@@ -2134,65 +2134,42 @@ ThotBool            history;
   CHAR_T*             content_type;
   STRING              profile;
   int                 i, j;
-  ThotBool            otherFile;
+  int                 parsingLevel;
+  ThotBool            unknown;
   ThotBool            plainText;
-  ThotBool            XHTMLdoc;
-  ThotBool            xmlDeclaration;
+  ThotBool            xmlDec, withDoctype, isXML;
 
   docType = docHTML;
-  otherFile = TRUE;
-  XHTMLdoc = FALSE;
+  unknown = TRUE;
   tempdir = tempdocument = NULL;
   content_type = HTTP_headers (http_headers, AM_HTTP_CONTENT_TYPE);
   /* check if there is an XML declaration with a charset declaration */
   if (tempfile[0] != WC_EOS)
-    xmlDeclaration = HasXMLDeclaration (tempfile, &charset);
+    CheckDocHeader (tempfile, &xmlDec, &withDoctype, &isXML, &parsingLevel, &charset);
   else
-    xmlDeclaration = HasXMLDeclaration (pathname, &charset);     
-    
+    CheckDocHeader (pathname, &xmlDec, &withDoctype, &isXML, &parsingLevel, &charset);
+
   if (content_type == NULL || content_type[0] == EOS)
     /* no content type */
     {
-      /* try to guess the document type after its file name extension */
-      if (IsHTMLName (pathname))
+      /* check file name extension */
+      if (parsingLevel != L_Other || IsHTMLName (pathname))
 	{
 	  /* it seems to be an HTML document */
 	  docType = docHTML;
-	  /* it may be an XHTML document. Look for <?xml ...?> in it */
-	  if (xmlDeclaration)
-	     XHTMLdoc = TRUE;
-	  otherFile = FALSE;
+	  unknown = FALSE;
 	}
-      else if (IsXMLName (pathname))
+      else if (isXML || IsXMLName (pathname))
 	{
-	/* it's a document written in XML: check its doctype */
-	  if (xmlDeclaration)
-	    {
-	    docType = docHTML;
-	    XHTMLdoc = TRUE;
-	    }
-	  else
-	    docType = docText;
-	  otherFile = FALSE;
+	  /* it seems to be an XML document */
+	  isXML = TRUE;
+	  docType = docText;
+	  unknown = FALSE;
 	}
       else if (IsCSSName (pathname))
 	{
 	  docType = docCSS;
-	  otherFile = FALSE;
-	}
-      else if (!IsImageName (pathname))
-	{
-	  docType = docText;
-	  otherFile = FALSE;
-	}
-      else if (tempfile[0] != WC_EOS)
-	{
-	/* It's a document loaded from the Web */
-	/* Let's suppose it's HTML */
-	  docType = docHTML;
-	  otherFile = FALSE;
-	  if (xmlDeclaration)
-	     XHTMLdoc = TRUE;
+	  unknown = FALSE;
 	}
       }
    else
@@ -2215,53 +2192,46 @@ ThotBool            history;
 		 {
 		   /* it's an HTML document */
 		   docType = docHTML;
-		   otherFile = FALSE;
-		   /* check if it's an XHTML document */
-		   if (xmlDeclaration)
-		     XHTMLdoc = TRUE;
+		   unknown = FALSE;
 		 }
 	       else if (!ustrncasecmp (&content_type[i+1], TEXT("xhtml"), 5))
 		 {
 		   /* it's an XHTML document */
 		   docType = docHTML;
-		   XHTMLdoc = TRUE;
-		   otherFile = FALSE;
+		   unknown = FALSE;
 		 }
 	       else if (!ustrncasecmp (&content_type[i+1], TEXT("xml"), 3))
 		 {
-		   /* it's an XML document: check its content */
-		   if ((tempfile[0] != WC_EOS && IsXHTMLDocType (tempfile)) ||
-		       (tempfile[0] == WC_EOS && IsXHTMLDocType (pathname)))
-		     {
-		     docType = docHTML;
-		     XHTMLdoc = TRUE;
-		     }
-		   else
+		   /* it's an XML document */
+		   isXML = TRUE;
+		   if (parsingLevel == L_Other)
 		     docType = docText;
-		   otherFile = FALSE;
+		   else
+		     docType = docHTML;
+		   unknown = FALSE;
 		 }
 	       else if (!ustrncasecmp (&content_type[i+1], TEXT("css"), 3))
 		 {
 		   docType = docCSS;
-		   otherFile = FALSE;
+		   unknown = FALSE;
 		 }
 	       else
 		 {
 		   docType = docText;
-		   otherFile = FALSE;
+		   unknown = FALSE;
 		 }
 	     }
 	   else if (!ustrcasecmp (content_type, TEXT("application")) &&
 		    !ustrncasecmp (&content_type[i+1], TEXT("x-sh"), 4))
 	     {
 	       docType = docText;
-	       otherFile = FALSE;
+	       unknown = FALSE;
 	     }	     
 	 }
      }
 
   /* Is the document an image */
-  if (otherFile)
+  if (unknown)
     {
       if (content_type && !ustrcmp (content_type, TEXT("image")) 
 	  && tempfile[0] != WC_EOS)
@@ -2277,7 +2247,8 @@ ThotBool            history;
 	  if (IsImageType (&content_type[i]))
 	    {
 	      docType = docImage;
-	      otherFile = FALSE;
+	      unknown = FALSE;
+	      parsingLevel = L_Transitional;
 	    }
 	}
       else if (IsImageName (pathname) && tempfile[0] == WC_EOS)
@@ -2285,11 +2256,12 @@ ThotBool            history;
 	  /* It's a local image file that we can display. We change the 
 	     doctype flag so that we can create an HTML container later on */
 	  docType = docImage;
-	  otherFile = FALSE;
+	  unknown = FALSE;
+	  parsingLevel = L_Transitional;
 	}
     }
 
-  if (otherFile && tempfile[0] != WC_EOS)
+  if (unknown && tempfile[0] != WC_EOS)
     {
       /* The document is not an HTML file and cannot be parsed */
       /* rename the temporary file */
@@ -2452,7 +2424,7 @@ ThotBool            history;
       DocumentMeta[newdoc]->form_data = TtaWCSdup (form_data);
       DocumentMeta[newdoc]->method = (ClickEvent) method;
       DocumentMeta[newdoc]->put_default_name = FALSE;
-      DocumentMeta[newdoc]->xmlformat = XHTMLdoc;
+      DocumentMeta[newdoc]->xmlformat = isXML;
       DocumentSource[newdoc] = 0;
 
       charEncoding = HTTP_headers (http_headers, AM_HTTP_CHARSET);
@@ -2483,36 +2455,40 @@ ThotBool            history;
 
       tempdir = TtaAllocString (MAX_LENGTH);
       TtaExtractName (tempdocument, tempdir, documentname);
-      plainText = (DocumentTypes[newdoc] == docText ||
-		   DocumentTypes[newdoc] == docTextRO ||
-		   DocumentTypes[newdoc] == docCSS ||
-		   DocumentTypes[newdoc] == docCSSRO ||
-		   DocumentTypes[newdoc] == docSource ||
-		   DocumentTypes[newdoc] == docSourceRO ||
-		   DocumentTypes[newdoc] == docLog);
       /* Now we forget the method CE_INIT. It's a standard method */
       if (DocumentMeta[newdoc]->method == CE_INIT)
 	DocumentMeta[newdoc]->method = CE_ABSOLUTE;
 
       /* check the current profile */
       profile = TtaGetEnvString ("Profile");
-      if (!ustrncmp (profile, TEXT("XHTML-basic"), 10))
-	{
-	  ParsingLevel[newdoc] = L_Basic;
-	  if (!plainText)
-	    DocumentMeta[newdoc]->xmlformat = TRUE;
-	}
+      if (parsingLevel == L_Other)
+	ParsingLevel[newdoc] = parsingLevel;
       else
-	ParsingLevel[newdoc] = L_Transitional;
+	{
+	  if (!ustrncmp (profile, TEXT("XHTML"), 5))
+	    /* force the XML parsing */
+	    DocumentMeta[newdoc]->xmlformat = TRUE;
+	  if (!ustrncmp (profile, TEXT("XHTML-basic"), 10))
+	    {
+	      if (parsingLevel < L_Basic)
+		ParsingLevel[newdoc] = parsingLevel;
+	      else	    
+		ParsingLevel[newdoc] = L_Basic;
+	    }
+	  else
+	    ParsingLevel[newdoc] = parsingLevel;
+	}
 
 #ifdef EXPAT_PARSER
-      if (DocumentMeta[newdoc]->xmlformat)
+      plainText = (parsingLevel == L_Other);
+      if (DocumentMeta[newdoc]->xmlformat && !plainText)
 	StartXmlParser (newdoc,
 			tempdocument,
 			documentname,
 			tempdir,
 			pathname,
-			plainText);
+			xmlDec,
+			withDoctype);
       else
 	StartParser (newdoc, tempdocument, documentname, tempdir, pathname, plainText);
 #else /* EXPAT_PARSER */

@@ -3696,20 +3696,23 @@ void       StartXmlParser (Document doc,
 			   CHAR_T*  documentName,
 			   CHAR_T*  documentDirectory,
 			   CHAR_T*  pathURL,
-			   ThotBool plainText)
+			   ThotBool xmlDec,
+			   ThotBool withDoctype)
 #else
 void       StartXmlParser (doc,
 			   htmlFileName,
 			   documentName,
 			   documentDirectory,
 			   pathURL,
-			   plainText)
+			   xmlDec,
+			   withDoctype)
 Document    doc;
 CHAR_T*     htmlFileName;
 CHAR_T*     documentName;
 CHAR_T*     documentDirectory;
 CHAR_T*     pathURL;
-ThotBool    plainText;
+ThotBool    xmlDec;
+ThotBool    withDoctype;
 #endif
 
 {
@@ -3789,75 +3792,35 @@ ThotBool    plainText;
 	/* is the current document a HTML document */
 	isHTML = (ustrcmp (TtaGetSSchemaName (DocumentSSchema),
 			   TEXT("HTML")) == 0);	
-	if (plainText)
+	if (!isHTML &&
+	    !(isANNOT = (ustrcmp (TtaGetSSchemaName (DocumentSSchema),
+				  TEXT("Annot")) == 0)))
 	  {
-	    if (isHTML)
-	      {
-		/* change the document type */
-		TtaFreeView (doc, 1);
-		doc = TtaNewDocument (TEXT("TextFile"), documentName);
-		TtaSetPSchema (doc, TEXT("TextFileP"));
-		DocumentSSchema = TtaGetDocumentSSchema (doc);
-		isHTML = FALSE;
-	      }
-	    rootElement = TtaGetMainRoot (doc);
-	    if (DocumentTypes[doc] == docSource ||
-		DocumentTypes[doc] == docSourceRO)
-	      {
-		/* add the attribute Source */
-		attrType.AttrSSchema = DocumentSSchema;
-		attrType.AttrTypeNum = TextFile_ATTR_Source;
-		attr = TtaGetAttribute (rootElement, attrType);
-		if (attr == 0)
-		  {
-		    attr = TtaNewAttribute (attrType);
-		    TtaAttachAttribute (rootElement, attr, doc);
-		  }
-	      }
-	    
-	    /* add the default attribute PrintURL */
-	    attrType.AttrSSchema = DocumentSSchema;
-	    attrType.AttrTypeNum = TextFile_ATTR_PrintURL;
-	    attr = TtaGetAttribute (rootElement, attrType);
-	    if (attr == 0)
-	      {
-		attr = TtaNewAttribute (attrType);
-		TtaAttachAttribute (rootElement, attr, doc);
-	      }
+	    /* change the document type */
+	    TtaFreeView (doc, 1);
+	    doc = TtaNewDocument (TEXT("HTML"), documentName);
+	    if (TtaGetScreenDepth () > 1)
+	      TtaSetPSchema (doc, TEXT("HTMLP"));
+	    else
+	      TtaSetPSchema (doc, TEXT("HTMLPBW"));
+	    DocumentSSchema = TtaGetDocumentSSchema (doc);
+	    isHTML = TRUE;
 	  }
-	else
+	    
+	LoadUserStyleSheet (doc);
+	rootElement = TtaGetMainRoot (doc);
+	    
+	/* add the default attribute PrintURL */
+	attrType.AttrSSchema = DocumentSSchema;
+	attrType.AttrTypeNum = HTML_ATTR_PrintURL;
+	attr = TtaGetAttribute (rootElement, attrType);
+	if (!attr)
 	  {
-	    if (!isHTML &&
-		!(isANNOT = (ustrcmp (TtaGetSSchemaName (DocumentSSchema),
-				      TEXT("Annot")) == 0)))
-	      {
-		/* change the document type */
-		TtaFreeView (doc, 1);
-		doc = TtaNewDocument (TEXT("HTML"), documentName);
-		if (TtaGetScreenDepth () > 1)
-		  TtaSetPSchema (doc, TEXT("HTMLP"));
-		else
-		  TtaSetPSchema (doc, TEXT("HTMLPBW"));
-		DocumentSSchema = TtaGetDocumentSSchema (doc);
-		isHTML = TRUE;
-	      }
-	    
-	    LoadUserStyleSheet (doc);
-	    rootElement = TtaGetMainRoot (doc);
-	    
-	    /* add the default attribute PrintURL */
-	    attrType.AttrSSchema = DocumentSSchema;
-	    attrType.AttrTypeNum = HTML_ATTR_PrintURL;
-	    attr = TtaGetAttribute (rootElement, attrType);
-	    if (!attr)
-	      {
-		attr = TtaNewAttribute (attrType);
-		TtaAttachAttribute (rootElement, attr, doc);
-	      }
-	  }	
-
+	    attr = TtaNewAttribute (attrType);
+	    TtaAttachAttribute (rootElement, attr, doc);
+	  }
+      
 	TtaSetDisplayMode (doc, NoComputedDisplay);
-
 	/* delete all element except the root element */
 	el = TtaGetFirstChild (rootElement);
 	while (el != NULL)
@@ -3874,40 +3837,35 @@ ThotBool    plainText;
 	/* disable auto save */
 	TtaSetDocumentBackUpInterval (doc, 0);
 
-	if (plainText)
-	    ReadTextFile (stream, NULL, doc, pathURL);
-	else
+	/* initialize all parser contexts if not done yet */
+	if (firstParserCtxt == NULL)
+	  InitXmlParserContexts ();
+	ChangeXmlParserContext (TEXT("HTML"));
+	
+	/* initialize parsing environment */
+	InitializeXmlParser (NULL, FALSE, 0);
+	
+	/* Specific initialization for expat */
+	InitializeExpatParser ();
+	
+	/* parse the input file and build the Thot document */
+	XmlParse (stream, NULL);
+	
+	/* completes all unclosed elements */
+	el = XMLcontext.lastElement;
+	while (el != NULL)
 	  {
-	    /* initialize all parser contexts if not done yet */
-	    if (firstParserCtxt == NULL)
-	      InitXmlParserContexts ();
-	    ChangeXmlParserContext (TEXT("HTML"));
-	    
-	    /* initialize parsing environment */
-	    InitializeXmlParser (NULL, FALSE, 0);
-	    
-	    /* Specific initialization for expat */
-	    InitializeExpatParser ();
-	    
-	    /* parse the input file and build the Thot document */
-	    XmlParse (stream, NULL);
-	    
-	    /* completes all unclosed elements */
-	    el = XMLcontext.lastElement;
-	    while (el != NULL)
-	      {
-		(*(currentParserCtxt->ElementComplete)) (el,
-							 XMLcontext.doc,
-							 &error);
-		el = TtaGetParent (el);
-	      }
-	    
-	    /* check the Thot abstract tree */
-	    CheckAbstractTree (pathURL, XMLcontext.doc);
-
-	    FreeExpatParser ();
-	    FreeXmlParserContexts ();
+	    (*(currentParserCtxt->ElementComplete)) (el,
+						     XMLcontext.doc,
+						     &error);
+	    el = TtaGetParent (el);
 	  }
+	
+	/* check the Thot abstract tree */
+	CheckAbstractTree (pathURL, XMLcontext.doc);
+	
+	FreeExpatParser ();
+	FreeXmlParserContexts ();
 
 	gzclose (stream);
 	TtaFreeMemory (docURL);

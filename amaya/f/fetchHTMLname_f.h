@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int MapGI ( CHAR_T* gi,
+extern int MapGI ( CHAR_T *gi,
                    SSchema *schema,
                    Document doc );
 extern void GIType ( CHAR_T* gi,
@@ -23,7 +23,7 @@ extern AttributeMapping *MapHTMLAttribute ( CHAR_T *attrName,
 
 #else /* __STDC__ */
 
-extern int MapGI (/* CHAR_T* gi,
+extern int MapGI (/* CHAR_T *gi,
                      SSchema *schema,
                      Document doc */);
 extern void GIType (/* CHAR_T* gi,

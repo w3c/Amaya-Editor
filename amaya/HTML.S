@@ -42,11 +42,11 @@ STRUCT
 
   HTML								{ HTML }
      (ATTR SectionNumbering = Yes_; ShowAreas = Yes_;
-	   PrintURL = Yes_; HtmlDTD = Transitional, Frameset;
+	   PrintURL = Yes_; HtmlDTD = Text;
 	   Namespaces = Text; RealLang = Yes_; Charset = Text) =
 	BEGIN
 	HEAD;
-      ? BODY;	{ only one of BODY, FRAMESET is allowed }
+      ? BODY;	{ only one of BODY, document type }
       ? FRAMESET;
 	END + (Invalid_element, Comment\240);
 

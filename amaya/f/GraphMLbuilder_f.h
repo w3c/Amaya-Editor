@@ -54,6 +54,9 @@ extern void ParsePositionAttribute ( Attribute attr,
 extern void ParseCoordAttribute ( Attribute attr,
                                   Element el,
                                   Document doc );
+extern void ParseWidthHeightAttribute ( Attribute attr,
+                                        Element el,
+                                        Document doc );
 extern void GraphMLAttributeComplete ( Attribute attr,
                                        Element el,
                                        Document doc );
@@ -108,6 +111,9 @@ extern void ParsePositionAttribute (/* Attribute attr,
 extern void ParseCoordAttribute (/* Attribute attr,
                                     Element el,
                                     Document doc */);
+extern void ParseWidthHeightAttribute (/* Attribute attr,
+                                          Element el,
+                                          Document doc */);
 extern void GraphMLAttributeComplete (/* Attribute attr,
                                          Element el,
                                          Document doc */);

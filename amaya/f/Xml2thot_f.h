@@ -28,7 +28,8 @@ extern void StartXmlParser ( Document doc,
                              CHAR_T* documentName,
                              CHAR_T* documentDirectory,
                              CHAR_T* pathURL,
-                             ThotBool plainText );
+                             ThotBool xmlDec,
+                             ThotBool withDoctype );
 
 #else /* __STDC__ */
 
@@ -54,7 +55,8 @@ extern void StartXmlParser (/* Document doc,
                                CHAR_T* documentName,
                                CHAR_T* documentDirectory,
                                CHAR_T* pathURL,
-                               ThotBool plainText */);
+                               ThotBool xmlDec,
+                               ThotBool withDoctype */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -53,6 +53,29 @@ static int          SRC_attr_tab[] = {
 };
 static STRING       QuotedText;
 
+
+static CHAR_T *HTMLDocTypes_1[] =
+{
+  TEXT("\"-//W3C//DTD XHTML Basic 1.0//EN\""),
+  TEXT("\"-//W3C//DTD XHTML 1.0 Strict//EN\""),
+  TEXT("\"-//W3C//DTD XHTML 1.0 Transitional//EN\""),
+  TEXT("\"-//W3C//DTD XHTML 1.0 Frameset//EN\""),
+  TEXT("\"-//W3C//DTD HTML 4.01//EN\""),
+  TEXT("\"-//W3C//DTD HTML 4.01 Transitional//EN\""),
+  TEXT("\"-//W3C//DTD HTML 4.01 Frameset//EN\"")
+};
+
+static CHAR_T *HTMLDocTypes_2[] =
+{
+  TEXT("\"http://www.w3.org/1999/xhtml\">\n"),
+  TEXT("\"DTD/xhtml1-1-strict.dtd\">\n"),
+  TEXT("\"DTD/xhtml1-1-transitional.dtd\">\n"),
+  TEXT("\'DTD/xhtml1-1-frameset.dtd\">\n"),
+  TEXT("\"http://www.w3.org/TR/REC-html401/strict.dtd\">\n"),
+  TEXT("\"http://www.w3.org/TR/REC-html401/loose.dtd\">\n"),
+  TEXT("\"http://www.w3.org/TR/REC-html401/frameset.dtd\">\n"),
+};
+
 #include "AHTURLTools_f.h"
 #include "EDITimage_f.h"
 #include "EDITstyle_f.h"
@@ -779,29 +802,6 @@ Document     doc;
       useGraphML = TRUE;
 
    root = TtaGetMainRoot (doc);
-   attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
-   attrType.AttrTypeNum = HTML_ATTR_Namespaces;
-   attr = TtaGetAttribute (root, attrType);
-   if (!useMathML && !useGraphML && attr)
-      /* delete the Namespaces attribute */
-      TtaRemoveAttribute (root, attr, doc);
-   else if (useMathML || useGraphML)
-      {
-      /* prepare the value of attribute Namespaces */
-      buffer[0] = EOS;
-      if (useMathML)
-	ustrcat (buffer, TEXT("\n      xmlns:m=\"http://www.w3.org/1998/Math/MathML/\""));
-      if (useGraphML)
-	ustrcat (buffer, TEXT("\n      xmlns:g=\"http://www.w3.org/Graphics/SVG/Amaya2D\""));
-      /* set the value of attribute Namespaces */
-      if (attr == NULL)
-	{
-	  attr = TtaNewAttribute (attrType);
-	  TtaAttachAttribute (root, attr, doc);
-	}
-      TtaSetAttributeText (attr, buffer, root, doc);
-      }
-
    /* looks for a FRAMESET element and set attribute HtmlDTD */
    useFrames = FALSE;
    el = TtaGetFirstChild (root);
@@ -814,17 +814,100 @@ Document     doc;
       else
          TtaNextSibling (&el);
       }
-   attrType.AttrTypeNum = HTML_ATTR_HtmlDTD;
+
+   attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+   attrType.AttrTypeNum = HTML_ATTR_Namespaces;
    attr = TtaGetAttribute (root, attrType);
-   if (!attr)
+   if (!useMathML && !useGraphML)
+     {
+       /* delete the Namespaces attribute */
+       if (attr)
+	 TtaRemoveAttribute (root, attr, doc);
+
+       /* generating the DOCTYPE */
+       buffer[0] = EOS;
+       attrType.AttrTypeNum = HTML_ATTR_HtmlDTD;
+       attr = TtaGetAttribute (root, attrType);
+       if (!attr)
+	 {
+	   attr = TtaNewAttribute (attrType);
+	   TtaAttachAttribute (root, attr, doc);
+	 }
+
+	ustrcat (buffer, TEXT("<!DOCTYPE html PUBLIC "));
+	if (DocumentMeta[doc]->xmlformat)
+	  {
+	    /* xml format */
+	    if (useFrames)
+	      {
+		ustrcat (buffer, HTMLDocTypes_1[3]);
+		ustrcat (buffer, TEXT("\n    "));
+		ustrcat (buffer, HTMLDocTypes_2[3]);
+	      }
+	    else if (ParsingLevel[doc] == L_Basic)
+	      {
+		ustrcat (buffer, HTMLDocTypes_1[0]);
+		ustrcat (buffer, TEXT("\n    "));
+		ustrcat (buffer, HTMLDocTypes_2[0]);
+	      }
+	    else if (ParsingLevel[doc] == L_Strict)
+	      {
+		ustrcat (buffer, HTMLDocTypes_1[1]);
+		ustrcat (buffer, TEXT("\n    "));
+		ustrcat (buffer, HTMLDocTypes_2[1]);
+	      }
+	    else
+	      {
+		ustrcat (buffer, HTMLDocTypes_1[2]);
+		ustrcat (buffer, TEXT("\n    "));
+		ustrcat (buffer, HTMLDocTypes_2[2]);
+	      }
+	  }
+	else
+	  {
+	    if (useFrames)
+	      {
+		ustrcat (buffer, HTMLDocTypes_1[6]);
+		ustrcat (buffer, TEXT("\n    "));
+		ustrcat (buffer, HTMLDocTypes_2[6]);
+	      }
+	    else if (ParsingLevel[doc] == L_Strict)
+	      {
+		ustrcat (buffer, HTMLDocTypes_1[4]);
+		ustrcat (buffer, TEXT("\n    "));
+		ustrcat (buffer, HTMLDocTypes_2[4]);
+	      }
+	    else
+	      {
+		ustrcat (buffer, HTMLDocTypes_1[5]);
+		ustrcat (buffer, TEXT("\n    "));
+		ustrcat (buffer, HTMLDocTypes_2[5]);
+	      }
+	  }
+	TtaSetAttributeText (attr, buffer, root, doc);
+     }
+   else if (useMathML || useGraphML)
       {
-      attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (root, attr, doc);
+	/* prepare the value of attribute Namespaces */
+	buffer[0] = EOS;
+	if (useMathML)
+	  ustrcat (buffer, TEXT("\n      xmlns:m=\"http://www.w3.org/1998/Math/MathML/\""));
+	if (useGraphML)
+	  ustrcat (buffer, TEXT("\n      xmlns:g=\"http://www.w3.org/Graphics/SVG/Amaya2D\""));
+	/* set the value of attribute Namespaces */
+	if (attr == NULL)
+	  {
+	    attr = TtaNewAttribute (attrType);
+	    TtaAttachAttribute (root, attr, doc);
+	  }
+	TtaSetAttributeText (attr, buffer, root, doc);
+
+	/* delete the DOCTYPE attribute */
+	attrType.AttrTypeNum = HTML_ATTR_HtmlDTD;
+	attr = TtaGetAttribute (root, attrType);
+	if (attr)
+	  TtaRemoveAttribute (root, attr, doc);
       }
-   if (useFrames)
-      TtaSetAttributeValue (attr, HTML_ATTR_HtmlDTD_VAL_Frameset, root, doc);
-   else
-      TtaSetAttributeValue (attr, HTML_ATTR_HtmlDTD_VAL_Transitional, root, doc);
 
    /* get the document charset */
    Charset[0] = EOS;
@@ -924,6 +1007,36 @@ Document     doc;
 }
 
 /*----------------------------------------------------------------------
+   RestartParser
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void       RestartHTMLParser (Document doc, CHAR_T *localFile, CHAR_T *tempdir, CHAR_T *documentname)
+#else
+static void       RestartHTMLParser (doc, localFile, tempdir, documentname)
+Document          doc;
+CHAR_T           *localFile;
+CHAR_T           *tempdir;
+CHAR_T           *documentname;
+#endif
+{
+  CHARSET             charset;
+  int                 parsingLevel;
+  ThotBool            xmlDec, withDoctype, isXML;
+
+  CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &parsingLevel, &charset);
+  if (ParsingLevel[doc] != parsingLevel)
+    {
+      ;
+    }
+#ifdef EXPAT_PARSER
+  if (DocumentMeta[doc]->xmlformat)       
+    StartXmlParser (doc, localFile, documentname, tempdir, localFile, xmlDec, withDoctype);
+  else
+#endif /* EXPAT_PARSER */
+    StartParser (doc, localFile, documentname, tempdir, localFile, FALSE);
+}
+ 
+/*----------------------------------------------------------------------
    RedisplaySourceFile
    If doc is a HTML document and the source view is open, redisplay the
    source.
@@ -936,10 +1049,10 @@ Document          doc;
 
 #endif
 {
-  CHAR_T*   localFile;
-  CHAR_T	documentname[MAX_LENGTH];
-  CHAR_T	tempdir[MAX_LENGTH];
-  NotifyElement event;
+  CHAR_T             *localFile;
+  CHAR_T	      documentname[MAX_LENGTH];
+  CHAR_T	      tempdir[MAX_LENGTH];
+  NotifyElement       event;
 
   if (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docHTMLRO)
     /* It's a HTML document */
@@ -951,18 +1064,8 @@ Document          doc;
           localFile = GetLocalPath (doc, DocumentURLs[doc]);
 	  TtaExtractName (localFile, tempdir, documentname);
 	  /* parse and display the new version */
-
-#ifdef EXPAT_PARSER
-	  if (DocumentMeta[doc]->xmlformat)       
-	    StartXmlParser (DocumentSource[doc], localFile, documentname,
-			    tempdir, localFile, TRUE);
-	  else
-	    StartParser (DocumentSource[doc], localFile, documentname,
-			 tempdir, localFile, TRUE);
-#else /* EXPAT_PARSER */
 	  StartParser (DocumentSource[doc], localFile, documentname, tempdir,
 		       localFile, TRUE);
-#endif /* EXPAT_PARSER */
 	  TtaSetDocumentUnmodified (DocumentSource[doc]);
 	  event.document = doc;
 	  SynchronizeSourceView (&event);
@@ -1545,18 +1648,7 @@ View                view;
        TtaExportDocumentWithNewLineNumbers (document, tempdocument,
 					    TEXT("TextFileT"));
        TtaExtractName (tempdocument, tempdir, documentname);
-#ifdef EXPAT_PARSER
-       if (DocumentMeta[htmlDoc]->xmlformat)       
-	 StartXmlParser (htmlDoc, tempdocument, documentname,
-			 tempdir, tempdocument, FALSE);
-       else
-	 StartParser (htmlDoc, tempdocument, documentname,
-		      tempdir, tempdocument, FALSE);
-       
-#else /* EXPAT_PARSER */
-       StartParser (htmlDoc, tempdocument, documentname, tempdir, tempdocument,
-		    FALSE);
-#endif /* EXPAT_PARSER */
+       RestartHTMLParser (htmlDoc, tempdocument, tempdir, documentname);
 
        /* fetch and display all images referred by the document */
        DocNetworkStatus[htmlDoc] = AMAYA_NET_ACTIVE;
@@ -1798,17 +1890,7 @@ View                view;
 	if (htmlDoc)
 	   {
 	   TtaExtractName (localFile, tempdir, documentname);
-#ifdef EXPAT_PARSER
-       if (DocumentMeta[htmlDoc]->xmlformat)       
-	   StartXmlParser (htmlDoc, localFile, documentname,
-			   tempdir, localFile, FALSE);
-       else
-	   StartParser (htmlDoc, localFile, documentname,
-			tempdir, localFile, FALSE);       
-#else /* EXPAT_PARSER */
-       StartParser (htmlDoc, localFile, documentname,
-		    tempdir, localFile, FALSE);
-#endif /* EXPAT_PARSER */
+	   RestartHTMLParser (DocumentMeta[htmlDoc], localFile, tempdir, documentname);
 
 	   /* fetch and display all images referred by the document */
 	   DocNetworkStatus[htmlDoc] = AMAYA_NET_ACTIVE;

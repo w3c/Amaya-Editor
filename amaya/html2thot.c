@@ -5562,22 +5562,43 @@ STRING	           pathURL;
     }
 }
 
+
 /*----------------------------------------------------------------------
-  IsXHTMLDocType parses the XML file to detect if it's XHML document.
+  CheckDocHeader parses the loaded file to detect if it includes:
+  - an XML declaration (returns xmlDec = TRUE)
+  - a doctype (returns docType = TRUE)
+  - an html namespace
+  Other returns:
+  The indicator isXML
+  The document type transitional, strict, basic, other (parsingLevel)
+  The charset value if the XML declaration gives an encoding or
+  UNDEFINED_CHARSET.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            IsXHTMLDocType (STRING fileName)
+void            CheckDocHeader (CHAR_T *fileName, ThotBool *xmlDec, ThotBool *docType, ThotBool *isXML, int *parsingLevel, CHARSET *charset)
 #else
-ThotBool            IsXHTMLDocType (fileName)
-STRING              fileName;
+void            CheckDocHeader (fileName, xmlDec, docType, isXML, parsingLevel, charset)
+CHAR_T         *fileName;
+ThotBool       *xmlDec;
+ThotBool       *docType;
+ThotBool       *isXML;
+int            *parsingLevel;
+CHARSET        *charset;
 #endif
 {
   gzFile        stream;
   char          file_name[MAX_LENGTH];
-  int           res, i;
-  ThotBool      endOfFile, isXHTML;
-  
-  isXHTML = FALSE;
+  char         *ptr, *end;
+  char          charsetname[MAX_LENGTH];
+  int           res, i, j, k;
+  ThotBool      endOfFile, beginning;
+  ThotBool      found;
+
+  *xmlDec = FALSE;
+  *docType = FALSE;
+  *isXML = FALSE;
+  *parsingLevel = L_Other;
+  *charset = UNDEFINED_CHARSET;
   wc2iso_strcpy (file_name, fileName);
   stream = gzopen (file_name, "r");
   if (stream != 0)
@@ -5585,135 +5606,105 @@ STRING              fileName;
       InputText = NULL;
       LgBuffer = 0;
       endOfFile = FALSE;
+      beginning = TRUE;
       while (!endOfFile)
 	{
 	  res = gzread (stream, FileBuffer, INPUT_FILE_BUFFER_SIZE);
-	  if (res <= 0)
-	    endOfFile = TRUE;
-	  else
+	  if (res >= 5)
 	    FileBuffer[res] = EOS;
-	  /* check if we are reading a file with "<html ...>" */
+	  /* check if the file contains "<?xml ..." */
 	  i = 0;
-	  while (!endOfFile && i < res)
+	  endOfFile = res < INPUT_FILE_BUFFER_SIZE;
+	  found = TRUE;
+	  while (found)
 	    {
-	      if (strncasecmp (&FileBuffer[i], "<!doctype html public", 21))
+	      found = FALSE;
+	      while (!found && i < res)
+		if (FileBuffer[i] == '<')
+		  found = TRUE;
+		else
+		  i++;
+	      /* if the declaration is present it's the first element */
+	      if (found)
 		{
-		  /* we've found <!doctype  */
-		  i += 21;
-		  /* stop the research */
-		  endOfFile = TRUE;
-		  while (FileBuffer[i] == WC_SPACE  ||
-			 FileBuffer[i] == WC_EOL    ||
-			 FileBuffer[i] == WC_TAB    ||
-			 FileBuffer[i] == WC_CR)
-		    i++;
-		  if (i != 21 && !strncasecmp(&FileBuffer[i], "\"-//W3C//DTD XHTML Basic 1.0//EN\"", 4))
+		  if (beginning && !strncmp (&FileBuffer[i], "<?xml ", 6))
 		    {
-		      i += 21;
-		      while (FileBuffer[i] == WC_SPACE  ||
-			     FileBuffer[i] == WC_EOL    ||
-			     FileBuffer[i] == WC_TAB    ||
-			     FileBuffer[i] == WC_CR)
-			i++;
-		      isXHTML = TRUE;
+		      /* we've found <?xml */
+		      i += 6;
+		      *xmlDec = TRUE;
+		      *isXML = TRUE;
+		      /* check whether there is an encoding */
+		      ptr = strstr (&FileBuffer[i], "encoding");
+		      end = NULL;
+		      if (ptr)
+			ptr = strstr (ptr, "\"");
+		      if (ptr)
+			end = strstr (&ptr[1], "\"");
+		      if (end && end != ptr)
+			{
+			  /* get the document charset */
+			  k = 0; j = 1;
+			  while (&ptr[j] != end)
+			    charsetname[k++] = ptr[j++];
+			  charsetname[k] = WC_EOS;
+			  *charset = TtaGetCharset (charsetname);
+			}
 		    }
-		}
-	      else if (!strncasecmp(&FileBuffer[i], "<html", 5))
-		{
-		  /* we've found <html  */
-		  i += 5;
-		  /* stop the research */
-		  endOfFile = TRUE;
-		  if (FileBuffer[i] == WC_SPACE  ||
-		      FileBuffer[i] == WC_EOL    ||
-		      FileBuffer[i] == WC_TAB    ||
-		      FileBuffer[i] == WC_CR     ||
-		      FileBuffer[i] == TEXT('>'))
-		    isXHTML = TRUE;
+		  else if (!strncasecmp (&FileBuffer[i], "<!DOCTYPE ", 10))
+		    {
+		      /* the doctype is found */
+		      i += 10;
+		      *docType = TRUE;
+		      /* it's not necessary to continue */
+		      found = FALSE;
+		      endOfFile = TRUE;
+		      /* check the current DOCTYPE */
+		      if (!strncasecmp (&FileBuffer[i], "html PUBLIC ", 12))
+			{
+			  i += 12;
+			  /* by default all HTML tags are accepted */
+			  *parsingLevel = L_Transitional;
+			  if (strstr (&FileBuffer[i], "DTD XHTML"))
+			    *isXML = TRUE;
+			  if (strstr (&FileBuffer[i], "Basic"))
+			    *parsingLevel = L_Basic;
+			  else if (strstr (&FileBuffer[i], "Strict"))
+			    *parsingLevel = L_Strict;
+			}
+		    }
+		  else if (!strncasecmp (&FileBuffer[i], "<html ", 6))
+		    {
+		      /* the html tag is found */
+		      i += 6;
+		      /* it's not necessary to continue */
+		      found = FALSE;
+		      endOfFile = TRUE;
+		      /* by default all HTML tags are accepted */
+		      *parsingLevel = L_Transitional;
+		      if (strstr (&FileBuffer[i], "xhtml"))
+			*isXML = TRUE;
+		      if (strstr (&FileBuffer[i], "Basic"))
+			*parsingLevel = L_Basic;
+		      else if (strstr (&FileBuffer[i], "Strict"))
+			*parsingLevel = L_Strict;
+		    }
+		  else if (strncmp (&FileBuffer[i], "<!-- ", 10))
+		    {
+		      /* it's not a comment */
+		      /* it's not necessary to continue */
+		      found = FALSE;
+		      endOfFile = TRUE;
+		    }
 		}
 	      else
-		i++;
+		/* it's not necessary to continue */
+		endOfFile = TRUE;
+	      /* we're no longer parsing the beginning of the file */
+	      beginning = FALSE;
 	    }
 	}
       gzclose (stream);
     }
-  return (isXHTML);
-}
-
-
-/*----------------------------------------------------------------------
-  HasXMLDeclarationL parses the loaded file to detect if it includes a XML
-  declaration.
-  Set the charset value if the XML declaration gives an encoding.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            HasXMLDeclaration (CHAR_T *fileName, CHARSET *charset)
-#else
-ThotBool            HasXMLDeclaration (fileName, charset)
-CHAR_T             *fileName;
-CHARSET            *charset;
-#endif
-{
-  gzFile        stream;
-  char          file_name[MAX_LENGTH];
-  CHAR_T       *ptr, *end;
-  CHAR_T        charsetname[MAX_LENGTH];
-  int           res, i, j;
-  ThotBool      endOfFile, isXHTML;
-
-  isXHTML = FALSE;
-  wc2iso_strcpy (file_name, fileName);
-  *charset = UNDEFINED_CHARSET;
-  stream = gzopen (file_name, "r");
-  if (stream != 0)
-    {
-      InputText = NULL;
-      LgBuffer = 0;
-      res = gzread (stream, FileBuffer, INPUT_FILE_BUFFER_SIZE);
-      if (res >= 5)
-	FileBuffer[res] = EOS;
-      /* check if the file contains "<?xml ..." */
-      i = 0;
-      while (i < res && i < 5)
-	{
-	  /* if the declaration is present it's the first element */
-	  if (strncasecmp (&FileBuffer[i], "<?xml", 5))
-	    i++;
-	  else
-	    {
-	      /* we've found <?xml */
-	      i += 5;
-	      /* stop the research */
-	      endOfFile = TRUE;
-	      if (FileBuffer[i] == WC_SPACE  ||
-		  FileBuffer[i] == WC_EOL    ||
-		  FileBuffer[i] == WC_TAB    ||
-		  FileBuffer[i] == WC_CR)
-		{
-		  isXHTML = TRUE;
-		  /* check whether there is an encoding */
-		  i++;
-		  ptr = ustrstr (&FileBuffer[i], TEXT("encoding"));
-		  end = NULL;
-		  if (ptr)
-		    ptr = ustrstr (ptr, TEXT("\""));
-		  if (ptr)
-		    end = ustrstr (&ptr[1], TEXT("\""));
-		  if (end && end != ptr)
-		    {
-		      /* get the document charset */
-		      i = 0; j = 1;
-		      while (&ptr[j] != end)
-			charsetname[i++] = ptr[j++];
-		      charsetname[i] = WC_EOS;
-		      *charset = TtaGetCharset (charsetname);
-		    }
-		}
-	    }
-	}
-      gzclose (stream);
-    }
-  return (isXHTML);
 }
 
 

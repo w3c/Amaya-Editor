@@ -50,9 +50,12 @@ extern void ReadTextFile ( FILE *infile,
                            char* textbuf,
                            Document doc,
                            STRING pathURL );
-extern ThotBool IsXHTMLDocType ( STRING fileName );
-extern ThotBool HasXMLDeclaration ( CHAR_T *fileName,
-                                    CHARSET *charset );
+extern void CheckDocHeader ( CHAR_T *fileName,
+                             ThotBool *xmlDec,
+                             ThotBool *docType,
+                             ThotBool *isXML,
+                             int *parsingLevel,
+                             CHARSET *charset );
 extern void CheckAbstractTree ( CHAR_T* pathURL,
                                 Document doc );
 extern void ParseIncludedHTML ( Element elem,
@@ -114,9 +117,12 @@ extern void ReadTextFile (/* FILE *infile,
                              char* textbuf,
                              Document doc,
                              STRING pathURL */);
-extern ThotBool IsXHTMLDocType (/* STRING fileName */);
-extern ThotBool HasXMLDeclaration (/* CHAR_T *fileName,
-                                      CHARSET *charset */);
+extern void CheckDocHeader (/* CHAR_T *fileName,
+                               ThotBool *xmlDec,
+                               ThotBool *docType,
+                               ThotBool *isXML,
+                               int *parsingLevel,
+                               CHARSET *charset */);
 extern void CheckAbstractTree (/* CHAR_T* pathURL,
                                   Document doc */);
 extern void ParseIncludedHTML (/* Element elem,

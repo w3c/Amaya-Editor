@@ -49,21 +49,48 @@
 +templates
 +views
 
-################# AMAYA BASIC-EDITOR
-<basic-editor>
+################# XHTML
+<XHTML>
 +amayabase
-+struct-module
-+text-module
-+hypertext-module
-+list-module
++areas
 +browsing
-+basic-css-style
++config
++css-style
 +edit
++basic-form-module
++forms
++link-module
++base-module
++meta-module
++head
++html-style
++makebook
++maths
 +object-module
 +print
 +source-view
 +spell
++tables
++templates
++views
+
+################# AMAYA XHTML-BASIC
+<XHTML-basic>
++amayabase
 +basic-table-module
++browsing
++basic-css-style
++config
++edit
++hypertext-module
++list-module
++makebook
++object-module
++print
++source-view
++spell
++struct-module
++text-module
 +views
 
 ################# AMAYA BROWSER
@@ -193,7 +220,6 @@ SetupAndPrint
 ########### HTML
 [head]
 &CreateScript
-&CreateStyle
 
 ########### XHTML modules
 [struct-module]
@@ -353,6 +379,7 @@ EnableCSS
 
 [basic-css-style]
 +css-browsing
+&ApplyClass
 &ChangeBackgroundImage
 &TtcChangeCharacters
 &TtcChangeColors
@@ -366,7 +393,7 @@ HelpStyleSheets
 [css-style]
 +basic-css-style
 &CreateClass
-&ApplyClass
+&CreateStyle
 
 ########### OPTIONAL MODULES
 [config]
