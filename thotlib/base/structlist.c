@@ -3448,11 +3448,12 @@ static void wrprules (PtrPRule RP, FILE *fileDescriptor)
 	  case PtPictInfo:
 	    break;
 	  }
+	fprintf (fileDescriptor, " {-- ");
 	if (RP->PrImportant)
-	  fprintf (fileDescriptor, "!important");
-	fprintf (fileDescriptor, " specificity=%d,", RP->PrSpecificity);
-	fprintf (fileDescriptor, " line=%d", RP->PrCSSLine);
-	fprintf (fileDescriptor, " --}\n"); /* next rule */
+	  fprintf (fileDescriptor, "!important ");
+	fprintf (fileDescriptor, "specificity=%d,", RP->PrSpecificity);
+	fprintf (fileDescriptor, " line=%d --}\n", RP->PrCSSLine);
+	/* next rule */
 	RP = RP->PrNextPRule;
      }
 }
