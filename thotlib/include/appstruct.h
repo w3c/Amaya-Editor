@@ -14,8 +14,8 @@
  * 
  */
  
-#ifndef _APP_H_
-#define _APP_H_
+#ifndef _APPSTRUCT_H_
+#define _APPSTRUCT_H_
 #include "interface.h"
 #include "appaction.h"
 
