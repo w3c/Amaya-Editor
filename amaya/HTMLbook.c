@@ -346,7 +346,7 @@ void             SetInternalLinks (Document document)
   CheckPrintingDocument reinitialize printing parameters as soon as
   the printing document changes.
   ----------------------------------------------------------------------*/
-static void         CheckPrintingDocument (Document document)
+static void CheckPrintingDocument (Document document)
 {
   char         docName[MAX_LENGTH];
   char        *ptr; 
@@ -511,7 +511,7 @@ static void         PrintDocument (Document doc, View view)
 /*----------------------------------------------------------------------
    PrintAs prints the document using predefined parameters.
    ----------------------------------------------------------------------*/  
-void                PrintAs (Document doc, View view)
+void PrintAs (Document doc, View view)
 {
 #ifdef _WINDOWS
   DocPrint = doc;

@@ -1675,7 +1675,7 @@ static void ValidateGeneralConf (void)
   RecalibrateZoom
   Moves the Zoom setting on all documents to the specified value
   ----------------------------------------------------------------------*/
-static void      RecalibrateZoom ()
+static void RecalibrateZoom ()
 {
   int               zoom;
   int               doc, view;
@@ -1698,13 +1698,61 @@ static void      RecalibrateZoom ()
 }
 
 /*----------------------------------------------------------------------
+  UpdateShowTargets
+  Sets the show targets on all documents
+  ----------------------------------------------------------------------*/
+static void UpdateShowTargets ()
+{
+  int               visibility;
+  int               doc;
+
+  /* recalibrate the zoom settings in all the active documents and
+   active views*/
+  for (doc = 1; doc < DocumentTableLength; doc++)
+    {
+      if (DocumentURLs[doc])
+	{
+	  visibility = TtaGetSensibility (doc, 1);
+	  if ((visibility == 5 && S_Targets) ||
+	      (visibility == 4 && !S_Targets))
+	    /* change the status of the document */
+	    ShowTargets (doc, 1);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  UpdateSectionNumbering
+  Sets the section numbering on all documents
+  ----------------------------------------------------------------------*/
+static void UpdateSectionNumbering ()
+{
+  int               doc;
+
+  for (doc = 1; doc < DocumentTableLength; doc++)
+    {
+      if (DocumentURLs[doc] && SNumbering[doc] != S_Numbers)
+	{
+	  TtaSetToggleItem (doc, 1, Special, TSectionNumber, S_Numbers);
+	  if (DocumentTypes[doc] == docHTML)
+	    /* generate numbers */
+	    SectionNumbering (doc, 1);
+	  else
+	    /* update only the indicator */
+	    SNumbering[doc] = S_Numbers;
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
   SetGeneralConf
   Updates the registry General values and calls the General functions
   to take into account the changes
   ----------------------------------------------------------------------*/
 static void SetGeneralConf (void)
 {
-  int oldZoom;
+  int         oldZoom;
+  ThotBool    old;
 
   TtaSetEnvInt ("DOUBLECLICKDELAY", DoubleClickDelay, TRUE);
   TtaGetEnvInt ("ZOOM", &oldZoom);
@@ -1721,11 +1769,18 @@ static void SetGeneralConf (void)
   TtaSetEnvBoolean ("ENABLE_DOUBLECLICK", DoubleClick, TRUE);
   /* @@@ */
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
+  /* handling show targets and section numbering */
+  TtaGetEnvBoolean ("SHOW_TARGET", &old);
+  TtaSetEnvBoolean ("SHOW_TARGET", S_Targets, TRUE);
+  if (old != S_Targets)
+    UpdateShowTargets ();
+  TtaGetEnvBoolean ("SECTION_NUMBERING", &old);
+  TtaSetEnvBoolean ("SECTION_NUMBERING", S_Numbers, TRUE);
+  if (old != S_Numbers)
+    UpdateSectionNumbering ();
   /* @@@ */
   TtaSetEnvBoolean ("ENABLE_FTP", EnableFTP, TRUE);
   AHTFTPURL_flag_set (EnableFTP);
-  TtaSetEnvBoolean ("SHOW_TARGET", S_Targets, TRUE);
-  TtaSetEnvBoolean ("SECTION_NUMBERING", S_Numbers, TRUE);
   TtaSetEnvString ("HOME_PAGE", HomePage, TRUE);
   TtaSetEnvString ("LANG", DialogueLang, TRUE);
   if (AccesskeyMod == 0)
