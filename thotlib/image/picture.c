@@ -1859,6 +1859,12 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
     return;
   if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == EOS)
     return;
+  /* If we're replacing an image*/
+  if (glIsTexture (imageDesc->TextureBind))
+		{
+		glDeleteTextures (1, &(imageDesc->TextureBind));
+      	imageDesc->TextureBind = 0;
+		}
   GetPictureFileName (imageDesc->PicFileName, fileName);
   typeImage = imageDesc->PicType;
   status = PictureFileOk (fileName, &typeImage);
