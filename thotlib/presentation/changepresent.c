@@ -1,11 +1,8 @@
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
 
 /*
-  modpres.c -- Modifications de la presentation specifique.
   Modifications de la presentation specifique.
-  V. Quint	Juin 1987
-  Major changes:
+  V. Quint
  */
 
 #include "thot_sys.h"
