@@ -5177,23 +5177,25 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 		      /* check whether there is an encoding */
 		      ptr = strstr (&FileBuffer[i], "encoding");
 		      if (ptr)
-			beg = strstr (ptr, "\"");
-		      if (beg && beg < end)
-			end = strstr (&beg[1], "\"");
-		      else
 			{
-			  beg = strstr (ptr, "\'");
+			  beg = strstr (ptr, "\"");
 			  if (beg && beg < end)
-			    end = strstr (&beg[1], "\'");
-			}
-		      if (end && end != beg)
-			{
-			  /* get the document charset */
-			  k = 0; j = 1;
-			  while (&beg[j] != end && k < MAX_LENGTH)
-			    charsetname[k++] = beg[j++];
-			  charsetname[k] = EOS;
-			  *charset = TtaGetCharset (charsetname);
+			    end = strstr (&beg[1], "\"");
+			  else
+			    {
+			      beg = strstr (ptr, "\'");
+			      if (beg && beg < end)
+				end = strstr (&beg[1], "\'");
+			    }
+			  if (end && end != beg)
+			    {
+			      /* get the document charset */
+			      k = 0; j = 1;
+			      while (&beg[j] != end && k < MAX_LENGTH)
+				charsetname[k++] = beg[j++];
+			      charsetname[k] = EOS;
+			      *charset = TtaGetCharset (charsetname);
+			    }
 			}
 		    }
 		  else if (!strncasecmp (&FileBuffer[i], "<!DOCTYPE", 9))
