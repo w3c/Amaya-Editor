@@ -1349,8 +1349,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 	    {
 	      /* Greek characters */
 	      code = GreekFontScript;
-	      if (c == 0x3D1 || c == 0x3D2 || c == 0x3D6)
-		/* thetasym, upsih, piv */
+	      if (c == 0x3C2 || c == 0x3D1 || c == 0x3D2 || c== 0x3D5 ||
+		  c == 0x3D6)
+		/* final sigma, thetasym, upsih, phi, piv */
 		{
 		  pfont = &(fontset->FontSymbol);
 		  encoding = ISO_SYMBOL;
