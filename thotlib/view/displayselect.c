@@ -1,12 +1,6 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
-   visu.c : visualisation des Selections.
-
-   I. Vatton - Mai 87
-   IV : Aout 92 coupure des mots
-   IV : Juin 93 polylines
+   visualisation of Selections.
+   I. Vatton
  */
 
 #include "thot_sys.h"

@@ -1,10 +1,6 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /* 
-   des.c : gestion des designations de boites.
-   I. Vatton - Mars 85
-   IV : Juin 93 polylines
+   locate what is designated in Concret Image.
+   I. Vatton
  */
 
 #include "libmsg.h"
@@ -22,7 +18,6 @@
 #include "appdialogue.var"
 
 #include "appli_f.h"
-#include "structcreation_f.h"
 #include "boxmoves_f.h"
 #include "boxlocate_f.h"
 #include "views_f.h"
@@ -34,6 +29,8 @@
 #include "buildlines_f.h"
 #include "changepresent_f.h"
 #include "boxselection_f.h"
+#include "structcreation_f.h"
+#include "structselect_f.h"
 
 #ifdef WWW_MSWINDOWS		/* map to MSVC library system calls */
 #include <math.h>
@@ -55,6 +52,81 @@ extern void         DefClip ();
 extern boolean      AfFinFenetre ();
 
 #endif /* __STDC__ */
+
+
+/* ---------------------------------------------------------------------- */
+/* |  LocateSelectionInView repe`re le pave' et e'ventuellement le      | */
+/* |    caracte`re se'lectionne'. La valeur de button, indique s'il     | */
+/* |    s'agit d'une marque initiale ou d'une extension de se'lection : | */
+/* |    - 0 s'il s'agit d'une extension de se'lection.                  | */
+/* |    - 1 s'il s'agit d'un drag.                                      | */
+/* |    - 2 s'il s'agit d'une marque initiale.                          | */
+/* |    - 3 s'il s'agit d'un double clic.                               | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                PoseMrq (int frame, int x, int y, int button)
+#else  /* __STDC__ */
+void                PoseMrq (frame, x, y, button)
+int                 frame;
+int                 x;
+int                 y;
+int                 button;
+#endif /* __STDC__ */
+{
+   int               indbuff;
+   PtrBox            pBox;
+   PtrTextBuffer      pBuffer;
+   PtrAbstractBox             paved;
+   int                 nbcar;
+   int                 nbbl;
+   ViewFrame            *pFrame;
+
+   if (frame >= 1)
+     {
+	/* recherche si une boite terminale est designee */
+	pFrame = &FntrTable[frame - 1];
+	x += pFrame->FrXOrg;
+	y += pFrame->FrYOrg;
+	paved = pFrame->FrAbstractBox;
+	nbcar = 0;
+	/* recupere la boite selectionnee */
+	if (ThotLocalActions[T_selecbox] != NULL)
+	   (*ThotLocalActions[T_selecbox]) (&pBox, paved, frame, x, y, &nbcar);
+	/* S'il s'agit d'une extension de la selection */
+	/* il faut eviter de selectionner la boite englobante */
+	if (button == 0 || button == 1)
+	  {
+	     if (IsParentBox (pBox, pFrame->FrSelectionBegin.VsBox))
+		pBox = DesBoiteTerm (frame, x, y);
+	  }
+	if (pBox != NULL)
+	  {
+	     paved = pBox->BxAbstractBox;
+	     if (paved->AbLeafType == LtText &&
+		 (!paved->AbPresentationBox || paved->AbCanBeModified))
+	       {
+		  x -= pBox->BxXOrg;
+		  DesCaractere (pBox, &pBuffer, &x, &indbuff, &nbcar, &nbbl);
+		  nbcar = pBox->BxIndChar + nbcar + 1;
+	       }
+	  }
+	else
+	   paved = NULL;
+
+	EndInsert ();
+	if (paved != NULL)
+	   /* Initialisation de la selection */
+	   if (button == 3)
+	      SelectCour (frame, paved, nbcar, FALSE, TRUE, TRUE, FALSE);
+	   else if (button == 2)
+	      SelectCour (frame, paved, nbcar, FALSE, TRUE, FALSE, FALSE);
+	/* Extension de la selection */
+	   else if (button == 0)
+	      SelectCour (frame, paved, nbcar, TRUE, TRUE, FALSE, FALSE);
+	   else if (button == 1)
+	      SelectCour (frame, paved, nbcar, TRUE, TRUE, FALSE, TRUE);
+     }
+}
 
 /* ---------------------------------------------------------------------- */
 /* |    ecrete rend 0 si val dans l'intervalle [-CHKR_LIMIT,+CHKR_LIMIT] et sinon | */
