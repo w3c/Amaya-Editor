@@ -2436,8 +2436,11 @@ void PrintDoc (HWND hWnd, int argc, char **argv, HDC PrinterDC,
 			 char *tmpDir, HINSTANCE hInst, ThotBool buttonCmd)
 #else /* _WX */
 DLLEXPORT void PrintDoc (HWND hWnd, int argc, char **argv, HDC PrinterDC,
+
 			 ThotBool isTrueColors, int depth, char *tmpDocName,
+
 			 char *tmpDir, HINSTANCE hInst, ThotBool buttonCmd)
+
 #endif /* _WX */
 #else  /* _WINDOWS */
 #ifdef _WX
@@ -2613,14 +2616,17 @@ int main (int argc, char **argv)
 	      /* CSS files given in the command line */
 	      argCounter++;
 	      CSSOrigin[cssCounter] = 'a';
-	      CSSName[cssCounter++] = TtaStrdup (argv[argCounter++]);
+          argv[argCounter][strlen (argv[argCounter]) - 1] = EOS;
+		  CSSName[cssCounter++] = TtaStrdup (&(argv[argCounter++][1]));
+
 	    }
 	  else if (!strcmp (argv[argCounter], "-cssu"))
 	    {
 	      /* CSS files given in the command line */
 	      argCounter++;
 	      CSSOrigin[cssCounter] = 'u';
-	      CSSName[cssCounter++] = TtaStrdup (argv[argCounter++]);
+          argv[argCounter][strlen (argv[argCounter]) - 1] = EOS;
+	      CSSName[cssCounter++] = TtaStrdup (&(argv[argCounter++][1]));
 	    }
 	  else if (!strcmp (argv[argCounter], "-npps"))
 	    {

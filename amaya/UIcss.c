@@ -527,11 +527,11 @@ char *CssToPrint (Document doc, char *printdir)
 			  css->localName)
 			{
 			  /* add that file name to the list */
-			  strcpy (&ptr[length], "u ");
+			  strcpy (&ptr[length], "u\"");
 			  length += 2;
 			  strcpy (&ptr[length], css->localName);
 			  length += strlen (css->localName);
-			  ptr[length++] = SPACE;
+			  ptr[length++] = '"';
 			}
 		      pInfo = pInfo->PiNext;
 		    }
@@ -554,11 +554,11 @@ char *CssToPrint (Document doc, char *printdir)
 			   pInfo->PiCategory == CSS_IMPORT))
 			{
 			  /* add that file name to the list */
-			  strcpy (&ptr[length], "a ");
+			  strcpy (&ptr[length], "a\"");
 			  length += 2;
 			  strcpy (&ptr[length], css->localName);
 			  length += strlen (css->localName);
-			  ptr[length++] = SPACE;
+			  ptr[length++] = '"';
 			}
 		      pInfo = pInfo->PiNext;
 		    }
@@ -609,11 +609,11 @@ char *CssToPrint (Document doc, char *printdir)
 		      if (file)
 			{
 			  /* add that file name to the list */
-			  strcpy (&ptr[length], "a ");
+			  strcpy (&ptr[length], "a\"");
 			  length += 2;
 			  strcpy (&ptr[length], tempfile);
 			  length += strlen (tempfile);
-			  ptr[length++] = SPACE;
+			  ptr[length++] = '"';
 			}
 		    }
 		  if (file)

@@ -110,7 +110,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    char                    cmd[1024];
    int                     res;
 #endif /* _WINDOWS */
-   int                     i, j = 0;
+   int                     i, lg, j = 0;
    int                     frame;
 
    /* initialize the print command */
@@ -494,7 +494,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
        while (cssToPrint[i] != EOS)
 	 {
 	   /* skip leading spaces */ 
-	   while (cssToPrint[i] == SPACE)
+	   if (cssToPrint[i] == '"')
 	     i++;
 	   if (cssToPrint[i] != 'a' && cssToPrint[i] != 'u')
 	     /* ERROR */
@@ -522,35 +522,31 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 	       i++;
 	     }
 	   /* skip spaces after the flag */
-	   while (cssToPrint[i] == SPACE && cssToPrint[i] != EOS)
-	     i++;
-           if (cssToPrint[i] != EOS)
+       if (cssToPrint[i] == '"')
+	   {
+		 lg = 1;
+	     while (cssToPrint[i+lg] != '"' && cssToPrint[i+lg] != EOS)
+		   lg++;
+         if (cssToPrint[i+lg] != EOS)
 	     /* there is a file name after the flag */
 	     {
+		   lg++;
 #ifdef _WINDOWS
-	       printArgv[printArgc] = (char *)TtaGetMemory (99);
+	       printArgv[printArgc] = (char *)TtaGetMemory (lg + 1);
 		   j = 0;
-	       while (cssToPrint[i] != SPACE && cssToPrint[i] != EOS)
-		 {
-		   /* copy the character */
-		   printArgv[printArgc][j++] = cssToPrint[i];
-		   printArgv[printArgc][j] = EOS;
+		   while (j < lg)
+             printArgv[printArgc][j++] = cssToPrint[i++];
+           printArgv[printArgc][j] =EOS;
 		   /* process next char */
-		   i++;
-		 }
 	       printArgc++;
 #else /* _WINDOWS */
-	       while (cssToPrint[i] != SPACE && cssToPrint[i] != EOS)
-		 {
-		   /* copy the character */
-		   cmd[j++] = cssToPrint[i];
-		   cmd[j] = EOS;
-		   /* process next char */
-		   i++;
-		 }
+		   lg += j;
+		   while (j < lg)
+             cmd[j++] = cssToPrint[i++];
 #endif /* _WINDOWS */
 	     }
-	 }
+	   }
+	   }
      }
    /* transmit the path or source file */
 #ifdef _WINDOWS
