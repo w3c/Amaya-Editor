@@ -179,7 +179,7 @@
 177 Ingrandimento della fonte
 178 Lingua delle finestre di dialogo
 179 Incolla mantenendo le righe originali
-180 **Generate backup files
+180 Crea copie di salvataggio
 181 Mostra le immagini di sfondo
 182 Mostra barra dei pulsanti
 183 Mostra indirizzo
@@ -230,7 +230,7 @@
 228 Caricamento automatico delle annotazioni remote
 229 Disabilita il caricamento remoto automatico alla partenza (per lavorare offline)
 230 Colore della selezione
-231 **Selection background color
+231 Selezione colore di sfondo
 232 Orientamento
 233 Ritratto
 234 Paesaggio
@@ -350,26 +350,26 @@
 348 Animazione definita.
 349 Attributo animato
 350 Elemento senza ID
-351 **Add ID
-352 **Remove ID
-353 **Add/Remove IDs
-354 **Apply operation
-355 **Enter an element name
-356 **Apply CSS
+351 Aggiungi ID
+352 Elimina ID
+353 Aggiungi/Elimina ID
+354 Applica l'operazione
+355 Inserisci un nome di elemento
+356 Applica il CSS
 357 **Current screen type
-358 **New Topic
-359 **Bookmark Properties
-360 **Topic Properties
-361 **Topic hierarchy:
+358 Nuovo argomento
+359 Proprietà del bookmark
+360 Proprietà dell'argomento
+361 Gerarchia degli argomenti :
 362 Titolo:
 363 **Recalls:
 364 Autore:
-365 **Created:
-366 **Last modified:
-367 **Description:
-368 **Please select an element
-369 **All CSS
-370 **CSS style rules applied to the <%s> element\n
-371 **Blue lines are links activated by a double (or a single) click\n
-372 **Load objects (object, embed)
-373 **No style rule for this element
+365 Creato :
+366 Ultima modifica :
+367 Descrizione :
+368 Selezionare un elemento
+369 Tutti i CSS
+370 Regole di stile CSS applicata all'elemento <%s>\n
+371 Le righe in blu sono collegamenti attivati con un doppio (o semplice) click\n
+372 Carica oggetti (object, embed)
+373 Nessuna regola di stile per questo elemento

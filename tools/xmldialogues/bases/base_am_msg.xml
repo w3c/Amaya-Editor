@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Wed Apr 23 09:57:58 CEST 2003" version="56">
+<base last_update="Tue Oct 28 15:43:55 CET 2003" version="57">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -1807,6 +1807,7 @@
 <label define="AM_AUTO_SAVE">
 	<message xml:lang="en">Generate backup files</message>
 	<message xml:lang="fr">Produire des fichiers de sauvegarde</message>
+	<message xml:lang="it">Crea copie di salvataggio</message>
 </label>
 <label define="AM_SHOW_BG_IMAGES">
 	<message xml:lang="en">Show background images</message>
@@ -2309,6 +2310,7 @@
 <label define="AM_BG_SEL_COLOR">
 	<message xml:lang="en">Selection background color</message>
 	<message xml:lang="fr">Couleur de fond de sélection</message>
+	<message xml:lang="it">Selezione colore di sfondo</message>
 </label>
 <label define="AM_ORIENTATION">
 	<message xml:lang="en">Orientation</message>
@@ -3481,26 +3483,32 @@
 <label define="ADD_ID">
 	<message xml:lang="en">Add ID</message>
 	<message xml:lang="fr">Ajouter ID</message>
+	<message xml:lang="it">Aggiungi ID</message>
 </label>
 <label define="REMOVE_ID">
 	<message xml:lang="en">Remove ID</message>
 	<message xml:lang="fr">Supprimer ID</message>
+	<message xml:lang="it">Elimina ID</message>
 </label>
 <label define="ADD_REMOVE_ID">
 	<message xml:lang="en">Add/Remove IDs</message>
 	<message xml:lang="fr">Ajouter/Supprimer IDs</message>
+	<message xml:lang="it">Aggiungi/Elimina ID</message>
 </label>
 <label define="APPLY_OPERATION">
 	<message xml:lang="en">Apply operation</message>
 	<message xml:lang="fr">Appliquer opération</message>
+	<message xml:lang="it">Applica l'operazione</message>
 </label>
 <label define="ENTER_ELEMENT_NAME">
 	<message xml:lang="en">Enter an element name</message>
 	<message xml:lang="fr">Entrer le nom d'un élément</message>
+	<message xml:lang="it">Inserisci un nome di elemento</message>
 </label>
 <label define="AM_LOAD_CSS">
 	<message xml:lang="en">Apply CSS</message>
 	<message xml:lang="fr">Appliquer CSS</message>
+	<message xml:lang="it">Applica il CSS</message>
 </label>
 <label define="AM_SCREEN_TYPE">
 	<message xml:lang="en">Current screen type</message>
@@ -3509,18 +3517,22 @@
 <label define="AM_NEW_TOPIC">
 	<message xml:lang="en">New Topic</message>
 	<message xml:lang="fr">Nouvelle Rubrique</message>
+	<message xml:lang="it">Nuovo argomento</message>
 </label>
 <label define="AM_BM_BPROPERTIES">
 	<message xml:lang="en">Bookmark Properties</message>
 	<message xml:lang="fr">Propriétés du signet</message>
+	<message xml:lang="it">Proprietà del bookmark</message>
 </label>
 <label define="AM_BM_TPROPERTIES">
 	<message xml:lang="en">Topic Properties</message>
 	<message xml:lang="fr">Propriétés de la rubrique</message>
+	<message xml:lang="it">Proprietà dell'argomento</message>
 </label>
 <label define="AM_BM_TOPIC_HIERARCHY">
 	<message xml:lang="en">Topic hierarchy:</message>
 	<message xml:lang="fr">Hiérarchie des rubriques:</message>
+	<message xml:lang="it">Gerarchia degli argomenti :</message>
 </label>
 <label define="AM_BM_TITLE">
 	<message xml:lang="en">Title:</message>
@@ -3548,41 +3560,49 @@
 <label define="AM_BM_CREATED">
 	<message xml:lang="en">Created:</message>
 	<message xml:lang="fr">Crée:</message>
+	<message xml:lang="it">Creato :</message>
 </label>
 <label define="AM_BM_MODIFIED">
 	<message xml:lang="en">Last modified:</message>
 	<message xml:lang="fr">Dernière modification:</message>
+	<message xml:lang="it">Ultima modifica :</message>
 </label>
 <label define="AM_BM_DESCRIPTION">
 	<message xml:lang="en">Description:</message>
 	<message xml:lang="fr">Description:</message>
+	<message xml:lang="it">Descrizione :</message>
 </label>
 <label define="AM_NO_SELECTION">
 	<message xml:lang="en">Please select an element</message>
 	<message xml:lang="fr">Sélectionnez un �l�ment</message>
+	<message xml:lang="it">Selezionare un elemento</message>
 </label>
 <label define="AM_ALL_CSS">
 	<message xml:lang="en">All CSS</message>
 	<message xml:lang="fr">Toutes les CSS</message>
+	<message xml:lang="it">Tutti i CSS</message>
 </label>
 <label define="AM_STYLE_APPLIED">
 	<message xml:lang="en">CSS style rules applied to the &lt;%s> element\n</message>
 	<message xml:lang="fr">Règles de style CSS appliqué �  l'élément &lt;%s> \n</message>
+	<message xml:lang="it">Regole di stile CSS applicata all'elemento &lt;%s>\n</message>
 </label>
 <label define="AM_LINK_LINE">
 	<message xml:lang="en">Blue lines are links activated by a double (or a single) click\n</message>
 	<message xml:lang="fr">Les lignes bleues sont des liens activés par un double (ou simple) click</message>
+	<message xml:lang="it">Le righe in blu sono collegamenti attivati con un doppio (o semplice) click\n</message>
 </label>
 <label define="AM_LOAD_OBJECTS">
 	<message xml:lang="en">Load objects (object, embed)</message>
 	<message xml:lang="fr">Charger les objets (object, embed)</message>
+	<message xml:lang="it">Carica oggetti (object, embed)</message>
 </label>
 <label define="AM_NO_STYLE_FOR_ELEM">
-        <message xml:lang="en">No style rule for this element</message>
-        <message xml:lang="fr">Pas de règle de style pour cet élément</message>
+	<message xml:lang="en">No style rule for this element</message>
+	<message xml:lang="fr">Pas de règle de style pour cet élément</message>
+	<message xml:lang="it">Nessuna regola di stile per questo elemento</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>
 </base>
-

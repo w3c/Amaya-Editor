@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Wed Apr 23 09:57:58 CEST 2003" version="58">
+<base last_update="Tue Oct 28 15:43:55 CET 2003" version="59">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -2032,6 +2032,7 @@
 <label define="BShowAppliedStyle">
 	<message xml:lang="en">Show applied style...</message>
 	<message xml:lang="fr">Montrer le style appliqué...</message>
+	<message xml:lang="it">Mostra lo stile applicato...</message>
 </label>
 <label define="BLinkCSS">
 	<message xml:lang="en">Lin&amp;k...</message>
@@ -2333,10 +2334,12 @@
 <label define="BBookmarkFile">
 	<message xml:lang="en">New Bookmark</message>
 	<message xml:lang="fr">Nouveau signet</message>
+	<message xml:lang="it">Nuovo bookmark</message>
 </label>
 <label define="BEditTopics">
 	<message xml:lang="en">New Topic</message>
 	<message xml:lang="fr">Nouvelle rubrique</message>
+	<message xml:lang="it">Nuovo argomento</message>
 </label>
 <label define="BViewBookmarks">
 	<message xml:lang="en">View Bookmarks</message>
@@ -2348,7 +2351,8 @@
 </label>
 <label define="BImportTopics">
 	<message xml:lang="en">Import a topic hierarchy</message>
-</label>       
+	<message xml:lang="it">Importa una gerarchia di argomenti</message>
+</label>
 <label define="BLock">
 	<message xml:lang="en">Lock resource...</message>
 	<message xml:lang="fr">Verrouiller la ressource...</message>
