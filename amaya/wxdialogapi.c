@@ -11,6 +11,7 @@
 
 #ifdef _WX
   #include "wxdialog/AuthentDlgWX.h"
+  #include "wxdialog/BgImageDlgWX.h"
   #include "wxdialog/CheckedListDlgWX.h"
   #include "wxdialog/CreateTableDlgWX.h"
   #include "wxdialog/DocInfoDlgWX.h"
@@ -925,6 +926,47 @@ ThotBool CreateSpellCheckDlgWX ( int ref, int base, ThotWindow parent,
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
       /* the dialog has been sucesfully registred */
       return TRUE;
+  else
+    {
+      /* an error occured durring registration */
+      p_dlg->Destroy();
+      return FALSE;
+    }
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  CreateBgImageDlgWX create the dialog for creating new background image
+  params:
+    + parent : parent window
+    + title : dialog title
+  returns:
+  ----------------------------------------------------------------------*/
+ThotBool CreateBgImageDlgWX ( int ref, ThotWindow parent, const char * urlToOpen, int RepeatValue )
+{
+#ifdef _WX
+  /* check if the dialog is already open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
+  wxString wx_urlToOpen = TtaConvMessageToWX( urlToOpen );
+  
+  BgImageDlgWX * p_dlg = new BgImageDlgWX( ref,
+					   parent,
+					   wx_urlToOpen,
+					   RepeatValue );
+
+  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+    {
+      /* the dialog has been sucesfully registred */
+      TtaSetDialoguePosition ();
+      TtaShowDialogue (ref, FALSE);
+      /* wait for an answer */
+      TtaWaitShowDialogue ();
+      return TRUE;
+    }
   else
     {
       /* an error occured durring registration */

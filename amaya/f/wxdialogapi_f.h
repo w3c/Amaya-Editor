@@ -109,6 +109,10 @@ extern ThotBool CreateSpellCheckDlgWX ( int ref,
                                         int base,
                                         ThotWindow parent,
                                         int checkingArea );
+extern ThotBool CreateBgImageDlgWX ( int ref,
+                                     ThotWindow parent,
+                                     const char * urlToOpen,
+                                     int RepeatValue );
 
 #else /* __STDC__ */
 
@@ -215,6 +219,10 @@ extern ThotBool CreateSpellCheckDlgWX ( int ref,
                                           int base,
                                           ThotWindow parent,
                                           int checkingArea );
+extern ThotBool CreateBgImageDlgWX ( int ref,
+                                       ThotWindow parent,
+                                       const char * urlToOpen,
+                                       int RepeatValue );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

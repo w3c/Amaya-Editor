@@ -833,9 +833,17 @@ void ChangeBackgroundImage (Document document, View view)
    ImgDocument = document;
    TtaSetDialoguePosition ();
    TtaShowDialogue (RefFormImage, TRUE);
-   TtaFreeMemory (s);
 #endif /* _GTK */
 #ifdef _WX
+   if (LastURLImage[0] != EOS)
+      strcpy (s, LastURLImage);
+   else {
+      strcpy (s, DirectoryImage);
+      strcat (s, DIR_STR);
+      strcat (s, ImageName);
+   }
+   ImgDocument = document;
+   CreateBgImageDlgWX( BaseImage+FormBackground, TtaGetViewFrame(document, view), s, RepeatValue );
 #endif /* _WX */
 #ifdef _WINGUI
    if (LastURLImage[0] != EOS)
@@ -848,6 +856,7 @@ void ChangeBackgroundImage (Document document, View view)
    ImgDocument = document;
    CreateBackgroundImageDlgWindow (TtaGetViewFrame (document, view), s);
 #endif /* _WINGUI */
+   TtaFreeMemory (s);
 }
 
 
