@@ -8,7 +8,7 @@
 
 extern void InitApplicationSchema ( PtrSSchema pSS );
 extern PtrAction FetchAction ( STRING actionName );
-extern void TteAddAction ( STRING actionName,
+extern void TteAddAction ( char* actionName,
                            Proc doIt );
 extern int TteAddUserAction ( STRING actionName,
                               UserProc procedure,
@@ -20,13 +20,13 @@ extern void TteAddActionEvent ( PtrEventsSet eventsList,
                                 int typeId,
                                 APPevent event,
                                 ThotBool pre,
-                                STRING actionName );
+                                char* actionName );
 
 #else /* __STDC__ */
 
 extern void InitApplicationSchema (/* PtrSSchema pSS */);
 extern PtrAction FetchAction (/* STRING actionName */);
-extern void TteAddAction (/* STRING actionName,
+extern void TteAddAction (/* char* actionName,
                              Proc doIt */);
 extern int TteAddUserAction (/* STRING actionName,
                                 UserProc procedure,
@@ -38,7 +38,7 @@ extern void TteAddActionEvent (/* PtrEventsSet eventsList,
                                   int typeId,
                                   APPevent event,
                                   ThotBool pre,
-                                  STRING actionName */);
+                                  char* actionName */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

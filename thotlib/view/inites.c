@@ -305,10 +305,10 @@ void         FreeDocColors ()
    are allocated.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InitDocColors (char* name)
+void                InitDocColors (CharUnit* name)
 #else  /* __STDC__ */
 void                InitDocColors (name)
-STRING              name;
+CharUnit*           name;
 
 #endif /* __STDC__ */
 {

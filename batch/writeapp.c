@@ -104,7 +104,7 @@ PtrActionEvent      pactevent;
       return;
 
    WriteAnEvent (eventName, pactevent->AEvNext);
-   fprintf (AppFile, "  TteAddActionEvent (appliActions, %d, %s, %d, TEXT(\"%s\"));\n",
+   fprintf (AppFile, "  TteAddActionEvent (appliActions, %d, %s, %d, \"%s\");\n",
 	    pactevent->AEvType,
 	    eventName,
 	    pactevent->AEvPre,
@@ -176,7 +176,7 @@ STRING              menuName;
 	       fprintf (AppFile, "DocTypeWindow");
 	       break;
 	 }
-   fprintf (AppFile, ", TEXT(\"%s\"), %s, %s, %d);\n", schemaName, menuName,
+   fprintf (AppFile, ", \"%s\", %s, %s, %d);\n", schemaName, menuName,
 	    item->AppItemName, itemsNumber);
 
    /* traite la liste des items du sous-menu */
@@ -196,13 +196,13 @@ STRING              menuName;
 		    fprintf (AppFile, "DocTypeWindow");
 		    break;
 	      }
-	fprintf (AppFile, ", TEXT(\"%s\"), %s, %s", schemaName, menuName, item->AppItemName);
+	fprintf (AppFile, ", \"%s\", %s, %s", schemaName, menuName, item->AppItemName);
 	if (subitem->AppItemName == NULL)
 	   fprintf (AppFile, ", 0");
 	else
 	   fprintf (AppFile, ", %s", subitem->AppItemName);
 	if (subitem->AppItemActionName == NULL)
-	   fprintf (AppFile, ", NULL, TEXT('%c'));\n", subitem->AppItemType);
+	   fprintf (AppFile, ", NULL, '%c');\n", subitem->AppItemType);
 	else
 	   fprintf (AppFile, ", \"%s\", '%c');\n", subitem->AppItemActionName, subitem->AppItemType);
 
@@ -246,7 +246,7 @@ char               *schemaName;
 		    fprintf (AppFile, "DocTypeWindow");
 		    break;
 	      }
-	fprintf (AppFile, ", TEXT(\"%s\"));\n", schemaName);
+	fprintf (AppFile, ", \"%s\");\n", schemaName);
      }
    else
      {
@@ -276,12 +276,12 @@ char               *schemaName;
 			 fprintf (AppFile, "DocTypeWindow");
 			 break;
 		   }
-	     fprintf (AppFile, ", TEXT(\"%s\"), %d, %s, %d", schemaName,
+	     fprintf (AppFile, ", \"%s\", %d, %s, %d", schemaName,
 		      menu->AppMenuView, menu->AppMenuName, itemsNumber);
 	     /* Declare les menus dynamiques */
 	     if (!ustrcmp (menu->AppMenuName, TEXT("Attributes_")))
 	       {
-		  fprintf (AppFile, ", TEXT(\"MenuAttribute\"));\n");
+		  fprintf (AppFile, ", \"MenuAttribute\");\n");
 		  fprintf (AppFile, "  AttributeMenuLoadResources();\n");
 	       }
 	     else if (!ustrcmp (menu->AppMenuName, TEXT("Selection_")))
@@ -291,10 +291,10 @@ char               *schemaName;
 	       }
 	     else if (!ustrcmp (menu->AppMenuName, TEXT("Help_")))
 	       {
-		  fprintf (AppFile, ", TEXT(\"MenuHelp\"));\n");
+		  fprintf (AppFile, ", \"MenuHelp\");\n");
 	       }
 	     else
-		fprintf (AppFile, ", TEXT(\"\"));\n");
+		fprintf (AppFile, ", \"\");\n");
 
 	     /* traite la liste des items du menu */
 	     item = menu->AppMenuItems;
@@ -318,15 +318,15 @@ char               *schemaName;
 				   fprintf (AppFile, "DocTypeWindow");
 				   break;
 			     }
-		       fprintf (AppFile, ", TEXT(\"%s\"), %s, -1", schemaName, menu->AppMenuName);
+		       fprintf (AppFile, ", \"%s\", %s, -1", schemaName, menu->AppMenuName);
 		       if (item->AppItemName == NULL)
 			  fprintf (AppFile, ", 0");
 		       else
 			  fprintf (AppFile, ", %s", item->AppItemName);
 		       if (item->AppItemActionName == NULL)
-			  fprintf (AppFile, ", NULL, TEXT('%c'));\n", item->AppItemType);
+			  fprintf (AppFile, ", NULL, '%c');\n", item->AppItemType);
 		       else
-			  fprintf (AppFile, ", TEXT(\"%s\"), TEXT('%c'));\n", item->AppItemActionName, item->AppItemType);
+			  fprintf (AppFile, ", \"%s\", '%c');\n", item->AppItemActionName, item->AppItemType);
 		    }
 		  /* item suivant */
 		  item = item->AppNextItem;
@@ -364,7 +364,7 @@ PtrEventsSet        pAppli;
    fprintf (AppFile, "void %sApplicationInitialise ()\n", fname);
    fprintf (AppFile, "{\n PtrEventsSet appliActions;\n\n");
    fprintf (AppFile, "  /* Create the new application context*/\n");
-   fprintf (AppFile, "  appliActions = TteNewEventsSet (%d, TEXT(\"%s\"));\n",
+   fprintf (AppFile, "  appliActions = TteNewEventsSet (%d, \"%s\");\n",
 	    pAppli->EvSStructId, pAppli->EvSName);
 
    WriteEventsList (pAppli);
@@ -650,7 +650,7 @@ char               *fname;
    action = ActionList;
    while (action != NULL)
      {
-	fprintf (AppFile, "  TteAddAction (TEXT(\"%s\"), (Proc)%s);\n",
+	fprintf (AppFile, "  TteAddAction (\"%s\", (Proc)%s);\n",
 		 action->ActName,
 		 action->ActName);
 	action = action->ActNext;
@@ -761,10 +761,10 @@ char               *fname;
 	while (menuAction != NULL)
 	  {
 	     if (menuAction->AppFunction)
-	       fprintf (AppFile, "  TteAddMenuAction(TEXT(\"%s\"), (Proc)%s, TRUE);\n",
+	       fprintf (AppFile, "  TteAddMenuAction(\"%s\", (Proc)%s, TRUE);\n",
 		      menuAction->AppNameValue, menuAction->AppNameValue);
 	     else
-	       fprintf (AppFile, "  TteAddMenuAction(TEXT(\"%s\"), (Proc)%s, FALSE);\n",
+	       fprintf (AppFile, "  TteAddMenuAction(\"%s\", (Proc)%s, FALSE);\n",
 		      menuAction->AppNameValue, menuAction->AppNameValue);
 	     if (!menuAction->AppStandardName)
 		/* ecrit les fonctions non standard des menus dans XXXaction.c */
@@ -814,8 +814,8 @@ char               *fname;
 	  }
 
 	fprintf (AppFile, "  /* load appName+\"dialogue\" message file */\n");
-	fprintf (AppFile, "  ustrcpy (workName, appName);\n");
-	fprintf (AppFile, "  ustrcat(workName, TEXT(\"dialogue\"));\n");
+	fprintf (AppFile, "  StringCopy (workName, appName);\n");
+	fprintf (AppFile, "  StringConcat(workName, CUSTEXT(\"dialogue\"));\n");
 	fprintf (AppFile, "  TtaGetMessageTable (workName, MAX_EDITOR_LABEL);\n");
 	/* if necessary load editing Resources */
 	if (editingResource)

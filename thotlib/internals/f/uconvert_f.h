@@ -12,7 +12,7 @@ extern int uctoi ( const STRING string );
 extern long uctol ( const STRING string );
 extern CHAR_T utolower ( CHAR_T c );
 extern CharUnit ToLower ( CharUnit c );
-extern int cus_atoi ( const CharUnit* string );
+extern int custoi ( const CharUnit* string );
 
 #else /* __STDC__ */
 
@@ -22,7 +22,7 @@ extern int uctoi (/* const STRING string */);
 extern long uctol (/* const STRING string */);
 extern CHAR_T utolower (/* CHAR_T c */);
 extern CharUnit ToLower (/* CharUnit c */);
-extern int cus_atoi (/* const CharUnit* string */);
+extern int custoi (/* const CharUnit* string */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

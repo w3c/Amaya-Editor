@@ -34,11 +34,11 @@ extern struct Langue_Ctl LangTable[MAX_LANGUAGES];
 extern struct Langue_Ctl TypoLangTable[MAX_LANGUAGES];
 extern int          FreeEntry;
 
-static STRING       dictPath;	/* environment variable DICOPAR */
+static CharUnit*    dictPath;	/* environment variable DICOPAR */
 static PtrDict      dictTable[MaxDictionaries];
 
 unsigned            ReverseCode[NbLtr];
-UCHAR_T       Code[256];	/* Alphabet characters */
+unsigned char       Code[256];	/* Alphabet characters */
 
 #include "memory_f.h"
 #include "fileaccess_f.h"
@@ -51,9 +51,9 @@ UCHAR_T       Code[256];	/* Alphabet characters */
   ----------------------------------------------------------------------*/
 static void           LoadAlphabet ()
 {
-  FILE*      falpha;
-  PathBuffer alphaName;
-  UCHAR_T    x;
+  FILE*         falpha;
+  PathBuffer    alphaName;
+  unsigned char x;
   int        i;
   
   if (dictPath != NULL)
@@ -67,12 +67,12 @@ static void           LoadAlphabet ()
   if ((falpha = cus_fopen (alphaName, CUSTEXT("r"))) != NULL)
     {
       for (i = 0; i < 256; i++)
-          Code[i] = (UCHAR_T) 100;
+          Code[i] = (unsigned char) 100;
       i = 1;
       while ((fscanf (falpha, "%c ", &x) != EOF) && (i < NbLtr))
 	{
-	  Code[x] = (UCHAR_T) i;
-	  ReverseCode[i++] = (UCHAR_T) x;
+	  Code[x] = (unsigned char) i;
+	  ReverseCode[i++] = (unsigned char) x;
 	}
       fclose (falpha);
     }

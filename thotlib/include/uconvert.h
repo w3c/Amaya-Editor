@@ -9,12 +9,14 @@ extern char*  WideChar2ISO (STRING);
 extern int    uctoi        (const STRING);
 extern long   uctol        (const STRING);
 extern CHAR_T utolower     (CHAR_T);
+extern int    custoi       (const CharUnit*);
 #else  /* !__STDC__ */
 extern STRING ISO2WideChar ();
-extern char*  WideChar2ISO        ();
+extern char*  WideChar2ISO ();
 extern int  uctoi          ();
 extern long uctol          ();
 extern CHAR_T utolower     ();
+extern int    custoi       ();
 #endif /* !__STDC__ */
 
 #endif /* __UCONVERT_H__ */

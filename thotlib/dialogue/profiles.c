@@ -89,10 +89,10 @@ CharUnit*     Astring;
 {
   int         c = 0;
 
-  while (Astring[c] != EOS && Astring[c] != EOL)
+  while (Astring[c] != CUS_EOS && Astring[c] != CUS_EOL)
     c++;
-  if (Astring[c] == EOL)
-    Astring[c] = EOS;    
+  if (Astring[c] == CUS_EOL)
+    Astring[c] = CUS_EOS;    
 }
 
 
@@ -338,7 +338,7 @@ CharUnit*      element;
       i = 1;
       while (element[i] != PROFILE_END)
 	i++;
-      element[i] = EOS;
+      element[i] = CUS_EOS;
       /* The new profile in progress */
       CurrentModule = AddProfile (&element[1]);
       CurrentEntries = 0;

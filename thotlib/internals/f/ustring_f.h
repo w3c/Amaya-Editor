@@ -8,6 +8,8 @@
 
 extern int ustrcasecmp ( STRING str1,
                          const STRING str2 );
+extern int cus2iso_strcasecmp (CharUnit*, const char*);
+extern int iso2cus_strcasecmp (char*, const CharUnit*);
 extern STRING ustrcat ( STRING dest,
                         const STRING src );
 extern STRING ustrchr ( const STRING src,
@@ -84,6 +86,8 @@ extern CharUnit* StringSubstring ( const CharUnit* str,
 
 extern int ustrcasecmp (/* STRING str1,
                            const STRING str2 */);
+extern int cus2iso_strcasecmp (/* CharUnit*, const char* */);
+extern int iso2cus_strcasecmp (/* char*, const CharUnit* */);
 extern STRING ustrcat (/* STRING dest,
                           const STRING src */);
 extern STRING ustrchr (/* const STRING src,

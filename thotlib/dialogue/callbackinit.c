@@ -72,17 +72,17 @@ PtrSSchema          pSS;
    FetchAction finds and returns an action with the name actionName 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrAction    FetchAction (STRING actionName)
+PtrAction    FetchAction (char* actionName)
 #else  /* __STDC__ */
 PtrAction    FetchAction (actionName)
-STRING              actionName;
+char*        actionName;
 
 #endif /* __STDC__ */
 {
    PtrAction           pAction;
 
    pAction = ActionList;
-   while (pAction != NULL && ustrcmp (actionName, pAction->ActName) != 0)
+   while (pAction != NULL && strcmp (actionName, pAction->ActName) != 0)
       pAction = pAction->ActNext;
    return pAction;
 }
@@ -93,10 +93,10 @@ STRING              actionName;
    pointed to by the global variable ActionList.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteAddAction (STRING actionName, Proc doIt)
+void                TteAddAction (char* actionName, Proc doIt)
 #else  /* __STDC__ */
 void                TteAddAction (actionName, doIt)
-STRING              actionName;
+char*               actionName;
 Proc                doIt;
 
 #endif /* __STDC__ */
@@ -109,12 +109,12 @@ Proc                doIt;
      {
 	/* following actions are treated */
 	newAction = pAction->ActNext;
-	while (newAction != NULL && ustrcmp (actionName, pAction->ActName) != 0)
+	while (newAction != NULL && strcmp (actionName, pAction->ActName) != 0)
 	  {
 	     pAction = pAction->ActNext;
 	     newAction = newAction->ActNext;
 	  }
-	if (ustrcmp (actionName, pAction->ActName) == 0)
+	if (strcmp (actionName, pAction->ActName) == 0)
 	   newAction = pAction;
      }
    else
@@ -294,14 +294,14 @@ char*               name;
    eventsList.				                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteAddActionEvent (PtrEventsSet eventsList, int typeId, APPevent event, ThotBool pre, STRING actionName)
+void                TteAddActionEvent (PtrEventsSet eventsList, int typeId, APPevent event, ThotBool pre, char* actionName)
 #else  /* __STDC__ */
 void                TteAddActionEvent (eventsList, typeId, event, pre, actionName)
 PtrEventsSet        eventsList;
 int                 typeId;
 APPevent            event;
 ThotBool            pre;
-STRING              actionName;
+Char*               actionName;
 
 #endif /* __STDC__ */
 {

@@ -324,9 +324,9 @@ CharUnut c;
 }
 
 #ifdef __STDC__
-int cus_atoi (const CharUnit* string)
+int custoi (const CharUnit* string)
 #else  /* !__STDC__ */
-int cus_atoi (string)
+int custoi (string)
 const CharUnit* string;
 #endif /* !__STDC__ */
 {

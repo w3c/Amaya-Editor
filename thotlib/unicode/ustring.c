@@ -13,11 +13,12 @@
 #include <stdlib.h>
 #include "thot_sys.h"
 
+#include "ustring_f.h"
+
 #ifdef _I18N_
 /*-------------------------------------------------------------
   ustrcasecmp: compare two strings without regard to case.
   -------------------------------------------------------------*/
- 
 #ifdef __STDC__
 int ustrcasecmp (STRING str1, const STRING str2)
 #else  /* __STDC__ */
@@ -30,6 +31,41 @@ const STRING str2;
     return (int) _wcsicmp ((wchar_t*)str1, (wchar_t*)str2);
 #   else  /* !_WINDOWS */
 #   endif /* !_WINDOWS */
+}
+
+/*-------------------------------------------------------------
+  ustrcasecmp: compare CharUnit* string to a char* string.
+  -------------------------------------------------------------*/
+#ifdef __STDC__
+int cus2iso_strcasecmp (CharUnit* str1, const char* str2)
+#else  /* __STDC__ */
+int cus2iso_strcasecmp (str1, str2)
+const CharUnit* str1;
+const char*     str2;
+#endif /* __STDC__ */
+{
+    int       diff;
+    CharUnit* cus_str2 = (CharUnit*) malloc ((strlen (str2) + 1) * sizeof (CharUnit));
+
+    iso2wc_strcpy (cus_str2, str2);
+    diff = StringCaseCompare (str1, cus_str2);
+
+    free (cus_str2);
+    return diff;
+}
+
+/*-------------------------------------------------------------
+  ustrcasecmp: compare CharUnit* string to a char* string.
+  -------------------------------------------------------------*/
+#ifdef __STDC__
+int iso2cus_strcasecmp (char* str1, const CharUnit* str2)
+#else  /* __STDC__ */
+int iso2cus_strcasecmp (str1, str2)
+const CharUnit* str1;
+const char*     str2;
+#endif /* __STDC__ */
+{
+    return cus2iso_strcasecmp (str2, str1);
 }
 
 /*-------------------------------------------------------------
@@ -423,6 +459,34 @@ const STRING str2;
 #   else  /* !_WINDOWS */
     return (unsigned int) strcasecmp ((char*)str1, (char*)str2);
 #   endif /* !_WINDOWS */
+}
+
+/*-------------------------------------------------------------
+  cus2iso_strcasecmp: compare CharUnit* string to a char* string.
+  -------------------------------------------------------------*/
+#ifdef __STDC__
+int cus2iso_strcasecmp (CharUnit* str1, const char* str2)
+#else  /* __STDC__ */
+int cus2iso_strcasecmp (str1, str2)
+const CharUnit* str1;
+const char*     str2;
+#endif /* __STDC__ */
+{
+    return ustrcasecmp (str1, str2);
+}
+
+/*-------------------------------------------------------------
+  iso2cus_strcasecmp: compare char* string to a CharUnit* string.
+  -------------------------------------------------------------*/
+#ifdef __STDC__
+int iso2cus_strcasecmp (char* str1, const CharUnit* str2)
+#else  /* __STDC__ */
+int iso2cus_strcasecmp (str1, str2)
+const CharUnit* str1;
+const char*     str2;
+#endif /* __STDC__ */
+{
+    return ustrcasecmp (str1, str2);
 }
 
 /*-------------------------------------------------------------

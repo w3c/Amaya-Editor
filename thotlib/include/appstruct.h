@@ -30,13 +30,13 @@ typedef enum
 typedef struct _APP_action *PtrAction;
 typedef struct _APP_action
 {
-  STRING              ActName;	/* Name of the action */
-  Proc                ActAction;/* The action to be executed */
-  UserProc            ActUser;  /* Any specific action defined by the user */
-  void               *ActArg;   /* and the associated argument */
-  ThotBool            ActPre;	/* Previous event implies function */
-  APPevent            ActEvent;	/* What NotifyEvent context to generate */
-  PtrAction           ActNext;	/* Next action in the list */
+    char*      ActName;   /* Name of the action                      */
+    Proc       ActAction; /* The action to be executed               */
+    UserProc   ActUser;   /* Any specific action defined by the user */
+    void*      ActArg;    /* and the associated argument             */
+    ThotBool   ActPre;    /* Previous event implies function         */
+    APPevent   ActEvent;  /* What NotifyEvent context to generate    */
+    PtrAction  ActNext;   /* Next action in the list                 */
 } APP_action;
 
 
@@ -78,18 +78,18 @@ extern void         TableHLoadResources ();
 extern void         TteConnectAction (int id, Proc procedure);
 extern void         TtaSetBackup (Proc procedure);
 extern void         TtaSetDocStatusUpdate (Proc procedure);
-extern void         TteZeroMenu (WindowType windowtype, STRING schemaName);
+extern void         TteZeroMenu (WindowType windowtype, char* schemaName);
 extern void         TteOpenMainWindow (STRING name, Pixmap logo, Pixmap icon);
 extern void         TteInitMenus (CharUnit* name, int number);
 extern void         TteAddMenuAction (char* actionName, Proc procedure, ThotBool state);
 extern int          TteAddUserMenuAction (char* actionName, UserProc procedure, void *arg);
-extern void         TteAddMenu (WindowType windowtype, STRING schemaName, int view, int menuID, int itemsNumber, STRING menuName);
-extern void         TteAddSubMenu (WindowType windowtype, STRING schemaName, int menuID, int itemID, int itemsNumber);
-extern void         TteAddMenuItem (WindowType windowtype, STRING schemaName, int menuID, int subMenuID, int itemID, char* actionName, char itemType);
+extern void         TteAddMenu (WindowType windowtype, char* schemaName, int view, int menuID, int itemsNumber, char* menuName);
+extern void         TteAddSubMenu (WindowType windowtype, char* schemaName, int menuID, int itemID, int itemsNumber);
+extern void         TteAddMenuItem (WindowType windowtype, char* schemaName, int menuID, int subMenuID, int itemID, char* actionName, char itemType);
 
-extern void         TteAddAction (STRING actionName, Proc doIt);
+extern void         TteAddAction (char* actionName, Proc doIt);
 extern int          TteAddUserAction (STRING actionName, UserProc procedure, void *arg);
-extern void         TteAddActionEvent (PtrEventsSet eventsList, int typeId, APPevent event, ThotBool pre, STRING actionName);
+extern void         TteAddActionEvent (PtrEventsSet eventsList, int typeId, APPevent event, ThotBool pre, char* actionName);
 extern PtrEventsSet TteGetEventsSet (char* name);
 extern PtrEventsSet TteNewEventsSet (int structureId, char* name);
 extern void         TtcStandardPresentation (Document document, View view);
@@ -179,19 +179,19 @@ extern void         TtcRedo  (Document document, View view);
 extern void         TteConnectAction ( /*int id, Proc procedure */ );
 extern void         TtaSetBackup (/* Proc procedure */);
 extern void         TtaSetDocStatusUpdate (/* Proc procedure */);
-extern void         TteZeroMenu ( /*WindowType windowtype, STRING schemaName */ );
+extern void         TteZeroMenu ( /*WindowType windowtype, char* schemaName */ );
 extern void         TteOpenMainWindow ( /*STRING name, Pixmap logo, Pixmap icon */ );
 extern void         TteInitMenus ( /*CharUnit* name,int number */ );
 extern void         TteAddMenuAction ( /*char* actionName, Proc procedure, ThotBool state */ );
 extern void         TteAddUserAction ( /*STRING actionName, UserProc procedure, void *arg*/ );
-extern void         TteAddMenu ( /*WindowType windowtype, STRING schemaName, int view, int menuID, int itemsNumber, STRING menuName */ );
-extern void         TteAddSubMenu ( /*WindowType windowtype, STRING schemaName, int menuID, int itemID, int itemsNumber */ );
-extern void         TteAddMenuItem ( /*WindowType windowtype, STRING schemaName, int menuID, int subMenuID, int itemID, STRING actionName, CHAR_T itemType */ );
+extern void         TteAddMenu ( /*WindowType windowtype, char* schemaName, int view, int menuID, int itemsNumber, char* menuName */ );
+extern void         TteAddSubMenu ( /*WindowType windowtype, char* schemaName, int menuID, int itemID, int itemsNumber */ );
+extern void         TteAddMenuItem ( /*WindowType windowtype, char* schemaName, int menuID, int subMenuID, int itemID, STRING actionName, CHAR_T itemType */ );
 
-extern void         TteAddAction ( /*STRING actionName, Proc doIt */ );
+extern void         TteAddAction ( /*char* actionName, Proc doIt */ );
 extern void         InitEventActions ( /*PtrEventsSet eventsList, int typeId, ECFevent event, ThotBool pre, STRING actionName */ );
-extern PtrEventsSet TteGetEventsSet ( /*STRING name*/ );
-extern PtrEventsSet TteNewEventsSet ( /*int structureId, STRING name */ );
+extern PtrEventsSet TteGetEventsSet ( /*char* name*/ );
+extern PtrEventsSet TteNewEventsSet ( /*int structureId, char* name */ );
 extern void         TtaSetTransformCallback ( /*Func function*/ );
 
 /* List of editor dialogue actions */

@@ -16,20 +16,20 @@ extern int TteAddUserMenuAction ( char* actionName,
                                   UserProc procedure,
                                   void *arg );
 extern void TteZeroMenu ( WindowType windowtype,
-                          STRING schemaName );
+                          char* schemaName );
 extern void TteAddMenu ( WindowType windowtype,
-                         STRING schemaName,
+                         char* schemaName,
                          int view,
                          int menuID,
                          int itemsNumber,
-                         STRING menuName );
+                         char* menuName );
 extern void TteAddSubMenu ( WindowType windowtype,
-                            STRING schemaName,
+                            char* schemaName,
                             int menuID,
                             int itemID,
                             int itemsNumber );
 extern void TteAddMenuItem ( WindowType windowtype,
-                             STRING schemaName,
+                             char* schemaName,
                              int menuID,
                              int subMenu,
                              int itemID,
@@ -77,7 +77,7 @@ extern void TtcSwitchCommands ( Document document,
 extern void DrawingInput ( int *w,
                            int frame,
                            int *infos );
-extern int MakeFrame ( STRING schema,
+extern int MakeFrame ( char* schema,
                        int view,
                        STRING name,
                        int X,
@@ -133,20 +133,20 @@ extern int TteAddUserMenuAction (/* char* actionName,
                                     UserProc procedure,
                                     void *arg */);
 extern void TteZeroMenu (/* WindowType windowtype,
-                            STRING schemaName */);
+                            char* schemaName */);
 extern void TteAddMenu (/* WindowType windowtype,
-                           STRING schemaName,
+                           char* schemaName,
                            int view,
                            int menuID,
                            int itemsNumber,
-                           STRING menuName */);
+                           char* menuName */);
 extern void TteAddSubMenu (/* WindowType windowtype,
-                              STRING schemaName,
+                              char* schemaName,
                               int menuID,
                               int itemID,
                               int itemsNumber */);
 extern void TteAddMenuItem (/* WindowType windowtype,
-                               STRING schemaName,
+                               char* schemaName,
                                int menuID,
                                int subMenu,
                                int itemID,
@@ -194,7 +194,7 @@ extern void TtcSwitchCommands (/* Document document,
 extern void DrawingInput (/* int *w,
                              int frame,
                              int *infos */);
-extern int MakeFrame (/* STRING schema,
+extern int MakeFrame (/* char* schema,
                          int view,
                          STRING name,
                          int X,

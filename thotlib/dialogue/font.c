@@ -1155,18 +1155,18 @@ int zoom;
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-void                WIN_InitDialogueFonts (HDC hDC, char* name)
+void                WIN_InitDialogueFonts (HDC hDC, CharUnit* name)
 #else  /* __STDC__ */
 void                WIN_InitDialogueFonts (hDC, name)
 HDC                 hDC;
-char*               name;
+CharUnit*           name;
 #endif /* __STDC__ */
 #else  /* !_WINDOWS */
 #ifdef __STDC__
-void                InitDialogueFonts (STRING name)
+void                InitDialogueFonts (char* name)
 #else  /* __STDC__ */
 void                InitDialogueFonts (name)
-STRING              name;
+char*               name;
 #endif /* __STDC__ */
 #endif /* _WINDOWS */
 {

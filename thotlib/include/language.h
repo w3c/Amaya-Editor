@@ -79,7 +79,7 @@ extern void         TtaRemoveLanguage (Language language);
    Return value:
    identifier of that language or 0 if the language is unknown.
   ----------------------------------------------------------------------*/
-extern Language     TtaGetLanguageIdFromName (char* languageName);
+extern Language     TtaGetLanguageIdFromName (CharUnit* languageName);
 
 /*----------------------------------------------------------------------
    TtaGetVarLANG
@@ -248,7 +248,7 @@ extern Dictionary   TtaGetSecondaryTypoDictionary (Language languageId);
 
 extern Language     TtaNewLanguage ( /* char *languageName, char languageAlphabet, char *principalDictionary, char *secondDictionary */ );
 extern void         TtaRemoveLanguage ( /* Language language */ );
-extern Language     TtaGetLanguageIdFromName ( /* char *languageName */ );
+extern Language     TtaGetLanguageIdFromName ( /* CharUnit *languageName */ );
 extern CharUnit*    TtaGetVarLANG ( /* void */ );
 extern Language     TtaGetDefaultLanguage ( /* void */ );
 extern Language     TtaGetLanguageIdFromAlphabet ( /* char languageAlphabet */ );

@@ -498,7 +498,7 @@ HTRequest          *request;
 
    /* force the error type (we're generating it anyway) */
    if (!me->content_type)
-     me->content_type = WideChar2ISO (TtaStrdup (TEXT("text/html")));
+     me->content_type = TtaStrdup ("text/html");
 
    while ((pres = (HTError *) HTList_nextObject (cur)))
      {

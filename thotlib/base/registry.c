@@ -597,7 +597,7 @@ int *value;
    }
 
  /* make the convertion */
- *value = uctoi (strptr);
+ *value = custoi (strptr);
 
  return TRUE;
 }
@@ -897,7 +897,7 @@ int *value;
    }
 
  /* make the convertion */
- *value = cus_atoi (strptr);
+ *value = custoi (strptr);
 
  return TRUE;
 }

@@ -22,7 +22,7 @@ extern void       WIN_TtaSetToggleMenu (int, int, ThotBool, HWND);
 extern void       WIN_APP_TextCallback (HWND, int);
 extern void       WIN_ThotCallBack (HWND, WPARAM, LPARAM);
 extern void       WIN_CharTranslation (HWND, int, UINT, WPARAM, LPARAM);
-extern void       WIN_InitDialogueFonts (HDC, char*);
+extern void       WIN_InitDialogueFonts (HDC, CharUnit*);
 extern void       APP_ButtonCallback (ThotButton, int, caddr_t);
 extern void       CleanFrameCatList (int);
 extern int        GetMainFrameNumber (ThotWindow);
