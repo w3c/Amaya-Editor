@@ -2475,14 +2475,17 @@ void SynchronizeSourceView (NotifyElement *event)
       /* display the line position of the selection */
       line = TtaGetElementLineNumber (firstSel);
       elType = TtaGetElementType (firstSel);
-      /* take into account previous elements in the same line */
-      el = TtaGetParent (firstSel);
-      el = TtaGetFirstChild (el);
-      while (el && el != firstSel)
+      if (elType.ElTypeNum == TextFile_EL_TEXT_UNIT)
 	{
-	  /* add characters of previous elements */
-	  firstChar += TtaGetElementVolume (el);
-	  TtaNextSibling (&el);
+	  /* take into account previous elements in the same line */
+	  el = TtaGetParent (firstSel);
+	  el = TtaGetFirstChild (el);
+	  while (el && el != firstSel)
+	    {
+	      /* add characters of previous elements */
+	      firstChar += TtaGetElementVolume (el);
+	      TtaNextSibling (&el);
+	    }
 	}
       sprintf (message, "line %d char %d", line, firstChar);
       TtaSetStatus (doc, 1, message, NULL);
