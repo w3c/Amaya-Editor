@@ -4,10 +4,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xdd;&#xeb;&#xe5;&#xec;&#xe5;&#xed;&#xf2;&#xfb;
-  &#xf1;&#xf2;&#xe8;&#xeb;&#xff;
-  &#xf1;&#xe8;&#xec;&#xe2;&#xee;&#xeb;&#xee;&#xe2; &#xe2; HTML</title>
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
+  <title>Элементы стиля символов в HTML</title>
+  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
+  />
   <style type="text/css">
 
   </style>

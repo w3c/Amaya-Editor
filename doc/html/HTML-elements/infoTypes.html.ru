@@ -4,9 +4,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xc8;&#xed;&#xf4;&#xee;&#xf0;&#xec;&#xe0;&#xf6;&#xe8;&#xee;&#xed;&#xed;&#xfb;&#xe5;
-  &#xf2;&#xe8;&#xef;&#xfb; &#xe2; HTML</title>
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
+  <title>Информационные типы в HTML</title>
+  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
+  />
   <style type="text/css">
 
   </style>

@@ -40,9 +40,9 @@ Man beachte, dass es für Tabellen spezielle Elemente gibt um Überschriften zu
 markieren.</p>
 
 <p>Die ersten drei Überschriftsebenen können mit Knöpfen der Knopfleiste,
-<img src="../../images/H1.gif" alt="Knopf Überschrift Ebene 1" />, <img
-src="../../images/H2.gif" alt="Knopf Überschrift Ebene 2" /> und <img
-src="../../images/H3.gif" alt="Knopf Überschrift Ebene 3" />, erzeugt werden.
+<img src="../../../resources/icons/22x22/XHTML_H1.png" alt="Knopf Überschrift Ebene 1" />, <img
+src="../../../resources/icons/22x22/XHTML_H2.png" alt="Knopf Überschrift Ebene 2" /> und <img
+src="../../../resources/icons/22x22/XHTML_H3.png" alt="Knopf Überschrift Ebene 3" />, erzeugt werden.
 Alle Überschriften können aus dem Menü <strong>XHTML</strong> oder über
 Tastenkürzel (<kbd>Strg 1</kbd> für <code>h1</code>, <kbd>Strg 2</kbd> für
 <code>h2</code> u.s.w.) erzeugt werden</p>

@@ -3,7 +3,9 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Types en ligne</title>
-  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
+  />
+  <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -179,12 +181,5 @@ attribut sur une portion de texte. Il est détruit quand l'attribut
 correspondant est supprimé.</p>
 </div>
 </div>
-
-<p align="right"><a href="address.html.fr"><img alt="previous" border="0"
-src="../../images/left.gif" /></a> <a href="../Manual.html.fr#There"><img
-alt="top" border="0" src="../../images/up.gif" /></a> <a
-href="40styling.html.fr"><img alt="next" border="0"
-src="../../images/right.gif" /></a></p>
-<hr />
 </body>
 </html>

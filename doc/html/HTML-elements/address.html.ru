@@ -4,8 +4,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xce;&#xe1; &#xe0;&#xe2;&#xf2;&#xee;&#xf0;&#xe5;</title>
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
+  <title>Об авторе</title>
+  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
+  />
   <style type="text/css">
 
 

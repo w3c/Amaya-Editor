@@ -4,9 +4,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xd1;&#xef;&#xe8;&#xf1;&#xee;&#xea;
-  &#xfd;&#xeb;&#xe5;&#xec;&#xe5;&#xed;&#xf2;&#xee;&#xe2;</title>
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
+  <title>Список элементов</title>
+  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
+  />
   <style type="text/css">
 
   </style>
@@ -74,12 +74,14 @@
 </dl>
 
 <p>Все три типа списков могут быть созданы из панели инструментов используя
-кнопки списков <img src="../../images/OList.gif" alt="Маркированный список"
-/>, <img src="../../images/NumList.gif" alt="Нумерованный список" />, <img
-src="../../images/DL.gif" alt="Список определения" />. Все типы списков могут
-быть созданы из меню <strong>XHTML</strong>, или используя комбинации кнопок.
-Принятыми по умолчанию комбинациями кнопок для unix систем является <kbd>Ctrl
-h Ctrl l</kbd> для упорядоченного списка, <kbd>Ctrl h Ctrl n</kbd> для
+кнопки списков <img src="../../../resources/icons/22x22/XHTML_Bullet.png"
+alt="Маркированный список" />, <img
+src="../../../resources/icons/22x22/XHTML_Num.png" alt="Нумерованный список"
+/>, <img src="../../../resources/icons/22x22/XHTML_DL.png"
+alt="Список определения" />. Все типы списков могут быть созданы из меню
+<strong>XHTML</strong>, или используя комбинации кнопок. Принятыми по
+умолчанию комбинациями кнопок для unix систем является <kbd>Ctrl h Ctrl
+l</kbd> для упорядоченного списка, <kbd>Ctrl h Ctrl n</kbd> для
 неупорядоченного списка, и <kbd>Ctrl h Ctrl d</kbd> для списка
 определения.</p>
 

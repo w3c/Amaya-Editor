@@ -4,9 +4,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xc2;&#xf1;&#xf2;&#xf0;&#xee;&#xe5;&#xed;&#xed;&#xe0;&#xff;
-  &#xec;&#xe0;&#xf0;&#xea;&#xe8;&#xf0;&#xee;&#xe2;&#xea;&#xe0;</title>
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
+  <title>Встроенная маркировка</title>
+  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
+  />
   <style type="text/css">
   </style>
   <link href="../style.css" rel="stylesheet" type="text/css" />
@@ -107,7 +107,8 @@ href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ACRONYM"><code>acron
 <acronym title="World Wide Web Consortium">W3C</acronym>, выберите меню
 <strong>XHTML</strong>, в подменю тип информации выберите пункт акроним.
 Затем выберите полный элемент (<kbd>F2 key</kbd>), откройте меню Атрибуты,
-выберите заголовок, введите <kbd>World Wide Web Consortium</kbd>, и примените его.</p>
+выберите заголовок, введите <kbd>World Wide Web Consortium</kbd>, и примените
+его.</p>
 
 <p><a href="../StyleSheets.html.ru">Таблица стилей</a> может использоваться
 для изменения представления акронимов и абревиатур.</p>

@@ -43,9 +43,9 @@ H2, H3, H4, H5, и H6</code></a>. ќни должны использоватьс€ дл€ маркировки
 данных существуют специальные элементы дл€ маркировки заголовков таблиц.</p>
 
 <p>ѕервые три уровн€ заголовка могут быть созданы из панели инструментов,
-использу€ дл€ этого кнопки изображени€ <img src="../../images/H1.gif"
-alt="H1 button" />, <img src="../../images/H2.gif" alt="H2 button" />, <img
-src="../../images/H3.gif" alt="H3 button" />. ¬се уровни заголовка могут быть
+использу€ дл€ этого кнопки изображени€ <img src="../../../resources/icons/22x22/XHTML_H1.png"
+alt="H1 button" />, <img src="../../../resources/icons/22x22/XHTML_H2.png" alt="H2 button" />, <img
+src="../../../resources/icons/22x22/XHTML_H3.png" alt="H3 button" />. ¬се уровни заголовка могут быть
 созданы из меню <strong>XHTML</strong>, или использу€ комбинации кнопок.
 ѕрин€тыми по умолчанию комбинаци€ми кнопок €вл€ютс€ <kbd>Ctrl 1</kbd> дл€
 <code>H1</code>, <kbd>Ctrl 2</kbd> дл€ <code>h2</code>, и так далее до
