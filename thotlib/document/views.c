@@ -1406,7 +1406,7 @@ int                *nItems;
 /*----------------------------------------------------------------------
    CloseView ferme la vue de numero viewNb du document pDoc, ou le
    document complet s'il s'agit de la derniere vue de ce document. 
-   Si assoc est vrai, view un numero d'elements associe's          
+   Si assoc est vrai, viewNb un numero d'elements associe's          
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -1469,21 +1469,18 @@ boolean             assoc;
 	     if (ok)
 	       {
 		  /* desactive la vue si elle est active */
-		  DeactivateView (pDoc, view, assoc);
+		  DeactivateView (pDoc, viewNb, assoc);
 		  /* fait detruire la fenetre par le mediateur */
 		  if (assoc)
-		     DestroyFrame (pDoc->DocAssocFrame[view - 1]);
+		     DestroyFrame (pDoc->DocAssocFrame[viewNb - 1]);
 		  else
-		     DestroyFrame (pDoc->DocViewFrame[view - 1]);
+		     DestroyFrame (pDoc->DocViewFrame[viewNb - 1]);
 		  notifyDoc.event = TteViewClose;
 		  notifyDoc.document = (Document) IdentDocument (pDoc);
-		  if (assoc)
-		     notifyDoc.view = view + 100;
-		  else
-		     notifyDoc.view = view;
+		  notifyDoc.view = view;
 		  CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
 		  /* detruit le contexte de la vue */
-		  CloseDocumentView (pDoc, view, assoc, TRUE);
+		  CloseDocumentView (pDoc, viewNb, assoc, TRUE);
 	       }
 	  }
      }
