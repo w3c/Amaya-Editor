@@ -289,7 +289,7 @@ Document document;
 /* ----------------------------------------------------------------------
    TtaCancelLastRegisteredSequence
 
-   Cancel the last sequence of editing operations registered in the
+   Cancel the latest sequence of editing operations registered in the
    editing history of document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -300,4 +300,21 @@ Document document;
 #endif /* __STDC__ */
 {
    CancelLastSequenceFromHistory (LoadedDocument [document - 1]);
+}
+
+/* ----------------------------------------------------------------------
+   TtaUndoNoRedo
+
+   Undo the latest sequence of editing operations recorded in the history
+   of document and forget about this sequence: it won't be redone by
+   the next Redo command issued by the user.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         TtaUndoNoRedo (Document document)
+#else /* __STDC__ */
+void         TtaUndoNoRedo (document)
+Document document;
+#endif /* __STDC__ */
+{
+   UndoNoRedo (document);
 }

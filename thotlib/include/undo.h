@@ -137,6 +137,15 @@ extern void         TtaClearUndoHistory (Document document);
   ----------------------------------------------------------------------*/
 extern void         TtaCancelLastRegisteredSequence (Document document);
 
+/* ----------------------------------------------------------------------
+   TtaUndoNoRedo
+ 
+   Undo the latest sequence of editing operations recorded in the history
+   of document and forget about this sequence: it won't be redone by
+   the next Redo command issued by the user.
+  ----------------------------------------------------------------------*/
+extern void         TtaUndoNoRedo (Document document);
+
 #else  /* __STDC__ */
 extern void         TtaOpenUndoSequence (/* Document document, Element firstSel,Element lastSel, int firstSelChar, int lastSelChar */);
 extern boolean      TtaCloseUndoSequence (/* Document document */);
@@ -148,6 +157,7 @@ extern void         TtaRegisterAttributeDelete (/* Attribute attribute, Element 
 extern void         TtaRegisterAttributeReplace (/* Attribute attribute, Element element, Document document */);
 extern void         TtaClearUndoHistory (/* Document document */);
 extern void         TtaCancelLastRegisteredSequence (/* Document document */);
+extern void         TtaUndoNoRedo (/* Document document */);
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
 

@@ -1794,7 +1794,7 @@ void                DoSaveAs ()
 	    restore the previous contents of the document
 	    */
 	  if (toUndo)
-	    TtcUndo (doc, 1);
+	    TtaUndoNoRedo (doc);
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), documentFile);
 	  /* restore the previous status of the document */
 	  if (!docModified)

@@ -89,6 +89,61 @@ static void UpdateHistoryLength (diff, pDoc)
 }
 
 /*----------------------------------------------------------------------
+   UpdateRedoLength
+   Add diff to variable pDoc->DocNbUndone
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void UpdateRedoLength (int diff, PtrDocument pDoc)
+#else  /* __STDC__ */
+static void UpdateRedoLength (diff, pDoc)
+     int diff;
+     PtrDocument pDoc;
+
+#endif /* __STDC__ */
+{
+   if (pDoc->DocNbUndone == 0 && diff > 0)
+     /* enable Redo command */
+     SwitchRedo (pDoc, TRUE);
+   pDoc->DocNbUndone += diff;
+   if (pDoc->DocNbUndone == 0 && diff < 0)
+     /* disable Redo command */
+     SwitchRedo (pDoc, FALSE);
+}
+
+/*----------------------------------------------------------------------
+   UnchainLatestOp
+   Remove the last editing operation from the undo or redo queue
+   (depending on parameter undo) and return it.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static PtrEditOperation UnchainLatestOp (PtrDocument pDoc, boolean undo)
+#else  /* __STDC__ */
+static PtrEditOperation UnchainLatestOp (pDoc, undo)
+PtrDocument pDoc;
+boolean undo;
+
+#endif /* __STDC__ */
+{
+   PtrEditOperation	*editOp, last;
+
+   if (undo)
+      editOp = &(pDoc->DocLastEdit);
+   else
+      editOp = &(pDoc->DocLastUndone);
+   last = *editOp;
+   *editOp = (*editOp)->EoPreviousOp;
+   (*editOp)->EoNextOp = NULL;
+   last->EoPreviousOp = NULL;
+   if (last->EoType == EtDelimiter)
+      if (undo)
+         /* update the number of editing commands remaining in the history */
+         UpdateHistoryLength (-1, pDoc);
+      else
+	 UpdateRedoLength (-1, pDoc);
+   return last;
+}
+
+/*----------------------------------------------------------------------
    CancelAnEdit
    Remove and delete an editing operation from the history
   ----------------------------------------------------------------------*/
@@ -572,24 +627,6 @@ PtrDocument pDoc;
 }
 
 /*----------------------------------------------------------------------
-   MoveEditToRedoQueue
-   Move the latest undone edit of document pDoc from the Undo queue to
-   the Redo queue.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void MoveEditToRedoQueue (PtrDocument pDoc)
-#else  /* __STDC__ */
-static void MoveEditToRedoQueue (pDoc)
-PtrDocument pDoc;
-
-#endif /* __STDC__ */
-{
-   /*********/
-   CancelAnEdit (pDoc->DocLastEdit, pDoc);
-}
-
-
-/*----------------------------------------------------------------------
    CancelLastSequenceFromHistory
 
    Cancel the last sequence of editing operations registered in the
@@ -618,9 +655,334 @@ PtrDocument         pDoc;
 }
 
 /*----------------------------------------------------------------------
+   UndoOperation
+
+   Undo the editing operation described by editOp for document doc.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void	UndoOperation (PtrEditOperation editOp, Document doc)
+#else  /* __STDC__ */
+static void	UndoOperation (editOp, doc)
+PtrEditOperation editOp;
+Document doc;
+
+#endif /* __STDC__ */
+{
+   PtrElement		pEl, pSibling;
+   PtrDocument		pDoc;
+   NotifyElement	notifyEl;
+   NotifyAttribute	notifyAttr;
+   int			i, nSiblings;
+
+   pDoc = LoadedDocument [doc - 1];
+   if (editOp->EoType == EtDelimiter)
+      /* end of a sequence */
+      {
+      /* enable structure checking */
+      TtaSetStructureChecking (TRUE, doc);
+      /* end of undo sequence */
+      TtaSetDisplayMode (doc, DisplayImmediately);
+      /* set the selection that is recorded */
+      if (editOp->EoFirstSelectedEl && editOp->EoLastSelectedEl)
+        {
+        /* Send events TteElemSelect.Pre */
+        notifyEl.event = TteElemSelect;
+        notifyEl.document = doc;
+        notifyEl.element = (Element) (editOp->EoFirstSelectedEl);
+        notifyEl.elementType.ElTypeNum =
+			editOp->EoFirstSelectedEl->ElTypeNumber;
+        notifyEl.elementType.ElSSchema =
+			(SSchema) (editOp->EoFirstSelectedEl->ElStructSchema);
+        notifyEl.position = 0;
+        CallEventType ((NotifyEvent *) & notifyEl, TRUE);
+        if (editOp->EoFirstSelectedChar > 0)
+          {
+          if (editOp->EoFirstSelectedEl == editOp->EoLastSelectedEl)
+   	     i = editOp->EoLastSelectedChar;
+          else
+   	     i = TtaGetTextLength ((Element)(editOp->EoFirstSelectedEl));
+          TtaSelectString (doc, (Element)(editOp->EoFirstSelectedEl),
+			   editOp->EoFirstSelectedChar, i);
+          }
+        else
+          TtaSelectElement (doc, (Element)(editOp->EoFirstSelectedEl));
+        /* Send events TteElemSelect.Post */
+        notifyEl.event = TteElemSelect;
+        notifyEl.document = doc;
+        notifyEl.element = (Element) (editOp->EoFirstSelectedEl);
+        notifyEl.elementType.ElTypeNum =
+			editOp->EoFirstSelectedEl->ElTypeNumber;
+        notifyEl.elementType.ElSSchema =
+			(SSchema) (editOp->EoFirstSelectedEl->ElStructSchema);
+        notifyEl.position = 0;
+        CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+        if (editOp->EoFirstSelectedEl != editOp->EoLastSelectedEl)
+          {
+          /* Send event TteElemExtendSelect. Pre */
+          notifyEl.event = TteElemExtendSelect;
+          notifyEl.document = doc;
+          notifyEl.element = (Element)(editOp->EoLastSelectedEl);
+          notifyEl.elementType.ElTypeNum =
+			editOp->EoLastSelectedEl->ElTypeNumber;
+          notifyEl.elementType.ElSSchema =
+			(SSchema) (editOp->EoLastSelectedEl->ElStructSchema);
+          notifyEl.position = 0;
+          CallEventType ((NotifyEvent *) & notifyEl, TRUE);
+          TtaExtendSelection (doc, (Element)(editOp->EoLastSelectedEl),
+			      editOp->EoLastSelectedChar);
+          /* Send event TteElemExtendSelect. Post */
+          notifyEl.event = TteElemExtendSelect;
+          notifyEl.document = doc;
+          notifyEl.element = (Element)(editOp->EoLastSelectedEl);
+          notifyEl.elementType.ElTypeNum =
+			editOp->EoLastSelectedEl->ElTypeNumber;
+          notifyEl.elementType.ElSSchema =
+			(SSchema) (editOp->EoLastSelectedEl->ElStructSchema);
+          notifyEl.position = 0;
+          CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+          }
+        }
+      }
+   if (editOp->EoType == EtAttribute)
+      {
+      notifyAttr.document = doc;
+      notifyAttr.element = (Element) (editOp->EoElement);
+      /* delete the attribute that has to be removed from the element */
+      if (editOp->EoElement && editOp->EoCreatedAttribute)
+         {
+         /* tell the application that an attribute will be removed */
+         notifyAttr.event = TteAttrDelete;
+         notifyAttr.attribute = (Attribute) (editOp->EoCreatedAttribute);
+         notifyAttr.attributeType.AttrSSchema =
+			(SSchema) (editOp->EoCreatedAttribute->AeAttrSSchema);
+         notifyAttr.attributeType.AttrTypeNum =
+			editOp->EoCreatedAttribute->AeAttrNum;
+         CallEventAttribute (&notifyAttr, TRUE);
+         /* remove the attribute */
+         TtaRemoveAttribute ((Element) (editOp->EoElement),
+			     (Attribute)(editOp->EoCreatedAttribute), doc);
+         notifyAttr.attribute = NULL;
+         /* tell the application that an attribute has been removed */
+         CallEventAttribute (&notifyAttr, FALSE);	    
+         }
+      /* put the saved attribute (if any) on the element */
+      if (editOp->EoElement && editOp->EoSavedAttribute)
+         {
+         /* tell the application that an attribute will be created */
+         notifyAttr.event = TteAttrCreate;
+         notifyAttr.attribute = NULL;
+         notifyAttr.attributeType.AttrSSchema =
+			(SSchema) (editOp->EoSavedAttribute->AeAttrSSchema);
+         notifyAttr.attributeType.AttrTypeNum =
+			editOp->EoSavedAttribute->AeAttrNum;
+         CallEventAttribute (&notifyAttr, TRUE);
+         /* put the attribute on the element */
+         TtaAttachAttribute ((Element)(editOp->EoElement),
+			     (Attribute)(editOp->EoSavedAttribute), doc);
+         /* tell the application that an attribute has been put */
+         notifyAttr.attribute = (Attribute) (editOp->EoSavedAttribute);
+         CallEventAttribute (&notifyAttr, FALSE);	    
+         /* the attribute is no longer associated with the history block */
+         editOp->EoSavedAttribute = NULL;
+         }
+      }
+   if (editOp->EoType == EtElement)
+      {
+      /* delete the element that has to be removed from the abstract tree */
+      if (editOp->EoCreatedElement)
+         {
+         pEl = editOp->EoCreatedElement;
+         /* tell the application that an element will be removed from the
+         abstract tree */
+         SendEventSubTree (TteElemDelete, pDoc, pEl,
+			   TTE_STANDARD_DELETE_LAST_ITEM);
+         /* prepare event TteElemDelete to be sent to the application */
+         notifyEl.event = TteElemDelete;
+         notifyEl.document = doc;
+         notifyEl.element = (Element) (pEl->ElParent);
+         notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
+         notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+         nSiblings = 0;
+         pSibling = pEl;
+         while (pSibling->ElPrevious != NULL)
+            {
+            nSiblings++;
+            pSibling = pSibling->ElPrevious;
+            }
+         notifyEl.position = nSiblings;
+         /* remove an element */
+         TtaDeleteTree ((Element)pEl, doc);
+         /* tell the application that an element has been removed */
+         CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
+         editOp->EoCreatedElement = NULL;
+         }
+      /* insert the saved element in the abstract tree */
+      if (editOp->EoSavedElement)
+         {
+         if (editOp->EoPreviousSibling)
+            TtaInsertSibling ((Element)(editOp->EoSavedElement),
+			      (Element)(editOp->EoPreviousSibling),FALSE, doc);
+         else
+            TtaInsertFirstChild ((Element *)&(editOp->EoSavedElement),
+				 (Element)(editOp->EoParent), doc);
+         /* send event ElemPaste.Post to the application */
+         NotifySubTree (TteElemPaste, pDoc, editOp->EoSavedElement, 0);
+         editOp->EoSavedElement = NULL;
+         }
+      }
+}
+
+/*----------------------------------------------------------------------
+   ReverseEditOperation
+
+   Reverse the editing operation described by editOp.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void ReverseEditOperation (PtrEditOperation editOp, PtrDocument pDoc)
+#else  /* __STDC__ */
+static void ReverseEditOperation (editOp, pDoc)
+PtrEditOperation editOp;
+PtrDocument pDoc;
+
+#endif /* __STDC__ */
+{
+   /**********/;
+}
+
+/*----------------------------------------------------------------------
+   MoveEditToRedoQueue
+   Move the latest undone edit of document pDoc from the Undo queue to
+   the Redo queue.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void MoveEditToRedoQueue (PtrDocument pDoc)
+#else  /* __STDC__ */
+static void MoveEditToRedoQueue (pDoc)
+PtrDocument pDoc;
+
+#endif /* __STDC__ */
+{
+   PtrEditOperation	editOp;
+
+   editOp = UnchainLatestOp (pDoc, TRUE);
+   /* reverse operation */
+   ReverseEditOperation (editOp, pDoc);
+   /* insert it in the Redo queue */
+   editOp->EoPreviousOp = pDoc->DocLastUndone;
+   if (pDoc->DocLastUndone)
+      pDoc->DocLastUndone->EoNextOp = editOp;
+   pDoc->DocLastUndone = editOp;
+   editOp->EoNextOp = NULL;
+}
+
+/*----------------------------------------------------------------------
+   MoveEditToUndoQueue
+   Move the latest redone edit of document pDoc from the Redo queue to
+   the Undo queue.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void MoveEditToUndoQueue (PtrDocument pDoc)
+#else  /* __STDC__ */
+static void MoveEditToUndoQueue (pDoc)
+PtrDocument pDoc;
+
+#endif /* __STDC__ */
+{
+   PtrEditOperation	editOp;
+
+   /* remove the latest edit operation from the Redo queue */
+   editOp = UnchainLatestOp (pDoc, FALSE);
+   /* reverse operation */
+   ReverseEditOperation (editOp, pDoc);
+   /* insert it in the Undo queue */
+   editOp->EoPreviousOp = pDoc->DocLastEdit;
+   if (pDoc->DocLastEdit)
+      pDoc->DocLastEdit->EoNextOp = editOp;
+   pDoc->DocLastEdit = editOp;
+   editOp->EoNextOp = NULL;
+}
+
+/*----------------------------------------------------------------------
+   OpenRedoSequence
+   Open a sequence of editing operations in the Redo queue.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void OpenRedoSequence (Document doc)
+
+#else  /* __STDC__ */
+static void OpenRedoSequence (doc)
+Document doc;
+#endif /* __STDC__ */
+{
+  PtrDocument		pDoc;
+  PtrEditOperation	editOp, nextOp;
+  Element		firstSel, lastSel;
+  int			firstSelChar, lastSelChar, i;
+
+  pDoc = LoadedDocument [doc - 1];
+  /* create a new operation descriptor, a Delimiter */
+  editOp = (PtrEditOperation) TtaGetMemory (sizeof (EditOperation));
+  editOp->EoType = EtDelimiter;
+  /* link the new operation descriptor in the Redo queue */
+  editOp->EoPreviousOp = pDoc->DocLastUndone;
+  if (pDoc->DocLastUndone)
+     pDoc->DocLastUndone->EoNextOp = editOp;
+  pDoc->DocLastUndone = editOp;
+  editOp->EoNextOp = NULL;
+  /* store the current selection in this descriptor */
+  TtaGiveFirstSelectedElement (doc, &firstSel, &firstSelChar, &i);
+  TtaGiveLastSelectedElement (doc, &lastSel, &i, &lastSelChar);
+  editOp->EoFirstSelectedEl = firstSel;
+  editOp->EoFirstSelectedChar = firstSelChar;
+  editOp->EoLastSelectedEl = lastSel;
+  editOp->EoLastSelectedChar = lastSelChar;
+  /* update the number of editing sequences registered in the Redo queue */
+  UpdateRedoLength (1, pDoc);
+}
+
+/*----------------------------------------------------------------------
+   UndoNoRedo
+   Undo the latest sequence of editing operations recorded in the history
+   of document doc and forget about this sequence: it won't be redone by
+   the next Redo command issued by the user.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                UndoNoRedo (Document doc)
+#else  /* __STDC__ */
+void                UndoNoRedo (doc)
+Document            doc;
+
+#endif /* __STDC__ */
+{
+   PtrDocument          pDoc;
+   boolean		doit;
+
+   pDoc = LoadedDocument [doc - 1];
+   if (!pDoc->DocLastEdit)
+     /* history is empty */
+      return;
+   TtaSetDisplayMode (doc, DeferredDisplay);
+   /* disable structure checking */
+   TtaSetStructureChecking (FALSE, doc);
+
+   /* Undo the latest editing operations up to the first sequence delimiter */
+   doit = TRUE;
+   while (doit)
+      {
+      UndoOperation (pDoc->DocLastEdit, doc);
+      if (pDoc->DocLastEdit->EoType == EtDelimiter)
+	 /* end of sequence */
+	 doit = FALSE;
+      /* the most recent editing operation in the history has been undone.
+         Remove it from the editing history */
+      CancelAnEdit (pDoc->DocLastEdit, pDoc);
+      }
+}
+
+/*----------------------------------------------------------------------
    TtcUndo
-   Undo the latest sequence of editing operations recorded in the history and
-   remove it from the history.
+   Undo the latest sequence of editing operations recorded in the history
+   of document doc and register it in the Redo queue.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcUndo (Document doc, View view)
@@ -632,10 +994,6 @@ View                view;
 #endif /* __STDC__ */
 {
    PtrDocument          pDoc;
-   PtrElement		pEl, pSibling;
-   NotifyElement	notifyEl;
-   NotifyAttribute	notifyAttr;
-   int			i, nSiblings;
    boolean		doit;
 
    pDoc = LoadedDocument [doc - 1];
@@ -647,190 +1005,29 @@ View                view;
    /* disable structure checking */
    TtaSetStructureChecking (FALSE, doc);
    /* Start a new sequence in the Redo queue */
-   /***********/
+   /*********
+   OpenRedoSequence (doc);
+   **********/
 
    /* Undo all operations belonging to a sequence of editing operations */
    doit = TRUE;
    while (doit)
       {
+      UndoOperation (pDoc->DocLastEdit, doc);
       if (pDoc->DocLastEdit->EoType == EtDelimiter)
-	 {
-	 /* enable structure checking */
-	 TtaSetStructureChecking (TRUE, doc);
-	 /* end of undo sequence */
-	 TtaSetDisplayMode (doc, DisplayImmediately);
-         /* set the selection that is recorded */
-         if (pDoc->DocLastEdit->EoFirstSelectedEl &&
-	     pDoc->DocLastEdit->EoLastSelectedEl)
-	   {
-	   /* Send events TteElemSelect.Pre */
-	   notifyEl.event = TteElemSelect;
-           notifyEl.document = doc;
-           notifyEl.element = (Element) (pDoc->DocLastEdit->EoFirstSelectedEl);
-           notifyEl.elementType.ElTypeNum =
-			    pDoc->DocLastEdit->EoFirstSelectedEl->ElTypeNumber;
-           notifyEl.elementType.ElSSchema =
-	      (SSchema) (pDoc->DocLastEdit->EoFirstSelectedEl->ElStructSchema);
-           notifyEl.position = 0;
-           CallEventType ((NotifyEvent *) & notifyEl, TRUE);
-           if (pDoc->DocLastEdit->EoFirstSelectedChar > 0)
-             {
-             if (pDoc->DocLastEdit->EoFirstSelectedEl ==
-					   pDoc->DocLastEdit->EoLastSelectedEl)
-   	        i = pDoc->DocLastEdit->EoLastSelectedChar;
-             else
-   	        i = TtaGetTextLength ((Element)(pDoc->DocLastEdit->EoFirstSelectedEl));
-             TtaSelectString (doc,
-			      (Element)(pDoc->DocLastEdit->EoFirstSelectedEl),
-			      pDoc->DocLastEdit->EoFirstSelectedChar, i);
-             }
-           else
-             TtaSelectElement (doc,
-			      (Element)(pDoc->DocLastEdit->EoFirstSelectedEl));
-	   /* Send events TteElemSelect.Post */
-	   notifyEl.event = TteElemSelect;
-           notifyEl.document = doc;
-           notifyEl.element = (Element) (pDoc->DocLastEdit->EoFirstSelectedEl);
-           notifyEl.elementType.ElTypeNum =
-			    pDoc->DocLastEdit->EoFirstSelectedEl->ElTypeNumber;
-           notifyEl.elementType.ElSSchema =
-	      (SSchema) (pDoc->DocLastEdit->EoFirstSelectedEl->ElStructSchema);
-           notifyEl.position = 0;
-           CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-           if (pDoc->DocLastEdit->EoFirstSelectedEl !=
-					   pDoc->DocLastEdit->EoLastSelectedEl)
-	     {
-	     /* Send event TteElemExtendSelect. Pre */
-	     notifyEl.event = TteElemExtendSelect;
-             notifyEl.document = doc;
-             notifyEl.element = (Element)(pDoc->DocLastEdit->EoLastSelectedEl);
-             notifyEl.elementType.ElTypeNum =
-			     pDoc->DocLastEdit->EoLastSelectedEl->ElTypeNumber;
-             notifyEl.elementType.ElSSchema =
-	       (SSchema) (pDoc->DocLastEdit->EoLastSelectedEl->ElStructSchema);
-             notifyEl.position = 0;
-             CallEventType ((NotifyEvent *) & notifyEl, TRUE);
-             TtaExtendSelection (doc,
-				(Element)(pDoc->DocLastEdit->EoLastSelectedEl),
-			        pDoc->DocLastEdit->EoLastSelectedChar);
-	     /* Send event TteElemExtendSelect. Post */
-	     notifyEl.event = TteElemExtendSelect;
-             notifyEl.document = doc;
-             notifyEl.element = (Element)(pDoc->DocLastEdit->EoLastSelectedEl);
-             notifyEl.elementType.ElTypeNum =
-			     pDoc->DocLastEdit->EoLastSelectedEl->ElTypeNumber;
-             notifyEl.elementType.ElSSchema =
-	       (SSchema) (pDoc->DocLastEdit->EoLastSelectedEl->ElStructSchema);
-             notifyEl.position = 0;
-             CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-	     }
-	   }
-         doit = FALSE;
-	 }
-      if (pDoc->DocLastEdit->EoType == EtAttribute)
-	 {
-	 notifyAttr.document = doc;
-	 notifyAttr.element = (Element) (pDoc->DocLastEdit->EoElement);
-	 /* delete the attribute that has to be removed from the element */
-	 if (pDoc->DocLastEdit->EoElement &&
-	     pDoc->DocLastEdit->EoCreatedAttribute)
-	    {
-	    /* tell the application that an attribute will be removed */
-	    notifyAttr.event = TteAttrDelete;
-	    notifyAttr.attribute =
-			   (Attribute) (pDoc->DocLastEdit->EoCreatedAttribute);
-	    notifyAttr.attributeType.AttrSSchema =
-	      (SSchema) (pDoc->DocLastEdit->EoCreatedAttribute->AeAttrSSchema);
-	    notifyAttr.attributeType.AttrTypeNum =
-			      pDoc->DocLastEdit->EoCreatedAttribute->AeAttrNum;
-	    CallEventAttribute (&notifyAttr, TRUE);
-	    /* remove the attribute */
-	    TtaRemoveAttribute ((Element) (pDoc->DocLastEdit->EoElement),
-		     (Attribute)(pDoc->DocLastEdit->EoCreatedAttribute), doc);
-	    notifyAttr.attribute = NULL;
-	    /* tell the application that an attribute has been removed */
-	    CallEventAttribute (&notifyAttr, FALSE);	    
-	    }
-	 /* put the saved attribute (if any) on the element */
-	 if (pDoc->DocLastEdit->EoElement &&
-	     pDoc->DocLastEdit->EoSavedAttribute)
-	    {
-	    /* tell the application that an attribute will be created */
-	    notifyAttr.event = TteAttrCreate;
-	    notifyAttr.attribute = NULL;
-	    notifyAttr.attributeType.AttrSSchema =
-		(SSchema) (pDoc->DocLastEdit->EoSavedAttribute->AeAttrSSchema);
-	    notifyAttr.attributeType.AttrTypeNum =
-				pDoc->DocLastEdit->EoSavedAttribute->AeAttrNum;
-	    CallEventAttribute (&notifyAttr, TRUE);
-	    /* put the attribute on the element */
-	    TtaAttachAttribute ((Element)(pDoc->DocLastEdit->EoElement),
-			(Attribute)(pDoc->DocLastEdit->EoSavedAttribute), doc);
-	    /* tell the application that an attribute has been put */
-	    notifyAttr.attribute =
-			     (Attribute) (pDoc->DocLastEdit->EoSavedAttribute);
-	    CallEventAttribute (&notifyAttr, FALSE);	    
-	    /* the attribute is no longer associated with the history block */
-	    pDoc->DocLastEdit->EoSavedAttribute = NULL;
-	    }
-	 }
-      if (pDoc->DocLastEdit->EoType == EtElement)
-	 {
-         /* delete the element that has to be removed from the abstract tree */
-         if (pDoc->DocLastEdit->EoCreatedElement)
-            {
-	    pEl = pDoc->DocLastEdit->EoCreatedElement;
-	    /* tell the application that an element will be removed from the
-	    abstract tree */
-	    SendEventSubTree (TteElemDelete, pDoc, pEl,
-			      TTE_STANDARD_DELETE_LAST_ITEM);
-	    /* prepare event TteElemDelete to be sent to the application */
-	    notifyEl.event = TteElemDelete;
-	    notifyEl.document = doc;
-	    notifyEl.element = (Element) (pEl->ElParent);
-	    notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-	    notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-	    nSiblings = 0;
-	    pSibling = pEl;
-	    while (pSibling->ElPrevious != NULL)
-	       {
-	       nSiblings++;
-	       pSibling = pSibling->ElPrevious;
-	       }
-	    notifyEl.position = nSiblings;
-	    /* remove an element */
-            TtaDeleteTree ((Element)pEl, doc);
-	    /* tell the application that an element has been removed */
-	    CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
-	    pDoc->DocLastEdit->EoCreatedElement = NULL;
-	    }
-
-         /* insert the saved element in the abstract tree */
-         if (pDoc->DocLastEdit->EoSavedElement)
-            {
-            if (pDoc->DocLastEdit->EoPreviousSibling)
-               TtaInsertSibling ((Element)(pDoc->DocLastEdit->EoSavedElement),
-			      (Element)(pDoc->DocLastEdit->EoPreviousSibling),
-			      FALSE, doc);
-            else
-               TtaInsertFirstChild ((Element *)&(pDoc->DocLastEdit->EoSavedElement),
-				  (Element)(pDoc->DocLastEdit->EoParent), doc);
-            /* send event ElemPaste.Post to the application */
-            NotifySubTree (TteElemPaste, pDoc,
-			   pDoc->DocLastEdit->EoSavedElement, 0);
-            pDoc->DocLastEdit->EoSavedElement = NULL;
-            }
-	 }
-   
+	 /* end of sequence */
+	 doit = FALSE;
       /* the most recent editing operation in the history has been undone.
          Remove it from the editing history and put it in the Redo queue */
-      MoveEditToRedoQueue (pDoc);
+      /********
+      MoveEditToRedoQueue (pDoc); ****/ CancelAnEdit (pDoc->DocLastEdit, pDoc);
       }
 }
 
 /*----------------------------------------------------------------------
    TtcRedo
-   Redo the latest sequence of editing operations undone by the TtcUndo.
+   Redo the latest sequence of editing operations undone by the TtcUndo
+   and register it in the editing history.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcRedo (Document doc, View view)
@@ -842,16 +1039,36 @@ View                view;
 #endif /* __STDC__ */
 {
    PtrDocument          pDoc;
-/*****
-   PtrElement		pEl;
-   NotifyElement	notifyEl;
-   NotifyAttribute	notifyAttr;
-*****/
+   Element		firstSel, lastSel;
+   int			firstSelChar, lastSelChar, i;
+   boolean		doit;
+
+   return;	/********/
+
+   pDoc = LoadedDocument [doc - 1];
    if (!pDoc->DocLastUndone)
      /* no undone command */
       return;
 
-   pDoc = LoadedDocument [doc - 1];
-   
-   /*********/
+   TtaSetDisplayMode (doc, DeferredDisplay);
+   /* disable structure checking */
+   TtaSetStructureChecking (FALSE, doc);
+   /* Start a new sequence in the Undo queue */
+   TtaGiveFirstSelectedElement (doc, &firstSel, &firstSelChar, &i);
+   TtaGiveLastSelectedElement (doc, &lastSel, &i, &lastSelChar);
+   OpenHistorySequence (pDoc, firstSel, lastSel, firstSelChar, lastSelChar);
+
+   /* Undo all operations belonging to a sequence of editing operations */
+   doit = TRUE;
+   while (doit)
+      {
+      UndoOperation (pDoc->DocLastUndone, doc);
+      if (pDoc->DocLastUndone->EoType == EtDelimiter)
+	 /* end of sequence */
+	 doit = FALSE;
+      /* the most recent editing operation in the history has been redone.
+         Remove it from the Redo queue and put it in the Undo queue */
+      MoveEditToUndoQueue (pDoc);
+      }
+   CloseHistorySequence (pDoc);
 }

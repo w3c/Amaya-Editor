@@ -24,6 +24,7 @@ extern void OpenHistorySequence ( PtrDocument pDoc,
                                   int lastSelChar );
 extern boolean CloseHistorySequence ( PtrDocument pDoc );
 extern void CancelLastSequenceFromHistory ( PtrDocument pDoc );
+extern void UndoNoRedo ( Document doc );
 extern void TtcUndo ( Document doc,
                       View view );
 extern void TtcRedo ( Document doc,
@@ -49,6 +50,7 @@ extern void OpenHistorySequence (/* PtrDocument pDoc,
                                     int lastSelChar */);
 extern boolean CloseHistorySequence (/* PtrDocument pDoc */);
 extern void CancelLastSequenceFromHistory (/* PtrDocument pDoc */);
+extern void UndoNoRedo (/* Document doc */);
 extern void TtcUndo (/* Document doc,
                         View view */);
 extern void TtcRedo (/* Document doc,

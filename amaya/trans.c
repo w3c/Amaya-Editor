@@ -1078,7 +1078,7 @@ Document            doc;
 		       TtaIsBefore (invEl, myLastSelect))))
 		    {		/* if the transformation failed */
 		       res = FALSE;
-		       TtcUndo (doc, 0);
+		       TtaUndoNoRedo (doc);
 		    }
 	       }
 	  }
@@ -1090,7 +1090,7 @@ Document            doc;
 		  if (myLastSelect == NULL || TtaIsBefore (invEl, myLastSelect))
 		    {		/* if the transformation failed */
 		       res = FALSE;
-		       TtcUndo (doc, 0);
+		       TtaUndoNoRedo (doc);
 		    }
 	       }
 	  }
