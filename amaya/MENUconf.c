@@ -47,6 +47,9 @@
 #include "resource.h"
 #include "wininclude.h"
 
+#include "constmedia.h"
+#include "appdialogue.h"
+#include "profiles_f.h"
 
 
 extern HINSTANCE hInstance;
@@ -253,7 +256,7 @@ static void         GetLanNegConf (void);
 static void         GetDefaultLanNegConf (void);
 static void         SetLanNegConf (void);
 #ifndef _WINDOWS
-static void         ProfilesCallbackDialog(int ref, int typedata, STRING data);
+static void         ProfileCallbackDialog(int ref, int typedata, STRING data);
 static void         RefreshProfileMenu (void);
 static void         BuildProfileSelector(void);
 #endif /* !_WINDOWS */
@@ -340,9 +343,7 @@ static void         SetTemplatesConf (/* void */);
 #endif
 
 
-#include "constmedia.h"
-#include "appdialogue.h"
-#include "profiles_f.h"
+
 #ifndef AMAYA_JAVA
 #include "query_f.h"
 #endif
