@@ -256,7 +256,7 @@ PtrAttribute AttachAttrByExceptNum (int ExceptNum, PtrElement pEl,
 	pAttr->AeAttrSSchema = pSS;
 	pAttr->AeAttrNum = attrNum;
 	pAttr->AeDefAttr = FALSE;
-	pAttr->AeAttrType = pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType;
+	pAttr->AeAttrType = pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrType;
 	if (pAttr->AeAttrType == AtReferenceAttr)
 	  {
 	     if (pReferredEl != NULL)

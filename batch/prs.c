@@ -498,7 +498,7 @@ static void         EndOfRulesForType ()
 	if (pPRuleA)
 	  {
 	     /* selon le type de l'attribut */
-	     switch (pSSchema->SsAttribute[CurAttrNum - 1].AttrType)
+	     switch (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType)
 		   {
 		      case AtNumAttr:
 			 pAttrCase = &pPRuleA->ApCase[pPRuleA->ApNCases - 1];
@@ -794,7 +794,7 @@ static AttributePres *NewAttrPRule (int att)
    if (pPRuleA)
      {
 	/* selon le type de l'attribut */
-	switch (pSSchema->SsAttribute[att - 1].AttrType)
+	switch (pSSchema->SsAttribute->TtAttr[att - 1]->AttrType)
 	      {
 		 case AtNumAttr:
 		    pPRuleA->ApNCases = 0;
@@ -878,7 +878,7 @@ static void         GenerateRPresAttribut (indLine wi)
    /* maintenant on remplit les champs dans pPRuleA */
    pPRuleA->ApElemType = CurElemHeritAttr;
 
-   switch (pSSchema->SsAttribute[CurAttrNum - 1].AttrType)
+   switch (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType)
 	 {
 	    case AtNumAttr:
 	       /* c'est un attribut a valeur numerique */
@@ -3064,7 +3064,7 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	  CompilerMessage (wi, PRS, FATAL, CANT_USE_IF_NOT_A_REF_ATTR,
 			   inputLine, LineNum);
 	else if (AttributeDef &&
-		 pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtReferenceAttr)
+		 pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType != AtReferenceAttr)
 	  /* seulement pour les attributs reference */
 	  CompilerMessage (wi, PRS, FATAL, CANT_USE_IF_NOT_A_REF_ATTR,
 			   inputLine, LineNum);
@@ -3241,7 +3241,7 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	  CompilerMessage (wi, PRS, FATAL, VALID_ONLY_FOR_REFS, inputLine,
 			   LineNum);
 	else if (AttributeDef &&
-		 pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtReferenceAttr)
+		 pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType != AtReferenceAttr)
 	  /* seulement pour les attributs reference */
 	  CompilerMessage (wi, PRS, FATAL, CANT_USE_IF_NOT_A_REF_ATTR,
 			   inputLine, LineNum);
@@ -3629,7 +3629,7 @@ static void         NewBoxName (indLine wl, indLine wi, int identnum)
   ----------------------------------------------------------------------*/
 static void         IntAttribute (int attr, SyntacticCode prevRule, indLine wi)
 {
-   if (pSSchema->SsAttribute[attr - 1].AttrType != AtNumAttr)
+   if (pSSchema->SsAttribute->TtAttr[attr - 1]->AttrType != AtNumAttr)
       /* not an attribute of type Integer, error */
       CompilerMessage (wi, PRS, FATAL, BAD_ATTR_TYPE, inputLine, LineNum);
    else
@@ -3752,7 +3752,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
    PresVarItem        *pVarElem;
    PtrPRule            pPRule;
    PtrCondition        pCond;
-   TtAttribute        *pAttr;
+   PtrTtAttribute      pAttr;
    PtrHostView         pHostView, prevHostView;
 
    /* gCode = numero de la regle ou apparait le nom */
@@ -3808,7 +3808,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 		      definie dans un autre schema de presentation (pour
 		      la presentation des references externes) */
 		   if ((RuleDef && pSSchema->SsRule[CurType - 1].SrRefTypeNat[0] == '\0') ||
-		       (AttributeDef && pSSchema->SsAttribute[CurAttrNum - 1].AttrTypeRefNature[0] == '\0'))
+		       (AttributeDef && pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrTypeRefNature[0] == '\0'))
 		      /* la regle ne s'applique pas a` une reference externe */
 		      CompilerMessage (BeginCopyType, PRS, FATAL,
 				       AUTHORIZED_ONLY_FOR_EXT_REFS,
@@ -3899,10 +3899,10 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 	        {
 		/* cherche ce nom parmi les attributs du schema de structure */
 		i = 1;
-		while (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName) &&
+		while (strcmp (n, pSSchema->SsAttribute->TtAttr[i - 1]->AttrName) &&
 		       i < pSSchema->SsNAttributes)
 		   i++;
-		if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
+		if (strcmp (n, pSSchema->SsAttribute->TtAttr[i - 1]->AttrName))
 		   /* on ne l'a pas trouve, erreur */
 		   CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER,
 				    inputLine, LineNum);
@@ -4073,10 +4073,10 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 	     /* cherche ce nom parmi les attributs du schema de structure */
 	     CopyName (n, wi, wl);
 	     i = 1;
-	     while (strcmp (n, pSSchema->SsAttribute[i -1].AttrName) &&
+	     while (strcmp (n, pSSchema->SsAttribute->TtAttr[i -1]->AttrName) &&
 		    i < pSSchema->SsNAttributes)
 	        i++;
-	     if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
+	     if (strcmp (n, pSSchema->SsAttribute->TtAttr[i - 1]->AttrName))
 	        /* on ne l'a pas trouve, erreur */
 	        CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER,
 				 inputLine, LineNum);
@@ -4172,10 +4172,10 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
        /* cherche ce nom d'attribut dans le schema de structure */
        CopyName (n, wi, wl);
        i = 1;
-       while (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName) &&
+       while (strcmp (n, pSSchema->SsAttribute->TtAttr[i - 1]->AttrName) &&
 	      i < pSSchema->SsNAttributes)
 	  i++;
-       if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
+       if (strcmp (n, pSSchema->SsAttribute->TtAttr[i - 1]->AttrName))
 	  /* on ne l'a pas trouve, erreur */
 	  CompilerMessage (wi, PRS, FATAL, NO_SUCH__ATTR, inputLine, LineNum);
        else if (!(prevRule == RULE_Attr
@@ -4227,7 +4227,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 	  /* c'est un nom d'attribut apres le mot INIT ou REINIT dans */
 	  /* une definition de compteur */
 	  /* seuls les attributs numeriques sont accepte's */
-	  if (pSSchema->SsAttribute[i - 1].AttrType != AtNumAttr)
+	  if (pSSchema->SsAttribute->TtAttr[i - 1]->AttrType != AtNumAttr)
 	     /* ce n'est pas un attribut numerique, erreur */
 	     CompilerMessage (wi, PRS, FATAL, BAD_ATTR_TYPE, inputLine,
 			      LineNum);
@@ -4254,11 +4254,11 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 	  /* c'est un nom d'attribut a la place d'une valeur numerique */
 	  /* pour comparer la valeur de l'attribut a un attribut pose  */
 	  /* sur un element englobant */
-	  if (pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtNumAttr)
+	  if (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType != AtNumAttr)
 	     /* interdit pour un attribut non numerique */
 	     CompilerMessage (wi, PRS, FATAL, FORBIDDEN_FOR_THIS_TYPE_OF_ATTR,
 			      inputLine, LineNum);
-	  else if (pSSchema->SsAttribute[i - 1].AttrType != AtNumAttr)
+	  else if (pSSchema->SsAttribute->TtAttr[i - 1]->AttrType != AtNumAttr)
 	     /* l'attribut n'est pas un attribut numerique */
 	     CompilerMessage (wi, PRS, FATAL, FORBIDDEN_FOR_THIS_TYPE_OF_ATTR,
 			      inputLine, LineNum);
@@ -4328,10 +4328,10 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 	     {
 	     CopyName (n, wi, wl);
 	     i = 1;
-	     while (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName) &&
+	     while (strcmp (n, pSSchema->SsAttribute->TtAttr[i - 1]->AttrName) &&
 		    i < pSSchema->SsNAttributes)
 	        i++;
-	     if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
+	     if (strcmp (n, pSSchema->SsAttribute->TtAttr[i - 1]->AttrName))
 	        /* on ne l'a pas trouve, erreur */
 	        CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER,
 				 inputLine, LineNum);
@@ -4693,7 +4693,7 @@ que la boite creee ne contient pas AttrName ou AttrValue @@@@*****/
        /* cherche cette valeur parmi celles de l'attribut */
        /* precedemment trouve */
        CopyName (n, wi, wl);
-       pAttr = &pSSchema->SsAttribute[CurAttrNum - 1];
+       pAttr = pSSchema->SsAttribute->TtAttr[CurAttrNum - 1];
        if (pAttr->AttrType != AtEnumAttr)
 	  /* ce n'est pas un attribut a valeur enumerees */
 	  CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine,
@@ -4862,7 +4862,7 @@ static void ProcessInteger (SyntacticCode gCode, indLine wl, indLine wi)
 	       break;
 	    case RULE_MinVal:
 	       /* MinVal */
-	       if (pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtNumAttr
+	       if (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType != AtNumAttr
 		   || n >= MAX_INT_ATTR_VAL)
 		  CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
 	       /* ce n'est pas un attribut a valeur numerique */
@@ -4876,7 +4876,7 @@ static void ProcessInteger (SyntacticCode gCode, indLine wl, indLine wi)
 	       /* d'attribut numerique sera positive */
 	    case RULE_MaxVal:
 	       /* MaxVal */
-	       if (pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtNumAttr
+	       if (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType != AtNumAttr
 		   || n >= MAX_INT_ATTR_VAL)
 		  CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
 	       /* ce n'est pas un attribut a valeur numerique */
@@ -4890,7 +4890,7 @@ static void ProcessInteger (SyntacticCode gCode, indLine wl, indLine wi)
 	       /* d'attribut numerique sera positive */
 	    case RULE_MinInterval:
 	       /* MinInterval */
-	       if (pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtNumAttr
+	       if (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType != AtNumAttr
 		   || n >= MAX_INT_ATTR_VAL)
 		  CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
 	       /* ce n'est pas un attribut a valeur numerique */
@@ -4904,7 +4904,7 @@ static void ProcessInteger (SyntacticCode gCode, indLine wl, indLine wi)
 	       /* d'attribut numerique sera positive */
 	    case RULE_MaxInterval:
 	       /* MaxInterval */
-	       if (pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtNumAttr
+	       if (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType != AtNumAttr
 		   || n >= MAX_INT_ATTR_VAL)
 		  CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
 	       /* ce n'est pas un attribut a valeur numerique */
@@ -4921,7 +4921,7 @@ static void ProcessInteger (SyntacticCode gCode, indLine wl, indLine wi)
 	       /* d'attribut numerique sera positive */
 	    case RULE_ValEqual:
 	       /* ValEqual */
-	       if (pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtNumAttr
+	       if (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType != AtNumAttr
 		   || n >= MAX_INT_ATTR_VAL)
 		  CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
 	       /* ce n'est pas un attribut a valeur numerique */
@@ -5017,7 +5017,7 @@ static void ProcessString (SyntacticCode gCode, indLine wl, indLine wi)
    else if (gCode == RULE_TextEqual)
       /* TextEqual c'est une valeur d'attribut */
      {
-      if (pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtTextAttr)
+      if (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType != AtTextAttr)
 	 /* ce n'est pas un attribut a valeur textuelle */
 	 CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
       else if (wl > MAX_NAME_LENGTH)
@@ -5211,7 +5211,7 @@ void                SortAllPRules ()
 	    pPRuleA = pPRuleA->ApNextAttrPres)
 	 {
 	   /* selon le type de l'attribut */
-	   switch (pSSchema->SsAttribute[j].AttrType)
+	   switch (pSSchema->SsAttribute->TtAttr[j]->AttrType)
 	     {
 	     case AtNumAttr:
 	       for (k = 0; k < pPRuleA->ApNCases; k++)
@@ -5224,7 +5224,7 @@ void                SortAllPRules ()
 	       SortPresRules (&pPRuleA->ApRefFirstPRule);
 	       break;
 	     case AtEnumAttr:
-	       for (k = 0; k <= pSSchema->SsAttribute[j].AttrNEnumValues; k++)
+	       for (k = 0; k <= pSSchema->SsAttribute->TtAttr[j]->AttrNEnumValues; k++)
 		 SortPresRules (&pPRuleA->ApEnumFirstPRule[k]);
 	       break;
 	     default:
@@ -6061,7 +6061,7 @@ static void         CheckAllBoxesUsed ()
 	for (l = pPSchema->PsNAttrPRule[att]; l-- > 0; pPRuleA = pPRuleA->ApNextAttrPres)
 	  {
 	     /* selon le type de l'attribut */
-	     switch (pSSchema->SsAttribute[att].AttrType)
+	     switch (pSSchema->SsAttribute->TtAttr[att]->AttrType)
 		   {
 		      case AtNumAttr:
 			 for (k = 0; k < pPRuleA->ApNCases; k++)
@@ -6074,7 +6074,7 @@ static void         CheckAllBoxesUsed ()
 			 CheckUsedBoxes (pPRuleA->ApRefFirstPRule, usedBox);
 			 break;
 		      case AtEnumAttr:
-			 for (k = 0; k <= pSSchema->SsAttribute[att].AttrNEnumValues; k++)
+			 for (k = 0; k <= pSSchema->SsAttribute->TtAttr[att]->AttrNEnumValues; k++)
 			    CheckUsedBoxes (pPRuleA->ApEnumFirstPRule[k], usedBox);
 			 break;
 		      default:

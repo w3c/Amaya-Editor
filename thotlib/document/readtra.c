@@ -699,7 +699,7 @@ static void ReadBlocks (BinFile file, PtrTRuleBlock *pBlock, PtrTRule *pNextTRul
 			   case TcondAttr:
 			      TtaReadShort (file, &pCond->TcAttr);
 			      if (!error)
-				 switch ((*pSS)->SsAttribute[pCond->TcAttr - 1].AttrType)
+				 switch ((*pSS)->SsAttribute->TtAttr[pCond->TcAttr - 1]->AttrType)
 				       {
 					  case AtNumAttr:
 					     TtaReadSignedShort (file, &pCond->TcLowerBound);
@@ -797,7 +797,7 @@ static void ReadAttrTRules (BinFile file, int att, PtrTRuleBlock *pNextBlock,
      {
 	pAttrT = &(*pTSch)->TsAttrTRule[att];
 	TtaReadShort (file, &pAttrT->AtrElemType);
-	switch ((*pSS)->SsAttribute[att].AttrType)
+	switch ((*pSS)->SsAttribute->TtAttr[att]->AttrType)
 	      {
 		 case AtNumAttr:
 		    TtaReadShort (file, &pAttrT->AtrNCases);
@@ -821,7 +821,7 @@ static void ReadAttrTRules (BinFile file, int att, PtrTRuleBlock *pNextBlock,
 				pSS, pNextBlock);
 		    break;
 		 case AtEnumAttr:
-		    for (i = 0; i <= (*pSS)->SsAttribute[att].AttrNEnumValues; i++)
+		    for (i = 0; i <= (*pSS)->SsAttribute->TtAttr[att]->AttrNEnumValues; i++)
 		       ReadBlocks (file, &pAttrT->AtrEnuTRuleBlock[i],
 				   pNextTRule, pSS, pNextBlock);
 		    break;
@@ -834,7 +834,7 @@ static void ReadAttrTRules (BinFile file, int att, PtrTRuleBlock *pNextBlock,
 /*----------------------------------------------------------------------
    FreeTRulesAttr libere les regles de traduction d'un attribut.   
   ----------------------------------------------------------------------*/
-static void FreeTRulesAttr (AttributeTransl *pAttrT, TtAttribute *pAttr)
+static void FreeTRulesAttr (AttributeTransl *pAttrT, PtrTtAttribute pAttr)
 {
    int                 i;
 
@@ -1063,7 +1063,7 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
 	      if (!error)
 		{
 		   pAttrTr = &pTSch->TsAttrTRule[i];
-		   switch (pSS->SsAttribute[i].AttrType)
+		   switch (pSS->SsAttribute->TtAttr[i]->AttrType)
 			 {
 			    case AtNumAttr:
 			       TtaReadShort (file, &pAttrTr->AtrNCases);
@@ -1081,7 +1081,7 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
 				  ReadPtrTRuleBlock (file, &pNextBlock);
 			       break;
 			    case AtEnumAttr:
-			       for (j = 0; j <= pSS->SsAttribute[i].AttrNEnumValues; j++)
+			       for (j = 0; j <= pSS->SsAttribute->TtAttr[i]->AttrNEnumValues; j++)
 				  pAttrTr->AtrEnuTRuleBlock[j] =
 				     ReadPtrTRuleBlock (file, &pNextBlock);
 			       break;
@@ -1203,7 +1203,7 @@ void FreeTranslationSchema (PtrTSchema pTSch, PtrSSchema pSS)
       FreeBlocks (pTSch->TsElemTRule[i]);
    /* libere les blocs de regles des attributs */
    for (i = 0; i < pSS->SsNAttributes; i++)
-      FreeTRulesAttr (&pTSch->TsAttrTRule[i], &pSS->SsAttribute[i]);
+      FreeTRulesAttr (&pTSch->TsAttrTRule[i], pSS->SsAttribute->TtAttr[i]);
    /* libere les blocs de regles des presentations */
    for (i = 0; i < MAX_TRANSL_PRULE; i++)
       FreeTRulesPres (i + 1, &pTSch->TsPresTRule[i]);

@@ -2779,37 +2779,37 @@ static void AttachCounterValue (PtrElement pEl, PtrElement pElIncluded,
 {
    int                 att;
    PtrAttribute        pAttr;
-   TtAttribute        *pTtAttr;
+   PtrTtAttribute      pTtAttr;
    ThotBool            found;
 
    if (pElIncluded != NULL)
      {
-	/* le document inclus est charge', cherche l'attribut dans */
-	/* son schema de structure */
-	att = 0;
-	found = FALSE;
-	while (att < pElIncluded->ElStructSchema->SsNAttributes && !found)
-	  {
-	     att++;
-	     pTtAttr = &(pElIncluded->ElStructSchema->SsAttribute[att - 1]);
-	     if (pTtAttr->AttrType == AtNumAttr)
-		/* c'est un attribut numerique */
-		if (strncmp (pTtAttr->AttrOrigName, NmAttr, sizeof (Name)) == 0)
-		   /* il a le nom cherche' */
-		   found = TRUE;
-	  }
-	if (found)
-	  {
-	     /* l'attribut est bien defini dans le schema de structure du */
-	     /* document inclus, on le met sur la racine */
-	     GetAttribute (&pAttr);
-	     pAttr->AeAttrSSchema = pElIncluded->ElStructSchema;
-	     pAttr->AeAttrNum = att;
-	     pAttr->AeAttrType = AtNumAttr;
-	     pAttr->AeAttrValue = CounterVal (counter, pSchS, pSchP, pEl, 1);
-	     AttachAttrWithValue (pElIncluded, pDocIncluded, pAttr);
-	     DeleteAttribute (NULL, pAttr);
-	  }
+       /* le document inclus est charge', cherche l'attribut dans */
+       /* son schema de structure */
+       att = 0;
+       found = FALSE;
+       while (att < pElIncluded->ElStructSchema->SsNAttributes && !found)
+	 {
+	   att++;
+	   pTtAttr = pElIncluded->ElStructSchema->SsAttribute->TtAttr[att - 1];
+	   if (pTtAttr->AttrType == AtNumAttr)
+	     /* c'est un attribut numerique */
+	     if (strncmp (pTtAttr->AttrOrigName, NmAttr, sizeof (Name)) == 0)
+	       /* il a le nom cherche' */
+	       found = TRUE;
+	 }
+       if (found)
+	 {
+	   /* l'attribut est bien defini dans le schema de structure du */
+	   /* document inclus, on le met sur la racine */
+	   GetAttribute (&pAttr);
+	   pAttr->AeAttrSSchema = pElIncluded->ElStructSchema;
+	   pAttr->AeAttrNum = att;
+	   pAttr->AeAttrType = AtNumAttr;
+	   pAttr->AeAttrValue = CounterVal (counter, pSchS, pSchP, pEl, 1);
+	   AttachAttrWithValue (pElIncluded, pDocIncluded, pAttr);
+	   DeleteAttribute (NULL, pAttr);
+	 }
      }
 }
 

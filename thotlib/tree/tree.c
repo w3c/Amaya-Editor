@@ -2179,7 +2179,7 @@ void AttachRequiredAttributes (PtrElement pEl, SRule *pSRule, PtrSSchema pSS,
       if (!pSRule->SrDefAttrModif[i])
 	/* fixed value attribute */
 	pAttr->AeDefAttr = TRUE;
-      pAttr->AeAttrType = pSS->SsAttribute[att - 1].AttrType;
+      pAttr->AeAttrType = pSS->SsAttribute->TtAttr[att - 1]->AttrType;
       switch (pAttr->AeAttrType)
 	{
 	case AtEnumAttr:

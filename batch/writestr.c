@@ -285,7 +285,7 @@ static void         WriteRule (SRule * pSRule)
 ThotBool             WriteStructureSchema (Name fileName, PtrSSchema pSS,
 					   int code)
 {
-   TtAttribute        *pAttr;
+   PtrTtAttribute      pAttr;
    int                 i, j;
 
    /* ouvre le fichier */
@@ -325,7 +325,7 @@ ThotBool             WriteStructureSchema (Name fileName, PtrSSchema pSS,
    /* ecrit les attributs */
    for (i = 0; i < pSS->SsNAttributes; i++)
      {
-	pAttr = &pSS->SsAttribute[i];
+	pAttr = pSS->SsAttribute->TtAttr[i];
 	WriteName (pAttr->AttrName);
 	WriteBoolean (pAttr->AttrGlobal);
 	WriteShort (pAttr->AttrFirstExcept);

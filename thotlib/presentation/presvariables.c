@@ -900,7 +900,7 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
    PresVariable       *pPr1;
    PresVarItem        *pVa1;
    PresConstant       *pPres1;
-   TtAttribute        *pAttr1;
+   PtrTtAttribute         pAttr1;
    PtrElement          pEl;
    Counter            *pCo1;
    char                number[20];
@@ -987,7 +987,7 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 		    pAb->AbVolume += l;
 		    break;
 		  case AtEnumAttr:
-		    pAttr1 = &pSS->SsAttribute[pA->AeAttrNum - 1];
+		    pAttr1 = pSS->SsAttribute->TtAttr[pA->AeAttrNum - 1];
 		    CopyStringToBuffer (pAttr1->AttrEnumValue[pA->AeAttrValue-1],
 				      pAb->AbText, &l);
 		    pAb->AbVolume += l;
@@ -1099,7 +1099,7 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 
 	  case VarAttrName:
 	    /* Nom de l'attribut */
-	    CopyStringToBuffer (pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrName, pAb->AbText, &l);
+	    CopyStringToBuffer (pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrName, pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    break;
 

@@ -559,7 +559,7 @@ static void WrTree (PtrElement pNode, int Indent, FILE *fileDescriptor,
    PtrAttribute        pAttr;
    PtrPRule            pRule;
    SRule              *pRe1;
-   TtAttribute        *pAttr1;
+   PtrTtAttribute      pAttr1;
 
    if (pNode != NULL)
      {
@@ -622,7 +622,7 @@ static void WrTree (PtrElement pNode, int Indent, FILE *fileDescriptor,
 	   pAttr = pNode->ElFirstAttr;
 	   while (pAttr != NULL)
 	     {
-	       pAttr1 = &pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum-1];
+	       pAttr1 = pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum-1];
 	       fprintf (fileDescriptor, "%s=", pAttr1->AttrOrigName);
 	       switch (pAttr1->AttrType)
 		 {
@@ -673,7 +673,7 @@ static void WrTree (PtrElement pNode, int Indent, FILE *fileDescriptor,
 	       WrPRuleType (pRule, fileDescriptor);
 	       if (pRule->PrSpecifAttr > 0)
 		 fprintf (fileDescriptor, "[%s]", pRule->PrSpecifAttrSSchema->
-			  SsAttribute[pRule->PrSpecifAttr - 1].AttrOrigName);
+			  SsAttribute->TtAttr[pRule->PrSpecifAttr - 1]->AttrOrigName);
 	       fprintf (fileDescriptor, " view%d", pRule->PrViewNum);
 	       pRule = pRule->PrNextPRule;
 	     }
@@ -1471,7 +1471,7 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 		{
 		pAt1 = pDelPR->DpAttribute;
 		fprintf (fileDescriptor, "[%s]", pAt1->AeAttrSSchema->
-			 SsAttribute[pAt1->AeAttrNum - 1].AttrOrigName);
+			 SsAttribute->TtAttr[pAt1->AeAttrNum - 1]->AttrOrigName);
 		}
 	     fprintf (fileDescriptor, "\n");
 	     for (j = 1; j <= Indent + 6; j++)
@@ -2152,7 +2152,8 @@ static void wrnomregle (int r, FILE *fileDescriptor)
 static void wrnomattr (int a, FILE *fileDescriptor)
 {
   if (a != 0)
-    fprintf (fileDescriptor, pSchemaStr->SsAttribute[abs (a) - 1].AttrName);
+    fprintf (fileDescriptor,
+	     pSchemaStr->SsAttribute->TtAttr[abs (a) - 1]->AttrName);
 }
 
 
@@ -3175,7 +3176,7 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
    PtrDocument         pDoc;
    PtrHandlePSchema    pHd;
    PresConstant       *pPr1;
-   TtAttribute        *pAt1;
+   PtrTtAttribute      pAt1;
    AttributePres      *pRP1;
    NumAttrCase        *pCa1;
    int                 i, j;
@@ -3278,7 +3279,7 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 		     fprintf (fileDescriptor, "\n");
 		     for (Attr = 1; Attr <= pSchemaStr->SsNAttributes; Attr++)
 		       {
-			 pAt1 = &pSchemaStr->SsAttribute[Attr - 1];
+			 pAt1 = pSchemaStr->SsAttribute->TtAttr[Attr - 1];
 			 pRP1 = pSc1->PsAttrPRule[Attr - 1];
 			 while (pRP1 != NULL)
 			   {

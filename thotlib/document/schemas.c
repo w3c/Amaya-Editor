@@ -344,7 +344,7 @@ static void ReleasePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
 	  pAttrPres = pPSchema->PsAttrPRule[i];
 	  while (pAttrPres != NULL)
 	    {
-	      switch (pSS->SsAttribute[i].AttrType)
+	      switch (pSS->SsAttribute->TtAttr[i]->AttrType)
 		{
 		case AtNumAttr:
 		  for (j = 0; j < pAttrPres->ApNCases; j++)
@@ -357,7 +357,8 @@ static void ReleasePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
 		  FreePRuleList (&pAttrPres->ApRefFirstPRule);
 		  break;
 		case AtEnumAttr:
-		  for (j = 0; j <= pSS->SsAttribute[i].AttrNEnumValues; j++)
+		  for (j = 0;
+		       j <= pSS->SsAttribute->TtAttr[i]->AttrNEnumValues; j++)
 		    FreePRuleList (&pAttrPres->ApEnumFirstPRule[j]);
 		  break;
 		default:
@@ -1487,12 +1488,14 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
   else
     {
       i = pSS->SsNAttributes;
-      strncpy (pSS->SsAttribute[i].AttrName, XMLName, MAX_NAME_LENGTH);
-      strncpy (pSS->SsAttribute[i].AttrOrigName, XMLName, MAX_NAME_LENGTH);
-      pSS->SsAttribute[i].AttrGlobal = TRUE;
-      pSS->SsAttribute[i].AttrFirstExcept = 0;
-      pSS->SsAttribute[i].AttrLastExcept = 0;
-      pSS->SsAttribute[i].AttrType = AtTextAttr;
+      strncpy (pSS->SsAttribute->TtAttr[i]->AttrName, XMLName,
+	       MAX_NAME_LENGTH);
+      strncpy (pSS->SsAttribute->TtAttr[i]->AttrOrigName, XMLName,
+	       MAX_NAME_LENGTH);
+      pSS->SsAttribute->TtAttr[i]->AttrGlobal = TRUE;
+      pSS->SsAttribute->TtAttr[i]->AttrFirstExcept = 0;
+      pSS->SsAttribute->TtAttr[i]->AttrLastExcept = 0;
+      pSS->SsAttribute->TtAttr[i]->AttrType = AtTextAttr;
 
       /* Initialize and insert the presentation rules */
       /* associed to this new attribute */
@@ -1518,7 +1521,7 @@ void    TtaGetXmlAttributeType (char *XMLName, AttributeType *attrType)
    pSS = (PtrSSchema) attrType->AttrSSchema;
    for (nbattr = 0;  !found && nbattr < pSS->SsNAttributes; nbattr++)
      {
-       if (strcmp (pSS->SsAttribute[nbattr].AttrName, XMLName) == 0)
+       if (strcmp (pSS->SsAttribute->TtAttr[nbattr]->AttrName, XMLName) == 0)
 	 {
 	   attrType->AttrTypeNum = nbattr + 1;
 	   found = TRUE;
@@ -1924,12 +1927,16 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
       printf ("\nNombre d'attributs : %d\n", pSS->SsNAttributes);
       for (i = 0;  i < pSS->SsNAttributes; i++)
 	{
-	  printf ("AttrName : %s\n", pSS->SsAttribute[i].AttrName);
-	  printf ("AttrOrigName : %s\n", pSS->SsAttribute[i].AttrOrigName);
-	  printf ("AttrGlobal : %d\n", pSS->SsAttribute[i].AttrGlobal);
-	  printf ("AttrFirstExcept : %d\n", pSS->SsAttribute[i].AttrFirstExcept);
-	  printf ("AttrAttrLastExcept : %d\n", pSS->SsAttribute[i].AttrLastExcept);
-	  printf ("AttrType : %d\n", pSS->SsAttribute[i].AttrType);
+	  printf ("AttrName : %s\n", pSS->SsAttribute->TtAttr[i]->AttrName);
+	  printf ("AttrOrigName : %s\n",
+		  pSS->SsAttribute->TtAttr[i]->AttrOrigName);
+	  printf ("AttrGlobal : %d\n",
+		  pSS->SsAttribute->TtAttr[i]->AttrGlobal);
+	  printf ("AttrFirstExcept : %d\n",
+		  pSS->SsAttribute->TtAttr[i]->AttrFirstExcept);
+	  printf ("AttrAttrLastExcept : %d\n",
+		  pSS->SsAttribute->TtAttr[i]->AttrLastExcept);
+	  printf ("AttrType : %d\n", pSS->SsAttribute->TtAttr[i]->AttrType);
 	}
      
       if (pPS != NULL)
@@ -2040,13 +2047,13 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
 	  for (i = 0; i < pSS->SsNAttributes; i++)
 	    {
 	      AttributePres *nextAtRule;
-	      printf ("\nAttribut %d Nom : %s\n", i, pSS->SsAttribute[i].AttrName);
-	      printf ("  PsAttrType : %d\n", pSS->SsAttribute[i].AttrType);
+	      printf ("\nAttribut %d Nom : %s\n", i, pSS->SsAttribute->TtAttr[i]->AttrName);
+	      printf ("  PsAttrType : %d\n", pSS->SsAttribute->TtAttr[i]->AttrType);
 	      nextAtRule = pPS->PsAttrPRule[i];
 	      while (nextAtRule != NULL)
 		{
 		  printf ("  ApElemType : %d\n", nextAtRule->ApElemType);
-		  if (pSS->SsAttribute[i].AttrType == AtTextAttr)
+		  if (pSS->SsAttribute->TtAttr[i]->AttrType == AtTextAttr)
 		    {
 		      printf ("  ApString : %s\n", nextAtRule->ApString);
 		      nextPRule = (pPS->PsAttrPRule[i])->ApTextFirstPRule;

@@ -1500,7 +1500,7 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 			       if (!error)
 				 {
 				    error = !TtaReadShort (file, &pAttrP->ApElemType);
-				    switch (pSS->SsAttribute[i].AttrType)
+				    switch (pSS->SsAttribute->TtAttr[i]->AttrType)
 					  {
 					     case AtNumAttr:
 						for (j = 0; j < MAX_PRES_ATTR_CASE; j++)
@@ -1526,7 +1526,7 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 					     case AtEnumAttr:
 						for (j = 0; j <= MAX_ATTR_VAL; j++)
 						   pAttrP->ApEnumFirstPRule[j] = NULL;
-						for (j = 0; j <= pSS->SsAttribute[i].AttrNEnumValues; j++)
+						for (j = 0; j <= pSS->SsAttribute->TtAttr[i]->AttrNEnumValues; j++)
 						   pAttrP->ApEnumFirstPRule[j] = ReadPRulePtr (file, &pNextPRule);
 						break;
 					  }
@@ -1565,7 +1565,7 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 			for (l = pPSch->PsNAttrPRule[i]; l-- > 0; pAttrP = pAttrP->ApNextAttrPres)
 			  {
 			     if (!error)
-				switch (pSS->SsAttribute[i].AttrType)
+				switch (pSS->SsAttribute->TtAttr[i]->AttrType)
 				      {
 					 case AtNumAttr:
 					    for (j = 0; j < pAttrP->ApNCases; j++)
@@ -1578,7 +1578,7 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 					    ReadPRules (file, &pAttrP->ApTextFirstPRule, &pNextPRule);
 					    break;
 					 case AtEnumAttr:
-					    for (j = 0; j <= pSS->SsAttribute[i].AttrNEnumValues; j++)
+					    for (j = 0; j <= pSS->SsAttribute->TtAttr[i]->AttrNEnumValues; j++)
 					       ReadPRules (file, &pAttrP->ApEnumFirstPRule[j], &pNextPRule);
 					    break;
 				      }

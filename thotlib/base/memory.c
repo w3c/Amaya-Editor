@@ -168,7 +168,9 @@ void TtaFreeMemory (void *ptr)
   ----------------------------------------------------------------------*/
 void                FreeAll ()
 {
-  void   *ptr;
+  void       *ptr;
+  PtrSSchema pSS;
+  int        i;
 
   while (PtFree_TextBuff != NULL)
     {
@@ -276,9 +278,12 @@ void                FreeAll ()
 
   while (PtFree_SchStruct != NULL)
     {
-      ptr = (void *)PtFree_SchStruct;
+      pSS = PtFree_SchStruct;
       PtFree_SchStruct = PtFree_SchStruct->SsNextExtens;
-      TtaFreeMemory (ptr);
+      for (i = 0; i < MAX_ATTR_SSCHEMA; i++)
+	free (pSS->SsAttribute->TtAttr[i]);
+      free (pSS->SsAttribute);
+      TtaFreeMemory ((void *) pSS);
     }
   NbFree_SchStruct = 0;
     
@@ -1296,19 +1301,31 @@ void FreeExternalBlock (PtrExtensBlock pBE)
 void GetSchStruct (PtrSSchema * pSS)
 {
   PtrSSchema    pNewSS;
+  TtAttrTable   *pAtt;
+  int           size, i;
 
   if (PtFree_SchStruct == NULL)
-    pNewSS = (PtrSSchema) TtaGetMemory (sizeof (StructSchema));
+    {
+      pNewSS = (PtrSSchema) TtaGetMemory (sizeof (StructSchema));
+      size = MAX_ATTR_SSCHEMA * sizeof (PtrTtAttribute);
+      pAtt = (TtAttrTable*) malloc (size);
+      for (i = 0; i < MAX_ATTR_SSCHEMA; i++)
+	 pAtt->TtAttr[i] = (PtrTtAttribute) malloc (sizeof (TtAttribute));
+    }
   else
     {
       pNewSS = PtFree_SchStruct;
       PtFree_SchStruct = pNewSS->SsNextExtens;
       NbFree_SchStruct--;
+      pAtt = pNewSS->SsAttribute;
     }
   *pSS = pNewSS;
   if (pNewSS)
     {
       memset (pNewSS, 0, sizeof (StructSchema));
+      pNewSS->SsAttribute = pAtt;
+      for (i = 0; i < MAX_ATTR_SSCHEMA; i++)
+	 memset (pAtt->TtAttr[i], 0, sizeof (TtAttribute));
       NbUsed_SchStruct++;
     }
 }
@@ -1318,6 +1335,7 @@ void GetSchStruct (PtrSSchema * pSS)
   ----------------------------------------------------------------------*/
 void FreeSchStruc (PtrSSchema pSS)
 {
+
   if (pSS->SsExtensBlock != NULL)
     {
       FreeExternalBlock (pSS->SsExtensBlock);
@@ -1333,6 +1351,10 @@ void FreeSchStruc (PtrSSchema pSS)
   pSS->SsNExtensRules = 0;
   pSS->SsExtensBlock = NULL;
 #ifdef DEBUG_MEMORY
+  int i;
+  for (i = 0; i < MAX_ATTR_SSCHEMA; i++)
+    free (pSS->SsAttribute->TtAttr[i]);
+  free (pSS->SsAttribute);
   TtaFreeMemory (pSS);
 #else
   pSS->SsNextExtens = PtFree_SchStruct;

@@ -390,7 +390,7 @@ static void IsomorphicTransform (PtrElement pEl, PtrSSchema pSS,
    while (pAttr != NULL)	/* examine tous les attributs de l'element */
      {
 	pNextAttr = pAttr->AeNext;
-	if (!pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrGlobal)
+	if (!pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrGlobal)
 	   /* c'est un attribut local, il faut verifier */
 	  {
 	     found = FALSE;

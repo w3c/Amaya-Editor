@@ -37,7 +37,7 @@ static int          CommentNum;
 static int          STR;	/* Identification des messages Str */
 PtrSSchema          pSc1;
 SRule              *pRe1;
-TtAttribute        *pAt1;
+PtrTtAttribute      pAt1;
 
 #include "readstr_f.h"
 
@@ -426,9 +426,9 @@ static void         Wdefine ()
 static void         wrattr (int a)
 {
    int                 j;
-   TtAttribute        *pAt1;
+   PtrTtAttribute      pAt1;
 
-   pAt1 = &pSchStr->SsAttribute[a - 1];
+   pAt1 = pSchStr->SsAttribute->TtAttr[a - 1];
    if (optionh)
      {
 	if (pAt1->AttrGlobal)
@@ -576,7 +576,7 @@ static void         wrrule (int r, SRule * pRegleExtens)
    int                 i;
    PtrSSchema          pSc1;
    SRule              *pRe1;
-   TtAttribute        *pAt1;
+   PtrTtAttribute      pAt1;
 
    pSc1 = pSchStr;
    if (pRegleExtens != NULL)
@@ -797,7 +797,7 @@ static void         wrrule (int r, SRule * pRegleExtens)
 	     printf ("%c%cWITH ", '\t', '\t');
 	     for (i = 1; i <= pRe1->SrNDefAttrs; i++)
 	       {
-		  pAt1 = &pSc1->SsAttribute[pRe1->SrDefAttr[i - 1] - 1];
+		  pAt1 = pSc1->SsAttribute->TtAttr[pRe1->SrDefAttr[i - 1] - 1];
 		  wrnom (pAt1->AttrName);
 		  if (pAt1->AttrType != AtReferenceAttr)
 		    {
@@ -918,7 +918,8 @@ int                 main (int argc, char **argv)
 	     printf (";\n");
 	  }
 	/* ecrit les attributs globaux */
-	if (pSc1->SsNAttributes > 0 && pSc1->SsAttribute[0].AttrGlobal)
+	if (pSc1->SsNAttributes > 0 &&
+	    pSc1->SsAttribute->TtAttr[0]->AttrGlobal)
 	  {
 	     if (!optionh)
 		printf ("ATTR\n");
@@ -927,15 +928,15 @@ int                 main (int argc, char **argv)
 	  }
 
 	for (i = 1; i <= pSc1->SsNAttributes; i++)
-	   if (pSc1->SsAttribute[i - 1].AttrGlobal)
+	   if (pSc1->SsAttribute->TtAttr[i - 1]->AttrGlobal)
 	     {
 		if (!optionh)
 		   printf ("   ");
-		pSc1->SsAttribute[i - 1].AttrGlobal = False;
+		pSc1->SsAttribute->TtAttr[i - 1]->AttrGlobal = False;
 		/* indique a wrattr qu'il faut */
 		/* ecrire les valeurs de l'attribut */
 		wrattr (i);
-		pSc1->SsAttribute[i - 1].AttrGlobal = True;
+		pSc1->SsAttribute->TtAttr[i - 1]->AttrGlobal = True;
 		if (!optionh)
 		   printf (";\n");
 	     }
@@ -944,7 +945,7 @@ int                 main (int argc, char **argv)
 	  {
 	     premattrlocal = True;
 	     for (i = 1; i <= pSc1->SsNAttributes; i++)
-		if (!pSc1->SsAttribute[i - 1].AttrGlobal)
+		if (!pSc1->SsAttribute->TtAttr[i - 1]->AttrGlobal)
 		  {
 		     if (premattrlocal)
 		       {
@@ -1078,7 +1079,7 @@ int                 main (int argc, char **argv)
 		/* ecrit d'abord les exceptions de tous les attributs */
 		for (a = 1; a <= pSc1->SsNAttributes; a++)
 		  {
-		     pAt1 = &pSc1->SsAttribute[a - 1];
+		     pAt1 = pSc1->SsAttribute->TtAttr[a - 1];
 		     if (pAt1->AttrFirstExcept > 0)
 			/* cet attribut a des exceptions */
 		       {
@@ -1217,13 +1218,13 @@ int                 main (int argc, char **argv)
 	   if (pSchStr->SsExtensBlock->EbExtensRule[k].SrName[0] != '\0')
 	      printName (&(pSchStr->SsExtensBlock->EbExtensRule[k].SrName[0]));
 	for (k = 0; k < pSchStr->SsNAttributes; k++)
-	   printName (&(pSchStr->SsAttribute[k].AttrName[0]));
+	   printName (&(pSchStr->SsAttribute->TtAttr[k]->AttrName[0]));
 
 	for (k = 0; k < pSchStr->SsNAttributes; k++)
 	  {
-	     if (pSchStr->SsAttribute[k].AttrType == AtEnumAttr)
-		for (l = 0; l < pSchStr->SsAttribute[k].AttrNEnumValues; l++)
-		   printName (&(pSchStr->SsAttribute[k].AttrEnumValue[l][0]));
+	     if (pSchStr->SsAttribute->TtAttr[k]->AttrType == AtEnumAttr)
+		for (l = 0; l < pSchStr->SsAttribute->TtAttr[k]->AttrNEnumValues; l++)
+		   printName (&(pSchStr->SsAttribute->TtAttr[k]->AttrEnumValue[l][0]));
 	  }
      }
    TtaSaveAppRegistry ();

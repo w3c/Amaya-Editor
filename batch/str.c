@@ -162,7 +162,7 @@ static void InitBasicType (SRule *pRule, char *name, BasicType typ)
 static void         Initialize ()
 {
    int                 i;
-   TtAttribute        *pAttr;
+   PtrTtAttribute      pAttr;
    SRule              *pRule;
 
    pSSchema->SsExtension = False;
@@ -174,7 +174,7 @@ static void         Initialize ()
    pSSchema->SsNAttributes = 0;
    for (i = 0; i < MAX_ATTR_SSCHEMA; i++)
      {
-	pAttr = &pSSchema->SsAttribute[i];
+	pAttr = pSSchema->SsAttribute->TtAttr[i];
 	pAttr->AttrOrigName[0] = '\0';
 	pAttr->AttrGlobal = True;
 	/* all attributes are global */
@@ -185,7 +185,7 @@ static void         Initialize ()
 	pAttr->AttrNEnumValues = 0;
      }
    /* create the language attribute */
-   pAttr = &pSSchema->SsAttribute[0];
+   pAttr = pSSchema->SsAttribute->TtAttr[0];
    strncpy (pAttr->AttrName, "Langue", MAX_NAME_LENGTH);
    pAttr->AttrOrigName[0] = '\0';
    pAttr->AttrGlobal = True;
@@ -483,7 +483,7 @@ static void         ChangeOneRule (SRule * pRule)
 static void         ChangeRules ()
 {
    int                 i;
-   TtAttribute        *pAttr;
+   PtrTtAttribute      pAttr;
    
    /* use SrRecursDone with the mean `unused rule' */
    for (i = MAX_BASIC_TYPE; i < pSSchema->SsNRules; i++)
@@ -497,7 +497,7 @@ static void         ChangeRules ()
    /* go through all attributes defined in the structure schema */
    for (i = 0; i < pSSchema->SsNAttributes; i++)
      {
-	pAttr = &pSSchema->SsAttribute[i];
+	pAttr = pSSchema->SsAttribute->TtAttr[i];
 	/* don't take care of reference attributes */
 	if (pAttr->AttrType == AtReferenceAttr)
 	   /* only take care of types defined in the same schema */
@@ -722,7 +722,7 @@ static int          AttributeNumber (indLine wl, indLine wi)
    CopyWord (N, wi, wl);
    AttrNum = 0;
    do
-      ok = strcmp (N, pSSchema->SsAttribute[AttrNum++].AttrName) == 0;
+      ok = strcmp (N, pSSchema->SsAttribute->TtAttr[AttrNum++]->AttrName) == 0;
    while (!ok && AttrNum < pSSchema->SsNAttributes);
    if (!ok)
       AttrNum = 0;
@@ -739,7 +739,7 @@ static void      ExceptionNum (int num, ThotBool checkType, ThotBool checkAttr,
 			       ThotBool CheckIntAttr, indLine wi)
 {
    SRule              *pRule;
-   TtAttribute        *pAttr;
+   PtrTtAttribute      pAttr;
 
    if (checkType && ExceptType == 0)
      CompilerMessage (wi, STR, FATAL, STR_ONLY_FOR_ELEMS, inputLine, LineNum);
@@ -748,11 +748,11 @@ static void      ExceptionNum (int num, ThotBool checkType, ThotBool checkAttr,
    if (ExceptAttr > 0)
      {
        if (CheckIntAttr &&
-	   pSSchema->SsAttribute[ExceptAttr - 1].AttrType != AtNumAttr)
+	   pSSchema->SsAttribute->TtAttr[ExceptAttr - 1]->AttrType != AtNumAttr)
 	 CompilerMessage (wi, STR, FATAL, STR_ONLY_FOR_NUMERICAL_ATTRS,
 			  inputLine, LineNum);
        if (num == ExcActiveRef &&
-	   pSSchema->SsAttribute[ExceptAttr - 1].AttrType != AtReferenceAttr)
+	   pSSchema->SsAttribute->TtAttr[ExceptAttr - 1]->AttrType != AtReferenceAttr)
 	 CompilerMessage (wi, STR, FATAL, STR_ONLY_FOR_REFERENCE_ATTRS,
 			  inputLine, LineNum);
      }
@@ -781,7 +781,7 @@ static void      ExceptionNum (int num, ThotBool checkType, ThotBool checkAttr,
 	     }
 	   else if (ExceptAttr != 0)
 	     {
-	       pAttr = &pSSchema->SsAttribute[ExceptAttr - 1];
+	       pAttr = pSSchema->SsAttribute->TtAttr[ExceptAttr - 1];
 	       if (pAttr->AttrFirstExcept == 0)
 		 pAttr->AttrFirstExcept = pSSchema->SsNExceptions;
 	       pAttr->AttrLastExcept = pSSchema->SsNExceptions;
@@ -1003,7 +1003,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 {
    int                 SynInteger, i, j;
    Name                N;
-   TtAttribute        *pAttr;
+   PtrTtAttribute      pAttr;
    SRule              *pRule;
    ThotBool            ok;
    int                 attrNum;
@@ -1023,11 +1023,11 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	   {
 	     if (CompilExtens)
 	       /* within the extension rule */
-	       pAttr = &pSSchema->SsAttribute[CurExtensRule->
+	       pAttr = pSSchema->SsAttribute->TtAttr[CurExtensRule->
 			    SrLocalAttr[CurExtensRule->SrNLocalAttrs - 1] - 1];
 	     else
 	       /* within the structure rule */
-	       pAttr = &pSSchema->SsAttribute[CurLocAttr[CurNLocAttr - 1] - 1];
+	       pAttr = pSSchema->SsAttribute->TtAttr[CurLocAttr[CurNLocAttr - 1] - 1];
 	     if (pAttr->AttrType == AtEnumAttr && pAttr->AttrNEnumValues == 0)
 	       /* no value defined */
 	       CompilerMessage (wi, STR, FATAL, STR_ATTR_WITHOUT_VALUE,
@@ -1080,7 +1080,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	 else if (r == RULE_LocalAttr)
 	   {
 	     /* define the type of a local attribute */
-	     pAttr = &pSSchema->SsAttribute[pSSchema->SsNAttributes - 1];
+	     pAttr = pSSchema->SsAttribute->TtAttr[pSSchema->SsNAttributes - 1];
 	     if (pAttr->AttrType != AtEnumAttr ||
 		 (pAttr->AttrType == AtEnumAttr && pAttr->AttrNEnumValues > 0))
 	       /* attribute already defined */
@@ -1114,11 +1114,11 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	     CompilLocAttr = False;
 	     if (CompilExtens)
 	       /* within extension rule */
-	       pAttr = &pSSchema->SsAttribute[CurExtensRule->
+	       pAttr = pSSchema->SsAttribute->TtAttr[CurExtensRule->
 			    SrLocalAttr[CurExtensRule->SrNLocalAttrs - 1] - 1];
 	     else
 	       /* within structure rule */
-	       pAttr = &pSSchema->SsAttribute[CurLocAttr[CurNLocAttr - 1] - 1];
+	       pAttr = pSSchema->SsAttribute->TtAttr[CurLocAttr[CurNLocAttr - 1] - 1];
 	     if (pAttr->AttrType == AtEnumAttr && pAttr->AttrNEnumValues == 0)
 	       /* no value defined */
 	       CompilerMessage (wi, STR, FATAL, STR_ATTR_WITHOUT_VALUE,
@@ -1193,7 +1193,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		   else if (SecondInPair)
 		     {
 		       if (r == RULE_AttrType)
-			 pSSchema->SsAttribute[pSSchema->SsNAttributes - 1].
+			 pSSchema->SsAttribute->TtAttr[pSSchema->SsNAttributes - 1]->
 			   AttrTypeRef = -(i + 1);
 		       else if (pSSchema->SsRule[CurRule[RecursLevel - 1] - 1].
 				SrConstruct == CsReference)
@@ -1361,7 +1361,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	   }
 	 break;
        case KWD_INTEGER:
-	 pSSchema->SsAttribute[pSSchema->SsNAttributes - 1].AttrType =
+	 pSSchema->SsAttribute->TtAttr[pSSchema->SsNAttributes - 1]->AttrType =
 	   AtNumAttr;
 	 break;
        case KWD_TEXT:
@@ -1370,7 +1370,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	   BasicEl (CharString + 1, wi, pr);
 	 else
 	   /* attribute type */
-	   pSSchema->SsAttribute[pSSchema->SsNAttributes - 1].AttrType =
+	   pSSchema->SsAttribute->TtAttr[pSSchema->SsNAttributes - 1]->AttrType =
 	     AtTextAttr;
 	 break;
        case KWD_REFERENCE:
@@ -1398,7 +1398,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	   /* attribut type */
 	   {
 	     ReferenceAttr = True;	/* it's a reference attribute */
-	     pAttr = &pSSchema->SsAttribute[pSSchema->SsNAttributes - 1];
+	     pAttr = pSSchema->SsAttribute->TtAttr[pSSchema->SsNAttributes - 1];
 	     pAttr->AttrType = AtReferenceAttr;
 	     pAttr->AttrTypeRefNature[0] = '\0';
 	     pAttr->AttrTypeRef = 0;
@@ -1409,7 +1409,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	 break;
        case KWD_ANY:
 	 if (ReferenceAttr)
-	   pSSchema->SsAttribute[pSSchema->SsNAttributes - 1].AttrTypeRef = 0;
+	   pSSchema->SsAttribute->TtAttr[pSSchema->SsNAttributes - 1]->AttrTypeRef = 0;
 	 else
 	   pSSchema->SsRule[CurRule[RecursLevel - 1] - 1].SrReferredType = 0;
 	 break;
@@ -1816,7 +1816,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	     if (pr == RULE_TypeRef && ReferenceAttr)
 	       /* within a reference attribute */
 	       {
-		 pSSchema->SsAttribute[pSSchema->SsNAttributes - 1].AttrTypeRef
+		 pSSchema->SsAttribute->TtAttr[pSSchema->SsNAttributes - 1]->AttrTypeRef
 		   = nb + MAX_BASIC_TYPE;
 		 CopyWord (ReferredTypeName, wi, wl);
 		 /* keep the referred type name in case it's */
@@ -1855,7 +1855,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 			 {
 			 case AttrRef:
 			   /* within reference attribute */
-			   pAttr = &pSSchema->SsAttribute[pSSchema->
+			   pAttr = pSSchema->SsAttribute->TtAttr[pSSchema->
 							 SsNAttributes - 1];
 			   if (SecondInPair)
 			     pAttr->AttrTypeRef = i + 2;
@@ -2035,7 +2035,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 			 CompilerMessage (wi, STR, FATAL,
 					  STR_TYPE_OR_ATTR_UNKNOWN, inputLine,
 					  LineNum);
-		       else if (pSSchema->SsAttribute[ExceptAttr - 1].
+		       else if (pSSchema->SsAttribute->TtAttr[ExceptAttr - 1]->
 				AttrFirstExcept != 0)
 			 CompilerMessage (wi, STR, FATAL,
 					  STR_THIS_ATTR_ALREADY_HAS_EXCEPTS,
@@ -2110,7 +2110,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	     if (attrNum == 0)
 	       /* new name within the schema */
 	       if (strncmp (&inputLine[wi - 1],
-			     pSSchema->SsAttribute[0].AttrName, wl) == 0)
+			     pSSchema->SsAttribute->TtAttr[0]->AttrName, wl) == 0)
 		 /* it's the language attribute */
 		 attrNum = 1;
 	     if (CompilAttr || CompilLocAttr)
@@ -2124,7 +2124,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		   if (attrNum > 0)
 		     {
 		       /* attribute already defined */
-		       if (pSSchema->SsAttribute[attrNum - 1].AttrGlobal)
+		       if (pSSchema->SsAttribute->TtAttr[attrNum - 1]->AttrGlobal)
 			 /* the global attribute cannot be */
 			 /* used as local attribute */
 			 CompilerMessage (wi, STR, FATAL, STR_GLOBAL_ATTR,
@@ -2141,7 +2141,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 			 pSSchema->SsNAttributes++;
 			 Identifier[nb - 1].SrcIdentDefRule =
 			   pSSchema->SsNAttributes;
-			 pAttr = &pSSchema->SsAttribute[pSSchema->
+			 pAttr = pSSchema->SsAttribute->TtAttr[pSSchema->
 						       SsNAttributes - 1];
 			 if (CompilLocAttr)
 			   /* local attribute */
@@ -2199,7 +2199,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 					  inputLine, LineNum);
 		   }
 		 else
-		   if (pSSchema->SsAttribute[ExceptAttr - 1].AttrFirstExcept !=
+		   if (pSSchema->SsAttribute->TtAttr[ExceptAttr - 1]->AttrFirstExcept !=
 		       0)
 		     CompilerMessage (wi, STR, FATAL,
 				      STR_THIS_ATTR_ALREADY_HAS_EXCEPTS,
@@ -2235,7 +2235,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	       /* attribute value definition for the current */
 	       /* attribute (the last one for the moment) */
 	       {
-		 pAttr = &pSSchema->SsAttribute[pSSchema->SsNAttributes - 1];
+		 pAttr = pSSchema->SsAttribute->TtAttr[pSSchema->SsNAttributes - 1];
 		 if (pAttr->AttrNEnumValues >= MAX_ATTR_VAL)
 		   /* overflow of values list */
 		   CompilerMessage (wi, STR, FATAL, STR_TOO_MANY_VALUES,
@@ -2279,7 +2279,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		     pRule = CurExtensRule;
 		   else
 		     pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
-		   pAttr = &pSSchema->SsAttribute[pRule->
+		   pAttr = pSSchema->SsAttribute->TtAttr[pRule->
 				       SrDefAttr[pRule->SrNDefAttrs - 1] - 1];
 		   if (pAttr->AttrType != AtEnumAttr)
 		     CompilerMessage (wi, STR, FATAL,
@@ -2370,8 +2370,8 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	       pRule = CurExtensRule;
 	     else
 	       pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
-	     if (pSSchema->SsAttribute[pRule->SrDefAttr
-			   [pRule->SrNDefAttrs - 1] - 1].AttrType != AtNumAttr)
+	     if (pSSchema->SsAttribute->TtAttr[pRule->SrDefAttr
+			   [pRule->SrNDefAttrs - 1] - 1]->AttrType != AtNumAttr)
 	       CompilerMessage (wi, STR, FATAL,
 				STR_INVALID_VALUE_FOR_THAT_ATTR, inputLine,
 				LineNum);
@@ -2409,8 +2409,8 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	       pRule = CurExtensRule;
 	     else
 	       pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
-	     if (pSSchema->SsAttribute[pRule->SrDefAttr
-			 [pRule->SrNDefAttrs - 1] - 1].AttrType != AtTextAttr)
+	     if (pSSchema->SsAttribute->TtAttr[pRule->SrDefAttr
+			 [pRule->SrNDefAttrs - 1] - 1]->AttrType != AtTextAttr)
 	       CompilerMessage (wi, STR, FATAL,
 				STR_INVALID_VALUE_FOR_THAT_ATTR, inputLine,
 				LineNum);

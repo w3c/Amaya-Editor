@@ -134,7 +134,7 @@ void CreateComparAttrTable (PtrAttribute pAttr, PtrDocument pDoc)
   /* scan all attributes defined in the structure schema */
   for (attr = 0; attr < pAttr->AeAttrSSchema->SsNAttributes; attr++)
     /* check only integer attributes */
-    if (pAttr->AeAttrSSchema->SsAttribute[attr].AttrType == AtNumAttr)
+    if (pAttr->AeAttrSSchema->SsAttribute->TtAttr[attr]->AttrType == AtNumAttr)
       {
 	/* check the main presentation schema and all its extensions */
 	pSchP = pPS;
@@ -199,7 +199,7 @@ void TransmitElementContent (PtrElement pEl, PtrDocument pDoc,
   PtrAttribute        pAttr;
   DocumentIdentifier  IncludedDocIdent;
   int                 att;
-  TtAttribute        *AttrDef;
+  PtrTtAttribute         AttrDef;
   PtrElement          pChild;
   ThotBool            found;
   int                 len;
@@ -234,7 +234,7 @@ void TransmitElementContent (PtrElement pEl, PtrDocument pDoc,
 		     while (att < pIncludedEl->ElStructSchema->SsNAttributes &&
 			    !found)
 		       {
-			 AttrDef = &(pIncludedEl->ElStructSchema->SsAttribute[att++]);
+			 AttrDef = pIncludedEl->ElStructSchema->SsAttribute->TtAttr[att++];
 			 if (AttrDef->AttrType == AtTextAttr)
 			   /* that's a text attribute */
 			   if (strcmp (AttrDef->AttrOrigName, attrName) == 0)

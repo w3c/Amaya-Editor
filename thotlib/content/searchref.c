@@ -313,8 +313,8 @@ void                FindReferredEl ()
 			pRefTable[nMenuItems] = pAttr->AeAttrReference;
 			nMenuItems++;
 			strcpy (menuBuf + menuBufLen,
-				pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrName);
-			menuBufLen += strlen (pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrName) + 1;
+				pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrName);
+			menuBufLen += strlen (pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrName) + 1;
 		     }
 	     pAttr = pAttr->AeNext;
 	  }

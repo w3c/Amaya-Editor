@@ -581,7 +581,7 @@ void WriteBlocks (PtrTRuleBlock pBlock, PtrSSchema pSS)
 			 break;
 		      case TcondAttr:
 			 WriteShort (pCond->TcAttr);
-			 switch (pSS->SsAttribute[pCond->TcAttr - 1].AttrType)
+			 switch (pSS->SsAttribute->TtAttr[pCond->TcAttr - 1]->AttrType)
 			       {
 				  case AtNumAttr:
 				     WriteSignedShort (pCond->TcLowerBound);
@@ -644,7 +644,7 @@ void WriteTRulesAttr (int att, PtrSSchema pSS, PtrTSchema pTSch)
 
    pAttrT = &pTSch->TsAttrTRule[att - 1];
    WriteShort (pAttrT->AtrElemType);
-   switch (pSS->SsAttribute[att - 1].AttrType)
+   switch (pSS->SsAttribute->TtAttr[att - 1]->AttrType)
 	 {
 	    case AtNumAttr:
 	       WriteShort (pAttrT->AtrNCases);
@@ -664,7 +664,7 @@ void WriteTRulesAttr (int att, PtrSSchema pSS, PtrTSchema pTSch)
 	       WriteBlocks (pAttrT->AtrRefTRuleBlock, pSS);
 	       break;
 	    case AtEnumAttr:
-	       for (i = 0; i <= pSS->SsAttribute[att - 1].AttrNEnumValues; i++)
+	       for (i = 0; i <= pSS->SsAttribute->TtAttr[att - 1]->AttrNEnumValues; i++)
 		  WriteBlocks (pAttrT->AtrEnuTRuleBlock[i], pSS);
 	       break;
 	    default:
@@ -783,7 +783,7 @@ ThotBool WriteTranslationSchema (Name fileName, PtrTSchema pTSch, PtrSSchema pSS
    for (i = 0; i < pSS->SsNAttributes; i++)
      {
 	pAttrTr = &pTSch->TsAttrTRule[i];
-	switch (pSS->SsAttribute[i].AttrType)
+	switch (pSS->SsAttribute->TtAttr[i]->AttrType)
 	      {
 		 case AtNumAttr:
 		    WriteShort (pAttrTr->AtrNCases);
@@ -797,7 +797,7 @@ ThotBool WriteTranslationSchema (Name fileName, PtrTSchema pTSch, PtrSSchema pSS
 		    WriteBlockPtr (pAttrTr->AtrRefTRuleBlock);
 		    break;
 		 case AtEnumAttr:
-		    for (j = 0; j <= pSS->SsAttribute[i].AttrNEnumValues; j++)
+		    for (j = 0; j <= pSS->SsAttribute->TtAttr[i]->AttrNEnumValues; j++)
 		       WriteBlockPtr (pAttrTr->AtrEnuTRuleBlock[j]);
 		    break;
 		 default:

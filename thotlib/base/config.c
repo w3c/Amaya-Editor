@@ -964,7 +964,7 @@ static ThotBool Translate (PtrSSchema pSS, char *word, char *trans)
 {
    ThotBool            found;
    int                 i, j;
-   TtAttribute        *pAttr;
+   PtrTtAttribute      pAttr;
    char                terme[MAX_NAME_LENGTH];
 
    found = FALSE;
@@ -979,7 +979,7 @@ static ThotBool Translate (PtrSSchema pSS, char *word, char *trans)
    /* cherche ensuite parmi les noms d'attributs et de valeurs d'attributs */
    for (i = 0; i < pSS->SsNAttributes; i++)
 	{
-	   pAttr = &pSS->SsAttribute[i];
+	   pAttr = pSS->SsAttribute->TtAttr[i];
 	   if (strcmp (terme, pAttr->AttrName) == 0)
 	     {
 		strncpy (pAttr->AttrName, AsciiTranslate (trans), MAX_NAME_LENGTH - 1);

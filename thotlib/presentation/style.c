@@ -713,7 +713,7 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
 	}
       else
 	{
-	  switch (pSS->SsAttribute[attrType].AttrType)
+	  switch (pSS->SsAttribute->TtAttr[attrType]->AttrType)
 	    {
 	    case AtNumAttr:
 	      if (attrVal)
@@ -806,7 +806,7 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
 	}
 
       attrVal = ctxt->attrText[att];
-      switch (pSS->SsAttribute[attrType].AttrType)
+      switch (pSS->SsAttribute->TtAttr[attrType]->AttrType)
 	{
 	case AtNumAttr:
 	  new->ApNCases = 1;
@@ -2508,7 +2508,7 @@ void TtaCleanStylePresentation (Element el, PSchema tsch, Document doc)
 	  nbrules = ((PtrPSchema) tsch)->PsNAttrPRule[attrType];
 	  for (i = 0; i < nbrules; i++)
 	    {
-	      switch (pSS->SsAttribute[attrType].AttrType)
+	      switch (pSS->SsAttribute->TtAttr[attrType]->AttrType)
 		{
 		case AtNumAttr:
 		  for (j = 0; j < attrs->ApNCases; j++)
@@ -2529,7 +2529,7 @@ void TtaCleanStylePresentation (Element el, PSchema tsch, Document doc)
 		  pRule = attrs->ApRefFirstPRule;
 		  break;
 		case AtEnumAttr:
-		  for (j = 0; j < pSS->SsAttribute[attrType].AttrNEnumValues; j++)
+		  for (j = 0; j < pSS->SsAttribute->TtAttr[attrType]->AttrNEnumValues; j++)
 		    {
 		      pRule = attrs->ApEnumFirstPRule[j];
 		      while (pRule != NULL)

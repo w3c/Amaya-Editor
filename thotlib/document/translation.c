@@ -1049,7 +1049,7 @@ static ThotBool     ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
 	 {
 	 pElem = NULL;
 	 if (pAttr != NULL &&
-	     pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum-1].AttrType ==
+	     pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum-1]->AttrType ==
 	     AtReferenceAttr)
 	   /* c'est un attribut reference */
 	   pRef = pAttr->AeAttrReference;
@@ -1176,14 +1176,14 @@ static ThotBool     ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
 			i = 1;
 			do
 			  {
-			  if (pRefSS->SsAttribute[i++].AttrType ==
+			  if (pRefSS->SsAttribute->TtAttr[i++]->AttrType ==
 			      AtReferenceAttr)
 			    /* c'est une reference */
-			    if (pRefSS->SsAttribute[i - 1].AttrTypeRef != 0)
-			      possibleRef = (pRefSS->SsAttribute[i - 1].
+			    if (pRefSS->SsAttribute->TtAttr[i - 1]->AttrTypeRef != 0)
+			      possibleRef = (pRefSS->SsAttribute->TtAttr[i-1]->
 				   AttrTypeRefNature[0] == EOS &&
 				   /* meme schema de structure */
-				   EquivalentSRules (pRefSS->SsAttribute[i-1].
+				   EquivalentSRules (pRefSS->SsAttribute->TtAttr[i-1]->
 					   AttrTypeRef,
 					   pRefSS, pEl1->ElTypeNumber, pRefSS,
 				           pEl1->ElParent));
@@ -1205,7 +1205,7 @@ static ThotBool     ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
 	          (ou de la derniere) reference a l'element reference' */
 	       pRef = NULL;
 	       if (pAttr != NULL &&
-		   pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].
+		   pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->
 		                AttrType == AtReferenceAttr)
 		 /* c'est un attribut reference */
 		 pRef = pAttr->AeAttrReference;
@@ -1227,7 +1227,7 @@ static ThotBool     ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
 	       pRef = NULL;
 	       ret = FALSE;
 	       if (pAttr != NULL &&
-		   pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].
+		   pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->
 		                                 AttrType == AtReferenceAttr)
 		 /* c'est un attribut reference */
 		 pRef = pAttr->AeAttrReference;
@@ -1337,7 +1337,7 @@ static ThotBool     ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
 		       pAttrEl->AeAttrNum == Cond->TcAttr)
 		     /* c'est l'attribut cherche', on teste sa valeur selon
 		        son type */
-		     switch (pSS->SsAttribute[pAttrEl->AeAttrNum - 1].AttrType)
+		     switch (pSS->SsAttribute->TtAttr[pAttrEl->AeAttrNum - 1]->AttrType)
 		       {
 		       case AtNumAttr:
 			 ret = pAttrEl->AeAttrValue <= Cond->TcUpperBound &&
@@ -2151,7 +2151,7 @@ static void PutVariable (PtrElement pEl, PtrAttribute pAttr,
   TranslVarItem      *varItem;
   PtrElement          pRefEl, pAncest;
   PtrReference        pRef;
-  TtAttribute        *attrTrans;
+  PtrTtAttribute         attrTrans;
   PtrAttribute        pA;
   DocumentIdentifier  docIdent;
   PtrDocument         pExtDoc;
@@ -2192,7 +2192,7 @@ static void PutVariable (PtrElement pEl, PtrAttribute pAttr,
 	 if (ref)
 	   {
 	   if (pAttr != NULL &&
-	       pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].
+	       pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->
 	       AttrType == AtReferenceAttr)
 	     /* c'est un attribut reference */
 	     pRef = pAttr->AeAttrReference;
@@ -2296,7 +2296,7 @@ static void PutVariable (PtrElement pEl, PtrAttribute pAttr,
 		  break;
 		case AtEnumAttr:
 		  i = 0;
-		  attrTrans = &pA->AeAttrSSchema->SsAttribute[varItem->TvItem-1];
+		  attrTrans = pA->AeAttrSSchema->SsAttribute->TtAttr[varItem->TvItem-1];
 		  while (attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i] != EOS)
 		    {
 		      c = attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i++];
@@ -2508,7 +2508,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 		break;
 	      case AtEnumAttr:
 		/* ecrit le nom de la valeur de l'attribut */
-		attrTrans = &pA->AeAttrSSchema->SsAttribute[pA->AeAttrNum-1];
+		attrTrans = pA->AeAttrSSchema->SsAttribute->TtAttr[pA->AeAttrNum-1];
 		i = 0;
 		while (attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i] != EOS)
 		  {
@@ -2647,7 +2647,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	case ToReferredDocumentDir:
 	  pRef = NULL;
 	  if (pAttr != NULL &&
-	      pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].
+	      pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->
 	      AttrType == AtReferenceAttr)
 	    /* c'est un attribut reference qu'on traduit */
 	    pRef = pAttr->AeAttrReference;
@@ -2707,7 +2707,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	  /* traduit l'element reference' de type pTRule->TrObjectNum */
 	  pRef = NULL;
 	  if (pAttr != NULL &&
-	      pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType == AtReferenceAttr)
+	      pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrType == AtReferenceAttr)
 	    /* c'est un attribut reference qu'on traduit */
 	    pRef = pAttr->AeAttrReference;
 	  else if (pEl->ElTerminal && pEl->ElLeafType == LtReference)
@@ -2770,7 +2770,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	      /* si on traduit un attribut reference, on ne s'occupe que de */
 	      /* l'attribut */
 	      if (pAttr != NULL
-		  && pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].
+		  && pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->
 		  AttrType == AtReferenceAttr)
 		/* c'est un attribut reference */
 		pRef = pAttr->AeAttrReference;
@@ -2854,12 +2854,12 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 		      i = 1;
 		      do
 			{
-			  if (pSS->SsAttribute[i].AttrType == AtReferenceAttr &&
+			  if (pSS->SsAttribute->TtAttr[i]->AttrType == AtReferenceAttr &&
 			      /* c'est une reference */
-			      pSS->SsAttribute[i].AttrTypeRef != 0)
-			    possibleRef = (pSS->SsAttribute[i].
+			      pSS->SsAttribute->TtAttr[i]->AttrTypeRef != 0)
+			    possibleRef = (pSS->SsAttribute->TtAttr[i]->
 					   AttrTypeRefNature[0] == EOS &&
-					   EquivalentSRules (pSS->SsAttribute[i].
+					   EquivalentSRules (pSS->SsAttribute->TtAttr[i]->
 							     AttrTypeRef, pSS,
 							     pElGet->ElTypeNumber, pSS,
 							     pElGet->ElParent));
@@ -3008,7 +3008,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	  /* cherche d'abord l'element designe' */
 	  pRef = NULL;
 	  if (pAttr != NULL &&
-	      pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].
+	      pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->
 	      AttrType == AtReferenceAttr)
 	    /* c'est un attribut reference qu'on traduit */
 	    pRef = pAttr->AeAttrReference;

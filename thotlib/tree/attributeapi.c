@@ -102,7 +102,7 @@ static void AttachMandatoryAttrSRule (PtrElement pEl, PtrDocument
 	      pAttr->AeAttrSSchema = pSS;
 	      pAttr->AeAttrNum = att;
 	      pAttr->AeDefAttr = FALSE;
-	      pAttr->AeAttrType = pSS->SsAttribute[att - 1].AttrType;
+	      pAttr->AeAttrType = pSS->SsAttribute->TtAttr[att - 1]->AttrType;
 	      switch (pAttr->AeAttrType)
 		{
 		case AtNumAttr:
@@ -303,7 +303,7 @@ Attribute           TtaNewAttribute (AttributeType attType)
       pAttr->AeAttrNum = attType.AttrTypeNum;
       pAttr->AeDefAttr = FALSE;
       pAttr->AeAttrType =
-              pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType;
+              pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrType;
       switch (pAttr->AeAttrType)
 	{
 	case AtEnumAttr:
@@ -524,7 +524,7 @@ void TtaSetAttributeValue (Attribute attribute, int value,
 	TtaError (ERR_invalid_attribute_type);
       else if (value < 1)
 	TtaError (ERR_invalid_attribute_value);
-      else if (value > pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrNEnumValues)
+      else if (value > pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrNEnumValues)
 	TtaError (ERR_invalid_attribute_value);
       else
 	ok = TRUE;
@@ -709,7 +709,7 @@ void TtaGiveAttributeTypeFromName (char *name, Element element,
       else
 	{
 	  pSS = (PtrSSchema)((*attType).AttrSSchema);
-	  switch (pSS->SsAttribute[(*attType).AttrTypeNum - 1].AttrType)
+	  switch (pSS->SsAttribute->TtAttr[(*attType).AttrTypeNum - 1]->AttrType)
 	    {
 	     case AtEnumAttr:
 	       *attrKind = 0;
@@ -766,7 +766,7 @@ void TtaGiveAttributeTypeFromOriginalName (char *name, Element element,
       else
 	{
 	  pSS = (PtrSSchema)((*attType).AttrSSchema);
-	  switch (pSS->SsAttribute[(*attType).AttrTypeNum - 1].AttrType)
+	  switch (pSS->SsAttribute->TtAttr[(*attType).AttrTypeNum - 1]->AttrType)
 	    {
 	    case AtEnumAttr:
 	      *attrKind = 0;
@@ -807,7 +807,7 @@ char *TtaGetAttributeName (AttributeType attType)
 	   attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
     TtaError (ERR_invalid_attribute_type);
   else
-    strncpy (bufferName, ((PtrSSchema) (attType.AttrSSchema))->SsAttribute[attType.AttrTypeNum - 1].AttrName, MAX_NAME_LENGTH);
+    strncpy (bufferName, ((PtrSSchema) (attType.AttrSSchema))->SsAttribute->TtAttr[attType.AttrTypeNum - 1]->AttrName, MAX_NAME_LENGTH);
   return bufferName;
 }
 
@@ -830,7 +830,7 @@ char *TtaGetAttributeOriginalName (AttributeType attType)
 	   attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
     TtaError (ERR_invalid_attribute_type);
   else
-    strncpy (bufferName, ((PtrSSchema) (attType.AttrSSchema))->SsAttribute[attType.AttrTypeNum - 1].AttrOrigName, MAX_NAME_LENGTH);
+    strncpy (bufferName, ((PtrSSchema) (attType.AttrSSchema))->SsAttribute->TtAttr[attType.AttrTypeNum - 1]->AttrOrigName, MAX_NAME_LENGTH);
   return bufferName;
 }
 
@@ -919,12 +919,12 @@ char *TtaGetAttributeValueOriginalName (AttributeType attType, int value)
   else if (attType.AttrTypeNum < 1 ||
 	   attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
     TtaError (ERR_invalid_attribute_type);
-  else if (((PtrSSchema) (attType.AttrSSchema))->SsAttribute[attType.AttrTypeNum - 1].AttrType != AtEnumAttr )
+  else if (((PtrSSchema) (attType.AttrSSchema))->SsAttribute->TtAttr[attType.AttrTypeNum - 1]->AttrType != AtEnumAttr )
     TtaError (ERR_invalid_attribute_type);
-  else if (value < 1 || value > ((PtrSSchema) (attType.AttrSSchema))->SsAttribute[attType.AttrTypeNum - 1].AttrNEnumValues)
+  else if (value < 1 || value > ((PtrSSchema) (attType.AttrSSchema))->SsAttribute->TtAttr[attType.AttrTypeNum - 1]->AttrNEnumValues)
     TtaError (ERR_invalid_parameter);
   else
-    strncpy (bufferName, ((PtrSSchema) (attType.AttrSSchema))->SsAttribute[attType.AttrTypeNum - 1].AttrEnumOrigValue[value - 1], MAX_NAME_LENGTH);
+    strncpy (bufferName, ((PtrSSchema) (attType.AttrSSchema))->SsAttribute->TtAttr[attType.AttrTypeNum - 1]->AttrEnumOrigValue[value - 1], MAX_NAME_LENGTH);
   return bufferName;
 }
 
@@ -948,12 +948,12 @@ char *TtaGetAttributeValueName (AttributeType attType, int value)
   else if (attType.AttrTypeNum < 1 ||
 	   attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
     TtaError (ERR_invalid_attribute_type);
-  else if (((PtrSSchema) (attType.AttrSSchema))->SsAttribute[attType.AttrTypeNum - 1].AttrType != AtEnumAttr )
+  else if (((PtrSSchema) (attType.AttrSSchema))->SsAttribute->TtAttr[attType.AttrTypeNum - 1]->AttrType != AtEnumAttr )
     TtaError (ERR_invalid_attribute_type);
-  else if (value < 1 || value > ((PtrSSchema) (attType.AttrSSchema))->SsAttribute[attType.AttrTypeNum - 1].AttrNEnumValues)
+  else if (value < 1 || value > ((PtrSSchema) (attType.AttrSSchema))->SsAttribute->TtAttr[attType.AttrTypeNum - 1]->AttrNEnumValues)
     TtaError (ERR_invalid_parameter);
   else
-    strncpy (bufferName, ((PtrSSchema) (attType.AttrSSchema))->SsAttribute[attType.AttrTypeNum - 1].AttrEnumValue[value - 1], MAX_NAME_LENGTH);
+    strncpy (bufferName, ((PtrSSchema) (attType.AttrSSchema))->SsAttribute->TtAttr[attType.AttrTypeNum - 1]->AttrEnumValue[value - 1], MAX_NAME_LENGTH);
   return bufferName;
 }
 
@@ -971,7 +971,7 @@ char *TtaGetAttributeValueName (AttributeType attType, int value)
 int TtaGetAttributeValueFromOriginalName (char *name,
 					  AttributeType attType)
 {
-  TtAttribute	      *attr;
+  PtrTtAttribute       attr;
   int		       value, i;
 
   UserErrorCode = 0;
@@ -983,11 +983,11 @@ int TtaGetAttributeValueFromOriginalName (char *name,
   else if (attType.AttrTypeNum < 1 ||
 	   attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
     TtaError (ERR_invalid_attribute_type);
-  else if (((PtrSSchema) (attType.AttrSSchema))->SsAttribute[attType.AttrTypeNum - 1].AttrType != AtEnumAttr )
+  else if (((PtrSSchema) (attType.AttrSSchema))->SsAttribute->TtAttr[attType.AttrTypeNum - 1]->AttrType != AtEnumAttr )
     TtaError (ERR_invalid_attribute_type);
   else
     {
-      attr = & ((PtrSSchema) (attType.AttrSSchema))->SsAttribute[attType.AttrTypeNum - 1];
+      attr = ((PtrSSchema) (attType.AttrSSchema))->SsAttribute->TtAttr[attType.AttrTypeNum - 1];
       for (i = 0; value == 0 && i < attr->AttrNEnumValues; i++)
 	if (strncmp (attr->AttrEnumOrigValue[i], name, MAX_NAME_LENGTH) == 0)
 	  value = i+1;
@@ -1007,7 +1007,7 @@ int TtaGetAttributeValueFromOriginalName (char *name,
    ---------------------------------------------------------------------- */
 int TtaGetAttributeValueFromName (char *name, AttributeType attType)
 {
-  TtAttribute	      *attr;
+  PtrTtAttribute       attr;
   int		       value, i;
 
   UserErrorCode = 0;
@@ -1019,11 +1019,11 @@ int TtaGetAttributeValueFromName (char *name, AttributeType attType)
   else if (attType.AttrTypeNum < 1 ||
 	   attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
     TtaError (ERR_invalid_attribute_type);
-  else if (((PtrSSchema) (attType.AttrSSchema))->SsAttribute[attType.AttrTypeNum - 1].AttrType != AtEnumAttr )
+  else if (((PtrSSchema) (attType.AttrSSchema))->SsAttribute->TtAttr[attType.AttrTypeNum - 1]->AttrType != AtEnumAttr )
     TtaError (ERR_invalid_attribute_type);
   else
     {
-      attr = & ((PtrSSchema) (attType.AttrSSchema))->SsAttribute[attType.AttrTypeNum - 1];
+      attr = ((PtrSSchema) (attType.AttrSSchema))->SsAttribute->TtAttr[attType.AttrTypeNum - 1];
       for (i = 0; value == 0 && i < attr->AttrNEnumValues; i++)
 	if (strncmp(attr->AttrEnumValue[i], name, MAX_NAME_LENGTH) == 0)
 	  value = i+1;

@@ -1068,14 +1068,15 @@ void ReadAttributePiv (BinFile pivFile, PtrElement pEl,
      attr++;
    /* lit le contenu de l'attribut selon son type */
    if (!error)
-     switch (pSchAttr->SsAttribute[attr - 1].AttrType)
+     switch (pSchAttr->SsAttribute->TtAttr[attr - 1]->AttrType)
        {
        case AtEnumAttr:
 	 TtaReadShort (pivFile, &val);
-	 if (val > pSchAttr->SsAttribute[attr - 1].AttrNEnumValues)
+	 if (val > pSchAttr->SsAttribute->TtAttr[attr - 1]->AttrNEnumValues)
 	   {
 	     printf ("Attribute value error: %s = %d\n",
-		     pSchAttr->SsAttribute[attr - 1].AttrOrigName, val);
+		     pSchAttr->SsAttribute->TtAttr[attr - 1]->AttrOrigName,
+		     val);
 	     create = FALSE;
 	   }
 	 break;
@@ -1160,7 +1161,7 @@ void ReadAttributePiv (BinFile pivFile, PtrElement pEl,
 	       pA->AeAttrNum = attr;
 	       pA->AeDefAttr = FALSE;
 	       /* prend le type de l'attribut dans le schema de structure */
-	       pA->AeAttrType = pA->AeAttrSSchema->SsAttribute[pA->AeAttrNum - 1].AttrType;
+	       pA->AeAttrType = pA->AeAttrSSchema->SsAttribute->TtAttr[pA->AeAttrNum - 1]->AttrType;
 	     }
 	   else
 	     *pAttr = NULL;

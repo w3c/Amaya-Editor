@@ -840,7 +840,7 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 	{
 	  pElem = NULL;
 	  if (pAttr != NULL &&
-	      pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType ==
+	      pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrType ==
 	      AtReferenceAttr)
 	    /* c'est un attribut reference */
 	    pRef = pAttr->AeAttrReference;
@@ -927,7 +927,7 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 	       de la derniere reference a l'element reference' */
 	    pRef = NULL;
 	    if (pAttr != NULL &&
-		pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType == AtReferenceAttr)
+		pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrType == AtReferenceAttr)
 	      /* c'est un attribut reference */
 	      pRef = pAttr->AeAttrReference;
 	    else if (pElem->ElTerminal && pElem->ElLeafType == LtReference)
@@ -949,7 +949,7 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 	    pRef = NULL;
 	    currentCond = FALSE;
 	    if (pAttr != NULL &&
-		pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType == AtReferenceAttr)
+		pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrType == AtReferenceAttr)
 	      /* c'est un attribut reference */
 	      pRef = pAttr->AeAttrReference;
 	    else if (pElem->ElTerminal && pElem->ElLeafType == LtReference)
@@ -2087,7 +2087,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
       case AtEnumAttr:
 	/* on verifie que la valeur est correcte */
 	if (pAttr->AeAttrValue < 0 ||
-	    pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrNEnumValues < pAttr->AeAttrValue)
+	    pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrNEnumValues < pAttr->AeAttrValue)
 	  /* valeur incorrecte, on prend les regles qui s'appliquent a */
 	  /* n'importe quelle valeur */
 	  pRule = pAPRule->ApEnumFirstPRule[0];

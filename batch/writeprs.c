@@ -1267,7 +1267,7 @@ ThotBool WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pS
 	     pAttPres = pAttPres->ApNextAttrPres)
 	  {
 	     WriteShort (pAttPres->ApElemType);
-	     switch (pSS->SsAttribute[i].AttrType)
+	     switch (pSS->SsAttribute->TtAttr[i]->AttrType)
 		   {
 		      case AtNumAttr:
 			 WriteShort (pAttPres->ApNCases);
@@ -1288,7 +1288,7 @@ ThotBool WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pS
 			 WriteRulePtr (pAttPres->ApTextFirstPRule);
 			 break;
 		      case AtEnumAttr:
-			 for (j = 0; j <= pSS->SsAttribute[i].AttrNEnumValues; j++)
+			 for (j = 0; j <= pSS->SsAttribute->TtAttr[i]->AttrNEnumValues; j++)
 			    WriteRulePtr (pAttPres->ApEnumFirstPRule[j]);
 			 break;
 		   }
@@ -1315,7 +1315,7 @@ ThotBool WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pS
 	for (k = pPSch->PsNAttrPRule[i]; k-- > 0;
 	     pAttPres = pAttPres->ApNextAttrPres)
 	  {
-	     switch (pSS->SsAttribute[i].AttrType)
+	     switch (pSS->SsAttribute->TtAttr[i]->AttrType)
 		   {
 		      case AtNumAttr:
 			 for (j = 0; j < pAttPres->ApNCases; j++)
@@ -1328,7 +1328,7 @@ ThotBool WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pS
 			 WritePRules (pAttPres->ApTextFirstPRule);
 			 break;
 		      case AtEnumAttr:
-			 for (j = 0; j <= pSS->SsAttribute[i].AttrNEnumValues; j++)
+			 for (j = 0; j <= pSS->SsAttribute->TtAttr[i]->AttrNEnumValues; j++)
 			    WritePRules (pAttPres->ApEnumFirstPRule[j]);
 			 break;
 		   }

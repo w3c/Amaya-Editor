@@ -191,12 +191,12 @@ void GetAttrRuleFromName (int *attrNum, PtrSSchema *pSSch, PtrElement pElem,
 		{
 		  att++;
 		  /* The local attributes are not considered */
-		  if (pSS->SsAttribute[att - 1].AttrGlobal)
+		  if (pSS->SsAttribute->TtAttr[att - 1]->AttrGlobal)
 		    {
 		      if (whichName == SCHEMA_NAME)
-			name = pSS->SsAttribute[att - 1].AttrOrigName;
+			name = pSS->SsAttribute->TtAttr[att - 1]->AttrOrigName;
 		      else
-			name = pSS->SsAttribute[att - 1].AttrName;
+			name = pSS->SsAttribute->TtAttr[att - 1]->AttrName;
 		      if (strcmp (attrName, name) == 0)
 			found = TRUE;
 		    }
@@ -223,9 +223,9 @@ void GetAttrRuleFromName (int *attrNum, PtrSSchema *pSSch, PtrElement pElem,
 	      {
 		att = pRe1->SrLocalAttr[i - 1];
 		if (whichName == SCHEMA_NAME)
-		  name = pSS->SsAttribute[att - 1].AttrOrigName;
+		  name = pSS->SsAttribute->TtAttr[att - 1]->AttrOrigName;
 		else
-		  name = pSS->SsAttribute[att - 1].AttrName;
+		  name = pSS->SsAttribute->TtAttr[att - 1]->AttrName;
 		if (strcmp (attrName, name) == 0)
 		  found = TRUE;
 	      }
@@ -1086,7 +1086,7 @@ void                ReferredType (PtrElement pRefEl, PtrAttribute pRefAttr,
 {
    int                 referredNature;
    SRule              *pRule;
-   TtAttribute        *pAtt;
+   PtrTtAttribute         pAtt;
 
    if (pRefEl != NULL)
      {
@@ -1134,7 +1134,7 @@ void                ReferredType (PtrElement pRefEl, PtrAttribute pRefAttr,
       /* c'est un attribut reference */
      {
 	/* regle de definition de l'attribut reference */
-	pAtt = &pRefAttr->AeAttrSSchema->SsAttribute[pRefAttr->AeAttrNum - 1];
+	pAtt = pRefAttr->AeAttrSSchema->SsAttribute->TtAttr[pRefAttr->AeAttrNum - 1];
 	/* cherche le type de l'element reference' prevu par le schema */
 	/* de structure */
 	*typeNum = pAtt->AttrTypeRef;
@@ -2325,7 +2325,7 @@ ThotBool CanAssociateAttr (PtrElement pEl, PtrAttribute pAttr,
 
    /* si c'est un attribut local, il ne s'applique que s'il correspond au */
    /* type de l'element */
-   if (pNewAttr->AeAttrSSchema->SsAttribute[pNewAttr->AeAttrNum - 1].AttrGlobal)
+   if (pNewAttr->AeAttrSSchema->SsAttribute->TtAttr[pNewAttr->AeAttrNum - 1]->AttrGlobal)
       /*c'est un attribut global, il peut s'appliquer a tous les types d'elements */
       allowed = TRUE;
    else

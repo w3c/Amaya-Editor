@@ -360,8 +360,7 @@ static PtrSSchema ConstructAbstractSchStruct ()
 {
    PtrSSchema          pSS;
 
-   pSS = (PtrSSchema) TtaGetMemory (sizeof (StructSchema));
-   memset (pSS, 0, sizeof (StructSchema));
+   GetSchStruct (&pSS);
    pSS->SsCode = 0;
 
    /* initialise les types de base */
@@ -737,291 +736,294 @@ static void ProcessLongKeyWord (int x, SyntacticCode r, indLine wi)
 /*----------------------------------------------------------------------
    ProcessName processes a name.                                      
   ----------------------------------------------------------------------*/
-static void ProcessName (SyntacticCode r, SyntacticCode pr, indLine wl, indLine wi)
+static void ProcessName (SyntacticCode r, SyntacticCode pr, indLine wl,
+			 indLine wi)
 {
-   PtrAppName          curAction, prevAction;
-   int                 i;
-   Name                name;
-   PtrAppDocType       docType, newDocType;
-   PtrAppName          schUsed, newSchUsed;
-   ThotBool             found;
+  PtrAppName          curAction, prevAction;
+  int                 i;
+  Name                name;
+  PtrAppDocType       docType, newDocType;
+  PtrAppName          schUsed, newSchUsed;
+  ThotBool             found;
 
-   if (wl > MAX_NAME_LENGTH - 1)
-      CompilerMessage (wi, COMPIL, FATAL, INVALID_WORD_SIZE, inputLine, LineNum);
-   else
-     {
-	strncpy (name, &inputLine[wi - 1], wl);
-	name[wl] = '\0';
-     }
-   switch (r)
-	 {
-	       /* r = numero de la regle ou apparait le nom */
-
-	    case RULE_ElemIdent:
-	       typeNum = 0;
-	       if (pr == RULE_AppliModel)
-		 {
-		    if (!strcmp (fileName, "EDITOR"))
-		      {
-			 /* construct an abstract schemas structure */
-			 pSSchema = ConstructAbstractSchStruct ();
-			 /* acquiert un schema */
-			 pAppli = TteNewEventsSet (pSSchema->SsCode, fileName);
-			 /* Pointer to the list of schemas menus descriptors */
-			 DocTypeMenus = NULL;
-		      }
+  if (wl > MAX_NAME_LENGTH - 1)
+    CompilerMessage (wi, COMPIL, FATAL, INVALID_WORD_SIZE, inputLine, LineNum);
+  else
+    {
+      strncpy (name, &inputLine[wi - 1], wl);
+      name[wl] = '\0';
+    }
+  switch (r)
+    /* r = numero de la regle ou apparait le nom */
+    {
+    case RULE_ElemIdent:
+      typeNum = 0;
+      if (pr == RULE_AppliModel)
+	{
+	  if (!strcmp (fileName, "EDITOR"))
+	    {
+	      /* construct an abstract schemas structure */
+	      pSSchema = ConstructAbstractSchStruct ();
+	      /* acquiert un schema */
+	      pAppli = TteNewEventsSet (pSSchema->SsCode, fileName);
+	      /* Pointer to the list of schemas menus descriptors */
+	      DocTypeMenus = NULL;
+	    }
+	  else
+	    {
+	      /* TypeName est ici le nom de la structure generique */
+	      /* => on lit le schema de structure compile' */
+	      GetSchStruct (&pSSchema);
+		if (!ReadStructureSchema (name, pSSchema))
+		  CompilerMessage (wi, APP, FATAL, APP_STRUCT_SCHEM_NOT_FOUND,
+				   inputLine, LineNum);
+		else if (strcmp (name, pSSchema->SsName) != 0)
+		  CompilerMessage (wi, APP, FATAL, UNMATCHING_STRUCT_SCHEME,
+				   inputLine, LineNum);
+		else
+		  /* acquiert un schema */
+		  pAppli = TteNewEventsSet (pSSchema->SsCode, fileName);
+	    }
+	}
+      else
+	{
+	  /* is it an Element? */
+	  if (pr == RULE_ElemActions)
+	    {
+	      i = 0;
+	      while (strcmp (name, pSSchema->SsRule[i].SrName) != 0 &&
+		     i < pSSchema->SsNRules)
+		i++;
+	      if (i < pSSchema->SsNRules)
+		{
+		  if (pSSchema->SsRule[i].SrConstruct == CsPairedElement)
+		    /* c'est un element CsPairedElement */
+		    if (!SecondInPair && !FirstInPair)
+		      /* le nom du type n'etait pas precede' de First ou Second */
+		      CompilerMessage (wi, APP, FATAL, MISSING_FIRST_SECOND,
+				       inputLine, LineNum);
 		    else
 		      {
-			 /* TypeName est ici le nom de la structure generique */
-			 /* => on lit le schema de structure compile' */
-			 pSSchema = (PtrSSchema) TtaGetMemory (sizeof (StructSchema));
-			 if (!ReadStructureSchema (name, pSSchema))
-			    CompilerMessage (wi, APP, FATAL, APP_STRUCT_SCHEM_NOT_FOUND,
-					   inputLine, LineNum);
-			 else if (strcmp (name, pSSchema->SsName) != 0)
-			    CompilerMessage (wi, APP, FATAL,
-					   UNMATCHING_STRUCT_SCHEME,
-					   inputLine, LineNum);
-			 else
-			    /* acquiert un schema */
-			    pAppli = TteNewEventsSet (pSSchema->SsCode, fileName);
+			if (SecondInPair)
+			  /* il s'agit du type suivant */
+			  i++;
 		      }
-		 }
-	       else
-		 {
-		    /* is it an Element? */
-		    if (pr == RULE_ElemActions)
-		      {
-			 i = 0;
-			 while (strcmp (name, pSSchema->SsRule[i].SrName) != 0
-				&& i < pSSchema->SsNRules)
-			    i++;
-			 if (i < pSSchema->SsNRules)
-			   {
-			      if (pSSchema->SsRule[i].SrConstruct == CsPairedElement)
-				 /* c'est un element CsPairedElement */
-				 if (!SecondInPair && !FirstInPair)
-				    /* le nom du type n'etait pas precede' de First ou Second */
-				    CompilerMessage (wi, APP, FATAL, MISSING_FIRST_SECOND,
-						   inputLine, LineNum);
-				 else
-				   {
-				      if (SecondInPair)
-					 /* il s'agit du type suivant */
-					 i++;
-				   }
-			      else
-				 /* ce n'est pas un element CsPairedElement */
-			      if (SecondInPair || FirstInPair)
-				 /* le nom du type etait precede' de First ou Second */
-				 CompilerMessage (wi, APP, FATAL, NOT_A_PAIR, inputLine,
-						LineNum);
-			      typeNum = i + 1;
-			   }
-			 else
-			   {
-			      if (!strcmp (fileName, "EDITOR"))
-				{
-				   strcpy (pSSchema->SsRule[i].SrName, name);
-				   pSSchema->SsNRules++;
-				   typeNum = i + 1;
-				}
-			      else
-				 CompilerMessage (wi, APP, FATAL, UNKNOWN_TYPE_APP,
-						inputLine, LineNum);
-			   }
-			 FirstInPair = False;
-			 SecondInPair = False;
-		      }
-		 }
-	       break;
-
-	    case RULE_DocumentType:
-	       if (pr == RULE_SchemaList)
-		  /* un nom de type de document dans l'instruction USES */
-		 {
-		    /* acquiert un descripteur de schema A utilise' */
-		    newSchUsed = (PtrAppName) TtaGetMemory (sizeof (AppName));
-		    /* met le nom du schema A utilise' dans le descripteur */
-		    newSchUsed->AppNameValue = TtaStrdup (name);
-		    newSchUsed->AppStandardName = False;
-		    /* chaine ce nouveau descripteur en fin de liste */
-		    newSchUsed->AppNextName = NULL;
-		    if (SchemasUsed == NULL)
-		       /* la chaine etait vide */
-		       SchemasUsed = newSchUsed;
-		    else
-		      {
-			 schUsed = SchemasUsed;
-			 while (schUsed->AppNextName != NULL)
-			    schUsed = schUsed->AppNextName;
-			 schUsed->AppNextName = newSchUsed;
-		      }
-		 }
-	       else if (pr == RULE_Menus)
-		  /* un type de document pour lequel on veut definir les boutons */
-		  /* et menus des frames */
-		 {
-		    /* ajoute un type de document */
-		    /* alloue un descripteur de type de document */
-		    newDocType = (PtrAppDocType) TtaGetMemory (sizeof (AppDocType));
-		    /* initialise ce descripteur */
-		    newDocType->AppDocTypeName = TtaStrdup (name);
-		    newDocType->AppDocTypeMenus = NULL;
-		    newDocType->AppNextDocType = NULL;
-		    if (DocTypeMenus == NULL)
-		       DocTypeMenus = newDocType;
-		    else
-		      {
-			 docType = DocTypeMenus;
-			 while (docType->AppNextDocType != NULL)
-			    docType = docType->AppNextDocType;
-			 docType->AppNextDocType = newDocType;
-		      }
-		    newDocType->AppDocTypeMenus = NULL;
-		    MenuList = &(newDocType->AppDocTypeMenus);
-		 }
-	       break;
-
-	    case RULE_EvtIdent:
-	       /* Le nom de l'evenement */
-	       PreEvent = True;
-	       /* cherche si l'evenement est dans la table des evenements definis */
-	       if (!RegisteredEvent (name, &curEvent))
-		  /* il n'y est pas, erreur */
-		  CompilerMessage (wi, APP, FATAL, UNKNOWN_MESSAGE, inputLine, LineNum);
-	       else if (!DefaultSection)
-		 {
-		    /* on n'est pas dans la section DEFAULT du schema A */
-		    /* on n'accepte pas les evenements pour les documents, pour les */
-		    /* vues, ni pour l'application */
-		    if (curEvent >= TteDocOpen)
-		       CompilerMessage (wi, APP, FATAL, NOT_IN_DEFAULT, inputLine,
-				      LineNum);
-		 }
-	       else
-		 {
-		    if (curEvent >= TteInit)
-		       /* c'est un evenement pour l'application */
-		      {
-			 if (strcmp (fileName, "EDITOR"))
-			    /* ce n'est pas EDITOR.A qu'on compile, refus */
-			    CompilerMessage (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I, inputLine,
-					   LineNum);
-		      }
-		    else if (AttributesSection)
-		      {
-			 if (curEvent > TteAttrDelete)
-			    CompilerMessage (wi, APP, FATAL, FORBIDDEN_FOR_AN_ATTR,
-					   inputLine, LineNum);
-		      }
-		    else if (ElementsSection)
-		      {
-			 if (curEvent <= TteAttrDelete)
-			    CompilerMessage (wi, APP, FATAL, FORBIDDEN_FOR_AN_ELEM,
-					   inputLine, LineNum);
-		      }
-		 }
-	       break;
-
-	    case RULE_ActionIdent:
-	       if (pr == RULE_ItemAction)
-		  /* action associee a un item de menu */
-		  strcpy (ActionName, name);
-	       else if (pr == RULE_EvtAction)
-		 {
-		    /* action associee a un evenement */
-		    eventAction = TtaStrdup (name);
-		    TteAddAction (eventAction, 0);
-		 }
-	       else
-		 {
-		   /* a simple list of functions */
-		  curAction = ActionsUsed;
-		  found = False;
-		  prevAction = NULL;
-		  while (!found && curAction != NULL)
+		  else
+		    /* ce n'est pas un element CsPairedElement */
+		    if (SecondInPair || FirstInPair)
+		      /* le nom du type etait precede' de First ou Second */
+		      CompilerMessage (wi, APP, FATAL, NOT_A_PAIR, inputLine,
+				       LineNum);
+		  typeNum = i + 1;
+		}
+	      else
+		{
+		  if (!strcmp (fileName, "EDITOR"))
 		    {
-		       if (curAction->AppNameValue != NULL &&
-			   strcmp (curAction->AppNameValue, name) == 0)
-			  /* the action is already in the list */
-			  found = True;
-		       else
-			 {
-			    prevAction = curAction;
-			    /* passe a l'action suivante de la liste */
-			    curAction = curAction->AppNextName;
-			 }
+		      strcpy (pSSchema->SsRule[i].SrName, name);
+		      pSSchema->SsNRules++;
+		      typeNum = i + 1;
 		    }
-		  if (!found)
-		     /* l'action de l'item n'est pas in the list, on l'y met */
-		    {
-		       curAction = (PtrAppName) TtaGetMemory (sizeof (AppName));
-		       curAction->AppNameValue = TtaStrdup (name);
-		       curAction->AppStandardName = False;
-		       curAction->AppFunction = FunctionsSection;
-		       curAction->AppNextName = NULL;
-		       if (prevAction == NULL)
-			  ActionsUsed = curAction;
-		       else
-			  prevAction->AppNextName = curAction;
-		    }
-		   
-		 }
-	       break;
+		  else
+		    CompilerMessage (wi, APP, FATAL, UNKNOWN_TYPE_APP,
+				     inputLine, LineNum);
+		}
+	      FirstInPair = False;
+	      SecondInPair = False;
+	    }
+	}
+      break;
 
-	    case RULE_AttrIdent:
-	       attrNum = 0;
-	       if (!strcmp (fileName, "EDITOR") && pSSchema == NULL)
-		 {
-		    pSSchema = ConstructAbstractSchStruct ();
-		    pAppli = TteNewEventsSet (pSSchema->SsCode, fileName);
-		 }
-	       if (pr == RULE_AttrActions)
-		 {
-		    i = 1;
-		    while (strcmp (name, pSSchema->SsAttribute[i - 1].AttrOrigName) != 0
-			   && i <= pSSchema->SsNAttributes)
-		       i++;
-		    if (i <= pSSchema->SsNAttributes)
-		       attrNum = i;
-		    else
-		      {
-			 if (!strcmp (fileName, "EDITOR"))
-			   {
-			      /* the file .A is a EDITOR.A */
-			      strcpy (pSSchema->SsAttribute[i - 1].AttrOrigName, name);
-			      pSSchema->SsNAttributes = pSSchema->SsNAttributes + 1;
-			      attrNum = i;
-			   }
-			 else
-			    CompilerMessage (wi, APP, FATAL, UNKNOWN_ATTR_APP, inputLine, LineNum);
-		      }
-		 }
-	       break;
+    case RULE_DocumentType:
+      if (pr == RULE_SchemaList)
+	/* un nom de type de document dans l'instruction USES */
+	{
+	  /* acquiert un descripteur de schema A utilise' */
+	  newSchUsed = (PtrAppName) TtaGetMemory (sizeof (AppName));
+	  /* met le nom du schema A utilise' dans le descripteur */
+	  newSchUsed->AppNameValue = TtaStrdup (name);
+	  newSchUsed->AppStandardName = False;
+	  /* chaine ce nouveau descripteur en fin de liste */
+	  newSchUsed->AppNextName = NULL;
+	  if (SchemasUsed == NULL)
+	    /* la chaine etait vide */
+	    SchemasUsed = newSchUsed;
+	  else
+	    {
+	      schUsed = SchemasUsed;
+	      while (schUsed->AppNextName != NULL)
+		schUsed = schUsed->AppNextName;
+	      schUsed->AppNextName = newSchUsed;
+	    }
+	}
+      else if (pr == RULE_Menus)
+	/* un type de document pour lequel on veut definir les boutons */
+	/* et menus des frames */
+	{
+	  /* ajoute un type de document */
+	  /* alloue un descripteur de type de document */
+	  newDocType = (PtrAppDocType) TtaGetMemory (sizeof (AppDocType));
+	  /* initialise ce descripteur */
+	  newDocType->AppDocTypeName = TtaStrdup (name);
+	  newDocType->AppDocTypeMenus = NULL;
+	  newDocType->AppNextDocType = NULL;
+	  if (DocTypeMenus == NULL)
+	    DocTypeMenus = newDocType;
+	  else
+	    {
+	      docType = DocTypeMenus;
+	      while (docType->AppNextDocType != NULL)
+		docType = docType->AppNextDocType;
+	      docType->AppNextDocType = newDocType;
+	    }
+	  newDocType->AppDocTypeMenus = NULL;
+	  MenuList = &(newDocType->AppDocTypeMenus);
+	}
+      break;
 
-	    case RULE_MenuIdent:
-	       /* un nom de menu */
-	       strcpy (MenuName, name);
-	       SubmenuName[0] = '\0';
-	       ItemName[0] = '\0';
-	       ItemType = ' ';
-	       ActionName[0] = '\0';
-	       break;
+    case RULE_EvtIdent:
+      /* Le nom de l'evenement */
+      PreEvent = True;
+      /* cherche si l'evenement est dans la table des evenements definis */
+      if (!RegisteredEvent (name, &curEvent))
+	/* il n'y est pas, erreur */
+	CompilerMessage (wi, APP, FATAL, UNKNOWN_MESSAGE, inputLine, LineNum);
+      else if (!DefaultSection)
+	{
+	  /* on n'est pas dans la section DEFAULT du schema A */
+	  /* on n'accepte pas les evenements pour les documents, pour les */
+	  /* vues, ni pour l'application */
+	  if (curEvent >= TteDocOpen)
+	    CompilerMessage (wi, APP, FATAL, NOT_IN_DEFAULT, inputLine,
+			     LineNum);
+	}
+      else
+	{
+	  if (curEvent >= TteInit)
+	    /* c'est un evenement pour l'application */
+	    {
+	      if (strcmp (fileName, "EDITOR"))
+		/* ce n'est pas EDITOR.A qu'on compile, refus */
+		CompilerMessage (wi, APP, FATAL,
+				 FORBIDDEN_OUTSIDE_EDITOR_I, inputLine,
+				 LineNum);
+	    }
+	  else if (AttributesSection)
+	    {
+	      if (curEvent > TteAttrDelete)
+		CompilerMessage (wi, APP, FATAL, FORBIDDEN_FOR_AN_ATTR,
+				 inputLine, LineNum);
+	    }
+	  else if (ElementsSection)
+	    {
+	      if (curEvent <= TteAttrDelete)
+		CompilerMessage (wi, APP, FATAL, FORBIDDEN_FOR_AN_ELEM,
+				 inputLine, LineNum);
+	    }
+	}
+      break;
 
-	    case RULE_SubmenuIdent:
-	       /* un nom de sous-menu dans une definition de menu */
-	       strcpy (SubmenuName, name);
-	       break;
+    case RULE_ActionIdent:
+      if (pr == RULE_ItemAction)
+	/* action associee a un item de menu */
+	strcpy (ActionName, name);
+      else if (pr == RULE_EvtAction)
+	{
+	  /* action associee a un evenement */
+	  eventAction = TtaStrdup (name);
+	  TteAddAction (eventAction, 0);
+	}
+      else
+	{
+	  /* a simple list of functions */
+	  curAction = ActionsUsed;
+	  found = False;
+	  prevAction = NULL;
+	  while (!found && curAction != NULL)
+	    {
+	      if (curAction->AppNameValue != NULL &&
+		  strcmp (curAction->AppNameValue, name) == 0)
+		/* the action is already in the list */
+		found = True;
+	      else
+		{
+		  prevAction = curAction;
+		  /* passe a l'action suivante de la liste */
+		  curAction = curAction->AppNextName;
+		}
+	    }
+	  if (!found)
+	    /* l'action de l'item n'est pas in the list, on l'y met */
+	    {
+	      curAction = (PtrAppName) TtaGetMemory (sizeof (AppName));
+	      curAction->AppNameValue = TtaStrdup (name);
+	      curAction->AppStandardName = False;
+	      curAction->AppFunction = FunctionsSection;
+	      curAction->AppNextName = NULL;
+	      if (prevAction == NULL)
+		ActionsUsed = curAction;
+	      else
+		prevAction->AppNextName = curAction;
+	    }
+	  
+	}
+      break;
 
-	    case RULE_ItemIdent:
-	       /* un nom d'item de menu dans une definition de menu */
-	       strcpy (ItemName, name);
-	       break;
+    case RULE_AttrIdent:
+      attrNum = 0;
+      if (!strcmp (fileName, "EDITOR") && pSSchema == NULL)
+	{
+	  pSSchema = ConstructAbstractSchStruct ();
+	  pAppli = TteNewEventsSet (pSSchema->SsCode, fileName);
+	}
+      if (pr == RULE_AttrActions)
+	{
+	  i = 1;
+	  while (strcmp (name,
+			 pSSchema->SsAttribute->TtAttr[i-1]->AttrOrigName) != 0 &&
+		 i <= pSSchema->SsNAttributes)
+	    i++;
+	  if (i <= pSSchema->SsNAttributes)
+	    attrNum = i;
+	  else
+	    {
+	      if (!strcmp (fileName, "EDITOR"))
+		{
+		  /* the file .A is a EDITOR.A */
+		  strcpy (pSSchema->SsAttribute->TtAttr[i - 1]->AttrOrigName,
+			  name);
+		  pSSchema->SsNAttributes = pSSchema->SsNAttributes + 1;
+		  attrNum = i;
+		}
+	      else
+		CompilerMessage (wi, APP, FATAL, UNKNOWN_ATTR_APP, inputLine,
+				 LineNum);
+	    }
+	}
+      break;
 
-	    default:
-	       break;
-	 }
+    case RULE_MenuIdent:
+      /* un nom de menu */
+      strcpy (MenuName, name);
+      SubmenuName[0] = '\0';
+      ItemName[0] = '\0';
+      ItemType = ' ';
+      ActionName[0] = '\0';
+      break;
+
+    case RULE_SubmenuIdent:
+      /* un nom de sous-menu dans une definition de menu */
+      strcpy (SubmenuName, name);
+      break;
+
+    case RULE_ItemIdent:
+      /* un nom d'item de menu dans une definition de menu */
+      strcpy (ItemName, name);
+      break;
+
+    default:
+      break;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1188,9 +1190,9 @@ static void WriteRuleName (FILE * Hfile, int r)
 static void WriteAttribute (FILE * Hfile, int a)
 {
    int                 j;
-   TtAttribute        *pAttr;
+   PtrTtAttribute      pAttr;
 
-   pAttr = &pSSchema->SsAttribute[a];
+   pAttr = pSSchema->SsAttribute->TtAttr[a];
    if (pAttr->AttrGlobal)
       return;			/* AttrGlobal means "attribute written" */
    fprintf (Hfile, "#define ");
@@ -1315,21 +1317,21 @@ static void         WriteDefineFile (char *fname)
         fprintf (Hfile, "/* #################################### */\n");
 	fprintf (Hfile, "/* Types and attributes for the document type %s */\n", pSSchema->SsName);
 	/* write global attributes */
-	if (pSSchema->SsNAttributes > 0 && pSSchema->SsAttribute[0].AttrGlobal)
+	if (pSSchema->SsNAttributes > 0 && pSSchema->SsAttribute->TtAttr[0]->AttrGlobal)
 	   fprintf (Hfile, "\n/* Global attributes */\n");
 
 	for (i = 0; i < pSSchema->SsNAttributes; i++)
-	   if (pSSchema->SsAttribute[i].AttrGlobal)
+	   if (pSSchema->SsAttribute->TtAttr[i]->AttrGlobal)
 	     {
-		pSSchema->SsAttribute[i].AttrGlobal = False;
+		pSSchema->SsAttribute->TtAttr[i]->AttrGlobal = False;
 		/* tell WriteAttribute that it should write attribute values */
 		WriteAttribute (Hfile, i);
-		pSSchema->SsAttribute[i].AttrGlobal = True;
+		pSSchema->SsAttribute->TtAttr[i]->AttrGlobal = True;
 	     }
 	/* write local attributes */
 	firstLocalAttribute = True;
 	for (i = 0; i < pSSchema->SsNAttributes; i++)
-	   if (!pSSchema->SsAttribute[i].AttrGlobal)
+	   if (!pSSchema->SsAttribute->TtAttr[i]->AttrGlobal)
 	     {
 		if (firstLocalAttribute)
 		  {

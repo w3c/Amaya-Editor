@@ -92,12 +92,12 @@ ThotBool AttrHasException (int exceptNum, int attr, PtrSSchema pSS)
 {
    ThotBool            ret;
    int                 e;
-   TtAttribute        *pAtt;
+   PtrTtAttribute         pAtt;
 
    ret = FALSE;
    if (pSS != NULL)
      {
-	pAtt = &pSS->SsAttribute[attr - 1];
+	pAtt = pSS->SsAttribute->TtAttr[attr - 1];
 	if (pAtt->AttrFirstExcept != 0)
 	   /* il y a des exceptions pour cet attribut */
 	  {

@@ -127,6 +127,12 @@ typedef struct _TtAttribute
 #define AttrEnumValue u.s3._AttrEnumValue_
 #define AttrEnumOrigValue u.s3._AttrEnumOrigValue_
 
+typedef TtAttribute *PtrTtAttribute;
+
+typedef struct _TtAttrTable
+{
+        PtrTtAttribute TtAttr[1];
+} TtAttrTable;
 
 typedef struct _StructSchema *PtrSSchema;
 
@@ -311,12 +317,14 @@ typedef struct _StructSchema
    char             SsConstBuffer[MAX_LEN_ALL_CONST];/* number of the rule
 					    defining the first dynamically
 					    loaded nature */
-   int              SsFirstDynNature;    /* attributes for this schema */
-   TtAttribute      SsAttribute[MAX_ATTR_SSCHEMA];   /* structure rules
-							defining the elements*/
-   SRule            SsRule[MAX_RULES_SSCHEMA + 2];   /* +2 to be sure to have
-					    two free rules at the end of the
-					    arrays */
+   int              SsFirstDynNature;
+
+   TtAttrTable      *SsAttribute;        /* attributes for this schema */
+
+   SRule            SsRule[MAX_RULES_SSCHEMA + 2]; /* structure rules
+					    defining the elements, +2 to be
+					    sure to have two free rules at the
+					    end of the arrays */
 } StructSchema;
 
 #endif /* _THOTLIB_TYPESTR_H_ */

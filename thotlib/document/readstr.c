@@ -158,7 +158,7 @@ static ThotBool ReadBasicType (BinFile file, BasicType *typ)
 /*----------------------------------------------------------------------
    ReadAttribute                                			
   ----------------------------------------------------------------------*/
-static ThotBool     ReadAttribute (BinFile file, TtAttribute *pAttr)
+static ThotBool     ReadAttribute (BinFile file, PtrTtAttribute pAttr)
 {
    AttribType          attrType;
    int                 j;
@@ -387,7 +387,7 @@ ThotBool ReadStructureSchema (Name fileName, PtrSSchema pSS)
 
 	/* lit les attributs */
 	for (i = 0; i < pSS->SsNAttributes; i++)
-	   if (!ReadAttribute (file, &pSS->SsAttribute[i]))
+	   if (!ReadAttribute (file, pSS->SsAttribute->TtAttr[i]))
 	     {
 		/* message 'Fichier .STR incorrect ' */
 		TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_STR_FILE), fileName);

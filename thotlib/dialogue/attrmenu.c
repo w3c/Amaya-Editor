@@ -981,11 +981,11 @@ void CallbackReqAttrMenu (int ref, int val, char *txt)
   ----------------------------------------------------------------------*/
 void BuildReqAttrMenu (PtrAttribute pAttr, PtrDocument pDoc)
 {
-   TtAttribute        *pRuleAttr;
+   PtrTtAttribute        pRuleAttr;
 
    PtrReqAttr = pAttr;
    PtrDocOfReqAttr = pDoc;
-   pRuleAttr = &pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1];
+   pRuleAttr = pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1];
    /* toujours lie a la vue 1 du document */
    MenuValues (pRuleAttr, TRUE, NULL, pDoc, 1);
 #ifndef _WINDOWS
@@ -1034,7 +1034,7 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
   PtrSSchema          pSchExt;
   PtrAttribute        pAttrNew;
   SRule              *pRe1;
-  TtAttribute        *pAttr;
+  PtrTtAttribute      pAttr;
   char                tempBuffer[MAX_NAME_LENGTH + 1];
   int                 i, j, k;
   int                 firstChar, lastChar;
@@ -1079,7 +1079,7 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
 		    {
 		      att++;
 		      /* skip local attributes */
-		      if (pSS->SsAttribute[att - 1].AttrGlobal &&
+		      if (pSS->SsAttribute->TtAttr[att - 1]->AttrGlobal &&
 			  /* and invisible attributes */
 			  !AttrHasException (ExcInvisible, att, pSS))
 			/* skip the attribute Langue execpt the first time */
@@ -1159,8 +1159,7 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
 	  /* met les noms des attributs de la table dans le menu */
 	  for (att = 0; att < nbOfEntries; att++)
 	    {
-	      pAttr = &AttrStruct[att]->SsAttribute[AttrNumber[att] - 1];
-	      
+	      pAttr = AttrStruct[att]->SsAttribute->TtAttr[AttrNumber[att]-1];
 	      pAttrNew->AeAttrSSchema = AttrStruct[att];
 	      pAttrNew->AeAttrNum = AttrNumber[att];
 	      pAttrNew->AeDefAttr = FALSE;
@@ -1493,7 +1492,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
 	      pAttrNew->AeAttrSSchema = SchCurrentAttr;
 	      pAttrNew->AeAttrNum = NumCurrentAttr;
 	      pAttrNew->AeDefAttr = FALSE;
-	      pAttrNew->AeAttrType = SchCurrentAttr->SsAttribute[NumCurrentAttr - 1].AttrType;
+	      pAttrNew->AeAttrType = SchCurrentAttr->SsAttribute->TtAttr[NumCurrentAttr - 1]->AttrType;
 	      
 	      switch (pAttrNew->AeAttrType)
 		{
@@ -1567,7 +1566,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
   ----------------------------------------------------------------------*/
 void CallbackAttrMenu (int refmenu, int att, int frame)
 {
-  TtAttribute        *pAttr;
+  PtrTtAttribute      pAttr;
   PtrAttribute        pAttrNew, currAttr;
   PtrDocument         SelDoc;
   PtrElement          firstSel, lastSel;
@@ -1603,7 +1602,7 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 	pAttrNew->AeAttrSSchema = AttrStruct[att];
 	pAttrNew->AeAttrNum = AttrNumber[att];
 	pAttrNew->AeDefAttr = FALSE;
-	pAttr = &AttrStruct[att]->SsAttribute[AttrNumber[att] - 1];
+	pAttr = AttrStruct[att]->SsAttribute->TtAttr[AttrNumber[att] - 1];
 	pAttrNew->AeAttrType = pAttr->AttrType;
 	if (pAttr->AttrType == AtReferenceAttr)
 	  {

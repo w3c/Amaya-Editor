@@ -213,7 +213,7 @@ static void         InitAttrTransl ()
        pAttTr = &pTSchema->TsAttrTRule[i];
        pAttTr->AtrElemType = 0;
        /* selon le type de l'attribut */
-       switch (pSSchema->SsAttribute[i].AttrType)
+       switch (pSSchema->SsAttribute->TtAttr[i]->AttrType)
 	 {
 	 case AtNumAttr:
 	   pAttTr->AtrNCases = 0;
@@ -573,7 +573,7 @@ static void NewRuleBlock ()
        /* bloc de regles associe' a un attribut */
        {
 	 pAttrTrans = &pTSchema->TsAttrTRule[CurAttr - 1];
-	 switch (pSSchema->SsAttribute[CurAttr - 1].AttrType)
+	 switch (pSSchema->SsAttribute->TtAttr[CurAttr - 1]->AttrType)
 	   {
 	   case AtNumAttr:
 	     pAttrTrans->AtrCase[pAttrTrans->AtrNCases - 1].TaTRuleBlock =
@@ -739,7 +739,7 @@ static void AttrInCreateOrWrite (int att, SyntRuleNum pr, indLine wi)
    int                 j;
 
    /* on refuse les attributs reference */
-   if (pSSchema->SsAttribute[att - 1].AttrType == AtReferenceAttr)
+   if (pSSchema->SsAttribute->TtAttr[att - 1]->AttrType == AtReferenceAttr)
      CompilerMessage (wi, TRA, FATAL, REF_ATTR_NOT_ALLOWED, inputLine,
 		      LineNum);
    else if (pr == RULE_Token)
@@ -752,7 +752,7 @@ static void AttrInCreateOrWrite (int att, SyntRuleNum pr, indLine wi)
      /* un nom d'attribut dans une fonction de comptage, apres le mot-cle' */
      /* INIT. Seuls les attributs numeriques portant sur l'element racine  */
      /* du schema de structure sont autorises ici */
-     if (pSSchema->SsAttribute[att - 1].AttrType != AtNumAttr)
+     if (pSSchema->SsAttribute->TtAttr[att - 1]->AttrType != AtNumAttr)
        /* ce n'est pas un attribut numerique, erreur */
        CompilerMessage (wi, TRA, FATAL, EXPECTING_A_NUMERICAL_ATTR, inputLine,
 			LineNum);
@@ -882,10 +882,10 @@ static int          AttributeNum (indLine wi, indLine wl)
    CopyWord (n, wi, wl);
    /* verifie si l'attribut existe bien dans le schema de structure */
    i = 1;
-   while (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName) != 0 &&
+   while (strcmp (n, pSSchema->SsAttribute->TtAttr[i - 1]->AttrName) != 0 &&
           i < pSSchema->SsNAttributes)
      i++;
-   if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName) != 0)
+   if (strcmp (n, pSSchema->SsAttribute->TtAttr[i - 1]->AttrName) != 0)
      /* attribut inconnu */
      i = 0;
    return i;
@@ -935,7 +935,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
    TranslVariable     *pTransVar;
    TCounter           *pCntr;
    AttributeTransl    *pAttrTrans;
-   TtAttribute        *pAttr;
+   PtrTtAttribute      pAttr;
    TranslNumAttrCase  *pCase;
    PRuleTransl        *pPresTrans;
 
@@ -1404,7 +1404,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 	       if ((InTypeRules &&
 		    pSSchema->SsRule[CurType - 1].SrConstruct != CsReference)||
 		   (InAttrRules &&
-		    pSSchema->SsAttribute[CurAttr - 1].AttrType !=
+		    pSSchema->SsAttribute->TtAttr[CurAttr - 1]->AttrType !=
 		    AtReferenceAttr))
 		 /* l'element ou l'attribut auquel s'applique la regle */
 		 /* n'est pas une reference, erreur */
@@ -1479,7 +1479,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 	     if ((InTypeRules &&
 		  pSSchema->SsRule[CurType - 1].SrConstruct != CsReference) ||
 		 (InAttrRules &&
-		  pSSchema->SsAttribute[CurAttr - 1].AttrType !=
+		  pSSchema->SsAttribute->TtAttr[CurAttr - 1]->AttrType !=
 		  AtReferenceAttr))
 	       /* l'element ou l'attribut auquel s'applique la regle */
 	       /* n'est pas une reference, erreur */
@@ -1524,7 +1524,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 		       pSSchema->SsRule[CurType - 1].SrConstruct !=
 		       CsReference) ||
 		      (InAttrRules &&
-		       pSSchema->SsAttribute[CurAttr - 1].AttrType !=
+		       pSSchema->SsAttribute->TtAttr[CurAttr - 1]->AttrType !=
 		       AtReferenceAttr))
 	       /* l'element ou l'attribut auquel s'applique la regle n'est */
 	       /* pas une reference, erreur */
@@ -1542,7 +1542,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 	     if ((InTypeRules &&
 		  pSSchema->SsRule[CurType - 1].SrConstruct != CsReference) ||
 		 (InAttrRules &&
-		  pSSchema->SsAttribute[CurAttr - 1].AttrType !=
+		  pSSchema->SsAttribute->TtAttr[CurAttr - 1]->AttrType !=
 		  AtReferenceAttr))
 	       /* l'element ou l'attribut auquel s'applique la regle n'est */
 	       /* pas une reference, erreur */
@@ -1557,7 +1557,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 	     if ((InTypeRules &&
 		  pSSchema->SsRule[CurType - 1].SrConstruct != CsReference) ||
 		 (InAttrRules &&
-		  pSSchema->SsAttribute[CurAttr - 1].AttrType !=
+		  pSSchema->SsAttribute->TtAttr[CurAttr - 1]->AttrType !=
 		  AtReferenceAttr))
 	       /* l'element ou l'attribut auquel s'applique la regle n'est */
 	       /* pas une reference, erreur */
@@ -1572,7 +1572,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 	     if ((InTypeRules &&
 		  pSSchema->SsRule[CurType - 1].SrConstruct != CsReference) ||
 		 (InAttrRules &&
-		  pSSchema->SsAttribute[CurAttr - 1].AttrType !=
+		  pSSchema->SsAttribute->TtAttr[CurAttr - 1]->AttrType !=
 		  AtReferenceAttr))
 	       /* l'element ou l'attribut auquel s'applique la regle n'est */
 	       /* pas une reference, erreur */
@@ -1670,7 +1670,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 	       if ((InTypeRules &&
 		    pSSchema->SsRule[CurType - 1].SrConstruct != CsReference)||
 		   (InAttrRules &&
-		    pSSchema->SsAttribute[CurAttr - 1].AttrType !=
+		    pSSchema->SsAttribute->TtAttr[CurAttr - 1]->AttrType !=
 		    AtReferenceAttr))
 		 /* l'element ou l'attribut auquel s'applique la regle */
 		 /* n'est pas une reference, erreur */
@@ -1703,7 +1703,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 	       if ((InTypeRules &&
 		    pSSchema->SsRule[CurType - 1].SrConstruct != CsReference)||
 		   (InAttrRules &&
-		    pSSchema->SsAttribute[CurAttr - 1].AttrType !=
+		    pSSchema->SsAttribute->TtAttr[CurAttr - 1]->AttrType !=
 		    AtReferenceAttr))
 		 /* l'element ou l'attribut auquel s'applique la regle */
 		 /* n'est pas une reference, erreur */
@@ -2649,7 +2649,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 		       CurBlock = NULL;
 		       CurTRule = NULL;
 		       pAttrTrans = &pTSchema->TsAttrTRule[CurAttr - 1];
-		       switch (pSSchema->SsAttribute[CurAttr - 1].AttrType)
+		       switch (pSSchema->SsAttribute->TtAttr[CurAttr - 1]->AttrType)
 			 {
 			 case AtNumAttr:     /* attribut a valeur numerique */
 			   if (pAttrTrans->AtrNCases >= MAX_TRANSL_ATTR_CASE)
@@ -2706,7 +2706,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 			 TcCondition = TcondAttr;
 		       CurBlock->TbCondition[CurBlock->TbNConditions - 1].
 			 TcAttr = i;
-		       switch (pSSchema->SsAttribute[i - 1].AttrType)
+		       switch (pSSchema->SsAttribute->TtAttr[i - 1]->AttrType)
 			 {
 			 case AtNumAttr:
 			   CurBlock->TbCondition[CurBlock->TbNConditions - 1].
@@ -2743,7 +2743,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 		     TcAttr;
 		 else
 		   k = CurAttr;
-		 pAttr = &pSSchema->SsAttribute[k - 1];
+		 pAttr = pSSchema->SsAttribute->TtAttr[k - 1];
 		 if (pAttr->AttrType != AtEnumAttr)
 		   /* pas un attribut a valeur enumerees */
 		   CompilerMessage (wi, TRA, FATAL, BAD_ATTR_VALUE, inputLine,
@@ -2897,7 +2897,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 		     TcAttr;
 		 else
 		   i = CurAttr;
-		 if (pSSchema->SsAttribute[i - 1].AttrType != AtNumAttr ||
+		 if (pSSchema->SsAttribute->TtAttr[i - 1]->AttrType != AtNumAttr ||
 		     k >= MAX_INT_ATTR_VAL)
 		   /* ce n'est pas un attribut numerique */
 		   CompilerMessage (wi, TRA, FATAL, EXPECTING_A_NUMERICAL_ATTR,
@@ -2926,7 +2926,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 		     TcAttr;
 		 else
 		   i = CurAttr;
-		 if (pSSchema->SsAttribute[i - 1].AttrType != AtNumAttr ||
+		 if (pSSchema->SsAttribute->TtAttr[i - 1]->AttrType != AtNumAttr ||
 		     k >= MAX_INT_ATTR_VAL)
 		   /* ce n'est pas un attribut numerique */
 		   CompilerMessage (wi, TRA, FATAL, EXPECTING_A_NUMERICAL_ATTR,
@@ -2955,7 +2955,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 		     TcAttr;
 		 else
 		   i = CurAttr;
-		 if (pSSchema->SsAttribute[i - 1].AttrType != AtNumAttr ||
+		 if (pSSchema->SsAttribute->TtAttr[i - 1]->AttrType != AtNumAttr ||
 		     k >= MAX_INT_ATTR_VAL)
 		   /* ce n'est pas un attribut numerique */
 		   CompilerMessage (wi, TRA, FATAL, EXPECTING_A_NUMERICAL_ATTR,
@@ -2984,7 +2984,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 		     TcAttr;
 		 else
 		   i = CurAttr;
-		 if (pSSchema->SsAttribute[i - 1].AttrType != AtNumAttr ||
+		 if (pSSchema->SsAttribute->TtAttr[i - 1]->AttrType != AtNumAttr ||
 		     k >= MAX_INT_ATTR_VAL)
 		   /* ce n'est pas un attribut numerique */
 		   CompilerMessage (wi, TRA, FATAL, EXPECTING_A_NUMERICAL_ATTR,
@@ -3023,7 +3023,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 		     TcAttr;
 		 else
 		   i = CurAttr;
-		 if (pSSchema->SsAttribute[i - 1].AttrType != AtNumAttr ||
+		 if (pSSchema->SsAttribute->TtAttr[i - 1]->AttrType != AtNumAttr ||
 		     k >= MAX_INT_ATTR_VAL)
 		   /* ce n'est pas un attribut numerique */
 		   CompilerMessage (wi, TRA, FATAL, BAD_LIMITS, inputLine,
@@ -3212,7 +3212,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 		     TcAttr;
 		 else
 		   i = CurAttr;
-		 if (pSSchema->SsAttribute[i - 1].AttrType != AtTextAttr)
+		 if (pSSchema->SsAttribute->TtAttr[i - 1]->AttrType != AtTextAttr)
 		   /* ce n'est pas un attribut textuel */
 		   CompilerMessage (wi, TRA, FATAL, NOT_A_TEXTUAL_ATTR,
 				    inputLine, LineNum);
