@@ -1,0 +1,6 @@
+# Empty gtkrc for default theme
+style "Amaya"
+    {
+        font = "-*-helvetica-medium-r-*-*-*-120-*-*-*-*-*-*"
+    }
+    widget_class "*GtkWidget"	style "Amaya"
