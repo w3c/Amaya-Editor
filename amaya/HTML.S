@@ -137,7 +137,7 @@ STRUCT
 		  Height_ = Integer; Width__ = Text;
 		{ height             width }
 		  IntWidthPercent = Integer; IntWidthPxl = Integer;
-		  USEMAP = Text; ISMAP = Yes_;
+		  USEMAP = Text; ISMAP = Yes_; IsInput = Yes_;
 		{ usemap         ismap }
 		  Alignment = Top_, Middle_, Bottom_, Left_, Right_;
 		{ align       top   middle   bottom   left   right }
@@ -830,6 +830,7 @@ EXCEPT
 	IntSizeIncr:	Invisible;
 	IntSizeDecr:	Invisible;
 	IntSizeRel:	Invisible;
+	IsInput:	Invisible;
 	x_coord:	Invisible, NewHPos;
 	y_coord:	Invisible, NewVPos;
 	height\240:	Invisible, NewHeight;

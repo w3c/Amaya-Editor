@@ -78,7 +78,11 @@ void RestoreDocumentStatus (event)
 #endif /* __STDC__*/
 {
   if (!documentStatus)
-    TtaSetDocumentUnmodified (event->document);
+    {
+      TtaSetDocumentUnmodified (event->document);
+      /* switch Amaya buttons and menus */
+      DocStatusUpdate (event->document, documentStatus);
+    }
 }
  
  
@@ -498,213 +502,217 @@ int                 mode;
 
 #endif
 {
-   ElementType         elType;
-   Element             elForm;
-   Attribute           attr, attrS, def;
-   AttributeType       attrType, attrTypeS;
-   int                 length;
-   CHAR_T              name[MAX_LENGTH], value[MAX_LENGTH];
-   STRING              text;
-   int                 modified = FALSE;
-   Language            lang;
+  ElementType         elType;
+  Element             elForm;
+  Attribute           attr, attrS, def;
+  AttributeType       attrType, attrTypeS;
+  CHAR_T              name[MAX_LENGTH], value[MAX_LENGTH];
+  STRING              text;
+  Language            lang;
+  int                 length;
+  int                 modified = FALSE;
 
-   if (el)
-     {
-	if (mode == HTML_EL_Reset_Input)
-	   /* save current status of the document */
-	   modified = TtaIsDocumentModified (doc);
-
-	lang = TtaGetDefaultLanguage ();
-
-	attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-	attrType.AttrTypeNum = HTML_ATTR_NAME;
-	attrTypeS.AttrSSchema = attrType.AttrSSchema;
-	TtaSearchAttribute (attrType, SearchForward, ancestor, &el, &attr);
-	while (el != NULL && TtaIsAncestor(el, ancestor))
-	  {
-	     if (attr != NULL)
-	       {
-		  elType = TtaGetElementType (el);
-		  switch (elType.ElTypeNum)
+  if (el)
+    {
+      if (mode == HTML_EL_Reset_Input)
+	/* save current status of the document */
+	modified = TtaIsDocumentModified (doc);
+      
+      lang = TtaGetDefaultLanguage ();
+      
+      attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+      attrType.AttrTypeNum = HTML_ATTR_NAME;
+      attrTypeS.AttrSSchema = attrType.AttrSSchema;
+      TtaSearchAttribute (attrType, SearchForward, ancestor, &el, &attr);
+      while (el != NULL && TtaIsAncestor(el, ancestor))
+	{
+	  if (attr != NULL)
+	    {
+	      elType = TtaGetElementType (el);
+	      switch (elType.ElTypeNum)
+		{
+		case HTML_EL_Option_Menu:
+		  if (mode == HTML_EL_Submit_Input)
+		    SubmitOptionMenu (el, attr, doc);
+		  else if (mode == HTML_EL_Reset_Input)
+		    ResetOptionMenu (el, doc);
+		  break;
+		  
+		case HTML_EL_Checkbox_Input:
+		  if (mode == HTML_EL_Submit_Input)
+		    {
+		      /* Get the element's current status */
+		      attrTypeS.AttrTypeNum = HTML_ATTR_Checked;
+		      attrS = TtaGetAttribute (el, attrTypeS);
+		      if (attrS != NULL &&
+			  TtaGetAttributeValue (attrS) == HTML_ATTR_Checked_VAL_Yes_)
 			{
-			  case HTML_EL_Option_Menu:
-			      if (mode == HTML_EL_Submit_Input)
-				 SubmitOptionMenu (el, attr, doc);
-			      else if (mode == HTML_EL_Reset_Input)
-				 ResetOptionMenu (el, doc);
-			      break;
-
-			   case HTML_EL_Checkbox_Input:
-			     if (mode == HTML_EL_Submit_Input)
-				{
-				   /* Get the element's current status */
-				   attrTypeS.AttrTypeNum = HTML_ATTR_Checked;
-				   attrS = TtaGetAttribute (el, attrTypeS);
-				   if (attrS != NULL &&
-				       TtaGetAttributeValue (attrS) == HTML_ATTR_Checked_VAL_Yes_)
-				     {
-				       /* save the NAME attribute of the element el */
-				       length = MAX_LENGTH - 1;
-				       TtaGiveTextAttributeValue (attr, name, &length);
-				       /* get the "value" attribute */
-					attrTypeS.AttrTypeNum = HTML_ATTR_Value_;
-					attrS = TtaGetAttribute (el, attrTypeS);
-					if (attrS != NULL)
-					  {
-					     /* save the Value attribute of the element el */
-					     length = MAX_LENGTH - 1;
-					     TtaGiveTextAttributeValue (attrS, value, &length);
-					     AddNameValue (name, value);
-					  }
-					else
-					  /* give a default checkbox value (On) */
-					  AddNameValue (name, TEXT("on"));
-				     }
-				}
-			      else if (mode == HTML_EL_Reset_Input)
-				{
-				   /* Reset according to the default attribute */
-				   attrTypeS.AttrTypeNum = HTML_ATTR_DefaultChecked;
-				   def = TtaGetAttribute (el, attrTypeS);
-				   /* remove previous checked attribute */
-				   attrTypeS.AttrTypeNum = HTML_ATTR_Checked;
-				   attrS = TtaGetAttribute (el, attrTypeS);
-				   if (attrS != NULL)
-				      TtaRemoveAttribute (el, attrS, doc);
-				   /* create a new checked attribute */
-				   attrS = TtaNewAttribute (attrTypeS);
-				   TtaAttachAttribute (el, attrS, doc);
-				   if (def != NULL)
-				      TtaSetAttributeValue (attrS, HTML_ATTR_Checked_VAL_Yes_, el, doc);
-				   else
-				      TtaSetAttributeValue (attrS, HTML_ATTR_Checked_VAL_No_, el, doc);
-				}
-			      break;
-
-			   case HTML_EL_Radio_Input:
-			      if (mode == HTML_EL_Submit_Input)
-				{
-				   /* Get the element's current status */
-				   attrTypeS.AttrTypeNum = HTML_ATTR_Checked;
-				   attrS = TtaGetAttribute (el, attrTypeS);
-				   if (attrS != NULL &&
-				       TtaGetAttributeValue (attrS) == HTML_ATTR_Checked_VAL_Yes_)
-				     {
-					/* get the Value attribute */
-					attrTypeS.AttrTypeNum = HTML_ATTR_Value_;
-					attrS = TtaGetAttribute (el, attrTypeS);
-					if (attrS != NULL)
-					  {
-					     /* save the NAME attribute of the element el */
-					     length = MAX_LENGTH - 1;
-					     TtaGiveTextAttributeValue (attr, name, &length);
-					     /* save the Value attribute of the element el */
-					     length = MAX_LENGTH - 1;
-					     TtaGiveTextAttributeValue (attrS, value, &length);
-					     AddNameValue (name, value);
-					  }
-				     }
-				}
-			      else if (mode == HTML_EL_Reset_Input)
-				{
-				   /* Reset according to the default attribute */
-				   attrTypeS.AttrTypeNum = HTML_ATTR_DefaultChecked;
-				   def = TtaGetAttribute (el, attrTypeS);
-				   /* remove previous checked attribute */
-				   attrTypeS.AttrTypeNum = HTML_ATTR_Checked;
-				   attrS = TtaGetAttribute (el, attrTypeS);
-				   if (attrS != NULL)
-				      TtaRemoveAttribute (el, attrS, doc);
-				   /* create a new checked attribute */
-				   attrS = TtaNewAttribute (attrTypeS);
-				   TtaAttachAttribute (el, attrS, doc);
-				   if (def != NULL)
-				      TtaSetAttributeValue (attrS, HTML_ATTR_Checked_VAL_Yes_, el, doc);
-				   else
-				      TtaSetAttributeValue (attrS, HTML_ATTR_Checked_VAL_No_, el, doc);
-				}
-			      break;
-
-			   case HTML_EL_Text_Area:
-			   case HTML_EL_Text_Input:
-			   case HTML_EL_File_Input:
-			   case HTML_EL_Password_Input:
-			      if (mode == HTML_EL_Submit_Input)
-				{
-				  /* search the value in the Text_With_Frame element */
-				  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-				  elForm = TtaSearchTypedElement (elType, SearchInTree, el);
-				  /* save the NAME attribute of the element el */
-				  length = MAX_LENGTH - 1;
-				  TtaGiveTextAttributeValue (attr, name, &length);
-				  AddElement (name);
-				  AddToBuffer (TEXT("="));
-				  while (elForm)
-				     {
-				       length = TtaGetTextLength (elForm) + 1;
-				       text = TtaGetMemory (length);
-				       TtaGiveTextContent (elForm, text, &length, &lang);
-				       AddElement (text);
-				       TtaFreeMemory (text);
-				       elForm = TtaSearchTypedElementInTree (elType, SearchForward, el, elForm);
-				     }
-				  AddToBuffer (TEXT("&"));
-				}
-			      else if (mode == HTML_EL_Reset_Input)
-				{
-				  /* Reset according to the default attribute*/
-				  /* gets the default value */
-				   attrTypeS.AttrTypeNum = HTML_ATTR_Default_Value;
-				   def = TtaGetAttribute (el, attrTypeS);
-				   if (def != NULL)
-				     {
-					length = MAX_LENGTH - 1;
-					TtaGiveTextAttributeValue (def, value, &length);
-				     }
-				   else
-				     /* there's no default value */
-				     value[0] = EOS;
-				   /* search the value in the Text_With_Frame element */
-				   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-				   elForm = TtaSearchTypedElement (elType, SearchInTree, el);
-				   /* reset the value of the element */
-				   if (elForm != NULL) 
-				     TtaSetTextContent (elForm, value, lang, doc);
-				}
-			      break;
-
-			   case HTML_EL_Hidden_Input:
-			      if (mode == HTML_EL_Submit_Input)
-				{
-				   /* the value is in the default value attribute */
-				   attrTypeS.AttrTypeNum = HTML_ATTR_Value_;
-				   attrS = TtaGetAttribute (el, attrType);
-				   def = TtaGetAttribute (el, attrTypeS);
-				   if (def != NULL)
-				     {
-					/* save the NAME attribute of the element el */
-					length = MAX_LENGTH - 1;
-					TtaGiveTextAttributeValue (attr, name, &length);
-					/* save of the element content */
-					length = MAX_LENGTH - 1;
-					TtaGiveTextAttributeValue (def, value, &length);
-					AddNameValue (name, value);
-				     }
-				}
-			      break;
-
-			   default:
-			      break;
+			  /* save the NAME attribute of the element el */
+			  length = MAX_LENGTH - 1;
+			  TtaGiveTextAttributeValue (attr, name, &length);
+			  /* get the "value" attribute */
+			  attrTypeS.AttrTypeNum = HTML_ATTR_Value_;
+			  attrS = TtaGetAttribute (el, attrTypeS);
+			  if (attrS != NULL)
+			    {
+			      /* save the Value attribute of the element el */
+			      length = MAX_LENGTH - 1;
+			      TtaGiveTextAttributeValue (attrS, value, &length);
+			      AddNameValue (name, value);
+			    }
+			  else
+			    /* give a default checkbox value (On) */
+			    AddNameValue (name, TEXT("on"));
 			}
-	       }
-	     TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+		    }
+		  else if (mode == HTML_EL_Reset_Input)
+		    {
+		      /* Reset according to the default attribute */
+		      attrTypeS.AttrTypeNum = HTML_ATTR_DefaultChecked;
+		      def = TtaGetAttribute (el, attrTypeS);
+		      /* remove previous checked attribute */
+		      attrTypeS.AttrTypeNum = HTML_ATTR_Checked;
+		      attrS = TtaGetAttribute (el, attrTypeS);
+		      if (attrS != NULL)
+			TtaRemoveAttribute (el, attrS, doc);
+		      /* create a new checked attribute */
+		      attrS = TtaNewAttribute (attrTypeS);
+		      TtaAttachAttribute (el, attrS, doc);
+		      if (def != NULL)
+			TtaSetAttributeValue (attrS, HTML_ATTR_Checked_VAL_Yes_, el, doc);
+		      else
+			TtaSetAttributeValue (attrS, HTML_ATTR_Checked_VAL_No_, el, doc);
+		    }
+		  break;
+		  
+		case HTML_EL_Radio_Input:
+		  if (mode == HTML_EL_Submit_Input)
+		    {
+		      /* Get the element's current status */
+		      attrTypeS.AttrTypeNum = HTML_ATTR_Checked;
+		      attrS = TtaGetAttribute (el, attrTypeS);
+		      if (attrS != NULL &&
+			  TtaGetAttributeValue (attrS) == HTML_ATTR_Checked_VAL_Yes_)
+			{
+			  /* get the Value attribute */
+			  attrTypeS.AttrTypeNum = HTML_ATTR_Value_;
+			  attrS = TtaGetAttribute (el, attrTypeS);
+			  if (attrS != NULL)
+			    {
+			      /* save the NAME attribute of the element el */
+			      length = MAX_LENGTH - 1;
+			      TtaGiveTextAttributeValue (attr, name, &length);
+			      /* save the Value attribute of the element el */
+			      length = MAX_LENGTH - 1;
+			      TtaGiveTextAttributeValue (attrS, value, &length);
+			      AddNameValue (name, value);
+			    }
+			}
+		    }
+		  else if (mode == HTML_EL_Reset_Input)
+		    {
+		      /* Reset according to the default attribute */
+		      attrTypeS.AttrTypeNum = HTML_ATTR_DefaultChecked;
+		      def = TtaGetAttribute (el, attrTypeS);
+		      /* remove previous checked attribute */
+		      attrTypeS.AttrTypeNum = HTML_ATTR_Checked;
+		      attrS = TtaGetAttribute (el, attrTypeS);
+		      if (attrS != NULL)
+			TtaRemoveAttribute (el, attrS, doc);
+		      /* create a new checked attribute */
+		      attrS = TtaNewAttribute (attrTypeS);
+		      TtaAttachAttribute (el, attrS, doc);
+		      if (def != NULL)
+			TtaSetAttributeValue (attrS, HTML_ATTR_Checked_VAL_Yes_, el, doc);
+		      else
+			TtaSetAttributeValue (attrS, HTML_ATTR_Checked_VAL_No_, el, doc);
+		    }
+		  break;
+		  
+		case HTML_EL_Text_Area:
+		case HTML_EL_Text_Input:
+		case HTML_EL_File_Input:
+		case HTML_EL_Password_Input:
+		  if (mode == HTML_EL_Submit_Input)
+		    {
+		      /* search the value in the Text_With_Frame element */
+		      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+		      elForm = TtaSearchTypedElement (elType, SearchInTree, el);
+		      /* save the NAME attribute of the element el */
+		      length = MAX_LENGTH - 1;
+		      TtaGiveTextAttributeValue (attr, name, &length);
+		      AddElement (name);
+		      AddToBuffer (TEXT("="));
+		      while (elForm)
+			{
+			  length = TtaGetTextLength (elForm) + 1;
+			  text = TtaGetMemory (length);
+			  TtaGiveTextContent (elForm, text, &length, &lang);
+			  AddElement (text);
+			  TtaFreeMemory (text);
+			  elForm = TtaSearchTypedElementInTree (elType, SearchForward, el, elForm);
+			}
+		      AddToBuffer (TEXT("&"));
+		    }
+		  else if (mode == HTML_EL_Reset_Input)
+		    {
+		      /* Reset according to the default attribute*/
+		      /* gets the default value */
+		      attrTypeS.AttrTypeNum = HTML_ATTR_Default_Value;
+		      def = TtaGetAttribute (el, attrTypeS);
+		      if (def != NULL)
+			{
+			  length = MAX_LENGTH - 1;
+			  TtaGiveTextAttributeValue (def, value, &length);
+			}
+		      else
+			/* there's no default value */
+			value[0] = EOS;
+		      /* search the value in the Text_With_Frame element */
+		      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+		      elForm = TtaSearchTypedElement (elType, SearchInTree, el);
+		      /* reset the value of the element */
+		      if (elForm != NULL) 
+			TtaSetTextContent (elForm, value, lang, doc);
+		    }
+		  break;
+		  
+		case HTML_EL_Hidden_Input:
+		  if (mode == HTML_EL_Submit_Input)
+		    {
+		      /* the value is in the default value attribute */
+		      attrTypeS.AttrTypeNum = HTML_ATTR_Value_;
+		      attrS = TtaGetAttribute (el, attrType);
+		      def = TtaGetAttribute (el, attrTypeS);
+		      if (def != NULL)
+			{
+			  /* save the NAME attribute of the element el */
+			  length = MAX_LENGTH - 1;
+			  TtaGiveTextAttributeValue (attr, name, &length);
+			  /* save of the element content */
+			  length = MAX_LENGTH - 1;
+			  TtaGiveTextAttributeValue (def, value, &length);
+			  AddNameValue (name, value);
+			}
+		    }
+		  break;
+		  
+		default:
+		  break;
+		}
+	    }
+	  TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+	}
+      
+      if (mode == HTML_EL_Reset_Input)
+	/* restore status of the document */
+	if (!modified)
+	  {
+	    TtaSetDocumentUnmodified (doc);
+	    /* switch Amaya buttons and menus */
+	    DocStatusUpdate (doc, modified);
 	  }
-
-	if (mode == HTML_EL_Reset_Input)
-	   /* restore status of the document */
-	   if (!modified)
-	      TtaSetDocumentUnmodified (doc);
-     }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -922,12 +930,16 @@ Element             element;
    /* find the parent form node */
    elType.ElTypeNum = HTML_EL_Form;
    elForm = TtaGetTypedAncestor (element, elType);
-   if (elForm == NULL)
-     /* could not find a form ancestor */
+   if (!elForm)
      {
-     if (buffer)
-       TtaFreeMemory (buffer);
-     return;
+       /* could not find a form ancestor */
+       elForm = TtaSearchTypedElement (elType, SearchBackward, element);
+       if (!elForm)
+	 {
+	   /* could not find a form before that element */
+	   TtaFreeMemory (buffer);
+	   return;
+	 }
      }
    else
      ancestor = elForm;
@@ -1059,7 +1071,11 @@ Element             el;
 	     TtaSetAttributeValue (attr, HTML_ATTR_Checked_VAL_Yes_, el, doc);
 	  }
 	if (!modified)
-	   TtaSetDocumentUnmodified (doc);
+	  {
+	    TtaSetDocumentUnmodified (doc);
+	    /* switch Amaya buttons and menus */
+	    DocStatusUpdate (doc, modified);
+	  }
      }
 }
 
@@ -1162,7 +1178,11 @@ Element             el;
 		    }
 	       }
 	     if (!modified)
-		TtaSetDocumentUnmodified (doc);
+	       {
+		 TtaSetDocumentUnmodified (doc);
+		 /* switch Amaya buttons and menus */
+		 DocStatusUpdate (doc, modified);
+	       }
 	  }
      }
 }
@@ -1226,271 +1246,272 @@ void                SelectOneOption (Document doc, Element el)
 void                SelectOneOption (doc, el)
 Document            doc;
 Element             el;
-
 #endif
 {
 #ifdef _WINDOWS
-   int nbOldEntries = 20;
+  int                 nbOldEntries = 20;
 #endif /* _WINDOWS */
-
 #define MAX_OPTIONS 100
 #define MAX_SUBOPTIONS 20
 #define MAX_LABEL_LENGTH 50
-   ElementType         elType, childType;
-   Element	       elText, menuEl, child;
-   Element             option[MAX_OPTIONS],
-		       subOptions[MAX_SUBMENUS][MAX_SUBOPTIONS];
-   ThotBool	       selected[MAX_OPTIONS],
-		       subSelected[MAX_SUBMENUS][MAX_SUBOPTIONS];
-   AttributeType       attrType;
-   Attribute	       attr;
-   SSchema	       htmlSch;
-   int                 length, nbitems, lgmenu, i, nbsubmenus, nbsubitems;
-   CHAR_T              text[MAX_LABEL_LENGTH];
-   CHAR_T              buffmenu[MAX_LENGTH];
-   Language            lang;
-   int                 modified;
-   ThotBool	       multipleOptions, sel;
+  ElementType         elType, childType;
+  Element	      elText, menuEl, child;
+  Element             option[MAX_OPTIONS];
+  Element	      subOptions[MAX_SUBMENUS][MAX_SUBOPTIONS];
+  ThotBool	      selected[MAX_OPTIONS];
+  ThotBool            subSelected[MAX_SUBMENUS][MAX_SUBOPTIONS];
+  AttributeType       attrType;
+  Attribute	      attr;
+  SSchema	      htmlSch;
+  CHAR_T              text[MAX_LABEL_LENGTH];
+  CHAR_T              buffmenu[MAX_LENGTH];
+  Language            lang;
+  int                 length, nbitems, lgmenu, i, nbsubmenus, nbsubitems;
+  int                 modified;
+  ThotBool	      multipleOptions, sel;
 
-   if (el == NULL)
-      return;
+  if (el == NULL)
+    return;
 
-#  ifdef _WINDOWS  
+#ifdef _WINDOWS  
    opDoc = doc;
-#  endif /* _WINDOWS */
-
+#endif /* _WINDOWS */
    htmlSch = TtaGetSSchema (TEXT("HTML"), doc);
    /* search the enclosing option element */
    do
      {
-	elType = TtaGetElementType (el);
-	if (elType.ElTypeNum != HTML_EL_Option || elType.ElSSchema != htmlSch)
-	   el = TtaGetParent (el);
+       elType = TtaGetElementType (el);
+       if (elType.ElTypeNum != HTML_EL_Option || elType.ElSSchema != htmlSch)
+	 el = TtaGetParent (el);
      }
    while (el &&
           (elType.ElTypeNum != HTML_EL_Option || elType.ElSSchema != htmlSch));
 
    if (elType.ElTypeNum == HTML_EL_Option && elType.ElSSchema == htmlSch)
      {
-	/* create the option menu */
-	lgmenu = 0;
-	nbitems = 0;
-	nbsubmenus = 0;
-        elType.ElTypeNum = HTML_EL_Option_Menu;
-	menuEl = TtaGetTypedAncestor (el, elType);
-	if (menuEl != NULL)
-	  {
-	     attrType.AttrSSchema = htmlSch;
-	     attrType.AttrTypeNum = HTML_ATTR_Multiple;
-	     attr = TtaGetAttribute (menuEl, attrType);
-	     if (attr)
-	         /* multiple options are allowed */
-		 multipleOptions = TRUE;
-	     else
-		 multipleOptions = FALSE;
-	     
-	     attrType.AttrTypeNum = HTML_ATTR_Selected;
-	     el = TtaGetFirstChild (menuEl);
-	     while (nbitems < MAX_OPTIONS && el)
-	       {
-		  elType = TtaGetElementType (el);
-		  if (elType.ElTypeNum == HTML_EL_OptGroup &&
-                      elType.ElSSchema == htmlSch)
-                    {
-                    /* It's an OptGroup.A submenu has to be created later on */
-                    if (nbsubmenus < MAX_SUBMENUS)
-		       nbsubmenus++;
-		    else
-		       /* too many submenus. Ignore that OptGroup */
-		       elType.ElTypeNum = 0;
-                    }
-		  if ((elType.ElTypeNum == HTML_EL_Option ||
-                      elType.ElTypeNum == HTML_EL_OptGroup) &&
-                       elType.ElSSchema == htmlSch)
-		    {
-		       option[nbitems] = el;
-#              ifdef _WINDOWS 
-               opOption[nbitems] = el;
-#              endif /* _WINDOWS */
-		       if (multipleOptions)
-                          {
-                          attrType.AttrTypeNum = HTML_ATTR_Selected;
-		          selected[nbitems] = (TtaGetAttribute (el, attrType) != NULL);
-                          }
-                       /* get the menu item label */
-                       /* is there a label attribute? */
-                       attrType.AttrTypeNum = HTML_ATTR_label;
-                       attr = TtaGetAttribute (el, attrType);
-		       length = MAX_LABEL_LENGTH;
-                       if (attr)
-                          TtaGiveTextAttributeValue (attr, text, &length);
-                       else if (elType.ElTypeNum == HTML_EL_Option)
-                          /* there is no label attribute, but it's an Option
-                             Take its content as the item label */
-                          {
-		          elText = TtaGetFirstChild (el);
-			  if (elText)
-		             TtaGiveTextContent (elText, text, &length, &lang);
-			  else
-			     length = 0;
-                          }
+       /* create the option menu */
+       lgmenu = 0;
+       nbitems = 0;
+       nbsubmenus = 0;
+       elType.ElTypeNum = HTML_EL_Option_Menu;
+       menuEl = TtaGetTypedAncestor (el, elType);
+       if (menuEl != NULL)
+	 {
+	   attrType.AttrSSchema = htmlSch;
+	   attrType.AttrTypeNum = HTML_ATTR_Multiple;
+	   attr = TtaGetAttribute (menuEl, attrType);
+	   if (attr)
+	     /* multiple options are allowed */
+	     multipleOptions = TRUE;
+	   else
+	     multipleOptions = FALSE;
+	   
+	   attrType.AttrTypeNum = HTML_ATTR_Selected;
+	   el = TtaGetFirstChild (menuEl);
+	   while (nbitems < MAX_OPTIONS && el)
+	     {
+	       elType = TtaGetElementType (el);
+	       if (elType.ElTypeNum == HTML_EL_OptGroup &&
+		   elType.ElSSchema == htmlSch)
+		 {
+		   /* It's an OptGroup.A submenu has to be created later on */
+		   if (nbsubmenus < MAX_SUBMENUS)
+		     nbsubmenus++;
+		   else
+		     /* too many submenus. Ignore that OptGroup */
+		     elType.ElTypeNum = 0;
+		 }
+	       if ((elType.ElTypeNum == HTML_EL_Option ||
+		    elType.ElTypeNum == HTML_EL_OptGroup) &&
+		   elType.ElSSchema == htmlSch)
+		 {
+		   option[nbitems] = el;
+#ifdef _WINDOWS 
+		   opOption[nbitems] = el;
+#endif /* _WINDOWS */
+		   if (multipleOptions)
+		     {
+		       attrType.AttrTypeNum = HTML_ATTR_Selected;
+		       selected[nbitems] = (TtaGetAttribute (el, attrType) != NULL);
+		     }
+		   /* get the menu item label */
+		   /* is there a label attribute? */
+		   attrType.AttrTypeNum = HTML_ATTR_label;
+		   attr = TtaGetAttribute (el, attrType);
+		   length = MAX_LABEL_LENGTH;
+		   if (attr)
+		     TtaGiveTextAttributeValue (attr, text, &length);
+		   else if (elType.ElTypeNum == HTML_EL_Option)
+		     /* there is no label attribute, but it's an Option
+			Take its content as the item label */
+		     {
+		       elText = TtaGetFirstChild (el);
+		       if (elText)
+			 TtaGiveTextContent (elText, text, &length, &lang);
 		       else
-			  length = 0;
-		       /* count the EOS character */
-		       text[length] = EOS;
-		       length++;
-                       /* we have to add the 'B', 'T' or 'M' character */
-		       length++;
-		       if (lgmenu + length < MAX_LENGTH)
-			  /* add an item */
-			  {
-                          if (elType.ElTypeNum == HTML_EL_OptGroup)
-                             usprintf (&buffmenu[lgmenu], TEXT("M%s"), text);
-			  else if (multipleOptions)
+			 length = 0;
+		     }
+		   else
+		     length = 0;
+		   /* count the EOS character */
+		   text[length] = EOS;
+		   length++;
+		   /* we have to add the 'B', 'T' or 'M' character */
+		   length++;
+		   if (lgmenu + length < MAX_LENGTH)
+		     /* add an item */
+		     {
+		       if (elType.ElTypeNum == HTML_EL_OptGroup)
+			 usprintf (&buffmenu[lgmenu], TEXT("M%s"), text);
+		       else if (multipleOptions)
+			 usprintf (&buffmenu[lgmenu], TEXT("T%s"), text);
+		       else
+			 usprintf (&buffmenu[lgmenu], TEXT("B%s"), text);
+		       nbitems++;
+		     }
+		   lgmenu += length;
+		 }
+	       TtaNextSibling (&el);
+	     }
+	   if (nbitems > 0)
+	     {
+	       /* create the main menu */
+	       TtaNewPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
+			    NULL, nbitems, buffmenu, NULL, 'L');
+	       if (multipleOptions)
+		 for (i = 0; i < nbitems; i++)
+		   if (selected[i])
+#ifdef _WINDOWS
+		     WIN_TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE, FrMainRef [currentFrame]);
+#else  /* !_WINDOWS */
+	       TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE);
+#endif /* _WINDOWS */
+	       if (nbsubmenus > 0) {
+		 /* There ia at least 1 OPTGROUP. Create submenus corresponding to OPTGROUPs */
+		 nbitems = 0;	/* item number in main (SELECT) menu */
+		 /* check all children of element SELECT */
+		 el = TtaGetFirstChild (menuEl);
+		 nbsubmenus = 0;
+		 while (nbsubmenus < MAX_SUBMENUS && el) {
+		   elType = TtaGetElementType (el);
+		   if (elType.ElTypeNum == HTML_EL_Option && elType.ElSSchema == htmlSch)
+		     /* this is an OPTION */
+		     nbitems++;	/* item number in the main menu */
+		   else if (elType.ElTypeNum == HTML_EL_OptGroup && elType.ElSSchema == htmlSch) {
+		     /* this is an OPTGROUP.  Create the corresponding sub menu */
+		     /* First, check all children of OPTGROUP */
+		     child = TtaGetFirstChild (el);
+		     lgmenu = 0;
+		     nbsubitems = 0;
+		     while (nbsubitems < MAX_SUBOPTIONS && child) {
+		       childType = TtaGetElementType (child);
+		       if (childType.ElTypeNum == HTML_EL_Option && childType.ElSSchema == htmlSch) {
+			 /* it's an OPTION. Create a submenu item */
+			 subOptions[nbsubmenus][nbsubitems] = child;
+			 if (multipleOptions) {
+			   attrType.AttrTypeNum = HTML_ATTR_Selected;
+			   subSelected[nbsubmenus][nbsubitems] = (TtaGetAttribute (child, attrType) != NULL);
+			 } 
+			 /* get the item label */
+			 attrType.AttrTypeNum = HTML_ATTR_label;
+			 attr = TtaGetAttribute (child, attrType);
+			 length = MAX_LABEL_LENGTH - 1;
+			 if (attr) /* there is a label attribute. Take it */
+			   TtaGiveTextAttributeValue (attr, text, &length);
+			 else { /* take the element's content */
+			   elText = TtaGetFirstChild (child);
+			   if (elText)
+			     TtaGiveTextContent (elText, text, &length, &lang);
+			   else
+			     length = 0;
+			 } 
+			 /* count the EOS character */
+			 text[length] = EOS;
+			 length++;
+			 /* we have to add the 'B'or 'T' character */
+			 length++;
+			 if (lgmenu + length < MAX_LENGTH) { /* append that item to the buffer */
+			   if (multipleOptions)
 			     usprintf (&buffmenu[lgmenu], TEXT("T%s"), text);
-			  else
+			   else
 			     usprintf (&buffmenu[lgmenu], TEXT("B%s"), text);
-			  nbitems++;
-			  }
-		       lgmenu += length;
-		    }
-		  TtaNextSibling (&el);
-	       }
-	     if (nbitems > 0)
-	       {
-		  /* create the main menu */
-		  TtaNewPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
-			       NULL, nbitems, buffmenu, NULL, 'L');
-          if (multipleOptions)
-             for (i = 0; i < nbitems; i++)
-                 if (selected[i])
-#                ifdef _WINDOWS
-                 WIN_TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE, FrMainRef [currentFrame]);
-#                else  /* !_WINDOWS */
-                 TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE);
-#                endif /* _WINDOWS */
-                 if (nbsubmenus > 0) {
-                    /* There ia at least 1 OPTGROUP. Create submenus corresponding to OPTGROUPs */
-                    nbitems = 0;	/* item number in main (SELECT) menu */
-                    /* check all children of element SELECT */
-                    el = TtaGetFirstChild (menuEl);
-                    nbsubmenus = 0;
-                    while (nbsubmenus < MAX_SUBMENUS && el) {
-                          elType = TtaGetElementType (el);
-                          if (elType.ElTypeNum == HTML_EL_Option && elType.ElSSchema == htmlSch)
-                             /* this is an OPTION */
-                             nbitems++;	/* item number in the main menu */
-                          else if (elType.ElTypeNum == HTML_EL_OptGroup && elType.ElSSchema == htmlSch) {
-                               /* this is an OPTGROUP.  Create the corresponding sub menu */
-                               /* First, check all children of OPTGROUP */
-                               child = TtaGetFirstChild (el);
-                               lgmenu = 0;
-                               nbsubitems = 0;
-                               while (nbsubitems < MAX_SUBOPTIONS && child) {
-                                     childType = TtaGetElementType (child);
-                                     if (childType.ElTypeNum == HTML_EL_Option && childType.ElSSchema == htmlSch) {
-                                        /* it's an OPTION. Create a submenu item */
-                                        subOptions[nbsubmenus][nbsubitems] = child;
-                                        if (multipleOptions) {
-                                           attrType.AttrTypeNum = HTML_ATTR_Selected;
-                                           subSelected[nbsubmenus][nbsubitems] = (TtaGetAttribute (child, attrType) != NULL);
-										} 
-                                        /* get the item label */
-                                        attrType.AttrTypeNum = HTML_ATTR_label;
-                                        attr = TtaGetAttribute (child, attrType);
-                                        length = MAX_LABEL_LENGTH - 1;
-                                       if (attr) /* there is a label attribute. Take it */
-                                          TtaGiveTextAttributeValue (attr, text, &length);
-									   else { /* take the element's content */
-                                            elText = TtaGetFirstChild (child);
-                                            if (elText)
-                                               TtaGiveTextContent (elText, text, &length, &lang);
-                                            else
-                                               length = 0;
-									   } 
-                                       /* count the EOS character */
-                                       text[length] = EOS;
-                                       length++;
-	                                   /* we have to add the 'B'or 'T' character */
-                                       length++;
-                                       if (lgmenu + length < MAX_LENGTH) { /* append that item to the buffer */
-                                          if (multipleOptions)
-                                             usprintf (&buffmenu[lgmenu], TEXT("T%s"), text);
-                                          else
-                                             usprintf (&buffmenu[lgmenu], TEXT("B%s"), text);
-                                          nbsubitems++;
-									   } 
-                                       lgmenu += length;
-									 } 
-                                     /* next child of OPTGROUP */
-                                     TtaNextSibling (&child);
-							   }
-                               /* All children of OPTGROUP have been checked. */
-                               /* create the submenu */
+			   nbsubitems++;
+			 } 
+			 lgmenu += length;
+		       } 
+		       /* next child of OPTGROUP */
+		       TtaNextSibling (&child);
+		     }
+		     /* All children of OPTGROUP have been checked. */
+		     /* create the submenu */
 #                               ifdef _WINDOWS
-                                TtaNewSubmenu (BaseDialog + OptionMenu + (nbsubmenus * nbOldEntries) + 1, BaseDialog+OptionMenu, nbitems, NULL, nbsubitems, buffmenu, NULL, FALSE);
+		     TtaNewSubmenu (BaseDialog + OptionMenu + (nbsubmenus * nbOldEntries) + 1, BaseDialog+OptionMenu, nbitems, NULL, nbsubitems, buffmenu, NULL, FALSE);
 #                               else  /* !_WINDOWS */
-                                TtaNewSubmenu (BaseDialog+OptionMenu+nbsubmenus+1, BaseDialog+OptionMenu, nbitems, NULL, nbsubitems, buffmenu, NULL, FALSE);
+		     TtaNewSubmenu (BaseDialog+OptionMenu+nbsubmenus+1, BaseDialog+OptionMenu, nbitems, NULL, nbsubitems, buffmenu, NULL, FALSE);
 #                               endif /* _WINDOWS */
-                                if (multipleOptions)
-                                   for (i = 0; i < nbsubitems; i++)
-                                       if (subSelected[nbsubmenus][i])
+		     if (multipleOptions)
+		       for (i = 0; i < nbsubitems; i++)
+			 if (subSelected[nbsubmenus][i])
 #                                         ifdef _WINDOWS
-                                          WIN_TtaSetToggleMenu (BaseDialog + OptionMenu + (nbsubmenus * nbOldEntries) + 1, i, TRUE, FrMainRef [currentFrame]);
+			   WIN_TtaSetToggleMenu (BaseDialog + OptionMenu + (nbsubmenus * nbOldEntries) + 1, i, TRUE, FrMainRef [currentFrame]);
 #                                         else  /* !_WINDOWS */
-                                          TtaSetToggleMenu (BaseDialog+OptionMenu+nbsubmenus+1, i, TRUE);
+		     TtaSetToggleMenu (BaseDialog+OptionMenu+nbsubmenus+1, i, TRUE);
 #                                         endif /* _WINDOWS */
-                                          nbsubmenus++;
-                                          nbitems++;	/* item number in the main menu */
-						  }  
-                          /* Next child of SELECT */
-                          TtaNextSibling (&el);
-					}
-				 }
-                 /* activate the menu that has just been created */
-                 ReturnOption = -1;
-                 ReturnOptionMenu = -1;
+		     nbsubmenus++;
+		     nbitems++;	/* item number in the main menu */
+		   }  
+		   /* Next child of SELECT */
+		   TtaNextSibling (&el);
+		 }
+	       }
+	       /* activate the menu that has just been created */
+	       ReturnOption = -1;
+	       ReturnOptionMenu = -1;
 #                ifndef _WINDOWS
-                 TtaSetDialoguePosition ();
+	       TtaSetDialoguePosition ();
 #                endif /* !_WINDOWS */
-                 TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
-                 /* wait for an answer from the user */
-                 TtaWaitShowDialogue ();
-                 if (ReturnOption >= 0 && ReturnOptionMenu >= 0) {
-                    /* make the returned option selected */
-					 if (ReturnOptionMenu == 0) { /* an item in the main (SELECT) menu */
-                        el = option[ReturnOption];
-                        sel = selected[ReturnOption];
-					 } else { /* an item in a submenu */
+	       TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
+	       /* wait for an answer from the user */
+	       TtaWaitShowDialogue ();
+	       if (ReturnOption >= 0 && ReturnOptionMenu >= 0) {
+		 /* make the returned option selected */
+		 if (ReturnOptionMenu == 0) { /* an item in the main (SELECT) menu */
+		   el = option[ReturnOption];
+		   sel = selected[ReturnOption];
+		 } else { /* an item in a submenu */
 #                           ifdef _WINDOWS
-                            /* el = subOptions[ReturnOptionMenu - nbOldEntries - 1][ReturnOption]; */
-                            el = subOptions[ReturnOptionMenu / nbOldEntries ][ReturnOption];
-                            sel = subSelected[ReturnOptionMenu / nbOldEntries][ReturnOption];
+		   /* el = subOptions[ReturnOptionMenu - nbOldEntries - 1][ReturnOption]; */
+		   el = subOptions[ReturnOptionMenu / nbOldEntries ][ReturnOption];
+		   sel = subSelected[ReturnOptionMenu / nbOldEntries][ReturnOption];
 #                           else  /* _WINDOWS */
-                            el = subOptions[ReturnOptionMenu - 1][ReturnOption];
-                            sel = subSelected[ReturnOptionMenu - 1][ReturnOption];
+		   el = subOptions[ReturnOptionMenu - 1][ReturnOption];
+		   sel = subSelected[ReturnOptionMenu - 1][ReturnOption];
 #                           endif /* _WINDOWS */
-					 }
-                     modified = TtaIsDocumentModified (doc);	  
-                     if (!multipleOptions)
-                        OnlyOneOptionSelected (el, doc, FALSE);
-                     else {
-                          attrType.AttrTypeNum = HTML_ATTR_Selected;
-                          attr = TtaGetAttribute (el, attrType);
-                          if (sel)
-                             TtaRemoveAttribute (el, attr, doc);
-                          else {
-                               if (!attr)
-                                  attr = TtaNewAttribute (attrType);
-                               TtaAttachAttribute (el, attr, doc);
-                               TtaSetAttributeValue (attr, HTML_ATTR_Selected_VAL_Yes_, el, doc);
-						  } 
-					 } 
-                     if (!modified)
-                        TtaSetDocumentUnmodified (doc);
-				 } 
+		 }
+		 modified = TtaIsDocumentModified (doc);	  
+		 if (!multipleOptions)
+		   OnlyOneOptionSelected (el, doc, FALSE);
+		 else {
+		   attrType.AttrTypeNum = HTML_ATTR_Selected;
+		   attr = TtaGetAttribute (el, attrType);
+		   if (sel)
+		     TtaRemoveAttribute (el, attr, doc);
+		   else {
+		     if (!attr)
+		       attr = TtaNewAttribute (attrType);
+		     TtaAttachAttribute (el, attr, doc);
+		     TtaSetAttributeValue (attr, HTML_ATTR_Selected_VAL_Yes_, el, doc);
 		   } 
-	  } 
+		 } 
+		 if (!modified)
+		   {
+		     TtaSetDocumentUnmodified (doc);
+		     /* switch Amaya buttons and menus */
+		     DocStatusUpdate (doc, modified);
+		   }
+	       } 
+	     } 
+	 } 
      } 
 }
  

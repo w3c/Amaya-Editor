@@ -1570,6 +1570,8 @@ View                view;
 	  DocumentMeta[doc]->form_data = NULL;
 	}
       TtaSetDocumentUnmodified (doc);
+      /* switch Amaya buttons and menus */
+      DocStatusUpdate (doc, FALSE);
       TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[doc]);
     }
   else
@@ -2303,6 +2305,8 @@ void                DoSaveAs ()
 		  DocumentMeta[doc]->form_data = NULL;
 		}
 	      TtaSetDocumentUnmodified (doc);
+	      /* switch Amaya buttons and menus */
+	      DocStatusUpdate (doc, FALSE);
 	    }
 	  /* if it's a HTML document and the source view is open, redisplay
 	     the source. */
@@ -2325,7 +2329,11 @@ void                DoSaveAs ()
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), documentFile);
 	  /* restore the previous status of the document */
 	  if (!docModified)
-	    TtaSetDocumentUnmodified (doc);
+	    {
+	      TtaSetDocumentUnmodified (doc);
+	      /* switch Amaya buttons and menus */
+	      DocStatusUpdate (doc, docModified);
+	    }
 	  DocumentMeta[doc]->put_default_name = old_put_def_name;
 	  /* propose to save a second time */
 	  SaveDocumentAs(doc, 1);

@@ -1956,6 +1956,18 @@ BOXES
 		END;
 	END;
 
+ ATTR_Image: BEGIN
+	Content: Text ' type=IMAGE';
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
  Text_Space: BEGIN
 	Content: Graphics ' ';
 	If Immediately within Form
@@ -7708,7 +7720,8 @@ RULES
 
  PICTURE_UNIT: BEGIN
 	Depth: 5;
-	CreateBefore(IMG_S);
+	if NOT Immediately within Object BEGIN
+		CreateBefore(IMG_S);
 	LineBreak: No;
 	PageBreak: No;
 	if Immediately within Object BEGIN

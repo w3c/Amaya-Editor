@@ -4696,7 +4696,11 @@ int                 attrNum;
         TtaSetAttributeValue (attr, 1, root, document);
       }
    if (!docModified)
+     {
 	TtaSetDocumentUnmodified (document);
+	/* switch Amaya buttons and menus */
+	DocStatusUpdate (document, docModified);
+     }
 }
 
 /*----------------------------------------------------------------------

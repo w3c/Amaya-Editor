@@ -523,7 +523,11 @@ STRING              imageName;
   
   /* if the document was not modified before this update reset it unmodified */
   if (!modified)
-    TtaSetDocumentUnmodified (doc);
+    {
+      TtaSetDocumentUnmodified (doc);
+      /* switch Amaya buttons and menus */
+      DocStatusUpdate (doc, modified);
+    }
   /* the image is loaded */
   TtaSetStatus (doc, 1, TEXT(" "), NULL);
 }
