@@ -19,7 +19,7 @@ Amaya.</p>
 
 <h1>Amaya 1.3a</h1>
 <p>
-September 21, 1998</p>
+September 23, 1998</p>
 
 <h2>New:</h2>
 <ul>
@@ -114,7 +114,8 @@ modified. With a non-empty selection the Backspace deletes the current
 selection but not the previous character.
 </li>
 <li>
-Improvement of CSS parsing.
+Improvement of CSS parsing. Style commands (format, colors, etc.) are also
+improved.
 </li>
 <li>
 Sometimes it was impossible to copy/paste from Amaya to another application.
@@ -145,6 +146,11 @@ The default color of ReadOnly documents is now black.
 </li>
 <li>
 Bullets in UL elements didn't grow with the UL size.
+</li>
+<li>
+When saving a document, the document status was set unmodified even if the
+operation failed. "Save As" could change attributes URL and SRC. If the saving
+failed old values were lost. Now Amaya restores the previous document state.
 </li>
 <li>
 Improvement of the vertical table formatting.
@@ -202,8 +208,8 @@ The drag now generates an auto-scroll (not available on Windows).
 </li>
 <li>
 There is a new input method for Iso-Latin-1 characters. According to the
-following table one can obtain a '&atilde;' by first pressing '~' then typing
-'a'. To obtain a simple '~' you have to press '~' twice.
+following table one can obtain a 'ã' by first pressing '~' then typing 'a'. To
+obtain a simple '~' you have to press '~' twice.
 </li>
 </ul>
 
@@ -238,22 +244,22 @@ accent-letter
 a A
 </td>
 <td>
-&atilde; &Atilde;
+ã Ã
 </td>
 <td>
-&agrave; &Agrave;
+à À
 </td>
 <td>
-&aacute; &Aacute;
+á Á
 </td>
 <td>
-&auml; &Auml;
+ä Ä
 </td>
 <td>
-&aring; &Aring;
+å Å
 </td>
 <td>
-&acirc; &Acirc;
+â Â
 </td>
 </tr>
 <tr>
@@ -264,7 +270,7 @@ c C
 
 </td>
 <td>
-&ccedil; &Ccedil;
+ç Ç
 </td>
 <td>
 
@@ -287,19 +293,19 @@ e E
 
 </td>
 <td>
-&egrave; &Egrave;
+è È
 </td>
 <td>
-&eacute; &Eacute;
+é É
 </td>
 <td>
-&euml; &Euml;
+ë Ë
 </td>
 <td>
 
 </td>
 <td>
-&ecirc; &Ecirc;
+ê Ê
 </td>
 </tr>
 <tr>
@@ -310,19 +316,19 @@ i I
 
 </td>
 <td>
-&igrave; &Igrave;
+ì Ì
 </td>
 <td>
-&iacute; &Iacute;
+í Í
 </td>
 <td>
-&iuml; &Iuml;
+ï Ï
 </td>
 <td>
 
 </td>
 <td>
-&icirc; &Icirc;
+î Î
 </td>
 </tr>
 <tr>
@@ -330,7 +336,7 @@ i I
 n N
 </td>
 <td>
-&ntilde; &Ntilde;
+ñ Ñ
 </td>
 <td>
 
@@ -353,22 +359,22 @@ n N
 o O
 </td>
 <td>
-&otilde; &Otilde;
+õ Õ
 </td>
 <td>
-&ograve; &Ograve;
+ò Ò
 </td>
 <td>
-&oslash; &Oslash;
+ø Ø
 </td>
 <td>
-&ouml; &Ouml;
+ö Ö
 </td>
 <td>
 
 </td>
 <td>
-&ocirc; &Ocirc;
+ô Ô
 </td>
 </tr>
 <tr>
@@ -379,19 +385,19 @@ u U
 
 </td>
 <td>
-&ugrave; &Ugrave;
+ù Ù
 </td>
 <td>
-&uacute; &Uacute;
+ú Ú
 </td>
 <td>
-&uuml; &Uuml;
+ü Ü
 </td>
 <td>
 
 </td>
 <td>
-&ucirc; &Ucirc;
+û Û
 </td>
 </tr>
 <tr>
@@ -402,13 +408,13 @@ y Y
 
 </td>
 <td>
-&Yacute;
+Ý
 </td>
 <td>
-&yacute; &Yacute;
+ý Ý
 </td>
 <td>
-&yuml;
+ÿ
 </td>
 <td>
 
@@ -1290,7 +1296,7 @@ It now stays at its current position.
 <hr>
 
 <address>
-<a href="mailto:vatton@w3.org">Ir&egrave;ne Vatton</a><br>
+<a href="mailto:vatton@w3.org">Irène Vatton</a><br>
 $Date: 1997/07/10</address>
 </body>
 </html>

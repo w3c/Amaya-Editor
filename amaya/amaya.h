@@ -243,6 +243,7 @@ THOT_EXPORT int          FilesLoading[DocumentTableLength];
 
 THOT_EXPORT int          DocNetworkStatus[DocumentTableLength];
 THOT_EXPORT Document     W3Loading;	/* the document being loaded */
+THOT_EXPORT Document     BackupDocument;	/* the current backup */
 THOT_EXPORT int          IButton;
 THOT_EXPORT int          BButton;
 THOT_EXPORT int          TTButton;

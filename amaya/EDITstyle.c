@@ -399,7 +399,11 @@ Document            doc;
 	{
 	  /* only one element -> create a SPAN if needed */
 	  if (MakeASpan (AClassFirstReference, &cour, doc))
-	    AClassLastReference = cour;
+	    {
+	      /* re-select the element */
+	      TtaSelectElement (doc, cour);
+	      AClassLastReference = cour;
+	    }
 	  else
 	    cour = AClassFirstReference;
 	}
@@ -708,8 +712,8 @@ View                view;
   while (cour != NULL);
   
   /* Case of a substring : need to split the original text. */
-  if ((AClassFirstReference == AClassLastReference) &&
-      (firstSelectedChar != 0))
+  if (AClassFirstReference == AClassLastReference &&
+      firstSelectedChar != 0)
     {
       len = TtaGetTextLength (AClassFirstReference);
       if (len <= 0)
@@ -723,6 +727,9 @@ View                view;
 	  TtaNextSibling (&AClassFirstReference);
 	  AClassLastReference = AClassFirstReference;
 	}
+      if (AClassFirstReference != NULL)
+	/* re-select the element */
+	TtaSelectElement (doc, AClassFirstReference);
     }
 
   if (AClassFirstReference == NULL)

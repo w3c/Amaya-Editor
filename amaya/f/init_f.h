@@ -80,6 +80,9 @@ extern Document GetHTMLDocument ( const char *documentPath,
 extern void CallbackDialogue ( int ref,
                                int typedata,
                                char *data );
+extern int  RestoreOneAmayaDoc (Document doc,
+				char *tempdoc,
+				char *docname);
 extern void InitAmaya ( NotifyEvent * event );
 extern void ChangeAttrOnRoot ( Document document,
                                int attrNum );
@@ -202,6 +205,9 @@ extern Document GetHTMLDocument (/* const char *documentPath,
 extern void CallbackDialogue (/* int ref,
                                  int typedata,
                                  char *data */);
+extern int  RestoreOneAmayaDoc (/* Document doc,
+				   char *tempdoc,
+				   char *docname */);
 extern void InitAmaya (/* NotifyEvent * event */);
 extern void ChangeAttrOnRoot (/* Document document,
                                  int attrNum */);

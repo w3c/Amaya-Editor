@@ -515,36 +515,33 @@ boolean            *ok;
 {
    char                msg[MAX_LENGTH];
    char                documentname[MAX_LENGTH];
-   char                url_sep;
    int                 len;
 
-DBG(fprintf(stderr, "AddNoName :  %s \n", url);)
-
-  if (strchr (url, '/'))
-    url_sep = '/';
-  else 
-    url_sep = DIR_SEP;
-
   len = strlen (url);
+  TtaExtractName (url, msg, documentname);
+  *ok = (documentname[0] != EOS);
+  if (*ok)
+    return (FALSE);
+  else
+    {
+      /* the name is not correct for the put operation */
+      strcpy (msg, TtaGetMessage(AMAYA, AM_NO_NAME));
+      strcat (msg, url);
+      if (IsW3Path (url))
+	{
+	  if (url[len -1] != URL_SEP)
+	    strcat (msg, URL_STR);
+	}
+      else if (url[len -1] != DIR_SEP)
+	strcat (msg, DIR_STR);
+      strcat (msg, "noname.html");
+      InitConfirm (document, view, msg);
 
-   TtaExtractName (url, msg, documentname);
-   *ok = (documentname[0] != EOS);
-   if (*ok)
-     return (FALSE);
-   else
-     {
-       /* the name is not correct for the put operation */
-       strcpy (msg, TtaGetMessage(AMAYA, AM_NO_NAME));
-       strcat (msg, url);
-       if (url [len -1] != url_sep)
-          strcat (msg, url_sep);
-       strcat (msg, "noname.html");
-       InitConfirm (document, view, msg);
-       if (UserAnswer == 0)
-	 return (FALSE);
-       else
-	 return (TRUE);
-     }
+      if (UserAnswer == 0)
+	return (FALSE);
+      else
+	return (TRUE);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -946,7 +943,8 @@ void                   BackUpDocs ()
 	      return;
 	  }
 
-	SavingDocument = 0;
+	/* generate the backup file name */
+        SavingDocument = 0;
 	ptr = DocumentURLs[doc];
 	l = strlen (ptr) - 1;
 	if (IsW3Path (ptr) &&  ptr[l] == URL_SEP)
@@ -963,9 +961,11 @@ void                   BackUpDocs ()
 	  sprintf (pathname, "%s%c%s.html", TempFileDirectory, DIR_SEP, docname);
 	else
 	  sprintf (pathname, "%s%c%s", TempFileDirectory, DIR_SEP, docname);
- 	DocumentURLs[doc] = pathname;
-	SaveDocument (doc, 1);
-	/* register the temporary doument name */
+
+	/* write the backup file */
+        DocumentURLs[doc] = pathname;
+        SaveDocument (doc, 1);
+	/* register the backup file name and the original document name */
 	fprintf (f, "%s %s\n", pathname, ptr);
 	TtaFreeMemory (ptr);
       }
@@ -1372,11 +1372,13 @@ void                DoSaveAs ()
   char               *tempname, *localPath;
   char               *imagePath, *base;
   char                imgbase[MAX_LENGTH];
+  char                backupName[MAX_LENGTH], backupFile[MAX_LENGTH];
   char                url_sep;
   int                 res;
   int                 len;
   boolean             src_is_local;
   boolean             dst_is_local, ok;
+  boolean	      docModified;
 
   src_is_local = !IsW3Path (DocumentURLs[SavingDocument]);
   dst_is_local = !IsW3Path (SavePath);
@@ -1398,7 +1400,6 @@ DBG(fprintf(stderr, "DoSaveAs : from %s to %s/%s , with images %d\n", DocumentUR
      }
   }
 
-  strcat (documentFile, SaveName);
   if (SaveName[0] == EOS)
     {
       /* there is no document name */
@@ -1420,17 +1421,18 @@ DBG(fprintf(stderr, " set SaveName to noname.html\n");)
 	  SaveDocumentAs (doc, 1);
 	}
     }
+  else
+    strcat (documentFile, SaveName);
 
-  /* TODO: save the original document */
+  doc = SavingDocument;
   if (ok && dst_is_local)
     {
       /* verify that the directory exists */
       if (!TtaCheckDirectory (SavePath))
 	{
-	  doc = SavingDocument;
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), SavePath);
 	  /* the user has to change the name of the images directory */
-	  SaveDocumentAs(SavingDocument, 1);
+	  SaveDocumentAs(doc, 1);
 	  ok = FALSE;
 	}
       /* verify that we don't overwite anything and ask for confirmation */
@@ -1439,29 +1441,30 @@ DBG(fprintf(stderr, " set SaveName to noname.html\n");)
 	  /* ask confirmation */
 	  tempname = TtaGetMemory (MAX_LENGTH);
 	  sprintf (tempname, TtaGetMessage (LIB, TMSG_FILE_EXIST), documentFile);
-	  InitConfirm (SavingDocument, 1, tempname);
+	  InitConfirm (doc, 1, tempname);
 	  TtaFreeMemory (tempname);
 	  if (!UserAnswer)
 	    {
 	      /* the user has to change the name of the saving file */
-	      SaveDocumentAs(SavingDocument, 1);
+	      SaveDocumentAs(doc, 1);
 	      ok = FALSE;
 	    }
 	}
     }
 
+  /* Check information before starting the operation */
   if (ok)
     {
       /* search if there is a BASE element within the document */
-      root = TtaGetMainRoot (SavingDocument);
-      elType.ElSSchema = TtaGetDocumentSSchema (SavingDocument);
+      root = TtaGetMainRoot (doc);
+      elType.ElSSchema = TtaGetDocumentSSchema (doc);
       attrType.AttrSSchema = elType.ElSSchema;
       /* search the BASE element */
       elType.ElTypeNum = HTML_EL_BASE;
       el = TtaSearchTypedElement (elType, SearchInTree, root);
       if (el)
 	/* URLs are still relative to the document base */
-	base = GetBaseURL (SavingDocument);
+	base = GetBaseURL (doc);
       else
 	base = NULL;
       
@@ -1490,14 +1493,13 @@ DBG(fprintf(stderr, " set SaveName to noname.html\n");)
 	      ok = TtaCheckDirectory (tempname);
 	      if (!ok)
 		{
-		  doc = SavingDocument;
 		  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), tempname);
 		  TtaFreeMemory (tempname);
 		  /* free base before returning*/
 		  if (base)
 		    TtaFreeMemory (base);
 		  /* the user has to change the name of the images directory */
-		  SaveDocumentAs(SavingDocument, 1);
+		  SaveDocumentAs(doc, 1);
 		}
 	      else
 		TtaFreeMemory (tempname);
@@ -1518,22 +1520,35 @@ DBG(fprintf(stderr, " set SaveName to noname.html\n");)
 	imgbase[0] = EOS;
     }
 
+  /*
+    The saving could change URLs and SRC attributes in the document.
+    The current state of the document is saved in a backup file
+    and can be retored if the operation fails
+    */
+  if (ok)
+    {
+      docModified = TtaIsDocumentModified (doc);
+      strcpy (backupName, DocumentURLs[doc]);
+      sprintf (backupFile, "%s%cbackup.html", TempFileDirectory, DIR_SEP);
+      ok = TtaExportDocument (doc, backupFile, "HTMLT");
+    }
+
   if (ok)
     {
       /* avoid flash on screen */
-      dispMode = TtaGetDisplayMode (SavingDocument);
+      dispMode = TtaGetDisplayMode (doc);
       if (dispMode == DisplayImmediately)
-	TtaSetDisplayMode (SavingDocument, DeferredDisplay);
+	TtaSetDisplayMode (doc, DeferredDisplay);
 
       /* Transform all URLs to absolute ones */
         if (UpdateURLs)
 	  {
 	    if (base)
 	      /* URLs are still relative to the document base */
-	      SetRelativeURLs (SavingDocument, base);
+	      SetRelativeURLs (doc, base);
 	    else
 	      /* URLs are relative to the new document directory */
-	      SetRelativeURLs (SavingDocument, documentFile);
+	      SetRelativeURLs (doc, documentFile);
 	  }
 	/* now free base */
 	if (base)
@@ -1541,7 +1556,7 @@ DBG(fprintf(stderr, " set SaveName to noname.html\n");)
 	
 	if (!src_is_local)
 	  /* store the name of the local temporary file */
-	  localPath = GetLocalPath (SavingDocument, DocumentURLs[SavingDocument]);
+	  localPath = GetLocalPath (doc, DocumentURLs[doc]);
 	else
 	  localPath = NULL;
 	/* Change the document URL and if CopyImage is TRUE change all
@@ -1551,8 +1566,7 @@ DBG(fprintf(stderr, " set SaveName to noname.html\n");)
 	UpdateDocAndImages (src_is_local, dst_is_local, imgbase, documentFile);
 	  
 	/* restore the current mode */
-	TtaSetDisplayMode (SavingDocument, dispMode);
-	doc = SavingDocument;
+	TtaSetDisplayMode (doc, dispMode);
 	  
 	if (dst_is_local)
 	  {
@@ -1569,16 +1583,16 @@ DBG(fprintf(stderr, "   Uploading document to net %s\n", documentFile);)
 
 	    /* now save the file as through the normal process of saving */
 	    /* to a remote URL. */
-	    ok = SaveDocumentThroughNet (SavingDocument, 1, TRUE, CopyImages);
+	    ok = SaveDocumentThroughNet (doc, 1, TRUE, CopyImages);
 	  }
 
 	    
 	SavingDocument = 0;
-	TtaSetTextZone (doc, 1, 1, DocumentURLs[doc]);
 	if (ok)
 	  {
-	/* update informations on the document. */
+	    /* Sucess of the operation */
 	    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), documentFile);
+	    TtaSetTextZone (doc, 1, 1, DocumentURLs[doc]);
 	    /* remove the previous temporary file */
 	    if (localPath)
 	      {
@@ -1588,11 +1602,22 @@ DBG(fprintf(stderr, "   Uploading document to net %s\n", documentFile);)
 	  }
 	else
 	  {
+	    /*
+	      Operation failed:
+	      restore the previous contents of the document
+	      */
+	    TtaSetDocumentUnmodified (doc);
+	    doc = RestoreOneAmayaDoc (doc, backupFile, backupName);
+	    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), documentFile);
+	    /* restore the previous status of the document */
+	    if (!docModified)
+	      TtaSetDocumentUnmodified (doc);
 	    if (localPath)
 	      TtaFreeMemory (localPath);
-	    if (!dst_is_local)
-	      SaveDocumentAs(doc, 1);
+	    /* propose to save a second time */
+	    SaveDocumentAs(doc, 1);
 	  }
+
 
     }
   TtaFreeMemory (documentFile);

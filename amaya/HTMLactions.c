@@ -732,7 +732,9 @@ Document       doc;
       TtaFreeMemory (DocumentMeta[doc]);
       DocumentMeta[doc] = NULL;
       RemoveDocCSSs (doc, TRUE);
-      RemoveDocumentImages (doc);
+      /* avoid to free images of backup documents */
+      if (BackupDocument != doc)
+	RemoveDocumentImages (doc);
     }
 
   if (!W3Loading)

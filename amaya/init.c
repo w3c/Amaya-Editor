@@ -2952,22 +2952,26 @@ char               *data;
 
 /*----------------------------------------------------------------------
   RestoreOneAmayaDoc restores a saved file
+  doc is the suggested doc to be loaded or 0.
   docname is the original name of the document.
   tempdoc is the name of the saved file.
+  Return the new recovered document
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int       RestoreOneAmayaDoc (char *tempdoc, char *docname)
+int       RestoreOneAmayaDoc (Document doc,char *tempdoc, char *docname)
 #else
-int       RestoreOneAmayaDoc (tempdoc, docname)
+int       RestoreOneAmayaDoc (doc, tempdoc, docname)
+Document  doc;
 char     *tempdoc;
 char     *docname;
 #endif
 {
   char                tempfile[MAX_LENGTH];
   int                 newdoc, len;
-  boolean             aDoc;
 
-  newdoc = InitDocView (0, docname);
+  W3Loading = doc;
+  BackupDocument = doc;
+  newdoc = InitDocView (doc, docname);
   if (newdoc != 0)
     {
       /* load the saved file */
@@ -2997,14 +3001,17 @@ char     *docname;
 	  TtaSetDocumentDirectory (newdoc, DirectoryName);
 	}
       W3Loading = 0;		/* loading is complete now */
+      DocNetworkStatus[newdoc] = AMAYA_NET_ACTIVE;
       FetchAndDisplayImages (newdoc, 0);
       TtaSetDocumentModified (newdoc);
+      DocNetworkStatus[newdoc] = AMAYA_NET_INACTIVE;
       /* almost one file is restored */
-      aDoc = TRUE;
-      TtaSetStatus (newdoc, 1, " ", NULL);
+      TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
       /* unlink this saved file */
       TtaFileUnlink (tempdoc);
     }
+  BackupDocument = 0;
+  return (newdoc);
 }
 
 /*----------------------------------------------------------------------
@@ -3038,7 +3045,7 @@ static boolean        RestoreAmayaDocs ()
 	    {
 	      if (UserAnswer)
 		{
-		  if (RestoreOneAmayaDoc (tempdoc, docname))
+		  if (RestoreOneAmayaDoc (0, tempdoc, docname))
 		      aDoc = TRUE;
 		}
 	      else
@@ -3073,7 +3080,8 @@ NotifyEvent        *event;
    if (AmayaInitialized)
       return;
    AmayaInitialized = 1;
-
+   W3Loading = 0;
+   BackupDocument = 0;
    /* initialize status */
    SelectionDoc = 0;
    SelectionInPRE = FALSE;
