@@ -729,7 +729,7 @@ Document         doc;
 						   (isAnnotLink) ? 0 : doc,
 						   doc,
 						   (isAnnotLink) ? CE_ANNOT : CE_RELATIVE, 
-						   TRUE, 
+						   (isAnnotLink) ? FALSE : TRUE, 
 						   (void *) FollowTheLink_callback,
 						   (void *) ctx);
 #else
