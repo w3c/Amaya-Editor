@@ -2524,6 +2524,18 @@ void selection_handle (GtkWidget        *widget,
 			    Xbuffer, 
 			    strlen(Xbuffer));
 }
+
+/*When user begin a new selection*/
+void gtk_claim_selection()
+{
+  if (FrameTable[ActiveFrame].WdFrame)
+    {
+      /* but now we own the selection, so goodbye to the other app */
+      gtk_selection_owner_set (GTK_WIDGET(FrameTable[ActiveFrame].WdFrame),
+			       GDK_SELECTION_PRIMARY,
+			       GDK_CURRENT_TIME);
+    }
+}
 #endif /* _GTK */
 
 /*----------------------------------------------------------------------
