@@ -1163,10 +1163,25 @@ SSchema		   *schema;
 
    entry = -1;
    *schema = NULL;
+   i = 0;
+   do
+         if (!strcasecmp (HTMLGIMappingTable[i].htmlGI, gi))
+            {
+	    entry = i;
+/******
+	    if (HTMLSSchema == NULL)
+	       *schema = TtaGetSSchema ("HTML", doc);
+	    else
+*****/
+	       *schema = HTMLSSchema;
+	    }
+         else
+	    i++;
+   while (entry < 0 && HTMLGIMappingTable[i].htmlGI[0] != EOS);
 #ifdef MATHML
-   if (WithinMathML)
+   if (entry < 0)
       {
-      /* tagGIt found in HTMLGIMappingTable */
+      /* tag not found in HTMLGIMappingTable */
       /* search in MathMLGIMappingTable */
       i = 0;
       do
@@ -1185,24 +1200,6 @@ SSchema		   *schema;
       while (entry < 0 && MathMLGIMappingTable[i].htmlGI[0] != EOS);
       }
 #endif /* MATHML */
-   if (entry < 0)
-      {
-      i = 0;
-      do
-         if (!strcasecmp (HTMLGIMappingTable[i].htmlGI, gi))
-            {
-	    entry = i;
-/******
-	    if (HTMLSSchema == NULL)
-	       *schema = TtaGetSSchema ("HTML", doc);
-	    else
-*****/
-	       *schema = HTMLSSchema;
-	    }
-         else
-	    i++;
-      while (entry < 0 && HTMLGIMappingTable[i].htmlGI[0] != EOS);
-      }
    return entry;
 }
 
@@ -1343,56 +1340,50 @@ SSchema            *schema;
 
    entry = -1;
    *schema = NULL;
-#ifdef MATHML
-   if (WithinMathML)
-      {
-      i = 0;
-      do
-         if (!strcasecmp (MathMLAttributeMappingTable[i].htmlAttribute, Attr))
-	    if (MathMLAttributeMappingTable[i].htmlElement[0] == EOS)
-	       {
-	       entry = i;
-	       *schema = MathMLSSchema;
-	       }
-	    else if (!strcasecmp (MathMLAttributeMappingTable[i].htmlElement,
-			          MathMLGIMappingTable[lastElemEntry].htmlGI))
-	       {
-	       entry = i;
-	       *schema = MathMLSSchema;
-	       }
-	    else
-	       i++;
-         else
-	    i++;
-      while (entry < 0 && MathMLAttributeMappingTable[i].AttrOrContent != EOS);
-      if (entry >= 0)
-          return (&MathMLAttributeMappingTable[entry]);
-      }
-#endif
-   if (entry < 0)
-      {
-      i = 0;
-      do
-         if (!strcasecmp (HTMLAttributeMappingTable[i].htmlAttribute, Attr))
-	    if (HTMLAttributeMappingTable[i].htmlElement[0] == EOS)
+   i = 0;
+   do
+      if (!strcasecmp (HTMLAttributeMappingTable[i].htmlAttribute, Attr))
+	 if (HTMLAttributeMappingTable[i].htmlElement[0] == EOS)
 	       {
 	       entry = i;
 	       *schema = HTMLSSchema;
 	       }
-	    else if (!strcasecmp (HTMLAttributeMappingTable[i].htmlElement,
+	 else if (!strcasecmp (HTMLAttributeMappingTable[i].htmlElement,
 			          HTMLGIMappingTable[lastElemEntry].htmlGI))
 	       {
 	       entry = i;
 	       *schema = HTMLSSchema;
 	       }
-	    else
+	 else
 	       i++;
-         else
-	    i++;
-      while (entry < 0 && HTMLAttributeMappingTable[i].AttrOrContent != EOS);
-      if (entry >= 0)
-         return (&HTMLAttributeMappingTable[entry]);
-      }
+      else
+	 i++;
+   while (entry < 0 && HTMLAttributeMappingTable[i].AttrOrContent != EOS);
+   if (entry >= 0)
+      return (&HTMLAttributeMappingTable[entry]);
+#ifdef MATHML
+   i = 0;
+   do
+      if (!strcasecmp (MathMLAttributeMappingTable[i].htmlAttribute, Attr))
+	 if (MathMLAttributeMappingTable[i].htmlElement[0] == EOS)
+	       {
+	       entry = i;
+	       *schema = MathMLSSchema;
+	       }
+	 else if (!strcasecmp (MathMLAttributeMappingTable[i].htmlElement,
+			          MathMLGIMappingTable[lastElemEntry].htmlGI))
+	       {
+	       entry = i;
+	       *schema = MathMLSSchema;
+	       }
+	 else
+	       i++;
+      else
+	 i++;
+   while (entry < 0 && MathMLAttributeMappingTable[i].AttrOrContent != EOS);
+   if (entry >= 0)
+       return (&MathMLAttributeMappingTable[entry]);
+#endif
    return NULL;
 }
 
@@ -1442,8 +1433,31 @@ char               *AttrVal;
    int                 i, value;
 
    value = -1;
+   i = 0;
+   while (HTMLAttrValueMappingTable[i].ThotAttr != ThotAtt &&
+	  HTMLAttrValueMappingTable[i].ThotAttr != 0)
+      i++;
+   if (HTMLAttrValueMappingTable[i].ThotAttr == ThotAtt)
+      do
+	 if (AttrVal[1] == EOS && (ThotAtt == HTML_ATTR_NumberStyle ||
+				   ThotAtt == HTML_ATTR_ItemStyle))
+	    /* attributes NumberStyle (which is always 1 character long) */
+	    /* and ItemStyle (only when its length is 1) are */
+	    /* case sensistive. Compare their exact value */
+	    if (AttrVal[0] == HTMLAttrValueMappingTable[i].htmlAttrValue[0])
+	       value = HTMLAttrValueMappingTable[i].ThotAttrValue;
+	    else
+	       i++;
+	 else
+	    /* for other attributes, uppercase and lowercase are */
+	    /* equivalent */
+	    if (!strcasecmp (HTMLAttrValueMappingTable[i].htmlAttrValue, AttrVal))
+	       value = HTMLAttrValueMappingTable[i].ThotAttrValue;
+	    else
+	       i++;
+      while (value < 0 && HTMLAttrValueMappingTable[i].ThotAttr != 0);
 #ifdef MATHML
-   if (WithinMathML)
+   if (value < 0)
       {
       i = 0;
       while (MathMLAttrValueMappingTable[i].ThotAttr != ThotAtt &&
@@ -1458,39 +1472,13 @@ char               *AttrVal;
          while (value < 0 && MathMLAttrValueMappingTable[i].ThotAttr != 0);
       }
 #endif
-   if (value < 0)
-      {
-      i = 0;
-      while (HTMLAttrValueMappingTable[i].ThotAttr != ThotAtt &&
-	     HTMLAttrValueMappingTable[i].ThotAttr != 0)
-         i++;
-      if (HTMLAttrValueMappingTable[i].ThotAttr == ThotAtt)
-         do
-	    if (AttrVal[1] == EOS && (ThotAtt == HTML_ATTR_NumberStyle ||
-				      ThotAtt == HTML_ATTR_ItemStyle))
-	       /* attributes NumberStyle (which is always 1 character long) */
-	       /* and ItemStyle (only when its length is 1) are */
-	       /* case sensistive. Compare their exact value */
-	       if (AttrVal[0] == HTMLAttrValueMappingTable[i].htmlAttrValue[0])
-	          value = HTMLAttrValueMappingTable[i].ThotAttrValue;
-	       else
-	          i++;
-	    else
-	       /* for other attributes, uppercase and lowercase are */
-	       /* equivalent */
-	       if (!strcasecmp (HTMLAttrValueMappingTable[i].htmlAttrValue, AttrVal))
-	          value = HTMLAttrValueMappingTable[i].ThotAttrValue;
-	       else
-	          i++;
-         while (value < 0 && HTMLAttrValueMappingTable[i].ThotAttr != 0);
-      }
    return value;
 }
 
 
 /*----------------------------------------------------------------------
    copyCEstring    create a copy of the string of elements pointed
-   by first and return a pointer on ther first
+   by first and return a pointer on the first
    element of the copy.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
