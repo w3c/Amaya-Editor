@@ -3,14 +3,12 @@
 <html>
 <head>
 <title>No title</title>
-<meta name="GENERATOR" content=""amaya V1.4"">
 </head>
-<body>
+<body style="color: #000000;background-color: #FFFFFF" lang="en">
 <p>
 <a href="../../"><img border="0" alt="W3C"
 src="../../Icons/WWW/w3c_home"></a><a href="../"><img border="0"
-src="../Icons/amaya.gif" alt="Amaya"></a> <a href="Manual.html"><img
-border="0" src="../Icons/doc48x.gif" alt="Doc"></a></p>
+src="../Icons/amaya.gif" alt="Amaya"></a> </p>
 
 <h1>Amaya Frequently Answered Questions</h1>
 
@@ -43,6 +41,13 @@ border="0" src="../Icons/doc48x.gif" alt="Doc"></a></p>
 </li>
 <li>
 <a href="#edit">Can I edit tags directly?</a>
+</li>
+<li>
+<a href="#Displayed">Displayed fonts are too small</a>
+</li>
+<li>
+<a href="#want">I want to change the default document size (too small or too
+big)</a>
 </li>
 </ol>
 
@@ -100,8 +105,8 @@ gives access to the source code of Amaya.</p>
 <hr>
 
 
-<h3><a name="download1"></a><a name="Where1"><a name="Amaya1">Is Amaya
-available for MacOS platform?</a></a></h3>
+<h3><a name="download1"></a><a name="Where1"></a><a name="Amaya1">Is Amaya
+available for MacOS platform?</a></h3>
 <p>
 Today we support Unix platforms and Windows platforms. We don't have the
 resources needed for supporting another platform. But the source code  is
@@ -111,8 +116,8 @@ available and someone else could do the port</p>
 <hr>
 
 
-<h2><a name="Amaya3"><a name="release">Can I release Amaya on a
-CD-ROM?</a></a></h2>
+<h2><a name="Amaya3"></a><a name="release">Can I release Amaya on a
+CD-ROM?</a></h2>
 <p>
 Yes, and you can charge for it, given the above requirements are met.</p>
 <p>
@@ -120,8 +125,8 @@ Yes, and you can charge for it, given the above requirements are met.</p>
 <hr>
 
 
-<h2><a name="Amaya2"><a name="make">Can I make the changes and re-release
-it?</a></a></h2>
+<h2><a name="Amaya2"></a><a name="make">Can I make the changes and re-release
+it?</a></h2>
 <p>
 Yes, we want people to experiment with and improve Amaya. It can even be used
 in commercial software. If you make changes for the better, we encourage you
@@ -171,8 +176,8 @@ to rebuild the whole structure tree.</p>
 <hr>
 
 
-<h3><a name="download2"></a><a name="Where2"><a name="Where3">Where I can get
-the developers documentation</a></a></h3>
+<h3><a name="download2"></a><a name="Where2"></a><a name="Where3">Where I can
+get the developers documentation</a></h3>
 <p>
 Those who want to extend or change the Amaya application need to read
 following documentation:</p>
@@ -198,12 +203,12 @@ manual</a>
 <hr>
 
 
-<h2><a name="Amaya32"><a name="Make">Make complains with missing
-files</a></a></h2>
+<h2><a name="Amaya32"></a><a name="Make">Make complains with missing
+files</a></h2>
 <p>
 You certainly miss to create the object subtree. As explained in <a
 href="http://www.w3.org/Amaya/User/Autoconf.html">Autoconf page</a>, you have
-to create first a subtree (obj or any other name)  for object and lauch
+to create first a subtree (obj or any other name)  for object and launch
 configure to create the Makefile(s)</p>
 <pre>cd Thot</pre>
 <pre>mkdir obj </pre>
@@ -212,20 +217,20 @@ configure to create the Makefile(s)</p>
 <hr>
 
 
-<h2><a name="Amaya31"><a name="Make1">Make fails when compiling the HTML
-schema</a></a></h2>
+<h2><a name="Amaya31"></a><a name="Make1">Make fails when compiling the HTML
+schema</a></h2>
 <p>
 Thot compilers need a <strong>cpp</strong> preprocessor:</p>
 <ul>
 <li>
-If you use GNU tools, configure should invoque the gcc compiler with right
+If you use GNU tools, configure should invoke the gcc compiler with right
 options. You can check that the file <em>Options</em> has the following
 definition:
 <pre>CPP     = gcc -E -x c</pre>
 </li>
 <li>
-In other case you have to be sure that <strong>cpp</strong> prepocessor  is in
-your PATH.
+In other case you have to be sure that <strong>cpp</strong> preprocessor  is
+in your PATH.
 </li>
 </ul>
 <p>
@@ -233,11 +238,83 @@ your PATH.
 <hr>
 
 
-<h2><a name="Amaya321"><a name="don't">I don't have Motif</a></a></h2>
+<h2><a name="Amaya321"></a><a name="don't">I don't have Motif</a></h2>
 <p>
-Motif is not free available on Linux platforms.Amaya works fine with latests
+Motif is not free available on Linux platforms.Amaya works fine with latest
 versions (0.8.0 and later) of <a href="http://www.lesstif.org/">Lesstif</a> (a
 free Motif clone).</p>
+<p>
+</p>
+<hr>
+
+
+<h2><a name="Amaya3212"></a><a name="don't2"><a name="Displayed">Displayed
+fonts are too small</a></a></h2>
+<p>
+With Amaya it's possible to zoom in and zoom out document, window by document
+window. So each document displayed within a zoomed window will be displayed
+larger or smaller than its real size according of the current zoom.</p>
+<p>
+By default the zoom value is 0 (documents are displayed by default as they
+are). This default value can be modified in the registry file of the user
+($HOME/.thotrc (Unix) or Thot/config/thot.rc (Windows)). By example one can
+set the parameter ZOOM=3.</p>
+<p>
+</p>
+<hr>
+
+
+<h2><a name="Amaya3211"></a><a name="don't1"><a name="want">I want to change
+the default document size (too small or too big)</a></a></h2>
+<p>
+Parameters related to the particular schema HTML are stored in the
+<code>Thot/amaya/HTML.conf</code> file. In that file there are different
+sections, one by Presentation Schema. Normally the user has to only act on the
+first section:</p>
+<pre>style HTMLP
+open
+  Formatted_view:        1 1 182 250
+geometry
+  Structure_view:        190 100 160 170
+  Alternate_view:        190 1 156 99
+  Links_view:            192 3 156 120
+  Table_of_contents:     194 5 156 120
+  Math_Structure_view:   195 6 156 80
+  Graph_Structure_view:  197 8 156 80  </pre>
+<p>
+For each view there are four parameters: x, y, width and height. The user can
+change these default values. For Unix users we suggest to first copy this file
+into a specific file and edit this specific file instead of the original. So
+modifications won't be lost when the Amaya version is updated.</p>
+<p>
+</p>
+<hr>
+
+<address>
+<a href="mailto:irene.vatton@w3.org">Ir&egrave;ne Vatton</a><br>
+$Date$</address>
+<address>
+<p class="policyfooter">
+<small><a
+href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright">Copyright</a>
+&nbsp;&copy;&nbsp; 1997 <a href="http://www.w3.org/">W3C</a> (<a
+href="http://www.lcs.mit.edu/">MIT</a>, <a
+href="http://www.inria.fr/">INRIA</a>, <a
+href="http://www.keio.ac.jp/">Keio</a> ), All Rights Reserved. W3C <a
+href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Legal
+Disclaimer">liability,</a> <a
+href="http://www.w3.org/Consortium/Legal/ipr-notice.html#W3C
+Trademarks">trademark</a>, <a
+href="http://www.w3.org/Consortium/Legal/copyright-documents.html">document
+use </a>and <a
+href="http://www.w3.org/Consortium/Legal/copyright-software.html">software
+licensing </a>rules apply. Your interactions with this site are in accordance
+with our <a
+href="http://www.w3.org/Consortium/Legal/privacy-statement.html#Public">public</a>
+and <a
+href="http://www.w3.org/Consortium/Legal/privacy-statement.html#Members">Member</a>
+privacy statements.</small></p>
+</address>
 <p>
 </p>
 <p>

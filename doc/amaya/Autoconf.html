@@ -1,10 +1,10 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+   "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-<title>
-Compiling Amaya</title>
+<title>Compiling Amaya</title>
 </head>
-<body>
+<body lang="en">
 <p>
 <a href="../../"><img border="0" alt="W3C"
 src="../../Icons/WWW/w3c_home"></a><a href="../"><img border="0"
@@ -21,16 +21,22 @@ Here is the content of this document:</p>
 <ol>
 <li>
 <a href="#L437">Prerequisite</a>
+</li>
 <li>
 <a href="#L438">How to build</a>
+</li>
 <li>
 <a href="#L1046">More info on the make files</a>
+</li>
 <li>
 <a href="#L666">More info on the build process</a>
+</li>
 <li>
 <a href="#L440">If make failed</a>
+</li>
 <li>
 <a href="#L689">If amaya binary doesn't work</a>
+</li>
 </ol>
 
 <h3><a name="L437">Prerequisite:</a></h3>
@@ -39,16 +45,20 @@ Here is the content of this document:</p>
 We strongly recommend to use a GNU make and if possible GNU CC since these are
 the tools used by the Amaya Team, and very few testings have been done with
 other flavours of make and C compilers.
+</li>
 <li>
 You need the Thot library source code archive thot-src-xxx.tar.gz and the
 Amaya source code archive amaya-src-yyy.tar.gz.
+</li>
 <li>
 Having usual Unix development tools, at least <code>sed</code>,
 <code>awk</code> and <code>cpp</code> should be available.
+</li>
 <li>
 Amaya requires X-Windows (X11R5 or X11R6) and Motif (1.2.x or 2.0). Amaya
-should now work fine with latests versions (0.8.0 and later) of <a
+should now work fine with latest versions (0.8.0 and later) of <a
 href="http://www.lesstif.org/">Lesstif</a> (a free Motif clone).
+</li>
 </ul>
 
 <h3><a name="L438">How to build in 4 steps:</a></h3>
@@ -61,9 +71,10 @@ Install your source code tree:
 <p>
 this will create a Thot subtree of approximately 13
 MBytes.<strong></strong></p>
+</li>
 <li>
 <span style="color : #FF0000">Create a subtree (obj)</span>  for object and
-lauch configure to create the Makefile(s):
+launch configure to create the Makefile(s):
 <pre>cd Thot
 mkdir obj 
 cd obj 
@@ -99,6 +110,7 @@ more than 20 MBytes.</p>
 It also gives some hints on how the source tree is configured.</p>
 <p>
 </p>
+</li>
 <li>
 Build everything:
 <pre>make all</pre>
@@ -113,9 +125,10 @@ or</p>
 The compilation process can take a fair amount of time, 10 minutes at
 least.</p>
 <p>
-You can test the result immediately by lauching Amaya binary built in the bin
+You can test the result immediately by launching Amaya binary built in the bin
 directory:</p>
 <pre>bin/amaya</pre>
+</li>
 <li>
 If amaya binary seems fine you can install it:
 <pre>make install</pre>
@@ -128,6 +141,7 @@ command line options in step 2.</p>
 Ultimately, if you're not satisfied with your current Amaya installation, you
 can clean up with:</p>
 <pre>make uninstall</pre>
+</li>
 </ol>
 
 <h3><a name="L1046">More info on the make files</a></h3>
@@ -141,37 +155,48 @@ targets:</p>
 <li>
 make <strong>rebuild</strong> : rebuild all the Makefile(s) from the autoconf
 and Makefile.in files.
+</li>
 <li>
 make <strong>depend</strong> : rebuild all the dependencies in the object
 tree.
+</li>
 <li>
 make <strong>proto</strong> : rebuild all the prototype include files xxx_f.h
 from their xxx.c counterpart.
+</li>
 <li>
 make <strong>clean</strong> : removes all object files, but keep the binaries
 in <code>Thot/</code><strong>obj </strong><code>/bin</code> .
+</li>
 <li>
 make <strong>kaffe</strong> : rebuild the kaffe libraries and binaries (if
 sources are available).
+</li>
 <li>
-make <strong>libwww</strong> : rebuild the libwww.a library from
-Thot/w3c-libwww-5.0a tree.
+make <strong>libwww</strong> : rebuild the libwww.a library from Thot/libww
+tree.
+</li>
 <li>
 make <strong>libjpeg</strong> : rebuild the libjpeg.a library from
 Thot/libjpeg tree.
+</li>
 <li>
 make <strong>libpng</strong> : rebuild the libpng.a and libz.a libraries from
 Thot/libpng tree.
+</li>
 <li>
-make without argument rebuild evrything.
+make without argument rebuild everything.
+</li>
 <li>
 make <strong>amaya</strong> rebuild <strong>Amaya</strong> binary.
+</li>
 <li>
 make <strong>classes</strong> rebuild <strong>Java</strong>
 <code>.class</code> files from their <code>.java</code> sources. With some
 versions of kaffe it may be a good idea to increase the maximum size of a Java
 V.M. while compiling by adding " <code>-mx 64000000</code> " before
 <code>sun.tools.javac.Main</code> in <code>bin/javac</code> file.
+</li>
 </ul>
 <p>
 One can also go to a specific sub-directory in the object tree and launch make
@@ -182,7 +207,7 @@ Next section try to give some hint on debugging errors at compile-time.</p>
 
 <h3><a name="L440">If make failed:</a></h3>
 <p>
-Errors may append at diffferent stages in the compilation process. Here is a
+Errors may append at different stages in the compilation process. Here is a
 small checklist:</p>
 <ul>
 <li>
@@ -193,54 +218,68 @@ href="#L666">previous section</a> failed.
 <li>
 do you use GNU make? The Makefile organization heavily relies on including
 sub-Makefiles and some old versions of Make don't support it.
+</li>
 <li>
 do you have write access on the <code>Thot/</code><strong>obj </strong>
 directory ?
+</li>
 <li>
 do you have all mandatory sources ?
+</li>
 </ol>
+</li>
 <li>
-an error when compiling a C file occured. This should not be the case on any
+an error when compiling a C file occurred. This should not be the case on any
 of the supported platform:
 <ol>
 <li>
 check that you have some room left for the object.
+</li>
 <li>
 verify the include path for the X-Windows and Motif include files in
 <code>Thot/</code><strong>obj </strong><code>/Options.</code>
+</li>
 <li>
 verify that the target directory for the object exist and is writable. The
 object name is shown in the make output behind the <strong>-o</strong> flag.
+</li>
 <li>
 check that you are using an ANSI compliant compiler, while the code should
 compile with non-ANSI ones, we don't test this feature on a regular basis.
+</li>
 <li>
 If the error occurs when compiling a C file in the amaya directory, check that
 all the compilers invocations in steps 7 to 11 did not produce any error (the
 Thot compilers are verbose so errors messages may not be easily detected).
+</li>
 <li>
 otherwise your best bet is to report the problem to the <strong>Amaya</strong>
 development Team, by sending the error to the <code>www-amaya@w3.org</code>
 mailing-list. Please check first the <a
 href="http://opera.inrialpes.fr/amaya/messages/">archive</a>, the error may
 have been already reported.
+</li>
 </ol>
+</li>
 <li>
-an error running a compiler schema occured:
+an error running a compiler schema occurred:
 <ol>
 <li>
 be sure that the compilers were properly build in step 5, check with
 <strong>ldd</strong> that there is no missing shared library, e.g:
 <p>
 <code>ldd bin/app</code></p>
+</li>
 <li>
 be sure that <strong>cpp</strong> preprocessor is in the PATH. One can use the
-following shell script in conjuction with gcc, name it cpp, put it in the PATH
-with 755 Unix rights:
+following shell script in conjunction with gcc, name it cpp, put it in the
+PATH with 755 Unix rights:
 <pre>#!/bin/sh
         exec `gcc --print-prog-name=cpp` $@</pre>
+</li>
 <li>
 check that you have write right access on Thot/amaya directory.
+</li>
 <li>
 One can force the compiler to rebuild the amaya and HTML schemas by typing:
 <p>
@@ -249,9 +288,11 @@ One can force the compiler to rebuild the amaya and HTML schemas by typing:
 <code>touch ../amaya/*.A</code></p>
 <p>
 <code>make amaya</code></p>
+</li>
 </ol>
+</li>
 <li>
-an error occured at link time:
+an error occurred at link time:
 <ol>
 <li>
 Check that the current directory contains all the precompiled libraries,
@@ -260,6 +301,7 @@ for the <strong>obj </strong>. If these files are lacking, fetch the
 appropriate
 <code>thot-libs-</code><strong>target</strong><code>-xxx.tar.gz</code> <a
 href="SourceDist.html">distribution</a> file and install it.
+</li>
 <li>
 Check that the precompiled libraries are not corrupted e.g.:
 <p>
@@ -268,8 +310,9 @@ Check that the precompiled libraries are not corrupted e.g.:
 <code>nm libwww.a</code></p>
 <p>
 should not print any errors</p>
+</li>
 <li>
-In case of a corrupted library, one can reextract it from the distribution
+In case of a corrupted library, one can re-extract it from the distribution
 file or rebuild it by giving one of the appropriate commands:
 <p>
 make libjpeg</p>
@@ -281,14 +324,17 @@ make libwww</p>
 In case of problem building the WWW library, please check it's <a
 href="/INSTALL.html">installation instructions</a>. Compiling the graphic
 libraries should be quite straightforward.</p>
+</li>
 <li>
 verify the library path (<strong>-L</strong> flags in
 <strong>LINK_OPTIONS</strong>) for the X-Windows and Motif libraries files in
 <code>Thot/</code><strong>obj </strong><code>/Makefile</code>.
+</li>
 <li>
 Check whether <strong>-lSM</strong> and <strong>-lICE</strong>  X11R6
 libraries are needed. These were not needed (available) when working on an
 X11R5 environment.
+</li>
 <li>
 If amaya linking complains about <strong>XLookupString</strong>, check in
 <code>Thot/amaya/EDITOR.A</code> that the section USES does not refer to
@@ -298,13 +344,16 @@ If amaya linking complains about <strong>XLookupString</strong>, check in
 <p>
 This is related to the input of ISO-Latin-1 sequences in Motif dialog
 boxes.</p>
+</li>
 <li>
 Otherwise your best bet is to report the problem to the <strong>Amaya</strong>
 development Team, by sending the error to the <code>www-amaya@w3.org</code>
 mailing-list. Please check first the <a
 href="http://opera.inrialpes.fr/amaya/messages/">archive</a>, the error may
 have been already reported
+</li>
 </ol>
+</li>
 </ul>
 
 <h3><a name="L689">If amaya binary doesn't work:</a></h3>
@@ -322,12 +371,15 @@ command
 <p>
 should print all the shared libraries needed by amaya and the path to the
 corresponding libraries in the system.</p>
+</li>
 <li>
-Check that the amaya compiled <strong>shemas</strong> are present, namely
+Check that the amaya compiled <strong>schemas</strong> are present, namely
 <code>Thot/amaya/HTML.STR</code>, <code>Thot/amaya/HTMLP.PRS</code>...
+</li>
 <li>
 Verify that the main <a href="Registry.html">registry</a> file
 <code>Thot/config/thot.ini</code> is present.
+</li>
 </ol>
 <p>
 If everything seems Ok, one can debug the problem by using a system call
@@ -347,6 +399,7 @@ release.</p>
 <p>
 </p>
 <hr>
+
 <address>
 <a href="mailto:irene.vatton@w3.org">Ir&egrave;ne Vatton</a><br>
 <br>

@@ -29,9 +29,6 @@ extern char *UpdateCSSBackgroundImage ( char *oldpath,
                                         char *imgpath,
                                         char *styleString );
 extern char *GetCSSBackgroundURL ( char *styleString );
-extern void ParseCSSRule ( PresentationTarget target,
-                           PresentationContext context,
-                           char *cssRule );
 extern int EvaluateClassContext ( Element el,
                                   char *class,
                                   char *selector,
@@ -101,9 +98,6 @@ extern char *UpdateCSSBackgroundImage (/* char *oldpath,
                                           char *imgpath,
                                           char *styleString */);
 extern char *GetCSSBackgroundURL (/* char *styleString */);
-extern void ParseCSSRule (/* PresentationTarget target,
-                             PresentationContext context,
-                             char *cssRule */);
 extern int EvaluateClassContext (/* Element el,
                                     char *class,
                                     char *selector,

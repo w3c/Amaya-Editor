@@ -195,6 +195,7 @@ int                 ymax;
    PtrAbstractBox      pAb, pAbChild;
    PtrBox              pBox, pBoxChild;
    ViewFrame          *pFrame;
+   PictInfo           *imageDesc;
    int                 x, y;
    int                 xd, yd;
    int                 width, height;
@@ -206,8 +207,12 @@ int                 ymax;
    pBox = pAb->AbBox;
    if (pBox == NULL)
       return;
-   if (pAb->AbPictBackground)
-     DrawPicture (pBox, (PictInfo *) pAb->AbPictBackground, frame);
+   imageDesc = (PictInfo *) pAb->AbPictBackground;
+   if (pAb->AbPictBackground &&
+       (!pAb->AbTruncatedHead ||
+	(imageDesc->PicPresent != XRepeat &&
+	 imageDesc->PicPresent != RealSize)))
+     DrawPicture (pBox, imageDesc, frame);
 #  ifndef _WINDOWS
    else if (pAb->AbFillBox)
      /* todo: clip when backgroud will be printed */
@@ -263,13 +268,19 @@ int                 ymax;
 		       && yd <= ymax
 		       && xd + width >= xmin
 		       && xd <= xmax)
-		     if (pAb->AbPictBackground)
-		       DrawPicture (pBoxChild, (PictInfo *) pAb->AbPictBackground, frame);
-		     else
-		       DrawRectangle (frame, pBox->BxThickness, pAb->AbLineStyle,
-				      xd - x, yd - y,
-				      width, height, 0, 0, pAb->AbForeground,
-				      pAb->AbBackground, pAb->AbFillPattern);
+		     {
+		       imageDesc = (PictInfo *) pAb->AbPictBackground;
+		       if (pAb->AbPictBackground &&
+			   (!pAb->AbTruncatedHead ||
+			    (imageDesc->PicPresent != XRepeat &&
+			     imageDesc->PicPresent != RealSize)))
+			 DrawPicture (pBoxChild, (PictInfo *) pAb->AbPictBackground, frame);
+		       else
+			 DrawRectangle (frame, pBox->BxThickness, pAb->AbLineStyle,
+					xd - x, yd - y,
+					width, height, 0, 0, pAb->AbForeground,
+					pAb->AbBackground, pAb->AbFillPattern);
+		     }
 		   pBoxChild = pBoxChild->BxNext;
 		 }
 	       while (pBoxChild != NULL && IsParentBox (pBox, pBoxChild));
