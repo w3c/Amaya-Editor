@@ -849,9 +849,9 @@ void GL_DrawUnicodeChar (CHAR_T const c, float x, float y, void *GL_font, int fg
 /*----------------------------------------------------------------------
   CharacterWidth returns the width of a char in a given font.
   ----------------------------------------------------------------------*/
-int CharacterWidth (char *c, PtrFont font)
+int CharacterWidth (unsigned char c, PtrFont font)
 {
-	UnicodeCharacterWidth ((CHAR_T *) c, font);
+	UnicodeCharacterWidth ((CHAR_T) c, font);
 }
 
 
