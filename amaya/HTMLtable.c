@@ -3007,13 +3007,15 @@ void CellWidthCreated(event)
      {
      TtaGiveReferenceAttributeValue (attr, &colhead, name, &refdoc);
      if (colhead != NULL)
+	{
+        /* remove attribute Col_width_percent from column head if it is present */
+        attrType.AttrTypeNum = HTML_ATTR_Col_width_percent;
+        attrColWidthPcent = TtaGetAttribute (colhead, attrType);
+        if (attrColWidthPcent != NULL)
+           TtaRemoveAttribute (colhead, attrColWidthPcent, doc);
 	UpdateColHeadWidth (colhead, cell, doc);
+	}
      }
-   /* remove attribute Col_width_percent if it is present */
-   attrType.AttrTypeNum = HTML_ATTR_Col_width_percent;
-   attrColWidthPcent = TtaGetAttribute (colhead, attrType);
-   if (attrColWidthPcent != NULL)
-      TtaRemoveAttribute (colhead, attrColWidthPcent, doc);
 }
  
  
@@ -3030,7 +3032,7 @@ void CellWidthModified(event)
    ElementType         elType, groupType;
    AttributeType       attrType;
    Element             cell, colhead, group, firstgroup, row, tbody;
-   Attribute           attr, attrColWidthPxl;
+   Attribute           attr, attrColWidthPxl, attrColWidthPcent;
    Document            doc, refdoc;
    char                name[50];
    DisplayMode         dispMode;
@@ -3050,12 +3052,17 @@ void CellWidthModified(event)
 	{
 	dispMode = TtaGetDisplayMode (doc);
 	TtaSetDisplayMode (doc, DeferredDisplay);
-	/* set remove existing attribute Col_width_pxl */
+	/* remove existing attribute Col_width_pxl from column head */
         attrType.AttrTypeNum = HTML_ATTR_Col_width_pxl;
         attrColWidthPxl = TtaGetAttribute (colhead, attrType);
         if (attrColWidthPxl != NULL)
 	  /* the Column_head has an attribute Col_width_pxl, remove it */
           TtaRemoveAttribute (colhead, attrColWidthPxl, doc);
+        /* remove existing attribute Col_width_percent from column head */
+        attrType.AttrTypeNum = HTML_ATTR_Col_width_percent;
+        attrColWidthPcent = TtaGetAttribute (colhead, attrType);
+        if (attrColWidthPcent != NULL)
+           TtaRemoveAttribute (colhead, attrColWidthPcent, doc);
 	/* search the group of rows to which the cell belongs */
 	group = cell;
 	do
@@ -3173,7 +3180,7 @@ void CellWidthDeleted(event)
         attrColWidthPxl = TtaGetAttribute (colhead, attrType);
 	if (attrColWidthPxl == NULL)
 	   /* the Column_head has no Col_width_pxl attribute. Create a
-	      Col_width_Pcent attribute */
+	      Col_width_percent attribute */
 	   {
 	   firstcolhead = GetFirstColumnHead (cell);
 	   doc = event->document;
