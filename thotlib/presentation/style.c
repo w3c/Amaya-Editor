@@ -902,7 +902,7 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
       if (att > 0 && ctxt->type)
 	{
 	  new->ApElemType = ctxt->type;
-	  pSP = PresentationSchema (ctxt->schema, LoadedDocument[ctxt->doc-1]);
+	  pSP = PresentationSchema (pSS, LoadedDocument[ctxt->doc-1]);
 	  pSP->PsNInheritedAttrs->Num[ctxt->type - 1]++;
 	  pSP->PsNHeirElems->Num[attrType - 1]++;
 	}
