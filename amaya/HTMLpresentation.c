@@ -407,6 +407,24 @@ NotifyPresentation *event;
   return (ret);
 }
 
+
+/*----------------------------------------------------------------------
+  SetStyle
+  A specific PRule has been created, modified or deleted by the user for
+  a given element. (post-event)
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                SetStyle (NotifyPresentation * event)
+#else  /* __STDC__ */
+void                SetStyle (event)
+NotifyPresentation *event;
+#endif /* __STDC__ */
+{
+  /* set the Style_ attribute ? */
+  SetStyleAttribute (event->document, event->element);
+}
+
+
 /*----------------------------------------------------------------------
  AttrLangDeleted
  A Lang attribute has been deleted
