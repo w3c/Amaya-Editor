@@ -93,6 +93,82 @@ extern void GetHTMLDocument_callback ( int newdoc,
                                        char *outputfile,
                                        AHTHeaders *http_headers,
                                        void * context );
+extern Document GetHTMLDocument ( const char *documentPath,
+                                  char *form_data,
+                                  Document doc,
+                                  Document baseDoc,
+                                  ClickEvent CE_event,
+                                  ThotBool history,
+                                  TTcbf *cbf,
+                                  void *ctx_cbf );
+extern void CallbackDialogue ( int ref,
+                               int typedata,
+                               char *data );
+extern ThotBool CheckMakeDirectory ( char *name,
+                                     ThotBool recursive );
+extern void FreeAmayaStructures ( void );
+extern void InitAmaya ( NotifyEvent * event );
+extern void ChangeAttrOnRoot ( Document document,
+                               int attrNum );
+extern void ShowMapAreas ( Document document,
+                           View view );
+extern void MakeIDMenu ( Document doc,
+                         View view );
+extern void HelpAmaya ( Document document,
+                        View view );
+extern void HelpAtW3C ( Document document,
+                        View view );
+extern void HelpBrowsing ( Document document,
+                           View view );
+extern void HelpSelecting ( Document document,
+                            View view );
+extern void HelpSearching ( Document document,
+                            View view );
+extern void HelpViews ( Document document,
+                        View view );
+extern void HelpCreating ( Document document,
+                           View view );
+extern void HelpLinks ( Document document,
+                        View view );
+extern void HelpChanging ( Document document,
+                           View view );
+extern void HelpTables ( Document document,
+                         View view );
+extern void HelpMath ( Document document,
+                       View view );
+extern void HelpSVG ( Document document,
+                      View view );
+extern void HelpImageMaps ( Document document,
+                            View view );
+extern void HelpStyleSheets ( Document document,
+                              View view );
+extern void HelpAttributes ( Document document,
+                             View view );
+extern void HelpSpellChecking ( Document document,
+                                View view );
+extern void HelpPublishing ( Document document,
+                             View view );
+extern void HelpPrinting ( Document document,
+                           View view );
+extern void HelpNumbering ( Document document,
+                            View view );
+extern void HelpMakeBook ( Document document,
+                           View view );
+extern void HelpAnnotation ( Document document,
+                             View view );
+extern void HelpConfigure ( Document document,
+                            View view );
+extern void HelpShortCuts ( Document document,
+                            View view );
+extern void HelpAccess ( Document document,
+                         View view );
+extern void ShowLogFile ( Document doc,
+                          View view );
+extern void CheckAmayaClosed ( void );
+extern void CloseDocument ( Document doc,
+                            View view );
+extern void AmayaClose ( Document document,
+                         View view );
 
 #else /* __STDC__ */
 
@@ -183,6 +259,82 @@ extern void GetHTMLDocument_callback (/* int newdoc,
                                          char *outputfile,
                                          AHTHeaders *http_headers,
                                          void * context */);
+extern Document GetHTMLDocument (/* const char *documentPath,
+                                    char *form_data,
+                                    Document doc,
+                                    Document baseDoc,
+                                    ClickEvent CE_event,
+                                    ThotBool history,
+                                    TTcbf *cbf,
+                                    void *ctx_cbf */);
+extern void CallbackDialogue (/* int ref,
+                                 int typedata,
+                                 char *data */);
+extern ThotBool CheckMakeDirectory (/* char *name,
+                                       ThotBool recursive */);
+extern void FreeAmayaStructures (/* void */);
+extern void InitAmaya (/* NotifyEvent * event */);
+extern void ChangeAttrOnRoot (/* Document document,
+                                 int attrNum */);
+extern void ShowMapAreas (/* Document document,
+                             View view */);
+extern void MakeIDMenu (/* Document doc,
+                           View view */);
+extern void HelpAmaya (/* Document document,
+                          View view */);
+extern void HelpAtW3C (/* Document document,
+                          View view */);
+extern void HelpBrowsing (/* Document document,
+                             View view */);
+extern void HelpSelecting (/* Document document,
+                              View view */);
+extern void HelpSearching (/* Document document,
+                              View view */);
+extern void HelpViews (/* Document document,
+                          View view */);
+extern void HelpCreating (/* Document document,
+                             View view */);
+extern void HelpLinks (/* Document document,
+                          View view */);
+extern void HelpChanging (/* Document document,
+                             View view */);
+extern void HelpTables (/* Document document,
+                           View view */);
+extern void HelpMath (/* Document document,
+                         View view */);
+extern void HelpSVG (/* Document document,
+                        View view */);
+extern void HelpImageMaps (/* Document document,
+                              View view */);
+extern void HelpStyleSheets (/* Document document,
+                                View view */);
+extern void HelpAttributes (/* Document document,
+                               View view */);
+extern void HelpSpellChecking (/* Document document,
+                                  View view */);
+extern void HelpPublishing (/* Document document,
+                               View view */);
+extern void HelpPrinting (/* Document document,
+                             View view */);
+extern void HelpNumbering (/* Document document,
+                              View view */);
+extern void HelpMakeBook (/* Document document,
+                             View view */);
+extern void HelpAnnotation (/* Document document,
+                               View view */);
+extern void HelpConfigure (/* Document document,
+                              View view */);
+extern void HelpShortCuts (/* Document document,
+                              View view */);
+extern void HelpAccess (/* Document document,
+                           View view */);
+extern void ShowLogFile (/* Document doc,
+                            View view */);
+extern void CheckAmayaClosed (/* void */);
+extern void CloseDocument (/* Document doc,
+                              View view */);
+extern void AmayaClose (/* Document document,
+                           View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
