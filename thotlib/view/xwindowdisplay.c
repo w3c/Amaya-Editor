@@ -231,7 +231,7 @@ int DrawString (CHAR_T *buff, int i, int lg, int frame, int x, int y,
 	  j = 0;
 	  while (j < lg)
 	    {
-	      ptcar[j] = '*';
+	      ptcar[j++] = '*';
 	      width += CharacterWidth (42, font);
 	    }
 	  ptcar[lg] = EOS;
