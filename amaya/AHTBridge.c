@@ -61,6 +61,7 @@ static const SockOps ReadBits = FD_READ | FD_ACCEPT | FD_CLOSE;
 static const SockOps WriteBits = FD_WRITE | FD_CONNECT;
 static const SockOps ExceptBits = FD_OOB;
 
+static XtInputId sockets[200];
 
 /* Private functions */
 
@@ -107,25 +108,37 @@ XtInputId          *id;
    /* Libwww 5.0a does not take into account the ops parameter
       in the invocation of for this function call */
 
-#  ifdef HACK_WWW
-   HTEventCallback    *cbf;
-#  else
    HTEventCallback    *cbf;
 
    ops = FD_WRITE;
    cbf = (HTEventCallback *) __RetrieveCBF (*s, ops, &rqp);
-#  endif
+
+
+    if (cbf && (rqp == NULL)) {
+#ifdef DEBUG_LIBWWW
+        fprintf(stderr, "AHTCallback_bridge_register, RQP is NULL\n");
+#endif
+	if (sockets[*s]) {
+	  sockets[*s] = 0;
+	  XtRemoveInput (*id);
+	  (*cbf) (*s, 0, FD_CLOSE);
+	}
+	return (0);
+    }
+
 
    me = HTRequest_context (rqp);
-   if (THD_TRACE)
+
+#ifdef DEBUG_LIBWWW
       fprintf (stderr, "AHTBridge: Processing url %s \n", me->urlName);
+#endif
 
    /* verify if there's any callback associated with the request */
-   if (!cbf || !rqp || rqp->priority == HT_PRIORITY_OFF) {
-      if (THD_TRACE)
+   if (!(cbf) || !(rqp) || rqp->priority == HT_PRIORITY_OFF) {
+#ifdef DEBUG_LIBWWW
 	 HTTrace ("Callback.... No callback found\n");
+#endif
       
-      /* experimental */
       /* remove the Xt input which caused this callback */
 #     ifdef WWW_XWINDOWS
       XtRemoveInput (*id);
@@ -166,8 +179,9 @@ XtInputId          *id;
 
    me->reqStatus = HT_BUSY;
    if ((status = (*cbf) (*s, rqp, ops)) != HT_OK)
-      HTTrace ("Callback.... received != HT_OK");
-
+#ifdef DEBUG_LIBWWW
+      HTTrace ("Callback.... returned a value != HT_OK");
+#endif
    /* Several states can happen after this callback. They
     * are indicated by the me->reqStatus structure member and
     * the fds external variables. The following lines examine
@@ -201,32 +215,41 @@ XtInputId          *id;
        * we are using the same old socket number.
        */
        
-       if (THD_TRACE)
+#ifdef DEBUG_LIBWWW
 	  fprintf (stderr, "*** detected a reissue of request \n");
+#endif
        return (0);
    }
 
    /* we verify if the request exists. If it has ended, we will have
       a reqStatus with an HT_END value */
 
-   if ((me->request->net == (HTNet *) NULL) || (me->reqStatus == HT_END || me->reqStatus == HT_ERR)) {
-      /* request has ended */
-#     ifndef _WINDOWS
-      if (THD_TRACE)
-	 fprintf (stderr, "(BF) removing Xtinput %lu !RWE, sock %d (Request has ended)\n", *id, *s);
-#     endif	 /* !_WINDOWS */
-      if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC)) {
-	 /* free the memory allocated for async requests */
+/***   
+     if ((me->request->net == (HTNet *) NULL) || 
+     (me->reqStatus == HT_END || 
+     me->reqStatus == HT_ERR)) {
+****/
+
+   if ((me->reqStatus == HT_END) ||
+       (me->reqStatus == HT_ERR)) {
+        /* request has ended */
+#ifndef _WINDOWS
+#ifdef DEBUG_LIBWWW
+       fprintf (stderr, "(BF) removing Xtinput %lu !RWE, sock %d (Request has ended)\n", *id, *s);
+#endif
+#endif	 /* !_WINDOWS */
+     if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC)) {
+
 	 AHTPrintPendingRequestStatus (me->docid, YES);
+	 /* free the memory allocated for async requests */
 	 AHTReqContext_delete (me);
       } else if (me->reqStatus != HT_END && HTError_hasSeverity (HTRequest_error (me->request), ERR_NON_FATAL))
 	    /* did the SYNC request end because of an error? If yes, report it back to the caller */
 	    me->reqStatus = HT_ERR;
       return (0);
    }
-
-   /* The request is still alive, so change it's status to indicate it's out of the
-      critical section */
+   /* The request is still alive, so change it's status to indicate 
+      it's out of the critical section */
    me->reqStatus = HT_WAITING;
    return (0);
 }
@@ -260,34 +283,37 @@ HTAlertPar         *reply;
    AHTReqContext      *me = HTRequest_context (request);
 
    if (me->reqStatus == HT_NEW) {
-      if ((me->output != stdout) && me->outputfile && (me->output = fopen (me->outputfile, "wb")) == NULL) {
-	     /* the request is associated with a file */
-	     me->outputfile[0] = EOS;	/* file could not be opened */
-	     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
-			   me->outputfile);
-	     me->reqStatus = HT_ERR;
-  	     if (me->error_html)
-	         DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
+      if ((me->output != stdout) && 
+	  me->outputfile && 
+	  (me->output = fopen (me->outputfile, "wb")) == NULL) {
+	/* the request is associated with a file */
+	me->outputfile[0] = EOS;	/* file could not be opened */
+	TtaSetStatus (me->docid, 1, 
+		      TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
+		      me->outputfile);
+	me->reqStatus = HT_ERR;
+	if (me->error_html)
+	  DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
       } else {
-	    if (THD_TRACE)
-	        fprintf (stderr, "WIN_Activate_Request: Activating pending %s . Open fd %d\n", me->urlName, (int) me->output);
-	     HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));    
+	if (THD_TRACE)
+	  fprintf (stderr, "WIN_Activate_Request: Activating pending %s . Open fd %d\n", me->urlName, (int) me->output);
+	HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));    
         /*change the status of the request */
         me->reqStatus = HT_WAITING;
       }
    } 
    else if (me->reqStatus == HT_WAITING) {
-
-	   /*change the status of the request */
-        rewind (me->output);
-		if (HTRequest_outputStream (me->request) == NULL)
-            HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
+     
+     /*change the status of the request */
+     rewind (me->output);
+     if (HTRequest_outputStream (me->request) == NULL)
+       HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
    } 
    else {
-		 me->reqStatus = HT_ERR;
+     me->reqStatus = HT_ERR;
    }
    
-  return ((me->reqStatus != HT_ERR) ? HT_OK : HT_ERROR);
+   return ((me->reqStatus != HT_ERR) ? HT_OK : HT_ERROR);
 }
 
 #else
@@ -319,30 +345,37 @@ HTAlertPar         *reply;
 {
    AHTReqContext      *me = HTRequest_context (request);
 
-   if (THD_TRACE)
+#ifdef DEBUG_LIBWWW
      fprintf (stderr, "(Activating a request\n");
+#endif
 
-   if (me->reqStatus == HT_NEW || me->reqStatus == HT_PENDING) {
-	/* the request is active, open the output file */
-       if ((me->output != stdout) && !(me->output = fopen (me->outputfile, "w"))) {
-	   me->outputfile[0] = EOS;	
-	   /* file could not be opened */
-	   TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE), me->outputfile);
-	   me->reqStatus = HT_ERR;
-	   /* should the error be shown on the Amaya doc window? */
-	   if (me->error_html)
-	       DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR; 
+     if (me->reqStatus == HT_NEW) {
+       /* the request is active, open the output file */
+       if ((me->output != stdout) && 
+	   !(me->output = fopen (me->outputfile, "w"))) {
+	 me->outputfile[0] = EOS;	
+	 /* file could not be opened */
+	 TtaSetStatus (me->docid, 1, 
+		       TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
+		       me->outputfile);
+	 me->reqStatus = HT_ERR;
+	 /* should the error be shown on the Amaya doc window? */
+	 if (me->error_html)
+	   DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR; 
        } 
        /* else {
-	     HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
-	     me->reqStatus = HT_WAITING;
-       }*/
-#ifdef JOSE
-	   fprintf (stderr, "ADDNEWSOCK: associated %s to fd %d\n", me->urlName, me->output); 
+	  HTRequest_setOutputStream (me->request, 
+	  AHTFWriter_new (me->request, me->output, YES));
+	  me->reqStatus = HT_WAITING;
+	  }*/
+#ifdef DEBUG_LIBWWW
+       fprintf (stderr, "ADDNEWSOCK: associated %s to FD %p\n", 
+		me->urlName, me->output); 
 #endif
        if (me->output) {
-	  if (THD_TRACE)
+	 if (THD_TRACE)
 	     fprintf (stderr, "Add_NewSocket_to_Loop: Activating pending %s . Open fd %d\n", me->urlName, (int) me->output);
+
 	  HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
 	  me->reqStatus = HT_WAITING;
        }
@@ -352,7 +385,8 @@ HTAlertPar         *reply;
        /* request was aborted and now is is being reissued */
        rewind (me->output);
        /* verify if this is OK */
-       HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
+       HTRequest_setOutputStream (me->request, 
+				  AHTFWriter_new (me->request, me->output, YES));
    } 
    
    return (HT_OK);
@@ -395,13 +429,40 @@ HTPriority          p;
 #endif
 */
 
+
    if ((status = HTEventrg_register (sock, rqp, ops,
 				     cbf, p)) != HT_OK)
       return (status);
 
+#ifndef _WINDOWS
+
+   if (rqp == NULL && ops == FD_CLOSE) {
+#ifdef DEBUG_LIBWWW
+	fprintf(stderr, "HTEvent_register: ***** RQP is NULL @@@@@\n");
+#endif
+	if (sockets[sock] != 0) {
+	  XtRemoveInput (sockets[sock]);
+	}
+
+	sockets[sock] = XtAppAddInput (app_cont, 
+				       sock,
+				       (XtPointer) XtInputReadMask,
+				       (XtInputCallbackProc) AHTCallback_bridge,
+				       (XtPointer) XtInputReadMask);
+	return (status);
+   }
+#endif /* _WINDOWS */
+
    if (rqp)
      {
 	me = HTRequest_context (rqp);
+
+#ifndef _WINDOWS
+	if (sockets[sock] != 0) {
+	  XtRemoveInput (sockets[sock]);
+	  sockets[sock] = 0;
+#endif /* _WINDOWS */
+	}	  
 
     /*** VERY EXPERIMENTAL ***/
     me->read_sock = sock;
@@ -412,23 +473,25 @@ HTPriority          p;
 	if (me->reqStatus == HT_NEW)
 	  {
 	     /* we are opening a pending request */
-	     if ((me->output != stdout) && (me->output = fopen (me->outputfile, "w")) == NULL)
+	     if ((me->output != stdout) && 
+		 (me->output = fopen (me->outputfile, "w")) == NULL)
 	       {
-		  me->outputfile[0] = '\0';	/* file could not be opened */
-		  TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
-				me->outputfile);
-		  me->reqStatus = HT_ERR;
-		  return (HT_ERROR);
+		 me->outputfile[0] = '\0';	/* file could not be opened */
+		 TtaSetStatus (me->docid, 1, 
+			       TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
+			       me->outputfile);
+		 me->reqStatus = HT_ERR;
+		 return (HT_ERROR);
 	       }
-#ifdef JOSE
-	   fprintf (stderr, "ADDNEWSOCK: associated %s to fd %d\n", me->urlName, me->output); 
+#ifdef DEBUG_LIBWWW
+	     fprintf (stderr, "ADDNEWSOCK: associated %s to FILE %p\n", me->urlName, me->output); 
 #endif
 	     HTRequest_setOutputStream (me->request,
-			     AHTFWriter_new (me->request, me->output, YES));
+					AHTFWriter_new (me->request, me->output, YES));
 	     me->reqStatus = HT_WAITING;
-
+	     
 	     if (THD_TRACE)
-		fprintf (stderr, "AHTEvent_register: Activating pending request url %s, fd %d\n", me->urlName, (int) me->output);
+	       fprintf (stderr, "AHTEvent_register: Activating pending request url %s, fd %d\n", me->urlName, (int) me->output);
 	  }
 
 	if (THD_TRACE)
@@ -458,7 +521,6 @@ HTPriority          p;
    return (status);
 }
 
-
 /*----------------------------------------------------------------------
   AHTEvent_unregister
   callback called by libwww each time a request is unregistered. This
@@ -483,27 +545,41 @@ SockOps             ops;
    /* Libwww 5.0a does not take into account the third parameter
       **  for this function call */
 
-   HTEventCallback    *cbf = (HTEventCallback *) __RetrieveCBF (sock, (SockOps) NULL, &rqp);
-
 #ifndef _WINDOWS
+   
+   HTEventCallback     *cbf = (HTEventCallback *) __RetrieveCBF (sock, (SockOps) NULL, &rqp);
+   
+#ifdef DEBUG_LIBWWW
+   fprintf (stderr, "AHTEventUnregister: cbf = %d, sock = %d, rqp = %d, ops= %x", cbf, sock, rqp, ops);
+#endif
+   
+   if (sockets[sock] != 0) {
+     XtRemoveInput (sockets[sock]);
+     sockets[sock] = 0;
+   }
+
    if (cbf)
      {
-	if (rqp)
-	  {
-	     me = HTRequest_context (rqp);
-
-	     if (ops & ReadBits)
-		RequestKillReadXtevent (me);
-
-	     if (ops & WriteBits)
-		RequestKillWriteXtevent (me);
-
-	     if (ops & ExceptBits)
-		RequestKillExceptXtevent (me);
-	  }
+       if (rqp)
+	 {
+	   me = HTRequest_context (rqp);
+	   
+	   if (ops & ReadBits) 
+	     RequestKillReadXtevent (me);
+	   
+	   if (ops & WriteBits)
+	     RequestKillWriteXtevent (me);
+	   
+	   if (ops & ExceptBits)
+	     RequestKillExceptXtevent (me);
+/**** for windows? ***
+	if (me->reqStatus == HT_END)
+	  AHTReqContext_delete (me);
+*****/
+	 }
      }
 
-#endif _WINDOWS
+#endif /* !_WINDOWS */
 
    status = HTEventrg_unregister (sock, ops);
 
@@ -693,6 +769,13 @@ AHTReqContext      *me;
 #endif /* !_WINDOWS */
 
 #endif /* !AMAYA_JAVA */
+
+
+
+
+
+
+
 
 
 

@@ -78,7 +78,7 @@ char                c;
    int                 status;
    AHTReqContext      *reqcont;
 
-#ifdef JOSE
+#ifdef DEBUG_LIBWWW
    if (me->fp == NULL)
        fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
 #endif
@@ -107,7 +107,7 @@ const char         *s;
    int                 status = 0;
    AHTReqContext      *reqcont;
 
-#ifdef JOSE
+#ifdef DEBUG_LIBWWW
    if (me->fp == NULL)
        fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
 #endif
@@ -118,11 +118,15 @@ const char         *s;
 	status = (fputs (s, me->fp) == EOF) ? HT_ERROR : HT_OK;
 	if (status == HT_OK)
 	   status = AHTFWriter_flush (me);
+ 
+	if (reqcont && reqcont->incremental_cbf)
+	  (*reqcont->incremental_cbf) (reqcont, s, strlen (s), status);
      }
+   else 
+     status = HT_ERROR;
 
-   if (reqcont && reqcont->incremental_cbf)
-      (*reqcont->incremental_cbf) (reqcont, s, strlen (s), status);
-   return (status);
+  /* JK: Should there we a callback to incremental too? */
+   return status;
 }
 
 
@@ -142,7 +146,7 @@ int                 l;
    int                 status;
    AHTReqContext      *reqcont;
 
-#ifdef JOSE
+#ifdef DEBUG_LIBWWW
    if (me->fp == NULL)
        fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
 #endif
@@ -169,7 +173,7 @@ static int         AHTFWriter_flush (me)
 HTStream           *me
 #endif				/* __STDC__ */
 {
-#ifdef JOSE
+#ifdef DEBUG_LIBWWW
    if (me->fp == NULL)
        fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
 #endif
@@ -220,7 +224,7 @@ HTList             *e;
 
 #endif /* __STDC__ */
 {
-#ifdef JOSE
+#ifdef DEBUG_LIBWWW
    if (me->fp == NULL)
        fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_abort\n");
 #endif
@@ -278,7 +282,7 @@ BOOL                leave_open;
    if ((me = (HTStream *) HT_CALLOC (1, sizeof (HTStream))) == NULL)
       HT_OUTOFMEM ("HTFWriter_new");
    me->isa = &AHTFWriter;
-#ifdef JOSE
+#ifdef DEBUG_LIBWWW
    if (fp == NULL)
        fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
 #endif

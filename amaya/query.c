@@ -253,8 +253,12 @@ int                 docid;
    /* error stream handling */
    me->error_stream = (char *) NULL;
    me->error_stream_size = 0;
-   
+
+#ifdef DEBUG_LIBWWW
+   fprintf (stderr, "AHTReqContext_new: Created object %p\n", me);
+#endif   
    return me;
+
 }
 
 /*----------------------------------------------------------------------
@@ -275,6 +279,10 @@ AHTReqContext      *me;
 
    if (me)
      {
+
+#ifdef DEBUG_LIBWWW
+        fprintf (stderr, "AHTReqContext_delete: Deleting object %p\n", me);
+#endif   
 
 	if (Amaya->reqlist)
 	   HTList_removeObject (Amaya->reqlist, (void *) me);
@@ -302,6 +310,17 @@ AHTReqContext      *me;
           RequestKillAllXtevents(me);
 #     endif /* WWW_XWINDOWS */
 #     endif /* !_WINDOWS */
+
+	if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC))
+	  /* for the ASYNC mode, free the memory we allocated in GetObjectWWW
+	     or in PutObjectWWW */
+	  {
+	    TtaFreeMemory (me->urlName);
+	    me->urlName = NULL;
+	    TtaFreeMemory (me->outputfile);
+	    me->outputfile = NULL;
+	  }
+   
 	TtaFreeMemory ((void *) me);
 
 	Amaya->open_requests--;
@@ -346,6 +365,12 @@ HTStream           *target;
      {
 	if (PROT_TRACE)
 	   HTTrace ("Posting Data Target WOULD BLOCK\n");
+#ifdef _WINDOWS
+	return HT_CONTINUE;
+#else
+     	return HT_WOULD_BLOCK;
+#endif /* _WINDOWS */
+
 	return HT_WOULD_BLOCK;
      }
    else if (status == HT_PAUSE)
@@ -382,31 +407,35 @@ static void         Thread_deleteAll ()
   AHTReqContext      *me;
   AHTDocId_Status    *docid_status;
 
-   if (Amaya && Amaya->reqlist)
-     {
-	if (Amaya->open_requests > 0)
-	  {
-	    cur = Amaya->reqlist;
-
-	     HTNet_killAll ();
-	     /* erase the requests */
-	     while ((me = (AHTReqContext *) HTList_removeLastObject (cur)))
-	       {
-		  if (me->request)
-		    {
+  if (Amaya && Amaya->reqlist)
+    {
+      if (Amaya->open_requests > 0)
+#ifdef DEBUG_LIBWWW
+      fprintf (stderr, "Thread_deleteAll: Killing %d outstanding "
+	               "requests\n", Amaya->open_requests);
+#endif   
+	{
+	  cur = Amaya->reqlist;
+	  
+	  HTNet_killAll ();
+	  /* erase the requests */
+	  while ((me = (AHTReqContext *) HTList_removeLastObject (cur)))
+	    {
+	      if (me->request)
+		{
 #              ifndef _WINDOWS 
-		       RequestKillAllXtevents (me);
+		  RequestKillAllXtevents (me);
 #              endif /* !_WINDOWS */
-		       AHTReqContext_delete (me);
-		    }
-	       }		/* while */
-
-	     /* erase the docid_status entities */
-	     while ((docid_status = (AHTDocId_Status *) HTList_removeLastObject ((void *) Amaya->docid_status)))
-		TtaFreeMemory ((void *) docid_status);
-
-	  }			/* if */
-     }
+		  AHTReqContext_delete (me);
+		}
+	    }		/* while */
+	  
+	  /* erase the docid_status entities */
+	  while ((docid_status = (AHTDocId_Status *) HTList_removeLastObject ((void *) Amaya->docid_status)))
+	    TtaFreeMemory ((void *) docid_status);
+	  
+	}			/* if */
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -464,33 +493,30 @@ int                 status;
    
    if (HTRequest_doRetry (request))
      {
-
 	/* Verify if this is not redundant */
 
 	/* do we need to normalize the URL? */
 	if (strncmp (new_anchor->parent->address, "http:", 5))
 	  {
 	     /* Yes, so we use the pre-redirection anchor as a base name */
-	     ref = AmayaParseUrl (new_anchor->parent->address, me->urlName, AMAYA_PARSE_ALL);
+	     ref = AmayaParseUrl (new_anchor->parent->address, 
+				  me->urlName, AMAYA_PARSE_ALL);
 	     if (ref)
 	       {
-		  TtaFreeMemory (new_anchor->parent->address);
-		  new_anchor->parent->address = ref;
+		 TtaFreeMemory (new_anchor->parent->address);
+		 new_anchor->parent->address = ref;
 	       }
 	  }
 
 	/* update the current file name */
 	if (strlen (new_anchor->parent->address) > (MAX_LENGTH - 2))
 	  {
-	     /*
-	        ** copy MAX_LENGTH cars. The error will be detected later on and shown on the
-	        ** screen. This code will be fixed up later on
-	      */
-	     strncpy (me->urlName, new_anchor->parent->address, MAX_LENGTH - 1);
+	     strncpy (me->urlName, new_anchor->parent->address, 
+		      MAX_LENGTH - 1);
 	     me->urlName[MAX_LENGTH - 1] = EOS;
 	  }
 	else
-	   strcpy (me->urlName, new_anchor->parent->address);
+	  strcpy (me->urlName, new_anchor->parent->address);
 
 	ChopURL (me->status_urlName, me->urlName);
 
@@ -500,35 +526,46 @@ int                 status;
 	/* Start request with new credentials */
 
 	if (me->output) {
-#ifdef JOSE
-	    fprintf (stderr, "redirection_handler: url  %s, closing fd %d\n", me->urlName, me->output); 
-#endif
+#ifdef DEBUG_LIBWWW
+	    fprintf (stderr, "redirection_handler: New URL is  %s, closing "
+		             "FILE %p\n", me->urlName, me->output); 
+#endif 
 	    AHTFWriter_FREE (request->output_stream);
-	    fclose (me->output);
-	    me->output = NULL;
+	    if (me->output != stdout) { /* Are we writing to a file? */
+	      fclose (me->output);
+	      me->output = NULL;
+	    }
 	}
+
+# ifdef _WINDOWS
+	/* if ((me->mode & AMAYA_ASYNC) ||      (me->mode & AMAYA_IASYNC)) {
+	   me->reqStatus = HT_END; */
+	/* HTEventrg_unregister (me->read_sock, 0); */
+	/* }  */
+# endif /* _WINDOWS */
 
 	me->reqStatus = HT_NEW; /* reset the status */
 	if (me->method == METHOD_PUT || me->method == METHOD_POST)	/* PUT, POST etc. */
-	   status = HTLoadAbsolute (me->urlName, request);
+	  status = HTLoadAbsolute (me->urlName, request);
 	else
-	   HTLoadAnchor (new_anchor, request);
+	  HTLoadAnchor (new_anchor, request);
      }
    else
      {
-	HTRequest_addError (request, ERR_FATAL, NO, HTERR_MAX_REDIRECT,
-			    NULL, 0, "HTRedirectFilter");
-	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REDIRECTIONS_LIMIT),
-		      NULL);
-	if (me->error_html)
-	   DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
+       HTRequest_addError (request, ERR_FATAL, NO, HTERR_MAX_REDIRECT,
+			   NULL, 0, "HTRedirectFilter");
+       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REDIRECTIONS_LIMIT),
+		     NULL);
+       if (me->error_html)
+	 DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR; 
+       /* so that we can show the error message */
      }
 
    /*
-      **  By returning HT_ERROR we make sure that this is the last handler to be
-      **  called. We do this as we don't want any other filter to delete the 
-      **  request object now when we have just started a new one ourselves
-    */
+   **  By returning HT_ERROR we make sure that this is the last handler to be
+   **  called. We do this as we don't want any other filter to delete the 
+   **  request object now when we have just started a new one ourselves
+   */
    return HT_ERROR;
 }
 
@@ -554,168 +591,182 @@ int                 status;
    HTList              *cur;
 
    if (!me)
-      return HT_OK;		/* not an Amaya request */
-
+     return HT_OK;		/* not an Amaya request */
+   
    if (!AmayaIsAlive)
-      me->reqStatus = HT_ABORT;
-
+     me->reqStatus = HT_ABORT;
+   
    if (status == HT_LOADED || status == HT_CREATED || status == HT_NO_DATA)
-       error_flag = FALSE;
+     error_flag = FALSE;
    else
-       error_flag = TRUE;
-
+     error_flag = TRUE;
+   
    /* output any errors from the server */
-
-    /***
-    ** me->output = output file which will receive an html file
-    ** me->error_html = yes, output HTML errors in the screen
-    ** request->error_stack == if there are any errors, they will be here
-    ** me->error_stream_size If it's != 0 means an error message has already
-    **                       been written to the stack
-    */
-
+   
+   /***
+   ** me->output = output file which will receive an html file
+   ** me->error_html = yes, output HTML errors in the screen
+   ** request->error_stack == if there are any errors, they will be here
+   ** me->error_stream_size If it's != 0 means an error message has already
+   **                       been written to the stack
+   */
+   
    /* First, we verify if there are any errors and if they are not
    ** yet written to the error stack. If no, then let's try to write them
    ** ourselves
    */
-
-#ifdef JOSE
-	   fprintf (stderr, "terminate_handler: url  %s, closing fd %d\n", me->urlName, me->output); 
+   
+#ifdef DEBUG_LIBWWW
+   fprintf (stderr, "terminate_handler: URL is "
+	    "%s, closing FILE %p status is %d\n", me->urlName, me->output, 
+	    status); 
 #endif
-
+   
    if (me->output && me->output != stdout)
      {
-	/* we are writing to a file */
-	if (me->reqStatus != HT_ABORT)
-	  {			/* if the request was not aborted and */
-	    if (error_flag)
-	      {		/* there were some errors */
-		if (me->error_html == TRUE)
-		  {		/* and we want to print errors */
-		    if (me->error_stream_size == 0)	/* and the stream is empty */
-			  AHTError_MemPrint (request);	/* copy errors from the error stack 
-							   ** into a data structure */
-		       if (me->error_stream)
-			 {	/* if the stream is non-empty */
-			    fprintf (me->output, me->error_stream);	/* output the errors */
-			    error_flag = FALSE;		/* show it in the HTML window */
-			 }
-		       else
-			  me->reqStatus = HT_ERR;	/* we did not get an error msg, 
-							   ** so just
-							   **  mark error 
-							 */
-		    }
-		  else
-		     me->reqStatus = HT_ERR;	/* we don't want to print the error */
-	       }		/* if error_stack */
-	  }			/* if != HT_ABORT */
-	fclose (me->output);
-	me->output = NULL;
+       /* we are writing to a file */
+       if (me->reqStatus != HT_ABORT)
+	 {			/* if the request was not aborted and */
+	   if (error_flag)
+	     {		        /* there were some errors */
+	       if (me->error_html == TRUE)
+		 {		/* and we want to print errors */
+		   if (me->error_stream_size == 0)/* and the stream is empty */
+		     AHTError_MemPrint (request); /* copy errors from 
+						  **the error stack 
+						  ** into a data structure */
+		   if (me->error_stream)
+		     {	/* if the stream is non-empty */
+		       fprintf (me->output, me->error_stream);/* output the errors */
+		       error_flag = FALSE;		/* show it in the HTML window */
+		     }
+		   else
+		     me->reqStatus = HT_ERR;	/* we did not get an error msg, 
+						** so just markerror */
+		 }
+	       else
+		 me->reqStatus = HT_ERR;	/* we don't want to print the error */
+	     }		        /* if error_stack */
+	 }			/* if != HT_ABORT */
+       fclose (me->output);
+       me->output = NULL;
      }
    else
      {
-	/* We must be doing a PUT. Verify if there was an error */
-	if (error_flag)
-	  me->reqStatus = HT_ERR;
+       /* We must be doing a PUT. Verify if there was an error */
+       if (error_flag)
+	 me->reqStatus = HT_ERR;
      }				/* if me-output */
-
+   
    /* Second Step: choose a correct treatment in function of the request's
       being associated with an error, with an interruption, or with a
       succesful completion */
-
+   
    if (!error_flag  && me->reqStatus != HT_ERR
        && me->reqStatus != HT_ABORT)
      {
-	me->reqStatus = HT_END;	/* no errors */
-	if (me->terminate_cbf)
-	   (*me->terminate_cbf) ((AHTReqContext *) me,
-				 HT_LOADED);
+       me->reqStatus = HT_END;	/* no errors */
+       if (me->terminate_cbf)
+	 (*me->terminate_cbf) ((AHTReqContext *) me,
+			       HT_LOADED);
      }
    else if (me->reqStatus == HT_ABORT)
      /* either the application ended or the user pressed the stop 
 	button. We erase the incoming file, if it exists */
      {
-	if (me->outputfile && me->outputfile[0] != EOS)
-	  {
-	     TtaFileUnlink (me->outputfile);
-	     me->outputfile[0] = EOS;
-	  }
+       if (me->outputfile && me->outputfile[0] != EOS)
+	 {
+	   TtaFileUnlink (me->outputfile);
+	   me->outputfile[0] = EOS;
+	 }
      }
    else if (me->reqStatus == HT_ERR)
      {
-	/* there was an error */
-	if (me->terminate_cbf)
-	   (*me->terminate_cbf) ((AHTReqContext *) me,
-				 HT_ERROR);
-
-	if (me->outputfile && me->outputfile[0] != EOS)
-	  {
-	     TtaFileUnlink (me->outputfile);
-	     me->outputfile[0] = EOS;
-	  }
+       /* there was an error */
+       if (me->terminate_cbf)
+	 (*me->terminate_cbf) ((AHTReqContext *) me,
+			       HT_ERROR);
+       
+       if (me->outputfile && me->outputfile[0] != EOS)
+	 {
+	   TtaFileUnlink (me->outputfile);
+	   me->outputfile[0] = EOS;
+	 }
      }
    else if (error_flag && 
 	    (me->reqStatus == HT_BUSY || me->reqStatus == HT_WAITING))
      {
-	/* there was an error */
-	if (me->terminate_cbf)
-	   (*me->terminate_cbf) ((AHTReqContext *) me,
-				 HT_ERROR);
-
-	if (me->outputfile && me->outputfile[0] != EOS)
-	  {
-	     TtaFileUnlink (me->outputfile);
-	     me->outputfile[0] = EOS;
-	     me->reqStatus = HT_ERR;
-	  }
+       /* there was an error */
+       if (me->terminate_cbf)
+	 (*me->terminate_cbf) ((AHTReqContext *) me,
+			       HT_ERROR);
+       
+       if (me->outputfile && me->outputfile[0] != EOS)
+	 {
+	   TtaFileUnlink (me->outputfile);
+	   me->outputfile[0] = EOS;
+	   me->reqStatus = HT_ERR;
+	 }
      }				/* if-else HT_END, HT_ABORT, HT_ERROR */
-
-   if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC))
-     /* for the ASYNC mode, free the memory we allocated in GetObjectWWW
-	or in PutObjectWWW */
-     {
-	TtaFreeMemory (me->urlName);
-	me->urlName = NULL;
-	TtaFreeMemory (me->outputfile);
-	me->outputfile = NULL;
-     }
-
+   
    /* don't remove or Xt will hang up during the PUT */
-
+   
    if (AmayaIsAlive  && ((me->method == METHOD_POST) ||
 			 (me->method == METHOD_PUT)))
      {
        /* output the status of the request */
        if (status == 200)
-	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REQUEST_SUCCEEDED), me->status_urlName);
+	 TtaSetStatus (me->docid, 1,  
+		       TtaGetMessage (AMAYA, AM_REQUEST_SUCCEEDED),
+		       me->status_urlName);
        else if (status == 201)
-	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CREATED_NEW_REMOTE_RESSOURCE), me->status_urlName);
+	 TtaSetStatus (me->docid, 1, 
+		       TtaGetMessage (AMAYA, AM_CREATED_NEW_REMOTE_RESSOURCE),
+		       me->status_urlName);
        else if (status == 204 && me->method == METHOD_PUT)
-	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UPDATED_REMOTE_RESSOURCE), me->status_urlName);
+	 TtaSetStatus (me->docid, 1,
+		       TtaGetMessage (AMAYA, AM_UPDATED_REMOTE_RESSOURCE),
+		       me->status_urlName);
        else if (status == 204 && me->method == METHOD_PUT)
-	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_NO_DATA), (char *) NULL);
+	 TtaSetStatus (me->docid, 1, 
+		       TtaGetMessage (AMAYA, AM_NO_DATA), 
+		       (char *) NULL);
        else if (status == -400 || status == 505)
 	 {
-	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX), (char *) NULL);
-	   sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX));
+	 TtaSetStatus (me->docid, 1, 
+		       TtaGetMessage (AMAYA, 
+				      AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX),
+		       (char *) NULL);
+	 sprintf (AmayaLastHTTPErrorMsg, 
+		  TtaGetMessage (AMAYA,
+				 AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX));
 	 }
        else if (status == -401) 
 	 {
 	   TtaSetStatus (me->docid, 1,
-			 TtaGetMessage (AMAYA, AM_AUTHENTICATION_FAILURE), me->status_urlName);
-	   sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_AUTHENTICATION_FAILURE), me->status_urlName);
+			 TtaGetMessage (AMAYA, 
+					AM_AUTHENTICATION_FAILURE), 
+			 me->status_urlName);
+	   sprintf (AmayaLastHTTPErrorMsg, 
+		    TtaGetMessage (AMAYA, AM_AUTHENTICATION_FAILURE),
+		    me->status_urlName);
 	 }
        else if (status == -403)
 	 {
 	   TtaSetStatus (me->docid, 1,
-			 TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS), me->status_urlName);
-	   sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS), me->urlName);
+			 TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS),
+			 me->status_urlName);
+	   sprintf (AmayaLastHTTPErrorMsg, 
+		    TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS), 
+		    me->urlName);
 	 }
        else if (status == -405)
 	 {
-	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_METHOD_NOT_ALLOWED), (char *) NULL);
-	 sprintf(AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_METHOD_NOT_ALLOWED));
+	 TtaSetStatus (me->docid, 1, 
+		       TtaGetMessage (AMAYA, AM_METHOD_NOT_ALLOWED),
+		       (char *) NULL);
+	 sprintf(AmayaLastHTTPErrorMsg, 
+		 TtaGetMessage (AMAYA, AM_METHOD_NOT_ALLOWED));
 	 }
        else if (status == -1)
 	 {
@@ -729,16 +780,25 @@ int                 status;
 	     /* there's no error context */
 	     {
 	       sprintf (msg_status, "%d", status); 
-	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
-	       sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
+	       TtaSetStatus (me->docid, 1, 
+			     TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), 
+			     msg_status);
+	       sprintf (AmayaLastHTTPErrorMsg, 
+			TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS),
+			msg_status);
 	       return (HT_OK);
 	     }
-	     errorElement = error->element;
-
+	   
+	   /* there's an error context */
+	   errorElement = error->element;
+	   
 	   if (errorElement == HTERR_NOT_IMPLEMENTED)
 	     {
-	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_SERVER_NOT_IMPLEMENTED_501_ERROR), (char *) NULL);
-	       sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_SERVER_NOT_IMPLEMENTED_501_ERROR));
+	       TtaSetStatus (me->docid, 1,
+			     TtaGetMessage (AMAYA, AM_SERVER_NOT_IMPLEMENTED_501_ERROR), 
+			     (char *) NULL);
+	       sprintf (AmayaLastHTTPErrorMsg, 
+			TtaGetMessage (AMAYA, AM_SERVER_NOT_IMPLEMENTED_501_ERROR));
 	       status = -501;
 	     }
 	   else if (errorElement == HTERR_INTERNAL)
@@ -746,13 +806,20 @@ int                 status;
 	       if ((error->length > 0) && (error->length <= 25) &&
 		   (error->par) && (((char *) error->par)[0] != EOS)) 
 		 {
-		 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), (char *) (error->par));
-		 sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), (char *) (error->par));
+		   TtaSetStatus (me->docid, 1, 
+				 TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), 
+				 (char *) (error->par));
+		 sprintf (AmayaLastHTTPErrorMsg, 
+			  TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), 
+			  (char *) (error->par));
 		 }
 	       else
 		 {
-		 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE), (char *) NULL);
-		 sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE));
+		   TtaSetStatus (me->docid, 1, 
+				 TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE), 
+				 (char *) NULL);
+		 sprintf (AmayaLastHTTPErrorMsg, 
+			  TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE));
 		 }
 	       status = -500; 
 	     }
@@ -760,14 +827,15 @@ int                 status;
 	     {
 	       sprintf (msg_status, "%d", status); 
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
-		 sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
+	       sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
 	     }
 	 }
      }
-
+   
 #ifdef _WINDOWS
    /* erase the context if we're dealing with an asynchronous request */
-   if ((me->mode & AMAYA_ASYNC) ||	(me->mode & AMAYA_IASYNC)) {
+   if ((me->mode & AMAYA_ASYNC) ||
+       (me->mode & AMAYA_IASYNC)) {
 	   me->reqStatus = HT_END;
        /** AHTReqContext_delete (me); **/
    }
@@ -778,8 +846,8 @@ int                 status;
 
 /*----------------------------------------------------------------------
   AHTLoadTerminate_handler
-  this is an application "AFTER" Callback. It uses all the functionaly
-  that the app part of the Library gives for handling AFTER a request. 
+  this is an application "AFTER" Callback. It's called by the library
+  when a request has ended, so that we can setup the correct status.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -808,30 +876,35 @@ int                 status;
 					      Amaya->docid_status);
 
 	       if (docid_status != NULL && docid_status->counter > 1)
-		  TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA,
-						   AM_ELEMENT_LOADED), me->status_urlName);
-
+		  TtaSetStatus (me->docid, 1, 
+				TtaGetMessage (AMAYA, AM_ELEMENT_LOADED),
+				me->status_urlName);
 	       break;
 
 	    case HT_NO_DATA:
 	       if (PROT_TRACE)
-		  HTTrace ("Load End.... OK BUT NO DATA: `%s\'\n", me->status_urlName);
-	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_LOADED_NO_DATA),
+		  HTTrace ("Load End.... OK BUT NO DATA: `%s\'\n", 
+			   me->status_urlName);
+	       TtaSetStatus (me->docid, 1, 
+			     TtaGetMessage (AMAYA, AM_LOADED_NO_DATA),
 			     me->status_urlName);
 	       break;
 
 	    case HT_INTERRUPTED:
 	       if (PROT_TRACE)
-		  HTTrace ("Load End.... INTERRUPTED: `%s\'\n", me->status_urlName);
-	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_LOAD_ABORT), NULL);
-
+		  HTTrace ("Load End.... INTERRUPTED: `%s\'\n", 
+			   me->status_urlName);
+	       TtaSetStatus (me->docid, 1, 
+			     TtaGetMessage (AMAYA, AM_LOAD_ABORT), 
+			     NULL);
 	       break;
 
 	    case HT_RETRY:
 	       if (PROT_TRACE)
 		  HTTrace ("Load End.... NOT AVAILABLE, RETRY AT %ld\n",
 			   HTResponse_retryTime (response));
-	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_NOT_AVAILABLE_RETRY),
+	       TtaSetStatus (me->docid, 1, 
+			     TtaGetMessage (AMAYA, AM_NOT_AVAILABLE_RETRY),
 			     me->status_urlName);
 	       break;
 
@@ -845,8 +918,9 @@ int                 status;
 
 	       if (PROT_TRACE)
 		  HTTrace ("Load End.... ERROR: Can't access `%s\'\n",
-			   me->status_urlName ? me->status_urlName : "<UNKNOWN>");
-	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+			   me->status_urlName ? me->status_urlName :"<UNKNOWN>");
+	       TtaSetStatus (me->docid, 1,
+			     TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
 			     me->status_urlName ? me->status_urlName : "<UNKNOWN>");
 	       break;
 	    default:
@@ -860,6 +934,8 @@ int                 status;
 
 /*----------------------------------------------------------------------
   AHTAcceptTypesInit
+  This function prepares the Accept header used by Amaya during
+  the HTTP content negotiation phase
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void           AHTAcceptTypesInit (HTList *c)
@@ -873,12 +949,18 @@ HTList             *c;
 
       /* define here all the mime types that Amaya can accept */
 
-      HTConversion_add (c, "image/png",  "www/present", HTThroughLine, 1.0, 0.0, 0.0);
-      HTConversion_add (c, "image/jpeg", "www/present", HTThroughLine, 1.0, 0.0, 0.0);
-      HTConversion_add (c, "image/gif",  "www/present", HTThroughLine, 1.0, 0.0, 0.0);
-      HTConversion_add (c, "image/xbm",  "www/present", HTThroughLine, 1.0, 0.0, 0.0);
-      HTConversion_add (c, "image/xpm",  "www/present", HTThroughLine, 1.0, 0.0, 0.0);
-      HTConversion_add (c, "application/postscript",  "www/present", HTThroughLine, 1.0, 0.0, 0.0);
+      HTConversion_add (c, "image/png",  "www/present", 
+			HTThroughLine, 1.0, 0.0, 0.0);
+      HTConversion_add (c, "image/jpeg", "www/present", 
+			HTThroughLine, 1.0, 0.0, 0.0);
+      HTConversion_add (c, "image/gif",  "www/present", 
+			HTThroughLine, 1.0, 0.0, 0.0);
+      HTConversion_add (c, "image/xbm",  "www/present", 
+			HTThroughLine, 1.0, 0.0, 0.0);
+      HTConversion_add (c, "image/xpm",  "www/present", 
+			HTThroughLine, 1.0, 0.0, 0.0);
+      HTConversion_add (c, "application/postscript",  
+			"www/present", HTThroughLine, 1.0, 0.0, 0.0);
 
    /* Define here the equivalences between MIME types and file extensions for
     the types that Amaya can display */
@@ -966,8 +1048,8 @@ static void         AHTProtocolInit (void)
 {
 
    /* 
-      NB. Preemptive == YES = Blocking request
-      Non-preemptive == NO = Non-blocking request
+      NB. Preemptive == YES means Blocking requests
+      Non-preemptive == NO means Non-blocking requests
    */
 
    HTProtocol_add ("http", "buffered_tcp", NO, HTLoadHTTP, NULL);
@@ -992,26 +1074,22 @@ static void         AHTNetInit (void)
 {
 
 /*      Register BEFORE filters
-   **      The BEFORE filters handle proxies, caches, rule files etc.
-   **      The filters are called in the order by which the are registered
-   **      Not done automaticly - may be done by application!
- */
+**      The BEFORE filters handle proxies, caches, rule files etc.
+**      The filters are called in the order by which the are registered
+**      Not done automaticly - may be done by application!
+*/
+  
 
-
-   /*#ifndef HACK_WWW */
-   HTNet_addBefore (HTCredentialsFilter, "http://*", NULL, 6);
-   HTNet_addBefore (HTProxyFilter, NULL, NULL, 10);
-
-   /*#endif */
+  HTNet_addBefore (HTCredentialsFilter, "http://*", NULL, 6);
+  HTNet_addBefore (HTProxyFilter, NULL, NULL, 10);
 
 /*      register AFTER filters
-   **      The AFTER filters handle error messages, logging, redirection,
-   **      authentication etc.
-   **      The filters are called in the order by which the are registered
-   **      Not done automaticly - may be done by application!
- */
+**      The AFTER filters handle error messages, logging, redirection,
+**      authentication etc.
+**      The filters are called in the order by which the are registered
+**      Not done automaticly - may be done by application!
+*/
 
-#ifndef HACK_WWW
    HTNet_addAfter (HTAuthFilter, "http://*", NULL, HT_NO_ACCESS, 5);
    HTNet_addAfter (redirection_handler, "http://*", NULL, HT_TEMP_REDIRECT, 5);
    HTNet_addAfter (redirection_handler, "http://*", NULL, HT_PERM_REDIRECT, 5);
@@ -1019,7 +1097,6 @@ static void         AHTNetInit (void)
    HTNet_addAfter (AHTLoadTerminate_handler, NULL, NULL, HT_ALL, HT_FILTER_LAST);	
    /* handles all errors */
    HTNet_addAfter (terminate_handler, NULL, NULL, HT_ALL, HT_FILTER_LAST);
-#endif
 }
 
 /*----------------------------------------------------------------------
@@ -1073,9 +1150,7 @@ char               *AppVersion;
    HTTransportInit ();
 
    /* Register the default set of application protocol modules */
-#ifndef HACK_WWW
    AHTProtocolInit ();
-#endif
 
    /* Enable the persistent cache */
    /*   HTCacheInit (NULL, 20); */
@@ -1099,7 +1174,7 @@ char               *AppVersion;
    HTFormat_setTransferCoding (encodings);
 
    /* Register the default set of MIME header parsers */
-   HTMIMEInit ();		/* must be called again for language selector */
+   HTMIMEInit ();   /* must be called again for language selector */
 
    /* Register the default set of Icons for directory listings */
    /*HTIconInit(NULL); *//* experimental */
@@ -1121,33 +1196,33 @@ static void         AHTProfile_delete ()
 {
  
   /* free the Amaya global context */
-   if (!converters)
-      HTConversion_deleteAll (converters);
-   if (!acceptTypes)
-      HTConversion_deleteAll (acceptTypes);
-   if (!encodings)
-      HTCoding_deleteAll (encodings);
+  if (!converters)
+    HTConversion_deleteAll (converters);
+  if (!acceptTypes)
+    HTConversion_deleteAll (acceptTypes);
+  if (!encodings)
+    HTCoding_deleteAll (encodings);
+  
+  HTList_delete (Amaya->docid_status);
+  HTList_delete (Amaya->reqlist);
+  TtaFreeMemory (Amaya);
+  {
 
-   HTList_delete (Amaya->docid_status);
-   HTList_delete (Amaya->reqlist);
-   TtaFreeMemory (Amaya);
-  		      {
-
-  if (HTLib_isInitialized ())
-
+    if (HTLib_isInitialized ())
+      
 #  ifdef _WINDOWS
       HTEventTerminate ();
 #  endif _WINDOWS;		
-
-      /* Clean up the persistent cache (if any) */
-      HTCacheTerminate ();
-
-      /* Clean up all the global preferences */
-      HTFormat_deleteAll ();
-
-      /* Terminate libwww */
-      HTLibTerminate ();
-    }
+    
+    /* Clean up the persistent cache (if any) */
+    HTCacheTerminate ();
+    
+    /* Clean up all the global preferences */
+    HTFormat_deleteAll ();
+    
+    /* Terminate libwww */
+    HTLibTerminate ();
+  }
 }
 
 /*----------------------------------------------------------------------
@@ -1176,10 +1251,9 @@ void                QueryInit ()
    HTEvent_setUnregisterCallback (AHTEvent_unregister);
 #  endif /* _WINDOWS */
 
-   /* Setup authentication manager */
-    /***
-      HTAuthCall_add("basic", HTBasic_parse, HTBasic_generate, HTBasic_delete);
-      ****/
+#ifdef DEBUG_LIBWWW
+  WWW_TraceFlag = SHOW_CORE_TRACE | SHOW_THREAD_TRACE | PROT_TRACE;
+#endif
 
    /* Trace activation (for debugging) */
    /*
@@ -1197,7 +1271,6 @@ void                QueryInit ()
      ***/
 
    /* Setting up other user interfaces */
-   /* needs a little bit more work */
 
    /* Setting up different network parameters */
    /* Maximum number of simultaneous open sockets */
@@ -1211,7 +1284,7 @@ void                QueryInit ()
    Amaya->reqlist = HTList_new ();
    Amaya->docid_status = HTList_new ();
    Amaya->open_requests = 0;
-
+   
 #ifdef CATCH_SIG
    signal (SIGPIPE, SIG_IGN);
 #endif
@@ -1577,7 +1650,6 @@ status_urlName);
    } else {
          /* part of the stop button handler */
          if ((mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC)) {
-	    status = LoopForStop (me);
 	    AHTReqContext_delete (me);
 	 }
    }
@@ -1672,7 +1744,7 @@ void               *context_tcbf;
 #  ifndef _WINDOWS
    if ((fd = open (fileName, O_RDONLY)) == -1)
 #  else /* _WINDOWS */
-   if ((fd = open (fileName, _O_RDONLY)) == -1)
+   if ((fd = open (fileName, _O_RDONLY | _O_BINARY)) == -1)
 #  endif /* _WINDOWS */
      {
 	/* if we could not open the file, exit */
@@ -1779,6 +1851,7 @@ char               *outputfile;
 #else
    HTRequest_setPreemptive (me->request, NO);
 #endif /* _WINDOWS */
+
    /* select the parameters that distinguish a PUT from a GET/POST */
    me->method = METHOD_PUT;
    HTRequest_setMethod (me->request, METHOD_PUT);
@@ -1801,22 +1874,23 @@ char               *outputfile;
 
    HTAnchor_setLength ((HTParentAnchor *) me->anchor, me->block_size);
    HTRequest_setEntityAnchor (me->request, me->anchor);
+   /* prepare the URLname that will be displayed in teh status bar */
+   ChopURL (me->status_urlName, me->urlName);
+   TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REMOTE_SAVING),
+		     me->status_urlName);
    status = HTLoadAbsolute (urlName, me->request);
 
+#ifndef _WINDOWS
    if (status == HT_ERROR || me->reqStatus == HT_END || me->reqStatus == HT_ERR || HTError_hasSeverity (HTRequest_error (me->request), ERR_INFO))
+#else
+     if (status == HT_ERROR)
+#endif /* !_WINDOWS */
      {
        status = HT_ERROR;
-	   /*
        AHTReqContext_delete (me);
-	   */
      }     
    else
      {
-       /* prepare the URLname that will be displayed in teh status bar */
-       ChopURL (me->status_urlName, me->urlName);
-       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REMOTE_SAVING),
-		     me->status_urlName);
-
 	/* part of the stop button handler */
 
 	if ((mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC))
@@ -1880,25 +1954,22 @@ int                 docid;
 			   case HT_NEW_PENDING:
 			   case HT_WAITING:
 			   default:
-#                 ifndef _WINDOWS
-			      RequestKillAllXtevents (me);
-#                 endif /* !_WINDOWS */
 			      me->reqStatus = HT_ABORT;
 #                 ifndef _WINDOWS
-				  HTRequest_kill (me->request);
-				  
+			      RequestKillAllXtevents (me);
+#                 endif _WINDOWS
+			      HTRequest_kill (me->request);
+			      
 			      if ((me->mode & AMAYA_ASYNC) ||
 				  (me->mode & AMAYA_IASYNC))
 				{
 
 				   AHTReqContext_delete (me);
 				}
-#               else
-				AHTReqContext_delete (me);
-#               endif /* !WINDOWS */
-
-				  cur = Amaya->reqlist;
-
+			      AHTReqContext_delete (me);
+			      
+			      cur = Amaya->reqlist;
+			      
 			      open_requests--;
 
 			      break;
