@@ -31,7 +31,8 @@ Extensions 2.3:
     list of domains.
   - You can now declare the proxy using just the server's name and it's
     optional port (no need to prefix it with the http:// string as before)
-
+  - Improved the Accept: string for doing for doing image and css content
+    negotiation.
 * Building Amaya:
   - There are new make files for the Windows platforms.
 
