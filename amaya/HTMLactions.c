@@ -2983,8 +2983,11 @@ void CheckSynchronize (NotifyElement *event)
 	    }
 	}
       else
-	/* the document didn't change. Only synchronize the selection. */
-	SynchronizeSourceView (event);
+	{
+	  /* the document didn't change. Only synchronize the selection. */
+	  UpdateContextSensitiveMenus (event->document);
+	  SynchronizeSourceView (event);
+	}
       SelectionDoc = event->document;
     }
   else
