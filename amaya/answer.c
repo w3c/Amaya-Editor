@@ -97,7 +97,7 @@ BOOL AHTProgress (HTRequest *request, HTAlertOpcode op,
 	       if (pro > 100)		/* libwww reports > 100! */
 		 pro = 100;
 	       HTNumToStr ((unsigned long) cl, buf, 10);
-	       sprintf (tempbuf, "%s (%d%% of %s\n)", me->status_urlName, (int) pro, buf);
+	       sprintf (tempbuf, "%s (%d%% of %s)", me->status_urlName, (int) pro, buf);
 	     }
 	   else 
 	     {
@@ -134,7 +134,7 @@ BOOL AHTProgress (HTRequest *request, HTAlertOpcode op,
 	       bytes_rw = HTRequest_bodyWritten (request);
 	       pro = (int) ((bytes_rw * 100l) / cl);
 	       HTNumToStr ((unsigned long) cl, buf, 10);
-	       sprintf (tempbuf, "%s: Writing (%d%% of %s\n)", me->urlName, pro, buf);
+	       sprintf (tempbuf, "%s: Writing (%d%% of %s)", me->urlName, pro, buf);
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE), tempbuf);
 	     }
 	   else  

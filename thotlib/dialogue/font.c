@@ -1146,6 +1146,7 @@ void InitDialogueFonts (char* name)
   f3 = MenuSize + 2;
   
 #ifndef _WINDOWS
+#ifndef _GTK
   fontpath = TtaGetEnvString ("THOTFONT");
   if (fontpath)
     {
@@ -1187,6 +1188,7 @@ void InitDialogueFonts (char* name)
   for (i = 0; i < MAX_FONT; i++)
     TtPatchedFont[i] = 0;
 #endif /* _GTK */
+#endif /* !_GTK */
 #endif /* _WINDOWS */
 
   /* Initialize the Thot Lib standards fonts */

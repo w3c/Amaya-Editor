@@ -229,6 +229,7 @@ void TteInitMenus (char *name, int number)
    WIN_TtaInitDialogue (servername);
 #else  /* _WINDOWS */
    TtaInitDialogue (servername, &app_cont, &Dp);
+#ifndef _GTK
    if (!RootShell)
      {
 	/* Connection au serveur X impossible */
@@ -237,6 +238,7 @@ void TteInitMenus (char *name, int number)
 	exit (1);
      }
    TtDisplay = Dp;
+#endif
 #endif /* !_WINDOWS */
 
    /* Definition de la procedure de retour des dialogues */
@@ -1141,6 +1143,7 @@ void TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon)
    ActionList = NULL;
    TteLoadApplications ();
 #ifndef _WINDOWS
+#ifndef _GTK
    if (TtDisplay == 0)
      {
 	/* Connexion au serveur X impossible */
@@ -1148,6 +1151,7 @@ void TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon)
 	exit (1);
      }
    else
+#endif /* !_GTK */
 #endif /* !_WINDOWS */
      {
 	/* Compte le nombre de menus a creer */
@@ -1190,8 +1194,10 @@ void TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon)
 
 	/* icone des fenetres de documents */
 #ifndef _WINDOWS
+#ifndef _GTK
 	wind_pixmap = XCreateBitmapFromData (TtDisplay, XDefaultRootWindow (TtDisplay),
 		      logowindow_bits, logowindow_width, logowindow_height);
+#endif /* !_GTK */
 #endif /* _WINDOWS */
         /**** creation des menus ****/
 	ptrmenu = MainMenuList;

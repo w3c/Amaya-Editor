@@ -129,11 +129,13 @@ static ThotBool FindColor (int disp, char *name, char *colorplace,
 static void         InitCurs ()
 {
 #ifndef _WINDOWS
+#ifndef _GTK
    WindowCurs = XCreateFontCursor (TtDisplay, XC_hand2);
    VCurs = XCreateFontCursor (TtDisplay, XC_sb_v_double_arrow);
    HCurs = XCreateFontCursor (TtDisplay, XC_sb_h_double_arrow);
    HVCurs = XCreateFontCursor (TtDisplay, /*XC_fleur*/XC_plus);
    WaitCurs = XCreateFontCursor (TtDisplay, XC_watch);
+#endif
 #endif /* _WINDOWS */
 }
 

@@ -1394,16 +1394,6 @@ static void CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_
 #ifndef _GTK
 static void CallList (ThotWidget w, struct Cat_Context *catalogue, XmListCallbackStruct * infos)
 {
-
-  /*
-  * ATTENTION A LA VARIABLE
-  *
-  *XmListCallbackStruct qui n'est peutetre pas definie pour GTK
-  *
-  *
-  *
-  **/
-
    char              *text = NULL;
    ThotBool           ok;
 
@@ -1564,7 +1554,8 @@ void       TtaInitDialogue (char *server, ThotAppContext *app_context, Display *
    char               *arg;
 #endif /* !_WINDOWS */
 #ifdef _GTK
-   gtk_init(&appArgc, &appArgv);
+   if (!gtk_init_check (&appArgc, &appArgv))
+     printf ("GUI can't be initialized\n");
    gdk_imlib_init();
 #endif /* _GTK */
 
@@ -1635,6 +1626,7 @@ void       TtaInitDialogue (char *server, ThotAppContext *app_context, Display *
    */
 
 
+#ifndef _GTK
    /* Ouverture de l'application pour le serveur X-ThotWindow */
    RootShell = 0;
    XtToolkitInitialize ();
@@ -1648,8 +1640,6 @@ void       TtaInitDialogue (char *server, ThotAppContext *app_context, Display *
    *app_context = Def_AppCont;
    *Dp = GDp;
    RootShell = XtAppCreateShell ("", "Dialogue", applicationShellWidgetClass, GDp, NULL, 0);
-
-#ifndef _GTK
    /* 28/Nov/2000: Contribution by Johaness Zellner for enabling tear-off
       menus */
    XmRepTypeInstallTearOffModelConverter();
@@ -5871,7 +5861,7 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 #else /* _GTK */
 	    PopShell = gtk_window_new (GTK_WINDOW_DIALOG);
 	    PopShell->style->font=DefaultFont;
-	    gtk_widget_show (PopShell);
+	    gtk_widget_realize (PopShell);
 	    gtk_window_set_title (GTK_WINDOW (PopShell), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
 	    gtk_widget_set_uposition(GTK_WIDGET(PopShell), ShowX, ShowY);
 	    gtk_container_set_border_width (GTK_CONTAINER(PopShell), 5);

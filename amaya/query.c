@@ -2267,10 +2267,8 @@ void         QueryInit ()
 #ifndef _WINDOWS
    HTEvent_setRegisterCallback ((void *) AHTEvent_register);
    HTEvent_setUnregisterCallback ((void *) AHTEvent_unregister);
-#ifndef _GTK
    HTTimer_registerSetTimerCallback ((void *) AMAYA_SetTimer);
    HTTimer_registerDeleteTimerCallback ((void *) AMAYA_DeleteTimer);
-#endif /* _GTK */
 #endif /* !_WINDOWS */
 
 #ifdef HTDEBUG

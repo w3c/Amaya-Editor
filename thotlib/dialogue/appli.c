@@ -2488,10 +2488,12 @@ ThotWindow TtaGetThotWindow (int frame)
 void SetCursorWatch (int thotThotWindowid)
 {
 #  ifndef _WINDOWS
+#ifndef _GTK
    Drawable            drawable;
 
    drawable = TtaGetThotWindow (thotThotWindowid);
    XDefineCursor (TtDisplay, drawable, WaitCurs);
+#endif /* !_GTK */
 #  else  /* _WINDOWS */
    SetCursor (LoadCursor (NULL, IDC_WAIT));
    ShowCursor (TRUE);
@@ -2504,10 +2506,12 @@ void SetCursorWatch (int thotThotWindowid)
 void ResetCursorWatch (int thotThotWindowid)
 {
 #  ifndef _WINDOWS
+#ifndef _GTK
    Drawable            drawable;
 
    drawable = TtaGetThotWindow (thotThotWindowid);
    XUndefineCursor (TtDisplay, drawable);
+#endif /* !_GTK */
 #  else  /* _WINDOWS */
    ShowCursor (FALSE);
    SetCursor (LoadCursor (NULL, IDC_ARROW));
@@ -2530,9 +2534,11 @@ void TtaSetCursorWatch (Document document, View view)
 	for (frame = 1; frame <= MAX_FRAME; frame++)
 	  {
 #        ifndef _WINDOWS
+#ifndef _GTK
 	     drawable = TtaGetThotWindow (frame);
 	     if (drawable != 0)
 		XDefineCursor (TtDisplay, drawable, WaitCurs);
+#endif /* !_GTK */
 #        endif /* _WINDOWS */
 	  }
      }
@@ -2540,8 +2546,10 @@ void TtaSetCursorWatch (Document document, View view)
      {
 	frame = GetWindowNumber (document, view);
 #   ifndef _WINDOWS
+#ifndef _GTK
 	if (frame != 0)
 	   XDefineCursor (TtDisplay, TtaGetThotWindow (frame), WaitCurs);
+#endif /* !_GTK */
 #   endif /* _WINDOWS */
      }
 }
@@ -2562,9 +2570,11 @@ void TtaResetCursor (Document document, View view)
 	for (frame = 1; frame <= MAX_FRAME; frame++)
 	  {
 #ifndef _WINDOWS
+#ifndef _GTK
 	     drawable = TtaGetThotWindow (frame);
 	     if (drawable != 0)
 		XUndefineCursor (TtDisplay, drawable);
+#endif /* !_GTK */
 #endif /* _WINDOWS */
 	  }
      }
@@ -2572,8 +2582,10 @@ void TtaResetCursor (Document document, View view)
      {
 	frame = GetWindowNumber (document, view);
 #ifndef _WINDOWS
+#ifndef _GTK
 	if (frame != 0)
 	   XUndefineCursor (TtDisplay, TtaGetThotWindow (frame));
+#endif /* !_GTK */
 #endif /* _WINDOWS */
      }
 }
@@ -2604,12 +2616,14 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pave)
 #  ifdef _WINDOWS
    cursor = LoadCursor (hInstance, MAKEINTRESOURCE (Window_Curs));
 #  else  /* !_WINDOWS */
+#ifndef _GTK
    for (i = 1; i <= MAX_FRAME; i++)
      {
        drawable = TtaGetThotWindow (i);
        if (drawable != 0)
           XDefineCursor (TtDisplay, drawable, WindowCurs);
      }
+#endif /* !_GTK */
 #  endif /* !_WINDOWS */
 
    /* Boucle d'attente de designation */
@@ -2634,9 +2648,11 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pave)
    for (i = 1; i <= MAX_FRAME; i++)
      {
 #ifndef _WINDOWS
+#ifndef _GTK
        drawable = TtaGetThotWindow (i);
        if (drawable != 0)
 	 XUndefineCursor (TtDisplay, drawable);
+#endif /* !_GTK */
 #endif /* _WINDOWS */
      }
 
@@ -2690,7 +2706,6 @@ void ChangeFrameTitle (int frame, char *text)
   ----------------------------------------------------------------------*/
 void ChangeSelFrame (int frame)
 {
-#ifndef _GTK
    ThotWidget          w;
    Document            doc;
 
@@ -2707,12 +2722,15 @@ void ChangeSelFrame (int frame)
 	    /* raise the new document */
 	     w = FrameTable[frame].WdFrame;
 #ifndef _WINDOWS
+#ifndef _GTK
 	     if (w != 0)
 		XMapRaised (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
+#else /* _GTK */
+
+#endif /* !_GTK */
 #endif /* _WINDOWS */
 	  }
      }
-#endif /* _GTK */
 }
 
 
@@ -2827,7 +2845,6 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
 
 	gdk_gc_set_clip_rectangle (TtLineGC, &rect);	
 	gdk_gc_set_clip_rectangle (TtGreyGC, &rect);
-
 	gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);
 #else /* _GTK */
 	rect.x = 0;

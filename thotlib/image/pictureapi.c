@@ -40,10 +40,14 @@
 Pixmap              TtaCreateBitmapLogo (int width, int height, char *bits)
 {
 #ifndef _WINDOWS
+#ifndef _GTK
    if (bits != NULL)
       return (XCreateBitmapFromData (TtDisplay, TtRootWindow, bits, width, height));
    else
       return (0);
+#else /* _GTK */
+   return 0;
+#endif /* !_GTK */
 #else  /* _WINDOWS */
    return CreateBitmap (width, height, 16, 4, bits);
 #endif /* _WINDOWS */

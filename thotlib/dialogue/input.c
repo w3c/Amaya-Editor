@@ -1509,7 +1509,9 @@ ThotTranslations      InitTranslations (char *appliname)
       fclose (file);
       /* Creation de la table de translation */
 #ifndef _WINDOWS
+#ifndef _GTK
       table = XtParseTranslationTable (text);
+#endif
 #endif  /* !_WINDOWS */
       TtaFreeMemory (text);
       return table;
