@@ -123,7 +123,7 @@ char               *data;
    char                BufDir[MAX_PATH];
    char                URL_DIR_SEP;
 
-   if (typedata == STRING_DATA && data && strchr (data, '/'))
+   if (typeData == STRING_DATA && data && strchr (data, '/'))
      URL_DIR_SEP = '/';
    else 
      URL_DIR_SEP = DIR_SEP;
