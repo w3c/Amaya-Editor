@@ -79,7 +79,10 @@ static ThotBool             Prof_ReadOnly = TRUE;
 /*-----------------------------------------------------------------------
    Prof_InitTable: Seek the current profile and init the function table
   ----------------------------------------------------------------------*/
-void Prof_InitTable()
+
+
+
+void Prof_InitTable(void)
 {
   FILE *              Def_FILE;
   FILE *              Prof_FILE; 
@@ -88,19 +91,19 @@ void Prof_InitTable()
   char                TempString [MAX_PRO_LENGTH];
   int                 i = 0;
 
-  ptr = TtaGetEnvString("Profiles_File");
+  ptr = TtaGetEnvString(TEXT("Profiles_File"));
   if (ptr && *ptr)
       Prof_FILE = fopen(ptr,"r");
   else
 	  Prof_FILE = NULL;
 
-  ptr = TtaGetEnvString ("Profile");
+  ptr = TtaGetEnvString (TEXT("Profile"));
   if (ptr && *ptr)
     strcpy (UserProfile, AddHooks (ptr));
   else
 	 UserProfile[0] = EOS;
   
-  ptr = TtaGetEnvString("THOTDIR");
+  ptr = TtaGetEnvString(TEXT("THOTDIR"));
   ptr2 = TtaGetMemory (strlen (ptr) + strlen (DEF_FILE) + 10);
   if (ptr2) 
     {
@@ -169,7 +172,7 @@ int  Prof_RebuildProTable(STRING prof_file)
   
   Prof_FILE = fopen(prof_file,"r");
   DeleteTable(Pro_Table, &Pro_nbelem);
-   if (Prof_FILE != NULL)
+   if (Prof_FILE)
      {
        while (fgets(TempString, sizeof(TempString), Prof_FILE))
 	 {
@@ -315,9 +318,9 @@ STRING functionName;
    Prof_DeleteFunTable : Deletes the function table (free allocated memory)
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void Prof_DeleteFunTable()
+void Prof_DeleteFunTable(void)
 #else  /* __STDC__ */
-void Prof_DeleteFunTable()
+void Prof_DeleteFunTable(void)
 #endif /* __STDC__ */
 {
   DeleteTable(Fun_Table, & Fun_nbelem);
@@ -728,5 +731,8 @@ char string[];
     }
   new[k] = EOS;
   strcpy (string, new);
+
+
+
 }
 
