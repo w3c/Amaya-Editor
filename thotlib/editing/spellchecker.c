@@ -76,7 +76,7 @@ static int           type_err;	/* Type du mot errone (majuscule, SmallLettering)
    Returns 1 if the dictionary is loaded.                            
   ----------------------------------------------------------------------*/
 ThotBool TtaLoadDocumentDictionary (PtrDocument document, int *pDictionary,
-				    ThotBool ToCreate)
+				    ThotBool toCreate)
 {
   char              *extenddic;
   char               path[MAX_PATH], dictname[MAX_PATH];
@@ -100,7 +100,7 @@ ThotBool TtaLoadDocumentDictionary (PtrDocument document, int *pDictionary,
   if (path[0] == EOS ||  !TtaCheckDirectory (path))
     strcpy (path, TtaGetEnvString ("APP_HOME"));
   LoadTreatedDict ((PtrDict *) pDictionary, 0, document, dictname,
-		   path, FALSE, ToCreate);
+		   path, FALSE, toCreate);
   return (*pDictionary != EOS);
 }
 
@@ -261,11 +261,12 @@ int WordInDictionary (unsigned char *word, PtrDict dict)
 
 
 /*----------------------------------------------------------------------
-   CheckWord retourne                                       
-   1 si le mot appartient a un dict                        
-   ou est de longueur 1 ou 2                             
-   0 si le mot est inconnu ou vide                         
-   -1 s'il n'y a pas de dictionnaire pour verifier ce mot   
+  CheckWord returns
+   *  1 if the word belong to the dictionary or the word is 1 or 2
+      characters long
+   *  0 if the word is unknown or empty
+   * -1 if there is no dictionary
+  The word must be ISO-8859-1 encoded.
   ----------------------------------------------------------------------*/
 int CheckWord (unsigned char *word, Language language, PtrDict dict)
 {
@@ -491,7 +492,6 @@ static void Cmp (unsigned char *wordtest, PtrDict dict)
 	      if (k <= lastline)
 		{
 		  strcpy ((char*)currentWord, (char*)&dict->DictString[pWord]);
-		  
 		  /* calcul */
 		  for (j = k; j <= size; j++)
 		    {
@@ -544,32 +544,52 @@ static void Cmp (unsigned char *wordtest, PtrDict dict)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void         LoadSpellChecker ()
+static void LoadSpellChecker ()
 {
-   int                 i;
-   int                 pWord;
+  CHARSET             defaultCharset;
+  unsigned char      *word;
+  int                 i;
+  int                 pWord;
 
-   strcpy (ChkrCorrection[0], ChkrErrWord);
-   for (i = 0; i < NC; i++)
-     {
-	pWord = WordsList[i];
-	if (pWord >= 0)
-	  {
-	     strcpy (ChkrCorrection[i + 1], &DictsList[i]->DictString[pWord]);
-	     Code2Asci (ChkrCorrection[i + 1]);
-	     switch (type_err)
-		   {
-		      case 1:	/* SmallLettering ou melange */
-			 break;
-		      case 2:
-			 SetCapital (ChkrCorrection[i + 1]);
-			 break;
-		      case 3:
-			 SetUpperCase (ChkrCorrection[i + 1]);
-			 break;
-		   }
-	  }
-     }
+  defaultCharset = TtaGetDefaultCharset ();
+  /* convert the string into the dialog encoding if necessary */
+  if (defaultCharset == UTF_8)
+    {
+      word = TtaConvertByteToMbs ((unsigned char *)ChkrErrWord,
+				  ISO_8859_1);
+      strcpy (ChkrCorrection[0], (char *)word);
+      TtaFreeMemory (word);
+    }
+  else
+    strcpy (ChkrCorrection[0], ChkrErrWord);
+  for (i = 1; i <= NC; i++)
+    {
+      pWord = WordsList[i];
+      if (pWord >= 0)
+	{
+	  strcpy (ChkrCorrection[i], &DictsList[i]->DictString[pWord]);
+	  Code2Asci (ChkrCorrection[i]);
+	  switch (type_err)
+	    {
+	    case 1:	/* SmallLettering ou melange */
+	      break;
+	    case 2:
+	      SetCapital (ChkrCorrection[i]);
+	      break;
+	    case 3:
+	      SetUpperCase (ChkrCorrection[i]);
+	      break;
+	    }
+	  /* convert the string into the dialog encoding if necessary */
+	  if (defaultCharset == UTF_8)
+	    {
+	      word = TtaConvertByteToMbs ((unsigned char *)ChkrCorrection[i],
+					  ISO_8859_1);
+	      strcpy (ChkrCorrection[i], (char *)word);
+	      TtaFreeMemory (word);
+	    }
+	}
+    }
 }
 
 
@@ -577,119 +597,111 @@ static void         LoadSpellChecker ()
   ----------------------------------------------------------------------*/
 static void SaveDictFile (PtrDict docDict)
 {
-   FILE               *f;
-   int                 i, j;
-   char                tempbuffer[THOT_MAX_CHAR];
-   char                word[MAX_WORD_LEN];
-
-   FindCompleteName (docDict->DictName, "", docDict->DictDirectory, tempbuffer, &i);
-   if (docDict->DictNbWords > 0)
-     {
-	f = TtaWriteOpen (tempbuffer);
-	if (f != NULL)
-	  {
-	    /* enregistrer d'abord nb words and nb chars effectifs */
-	     i = docDict->DictNbWords;
-	     j = docDict->DictNbChars;
-	     fprintf (f, "%d %d\n", i, j);
-
-	     for (i = 0; i < docDict->DictNbWords; i++)
-	       {
-		  strcpy (word, &docDict->DictString[docDict->DictWords[i]]);
-		  Code2Asci (word);
-		  fprintf (f, "%s\n", word);
-		  /* ajouter le CR de fin de ligne */
-	       }
-	     TtaWriteClose (f);
-	     /* OK sauvegarde dictionnaire document */
-	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_OK_SAVE),
-				docDict->DictName);
-	     /* toutes les mises a jour sont enregistrees */
-	     docDict->DictModified = FALSE;
-	  }
-	else
-	   /* erreur sauvegarde dictionnaire document */
-	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_NO_SAVE);
-     }
+  FILE               *f;
+  int                 i, j;
+  char                tempbuffer[THOT_MAX_CHAR];
+  char                word[MAX_WORD_LEN];
+  
+  FindCompleteName (docDict->DictName, "", docDict->DictDirectory, tempbuffer, &i);
+  if (docDict->DictNbWords > 0)
+    {
+      f = TtaWriteOpen (tempbuffer);
+      if (f != NULL)
+	{
+	  /* enregistrer d'abord nb words and nb chars effectifs */
+	  i = docDict->DictNbWords;
+	  j = docDict->DictNbChars;
+	  fprintf (f, "%d %d\n", i, j);
+	  
+	  for (i = 0; i < docDict->DictNbWords; i++)
+	    {
+	      strcpy (word, &docDict->DictString[docDict->DictWords[i]]);
+	      Code2Asci (word);
+	      fprintf (f, "%s\n", word);
+	      /* ajouter le CR de fin de ligne */
+	    }
+	  TtaWriteClose (f);
+	  /* toutes les mises a jour sont enregistrees */
+	  docDict->DictModified = FALSE;
+	}
+      else
+	/* erreur sauvegarde dictionnaire document */
+	TtaDisplaySimpleMessage (INFO, LIB, TMSG_NO_SAVE);
+    }
 }
 
 /*----------------------------------------------------------------------
-   AddWord                                                 
-   ajoute un mot nouveau dans le dictionnaire docDict          
-   apres avoir verifie qu'il n'y etait pas deja                 
-   (s'il n'y a plus de place : ferme et ouvre avec plus d'espace) 
-   creation eventuelle et initialisation de ChkrFileDict             
+  AddWord adds the new word in the dictionary after checking it's
+  not already registered.
+  Create or Reallocate the dictionary if necessary.
+  The word must be ISO-8859-1 encoded.
   ----------------------------------------------------------------------*/
 void AddWord (unsigned char *word, PtrDict * pDict)
 {
-   unsigned char       word1[MAX_WORD_LEN];
-   int                 ret;
-   Name                DiNom;
-   ThotBool            OKinsere = TRUE;
-   PtrDict             docDict;
+  unsigned char       word1[MAX_WORD_LEN];
+  int                 ret;
+  Name                DiNom;
+  ThotBool            OKinsere = TRUE;
+  PtrDict             docDict;
 
-   docDict = *pDict;
-   strcpy ((char*)word1, (char*)word);
-   /* verifier que ce mot est bien en caracteres iso */
-   if (IsIso ((char*)word1))
-     {
-	/* ajout d'un mot dans le dictionnaire docDict */
-	SmallLettering (word1);
-	Asci2Code ((char*)word1);
-	ret = InsertWord (docDict, word1);
-	switch (ret)
-	      {
-		 case -2:
-		    /* le docDict est encore vide : le creer */
-		    if (TtaLoadDocumentDictionary (ChkrRange->SDocument, (int *) pDict, TRUE))
-		      {
-			 docDict = *pDict;
-			 /* le dictionnaire du document est maintenant charge' */
-			 ret = InsertWord (docDict, word1);
-			 TreateDictionary (docDict);
-		      }
-		    else
-		      {
-			 /* impossible d'ajouter dans le dictionnaire du document ??? */
-			 TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_REFUSE_WORD), word);
-			 OKinsere = FALSE;
-		      }
-		    break;
-		 case -1:
-		    /* dictionnaire plein */
-		    SaveDictFile (docDict);
-		    /* rechargement du dictionnaire avec plus de memoire */
-		    strcpy (DiNom, docDict->DictName); 
-		    if (ReloadDictionary (pDict) == TRUE)
-		      {
-			 docDict = *pDict;
-			 if (InsertWord (docDict, word1) > 0)
-			    TreateDictionary (docDict);
-		      }
-		    else
-		       OKinsere = FALSE;
-		    break;
-		 case 0:
-		    /* le mot etait deja dans le dictionnaire */
-		    /* ne rien faire */
-		    OKinsere = FALSE;
-		    break;
-		 case 1:
-		    /* mot ajoute' dans le dictionnaire */
-		    TreateDictionary (docDict);
-		    break;
-	      }
-	if (OKinsere == TRUE)
-	  {
-	     /* avertir l'utilisateur de la reussite de l'ajout dans le dict */
-	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ADD_WORD), word);
-	     /*  enregistrer le dictionnaire du document apres chaque mise a jour */
-	     SaveDictFile (docDict);
-	  }
-     }
-   else	
-     /* car. incorrect, ajout du mot refus\351 */
-      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_REFUSE_WORD), word);
+  docDict = *pDict;
+  strcpy ((char*)word1, (char*)word);
+  /* verifier que ce mot est bien en caracteres iso */
+  if (IsIso ((char*)word1))
+    {
+      /* ajout d'un mot dans le dictionnaire docDict */
+      SmallLettering (word1);
+      Asci2Code ((char*)word1);
+      ret = InsertWord (docDict, word1);
+      switch (ret)
+	{
+	case -2:
+	  /* le docDict est encore vide : le creer */
+	  if (TtaLoadDocumentDictionary (ChkrRange->SDocument, (int *) pDict, TRUE))
+	    {
+	      docDict = *pDict;
+	      /* le dictionnaire du document est maintenant charge' */
+	      ret = InsertWord (docDict, word1);
+	      TreateDictionary (docDict);
+	    }
+	  else
+	    {
+	      /* impossible d'ajouter dans le dictionnaire du document ??? */
+	      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_REFUSE_WORD), word);
+	      OKinsere = FALSE;
+	    }
+	  break;
+	case -1:
+	  /* dictionnaire plein */
+	  SaveDictFile (docDict);
+	  /* rechargement du dictionnaire avec plus de memoire */
+	  strcpy (DiNom, docDict->DictName); 
+	  if (ReloadDictionary (pDict) == TRUE)
+	    {
+	      docDict = *pDict;
+	      if (InsertWord (docDict, word1) > 0)
+		TreateDictionary (docDict);
+	    }
+	  else
+	    OKinsere = FALSE;
+	  break;
+	case 0:
+	  /* le mot etait deja dans le dictionnaire */
+	  /* ne rien faire */
+	  OKinsere = FALSE;
+	  break;
+	case 1:
+	  /* mot ajoute' dans le dictionnaire */
+	  TreateDictionary (docDict);
+	  break;
+	}
+      if (OKinsere == TRUE)
+	/*  enregistrer le dictionnaire du document apres chaque mise a jour */
+	SaveDictFile (docDict);
+    }
+  else
+    /* car. incorrect, ajout du mot refus\351 */
+    TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_REFUSE_WORD), word);
 }
 
 
@@ -697,63 +709,62 @@ void AddWord (unsigned char *word, PtrDict * pDict)
   ----------------------------------------------------------------------*/
 static void InitChecker ()
 {
-   int                 j;
+  int                 j;
 
-   /* Initialisation des scores */
-   for (j = 0; j <= NC; j++)
-     {
-	Scores[j] = 1000;
-	WordsList[j] = -1;
-	DictsList[j] = NULL;
-     }
+  /* Initialisation des scores */
+  for (j = 0; j <= NC; j++)
+    {
+      Scores[j] = 1000;
+      WordsList[j] = -1;
+      DictsList[j] = NULL;
+    }
 
-   /* Initialisation de la correction */
-   for (j = 0; j <= NC; j++)
-      strcpy (ChkrCorrection[j],"$");
+  /* Initialisation de la correction */
+  for (j = 0; j <= NC; j++)
+    strcpy (ChkrCorrection[j], "$");
 }
 
 
 
 /*----------------------------------------------------------------------
-   GiveProposal          
-   met dans ChkrCorrection les propositions de correction du mot       
-   qui se trouve dans ChkrErrWord                                   
+   GiveProposal puts into ChkrCorrection proposals for the current
+   ChkrErrWord word.
   ----------------------------------------------------------------------*/
 void GiveProposal (Language language, PtrDict docDict)
 {
-   PtrDict             globalDict;
-   PtrDict             personalDict;
-   PtrDict             acronymDict;
-   PtrDict             nameDict;
+  PtrDict             globalDict;
+  PtrDict             personalDict;
+  PtrDict             acronymDict;
+  PtrDict             nameDict;
 
-   /* ATTENTION : ChkrErrWord contient le mot a corriger */
-   InitChecker ();	/* raz des scores */
+  /* ATTENTION : ChkrErrWord contient le mot a corriger */
+  InitChecker ();	/* raz des scores */
 
-   globalDict = (PtrDict) TtaGetPrincipalDictionary (language);
-   personalDict = (PtrDict) TtaGetSecondaryDictionary (language);
-   acronymDict = (PtrDict) TtaGetPrincipalDictionary (0);
-   nameDict = (PtrDict) TtaGetSecondaryDictionary (0);
+  globalDict = (PtrDict) TtaGetPrincipalDictionary (language);
+  personalDict = (PtrDict) TtaGetSecondaryDictionary (language);
+  acronymDict = (PtrDict) TtaGetPrincipalDictionary (0);
+  nameDict = (PtrDict) TtaGetSecondaryDictionary (0);
 
-   /* on suppose que ChkrErrWord contient la description du mot errone' */
-   Cmp ((unsigned char *)ChkrErrWord, globalDict);
+  /* on suppose que ChkrErrWord contient la description du mot errone' */
+  Cmp ((unsigned char *)ChkrErrWord, globalDict);
 
-   /* calcul local avec le dictionnaire personnel s'il existe */
-   if (personalDict != NULL)
-      Cmp ((unsigned char *)ChkrErrWord, personalDict);
-
-   /* calcul local avec le dictionnaire du document s'il n'est pas vide */
-   if (docDict != NULL)
-      Cmp ((unsigned char *)ChkrErrWord, docDict);
-
-   /* calcul local avec le dictionnaire de sigles s'il n'est pas vide */
-   if (acronymDict != NULL)
-      Cmp ((unsigned char *)ChkrErrWord, acronymDict);
-
-   /* calcul local avec le dictionnaire de noms s'il n'est pas vide */
-   if (nameDict != NULL)
-      Cmp ((unsigned char *)ChkrErrWord, nameDict);
-   /* remplissage de ChkrCorrection  */
-   LoadSpellChecker ();
+  /* calcul local avec le dictionnaire personnel s'il existe */
+  if (personalDict != NULL)
+    Cmp ((unsigned char *)ChkrErrWord, personalDict);
+  
+  /* calcul local avec le dictionnaire du document s'il n'est pas vide */
+  if (docDict != NULL)
+    Cmp ((unsigned char *)ChkrErrWord, docDict);
+  
+  /* calcul local avec le dictionnaire de sigles s'il n'est pas vide */
+  if (acronymDict != NULL)
+    Cmp ((unsigned char *)ChkrErrWord, acronymDict);
+  
+  /* calcul local avec le dictionnaire de noms s'il n'est pas vide */
+  if (nameDict != NULL)
+    Cmp ((unsigned char *)ChkrErrWord, nameDict);
+  /* remplissage de ChkrCorrection  */
+  LoadSpellChecker ();
 }
 
 
@@ -762,35 +773,35 @@ void GiveProposal (Language language, PtrDict docDict)
   ----------------------------------------------------------------------*/
 static void init_Tsub (FILE *ftsub)
 {
-   unsigned char       ch1[80], ch2[80], ch3[80];
-   unsigned char       x, y, valeur;
-   int                 i, j;
-   int                 coeff;
+  unsigned char       ch1[80], ch2[80], ch3[80];
+  unsigned char       x, y, valeur;
+  int                 i, j;
+  int                 coeff;
 
-   /* initialisation de Tsub */
-   for (i = 0; i < NbLtr; i++)
-      for (j = 0; j < NbLtr; j++)
-	 Tsub[i][j] = KD;
-   while (fscanf (ftsub, "%s%s%s", ch1, ch2, ch3) != EOF)
-     {
-	sscanf ((char *)ch1, "%c", (char*)&x);
-	sscanf ((char *)ch2, "%c", (char*)&y);
-	sscanf ((char *)ch3, "%c", (char*)&valeur);
-	switch (valeur)
-	  {
-	  case 'b':
-	    coeff = KB;
-	    break;
-	  case 'm':
-	    coeff = KM;
-	    break;
-	  default:
-	    coeff = KD;
-	    break;
-	  }
-	Tsub[Code[x]][Code[y]] = coeff;
-     }
-   TtaReadClose (ftsub);
+  /* initialisation de Tsub */
+  for (i = 0; i < NbLtr; i++)
+    for (j = 0; j < NbLtr; j++)
+      Tsub[i][j] = KD;
+  while (fscanf (ftsub, "%s%s%s", ch1, ch2, ch3) != EOF)
+    {
+      sscanf ((char *)ch1, "%c", (char*)&x);
+      sscanf ((char *)ch2, "%c", (char*)&y);
+      sscanf ((char *)ch3, "%c", (char*)&valeur);
+      switch (valeur)
+	{
+	case 'b':
+	  coeff = KB;
+	  break;
+	case 'm':
+	  coeff = KM;
+	  break;
+	default:
+	  coeff = KD;
+	  break;
+	}
+      Tsub[Code[x]][Code[y]] = coeff;
+    }
+  TtaReadClose (ftsub);
 }
 
 
@@ -798,43 +809,43 @@ static void init_Tsub (FILE *ftsub)
   ----------------------------------------------------------------------*/
 static void init_param (FILE * fd)
 {
-   int                 i, cc, ii, oo, pp, bb, mm, dd, ss, rr;
+  int                 i, cc, ii, oo, pp, bb, mm, dd, ss, rr;
 
-/* lecture de la premiere ligne: 
-   nbre de corrections, insertion, omission, permutation,
-   bonne substitution, substitution moyenne, mauvaise substitution */
-
-   fscanf (fd, "%d%d%d%d%d%d%d", &cc, &ii, &oo, &pp, &bb, &mm, &dd);
-   if (cc > 0)
-      NC = cc;
-   else
-      NC = 3;			/* valeur par defaut */
-   if (ii > 0)
-      KI = ii;
-   if (oo > 0)
-      KO = oo;
-   if (pp > 0)
-      KP = pp;
-   if (bb > 0)
-      KB = bb;
-   if (mm > 0)
-      KM = mm;
-   if (dd > 0)
-      KD = dd;
-   /* lecture des lignes suivantes  */
-   while (fscanf (fd, "%d%d%d", &i, &ss, &rr) != EOF)
-     {
-	if (i < MAX_WORD_LEN)
-	  {
-	     if (ss > 0)
-		Seuil[i] = ss;
-	     if (rr > 0)
-		Delta[i] = rr;
-	  }
-	else
-	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_NO_PARAM);
-	/* erreur fichier parametre */
-     }
+  /* lecture de la premiere ligne: 
+     nbre de corrections, insertion, omission, permutation,
+     bonne substitution, substitution moyenne, mauvaise substitution */
+  
+  fscanf (fd, "%d%d%d%d%d%d%d", &cc, &ii, &oo, &pp, &bb, &mm, &dd);
+  if (cc > 0)
+    NC = cc;
+  else
+    NC = 3;			/* valeur par defaut */
+  if (ii > 0)
+    KI = ii;
+  if (oo > 0)
+    KO = oo;
+  if (pp > 0)
+    KP = pp;
+  if (bb > 0)
+    KB = bb;
+  if (mm > 0)
+    KM = mm;
+  if (dd > 0)
+    KD = dd;
+  /* lecture des lignes suivantes  */
+  while (fscanf (fd, "%d%d%d", &i, &ss, &rr) != EOF)
+    {
+      if (i < MAX_WORD_LEN)
+	{
+	  if (ss > 0)
+	    Seuil[i] = ss;
+	  if (rr > 0)
+	    Delta[i] = rr;
+	}
+      else
+	TtaDisplaySimpleMessage (INFO, LIB, TMSG_NO_PARAM);
+      /* erreur fichier parametre */
+    }
 }
 
 
@@ -842,14 +853,14 @@ static void init_param (FILE * fd)
   ----------------------------------------------------------------------*/
 static void DefaultParams (int lettres)
 {
-   int                 i;
+  int                 i;
 
-   NC = 3;
-   for (i = 1; i < MAX_WORD_LEN; i++)
-     {
-	Seuil[i] = KI + KI * (i - 1) / lettres;
-	Delta[i] = 1 + ((i - 1) / lettres);
-     }
+  NC = 3;
+  for (i = 1; i < MAX_WORD_LEN; i++)
+    {
+      Seuil[i] = KI + KI * (i - 1) / lettres;
+      Delta[i] = 1 + ((i - 1) / lettres);
+    }
 }
 
 
@@ -860,109 +871,110 @@ static void DefaultParams (int lettres)
   ----------------------------------------------------------------------*/
 int ParametrizeChecker ()
 {
-   FILE               *fparam;
-   FILE               *ftsub;
-   char                paramnom[MAX_LENGTH];
-   char                clavnom[MAX_LENGTH];
-   char               *corrpath;
-   int                 ret;
+  FILE               *fparam;
+  FILE               *ftsub;
+  char                paramnom[MAX_LENGTH];
+  char                clavnom[MAX_LENGTH];
+  char               *corrpath;
+  int                 ret;
 
-   ret = 1;
-   /* initialisations des parametres du correcteur */
-   if (Clavier_charge == FALSE)
-     {
-	/* remplir corrpath pour acces aux fichiers param et clavier */
-	corrpath = TtaGetEnvString ("DICOPAR");
-	if (corrpath == NULL)
-	  ret = 0;
-	else
-	  {
-	     /* Lecture du fichier parametres */
-	     strcpy (paramnom, corrpath);
-	     strcat (paramnom, DIR_STR);
-	     strcat (paramnom, "param");
-	     if ((fparam = TtaReadOpen (paramnom)) != NULL)
-	       /* Existence du fichier */
-		init_param (fparam);
-	     else
-	       {
-		  /* valeur par defaut LGR = 4 */
-		  DefaultParams (4);
-	       }
+  ret = 1;
+  /* initialisations des parametres du correcteur */
+  if (Clavier_charge == FALSE)
+    {
+      /* remplir corrpath pour acces aux fichiers param et clavier */
+      corrpath = TtaGetEnvString ("DICOPAR");
+      if (corrpath == NULL)
+	ret = 0;
+      else
+	{
+	  /* Lecture du fichier parametres */
+	  strcpy (paramnom, corrpath);
+	  strcat (paramnom, DIR_STR);
+	  strcat (paramnom, "param");
+	  if ((fparam = TtaReadOpen (paramnom)) != NULL)
+	    /* Existence du fichier */
+	    init_param (fparam);
+	  else
+	    /* valeur par defaut LGR = 4 */
+	    DefaultParams (4);
 
-	     /* Lecture du  fichier clavier */
-	     strcpy (clavnom, corrpath);
-	     strcat (clavnom, DIR_STR);
-	     strcat (clavnom, "clavier");
-	     if ((ftsub = TtaReadOpen (clavnom)) != NULL)
-	       /* Existence du fichier */
-	       {
-		  init_Tsub (ftsub);
-		  Clavier_charge = TRUE;
-	       }
-	     else
-	       {
-		  TtaDisplaySimpleMessage (INFO, LIB, TMSG_NO_KEYBOARD);
-		  ret = 0;
-	       }
-	  }
-     }
-   return (ret);
+	  /* Lecture du  fichier clavier */
+	  strcpy (clavnom, corrpath);
+	  strcat (clavnom, DIR_STR);
+	  strcat (clavnom, "clavier");
+	  if ((ftsub = TtaReadOpen (clavnom)) != NULL)
+	    /* Existence du fichier */
+	    {
+	      init_Tsub (ftsub);
+	      Clavier_charge = TRUE;
+	    }
+	  else
+	    {
+	      TtaDisplaySimpleMessage (INFO, LIB, TMSG_NO_KEYBOARD);
+	      ret = 0;
+	    }
+	}
+    }
+  return (ret);
 }
 
 
 /*----------------------------------------------------------------------
-   WordReplace                                               
+   WordReplace
+   Both word are defaultCharset encoded.
   ----------------------------------------------------------------------*/
 void WordReplace (unsigned char *orgWord,  unsigned char *newWord)
 {
-   int                 idx;
-   int                 stringLength;	/* longueur de cette chaine */
-   CHAR_T             *nString, *oString;
-   int                 newStringLen;	/* longueur de cette chaine */
+  CHAR_T             *nString, *oString;
+  CHARSET             defaultCharset;
+  int                 idx;
+  int                 stringLength;	/* longueur de cette chaine */
+  int                 newStringLen;	/* longueur de cette chaine */
 
-   /* replace the wrong word by the right word */
-   oString = TtaConvertByteToCHAR (orgWord, ISO_8859_1);
-   nString = TtaConvertByteToCHAR (newWord, ISO_8859_1);
-   stringLength = ustrlen (oString);
-   /* initialiser newStringLen et pChaineRemplace */
-   newStringLen = ustrlen (nString);
+  /* replace the wrong word by the right word */
+  defaultCharset = TtaGetDefaultCharset ();
+  oString = TtaConvertByteToCHAR (orgWord, defaultCharset);
+  nString = TtaConvertByteToCHAR (newWord, defaultCharset);
+  stringLength = ustrlen (oString);
+  /* initialiser newStringLen et pChaineRemplace */
+  newStringLen = ustrlen (nString);
 
-   /* substitue la nouvelle chaine et la selectionne */
-   if (ChkrRange->SStartToEnd)
-     {
-	idx = ChkrIndChar - stringLength;
-	OpenHistorySequence (ChkrRange->SDocument, ChkrElement, ChkrElement,
-			     NULL, idx, idx + stringLength);
-	AddEditOpInHistory (ChkrElement, ChkrRange->SDocument, TRUE, TRUE);
-	CloseHistorySequence (ChkrRange->SDocument);
-	ReplaceString (ChkrRange->SDocument, ChkrElement, idx,
-		       stringLength, nString, newStringLen, TRUE);
-	/* met a jour ChkrIndChar */
-	ChkrIndChar = idx + newStringLen;
+  /* substitue la nouvelle chaine et la selectionne */
+  if (ChkrRange->SStartToEnd)
+    {
+      idx = ChkrIndChar - stringLength;
+      OpenHistorySequence (ChkrRange->SDocument, ChkrElement, ChkrElement,
+			   NULL, idx, idx + stringLength);
+      AddEditOpInHistory (ChkrElement, ChkrRange->SDocument, TRUE, TRUE);
+      CloseHistorySequence (ChkrRange->SDocument);
+      ReplaceString (ChkrRange->SDocument, ChkrElement, idx,
+		     stringLength, nString, newStringLen, TRUE);
+      /* met a jour ChkrIndChar */
+      ChkrIndChar = idx + newStringLen;
 
-	/* met eventuellement a jour la borne de fin du domaine de recherche */
-	if (ChkrElement == ChkrRange->SEndElement)
-	   /* la borne est dans l'element ou` on a fait le remplacement */
-	   if (ChkrRange->SEndChar > 1)
-	      /* la borne n'est pas a la fin de l'element, on decale la borne */
-	      ChkrRange->SEndChar += newStringLen - stringLength;
-     }
-   else
-     {
-	idx = ChkrIndChar;
-	OpenHistorySequence (ChkrRange->SDocument, ChkrElement, ChkrElement,
-			     NULL, idx, idx+stringLength-1);
-	AddEditOpInHistory (ChkrElement, ChkrRange->SDocument, TRUE, TRUE);
-	CloseHistorySequence (ChkrRange->SDocument);
-	ReplaceString (ChkrRange->SDocument, ChkrElement, idx,
-		       stringLength, nString, newStringLen, TRUE);
-     }
+      /* met eventuellement a jour la borne de fin du domaine de recherche */
+      if (ChkrElement == ChkrRange->SEndElement)
+	/* la borne est dans l'element ou` on a fait le remplacement */
+	if (ChkrRange->SEndChar > 1)
+	  /* la borne n'est pas a la fin de l'element, on decale la borne */
+	  ChkrRange->SEndChar += newStringLen - stringLength;
+    }
+  else
+    {
+      idx = ChkrIndChar;
+      OpenHistorySequence (ChkrRange->SDocument, ChkrElement, ChkrElement,
+			   NULL, idx, idx+stringLength-1);
+      AddEditOpInHistory (ChkrElement, ChkrRange->SDocument, TRUE, TRUE);
+      CloseHistorySequence (ChkrRange->SDocument);
+      ReplaceString (ChkrRange->SDocument, ChkrElement, idx,
+		     stringLength, nString, newStringLen, TRUE);
+    }
 
-   TtaFreeMemory (nString);
-   TtaFreeMemory (oString);
-   /* met eventuellement a jour la selection initiale */
-   UpdateDuringSearch (ChkrElement, newStringLen - stringLength);
+  TtaFreeMemory (nString);
+  TtaFreeMemory (oString);
+  /* met eventuellement a jour la selection initiale */
+  UpdateDuringSearch (ChkrElement, newStringLen - stringLength);
 }
 
 
@@ -972,60 +984,60 @@ void WordReplace (unsigned char *orgWord,  unsigned char *newWord)
   ----------------------------------------------------------------------*/
 ThotBool CheckChangeSelection ()
 {
-   PtrDocument         docsel;
-   PtrElement          pEl1, pElN;
-   int                 c1, cN;
-   ThotBool            ok;
+  PtrDocument         docsel;
+  PtrElement          pEl1, pElN;
+  int                 c1, cN;
+  ThotBool            ok;
 
-   /* Si le correcteur n'a pas debute */
-   if (ChkrElement == NULL)
-      /* Ce n'est pas la peine de faire cette verification */
-      return (FALSE);
+  /* Si le correcteur n'a pas debute */
+  if (ChkrElement == NULL)
+    /* Ce n'est pas la peine de faire cette verification */
+    return (FALSE);
 
-   docsel = ChkrRange->SDocument;
-   if (ChkrRange->SStartToEnd)
-     {
-	pEl1 = ChkrElement;
-	c1 = ChkrIndChar;
-	ok = GetCurrentSelection (&ChkrRange->SDocument, &ChkrElement, &pElN,
-				  &cN, &ChkrIndChar);
-	if (ChkrIndChar < cN)
-	  /* selection is just a caret */
-	  ChkrIndChar = cN;
-	if (pElN && ChkrIndChar == 0)
-	  /* the whole element is selected */
-	  ChkrIndChar = pElN->ElVolume;
-     }
-   else
-     {
-	pEl1 = ChkrElement;
-	c1 = ChkrIndChar;
-	ok = GetCurrentSelection (&ChkrRange->SDocument, &pElN, &ChkrElement,
-				  &ChkrIndChar, &cN);
-	if (pElN && ChkrIndChar == 0)
-	  /* the whole element is selected */
-	  ChkrIndChar = 1;
-     }
+  docsel = ChkrRange->SDocument;
+  if (ChkrRange->SStartToEnd)
+    {
+      pEl1 = ChkrElement;
+      c1 = ChkrIndChar;
+      ok = GetCurrentSelection (&ChkrRange->SDocument, &ChkrElement, &pElN,
+				&cN, &ChkrIndChar);
+      if (ChkrIndChar < cN)
+	/* selection is just a caret */
+	ChkrIndChar = cN;
+      if (pElN && ChkrIndChar == 0)
+	/* the whole element is selected */
+	ChkrIndChar = pElN->ElVolume;
+    }
+  else
+    {
+      pEl1 = ChkrElement;
+      c1 = ChkrIndChar;
+      ok = GetCurrentSelection (&ChkrRange->SDocument, &pElN, &ChkrElement,
+				&ChkrIndChar, &cN);
+      if (pElN && ChkrIndChar == 0)
+	/* the whole element is selected */
+	ChkrIndChar = 1;
+    }
 
-   if (!ok)
-     {
-	/* Il n'y a pas encore de selection actuelle dans ce document */
-	ChkrRange->SDocument = docsel;
-	pEl1 = ChkrElement;
-	pElN = pEl1;
-	c1 = ChkrIndChar;
-	cN = c1;
-     }
+  if (!ok)
+    {
+      /* Il n'y a pas encore de selection actuelle dans ce document */
+      ChkrRange->SDocument = docsel;
+      pEl1 = ChkrElement;
+      pElN = pEl1;
+      c1 = ChkrIndChar;
+      cN = c1;
+    }
 
-   if (docsel != ChkrRange->SDocument)
-      /* La selection a change de document */
-      return (TRUE);
-   else
-     {
-	ok = (ChkrElement != pEl1 || ChkrElement != pElN || ChkrIndChar != c1);
-	/* S'il s'agit d'une nouvelle selection dans le document */
-	return (ok);
-     }
+  if (docsel != ChkrRange->SDocument)
+    /* La selection a change de document */
+    return (TRUE);
+  else
+    {
+      ok = (ChkrElement != pEl1 || ChkrElement != pElN || ChkrIndChar != c1);
+      /* S'il s'agit d'une nouvelle selection dans le document */
+      return (ok);
+    }
 }
 
 
@@ -1193,25 +1205,19 @@ static ThotBool IgnoreWord (unsigned char *word)
 
 
 /*----------------------------------------------------------------------
-   NextSpellingError retourne le mot errone' suivant et le           
-   selectionne dans la vue courante du document.                
-   Le mot errone' est mis dans ChkrErrWord.                           
+   NextSpellingError stores the next misspelled word into ChkrErrWord.
   ----------------------------------------------------------------------*/
-void NextSpellingError (unsigned char *word, PtrDict docDict)
+void NextSpellingError (PtrDict docDict)
 {
   Language            language;
   CHAR_T              s[MAX_WORD_LEN];
+  unsigned char       word[MAX_WORD_LEN];
   int                 j;
   int                 i;
   ThotBool            ok, novalid;
 
   /* get the CHAR_T string */
   j = 0;
-  while (word[j] != EOS)
-    {
-      s[j] = TtaGetWCFromChar (word[j], ISO_8859_1);
-      j++;
-    }
   s[j] = EOS;
   i = 1;
   do

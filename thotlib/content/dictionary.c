@@ -375,20 +375,18 @@ static void PrepareDictionary (PtrDict *pDictionary, char *dictName,
   if (readonly == FALSE)
     {
       /* Alterable dictionary */
-      if (TtaFileExist (tempbuffer) != 0)
-	  dictFile = TtaRWOpen (tempbuffer);
+      if (TtaFileExist (tempbuffer))
+	dictFile = TtaRWOpen (tempbuffer);
       else
 	{
 	  /* new dictionary */
 	  new_ = TRUE;
-	  dictFile = TtaReadOpen (tempbuffer);
+	  dictFile = TtaWriteOpen (tempbuffer);
 	}
     }
   else
-    {
-      /* READONLY dictionary (generally pre-treated) */
-      dictFile = TtaReadOpen (tempbuffer);
-    }
+    /* READONLY dictionary (generally pre-treated) */
+    dictFile = TtaReadOpen (tempbuffer);
   
   if (dictFile == NULL)
     /* Inacessible dictionary: *pDictionary = NULL */
@@ -522,14 +520,14 @@ int LoadTreatedDict (PtrDict *pDictionary, Language lang, PtrDocument document,
 	switch (i)
 	      {
 		 case (-1):
-		    if (readonly == TRUE)
+		    if (readonly)
 		      {
 			 /* file inaccesible */
 			 *pDictionary = NULL;
 			 ret = -1;
 			 break;
 		      }
-		    if (toCreate != TRUE)
+		    if (!toCreate)
 		      {
 			 /* Do not create the not readonly dictionary yet */
 			 *pDictionary = NULL;

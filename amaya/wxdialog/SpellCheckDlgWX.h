@@ -6,9 +6,8 @@
 //-----------------------------------------------------------------------------
 // Headers
 //-----------------------------------------------------------------------------
-
-#include "AmayaDialog.h"
 #include "wx/spinctrl.h"
+#include "AmayaDialog.h"
 
 //-----------------------------------------------------------------------------
 // Class definition: SpellCheckDlgWX
@@ -21,7 +20,8 @@ public:
   // Constructor.
   SpellCheckDlgWX( int ref,
 		   int base,
-		   wxWindow* parent );
+		   wxWindow* parent,
+		   int checkingArea );
   
   // Destructor.                  
   virtual ~SpellCheckDlgWX();

@@ -39,12 +39,10 @@ void SpellCheckDlgWX::Set_Proposals ( )
   char  *lang;
   int    i;
 
-  wxLogDebug( _T("SpellCheckDlgWX::WX_Set_Proposals") );
-
   //update informations 
   // selected text
   TtaGetProposal (&proposal, 0);
-  XRCCTRL(*this, "wxID_SELECTED_TXT",  wxButton)->SetLabel(TtaConvMessageToWX( proposal ) );
+  XRCCTRL(*this, "wxID_SELECTED_TXT", wxButton)->SetLabel(TtaConvMessageToWX( proposal ) );
   // default correction
   TtaGetProposal (&proposal, 1);
   if (strcmp (proposal, "$") != 0)
@@ -79,25 +77,26 @@ void SpellCheckDlgWX::Set_Proposals ( )
   ----------------------------------------------------------------------*/
 SpellCheckDlgWX::SpellCheckDlgWX( int ref,
 				  int base,
-				  wxWindow* parent ) :
+				  wxWindow* parent,
+				  int checkingArea) :
   AmayaDialog( parent, ref )
 {
   m_base = base;
   m_ref = ref;
 
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("SpellCheckDlgWX"));
-  wxLogDebug( _T("SpellCheckDlgWX::SpellCheckDlgWX"));
   wxString wx_title = TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_Correct) );
   SetTitle( wx_title );
 
   // proposals
   XRCCTRL(*this, "wxID_NB_PROPOSALS_TXT", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_Number_Propositions) ));
-  XRCCTRL(*this, "wxID_SELECTED_TXT",   wxButton)->SetLabel(TtaConvMessageToWX( " ") );
+  XRCCTRL(*this, "wxID_SELECTED_TXT",   wxButton)->SetLabel(TtaConvMessageToWX( "") );
   XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->SetString(0, TtaConvMessageToWX( "" ));
   XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->SetString(1, TtaConvMessageToWX( "" ));
   XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->SetString(2, TtaConvMessageToWX( "" ));
   XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->SetString(3, TtaConvMessageToWX( "" ));
   XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->SetString(4, TtaConvMessageToWX( "" ));
+  XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->SetSelection(-1);
   XRCCTRL(*this, "wxID_FIRST_PROPOSAL", wxTextCtrl)->SetValue(TtaConvMessageToWX( "" ) );
   m_nb_proposals = XRCCTRL(*this, "wxID_NB_PROPOSAL", wxSpinCtrl)->GetValue();
   m_max_proposals = 5;
@@ -108,8 +107,7 @@ SpellCheckDlgWX::SpellCheckDlgWX( int ref,
   XRCCTRL(*this, "wxID_CHECKING_AREA", wxRadioBox)->SetString(1, TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_WITHIN_SEL) ));
   XRCCTRL(*this, "wxID_CHECKING_AREA", wxRadioBox)->SetString(2, TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_AFTER_SEL) ));
   XRCCTRL(*this, "wxID_CHECKING_AREA", wxRadioBox)->SetString(3, TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC) ));
-  XRCCTRL(*this, "wxID_CHECKING_AREA", wxRadioBox)->SetSelection(2);
-
+  XRCCTRL(*this, "wxID_CHECKING_AREA", wxRadioBox)->SetSelection(checkingArea);
 
   // 'ignore' check list and text ctrl
   XRCCTRL(*this, "wxID_IGNORE_TXT",  wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_Ignore) ));
@@ -123,6 +121,7 @@ SpellCheckDlgWX::SpellCheckDlgWX( int ref,
   XRCCTRL(*this, "wxID_IGNORE4_CHK", wxCheckBox)->SetValue(TRUE);
   m_special_char = TtaConvMessageToWX( "@#$&+~" );
   XRCCTRL(*this, "wxID_IGNORE_CHAR", wxTextCtrl)->SetValue( m_special_char );
+  XRCCTRL(*this, "wxID_SPELL_LANGUAGE_TXT", wxStaticText)->SetLabel(TtaConvMessageToWX( "" ));
 
   // buttons
   XRCCTRL(*this, "wxID_CANCEL_BUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
@@ -217,13 +216,11 @@ void SpellCheckDlgWX::OnReplaceWithButton( wxCommandEvent& event )
   ----------------------------------------------------------------------------*/
 void SpellCheckDlgWX::OnChangeProposals ( wxCommandEvent& event )
 {
-  wxLogDebug( _T("SpellCheckDlgWX::OnChangeProposals") );
   int i = XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->GetSelection();
   wxString selected_item = 
     XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->GetStringSelection();
   if ( !selected_item.IsEmpty() )
     {  
-      wxLogDebug( _T("SpellCheckDlgWX::OnChangeProposals - selected=") + selected_item );
       // allocate a temporary buffer
       char buffer[100];
       wxASSERT( selected_item.Len() < 100 );
@@ -231,7 +228,6 @@ void SpellCheckDlgWX::OnChangeProposals ( wxCommandEvent& event )
       ThotCallback (m_base + ChkrSelectProp, STRING_DATA, buffer);
       // update first proposal
       XRCCTRL(*this, "wxID_FIRST_PROPOSAL", wxTextCtrl)->SetValue(selected_item);
-      XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->Deselect(i);
     }
 }
 
@@ -242,7 +238,6 @@ void SpellCheckDlgWX::OnChangeNbProposals ( wxSpinEvent& event )
 {
   char   * lang;
 
-  wxLogDebug( _T("SpellCheckDlgWX::OnChangeNbProposals") );
   m_nb_proposals = XRCCTRL(*this, "wxID_NB_PROPOSAL", wxSpinCtrl)->GetValue();
   ThotCallback (m_base + ChkrCaptureNC, INTEGER_DATA, (char *) m_nb_proposals);
   SpellCheckDlgWX::Set_Proposals ();
@@ -253,7 +248,6 @@ void SpellCheckDlgWX::OnChangeNbProposals ( wxSpinEvent& event )
   ---------------------------------------------------------------*/
 void SpellCheckDlgWX::OnIgnoreCapitalsChkBox ( wxCommandEvent& event )
 {
-  wxLogDebug( _T("SpellCheckDlgWX::OnIgnoreCapitalsChkBox") );
   ThotCallback (m_base + ChkrMenuIgnore, INTEGER_DATA, (char*) 0);
 }
 
@@ -262,7 +256,6 @@ void SpellCheckDlgWX::OnIgnoreCapitalsChkBox ( wxCommandEvent& event )
   ---------------------------------------------------------------*/
 void SpellCheckDlgWX::OnIgnoreArabicsChkBox ( wxCommandEvent& event )
 {
-  wxLogDebug( _T("SpellCheckDlgWX::OnIgnoreArabicsChkBox") );
   ThotCallback (m_base + ChkrMenuIgnore, INTEGER_DATA, (char*) 1);
 }
 
@@ -271,7 +264,6 @@ void SpellCheckDlgWX::OnIgnoreArabicsChkBox ( wxCommandEvent& event )
   ---------------------------------------------------------------*/
 void SpellCheckDlgWX::OnIgnoreRomansChkBox ( wxCommandEvent& event )
 {
-  wxLogDebug( _T("SpellCheckDlgWX::OnIgnoreRomansChkBox") );
   ThotCallback (m_base + ChkrMenuIgnore, INTEGER_DATA, (char*) 2);
 }
 
@@ -280,7 +272,6 @@ void SpellCheckDlgWX::OnIgnoreRomansChkBox ( wxCommandEvent& event )
   ---------------------------------------------------------------*/
 void SpellCheckDlgWX::OnIgnoreSpecialsChkBox ( wxCommandEvent& event )
 {
-  wxLogDebug( _T("SpellCheckDlgWX::OnIgnoreSpecialsChkBox") );
   ThotCallback (m_base + ChkrMenuIgnore, INTEGER_DATA, (char*) 3);
   if (XRCCTRL(*this, "wxID_IGNORE4_CHK", wxCheckBox)->GetValue() == TRUE)
     XRCCTRL(*this, "wxID_IGNORE_CHAR", wxTextCtrl)->SetEditable( TRUE );
@@ -293,7 +284,6 @@ void SpellCheckDlgWX::OnIgnoreSpecialsChkBox ( wxCommandEvent& event )
   ----------------------------------------------------------------------------*/
 void SpellCheckDlgWX::OnAreaRadioBox ( wxCommandEvent& event )
 {
-  wxLogDebug( _T("SpellCheckDlgWX::OnAreaRadioBox") );
   ThotCallback (m_base + ChkrMenuOR, INTEGER_DATA,
 		(char*)(XRCCTRL(*this, "wxID_CHECKING_AREA", wxRadioBox)->GetSelection( )) );
 }
@@ -304,7 +294,6 @@ void SpellCheckDlgWX::OnAreaRadioBox ( wxCommandEvent& event )
 void SpellCheckDlgWX::OnSpecialChar ( wxCommandEvent& event )
 {
   wxString special_char = XRCCTRL(*this, "wxID_IGNORE_CHAR", wxTextCtrl)->GetValue( );
-  wxLogDebug( _T("SpellCheckDlgWX::OnSpecialChar - special_char =")+ special_char);
 
   // allocate a temporary buffer to convert wxString to (char *) UTF-8 buffer
   char buffer[512];

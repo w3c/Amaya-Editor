@@ -768,7 +768,7 @@ ThotBool CreatePreferenceDlgWX ( int ref, ThotWindow parent,
   wxArrayString wx_items = BuildWX_URL_List(url_list);
   PreferenceDlgWX * p_dlg = new PreferenceDlgWX( ref,
 						 parent,
-						 wx_items );
+						 wx_items);
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
       /* the dialog has been sucesfully registred */
       return TRUE;
@@ -788,7 +788,8 @@ ThotBool CreatePreferenceDlgWX ( int ref, ThotWindow parent,
  Used to :
   - Create the Spell Checker Amaya dialog
  ------------------------------------------------------------------------*/
-ThotBool CreateSpellCheckDlgWX ( int ref, int base, ThotWindow parent)
+ThotBool CreateSpellCheckDlgWX ( int ref, int base, ThotWindow parent,
+				 int checkingArea)
 {
 #ifdef _WX
 
@@ -796,7 +797,8 @@ ThotBool CreateSpellCheckDlgWX ( int ref, int base, ThotWindow parent)
   if (TtaRaiseDialogue (ref))
     return FALSE;
 
-  SpellCheckDlgWX * p_dlg = new SpellCheckDlgWX( ref, base, parent);
+  SpellCheckDlgWX * p_dlg = new SpellCheckDlgWX( ref, base, parent,
+						 checkingArea);
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
       /* the dialog has been sucesfully registred */
       return TRUE;

@@ -27,8 +27,7 @@ extern int ParametrizeChecker ( void );
 extern void WordReplace ( unsigned char *orgWord,
                           unsigned char *newWord );
 extern ThotBool CheckChangeSelection ( void );
-extern void NextSpellingError ( unsigned char *word,
-                                PtrDict docDict );
+extern void NextSpellingError ( PtrDict docDict );
 
 #else /* __STDC__ */
 
@@ -53,8 +52,7 @@ extern int ParametrizeChecker ( void );
 extern void WordReplace ( unsigned char *orgWord,
                             unsigned char *newWord );
 extern ThotBool CheckChangeSelection ( void );
-extern void NextSpellingError ( unsigned char *word,
-                                  PtrDict docDict );
+extern void NextSpellingError ( PtrDict docDict );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

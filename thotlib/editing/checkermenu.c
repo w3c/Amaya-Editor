@@ -13,7 +13,7 @@
  *
  */
 #ifdef _WX
-  #include "wx/wx.h"
+#include "wx/wx.h"
 #endif /* _WX */
 
 #include "thot_gui.h"
@@ -37,12 +37,6 @@
 #include "resource.h"
 #endif /* _WINGUI */
 
-#ifdef _WX
-#include "wxinclude.h"
-#include "wx/msgdlg.h" // wxMessageDialog
-#include "message_wx.h"
-#endif /* _WX */
-
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "edit_tv.h"
@@ -52,18 +46,25 @@
 #define THOT_EXPORT extern
 #include "spell_tv.h"
 
+#ifdef _WX
+#include "wxinclude.h"
+#include "wx/msgdlg.h" // wxMessageDialog
+#include "message_wx.h"
+#endif /* _WX */
+
 /* les variables locales */
 static int          OldNC;
 static int          SpellingBase = 0;
 static ThotBool     FirstStep;
 static ThotBool     ToReplace;
 static char         CorrectWord[MAX_WORD_LEN];
-static char         CurrentWord[MAX_WORD_LEN];
+static char         BadWord[MAX_WORD_LEN];
 static PtrDocument  pDocSel;
 
 /* procedures importees de l'editeur */
 #include "actions_f.h"
 #include "appli_f.h"
+#include "checkermenu_f.h"
 #include "dictionary_f.h"
 #include "font_f.h"
 #include "memory_f.h"
@@ -138,7 +139,6 @@ static void DisplayWords (void)
 	}
     }
   OldNC = NC;
-
 #endif /* _WINGUI */
 #ifdef _GTK
    int                 i, indx, length;
@@ -147,7 +147,7 @@ static void DisplayWords (void)
 
    /* recopie les propositions */
    indx = 0;
-   /* commencer a 1 parce qu'en 0 il y a CurrentWord */
+   /* commencer a 1 parce qu'en 0 il y a BadWord */
    for (i = 1; (i <= NC && strcmp (ChkrCorrection[i], "$") != 0); i++)
      {
 	entry = ChkrCorrection[i];
@@ -399,22 +399,39 @@ void UnsetEntryMenu (int ref, int ent)
 void TtcSpellCheck (Document doc, View view)
 {
    PtrDocument         document;
-   int                 i;
-#ifdef _GTK
    PtrElement          pEl1, pElN;
    int                 c1, cN;
+   int                 i;
+   ThotBool            ok;
+#ifdef _GTK
    int                 indx;
    char                BufMenu[MAX_TXT_LEN];
-   ThotBool            ok;
 #endif /* _GTK */
-
-   /* SpecialChars = "@#$&+~"; */
+#ifdef _WX
+  ThotBool             created;
+#endif /* _WX */
 
    /* Document concerne */
    document = LoadedDocument[doc - 1];
    if (document == NULL)
       return;
    SpellCheckLoadResources ();
+
+   /* Afficher une liste de mots EMPTY */
+   strcpy (ChkrCorrection[0], " ");
+   for (i = 1; i <= NC; i++)
+      strcpy (ChkrCorrection[i], "$");
+
+   /* ne pas ignorer les mots en capitale, chiffres romains */
+   /* ou contenant des chiffres arabes,  certains car. speciaux */
+   strncpy (RejectedChar, "@#$&+~", MAX_REJECTED_CHARS);
+   /* liste par defaut */
+   IgnoreUppercase = TRUE;
+   IgnoreArabic = TRUE;
+   IgnoreRoman = TRUE;
+   IgnoreSpecial = TRUE;
+   /* Document selectionne */
+   ok = GetCurrentSelection (&pDocSel, &pEl1, &pElN, &c1, &cN);
 
 #ifdef _GTK
    if (ChkrRange != NULL)
@@ -429,7 +446,7 @@ void TtcSpellCheck (Document doc, View view)
    indx += strlen (&BufMenu[indx]) + 1;
    strcpy (&BufMenu[indx], TtaGetMessage (LIB, TMSG_Replace_Without));
    indx += strlen(&BufMenu[indx]) + 1;
-   strcpy(&BufMenu[indx], TtaGetMessage(LIB, TMSG_Replace_With));
+   strcpy (&BufMenu[indx], TtaGetMessage(LIB, TMSG_Replace_With));
    /* ne pas afficher cette feuille maintenant */
    TtaNewSheet (SpellingBase + ChkrFormCorrect, TtaGetViewFrame (doc, view), 
 		TtaGetMessage (LIB, TMSG_Correct), 4, BufMenu, FALSE, 4, 'L',
@@ -438,14 +455,6 @@ void TtcSpellCheck (Document doc, View view)
    /* initialise le champ langue de correction courante */
    TtaNewLabel (SpellingBase + ChkrLabelLanguage,
 		SpellingBase + ChkrFormCorrect, " ");
-#endif /* _GTK */
-
-   /* Afficher une liste de mots EMPTY */
-   strcpy (ChkrCorrection[0], " ");
-   for (i = 1; i <= NC; i++)
-      strcpy (ChkrCorrection[i], "$");
-
-#ifdef _GTK
    DisplayWords ();
    /* creer le sous-menu OU dans la feuille OPTIONS */
    indx = 0;			/* Ou commencer la correction ? */
@@ -460,8 +469,6 @@ void TtcSpellCheck (Document doc, View view)
 		  TtaGetMessage (LIB, TMSG_What), 4, BufMenu, NULL, 0, FALSE);
    TtaSetMenuForm (SpellingBase + ChkrMenuOR, 2);     /* apres la selection */
    /* Initialiser le formulaire CORRIGER */
-   /* Document selectionne */
-   ok = GetCurrentSelection (&pDocSel, &pEl1, &pElN, &c1, &cN);
    if (!ok || pDocSel != document)
      {
 	/* pas de selection dans le document d'ou vient la commande */
@@ -504,19 +511,6 @@ void TtcSpellCheck (Document doc, View view)
    TtaNewTextForm (SpellingBase + ChkrSpecial, SpellingBase + ChkrFormCorrect,
 		   NULL, 20, 1, TRUE);
    TtaSetTextForm (SpellingBase + ChkrSpecial, "@#$&+~");
-#endif /* _GTK */
-
-   /* ne pas ignorer les mots en capitale, chiffres romains */
-   /* ou contenant des chiffres arabes,  certains car. speciaux */
-   strncpy (RejectedChar, "@#$&+~", MAX_REJECTED_CHARS);
-   /* liste par defaut */
-
-   IgnoreUppercase = TRUE;
-   IgnoreArabic = TRUE;
-   IgnoreRoman = TRUE;
-   IgnoreSpecial = TRUE;
-
-#ifdef _GTK 
    /* Selectionne les types de mots a ne ignorer par defaut */
    TtaSetToggleMenu (SpellingBase + ChkrMenuIgnore, 0, IgnoreUppercase);
    TtaSetToggleMenu (SpellingBase + ChkrMenuIgnore, 1, IgnoreArabic);
@@ -532,7 +526,6 @@ void TtcSpellCheck (Document doc, View view)
 
    /* Indique que c'est une nouvelle correction qui debute */
    FirstStep = TRUE;
-
    ChkrRange = NULL;		/* pas de contexte de correction alloue */
    /* On alloue le contexte */
    GetSearchContext (&ChkrRange);
@@ -549,18 +542,20 @@ void TtcSpellCheck (Document doc, View view)
       SpellChecker = NULL;
       hwndLanguage = NULL;
     }
-  DialogBox (hInstance, MAKEINTRESOURCE (SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
+  DialogBox (hInstance, MAKEINTRESOURCE (SPELLCHECKDIALOG), NULL,
+	     (DLGPROC) SpellCheckDlgProc);
 #endif /* _WINGUI */
 #ifdef _WX
-  {
-    ThotBool created;
-    created = CreateSpellCheckDlgWX (SpellingBase + ChkrFormCorrect, SpellingBase, TtaGetViewFrame (doc, view));
-    if (created)
-      {
-	TtaShowDialogue (SpellingBase + ChkrFormCorrect, FALSE);
-      }
-  }
- #endif /* _WX */
+   if (!ok || pDocSel != document)
+     i = 1;
+   else
+     i = 2;
+  created = CreateSpellCheckDlgWX (SpellingBase + ChkrFormCorrect,
+				   SpellingBase, TtaGetViewFrame (doc, view), i);
+  CallbackChecker (SpellingBase + ChkrMenuOR, INTEGER_DATA, (char *)i);
+  if (created)
+    TtaShowDialogue (SpellingBase + ChkrFormCorrect, FALSE);
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -586,7 +581,7 @@ static void SetProposals (Language language)
    /* afficher les mots proposes contenus dans ChkrErrWord */
    DisplayWords ();
    /* recopier la premiere proposition dans CorrectWord */
-   if (strcmp (ChkrCorrection[1], "$") != 0)
+   if (!strcmp (ChkrCorrection[1], "$"))
       strcpy (CorrectWord, ChkrCorrection[1]);
    else
       CorrectWord[0] = EOS;
@@ -603,54 +598,86 @@ static void SetProposals (Language language)
 #endif /* _GTK */
 }
 
+/*----------------------------------------------------------------------
+  TtaGetProposal
+  Returns a proposal from the list of proposals (needed by wx)
+  ----------------------------------------------------------------------*/
+void TtaGetProposal (char **proposal, int i)
+{
+  *proposal = ChkrCorrection[i];
+}
+
+/*----------------------------------------------------------------------
+  TtaGetChkrLanguageName
+  Returns the name of the checker language (needed by wx)
+  Return value:
+  the name of the language.
+  ----------------------------------------------------------------------*/
+void TtaGetChkrLanguageName (char **lang)
+{
+  *lang = TtaGetLanguageName (ChkrLanguage);
+}
 
 /*----------------------------------------------------------------------
    StartSpellChecker retourne 0 si c'est OK et -1 en cas d'erreur          
   ----------------------------------------------------------------------*/
 static ThotBool StartSpellChecker ()
 {
-   ThotBool            ok;
+  CHARSET             defaultCharset;
+  unsigned char      *word;
+  ThotBool            ok;
 
-   /* preparer le lancement de la premiere correction */
-   ok = TRUE;
-   CorrectWord[0] = EOS;
-   CurrentWord[0] = EOS;
-   ToReplace = FALSE;
-   /* Rechercher la premiere erreur */
-   if (FirstStep)
-     {
-	FirstStep = FALSE;
-	ChkrElement = NULL;
-	ChkrIndChar = 1;
-     }
+  /* preparer le lancement de la premiere correction */
+  ok = TRUE;
+  CorrectWord[0] = EOS;
+  BadWord[0] = EOS;
+  ToReplace = FALSE;
+  /* Rechercher la premiere erreur */
+  if (FirstStep)
+    {
+      FirstStep = FALSE;
+      ChkrElement = NULL;
+      ChkrIndChar = 1;
+      /*InitSearchDomain ((int) data, ChkrRange);*/
+    }
 
-   /* en tenant compte des options choisies (par defaut) */
-   NextSpellingError ((unsigned char*)CurrentWord, ChkrFileDict);
-   if (CurrentWord[0] != EOS)
-      /* calculer la 1ere liste des propositions ds selecteur */
-      SetProposals (ChkrLanguage);
-   else
-     {
-       /* Correction TERMINEE */
+  /* en tenant compte des options choisies (par defaut) */
+  NextSpellingError (ChkrFileDict);
+  defaultCharset = TtaGetDefaultCharset ();
+  /* convert the string into the dialog encoding if necessary */
+  if (defaultCharset == UTF_8)
+    {
+      word = TtaConvertByteToMbs ((unsigned char *)ChkrErrWord,
+				  ISO_8859_1);
+      strcpy (BadWord, (char *)word);
+      TtaFreeMemory (word);
+    }
+  else
+    strcpy (BadWord, ChkrErrWord);
+  if (BadWord[0] != EOS)
+    /* calculer la 1ere liste des propositions ds selecteur */
+    SetProposals (ChkrLanguage);
+  else
+    {
+      /* Correction TERMINEE */
 #ifdef _WINGUI
-       MessageBox (NULL, TtaGetMessage (LIB, TMSG_END_CHECK), \
-		   "Spell checking", MB_OK | MB_ICONINFORMATION);
+      MessageBox (NULL, TtaGetMessage (LIB, TMSG_END_CHECK), \
+		  "Spell checking", MB_OK | MB_ICONINFORMATION);
 #endif /* _WINGUI */
 #ifdef _GTK
-       TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_END_CHECK), NULL);
+      TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_END_CHECK), NULL);
 #endif /* _GTK */
 #ifdef _WX
-       wxMessageDialog 
-	 spell_checker_messagedialog( (wxWindow*) NULL,
-				      TtaConvMessageToWX (TtaGetMessage (LIB, TMSG_END_CHECK)), 
-				      TtaConvMessageToWX (TtaGetMessage (LIB, TMSG_Correct)),
-				      (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
-       spell_checker_messagedialog.ShowModal(); 
+      wxMessageDialog 
+	spell_checker_messagedialog( (wxWindow*) NULL,
+				     TtaConvMessageToWX (TtaGetMessage (LIB, TMSG_END_CHECK)), 
+				     TtaConvMessageToWX (TtaGetMessage (LIB, TMSG_Correct)),
+				     (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
+      spell_checker_messagedialog.ShowModal(); 
 #endif /* _WX */
-       FirstStep = TRUE;
-       ok = FALSE;
-     }
-   return (ok);
+      ok = FALSE;
+    }
+  return (ok);
 }
 
 
@@ -659,8 +686,10 @@ static ThotBool StartSpellChecker ()
   ----------------------------------------------------------------------*/
 static void ApplyCommand (int val)
 {
-   ThotBool            change;
-   PtrDocument         document;
+  PtrDocument         document;
+  CHARSET             defaultCharset;
+  unsigned char      *word;
+  ThotBool            change;
 
    if (ChkrRange == NULL)
       /* Le correcteur n'est pas lance */
@@ -683,22 +712,29 @@ static void ApplyCommand (int val)
 	   break;
 	 case 2:
 	   /* Passer apres maj du dictionnaire */
-	   /* mettre CurrentWord dans le dictionnaire */
+	   /* mettre BadWord dans le dictionnaire */
 	   if (ChkrElement != NULL)
 	     {
 	     /* Sauf au 1er lancement */
+	       defaultCharset = TtaGetDefaultCharset ();
 	     if (CorrectWord[0] != EOS &&
-		 (strcmp (CorrectWord, ChkrCorrection[1]) != 0))
+		 !strcmp (CorrectWord, ChkrCorrection[1]))
 	       {
 		 /* ajouter le mot corrige dans le dictionaire */
-		 if (!CheckWord ((unsigned char*)CorrectWord, ChkrLanguage, ChkrFileDict))
-		   AddWord ((unsigned char*)CorrectWord, &ChkrFileDict);
+		 if (defaultCharset == UTF_8)
+		   word = TtaConvertMbsToByte ((unsigned char *)CorrectWord,
+					       ISO_8859_1);
+		 else
+		   word = (unsigned char *)CorrectWord;
+		 if (!CheckWord (word, ChkrLanguage, ChkrFileDict))
+		   AddWord (word, &ChkrFileDict);
 	       }
 	     else
 	       {
 		 /* ajouter le mot courant dans le dictionnaire */
-		 if (!CheckWord ((unsigned char*)CurrentWord, ChkrLanguage, ChkrFileDict))
-		   AddWord ((unsigned char*)CurrentWord, &ChkrFileDict);
+		 word = (unsigned char *)ChkrErrWord;
+		 if (!CheckWord (word, ChkrLanguage, ChkrFileDict))
+		   AddWord (word, &ChkrFileDict);
 	       }
 	     }
 	   break;
@@ -706,8 +742,9 @@ static void ApplyCommand (int val)
 	   /* ToReplace */
 	   if (ToReplace)	/* CorrectWord est rempli */
 	     {		/* et ce n'est pas 1er lancement */
-	       if (ChkrElement != NULL && CurrentWord[0] != EOS)
-		 WordReplace ((unsigned char*)CurrentWord, (unsigned char*)CorrectWord);
+	       if (ChkrElement != NULL && BadWord[0] != EOS)
+		 WordReplace ((unsigned char*)BadWord,
+			      (unsigned char*)CorrectWord);
 	       ToReplace = FALSE;
 	     }
 	   break;
@@ -715,13 +752,22 @@ static void ApplyCommand (int val)
 	   /* ToReplace et maj dictionnaire */
 	   if (ToReplace)	/* CorrectWord est rempli */
 	     {		/* et ce n'est pas 1er lancement */
-	       if (ChkrElement != NULL && CurrentWord[0] != EOS)
+	       if (ChkrElement != NULL && BadWord[0] != EOS)
 		 {
-		   WordReplace ((unsigned char*)CurrentWord, (unsigned char*)CorrectWord);
+		   WordReplace ((unsigned char*)BadWord,
+				(unsigned char*)CorrectWord);
 		   /* mettre CorrectWord dans le dictionnaire */
-		   if (!CheckWord ((unsigned char*)CorrectWord, ChkrLanguage, ChkrFileDict))
+		   defaultCharset = TtaGetDefaultCharset ();
+		   if (defaultCharset == UTF_8)
+		     word = TtaConvertMbsToByte ((unsigned char *)CorrectWord,
+						 ISO_8859_1);
+		   else
+		     word = (unsigned char *)CorrectWord;
+		   if (!CheckWord (word, ChkrLanguage, ChkrFileDict))
 		     /* mettre ce nouveau mot dans le dictionnaire */
-		     AddWord ((unsigned char*)CorrectWord, &ChkrFileDict);
+		     AddWord (word, &ChkrFileDict);
+		   if (defaultCharset == UTF_8)
+		     TtaFreeMemory (word);
 		 }
 	       ToReplace = FALSE;
 	     }
@@ -785,7 +831,7 @@ void CallbackChecker (int ref, int dataType, char *data)
       case ChkrCaptureNC:
 	/* modification de Nb de corrections a proposer */
 	NC = (int) data;
-	if (NC > OldNC && ChkrElement != NULL && CurrentWord[0] != EOS)
+	if (NC > OldNC && ChkrElement != NULL && BadWord[0] != EOS)
 	  SetProposals (ChkrLanguage);
 	else
 	  DisplayWords ();
@@ -829,9 +875,12 @@ void CallbackChecker (int ref, int dataType, char *data)
 	      if (pDocSel == ChkrRange->SDocument)
 		{
 		  /* Il faut reactiver les entree */
-		  TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 0, NULL, (ThotColor)-1, 1);
-		  TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 1, NULL, (ThotColor)-1, 1);
-		  TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 2, NULL, (ThotColor)-1, 1);
+		  TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR,
+				      0, NULL, (ThotColor)-1, 1);
+		  TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR,
+				      1, NULL, (ThotColor)-1, 1);
+		  TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR,
+				      2, NULL, (ThotColor)-1, 1);
 		} 
 #endif /* GTK */
 	    }
@@ -840,9 +889,8 @@ void CallbackChecker (int ref, int dataType, char *data)
 	/* retour du selecteur de propositions */
 	/* recopier le choix dans CorrectWord */
 	strcpy (CorrectWord, data);
-	if (CorrectWord[0] != EOS
-	    && CurrentWord != EOS
-	    && strcmp (CorrectWord, CurrentWord) != 0)
+	if (CorrectWord[0] != EOS && BadWord != EOS
+	    && strcmp (CorrectWord, BadWord) != 0)
 	  ToReplace = TRUE;
 	break;
       case ChkrFormCorrect:
@@ -869,26 +917,3 @@ void SpellCheckLoadResources ()
      }
 }
 
-/*----------------------------------------------------------------------
-  TtaGetProposal
-
-  Returns a proposal from the list of proposals (needed by wx)
-  ----------------------------------------------------------------------*/
-void TtaGetProposal (char **proposal, int i)
-{
-  *proposal = ChkrCorrection[i];
-  return;
-}
-
-/*----------------------------------------------------------------------
-  TtaGetChkrLanguageName
-
-  Returns the name of the checker language (needed by wx)
-  Return value:
-  the name of the language.
-  ----------------------------------------------------------------------*/
-void TtaGetChkrLanguageName (char **lang)
-{
-  *lang = TtaGetLanguageName (ChkrLanguage);
-  return;
-}

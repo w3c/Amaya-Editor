@@ -89,7 +89,8 @@ extern ThotBool CreatePreferenceDlgWX ( int ref,
                                         const char *url_list );
 extern ThotBool CreateSpellCheckDlgWX ( int ref,
                                         int base,
-                                        ThotWindow parent );
+                                        ThotWindow parent,
+                                        int checkingArea );
 
 #else /* __STDC__ */
 
@@ -176,7 +177,8 @@ extern ThotBool CreatePreferenceDlgWX ( int ref,
                                           const char *url_list );
 extern ThotBool CreateSpellCheckDlgWX ( int ref,
                                           int base,
-                                          ThotWindow parent );
+                                          ThotWindow parent,
+                                          int checkingArea );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

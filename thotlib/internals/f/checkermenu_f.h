@@ -9,26 +9,26 @@
 extern void TtcSpellCheck ( Document doc,
                             View view );
 extern void ResetCheckInDocument ( PtrDocument pDoc );
+extern void TtaGetProposal ( char **proposal,
+                             int i );
+extern void TtaGetChkrLanguageName ( char **lang );
 extern void CallbackChecker ( int ref,
                               int dataType,
                               char *data );
 extern void SpellCheckLoadResources ( void );
-extern void TtaGetProposal ( char **proposal,
-                             int i );
-extern void TtaGetChkrLanguageName ( char **lang );
 
 #else /* __STDC__ */
 
 extern void TtcSpellCheck ( Document doc,
                               View view );
 extern void ResetCheckInDocument ( PtrDocument pDoc );
+extern void TtaGetProposal ( char **proposal,
+                               int i );
+extern void TtaGetChkrLanguageName ( char **lang );
 extern void CallbackChecker ( int ref,
                                 int dataType,
                                 char *data );
 extern void SpellCheckLoadResources ( void );
-extern void TtaGetProposal ( char **proposal,
-                               int i );
-extern void TtaGetChkrLanguageName ( char **lang );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
