@@ -1041,7 +1041,7 @@ static ThotBool     CannotContainText (ElementType elType)
   ----------------------------------------------------------------------*/
 static void         TextToDocument ()
 {
-   ElementType      elType;
+   ElementType      elType, lastType;
    Element          elText, parent, ancestor, prev;
    int              i;
    ThotBool         ignoreLeadingSpaces;
@@ -1058,17 +1058,34 @@ static void         TextToDocument ()
 	     if (parent == NULL)
 		parent = HTMLcontext.lastElement;
 	     elType = TtaGetElementType (parent);
-	     if (IsCharacterLevelElement (HTMLcontext.lastElement) &&
-		 elType.ElTypeNum != HTML_EL_Option_Menu &&
-		 elType.ElTypeNum != HTML_EL_OptGroup)
-		{
-	        ignoreLeadingSpaces = FALSE;
-	        elType = TtaGetElementType (HTMLcontext.lastElement);
-	        if (elType.ElTypeNum == HTML_EL_BR)
-		   ignoreLeadingSpaces = TRUE;
-		}
+	     ignoreLeadingSpaces = TRUE;
+	     if (IsCharacterLevelElement (HTMLcontext.lastElement))
+		 {
+		   if (elType.ElTypeNum != HTML_EL_Option_Menu &&
+		       elType.ElTypeNum != HTML_EL_OptGroup)
+		     {
+		       ignoreLeadingSpaces = FALSE;
+		       elType = TtaGetElementType (HTMLcontext.lastElement);
+		       if (elType.ElTypeNum == HTML_EL_BR)
+			 ignoreLeadingSpaces = TRUE;
+		     }
+		 }
 	     else
-	        ignoreLeadingSpaces = TRUE;
+	       {
+		 elType = TtaGetElementType (HTMLcontext.lastElement);
+		 if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) &&
+		     ((elType.ElTypeNum == HTML_EL_Comment_) ||
+		     (elType.ElTypeNum == HTML_EL_XMLPI)))
+		   ignoreLeadingSpaces = FALSE;
+
+		 if (ignoreLeadingSpaces)
+		   {
+		     lastType = TtaGetElementType (HTMLcontext.lastElement);
+		     if ((strcmp (TtaGetSSchemaName (lastType.ElSSchema), "MathML") == 0) &&
+			 (lastType.ElTypeNum == MathML_EL_MathML))
+		       ignoreLeadingSpaces = FALSE;
+		   }
+	       }
 	  }
 	else
 	   /* the new Text element should be the first child of the latest
@@ -5454,8 +5471,8 @@ static void CheckBlocksInCharElem (Document doc)
   ElementType	      elType, parentType;
   ThotBool            done;
   
-  /* check all block-level elements whose parent was a character-level
-     element */
+  /* check all block-level elements whose parent 
+     was a character-level element */
   elTBC = FirstElemToBeChecked;
   while (elTBC != NULL)
     {
@@ -5479,6 +5496,7 @@ static void CheckBlocksInCharElem (Document doc)
 		{
 		  first = TtaGetFirstChild (el);
 		  child = first;
+		  last = NULL;
 		  /* move the pseudo paragrah as sibling of parent*/
 		  TtaRemoveTree (el, doc);
 		  TtaInsertSibling (el, parent, TRUE, doc);
@@ -5495,7 +5513,10 @@ static void CheckBlocksInCharElem (Document doc)
 		      if (child == first)
 			TtaInsertFirstChild (&child, parent, doc);
 		      else
-			TtaInsertSibling (child, last, TRUE, doc);
+			/* Modif LC 21/06/01 */
+			/* Insert the element 'child' after the element
+			   'last', not before */
+			TtaInsertSibling (child, last, FALSE, doc);
 		      last = child;
 		      child = next;
 		    }

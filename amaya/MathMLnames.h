@@ -11,7 +11,7 @@ static ElemMapping    MathMLElemMappingTable[] =
    {"c", SPACE, MathML_EL_TEXT_UNIT, L_Other, TRUE},
    {"maligngroup", 'E', MathML_EL_MALIGNGROUP, L_Other, FALSE},
    {"malignmark", 'E', MathML_EL_MALIGNMARK, L_Other, FALSE},
-   {"math", SPACE, MathML_EL_MathML, L_Other, FALSE},
+   {"math", SPACE, MathML_EL_MathML, L_Other, TRUE},
    {"menclose", SPACE, MathML_EL_MENCLOSE, L_Other, FALSE},
    {"merror", SPACE, MathML_EL_MERROR, L_Other, FALSE},
    {"mf", SPACE, MathML_EL_MF, L_Other, FALSE},  /* for compatibility with an old version of MathML: WD-math-970704 */

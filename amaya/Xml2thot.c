@@ -1676,7 +1676,7 @@ static void       EndOfXmlStartElement (char *elementName)
   AttributeType   attrType;
   Attribute       attr;
   int             length;
-  char           *text, *elSchemaName;
+  char           *text;
 
   if (UnknownTag)
     return;
@@ -1684,9 +1684,7 @@ static void       EndOfXmlStartElement (char *elementName)
   if (XMLcontext.lastElement != NULL && currentElementName[0] != EOS)
     {
       elType = TtaGetElementType (XMLcontext.lastElement);
-      elSchemaName = TtaGetSSchemaName (elType.ElSSchema);
-      
-      if (strcmp ("HTML", elSchemaName) == 0)
+      if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
 	{
 	  if (!strcmp (nameElementStack[stackLevel - 1], "pre")   ||
 	      !strcmp (nameElementStack[stackLevel - 1], "style") ||
@@ -1825,7 +1823,6 @@ static ThotBool  IsLeadingSpaceUseless ()
 {
    ElementType   elType, lastElType, ancestorType;
    Element       parent, ancestor, prev;
-   char         *elSchemaName;
    ThotBool      removeLeadingSpaces;
 
    if (InsertSibling ())
@@ -1836,29 +1833,29 @@ static ThotBool  IsLeadingSpaceUseless ()
        if (parent == NULL)
 	 parent = XMLcontext.lastElement;
        elType = TtaGetElementType (parent);
-       elSchemaName = TtaGetSSchemaName (elType.ElSSchema);
        lastElType = TtaGetElementType (XMLcontext.lastElement);
-       if (IsXMLElementInline (lastElType) &&
-	   ((strcmp ("HTML", elSchemaName) != 0) ||
-	   ((strcmp ("HTML", elSchemaName) == 0) &&
-	    (elType.ElTypeNum != HTML_EL_Option_Menu) &&
-	    (elType.ElTypeNum != HTML_EL_OptGroup))))
+       removeLeadingSpaces = TRUE;
+       if (IsXMLElementInline (lastElType))
 	 {
-	   removeLeadingSpaces = FALSE;
-	   elType = TtaGetElementType (XMLcontext.lastElement);
-	   if ((elType.ElTypeNum == HTML_EL_BR) && 
-	       (strcmp ("HTML", elSchemaName) == 0))
-	     removeLeadingSpaces = TRUE;
+	   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
+	     removeLeadingSpaces = FALSE;
+	   else
+	     {
+	       if (elType.ElTypeNum != HTML_EL_Option_Menu &&
+		   elType.ElTypeNum != HTML_EL_OptGroup)
+		 {
+		   removeLeadingSpaces = FALSE;
+		   if (lastElType.ElTypeNum == HTML_EL_BR)
+		     removeLeadingSpaces = TRUE;
+		 }
+	     }
 	 }
        else
 	 {
-	   if (!IsXMLElementInline (lastElType) &&
-	       (strcmp ("HTML", elSchemaName) == 0) &&
+	   if ((strcmp (TtaGetSSchemaName (lastElType.ElSSchema), "HTML") == 0) &&
 	       ((lastElType.ElTypeNum == HTML_EL_Comment_) ||
 		(lastElType.ElTypeNum == HTML_EL_XMLPI)))
 	     removeLeadingSpaces = FALSE;
-	   else
-	     removeLeadingSpaces = TRUE;
 	 }
      }
    else
@@ -1866,13 +1863,12 @@ static ThotBool  IsLeadingSpaceUseless ()
 	of the latest element encountered */
      {
        parent = XMLcontext.lastElement;
-       removeLeadingSpaces = TRUE;
        elType = TtaGetElementType (XMLcontext.lastElement);
-       elSchemaName = TtaGetSSchemaName (elType.ElSSchema);
-       if ((strcmp ("HTML", elSchemaName) != 0) ||
-	   ((strcmp ("HTML", elSchemaName) == 0) &&
-	   elType.ElTypeNum != HTML_EL_Option_Menu &&
-	   elType.ElTypeNum != HTML_EL_OptGroup))
+       removeLeadingSpaces = TRUE;
+       if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0) ||
+	   ((strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML")  == 0) &&
+	    elType.ElTypeNum != HTML_EL_Option_Menu &&
+	    elType.ElTypeNum != HTML_EL_OptGroup))
 	 {
 	   ancestor = parent;
 	   ancestorType = TtaGetElementType (ancestor);
@@ -3326,12 +3322,12 @@ static void       Hndl_ElementStart (void *userData,
 		 TtaFreeMemory (attrName);
 	       if (attrValue != NULL)
 		 TtaFreeMemory (attrValue);
-
+	       
 	       /* Restore the context (it may have been changed */
 	       /* by the treatment of the attribute) */
 	       currentParserCtxt = elementParserCtxt;
 	     }
-	   
+
 	   /*----- Treatment called at the end of start tag -----*/
 	   EndOfXmlStartElement (elementName);
 	   
@@ -4018,21 +4014,22 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
 	}
     }
   
-  /* Free expat parser */ 
-  FreeXmlParserContexts ();
-  FreeExpatParser ();
+  TtaSetStructureChecking (1, doc);
 
   if (svgEl != NULL && !XMLNotWellFormed)
-    TtaSetAccessRight (TtaGetParent (svgEl), ReadOnly, doc);
+    /* TtaSetAccessRight (TtaGetParent (svgEl), ReadOnly, doc); */
+    TtaSetAccessRight (svgEl, ReadOnly, doc);
 
   if (docURL != NULL)
     {
       TtaFreeMemory (docURL);
       docURL = NULL;
     }
-
-  TtaSetStructureChecking (1, doc);
   TtaSetDisplayMode (doc, DisplayImmediately);
+
+  /* Free expat parser */ 
+  FreeXmlParserContexts ();
+  FreeExpatParser ();
 
   return (!XMLNotWellFormed);
 }
