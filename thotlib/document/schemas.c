@@ -328,8 +328,8 @@ ThotBool LoadPresentationSchema (Name schemaName, PtrSSchema pSS,
    pSS pointe le schema de structure auquel le schema de           
    presentation a liberer est associe.
   ----------------------------------------------------------------------*/
-void               FreePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
-					   PtrDocument pDoc)
+void FreePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
+			     PtrDocument pDoc)
 {
   PtrDocSchemasDescr   pPfS, pPrevPfS;
   PtrHandlePSchema     pHSP, pNextHSP;
@@ -1009,16 +1009,19 @@ void             FreeDocumentSchemas (PtrDocument pDoc)
    while (pDoc->DocFirstSchDescr)
      {
        pSS = pDoc->DocFirstSchDescr->PfSSchema;
+       if (pSS)
+	 {
 #ifndef NODISPLAY
-       FreePresentationSchema (pDoc->DocFirstSchDescr->PfPSchema, pSS, pDoc);
+	   FreePresentationSchema (pDoc->DocFirstSchDescr->PfPSchema, pSS, pDoc);
 #endif
-       if (ReleaseStructureSchema (pSS, pDoc))
-	 /* this structure schema has been unloaded */
-	 /* remove any reference to that schema from all Nature rules
-	    of other S schemas */
-	 for (i = 0; i < MAX_SSCHEMAS; i++)
-	   if (LoadedSSchema[i].pStructSchema)
-	     FreeNatureRules (LoadedSSchema[i].pStructSchema, pSS);
+	   if (ReleaseStructureSchema (pSS, pDoc))
+	     /* this structure schema has been unloaded */
+	     /* remove any reference to that schema from all Nature rules
+		of other S schemas */
+	     for (i = 0; i < MAX_SSCHEMAS; i++)
+	       if (LoadedSSchema[i].pStructSchema)
+		 FreeNatureRules (LoadedSSchema[i].pStructSchema, pSS);
+	 }
      }
    pDoc->DocSSchema = NULL;
 }
