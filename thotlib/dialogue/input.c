@@ -1058,6 +1058,7 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 	  index = MY_KEY_Up;
 	  break;
 	case THOT_KEY_Return:
+	case 10:
 	  index = MY_KEY_Return;
 	  break;
 	case THOT_KEY_Left:
