@@ -2888,7 +2888,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 {
   PtrBox              box;
-  PtrAbstractBox      pAb;
+  PtrAbstractBox      pAb, relAb;
   PtrAbstractBox      pCurrentAb;
   PtrPosRelations     pPosRel;
   BoxRelation        *pRelation;
@@ -3011,7 +3011,9 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 				box = pAb->AbBox;
 			      else
 				box = NULL;
-			      if (pRelation->ReBox != box || Propagate == ToAll)
+			      relAb = pRelation->ReBox->BxAbstractBox;
+			      if (relAb->AbEnclosing != pCurrentAb &&
+				  (pRelation->ReBox != box || Propagate == ToAll))
 				MoveVertRef (pRelation->ReBox, pBox, delta, frame);
 			    }
 			}
@@ -3098,7 +3100,7 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 {
   PtrBox              box;
-  PtrAbstractBox      pAb;
+  PtrAbstractBox      pAb, relAb;
   PtrAbstractBox      pCurrentAb;
   PtrPosRelations     pPosRel;
   BoxRelation        *pRelation;
@@ -3216,11 +3218,14 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 			  if (pRelation->ReBox != pBox)
 			    {
 			      pAb = pCurrentAb->AbEnclosing;
-			      if (pAb != NULL)
+			      if (pAb)
 				box = pAb->AbBox;
 			      else
 				box = NULL;
-			      if (pRelation->ReBox != box || Propagate == ToAll)
+			      relAb = pRelation->ReBox->BxAbstractBox;
+			      if (relAb->AbEnclosing != pCurrentAb &&
+				  (pRelation->ReBox != box || Propagate == ToAll))
+				/* don't change internal refs */
 				MoveHorizRef (pRelation->ReBox, pBox, delta, frame);
 			    }
 			}
