@@ -6,7 +6,7 @@
 #
 # And the associated Librairies for supported versions.
 #
-EDITORVERSION=2.2
+EDITORVERSION=2.1a
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 
