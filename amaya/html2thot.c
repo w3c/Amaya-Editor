@@ -4859,7 +4859,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
   *xmlns = FALSE;
   *parsingLevel = L_Other;
   *charset = UNDEFINED_CHARSET;
-  *thotType = docHTML;
+  *thotType = docText;
   stream = gzopen (fileName, "r");
   if (stream != 0)
     {
