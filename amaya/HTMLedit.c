@@ -2923,6 +2923,7 @@ void CheckNewLines (NotifyOnTarget *event)
 	      sibLength = TtaGetElementVolume (next);
 	      sibLength+= 2;
 	      sibContent = (CHAR_T *)TtaGetMemory (sibLength * sizeof(CHAR_T));
+	      sibContent[1] = EOS;
 	      TtaGiveBufferContent (next, &sibContent[1], sibLength-1, &lang);
 	      if (sibContent[1] != SPACE)
 		/* no space at the beginning of the next text element */
