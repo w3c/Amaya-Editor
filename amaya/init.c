@@ -2538,7 +2538,6 @@ static Document LoadDocument (Document doc, char *pathname,
   char               *s;
   char               *content_type;
   char               *http_content_type;
-  char               *profile;
   int                 i, j;
   int                 parsingLevel;
   ThotBool            unknown;
@@ -3543,7 +3542,7 @@ void ShowStructure (Document document, View view)
   ShowAlternate
   Open the Alternate view of an HTML document.
   ----------------------------------------------------------------------*/
-void                ShowAlternate (Document document, View view)
+void ShowAlternate (Document document, View view)
 {
    View                altView;
    int                 x, y, w, h;

@@ -321,8 +321,8 @@ void CallbackImage (int ref, int typedata, char *data)
 	}
       break;
     case ImageAlt:
-      strncpy (ImgAlt, data, NAME_LENGTH-1);
-      ImgAlt[NAME_LENGTH-1] = EOS;
+      strncpy (ImgAlt, data, MAX_LENGTH - 1);
+      ImgAlt[MAX_LENGTH - 1] = EOS;
       break;
     case ImageDir:
       if (!strcmp (data, ".."))
@@ -375,7 +375,7 @@ void InitImage (void)
    BaseImage = TtaSetCallback (CallbackImage, IMAGE_MAX_REF);
    RepeatValue = 0;
    LastURLImage[0] = EOS;
-   strcpy (ImgFilter, ".gif");
+   strcpy (ImgFilter, "*.gif");
    /* set path on current directory */
    getcwd (DirectoryImage, MAX_LENGTH);
 }
