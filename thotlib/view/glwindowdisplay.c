@@ -1357,6 +1357,9 @@ AnimTime ComputeThotCurrentTime (int frame)
   return current_time;
 }
 
+/* flag used to display only once opengl status (version, renderer ...)*/
+static ThotBool DisplayOpenGLStatus = TRUE;
+ 
 #define GLU_ERROR_MSG "\nSorry, Amaya requires GLU 1.2 or later.\n"
 /*----------------------------------------------------------------------
   SetGlPipelineState : Detect Opengl, Software, Hardware, 
@@ -1400,25 +1403,29 @@ void SetGlPipelineState ()
       SetBadCard (!badbuffer);
     }
   
-  /* Print opengl status : usefull for debug on multiple plateformes */
-  printf ("\nOpenGL Status:");
-  printf ("\n  Software Mode = %s", Software_Mode ? "Soft" : "Hard" );
-  /* Display Opengl Vendor Name,  Opengl Version, Opengl Renderer*/
-  printf ("\n  VENDOR : %s\n  VERSION : %s\n  RENDERER : %s", 
-	   (char *)glGetString(GL_VENDOR), 
-	   (char *)glGetString(GL_VERSION), 
-	   (char *)glGetString(GL_RENDERER));
-  /* g_print( "%s\n", (char *)glGetString(GL_EXTENSIONS));  */
-  printf ("\n  GLU Version : %s", 
-	   (char *)gluGetString (GLU_VERSION));
-  glGetIntegerv (GL_AUX_BUFFERS,      &auxnumBuffers);
-  glGetIntegerv (GL_ACCUM_RED_BITS,   &acred);
-  glGetIntegerv (GL_ACCUM_GREEN_BITS, &acgreen); 
-  glGetIntegerv (GL_ACCUM_BLUE_BITS,  &acblue); 
-  glGetIntegerv (GL_ACCUM_ALPHA_BITS, &acalpha);
-  printf ("\n  Aux buffers count %d", auxnumBuffers);
-  printf ("\n  Acumm rgba : %d %d %d %d", acred, acgreen, acblue, acalpha);
-  printf ("\n");
+  if ( DisplayOpenGLStatus )
+  {
+    /* Print opengl status : usefull for debug on multiple plateformes */
+    printf ("\nOpenGL Status:");
+    printf ("\n  Software Mode = %s", Software_Mode ? "Soft" : "Hard" );
+    /* Display Opengl Vendor Name,  Opengl Version, Opengl Renderer*/
+    printf ("\n  VENDOR : %s\n  VERSION : %s\n  RENDERER : %s", 
+	    (char *)glGetString(GL_VENDOR), 
+	    (char *)glGetString(GL_VERSION), 
+	    (char *)glGetString(GL_RENDERER));
+    /* g_print( "%s\n", (char *)glGetString(GL_EXTENSIONS));  */
+    printf ("\n  GLU Version : %s", 
+	    (char *)gluGetString (GLU_VERSION));
+    glGetIntegerv (GL_AUX_BUFFERS,      &auxnumBuffers);
+    glGetIntegerv (GL_ACCUM_RED_BITS,   &acred);
+    glGetIntegerv (GL_ACCUM_GREEN_BITS, &acgreen); 
+    glGetIntegerv (GL_ACCUM_BLUE_BITS,  &acblue); 
+    glGetIntegerv (GL_ACCUM_ALPHA_BITS, &acalpha);
+    printf ("\n  Aux buffers count %d", auxnumBuffers);
+    printf ("\n  Acumm rgba : %d %d %d %d", acred, acgreen, acblue, acalpha);
+    printf ("\n");
+    DisplayOpenGLStatus = FALSE;
+  }
 
   /*  glClearColor (1, 0, 0, 0); */
   /* no fog*/
