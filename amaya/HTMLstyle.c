@@ -2845,6 +2845,10 @@ boolean             isHTML;
 	/* select the element BODY */
 	target = (PresentationTarget)el;
     }
+  else if (css)
+      el = NULL;
+  else
+      el = (Element) target;
 
   url = NULL;
   cssRule = TtaSkipBlanks (cssRule);
