@@ -15,7 +15,8 @@ LIBS	=  $(AMAYA_LIBWWW_LIBS) $(AMAYA_JAVA_LIBS) $(AMAYA_PLUGIN_LIBS) \
 	  $(AMAYA_MATH_LIBS) $(AMAYA_GRAPH_LIBS) $(AMAYA_ANNOT_LIBS) \
           -L../tablelib -L../thotlib -L.. -lThotTable -lThotEditor \
           $(AMAYA_OPTION_EXTRA_LIBS) $(IMGLIBS) \
-	  $(MOTIF_LIBRARIES) $(XMLIB) $(X_LIBS) -lXt $(X_PRE_LIBS) \
+	  $(MOTIF_LIBRARIES) $(GTK_LIBRARIES) \
+	  $(XMLIB) $(X_LIBS) -lXt $(X_PRE_LIBS) \
 	  -lXext -lX11 $(X_EXTRA_LIBS) @LIBS@ @EXTRA_LIBS@ -lm
 
 CONFIGFILES=XKeysymDB unix-thot.rc amaya.keyboard \
