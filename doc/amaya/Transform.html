@@ -100,8 +100,8 @@ they are inserted when transforming the source element.
 The target tag list is itself divided into two parts separated by a colon
 <STRONG><CODE>:</CODE></STRONG> :</P>
 <UL>
-<LI>the generation location path (identifiates of the place where new tags
-have to be inserted).
+<LI>the generation location path (identifies the place where new tags have to
+be inserted).
 <LI>and the list of tags to be generated.
 </UL>
 <P>
@@ -118,7 +118,7 @@ moved to a different place in the destination.</P>
 <P>
 If the source tag or the name in the left part of a rules is present more than
 once in the pattern, the rule transforms all the elements matching an
-occurence of the tag in the pattern.</P>
+occurrence of the tag in the pattern.</P>
 <HR>
 <H2>Transformation process</H2>
 
@@ -131,8 +131,8 @@ transformations are proposed to the user in a pop-up menu.</P>
 If several transformations with the same name match the selected elements, the
 higher-level matching transformation is proposed to the user. If several
 transformations match at the same level, the first one declared in the
-<CODE>HTML.trans</CODE> file is proposed. As a consequence it is recomended to
-specify the transformations with specific patterns before the more general
+<CODE>HTML.trans</CODE> file is proposed. As a consequence it is recommended
+to specify the transformations with specific patterns before the more general
 ones.</P>
 <P>
 Once a transformation has been chosen by the user, the destination structure
@@ -141,7 +141,7 @@ is built according to the rules while selected elements are traversed.</P>
 Finally, the contents of the source elements (text and pictures, but also
 structured elements) are moved into the produced elements.</P>
 <P>
-This transofrmation process for HTML documents is fully described in <A
+This transformation process for HTML documents is fully described in <A
 href="http://opera.inrialpes.fr/OPERA/Papers/WWW96/WWW96.html"><EM>Interactively
 Restructuring HTML Documents</EM></A>, a paper presented at the <A
 href="http://www5conf.inria.fr/">5th international WWW conference</A> in
@@ -150,7 +150,7 @@ Paris, May 96, by C&eacute;cile Roisin and St&eacute;phane Bonhomme.</P>
 <H2><A name="L235">Examples</A></H2>
 
 <UL>
-<LI>The first example merges several consecutive unumbered lists (UL) into an
+<LI>The first example merges several consecutive unnumbered lists (UL) into an
 unique list.
 <PRE>
 Merge Lists: (UL{LI+})+;
@@ -159,14 +159,14 @@ Merge Lists: (UL{LI+})+;
     }
 </PRE>
 <P>
-The pattern matches a sequence of unumbered lists (UL), that contain a
+The pattern matches a sequence of unnumbered lists (UL), that contain a
 sequence of items (LI).</P>
 <P>
 The rule expresses that each time an item is encountered when traversing the
-matched elements, a new LI tag is created whithin an UL. When the rule is
-first applied, the resulting structure is empty, so there is no UL element in
-which the LI can be created. Therefore an UL is first created, then the rule
-can be applied.</P>
+matched elements, a new LI tag is created within an UL. When the rule is first
+applied, the resulting structure is empty, so there is no UL element in which
+the LI can be created. Therefore an UL is first created, then the rule can be
+applied.</P>
 <P>
 </P>
 <LI>The second example transforms a definition list into a table.
@@ -217,7 +217,6 @@ examples.
 <A href="mailto:Stephane.Bonhomme@inrialpes.fr">St&eacute;phane
 Bonhomme</A></P>
 <P>
-<A href="/opera/WWW/Help/Webmaster">Webmaster</A><BR>$Date: 1996/08/2210:10:41
-$</P>
+<A href="/opera/WWW/Help/Webmaster">Webmaster</A><BR>$Date$</P>
 </BODY>
 </HTML>
