@@ -26,33 +26,32 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 // Dialog
 //
 
-PUBLISHMENU DIALOG DISCARDABLE  100, 100, 255, 225
+PUBLISHMENU DIALOG DISCARDABLE  100, 100, 255, 212
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Publishing Preferences"
 FONT 8, "MS Sans Serif"
 BEGIN
-    LTEXT           "Charset for new documents",IDC_CHARSET_TITLE,7,13,214,
-                    11
-    LISTBOX         IDC_CHARSET_LIST,7,22,163,47,LBS_SORT | 
+    LTEXT           "Charset for new documents",IDC_CHARSET_TITLE,7,5,214,11
+    LISTBOX         IDC_CHARSET_LIST,7,15,163,47,LBS_SORT | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
     CONTROL         "Use the application/xhtml+xml MIME type for XHTML documents",
                     IDC_USEXHTMLMIMETYPE,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,75,241,8
+                    WS_TABSTOP,7,70,241,8
     CONTROL         "Use ETAGS and preconditions",IDC_LOSTUPDATECHECK,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,87,182,8
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,83,182,8
     CONTROL         "Verify each PUT with a GET",IDC_VERIFYPUBLISH,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,99,174,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,96,174,10
     CONTROL         "Export CR/LF",IDC_CRLF,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,7,111,138,10
     LTEXT           "Default name for URLs finishing in '/'",
-                    IDC_TDEFAULTNAME,7,131,190,8
-    EDITTEXT        IDC_DEFAULTNAME,7,144,164,12,ES_AUTOHSCROLL
+                    IDC_TDEFAULTNAME,7,127,190,8
+    EDITTEXT        IDC_DEFAULTNAME,7,138,164,12,ES_AUTOHSCROLL
     LTEXT           "Allow automatic PUT redirections on these domains",
-                    IDC_TSAFEPUTREDIRECT,7,163,182,8
-    EDITTEXT        IDC_SAFEPUTREDIRECT,7,174,164,12,ES_AUTOHSCROLL
-    DEFPUSHBUTTON   "Apply",ID_APPLY,31,193,50,14
-    PUSHBUTTON      "Defaults",ID_DEFAULTS,101,193,50,14
-    PUSHBUTTON      "Done",ID_DONE,171,193,50,14
+                    IDC_TSAFEPUTREDIRECT,7,158,182,8
+    EDITTEXT        IDC_SAFEPUTREDIRECT,7,168,164,12,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "Apply",ID_APPLY,31,191,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,101,191,50,14
+    PUSHBUTTON      "Done",ID_DONE,171,191,50,14
 END
 
 CACHEMENU DIALOG DISCARDABLE  100, 100, 243, 178
@@ -345,8 +344,7 @@ BEGIN
     BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 248
-        TOPMARGIN, 6
-        BOTTOMMARGIN, 218
+        BOTTOMMARGIN, 205
     END
 
     CACHEMENU, DIALOG

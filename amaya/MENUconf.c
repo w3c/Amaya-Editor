@@ -206,6 +206,7 @@ static HWND     CharsetList;
 static AM_WIN_MenuText WIN_PublishMenuText[] = 
 {
 	{AM_INIT_ALL, AM_PUBLISH_MENU},
+	{IDC_CHARSET_TITLE, AM_DEFAULT_CHARSET},
 	{IDC_USEXHTMLMIMETYPE, AM_USE_XHTML_MIMETYPE},
 	{IDC_LOSTUPDATECHECK, AM_USE_ETAGS},
 	{IDC_VERIFYPUBLISH, AM_VERIFY_PUT},
@@ -2427,6 +2428,9 @@ static void BuildCharsetList (void)
   if (CurrentCharset == -1)
     CurrentCharset = i_default;
   SendMessage (CharsetList, LB_SETCURSEL, (WPARAM)CurrentCharset, (LPARAM)0);
+
+  if (*CharsetType)
+  strcpy (NewCharset, CharsetType);
 }
 
 /*----------------------------------------------------------------------
@@ -2455,15 +2459,18 @@ void WIN_RefreshPublishMenu (HWND hwnDlg)
 LRESULT CALLBACK WIN_PublishDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 				     LPARAM lParam)
 { 
-  switch (msg)
+ int       itemIndex = 0;
+	
+	switch (msg)
     {
     case WM_INITDIALOG:
       PublishHwnd = hwnDlg;
-      /* initialize the menu text */
+      CharsetList = GetDlgItem (hwnDlg, IDC_CHARSET_LIST);
+      WIN_SetDialogfont (CharsetList);
+	  /* initialize the menu text */
       WIN_SetMenuText (hwnDlg, WIN_PublishMenuText);
       /* write the current values in the dialog entries */
       WIN_RefreshPublishMenu (hwnDlg);
-      CharsetList = GetDlgItem (hwnDlg, IDC_CHARSET_LIST);
       break;
 
     case WM_CLOSE:
@@ -2504,11 +2511,13 @@ LRESULT CALLBACK WIN_PublishDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	case IDC_CRLF:
 	  ExportCRLF = !ExportCRLF;
 	  break;
+	  /*
 	case IDC_CHARSET_LIST:
 	  CurrentCharset = SendMessage (CharsetList, LB_GETCURSEL, 0, 0);
 	  CurrentCharset = SendMessage (CharsetList, LB_GETTEXT, CurrentCharset,
-				   (LPARAM) NewScreen);
-
+				   (LPARAM) NewCharset);
+	  break;
+	  */
 	  /* action buttons */
 	case ID_APPLY:
 	  if (strcmp (CharsetType, NewCharset))
@@ -2533,6 +2542,20 @@ LRESULT CALLBACK WIN_PublishDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  WIN_RefreshPublishMenu (hwnDlg);
 	  break;
 	}
+
+     switch (HIWORD (wParam))
+	 {
+	  case LBN_SELCHANGE:
+	    itemIndex = SendMessage (CharsetList, LB_GETCURSEL, 0, 0);
+	    CurrentCharset = SendMessage (CharsetList, LB_GETTEXT, itemIndex,
+		  		     (LPARAM) NewCharset);
+	     SetDlgItemText (hwnDlg, IDC_PROFILENAME, NewCharset);
+	  break;
+	 }
+
+      break;
+ 
+
       break;	     
     default: return FALSE;
     }
@@ -2740,7 +2763,10 @@ void PublishConfMenu (Document document, View view)
    TtaSetDialoguePosition ();
    TtaShowDialogue (PublishBase + PublishMenu, TRUE);
 #else
-  if (!PublishHwnd)
+    /* load and display the current values */
+   GetPublishConf ();
+
+   if (!PublishHwnd)
 	   DialogBox (hInstance, MAKEINTRESOURCE (PUBLISHMENU), NULL, 
 	  (DLGPROC) WIN_PublishDlgProc);
   else
