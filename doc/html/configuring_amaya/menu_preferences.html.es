@@ -3,9 +3,9 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Menú Preferencias</title>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -122,10 +122,6 @@ pegado desde un aplicación externa. Cuando está activada, Amaya mantiene la
 separación en líneas de la aplicación original. Si está desactivada, los
 caracteres de <code>salto de línea</code> se sustituyen por espacios.</p>
 
-<p><strong>Mostrar imágenes de fondo.</strong> Controla la presentación de
-las imágenes de fondo. Esta opción se tiene en cuenta al cargar un
-documento.</p>
-
 <p><strong>Mostrar barra de botones.</strong> Controla si se muestra la barra
 de botones en las vistas principales del documento.</p>
 
@@ -219,6 +215,10 @@ marcada indica que la opción está activada.</p>
 <p><strong>Cargar imágenes.</strong> Controla si las imágenes deben cargarse.
 Esta opción se utiliza al cargar nuevos documentos.</p>
 
+<p><strong>Mostrar imágenes de fondo.</strong> Controla la presentación de
+las imágenes de fondo. Esta opción se tiene en cuenta al cargar un
+documento.</p>
+
 <p><strong>Doble clic activa enlaces.</strong> Desde la primera versión de
 Amaya, para activar un enlace hay que hacer doble clic en él. Eso te permite
 elegir entre editar o activar un enlace. Puedes deshabilitar este
@@ -227,10 +227,12 @@ comportamiento desactivando esta opción.</p>
 <p><strong>Activar FTP.</strong> Permite a Amaya abrir URLs de FTP. Este
 soporte es experimental y todavía tiene errores. Por ejemplo, en los URLs de
 FTP que necesitan autentificar al usuario, la información de autentificación
-no se memoriza siempre. Además, si pulsas el botón <strong>Detener</strong>
-durante una descarga FTP Amaya puede bloquearse. Debido a estos problemas,
-esta opción se añadió para que otros desarrolladores pudieran ayudar a
-resolver los problemas. Por omisión, esta opción está desactivada.</p>
+no se memoriza siempre. Además, si pulsas el botón</p>
+
+<p><strong>Detener</strong> durante una descarga FTP Amaya puede bloquearse.
+Debido a estos problemas, esta opción se añadió para que otros
+desarrolladores pudieran ayudar a resolver los problemas. Por omisión, esta
+opción está desactivada.</p>
 
 <h2>Publicación</h2>
 
