@@ -14,7 +14,7 @@
 13 Aide
 14 Nouveau
 15 Ouvrir
-16 Ouvrir et Vue
+16 Ouvrir dans nouvelle fenetre
 17 Recharger le document
 18 Sauver
 19 Sauver comme
@@ -51,13 +51,13 @@
 50 Liste de definitions
 51 Terme
 52 Definition
-53 Horizontal Rule
-54 BlockQuote
-55 Preformatted
-56 Address
+53 Trait horizontal
+54 Citation
+55 Preformat\351
+56 Adresse
 57 Table
 58 Table
-59 Caption
+59 L\351gende
 60 THead
 61 TBody
 62 TFoot
@@ -96,8 +96,8 @@
 95 Couleurs
 96 Format
 97 Image de fond
-98 Cr\351er une Classe
-99 Appliquer une Classe
+98 Cr\351er une r\350gle
+99 Appliquer une classe
 100 Feuilles de style
 101 Types information
 102 Emphase
