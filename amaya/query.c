@@ -222,6 +222,10 @@ AHTReqContext      *me;
 
 	if (me->error_stream != (char *) NULL)
 	   HT_FREE (me->error_stream);
+	
+	if (me->read_xtinput_id || me->write_xtinput_id ||
+            me->except_xtinput_id)
+          RequestKillAllXtevents(me);
 
 	TtaFreeMemory ((void *) me);
 
@@ -299,13 +303,15 @@ static void         Thread_deleteAll (void)
 static void         Thread_deleteAll ()
 #endif
 {
+  HTList             *cur;
+  AHTReqContext      *me;
+  AHTDocId_Status    *docid_status;
+
    if (Amaya && Amaya->reqlist)
      {
 	if (Amaya->open_requests > 0)
 	  {
-	     HTList             *cur = Amaya->reqlist;
-	     AHTReqContext      *me;
-	     AHTDocId_Status    *docid_status;
+	    cur = Amaya->reqlist;
 
 	     HTNet_killAll ();
 	     /* erase the requests */
@@ -319,14 +325,12 @@ static void         Thread_deleteAll ()
 		       AHTReqContext_delete (me);
 		    }
 	       }		/* while */
-	     HTList_delete (Amaya->reqlist);
+
 	     /* erase the docid_status entities */
 	     while ((docid_status = (AHTDocId_Status *) HTList_removeLastObject ((void *) Amaya->docid_status)))
 		TtaFreeMemory ((void *) docid_status);
 
-	     HTList_delete (Amaya->reqlist);
 	  }			/* if */
-	TtaFreeMemory ((void *) Amaya);
      }
 }
 
@@ -401,14 +405,14 @@ int                 status;
 	  }
 
 	/* update the current file name */
-	if (strlen (new_anchor->parent->address) > (MAX_LENGTH - 1))
+	if (strlen (new_anchor->parent->address) > (MAX_LENGTH - 2))
 	  {
 	     /*
 	        ** copy MAX_LENGTH cars. The error will be detected later on and shown on the
 	        ** screen. This code will be fixed up later on
 	      */
-	     strncpy (me->urlName, new_anchor->parent->address, MAX_LENGTH);
-	     me->urlName[MAX_LENGTH] = '\0';
+	     strncpy (me->urlName, new_anchor->parent->address, MAX_LENGTH - 1);
+	     me->urlName[MAX_LENGTH - 1] = EOS;
 	  }
 	else
 	   strcpy (me->urlName, new_anchor->parent->address);
@@ -531,10 +535,9 @@ int                 status;
 				 HT_LOADED);
      }
    else if (me->reqStatus == HT_ABORT)
+     /* either the application ended or the user pressed the stop 
+	button. We erase the incoming file, if it exists */
      {
-	if (me->terminate_cbf)
-	   (*me->terminate_cbf) ((AHTReqContext *) me,
-				 HT_ERROR);
 	if (me->outputfile && me->outputfile[0] != EOS)
 	  {
 	     TtaFileUnlink (me->outputfile);
@@ -577,15 +580,17 @@ int                 status;
 	or in PutObjectWWW */
      {
 	TtaFreeMemory (me->urlName);
+	me->urlName = NULL;
 	TtaFreeMemory (me->outputfile);
+	me->outputfile = NULL;
      }
 
    /* don't remove or Xt will hang up during the put */
 
    if (me->method == METHOD_PUT || me->method == METHOD_POST)
      {
-	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE),
-		      me->urlName);
+	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE),
+		       me->urlName);
 
      }
    return HT_OK;
@@ -925,6 +930,11 @@ static void         AHTProfile_delete ()
 	/* Terminate libwww */
 	HTLibTerminate ();
      }
+
+   /* free the global context */
+   HTList_delete (Amaya->docid_status);
+   HTList_delete (Amaya->reqlist);
+   TtaFreeMemory (Amaya);
 }
 
 /*----------------------------------------------------------------------
@@ -1069,13 +1079,20 @@ static int          LoopForStop (AHTReqContext * me)
 
 /*----------------------------------------------------------------------
   QueryClose
-  closes all existing threads, frees all allocated memory and then
-  ends libwww.
+  closes all existing threads, frees all non-automatically deallocated
+  memory and then ends libwww.
   ----------------------------------------------------------------------*/
 void                QueryClose ()
 {
-   Thread_deleteAll ();
+   /* remove all the handlers and callbacks that may output a message to
+      a non-existent Amaya window */
 
+   HTNet_deleteAfter (AHTLoadTerminate_handler);
+   HTNet_deleteAfter (redirection_handler);
+   HTAlertCall_deleteAll (HTAlert_global () );
+
+   Thread_deleteAll ();
+ 
 #ifndef HACK_WWW
 /**  HTAuthInfo_deleteAll (); **/
 #endif
@@ -1335,10 +1352,10 @@ boolean             error_html;
 	strcpy (tmp, outputfile);
 	me->outputfile = tmp;
 
-	tmp = TtaGetMemory (MAX_LENGTH);
-	strcpy (tmp, urlName);
+	tmp = TtaGetMemory (MAX_LENGTH + 1);
+        strncpy (tmp, urlName, MAX_LENGTH);
+        tmp[MAX_LENGTH] = EOS;
 	me->urlName = tmp;
-
      }
    else
      {
@@ -1379,10 +1396,15 @@ generated
 
 	/* in case of error, free all allocated memory and exit */
 
+	if (me->output)
+	    fclose (me->output);
+
 	if ((mode & AMAYA_ASYNC) || (mode & AMAYA_IASYNC))
 	  {
-	     TtaFreeMemory (me->outputfile);
-	     TtaFreeMemory (me->urlName);
+	    if(me->outputfile)
+	      TtaFreeMemory (me->outputfile);
+	    if(me->urlName)
+	      TtaFreeMemory (me->urlName);
 	  }
 	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
 		      me->urlName);
@@ -1427,6 +1449,9 @@ generated
 			   */
 			  if (THD_TRACE)
 			     fprintf (stderr, "GetObjectWWW: %s is pending. Closing fd %d\n", me->urlName, (int) me->output);
+			  /* free the allocated stream object */
+			  AHTFWriter_FREE (HTRequest_outputStream(me->request));
+			  HTRequest_setOutputStream (me->request, (HTStream *) NULL);
 			  fclose (me->output);
 			  me->output = NULL;
 			  break;

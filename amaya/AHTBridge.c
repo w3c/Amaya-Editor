@@ -148,6 +148,10 @@ XtInputId          *id;
      
      /* first we change the status of the request, to say it
 	has entered a critical section */
+
+     if((HTRequest_outputStream(me->request) == (HTStream *) NULL))
+       fprintf(stderr,"\n **ERROR** opening %s\n\n",me->urlName);
+
      me->reqStatus = HT_BUSY;
      if ((status = (*cbf) (*s, rqp, ops)) != HT_OK)
        HTTrace ("Callback.... received != HT_OK");
@@ -252,29 +256,34 @@ HTAlertPar         *reply;
 {
    AHTReqContext      *me = HTRequest_context (request);
 
-   if (me->reqStatus == HT_NEW_PENDING)
+   if (me->reqStatus == HT_BUSY)
+     /* request was aborted and now is is being reissued */
      {
-	/* we are dequeing a pending request */
-	if (me->outputfile && (me->output = fopen (me->outputfile, "w")) == NULL)
-	  {
-	    /* the request is associated with a file */
+       rewind (me->output);
+       HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
+     } else if (me->reqStatus == HT_NEW_PENDING)
+       {
+	 /* we are dequeing a pending request */
+	 if (me->outputfile && (me->output = fopen (me->outputfile, "w")) == NULL)
+	   {
+	     /* the request is associated with a file */
 	     me->outputfile[0] = '\0';	/* file could not be opened */
 	     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
 			   me->outputfile);
 	     me->reqStatus = HT_ERR;
 	     return (HT_ERROR);
-	  }
-	if (THD_TRACE)
+	   }
+	 if (THD_TRACE)
 	   fprintf (stderr, "Add_NewSocket_to_Loop: Activating pending %s . Open fd %d\n", me->urlName, (int) me->output);
-	HTRequest_setOutputStream (me->request,
-			     AHTFWriter_new (me->request, me->output, YES));
-     }
+	 HTRequest_setOutputStream (me->request,
+				    AHTFWriter_new (me->request, me->output, YES));
+       }
 
    /*change the status of the request */
    me->reqStatus = HT_WAITING;
 
    if (THD_TRACE)
-      fprintf (stderr, "(Activating a pending request\n");
+     fprintf (stderr, "(Activating a pending request\n");
 
    return (HT_OK);
 }
