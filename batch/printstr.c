@@ -460,6 +460,9 @@ int                 Num;
 	    case ExcExtendedSelection:
 	       printf ("ExtendedSelection");
 	       break;
+	    case ExcClickableSurface:
+	       printf ("ClickableSurface");
+	       break;
 	    case ExcReturnCreateNL:
 	       printf ("ReturnCreateNL");
 	       break;

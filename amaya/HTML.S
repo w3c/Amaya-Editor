@@ -818,7 +818,7 @@ EXCEPT
 	Address:	ParagraphBreak;
 	Term:		ParagraphBreak;
 	MAP:		IsDraw;
-	AREA:		MoveResize;
+	AREA:		MoveResize, ClickableSurface;
 	Password_Input: Shadow;
 	Preformatted:	ReturnCreateNL;
 	STYLE_:		ReturnCreateNL;

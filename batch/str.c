@@ -1864,6 +1864,9 @@ SyntRuleNum         pr;
        case KWD_ExtendedSelection:
 	 ExceptionNum (ExcExtendedSelection, True, False, False, wi);
 	 break;
+       case KWD_ClickableSurface:
+	 ExceptionNum (ExcClickableSurface, True, False, False, wi);
+	 break;
        case KWD_ReturnCreateNL:
 	 ExceptionNum (ExcReturnCreateNL, True, False, False, wi);
 	 break;

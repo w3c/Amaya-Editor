@@ -1926,6 +1926,7 @@ exceptions are indicated by a name.  They are separated by semicolons.</p>
                     'PageBreak' / 'PageBreakAllowed' / 'PageBreakPlace' /
                     'PageBreakRepetition' / 'PageBreakRepBefore' /
                     'HighlightChildren' / 'ExtendedSelection' /
+                    'SelectParent' / 'ClickableSurface' /
                     'ReturnCreateNL' / 'ReturnCreateWithin' /
                     'IsDraw' / 'IsTable' /
                     'IsRow' / 'IsColHead' / 'IsCell' /
@@ -2068,20 +2069,29 @@ exceptions are indicated by a name.  They are separated by semicolons.</p>
       element (if it has that exception) to the current selection, without
       selecting other elements between the current selection and the clicked
       element.</dd>
-  <dt>IsDraw, IsTable, IsColHead, IsRow, IsCell</dt>
+  <dt><code>SelectParent</code></dt>
+    <dd>This exception can only be applied to element types. When the user
+      clicks on an element of that type, the parent of the element is selected
+      instead of the element itself.</dd>
+  <dt><code>ClickableSurface</code></dt>
+    <dd>This exception can only be applied to element types. When the user
+      clicks within a child of an element of that type, this child is selected
+      even if it is a graphic leaf that is not filled.</dd>
+  <dt><code>IsDraw</code>, <code>IsTable</code>, <code>IsColHead</code>,
+  <code>IsRow</code>, <code>IsCell</code></dt>
     <dd>These exceptions can only be applied to element types.  Elements of a
       type to which these exceptions are applied are identified as Draws,
       Tables, Colheads, Rows or Cells and specific processing are applied to
       them.</dd>
-  <dt>ColRef</dt>
+  <dt><code>ColRef</code></dt>
     <dd>This exception can only be applied to attributes of the reference
       type. It indicates that this attribute refers to the column head (see
       exception IsColHead) which the element belongs to.</dd>
-  <dt>ColSpan, RowSpan</dt>
+  <dt><code>ColSpan</code>, <code>RowSpan</code></dt>
     <dd>These exceptions can only be applied to numeric attributes of cells.
       They indicate that attribute values give how many columns or rows the
       element spans.</dd>
-  <dt>Shadow</dt>
+  <dt><code>Shadow</code></dt>
     <dd>This exception can only be applied to element types.  Text of elements
       of a type to which this exception is applied are displayed and printed
       as a set of stars ('*').</dd>
@@ -4745,10 +4755,10 @@ of the attribute is used.</p>
   minimumA       = minimum / AttrID .
   minimum        = NUMBER .</pre>
 
-<p>The properties which can be obtained by inheritance are
-hyphenation, interline spacing, character font (font family), font style, font
-size, visibility, indentation, underlining, alignment of text, stacking order
-of objects, the style and thickness of lines, fill pattern and the colors of
+<p>The properties which can be obtained by inheritance are hyphenation,
+interline spacing, character font (font family), font style, font size,
+visibility, indentation, underlining, alignment of text, stacking order of
+objects, the style and thickness of lines, fill pattern and the colors of
 lines and characters.</p>
 </div>
 
@@ -4779,9 +4789,9 @@ boxes will be placed according to the line breaking rules.</p>
 
 <p>The <tt>Line</tt> rule does not have a parameter.  The characteristics of
 the lines that will be constructed are determined by the <tt>LineSpacing</tt>,
-<tt>Indent</tt>, <tt>Adjust</tt>, and <tt>Hyphenate</tt>
-rules.  Moreover, the <a href="#insectd42226"><tt>Inline</tt> rule</a> permits
-the exclusion of certain elements from the line breaking process.</p>
+<tt>Indent</tt>, <tt>Adjust</tt>, and <tt>Hyphenate</tt> rules.  Moreover, the
+<a href="#insectd42226"><tt>Inline</tt> rule</a> permits the exclusion of
+certain elements from the line breaking process.</p>
 
 <p>When the <tt>Line</tt> rule appears in the rules sequence of a non-primary
 view, it applies only to that view, but when the <tt>Line</tt> rule appears in
@@ -6674,9 +6684,8 @@ rules:</p>
 <ul>
   <li>those taking numeric values (<tt>Size, Indent, LineSpacing,
     LineWeight</tt>),</li>
-  <li>those with values taken from a predefined list (<tt>Adjust,
-    Hyphenate, Style, Weight, Font, UnderLine, Thickness,
-  LineStyle</tt>),</li>
+  <li>those with values taken from a predefined list (<tt>Adjust, Hyphenate,
+    Style, Weight, Font, UnderLine, Thickness, LineStyle</tt>),</li>
   <li>those whose value is a name (<tt>FillPattern, Background,
     Foreground</tt>).</li>
 </ul>
@@ -7555,9 +7564,9 @@ for which the translation rule block should be applied.</p>
   <li>rules taking numeric values: <tt>Size</tt>, <tt>Indent</tt>,
     <tt>LineSpacing</tt>, <tt>LineWeight</tt>,</li>
   <li>rules whose values are taken from a predefined list (i.e. whose type is
-    an enumeration): <tt>Adjust</tt>, <tt>Hyphenate,/TT&gt;,
-    <tt>Style</tt>, <tt>Weight</tt>, <tt>Font</tt>, <tt>UnderLine</tt>,
-    <tt>Thickness</tt>, <tt>LineStyle</tt>,</tt></li>
+    an enumeration): <tt>Adjust</tt>, <tt>Hyphenate,/TT&gt;, <tt>Style</tt>,
+    <tt>Weight</tt>, <tt>Font</tt>, <tt>UnderLine</tt>, <tt>Thickness</tt>,
+    <tt>LineStyle</tt>,</tt></li>
   <li>rules whose value is a name: <tt>FillPattern</tt>, <tt>Background</tt>,
     <tt>Foreground</tt>.</li>
 </ul>
@@ -7873,6 +7882,7 @@ ExcValue       = 'NoCut' / 'NoCreate' /
                  'ImportLine' / 'ImportParagraph' /
                  'NoPaginate' / 'ParagraphBreak' /
                  'HighlightChildren' / 'ExtendedSelection' /
+                 'SelectParent' / 'ClickableSurface' /
                  'ReturnCreateNL' / 'ReturnCreateWithin' .
 
 ExtensRuleSeq  = ExtensRule ';' &lt; ExtensRule ';' &gt; .

@@ -126,6 +126,7 @@ ExceptVal =	 'NoCut' / 'NoCreate' / 'NoHMove' / 'NoVMove' /
                  'ImportLine' / 'ImportParagraph' /
 		 'ParagraphBreak' / 'SelectParent' /
                  'HighlightChildren' / 'ExtendedSelection' /
+                 'ClickableSurface' /
 		 'ReturnCreateNL' / 'ReturnCreateWithin' /
 		 'IsTable' / 'IsRow' /
 		 'IsColHead' / 'IsCell' / 'NewPercentWidth' /

@@ -77,27 +77,29 @@
 #define ExcSelectParent 310
 #define ExcHighlightChildren 311
 #define ExcExtendedSelection 312
-#define ExcIsDraw 313
-#define ExcMoveResize 314
-#define ExcNoShowBox 315
+#define ExcClickableSurface 313
+#define ExcIsDraw 314
+#define ExcMoveResize 315
+#define ExcNoShowBox 316
 
 /* Table exceptions */
-#define ExcIsTable 316
-#define ExcIsRow 317
-#define ExcIsColHead 318
-#define ExcIsCell 319
-#define ExcNewPercentWidth 320
-#define ExcColRef 321
-#define ExcColSpan 322
-#define ExcRowSpan 323
-#define ExcShadow 324
-#define ExcEventAttr 325
+#define ExcIsTable 320
+#define ExcIsRow 321
+#define ExcIsColHead 322
+#define ExcIsCell 323
+#define ExcNewPercentWidth 324
+#define ExcColRef 325
+#define ExcColSpan 326
+#define ExcRowSpan 327
+#define ExcShadow 328
+#define ExcEventAttr 329
 
 /* CSS exceptions */
 #define ExcCssBackground 340
 #define ExcCssClass 341
 #define ExcCssId 342
 #define ExcCssPseudoClass 343
+
 /* SpellCheck exception */
 #define ExcNoSpellCheck 400
 

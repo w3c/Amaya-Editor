@@ -1206,6 +1206,7 @@ PtrBox          GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 					int *pointselect)
 {
   PtrBox              pBox;
+  PtrElement          pParent;
   int                 i, x;
   ThotPoint           *points = NULL;
   int                 npoints, sub;
@@ -1213,9 +1214,7 @@ PtrBox          GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
   ThotBool            OK, testSegment;
 
   *pointselect = 0;
-  if (pAb->AbBox == NULL)
-    return (NULL);
-  else
+  if (pAb->AbBox)
     {
       pBox = pAb->AbBox;
       /* Is there a piece of split box? */
@@ -1240,101 +1239,115 @@ PtrBox          GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 	       pAb->AbShape == '0')
 	/* it's also a dummy box */
 	return (NULL);
-      /* If the box is not a polyline or a path, it must include the point */
       else if (pAb->AbLeafType == LtPolyLine || pAb->AbLeafType == LtPath ||
+	       /* If the box is not a polyline or a path, it must include
+		  the point */
 	       (pBox->BxXOrg <= lowerX &&
 		pBox->BxXOrg + pBox->BxWidth >= higherX &&
 		pBox->BxYOrg <= y &&
 		pBox->BxYOrg + pBox->BxHeight >= y))
-	if (pAb->AbLeafType == LtGraphics && pAb->AbVolume != 0)
-	  /* It's a simple graphic shape */
-	  {
-	    pBox = IsOnShape (pAb, lowerX, y, pointselect);
-	    if (pBox != NULL)
-	      /* the point is on the outline */
-	      return (pBox);
-	    /* the point is not on the outline */
-	    if (pAb->AbFillPattern > 0 && pAb->AbBackground >= 0)
-	      /* the box is filled. Is the point within the shape? */
-	      if (InShape (pAb, lowerX, y))
-		return (pAb->AbBox);
+	{
+	  pParent = pAb->AbElement->ElParent;
+	  if (pAb->AbLeafType == LtGraphics && pAb->AbVolume != 0)
+	    /* It's a simple graphic shape */
+	    {
+	      pBox = IsOnShape (pAb, lowerX, y, pointselect);
+	      if (pBox != NULL)
+		/* the point is on the outline */
+		return (pBox);
+	      /* the point is not on the outline */
+	      if ((pAb->AbFillPattern > 0 && pAb->AbBackground >= 0) ||
+		  TypeHasException (ExcClickableSurface, pParent->ElTypeNumber,
+				    pParent->ElStructSchema))
+		/* the box is filled. Is the point within the shape? */
+		{
+		  if (InShape (pAb, lowerX, y))
+		    return (pAb->AbBox);
+		  else
+		    return (NULL);
+		}
+	      else
+		return (pBox);
+	    }
+	  else if (pAb->AbLeafType == LtPolyLine && pAb->AbVolume > 2)
+	    {
+	      /* the polyline contains at least one segment */
+	      pBox = GetPolylinePoint (pAb, lowerX, y, frame, pointselect);
+	      if (pBox != NULL)
+		/* the point doesn't belong to a segment */
+		return (pBox);
+	      if ((pAb->AbFillPattern > 0 && pAb->AbBackground >= 0) ||
+		  TypeHasException (ExcClickableSurface, pParent->ElTypeNumber,
+				    pParent->ElStructSchema))
+		/* the shape is filled. Is the point within the shape? */
+		{
+		  if (IsWithinPolyline (pAb, lowerX, y, frame))
+		    return (pAb->AbBox);
+		  else
+		    return (pBox);
+		}
+	    }
+	  else if (pAb->AbLeafType == LtPath && pAb->AbFirstPathSeg)
+	    /* it's a non-empty path */
+	    {
+	      /* builds the list of points representing the path */
+	      points = BuildPolygonForPath (pAb->AbFirstPathSeg, frame,
+					    &npoints, &subpathStart);
+	      /* is the position of interest on the polyline represented by
+		 these points? */
+	      x = lowerX - pBox->BxXOrg;
+	      y -= pBox->BxYOrg;
+	      OK = FALSE;
+	      sub = 0;
+	      /* test every segment comprised between 2 successive points */
+	      for (i = 0; (i < npoints - 1) && !OK; i++)
+		{
+		  testSegment = TRUE;
+		  if (subpathStart)
+		    /* there are several subpaths in this path */
+		    {
+		      if (subpathStart[sub] == i + 1)
+			/* this segment corresponds to a moveto. Skip it */
+			{
+			  testSegment = FALSE;
+			  /* get prepared for the next subpath */
+			  sub++;
+			  if (subpathStart[sub] == 0)
+			    /* this is the last subpath. Don't test more
+			       subpaths */
+			    {
+			      free (subpathStart);
+			      subpathStart = NULL;
+			    }
+			}
+		    }
+		  if (testSegment)
+		    OK = IsOnSegment (x, y, points[i].x, points[i].y,
+				      points[i + 1].x, points[i + 1].y);
+		}
+	      if (!OK)
+		/* the point is not on the path. Is it within the path ? */
+		{
+		  /* check only if the path is filled */
+		  if ((pAb->AbFillPattern > 0 && pAb->AbBackground >= 0) ||
+		      TypeHasException (ExcClickableSurface,
+					pParent->ElTypeNumber,
+					pParent->ElStructSchema))
+		    OK = IsWithinPath (x, y, points, npoints);
+		}
+	      free (points);
+	      if (subpathStart)
+		free (subpathStart);
+	      if (OK)
+		return (pBox);
 	      else
 		return (NULL);
-	    else
-	      return (pBox);
-	  }
-	else if (pAb->AbLeafType == LtPolyLine && pAb->AbVolume > 2)
-	  {
-	    /* the polyline contains at least one segment */
-	    pBox = GetPolylinePoint (pAb, lowerX, y, frame, pointselect);
-	    if (pBox != NULL)
-	      /* the point doesn't belong to a segment */
-	      return (pBox);
-	    if (pAb->AbFillPattern > 0 && pAb->AbBackground >= 0 &&
-		/* the shape is filled. Is the point within the shape? */
-		IsWithinPolyline (pAb, lowerX, y, frame))
-	      return (pAb->AbBox);
-	    else
-	      return (pBox);
-	  }
-	else if (pAb->AbLeafType == LtPath && pAb->AbFirstPathSeg)
-	  /* it's a non-empty path */
-	  {
-	    /* builds the list of points representing the path */
-	    points = BuildPolygonForPath (pAb->AbFirstPathSeg, frame,
-					  &npoints, &subpathStart);
-	    /* is the position of interest on the polyline represented by
-	       these points? */
-	    x = lowerX - pBox->BxXOrg;
-	    y -= pBox->BxYOrg;
-	    OK = FALSE;
-	    sub = 0;
-	    /* test every segment comprised between 2 successive points */
-	    for (i = 0; (i < npoints - 1) && !OK; i++)
-	      {
-		testSegment = TRUE;
-		if (subpathStart)
-		  /* there are several subpaths in this path */
-		  {
-		    if (subpathStart[sub] == i + 1)
-		      /* this segment corresponds to a moveto. Skip it */
-		      {
-			testSegment = FALSE;
-			/* get prepared for the next subpath */
-			sub++;
-			if (subpathStart[sub] == 0)
-			  /* this is the last subpath. Don't test more
-			     subpaths */
-			  {
-			    free (subpathStart);
-			    subpathStart = NULL;
-			  }
-		      }
-		  }
-		if (testSegment)
-		  OK = IsOnSegment (x, y, points[i].x, points[i].y,
-				    points[i + 1].x, points[i + 1].y);
-	      }
-	    if (!OK)
-	      /* the point is not on the path. Is it within the path ? */
-	      {
-		/* check only if the path is really filled */
-		if (pAb->AbFillPattern > 0 && pAb->AbBackground >= 0)
-		  OK = IsWithinPath (x, y, points, npoints);
-	      }
-	    free (points);
-	    if (subpathStart)
-	      free (subpathStart);
-	    if (OK)
-	      return (pBox);
-	    else
-	      return (NULL);
-	  }
-	else
-	  return (pBox);
-      else
-	return (NULL);
+	    }
+	  else
+	    return (pBox);
+	}
     }
+  return (NULL);
 }
 
 /*----------------------------------------------------------------------
