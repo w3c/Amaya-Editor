@@ -486,6 +486,7 @@ SelectColumn
 &CreateColumnAfter
 &PasteBefore
 &PasteAfter
+HelpMath
 HelpTables
 
 ################# SVG
@@ -575,6 +576,7 @@ ReplyToAnnotation
 LoadAnnotations
 PostAnnotation
 DeleteAnnotation
+CustomQuery
 FilterAnnot
 ConfigAnnot
 HelpAnnotation
