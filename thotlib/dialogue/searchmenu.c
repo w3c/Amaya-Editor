@@ -195,7 +195,22 @@ LPARAM lParam;
       break;
       
     case WM_COMMAND:
-      switch (LOWORD (wParam))
+	  if (HIWORD (wParam) == EN_UPDATE)
+	  {
+          switch (LOWORD (wParam))
+		  {
+		  case IDC_REPLACEDIT:
+			  /* if the user types in this box, we'll turn on the
+			     replace mode if it wasn't the case at this time */
+			  if (iMode == 0)
+			  {
+				iMode = 1;
+  	            CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, IDC_ONREQUEST);
+			  }
+			  break;
+		  }
+	  }
+    switch (LOWORD (wParam))
 	{
 	case ID_CONFIRM:
 	  searchEnd = FALSE;
