@@ -21,20 +21,15 @@ LIBS	=  $(AMAYA_PLUGIN_LIBS) $(AMAYA_ANNOT_LIBS) $(AMAYA_DAV_LIBS) \
 	  -lXext -lX11 $(X_EXTRA_LIBS) @LIBS@ @EXTRA_LIBS@ -lm $(GL_LIBRARIES)
 
 CONFIGFILES=XKeysymDB unix-thot.rc amaya.keyboard amaya.profiles\
-	    en-amayadialogue en-amayamsg en-libdialogue en-corrdialogue \
-	    fr-amayadialogue fr-amayamsg fr-libdialogue fr-corrdialogue \
-	    de-amayadialogue de-amayamsg de-libdialogue de-corrdialogue \
-	    tr-amayadialogue tr-amayamsg tr-libdialogue tr-corrdialogue \
-	    it-amayadialogue it-amayamsg it-libdialogue it-corrdialogue \
-	    es-amayadialogue es-amayamsg es-libdialogue es-corrdialogue \
-	    annot.schemas annotschema.rdf annottypes.rdf
+	    *-amayadialogue *-amayamsg *-libdialogue *-corrdialogue \
+	    amaya.emacs annot.schemas *.rdf
 
 ANNOTFILES=Annot.STR AnnotP.PRS AnnotT.TRA
 
 DICOFILES= *.ptn *.dic alphabet clavier
 
 AMAYAFILES= *.STR *.conf *.trans *.en *.gif *.png \
-           *.PRS *.TRA AmayaPage.html AmayaPage.html.fr
+           *.PRS *.TRA AmayaPage.html AmayaPage.html.*
 
 FONTSFILES=Families.list fonts.dir icones*
 
