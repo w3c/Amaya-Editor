@@ -598,10 +598,10 @@ ThotBool	    withUndo;
 	  TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
 	else
 	  {
-	    ustrcpy (bufMenu, DirectoryName);
-	    ustrcat (bufMenu, DIR_STR);
-	    ustrcat (bufMenu, DocumentName);
-	    TtaSetTextForm (BaseDialog + AttrHREFText, bufMenu);
+	    ustrcpy (s, DirectoryName);
+	    ustrcat (s, DIR_STR);
+	    ustrcat (s, DocumentName);
+	    TtaSetTextForm (BaseDialog + AttrHREFText, s);
 	  }
 	TtaSetTextForm (BaseDialog + HREFFilterText, ScanFilter);
 	TtaSetDialoguePosition ();
