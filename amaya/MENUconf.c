@@ -4037,7 +4037,7 @@ static void SetAnnotConf ()
   /* and restart the annotlib */
   /* @@ we could make this finer granularity, and more elegant  */
   StopAllRequests (1);
-  ANNOT_Quit ();
+  ANNOT_FreeConf ();
   ANNOT_Init ();
 }
 

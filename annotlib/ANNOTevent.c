@@ -367,14 +367,14 @@ void ANNOT_Init ()
 }
 
 /*-----------------------------------------------------------------------
-   ANNOT_Quit
+   ANNOT_FreeConf
   -----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void ANNOT_Quit ()
+void ANNOT_FreeConf ()
 #else /* __STDC__*/
-void ANNOT_Quit ()
+void ANNOT_FreeConf ()
 #endif /* __STDC__*/
 {
   if (annotDir)
@@ -390,7 +390,24 @@ void ANNOT_Quit ()
     TtaFreeMemory (annotPostServer);
   if (annotAlgaeText)
     TtaFreeMemory (annotAlgaeText);
-  SCHEMA_FreeRDFModel();
+}
+
+/*-----------------------------------------------------------------------
+   ANNOT_Quit
+  -----------------------------------------------------------------------
+   Frees Annotation resources and releases all RDF resources.
+   Be careful about outstanding references to RDF resources if you
+   call this without intending to exit the application.
+  -----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+void ANNOT_Quit ()
+#else /* __STDC__*/
+void ANNOT_Quit ()
+#endif /* __STDC__*/
+{
+  ANNOT_FreeConf ();
+  SCHEMA_FreeRDFModel ();
   schema_init = FALSE;
 }
 
