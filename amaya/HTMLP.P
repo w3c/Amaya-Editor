@@ -9360,7 +9360,10 @@ ATTRIBUTES
 	CreateBefore(RULES_ALL);
 
  cellspacing (Table_head) > 0:
+	BEGIN
 	PaddingLeft: cellspacing px;	
+	PaddingRight: cellspacing px;	
+	END;
  cellspacing (Column_head):
 	BEGIN
 	HorizPos: Left = Previous . Right + cellspacing px;
