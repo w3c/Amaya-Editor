@@ -7398,6 +7398,10 @@ void ShowPanel (Document doc, View view)
   ----------------------------------------------------------------------*/
 void FullScreen (Document doc, View view)
 {
+#ifdef _WX
+  int frame_id = GetWindowNumber (doc, view);
+  TtaToggleOnOffFullScreen( frame_id );
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------

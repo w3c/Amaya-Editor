@@ -1360,6 +1360,12 @@ void BuildPopdown ( Menu_Ctl *ptrmenu, int ref, ThotMenu button,
 		  FrameTable[frame].MenuSplitViewID     = ptrmenu->MenuID;
 		  FrameTable[frame].MenuItemSplitViewID = ptrmenu->ItemsList[item].ItemID;
 		}
+	      /* Is it the "Fullscreen on/off" command */
+	      else if (!strcmp (MenuActionList[action].ActionName, "FullScreen"))
+		{
+		  FrameTable[frame].MenuFullScreenID     = ptrmenu->MenuID;
+		  FrameTable[frame].MenuItemFullScreenID = ptrmenu->ItemsList[item].ItemID;
+		}
 #endif /* _WX */
 	      /* activate this entry */
 	      MenuActionList[action].ActionActive[frame] = TRUE;

@@ -95,6 +95,8 @@ class AmayaWindow : public wxFrame
   virtual AmayaPage *  GetActivePage() const;
   virtual AmayaFrame * GetActiveFrame() const;
 
+  virtual void ToggleFullScreen();
+
   // --------------------------------------------- //
   // WXAMAYAWINDOW_NORMAL interface
   virtual AmayaPanel * GetAmayaPanel() const;
@@ -102,6 +104,7 @@ class AmayaWindow : public wxFrame
   virtual void ClosePanel();
   virtual void OpenPanel();
   virtual void RefreshShowPanelToggleMenu();
+  virtual void RefreshFullScreenToggleMenu();
 
   virtual AmayaPage *    CreatePage( bool attach = false, int position = 0 );
   virtual bool           AttachPage( int position, AmayaPage * p_page );

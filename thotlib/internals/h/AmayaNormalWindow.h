@@ -99,7 +99,8 @@ class AmayaNormalWindow : public AmayaWindow
   bool IsPanelOpened();
   void ClosePanel();
   void OpenPanel();
-  virtual void RefreshShowPanelToggleMenu();  
+  virtual void RefreshShowPanelToggleMenu();
+  virtual void RefreshFullScreenToggleMenu();
 
  protected:
   DECLARE_EVENT_TABLE()

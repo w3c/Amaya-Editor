@@ -525,6 +525,33 @@ void AmayaWindow::RefreshShowPanelToggleMenu()
 {
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  ToggleFullScreen
+ * Description:  switch on/off fullscreen state
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaWindow::ToggleFullScreen()
+{
+  if (IsFullScreen())
+    ShowFullScreen(false, wxFULLSCREEN_ALL);
+  else
+    ShowFullScreen(true, wxFULLSCREEN_ALL);
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  RefreshFullScreenToggleMenu
+ * Description:  is called to toggle on/off the "fullscreen" menu item depeding on
+ *               the window fullscreen state.
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaWindow::RefreshFullScreenToggleMenu()
+{
+}
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type

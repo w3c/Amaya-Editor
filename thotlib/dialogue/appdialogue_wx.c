@@ -204,8 +204,10 @@ static void TtaMakeMenuBar( int frame_id, const char * schema_name )
   FrameTable[frame_id].MenuContext = -1;
   FrameTable[frame_id].MenuShowPanelID = -1;
   FrameTable[frame_id].MenuSplitViewID = -1;
+  FrameTable[frame_id].MenuFullScreenID = -1;
   FrameTable[frame_id].MenuItemShowPanelID = -1;
   FrameTable[frame_id].MenuItemSplitViewID = -1;
+  FrameTable[frame_id].MenuItemFullScreenID = -1;
   
   while (p_menu_bar && ptrmenu)
     {
@@ -1533,5 +1535,34 @@ void TtaDoPostFrameCreation( int frame_id )
     }
   /* refresh specific menu item states */
   p_window->RefreshShowPanelToggleMenu();
+  p_window->RefreshFullScreenToggleMenu();
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaToggleOnOffSplitView
+  execute the split/unsplit action
+  this methode is directly connected to a menu item action
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void TtaToggleOnOffFullScreen( int frame_id )
+{
+#ifdef _WX
+  AmayaFrame * p_frame = FrameTable[frame_id].WdFrame;
+  if (!p_frame)
+    {
+      wxASSERT(false);
+      return;
+    }
+
+  AmayaWindow * p_window = p_frame->GetWindowParent();
+  if (!p_window)
+    {
+      wxASSERT(false);
+      return;
+    }
+
+  p_window->ToggleFullScreen();
 #endif /* _WX */
 }
