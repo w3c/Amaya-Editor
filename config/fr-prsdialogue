@@ -76,7 +76,7 @@
 75 Interdit dans une boite de presentation\n
 76 Trop de regles Transmit pour ce compteur\n
 77 Ce n\'est pas un document inclus\n
-78 Fichier incorrect\n
+78 Fichier incorrect, usage : prs [-Dnom=val] fichier[.P]\n
 79 Interdit dans une reference\n
 80 Seulement dans les boites de presentation, les references et les paires\n
 81 Deja une regle Copy ou Content\n
@@ -91,9 +91,9 @@
 90 Couleur inconnue\n
 91 Regle interdite pour un choix\n
 92 Seulement pour les boites de presentation\n
-93 Nom du schema a compiler (sans .SCH):\n
-94 Vue_Unique
-95 Nom du schema de presentation a lister:\n
+93 Vue_Unique
+94 Suffixe du fichier invalide\n
+95 cpp non trouv\351\n
 96 Utilisez plutot "CreateFirst"\n
 97 Utilisez plutot "PageBreak" ou "LineBreak"\n
 98 Pas de nom de type pour les boites\n
@@ -101,5 +101,3 @@
 100 Message inconnu\n
 101 %s : ecriture impossible\n
 102 Seulement pour les attributs\n
-103 Le suffixe du fichier n'est pas valide\n
-104 cpp non trouv\351\n

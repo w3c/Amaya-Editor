@@ -112,28 +112,17 @@ static boolean      SecondInPair;	/* on a rencontre' "Second" */
 #include "fileaccess_f.h"
 #include "message_f.h"
 #include "compilmsg_f.h"
+#include "registry_f.h"
 
-#ifdef __STDC__
-extern void         TtaInitializeAppRegistry (char *);
-extern void         TtaSaveAppRegistry (void);
-
-#else
-extern void         TtaInitializeAppRegistry ();
-extern void         TtaSaveAppRegistry ();
-
-#endif /* __STDC__ */
 
 /*----------------------------------------------------------------------
    Initialize	initialise le schema de traduction en memoire   
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         Initialize ()
-
 #else  /* __STDC__ */
 static void         Initialize ()
-#endif				/* __STDC__ */
-
+#endif /* __STDC__ */
 {
    int                 i;
 
@@ -202,14 +191,11 @@ static void         Initialize ()
 /*----------------------------------------------------------------------
    initialise les regles de traduction des attributs               
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         InitAttrTransl ()
-
 #else  /* __STDC__ */
 static void         InitAttrTransl ()
-#endif				/* __STDC__ */
-
+#endif /* __STDC__ */
 {
    int                 i, j;
    AttributeTransl    *pAttTr;
@@ -253,16 +239,12 @@ static void         InitAttrTransl ()
    traite le type d'element indique' dans une condition Within ou  
    FirstWithin Le nom du type se trouve dans la variable TypeWithin 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         EndOfContdition (PtrSSchema pSS)
-
 #else  /* __STDC__ */
 static void         EndOfContdition (pSS)
 PtrSSchema          pSS;
-
 #endif /* __STDC__ */
-
 {
    int                 i;
 
@@ -322,18 +304,14 @@ PtrSSchema          pSS;
 /*----------------------------------------------------------------------
    traite un nom de regle de presentation passee en parametre      
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         PresentationName (PRuleType TypeRPres, SyntRuleNum pr, int wi)
-
 #else  /* __STDC__ */
 static void         PresentationName (TypeRPres, pr, wi)
 PRuleType           TypeRPres;
 SyntRuleNum         pr;
 int                 wi;
-
 #endif /* __STDC__ */
-
 {
    int                 i, j;
    PRuleTransl        *pPresTrans;
@@ -417,17 +395,13 @@ int                 wi;
 /*----------------------------------------------------------------------
    traite le mot-cle' representant une valeur d'une presentation.  
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         PresentValue (char value, int wi)
-
 #else  /* __STDC__ */
 static void         PresentValue (value, wi)
 char                value;
 int                 wi;
-
 #endif /* __STDC__ */
-
 {
    int                 i;
    PRuleTransl        *pPresTrans;
@@ -464,11 +438,9 @@ int                 wi;
 /*----------------------------------------------------------------------
    SrceStringGreater                                               
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static int          SrceStringGreater (int framet, int lent, int rank, boolean * equal,
 				       SourceString source)
-
 #else  /* __STDC__ */
 static int          SrceStringGreater (framet, lent, rank, equal, source)
 int                 framet;
@@ -476,9 +448,7 @@ int                 lent;
 int                 rank;
 boolean            *equal;
 SourceString        source;
-
 #endif /* __STDC__ */
-
 {
    int                 i, k, s;
    boolean             eq;
@@ -513,17 +483,13 @@ SourceString        source;
    indx : index dans inputLine du premier caractere de la chaine,  
    len est la longueur de la chaine.                                
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         NewSourceString (int indx, int len)
-
 #else  /* __STDC__ */
 static void         NewSourceString (indx, len)
 int                 indx;
 int                 len;
-
 #endif /* __STDC__ */
-
 {
    int                 k;
    boolean             equal;

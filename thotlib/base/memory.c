@@ -244,14 +244,11 @@ unsigned int        n;
    InitEditorMemory effectue l'initialisation des variables de gestion de 
    liste.                                                  
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                InitEditorMemory ()
-
 #else  /* __STDC__ */
 void                InitEditorMemory ()
-#endif				/* __STDC__ */
-
+#endif /* __STDC__ */
 {
 
    NbFree_TextBuff = 0;
@@ -956,55 +953,47 @@ PtrReferenceChange  pFRC;
 /*----------------------------------------------------------------------
    GetAbstractBox alloue un pave.                                  
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-void                GetAbstractBox (PtrAbstractBox * pAb)
-
+void                GetAbstractBox (PtrAbstractBox *pAb)
 #else  /* __STDC__ */
 void                GetAbstractBox (pAb)
 PtrAbstractBox     *pAb;
-
 #endif /* __STDC__ */
-
 {
-   PtrAbstractBox      pPa1;
+   PtrAbstractBox      pNewAb;
 
    if (PtFree_AbsBox == NULL)
-      *pAb = (PtrAbstractBox) TtaGetMemory (sizeof (AbstractBox));
+      pNewAb = (PtrAbstractBox) TtaGetMemory (sizeof (AbstractBox));
    else
      {
-	*pAb = PtFree_AbsBox;
-	PtFree_AbsBox = (*pAb)->AbNext;
+	pNewAb = PtFree_AbsBox;
+	PtFree_AbsBox = pNewAb->AbNext;
 	NbFree_AbsBox--;
      }
    NbUsed_AbsBox++;
-   pPa1 = *pAb;
-   memset (pPa1, 0, sizeof (AbstractBox));
-   pPa1->AbElement = NULL;
-   pPa1->AbEnclosing = NULL;
-   pPa1->AbPrevious = NULL;
-   pPa1->AbNext = NULL;
-   pPa1->AbFirstEnclosed = NULL;
-   pPa1->AbVolume = 0;
-   pPa1->AbNextRepeated = NULL;
-   pPa1->AbPreviousRepeated = NULL;
-   pPa1->AbCopyDescr = NULL;
-   pPa1->AbCreatorAttr = NULL;
+   *pAb = pNewAb;
+   memset (pNewAb, 0, sizeof (AbstractBox));
+   pNewAb->AbElement = NULL;
+   pNewAb->AbEnclosing = NULL;
+   pNewAb->AbPrevious = NULL;
+   pNewAb->AbNext = NULL;
+   pNewAb->AbFirstEnclosed = NULL;
+   pNewAb->AbVolume = 0;
+   pNewAb->AbNextRepeated = NULL;
+   pNewAb->AbPreviousRepeated = NULL;
+   pNewAb->AbCopyDescr = NULL;
+   pNewAb->AbCreatorAttr = NULL;
 }
 
 /*----------------------------------------------------------------------
    FreeAbstractBox libere un pave.                                 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                FreeAbstractBox (PtrAbstractBox pAb)
-
 #else  /* __STDC__ */
 void                FreeAbstractBox (pAb)
 PtrAbstractBox      pAb;
-
 #endif /* __STDC__ */
-
 {
 
    if (pAb->AbLeafType == LtPicture)
@@ -1026,85 +1015,81 @@ PtrAbstractBox      pAb;
 /*----------------------------------------------------------------------
    GetDocument alloue un descripteur de document.                  
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                GetDocument (PtrDocument * pDoc)
-
 #else  /* __STDC__ */
 void                GetDocument (pDoc)
 PtrDocument        *pDoc;
-
 #endif /* __STDC__ */
-
 {
    int                 i;
-   PtrDocument         pDo1;
+   PtrDocument         pNewDoc;
 
    if (PtFree_Document == NULL)
-      *pDoc = (PtrDocument) TtaGetMemory (sizeof (DocumentDescr));
+      pNewDoc = (PtrDocument) TtaGetMemory (sizeof (DocumentDescr));
    else
      {
-	*pDoc = PtFree_Document;
-	PtFree_Document = (*pDoc)->DocNext;
+	pNewDoc = PtFree_Document;
+	PtFree_Document = pNewDoc->DocNext;
 	NbFree_Document--;
      }
    NbUsed_Document++;
    /* initialise le contexte de document */
-   pDo1 = *pDoc;
-   memset (pDo1, 0, sizeof (DocumentDescr));
-   pDo1->DocNext = NULL;
-   pDo1->DocComment = NULL;
-   pDo1->DocSSchema = NULL;
-   pDo1->DocRootElement = NULL;
+   *pDoc = pNewDoc;
+   memset (pNewDoc, 0, sizeof (DocumentDescr));
+   pNewDoc->DocNext = NULL;
+   pNewDoc->DocComment = NULL;
+   pNewDoc->DocSSchema = NULL;
+   pNewDoc->DocRootElement = NULL;
    for (i = 0; i < MAX_ASSOC_DOC; i++)
      {
-	pDo1->DocAssocRoot[i] = NULL;
-	pDo1->DocAssocSubTree[i] = NULL;
-	pDo1->DocAssocFrame[i] = 0;
-	pDo1->DocAssocVolume[i] = 0;
-	pDo1->DocAssocFreeVolume[i] = 0;
-	pDo1->DocAssocNPages[i] = 0;
-	pDo1->DocAssocModifiedAb[i] = NULL;
+	pNewDoc->DocAssocRoot[i] = NULL;
+	pNewDoc->DocAssocSubTree[i] = NULL;
+	pNewDoc->DocAssocFrame[i] = 0;
+	pNewDoc->DocAssocVolume[i] = 0;
+	pNewDoc->DocAssocFreeVolume[i] = 0;
+	pNewDoc->DocAssocNPages[i] = 0;
+	pNewDoc->DocAssocModifiedAb[i] = NULL;
      }
    for (i = 0; i < MAX_PARAM_DOC; i++)
-      pDo1->DocParameters[i] = NULL;
+      pNewDoc->DocParameters[i] = NULL;
    /* cree et initialise un descripteur bidon de reference, debut */
    /* de la chaine des descripteurs de references du document */
-   GetDescReference (&pDo1->DocReferredEl);
+   GetDescReference (&pNewDoc->DocReferredEl);
    for (i = 0; i < MAX_VIEW_DOC; i++)
      {
-	pDo1->DocView[i].DvSSchema = NULL;
-	pDo1->DocView[i].DvPSchemaView = 0;
-	pDo1->DocView[i].DvSync = FALSE;
-	pDo1->DocViewRootAb[i] = NULL;
-	pDo1->DocViewSubTree[i] = NULL;
-	pDo1->DocViewFrame[i] = 0;
-	pDo1->DocViewVolume[i] = 0;
-	pDo1->DocViewFreeVolume[i] = 0;
-	pDo1->DocViewNPages[i] = 0;
-	pDo1->DocViewModifiedAb[i] = NULL;
+	pNewDoc->DocView[i].DvSSchema = NULL;
+	pNewDoc->DocView[i].DvPSchemaView = 0;
+	pNewDoc->DocView[i].DvSync = FALSE;
+	pNewDoc->DocViewRootAb[i] = NULL;
+	pNewDoc->DocViewSubTree[i] = NULL;
+	pNewDoc->DocViewFrame[i] = 0;
+	pNewDoc->DocViewVolume[i] = 0;
+	pNewDoc->DocViewFreeVolume[i] = 0;
+	pNewDoc->DocViewNPages[i] = 0;
+	pNewDoc->DocViewModifiedAb[i] = NULL;
      }
-   pDo1->DocDName[0] = '\0';
-   ClearDocIdent (&pDo1->DocIdent);
-   pDo1->DocDirectory[0] = '\0';
-   pDo1->DocSchemasPath[0] = '\0';
-   pDo1->DocBackUpInterval = 0;
-   pDo1->DocReadOnly = FALSE;
-   pDo1->DocExportStructure = FALSE;
-   pDo1->DocLabelExpMax = 1;
-   pDo1->DocMaxPairIdent = 0;
-   pDo1->DocModified = FALSE;
-   pDo1->DocNTypedChars = 0;
-   pDo1->DocNewOutRef = NULL;
-   pDo1->DocDeadOutRef = NULL;
-   pDo1->DocChangedReferredEl = NULL;
-   pDo1->DocNLanguages = 0;
-   pDo1->DocNNatures = 0;
-   pDo1->DocPivotVersion = 0;
-   pDo1->DocLabels = NULL;
-   pDo1->DocToBeChecked = FALSE;
-   pDo1->DocPivotError = FALSE;
-   pDo1->DocNotifyAll = FALSE;
+   pNewDoc->DocDName[0] = '\0';
+   ClearDocIdent (&pNewDoc->DocIdent);
+   pNewDoc->DocDirectory[0] = '\0';
+   pNewDoc->DocSchemasPath[0] = '\0';
+   pNewDoc->DocBackUpInterval = 0;
+   pNewDoc->DocReadOnly = FALSE;
+   pNewDoc->DocExportStructure = FALSE;
+   pNewDoc->DocLabelExpMax = 1;
+   pNewDoc->DocMaxPairIdent = 0;
+   pNewDoc->DocModified = FALSE;
+   pNewDoc->DocNTypedChars = 0;
+   pNewDoc->DocNewOutRef = NULL;
+   pNewDoc->DocDeadOutRef = NULL;
+   pNewDoc->DocChangedReferredEl = NULL;
+   pNewDoc->DocNLanguages = 0;
+   pNewDoc->DocNNatures = 0;
+   pNewDoc->DocPivotVersion = 0;
+   pNewDoc->DocLabels = NULL;
+   pNewDoc->DocToBeChecked = FALSE;
+   pNewDoc->DocPivotError = FALSE;
+   pNewDoc->DocNotifyAll = FALSE;
 }
 
 /*----------------------------------------------------------------------

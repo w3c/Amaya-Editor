@@ -1369,8 +1369,6 @@ PtrSSchema          pSS;
 
    for (i = 0; i < pSS->SsNRules; i++)
       WriteBoolean (pPSch->PsAssocPaginated[i]);
-   /* for (i = 0; i < pSS->SsNRules; i++) *//* TODO */
-   /* WriteBoolean (pPSch->SPVueAssocAvecCol[i]); *//* TODO */
    for (i = 0; i < pSS->SsNRules; i++)
       WriteShort (pPSch->PsElemTransmit[i]);
    WriteShort (pPSch->PsNTransmElems);

@@ -6166,6 +6166,7 @@ char              **argv;
 	     exit (1);
 	  }
 	strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
+	srceFileName[MAX_NAME_LENGTH - 1] = '\0';
 	param++;
 	strcpy (fname, srceFileName);
 	/* check if the name contains a suffix */

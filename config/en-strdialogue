@@ -41,7 +41,7 @@
 40 Not allowed here\n
 41 This element has local attributes\n
 42 Not enough memory\n
-43 No such file\n
+43 Invalid file, usage: str file[.S]\n
 44 Only for reference attributes\n
 45 Root cannot be a pair\n
 46 "First" or "Second" forbidden for this type\n
@@ -57,7 +57,7 @@
 56 %s : is a temporary element.\n
 57 %s : won\'t be created\n
 58 %s : won\'t be created and is referenced!?!?\n
-59 The suffix of the file name is invalid: %s\n
+59 Invalid file suffix: %s\n
 60 %s cannot be included\n
 61 %s cannot be extern\n
 62 %s : external structure not found\n

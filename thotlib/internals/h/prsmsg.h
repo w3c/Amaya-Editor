@@ -91,17 +91,15 @@
 #define MISSING_COLOR                         90
 #define CANT_USE_RULE_FOR_A_CHOICE            91
 #define VALID_ONLY_FOR_PRES_BOX               92
-#define SCHEM_TO_COMPILE_WITHOUT_SCH 	      93
-#define SINGLE_VIEW	                      94
-#define SCHEM_TO_LIST	                      95
+#define SINGLE_VIEW	                      93
+#define INVALID_FILE			      94
+#define CPP_NOT_FOUND                         95
 #define USE_CREATEFIRST	                      96
 #define USE_PAGEBREAK	                      97
 #define CANT_USE_TYPE_NAME_FOR_A_BOX	      98
 #define FORBIDDEN_IN_A_POSITION	              99
-#define MSG_NOT_KNOWN	                     100
+
 #define WRITE_ERROR	                     101
 #define VALID_ONLY_FOR_ATTRIBUTES	     102
-#define INVALID_FILE			     103
-#define CPP_NOT_FOUND                        104
-#define PRS_MSG_MAX		             105
+#define PRS_MSG_MAX		             103
 

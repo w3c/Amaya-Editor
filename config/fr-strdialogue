@@ -41,7 +41,7 @@
 40 Interdit ici\n
 41 Cet element a deja des attributs locaux\n
 42 Memoire insuffisante\n
-43 Fichier incorrect\n
+43 Fichier incorrect, usage : str fichier[.S]\n
 44 Seulement pour les attributs reference\n
 45 La racine ne peut pas etre une paire\n
 46 "First" ou "Second" interdit pour ce type\n
@@ -57,7 +57,7 @@
 56 %s : sera cree temporairement.\n
 57 %s : ne sera pas cree\n
 58 %s : ne sera pas cree et est reference !?!?\n
-59 Le suffixe du nom de schema est invalide : %s\n 
+59 Suffixe du fichier invalide : %s\n 
 60 %s ne peut pas etre inclus\n
 61 %s ne peut pas etre defini comme extern\n
 62 %s : structure extern inconnue\n

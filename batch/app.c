@@ -724,7 +724,7 @@ indLine             wi;
 }
 
 /*----------------------------------------------------------------------
-   ProcessName trite un nom.                                      
+   ProcessName processes a name.                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ProcessName (SyntacticCode r, SyntacticCode pr, indLine wl, indLine wi)
@@ -1186,10 +1186,10 @@ int                 r;
 #endif /* __STDC__ */
 
 {
-   if (pSSchema->SsRule[r - 1].SrName[0] == '\0')
-      fprintf (Hfile, "ID%d", r);
+   if (pSSchema->SsRule[r].SrName[0] == '\0')
+      fprintf (Hfile, "ID%d", r+1);
    else
-      WriteName (Hfile, pSSchema->SsRule[r - 1].SrName);
+      WriteName (Hfile, pSSchema->SsRule[r].SrName);
 }
 
 /*----------------------------------------------------------------------
@@ -1250,38 +1250,38 @@ FILE               *Hfile;
 
    fprintf (Hfile, "#define ");
    WriteName (Hfile, pSSchema->SsName);
-   r = CharString + 1;
+   r = CharString;
    fprintf (Hfile, "_EL_");
    WriteRuleName (Hfile, r);
-   fprintf (Hfile, " %d\n", r);
+   fprintf (Hfile, " %d\n", r+1);
 
    fprintf (Hfile, "#define ");
    WriteName (Hfile, pSSchema->SsName);
-   r = GraphicElem + 1;
+   r = GraphicElem;
    fprintf (Hfile, "_EL_");
    WriteRuleName (Hfile, r);
-   fprintf (Hfile, " %d\n", r);
+   fprintf (Hfile, " %d\n", r+1);
 
    fprintf (Hfile, "#define ");
    WriteName (Hfile, pSSchema->SsName);
-   r = Symbol + 1;
+   r = Symbol;
    fprintf (Hfile, "_EL_");
    WriteRuleName (Hfile, r);
-   fprintf (Hfile, " %d\n", r);
+   fprintf (Hfile, " %d\n", r+1);
 
    fprintf (Hfile, "#define ");
    WriteName (Hfile, pSSchema->SsName);
-   r = Picture + 1;
+   r = Picture;
    fprintf (Hfile, "_EL_");
    WriteRuleName (Hfile, r);
-   fprintf (Hfile, " %d\n", r);
+   fprintf (Hfile, " %d\n", r+1);
 
    fprintf (Hfile, "#define ");
    WriteName (Hfile, pSSchema->SsName);
-   r = PageBreak + 1;
+   r = PageBreak;
    fprintf (Hfile, "_EL_");
    WriteRuleName (Hfile, r);
-   fprintf (Hfile, " %d\n", r);
+   fprintf (Hfile, " %d\n", r+1);
 }
 
 /*----------------------------------------------------------------------
@@ -1326,7 +1326,7 @@ SRule              *pExtensRule;
 	     else
 		WriteName (Hfile, pRule->SrName);
 	  }
-	fprintf (Hfile, " %d\n", r);
+	fprintf (Hfile, " %d\n", r+1);
 
 	if (pRule->SrNLocalAttrs > 0)
 	   for (i = 0; i < pRule->SrNLocalAttrs; i++)
@@ -1395,12 +1395,12 @@ char               *fname;
 	  {
 	     fprintf (Hfile, "\n/* Constants */\n");
 	     while (pSSchema->SsRule[rule].SrConstruct == CsConstant)
-		WriteRule (Hfile, ++rule, NULL);
+		WriteRule (Hfile, rule++, NULL);
 	  }
-	firstRule = rule + 1;
+	firstRule = rule;
 	/* write parameters */
 	first = True;
-	for (rule = firstRule; rule <= pSSchema->SsNRules; rule++)
+	for (rule = firstRule; rule < pSSchema->SsNRules; rule++)
 	   if (pSSchema->SsRule[rule].SrParamElem)
 	     {
 		if (first)
@@ -1413,7 +1413,7 @@ char               *fname;
 	/* write rules */
 	if (pSSchema->SsNRules >= firstRule)
 	   fprintf (Hfile, "\n/* Elements */\n");
-	for (rule = firstRule; rule <= pSSchema->SsNRules; rule++)
+	for (rule = firstRule; rule < pSSchema->SsNRules; rule++)
 	  {
 	     pRule = &pSSchema->SsRule[rule];
 	     /* skip parameters, associated elements, */
@@ -1440,7 +1440,7 @@ char               *fname;
 	  }
 	/* write associated elements */
 	first = True;
-	for (rule = firstRule; rule <= pSSchema->SsNRules; rule++)
+	for (rule = firstRule; rule < pSSchema->SsNRules; rule++)
 	   if (pSSchema->SsRule[rule].SrAssocElem)
 	     {
 		if (first)
@@ -1454,7 +1454,7 @@ char               *fname;
 	   /* there is at least one associated element. Write LIST rules added */
 	   /* for associated elements */
 	  {
-	     for (rule = firstRule; rule <= pSSchema->SsNRules; rule++)
+	     for (rule = firstRule; rule < pSSchema->SsNRules; rule++)
 	       {
 		  pRule = &pSSchema->SsRule[rule];
 		  if (pRule->SrConstruct == CsList)
@@ -1464,7 +1464,7 @@ char               *fname;
 	  }
 	/* write exported elements */
 	first = True;
-	for (rule = firstRule; rule <= pSSchema->SsNRules; rule++)
+	for (rule = firstRule; rule < pSSchema->SsNRules; rule++)
 	   if (pSSchema->SsRule[rule].SrUnitElem)
 	     {
 		if (first)
@@ -1476,7 +1476,7 @@ char               *fname;
 	     }
 
 	first = True;
-	for (rule = firstRule; rule <= pSSchema->SsNRules; rule++)
+	for (rule = firstRule; rule < pSSchema->SsNRules; rule++)
 	   if (pSSchema->SsRule[rule].SrConstruct == CsNatureSchema)
 	     {
 		if (first)
@@ -1487,8 +1487,8 @@ char               *fname;
 		fprintf (Hfile, "#define ");
 		WriteName (Hfile, pSSchema->SsName);
 		fprintf (Hfile, "_EL_");
-		WriteRuleName (Hfile, rule + 1);
-		fprintf (Hfile, " %d\n", rule + 1);
+		WriteRuleName (Hfile, rule);
+		fprintf (Hfile, " %d\n", rule+1);
 	     }
      }
 }
@@ -1507,8 +1507,8 @@ char              **argv;
 {
    FILE               *filedesc;
    boolean             fileOK;
-   char                buffer[200];
-   Name                pFileName;
+   char                buffer[200], *ptr;
+   Name                srceFileName;
    int                 i;
    int                 wi;	/* position du debut du mot courant dans la ligne */
    int                 wl;	/* longueur du mot courant */
@@ -1534,24 +1534,39 @@ char              **argv;
      {
 	if (argc != 2)
 	  {
-	     fprintf (stderr, "usage: %s <input-file>\n", argv[0]);
+	     TtaDisplaySimpleMessage (FATAL, APP, FILE_NOT_FOUND);
 	     exit (1);
 	  }
 	else
 	  {
 	     /* recupere le nom du schema a compiler */
-	     strncpy (fileName, argv[1], MAX_NAME_LENGTH - 1);
-	     strncpy (pFileName, fileName, MAX_NAME_LENGTH - 3);
-	     /* ajoute le suffixe .A */
-	     strcat (pFileName, ".A");
-	     /* ouvre le fichier a compiler */
-	     filedesc = fopen (pFileName, "r");
-	     if (filedesc == 0)
-		TtaDisplayMessage (FATAL, TtaGetMessage (APP, FILE_NOT_FOUND), pFileName);
+	     strncpy (srceFileName, argv[1], MAX_NAME_LENGTH - 1);
+	     srceFileName[MAX_NAME_LENGTH - 1] = '\0';
+	     strcpy (fileName, srceFileName);
+	     ptr = strrchr(fileName, '.');
+	     if (!ptr)
+	       /* there is no suffix */
+	       strcat (srceFileName, ".A");
+	     else if (strcmp(ptr, ".A"))
+	       {
+		 /* it's not the valid suffix */
+		 TtaDisplayMessage (FATAL, TtaGetMessage(APP, INVALID_FILE), srceFileName);
+		 exit (1);
+	       }
 	     else
 	       {
+		 /* it's the valid suffix, cut the srcFileName here */
+		 ptr[0] = '\0';
+	       }
+	     /* ouvre le fichier a compiler */
+	     filedesc = fopen (srceFileName, "r");
+	     if (filedesc == 0)
+		TtaDisplaySimpleMessage (FATAL, APP, FILE_NOT_FOUND);
+	     else
+	       {
+		  /* save the file name without extension */
+		  strcpy (srceFileName, fileName);
 		  /* le fichier a compiler est ouvert */
-		  strcpy (pFileName, fileName);
 		  NIdentifiers = 0;
 		  /* table des identificateurs vide */
 		  LineNum = 0;
@@ -1616,10 +1631,10 @@ char              **argv;
 		       /* ecrit le schema compile' dans le fichier de sortie     */
 		       /* le directory des schemas est le directory courant      */
 		       SchemaPath[0] = '\0';
-		       GenerateApplication (pFileName, pAppli);
-		       strcpy (pFileName, fileName);
-		       if (strcmp (pFileName, "EDITOR") != 0)
-			  WriteDefineFile (pFileName);
+		       strcpy (srceFileName, fileName);
+		       GenerateApplication (srceFileName, pAppli);
+		       if (strcmp (srceFileName, "EDITOR") != 0)
+			  WriteDefineFile (srceFileName);
 		    }
 	       }
 	  }

@@ -497,12 +497,13 @@ char               *fname;
 		      case TteViewScroll:
 			 fprintf (AppFile, "NotifyWindow *event);\n");
 			 fprintf (actionFile, "NotifyWindow *event)\n");
+			 strcat (s, "event)\n     NotifyWindow *event;\n");
 			 break;
 		      case TteInit:
 		      case TteExit:
 			 fprintf (AppFile, "NotifyEvent *event);\n");
 			 fprintf (actionFile, "NotifyEvent *event)\n");
-			 strcat (s, "event)\n     NotifyWindow *event;\n");
+			 strcat (s, "event)\n     NotifyEvent *event;\n");
 			 break;
 		      default:
 			 break;

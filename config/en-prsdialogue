@@ -76,7 +76,7 @@
 75 Forbidden in a presentation box\n
 76 Too many Transmit rules for this counter\n
 77 This is not an included document\n
-78 No such file\n
+78 Invalid file, usage: prs [-Dname=val] file[.P] [outpufile(without .PRS)]\n
 79 Forbidden in a reference\n
 80 Only for boxes, references, and pairs\n
 81 Only one Copy or Content\n
@@ -91,9 +91,9 @@
 90 Unknown color\n
 91 Invalid rule for a choice\n
 92 Only for presentation boxes\n
-93 Name of the schema to compile (without .SCH) :
-94 Vue Unique\n
-95 Name of the presentation schema to list (without .SCH) :
+93 Vue Unique\n
+94 Invalid file suffix: %s\n
+95 cpp not found\n
 96 Use "CreateFirst" instead\n
 97 Use "PageBreak" or "LineBreak" instead\n
 98 Dont use a type name for a box\n
@@ -101,5 +101,3 @@
 100 Unknown message\n
 101 Cannot write %s\n
 102 Only for attributes\n
-103 The suffix of the file is invalid: %s\n
-104 cpp not found\n
