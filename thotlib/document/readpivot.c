@@ -1,8 +1,5 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
-   Ce module charge un document depuis un fichier contenant une representation
+   ce module charge un document depuis un fichier contenant une representation
    pivot et construit les arbres abstraits correspondants.
  */
 
@@ -27,7 +24,7 @@
 #include "appdialogue_tv.h"
 
 boolean             error;
-static boolean      msgAncienFormat;
+static boolean      msgOldFormat;
 
 /* table d'equivalence entre les couleurs de la version pivot 3 et celles */
 /* des versions 4 et suivantes */
@@ -43,7 +40,7 @@ static int          newColor[] =
  149, 149, 140, 130, 130, 131, 131, 133, 133, 133, 133, 123, 3, 1, 7,
  7, 6, 6, 5, 5, 5, 4, 4, 4, 3, 3, 2};
 
-#define MaxDocExt 10
+#define MAX_EXT_DOC 10
 
 #include "tree_f.h"
 #include "structcreation_f.h"
@@ -67,12 +64,13 @@ static int          newColor[] =
 
 
 /* ---------------------------------------------------------------------- */
+/* |	PivotError							| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         PivotError (BinFile fich)
+static void         PivotError (BinFile file)
 #else  /* __STDC__ */
-static void         PivotError (fich)
-BinFile             fich;
+static void         PivotError (file)
+BinFile             file;
 
 #endif /* __STDC__ */
 {
@@ -84,7 +82,7 @@ BinFile             fich;
    i = 1;
    while (!stop && i < 200)
      {
-	if (!BIOreadByte (fich, &c))
+	if (!BIOreadByte (file, &c))
 	   stop = TRUE;
 	else
 	  {
@@ -111,31 +109,31 @@ BinFile             fich;
 /* |            presentation trouve ou 0.                               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static char        *NormalizeFileName (char *fn, int *oldTypeImage, PictureScaling * oldPres, boolean * trouve)
+static char        *NormalizeFileName (char *fileName, int *oldTypeImage, PictureScaling * oldPres, boolean * found)
 
 #else  /* __STDC__ */
-static char        *NormalizeFileName (fn, oldTypeImage, oldPres, trouve)
-char               *fn;
+static char        *NormalizeFileName (fileName, oldTypeImage, oldPres, found)
+char               *fileName;
 int                *oldTypeImage;
-PictureScaling          *oldPres;
-boolean            *trouve;
+PictureScaling     *oldPres;
+boolean            *found;
 
 #endif /* __STDC__ */
 
 {
    char               *name;
 
-   name = fn;
+   name = fileName;
    if (*name < ' ')
      {
 	*oldTypeImage = *name++ - 1;
 	*oldPres = (PictureScaling) (*oldTypeImage / 4);
 	*oldTypeImage = *oldTypeImage % 4;
-	*trouve = TRUE;
+	*found = TRUE;
      }
    else
      {
-	*trouve = FALSE;
+	*found = FALSE;
 	*oldPres = RealSize;
      }
    *oldTypeImage = UNKNOWN_FORMAT;
@@ -144,78 +142,76 @@ boolean            *trouve;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    CreateReglePres cree une regle de presentation pour l'image     | */
+/* |    CreatePRule cree une regle de presentation pour l'image		| */
 /* |            contenue dans pEl.                                      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         CreateReglePres (PtrElement pEl, int typeimage, PictureScaling pres, int Vue)
+static void         CreatePRule (PtrElement pEl, int pictureType, PictureScaling scaling, int view)
 
 #else  /* __STDC__ */
-static void         CreateReglePres (pEl, typeimage, pres, Vue)
+static void         CreatePRule (pEl, pictureType, scaling, view)
 PtrElement          pEl;
-int                 typeimage;
-PictureScaling           pres;
-int              Vue;
+int                 pictureType;
+PictureScaling      scaling;
+int                 view;
 
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pRegle;
+   PtrPRule        pPRule;
 
-   GetReglePres (&pRegle);	/* acquiert une regle */
+   GetReglePres (&pPRule);
    /* initialise d'abord la nouvelle regle */
-   pRegle->PrPresMode = PresImmediate;
-   pRegle->PrSpecifAttr = 0;
-   pRegle->PrSpecifAttrSSchema = NULL;
-   pRegle->PrViewNum = Vue;
-   pRegle->PrType = PtPictInfo;
-   pRegle->PrPictInfo.PicXArea = 0;
-   pRegle->PrPictInfo.PicYArea = 0;
-   pRegle->PrPictInfo.PicWArea = 0;
-   pRegle->PrPictInfo.PicHArea = 0;
-   pRegle->PrPictInfo.PicPresent = pres;
-   pRegle->PrPictInfo.PicType = typeimage;
+   pPRule->PrPresMode = PresImmediate;
+   pPRule->PrSpecifAttr = 0;
+   pPRule->PrSpecifAttrSSchema = NULL;
+   pPRule->PrViewNum = view;
+   pPRule->PrType = PtPictInfo;
+   pPRule->PrPictInfo.PicXArea = 0;
+   pPRule->PrPictInfo.PicYArea = 0;
+   pPRule->PrPictInfo.PicWArea = 0;
+   pPRule->PrPictInfo.PicHArea = 0;
+   pPRule->PrPictInfo.PicPresent = scaling;
+   pPRule->PrPictInfo.PicType = pictureType;
    /* chaine la nouvelle regle */
-   pRegle->PrNextPRule = pEl->ElFirstPRule;
-   pEl->ElFirstPRule = pRegle;
+   pPRule->PrNextPRule = pEl->ElFirstPRule;
+   pEl->ElFirstPRule = pPRule;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    rdTypeDim lit un type de dimension dans le fichier et retourne  | */
-/* |            sa valeur.                                              | */
+/* |    ReadDimensionType lit un type de dimension dans le fichier et	| */
+/* |	retourne sa valeur.                                             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static boolean      rdTypeDim (BinFile fich)
+static boolean      ReadDimensionType (BinFile file)
 #else  /* __STDC__ */
-static boolean      rdTypeDim (fich)
-BinFile             fich;
+static boolean      ReadDimensionType (file)
+BinFile             file;
 
 #endif /* __STDC__ */
 {
    char                c;
-   boolean             rdTypeDim;
 
-   if (!BIOreadByte (fich, &c))
+   if (!BIOreadByte (file, &c))
      {
 	c = '\0';
-	PivotError (fich);
+	PivotError (file);
      }
    if (c == C_PIV_ABSOLUTE)
-      rdTypeDim = TRUE;
+      return TRUE;
    else
-      rdTypeDim = FALSE;
-   return rdTypeDim;
+      return FALSE;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* | rdUnit lit une unite dans le fichier et retourne sa valeur.        | */
+/* | ReadUnit lit une unite dans le fichier et retourne sa valeur.	| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static TypeUnit     rdUnit (BinFile file)
+static TypeUnit     ReadUnit (BinFile file)
 #else  /* __STDC__ */
-static TypeUnit     rdUnit (file)
-BinFile             fich;
+static TypeUnit     ReadUnit (file)
+BinFile             file;
 
 #endif /* __STDC__ */
 {
@@ -242,195 +238,192 @@ BinFile             fich;
 	 }
 }
 
+
 /* ---------------------------------------------------------------------- */
-/* |    rdSigne lit un signe dans le fichier et retourne sa valeur.     | */
+/* |    ReadSign lit un signe dans le fichier et retourne sa valeur.    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static boolean      rdSigne (BinFile fich)
+static boolean      ReadSign (BinFile file)
 #else  /* __STDC__ */
-static boolean      rdSigne (fich)
-BinFile             fich;
+static boolean      ReadSign (file)
+BinFile             file;
 
 #endif /* __STDC__ */
 {
    char                c;
-   boolean             rdSigne;
 
-   if (!BIOreadByte (fich, &c))
+   if (!BIOreadByte (file, &c))
      {
 	c = '\0';
-	PivotError (fich);
+	PivotError (file);
      }
    if (c == C_PIV_PLUS)
-      rdSigne = TRUE;
+      return TRUE;
    else
-      rdSigne = FALSE;
-   return rdSigne;
+      return FALSE;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    rdBooleen lit un booleen dans le fichier et retourne sa valeur. | */
+/* |    ReadBoolean lit un booleen dans le fichier et retourne sa valeur| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static boolean      rdBooleen (BinFile fich)
+static boolean      ReadBoolean (BinFile file)
 
 #else  /* __STDC__ */
-static boolean      rdBooleen (fich)
-BinFile             fich;
+static boolean      ReadBoolean (file)
+BinFile             file;
 
 #endif /* __STDC__ */
 
 {
    char                c;
-   boolean             rdBooleen;
 
-   if (!BIOreadByte (fich, &c))
+   if (!BIOreadByte (file, &c))
      {
 	c = '\0';
-	PivotError (fich);
+	PivotError (file);
      }
    if (c == C_PIV_TRUE)
-      rdBooleen = TRUE;
+      return TRUE;
    else
-      rdBooleen = FALSE;
-   return rdBooleen;
+      return FALSE;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    rdCadr lit un BAlignment dans le fichier et retourne sa valeur.    | */
+/* |  ReadAlign lit un BAlignment dans le fichier et retourne sa valeur. | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static BAlignment      rdCadr (BinFile fich)
+static BAlignment      ReadAlign (BinFile file)
 
 #else  /* __STDC__ */
-static BAlignment      rdCadr (fich)
-BinFile             fich;
+static BAlignment      ReadAlign (file)
+BinFile             file;
 
 #endif /* __STDC__ */
 
 {
    char                c;
-   BAlignment             rdCadr;
+   BAlignment          align;
 
-   if (!BIOreadByte (fich, &c))
+   if (!BIOreadByte (file, &c))
      {
 	c = '\0';
-	PivotError (fich);
+	PivotError (file);
      }
    switch (c)
 	 {
 	    case C_PIV_LEFT:
-	       rdCadr = AlignLeft;
+	       align = AlignLeft;
 	       break;
 	    case C_PIV_RIGHT:
-	       rdCadr = AlignRight;
+	       align = AlignRight;
 	       break;
 	    case C_PIV_CENTERED:
-	       rdCadr = AlignCenter;
+	       align = AlignCenter;
 	       break;
 	    case C_PIV_LEFTDOT:
-	       rdCadr = AlignLeftDots;
+	       align = AlignLeftDots;
 	       break;
 	    default:
-	       PivotError (fich);
+	       PivotError (file);
 	       PivotFormatError ("l");
-	       rdCadr = AlignLeft;
+	       align = AlignLeft;
 	       break;
 	 }
-   return rdCadr;
+   return align;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    rdTypePage lit un Type de page dans le fichier et retourne sa   | */
-/* |            valeur.                                                 | */
+/* |    ReadPageType	lit un Type de page dans le fichier et retourne	| */
+/* |            sa valeur.                                              | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static PageType     rdTypePage (BinFile fich)
+static PageType     ReadPageType (BinFile file)
 
 #else  /* __STDC__ */
-static PageType     rdTypePage (fich)
-BinFile             fich;
+static PageType     ReadPageType (file)
+BinFile             file;
 
 #endif /* __STDC__ */
 
 {
    char                c;
-   PageType            rdTypePage;
+   PageType            typ;
 
-   if (!BIOreadByte (fich, &c))
+   if (!BIOreadByte (file, &c))
      {
 	c = '\0';
-	PivotError (fich);
+	PivotError (file);
      }
    switch (c)
 	 {
 	    case C_PIV_COMPUTED_PAGE:
-	       rdTypePage = PgComputed;
+	       typ = PgComputed;
 	       break;
 	    case C_PIV_START_PAGE:
-	       rdTypePage = PgBegin;
+	       typ = PgBegin;
 	       break;
 	    case C_PIV_USER_PAGE:
-	       rdTypePage = PgUser;
+	       typ = PgUser;
 	       break;
-	       /* les marques colonnes sont traduites en marques pages pour */
+	       /* les tags colonnes sont traduites en tags pages pour */
 	       /* la version qui ne gere pas les colonnes */
 	       /* un message est affiche a l'utilisateur pour qu'il */
 	       /* repagine s'il le desire */
 	    case C_PIV_COMPUTED_COL:
 #ifdef __COLPAGE__
-	       rdTypePage = ColComputed;
+	       typ = ColComputed;
 #else  /* __COLPAGE__ */
-	       rdTypePage = PgComputed;
+	       typ = PgComputed;
 	       TtaDisplaySimpleMessage (INFO, LIB, COLUMNS_PAGINATE_AGAIN);
 #endif /* __COLPAGE__ */
 	       break;
 	    case C_PIV_START_COL:
 #ifdef __COLPAGE__
-	       rdTypePage = ColBegin;
+	       typ = ColBegin;
 #else  /* __COLPAGE__ */
-	       rdTypePage = PgComputed;
+	       typ = PgComputed;
 	       TtaDisplaySimpleMessage (INFO, LIB, COLUMNS_PAGINATE_AGAIN);
 #endif /* __COLPAGE__ */
 	       break;
 	    case C_PIV_USER_COL:
 #ifdef __COLPAGE__
-	       rdTypePage = ColUser;
+	       typ = ColUser;
 #else  /* __COLPAGE__ */
-	       rdTypePage = PgComputed;
+	       typ = PgComputed;
 	       TtaDisplaySimpleMessage (INFO, LIB, COLUMNS_PAGINATE_AGAIN);
 #endif /* __COLPAGE__ */
 	       break;
 	    case C_PIV_COL_GROUP:
 #ifdef __COLPAGE__
-	       rdTypePage = ColGroup;
+	       typ = ColGroup;
 #else  /* __COLPAGE__ */
-	       rdTypePage = PgComputed;
+	       typ = PgComputed;
 	       TtaDisplaySimpleMessage (INFO, LIB, COLUMNS_PAGINATE_AGAIN);
 #endif /* __COLPAGE__ */
 	       break;
 	    case C_PIV_REPEAT_PAGE:
-	       /* les marques page rappel sont transformees */
-	       /* en marques page calculees, car le nouveau */
-	       /* code ne traite plus ces types de marques */
-	       rdTypePage = PgComputed;
+	       /* les tags page rappel sont transformees */
+	       /* en tags page calculees, car le nouveau */
+	       /* code ne traite plus ces types de tags */
+	       typ = PgComputed;
 	       break;
 	    default:
-	       PivotError (fich);
+	       PivotError (file);
 	       PivotFormatError ("C");
-	       rdTypePage = PgComputed;
+	       typ = PgComputed;
 	       break;
 	 }
-   return rdTypePage;
+   return typ;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    readComment lit un commentaire dans le fichier fich et retourne | */
+/* |    ReadComment lit un commentaire dans le fichier file et retourne | */
 /* |            un pointeur sur le premier buffer du texte du           | */
-/* |            commentaire lu, si effectif est vrai. Si effectif est   | */
+/* |            commentaire lu, si store est vrai. Si store est		| */
 /* |            faux, le commentaire est simplement saute' et la        | */
 /* |            fonction retourne NULL.                                 | */
 /* |            Si oldformat est vrai, le commentaire est lu selon      | */
@@ -438,141 +431,146 @@ BinFile             fich;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-PtrTextBuffer      readComment (BinFile fich, boolean effectif, boolean oldformat)
+PtrTextBuffer      ReadComment (BinFile file, boolean store, boolean oldformat)
 
 #else  /* __STDC__ */
-PtrTextBuffer      readComment (fich, effectif, oldformat)
-BinFile             fich;
-boolean             effectif;
+PtrTextBuffer      ReadComment (file, store, oldformat)
+BinFile             file;
+boolean             store;
 boolean             oldformat;
 
 #endif /* __STDC__ */
 
 {
-   char                c;
-   PtrTextBuffer      b;
-   int                 n, lg;
-   PtrTextBuffer      readComment;
+   PtrTextBuffer      firstBuf, pBuf;
+   int                n, len;
+   char               c;
 
-   lg = 0;
-   /* lit l'octet qui suit la marque commentaire */
-   if (!BIOreadByte (fich, &c))
+   len = 0;
+   /* lit l'octet qui suit le tag commentaire */
+   if (!BIOreadByte (file, &c))
      {
 	c = '\0';
-	PivotError (fich);
+	PivotError (file);
      }
    if (oldformat && c != (char) C_PIV_BEGIN)
      {
-	PivotError (fich);
-	PivotFormatError ("y");	/* marque debut de commentaire ancien format absente */
-	readComment = NULL;
+	PivotError (file);
+	/* tag debut de commentaire ancien format absente */
+	PivotFormatError ("y");
+	firstBuf = NULL;
      }
    else
      {
 	if (!oldformat)
 	   /* l'octet lu est l'octet de poids fort de la longueur */
 	  {
-	     lg = 256 * ((int) c);	/* lit le 2eme octet de la longueur */
-	     if (!BIOreadByte (fich, &c))
+	     len = 256 * ((int) c);
+	     /* lit le 2eme octet de la longueur */
+	     if (!BIOreadByte (file, &c))
 	       {
 		  c = '\0';
-		  PivotError (fich);
+		  PivotError (file);
 	       }
-	     lg += (int) c;
+	     len += (int) c;
 	  }
-	if (!effectif)
+	if (!store)
 	  {
 	     /* on saute le texte du commentaire */
-	     readComment = NULL;
+	     firstBuf = NULL;
 	     if (oldformat)
 		/* lit le fichier jusqu'au 1er zero */
 		do
-		   if (!BIOreadByte (fich, &c))
+		   if (!BIOreadByte (file, &c))
 		     {
 			c = '\0';
-			PivotError (fich);
+			PivotError (file);
 		     }
 		while (c != '\0') ;
 	     else
-		while (lg > 0)
+		while (len > 0)
 		  {
 		     /* lit le nombre d'octets indique' */
-		     if (!BIOreadByte (fich, &c))
-			PivotError (fich);
-		     lg--;
+		     if (!BIOreadByte (file, &c))
+			PivotError (file);
+		     len--;
 		  }
 	  }
 	else
 	  {
 	     /* on lit effectivement le texte du commentaire */
-	     GetBufTexte (&b);
-	     readComment = b;
+	     GetBufTexte (&pBuf);
+	     firstBuf = pBuf;
 	     n = 0;
 	     if (oldformat)
-		lg = 1;		/* il faut lire au moins le zero final */
-	     if (lg > 0)
+		/* il faut lire au moins le zero final */
+		len = 1;
+	     if (len > 0)
 		do
 		  {
 		     /* lit le texte du commentaire */
-		     if (n == MAX_CHAR - 1)	/* le buffer courant est plein, on change de buffer */
+		     if (n == MAX_CHAR - 1)
+			/* le buffer courant est plein, on change de buffer */
 		       {
-			  b->BuLength = n;
-			  b->BuContent[n] = '\0';
-			  b = NewTextBuffer (b);
+			  pBuf->BuLength = n;
+			  pBuf->BuContent[n] = '\0';
+			  pBuf = NewTextBuffer (pBuf);
 			  n = 0;
 
 		       }
-		     if (!BIOreadByte (fich, &c))
+		     if (!BIOreadByte (file, &c))
 		       {
 			  c = '\0';
-			  PivotError (fich);
+			  PivotError (file);
 		       }
 		     n++;
-		     b->BuContent[n - 1] = c;
+		     pBuf->BuContent[n - 1] = c;
 		     if (!oldformat)
-			lg--;	/* decremente le nombre d'octets  restant a lire */
+			/* decremente le nombre d'octets  restant a lire */
+			len--;
 		     else if (c == '\0')
 		       {
 			  n--;
-			  lg = 0;
+			  len = 0;
 		       }
 		  }
-		while (lg != 0);	/* termine le buffer en cours */
-	     b->BuLength = n;
-	     b->BuContent[n] = '\0';
+		while (len != 0);
+	     /* termine le buffer en cours */
+	     pBuf->BuLength = n;
+	     pBuf->BuContent[n] = '\0';
 	  }
 	if (oldformat)
 	  {
-	     /* lit la marque de fin */
-	     if (!BIOreadByte (fich, &c))
+	     /* lit le tag de fin */
+	     if (!BIOreadByte (file, &c))
 		c = '\0';
 	     if (c != (char) C_PIV_END)
 	       {
-		  PivotError (fich);
+		  PivotError (file);
 		  PivotFormatError ("c");
 	       }
 	  }
      }
-   return readComment;
+   return firstBuf;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    rdImageType lit le type de l'image d'un PictInfo.        | */
+/* |    ReadPictureType lit le type de l'image d'un PictInfo.		| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static int          rdImageType (BinFile fich)
+static int          ReadPictureType (BinFile file)
 
 #else  /* __STDC__ */
-static int          rdImageType (fich)
-BinFile             fich;
+static int          ReadPictureType (file)
+BinFile             file;
 
 #endif /* __STDC__ */
 
 {
    int                 n;
 
-   BIOreadShort (fich, &n);
+   BIOreadShort (file, &n);
    /* Pour assurer la compatibilite avec Linux et autre machine */
    if (n == 255)
       return -1;
@@ -581,15 +579,15 @@ BinFile             fich;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    rdCroppingFrame lit la cropping frame d'un PictInfo.     | */
+/* |    ReadPictureArea lit la zone affichable d'un PictInfo.		| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         rdCroppingFrame (BinFile fich, int *PicXArea, int *PicYArea, int *PicWArea, int *PicHArea)
+static void         ReadPictureArea (BinFile file, int *PicXArea, int *PicYArea, int *PicWArea, int *PicHArea)
 
 #else  /* __STDC__ */
-static void         rdCroppingFrame (fich, PicXArea, PicYArea, PicWArea, PicHArea)
-BinFile             fich;
+static void         ReadPictureArea (file, PicXArea, PicYArea, PicWArea, PicHArea)
+BinFile             file;
 int                *PicXArea;
 int                *PicYArea;
 int                *PicWArea;
@@ -600,58 +598,57 @@ int                *PicHArea;
 {
    int                 n;
 
-   BIOreadShort (fich, &n);
+   BIOreadShort (file, &n);
    *PicXArea = PointToPixel (n);
-   BIOreadShort (fich, &n);
+   BIOreadShort (file, &n);
    *PicYArea = PointToPixel (n);
-   BIOreadShort (fich, &n);
+   BIOreadShort (file, &n);
    *PicWArea = PointToPixel (n);
-   BIOreadShort (fich, &n);
+   BIOreadShort (file, &n);
    *PicHArea = PointToPixel (n);
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    rdImagePresentation lit la presentation d'un PictInfo.   | */
+/* |    ReadPicturePresentation lit la presentation d'un PictInfo	| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static PictureScaling    rdImagePresentation (BinFile fich)
+static PictureScaling    ReadPicturePresentation (BinFile file)
 
 #else  /* __STDC__ */
-static PictureScaling    rdImagePresentation (fich)
-BinFile             fich;
+static PictureScaling    ReadPicturePresentation (file)
+BinFile             file;
 
 #endif /* __STDC__ */
 
 {
    char                c;
-   PictureScaling           rdImagePresentation;
+   PictureScaling           scaling;
 
-   if (!BIOreadByte (fich, &c))
+   if (!BIOreadByte (file, &c))
      {
 	c = '\0';
-	PivotError (fich);
+	PivotError (file);
      }
    switch (c)
 	 {
 	    case C_PIV_REALSIZE:
-	       rdImagePresentation = RealSize;
+	       scaling = RealSize;
 	       break;
 	    case C_PIV_RESCALE:
-	       rdImagePresentation = ReScale;
+	       scaling = ReScale;
 	       break;
 	    case C_PIV_FILLFRAME:
-	       rdImagePresentation = FillFrame;
+	       scaling = FillFrame;
 	       break;
 	    default:
-	       PivotError (fich);
+	       PivotError (file);
 	       PivotFormatError ("PICT");
-/***todo: definir un autre type d'erreur ? */
-	       rdImagePresentation = RealSize;
+	       scaling = RealSize;
 	       break;
 	 }
 
-   return rdImagePresentation;
+   return scaling;
 }
 
 
@@ -662,12 +659,12 @@ BinFile             fich;
 
 
 #ifdef __STDC__
-void                LabelStringToInt (LabelString strn, int *num)
+void                LabelStringToInt (LabelString string, int *number)
 
 #else  /* __STDC__ */
-void                LabelStringToInt (strn, num)
-LabelString         strn;
-int                *num;
+void                LabelStringToInt (string, number)
+LabelString         string;
+int                *number;
 
 #endif /* __STDC__ */
 
@@ -678,14 +675,14 @@ int                *num;
    char                c;
 
    ok = FALSE;
-   *num = 0;
-   if (strn[0] == 'L')
+   *number = 0;
+   if (string[0] == 'L')
      {
 	val = 0;
 	i = 1;
 	do
 	  {
-	     c = strn[i];
+	     c = string[i];
 	     i++;
 	     if (c >= '0' && c <= '9')
 	       {
@@ -697,30 +694,30 @@ int                *num;
 	  }
 	while (ok && c != '\0');
 	if (ok)
-	   *num = val;
+	   *number = val;
      }
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    rdReference lit une reference dans le fichier fich et retourne  | */
-/* |            le type de la reference lue (TR), le label de l'element | */
-/* |            reference' (lab), un booleen indiquant si la reference  | */
-/* |            est interne ou externe (RExt) et, dans le cas d'une     | */
-/* |            reference externe, le nom (N) du document contenant     | */
-/* |            l'element reference'.                                   | */
+/* |    ReadReference lit une reference dans le fichier file et retourne| */
+/* |       le type de la reference lue (refType), le label de l'element | */
+/* |       reference' (label), un booleen indiquant si la reference	| */
+/* |       est interne ou externe (refExt) et, dans le cas d'une	| */
+/* |       reference externe, le nom (docIdent) du document contenant	| */
+/* |       l'element reference'. 					| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         rdReference (ReferenceType * TR, LabelString lab, boolean * RExt, DocumentIdentifier * I, BinFile fich)
+static void         ReadReference (ReferenceType * refType, LabelString label, boolean * refExt, DocumentIdentifier * docIdent, BinFile file)
 
 #else  /* __STDC__ */
-static void         rdReference (TR, lab, RExt, I, fich)
-ReferenceType          *TR;
-LabelString         lab;
-boolean            *RExt;
-DocumentIdentifier    *I;
-BinFile             fich;
+static void         ReadReference (refType, label, refExt, docIdent, file)
+ReferenceType       *refType;
+LabelString         label;
+boolean             *refExt;
+DocumentIdentifier  *docIdent;
+BinFile             file;
 
 #endif /* __STDC__ */
 
@@ -728,23 +725,24 @@ BinFile             fich;
    int                 j;
    char                c;
 
-   NulIdentDoc (I);
+   NulIdentDoc (docIdent);
    /* lit un octet */
-   if (!BIOreadByte (fich, &c))
+   if (!BIOreadByte (file, &c))
      {
 	c = '\0';
-	PivotError (fich);
+	PivotError (file);
      }
    /* cet octet represente-t-il un type de reference correct ? */
-   if (!(c == C_PIV_REF_FOLLOW || c == C_PIV_REF_INCLUSION || c == C_PIV_REF_INCLUS_EXP))
+   if (c != C_PIV_REF_FOLLOW && c != C_PIV_REF_INCLUSION &&
+       c != C_PIV_REF_INCLUS_EXP)
       /* non, ancien format pivot */
       /* on envoie un message a l'utilisateur, si ce n'est deja fait */
      {
-	if (msgAncienFormat)
+	if (msgOldFormat)
 	  {
-	     PivotError (fich);
+	     PivotError (file);
 	     TtaDisplaySimpleMessage (INFO, LIB, OLD_PIV_FORMAT_SAVE_DOC_WITH_THOT);
-	     msgAncienFormat = FALSE;	/* c'est fait */
+	     msgOldFormat = FALSE;	/* c'est fait */
 	  }
 	if (c == MOldRefInterne || c == MOldRefExterne || c == MOldRefInclusion)
 	   /* ancien format version 2 */
@@ -753,46 +751,46 @@ BinFile             fich;
 	     switch (c)
 		   {
 		      case MOldRefInterne:
-			 *RExt = FALSE;
-			 *TR = RefFollow;
+			 *refExt = FALSE;
+			 *refType = RefFollow;
 			 break;
 		      case MOldRefExterne:
-			 *RExt = TRUE;
-			 *TR = RefFollow;
+			 *refExt = TRUE;
+			 *refType = RefFollow;
 			 break;
 		      case MOldRefInclusion:
-			 *TR = RefInclusion;
-			 *RExt = TRUE;
+			 *refType = RefInclusion;
+			 *refExt = TRUE;
 			 break;
 		   }
 	     /* lit le type de label */
-	     if (!BIOreadByte (fich, &c))
+	     if (!BIOreadByte (file, &c))
 	       {
 		  c = '\0';
-		  PivotError (fich);
+		  PivotError (file);
 	       }
 	     /* lit la valeur du label */
-	     ReadLabel (c, lab, fich);
-	     if (*RExt && lab[0] != '\0')
+	     ReadLabel (c, label, file);
+	     if (*refExt && label[0] != '\0')
 		/* lit le nom du document contenant l'element reference' */
-		BIOreadIdentDoc (fich, I);
+		BIOreadIdentDoc (file, docIdent);
 	  }
 	else
 	   /* on interprete comme dans la version 1 */
 	   /* c'est une reference renvoi interne */
 	  {
-	     *TR = RefFollow;
-	     *RExt = FALSE;	/* il n'y a qu'un label court, sans marque */
+	     *refType = RefFollow;
+	     *refExt = FALSE;	/* il n'y a qu'un label court, sans tag */
 	     /* l'octet lu est l'octet de poids fort du label */
 	     j = 256 * ((int) c);	/* lit le 2eme octet du label */
-	     if (!BIOreadByte (fich, &c))
+	     if (!BIOreadByte (file, &c))
 	       {
 		  c = '\0';
-		  PivotError (fich);
+		  PivotError (file);
 	       }
 	     j += (int) c;
 	     /* convertit le label numerique en chaine de caracteres */
-	     LabelIntToString (j, lab);
+	     LabelIntToString (j, label);
 	  }
      }
    else
@@ -803,36 +801,38 @@ BinFile             fich;
 	switch (c)
 	      {
 		 case C_PIV_REF_FOLLOW:
-		    *TR = RefFollow;
+		    *refType = RefFollow;
 		    break;
 		 case C_PIV_REF_INCLUSION:
-		    *TR = RefInclusion;
+		    *refType = RefInclusion;
 		    break;
 		 case C_PIV_REF_INCLUS_EXP:
-		    *TR = RefInclusion;
+		    *refType = RefInclusion;
 		    break;
 	      }
 	/* lit l'indicateur reference  interne/externe */
-	*RExt = !rdBooleen (fich);
+	*refExt = !ReadBoolean (file);
 	/* lit le type de label */
-	if (!BIOreadByte (fich, &c))
+	if (!BIOreadByte (file, &c))
 	  {
 	     c = '\0';
-	     PivotError (fich);
+	     PivotError (file);
 	  }
 	/* lit la valeur du label */
-	ReadLabel (c, lab, fich);
-	if (*RExt && lab[0] != '\0')
-	   /* lit l'identificateur du document contenant l'element reference' */
-	   BIOreadIdentDoc (fich, I);
+	ReadLabel (c, label, file);
+	if (*refExt && label[0] != '\0')
+	   /* lit l'identificateur du document contenant l'element reference'*/
+	   BIOreadIdentDoc (file, docIdent);
 
      }
 }
 
+
 /* ---------------------------------------------------------------------- */
-/* |    GetElRefer cherche s'il existe un descripteur de reference      | */
-/* |            designant l'element de label Lab dans le document de    | */
-/* |            IDoc. Si IDoc est un identificateur vide, l'element designe'    | */
+/* |    GetElRefer cherche s'il existe un descripteur de reference	| */
+/* |            designant l'element de label label dans le document de	| */
+/* |            docIdent. Si docIdent est un identificateur vide,	| */
+/* |		l'element designe'					| */
 /* |            est interne au document en cours de lecture, dont le    | */
 /* |            contexte est pointe' par pDoc. Si le descripteur        | */
 /* |            n'existe pas, il est cree' et chaine'.                  | */
@@ -841,161 +841,160 @@ BinFile             fich;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static PtrReferredDescr GetElRefer (LabelString Lab, DocumentIdentifier IDoc, PtrDocument pDoc)
+static PtrReferredDescr GetElRefer (LabelString label, DocumentIdentifier docIdent, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static PtrReferredDescr GetElRefer (Lab, IDoc, pDoc)
-LabelString         Lab;
-DocumentIdentifier     IDoc;
+static PtrReferredDescr GetElRefer (label, docIdent, pDoc)
+LabelString         label;
+DocumentIdentifier  docIdent;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrReferredDescr    pr;
-   boolean             stop;
-   PtrReferredDescr    pDe1;
+   PtrReferredDescr    pRefD;
    int                 i;
+   boolean             stop;
 
-   pr = pDoc->DocReferredEl;
+   pRefD = pDoc->DocReferredEl;
    stop = FALSE;
    do
       /* parcourt la chaine des descripteurs de reference du document en   */
       /* cours de lecture. (Le premier descripteur de la chaine est bidon) */
      {
-	pr = pr->ReNext;
-	if (pr == NULL)
-	   stop = TRUE;		/* fin de la chaine */
-	else if (strcmp (pr->ReReferredLabel, Lab) == 0)	/* le label correspond */
-	   if (IdentDocNul (IDoc) && !pr->ReExternalRef)
+	pRefD = pRefD->ReNext;
+	if (pRefD == NULL)
+	   /* fin de la chaine */
+	   stop = TRUE;
+	else if (strcmp (pRefD->ReReferredLabel, label) == 0)
+	   /* le label correspond */
+	   if (IdentDocNul (docIdent) && !pRefD->ReExternalRef)
 	      /* on cherche une reference interne et c'en est une */
 	      stop = TRUE;	/* trouve' */
-	   else if (!IdentDocNul (IDoc) && pr->ReExternalRef)
+	   else if (!IdentDocNul (docIdent) && pRefD->ReExternalRef)
 	      /* on cherche une reference externe et c'en est une */
-	      if (MemeIdentDoc (IDoc, pr->ReExtDocument))
+	      if (MemeIdentDoc (docIdent, pRefD->ReExtDocument))
 		 stop = TRUE;
      }
    while (!stop);
-   if (pr == NULL)
+   if (pRefD == NULL)
       /* on n'a pas trouve' le descripteur */
       /* on cree et chaine un nouveau descripteur */
      {
-	pr = NewReferredElDescr (pDoc);
+	pRefD = NewReferredElDescr (pDoc);
 	/* on initialise le descripteur de reference cree'. */
-	pDe1 = pr;
-	strncpy (pDe1->ReReferredLabel, Lab, MAX_LABEL_LEN);
-	pDe1->ReExternalRef = !IdentDocNul (IDoc);
-	if (pDe1->ReExternalRef)
-	   CopyIdentDoc (&pDe1->ReExtDocument, IDoc);
+	strncpy (pRefD->ReReferredLabel, label, MAX_LABEL_LEN);
+	pRefD->ReExternalRef = !IdentDocNul (docIdent);
+	if (pRefD->ReExternalRef)
+	   CopyIdentDoc (&pRefD->ReExtDocument, docIdent);
 	else
 	  {
-	     LabelStringToInt (Lab, &i);
+	     LabelStringToInt (label, &i);
 	     if (i > GetCurrentLabel (pDoc))
 		SetCurrentLabel (pDoc, i);
 	  }
      }
-   return pr;
+   return pRefD;
 }
 
+
 /* ---------------------------------------------------------------------- */
-/* |    CreeReference chaine le descripteur de reference pointe' par    | */
-/* |            RefPtr appartenant au document dont le contexte est     | */
+/* |    CreateReference chaine le descripteur de reference pointe' par  | */
+/* |            pRef appartenant au document dont le contexte est       | */
 /* |            pointe' par pDoc et initialise ce descripteur pour      | */
-/* |            qu'il designe l'element de label lab appartenant au     | */
-/* |            document I. Si I est un identificateur vide, il s'agit du       | */
-/* |            document pDoc.                                          | */
+/* |            qu'il designe l'element de label label appartenant au   | */
+/* |            document docIdent. Si docIdent est un identificateur	| */
+/* |            vide, il s'agit du document pDoc.			| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         CreeReference (PtrReference RefPtr, ReferenceType TRef, LabelString lab, boolean RExt, DocumentIdentifier I, PtrDocument pDoc)
+static void         CreateReference (PtrReference pRef, ReferenceType refType, LabelString label, boolean refExt, DocumentIdentifier docIdent, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void         CreeReference (RefPtr, TRef, lab, RExt, I, pDoc)
-PtrReference        RefPtr;
-ReferenceType           TRef;
-LabelString         lab;
-boolean             RExt;
-DocumentIdentifier     I;
+static void         CreateReference (pRef, refType, label, refExt, docIdent, pDoc)
+PtrReference        pRef;
+ReferenceType       refType;
+LabelString         label;
+boolean             refExt;
+DocumentIdentifier  docIdent;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrReferredDescr    r;
-   PtrReference        pRf;
-   PtrReference        pPR1;
+   PtrReferredDescr    pRefD;
+   PtrReference        pRef;
 
-   if (lab[0] != '\0')
+   if (label[0] != '\0')
       /* cherche le descripteur d'element reference' correspondant */
      {
-	r = GetElRefer (lab, I, pDoc);
-	pPR1 = RefPtr;
+	pRefD = GetElRefer (label, docIdent, pDoc);
 	/* met le descripteur de reference a la fin de la chaine des */
 	/* descripteur de reference du document */
-	if (r->ReFirstReference == NULL)
+	if (pRefD->ReFirstReference == NULL)
 	  {
-	     r->ReFirstReference = RefPtr;
-	     pPR1->RdPrevious = NULL;
+	     pRefD->ReFirstReference = pRef;
+	     pRef->RdPrevious = NULL;
 	  }
 	else
 	  {
-	     pRf = r->ReFirstReference;
-	     while (pRf->RdNext != NULL)
-		pRf = pRf->RdNext;
-	     pRf->RdNext = RefPtr;
-	     pPR1->RdPrevious = pRf;
+	     pRef = pRefD->ReFirstReference;
+	     while (pRef->RdNext != NULL)
+		pRef = pRef->RdNext;
+	     pRef->RdNext = pRef;
+	     pRef->RdPrevious = pRef;
 	  }
-	pPR1->RdNext = NULL;	/* remplit le descripteur de reference */
-	pPR1->RdReferred = r;
-	pPR1->RdTypeRef = TRef;
-	pPR1->RdInternalRef = !RExt;
+	/* remplit le descripteur de reference */
+	pRef->RdNext = NULL;
+	pRef->RdReferred = pRefD;
+	pRef->RdTypeRef = refType;
+	pRef->RdInternalRef = !refExt;
      }
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    ReadType lit dans le fichier pivot, selon la valeur de marque,  | */
+/* |    ReadType lit dans le fichier pivot, selon la valeur de tag,     | */
 /* |            un numero de type ou un nom de nature et rend le numero | */
 /* |            de la regle definissant le type lu. Retourne 0 si       | */
-/* |            erreur. Si marque est une marque de nature, au retour   | */
-/* |            pSchStr contient un pointeur sur le schema de structure | */
+/* |            erreur. Si tag est une tag de nature, au retour		| */
+/* |            pSS contient un pointeur sur le schema de structure | */
 /* |            de cette nature.                                        | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static int  ReadType (PtrDocument pDoc, PtrSSchema * pSchStr, BinFile fichpiv, char *marque)
+static int  ReadType (PtrDocument pDoc, PtrSSchema * pSS, BinFile pivFile, char *tag)
 
 #else  /* __STDC__ */
-static int  ReadType (pDoc, pSchStr, fichpiv, marque)
+static int  ReadType (pDoc, pSS, pivFile, tag)
 PtrDocument         pDoc;
-PtrSSchema       *pSchStr;
-BinFile             fichpiv;
-char               *marque;
+PtrSSchema          *pSS;
+BinFile             pivFile;
+char                *tag;
 
 #endif /* __STDC__ */
 
 {
-   int                 nat;
-   int         nr;
-   Name                 NomSchPrs;
+   Name                PSchemaName;
+   int                 nat, rule;
    boolean             Extension;
 
-   nr = 0;
-   if (*marque == (char) C_PIV_NATURE)
+   rule = 0;
+   if (*tag == (char) C_PIV_NATURE)
      {
 	/* lit le numero de nature */
-	BIOreadShort (fichpiv, &nat);
+	BIOreadShort (pivFile, &nat);
 	if (nat < 0 || nat >= pDoc->DocNNatures)
 	  {
-	     PivotError (fichpiv);
+	     PivotError (pivFile);
 	     PivotFormatError ("Nature Num");
 	  }
-	/* lit la marque de type qui suit */
+	/* lit le tag de type qui suit */
 	if (!error)
-	   if (!BIOreadByte (fichpiv, marque))
-	      PivotError (fichpiv);
+	   if (!BIOreadByte (pivFile, tag))
+	      PivotError (pivFile);
 	/* teste si le numero lu est celui de la structure generique du document */
 	   else if (nat == 0)
-	      *pSchStr = pDoc->DocSSchema;
+	      *pSS = pDoc->DocSSchema;
 	   else
 	     {
 		/* teste s'il s'agit d'une extension de la structure generique du */
@@ -1005,44 +1004,46 @@ char               *marque;
 		   if (pDoc->DocNatureSSchema[nat]->SsExtension)
 		     {
 			Extension = TRUE;
-			*pSchStr = pDoc->DocNatureSSchema[nat];
+			*pSS = pDoc->DocNatureSSchema[nat];
 		     }
 		if (!Extension)
 		  {
-		     NomSchPrs[0] = '\0';	/* pas de presentation preferentielle */
-		     nr = CreeNature (pDoc->DocNatureName[nat], pDoc->DocNaturePresName[nat], *pSchStr);
+		     /* pas de presentation preferentielle */
+		     PSchemaName[0] = '\0';
+		     rule = CreeNature (pDoc->DocNatureName[nat], pDoc->DocNaturePresName[nat], *pSS);
 		     /* recupere le numero de la regle de nature */
-		     if (nr == 0)
+		     if (rule == 0)
 		       {
-			  PivotError (fichpiv);
+			  PivotError (pivFile);
 			  PivotFormatError ("n");
 		       }
 		     else
-			*pSchStr = (*pSchStr)->SsRule[nr - 1].SrSSchemaNat;
+			*pSS = (*pSS)->SsRule[rule - 1].SrSSchemaNat;
 		  }
 	     }
      }
    if (!error)
-      if (*marque == (char) C_PIV_TYPE)
+      if (*tag == (char) C_PIV_TYPE)
 	{
-	   BIOreadShort (fichpiv, &nr);		/* lit le numero de type de l'element */
+	   /* lit le numero de type de l'element */
+	   BIOreadShort (pivFile, &rule);
 	   if (pDoc->DocPivotVersion < 4)
 	      /* on tient compte de l'ajout du type de base PolyLine */
-	      if (nr >= MAX_BASIC_TYPE)
-		 nr++;
+	      if (rule >= MAX_BASIC_TYPE)
+		 rule++;
 	}
       else
 	{
-	   nr = 0;
-	   PivotError (fichpiv);
+	   rule = 0;
+	   PivotError (pivFile);
 	   PivotFormatError ("t");
 	}
 
-   return nr;
+   return rule;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    ContenuElExp compare le type de l'element en cours de lecture   | */
+/* |   ExportedContent compare le type de l'element en cours de lecture | */
 /* |            avec le type qui doit constituer le contenu d'un        | */
 /* |            element exporte'. Si le type correspond, positionne les | */
 /* |            indicateurs marquant qu'on doit creer tout le contenu   | */
@@ -1051,37 +1052,36 @@ char               *marque;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         ContenuElExp (boolean * creetout, int * TypeElement, PtrSSchema * pSchStr, PtrSSchema * pschcont, int * typecontenu)
+static void         ExportedContent (boolean * createAll, int * elType, PtrSSchema * pSS, PtrSSchema * pContSS, int * contentType)
 
 #else  /* __STDC__ */
-static void         ContenuElExp (creetout, TypeElement, pSchStr, pschcont, typecontenu)
-boolean            *creetout;
-int        *TypeElement;
-PtrSSchema       *pSchStr;
-PtrSSchema       *pschcont;
-int        *typecontenu;
+static void         ExportedContent (createAll, elType, pSS, pContSS, contentType)
+boolean          *createAll;
+int              *elType;
+PtrSSchema       *pSS;
+PtrSSchema       *pContSS;
+int		 *contentType;
 
 #endif /* __STDC__ */
 
 {
    int                 i;
    boolean             ok;
-   SRule              *pRe1;
+   SRule              *pSRule;
 
-   if (*typecontenu != 0 && *pschcont != NULL)
+   if (*contentType != 0 && *pContSS != NULL)
      {
 	ok = FALSE;
-	if ((*pschcont)->SsCode == (*pSchStr)->SsCode)
-	   if (*TypeElement == *typecontenu)
+	if ((*pContSS)->SsCode == (*pSS)->SsCode)
+	   if (*elType == *contentType)
 	      /* meme numero de type */
 	      ok = TRUE;
 	   else
 	     {
-		pRe1 = &(*pschcont)->SsRule[*typecontenu - 1];
-		if (pRe1->SrConstruct == CsChoice)
+		pSRule = &(*pContSS)->SsRule[*contentType - 1];
+		if (pSRule->SrConstruct == CsChoice)
 		   /* le contenu a creer est un choix */
-		   /* TODO: on ignore UNIT et NATURE, on peut faire mieux */
-		   if (pRe1->SrNChoices > 0)
+		   if (pSRule->SrNChoices > 0)
 		      /* on compare le type de l'element courant */
 		      /* avec toutes les options du choix */
 		      /* choix explicite */
@@ -1090,110 +1090,109 @@ int        *typecontenu;
 			do
 			  {
 			     i++;
-			     ok = pRe1->SrChoice[i - 1] == *TypeElement;
+			     ok = pSRule->SrChoice[i - 1] == *elType;
 			  }
-			while (!(ok || i >= pRe1->SrNChoices));
+			while (!ok && i < pSRule->SrNChoices);
 		     }
 	     }
 	if (!ok)
-	   if (*TypeElement == (*pSchStr)->SsRootElem)
+	   if (*elType == (*pSS)->SsRootElem)
 	     {
-		pRe1 = &(*pschcont)->SsRule[*typecontenu - 1];
-		if (pRe1->SrConstruct == CsNatureSchema)
+		pSRule = &(*pContSS)->SsRule[*contentType - 1];
+		if (pSRule->SrConstruct == CsNatureSchema)
 		  {
 		     /* le contenu cherche' est justement une racine de nature */
-		     if (pRe1->SrSSchemaNat != NULL)
-			ok = pRe1->SrSSchemaNat->SsCode == (*pSchStr)->SsCode;
+		     if (pSRule->SrSSchemaNat != NULL)
+			ok = pSRule->SrSSchemaNat->SsCode == (*pSS)->SsCode;
 		  }
-		else if (pRe1->SrConstruct == CsChoice)
+		else if (pSRule->SrConstruct == CsChoice)
 		   /* le contenu cherche' est un choix. Y a-t-il, parmi les */
 		   /* options de ce choix, la nature dont l'element courant est */
 		   /* racine? */
-		   if (pRe1->SrNChoices > 0)
+		   if (pSRule->SrNChoices > 0)
 		      /* choix explicite */
 		     {
 			i = 0;
 			do
 			  {
 			     i++;
-			     if ((*pschcont)->SsRule[pRe1->SrChoice[i - 1] - 1].SrConstruct == CsNatureSchema)
+			     if ((*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1].SrConstruct == CsNatureSchema)
 				/* l'option i est un changement de nature */
-				if ((*pschcont)->SsRule[pRe1->SrChoice[i - 1] - 1].SrSSchemaNat != NULL)
-				   ok = ((*pschcont)->SsRule[pRe1->SrChoice[i - 1] - 1].SrSSchemaNat->SsCode == (*pSchStr)->SsCode);
+				if ((*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1].SrSSchemaNat != NULL)
+				   ok = ((*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1].SrSSchemaNat->SsCode == (*pSS)->SsCode);
 			  }
-			while (!(ok || i >= pRe1->SrNChoices));
+			while (!ok && i < pSRule->SrNChoices);
 		     }
 	     }
 	if (ok)
 	  {
-	     *creetout = TRUE;	/* on cree toute la descendance de l'element */
-	     *typecontenu = 0;	/* on ne creera plus de contenu pour cet element */
+	     *createAll = TRUE;	/* on cree toute la descendance de l'element */
+	     *contentType = 0;	/* on ne creera plus de contenu pour cet element */
 	  }
      }
 }
 
- /* le code qui suit vient de la procedure VerifAttrRequis */
+
 /* ---------------------------------------------------------------------- */
-/* |    VerifAttrRequis1Regle verifie que l'element pointe' par pEl     | */
-/* |    possede les attributs requis indique's dans la regle pRegle du  | */
+/* |    CheckMandatAttrSRule verifie que l'element pointe' par pEl      | */
+/* |    possede les attributs requis indique's dans la regle pSRule du  | */
 /* |    schema de structure pSS et, si certains attributs requis        | */
 /* |    manquent, affiche un message d'erreur.                          | */
 /* ---------------------------------------------------------------------- */
 
-
 #ifdef __STDC__
-static void         VerifAttrRequis1Regle (PtrElement pEl, SRule * pRegle, PtrSSchema pSS)
+static void         CheckMandatAttrSRule (PtrElement pEl, SRule * pSRule, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-static void         VerifAttrRequis1Regle (pEl, pRegle, pSS)
+static void         CheckMandatAttrSRule (pEl, pSRule, pSS)
 PtrElement          pEl;
-SRule              *pRegle;
-PtrSSchema        pSS;
+SRule              *pSRule;
+PtrSSchema         pSS;
 
 #endif /* __STDC__ */
 
 {
-  PtrAttribute         pAttr;
+  PtrAttribute        pAttr;
   int                 i, att;
-  boolean             trouve;
+  boolean             found;
 
   /* parcourt tous les attributs locaux definis dans la regle */
-  for (i = 1; i <= pRegle->SrNLocalAttrs; i++)
-    if (pRegle->SrRequiredAttr[i - 1])
+  for (i = 0; i < pSRule->SrNLocalAttrs; i++)
+    if (pSRule->SrRequiredAttr[i])
       /* cet attribut local est requis */
       {
-	att = pRegle->SrLocalAttr[i - 1];
+	att = pSRule->SrLocalAttr[i];
 	/* cherche si l'element possede cet attribut */
 	pAttr = pEl->ElFirstAttr;
-	trouve = FALSE;
-	while (pAttr != NULL && !trouve)
+	found = FALSE;
+	while (pAttr != NULL && !found)
 	  if (pAttr->AeAttrNum == att &&
 	      pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
-	    trouve = TRUE;
+	    found = TRUE;
 	  else
 	    pAttr = pAttr->AeNext;
-	if (!trouve)
+	if (!found)
 	  /* l'element ne possede pas cet attribut requis */
-	  TtaDisplayMessage (INFO, TtaGetMessage (LIB, ATTR_REQUIRED_FOR_EL), pSS->SsAttribute[att - 1].AttrName, pRegle->SrName);
+	  TtaDisplayMessage (INFO, TtaGetMessage (LIB, ATTR_REQUIRED_FOR_EL), pSS->SsAttribute[att - 1].AttrName, pSRule->SrName);
       }
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    VerifAttrRequis verifie que l'element pointe' par pEl possede   | */
+/* |  CheckMandatoryAttr verifie que l'element pointe' par pEl possede  | */
 /* |            les attributs requis et, si certains attributs requis   | */
 /* |            manquent, affiche un message d'erreur.                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         VerifAttrRequis (PtrElement pEl, PtrDocument pDoc)
+static void         CheckMandatoryAttr (PtrElement pEl, PtrDocument pDoc)
 #else  /* __STDC__ */
-static void         VerifAttrRequis (pEl, pDoc)
+static void         CheckMandatoryAttr (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
 
-   SRule              *pRegle;
+   SRule            *pSRule;
    PtrSSchema        pSS;
 
    if (pEl != NULL)
@@ -1201,8 +1200,8 @@ PtrDocument         pDoc;
 	/* traite d'abord les attributs requis par la regle de structure */
 	/* qui definit l'element */
 	pSS = pEl->ElStructSchema;
-	pRegle = &pSS->SsRule[pEl->ElTypeNumber - 1];
-	VerifAttrRequis1Regle (pEl, pRegle, pSS);
+	pSRule = &pSS->SsRule[pEl->ElTypeNumber - 1];
+	CheckMandatAttrSRule (pEl, pSRule, pSS);
 	/* traite les attributs requis par toutes les regles d'extension de */
 	/* ce type d'element */
 	pSS = pDoc->DocSSchema;
@@ -1214,10 +1213,10 @@ PtrDocument         pDoc;
 	       {
 		  /* cherche dans ce schema d'extension la regle qui concerne */
 		  /* le type de l'element */
-		  pRegle = ExtensionRule (pEl->ElStructSchema, pEl->ElTypeNumber, pSS);
-		  if (pRegle != NULL)
+		  pSRule = ExtensionRule (pEl->ElStructSchema, pEl->ElTypeNumber, pSS);
+		  if (pSRule != NULL)
 		     /* il y a une regle d'extension, on la traite */
-		     VerifAttrRequis1Regle (pEl, pRegle, pSS);
+		     CheckMandatAttrSRule (pEl, pSRule, pSS);
 		  /* passe au schema d'extension suivant */
 		  pSS = pSS->SsNextExtens;
 	       }
@@ -1228,28 +1227,28 @@ PtrDocument         pDoc;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ReadAttribut lit dans le fichier fichpiv un attribut qui est    | */
-/* |    sous forme pivot. Le fichier doit etre positionne' juste apres  | */
-/* |    la Marque-TtAttribute (qui a deja ete lue). Au retour, le fichier  | */
+/* |    ReadAttr lit dans le fichier pivFile un attribut qui est sous   | */
+/* |    forme pivot. Le fichier doit etre positionne' juste apres       | */
+/* |    la Marque-Attribut (qui a deja ete lue). Au retour, le fichier  | */
 /* |    est positionne' sur le premier octet qui suit l'attribut        | */
 /* |    (prochain octet qui sera lu).                                   | */
-/* |    Si cree est faux, rien n'est cree', l'attribut est simplement   | */
+/* |    Si create est faux, rien n'est cree', l'attribut est simplement | */
 /* |    saute' dans le fichier.                                         | */
-/* |    Si cree est vrai, un attribut est cree' et  est retourne'       | */
-/* |    dans pAttrLu.                                                   | */
-/* |    ATTENTION: ReadAttribut utilise la table des natures du document| */
+/* |    Si create est vrai, un attribut est cree' et  est retourne'     | */
+/* |    dans pReadAttr.                                                 | */
+/* |    ATTENTION: ReadAttr utilise la table des natures du document    | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                ReadAttribut (BinFile fichpiv, PtrElement pEl, PtrDocument pDoc, boolean cree, PtrAttribute * pAttrLu, PtrAttribute * pAttr)
+void                ReadAttr (BinFile pivFile, PtrElement pEl, PtrDocument pDoc, boolean create, PtrAttribute * pReadAttr, PtrAttribute * pAttr)
 
 #else  /* __STDC__ */
-void                ReadAttribut (fichpiv, pEl, pDoc, cree, pAttrLu, pAttr)
-BinFile             fichpiv;
+void                ReadAttr (pivFile, pEl, pDoc, create, pReadAttr, pAttr)
+BinFile             pivFile;
 PtrElement          pEl;
 PtrDocument         pDoc;
-boolean             cree;
-PtrAttribute        *pAttrLu;
+boolean             create;
+PtrAttribute        *pReadAttr;
 PtrAttribute        *pAttr;
 
 #endif /* __STDC__ */
@@ -1260,36 +1259,37 @@ PtrAttribute        *pAttr;
    int                 attr;
    int                 val;
    boolean             signe;
-   ReferenceType           TRef;
-   boolean             RExt;
+   ReferenceType           refType;
+   boolean             refExt;
    DocumentIdentifier     I;
-   LabelString         lab;
+   LabelString         label;
    PtrTextBuffer      pBT, pPremBuff;
    char                c;
    PtrAttribute         pA;
-   PtrReference        pRf;
-   boolean             trouve;
+   PtrReference        pRef;
+   boolean             found;
    boolean             stop;
 
-   *pAttrLu = NULL;
+   *pReadAttr = NULL;
    pSchAttr = NULL;
    pA = NULL;
    signe = FALSE;
    /* lit le numero du schema de structure definissant l'attribut */
-   BIOreadShort (fichpiv, &n);
+   BIOreadShort (pivFile, &n);
    if (n < 0 || n >= pDoc->DocNNatures)
      {
 	PivotFormatError ("Nature Num GetAttributeOfElement ");
-	PivotError (fichpiv);
+	PivotError (pivFile);
      }
    else
       pSchAttr = pDoc->DocNatureSSchema[n];
    if (pSchAttr == NULL)
      {
 	PivotFormatError ("Nature GetAttributeOfElement");
-	PivotError (fichpiv);
+	PivotError (pivFile);
      }
-   BIOreadShort (fichpiv, &attr);	/* lit l'attribut */
+   /* lit l'attribut */
+   BIOreadShort (pivFile, &attr);
    if (pDoc->DocPivotVersion < 4)
       /* on tient compte de l'ajout de l'attribut Langue */
       attr++;
@@ -1298,30 +1298,30 @@ PtrAttribute        *pAttr;
       switch (pSchAttr->SsAttribute[attr - 1].AttrType)
 	    {
 	       case AtEnumAttr:
-		  BIOreadShort (fichpiv, &val);
+		  BIOreadShort (pivFile, &val);
 		  if (val > pSchAttr->SsAttribute[attr - 1].AttrNEnumValues)
 		    {
 		       printf ("Attribute value error: %s = %d\n", pSchAttr->SsAttribute[attr - 1].AttrOrigName, val);
-		       cree = FALSE;
+		       create = FALSE;
 		    }
 		  break;
 	       case AtNumAttr:
-		  BIOreadShort (fichpiv, &val);
-		  signe = rdSigne (fichpiv);
+		  BIOreadShort (pivFile, &val);
+		  signe = ReadSign (pivFile);
 		  break;
 	       case AtReferenceAttr:
-		  rdReference (&TRef, lab, &RExt, &I, fichpiv);
+		  ReadReference (&refType, label, &refExt, &I, pivFile);
 		  break;
 	       case AtTextAttr:
-		  if (!cree)
+		  if (!create)
 		     /* on consomme le texte de l'attribut, sans le garder */
 		     do
-			if (!BIOreadByte (fichpiv, &c))
+			if (!BIOreadByte (pivFile, &c))
 			  {
-			     PivotError (fichpiv);
+			     PivotError (pivFile);
 			     PivotFormatError ("A");
 			  }
-		     while (!(error || c == '\0')) ;
+		     while (!error && c != '\0');
 		  else
 		    {
 		       /* acquiert un premier buffer de texte */
@@ -1330,10 +1330,10 @@ PtrAttribute        *pAttr;
 		       /* lit tout le texte de l'attribut */
 		       stop = FALSE;
 		       do
-			  if (!BIOreadByte (fichpiv, &pBT->BuContent[pBT->BuLength++]))
+			  if (!BIOreadByte (pivFile, &pBT->BuContent[pBT->BuLength++]))
 			     /* erreur de lecture */
 			    {
-			       PivotError (fichpiv);
+			       PivotError (pivFile);
 			       PivotFormatError ("A");
 			    }
 			  else
@@ -1350,7 +1350,7 @@ PtrAttribute        *pAttr;
 			       /* acquiert un nouveau buffer */
 			       pBT = NewTextBuffer (pBT);
 			    }
-		       while (!(error || stop)) ;
+		       while (!error && !stop) ;
 		       pBT->BuLength--;
 		    }
 		  break;
@@ -1364,30 +1364,30 @@ PtrAttribute        *pAttr;
 	   /* ExtCorr et ExtMot */
 	   if (pSchAttr->SsExtension)
 	      if (strcmp (pSchAttr->SsName, "ExtCorr") == 0)
-		 cree = FALSE;
+		 create = FALSE;
 	      else if (strcmp (pSchAttr->SsName, "ExtMot") == 0)
-		 cree = FALSE;
-	if (!cree)
+		 create = FALSE;
+	if (!create)
 	   *pAttr = NULL;
 	else
 	  {
 	     /* Si c'est un attribut impose', a valeur fixe ou modifiable, */
 	     /* il a deja ete cree' par NewSubtree. On cherche si l'element */
 	     /* possede deja cet attribut */
-	     trouve = FALSE;
+	     found = FALSE;
 	     if (pEl != NULL)
 	       {
 		  pA = pEl->ElFirstAttr;
-		  while (pA != NULL && !trouve)
+		  while (pA != NULL && !found)
 		    {
 		       if (pA->AeAttrSSchema == pSchAttr)
 			  if (pA->AeAttrNum == attr)
-			     trouve = TRUE;
-		       if (!trouve)
+			     found = TRUE;
+		       if (!found)
 			  pA = pA->AeNext;
 		    }
 	       }
-	     if (!trouve)
+	     if (!found)
 	       {
 		  /* acquiert un bloc attribut pour l'element */
 		  GetAttr (pAttr);
@@ -1401,7 +1401,7 @@ PtrAttribute        *pAttr;
 	       }
 	     else
 		*pAttr = NULL;
-	     *pAttrLu = pA;
+	     *pReadAttr = pA;
 	     /* lit la valeur de l'attribut selon son type */
 	     switch (pA->AeAttrType)
 		   {
@@ -1416,12 +1416,12 @@ PtrAttribute        *pAttr;
 		      case AtReferenceAttr:
 			 pA->AeAttrReference = NULL;
 			 /* acquiert une reference et l'initialise */
-			 GetReference (&pRf);
-			 pA->AeAttrReference = pRf;
-			 pRf->RdElement = pEl;
-			 pRf->RdAttribute = pA;
+			 GetReference (&pRef);
+			 pA->AeAttrReference = pRef;
+			 pRef->RdElement = pEl;
+			 pRef->RdAttribute = pA;
 			 /* lie la reference a l'objet qu'elle designe */
-			 CreeReference (pA->AeAttrReference, TRef, lab, RExt, I, pDoc);
+			 CreateReference (pA->AeAttrReference, refType, label, refExt, I, pDoc);
 			 break;
 		      case AtTextAttr:
 			 pA->AeAttrText = pPremBuff;
@@ -1435,37 +1435,36 @@ PtrAttribute        *pAttr;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    rdAttribut lit dans le fichier fichpiv un attribut qui est      | */
+/* |    ReadAttribute lit dans le fichier pivFile un attribut qui est      | */
 /* |    sous forme pivot. Le fichier doit etre positionne' juste apres  | */
-/* |    la Marque-TtAttribute (qui a deja ete lue). Au retour, le fichier  | */
+/* |    la Marque-Attribut (qui a deja ete lue). Au retour, le fichier  | */
 /* |    est positionne' sur le premier octet qui suit l'attribut        | */
 /* |    (prochain octet qui sera lu).                                   | */
-/* |    Si cree est faux, rien n'est cree' dans l'arbre abstrait,       | */
+/* |    Si create est faux, rien n'est cree' dans l'arbre abstrait,       | */
 /* |    l'attribut est simplement saute' dans le fichier.               | */
-/* |    Si cree est vrai, un attribut est cree' et attache' a l'element | */
+/* |    Si create est vrai, un attribut est cree' et attache' a l'element | */
 /* |    pointe' par pEl; un pointeur sur cet attribut est retourne'     | */
-/* |    dans pAttrLu.                                                   | */
-/* |    ATTENTION: rdAttribut utilise la table des natures du document  | */
+/* |    dans pReadAttr.                                                   | */
+/* |    ATTENTION: ReadAttribute utilise la table des natures du document  | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         rdAttribut (BinFile fichpiv, PtrElement pEl, PtrDocument pDoc, boolean cree, PtrAttribute * pAttrLu)
+static void         ReadAttribute (BinFile pivFile, PtrElement pEl, PtrDocument pDoc, boolean create, PtrAttribute * pReadAttr)
 
 #else  /* __STDC__ */
-static void         rdAttribut (fichpiv, pEl, pDoc, cree, pAttrLu)
-BinFile             fichpiv;
+static void         ReadAttribute (pivFile, pEl, pDoc, create, pReadAttr)
+BinFile             pivFile;
 PtrElement          pEl;
 PtrDocument         pDoc;
-boolean             cree;
-PtrAttribute        *pAttrLu;
+boolean             create;
+PtrAttribute        *pReadAttr;
 
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pAttr;
-   PtrAttribute         pA;
+   PtrAttribute         pAttr, pA;
 
-   ReadAttribut (fichpiv, pEl, pDoc, cree, pAttrLu, &pAttr);
+   ReadAttr (pivFile, pEl, pDoc, create, pReadAttr, &pAttr);
    if (pAttr != NULL)
       /* chaine ce bloc en queue de la chaine des attributs de */
       /* l'element */
@@ -1489,55 +1488,55 @@ PtrAttribute        *pAttrLu;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    rdReglePres lit dans le fichier fichpiv une regle de            | */
+/* |    rdReglePres lit dans le fichier pivFile une regle de            | */
 /* |    presentation qui est sous forme pivot. Le fichier doit etre     | */
 /* |    positionne' juste apres la Marque-Presentation (qui a deja ete  | */
 /* |    lue). Au retour, le fichier est positionne' sur le premier      | */
 /* |    octet qui suit la regle de presentation lue (prochain octet qui | */
 /* |    sera lu).                                                       | */
-/* |    Si cree est faux, rien n'est cree' dans l'arbre abstrait, la    | */
+/* |    Si create est faux, rien n'est cree' dans l'arbre abstrait, la    | */
 /* |    regle de presentation est simplement saute'e dans le fichier.   | */
-/* |    Si cree est vrai, une regle est cree'e et attache'e a l'element | */
+/* |    Si create est vrai, une regle est cree'e et attache'e a l'element | */
 /* |    pointe' par pEl; un pointeur sur cette regle est retourne'      | */
 /* |    dans pRegleLue.                                                 | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                rdReglePres (PtrDocument pDoc, BinFile fichpiv, PtrElement pEl, boolean cree, PtrPRule * pRegleLue, boolean Attache)
+void                rdReglePres (PtrDocument pDoc, BinFile pivFile, PtrElement pEl, boolean create, PtrPRule * pRegleLue, boolean Attache)
 #else  /* __STDC__ */
-void                rdReglePres (pDoc, fichpiv, pEl, cree, pRegleLue, Attache)
+void                rdReglePres (pDoc, pivFile, pEl, create, pRegleLue, Attache)
 PtrDocument         pDoc;
-BinFile             fichpiv;
+BinFile             pivFile;
 PtrElement          pEl;
-boolean             cree;
-PtrPRule       *pRegleLue;
+boolean             create;
+PtrPRule            *pRegleLue;
 boolean             Attache;
 
 #endif /* __STDC__ */
 {
-   int                 Vue;
+   int                 view;
    int                 boite;
    char                ch;
    PRuleType           TypeRP;
-   BAlignment             Cadre;
+   BAlignment          Cadre;
    boolean             dimabs;
    TypeUnit            unit;
    boolean             signe;
    boolean             just;
    int                 val;
-   int                 typeimage;
+   int                 pictureType;
    int                 PicXArea, PicYArea, PicWArea, PicHArea;
-   PictureScaling           pres;
-   PtrPRule        pR1;
-   PtrPRule        pRegle;
-   PtrPRule        pRegleP;
-   PosRule           *pRegleP6;
+   PictureScaling      pres;
+   PtrPRule            pR1;
+   PtrPRule            pPRule;
+   PtrPRule            pRegleP;
+   PosRule            *pPosRule;
    PtrPSchema          pSPR;
-   PtrSSchema        pSSR;
-   DimensionRule       *pRelD1;
-   PtrAttribute         pAttr;
+   PtrSSchema          pSSR;
+   DimensionRule       *pDimRule;
+   PtrAttribute        pAttr;
 
    pres = (PictureScaling) 0;
-   typeimage = 0;
+   pictureType = 0;
    just = FALSE;
    signe = FALSE;
    dimabs = FALSE;
@@ -1546,14 +1545,14 @@ boolean             Attache;
    *pRegleLue = NULL;
    unit = UnRelative;
    /* lit le numero de vue */
-   BIOreadShort (fichpiv, &Vue);
+   BIOreadShort (pivFile, &view);
    /* lit le numero de la boite de present. concernee par la regle */
    /* TODO a modifier lorsque les boites de presentation pourront */
    /* porter des regles specifiques */
-   BIOreadShort (fichpiv, &boite);
+   BIOreadShort (pivFile, &boite);
    /* lit le type de la regle */
-   if (!BIOreadByte (fichpiv, &ch))
-      PivotError (fichpiv);
+   if (!BIOreadByte (pivFile, &ch))
+      PivotError (pivFile);
    switch (ch)
 	 {
 	    case C_PR_ADJUST:
@@ -1623,7 +1622,7 @@ boolean             Attache;
 	       TypeRP = PtForeground;
 	       break;
 	    default:
-	       PivotError (fichpiv);
+	       PivotError (pivFile);
 	       PivotFormatError ("p");
 	       break;
 	 }
@@ -1633,20 +1632,20 @@ boolean             Attache;
       switch (TypeRP)
 	    {
 	       case PtAdjust:
-		  Cadre = rdCadr (fichpiv);
+		  Cadre = ReadAlign (pivFile);
 		  break;
 	       case PtHeight:
 	       case PtWidth:
-		  dimabs = rdTypeDim (fichpiv);
-		  BIOreadShort (fichpiv, &val);
-		  unit = rdUnit (fichpiv);
-		  signe = rdSigne (fichpiv);
+		  dimabs = ReadDimensionType (pivFile);
+		  BIOreadShort (pivFile, &val);
+		  unit = ReadUnit (pivFile);
+		  signe = ReadSign (pivFile);
 		  break;
 	       case PtVertPos:
 	       case PtHorizPos:
-		  BIOreadShort (fichpiv, &val);
-		  unit = rdUnit (fichpiv);
-		  signe = rdSigne (fichpiv);
+		  BIOreadShort (pivFile, &val);
+		  unit = ReadUnit (pivFile);
+		  signe = ReadSign (pivFile);
 		  break;
 	       case PtBreak1:
 	       case PtBreak2:
@@ -1654,103 +1653,103 @@ boolean             Attache;
 	       case PtSize:
 	       case PtLineSpacing:
 	       case PtLineWeight:
-		  BIOreadShort (fichpiv, &val);
-		  unit = rdUnit (fichpiv);
+		  BIOreadShort (pivFile, &val);
+		  unit = ReadUnit (pivFile);
 		  if (TypeRP == PtIndent)
-		     signe = rdSigne (fichpiv);
+		     signe = ReadSign (pivFile);
 		  break;
 	       case PtFillPattern:
 	       case PtBackground:
 	       case PtForeground:
-		  BIOreadShort (fichpiv, &val);
+		  BIOreadShort (pivFile, &val);
 		  break;
 	       case PtFont:
 	       case PtStyle:
 	       case PtUnderline:
 	       case PtThickness:
 	       case PtLineStyle:
-		  if (!BIOreadByte (fichpiv, &ch))
-		     PivotError (fichpiv);
+		  if (!BIOreadByte (pivFile, &ch))
+		     PivotError (pivFile);
 		  break;
 	       case PtJustify:
 	       case PtHyphenate:
-		  just = rdBooleen (fichpiv);
+		  just = ReadBoolean (pivFile);
 		  break;
 	       case PtPictInfo:
-		  rdCroppingFrame (fichpiv, &PicXArea, &PicYArea, &PicWArea, &PicHArea);
-		  pres = rdImagePresentation (fichpiv);
-		  typeimage = rdImageType (fichpiv);
+		  ReadPictureArea (pivFile, &PicXArea, &PicYArea, &PicWArea, &PicHArea);
+		  pres = ReadPicturePresentation (pivFile);
+		  pictureType = ReadPictureType (pivFile);
 		  break;
 	       default:
 		  break;
 	    }
 
-   if (cree)
+   if (create)
      {
-	GetReglePres (&pRegle);	/* acquiert une regle */
-	*pRegleLue = pRegle;
+	GetReglePres (&pPRule);	/* acquiert une regle */
+	*pRegleLue = pPRule;
 	/* initialise d'abord la nouvelle regle */
-	pRegle->PrPresMode = PresImmediate;
-	pRegle->PrSpecifAttr = 0;
-	pRegle->PrSpecifAttrSSchema = NULL;
+	pPRule->PrPresMode = PresImmediate;
+	pPRule->PrSpecifAttr = 0;
+	pPRule->PrSpecifAttrSSchema = NULL;
 	pAttr = NULL;
-	pRegle->PrViewNum = Vue;
-	pRegle->PrType = TypeRP;
+	pPRule->PrViewNum = view;
+	pPRule->PrType = TypeRP;
 	/* charge les parametres de la regle selon son type */
 	if (!error)
-	   switch (pRegle->PrType)
+	   switch (pPRule->PrType)
 		 {
 		    case PtAdjust:
-		       pRegle->PrAdjust = Cadre;
+		       pPRule->PrAdjust = Cadre;
 		       break;
 		    case PtHeight:
 		    case PtWidth:
-		       pRelD1 = &pRegle->PrDimRule;
-		       pRelD1->DrPosition = FALSE;
-		       pRelD1->DrAbsolute = dimabs;
-		       if (!pRelD1->DrAbsolute)
+		       pDimRule = &pPRule->PrDimRule;
+		       pDimRule->DrPosition = FALSE;
+		       pDimRule->DrAbsolute = dimabs;
+		       if (!pDimRule->DrAbsolute)
 			  /* c'est une dimension relative, on prend */
 			  /* la regle qui devrait s'appliquer a     */
 			  /* l'element, puis on la modifie selon    */
 			  /* ce qui est lu dans le fichier          */
 			 {
-			    pR1 = ReglePEl (pEl, &pSPR, &pSSR, 0, NULL, pRegle->PrViewNum,
-				       pRegle->PrType, FALSE, TRUE, &pAttr);
+			    pR1 = ReglePEl (pEl, &pSPR, &pSSR, 0, NULL, pPRule->PrViewNum,
+				       pPRule->PrType, FALSE, TRUE, &pAttr);
 			    if (pR1 != NULL)
 
 			      {
-				 *pRegle = *pR1;
-				 pRegle->PrViewNum = Vue;
-				 pRegle->PrNextPRule = NULL;
-				 pRegle->PrCond = NULL;
+				 *pPRule = *pR1;
+				 pPRule->PrViewNum = view;
+				 pPRule->PrNextPRule = NULL;
+				 pPRule->PrCond = NULL;
 			      }
 			 }
-		       pRelD1->DrAttr = FALSE;
-		       pRelD1->DrValue = val;
-		       pRelD1->DrUnit = unit;
+		       pDimRule->DrAttr = FALSE;
+		       pDimRule->DrValue = val;
+		       pDimRule->DrUnit = unit;
 		       if (!signe)
-			  pRelD1->DrValue = -pRelD1->DrValue;
-		       pRelD1->DrMin = FALSE;
+			  pDimRule->DrValue = -pDimRule->DrValue;
+		       pDimRule->DrMin = FALSE;
 		       break;
 		    case PtVertPos:
 		    case PtHorizPos:
-		       pRegleP6 = &pRegle->PrPosRule;
+		       pPosRule = &pPRule->PrPosRule;
 		       /* c'est une position relative, on prend */
 		       /* la regle qui devrait s'appliquer a    */
 		       /* l'element, puis on la modifie selon   */
 		       /* ce qui est lu dans le fichier         */
-		       pR1 = ReglePEl (pEl, &pSPR, &pSSR, 0, NULL, pRegle->PrViewNum,
-				       pRegle->PrType, FALSE, TRUE, &pAttr);
+		       pR1 = ReglePEl (pEl, &pSPR, &pSSR, 0, NULL, pPRule->PrViewNum,
+				       pPRule->PrType, FALSE, TRUE, &pAttr);
 		       if (pR1 != NULL)
-			  *pRegle = *pR1;
-		       pRegle->PrViewNum = Vue;
-		       pRegle->PrNextPRule = NULL;
-		       pRegle->PrCond = NULL;
-		       pRegleP6->PoDistAttr = FALSE;
-		       pRegleP6->PoDistance = val;
-		       pRegleP6->PoDistUnit = unit;
+			  *pPRule = *pR1;
+		       pPRule->PrViewNum = view;
+		       pPRule->PrNextPRule = NULL;
+		       pPRule->PrCond = NULL;
+		       pPosRule->PoDistAttr = FALSE;
+		       pPosRule->PoDistance = val;
+		       pPosRule->PoDistUnit = unit;
 		       if (!signe)
-			  pRegleP6->PoDistance = -pRegleP6->PoDistance;
+			  pPosRule->PoDistance = -pPosRule->PoDistance;
 		       break;
 		    case PtBreak1:
 		    case PtBreak2:
@@ -1758,43 +1757,43 @@ boolean             Attache;
 		    case PtSize:
 		    case PtLineSpacing:
 		    case PtLineWeight:
-		       pRegle->PrMinAttr = FALSE;
-		       pRegle->PrMinValue = val;
-		       pRegle->PrMinUnit = unit;
-		       if (pRegle->PrType == PtIndent)
+		       pPRule->PrMinAttr = FALSE;
+		       pPRule->PrMinValue = val;
+		       pPRule->PrMinUnit = unit;
+		       if (pPRule->PrType == PtIndent)
 			  if (!signe)
-			     pRegle->PrMinValue = -pRegle->PrMinValue;
+			     pPRule->PrMinValue = -pPRule->PrMinValue;
 		       break;
 		    case PtFillPattern:
-		       pRegle->PrAttrValue = FALSE;
-		       pRegle->PrIntValue = val;
+		       pPRule->PrAttrValue = FALSE;
+		       pPRule->PrIntValue = val;
 		       break;
 		    case PtBackground:
 		    case PtForeground:
-		       pRegle->PrAttrValue = FALSE;
+		       pPRule->PrAttrValue = FALSE;
 		       /* convertit les couleurs des anciennes versions */
 		       if (pDoc->DocPivotVersion < 4)
 			  val = newColor[val];
-		       pRegle->PrIntValue = val;
+		       pPRule->PrIntValue = val;
 		       break;
 		    case PtFont:
 		    case PtStyle:
 		    case PtUnderline:
 		    case PtThickness:
 		    case PtLineStyle:
-		       pRegle->PrChrValue = ch;
+		       pPRule->PrChrValue = ch;
 		       break;
 		    case PtJustify:
 		    case PtHyphenate:
-		       pRegle->PrJustify = just;
+		       pPRule->PrJustify = just;
 		       break;
 		    case PtPictInfo:
-		       pRegle->PrPictInfo.PicXArea = PicXArea;
-		       pRegle->PrPictInfo.PicYArea = PicYArea;
-		       pRegle->PrPictInfo.PicWArea = PicWArea;
-		       pRegle->PrPictInfo.PicHArea = PicHArea;
-		       pRegle->PrPictInfo.PicPresent = pres;
-		       pRegle->PrPictInfo.PicType = typeimage;
+		       pPRule->PrPictInfo.PicXArea = PicXArea;
+		       pPRule->PrPictInfo.PicYArea = PicYArea;
+		       pPRule->PrPictInfo.PicWArea = PicWArea;
+		       pPRule->PrPictInfo.PicHArea = PicHArea;
+		       pPRule->PrPictInfo.PicPresent = pres;
+		       pPRule->PrPictInfo.PicType = pictureType;
 		       break;
 		    default:
 		       break;
@@ -1803,8 +1802,8 @@ boolean             Attache;
 	/* avec cet attribut */
 	if (pAttr != NULL)
 	  {
-	     pRegle->PrSpecifAttr = pAttr->AeAttrNum;
-	     pRegle->PrSpecifAttrSSchema = pAttr->AeAttrSSchema;
+	     pPRule->PrSpecifAttr = pAttr->AeAttrNum;
+	     pPRule->PrSpecifAttrSSchema = pAttr->AeAttrSSchema;
 	  }
 
 	if (Attache)
@@ -1812,7 +1811,7 @@ boolean             Attache;
 	   /* chaine des regles de presentation de l'element */
 	   if (pEl->ElFirstPRule == NULL)
 	      /* pas encore de regle de presentation pour l'element */
-	      pEl->ElFirstPRule = pRegle;
+	      pEl->ElFirstPRule = pPRule;
 	   else
 	     {
 		/* 1ere regle de presentation de l'element */
@@ -1821,10 +1820,10 @@ boolean             Attache;
 		while (pRegleP->PrNextPRule != NULL)
 		   pRegleP = pRegleP->PrNextPRule;
 		/* chaine la nouvelle regle */
-		pRegleP->PrNextPRule = pRegle;
+		pRegleP->PrNextPRule = pPRule;
 	     }
-	pRegle->PrNextPRule = NULL;	/* c'est la derniere regle */
-     }				/* end if cree */
+	pPRule->PrNextPRule = NULL;	/* c'est la derniere regle */
+     }				/* end if create */
 }
 
 	/* debut ajout */
@@ -1879,7 +1878,7 @@ PtrDocument         pDoc;
 
 /* ---------------------------------------------------------------------- */
 /* |    Internalise effectue la traduction de la forme pivot commencant | */
-/* |            a` la position courante dans fichpiv vers la            | */
+/* |            a` la position courante dans pivFile vers la            | */
 /* |            representation interne. Au retour le fichier est        | */
 /* |            positionne' apres la partie traduite. Le fichier doit   | */
 /* |            etre ouvert avant l'appel et il reste ouvert au retour. | */
@@ -1888,41 +1887,41 @@ PtrDocument         pDoc;
 /* |            - pSchStr: pointeur sur le schema de structure courant. | */
 /* |            - pDoc:    pointeur sur le contexte du document en      | */
 /* |            cours de lecture.                                       | */
-/* |            - marque:  marque precedent le numero de type ou le nom | */
+/* |            - tag:  tag precedent le numero de type ou le nom | */
 /* |            de nature. Au retour: 1er octet suivant l'element.      | */
 /* |            - NAssoc:  numero de la liste d'elements associes a`    | */
 /* |            laquelle appartient le texte a` internaliser. Zero si   | */
 /* |            c'est l'arbre principal.                                | */
 /* |            - creepar: indique s'il faut creer un parametre ou non. | */
-/* |            - creetout:indique qu'il faut creer tous les elements   | */
+/* |            - createAll:indique qu'il faut creer tous les elements   | */
 /* |            qui descendent de l'element courant et qui sont dans le | */
-/* |            fichier. Si creetout est faux, on ne cree que les       | */
+/* |            fichier. Si createAll est faux, on ne cree que les       | */
 /* |            elements exportes et dans ceux-ci tout le sous-arbre    | */
-/* |            des elements de type typecontenu definis dans le schema | */
-/* |            de structure pointe' par pschcont.                      | */
+/* |            des elements de type contentType definis dans le schema | */
+/* |            de structure pointe' par pContSS.                      | */
 /* |            - TypeLu:  au retour, indique le type de l'element lu,  | */
 /* |            qu'il ait ete cree' ou pas.                             | */
 /* |            - SchStrLu: au retour, pointeur sur le schema de        | */
 /* |            structure de l'element lu, qu'il ait ete cree' ou pas.  | */
 /* |            - Pere: element qui sera le pere de l'element lu.       | */
-/* |            - creedesc: si creedesc est faux, on ne cree pas        | */
-/* |            l'element lu ni sa descendance. Prioritaire sur creetout| */
+/* |            - creedesc: si cree<desc est faux, on ne cree pas        | */
+/* |            l'element lu ni sa descendance. Prioritaire sur createAll| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-PtrElement          Internalise (BinFile fichpiv, PtrSSchema pSchStr, PtrDocument pDoc, char *marque, int NAssoc, boolean creepar, boolean creetout, int * typecontenu, PtrSSchema * pschcont, int * TypeLu, PtrSSchema * SchStrLu, boolean creepage, PtrElement Pere, boolean creedesc)
+PtrElement          Internalise (BinFile pivFile, PtrSSchema pSchStr, PtrDocument pDoc, char *tag, int NAssoc, boolean creepar, boolean createAll, int * contentType, PtrSSchema * pContSS, int * TypeLu, PtrSSchema * SchStrLu, boolean creepage, PtrElement Pere, boolean creedesc)
 
 #else  /* __STDC__ */
-PtrElement          Internalise (fichpiv, pSchStr, pDoc, marque, NAssoc, creepar, creetout, typecontenu, pschcont, TypeLu, SchStrLu, creepage, Pere, creedesc)
-BinFile             fichpiv;
+PtrElement          Internalise (pivFile, pSchStr, pDoc, tag, NAssoc, creepar, createAll, contentType, pContSS, TypeLu, SchStrLu, creepage, Pere, creedesc)
+BinFile             pivFile;
 PtrSSchema        pSchStr;
 PtrDocument         pDoc;
-char               *marque;
+char               *tag;
 int                 NAssoc;
 boolean             creepar;
-boolean             creetout;
-int        *typecontenu;
-PtrSSchema       *pschcont;
+boolean             createAll;
+int        *contentType;
+PtrSSchema       *pContSS;
 int        *TypeLu;
 PtrSSchema       *SchStrLu;
 boolean             creepage;
@@ -1934,19 +1933,19 @@ boolean             creedesc;
 {
    char                ch;
    int                 i, j;
-   int                 Vue;
+   int                 view;
    int                 n;
-   LabelString         lab;
-   int                 typeimage;
+   LabelString         label;
+   int                 pictureType;
    boolean             cree;
    boolean             Inclusion;
    boolean             modif;
    boolean             parametre;
    boolean             trouvetype;	/* on a reconnu le type d'une image dans un pivot v1 */
-   boolean             RExt;
+   boolean             refExt;
    PictureScaling           pres;
    DocumentIdentifier     I;
-   int         TypeElement;
+   int         elType;
    int         nR;
    PtrAttribute         pAttr;
    PtrTextBuffer      b;
@@ -1957,32 +1956,32 @@ boolean             creedesc;
    PtrElement          pEl2;
    PtrElement          pElInt;
    PtrElement          pElLu;
-   PtrPRule        pRegle;
+   PtrPRule        pPRule;
    PtrSSchema        pSS;
-   SRule              *pRe1;
+   SRule              *pSRule;
    BasicType          TFeuille;
    PageType            TPage;
-   ReferenceType           TRef;
+   ReferenceType           refType;
    boolean             AvecReferences;
    PtrReferredDescr    pDR;
    char                Alphabet;
-   boolean             trouve;
+   boolean             found;
    char                c;
    PtrElement          futurPere;
    NotifyElement       notifyEl;
 
-   pRe1 = NULL;
+   pSRule = NULL;
    pEl = NULL;
    AvecReferences = FALSE;
    cree = FALSE;
-   if (*marque != (char) C_PIV_TYPE && *marque != (char) C_PIV_NATURE)
+   if (*tag != (char) C_PIV_TYPE && *tag != (char) C_PIV_NATURE)
      {
 /*************/
 	i = 1;
 	while (!error && i < 200)
 	  {
-	     if (!BIOreadByte (fichpiv, &c))
-		PivotError (fichpiv);
+	     if (!BIOreadByte (pivFile, &c))
+		PivotError (pivFile);
 	     else
 	       {
 		  if (c < ' ')
@@ -1998,73 +1997,73 @@ boolean             creedesc;
 	printf ("\n");
 /*************/
 	PivotFormatError ("I");	/* erreur */
-	PivotError (fichpiv);
+	PivotError (pivFile);
      }
    else
      {
 	/* lit le type de l'element dans le fichier */
-	TypeElement = ReadType (pDoc, &pSchStr, fichpiv, marque);
+	elType = ReadType (pDoc, &pSchStr, pivFile, tag);
 	if (!error)
 	  {
-	     *TypeLu = TypeElement;	/* numero de type de l'element en cours */
+	     *TypeLu = elType;	/* numero de type de l'element en cours */
 	     *SchStrLu = pSchStr;	/* schema de structure de l'element en cours */
-	     if (!creetout)
+	     if (!createAll)
 		/* on ne cree que les elements de type exporte'. L'element en cours */
 		/* de lecture est-il du type qui constitue le contenu de l'element */
 		/* exporte' englobant ? */
-		ContenuElExp (&creetout, &TypeElement, &pSchStr, pschcont, typecontenu);
-	     pRe1 = &pSchStr->SsRule[TypeElement - 1];
-	     if (creetout)
+		ExportedContent (&createAll, &elType, &pSchStr, pContSS, contentType);
+	     pSRule = &pSchStr->SsRule[elType - 1];
+	     if (createAll)
 		cree = TRUE;
 	     else
 		/* on ne cree que les elements de type exporte' */
 	       {
 		  cree = FALSE;
-		  if (pRe1->SrExportedElem)	/* l'element est d'un type exporte' */
-		     if (pRe1->SrExportContent != 0)
+		  if (pSRule->SrExportedElem)	/* l'element est d'un type exporte' */
+		     if (pSRule->SrExportContent != 0)
 			/* on veut creer au moins une partie de son contenu */
 		       {
 			  cree = TRUE;	/* on le cree */
-			  *typecontenu = pRe1->SrExportContent;
+			  *contentType = pSRule->SrExportContent;
 			  /* il faudra creer son contenu */
 			  /* cherche le schema de structure ou est */
 			  /* defini son contenu */
-			  if (pRe1->SrNatExpContent[0] == '\0')
+			  if (pSRule->SrNatExpContent[0] == '\0')
 			     /* meme schema de structure */
-			     *pschcont = pSchStr;
+			     *pContSS = pSchStr;
 			  else
 			     /* cherche dans la table des natures du document */
 			    {
 			       i = 0;
 			       do
 				  i++;
-			       while (!(pDoc->DocNatureName[i - 1] == pRe1->SrNatExpContent ||
-					i == pDoc->DocNNatures));
-			       if (pDoc->DocNatureName[i - 1] == pRe1->SrNatExpContent)
+			       while (pDoc->DocNatureName[i - 1] != pSRule->SrNatExpContent &&
+					i != pDoc->DocNNatures);
+			       if (pDoc->DocNatureName[i - 1] == pSRule->SrNatExpContent)
 				  /* trouve' */
-				  *pschcont = pDoc->DocNatureSSchema[i - 1];
+				  *pContSS = pDoc->DocNatureSSchema[i - 1];
 			       else
 				  /* la nature du contenu n'est pas chargee */
 				 {
-				    *pschcont = NULL;
-				    *typecontenu = 0;
+				    *pContSS = NULL;
+				    *contentType = 0;
 				    /* il faut peut-etre aussi creer */
 				    /* tout le contenu de l'element */
 				 }
 			    }
-			  ContenuElExp (&creetout, &TypeElement, &pSchStr, pschcont, typecontenu);
+			  ExportedContent (&createAll, &elType, &pSchStr, pContSS, contentType);
 		       }
-		  if (TypeElement == PageBreak + 1)
+		  if (elType == PageBreak + 1)
 		     if (creepage)
 		       {
 			  cree = TRUE;	/* on le cree */
-			  *typecontenu = TypeElement;
-			  *pschcont = pSchStr;
+			  *contentType = elType;
+			  *pContSS = pSchStr;
 
 			  /* il faudra creer son contenu */
 			  /* cherche le schema de structure ou est */
 			  /* defini son contenu */
-			  ContenuElExp (&creetout, &TypeElement, &pSchStr, pschcont, typecontenu);
+			  ExportedContent (&createAll, &elType, &pSchStr, pContSS, contentType);
 		       }
 	       }
 	     if (creedesc)
@@ -2085,7 +2084,7 @@ boolean             creedesc;
 	     /* on cree toujours la racine du document */
 	     if (!cree)
 		if (pSchStr == pDoc->DocSSchema)
-		   if (TypeElement == pSchStr->SsRootElem)
+		   if (elType == pSchStr->SsRootElem)
 		      /* c'est la racine, on cree */
 		      cree = TRUE;
 	     if (!cree)
@@ -2093,75 +2092,75 @@ boolean             creedesc;
 	     else
 		/* cree un element du type lu */
 	       {
-		  if (pSchStr->SsRule[TypeElement - 1].SrParamElem && creepar)
+		  if (pSchStr->SsRule[elType - 1].SrParamElem && creepar)
 		     /* simule un element ordinaire, si c'est un parametre a creer */
 		    {
-		       pSchStr->SsRule[TypeElement - 1].SrParamElem = FALSE;
+		       pSchStr->SsRule[elType - 1].SrParamElem = FALSE;
 		       parametre = TRUE;
 		    }
 		  else
 		     parametre = FALSE;
 		  /* il ne faut pas que le label max. du document augmente */
-		  pEl = NewSubtree (TypeElement, pSchStr, pDoc, NAssoc, FALSE, TRUE, FALSE, FALSE);
+		  pEl = NewSubtree (elType, pSchStr, pDoc, NAssoc, FALSE, TRUE, FALSE, FALSE);
 		  if (pEl != NULL)
 		     pEl->ElLabel[0] = '\0';
 		  if (parametre)
-		     pSchStr->SsRule[TypeElement - 1].SrParamElem = TRUE;
+		     pSchStr->SsRule[elType - 1].SrParamElem = TRUE;
 	       }
 
-	     if (!BIOreadByte (fichpiv, marque))
-		PivotError (fichpiv);
+	     if (!BIOreadByte (pivFile, tag))
+		PivotError (pivFile);
 	  }
 	Inclusion = FALSE;	/* est-ce une reference a un element inclus? */
-	if (!error && *marque == (char) C_PIV_INCLUDED)
+	if (!error && *tag == (char) C_PIV_INCLUDED)
 	   /* oui, lit la reference */
 	  {
 	     Inclusion = TRUE;
-	     rdReference (&TRef, lab, &RExt, &I, fichpiv);
+	     ReadReference (&refType, label, &refExt, &I, pivFile);
 	     if (cree)
 	       {
 		  GetReference (&pEl->ElSource);
 		  pEl->ElSource->RdElement = pEl;
-		  CreeReference (pEl->ElSource, TRef, lab, RExt, I, pDoc);
+		  CreateReference (pEl->ElSource, refType, label, refExt, I, pDoc);
 		  pEl->ElIsCopy = TRUE;
 
 	       }
-	     if (!BIOreadByte (fichpiv, marque))
-		PivotError (fichpiv);
+	     if (!BIOreadByte (pivFile, tag))
+		PivotError (pivFile);
 	  }
 
-	/* lit la marque "Element-reference'" si elle est presente */
+	/* lit le tag "Element-reference'" si elle est presente */
 	if (!error)
-	   if (*marque == (char) C_PIV_REFERRED)
+	   if (*tag == (char) C_PIV_REFERRED)
 	     {
 		AvecReferences = TRUE;
-		if (!BIOreadByte (fichpiv, marque))
-		   PivotError (fichpiv);
+		if (!BIOreadByte (pivFile, tag))
+		   PivotError (pivFile);
 	     }
 	   else
 	      AvecReferences = FALSE;
 	/* traite le label s'il est present */
-	lab[0] = '\0';
+	label[0] = '\0';
 	if (!error)
-	   if (*marque == (char) C_PIV_SHORT_LABEL || *marque == (char) C_PIV_LONG_LABEL ||
-	       *marque == (char) C_PIV_LABEL)
+	   if (*tag == (char) C_PIV_SHORT_LABEL || *tag == (char) C_PIV_LONG_LABEL ||
+	       *tag == (char) C_PIV_LABEL)
 	     {
-		ReadLabel (*marque, lab, fichpiv);
-		/* lit la marque qui suit le label */
-		if (!BIOreadByte (fichpiv, marque))
-		   PivotError (fichpiv);
+		ReadLabel (*tag, label, pivFile);
+		/* lit le tag qui suit le label */
+		if (!BIOreadByte (pivFile, tag))
+		   PivotError (pivFile);
 	     }
-	if (!error && lab[0] != '\0' && cree)
+	if (!error && label[0] != '\0' && cree)
 	   /* l'element porte un label */
 	  {
-	     strncpy (pEl->ElLabel, lab, MAX_LABEL_LEN);
+	     strncpy (pEl->ElLabel, label, MAX_LABEL_LEN);
 	     if (!AvecReferences)
 		/* on verifie si cet element (ou plutot son label) est dans la */
 		/* chaine des elements reference's de l'exterieur */
 	       {
 		  pDR = pDoc->DocLabels;
 		  while (pDR != NULL && !AvecReferences)
-		     if (strcmp (pDR->ReReferredLabel, lab) == 0)
+		     if (strcmp (pDR->ReReferredLabel, label) == 0)
 			AvecReferences = TRUE;
 		     else
 			pDR = pDR->ReNext;
@@ -2172,7 +2171,7 @@ boolean             creedesc;
 
 		  {
 		     NulIdentDoc (&I);
-		     pEl->ElReferredDescr = GetElRefer (lab, I, pDoc);
+		     pEl->ElReferredDescr = GetElRefer (label, I, pDoc);
 		     if (pEl->ElReferredDescr->ReReferredElem != NULL)
 			/* on a deja lu dans ce document un element */
 			/* portant ce label, erreur */
@@ -2185,29 +2184,29 @@ boolean             creedesc;
 		  }
 	  }
 
-	/* lit la marque d'holophraste si elle est presente */
+	/* lit le tag d'holophraste si elle est presente */
 	if (!error && cree)
 	   pEl->ElHolophrast = FALSE;
-	if (*marque == (char) C_PIV_HOLOPHRAST && !error)
+	if (*tag == (char) C_PIV_HOLOPHRAST && !error)
 	  {
 	     if (cree)
 		pEl->ElHolophrast = TRUE;
 	     /* lit l'octet qui suit */
-	     if (!BIOreadByte (fichpiv, marque))
-		PivotError (fichpiv);
+	     if (!BIOreadByte (pivFile, tag))
+		PivotError (pivFile);
 	  }
 	/* lit les attributs de l'element s'il y en a */
-	while (*marque == (char) C_PIV_ATTR && !error)
+	while (*tag == (char) C_PIV_ATTR && !error)
 	  {
-	     rdAttribut (fichpiv, pEl, pDoc, cree, &pAttr);
+	     ReadAttribute (pivFile, pEl, pDoc, cree, &pAttr);
 	     if (!error)
-		if (!BIOreadByte (fichpiv, marque))
-		   PivotError (fichpiv);
+		if (!BIOreadByte (pivFile, tag))
+		   PivotError (pivFile);
 	  }
 	/* tous les attributs de l'element sont lus, on verifie qu'il ne */
 	/* manque pas d'attributs locaux obligatoires pour l'element */
 	if (!error && cree)
-	   VerifAttrRequis (pEl, pDoc);
+	   CheckMandatoryAttr (pEl, pDoc);
 
 	/* lit les regles de presentation de l'element */
 	/* etablit d'abord le chainage de l'element avec son pere pour que la */
@@ -2215,93 +2214,93 @@ boolean             creedesc;
 	/* regles de presentation heritees des attributs des ascendants */
 	if (pEl != NULL)
 	   pEl->ElParent = Pere;
-	while (*marque == (char) C_PIV_PRESENT && !error)
+	while (*tag == (char) C_PIV_PRESENT && !error)
 	  {
-	     rdReglePres (pDoc, fichpiv, pEl, cree, &pRegle, TRUE);
+	     rdReglePres (pDoc, pivFile, pEl, cree, &pPRule, TRUE);
 	     if (!error)
 		/* lit l'octet qui suit la regle */
-		if (!BIOreadByte (fichpiv, marque))
-		   PivotError (fichpiv);
+		if (!BIOreadByte (pivFile, tag))
+		   PivotError (pivFile);
 	  }
 	/* lit le commentaire qui accompagne eventuellement l'element */
 	if (!error)
-	   if (*marque == (char) C_PIV_COMMENT || *marque == (char) C_PIV_OLD_COMMENT)
+	   if (*tag == (char) C_PIV_COMMENT || *tag == (char) C_PIV_OLD_COMMENT)
 	     {
-		pBComment = readComment (fichpiv, cree, (boolean) (*marque == (char) C_PIV_OLD_COMMENT));	/*  */
+		pBComment = ReadComment (pivFile, cree, (boolean) (*tag == (char) C_PIV_OLD_COMMENT));	/*  */
 		if (cree)
 		   pEl->ElComment = pBComment;
 		/* lit l'octet suivant le commentaire */
-		if (!BIOreadByte (fichpiv, marque))
-		   PivotError (fichpiv);
+		if (!BIOreadByte (pivFile, tag))
+		   PivotError (pivFile);
 	     }
 	if (!error)
 	   /* si l'element est une copie par inclusion, il n'a pas de contenu */
 	   if (!Inclusion)
 	      /* lit le contenu de l'element cree */
 	      /* traitement specifique selon le constructeur de l'element */
-	      switch (pSchStr->SsRule[TypeElement - 1].SrConstruct)
+	      switch (pSchStr->SsRule[elType - 1].SrConstruct)
 		    {
 		       case CsReference:
-			  if (*marque != (char) C_PIV_REFERENCE)
+			  if (*tag != (char) C_PIV_REFERENCE)
 			    {
-			       PivotError (fichpiv);
+			       PivotError (pivFile);
 			       PivotFormatError ("R");	/* erreur */
 			    }
 			  else
 			     /* traitement des references : on lit la reference */
 			    {
-			       rdReference (&TRef, lab, &RExt, &I, fichpiv);
+			       ReadReference (&refType, label, &refExt, &I, pivFile);
 			       if (cree)
-				  CreeReference (pEl->ElReference, TRef, lab, RExt, I, pDoc);
-			       if (!BIOreadByte (fichpiv, marque))
-				  PivotError (fichpiv);
+				  CreateReference (pEl->ElReference, refType, label, refExt, I, pDoc);
+			       if (!BIOreadByte (pivFile, tag))
+				  PivotError (pivFile);
 			    }
 			  break;
 		       case CsPairedElement:
-			  if (*marque != (char) C_PIV_BEGIN)
+			  if (*tag != (char) C_PIV_BEGIN)
 			    {
-			       PivotError (fichpiv);
-			       PivotFormatError ("M");	/* erreur, pas de marque debut */
+			       PivotError (pivFile);
+			       PivotFormatError ("M");	/* erreur, pas de tag debut */
 			    }
 			  else
 			     /* traitement des paires : on lit l'identificateur */
 			    {
-			       BIOreadInteger (fichpiv, &i);
+			       BIOreadInteger (pivFile, &i);
 			       if (cree)
 				  pEl->ElPairIdent = i;
 			       if (i > pDoc->DocMaxPairIdent)
 				  pDoc->DocMaxPairIdent = i;
-			       if (!BIOreadByte (fichpiv, marque))
-				  PivotError (fichpiv);
-			       if (*marque != (char) C_PIV_END)
-				  /* erreur, pas de marque de fin */
+			       if (!BIOreadByte (pivFile, tag))
+				  PivotError (pivFile);
+			       if (*tag != (char) C_PIV_END)
+				  /* erreur, pas de tag de fin */
 				 {
-				    PivotError (fichpiv);
+				    PivotError (pivFile);
 				    PivotFormatError ("m");
 				 }
-			       else if (!BIOreadByte (fichpiv, marque))
-				  PivotError (fichpiv);
+			       else if (!BIOreadByte (pivFile, tag))
+				  PivotError (pivFile);
 			    }
 			  break;
 		       case CsBasicElement:
-			  TFeuille = pSchStr->SsRule[TypeElement - 1].SrBasicType;
+			  TFeuille = pSchStr->SsRule[elType - 1].SrBasicType;
 			  if (TFeuille == CharString)
 			     if (pDoc->DocPivotVersion >= 4)
 			       {
-				  if (*marque != (char) C_PIV_LANG)
-				     /* pas de marque de langue, c'est la premiere langue de la */
+				  if (*tag != (char) C_PIV_LANG)
+				     /* pas de tag de langue, c'est la premiere langue de la */
 				     /* table des langues du document */
 				     i = 0;
 				  else
 				    {
 				       /* lit le numero de langue (pour la table des langues du document */
-				       if (!BIOreadByte (fichpiv, marque))
-					  PivotError (fichpiv);
+				       if (!BIOreadByte (pivFile, tag))
+					  PivotError (pivFile);
 				       else
-					  i = (int) (*marque);
+					  i = (int) (*tag);
 				       /* lit l'octet suivant */
-				       if (!BIOreadByte (fichpiv, marque))
-					  PivotError (fichpiv);
+				       if (!BIOreadByte (pivFile, tag))
+					  PivotError (pivFile);
 				    }
 				  if (cree && !error)
 				    {
@@ -2324,28 +2323,28 @@ boolean             creedesc;
 				  /* dans le cas d'une inclusion sans expansion, il */
 				  /* n'y a pas d'alphabet. */
 				  /* dans les versions pivot anciennes, il peut y avoir une */
-				  /* marque d'alphabet. On la saute */
-				  if (*marque != (char) C_PIV_BEGIN &&
-				      *marque != (char) C_PIV_END &&
-				      *marque != (char) C_PIV_TYPE &&
-				      *marque != (char) C_PIV_NATURE)
+				  /* tag d'alphabet. On la saute */
+				  if (*tag != (char) C_PIV_BEGIN &&
+				      *tag != (char) C_PIV_END &&
+				      *tag != (char) C_PIV_TYPE &&
+				      *tag != (char) C_PIV_NATURE)
 				     /* on a lu l'alphabet */
 				    {
-				       Alphabet = *marque;
+				       Alphabet = *tag;
 				       /* lit l'octet suivant */
-				       if (!BIOreadByte (fichpiv, marque))
-					  PivotError (fichpiv);
+				       if (!BIOreadByte (pivFile, tag))
+					  PivotError (pivFile);
 				    }
 				  if (cree)
 				    {
 				       pEl->ElLanguage = TtaGetLanguageIdFromAlphabet (Alphabet);
 				       /* verifie que la langue est dans la table des langues */
 				       /* du document */
-				       trouve = FALSE;
-				       for (i = 0; i < pDoc->DocNLanguages && !trouve; i++)
+				       found = FALSE;
+				       for (i = 0; i < pDoc->DocNLanguages && !found; i++)
 					  if (pDoc->DocLanguages[i] == pEl->ElLanguage)
-					     trouve = TRUE;
-				       if (!trouve && pDoc->DocNLanguages < MAX_LANGUAGES_DOC)
+					     found = TRUE;
+				       if (!found && pDoc->DocNLanguages < MAX_LANGUAGES_DOC)
 					  /* elle n'y est pas, on la met */
 					 {
 					    pDoc->DocLanguages[pDoc->DocNLanguages] = pEl->ElLanguage;
@@ -2354,12 +2353,12 @@ boolean             creedesc;
 				    }
 			       }
 
-			  if (*marque == (char) C_PIV_BEGIN && !error)
+			  if (*tag == (char) C_PIV_BEGIN && !error)
 			    {
 			       if (TFeuille != PageBreak)
-				  if (!BIOreadByte (fichpiv, marque))
-				     PivotError (fichpiv);
-			       if (*marque != (char) C_PIV_END)	/* il y a un contenu */
+				  if (!BIOreadByte (pivFile, tag))
+				     PivotError (pivFile);
+			       if (*tag != (char) C_PIV_END)	/* il y a un contenu */
 				 {
 				    switch (TFeuille)
 					  {
@@ -2367,10 +2366,10 @@ boolean             creedesc;
 						if (!cree)
 						   /* saute le texte de l'element */
 						  {
-						     ch = *marque;
+						     ch = *tag;
 						     while (ch != '\0' && !error)
-							if (!BIOreadByte (fichpiv, &ch))
-							   PivotError (fichpiv);
+							if (!BIOreadByte (pivFile, &ch))
+							   PivotError (pivFile);
 						  }
 						else
 						   /* lit le texte et remplit les buffers de texte    */
@@ -2378,7 +2377,7 @@ boolean             creedesc;
 						     b = pEl->ElText;
 						     n = 0;
 						     pEl->ElTextLength = 0;
-						     ch = *marque;
+						     ch = *tag;
 						     do
 							if (ch != '\0')
 							  {
@@ -2423,26 +2422,26 @@ boolean             creedesc;
 								   ch = '\231';
 							     /* range le caractere et lit le suivant */
 							     b->BuContent[n - 1] = ch;
-							     if (!BIOreadByte (fichpiv, &ch))
-								PivotError (fichpiv);
+							     if (!BIOreadByte (pivFile, &ch))
+								PivotError (pivFile);
 							  }
-						     while (!(ch == '\0')) ;
+						     while (ch != '\0') ;
 						     pEl->ElTextLength += n;
 						     b->BuLength = n;
 						     b->BuContent[n] = '\0';
 						     pEl->ElVolume = pEl->ElTextLength;
 						  }
-						if (!BIOreadByte (fichpiv, marque))
-						   PivotError (fichpiv);
+						if (!BIOreadByte (pivFile, tag))
+						   PivotError (pivFile);
 						break;
 					     case Picture:
 						if (!cree)
 						   /* saute le texte de l'element */
 						  {
-						     ch = *marque;
+						     ch = *tag;
 						     while (ch != '\0')
-							if (!BIOreadByte (fichpiv, &ch))
-							   PivotError (fichpiv);
+							if (!BIOreadByte (pivFile, &ch))
+							   PivotError (pivFile);
 						  }
 						else
 						   /* lit le texte et remplit les buffers de texte    */
@@ -2451,49 +2450,49 @@ boolean             creedesc;
 						     n = 0;
 						     pEl->ElNameLength = 0;
 						     pEl->ElImageDescriptor = NULL;
-						     ch = *marque;
+						     ch = *tag;
 						     do
 							if (ch != '\0')
 							  {
 							     /* TODO : nom d'image > MAX_CHAR */
 							     if (n == MAX_CHAR - 1)
 							       {
-								  PivotError (fichpiv);
+								  PivotError (pivFile);
 								  PivotFormatError ("x");
 							       }
 							     n++;
 							     /* range le caractere et lit le suivant */
 							     b->BuContent[n - 1] = ch;
-							     if (!BIOreadByte (fichpiv, &ch))
-								PivotError (fichpiv);
+							     if (!BIOreadByte (pivFile, &ch))
+								PivotError (pivFile);
 							  }
-						     while (!(ch == '\0')) ;
+						     while (ch != '\0');
 						     /* on suppose que le nom tient en entier dans un buffer */
 						     /* on normalize le nom */
-						     strcpy (b->BuContent, NormalizeFileName (b->BuContent, &typeimage,
+						     strcpy (b->BuContent, NormalizeFileName (b->BuContent, &pictureType,
 						       &pres, &trouvetype));
 						     if (trouvetype)
 						       {
 							  /* on a trouve une image v1, on cree une regle */
 							  /* de presentation PictInfo pour l'element */
-							  CreateReglePres (pEl, typeimage, pres, Vue);
+							  CreatePRule (pEl, pictureType, pres, view);
 						       }
 						     pEl->ElNameLength += n;
 						     b->BuLength = n;
 						     b->BuContent[n] = '\0';
 						     pEl->ElVolume = pEl->ElNameLength;
 						  }
-						if (!BIOreadByte (fichpiv, marque))
-						   PivotError (fichpiv);
+						if (!BIOreadByte (pivFile, tag))
+						   PivotError (pivFile);
 						break;
 					     case Symbol:
 					     case GraphicElem:
 						/* on a lu le code representant la forme */
-						ch = *marque;
+						ch = *tag;
 						/* lit l'octet qui suit */
-						if (!BIOreadByte (fichpiv, marque))
-						   PivotError (fichpiv);
-						else if (*marque != (char) C_PIV_POLYLINE)
+						if (!BIOreadByte (pivFile, tag))
+						   PivotError (pivFile);
+						else if (*tag != (char) C_PIV_POLYLINE)
 						   /* c'est un element graphique simple */
 						  {
 						     if (cree)
@@ -2515,12 +2514,12 @@ boolean             creedesc;
 						   /* c'est une Polyline */
 						  {
 						     /* lit le nombre de points de la ligne */
-						     if (!BIOreadShort (fichpiv, &n))
-							PivotError (fichpiv);
+						     if (!BIOreadShort (pivFile, &n))
+							PivotError (pivFile);
 						     /* lit tous les points */
 						     else if (!cree)
 							for (i = 0; i < n; i++)
-							   BIOreadInteger (fichpiv, &j);
+							   BIOreadInteger (pivFile, &j);
 						     else
 						       {
 							  /* transforme l'element graphique simple en Polyline */
@@ -2539,66 +2538,66 @@ boolean             creedesc;
 								    b = NewTextBuffer (b);
 								    j = 0;
 								 }
-							       BIOreadInteger (fichpiv, &b->BuPoints[j].XCoord);
-							       BIOreadInteger (fichpiv, &b->BuPoints[j].YCoord);
+							       BIOreadInteger (pivFile, &b->BuPoints[j].XCoord);
+							       BIOreadInteger (pivFile, &b->BuPoints[j].YCoord);
 							       b->BuLength++;
 							       j++;
 							    }
 						       }
-						     /* lit l'octet qui suit (marque de fin d'element) */
-						     if (!BIOreadByte (fichpiv, marque))
-							PivotError (fichpiv);
+						     /* lit l'octet qui suit (tag de fin d'element) */
+						     if (!BIOreadByte (pivFile, tag))
+							PivotError (pivFile);
 						  }
 						break;
 					     case PageBreak:
 						/* lit le numero de page et */
 						/* le type de page */
-						BIOreadShort (fichpiv, &n);
-						BIOreadShort (fichpiv, &Vue);
-						TPage = rdTypePage (fichpiv);
-						modif = rdBooleen (fichpiv);
+						BIOreadShort (pivFile, &n);
+						BIOreadShort (pivFile, &view);
+						TPage = ReadPageType (pivFile);
+						modif = ReadBoolean (pivFile);
 						if (cree)
 						  {
 						     pEl->ElPageNumber = n;
-						     pEl->ElViewPSchema = Vue;
+						     pEl->ElViewPSchema = view;
 						     pEl->ElPageType = TPage;
 						     pEl->ElPageModified = modif;
 						  }
-						if (!BIOreadByte (fichpiv, marque))
-						   PivotError (fichpiv);
+						if (!BIOreadByte (pivFile, tag))
+						   PivotError (pivFile);
 						break;
 					     default:
 						break;
 					  }
 
 				 }
-			       if (*marque != (char) C_PIV_END)
+			       if (*tag != (char) C_PIV_END)
 				 {
-				    PivotError (fichpiv);
+				    PivotError (pivFile);
 				    PivotFormatError ("F");
 				 }
 
-			       if (!BIOreadByte (fichpiv, marque))
-				  PivotError (fichpiv);
+			       if (!BIOreadByte (pivFile, tag))
+				  PivotError (pivFile);
 			    }
 			  break;
 		       default:
 			  /* traite le contenu s'il y en a un */
-			  if (*marque == (char) C_PIV_BEGIN)
+			  if (*tag == (char) C_PIV_BEGIN)
 			    {
 			       if (pEl != NULL)
 				  if (pEl->ElTerminal)
 				    {
-				       PivotError (fichpiv);
+				       PivotError (pivFile);
 				       PivotFormatError ("f");
 				    }
 			       /* erreur: feuille avec contenu */
 			       if (!error)
 				 {
-				    if (!BIOreadByte (fichpiv, marque))
-				       PivotError (fichpiv);
+				    if (!BIOreadByte (pivFile, tag))
+				       PivotError (pivFile);
 				    ElPreced = NULL;
-				    while (*marque != (char) C_PIV_END && !error)
+				    while (*tag != (char) C_PIV_END && !error)
 				       /* ce n'est pas un element vide, */
 				       /* on lit son contenu */
 				      {
@@ -2608,8 +2607,8 @@ boolean             creedesc;
 					    futurPere = pEl;
 					 else
 					    futurPere = Pere;
-					 p = Internalise (fichpiv, pSchStr, pDoc, marque, NAssoc,
-							  creepar, creetout, typecontenu, pschcont, &nR,
+					 p = Internalise (pivFile, pSchStr, pDoc, tag, NAssoc,
+							  creepar, createAll, contentType, pContSS, &nR,
 							  &pSS, creepage, futurPere, creedesc);
 					 pElLu = p;
 					 if (!error)
@@ -2625,7 +2624,7 @@ boolean             creedesc;
 						   }
 						 else if (pEl != NULL)
 						   {
-						      if (!creetout)
+						      if (!createAll)
 							 if (p->ElTypeNumber != PageBreak + 1)
 							    if (p->ElStructSchema != pEl->ElStructSchema)
 							       /* l'element a inserer dans l'arbre appartient       */
@@ -2666,8 +2665,8 @@ boolean             creedesc;
 					      }
 				      }
 				    if (!error)
-				       if (!BIOreadByte (fichpiv, marque))
-					  PivotError (fichpiv);
+				       if (!BIOreadByte (pivFile, tag))
+					  PivotError (pivFile);
 				 }
 			    }
 			  break;
@@ -2764,7 +2763,7 @@ PtrElement          pRacine;
 #endif /* __STDC__ */
 {
    PtrElement          pEl1, pEl2;
-   boolean             trouve;
+   boolean             found;
 
    pEl1 = pRacine;
    /* cherche tous les elements produits par le constructeur CsPairedElement */
@@ -2778,17 +2777,17 @@ PtrElement          pRacine;
 	     {
 		/* on cherche l'element de fin correspondant */
 		pEl2 = pEl1;
-		trouve = FALSE;
+		found = FALSE;
 		do
 		  {
 		     pEl2 = FwdSearchTypedElem (pEl2, pEl1->ElTypeNumber + 1, pEl1->ElStructSchema);
 		     if (pEl2 != NULL)
 			/* on a trouve' un element du type cherche' */
 			/* c'est le bon s'il a le meme identificateur */
-			trouve = (pEl2->ElPairIdent == pEl1->ElPairIdent);
+			found = (pEl2->ElPairIdent == pEl1->ElPairIdent);
 		  }
-		while ((pEl2 != NULL) && (!trouve));
-		if (trouve)
+		while ((pEl2 != NULL) && (!found));
+		if (found)
 		   /* On etablit le chainage entre les 2 elements */
 		  {
 		     pEl1->ElOtherPairedEl = pEl2;
@@ -2905,24 +2904,26 @@ int                 rangNature;
 }
 
 
-/* rdNomsSchemas lit les noms des schemas de structure et de presentation */
-/* qui se trouvent dans le fichier fich et charge ces schemas */
-
+/* ---------------------------------------------------------------------- */
+/* |	rdNomsSchemas lit les noms des schemas de structure et de	| */
+/* |	presentation qui se trouvent dans le fichier file et charge ces	| */
+/* |	schemas								| */
+/* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                rdNomsSchemas (BinFile fich, PtrDocument pDoc, char *marque, PtrSSchema pSCharge)
+void                rdNomsSchemas (BinFile file, PtrDocument pDoc, char *tag, PtrSSchema pSCharge)
 
 #else  /* __STDC__ */
-void                rdNomsSchemas (fich, pDoc, marque, pSCharge)
-BinFile             fich;
+void                rdNomsSchemas (file, pDoc, tag, pSCharge)
+BinFile             file;
 PtrDocument         pDoc;
-char               *marque;
+char               *tag;
 PtrSSchema        pSCharge;
 
 #endif /* __STDC__ */
 
 {
-   Name                 NomSchStr, NomSchPrs;
+   Name                 NomSchStr, PSchemaName;
    PtrSSchema        pSS;
    int                 i, rangNature;
    boolean             ExtensionSch;
@@ -2932,12 +2933,12 @@ PtrSSchema        pSCharge;
    rangNature = 1;
    /* lit le type du document */
    do
-      if (!BIOreadByte (fich, &NomSchStr[i++]))
-	 PivotError (fich);
-   while (!(error || NomSchStr[i - 1] == '\0' || i == MAX_NAME_LENGTH)) ;
+      if (!BIOreadByte (file, &NomSchStr[i++]))
+	 PivotError (file);
+   while (!error && NomSchStr[i - 1] != '\0' && i != MAX_NAME_LENGTH);
    if (NomSchStr[i - 1] != '\0')
      {
-	PivotError (fich);
+	PivotError (file);
 	PivotFormatError ("Z");
      }
    else
@@ -2945,23 +2946,23 @@ PtrSSchema        pSCharge;
 	if (pDoc->DocPivotVersion >= 4)
 	   /* Lit le code du schema de structure */
 	   if (!error)
-	      if (!BIOreadShort (fich, &versionSchema))
-		 PivotError (fich);
+	      if (!BIOreadShort (file, &versionSchema))
+		 PivotError (file);
 	/* Lit le nom du schema de presentation associe' */
 	i = 0;
 	do
-	   if (!BIOreadByte (fich, &NomSchPrs[i++]))
-	      PivotError (fich);
-	while (!(error || NomSchPrs[i - 1] == '\0' || i == MAX_NAME_LENGTH)) ;
+	   if (!BIOreadByte (file, &PSchemaName[i++]))
+	      PivotError (file);
+	while (!error && PSchemaName[i - 1] != '\0' && i != MAX_NAME_LENGTH);
 
-	if (!BIOreadByte (fich, marque))
-	   PivotError (fich);
+	if (!BIOreadByte (file, tag))
+	   PivotError (file);
 	NatureDansTable (pDoc, NomSchStr, rangNature);
 	/* charge les schemas de structure et de presentation du document */
 	if (pDoc->DocSSchema == NULL)
-	   LoadSchemas (NomSchStr, NomSchPrs, &pDoc->DocSSchema, pSCharge, FALSE);
+	   LoadSchemas (NomSchStr, PSchemaName, &pDoc->DocSSchema, pSCharge, FALSE);
 	if (pDoc->DocSSchema == NULL)
-	   PivotError (fich);
+	   PivotError (file);
 	else if (pDoc->DocPivotVersion >= 4)
 	   /* on verifie que la version du schema charge' est la meme */
 	   /* que celle du document */
@@ -2975,52 +2976,52 @@ PtrSSchema        pSCharge;
      {
 	pDoc->DocNatureSSchema[rangNature - 1] = pDoc->DocSSchema;
 	strncpy (pDoc->DocNatureName[rangNature - 1], NomSchStr, MAX_NAME_LENGTH);
-	strncpy (pDoc->DocNaturePresName[rangNature - 1], NomSchPrs, MAX_NAME_LENGTH);
+	strncpy (pDoc->DocNaturePresName[rangNature - 1], PSchemaName, MAX_NAME_LENGTH);
 	if (pDoc->DocSSchema != NULL)
 	   if (pDoc->DocSSchema->SsPSchema == NULL)
 	      /* le schema de presentation n'a pas ete charge' (librairie  */
 	      /* Kernel, par exemple). On memorise dans le schema de */
 	      /* structure charge' le nom du schema P associe' */
-	      strncpy (pDoc->DocSSchema->SsDefaultPSchema, NomSchPrs, MAX_NAME_LENGTH);
+	      strncpy (pDoc->DocSSchema->SsDefaultPSchema, PSchemaName, MAX_NAME_LENGTH);
      }
-   /* lit les noms des fichiers contenant les schemas de nature  */
+   /* lit les noms des fileiers contenant les schemas de nature  */
    /* dynamiques et charge ces schemas, sauf si on ne charge que */
    /* les elements exportables. */
-   while ((*marque == (char) C_PIV_NATURE || *marque == (char) C_PIV_SSCHEMA_EXT)
+   while ((*tag == (char) C_PIV_NATURE || *tag == (char) C_PIV_SSCHEMA_EXT)
 	  && !error)
      {
-	ExtensionSch = (*marque == (char) C_PIV_SSCHEMA_EXT);
+	ExtensionSch = (*tag == (char) C_PIV_SSCHEMA_EXT);
 	i = 0;
 	rangNature++;
 	do
-	   if (!BIOreadByte (fich, &NomSchStr[i++]))
-	      PivotError (fich);
+	   if (!BIOreadByte (file, &NomSchStr[i++]))
+	      PivotError (file);
 	while (NomSchStr[i - 1] != '\0' && !error) ;
 	if (pDoc->DocPivotVersion >= 4)
 	   /* Lit le code du schema de structure */
 	   if (!error)
-	      if (!BIOreadShort (fich, &versionSchema))
-		 PivotError (fich);
+	      if (!BIOreadShort (file, &versionSchema))
+		 PivotError (file);
 	/* Lit le nom du schema de presentation associe' */
 	if (!error)
-	   if (!BIOreadByte (fich, marque))
-	      PivotError (fich);
-	if (*marque >= '!' && *marque <= '~' && !error)
+	   if (!BIOreadByte (file, tag))
+	      PivotError (file);
+	if (*tag >= '!' && *tag <= '~' && !error)
 	   /* il y a un nom de schema de presentation */
 	  {
-	     NomSchPrs[0] = *marque;
+	     PSchemaName[0] = *tag;
 	     i = 1;
 	     do
-		if (!BIOreadByte (fich, &NomSchPrs[i++]))
-		   PivotError (fich);
-	     while (!(error || NomSchPrs[i - 1] == '\0' || i == MAX_NAME_LENGTH)) ;
+		if (!BIOreadByte (file, &PSchemaName[i++]))
+		   PivotError (file);
+	     while (!error && PSchemaName[i - 1] != '\0' && i != MAX_NAME_LENGTH);
 
-	     if (!BIOreadByte (fich, marque))
-		PivotError (fich);
+	     if (!BIOreadByte (file, tag))
+		PivotError (file);
 	  }
 	else
 	   /* il n'y a pas de nom */
-	   NomSchPrs[0] = '\0';
+	   PSchemaName[0] = '\0';
 	pSS = NULL;
 	if (!error)
 	  {
@@ -3028,12 +3029,12 @@ PtrSSchema        pSCharge;
 	     if (pDoc->DocNatureSSchema[rangNature - 1] == NULL)
 		if (ExtensionSch)
 		   /* charge l'extension de schema */
-		   pSS = LoadExtension (NomSchStr, NomSchPrs, pDoc);
+		   pSS = LoadExtension (NomSchStr, PSchemaName, pDoc);
 		else
 		  {
-		     i = CreeNature (NomSchStr, NomSchPrs, pDoc->DocSSchema);
+		     i = CreeNature (NomSchStr, PSchemaName, pDoc->DocSSchema);
 		     if (i == 0)
-			PivotError (fich);	/* echec creation nature */
+			PivotError (file);	/* echec creation nature */
 		     else
 			pSS = pDoc->DocSSchema->SsRule[i - 1].SrSSchemaNat;
 		  }
@@ -3049,12 +3050,12 @@ PtrSSchema        pSCharge;
 		     TtaDisplayMessage (INFO, TtaGetMessage(LIB, STR_SCH_CHANGED), pSS->SsName);
 		  }
 	     pDoc->DocNatureSSchema[rangNature - 1] = pSS;
-	     strncpy (pDoc->DocNaturePresName[rangNature - 1], NomSchPrs, MAX_NAME_LENGTH);
+	     strncpy (pDoc->DocNaturePresName[rangNature - 1], PSchemaName, MAX_NAME_LENGTH);
 	     if (pSS->SsPSchema == NULL)
 		/* le schema de presentation n'a pas ete charge' (librairie
 		   Kernel, par exemple). On memorise dans le schema de structure
 		   charge' le nom du schema P associe' */
-		strncpy (pSS->SsDefaultPSchema, NomSchPrs, MAX_NAME_LENGTH);
+		strncpy (pSS->SsDefaultPSchema, PSchemaName, MAX_NAME_LENGTH);
 	  }
      }
 }
@@ -3062,13 +3063,13 @@ PtrSSchema        pSCharge;
 
 
 #ifdef __STDC__
-void                rdTableLangues (BinFile fich, PtrDocument pDoc, char *marque)
+void                rdTableLangues (BinFile file, PtrDocument pDoc, char *tag)
 
 #else  /* __STDC__ */
-void                rdTableLangues (fich, pDoc, marque)
-BinFile             fich;
+void                rdTableLangues (file, pDoc, tag)
+BinFile             file;
 PtrDocument         pDoc;
-char               *marque;
+char               *tag;
 
 #endif /* __STDC__ */
 
@@ -3079,16 +3080,16 @@ char               *marque;
    /* lit la table des langues utilisees par le document */
    pDoc->DocNLanguages = 0;
    if (pDoc->DocPivotVersion >= 4)
-      while (*marque == (char) C_PIV_LANG && !error)
+      while (*tag == (char) C_PIV_LANG && !error)
 	{
 	   i = 0;
 	   do
-	      if (!BIOreadByte (fich, &NomLangue[i++]))
-		 PivotError (fich);
-	   while (!(error || NomLangue[i - 1] == '\0' || i == MAX_NAME_LENGTH)) ;
+	      if (!BIOreadByte (file, &NomLangue[i++]))
+		 PivotError (file);
+	   while (!error && NomLangue[i - 1] != '\0' && i != MAX_NAME_LENGTH);
 	   if (NomLangue[i - 1] != '\0')
 	     {
-		PivotError (fich);
+		PivotError (file);
 		PivotFormatError ("Z");
 	     }
 	   else
@@ -3098,8 +3099,8 @@ char               *marque;
 		      pDoc->DocLanguages[pDoc->DocNLanguages++] =
 			 TtaGetLanguageIdFromName (NomLangue);
 		/* lit l'octet suivant le nom de langue */
-		if (!BIOreadByte (fich, marque))
-		   PivotError (fich);
+		if (!BIOreadByte (file, tag))
+		   PivotError (file);
 	     }
 	}
 }
@@ -3111,11 +3112,11 @@ char               *marque;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-int                 rdVersionNumber (BinFile fich, PtrDocument pDoc)
+int                 rdVersionNumber (BinFile file, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-int                 rdVersionNumber (fich, pDoc)
-BinFile             fich;
+int                 rdVersionNumber (file, pDoc)
+BinFile             file;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -3126,15 +3127,15 @@ PtrDocument         pDoc;
 
    ret = 0;
    pDoc->DocPivotVersion = 1;
-   if (!BIOreadByte (fich, &c))
+   if (!BIOreadByte (file, &c))
       ret = 10;
    else if (c != (char) C_PIV_VERSION)
       ret = 10;
-   else if (!BIOreadByte (fich, &c))
+   else if (!BIOreadByte (file, &c))
       ret = 10;
    else if (c != (char) C_PIV_VERSION)
       ret = 10;
-   else if (!BIOreadByte (fich, &c))
+   else if (!BIOreadByte (file, &c))
       ret = 10;
    else
       pDoc->DocPivotVersion = (int) c;
@@ -3146,58 +3147,58 @@ PtrDocument         pDoc;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                rdPivotHeader (BinFile fich, PtrDocument pDoc, char *marque)
+void                rdPivotHeader (BinFile file, PtrDocument pDoc, char *tag)
 
 #else  /* __STDC__ */
-void                rdPivotHeader (fich, pDoc, marque)
-BinFile             fich;
+void                rdPivotHeader (file, pDoc, tag)
+BinFile             file;
 PtrDocument         pDoc;
-char               *marque;
+char               *tag;
 
 #endif /* __STDC__ */
 
 {
-   LabelString         lab;
+   LabelString         label;
    int                 i;
    char                c;
 
    /* lit le numero de version s'il est present */
-   if (!BIOreadByte (fich, marque))
-      PivotError (fich);
-   if (*marque == (char) C_PIV_VERSION)
+   if (!BIOreadByte (file, tag))
+      PivotError (file);
+   if (*tag == (char) C_PIV_VERSION)
      {
-	if (!BIOreadByte (fich, marque))
-	   PivotError (fich);
-	else if (!BIOreadByte (fich, &c))
-	   PivotError (fich);
+	if (!BIOreadByte (file, tag))
+	   PivotError (file);
+	else if (!BIOreadByte (file, &c))
+	   PivotError (file);
 	else
 	  {
 	     pDoc->DocPivotVersion = (int) c;
-	     if (!BIOreadByte (fich, marque))
-		PivotError (fich);
+	     if (!BIOreadByte (file, tag))
+		PivotError (file);
 	  }
      }
-   else				/* Pivot sans marque de version */
+   else				/* Pivot sans tag de version */
       pDoc->DocPivotVersion = 1;
 
    /* lit le label max. du document s'il est present */
-   if (!error && (*marque == (char) C_PIV_SHORT_LABEL || *marque == (char) C_PIV_LONG_LABEL
-		  || *marque == (char) C_PIV_LABEL))
+   if (!error && (*tag == (char) C_PIV_SHORT_LABEL || *tag == (char) C_PIV_LONG_LABEL
+		  || *tag == (char) C_PIV_LABEL))
      {
-	ReadLabel (*marque, lab, fich);
-	LabelStringToInt (lab, &i);
+	ReadLabel (*tag, label, file);
+	LabelStringToInt (label, &i);
 	SetCurrentLabel (pDoc, i);
-	if (!BIOreadByte (fich, marque))
-	   PivotError (fich);
+	if (!BIOreadByte (file, tag))
+	   PivotError (file);
      }
    /* lit la table des langues utilisees par le document */
-   rdTableLangues (fich, pDoc, marque);
+   rdTableLangues (file, pDoc, tag);
 }
 
 
 /* ---------------------------------------------------------------------- */
 /* |    ChargeDoc charge en memoire (representation interne) un document| */
-/* |            qui se trouve sous la forme pivot dans le fichier fich. | */
+/* |            qui se trouve sous la forme pivot dans le fichier file. | */
 /* |            Le fichier doit etre ouvert et positionne' au debut.    | */
 /* |            Il n'est pas ferme' par ChargeDoc.                      | */
 /* |            pDoc est le pointeur sur le descripteur de document du  | */
@@ -3210,11 +3211,11 @@ char               *marque;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                ChargeDoc (BinFile fich, PtrDocument pDoc, boolean ChargeDocExt, boolean Squelette, PtrSSchema pSCharge, boolean WithAPPEvent)
+void                ChargeDoc (BinFile file, PtrDocument pDoc, boolean ChargeDocExt, boolean Squelette, PtrSSchema pSCharge, boolean WithAPPEvent)
 
 #else  /* __STDC__ */
-void                ChargeDoc (fich, pDoc, ChargeDocExt, Squelette, pSCharge, WithAPPEvent)
-BinFile             fich;
+void                ChargeDoc (file, pDoc, ChargeDocExt, Squelette, pSCharge, WithAPPEvent)
+BinFile             file;
 PtrDocument         pDoc;
 boolean             ChargeDocExt;
 boolean             Squelette;
@@ -3226,7 +3227,7 @@ boolean             WithAPPEvent;
 {
    int                 d, i, j, assoc;
    boolean             found, ok;
-   char                marque;
+   char                tag;
    PtrElement          s, p, premier;
 
    int         nR, typelu;
@@ -3237,14 +3238,13 @@ boolean             WithAPPEvent;
    DocumentIdentifier     IdentDocSource;
    PtrDocument         pDocSource;
    int                 NumDocExt;
-   PtrDocument         TabDocExt[MaxDocExt];
+   PtrDocument         TabDocExt[MAX_EXT_DOC];
    PtrPSchema          pSc1;
-   PtrSSchema        pSchS1;
-   PtrElement          pEl1;
-   SRule              *pRe1;
+   PtrSSchema          pSchS1;
+   SRule              *pSRule;
    boolean             pagesacreer;
    PtrSSchema        curExtension, previousSSchema;
-   BinFile             fichext;
+   BinFile             EXTfile;
    char                texte[MAX_TXT_LEN];
    boolean             DocumentCorrect;
    NotifyDialog        notifyDoc;
@@ -3253,30 +3253,30 @@ boolean             WithAPPEvent;
    DocumentCorrect = TRUE;
    ok = FALSE;
    error = FALSE;
-   msgAncienFormat = TRUE;
+   msgOldFormat = TRUE;
    pDoc->DocRootElement = NULL;
    pagesacreer = FALSE;
    pDoc->DocNNatures = 0;
    /* lit l'entete du fichier pivot */
-   rdPivotHeader (fich, pDoc, &marque);
+   rdPivotHeader (file, pDoc, &tag);
    /* lit le commentaire du document s'il est present */
-   if (!error && (marque == (char) C_PIV_COMMENT || marque == (char) C_PIV_OLD_COMMENT))
+   if (!error && (tag == (char) C_PIV_COMMENT || tag == (char) C_PIV_OLD_COMMENT))
      {
-	pDoc->DocComment = readComment (fich, TRUE, (boolean) (marque == (char) C_PIV_OLD_COMMENT));
+	pDoc->DocComment = ReadComment (file, TRUE, (boolean) (tag == (char) C_PIV_OLD_COMMENT));
 	/* lit l'octet suivant le commentaire */
-	if (!BIOreadByte (fich, &marque))
-	   PivotError (fich);
+	if (!BIOreadByte (file, &tag))
+	   PivotError (file);
      }
    /* Lit le nom du schema de structure */
    /* qui est en tete du fichier pivot */
-   if (!error && marque != (char) C_PIV_NATURE)
+   if (!error && tag != (char) C_PIV_NATURE)
      {
-	PivotError (fich);
-	PivotFormatError ("N");	/* marque classe absente */
+	PivotError (file);
+	PivotFormatError ("N");	/* tag classe absente */
      }
    if (!error)
       /* lit les noms des schemas de structure et de presentation */
-      rdNomsSchemas (fich, pDoc, &marque, pSCharge);
+      rdNomsSchemas (file, pDoc, &tag, pSCharge);
    if (WithAPPEvent && pDoc->DocSSchema != NULL && !error)
      {
 	notifyDoc.event = TteDocOpen;
@@ -3297,8 +3297,8 @@ boolean             WithAPPEvent;
 	     ok = FALSE;
 	     pSc1 = pDoc->DocSSchema->SsPSchema;
 	     if (pSc1 != NULL)
-		for (i = 1; i <= pSc1->PsNViews; i++)
-		   ok = ok || pSc1->PsExportView[i - 1];
+		for (i = 0; i < pSc1->PsNViews; i++)
+		   ok = ok || pSc1->PsExportView[i];
 	     if (ok)
 	       {
 		  /* une vue EXPORT est prevue */
@@ -3317,33 +3317,33 @@ boolean             WithAPPEvent;
 	/* pendant la lecture du fichier .PIV). On cherche ce */
 	/* fichier dans le meme directory que le fichier .PIV */
 	DoFileName (pDoc->DocDName, "EXT", pDoc->DocDirectory, texte, &i);
-	fichext = BIOreadOpen (texte);
-	if (fichext != 0)
+	EXTfile = BIOreadOpen (texte);
+	if (EXTfile != 0)
 	  {
-	     LoadEXTfile (fichext, NULL, &pDoc->DocLabels, TRUE);
-	     BIOreadClose (fichext);
+	     LoadEXTfile (EXTfile, NULL, &pDoc->DocLabels, TRUE);
+	     BIOreadClose (EXTfile);
 	  }
 	else
 	   pDoc->DocLabels = NULL;
 	/* Internalise le fichier .PIV */
 
 	/* lit les parametres */
-	for (i = 1; i <= MAX_PARAM_DOC; i++)
-	   pDoc->DocParameters[i - 1] = NULL;
+	for (i = 0; i < MAX_PARAM_DOC; i++)
+	   pDoc->DocParameters[i] = NULL;
 	i = 1;
-	while (marque == (char) C_PIV_PARAM && !error)
+	while (tag == (char) C_PIV_PARAM && !error)
 	   if (i > MAX_PARAM_DOC)
 	     {
-		PivotError (fich);
+		PivotError (file);
 		PivotFormatError ("Y");
 	     }
 	   else
 	     {
-		if (!BIOreadByte (fich, &marque))
-		   PivotError (fich);
+		if (!BIOreadByte (file, &tag))
+		   PivotError (file);
 		nR = 0;
 		pNat = NULL;
-		p = Internalise (fich, pDoc->DocSSchema, pDoc, &marque, 0, TRUE,
+		p = Internalise (file, pDoc->DocSSchema, pDoc, &tag, 0, TRUE,
 				 !pDoc->DocExportStructure, &nR, &pNat,
 				 &typelu, &pSS, pagesacreer, NULL, TRUE);
 		if (WithAPPEvent && pDoc->DocSSchema != NULL && !error)
@@ -3365,28 +3365,28 @@ boolean             WithAPPEvent;
 		i++;
 	     }
 	/* lit les elements associes */
-	for (assoc = 1; assoc <= MAX_ASSOC_DOC; assoc++)
-	   pDoc->DocAssocRoot[assoc - 1] = NULL;
+	for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
+	   pDoc->DocAssocRoot[assoc] = NULL;
 	assoc = 0;
-	while (marque == (char) C_PIV_ASSOC && !error)
+	while (tag == (char) C_PIV_ASSOC && !error)
 	   /* debut d'un nouveau type d'element associe */
 	  {
 	     assoc++;
-	     if (!BIOreadByte (fich, &marque))
-		PivotError (fich);
+	     if (!BIOreadByte (file, &tag))
+		PivotError (file);
 	     /* lit et cree le premier element associe de ce type */
 	     nR = 0;
 	     pNat = NULL;
 
-	     p = Internalise (fich, pDoc->DocSSchema, pDoc, &marque, assoc, FALSE,
+	     p = Internalise (file, pDoc->DocSSchema, pDoc, &tag, assoc, FALSE,
 			      !pDoc->DocExportStructure, &nR, &pNat,
 			      &typelu, &pSS, pagesacreer, NULL, TRUE);
 	     if (WithAPPEvent && pDoc->DocSSchema != NULL && !error)
 		SendEventAttrRead (p, pDoc);
-	     pRe1 = &pSS->SsRule[typelu - 1];
+	     pSRule = &pSS->SsRule[typelu - 1];
 
-	     if (pRe1->SrConstruct == CsList &&
-		 pSS->SsRule[pRe1->SrListItem - 1].SrAssocElem)
+	     if (pSRule->SrConstruct == CsList &&
+		 pSS->SsRule[pSRule->SrListItem - 1].SrAssocElem)
 		/* l'element lu est la racine d'un arbre d'elements associe'. */
 		/* L'arbre a ete lu entierement */
 	       {
@@ -3405,13 +3405,13 @@ boolean             WithAPPEvent;
 		  /* l'arbre d'elements associes, n'est pas presente, mais */
 		  /* seulement ses fils */
 		  premier = p;
-		  /* on lit les marques de pages jusqu'au premier element associe' */
+		  /* on lit les tags de pages jusqu'au premier element associe' */
 		  if (!error && typelu == PageBreak + 1)
 		     while (typelu == PageBreak + 1)
 		       {
 			  nR = 0;
 			  pNat = NULL;
-			  s = Internalise (fich, pDoc->DocSSchema, pDoc, &marque, assoc,
+			  s = Internalise (file, pDoc->DocSSchema, pDoc, &tag, assoc,
 				     FALSE, !pDoc->DocExportStructure, &nR, &pNat,
 				    &typelu, &pSS, pagesacreer, NULL, TRUE);
 			  if (WithAPPEvent && pDoc->DocSSchema != NULL && !error)
@@ -3444,7 +3444,7 @@ boolean             WithAPPEvent;
 				 if (!found)
 				    j--;
 			      }
-			    while (!(found || j == 1));
+			    while (!found && j != 1);
 			    if (!found)
 			       /* pas trouve', on cherche dans l'extension suivante du */
 			       /* schema de structure du document */
@@ -3453,7 +3453,7 @@ boolean             WithAPPEvent;
 		       while (!found && pSchS1 != NULL);
 		       if (!found)
 			 {
-			    PivotError (fich);
+			    PivotError (file);
 			    PivotFormatError ("a");
 			 }
 		       else
@@ -3473,11 +3473,11 @@ boolean             WithAPPEvent;
 			 }
 		    }
 		  /* lit les elements associes suivants de meme type */
-		  while (!error && (marque == (char) C_PIV_TYPE || marque == (char) C_PIV_NATURE))
+		  while (!error && (tag == (char) C_PIV_TYPE || tag == (char) C_PIV_NATURE))
 		    {
 		       nR = 0;
 		       pNat = NULL;
-		       s = Internalise (fich, pDoc->DocSSchema, pDoc, &marque, assoc,
+		       s = Internalise (file, pDoc->DocSSchema, pDoc, &tag, assoc,
 				     FALSE, !pDoc->DocExportStructure, &nR, &pNat,
 					&typelu, &pSS, pagesacreer,
 				    pDoc->DocAssocRoot[assoc - 1], TRUE);
@@ -3508,26 +3508,26 @@ boolean             WithAPPEvent;
 
 	/* lit le corps du document */
 	if (!error)
-	   if (marque != (char) C_PIV_DOC_END)
-	      if (marque != (char) C_PIV_STRUCTURE)
+	   if (tag != (char) C_PIV_DOC_END)
+	      if (tag != (char) C_PIV_STRUCTURE)
 		{
-		   PivotError (fich);
+		   PivotError (file);
 		   PivotFormatError ("O");
 		}
 	      else
 		{
-		   if (!BIOreadByte (fich, &marque))
-		      PivotError (fich);
-		   if (marque != (char) C_PIV_TYPE && marque != (char) C_PIV_NATURE)
+		   if (!BIOreadByte (file, &tag))
+		      PivotError (file);
+		   if (tag != (char) C_PIV_TYPE && tag != (char) C_PIV_NATURE)
 		     {
-			PivotError (fich);
+			PivotError (file);
 			PivotFormatError ("P");
 		     }
 		   else
 		     {
 			nR = 0;
 			pNat = NULL;
-			p = Internalise (fich, pDoc->DocSSchema, pDoc, &marque, 0,
+			p = Internalise (file, pDoc->DocSSchema, pDoc, &tag, 0,
 				     FALSE, !pDoc->DocExportStructure, &nR, &pNat,
 				    &typelu, &pSS, pagesacreer, NULL, TRUE);
 			if (WithAPPEvent && pDoc->DocSSchema != NULL && !error)
@@ -3582,7 +3582,7 @@ boolean             WithAPPEvent;
 
 	/* supprime les extensions de schemas ExtCorr et ExtMot */
 	/* les attributs definis dans ces extensions ont deje ete retire's par */
-	/* ReadAttribut (ces extensions ne definissent que des attributs) */
+	/* ReadAttr (ces extensions ne definissent que des attributs) */
 	if (!error && pDoc->DocPivotVersion < 4)
 	  {
 	     previousSSchema = pDoc->DocSSchema;
@@ -3612,17 +3612,17 @@ boolean             WithAPPEvent;
 	     if (pDoc->DocRootElement != NULL)
 		AffecteLabel (pDoc->DocRootElement, pDoc);
 	     /* on affecte des labels aux elements des arbres associes */
-	     for (assoc = 1; assoc <= MAX_ASSOC_DOC; assoc++)
-		if (pDoc->DocAssocRoot[assoc - 1] != NULL)
-		   AffecteLabel (pDoc->DocAssocRoot[assoc - 1], pDoc);
+	     for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
+		if (pDoc->DocAssocRoot[assoc] != NULL)
+		   AffecteLabel (pDoc->DocAssocRoot[assoc], pDoc);
 	     /* on affecte des labels aux elements des parametres */
-	     for (i = 1; i <= MAX_PARAM_DOC; i++)
-		if (pDoc->DocParameters[i - 1] != NULL)
-		   AffecteLabel (pDoc->DocParameters[i - 1], pDoc);
+	     for (i = 0; i < MAX_PARAM_DOC; i++)
+		if (pDoc->DocParameters[i] != NULL)
+		   AffecteLabel (pDoc->DocParameters[i], pDoc);
 
 	     /* nettoie la table des documents externes charge's */
-	     for (NumDocExt = 1; NumDocExt <= MaxDocExt; NumDocExt++)
-		TabDocExt[NumDocExt - 1] = NULL;
+	     for (NumDocExt = 0; NumDocExt < MAX_EXT_DOC; NumDocExt++)
+		TabDocExt[NumDocExt] = NULL;
 	     /* parcourt la chaine des descripteurs d'elements reference's */
 	     /* du document, pour traiter toutes les references */
 	     pDR = pDoc->DocReferredEl->ReNext;
@@ -3653,45 +3653,38 @@ boolean             WithAPPEvent;
 					     /* cherche une entree libre dans la table des documents */
 					     /* externes charge's */
 					    {
-					       NumDocExt = 1;
-					       while (TabDocExt[NumDocExt - 1] != NULL
-						   && NumDocExt < MaxDocExt)
+					       NumDocExt = 0;
+					       while (TabDocExt[NumDocExt] != NULL
+						   && NumDocExt < MAX_EXT_DOC-1)
 						  NumDocExt++;
-					       if (TabDocExt[NumDocExt - 1] == NULL)
+					       if (TabDocExt[NumDocExt] == NULL)
 						  /* on a trouve' une entree libre, on */
 						  /* charge  le document externe */
 						 {
-						    CreateDocument (&TabDocExt[NumDocExt - 1]);
-						    if (TabDocExt[NumDocExt - 1] != NULL)
+						    CreateDocument (&TabDocExt[NumDocExt]);
+						    if (TabDocExt[NumDocExt] != NULL)
 						      {
-							 CopyIdentDoc (&TabDocExt[NumDocExt - 1]->DocIdent, IdentDocSource);
-							 ok = OpenDocument (NULL, TabDocExt[NumDocExt - 1],
+							 CopyIdentDoc (&TabDocExt[NumDocExt]->DocIdent, IdentDocSource);
+							 ok = OpenDocument (NULL, TabDocExt[NumDocExt],
 									FALSE, FALSE,
 									NULL, FALSE);
 						      }
-						    if (TabDocExt[NumDocExt - 1] != NULL)
+						    if (TabDocExt[NumDocExt] != NULL)
 						      {
-							 CopyIdentDoc (&TabDocExt[NumDocExt - 1]->DocIdent, IdentDocSource);
+							 CopyIdentDoc (&TabDocExt[NumDocExt]->DocIdent, IdentDocSource);
 							 if (!ok)
 							   {
 							      /* echec a l'ouverture du document */
 							      TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), IdentDocSource);
-							      FreeDocument (TabDocExt[NumDocExt - 1]);
-							      TabDocExt[NumDocExt - 1] = NULL;
+							      FreeDocument (TabDocExt[NumDocExt]);
+							      TabDocExt[NumDocExt] = NULL;
 							   }
 						      }
 						 }
 					    }
-				    pEl1 = pRef->RdElement;
-				    pRe1 = &pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1];
-				    /*TODO *//* mis en commentaire cas instruction if sans corps */
-				    /* if (pRe1->SrConstruct == CsReference) */
-				    /* il s'agit d'un element reference */
-				    /* if (pRe1->SrRefImportedDoc) */
-				    /* traitement des documents importes */
+				    pSRule = &pRef->RdElement->ElStructSchema->SsRule[pRef->RdElement->ElTypeNumber - 1];
 				 }
-			       /* il s'agit plus precisement de l'inclusion */
-			       /* d'un document externe */
+			       /* inclusion d'un document externe */
 			       CopyIncludedElem (pRef->RdElement, pDoc);
 			    }
 		       pRef = pRef->RdNext;
@@ -3702,38 +3695,38 @@ boolean             WithAPPEvent;
 	     if (ChargeDocExt)
 		/* on decharge les documents externes qui ont ete charge's */
 		/* pour copier des elements inclus */
-		for (NumDocExt = 1; NumDocExt <= MaxDocExt; NumDocExt++)
-		   if (TabDocExt[NumDocExt - 1] != NULL)
+		for (NumDocExt = 0; NumDocExt < MAX_EXT_DOC; NumDocExt++)
+		   if (TabDocExt[NumDocExt] != NULL)
 		     {
-			DeleteAllTrees (TabDocExt[NumDocExt - 1]);
-			LibSchemas (TabDocExt[NumDocExt - 1]);
+			DeleteAllTrees (TabDocExt[NumDocExt]);
+			LibSchemas (TabDocExt[NumDocExt]);
 			/* cherche le document dans la table */
 			/* des documents */
-			d = 1;
-			while (LoadedDocument[d - 1] != TabDocExt[NumDocExt - 1]
-			       && d < MAX_DOCUMENTS)
+			d = 0;
+			while (LoadedDocument[d] != TabDocExt[NumDocExt]
+			       && d < MAX_DOCUMENTS - 1)
 			   d++;
 			/* libere l'entree de la table des documents */
-			if (LoadedDocument[d - 1] == TabDocExt[NumDocExt - 1])
-			   LoadedDocument[d - 1] = NULL;
+			if (LoadedDocument[d] == TabDocExt[NumDocExt])
+			   LoadedDocument[d] = NULL;
 			/* libere tout le document */
-			FreeDocument (TabDocExt[NumDocExt - 1]);
+			FreeDocument (TabDocExt[NumDocExt]);
 		     }
 	     /* verifie que les racines de tous les arbres du document possedent */
 	     /* bien un attribut langue */
 	     CheckLanguageAttr (pDoc, pDoc->DocRootElement);
 	     pDoc->DocRootElement->ElAccess = AccessReadWrite;
-	     for (i = 1; i <= MAX_PARAM_DOC; i++)
-		if (pDoc->DocParameters[i - 1] != NULL)
+	     for (i = 0; i < MAX_PARAM_DOC; i++)
+		if (pDoc->DocParameters[i] != NULL)
 		  {
-		     CheckLanguageAttr (pDoc, pDoc->DocParameters[i - 1]);
-		     pDoc->DocParameters[i - 1]->ElAccess = AccessReadOnly;
+		     CheckLanguageAttr (pDoc, pDoc->DocParameters[i]);
+		     pDoc->DocParameters[i]->ElAccess = AccessReadOnly;
 		  }
-	     for (i = 1; i <= MAX_ASSOC_DOC; i++)
-		if (pDoc->DocAssocRoot[i - 1] != NULL)
+	     for (i = 0; i < MAX_ASSOC_DOC; i++)
+		if (pDoc->DocAssocRoot[i] != NULL)
 		  {
-		     CheckLanguageAttr (pDoc, pDoc->DocAssocRoot[i - 1]);
-		     pDoc->DocAssocRoot[i - 1]->ElAccess = AccessReadWrite;
+		     CheckLanguageAttr (pDoc, pDoc->DocAssocRoot[i]);
+		     pDoc->DocAssocRoot[i]->ElAccess = AccessReadWrite;
 		  }
 	     if (ThotLocalActions[T_indexschema] != NULL)
 		(*ThotLocalActions[T_indexschema]) (pDoc);

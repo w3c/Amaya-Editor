@@ -1,20 +1,23 @@
-/* Declarations de types pour la presentation des documents */
+
+/* Type declaration for the presentation of documents */
+
 
 /* DEFINITIONS
-   
-   Un numero de vue est le rang d'une vue dans la table PresentSchema.PsView.
-   Un numero de compteur est le rang d'un compteur dans la table PresentSchema.
-   PsCounter.
-   Un numero de constantes est le rang d'une constante dans la table
-   PresentSchema.PsConstant.
-   Un numero de variable est le rang d'une variable dans la table PresentSchema.
-   PsVariable.
-   Un numero de boite de presentation est le rang d'une boite dans la table
-   PresentSchema.PsPresentBox. */
+
+	A view number is the rank of a view in the table PresentSchema.PsView.
+	A counter number is the rank of a counter in the table PresentSchema.
+	PsCounter.
+	A constant number is the rank of a constant in the table PresentSchema.
+	PsConstant.
+	A variable number is the rank of a variable in the table PresentSchema.
+	PsVariable.
+	A presentation box number is the rank of a box in the table
+	PresentSchema.PsPresentBox.
+*/
 
 #include "typebase.h"
-/******************* a revoir avec les Images descriptors ***********/
-/* mode de presentation des images */
+
+/* presentation mode of the pictures */
 #define UNKNOWN_FORMAT   -1
 typedef enum
 {
@@ -22,9 +25,8 @@ typedef enum
         ReScale,
         FillFrame
 } PictureScaling;
-/********************************************************************/
 
-/* cotes et axes des boites */
+/* dimensions and axes of the boxes */
 typedef enum
 {
     Top, Bottom, Left, Right, HorizRef, VertRef,
@@ -33,46 +35,46 @@ typedef enum
 
 typedef struct _PresRule *PtrPRule;
 
-/* niveau relatif */
+/* relative level */
 typedef enum
 {
-  RlEnclosing, RlSameLevel, RlEnclosed, RlPrevious, RlNext, RlSelf, RlContainsRef,
+  RlEnclosing, RlSameLevel, RlEnclosed, RlPrevious, RlNext, RlSelf, 
+RlContainsRef,
   RlRoot, RlReferred, RlCreator
 } Level;
 
-/* SRule de positionnement relatif de deux cotes ou axes de boites */
+/* relative positionning rule for the dimensions or axes of two boxes */
 typedef struct _PosRule
 {
-  BoxEdge	PoPosDef;	/* le cote du pave dont on definit la
-				   position */
-  BoxEdge	PoPosRef;	/* le cote du pave par rapport auquel on
-				   definit la position */
-  TypeUnit	PoDistUnit;	/* PoDistance est exprime' en points typo,
-				   en 1/10 de caracteres, etc. */
-  boolean	PoDistAttr;	/* PoDistance est un numero d'attribut
-				   numerique ou une valeur numerique */
-  int	PoDistance;	/* distance entre ces deux cotes */
-  Level	PoRelation;	/* niveau relatif de l'element de reference
-				   dans la representation interne */
-  boolean	PoNotRel;	/* si 'false', PoTypeRefElem ou PoRefPresBox
-				   indique le type de l'elem. de ref.,
-				   si 'true', le type exclus. */
-  boolean	PoUserSpecified;	/* la distance peut etre choisie par
-				   l'utilisateur lors de la creation */
-  boolean	PoRefElem;	/* la reference est la boite d'un element
-				   structure, sinon, une boite de pres. */
+  BoxEdge	PoPosDef;	/* side of the abstract box of which the
+				   position is defined */
+  BoxEdge	PoPosRef;	/* side of the abstract box from which the
+				   position is defined */
+  TypeUnit	PoDistUnit;	/* PoDistance is expressed in picas, 1/10 of
+				   a character, etc. */
+  boolean	PoDistAttr;	/* PoDistance is a numerical attribute number
+				   or a numerical value */
+  int		PoDistance;	/* distance between those two sides */
+  Level		PoRelation;	/* relative level of the reference element
+				   in the internal representation */
+  boolean	PoNotRel;	/* if 'false', PoTypeRefElem or PoRefPresBox
+				   indicates the type of the reference element,
+				   if 'true', the exclusive type. */
+  boolean	PoUserSpecified;/* the distance may be chosen by the user
+				   during the creation */
+  boolean	PoRefElem;	/* the reference is the box of an element,
+				   a presentation box otherwise */
   union
   {
     struct			/* PoRefElem = True */
     {
-      int	 _PoTypeRefElem_;	 /* le type de l'element par rapport
-					    auquel on definit la position */
+      int	 _PoTypeRefElem_;	/* type of the element from which the
+					   position is defined */ 
     } s0;
     struct			/* PoRefElem = False */
     {
-      int _PoRefPresBox_; /* le type de la boite par rapport a
-				      laquelle on definit la position.
-				      Zero si type quelconque */
+      int _PoRefPresBox_;	/* type of the box from which the
+				   position is defined, 0 if any */
     } s1;
   } u;
 } PosRule;
@@ -80,53 +82,48 @@ typedef struct _PosRule
 #define PoTypeRefElem u.s0._PoTypeRefElem_
 #define PoRefPresBox u.s1._PoRefPresBox_
 
-/* SRule de dimensionnement de boites */
+/* Box dimensionning SRule */
 typedef struct _DimensionRule
 {
-  boolean	 DrPosition;	/* La dimension est definie comme une
-				   position (boite elastique) */
+  boolean	 DrPosition;	/* the dimension is defined as a position
+				   (rubber band box) */
   union
   {
     struct			/* DrPosition = True */
     {
-      PosRule	_DrPosRule_;     /* la regle de position  qui definit la
-				  dimension */
+      PosRule	_DrPosRule_;    /* the position rule that defines the
+				   dimension */
     }   s0;
     struct			/* DrPosition = False */
     {
-      boolean	_DrAbsolute_;     /* Valeur absolue,sinon relative */
-      boolean	_DrSameDimens_; /* On definit la dimension par rapport a
-				  la meme dimension d'une autre boite*/
-      TypeUnit	_DrUnit_;    /* DrValue est exprime' en points
-				  typo, en 1/10 de caracteres, etc. */
-      boolean	_DrAttr_;    /* DrValue est un numero d'attribut
-				  numerique ou une valeur numerique */
-      boolean	_DrMin_; /* dimension minimum */
-      boolean	_DrUserSpecified_;/* la distance peut etre choisie par
-				  l'utilisateur */
-      int	_DrValue_;  /* valeur du pourcentage, de l'increment
-				  ou de la valeur absolue */
-      Level	_DrRelation_;  /* niveau relatif de l'element de
-				  reference */
-      boolean	_DrNotRelat_;  /* si False, DrTypeRefElem ou DrRefPresBox
-				  indique le type de l'elem. de ref.,
-				  si False, le type exclus. */
-      boolean	_DrRefElement_;  /* la reference est la boite d'un
-				  element structure, sinon une boite
-				  de presentation */
+      boolean	_DrAbsolute_;   /* absolute value, relative otherwise */ 
+      boolean	_DrSameDimens_; /* the dimension is defined in regard to
+				   the same dimension of another box */
+      TypeUnit	_DrUnit_;       /* DrValue is expressed in picas, 1/10 of a
+				   character, etc. */ 
+      boolean	_DrAttr_;       /* DrValue is a numerical attribute or a
+				   numerical value attribute  number */ 
+      boolean	_DrMin_; 	/* minimum dimension */
+      boolean	_DrUserSpecified_; /* the distance may be chosen by the user */
+      int	_DrValue_;      /* value of the percentage, the increment or
+				   the absolute value */
+      Level	_DrRelation_;  	/* relative level of the reference element */
+      boolean	_DrNotRelat_;   /* if false, DrTypeRefElem or DrRefPresBox
+				  indicates the type of the reference elt.
+				  if false, the exclusive type. */
+      boolean	_DrRefElement_; /* the reference is the box of an element,
+				    otherwise a presentation box */
       union
       {
 	struct			/* DrRefElement = True */
 	{
-	  int	_DrTypeRefElem_;	/* le type de l'element par
-					   rapport auquel on definit
-					   la dimension  */
+	  int	_DrTypeRefElem_;	/* type of the element in regards to
+					   which the dimension is defined */ 
 	} s0;
 	struct			/* DrRefElement = False */
 	{
-	  int _DrRefPresBox_;/* le type de la boite par
-					 rapport a laquelle on definit la
-					 dimension. Zero si type quelconque */
+	  int _DrRefPresBox_;	/* type of the box in regards to
+				   which the dimension is defined, 0 if any */
 	} s1;
       } u;
     } s1;
@@ -147,55 +144,53 @@ typedef struct _DimensionRule
 #define DrTypeRefElem u.s1.u.s0._DrTypeRefElem_
 #define DrRefPresBox u.s1.u.s1._DrRefPresBox_
 
-/* type du contenu d'une boite de presentation */
+/* type of the content of a presentation box */
 typedef enum
 {
     FreeContent, ContVariable, ContConst, ContElement
 }	ContentType;
 
-/* une boite de presentation */
+/* a presentation box */
 typedef struct _PresentationBox
 {
-  Name		 PbName;		/* Name de la boite */
-  PtrPRule PbFirstPRule;	/* premiere regle de presentation
-				   definissant la boite */
-  boolean	 PbAcceptPageBreak;	/* indique si la boite peut etre */
-				/* coupee ou non en bas de page. */
-  boolean	 PbAcceptLineBreak;	/* indique si la boite peut etre */
-				/* coupee ou non en bout de ligne. */
-  boolean	 PbBuildAll;	/* indique si l'image de la boite doit etre
-				   construite d'un seul bloc ou peut etre
-				   fractionnee */
-  boolean	 PbNotInLine;	/* boite non prise en compte dans la mise
-				   en lignes */
-  boolean	 PbPageFooter;	/* c'est une boite de bas de page */
-  boolean	 PbPageHeader;	/* c'est une boite de haut de page */
-  boolean	 PbPageBox;		/* c'est une boite page */
-  int	 PbFooterHeight;  /* si c'est une boite page, hauteur du bas
-				      de page en points typo */
-  int	 PbHeaderHeight; /* si c'est une boite page, hauteur du haut
-				      de page en points typo */
-  int		 PbPageCounter;	/* numero du compteur de page, seulement si
-				   PbPageBox est vrai */
-  ContentType	 PbContent;		/* contenu impose de la boite */
+  Name		 PbName;	/* box name */	
+  PtrPRule PbFirstPRule;	/* first presentation rule defining the box */
+  boolean	 PbAcceptPageBreak;	/* indicates whether the box may be
+					   cut at the bottom of the page */
+  boolean	 PbAcceptLineBreak;	/* indicates wheter the box may be
+					   cut at the end of a line */
+  boolean	 PbBuildAll;	/* indicates if the box image must be built
+				   in one piece or if it can be divided */
+  boolean	 PbNotInLine;	/* box not taken into account in the line layout */
+  boolean	 PbPageFooter;	/* it is a footer box */
+  boolean	 PbPageHeader;	/* it is a header box */
+  boolean	 PbPageBox;	/* it is a page box */
+  int	 PbFooterHeight;        /* if it is a page box, size of the footer
+				   in picas */
+  int	 PbHeaderHeight; 	/* if it is a page box, size of the header
+				   in picas */
+  int		 PbPageCounter;	/* number of the page counter, only if
+				   PbPageBox is true */
+  ContentType	 PbContent;     /* compulsory box content */
   union
   {
     struct			/* PbContent = ContVariable */
     {
-      int	  _PbContVariable_;	/* numero de la variable */
+      int	  _PbContVariable_;	/* number of the variable */
     }   s0;
     struct			/* PbContent = ContConst */
     {
-      int	  _PbContConstant_;	/* numero de la constante */
+      int	  _PbContConstant_;	/* number of the constant */
     } s1;
     struct			/* PbContent = ContElement */
     {
-      int	  _PbContElem_;	/* numero du type d'elem */
-      int	  _PbContRefElem_;	/* numero de type de la reference a cet elem */
+      int	  _PbContElem_;	/* number of the element type */
+      int	  _PbContRefElem_;	/* number of the type of reference
+					   to this element */
     } s2;
     struct			/* PbContent = FreeContent */
     {
-      char  _PbContFree_; /* pour faire plaisir au compilateur */
+      char  _PbContFree_; /* to make the compiler happy */
     } s3;
   } u;
 } PresentationBox;
@@ -206,24 +201,26 @@ typedef struct _PresentationBox
 #define PbContRefElem u.s2._PbContRefElem_
 #define PbContFree u.s3._PbContFree_
 
-/* BAlignment des lignes dans un pave mis en ligne */
+/* BAlignment of the lines in an abstract box */
 typedef enum
 {
   AlignLeft, AlignRight, AlignCenter, AlignLeftDots
-} BAlignment;	/* AlignLeftDots = Cadre' a gauche, la derniere
-		   ligne remplie avec des points */
+} BAlignment;	/* AlignLeftDots = aligned to the left, the last
+		   line is filled with dots */
 typedef enum
 {
-  /* l'ordre determine celui des regles dans le schema de presentation */
-  PtVisibility, PtFunction, PtVertRef, PtHorizRef, PtHeight, PtWidth, PtVertPos, PtHorizPos, PtSize,
-  PtStyle, PtFont, PtUnderline, PtThickness, PtIndent, PtLineSpacing, PtDepth, PtAdjust,
+  /* the order determines the order of the rules in the presentation schema */
+  PtVisibility, PtFunction, PtVertRef, PtHorizRef, PtHeight, PtWidth, 
+PtVertPos, PtHorizPos, PtSize,
+  PtStyle, PtFont, PtUnderline, PtThickness, PtIndent, PtLineSpacing, PtDepth, 
+PtAdjust,
   PtJustify, PtLineStyle, PtLineWeight, PtFillPattern, PtBackground,
   PtForeground, PtHyphenate,
-  /* Les 3 types suivants doivent etre les derniers */
+  /* the three following types must be the last ones */
   PtBreak1, PtBreak2, PtPictInfo
 } PRuleType;
 
-/* mode de calcul des proprietes */
+/* computing mode of the properties */
 typedef enum
 {
   PresImmediate, PresInherit, PresFunction
@@ -231,10 +228,11 @@ typedef enum
 
 typedef enum
 {
-  InheritParent, InheritPrevious, InheritChild, InheritCreator, InheritGrandFather
+  InheritParent, InheritPrevious, InheritChild, InheritCreator, 
+InheritGrandFather
 } InheritMode;
 
-/* l'ordre determine celui des regles dans le schema de presentation*/
+/* the order determines the order of the rules in the presentation schema */
 typedef enum
 {
   FnLine, FnPage, FnCreateBefore, FnCreateWith, FnCreateFirst, FnCreateLast,
@@ -247,49 +245,50 @@ typedef enum
   CntArabic, CntURoman, CntLRoman, CntUppercase, CntLowercase
 } CounterStyle;
 
-/* types des variables de presentation */
+/* types of the presentation variables */
 typedef enum
 {
   VarText, VarCounter, VarDate, VarFDate, VarDirName, VarDocName, VarElemName,
   VarAttrName, VarAttrValue, VarPageNumber
 } VariableType;
 
-/* Pour indiquer la nature de la valeur du compteur */
+/* to indicate the nature of the counter value */
 typedef enum
 {
   CntMaxVal, CntMinVal, CntCurVal
 } CounterValue;
 
-/* un element d'une variable */
+/* a variable element */
 typedef struct _PresVarItem
 {
   VariableType     ViType;
-  CounterStyle  ViStyle;	/* style des chiffres pour */
-  /* VarCounter, VarAttrValue et VarPageNumber */
+  CounterStyle  ViStyle;	/* digit style for VarCounter, VarAttrValue and
+				   VarPageNumber */
   union
   {
     struct
     {
-      int	     _ViConstant_;	 /* numero de la constante */
+      int	     _ViConstant_;	/* number of the constant */ 
     } s0;
     struct
     {
-      int	     _ViCounter_;   /* numero du compteur */
-      CounterValue _ViCounterVal_; /* indique si on s'interesse a la
-				        valeur maximale, minimale ou courante du compteur */
+      int	     _ViCounter_;   	/* number of the counter */
+      CounterValue _ViCounterVal_; 	/* indicates if we are interested in
+					   the maximum, minimum or current
+					   value of the counter */
     } s1;
     struct
     {
-      int  _ViAttr_;  /* numero de l'attribut */
+      int  _ViAttr_;  	/* the attribute number */
     } s2;
     struct
     {
-      int            _ViDate_;      /* pour le compilateur */
+      int            _ViDate_;      /* for the compiler */
     } s3;
     struct			    /* ViType = VarPageNumber */
     {
-      int	     _ViView_;/* numero de la vue  ou on compte
-				       les pages */
+      int	     _ViView_;	/* number of the view in which the pages are
+				   counted */
     } s4;
   } u;
 } PresVarItem;
@@ -301,16 +300,16 @@ typedef struct _PresVarItem
 #define ViDate u.s3._ViDate_
 #define ViView u.s4._ViView_
 
-/* Un type de condition de creation de boite */
+/* A box creation condition type */
 typedef enum
 {
-  PcFirst, PcLast, PcReferred, PcFirstRef, PcLastRef, PcExternalRef, PcInternalRef,
-  PcCopyRef, PcAnyAttributes, PcFirstAttr, PcLastAttr, PcUserPage, PcStartPage, PcComputedPage,
-  PcEmpty, PcEven, PcOdd, PcOne, PcInterval, PcWithin, PcElemType, PcAttribute,
-  PcNoCondition, PcDefaultCond
+  PcFirst, PcLast, PcReferred, PcFirstRef, PcLastRef, PcExternalRef,
+  PcInternalRef, PcCopyRef, PcAnyAttributes, PcFirstAttr, PcLastAttr,
+  PcUserPage, PcStartPage, PcComputedPage, PcEmpty, PcEven, PcOdd, PcOne,
+  PcInterval, PcWithin, PcElemType, PcAttribute, PcNoCondition, PcDefaultCond
 } PresCondition;
 
-/* Pour interpreter le champ CoRelation */
+/* To interpret the field CoRelation */
 typedef enum
 {
   CondGreater, CondLess, CondEquals
@@ -318,50 +317,49 @@ typedef enum
 
 typedef struct _Condition *PtrCondition;
 
-/* Une condition d'application d'une regle de presentation */
+/* A presentation rule application condition */
 typedef struct _Condition
 {
-  PtrCondition    CoNextCondition;	/* Condition suivante dans la liste
-					   IF cond AND cond AND cond... */
-  PresCondition   CoCondition;		/* type de la condition */
-  boolean         CoNotNegative;	/* la condition n'est pas negative */
-  boolean	  CoTarget;		/* la condition concerne la cible
-					   (uniquement pour les references) */
+  PtrCondition    CoNextCondition;	/* Next condition in the list
+					   IF cond AND cond AND cond ... */
+  PresCondition   CoCondition;	        /* type of the condition */	
+  boolean         CoNotNegative;	/* the condition is not negative */
+  boolean	  CoTarget;		/* the condition affects the target
+					   (for references only) */
   union
   {
     struct				/* CoCondition = PcInterval, PcEven,
 					   PcOdd, PcOne */
     {
-      int	  _CoCounter_; /* numero du compteur sur lequel porte
-					   la condition */
-      int	  _CoMinCounter_; /* valeur minimum du compteur pour que
-					   la regle de presentation soit
-					   appliquee */
-      int	  _CoMaxCounter_; /* valeur maximum du compteur pour que
-					   la regle de presentation soit
-					   appliquee */
-      CounterValue _CoValCounter_; /* Indique si on prend la valeur
-					   courante du compteur, sa valeur
-					   mini ou sa valeur maxi */
+      int	  _CoCounter_; 	  /* number of the counter on which the
+				     condition applies */
+      int	  _CoMinCounter_; /* minimum value of the counter so that
+				     the presentation rule may be applied */
+      int	  _CoMaxCounter_; /* maximum value of the counter so that
+				     the presentation rule may be applied */
+      CounterValue _CoValCounter_; 	/* indicates if the minimum, maximum
+					   or current value of the counter is
+					   used */
     } s0;
     struct				/* CoCondition = PcWithin */
     {
       int	  _CoRelation_;		/* RelLevel */
-      int	  _CoTypeAncestor_;		/* type de l'ancetre */
+      int	  _CoTypeAncestor_;	/* type of the ancestor */	
       boolean	  _CoImmediate_;	/* Immediately */
       ArithRel  _CoAncestorRel_;
-      Name	  _CoAncestorName_;	/* nom du type de l'ancetre, si
-					   defini dans un autre schema */
-      Name	  _CoSSchemaName_;	/* nom du schema ou est defini
-					   l'ancetre si CoTypeAncestor=0*/
+      Name	  _CoAncestorName_;	/* Ancestor type name, if defined
+					   in another schema */
+      Name	  _CoSSchemaName_;	/* name of the schema where the
+					   ancestor is defined if
+					   CoTypeAncestor = 0 */
     } s1;
     struct				/* CoCondition = PcElemType or
 					   PcAttribute */
     {
-      int	  _CoTypeElAttr_;	/* PcElemType: type de l'elem
-					   auquel l'attribut est attache'.
-					   PcAttribute: attribut porte' par
-					   l'element. */
+      int	  _CoTypeElAttr_;	/* PcElemType: type of the element
+					   to which the attribute is attached.
+					   PcAttribute: attribute carried by
+					   the element */
     } s2;
   } u;
 } Condition;
@@ -378,64 +376,62 @@ typedef struct _Condition
 #define CoSSchemaName u.s1._CoSSchemaName_
 #define CoTypeElAttr u.s2._CoTypeElAttr_
 
-/* Les regles de presentation relatives a un objet sont chainees entre
-   elles par le pointeur PrNextPRule. Ainsi les regles de presentation
-   d'un type defini dans le schema de structure sont chainees, de meme
-   que les regles de presentation d'une valeur d'attribut logique, ou
-   d'une boite de presentation, ou encore les regles par defaut. */
+/* The presentation rules relative to an object are linked by means of
+   the pointer PrNextPRule. This way the presentation rules of a type
+   defined in the structure schema are linked, as well as the presentation
+   rules of a logical attribute value, of a presentation box or of the
+   default rules */ 
 
-/* une regle de presentation */
+/* a presentation rule */
 typedef struct _PresRule
 {
-  PRuleType       PrType;		/* type de la regle */
-  PtrPRule    PrNextPRule;	/* regle suivante pour le meme objet */
-  PtrCondition    PrCond;		/* conditions d'application de la
-					   regle */
-  int          PrViewNum;		/* numero de la vue a laquelle la regle
-					   s'applique */
-  int  PrSpecifAttr;	/* Seulement pour les regles de pres.
-					   specifiques attaches aux elements de
-					   l'arbre abstrait: numero de l'attr.
-					   auquel correspond la regle, 0 si la
-					   regle n'est pas derivee d'une regle
-					   d'attribut */
-  PtrSSchema    PrSpecifAttrSSchema;	/* pointeur sur le schema de structure
-					   definissant l'attr. PrSpecifAttr */
-  PresMode	  PrPresMode;		/* mode de calcul de la valeur */ 
+  PRuleType       PrType;	/* rule type */	
+  PtrPRule    PrNextPRule;	/* next rule for the same object */
+  PtrCondition    PrCond;	/* application conditions for the rule */	
+  int          PrViewNum;	/* number of the view to which the rule
+				   applies */	
+  int  PrSpecifAttr;		/* only for specifical presentation rules
+				   attached to the abstract tree elements:
+				   number of the attribute to which the
+				   rule corresponds, 0 if the rule is not
+				   derived from an attribute rule */
+  PtrSSchema    PrSpecifAttrSSchema;	/* pointer on the structure
+					   schema defining the attribute
+					   PrSpecifAttr */
+  PresMode	  PrPresMode;	/* computing mode of the value */	
   union
   {
     struct				/* PrPresMode = PresInherit */
     {
       InheritMode _PrInheritMode_;
-      boolean      _PrInhAttr_;	  /* PrInhDelta est un numero d'attribut
-				     numerique et si faux une valeur */
-      int      _PrInhDelta_;	  /* positif: increment, nul: egalite,
-				     negatif: decrement */
-      boolean      _PrMinMaxAttr_; /* PrInhMinOrMax est un numero
-				     d'attribut numerique ou une valeur*/
-      int      _PrInhMinOrMax_; /* valeur min ou max de l'heritage*/
-      TypeUnit     _PrInhUnit_;/* PrInhDelta et PrInhMinOrMax sont
-				     exprimes en points typo, pixel,
-				     valeur relative, etc. */
+      boolean      _PrInhAttr_;	/* PrInhDelta is a numerical attribute
+				   number and a value if false */  
+      int      _PrInhDelta_;	/* positive: increment, zero: equality,
+				   negative: decrement */  
+      boolean      _PrMinMaxAttr_; 	/* PrInhMinOrMax is a numerical
+					   attribute number or a value */
+      int      _PrInhMinOrMax_; /* min or max value of the inheritance */
+      TypeUnit     _PrInhUnit_;	/* PrInhDelta and PrInhMinOrMax are
+				   expressed in picas, pixels, relative value,
+				   etc. */
     } s0;
     struct			  /* PrPresMode = PresFunction */
     {
       FunctionType    _PrPresFunction_;
-      boolean      _PrPresBoxRepeat_;	/* boite de presentation repetee sur
-				   tous les paves de l'element */
-      boolean	   _PrExternal_;/* si PrElement est vrai, PrExternal
-				   indique que le type dont le nom est
-				   dans PrPresBoxName est externe */
-      boolean      _PrElement_;	/* PrPresBox[1] ou PrPresBoxName est un
-				   numero de type d'element et non de
-				   boite de presentation */
-      int	   _PrNPresBoxes_;	/* nombre de boites de presentation
-				   (utile seulement pour la regle
-				   Colonne) */
-	    int          _PrPresBox_[MAX_COLUMN_PAGE];	/* numero des boites de pres.*/
-	    Name          _PrPresBoxName_;	/* Name de la 1ere (ou seule) boite de
-					   presentation concernee par la
-					   fonction */
+      boolean      _PrPresBoxRepeat_;	/* presentation box repeated over all
+					   the abstract boxes of the element */
+      boolean	   _PrExternal_; /* if PrElement is true, PrExternal indicates
+				    that the type of which the name is in
+				    PrPresBoxName is external */
+      boolean      _PrElement_;	/* PrPresBox[1] or PrPresBoxName is an
+				   element type number, not a presentation
+				   box number */
+      int	   _PrNPresBoxes_;	/* number of presentation boxes (of use
+					   for the column rule only) */
+      int          _PrPresBox_[MAX_COLUMN_PAGE]; /* number of the
+					            presentation boxes */
+      Name          _PrPresBoxName_;	/* Name of the first (or only) presentation
+					   box to which the function applies */
     } s1;
     struct			 /* PrPresMode = PresImmediate */
     {
@@ -444,8 +440,8 @@ typedef struct _PresRule
 	struct	/* PRuleType = PtVisibility, PtDepth, PtFillPattern, */
 	        /* PtBackground, PtForeground */
 	{
-	  boolean  _PrAttrValue_; /* PrIntValue est un numero d'attribut
-				    numerique ou une valeur numerique */
+	  boolean  _PrAttrValue_; 	/* PrIntValue is a numerical attribute
+					   or numerical value number */ 
 	  int  _PrIntValue_;
 	}  s0;
 	struct	/* PRuleType = PtFont, PtStyle, PtUnderline, PtThickness,*/
@@ -456,12 +452,11 @@ typedef struct _PresRule
 	struct	/* PRuleType = PtBreak1, PtBreak2, */
 		/* PtIndent, PtSize, PtLineSpacing, PtLineWeight */
 	{
-	  TypeUnit _PrMinUnit_;/* La hauteur min est exprimee en
-				     points typo, en 1/10 de
-				     caracteres, etc. */
-	  boolean  _PrMinAttr_;/* Le champ suivant est un numero
-				      d'attribut ou une valeur */
-	  int  _PrMinValue_;    /* Valeur de la hauteur minimum */
+	  TypeUnit _PrMinUnit_;	/* the min height is expressed in picas,
+				   1/10 of a character, etc. */
+	  boolean  _PrMinAttr_;	/* the following field is an attribute number
+				   or a value */
+	  int  _PrMinValue_;    /* value of the minimum height */
 	} s2;
 	struct	/* PRuleType = PtVertRef, PtHorizRef, PtVertPos, PtHorizPos*/
 	{
@@ -479,7 +474,7 @@ typedef struct _PresRule
 	{
 	  BAlignment _PrAdjust_;
 	} s6;
-	/* synchroniser cette structure avec PictInfo */
+	/* synchronize this structure with PictInfo */
 	struct	/* PRuleType = PtPictInfo */
 	{
 	  int		PicXArea, PicYArea, PicWArea, PicHArea;
@@ -516,80 +511,78 @@ typedef struct _PresRule
 #define PrAdjust u.s2.u.s6._PrAdjust_
 #define PrPictInfo u.s2.u.s7
 
-/* operation sur compteur */
+/* operation on a counter */
 typedef enum
 {
   CntrSet, CntrAdd, CntrRank, CntrRLevel
 } CounterOp;
 
-/* une operation elementaire pour un compteur */
+/* an elementary operation on a counter */
 typedef struct _CntrItem
 {
-  CounterOp       CiCntrOp;	/* l'operation */
-  int             CiElemType;	/* numero du type d'element (si CECatElem =
-				   ElementStruct) qui declenche l'operation */
-  int		  CiAscendLevel;  /* Level du parent que l'on souhaite compter
-				   pour structures recursives */
-  int          CiViewNum;	/* numero de la vue a laquelle se rapportent
-				   les pages a compter (si CiElemType est une
-				   page) */
-  int             CiParamValue;	/* valeur du parametre de l'operation */
-  int  CiInitAttr;	/* TtAttribute d'un ascendant qui donne sa valeur
-				   initiale au compteur, 0 si la valeur initial
-				   ne depend pas d'un attribut */
-  int  CiReinitAttr;/* TtAttribute qui donne sa valeur au compteur
-				   pour l'element qui le porte et les elements
-				   suivants, 0 si pas de reinitialisation */
+  CounterOp       CiCntrOp;	/* the operation */
+  int             CiElemType;	/* number of the element type (if CECatElem =
+				   ElementStruct) triggering the operation */
+  int		  CiAscendLevel;  /* level of the parent we wish to count for
+				     recursive structures */
+  int          CiViewNum;	/* number of the view to which the pages to
+				   count refer (if CiElemType is a page) */
+  int             CiParamValue;	/* value of the operation parameter*/
+  int  CiInitAttr;	        /* TtAttribute of an ascendent that gives the
+				   counter its initial value, 0 if the initial
+				   value does not depend on any attribute */
+  int  CiReinitAttr;	        /* TtAttribute that gives its value to the
+				   counter for the element that carries it and the
+				   following elements, 0 if no re-initialization */
 } CntrItem;
 
-/* un compteur */
+/* a counter */
 typedef struct _Counter
 {
-  int		 CnNItems;	/* Nombre d'operations sur ce compteur */
-  CntrItem        CnItem[MAX_PRES_COUNT_ITEM];	/* les operations */
-  int		 CnNPresBoxes;	/* Nombre d'elements dans CnPresBox */
-  int   CnPresBox[MAX_PRES_COUNT_USER];  /* liste des numeros de type des
-				   boites de presentation utilisant le compteur
-				   dans leur contenu */
+  int		 CnNItems;	/* number of operations on this counter */
+  CntrItem        CnItem[MAX_PRES_COUNT_ITEM];	/* the operations */
+  int		 CnNPresBoxes;	/* Number of elements in CnPresBox */
+  int   CnPresBox[MAX_PRES_COUNT_USER];  /* list of the type numbers of the
+					    presentation boxes using the
+					    counter in their content */
   boolean	 CnMinMaxPresBox[MAX_PRES_COUNT_USER];
-  int		 CnNTransmAttrs; /* nombre d'attributs externes auxquels est
-				   transmise la valeur du compteur */
-  Name		 CnTransmAttr[MAX_TRANSM_ATTR]; /* noms des attributs auxquels est
-				   transmise la valeur du compteur */
-  int		 CnTransmSSchemaAttr[MAX_TRANSM_ATTR]; /* numero de type des
-				   documents externes ou sont definis les
-				   attributs CnTransmAttr */
-  int		 CnNCreators;	/* Nombre d'elements dans CnCreator */
-  int   CnCreator[MAX_PRES_COUNT_USER]; /* liste des numeros de type de
-				   boite qui creent d'autres boites selon la
-				   valeur du compteur. */
+  int		 CnNTransmAttrs; /* number of external attributes to which
+				    the counter value is transmitted */ 
+  Name		 CnTransmAttr[MAX_TRANSM_ATTR]; /* names of the attributes
+					   to which the counter value is transmitted */
+  int		 CnTransmSSchemaAttr[MAX_TRANSM_ATTR]; 	/* type number of
+					   the external documents where the
+					   CnTransmAttr are defined */
+  int		 CnNCreators;	/* Number of elements in CnCreator */
+  int   CnCreator[MAX_PRES_COUNT_USER];	/* list of type numbers of the box
+				   that create other boxes depending on the
+				   counter value */
   boolean	 CnMinMaxCreator[MAX_PRES_COUNT_USER];
-  boolean        CnPresBoxCreator[MAX_PRES_COUNT_USER];	/* indique si la boite
-				   correspondante de CnCreator est une boite
-				   de presentation ou non */
-  int		 CnNCreatedBoxes; /* Nombre d'elements dans CnCreatedBox */
-  int   CnCreatedBox[MAX_PRES_COUNT_USER]; /* liste des numeros de type des
-				   boites de presentation creee selon la valeur
-				   du compteur */
+  boolean        CnPresBoxCreator[MAX_PRES_COUNT_USER];	/* indicates whether the
+				   box corresponding of CnCreator is a presentation box */
+  int		 CnNCreatedBoxes; /* Number of elements in CnCreatedBox */
+  int   CnCreatedBox[MAX_PRES_COUNT_USER];	/* list of type numbers of
+				   the presentation boxes created in regards to the
+				   counter value */
   boolean	 CnMinMaxCreatedBox[MAX_PRES_COUNT_USER];
-  boolean        CnPageFooter;	/* ce compteur est utilise' en bas de  page */
+  boolean        CnPageFooter;	/* this counter is used in a footer */
 } Counter;
 
-/* une constante de presentation */
+/* a presentation constant */
 typedef struct _PresConstant
 {
-  BasicType     PdType;	/* type de la constante */
-  char           PdAlphabet;	/* alphabet de la constante */
-  char           PdString[MAX_PRES_CONST_LEN];	/* chaine constante de presentation,
-				   terminee par un NUL */
+  BasicType     PdType;				/* type of the constant */
+  char           PdAlphabet;			/* alphabet of the constant */
+  char           PdString[MAX_PRES_CONST_LEN];	/* constant presentation string,
+				   		terminated by a NUL character */
 } PresConstant;
 
-/* une variable de presentation est la concatenation des resultats de
-   plusieurs elements */
+/* a presentation variable is the concatenation of the results of various
+   elements */
 typedef struct _PresVariable
 {
-    int		 PvNItems;	/* nombre effectif d'elements*/
-    PresVarItem      PvItem[MAX_PRES_VAR_ITEM];   /* liste des elements */
+    int		 PvNItems;	/* effective number of elements */
+    PresVarItem      PvItem[MAX_PRES_VAR_ITEM]; /* list of the elements */  
 } PresVariable;
 
 typedef enum 
@@ -598,56 +591,55 @@ typedef enum
 } AttrComparType;
 
 
-/* un cas d'application de regles de presentation pour un attribut a
-   valeur numerique */
+/* a case of presentation rules application for a numerical value
+   attribute */
 typedef struct _NumAttrCase
 {
-  AttrComparType  CaComparType;/* type des elements de comparaison */
-  int	 	  CaLowerBound; /* valeur minimum de l'attribut pour que les
-				   regles de presentation soient appliquees */
-  int	 	  CaUpperBound;	/* valeur maximum de l'attribut pour que les
-				   regles de presentation soient appliquees */
-  PtrPRule    CaFirstPRule;/* premiere regle de la chaine des regles a
-				   appliquer quand la valeur de l'attribut est
-				   dans l'intervalle */
+  AttrComparType  CaComparType;	/* type of the comparison elements */
+  int	 	  CaLowerBound; 	/* minimum value of the attribute such that
+					   the presentation rules are applied */
+  int	 	  CaUpperBound;	/* maximum value of the attribute such that
+				   the presentation rules are applied */
+  PtrPRule    CaFirstPRule;	/* first rule of the chain of rules to apply
+				   when the attribute value is in the interval */
 } NumAttrCase;
 
-/* presentation d'un attribut logique, selon son type */
+/* presentation of a logical attribute, according to its type */
 typedef struct _AttributePres
 {
-  int     ApElemType;/* Type d'element auquel s'applique les regles
-				  de presentation, 0 si les regles
-				  s'appliquent quel que soit le type d'elem*/
-  struct _AttributePres *ApNextAttrPres; /* le paquet de regles de presentation
-					  pour l'element suivant */
+  int     ApElemType;	/* type of element to which the presentation rules
+			   apply, 0 if the rules apply whatever the element
+			   type is */
+  struct _AttributePres *ApNextAttrPres; 	/* the packet of presentation rules
+						   for the next element */
   union
   {
     struct
     {
-      int	  _ApNCases_;	/* nombre de cas d'application de
-				   regles de presentation */
-      NumAttrCase  _ApCase_[MAX_PRES_ATTR_CASE]; /* les cas d'application de
-					      regles de presentation */
+      int	  _ApNCases_;	/* number of application cases for the presentation
+				   rules */
+      NumAttrCase  _ApCase_[MAX_PRES_ATTR_CASE]; 	/* the cases of application
+				   of the presentation rules */
     } s0;
     struct
     {
-      PtrPRule _ApRefFirstPRule_; /* premiere regle de la chaine des
-					 regles a appliquer pour l'attribut*/
+      PtrPRule _ApRefFirstPRule_;     /* first rule in the string of rules
+					 to apply for the attribute */
     } s1;
     struct
     {
-      Name	   _ApString_;	/*la valeur qui declenche l'application
-				  des regles de presentation */
-      PtrPRule _ApTextFirstPRule_;	/* premiere regle de la chaine des
-				   regles a appliquer pour cette val */
+      Name	   _ApString_;	/* the value triggering the application of the
+				   presentation rules */
+      PtrPRule _ApTextFirstPRule_;    /* first rule in the string of rules
+					 to apply for this value */
     } s2;
     struct
     {
-      PtrPRule _ApEnumFirstPRule_[MAX_ATTR_VAL + 1]; /* pour chaque valeur de
-					   l'attribut, dans l'ordre de la table
-					   AttrEnumValue, adresse de la premiere
-					   regle de presentation associee a
-					   cette valeur */
+      PtrPRule _ApEnumFirstPRule_[MAX_ATTR_VAL + 1]; /* for each value of the
+					   attribute, in the order of the table
+					   AttrEnumValue, address of the first
+					   presentation rule associated with
+					   this value */
     } s3;
   } u;
 } AttributePres;
@@ -659,159 +651,160 @@ typedef struct _AttributePres
 #define ApTextFirstPRule u.s2._ApTextFirstPRule_
 #define ApEnumFirstPRule u.s3._ApEnumFirstPRule_
 
-/* table de noms de vues */
+/* view names table */
 typedef Name     ViewTable[MAX_VIEW];
 
-/* description d'une vue a imprimer */
+/* description of a view to print */
 typedef struct _PrintedView
 {
-    boolean     VpAssoc;	/* c'est une vue d'elements associes */
-    int	 	VpNumber;    	/* numero de la vue, ou du type de la liste
-				   d'elements associes, si VpAssoc. */
+    boolean     VpAssoc;	/* it is a view of associated elements */
+    int	 	VpNumber;    	/* number of the view, or of the type of the
+				   associated elements list if VpAssoc. */
 } PrintedView;
 
-typedef PtrPRule PtrPRuleTable[MAX_RULES_SSCHEMA];    /* Table des adresses de
-				  regles de presentation des Types */
+typedef PtrPRule PtrPRuleTable[MAX_RULES_SSCHEMA];  /* Table of the addresses
+				  of the presentation rules of the Types */
 
-/* une regle de transmission d'une valeur d'element a un attribut */
-/* d'un document inclus */
+/* a rule of transmission of a value from an element to an included
+   document attribute */
 typedef struct _TransmitElem
 {
-    int		TeTargetDoc;	/* indice de la regle de structure */
-				/* qui definit le type de document inclus */
-    Name		TeTargetAttr;	/* nom de l'attribut du document */
-				/* inclus auquel on transmet la valeur de */
-				/* l'element */
+    int		TeTargetDoc;	/* index of the structure rule defining
+				   the included document type */
+    Name		TeTargetAttr;  /* name of the included document
+				   attribute to which the element value
+				   is transmitted */
 } TransmitElem;
 
-typedef boolean InheritAttrTable[MAX_ATTR_SSCHEMA];	/* cette table attachee a un
-					  element indique quels sont les
-					  attributs dont herite cet element */
-typedef boolean ComparAttrTable[MAX_ATTR_SSCHEMA]; /* cette table attachee a un
-					  attribut indique quels sont les
-					  attributs qui se comparent a lui
-					  pour la presentation */
+typedef boolean InheritAttrTable[MAX_ATTR_SSCHEMA];	/* this table is
+                                          attached to an element and
+					  indicates what are the elements
+					  that this attribute inherits */
+typedef boolean ComparAttrTable[MAX_ATTR_SSCHEMA]; /* this table is
+					  attached to an element and
+					  indicates what are the attributes
+					  comparing themselves to it for
+					  presentation */
 
-/* un schema de presentation charge' en memoire */
+/* a presentation schema loaded in memory */
 typedef struct _PresentSchema
 {
-  PtrPSchema    PsNext;    		/* pour le chainage des blocs libres */
-  Name	 	PsStructName;    	/* nom du schema de structure */
-  Name		PsPresentName;		/* nom de ce schema de presentation */
-  int	 	PsStructCode;    	/* code identifiant la version de
-					   ce schema de structure */
-  int		PsNViews;	    	/* nombre de vues */
-  ViewTable       PsView;    		/* definition des vues */
-  boolean       PsPaginatedView[MAX_VIEW]; /* indique les vues qui */
- 				        /* sont decoupees en pages */
-  boolean       PsColumnView[MAX_VIEW];	/* indique les vues qui */
-					/* sont decoupees en colonnes */
-  int		PsNPrintedViews;		/* nombre de vues a imprimer */
-  PrintedView    PsPrintedView[MAX_PRINT_VIEW];/* les vues a imprimer */
-  boolean       PsExportView[MAX_VIEW];    /* indique les vues qui affichent les
-					   seuls elements exportes */
-  int		PsNCounters;		/* nombre de compteurs */
-  int		PsNConstants;		/* nombre de constantes de present. */
-  int		PsNVariables;		/* nombre de variables de present. */
-  int		PsNPresentBoxes;	/* nombre de boites de presentation et
-					   de mise en page */
-  PtrPRule  PsFirstDefaultPRule;	/* debut de la chaine des regles par
-					   defaut */
-  Counter      PsCounter[MAX_PRES_COUNTER]; /* compteurs */
-  PresConstant     PsConstant[MAX_PRES_CONST];	/* constantes de presentation */
-  PresVariable       PsVariable[MAX_PRES_VARIABLE];	/* variables de presentation */
-  PresentationBox        PsPresentBox[MAX_PRES_BOX]; /* descriptions des boites de
-					   presentation et de mise en page */
-	/* Pour la presentation en colonnes, la boite numero 0 */
-	/* contient la boite Groupe de colonnes, la boite 1 contient */
-	/* la colonne de gauche, etc. */
-    
-  AttributePres *PsAttrPRule[MAX_ATTR_SSCHEMA];/* pointeurs sur les regles de 
-					   presentation des attributs logiques,
-					   dans l'ordre de la table
+  PtrPSchema    PsNext;    		/* for free blocks linking */
+  Name	 	PsStructName;    	/* name of the structure schema */
+  Name		PsPresentName;		/* name of this presentation schema */
+  int	 	PsStructCode;    	/* code identifying the version of this
+					   structure schema */
+  int		PsNViews;	    	/* number of views */
+  ViewTable       PsView;    		/* definition of the views */
+  boolean       PsPaginatedView[MAX_VIEW]; /* indicates the paginated views */
+  boolean       PsColumnView[MAX_VIEW];	/* indicates the views separated in
+					   columns */
+  int		PsNPrintedViews;		/* number of views to print */
+  PrintedView    PsPrintedView[MAX_PRINT_VIEW];/* the views to print */
+  boolean       PsExportView[MAX_VIEW];    /* indicates the views that display
+					      only the exported elements */
+  int		PsNCounters;		/* number of counters */
+  int		PsNConstants;		/* number of presentation constants */
+  int		PsNVariables;		/* number of presentation variables */
+  int		PsNPresentBoxes;	/* number of presentation and layout
+					   boxes */
+  PtrPRule  PsFirstDefaultPRule;	/* beginning of the default rules
+					   string */
+  Counter      PsCounter[MAX_PRES_COUNTER]; /* counters */
+  PresConstant     PsConstant[MAX_PRES_CONST];	/* presentation constants */
+  PresVariable       PsVariable[MAX_PRES_VARIABLE]; /* presentation variables*/
+  PresentationBox        PsPresentBox[MAX_PRES_BOX]; /* descriptions of the
+							presentation and layout
+							boxes */
+        /* For the columns layout, box number 0 contains the Column group box
+	   box number 1 contains the left-hand column, etc. */
+  AttributePres *PsAttrPRule[MAX_ATTR_SSCHEMA];/* pointers on the presentation
+					   rules of the logical attributes,
+					   in the same order than in the table
 					   StructSchema.SsAttribute */
-  int		PsNAttrPRule[MAX_ATTR_SSCHEMA]; /* nombre de paquets de
-					   regles de presentation pour chaque
-					   attribut logique, ie taille des
-					   chaines de AttributePres dans la
-					   table PsAttrPRule, dans l'ordre de
-					   la table StructSchema.SsAttribute */
-  PtrPRuleTable	PsElemPRule;    	/* pointeurs sur le debut de la chaine
-					  de regles de presentation specifiques
-					  a chaque type d'element, dans le meme
-					  ordre que dans la table
-					  StructSchema.SsRule */
-    
-  int    	PsNHeirElems[MAX_ATTR_SSCHEMA]; /* pour chaque attribut,
-					  dans le meme ordre que dans la table
-					  StructSchema.SsAttribute, indique le
-					  nombre d'elements pouvant heriter de
-					  l'attribut */
-  int    	PsNInheritedAttrs[MAX_RULES_SSCHEMA]; /* pour chaque type d'element,
-					  dans le meme ordre que dans la table
-					  StructSchema.SsRule, indique le
-					  nombre d'attributs herites par
-					  l'element */
-  InheritAttrTable *PsInheritedAttr[MAX_RULES_SSCHEMA]; /* pour chaque type
-					  d'element, dans le meme ordre que
-					  dans la table StructSchema.SsRule,
-					  pointe sur la table indiquant quels
-					  sont les attr herites par l'element*/
-  int    	PsNComparAttrs[MAX_ATTR_SSCHEMA]; /* pour chaque attribut
-					  dans le meme ordre que dans la table
-					  StructSchema.SsAttribute, indique le
-					  nombre d'attributs se comparant a
-					  l'attribut pour en deduire de la
+  int		PsNAttrPRule[MAX_ATTR_SSCHEMA]; /* number of presentation rules
+					   packets for each logical attribute,
+					   i.e. size of the strings of
+					   AttributePres in the table PsAttrPRule
+					   in the same order than in the table
+					   StructSchema.SsAttribute */
+  PtrPRuleTable	PsElemPRule;    	/* pointers on the beginning of the
+					   string of presentation rules relating
+					   to each type of element, in the same
+					   order than in tha table
+					   StructSchema.SsRule */
+  int    	PsNHeirElems[MAX_ATTR_SSCHEMA]; /* indicates for each attribute,
+					  in the same order than in the table
+					  StructSchema.AsAttribute, the number
+					  of elements that can inherit from the
+					  attribute */
+  int    	PsNInheritedAttrs[MAX_RULES_SSCHEMA]; /* points for each element,
+					  in the same order than in the table
+					  StructSchema.SsRule, on the table
+					  indicating the number of attributes
+					  inherited by the element */
+  InheritAttrTable *PsInheritedAttr[MAX_RULES_SSCHEMA]; /* points for each type
+					  of element, in the same order than in
+					  the table StructSchema.SsRule, on the
+					  table indicating what are the attributes
+					  inherited by the element */
+  int    	PsNComparAttrs[MAX_ATTR_SSCHEMA]; /* indicates for each attribute,
+					  in the same order than in the table
+					  StructSchema.SsRule, the number of
+					  attributes comparing themselves to
+					  the attribute in order to deduce the
 					  presentation */
-  ComparAttrTable *PsComparAttr[MAX_ATTR_SSCHEMA]; /* pour chaque attr,
-					  dans le meme ordre que dans la table
-					  StructSchema.SsAttribute, pointe sur la
-					  table indiquant quels attributs se
-					  comparent a l'attribut pour en
-					  deduire une presentation */
-  boolean     PsAcceptPageBreak[MAX_RULES_SSCHEMA];/* pour chaque type d'element,
-					  dans le meme ordre que dans la table
-					  StructSchema.SsRule,	indique si
-					  l'element peut etre coupe' en bas de
-					  page. */
-  boolean     PsAcceptLineBreak[MAX_RULES_SSCHEMA];/* pour chaque type d'element,
-					  dans le meme ordre que dans la table
-					  StructSchema.SsRule,	indique si
-					  l'element peut etre coupe' en bout
-					  de ligne. */
-  boolean     PsBuildAll[MAX_RULES_SSCHEMA];    /* pour chaque type d'element,
-					  dans le meme ordre que dans la table
-					  StructSchema.SsRule, indique si
-					  l'image de la boite doit etre
-					  construite d'un seul bloc ou peut
-					  etre fractionnee. */
-  boolean	PsNotInLine[MAX_RULES_SSCHEMA];	/* pour chaque type d'element,
-					  dans le meme ordre que dans la table
-					  StructSchema.SsRule,	indique que
-					  l'element ne doit pas etre pris en
-					  compte dans la mise en lignes */
-  boolean     PsInPageHeaderOrFooter[MAX_RULES_SSCHEMA];    /* pour chaque type d'element,
-					  dans le meme ordre que dans la table
-					  StructSchema.SsRule,indique si
-					  l'element est affiche'dans le corps
-					  des pages (si faux) ou dans une boite
-					  de haut ou bas de page (si vrai)  */
-  boolean     PsAssocPaginated[MAX_RULES_SSCHEMA];/* pour chaque type d'element,
-					  dans le meme ordre que dans la table
-					  StructSchema.SsRule, indique si
-					  l'element est mis en pages
-					  (significatif uniquement pour les
-					  listes d'elements associes). */
-  int		PsElemTransmit[MAX_RULES_SSCHEMA];	/* pour chaque type d'element,
-					  dans le meme ordre que dans la table
-					  StructSchema.SsRule, indice dans la
-					  table SPTransmit de l'entree qui
-					  donne la transmission des valeurs de
-					  l'element aux attributs des documents
-					  inclus */
-  int		PsNTransmElems;		/* nombre d'entrees dans la table
-					  PsTransmElem */
-  TransmitElem	PsTransmElem[MAX_TRANSM_ELEM];/* table des transmissions des
-					  des valeurs d'element a des attributs
-					  de documents inclus */
+  ComparAttrTable *PsComparAttr[MAX_ATTR_SSCHEMA]; /* points for each 
+attribute,
+					  in the same order than in the table
+					  StructSchema.SsRule, on the table
+					  indicating which attribute compare
+					  themselves to the attribute in order to
+					  deduce a presentation */
+  boolean     PsAcceptPageBreak[MAX_RULES_SSCHEMA];/* indicates for each 
+element
+					  type, in the same order than in the
+					  table StructSchema.SsRule, if the
+					  element can be cut at the bottom of
+					  a page */
+  boolean     PsAcceptLineBreak[MAX_RULES_SSCHEMA];/* indicates for each 
+element
+					  type, in the same order than in the
+					  table StructSchema.SsRule, if the
+					  element can be cut at the end of a
+					  line */
+  boolean     PsBuildAll[MAX_RULES_SSCHEMA];    /* indicates for each element
+					  type, in the same order than in the
+					  table StructSchema.SsRule, if the
+					  image of the box must be built in one
+					  piece or if it can be divided */
+  boolean     PsNotInLine[MAX_RULES_SSCHEMA];	/* indicates for each element
+					  type, in the same order than in the
+					  table StructSchema.SsRule, that the
+					  element is not to be taken into
+					  account when making lines */
+  boolean     PsInPageHeaderOrFooter[MAX_RULES_SSCHEMA]; /* indicates for each 
+element
+					  type, in the same order than in the
+					  table StructSchema.SsRule, if the
+					  element is displayed in the body of
+					  the pages (if false) or in a footer
+					  or header box (if true) */
+  boolean     PsAssocPaginated[MAX_RULES_SSCHEMA];/* indicates for each element
+					  type, in the same order than in the
+					  table StructSchema.SsRule, if the
+					  element is paginated (meaningful only
+					  for the associated elements lists) */
+  int	      PsElemTransmit[MAX_RULES_SSCHEMA];/* for each element
+					  type, in the same order than in the
+					  table StructSchema.SsRule, index in the
+					  table SPTransmit of the entry giving
+					  the transmission of the element values
+					  to the attributes of the included
+					  documents */
+  int	      PsNTransmElems;	       /* number of entries in the table PsTransmElem */
+  TransmitElem	PsTransmElem[MAX_TRANSM_ELEM];/* table of the transmissions of 
+the
+					  element values to attributes of
+					  included documents */
 } PresentSchema;
