@@ -1486,7 +1486,7 @@ boolean             before;
 		  if (pSibling->ElLeafType == LtPairedElem)
 		     /* skip the paired element */
 		     DeleteNextChar (frame, pSibling, before);
-		  else if (pSibling->ElLeafType == LtText)
+		  else if (pSibling->ElTypeNumber == CharString + 1)
 		     if (before)
 		       {
 			  /* set selection after the last character of the string */
@@ -1504,7 +1504,7 @@ boolean             before;
 			  /* simulate a delete */
 			  TtcDeleteSelection (0, 0);
 		       }
-		  else if (pSibling->ElLeafType == LtPicture)
+		  else /* if (pSibling->ElLeafType == LtPicture) */
 		    {
 			  /* set selection before the first character of the string */
 			  SelectElement (pDoc, pSibling, FALSE, FALSE);
