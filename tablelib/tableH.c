@@ -404,14 +404,14 @@ static ThotBool  GiveAttrWidth (PtrAbstractBox pAb, int zoom,
       found = FALSE;
       while (!found && pAttr != NULL)
 	if (pAttr->AeAttrNum == attrWidth &&
-	    pAttr->AeAttrSSchema->SsCode == pSS->SsCode &&
+	    pAttr->AeAttrSSchema == pSS &&
 	    (pAttr->AeAttrType == AtNumAttr || pAttr->AeAttrType == AtEnumAttr))
 	  {
 	    found = TRUE;
             *width = PixelValue (pAttr->AeAttrValue, UnPixel, NULL, zoom);
 	  }
 	else if (pAttr->AeAttrNum == attrPercent &&
-	    pAttr->AeAttrSSchema->SsCode == pSS->SsCode &&
+	    pAttr->AeAttrSSchema == pSS &&
 	    (pAttr->AeAttrType == AtNumAttr || pAttr->AeAttrType == AtEnumAttr))
 	  {
 	    found = TRUE;
@@ -720,6 +720,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
       sumPercent = sumPercent * width / 100;
       if (min + sum + sumPercent > width)
 	{
+	  /* table contents too large */
 	  for (cRef = 0; cRef < cNumber; cRef++)
 	    if (colPercent[cRef])
 	      {
@@ -732,6 +733,16 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
 		sum += colWidth[cRef];
 	      }
 	  sumPercent = 0;
+	}
+      else if (sumPercent < width - sum - max)
+	{
+	  /* table contents too narrow */
+	  for (cRef = 0; cRef < cNumber; cRef++)
+	    if (colPercent[cRef])
+	      colPercent[cRef] = 0;
+	  sumPercent = 0;
+	  min += minOfPercent;
+	  max += maxOfPercent;
 	}
     }
 #ifdef TAB_DEBUG
@@ -1169,10 +1180,10 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
 			  pAttr = pAb->AbElement->ElFirstAttr;
 			  foundH = FALSE;
 			  foundV = FALSE;
-			  while ((!foundH || !foundV) && pAttr != NULL)
+			  while ((!foundH || !foundV) && pAttr)
 			    {
 			      if (pAttr->AeAttrNum == attrVSpan &&
-				  pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
+				  pAttr->AeAttrSSchema == pSS)
 				{
 				  if (pAttr->AeAttrType == AtEnumAttr || pAttr->AeAttrType == AtNumAttr)
 				    {
@@ -1202,7 +1213,7 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
 				    }
 				}
 			      if (pAttr->AeAttrNum == attrHSpan &&
-				  pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
+				  pAttr->AeAttrSSchema == pSS)
 				{
 				  foundH = TRUE;
 				  if (pAttr->AeAttrType == AtEnumAttr ||
@@ -1306,7 +1317,6 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
 	    {
 	      realMin += colWidth[cRef];
 	      realMax += colWidth[cRef];
-	      span++;
 	    }
 	  else
 	    {
