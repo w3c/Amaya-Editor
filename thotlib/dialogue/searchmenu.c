@@ -907,7 +907,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
 			search_messagedialog( (wxWindow*) NULL,
 					      TtaConvMessageToWX (TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE)), 
 					      TtaConvMessageToWX (wxCaption),
-					      (long) wxOK | wxICON_EXCLAMATION);
+					      (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
 		      search_messagedialog.ShowModal(); 
 		    }
 		}
@@ -917,7 +917,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
 		    search_messagedialog( (wxWindow*) NULL,
 					  TtaConvMessageToWX (TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE)), 
 					  TtaConvMessageToWX (wxCaption),
-					  (long) wxOK | wxICON_EXCLAMATION);
+					  (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
 		  search_messagedialog.ShowModal();
 		}
 #endif /* _WX */

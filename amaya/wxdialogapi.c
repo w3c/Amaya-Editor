@@ -335,7 +335,7 @@ ThotBool CreateCSSDlgWX( int ref,
 			 ThotWindow parent,
 			 int nb_item,
 			 char *items,
-			 char *title )
+			 char *title)
 {
 #ifdef _WX
   wxString      wx_title = TtaConvMessageToWX( title );
@@ -349,6 +349,16 @@ ThotBool CreateCSSDlgWX( int ref,
       wx_items.Add( TtaConvMessageToWX( &items[index] ) );
       index += strlen (&items[index]) + 1; /* one entry length */
       i++;
+    }
+
+  if ( nb_item <= 0 )
+    {
+      wxMessageDialog messagedialog( NULL,
+				     TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_NO_CSS)), 
+				     wx_title,
+				     (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
+      messagedialog.ShowModal();
+      return FALSE;
     }
 
   /* create the dialog */
