@@ -2879,12 +2879,14 @@
 	<message xml:lang="fr">Ajouter ou modifier le doctype du document supprimera certains éléments ou attributs</message>
 	<message xml:lang="it">Aggiungere o cambiare doctype eliminerà alcuni elementi o attributi</message>
 	<message xml:lang="de">Durch das Hinzufügen oder Ändern des Dokumententyps gehen Elemente oder Attribute verloren</message>
+	<message xml:lang="es">Al anadir o cambiar la declaración de tipo de documento se eliminarán o cambiarán algunos elementos o atributos</message>á
 </label>
 <label define="AM_CHANGE_DOCTYPE2">
 	<message xml:lang="en">Please confirm operation</message>
 	<message xml:lang="fr">Confirmez-vous l'opération ?</message>
 	<message xml:lang="it">Confermi l'operazione?</message>
 	<message xml:lang="de">Soll die Operation ausgeführt werden ?</message>
+	<message xml:lang="es">Confirme la operación, por favor</message>
 </label>
 <label define="AM_USE_XHTML_MIMETYPE">
 	<message xml:lang="en">Use the application/xhtml+xml MIME type for XHTML documents</message>
