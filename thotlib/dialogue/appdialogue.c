@@ -262,13 +262,8 @@ LRESULT CALLBACK ComboBoxProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
 
 	case WM_COMMAND:
 
-		switch (wParam)
+		switch (HIWORD(wParam))
 		{
-
-		case CBN_SELENDOK:
-				SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
-				return 0;
-
 		case WM_KEYDOWN:
 			switch (wParam)
 			{
@@ -286,40 +281,23 @@ LRESULT CALLBACK ComboBoxProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
 			return 0; 
 			}
  
-
-			
-		case BN_CLICKED:
-			return 0;
-		case CBN_CLOSEUP:
-			return 0;
 		case CBN_DROPDOWN:
 			SendMessage (hwnd, CB_SHOWDROPDOWN, 0, 0);
 			break;
+		case CBN_SELCHANGE:
+			CallWindowProc (lpfnComboBoxWndProc, hwnd, msg, wParam, lParam);
+			SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
+			return 0;
 		case CBN_EDITCHANGE:
 			SendMessage (hwnd, CB_GETEDITSEL, 0, 0);
 			break;
 		case VK_RETURN:
 			SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
 			return 0;
+		case CBN_EDITUPDATE:
+			SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
+			break;
 		}
-		break;
- 
-	case BN_CLICKED:
-		return 0;
-	case CBN_CLOSEUP:
-		break;
-	case CBN_DROPDOWN:
-		/*SendMessage (hwnd, CB_SHOWDROPDOWN, 1, 0);*/
-		break;
-	case CBN_EDITCHANGE:
-		SendMessage (hwnd, CB_GETEDITSEL, 0, 0);
-		break;
-	case CBN_EDITUPDATE:
-		SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
-		break;
-
-	case CBN_SELCHANGE:
-		SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
 		break;
 
 	case VK_RETURN: 
@@ -2187,6 +2165,9 @@ void InitWdComboBoxList (ThotWindow hwnCB, char *buffer)
   int          cpt = 0;
   char        *ptr, *ptr1;
 
+  /* remove previous entries */
+   SendMessage (hwnCB, CB_RESETCONTENT, 0, (LPARAM) NULL);
+   SetWindowText (hwnCB, buffer);
    ptr = buffer;
   /*  function will stop on double EOS */
   if (buffer)
@@ -2476,9 +2457,6 @@ int TtaAddTextZone (Document doc, View view, char *label,
 							 GWL_WNDPROC, (DWORD) TextZoneProc);
 	  lpfnComboBoxWndProc = (WNDPROC) SetWindowLong (w, GWL_WNDPROC,
 							 (DWORD) ComboBoxProc);
-	  /* Initialize listbox linked to combobox */
-	  InitWdComboBoxList (w, listUrl);
-	  /*FrameTable[frame].showLogo = TRUE;*/
 	  PostMessage (FrMainRef[frame], WM_SIZE, 0, MAKELPARAM (rect.right, rect.bottom));
 #endif /* _WINDOWS */
 	  ret = 1;
@@ -2526,7 +2504,6 @@ void TtaSetTextZone (Document doc, View view, char *listUrl)
 	    {
 #ifdef _WINDOWS
 	      /* Initialize listbox linked to combobox */
-		  SetWindowText (w, listUrl);
 	      InitWdComboBoxList (w, listUrl);
 #else  /* _WINDOWS */
 #ifndef _GTK

@@ -1675,10 +1675,11 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 
   case WM_ENTER:
     hwndTextEdit = GetFocus ();
-    ActiveFrame = frame;
-    APP_TextCallback (hwndTextEdit, frame, NULL);
     if (frame != -1)
+      {
+      APP_TextCallback (hwndTextEdit, frame, NULL);
       SetFocus (FrRef [frame]);
+	}
     return 0L;
 
   case WM_SYSKEYDOWN:
@@ -1686,7 +1687,6 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
     if (frame != -1)
       {
         SetFocus (FrRef [frame]);
-	ActiveFrame = frame;
 	SendMessage (FrRef [frame], mMsg, wParam, lParam);
       }
     return 0L;
@@ -1695,7 +1695,6 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
     if (frame != -1)
 	{
 	  SetFocus (FrRef [frame]);
-	  ActiveFrame = frame;
 	  SendMessage (FrRef [frame], mMsg, wParam, lParam);
 	}
     return 0L;
