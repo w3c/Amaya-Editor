@@ -30,6 +30,7 @@ extern int GetObjectWWW ( int docid,
                           ThotBool error_html,
                           char *content_type );
 extern ThotBool IsW3Path ( const char* path );
+extern void CloseTextInsertion ( void );
 extern void NormalizeURL ( char* orgName,
                            Document doc,
                            char* newName,
@@ -160,6 +161,7 @@ extern int GetObjectWWW (/* int docid,
                             ThotBool error_html,
                             char *content_type */);
 extern ThotBool IsW3Path (/* const char* path */);
+extern void CloseTextInsertion (/* void */);
 extern void NormalizeURL (/* char* orgName,
                              Document doc,
                              char* newName,

@@ -2631,19 +2631,20 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  if ((pCurrentBox->BxWidth > 0 && pCurrentBox->BxHeight > 0) ||
 	      pCurrentBox->BxType == BoPicture)
 	    {
-		  k = EXTRA_GRAPH;
-#ifndef _GLTRANSFORMATION
-	      if (pCurrentBox->BxLMargin)
-		DefClip (frame, pCurrentBox->BxXOrg + pCurrentBox->BxLMargin - k,
-			 pCurrentBox->BxYOrg - k,
-			 pCurrentBox->BxXOrg + pCurrentBox->BxWidth + pCurrentBox->BxLMargin + k,
-			 pCurrentBox->BxYOrg + pCurrentBox->BxHeight + k);
+	      if (pCurrentBox->BxAbstractBox->AbElement->ElTerminal)
+		k = EXTRA_GRAPH;
 	      else
+		k = 0;
+	      if (TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
+				    pAb->AbElement->ElStructSchema))
+		DefClip (frame, -1, -1, -1, -1);
+	      else
+#ifndef _GLTRANSFORMATION
 		DefClip (frame, pCurrentBox->BxXOrg - k, pCurrentBox->BxYOrg - k,
 			 pCurrentBox->BxXOrg + pCurrentBox->BxWidth + k,
 			 pCurrentBox->BxYOrg + pCurrentBox->BxHeight + k);
 #else /* _GLTRANSFORMATION */		
-		DefClip (frame, pCurrentBox->BxClipX - k,
+	        DefClip (frame, pCurrentBox->BxClipX - k,
 			 pCurrentBox->BxClipY - k,
 			 pCurrentBox->BxClipX + pCurrentBox->BxClipW + k,
 			 pCurrentBox->BxClipY + pCurrentBox->BxClipH + k);

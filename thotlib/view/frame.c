@@ -95,7 +95,6 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
    if (frame > 0 && frame <= MAX_FRAME)
      {
 	pFrame = &ViewFrameTable[frame - 1];
-	
 	xb = pFrame->FrClipXBegin - pFrame->FrXOrg;
 	xe = pFrame->FrClipXEnd - pFrame->FrXOrg - xb; 
 	yb = pFrame->FrClipYBegin - pFrame->FrYOrg;
@@ -267,10 +266,10 @@ static void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
       TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
 			pAb->AbElement->ElStructSchema))
     /* repaint the whole window when the fill applies to the document */
-      setWindow = (pAb->AbDocView == 1 &&
-		   (pAb->AbEnclosing == NULL || /* document */
-		    pAb->AbEnclosing->AbEnclosing == NULL || /* html */
-		    pAb->AbEnclosing->AbEnclosing->AbEnclosing == NULL) /* body */);
+    setWindow = (pAb->AbDocView == 1 &&
+		 (pAb->AbEnclosing == NULL || /* document */
+		  pAb->AbEnclosing->AbEnclosing == NULL || /* html */
+		  pAb->AbEnclosing->AbEnclosing->AbEnclosing == NULL) /* body */);
   if (setWindow)
     {
       /* get the maximum of the window size and the root box size */
@@ -280,11 +279,11 @@ static void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
 	h = pBox->BxHeight;
       width = w + 1;
       height = h + 1;
-      xd = xmin - pFrame->FrXOrg;
-      yd = ymin - pFrame->FrYOrg;
+      xd = xmin;
+      yd = ymin;
       if (pBox->BxFill)
 	/* draw the box background */
-	DrawRectangle (frame, 0, 0, xd, yd, width, height,
+	DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height,
 		       pAb->AbForeground, pAb->AbBackground,
 		       pAb->AbFillPattern);
     }
@@ -475,7 +474,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 		  /* box in the current plane */
 		  pBox = pAb->AbBox;
 #ifdef _GL
-		  if (pAb->AbElement && pAb->AbDepth == plane)
+		  if (pAb->AbElement)
 		    {
 		      if (pAb->AbElement->ElTransform)
 			DisplayTransformation (pAb->AbElement->ElTransform, 
@@ -690,7 +689,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
    Return non zero if new abstract boxes were added in order
    to build the corresponding abstract image.
   ----------------------------------------------------------------------*/
-ThotBool            RedrawFrameTop (int frame, int scroll)
+ThotBool RedrawFrameTop (int frame, int scroll)
 {
   PtrBox              topBox = NULL;
   PtrBox              create;

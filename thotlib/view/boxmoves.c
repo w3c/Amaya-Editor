@@ -1903,7 +1903,10 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		{
 		  /* add an extra margin for graphics */
 		  if (pBox->BxLMargin < 0)
-		    k = - pBox->BxLMargin;
+		    {
+		      i -= pBox->BxLMargin;
+		      k = 0;
+		    }
 		  else if (pCurrentAb->AbLeafType == LtGraphics)
 		    k = EXTRA_GRAPH;
 		  else
@@ -2846,7 +2849,10 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 		  j = pBox->BxXOrg + pBox->BxWidth;
 		  /* add margins for graphics */
 		  if (pBox->BxLMargin < 0)
-		    k = - pBox->BxLMargin;
+		    {
+		      i -= pBox->BxLMargin;
+		      k = 0;
+		    }
 		  else if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
 		    k = EXTRA_GRAPH;
 		  else

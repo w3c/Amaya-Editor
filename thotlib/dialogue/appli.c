@@ -3314,90 +3314,90 @@ void GetSizesFrame (int frame, int *width, int *height)
 }
 
 /*----------------------------------------------------------------------
-   DefineClipping limite la zone de reaffichage sur la fenetre frame et   
-   recalcule ses limites sur l'image concrete.             
+  DefineClipping defines the window area to be redisplayed and updates
+  the values in the concrete image.
   ----------------------------------------------------------------------*/
-void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, int *yf, int raz)
+void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd,
+		      int *xf, int *yf, int raz)
 {
-   int              clipx, clipy, clipwidth, clipheight;
+  int              clipx, clipy, clipwidth, clipheight;
 
 #ifndef _GL 
 #ifndef _WINDOWS
 #ifdef _GTK
-   GdkRectangle      rect;
+  GdkRectangle      rect;
 #else /* _GTK */
-   XRectangle        rect;
+  XRectangle        rect;
 #endif /* _GTK */
 #endif /* _WINDOWS */
 #endif /* _GL */
 
-   if (*xd < *xf && *yd < *yf && orgx < *xf && orgy < *yf) {
-	/* On calcule le rectangle de clipping su la fenetre */
-	clipx = *xd - orgx;
-	if (clipx < 0)
-	{
-	   *xd -= clipx;
-	   clipx = 0;
-	}
+  if (*xd < *xf && *yd < *yf && orgx < *xf && orgy < *yf) {
+    /* compute the clipping area in the window */
+    clipx = *xd - orgx;
+    if (clipx < 0)
+      {
+	*xd -= clipx;
+	clipx = 0;
+      }
+    clipy = *yd - orgy;
+    if (clipy < 0)
+      {
+	*yd -= clipy;
+	clipy = 0;
+      }
 
-	clipy = *yd - orgy;
-	if (clipy < 0)
-	{
-	   *yd -= clipy;
-	   clipy = 0;
-	}
-
-	clipwidth = FrameTable[frame].FrWidth + orgx;
-	if (*xf > clipwidth)
-	   *xf = clipwidth;
-	clipheight = FrameTable[frame].FrHeight + orgy;
-	if (*yf > clipheight)
-	   *yf = clipheight;
-	clipwidth = *xf - *xd;
-	clipheight = *yf - *yd;
-	clipy += FrameTable[frame].FrTopMargin;
+    clipwidth = FrameTable[frame].FrWidth + orgx;
+    if (*xf > clipwidth)
+      *xf = clipwidth;
+    clipheight = FrameTable[frame].FrHeight + orgy;
+    if (*yf > clipheight)
+      *yf = clipheight;
+    clipwidth = *xf - *xd;
+    clipheight = *yf - *yd;
+    clipy += FrameTable[frame].FrTopMargin;
 #ifndef _GL
 #ifdef _WINDOWS
     if (!(clipRgn = CreateRectRgn (clipx, clipy, 
-                             clipx + clipwidth, clipy + clipheight)))
-       WinErrorBox (NULL, "DefineClipping");
+				   clipx + clipwidth, clipy + clipheight)))
+      WinErrorBox (NULL, "DefineClipping");
 #else  /* _WINDOWS */ 
 #ifdef _GTK 
-	rect.x = clipx;
-	rect.y = clipy;
-	rect.width = clipwidth;
-	rect.height = clipheight;
-	gdk_gc_set_clip_rectangle (TtLineGC, &rect);	
-	gdk_gc_set_clip_rectangle (TtGreyGC, &rect);
-	gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);
+    rect.x = clipx;
+    rect.y = clipy;
+    rect.width = clipwidth;
+    rect.height = clipheight;
+    gdk_gc_set_clip_rectangle (TtLineGC, &rect);	
+    gdk_gc_set_clip_rectangle (TtGreyGC, &rect);
+    gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);
 #else /* _GTK */
-	rect.x = 0;
-	rect.y = 0;
-	rect.width = clipwidth;
-	rect.height = clipheight;
-	XSetClipRectangles (TtDisplay, TtLineGC, clipx,
-		 clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
-	XSetClipRectangles (TtDisplay, TtGreyGC, clipx,
-		 clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
-	XSetClipRectangles (TtDisplay, TtGraphicGC, clipx,
-		 clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
+    rect.x = 0;
+    rect.y = 0;
+    rect.width = clipwidth;
+    rect.height = clipheight;
+    XSetClipRectangles (TtDisplay, TtLineGC, clipx,
+			clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
+    XSetClipRectangles (TtDisplay, TtGreyGC, clipx,
+			clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
+    XSetClipRectangles (TtDisplay, TtGraphicGC, clipx,
+			clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
 #endif /* _GTK */
 #endif /* _WINDOWS */
-	if (raz > 0)
-	  Clear (frame, clipwidth, clipheight, clipx, clipy);
+    if (raz > 0)
+      Clear (frame, clipwidth, clipheight, clipx, clipy);
 #else /* _GL */
+    
+    GL_SetClipping (clipx,
+		    FrameTable[frame].FrHeight
+		    + FrameTable[frame].FrTopMargin
+		    - (clipy + clipheight),
+		    clipwidth,
+		    clipheight); 
 
-	GL_SetClipping (clipx,
-			FrameTable[frame].FrHeight
-			+ FrameTable[frame].FrTopMargin
-			- (clipy + clipheight),
-			clipwidth,
-			clipheight); 
-
-	if (raz > 0)
-	  ClearAll (frame);
-	  /* Clear (frame, clipwidth, clipheight,  */
-	/* 		 clipx, clipy); */
+    if (raz > 0)
+      ClearAll (frame);
+    /* Clear (frame, clipwidth, clipheight,  */
+    /* 		 clipx, clipy); */
 #endif /*_GL*/
      }
 }

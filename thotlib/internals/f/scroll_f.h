@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern ThotBool WithBackgroundImage ( PtrAbstractBox pAb );
 extern void VerticalScroll ( int frame,
                              int delta,
                              int selection );
@@ -37,6 +38,7 @@ extern ThotBool IsAbsBoxVisible ( int frame,
 
 #else /* __STDC__ */
 
+extern ThotBool WithBackgroundImage (/* PtrAbstractBox pAb */);
 extern void VerticalScroll (/* int frame,
                                int delta,
                                int selection */);

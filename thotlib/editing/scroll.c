@@ -32,16 +32,52 @@
 #include "textcommands_f.h"
 #include "xwindowdisplay_f.h"
 
+/*----------------------------------------------------------------------
+  WithBackgroundImage returns TRUE if the abstract box has a background
+  image.
+  If the abstract box is the root element, checks also if a child element
+  has the exception ExcSetWindowBackground and a background image.
+  ----------------------------------------------------------------------*/
+ThotBool WithBackgroundImage (PtrAbstractBox pAb)
+{
+  PtrAbstractBox       pChild;
+  ThotBool             found;
+
+  if (pAb)
+    {
+      if (pAb->AbDocView == 1 && pAb->AbLeafType == LtCompound &&
+	  pAb->AbPictBackground &&
+	  TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
+			    pAb->AbElement->ElStructSchema))
+	return TRUE;
+      if (pAb->AbEnclosing == NULL)
+	{
+	  /* check also its children */
+	  pAb = pAb->AbFirstEnclosed;
+	  while (pAb)
+	    {
+	      if (WithBackgroundImage (pAb))
+		return TRUE;
+	      pChild = pAb->AbFirstEnclosed;
+	      while (pChild)
+		{
+		  if (WithBackgroundImage (pChild))
+		    return TRUE;
+		  pChild = pChild->AbNext;
+		}
+	      pAb = pAb->AbNext;
+	    }
+	}
+    }
+  return FALSE;
+}
 
 /*----------------------------------------------------------------------
-   VerticalScroll effectue un scroll en avant (delta > 0) ou en arriere   
-   (delta<0).                                              
-   Deplacement par raster-op d'une partie de la fenetre et 
-   reaffichage du reste de la fenetre :                    
-   - soit en avant par RedrawFrameBottom,                       
-   - soit en arriere par RedrawFrameTop.                     
-   Le parametre selection indique s'il faut ge'rer la      
-   selection (valeur 1) ou non (valeur 0).                 
+   VerticalScroll scrolls forward (delta > 0) or backward (delta < 0).
+   Moves by raster-op a part of the window and displays the new part:                  
+   - forwardr by RedrawFrameBottom,                       
+   - backward by RedrawFrameTop.                     
+   The parameter selection is 1 if threre is a selection, 0 if not.
   ----------------------------------------------------------------------*/
 void VerticalScroll (int frame, int delta, int selection)
 {
@@ -90,30 +126,48 @@ void VerticalScroll (int frame, int delta, int selection)
 		    {
 		     if (delta > 0)
 		       {
-			  /* SCROLL AVANT */
+			  /* SCROLL forward */
 			  if (delta > max)
 			     delta = max;
 			  y = delta;
 			  height = hframe - y;
 			  width = lframe + 1;
-			  Scroll (frame, width, height, 0, y, 0, 0);
-			  height = pFrame->FrYOrg + hframe;
-			  DefClip (frame, pFrame->FrXOrg, height,
-				   pFrame->FrXOrg + lframe, height + delta);
+			  if (WithBackgroundImage (pAbb))
+			    /* redisplay the whole window */
+			    DefClip (frame, pFrame->FrXOrg,
+				     pFrame->FrYOrg,
+				     pFrame->FrXOrg + width,
+				     pFrame->FrYOrg + hframe + delta);
+			  else
+			    {
+			      Scroll (frame, width, height, 0, y, 0, 0);
+			      height = pFrame->FrYOrg + hframe;
+			      DefClip (frame, pFrame->FrXOrg, height,
+				       pFrame->FrXOrg + lframe, height + delta);
+			    }
 			  add = RedrawFrameBottom (frame, delta, NULL);
 		       }
 		     else
 		       {
-			  /* SCROLL ARRIERE */
+			  /* SCROLL backward */
 			  if (delta < y)
 			     delta = y;
 			  height = hframe + delta;
 			  width = lframe + 1;
 			  y = -delta;
-			  Scroll (frame, width, height, 0, 0, 0, y);
-			  height = pFrame->FrYOrg;
-			  DefClip (frame, pFrame->FrXOrg, height + delta,
-				   pFrame->FrXOrg + lframe, height);
+			  if (WithBackgroundImage (pAbb))
+			    /* redisplay the whole window */
+			    DefClip (frame, pFrame->FrXOrg,
+				     pFrame->FrYOrg + delta,
+				     pFrame->FrXOrg + width,
+				     pFrame->FrYOrg + hframe);
+			  else
+			    {
+			      Scroll (frame, width, height, 0, 0, 0, y);
+			      height = pFrame->FrYOrg;
+			      DefClip (frame, pFrame->FrXOrg, height + delta,
+				       pFrame->FrXOrg + lframe, height);
+			    }
 			  add = RedrawFrameTop (frame, -delta);
 		       }
 		     /* recompute scrolls */
