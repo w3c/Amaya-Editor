@@ -2581,7 +2581,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   if (pLine)
     {
       y = orgY;
-      if (pBlock->BxType == BoBlock)
+      /*if (pBlock->BxType == BoBlock)*/
 	{
 	  y += pLine->LiYOrg;
 	  if (pLine->LiXMax - pLine->LiRealLength < box->BxWidth)
