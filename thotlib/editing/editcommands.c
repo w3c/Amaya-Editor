@@ -2494,8 +2494,11 @@ static void ContentEditing (int editType)
 	      else if ((pAb->AbLeafType == LtGraphics ||
 			pAb->AbLeafType == LtPolyLine) &&
 		       FromKeyboard)
-		LoadShape ((char) editType, pLine, defaultHeight, defaultWidth,
-			   pBox, pAb, frame);
+		{
+		  LoadShape ((char) editType, pLine, defaultHeight,
+			     defaultWidth, pBox, pAb, frame);
+		  NewContent (pAb);
+		}
 	    }
 	}
       
