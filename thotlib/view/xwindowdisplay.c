@@ -42,6 +42,385 @@
 #include "xwindowdisplay_f.h"
 
 
+#ifdef _GL
+
+#include <gtkgl/gtkglarea.h>
+#include <GL/gl.h>
+#include <GL/glut.h>
+
+#ifdef GLU_VERSION_1_2
+ /* Vertex list when tesselation is called */
+  typedef struct listmem {
+    GLint *data;
+    struct listmem *next;
+  } ListMem;
+
+  ListMem root;
+#endif/*  GLU_VERSION_1_2 */
+
+/* tesselation mode */
+typedef enum {
+  DEFINE, TESSELATED
+} mode_type;
+
+/*----------------------------------------------------------------------
+ GL_SetForeground : set color before drawing a or many vertex
+  ----------------------------------------------------------------------*/
+static void GL_SetForeground (int fg)
+{
+    unsigned short red, green, blue;
+
+    TtaGiveThotRGB (fg, &red, &green, &blue);
+    glColor4ub (red, green, blue, 255);
+}
+
+int BG_Frame=0;
+/*----------------------------------------------------------------------
+  GL_SetBackground : Save background color ('cause also used in GL_Clear)
+  ----------------------------------------------------------------------*/
+static void GL_SetBackground (int bg)
+{   
+  BG_Frame = bg;
+}
+
+/*----------------------------------------------------------------------
+   GL_VideoInvert : 
+   using a transparent yellow instead of inverting... much simpler !   
+  ----------------------------------------------------------------------*/
+static void GL_VideoInvert(int width, int height, int x, int y)
+{
+  glBegin(GL_QUADS);
+  glColor4ub (127, 127, 50, 127);
+  glVertex2i (x, y);
+  glVertex2i (x + width, y);
+  glVertex2i (x +  width, y + height);
+  glVertex2i (x, y + height);
+  glEnd (); 
+}
+
+/*----------------------------------------------------------------------
+   GL_ClearArea
+    Create a plane filled with background color
+    at the size of the clear area
+    (sort of an erase tool, corresponding to a gdk_clear...)
+  ----------------------------------------------------------------------*/
+static void GL_ClearArea(int width, int height, int x, int y)
+{
+  if (!FrameTable[ActiveFrame].WdFrame)
+    return;
+  GL_SetForeground (BG_Frame);
+  glBegin (GL_QUADS);
+  glVertex2i (x, y);
+  glVertex2i (x + width, y);
+  glVertex2i (x +  width, y + height);
+  glVertex2i (x, y + height);
+  glEnd ();
+}
+/*----------------------------------------------------------------------
+   GL_DrawEmptyRectangle Outlined rectangle
+  ----------------------------------------------------------------------*/
+static void  GL_DrawEmptyRectangle (int fg, int x, int y, int width, int height)
+{
+  y = (GLdouble) y;
+  x = (GLdouble) x;
+  width = (GLdouble) width;
+  height = (GLdouble) height; 
+  GL_SetForeground (fg);
+  glBegin (GL_LINE_STRIP);
+  glVertex2d (  x, y );
+  glVertex2d (  x, y + height);
+  glVertex2d (  x +  width, y + height);
+  glVertex2d (  x + width, y);
+  glVertex2d (  x, y );
+  glEnd ();
+
+}
+/*----------------------------------------------------------------------
+   GL_DrawRectangle
+   (don't use glrect because it's exactly the same but require opengl 1.2)
+  ----------------------------------------------------------------------*/
+static void GL_DrawRectangle (int fg, int x, int y, int width, int height)
+{
+  
+  y = (GLdouble) y;
+  x = (GLdouble) x;
+  width = (GLdouble) width;
+  height = (GLdouble) height;    
+  GL_SetForeground (fg);
+  glBegin (GL_POLYGON);
+  glVertex2d (  x, y );
+  glVertex2d (  x + width, y);
+  glVertex2d (  x +  width, y + height);
+  glVertex2d (  x, y + height);
+  glEnd ();
+}
+/*----------------------------------------------------------------------
+   GL_DrawLine
+  ----------------------------------------------------------------------*/
+static void GL_DrawLine (int x1, int y1, int x2, int y2)
+{
+    glBegin (GL_LINES) ;
+    glVertex2d ((GLdouble) x1, 
+		(GLdouble) y1);
+    glVertex2d ((GLdouble) x2, 
+		(GLdouble) y2);
+    glEnd () ;
+}
+/*----------------------------------------------------------------------
+   GL_DrawLines
+  ----------------------------------------------------------------------*/
+static void GL_DrawLines (ThotPoint *point, int npoints)
+{
+  int i;
+
+    glBegin (GL_LINE_STRIP) ;
+    for(i=0; i<npoints; i++) 
+      {
+	glVertex2d ((point + i)->x , 
+		   (point + i)->y) ;
+      }
+    glEnd ();
+}
+/*----------------------------------------------------------------------
+  GL_DrawSegments
+  ----------------------------------------------------------------------*/
+static void GL_DrawSegments (XSegment *point, int npoints)
+{
+  int i;
+
+  for(i=0; i<npoints; i++) 
+    {
+      glBegin (GL_LINE_STRIP) ;
+      glVertex2d ((point + i)->x1 , 
+		  (point + i)->y1) ;
+      glVertex2d ((point + i)->x2 , 
+		  (point + i)->y2) ;
+      glEnd ();	
+    }
+}
+#ifdef GLU_VERSION_1_2
+/*----------------------------------------------------------------------
+  combineCallback :  used to create a new vertex when edges
+  intersect.  coordinate location is trivial to calculate,
+  but weight[4] may be used to average color, normal, or texture 
+  coordinate data.
+  ----------------------------------------------------------------------*/
+/* ARGSUSED */
+void CALLBACK
+myCombine(GLdouble coords[3], void *vertex_data[4], 
+	  GLfloat weight[4], void **dataOut)
+{
+  ListMem *ptr = &root;
+  while (ptr->next) 
+    ptr = ptr->next;
+  ptr->next = malloc(sizeof(ListMem));
+  ptr = ptr->next;
+  ptr->next = 0;
+  ptr->data = malloc(3 * sizeof(GLint));
+  ptr->data[0] = (GLint) coords[0];
+  ptr->data[1] = (GLint) coords[1];
+  ptr->data[2] = (GLint) coords[2];
+  *dataOut = ptr->data;
+}
+#endif
+/*----------------------------------------------------------------------
+ my_error : Displays GLU error 
+ (VERY useful on 50000000000 vertex polygon... 
+ see jasc webdraw butterfly sample )
+  ----------------------------------------------------------------------*/
+void CALLBACK
+my_error(GLenum err)
+{
+  g_print ("%s \n", gluErrorString(err));
+}
+
+
+/* 
+   Number of contour in the 
+   polygon that must be tesselated
+   also used in draw path
+   (don't worry, those static horror 
+   will move when Drawpath will be complete
+   (Elliptic Arc rewrite)
+*/ 
+/***************************/ 
+/* To be malloc'ed !!!!!!!!!!*/
+static int tab[1000];
+static int n_polygon;
+/****************************/
+
+/*----------------------------------------------------------------------
+ tesse :  Tesselation that use GLU library tesselation 
+   (triangulations based on Delaunay algorythms)
+   Compute a polygon,
+   handles 'holes' in the polygon,
+   And create new point (Vertex) that 
+   permits to display the polygon with simpler shape
+   as it calls mycombine to create them
+   (in this case triangles...)
+  ----------------------------------------------------------------------*/
+void 
+tesse(ThotPoint *contours, int contour_cnt)
+{ 
+  int i;
+  mode_type mode;
+  GLdouble data[3];
+  /****************************/
+  /* To be malloc'ed !!!!!!!!!!*/
+  GLint p[100000][2];
+  /****************************/
+  GLUtriangulatorObj *tobj = NULL;
+  int n_poly_count = 0;
+  if (tobj == NULL)
+    tobj = gluNewTess();
+
+/*
+Winding possibilities are :
+GLU_TESS_WINDING_ODD = Classique
+GLU_TESS_WINDING_NONZERO
+GLU_TESS_WINDING_POSITIVE
+GLU_TESS_WINDING_NEGATIVE
+GLU_TESS_WINDING_ABS_GEQ_TWO
+*/ 
+  glEdgeFlag(GL_TRUE);
+  gluTessProperty(tobj,
+		  GLU_TESS_WINDING_RULE, 
+		  GLU_TESS_WINDING_ODD);
+  gluTessProperty(tobj,
+		  GLU_TESS_BOUNDARY_ONLY,
+		  GL_FALSE);
+  gluTessProperty(tobj,
+		  GLU_TESS_TOLERANCE, 
+		  0);
+  if (tobj != NULL) 
+    {
+      gluTessCallback(tobj, GLU_BEGIN, 
+		      (void (CALLBACK*)())glBegin);
+      gluTessCallback(tobj, GLU_END, 
+		      (void (CALLBACK*)())glEnd);
+      gluTessCallback(tobj, GLU_ERROR, 
+		      (void (CALLBACK*)()) my_error); 
+      gluTessCallback(tobj, GLU_VERTEX, 
+		      (void (CALLBACK*)()) glVertex2iv);
+#ifdef GLU_VERSION_1_2
+      root.data = 0;
+      root.next = 0;
+      gluTessCallback(tobj, GLU_TESS_COMBINE, 
+		      (void (CALLBACK*)()) myCombine);
+#endif      
+      gluBeginPolygon(tobj); 
+      /*
+	GLU_EXTERIOR , GLU_INTERIOR, GLU_UNKNOWN, GLU_CCW, GLU_CW
+      */
+      gluNextContour(tobj, GLU_UNKNOWN); 
+      for (i = 0; i < contour_cnt; i++) 
+	{ 
+	  if (i == tab[n_poly_count] 
+	      &&  n_poly_count < n_polygon)
+	    {
+	      n_poly_count++;
+	      gluNextContour(tobj, GLU_UNKNOWN); 
+	    }
+	  data[0] = (GLdouble) (contours[i].x);
+	  data[1] = (GLdouble) (contours[i].y);
+	  data[2] = 0.0;
+	  p[i][0] = (GLint) (contours[i].x);
+	  p[i][1] = (GLint) (contours[i].y);
+	  gluTessVertex(tobj, data, p[i]);
+	} 
+      gluEndPolygon(tobj);
+      mode = TESSELATED;
+#ifdef GLU_VERSION_1_2
+      {
+	ListMem *fptr = root.next;
+	ListMem *tmp;
+	while (fptr) 
+	  {
+	    tmp = fptr->next;
+	    free(fptr->data);
+	    free(fptr);
+	    fptr = tmp;
+	  }
+      }
+#endif
+      gluDeleteTess(tobj);
+    }
+}
+/*----------------------------------------------------------------------
+ GL_DrawPolygon
+  ----------------------------------------------------------------------*/
+static void GL_DrawPolygon (ThotPoint *points, int npoints)
+{
+  /*
+    perhaps we ca extract the tesselation algorithms from 
+    the GLu library as 
+    http://www.vterrain.org/Implementation/Libs/triangulate.html
+    suggests...
+    so I just let this interface for now...
+   */
+  tesse (points, npoints);
+}
+
+/* 
+   the *64 is here to have more precise 
+   angle without having cpu eating floating point calculations...
+*/
+#define FULLCIRCLE 360*64 
+/*----------------------------------------------------------------------
+ GL_DrawArc 
+  ----------------------------------------------------------------------*/
+static void GL_DrawArc (int x, int y, int w, int h, int angle1, int angle2)
+{
+  int angle;
+
+    if (angle2 > FULLCIRCLE)
+      angle2 =  FULLCIRCLE;
+    else if (angle2 < -FULLCIRCLE)
+      angle2 = - FULLCIRCLE;
+  /*
+    selfJoin = angle2 == FULLCIRCLE || angle2 == -FULLCIRCLE; 
+    if selfjoin GL_LINE_LOOP ?
+   */
+  glBegin (GL_LINES) ; 
+  for (angle = angle1; angle < angle2; angle++) 
+    {
+      glVertex2d( x + w / 2 * (1 + cos (angle)),
+		  y + h / 2 * (1 - sin (angle)));
+    }
+  glEnd();
+}
+
+
+/*----------------------------------------------------------------------
+ GL_DrawString : Draw a string  
+ Use Glut lib for now
+ to be modified upon the integration of the FTGL lib :
+ http://homepages.paradise.net.nz/henryj/code/index.html
+  ----------------------------------------------------------------------*/
+static void GL_DrawString (char const *str, float x, float y)
+{
+   int i;
+   
+   i = 0;
+   glRasterPos2i (x,  y);
+   while (*(str+i))
+     glutBitmapCharacter (GLUT_BITMAP_HELVETICA_10,  *(str+i++));
+   
+}
+/*----------------------------------------------------------------------
+  GL_DrawChar : draw a character... 
+  Use Glut lib for now
+  to be modified upon the integration of the FTGL lib :
+  http://homepages.paradise.net.nz/henryj/code/index.html
+  ----------------------------------------------------------------------*/
+static void GL_DrawChar (char const c, float x, float y)
+{
+  glRasterPos2i (x, y);
+  glutBitmapCharacter (GLUT_BITMAP_HELVETICA_10,  c);
+}
+
+#endif /*_GL*/
+
 /*----------------------------------------------------------------------
   FontOrig update and (x, y) location before DrawString
   accordingly to the ascent of the font used.
@@ -62,9 +441,13 @@ static void LoadColor (int fg)
 {
 #ifdef _GTK
   /* Color of the box */
-  gdk_rgb_gc_set_foreground (TtLineGC, ColorPixel (fg));
+#ifndef _GL
+    gdk_rgb_gc_set_foreground (TtLineGC, ColorPixel (fg));
+#else /*_GL*/
+    GL_SetForeground (fg);
+#endif /*_GL*/
 #else /* _GTK */
-  XSetForeground (TtDisplay, TtLineGC, ColorPixel (fg));
+    XSetForeground (TtDisplay, TtLineGC, ColorPixel (fg));
 #endif /* _GTK */
 }
 
@@ -81,8 +464,12 @@ static void InitDrawing (int style, int thick, int fg)
     {
       /* solid */
 #ifdef _GTK
+#ifndef _GL
       gdk_gc_set_line_attributes (TtLineGC, thick, GDK_LINE_SOLID,
 				  GDK_CAP_BUTT, GDK_JOIN_MITER);
+#else /*_GL*/    
+      glLineWidth(thick);
+#endif /*_GL*/
 #else /* _GTK */
       XSetLineAttributes (TtDisplay, TtLineGC, thick, LineSolid,
 			  CapButt, JoinMiter);
@@ -98,9 +485,14 @@ static void InitDrawing (int style, int thick, int fg)
 	dash[0] = 8;
       dash[1] = 4;
 #ifdef _GTK
+#ifndef _GL
       gdk_gc_set_dashes ( TtLineGC, 0, dash, 2); 
       gdk_gc_set_line_attributes (TtLineGC, thick, GDK_LINE_ON_OFF_DASH,
 				  GDK_CAP_BUTT, GDK_JOIN_MITER);
+#else /*_GL*/   
+     glLineWidth(thick); 
+     glLineStipple(2, dash); 
+#endif /*_GL*/
 #else /* _GTK */
       XSetDashes (TtDisplay, TtLineGC, 0, dash, 2);
       XSetLineAttributes (TtDisplay, TtLineGC, thick, LineOnOffDash,
@@ -118,9 +510,13 @@ static void InitDrawing (int style, int thick, int fg)
 static void DoDrawOneLine (int frame, int x1, int y1, int x2, int y2)
 {
 #ifdef _GTK
-   gdk_draw_line (FrRef[frame], TtLineGC, x1, y1, x2, y2);
+#ifdef _GL
+  GL_DrawLine (x1, y1, x2, y2);
+#else /*  _GL */
+  gdk_draw_line (FrRef[frame], TtLineGC, x1, y1, x2, y2);
+#endif /*  _GL */
 #else /* _GTK */
-   XDrawLine (TtDisplay, FrRef[frame], TtLineGC, x1, y1, x2, y2);
+  XDrawLine (TtDisplay, FrRef[frame], TtLineGC, x1, y1, x2, y2);
 #endif /* _GTK */
 }
 
@@ -181,11 +577,15 @@ void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
 
    LoadColor (fg);
 #ifdef _GTK
-   gdk_draw_text (w, font, TtLineGC, 
+#ifndef _GL
+    gdk_draw_text (w, font, TtLineGC, 
 		  x, 
 		  y + FrameTable[frame].FrTopMargin + FontBase (font), 
 		  &car,
 		  1);
+#else /* _GL */
+   GL_DrawChar(car, x, y);
+#endif/*  _GL */
 #else /* _GTK */
    XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid); 
    XDrawString (TtDisplay, w, TtLineGC, x, y + FrameTable[frame].FrTopMargin + FontBase (font), &car, 1);
@@ -247,14 +647,22 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 	{
 	  LoadColor (fg);
 #ifdef _GTK
-	  gdk_draw_string (w, font,TtLineGC, x, y, buff);
+#ifndef _GL
+	 gdk_draw_string (w, font,TtLineGC, x, y, buff);
+#else /* _GL */
+	 GL_DrawString (buff, x, y);
+#endif /* _GL */
 #else /* _GTK */
 	  XDrawString (TtDisplay, w, TtLineGC, x, y, buff, lg);
 #endif /* _GTK */
 	  if (hyphen)
 	    /* draw the hyphen */
 #ifdef _GTK
+#ifndef _GL
 	    gdk_draw_string (w, font,TtLineGC, x + width, y, "\255");
+#else /* _GL */
+	  GL_DrawString ("\255", x, y);
+#endif /* _GL */
 #else /* _GTK */
 	    XDrawString (TtDisplay, w, TtLineGC, x + width, y, "\255", 1);
 #endif /* _GTK */
@@ -374,7 +782,11 @@ void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 	while (nb > 0)
 	  {
 #ifdef _GTK
-	     gdk_draw_string (w,font, TtLineGC, xcour, y, ptcar);
+#ifndef _GL
+	    gdk_draw_string (w,font, TtLineGC, xcour, y, ptcar);
+#else /* _GL */
+	  GL_DrawString( ptcar, xcour, y);
+#endif /* _GL */
 #else /* _GTK */
 	     XDrawString (TtDisplay, w, TtLineGC, xcour, y, ptcar, 2);
 #endif /* _GTK */
@@ -578,7 +990,11 @@ void DrawIntersection (int frame, int x, int y, int l, int h, PtrFont font,
 
 	/* Upper part */
 #ifdef _GTK
+#ifndef _GL
 	gdk_draw_arc (FrRef[frame], TtLineGC,FALSE, x + 1, y + 1, l - 3, arc * 2, 0 * 64, 180 * 64);
+#else /* _GL */
+	GL_DrawArc(x + 1, y + 1, l - 3, arc * 2, 0 * 64, 180 * 64);
+#endif /* _GL */
 #else /* _GTK */
 	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1, y + 1, l - 3, arc * 2, 0 * 64, 180 * 64);
 #endif /* _GTK */
@@ -613,10 +1029,16 @@ void DrawUnion (int frame, int x, int y, int l, int h, PtrFont font, int fg)
 
 	/* Lower part */
 #ifdef _GTK
+#ifndef _GL
 	gdk_draw_arc (FrRef[frame], TtLineGC,FALSE,
 		      x + 1, y + h - arc * 2 - 2,
 		      l - 3, arc * 2,
 		      -0 * 64, -180 * 64);
+#else /*_GL*/
+	GL_DrawArc (x + 1, y + h - arc * 2 - 2,
+		      l - 3, arc * 2,
+		      -0 * 64, -180 * 64);
+#endif /* _GL */
 #else /* _GTK */
 	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1, y + h - arc * 2 - 2, l - 3, arc * 2, -0 * 64, -180 * 64);
 #endif /* _GTK */
@@ -666,9 +1088,13 @@ static void ArrowDrawing (int frame, int x1, int y1, int x2, int y2,
    if (pattern != 0)
      {
 #ifdef _GTK
+#ifndef _GL
       gdk_gc_set_tile (TtGreyGC, (GdkPixmap *)pattern);
       gdk_draw_polygon (FrRef[frame], TtGreyGC,TRUE, point, 3);
       gdk_pixmap_unref ((GdkPixmap *)pattern);
+#else /*_GL*/
+      GL_DrawPolygon (point, 3);
+#endif /* _GL */
 #else /* _GTK */
       XSetTile (TtDisplay, TtGreyGC, pattern);     
       XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, point, 3, Convex, CoordModeOrigin);
@@ -1073,7 +1499,6 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 	  }
      }
 }
-
 /*----------------------------------------------------------------------
   DrawRectangle draw a rectangle located at (x, y) in frame,
   of geometry width x height.
@@ -1096,9 +1521,14 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
   if (pat != 0)
     {
 #ifdef _GTK
+#ifndef _GL
       gdk_gc_set_tile (TtGreyGC, (GdkPixmap *)pat);    
       gdk_draw_rectangle (FrRef[frame], TtGreyGC, TRUE, x, y, width, height);
       gdk_pixmap_unref ((GdkPixmap *)pat);
+#else /*_GL*/
+      GL_DrawRectangle(bg, x, y, width, height);
+#endif /*_GL*/
+
 #else /* _GTK */
       XSetTile (TtDisplay, TtGreyGC, pat);
       XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC, x, y, width, height);
@@ -1118,8 +1548,11 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
 
       InitDrawing (style, thick, fg); 
 #ifdef _GTK
+#ifndef _GL
       gdk_draw_rectangle ( FrRef[frame],TtLineGC,FALSE, x, y, width, height);
-
+#else /*_GL*/
+      GL_DrawEmptyRectangle(fg, x,  y, width, height);
+#endif /*_GL*/
 #else /* _GTK */
       XDrawRectangle (TtDisplay, FrRef[frame], TtLineGC, x, y, width, height);
 #endif /* _GTK */
@@ -1160,9 +1593,14 @@ void DrawDiamond (int frame, int thick, int style, int x, int y, int width,
    if (pat != 0)
      {
 #ifdef _GTK
+#ifndef _GL
       gdk_gc_set_tile (TtGreyGC, (GdkPixmap *)pat);
       gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE, point, 5);
       gdk_pixmap_unref ((GdkPixmap *)pat); 
+#else /*_GL*/
+      LoadColor(pattern);
+      GL_DrawPolygon (point, 5);
+#endif /*_GL*/
 #else /* _GTK */
        XSetTile (TtDisplay, TtGreyGC, pat);
        XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
@@ -1176,7 +1614,11 @@ void DrawDiamond (int frame, int thick, int style, int x, int y, int width,
      {
 	InitDrawing (style, thick, fg);
 #ifdef _GTK
+#ifndef _GL
 	gdk_draw_polygon (FrRef[frame], TtLineGC, FALSE, point, 5);
+#else /*_GL*/
+	GL_DrawPolygon (point, 5);
+#endif /*_GL*/
 #else /* _GTK */
 	XDrawLines (TtDisplay, FrRef[frame], TtLineGC, point, 5, CoordModeOrigin);
 #endif /* _GTK */
@@ -1245,10 +1687,15 @@ void DrawSegments (int frame, int thick, int style, int x, int y,
   InitDrawing (style, thick, fg);
 #ifdef _GTK
   for (k=0; k< nb-2; k++)
+#ifndef _GL
     gdk_draw_line (FrRef[frame], TtLineGC,
 		   points[k].x, points[k].y,
 		   points[k+1].x, points[k+1].y);
-  
+#else /*_GL*/ 
+  GL_DrawLine( points[k].x, points[k].y,
+	       points[k+1].x, points[k+1].y);
+#endif /*_GL*/
+
 #else /* _GTK */
   XDrawLines (TtDisplay, FrRef[frame], TtLineGC,
 	      points, nb - 1, CoordModeOrigin);
@@ -1282,9 +1729,16 @@ static void DoDrawLines (int frame, int thick, int style,
    if (pat != 0) 
      {
 #ifdef _GTK
+
+#ifndef _GL
        gdk_gc_set_tile (TtGreyGC, (GdkPixmap *)pat);
        gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE, points, npoints); 
        gdk_pixmap_unref ((GdkPixmap *)pat);
+#else /*_GL*/
+       LoadColor(bg);
+       GL_DrawPolygon (points, npoints);
+#endif /*_GL*/
+
 #else /* _GTK */
        XSetTile (TtDisplay, TtGreyGC, pat);
        XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, npoints,
@@ -1298,7 +1752,12 @@ static void DoDrawLines (int frame, int thick, int style,
      {
        InitDrawing (style, thick, fg);
 #ifdef _GTK
+#ifndef _GL
        gdk_draw_lines (FrRef[frame], TtLineGC, points, npoints); 
+#else /*_GL*/
+       GL_DrawLines(points, npoints);
+#endif /*_GL*/
+
 #else /* _GTK */
        XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints,
 		   CoordModeOrigin);
@@ -1455,7 +1914,13 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
    /* Draw the border */
    InitDrawing (style, thick, fg);
 #ifdef _GTK
+
+#ifndef _GL
   gdk_draw_lines (FrRef[frame], TtLineGC, points, npoints);
+#else  /*_GL*/
+  GL_DrawLines(points, npoints);
+#endif/* _GL*/
+
 #else /* _GTK */
   XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints, CoordModeOrigin);
 #endif /* _GTK */
@@ -1568,9 +2033,14 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
   if (pat != 0)
     {
 #ifdef _GTK
+#ifndef _GL
       gdk_gc_set_tile ( TtGreyGC, (GdkPixmap *)pat);
       gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE , points, npoints); 
       gdk_pixmap_unref ((GdkPixmap *)pat);
+#else /*_GL*/
+      LoadColor(pattern);
+      GL_DrawPolygon (points, npoints);
+#endif /*_GL*/
 #else /* _GTK */
       XSetTile (TtDisplay, TtGreyGC, pat);
       XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, npoints, Complex, CoordModeOrigin);
@@ -1583,7 +2053,11 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
     {
       InitDrawing (style, thick, fg);
 #ifdef _GTK
+#ifndef _GL
       gdk_draw_polygon (FrRef[frame], TtLineGC, FALSE, points, npoints);
+#else /*_GL*/
+      GL_DrawPolygon (points, npoints);
+#endif /*_GL*/
 #else /* _GTK */
       XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints, CoordModeOrigin);
 #endif /* _GTK */
@@ -1639,20 +2113,33 @@ void DrawPath (int frame, int thick, int style, int x, int y,
       maxpoints = ALLOC_POINTS;
       points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * maxpoints);
       npoints = 0;
-      pPa = path;
+      pPa = path; 
+#ifdef _GL
+      n_polygon = 0;
+#endif /* _GL */
       while (pPa)
 	{
 	  if (pPa->PaNewSubpath)
 	    /* this path segment starts a new subpath */
 	    /* if some points are already stored, display the line
 	       they represent */
-	    if (npoints > 1)
+#ifndef _GL
+	     if (npoints > 1)
 	      {
 		DrawCurrent (frame, thick, style, points, npoints, fg, bg,
 			     pattern);
 		npoints = 0;
 	      }
-
+#else /* _GL */
+	    {
+	      /* 
+		 We get here the contour separation nedded
+		 for the tesseleation 
+		 (handles polygon with holes)
+	      */
+	      tab[n_polygon++] = npoints;
+	    }
+#endif /* _GL */
 	  switch (pPa->PaShape)
 	    {
 	    case PtLine:
@@ -1967,6 +2454,7 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
 	point[12].y = point[0].y;
 
 #ifdef _GTK
+#ifndef _GL
 	gdk_gc_set_tile (TtGreyGC, (GdkPixmap *)pat);
 	gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE, point, 13);
 	
@@ -1978,6 +2466,16 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
 			xarc[i].angle1,xarc[i].angle2); 
 	}
 	gdk_pixmap_unref ((GdkPixmap *)pat);
+#else /*_GL*/
+	LoadColor (fg);
+	GL_DrawPolygon (point, 13);
+	for (i=0;i<4;i++){
+	  GL_DrawArc (xarc[i].x, xarc[i].y, 
+			xarc[i].width, xarc[i].height, 
+			xarc[i].angle1,xarc[i].angle2); 
+	}
+#endif /*_GL*/
+
 #else /* _GTK */
 	XSetTile (TtDisplay, TtGreyGC, pat);
 	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
@@ -1993,6 +2491,7 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
      {
 	InitDrawing (style, thick, fg);
 #ifdef _GTK
+#ifndef _GL
 	for (i=0;i<4;i++){
 	  gdk_draw_arc (FrRef[frame], TtLineGC, FALSE, 
 			xarc[i].x, xarc[i].y, 
@@ -2000,6 +2499,16 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
 			xarc[i].angle1,xarc[i].angle2);
 	}
 	gdk_draw_segments (FrRef[frame], TtLineGC, (GdkSegment *)seg, 4);
+#else /*_GL*/	
+	for (i=0;i<4;i++){
+	  GL_DrawArc (xarc[i].x, xarc[i].y, 
+		      xarc[i].width, xarc[i].height, 
+		      xarc[i].angle1,xarc[i].angle2);
+	} 
+	GL_DrawSegments (seg, 4);
+        /*gl_segments ?*/
+#endif /*_GL*/
+
 #else /* _GTK */
 	XDrawArcs (TtDisplay, FrRef[frame], TtLineGC, xarc, 4);
 	XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 4);
@@ -2029,10 +2538,14 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
 
    if (pat != 0)
      {
-#ifdef _GTK
+#ifdef _GTK 
+#ifndef _GL
       gdk_gc_set_tile ( TtGreyGC, (GdkPixmap *)pat);
       gdk_draw_arc (FrRef[frame], TtGreyGC, TRUE, x, y, width, height, 0, 360 * 64);
       gdk_pixmap_unref ((GdkPixmap *)pat);
+#else /*_GL*/
+      GL_DrawArc ( x, y, width, height, 0, 360 * 64);
+#endif /*_GL*/
 #else /* _GTK */
       XSetTile (TtDisplay, TtGreyGC, pat);
       XFillArc (TtDisplay, FrRef[frame], TtGreyGC, x, y, width, height, 0, 360 * 64);
@@ -2045,7 +2558,11 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
      {
       InitDrawing (style, thick, fg);
 #ifdef _GTK
+#ifndef _GL
       gdk_draw_arc (FrRef[frame], TtLineGC, FALSE,  x, y, width, height, 0, 360 * 64);
+#else /*_GL*/
+      GL_DrawArc ( x, y, width, height, 0, 360 * 64);
+#endif /*_GL*/
 #else /* _GTK */
       XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x, y, width, height, 0, 360 * 64);
 #endif /* _GTK */
@@ -2235,7 +2752,11 @@ void DrawCorner (int frame, int thick, int style, int x, int y, int l,
 	       break;
 	 }
 #ifdef _GTK
+#ifndef _GL
    gdk_draw_lines (FrRef[frame], TtLineGC, point, 3);
+#else /*_GL*/
+   GL_DrawLines (point, 3);
+#endif /*_GL*/
 #else /* _GTK */
    XDrawLines (TtDisplay, FrRef[frame], TtLineGC, point, 3, CoordModeOrigin);
 #endif /* _GTK */
@@ -2374,6 +2895,7 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
 	point[12].y = point[0].y;
 
 #ifdef _GTK
+#ifndef _GL
 	gdk_gc_set_tile (TtGreyGC, (GdkPixmap *)pat);
 	gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE,  point, 13);
 	/* Trace quatre arcs de cercle */
@@ -2385,6 +2907,16 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
 			xarc[i].angle1, xarc[i].angle2);
 	  }
 	gdk_pixmap_unref ((GdkPixmap *)pat);
+#else /*_GL*/
+	LoadColor (fg);
+	GL_DrawPolygon (point, 13);
+	for (i = 0; i < 4; i++)
+	  {  
+	    GL_DrawArc	(xarc[i].x, xarc[i].y, 
+			 xarc[i].width, xarc[i].height, 
+			 xarc[i].angle1, xarc[i].angle2);
+	  }
+#endif /*_GL*/
 #else /* _GTK */
 	XSetTile (TtDisplay, TtGreyGC, pat);
 	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
@@ -2402,26 +2934,41 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
 #ifdef _GTK
 	for (i = 0 ; i < 4; i++)
 	  {  
+#ifndef _GL
 	  gdk_draw_arc (FrRef[frame], TtLineGC, FALSE, 
 			xarc[i].x, xarc[i].y, 
 			xarc[i].width, xarc[i].height, 
 			xarc[i].angle1, xarc[i].angle2); 
-	  }
+	  
+#else /*_GL*/
+	GL_DrawArc (xarc[i].x, xarc[i].y, 
+			xarc[i].width, xarc[i].height, 
+			xarc[i].angle1, xarc[i].angle2); 
+#endif /*_GL*/
+}
 #else /* _GTK */
 	XDrawArcs (TtDisplay, FrRef[frame], TtLineGC, xarc, 4);
 #endif /* _GTK */
 	if (arc2 < height / 2)
 	  {
 #ifdef _GTK
+#ifndef _GL
 	   gdk_draw_segments (FrRef[frame], TtLineGC, (GdkSegment *)seg, 5);
+#else /*_GL*/
+	   GL_DrawSegments(seg, 5);
+#endif /*_GL*/
 #else /* _GTK */
 	   XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 5);
 #endif /* _GTK */
 	  }
 	else
 	  {
-#ifdef _GTK
+#ifdef _GTK 
+#ifndef _GL
 	   gdk_draw_segments (FrRef[frame], TtLineGC, (GdkSegment *)seg, 4);
+#else /*_GL*/
+	   GL_DrawSegments(seg, 4);
+#endif /*_GL*/
 #else /* _GTK */
 	   XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 4);
 #endif /* _GTK */
@@ -2453,10 +3000,14 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
    if (pat != 0)
      {
 #ifdef _GTK
+#ifndef _GL
         gdk_gc_set_tile (TtGreyGC, (GdkPixmap *)pat);
 	gdk_draw_arc (FrRef[frame], TtGreyGC, TRUE,
 		  x, y, width, height, 0, 360 * 64);
 	gdk_pixmap_unref ((GdkPixmap *)pat);
+#else /*_GL*/
+	GL_DrawArc (x, y, width, height, 0, 360 * 64);
+#endif /*_GL*/
 #else /* _GTK */
 	XSetTile (TtDisplay, TtGreyGC, pat);
 	XFillArc (TtDisplay, FrRef[frame], TtGreyGC,
@@ -2470,8 +3021,12 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
      {
 	InitDrawing (style, thick, fg);
 #ifdef _GTK
+#ifndef _GL
 	gdk_draw_arc (FrRef[frame], TtLineGC, FALSE,
 		      x, y, width, height, 0, 360 * 64); 
+#else /*_GL*/
+	GL_DrawArc(x, y, width, height, 0, 360 * 64); 
+#endif /*_GL*/
 #else /* _GTK */
 	XDrawArc (TtDisplay, FrRef[frame], TtLineGC,
 		  x, y, width, height, 0, 360 * 64);
@@ -2485,8 +3040,12 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
 	     shiftX = width * A * 0.5 + 0.5;
 
 #ifdef _GTK
+#ifndef _GL
 	     gdk_draw_line (FrRef[frame], TtLineGC,
 			    x + shiftX, y + px7mm, x + width - shiftX, y + px7mm);
+#else /*_GL*/
+	     GL_DrawLine(x + shiftX, y + px7mm, x + width - shiftX, y + px7mm);
+#endif /*_GL*/
 #else /* _GTK */	    
 	     XDrawLine (TtDisplay, FrRef[frame], TtLineGC,
 		      x + shiftX, y + px7mm, x + width - shiftX, y + px7mm);
@@ -2515,10 +3074,14 @@ void psBoundingBox (int frame, int width, int height)
 void SetMainWindowBackgroundColor (int frame, int color)
 {
 #ifdef _GTK
+#ifndef _GL
    GdkColor gdkcolor;
 
    gdkcolor.pixel = gdk_rgb_xpixel_from_rgb (ColorPixel (color));
    gdk_window_set_background (FrRef[frame], &gdkcolor);
+#else /*_GL*/ 
+   GL_SetBackground(color);
+#endif /*_GL*/
 #else /* _GTK */
    XSetWindowBackground (TtDisplay, FrRef[frame], ColorPixel (color));
 #endif /* _GTK */
@@ -2529,13 +3092,23 @@ void SetMainWindowBackgroundColor (int frame, int color)
   ----------------------------------------------------------------------*/
 void Clear (int frame, int width, int height, int x, int y)
 {
+#ifdef _GL
+  GtkWidget *w;
+
+  w = FrameTable[frame].WdFrame;
+#else /* _GL */ 
   ThotWindow          w;
 
   w = FrRef[frame];
+#endif /* _GL */
   if (w != None)
     {
 #ifdef _GTK
-      gdk_window_clear_area (w, x, y + FrameTable[frame].FrTopMargin, width, height);
+#ifndef _GL
+	gdk_window_clear_area (w, x, y + FrameTable[frame].FrTopMargin, width, height);
+#else /*_GL*/ 
+	GL_ClearArea(x, y + FrameTable[frame].FrTopMargin, width, height);
+#endif /*_GL*/
 #else /* _GTK */
       XClearArea (TtDisplay, w, x, y + FrameTable[frame].FrTopMargin, width, height, FALSE);
 #endif /* _GTK */
@@ -2549,7 +3122,11 @@ void WChaine (ThotWindow w, char *string, int x, int y, PtrFont font,
 	      ThotGC GClocal)
 {
 #ifdef _GTK
+#ifndef _GL
    gdk_draw_string (w, font, GClocal, x, y+gdk_string_height (font, string), string); 
+#else /*_GL*/
+
+#endif /*_GL*/
 #else /* _GTK */
    XSetFont (TtDisplay, GClocal, ((XFontStruct *) font)->fid);
    FontOrig (font, string[0], &x, &y);
@@ -2569,9 +3146,13 @@ void VideoInvert (int frame, int width, int height, int x, int y)
    w = FrRef[frame];
 
    if (w != None)
-#ifdef _GTK
-      gdk_draw_rectangle (w, TtInvertGC, TRUE, x, 
-			  y + FrameTable[frame].FrTopMargin, width, height);
+#ifdef _GTK  
+#ifndef _GL
+     gdk_draw_rectangle (w, TtInvertGC, TRUE, x, 
+			 y + FrameTable[frame].FrTopMargin, width, height);
+#else /*_GL*/
+   GL_VideoInvert(width, height, x, y + FrameTable[frame].FrTopMargin);
+#endif /*_GL*/
 #else /* _GTK */
      XFillRectangle (TtDisplay, w, TtInvertGC, x, y + FrameTable[frame].FrTopMargin, width, height);
 #endif /* _GTK */
@@ -2586,7 +3167,8 @@ void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
 {
   if (FrRef[frame] != None)
     {
-#ifdef _GTK
+#ifdef _GTK 
+#ifndef _GL
       gdk_window_copy_area (FrRef[frame], TtWhiteGC,
 			    xf,
 			    yf + FrameTable[frame].FrTopMargin,
@@ -2595,6 +3177,9 @@ void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
 			    yd + FrameTable[frame].FrTopMargin,
 			    width,
 			    height);
+#else /*_GL*/
+
+#endif /*_GL*/
 #else /* _GTK */
       XCopyArea (TtDisplay, FrRef[frame], FrRef[frame], TtWhiteGC,
 		 xd, yd + FrameTable[frame].FrTopMargin, width, height,
@@ -2621,27 +3206,43 @@ void PaintWithPattern (int frame, int x, int y, int width, int height,
    if (pat != 0)
      {
 #ifdef _GTK
+#ifndef _GL
         gdk_gc_set_tile (TtGreyGC, (GdkPixmap *)pat);
+#else /*_GL*/
+
+#endif /*_GL*/
 #else /* _GTK */
 	XSetTile (TtDisplay, TtGreyGC, pat);
 #endif /* _GTK */
 	if (w != 0) {
 #ifdef _GTK
+#ifndef _GL
 	  gdk_draw_rectangle (w, TtGreyGC, TRUE, x, y, width, height);
+#else /*_GL*/
+	  GL_DrawRectangle(pattern, x,  y, width, height);
+#endif /*_GL*/
 #else /* _GTK */
 	  XFillRectangle (TtDisplay, w, TtGreyGC, x, y, width, height);
 #endif /* _GTK */
 	} else {
 #ifdef _GTK
+#ifndef _GL
 	  gdk_draw_rectangle (FrRef[frame], TtGreyGC, TRUE,
 			      x, y + FrameTable[frame].FrTopMargin, 
 			      width, height);
+#else /*_GL*/
+	  GL_DrawRectangle(fg, x,  y + FrameTable[frame].FrTopMargin, width, height);
+#endif /*_GL*/
 #else /* _GTK */
 	  XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC, x, y + FrameTable[frame].FrTopMargin, width, height);
 #endif /* _GTK */
 	}
-#ifdef _GTK
+#ifdef _GTK 
+#ifndef _GL
 	gdk_pixmap_unref ((GdkPixmap *)pat);
+#else /*_GL*/
+
+#endif /*_GL*/
 #else /* _GTK */
 	XFreePixmap (TtDisplay, pat);
 #endif /* _GTK */
