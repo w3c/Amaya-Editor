@@ -1674,15 +1674,19 @@ static void         TextToDocument ()
 	  {
 	     parent = lastElement;
 	     ignoreLeadingSpaces = TRUE;
-	     ancestor = parent;
-	     while (ignoreLeadingSpaces && IsCharacterLevelElement (ancestor))
+	     elType = TtaGetElementType (lastElement);
+	     if (elType.ElTypeNum != HTML_EL_Option_Menu)
 		{
-		prev = ancestor;
-		TtaPreviousSibling (&prev);
-		if (prev == NULL)
-		   ancestor = TtaGetParent (ancestor);
-		else
-		   ignoreLeadingSpaces = FALSE;
+	        ancestor = parent;
+	        while (ignoreLeadingSpaces && IsCharacterLevelElement (ancestor))
+		   {
+		   prev = ancestor;
+		   TtaPreviousSibling (&prev);
+		   if (prev == NULL)
+		      ancestor = TtaGetParent (ancestor);
+		   else
+		      ignoreLeadingSpaces = FALSE;
+		   }
 		}
 	  }
 	elType = TtaGetElementType (parent);

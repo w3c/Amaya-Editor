@@ -386,7 +386,7 @@ RULES
 	
    Root_exp:	
         BEGIN
-	HorizPos: Left = Enclosing . Left + 1;
+	HorizPos: Left = Enclosing . Left + 0.7;
 	VertPos: Top = Enclosing . Top + 0.1;
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;

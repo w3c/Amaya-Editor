@@ -1108,16 +1108,30 @@ BOXES
 		Visibility: 0;
 	END;
 
+ Option_Box: BEGIN
+	VertPos: Top = Previous AnyElem . Bottom;
+	HorizPos: Left = Enclosing . Left;
+	Width: Enclosed . Width;
+	Height: Enclosed . Height;
+	LineBreak: No;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	IN Links_view
+		Visibility: 0;
+	END;
+
  Option_Frame: BEGIN
 	Content: Graphics 'R';
-	VertPos: Top = Enclosing . Top - 3 pt;
-	HorizPos: Left = Enclosing . Left - 3 pt;
-	Width: Enclosing . Width + 6 pt;
-	Height: Enclosing . Height + 6 pt;
+	VertPos: Top = Enclosing . Top;
+	HorizPos: Left = Enclosing . Left;
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
 #ifndef BLACK_WHITE
 	Background : Grey;
 #endif
-	LineWeight: 2 pt;
+	LineWeight: 1 pt;
 	Depth: 5;
 	InLine: No;
 	IN Structure_view
@@ -1125,6 +1139,14 @@ BOXES
 	IN Alternate_view
 		Visibility: 0;
 	IN Links_view
+		Visibility: 0;
+	END;
+
+ Option_xpm: BEGIN
+	Content: Picture 'option.xpm';
+	HorizPos: Left = Enclosing . Left + 0.2;
+	VertPos: HMiddle = Option . HMiddle;
+	IN Structure_view
 		Visibility: 0;
 	END;
 
@@ -1749,14 +1771,6 @@ BOXES
 	Content: Picture 'radio-s.xpm';
 	HorizPos: Left = Previous . Right + 1;
 	VertPos: HRef = Previous . HRef;
-	IN Structure_view
-		Visibility: 0;
-	END;
-
- Option_xpm: BEGIN
-	Content: Picture 'option.xpm';
-	HorizPos: Nil;
-	VertPos: Nil;
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -4916,15 +4930,17 @@ RULES
 	END;
 
  Option_Menu: BEGIN
+	CreateEnclosing(Option_Box);
 	CreateBefore(SELECT_S);
 	CreateBefore(ATTR_NAME);
 	CreateBefore(VALUE_NAME);
 	CreateWith(VerticalLine);
-	CreateLast(Option_Frame);
+	CreateAfter(Option_Frame);
 	CreateFirst(Option_xpm);
 	HorizPos: Left = Enclosing . Left + 2 pt;	
-	VertPos: Top = Previous AnyElem . Bottom + 2 pt;
-	LineBreak: No;	
+	VertPos: Top = Enclosing . Top + 2 pt;
+	LineBreak: No;
+	HorizRef: Enclosed AnyElem . HRef;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -4935,8 +4951,9 @@ RULES
  Option: BEGIN
 	CreateBefore(OPTION_S);
 	Visibility: 0;
-	HorizPos: Nil;	
-	VertPos: Nil;
+	HorizPos: Left = Previous . Right + 0.2;	
+	VertPos: Top = Enclosing . Top;
+	LineBreak: No;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		Width: Enclosing . Width - STRUCT_INDENT;
