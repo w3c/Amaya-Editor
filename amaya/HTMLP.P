@@ -3123,6 +3123,10 @@ RULES
 
  Text_Area: BEGIN
 	CreateBefore(ElementName);
+	MarginTop: 1 px;
+	MarginLeft: 3 px;
+	MarginBottom: 1 px;
+	MarginRight: 3 px;
 	Width: 20 ex;
 	Height: 2 Min;
 	LineBreak: No;
