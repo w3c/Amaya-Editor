@@ -246,9 +246,9 @@ UINT subMenuID [MAX_FRAME];
 ThotWindow WIN_curWin = (ThotWindow)(-1);
 
 #ifdef __STDC__
-extern void main (int, char**);
+extern int main (int, char**);
 #else  /* !__STDC__ */
-extern void main ();
+extern int main ();
 #endif /* __STDC__ */
 
 /*----------------------------------------------------------------------
