@@ -13,7 +13,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "thot_sys.h"
+#include "fileaccess.h"
 
+#include "platform_f.h"
 #include "registry_f.h"
 #include "ustring_f.h"
 
@@ -429,27 +431,28 @@ CHARSET TtaGetLocaleCharset ()
   if (LocaleSystemCharset == UNSUPPORTED_CHARSET)
     {
       char * lang = getenv("LANG");
-      if (lang)
+      if (lang && TtaDirExists ("/tmp"))
 	{
-	  int fd;
+	  int  fd;
 	  char buffer[256];
-	  memset( buffer, 0, 256 );
-	  
+	  memset ( buffer, 0, 256 );
 	  /* ask the system using locale command */
 	  system ("locale -ck LC_MESSAGES | grep messages-codeset | sed 's/.*=\"//' | sed 's/\"//' > /tmp/locale");
-	  fd = open("/tmp/locale", O_RDONLY);
-	  read (fd, buffer, 255);
-	  close (fd);
-	  system ("rm -f /tmp/locale");
-	  buffer[strlen(buffer)-1] = '\0';
-	  
-	  /* convert the string into thotlib index */
-	  LocaleSystemCharset = TtaGetCharset(buffer); 
+	  fd = open ("/tmp/locale", O_RDONLY);
+	  if (fd)
+	    {
+	      read (fd, buffer, 255);
+	      close (fd);
+	      system ("rm -f /tmp/locale");
+	      buffer[strlen(buffer)-1] = EOS;
+	      /* convert the string into thotlib index */
+	      LocaleSystemCharset = TtaGetCharset(buffer); 
+	    }
 	}
-      else
-	/* default unix charset is iso-latin-1 */
-	LocaleSystemCharset = ISO_8859_1;
     }
+  if (LocaleSystemCharset == UNSUPPORTED_CHARSET)
+    /* default unix charset is iso-latin-1 */
+    LocaleSystemCharset = ISO_8859_1;
 #endif /* _WINDOWS */
   return LocaleSystemCharset;
 }
