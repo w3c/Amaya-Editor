@@ -242,7 +242,7 @@ sont :</p>
   </li>
 </ul>
 
-<p>Le dernier item de la palette <strong>Math</strong> (
+<p>Le dernier item de la palette <strong>Math</strong> ( 
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mi>&alpha;&beta;&gamma;</mi>
 </math>
@@ -352,14 +352,15 @@ Ces liens sont représentés en utilisant une version détachée du <a
 href="http://www.w3.org/TR/WD-xlink">XML Linking Language (XLink)</a>. Seuls
 les liens simples unidirectionnels sont utilisables, mais vous pouvez associer
 un lien à n'importe quelle partie d'une formule. Par exemple, la fraction dans
-la formule ci-dessous est un lien vers la page d'accueil W3C :</p>
+la formule ci-dessous est un lien vers la page d'accueil du W3C :</p>
 
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mrow>
     <mi>y</mi>
     <mo>=</mo>
     <mi></mi>
-    <mfrac href="http://www.w3.org/">
+    <mfrac xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
+    xlink:href="http://www.w3.org/">
       <mn>1</mn>
       <msqrt>
         <mrow>
@@ -376,9 +377,7 @@ la formule ci-dessous est un lien vers la page d'accueil W3C :</p>
 </math>
 
 <p>Cliquer deux fois sur un des caractères à l'intérieur de la fraction fait
-apparaître la page d'accueil W3C. Dans le fichier XML, la fraction est
-représentée par :</p>
-<pre><code>&lt;mfrac xml:link="simple" href="http://www.w3.org/"&gt;...&lt;/mfrac&gt;</code></pre>
+apparaître la page d'accueil du W3C.</p>
 
 <p>(Vous pouvez trouver cela seulement dans la vue structure. Ce n'est pas
 actuellement indiqué dans la vue liens). Pour créer un tel lien, il suffit de
@@ -396,10 +395,10 @@ MathML 2.0, et non le <em>Balisage du Contenu</em>. Tous les éléments de
 présentation et les attributs sont utilisables, mais seulement quelques
 attributs sont restitués à l'écran (<code>alttext</code>,
 <code>fontsize</code>, <code>fontweight</code>, <code>fontstyle</code>,
-<code>fontfamily</code>, <code>color</code>, <code>numalign</code>,
-<code>denomalign</code>, <code>bevelled</code>, <code>notation</code>,
-<code>lquote</code>, <code>rquote</code>, <code>lspace</code>,
-<code>rspace</code>, <code>subscriptshift</code>,
+<code>fontfamily</code>, <code>color</code>, <code>linethickness</code>,
+<code>numalign</code>, <code>denomalign</code>, <code>bevelled</code>,
+<code>notation</code>, <code>lquote</code>, <code>rquote</code>,
+<code>lspace</code>, <code>rspace</code>, <code>subscriptshift</code>,
 <code>superscriptshift</code>, <code>form</code>, <code>width</code>
 (<code>mspace</code> only), <code>height</code> (<code>mspace</code> only),
 <code>depth</code> (<code>mspace</code> only)).</p>

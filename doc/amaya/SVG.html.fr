@@ -28,8 +28,9 @@
 <div>
 <h2>Edition des graphiques</h2>
 
-<p>Amaya vous permet d'inclure des graphiques vectoriels, dans des pages web,
-suivant la spécification Scalable Vector Graphics (SVG).</p>
+<p>Amaya vous permet d'inclure des graphiques vectoriels dans des pages web,
+suivant la spécification Scalable Vector Graphics (<a
+href="http://www.w3.org/TR/svg/">SVG</a>).</p>
 </div>
 
 <p align="right"><a href="Math.html.fr"><img alt="previous" border="0"
