@@ -3522,7 +3522,7 @@ char               *attrstr;
    SKIP_BLANK (attrstr);
    if (IS_WORD (attrstr, "no-repeat"))
      {
-	repeat.typed_data.value = DRIVERP_REALSIZE;
+	repeat.typed_data.value = DRIVERP_SCALE;
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "repeat-y"))
@@ -4488,7 +4488,7 @@ boolean                mode;
  ************************************************************************/
 
 /*----------------------------------------------------------------------
-   HTMLSetBackgroundColor :                                        
+   HTMLSetBackgroundColor :
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HTMLSetBackgroundColor (Document doc, Element elem, char *color)
@@ -4501,7 +4501,38 @@ char               *color;
 {
    char                css_command[100];
 
-   sprintf (css_command, "background : %s", color);
+   sprintf (css_command, "background: %s", color);
+   ParseHTMLSpecificStyle (elem, css_command, doc);
+}
+
+/*----------------------------------------------------------------------
+   HTMLSetBackgroundImage :
+   repeat = repeat value
+   image = url of background image
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                HTMLSetBackgroundImage (Document doc, Element elem, int repeat, char *image)
+#else
+void                HTMLSetBackgroundImage (doc, elem, repeat, image)
+Document            doc;
+Element             elem;
+int                 repeat;
+char               *image;
+#endif
+{
+   char                css_command[100];
+
+   if (image[0] != DIR_SEP)
+   sprintf (css_command, "background-image: url(%s); background-repeat: ", image);
+   sprintf (css_command, "background-image: url(file:/%s); background-repeat: ", image);
+   if (repeat == DRIVERP_REPEAT)
+     strcat (css_command, "repeat");
+   else if (repeat == DRIVERP_HREPEAT)
+     strcat (css_command, "repeat-x");
+   else if (repeat == DRIVERP_VREPEAT)
+     strcat (css_command, "repeat-y");
+   else
+     strcat (css_command, "no-repeat");
    ParseHTMLSpecificStyle (elem, css_command, doc);
 }
 
@@ -4519,7 +4550,7 @@ char               *color;
 {
    char                css_command[100];
 
-   sprintf (css_command, "color : %s", color);
+   sprintf (css_command, "color: %s", color);
    ParseHTMLSpecificStyle (elem, css_command, doc);
 }
 
@@ -4534,18 +4565,31 @@ Document            doc;
 Element             elem;
 #endif
 {
-   PRule               rule;
-   ElementType         elType;
-   int                 type;
+   char                css_command[100];
 
-   rule = TtaGetPRule (elem, PRBackground);
-   if (rule)
-      TtaRemovePRule (elem, rule, doc);
-   elType = TtaGetElementType (elem);
-   type = elType.ElTypeNum;
-   if ((type == HTML_EL_HTML) || (type == HTML_EL_BODY) ||
-       (type == HTML_EL_HEAD))
-      TtaResetViewBackgroundColor (doc, 1);
+   sprintf (css_command, "background: xx"       );
+   SetHTMLStyleParserDestructiveMode (True);
+   ParseHTMLSpecificStyle (elem, css_command, doc);
+   SetHTMLStyleParserDestructiveMode (False);
+}
+
+/*----------------------------------------------------------------------
+   HTMLResetBackgroundImage :                                      
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                HTMLResetBackgroundImage (Document doc, Element elem)
+#else
+void                HTMLResetBackgroundImage (doc, elem)
+Document            doc;
+Element             elem;
+#endif
+{
+   char                css_command[1000];
+
+   sprintf (css_command, "background-image: url(xx); background-repeat: repeat");
+   SetHTMLStyleParserDestructiveMode (True);
+   ParseHTMLSpecificStyle (elem, css_command, doc);
+   SetHTMLStyleParserDestructiveMode (False);
 }
 
 /*----------------------------------------------------------------------

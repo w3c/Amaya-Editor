@@ -17,7 +17,7 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
-
+#include "presentdriver.h"
 
 static char        *TargetDocumentURL = NULL;
 
@@ -666,8 +666,11 @@ NotifyAttribute    *event;
       length = buflen - 1;
    if (length > 0)
       TtaGiveTextAttributeValue (event->attribute, value, &length);
+
    if (event->attributeType.AttrTypeNum == HTML_ATTR_BackgroundColor)
       HTMLSetBackgroundColor (event->document, event->element, value);
+   else if (event->attributeType.AttrTypeNum == HTML_ATTR_background_)
+      HTMLSetBackgroundImage (event->document, event->element, DRIVERP_REPEAT, value);
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_color ||
 	    event->attributeType.AttrTypeNum == HTML_ATTR_TextColor)
       HTMLSetForegroundColor (event->document, event->element, value);
@@ -694,6 +697,8 @@ NotifyAttribute    *event;
 {
    if (event->attributeType.AttrTypeNum == HTML_ATTR_BackgroundColor)
       HTMLResetBackgroundColor (event->document, event->element);
+   else if (event->attributeType.AttrTypeNum == HTML_ATTR_background_)
+      HTMLResetBackgroundImage (event->document, event->element);
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_color ||
 	    event->attributeType.AttrTypeNum == HTML_ATTR_TextColor)
       HTMLResetForegroundColor (event->document, event->element);

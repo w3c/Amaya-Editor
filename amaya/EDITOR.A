@@ -23,7 +23,6 @@ MENUS
 	view:1 File button:BSave -> SaveDocument;
 	view:1 File button:BSaveAs -> SaveDocumentAs;
 	view:1 File Separator;
-	view:1 File button:BPrint -> PrintAs;
 	view:1 File button:BSetUpandPrint -> SetupAndPrint;
 	view:1 File Separator;
 	view:1 File button:BClose -> TtcCloseDocument;
@@ -117,6 +116,7 @@ MENUS
         view:1 Style button:BCharacterStyle -> TtcChangeCharacters;
         view:1 Style button:BColors -> TtcChangeColors;
         view:1 Style button:BFormat -> TtcChangeFormat;
+	view:1 Style button:BBackgroundImage -> ChangeBackgroundImage;
 	view:1 Style Separator;
 
 	view:1 Style button:BCreateClass -> ChangeClass;

@@ -137,5 +137,10 @@ int                 AMAYA;
 #define AM_PRINT_TOC		      125
 #define AM_NUMBERED_LINKS	      126
 #define AM_BUTTON_JAVA                127
-#define AMAYA_MSG_MAX                 128
+#define AM_REPEAT_MODE                128
+#define AM_REPEAT                     129
+#define AM_REPEAT_X                   130
+#define AM_REPEAT_Y                   131
+#define AM_NO_REPEAT                  132
+#define AMAYA_MSG_MAX                 133
 

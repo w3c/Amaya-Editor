@@ -18,84 +18,84 @@
 17 Recharger le document
 18 Sauver
 19 Sauver comme
-20 Imprimer
-21 Options et imprimer
-22 Fermer le document
-23 Quitter
-24 Fermer la vue
-25 Couper
-26 Copier
-27 Coller
-28 Detruire
-29 Rechercher
-30 Corriger
-31 IsIndex
-32 Base
-33 Meta
-34 Link
-35 Commentaire
-36 Paragraph
-37 Image
-38 Break
-39 Heading
-40 H1
-41 H2
-42 H3
-43 H4
-44 H5
-45 H6
-46 Liste
-47 Simple liste
-48 Liste numerotee
-49 Menu
-50 Directory
-51 Liste de definitions
-52 Terme
-53 Definition
-54 Horizontal Rule
-55 BlockQuote
-56 Preformatted
-57 Address
+20 Options et imprimer
+21 Fermer le document
+22 Quitter
+23 Fermer la vue
+24 Couper
+25 Copier
+26 Coller
+27 Detruire
+28 Rechercher
+29 Corriger
+30 IsIndex
+31 Base
+32 Meta
+33 Link
+34 Commentaire
+35 Paragraph
+36 Image
+37 Break
+38 Heading
+39 H1
+40 H2
+41 H3
+42 H4
+43 H5
+44 H6
+45 Liste
+46 Simple liste
+47 Liste numerotee
+48 Menu
+49 Directory
+50 Liste de definitions
+51 Terme
+52 Definition
+53 Horizontal Rule
+54 BlockQuote
+55 Preformatted
+56 Address
+57 Table
 58 Table
-59 Table
-60 Caption
-61 THead
-62 TBody
-63 TFoot
-64 Row
-65 DataCell
-66 HeadingCell
+59 Caption
+60 THead
+61 TBody
+62 TFoot
+63 Row
+64 DataCell
+65 HeadingCell
+66 Form
 67 Form
-68 Form
-69 Toggle
-70 Radio
-71 Option
-72 TextInput
-73 TextArea
-74 CommandLine
-75 Zone active
-76 Rectangle
-77 Cercle
-78 Polygone
-79 Division
-80 Object
+68 Toggle
+69 Radio
+70 Option
+71 TextInput
+72 TextArea
+73 CommandLine
+74 Zone active
+75 Rectangle
+76 Cercle
+77 Polygone
+78 Division
+79 Object
+80 Applet
 81 Applet
-82 Applet
-83 Param\350tre
-84 Cr\351er lien
-85 Cr\351er cible
-86 Changer lien
-87 D\351truire ancre
-88 Montrer boutons
-89 Montrer adresse et titre
-90 Montrer la structure
-91 Montrer la vue altern\351e
-92 Montrer les liens
-93 Montrer la table des mati\350res
-94 Montrer les zones actives
-95 Style de caract\350res
-96 Couleurs
-97 Format
+82 Param\350tre
+83 Cr\351er lien
+84 Cr\351er cible
+85 Changer lien
+86 D\351truire ancre
+87 Montrer boutons
+88 Montrer adresse et titre
+89 Montrer la structure
+90 Montrer la vue altern\351e
+91 Montrer les liens
+92 Montrer la table des mati\350res
+93 Montrer les zones actives
+94 Style de caract\350res
+95 Couleurs
+96 Format
+97 Image de fond
 98 Cr\351er une Classe
 99 Appliquer une Classe
 100 Feuilles de style

@@ -74,10 +74,16 @@ extern void SetHTMLStyleParserDestructiveMode ( boolean mode );
 extern void HTMLSetBackgroundColor ( Document doc,
                                      Element elem,
                                      char *color );
+extern void HTMLSetBackgroundImage ( Document doc,
+                                     Element elem,
+				     int repeat,
+                                     char *image );
 extern void HTMLSetForegroundColor ( Document doc,
                                      Element elem,
                                      char *color );
 extern void HTMLResetBackgroundColor ( Document doc,
+                                       Element elem );
+extern void HTMLResetBackgroundImage ( Document doc,
                                        Element elem );
 extern void HTMLResetForegroundColor ( Document doc,
                                        Element elem );
@@ -161,10 +167,16 @@ extern void SetHTMLStyleParserDestructiveMode (/* boolean mode */);
 extern void HTMLSetBackgroundColor (/* Document doc,
                                        Element elem,
                                        char *color */);
+extern void HTMLSetBackgroundImage (/* Document doc,
+                                       Element elem,
+				       int repeat,
+                                       char *image */);
 extern void HTMLSetForegroundColor (/* Document doc,
                                        Element elem,
                                        char *color */);
 extern void HTMLResetBackgroundColor (/* Document doc,
+                                         Element elem */);
+extern void HTMLResetBackgroundImage (/* Document doc,
                                          Element elem */);
 extern void HTMLResetForegroundColor (/* Document doc,
                                          Element elem */);

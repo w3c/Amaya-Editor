@@ -179,6 +179,12 @@ ATTRIBUTES
 	AttrModify.Post -> AttrColorCreated;
 	AttrDelete.Pre ->  AttrColorDelete;	
 	END;
+   background_:
+	BEGIN
+	AttrCreate.Post -> AttrColorCreated;
+	AttrModify.Post -> AttrColorCreated;
+	AttrDelete.Pre ->  AttrColorDelete;	
+	END;
    LinkColor:
 	BEGIN
 	AttrCreate.Post -> AttrColorCreated;

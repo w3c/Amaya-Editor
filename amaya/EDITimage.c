@@ -16,6 +16,8 @@
 /* Included headerfiles */
 #define THOT_EXPORT extern
 #include "amaya.h"
+#include "css.h"
+#include "presentdriver.h"
 
 #define ImageURL	1
 #define ImageLabel	2
@@ -23,18 +25,21 @@
 #define ImageSel	4
 #define ImageFilter     5
 #define FormImage	6
-#define IMAGE_MAX_REF	7
+#define RepeatImage	7
+#define IMAGE_MAX_REF	8
 
 static int          BaseImage;
+static int          RepeatValue;
 static char         DirectoryImage[MAX_LENGTH];
 static char         LastURLImage[MAX_LENGTH];
 static char         ImageName[MAX_LENGTH];
 static char         ImgFilter[NAME_LENGTH];
-#include "init_f.h"
 #include "AHTURLTools_f.h"
 #include "EDITimage_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLedit_f.h"
+#include "HTMLstyle_f.h"
+#include "init_f.h"
 
 
 /*----------------------------------------------------------------------
@@ -80,6 +85,9 @@ char               *data;
 	  if (val == 0)
 	    LastURLImage[0] = EOS;
 	}
+      break;
+    case RepeatImage:
+      RepeatValue = val;
       break;
     case ImageFilter:
       /* Filter value */
@@ -158,6 +166,7 @@ void                InitImage ()
 #endif				/* __STDC__ */
 {
    BaseImage = TtaSetCallback (CallbackImage, IMAGE_MAX_REF);
+   RepeatValue = 0;
    LastURLImage[0] = EOS;
    strcpy(ImgFilter, ".png");
    /* set path on current directory */
@@ -179,9 +188,8 @@ View                view;
 #endif /* __STDC__ */
 {
    int                 i;
-   char               *s;
+   char                s[MAX_LENGTH];
 
-   s = TtaGetMemory (MAX_LENGTH);
    /* Dialogue form for open URL or local */
    i = 0;
    strcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
@@ -215,8 +223,92 @@ View                view;
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseImage + FormImage, FALSE);
    TtaWaitShowDialogue ();
-   TtaFreeMemory (s);
    return (LastURLImage);
+}
+
+
+/*----------------------------------------------------------------------
+  ChangeBackgroundImage displays a form
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void ChangeBackgroundImage (Document document, View view)
+#else /* __STDC__*/
+void ChangeBackgroundImage (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+   Element             el;
+   char                s[MAX_LENGTH];
+   int                 firstchar, lastchar;
+   int                 i;
+
+   TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
+   if (el == NULL)
+     /* nothing to do */
+     return;
+
+   /* there is a selection */
+   /* Dialogue form for open URL or local */
+   i = 0;
+   strcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+   i += strlen (&s[i]) + 1;
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
+   i += strlen (&s[i]) + 1;
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
+
+   TtaNewSheet (BaseImage + FormImage, TtaGetViewFrame (document, view),  TtaGetMessage (AMAYA, AM_OPEN_URL),
+		3, s, TRUE, 2, 'L', D_CANCEL);
+   TtaNewTextForm (BaseImage + ImageURL, BaseImage + FormImage,
+		   TtaGetMessage (AMAYA, AM_OPEN_URL), 50, 1, TRUE);
+   TtaNewLabel (BaseImage + ImageLabel, BaseImage + FormImage, " ");
+   TtaListDirectory (DirectoryImage, BaseImage + FormImage,
+		     TtaGetMessage (LIB, TMSG_DOC_DIR),
+		     BaseImage + ImageDir, ImgFilter,
+		     TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
+   if (LastURLImage[0] != EOS)
+      TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
+   else
+     {
+	strcpy (s, DirectoryImage);
+	strcat (s, DIR_STR);
+	strcat (s, ImageName);
+	TtaSetTextForm (BaseImage + ImageURL, s);
+     }
+
+   TtaNewTextForm (BaseImage + ImageFilter, BaseImage + FormImage,
+		   TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
+   TtaSetTextForm (BaseImage + ImageFilter, ImgFilter);
+   /* selector for repeat mode */
+   i = 0;
+   sprintf (&s[i], "%s%s", "B", TtaGetMessage (AMAYA, AM_REPEAT));
+   i += strlen (&s[i]) + 1;
+   sprintf (&s[i], "%s%s", "B", TtaGetMessage (AMAYA, AM_REPEAT_X));
+   i += strlen (&s[i]) + 1;
+   sprintf (&s[i], "%s%s", "B", TtaGetMessage (AMAYA, AM_REPEAT_Y));
+   i += strlen (&s[i]) + 1;
+   sprintf (&s[i], "%s%s", "B", TtaGetMessage (AMAYA, AM_NO_REPEAT));
+   TtaNewSubmenu (BaseImage + RepeatImage, BaseImage + FormImage, 0,
+		  TtaGetMessage (AMAYA, AM_REPEAT_MODE), 4, s, NULL, FALSE);
+   TtaSetMenuForm (BaseImage + RepeatImage, 0);
+
+   TtaSetDialoguePosition ();
+   TtaShowDialogue (BaseImage + FormImage, FALSE);
+   TtaWaitShowDialogue ();
+   if (LastURLImage[0] == EOS)
+     HTMLResetBackgroundImage (document, el);
+   else
+     {
+       if (RepeatValue == 0)
+	 i = DRIVERP_REPEAT;
+       else if (RepeatValue == 1)
+	 i = DRIVERP_HREPEAT;
+       else if (RepeatValue == 2)
+	 i = DRIVERP_VREPEAT;
+       else
+	 i = DRIVERP_SCALE;
+       HTMLSetBackgroundImage (document, el, i, LastURLImage);
+     }
 }
 
 
