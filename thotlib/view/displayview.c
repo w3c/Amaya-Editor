@@ -88,8 +88,6 @@ typedef struct _SelectionDescriptor
 SelectionDescriptor;
  
 static SelectionDescriptor documentNewSelection[MAX_DOCUMENTS];
-static CHAR_T         nameBuffer[MAX_NAME_LENGTH];
-
 
 /*----------------------------------------------------------------------
    RedisplayDocViews demande le reaffichage de toutes les vues du	
