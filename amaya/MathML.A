@@ -46,6 +46,7 @@ ELEMENTS
 	END;
    MColumn_head:
 	BEGIN
+	ElemPaste.Post -> ColumnPasted;
 	ElemDelete.Pre -> DeleteColumn;
 	ElemDelete.Post -> ColumnDeleted;
 	END;
