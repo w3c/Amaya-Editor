@@ -27,6 +27,7 @@
 #include "styleparser_f.h"
 #include "Xml2thot_f.h"
 #include "HTMLedit_f.h"
+#include "AHTURLTools_f.h"
 
 /* maximum length of a Thot structure schema name */
 #define MAX_SS_NAME_LENGTH 32
@@ -45,6 +46,9 @@ AttrValueMapping XmlAttrValueMappingTable[] =
 
 /* maximum size of error messages */
 #define MaxMsgLength 200
+
+/* Variable used fot the modification of a CSS stylesheet */
+static char OldCssName[MAX_LENGTH];
 
 /*----------------------------------------------------------------------
   XmlAttributeComplete
@@ -288,9 +292,112 @@ static Element IsXmlStyleSheet (Element el)
 	   if (parentType.ElTypeNum != piNum)
 	     parent = NULL;
 	 }
+       else
+	 parent = NULL;
      }
 
    return parent;
+}
+
+/*----------------------------------------------------------------------
+   XmlStyleSheetWillBeModified                                             
+  ----------------------------------------------------------------------*/
+ThotBool XmlStyleSheetWillBeModified (NotifyOnTarget *event)
+{
+  char         *ptr = NULL, *end = NULL, *buffer = NULL;
+  int           length;
+  Language      lang;
+    
+  if (event->target != NULL)
+    {
+      OldCssName[0] = EOS;
+      length = TtaGetTextLength (event->target) + 1;
+      buffer = TtaGetMemory (length);
+      if (buffer != NULL)
+	{
+	  TtaGiveTextContent (event->target, buffer, &length, &lang);
+	  buffer[length++] = EOS;
+	  /* Is it an xml stylesheet ? */
+	  ptr = strstr (buffer, "xml-stylesheet");
+	  if (ptr != NULL)
+	    {
+	      /* Search the name of the stylesheet */
+	      ptr = strstr (buffer, "href");
+	      if (ptr != NULL)
+		{
+		  ptr = strstr (ptr, "\"");
+		  ptr++;
+		}
+	      if (ptr != NULL)
+		{
+		  end = strstr (ptr, "\"");
+		  *end = EOS;
+		  strcpy (OldCssName, ptr);
+		}
+	    }
+	}
+      TtaFreeMemory (buffer);
+    }
+  return FALSE;
+}
+
+/*----------------------------------------------------------------------
+   XmlStyleSheetModified                                             
+  ----------------------------------------------------------------------*/
+void XmlStyleSheetModified (NotifyOnTarget *event)
+{
+  char         *ptr = NULL, *end = NULL, *buffer = NULL;
+  char          cssname[MAX_LENGTH], delimitor;
+  char          pathname[MAX_LENGTH], documentname[MAX_LENGTH];   
+  int           length;
+  Language      lang;
+  int           oldStructureChecking;
+    
+  if (event->target != NULL)
+    {
+      length = TtaGetTextLength (event->target) + 1;
+      buffer = TtaGetMemory (length);
+      if (buffer != NULL)
+	{
+	  TtaGiveTextContent (event->target, buffer, &length, &lang);
+	  buffer[length++] = EOS;
+	  /* Is it an xml stylesheet ? */
+	  ptr = strstr (buffer, "xml-stylesheet");
+	  if (ptr != NULL)
+	    {
+	      /* Search the name of the stylesheet */
+	      ptr = strstr (buffer, "href");
+	      if (ptr != NULL)
+		{
+		  ptr = strstr (ptr, "=");
+		  ptr++;
+		  while (ptr[0] != EOS && ptr[0] == ' ')
+		    ptr++;
+		  if (ptr[0] != EOS)
+		    {
+		      delimitor = ptr[0];
+		      strcpy (cssname, &ptr[1]);
+		      end = strchr (cssname, delimitor);
+		      if (end && end[0] != EOS)
+			*end = EOS;
+		      if (OldCssName[0] != EOS && 
+			  (strcmp (OldCssName, cssname) != 0))
+			{
+			  NormalizeURL (OldCssName, event->document, pathname, documentname, NULL);
+			  RemoveStyleSheet (pathname, event->document, TRUE, TRUE, NULL);
+			  oldStructureChecking = TtaGetStructureChecking (event->document);
+			  TtaSetStructureChecking (0, event->document);
+			  XmlStyleSheetPi (buffer, event->element);
+			  TtaSetStructureChecking ((ThotBool)oldStructureChecking, event->document);
+			}
+		    }
+		}
+	    }
+	}
+      TtaFreeMemory (buffer);
+    }
+  OldCssName[0] = EOS;
+  return;
 }
 
 /*----------------------------------------------------------------------

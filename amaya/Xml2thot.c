@@ -3577,8 +3577,8 @@ void      XmlStyleSheetPi (char *PiData, Element piEl)
 		   css_href = ReallocUTF8String (css_href, XMLcontext.doc);
 		   LoadStyleSheet (css_href, XMLcontext.doc, piEl,
 				   css_info, css_media, FALSE);
-		   TtaFreeMemory (css_href);
 		 }
+	       TtaFreeMemory (css_href);
 	     }
 	 }
      }

@@ -53,6 +53,13 @@ ELEMENTS
 	END;
    MTABLE:
 	ElemNew.Post -> TableCreated;
+
+   XMLPI:
+	BEGIN
+	ElemTextModify.Pre -> XmlStyleSheetWillBeModified;
+	ElemTextModify.Post -> XmlStyleSheetModified;
+	END;
+
    TEXT_UNIT:
 	BEGIN
 	ElemNew.Post -> NewMathString;

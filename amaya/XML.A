@@ -10,6 +10,12 @@ DEFAULT
 
 ELEMENTS
 
+   xmlpi:
+	BEGIN
+	ElemTextModify.Pre -> XmlStyleSheetWillBeModified;
+	ElemTextModify.Post -> XmlStyleSheetModified;
+	END;
+
    TEXT_UNIT:
 	BEGIN
 	ElemPaste.Post -> XmlStyleSheetPasted;
