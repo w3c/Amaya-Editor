@@ -53,8 +53,7 @@ extern void GoToHome ( Document doc,
 extern Document InitDocView ( Document doc,
                               CHAR_T* docname,
                               DocumentType docType,
-                              Document sourceOfDoc,
-                              ThotBool logFile );
+                              Document sourceOfDoc );
 extern void Reload_callback ( int doc,
                               int status,
                               CHAR_T* urlName,
@@ -204,8 +203,7 @@ extern void GoToHome (/* Document doc,
 extern Document InitDocView (/* Document doc,
                                 CHAR_T* docname,
                                 DocumentType docType,
-                                Document sourceOfDoc,
-                                ThotBool logFile */);
+                                Document sourceOfDoc */);
 extern void Reload_callback (/* int doc,
                                 int status,
                                 CHAR_T* urlName,

@@ -69,7 +69,7 @@ extern void         TtaGetViewWH (Document doc, int view, /*OUT*/ int *w,
 				  /*OUT*/ int *h);
 
 /*----------------------------------------------------------------------
-   TtaGetViewGeometryRegistry 
+   TtaGetViewGeometry 
    returns the position (x, y) and sizes        
    (width, height) of the frame where a view is displayed. These values
    are read from the Thot registry and, if they don't exist, from a 
@@ -79,17 +79,7 @@ extern void         TtaGetViewWH (Document doc, int view, /*OUT*/ int *w,
    x, y, width, height: the frame's geometry
 
   ----------------------------------------------------------------------*/
-extern void         TtaGetViewGeometryRegistry (Document document, char* name, /*OUT*/ int *x, /*OUT*/ int *y, /*OUT*/ int *width, /*OUT*/ int *height);
-
-
-/*----------------------------------------------------------------------
-   TtaGetViewGeometry returns the position (x, y) and sizes        
-   (width, height) of the frame where a view is displayed.
-   The values returned are in pixels.
-   Parameters:    document: the document.                  
-   name: the name of the view in P schema.  
-  ----------------------------------------------------------------------*/
-extern void         TtaGetViewGeometry (Document document, CHAR_T* name, /*OUT*/ int *x, /*OUT*/ int *y, /*OUT*/ int *width, /*OUT*/ int *height);
+extern void         TtaGetViewGeometry (Document document, char* name, /*OUT*/ int *x, /*OUT*/ int *y, /*OUT*/ int *width, /*OUT*/ int *height);
 
 /*----------------------------------------------------------------------
    TtaGetViewGeometryMM returns the position (x, y) and sizes        
@@ -492,7 +482,6 @@ extern void         TtaChangeWindowTitle (Document, View, STRING);
 #else  /* __STDC__ */
 
 extern void         TtaGetViewWH ( /* Document doc, int view, int *w, int *h */ );
-extern void         TtaGetViewGeometryRegistry ( /* Document document, char* name, int *x, int *y, int *width, int *height */ );
 extern void         TtaGetViewGeometry ( /* Document document, CHAR_T* name, int *x, int *y, int *width, int *height */ );
 extern void         TtaGetViewGeometryMM ( /* Document document, CHAR_T* name, int *x, int *y, int *width, int *height */ );
 extern View         TtaOpenMainView ( /* Document document, int x, int y, int w, int h */ );

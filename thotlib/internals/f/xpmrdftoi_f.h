@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern int XpmReadFileToImage ( Display *display,
                                 char *filename,
                                 XImage **image_return,
@@ -15,6 +16,7 @@ extern int XpmReadFileToXpmImage ( char *filename,
                                    XpmInfo *info );
 
 #else /* __STDC__ */
+
 extern int XpmReadFileToImage (/* Display *display,
                                   char *filename,
                                   XImage **image_return,

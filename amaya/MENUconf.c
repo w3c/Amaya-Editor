@@ -2825,10 +2825,11 @@ STRING              pathname;
   registry entry under the form "x y w h"
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void RestoreDefEnvGeom (char* env_var)
+static void RestoreDefEnvGeom (char* env_var, Document doc)
 #else
-static void RestoreDefEnvGeom (env_var)
-char* env_var;
+static void RestoreDefEnvGeom (env_var, doc)
+char       *env_var;
+Document    doc;
 #endif /* _STDC_ */
 {
   int x, y, w, h;
@@ -2839,13 +2840,8 @@ char* env_var;
   /* in order to read the default values from HTML.conf, we erase the 
      registry entry */
   TtaClearEnvString (env_var);
-  TtaGetViewGeometryMM (GeometryDoc, EnvVar, &x, &y, &w, &h); 
-  usprintf (s, TEXT("%d %d %d %d"), 
-	   x,
-	   y,
-	   w,
-	   h);
-
+  TtaGetViewGeometry (doc, EnvVar, &x, &y, &w, &h); 
+  usprintf (s, TEXT("%d %d %d %d"), x, y, w, h);
   TtaSetEnvString (env_var, s, TRUE);
 }
 
@@ -2855,10 +2851,11 @@ char* env_var;
   using the format "x y w h"
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void SetEnvGeom (char* view_name)
+static void SetEnvGeom (char* view_name, Document doc)
 #else
-static void SetEnvGeom (view_name)
-char* view_name
+static void SetEnvGeom (view_name, doc)
+char       *view_name;
+Document    doc;
 #endif /* _STDC_ */
 {
   int view;
@@ -2866,19 +2863,17 @@ char* view_name
   
 
   /* @@ I should be able to remove this line */
-  TtaGetViewGeometryRegistry (GeometryDoc, view_name, &x, &y, &w, &h);
-
-  view = TtaGetViewFromName (GeometryDoc, view_name);
-  if (view != 0 && TtaIsViewOpened (GeometryDoc, view))
+  TtaGetViewGeometry (doc, view_name, &x, &y, &w, &h);
+  if (!strcmp (view_name, "Source_view"))
+    /* takes the current size and position of the main view */
+    view = 1;
+  else
+    view = TtaGetViewFromName (doc, view_name);
+  if (view != 0 && TtaIsViewOpened (doc, view))
     {
       /* get current geometry */
-      TtaGetViewXYWH (GeometryDoc, view, &x, &y, &w, &h);
-      usprintf (s, TEXT("%d %d %d %d"), 
-	       x,
-	       y,
-	       w,
-	       h);
-      
+      TtaGetViewXYWH (doc, view, &x, &y, &w, &h);
+      usprintf (s, TEXT("%d %d %d %d"), x, y, w, h);
       TtaSetEnvString (view_name, s, TRUE);
     }
 }
@@ -2893,14 +2888,18 @@ static void RestoreDefaultGeometryConf (void)
 static void RestoreDefaultGeometryConf ()
 #endif /* __STDC__ */
 {
-  RestoreDefEnvGeom ("Formatted_view");
-  RestoreDefEnvGeom ("Structure_view");
-  RestoreDefEnvGeom ("Math_Structure_view");
-  RestoreDefEnvGeom ("Graph_Structure_view");
-  RestoreDefEnvGeom ("Alternate_view");
-  RestoreDefEnvGeom ("Links_view");
-  RestoreDefEnvGeom ("Table_of_contents");
+  int   i;
 
+  RestoreDefEnvGeom ("Formatted_view", GeometryDoc);
+  RestoreDefEnvGeom ("Structure_view", GeometryDoc);
+  RestoreDefEnvGeom ("Math_Structure_view", GeometryDoc);
+  RestoreDefEnvGeom ("Graph_Structure_view", GeometryDoc);
+  RestoreDefEnvGeom ("Alternate_view", GeometryDoc);
+  RestoreDefEnvGeom ("Links_view", GeometryDoc);
+  RestoreDefEnvGeom ("Table_of_contents", GeometryDoc);
+  i = DocumentSource[GeometryDoc];
+  if (i)
+    RestoreDefEnvGeom ("Source_view", i);
   /* save the options */
   TtaSaveAppRegistry ();
 }
@@ -2914,18 +2913,21 @@ static void SetEnvCurrentGeometry ()
 static void SetEnvCurrentGeometry ()
 #endif /* _STDC__ */
 {
+  int i;
+
   /* only do the processing if the document exists */
   if (DocumentURLs[GeometryDoc])
     {
-      SetEnvGeom ("Formatted_view");
-      SetEnvGeom ("Structure_view");
-      SetEnvGeom ("Math_Structure_view");
-#ifdef GRAPHML
-      SetEnvGeom ("Graph_Structure_view");
-#endif /* GRAPHML */
-      SetEnvGeom ("Alternate_view");
-      SetEnvGeom ("Links_view");
-      SetEnvGeom ("Table_of_contents");
+      SetEnvGeom ("Formatted_view", GeometryDoc);
+      SetEnvGeom ("Structure_view", GeometryDoc);
+      SetEnvGeom ("Math_Structure_view", GeometryDoc);
+      SetEnvGeom ("Graph_Structure_view", GeometryDoc);
+      SetEnvGeom ("Alternate_view", GeometryDoc);
+      SetEnvGeom ("Links_view", GeometryDoc);
+      SetEnvGeom ("Table_of_contents", GeometryDoc);
+      i = DocumentSource[GeometryDoc];
+      if (i)
+	  SetEnvGeom ("Source_view", i);
     } /* if GeometryDoc exists */
 }
 

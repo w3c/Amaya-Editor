@@ -9181,6 +9181,7 @@ ATTRIBUTES
  Align = left_:
 	BEGIN
 	CreateBefore(ALIGN_LEFT);
+	Adjust: Left;
 	HorizPos: Left = Enclosing . Left;
 	In Structure_view
 	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -9190,6 +9191,7 @@ ATTRIBUTES
  Align = center_:
 	BEGIN
 	CreateBefore(ALIGN_CENTER);
+	Adjust: VMiddle;
 	HorizPos: VMiddle = Enclosing . VMiddle;
 	In Structure_view
 	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -9199,6 +9201,7 @@ ATTRIBUTES
  Align = right_:
 	BEGIN
 	CreateBefore(ALIGN_RIGHT);
+	Adjust: Right;
 	HorizPos: Right = Enclosing . Right;
 	In Structure_view
 	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -9246,6 +9249,22 @@ ATTRIBUTES
 	HorizPos: Right = Enclosing . Right;
 	In Structure_view
 	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	END;
+ TextAlign (Table) = center_:
+	BEGIN
+	HorizPos: VMiddle = Enclosing . VMiddle;
+	In Structure_view
+	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+	   HorizPos: Left = Enclosing . Left;
+	END;
+ TextAlign (Table) = right_:
+	BEGIN
+	HorizPos: Right = Enclosing . Right;
+	In Structure_view
+	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+	   HorizPos: Left = Enclosing . Left;
 	END;
 
  ISMAP:

@@ -1139,16 +1139,23 @@ Document       doc;
 	ResetHighlightedElement ();
       if (DocumentSource[doc])
 	{
-	sourceDoc = DocumentSource[doc];
-	TtcCloseDocument (sourceDoc, 1);
-	FreeDocumentResource (sourceDoc);
-        DocumentSource[doc] = 0;
+	  if (DocumentTypes[doc] != docLog)
+	    {
+	      sourceDoc = DocumentSource[doc];
+	      TtcCloseDocument (sourceDoc, 1);
+	      FreeDocumentResource (sourceDoc);
+	    }
+	  DocumentSource[doc] = 0;
 	}
       /* is this document the source of another document? */
       for (i = 1; i < DocumentTableLength; i++)
          if (DocumentURLs[i] != NULL)
 	    if (DocumentSource[i] == doc)
-	       DocumentSource[i] = 0;
+	      {
+		DocumentSource[i] = 0;
+		if (DocumentTypes[i] == docLog)
+		  TtaCloseDocument (i);
+	      }
       RemoveDocCSSs (doc);
       /* avoid to free images of backup documents */
       if (BackupDocument != doc)

@@ -124,6 +124,13 @@ extern void Clear ( int frame,
                     int haut,
                     int x,
                     int y );
+extern PtrElement CreateSibling ( PtrDocument pDoc,
+                                  PtrElement pEl,
+                                  ThotBool before,
+                                  ThotBool createAbsBox,
+                                  int typeNum,
+                                  PtrSSchema pSS,
+                                  ThotBool inclusion );
 
 #else /* __STDC__ */
 
@@ -245,6 +252,13 @@ extern void Clear (/* int frame,
                       int haut,
                       int x,
                       int y */);
+extern PtrElement CreateSibling (/* PtrDocument pDoc,
+                                    PtrElement pEl,
+                                    ThotBool before,
+                                    ThotBool createAbsBox,
+                                    int typeNum,
+                                    PtrSSchema pSS,
+                                    ThotBool inclusion */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

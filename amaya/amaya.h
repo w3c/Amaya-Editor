@@ -92,10 +92,8 @@ typedef void  TTcbf (Document doc, int status, CHAR_T* urlName,
 /* The different events to open a new document */
 typedef enum _ClickEvent {
   CE_ABSOLUTE, CE_RELATIVE, CE_FORM_POST, CE_FORM_GET,
-  CE_HELP, CE_MAKEBOOK, CE_LOG , CE_TEMPLATE, CE_INIT
-#ifdef ANNOTATIONS
-  ,CE_ANNOT
-#endif /* ANNOTATIONS */
+  CE_HELP, CE_MAKEBOOK, CE_LOG , CE_TEMPLATE, CE_INIT,
+  CE_ANNOT
 } ClickEvent;
 
 #define NO               0
@@ -327,10 +325,9 @@ typedef enum
   docCSSRO,
   docSource,
   docSourceRO,
-#ifdef ANNOTATIONS
   docAnnot,
-  docAnnotRO
-#endif /* ANNOTATIONS */
+  docAnnotRO,
+  docLog
 } DocumentType;
 
 

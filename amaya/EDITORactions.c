@@ -97,9 +97,9 @@ ThotBool            isHTML;
   documentname = TtaAllocString (MAX_LENGTH);
   NormalizeURL (url, 0, pathname, documentname, NULL);
   if (isHTML)
-    doc = InitDocView (0, documentname, docHTML, 0, FALSE);
+    doc = InitDocView (0, documentname, docHTML, 0);
   else
-    doc = InitDocView (0, documentname, docCSS, 0, FALSE);
+    doc = InitDocView (0, documentname, docCSS, 0);
   TtaFreeMemory (documentname);
   TtaFreeMemory (pathname);
 

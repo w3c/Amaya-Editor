@@ -1472,14 +1472,13 @@ View            view;
    sourceOfDoc is not zero when we're opening the source view of a document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document     InitDocView (Document doc, CHAR_T* docname, DocumentType docType, Document sourceOfDoc, ThotBool logFile)
+Document     InitDocView (Document doc, CHAR_T* docname, DocumentType docType, Document sourceOfDoc)
 #else
-Document     InitDocView (doc, docname, docType, sourceOfDoc, logFile)
+Document     InitDocView (doc, docname, docType, sourceOfDoc)
 Document     doc;
 CHAR_T*      docname;
 DocumentType docType;
 Document     sourceOfDoc;
-ThotBool     logFile;
 #endif
 {
   View                mainView, structView, altView, linksView, tocView;
@@ -1506,14 +1505,12 @@ ThotBool     logFile;
 	docType = docTextRO;
       else if (docType == docSource)
 	docType = docSourceRO;
-#ifdef ANNOTATIONS
       else if (docType == docAnnot)
 	docType = docAnnotRO;
-#endif /* ANNOTATIONS */
     }
 
   old_doc = doc;		/* previous document */
-  if (doc != 0 && !TtaIsDocumentModified (doc))
+  if (doc != 0 && docType != docLog && !TtaIsDocumentModified (doc))
     /* the new document will replace another document in the same window */
     {
       if (DocumentTypes[doc] == docHTMLRO || DocumentTypes[doc] == docHTML)
@@ -1563,12 +1560,11 @@ ThotBool     logFile;
    /* open the document */
    if (docType == docText || docType == docTextRO ||
        docType == docCSS || docType == docCSSRO ||
-       docType == docSource || docType == docSourceRO)
+       docType == docSource || docType == docSourceRO ||
+       docType == docLog)
      doc = TtaNewDocument (TEXT("TextFile"), docname);
-#ifdef ANNOTATIONS
    else if (docType == docAnnot || docType == docAnnotRO)
      doc = TtaNewDocument (TEXT("Annot"), docname);
-#endif /* ANNOTATIONS */
    else
      doc = TtaNewDocument (TEXT("HTML"), docname);
    if (doc >= DocumentTableLength)
@@ -1581,13 +1577,12 @@ ThotBool     logFile;
        /* assign a presentation model to the document */
        if (docType == docText || docType == docTextRO||
 	   docType == docCSS || docType == docCSSRO ||
-           docType == docSource || docType == docSourceRO)
+           docType == docSource || docType == docSourceRO ||
+	   docType == docLog)
 	   TtaSetPSchema (doc, TEXT("TextFileP"));
-#ifdef ANNOTATIONS
        else if (docType == docAnnot || docType == docAnnotRO)
 	   TtaSetPSchema (doc, TEXT("AnnotP"));
        /* @@ shouldn't we have a Color and BW case for annots too? */
-#endif /* ANNOTATIONS */
        else
 	 {
 	   if (TtaGetScreenDepth () > 1)
@@ -1596,40 +1591,63 @@ ThotBool     logFile;
 	     TtaSetPSchema (doc, TEXT("HTMLPBW"));
 	 }
 
+       TtaSetNotificationMode (doc, 1);
        /* get the geometry of the main view */
-#ifdef ANNOTATIONS
        if (docType == docAnnot || docType == docAnnotRO)
 	 tmp = "Annot_Formatted_view";
-       else
-#endif /* ANNOTATIONS */
-	 tmp = "Formatted_view";
-       TtaGetViewGeometryRegistry (doc, tmp, &x, &y, &w, &h);
-
-       TtaSetNotificationMode (doc, 1);
-       /* change the position slightly to avoid hiding completely the main
-	  view of other documents */
-       x = x + (doc - 1) * 5;
-       y = y + (doc - 1) * 5;
-       /* open the main view */
-       if (logFile)
-	 mainView = TtaOpenMainView (doc, x, y, w, 60);
        else if (sourceOfDoc &&
 		(docType == docSource || docType == docSourceRO))
-	 {
-	   TtaGetViewGeometryRegistry (sourceOfDoc, "Structure_view",
-				       &x, &y, &w, &h);
-	   mainView = TtaOpenMainView (doc, x, y, w, h);
-	 }
+	 tmp = "Source_view";
        else
-	 mainView = TtaOpenMainView (doc, x, y, w, h);
+	 tmp = "Formatted_view";
+       TtaGetViewGeometry (doc, tmp, &x, &y, &w, &h);
+       if (docType == docLog)
+	 {
+	   x += 30;
+	   y += 30;
+	   h = 300;
+	   w = 550;
+	 }
+       /* change the position slightly to avoid hiding completely the main
+	  view of other documents */
+       x = x + (doc - 1) * 10;
+       y = y + (doc - 1) * 10;
+       /* open the main view */
+       mainView = TtaOpenMainView (doc, x, y, w, h);
        
        if (mainView == 0)
 	 {
 	   TtaCloseDocument (doc);
 	   return (0);
 	 }
-
-       if (!opened)
+       if (docType == docLog)
+	 {
+	   TtaSetItemOff (doc, 1, File, BHtml);
+	   TtaSetItemOff (doc, 1, File, BTemplate);
+	   TtaSetItemOff (doc, 1, File, BCss);
+	   TtaSetItemOff (doc, 1, File, BOpenDoc);
+	   TtaSetItemOff (doc, 1, File, BOpenInNewWindow);
+	   TtaSetItemOff (doc, 1, File, BReload);
+	   TtaSetItemOff (doc, 1, File, BBack);
+	   TtaSetItemOff (doc, 1, File, BForward);
+	   TtaSetItemOff (doc, 1, File, BSave);
+	   TtaSetItemOff (doc, 1, File, BSynchro);
+	   TtaSetItemOff (doc, 1, File, BExit);
+	   TtaSetMenuOff (doc, 1, Edit_);
+	   TtaSetMenuOff (doc, 1, Types);
+	   TtaSetMenuOff (doc, 1, Links);
+	   TtaSetMenuOff (doc, 1, Views);
+	   TtaSetMenuOff (doc, 1, Style);
+	   TtaSetMenuOff (doc, 1, Special);
+	   TtaSetMenuOff (doc, 1, Attributes_);
+#ifdef ANNOTATIONS
+	   TtaSetMenuOff (doc, 1, Annotations_);
+#endif /* ANNOTATIONS */
+	   TtaSetMenuOff (doc, 1, Help_);
+	   TtcSwitchButtonBar (doc, 1); /* no button bar */
+	   TtcSwitchCommands (doc, 1); /* no command open */
+	 }
+       else if (!opened)
 	 /* re-use an existing window */
 	 {
 	   /* Create all buttons */
@@ -1737,16 +1755,11 @@ ThotBool     logFile;
 #ifdef GRAPHML
 	   AddGraphicsButton (doc, 1);
 #endif /* GRAPHML */
-#ifdef ANNOTATIONS
-	   if (docType != docAnnot && docType != docAnnotRO)
-#endif /* ANNOTATIONS */
-	   TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL), TRUE,
-			   TextURL);
-#ifdef ANNOTATIONS
+	   if (docType == docAnnot || docType == docAnnotRO)
+	     TtcSwitchCommands (doc, 1); /* no command open */
 	   else
-	     /* @@ patch for not seeing the icon, while waiting for Irene */
-	     TtcSwitchCommands (doc, 1);
-#endif /* ANNOTATIONS */
+	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL), TRUE,
+			   TextURL);
 
 	   /* initial state for menu entries */
 	   TtaSetItemOff (doc, 1, File, BBack);
@@ -1774,7 +1787,9 @@ ThotBool     logFile;
 
    /* store the new document type */
    reinitialized = FALSE;
-   if (docType == docImage)        /* -------->loading an image */
+   if (docType == docLog)           /* -------->log file */
+     DocumentTypes[doc] = docLog;
+   else if (docType == docImage)    /* -------->loading an image */
      {
        if (DocumentTypes[doc] == docHTMLRO ||
 	   DocumentTypes[doc] == docTextRO ||
@@ -1868,9 +1883,7 @@ ThotBool     logFile;
        DocumentTypes[doc] = docSource;
      }
    else if (docType == docSourceRO)
-     {
-       DocumentTypes[doc] = docSourceRO;
-     }
+     DocumentTypes[doc] = docSourceRO;
    else if (docType == docHTMLRO) /* -------->loading HTML in ReadOnly */
      {
        /* document in ReadOnly mode */
@@ -1878,9 +1891,7 @@ ThotBool     logFile;
      }
 #ifdef ANNOTATIONS
    else if (docType == docAnnot) /* -------->loading an Annotation */
-     {
        DocumentTypes[doc] = docAnnot;
-     }
    else if (docType == docAnnotRO) /* ---->loading an Annotation in ReadOnly */
      {
        /* document in ReadOnly mode */
@@ -1910,7 +1921,7 @@ ThotBool     logFile;
 	 }
      }
 
-   if (reinitialized || !opened)
+   if ((reinitialized || !opened))
      /* now update menus and buttons according to the document status */
      if (DocumentTypes[doc] == docHTMLRO ||
 	 DocumentTypes[doc] == docImageRO ||
@@ -2368,7 +2379,7 @@ ThotBool            history;
 	  if (method == CE_RELATIVE && docType == docCSS)
 	    {
 	      /* display the CSS in a new window */
-	      newdoc = InitDocView (0, documentname, docType, 0, FALSE);
+	      newdoc = InitDocView (0, documentname, docType, 0);
 	      ResetStop (doc);
 	      /* clear the status line of previous document */
 	      TtaSetStatus (doc, 1, TEXT(" "), NULL);
@@ -2383,12 +2394,18 @@ ThotBool            history;
 	      else
 		docType = docAnnot;
 	      method = CE_RELATIVE;
-	      newdoc = InitDocView (doc, documentname, docAnnot, 0, FALSE);
+	      /* ???? newdoc = doc */
+	      newdoc = InitDocView (doc, documentname, docAnnot, 0);
 	    }
 #endif /* ANNOTATIONS */
-	  else if (method != CE_INIT 
-		   || (docType != docHTML && docType != docHTMLRO))
-	    newdoc = InitDocView (doc, documentname, docType, 0, FALSE);
+	  else if (method == CE_LOG)
+	    {
+	      docType = docLog;
+	      newdoc = doc;
+	    }
+	  else if (method != CE_INIT ||
+		   (docType != docHTML && docType != docHTMLRO))
+	    newdoc = InitDocView (doc, documentname, docType, 0);
 	  else
 	    newdoc = doc;
 	}
@@ -2521,7 +2538,8 @@ ThotBool            history;
 		   DocumentTypes[newdoc] == docCSS ||
 		   DocumentTypes[newdoc] == docCSSRO ||
 		   DocumentTypes[newdoc] == docSource ||
-		   DocumentTypes[newdoc] == docSourceRO);
+		   DocumentTypes[newdoc] == docSourceRO ||
+		   DocumentTypes[newdoc] == docLog);
       /* Now we forget the method CE_INIT. It's a standard method */
       if (DocumentMeta[newdoc]->method == CE_INIT)
 	DocumentMeta[newdoc]->method = CE_ABSOLUTE;
@@ -2941,7 +2959,7 @@ View                view;
        }
      TtaExtractName (tempdocument, tempdir, documentname);
      /* open a window for the source code */
-     sourceDoc = InitDocView (0, documentname, docSource, document, FALSE);   
+     sourceDoc = InitDocView (0, documentname, docSource, document);   
      if (sourceDoc > 0)
        {
 	 DocumentSource[document] = sourceDoc;
@@ -2964,8 +2982,8 @@ View                view;
 	     DocumentTypes[sourceDoc] = docSourceRO;
 	     SetDocumentReadOnly (sourceDoc);
 	   }
-	 TtcSwitchButtonBar (sourceDoc, 1); /* no button bar */	 
-	 TtcSwitchCommands (sourceDoc, 1); /* no command filed */	 
+	 TtcSwitchButtonBar (sourceDoc, 1); /* no button bar */
+	 TtcSwitchCommands (sourceDoc, 1); /* no command open */
 	 TtaSetItemOff (sourceDoc, 1, File, New1);
 	 TtaSetItemOff (sourceDoc, 1, File, BHtml);
 	 TtaSetItemOff (sourceDoc, 1, File, BTemplate);
@@ -3016,12 +3034,12 @@ View                view;
      TtaRaiseView (document, structView);
    else
      {
-       TtaGetViewGeometryRegistry (document, "Structure_view", &x, &y, &w, &h);
+       TtaGetViewGeometry (document, "Structure_view", &x, &y, &w, &h);
        structView = TtaOpenView (document, TEXT("Structure_view"), x, y, w, h);
        if (structView != 0)
 	 {
-	   TtcSwitchButtonBar (document, structView);
-	   TtcSwitchCommands (document, structView);
+	   TtcSwitchButtonBar (document, structView); /* no button bar */
+	   TtcSwitchCommands (document, structView); /* no command open */
 	   if (DocumentTypes[document] == docHTMLRO ||
 	       DocumentTypes[document] == docImageRO)
 	     {
@@ -3041,14 +3059,12 @@ View                view;
      TtaRaiseView (document, mathView);
    else
      {
-       TtaGetViewGeometryRegistry (document, "Math_Structure_view",
-				   &x, &y, &w, &h);
-       mathView = TtaOpenView (document, TEXT("Math_Structure_view"),
-			       x, y, w, h);
+       TtaGetViewGeometry (document, "Math_Structure_view", &x, &y, &w, &h);
+       mathView = TtaOpenView (document, TEXT("Math_Structure_view"), x, y, w, h);
        if (mathView != 0)
 	 {
-	   TtcSwitchButtonBar (document, mathView);
-	   TtcSwitchCommands (document, mathView);
+	   TtcSwitchButtonBar (document, mathView); /* no button bar */
+	   TtcSwitchCommands (document, mathView); /* no command open */
 	   if (DocumentTypes[document] == docHTMLRO ||
 	       DocumentTypes[document] == docImageRO)
 	     {
@@ -3069,14 +3085,12 @@ View                view;
      TtaRaiseView (document, graphView);
    else
      {
-       TtaGetViewGeometryRegistry (document, "Graph_Structure_view",
-				   &x, &y, &w, &h);
-       graphView = TtaOpenView (document, TEXT("Graph_Structure_view"),
-				x, y, w, h);
+       TtaGetViewGeometry (document, "Graph_Structure_view", &x, &y, &w, &h);
+       graphView = TtaOpenView (document, TEXT("Graph_Structure_view"), x, y, w, h);
        if (graphView != 0)
 	 {
-	   TtcSwitchButtonBar (document, graphView);
-	   TtcSwitchCommands (document, graphView);
+	   TtcSwitchButtonBar (document, graphView); /* no button bar */
+	   TtcSwitchCommands (document, graphView); /* no command open */
 	   if (DocumentTypes[document] == docHTMLRO ||
 	       DocumentTypes[document] == docImageRO)
 	     {
@@ -3118,13 +3132,13 @@ View                view;
       TtaRaiseView (document, altView);
    else
      {
-	TtaGetViewGeometryRegistry(document, "Alternate_view", &x, &y, &w, &h);
+	TtaGetViewGeometry (document, "Alternate_view", &x, &y, &w, &h);
 	altView = TtaOpenView (document, TEXT("Alternate_view"), x, y, w, h);
 	if (altView != 0)
 	  {
 	    SetWindowTitle (document, document, altView);
-	    TtcSwitchButtonBar (document, altView);
-	    TtcSwitchCommands (document, altView);
+	    TtcSwitchButtonBar (document, altView); /* no button bar */
+	    TtcSwitchCommands (document, altView); /* no command open */
 	    if (DocumentTypes[document] == docHTMLRO ||
 		DocumentTypes[document] == docImageRO)
 	      {
@@ -3164,13 +3178,13 @@ View                view;
       TtaRaiseView (document, linksView);
    else
      {
-	TtaGetViewGeometryRegistry (document, "Links_view", &x, &y, &w, &h);
+	TtaGetViewGeometry (document, "Links_view", &x, &y, &w, &h);
 	linksView = TtaOpenView (document, TEXT("Links_view"), x, y, w, h);
 	if (linksView != 0)
 	  {
 	    SetWindowTitle (document, document, linksView);
-	    TtcSwitchButtonBar (document, linksView);
-	    TtcSwitchCommands (document, linksView);
+	    TtcSwitchButtonBar (document, linksView); /* no button bar */
+	    TtcSwitchCommands (document, linksView); /* no command open */
 	    if (DocumentTypes[document] == docHTMLRO ||
 		DocumentTypes[document] == docImageRO)
 	      {
@@ -3210,15 +3224,13 @@ View                view;
       TtaRaiseView (document, tocView);
    else
      {
-	TtaGetViewGeometryRegistry (document, "Table_of_contents",
-				    &x, &y, &w, &h);
-	tocView = TtaOpenView (document, TEXT("Table_of_contents"),
-			       x, y, w, h);
+	TtaGetViewGeometry (document, "Table_of_contents", &x, &y, &w, &h);
+	tocView = TtaOpenView (document, TEXT("Table_of_contents"), x, y, w, h);
 	if (tocView != 0)
 	  {
 	    SetWindowTitle (document, document, tocView);
-	    TtcSwitchButtonBar (document, tocView);
-	    TtcSwitchCommands (document, tocView);
+	    TtcSwitchButtonBar (document, tocView); /* no button bar */
+	    TtcSwitchCommands (document, tocView); /* no command open */
 	    if (DocumentTypes[document] == docHTMLRO ||
 		DocumentTypes[document] == docImageRO)
 	      {
@@ -3535,11 +3547,9 @@ void               *ctx_cbf;
 	    of normalizeFile, as the function doesn't allocate
 	    memory dynamically (note: this can generate some MAX_LENGTH
 	    problems) */
-	 if (CE_event == CE_RELATIVE || CE_event == CE_FORM_GET
-#ifdef ANNOTATIONS
-	     || CE_event == CE_ANNOT
-#endif /*ANNOTATIONS */
-		 || CE_event == CE_FORM_POST || CE_event == CE_MAKEBOOK)
+	 if (CE_event == CE_RELATIVE || CE_event == CE_FORM_GET ||
+	     CE_event == CE_ANNOT || CE_event == CE_FORM_POST ||
+	     CE_event == CE_MAKEBOOK)
 	   /* we're following a link, so do all the convertions on
 	      the URL */
 	   NormalizeFile (pathname, tempfile, AM_CONV_ALL);
@@ -3595,144 +3605,120 @@ void               *ctx_cbf;
        ctx->local_link = 0;
      }
 
+   toparse = 0;
    if (ok && newdoc == 0)
      {
        /* document not loaded yet */
-       if ((CE_event == CE_RELATIVE || CE_event == CE_FORM_GET
-	    || CE_event == CE_FORM_POST || CE_event == CE_MAKEBOOK
-#ifdef ANNOTATIONS
-	    || CE_event == CE_ANNOT
-#endif /*ANNOTATIONS */
-	    )
-	    && !IsW3Path (pathname) 
-	    && !TtaFileExist (pathname))
+       if ((CE_event == CE_RELATIVE || CE_event == CE_FORM_GET ||
+	    CE_event == CE_FORM_POST || CE_event == CE_MAKEBOOK ||
+	    CE_event == CE_ANNOT) &&
+	    !IsW3Path (pathname) && !TtaFileExist (pathname))
 	 {
 	   /* the target document doesn't exist */
-	   TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-			 pathname);
+	   TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
 	   ok = FALSE; /* do not continue */
 	 }
-       else    
+       else if (CE_event == CE_LOG)
+	   /* need to create a new window for the document */
+	     newdoc = InitDocView (doc, documentname, docLog, 0);
+       else if (CE_event == CE_HELP)
 	 {
-	   toparse = 0;
-	   /* In case of initial document, open the view before loading */
-	   if (doc == 0)
+	   /* need to create a new window for the document */
+	   newdoc = InitDocView (doc, documentname, docHTMLRO, 0);
+	   if (newdoc)
 	     {
-	       /* need to create a new window for the document */
-	       if (CE_event == CE_LOG)
-		 newdoc = InitDocView (doc, documentname, docTextRO, 0, TRUE);
-	       else if (CE_event == CE_HELP)
-		 newdoc = InitDocView (doc, documentname, docHTMLRO, 0, FALSE);
+	       /* help document has to be in read-only mode */
+	       TtcSwitchCommands (newdoc, 1); /* no command open */
+	       TtaSetToggleItem (newdoc, 1, Views, TShowTextZone, FALSE);
+	       TtaSetMenuOff (newdoc, 1, Help_);
+	     }
+	 }
 #ifdef ANNOTATIONS
-	       else if (CE_event == CE_ANNOT)
-		 {
-		   newdoc = InitDocView (doc, documentname, docAnnot, 0,FALSE);
-		   /* we're downloading an annotation, fix the accept_header
-		      (thru the content_type variable) to application/rdf */
-		   content_type = TEXT("application/rdf");
-		 }
+       else if (CE_event == CE_ANNOT)
+	 {
+	   /* need to create a new window for the document */
+	   newdoc = InitDocView (doc, documentname, docAnnot, 0);
+	   /* we're downloading an annotation, fix the accept_header
+	      (thru the content_type variable) to application/rdf */
+	   content_type = TEXT("application/rdf");
+	 }
 #endif /* ANNOTATIONS */
-	       else
-		   newdoc = InitDocView (doc, documentname, docHTML, 0, FALSE);
-	       if (newdoc == 0)
-		 /* cannot display the new document */
-		 ok = FALSE;
+       else if (doc == 0)
+	 /* In case of initial document, open the view before loading */
+	 newdoc = InitDocView (doc, documentname, docHTML, 0);
+       else
+	 {
+	   newdoc = doc;
+	   /* stop current transfer for previous document */
+	   if (CE_event != CE_MAKEBOOK)
+	     StopTransfer (baseDoc, 1);
+	   else
+	     /* temporary docs to make a book are not in ReadOnly mode */
+	     DocumentTypes[newdoc] = docHTML;
+	 }
+
+       if (newdoc == 0)
+	 /* cannot display the new document */
+	 ok = FALSE;
+       if (ok)
+	 {
+	   /* this document is currently in load */
+	   W3Loading = newdoc;
+	   ActiveTransfer (newdoc);
+	   /* set up the transfer mode */
+	   mode = AMAYA_ASYNC | AMAYA_FLUSH_REQUEST;
+
+	   if (CE_event == CE_FORM_POST)
+	     mode = mode | AMAYA_FORM_POST | AMAYA_NOCACHE;
+	   else if (CE_event == CE_MAKEBOOK)
+	     mode = AMAYA_ASYNC;
+
+	   if (IsW3Path (pathname))
+	     {
+	       if (CE_event != CE_FORM_POST
+		   && !ustrcmp (documentname, TEXT("noname.html")))
+		 {
+		   slash = ustrlen (pathname);
+		   if (slash && pathname[slash - 1] != TEXT('/'))
+		     ustrcat (pathname, TEXT("/"));
+		 }
+	       css = SearchCSS (0, pathname);
+	       if (css == NULL)
+		 toparse =  GetObjectWWW (newdoc, pathname, form_data,
+					  tempfile, mode, NULL, NULL,
+					  (void *) GetHTMLDocument_callback,
+					  (void *) ctx, YES, content_type);
 	       else
 		 {
-		   if (CE_event == CE_HELP || CE_event == CE_LOG)
-		     {
-		       /* help document has to be in read-only mode */
-		       TtcSwitchCommands (newdoc, 1); /* no command filed */
-		       
-		       if (CE_event == CE_HELP)
-			 TtaSetToggleItem (newdoc, 1, Views, TShowTextZone,
-					   FALSE);
-		       else
-			 {
-			   TtaSetItemOff (newdoc, 1, File, BReload);
-			   TtaSetItemOff (newdoc, 1, Edit_, TEditMode);
-			   TtaChangeButton (newdoc, 1, iEditor, iconEditor,
-					    FALSE);
-			   /* invalid the menu Views */
-			   TtaSetMenuOff (newdoc, 1, Views);
-			 }
-		       TtaSetMenuOff (newdoc, 1, Help_);
-		     }
+		   /* it was already loaded, we need to open it */
+		   TtaSetStatus (newdoc, 1,
+				 TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
+		   /* just take a copy of the local temporary file */
+		   ustrcpy (tempfile, css->localName);
+		   GetHTMLDocument_callback (newdoc, 0, pathname,
+					     tempfile, NULL,
+					     (void *) ctx);
+		   TtaHandlePendingEvents ();
 		 }
 	     }
 	   else
 	     {
-	       newdoc = doc;
-	       /* stop current transfer for previous document */
-	       if (CE_event != CE_MAKEBOOK)
-		 StopTransfer (baseDoc, 1);
-	       else
-		 /* temporary docs to make a book are not in ReadOnly mode */
-		 DocumentTypes[newdoc] = docHTML;
-	     }
-
-	   if (ok)
-	     {
-	       /* this document is currently in load */
-	       W3Loading = newdoc;
-	       ActiveTransfer (newdoc);
-	       /* set up the transfer mode */
-	       mode = AMAYA_ASYNC | AMAYA_FLUSH_REQUEST;
-
-	       if (CE_event == CE_FORM_POST)
-		 mode = mode | AMAYA_FORM_POST | AMAYA_NOCACHE;
-	       else if (CE_event == CE_MAKEBOOK)
-		 mode = AMAYA_ASYNC;
-
-		 if (IsW3Path (pathname))
-		   {
-		     if (CE_event != CE_FORM_POST
-			 && !ustrcmp (documentname, TEXT("noname.html")))
-		       {
-			 slash = ustrlen (pathname);
-			 if (slash && pathname[slash - 1] != TEXT('/'))
-			   ustrcat (pathname, TEXT("/"));
-		       }
-		     css = SearchCSS (0, pathname);
-		     if (css == NULL)
-		       toparse =  GetObjectWWW (newdoc, pathname, form_data,
-					   tempfile, mode, NULL, NULL,
-					   (void *) GetHTMLDocument_callback,
-					   (void *) ctx, YES, content_type);
-		     else
-		       {
-			 /* it was already loaded, we need to open it */
-			 TtaSetStatus (newdoc, 1,
-			      TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
-			 /* just take a copy of the local temporary file */
-			 ustrcpy (tempfile, css->localName);
-			 GetHTMLDocument_callback (newdoc, 0, pathname,
-						   tempfile, NULL,
-						   (void *) ctx);
-			 TtaHandlePendingEvents ();
-		       }
-		   }
-		 else
-		   {
-		     /* wasn't a document off the web, we need to open it */
-		     TtaSetStatus (newdoc, 1,
-				   TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED),
-				   NULL);
-		     GetHTMLDocument_callback (newdoc, 0, pathname, tempfile,
-					       NULL, (void *) ctx);
-		     TtaHandlePendingEvents ();
-		   }
+	       /* wasn't a document off the web, we need to open it */
+	       TtaSetStatus (newdoc, 1,
+			     TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED),
+			     NULL);
+	       GetHTMLDocument_callback (newdoc, 0, pathname, tempfile,
+					 NULL, (void *) ctx);
+	       TtaHandlePendingEvents ();
 	     }
 	 }
      }
    else if (ok && newdoc != 0)
-     /* following a local link */
      {
-       TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED),
-		     NULL);
+       /* following a local link */
+       TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
        ctx->local_link = 1;
-       GetHTMLDocument_callback (newdoc, 0, pathname, tempfile, NULL,
-				 (void *) ctx);
+       GetHTMLDocument_callback (newdoc, 0, pathname, tempfile, NULL, (void *) ctx);
        TtaHandlePendingEvents ();
      }
 
@@ -4432,7 +4418,7 @@ DocumentType     docType;
   W3Loading = doc;
   BackupDocument = doc;
   TtaExtractName (tempdoc, DirectoryName, DocumentName);
-  newdoc = InitDocView (doc, DocumentName, docType, 0, FALSE);
+  newdoc = InitDocView (doc, DocumentName, docType, 0);
   if (newdoc != 0)
     {
       /* load the saved file */
@@ -5447,10 +5433,14 @@ View     view;
 #endif /* __STDC__ */
 {
   CHAR_T    localname[MAX_LENGTH];
+  int       newdoc;
 
   usprintf (localname, TEXT("%s%c%d%cHTML.ERR"), TempFileDirectory, DIR_SEP,
 	    doc, DIR_SEP);
-  doc = GetHTMLDocument (localname, NULL, 0, 0, CE_LOG, FALSE, NULL, NULL);
+  newdoc = GetHTMLDocument (localname, NULL, doc, 0, CE_LOG, FALSE, NULL, NULL);
+  /* store the relation with the original document */
+  if (newdoc)
+    DocumentSource[newdoc] = doc;
 }
 
 

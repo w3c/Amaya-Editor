@@ -1961,9 +1961,9 @@ int           *height;
    name: the name of the view in P schema.  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               TtaGetViewGeometryRegistry (Document document, char* name, int *x, int *y, int *width, int *height)
+void               TtaGetViewGeometry (Document document, char* name, int *x, int *y, int *width, int *height)
 #else  /* __STDC__ */
-void               TtaGetViewGeometryRegistry (document, name, x, y, width, height)
+void               TtaGetViewGeometry (document, name, x, y, width, height)
 Document           document;
 char*              name;
 int                *x;
@@ -1974,11 +1974,9 @@ int                *height;
 #endif /* __STDC__ */
 {
   PtrDocument pDoc;
-  char      line[MAX_TXT_LEN];
-  char      ptr2[MAX_TXT_LEN];
-  CHAR_T*   ptr;
-  ThotBool  found;
-  CHAR_T    tmp[MAX_TXT_LEN];
+  char        line[MAX_TXT_LEN];
+  char        ptr2[MAX_TXT_LEN];
+  CHAR_T*     ptr;
 
   
   UserErrorCode = 0;
@@ -1989,53 +1987,19 @@ int                *height;
 
   if (document < 1 || document > MAX_DOCUMENTS)
      TtaError (ERR_invalid_document_parameter);
-  else if (document != 0) {
-       pDoc = LoadedDocument[document - 1];
-       ptr = TtaGetEnvString (name);
-       if (!ptr || ptr[0] == WC_EOS)
-          found = FALSE;
-       else
-           found = TRUE;
-      
-      if (found) {
-         wc2iso_strcpy (ptr2, ptr);
-         sprintf (line, ":%s", ptr2);
-         getXYWidthHeight (line, pDoc, x, y, width, height);
-	  } else {
-             iso2wc_strcpy (tmp, name);
-             ConfigGetViewGeometry (pDoc, tmp, x, y, width, height);
-	  }
-  } 
-}
-
-/*----------------------------------------------------------------------
-   TtaGetViewGeometry returns the position (x, y) and sizes        
-   (width, height) of the frame wher view is displayed.    
-   Parameters:    document: the document.                  
-   name: the name of the view in P schema.  
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaGetViewGeometry (Document document, CHAR_T* name, int *x, int *y, int *width, int *height)
-#else  /* __STDC__ */
-void                TtaGetViewGeometry (document, name, x, y, width, height)
-Document            document;
-CHAR_T*             name;
-int                *x;
-int                *y;
-int                *width;
-int                *height;
-
-#endif /* __STDC__ */
-{
-   UserErrorCode = 0;
-   *x = 0;
-   *y = 0;
-   *width = 0;
-   *height = 0;
-   if (document < 1 || document > MAX_DOCUMENTS)
-      TtaError (ERR_invalid_document_parameter);
-   else if (document != 0)
-      ConfigGetViewGeometry (LoadedDocument[document - 1], name, x, y, width, height);
+  else if (document != 0)
+    {
+      pDoc = LoadedDocument[document - 1];
+      ptr = TtaGetEnvString (name);
+      if ( !ptr || ptr[0] == WC_EOS)
+	ConfigGetViewGeometry (pDoc, name, x, y, width, height);
+      else
+	{
+	  wc2iso_strcpy (ptr2, ptr);
+	  sprintf (line, ":%s", ptr2);
+	  getXYWidthHeight (line, pDoc, x, y, width, height);
+	}
+    } 
 }
 
 /*----------------------------------------------------------------------
@@ -2058,15 +2022,7 @@ int                *height;
 
 #endif /* __STDC__ */
 {
-   UserErrorCode = 0;
-   *x = 0;
-   *y = 0;
-   *width = 0;
-   *height = 0;
-   if (document < 1 || document > MAX_DOCUMENTS)
-      TtaError (ERR_invalid_document_parameter);
-   else if (document != 0)
-      ConfigGetViewGeometry (LoadedDocument[document - 1], name, x, y, width, height);
+   TtaGetViewGeometry (document, name, x, y, width, height);
    /* the above function returns the geometry in pixels, so we'll now convert
       it to mm */
    *x = pixeltomm (*x, FALSE);

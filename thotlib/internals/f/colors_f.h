@@ -12,7 +12,8 @@ extern ThotBool ThotCreatePalette ( int x,
 extern void TtcChangeColors ( Document document,
                               View view );
 extern void TtcGetPaletteColors ( int *fg,
-                                  int *bg );
+                                  int *bg,
+                                  ThotBool palType );
 
 #else /* __STDC__ */
 
@@ -22,7 +23,8 @@ extern ThotBool ThotCreatePalette (/* int x,
 extern void TtcChangeColors (/* Document document,
                                 View view */);
 extern void TtcGetPaletteColors (/* int *fg,
-                                    int *bg */);
+                                    int *bg,
+                                    ThotBool palType */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
