@@ -636,6 +636,8 @@ gboolean GL_DrawCallback (ThotWidget widget,
 {
   int frame;
 
+  return FALSE;
+  
   frame = (int ) gtk_object_get_data (GTK_OBJECT (widget), "frame");
   FrameTable[frame].DblBuffNeedSwap = TRUE;
   return TRUE;
@@ -674,15 +676,6 @@ gboolean  GL_Init (ThotWidget widget,
 	    InitDialogueFonts ("");
 	    dialogfont_enabled = TRUE;
 	  } 
-
-      /* gtk_idle_add (GTK_SIGNAL_FUNC (GL_DrawAll),  */
-      /* 		    NULL);  */
-
-      /* gtk_timeout_add (5,  */
-      /*                        GL_DrawAll,  */
-      /*                       (gpointer)   NULL);  */
-
-
       return TRUE;
     }
   else
@@ -2283,8 +2276,6 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
    in order to repeat user action until he released the button
    or move away from the widget.
 ----------------------------------------------------------------------*/
-static int          Motion_y = 0;
-static int          Motion_x = 0;
 static ThotBool     Selecting = FALSE;
 
 gboolean GtkLiningSelection (gpointer data)
@@ -2293,69 +2284,87 @@ gboolean GtkLiningSelection (gpointer data)
   ViewFrame          *pFrame;
   int                 frame;
   int                 view;
+  static int          Motion_y = 0;
+  static int          Motion_x = 0;
+  GdkModifierType state = GDK_BUTTON1_MOTION_MASK;
+  int x,y;
+  
+  frame = (int) data;
+  if (frame < 1)
+    return FALSE;
 
-   frame = (int) data;
-   if (frame < 1)
-     return FALSE;
-   FrameToView (frame, &doc, &view);
-   pFrame = &ViewFrameTable[frame - 1];
-   /* generate a scroll if necessary */
-   if (Motion_y > FrameTable[frame].FrHeight)
-     {
-       if (pFrame->FrAbstractBox &&
-	   pFrame->FrAbstractBox->AbBox &&
-	   pFrame->FrYOrg + FrameTable[frame].FrHeight < pFrame->FrAbstractBox->AbBox->BxHeight)
-	 TtcLineDown (doc, view);
-       else
-	 {
-	   /* stop the scrolling */
-	   Selecting = FALSE;
-	   Motion_y = FrameTable[frame].FrHeight;
-	 }
+  gdk_window_get_pointer ((FrameTable[frame].WdFrame)->window, 
+			  &x, 
+			  &y, 
+			  &state);
+  if (x != Motion_x || y != Motion_y)
+    {
+
+      Motion_y = y;
+      Motion_x = x;
+      FrameToView (frame, &doc, &view);
+      pFrame = &ViewFrameTable[frame - 1];
+      /* generate a scroll if necessary */
+      if (Motion_y > FrameTable[frame].FrHeight)
+	{
+	  if (pFrame->FrAbstractBox &&
+	      pFrame->FrAbstractBox->AbBox &&
+	      pFrame->FrYOrg + FrameTable[frame].FrHeight < pFrame->FrAbstractBox->AbBox->BxHeight)
+	    TtcLineDown (doc, view);
+	  else
+	    {
+	      /* stop the scrolling */
+	      Selecting = FALSE;
+	      Motion_y = FrameTable[frame].FrHeight;
+	    }
        
-     }
-   else if (Motion_y < 0)
-     {
-       if (pFrame->FrYOrg > 0)
-	 TtcLineUp (doc, view);
-       else
-	 {
-	   /* stop the scrolling */
-	   Selecting = FALSE;
-	   Motion_y = 0;
-	 }
-     }
-   if (FrameTable[frame].FrScrollWidth > FrameTable[frame].FrWidth)
-     {
-       if (Motion_x > FrameTable[frame].FrWidth)
-	 {
-	   if (pFrame->FrXOrg + FrameTable[frame].FrWidth < FrameTable[frame].FrScrollWidth)
-	     TtcScrollRight (doc, view);
-	   else
-	     {
-	       Selecting = FALSE;
-	       Motion_x = FrameTable[frame].FrWidth;
-	     }
-	 }
-       else if (Motion_x < 1)
-	 {
-	   if (pFrame->FrXOrg > 0)
-	     TtcScrollLeft (doc, view);
-	   else
-	     {
-	       Selecting = FALSE;
-	       Motion_x = 0;
-	     }
-	 }
-     }
-   if (Selecting)
-     {
-       LocateSelectionInView (frame,  Motion_x, Motion_y, 0);
-       TtcCopyToClipboard (doc, view);
-     }
-   /* As this is a timeout function, return TRUE so that it
-     continues to get called */
-   return Selecting;
+	}
+      else if (Motion_y < 0)
+	{
+	  if (pFrame->FrYOrg > 0)
+	    TtcLineUp (doc, view);
+	  else
+	    {
+	      /* stop the scrolling */
+	      Selecting = FALSE;
+	      Motion_y = 0;
+	    }
+	}
+      if (FrameTable[frame].FrScrollWidth > FrameTable[frame].FrWidth)
+	{
+	  if (Motion_x > FrameTable[frame].FrWidth)
+	    {
+	      if (pFrame->FrXOrg + FrameTable[frame].FrWidth < FrameTable[frame].FrScrollWidth)
+		TtcScrollRight (doc, view);
+	      else
+		{
+		  Selecting = FALSE;
+		  Motion_x = FrameTable[frame].FrWidth;
+		}
+	    }
+	  else if (Motion_x < 1)
+	    {
+	      if (pFrame->FrXOrg > 0)
+		TtcScrollLeft (doc, view);
+	      else
+		{
+		  Selecting = FALSE;
+		  Motion_x = 0;
+		}
+	    }
+	}
+      if (Selecting)
+	{
+	  LocateSelectionInView (frame,  Motion_x, Motion_y, 0);
+	  TtcCopyToClipboard (doc, view);
+	}
+      /* As this is a timeout function, return TRUE so that it
+	 continues to get called */
+      return Selecting;
+    }
+  else
+    return TRUE;   
+  
 }
 #endif /* _GTK */
 
@@ -2718,9 +2727,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	    }
 	  else
 	    { 
-	      TtcLineUp(document, view); 
-	      TtcLineUp(document, view); 
-	      TtcLineUp(document, view); 
+	      VerticalScroll (frame, -39, 1);
 	    }	  
 	  break;
 	case 5:
@@ -2735,9 +2742,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	    }
 	  else
 	    {
-	      TtcLineDown (document, view); 
-	      TtcLineDown (document, view); 
-	      TtcLineDown (document, view); 
+	      VerticalScroll (frame, 39, 1);
 	    }
 	  break;
 	default:
@@ -2773,10 +2778,8 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  break;
 	}
       break;
-    case GDK_MOTION_NOTIFY:
+    case GDK_MOTION_NOTIFY: 
       /* extend the current selection */
-      Motion_y = event->y;
-      Motion_x = event->x;
       if (Selecting == TRUE)
 	{
 	  /* We add a callback timer caller */
@@ -2790,8 +2793,6 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
       /* drag is finished */
       /* we stop the callback calling timer */
       Selecting = FALSE;
-      Motion_y = event->y;
-      Motion_x = event->x;
       if (timer != None)
 	{
 	  gtk_timeout_remove (timer);
@@ -2805,6 +2806,8 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  LocateSelectionInView (frame, ClickX, ClickY, 4);
 	  TtaAbortShowDialogue ();
 	}
+      FrameToView (frame, &document, &view);
+      TtcCopyToClipboard (document, view);
       break;
     case GDK_KEY_PRESS: 
       TtaAbortShowDialogue ();
@@ -3546,7 +3549,9 @@ void UpdateScrollbars (int frame)
 	      gtk_widget_show (GTK_WIDGET (vscroll));
 	      gtk_widget_draw_default (GTK_WIDGET (vscroll));
 #ifdef _GL
-	      gl_window_resize (frame, vscroll->allocation.width, 0);
+	      gl_window_resize (frame, 
+				vscroll->allocation.width, 
+				0);
 #endif /*_GL*/
 	    }
 	}
@@ -3559,57 +3564,57 @@ void UpdateScrollbars (int frame)
   memset(&scrollInfo, 0, sizeof(scrollInfo));	
   scrollInfo.cbSize = sizeof (SCROLLINFO);
   scrollInfo.fMask  = SIF_PAGE | SIF_POS | SIF_RANGE;
-if (width >= l && x == 0 && width > 60)
-  {
-    /*hide*/
-	  if (Win_Scroll_visible (FrameTable[frame].WdScrollH))
-	  {
+  if (width >= l && x == 0 && width > 60)
+    {
+      /*hide*/
+      if (Win_Scroll_visible (FrameTable[frame].WdScrollH))
+	{
 	  scrollInfo.nMax = 2;
-      SetScrollInfo (FrameTable[frame].WdScrollH, SB_CTL, &scrollInfo, TRUE);
-      ShowScrollBar (FrameTable[frame].WdScrollH, SB_CTL, FALSE);
+	  SetScrollInfo (FrameTable[frame].WdScrollH, SB_CTL, &scrollInfo, TRUE);
+	  ShowScrollBar (FrameTable[frame].WdScrollH, SB_CTL, FALSE);
 	  need_resize = TRUE;
-	  }
-  }
+	}
+    }
   else if (width + x <= l)
     {
       /*show*/
-	  if (Win_Scroll_visible (FrameTable[frame].WdScrollH) == FALSE)
-		{
-			ShowScrollBar (FrameTable[frame].WdScrollH, SB_CTL, TRUE);
-			need_resize = TRUE;
-		 }
-	  scrollInfo.nMax   = l;
+      if (Win_Scroll_visible (FrameTable[frame].WdScrollH) == FALSE)
+	{
+	  ShowScrollBar (FrameTable[frame].WdScrollH, SB_CTL, TRUE);
+	  need_resize = TRUE;
+	}
+      scrollInfo.nMax   = l;
       scrollInfo.nPage  = width;
       scrollInfo.nPos   = x;	 
       SetScrollInfo (FrameTable[frame].WdScrollH, SB_CTL, &scrollInfo, TRUE);
     }
   else
     /*show*/
-	if (Win_Scroll_visible (FrameTable[frame].WdScrollH) == FALSE)
-	{
-		ShowScrollBar (FrameTable[frame].WdScrollH, SB_CTL, FALSE);
-		need_resize = TRUE;
-	}
+    if (Win_Scroll_visible (FrameTable[frame].WdScrollH) == FALSE)
+      {
+	ShowScrollBar (FrameTable[frame].WdScrollH, SB_CTL, FALSE);
+	need_resize = TRUE;
+      }
    
   if (height >= h && y == 0)
-  { 
-    /*hide*/
-	  if (Win_Scroll_visible (FrameTable[frame].WdScrollV))
-	  {
-		scrollInfo.nMax = 2;
-		SetScrollInfo (FrameTable[frame].WdScrollV, SB_CTL, &scrollInfo, TRUE);
-		ShowScrollBar(FrameTable[frame].WdScrollV, SB_CTL, FALSE);
-	  	need_resize = TRUE;
-	  }
-  }
+    { 
+      /*hide*/
+      if (Win_Scroll_visible (FrameTable[frame].WdScrollV))
+	{
+	  scrollInfo.nMax = 2;
+	  SetScrollInfo (FrameTable[frame].WdScrollV, SB_CTL, &scrollInfo, TRUE);
+	  ShowScrollBar(FrameTable[frame].WdScrollV, SB_CTL, FALSE);
+	  need_resize = TRUE;
+	}
+    }
   else if (height + y <= h)
     {
       /*show*/
-	   if (Win_Scroll_visible (FrameTable[frame].WdScrollV) == FALSE)
-	  {
-		ShowScrollBar (FrameTable[frame].WdScrollV, SB_CTL, TRUE);
-		need_resize = TRUE;
-	  }
+      if (Win_Scroll_visible (FrameTable[frame].WdScrollV) == FALSE)
+	{
+	  ShowScrollBar (FrameTable[frame].WdScrollV, SB_CTL, TRUE);
+	  need_resize = TRUE;
+	}
       scrollInfo.nMax   = h;
       scrollInfo.nPage  = height;
       scrollInfo.nPos   = y;
@@ -3618,18 +3623,18 @@ if (width >= l && x == 0 && width > 60)
     }
   else
     /*show*/
-     if (Win_Scroll_visible (FrameTable[frame].WdScrollV) == FALSE)
-	  {
-		ShowScrollBar (FrameTable[frame].WdScrollV, SB_CTL, TRUE);
-		need_resize = TRUE;
-	  }
+    if (Win_Scroll_visible (FrameTable[frame].WdScrollV) == FALSE)
+      {
+	ShowScrollBar (FrameTable[frame].WdScrollV, SB_CTL, TRUE);
+	need_resize = TRUE;
+      }
 
-	if (need_resize)
-	{
-		Wnd_ResizeContent (FrMainRef[frame], 
-							FRWidth[frame], 
-							FRHeight[frame],  
-							frame);
-	}
+  if (need_resize)
+    {
+      Wnd_ResizeContent (FrMainRef[frame], 
+			 FRWidth[frame], 
+			 FRHeight[frame],  
+			 frame);
+    }
 #endif /* _WINDOWS */
 }

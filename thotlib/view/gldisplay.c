@@ -992,8 +992,8 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
 	width = width - thick;
       if (height > thick)
 	height = height - thick;
-      x = x + thick / 2;
-      y = y + thick / 2;
+      x = x + thick/2;
+      y = y + thick/2;
 
       InitDrawing (style, thick, fg); 
       GL_DrawEmptyRectangle(fg, x,  y, width, height);
@@ -1775,17 +1775,79 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
 {
   int        Y;
 
-  y += FrameTable[frame].FrTopMargin;
-  if (align == 1)
-    Y = y + (h - thick) / 2;
-  else if (align == 2)
-    Y = y + h - (thick + 1) / 2;
-  else
-    Y = y + thick / 2;
   if (thick > 0 && fg >= 0)
     {
+      y += FrameTable[frame].FrTopMargin;
+
+      if (align == 1)
+	Y = y + (h - thick) / 2;
+      else if (align == 2)
+	Y = y + h - (thick + 1) / 2;
+      else
+	Y = y + thick / 2;
+
+      x += thick / 2;
+      l -= thick;
+            
       InitDrawing (style, thick, fg);
       DoDrawOneLine (frame, x, Y, x + l, Y);
+    }
+}
+/*----------------------------------------------------------------------
+  DrawVerticalLine draw a vertical line aligned left center or right
+  depending on align value.
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+void DrawVerticalLine (int frame, int thick, int style, int x, int y,
+		       int l, int h, int align, int fg)
+{
+  int        X;
+
+  if (thick > 0 && fg >= 0)
+    {
+      if (align == 1)
+	X = x + (l - thick) / 2;
+      else if (align == 2)
+	X = x + l - (thick + 1) / 2;
+      else
+	X = x + thick / 2;
+      
+      y += thick / 2;
+      h -= thick;
+
+      y += FrameTable[frame].FrTopMargin;
+      InitDrawing (style, thick, fg);
+      DoDrawOneLine (frame, X, y, X, y + h);
+    }
+}
+
+/*----------------------------------------------------------------------
+  DrawDoubleVerticalLine draw a double vertical line aligned left center
+  or right depending on align value.
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+void DrawDoubleVerticalLine (int frame, int thick, int style, int x, int y,
+			     int l, int h, int align, int fg)
+{
+  int        X;
+
+  if (thick > 0 && fg >= 0)
+    {
+      if (align == 1)
+	X = x + (l - thick) / 2;
+      else if (align == 2)
+	X = x + l - (thick + 1) / 2;
+      else
+	X = x + thick / 2;
+      
+      y += FrameTable[frame].FrTopMargin;
+
+      y += thick / 2;
+      h -= thick;  
+
+      InitDrawing (style, thick, fg);
+      DoDrawOneLine (frame, X, y, X, y + h);
+      DoDrawOneLine (frame, X + (3 * thick), y, X + (3 * thick), y + h);
     }
 }
 
@@ -1822,56 +1884,7 @@ void DrawHorizontalBrace (int frame, int thick, int style, int x, int y,
     }
 }
 
-/*----------------------------------------------------------------------
-  DrawVerticalLine draw a vertical line aligned left center or right
-  depending on align value.
-  parameter fg indicates the drawing color
-  ----------------------------------------------------------------------*/
-void DrawVerticalLine (int frame, int thick, int style, int x, int y,
-		       int l, int h, int align, int fg)
-{
-  int        X;
 
-  if (align == 1)
-    X = x + (l - thick) / 2;
-  else if (align == 2)
-    X = x + l - (thick + 1) / 2;
-  else
-    X = x + thick / 2;
-
-  y += FrameTable[frame].FrTopMargin;
-  if (thick > 0 && fg >= 0)
-    {
-      InitDrawing (style, thick, fg);
-      DoDrawOneLine (frame, X, y, X, y + h);
-    }
-}
-
-/*----------------------------------------------------------------------
-  DrawDoubleVerticalLine draw a double vertical line aligned left center
-  or right depending on align value.
-  parameter fg indicates the drawing color
-  ----------------------------------------------------------------------*/
-void DrawDoubleVerticalLine (int frame, int thick, int style, int x, int y,
-			     int l, int h, int align, int fg)
-{
-  int        X;
-
-  if (align == 1)
-    X = x + (l - thick) / 2;
-  else if (align == 2)
-    X = x + l - (thick + 1) / 2;
-  else
-    X = x + thick / 2;
-
-  y += FrameTable[frame].FrTopMargin;
-  if (thick > 0 && fg >= 0)
-    {
-      InitDrawing (style, thick, fg);
-      DoDrawOneLine (frame, X, y, X, y + h);
-      DoDrawOneLine (frame, X + (3 * thick), y, X + (3 * thick), y + h);
-    }
-}
 
 /*----------------------------------------------------------------------
   DrawSlash draw a slash or backslash depending on direction.
@@ -2218,7 +2231,7 @@ void PaintWithPattern (int frame, int x, int y, int width, int height,
 	else 
 	{
 	  GL_DrawRectangle(fg, x,  y + FrameTable[frame].FrTopMargin, width, height);
-   }
+	}
    }
 }
 #endif /* _GL*/

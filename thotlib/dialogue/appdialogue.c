@@ -2710,12 +2710,18 @@ void TtcSwitchCommands (Document doc, View view)
 	       {
 		 if (GTK_WIDGET_VISIBLE(row))
 		   gtk_widget_hide (row);
-		  else
-		    gtk_widget_show_all (row);
+		 else
+		   gtk_widget_show_all (row);
+#ifdef _GL
+		 gl_window_resize (frame, 
+				   row->allocation.width, 
+				   row->allocation.height);
+		 
 		  /* Il faut forcer la reevaluation de la fenetre */
 		 /*		  w = FrameTable[frame].WdFrame;
 		  FrameResized ((int *) w, frame, NULL);
 		  gtk_widget_show_all (row->parent->parent);*/
+#endif /* _GL */
 	       }
 #endif /* _GTK */
 #else  /* _WINDOWS */
@@ -3383,8 +3389,8 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 				  | GDK_BUTTON_MOTION_MASK
 				  | GDK_KEY_PRESS_MASK
 				  | GDK_KEY_RELEASE_MASK
-				 /*  | GDK_POINTER_MOTION_HINT_MASK   */
-				 /*  | GDK_POINTER_MOTION_MASK  */
+				  /* | GDK_POINTER_MOTION_HINT_MASK  */
+/* 				  | GDK_POINTER_MOTION_MASK   */
 				  | GDK_EXPOSURE_MASK
 				  );
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area),

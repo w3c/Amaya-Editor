@@ -897,7 +897,7 @@ static void LayoutPicture (Pixmap pixmap,
 	      i = 0;
 	      do
 		{
-		  /* check if the limits of the copied zone */
+		  /* check if the limits of the copied zone*/
 		  if (i + imageDesc->PicWArea <= w)
 		    iw = imageDesc->PicWArea;
 		  else
@@ -906,14 +906,14 @@ static void LayoutPicture (Pixmap pixmap,
 		    jh = imageDesc->PicHArea;
 		  else
 		    jh = h - j;
+		 
 		  GL_TextureMap (imageDesc, 
-				 xFrame, yFrame, 
-				 iw ,jh);
-		  /*BitBlt (hMemDC, i, j, iw, jh, hOrigDC, 0, 0, SRCCOPY);*/
-		  i += imageDesc->PicWArea;
+				 xFrame + i, yFrame + j,
+				 imageDesc->PicWidth, imageDesc->PicHeight);
+		  i += imageDesc->PicWidth;
 		} 
 	      while (i < w);
-	      j += imageDesc->PicHArea;
+	      j += imageDesc->PicHeight;
 	    } 
 	  while (j < h);
 	  break;  
@@ -1857,12 +1857,17 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc,
   picXOrg = 0;
   picYOrg = 0;
 
+#ifndef _GL
   if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == EOS || 
       (box->BxAbstractBox->AbLeafType == LtCompound &&
 	  imageDesc->PicPixmap == PictureLogo))
     return;
-
-
+#else /*_GL*/
+  if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == EOS || 
+      (box->BxAbstractBox->AbLeafType == LtCompound &&
+       (strcmp (imageDesc->PicFileName, LostPicturePath) == NULL)))
+    return;
+#endif /* _GL */
   drawable = (Drawable)TtaGetThotWindow (frame);
   GetXYOrg (frame, &xFrame, &yFrame);
   typeImage = imageDesc->PicType;

@@ -1584,7 +1584,7 @@ void GL_Swap (int frame)
   if (frame < MAX_FRAME)
     {
       glFinish ();
-      glFlush ();     
+      glFlush ();
 #ifdef _WINDOWS
       if (GL_Windows[frame])
 	SwapBuffers (GL_Windows[frame]);
@@ -1626,10 +1626,12 @@ ThotBool GL_prepare (int frame)
 void GL_realize (int frame)
 {
 
+  
+#ifdef _TESTSWAP
+  GL_Swap (frame);
+  FrameTable[frame].DblBuffNeedSwap = FALSE;
+#else
   FrameTable[frame].DblBuffNeedSwap = TRUE;
-#ifdef _WINDOWS
-  /*GL_Swap (frame);*/
-  /*FrameTable[frame].DblBuffNeedSwap = FALSE;*/
 #endif /*_WINDOWS*/
   return;
 }
@@ -1692,6 +1694,7 @@ ThotBool GL_DrawAll ()
   
   if (!FrameUpdating )
     {
+      FrameUpdating = TRUE;     
       if (!frame_animating)
 	{	
 	  frame_animating = TRUE;      
@@ -1745,6 +1748,7 @@ ThotBool GL_DrawAll ()
 	    }
 	  frame_animating  = FALSE;      
 	}  
+      FrameUpdating = FALSE;     
     }
   return TRUE;  
 }
@@ -2053,20 +2057,23 @@ void gl_window_resize (int frame, int width, int height)
   if (GL_prepare (frame))
       {
 #ifdef _GTK
-  /* gdk_gl_wait_gdk (); */
-/*   gdk_gl_wait_gl (); */
   widget = FrameTable[frame].WdFrame;
 
   gtk_widget_queue_resize  (widget->parent->parent);
   while (gtk_events_pending ()) 
     gtk_main_iteration ();
 
-  /* gdk_gl_wait_gdk (); */
-/*   gdk_gl_wait_gl (); */
+  gdk_gl_wait_gdk (); 
+  gdk_gl_wait_gl (); 
+
+
+  DefClip (frame, -1, -1, -1, -1);
+  FrameTable[frame].DblBuffNeedSwap = TRUE;
   return;
-  GLResize (widget->allocation.width+width, 
-	    widget->allocation.height+height, 
-	    0, 0);
+
+  /* GLResize (widget->allocation.width+width,  */
+/* 	    widget->allocation.height+height,  */
+/* 	    0, 0); */
 #endif /*_GTK*/
 	DefRegion (frame, 
  		   0, 0,
