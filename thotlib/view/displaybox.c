@@ -25,12 +25,12 @@
 #include "buildboxes_f.h"
 
 /**
- *      ValEpaisseur compute the height of an abstract box.
+ *      GetLineWeight computes the line weight of an abstract box.
  **/
 #ifdef __STDC__
-static int          ValEpaisseur (PtrAbstractBox pAb)
+static int          GetLineWeight (PtrAbstractBox pAb)
 #else  /* __STDC__ */
-static int          ValEpaisseur (pAb)
+static int          GetLineWeight (pAb)
 PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
@@ -43,9 +43,7 @@ PtrAbstractBox      pAb;
 
 
 /**
- *      DisplayImage affiche une boite vide dimensionnee et positionnee dans
- *              la fenetre frame. On affiche une suite de caracteres
- *              grise's sur toute la surface de la boite.
+ *      DisplayImage display a empty box in the frame.
  **/
 #ifdef __STDC__
 static void         DisplayImage (PtrBox pBox, int frame)
@@ -187,7 +185,7 @@ int                 frame;
 		   DrawRectangle (frame, 0, 0, xd, yd, pBox->BxWidth, pBox->BxHeight, 0, 0, 0, bg, 2);
 
 		/* Line thickness */
-		i = ValEpaisseur (pBox->BxAbstractBox);
+		i = GetLineWeight (pBox->BxAbstractBox);
 
 		switch (pBox->BxAbstractBox->AbShape)
 		      {
@@ -383,7 +381,7 @@ int                 frame;
 
 	   pv = pBox->BxAbstractBox;
 	   /* Style and thickness of drawing */
-	   i = ValEpaisseur (pv);
+	   i = GetLineWeight (pv);
 	   switch (pv->AbLineStyle)
 		 {
 		    case 'S':
@@ -457,7 +455,7 @@ int                 frame;
 		       DrawHorizontalLine (frame, i, style, xd, yd, pBox->BxWidth, pBox->BxHeight, 1, RO, op, fg);
 		       break;
 		    case 't':
-		       DrawVerticalLine (frame, i, style, xd, yd, pBox->BxWidth, pBox->BxHeight, 0, RO, op, fg);
+		       DrawHorizontalLine (frame, i, style, xd, yd, pBox->BxWidth, pBox->BxHeight, 0, RO, op, fg);
 		       break;
 		    case 'b':
 		       DrawHorizontalLine (frame, i, style, xd, yd, pBox->BxWidth, pBox->BxHeight, 2, RO, op, fg);
@@ -466,7 +464,7 @@ int                 frame;
 		       DrawVerticalLine (frame, i, style, xd, yd, pBox->BxWidth, pBox->BxHeight, 1, RO, op, fg);
 		       break;
 		    case 'l':
-		       DrawHorizontalLine (frame, i, style, xd, yd, pBox->BxWidth, pBox->BxHeight, 0, RO, op, fg);
+		       DrawVerticalLine (frame, i, style, xd, yd, pBox->BxWidth, pBox->BxHeight, 0, RO, op, fg);
 		       break;
 		    case 'r':
 		       DrawVerticalLine (frame, i, style, xd, yd, pBox->BxWidth, pBox->BxHeight, 2, RO, op, fg);
@@ -690,7 +688,7 @@ int                 frame;
 
 	   pv = pBox->BxAbstractBox;
 	   /* Style and thickness of the line */
-	   i = ValEpaisseur (pv);
+	   i = GetLineWeight (pv);
 	   switch (pv->AbLineStyle)
 		 {
 		    case 'S':
