@@ -1776,7 +1776,7 @@ PtrAttribute        *pReadAttr;
 {
    PtrAttribute         pAttr, pA;
 
-   ReadAttr (pivFile, pEl, pDoc, create, pReadAttr, &pAttr);
+   ReadAttributePiv (pivFile, pEl, pDoc, create, pReadAttr, &pAttr);
    if (pAttr != NULL)
       /* chaine ce bloc en queue de la chaine des attributs de */
       /* l'element */
@@ -3860,7 +3860,7 @@ boolean             withEvent;
 
 	/* supprime les extensions de schemas ExtCorr et ExtMot */
 	/* les attributs definis dans ces extensions ont deje ete retire's par */
-	/* ReadAttr (ces extensions ne definissent que des attributs) */
+	/* ReadAttributePiv (ces extensions ne definissent que des attributs) */
 	if (!error && pDoc->DocPivotVersion < 4)
 	  {
 	     previousSSchema = pDoc->DocSSchema;
