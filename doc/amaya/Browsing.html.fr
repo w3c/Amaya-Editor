@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Naviguer avec Amaya</title>
-  <meta name="GENERATOR" content="amaya V4.2.1" />
+  <meta name="GENERATOR" content="amaya V4.2.2" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -58,15 +58,28 @@ soit utiliser une sélection étendue soit déplacer le point d'insertion à
 l'intérieur des liens à l'aide des flèches. Il est également possible
 d'utiliser le clavier pour activer les liens, ainsi que les formulaires de
 contrôles. La commande au clavier est <strong>Alt-Return</strong> par défaut.
-Si l'auteur du document a associé un attribut accesskey au lien (par exemple
-<code>acceskey="a"</code>), la commande <strong>Alt-accesskey</strong> (par
-exemple Alt-a) va activer le lien.</p>
+</p>
 
 <p>Le document récupéré par cette opération <em>remplace</em> normalement le
 document courant dans la même fenêtre et conserve le mode (éditeur ou
 navigateur). Cependant, si le document courant a été modifié et n'a pas encore
 été sauvegardé, une autre fenêtre sera créée pour le nouveau document, afin
 d'éviter la perte des derniers changements.</p>
+
+<h3><a name="L294">Accès rapides</a></h3>
+
+<p>Un auteur peut associer un attribut <code>acceskey</code> à un champ de
+formulaire, une zone activable, ou un lien. Les éments suivants supportent cet
+attribut: AREA, BUTTON, INPUT, LABEL, LEGEND, et TEXTAREA. Ceci peut être
+crutial pour les personnes avec des handicaps moteur, mais il y a d'autres
+conditions où c'est nécessaire ou utile.</p>
+
+<p>Si l'auteur du document a associé un attribut <code>accesskey</code> au
+lien (par exemple <code>acceskey="a"</code>) dans un document, la commande
+<strong>Alt-accesskey</strong> (par exemple Alt-a) va activer le lien. Quand
+elle est assignée à un élément de formulaire, la commande
+<strong>Alt-accesskey</strong> donne le focus à cet élément (le suivant dans
+le cas de LABEL et LEGEND).</p>
 
 <h3><a name="L515">Ancres cibles</a></h3>
 

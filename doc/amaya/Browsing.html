@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Browsing with Amaya</title>
-  <meta name="GENERATOR" content="amaya V4.2.1" />
+  <meta name="GENERATOR" content="amaya V4.2.2" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -53,16 +53,28 @@ simple-click. In that case, you cannot easily put the insert point within
 anchors: you have to use the drag and/or arrows to move the insert point
 within an anchor. It is also possible to use the keyboard to activate links,
 as well as form controls. The default keyboard command is
-<strong>Alt-Return</strong>. When the author associated an attribute accesskey
-to a link (example <code>accesskey="a"</code>), the command
-<strong>Alt-accesskey</strong> (in the example Alt-a) will activate the
-link.</p>
+<strong>Alt-Return</strong>. </p>
 
 <p>The document retrieved by this operation normally <em>replaces</em> the
 current document in the same window, in the same mode (editor or browser ).
 However, if the current document has been modified and has not been saved yet,
 another window is created for the new document, to avoid losing last
 changes.</p>
+
+<h3><a name="Access">Access keys</a></h3>
+
+<p>An author could associate an attribute <code>accesskey</code> to a form
+field, an area, or a link. The following elements support the accesskey: AREA,
+BUTTON, INPUT, LABEL, LEGEND, and TEXTAREA.This can be crucial to people with
+motoric disabilities but there are other conditions where it could be
+necessary or useful.</p>
+
+<p>When the author associated an attribute accesskey to a link (example
+<code>accesskey="a"</code>) in a document, the command
+<strong>Alt-accesskey</strong> (in the example Alt-a) will activate that link.
+Pressing <strong>Alt- accesskey</strong> when assigned to a form element will
+give the focus to that element (the following element for LABEL and
+LEGEND).</p>
 
 <h3><a name="L515">Target anchors</a></h3>
 
