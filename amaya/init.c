@@ -4399,8 +4399,8 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
 #endif /* ANNOTATIONS */
        else if (doc == 0 || InNewWindow)
 	 {
-	   /* In case of initial document, open the view before loading */
-	   newdoc = InitDocAndView (0, documentname, docType, 0, FALSE, L_Other);
+	     /* In case of initial document, open the view before loading */
+	     newdoc = InitDocAndView (0, documentname, docType, 0, FALSE, L_Other);
 	   /* now the new window is open */
 	   if (CE_event == CE_RELATIVE || CE_event == CE_ABSOLUTE)
 	     /* don't free the current loaded document */
@@ -4781,7 +4781,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		   InitializeNewDoc (tempfile, NewDocType, CurrentDocument, NewDocProfile);
 		 }
 	     }
-	   else if (DocumentName[0] != EOS){
+	   else if (DocumentName[0] != EOS)
+	     {
 	       CompleteUrl(&DocumentName);  
 	       if (InNewWindow)
 		   GetHTMLDocument (DocumentName, NULL, 0, 0, Loading_method,
@@ -4790,8 +4791,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		   GetHTMLDocument (DocumentName, NULL, CurrentDocument,
 				    CurrentDocument, Loading_method, TRUE,
 				    NULL, NULL);
-	   }
-	      else if (DirectoryName[0] != EOS)
+	     }
+	   else if (DirectoryName[0] != EOS)
 	     TtaSetStatus (CurrentDocument, 1,
 			   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
 			   DirectoryName);

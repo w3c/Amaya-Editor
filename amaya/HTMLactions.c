@@ -765,9 +765,16 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
 	   /* interrupt current transfer */
 	   StopTransfer (doc, 1);	   
 	   /* get the referred document */
+	   if (!strncmp (documentURL, "mailto:", 7))
+	     {
+	       TtaSetStatus (doc, 1,
+			   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+			   documentURL);
+	       return (FALSE);
+	     }
 #ifdef ANNOTATIONS
 	   /* is it an annotation link? */
-	   if (elType.ElSSchema == TtaGetSSchema ("XLink", doc) &&
+	   else if (elType.ElSSchema == TtaGetSSchema ("XLink", doc) &&
 	       elType.ElTypeNum == XLink_EL_XLink)
 	     {
 	       /* loading an annotation */
@@ -775,8 +782,8 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
 	       method = CE_ANNOT;
 	       history = FALSE;
 	     }
-	   else
 #endif /* ANNOTATIONS */
+	   else
 	     {
 	       reldoc = doc;
 	       method = CE_RELATIVE;
@@ -793,13 +800,19 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
 		   NormalizeURL (buffer, doc, documentURL, documentname, NULL);
 		 }
 	     }
+
 	   if (method != CE_RELATIVE || InNewWindow ||
 	       CanReplaceCurrentDocument (doc, 1))
-	     /* Load the new document */
-	     targetDocument = GetHTMLDocument (documentURL, NULL, reldoc, doc, 
-					       method, history, 
-					       (void *) FollowTheLink_callback,
-					       (void *) ctx);
+	     {
+	       if (IsUndisplayedName (documentURL))
+		 /* it's not necessary to open a new window */
+		 InNewWindow = FALSE;
+	       /* Load the new document */
+	       targetDocument = GetHTMLDocument (documentURL, NULL, reldoc, doc, 
+						 method, history, 
+						 (void *) FollowTheLink_callback,
+						 (void *) ctx);
+	     }
 	 }
        return (TRUE);
      }

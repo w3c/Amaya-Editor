@@ -2547,8 +2547,8 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  ClickX = event->x;
 	  ClickY = event->y;
 	  LocateSelectionInView (frame, ClickX, ClickY, 4);
+	  TtaAbortShowDialogue ();
 	}
-      TtaAbortShowDialogue ();
       break;
     case GDK_KEY_PRESS: 
       TtaAbortShowDialogue ();

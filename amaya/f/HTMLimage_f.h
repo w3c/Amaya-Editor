@@ -36,6 +36,8 @@ extern void FetchImage ( Document doc,
 extern ThotBool FetchAndDisplayImages ( Document doc,
                                         int flags,
                                         Element elSubTree );
+extern ThotBool SelectPicture ( NotifyElement *event );
+extern ThotBool DeletePicture ( NotifyElement *event );
 
 #else /* __STDC__ */
 
@@ -69,6 +71,8 @@ extern void FetchImage (/* Document doc,
 extern ThotBool FetchAndDisplayImages (/* Document doc,
                                           int flags,
                                           Element elSubTree */);
+extern ThotBool SelectPicture (/* NotifyElement *event */);
+extern ThotBool DeletePicture (/* NotifyElement *event */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

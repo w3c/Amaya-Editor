@@ -9294,7 +9294,8 @@ void TtaAbortShowDialogue ()
 			   || ShowCat->Cat_Type == CAT_SHEET
 			   || ShowCat->Cat_Type == CAT_DIALOG)
 			 {
-			   gtk_widget_hide (GTK_WIDGET(ShowCat->Cat_Widget->parent));
+			   if (ShowCat->Cat_Widget->parent)
+			     gtk_widget_hide (GTK_WIDGET(ShowCat->Cat_Widget->parent));
 			   CallSheet (None, ShowCat, NULL);
 			 }
 		       else

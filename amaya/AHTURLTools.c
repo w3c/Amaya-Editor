@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -523,6 +523,45 @@ ThotBool IsXMLName (const char *path)
 }
 
 /*----------------------------------------------------------------------
+  IsUndisplayedName                                                         
+  returns TRUE if path points to an undisplayed resource.
+  ----------------------------------------------------------------------*/
+ThotBool IsUndisplayedName (const char *path)
+{
+   char                temppath[MAX_LENGTH];
+   char                suffix[MAX_LENGTH];
+
+   if (!path)
+      return (FALSE);
+
+   strcpy (temppath, path);
+   TtaExtractSuffix (temppath, suffix);
+
+   if (!strcasecmp (suffix, "exe") ||
+       !strcasecmp (suffix, "pdf") ||
+       !strcasecmp (suffix, "tar") ||
+       !strcasecmp (suffix, "tgz") ||
+       !strcasecmp (suffix, "ddl") ||
+       !strcasecmp (suffix, "o"))
+     return (TRUE);
+   else if (!strcmp (suffix, "gz"))
+     {
+       /* take into account compressed files */
+       TtaExtractSuffix (temppath, suffix);       
+       if (!strcasecmp (suffix, "exe") ||
+	   !strcasecmp (suffix, "pdf") ||
+	   !strcasecmp (suffix, "tar") ||
+	   !strcasecmp (suffix, "ddl") ||
+	   !strcasecmp (suffix, "o"))
+	 return (TRUE);
+       else
+	 return (FALSE);
+     }
+   else
+     return (FALSE);
+}
+
+/*----------------------------------------------------------------------
   IsMathMLName                                                         
   returns TRUE if path points to an MathML resource.
   ----------------------------------------------------------------------*/
@@ -739,7 +778,7 @@ ThotBool IsHTTPPath (const char *path)
   IsWithParameters                           
   returns TRUE if url has a concatenated query string.
   ----------------------------------------------------------------------*/
-ThotBool            IsWithParameters (const char *url)
+ThotBool IsWithParameters (const char *url)
 {
    int                 i;
 
@@ -759,7 +798,7 @@ ThotBool            IsWithParameters (const char *url)
   IsW3Path                                           
   returns TRUE if path is in fact a URL.
   ----------------------------------------------------------------------*/
-ThotBool             IsW3Path (const char *path)
+ThotBool IsW3Path (const char *path)
 {
   if (strncmp (path, "http:", 5)   && 
       strncmp (path, "ftp:", 4)    &&
@@ -778,7 +817,7 @@ ThotBool             IsW3Path (const char *path)
   IsFilePath                                           
   returns TRUE if path is in fact a URL.
   ----------------------------------------------------------------------*/
-ThotBool             IsFilePath (const char *path)
+ThotBool IsFilePath (const char *path)
 {
   if (strncmp (path, "file:", 5))
     return FALSE;
@@ -789,7 +828,7 @@ ThotBool             IsFilePath (const char *path)
   IsValidProtocol                                                    
   returns true if the url protocol is supported by Amaya.
   ----------------------------------------------------------------------*/
-ThotBool             IsValidProtocol (const char *url)
+ThotBool IsValidProtocol (const char *url)
 {
    if (!strncmp (url, "http:", 5)
       || !strncmp (url, "internal:", 9)
