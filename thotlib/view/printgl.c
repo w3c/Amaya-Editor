@@ -11,6 +11,11 @@
  */
 #ifdef _GL
 
+#ifdef _WX
+  #include "wx/wx.h"
+  #include "wx/glcanvas.h"
+#endif /* _WX */
+
 #include "thot_gui.h"
 #include "ustring.h"
 #include "math.h"
@@ -59,16 +64,24 @@
 
 
 #ifdef _GTK
-#include <gtk/gtk.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <gdk/gdk.h>
-#include <gtkgl/gdkgl.h>
+  #include <gtk/gtk.h>
+  #include <GL/gl.h>
+  #include <GL/glu.h>
+  #include <gdk/gdk.h>
+  #include <gtkgl/gdkgl.h>
 
-static GdkGLContext *context = NULL;
-static GdkPixmap    *pixmap = NULL;
-static GdkGLPixmap  *glpixmap = NULL;
+  static GdkGLContext *context = NULL;
+  static GdkPixmap    *pixmap = NULL;
+  static GdkGLPixmap  *glpixmap = NULL;
 #endif /* _GTK */
+
+#ifdef _WX
+  #include "AmayaApp.h"
+  #include "AmayaPrintNotify.h"
+  static wxGLCanvas * wx_canvas = NULL;
+  extern AmayaPrintNotify * g_p_print_dialog;
+
+#endif /* _WX */
 
 #include "GL/gl.h"
 #include "ustring.h"
@@ -184,6 +197,14 @@ void GetGLContext ()
   glpixmap = gdk_gl_pixmap_new (visual, pixmap);
   gdk_gl_pixmap_make_current (glpixmap, context);
 #endif /* _GTK */
+
+#ifdef _WX
+  wx_canvas = new wxGLCanvas( g_p_print_dialog, -1,
+			      wxDefaultPosition, wxDefaultSize,
+			      0, _T("AmayaCanvas"),
+			      AmayaApp::GetGL_AttrList() );
+  wx_canvas->SetCurrent();
+#endif /* _WX */
 
   SetGlPipelineState ();
   GLResize (GL_HEIGHT, GL_WIDTH, 0, 0);
@@ -436,7 +457,7 @@ ThotBool GL_prepare (int frame)
 #endif 
 
 #ifdef _WX
-  /* TODO */
+  wx_canvas->SetCurrent();
 #endif /* _WX */
   
 #ifdef _WINGUI

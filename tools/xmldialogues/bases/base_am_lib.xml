@@ -408,6 +408,10 @@
 	<message xml:lang="fi">Sisennys</message>
 	<message xml:lang="ru">Отступ</message>
 </label>
+<label define="TMSG_LIB_PRINTING_IN_PROGRESS">
+	<message xml:lang="en">Printing in progress</message>
+	<message xml:lang="fr">Impression en cours</message>
+</label>
 <label define="TMSG_LIB_PRINT">
 	<message xml:lang="en">Print</message>
 	<message xml:lang="fr">Imprimer</message>

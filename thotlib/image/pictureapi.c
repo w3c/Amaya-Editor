@@ -33,8 +33,9 @@
 
 #include "memory_f.h"
 #ifdef _WX
-#include "AmayaWindow.h"
-#include "appdialogue_wx.h"
+  #include "AmayaWindow.h"
+  #include "appdialogue_wx.h"
+  #include "message_wx.h"
 #endif /* _WX */
 
 /*----------------------------------------------------------------------

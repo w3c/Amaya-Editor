@@ -143,9 +143,15 @@ static int          LastPrinted;
  * extern int          errno;*/
 
 #ifdef _WX
+#include <locale.h>
+#include "AmayaPrintNotify.h"
+#include "wxAmayaTimer.h"
 /* TODO : rendre le code plus propre car FrRef n'a rien a voir avec un file descriptor !!!
  * pourtant on l'utilise comme tel dans le print :( */
-ThotWindow      FrRef[MAX_FRAME + 2];
+ThotWindow         FrRef[MAX_FRAME + 2];
+AmayaPrintNotify * g_p_print_dialog = NULL;
+wxAmayaTimer *     g_p_dialog_timer = NULL;
+static int         pg_counter = 0;
 #endif /* _WX */
 
 #ifdef _GTK
@@ -638,6 +644,11 @@ static void InitTable (int i, PtrDocument pDoc)
   FrameTable[i].FrDoc = IdentDocument (pDoc);
   FrameTable[i].FrView = i;
   RemoveClipping(i);
+
+#ifdef _WX
+  /* initialize a virtual frame because it's tested into display function to know if it's necessary to display */
+  FrameTable[i].WdFrame = (AmayaFrame*)1;
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1912,6 +1923,38 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
  return 0;
 }
 
+#ifdef _WX
+/*----------------------------------------------------------------------
+  MyPrintDlgTimerProcWX : Call when the timer occurs
+  ----------------------------------------------------------------------*/
+static void MyPrintDlgTimerProcWX( void * data)
+{
+  delete g_p_dialog_timer;
+  g_p_dialog_timer = NULL;
+}
+
+/*----------------------------------------------------------------------
+  Callback that cancel printing
+  ----------------------------------------------------------------------*/
+void wx_print_cancel()
+{
+  if (button_quit)
+    {
+      wxExit();
+    }
+  else
+    DoAbort = TRUE;
+}
+
+/*----------------------------------------------------------------------
+  Create and display dialog box that permits cancel and viewing page number
+  ----------------------------------------------------------------------*/
+void wx_print_dialog ()
+{
+  g_p_print_dialog = new AmayaPrintNotify();
+  g_p_print_dialog->Show();
+}
+#endif /* _WX */
 
 /*----------------------------------------------------------------------
   PrintOnePage    imprime l'image de la page de pave pPageAb a    
@@ -1931,9 +1974,9 @@ ThotBool PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb,
   int                 pageHeight, nextPageBreak, nChars;
   int                 h;
   ThotBool            stop, emptyImage;
-#ifdef _GTK
+#if defined(_GTK) || defined(_WX)
   char                title_label[50];
-#endif /* _GTK */
+#endif /* _GTK || _WX */
 
   /* control the Abort printing button */
   if (DoAbort)
@@ -1946,6 +1989,19 @@ ThotBool PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb,
   while (gtk_events_pending())
     gtk_main_iteration();
 #endif /* _GTK */
+
+#ifdef _WX
+  pg_counter++;
+  sprintf(title_label, "%s [ %i ]", TtaGetMessage(LIB, TMSG_LIB_PRINTING_IN_PROGRESS), pg_counter);
+  g_p_print_dialog->SetMessage( title_label );
+  
+  g_p_dialog_timer = new wxAmayaTimer( MyPrintDlgTimerProcWX, NULL );
+  /* start a one shot timer */
+  g_p_dialog_timer->Start( 500, wxTIMER_ONE_SHOT );
+  while (g_p_dialog_timer)
+    wxSafeYield( g_p_print_dialog );
+#endif /* _WX */
+
 #ifdef _WINGUI
   if (TtPrinterDC)
     {
@@ -2113,6 +2169,11 @@ void DisplayConfirmMessage (char *text)
     gtk_window_set_title (GTK_WINDOW (window),text); 
     button_quit = TRUE;
 #endif /* _GTK */
+
+#ifdef _WX
+    g_p_print_dialog->SetMessage( text );
+    button_quit = TRUE;
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -2127,6 +2188,10 @@ void DisplayMessage (char *text, int msgType)
       gtk_window_set_title (GTK_WINDOW (window),text);
       button_quit = TRUE;
 #endif /* _GTK */
+#ifdef _WX
+      g_p_print_dialog->SetMessage( text );
+      button_quit = TRUE;
+#endif /* _WX */
       /* if the request comes from the Thotlib we have to remove the directory */
       if (removeDirectory)
 	{
@@ -2421,7 +2486,11 @@ DLLEXPORT void PrintDoc (HWND hWnd, int argc, char **argv, HDC PrinterDC,
 			 ThotBool isTrueColors, int depth, char *tmpDocName,
 			 char *tmpDir, HINSTANCE hInst, ThotBool buttonCmd)
 #else  /* _WINDOWS */
+#ifdef _WX
+int amaya_main (int argc, char **argv)
+#else /* _WX */
 int main (int argc, char **argv)
+#endif /* _WX */
 #endif /* _WINDOWS */
 {
   char             *realName = NULL;
@@ -2441,6 +2510,11 @@ int main (int argc, char **argv)
   ThotBool          realNameFound = FALSE;
   ThotBool          viewFound = FALSE;
   ThotBool          done;
+
+#if defined(_WX)
+  /* In order to get a "." even in a localised unix (ie: french becomes ",") */
+  setlocale (LC_NUMERIC, "C");
+#endif /* _WX */
 
   thotWindow       = 0;
   removeDirectory = FALSE;
@@ -2487,6 +2561,10 @@ int main (int argc, char **argv)
     usage (argv[0]);
 #endif /* _WINDOWS */
 
+#ifdef _WX
+  /* create the print dialog befor the opengl initialisation because the virtual gl canvas is a child of this dialog */
+  wx_print_dialog ();
+#endif /* _WX */
 
 #ifdef _GTK
   /* Initialization of gtk libraries */
@@ -2852,7 +2930,12 @@ int main (int argc, char **argv)
       return (0);
     }
   exit (0);
-#endif /* _GTK */	
+#endif /* _GTK */
+  
+#ifdef _WX
+  wxExit();
+#endif /* _WX */
+
 #ifdef _WINDOWS
    return;
 #else /* _WINDOWS */

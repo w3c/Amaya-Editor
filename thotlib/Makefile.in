@@ -78,6 +78,10 @@ include .depends
 #########################################################################
 
 THOTK_OBJ = \
+	base/AmayaApp.o \
+	base/wxAmayaTimer.o \
+        base/wxAmayaSocketEvent.o \
+        base/wxAmayaSocketEventLoop.o \
 	base/global.o \
 	base/fileaccess.o \
 	base/memory.o \
@@ -290,6 +294,9 @@ libThotEditor.a : $(THOTK_OBJ) $(DISPLAY_OBJ) $(EDITOR_OBJ)
 #
 
 PRINT_OBJ= \
+	base/message_wx.o \
+	base/registry_wx.o \
+	dialogue/AmayaPrintNotify.o \
 	dialogue/nodialog.o \
 	tree/paginatePP.o \
 	view/initpses.o \

@@ -35,108 +35,109 @@
 33 Default
 34 Align
 35 Indent
-36 Print
-37 Manual feed
-38 Options
-39 A4
-40 US
-41 Paper format
-42 Done
-43 Directories
-44 The document %s already exists. Do you want to overwrite it?
-45 Left button sets the text color
-46 Middle or Right button sets the background color
-47 Font family
-48 Normal
-49 Bold
-50 Italic
-51 Oblique
-52 Normal
-53 Boldness
-54 Normal
-55 Underline
-56 Cross out
-57 Body size (pt)
-58 Indent (pt)
-59 Line spacing (pt)
-60 Line spacing
-61 Save document
-62 Close, don't save
-63 Character style
-64 Colors
-65 Delete
-66 Output
-67 PostScript file
-68 Printer
-69 Search for
-70 Ignore case
-71 Replace by
-72 Replace
-73 No replace
-74 Replace on request
-75 Automatic replace
-76 Search where
-77 Before selection
-78 Within selection
-79 After selection
-80 In the whole document
-81 Do not replace
-82 Default colors
-83 before closing it
-84 Close a document
-85 Math symbols
-86 Graphics
-87 Latin alphabet
-88 Greek alphabet
-89 Save
-90 Text
-91 Graphic
-92 Symbol
-93 Image
-94 Element type
-95 after
-96 before
-97 around
-98 Include
-99 Paste
-100 to create
-101 Insert
-102 Page break
-103 Language of element
-104 Inherited language:
-105 Not found
-106 Search in
-107 Search
-108 Read only element
-109 Nothing to replace
-110 Standard characters
-111 Standard graphics
-112 Standard format
-113 Standard geometry
-114 pt
-115 Line style
-116 Line weight
-117 Fill pattern
-118 Split
-119 Object type
-120 Goto page number:
-121 Any
-122 Attribute to search
-123 Type to search
-124 Natures
-125 Attribute value:
-126 Unknown attribute
-127 Cancel
-128 Error in PostScript translation
-129 Command refused by the spooler "%s"
-130 Cannot create "%s"
-131 Overline
-132 Document format
-133 Events
-134 Remove attribute
-135 Left button sets the selection color
-136 Middle or Right button sets the caret color
-137 More ...
-138 Get
-139 Color
-140 No element can be inserted
+36 Printing in progress
+37 Print
+38 Manual feed
+39 Options
+40 A4
+41 US
+42 Paper format
+43 Done
+44 Directories
+45 The document %s already exists. Do you want to overwrite it?
+46 Left button sets the text color
+47 Middle or Right button sets the background color
+48 Font family
+49 Normal
+50 Bold
+51 Italic
+52 Oblique
+53 Normal
+54 Boldness
+55 Normal
+56 Underline
+57 Cross out
+58 Body size (pt)
+59 Indent (pt)
+60 Line spacing (pt)
+61 Line spacing
+62 Save document
+63 Close, don't save
+64 Character style
+65 Colors
+66 Delete
+67 Output
+68 PostScript file
+69 Printer
+70 Search for
+71 Ignore case
+72 Replace by
+73 Replace
+74 No replace
+75 Replace on request
+76 Automatic replace
+77 Search where
+78 Before selection
+79 Within selection
+80 After selection
+81 In the whole document
+82 Do not replace
+83 Default colors
+84 before closing it
+85 Close a document
+86 Math symbols
+87 Graphics
+88 Latin alphabet
+89 Greek alphabet
+90 Save
+91 Text
+92 Graphic
+93 Symbol
+94 Image
+95 Element type
+96 after
+97 before
+98 around
+99 Include
+100 Paste
+101 to create
+102 Insert
+103 Page break
+104 Language of element
+105 Inherited language:
+106 Not found
+107 Search in
+108 Search
+109 Read only element
+110 Nothing to replace
+111 Standard characters
+112 Standard graphics
+113 Standard format
+114 Standard geometry
+115 pt
+116 Line style
+117 Line weight
+118 Fill pattern
+119 Split
+120 Object type
+121 Goto page number:
+122 Any
+123 Attribute to search
+124 Type to search
+125 Natures
+126 Attribute value:
+127 Unknown attribute
+128 Cancel
+129 Error in PostScript translation
+130 Command refused by the spooler "%s"
+131 Cannot create "%s"
+132 Overline
+133 Document format
+134 Events
+135 Remove attribute
+136 Left button sets the selection color
+137 Middle or Right button sets the caret color
+138 More ...
+139 Get
+140 Color
+141 No element can be inserted

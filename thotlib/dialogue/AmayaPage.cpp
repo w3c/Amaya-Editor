@@ -18,6 +18,7 @@
 #include "libmsg.h"
 #include "frame.h"
 #include "appdialogue_wx.h"
+#include "registry_wx.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern

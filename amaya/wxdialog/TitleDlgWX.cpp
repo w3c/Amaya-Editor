@@ -11,6 +11,7 @@
 #include "amaya.h"
 #include "wxinclude.h"
 #include "appdialogue_wx.h"
+#include "message_wx.h"
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them

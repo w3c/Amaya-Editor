@@ -234,10 +234,6 @@ AMAYA_OBJ = \
 	wxdialog/SaveAsDlgWX.o \
 	wxdialog/AmayaDialog.o \
 	wxdialogapi.o \
-	AmayaApp.o \
-	wxAmayaTimer.o \
-        wxAmayaSocketEvent.o \
-        wxAmayaSocketEventLoop.o \
 	EDITORAPP.o \
 	HTMLAPP.o \
 	TextFileAPP.o \

@@ -17,7 +17,7 @@
 
 #ifdef _WX
   #include "wx/wx.h"
-  #include "AmayaApp.h"
+//  #include "AmayaApp.h"
 #endif /* _WX */
 
 #undef THOT_EXPORT
@@ -50,6 +50,7 @@
 #ifdef _WX
   #include "wxdialogapi_f.h"
   #include "windowtypes_wx.h"
+  #include "registry_wx.h"
   #include "appdialogue_wx.h"
 #endif /* _WX */
 
@@ -7983,15 +7984,3 @@ void SaveGeometryOnExit (int document, const char * view_name)
     /* Save the current windows geometry */
     SetGeometryConf ( document, view_name );
 }
-
-
-#if defined(_GL) && defined(_WX)
-/*----------------------------------------------------------------------
-  GetGL_AttrList
-  return the best OpenGL attribut configuration (initialized into AmayaApp::OnInit)
-  ----------------------------------------------------------------------*/
-int * GetGL_AttrList()
-{
-  return AmayaApp::GetGL_AttrList();
-}
-#endif /* _GL && _WX */

@@ -16,7 +16,6 @@
 
 #ifdef _WX
   #include "wx/wx.h"
-  #include "AmayaApp.h"
 #endif /* _WX */
 
 /* Included headerfiles */

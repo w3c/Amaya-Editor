@@ -8,6 +8,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 
+#include "AmayaApp.h"
 #include "AmayaCanvas.h"
 #include "AmayaFrame.h"
 #include "AmayaPage.h"
@@ -38,10 +39,6 @@
 
 #ifdef _GL
   #include "glwindowdisplay.h"
-
-  // this function is defined into amaya/init.c
-  // I need to declare as extern because it's not possible to include amaya function into thotlib (dirty...)
-  extern int * GetGL_AttrList();
 #endif /*_GL*/
 
 #ifdef _GL
@@ -64,7 +61,7 @@ AmayaCanvas::AmayaCanvas( AmayaFrame *  p_parent_window,
 		p_shared_context,
 		-1,
 		wxDefaultPosition, wxDefaultSize, 0 , _T("AmayaCanvas"),
-		GetGL_AttrList() ),
+		AmayaApp::GetGL_AttrList() ),
 #else // #ifdef _GL  
 AmayaCanvas::AmayaCanvas( AmayaFrame *  p_parent_window )
   : wxPanel( p_parent_window ),

@@ -54,6 +54,7 @@
   #include "AmayaWindow.h"
   #include "AmayaCallback.h"
   #include "appdialogue_wx.h"
+  #include "message_wx.h"
 #endif /* _WX */
 
 #define THOT_EXPORT

@@ -6,7 +6,6 @@
 #include "constmenu.h"
 
 extern void          ThotCallback ( int ref, int typedata, char *data );
-extern wxString      TtaConvMessageToWX ( const char * p_message );
 extern int           TtaGetWindowNumber( );
 extern AmayaWindow * TtaGetWindowFromId( int window_id );
 extern void          TtaCloseWindow( int window_id );
@@ -16,15 +15,6 @@ extern int           TtaGetFrameId( int window_id, int page_id, int position );
 extern int           TtaGetFrameDocumentId( int frame_id );
 extern ThotBool      TtaRegisterWidgetWX( int ref, void * p_widget );
 extern int           TtaGetActiveWindowId();
-
-/* constants used to identify different type of ressources */
-typedef enum
-  {
-    WX_RESOURCES_ICON,
-    WX_RESOURCES_XRC
-  } wxResourceType;
-
-extern wxString      TtaGetResourcePathWX( wxResourceType type, const char * filename );
 
 extern int TtaMakeWindow(int x, int y, int w, int h, int kind, int parent_window_id );
 extern int TtaMakeFrame( const char * schema_name,

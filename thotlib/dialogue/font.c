@@ -2328,9 +2328,15 @@ void InitDialogueFonts (char *name)
   else*/
     DialogFont =  ReadFont (script, 2, 0, index, UnRelative);
 #endif /* _WINGUI */
-    
-#if defined(_GTK) || defined(_WX)
+
+#ifdef _WX
   /* WX TODO : ecrire le code de LoadFont() pour charger une wxFont utilisable dans les dialogues */
+    DialogFont = NULL;
+    IDialogFont = NULL;
+    LargeDialogFont = NULL;
+#endif /* _WX */
+
+#if defined(_GTK)
   DialogFont =  ReadFont (script, 2, 0, index, UnRelative);
   if (DialogFont == NULL)
     {
@@ -2356,7 +2362,7 @@ void InitDialogueFonts (char *name)
       if (LargeDialogFont == NULL)
 	LargeDialogFont = IDialogFont;
     }
-#endif /*#if defined(_GTK) || defined(_WX) */
+#endif /* _GTK */
   
 #ifdef _GL
 

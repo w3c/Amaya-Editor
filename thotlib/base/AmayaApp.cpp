@@ -6,24 +6,40 @@
   #include "wx/xrc/xmlres.h"          // XRC XML resouces
 #endif /* _GLPRINT */
 
+#include "thot_gui.h"
+#include "thot_sys.h"
+#include "constmedia.h"
+#include "typemedia.h"
+#include "appdialogue.h"
+#include "dialog.h"
+#include "selection.h"
+#include "application.h"
+#include "dialog.h"
+#include "document.h"
+#include "message.h"
+#include "libmsg.h"
+#include "frame.h"
+
 #include "AmayaApp.h"
 
-#define THOT_EXPORT extern
-#include "amaya.h"
+//#define THOT_EXPORT extern
+//#include "amaya.h"
+
+
 #include "appdialogue_wx.h"
+#include "registry_wx.h"
 
 #include "wxAmayaSocketEventLoop.h"
 #include "wxAmayaSocketEvent.h"
 
 IMPLEMENT_APP(AmayaApp)
 
-#ifndef _GLPRINT
-// defined into EDITORAPP.c
-extern int amaya_main (int argc, char** argv);
-#else /* _GLPRINT */
-// defined into print.c
-extern int main (int argc, char** argv);
-#endif /* #ifndef _GLPRINT */
+#ifdef _WINDOWS
+  // TODO
+#else /* _WINDOWS */
+  // defined into EDITORAPP.c or print.c
+  extern int amaya_main (int argc, char** argv);
+#endif /* _WINDOWS */
 
 #ifdef _GL
 /*
@@ -97,7 +113,8 @@ bool AmayaApp::OnInit()
   // just convert arguments format (unicode to iso-8859-1) before passing it to amaya_main
   InitAmayaArgs();
 
-#ifndef _GLPRINT
+  //#ifndef _GLPRINT
+
   /* initialize the Registry */
   TtaInitializeAppRegistry (amaya_argv[0]);
 
@@ -122,7 +139,8 @@ bool AmayaApp::OnInit()
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "PrintDlgWX.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "SaveAsDlgWX.xrc") );
   // TODO: rajouter ici toutes les autres ressources a charger  
-#endif /* #ifndef _GLPRINT */
+
+  //#endif /* #ifndef _GLPRINT */
 
   /* setup the socket event loop */
   /* when a socket is active, check every 100 ms if something happend on the socket */
@@ -206,12 +224,8 @@ void AmayaApp::OnIdle( wxIdleEvent& event )
   if (!m_AmayaIsLaunched)
     {
       m_AmayaIsLaunched = TRUE;
-#ifndef _GLPRINT
-      // just call amaya main from EDITORAPP.c
+      // just call amaya main from EDITORAPP.c or print.c
       amaya_main( amaya_argc, amaya_argv );
-#else /* _GLPRINT */
-      main( amaya_argc, amaya_argv );
-#endif /* _GLPRINT */
     }
 
 #if DEBUG_FOCUS

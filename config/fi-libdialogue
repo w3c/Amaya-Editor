@@ -35,108 +35,109 @@
 33 Oletus
 34 Kohdistus
 35 Sisennys
-36 Tulostus
-37 Käsinsyöttö
-38 Asetukset
-39 A4
-40 US
-41 Paperikoko
-42 Valmis
-43 Hakemistot
-44 Dokumentti %s on jo olemassa. Korvataanko?
-45 Vasen näppäin asettaa tekstin värin
-46 Keskimmäinen tai oikea näppäin asettaa taustavärin
-47 Fonttiperhe
-48 Normaali
-49 Lihavoitu
-50 Kursivoitu
-51 Viisto
-52 Normaali
-53 Lihavointi
-54 Normaali
-55 Alleviivaa
-56 Vedä yli
-57 Kappalekoko (pt)
-58 Sisennä (pt)
-59 Riviväli (pt)
-60 Riviväli
-61 Tallenna dokumentti
-62 Sulje, älä tallenna
-63 Merkkityyli
-64 Värit
-65 Poista
-66 Tuloste
-67 PostScript tiedosto
-68 Tulostin
-69 Etsi
-70 ISOLLA = pienellä
-71 Korvaa tällä
-72 Korvaa
-73 Älä korvaa
-74 Korvaa pyynnöstä
-75 Automaattinen korvus
-76 Etsi missä
-77 Ennen valintaa
-78 Valinnan sisällä
-79 Valinnan jälkeen
-80 Koko dokumentissa
-81 Älä korvaa
-82 Oletusvärit
-83 ennen sen sulkemista
-84 Sulje dokumentti
-85 Matemaattiset symbolit
-86 Grafiikka
-87 Latinalaiset aakkoset
-88 Kreikkalaiset aakkoset
-89 Tallenna
-90 Tekstiä
-91 Grafiikkaa
-92 Symboli
-93 Kuva
-94 Elementin tyyppi
-95 jälkeen
-96 ennen
-97 ympärillä
-98 Sisällytä
-99 Liitä
-100 luoda
-101 Sisällytä
-102 Katkaise sivu
-103 Elementin kieli
-104 Peritty kieli:
-105 Ei löydy
-106 Etsi tässä
-107 Etsi
-108 Vain lukuelementti
-109 Ei korvattavaa
-110 Vakiomerkit
-111 Vakiografiikka
-112 Vakiomuoto
-113 Vakiogeometria
-114 pt
-115 Viivatyyli
-116 Viivapaksuus
-117 Täyttökuvio
-118 Jaa
-119 Elementtityyppi
-120 Siirry sivulle:
-121 Mikä tahansa
-122 Määre etsintään
-123 Tyyppi etsintään
-124 Luonteet
-125 Määreen arvo:
-126 Tuntematon määre
-127 Peruuta
-128 Virhe PostScript käännöksessä
-129 Kirjoitinajuri hylkäsi komennon "%s"
-130 Ei voi luoda "%s"
-131 Yliviivaa
-132 Dokumentin muoto
-133 Tapahtumat
-134 Poista määritys
-135 Hiiren vasen näppäin asettaa valintavärin
-136 Hiiren keskimmäinen tai oikea näppäin asettaa caret värin
-137 Lisää ...
-138 Hae
-139 Väri
-140 **No element can be inserted
+36 **Printing in progress
+37 Tulostus
+38 Käsinsyöttö
+39 Asetukset
+40 A4
+41 US
+42 Paperikoko
+43 Valmis
+44 Hakemistot
+45 Dokumentti %s on jo olemassa. Korvataanko?
+46 Vasen näppäin asettaa tekstin värin
+47 Keskimmäinen tai oikea näppäin asettaa taustavärin
+48 Fonttiperhe
+49 Normaali
+50 Lihavoitu
+51 Kursivoitu
+52 Viisto
+53 Normaali
+54 Lihavointi
+55 Normaali
+56 Alleviivaa
+57 Vedä yli
+58 Kappalekoko (pt)
+59 Sisennä (pt)
+60 Riviväli (pt)
+61 Riviväli
+62 Tallenna dokumentti
+63 Sulje, älä tallenna
+64 Merkkityyli
+65 Värit
+66 Poista
+67 Tuloste
+68 PostScript tiedosto
+69 Tulostin
+70 Etsi
+71 ISOLLA = pienellä
+72 Korvaa tällä
+73 Korvaa
+74 Älä korvaa
+75 Korvaa pyynnöstä
+76 Automaattinen korvus
+77 Etsi missä
+78 Ennen valintaa
+79 Valinnan sisällä
+80 Valinnan jälkeen
+81 Koko dokumentissa
+82 Älä korvaa
+83 Oletusvärit
+84 ennen sen sulkemista
+85 Sulje dokumentti
+86 Matemaattiset symbolit
+87 Grafiikka
+88 Latinalaiset aakkoset
+89 Kreikkalaiset aakkoset
+90 Tallenna
+91 Tekstiä
+92 Grafiikkaa
+93 Symboli
+94 Kuva
+95 Elementin tyyppi
+96 jälkeen
+97 ennen
+98 ympärillä
+99 Sisällytä
+100 Liitä
+101 luoda
+102 Sisällytä
+103 Katkaise sivu
+104 Elementin kieli
+105 Peritty kieli:
+106 Ei löydy
+107 Etsi tässä
+108 Etsi
+109 Vain lukuelementti
+110 Ei korvattavaa
+111 Vakiomerkit
+112 Vakiografiikka
+113 Vakiomuoto
+114 Vakiogeometria
+115 pt
+116 Viivatyyli
+117 Viivapaksuus
+118 Täyttökuvio
+119 Jaa
+120 Elementtityyppi
+121 Siirry sivulle:
+122 Mikä tahansa
+123 Määre etsintään
+124 Tyyppi etsintään
+125 Luonteet
+126 Määreen arvo:
+127 Tuntematon määre
+128 Peruuta
+129 Virhe PostScript käännöksessä
+130 Kirjoitinajuri hylkäsi komennon "%s"
+131 Ei voi luoda "%s"
+132 Yliviivaa
+133 Dokumentin muoto
+134 Tapahtumat
+135 Poista määritys
+136 Hiiren vasen näppäin asettaa valintavärin
+137 Hiiren keskimmäinen tai oikea näppäin asettaa caret värin
+138 Lisää ...
+139 Hae
+140 Väri
+141 **No element can be inserted

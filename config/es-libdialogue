@@ -35,108 +35,109 @@
 33 Por omisión
 34 Alineación
 35 Sangría
-36 Configurar e imprimir
-37 Alimentación manual
-38 Opciones
-39 A4
-40 US
-41 Formato de papel
-42 Aceptar
-43 Directorios
-44 El documento %s ya existe. ¿Quiere sobreescribirlo?
-45 El botón izquierdo fija el color del texto
-46 El botón derecho o el central fijan el color del fondo
-47 Familia de fuente
-48 Normal
-49 Negrita
-50 Cursiva
-51 Oblicua
-52 Normal
-53 Grosor
-54 Normal
-55 Subrayado
-56 Tachado
-57 Tamaño del cuerpo (pt)
-58 Sangría (pt)
-59 Interlineado (pt)
-60 Interlineado
-61 Guardar documento
-62 Cerrar, no guardar
-63 Estilo de carácter
-64 Colores
-65 Borrar
-66 Salida
-67 Archivo PostScript
-68 Impresora
-69 Buscar:
-70 No haga caso del caso
-71 Reemplazar por:
-72 Reemplazar
-73 No reemplazar
-74 Solicitar confirmación
-75 Reemplazar automáticamente
-76 Dónde buscar
-77 Antes de la selección
-78 En la selección
-79 Tras la selección
-80 En todo el documento
-81 No reemplazar
-82 Colores por omisión
-83 antes de cerrarlo
-84 Cerrar un documento
-85 Símbolos matemáticos
-86 Gráficos
-87 Alfabeto latino
-88 Alfabeto griego
-89 Guardar
-90 Texto
-91 Gráfico
-92 Símbolo
-93 Imagen
-94 Tipo de elemento
-95 después
-96 antes
-97 alrededor
-98 Incluir
-99 Pegar
-100 para crear
-101 Insertar
-102 Salto de página
-103 Idioma del elemento
-104 Idioma heredado:
-105 No encontrado
-106 Buscar en
-107 Buscar
-108 Elemento de sólo lectura
-109 Nada que sustituir
-110 Caracteres estándar
-111 Gráficos estándar
-112 Formato estándar
-113 Geometría estándar
-114 pt
-115 Estilo de línea
-116 Grosor de línea
-117 Patrón de relleno
-118 Dividir
-119 Tipo de objeto
-120 Ir a página número:
-121 Cualquiera
-122 Atributo a buscar
-123 Tipo a buscar
-124 Natures
-125 Valores de atributo:
-126 Atributo desconocido
-127 Cancelar
-128 Error en traducción PostScript
-129 Orden rechazada por el spooler "%s"
-130 No puedo crear "%s"
-131 Overline
-132 Formato de documento
-133 Eventos
-134 Eliminar atributo
-135 El botón izquierdo fija el color de texto de la selección
-136 El botón central o derecho fija el color de fondo de la selección
-137 Más ...
-138 Obtener
-139 Color
-140 No se puede insertar ningún elemento
+36 **Printing in progress
+37 Configurar e imprimir
+38 Alimentación manual
+39 Opciones
+40 A4
+41 US
+42 Formato de papel
+43 Aceptar
+44 Directorios
+45 El documento %s ya existe. ¿Quiere sobreescribirlo?
+46 El botón izquierdo fija el color del texto
+47 El botón derecho o el central fijan el color del fondo
+48 Familia de fuente
+49 Normal
+50 Negrita
+51 Cursiva
+52 Oblicua
+53 Normal
+54 Grosor
+55 Normal
+56 Subrayado
+57 Tachado
+58 Tamaño del cuerpo (pt)
+59 Sangría (pt)
+60 Interlineado (pt)
+61 Interlineado
+62 Guardar documento
+63 Cerrar, no guardar
+64 Estilo de carácter
+65 Colores
+66 Borrar
+67 Salida
+68 Archivo PostScript
+69 Impresora
+70 Buscar:
+71 No haga caso del caso
+72 Reemplazar por:
+73 Reemplazar
+74 No reemplazar
+75 Solicitar confirmación
+76 Reemplazar automáticamente
+77 Dónde buscar
+78 Antes de la selección
+79 En la selección
+80 Tras la selección
+81 En todo el documento
+82 No reemplazar
+83 Colores por omisión
+84 antes de cerrarlo
+85 Cerrar un documento
+86 Símbolos matemáticos
+87 Gráficos
+88 Alfabeto latino
+89 Alfabeto griego
+90 Guardar
+91 Texto
+92 Gráfico
+93 Símbolo
+94 Imagen
+95 Tipo de elemento
+96 después
+97 antes
+98 alrededor
+99 Incluir
+100 Pegar
+101 para crear
+102 Insertar
+103 Salto de página
+104 Idioma del elemento
+105 Idioma heredado:
+106 No encontrado
+107 Buscar en
+108 Buscar
+109 Elemento de sólo lectura
+110 Nada que sustituir
+111 Caracteres estándar
+112 Gráficos estándar
+113 Formato estándar
+114 Geometría estándar
+115 pt
+116 Estilo de línea
+117 Grosor de línea
+118 Patrón de relleno
+119 Dividir
+120 Tipo de objeto
+121 Ir a página número:
+122 Cualquiera
+123 Atributo a buscar
+124 Tipo a buscar
+125 Natures
+126 Valores de atributo:
+127 Atributo desconocido
+128 Cancelar
+129 Error en traducción PostScript
+130 Orden rechazada por el spooler "%s"
+131 No puedo crear "%s"
+132 Overline
+133 Formato de documento
+134 Eventos
+135 Eliminar atributo
+136 El botón izquierdo fija el color de texto de la selección
+137 El botón central o derecho fija el color de fondo de la selección
+138 Más ...
+139 Obtener
+140 Color
+141 No se puede insertar ningún elemento

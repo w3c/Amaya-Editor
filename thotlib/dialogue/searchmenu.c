@@ -30,8 +30,9 @@
 #endif /* _WINGUI */
 
 #ifdef _WX
-#include "wxinclude.h"
-#include "wx/msgdlg.h" // wxMessageDialog
+  #include "wxinclude.h"
+  #include "wx/msgdlg.h" // wxMessageDialog
+  #include "message_wx.h"
 #endif /* _WX */
 
 #define THOT_EXPORT extern

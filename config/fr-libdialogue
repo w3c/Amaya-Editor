@@ -35,108 +35,109 @@
 33 Défaut
 34 Alignement
 35 Renfoncement
-36 Imprimer
-37 Alimentation manuelle
-38 Options
-39 A4
-40 US
-41 Format du papier
-42 Terminer
-43 Répertoires
-44 Le document %s existe déjà. Voulez-vous l'écraser ?
-45 Bouton gauche change la couleur du texte
-46 Bouton milieu ou droit change la couleur du fond
-47 Police
-48 Normal
-49 Gras
-50 Italique
-51 Oblique
-52 Normal
-53 Graisse
-54 Non souligné
-55 Souligné
-56 Biffé
-57 Corps (pt)
-58 Renfoncement (pt)
-59 Interligne (pt)
-60 Interligne
-61 Sauver le document
-62 Fermer sans sauver
-63 Style des caractères
-64 Couleurs
-65 Supprimer
-66 Destination
-67 Fichier PostScript
-68 Imprimante
-69 Texte à chercher
-70 Ignorer la casse
-71 Texte de remplacement
-72 Remplacement
-73 Sans remplacement
-74 Remplacement à la demande
-75 Remplacement automatique
-76 Où rechercher
-77 Avant la sélection
-78 Dans la sélection
-79 Après la sélection
-80 Dans tout le document
-81 Sauter
-82 Couleurs par défaut
-83 avant de le fermer
-84 Fermer un document
-85 Symboles mathématiques
-86 Graphiques
-87 Alphabet latin
-88 Alphabet grec
-89 Sauver
-90 Texte
-91 Graphique
-92 Symbole
-93 Image
-94 Type d'élément
-95 après
-96 avant
-97 autour
-98 Inclure
-99 Coller
-100 à créer
-101 Insérer
-102 Saut de page
-103 Langue de l'élément
-104 Langue héritée :
-105 Pas trouvé
-106 Recherche dans
-107 Recherche
-108 Elément en lecture seule
-109 Plus de remplacements
-110 Caractères standard
-111 Graphiques standard
-112 Format standard
-113 Géométrie standard
-114 pt
-115 Style des traits
-116 Epaisseur des traits
-117 Motif de remplissage
-118 Diviser
-119 Type d'objet
-120 Aller page numéro :
-121 any
-122 Attribut à chercher
-123 Type à chercher
-124 Natures
-125 Valeur de l'attribut :
-126 Attribut inconnu
-127 Annuler
-128 Erreur dans la traduction en PostScript
-129 Commande refusée par le spooler : %s
-130 Création impossible : %s
-131 Surligné
-132 Format de document
-133 Événements
-134 Retire l'attribut
-135 Bouton gauche change la couleur de sélection
-136 Bouton milieu ou droit change la couleur du curseur
-137 Autres ...
-138 Actualiser
-139 Couleur
-140 Pas d'élément à insérer
+36 Impression en cours
+37 Imprimer
+38 Alimentation manuelle
+39 Options
+40 A4
+41 US
+42 Format du papier
+43 Terminer
+44 Répertoires
+45 Le document %s existe déjà. Voulez-vous l'écraser ?
+46 Bouton gauche change la couleur du texte
+47 Bouton milieu ou droit change la couleur du fond
+48 Police
+49 Normal
+50 Gras
+51 Italique
+52 Oblique
+53 Normal
+54 Graisse
+55 Non souligné
+56 Souligné
+57 Biffé
+58 Corps (pt)
+59 Renfoncement (pt)
+60 Interligne (pt)
+61 Interligne
+62 Sauver le document
+63 Fermer sans sauver
+64 Style des caractères
+65 Couleurs
+66 Supprimer
+67 Destination
+68 Fichier PostScript
+69 Imprimante
+70 Texte à chercher
+71 Ignorer la casse
+72 Texte de remplacement
+73 Remplacement
+74 Sans remplacement
+75 Remplacement à la demande
+76 Remplacement automatique
+77 Où rechercher
+78 Avant la sélection
+79 Dans la sélection
+80 Après la sélection
+81 Dans tout le document
+82 Sauter
+83 Couleurs par défaut
+84 avant de le fermer
+85 Fermer un document
+86 Symboles mathématiques
+87 Graphiques
+88 Alphabet latin
+89 Alphabet grec
+90 Sauver
+91 Texte
+92 Graphique
+93 Symbole
+94 Image
+95 Type d'élément
+96 après
+97 avant
+98 autour
+99 Inclure
+100 Coller
+101 à créer
+102 Insérer
+103 Saut de page
+104 Langue de l'élément
+105 Langue héritée :
+106 Pas trouvé
+107 Recherche dans
+108 Recherche
+109 Elément en lecture seule
+110 Plus de remplacements
+111 Caractères standard
+112 Graphiques standard
+113 Format standard
+114 Géométrie standard
+115 pt
+116 Style des traits
+117 Epaisseur des traits
+118 Motif de remplissage
+119 Diviser
+120 Type d'objet
+121 Aller page numéro :
+122 any
+123 Attribut à chercher
+124 Type à chercher
+125 Natures
+126 Valeur de l'attribut :
+127 Attribut inconnu
+128 Annuler
+129 Erreur dans la traduction en PostScript
+130 Commande refusée par le spooler : %s
+131 Création impossible : %s
+132 Surligné
+133 Format de document
+134 Événements
+135 Retire l'attribut
+136 Bouton gauche change la couleur de sélection
+137 Bouton milieu ou droit change la couleur du curseur
+138 Autres ...
+139 Actualiser
+140 Couleur
+141 Pas d'élément à insérer

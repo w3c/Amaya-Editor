@@ -32,7 +32,9 @@
 #include "appdialogue.h"
 #include "thotcolor.h"
 #include "picture.h"
-
+#ifdef _WX
+  #include "message_wx.h"
+#endif /* _WX */
 #ifdef _GTK
   #include <gdk/gdkx.h>
 #endif /*_GTK*/

@@ -35,108 +35,109 @@
 33 Fehlwert
 34 Ausrichten
 35 Einrücken
-36 Drucken
-37 manueller Papiereinzug
-38 Optionen
-39 A4
-40 US
-41 Papierformat
-42 Beenden
-43 Verzeichnisse
-44 %s existiert bereits. Überschreiben?
-45 Maustaste 1 setzt die Textfarbe
-46 Maustaste 2 oder 3 setzt die Hintergrundfarbe
-47 Familie
-48 Normal
-49 Fett
-50 Kursiv
-51 Geneigt
-52 Normal
-53 Stärke
-54 Normal
-55 Unterstrichen
-56 Durchgestrichen
-57 Größe (pt)
-58 Einrücken (pt)
-59 Zeilenabstand (pt)
-60 Zeilenabstand
-61 Speichern
-62 Nicht Speichern
-63 Schräge
-64 Farbe
-65 Löschen
-66 Ausgabe
-67 PostScript-Datei
-68 Drucker
-69 Suchen nach
-70 Buchstabenlage ignorieren
-71 Ersetzen durch
-72 Modus
-73 Nicht ersetzen
-74 Bestätigen
-75 Alle ersetzen
-76 Suchraum
-77 Oberhalb der Markierung
-78 Innerhalb der Markierung
-79 Unterhalb der Markierung
-80 Im gesamten Dokument
-81 Überspringen
-82 Standardfarbe
-83 vorher speichern?
-84 Dokument schließen
-85 Formelsatz
-86 Grafik
-87 Lateinisches Alphabet
-88 Griechiches Alphabet
-89 Speichern
-90 Text
-91 Zeichnung
-92 Symbol
-93 Bild
-94 Art des Elements
-95 nach
-96 vor
-97 um
-98 Einfügen
+36 **Printing in progress
+37 Drucken
+38 manueller Papiereinzug
+39 Optionen
+40 A4
+41 US
+42 Papierformat
+43 Beenden
+44 Verzeichnisse
+45 %s existiert bereits. Überschreiben?
+46 Maustaste 1 setzt die Textfarbe
+47 Maustaste 2 oder 3 setzt die Hintergrundfarbe
+48 Familie
+49 Normal
+50 Fett
+51 Kursiv
+52 Geneigt
+53 Normal
+54 Stärke
+55 Normal
+56 Unterstrichen
+57 Durchgestrichen
+58 Größe (pt)
+59 Einrücken (pt)
+60 Zeilenabstand (pt)
+61 Zeilenabstand
+62 Speichern
+63 Nicht Speichern
+64 Schräge
+65 Farbe
+66 Löschen
+67 Ausgabe
+68 PostScript-Datei
+69 Drucker
+70 Suchen nach
+71 Buchstabenlage ignorieren
+72 Ersetzen durch
+73 Modus
+74 Nicht ersetzen
+75 Bestätigen
+76 Alle ersetzen
+77 Suchraum
+78 Oberhalb der Markierung
+79 Innerhalb der Markierung
+80 Unterhalb der Markierung
+81 Im gesamten Dokument
+82 Überspringen
+83 Standardfarbe
+84 vorher speichern?
+85 Dokument schließen
+86 Formelsatz
+87 Grafik
+88 Lateinisches Alphabet
+89 Griechiches Alphabet
+90 Speichern
+91 Text
+92 Zeichnung
+93 Symbol
+94 Bild
+95 Art des Elements
+96 nach
+97 vor
+98 um
 99 Einfügen
-100 Erzeugen
-101 Einfügen
-102 Seitenumbruch
-103 Sprache des Elements
-104 Sprachvoreinstellung:
-105 Suche beendet
-106 Suche in
-107 Suche
-108 Schreibgeschütztes Dokument
-109 Suche beendet
-110 Standardzeichensatz
-111 Standardgrafik
-112 Standardformat
-113 Standardgeometrie
-114 pt
-115 Linienart
-116 Linienstärke
-117 Füllmuster
-118 Teilen
-119 Objekttyp
-120 Gehe zu Seite Nr.:
-121 egal
-122 Attribut suchen
-123 Suche nach Typ
-124 Dokumenttyp
-125 Wert des Attributs:
-126 Unbekanntes Attribut
-127 Abbrechen
-128 Fehler in der PostScript-Erkennung
-129 Auftrag vom Druckspooler "%s" zurückgewiesen
-130 Kann "%s" nicht erzeugen
-131 Überstrichen
-132 Format
-133 Ereignisse (Events)
-134 Löschen
-135 Linke Maustaste: Farbe für markierten Text
-136 Mittlere oder rechte Maustaste: Cursorfarbe
-137 Weiter ...
-138 Holen
-139 Farbe
-140 Es kann kein Element eingefügt werden
+100 Einfügen
+101 Erzeugen
+102 Einfügen
+103 Seitenumbruch
+104 Sprache des Elements
+105 Sprachvoreinstellung:
+106 Suche beendet
+107 Suche in
+108 Suche
+109 Schreibgeschütztes Dokument
+110 Suche beendet
+111 Standardzeichensatz
+112 Standardgrafik
+113 Standardformat
+114 Standardgeometrie
+115 pt
+116 Linienart
+117 Linienstärke
+118 Füllmuster
+119 Teilen
+120 Objekttyp
+121 Gehe zu Seite Nr.:
+122 egal
+123 Attribut suchen
+124 Suche nach Typ
+125 Dokumenttyp
+126 Wert des Attributs:
+127 Unbekanntes Attribut
+128 Abbrechen
+129 Fehler in der PostScript-Erkennung
+130 Auftrag vom Druckspooler "%s" zurückgewiesen
+131 Kann "%s" nicht erzeugen
+132 Überstrichen
+133 Format
+134 Ereignisse (Events)
+135 Löschen
+136 Linke Maustaste: Farbe für markierten Text
+137 Mittlere oder rechte Maustaste: Cursorfarbe
+138 Weiter ...
+139 Holen
+140 Farbe
+141 Es kann kein Element eingefügt werden

@@ -40,7 +40,6 @@
 
 #ifdef _WX
   #include "wx/wx.h"
-  #include "AmayaApp.h"
 #endif /* _WX */
 
 #define THOT_EXPORT extern

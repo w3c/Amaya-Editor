@@ -32,6 +32,7 @@
 
 #ifdef _WX
   #include "appdialogue_wx.h"
+  #include "message_wx.h"
 #endif /* _WX */
 
 #ifdef _GL

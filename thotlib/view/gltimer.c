@@ -40,7 +40,7 @@
 #include "frame.h"
 
 #ifdef _WX
-  #include "wxinclude.h"
+  #include "wxAmayaTimer.h"
 #endif /* _WX */
 
 #undef THOT_EXPORT

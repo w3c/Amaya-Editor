@@ -10,6 +10,7 @@
 #include "amaya.h"
 #include "print.h"
 #include "appdialogue_wx.h"
+#include "message_wx.h"
 
 #define APPFILENAMEFILTER _T("HTML files (*.*htm[l])|*.*htm*|XML files (*.xml)|*.xml|MathML Files (*.mml)|*.mml|SVG files (*.svg)|*.svg|CSS files (*.css)|*.css|All files (*.*)|*.*")
 #define APPCSSNAMEFILTER _T("CSS files (*.css)|*.css|All files (*.*)|*.*")

@@ -153,9 +153,11 @@ void TtaMainLoop ()
   /* Sets the current locale according to the program environment */
 #ifdef _GTK
   gtk_set_locale ();
+#endif /* _GTK */
+#if defined(_WX) || defined(_GTK)
   /* In order to get a "." even in a localised unix (ie: french becomes ",") */
   setlocale (LC_NUMERIC, "C");
-#endif /* _GTK */
+#endif /* _WX || _GTK */
 #ifdef _WINGUI
   setlocale (LC_ALL, ".OCP");
   /* _setmbcp (_MB_CP_OEM); */

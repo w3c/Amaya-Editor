@@ -16,6 +16,10 @@
 #include "application.h"
 #include "appdialogue_wx.h"
 #include "windowtypes_wx.h"
+#ifdef _WX
+  #include "message_wx.h"
+  #include "registry_wx.h"
+#endif /* _WX */
 
 #include "appdialogue_f.h"
 #include "appdialogue_wx_f.h"

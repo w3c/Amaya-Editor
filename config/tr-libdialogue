@@ -35,108 +35,109 @@
 33 Öntanımlı
 34 Hizala
 35 İçeriden
-36 Yazdır
-37 Elle besleme
-38 Seçenekler
-39 A4
-40 US
-41 Sayfa biçimi
-42 Tamam
-43 Dizinleri
-44 %s belgesi zaten var, üzerine yazmak ister misiniz?
-45 Sol duğme tuş yazı rengini ayarlar
-46 Orta veya sağ tuş arkaplan rengini ayarlar
-47 Yazıtipi ailesi
-48 Normal
-49 Kalın
-50 İtalik
-51 Oblik
-52 Normal
-53 Kalın
-54 Normal
-55 Altçizgi
-56 Cross out
-57 Body boyu (pt)
-58 İçeriden (pt)
-59 Satır aralığı (pt)
-60 Satır aralığı
-61 Belge kaydet
-62 Kapat, kaydetme
-63 Karakter tarzı
-64 Renkler
-65 Sil
-66 Çıktı
-67 PostScript dosya
-68 Yazıcı
-69 Metin arama
-70 BÜYÜK HARF = küçük harf
-71 ile değiştir
-72 Değiştir
-73 Değiştirme
-74 İstek üzerine değiştir
-75 Otomatik olarak değiştir
-76 Arama nerede
-77 Seçimden önce
-78 Seçim içi
-79 Seçimden sonra
-80 Tüm belgede
-81 Değiştirme
-82 Öntanımlı renkler
-83 kapamadan önce
-84 Belgeyi kapa
-85 Matematik sembolleri
-86 Grafik
-87 Latin alfabesi
-88 Yunan alfabesi
-89 Kaydet
-90 Metin
-91 Grafik
-92 Simge
-93 Görüntü
-94 Birim tipi
-95 önce
-96 sonra
-97 civarında
-98 Ekle
-99 Yapıştır
-100 Yapılmalıdır
-101 Ekle
-102 Sayfa kesmesi
-103 Birimin dili
-104 Alınan dil
-105 Bulunamadı
-106 Ara
+36 **Printing in progress
+37 Yazdır
+38 Elle besleme
+39 Seçenekler
+40 A4
+41 US
+42 Sayfa biçimi
+43 Tamam
+44 Dizinleri
+45 %s belgesi zaten var, üzerine yazmak ister misiniz?
+46 Sol duğme tuş yazı rengini ayarlar
+47 Orta veya sağ tuş arkaplan rengini ayarlar
+48 Yazıtipi ailesi
+49 Normal
+50 Kalın
+51 İtalik
+52 Oblik
+53 Normal
+54 Kalın
+55 Normal
+56 Altçizgi
+57 Cross out
+58 Body boyu (pt)
+59 İçeriden (pt)
+60 Satır aralığı (pt)
+61 Satır aralığı
+62 Belge kaydet
+63 Kapat, kaydetme
+64 Karakter tarzı
+65 Renkler
+66 Sil
+67 Çıktı
+68 PostScript dosya
+69 Yazıcı
+70 Metin arama
+71 BÜYÜK HARF = küçük harf
+72 ile değiştir
+73 Değiştir
+74 Değiştirme
+75 İstek üzerine değiştir
+76 Otomatik olarak değiştir
+77 Arama nerede
+78 Seçimden önce
+79 Seçim içi
+80 Seçimden sonra
+81 Tüm belgede
+82 Değiştirme
+83 Öntanımlı renkler
+84 kapamadan önce
+85 Belgeyi kapa
+86 Matematik sembolleri
+87 Grafik
+88 Latin alfabesi
+89 Yunan alfabesi
+90 Kaydet
+91 Metin
+92 Grafik
+93 Simge
+94 Görüntü
+95 Birim tipi
+96 önce
+97 sonra
+98 civarında
+99 Ekle
+100 Yapıştır
+101 Yapılmalıdır
+102 Ekle
+103 Sayfa kesmesi
+104 Birimin dili
+105 Alınan dil
+106 Bulunamadı
 107 Ara
-108 Salt-oku birim
-109 Değiştirilecek bir şey yok
-110 Standart karakterler
-111 Standart grafikler
-112 Standart biçim
-113 Standart geometri
-114 pt
-115 Çizgi tarzı
-116 Çizgi ağırlığı
-117 Doldurma şekli
-118 Ayır
-119 Nesne türü
-120 Numaralı sayfaya git
-121 Herhangi
-122 Aranacak olan özellik
-123 Aranacak olan tip
-124 özellikler
-125 Özellik değeri
-126 Bilinmeyen özellik
-127 Vazgeç
-128 PostScript dönüşümünde hata
-129 Komut "%s" tarafından reddedildi.
-130 "%s" yaratılamadı
-131 Üstçizgi
-132 Dokümanın forması
-133 Olaylar
-134 Özeliği sil
-135 Sol düğme seçilin rengini değiştiriyor
-136 Orta ve sağ düğme kürsör\'ün rengini değiştiriyor
-137 Diğer...
-138 Yenilendir
-139 Renk
-140 **No element can be inserted
+108 Ara
+109 Salt-oku birim
+110 Değiştirilecek bir şey yok
+111 Standart karakterler
+112 Standart grafikler
+113 Standart biçim
+114 Standart geometri
+115 pt
+116 Çizgi tarzı
+117 Çizgi ağırlığı
+118 Doldurma şekli
+119 Ayır
+120 Nesne türü
+121 Numaralı sayfaya git
+122 Herhangi
+123 Aranacak olan özellik
+124 Aranacak olan tip
+125 özellikler
+126 Özellik değeri
+127 Bilinmeyen özellik
+128 Vazgeç
+129 PostScript dönüşümünde hata
+130 Komut "%s" tarafından reddedildi.
+131 "%s" yaratılamadı
+132 Üstçizgi
+133 Dokümanın forması
+134 Olaylar
+135 Özeliği sil
+136 Sol düğme seçilin rengini değiştiriyor
+137 Orta ve sağ düğme kürsör\'ün rengini değiştiriyor
+138 Diğer...
+139 Yenilendir
+140 Renk
+141 **No element can be inserted

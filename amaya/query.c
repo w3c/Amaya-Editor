@@ -24,7 +24,6 @@
 #ifdef _WX
   #include "wx/utils.h"
   #include "wx/dir.h"
-  #include "AmayaApp.h"
   #include "wxAmayaSocketEvent.h"
   #include "wxAmayaSocketEventLoop.h"
 #endif /* _WX */
