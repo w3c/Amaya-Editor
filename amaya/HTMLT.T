@@ -107,28 +107,28 @@ RULES
 	Create '<H1';
 	Create Attributes;
 	Create '>';
-	Create '</H1>\12' After;
+	Create '</H1>\12\12' After;
 	END;
 
  H2:	BEGIN
 	Create '<H2';
 	Create Attributes;
 	Create '>';
-	Create '</H2>\12' After;
+	Create '</H2>\12\12' After;
 	END;
 
  H3:	BEGIN
 	Create '<H3';
 	Create Attributes;
 	Create '>';
-	Create '</H3>\12' After;
+	Create '</H3>\12\12' After;
 	END;
 
  H4:	BEGIN
 	Create '<H4';
 	Create Attributes;
 	Create '>';
-	Create '</H4>\12' After;
+	Create '</H4>\12\12' After;
 	END;
 
  H5:	BEGIN
@@ -302,7 +302,7 @@ RULES
 	   BEGIN
 	   Create '<P';
 	   Create Attributes;
-	   Create '>';
+	   Create '>\12';
 	   Create '</P>' After;
 	   END;
 	Create '\12' After;
@@ -396,16 +396,15 @@ RULES
 	Create '<PRE';
 	Create Attributes;
 	Create '>';
-	Create '</PRE>\12' After;
+	Create '\12</PRE>\12' After;
 	END;
 
  Pre_Line : BEGIN
-	IF NOT FIRST
-		Create '\12';
+	Create '\12';
 	END;
 
  Horizontal_Rule: BEGIN
-	Create '\12<HR';
+	Create '<HR';
 	Create Attributes;
 	Remove;
 	Create '>\12';
@@ -860,15 +859,16 @@ ATTRIBUTES
  Class: BEGIN
 	IF Within TEXT_UNIT
 	    BEGIN
-	    Create '<SPAN class=';
+	    Create '<SPAN class="';
 	    Create Class;
-	    Create '>';
+	    Create '">';
 	    Create '</SPAN>' After;
 	    END;
 	IF NOT Within TEXT_UNIT
 	    BEGIN
-	    Create ' class=';
+	    Create ' class="';
 	    Create Class;
+	    Create QuoteF;
 	    END;
 	END;
 
