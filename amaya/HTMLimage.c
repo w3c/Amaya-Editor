@@ -557,7 +557,7 @@ void DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
 	      for (i = strlen (imageName); i > 0 && imageName[i] != '.'; i--);
 	      if (imageName[i] == '.' && !strcmp (&imageName[i+1], "svg"))
 		is_svg = TRUE;
-	      if (imageName[i] == '.' && !strcmp (&imageName[i+1], "mml"))
+	      else if (imageName[i] == '.' && !strcmp (&imageName[i+1], "mml"))
 		is_mml = TRUE;
 	      else /* try sniffing */
 		{

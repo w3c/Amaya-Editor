@@ -3798,13 +3798,53 @@ static void  InitializeXmlParsingContext (Document doc,
 }
 
 /*----------------------------------------------------------------------
+  ReplaceExternAttrType
+  ----------------------------------------------------------------------*/
+static  ReplaceExternAttrType (Element elold, Element elnew, Document doc)
+{
+  AttributeType   attrType, attrType1;
+  Attribute       attrold, attrnew, nextattr;
+  int             attrKind, val, length;
+  char           *buffer;
+
+  /* Attach the attributes to the new element */
+  nextattr = NULL;
+  TtaNextAttribute (elold, &nextattr);
+  while (nextattr != NULL)
+    {
+      attrold = nextattr;
+      TtaNextAttribute (elold, &nextattr);
+      TtaGiveAttributeType (attrold, &attrType, &attrKind);
+      
+      attrnew = TtaNewAttribute (attrType);
+      TtaAttachAttribute (elnew, attrnew, doc);
+      switch (attrKind)
+	{
+	case 0: /* enumerate */
+	case 1:	/* integer */
+	  val = TtaGetAttributeValue (attrold);
+	  TtaSetAttributeValue (attrnew, val, elnew, doc);
+	  break;
+	case 2:	/* text */
+	  length = TtaGetTextAttributeLength (attrold);
+	  buffer = TtaGetMemory (length + 1);
+	  TtaGiveTextAttributeValue (attrold, buffer, &length);
+	  TtaSetAttributeText (attrnew, buffer, elnew, doc);
+	  TtaFreeMemory (buffer);
+	  break;
+	case 3:	/* reference */
+	  break;
+	}     
+    }
+}
+
+/*----------------------------------------------------------------------
   ChangeExternElemType
   ----------------------------------------------------------------------*/
 static Element  ChangeExternElemType (Element el, Document doc)
 {
   ElementType   elType, parentType;
   Element       parent, elemElement, elemContent;
-  Attribute     attr, nextattr;
   int           oldStructureChecking;
  
   elemElement = NULL;
@@ -3828,8 +3868,10 @@ static Element  ChangeExternElemType (Element el, Document doc)
 	  if (elemContent != NULL)
 	    {
 	      TtaInsertSibling (elemContent, el, FALSE, doc);
+	      /* Attach the attributes to that new element */
+	      ReplaceExternAttrType (el, elemContent, doc);
 	      /* Remove the PICTURE_UNIT element form the tree */
-	      TtaRemoveTree (el, doc);
+	      TtaDeleteTree (el, doc);
 	    }
 	}
       else
@@ -3841,21 +3883,14 @@ static Element  ChangeExternElemType (Element el, Document doc)
 	    {
 	      TtaInsertSibling (elemElement, el, FALSE, doc);
 	      /* Attach the attributes to that new element */
-	      nextattr = NULL;
-	      TtaNextAttribute (el, &nextattr);
-	      while (nextattr != NULL)
-		{
-		  attr = nextattr;
-		  TtaNextAttribute (el, &nextattr);
-		  TtaAttachAttribute (elemElement, attr, doc);
-		}
+	      ReplaceExternAttrType (el, elemElement, doc);
 	      /* create a SVG_ImageContent element */
 	      elType.ElTypeNum = HTML_EL_SVG_ImageContent;
 	      elemContent = TtaNewElement (doc, elType);
 	      if (elemContent != NULL)
 		TtaInsertFirstChild (&elemContent, elemElement, doc);
 	      /* Remove the PICTURE_UNIT element form the tree */
-	      TtaRemoveTree (el, doc);
+	      TtaDeleteTree (el, doc);
 	    }
 	}
     }
@@ -3869,16 +3904,9 @@ static Element  ChangeExternElemType (Element el, Document doc)
 	{
 	  TtaInsertSibling (elemContent, el, FALSE, doc);
 	  /* Attach the attributes to that new element */
-	  nextattr = NULL;
-	  TtaNextAttribute (el, &nextattr);
-	  while (nextattr != NULL)
-	    {
-	      attr = nextattr;
-	      TtaNextAttribute (el, &nextattr);
-	      TtaAttachAttribute (elemContent, attr, doc);
-	    }
+	  ReplaceExternAttrType (el, elemContent, doc);
 	  /* Remove the PICTURE_UNIT element form the tree */
-	  TtaRemoveTree (el, doc);
+	  TtaDeleteTree (el, doc);
 	}
     }
   else if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) &&

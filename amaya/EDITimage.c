@@ -911,6 +911,7 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
 	  TtaFreeMemory (value);
 	  /* set the element content */
 	  TtaSetTextContent (pict, pathimage, SPACE, doc);
+	  DisplayImage (doc, pict, pathimage, NULL);
 	}
       else
 	{
@@ -954,20 +955,11 @@ void UpdateSRCattribute (NotifyElement *event)
 	TtaDeleteTree (el, doc);
 	return;
      }
-   /* search the SRC attribute */
-   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-   attrType.AttrTypeNum = HTML_ATTR_SRC;
    elSRC = TtaGetParent (el);
    if (elSRC != NULL)
       elSRC = el;
-   attr = TtaGetAttribute (elSRC, attrType);
-   if (attr == 0)
-     {
-	attr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (elSRC, attr, doc);
-     }
-   ComputeSRCattribute (elSRC, doc, 0, attr, text);
    /* add the ALT attribute */
+   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
    attrType.AttrTypeNum = HTML_ATTR_ALT;
    attr = TtaGetAttribute (elSRC, attrType);
    if (attr == 0)
@@ -992,6 +984,15 @@ void UpdateSRCattribute (NotifyElement *event)
        TtaSetAttributeText (attr, ImgAlt, elSRC, doc);
        ImgAlt[0] = EOS;
      }
+   /* search the SRC attribute */
+   attrType.AttrTypeNum = HTML_ATTR_SRC;
+   attr = TtaGetAttribute (elSRC, attrType);
+   if (attr == 0)
+     {
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (elSRC, attr, doc);
+     }
+   ComputeSRCattribute (elSRC, doc, 0, attr, text);
 }
 
 
