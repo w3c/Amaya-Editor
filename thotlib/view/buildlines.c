@@ -2813,7 +2813,7 @@ static void CompressLine (PtrLine pLine, int xDelta, int frame, int spaceDelta)
        else
 	 pBox = GetNextBox (ibox1->BxAbstractBox);
      }
-   while (ibox1 != pLine->LiLastBox && ibox1 != pLine->LiLastPiece);
+   while (pBox && ibox1 != pLine->LiLastBox && ibox1 != pLine->LiLastPiece);
    ReadyToDisplay = status;
 }
 
