@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -73,8 +73,17 @@ static ThotBool GetIncludedDocuments ();
   ----------------------------------------------------------------------*/
 void  RedisplayDocument(Document doc, View view)
 {
+  Element	       el;
+  int		       position;
+  int		       distance;
+
+  /* get the current position in the document */
+  position = RelativePosition (doc, &distance);
   TtaSetDisplayMode (doc, NoComputedDisplay);
   TtaSetDisplayMode (doc, DisplayImmediately);
+  /* show the document at the same position */
+  el = ElementAtPosition (doc, position);
+  TtaShowElement (doc, view, el, distance);
 }
 
 

@@ -6348,13 +6348,17 @@ void InitAmaya (NotifyEvent * event)
   ----------------------------------------------------------------------*/
 void ChangeAttrOnRoot (Document doc, int attrNum)
 {
-  Element	    root;
-  AttributeType    attrType;
-  Attribute	    attr;
-  ThotBool	    docModified;
+  Element	       root, el;
+  AttributeType        attrType;
+  Attribute	       attr;
+  int		       position;
+  int		       distance;
+  ThotBool	       docModified;
 
   docModified = TtaIsDocumentModified (doc);
   root = TtaGetRootElement (doc);
+  /* get the current position in the document */
+  position = RelativePosition (doc, &distance);
   TtaSetDisplayMode (doc, NoComputedDisplay);
   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
   attrType.AttrTypeNum = attrNum;
@@ -6376,6 +6380,9 @@ void ChangeAttrOnRoot (Document doc, int attrNum)
       DocStatusUpdate (doc, docModified);
     }
   TtaSetDisplayMode (doc, DisplayImmediately);
+  /* show the document at the same position */
+  el = ElementAtPosition (doc, position);
+  TtaShowElement (doc, 1, el, distance);
 }
 
 /*----------------------------------------------------------------------
