@@ -148,6 +148,10 @@ AmayaCanvas * AmayaFrame::CreateDrawingArea()
       p_canvas = new AmayaCanvas( this, m_pSharedContext );
     }
 #endif /*_NOSHARELIST*/
+
+  /* try to force opengl to use this canvas (initialize the opengl context) */
+  p_canvas->SetCurrent();
+
 #else /* _GL */
   p_canvas = new AmayaCanvas( this );
 #endif /* _GL */
@@ -308,7 +312,7 @@ void AmayaFrame::ShowScrollbar( int scrollbar_id )
  */
 void AmayaFrame::SetCurrent()
 {
-  if (m_pCanvas)
+  if (m_pCanvas && m_pCanvas->IsInit())
     m_pCanvas->SetCurrent();
 }
 
@@ -322,7 +326,7 @@ void AmayaFrame::SetCurrent()
  */
 void AmayaFrame::SwapBuffers()
 {
-  if (m_pCanvas)
+  if (m_pCanvas && m_pCanvas->IsInit())
     m_pCanvas->SwapBuffers();
 }
 #endif // #ifdef _GL
