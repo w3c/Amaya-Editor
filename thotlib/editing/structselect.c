@@ -345,7 +345,7 @@ int                *lastChar;
 	     *firstChar = FirstSelectedChar;
 	     if (LastSelectedChar == 0)
 		*lastChar = 0;
-	     else if (SelPosition)
+	     else if (SelPosition) 
 		*lastChar = LastSelectedChar;
 	     else
 		*lastChar = LastSelectedChar + 1;

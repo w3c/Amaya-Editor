@@ -34,6 +34,7 @@
 #include "typecorr.h"
 #include "appdialogue.h"
 #include "labelAllocator.h"
+#include "registry.h"
 
 #undef EXPORT
 #define EXPORT extern
@@ -3492,6 +3493,7 @@ boolean             withEvent;
    DocumentIdentifier  docIdent;
    char                buffer[MAX_TXT_LEN];
    char                tag;
+   char 	       *debugstr;
    boolean             structureOK, createPages, found, ok;
 
    pDoc->DocToBeChecked = FALSE;
@@ -3809,9 +3811,13 @@ boolean             withEvent;
 	  {
 	     /* on previent l'utilisateur */
 	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_DOC_STRUCTURE), pDoc->DocDName);
-	     /* on met le document en Read-Only */
-	     pDoc->DocReadOnly = TRUE;
-	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LOCKED_DOC), pDoc->DocDName);
+             debugstr = TtaGetEnvString ("DEBUG");
+	     if(debugstr == NULL || strcasecmp(debugstr,"YES"))
+	       {
+	         /* on met le document en Read-Only */
+	         pDoc->DocReadOnly = TRUE;
+	         TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LOCKED_DOC), pDoc->DocDName);
+               }
 	  }
 	/* libere les labels des elements reference's par d'autres */
 	/* documents */

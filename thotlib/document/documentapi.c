@@ -268,7 +268,8 @@ int                 accessMode;
 		  /* keep the actual schema path into the document context */
 		  strncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
 		  document = IdentDocument (pDoc);
-		  pDoc->DocReadOnly = (accessMode == 0);
+		  if (!pDoc->DocReadOnly)
+		     pDoc->DocReadOnly = (accessMode == 0);
 	       }
 	  }
      }
