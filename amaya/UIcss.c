@@ -228,69 +228,67 @@ void                ApplyExtraPresentation (Document doc)
 #else
 void                ApplyExtraPresentation (doc)
 Document            doc;
-
 #endif
 {
-   CSSInfoPtr          css;
-   int                 color = -1;
-   int                 zoom = 0, old_zoom;
+  CSSInfoPtr          css;
+  int                 color = -1;
+  int                 zoom = 0, old_zoom;
 
-   css = GetDocumentStyle (doc);
-   if (css->pschema != NULL)
-     {
-	if (css->view_background_color != -1)
-	   color = css->view_background_color;
-	if (css->magnification != -1000)
-	   zoom = css->magnification;
-     }
-   while (css != NULL)
-     {
-	if (css->documents[doc])
-	  {
-	     switch (css->category)
-		   {
-		      case CSS_EXTERNAL_STYLE:
-			 if (css->view_background_color != -1)
-			    color = css->view_background_color;
-			 if (css->magnification != -1000)
-			    zoom = css->magnification;
-			 break;
-		      default:
-			 break;
-		   }
-	  }
-	css = css->NextCSS;
-     }
-
-   css = User_CSS;
-   if (css != NULL)
-     {
-	if (css->view_background_color != -1)
-	   color = css->view_background_color;
-	if (css->magnification != -1000)
-	   zoom = css->magnification;
-     }
+  css = GetDocumentStyle (doc);
+  if (css->pschema != NULL)
+    {
+      if (css->view_background_color != -1)
+	color = css->view_background_color;
+      if (css->magnification != -1000)
+	zoom = css->magnification;
+    }
+  
+  while (css != NULL)
+    {
+      if (css->documents[doc])
+	{
+	  switch (css->category)
+	    {
+	    case CSS_EXTERNAL_STYLE:
+	      if (css->view_background_color != -1)
+		color = css->view_background_color;
+	      if (css->magnification != -1000)
+		zoom = css->magnification;
+	      break;
+	    default:
+	      break;
+	    }
+	}
+      css = css->NextCSS;
+    }
+  
+  css = User_CSS;
+  if (css != NULL)
+    {
+      if (css->view_background_color != -1)
+	color = css->view_background_color;
+      if (css->magnification != -1000)
+	zoom = css->magnification;
+    }
 #ifdef DEBUG_CSS
-   fprintf (stderr, "ApplyExtraPresentation(color = %d)\n", color);
+  fprintf (stderr, "ApplyExtraPresentation(color = %d)\n", color);
 #endif
-   if (color != -1)
-     {
-	TtaSetViewBackgroundColor (doc, 1, color);
-     }
-   if (zoom != -1000)
-     {
-	old_zoom = TtaGetZoom (doc, 1);
-	if (zoom != old_zoom)
-	   TtaSetZoom (doc, 1, zoom - old_zoom);
-     }
-   NonPPresentChanged = FALSE;
+
+  if (color != -1)
+    TtaSetViewBackgroundColor (doc, 1, color);
+  if (zoom != -1000)
+    {
+      old_zoom = TtaGetZoom (doc, 1);
+      if (zoom != old_zoom)
+	TtaSetZoom (doc, 1, zoom - old_zoom);
+    }
+  NonPPresentChanged = FALSE;
 }
 
 /*----------------------------------------------------------------------
    InitBrowse : dialog used to save an external CSS file, the user's 
    preferences or the HTML File itself.                 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                InitBrowse (Document doc, View view, char *url)
 #else

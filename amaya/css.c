@@ -1351,7 +1351,7 @@ Document            doc;
    CSSInfoPtr          css;
 
    if (User_CSS != NULL)
-      return;
+      ApplyExtraPresentation (doc);
 
    thotdir = TtaGetEnvString ("THOTDIR");
    home = TtaGetEnvString ("HOME");
@@ -1524,102 +1524,9 @@ void                ApplyFinalStyle (doc)
 Document            doc;
 #endif
 {
-   PSchema             next;
-   CSSInfoPtr          css;
-   int                 color = -1;
-   int                 zoom = 0, old_zoom;
-
-#ifdef linux
-   int                 frame, framexmax, frameymax;
-
-#endif
 
    RebuildHTMLStyleHeader (doc);
    LoadUserStyleSheet (doc);
-   css = GetDocumentStyle (doc);
-   if (css->pschema != NULL)
-     {
-	next = TtaGetFirstPSchema (doc);
-	TtaAddPSchema (css->pschema, next, TRUE, doc);
-	css->documents[doc] = TRUE;
-     }
-#ifdef IV
-   css = GetDocumentStyle (doc);
-   if (css->pschema != NULL)
-     {
-	next = TtaGetFirstPSchema (doc);
-	TtaAddPSchema (css->pschema, next, TRUE, doc);
-	css->documents[doc] = TRUE;
-	if (css->view_background_color != -1)
-	   color = css->view_background_color;
-	if (css->magnification != -1000)
-	   zoom = css->magnification;
-     }
-   css = ListCSS;
-
-   while (css != NULL)
-     {
-	if (css->documents[doc])
-	  {
-	     switch (css->category)
-		   {
-		      case CSS_EXTERNAL_STYLE:
-			 next = TtaGetFirstPSchema (doc);
-			 TtaAddPSchema (css->pschema, next, TRUE, doc);
-			 css->documents[doc] = TRUE;
-			 if (css->view_background_color != -1)
-			    color = css->view_background_color;
-			 if (css->magnification != -1000)
-			    zoom = css->magnification;
-			 break;
-		      default:
-			 break;
-		   }
-	  }
-	css = css->NextCSS;
-     }
-
-   css = User_CSS;
-   if (css != NULL)
-     {
-	css->documents[doc] = TRUE;
-	next = TtaGetFirstPSchema (doc);
-	TtaAddPSchema (css->pschema, next, TRUE, doc);
-	if (css->view_background_color != -1)
-	   color = css->view_background_color;
-	if (css->magnification != -1000)
-	   zoom = css->magnification;
-     }
-#ifdef DEBUG_CSS
-   fprintf (stderr, "ApplyFinalStyle(color = %d)\n", color);
-#endif
-
-   if (color != -1)
-     {
-	TtaSetViewBackgroundColor (doc, 1, color);
-     }
-   if (zoom != -1000)
-     {
-	old_zoom = TtaGetZoom (doc, 1);
-	if (zoom != old_zoom)
-	   TtaSetZoom (doc, 1, zoom - old_zoom);
-     }
-   AddHTMLHistory (DocumentURLs[doc]);
-
-#ifdef linux
-   /*
-    * don't remove these lines !!!
-    * !!!!!!!!!!!!!!!!! ????? Bug ????? !!!!!!!!!!!!!!!!
-    * I don't know why, D.V. !!!
-    */
-#ifndef _WINDOWS
-   frame = GetWindowFrame (XtWindow (TtaGetViewFrame (doc, 1)));
-   GetSizesFrame (frame, &framexmax, &frameymax);
-   DefClip (frame, 0, 0, framexmax, frameymax);
-   FrameResized ((int *) TtaGetViewFrame (doc, 1), frame, NULL);
-#endif /* _WINDOWS */
-#endif /* linux */
-#endif
 }
 
 /*----------------------------------------------------------------------

@@ -18,6 +18,7 @@
 #include "css_f.h"
 #include "html2thot_f.h"
 #include "HTMLstyle_f.h"
+#include "UIcss_f.h"
 
 #ifdef AMAYA_DEBUG
 #define MSG(msg) fprintf(stderr,msg)
@@ -638,40 +639,38 @@ char               *attrstr;
 char              **url;
 #endif
 {
-   if (((attrstr[0] == 'u') || (attrstr[0] = 'U')) &&
-       ((attrstr[0] == 'r') || (attrstr[0] = 'R')) &&
-       ((attrstr[0] == 'l') || (attrstr[0] = 'L')))
-     {
-	char               *base;
+  char                sauve;
+  char               *base;
+  if (((attrstr[0] == 'u') || (attrstr[0] = 'U')) &&
+      ((attrstr[0] == 'r') || (attrstr[0] = 'R')) &&
+      ((attrstr[0] == 'l') || (attrstr[0] = 'L')))
+    {
+      attrstr += 3;
+      SKIP_BLANK (attrstr);
+      if (*attrstr == '(')
+	{
+	  attrstr++;
+	  SKIP_BLANK (attrstr);
+	  base = attrstr;
+	  while ((*attrstr != EOS) && (!IS_BLANK (attrstr)) &&
+		 (*attrstr != ')'))
+	    attrstr++;
+      
+	  if (url != NULL)
+	    {
+	      sauve = *attrstr;
+	      *attrstr = EOS;
+	      *url = TtaStrdup (base);
+	      *attrstr = sauve;
+	    }
+	  attrstr++;
+	  return (attrstr);
+	}
+    }
 
-	attrstr += 3;
-	SKIP_BLANK (attrstr);
-	if (*attrstr != '(')
-	   goto not_url;
-	attrstr++;
-	SKIP_BLANK (attrstr);
-	base = attrstr;
-	while ((*attrstr != EOS) && (!IS_BLANK (attrstr)) &&
-	       (*attrstr != ')'))
-	   attrstr++;
-
-	if (url != NULL)
-	  {
-	     char                sauve;
-
-	     sauve = *attrstr;
-	     *attrstr = EOS;
-	     *url = TtaStrdup (base);
-	     *attrstr = sauve;
-	  }
-	attrstr++;
-	return (attrstr);
-     }
- not_url:
-   if (url != NULL)
-      *url = NULL;
-
-   return (attrstr);
+  if (url != NULL)
+    *url = NULL;  
+  return (attrstr);
 }
 
 /*----------------------------------------------------------------------
@@ -1245,7 +1244,7 @@ PSchema             gPres;
   for (i = 0; i < MAX_ANCESTORS; i++)
     {
       ancestors[i] = NULL;
-      ctxt->ancestors[i] = NULL;
+      ctxt->ancestors[i] = 0;
       ctxt->ancestors_nb[i] = 0;
     }
   
@@ -2899,14 +2898,13 @@ char               *attrstr;
 	 * we don't currently support URL just parse it to skip it.
 	 */
 	attrstr = ParseHTMLURL (attrstr, &url);
+	
 	TtaFreeMemory (url);
      }
    attrstr = ParseHTML3StyleColor (attrstr, &best);
 
    if (best.unit == DRIVERP_UNIT_INVALID)
-     {
-	return (attrstr);
-     }
+     return (attrstr);
    /*
     * if the background is set on the HTML or BODY element,
     * set the background color for the full window.

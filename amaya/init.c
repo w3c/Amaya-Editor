@@ -92,6 +92,7 @@ static Pixmap       iconPlugin;
 #include "EDITstyle_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
+#include "HTMLhistory_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLsave_f.h"
 #include "HTMLstyle_f.h"
@@ -827,6 +828,8 @@ char               *documentname;
 	   /* this document is displayed */
 	   TtaSetTextZone (newdoc, 1, 1, s);
 	StartHTMLParser (newdoc, tempdocument, documentname, tempdir, pathname);
+	/* add this URL in history file */
+	AddHTMLHistory (DocumentURLs[newdoc]);
      }
    return (newdoc);
 }

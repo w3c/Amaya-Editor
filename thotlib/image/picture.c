@@ -1236,16 +1236,15 @@ char               *imageFile;
 #endif /* __STDC__ */
 
 {
-/*----------------------------------------------------------------------
-   char fileName[MAX_PATH];
-   int  typeImage;
-   Drawable   myDrawable = None;
-   Drawable   PicMask;
-   int xif,yif,wif,hif;
+   char            fileName[MAX_PATH];
+   int             typeImage;
+   Drawable        myDrawable = None;
+   Drawable        PicMask;
+   int             xif,yif,wif,hif;
    PictureScaling  pres;
-   unsigned long Bgcolor;
-   ThotWindow     frame;
-   int        vue;
+   unsigned long   Bgcolor;
+   ThotWindow      frame;
+   int             vue;
 
    GetPictureFileName(imageFile, fileName);
    typeImage = GetPictureFormat(fileName);
@@ -1255,6 +1254,5 @@ char               *imageFile;
    XSetWindowBackgroundPixmap(TtDisplay,w,myDrawable);
    FreePixmap(myDrawable);
    FreePixmap(PicMask);
-  ----------------------------------------------------------------------*/
    return (0);
 }
