@@ -63,9 +63,14 @@ AmayaNormalWindow::AmayaNormalWindow (  int             window_id
 					,const wxSize&  size
 					) : 
   AmayaWindow( window_id, p_parent_window, pos, size, WXAMAYAWINDOW_NORMAL ),
-  m_pDummyMenuBar( NULL ),
-  m_SlashPos( 194 )
+  m_pDummyMenuBar( NULL )
 {
+
+  // initialize default slashbar position
+  TtaSetEnvInt("SLASH_PANEL_POS", 195, FALSE);
+  // load slash position from registry
+  TtaGetEnvInt ("SLASH_PANEL_POS", &m_SlashPos);
+
   // Create a background panel to contain everything : better look on windows
   wxBoxSizer * p_TopSizer = new wxBoxSizer ( wxVERTICAL );
   SetSizer(p_TopSizer);
@@ -519,6 +524,10 @@ void AmayaNormalWindow::OnSplitterPosChanged( wxSplitterEvent& event )
 {
   TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaNormalWindow::OnSplitterPosChanged now = %d"), event.GetSashPosition() );
   m_SlashPos = event.GetSashPosition();
+
+  // save slash position into registry 
+  TtaSetEnvInt("SLASH_PANEL_POS", m_SlashPos, TRUE);
+
   //  event.Skip();
 }
 
