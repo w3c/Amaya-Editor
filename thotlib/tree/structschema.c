@@ -1454,8 +1454,8 @@ boolean             inTree;
 			       if (pRule->SrConstruct == CsUnorderedAggregate)
 				  /* examine tous les composants declare's dans la regle */
 				  for (i = 0; i < pRule->SrNComponents && !ok; i++)
-				     if (EquivalentSRules (pRule->SrComponent[i], pAscSS,
-					       typeNum, pSS, pEl->ElParent))
+				     if (pRule->SrComponent[i] == typeNum &&
+					 pAscSS->SsCode == pSS->SsCode)
 				       {
 					  ok = TRUE;
 					  compNum = i + 1;
@@ -1466,8 +1466,8 @@ boolean             inTree;
 				    /* cherche le rang compNum de l'element pEl dans l'agregat */
 				    compNum = 0;
 				    for (i = 0; i < pRule->SrNComponents && compNum == 0; i++)
-				       if (EquivalentSRules (pRule->SrComponent[i], pAscSS,
-							     pEl->ElTypeNumber, pEl->ElStructSchema, pEl->ElParent))
+				       if (pRule->SrComponent[i] == pEl->ElTypeNumber &&
+					   pAscSS->SsCode == pEl->ElStructSchema->SsCode)
 					  compNum = i + 1;
 				    if (compNum == 0)
 				       /* l'element pEl n'est pas un composant prevu de */
@@ -1523,8 +1523,8 @@ boolean             inTree;
 					    /* page ni une inclusion. On cherche son */
 					    /* rang dans la regle qui definit l'agregat */
 					    for (i = 0; i < pRule->SrNComponents && compNum == 0; i++)
-					       if (EquivalentSRules (pRule->SrComponent[i], pAscSS,
-								     pEl->ElTypeNumber, pEl->ElStructSchema, pEl->ElParent))
+					       if (pRule->SrComponent[i] == pEl->ElTypeNumber &&
+						   pAscSS->SsCode == pEl->ElStructSchema->SsCode)
 						  compNum = i + 1;
 				      }
 				    if (pEl != NULL)
@@ -1537,7 +1537,8 @@ boolean             inTree;
 					      if (compNum > 1)
 						 /* pas de composant avant le premier */
 						 for (i = compNum - 1; i >= 1 && optional && !ok; i--)
-						    if (EquivalentSRules (pRule->SrComponent[i - 1], pAscSS, typeNum, pSS, pEl->ElParent))
+						    if (pRule->SrComponent[i-1] == typeNum &&
+							pAscSS->SsCode == pSS->SsCode)
 						       ok = TRUE;
 						    else
 						       optional = (pRule->SrOptComponent[i - 1] || !FullStructureChecking);
@@ -1549,7 +1550,8 @@ boolean             inTree;
 						 /* pas de composant apres le dernier */
 						 for (i = compNum + 1; i <= pRule->SrNComponents && optional
 						      && !ok; i++)
-						    if (EquivalentSRules (pRule->SrComponent[i - 1], pAscSS, typeNum, pSS, pEl->ElParent))
+						    if (pRule->SrComponent[i-1] == typeNum &&
+							pAscSS->SsCode == pSS->SsCode)
 						       ok = TRUE;
 						    else
 						       optional = (pRule->SrOptComponent[i - 1] || !FullStructureChecking);
