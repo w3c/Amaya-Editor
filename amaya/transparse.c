@@ -20,6 +20,7 @@
 
 #define THOT_EXPORT extern
 #include "amaya.h"
+#include "fileaccess.h"
 #ifdef  PPSTANDALONE
 #define  NAME_LENGTH 20
 #include "parser.h"
@@ -2075,7 +2076,7 @@ BinFile               infile;
 #endif
 {
    unsigned char       charRead, oldcharRead;
-   boolean             match,readOk;
+   boolean             match, readOk;
    PtrTransition       trans;
 
    /* initialize automaton *//* parse the input file    */
@@ -2298,6 +2299,9 @@ char               *name;
 #else
    BinFile             infile = (BinFile)0;
    char		       fileName[MAX_LENGTH];
+   char                pathes[MAX_LENGTH];
+   char               *next, *cour;
+   boolean             found = FALSE;
    struct stat        *StatBuffer;
    int                 len, status;
 #endif
@@ -2305,13 +2309,27 @@ char               *name;
 #ifndef PPSTANDALONE
    /* build the transformation file name from schema directory and schema name */
    
-   TtaGetSchemaPath(fileName,MAX_LENGTH);
-   len = strlen(fileName);
-   if (fileName[len]!= DIR_SEP)
-     strcat (fileName,DIR_STR);
-   strcat (fileName,name);
-   strcat (fileName,".trans");
-
+   TtaGetSchemaPath(pathes,MAX_LENGTH);
+   cour = pathes;
+   while (!found && cour != NULL)
+     {
+   	next = strchr (cour, PATH_SEP);
+	if (next == NULL)
+       	  strcpy (fileName, cour);
+        else
+	  {
+            strncpy (fileName, cour, (size_t)(next - cour)); 
+	    fileName[(next - cour)] = '\0';
+          }
+        len = strlen(fileName);
+        if (fileName[len]!= DIR_SEP)
+          strcat (fileName,DIR_STR);
+        strcat (fileName,name);
+        strcat (fileName,".trans");
+	found = (TtaFileExist(fileName) == 1);
+	if (!found)
+	   cour = (char *)(next+1);
+     }
    /* check if the file is newer than last read */
    StatBuffer = (struct stat *) TtaGetMemory (sizeof (struct stat));
    

@@ -2062,12 +2062,14 @@ char               *data;
    switch (ref - TransBaseDialog)
 	 {
 	    case TransMenu:
+               TtaSelectElement (TransDoc, NULL);
 	       oldDisplayMode = TtaGetDisplayMode (TransDoc);
-	       TtaSetDisplayMode (TransDoc, NoComputedDisplay);
-	       TtaSelectElement (TransDoc, NULL);
+	       TtaSetDisplayMode (TransDoc, DeferredDisplay);
+               TtaClearViewSelections ();
 	       resultTrans = ApplyTransformation (menuTrans[val], TransDoc);
 	       if (!resultTrans)
 		 {
+	            TtaSetDisplayMode (TransDoc, oldDisplayMode);
 		    /* transformation has failed, restoring the old selection */
 		    if (ffc == 0 && flc == 0)
 		       TtaSelectElement (TransDoc, origFirstSelect);
@@ -2096,11 +2098,11 @@ char               *data;
 		       TtaNextSibling (&myFirstSelect);
 		    else
 		       myFirstSelect = TtaGetFirstChild (myFirstSelect);
+	            TtaSetDisplayMode (TransDoc, oldDisplayMode);
 		    TtaSelectElement (TransDoc, myFirstSelect);
 		    if (myLastSelect != NULL && TtaIsBefore (myFirstSelect, myLastSelect))
 		       TtaExtendSelection (TransDoc, myLastSelect, 0);
 		 }
-	       TtaSetDisplayMode (TransDoc, oldDisplayMode);
 	       FreeMatchEnv ();
 	       break;
 	 }
