@@ -4347,6 +4347,10 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	{
 	  /* it's an attribute */
 	  MapXMLAttribute (xmlType, attrs[i], names[i], &level, doc, &att);
+	  if (att == DummyAttribute && !strcmp (schemaName, "HTML"))
+	    /* it's the "type" attribute for an "input" element. In the tree
+	       it's represented by the element type, not by an attribute */
+	    att = 0;
 	  ctxt->attrType[j] = att;
 	  attrType.AttrSSchema = ctxt->schema;
 	  attrType.AttrTypeNum = att;

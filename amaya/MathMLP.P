@@ -99,6 +99,7 @@ BOXES
 		HorizPos: Left = Enclosing . Left;
 		Height: Creator . Height;
 		Width: 1.1;
+	        HorizRef: * . Bottom;
 		LineWeight: 1 pt;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
@@ -1550,7 +1551,7 @@ RULES
                    BEGIN
 		   HorizPos: Left = Previous . Right;
                    END;
-		if within CDATA_line
+		IF within CDATA_line
                    BEGIN
 		   HorizPos: Left = Previous . Right;
                    VertPos: HRef = Previous . HRef;
