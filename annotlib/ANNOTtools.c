@@ -148,7 +148,9 @@ int AnnotList_localCount (List *annot_list)
   while (item)
     {
       annot = (AnnotMeta *) item->object;
-      if (!IsW3Path (annot->body_url))
+      /* local annotations have a null URI if they were newly
+	 created this session, otherwise they have a file: URI */
+      if (!annot->annot_url || IsFilePath(annot->annot_url))
 	count++;
       item = item->next;
     }
@@ -657,12 +659,12 @@ void AnnotList_writeIndex (CHAR_T *indexFile, List *annot_list)
     {
       annot = (AnnotMeta *) annot_ptr->object;
      
-      /* only save the local annotations */
-      if (!IsW3Path (annot->body_url))
+      /* only save the local annotations; these either have a NULL URI
+	 (if they were newly created this session) or have a file: URI */
+      if (!annot->annot_url || IsFilePath(annot->annot_url))
 	{
 	  fprintf (fp, 
-		   "<r:Description about=\"%s\">\n",
-		   annot->body_url);
+		   "<r:Description>\n");
 
 	  fprintf (fp, 
 		   "<r:type resource=\"http://www.w3.org/1999/xx/annotation-ns#Annotation\" />\n");
