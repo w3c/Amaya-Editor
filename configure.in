@@ -453,7 +453,17 @@ if test "$with_wx" = "yes" ; then
     #   --with-gtk              use GTK+
     #   --with-opengl           use OpenGL (or Mesa)
     #   --with-xrc              use XRC resources system
-    WXCONFIGURE_OPTION="--with-opengl --with-gtk --enable-gtk2 --enable-unicode --enable-ipc --with-xrc --enable-shared=no"
+	#   --disable-htmlhelp
+	#   --disable-html
+	#   --disable-docview
+	#   --disable-mdi
+	#   --disable-mdidoc
+	#   --disable-protocols
+	#   --disable-ftp
+	#   --disable-http
+	#   --disable-sound
+	WXCONFIGURE_TUNNING_OPTION="--disable-htmlhelp --disable-html --disable-docview --disable-mdi --disable-mdidoc --disable-protocols --disable-ftp --disable-http --disable-sound"
+    WXCONFIGURE_OPTION="--with-opengl --with-gtk --enable-gtk2 --enable-unicode --enable-ipc --with-xrc --enable-shared=no $WXCONFIGURE_TUNNING_OPTION"
   fi
   if test "$OS_OPTIONS" = "-D_UNIX -D_MACOS" ; then
     # MACOSX
@@ -499,7 +509,7 @@ if test "$with_wx" = "yes" ; then
   # setup libraries paths
   WX_LIBRARIES=""
   WX_LIBRARIES_EXTRA_PARAM=""
-  WXCONFIG_LIBS_PARAM="xrc,html,adv,core,xml,net"
+  WXCONFIG_LIBS_PARAM="xrc,adv,core,xml,net"
   # GL is used ?
   if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
     WXCONFIG_LIBS_PARAM="${WXCONFIG_LIBS_PARAM},gl"
