@@ -12,15 +12,13 @@ CLASSROOT=`pwd`
 ZIP=zip -0
 COMPRESS=zip -9
 
-SUBDIRS=thotlib amaya thot external biss
-
-all : debug http subdir
+all : debug w3c_compile
 
 debug :
 	@echo CLASSPATH=$$CLASSPATH
 	@echo PATH=$$PATH
 
-http :
+w3c_compile:
 	@(if [ -d w3c ] ; then cd w3c ; make ; fi)
 
 zips :
@@ -32,15 +30,6 @@ zips :
 	`find $(JIGSAW_DIRS) $(THOTLIB_DIRS) $(AMAYA_DIRS) -name \*.java` \
 	`find $(JIGSAW_DIRS) $(THOTLIB_DIRS) $(AMAYA_DIRS) -name Makefile` \
 	       makefile Makefile
-
-subdir :
-	@(CLASSROOT="$(CLASSROOT)" ; export CLASSROOT; \
-	  CLASSPATH="$(CLASSPATH):$(CLASSROOT)/external" ; export CLASSPATH; \
-	  for subdir in $(SUBDIRS) ; do \
-	  if [ -d $$subdir ] ; \
-	  then \
-	      cd $$subdir ; make ; cd .. ; \
-	  fi ; done)
 
 clean :
 	@(if [ -d w3c ] ; then cd w3c ; make clean ; fi)
