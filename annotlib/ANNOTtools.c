@@ -131,6 +131,9 @@ void AnnotFilter_add (List **me, CHAR_T *object)
   List *new;
   AnnotFilterData *filter;
 
+  if (!object)
+    return;
+
   if (*me && AnnotFilter_search (*me, object))
     return;
 
