@@ -476,7 +476,7 @@ int                 scroll;
 		       pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume - vol - y;
 		    }
 
-		  /* A piece of the abstract image need to be rebuild on top */
+		  /* It lacks some abtract image at the top of the frame */
 		  else if (pFrame->FrAbstractBox->AbTruncatedHead && y < 0)
 		    {
 		       /* Free abstract boxes at the bottom */
@@ -935,7 +935,7 @@ int                 scroll;
 		  pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume - vol - y;
 	       }
 
-	     /* It still lack a some abtract image area at the bottom of the frame */
+	     /* It lacks some abtract image at the bottom of the frame */
 	     else if (pFrame->FrAbstractBox->AbTruncatedTail &&
 		      (y > 0 ||
 		       (!pFrame->FrAbstractBox->AbHeight.DimIsPosition &&
