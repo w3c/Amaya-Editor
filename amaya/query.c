@@ -217,6 +217,7 @@ int                 docid;
    /* Initialize the other members of the structure */
    me->reqStatus = HT_NEW; /* initial status of a request */
    me->output = NULL;
+   me->content_type = NULL;
 #  ifndef _WINDOWS
    me->read_xtinput_id = (XtInputId) NULL;
    me->write_xtinput_id = (XtInputId) NULL;
@@ -307,7 +308,7 @@ AHTReqContext      *me;
 	  
 	HTRequest_delete (me->request);
 
-	if (me->output)
+	if (me->output && me->output != stdout)
 	  {	
 #ifdef DEBUG_LIBWWW       
 	    fprintf (stderr, "AHTReqContext_delete: URL is  %s, closing "
