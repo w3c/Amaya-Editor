@@ -619,7 +619,7 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	       pBox = pBoxEnd;
 	       x = pViewSelEnd->VsXPos + pBox->BxXOrg;
 	       if (pViewSelEnd->VsBuffer && pViewSelEnd->VsIndBuf < pViewSelEnd->VsBuffer->BuLength)
-		 x -= CharacterWidth (pViewSelEnd->VsBuffer->BuContent[pViewSelEnd->VsIndBuf], pBox->BxFont);
+		 x -= BoxCharacterWidth (pViewSelEnd->VsBuffer->BuContent[pViewSelEnd->VsIndBuf], pBox->BxFont);
 	       y = pBox->BxYOrg + pBox->BxHeight;
 	       yDelta = 10;
 	       /* store the end position of the selection as the new reference */

@@ -1121,13 +1121,13 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		    {
 		      /* Show the space chars */
 		      if (car == SPACE || car == TAB) 
-			DrawChar (SHOWN_SPACE, frame, x, y, nextfont, fg);
+			DrawChar ((char) SHOWN_SPACE, frame, x, y, nextfont, fg);
 		      else if (car == THIN_SPACE)
-			DrawChar (SHOWN_THIN_SPACE, frame, x, y, nextfont, fg);
+			DrawChar ((char) SHOWN_THIN_SPACE, frame, x, y, nextfont, fg);
 		      else if (car == HALF_EM)
-			DrawChar (SHOWN_HALF_EM, frame, x, y, nextfont, fg);
+			DrawChar ((char) SHOWN_HALF_EM, frame, x, y, nextfont, fg);
 		      else if (car == UNBREAKABLE_SPACE)
-			DrawChar (SHOWN_UNBREAKABLE_SPACE, frame, x, y,
+			DrawChar ((char) SHOWN_UNBREAKABLE_SPACE, frame, x, y,
 				  nextfont, fg);
 		    }
 		 

@@ -1087,7 +1087,7 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c,
 	{
 	  /* 0 -> FF */
 	  lfont = fontset->FontIso_1;
-	  car = c;
+	  car = (char) c;
 	}
       else if (c >= 0x370 && c < 0x3FF)
 	{
@@ -1346,6 +1346,7 @@ static SpecFont LoadFontSet (char alphabet, int family, int highlight,
   mask = 1 << (frame - 1);
   /* store window frame number */
   fontset->FontFrames = fontset->FontFrames | mask;
+  return (fontset);
 #else /* _I18N_ */
   return LoadNearestFont (alphabet, family, highlight, index,
 			  frame, TRUE, TRUE);

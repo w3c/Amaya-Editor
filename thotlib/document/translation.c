@@ -2169,7 +2169,8 @@ static void PutVariable (PtrElement pEl, PtrAttribute pAttr,
   DocumentIdentifier  docIdent;
   PtrDocument         pExtDoc;
   PtrTextBuffer       pBuf;
-  unsigned char       number[20], c;
+  unsigned char       number[20];
+  CHAR_T              c;
   int                 item, i, j, k;
   ThotBool            found;
 

@@ -3375,7 +3375,7 @@ void TtcCutSelection (Document doc, View view)
 #ifdef _WINDOWS
    HANDLE              hMem   = 0;
    LPTSTR              lpData = 0;
-   CHAR_T             *ptrData;
+   char               *ptrData;
    LPTSTR              pBuff;
    int                 ndx;
 #endif /* _WINDOWS */
@@ -3665,8 +3665,8 @@ void TtcCopySelection (Document doc, View view)
   int                frame;
 #ifdef _WINDOWS
   HANDLE             hMem   = 0;
-  CHAR_T            *lpData = 0;
-  CHAR_T            *pBuff;
+  char              *lpData = NULL;
+  char              *pBuff;
   HWND               activeWnd;
 #endif /* _WINDOW */
 
@@ -3719,7 +3719,7 @@ void TtcPaste (Document doc, View view)
   ViewSelection      *pViewSel;
 #ifdef _WINDOWS
   HANDLE              hMem;
-  STRING              lpData;
+  char               *lpData;
   int                 lpDatalength;
 #endif /* _WINDOWS */
   PtrDocument         pDoc;

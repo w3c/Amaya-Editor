@@ -1138,9 +1138,6 @@ void TtaGiveTextContent (Element element, unsigned char *buffer, int *length,
   PtrTextBuffer       pBuf;
   unsigned char      *ptr;
   int                 len, l;
-#ifdef _I18N_
-  int                 i;
-#endif /* _I18N_ */
 
   UserErrorCode = 0;
   pEl = (PtrElement) element;

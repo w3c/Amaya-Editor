@@ -660,7 +660,7 @@ int TtaMBstringToWC (unsigned char **src, wchar_t *dest)
   unsigned char *ptrSrc = *src;
   wchar_t        res;
   int            nbBytesConverted = 0;
-  int            nbBytesToConvert;
+  int            nbBytesToConvert, i;
 
   if (*ptrSrc < 0xC0)
     nbBytesToConvert = 1;
@@ -698,7 +698,8 @@ int TtaMBstringToWC (unsigned char **src, wchar_t *dest)
       res += *ptrSrc++;
     }
 
-  res -= offset[nbBytesToConvert - 1];
+  i = offset[nbBytesToConvert - 1];
+  res -= (wchar_t) i;
   if (res <= 0xFFFF)
     *dest = res;
   else 
@@ -717,7 +718,7 @@ int TtaMBstringToWC (unsigned char **src, wchar_t *dest)
   ----------------------------------------------------------------------*/
 int TtaGetNextWCFromString (wchar_t *car, unsigned char **txt, CHARSET encoding)
 {
-  int            nbBytesToRead;
+  int            nbBytesToRead, i;
   unsigned char *start = *txt;
   wchar_t        res;
 
@@ -759,7 +760,8 @@ int TtaGetNextWCFromString (wchar_t *car, unsigned char **txt, CHARSET encoding)
 	case 1:
 	  res += *start++;
 	}
-      res -= offset[nbBytesToRead - 1];      
+      i = offset[nbBytesToRead - 1];
+      res -= (wchar_t) i;
       *car = res;
     }
   else

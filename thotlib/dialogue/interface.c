@@ -76,7 +76,7 @@ static int           mk_state = 0;
 static int           TtaKeyboardMapInstalled = 0;
 
 #ifdef _WINDOWS
-static char          previous_keysym;
+static unsigned char previous_keysym;
 #else  /* !_WINDOWS */
 static KeySym        previous_keysym;
 static KeySym        previous_value = 0;
@@ -129,8 +129,8 @@ XK_uacute, XK_ucircumflex, XK_udiaeresis, XK_yacute, XK_thorn, XK_ydiaeresis,
 typedef struct multi_key
   {
 #ifdef _WINDOWS
-     char                c;
-     char                m;
+     unsigned char       c;
+     unsigned char       m;
      int                 r;
 #else  /* !_WINDOWS */
      KeySym              c;

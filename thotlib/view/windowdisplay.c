@@ -395,6 +395,7 @@ void DisplayUnderline (int frame, int x, int y, PtrFont font, int type,
 void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 {
   PtrFont             font;
+  SpecFont            spec;
   char               *ptcar;
   int                 xcour;
   int                 width, nb;
@@ -405,7 +406,8 @@ void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 #endif /* _WIN_PRINT */
 
   y += FrameTable[frame].FrTopMargin;
-  font = ThotLoadFont ('L', 1, 0, 6, UnPoint, frame);
+  spec = ThotLoadFont ('L', 1, 0, 6, UnPoint, frame);
+  GetFontAndIndexFromSpec (SPACE, spec, &font);
   if (boxWidth > 0)
     {
       y = y - FontAscent (font) + CharacterAscent (SPACE, font);
@@ -527,7 +529,7 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
   DrawMonoSymb draw a one glyph symbol.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-static void DrawMonoSymb (CHAR_T symb, int frame, int x, int y, int l,
+static void DrawMonoSymb (unsigned char symb, int frame, int x, int y, int l,
 			  int h, PtrFont font, int fg)
 {
   int                 xm, yf;

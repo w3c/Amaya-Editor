@@ -62,7 +62,7 @@ static void GetPictureBoundaries (char *fn, int *xif, int *yif, int *wif,
       for (c = getc (fin); c != EOF; c = getc (fin))
 	{
 	  if (pt - buff < BUFSIZE - 2)
-	    *pt++ = (CHAR_T) c;
+	    *pt++ = (char) c;
 	  if (c == '\n')
 	    {
 	      *(--pt) = EOS;

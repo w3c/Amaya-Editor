@@ -69,7 +69,7 @@ ThotBool TtaReadByte (BinFile file, unsigned char *bval)
 ThotBool TtaReadWideChar (BinFile file, CHAR_T *bval)
 {
 #ifdef _I18N_
-  int           nbBytesToRead;
+  int           nbBytesToRead, i;
   unsigned char car;
   unsigned char res;
 
@@ -113,7 +113,8 @@ ThotBool TtaReadWideChar (BinFile file, CHAR_T *bval)
       TtaReadByte (file, &car);
     case 1: res += car;
     }
-  res -= offset[nbBytesToRead - 1];
+  i = offset[nbBytesToRead - 1];
+  res -= (unsigned char) i;
 
   if (res <= 0xFFFF)
     *bval = res;
