@@ -55,8 +55,7 @@
 #include "structselect_f.h"
 #include "unstructchange_f.h"
 #include "actions_f.h"
-
-#define SINGLE_LINESPACING 11
+#include "units_f.h"
 
 static PtrDocument  DocModPresent;
 static boolean             ChngStandardColor;	/* standard presentation colors  */
@@ -125,6 +124,7 @@ static int          PaintWithPattern;	/* number of the requested trame */
 static RuleSet      TheRules;
 static RuleSet      GeomRules;
 static int          OldLineSp;
+static int          NormalLineSpacing;
 static void         ResetMenus ();
 
 
@@ -356,10 +356,8 @@ int                 applyDomain;
 	  pAb = AbsBoxOfEl (pFirstSel, SelectedView);
 	if (pAb != NULL)
 	  {
-	    if (pAb->AbSizeUnit == UnPoint)
-	      currentBodySize = pAb->AbSize;
-	    else
-	      currentBodySize = FontPointSize (pAb->AbSize);
+	     currentBodySize = PixelToPoint(PixelValue (pAb->AbSize,
+							pAb->AbSizeUnit, pAb));
 	    
 	    /* famille de polices de caracteres */
 	    if (locChngFontFamily)
@@ -492,14 +490,8 @@ int                 applyDomain;
 		      sign = 0;
 		    else
 		      sign = -1;
-		    i = abs (pAb->AbIndent);
-		    if (pAb->AbIndentUnit == UnRelative)
-		      /* convertit AbIndent en points typographiques */
-		      {
-			i = (currentBodySize * i) / 10;
-			if ((currentBodySize * i) % 10 >= 5)
-			  i++;
-		      }
+		    i = PixelToPoint(PixelValue (abs (pAb->AbIndent),
+						 pAb->AbIndentUnit, pAb));
 		    if (sign == IndentSign && i == IndentValue)
 		      /* pas de changement */
 		      locChngIndent = FALSE;
@@ -522,14 +514,9 @@ int                 applyDomain;
 		  }
 		else
 		  {
-		    i = pAb->AbLineSpacing;
-		    if (pAb->AbLineSpacingUnit == UnRelative)
-		      /* convertit 'interligne en points typographiques */
-		      {
-			i = (currentBodySize * i) / 10;
-			if ((currentBodySize * i) % 10 >= 5)
-			  i++;
-		      }
+		    /* convertit 'interligne en points typographiques */
+		    i = PixelToPoint(PixelValue (pAb->AbLineSpacing,
+						 pAb->AbLineSpacingUnit, pAb));
 		    if (OldLineSp == i)
 		      locChngLineSp = FALSE;
 		  }
@@ -1001,9 +988,9 @@ char               *txt;
       if (OldLineSp != val)
 	{
 	  OldLineSp = val;
-	  if (val <= (SINGLE_LINESPACING * 3) / 2)
+	  if (val < (NormalLineSpacing * 3) / 2)
 	    i = 0;
-	  else if (val >= SINGLE_LINESPACING * 2)
+	  else if (val >= NormalLineSpacing * 2)
 	    i = 2;
 	  else
 	    i = 1;
@@ -1022,7 +1009,7 @@ char               *txt;
 	  ChngLineSp = TRUE;
 	  StdLineSp = FALSE;
 	  /* l'utilisateur demande a changer l'interligne */
-	  OldLineSp = ((val + 2) * SINGLE_LINESPACING) / 2;
+	  OldLineSp = ((val + 2) * NormalLineSpacing) / 2;
 	  TtaSetNumberForm (NumZoneLineSpacing, OldLineSp);
 	}
       ApplyPresentMod (Apply_LineSp);
@@ -1409,10 +1396,8 @@ View                view;
 		i = LineWeight;
 	     else
 	       {
-		  if (pAb->AbSizeUnit == UnPoint)
-		     currentBodySize = pAb->AbSize;
-		  else
-		     currentBodySize = FontPointSize (pAb->AbSize);
+	          currentBodySize = PixelToPoint(PixelValue (pAb->AbSize,
+							pAb->AbSizeUnit, pAb));
 		  i = (currentBodySize * LineWeight) / 10;
 		  if ((currentBodySize * i) % 10 >= 5)
 		     i++;
@@ -1470,7 +1455,6 @@ View                view;
    int                 firstChar, lastChar;
    boolean             selectionOK;
    PtrAbstractBox      pAb;
-   int                 currentBodySize;
    char                string[MAX_TXT_LEN];
    PtrDocument         pDoc;
 
@@ -1540,18 +1524,8 @@ View                view;
 	     TtaNewNumberForm (NumZoneRecess, NumFormPresFormat,
 			TtaGetMessage (LIB, TMSG_INDENT_PTS), 0, 300, TRUE);
 	     /* initialise la valeur du renfoncement */
-	     if (pAb->AbSizeUnit == UnPoint)
-		currentBodySize = pAb->AbSize;
-	     else
-		currentBodySize = FontPointSize (pAb->AbSize);
-	     IndentValue = abs (pAb->AbIndent);
-	     if (pAb->AbIndentUnit == UnRelative)
-		/* convertit IndentValue en points typographiques */
-	       {
-		  IndentValue = (currentBodySize * IndentValue) / 10;
-		  if ((currentBodySize * IndentValue) % 10 >= 5)
-		     IndentValue++;
-	       }
+	     IndentValue = PixelToPoint(PixelValue (abs (pAb->AbIndent),
+					pAb->AbIndentUnit, pAb));
 	     TtaSetNumberForm (NumZoneRecess, IndentValue);
 
 	     /* sous-menu sens de renfoncement */
@@ -1608,25 +1582,15 @@ View                view;
 	     for (i = 0; i < 3; i++)
 		TtaRedrawMenuEntry (NumMenuLineSpacing, i, "icones", ThotColorNone, -1);
 	     /* initialise l'interligne en points typographiques */
-	     if (pAb->AbSizeUnit == UnPoint)
-		currentBodySize = pAb->AbSize;
-	     else
-		currentBodySize = FontPointSize (pAb->AbSize);
-	     i = pAb->AbLineSpacing;
-	     if (pAb->AbLineSpacingUnit == UnRelative)
-		/* convertit l'interligne en points typographiques */
-	       {
-		  i = (currentBodySize * i) / 10;
-		  if ((currentBodySize * i) % 10 >= 5)
-		     i++;
-	       }
-	     OldLineSp = i;
-	     TtaSetNumberForm (NumZoneLineSpacing, i);
+	     OldLineSp = PixelToPoint(PixelValue (pAb->AbLineSpacing,
+					  pAb->AbLineSpacingUnit, pAb));
+	     TtaSetNumberForm (NumZoneLineSpacing, OldLineSp);
 
+	     NormalLineSpacing = PixelToPoint(PixelValue (10, UnRelative, pAb));
 	     /* saisie de l'interligne par un menu */
-	     if (OldLineSp <= (SINGLE_LINESPACING * 3) / 2)
+	     if (OldLineSp < (NormalLineSpacing * 3) / 2)
 		i = 0;
-	     else if (pAb->AbLineSpacing >= SINGLE_LINESPACING * 2)
+	     else if (OldLineSp >= NormalLineSpacing * 2)
 		i = 2;
 	     else
 		i = 1;

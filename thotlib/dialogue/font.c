@@ -753,18 +753,32 @@ boolean             increase;
    ptrfont             ptfont;
 
    /* use only standard sizes */
-   if (unit == UnPoint)
-     {
-	/* nearest standard size lookup */
-	index = 0;
-	while (LogicalPointsSizes[index] < size && index <= MaxNumberOfSizes)
-	   index++;
-     }
-   else
+   if (unit == UnRelative)
       index = size;
+   else
+      {
+      if (unit == UnPixel)
+	 {
+	 size = PixelToPoint (size);
+	 unit = UnPoint;
+	 }
+      else
+	 if (unit == UnXHeight || unit == UnPercent)
+	    /* what does this mean??? set default size: 12 pt */
+	    {
+	    size = 12;
+	    unit = UnPoint;
+	    }
+      if (unit == UnPoint)
+         {
+	 /* nearest standard size lookup */
+	 index = 0;
+	 while (LogicalPointsSizes[index] < size && index <= MaxNumberOfSizes)
+	    index++;
+         }
+      }
 
-
-   if (UseBitStreamFamily && size == 11)
+   if (UseBitStreamFamily && size == 11 && unit == UnPoint)
       /* in the case of Bitstream, accept 11 points font size */
       FontIdentifier (alphabet, family, highlight, size, TRUE, text, textX);
    else
