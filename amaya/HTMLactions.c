@@ -111,6 +111,7 @@ NotifyElement      *event;
        elType.ElTypeNum != HTML_EL_Radio_Input &&
        elType.ElTypeNum != HTML_EL_Checkbox_Input &&
        elType.ElTypeNum != HTML_EL_Frame &&
+       elType.ElTypeNum != HTML_EL_Option_Menu &&
        elType.ElTypeNum != HTML_EL_Submit_Input &&
        elType.ElTypeNum != HTML_EL_Reset_Input)
       /* DoubleClick is disabled on other elements */
@@ -147,6 +148,17 @@ NotifyElement      *event;
      {
 	/* is it an option menu ? */
 	elFound = TtaGetParent (event->element);
+	elType = TtaGetElementType (elFound);
+	if (elType.ElTypeNum == HTML_EL_Option)
+	  {
+	     SelectOneOption (event->document, elFound);
+	     return TRUE;
+	  }
+     }
+   else if (elType.ElTypeNum == HTML_EL_Option_Menu)
+     {
+	/* it is an option menu */
+	elFound = TtaGetFirstChild (event->element);
 	elType = TtaGetElementType (elFound);
 	if (elType.ElTypeNum == HTML_EL_Option)
 	  {

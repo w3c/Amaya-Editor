@@ -1547,6 +1547,8 @@ void                (*procedure) ();
 		       n++;
 		       XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM);
 		       n++;
+		       XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM);
+		       n++;
 		       XtSetArg (args[n], XmNwidth, (Dimension) 60);
 		       n++;
 		       XtSetArg (args[n], XmNalignment, XmALIGNMENT_BEGINNING);
