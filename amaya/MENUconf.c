@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1999-2001
+ *  (c) COPYRIGHT MIT and INRIA, 1999-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -159,13 +159,13 @@ static char     DialogueLang [MAX_LENGTH];
 static int      AccesskeyMod;
 static int      FontMenuSize;
 static char     HomePage [MAX_LENGTH];
+static ThotBool ExportCRLF;
 static ThotBool Multikey;
 static ThotBool BgImages;
 static ThotBool DoubleClick;
 static ThotBool S_Targets;
 static ThotBool S_Numbers;
 static ThotBool EnableFTP;
-static ThotBool ExportCRLF;
 
 /* Publish menu options */
 #ifdef _WINDOWS
@@ -387,6 +387,7 @@ void InitAmayaDefEnv (void)
     HomePage[0]  = EOS;
   TtaSetDefEnvString ("HOME_PAGE", HomePage, FALSE);
   HomePage[0] = EOS;
+  TtaSetDefEnvString ("EXPORT_CRLF", "no", FALSE);
   TtaSetDefEnvString ("ENABLE_MULTIKEY", "no", FALSE);
   TtaSetDefEnvString ("ENABLE_BG_IMAGES", "yes", FALSE);
   TtaSetDefEnvString ("VERIFY_PUBLISH", "no", FALSE);
@@ -1552,8 +1553,8 @@ static void GetGeneralConf (void)
   TtaGetEnvBoolean ("ENABLE_FTP", &EnableFTP);
   TtaGetEnvBoolean ("SHOW_TARGET", &S_Targets);
   TtaGetEnvBoolean ("SECTION_NUMBERING", &S_Numbers);
-  TtaGetEnvBoolean ("EXPORT_CRLF", &ExportCRLF);
   GetEnvString ("HOME_PAGE", HomePage);
+  TtaGetEnvBoolean ("EXPORT_CRLF", &ExportCRLF);
   GetEnvString ("LANG", DialogueLang);
   GetEnvString ("ACCESSKEY_MOD", ptr);
   if (!strcmp (ptr, "Alt"))
@@ -1832,6 +1833,7 @@ static void GetDefaultGeneralConf ()
 		       GeneralBase + mToggleGeneral, 4);
   GetDefEnvToggle ("ENABLE_FTP", &EnableFTP,
 		       GeneralBase + mToggleGeneral, 5);
+  TtaGetDefEnvBoolean ("EXPORT_CRLF", &ExportCRLF);
   GetDefEnvString ("HOME_PAGE", HomePage);
   GetDefEnvString ("LANG", DialogueLang);
   GetDefEnvString ("ACCESSKEY_MOD", ptr);
