@@ -1502,9 +1502,9 @@ void BM_bookmarksSort (List **bookmark_list)
 	url = bookmark_cur->self_url;
       else
 	{
-	  url = TtaGetMemory (strlen (bookmark_cur->self_url) 
-			      + strlen (bookmark_cur->parent_url)
-			      + 2);
+	  url = (char*) TtaGetMemory (strlen (bookmark_cur->self_url) 
+				      + strlen (bookmark_cur->parent_url)
+				      + 2);
 	  sprintf (url, "%s:%s", bookmark_cur->self_url, bookmark_cur->parent_url);
 	}
       cur_entry = (Container *) HTHashtable_object (id_table, url);
@@ -1549,7 +1549,7 @@ void BM_bookmarksSort (List **bookmark_list)
   keys = HTHashtable_keys (id_table);
   for (i = 0; i < HTArray_size (keys); i++)
     {
-      tmp_entry = (Container *) HTHashtable_object (id_table, HTArray_data (keys)[i]);
+      tmp_entry = (Container *) HTHashtable_object (id_table, (char *) HTArray_data (keys)[i]);
       if (tmp_entry->parent == NULL)
 	{
 	  if (tmp_entry == root)

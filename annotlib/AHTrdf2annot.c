@@ -484,7 +484,7 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 	  ParseContext *parseCtx = (ParseContext *) context;
 	  char *base_uri = parseCtx->base_uri;
 	  char *ptr =  (char *) triple->object;
-	  object = TtaGetMemory (strlen (base_uri) + strlen (ptr) + 2);
+	  object = (char *) TtaGetMemory (strlen (base_uri) + strlen (ptr) + 2);
 	  sprintf (object, "%s#%s", base_uri, ptr);
 	}
       else

@@ -2753,7 +2753,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   TtaSetItemOff (doc, 1, Bookmarks_, BBookmarkFile);
 	   TtcSwitchButtonBar (doc, 1); /* no button bar */
 	   TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-			   TRUE, TextURL, NULL);
+			   TRUE, (Proc) TextURL, NULL);
 	   TtcSwitchCommands (doc, 1); /* no command open */
 	 }
 #endif /* BOOKMARKS */
