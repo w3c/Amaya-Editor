@@ -856,7 +856,7 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
 	{
 	  /* ERROR, don't annotate end elements that Amaya added
 	     internally, but that don't exist in the document */
-	  InitInfo ("XPointer", "Impossilble to put a start XPointer in an internal added element");
+	  InitInfo ("XPointer", TtaGetMessage (AMAYA, AM_NO_SXPOINTER));
 	  return NULL;
 	}
 
@@ -875,7 +875,7 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
 	    {
 	      /* ERROR, don't annotate end elements that Amaya added
 		 internally, but that don't exist in the document */
-	      InitInfo ("XPointer", "Impossilble to put an end XPointer in an internal added element");
+	      InitInfo ("XPointer", TtaGetMessage (AMAYA, AM_NO_EXPOINTER));
 	      return NULL;
 	    }
 
