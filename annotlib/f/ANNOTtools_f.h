@@ -51,7 +51,7 @@ extern void SubstituteCharInString ( char *buffer,
                                      char new );
 extern char *GetTempName ( const char *dir,
                            const char *prefix );
-extern long GetFileSize ( CHAR_T *filename );
+extern long AGetFileSize ( CHAR_T *filename );
 extern void GetServerName ( CHAR_T *url,
                             CHAR_T *server );
 extern CHAR_T *ANNOT_GetHTMLTitle ( Document doc );

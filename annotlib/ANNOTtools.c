@@ -540,9 +540,9 @@ Document doc;
     return;
 
   if (IsFilePath(DocumentURLs[doc]))
-    content_length = GetFileSize (DocumentURLs[doc]+7);	/* skip "file://" */
+    content_length = AGetFileSize (DocumentURLs[doc]+7);	/* skip "file://" */
   else
-    content_length = GetFileSize (DocumentURLs[doc]);
+    content_length = AGetFileSize (DocumentURLs[doc]);
 
   fp = fopen ("/tmp/rdf.tmp", "w");
   /* write the prologue */
@@ -867,9 +867,9 @@ const char *prefix;
 }
 
 #ifdef __STDC__
-long GetFileSize (CHAR_T *filename)
+long AGetFileSize (CHAR_T *filename)
 #else
-long GetFileSize (filename)
+long AGetFileSize (filename)
 CHAR_T *filename;
 
 #endif /* __STDC__ */
@@ -883,7 +883,9 @@ CHAR_T *filename;
     return 0L;
    if (TtaFileStat (handle, &info) == 0)
      /* bad stat */
-     return 0L;
+     info.size = 0L;
+
+   TtaFileClose (handle);
 
    return (info.size);
 }
