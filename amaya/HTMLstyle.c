@@ -3521,7 +3521,7 @@ char               *cssRule;
 #endif
 {
   cssRule = SkipBlanks (cssRule);
-  while (*cssRule != ';' && *cssRule != EOS)
+  while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
     {
       /* perhaps a Backgroud Image */
       if (!strncasecmp (cssRule, "url", 3))
