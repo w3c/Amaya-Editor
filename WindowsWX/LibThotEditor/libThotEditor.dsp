@@ -199,6 +199,10 @@ SOURCE=..\..\thotlib\dialogue\AmayaSpeCharPanel.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\AmayaStatsThread.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\dialogue\AmayaSubPanel.cpp
 # End Source File
 # Begin Source File

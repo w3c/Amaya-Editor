@@ -2,6 +2,7 @@
   #include "wx/wx.h"
   #include "wx/bmpbuttn.h"
   #include "wx/spinctrl.h"
+  #include "wx/socket.h"
 #endif /* _WX */
 
 #include "thot_gui.h"
@@ -2442,6 +2443,8 @@ void TtaSendStatsInfo()
        !amaya_version || strcmp(amaya_version, TtaGetAppVersion()) != 0 )
     {
       TTALOGDEBUG_0( TTA_LOG_SOCKET, _T("TtaSendStatsInfo") );
+      
+	  wxSocketBase::Initialize();
 
       AmayaStatsThread * pThread = new AmayaStatsThread();
       if ( pThread->Create() != wxTHREAD_NO_ERROR )
