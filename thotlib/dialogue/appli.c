@@ -141,7 +141,27 @@ int         cyToolBar;
 TBADDBITMAP ThotTBBitmap;
 static ThotWindow WIN_curWin = NULL;
 
+static int FRWidth[MAX_FRAME];
+static int FRHeight[MAX_FRAME];
 
+/*----------------------------------------------------------------------
+   Win_Scroll_visible : Tells if a scrollbar is currently visible or not                                     
+  ----------------------------------------------------------------------*/
+static ThotBool Win_Scroll_visible (HWND scroll_hwnd)
+{
+  SCROLLINFO          scrollInfo;
+
+  memset(&scrollInfo, 0, sizeof(scrollInfo));
+  scrollInfo.cbSize = sizeof(scrollInfo);
+  scrollInfo.fMask = SIF_RANGE;
+
+  GetScrollInfo(scroll_hwnd, SB_CTL, &scrollInfo);
+
+  if (scrollInfo.nMin == 0 && scrollInfo.nMax == 2) 
+    return FALSE;
+  else
+    return TRUE;
+}
 /*----------------------------------------------------------------------
    WIN_GetDeviceContext selects a Device Context for a given
    thot window.                                                
@@ -467,7 +487,7 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
      pFrame->FrClipYEnd = ymax;
 #else /*_GL*/
 	 BeginPaint (w, &ps);
-	 FrameTable[frame].DblBuffNeedSwap = TRUE;
+	 GL_Swap (frame);
      EndPaint (w, &ps);
 #endif /*_GL*/
    }
@@ -512,7 +532,7 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
    */
 #endif/*_GL*/
    /* recompute the scroll bars */
-   UpdateScrollbars (frame);
+  UpdateScrollbars (frame);
 }
 #else /* _WINDOWS */
 
@@ -1653,8 +1673,88 @@ void CheckTtCmap ()
       LocalFree (ptrLogPal);
     }
 }
+/*----------------------------------------------------------------------
+  Wnd_ResizeContent : resize toolbar, statusbar, and canvas frame
+  ----------------------------------------------------------------------*/
+static void Wnd_ResizeContent (HWND hwnd, int cx, int cy, int frame)
+{
+  RECT                rWindow;
+  int                 cxVSB;
+  int                 cyHSB;
+  int                 cyTB;
+  DWORD               dwStyle;
+  int                 x,y,cyStatus,cyTxtZone;
+
+  FRWidth[frame] = cx;
+  FRHeight[frame] = cy;
+ /* Adjust toolbar size. */
+    if (IsWindowVisible (WinToolBar[frame]))
+      {
+	dwStyle = GetWindowLong (WinToolBar[frame], GWL_STYLE);
+	if (dwStyle & CCS_NORESIZE)
+	  MoveWindow (WinToolBar[frame], 0, 0, cx, cyToolBar, FALSE);
+	else
+	  ToolBar_AutoSize (WinToolBar[frame]);
+
+	InvalidateRect (WinToolBar[frame], NULL, TRUE);
+	GetWindowRect (WinToolBar[frame], &rWindow);
+	ScreenToClient (hwnd, (LPPOINT) &rWindow.left);
+	ScreenToClient (hwnd, (LPPOINT) &rWindow.right);
+	cyTB = rWindow.bottom - rWindow.top;
+      }
+    else 
+      cyTB = 0;
+    
+    cyTxtZone = cyTB;
+    /* Adjust text zones */
+	if (FrameTable[frame].Text_Zone &&
+	    IsWindowVisible (FrameTable[frame].Text_Zone))
+	  {
+	    MoveWindow (FrameTable[frame].Label, 15, cyTxtZone + 5, 70, 20, TRUE);
+	    MoveWindow (FrameTable[frame].Text_Zone, 85, cyTxtZone + 5, cx - 85, 20, TRUE);
+	    cyTxtZone += 28;
+	  }
+
+    /* Adjust status bar size. */
+    if (IsWindowVisible (FrameTable[frame].WdStatus))
+      {
+	GetWindowRect (FrameTable[frame].WdStatus, &rWindow);
+	cyStatus = rWindow.bottom - rWindow.top;
+	MoveWindow (FrameTable[frame].WdStatus, 0, cy - cyStatus, cx, cyStatus, TRUE);
+      }
+    else
+      cyStatus = 0;
 
 
+    if (Win_Scroll_visible (FrameTable[frame].WdScrollV)) 
+      {
+	/* Adjust Vertical scroll bar */
+	MoveWindow (FrameTable[frame].WdScrollV, cx - 15,
+		    cyTxtZone, 15, cy - (cyStatus + cyTxtZone + 15), TRUE);
+	/* Adjust client window size. */
+	GetWindowRect (FrameTable[frame].WdScrollV, &rWindow);
+	cxVSB = rWindow.right - rWindow.left;
+      }
+    else
+      cxVSB = 0;
+
+    if (Win_Scroll_visible (FrameTable[frame].WdScrollH)) 
+      {
+	/* Adjust Hoizontal scroll bar */
+	MoveWindow (FrameTable[frame].WdScrollH, 0,
+		    cy - (cyStatus + 15), cx - 15, 15, TRUE);
+	GetWindowRect (FrameTable[frame].WdScrollH, &rWindow);
+	cyHSB = rWindow.bottom - rWindow.top;
+      }   
+    else
+      cyHSB = 0;
+
+    x = 0;
+    y = cyTxtZone;
+    cx = cx - cxVSB;
+    cy = cy - (cyStatus + cyTxtZone + cyHSB);
+	MoveWindow (FrRef [frame], x, y, cx, cy, TRUE);
+}
 
 /*----------------------------------------------------------------------
   WndProc:  The main MS-Windows event handler for the Thot Library
@@ -1665,7 +1765,6 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
   HWND                hwndTextEdit;
   HWND                hwndToolTip;
   RECT                rect;
-  RECT                rWindow;
   LPNMHDR             pnmh;
   int                 frame;
   int                 view;
@@ -1673,13 +1772,6 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
   int                 idCtrl;
   int                 cx;
   int                 cy;
-  int                 cyStatus;
-  int                 cxVSB;
-  int                 cyHSB;
-  int                 cyTB;
-  int                 x, y;
-  int                 cyTxtZone;
-  DWORD               dwStyle;
   DWORD               dwToolBarStyles;
   DWORD               dwStatusBarStyles;
 
@@ -1879,77 +1971,15 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
   case WM_SIZE:
     cx = LOWORD (lParam);
     cy = HIWORD (lParam);
-    /* Adjust toolbar size. */
-    if (IsWindowVisible (WinToolBar[frame]))
-      {
-	dwStyle = GetWindowLong (WinToolBar[frame], GWL_STYLE);
-	if (dwStyle & CCS_NORESIZE)
-	  MoveWindow (WinToolBar[frame], 0, 0, cx, cyToolBar, FALSE);
-	else
-	  ToolBar_AutoSize (WinToolBar[frame]);
-
-	InvalidateRect (WinToolBar[frame], NULL, TRUE);
-	GetWindowRect (WinToolBar[frame], &rWindow);
-	ScreenToClient (hwnd, (LPPOINT) &rWindow.left);
-	ScreenToClient (hwnd, (LPPOINT) &rWindow.right);
-	cyTB = rWindow.bottom - rWindow.top;
-      }
-    else 
-      cyTB = 0;
-    
-    cyTxtZone = cyTB;
-    /* Adjust text zones */
-	if (FrameTable[frame].Text_Zone &&
-	    IsWindowVisible (FrameTable[frame].Text_Zone))
-	  {
-	    MoveWindow (FrameTable[frame].Label, 15, cyTxtZone + 5, 70, 20, TRUE);
-	    MoveWindow (FrameTable[frame].Text_Zone, 85, cyTxtZone + 5, cx - 100, 20, TRUE);
-	    cyTxtZone += 25;
-	  }
-
-    /* Adjust status bar size. */
-    if (IsWindowVisible (FrameTable[frame].WdStatus))
-      {
-	GetWindowRect (FrameTable[frame].WdStatus, &rWindow);
-	cyStatus = rWindow.bottom - rWindow.top;
-	MoveWindow (FrameTable[frame].WdStatus, 0, cy - cyStatus, cx, cyStatus, TRUE);
-      }
-    else
-      cyStatus = 0;
-
-    /* Adjust Vertical scroll bar */
-    MoveWindow (FrameTable[frame].WdScrollV, cx - 15,
-		cyTxtZone, 15, cy - (cyStatus + cyTxtZone + 15), TRUE);
-    
-    /* Adjust Hoizontal scroll bar */
-    MoveWindow (FrameTable[frame].WdScrollH, 0,
-		cy - (cyStatus + 15), cx - 15, 15, TRUE);
-    
-    /* Adjust client window size. */
-    GetWindowRect (FrameTable[frame].WdScrollV, &rWindow);
-    cxVSB = rWindow.right - rWindow.left;
-
-    GetWindowRect (FrameTable[frame].WdScrollH, &rWindow);
-    cyHSB = rWindow.bottom - rWindow.top;
-
-    x = 0;
-    y = cyTxtZone;
-    cx = cx - cxVSB;
-    cy = cy - (cyStatus + cyTxtZone + cyHSB);
-    MoveWindow (FrRef [frame], x, y, cx, cy, TRUE);
-
-    SetScrollRange (FrameTable[frame].WdScrollV, SB_CTL, 0, cy, TRUE);
-    SetScrollRange (FrameTable[frame].WdScrollH, SB_CTL, 0, cx, TRUE);
-
+    Wnd_ResizeContent (hwnd, cx, cy, frame);
 	SetFocus (FrRef [frame]);
 	ActiveFrame = frame;
-    return 0L;
+    return 1;
 
   default: 
     return (DefWindowProc (hwnd, mMsg, wParam, lParam));
   }
 }
-
 /* -------------------------------------------------------------------
    ClientWndProc
    ------------------------------------------------------------------- */
@@ -3473,6 +3503,7 @@ void UpdateScrollbars (int frame)
 #endif /* _GTK */
 #else /* _WINDOWS */
   SCROLLINFO          scrollInfo;
+  ThotBool            need_resize;
 #endif /* _WINDOWS */
 
   if (FrameUpdating ||
@@ -3575,42 +3606,83 @@ void UpdateScrollbars (int frame)
   
 #endif /*_GTK*/  
 #else  /* _WINDOWS */
+  need_resize = FALSE;
   l = FrameTable[frame].FrWidth;
   h = FrameTable[frame].FrHeight;
-
+  memset(&scrollInfo, 0, sizeof(scrollInfo));	
   scrollInfo.cbSize = sizeof (SCROLLINFO);
   scrollInfo.fMask  = SIF_PAGE | SIF_POS | SIF_RANGE;
-  scrollInfo.nMin   = 0;
-  if (width >= l && x == 0 && width > 60)
+if (width >= l && x == 0 && width > 60)
+  {
     /*hide*/
-    ShowScrollBar (FrameTable[frame].WdScrollH, SB_CTL, FALSE);
+	  if (Win_Scroll_visible (FrameTable[frame].WdScrollH))
+	  {
+	  scrollInfo.nMax = 2;
+      SetScrollInfo (FrameTable[frame].WdScrollH, SB_CTL, &scrollInfo, TRUE);
+      ShowScrollBar (FrameTable[frame].WdScrollH, SB_CTL, FALSE);
+	  need_resize = TRUE;
+	  }
+  }
   else if (width + x <= l)
     {
       /*show*/
-      ShowScrollBar (FrameTable[frame].WdScrollH, SB_CTL, TRUE);
-      scrollInfo.nMax   = l;
+	  if (Win_Scroll_visible (FrameTable[frame].WdScrollH) == FALSE)
+		{
+			ShowScrollBar (FrameTable[frame].WdScrollH, SB_CTL, TRUE);
+			need_resize = TRUE;
+		 }
+	  scrollInfo.nMax   = l;
       scrollInfo.nPage  = width;
       scrollInfo.nPos   = x;	 
-      SetScrollInfo (FrameTable[frame].WdScrollH, SB_CTL, &scrollInfo, TRUE);	
+      SetScrollInfo (FrameTable[frame].WdScrollH, SB_CTL, &scrollInfo, TRUE);
     }
   else
     /*show*/
-    ShowScrollBar (FrameTable[frame].WdScrollH, SB_CTL, FALSE);
+	if (Win_Scroll_visible (FrameTable[frame].WdScrollH) == FALSE)
+	{
+		ShowScrollBar (FrameTable[frame].WdScrollH, SB_CTL, FALSE);
+		need_resize = TRUE;
+	}
    
   if (height >= h && y == 0)
+  { 
     /*hide*/
-    ShowScrollBar(FrameTable[frame].WdScrollV, SB_CTL, TRUE);
+	  if (Win_Scroll_visible (FrameTable[frame].WdScrollV))
+	  {
+		scrollInfo.nMax = 2;
+		SetScrollInfo (FrameTable[frame].WdScrollV, SB_CTL, &scrollInfo, TRUE);
+		ShowScrollBar(FrameTable[frame].WdScrollV, SB_CTL, FALSE);
+	  	need_resize = TRUE;
+	  }
+  }
   else if (height + y <= h)
     {
       /*show*/
-      ShowScrollBar (FrameTable[frame].WdScrollV, SB_CTL, TRUE);
+	   if (Win_Scroll_visible (FrameTable[frame].WdScrollV) == FALSE)
+	  {
+		ShowScrollBar (FrameTable[frame].WdScrollV, SB_CTL, TRUE);
+		need_resize = TRUE;
+	  }
       scrollInfo.nMax   = h;
       scrollInfo.nPage  = height;
       scrollInfo.nPos   = y;
       SetScrollInfo (FrameTable[frame].WdScrollV, SB_CTL, &scrollInfo, TRUE);
+	 
     }
   else
     /*show*/
-    ShowScrollBar (FrameTable[frame].WdScrollV, SB_CTL, TRUE);
+     if (Win_Scroll_visible (FrameTable[frame].WdScrollV) == FALSE)
+	  {
+		ShowScrollBar (FrameTable[frame].WdScrollV, SB_CTL, TRUE);
+		need_resize = TRUE;
+	  }
+
+	if (need_resize)
+	{
+		Wnd_ResizeContent (FrMainRef[frame], 
+							FRWidth[frame], 
+							FRHeight[frame],  
+							frame);
+	}
 #endif /* _WINDOWS */
 }
