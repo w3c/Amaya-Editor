@@ -1,12 +1,6 @@
-/* -- Copyright (c) 1990 - 1996 Inria/CNRS  All rights reserved. -- */
-
 /*
-   printmenu.c : gestion des messages et menus de l'impression.
-   Code issu des modules initcatal.c et editmenu.c      
+   gestion des messages et menus de l'impression.
 
-   V. Quint     Mai 1992
-   C. Roisin     Avril 1996
-   I. Vatton     Juin 1996
  */
 
 #include "thot_sys.h"
@@ -17,17 +11,18 @@
 #include "typemedia.h"
 #include "language.h"
 #include "constmenu.h"
-
 #include "document.h"
 #include "dialog.h"
 #include "appdialogue.h"
-
+#include "frame.h"
+#include "thotfile.h"
 
 #undef EXPORT
 #define EXPORT extern
 #include "environ.var"
 #include "edit.var"
 #include "appdialogue.var"
+#include "frame.var"
 
 #include "appli_f.h"
 #include "applicationapi_f.h"
@@ -53,16 +48,228 @@
 #include "printmenu_f.h"
 #include "structselect_f.h"
 #include "selectmenu_f.h"
-#include "sysexec_f.h"
-
 
 #define NBMAXENTREES 25
 static PathBuffer   psdir;
 static boolean      ImprimerPapier;
-
-/* static AvailableView     LesVuesImprimables; */
 static boolean      AlimentationManuelle;
 static boolean      NewImprimerPapier;
+
+static ThotFileHandle msgfile_fid = ThotFile_BADHANDLE;		/* le fichier temporaire des messages */
+static char         msgfile_name[40];	/* son nom */
+static ThotFileOffset msgfile_curpos;	/* la position courante dans le fichier */
+static char         msg_buffer[1024];	/* le message courant */
+
+
+/* ---------------------------------------------------------------------- */
+
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static void         initImpression (int user_orientation, char *thotdir, char *tempdir, char *dir, char *nom, char *realname,
+				    char *imprimante, int pid, long thotWin, char *thotsch, char *thotdoc, char *traitement)
+#else  /* __STDC__ */
+static void         initImpression (user_orientation, thotdir, tempdir, dir, nom, realname, imprimante, pid, thotWin, thotsch, thotdoc, traitement)
+int                 user_orientation;
+char               *thotdir;
+char               *tempdir;
+char               *dir;
+char               *nom;
+char               *realname;
+char               *imprimante;
+int                 pid;
+long                thotWin;
+char               *thotsch;
+char               *thotdoc;
+char               *traitement;
+
+#endif /* __STDC__ */
+{
+   char                cmd[800];
+   char               *bak_name;
+   char               *piv_name;
+
+   if (user_orientation == 0)
+      strcpy (orientation, "Portrait");
+   else
+      strcpy (orientation, "Paysage");
+
+   sprintf (cmd, "/bin/mkdir %s\n", tempdir);
+   system (cmd);
+   sprintf (cmd, "chmod +rwx '%s'\n", tempdir);
+   system (cmd);
+
+   bak_name = (char *) TtaGetMemory (strlen (nom) + 5);
+   sprintf (bak_name, "%s.BAK", nom);
+   piv_name = (char *) TtaGetMemory (strlen (nom) + 5);
+   sprintf (piv_name, "%s.PIV", nom);
+   sprintf (cmd, "/bin/mv '%s'/'%s' '%s'/'%s'\n", dir, bak_name, tempdir, piv_name);
+   system (cmd);
+   sprintf (cmd, "traitement=%s\n", traitement);
+   system (cmd);
+   sprintf (cmd, "export traitement\n");
+   system (cmd);
+   sprintf (cmd, "realname=%s\n", realname);
+   system (cmd);
+   sprintf (cmd, "export realname\n");
+   system (cmd);
+   /*  sprintf (cmd, "printer_or_psname=%s\n", imprimante) ;
+      system (cmd) ;
+      sprintf (cmd, "export printer_or_psname\n") ;
+      system (cmd) ; */
+   sprintf (cmd, "thotpid=%d\n", pid);
+   system (cmd);
+   sprintf (cmd, "export pid\n");
+   system (cmd);
+   sprintf (cmd, "thotwindow=%ld\n", thotWin);
+   system (cmd);
+   sprintf (cmd, "export thotwindow\n");
+   system (cmd);
+   sprintf (cmd, "BIN=%s/bin\n", thotdir);
+   system (cmd);
+   sprintf (cmd, "export BIN\n");
+   system (cmd);
+   sprintf (cmd, "THOTDIR=%s\n", thotdir);
+   system (cmd);
+   sprintf (cmd, "export THOTDIR\n");
+   system (cmd);
+   sprintf (cmd, "THOTSCH=%s\n", thotsch);
+   system (cmd);
+   sprintf (cmd, "export THOTSCH\n");
+   system (cmd);
+   sprintf (cmd, "THOTDOC=%s:%s\n", tempdir, thotdoc);
+   system (cmd);
+   sprintf (cmd, "export THOTDOC\n");
+   system (cmd);
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    Imprimer effectue le lancement du shell pour l'impression.      | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static void          Imprimer (char *nom, char *dir, char *thotsch, char *thotdoc, char *thotpres, char *realname, char *realdir, char *imprimante, int pagedeb, int pagefin, int nbex, int decalage_h, int decalage_v, int user_orientation, int reduction, int nb_ppf, int suptrame, int alimmanuelle, int noiretblanc, int repaginer, char *vuesaimprimer)
+
+#else  /* __STDC__ */
+static void        Imprimer (nom, dir, thotsch, thotdoc, thotpres, realname, realdir, imprimante, pagedeb, pagefin, nbex, decalage_h, decalage_v, user_orientation, reduction, nb_ppf, suptrame, alimmanuelle, noiretblanc, repaginer, vuesaimprimer)
+char               *nom;
+char               *dir;
+char               *thotsch;
+char               *thotdoc;
+char               *thotpres;
+char               *realname;
+char               *realdir;
+char               *imprimante;
+int                 pagedeb;
+int                 pagefin;
+int                 nbex;
+int                 decalage_h;
+int                 decalage_v;
+int                 user_orientation;
+int                 reduction;
+int                 nb_ppf;
+int                 suptrame;
+int                 alimmanuelle;
+int                 noiretblanc;
+int                 repaginer;
+char               *vuesaimprimer;
+
+#endif /* __STDC__ */
+
+{
+   ThotPid             pid = ThotPid_get ();
+
+#ifndef NEW_WILLOWS
+   char                cmd[800];
+   int                 res;
+   char               *thotdir;
+   char               *tempdir;
+
+   thotdir = (char *) TtaGetEnvString ("THOTDIR");
+   if (!thotdir)
+	thotdir = ThotDir ();
+   tempdir = (char *) TtaGetMemory (40);
+   sprintf (tempdir, "/tmp/Thot%d", pid);
+
+   initImpression (user_orientation, thotdir, tempdir, dir, nom, realname, imprimante, pid, FrRef[0], thotsch, thotdoc, "PRINT");
+   if (imprimante[0] != '\0')
+      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s \"%s\" %s %d %d %d %s %d %d %d %d %d %ld Imprimer &\n",
+	       DirectoryBinaries, nom, tempdir, repaginer, pagedeb, pagefin, vuesaimprimer, realname, imprimante, page_size, nbex,
+	       decalage_h, decalage_v, orientation, reduction, nb_ppf, suptrame, alimmanuelle, noiretblanc, FrRef[0]);
+   else
+      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %s %d %d %d %s %d %d %d %d %d %ld Imprimer &\n",
+	       DirectoryBinaries, nom, tempdir, repaginer, pagedeb, pagefin, vuesaimprimer, realname, "lp", page_size, nbex,
+	       decalage_h, decalage_v, orientation, reduction, nb_ppf, suptrame, alimmanuelle, noiretblanc, FrRef[0]);
+
+   res = system (cmd);
+   if (res == -1)
+      TtaDisplaySimpleMessage (CONFIRM, LIB, LIB_ERROR_POSTSCRIPT_TRANSLATION);
+#endif /* NEW_WILLOWS */
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    SauverPS effectue le lancement du shell pour sauvegarde PS.     | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static void          SauverPS (char *nom, char *dir, char *thotsch, char *thotdoc, char *thotpres, char *realname, char *realdir, char *nomps, int pagedeb, int pagefin, int nbex, int decalage_h, int decalage_v, int user_orientation, int reduction, int nb_ppf, int suptrame, int alimmanuelle, int noiretblanc, int repaginer, char *vuesaimprimer)
+
+#else  /* __STDC__ */
+static void         SauverPS (nom, dir, thotsch, thotdoc, thotpres, realname, realdir, nomps, pagedeb, pagefin, nbex, decalage_h, decalage_v, user_orientation, reduction, nb_ppf, suptrame, alimmanuelle, noiretblanc, repaginer, vuesaimprimer)
+char               *nom;
+char               *dir;
+char               *thotsch;
+char               *thotdoc;
+char               *thotpres;
+char               *realname;
+char               *realdir;
+char               *nomps;
+int                 pagedeb;
+int                 pagefin;
+int                 nbex;
+int                 decalage_h;
+int                 decalage_v;
+int                 user_orientation;
+int                 reduction;
+int                 nb_ppf;
+int                 suptrame;
+int                 alimmanuelle;
+int                 noiretblanc;
+int                 repaginer;
+char               *vuesaimprimer;
+
+#endif /* __STDC__ */
+
+{
+   char                cmd[800];
+   int                 res;
+   char               *thotdir;
+
+   char               *tempdir;
+   ThotPid             pid = ThotPid_get ();
+
+   thotdir = TtaGetEnvString ("THOTDIR");
+   if (!thotdir)
+     {
+	thotdir = ThotDir ();
+     }
+   tempdir = (char *) TtaGetMemory (40);
+   sprintf (tempdir, "/tmp/Thot%d", pid);
+   initImpression (user_orientation, thotdir, tempdir, dir, nom, realname, nomps, pid, FrRef[0], thotsch, thotdoc, "SAVEPS");
+
+   if (nomps[0] != '\0')
+      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %s %d %d %d %s %d %d %d %d %d %ld Sauver &\n",
+	       DirectoryBinaries, nom, tempdir, repaginer, pagedeb, pagefin, vuesaimprimer, realname, nomps, page_size, nbex,
+	       decalage_h, decalage_v, orientation, reduction, nb_ppf, suptrame, alimmanuelle, noiretblanc, FrRef[0]);
+   else
+      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %s %d %d %d %s %d %d %d %d %d %ld Sauver &\n",
+	       DirectoryBinaries, nom, tempdir, repaginer, pagedeb, pagefin, vuesaimprimer, realname, "out.ps", page_size, nbex,
+	       decalage_h, decalage_v, orientation, reduction, nb_ppf, suptrame, alimmanuelle, noiretblanc, FrRef[0]);
+
+   res = system (cmd);
+   if (res == -1)
+      TtaDisplaySimpleMessage (CONFIRM, LIB, LIB_ERROR_POSTSCRIPT_TRANSLATION);
+}
 
 
 /* ---------------------------------------------------------------------- */
@@ -105,12 +312,8 @@ View                view;
    PathBuffer          dirname;
    Name                 docname;
    PathBuffer          vuesaimprimer;
-
    boolean             ok;
-
    Name                 savePres, newPres;
-
-
 
    pDocPrint = TabDocuments[document - 1];
    ConnectPrint ();
@@ -122,7 +325,15 @@ View                view;
 
    /* la repagination se fait dans le print */
    SavePath (pDocPrint, dirname, docname);
-   GetTempNames (pDocPrint->DocDirectory, pDocPrint->DocDName);
+
+   strcpy (pDocPrint->DocDirectory, "/tmp");
+   strcpy (pDocPrint->DocDName, "ThotXXXXXX");
+#ifdef WWW_MSWINDOWS
+   _mktemp (pDocPrint->DocDName);
+#else  /* WWW_MSWINDOWS */
+   mktemp (pDocPrint->DocDName);
+#endif /* !WWW_MSWINDOWS */
+
    ok = SauveDocument (pDocPrint, 2);
 
    /* restaure le schema de presentation */

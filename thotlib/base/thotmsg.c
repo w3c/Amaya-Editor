@@ -20,8 +20,6 @@ int                 UserErrorCode;
 boolean             PrintErrorMessages;
 
 #include "viewcommands_f.h"
-#include "sysexec_f.h"
-
 
 /* ---------------------------------------------------------------------- */
 /* |    TtaError affiche les messsges d'erreur de l'API.                | */
