@@ -1243,9 +1243,11 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 #ifdef _WX
 		    sprintf (menu_item, "%s", &text[index + 1]);
 
+#if 0		    
 		    wxLogDebug( _T("new wxMenuItem(toggle): name=") +
 			        TtaConvMessageToWX( menu_item ) +
 				_T("\tref=%d\tparent=%x"), ref, menu );
+#endif /* 0 */
 
 		    w = (ThotWidget) AmayaFrame::AppendMenuItem( 
 			menu,					/* parent */
@@ -2771,9 +2773,11 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 #ifdef _WX
 		      sprintf (menu_item, "%s", &text[index + 1]);
 
+#if 0		    
 		      wxLogDebug( _T("new wxMenuItem(toggle): name=") +
 				  TtaConvMessageToWX( menu_item ) +
 				  _T("\tref=%d\tparent=%x"), ref, menu );
+#endif /* 0 */
 
 		      w = (ThotWidget) AmayaFrame::AppendMenuItem(
                           menu,
@@ -2838,9 +2842,11 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 #ifdef _WX
 		    sprintf (menu_item, "%s", &text[index + 1]);
 
+#if 0		    
 		    wxLogDebug( _T("new wxMenu(submenu): name=") +
 			        TtaConvMessageToWX( menu_item ) +
 				_T("\tref=%d\tparent=%x"), ref, menu );
+#endif /* 0 */
 		    
 		    w = (ThotWidget) AmayaFrame::AppendSubMenu( 
 			menu, /* parent */
