@@ -324,10 +324,6 @@ void AmayaAttributePanel::ShowAttributValue( wxATTR_TYPE type )
   Layout();
   m_pPanelContentDetach->Layout();
 
-  // resize the popup window if the panel is floating
-  if (IsFloating())
-    GetParent()->Fit();
-
   // remember the current attribut type, used to know what callback must be called
   m_CurrentAttType = type;
 }
