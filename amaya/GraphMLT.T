@@ -252,11 +252,16 @@ RULES
 	create SOT;
 	create 'use';
 	create attributes;
-	create CloseTagNL;
-	indent +2;
-	indent -2 after;
-	create SCT after;
-	create 'use>\12' after;
+	if IntEmptyShape
+		create CloseEmptyTagNL;
+	if not IntEmptyShape
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'use>\12' after;
+		END;
 	END;
 
    image:
@@ -267,7 +272,7 @@ RULES
 	create attributes;
 	if IntEmptyShape
 		create CloseEmptyTagNL;
-	indent -7;
+	indent -7;	
 	if not IntEmptyShape
 		BEGIN
 		create CloseTagNL;

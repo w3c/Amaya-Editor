@@ -612,7 +612,7 @@ extern ElementType  TtaGetElementType (Element element);
 /* ----------------------------------------------------------------------
    TtaIsExtensionElement
 
-   Returns true is the element is from an extension schema
+   Returns true if the element is from an extension schema
 
    Parameter:
    element: the element.
@@ -622,6 +622,19 @@ extern ElementType  TtaGetElementType (Element element);
 
    ---------------------------------------------------------------------- */
 extern ThotBool     TtaIsExtensionElement (Element element);
+
+/* ----------------------------------------------------------------------
+   TtaIsTranscludedElement
+
+   Returns true if the element is a transcluded element
+
+   Parameter:
+   element: the element.
+
+   Return value:
+   true or false.
+   ---------------------------------------------------------------------- */
+extern ThotBool     TtaIsTranscludedElement (Element element);
 
 /* ----------------------------------------------------------------------
    TtaGetElementTypeName
@@ -1276,6 +1289,7 @@ extern Element      TtaGetCommonAncestor ( /* Element element1, Element element2
 extern Element      TtaGetTypedAncestor ( /* Element element, ElementType ancestorType */ );
 extern ElementType  TtaGetElementType ( /* Element element */ );
 extern ThotBool     TtaIsExtensionElement ( /* Element element */ );
+extern ThotBool     TtaIsTranscludedElement ( /* Element element */ );
 extern STRING       TtaGetElementTypeName ( /* ElementType elementType */ );
 extern void         TtaGiveTypeFromName ( /* ElementType *elementType, char *name */ );
 extern int          TtaSameTypes ( /* ElementType type1, ElementType type2 */ );

@@ -62,7 +62,7 @@ static ThotBool InCreation = FALSE;
 
 /*----------------------------------------------------------------------
  SetEmptyShapeAttrSubTree
- A GraphML drawing is about to be saved. Set the EmptyShape attribute
+ A GraphML drawing is about to be saved. Set the IntEmptyShape attribute
  on all geometric shapes that do not contain any other element.
  This attribute is used by the translation schema (GraphMLT.T) to
  generate a closing tag.
@@ -75,7 +75,7 @@ Element     el;
 Document    doc;
 #endif /* __STDC__*/
 {
-  ElementType	elType;
+  ElementType	elType, childType;
   AttributeType	attrType;
   Attribute	attr;
   Element	child, content;
@@ -104,6 +104,7 @@ Document    doc;
 	    elType.ElTypeNum == GraphML_EL_line_ ||
 	    elType.ElTypeNum == GraphML_EL_polyline ||
 	    elType.ElTypeNum == GraphML_EL_polygon ||
+	    elType.ElTypeNum == GraphML_EL_use_ ||
 	    elType.ElTypeNum == GraphML_EL_image)
 	   /* this element is concerned by the IntEmptyShape attribute */
 	   {
@@ -112,18 +113,27 @@ Document    doc;
 	   empty = TRUE;
 	   while (content && empty)
 	     {
-	       elType = TtaGetElementType (content);
-	       if (elType.ElSSchema != GraphMLSchema)
+	       childType = TtaGetElementType (content);
+	       if (childType.ElSSchema != GraphMLSchema)
 		 /* this child is not in the GraphML namespace */
 		 empty = FALSE;
 	       else
-		 if (elType.ElTypeNum != GraphML_EL_GRAPHICS_UNIT &&
-		     elType.ElTypeNum != GraphML_EL_XMLcomment)
+		 {
+		 if (childType.ElTypeNum != GraphML_EL_GRAPHICS_UNIT &&
+		     childType.ElTypeNum != GraphML_EL_XMLcomment)
+		   {
 		   /* this is not a Thot graphics leaf nor a comment */
-		   empty = FALSE;
-		 else
-		   /* check next child */
-		   TtaNextSibling (&content);
+		   if (elType.ElTypeNum != GraphML_EL_use_)
+		      empty = FALSE;
+	           else
+		      /* in a use element, transcluded elements don't count */
+		      if (!TtaIsTranscludedElement (content))
+			 empty = FALSE;
+		   }
+		 }
+	       if (empty)
+		 /* check next child */
+		 TtaNextSibling (&content);
 	     }
 
 	   attr = TtaGetAttribute (child, attrType);

@@ -306,7 +306,7 @@ Element             orig;
 		element->ElSource = pRef;
 		pRef->RdElement = element;
 		pRef->RdTypeRef = RefInclusion;
-		if (SetReference (element, NULL, orig,
+		if (SetReference (element, NULL, (PtrElement) orig,
 			      LoadedDocument[document - 1],
 			      LoadedDocument[document - 1], TRUE, FALSE))
 		   CopyIncludedElem (element, LoadedDocument[document - 1]);
@@ -2094,7 +2094,7 @@ ElementType         ancestorType;
 /* ----------------------------------------------------------------------
    TtaIsExtensionElement
 
-   Returns true is the element is from an extension schema
+   Returns true if the element is from an extension schema
 
    Parameter:
    element: the element.
@@ -2120,6 +2120,38 @@ Element             element;
      {
 	return (((PtrElement) element)->ElStructSchema->SsExtension);
      }
+}
+
+/* ----------------------------------------------------------------------
+   TtaIsTranscludedElement
+
+   Returns true if the element is a transcluded element
+
+   Parameter:
+   element: the element.
+
+   Return value:
+   true or false.
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+ThotBool            TtaIsTranscludedElement (Element element)
+#else  /* __STDC__ */
+ThotBool            TtaIsTranscludedElement (element)
+Element             element;
+#endif /* __STDC__ */
+{
+
+   UserErrorCode = 0;
+   if (element == NULL)
+     {
+	TtaError (ERR_invalid_parameter);
+        return FALSE;
+     }
+   else
+     if (!((PtrElement) element)->ElSource)
+       return FALSE;
+     else
+       return (((PtrElement) element)->ElSource->RdTypeRef == RefInclusion);
 }
 
 /* ----------------------------------------------------------------------
