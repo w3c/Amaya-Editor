@@ -2218,7 +2218,8 @@ int                 editType;
 	       }
 	     else
 		pAb = pBox->BxAbstractBox;
-	     if (pAb->AbReadOnly)
+	     if (pAb->AbReadOnly &&
+		 (editType == TEXT_CUT || editType == TEXT_INSERT || editType == TEXT_PASTE))
 	        return;
 	  }
         /*-- La commande coller concerne le mediateur --*/
