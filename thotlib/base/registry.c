@@ -45,6 +45,13 @@
    									
   ----------------------------------------------------------------------*/
 
+/* for Marc.Baudoin@hsc.fr (Marc Baudoin) */
+#ifdef _WINDOWS
+#define THOT_RC_FILENAME	"thot.ini"
+#else /* !_WINDOWS */
+#define THOT_RC_FILENAME	".thotrc"
+#endif /* ! _WINDOWS */
+
 #define THOT_INI_FILENAME	"thot.ini"
 #define THOT_CONFIG_FILENAME    "config"
 #define THOT_BIN_FILENAME	"bin"
@@ -690,7 +697,7 @@ static char        *WINIni_get (const char *env)
 
 
 /*
- * TtaSaveAppRegistry : Save the Registry the THOT_INI_FILENAME located
+ * TtaSaveAppRegistry : Save the Registry in the THOT_RC_FILENAME located
  *       in the user's directory.
  */
 
@@ -719,7 +726,7 @@ void                TtaSaveAppRegistry ()
      {
 	strcpy (filename, home_dir);
 	strcat (filename, DIR_STR);
-	strcat (filename, THOT_INI_FILENAME);
+	strcat (filename, THOT_RC_FILENAME);
      }
    else
      {
@@ -1139,15 +1146,32 @@ char               *appArgv0;
      {
 	strcpy (filename, home_dir);
 	strcat (filename, DIR_STR);
-	strcat (filename, THOT_INI_FILENAME);
+	strcat (filename, THOT_RC_FILENAME);
 	if (TtaFileExist (filename))
 	  {
 #ifdef DEBUG_REGISTRY
 	     fprintf (stderr, "reading user's %s from %s\n",
-		      THOT_INI_FILENAME, filename);
+		      THOT_RC_FILENAME, filename);
 #endif
 	     ImportRegistryFile (filename, REGISTRY_USER);
 	  }
+	else {
+	   char old_filename[MAX_PATH];
+	   strcpy (old_filename, home_dir);
+	   strcat (old_filename, DIR_STR);
+	   strcat (old_filename, THOT_INI_FILENAME);
+	   if (TtaFileExist (old_filename)) {
+#ifdef DEBUG_REGISTRY
+		fprintf (stderr, "reading user's %s from %s\n",
+			 THOT_INI_FILENAME, old_filename);
+#endif
+		ImportRegistryFile (old_filename, REGISTRY_USER);
+		TtaFileUnlink(old_filename);
+		TtaSaveAppRegistry();
+		fprintf (stderr, "user's preferences moved from %s to %s\n",
+			 old_filename, filename);
+	   }
+	}
      }
    else
       fprintf (stderr, "User's %s not found\n", THOT_INI_FILENAME);
