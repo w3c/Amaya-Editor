@@ -752,7 +752,16 @@ void AmayaFrame::SetActive( bool active )
   // this frame is active update its page
   AmayaPage * p_page = GetPageParent();
   if (p_page)
-    p_page->SetActiveFrame( this );
+    {
+      p_page->SetActiveFrame( this );
+
+      // setup the right frame url into the main window urlbar
+      p_page->SetWindowURL( p_page->GetActiveFrame()->GetFrameURL() );
+      // setup the enable/disable state of urlbar
+      p_page->SetWindowEnableURL( p_page->GetActiveFrame()->GetFrameEnableURL() );
+      // setup the enable/disable state of the toolbar buttons
+      p_page->SetWindowEnableToolBarButtons( p_page->GetActiveFrame()->GetFrameId() );
+    }
 }
 
 bool AmayaFrame::IsActive()
