@@ -654,16 +654,11 @@ int                 status;
 	me->outputfile = NULL;
      }
 
-   /* don't remove or Xt will hang up during the put */
+   /* don't remove or Xt will hang up during the PUT */
 
    if (AmayaIsAlive  && ((me->method == METHOD_POST) ||
 			 (me->method == METHOD_PUT)))
      {
-       /* experimental */
-       if (me->error_stream && me->error_stream[0] && me->error_stream_size)
-	 strncpy (AmayaLastHTTPErrorMsg, me->error_stream, AMAYA_LAST_HTTP_ERROR_MSG_SIZE -1);
-       AmayaLastHTTPErrorMsg [AMAYA_LAST_HTTP_ERROR_MSG_SIZE-1] = EOS;
-
        /* output the status of the request */
        if (status == 200)
 	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REQUEST_SUCCEEDED), me->urlName);
@@ -674,15 +669,27 @@ int                 status;
        else if (status == 204 && me->method == METHOD_PUT)
 	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_NO_DATA), (char *) NULL);
        else if (status == -400 || status == 505)
+	 {
 	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX), (char *) NULL);
-       else if (status == -401)
+	   sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX));
+	 }
+       else if (status == -401) 
+	 {
 	   TtaSetStatus (me->docid, 1,
 			 TtaGetMessage (AMAYA, AM_AUTHENTICATION_FAILURE), me->urlName);
+	   sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_AUTHENTICATION_FAILURE), me->urlName);
+	 }
        else if (status == -403)
-	 TtaSetStatus (me->docid, 1,
+	 {
+	   TtaSetStatus (me->docid, 1,
 			 TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS), me->urlName);
+	   sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS), me->urlName);
+	 }
        else if (status == -405)
+	 {
 	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_METHOD_NOT_ALLOWED), (char *) NULL);
+	 sprintf(AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_METHOD_NOT_ALLOWED));
+	 }
        else if (status == -1)
 	 {
 	   /*
@@ -696,27 +703,37 @@ int                 status;
 	     {
 	       sprintf (msg_status, "%d", status); 
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
+	       sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
 	       return (HT_OK);
 	     }
-	   errorElement = error->element;
+	     errorElement = error->element;
+
 	   if (errorElement == HTERR_NOT_IMPLEMENTED)
 	     {
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_SERVER_NOT_IMPLEMENTED_501_ERROR), (char *) NULL);
+	       sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_SERVER_NOT_IMPLEMENTED_501_ERROR));
 	       status = -501;
 	     }
 	   else if (errorElement == HTERR_INTERNAL)
 	     {
 	       if ((error->length > 0) && (error->length <= 25) &&
-		   (error->par) && (((char *) error->par)[0] != EOS))
+		   (error->par) && (((char *) error->par)[0] != EOS)) 
+		 {
 		 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), (char *) (error->par));
+		 sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), (char *) (error->par));
+		 }
 	       else
+		 {
 		 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE), (char *) NULL);
+		 sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE));
+		 }
 	       status = -500; 
 	     }
 	   else
 	     {
 	       sprintf (msg_status, "%d", status); 
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
+		 sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
 	     }
 	 }
      }
