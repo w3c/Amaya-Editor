@@ -1033,16 +1033,21 @@ static void LayoutPicture (Pixmap pixmap,
 	      /* 	      else */
 	      /* 		clipWidth = delta; */
 	    }
-	  if (clipWidth < imageDesc->PicWidth)
-	    w = clipWidth;
-	  else
-	    w = imageDesc->PicWidth;
-	  
-	  if (clipHeight < imageDesc->PicHeight) 
-	    h = clipHeight;
-	  else
-	    h = imageDesc->PicHeight;
-	  
+	  if (w > clipWidth)
+	    {
+	      if (clipWidth < imageDesc->PicWidth)
+		w = clipWidth;
+	      else
+		w = imageDesc->PicWidth;
+	    }
+	  if (h > clipHeight)
+	    {
+	      if (clipHeight < imageDesc->PicHeight) 
+		h = clipHeight;
+	      else
+		h = imageDesc->PicHeight;
+	    }
+ 
 	  j = 0;
 	  do
 	    {	      
