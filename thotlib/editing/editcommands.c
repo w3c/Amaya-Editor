@@ -1947,7 +1947,7 @@ int                 frame;
 	if (pAb->AbLeafType == LtText)
 	  {
 	     pFrame = &ViewFrameTable[frame - 1];
-	     /* calcule les valeurs xDelta, spacesDelta, charsDelta */
+	     /* get values xDelta, spacesDelta, charsDelta */
 	     if (pFrame->FrSelectionBegin.VsIndBox == pAb->AbVolume)
 	       {
 		  xDelta = 0;
@@ -1956,7 +1956,7 @@ int                 frame;
 	       }
 	     else
 	       {
-		  /* Indice de debut */
+		  /* index of the beginning */
 		  i = 1;
 		  pTargetBuffer = NULL;
 		  CopyBuffers (pBox->BxFont, frame, pFrame->FrSelectionBegin.VsIndBuf, pFrame->FrSelectionEnd.VsIndBuf, i,
@@ -1964,8 +1964,9 @@ int                 frame;
 	       }
 	  }
      }
-   /* coupe le contenu de la selection courante */
-   RemoveSelection (charsDelta, spacesDelta, xDelta, defaultHeight, defaultWidth, pLine, pBox, pAb, frame);
+   /* remove the contents of the current selection */
+   if (charsDelta > 0)
+     RemoveSelection (charsDelta, spacesDelta, xDelta, defaultHeight, defaultWidth, pLine, pBox, pAb, frame);
 }
 
 
@@ -3496,14 +3497,14 @@ View                view;
 #endif /* __STDC__ */
 {
    DisplayMode         dispMode;
+   int                 frame;
    ThotBool            lock = TRUE;
 #ifdef _WINDOWS
-   HANDLE  hMem   = 0;
-   LPTSTR  lpData = 0;
-   CHAR_T* ptrData;
-   LPTSTR  pBuff;
-   int     ndx;
-   int     frame;
+   HANDLE              hMem   = 0;
+   LPTSTR              lpData = 0;
+   CHAR_T             *ptrData;
+   LPTSTR              pBuff;
+   int                 ndx;
 #endif /* _WINDOWS */
 
    if (document == 0)
@@ -3521,28 +3522,33 @@ View                view;
 	 (*ThotLocalActions[T_lock]) ();
      }
 
-#ifdef _WINDOWS
    frame = GetWindowNumber (document, view);
+   if (frame != ActiveFrame)
+     {
+       /* yes close the previous insertion */
+       CloseTextInsertion ();
+       ActiveFrame = frame;
+     }
+#ifdef _WINDOWS
    TtcCopyToClipboard (document, view);
 
    if (!OpenClipboard (FrRef[frame]))
-      WinErrorBox (FrRef [frame], TEXT("TtcCutSelection (1)"));
-   else {
-      EmptyClipboard ();
+     WinErrorBox (FrRef [frame], TEXT("TtcCutSelection (1)"));
+   else
+     {
+       EmptyClipboard ();
+       hMem   = GlobalAlloc (GHND, ClipboardLength + 1);
+       lpData = (LPTSTR) GlobalLock (hMem);
+       ptrData = lpData;
+       pBuff  = (LPTSTR) Xbuffer;
+       for (ndx = 0; ndx < ClipboardLength; ndx++)
+	 *ptrData++ = *pBuff++;
+       *ptrData = 0;
 
-      hMem   = GlobalAlloc (GHND, ClipboardLength + 1);
-      lpData = (LPTSTR) GlobalLock (hMem);
-      ptrData = lpData;
-	  pBuff  = (LPTSTR) Xbuffer;
-      for (ndx = 0; ndx < ClipboardLength; ndx++)
-          *ptrData++ = *pBuff++;
-      *ptrData = 0;
-
-      GlobalUnlock (hMem);
-
-      SetClipboardData (CF_TEXT, hMem);
-      CloseClipboard ();
-   }
+       GlobalUnlock (hMem);
+       SetClipboardData (CF_TEXT, hMem);
+       CloseClipboard ();
+     }
 #endif /* _WINDOWS */
    ContentEditing (TEXT_CUT);
 
@@ -3565,74 +3571,80 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ViewSelection      *pViewSel;
-   DisplayMode         dispMode;
-   int                 frame;
-   ThotBool            delPrev, moveAfter;
-   ThotBool            lock = TRUE;
+  ViewSelection      *pViewSel;
+  DisplayMode         dispMode;
+  int                 frame;
+  ThotBool            delPrev, moveAfter;
+  ThotBool            lock = TRUE;
 
-   if (document != 0)
-     {
-       frame = GetWindowNumber (document, view);
-       delPrev = (StructSelectionMode || ViewFrameTable[frame - 1].FrSelectOnePosition);
-       pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
-       if (delPrev)
-	 /* remove the current empty element even if there is an insert point */
-	 delPrev = (pViewSel->VsBox != NULL && pViewSel->VsBox->BxAbstractBox->AbVolume != 0);
-       else
-	 /* remove the previous char if the selection is at the end of the text */
-	 delPrev = (pViewSel->VsBox != NULL &&
-		    pViewSel->VsBox->BxAbstractBox->AbLeafType == LtText &&
-		    pViewSel->VsIndBox >= pViewSel->VsBox->BxNChars);
-
-       /* avoid to redisplay step by step */
-       dispMode = TtaGetDisplayMode (document);
-       if (dispMode == DisplayImmediately)
-	 TtaSetDisplayMode (document, DeferredDisplay);
-       /* lock tables formatting */
-       if (ThotLocalActions[T_islock])
-	 {
-	   (*ThotLocalActions[T_islock]) (&lock);
-	   if (!lock)
-	     /* table formatting is not loked, lock it now */
-	     (*ThotLocalActions[T_lock]) ();
-	 }
-
-       if (delPrev)
-	 {
-	   pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
-	   if (pViewSel->VsBox != NULL &&
-	       pViewSel->VsBox->BxAbstractBox != NULL &&
-	       (!pViewSel->VsBox->BxAbstractBox->AbReadOnly ||
-		pViewSel->VsBox->BxIndChar + pViewSel->VsIndBox == 0 ||
-		(pViewSel->VsBox->BxIndChar + pViewSel->VsIndBox == 1 &&
-		 pViewSel->VsBox->BxAbstractBox->AbVolume == 1)))
-	     InsertChar (frame, 127, -1);
-	 }
-       else
-	 {
-	   /* delete the current selection instead of the previous char */
-	   CloseTextInsertion ();
-	   /* by default doen't change the selection after the delete */
-	   moveAfter = FALSE;
-	   if (pViewSel->VsBox != NULL)
-	     {
-	       moveAfter = (pViewSel->VsBox->BxAbstractBox->AbLeafType != LtText ||
-			    pViewSel->VsBox->BxAbstractBox->AbVolume == 0);
-	       ContentEditing (TEXT_SUP);
-	     }
-	   pViewSel = &ViewFrameTable[frame - 1].FrSelectionEnd;
-	   if (moveAfter &&
-	       pViewSel->VsBox && pViewSel->VsIndBox < pViewSel->VsBox->BxNChars)
-	     TtcPreviousChar (document, view);
-	 }
-
-       if (!lock)
-	 /* unlock table formatting */
-	 (*ThotLocalActions[T_unlock]) ();
-       if (dispMode == DisplayImmediately)
-	 TtaSetDisplayMode (document, dispMode);
-     }
+  if (document != 0)
+    {
+      frame = GetWindowNumber (document, view);
+      if (frame != ActiveFrame)
+	{
+	  /* yes close the previous insertion */
+	  CloseTextInsertion ();
+	  ActiveFrame = frame;
+	}
+      delPrev = (StructSelectionMode || ViewFrameTable[frame - 1].FrSelectOnePosition);
+      pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
+      if (delPrev)
+	/* remove the current empty element even if there is an insert point */
+	delPrev = (pViewSel->VsBox != NULL && pViewSel->VsBox->BxAbstractBox->AbVolume != 0);
+      else
+	/* remove the previous char if the selection is at the end of the text */
+	delPrev = (pViewSel->VsBox != NULL &&
+		   pViewSel->VsBox->BxAbstractBox->AbLeafType == LtText &&
+		   pViewSel->VsIndBox >= pViewSel->VsBox->BxNChars);
+      
+      /* avoid to redisplay step by step */
+      dispMode = TtaGetDisplayMode (document);
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (document, DeferredDisplay);
+      /* lock tables formatting */
+      if (ThotLocalActions[T_islock])
+	{
+	  (*ThotLocalActions[T_islock]) (&lock);
+	  if (!lock)
+	    /* table formatting is not loked, lock it now */
+	    (*ThotLocalActions[T_lock]) ();
+	}
+      
+      if (delPrev)
+	{
+	  pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
+	  if (pViewSel->VsBox != NULL &&
+	      pViewSel->VsBox->BxAbstractBox != NULL &&
+	      (!pViewSel->VsBox->BxAbstractBox->AbReadOnly ||
+	       pViewSel->VsBox->BxIndChar + pViewSel->VsIndBox == 0 ||
+	       (pViewSel->VsBox->BxIndChar + pViewSel->VsIndBox == 1 &&
+		pViewSel->VsBox->BxAbstractBox->AbVolume == 1)))
+	    InsertChar (frame, 127, -1);
+	}
+      else
+	{
+	  /* delete the current selection instead of the previous char */
+	  CloseTextInsertion ();
+	  /* by default doen't change the selection after the delete */
+	  moveAfter = FALSE;
+	  if (pViewSel->VsBox != NULL)
+	    {
+	      moveAfter = (pViewSel->VsBox->BxAbstractBox->AbLeafType != LtText ||
+			   pViewSel->VsBox->BxAbstractBox->AbVolume == 0);
+	      ContentEditing (TEXT_SUP);
+	    }
+	  pViewSel = &ViewFrameTable[frame - 1].FrSelectionEnd;
+	  if (moveAfter &&
+	      pViewSel->VsBox && pViewSel->VsIndBox < pViewSel->VsBox->BxNChars)
+	    TtcPreviousChar (document, view);
+	}
+      
+      if (!lock)
+	/* unlock table formatting */
+	(*ThotLocalActions[T_unlock]) ();
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (document, dispMode);
+    }
 }
 
 

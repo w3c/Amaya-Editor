@@ -891,7 +891,7 @@ static void ParseCharset (el)
 Element el;
 #endif /* !__STDC__ */
 {
- 
+#ifndef STANDALONE
    int length;
    CHAR_T *text, *text2, *ptrText, *str;
    CHAR_T  charsetname[MAX_LENGTH];
@@ -961,6 +961,7 @@ Element el;
         TtaFreeMemory (text);
 	 }
   }
+#endif /* STANDALONE */
 }
 
 /*----------------------------------------------------------------------
@@ -3323,8 +3324,10 @@ CHAR_T                c;
 	    /* when returning from the XML parser, the end tag has already
 	       been read */
 	    (void) CloseElement (lastElemEntry, -1, FALSE);
+#ifndef STANDALONE
 	  else
 	    StopParsing ();
+#endif /* STANDALONE */
 	}
       else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("xmlgraphics")))
 	/* a <XMLGRAPHICS> tag has been read */
@@ -3337,8 +3340,10 @@ CHAR_T                c;
 	    /* when returning from the XML parser, the end tag has already
 	       been read */
 	    (void) CloseElement (lastElemEntry, -1, FALSE);
+#ifndef STANDALONE
 	  else
 	    StopParsing ();
+#endif /* STANDALONE */
 	}
       else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("pre"))   ||
                !ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("style")) ||
@@ -3365,6 +3370,7 @@ CHAR_T                c;
       elType = TtaGetElementType (lastElement);
       if (elType.ElTypeNum == HTML_EL_STYLE_)
 	{
+#ifndef STANDALONE
 	  /* Search the Notation attribute */
 	  attrType.AttrSSchema = elType.ElSSchema;
 	  attrType.AttrTypeNum = HTML_ATTR_Notation;
@@ -3383,6 +3389,7 @@ CHAR_T                c;
 		ParsingCSS = TRUE;
 	      TtaFreeMemory (text);
 	    }
+#endif /* STANDALONE */
 	}
       else if (elType.ElTypeNum == HTML_EL_Text_Area)
 	{
@@ -4136,6 +4143,7 @@ char                c;
    PutInBuffer (c);
 }
 
+#ifndef STANDALONE
 /*----------------------------------------------------------------------
    CreateAttrWidthPercentPxl
    an HTML attribute "width" has been created for a Table of a HR.
@@ -4304,6 +4312,7 @@ Document            doc;
       ParseHTMLError (doc, msgBuffer);
       }
 }
+#endif /* STANDALONE */
 
 /*----------------------------------------------------------------------
    EndOfAttrValue
