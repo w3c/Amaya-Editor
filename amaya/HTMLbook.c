@@ -177,7 +177,6 @@ Document                document;
   attrType.AttrSSchema = elType.ElSSchema;
   /* looks for all anchors in the document */
   link = el;
-  split = FALSE;
   while (link != NULL)
     {
       link = TtaSearchTypedElement (elType, SearchForward, link);
@@ -212,6 +211,7 @@ Document                document;
 		{
 		  ptr = strrchr (text, '#');
 		  url = text;
+		  split = FALSE;
 		  if (ptr == text)
 		      /* a local link */
 		      url = NULL;
