@@ -3303,7 +3303,7 @@ void*     context;
    if (DocumentTypes[newdoc] == docAnnot
        || DocumentTypes[newdoc] == docAnnotRO)
      {
-       ANNOT_InitDocumentMeta (newdoc, baseDoc);
+       ANNOT_LoadAnnotation (baseDoc, newdoc);
      }
 #endif /* ANNOTATIONS */
    /* select the target if present */
