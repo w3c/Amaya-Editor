@@ -3093,7 +3093,6 @@ CHAR_T*       content_type;
 	I'm copying here some of the functionality I use in the PUT
        I need to put the common parts in another module */
        AM_GetFileSize (formdata, &filesize);
-       filesize = filesize + strlen ("w3c_annotate=");
        me->block_size = filesize;
 
        fileURL = HTParse (formdata, "file:/", PARSE_ALL);
@@ -3114,13 +3113,10 @@ CHAR_T*       content_type;
 	 int i;
 	 char c;
 
-	 me->document = TtaGetMemory (me->block_size 
-				      + strlen ("w3c_annotate=") + 1);
+	 me->document = TtaGetMemory (me->block_size + 1);
 	 fp = fopen (formdata, "r");
 	 i = 0; 
-	 strcpy (me->document, "w3c_annotate=");
 	 c = getc (fp);
-	 i = strlen(me->document);
 	 while (!feof (fp))
 	   {
 	     me->document[i++] = c;
