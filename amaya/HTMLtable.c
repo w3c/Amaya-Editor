@@ -733,6 +733,16 @@ Document            doc;
 	    }
 	  if (attr != NULL)
 	    TtaSetAttributeReference (attr, cell, doc, colElement[cRef + span - 1], doc);
+	  /* remove extra cells */
+	  nextCell = cell;
+	  TtaNextSibling (&nextCell);
+	  while (span > 1 && nextCell != NULL)
+	    {
+	      cell = nextCell;
+	      TtaNextSibling (&nextCell);
+	      TtaDeleteTree (cell, doc);
+	      span--;
+	    }
 	}
     }
   TtaFreeMemory (colElement);
