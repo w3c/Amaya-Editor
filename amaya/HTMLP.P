@@ -5280,8 +5280,6 @@ RULES
  PICTURE_UNIT: BEGIN
 	Depth: 5;
 	CreateBefore(IMG_S);
-	CreateBefore(ATTR_SRC);
-	CreateBefore(VALUE_SRC);
 	LineBreak: No;
 	PageBreak: No;
 #ifdef COUGAR
@@ -6034,6 +6032,12 @@ ATTRIBUTES
 	CreateLast(VALUE_REV_ANCH);
 	END;
 
+ SRC:
+	BEGIN
+	CreateBefore(ATTR_SRC);
+	CreateBefore(VALUE_SRC);
+	END;
+ 
  Width__:
 	BEGIN
 	CreateBefore(ATTR_WIDTH);

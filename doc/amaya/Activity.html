@@ -3,7 +3,7 @@
 <head>
 <title>
 Amaya Activity</title>
-<style>
+<style type="text/css">
 BLOCKQUOTE { color : #003A7F; font-style : italic }
 H2 { color : #00647F }
 H3 { color : #000000 }
@@ -59,7 +59,7 @@ structural model of the document can be displayed alongside the browser's view
 of how it should be presented on the screen. Amaya has a counterpart called <a
 href="http://www.w3.org/pub/WWW/Jigsaw/">Jigsaw</a> which plays a similar role
 on the server side. Amaya is a complete web browsing and authoring environment
-and comes equiped with a WYSIWYG style of interface, similar to that of the
+and comes equipped with a WYSIWYG style of interface, similar to that of the
 more popular commercial browsers.</p>
 <p>
 Amaya maintains a consistent internal document model adhering to the Document
@@ -71,20 +71,21 @@ language.</p>
 
 <h2><a name="role">Amaya at W3C</a></h2>
 <p>
-Amaya has been developed by W3C at by the Amaya team: Ir&egrave;ne Vatton,
+Amaya has been developed at W3C by the Amaya team: Ir&egrave;ne Vatton,
 Ramzi Gu&eacute;tari, Jos&eacute; Kahan, Vincent Quint, Daniel Veillard. Used
 by other groups within the consortium to demonstrate work and to act as an
 experimental platform Amaya has played an important role in the areas of:</p>
 <ul>
 <li><p>
-<b>Math on the Web:</b> Amaya demonstrates a prototype implementation of <a
+<b>Math on the Web:</b> Amaya demonstrates an implementation of <a
 href="../TR/WD-math/">MathML</a> which allows users to browse and edit web
 pages containing mathematical expressions. The screen below shows the way that
-you can display equations on the screen side by side the internal model used
+you can display equations on the screen side by side the MathML model used
 by Amaya.</p>
 </ul>
 <p>
-<img width="350" height="400" src="Icons/amaya-math.gif"></p>
+<img width="350" height="400" src="Icons/amaya-math.gif"
+alt="Amaya screen with equations"></p>
 <ul>
 <li><p>
 <b>HTTP protocol:</b> In its basic version, Amaya implements many web
@@ -111,9 +112,12 @@ presentational effects.</p>
 code. The way it handles documents is strictly according to the HTML DTD, the
 Document Type Definition.</p>
 <li><p>
+<b>DOM:</b> Amaya is used to experiment with the Java API developed by the DOM
+working group.</p>
+<li><p>
 <b>Amaya in other languages:</b> It is now possible to launch Amaya so that
 the user dialogs are in German or French. The intention is to cover other
-European languages in the future.</p>
+languages in the future.</p>
 </ul>
 
 <h2><a name="current">Current Situation</a></h2>
@@ -130,7 +134,7 @@ experienced using the software.</p>
 The pure C Amaya 1.2a beta public release is available in source code and
 precompiled binary forms, as is the Amaya-Java 1.1c beta public release.</p>
 <p>
-There are two distributions of Amaya. A pure C version based on Libwww and a
+There are two distributions of Amaya. A pure C version based on libwww and a
 version embedding a Java virtual machine. The later uses the HTTP classes from
 Jigsaw. This is a an object-oriented server for HTTP 1.1 written in Java. An
 API is available from the Java language offering an easy customization path
@@ -139,12 +143,12 @@ for Amaya users.</p>
 <h2><a name="future">What the Future Holds</a></h2>
 <p>
 The next release of Amaya, Amaya 1.3, should be ready July 1998. There are a
-number of improvments, for example:</p>
+number of improvements, for example:</p>
 <ul>
 <li><p>
 Better printer support: an increased range of printers will be supported in
 the Windows version of Amaya. Currently you are limited to output to a
-Postcript file.</p>
+Postscript file.</p>
 <li><p>
 Implementation of the new version of the PNG (Portable Network Graphics)
 library.</p>

@@ -142,13 +142,13 @@ EXCEPT
    PrescriptPairs:	Hidden;
    PrescriptPair:	Hidden;
    MTABLE:		IsTable;
-   MTable_head:		NoCut, {**** Hidden, NoSelect ****};
-   MColumn_head:	IsColHead, NoCut, {**** Hidden, NoSelect ****};
-{****    MC_Head:		Hidden, NoSelect; ****}
-{****   MTable_body:		Hidden; ****}
+   MTable_head:		NoCut, Hidden, NoSelect;
+   MColumn_head:	IsColHead, NoCut, Hidden, NoSelect;
+   MC_Head:		Hidden, NoSelect;
+   MTable_body:		Hidden;
    MTR:			IsRow;
    MTD:			IsCell, NoMove, NoResize;
-   CellWrapper:		NoCut, {**** Hidden ****};
+   CellWrapper:		NoCut, Hidden;
    C_Empty:		Hidden, NoSelect;
 
    Invalid_attribute:	Invisible;

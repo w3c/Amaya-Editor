@@ -1172,7 +1172,7 @@ int                 fg;
 
    exnum = 0;
 
-   if (FontHeight (font) >= h)
+   if (h <= (int) (1.3 * FontHeight (font)) )
      {
 	/* With only one glyph */
 	if (direction == 0)
@@ -1276,7 +1276,7 @@ int                 fg;
 
    exnum = 0;
 
-   if (FontHeight (font) >= h)
+   if (h <= (int) (1.3 * FontHeight (font)) )
      {
 	/* need only one char */
 	if (direction == 0)

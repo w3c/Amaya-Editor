@@ -605,6 +605,7 @@ int                 construct;
 	  break;
 	case 13:
 	  newType.ElTypeNum = MathML_EL_MTABLE;
+	  selectFirstChild = FALSE;	/* select the second component */
 	  break;
 	default:
 	  return;
@@ -710,7 +711,7 @@ int                 construct;
 	     element */
 	  child = TtaGetFirstChild (el);
 	  if (!selectFirstChild)
-	     /* get the seconf child */
+	     /* get the second child */
 	     TtaNextSibling (&child);
 	  while (child != NULL)
 	    {

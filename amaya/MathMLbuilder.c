@@ -132,7 +132,7 @@ static MathEntity        MathEntityTable[] =
    {"lrarr", 171, 'G'},
    {"lrArr", 219, 'G'},
    {"lsqb", 91, 'G'},
-   {"lt", 62, 'L'},
+   {"lt", 60, 'L'},
    {"middot", 215, 'G'},
    {"mldr", 188, 'G'},
    {"mu", 109, 'G'},
