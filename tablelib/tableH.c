@@ -1463,9 +1463,6 @@ int             frame;
 	  if (colWidth[cRef] && colWidth[cRef] < box->BxMinWidth)
 	    /* a constrained width it must be greater than the minimum */
 	    colWidth[cRef] = box->BxMinWidth;
-	  if (width == 0 && box->BxMinWidth)
-	    /* assign a minimum width to each column */
-	    box->BxMinWidth = 1;
 	  pTabRel->TaRTWidths[i] = colWidth[cRef];
 	  pTabRel->TaRTPercents[i] = colPercent[cRef];
 	  min += box->BxMinWidth;
