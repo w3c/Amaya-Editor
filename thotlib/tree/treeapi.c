@@ -33,6 +33,7 @@
 #include "applicationapi_f.h"
 #include "attributes_f.h"
 #include "attributeapi_f.h"
+#include "changeabsbox_f.h"
 #include "displayview_f.h"
 #include "documentapi_f.h"
 #include "exceptions_f.h"
@@ -889,7 +890,34 @@ void TtaExportTree (Element element, Document document,
     ExportTree ((PtrElement)element, document, fileName, TSchemaName);
 #endif
 }
- 
+
+/* ----------------------------------------------------------------------
+   TtaRedisplayElement
+   Remove, recompute and redisplay the whole image of element elem.
+   ---------------------------------------------------------------------- */
+void TtaRedisplayElement (Element element, Document document)
+{
+#ifndef NODISPLAY
+  PtrElement          pEl;
+  PtrDocument         pDoc;
+
+   UserErrorCode = 0;
+   if (element == NULL)
+     TtaError (ERR_invalid_parameter);
+   else if (document < 1 || document > MAX_DOCUMENTS)
+     TtaError (ERR_invalid_document_parameter);
+   else if (LoadedDocument[document - 1] == NULL)
+     TtaError (ERR_invalid_document_parameter);
+   else
+     {
+       pDoc = LoadedDocument[document - 1];
+       DestroyAbsBoxes ((PtrElement) element, pDoc, TRUE);
+       AbstractImageUpdated (pDoc);
+       RedisplayNewElement (document, (PtrElement) element, NULL, TRUE, TRUE);
+     }
+#endif /* NODISPLAY */
+}
+
 /* ----------------------------------------------------------------------
    TtaInsertSibling
    Inserts an element in a tree, as an immediate sibling of a given element.

@@ -1420,17 +1420,41 @@ ThotBool ComputeListItemNumber (PtrAbstractBox pAb)
   int              count, length;
   CounterStyle     countStyle;
   PtrElement       pPrev;
-  ThotBool         change;
+  PtrAttribute     pAttr;
+  ThotBool         change, set;
 
-  count = 1;
-  pPrev = pAb->AbElement->ElPrevious;
-  while (pPrev)
+  count = 0;
+  set = FALSE;
+  pPrev = pAb->AbElement;
+  while (pPrev && !set)
     {
       if (pPrev->ElStructSchema == pAb->AbElement->ElStructSchema &&
 	  pPrev->ElTypeNumber == pAb->AbElement->ElTypeNumber)
-	count++;
+	/* this element should be counted */
+	{
+	  pAttr = GetAttrElementWithException (ExcSetCounter, pPrev);
+	  /* it has an attribute that sets the counter */
+	  if (pAttr && pAttr->AeAttrType == AtNumAttr)
+	    {
+	      set = TRUE;
+	      count += pAttr->AeAttrValue;
+	    }
+	  else
+	    count++;
+	}
       pPrev = pPrev->ElPrevious;
     }
+  if (!set && pAb->AbElement && pAb->AbElement->ElParent)
+    {
+      pAttr = GetAttrElementWithException (ExcStartCounter,
+					   pAb->AbElement->ElParent);
+      if (pAttr && pAttr->AeAttrType == AtNumAttr)
+	{
+	  count += pAttr->AeAttrValue;
+	  count--;
+	}
+    }
+
   if (pAb->AbListStyleType == '1')
     countStyle = CntDecimal;
   else if (pAb->AbListStyleType == 'Z')

@@ -131,7 +131,7 @@ ExceptVal =	 'NoCut' / 'NoCreate' / 'NoReplicate' /
 		 'CssBackground' / 'CssClass' / 'CssId' / 'CssPseudoClass' /
 		 'NoShowBox' / 'SetWindowBackground' /
 		 'Shadow' / 'EventAttr' / 'SpacePreserve' /
-		 'IsPlaceholder' /
+		 'IsPlaceholder' / 'StartCounter' / 'SetCounter' /
 		 ExceptNum .
 ExceptNum =	 NUMBER .
 

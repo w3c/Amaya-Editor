@@ -110,7 +110,9 @@
 #define KWD_EventAttr 	1189
 #define KWD_SpacePreserve 	1190
 #define KWD_IsPlaceholder 	1191
-#define KWD_Root 	1192
+#define KWD_StartCounter 	1192
+#define KWD_SetCounter 	1193
+#define KWD_Root 	1194
 
 /*  RULES  */
 

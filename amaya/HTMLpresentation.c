@@ -220,6 +220,24 @@ void  AttrToSpan (Element elem, Attribute attr, Document doc)
 }
 
 /*----------------------------------------------------------------------
+  AttrStartChanged: the user has created, deleted  or modified a
+  Start attribute
+  ----------------------------------------------------------------------*/
+void AttrStartChanged (NotifyAttribute * event)
+{
+  TtaRedisplayElement (event->element, event->document);
+}
+
+/*----------------------------------------------------------------------
+  AttrItemValueChanged: the user has created, deleted  or modified an
+  ItemValue attribute
+  ----------------------------------------------------------------------*/
+void AttrItemValueChanged (NotifyAttribute * event)
+{
+  TtaRedisplayElement (event->element, event->document);
+}
+
+/*----------------------------------------------------------------------
   GlobalAttrCreated: the user has created a global attribute
   ----------------------------------------------------------------------*/
 void GlobalAttrCreated (NotifyAttribute * event)

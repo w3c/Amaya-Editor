@@ -66,6 +66,8 @@
 #define ExcNoBreakByReturn 40
 #define ExcNoReplicate 41
 #define ExcIsPlaceholder 42
+#define ExcStartCounter 43
+#define ExcSetCounter 44
 
 /* Draw exceptions */
 #define ExcSelectParent 310

@@ -1001,6 +1001,8 @@ EXCEPT
 	Embed_Content:  Hidden, NoSelect;
 	Object_Content: Hidden, NoCreate, NoCut, NoBreakByReturn;
 	Applet_Content: Hidden, NoCreate, NoCut, NoBreakByReturn;
-	is_css:	Invisible;
+	is_css:	        Invisible;
+        Start:	        StartCounter;
+        ItemValue:	SetCounter;
 	xml_space:      SpacePreserve;
 END

@@ -363,6 +363,20 @@ ATTRIBUTES
 	AttrDelete.Post -> GlobalAttrDeleted;
 	END;
 
+   Start:
+	BEGIN
+	AttrCreate.Post -> AttrStartChanged;
+	AttrModify.Post -> AttrStartChanged;
+	AttrDelete.Post -> AttrStartChanged;
+	END;
+
+   ItemValue:
+	BEGIN
+	AttrCreate.Post -> AttrItemValueChanged;
+	AttrModify.Post -> AttrItemValueChanged;
+	AttrDelete.Post -> AttrItemValueChanged;
+	END;
+
    xml_space:
 	BEGIN
 	AttrCreate.Post -> GlobalAttrCreated;

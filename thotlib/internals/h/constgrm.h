@@ -20,7 +20,7 @@
 #define MAX_IDENTIFIERS1 1601	/* MAX_IDENTIFIERS +1 */
 #define MAX_RULES 180		/* max. number of syntactic rules in a
 				   grammar */
-#define RULE_LENGTH 120		/* max. length of a syntactic rule */
+#define RULE_LENGTH 140		/* max. length of a syntactic rule */
 
 #endif /* _THOTLIB_CONSTGRM_H_ */
 

@@ -234,6 +234,12 @@ extern void TtaExportTree (Element element, Document document, char *fileName,
 			   char *TSchemaName);
  
 /* ----------------------------------------------------------------------
+   TtaRedisplayElement
+   Remove, recompute and redisplay the whole image of element element.
+   ---------------------------------------------------------------------- */
+extern void TtaRedisplayElement (Element element, Document document);
+
+/* ----------------------------------------------------------------------
    TtaInsertSibling
 
    Inserts an element in a tree, as an immediate sibling of a given element.
