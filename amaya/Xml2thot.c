@@ -114,11 +114,11 @@ static PtrParserCtxt	XhtmlParserCtxt = NULL;
 static PtrParserCtxt	GenericXmlParserCtxt = NULL;
 
 #define MAX_URI_NAME_LENGTH  60
-#define XHTML_URI            "http://www.w3.org/1999/xhtml"
-#define MathML_URI           "http://www.w3.org/1998/Math/MathML"
-#define SVG_URI              "http://www.w3.org/2000/svg"
-#define XLink_URI            "http://www.w3.org/1999/xlink"
-#define NAMESPACE_URI        "http://www.w3.org/XML/1998/namespace"
+#define XHTML_URI       "http://www.w3.org/1999/xhtml"
+#define MathML_URI      "http://www.w3.org/1998/Math/MathML"
+#define SVG_URI         "http://www.w3.org/2000/svg"
+#define XLink_URI       "http://www.w3.org/1999/xlink"
+#define NAMESPACE_URI   "http://www.w3.org/XML/1998/namespace"
 
 /* Namespaces table */
 #define MAX_NS_TABLE   50
@@ -182,7 +182,8 @@ static AttributeMapping* lastMappedAttr = NULL;
 static ThotBool      ExtraPI = FALSE;
                      /* the document DOCTYPE is currently parsed */
 static ThotBool      WithinDoctype = FALSE;
-
+                     /* parsing errors are not reported for external resources */
+static ThotBool      ShowParsingErrors = FALSE;;
 static ThotBool	     ParsingSubTree = FALSE;
 static ThotBool	     ImmediatelyAfterTag = FALSE;
 static ThotBool	     HTMLStyleAttribute = FALSE;
@@ -469,13 +470,18 @@ void XmlSetElemLineNumber (Element el)
   TtaSetElementLineNumber (el, lineNumber);
 }
 
-/*----------------------------------------------------------------------
+/*-----------------------------------------------------------------------------
    XmlParseError
-   print the error message msg on stderr.
+   Print the error message msg on stderr.
    When the line is 0 ask to expat the current line number
-  ----------------------------------------------------------------------*/
+   When the variable ShowParsingErrors is set to FALSE,
+   the message is ignored (we are parsing an external resource).
+  -----------------------------------------------------------------------------*/
 void  XmlParseError (ErrorType type, unsigned char *msg, int line)
 {
+  if (!ShowParsingErrors)
+      return;
+
   if (line == 0 && Parser == NULL)
     return;
 
@@ -4360,6 +4366,7 @@ static void  InitializeXmlParsingContext (Document doc,
   IgnoreCommentAndPi = FALSE;
   ParsingCDATA = FALSE;
   VirtualDoctype = FALSE;
+  ShowParsingErrors =  TRUE;
   /* external svg use reference */
   UseExtRef = FALSE;
   UseExtRefUri = NULL;
@@ -4645,6 +4652,9 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
     }
   else
     {
+      /* We are parsing the result an external resource */
+      /* Don't report parsing errors */
+      ShowParsingErrors = FALSE;
       /* Set document URL */
       tmpLen = strlen (fileName);
       docURL = TtaGetMemory (tmpLen + 1);
