@@ -658,33 +658,16 @@ gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
   GdkEventButton      *eventmouse;
   Document            doc; 
   int                 view;
-  int                 y;
+  int                 x, y;
   int                 height;
   static int          timer = None; 
   int                 firstycheck = 0;
 
+  GdkModifierType state;
+
   frame = (int) data; 
   FrameToView (frame, &doc, &view);
 
-  /* horibble hack cause windowsmaker and gtk don't give correct first y*/
-  firstycheck = (int) gtk_object_get_data  (GTK_OBJECT(w->parent->parent->parent), 
-					   "Yboolean");
-  if (firstycheck)
-    {
-      /*gdk_window_get_position(w->parent->parent->parent->window, &x, &y);
-       but it's buggy with window maker*/
-      y = (int) gtk_object_get_data (GTK_OBJECT(w->parent->parent->parent),
-				     "Yorigin");
-      w->parent->parent->parent->allocation.y = y;
-      gtk_object_set_data (GTK_OBJECT(w->parent->parent->parent),
-			   "Yboolean", (gpointer) 0);
-    }
-  else
-    {
-      /*gdk_window_get_position(w->parent->parent->parent->window, &x, &y);
-       but it's buggy with window maker*/
-      y = w->parent->parent->parent->allocation.y;
-    }
   if (timer != None)
     {
       gtk_timeout_remove (timer);
@@ -699,10 +682,7 @@ gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
 	{
 	  /* 16 is the pixel size of the scrollbar buttons*/
 	  height = w->allocation.height - 16;
-	  /* Gives the real Y 
-	     (eventmouse->y GTK gives bad number on the lower button)
-	     So We use the Window manager one and calculate absolute position...  */
-	  y = eventmouse->y_root - y - w->allocation.y;
+	  gdk_window_get_pointer (w->window, &x, &y, &state);
 	  if (eventmouse->state & GDK_CONTROL_MASK)
 	    {
 	      if (y > height)
