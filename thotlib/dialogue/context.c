@@ -470,7 +470,7 @@ char               *name;
 #  endif /* !_WINDOWS */
 
    /* color for read-only sections */
-   found = FindColor (0, name, "ReadOnlyColor", "DarkGreen3", &(RO_Color));
+   found = FindColor (0, name, "ReadOnlyColor", "Black", &(RO_Color));
 #  ifndef _WINDOWS 
    if (!found)
       RO_Color = cwhite.pixel;

@@ -2821,7 +2821,9 @@ int                 doc;
 		 visiVal = 5;
 	     }
 	   /* Initialise la visibilite et le zoom de la fenetre */
-	   InitializeFrameParams (frame, visiVal, zoomVal);	
+	   InitializeFrameParams (frame, visiVal, zoomVal);
+	   /* Initialise la couleur de fond */
+	   BackgroundColor[frame] = DefaultBColor;
 	 }
        else
 	 ChangeFrameTitle (frame, name);

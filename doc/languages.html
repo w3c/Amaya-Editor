@@ -6,7 +6,7 @@ The Languages of Thot</title>
 </head>
 <body>
 
-<div class="frontmatter" align=center>
+<div class="frontmatter" align="center">
 
 <h1>The Languages of Thot</h1>
 
@@ -18,6 +18,7 @@ The Languages of Thot</title>
 <p>
 &copy; 1996 INRIA</p>
 <hr>
+
 </div>
 
 <div class="tableofcontents">
@@ -29,15 +30,20 @@ The Languages of Thot</title>
 <ul>
 <li>
 <strong><a href="#sectb21">The logical structure of documents</a></strong>
+</li>
 <li>
 <strong><a href="#sectb22">Generic and specific structures</a></strong>
+</li>
 <li>
 <strong><a href="#sectb23">Logical structure and physical
 structure</a></strong>
+</li>
 <li>
 <strong><a href="#sectb24">Document structures and object
 structures</a></strong>
+</li>
 </ul>
+</li>
 <li>
 <big><a href="#sect3">The S language</a></big>
 <ul>
@@ -46,85 +52,122 @@ structures</a></strong>
 <ul>
 <li>
 <a href="#sectc311">The basic types</a>
+</li>
 <li>
 <a href="#sectc312">Constructed elements</a>
+</li>
 <li>
 <a href="#sectc313">Logical structure constructors</a>
 <ul>
 <li>
 <small><a href="#sectd3131">Aggregate and List</a></small>
+</li>
 <li>
 <small><a href="#sectd3132">Choice, Schema, and Unit</a></small>
+</li>
 <li>
 <small><a href="#sectd3133">Reference and Inclusion</a></small>
+</li>
 <li>
 <small><a href="#sectd3134">Mark pairs</a></small>
+</li>
 <li>
 <small><a href="#sectd3135">Restrictions and Extensions</a></small>
+</li>
 <li>
 <small><a href="#sectd3136">Summary</a></small>
+</li>
 </ul>
+</li>
 <li>
 <a href="#sectc314">Associated Elements</a>
+</li>
 <li>
 <a href="#sectc315">Attributes</a>
+</li>
 <li>
 <a href="#sectc316">Discussion of the model</a>
+</li>
 </ul>
+</li>
 <li>
 <strong><a href="#sectb32">The definition language for generic
 structures</a></strong>
 <ul>
 <li>
 <a href="#sectc321">Writing Conventions</a>
+</li>
 <li>
 <a href="#sectc322">Extension schemas</a>
+</li>
 <li>
 <a href="#sectc323">The general organization of structure schemas</a>
+</li>
 <li>
 <a href="#sectc324">The default presentation</a>
+</li>
 <li>
 <a href="#sectc325">Global Attributes</a>
+</li>
 <li>
 <a href="#sectc326">Parameters</a>
+</li>
 <li>
 <a href="#sectc327">Structured elements</a>
+</li>
 <li>
 <a href="#sectc328">Structure definitions</a>
 <ul>
 <li>
 <small><a href="#sectd3281">List</a></small>
+</li>
 <li>
 <small><a href="#sectd3282">Aggregate</a></small>
+</li>
 <li>
 <small><a href="#sectd3283">Choice</a></small>
+</li>
 <li>
 <small><a href="#sectd3284">Reference</a></small>
+</li>
 <li>
 <small><a href="#sectd3285">Mark pairs</a></small>
+</li>
 </ul>
+</li>
 <li>
 <a href="#sectc329">Imports</a>
+</li>
 <li>
 <a href="#sectc3210">Extension rules</a>
+</li>
 <li>
 <a href="#sectc3211">Associated elements</a>
+</li>
 <li>
 <a href="#sectc3212">Units</a>
+</li>
 <li>
 <a href="#sectc3213">Skeleton elements</a>
+</li>
 <li>
 <a href="#sectc3214">Exceptions</a>
+</li>
 </ul>
+</li>
 <li>
 <strong><a href="#sectb33">Some examples</a></strong>
 <ul>
 <li>
 <a href="#sectc331">A class of documents: articles</a>
+</li>
 <li>
 <a href="#sectc332">A class of objects: mathematical formulas</a>
+</li>
 </ul>
+</li>
 </ul>
+</li>
 <li>
 <big><a href="#sect4">The P language</a></big>
 <ul>
@@ -133,137 +176,199 @@ structures</a></strong>
 <ul>
 <li>
 <a href="#sectc411">Two levels of presentation</a>
+</li>
 <li>
 <a href="#sectc412">Boxes</a>
+</li>
 <li>
 <a href="#sectc413">Views and visibility</a>
+</li>
 <li>
 <a href="#sectc414">Pages</a>
+</li>
 <li>
 <a href="#sectc415">Numbering</a>
+</li>
 <li>
 <a href="#sectc416">Presentation parameters</a>
+</li>
 </ul>
+</li>
 <li>
 <strong><a href="#sectb42">Presentation description language</a></strong>
 <ul>
 <li>
 <a href="#sectc421">The organization of a presentation schema</a>
+</li>
 <li>
 <a href="#sectc422">Views</a>
+</li>
 <li>
 <a href="#sectc423">Print Views</a>
+</li>
 <li>
 <a href="#sectc424">Counters</a>
+</li>
 <li>
 <a href="#sectc425">Presentation constants</a>
+</li>
 <li>
 <a href="#sectc426">Variables</a>
+</li>
 <li>
 <a href="#sectc427">Default presentation rules</a>
+</li>
 <li>
 <a href="#sectc428">Presentation and page layout boxes</a>
+</li>
 <li>
 <a href="#sectc429">Presentation of structured elements</a>
+</li>
 <li>
 <a href="#sectc4210">Logical attribute presentation</a>
+</li>
 <li>
 <a href="#sectc4212">Value transmission rules</a>
+</li>
 <li>
 <a href="#sectc4213">Presentation rules</a>
+</li>
 <li>
 <a href="#sectc4214">Conditions applying to presentation rules</a>
 <ul>
 <li>
 <small><a href="#sectd42141">Conditions based on the logical position of the
 element</a></small>
+</li>
 <li>
 <small><a href="#sectd42142">Conditions on references</a></small>
+</li>
 <li>
 <small><a href="#sectd42143">Conditions on logical attributes</a></small>
+</li>
 <li>
 <small><a href="#sectd42144">Conditions on page breaks</a></small>
+</li>
 <li>
 <small><a href="#sectd42145">Conditions on the element's content</a></small>
+</li>
 <li>
 <small><a href="#sectd42146">Conditions on counters</a></small>
+</li>
 </ul>
+</li>
 <li>
 <a href="#sectc4215">A presentation rule</a>
+</li>
 <li>
 <a href="#sectc4216">Box axes</a>
+</li>
 <li>
 <a href="#sectc4217">Distance units</a>
+</li>
 <li>
 <a href="#sectc4218">Relative positions</a>
+</li>
 <li>
 <a href="#sectc4219">Box extents</a>
 <ul>
 <li>
 <small><a href="#sectd42191">Fixed extents</a></small>
+</li>
 <li>
 <small><a href="#sectd42192">Relative extents</a></small>
+</li>
 <li>
 <small><a href="#sectd42193">Elastic extents</a></small>
+</li>
 </ul>
+</li>
 <li>
 <a href="#sectc4220">Overflow</a>
+</li>
 <li>
 <a href="#sectc4221">Inheritance</a>
+</li>
 <li>
 <a href="#sectc4222">Line breaking</a>
 <ul>
 <li>
 <small><a href="#sectd42221">Line spacing</a></small>
+</li>
 <li>
 <small><a href="#sectd42222">First line indentation</a></small>
+</li>
 <li>
 <small><a href="#sectd42223">Alignment</a></small>
+</li>
 <li>
 <small><a href="#sectd42224">Justification</a></small>
+</li>
 <li>
 <small><a href="#sectd42225">Hyphenation</a></small>
+</li>
 <li>
 <small><a href="#sectd42226">Avoiding line breaking</a></small>
+</li>
 </ul>
+</li>
 <li>
 <a href="#sectc4223">Page breaking and line breaking conditions</a>
+</li>
 <li>
 <a href="#sectc4224">Visibility</a>
+</li>
 <li>
 <a href="#sectc4225">Character style parameters</a>
 <ul>
 <li>
 <small><a href="#sectd42251">Character size</a></small>
+</li>
 <li>
 <small><a href="#sectd42252">Font and character style</a></small>
+</li>
 <li>
 <small><a href="#sectd42253">Underlining</a></small>
+</li>
 </ul>
+</li>
 <li>
 <a href="#sectc4226">Stacking order</a>
+</li>
 <li>
 <a href="#sectc4227">Line style</a>
+</li>
 <li>
 <a href="#sectc4228">Line thickness</a>
+</li>
 <li>
 <a href="#sectc4229">Fill pattern</a>
+</li>
 <li>
 <a href="#sectc4230">Colors</a>
+</li>
 <li>
 <a href="#sectc4230a">Background color and border</a>
+</li>
 <li>
 <a href="#sectc4230b">Background pictures</a>
+</li>
 <li>
 <a href="#sectc4231">Presentation box content</a>
+</li>
 <li>
 <a href="#sectc4232">Presentation box creation</a>
+</li>
 <li>
 <a href="#sectc4233">Page layout</a>
+</li>
 <li>
 <a href="#sectc4234">Box copies</a>
+</li>
 </ul>
+</li>
 </ul>
+</li>
 <li>
 <big><a href="#sect5">The T language</a></big>
 <ul>
@@ -272,120 +377,173 @@ element</a></small>
 <ul>
 <li>
 <a href="#sectc511">Translation principles</a>
+</li>
 <li>
 <a href="#sectc512">Translation procedure</a>
+</li>
 </ul>
+</li>
 <li>
 <strong><a href="#sectb52">Translation definition language</a></strong>
 <ul>
 <li>
 <a href="#sectc521">Organization of a translation schema</a>
+</li>
 <li>
 <a href="#sectc522">Line length</a>
+</li>
 <li>
 <a href="#sectc523">Buffers</a>
+</li>
 <li>
 <a href="#sectc524">Counters</a>
+</li>
 <li>
 <a href="#sectc525">Constants</a>
+</li>
 <li>
 <a href="#sectc526">Variables</a>
+</li>
 <li>
 <a href="#sectc527">Translating structure elements</a>
+</li>
 <li>
 <a href="#sectc528">Conditional rules</a>
 <ul>
 <li>
 <small><a href="#sectd5281">Conditions based on the logical position of the
 element</a></small>
+</li>
 <li>
 <small><a href="#sectd5282">Conditions on references</a></small>
+</li>
 <li>
 <small><a href="#sectd5283">Conditions on the parameters</a></small>
+</li>
 <li>
 <small><a href="#sectd5284">Conditions on the alphabets</a></small>
+</li>
 <li>
 <small><a href="#sectd5285">Conditions on page breaks</a></small>
+</li>
 <li>
 <small><a href="#sectd5286">Conditions on the element's content</a></small>
+</li>
 <li>
 <small><a href="#sectd5287">Conditions on the presence of comments</a></small>
+</li>
 <li>
 <small><a href="#sectd5288">Conditions on the presence of specific
 presentation rules</a></small>
+</li>
 <li>
 <small><a href="#sectd5289">Conditions on the presence of logical
 attributes</a></small>
+</li>
 <li>
 <small><a href="#sectd52810">Conditions on logical attributes</a></small>
+</li>
 <li>
 <small><a href="#sectd52811">Conditions on specific presentation
 rules</a></small>
+</li>
 </ul>
+</li>
 <li>
 <a href="#sectc529">Translation rules</a>
+</li>
 <li>
 <a href="#sectc5210">The <tt>Create</tt> rule</a>
+</li>
 <li>
 <a href="#sectc5211">The <tt>Write</tt> rule</a>
+</li>
 <li>
 <a href="#sectc5212">The <tt>Read</tt> rule</a>
+</li>
 <li>
 <a href="#sectc5213">The <tt>Include</tt> rule</a>
+</li>
 <li>
 <a href="#sectc5214">The <tt>Get</tt> rule</a>
+</li>
 <li>
 <a href="#sectc5215">The <tt>Copy</tt> rule</a>
+</li>
 <li>
 <a href="#sectc5216">The <tt>Use</tt> rule</a>
+</li>
 <li>
 <a href="#sectc5217">The <tt>Remove</tt> rule</a>
+</li>
 <li>
 <a href="#sectc5218">The <tt>NoTranslation</tt> rule</a>
+</li>
 <li>
 <a href="#sectc5219">The <tt>NoLineBreak</tt> rule</a>
+</li>
 <li>
 <a href="#sectc5220">The <tt>ChangeMainFile</tt> rule</a>
+</li>
 <li>
 <a href="#sectc5220a">The <tt>RemoveFile</tt> rule</a>
+</li>
 <li>
 <a href="#sectc5221">The <tt>Set</tt> and <tt>Add</tt> rules</a>
+</li>
 <li>
 <a href="#sectc5221a">The <tt>Indent</tt> rule</a>
+</li>
 <li>
 <a href="#sectc5222">Rule application order</a>
+</li>
 <li>
 <a href="#sectc5223">Translation of logical attributes</a>
+</li>
 <li>
 <a href="#sectc5224">Translation of specific presentations</a>
+</li>
 <li>
 <a href="#sectc5225">Recoding of characters, symbols and graphics</a>
+</li>
 </ul>
+</li>
 </ul>
+</li>
 <li>
 <big><a href="#sect6">Language grammars</a></big>
 <ul>
 <li>
 <strong><a href="#sectb61">The M meta-language</a></strong>
+</li>
 <li>
 <strong><a href="#sectb62">The S language</a></strong>
+</li>
 <li>
 <strong><a href="#sectb63">The P language</a></strong>
+</li>
 <li>
 <strong><a href="#sectb64">The T language</a></strong>
+</li>
 </ul>
+</li>
 <li>
 <big><a href="#sect7">Character coding</a></big>
 <ul>
 <li>
 <strong><a href="#sectb71">Characters</a></strong>
+</li>
 <li>
 <strong><a href="#sectb72">Symbols</a></strong>
+</li>
 <li>
 <strong><a href="#sectb73">Graphical elements</a></strong>
+</li>
 </ul>
+</li>
 </ul>
 <hr>
+
 </div>
 
 <div class="chapter">
@@ -420,8 +578,10 @@ The creation of a model of this type essentially requires the definition :</p>
 <ul>
 <li>
 of the entities which can appear in the documents,
+</li>
 <li>
 and the relations between these entities.
+</li>
 </ul>
 <p>
 The choice of entities to include in the model can be subtle.  Some documents
@@ -493,6 +653,7 @@ documents are thus different.</p>
 
 <div class="figure">
 <hr>
+
 <pre>        Report A                 Report B
              Introduction              Introduction
              Chapter 1                 Chapter 1
@@ -505,9 +666,10 @@ documents are thus different.</p>
              Chapter 3                      Section 2.3
              Conclusion                     Section 2.4
                                        Conclusion</pre>
-<p align=center>
+<p align="center">
 <em><a name="specstruct">Two specific structures</a></em></p>
 <hr>
+
 </div>
 <p>
 The <em>generic structure</em> defines the ways in which specific structures
@@ -672,6 +834,7 @@ similar documents or a class of similar objects which every document can
 include.</p>
 </div>
 <hr>
+
 </div>
 
 <div class="chapter">
@@ -745,12 +908,16 @@ documents and structured objects are:</p>
 <ul>
 <li>
 character strings,
+</li>
 <li>
 graphical elements,
+</li>
 <li>
 pictures,
+</li>
 <li>
 and mathematical symbols.
+</li>
 </ul>
 </div>
 
@@ -985,12 +1152,16 @@ Thus, four constructors are used to construct a document:</p>
 <ul>
 <li>
 the aggregate constructor (ordered or not),
+</li>
 <li>
 the list constructor,
+</li>
 <li>
 the choice constructor and its extensions, the unit and schema constructors,
+</li>
 <li>
 the reference constructor and its variant, the inclusion.
+</li>
 </ul>
 <p>
 These constructors are also sufficient for objects.  Thus, these constructors
@@ -1097,13 +1268,17 @@ enumerations:</p>
 <li>
 <em>Numeric attributes</em> can take integer values (negative, positive, or
 null).
+</li>
 <li>
 <em>Textual attributes</em> have as their values character strings.
+</li>
 <li>
 <em>Reference attributes</em> designate an element of the logical structure.
+</li>
 <li>
 <em>Enumeration attributes</em> can take one value from a limited list of
 possible values, each value being a name.
+</li>
 </ul>
 <p>
 In a generic structure, there is a distinction between <em>global
@@ -1167,10 +1342,13 @@ three reasons:</p>
 <ul>
 <li>
 the generic structures are not fixed in the model itself,
+</li>
 <li>
 the model takes the dynamics of documents into account,
+</li>
 <li>
 the constructors offer great flexibility.
+</li>
 </ul>
 <p>
 When the generic structure of a document is not predefined, but rather is
@@ -1653,12 +1831,14 @@ A unit represents one of the two following categories:</p>
 <ul>
 <li>
 a base type: text, graphical element, symbol, picture,
+</li>
 <li>
 an element whose type is chosen from among the types defined as units in the
 <tt>UNITS</tt> section of the document's structure schema.  It can also be
 chosen from among the types defined as <a href="#sectd3132">units</a> in the
 <a href="#sectc3212"><tt>UNITS</tt> section</a> of the structure schemas that
 defines the ancestors of the element to which the rule is applied.
+</li>
 </ul>
 <p>
 Before the creation of an element defined as a unit, Thot asks the user to
@@ -2107,18 +2287,28 @@ exceptions are indicated by a name.  They are separated by semicolons.</p>
                      ':' ExcValSeq .
      ExcTypeOrAttr = ElemID / AttrID .
      ExcValSeq     = ExcValue &lt; ',' ExcValue > .
-     ExcValue      ='NoCut' / 'NoCreate' /
-                    'NoHMove' / 'NoVMove' / 'NoMove' /
-                    'NoHResize' / 'NoVResize' / 'NoResize' /
-                    'MoveResize' /
-                    'NewWidth' / 'NewHeight' /
-                    'NewHPos' / 'NewVPos' /
-                    'Invisible' / 'NoSelect' /
+     ExcValue      ='NoCut' / 'NoCreate' / 'NoHMove' / 
+                    'NoVMove' / 'NoHResize' / 'NoVResize' /
+                    'NoMove' / 'NoResize' / 'MoveResize' /
+                    'NewWidth' / 'NewHeight' / 'NewHPos' /
+                    'NewVPos' / 'Invisible' /
+                    'NoSelect' / <math>
+  <mrow>
+    <mo></mo>
+    <mo>'</mo>
+  </mrow>
+</math>
+NoSpellCheck' /
                     'Hidden' / 'ActiveRef' /
                     'ImportLine' / 'ImportParagraph' /
                     'NoPaginate' / 'ParagraphBreak' /
+                    'PageBreak' / 'PageBreakAllowed' / 'PageBreakPlace' /
+                    'PageBreakRepetition' / 'PageBreakRepBefore' /
                     'HighlightChildren' / 'ExtendedSelection' /
-                    'ReturnCreateNL' .</pre>
+                    'ReturnCreateNL' / 'IsDraw' / 'IsTable' /
+                    'IsRow' / 'IsColHead' / 'IsCell' /
+                    'NewPercentWidth' / 'ColRef' / 'ColSpan' /
+                    'RowSpan' / 'SaveDocument' / 'Shadow' .</pre>
 <p>
 The following are the available exceptions:</p>
 <dl>
@@ -2178,12 +2368,6 @@ the mouse, even if one of their ancestor element has an exception that
 prevents moving or resizing.  Their children elements can also be resized or
 moved.
 </dd>
-<dt><tt>NoSelect</tt></dt>
-<dd>
-This exception can only be applied to element types.  Elements of a type to
-which this exception is applied cannot be selected directly with the mouse,
-but they can be selected by other methods provided by the editor.
-</dd>
 <dt><tt>NewWidth</tt></dt>
 <dd>
 This exception can only be applied to numeric attributes.  If the width of an
@@ -2214,6 +2398,18 @@ This exception can only be applied to attributes, but can be applied to all
 attribute types.  It indicates that the attribute must not be seen by the user
 and that its value must not be changed directly.  This exception is usually
 used when another exception manipulates the value of an attribute.
+</dd>
+<dt><tt>NoSelect</tt></dt>
+<dd>
+This exception can only be applied to element types.  Elements of a type to
+which this exception is applied cannot  be selected directly with the mouse,
+but they can be selected by other methods provided by the editor.
+</dd>
+<dt>NoSpellCheck</dt>
+<dd>
+This exception can only be applied to element types.  Elements of a type to
+which this exception is applied are not taken into account by the spell
+checker.
 </dd>
 <dt><tt>Hidden</tt></dt>
 <dd>
@@ -2280,6 +2476,30 @@ command (middle button of the mouse) only add the clicked element (if it has
 that exception) to the current selection, without selecting other elements
 between the current selection and the clicked element.
 </dd>
+<dt>IsDraw, IsTable, IsColHead, IsRow, IsCell</dt>
+<dd>
+These exceptions can only be applied to element types.  Elements of a type to
+which these exceptions are applied are identified as Draws, Tables, Colheads,
+Rows or Cells and specific processing are applied to them.
+</dd>
+<dt>ColRef</dt>
+<dd>
+This exception can only be applied to attributes of the reference type. It
+indicates that this attribute refers to the column head (see exception
+IsColHead) which the element belongs to.
+</dd>
+<dt>ColSpan, RowSpan</dt>
+<dd>
+These exceptions can only be applied to numeric attributes of cells.  They
+indicate that attribute values give how many columns or rows the element
+spans. 
+</dd>
+<dt>Shadow</dt>
+<dd>
+This exception can only be applied to element types.  Text of elements of a
+type to which this exception is applied are displayed and printed as a set of
+stars ('*').
+</dd>
 </dl>
 <blockquote class="example">
 <p>
@@ -2293,9 +2513,11 @@ following qualities:</p>
 <li>
 Whenever the width or height of an object is changed using the mouse, the new
 values are stored in the object's Width and Height attributes.
+</li>
 <li>
 The user should not be able to change the values of the Width and Height
 attributes via the Attributes menu of the Thot editor.
+</li>
 </ul>
 <p>
 The following exceptions will produce this effect.</p>
@@ -2546,6 +2768,7 @@ etc.</p>
 </div>
 </div>
 <hr>
+
 </div>
 
 <div class="chapter">
@@ -2657,6 +2880,7 @@ the horizontal reference axis.
 
 <div class="figure">
 <hr>
+
 <pre>        Left   VRef  VMiddle        Right
                  :      :
     Top   -----------------------------
@@ -2673,9 +2897,10 @@ HMiddle ..|...........................|..
           |      :      :             |
   Bottom  -----------------------------
                  :      :</pre>
-<p align=center>
+<p align="center">
 <em><a name="boxes">The sides and axes of boxes</a><em></em></em></p>
 <hr>
+
 </div>
 <p>
 The principal role of boxes is to set the extent and position of the images of
@@ -2688,10 +2913,13 @@ There are three types of boxes:</p>
 <ul>
 <li>
 boxes corresponding to structural elements of the document,
+</li>
 <li>
 presentation boxes,
+</li>
 <li>
 page layout boxes.
+</li>
 </ul>
 <p>
 <strong>Boxes corresponding to structural elements of the document</strong>
@@ -2955,25 +3183,36 @@ Declarations of
 <ul>
 <li>
 all views,
+</li>
 <li>
 printed views,
+</li>
 <li>
 counters,
+</li>
 <li>
 presentation constants,
+</li>
 <li>
 variables,
+</li>
 </ul>
+</li>
 <li>
 default presentation rules,
+</li>
 <li>
 presentation box and page layout box definitions,
+</li>
 <li>
 presentation rules for structured elements,
+</li>
 <li>
 presentation rules for attributes,
+</li>
 <li>
 rules for transmitting values to attributes of included documents.
+</li>
 </ul>
 <p>
 Each of these sections is introduced by a keyword which is followed by a
@@ -3767,12 +4006,16 @@ its value is</p>
 <li>
 the value of the Importance attribute when the value is between 2 and 4
 (inclusive),
+</li>
 <li>
 1, when the value of the Importance attribute is less than 2,
+</li>
 <li>
 4, when the value of the Importance attribute is greater than 4,
+</li>
 <li>
 5, when the value of the Importance attribute is 10.
+</li>
 </ul>
 <p>
 The last case (value 5) must be defined before the case which handles all
@@ -4240,42 +4483,57 @@ function.  The parameters are:</p>
 <ul>
 <li>
 the position of the vertical and horizontal reference axes of the box,
+</li>
 <li>
 the position of the box in relation to other boxes,
+</li>
 <li>
 the height or width of the box, with overflow exceptions,
+</li>
 <li>
 the characteristics of the lines contained in the box: linespacing,
 indentation of the first line, justification, hyphenation,
+</li>
 <li>
 the conditions for breaking the box across pages,
+</li>
 <li>
 the characteristics of the characters contained in the box: size, font, style,
 underlining,
+</li>
 <li>
 the depth of the box among overlapping boxes (often called stacking order),
+</li>
 <li>
 the characteristics of graphic elements contained in the box: style and
 thickness of lines, fill pattern for closed objects,
+</li>
 <li>
 the colors in text, graphics, pictures, and symbols contained in the box are
 displayed or printed,
+</li>
 <li>
 for presentation boxes only, the contents of the box.
+</li>
 </ul>
 <p>
 The <a name="presfunct">presentation functions</a> are:</p>
 <ul>
 <li>
 the creation of a presentation box
+</li>
 <li>
 the line-breaking or page-breaking style,
+</li>
 <li>
 the copying of another box,
+</li>
 <li>
 the display of the box background and border,
+</li>
 <li>
 the display of a background picture and its aspect.
+</li>
 </ul>
 <p>
 For each box and each view, every presentation parameter is defined once and
@@ -4404,9 +4662,11 @@ In all these rules, the distance or extent can be expressed</p>
 <li>
 either in relative units, which depend on the size of the characters in the
 current font: height of the element's font or height of the letter 'x',
+</li>
 <li>
 or in absolute units: centimeter, millimeter, inch, typographer's point, pica
 or pixel.
+</li>
 </ul>
 <p>
 Units can be chosen freely.  Thus, it is possible to use relative units in one
@@ -4428,20 +4688,28 @@ absolute units:</p>
 <ul>
 <li>
 <tt>em</tt>: height of the element's font,
+</li>
 <li>
 <tt>ex</tt>: height of the letter 'x',
+</li>
 <li>
 <tt>cm</tt>: centimeter,
+</li>
 <li>
 <tt>mm</tt>: millimeter,
+</li>
 <li>
 <tt>in</tt>: inch (1 in = 2.54 cm),
+</li>
 <li>
 <tt>pt</tt>: point (1 pt = 1/72 in),
+</li>
 <li>
 <tt>pc</tt>: pica (1 pc = 12 pt),
+</li>
 <li>
 <tt>px</tt>: pixel.
+</li>
 </ul>
 <p>
 Whatever the chosen unit, relative or absolute, the number is not necessarily
@@ -4805,6 +5073,7 @@ href="#posdim">figure</a>.</p>
 
 <div class="figure">
 <hr>
+
 <pre>-------------------------------------------------------------
 | Window and Report           ^                             |
 |                             | 1 line                      |
@@ -4825,9 +5094,10 @@ href="#posdim">figure</a>.</p>
 |  2 cm  |                                                  |
 |&lt;------>|                    Summary                       |
 :        :                                                  :</pre>
-<p align=center>
+<p align="center">
 <em><a name="posdim">Box position and extent</a><em></em></em></p>
 <hr>
+
 </div>
 </blockquote>
 </div>
@@ -5077,13 +5347,17 @@ inherited.  A constant value is specified by a keyword:</p>
 <ul>
 <li>
 <tt>Left</tt>: at the left edge,
+</li>
 <li>
 <tt>Right</tt>: at the right edge,
+</li>
 <li>
 <tt>VMiddle</tt>: centered
+</li>
 <li>
 <tt>LeftWithDots</tt>: at the left edge with a dotted line filling out the
 last line up to the right edge of the line breaking box.
+</li>
 </ul>
 <p>
 An inherited value can only be the same as that of the reference box and is
@@ -5985,6 +6259,7 @@ Column  = LIST OF (Cell = Text);</pre>
 
 <div class="figure">
 <hr>
+
 <pre>|                |                |               |
 |  xx xxxx xxxx  |x xxxx xxx xxxxx|  x xxx x xxx  |
 | xxx xxx xxxx x |   x xx x xxx   | xxxxx xxxx xx |
@@ -5997,9 +6272,10 @@ Column  = LIST OF (Cell = Text);</pre>
 |----------------| xxx xxxxx xxxx | xxxx xxxx xxx |
 | xxxxx xxx xxxx |  xxxx xx x xx  |   xxxxx xxx   |
 |xxxx xx x xxxxxx| xxxx xx xxxxxx |  xxxxx xxxxx  |</pre>
-<p align=center>
+<p align="center">
 <em><a name="table">The design of a table</a></em></p>
 <hr>
+
 </div>
 <p>
 The presentation of the table should resemble the design of the above <a
@@ -6210,6 +6486,7 @@ of the current chapter, the box's contents are defined in this way:</p>
 </div>
 </div>
 <hr>
+
 </div>
 
 <div class="chapter">
@@ -6269,13 +6546,17 @@ associated:</p>
 <ul>
 <li>
 with element types defined in the structure schema,
+</li>
 <li>
 with global or local attributes defined in the structure schema,
+</li>
 <li>
 with specific presentation rules,
+</li>
 <li>
 with the content of the leaves of  the structure (characters, symbols and
 graphical elements)
+</li>
 </ul>
 <p>
 Thus, for each node, the translator applies all rules associated with the
@@ -6293,12 +6574,16 @@ These rules primarily allow:</p>
 <li>
 generation of a text constant or variable before or after the contents of an
 element,
+</li>
 <li>
 modification of the order in which elements appear after translation,
+</li>
 <li>
 removal of an element in the translated document,
+</li>
 <li>
 and writing messages on the user's terminal during translation.
+</li>
 </ul>
 </div>
 </div>
@@ -6333,32 +6618,44 @@ order:</p>
 <ul>
 <li>
 the length of lines produced by the translation,
+</li>
 <li>
 the character delimiting the end of the line,
+</li>
 <li>
 the character string which the translator will insert if it must line-break
 the translated text,
+</li>
 <li>
 declarations of
 <ul>
 <li>
 buffers,
+</li>
 <li>
 counters,
+</li>
 <li>
 constants,
+</li>
 <li>
 variables,
+</li>
 </ul>
+</li>
 <li>
 translation rules associated with element types,
+</li>
 <li>
 translation rules associated with attributes,
+</li>
 <li>
 translation rules associated with specific presentation rules,
+</li>
 <li>
 translation rules associated with characters strings, symbols and graphical
 elements.
+</li>
 </ul>
 <p>
 Each of these sections is introduced by a keyword followed by a sequence of
@@ -6505,12 +6802,14 @@ encountered when travelling the logical structure from the root to the
 concerned element is taken into account.  If the relative level is negative,
 the logical structure is travelled in the other direction, from the concerned
 element to the root.</p>
+</li>
 <li>
 <tt>Rlevel of ElemID</tt> indicates that the counter's values is the relative
 level in the tree of the element for which the counter is being evaluated. The
 counter counts the number of elements of type <tt>ElemID</tt> which are found
 on the path between the root of the document's logical structure tree and the
 element (inclusive).
+</li>
 <li>
 <tt>Set n on Type1 Add m on Type2</tt> indicates that the counter's value is
 calculated as follows:  in traversing the document from the beginning to the
@@ -6519,6 +6818,7 @@ value <tt>n</tt> each time a <tt>Type1</tt> element is encountered and is
 incremented by the amount <tt>m</tt> each time a <tt>Type2</tt> element is
 encountered.  The initial value <tt>n</tt> and the increment <tt>m</tt> are
 integers.
+</li>
 </ul>
 <p>
 As in a presentation schema, the <tt>Rank</tt> and <tt>Set</tt> functions can
@@ -6646,41 +6946,54 @@ comma and one of the following keywords:</p>
 <ul>
 <li>
 <tt>Arabic</tt>: arabic numerals (default value),
+</li>
 <li>
 <tt>LRoman</tt>: lower-case roman numerals,
+</li>
 <li>
 <tt>URoman</tt>: upper-case roman numerals,
+</li>
 <li>
 <tt>Uppercase</tt>: upper-case letter,
+</li>
 <li>
 <tt>Lowercase</tt>: lower-case letter.
+</li>
 </ul>
+</li>
 <li>
 The function <tt>FileDir</tt>, without parameter, returns a string
 representing the name of the directory of the output file that has been given
 as a parameter to the translation program. The string includes a character '/'
 at the end.
+</li>
 <li>
 The function <tt>FileName</tt>, without parameter, returns a string
 representing the name of the output file that has been given as a parameter to
 the translation program. The file extension (the character string that
 terminate the file name, after a dot) is not part of that string.
+</li>
 <li>
 The function <tt>Extension</tt>, without parameter, returns a string
 representing the extension of the file name. That string is empty if the file
 name that has been given as a parameter to the translation program has no
 extension. If there is an extension, its first character is a dot.
+</li>
 <li>
 The function <tt>DocumentName</tt>, without parameter, returns a string
 representing the name of the document being translated.
+</li>
 <li>
 The function <tt>DocumentDir</tt>, without parameter, returns a string
 representing the directory containing the document being translated.
+</li>
 <li>
 The function formed by the name of a constant returns that constant's value.
+</li>
 <li>
 The function formed by a character string between apostrophes returns that
 string.
+</li>
 <li>
 The function formed by the name of a buffer returns the contents of that
 buffer.  If the named buffer is the picture buffer, then the name of the last
@@ -6688,6 +7001,7 @@ picture encountered is returned.  Otherwise, the buffer is a read buffer and
 the value returned is text previously read from the terminal.  If the buffer
 is empty (no picture has been encountered or the <tt>Read</tt> rule has not
 been executed for the buffer), then the empty string is returned.
+</li>
 <li>
 The function formed by an attribute name takes the value of the indicated
 attribute for the element to which the variable applies.  If the element does
@@ -6695,6 +7009,7 @@ not have that attribute, then the element's ancestor are searched toward the
 root of the tree.  If one of the ancestors does have the attribute then its
 value is used.  If no ancestors have the attribute, then the value of the
 function is the empty string.
+</li>
 </ul>
 <pre>     VariableSeq = Variable &lt; Variable > .
      Variable    = VarID ':' Function &lt; Function > ';' .
@@ -6815,10 +7130,12 @@ ancestor, the key word <tt>Ancestor</tt> must be used, followed by</p>
 <li>
 either an integer which represents the number of levels in the tree between
 the element and the ancestor of interest,
+</li>
 <li>
 or the type name of the ancestor of interest.  If that type is defined in a
 separate structure schema, the name of that schema must follow between
 parentheses.
+</li>
 </ul>
 <p>
 There is a special case for the parent element, which can be simply written
@@ -7012,13 +7329,16 @@ equals sign.  Conditions based on ranges of values have several forms:</p>
 <li>
 all values less than a given value (the value is preceded by a ``less than''
 sign).
+</li>
 <li>
 all values greater than a given value (the value is preceded by a ``greater
 than'' sign).
+</li>
 <li>
 all values falling in an interval, bounds included.  The range of values is
 then specified <tt>IN [</tt>Minimum <tt>..</tt>Maximum<tt>]</tt>, where
 Minimum and Maximum are integers.
+</li>
 </ul>
 <p>
 All numeric values may be negative.  The integer is simply preceded by a minus
@@ -7049,11 +7369,14 @@ rules:</p>
 <ul>
 <li>
 those taking numeric values (<tt>Size, Indent, LineSpacing, LineWeight</tt>),
+</li>
 <li>
 those with values taken from a predefined list (<tt>Adjust, Justify,
 Hyphenate, Style, Font, UnderLine, Thickness, LineStyle</tt>),
+</li>
 <li>
 those whose value is a name (<tt>FillPattern, Background, Foreground</tt>).
+</li>
 </ul>
 <p>
 For presentation rules which take numeric values, the condition can take a
@@ -7064,13 +7387,16 @@ of values have several forms:</p>
 <li>
 all values less than a given value (the value is preceded by a ``less than''
 sign).
+</li>
 <li>
 all values greater than a given value (the value is preceded by a ``greater
 than'' sign).
+</li>
 <li>
 all values falling in an interval, bounds included.  The range of values is
 then specified <tt>IN [</tt>Minimum <tt>..</tt>Maximum<tt>]</tt>, where
 Minimum and Maximum are integers.
+</li>
 </ul>
 <p>
 Values for the <tt>Indent</tt>rule may be negative.  The integer is then
@@ -7271,35 +7597,44 @@ The object to be generated can be:</p>
 <li>
 a constant string, specified by its name if it is declared in the schema's
 <tt>CONST</tt> section, or given directly as a value between apostrophes;
+</li>
 <li>
 the contents of a buffer, designated by the name of the buffer;
+</li>
 <li>
 a variable, designated by its name if it is declared in the translation
 schema's <tt>VAR</tt> section, or given directly between parentheses.  The
 text generated is the value of that variable evaluated for the element to
 which the rule applies.
+</li>
 <li>
 the value of an attribute, if the element being translated has this attribute.
 The attribute is specified by its name;
+</li>
 <li>
 the value of a specific presentation rule.  This object can only be generated
 if the translation rule is for a <a href="#prestransl">specific presentation
 rule</a>.  It is specified by the <tt>Value</tt> keyword;
+</li>
 <li>
 the element's content.  That is, the content of the leaves of the subtree of
 the translated element.  This is specified by the <tt>Content</tt> keyword;
+</li>
 <li>
 the comment attached to the element.  When the element doesn't have a comment,
 nothing is generated.  This is indicated by the <tt>Comment</tt> keyword;
+</li>
 <li>
 the translation of all attributes of the element (which is primarily used to
 apply the attribute translation rules <a href="#sectc5222">before</a> those of
 the element type).  This is specified by the <tt>Attributes</tt> keyword.
+</li>
 <li>
 the translation of all of the element's specific presentation rules (which is
 primarily used to apply the translation rules for the specific presentation
 rules <a href="#sectc5222">before</a> those of the element or its attributes).
 This option is specified by the <tt>Presentation</tt> keyword;
+</li>
 <li>
 The value of the reference's identifier.<br>
 Thot associates a unique identifier with each element in a document.  This
@@ -7310,26 +7645,33 @@ The <tt>RefId</tt> keyword produces the reference's identifier of the element
 to which the translation rule is applied, or the reference's identifier of its
 first ancestor that is referred by a reference or that can be referred by a
 reference.
+</li>
 <li>
 the value of a mark pair's unique identifier.  This may only be used for <a
 href="#sectd3285">mark pairs</a> and is indicated by the <tt>PairId</tt>
 keyword.
+</li>
 <li>
 the directory containing the file being generated (this string includes an
 ending '/', if it is not empty).  This is indicated by the <tt>FileDir</tt>
 keyword.
+</li>
 <li>
 the name of the file being generated (only the name, without the directory and
 without the extension). This is indicated by the <tt>FileName</tt> keyword.
+</li>
 <li>
 the extension of the file being generated (this string starts with a dot, if
 it is not empty).  This is indicated by the <tt>Extension</tt> keyword.
+</li>
 <li>
 the name of the document being translated.  This is indicated by the
 <tt>DocumentName</tt> keyword.
+</li>
 <li>
 the directory containing the document being translated.  This is indicated by
 the <tt>DocumentDir</tt> keyword.
+</li>
 </ul>
 <p>
 When the rule applies to a reference (an element or an attribute defined as a
@@ -7341,21 +7683,26 @@ for the referred element.  This specification can be:</p>
 <li>
 the name of a variable.  The rule generates the value of that variable,
 computed for the referred element.
+</li>
 <li>
 an element type.  The rule generates the translation of the element of that
 type, which is in the subtree of the referred element.  If this element is not
 defined in the structure schema which corresponds to the translation schema
 (that is, an object defined in another schema), the element's type name must
 be followed by the name of its structure schema between parentheses.
+</li>
 <li>
 the <tt>RefId</tt> keyword.  The rule generates the reference's identifier of
 the referred element.
+</li>
 <li>
 the <tt>DocumentName</tt> keyword.  The rule generates the name of the
 document to which the referred element belongs.
+</li>
 <li>
 the <tt>DocumentDir</tt> keyword.  The rule generates the name of the
 directory that contains the document of the referred element.
+</li>
 </ul>
 </div>
 
@@ -7942,14 +8289,17 @@ There are three categories of the presentation rules:</p>
 <li>
 rules taking numeric values: <tt>Size</tt>, <tt>Indent</tt>,
 <tt>LineSpacing</tt>, <tt>LineWeight</tt>,
+</li>
 <li>
 rules whose values are taken from a predefined list (i.e. whose type is an
 enumeration): <tt>Adjust</tt>, <tt>Justify</tt>, <tt>Hyphenate,/TT>,
 <tt>Style</tt>, <tt>Font</tt>, <tt>UnderLine</tt>, <tt>Thickness</tt>,
 <tt>LineStyle</tt>,</tt>
+</li>
 <li>
 rules whose value is a name: <tt>FillPattern</tt>, <tt>Background</tt>,
 <tt>Foreground</tt>.
+</li>
 </ul>
 <p>
 For presentation rules of the first category, the values which provoke
@@ -7962,13 +8312,16 @@ ways:</p>
 <li>
 all values less than a given value (this value is preceded by a ``less than''
 sign '<tt>&lt;</tt>'),
+</li>
 <li>
 all values greater than a given value (this value is preceded by a` `greater
 than'' sign '<tt>></tt>'),
+</li>
 <li>
 all values falling in an interval, bounds included.  The range of values is
 then specified <tt>IN [</tt>Minimum<tt>..</tt>Maximum<tt>]</tt>, where Minimum
 and Maximum are integers.
+</li>
 </ul>
 <p>
 All numeric values can be negative, in which case the integer is preceded by a
@@ -8127,6 +8480,7 @@ L<sup>A</sup>T<sub><big>E</big></sub>X:</p>
 </div>
 </div>
 <hr>
+
 </div>
 
 <div class="chapter">
@@ -8814,6 +9168,7 @@ Source        = STRING .
 Target        = STRING .</pre>
 </div>
 <hr>
+
 </div>
 
 <div class="chapter">
@@ -8854,42 +9209,61 @@ schemas.  Each symbol is represented by a single character.</p>
 <ul>
 <li>
 <tt>r</tt>: a radical
+</li>
 <li>
 <tt>i</tt>: a simple integral
+</li>
 <li>
 <tt>c</tt>: a curvilinear integral
+</li>
 <li>
 <tt>d</tt>: a double integral
+</li>
 <li>
 <tt>t</tt>: a triple integral
+</li>
 <li>
 <tt>S</tt>: the summation symbol
+</li>
 <li>
 <tt>P</tt>: the product symbol
+</li>
 <li>
 <tt>U</tt>: the union symbol
+</li>
 <li>
 <tt>I</tt>: the intersection symbol
+</li>
 <li>
 <tt>></tt>: a right arrow
+</li>
 <li>
 <tt>&lt;</tt>: a left arrow
+</li>
 <li>
 <tt>^</tt>:  an up arrow
+</li>
 <li>
 <tt>V</tt>: a down arrow
+</li>
 <li>
 <tt>(</tt>: an opening parenthesis
+</li>
 <li>
 <tt>)</tt>: a closing parenthesis
+</li>
 <li>
 <tt>{</tt>: an opening brace
+</li>
 <li>
 <tt>}</tt>: a closing brace
+</li>
 <li>
 <tt>[</tt>: an opening bracket
+</li>
 <li>
 <tt>]</tt>: a closing bracket
+</li>
 </ul>
 </div>
 
@@ -8904,94 +9278,137 @@ single character.</p>
 <ul>
 <li>
 a: a circle
+</li>
 <li><p>
 <tt>A</tt>: an open curve with an arrow head at the end</p>
+</li>
 <li>
 <tt>b</tt>: a horizontal line along the lower side of the box
+</li>
 <li>
 <tt>B</tt>: an open curve
+</li>
 <li>
 <tt>c</tt>: an ellipse inscribed in the box
+</li>
 <li>
 <tt>C</tt>: a rectangle with rounded corners
+</li>
 <li>
 <tt>D</tt>: an open curve with two arrow heads
+</li>
 <li>
 <tt>e</tt>: The northwest/southeast diagonal of the box with an arrowhead at
 the bottom
+</li>
 <li>
 <tt>E</tt>: The southwest/northeast diagonal of the box with an arrowhead at
 the top
+</li>
 <li>
 <tt>F</tt>: an open curve with an arrow head at start
+</li>
 <li>
 <tt>h</tt>: a horizontal line as wide as the box and placed in its middle
+</li>
 <li>
 <tt>l</tt>: a vertical line on the left side of the box
+</li>
 <li>
 <tt>L</tt>: a lozenge
+</li>
 <li>
 <tt>M</tt>: an open broken line with two arrow heads
+</li>
 <li>
 <tt>N</tt>: an open broken line with an arrow head at start
+</li>
 <li>
 <tt>o</tt>: The southwest/northeast diagonal of the box with an arrowhead at
 the bottom
+</li>
 <li>
 <tt>O</tt>: The northwest/southeast diagonal of the box with an arrowhead at
 the top
+</li>
 <li>
 <tt>p</tt>: a polygon
+</li>
 <li>
 <tt>P</tt>: a rectangle with round corners and a horizontal bar at the top
+</li>
 <li>
 <tt>Q</tt>: an ellipse with a horizontal bar at the top
+</li>
 <li>
 <tt>r</tt>: a vertical line on the right side of the box
+</li>
 <li>
 <tt>R</tt>: a rectangle which is the shape of the box
+</li>
 <li>
 <tt>s</tt>: a closed curve
+</li>
 <li>
 <tt>S</tt>: an open broken line
+</li>
 <li>
 <tt>t</tt>: a horizontal line along the upper side of the box
+</li>
 <li>
 <tt>U</tt>: an open broken line with an arrow head at the end
+</li>
 <li>
 <tt>v</tt>: a vertical line as tall as the box and placed in its middle
+</li>
 <li>
 <tt>V</tt>: a down arrow as tall as the box and in its middle
+</li>
 <li>
 w: a segment (2 points)
+</li>
 <li>
 <tt>W</tt>: the upper right corner
+</li>
 <li>
 x: a segment (2 points) with an arrow head at the end
+</li>
 <li>
 <tt>X</tt>: the lower right corner
+</li>
 <li>
 y: a segment (2 points) with an arrow head at the end
+</li>
 <li>
 <tt>Y</tt>: the lower left corner
+</li>
 <li>
 z: a segment (2 points) with an arrow head at the end
+</li>
 <li>
 <tt>Z</tt>: the upper left corner
+</li>
 <li>
 <tt>space</tt>: a transparent element
+</li>
 <li>
 <tt>^</tt>: an up arrow as tall as the box and in its middle
+</li>
 <li>
 <tt>></tt>: a right arrow as long as the box's width and in its middle
+</li>
 <li>
 <tt>></tt>: a left arrow as long as the box's width and in its middle
+</li>
 <li>
 <tt>/</tt>: The southwest/northeast diagonal of the box
+</li>
 <li>
 <tt>\</tt>: the northwest/southeast diagonal of the box
+</li>
 </ul>
 <hr>
+
 </div>
 </div>
 </body>
