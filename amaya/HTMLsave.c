@@ -128,7 +128,7 @@ LRESULT CALLBACK GetSaveDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
     case WM_INITDIALOG:
       SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_SAVE_AS));
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
-		     TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+		     TtaGetMessage (AMAYA, AM_BUTTON_SAVE));
       SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), "Browse");
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL),
 		     TtaGetMessage (LIB, TMSG_CANCEL));
@@ -517,7 +517,7 @@ static void InitSaveForm (Document document, View view, char *pathname)
    
    /* dialogue form for saving a document */
    i = 0;
-   strcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_BUTTON_SAVE));
    i += strlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_BROWSE));
    i += strlen (&s[i]) + 1;
