@@ -11,6 +11,8 @@
   #include "wxdialog/PrintDlgWX.h"
   #include "wxdialog/SaveAsDlgWX.h"
   #include "wxdialog/CSSDlgWX.h"
+  #include "wxdialog/DocInfoDlgWX.h"
+//  #include "AmayaApp.h"
 #endif /* _WX */
 
 #define THOT_EXPORT extern
@@ -381,4 +383,32 @@ ThotBool CreateCSSDlgWX( int ref,
 #else /* _WX */
   return FALSE;
 #endif /* _WX */  
+}
+
+/*----------------------------------------------------------------------
+  CreateDocInfoDlgWX create the Documnent Infos dialog
+  ----------------------------------------------------------------------*/
+ThotBool CreateDocInfoDlgWX ( int ref, ThotWindow parent, int doc)
+{
+#ifdef _WX
+  wxLogDebug( _T("CreateDocInfoDlgWX") );
+
+  DocInfoDlgWX * p_dlg = new DocInfoDlgWX( ref,
+					   parent,
+					   doc );
+
+  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+    {
+      /* the dialog has been sucesfully registred */
+      return TRUE;
+    }
+  else
+    {
+      /* an error occured durring registration */
+      p_dlg->Destroy();
+      return FALSE;
+    }
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */
 }

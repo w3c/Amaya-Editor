@@ -39,6 +39,9 @@ extern ThotBool CreateCSSDlgWX ( int ref,
                                  int nb_item,
                                  char *items,
                                  char *title );
+extern ThotBool CreateDocInfoDlgWX ( int ref,
+                                     ThotWindow parent,
+                                     int doc );
 
 #else /* __STDC__ */
 
@@ -75,6 +78,9 @@ extern ThotBool CreateCSSDlgWX ( int ref,
                                    int nb_item,
                                    char *items,
                                    char *title );
+extern ThotBool CreateDocInfoDlgWX ( int ref,
+                                       ThotWindow parent,
+                                       int doc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -550,6 +550,16 @@ void DocumentInfo (Document document, View view)
    CreateDocumentInfoDlgWindow (TtaGetViewFrame (document, view),
 				document);
 #endif /* _WINGUI */
+#ifdef _WX
+  ThotBool created = CreateDocInfoDlgWX (BaseDialog + DocInfoForm, TtaGetViewFrame (document, view), document);
+  if (created)
+    {
+      TtaSetDialoguePosition ();
+      TtaShowDialogue (BaseDialog + DocInfoForm, FALSE);
+      /* wait for an answer */
+      TtaWaitShowDialogue ();
+    }
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------

@@ -234,6 +234,7 @@ AMAYA_OBJ = \
 	wxdialog/SaveAsDlgWX.o \
 	wxdialog/CSSDlgWX.o \
 	wxdialog/AmayaDialog.o \
+	wxdialog/DocInfoDlgWX.o \
 	wxdialogapi.o \
 	EDITORAPP.o \
 	HTMLAPP.o \
