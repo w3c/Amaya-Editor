@@ -581,7 +581,7 @@ dnl
 dnl Set up the include variables.
 dnl
 
-THOTINCLUDES="-I${API} -I${VAR} -I${INC}L -I${FUNC} -I${SCHEMAS} ${JPEGINCL} ${PNGINCL}"
+THOTINCLUDES="-I${API} -I${VAR} -I${INCL} -I${FUNC} -I${SCHEMAS} ${JPEGINCL} ${PNGINCL}"
 APIINCLUDES=-I${API}
  
 if test "${VPATHOPT}" = "" ; then
