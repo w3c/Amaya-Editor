@@ -162,6 +162,16 @@ PRuleInfoPtr        rpi;
 	     FreeGenericContext (rpi->ctxt);
 	     rpi->ctxt = NULL;
 	  }
+	if (rpi->selector != NULL)
+	  {
+	     TtaFreeMemory (rpi->selector);
+	     rpi->selector = NULL;
+	  }
+	if (rpi->css_rule != NULL)
+	  {
+	     TtaFreeMemory (rpi->css_rule);
+	     rpi->css_rule = NULL;
+	  }
 	rpi->NextRPI = NULL;
 	TtaFreeMemory ((char *) rpi);
      }
