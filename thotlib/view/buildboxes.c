@@ -2822,7 +2822,7 @@ int                 frame;
 	    i = - i + pBox->BxTMargin + pBox->BxTPadding + pBox->BxTBorder;
 	    j = - j + pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
 	    /* Check if the changes affect the inside or the outside width */
-	    if (i != 0 && j != 0)
+	    if (i != 0 || j != 0)
 	      if (pAb->AbHeight.DimIsPosition ||
 		  pAb->AbHeight.DimAbRef == pAb->AbEnclosing ||
 		  pAb->AbHeight.DimAbRef == 0)
@@ -2839,7 +2839,7 @@ int                 frame;
 	    i = - i + pBox->BxLMargin + pBox->BxLPadding + pBox->BxLBorder;
 	    j = - j + pBox->BxRMargin + pBox->BxRPadding + pBox->BxRBorder;
 	    /* Check if the changes affect the inside or the outside width */
-	    if (i != 0 && j != 0)
+	    if (i != 0 || j != 0)
 	      {
 		if (pAb->AbWidth.DimIsPosition ||
 		    pAb->AbWidth.DimAbRef == pAb->AbEnclosing ||
@@ -2867,6 +2867,7 @@ int                 frame;
 	      }
 	    Propagate = savpropage;	/* Restaure la regle de propagation */
 	    pAb->AbMBPChange = FALSE;
+	    result = TRUE;
 	  }
 	/* CHANGEMENT DE POSITION HORIZONTALE */
 	if (pAb->AbHorizPosChange)

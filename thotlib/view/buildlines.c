@@ -2387,6 +2387,10 @@ int                *height;
 	  FreeLine (pLine);
 	}
     }
+  /* now add margins, borders and paddings to min and max widths */
+  x = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
+  pBox->BxMinWidth += x;
+  pBox->BxMaxWidth += x;
 }
 
 

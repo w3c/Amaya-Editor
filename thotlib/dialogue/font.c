@@ -932,7 +932,7 @@ ThotBool            increase;
   else
     FontIdentifier (alphabet, family, highlight, index, FALSE, text, textX);
    
-  /* initialize the Proscript font name */
+  /* initialize the PostScript font name */
   strcpy (PsName, text);
    
   /* Font cache lookup */

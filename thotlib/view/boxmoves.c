@@ -1994,9 +1994,12 @@ int                 frame;
 	    /* Keep in mind if the box positionning is absolute or not */
 	    absoluteMove = IsXPosComplete (pBox);
 	    /* internal boxes take into account margins borders and paddings */
-	    orgTrans += l;
-	    middleTrans += (l - r)/2;
-	    endTrans -= r;
+	    if (l != 0 || r != 0)
+	      {
+		orgTrans = l;
+		middleTrans = (l - r)/2;
+		endTrans = - r;
+	      }
 	    /* Moving included boxes or reevalution of the block of lines? */
 	    if (absoluteMove ||
 		pCurrentAb->AbWidth.DimAbRef != NULL ||
@@ -2456,10 +2459,12 @@ int                 frame;
 	    /* Keep in mind if the box positionning is absolute or not */
 	    absoluteMove = IsYPosComplete (pBox);
 	    /* internal boxes take into account margins borders and paddings */
-	    orgTrans += t;
-	    middleTrans += (t - b)/2;
-	    endTrans -= b;
-	    
+	    if (t != 0 || b != 0)
+	      {
+		orgTrans = t;
+		middleTrans = (t - b)/2;
+		endTrans = -b;
+	      }
 	    /* Moving included boxes? */
 	    if (absoluteMove && pBox->BxType == BoBlock)
 	      {
