@@ -1831,7 +1831,7 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 	  TtaAttachAttribute (el, attr, doc);
 	}
       /* space on both sides by default */
-      val = MathML_ATTR_IntAddSpace_VAL_both;
+      val = MathML_ATTR_IntAddSpace_VAL_both_;
       /* does the mo element have a form attribute? */
       attrType.AttrTypeNum = MathML_ATTR_form;
       formAttr = TtaGetAttribute (el, attrType);
@@ -1845,13 +1845,13 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 	      val = MathML_ATTR_IntAddSpace_VAL_nospace;
 	      break;
 	    case MathML_ATTR_form_VAL_infix:
-	      val = MathML_ATTR_IntAddSpace_VAL_both;
+	      val = MathML_ATTR_IntAddSpace_VAL_both_;
 	      break;
 	    case MathML_ATTR_form_VAL_postfix:
 	      val = MathML_ATTR_IntAddSpace_VAL_spaceafter;
 	      break;
 	    default:
-	      val = MathML_ATTR_IntAddSpace_VAL_both;
+	      val = MathML_ATTR_IntAddSpace_VAL_both_;
 	      break;
 	    } 
 	}
@@ -1905,7 +1905,7 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 			    val = MathML_ATTR_IntAddSpace_VAL_nospace;
 			  else
 			    /* infix operator */
-			    val = MathML_ATTR_IntAddSpace_VAL_both;
+			    val = MathML_ATTR_IntAddSpace_VAL_both_;
 			}
 		    }
 		  else if (text[0] == '&' ||
@@ -1920,7 +1920,7 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 			   (int)text[0] == 215 || /* times */
 			   (int)text[0] == 247)   /* divide */
 		    /* infix operator */
-		    val = MathML_ATTR_IntAddSpace_VAL_both;
+		    val = MathML_ATTR_IntAddSpace_VAL_both_;
 		  else if (text[0] == ',' ||
 			   text[0] == '!' ||
 			   text[0] == '&' ||
@@ -1991,7 +1991,7 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 			  (int)text[0] == 0x2194)   /* left right arrow */
 #endif
 			/* infix operator */
-			val = MathML_ATTR_IntAddSpace_VAL_both;
+			val = MathML_ATTR_IntAddSpace_VAL_both_;
 		      else
 			val = MathML_ATTR_IntAddSpace_VAL_nospace;
 #ifndef _I18N_
