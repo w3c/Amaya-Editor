@@ -786,20 +786,19 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
 		     TtaGetMessage (LIB, TMSG_DEL_ATTR));
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE),
 		     TtaGetMessage (LIB, TMSG_DONE));
-      
       radio1 = CreateWindow ("BUTTON", &ItemList[ndx],
 			     WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 			     cyChar * (1+2*i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 			     (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-       /* set the font of the window */
+      /* set the font of the window */
       WIN_SetDialogfont (radio1);
       ndx += strlen (&ItemList[ndx]) + 1;
       i++;
       radio2 = CreateWindow ("BUTTON", &ItemList[ndx],
-		  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
-		  cyChar * (1+2*i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
-		  (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-       /* set the font of the window */
+			     WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
+			     cyChar * (1+2*i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
+			     (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+      /* set the font of the window */
       WIN_SetDialogfont (radio2);
       ndx += strlen (&ItemList[ndx]) + 1;
       i++;
@@ -863,18 +862,18 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
 			      /* set the font of the window */
 			      WIN_SetDialogfont (radio8);
 			      ndx += strlen (&ItemList[ndx]) + 1;
-			i++;
-			if (attDlgNbItems > 8)
-			  {
-		            radio9 = CreateWindow ("BUTTON", &ItemList[ndx],
-						   WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
-						   cyChar * (1+2*i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
-						   (HMENU) OPT9, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-			    /* set the font of the window */
-			    WIN_SetDialogfont (radio9);
-			    ndx += strlen (&ItemList[ndx]) + 1;
-		            i++;
-			  }
+			      i++;
+			      if (attDlgNbItems > 8)
+				{
+				  radio9 = CreateWindow ("BUTTON", &ItemList[ndx],
+							 WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
+							 cyChar * (1+2*i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
+							 (HMENU) OPT9, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+				  /* set the font of the window */
+				  WIN_SetDialogfont (radio9);
+				  ndx += strlen (&ItemList[ndx]) + 1;
+				  i++;
+				}
 			    }
 			}
 		    }
@@ -914,72 +913,69 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
 	
     case WM_CLOSE:
     case WM_DESTROY:
-	  AttrForm = NULL;
+      AttrForm = NULL;
       EndDialog (hwnDlg, IDCANCEL);
       break;
       
     case WM_COMMAND:
       switch (LOWORD (wParam))
-      {
-      case OPT1:
-	iLocation = 0;
-	ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
-	break;
-      case OPT2:
-	iLocation = 1;
-	ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
-	break;
-      case OPT3:
-	iLocation = 2;
-	ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
-	break;
-      case OPT4:
-	iLocation = 3;
-	ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
-	break;
-      case OPT5:
-	iLocation = 4;
-	ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
-	break;
-      case OPT6:
-	iLocation = 5;
-	ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
-	break;
-      case OPT7:
-	iLocation = 6;
-	ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
-	break;
-      case OPT8:
-	iLocation = 7;
-	ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
-	break;
-      case OPT9:
-	iLocation = 8;
-	ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
-	break;
-       case ID_APPLY:
-	ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 1);
-	break;
+	{
+	case OPT1:
+	  iLocation = 0;
+	  ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+	  break;
+	case OPT2:
+	  iLocation = 1;
+	  ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+	  break;
+	case OPT3:
+	  iLocation = 2;
+	  ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+	  break;
+	case OPT4:
+	  iLocation = 3;
+	  ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+	  break;
+	case OPT5:
+	  iLocation = 4;
+	  ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+	  break;
+	case OPT6:
+	  iLocation = 5;
+	  ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+	  break;
+	case OPT7:
+	  iLocation = 6;
+	  ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+	  break;
+	case OPT8:
+	  iLocation = 7;
+	  ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+	  break;
+	case OPT9:
+	  iLocation = 8;
+	  ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+	  break;
+	case ID_APPLY:
+	  ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 1);
+	  break;
+	case ID_DELETE:
+	  ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+	  ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 2);
+	  AttrForm = NULL;
+	  break;
 	
-      case ID_DELETE:
-	ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
-	ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 2);
-	AttrForm = NULL;
-	EndDialog (hwnDlg, ID_DELETE);
-	break;
-	
-      case ID_DONE:
-	ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 0);
-	AttrForm = NULL;
-	EndDialog (hwnDlg, IDCANCEL);
-	break;
+	case ID_DONE:
+	  ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 0);
+	  AttrForm = NULL;
+	  EndDialog (hwnDlg, IDCANCEL);
+	  break;
  
-       case IDCANCEL:
-	AttrForm = NULL;
-    EndDialog (hwnDlg, IDCANCEL);
-    break;	  
-	
-	  }
+	case IDCANCEL:
+	  AttrForm = NULL;
+	  EndDialog (hwnDlg, IDCANCEL);
+	  break;	  
+	}
       break;
       
     default:
@@ -1786,12 +1782,13 @@ LRESULT CALLBACK LanguageDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       /* get the default GUI font */
       /* destroy the focus of the previous open dialog */
       LangForm = hwnDlg;
-      SetWindowText (hwnDlg, WndTitle);
+      SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_LANGUAGE));
 	  SetWindowText (GetDlgItem (hwnDlg, ID_APPLY), TtaGetMessage (LIB, TMSG_APPLY));
 	  SetWindowText (GetDlgItem (hwnDlg, ID_DELETE),
 		  TtaGetMessage (LIB, TMSG_DEL_ATTR));
 	  SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
-	  SetWindowText (GetDlgItem (hwnDlg, IDC_LANGELEM), Message);
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_LANGELEM),
+			 TtaGetMessage (LIB, TMSG_LANG_OF_EL));
 	  SetWindowText (GetDlgItem (hwnDlg, IDC_INHERITEDLANG), Message2);
       
       wndLangList = GetDlgItem (hwnDlg, IDC_LANGLIST),
@@ -1799,22 +1796,22 @@ LRESULT CALLBACK LanguageDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       WIN_SetDialogfont (wndLangList);
       SendMessage (wndLangList, LB_RESETCONTENT, 0, 0);
     while (i < NbItem && ItemList[index] != EOS)
-	{
-      /* keep in mind the current selected entry */
-      if (*WinCurLang && !strcmp (WinCurLang, &ItemList[index]))
-	    Num_lang = index;
-	  SendMessage (wndLangList, LB_INSERTSTRING, i, (LPARAM) &ItemList[index]); 
-	  index += strlen (&ItemList[index]) + 1;/* Longueur de l'intitule */
-	  i++;
+      {
+	/* keep in mind the current selected entry */
+	if (*WinCurLang && !strcmp (WinCurLang, &ItemList[index]))
+	  Num_lang = index;
+	SendMessage (wndLangList, LB_INSERTSTRING, i, (LPARAM) &ItemList[index]); 
+	index += strlen (&ItemList[index]) + 1;/* Longueur de l'intitule */
+	i++;
       }
-      if (Num_lang != -1)
-	  {
+    if (Num_lang != -1)
+      {
         SendMessage (wndLangList, LB_SETCURSEL, (WPARAM)Num_lang, (LPARAM)0);
-	      Num_lang = SendMessage (wndLangList, LB_GETTEXT, Num_lang,
-			  (LPARAM) WinCurLang);
-	  }
-      SetWindowText (GetDlgItem (hwnDlg, IDC_LNGEDIT), WinCurLang);
-      break;
+	Num_lang = SendMessage (wndLangList, LB_GETTEXT, Num_lang,
+				(LPARAM) WinCurLang);
+      }
+    SetWindowText (GetDlgItem (hwnDlg, IDC_LNGEDIT), WinCurLang);
+    break;
 
     case WM_CLOSE:
     case WM_DESTROY:
@@ -1823,29 +1820,30 @@ LRESULT CALLBACK LanguageDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       break;
 
     case WM_COMMAND:
-      if (LOWORD (wParam) == 1 || HIWORD (wParam) == LBN_SELCHANGE || HIWORD (wParam) == LBN_DBLCLK)
+      if (LOWORD (wParam) == 1 || HIWORD (wParam) == LBN_SELCHANGE ||
+	  HIWORD (wParam) == LBN_DBLCLK)
 	{
 	  if (HIWORD (wParam) == LBN_SELCHANGE)
 	    {
 	      Num_lang = SendMessage (wndLangList, LB_GETCURSEL, 0, 0);
 	      Num_lang = SendMessage (wndLangList, LB_GETTEXT, Num_lang,
-			  (LPARAM) WinCurLang);
-          SetWindowText (GetDlgItem (hwnDlg, IDC_LNGEDIT), WinCurLang);
+				      (LPARAM) WinCurLang);
+	      SetWindowText (GetDlgItem (hwnDlg, IDC_LNGEDIT), WinCurLang);
 	    }
 	  else if (HIWORD (wParam) == LBN_DBLCLK)
 	    {
 	      if (LB_ERR == (Num_lang = SendMessage (wndLangList, LB_GETCURSEL, 0, 0L)))
 		break;
 	      Num_lang = SendMessage (wndLangList, LB_GETTEXT, Num_lang,
-			  (LPARAM) WinCurLang);
+				      (LPARAM) WinCurLang);
 	    }
 	  SetDlgItemText (hwnDlg, IDC_LANGEDIT, WinCurLang);
 	  ThotCallback (NumSelectLanguage, STRING_DATA, WinCurLang);
 	  if (HIWORD (wParam) == LBN_DBLCLK)
 	    {
 	      ThotCallback (NumFormLanguage, INTEGER_DATA, (char*) 1);
-		  LangForm = NULL;
-		  EndDialog (hwnDlg, ID_DONE);
+	      LangForm = NULL;
+	      EndDialog (hwnDlg, ID_DONE);
 	      return FALSE;
 	    }
 	}
@@ -1858,7 +1856,6 @@ LRESULT CALLBACK LanguageDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  
 	case ID_DELETE:
 	  ThotCallback (NumFormLanguage, INTEGER_DATA, (char*) 2);
-	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	  
 	case ID_DONE:
@@ -3791,16 +3788,13 @@ void CreateCloseDocDlgWindow (ThotWindow parent, char *msg)
 /*-----------------------------------------------------------------------
  CreateLanguageDlgWindow
  ------------------------------------------------------------------------*/
-void CreateLanguageDlgWindow (ThotWindow parent, char *title, char *msg1,
-			      int nb_item, char *lang_list, char *msg2,
-			      int lang_value)
+void CreateLanguageDlgWindow (ThotWindow parent, int nb_item,
+			      char *lang_list, char *msg, int lang_value)
 {
   if (LangForm)
 	  EndDialog (LangForm, ID_DONE); 
 
-   strcpy (WndTitle, title);
-   strcpy (Message, msg1);
-   strcpy (Message2, msg2);
+   strcpy (Message2, msg);
    Num_lang = lang_value;
    if (lang_value >= 0)
 	   /* there is a selected language */
@@ -3840,10 +3834,10 @@ void CreateAttributeDlgWindow (char *title, int curr_val, int nb_items,
 {
   /* destroy the precent attribute menu */
   if (AttrForm)
-  {
-	  EndDialog (AttrForm, ID_DONE);
-	  AttrForm = NULL;
-  }
+    {
+      EndDialog (AttrForm, ID_DONE);
+      AttrForm = NULL;
+    }
   strcpy (AttDlgTitle, title);
   ItemList = item_list;
   currAttrVal = curr_val;
@@ -3851,37 +3845,37 @@ void CreateAttributeDlgWindow (char *title, int curr_val, int nb_items,
   switch (attDlgNbItems)
     {
     case 2:
-	  DialogBox (hInstance, MAKEINTRESOURCE (ATTR2ITEMSDIALOG), NULL, (DLGPROC) AttrItemsDlgProc);
+      DialogBox (hInstance, MAKEINTRESOURCE (ATTR2ITEMSDIALOG), NULL, 
+		 (DLGPROC) AttrItemsDlgProc);
       break;
-      
     case 3:
-	  DialogBox (hInstance, MAKEINTRESOURCE (ATTR3ITEMSDIALOG), NULL, (DLGPROC) AttrItemsDlgProc);
+      DialogBox (hInstance, MAKEINTRESOURCE (ATTR3ITEMSDIALOG), NULL,
+		 (DLGPROC) AttrItemsDlgProc);
       break;
-      
     case 4:
-	  DialogBox (hInstance, MAKEINTRESOURCE (ATTR4ITEMSDIALOG), NULL, (DLGPROC) AttrItemsDlgProc);
+      DialogBox (hInstance, MAKEINTRESOURCE (ATTR4ITEMSDIALOG), NULL,
+		 (DLGPROC) AttrItemsDlgProc);
       break;
-      
     case 5:
-	  DialogBox (hInstance, MAKEINTRESOURCE (ATTR5ITEMSDIALOG), NULL, (DLGPROC) AttrItemsDlgProc);
+      DialogBox (hInstance, MAKEINTRESOURCE (ATTR5ITEMSDIALOG), NULL,
+		 (DLGPROC) AttrItemsDlgProc);
       break;
-      
     case 6:
-	  DialogBox (hInstance, MAKEINTRESOURCE (ATTR6ITEMSDIALOG), NULL, (DLGPROC) AttrItemsDlgProc);
+	  DialogBox (hInstance, MAKEINTRESOURCE (ATTR6ITEMSDIALOG), NULL,
+		     (DLGPROC) AttrItemsDlgProc);
       break;
-      
     case 7:
-	  DialogBox (hInstance, MAKEINTRESOURCE (ATTR7ITEMSDIALOG), NULL, (DLGPROC) AttrItemsDlgProc);
+	  DialogBox (hInstance, MAKEINTRESOURCE (ATTR7ITEMSDIALOG), NULL,
+		     (DLGPROC) AttrItemsDlgProc);
       break;
-       
     case 8:
-	  DialogBox (hInstance, MAKEINTRESOURCE (ATTR8ITEMSDIALOG), NULL, (DLGPROC) AttrItemsDlgProc);
+	  DialogBox (hInstance, MAKEINTRESOURCE (ATTR8ITEMSDIALOG), NULL,
+		     (DLGPROC) AttrItemsDlgProc);
       break;
-      
     case 9:
-	  DialogBox (hInstance, MAKEINTRESOURCE (ATTR9ITEMSDIALOG), NULL, (DLGPROC) AttrItemsDlgProc);
+	  DialogBox (hInstance, MAKEINTRESOURCE (ATTR9ITEMSDIALOG), NULL,
+		     (DLGPROC) AttrItemsDlgProc);
       break;
- 
     default:
       break;
     } 
@@ -3892,9 +3886,10 @@ void CreateAttributeDlgWindow (char *title, int curr_val, int nb_items,
  ------------------------------------------------------------------------*/
 void CreateMCHARDlgWindow (ThotWindow parent, char *math_entity_name) 
 {
-    strcpy (MathEntName, math_entity_name);
-    DialogBox (hInstance, MAKEINTRESOURCE (MATH_ENTITY_DLG), NULL, (DLGPROC) MathEntityDlgProc);
-    strcpy (math_entity_name, MathEntName);
+  strcpy (MathEntName, math_entity_name);
+  DialogBox (hInstance, MAKEINTRESOURCE (MATH_ENTITY_DLG), NULL,
+	     (DLGPROC) MathEntityDlgProc);
+  strcpy (math_entity_name, MathEntName);
 }
 
 /*-----------------------------------------------------------------------

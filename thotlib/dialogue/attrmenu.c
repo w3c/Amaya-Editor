@@ -140,9 +140,11 @@ static void InitFormLanguage (Document doc, View view,
    /* Initialize the language selector */
    languageCode[0] = EOS;
    if (currAttr && currAttr->AeAttrText)
-     CopyBuffer2MBs (currAttr->AeAttrText, 0, (unsigned char*)languageCode, MAX_TXT_LEN);
+     CopyBuffer2MBs (currAttr->AeAttrText, 0, (unsigned char*)languageCode,
+		     MAX_TXT_LEN);
 #ifdef _WINGUI
-   ptr = GetListOfLanguages (WIN_buffMenu, MAX_TXT_LEN, languageCode, &nbItem, &defItem);
+   ptr = GetListOfLanguages (WIN_buffMenu, MAX_TXT_LEN, languageCode,
+			     &nbItem, &defItem);
 #endif /* _WINGUI */
    
 #if defined(_GTK) || defined(_MOTIF)
@@ -183,7 +185,8 @@ static void InitFormLanguage (Document doc, View view,
 	 {
 	   /* the attribute value is a RFC-1766 code. Convert it into */
 	   /* a language name */
-	   CopyBuffer2MBs (pHeritAttr->AeAttrText, 0, (unsigned char*)languageCode, MAX_TXT_LEN);
+	   CopyBuffer2MBs (pHeritAttr->AeAttrText, 0,
+			   (unsigned char*)languageCode, MAX_TXT_LEN);
 	   language = TtaGetLanguageIdFromName (languageCode);
 	   strcat (label, TtaGetLanguageName(language));
 	 }
@@ -247,8 +250,7 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg,
   
   switch (iMsg)
     {
-
- case WM_INITDIALOG:
+    case WM_INITDIALOG:
       SetWindowText (hwnd, TtaGetMessage (LIB, TMSG_ATTR));
       WIN_SetDialogfont (hwnd);
       hwnTitle = GetDlgItem (hwnd, IDC_ATTRNAME);
@@ -259,10 +261,10 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg,
       WIN_SetDialogfont (hwnEdit);
       SetDlgItemText (hwnd, ID_EDITVALUE, TextAttrValue);
      if (lpfnTextZoneWndProc == (WNDPROC) 0)
-	     lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (hwnEdit, GWL_WNDPROC,
-						       (DWORD) TextAttrProc);
+       lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (hwnEdit, GWL_WNDPROC,
+						      (DWORD) TextAttrProc);
       else
-	     SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) TextAttrProc);
+	SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) TextAttrProc);
  	  
       /* Confirm button */
       confirmButton = GetDlgItem (hwnd, ID_CONFIRM);
@@ -275,8 +277,8 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg,
       WIN_SetDialogfont (doneButton);
 
       SetFocus (hwnEdit);
-	  return FALSE;
-	  break;
+      return FALSE;
+      break;
 	  
     case WM_DESTROY :
       PostQuitMessage (0);
@@ -329,7 +331,7 @@ LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg,
 
   switch (iMsg)
     {
- case WM_INITDIALOG:
+    case WM_INITDIALOG:
       SetWindowText (hwnd, TtaGetMessage (LIB, TMSG_ATTR));
       WIN_SetDialogfont (hwnd);
       hwnTitle = GetDlgItem (hwnd, IDC_ATTRNAME);
@@ -339,11 +341,11 @@ LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg,
       hwnEdit = GetDlgItem (hwnd, ID_EDITVALUE);
       WIN_SetDialogfont (hwnEdit);
       SetDlgItemText (hwnd, ID_EDITVALUE, TextAttrValue);
-     if (lpfnTextZoneWndProc == (WNDPROC) 0)
-	     lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (hwnEdit, GWL_WNDPROC,
-						       (DWORD) TextAttrProc);
+      if (lpfnTextZoneWndProc == (WNDPROC) 0)
+       lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (hwnEdit, GWL_WNDPROC,
+						      (DWORD) TextAttrProc);
       else
-	     SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) TextAttrProc);
+	SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) TextAttrProc);
  	  
       /* Apply button */
       applyButton = GetDlgItem (hwnd, ID_APPLY);
@@ -361,16 +363,16 @@ LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg,
       WIN_SetDialogfont (doneButton);
 
       SetFocus (hwnEdit);
-	  return FALSE;
-	  break;
+      return FALSE;
+      break;
  
     case WM_DESTROY :
       PostQuitMessage (0);
       break;
       
     case WM_COMMAND:
-	switch (LOWORD (wParam))
-	 {
+      switch (LOWORD (wParam))
+	{
 	case ID_APPLY:
 	  txtLength = GetWindowTextLength (hwnEdit);
 	  if (txtLength >= LgMaxAttrText)
@@ -390,11 +392,11 @@ LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg,
 	  DestroyWindow (hwnd);
 	  break;
 	  
-    case IDCANCEL:
-	case ID_DONE:
-	  ThotCallback (NumMenuAttr, INTEGER_DATA, (char *) 0);
-	  DestroyWindow (hwnd);
-	  break;
+	 case IDCANCEL:
+	 case ID_DONE:
+	   ThotCallback (NumMenuAttr, INTEGER_DATA, (char *) 0);
+	   DestroyWindow (hwnd);
+	   break;
 	}
       break;
     default:
@@ -418,8 +420,7 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg,
 
   switch (iMsg)
     {
-
-  case WM_INITDIALOG:
+    case WM_INITDIALOG:
       SetWindowText (hwnd, TtaGetMessage (LIB, TMSG_ATTR));
 	  hwnTitle = GetDlgItem (hwnd, IDC_ATTRNAME);
 	  SetWindowText (hwnTitle, WIN_pAttr1->AttrName);
@@ -429,10 +430,10 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg,
       SetDlgItemInt (hwnd, ID_EDITVALUE, formValue, TRUE);
 	  WIN_SetDialogfont (hwnEdit);
       if (lpfnTextZoneWndProc == (WNDPROC) 0)
-	     lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (hwnEdit, GWL_WNDPROC,
+	lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (hwnEdit, GWL_WNDPROC,
 						       (DWORD) TextAttrProc);
       else
-   	     SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) TextAttrProc);
+	SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) TextAttrProc);
 
       /* Apply button */
       applyButton = GetDlgItem (hwnd, ID_APPLY);
@@ -450,7 +451,7 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg,
       WIN_SetDialogfont (doneButton);
 
       SetFocus (hwnEdit);
-	  return FALSE;
+      return FALSE;
       break;
 
     case WM_DESTROY :
@@ -459,36 +460,36 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg,
     
     case WM_COMMAND:
       switch (LOWORD (wParam))
-	  {
-	    case ID_APPLY:
-	      val = GetDlgItemInt (hwnd, ID_EDITVALUE, &ok, TRUE);
-	      if (ok)
-		  {
-	        ThotCallback (NumMenuAttrNumber, INTEGER_DATA, (char *) val);
-	        ThotCallback (NumMenuAttr, INTEGER_DATA, (char *) 1);
-	        DestroyWindow (hwnd);
-		  }
-	      break;
+	{
+	case ID_APPLY:
+	  val = GetDlgItemInt (hwnd, ID_EDITVALUE, &ok, TRUE);
+	  if (ok)
+	    {
+	      ThotCallback (NumMenuAttrNumber, INTEGER_DATA, (char *) val);
+	      ThotCallback (NumMenuAttr, INTEGER_DATA, (char *) 1);
+	      DestroyWindow (hwnd);
+	    }
+	  break;
  
     	case ID_DELETE:
-	      val = GetDlgItemInt (hwnd, ID_EDITVALUE, &ok, TRUE);
-	      if (ok)
-		  {
-	        ThotCallback (NumMenuAttrNumber, INTEGER_DATA, (char *) val);
-	        ThotCallback (NumMenuAttr, INTEGER_DATA, (char *) 2);
-	        DestroyWindow (hwnd);
-		  }
-	      break;
-	  
-		case IDCANCEL:
-		case ID_DONE:
-		  ThotCallback (NumMenuAttr, INTEGER_DATA, (char *) 0);
+	  val = GetDlgItemInt (hwnd, ID_EDITVALUE, &ok, TRUE);
+	  if (ok)
+	    {
+	      ThotCallback (NumMenuAttrNumber, INTEGER_DATA, (char *) val);
+	      ThotCallback (NumMenuAttr, INTEGER_DATA, (char *) 2);
 	      DestroyWindow (hwnd);
-	      break;
-	  }
+	    }
+	  break;
+	  
+	case IDCANCEL:
+	case ID_DONE:
+	  ThotCallback (NumMenuAttr, INTEGER_DATA, (char *) 0);
+	  DestroyWindow (hwnd);
+	  break;
+	}
       break;
-      default:
-          return FALSE;
+    default:
+      return FALSE;
     }
   return TRUE;
 }
@@ -601,9 +602,11 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
        if (currAttr && currAttr->AeAttrText)
 	 {
 	   i = LgMaxAttrText - 2;
-	   i = CopyBuffer2MBs (currAttr->AeAttrText, 0, (unsigned char*)TextAttrValue, i);
+	   i = CopyBuffer2MBs (currAttr->AeAttrText, 0,
+			       (unsigned char*)TextAttrValue, i);
 	   /* convert to the dialogue encoding */
-	   tmp = (char *)TtaConvertMbsToByte ((unsigned char *)TextAttrValue, TtaGetDefaultCharset ());
+	   tmp = (char *)TtaConvertMbsToByte ((unsigned char *)TextAttrValue,
+					      TtaGetDefaultCharset ());
 	   strcpy (TextAttrValue, tmp);
 	   TtaFreeMemory (tmp);
 	 }
@@ -676,8 +679,8 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
      default: break;
    }
        
-       if (title != NULL)
-	 TtaFreeMemory (title);
+   if (title != NULL)
+     TtaFreeMemory (title);
 }
 
 /*----------------------------------------------------------------------
@@ -1037,10 +1040,10 @@ void UpdateAttrMenu (PtrDocument pDoc)
   document = (Document) IdentDocument (pDoc);
   /* Traite toutes les vues de l'arbre principal */
   for (view = 1; view <= MAX_VIEW_DOC; view++)
-  {
-  frame = pDoc->DocViewFrame[view - 1];
-  if (frame != 0 && FrameTable[frame].MenuAttr != -1)
-	  {
+    {
+      frame = pDoc->DocViewFrame[view - 1];
+      if (frame != 0 && FrameTable[frame].MenuAttr != -1)
+	{
 #ifdef _WINGUI 
 	  currentFrame = frame;
 #endif /* _WINGUI */
@@ -1053,15 +1056,15 @@ void UpdateAttrMenu (PtrDocument pDoc)
 	      TtaSetMenuOff (document, view, menuID);
 	      TtaDestroyDialogue (ref);
 #ifdef _WINGUI
-		  /* Remove that reference in the window list of catalogues */
-		  CleanFrameCatList (frame, ref);
+	      /* Remove that reference in the window list of catalogues */
+	      CleanFrameCatList (frame, ref);
 #endif /* _WINGUI */
 	    }
 	  else
 	    {
 #ifdef _WINGUI
-	  nbOldItems = GetMenuItemCount (FrameTable[frame].WdMenus[menu]);
-	  for (i = 0; i < nbOldItems; i ++)
+	      nbOldItems = GetMenuItemCount (FrameTable[frame].WdMenus[menu]);
+	      for (i = 0; i < nbOldItems; i ++)
 		{
 		  if (!DeleteMenu (FrameTable[frame].WdMenus[menu], ref + i,
 				   MF_BYCOMMAND))
@@ -1069,7 +1072,7 @@ void UpdateAttrMenu (PtrDocument pDoc)
 				MF_BYPOSITION);
 		}
 #endif /* _WINGUI */
-	  if (EventMenu[frame - 1] != 0)
+	      if (EventMenu[frame - 1] != 0)
 		{
 		  /* destroy the submenu event */
 		  TtaDestroyDialogue (EventMenu[frame - 1]);
@@ -1078,7 +1081,7 @@ void UpdateAttrMenu (PtrDocument pDoc)
 		  CleanFrameCatList (frame, EventMenu[frame - 1]);
 		  if (subMenuID[frame])
 		    DeleteMenu (FrameTable[frame].WdMenus[menu], subMenuID[frame],
-			            MF_BYCOMMAND);
+				MF_BYCOMMAND);
 		  else 
 		    subMenuID[frame] = 0;
 #endif /* _WINGUI */
@@ -1086,26 +1089,28 @@ void UpdateAttrMenu (PtrDocument pDoc)
 		}
 	      TtaNewPulldown (ref, FrameTable[frame].WdMenus[menu], NULL,
 			      nbItemAttr, bufMenuAttr, NULL);
-	  if (nbEvent != 0)
+	      if (nbEvent != 0)
 		{
 		  /* there is a submenu of event attributes */
 		  EventMenu[frame - 1] = (nbItemAttr * MAX_MENU * MAX_ITEM) + ref;
 		  TtaNewSubmenu (EventMenu[frame - 1], ref, nbItemAttr - 1,
 				 NULL, nbEvent, bufEventAttr, NULL, FALSE);
-
+		  
 		  /* post active attributes */
 #ifdef _WINGUI
 		  for (i = 0; i < nbEvent; i++)
-        WIN_TtaSetToggleMenu (EventMenu[frame - 1], i,
-		       (ThotBool) (ActiveEventAttr[i] == 1), FrMainRef[frame]);
+		    WIN_TtaSetToggleMenu (EventMenu[frame - 1], i,
+					  (ThotBool) (ActiveEventAttr[i] == 1),
+					  FrMainRef[frame]);
 #endif /* _WINGUI */
-
+		  
 #if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 		  for (i = 0; i < nbEvent; i++)
-        TtaSetToggleMenu (EventMenu[frame - 1], i, (ActiveEventAttr[i] == 1));
+		    TtaSetToggleMenu (EventMenu[frame - 1], i,
+				      (ActiveEventAttr[i] == 1));
 #endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
 		}
-
+	      
 	      /* post active attributes */
 	      max = nbItemAttr;
 	      if (nbEvent != 0)
@@ -1113,17 +1118,18 @@ void UpdateAttrMenu (PtrDocument pDoc)
 		max--;
 	      for (i = 0; i < max; i++)
 #ifdef _WINGUI
-		WIN_TtaSetToggleMenu (ref, i, (ThotBool) (ActiveAttr[i] == 1), FrMainRef[frame]);
+		WIN_TtaSetToggleMenu (ref, i, (ThotBool) (ActiveAttr[i] == 1),
+				      FrMainRef[frame]);
 #endif /* _WINGUI */
-        
+	      
 #if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 	      TtaSetToggleMenu (ref, i, (ActiveAttr[i] == 1));
 #endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
 	      TtaSetMenuOn (document, view, menuID);
-  	  }
+	    }
 	}
-  
-  }
+      
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1264,8 +1270,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
       break;
     case NumMenuAttr:
       /* retour de la feuille de dialogue elle-meme */
-      if (valmenu == 0 || valmenu == 2)
-	/* fermeture de la feuille de dialogue */
+      if (valmenu == 0)
 	{
 	  /* on detruit la feuille de dialogue */
 	  TtaDestroyDialogue (NumMenuAttr);
@@ -1457,8 +1462,6 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 		/* restaure l'etat courant du toggle */
 #ifdef _WINGUI
 		CreateLanguageDlgWindow (TtaGetViewFrame (doc, view), 
-					 TtaGetMessage (LIB, TMSG_LANGUAGE),
-					 TtaGetMessage (LIB, TMSG_LANG_OF_EL), 
 					 WIN_nbItem, WIN_buffMenu, WIN_Lab, 
 					 (int)WIN_Language);
 #endif /* _WINGUI */
@@ -1612,7 +1615,7 @@ void CloseAttributeDialogues (PtrDocument pDoc)
    AttributeMenuLoadResources
    connects the local actions.
   ----------------------------------------------------------------------*/
-void                AttributeMenuLoadResources ()
+void AttributeMenuLoadResources ()
 {
   int i;
 
