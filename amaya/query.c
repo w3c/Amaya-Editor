@@ -383,7 +383,11 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
     }
 
   /* copy the content length */
+#ifdef _WINDOWS
+  _snprintf (tmp_wchar, sizeof (tmp_wchar), "%ld", HTAnchor_length (anchor));
+#else
   snprintf (tmp_wchar, sizeof (tmp_wchar), "%ld", HTAnchor_length (anchor));
+#endif /* _WINDOWS */
   me->http_headers.content_length = TtaStrdup (tmp_wchar);
 
   /* copy the reason */
