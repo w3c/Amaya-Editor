@@ -36,7 +36,7 @@ AmayaToolBar::AmayaToolBar( AmayaWindow * p_amaya_window_parent ) :
   wxPanel( p_amaya_window_parent,
 	   -1,
 	   wxDefaultPosition,
-	   wxSize(-1, 32), /* here it's possible to setup the toolbar size (height) */
+	   wxDefaultSize /*wxSize(-1, 22)*/, /* here it's possible to setup the toolbar size (height) */
 	   wxTAB_TRAVERSAL )
 {
   m_pAmayaWindowParent = p_amaya_window_parent;
@@ -77,8 +77,16 @@ void AmayaToolBar::AddTool( wxWindow * p_tool, bool expand, int border )
   if (expand)
     proportion = 1;
   
+  /*
+  if ( p_tool->GetSize().GetHeight() > GetSize().GetHeight() )
+    {
+      SetSize(-1, p_tool->GetSize().GetHeight()+2);
+    }
+  */
+
   m_pTopSizer->Add( p_tool, proportion, flag, border );
   m_pTopSizer->Layout();
+
 }
 
 /*
@@ -93,6 +101,19 @@ void AmayaToolBar::AddSeparator()
   wxPanel * p_separator = new wxPanel( this, -1, wxDefaultPosition, wxSize(2, -1) );
   p_separator->SetBackgroundColour( wxColour(_T("black")) );
   AddTool( p_separator, FALSE, 3 );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaToolBar
+ *      Method:  AddSpacer
+ * Description:  add a spacer (transparent box)
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaToolBar::AddSpacer( int width )
+{
+  wxPanel * p_spacer = new wxPanel( this, -1, wxDefaultPosition, wxSize(width, -1) );
+  AddTool( p_spacer, FALSE, 3 );
 }
 
 /*
