@@ -3693,7 +3693,14 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 	if ((pRule->PrViewNum == viewSch || pRule->PrType == PtPictInfo) &&
 	    DoesViewExist (pEl, pDoc, viewNb))
 	  {
-	    if (!selectedRule[pRule->PrType] ||
+	    if (viewSch != 1 || pRule->PrType == PtFunction)
+	      {
+		if (!ApplyRule (pRule, pSchP, pNewAbbox, pDoc, NULL))
+		  /* not the main view, apply the rule now */
+		  WaitingRule (pRule, pNewAbbox, pSchP, NULL,
+			       queuePA, queuePS, queuePP, queuePR, lqueue);
+	      }
+	    else if (!selectedRule[pRule->PrType] ||
 		(!selectedRule[pRule->PrType]->PrImportant &&
 		 selectedRule[pRule->PrType]->PrSpecificity <= pRule->PrSpecificity))
 	      {
