@@ -767,20 +767,15 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
 		 }
 	     }
 
-	   s = (char *)TtaConvertMbsToByte ((unsigned char *)utf8path,
-					    TtaGetDefaultCharset ());
-	   length = strlen (s);
-	   TtaFreeMemory (s);
-	   s = NULL;
-
 	   if (info)
 	     length += strlen (info);
 	   if (length < MAX_LENGTH)
 	     length = MAX_LENGTH;
+	   s = (char *)TtaConvertMbsToByte ((unsigned char *)utf8path,
+						 TtaGetDefaultCharset ());
 	   pathname = (char *)TtaGetMemory (length);
-	   strcpy (pathname, utf8path);
-	   /* don't free utf8path as it's stored within the context */
-	   utf8path[0] = EOS;
+	   strcpy (pathname, s);
+	   TtaFreeMemory (s);
 	   if (info)
 	     {
 	       /* @@ what do we do with the precedent parameters?*/
@@ -1063,7 +1058,7 @@ static void DisplayUrlAnchor (Element element, Document document)
    Element             anchor, ancestor;
    ElementType         elType;
    AttributeType       attrType;
-   char                *url, *pathname, *documentname;
+   char                *url, *pathname, *documentname, *utf8value;
    int                 length;
 
    /* Search an ancestor that acts as a link anchor */
@@ -1076,11 +1071,14 @@ static void DisplayUrlAnchor (Element element, Document document)
        length = TtaGetTextAttributeLength (HrefAttr);
        length++;
 	
-       url = (char *)TtaGetMemory (length);
-       if (url != NULL)
+       utf8value = (char *)TtaGetMemory (length);
+       if (utf8value != NULL)
 	 {
 	   /* Get the URL */
-	   TtaGiveTextAttributeValue (HrefAttr, url, &length);
+	   TtaGiveTextAttributeValue (HrefAttr, utf8value, &length);
+	   url = (char *)TtaConvertMbsToByte ((unsigned char *)utf8value,
+					     TtaGetDefaultCharset ());
+	   TtaFreeMemory (utf8value);
 	   pathname = (char *)TtaGetMemory (MAX_LENGTH);
 	   documentname = (char *)TtaGetMemory (MAX_LENGTH);
 	   if (url[0] == '#')
@@ -1114,14 +1112,16 @@ static void DisplayUrlAnchor (Element element, Document document)
 	   while (titleAttr == NULL && ancestor != NULL);
 	   if (titleAttr)
 	     {
-	       if (url)
-		 TtaFreeMemory (url);
+	       TtaFreeMemory (url);
 	       length = TtaGetTextAttributeLength (titleAttr);
 	       length ++;
-	       url = (char *)TtaGetMemory (length);
-	       if (url != NULL)
+	       utf8value = (char *)TtaGetMemory (length);
+	       if (utf8value)
 		 {
-		   TtaGiveTextAttributeValue (titleAttr, url, &length);
+		   TtaGiveTextAttributeValue (titleAttr, utf8value, &length);
+		   url = (char *)TtaConvertMbsToByte ((unsigned char *)utf8value,
+					     TtaGetDefaultCharset ());
+		   TtaFreeMemory (utf8value);
 		   strcat (pathname, " (");
 		   strcat (pathname, url);
 		   strcat (pathname, ")");
@@ -1129,11 +1129,9 @@ static void DisplayUrlAnchor (Element element, Document document)
 	     }
        
 	   TtaSetStatus (document, 1, pathname, NULL);
-	   
 	   TtaFreeMemory (pathname);
 	   TtaFreeMemory (documentname);
-	   if (url)
-	     TtaFreeMemory (url);
+	   TtaFreeMemory (url);
 	 }
      }
 }
