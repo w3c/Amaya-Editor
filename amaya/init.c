@@ -7478,33 +7478,32 @@ void InitStringForCombobox ()
       /* initialize the list by reading the file */
       i = 0;
       nb = 0;
-    while (TtaReadByte (file, &c))
+      while (TtaReadByte (file, &c))
 	{
 	  if (c == '"')
-	  {
-        len = 0;
-	    urlstring[len] = EOS;
-        while (len < MAX_LENGTH && TtaReadByte (file, &c) && c != EOL)
-		  {
-	        if (c == '"')
-	          urlstring[len] = EOS;
-	        else
-	          urlstring[len++] = (char)c;
-		  }
-	    if (i > 0 && len)
-	      /* add an EOS between two urls */
-	      URL_list[i++] = EOS;
-	    if (len)
+	    {
+	      len = 0;
+	      urlstring[len] = EOS;
+	      while (len < MAX_LENGTH && TtaReadByte (file, &c) && c != EOL)
 		{
-	      nb++;
-	      strcpy (&URL_list[i], urlstring);
-	      i += len;
+		  if (c == '"')
+		    urlstring[len] = EOS;
+		  else
+		    urlstring[len++] = (char)c;
 		}
-	  }
+	      if (i > 0 && len)
+		/* add an EOS between two urls */
+		URL_list[i++] = EOS;
+	      if (len)
+		{
+		  nb++;
+		  strcpy (&URL_list[i], urlstring);
+		  i += len;
+		}
+	    }
 	}
-     URL_list[i + 1] = EOS;
+      URL_list[i + 1] = EOS;
       TtaReadClose (file);
     }
   TtaFreeMemory (urlstring);
 }
-

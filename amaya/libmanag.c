@@ -1567,9 +1567,12 @@ void SelectLibraryFromPath (char *path)
 void InitSVGLibraryManagerStructure ()
 {
 #ifdef _SVGLIB
-  char     *url_home, *url_thot, *app_home, *thot_dir;
-  char     *urlstring, *librarytitle;
-  FILE     *libfile;
+  char          *url_home, *url_thot, *app_home, *thot_dir;
+  char          *urlstring, *title;
+  unsigned char  c;
+  FILE          *file;
+  int            i, nb, len;
+  ThotBool       cont;
 
   SVGlib_list = NULL;
   if (!HeaderListUriTitle)
@@ -1577,60 +1580,74 @@ void InitSVGLibraryManagerStructure ()
       url_home = (char *) TtaGetMemory (MAX_LENGTH);
       urlstring = (char *) TtaGetMemory (MAX_LENGTH);
       url_thot = (char *) TtaGetMemory (MAX_LENGTH);
-/*      app_home = (char *) TtaGetMemory (MAX_LENGTH);*/
-
       /* Read lib_files.dat into APP_HOME directory */
       app_home = TtaGetEnvString ("APP_HOME");
       sprintf (url_home, "%s%clib_files.dat", app_home, DIR_SEP); 
       /* ./.amaya/lib_files.dat */
-      libfile = TtaReadOpen (url_home);
-      if (libfile)
+      file = TtaReadOpen (url_home);
+      if (file)
 	{
-	  while (fscanf (libfile, "%s", urlstring) > 0)
+	  /* initialize the list by reading the file */
+	  i = 0;
+	  nb = 0;
+	  cont = TRUE;
+	  while (cont)
 	    {
-	      if (urlstring)
+	      len = 0;
+	      while (len < MAX_LENGTH && TtaReadByte (file, &c) && c != EOL)
+		urlstring[len++] = (char)c;
+	      urlstring[len] = EOS;
+	      cont = (c == EOL);
+	      if (urlstring[0] != EOS)
 		{
 		  /* Get the document title by opening the document
 		     and then update the Uri-Title structure */
-		  librarytitle = GetLibraryFileTitle (urlstring);
-		  if (librarytitle)
+		  title = GetLibraryFileTitle (urlstring);
+		  if (title)
 		    {
 		      /* ajout dans la structure et dans le buffer de memorisation */
-		      AddLibraryDataIntoStructure (TRUE, urlstring, librarytitle);
-		      TtaFreeMemory (librarytitle);
+		      AddLibraryDataIntoStructure (TRUE, urlstring, title);
+		      TtaFreeMemory (title);
 		    }
 		}
 	    }
-	  TtaReadClose (libfile);
+	  TtaReadClose (file);
 	}
-      
       /* Read lib_files.dat into THOTDIR directory */
       thot_dir = TtaGetEnvString ("THOTDIR");
-      sprintf (url_thot, "%s%cconfig%clib_files.dat", thot_dir, DIR_SEP,DIR_SEP);
-      libfile = TtaReadOpen (url_thot);
+      sprintf (url_thot, "%s%cconfig%clib_files.dat", thot_dir, DIR_SEP, DIR_SEP);
+      file = TtaReadOpen (url_thot);
       strcpy (url_thot, thot_dir);
-      if (libfile)
+      if (file)
 	{
-	  while (fscanf (libfile, "%s", urlstring) > 0)
+	  /* initialize the list by reading the file */
+	  i = 0;
+	  nb = 0;
+	  cont = TRUE;
+	  while (cont)
 	    {
-	      if (urlstring)
+	      len = 0;
+	      while (len < MAX_LENGTH && TtaReadByte (file, &c) && c != EOL)
+		urlstring[len++] = (char)c;
+	      urlstring[len] = EOS;
+	      cont = (c == EOL);
+	      if (urlstring[0] != EOS)
 		{
-		  /* modifier ici car ne fonctionne pas sous windows */
 		  sprintf (url_thot, "%s%cconfig%clibconfig%c%s", thot_dir,
 			   DIR_SEP, DIR_SEP, DIR_SEP, urlstring);
 		  strcpy (urlstring, url_thot);
 		  /* Get the document title by opening the document
 		     and then update the Uri-Title structure */
-		  librarytitle = GetLibraryFileTitle (urlstring);
-		  if (librarytitle)
+		  title = GetLibraryFileTitle (urlstring);
+		  if (title)
 		    {
 		      /* Add into Library Manager Structure List */
-		      AddLibraryDataIntoStructure (FALSE, urlstring, librarytitle);
-		      TtaFreeMemory (librarytitle);
+		      AddLibraryDataIntoStructure (FALSE, urlstring, title);
+		      TtaFreeMemory (title);
 		    }
 		}
 	    }
-	  TtaReadClose (libfile);
+	  TtaReadClose (file);
 	}
       
       TtaFreeMemory (url_thot);
@@ -2662,9 +2679,9 @@ void CopyUseElementAttribute (Element useEl, Element destElement, Document doc)
   Parameters:
   libraryDoc : document to update if it's not a newLib file
   newLib : TRUE if it's a new library
-  libraryTitle : Title of the new Library
+  title : Title of the new Library
   ----------------------------------------------------------------------*/
-void AddSVGModelIntoLibrary (Document libraryDoc, ThotBool newLib, char *libraryTitle)
+void AddSVGModelIntoLibrary (Document libraryDoc, ThotBool newLib, char *title)
 {
 #ifdef _SVGLIB
   char      *newURL, *suffix, *libraryURL, *tmp, *filename, *dirname;
@@ -2685,7 +2702,7 @@ void AddSVGModelIntoLibrary (Document libraryDoc, ThotBool newLib, char *library
       else
 	{
 	  /* initialize string buffer */
-	  tmp = GetLibraryPathFromTitle (libraryTitle);
+	  tmp = GetLibraryPathFromTitle (title);
 	  libraryURL = (char *) TtaGetMemory (MAX_LENGTH);
 	  strcpy (libraryURL, tmp);
 	  /* Open it */
@@ -2741,10 +2758,7 @@ void AddSVGModelIntoLibrary (Document libraryDoc, ThotBool newLib, char *library
   
   /* edit (update) library file */
   if (newLib)
-    {
-      libraryDoc = CreateNewLibraryFile (LastURLCatalogue, NewLibraryTitle);
-/*      ok = TtaExportDocumentWithNewLineNumbers (libraryDoc, LastURLCatalogue, "HTMLT");*/
-    }
+    libraryDoc = CreateNewLibraryFile (LastURLCatalogue, NewLibraryTitle);
   addingModelIntoLibraryFile (libraryDoc, newURL);
 
   if (newURL)
@@ -3035,7 +3049,7 @@ ThotBool WriteInterSessionLibraryFileManager ()
   ThotBool       succeed = FALSE;
 #ifdef _SVGLIB
   ListUriTitle  *curList = HeaderListUriTitle;
-  FILE          *libfile;
+  FILE          *file;
   char          *url_home, *urlstring, *app_home;
 
   url_home = (char *) TtaGetMemory (MAX_LENGTH);
@@ -3045,8 +3059,8 @@ ThotBool WriteInterSessionLibraryFileManager ()
   app_home = TtaGetEnvString ("APP_HOME");
   sprintf (url_home, "%s%clib_files.dat", app_home, DIR_SEP); 
   /* ./.amaya/lib_files.dat */
-  libfile = TtaWriteOpen (url_home);
-  if (libfile)
+  file = TtaWriteOpen (url_home);
+  if (file)
     {
       succeed = TRUE;
       /* necessité de tester le nombre d'uri a placer dans lib_files.dat
@@ -3055,13 +3069,13 @@ ThotBool WriteInterSessionLibraryFileManager ()
 	{
 	  if (curList->customLibrary)
 	    /* it's a custom Library, add it to APP_HOME/lib_files.dat */
-	    fprintf (libfile, "%s\n", curList->URI);
+	    fprintf (file, "%s\n", curList->URI);
 	  else
-	    fprintf (libfile, "%s", curList->URI);
+	    fprintf (file, "%s", curList->URI);
 	  curList = curList->next;
 	}
     }
-  TtaWriteClose (libfile);
+  TtaWriteClose (file);
   TtaFreeMemory (url_home);
   TtaFreeMemory (urlstring);
 #endif /* _SVGLIB */
