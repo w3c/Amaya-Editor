@@ -45,8 +45,12 @@
 #include "frame_f.h" 
 #include "picture_f.h"
 #include "xwindowdisplay_f.h"
+#include "buildlines_f.h"
 
 #ifdef _GL
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <math.h>
 #include "glwindowdisplay.h"
 #endif /*_GL*/
 
@@ -430,6 +434,191 @@ static void OriginSystemExit (PtrAbstractBox pAb, ViewFrame  *pFrame,
 #endif /* _GL */
 }
 
+/*--------------------------------------------------------
+  GetBoxTransformedCoord : Transform windows coordinate x, y
+  to the transformed system  of the seeked box
+  --------------------------------------------------------*/
+void GetBoxTransformedCoord  (PtrAbstractBox pAbSeeked, int frame,
+			      int *lowerx, int *higherx, 
+			      int *x, int *y)
+{
+#ifdef _GL
+  PtrAbstractBox      pAb;
+  PtrBox              pBox;
+  ViewFrame          *pFrame;
+  int                 plane;
+  int                 nextplane;
+  int                 l, h;
+  ThotBool            FrameUpdatingStatus, FormattedFrame;
+  int                 OldXOrg, OldYOrg, 
+                      ClipXOfFirstCoordSys, ClipYOfFirstCoordSys;
+
+  double              winx, winy, finalx, finaly, finalz;
+  int                 viewport[4];
+  double              projection_view[16];
+  double              model_view[16];
+  int                 base_y;
+
+  FrameUpdatingStatus = FrameUpdating;
+  FrameUpdating = TRUE;  
+  pFrame = &ViewFrameTable[frame - 1];
+  pAb = pFrame->FrAbstractBox;
+  GetSizesFrame (frame, &l, &h);
+  pBox = pAb->AbBox;
+  if (pBox == NULL)
+    return;
+  /* Display planes in reverse order from biggest to lowest */
+  plane = 65536;
+  nextplane = plane - 1;
+  pAb = pFrame->FrAbstractBox;
+  if (FrameTable[frame].FrView == 1)
+    FormattedFrame = TRUE;
+  else
+    FormattedFrame = FALSE;
+  OldXOrg = 0;
+  OldYOrg = 0;
+  ClipXOfFirstCoordSys = ClipYOfFirstCoordSys = 0;
+  while (plane != nextplane)
+    /* there is a new plane to display */
+    {
+      plane = nextplane;
+      /* Draw all the boxes not yet displayed */
+      pAb = pFrame->FrAbstractBox;
+      while (pAb)
+	{
+	  if (pAb->AbDepth == plane &&
+	      pAb != pFrame->FrAbstractBox &&
+	      pAb->AbBox)
+	    {
+	      /* box in the current plane */
+	      pBox = pAb->AbBox;
+	      if (pAb->AbElement && pAb->AbDepth == plane)
+		{ 
+		  if (FormattedFrame)
+		    {
+		      /* If the coord sys origin is translated, 
+			 it must be before any other transfromation*/
+		      if (pAb->AbElement->ElSystemOrigin)
+			DisplayBoxTransformation (pAb->AbElement->ElTransform, 
+						  pFrame->FrXOrg, pFrame->FrYOrg);
+		      /* Normal transformation*/
+		      if (pAb->AbElement->ElTransform)
+			DisplayTransformation (pAb->AbElement->ElTransform, 
+					       pBox->BxWidth, 
+					       pBox->BxHeight);
+		      if (pAb->AbElement->ElSystemOrigin)
+			{ 
+			  if (pFrame->FrXOrg ||pFrame->FrYOrg)
+			    {
+			      OldXOrg = pFrame->FrXOrg;
+			      OldYOrg = pFrame->FrYOrg;
+			      pFrame->FrXOrg = 0;
+			      pFrame->FrYOrg = 0;
+			      ClipXOfFirstCoordSys = pBox->BxClipX;
+			      ClipYOfFirstCoordSys = pBox->BxClipY;
+			    }
+			}
+		    }
+		  if (pAb == pAbSeeked && pAb->AbLeafType != LtCompound) 
+		    {  
+		      glGetDoublev (GL_MODELVIEW_MATRIX, model_view);
+		      glGetDoublev (GL_PROJECTION_MATRIX, projection_view);		      
+		    }
+			      
+		}
+	    }	  
+	  else if (pAb->AbDepth < plane)
+	    {
+	      /* keep the lowest value for plane depth */
+	      if (plane == nextplane)
+		nextplane = pAb->AbDepth;
+	      else if (pAb->AbDepth > nextplane)
+		nextplane = pAb->AbDepth;
+	    }
+	  /* get next abstract box */
+	  if (pAb->AbLeafType == LtCompound && 
+	      pAb->AbFirstEnclosed)
+	    /* get the first child */
+	    pAb = pAb->AbFirstEnclosed;
+	  else if (pAb->AbNext)	    
+	    {	 
+	      if (FormattedFrame)
+		{
+		  OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0);
+		  OriginSystemExit (pAb, pFrame, plane, OldXOrg, OldYOrg, 
+				    ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);
+		}
+	      /* get the next sibling */
+	      pAb = pAb->AbNext;
+	    }
+	  else
+	    {
+	      /* go up in the tree */
+	      while (pAb->AbEnclosing && 
+		     pAb->AbEnclosing->AbNext == NULL)
+		{
+		  if (FormattedFrame)
+		    {
+		      OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0);		  	
+		      OriginSystemExit (pAb, pFrame, plane, OldXOrg, OldYOrg, 
+					ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);
+		    }
+		  pAb = pAb->AbEnclosing;
+		}
+	      if (FormattedFrame)
+		{	
+		  OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0);
+		  OriginSystemExit (pAb, pFrame, plane, OldXOrg, OldYOrg, 
+				    ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);	  
+		}
+	      pAb = pAb->AbEnclosing;
+	      if (pAb)
+		{
+		  if (FormattedFrame)
+		    {
+		      OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0);
+		      OriginSystemExit (pAb, pFrame, plane, OldXOrg, OldYOrg, 
+					ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);	  
+		    }
+		  pAb = pAb->AbNext;
+		}
+	    }
+	}
+    } 
+  FrameUpdating = FrameUpdatingStatus;
+  viewport[0] = 0; viewport[1] = 0; viewport[2] = l; viewport[3] = h;
+  winx = (double) *lowerx;
+  winy = (double) (h - *y);
+
+  if (GL_TRUE == gluUnProject (winx, winy, 0.0,
+			       model_view,
+			       projection_view,
+			       viewport,
+			       &finalx, &finaly, &finalz))
+    {
+      base_y = FloatToInt ((float) finaly);
+      if (*lowerx != *higherx)
+	{
+	  *lowerx = FloatToInt ((float) finalx);
+	  winx = (double) *higherx;
+	  winy = (double) (h - *y);
+	  gluUnProject (winx, winy, 0.0,
+			model_view,
+			projection_view,
+			viewport,
+			&finalx, &finaly, &finalz);
+
+	  *higherx = FloatToInt ((float) finalx);
+	  base_y = FloatToInt ((float) finaly);
+	}
+      else
+	{
+	  *higherx = *lowerx = FloatToInt ((float) finalx);
+	  *y = base_y;
+	}
+    }
+#endif /* _GL */
+}
 /*--------------------------------------------------------
   ComputeABoundingBox : Compute a unique bounding box, 
   but with current matrix stack

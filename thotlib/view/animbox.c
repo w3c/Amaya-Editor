@@ -53,6 +53,7 @@
 #include "appli_f.h"
 #include "frame_f.h"
 #include "contentapi_f.h"
+#include "font_f.h"
 
 #ifdef _GL
 #include "glwindowdisplay.h"
@@ -165,11 +166,22 @@ static void ApplyOpacityToAllBoxes (PtrAbstractBox pAb, int result)
   ----------------------------------------------------------------------*/
 static void ApplyXToAllBoxes (PtrAbstractBox pAb, float result)
 {
+ PtrBox pBox;
+
   while (pAb != NULL)
-    {      
-      pAb->AbBox->VisibleModification = TRUE;
-      pAb->AbBox->BxXOrg = result;
-      pAb->AbBox->BxClipX = result;  
+    {   
+      pBox = pAb->AbBox;
+      pBox->VisibleModification = TRUE;
+      pBox->BxXOrg = result;
+      if (pBox->BxType == BoSplit || 
+	  pBox->BxType == BoMulScript)
+	{
+	  while (pBox->BxNexChild)
+	    {
+	      pBox = pBox->BxNexChild;			
+	      pBox->BxXOrg = result;
+	    }
+	}
       ApplyXToAllBoxes (pAb->AbFirstEnclosed, result);
       pAb = pAb->AbNext;
     }
@@ -179,11 +191,26 @@ static void ApplyXToAllBoxes (PtrAbstractBox pAb, float result)
   ----------------------------------------------------------------------*/
 static void ApplyYToAllBoxes (PtrAbstractBox pAb, float result)
 {
+  PtrBox pBox;
+
   while (pAb != NULL)
-    {      
-      pAb->AbBox->VisibleModification = TRUE;
-      pAb->AbBox->BxYOrg = result;
-      pAb->AbBox->BxClipY = result;
+    {   
+      pBox = pAb->AbBox;
+      if (pAb->AbLeafType == LtText)
+	result -= BoxFontBase (pBox->BxFont);
+
+      pBox->VisibleModification = TRUE;
+
+      pBox->BxYOrg = result;
+      if (pBox->BxType == BoSplit || 
+	  pBox->BxType == BoMulScript)
+	{
+	  while (pBox->BxNexChild)
+	    {
+	      pBox = pBox->BxNexChild;			
+	      pBox->BxYOrg = result;
+	    }
+	}
       ApplyYToAllBoxes (pAb->AbFirstEnclosed, result);
       pAb = pAb->AbNext;
     }
@@ -196,8 +223,7 @@ static void ApplyWidthToAllBoxes (PtrAbstractBox pAb, float result)
   while (pAb != NULL)
     {      
       pAb->AbBox->VisibleModification = TRUE;
-      pAb->AbBox->BxW = result;
-      pAb->AbBox->BxClipW = result;     
+      pAb->AbBox->BxW = result;     
       ApplyWidthToAllBoxes (pAb->AbFirstEnclosed, result);
       pAb = pAb->AbNext;
     }
@@ -211,7 +237,6 @@ static void ApplyHeightToAllBoxes (PtrAbstractBox pAb, float result)
     {      
       pAb->AbBox->VisibleModification = TRUE;
       pAb->AbBox->BxH = result;
-      pAb->AbBox->BxClipH = result;
       ApplyHeightToAllBoxes (pAb->AbFirstEnclosed, result);
       pAb = pAb->AbNext;
     }

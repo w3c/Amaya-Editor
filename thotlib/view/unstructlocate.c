@@ -87,8 +87,14 @@ void   GetClickedBox (PtrBox *result, PtrAbstractBox pRootAb, int frame,
 		   pAb->AbLeafType == LtPolyLine ||
 		   pAb->AbLeafType == LtPath)
 		 {
-		   graphicBox = GetEnclosingClickedBox (pAb, x, x, y, frame,
-							&pointIndex);
+#ifdef _GL  
+		   if (pBox->BxClipX <= x &&
+		       pBox->BxClipX + pBox->BxClipW >= x &&
+		       pBox->BxClipY <= y &&
+		       pBox->BxClipY + pBox->BxClipH >= y)
+#endif  /* _GL */
+		     graphicBox = GetEnclosingClickedBox (pAb, x, x, y, frame,
+							  &pointIndex);
 		   if (graphicBox == NULL)
 		     /* eliminate this box */
 		     d = dist + 1;

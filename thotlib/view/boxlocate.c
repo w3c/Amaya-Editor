@@ -1917,6 +1917,8 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
   if (pAb->AbBox)
     {
       pBox = pAb->AbBox;
+
+
       /* Is there a piece of split box? */
       if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 	{
@@ -1947,7 +1949,14 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 	       pAb->AbPresentationBox && pAb->AbShape == '0')
 	/* it's also a dummy box */
 	return (NULL);
-      else if (pAb->AbLeafType == LtSymbol && pAb->AbShape == 'r')
+
+#ifdef _GL
+      /* Transform windows coordinate x, y to the transformed system 
+	 of the current box */
+      GetBoxTransformedCoord (pAb, frame, &lowerX, &higherX, &x, &y);
+#endif /* _GL */
+
+      if (pAb->AbLeafType == LtSymbol && pAb->AbShape == 'r')
 	/* a radical */
 	return (IsOnShape (pAb, lowerX, y, pointselect));
       else if (pAb->AbLeafType == LtPolyLine || pAb->AbLeafType == LtPath ||

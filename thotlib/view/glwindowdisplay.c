@@ -1368,7 +1368,7 @@ static void DisplayViewBoxTransformation (PtrTransform Trans, int Width, int Hei
       Trans = Trans->Next;
     }
   if (is_scaled)
-    glScaled (w_scale, h_scale, (double) 0.0f);
+    glScaled (w_scale, h_scale, (double) 1.0f);
   if (is_translated)
     glTranslatef (-x_trans, -y_trans, (float) 0.0f);
 }
@@ -1401,7 +1401,7 @@ void DisplayTransformation (PtrTransform Trans, int Width, int Height)
 	    case  PtElScale:
 	      glScalef (Trans->XScale, 
 			Trans->YScale, 
-			0);
+			1.0);
 	      break;
 	    case PtElTranslate:
 	      glTranslatef (Trans->XScale, 
@@ -2094,10 +2094,6 @@ void SetGlPipelineState ()
   glDisable (GL_SCISSOR_TEST);
   glClear (GL_COLOR_BUFFER_BIT);
   glEnable (GL_SCISSOR_TEST);  
-
-  /*(needed for gradients)*/
-  /*glShadeModel (GL_SMOOTH);*/
-  /* no gradients for now => */
   glShadeModel (GL_FLAT);
 
   /* Not recommended for hardware cards... 
@@ -2466,8 +2462,6 @@ void PickObject (int frame, int x, int y)
     }
   glMatrixMode (GL_MODELVIEW);
   mode = RENDER;
-}
-
 }
 #endif/*  _PICK */
 

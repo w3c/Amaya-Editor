@@ -26,6 +26,12 @@ extern void DrawFilledBox ( PtrAbstractBox pAb,
                             int xmax,
                             int ymin,
                             int ymax );
+extern void GetBoxTransformedCoord ( PtrAbstractBox pAbSeeked,
+                                     int frame,
+                                     int *lowerx,
+                                     int *highery,
+                                     int *x,
+                                     int *y );
 extern void ComputeABoundingBox ( PtrAbstractBox pAbSeeked,
                                   int frame );
 extern PtrBox DisplayAllBoxes ( int frame,
@@ -65,6 +71,12 @@ extern void DrawFilledBox (/* PtrAbstractBox pAb,
                               int xmax,
                               int ymin,
                               int ymax */);
+extern void GetBoxTransformedCoord (/* PtrAbstractBox pAbSeeked,
+                                       int frame,
+                                       int *lowerx,
+                                       int *highery,
+                                       int *x,
+                                       int *y */);
 extern void ComputeABoundingBox (/* PtrAbstractBox pAbSeeked,
                                     int frame */);
 extern PtrBox DisplayAllBoxes (/* int frame,
