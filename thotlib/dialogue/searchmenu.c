@@ -611,7 +611,12 @@ void CallbackTextReplace (int ref, int val, char *txt)
       if (SearchingD->SDocument == NULL ||
 	  SearchingD->SDocument->DocSSchema == NULL)
 	{
-	  TtaDestroyDialogue (NumFormSearchText);
+#ifdef _WINDOWS
+      EndDialog (SearchW, ID_DONE);
+      SearchW = NULL;
+#else /* _WINDOWS */
+      TtaDestroyDialogue (NumFormSearchText);
+#endif /* _WINDOWS */
 	  TtaFreeMemory (SString);
 	  SString = NULL;
 	  TtaFreeMemory (RString);
