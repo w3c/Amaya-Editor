@@ -504,6 +504,10 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
     {
       DefRegion (nframe, x, y, l+x, y+h );
       RedrawFrameBottom(nframe, 0, NULL);
+
+      /*      FrameRedraw (nframe, l, h);*/
+      /*      FrameVScrolledGTK (FrameTable[nframe].WdScrollV, nframe);
+	      FrameHScrolledGTK (FrameTable[nframe].WdScrollH, nframe);*/
     }
   return FALSE;
 }
@@ -3007,8 +3011,9 @@ void UpdateScrollbars (int frame)
        tmpw->value = Xpos;
        /*       printf ("  Xpos=%d\n  pagesize=%d\n", Xpos, width);*/
        /*gtk_adjustment_set_value (tmpw, Xpos);       */
-       gtk_widget_show_all (GTK_WIDGET(hscroll)->parent);
+       /*       gtk_widget_show_all (GTK_WIDGET(hscroll)->parent);*/
        gtk_widget_show_all (GTK_WIDGET(hscroll));
+       gtk_widget_queue_draw (GTK_WIDGET(hscroll));
        /*       gtk_widget_show_all (GTK_WIDGET(tmpw));*/
 #endif /* !_GTK */
      }
@@ -3037,8 +3042,9 @@ void UpdateScrollbars (int frame)
        tmpw->value = Ypos;
        /*       printf ("  Ypos=%d\n  pagesize=%d\n", Ypos, height);*/
        /*       gtk_adjustment_set_value (tmpw, Ypos);       */
-       gtk_widget_show_all (GTK_WIDGET(vscroll)->parent);
+       /*       gtk_widget_show_all (GTK_WIDGET(vscroll)->parent);*/
        gtk_widget_show_all (GTK_WIDGET(vscroll));
+       gtk_widget_queue_draw (GTK_WIDGET(vscroll));
        /*       gtk_widget_show_all (GTK_WIDGET(tmpw));*/
 #endif /* !_GTK */
      }

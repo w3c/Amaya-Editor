@@ -2647,7 +2647,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 #ifdef _GTK
 	   /*** Build the document window ***/
 	   Main_Wd = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-	   /*	   gtk_widget_realize (Main_Wd);*/
+	   /*	   gtk_widget_show_all (Main_Wd);*/
 	   Main_Wd->style->font = DefaultFont;
 	   gtk_window_set_title (GTK_WINDOW (Main_Wd), name);
 	   gtk_window_set_policy (GTK_WINDOW (Main_Wd), TRUE, TRUE, FALSE);
@@ -2663,7 +2663,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 
 	   /* Create the vbox which contain all the elements of the view */
 	   vbox1 = gtk_vbox_new (FALSE, 0);
-
 	   gtk_widget_show (vbox1);
 	   gtk_container_add (GTK_CONTAINER (Main_Wd), vbox1);
 
@@ -2933,7 +2932,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     GTK_SIGNAL_FUNC(FrameResizedGTK),
 			     (gpointer)frame);
 	   /* Put the scrollbars */
-	   tmpw = gtk_adjustment_new ((gfloat)0, (gfloat)0, (gfloat)dy, (gfloat)13, (gfloat)dy-13, (gfloat)dy);
+	   tmpw = gtk_adjustment_new (0, 0, dy, 13, dy-13, dy);
 	   ConnectSignalGTK (GTK_OBJECT (tmpw),
 			     "value_changed",
 			     GTK_SIGNAL_FUNC(FrameVScrolledGTK),
@@ -2944,7 +2943,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   gtk_table_attach (GTK_TABLE (table2), vscrl, 1, 2, 0, 1,
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);
-
 	   tmpw = gtk_adjustment_new (0, 0, dx, 13, dx-13, dx);
 	   ConnectSignalGTK (GTK_OBJECT (tmpw),
 			     "value_changed",
@@ -2952,6 +2950,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     (gpointer)frame);
       	   hscrl = gtk_hscrollbar_new (GTK_ADJUSTMENT(tmpw));
 	   gtk_widget_show (hscrl);
+
 	   gtk_object_set_data (GTK_OBJECT(hscrl), "Adjustment", (gpointer)tmpw);
 	   gtk_table_attach (GTK_TABLE (table2), hscrl, 0, 1, 1, 2,
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
@@ -2968,17 +2967,23 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			      (guint)gtk_object_get_data (GTK_OBJECT(statusbar), "MainSerie"),
 			      "");
 	   FrameTable[frame].WdStatus = statusbar;
+	   FrameTable[frame].WdScrollH = hscrl;
+	   FrameTable[frame].WdScrollV = vscrl;
+
+	   /* approximate the real size of the drawing area */
+	   FrameTable[frame].FrWidth  = (int) dx - 20;
+	   FrameTable[frame].FrScrollWidth  = (int) dx - 20;
+	   FrameTable[frame].FrHeight = (int) dy - 20;
 
 	   /* show the main window */
 	   gtk_widget_show_all (Main_Wd);
 
+           FrameTable[frame].WdFrame =  drawing_area;
+           FrRef[frame] = drawing_area->window;
+
 	   /* Add App icone */
 	   gdk_window_set_icon_name (Main_Wd->window, "Amaya");
 	   gdk_window_set_icon (Main_Wd->window, NULL, (GdkPixmap *)wind_pixmap, NULL);
-
-	   FrameTable[frame].WdScrollH = hscrl;
-	   FrameTable[frame].WdScrollV = vscrl;
-           FrRef[frame] = drawing_area->window;
 #else /* !_GTK */
 	   /*** Creation of scrollbars ***/
 	   n = 0;
@@ -3224,12 +3229,13 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   FrameTable[frame].WdScrollV = vscrl;
 	   FrameTable[frame].WdFrame = drawing_area;
 	   FrRef[frame] = XtWindowOfObject (drawing_area);
-#endif /* !_GTK */
+
 	   /* approximate the real size of the drawing area */
 	   FrameTable[frame].FrWidth  = (int) dx - 20;
 	   FrameTable[frame].FrScrollWidth  = (int) dx - 20;
 	   FrameTable[frame].FrHeight = (int) dy - 20;
            FrameTable[frame].WdFrame =  drawing_area;
+#endif /* !_GTK */
 #else  /* _WINDOWS */
 	   /*** scrollbars ***/
 	   hscrl = CreateWindow ("scrollbar", NULL, WS_CHILD | WS_VISIBLE | SBS_HORZ,
