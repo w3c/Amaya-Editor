@@ -507,18 +507,21 @@ PtrElement GetCellInRow (PtrElement pRow, PtrElement pColHead,
 PtrElement NextRowInTable (PtrElement pRow, PtrElement pTable)
 {
   PtrElement pNextRow, pAsc;
+  int        rowType;
 
   if (pRow)
     {
       /* next row */
       pNextRow = pRow->ElNext;
-      while (pNextRow &&  !TypeHasException (ExcIsRow,
-					     pNextRow->ElTypeNumber,
-					     pNextRow->ElStructSchema))
-	/* skip comments */
+      while (pNextRow && !TypeHasException (ExcIsRow,
+					    pNextRow->ElTypeNumber,
+					    pNextRow->ElStructSchema))
+	/* skip comments, PIs, etc. */
 	pNextRow = pNextRow->ElNext;
       if (!pNextRow)
 	{
+	  /***** attention, 2 types de rows en MathML *****/
+	  rowType = GetElemWithException (ExcIsRow, pRow->ElStructSchema);
 	  pAsc = pRow->ElParent;
 	  while (pAsc && pAsc != pTable && !pAsc->ElNext)
 	    pAsc = pAsc->ElParent;
@@ -527,9 +530,7 @@ PtrElement NextRowInTable (PtrElement pRow, PtrElement pTable)
 	      pAsc = pAsc->ElNext;
 	      if (pAsc)
 		/* look for a row in another tbody or in tfoot */
-		/***** attention, 2 types de rows en MathML *****/
-		pNextRow = SearchTypedElementInSubtree (pAsc,
-							pRow->ElTypeNumber,
+		pNextRow = SearchTypedElementInSubtree (pAsc, rowType,
 							pRow->ElStructSchema);
 	      if (!pNextRow && !pAsc->ElNext)
 		{

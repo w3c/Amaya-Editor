@@ -108,7 +108,7 @@ int SetRowExt (Element cell, int span, Document doc, ThotBool inMath)
      attrType.AttrTypeNum = HTML_ATTR_RowExt;
 
    if (span == 1 || span < 0)
-     /* remove attribute RowExt if it is attached to the cell */
+     /* remove attribute RowExt if the cell has such an attribute */
      {
        attr = TtaGetAttribute (cell, attrType);
        if (attr)
@@ -117,16 +117,29 @@ int SetRowExt (Element cell, int span, Document doc, ThotBool inMath)
    else
      {
        if (span == 0)
+	 /* "infinite" span. The cell spans to the last row in its block
+	    of rows */
 	 span = THOT_MAXINT;
        spannedrow = row;
        while (span > 0 && spannedrow != NULL)
 	 {
-	   span--;
+	   if (span != THOT_MAXINT)
+	     span--;
 	   nextspannedrow = GetSiblingRow (spannedrow, FALSE, inMath);
-	   if ((span == 0 || nextspannedrow == NULL) && spannedrow != row)
+	   if (span == 0 || nextspannedrow == NULL)
+	     /* that the last row spanned by the cell */
 	     {
 	       attr = TtaGetAttribute (cell, attrType);
-	       if (attr == NULL)
+	       if (attr)
+		 {
+		   if (spannedrow == row)
+		     /* there is actually no spanning */
+		     {
+		       TtaRemoveAttribute (cell, attr, doc);
+		       attr = NULL;
+		     }
+		 }
+	       else if (spannedrow != row)
 		 {
 		   attr = TtaNewAttribute (attrType);
 		   if (attr != NULL)
@@ -134,7 +147,8 @@ int SetRowExt (Element cell, int span, Document doc, ThotBool inMath)
 		 }
 	       if (attr)
 		 TtaSetAttributeReference (attr, cell, doc, spannedrow, doc);
-	       overflow = span;
+	       if (span != THOT_MAXINT)
+	         overflow = span;
 	     }
 	   spannedrow = nextspannedrow;
 	 }
@@ -1055,7 +1069,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 		}
 	      overflow = SetRowExt (cell, span, doc, inMath);
 	      if (overflow > 0 && attr)
-		/* spanning value is too great. update it */
+		/* spanning value is too high. update it */
 		TtaSetAttributeValue (attr, span-overflow, cell, doc);
 
 	      /* if there an attribute colspan for that cell,
@@ -1937,7 +1951,7 @@ void CellPasted (NotifyElement * event)
    Document            doc;
    AttributeType       rowspanType;
    Attribute           attr;
-   int                 span;
+   int                 span, overflow;
    ThotBool            inMath;
 
    cell = event->element;
@@ -1960,7 +1974,8 @@ void CellPasted (NotifyElement * event)
      /* undoing the deletion of any other cell in a "delete column"
 	command. Link the restored cell with the corresponding ColumnHead*/
        elType = TtaGetElementType (cell);
-       inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
+       inMath = TtaSameSSchemas (elType.ElSSchema,
+				 TtaGetSSchema ("MathML", doc));
        LinkCellToColumnHead (cell, CurrentColumn, doc, inMath);
      }
    else
@@ -1984,7 +1999,21 @@ void CellPasted (NotifyElement * event)
 	 span = 1;
      }
    if (span > 1 || span == 0)
-     SetRowExt (cell, span, doc, inMath);
+     {
+       overflow = SetRowExt (cell, span, doc, inMath);
+       if (overflow > 0)
+	 /* spanning value is too high. Update it */
+	 {
+	   span -= overflow;
+	   if (span == 1 || span < 0)
+	     {
+	       if (attr)
+		 TtaRemoveAttribute (cell, attr, doc);
+	     }
+	   else if (attr)
+	     TtaSetAttributeValue (attr, span, cell, doc);
+	 }
+     }
    
    HandleColAndRowAlignAttributes (row, doc);
    /* Check attribute NAME or ID in order to make sure that its value */
@@ -2239,7 +2268,9 @@ ThotBool DeleteColumn (NotifyElement * event)
 }
 
 /*----------------------------------------------------------------------
-  ColumnPasted                                             
+  ColumnPasted
+  This function is called when undoing the creation of a column in a table.
+  
   ----------------------------------------------------------------------*/
 void ColumnPasted (NotifyElement * event)
 {
@@ -2301,11 +2332,12 @@ void ColumnPasted (NotifyElement * event)
 	    {
 	      attr = TtaGetAttribute (cell, attrTypeC);
 	      if (attr)
-		/* there is a colspan attribute */
+		/* this cell has a colspan attribute */
 		{
 		  colspan = TtaGetAttributeValue (attr);
 		  if (colspan == 0)
-		    /* this cell spans up to the last column */
+		    /* this cell spans up to the last column. Update its
+		       ColExt attribute */
 		    SetColExt (cell, 0, doc, inMath, FALSE);
 		}
 	    }
@@ -2727,7 +2759,7 @@ void RowPasted (NotifyElement * event)
 	    {
 	      /* set the new value of colspan to the number of columns we
 		 have encountered since the cell was linked to its column
-		 head, except if we have reached the las column of the table
+		 head, except if we have reached the last column of the table
 		 and the original colspan of the cell was 0 */
 	      if (colhead || colspan != 0)
 		colspan = ncol;

@@ -620,8 +620,8 @@ void PasteCommand ()
   PtrDocument         pDoc;
   PtrElement          firstSel, lastSel, pEl, pPasted, pClose, pFollowing,
                       pNextEl, pFree, pSplitText, pSel, cellChild;
-  PtrElement          pColHead, pNextCol, pRow, pNextRow, pTable, pRealCol,
-                      pCe, addedCell, pCell, extendedCell[500];
+  PtrElement          pColHead, pNextCol, pRow, pNextRow, pTable,
+                      pRealCol, pCe, addedCell, pCell, extendedCell[500];
   PtrPasteElem        pPasteD;
   ElementType         cellType;
   DisplayMode         dispMode;
@@ -838,16 +838,19 @@ void PasteCommand ()
 			  pEl = NULL;
 			  /* move to the bottom of this cell */
 			  if (rowspan == 0)
-			    /* infinite vertical spanning. Stop */
-			    pRow = NULL;
+			    {
+			      /* infinite vertical spanning. Skip all remaining
+				 rows in this block of rows */
+			      while (pRow->ElNext)
+				pRow = pRow->ElNext;
+			    }
 			  else
 			    while (pRow && rowspan > 1)
 			      {
 				pRow = NextRowInTable (pRow, pTable);
 				if (pPasteD)
 				  pPasteD = pPasteD->PeNext;
-				if (rowspan > 0)
-				  rowspan--;
+				rowspan--;
 			      }
 			}
 		      else if (before && back == 0 &&
@@ -936,14 +939,23 @@ void PasteCommand ()
 		    }
 		  else if (WholeColumnSaved)
 		    {
-		      /* get the last column of the cell */
+		      /* get the last row of the pasted cell */
 		      GetCellSpans (pPasted, &colspan, &rowspan);
-		      while (pNextRow && ((rowspan > 1) || (rowspan == 0)))
+		      if (rowspan == 0)
 			{
+			  /* infinite vertical spanning. Skip all remaining
+			     rows in this block of rows */
+			  while (pNextRow->ElNext)
+			    pNextRow = pNextRow->ElNext;
+			  /* get the first row in the next block, if any */
 			  pNextRow = NextRowInTable (pNextRow, pTable);
-			  if (rowspan > 0)
-			    rowspan--;
 			}
+		      else
+			while (pNextRow && rowspan > 1)
+			  {
+			    pNextRow = NextRowInTable (pNextRow, pTable);
+			    rowspan--;
+			  }
 		    }
 		}
 
