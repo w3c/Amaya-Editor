@@ -87,7 +87,7 @@ Ctrl <Key>v , Ctrl <Key>x:         TtcCloseView()
 Ctrl <Key>x , Ctrl <Key>z:         Synchronize()
 Alt <Key>b:                        GotoPreviousHTML() 
 Alt <Key>f:                        GotoNextHTML() 
-Alt <Key>r:                        Reload() 
+<Key>F5:			   Reload() 
 
 #edit menu 
 Ctrl <Key>w:                       TtcCutSelection() 
@@ -98,7 +98,7 @@ Ctrl <Key>f:                       TtcSearchText()
 Ctrl <Key>c:                       TtcCopySelection() 
 Ctrl <Key>d:                       TtcDeleteSelection() 
 #Shift Ctrl <Key>*:                SetBrowserEditor() 
-Ctrl <Key>u , Ctrl <Key>s:         SpellCheck()
+<Key>F7:			   SpellCheck()
 
 #Headings sbmenu
 Shift Ctrl <Key>1:                 CreateHeading1() 

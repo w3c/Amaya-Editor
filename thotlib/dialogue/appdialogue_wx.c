@@ -1837,12 +1837,21 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
       ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
       return true;
     }
-  else if (thot_keysym == WXK_F11 ||
-	   thot_keysym == WXK_F12)
+    else if ( thot_keysym == WXK_F2 ||
+	      /*	      thot_keysym == WXK_F3 ||*/
+	      /*	      thot_keysym == WXK_F4 ||*/
+	      thot_keysym == WXK_F5 ||
+	      /*	      thot_keysym == WXK_F6 ||*/
+	      thot_keysym == WXK_F7 ||
+	      /*	      thot_keysym == WXK_F8 ||*/
+	      /*	      thot_keysym == WXK_F9 ||*/
+	      /*	      thot_keysym == WXK_F10 ||*/
+	      thot_keysym == WXK_F11 ||
+	      thot_keysym == WXK_F12 )
     {
       ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
       return true;
-    }
+      }
   else
     return false;
 }
@@ -1865,7 +1874,6 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
       int thot_keysym = event.GetKeyCode();  
       
       bool proceed_key = (
-			  thot_keysym == WXK_F2     ||
 			  thot_keysym == WXK_INSERT ||
 			  thot_keysym == WXK_DELETE ||
 			  thot_keysym == WXK_HOME   ||
@@ -1897,8 +1905,8 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
 	}
 #endif /* 0 */
       
-      /* only allow the F2 special key outside canvas */
-      if (!p_gl_canvas && proceed_key && thot_keysym != WXK_F2)
+      /* do not allow special key outside the canvas */
+      if (!p_gl_canvas && proceed_key )
 	{
 	  event.Skip();
 	  return true;      
