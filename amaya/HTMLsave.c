@@ -1403,7 +1403,6 @@ void RestartParser (Document doc, char *localFile,
   DocumentType  thotType;
   char          charsetname[MAX_LENGTH];
   int           profile, parsingLevel;
-  int           i;
   ThotBool      xmlDec, withDoctype, isXML, isKnown;
 
   /* Clean up previous Parsing errors file */

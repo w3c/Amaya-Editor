@@ -14,6 +14,7 @@
 #ifdef _WX
   #include "wx/wx.h"
 #endif /* _WX */
+#include "constmenu.h"
 
 #define THOT_EXPORT extern
 #include "amaya.h"

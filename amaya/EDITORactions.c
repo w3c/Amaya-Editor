@@ -1944,9 +1944,10 @@ void CreateTable (Document document, View view)
 
 	  if (!UserAnswer)
 	    return;
-
-	  DoTableCreation (document);
 	}
+      /* ctreate the table or 
+	  try to transform the current selection if the selection is not empty */
+	  DoTableCreation (document);
     }
 }
 

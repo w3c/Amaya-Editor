@@ -237,7 +237,9 @@ static char *CSSCheckEndValue (char *cssRule, char *endvalue, char *msg)
 static char *SkipProperty (char *ptr, ThotBool reportError)
 {
   char       *deb;
+#ifdef IV
   char        c;
+#endif
 
   deb = ptr;
   while (*ptr != EOS && *ptr != ';' && *ptr != '}')
