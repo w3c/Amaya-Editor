@@ -32,12 +32,12 @@
 <p>Amaya permet de lire et d'afficher n'importe quel document XML
 bien-formé.</p>
 
-<p>Pour un document XML faisant référence à une DTD non supportée (autre que
-XHTML, MathML et SVG), Amaya offre un support d'affichage et d'édition plus
-restreint. En effet, comme Amaya n'analyse pas la DTD associée, il ne peut
-vérifier la validité d'un tel document et n'a pas d'informations
-particulières sur les éléments et attributs et sur leur organisation dans le
-document.</p>
+<p>Pour un document XML faisant référence à une DTD ou à un espace de noms
+non supporté (autre que XHTML, MathML et SVG), Amaya offre un support
+d'affichage et d'édition plus restreint. En effet, comme Amaya n'analyse pas
+la DTD associée, il ne peut vérifier la validité d'un tel document et n'a pas
+d'informations particulières sur les éléments et attributs et sur leur
+organisation dans le document.</p>
 
 <p>Pour ces documents XML, Amaya propose une vue source, une vue structure
 qui reflète l'organisation du document et une vue formattée qui affiche le
@@ -46,7 +46,9 @@ considérés comme <strong>blocs</strong>. Néanmoins, pour des raisons de
 lisibilité les éléments contenant au moins un fils de type "texte" sont
 considérés comme des <strong>inline</strong> et sont mis en ligne dans la vue
 formattée. Amaya permet également d'associer des feuilles de styles CSS pour
-ces documents par l'intermédiaire d'instructions de traitement.</p>
+ces documents par l'intermédiaire d'instructions de traitement
+(<strong>PI</strong>) de type <a
+href="http://www.w3.org/1999/06/REC-xml-stylesheet-19990629 "><strong>xml-stylesheet</strong></a>.</p>
 
 <p>Le support des documents XML dans Amaya est encore expérimental et aucune
 interface d'édition spécifique n'est disponible dans cette version. C'est
