@@ -592,6 +592,22 @@ compte que lorsque le texte de remplacement est fourni.</p>
 <p style="text-align: center"><img alt="(Insertion image)"
 src="../images/create_image-fr.png" /></p>
 
+<p>L'image est affichée avec ses dimensions par défaut. On peut
+redimensionnerer l'image insérée :</p>
+<ul>
+  <li>soit par manipulation directe - en combinant la touche
+    <kbd>Control</kbd> et le <kbd>bouton droit</kbd> ou le <kbd>bouton du
+    milieu</kbd> de la souris,</li>
+  <li>soit en éditant les attributs <strong>width</strong> et
+    <strong>height</strong> de l'image. Quand l'image est sélectionnée, on
+    sélectionne l'entrée <strong>width</strong> ou <strong>height</strong> du
+    menu <strong>Attributs</strong>.</li>
+</ul>
+
+<p>Par défaut l'image est cadrée à gauche. On peut modifier le cadrage de
+l'image sélectionnée en modifiant l'alignement dans le formulaire
+<strong>Format</strong> du menu <strong>Style</strong>.</p>
+
 <h3>Remplacer une image</h3>
 
 <p>Pour remplacer une image il faut sélectionner cette image en draguant sur
@@ -1390,7 +1406,7 @@ le document comme un document HTML au lieu de XHTML et donc éviter de bloquer
 sur le parseur XML.</p>
 </div>
 <address>
-  <p>Irène Vatton $date: Monday 16 February 2004 - 13:07:47$</p>
+  <p>Irène Vatton $date: Monday 16 February 2004 - 15:29:21$</p>
 
 </address>
 

@@ -1594,6 +1594,7 @@ void UpdateTitle (Element el, Document doc)
        /* get the text of the title */
        length++;
        text = (char *)TtaGetMemory (length);
+       text[0] = EOS;
        next = textElem;
        i = 0;
        while (next)
@@ -1609,7 +1610,12 @@ void UpdateTitle (Element el, Document doc)
 	 }
 	UpdateAtom (doc, DocumentURLs[doc], text);
 	if (DocumentTypes[doc] != docSource)
-	  TtaChangeWindowTitle (doc, 0, text, UTF_8);
+	  {
+	    src = (char *)TtaGetMemory (length + strlen (HTAppName) + strlen (HTAppVersion) + 3);
+	    sprintf (src, "%s %s: %s", HTAppName, HTAppVersion, text);
+	    TtaChangeWindowTitle (doc, 0, src, UTF_8);
+	    TtaFreeMemory (src);
+	  }
     	if (DocumentTypes[doc] == docSource || DocumentSource[doc])
 	  {
 	    src = (char *)TtaGetMemory (length + 8);

@@ -1176,23 +1176,47 @@ int  TtaGetNumberOfBytesToRead (unsigned char **txt, CHARSET encoding)
   -------------------------------------------------------------*/
 unsigned char *TtaConvertWCToByte (wchar_t *src, CHARSET encoding)
 {
-  char             *dest;
-  int               i;
+  unsigned char   *dest, *ptr, utf8str[8];
+  int              i, l, len, nl;
 
   dest = NULL;
   if (src)
     {
-      i = 0;
-      while (src[i] != 0)
-	i++;
-      dest = (char *)TtaGetMemory (i + 1);
-      i = 0;
-      while (src[i] != 0)
+      if (encoding == UTF_8)
 	{
-	  dest[i] = TtaGetCharFromWC (src[i], encoding);
-	  i++;
+	  len = strlen ((char *) src) * 4;
+	  dest = (unsigned char *) TtaGetMemory (len + 1);
+	  i = 0;
+	  l = 0;
+	  while (l < len && src[i] != 0)
+	    {
+	      ptr = utf8str;
+	      nl = TtaWCToMBstring (src[i], &ptr);
+	      if (nl + l < len)
+		{
+		  strncpy ((char *) &dest[l], (char *) utf8str, nl);
+		  l += nl;
+		}
+	      else
+		len = l;
+	      i++;
+	    }
+	  dest[l] = EOS;
 	}
-      dest[i] = EOS;
+      else
+	{
+	  i = 0;
+	  while (src[i] != EOS)
+	    i++;
+	  dest = (unsigned char *) TtaGetMemory (i + 1);
+	  i = 0;
+	  while (src[i] != EOS)
+	    {
+	      dest[i] = TtaGetCharFromWC (src[i], encoding);
+	      i++;
+	    }
+	  dest[i] = EOS;
+	}
     }
   return (unsigned char *)dest;
 }
@@ -1205,23 +1229,28 @@ unsigned char *TtaConvertWCToByte (wchar_t *src, CHARSET encoding)
 wchar_t *TtaConvertByteToWC (unsigned char *src, CHARSET encoding)
 {
   wchar_t          *dest;
-  int               i;
+  int               i, len;
   unsigned char     c;
   wchar_t           wc;
 
   dest = NULL;
   if (src)
     {
-      i = strlen ((const char *)src) + 1;
-      dest = (wchar_t *)TtaGetMemory (i * sizeof (wchar_t));
-      i = 0;
-      while ((c = *src++) != EOS)
+      if (encoding == UTF_8)
+	dest = TtaConvertMbsToCHAR (src);
+      else
 	{
-	  wc = TtaGetWCFromChar (c, encoding);
-	  if (wc)
-	    dest[i++] = wc;
+	  len = strlen ((const char *)src);
+	  dest = (wchar_t *)TtaGetMemory ((len + 1) * sizeof (wchar_t));
+	  i = 0;
+	  while (i < len && (c = *src++) != EOS)
+	    {
+	      wc = TtaGetWCFromChar (c, encoding);
+	      if (wc)
+		dest[i++] = wc;
+	    }
+	  dest[i] = EOS;
 	}
-      dest[i] = EOS;
     }
   return dest;
 }
@@ -1234,8 +1263,7 @@ wchar_t *TtaConvertByteToWC (unsigned char *src, CHARSET encoding)
 unsigned char *TtaConvertByteToMbs (unsigned char *src, CHARSET encoding)
 {
   wchar_t         *tmp;
-  unsigned char   *dest, *ptr;
-  int              i, l;
+  unsigned char   *dest;
 
   dest = NULL;
   if (src)
@@ -1246,17 +1274,7 @@ unsigned char *TtaConvertByteToMbs (unsigned char *src, CHARSET encoding)
 	{
 	  /* generate the WC string */
 	  tmp = TtaConvertByteToWC (src, encoding);
-	  /* now generate the Multi Byte string */
-	  dest = (unsigned char *)TtaGetMemory (4*strlen ((char *)src) + 1);
-	  i = 0;
-	  l = 0;
-	  while (tmp[i] != 0)
-	    {
-	      ptr = &dest[l];
-	      l += TtaWCToMBstring (tmp[i], &ptr);
-	      i++;
-	    }
-	  dest[l] = EOS;
+	  dest = TtaConvertWCToByte (tmp, UTF_8);
 	  TtaFreeMemory (tmp);
 	}
     }
@@ -1272,16 +1290,17 @@ unsigned char *TtaConvertMbsToByte (unsigned char *src, CHARSET encoding)
 {
   wchar_t         *tmp;
   unsigned char   *dest, *ptr;
-  int              i, l;
+  int              i, l, len;
 
   dest = NULL;
   if (src)
     {
       /* generate the WC string */
-      tmp = (wchar_t *)TtaGetMemory ((strlen ((char *)src) + 1) * sizeof (wchar_t));
+      len = strlen ((char *)src);
+      tmp = (wchar_t *)TtaGetMemory ((len + 1) * sizeof (wchar_t));
       i = 0;
       l = 0;
-      while (src[l] != 0)
+      while (src[l] != 0 && i < len)
 	{
 	  ptr = &src[l];
 	  l += TtaMBstringToWC (&ptr, &tmp[i]);
@@ -1304,15 +1323,16 @@ CHAR_T *TtaConvertMbsToCHAR (unsigned char *src)
 {
   CHAR_T          *dest = NULL;
   unsigned char   *ptr;
-  int              i, l;
+  int              i, l, len;
 
   if (src)
     {
       /* generate the WC string */
-      dest = (CHAR_T *)TtaGetMemory ((strlen ((char *)src) + 1) * sizeof (CHAR_T));
+      len = strlen ((char *)src);
+      dest = (CHAR_T *)TtaGetMemory ((len + 1) * sizeof (CHAR_T));
       i = 0;
       l = 0;
-      while (src[l] != 0)
+      while (src[l] != 0 && i < len)
 	{
 	  ptr = &src[l];
 	  l += TtaMBstringToWC (&ptr, &dest[i]);
