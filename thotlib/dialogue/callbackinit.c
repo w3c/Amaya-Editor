@@ -44,7 +44,7 @@ void InitApplicationSchema (PtrSSchema pSS)
   if (pSS->SsName[0] != EOS)
     {
       schemaActions = SchemasEvents;
-      while (schemaActions && !strcmp (schemaActions->EvSName, schemaName))
+      while (schemaActions && strcmp (schemaActions->EvSName, schemaName))
 	schemaActions = schemaActions->EvSNext;
       if (schemaActions != NULL)
 	pSS->SsActionList = schemaActions;
@@ -79,7 +79,7 @@ void TteAddAction (char *actionName, Proc doIt)
     {
       /* following actions are treated */
       newAction = pAction->ActNext;
-      while (newAction && !strcmp (actionName, pAction->ActName))
+      while (newAction && strcmp (actionName, pAction->ActName))
 	{
 	  pAction = pAction->ActNext;
 	  newAction = newAction->ActNext;
