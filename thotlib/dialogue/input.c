@@ -700,7 +700,7 @@ int                 key;
 #                  ifdef _WINDOWS
                    if (ptr->K_EntryCode == key && !(specialKey == FALSE && key == 27)) {
 #                  else  /* !_WINDOWS */
-                   if (ptr->K_EntryCode == key)) {
+                   if (ptr->K_EntryCode == key) {
 #                  endif /* _WINDOWS */
                       /* On entre dans un automate */
                       found = TRUE;
