@@ -74,33 +74,33 @@ static Name          NewSchemaName;
 /* ---------------------------------------------------------------------- */
 /* | BuildPathDocBuffer construit une chaine des paths de documents     | */
 /* |                    pour les dialogues de l'editeur Thot.                   | */
-/* |                    la chaine est construite dans BufDir et les entrees sont        | */
+/* |                    la chaine est construite dans bufDir et les entrees sont        | */
 /* |                    separees par separator, le nombre d'entrees est | */
-/* |                    retourne dans nbitem                            | */
+/* |                    retourne dans nbItems                            | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                BuildPathDocBuffer (char *BufDir, char separator, int *nbitem)
+void                BuildPathDocBuffer (char *bufDir, char separator, int *nbItems)
 #else  /* __STDC__ */
-void                BuildPathDocBuffer (BufDir, separator, nbitem)
-char               *BufDir;
+void                BuildPathDocBuffer (bufDir, separator, nbItems)
+char               *bufDir;
 char                separator;
-int                *nbitem;
+int                *nbItems;
 
 #endif /* __STDC__ */
 {
    int                 i, nb;
 
-   strncpy (BufDir, DocumentPath, MAX_PATH);
+   strncpy (bufDir, DocumentPath, MAX_PATH);
 
    /* remplace PATH_SEP par separator pour le formulaire de saisie des documents */
    nb = 1;
-   for (i = 0; i < MAX_PATH && BufDir[i] != '\0'; i++)
-      if (BufDir[i] == PATH_SEP)
+   for (i = 0; i < MAX_PATH && bufDir[i] != '\0'; i++)
+      if (bufDir[i] == PATH_SEP)
 	{
-	   BufDir[i] = separator;
+	   bufDir[i] = separator;
 	   nb++;
 	}
-   *nbitem = nb;
+   *nbItems = nb;
 }
 
 
@@ -241,7 +241,7 @@ char               *data;
    PathBuffer          docName;
    PtrDocument         pDoc;
    int                 i;
-   char                BufDir[MAX_PATH];
+   char                bufDir[MAX_PATH];
 
    val = (int) data;
    switch (ref)
@@ -277,9 +277,9 @@ char               *data;
 			      {
 				 strcat (DocumentPath, PATH_STR);
 				 strcat (DocumentPath, DirectoryName);
-				 BuildPathDocBuffer (BufDir, '\0', &i);
+				 BuildPathDocBuffer (bufDir, '\0', &i);
 				 TtaNewSelector (NumZoneDirOpenDoc, NumFormOpenDoc,
-						 TtaGetMessage (LIB, DOC_DIR), i, BufDir, 9, NULL, FALSE, TRUE);
+						 TtaGetMessage (LIB, DOC_DIR), i, bufDir, 9, NULL, FALSE, TRUE);
 
 				 TtaListDirectory (DirectoryName, NumFormOpenDoc, NULL, -1,
 						   ".PIV", TtaGetMessage (LIB, FILES), NumSelDoc);
@@ -394,10 +394,10 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   char                BufMenu[MAX_TXT_LEN];
-   char                BufDir[MAX_PATH];
+   char                bufMenu[MAX_TXT_LEN];
+   char                bufDir[MAX_PATH];
    PathBuffer          docName;
-   int                 length, nbitem;
+   int                 length, nbItems;
 
    if (ThotLocalActions[T_opendoc] == NULL)
      {
@@ -413,14 +413,14 @@ View                view;
    TtaNewForm (NumFormOpenDoc, 0, 0, 0,
 	  TtaGetMessage (LIB, OPEN_DOC), TRUE, 2, 'L', D_CANCEL);
    /* zone de saisie des dossiers documents */
-   BuildPathDocBuffer (BufDir, '\0', &nbitem);
+   BuildPathDocBuffer (bufDir, '\0', &nbItems);
    TtaNewSelector (NumZoneDirOpenDoc, NumFormOpenDoc,
-		   TtaGetMessage (LIB, DOC_DIR), nbitem, BufDir, 6, NULL, FALSE, TRUE);
-   if (DirectoryName[0] == '\0' && nbitem >= 1)
-      /* si pas de dossier courant, on initialise avec le premier de BufDir */
+		   TtaGetMessage (LIB, DOC_DIR), nbItems, bufDir, 6, NULL, FALSE, TRUE);
+   if (DirectoryName[0] == '\0' && nbItems >= 1)
+      /* si pas de dossier courant, on initialise avec le premier de bufDir */
      {
-	strcpy (DirectoryName, BufDir);
-	strcpy (DefaultDocumentName, BufDir);
+	strcpy (DirectoryName, bufDir);
+	strcpy (DefaultDocumentName, bufDir);
 	TtaSetSelector (NumZoneDirOpenDoc, 0, NULL);
      }
    else if (DirectoryName[0] != '\0')
@@ -443,8 +443,8 @@ View                view;
    TtaNewForm (NumFormImportClass, 0, 0, 0,
 	   TtaGetMessage (LIB, IMPORT_DOC_TYPE), FALSE, 1, 'L', D_DONE);
    /* selecteur ou zone de saisie Classe du document a importer */
-   nbitem = ConfigMakeImportMenu (BufMenu);
-   if (nbitem == 0)
+   nbItems = ConfigMakeImportMenu (bufMenu);
+   if (nbItems == 0)
       /* pas d'import defini dans le fichier de langue, */
       /* on cree une simple zone de saisie de texte */
       TtaNewTextForm (NumSelectImportClass, NumFormImportClass,
@@ -452,12 +452,12 @@ View                view;
    else
       /* on cree un selecteur */
      {
-	if (nbitem >= 6)
+	if (nbItems >= 6)
 	   length = 6;
 	else
-	   length = nbitem;
+	   length = nbItems;
 	TtaNewSelector (NumSelectImportClass, NumFormImportClass,
-			TtaGetMessage (LIB, IMPORT_DOC_TYPE), nbitem, BufMenu, length, NULL, TRUE, FALSE);
+			TtaGetMessage (LIB, IMPORT_DOC_TYPE), nbItems, bufMenu, length, NULL, TRUE, FALSE);
 	/* initialise le selecteur sur sa premiere entree */
 	TtaSetSelector (NumSelectImportClass, 0, "");
      }
