@@ -1,0 +1,85 @@
+#
+# Makefile for Java libraries sources compilation when the full
+# Amaya Java sources are not available.
+#
+# Generated from javalib/Makefile.javanosrc
+# Daniel Veillard, 1997
+#
+
+JAVASTUB= ../bin/javastub
+JAVAC	= PATH="`pwd`/../bin:$$PATH" ; export PATH; \
+cd $(THOTDIR)/classes ;\
+CLASSPATH=".:`pwd`:`pwd`/classes.zip:`pwd`/biss.zip:`pwd`/jigsaw.zip:`pwd`/thotlib.zip:`pwd`/amaya.zip";\
+export CLASSPATH; kaffe -mx 64000000 sun.tools.javac.Main
+KAFFEH	= CLASSPATH=".:$(THOTDIR)/classes:$(THOTDIR)/classes/classes.zip:$(THOTDIR)/classes/biss.zip:$(THOTDIR)/classes/jigsaw.zip:$(THOTDIR)/classes/thotlib.zip:$(THOTDIR)/classes/amaya.zip";\
+          export CLASSPATH; ../bin/kaffeh
+
+zips :
+	@(echo "Cannot build zip : Java sources not available");
+
+#
+# Availability of the sources influences the class headers generation.
+# In case the source are not available, do not try to compile them before
+# calling kaffeh
+#
+
+w3c_thotlib_Action.h : 
+	@echo
+	@echo "Producing header for class Action"
+	$(KAFFEH) w3c.thotlib.Action
+
+w3c_thotlib_IntPtr.h : 
+	@echo
+	@echo "Producing header for class IntPtr"
+	$(KAFFEH) w3c.thotlib.IntPtr
+
+w3c_thotlib_Language.h : 
+	@echo
+	@echo "Producing header for class Language"
+	$(KAFFEH) w3c.thotlib.Language
+
+w3c_thotlib_Extra.h : 
+	@echo
+	@echo "Producing header for class Extra"
+	$(KAFFEH) w3c.thotlib.Extra
+
+w3c_thotlib_PRule.h : 
+	@echo
+	@echo "Producing header for class PRule"
+	$(KAFFEH) w3c.thotlib.PRule
+
+w3c_thotlib_AttributeType.h : 
+	@echo
+	@echo "Producing header for class AttributeType"
+	$(KAFFEH) w3c.thotlib.AttributeType
+
+w3c_thotlib_Attribute.h : 
+	@echo
+	@echo "Producing header for class Attribute"
+	$(KAFFEH) w3c.thotlib.Attribute
+
+w3c_thotlib_ElementType.h : 
+	@echo
+	@echo "Producing header for class ElementType"
+	$(KAFFEH) w3c.thotlib.ElementType
+
+w3c_thotlib_Document.h : 
+	@echo
+	@echo "Producing header for class Document"
+	$(KAFFEH) w3c.thotlib.Document
+
+w3c_thotlib_SSchema.h : 
+	@echo
+	@echo "Producing header for class SSchema"
+	$(KAFFEH) w3c.thotlib.SSchema
+
+w3c_thotlib_Element.h : 
+	@echo
+	@echo "Producing header for class Element"
+	$(KAFFEH) w3c.thotlib.Element
+
+w3c_amaya_HTTPRequest.h :
+	@echo
+	@echo "Producing header for class HTTPRequest"
+	$(KAFFEH) w3c.amaya.HTTPRequest
+

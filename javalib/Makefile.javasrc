@@ -1,0 +1,123 @@
+#
+# Makefile for Java libraries sources compilation when the full
+# Amaya Java sources are available.
+#
+# Generated from javalib/Makefile.javasrc
+# Daniel Veillard, 1997
+#
+
+JAVASTUB= ../bin/javastub
+JAVAC	= PATH="`pwd`/../bin:$$PATH" ; export PATH; \
+cd $(THOTDIR)/classes ;\
+CLASSPATH=".:`pwd`:`pwd`/classes.zip:`pwd`/biss.zip:`pwd`/jigsaw.zip:`pwd`/amaya.zip:`pwd`/thotlib.zip";\
+export CLASSPATH; kaffe -mx 64000000 sun.tools.javac.Main
+KAFFEH	= CLASSPATH=".:$(THOTDIR)/classes:$(THOTDIR)/classes/classes.zip:$(THOTDIR)/classes/biss.zip:$(THOTDIR)/classes/jigsaw.zip";\
+          export CLASSPATH; ../bin/kaffeh
+
+# this rule rebuilds jigsaw.zip, amaya.zip and thotlib.zip
+# in the classes directory.
+
+zips : classes
+	cd $(THOTDIR)/classes ; make zips
+
+#
+# Availability of the sources influences the class headers generation.
+# In case the source are available, one compiles them before calling kaffeh
+#
+
+w3c_thotlib_Action.h : $(THOTDIR)/classes/w3c/thotlib/Action.java $(COMPILERS)
+	@echo
+	@echo "Compiling Java class Action"
+	$(JAVAC) w3c/thotlib/Action.java
+	@echo
+	@echo "Producing header for class Action"
+	$(KAFFEH) w3c.thotlib.Action
+
+w3c_thotlib_IntPtr.h : $(THOTDIR)/classes/w3c/thotlib/IntPtr.java $(COMPILERS)
+	@echo
+	@echo "Compiling Java class IntPtr"
+	$(JAVAC) w3c/thotlib/IntPtr.java
+	@echo
+	@echo "Producing header for class IntPtr"
+	$(KAFFEH) w3c.thotlib.IntPtr
+
+w3c_thotlib_Language.h : $(THOTDIR)/classes/w3c/thotlib/Language.java $(COMPILERS)
+	@echo
+	@echo "Compiling Java class Language"
+	$(JAVAC) w3c/thotlib/Language.java
+	@echo
+	@echo "Producing header for class Language"
+	$(KAFFEH) w3c.thotlib.Language
+
+w3c_thotlib_Extra.h : $(THOTDIR)/classes/w3c/thotlib/Extra.java $(COMPILERS)
+	@echo
+	@echo "Compiling Java class Extra"
+	$(JAVAC) w3c/thotlib/Extra.java
+	@echo
+	@echo "Producing header for class Extra"
+	$(KAFFEH) w3c.thotlib.Extra
+
+w3c_thotlib_PRule.h : $(THOTDIR)/classes/w3c/thotlib/PRule.java $(COMPILERS)
+	@echo
+	@echo "Compiling Java class PRule"
+	$(JAVAC) w3c/thotlib/PRule.java
+	@echo
+	@echo "Producing header for class PRule"
+	$(KAFFEH) w3c.thotlib.PRule
+
+w3c_thotlib_AttributeType.h : $(THOTDIR)/classes/w3c/thotlib/AttributeType.java $(COMPILERS)
+	@echo
+	@echo "Compiling Java class AttributeType"
+	$(JAVAC) w3c/thotlib/AttributeType.java
+	@echo
+	@echo "Producing header for class AttributeType"
+	$(KAFFEH) w3c.thotlib.AttributeType
+
+w3c_thotlib_Attribute.h : $(THOTDIR)/classes/w3c/thotlib/Attribute.java $(COMPILERS)
+	@echo
+	@echo "Compiling Java class Attribute"
+	$(JAVAC) w3c/thotlib/Attribute.java
+	@echo
+	@echo "Producing header for class Attribute"
+	$(KAFFEH) w3c.thotlib.Attribute
+
+w3c_thotlib_ElementType.h : $(THOTDIR)/classes/w3c/thotlib/ElementType.java $(COMPILERS)
+	@echo
+	@echo "Compiling Java class ElementType"
+	$(JAVAC) w3c/thotlib/ElementType.java
+	@echo
+	@echo "Producing header for class ElementType"
+	$(KAFFEH) w3c.thotlib.ElementType
+
+w3c_thotlib_Document.h : $(THOTDIR)/classes/w3c/thotlib/Document.java $(COMPILERS)
+	@echo
+	@echo "Compiling Java class Document"
+	$(JAVAC) w3c/thotlib/Document.java
+	@echo
+	@echo "Producing header for class Document"
+	$(KAFFEH) w3c.thotlib.Document
+
+w3c_thotlib_SSchema.h : $(THOTDIR)/classes/w3c/thotlib/SSchema.java $(COMPILERS)
+	@echo
+	@echo "Compiling Java class SSchema"
+	$(JAVAC) w3c/thotlib/SSchema.java
+	@echo
+	@echo "Producing header for class SSchema"
+	$(KAFFEH) w3c.thotlib.SSchema
+
+w3c_thotlib_Element.h : $(THOTDIR)/classes/w3c/thotlib/Element.java $(COMPILERS)
+	@echo
+	@echo "Compiling Java class Element"
+	$(JAVAC) w3c/thotlib/Element.java
+	@echo
+	@echo "Producing header for class Element"
+	$(KAFFEH) w3c.thotlib.Element
+
+w3c_amaya_HTTPRequest.h : $(THOTDIR)/classes/w3c/amaya/HTTPRequest.java $(COMPILERS)
+	@echo
+	@echo "Compiling Amaya class HTTPRequest"
+	$(JAVAC) w3c/amaya/HTTPRequest.java
+	@echo
+	@echo "Producing header for class HTTPRequest"
+	$(KAFFEH) w3c.amaya.HTTPRequest
+
