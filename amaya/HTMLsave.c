@@ -1119,7 +1119,7 @@ void                DoSaveAs ()
 	/*
 	 * Transform all URLs to absolute ones.
 	 */
-	if (UpdateImages)
+	if (UpdateURLs)
 	   SetAbsoluteURLs (SavingDocument, 1);
 
 	/* change all Picture SRC to the new remote URL. */
