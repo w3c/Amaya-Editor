@@ -619,6 +619,10 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
   ThotBool            constraint, useMax;
   ThotBool            addExtra;
 
+  pBox = table->AbBox;
+  /* check if we're really handling a table */
+  if (!pBox || pBox->BxType != BoTable)
+    return;
   /* Now check the table size */
   if (table->AbBox->BxCycles != 0)
     /* the table formatting is currently in process */
@@ -629,10 +633,6 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
     return;
 
   /* get the number of columns */
-  pBox = table->AbBox;
-  /* check if we're really handling a table */
-  if (pBox && pBox->BxType != BoTable)
-    return;
   pTabRel = pBox->BxColumns;
   cNumber = 0;
   while (pTabRel)
@@ -1235,7 +1235,7 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
   /* how many columns */
   pBox = table->AbBox;
   /* check if we're really handling a table */
-  if (pBox && pBox->BxType != BoTable)
+  if (!pBox || pBox->BxType != BoTable)
     return FALSE;
   pTabRel = pBox->BxColumns;
   cNumber = 0;
