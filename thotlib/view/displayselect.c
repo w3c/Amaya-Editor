@@ -355,9 +355,11 @@ PtrBox       pBox;
 	      pChildBox = pChildBox->BxNexChild;
 	    }
 	}
-      else if (pAb->AbLeafType != LtPicture &&
-	       pAb->AbLeafType != LtGraphics &&
-	       pAb->AbLeafType != LtPolyLine)
+      else if (pAb->AbLeafType == LtPicture ||
+	       pAb->AbLeafType == LtGraphics ||
+	       pAb->AbLeafType == LtPolyLine)
+	DisplayPointSelection (frame, pBox, 0);
+      else
 	{
 	  /* the whole box is selected */
 	  leftX = pBox->BxXOrg - pFrame->FrXOrg;

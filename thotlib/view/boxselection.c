@@ -787,7 +787,7 @@ ThotBool            alone;
 		}
 	    }
 
-	  /* pViewSel point to the right selector */
+	  /* pViewSel points to the right selector */
 	  if ( pFrame->FrClipXBegin == 0 && pFrame->FrClipXEnd == 0)
 	    {
 	      /* ready to display the current selection */

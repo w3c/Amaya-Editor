@@ -5887,11 +5887,12 @@ RULES
 		END;
 	END;
 
- HEAD:	BEGIN
+  HEAD:	BEGIN
 	Visibility: 0;
 	CreateBefore(HEAD_S);
 	IN Structure_view BEGIN
-		Visibility: Enclosing =;
+		if NOT within XMLGraphics
+		  Visibility: Enclosing =;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
@@ -6468,8 +6469,10 @@ RULES
 	END;
  Big_text:
 	BEGIN
-	CreateBefore(BIG_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(BIG_S);
+	   CreateWith(VerticalLine);
+	END;
 	LineBreak: Yes;
 	Size: 6;
 	HorizPos: Left = Previous . Right;
@@ -6485,8 +6488,10 @@ RULES
 	END;
  Small_text:
 	BEGIN
-	CreateBefore(SMALL_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(SMALL_S);
+	   CreateWith(VerticalLine);
+	END;
 	LineBreak: Yes;
 	Size: 3;
 	HorizPos: Left = Previous . Right;
@@ -6502,8 +6507,10 @@ RULES
 	END;
  Subscript:
 	BEGIN
-	CreateBefore(SUB_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(SUB_S);
+	   CreateWith(VerticalLine);
+	END;
 	LineBreak: No;
 	Size: Enclosing * 60 %;
 	HorizRef: Enclosed . HRef - 0.3;
@@ -6523,8 +6530,10 @@ RULES
 	END;
  Superscript:
 	BEGIN
-	CreateBefore(SUP_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(SUP_S);
+	   CreateWith(VerticalLine);
+	END;
 	LineBreak: No;
 	Size: Enclosing * 60 %;
 	HorizRef: Enclosed . HRef + 0.4;
@@ -6545,8 +6554,10 @@ RULES
 
  Emphasis:
 	BEGIN	
-	CreateBefore(EM_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(EM_S);
+	   CreateWith(VerticalLine);
+	END;
 	LineBreak: Yes;
 	Style: Italics;
 	HorizPos: Left = Previous . Right;
@@ -6561,8 +6572,10 @@ RULES
 
  Strong:
 	BEGIN
-	CreateBefore(STRONG_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	  CreateBefore(STRONG_S);
+	  CreateWith(VerticalLine);
+	END;
 	LineBreak: Yes;
 	Weight: Bold;
 	HorizPos: Left = Previous . Right;
@@ -6576,8 +6589,10 @@ RULES
 	END;
  Def:
 	BEGIN
-	CreateBefore(DFN_S);
-	CreateWith(VerticalLine);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(DFN_S);
+	   CreateWith(VerticalLine);
+	END;
 	LineBreak: Yes;
 	Size: Enclosing + 1;
 	Weight: Bold;
@@ -6923,6 +6938,7 @@ RULES
  HTMLfragment:
 	BEGIN
 	Width: Enclosing . Width;
+	Depth: Enclosing =;
 	END;
 
  Paragraph: BEGIN
@@ -7197,13 +7213,16 @@ RULES
 	END;
 
  Horizontal_Rule: BEGIN
-	CreateBefore(HR_S);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(HR_S);
 #ifdef PAGE
-	CreateLast(HR_Print);
+	   CreateLast(HR_Print);
+	END;
 #else
-	CreateLast(HR_Alt);
-	CreateLast(HR_Graph1);
-	if not within Preformatted
+	   CreateLast(HR_Alt);
+	   CreateLast(HR_Graph1);
+	END;
+	if not within Preformatted AND NOT within XMLGraphics
 	   CreateLast(HR_Graph2);
 #endif
 	Width: Enclosing . Width;
@@ -7641,7 +7660,7 @@ RULES
 	if IsInput BEGIN
 		 CreateBefore(IMG_in_S);
 		END;
-	if NOT Immediately within Object AND NOT IsInput BEGIN
+	if NOT Immediately within Object AND NOT IsInput AND NOT within XMLGraphics BEGIN
 		CreateBefore(IMG_S);
 		END;
 	LineBreak: No;
@@ -8563,9 +8582,11 @@ ATTRIBUTES
 	CreateBefore(VALUE_USEMAP);
 	END;
 
- ALT:	BEGIN
-	CreateBefore(ATTR_ALT);
-	CreateBefore(VALUE_ALT);
+ ALT:   BEGIN
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(ATTR_ALT);
+	   CreateBefore(VALUE_ALT);
+	   END;
 	END;
 
  longdesc: BEGIN
@@ -8706,10 +8727,11 @@ ATTRIBUTES
 	CreateLast(VALUE_REV_ANCH);
 	END;
 
- SRC:
-	BEGIN
-	CreateBefore(ATTR_SRC);
-	CreateBefore(VALUE_SRC);
+ SRC:   BEGIN
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(ATTR_SRC);
+	   CreateBefore(VALUE_SRC);
+	   END;
 	END;
 
  Width__:
