@@ -1177,6 +1177,9 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
   int           mainView;
   int           x, y, width, height;
  
+  /* Store the new value into the presentation rule */
+  TtaSetPRuleValue (event->element, event->pRule, event->value, event->document);
+
   el = event->element;
   elType = TtaGetElementType (el);
   doc = event->document;
@@ -1207,16 +1210,12 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
 	}
       if (sibling && MakeASpan (el, &span, doc))
 	{
-	  /* Store the new value into the presentation rule */
-	  TtaSetPRuleValue (event->element, presRule, event->value, doc);
 	  MovePRule (presRule, el, span, doc, FALSE);
 	  el = span;
 	}
       else
 	{
 	  el = TtaGetParent (el);
-	  /* Store the new value into the presentation rule */
-	  TtaSetPRuleValue (event->element, presRule, event->value, doc);
 	  MovePRule (presRule, event->element, el, doc, FALSE);
 	}
     }
