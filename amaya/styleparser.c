@@ -1563,7 +1563,7 @@ static char *ParseCSSFontSize (Element element, PSchema tsch,
 			       CSSInfoPtr css, ThotBool isHTML)
 {
    PresentationValue   pval;
-   char               *ptr = NULL;
+   char               *ptr = NULL, *ptr1 = NULL;
    ThotBool	       real;
 
    pval.typed_data.real = FALSE;
@@ -1625,13 +1625,16 @@ static char *ParseCSSFontSize (Element element, PSchema tsch,
    else
      {
        /* look for a '/' within the current cssRule */
+       ptr1 = strchr (cssRule, ';');
        ptr = strchr (cssRule, '/');
-       if (ptr != NULL)
+       if (ptr && (ptr1 == NULL || ptr < ptr1))
 	 {
 	   /* keep the line spacing rule */
 	   ptr[0] = EOS;
 	   ptr = &ptr[1];
 	 }
+       else
+	 ptr = NULL;
        cssRule = ParseCSSUnit (cssRule, &pval);
        if (pval.typed_data.unit == STYLE_UNIT_INVALID ||
            pval.typed_data.value < 0)
@@ -4556,8 +4559,6 @@ static void  ParseStyleDeclaration (Element el, char *cssRule, Document doc,
   char               *decl_end;
   char               *sel_end;
   char               *selector;
-  char                saved1;
-  char                saved2;
 
   /* separate the selectors string */
   cssRule = SkipBlanksAndComments (cssRule);
@@ -4575,23 +4576,15 @@ static void  ParseStyleDeclaration (Element el, char *cssRule, Document doc,
 	 *sel_end == EOL || *sel_end == CR)
     sel_end--;
   sel_end++;
-  saved1 = *sel_end;
   *sel_end = EOS;
   selector = cssRule;
 
   /* now, deal with the content ... */
   decl_end++;
   cssRule = decl_end;
-  while (*decl_end != EOS && *decl_end != '}')
-    decl_end++;
-  if (*decl_end == EOS)
-    {
-      CSSParseError ("Invalid selector", cssRule);
-      return;
-    }
-  saved2 = *decl_end;
-  *decl_end = EOS;
-
+  decl_end = &cssRule[strlen (cssRule) - 1];
+  if (*decl_end != '{')
+    *decl_end = EOS;
   /*
    * parse the style attribute string and install the corresponding
    * presentation attributes on the new element
@@ -4604,10 +4597,6 @@ static void  ParseStyleDeclaration (Element el, char *cssRule, Document doc,
   while ((selector != NULL) && (*selector != EOS))
     selector = ParseGenericSelector (selector, cssRule, ctxt, doc, css);
   TtaFreeMemory (ctxt);
-
-  /* restore the string to its original form ! */
-  *sel_end = saved1;
-  *decl_end = saved2;
 }
 
 /************************************************************************
