@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
 <TITLE>How to install the Amaya Binary Release</TITLE>
@@ -61,20 +61,17 @@ transfer, please get a new one. Read carefully the <CODE>COPYRIGHT</CODE>,
 <H3>Set up the environment and start Amaya</H3>
 
 <P>
-<STRONG>NOTE</STRONG> : This has changed since Amaya 0.9. The binary is
-lauched directly without an intermediate script shell.</P>
+The file <CODE>Thot/SYSTEM/bin/amaya</CODE> is the <STRONG>Amaya</STRONG>
+binary, the best thing is to add the path to the Thot/SYSTEM/bin directory to
+your PATH environment variable. For example on a <STRONG>Linux-ELF</STRONG>
+system:</P>
 <P>
-The file <CODE>Thot/bin/amaya</CODE> is the starting script used to launch
-<STRONG>Amaya</STRONG>, the best thing is to add the path to the
-Thot/bin/SYSTEM directory to your PATH environment variable. For example on a
-<STRONG>Linux-ELF</STRONG> system:</P>
-<P>
-<CODE>setenv PATH $PATH:/usr/local/Thot/bin/LINUX-ELF</CODE></P>
+<CODE>setenv PATH $PATH:/usr/local/Thot/LINUX-ELF/bin</CODE></P>
 <P>
 for a csh or tcsh shell. When using sh, bash or another variant of the Bourne
 shell</P>
 <P>
-<CODE>PATH=$PATH:/usr/local/Thot/bin/LINUX-ELF ; export $PATH</CODE></P>
+<CODE>PATH=$PATH:/usr/local/Thot/LINUX-ELF/bin ; export $PATH</CODE></P>
 <P>
 Maybe this command should be added to the .login startup script. Once done one
 can lauch <STRONG>Amaya</STRONG> simply by typing "amaya" to the shell prompt.
@@ -95,18 +92,13 @@ libraries needed by the executable file amayamain (located under
 <CODE>Thot/bin/SYSTEM/amaya</CODE>). for example on a
 <STRONG>Linux-ELF</STRONG> system type
 <P>
-<CODE>ldd Thot/bin/LINUX-ELF/amaya</CODE></P>
+<CODE>ldd Thot/LINUX-ELF/bin/amaya</CODE></P>
 <P>
 and check that there is no missing libraries.</P>
 </OL>
 <LI>One can install packages for different platform under the same directory
 (for example on a server filesystem exported via NFS to an heterogenous set of
-machines).
-<LI>Do not try to put a symbolic link directly to the Thot/bin/amaya script
-from /usr/local/bin. The script would not be abble to guess correctly the
-value of the internal variable <CODE>THOTDIR</CODE> and the binary would not
-start.
-<LI>The same apply when trying to copy the script to a different location.
+machines), use the appropriate <CODE>PATH</CODE> on each platform.
 <LI>All the traffic on the Amaya mailing-list is archived <A
 href="http://opera.inrialpes.fr/amaya/messages/">here</A>. Please have a look
 at it before sending us mail if something goes wrong. Remember, it's an Alpha
@@ -115,7 +107,7 @@ release.
 <HR>
 <ADDRESS>
 <A href="mailto:Daniel.Veillard@w3.org">Daniel Veillard</A><BR><A
-href="../../Help/Webmaster">Webmaster</A><BR>$Date: 1997/01/09 18:10:15
-$</ADDRESS>
+href="../../Help/Webmaster">Webmaster</A><BR>$Date: 1997/01/09
+18:10:15$</ADDRESS>
 </BODY>
 </HTML>
