@@ -36,6 +36,11 @@ Fixed bugs 2.5:
    reported something like: System wide unix-thot.rc not found.
    Thanks to Ovidiu Toader who solved that problem.
 
+* LIBWWW:
+  - In some cases, the HTTP Accept header had an extra ":" char.
+  - In the Message Digest Authentication algorithm, the digest was being
+    made using the absolute-uri, rather than the request-uri.
+
 =============================================================
 2.4
 =============================================================
