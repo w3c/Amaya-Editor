@@ -427,7 +427,7 @@ AHTReqContext      *me;
 		  TtaFreeMemory ((void *) docid_status);
 	       }
 	  }
-	if (HTRequest_outputStream (me->request))
+	if (me->method != METHOD_PUT && HTRequest_outputStream (me->request))
 	  AHTFWriter_FREE (me->request->output_stream);
 	HTRequest_delete (me->request);
 
@@ -472,7 +472,7 @@ AHTReqContext      *me;
     
     if (me->content_type)
       TtaFreeMemory (me->content_type);
-    /* @@@ need to do this better */
+    
     if (me->formdata)
       HTAssocList_delete (me->formdata);
     
@@ -554,9 +554,11 @@ HTRequest           *request;
 
   me = HTRequest_context (request);
 
-
   if (!me)
       return HT_ERROR;
+
+  if (me->method == METHOD_PUT)
+    return HT_OK;
 
 #ifdef DEBUG_LIBWWW
   fprintf(stderr, "AHTOpen_file: start for object : %p\n", me);
@@ -594,7 +596,7 @@ HTRequest           *request;
     {
 #endif /* !_WINDOWS */
 
-      me->outputfile[0] = '\0';	/* file could not be opened */
+      me->outputfile[0] = EOS;	/* file could not be opened */
 #ifdef DEBUG_LIBWWW
       fprintf(stderr, "AHTOpen_file: couldn't open output stream for url %s\n", me->urlName);
 #endif
@@ -2393,7 +2395,7 @@ void               *context_tcbf;
 
    if (me == NULL)
      {
-	/* need an error message here */
+	/* @@ need an error message here */
 	TtaHandlePendingEvents ();
 	return (HT_ERROR);
      }

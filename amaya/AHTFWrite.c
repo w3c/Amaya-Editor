@@ -125,7 +125,6 @@ const char         *s;
      return HT_ERROR;
    }
 
-
    /* Don't write anything if the output is stdout (used for publishing */
    if (me->fp == stdout) 
      return HT_OK;
@@ -208,7 +207,7 @@ HTStream           *me
 #ifdef DEBUG_LIBWWW
      fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
 #endif
-     return HT_ERROR;
+     return HT_OK;
    }
 
    /* Don't write anything if the output is stdout (used for publishing */
@@ -232,7 +231,7 @@ HTStream           *me;
 {
    if (me)
      {
-	if (me->leave_open != YES)
+	if (me->leave_open != YES && me->fp != stdout)
 	   fclose (me->fp);
 #ifdef HAVE_SYSTEM
 	if (me->end_command)
@@ -267,7 +266,7 @@ HTList             *e;
     HTTrace ("FileWriter.. ABORTING...\n");
   if (me)
     {
-      if (me->leave_open != YES)
+      if (me->leave_open != YES && me->fp)
 	fclose (me->fp);
       if (me->remove_on_close)
 	REMOVE (me->filename);
@@ -308,18 +307,20 @@ BOOL                leave_open;
 {
    HTStream           *me = NULL;
 
+
    if (!fp)
      {
 	if (STREAM_TRACE)
 	   HTTrace ("FileWriter.. Bad file descriptor\n");
 	return (HTStream *) HTErrorStream ();
      }
+
    if ((me = (HTStream *) HT_CALLOC (1, sizeof (HTStream))) == NULL)
-      HT_OUTOFMEM ("HTFWriter_new");
+     HT_OUTOFMEM ("HTFWriter_new");
    me->isa = &AHTFWriter;
 #ifdef DEBUG_LIBWWW
    if (fp == NULL)
-       fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
+     fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
 #endif
    me->fp = fp;
    me->leave_open = leave_open;
