@@ -125,7 +125,7 @@ PtrDocument         pDoc;
 				      /* c'est une inclusion avec expansion, on */
 				      /* copie d'abord l'element inclus */
 				      CopyIncludedElem (pRef->RdElement, pRefDoc);
-			     RedispReference (pRef, NULL, pRefDoc);
+			     RedispRef (pRef, NULL, pRefDoc);
 			  }
 		  }
 		while (pRef != NULL);

@@ -917,16 +917,6 @@ PtrElement          viewRoot;
 		/* element selectionne' */
 		CheckAbsBox (firstSel, 1, pDoc, FALSE, FALSE);
 	  }
-#ifdef __COLPAGE__
-	/* sauvegarde de l'image abstraite pour tests */
-	list = fopen ("/perles/roisin/debug/totoassoc", "w");
-	if (list != NULL)
-	  {
-	     NumberAbsBox (pDoc->DocAssocRoot[assoc - 1]->ElAbstractBox[0]);
-	     ListAbsBox (pDoc->DocAssocRoot[assoc - 1]->ElAbstractBox[0], 2, list);
-	     fclose (list);
-	  }
-#endif /* __COLPAGE__ */
 	ret = assoc;
      }
    else

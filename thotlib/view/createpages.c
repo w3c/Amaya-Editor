@@ -3,7 +3,7 @@
  */
 
 /*
-   crpages : procedures liees a la creation des pages et des colonnes
+   procedures liees a la creation des pages et des colonnes
    appelees par crimabs pour la creation des images abstraites
    contient quelques procedures du module crimabs
  */
@@ -1603,13 +1603,6 @@ boolean             forward;
 	     }
 	}
    /* sauvegarde de l'image abstraite pour tests */
-   list = fopen ("/perles/roisin/debug/pbfig", "w");
-   if (list != NULL)
-     {
-	NumberAbsBox (pAbb1);
-	ListAbsBox (pAbb1, 2, list);
-	fclose (list);
-     }
 }
 #endif /* __COLPAGE__ */
 
@@ -3442,4 +3435,3 @@ boolean            *arret;
 
 #endif /* __COLPAGE__ */
 
-/* end of module crpages.c */

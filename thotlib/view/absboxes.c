@@ -332,9 +332,9 @@ PtrElement          pEl;
    /* paves de presentation avant et apres */
    /* prevoir cas des paves de presentation de la racine ?? TODO */
    if (pEl != NULL)
-      for (v = 1; v <= MAX_VIEW_DOC; v++)
+      for (v = 0; v < MAX_VIEW_DOC; v++)
 	{
-	   pAbb = pEl->ElAbstractBox[v - 1];
+	   pAbb = pEl->ElAbstractBox[v];
 	   if (pAbb != NULL)
 	      if (pAbb->AbEnclosing != NULL)
 		 if (pAbb->AbEnclosing->AbPresentationBox &&
@@ -377,9 +377,9 @@ PtrElement          pEl;
    boolean             stop;
 
    if (pEl != NULL)
-      for (v = 1; v <= MAX_VIEW_DOC; v++)
+      for (v = 0; v < MAX_VIEW_DOC; v++)
 	{
-	   pAbb = pEl->ElAbstractBox[v - 1];
+	   pAbb = pEl->ElAbstractBox[v];
 	   if (pAbb != NULL)
 	      if (pAbb->AbEnclosing != NULL)
 		 if (pAbb->AbEnclosing->AbPresentationBox &&
@@ -1768,10 +1768,10 @@ PtrDocument         pDoc;
      {
 	if (!AssocView (pEl))
 	   /* une vue de l'arbre principal */
-	   for (view = 1; view <= MAX_VIEW_DOC; view++)
+	   for (view = 0; view < MAX_VIEW_DOC; view++)
 	     {
 		/* traite toutes les vues */
-		if (pDoc->DocView[view - 1].DvPSchemaView > 0)
+		if (pDoc->DocView[view].DvPSchemaView > 0)
 		   /* la vue existe */
 		  {
 #ifdef __COLPAGE__
@@ -1779,20 +1779,20 @@ PtrDocument         pDoc;
 		     /* si oui, on compte le nombre de pages actuel */
 		     /* pour etre sur d'ajouter au moins une page */
 		     /* (sauf si fin de vue) */
-		     pAb = pDoc->DocViewRootAb[view - 1];
+		     pAb = pDoc->DocViewRootAb[view];
 		     if (pAb->AbFirstEnclosed != NULL
 			 && pAb->AbFirstEnclosed->AbElement->ElTypeNumber ==
 			 PageBreak + 1)
 		       {
 			  nb = NbPages (pAb);
-			  pDoc->DocViewNPages[view - 1] = nb;
-			  pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
+			  pDoc->DocViewNPages[view ] = nb;
+			  pDoc->DocViewFreeVolume[view] = THOT_MAXINT;
 		       }
 		     else
 #endif /* __COLPAGE__ */
-			pDoc->DocViewFreeVolume[view - 1] =
-			   pDoc->DocViewVolume[view - 1] - pDoc->DocViewRootAb[view - 1]->AbVolume;
-		     AddVolView (pDoc->DocViewVolume[view - 1], pDoc->DocViewRootAb[view - 1],
+			pDoc->DocViewFreeVolume[view] =
+			   pDoc->DocViewVolume[view] - pDoc->DocViewRootAb[view]->AbVolume;
+		     AddVolView (pDoc->DocViewVolume[view], pDoc->DocViewRootAb[view],
 			       pEl, pDoc);
 		  }
 	     }
@@ -1812,7 +1812,7 @@ PtrDocument         pDoc;
 		   /* vue du document paginee */
 		  {
 		     nb = NbPages (pAb);
-		     pDoc->DocAssocNPages[view - 1] = nb;
+		     pDoc->DocAssocNPages[view] = nb;
 		     pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] = THOT_MAXINT;
 		  }
 		else

@@ -2529,21 +2529,6 @@ static void BalanceColumn (pDoc, rootAbsBox, nbView, schView)
  ChangeRHPage (rootAbsBox, pDoc, nbView);
       h = PosV + (High / 2);
       bool = ChangeConcreteImage(frame, &h, rootAbsBox);
-      /*----------------------------------------------------------------------
-   list = fopen("/perles/roisin/debug/equil","w");
-   if (list != NULL)
-	{
-   NumberAbsBox(pDoc->DocViewRootAb[nbView-1]);
-   ListAbsBox(pDoc->DocViewRootAb[0], 2, list);
-   fclose(list);
-   list = fopen("/perles/roisin/debug/btequil","w");
-   if (list != NULL)
-	{
-   ListAbsBoxes(rootAbsBox, 0, list);
-   fclose(list);
-	}
-	}
-  ----------------------------------------------------------------------*/
       if (!bool)
 	{
           /* on insere une marque colonne */
@@ -2835,14 +2820,6 @@ WholePageHeight = 0;
                     /* volume de la vue avant */
                     /* demande la creation de paves supplementaires */
 		    StopGroupCol = FALSE;
-             list = fopen("/perles/roisin/debug/avajoutpage","w");
-             if (list != NULL)
-               {
-                 NumberAbsBox(rootAbsBox);
-                 ListAbsBox(rootAbsBox, 2, list);
-                 fclose(list);
-              }		
-                    AddAbsBoxes(rootAbsBox, pDoc, FALSE);
 		    if (ToBalance && StopGroupCol)
 		      {
 		        /* mise a jour de StopGroupCol et du vollibre */
@@ -2985,13 +2962,6 @@ WholePageHeight = 0;
          /* on repositionne StopBeforeCreation a faux pour */
          /* permettre la creation des paves du nouvel elt MP */
          StopBeforeCreation = FALSE;
-          list = fopen("/perles/roisin/debug/PutMark","w");
-          if (list != NULL)
-            {
-              NumberAbsBox(rootAbsBox);
-              ListAbsBox(rootAbsBox, 2, list);
-              fclose(list);
-            }		
          PutMark(pRootEl, nbView, pDoc, frame,
 	                   &pTreatedPage, &pPageToTreat);
 	        /* calcule le volume qui a ete detruit pour en regenerer */

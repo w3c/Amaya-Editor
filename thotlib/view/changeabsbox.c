@@ -1866,7 +1866,7 @@ int                *boxType;
 			   /* reference suivante a l'element */
 			   pRef = pRef->RdNext;
 		     }
-		   while (!(ref || pRef == NULL));
+		   while (!ref && pRef != NULL);
 		}
 	   if (pElRef == NULL)
 	      /* cet element n'est pas reference' par un autre element */
@@ -1955,17 +1955,17 @@ int                *boxType;
 					     pRP = pRP->PrNextPRule;
 					     /* regle suivante de la page */
 					  }
-				     while (!(stop1));
+				     while (!stop1);
 				  }
 				pR = pR->PrNextPRule;
 				/* regle suivante de l'element */
 			     }
-			while (!(stop));
+			while (!stop);
 			if (*boxType == 0)
 			   pAsc = pAsc->ElParent;
 			/* passe a l'element englobant */
 		     }
-		while (!(pAsc == NULL || *boxType != 0)) ;
+		while (pAsc != NULL && *boxType == 0) ;
 		if (*boxType == 0)
 		   if (pElPage->ElAssocNum != 0
 		       && pElPage->ElAssocNum == pEl->ElAssocNum)
@@ -1980,7 +1980,7 @@ int                *boxType;
 			      stop = TRUE;
 			   else
 			      pAsc = pAsc->ElParent;
-			while (!(stop || pAsc == NULL));
+			while (!stop && pAsc != NULL);
 			if (pAsc == NULL)
 			   pElPage = NULL;
 			/* echec */
@@ -2097,7 +2097,7 @@ PtrAbstractBox            *pAbbReDisp;
 			pAbbPageThread = pAbbPage;
 		     pAbbPage = pAbbPage->AbNext;
 		  }
-	     while (!(stop));
+	     while (!stop);
 	     if (pAbbPage == NULL)
 		/* cette boite de haut ou bas de page n'existe pas, on la cree */
 		/* cherche le type de boite page */
@@ -2123,7 +2123,7 @@ PtrAbstractBox            *pAbbReDisp;
 			       if (pRule != NULL && !found)
 				  pRule = pRule->PrNextPRule;
 			    }
-			  while (!(found || pRule == NULL));
+			  while (!found && pRule != NULL);
 		       if (pRule != NULL)
 			 {
 			    pElPage->ElAbstractBox[viewNb - 1] = pAbbPageThread;
@@ -2319,7 +2319,7 @@ int                 viewSch;
 	}
       else
 	 pRule = pRule->PrNextPRule;
-   while (!(stop) && !(found));
+   while (!stop && !found);
    if (!found && !pEl->ElTerminal)
      {
 	pE = pEl->ElFirstChild;
@@ -2593,7 +2593,7 @@ int                 viewNb;
 				       pAbbLast = pAbbLast->AbNextRepeated;
 				    else
 				       stop = TRUE;
-				 while (!(stop));
+				 while (!stop);
 			      }
 			    /* verifie que les paves precedents et suivants sont complets */
 			    /* et les detruit s'ils sont incomplets */
@@ -2857,7 +2857,7 @@ int                 viewNb;
 			       else
 				  /* ce pave n'appartient pas a l'element */
 				  stop = TRUE;
-			    while (!(stop));
+			    while (!stop);
 			    /* cherche le dernier pave cree pour le nouvel element */
 			    pAbbLast = pAb;
 			    stop = FALSE;
@@ -2876,7 +2876,7 @@ int                 viewNb;
 			       else
 				  /* ce pave n'appartient pas a l'element */
 				  stop = TRUE;
-			    while (!(stop));
+			    while (!stop);
 			 }
 		       pAbbReDisp = Enclosing (pAbbFirst, pAbbLast);
 		       /* verifie que les paves precedents et suivants sont complets */
@@ -2913,7 +2913,7 @@ int                 viewNb;
 					       /* encore detruire les paves qui le precedent. */
 					       pAb->AbTruncatedHead = TRUE;
 				      }
-				    while (!(pAb == NULL));
+				    while (pAb != NULL);
 				 }
 			       else
 				  /* ce n'est pas une vue synchronisee, on detruit les */
@@ -2952,7 +2952,7 @@ int                 viewNb;
 						  pAb->AbTruncatedTail =
 						     TRUE;
 					 }
-				       while (!(pAb == NULL));
+				       while (pAb != NULL);
 				    }
 				  else
 				     /* ce n'est pas une vue synchronisee, on detruit les */
@@ -2994,7 +2994,7 @@ int                 viewNb;
 						pAb = NULL;
 					  /* pave deja coupe', on s'arrete */
 				       }
-				     while (!(pAb == NULL));
+				     while (pAb != NULL);
 				  }
 		    }
 		  if (pAbbFirst != NULL)
@@ -3194,7 +3194,7 @@ int                 view;
 		     pAb = NULL;	/* cas jamais possible ?? */
 	       }
 	  }
-	while (!(pAb == NULL));
+	while (pAb != NULL);
 	/* si on detruit une marque de page, on a detruit toutes les pages */
 	/* suivantes : il faut mettre la racine coupee en queue */
 	if (pEl->ElTypeNumber == PageBreak + 1)
@@ -3225,7 +3225,7 @@ int                 view;
 		      stop = TRUE;
 		   else
 		      pAbb = pAbb->AbNext;
-		while (!(stop));
+		while (!stop);
 		if (pAbb == NULL)
 		   /* il n'y a que des paves morts, on tue le pave */
 		   /* englobant */
@@ -3270,7 +3270,7 @@ int                 view;
 		     pAb = NULL;	/* cas jamais possible ?? */
 	       }
 	  }
-	while (!(pAb == NULL));
+	while (pAb != NULL);
 	/* conserve le pointeur sur le pave a reafficher */
 	if (AssocView (pEl))
 	   pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
@@ -3410,7 +3410,7 @@ int                 view;
 		     pAb = NULL;
 	       }
 	  }
-	while (!(pAb == NULL));
+	while (pAb != NULL);
 	if (PcFirst != PcLast)
 	   /* il y a plusieurs paves pour cet element, on reaffichera */
 	   /* le pave englobant */
@@ -3432,7 +3432,7 @@ int                 view;
 		      stop = TRUE;
 		   else
 		      pAbb = pAbb->AbNext;
-		while (!(stop));
+		while (!stop);
 		if (pAbb == NULL)
 		   /* il n'y a que des paves morts, on tue le pave */
 		   /* englobant */
@@ -3460,7 +3460,7 @@ int                 view;
 	     else
 		pAb = pAb->AbNext;
 	  }
-	while (!(pAb == NULL));
+	while (pAb != NULL);
 	/* conserve le pointeur sur le pave a reafficher */
 	if (AssocView (pEl))
 	   pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
@@ -3522,7 +3522,7 @@ boolean             verify;
 
 
 /*----------------------------------------------------------------------
-   RedispReference Reaffiche les paves de la reference pointee par   
+   RedispRef Reaffiche les paves de la reference pointee par   
    pRef appartenant au document pointe' par pDocRef.       
    Si pAb est NULL, tous les paves (sauf les paves de     
    presentation) de la reference, dans toutes les vues,    
@@ -3534,10 +3534,10 @@ boolean             verify;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                RedispReference (PtrReference pRef, PtrAbstractBox pAb, PtrDocument pDocRef)
+void                RedispRef (PtrReference pRef, PtrAbstractBox pAb, PtrDocument pDocRef)
 
 #else  /* __STDC__ */
-void                RedispReference (pRef, pAb, pDocRef)
+void                RedispRef (pRef, pAb, pDocRef)
 PtrReference        pRef;
 PtrAbstractBox             pAb;
 PtrDocument         pDocRef;
@@ -3582,7 +3582,7 @@ PtrDocument         pDocRef;
 		    stop = TRUE;
 		 else
 		    pPavRef = pPavRef->AbNext;
-	      while (!(stop));
+	      while (!stop);
 	      redisp = FALSE;
 	      if (pRef->RdTypeRef == RefInclusion)
 		 /* c'est une inclusion, on cree ses paves si ce n'est pas */
@@ -3673,7 +3673,7 @@ PtrDocument         pDocRef;
 			   if (!found)
 			      pRule = pRule->PrNextPRule;
 			}
-		   while (!(stop));
+		   while (!stop);
 		   if (found)
 		      /* oui, la reference copie ce type de pave */
 		     {
@@ -3771,7 +3771,7 @@ PtrDocument         pDoc;
 	   while (pRef != NULL)
 	      /* reaffiche les paves de la reference qui copient le pave */
 	     {
-		RedispReference (pRef, pAb, pDocRef);
+		RedispRef (pRef, pAb, pDocRef);
 		/* passe a la reference suivante */
 		pRef = NextReferenceToEl (pEl, pDoc, FALSE, pRef, &pDocRef, &pDocExt, TRUE);
 		/* passe au niveau superieur */
@@ -3890,7 +3890,7 @@ PtrSSchema        pSchStr;
 		       else if (pAbbAscent->AbNext != NULL)
 			  stop = TRUE;
 		    }
-		  while (!(stop));
+		  while (!stop);
 		  if (pAbbAscent != NULL)
 		     /* cherche si ce pave est celui cherche */
 		    {
@@ -3955,7 +3955,7 @@ int                 nv;
 	      /* l'element n'a pas de pave dans la vue, */
 	      /* ?cherche un element suivant qui ait un pave */
 	      pEl = FwdSearchTypedElem (pEl, 0, NULL);
-	while (!(stop));
+	while (!stop);
 	if (pEl != NULL)
 	   pAbbBegin[nv - 1] = pEl->ElAbstractBox[nv - 1];
      }
@@ -4165,7 +4165,7 @@ boolean             redisp;
 		     else
 			pRCre = pRe1->PrNextPRule;
 		  }
-	     while (!(stop || found));
+	     while (!stop && !found);
 	     if (found)
 		/* reevalue les conditions d'application de la regle */
 		if (!CondPresentation (pRCre->PrCond, pAb->AbElement, NULL, viewSch,
@@ -4883,7 +4883,7 @@ boolean             redisp;
 			       if (pRe1->SrChoice[i - 1] == index)
 				  trigger = TRUE;
 			    }
-			  while (!(trigger || i >= pRe1->SrNChoices));
+			  while (!trigger && i < pRe1->SrNChoices);
 		       }
 		  }
 		if (trigger)
@@ -5432,7 +5432,7 @@ PtrAttribute         pAttrComp;
 				  stop = TRUE;
 			       else
 				  pAbbNext = pAbbNext->AbNext;
-			    while (!(stop));
+			    while (!stop);
 			    /* les nouveaux paves doivent etre pris en compte par */
 			    /* leurs voisins */
 			    ApplyRefAbsBoxNew (pAbb, pAbbNext, &pReaff, pDoc);
@@ -5499,7 +5499,7 @@ PtrAttribute         pAttrComp;
 						   pRP = pRSpecif;
 						   pRSpecif = pRSpecif->PrNextPRule;
 						}
-					   while (!(stop));
+					   while (!stop);
 					   if (pRSpecif != NULL)
 					      /* l'element possede cette regle specifique, on */
 					      /* la supprime : l'attribut a priorite' sur la */
@@ -5802,7 +5802,7 @@ PtrElement         *pLib;
 					   stop = TRUE;
 					else
 					   pEVoisin = pEVoisin->ElNext;
-				     while (!(stop));
+				     while (!stop);
 				     /* met a jour le volume des paves correspondants */
 				     for (view = 1; view <= MAX_VIEW_DOC; view++)
 				       {
