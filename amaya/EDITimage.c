@@ -1219,6 +1219,7 @@ ThotBool AddLocalImage (char *fullname, char *name, char *url, Document doc,
 	  pImage->nextImage = NULL;
 	  pImage->document = doc;
 	  pImage->elImage = NULL;
+	  pImage->imageType = unknown_type;
 	}
       pImage->status = IMAGE_MODIFIED;
       *desc = pImage;
