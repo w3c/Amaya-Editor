@@ -253,3 +253,8 @@ Ctrl <Key>n , Ctrl <Key>d:	   DeleteAnnotation()
 Ctrl <Key>n , Ctrl <Key>l:	   LoadAnnotations()
 Ctrl <Key>n , Ctrl <Key>f:	   FilterAnnot()
 Ctrl <Key>n , Ctrl <Key>o:	   ConfigAnnot()
+
+
+#Try to override bizzare behaviour
+Shift <Key>End:     TtcSelEndOfLine()
+Shift <Key>Home:    TtcSelStartOfLine()
