@@ -965,6 +965,7 @@ static void UpdateBrowserMenus (Document doc)
       TtaSetItemOff (doc, 1, Edit_, BSpellCheck);
       TtaSetItemOff (doc, 1, Edit_, BTransform);
       TtaSetMenuOff (doc, 1, Types);
+      TtaSetMenuOff (doc, 1, XMLTypes);
       TtaSetMenuOff (doc, 1, Links);
       TtaSetMenuOff (doc, 1, Style);
       TtaSetItemOff (doc, 1, Special, BMakeBook);
@@ -980,6 +981,7 @@ static void UpdateBrowserMenus (Document doc)
 	  TtaSetItemOff (doc, view, Edit_, BTransform);
 	  TtaSetMenuOff (doc, view, StructTypes);
 	  TtaSetMenuOff (doc, view, Types);
+	  TtaSetMenuOff (doc, view, XMLTypes);
 	}
       view = TtaGetViewFromName (doc, "Alternate_view");
       if (view != 0 && TtaIsViewOpen (doc, view))
@@ -990,6 +992,7 @@ static void UpdateBrowserMenus (Document doc)
 	  TtaSetItemOff (doc, view, Edit_, BSpellCheck);
 	  TtaSetMenuOff (doc, view, StructTypes);
 	  TtaSetMenuOff (doc, view, Types);
+	  TtaSetMenuOff (doc, view, XMLTypes);
 	}
       view = TtaGetViewFromName (doc, "Links_view");
       if (view != 0 && TtaIsViewOpen (doc, view))
@@ -1000,6 +1003,7 @@ static void UpdateBrowserMenus (Document doc)
 	  TtaSetItemOff (doc, view, Edit_, BSpellCheck);
 	  TtaSetItemOff (doc, view, Edit_, BTransform);
 	  TtaSetMenuOff (doc, view, Types);
+	  TtaSetMenuOff (doc, view, XMLTypes);
 	}
       view = TtaGetViewFromName (doc, "Table_of_contents");
       if (view != 0 && TtaIsViewOpen (doc, view))
@@ -1010,6 +1014,7 @@ static void UpdateBrowserMenus (Document doc)
 	  TtaSetItemOff (doc, view, Edit_, BSpellCheck);
 	  TtaSetItemOff (doc, view, Edit_, BTransform);
 	  TtaSetMenuOff (doc, view, Types);
+	  TtaSetMenuOff (doc, view, XMLTypes);
 	}
     }
 }
@@ -1018,7 +1023,7 @@ static void UpdateBrowserMenus (Document doc)
    UpdateEditorMenus 
    Update windows menus for the Editor mode              
   ----------------------------------------------------------------------*/
-static void  UpdateEditorMenus (Document doc)
+static void UpdateEditorMenus (Document doc)
 {
   View       view;
 
@@ -1034,40 +1039,30 @@ static void  UpdateEditorMenus (Document doc)
   if (DocumentTypes[doc] == docHTML ||
       DocumentTypes[doc] == docSVG ||
       DocumentTypes[doc] == docMath ||
-#ifdef XML_GENERIC      
       DocumentTypes[doc] == docXml ||
-#endif /* XML_GENERIC */
       DocumentTypes[doc] == docImage)
     {
       TtaSetItemOn (doc, 1, Edit_, BSpellCheck);
       TtaSetItemOn (doc, 1, Edit_, BTransform);
-      TtaSetMenuOn (doc, 1, Types);
       TtaSetMenuOn (doc, 1, Links);
       TtaSetMenuOn (doc, 1, Style);
       TtaSetMenuOn (doc, 1, Attributes_);
-
-      TtaSetItemOn (doc, 1, Views, TShowMapAreas);
-      TtaSetItemOn (doc, 1, Views, TShowTargets);
-      TtaSetItemOn (doc, 1, Views, BShowAlternate);
-      TtaSetItemOn (doc, 1, Views, BShowToC);
-      TtaSetItemOn (doc, 1, Views, BShowStructure);
-      TtaSetItemOn (doc, 1, Views, BShowLinks);
-      TtaSetItemOn (doc, 1, Views, BShowSource);
-#ifdef XML_GENERIC      
-      if (DocumentTypes[doc] == docXml)
+      if (DocumentTypes[doc] != docMath &&
+	  DocumentTypes[doc] != docXml)
 	{
-	  TtaSetMenuOff (doc, 1, Annotations_);
-	  TtaSetItemOff (doc, 1, Views, TShowMapAreas);
-	  TtaSetItemOff (doc, 1, Views, TShowTargets);
-	  TtaSetItemOff (doc, 1, Views, BShowAlternate);
-	  TtaSetItemOff (doc, 1, Views, BShowToC);
-	}
-#endif /* XML_GENERIC */
-
-      if ( DocumentTypes[doc] == docMath)
-	TtaSetItemOff (doc, 1, Links, BDeleteAnchor);
-      else
-	{
+	  if (DocumentTypes[doc] != docHTML ||
+	      TtaGetDocumentProfile (doc) != L_Strict)
+	    TtaSetMenuOn (doc, 1, XMLTypes);
+	  if (DocumentTypes[doc] == docHTML ||
+	      DocumentTypes[doc] == docImage ||
+	      DocumentTypes[doc] == docLibrary)
+	    {
+	      TtaSetMenuOn (doc, 1, Types);
+	      TtaSetItemOn (doc, 1, Views, TShowMapAreas);
+	      TtaSetItemOn (doc, 1, Views, TShowTargets);
+	      TtaSetItemOn (doc, 1, Views, BShowAlternate);
+	      TtaSetItemOn (doc, 1, Views, BShowToC);
+	    }
 	  TtaSetItemOn (doc, 1, Special, TSectionNumber);
 	  TtaSetItemOn (doc, 1, Special, BMakeBook);
 	  TtaSetItemOn (doc, 1, Special, BMakeID);
@@ -1083,6 +1078,7 @@ static void  UpdateEditorMenus (Document doc)
 	  TtaChangeButton (doc, 1, iNum, iconNum, TRUE);
 	  TtaChangeButton (doc, 1, iDL, iconDL, TRUE);
 	  TtaChangeButton (doc, 1, iTable, iconTable, TRUE);
+	  SwitchIconMath (doc, 1, TRUE);
 #ifdef _SVG
 	  SwitchIconGraph (doc, 1, TRUE);
 #ifdef _SVGLIB
@@ -1090,9 +1086,19 @@ static void  UpdateEditorMenus (Document doc)
 #endif /* _SVGLIB */
 #endif /* _SVG */
 	}
-
+      else
+	{
+	  TtaSetMenuOn (doc, 1, XMLTypes);
+	  if ( DocumentTypes[doc] == docMath)
+	    {
+	      TtaSetItemOff (doc, 1, Links, BDeleteAnchor);
+	      SwitchIconMath (doc, 1, TRUE);
+	    }
+	}
+      TtaSetItemOn (doc, 1, Views, BShowStructure);
+      TtaSetItemOn (doc, 1, Views, BShowLinks);
+      TtaSetItemOn (doc, 1, Views, BShowSource);
       TtaChangeButton (doc, 1, iLink, iconLink, TRUE);
-      SwitchIconMath (doc, 1, TRUE);
 
       view = TtaGetViewFromName (doc, "Structure_view");
       if (view != 0 && TtaIsViewOpen (doc, view))
@@ -1102,15 +1108,15 @@ static void  UpdateEditorMenus (Document doc)
 	  TtaSetItemOn (doc, view, Edit_, BClear);
 	  TtaSetItemOn (doc, view, Edit_, BSpellCheck);
 	  TtaSetItemOn (doc, view, Edit_, BTransform);
-	  TtaSetMenuOn (doc, view, StructTypes);
-	  TtaSetMenuOn (doc, view, Types);
-#ifdef XML_GENERIC      
-	  if (DocumentTypes[doc] == docXml)
+	  if (DocumentTypes[doc] != docMath &&
+	      DocumentTypes[doc] != docXml)
 	    {
-	      TtaSetMenuOff (doc, view, StructTypes);
-	      TtaSetMenuOff (doc, view, Types);
+	      TtaSetMenuOn (doc, view, StructTypes);
+	      TtaSetMenuOn (doc, view, Types);
 	    }
-#endif /* XML_GENERIC */
+	  if (DocumentTypes[doc] != docHTML ||
+	      TtaGetDocumentProfile (doc) != L_Strict)
+	    TtaSetMenuOn (doc, view, XMLTypes);
 	}
       view = TtaGetViewFromName (doc, "Alternate_view");
       if (view != 0 && TtaIsViewOpen (doc, view))
@@ -1120,7 +1126,12 @@ static void  UpdateEditorMenus (Document doc)
 	  TtaSetItemOn (doc, view, Edit_, BClear);
 	  TtaSetItemOn (doc, view, Edit_, BSpellCheck);
 	  TtaSetMenuOn (doc, view, StructTypes);
-	  TtaSetMenuOn (doc, view, Types);
+	  if (DocumentTypes[doc] != docMath &&
+	      DocumentTypes[doc] != docXml)
+	    TtaSetMenuOn (doc, view, Types);
+	  if (DocumentTypes[doc] != docHTML ||
+	      TtaGetDocumentProfile (doc) != L_Strict)
+	    TtaSetMenuOn (doc, view, XMLTypes);
 	}
       view = TtaGetViewFromName (doc, "Links_view");
       if (view != 0 && TtaIsViewOpen (doc, view))
@@ -1130,11 +1141,12 @@ static void  UpdateEditorMenus (Document doc)
 	  TtaSetItemOn (doc, view, Edit_, BClear);
 	  TtaSetItemOn (doc, view, Edit_, BSpellCheck);
 	  TtaSetItemOn (doc, view, Edit_, BTransform);
-	  TtaSetMenuOn (doc, view, Types);
-#ifdef XML_GENERIC      
-	  if (DocumentTypes[doc] == docXml)
-	    TtaSetMenuOff (doc, view, Types);
-#endif /* XML_GENERIC */
+	  if (DocumentTypes[doc] != docMath &&
+	      DocumentTypes[doc] != docXml)
+	    TtaSetMenuOn (doc, view, Types);
+	  if (DocumentTypes[doc] != docHTML ||
+	      TtaGetDocumentProfile (doc) != L_Strict)
+	    TtaSetMenuOn (doc, view, XMLTypes);
 	}
       view = TtaGetViewFromName (doc, "Table_of_contents");
       if (view != 0 && TtaIsViewOpen (doc, view))
@@ -1144,7 +1156,12 @@ static void  UpdateEditorMenus (Document doc)
 	  TtaSetItemOn (doc, view, Edit_, BClear);
 	  TtaSetItemOn (doc, view, Edit_, BSpellCheck);
 	  TtaSetItemOn (doc, view, Edit_, BTransform);
-	  TtaSetMenuOn (doc, view, Types);
+	  if (DocumentTypes[doc] != docMath &&
+	      DocumentTypes[doc] != docXml)
+	    TtaSetMenuOn (doc, view, Types);
+	  if (DocumentTypes[doc] != docHTML ||
+	      TtaGetDocumentProfile (doc) != L_Strict)
+	    TtaSetMenuOn (doc, view, XMLTypes);
 	}
     }
 }
@@ -2491,13 +2508,14 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   TtaSetItemOff (doc, 1, File, BSave);
 	   TtaSetItemOff (doc, 1, File, BSynchro);
 	   TtaSetMenuOff (doc, 1, Types);
+	   TtaSetMenuOff (doc, 1, XMLTypes);
 	   TtaSetMenuOff (doc, 1, Links);
 	   TtaSetMenuOff (doc, 1, Views);
 	   TtaSetMenuOff (doc, 1, Style);
 	   TtaSetMenuOff (doc, 1, Special);
 	   TtaSetMenuOff (doc, 1, Attributes_);
 	 }
-       else if (docType == docLog /* comment for debug*/ || docType == docLibrary)
+       else if (docType == docLog || docType == docLibrary)
 	 {
 	   TtaSetItemOff (doc, 1, File, BHtmlBasic);
 	   TtaSetItemOff (doc, 1, File, BHtmlStrict);
@@ -2517,6 +2535,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   TtaSetItemOff (doc, 1, File, BExit);
 	   TtaSetMenuOff (doc, 1, Edit_);
 	   TtaSetMenuOff (doc, 1, Types);
+	   TtaSetMenuOff (doc, 1, XMLTypes);
 	   TtaSetMenuOff (doc, 1, Links);
 	   TtaSetMenuOff (doc, 1, Views);
 	   TtaSetMenuOff (doc, 1, Style);
@@ -2757,14 +2776,12 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
    if (reinitialized || !isOpen)
      {
      /* now update menus and buttons according to the document status */
-     if ((DocumentTypes[doc] == docText || DocumentTypes[doc] == docCSS ||
-	  DocumentTypes[doc] == docMath || DocumentTypes[doc] == docSource) ||
-	 (ReadOnlyDocument[doc] &&
-	  (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docImage ||
-	   DocumentTypes[doc] == docSVG ||
-	   DocumentTypes[doc] == docXml ||
-	   DocumentTypes[doc] == docLibrary ||
-	   DocumentTypes[doc] == docMath)))
+     if (DocumentTypes[doc] == docText ||
+	 DocumentTypes[doc] == docCSS ||
+	 DocumentTypes[doc] == docMath ||
+	 DocumentTypes[doc] == docXml ||
+	 DocumentTypes[doc] == docSource ||
+	 ReadOnlyDocument[doc])
        {
 	 TtaChangeButton (doc, 1, iI, iconINo, FALSE);
 	 TtaChangeButton (doc, 1, iB, iconBNo, FALSE);
@@ -2777,30 +2794,30 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	 TtaChangeButton (doc, 1, iNum, iconNumNo, FALSE);
 	 TtaChangeButton (doc, 1, iDL, iconDLNo, FALSE);
 	 TtaChangeButton (doc, 1, iTable, iconTableNo, FALSE);
-
+	 TtaSetItemOff (doc, 1, Special, BMakeBook);
+	 TtaSetItemOff (doc, 1, Views, TShowMapAreas);
+	 TtaSetItemOff (doc, 1, Views, TShowTargets);
+	 TtaSetItemOff (doc, 1, Views, BShowAlternate);
+	 TtaSetItemOff (doc, 1, Views, BShowLinks);
+	 TtaSetItemOff (doc, 1, Views, BShowToC);
+	 TtaSetMenuOff (doc, 1, Doctype1);
 #ifdef _SVG
 	 SwitchIconGraph (doc, 1, FALSE);
 #ifdef _SVGLIB
 	 SwitchIconLibrary (doc, 1, FALSE);
 #endif /* _SVGLIB */
 #endif /* _SVG */
-	 if (ReadOnlyDocument[doc] || DocumentTypes[doc] != docMath)
+	 if (ReadOnlyDocument[doc])
 	   {
+	     /* the document is in ReadOnly mode */
 	     TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
 	     SwitchIconMath (doc, 1, FALSE);
 	     TtaSetItemOff (doc, 1, Edit_, BTransform);
 	     TtaSetMenuOff (doc, 1, Links);
 	     TtaSetMenuOff (doc, 1, Style);
 	     TtaSetMenuOff (doc, 1, Types);
+	     TtaSetMenuOff (doc, 1, XMLTypes);
 	     TtaSetMenuOff (doc, 1, Attributes_);
-	   }
-	 else
-	   TtaSetItemOff (doc, 1, Links, BDeleteAnchor);
-
-	 TtaSetItemOff (doc, 1, Special, BMakeBook);
-	 if (ReadOnlyDocument[doc])
-	   {
-	     /* the document is in ReadOnly mode */
 	     TtaSetItemOff (doc, 1, Edit_, BUndo);
 	     TtaSetItemOff (doc, 1, Edit_, BRedo);
 	     TtaSetItemOff (doc, 1, Edit_, BCut);
@@ -2812,27 +2829,18 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	     TtaSetItemOff (doc, 1, Special, BMakeID);
 	     TtaChangeButton (doc, 1, iEditor, iconBrowser, TRUE);
 	     TtaSetMenuOff (doc, 1, Doctype1);
+	     TtaSetItemOff (doc, 1, Views, BShowStructure);
+	     TtaSetItemOff (doc, 1, Views, BShowSource);
 	   }
 	 else
-	   TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
-
-	 if ((DocumentTypes[doc] == docText || DocumentTypes[doc] == docCSS ||
-	      DocumentTypes[doc] == docSource) ||
-	     (ReadOnlyDocument[doc] &&
-	      (DocumentTypes[doc] == docSVG ||
-#ifdef XML_GENERIC      
-	       DocumentTypes[doc] == docXml ||
-#endif /* XML_GENERIC */
-	       DocumentTypes[doc] == docMath)))
 	   {
-	     TtaSetItemOff (doc, 1, Views, TShowMapAreas);
-	     TtaSetItemOff (doc, 1, Views, TShowTargets);
-	     TtaSetItemOff (doc, 1, Views, BShowStructure);
-	     TtaSetItemOff (doc, 1, Views, BShowAlternate);
-	     TtaSetItemOff (doc, 1, Views, BShowLinks);
-	     TtaSetItemOff (doc, 1, Views, BShowToC);
-	     TtaSetItemOff (doc, 1, Views, BShowSource);
-	     TtaSetMenuOff (doc, 1, Doctype1);
+	     TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
+	     TtaSetMenuOff (doc, 1, Types);
+	     if (DocumentTypes[doc] != docMath &&
+		 DocumentTypes[doc] != docXml)
+	       TtaSetMenuOff (doc, 1, XMLTypes);
+	     else if (DocumentTypes[doc] == docMath)
+	       TtaSetItemOff (doc, 1, Links, BDeleteAnchor);
 	   }
        }
      else if (DocumentTypes[doc] == docHTML ||
@@ -2843,6 +2851,9 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	      DocumentTypes[doc] == docMath)
        {
 	 TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
+	 if (DocumentTypes[doc] == docHTML &&
+	     TtaGetDocumentProfile (doc) == L_Strict)
+	   TtaSetMenuOff (doc, 1, XMLTypes);
 	 if (reinitialized)
 	   /* the document is in ReadWrite mode */
 	   UpdateEditorMenus (doc);
@@ -3753,7 +3764,7 @@ void Reload_callback (int doc, int status, char *urlName,
   Document           res = 0;
   Element            el;
   RELOAD_context    *ctx;
-  ThotBool           stopped_flag = FALSE;
+  ThotBool           stopped_flag = FALSE, keep;
 
   /* restore the context associated with the request */
   ctx = (RELOAD_context *) context;
@@ -3777,10 +3788,15 @@ void Reload_callback (int doc, int status, char *urlName,
        DocumentMeta[doc]->initial_url = NULL;
 
        RemoveParsingErrors (newdoc);
+       /* add the URI in the combobox string */
+       keep = (method == CE_ABSOLUTE || method == CE_INIT);
+       AddURLInCombobox (pathname, keep);
        /* parse and display the document, res contains the new document
-	identifier, as given by the thotlib */
+	  identifier, as given by the thotlib */
        res = LoadDocument (newdoc, pathname, form_data, NULL, method,
 			   tempfile, documentname, http_headers, FALSE, &InNewWindow);
+       if (!ReadOnlyDocument[doc])
+	 UpdateEditorMenus (doc);
 
        if (res == 0)
 	 {
@@ -4090,7 +4106,7 @@ void ShowSource (Document document, View view)
 #endif /* _SVGLIB */
        DocumentTypes[document] == docHTML)
 	   {
-	     if (TtaGetDocumentProfile(document) == L_Xhtml11)
+	     if (TtaGetDocumentProfile (document) == L_Xhtml11)
 	       TtaExportDocumentWithNewLineNumbers (document, tempdocument,
 						    "HTMLT11");
 	     else if (DocumentMeta[document]->xmlformat)
