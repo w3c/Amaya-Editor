@@ -23,6 +23,7 @@
 #include "fetchHTMLname_f.h"
 #include "fetchXMLname_f.h"
 #include "html2thot_f.h"
+#include "init_f.h"
 #include "Xml2thot_f.h"
 #include "HTMLimage_f.h"
 #include "MathML.h"
@@ -2536,13 +2537,13 @@ void TransformType (Document doc, View view)
 	}
       else
 	/* display a popup message */
-	InitInfo (TtaGetMessage (AMAYA, AM_NO_TRANS), NULL);
+	InitInfo (NULL, TtaGetMessage (AMAYA, AM_NO_TRANS));
       /*TtaSetStatus (TransDoc, 1, TtaGetMessage (AMAYA, AM_NO_TRANS), NULL);*/
       TtaFreeMemory (menuBuf);
     }
   else
     /* display a popup message */
-    InitInfo (TtaGetMessage (AMAYA, AM_NO_TRANS), NULL);
+    InitInfo (NULL, TtaGetMessage (AMAYA, AM_NO_TRANS));
   /*TtaSetStatus (TransDoc, 1, TtaGetMessage (AMAYA, AM_NO_TRANS), NULL);*/
   TtaFreeMemory (nameSet);
 }

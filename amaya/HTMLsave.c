@@ -2295,10 +2295,9 @@ void RemoveAutoSavedDoc (Document doc)
   char     pathname[MAX_LENGTH];
   char     docname[MAX_LENGTH];
   char    *url, c;
-  int      l, interval = 0;
+  int      l;
 
-  TtaGetEnvInt ("AUTO_SAVE", &interval);
-  if (interval == 0 || DocumentURLs[doc] == NULL)
+  if (DocumentURLs[doc] == NULL)
     return;
 
 #ifdef AMAYA_DEBUG
