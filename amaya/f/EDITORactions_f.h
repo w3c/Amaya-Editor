@@ -118,7 +118,8 @@ extern void CreateOrChangeLink ( Document doc,
                                  View view );
 extern void DeleteAnchor ( Document doc,
                            View view );
-
+extern void CleanCache ( Document doc, 
+                         View view );
 #else /* __STDC__ */
 
 extern void New (/* Document document,
@@ -231,6 +232,8 @@ extern void CreateOrChangeLink (/* Document doc,
                                    View view */);
 extern void DeleteAnchor (/* Document doc,
                              View view */);
+extern void CleanCache (/* Document doc, 
+                           View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

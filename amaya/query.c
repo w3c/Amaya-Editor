@@ -23,18 +23,8 @@
 #define AMAYA_WWW_CACHE
 #endif /* !_WINDOWS */
 
-/*** for windows? ***/
-
-#ifndef _WINDOWS
-#define CACHE_DIR_NAME "/libwww-cache"
-#else 
-#define CACHE_DIR_NAME "\\libwww-cache"
-#endif /* !_WINDOWS */
-
-
-
+#define CACHE_DIR_NAME DIR_STR"libwww-cache"
 #define DEFAULT_CACHE_SIZE 5
-
 
 /* Amaya includes  */
 #define THOT_EXPORT extern
@@ -86,6 +76,9 @@ static HTList      *encodings = NULL;
 static int          object_counter = 0;	/* loaded objects counter */
 static  boolean     AmayaAlive; /* set to 1 if the application is active;
 			  	   0 if we have killed */
+#ifdef  AMAYA_WWW_CACHE
+static int          cache_size = 0;  /* size of the cache in megabytes */
+#endif /* WWW_AMAYACACHE */
 
 #include "answer_f.h"
 #include "query_f.h"
@@ -97,12 +90,14 @@ static  boolean     AmayaAlive; /* set to 1 if the application is active;
 /* prototypes */
 
 #ifdef __STDC__
+static void RecCleanCache (char *dirname);
 #ifdef _WINDOWS
 int WIN_Activate_Request (HTRequest* , HTAlertOpcode, int, const char*, void*, HTAlertPar*);
 #endif /* _WINDOWS */
 #else
+static void RecCleanCache (/* char *dirname */);
 #ifdef _WINDOWS
-int WIN_Activate_Request ();
+int WIN_Activate_Request (/* HTRequest* , HTAlertOpcode, int, const char*, void*, HTAlertPar* */);
 #endif /* _WINDOWS */
 #endif /* __STDC__ */
 
@@ -1094,19 +1089,98 @@ static void         AHTAlertInit ()
 #endif /* AMAYA_WWW_CACHE */
 }
 
-#ifndef _WINDOWS
-/* @@@ needs specific win functions */
+/*----------------------------------------------------------------------
+  libwww_CleanCache
+  frontend to the recursive cache cleaning function
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void libwww_CleanCache (void)
+#else
+void libwww_CleanCache ()
+Document doc;
+View view;
+#endif /* __STDC__ */
+{
+  char *strptr;
+  char *cache_dir;
+  int cache_size;
+#ifdef AMAYA_WWW_CACHE
+  if (!HTCacheMode_enabled ())
+    /* don't do anything if we're not using a cache */
+    return;
+  /* temporarily close down the cache, purge it, then restart */
+  cache_dir = strdup (HTCacheMode_getRoot ());
+  cache_size = HTCacheMode_maxSize ();
+  HTCacheTerminate ();
+  strptr = TtaGetMemory (strlen (cache_dir) + 2);
+  strcpy (strptr, cache_dir);
+  strcat (strptr, DIR_STR);
+
+  RecCleanCache (strptr);
+
+  TtaFreeMemory (strptr);
+  HTCacheMode_setExpires(HT_EXPIRES_AUTO);
+  HTCacheInit (cache_dir, cache_size);
+  TtaFreeMemory (cache_dir);
+#endif /* AMAYA_WWW_CACHE */
+}
+
 #ifdef AMAYA_WWW_CACHE
 /*----------------------------------------------------------------------
-  CleanCache
+  RecCleanCache
   Clears an existing cache directory
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void CleanCache (char *dirname)
+static void RecCleanCache (char *dirname)
 #else
-void CleanCache (dirname)
-char *dirname;
+static void RecCleanCache (char *dirname)
+Document doc;
+View view;
 #endif /* __STDC__ */
+
+#ifdef _WINDOWS
+{
+  HANDLE hFindFile;
+  boolean status;
+  WIN32_FIND_DATA ffd;
+  
+  char t_dir [MAX_LENGTH];
+
+  /* creat a t_dir name to start searching for files */
+  if ((strlen (dirname) + 10) > MAX_LENGTH)
+    /* ERROR: directory name is too big */
+    return;
+
+  strcpy (t_dir, dirname);
+  strcat (t_dir, "\\*");
+
+  hFindFile = FindFirstFile ("t_dir", &ffd);
+    
+  if (hFindFile == INVALID_HANDLE_VALUE)
+    /* nothing to erase? */
+    return;
+
+  status = TRUE;
+  while (status) {
+    if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+      {
+	/* it's a directory, erase it recursively */
+	RecCleanCache (ffd.cFileName);
+	rmdir (ffd.cFileName);
+      }
+    else if (ffd.dwFileAttributes & FILE_ATTRIBUTE_NORMAL)
+      {
+	/* it's a file, erase it */
+	/*TtaUnlink (ffd.cFileName); */
+	/* @@ false condition, for not doing anything */
+	status = TRUE;
+      }
+    status = FindNextFile (hFindFile, &ffd);
+  }
+  FindClose (hFindFile);
+}
+
+#else /* _WINDOWS */
 {
   DIR *dp;
   struct stat st;
@@ -1115,7 +1189,7 @@ char *dirname;
 #else
   struct direct *d;
 #endif /* HAVE_DIRENT_H */
-  char filename [BUFSIZ+1];
+  char filename[BUFSIZ+1];
 
   if ((dp = opendir (dirname)) == NULL) 
     {
@@ -1126,14 +1200,12 @@ char *dirname;
   
   while ((d = readdir (dp)) != NULL)
     {
-#ifndef _WINDOWS
       /* skip the UNIX . and .. links */
       if (!strcmp (d->d_name, "..")
 	  || !strcmp (d->d_name, "."))
 	continue;
-#endif _WINDOWS
 
-      sprintf (filename, "%s%s", dirname, d->d_name);
+      sprintf (filename, "%s"DIR_STR"%s", dirname, d->d_name);
       if  (lstat (filename, &st) < 0 ) 
 	{
 	  /* @@2 need some error message */
@@ -1145,8 +1217,9 @@ char *dirname;
 	{
 	case S_IFDIR:
 	  /* if we find a directory, we erase it, recursively */
-	  strcat (filename, "/");
-	  CleanCache (filename);
+	  strcat (filename, DIR_STR);
+	  RecCleanCache (filename);
+	  rmdir (filename);
 	  break;
 	case S_IFLNK:
 	  /* skip any links we find */
@@ -1159,11 +1232,9 @@ char *dirname;
 	}
     }
   closedir (dp);
-  /* erase the directory */
-  rmdir (dirname);
 }
+#endif /* _WINDOWS */
 #endif /* AMAYA_WWW_CACHE */
-#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
   CacheInit
@@ -1181,10 +1252,9 @@ static void Cacheinit ()
 
 #else /* AMAYA_WWW_CACHE */
   char *strptr;
-  int cache_size;
   char *cache_dir = NULL;
   boolean cache;
-
+  
   /* activate cache? */
   strptr = (char *) TtaGetEnvString ("ENABLE_CACHE");
   if (strptr && *strptr && strcasecmp (strptr,"yes" ))
@@ -1222,21 +1292,14 @@ static void Cacheinit ()
 	 the directory, etc. attention to dir-sep  */
       strptr = TtaGetMemory (strlen (cache_dir) + 20);
       strcpy (strptr, cache_dir);
-#ifndef _WINDOWS
-      strcat (strptr, "/.lock");
-#else
-      strcat (strptr, "\\.lock");
-#endif /* !_WINDOWS */
+      strcat (strptr, DIR_STR".lock");
       if (TtaFileExist (strptr))
 	{
 	  /* remove the lock and clean the cache (the clean cache will remove
 	   all, making the following call unnecessary */
 	  strcpy (strptr, cache_dir);
-	  /* @@@ add DIRSEP */
-	  strcat (strptr, "/");
-#ifndef _WINDOWS
-	  CleanCache (strptr); 
-#endif /* !_WINDOWS */
+	  strcat (strptr, DIR_STR);
+	  RecCleanCache (strptr);
 	}
       TtaFreeMemory (strptr);
 

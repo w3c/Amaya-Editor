@@ -42,6 +42,7 @@ extern int AHTLoadTerminate_handler ( HTRequest * request,
 				      HTResponse * response,
 				      void *param, 
 				      int status );
+extern void libwww_CleanCache ( void );
 #else /* __STDC__ */
 
 extern AHTDocId_Status *GetDocIdStatus (/* int docid,
@@ -80,5 +81,7 @@ extern int AHTLoadTerminate_handler (/* HTRequest * request,
 					HTResponse * response,
 					void *param, 
 					int status */);
+extern void libwww_CleanCache (/* void */);
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
+

@@ -2177,3 +2177,22 @@ View                view;
 	  TtaExtendSelection (doc, lastSelectedElement, lastSelectedChar);
      }
 }
+
+/*----------------------------------------------------------------------
+  CleanCache
+  A frontend to the CleanCache function, called thru an Amaya menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void CleanCache (Document doc, View view)
+#else 
+void CleanCache (doc, view);
+Document doc;
+View view;
+#endif /* __STDC__ */
+{
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
+#else
+  libwww_CleanCache ();
+#endif /* AMAYA_JAVA */
+}
+
