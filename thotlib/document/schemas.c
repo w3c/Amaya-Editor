@@ -2010,14 +2010,14 @@ static void    InsertXmlPRules (PtrPSchema pPSch, int nSRules)
 
 /*----------------------------------------------------------------------
    TtaAddEmptyBox
-   Add a generic rule to an element type
+   Add a specific rule to an empty element
   ----------------------------------------------------------------------*/
 void    TtaAddEmptyBox (Element el, Document document)
 
 {
   PtrPRule            pRule;
 
-  /* Rule 'Createfirst(EmptyBox)' */
+  /* Rule 'Createlast(EmptyBox)' */
   GetPresentRule (&pRule);
   if (pRule != NULL)
     {
@@ -2036,7 +2036,7 @@ void    TtaAddEmptyBox (Element el, Document document)
       pRule->PrNPresBoxes = 1;
       pRule->PrPresBox[0] = EMPTY_PBOX;
       pRule->PrPresBoxName[0] = EOS;
-      LinkNewPRule (pRule, &(((PtrElement)el)->ElFirstPRule));   /**** ????? VQ ****/
+      LinkNewPRule (pRule, &(((PtrElement)el)->ElFirstPRule));
     }
 }
 
