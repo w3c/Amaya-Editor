@@ -3,12 +3,12 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Publishing</title>
+  <title>Publier</title>
   <meta name="GENERATOR" content="amaya V3.2.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="fr" lang="fr">
 
 <table border="0" width="100%" summary="toc">
   <tbody>
@@ -29,148 +29,161 @@
 <div id="Saving">
 <h2><a name="L1052">Sauver et Publier des documents</a></h2>
 
-<p>Amaya allows you to save documents either in HTML or as text format.</p>
+<p>Amaya permet de sauver les documents soit en HTML soit en format texte.</p>
 
-<p>Remote and local saving can be accessed in two ways, through the
-<strong>Save</strong> and <strong>SaveAs</strong> commands.</p>
+<p>Les sauvegardes lointaine et locale peuvent être accéder de deux façons,
+grâce aux commandes <strong>Sauver</strong> et <strong>Sauver
+comme</strong>.</p>
 
-<p>This manual section deacribes the Publishing menu commands. In addtion,
-there are a number of configuration options related to Amaya that you may
-change through the <a href="Configure.html#Publishing">Configuration
-menu</a>.</p>
+<p>Cette section manuelle décrit les commandes du menu de publication. En
+plus, il existe un nombre d'options de configuration que vous pouvez changer
+par l'intermédiaire du <a href="Configure.html#Publishing">menu de
+configuration</a>.</p>
 
-<h3><a name="L1104">Saving documents in HTML</a></h3>
+<h3><a name="L1104">Sauver des documents en HTML</a></h3>
 
-<p><b>Amaya</b> does not provide any global view of the set of pages installed
-on a server. However it is possible to save files to a remote server as to
-local files through the <strong>Save</strong> and <strong>SaveAs</strong>
-commands. During these operations, Amaya takes images into account.</p>
+<p><b>Amaya</b> fournit aucune vue d'ensemble de série de pages installées sur
+le serveur. Cependant il est possible de sauver des fichiers d'un serveur
+lointain comme des fichiers locaux grâce aux commandes <strong>Sauver</strong>
+et <strong>Sauver comme</strong>. Pendant ces opérations, Amaya tient compte
+des images.</p>
 
-<h4><a name="L1517">The Save command</a></h4>
+<h4><a name="L1517">La commande sauver</a></h4>
 
-<p>The save command can be invoked either by choosing <strong>Save</strong>
-from the <strong>File</strong> menu (control-s in Windows, control-x,
-control-s in Unix) or by clicking on the <img alt="floppy"
-src="../Icons/floppy.gif" align="middle" border="0" /> button. This command
-saves the current document to the location it was fetched from. Newly added
-images are saved in the same directory and no confirmation is asked except if
-the document name is unknown. Servers allow users to fetch a document when
-only the server name or the server directory name is given. This is very
-useful at browsing time, but it is not supported by the put method. In this
-case, Amaya detects that the document name is missing and proposes to use a
-default name or to complete the request.</p>
+<p>La commande sauver peut être invoquée soit en choisissant
+<strong>Sauver</strong> depuis le menu <strong>Fichier</strong> (control-s
+pour Windows, control-x, control-s pour Unix) ou bien en cliquant sur le
+bouton <img alt="floppy" src="../Icons/floppy.gif" align="middle" border="0"
+/> . Cette commande sauve le document courant à l'adresse où il a été amené.
+Les images nouvellement ajoutées sont sauvées dans le même répertoire et
+aucune confirmation n'est demandé, exceptée si le nom du document est inconnu.
+Les serveurs permettent aux utilisateurs d'importer un document quand seuls le
+nom du serveur ou le répertoire du serveur sont donnés. C'est très utile au
+moment de la navigation, mais ça n'est pas supporté par la méthode "put". Dans
+ce cas, Amaya détecte que le nom du document manque et propose d'utiliser un
+nom par défaut pour répondre à la demande.</p>
 
-<p>If one needs to save newly added images to a different location, the
-<strong>Save As</strong> command should be used instead.</p>
+<p>Si quelqu'un a besoin de sauver des images nouvellement ajoutées dans un
+autre endroit, la commande <strong>Sauver comme </strong>devra être utilisée à
+la place.</p>
 
-<h4><a name="L1518">The Save As command</a></h4>
+<h4><a name="L1518">La commande Sauver comme</a></h4>
 
-<p>Selecting the <strong>Save As</strong> entry in the <strong>File</strong>
-menu opens a dialog box that allows you to save the current document to a
-different location, a remote Web server or the local file system. You can:</p>
+<p>Le fait de sélectionner l'entrée <strong>Sauver comme</strong> dans le menu
+<strong>Fichier</strong> ouvre une boîte de dialogue qui vous permet de sauver
+le document courant à une adresse différente, un serveur Web lointain ou un
+fichier système local. Vous pouvez:</p>
 <ul>
-  <li>save the document to a local disk,</li>
-  <li>save the document to a remote URI,</li>
-  <li>save images embedded in the document in the document directory or a
-    different location,</li>
-  <li>transform embedded URIs,</li>
+  <li>sauver le document sur un disque local,</li>
+  <li>sauver le document sur un URI lointain,</li>
+  <li>sauver des images encastrées dans le répertoire du document ou à une
+    adresse différente,</li>
+  <li>transformer les URIs encastrées,</li>
 </ul>
 
 <p><img src="../Icons/SaveAs.gif" alt="SaveAs" /></p>
 
-<p>The items in the dialog box, from top to bottom, left to right are used as
-follows:</p>
+<p>Les choix dans la boîte de dialogue, de haut en bas, de gauche à droite
+sont utilisés comme suivant:</p>
 <ul>
-  <li>The <strong>Document directories</strong> selector shows the directories
-    contained in the current directory. It should be used to save a file on
-    the local file system.</li>
-  <li>The <strong>Files</strong> selector shows the files contained in the
-    current local directory.</li>
-  <li>The <strong>HTML</strong>, <strong>XML</strong> and
-    <strong>Text</strong> toggles are exclusive. The default is HTML and you
-    have to change it, if you want to produce an XML (Voyager) or a text
-    format of the current document.</li>
-  <li>The <strong>Copy Images</strong> toggle indicates whether the images
-    embedded in the current document must be copied along with the document to
-    the new location. It's generally better to keep this switch on as
-    otherwise you will not be sure that the corresponding images will be found
-    when opening the document later. However switching it off is useful when
-    you have only changed the text of the document and the document is stored
-    on the same server. When images are copied, Amaya will automatically
-    update all <strong>SRC</strong> attributes to point new image locations.
-    New locations will be relative URIs.</li>
-  <li>The <strong>Transform URIs</strong> toggle transforms all current URIs
-    into relative URIs when it's possible. Of course, if the document is saved
-    in a local file and URIs point to remote files, URIs will be absolute
-    ones. This ensures that all the links in the document remain correct after
-    the copy. However if you have several document linked together with
-    relative URIs and that you plan to move them to a remote location,
-    disabling URI conversion is needed to avoid referencing the initial
-    locations.</li>
-  <li>The <strong>Document location</strong> field indicates the location
-    where the HTML file has to be written. This can be a file in the local
-    filesystem (e.g. "/pub/html/welcome.html") or the name of a remote URI
-    (e.g. "http://www.w3.org/pub/WWW/Welcome.html").
-    <p><strong>Note</strong> that this should be a complete path as there is
-    no way to guess the name of "http://www.w3.org/pub/WWW". You should also
-    make sure that you have the <strong>right to do a PUT</strong> method in
-    the case of a remote location. See the page on <a
-    href="http://www.w3.org/Amaya/User/Put.html">configuring your server to
-    accept the PUT method</a> or ask your Web administrator.</p>
+  <li>Le sélecteur <strong>Répertoires</strong> montre les répertoires
+    contenus dans le répertoire courant. Il devrait être utilisé pour sauver
+    un fichier sur le fichier système local.</li>
+  <li>Le sélecteur des <strong>Fichiers</strong> montre les fichiers contenus
+    dans le répertoire local courant.</li>
+  <li>Les choix <strong>HTML</strong>, <strong>XML</strong> et
+    <strong>Texte</strong> sont exclusifs. Par défaut c'est HTML qui est coché
+    et vous devez changer si vous voulez produire un document XML (Voyager) ou
+    un format texte du document courant.</li>
+  <li>Le choix <strong>Copier les Images</strong> indique si les images
+    encastrées dans le document courant doivent être copiées avec le document
+    à une nouvelle adresse. Il vaut mieux généralement garder ce bouton actif,
+    autrement vous ne serez pas sûr que les images correspondantes seront
+    trouvées en ouvrant le document ultérieurement. Cependant, le rendre
+    inactif est utile quand vous avez changé uniquement le texte du document
+    et que le document est stocké sur le même serveur. Quand les images seront
+    copiées, Amaya mettra à jour automatiquement tous les attributs
+    <strong>SRC</strong> pour pointer vers des nouvelles adresses d'images.
+    Les nouvelles adresses seront des URIs relatifs.</li>
+  <li>Le choix <strong>Transformer les URIs</strong> transforme tous les URIs
+    courants en URIs relatifs quand c'est possible. Biensûr, si le document
+    est sauvé dans un fichier local et si les URIs pointent sur des fichiers
+    lointains, les URIs seront absolus. Ça assure que tous les liens dans le
+    document resteront correctes après la copie. Cependant, si vous avez
+    plusieurs document reliés aux URIs relatifs et que vous avez l'intention
+    de les déplacer vers une adresse lointaine, la désactivation de la
+    conversion en URI est nécessaire afin d'éviter le référencement des
+    adresses initiales.</li>
+  <li>Le champ <strong>Adresse du document</strong>  indique l'adresse ou le
+    fichier HTML a été écrit. Ce peut être un fichier dans le fichier système
+    local (par exemple "/pub/html/welcome.html") ou le nom d'un URI lointain
+    (par exemple "http://www.w3.org/pub/WWW/Welcome.html").
+    <p><strong>Notez </strong>que vous devrez donner le chemin complet comme
+    si il n'y avait aucun moyen de deviner le nom de
+    "http://www.w3.org/pub/WWW". Vous devrez également vous assurer que vous
+    avez le <strong>droit de faire une méthode PUT</strong> dans le cas d'une
+    adresse lointaine. Regardez la page <a
+    href="http://www.w3.org/Amaya/User/Put.html">configurez votre serveur pour
+    permettre la méthode PUT</a> ou demander à votre administrateur Web.</p>
   </li>
-  <li>The <strong>Images location</strong> field allows you to save images (if
-    <strong>Copy Images</strong> has been selected) to a different place than
-    the HTML file. This field should contain the name of a directory in the
-    local filesystem or a location in the remote server.
+  <li>Le champ <strong>Adresse des images</strong> vous permet de sauver des
+    images (si <strong>Copier les Images</strong> a été sélectionné) à un 
+    autre endroit que le fichier HTML. Ce camp devrait contenir le nom d'un
+    répertoire dans le fichier système local ou une adresse dans le serveur
+    lointain.
     <ul>
-      <li>using a relative path, the images is stored at a location relative
-        to the document directory. For example, if the document location is
-        "http://www.w3.org/pub/WWW/Welcome.html" and the images location is
-        "Images", an image "W3C.png" contained in the document is stored at
-        the URI "http://www.w3.org/pub/WWW/Images/W3C.png" and the HTML file
-        is modified to reference it as:
+      <li>en utilisant un chemin relatif, les images sont stockées à une
+        adresse relative au répertoire du document. Par exemple, si l'adresse
+        du document est "http://www.w3.org/pub/WWW/Welcome.html" et que
+        l'adresse des images est "Images", une image "W3C.png" contenue dans
+        le document est stockée à l'URI
+        "http://www.w3.org/pub/WWW/Images/W3C.png" et le fichier HTML est
+        modifiée le référant à:
         <p>&lt;IMG SRC="Images/W3C.png"&gt;</p>
-        <p>This is similar in the case of a document location in the local
-        filesystem.</p>
+        <p>C'est la même chose dans le cas d'une adresse dans le fichier
+        système local.</p>
       </li>
-      <li>using an absolute path, the images are stored at this exact
-        location, independently of the document location. In the previous
-        example, if the images location specified is "http://pub/WWW/Images",
-        the image is stored at "http://www.w3.org/pub/WWW/Images/W3C.png" and
-        the corresponding HTML file is modified in the following way:
+      <li>en utilisant un chemin absolu, les images sont stockées à cette
+        adresse exacte, indépendamment de l'adresse du document. Dans
+        l'exemple précédent, si l'adresse des images spécifiée est
+        "http://pub/WWW/Images", l'image est stockée à l'adresse
+        "http://www.w3.org/pub/WWW/Images/W3C.png" et le fichier HTML
+        correspondant est modifié de la manière suivante:
         <p>&lt;IMG SRC="Images/W3C.png"&gt;</p>
       </li>
     </ul>
   </li>
-  <li>Clicking on <strong>OK</strong> starts the process of transforming the
-    document and a popup asks for confirmation in both of the following cases:
+  <li>Le fait de cliquer sur <strong>OK</strong> débute le processus de
+    transformation du document et un événement demande confirmation dans les
+    deux cas suivant:
     <ol>
-      <li>The document has to be saved on a remote server. The complete URI to
-        be written to is displayed for verification.</li>
-      <li>The document has to be saved locally and the file already
-      exists.</li>
+      <li>Le document a été sauvé sur un serveur lointain. L'URI complet qui
+        doit être écrit est visualisé pour vérification.</li>
+      <li>Le document doit être sauvé localement et le fichier existe
+      déjà.</li>
     </ol>
     <p><strong>Notes</strong> :</p>
     <ul>
-      <li>When saving to a remote location please check that the http_proxy is
-        not set, or that the proxy server and the <a
-        href="http://www.w3.org/Amaya/User/Put.html">target server are
-        configured to work with the PUT</a> method.</li>
-      <li><p><b>Amaya</b> does not currently contact the remote server (in
-        case of an "http://..." destination) to check whether such a document
-        already exists.</p>
+      <li>Quand on sauve à une adresse lointaine, s'il vous plaît vérifier que
+        le proxy http n'est pas mis, ou que le serveur proxy et le <a
+        href="http://www.w3.org/Amaya/User/Put.html">serveur cible sont
+        configurés pour travailler avec la méthode PUT</a>.</li>
+      <li><p><b>Amaya</b> ne contacte pas couramment le serveur lointain (dans
+        le cas d'une destination "http://..." destination) pour contrôler si
+        un tel document existe déjà.</p>
       </li>
     </ul>
   </li>
 </ul>
 
-<h3><a name="L1105">Saving documents as text</a></h3>
+<h3><a name="L1105">Sauver des documents en tant que textes</a></h3>
 
-<p>The <strong>Save As</strong> command from the <strong>Edit</strong> menu
-displays a dialog box that allows you to save the current document in various
-formats. Clicking the <strong>Text</strong> button from the <strong>Output
-Format</strong> menu saves the document in text form, in a local file. A list
-of all URIs used in the document is appended to that file.</p>
+<p>La commande <strong>Sauver comme</strong> du menu <strong>Fichier
+</strong>visualise une boîte de dialogue permettant de sauver le document
+courant en formats variables.Le bouton <strong>Texte</strong> du menu<strong>
+Format du document</strong> sauve le document sous forme de texte, dans un
+fichier local. Une liste de tous les URIs utilisés s'affichent dans ce
+fichier.</p>
 </div>
 
 <p align="right"><a href="SpellChecking.html"><img alt="previous" border="0"

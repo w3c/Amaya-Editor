@@ -3,7 +3,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Printing</title>
+  <title>Imprimer</title>
   <meta name="GENERATOR" content="amaya V3.2.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
@@ -27,89 +27,91 @@
 </table>
 
 <div id="Printing">
-<h2><a name="L1062">Printing documents</a></h2>
+<h2><a name="L1062">Imprimer des documents</a></h2>
 
-<p>Amaya is able to print your documents with or without CSS style sheets on
-both Unix and Windows platforms. On Unix platforms it is only able to generate
-Postscript description, so you need to have a PostScript printer or use a
-application able to translate the PostScript into your specific printer
-language.</p>
+<p>Amaya est capable d'imprimer des document avec ou sans feuilles de style
+CSS pour les stations Unix et Windows. Sur les stations Unix il est uniquement
+possible de générer une description Postscript, donc vous avez besoin d'une
+imprimante PostScript printer ou d'utiliser une aplication capable de traduire
+le PostScript en votre langage d'imprimante spécifique.</p>
 
-<p>There are three ways for printing a document thru Amaya:</p>
+<p>Il y a trois manières d'imprimer un document avec Amaya:</p>
 <ul>
-  <li>the <strong>Setup and Print </strong>command (<code>File/Setup and
-    Print)</code>, which allows you to set some parameters and options before
-    printing.</li>
-  <li>the <strong>Print command</strong> (<code>File/Print</code>), which
-    prints a document using the configuration setup thru the previous
-  command.</li>
-  <li>the  <img src="../Icons/Print.gif" alt="Print" />
-    <strong>button</strong>, in the button bar, which is a shortcut to the
-    <strong>Print</strong> command on Unix platforms. Under Windows, this
-    button is a shortcut to the <strong>Setup and Print</strong> command. This
-    is due to a problem with the use of DLLs on Windows 95.</li>
+  <li>la commande <strong>Paramétrer et imprimer </strong>
+    (<code>Fichier/Paramétrer et imprimer)</code>, qui vous permet de fixer
+    certains paramètres et options avant d'imprimer.</li>
+  <li>la commande <strong>Imprimer</strong> (<code>Fichier/Imprimer</code>),
+    qui imprime un document en utilisant la configuration de paramétrage de la
+    commande précédante.</li>
+  <li>le <strong>bouton </strong> <img src="../Icons/Print.gif" alt="Print" />
+    , dans la barre des boutons, est un raccourci de la commande
+    <strong>Imprimer</strong> sur les stations Unix. Sous Windows, ce bouton
+    est le raccourci de la commande <strong>Paramétrer et imprimer</strong>.
+    C'est dû à un problème d'utilisation de DLLs sur Windows 95.</li>
 </ul>
 
-<h3>Setup and Print command</h3>
+<h3>La commande Paramétrer et Imprimer</h3>
 
-<p>This command allows you to set up different parameters and options. Note
-that some parameters and options are reset to their default value when you
-browse another document. This clear up depends on each platform.</p>
+<p>Cette commande vous permet d'établir différents paramètres et options.
+Notez que certains paramètres et certaines options reprennent leur valeur par
+défaut quand vous naviguez un autre document.  Cette propriété dépend de la
+station.</p>
 
-<h4>Unix platforms</h4>
+<h4>Stations Unix</h4>
 
-<p>Under Unix, you can set the following parameters:</p>
+<p>Sous Unix, vous pouvez fixer les paramètres suivant:</p>
 <ul>
-  <li>the paper format: A4. US</li>
-  <li>the orientation: Portrait, Landscape</li>
-  <li>the number of pages printed on the same sheet of paper: 1, 2, 4 pages
-    per sheet</li>
-  <li>the output: file, or printer</li>
+  <li>le format du papier: A4. US</li>
+  <li>l'orientation: Portrait, Paysage</li>
+  <li>la disposition (le nombre de pages imprimées sur la même feuille de
+    papier): 1, 2, 4 pages par feuille </li>
+  <li>la destination: fichier, ou imprimer</li>
 </ul>
 
-<p>In addition, you can select the following options:</p>
+<p>En plus, vous pouvez sélectionner les options suivantes:</p>
 <ul>
-  <li>Manual paper feed</li>
-  <li>Generation of the table of contents of the document</li>
-  <li>Generation of  the table of links: a number is generated after each link
-    in the document that refers an entry within the table of links; each table
-    entry lists the corresponding URL</li>
-  <li>Printing of the document URL on each page</li>
-  <li>Printing with  or without CSS style sheets</li>
+  <li>Alimentation manuelle</li>
+  <li>Table des matières</li>
+  <li>Table des liens: un numéro est généré après chaque lien dans le document
+    qui réfère un entrée à l'intérieur de la table de liens; chaque entrée de
+    la table liste l'URL correspondant</li>
+  <li>Imprimer l'URL</li>
+  <li>Sans feuilles de style</li>
 </ul>
 
-<h4>Windows platforms</h4>
+<h4>Stations Windows </h4>
 
-<p>On Windows platforms, a first dialogue box will propose the following
-options:</p>
+<p>Sur les stations Windows, une boîte de dialogue vous proposera en premeir
+lieu les options suivantes:</p>
 <ul>
-  <li>Generation of the table of contents of the document</li>
-  <li>Generation of  the table of links of the document</li>
-  <li>Printing of the document URL on each page</li>
-  <li>Printing with or without CSS style sheets</li>
+  <li>Table des matières</li>
+  <li>Table des liens</li>
+  <li>Imprimer l'URL </li>
+  <li>Sans feuilles de style</li>
 </ul>
 
-<p>then the standard Windows dialogue will let you choose the other printing
-parameters.</p>
+<p>Puis le dialogie standard de Windows vous laissera choisir les autres
+paramètres d'impression.</p>
 
-<h3>Print command</h3>
-This command prints the current document with the default printing parameters
-or with the values previously set with the command <strong>Setup and
-Print</strong>.
+<h3>La commande imprimer</h3>
+Cette commande imprime le document courant avec le paramètre d'impression par
+défaut ou avec les valeurs précédemment fixées grâce à la commande
+<strong>Paramétrer et imprimer</strong>.
 
-<p>On Windows platforms, the first time you launch the command
-<strong>Print</strong>, the standard Windows dialogue will be displayed to let
-you check that the default printer is correct. The following
-<strong>Print</strong> commands will be launched without any dialogue.</p>
+<p>Sur les stations Windows, la première fois que vous lancer la commande 
+<strong>Imprimer</strong>, le dialogue standard de Windows sera visualiser et
+vous laissera vérifier que límprimante par défaut est correcte. Les commandes 
+<strong>Imprimer</strong> suivantes seront lancées sans aucun dialogue.</p>
 
-<h3>Controlling page breaks with CSS</h3>
+<h3>Contrôler les arrêts de page avec CSS</h3>
 
-<p>Amaya supports the CSS page break properties: "<strong>page-break-before:
-always</strong>". When that property is attached to a specific element by an
-attribute <strong>style</strong>, it generates a page break before that
-specific element. When that property is attached to an element type within the
-style element of the document or within an external CSS style sheet, it
-generate a page break before each instance of that element.</p>
+<p>Amaya soutient les propriétésupports the CSS page break properties:
+"<strong>page-break-before: always</strong>". When that property is attached
+to a specific element by an attribute <strong>style</strong>, it generates a
+page break before that specific element. When that property is attached to an
+element type within the style element of the document or within an external
+CSS style sheet, it generate a page break before each instance of that
+element.</p>
 </div>
 
 <p align="right"><a href="Publishing.html"><img alt="previous" border="0"
