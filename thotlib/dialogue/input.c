@@ -665,6 +665,8 @@ gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
   frame = (int) data; 
   FrameToView (frame, &doc, &view);
   gdk_window_get_position(w->parent->parent->parent->window, &x, &y);
+  if (w->parent->parent->parent->allocation.y > y)
+    y = w->parent->parent->parent->allocation.y;
   if (timer != None)
     {
       gtk_timeout_remove (timer);
@@ -679,11 +681,9 @@ gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
 	{
 	  /* 16 is the pixel size of the scrollbar buttons*/
 	  height = w->allocation.height - 16;
-	  /* 
-	     Gives the real Y 
+	  /* Gives the real Y 
 	     (eventmouse->y GTK gives bad number on the lower button)
-	     So We use the Window manager one and calculate absolute position...
-	  */
+	     So We use the Window manager one and calculate absolute position...  */
 	  y = eventmouse->y_root - y - w->allocation.y;
 	  if (eventmouse->state & GDK_CONTROL_MASK)
 	    {
