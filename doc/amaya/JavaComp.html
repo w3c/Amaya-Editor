@@ -159,6 +159,8 @@ If everything went well, the following files should be available in the
   <li>
   amaya : the <strong>Amaya</strong> binary
   <li>
+  dns_daemon : the DNS requester module.
+  <li>
   print : the amaya printing subprocess binary.
   <li>
   app, grm, prs, str, tra, typ, printstr, printpr, rescandialogue : various
@@ -265,7 +267,9 @@ There is a few specific targets related to Kaffe and Java:</p>
   the correct CLASSPATH value.
   <li>
   make <strong>classes</strong> : rebuilds all the java classes for Amaya and
-  Jigsaw HTTP client implementation.
+  Jigsaw HTTP client implementation. It starts the Makefile in
+  <code>Thot/classes</code> directory after setting the correct CLASSPATH
+  value.
   <li>
   make <strong>zips</strong> : call make classes and rebuild the ZIP files
   containing the compiled classes.
@@ -440,7 +444,7 @@ small checklist:</p>
     the following shell script in conjuction with gcc, name it cpp, put it in
     the PATH with 755 Unix rights:
     <pre>#!/bin/sh
-                exec `gcc --print-prog-name=cpp` $*</pre>
+                    exec `gcc --print-prog-name=cpp` $*</pre>
     <li>
     check that you have write right access on Thot/amaya directory.
     <li>
@@ -458,9 +462,9 @@ small checklist:</p>
   <ol>
     <li>
     Check that the current directory contains all the precompiled libraries,
-    namely <code>libjpeg.a</code>,
-    <code>libpng.a</code> and <code>libz.a</code> for the
-    <strong>Target</strong>. If these files are lacking, fetch the appropriate
+    namely <code>libjpeg.a</code>, <code>libpng.a</code> and
+    <code>libz.a</code> for the <strong>Target</strong>. If these files are
+    lacking, fetch the appropriate
     <code>thot-libs-</code><strong>target</strong><code>-xxx.tar.gz</code> <a
     href="SourceDist.html">distribution</a> file and install it.
     <li>
