@@ -445,7 +445,7 @@ void                TtaQuit ()
   FreeTranslations ();
   FreeMenus ();
   ThotFreeAllFonts ();
-  TtaFreeAllEventsLists ();
+  TteFreeAllEventsLists ();
   TtaFreeAllCatalogs ();
   ConfigFree ();
 #endif /* NODISPLAY */

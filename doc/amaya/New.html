@@ -3,7 +3,7 @@
 <html>
 <head>
   <title>Amaya New Features History</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
 
 <body lang="en">
@@ -17,6 +17,214 @@ border="0" src="../Icons/doc48x.gif" alt="Doc"></a></p>
 
 <p>This file indicates the new features you can find in the latest versions of
 Amaya.</p>
+
+<h1>Amaya 3.0</h1>
+
+<h2>New features</h2>
+<ul>
+  <li>CSS
+    <ul>
+      <li>Support of more CSS properties:<br>
+        <code>margin-top, margin-right, margin-bottom, margin-left,
+        margin,</code><br>
+        <code>padding-top, padding-right, padding-bottom, padding-left,
+        padding,</code><br>
+        <code>border-top-width, border-right-width, border-bottom-width,
+        border-left-width, border-width,</code><br>
+        <code>border-top-color, border-right-color, border-bottom-color,
+        border-left-color, border-color,</code><br>
+        <code>border-top-style, border-right-style, border-bottom-style,
+        border-left-style, border-style,</code><br>
+        <code>border-top, border-right, border-bottom, border-left,
+        border</code>.</li>
+      <li>The user style sheet specified in User preferences is now taken into
+        account when documents are printed. Users are encouraged to create two
+        sections in their personal style sheet::
+
+        <blockquote>
+          <pre>@media screen {...}
+@media print {...}</pre>
+        </blockquote>
+      </li>
+      <li>The <code>media</code> attribute attached to a link to a style sheet
+        is now interpreted.</li>
+    </ul>
+  </li>
+  <li>MathML
+    <ul>
+      <li>New MathML 2.0 elements implemented: <code>menclose</code>,
+        <code>mchar</code>, <code>mglyph</code>, <code>mlabeledtr</code></li>
+      <li>New MathML 2.0 attributes implemented:  <code>xref</code>,
+        <code>numalign</code>, <code>denomalign</code>, <code>beveled</code>,
+        <code>columnwidth</code>, <code>side</code>,
+        <code>minlabelspacing</code></li>
+      <li>When the user creates or modifies an expression, the MathML editor
+        recognizes function names and generates separate <code>mi</code>
+        elements for them.</li>
+      <li>4 new commands have been added to menu Types/Math: Plain text
+        (mtext), Identifier (mi), Number (mn), Operator (mo). These commands
+        allow the user to change the type of basic elements. Command "Plain
+        text" can also be used to create character strings (mtext) that are
+        not changed or interpreted by the editor.</li>
+      <li>A new command in the Types/Math menu allows you to insert entities
+        in MathML expressions.</li>
+      <li>Buttons <em>E </em>(Emphasis) and <strong>S</strong> (Strong) work
+        on math expressions. They put an attribute <code>fontstyle</code> or
+        <code>fontweight</code> on elements <code>mi</code>, <code>mn</code>,
+        <code>mo</code>, <code>mtext</code>, etc. contained in the current
+        selection.</li>
+    </ul>
+  </li>
+  <li>User Interface/Editing
+    <ul>
+      <li>Amaya analizes all suffixes of the document name to detect if it's a
+        HTML document or not. So documents like "name.html.$LANG" can be now
+        edited as HTML documents.</li>
+      <li>As the document title is displayed on the top of the window, the
+        corresponding editing field is suppressed. The user can use the
+        dialogue entry Types/Change Title or  the structure view to change it.
+        The user can now define a shortcut for this corresponding function
+        "ChangeTitle ()".</li>
+    </ul>
+  </li>
+  <li>Libwww
+    <ul>
+      <li>Upgraded to the latest version (5.2.9) out from CVS.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2>Fixed bugs</h2>
+<ul>
+  <li>CSS
+    <ul>
+      <li>Amaya didn't remove background colors correctly.</li>
+      <li>When generating CSS rules with Style->Create_rule, element and
+        attribute names were printed in uppercase.</li>
+      <li>When a link to a CSS style sheet was pasted, that style sheet wasn't
+        applied.</li>
+      <li>Error in the CSS parser: parsing stopped at the first colon in an
+        @media section.</li>
+      <li>Amaya failed to create new style rules when existing style rules
+        were emmbedded in a comment within the style element.</li>
+      <li>Amaya crashed when a style element was created by the command
+        Structure->style.</li>
+    </ul>
+  </li>
+  <li>LibWWW
+    <ul>
+      <li>In some cases, the HTTP Accept header had an extra ":" char.</li>
+      <li>In the Message Digest Authentication algorithm, the digest was being
+        made using the absolute-uri, rather than the request-uri.</li>
+      <li>Supressed the HTTP/0.9 downgrade code as it generated more problems
+        that what it was supposed to fix.</li>
+      <li>The cache didn't work well when it had to do an HTTP Range request.
+        This was notorious when publishing a document as the previous cached
+        document wasn't updated. The code now works as intended.</li>
+      <li>Changed the Amaya libwww interface so that it minizes the error
+        messages where it just says "Error code: -1".</li>
+      <li>Fixed some minor memory leaks.</li>
+      <li>Changed the Amaya interface so that we can read the HTTP charset
+        value easily.</li>
+      <li>Memory could be corrupted when saving to a non-existent server.</li>
+    </ul>
+  </li>
+  <li>MathML
+    <ul>
+      <li>A strange attribute named EntityName was proposed in the Attribute
+        menu.</li>
+      <li>Odd things happened when an attribute "other" was associated with a
+        character string.</li>
+      <li>It was impossible to move the cursor to some positions within a
+        mathematical expression.</li>
+      <li>The editor generated unneeded <code>mrow</code> elements in some
+        cases (for instance within a <code>mtd</code> or a
+        <code>msqrt</code>).</li>
+      <li>Character references representing code points > 255 were simply
+        ignored. They are now kept and saved in their original form. When the
+        corresponding glyph is available in the Symbol font, this glyph is
+        displayed, otherwise a question mark is displayed.</li>
+      <li>When setting the lang attribute on an element containing a
+        mathematical expression some math symbols were changed to strange
+        characters.</li>
+    </ul>
+  </li>
+  <li>Tables
+    <ul>
+      <li>Attributes <code>cellspacing</code> and <code>cellpadding</code> are
+        now interpreted correctly.</li>
+      <li>Attribute align associated with element caption screwed up the
+        Structure view.</li>
+      <li>The table formatting has been improved.</li>
+      <li>Deleting a cell including a table crashed Amaya.</li>
+      <li>The HTML parser accepted a <code>height</code> attribute associated
+        with a <code>table</code> element, which is illegal, and screwed up
+        the layout. This attribute is now flagged as erroneous.</li>
+    </ul>
+  </li>
+  <li>User Interface
+    <ul>
+      <li>When more than 2 links were needed to get the actual executable
+        amaya reported something like: System wide unix-thot.rc not
+      found.</li>
+      <li>Amaya tried to auto-scroll the formatted view when the user worked
+        on the structure view.</li>
+      <li>"Make Book" didn't work correctly when referred chapters are stored
+        in different directories.</li>
+      <li>The Edit/Find command crashed after several unsuccessful
+      searches.</li>
+      <li>The Edit/Check spelling/Skip (+add Dic) command crashed when it
+        tried to allocate more memory for the user dictionary (e.g., after
+        adding some 50 words).</li>
+      <li>Some entities (&amp;oelig; for instance) were converted into some
+        fallback ISO Latin-1 characters (oe for instance) for display (which
+        is nice), but were saved under that form in the output file. Now the
+        original entity is saved.</li>
+      <li>The source view of an XHTML document was displayed as HTML 4.0 when
+        the document was modified before opeining the source view.</li>
+      <li>Entries Synchronize and Save in menu File were not enabled/disabled
+        correctly, in accordance with the current document state.</li>
+      <li>FORM names and values bigger than 512K were being trunked. There's
+        no such limit anymore.</li>
+      <li>Copying and pasting a URL into the address or open file dialogues
+        didn't work if this URL had newline (carry return) characters</li>
+    </ul>
+  </li>
+  <li>Editing
+    <ul>
+      <li>When the caret was at the beginning (resp. end) of an element, key
+        BackSpace (resp. Del) merged elements in some cases instead of
+        deleting the previous (resp. next) character.</li>
+      <li>The Paste command was not disabled in Help documents.</li>
+      <li>Amaya allowed the creation of a target anchor within a link.</li>
+      <li>It was impossible to copy the contents of a document in Read-Only
+        mode.</li>
+      <li>When inserting a character from the Greek palette into a latin
+        character string, characters following the new character were
+        transformed into greek.</li>
+      <li>Editing an attribute in a view crashed Amaya in some cases.</li>
+      <li>When pasting some text from another application, line breaks are
+        kept only if the the target element is a PRE, a STYLE or a
+      SCRIPT.</li>
+    </ul>
+  </li>
+  <li>Specific Windows bugs
+    <ul>
+      <li>Control Return didn't work.</li>
+      <li>Save as Dialog transforms '/' into '\' while saving on a remote
+        server and if the output file format is modified.</li>
+      <li>Amaya didn't remove contexts and files attached to the last closed
+        document.</li>
+      <li>Printing from the Print Button sometimes crashed Amaya.</li>
+    </ul>
+  </li>
+  <li>Makefile
+    <ul>
+      <li>cextract (for  making function prototypes) didn't work if the system
+        didn't have a <code>cpp</code> tool named "cpp".</li>
+    </ul>
+  </li>
+</ul>
 
 <h1>Amaya 2.4</h1>
 
@@ -156,7 +364,6 @@ Amaya.</p>
 </ul>
 <hr>
 
-
 <h1>Amaya 2.3</h1>
 
 <p>16 December, 1999</p>
@@ -165,7 +372,6 @@ Amaya.</p>
 
 <p></p>
 <hr>
-
 
 <h1>Amaya 2.2</h1>
 
@@ -278,7 +484,6 @@ Amaya.</p>
 </ul>
 <hr>
 
-
 <h1>Amaya 2.1</h1>
 
 <p>24 June, 1999</p>
@@ -370,7 +575,6 @@ Amaya.</p>
     cached document.</li>
 </ul>
 <hr>
-
 
 <h1>Amaya 2.0</h1>
 
@@ -504,7 +708,6 @@ Amaya.</p>
     URL having a different end name.</li>
 </ul>
 <hr>
-
 
 <h1>Amaya 1.4 and 1.4a</h1>
 
@@ -883,7 +1086,6 @@ Amaya.</p>
 </ul>
 <hr>
 
-
 <h1>Fixed bugs in Amaya 1.2a</h1>
 
 <p>March 27, 1998</p>
@@ -969,7 +1171,6 @@ and its installation is now automatic.</p>
   <li>other minor bugs</li>
 </ul>
 <hr>
-
 
 <h1>Fixed bugs in Amaya 1.1c</h1>
 
@@ -1097,7 +1298,6 @@ and its installation is now automatic.</p>
 <p></p>
 <hr>
 
-
 <h1>New features in Amaya 1.0 and 1.0a</h1>
 
 <p><em>April 3 1997 and May 7, 1997</em></p>
@@ -1213,7 +1413,6 @@ and its installation is now automatic.</p>
 </ul>
 <hr>
 
-
 <h1>New features in Amaya 0.95b</h1>
 
 <p><em>January 9, 1996</em></p>
@@ -1257,7 +1456,6 @@ and its installation is now automatic.</p>
   <li>When publishing, Amaya did not sent a Content-Type header.</li>
 </ul>
 <hr>
-
 
 <h1>New features in Amaya 0.9</h1>
 
@@ -1414,7 +1612,6 @@ and its installation is now automatic.</p>
     Edit/Find. It now stays at its current position.</li>
 </ul>
 <hr>
-
 <address>
   <a href="mailto:vatton@w3.org">Irène Vatton</a><br>
   $Date: 1997/07/10 

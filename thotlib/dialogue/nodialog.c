@@ -17,6 +17,43 @@
 #include "application.h"
 #include "memory_f.h"
 
+/*----------------------------------------------------------------------
+   ConfigFree
+   Frees the table entries of all the document types, natures and
+   extensions.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                ConfigFree (void)
+#else                        /* __STDC__ */
+void                ConfigFree (void)
+#endif                       /* __STDC__ */
+{
+}
+
+/*----------------------------------------------------------------------
+   TtaFreeAllCatalogs frees the memory associated with catalogs.                      
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaFreeAllCatalogs (void)
+#else  /* __STDC__ */
+void                TtaFreeAllCatalogs (void)
+
+#endif /* __STDC__ */
+{
+}
+
+/*----------------------------------------------------------------------
+   TteFreeAllEventsList frees all event lists and the event/action
+   context pointers.			                        
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TteFreeAllEventsList (void)
+#else  /* __STDC__ */
+void                TteFreeAllEventsList (void)
+
+#endif /* __STDC__ */
+{
+}
 
 /*----------------------------------------------------------------------
    GetObjectWWW
