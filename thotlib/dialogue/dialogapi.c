@@ -1430,7 +1430,7 @@ caddr_t             call_d;
    Destruction de feuillet.                                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         formKill (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t call_d)
+static void         formKill (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 
 #else  /* __STDC__ */
 static void         formKill (w, parentCatalogue, call_d)
@@ -1441,7 +1441,10 @@ caddr_t             call_d;
 #endif /* __STDC__ */
 {
    /* Le widget est detruit */
-   TtaDestroyDialogue (parentCatalogue->Cat_Ref);
+  if ((catalogue->Cat_Type == CAT_FORM)
+      || (catalogue->Cat_Type == CAT_SHEET)
+      || (catalogue->Cat_Type == CAT_DIALOG))
+    TtaDestroyDialogue (catalogue->Cat_Ref);
 }
 
 #ifndef _WINDOWS
@@ -5401,12 +5404,17 @@ int                 ref;
 		  catalogue->Cat_Entries = NULL;
 		  /* Note que tous les fils sont detruits */
 		  if (catalogue->Cat_Type != CAT_INT)
-		     ClearChildren (catalogue);
+		    {
+		      ClearChildren (catalogue);
+#ifndef _WINDOWS
+		      XtRemoveCallback (catalogue->Cat_Widget, XmNdestroyCallback, (XtCallbackProc) formKill, catalogue);
+#endif /* _WINDOWS */
+		    }
 	       }
 
-#            ifndef _WINDOWS
+#ifndef _WINDOWS
 	     XtDestroyWidget (catalogue->Cat_Widget);
-#            endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	     /* Libere le catalogue */
 	     catalogue->Cat_Widget = 0;
 	     NbLibCat++;

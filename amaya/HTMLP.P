@@ -1630,7 +1630,6 @@ BOXES
 		END;
 	END;
 
-#ifdef MATHML
  Math_S: BEGIN
 	Content: Text 'MATH';
 	Visibility: 0;
@@ -1640,8 +1639,6 @@ BOXES
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
-#endif
-#ifdef GRAPHML
  Graph_S: BEGIN
 	Content: Text 'GRAPHICS';
 	Visibility: 0;
@@ -1651,7 +1648,6 @@ BOXES
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
-#endif
 
  P_S: BEGIN
 	Content: Text 'P';
@@ -6980,7 +6976,6 @@ RULES
 		END;
 	END;
 
-#ifdef MATHML
  Math: BEGIN
 	CreateBefore(Math_S);
 	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
@@ -7015,8 +7010,6 @@ RULES
 	IN Alternate_view
 		Visibility: 0;
         END;
-#endif
-#ifdef GRAPHML
 
  XMLGraphics: BEGIN
 	CreateBefore(Graph_S);
@@ -7040,7 +7033,6 @@ RULES
 	BEGIN
 	Width: Enclosing . Width;
 	END;
-#endif
 
  Paragraph: BEGIN
 	CreateBefore(P_S);
@@ -7051,9 +7043,7 @@ RULES
 	NoBreak1 : 2;
 	NoBreak2 : 2;
 	if NOT within Table
-#ifdef GRAPHML
 	   and NOT within XMLGraphics
-#endif
 	   Justify: Yes;
 #endif
 	Adjust: Enclosing =;
@@ -9817,7 +9807,6 @@ ATTRIBUTES
 	CreateBefore(VALUE_NOTATION);
 	END;
 
-#ifdef MATHML
   mode = display:
 	BEGIN
 	CreateBefore(ATTR_MODE_DISPLAY);
@@ -9826,7 +9815,6 @@ ATTRIBUTES
 	END;
   mode = inline_math:
 	CreateBefore(ATTR_MODE_INLINE);
-#endif
 
   Class:
 	BEGIN

@@ -844,11 +844,9 @@ static GIMapping    HTMLGIMappingTable[] =
    {L"LINK", L'E', HTML_EL_LINK, NULL},
    {L"LISTING", SPACE, HTML_EL_Preformatted, NULL},	/*converted to PRE */
    {L"MAP", SPACE, HTML_EL_MAP, NULL},
-#ifdef MATHML
    {L"MATH", SPACE, HTML_EL_Math, NULL},
    {L"MATHDISP", SPACE, HTML_EL_Math, NULL},  /* for compatibility with an
 				     old version of MathML: WD-math-970704 */
-#endif
    {L"MENU", SPACE, HTML_EL_Menu, NULL},
    {L"META", L'E', HTML_EL_META, NULL},
    {L"NOFRAMES", SPACE, HTML_EL_NOFRAMES, NULL},
@@ -951,11 +949,9 @@ static GIMapping    HTMLGIMappingTable[] =
    {"LINK", 'E', HTML_EL_LINK, NULL},
    {"LISTING", SPACE, HTML_EL_Preformatted, NULL},	/*converted to PRE */
    {"MAP", SPACE, HTML_EL_MAP, NULL},
-#ifdef MATHML
    {"MATH", SPACE, HTML_EL_Math, NULL},
    {"MATHDISP", SPACE, HTML_EL_Math, NULL},  /* for compatibility with an
 				     old version of MathML: WD-math-970704 */
-#endif
    {"MENU", SPACE, HTML_EL_Menu, NULL},
    {"META", 'E', HTML_EL_META, NULL},
    {"NOFRAMES", SPACE, HTML_EL_NOFRAMES, NULL},
@@ -1052,9 +1048,7 @@ static int          CharLevelElement[] =
    HTML_EL_ACRONYM,
    HTML_EL_Font_, HTML_EL_Quotation, HTML_EL_Subscript, HTML_EL_Superscript,
    HTML_EL_Span, HTML_EL_BDO, HTML_EL_INS, HTML_EL_DEL,
-#ifdef MATHML
    HTML_EL_Math,
-#endif
    HTML_EL_Input,
    HTML_EL_Option, HTML_EL_OptGroup, HTML_EL_Option_Menu,
    HTML_EL_Text_Input, HTML_EL_Password_Input, HTML_EL_File_Input,
@@ -1302,9 +1296,7 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {L"MAXLENGTH", L"", L'A', HTML_ATTR_MaxLength},
    {L"MEDIA", L"", L'A', HTML_ATTR_media},
    {L"METHOD", L"", L'A', HTML_ATTR_METHOD},
-#ifdef MATHML
    {L"MODE", L"", L'A', HTML_ATTR_mode},
-#endif
    {L"MULTIPLE", L"", L'A', HTML_ATTR_Multiple},
 
    {L"N", L"", L'C', 0},
@@ -1526,9 +1518,7 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"MAXLENGTH", "", 'A', HTML_ATTR_MaxLength},
    {"MEDIA", "", 'A', HTML_ATTR_media},
    {"METHOD", "", 'A', HTML_ATTR_METHOD},
-#ifdef MATHML
    {"MODE", "", 'A', HTML_ATTR_mode},
-#endif
    {"MULTIPLE", "", 'A', HTML_ATTR_Multiple},
 
    {"N", "", 'C', 0},
@@ -1696,10 +1686,8 @@ static AttrValueMapping HTMLAttrValueMappingTable[] =
    {HTML_ATTR_Button_type, L"SUBMIT", HTML_ATTR_Button_type_VAL_submit},
    {HTML_ATTR_Button_type, L"RESET", HTML_ATTR_Button_type_VAL_reset},
 
-#ifdef MATHML
    {HTML_ATTR_mode, L"DISPLAY", HTML_ATTR_mode_VAL_display},
    {HTML_ATTR_mode, L"INLINE", HTML_ATTR_mode_VAL_inline_math},
-#endif
 
    {HTML_ATTR_frame, L"VOID", HTML_ATTR_frame_VAL_void},
    {HTML_ATTR_frame, L"ABOVE", HTML_ATTR_frame_VAL_above},
@@ -1836,10 +1824,8 @@ static AttrValueMapping HTMLAttrValueMappingTable[] =
    {HTML_ATTR_Button_type, "SUBMIT", HTML_ATTR_Button_type_VAL_submit},
    {HTML_ATTR_Button_type, "RESET", HTML_ATTR_Button_type_VAL_reset},
 
-#ifdef MATHML
    {HTML_ATTR_mode, "DISPLAY", HTML_ATTR_mode_VAL_display},
    {HTML_ATTR_mode, "INLINE", HTML_ATTR_mode_VAL_inline_math},
-#endif
 
    {HTML_ATTR_frame, "VOID", HTML_ATTR_frame_VAL_void},
    {HTML_ATTR_frame, "ABOVE", HTML_ATTR_frame_VAL_above},
@@ -2884,10 +2870,8 @@ Element             el;
 {
    ElementType         elType;
    int                 i;
-#ifdef MATHML
    AttributeType       attrType;
    Attribute	       attr;
-#endif
    ThotBool            ret;
 
    ret = FALSE;
@@ -2899,7 +2883,6 @@ Element             el;
    if (CharLevelElement[i] == elType.ElTypeNum)
       {
       ret = TRUE;
-#ifdef MATHML
       /* a Math element is a block element if it has an attribute mode=display */
       if (elType.ElTypeNum == HTML_EL_Math)
 	{
@@ -2910,7 +2893,6 @@ Element             el;
 	   if (TtaGetAttributeValue (attr) == HTML_ATTR_mode_VAL_display)
 	      ret = FALSE;
 	}
-#endif
       }
    return ret;
 }
@@ -4464,14 +4446,11 @@ CHAR_T                c;
    Attribute           attr;
    int                 length;
    STRING              text;
-#ifdef MATHML
    ThotBool	       math;
-#endif
 
    UnknownTag = FALSE;
    if ((lastElement != NULL) && (lastElemEntry != -1))
      {
-#ifdef MATHML
 	math = FALSE;
 	if (!ustrcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, TEXT("MATH")))
 	   /* a <MATH> tag has been read */
@@ -4504,8 +4483,6 @@ CHAR_T                c;
 	   (void) CloseElement (lastElemEntry, -1, FALSE);
 	   }
 	else 
-#endif /* MATHML */
-#ifdef GRAPHML
 	if (!ustrcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "XMLGRAPHICS"))
 	   /* a <XMLGRAPHICS> tag has been read */
 	   {
@@ -4517,7 +4494,6 @@ CHAR_T                c;
 	   (void) CloseElement (lastElemEntry, -1, FALSE);	   
 	   }
 	else
-#endif /* GRAPHML */
 	if (!ustrcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, TEXT("PRE")) ||
 	    !ustrcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, TEXT("STYLE")) ||
 	    !ustrcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, TEXT("SCRIPT")) )

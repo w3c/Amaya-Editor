@@ -468,7 +468,6 @@ RULES
 	Create '</bdo>' After;
 	END;
 
-#ifdef MATHML
  Math: BEGIN
 	Create '<math';
 	Create Attributes;
@@ -483,8 +482,6 @@ RULES
 #else	
 	Use MathMLT;
 #endif
-#endif
-#ifdef GRAPHML
  XMLGraphics: BEGIN
 	Create '<xmlgraphics';
 	Create Attributes;
@@ -498,7 +495,6 @@ RULES
 	Use GraphMLTX;
 #else
 	Use GraphMLT;
-#endif
 #endif
 
  Paragraph: BEGIN
@@ -1810,12 +1806,10 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
-#ifdef MATHML
  mode = inline_math:
 	Create ' mode="inline"';
  mode = display:
 	Create ' mode="display"';
-#endif
 
  summary: BEGIN
 	Create ' summary="';

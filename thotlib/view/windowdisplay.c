@@ -97,9 +97,9 @@ DWORD fontLangInfo = -1;
 #include "wininclude.h"
 
 extern BOOL autoScroll;
-#endif /* _WINDOWS */
 
-#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void ClipError (int frame) 
 #else  /* !__STDC__ */

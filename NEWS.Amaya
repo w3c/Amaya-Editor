@@ -16,7 +16,10 @@ Extensions 2.1a:
 Fixed bugs 2.1a:
 ---------------
 
-*
+* When a unix user launched Amaya with a not existing local file, Amaya
+  displayed a form to create a new document, but that form didn't worked
+  well. If the user opened the document, the File menu was broken. If the
+  user cancelled the form the application wasn't closed.
 
 =============================================================
 2.1

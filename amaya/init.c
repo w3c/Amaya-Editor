@@ -108,6 +108,9 @@ TEXT("Configure.html")
 
 static ThotBool  NewCSSfile = FALSE;
 static ThotBool  NewHTMLfile = FALSE;
+/* we have to mark the initial loading status to avoid to re-open the
+   document view twice */
+static int  Loading_method = CE_INIT;
 
 #ifndef _WINDOWS
 static ThotIcon       stopR;
@@ -1248,6 +1251,8 @@ STRING              label;
 
 
 /*----------------------------------------------------------------------
+  InitOpenDocForm initializes a form that ask the URI of the opened or
+  new created document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void        InitOpenDocForm (Document document, View view, STRING title)
@@ -1260,8 +1265,6 @@ STRING             title;
 {
    CHAR_T            s[MAX_LENGTH];
 #  ifndef _WINDOWS
-   /* For Windoz have a look to OPENFILENAME structure and
-      GetOpenFileName function */
    int               i;
 
    CurrentDocument = document;
@@ -1299,12 +1302,13 @@ STRING             title;
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + OpenForm, FALSE);
 #  else /* _WINDOWS */
+
+   CurrentDocument = document;
    if (LastURLName[0] != EOS)
       usprintf (s, TEXT("%s"), LastURLName);
    else
-        usprintf (s, TEXT("%s%c%s"), DirectoryName, DIR_STR, DocumentName);
+     usprintf (s, TEXT("%s%c%s"), DirectoryName, DIR_SEP, DocumentName);
 
-   CurrentDocument = document;
    CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), title, s, docToOpen, BaseDialog, OpenForm, DocSelect, DirSelect, URLName, 2);
 #  endif /* _WINDOWS */
 }
@@ -1353,10 +1357,7 @@ ThotBool    isHTML;
 	}
       else
 	ustrcpy (DocumentName, TEXT("New.html"));
-      if (document == 0)
-	InitOpenDocForm (document, 0, TtaGetMessage (1, BHtml));
-      else
-	InitOpenDocForm (document, view, TtaGetMessage (1, BHtml));
+      InitOpenDocForm (document, view, TtaGetMessage (1, BHtml));
     }
   else
     {
@@ -1368,7 +1369,7 @@ ThotBool    isHTML;
 	  usprintf (LastURLName, TEXT("%s%cNew.css"), tempfile, DIR_SEP);
 	}
       else
-      ustrcpy (DocumentName, TEXT("New.css"));
+	ustrcpy (DocumentName, TEXT("New.css"));
       InitOpenDocForm (document, view, TtaGetMessage (1, BCss));
     }
 }
@@ -1486,6 +1487,8 @@ ThotBool     logFile;
 	TtaFreeView (doc, 1);
 	opened = TRUE;
 	old_doc = 0;	/* the previous document doesn't exist any more */
+	/* The toolkit has to do its job now */
+	TtaHandlePendingEvents ();
      }
    else
       opened = FALSE;
@@ -2200,8 +2203,10 @@ ThotBool	    history;
 	      TtaSetStatus (doc, 1, TEXT(" "), NULL);
 	      ActiveTransfer (newdoc);
 	    }
-	  else
+	  else if (method != CE_INIT)
 	    newdoc = InitDocView (doc, documentname, docType, FALSE);
+	  else
+	    newdoc = doc;
 	}
       else
 	newdoc = doc;
@@ -3178,7 +3183,8 @@ void *context;
     - form_data: the text to be posted.
     - doc: the document which can be removed if not updated.
     - baseDoc: the document which documentPath is relative to.
-    - CE_event: CE_FORM_POST for a post request, CE_RELATIVE for a double click.
+    - CE_event: CE_FORM_POST for a post request, CE_RELATIVE for a double 
+      click.
     - history: record the URL in the browsing history
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -3617,9 +3623,9 @@ STRING              data;
 		       InitializeNewDoc (LastURLName, NewHTMLfile);
 		   /* load an URL */
 		   else if (InNewWindow)
-		     GetHTMLDocument (LastURLName, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);
+		     GetHTMLDocument (LastURLName, NULL, 0, 0, Loading_method, FALSE, NULL, NULL);
 		   else
-		     GetHTMLDocument (LastURLName, NULL, CurrentDocument, CurrentDocument, CE_ABSOLUTE, TRUE, NULL, NULL);
+		     GetHTMLDocument (LastURLName, NULL, CurrentDocument, CurrentDocument, Loading_method, TRUE, NULL, NULL);
 		 }
 	       else if (DirectoryName[0] != EOS && DocumentName[0] != EOS)
 		 {
@@ -3632,9 +3638,9 @@ STRING              data;
 		   if (TtaFileExist (tempfile))
 		     {
 		       if (InNewWindow)
-			 GetHTMLDocument (tempfile, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);
+			 GetHTMLDocument (tempfile, NULL, 0, 0, Loading_method, FALSE, NULL, NULL);
 		       else
-			 GetHTMLDocument (tempfile, NULL, CurrentDocument, CurrentDocument, CE_ABSOLUTE, TRUE, NULL, NULL);
+			 GetHTMLDocument (tempfile, NULL, CurrentDocument, CurrentDocument, Loading_method, TRUE, NULL, NULL);
 		     }
 		   else if (NewCSSfile || NewHTMLfile)
 		     InitializeNewDoc (tempfile, NewHTMLfile);
@@ -4518,8 +4524,9 @@ NotifyEvent        *event;
 	 }
     else
         /* Create a new document */
-        New (0, 1);
+        New (0, 0);
     }
+   Loading_method = CE_ABSOLUTE;
 }
 
 /*----------------------------------------------------------------------

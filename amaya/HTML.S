@@ -146,24 +146,18 @@ STRUCT
 		{ hspace            vspace }
 	Object;							{ OBJECT }
 	Applet;							{ APPLET }
-#ifdef MATHML
 	Math							{ MATH }
 	    (ATTR mode = display, inline_math) =
 		MathML;
-#endif
-#ifdef GRAPHML
         XMLGraphics (ATTR Height_; Width__;
 			IntWidthPercent;
 			IntWidthPxl)
 	 = GraphML with Height_ ?= 200, Width__ ?= '100%',
 			IntWidthPercent ?= 100;
-#endif
 	MAP;							{ MAP }
 	END;
 
-#ifdef GRAPHML
 	HTMLfragment = LIST OF (Element);
-#endif
 
   Block_Quote							{ BLOCKQUOTE }
      (ATTR cite = Text;
@@ -247,9 +241,7 @@ STRUCT
 	BDO = Basic_Set;					{ BDO }
 	Object;							{ OBJECT }
 	IFRAME;							{ IFRAME }
-#ifdef MATHML
 	Math;							{ MATH }
-#endif
 	END;
 
   BaseFont							{ BASEFONT }
@@ -823,10 +815,8 @@ EXCEPT
 	STYLE_:		ReturnCreateNL;
 	SCRIPT:		ReturnCreateNL;
 	Text_Area:	ReturnCreateNL;
-#ifdef GRAPHML
 	HTMLfragment:	NoMove, NoResize, Hidden;
 	XMLGraphics:    MoveResize, NoMove;
-#endif
 
 	ExternalLink:	Invisible;
 	InternalLink:	Invisible;
