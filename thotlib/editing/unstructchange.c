@@ -1793,7 +1793,12 @@ ThotBool            before;
 	     pSibling = pElem;
 	     pLeaf = NextLeaf (pSibling);
 	     pElem = AscentChildOfParagraph (pLeaf);
-	     if (ElemIsAnAncestor(pElem, pSibling))
+	     if (pElem == NULL && pLeaf->ElVolume == 0)
+	       {
+		 pSibling = pLeaf;
+		 pElem = pParent;
+	       }
+	     else if (ElemIsAnAncestor (pElem, pSibling))
 	       pElem = pLeaf;
 	   }
        else

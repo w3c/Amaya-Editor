@@ -2502,9 +2502,9 @@ int                 editType;
 			  TtaDisplaySimpleMessage (INFO, LIB, TMSG_NOTHING_TO_DEL);
 			  /* Pas de reaffichage */
 			  DefClip (frame, 0, 0, 0, 0);
-			  pFrame->FrReady = TRUE;
 			}
 		      /* Il n'est pas necessaire de mettre a jour la selection */
+		      pFrame->FrReady = TRUE;
 		      pAb = NULL;
 		    }
 		  else

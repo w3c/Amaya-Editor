@@ -1961,7 +1961,7 @@ BOXES
 	Height: Enclosing . Height;
 	Foreground : Black;
 	LineWeight: 2 px;
-	Depth: Creator + 2;
+	Depth: Creator + 1;
 	Visibility: Enclosing =;
 	IN Structure_view
 		Visibility: 0;
@@ -1980,7 +1980,7 @@ BOXES
 	FillPattern: backgroundcolor;
 	Foreground : White;
 	LineWeight: 1 px;
-	Depth: Creator + 3;
+	Depth: Creator + 2;
 	Visibility: Enclosing =;
 	InLine: No;
 	IN Structure_view
@@ -2030,10 +2030,14 @@ BOXES
 	BorderRightWidth: Creator =;
 	BorderBottomWidth: Creator =;
 	BorderLeftWidth: Creator =;
-	BorderTopColor: Creator =;
+	BorderTopColor: Grey;
+	BorderRightColor: Black;
+	BorderBottomColor: Black;
+	BorderLeftColor: Grey;
+{**	BorderTopColor: Creator =;
 	BorderRightColor: Creator =;
 	BorderBottomColor: Creator =;
-	BorderLeftColor: Creator =;
+	BorderLeftColor: Creator =;**}
 	BorderTopStyle: Solid;
 	BorderRightStyle: Solid;
 	BorderBottomStyle: Solid;
@@ -2075,6 +2079,7 @@ BOXES
 	Content: Picture 'option.gif';
 	HorizPos: Left = Enclosing . Left + 0.2;
 	VertPos: HMiddle = Enclosing . Top + 0.5;
+        HorizRef: * . Bottom;	
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -5439,7 +5444,7 @@ BOXES
 	Foreground: Creator =;
 	Background: Creator =;
 	FillPattern: Creator =;
-	Depth: Creator + 2;
+	Depth: Creator + 4;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -7352,25 +7357,40 @@ RULES
 	END;
 
  Option_Menu: BEGIN
-	CreateEnclosing(Option_Box);
+	{CreateEnclosing(Option_Box);}
 	if NOT within XMLGraphics BEGIN
 	   CreateBefore(SELECT_S);
 	   CreateWith(VerticalLine);
 	   END;
 	CreateFirst(Option_gif);
 	CreateLast(Option_space);
+	ShowBox;
 	Background : White;
 	Foreground : Black;
-	FillPattern: backgroundcolor;
+	FillPattern: nopattern;
 	BorderTopWidth: 1 px;
 	BorderRightWidth: 1 px;
 	BorderBottomWidth: 1 px;
 	BorderLeftWidth: 1 px;
-	HorizPos: Left = Enclosing . Left + 2 px;	
-	VertPos: Top = Enclosing . Top + 2 px;
+	BorderTopColor: Grey;
+	BorderRightColor: Black;
+	BorderBottomColor: Black;
+	BorderLeftColor: Grey;
+	BorderTopStyle: Solid;
+	BorderRightStyle: Solid;
+	BorderBottomStyle: Solid;
+	BorderLeftStyle: Solid;
+	Width: Enclosed . Width;
+	Height: Enclosed . Height;
 	LineBreak: No;
-	HorizRef: Enclosed AnyElem . HRef;
+	HorizPos: Left = Enclosing . Left + 0.2;	
+	VertPos: Top = Enclosing . Top + 0.4;
+	HorizRef: Enclosed . HRef;
 	IN Structure_view BEGIN
+		BorderTopWidth: 0 px;
+		BorderRightWidth: 0 px;
+		BorderBottomWidth: 0 px;
+		BorderLeftWidth: 0 px;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -7422,10 +7442,13 @@ RULES
 	Height: 2 Min;
 	LineBreak: No;
 	Font: INPUT_Font;
-	Depth: Enclosing + 4;
+	Depth: Enclosing + 1;
 #ifndef BLACK_WHITE
 	Background : LightRed4;
 #endif
+	HorizPos: Left = Enclosing . Left + 0.2;	
+	VertPos: Top = Enclosing . Top + 0.4;
+	HorizRef: Enclosed . HRef;
 	IN Structure_view BEGIN
 		VertPos: HRef = Previous . HRef;
 		HorizPos: Left = Previous . Right;
@@ -7482,7 +7505,7 @@ RULES
 	CreateBefore(Text_Mark);
 	CreateBefore(Text_Frame);
 	Width: 1 px;  Height: 1 px;
-	Depth: Enclosing + 4;
+	Depth: Enclosing =;
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -7535,7 +7558,7 @@ RULES
 	Width: 20 ex Min;
 	Height: 2 Min;
 	Font: INPUT_Font;
-	Depth: Enclosing + 4;
+	Depth: Enclosing + 1;
 	LineBreak: No;
 	Adjust: Left;
 #ifndef BLACK_WHITE
@@ -7559,7 +7582,7 @@ RULES
 	Width: 20 ex Min;
 	Height: 2 Min;
 	Font: INPUT_Font;
-	Depth: Enclosing + 4;
+	Depth: Enclosing + 1;
 	LineBreak: No;
 	Adjust: Left;
 #ifndef BLACK_WHITE
@@ -7592,7 +7615,7 @@ RULES
 	Width: 20 ex Min;
 	Height: 2 Min;
 	Font: INPUT_Font;
-	Depth: Enclosing + 4;
+	Depth: Enclosing + 1;
 	LineBreak: No;
 	Adjust: Left;
 #ifndef BLACK_WHITE
@@ -7613,11 +7636,14 @@ RULES
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_Reset);
 	CreateFirst(Value_Box);
-	Depth: Enclosing + 5;
+	Depth: Enclosing + 1;
 #ifndef BLACK_WHITE
 	Background : Grey;
 #endif
 	LineBreak: No;
+	HorizPos: Left = Enclosing . Left + 0.2;	
+	VertPos: Top = Enclosing . Top + 0.4;
+	HorizRef: * . HMiddle;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		Width: 1 px;
@@ -7629,11 +7655,14 @@ RULES
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_Submit);
 	CreateFirst(Value_Box);
-	Depth: Enclosing + 5;
+	Depth: Enclosing + 1;
 #ifndef BLACK_WHITE
 	Background : Grey;
 #endif
 	LineBreak: No;
+	HorizPos: Left = Enclosing . Left + 0.2;	
+	VertPos: Top = Enclosing . Top + 0.4;
+	HorizRef: * . HMiddle;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		Width: 1 px;
@@ -7645,11 +7674,14 @@ RULES
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_Button);
 	CreateFirst(Value_Box);
-	Depth: Enclosing + 5;
+	Depth: Enclosing + 1;
 #ifndef BLACK_WHITE
 	Background : Grey;
 #endif
 	LineBreak: No;
+	HorizPos: Left = Enclosing . Left + 0.2;	
+	VertPos: Top = Enclosing . Top + 0.4;
+	HorizRef: * . HMiddle;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		Width: 1 px;
