@@ -510,8 +510,8 @@ Element TtaCopyElement (Element sourceElement, Document sourceDocument,
    Return value:
    the last descendant created or NULL if the element cannot be created.
    ---------------------------------------------------------------------- */
-static Element    CreateDescent (Document document, Element element,
-				 ElementType elementType, ThotBool withContent)
+static Element CreateDescent (Document document, Element element,
+			      ElementType elementType, ThotBool withContent)
 {
   PtrElement          lastCreated;
   PtrElement          firstCreated;
@@ -2458,12 +2458,31 @@ int TtaIsHidden (Element element)
    UserErrorCode = 0;
    result = 0;
    if (element == NULL)
-	TtaError (ERR_invalid_parameter);
-   else
-     {
-	if (ElementIsHidden ((PtrElement) element))
-	   result = 1;
-     }
+     TtaError (ERR_invalid_parameter);
+   else if (ElementIsHidden ((PtrElement) element))
+     result = 1;
+   return result;
+}
+
+/* ----------------------------------------------------------------------
+   TtaIsCopy
+   Tests whether a given element is a copy.
+   Parameter:
+   element: the element to be tested.
+   Return Value:
+   1 if the element is a copy, 0 if not.
+
+   ---------------------------------------------------------------------- */
+int TtaIsCopy (Element element)
+{
+   int                 result;
+
+   UserErrorCode = 0;
+   result = 0;
+   if (element == NULL)
+     TtaError (ERR_invalid_parameter);
+   else if (((PtrElement)element)->ElIsCopy)
+     result = 1;
    return result;
 }
 

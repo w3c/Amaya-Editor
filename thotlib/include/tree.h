@@ -876,6 +876,17 @@ extern int TtaIsReadOnly (Element element);
 extern int TtaIsHidden (Element element);
 
 /* ----------------------------------------------------------------------
+   TtaIsCopy
+   Tests whether a given element is a copy.
+   Parameter:
+   element: the element to be tested.
+   Return Value:
+   1 if the element is a copy, 0 if not.
+
+   ---------------------------------------------------------------------- */
+extern int TtaIsCopy (Element element);
+
+/* ----------------------------------------------------------------------
    TtaIsInAnInclusion
 
    Tests whether a given element is (in) an included element. An included element

@@ -427,7 +427,10 @@ Element GetElemWithAttr (Document doc, AttributeType attrType, char *nameVal,
 	TtaSearchAttribute (attrType, SearchForward, el, &elFound, &nameAttr);
 	if (nameAttr && elFound)
 	  {
-	    if (nameAttr != ignoreAtt && elFound != ignoreEl)
+	    if (nameAttr != ignoreAtt &&
+		/* skip the element which receive the new attribute and
+		   element copies */
+		elFound != ignoreEl && TtaIsCopy (elFound) == 0)
 	      {
 		length = TtaGetTextAttributeLength (nameAttr);
 		length++;
