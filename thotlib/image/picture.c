@@ -1518,6 +1518,7 @@ void InitPictureHandlers (ThotBool printing)
    PictureIdType[HandlersCounter] = GIF_FORMAT;
    PictureMenuType[HandlersCounter] = GIF_FORMAT;
    HandlersCounter++;
+
    InitPngColors ();
    strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, PngName, MAX_FORMAT_NAMELENGHT);
    PictureHandlerTable[HandlersCounter].Produce_Picture = PngCreate;
@@ -2885,17 +2886,16 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
   saveBuffer (pngurl, FrameTable[frame].FrWidth, FrameTable[frame].FrHeight);
   return NULL;
 #else /*_GL*/
-  unsigned char   *screenshot = NULL;
-  int              i = 0;
-  unsigned char   *pixel;
   int              widthb, heightb;
 #ifdef _GTK
-  int              k, line;  
-  GdkImage        *View;
-  int              cpt1, cpt2, line2, mi_h, NbOctetsPerLine;
-  unsigned char    inter;
+  GdkImlibImage *image;  
 #else /* !_GTK */
 #ifdef _WINDOWS
+  int              x,y;
+  DWORD            RGBcolor;
+  unsigned char   *pixel = NULL;
+  unsigned char   *screenshot = NULL;
+  int              i = 0;
   HDC              SurfDC = NULL;
   HDC              OffscrDC = NULL; 
   HBITMAP          OffscrBmp = NULL;
@@ -2903,8 +2903,6 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
   LPBITMAPINFO     lpbi = NULL;
   LPVOID           lpvBits = NULL; 
   RECT             rect;
-  int              x,y;
-  DWORD            RGBcolor;
 #endif /* _WINDOWS */
 #endif /* _GTK */
   TtaHandlePendingEvents ();
@@ -2912,47 +2910,13 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
   widthb = (FrameTable[frame].WdFrame)->allocation.width;
   heightb = (FrameTable[frame].WdFrame)->allocation.height;
 
-  View = gdk_image_get (FrRef[frame], 0, 0, widthb, heightb);
-
-  pixel = (unsigned char *) View->mem;
-  k = 4 * View->width * View->height - 4;
-  /* change BGRA in RGBA */
-  while (i < k)
-    {
-      inter = *(pixel + i);
-      *(pixel + i) = *(pixel + i + 2);
-      *(pixel + i + 2) = inter;
-      *(pixel + i + 3) = 255 - *(pixel + i + 3);
-      i += 4;
-    }
-
-  /* Makes mirror picture */
-  pixel = (unsigned char *) View->mem;
-  i = cpt2 = 0;
-  cpt1 = 1;
-  mi_h = View->height / 2;
-  NbOctetsPerLine = View->width * 4;
-  while (cpt1 < mi_h)
-    {
-      cpt2 = 0;
-      line = NbOctetsPerLine * cpt1;
-      line2 = NbOctetsPerLine * (cpt1 - 1);
-      while (cpt2 < NbOctetsPerLine)
-	{
-	  inter = *(pixel + cpt2 + line2);
-	  *(pixel + cpt2 + line2) = *(pixel + k + 4 - line + cpt2);
-	  *(pixel + k + 4 - line + cpt2) = inter;
-	  cpt2++;
-	  i++;
-	}
-      cpt1++;
-    }
-  screenshot = (unsigned char *) TtaGetMemory (k + 4);
-  memcpy (screenshot, View->mem, k + 4);
-  gdk_image_destroy (View);
+  image =  gdk_imlib_create_image_from_drawable (FrRef[frame], NULL, 0, 0, widthb, heightb);
+  gdk_imlib_save_image (image, pngurl, NULL);
+  gdk_imlib_destroy_image (image);
+  
+  return NULL;
 #else /* !_GTK */
 #ifdef _WINDOWS
-
     GetClientRect (FrRef[frame], &rect);
     widthb = rect.right;
     heightb = rect.bottom;
@@ -2969,12 +2933,12 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
 			i++; /*opacity*/
 		}
 	screenshot = pixel;
-#endif /* _WINDOWS */
-#endif /* _GTK */
   SavePng (pngurl,
 	   screenshot,
 	   (unsigned int) widthb,
 	   (unsigned int) heightb);
   return screenshot;
+#endif /* _WINDOWS */
+#endif /* _GTK */
 #endif /*_GL*/
 }
