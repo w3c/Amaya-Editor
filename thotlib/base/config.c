@@ -1416,20 +1416,16 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
       pFrame->GetSize( width,height );
     }*/
 #endif /* _WX */
-  
 #if defined(_MOTIF) || defined(_GTK)
   int                 frame;
   ThotWidget          widget;
-
 #ifdef _GTK
   ThotWidget          tmpw;
 #endif /* _GTK */
-
 #ifdef _MOTIF  
   int                 n;
   Arg                 args[20];
 #endif /* _MOTIF */
-  
   Position            x, y;
   Dimension           w, h;
 
@@ -1437,7 +1433,8 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
   widget = (ThotWidget) FrameTable[frame].WdFrame;
 
 #ifdef _GTK
-  tmpw = gtk_widget_get_toplevel (GTK_WIDGET(widget));
+  tmpw = GTK_WIDGET(widget);
+  /*tmpw = gtk_widget_get_toplevel (GTK_WIDGET(widget));*/
   /* values of w h are not realy exact, there too much pixel (2 or 3) */
   w = tmpw->allocation.width;
   h = tmpw->allocation.height;

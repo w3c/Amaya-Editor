@@ -3542,7 +3542,7 @@ static void RestoreDefEnvGeom (char *env_var, Document doc)
   Gets the current geometry for a view and saves it in the registry
   using the format "x y w h"
   ----------------------------------------------------------------------*/
-static void SetEnvGeom ( const char *view_name, Document doc )
+static void SetEnvGeom (const char *view_name, Document doc)
 {
   int view;
   int x, y, w, h;
@@ -3600,11 +3600,11 @@ static void RestoreDefaultGeometryConf (void)
 /*----------------------------------------------------------------------
   SetEnvCurrentGeometry stores the current doc geometry in the registry
   ----------------------------------------------------------------------*/
-static void SetEnvCurrentGeometry ( int document, const char * view_name )
+static void SetEnvCurrentGeometry (int document, const char * view_name)
 {
   int  source, i;
-  i = document;
 
+  i = document;
   /* only do the processing if the document exists */
   if (i)
     if (DocumentURLs[i] != NULL &&

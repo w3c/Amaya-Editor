@@ -8090,9 +8090,10 @@ void InitAutoSave ()
   SaveGeometryOnExit
   save the current document geometry only if "Save geometry on exit" is enable
   ----------------------------------------------------------------------*/
-void SaveGeometryOnExit( int document, const char * view_name )
+void SaveGeometryOnExit (int document, const char * view_name)
 {
   ThotBool saveGeometry = FALSE;
+
   TtaGetEnvBoolean ("SAVE_GEOMETRY", &saveGeometry);
   if (saveGeometry)
     /* Save the current windows geometry */
