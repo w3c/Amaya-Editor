@@ -2417,23 +2417,10 @@ char      *MakeRelativeURL (char *aName, char *relatedName)
   ---------------------------------------------------------------------*/
 ThotBool AM_GetFileSize (char *filename, unsigned long *file_size)
 {
-  ThotFileHandle   handle = ThotFile_BADHANDLE;
-  ThotFileInfo     info;
-
-  *file_size = 0L;
   if (!TtaFileExist (filename))
     return FALSE;
-
-  handle = TtaFileOpen (filename, ThotFile_READWRITE);
-  if (handle == ThotFile_BADHANDLE)
-    /* ThotFile_BADHANDLE */
-    return FALSE;
-   if (TtaFileStat (handle, &info) == 0)
-     /* bad stat */
-     info.size = 0L;
-   TtaFileClose (handle);
-   *file_size = (unsigned long) info.size;
-   return TRUE;
+  *file_size = TtaGetFileSize (filename);
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------

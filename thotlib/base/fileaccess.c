@@ -30,6 +30,7 @@
 #include "platform_tv.h"
 
 #include "fileaccess_f.h"
+#include "memory_f.h"
 #include "platform_f.h"
 #include "registry_f.h"
 #ifdef _WINDOWS
@@ -391,10 +392,18 @@ ThotBool TtaReadName (BinFile file, unsigned char *name)
   ----------------------------------------------------------------------*/
 gzFile TtaGZOpen (CONST char *filename)
 {
-   if (filename && filename[0] != EOS)
-     return gzopen (filename, "r");
-   else
-     return (gzFile) NULL;
+  char    *name;
+  gzFile   file;
+
+  if (filename && filename[0] != EOS)
+    {
+      name = GetRealFileName (filename);
+      file = gzopen (name, "r");
+      TtaFreeMemory (name);
+      return file;
+    }
+  else
+    return (gzFile) NULL;
 }
 
 
@@ -413,15 +422,22 @@ void TtaGZClose (gzFile file)
   ----------------------------------------------------------------------*/
 BinFile TtaReadOpen (CONST char *filename)
 {
-#ifdef _WINDOWS 
-   char   *mode = "rb";
+  char    *name;
+  BinFile  file;
+
+  if (filename && filename[0] != EOS)
+    {
+      name = GetRealFileName (filename);
+#ifdef _WINDOWS
+      file = fopen (name, "rb");
 #else /* _WINDOWS */
-   char   *mode = "r";
+      file = fopen (name, "r");
 #endif /* _WINDOWS */
-   if (filename && filename[0] != EOS)
-     return fopen (filename, mode);
-   else
-     return (BinFile) NULL;
+      TtaFreeMemory (name);
+      return file;
+    }
+  else
+    return (BinFile) NULL;
 }
 
 
@@ -440,11 +456,22 @@ void TtaReadClose (BinFile file)
   ----------------------------------------------------------------------*/
 BinFile TtaWriteOpen (CONST char *filename)
 {
+  char    *name;
+  BinFile  file;
+
+  if (filename && filename[0] != EOS)
+    {
+      name = GetRealFileName (filename);
 #ifdef _WINDOWS
-  return fopen (filename, "wb+");
+      file = fopen (name, "wb+");
 #else /* _WINDOWS */
-  return fopen (filename, "w+");
+      file = fopen (name, "w+");
 #endif /* _WINDOWS */
+      TtaFreeMemory (name);
+      return file;
+    }
+  else
+    return (BinFile) NULL;
 }
 
 
@@ -463,7 +490,18 @@ void TtaWriteClose (BinFile file)
   ----------------------------------------------------------------------*/
 BinFile TtaRWOpen (CONST char *filename)
 {
-  return fopen (filename, "r+");
+  char    *name;
+  BinFile  file;
+
+  if (filename && filename[0] != EOS)
+    {
+      name = GetRealFileName (filename);
+      file = fopen (name, "r+");
+      TtaFreeMemory (name);
+      return file;
+    }
+  else
+    return (BinFile) NULL;
 }
 
 
