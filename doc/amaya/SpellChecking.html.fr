@@ -8,7 +8,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="fr" lang="fr">
 
 <table border="0" width="100%" summary="toc">
   <tbody>
@@ -35,7 +35,7 @@ invoqué par la commande <strong>Vérifier orthographe </strong>du menu
 le bon dictionnaire. Vous pouvez associer cet attribut à n'importe quel
 élément dans un document, même à un seul mot. Utilisez pour cela la commande
 <strong>Langue</strong> du menu  <strong><a
-href="Attributes.html#L1073">Attributs. </a></strong></p>
+href="Attributes.html#L1073">Attributs.</a></strong></p>
 
 <p>Lorsque l'utilisateur veut enregistrer un nouveau mot, le vérificateur
 d'orthographe crée ou met à jour le " dictionnaire personnel de
@@ -45,7 +45,7 @@ démarrer Amaya, l'utilisateur doit poser le  <code>paramètre <a
 href="Configure.html#Personnal">"EXTENDDICT="</a></code> dans le registre du
 fichier ($HOME/.thotrc file) pour changer le nom manquant. Ainsi, le
 vérificateur sera utilisé, en plus du dictionnaire spécifique du langage. Ce
-dictionnaire (dans le mode lire-écrire) contrôle tous les documents.  Ce
+dictionnaire (dans le mode lire-écrire) contrôle tous les documents. Ce
 dictionnaire est créé et automatiquement mis à jour par le vérificateur
 d'orthographe lorsque les commandes``Suivant (+dic)" et ``Remplacer (+dic)''
 sont actionnées (voir plus bas).</p>
@@ -60,17 +60,17 @@ vérificateur:</p>
     allant de 1 à 10, la valeur par défaut étant 3. Une fois qu'une erreur a
     été détectée, le moindre changement fait à cette valeur affiche
     immédiatement une nouvelle liste de propositions.</li>
-  <li>Plusieurs boutons dans le sous-menu  <strong>Ignorer les mots
+  <li>Plusieurs boutons dans le sous-menu <strong>Ignorer les mots
     </strong>vous permettent d'ignorer certains mots : par exemple les mots
-    contenant  des lettres capitales, incluant des chiffres, des chiffres
+    contenant des lettres capitales, incluant des chiffres, des chiffres
     romains ou les caractères spéciaux indiqués dans la liste plus bas. Cette
     liste peut être modifiée par l'utilisateur.</li>
-  <li>Le sous-menu  <strong>Vérifier orthographe</strong>, similaire en cela à
+  <li>Le sous-menu <strong>Vérifier orthographe</strong>, similaire en cela à
     la boîte de dialogue  <strong><a
     href="Searching.html">Rechercher</a></strong>, vous permet de spécifier la
     partie du document sur laquelle le vérificateur va travailler.</li>
-  <li>Le mot erroné est affiché dans l'espace <strong>Vérifier 
-    l'ortographe.</strong> La liste des propositions est affichée dans le
+  <li>Le mot erroné est affiché dans l'espace <strong>Vérifier
+    l'orthographe.</strong> La liste des propositions est affichée dans le
     sélecteur localisé en-dessous du mot incorrect. Par défaut, la première
     proposition de correction est sélectionnée. Pour sélectionner une autre
     proposition, cliquez simplement dessus. La proposition sélectionnée est
@@ -85,36 +85,35 @@ vérificateur:</p>
     puis de redémarrer la procédure de correction.</li>
 </ul>
 
-<p>Pour démarrer la correction, cliquez sur le bouton 
+<p>Pour démarrer la correction, cliquez sur le bouton
 <strong>Chercher/suivant</strong> en bas de la boîte de dialogue. Si une
 erreur est trouvée, le mot incorrect est sélectionné et éclairé dans le
 document. Si aucune erreur n'est détectée, le message "non trouvé" s'affiche
-dans le coin en bas à droite de la boîte de dialogue. </p>
+dans le coin en bas à droite de la boîte de dialogue.</p>
 
 <p>L'utilisateur peut  utiliser un des boutons placés en bas de la boîte de
-dialogue afin d'exécuter l'une des opérations suivantes: </p>
+dialogue afin d'exécuter l'une des opérations suivantes:</p>
 <ul>
   <li><strong>Terminer</strong>: la boîte de dialogue disparaît et la
-    vérification est abandonnée.  Les corrections précédentes ne sont pas
+    vérification est abandonnée. Les corrections précédentes ne sont pas
     effacées.</li>
   <li><strong>Chercher/suivant</strong>: le mot considéré incorrect est
-    acceptable.  Aucun changement n'est effectué, ni dans le texte, ni dans le
-    dictionnaire. Le vérificateur cherche l'erreur suivante. </li>
+    acceptable. Aucun changement n'est effectué, ni dans le texte, ni dans le
+    dictionnaire. Le vérificateur cherche l'erreur suivante.</li>
   <li><strong>Suivant (+dic)</strong>: c'est le même que "Chercher/suivant"
     sauf que le mot considéré incorrect est ajouté au dictionnaire spécifique
     d'orthographe du document. Ainsi, le vérificateur ignorera toute future
-    occurence à ce mot. </li>
+    occurrence à ce mot.</li>
   <li><strong>Remplacer et suivant</strong>: le mot considéré comme erroné est
     remplacé par le mot correct (changé ou modifié par l'utilisateur, voir
     plus loin) et le vérificateur cherche l'erreur suivante.</li>
   <li><p><strong>Remplacer (+dic)</strong>: c'est le même que "Remplacer et
     suivant", à la différence que le mot de remplacement est ajouté au
-    dictinnaire du document.  <a href="Attributes.html">                      
-                                                                                                                                                       <img
-    alt="previous" border="0" src="../Icons/left.gif" /></a> <a
-    href="Manual.html"><img alt="top" border="0" src="../Icons/up.gif" /></a>
-    <a href="Publishing.html"><img alt="next" border="0"
-    src="../Icons/right.gif" /></a></p>
+    dictionnaire du document.  <a href="Attributes.html"> <img alt="previous"
+    border="0" src="../Icons/left.gif" /></a> <a href="Manual.html"><img
+    alt="top" border="0" src="../Icons/up.gif" /></a> <a
+    href="Publishing.html"><img alt="next" border="0" src="../Icons/right.gif"
+    /></a></p>
   </li>
 </ul>
 </div>
