@@ -34,7 +34,7 @@ AmayaFloatingPanel::AmayaFloatingPanel( AmayaSubPanel * p_subpanel
   // insert the subpanel into the frame
   m_pTopSizer = new wxBoxSizer( wxVERTICAL );
   SetSizer(m_pTopSizer);
-  m_pTopSizer->Add( m_pPanelContent, 1, wxALL | wxEXPAND , 5 );
+  m_pTopSizer->Add( m_pPanelContent, 1, wxALL | wxEXPAND , 0 );
   m_pTopSizer->Fit(this);
   
   Layout();
@@ -53,6 +53,13 @@ AmayaFloatingPanel::~AmayaFloatingPanel()
 {
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFloatingPanel
+ *      Method:  OnClose
+ * Description:  reattach the subpanel to the sidepanel, reparent it
+ *--------------------------------------------------------------------------------------
+ */
 void AmayaFloatingPanel::OnClose( wxCloseEvent& event )
 {
   wxLogDebug(_T("AmayaFloatingPanel - OnClose") );

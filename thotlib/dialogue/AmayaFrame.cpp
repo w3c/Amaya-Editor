@@ -59,7 +59,11 @@ AmayaFrame::AmayaFrame(
                 int             frame_id
       	       ,AmayaWindow *   p_parent_window
 	      )
-  :  wxPanel( p_parent_window, -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL | wxRAISED_BORDER )
+  :  wxPanel( p_parent_window, -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL
+#ifndef _WINDOWS
+  | wxRAISED_BORDER
+#endif /* _WINDOWS */
+  )
      ,m_FrameId( frame_id )
      ,m_FrameTitle()
      ,m_WindowTitle()

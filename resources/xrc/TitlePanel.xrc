@@ -27,14 +27,12 @@
         </object>
         <option>1</option>
         <flag>wxALL|wxEXPAND</flag>
-        <border>5</border>
+      </object>
+      <object class="spacer">
+        <size>0,2</size>
       </object>
       <object class="sizeritem">
-        <object class="wxPanel">
-          <size>-1,2</size>
-          <fg>#000000</fg>
-          <bg>#000000</bg>
-        </object>
+        <object class="wxStaticLine"/>
         <flag>wxEXPAND</flag>
       </object>
     </object>

@@ -37,7 +37,7 @@
                         <flag>wxALIGN_CENTRE</flag>
                       </object>
                     </object>
-                    <style>wxSIMPLE_BORDER</style>
+                    <style>wxTAB_TRAVERSAL|wxSIMPLE_BORDER</style>
                   </object>
                   <flag>wxEXPAND</flag>
                 </object>
@@ -56,108 +56,128 @@
                               <object class="wxBoxSizer">
                                 <orient>wxVERTICAL</orient>
                                 <object class="sizeritem">
-                                  <object class="wxFlexGridSizer">
-                                    <cols>3</cols>
+                                  <object class="wxBoxSizer">
+                                    <orient>wxHORIZONTAL</orient>
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_PANEL_XHTML_STRONG">
                                         <bitmap>../icons/XHTML_B.gif</bitmap>
                                       </object>
-                                      <option>1</option>
-                                      <flag>wxEXPAND</flag>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
                                     </object>
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_PANEL_XHTML_EMPH">
                                         <bitmap>../icons/XHTML_I.gif</bitmap>
                                       </object>
-                                      <option>1</option>
-                                      <flag>wxEXPAND</flag>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
                                     </object>
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_PANEL_XHTML_CODE">
                                         <bitmap>../icons/XHTML_T.gif</bitmap>
                                       </object>
-                                      <option>1</option>
-                                      <flag>wxEXPAND</flag>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
                                     </object>
+                                  </object>
+                                  <option>1</option>
+                                  <flag>wxALL|wxALIGN_CENTRE</flag>
+                                </object>
+                                <object class="sizeritem">
+                                  <object class="wxBoxSizer">
+                                    <orient>wxHORIZONTAL</orient>
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_PANEL_XHTML_H1">
                                         <bitmap>../icons/XHTML_H1.gif</bitmap>
                                       </object>
-                                      <option>1</option>
-                                      <flag>wxEXPAND</flag>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
                                     </object>
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_PANEL_XHTML_H2">
                                         <bitmap>../icons/XHTML_H2.gif</bitmap>
                                       </object>
-                                      <option>1</option>
-                                      <flag>wxEXPAND</flag>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
                                     </object>
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_PANEL_XHTML_H3">
                                         <bitmap>../icons/XHTML_H3.gif</bitmap>
                                       </object>
-                                      <option>1</option>
-                                      <flag>wxEXPAND</flag>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
                                     </object>
+                                  </object>
+                                  <option>1</option>
+                                  <flag>wxALL|wxALIGN_CENTRE</flag>
+                                </object>
+                                <object class="sizeritem">
+                                  <object class="wxBoxSizer">
+                                    <orient>wxHORIZONTAL</orient>
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_PANEL_XHTML_BULLET">
                                         <bitmap>../icons/XHTML_Bullet.gif</bitmap>
                                       </object>
-                                      <option>1</option>
-                                      <flag>wxEXPAND</flag>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
                                     </object>
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_PANEL_XHTML_NL">
                                         <bitmap>../icons/XHTML_Num.gif</bitmap>
                                       </object>
-                                      <option>1</option>
-                                      <flag>wxEXPAND</flag>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
                                     </object>
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_PANEL_XHTML_DL">
                                         <bitmap>../icons/XHTML_DL.gif</bitmap>
                                       </object>
-                                      <option>1</option>
-                                      <flag>wxEXPAND</flag>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
                                     </object>
+                                  </object>
+                                  <option>1</option>
+                                  <flag>wxALL|wxALIGN_CENTRE</flag>
+                                </object>
+                                <object class="sizeritem">
+                                  <object class="wxBoxSizer">
+                                    <orient>wxHORIZONTAL</orient>
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_PANEL_XHTML_IMG">
                                         <bitmap>../icons/XHTML_Image.gif</bitmap>
                                       </object>
-                                      <option>1</option>
-                                      <flag>wxEXPAND</flag>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
                                     </object>
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_PANEL_XHTML_LINK">
                                         <bitmap>../icons/XHTML_Link.gif</bitmap>
                                       </object>
-                                      <option>1</option>
-                                      <flag>wxEXPAND</flag>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
                                     </object>
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_PANEL_XHTML_TABLE">
                                         <bitmap>../icons/XHTML_Table.gif</bitmap>
                                       </object>
-                                      <option>1</option>
-                                      <flag>wxEXPAND</flag>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
                                     </object>
-                                    <vgap>5</vgap>
-                                    <hgap>5</hgap>
                                   </object>
                                   <option>1</option>
                                   <flag>wxALL|wxALIGN_CENTRE</flag>
-                                  <border>5</border>
                                 </object>
                               </object>
-                              <style>wxSIMPLE_BORDER</style>
+                              <style>wxTAB_TRAVERSAL|wxSIMPLE_BORDER</style>
                             </object>
+                            <option>1</option>
                             <flag>wxEXPAND</flag>
                           </object>
                           <object class="spacer">
                             <size>0,2</size>
                           </object>
                         </object>
+                        <style>wxTAB_TRAVERSAL</style>
                       </object>
                       <option>1</option>
                       <flag>wxEXPAND</flag>
@@ -171,10 +191,12 @@
               <flag>wxALL|wxEXPAND</flag>
             </object>
           </object>
+          <style>wxTAB_TRAVERSAL</style>
         </object>
         <option>1</option>
-        <flag>wxEXPAND|wxALIGN_CENTRE</flag>
+        <flag>wxEXPAND</flag>
       </object>
     </object>
+    <style>wxTAB_TRAVERSAL</style>
   </object>
 </resource>

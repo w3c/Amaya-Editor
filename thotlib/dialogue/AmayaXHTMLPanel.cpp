@@ -42,7 +42,9 @@ AmayaXHTMLPanel::AmayaXHTMLPanel( wxWindow * p_parent_window, AmayaNormalWindow 
   : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_XHTML") )
 {
   wxLogDebug( _T("AmayaXHTMLPanel::AmayaXHTMLPanel") );
-
+  
+  m_OffColour = XRCCTRL(*this, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->GetBackgroundColour();
+  m_OnColour  = wxColour(250, 200, 200);
 }
 
 /*
@@ -137,23 +139,20 @@ void AmayaXHTMLPanel::OnButton( wxCommandEvent& event )
  */
 void AmayaXHTMLPanel::RefreshCheckButtonState( bool * p_checked_array )
 {
-  wxColour color_off = wxSystemSettings::GetColour(wxSYS_COLOUR_BACKGROUND);
-  wxColour color_on  = wxColour(250, 200, 200);
-
   if (p_checked_array[WXAMAYA_PANEL_XHTML_STRONG])
-    XRCCTRL(*this, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetBackgroundColour( color_on );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetBackgroundColour( m_OnColour );
   else
-    XRCCTRL(*this, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetBackgroundColour( color_off );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetBackgroundColour( m_OffColour );
   
   if (p_checked_array[WXAMAYA_PANEL_XHTML_EMPH])
-    XRCCTRL(*this, "wxID_PANEL_XHTML_EMPH", wxBitmapButton)->SetBackgroundColour( color_on );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_EMPH", wxBitmapButton)->SetBackgroundColour( m_OnColour );
   else
-    XRCCTRL(*this, "wxID_PANEL_XHTML_EMPH", wxBitmapButton)->SetBackgroundColour( color_off );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_EMPH", wxBitmapButton)->SetBackgroundColour( m_OffColour );
   
   if (p_checked_array[WXAMAYA_PANEL_XHTML_CODE])
-    XRCCTRL(*this, "wxID_PANEL_XHTML_CODE", wxBitmapButton)->SetBackgroundColour( color_on );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_CODE", wxBitmapButton)->SetBackgroundColour( m_OnColour );
   else
-    XRCCTRL(*this, "wxID_PANEL_XHTML_CODE", wxBitmapButton)->SetBackgroundColour( color_off );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_CODE", wxBitmapButton)->SetBackgroundColour( m_OffColour );
 
   Refresh();
   Layout();

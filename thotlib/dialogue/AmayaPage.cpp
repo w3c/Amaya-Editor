@@ -90,7 +90,7 @@ AmayaPage::AmayaPage( wxWindow * p_parent_window )
 
   // Split button creation
   // this button is used to quickly split the page 
-  m_pSplitButtonBottom = new AmayaQuickSplitButton( this, AmayaQuickSplitButton::wxAMAYA_QS_HORIZONTAL, 5 );
+  m_pSplitButtonBottom = new AmayaQuickSplitButton( this, AmayaQuickSplitButton::wxAMAYA_QS_HORIZONTAL, 4 );
   m_pSizerTop->Add( m_pSplitButtonBottom, 0, wxEXPAND, 0 );
   m_pSplitButtonBottom->ShowQuickSplitButton( true );
 

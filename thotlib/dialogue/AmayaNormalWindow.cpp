@@ -63,10 +63,17 @@ AmayaNormalWindow::AmayaNormalWindow (  int             window_id
   m_pDummyMenuBar( NULL ),
   m_SlashPos( 115 )
 {
+  // Create a background panel to contain everything : better look on windows
+  wxBoxSizer * p_TopSizer = new wxBoxSizer ( wxVERTICAL );
+  SetSizer(p_TopSizer);
+  wxPanel * p_TopParent = new wxPanel( this, -1, wxDefaultPosition, wxDefaultSize,
+	                                   wxTAB_TRAVERSAL | wxCLIP_CHILDREN | wxNO_BORDER);
+  p_TopSizer->Add( p_TopParent, 1, wxALL | wxEXPAND, 0 );
+
   // Create a splitted vertical window
-  m_pSplitterWindow = new wxSplitterWindow( this, -1,
+  m_pSplitterWindow = new wxSplitterWindow( p_TopParent, -1,
                       		            wxDefaultPosition, wxDefaultSize,
-                     		            wxSP_3DSASH | wxSP_3D | wxSP_3DBORDER /*| wxSP_PERMIT_UNSPLIT*/ );
+                     		            wxSP_3DBORDER | wxSP_3DSASH | wxSP_3D /*| wxSP_PERMIT_UNSPLIT*/ );
   m_pSplitterWindow->SetMinimumPaneSize( 100 );
   
   // Create a background panel to contains the notebook
@@ -84,7 +91,10 @@ AmayaNormalWindow::AmayaNormalWindow (  int             window_id
   m_pNotebookPanel->Layout();
   
   // Create a AmayaPanel to contains commands shortcut
-  m_pPanel = new AmayaPanel( m_pSplitterWindow, this, -1, wxDefaultPosition, wxDefaultSize,  wxTAB_TRAVERSAL | wxRAISED_BORDER | wxCLIP_CHILDREN );
+  m_pPanel = new AmayaPanel( m_pSplitterWindow, this, -1, wxDefaultPosition, wxDefaultSize,
+	  wxTAB_TRAVERSAL
+	  | wxRAISED_BORDER
+	  | wxCLIP_CHILDREN );
 
   // Split the Notebook and the AmayaPanel
   m_pSplitterWindow->SplitVertically(
@@ -99,22 +109,22 @@ AmayaNormalWindow::AmayaNormalWindow (  int             window_id
   wxBoxSizer * p_SizerFrame = new wxBoxSizer ( wxHORIZONTAL );
 
   // create the quick split button used to show/hide the panel
-  m_pSplitPanelButton = new AmayaQuickSplitButton( this, AmayaQuickSplitButton::wxAMAYA_QS_VERTICAL, 5 );
-  p_SizerFrame->Add( m_pSplitPanelButton, 0, wxEXPAND, 0 );
+  m_pSplitPanelButton = new AmayaQuickSplitButton( p_TopParent, AmayaQuickSplitButton::wxAMAYA_QS_VERTICAL, 4 );
+  p_SizerFrame->Add( m_pSplitPanelButton, 0, wxALL | wxEXPAND, 0 );
   m_pSplitPanelButton->ShowQuickSplitButton( true );
   
   // add the splitter window to the top sizer : panel + notebook
-  p_SizerFrame->Add( m_pSplitterWindow, 1, wxEXPAND );
-  
+  p_SizerFrame->Add( m_pSplitterWindow, 1, wxALL | wxEXPAND, 0 );
+
   // Create the toolbar
-  m_pToolBar = new AmayaToolBar( this );
+  m_pToolBar = new AmayaToolBar( p_TopParent, this );
 
   // Creation of the top sizer to contain toolbar and framesizer
-  wxBoxSizer * p_TopSizer = new wxBoxSizer ( wxVERTICAL );
-  p_TopSizer->Add( m_pToolBar, 0, wxALL | wxEXPAND, 1 );
-  p_TopSizer->Add( p_SizerFrame, 1, wxALL | wxEXPAND, 0 );
-  SetSizer(p_TopSizer);
-  p_TopSizer->Fit(this);
+  wxBoxSizer * p_TopLayoutSizer = new wxBoxSizer ( wxVERTICAL );
+  p_TopLayoutSizer->Add( m_pToolBar, 0, wxALL | wxEXPAND, 1 );
+  p_TopLayoutSizer->Add( p_SizerFrame, 1, wxALL | wxEXPAND, 0 );
+  p_TopParent->SetSizer(p_TopLayoutSizer);
+  p_TopLayoutSizer->Fit(p_TopParent);
 
   // Creation of the statusbar
   CreateStatusBar( 1 );

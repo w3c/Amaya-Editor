@@ -21,7 +21,7 @@ class AmayaToolBar : public wxPanel
 public:
   DECLARE_DYNAMIC_CLASS(AmayaToolBar)
 
-  AmayaToolBar ( AmayaWindow * amaya_window_parent = NULL );
+  AmayaToolBar ( wxWindow * p_parent = NULL, AmayaWindow * amaya_window_parent = NULL );
   virtual ~AmayaToolBar();
 
   void OnSize( wxSizeEvent& event );

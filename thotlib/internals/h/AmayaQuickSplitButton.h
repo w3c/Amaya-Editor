@@ -4,8 +4,9 @@
 #define __AMAYAQUICKSPLITBUTTON_H__
 
 #include "wx/wx.h"
+#include "wx/panel.h"
 
-class AmayaQuickSplitButton : public wxButton
+class AmayaQuickSplitButton : public wxPanel
 {
  public:
   DECLARE_DYNAMIC_CLASS(AmayaQuickSplitButton)
@@ -28,6 +29,7 @@ class AmayaQuickSplitButton : public wxButton
   DECLARE_EVENT_TABLE()  
   void OnEnterWindow( wxMouseEvent& event );
   void OnLeaveWindow( wxMouseEvent& event );
+  void OnActivate( wxMouseEvent& event );
 
   wxColour              m_OldColour;
   int                   m_Width;

@@ -28,6 +28,9 @@ public:
  protected:
   DECLARE_EVENT_TABLE()
   void OnButton( wxCommandEvent& event );
+
+  wxColour m_OffColour;
+  wxColour m_OnColour;
 };
 
 #endif // __AMAYAXHTMLPANEL_H__

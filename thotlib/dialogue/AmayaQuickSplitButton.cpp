@@ -13,7 +13,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaQuickSplitButton, wxButton)
  *--------------------------------------------------------------------------------------
  */
 AmayaQuickSplitButton::AmayaQuickSplitButton( wxWindow * p_parent_window, wxAmayaQuickSplitMode mode, int width )
-  :  wxButton( p_parent_window, -1, _T(""), wxDefaultPosition )
+  :  wxPanel( p_parent_window/*, -1, _T(""), wxDefaultPosition*/ )
      ,m_Width(width)
      ,m_Mode(mode)
 {
@@ -22,7 +22,7 @@ AmayaQuickSplitButton::AmayaQuickSplitButton( wxWindow * p_parent_window, wxAmay
   else if (m_Mode == wxAMAYA_QS_VERTICAL )
     SetSize(wxSize(m_Width, -1));
 
-  SetBackgroundColour(wxColour(255,200,200));
+  SetBackgroundColour(wxColour(255,160,160));
 
   SetAutoLayout(TRUE);
 }
@@ -39,6 +39,13 @@ AmayaQuickSplitButton::~AmayaQuickSplitButton()
 {
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaQuickSplitButton
+ *      Method:  OnLeaveWindow
+ * Description:  change the color when mouse enter the button
+ *--------------------------------------------------------------------------------------
+ */
 void AmayaQuickSplitButton::OnEnterWindow( wxMouseEvent& event )
 {
   wxLogDebug( _T("AmayaQuickSplitButton::OnEnterWindow") );
@@ -50,6 +57,13 @@ void AmayaQuickSplitButton::OnEnterWindow( wxMouseEvent& event )
   event.Skip();
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaQuickSplitButton
+ *      Method:  OnLeaveWindow
+ * Description:  change the color when mouse leave the button
+ *--------------------------------------------------------------------------------------
+ */
 void AmayaQuickSplitButton::OnLeaveWindow( wxMouseEvent& event )
 {
   wxLogDebug( _T("AmayaQuickSplitButton::OnLeaveWindow") );
@@ -58,6 +72,21 @@ void AmayaQuickSplitButton::OnLeaveWindow( wxMouseEvent& event )
   Refresh();
 
   event.Skip();
+}
+
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaQuickSplitButton
+ *      Method:  OnActivate
+ * Description:  simulate a button activate event
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaQuickSplitButton::OnActivate( wxMouseEvent& event )
+{
+  wxLogDebug( _T("AmayaQuickSplitButton::OnActivate") );
+  wxCommandEvent cmd_event( wxEVT_COMMAND_BUTTON_CLICKED, event.GetId() );
+  wxPostEvent( this, cmd_event );
 }
 
 /*
@@ -87,13 +116,16 @@ void AmayaQuickSplitButton::ShowQuickSplitButton( bool show )
   p_SizerTop->Layout();
 }
 
+
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
-BEGIN_EVENT_TABLE(AmayaQuickSplitButton, wxButton)
+BEGIN_EVENT_TABLE(AmayaQuickSplitButton, wxPanel)
   EVT_ENTER_WINDOW(AmayaQuickSplitButton::OnEnterWindow)
   EVT_LEAVE_WINDOW(AmayaQuickSplitButton::OnLeaveWindow)
+  EVT_LEFT_UP(     AmayaQuickSplitButton::OnActivate)
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */ 

@@ -22,7 +22,7 @@ public:
 		      ,wxWindowID     id             = -1
 		      ,const wxPoint& pos            = wxDefaultPosition
 		      ,const wxSize&  size           = wxDefaultSize
-		      ,long style                    = wxMINIMIZE_BOX | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxSTAY_ON_TOP | wxFRAME_NO_TASKBAR | wxRESIZE_BORDER | wxRESIZE_BOX
+		      ,long style                    = wxMINIMIZE_BOX | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxSTAY_ON_TOP | wxFRAME_NO_TASKBAR | wxFRAME_TOOL_WINDOW | wxRESIZE_BORDER | wxRESIZE_BOX
 		      );
   virtual ~AmayaFloatingPanel();
 

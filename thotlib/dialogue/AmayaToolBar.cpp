@@ -32,8 +32,8 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaToolBar, wxPanel)
  * Description:  create a new toolbar
  *--------------------------------------------------------------------------------------
  */
-AmayaToolBar::AmayaToolBar( AmayaWindow * p_amaya_window_parent ) : 
-  wxPanel( p_amaya_window_parent,
+AmayaToolBar::AmayaToolBar( wxWindow * p_parent, AmayaWindow * p_amaya_window_parent ) : 
+  wxPanel( p_parent,
 	   -1,
 	   wxDefaultPosition,
 	   /*wxDefaultSize */wxSize(22, 22), /* here it's possible to setup the toolbar size (height) */

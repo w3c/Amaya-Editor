@@ -194,8 +194,8 @@ void AmayaSubPanel::DoStick()
   // setup bitmaps
   wxBitmapButton* p_button = XRCCTRL(*this, "wxID_BUTTON_DETACH", wxBitmapButton);
   p_button->SetBitmapLabel(    m_Bitmap_DetachOn );
-  p_button->SetBitmapSelected( wxBitmap() );
-  p_button->SetBitmapFocus(    wxBitmap() );
+//  p_button->SetBitmapSelected( wxBitmap() );
+//  p_button->SetBitmapFocus(    wxBitmap() );
 
   // setup panel style
   wxPanel* p_panel_detach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
@@ -224,8 +224,8 @@ void AmayaSubPanel::DoUnstick()
   // setup bitmaps
   wxBitmapButton* p_button = XRCCTRL(*this, "wxID_BUTTON_DETACH", wxBitmapButton);
   p_button->SetBitmapLabel(    m_Bitmap_DetachOff );
-  p_button->SetBitmapSelected( wxBitmap() );
-  p_button->SetBitmapFocus(    wxBitmap() );
+//  p_button->SetBitmapSelected( wxBitmap() );
+//  p_button->SetBitmapFocus(    wxBitmap() );
 
   // close the floating window
   m_pFloatingPanel->Close();
