@@ -4604,6 +4604,7 @@ void        ParseExternalDocument (char     *fileName,
   char         *schemaName = NULL, *tempName = NULL, *ptr = NULL;
   ElementType   elType;
   Element       parent, oldel, child;
+  Element       copy;
   Element       idEl = NULL, extEl = NULL;
   AttributeType extAttrType;
   DocumentType  thotType;
@@ -4833,24 +4834,35 @@ void        ParseExternalDocument (char     *fileName,
 	      elType.ElSSchema = TtaGetSSchema ("HTML", externalDoc);
 	      elType.ElTypeNum = HTML_EL_BODY;
 	      idEl = TtaSearchTypedElement (elType, SearchForward, RootElement);
-	      TtaRemoveTree (idEl, externalDoc);
-	      TtaInsertFirstChild (&idEl, extEl, doc);
+	      /*
+		TtaRemoveTree (idEl, externalDoc);
+		TtaInsertFirstChild (&idEl, extEl, doc);
+	      */
+
 	    }
 	  else
 	    {
 	      idEl = TtaGetRootElement (externalDoc);
-	      TtaRemoveTree (idEl, externalDoc);
-	      TtaInsertFirstChild (&idEl, extEl, doc);
+	      /*
+		TtaRemoveTree (idEl, externalDoc);
+		TtaInsertFirstChild (&idEl, extEl, doc);
+	      */
 	    }
+	  /* Copy the sub-tree */
+	  copy = TtaCopyTree (idEl, externalDoc, doc, extEl);
+	  TtaInsertFirstChild (&copy, extEl, doc);
 	  /* Update the Images and the URLs in the pasted sub-tree */
 	  event.document = doc;
 	  event.position = externalDoc;
-	  UpdateURLsInSubtree(&event, idEl);
+	  /* UpdateURLsInSubtree(&event, idEl); */
+	  UpdateURLsInSubtree(&event, copy);
 	}
       /* Move presentation-schema extensions of the external document */
       /* to the sub-tree of which 'extEl' is the root */
       /* This allow to enable the style sheets attached to the external doc */
-      TtaMoveDocumentExtensionsToElement (externalDoc, idEl);
+
+      /* TtaMoveDocumentExtensionsToElement (externalDoc, idEl); */
+      TtaMoveDocumentExtensionsToElement (externalDoc, copy);
 
       /* Remove the ParsingErrors file */
       RemoveParsingErrors (externalDoc);
