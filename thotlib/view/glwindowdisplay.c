@@ -1366,6 +1366,7 @@ void SetGlPipelineState ()
 {
   const char *version = (const char *) gluGetString (GLU_VERSION);
   const char *renderer = (const char*) glGetString (GL_RENDERER);
+  int auxnumBuffers, acred, acgreen, acblue, acalpha;
   ThotBool graph_aa = TRUE;
   ThotBool badbuffer = FALSE;
   
@@ -1387,9 +1388,9 @@ void SetGlPipelineState ()
       WinErrorBox (NULL,  GLU_ERROR_MSG);
 #endif /*  _WINGUI */
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
       fprintf( stderr, GLU_ERROR_MSG);
-#endif /* #if defined(_MOTIF) || defined(_GTK)  || defined(_WX) */
+#endif /* #if defined(_GTK)  || defined(_WX) */
       exit (1);
     }
   
@@ -1410,7 +1411,6 @@ void SetGlPipelineState ()
   /* g_print( "%s\n", (char *)glGetString(GL_EXTENSIONS));  */
   printf ("\n  GLU Version : %s", 
 	   (char *)gluGetString (GLU_VERSION));
-  int auxnumBuffers, acred, acgreen, acblue, acalpha;
   glGetIntegerv (GL_AUX_BUFFERS,      &auxnumBuffers);
   glGetIntegerv (GL_ACCUM_RED_BITS,   &acred);
   glGetIntegerv (GL_ACCUM_GREEN_BITS, &acgreen); 
