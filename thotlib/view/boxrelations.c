@@ -2291,16 +2291,34 @@ static ThotBool     RemovePosRelation (PtrBox pOrginBox, PtrBox pTargetBox,
 			     pPosRel->PosRTable[j - 1].ReRefEdge = pPosRel->PosRTable[k - 1].ReRefEdge;
 			     pPosRel->PosRTable[j - 1].ReOp = pPosRel->PosRTable[k - 1].ReOp;
 			  */
+
+			  /* Old patch that crashes Amaya on optimized version */
+			  /*
 			  pPosRel->PosRTable[j - 1] = pPosRel->PosRTable[k - 1];
 			  if (pPosRel->PosRTable[k - 1].ReBox == NULL)
 			     j = MAX_RELAT_POS;
 			  else
 			    {
 			       j++;
-			       /* Faut-il annuler la derniere entree ? */
 			       if (j == MAX_RELAT_POS)
 				  pPosRel->PosRTable[j - 1].ReBox = NULL;
 			    }
+			  */
+
+			  /* New patch LC 16.02.2001 */
+			  if (pPosRel->PosRTable[k - 1].ReBox == NULL)
+			    {
+			      pPosRel->PosRTable[j - 1].ReBox = NULL;
+			      j = MAX_RELAT_POS;
+			    }
+			  else
+			    {
+			      pPosRel->PosRTable[j - 1] = pPosRel->PosRTable[k - 1];
+			      j++;
+			      if (j == MAX_RELAT_POS)
+				pPosRel->PosRTable[j - 1].ReBox = NULL;
+			    }
+			  
 		       }
 
 		     /* C'etait la derniere relation dans la table ? */
