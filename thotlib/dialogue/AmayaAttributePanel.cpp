@@ -134,28 +134,28 @@ void AmayaAttributePanel::SendDataToPanel( AmayaParams& p )
   switch ( action_id )
     {
     case wxATTR_ACTION_LISTUPDATE:
-      SetupListValue( (const char *)p.param2, (int)p.param3, (const int *)p.param4, (const char *)p.param5, (int)p.param6, (const int *)p.param7 );
       ShowAttributValue( wxATTR_TYPE_NONE );
+      SetupListValue( (const char *)p.param2, (int)p.param3, (const int *)p.param4, (const char *)p.param5, (int)p.param6, (const int *)p.param7 );
       break;
     case wxATTR_ACTION_SETUPLANG:
+      ShowAttributValue( wxATTR_TYPE_LANG );
       SetMandatoryState( (bool)p.param2 );
       SetupLangValue( (const char *)p.param3,(const char *)p.param4, (const char *)p.param5, (int)p.param6, (int)p.param7 );
-      ShowAttributValue( wxATTR_TYPE_LANG );
       break;
     case wxATTR_ACTION_SETUPTEXT:
+      ShowAttributValue( wxATTR_TYPE_TEXT );
       SetMandatoryState( (bool)p.param2 );
       SetupTextValue( (const char *)p.param3 );
-      ShowAttributValue( wxATTR_TYPE_TEXT );
       break;
     case wxATTR_ACTION_SETUPENUM:
+      ShowAttributValue( wxATTR_TYPE_ENUM );
       SetMandatoryState( (bool)p.param2 );
       SetupEnumValue( (const char *)p.param3, (int)p.param4, (int)p.param5 );
-      ShowAttributValue( wxATTR_TYPE_ENUM );
       break;
     case wxATTR_ACTION_SETUPNUM:
+      ShowAttributValue( wxATTR_TYPE_NUM );
       SetMandatoryState( (bool)p.param2 );
       SetupNumValue( (int)p.param3 );
-      ShowAttributValue( wxATTR_TYPE_NUM );
       break;
     }
 }
@@ -174,13 +174,6 @@ void AmayaAttributePanel::OnListSelectItem( wxCommandEvent& event )
 	      event.IsSelection() ? _T("yes") : _T("no"),
 	      event.GetSelection() );
   
-  // check that this attribut is checked
-  if ( !m_pAttrList->IsChecked(event.GetSelection()) )
-    {
-      ShowAttributValue( wxATTR_TYPE_NONE );
-      return;
-    }
-  
   SelectAttribute( event.GetSelection() );
 }
 
@@ -195,18 +188,23 @@ void AmayaAttributePanel::SelectAttribute( int position )
   // force the selection in the attribute list
   m_pAttrList->SetSelection(position);
 
-  // call the callback to show the right attribute value panel
-  int item_num = 0;
-  if ( position >= m_NbAttr )
+  if (m_pAttrList->IsChecked(position))
     {
-      item_num = position - m_NbAttr;
-      CallbackAttrMenu( -1, item_num, TtaGiveActiveFrame() );
+      // call the callback to show the right attribute value panel
+      int item_num = 0;
+      if ( position >= m_NbAttr )
+	{
+	  item_num = position - m_NbAttr;
+	  CallbackAttrMenu( -1, item_num, TtaGiveActiveFrame() );
+	}
+      else
+	{
+	  item_num = position;
+	  CallbackAttrMenu( -2, item_num, TtaGiveActiveFrame() );
+	}
     }
   else
-    {
-      item_num = position;
-      CallbackAttrMenu( -2, item_num, TtaGiveActiveFrame() );
-    }
+    ShowAttributValue( wxATTR_TYPE_NONE );
 }
 
 /*----------------------------------------------------------------------
@@ -316,6 +314,8 @@ void AmayaAttributePanel::ShowAttributValue( wxATTR_TYPE type )
 	m_pPanel_Num->Refresh();
       }
       break;
+    default:
+      break;
     }
 
   GetParent()->GetParent()->Layout();
@@ -342,6 +342,9 @@ void AmayaAttributePanel::SetupListValue( const char * p_attr_list, int nb_attr,
 					  const char * p_attr_evt_list, int nb_attr_evt, const int * p_active_attr_evt )
 {
   wxLogDebug(_T("AmayaAttributePanel::SetupListValue") );
+
+  /* remember the selected entry */
+  wxString last_entry = m_pAttrList->GetStringSelection();
 
   bool listHasFocus = (wxWindow::FindFocus() == m_pAttrList);
 
@@ -407,6 +410,12 @@ void AmayaAttributePanel::SetupListValue( const char * p_attr_list, int nb_attr,
   // workaround for a wx bug : the list lost the focus when it is updated...
   if (listHasFocus)
     m_pAttrList->SetFocus();
+
+  /* restore the last selected entry because 
+   * UpdateAttrMenu rebuild the list and clear the selection */
+  int item_to_select;
+  if ( (item_to_select = m_pAttrList->FindString(last_entry)) != wxNOT_FOUND)
+    SelectAttribute(item_to_select);
 }
 
 
@@ -604,6 +613,7 @@ void AmayaAttributePanel::OnAutoRefresh( wxCommandEvent& event )
     {
       m_pAttrList->Enable();
       DoUpdate();
+      TtaRedirectFocus();
     }
   else
     {
@@ -619,9 +629,9 @@ void AmayaAttributePanel::OnAutoRefresh( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void AmayaAttributePanel::ForceAttributeUpdate()
 {
+  /* do the update */
   PtrDocument pDoc;
   int         view;
-
   GetDocAndView( TtaGiveActiveFrame(), &pDoc, &view );
   if (pDoc)
     UpdateAttrMenu( pDoc );
