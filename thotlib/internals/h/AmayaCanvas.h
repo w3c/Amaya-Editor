@@ -77,22 +77,15 @@ public:
 
   bool IsParentFrameActive();
   bool IsInit();
-
-  void OnSize( wxSizeEvent& event );
-  void OnPaint( wxPaintEvent& event );
-  void OnSetFocus( wxFocusEvent & event );
-
-  void OnMouse( wxMouseEvent& event );
-#if 0
-  void OnChar( wxKeyEvent& event );
-  void OnKeyDown( wxKeyEvent& event );
-#endif /* 0 */
-    
-  void OnIdle( wxIdleEvent& event );
-  void OnChar( wxKeyEvent& event );  
   
 protected:
   DECLARE_EVENT_TABLE()
+  void OnSize( wxSizeEvent& event );
+  void OnPaint( wxPaintEvent& event );
+  void OnSetFocus( wxFocusEvent & event );
+  void OnMouse( wxMouseEvent& event );
+  void OnIdle( wxIdleEvent& event );
+  void OnChar( wxKeyEvent& event );  
   
   AmayaFrame *  m_pAmayaFrame;  // amaya frame reference (parent)
 

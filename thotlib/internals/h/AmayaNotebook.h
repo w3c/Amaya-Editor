@@ -72,21 +72,14 @@ class AmayaNotebook : public wxNotebook
   void OnClose(wxCloseEvent& event);
 
  protected:
+  DECLARE_EVENT_TABLE()
   void OnPageChanged(wxNotebookEvent& event);
   void OnPageChanging(wxNotebookEvent& event);
-
-#if 0
   void OnChar( wxKeyEvent& event );
-  void OnKeyDown( wxKeyEvent& event );
-#endif /* 0 */
-
   void OnSetFocus( wxFocusEvent & event );
   void OnIdle( wxIdleEvent& event );
-
   void OnContextMenu( wxContextMenuEvent & event );
   void OnContextMenuItem( wxCommandEvent& event );
-
-  DECLARE_EVENT_TABLE()
 
  protected:
   AmayaWindow *  m_pAmayaWindow; // amaya parent window

@@ -257,6 +257,19 @@ void AmayaNotebook::OnContextMenu( wxContextMenuEvent & event )
   event.Skip();
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaNotebook
+ *      Method:  OnChar
+ * Description:  manage keyboard events
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaNotebook::OnChar(wxKeyEvent& event)
+{
+  wxLogDebug( _T("AmayaNotebook::OnChar key=")+wxString(event.GetUnicodeKey()) );
+  event.Skip();
+}
+
 BEGIN_EVENT_TABLE(AmayaNotebook, wxNotebook)
   EVT_CLOSE(	                 AmayaNotebook::OnClose )
   EVT_NOTEBOOK_PAGE_CHANGED(  -1, AmayaNotebook::OnPageChanged )
@@ -266,6 +279,8 @@ BEGIN_EVENT_TABLE(AmayaNotebook, wxNotebook)
   EVT_IDLE(             AmayaNotebook::OnIdle) // Process a wxEVT_IDLE event
 
   EVT_CONTEXT_MENU(              AmayaNotebook::OnContextMenu )
+
+  EVT_CHAR( AmayaNotebook::OnChar )
 END_EVENT_TABLE()
   
 #endif /* #ifdef _WX */

@@ -490,6 +490,19 @@ void AmayaCanvas::OnSetFocus( wxFocusEvent & event )
   event.Skip();
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaCanvas
+ *      Method:  OnChar
+ * Description:  manage keyboard events, should propagate upward
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaCanvas::OnChar(wxKeyEvent& event)
+{
+  event.ResumePropagation(wxEVENT_PROPAGATE_MAX);
+  event.Skip();
+}
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
@@ -501,7 +514,7 @@ BEGIN_EVENT_TABLE(AmayaCanvas, wxPanel)
 #endif // #ifdef _GL
   EVT_SIZE( 		AmayaCanvas::OnSize )
   EVT_PAINT( 		AmayaCanvas::OnPaint )
-  EVT_SET_FOCUS(        AmayaCanvas::OnSetFocus )
+  //  EVT_SET_FOCUS(        AmayaCanvas::OnSetFocus )
 
   // what mouse event type is managed ? comment what is not managed
   EVT_LEFT_DOWN(	AmayaCanvas::OnMouse) // Process a wxEVT_LEFT_DOWN event. 
@@ -520,6 +533,8 @@ BEGIN_EVENT_TABLE(AmayaCanvas, wxPanel)
 //  EVT_MOUSE_EVENTS(	AmayaCanvas::OnMouse) // Process all mouse events. 
 
   EVT_IDLE(             AmayaCanvas::OnIdle) // Process a wxEVT_IDLE event
+
+  EVT_CHAR( AmayaCanvas::OnChar )
 END_EVENT_TABLE()
 
 #endif // #ifdef _WX

@@ -612,6 +612,10 @@ void AmayaWindow::OnChar(wxKeyEvent& event)
 	      ThotInput (GetActiveFrame()->GetFrameId(), thot_keysym, 0, thotMask, thot_keysym);
 	    } 
 	}
+
+      // TODO : here we must skip this event only when focus is not into the canvas
+      // for example if the focus is on a toolbar button, SPACE key event should be propagated to button (SPACE=activate the button)
+      event.Skip();
     }
   else
     event.Skip();
@@ -625,7 +629,7 @@ BEGIN_EVENT_TABLE(AmayaWindow, wxFrame)
   EVT_SIZE(      AmayaWindow::OnSize )
   EVT_IDLE(      AmayaWindow::OnIdle ) // Process a wxEVT_IDLE event  
   EVT_ACTIVATE(  AmayaWindow::OnActivate )
-  EVT_CHAR_HOOK( AmayaWindow::OnChar)
+  EVT_CHAR( AmayaWindow::OnChar )
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */
