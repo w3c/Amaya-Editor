@@ -614,8 +614,10 @@ Document        doc;
 	}
     }
 }
+
 /*----------------------------------------------------------------------
-   Update save button and menu entry according to the document status.
+   Update the save button and corresponding menu entry according to the
+   document status.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DocStatusUpdate (Document document, ThotBool modified)
@@ -2600,6 +2602,11 @@ View                view;
       /* the document has not been loaded yet */
       return;
 
+   if (DocumentTypes[doc] == docSource ||
+       DocumentTypes[doc] == docSourceRO)
+      /* don't reload a source document */
+      return;
+
    /* abort all current exchanges concerning this document */
    StopTransfer (doc, 1);
 
@@ -2828,6 +2835,7 @@ View                view;
      return;
    if (DocumentTypes[document] != docHTML &&
        DocumentTypes[document] != docHTMLRO)
+     /* it's not an HTML document */
      return;
    if (DocumentSource[document])
      /* the source code of this document is already shown */
@@ -2877,9 +2885,10 @@ View                view;
 	 TtaSetItemOff (sourceDoc, 1, File, BHtml);
 	 TtaSetItemOff (sourceDoc, 1, File, BTemplate);
 	 TtaSetItemOff (sourceDoc, 1, File, BCss);
-	 TtaSetItemOff (sourceDoc, 1, File, BSaveAs);
 	 TtaSetItemOff (sourceDoc, 1, File, BOpenDoc);
 	 TtaSetItemOff (sourceDoc, 1, File, BOpenInNewWindow);
+	 TtaSetItemOff (sourceDoc, 1, File, BReload);
+	 TtaSetItemOff (sourceDoc, 1, File, BSaveAs);
 	 TtaSetItemOff (sourceDoc, 1, Edit_, BSpellCheck);
 	 TtaSetItemOff (sourceDoc, 1, Edit_, BTransform);
 	 TtaSetItemOff (sourceDoc, 1, Views, TShowButtonbar);
@@ -2887,9 +2896,6 @@ View                view;
 	 TtaSetMenuOff (sourceDoc, 1, Special);
 	 TtaSetMenuOff (sourceDoc, 1, Help_);
 
-	 /* Switch the synchronization entry */
-	 if (TtaIsDocumentModified (document))
-	   DocStatusUpdate (document, TRUE);
 	 /* Synchronize selections */
 	 event.document = document;
 	 SynchronizeSourceView (&event);
@@ -2899,6 +2905,8 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
+  ShowStructure
+  Open the structure view(s) of an HTML document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ShowStructure (Document document, View view)
@@ -2996,6 +3004,8 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
+  ShowAlternate
+  Open the Alternate view of an HTML document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ShowAlternate (Document document, View view)
@@ -3040,6 +3050,8 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  ShowLinks
+  Open the Links view of an HTML document
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ShowLinks (Document document, View view)
@@ -3084,6 +3096,8 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  ShowToC
+  Open the Table of content view of an HTML document
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ShowToC (Document document, View view)
