@@ -5825,9 +5825,31 @@ DocumentType   *thotType;
 		  else if (!strncmp (&FileBuffer[i], "<!", 2) ||
 			   !strncmp (&FileBuffer[i], "<?", 2))
 		    {
-		      /* it's a comment or a pi */
-		      i += 2;
-		      /* continue */
+		      /* it's a comment or a PI */
+		      if (!strncmp (&FileBuffer[i], "<!", 2))
+			{
+			  /* look for the end of the comment */
+			  found = FALSE;
+			  while (!found && i < res-2)
+			    if (!strncmp (&FileBuffer[i], "-->", 3))
+			      found = TRUE;
+			    else
+			      i++;
+			}
+		      else
+			{
+			  /* look for the end of the PI */
+			  found = FALSE;
+			  while (!found && i < res-1)
+			    if (!strncmp (&FileBuffer[i], "?>", 2))
+			      found = TRUE;
+			    else
+			      i++;
+			}
+		      if (!found)
+			/* the end of the comment or PI can't be found */
+			/* it's not necessary to continue */
+			endOfSniffedFile = TRUE;			
 		    }
 		  else
 		    {
