@@ -49,6 +49,9 @@ config/fr-thotmessage \
 config/fr-thotversion \
 config/fr-transdialogue \
 config/fr-typdialogue \
+batch/MachineType \
+dicopar/*.tri \
+dicopar/*.ptn \
 doc/APIman-E.PIV \
 doc/APIman-F.PIV \
 doc/Appman-E.PIV \
@@ -240,6 +243,9 @@ indexlib/f/indpres_f.h \
 indexlib/f/indtable_f.h \
 indexlib/f/indtri_f.h \
 schemas/Makefile \
+schemas/Text_ASCII.inc \
+schemas/Text_SGML.inc \
+schemas/Text_Latex.inc \
 schemas/exc_matrix.h \
 schemas/exc_tableau.h \
 schemas/Math.h \
