@@ -161,6 +161,10 @@ bool AmayaSimpleWindow::AttachFrame( AmayaFrame * p_frame )
 {
   wxLogDebug( _T("AmayaSimpleWindow::AttachFrame window_id=%d"), m_WindowId );
 
+  // do not attach the frame if it is allready attached
+  if ( p_frame == m_pFrame )
+    return false;
+
   m_pFrame = p_frame;
   m_pFrame->SetActive(TRUE);
   m_pFrame->SetPageParent( NULL ); // no page parent
@@ -169,7 +173,7 @@ bool AmayaSimpleWindow::AttachFrame( AmayaFrame * p_frame )
  // now I am your parent.
   m_pFrame->Reparent( this );
  
-  // update the page title (same as bottom frame)
+  // update the frame's window parent title
   if (m_pFrame)
     m_pFrame->SetFrameTitle(m_pFrame->GetFrameTitle());
   
