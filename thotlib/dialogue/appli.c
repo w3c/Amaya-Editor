@@ -253,7 +253,7 @@ int                *info;
 {
    /* Enleve la procedure de Callback */
    /* Detruit la fenetre si elle existe encore */
-   if (FrRef[frame] != 0 && frame > 0)
+   if (frame > 0 && FrRef[frame] != 0)
       ViewClosed (frame);
 }
 
@@ -516,6 +516,8 @@ int                 value;
    int        delta, Xpos, Ypos, width, height;
    int        sPos, nbPages, remaining;
 
+   if (frame < 0)
+		return;
    /* do not redraw it if in NoComputedDisplay mode */
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
       return;
@@ -1368,7 +1370,6 @@ LPARAM      lParam;
 
   if (frame != -1)
     currentFrame = frame;
-
   GetWindowRect (hwnd, &rect);
   switch (mMsg)
   {
@@ -1423,7 +1424,8 @@ LPARAM      lParam;
   case WM_ENTER:
     hwndTextEdit = GetFocus ();
     WIN_APP_TextCallback (hwndTextEdit, frame);
-    SetFocus (FrRef [frame]);
+    if (frame != -1)
+      SetFocus (FrRef [frame]);
     return 0L;
 
   case WM_SYSKEYDOWN:
@@ -1477,26 +1479,29 @@ LPARAM      lParam;
     return 0L;
 
   case WM_CLOSE:
-    if (frame <= MAX_FRAME)
-      {
-	GetDocAndView (frame, &pDoc, &view, &assoc);
-	if (pDoc && view)
-	  CloseView (pDoc, view, assoc);
-	FrMainRef[frame] = 0;
-      }
-    return 0L;
-
   case WM_DESTROY:
-    FrMainRef[frame] = 0;
-    if (frame <= MAX_FRAME)
-      {
-	for (frameNDX = 0; frameNDX <= MAX_FRAME; frameNDX++)
-	  if (FrMainRef[frameNDX] != 0) 
-	    /* there is still an active frame */
-	    return 0L;
-	TtaQuit();
-      }
-    PostQuitMessage (0);
+    if (frame >= 0 && frame <= MAX_FRAME)
+	{
+      GetDocAndView (frame, &pDoc, &view, &assoc);
+      if (pDoc && view)
+        CloseView (pDoc, view, assoc);
+      if (FrameTable[frame].FrDoc == 0)
+        FrMainRef[frame] = 0;
+ 
+      if (mMsg == WM_DESTROY)
+	  {
+        for (frameNDX = 0; frameNDX <= MAX_FRAME; frameNDX++)
+          if (FrMainRef[frameNDX] != 0)
+		  {
+          /* there is still an active frame */
+          FrMainRef[frame] = 0;
+          return 0L;
+		  }
+        TtaQuit();
+	  }
+	}
+    if (mMsg == WM_DESTROY)
+      PostQuitMessage (0);
     return 0L;
         
   case WM_SIZE:
