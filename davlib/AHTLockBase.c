@@ -645,6 +645,10 @@ PUBLIC BOOL separateUri (const char *URI, const char *localFQDN,
     
     pnumber[i] = '\0';
     
+    /* use PORT_CHAR instead ':' (from ":port_number") in the filename 
+     * (Windows does not allow ':' in filename) */
+    if (pnumber[0] != '\0')
+        pnumber[0] = PORT_CHAR;
     
     /* copy the relativeURI in "rel" to relUri, or
      * define it as "/" */
