@@ -17,4 +17,5 @@ THOT_EXPORT	XVisualInfo* vptr;
 THOT_EXPORT	Visual*      theVisual;
 #else  /* _WINDOWS */
 THOT_EXPORT	void*        theVisual;
+THOT_EXPORT char         LostPicturePath [512];
 #endif /* _WINDOWS */
