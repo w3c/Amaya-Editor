@@ -63,7 +63,7 @@ CLEAN :
 	-@erase "$(INTDIR)\pngwrite.obj"
 	-@erase "$(INTDIR)\pngwtran.obj"
 	-@erase "$(INTDIR)\pngwutil.obj"
-	-@erase "$(INTDIR)\vc50.idb"
+	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(OUTDIR)\libpng.lib"
 
 "$(OUTDIR)" :
@@ -73,42 +73,39 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=cl.exe
-CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\libpng\zlib" /D "NDEBUG" /D "WIN32"\
- /D "_WINDOWS" /Fp"$(INTDIR)\libpng.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\"\
- /FD /c 
-CPP_OBJS=.\Release/
-CPP_SBRS=.
+CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\libpng\zlib" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\libpng.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
-.c{$(CPP_OBJS)}.obj::
+.c{$(INTDIR)}.obj::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.cpp{$(CPP_OBJS)}.obj::
+.cpp{$(INTDIR)}.obj::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.cxx{$(CPP_OBJS)}.obj::
+.cxx{$(INTDIR)}.obj::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.c{$(CPP_SBRS)}.sbr::
+.c{$(INTDIR)}.sbr::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.cpp{$(CPP_SBRS)}.sbr::
+.cpp{$(INTDIR)}.sbr::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.cxx{$(CPP_SBRS)}.sbr::
+.cxx{$(INTDIR)}.sbr::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
+RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libpng.bsc" 
 BSC32_SBRS= \
@@ -176,7 +173,7 @@ CLEAN :
 	-@erase "$(INTDIR)\pngwrite.obj"
 	-@erase "$(INTDIR)\pngwtran.obj"
 	-@erase "$(INTDIR)\pngwutil.obj"
-	-@erase "$(INTDIR)\vc50.idb"
+	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(OUTDIR)\libpng.lib"
 
 "$(OUTDIR)" :
@@ -186,42 +183,39 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=cl.exe
-CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\libpng\zlib" /D "_DEBUG" /D\
- "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\libpng.pch" /YX /Fo"$(INTDIR)\\"\
- /Fd"$(INTDIR)\\" /FD /c 
-CPP_OBJS=.\Debug/
-CPP_SBRS=.
+CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\libpng\zlib" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\libpng.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
-.c{$(CPP_OBJS)}.obj::
+.c{$(INTDIR)}.obj::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.cpp{$(CPP_OBJS)}.obj::
+.cpp{$(INTDIR)}.obj::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.cxx{$(CPP_OBJS)}.obj::
+.cxx{$(INTDIR)}.obj::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.c{$(CPP_SBRS)}.sbr::
+.c{$(INTDIR)}.sbr::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.cpp{$(CPP_SBRS)}.sbr::
+.cpp{$(INTDIR)}.sbr::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.cxx{$(CPP_SBRS)}.sbr::
+.cxx{$(INTDIR)}.sbr::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
+RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libpng.bsc" 
 BSC32_SBRS= \
@@ -254,6 +248,15 @@ LIB32_OBJS= \
 !ENDIF 
 
 
+!IF "$(NO_EXTERNAL_DEPS)" != "1"
+!IF EXISTS("libpng.dep")
+!INCLUDE "libpng.dep"
+!ELSE 
+!MESSAGE Warning: cannot find "libpng.dep"
+!ENDIF 
+!ENDIF 
+
+
 !IF "$(CFG)" == "libpng - Win32 Release" || "$(CFG)" == "libpng - Win32 Debug"
 
 !IF  "$(CFG)" == "libpng - Win32 Release"
@@ -265,8 +268,7 @@ LIB32_OBJS= \
 
 "zlib - Win32 ReleaseCLEAN" : 
    cd "..\zlib"
-   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\zlib.mak CFG="zlib - Win32 Release"\
- RECURSE=1 
+   $(MAKE) /$(MAKEFLAGS) /F .\zlib.mak CFG="zlib - Win32 Release" RECURSE=1 CLEAN 
    cd "..\libpng"
 
 !ELSEIF  "$(CFG)" == "libpng - Win32 Debug"
@@ -278,521 +280,100 @@ LIB32_OBJS= \
 
 "zlib - Win32 DebugCLEAN" : 
    cd "..\zlib"
-   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\zlib.mak CFG="zlib - Win32 Debug" RECURSE=1\
- 
+   $(MAKE) /$(MAKEFLAGS) /F .\zlib.mak CFG="zlib - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\libpng"
 
 !ENDIF 
 
 SOURCE=..\..\libpng\png.c
 
-!IF  "$(CFG)" == "libpng - Win32 Release"
-
-DEP_CPP_PNG_C=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_PNG_C=\
-	"..\..\libpng\alloc.h"\
-	
-
-"$(INTDIR)\png.obj" : $(SOURCE) $(DEP_CPP_PNG_C) "$(INTDIR)"
+"$(INTDIR)\png.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "libpng - Win32 Debug"
-
-DEP_CPP_PNG_C=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	
-
-"$(INTDIR)\png.obj" : $(SOURCE) $(DEP_CPP_PNG_C) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\libpng\pngerror.c
 
-!IF  "$(CFG)" == "libpng - Win32 Release"
-
-DEP_CPP_PNGER=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_PNGER=\
-	"..\..\libpng\alloc.h"\
-	
-
-"$(INTDIR)\pngerror.obj" : $(SOURCE) $(DEP_CPP_PNGER) "$(INTDIR)"
+"$(INTDIR)\pngerror.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "libpng - Win32 Debug"
-
-DEP_CPP_PNGER=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	
-
-"$(INTDIR)\pngerror.obj" : $(SOURCE) $(DEP_CPP_PNGER) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\libpng\pngget.c
 
-!IF  "$(CFG)" == "libpng - Win32 Release"
-
-DEP_CPP_PNGGE=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_PNGGE=\
-	"..\..\libpng\alloc.h"\
-	
-
-"$(INTDIR)\pngget.obj" : $(SOURCE) $(DEP_CPP_PNGGE) "$(INTDIR)"
+"$(INTDIR)\pngget.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "libpng - Win32 Debug"
-
-DEP_CPP_PNGGE=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	
-
-"$(INTDIR)\pngget.obj" : $(SOURCE) $(DEP_CPP_PNGGE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\libpng\pngmem.c
 
-!IF  "$(CFG)" == "libpng - Win32 Release"
-
-DEP_CPP_PNGME=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_PNGME=\
-	"..\..\libpng\alloc.h"\
-	
-
-"$(INTDIR)\pngmem.obj" : $(SOURCE) $(DEP_CPP_PNGME) "$(INTDIR)"
+"$(INTDIR)\pngmem.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "libpng - Win32 Debug"
-
-DEP_CPP_PNGME=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	
-
-"$(INTDIR)\pngmem.obj" : $(SOURCE) $(DEP_CPP_PNGME) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\libpng\pngpread.c
 
-!IF  "$(CFG)" == "libpng - Win32 Release"
-
-DEP_CPP_PNGPR=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_PNGPR=\
-	"..\..\libpng\alloc.h"\
-	
-
-"$(INTDIR)\pngpread.obj" : $(SOURCE) $(DEP_CPP_PNGPR) "$(INTDIR)"
+"$(INTDIR)\pngpread.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "libpng - Win32 Debug"
-
-DEP_CPP_PNGPR=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	
-
-"$(INTDIR)\pngpread.obj" : $(SOURCE) $(DEP_CPP_PNGPR) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\libpng\pngread.c
 
-!IF  "$(CFG)" == "libpng - Win32 Release"
-
-DEP_CPP_PNGRE=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_PNGRE=\
-	"..\..\libpng\alloc.h"\
-	
-
-"$(INTDIR)\pngread.obj" : $(SOURCE) $(DEP_CPP_PNGRE) "$(INTDIR)"
+"$(INTDIR)\pngread.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "libpng - Win32 Debug"
-
-DEP_CPP_PNGRE=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	
-
-"$(INTDIR)\pngread.obj" : $(SOURCE) $(DEP_CPP_PNGRE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\libpng\pngrio.c
 
-!IF  "$(CFG)" == "libpng - Win32 Release"
-
-DEP_CPP_PNGRI=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_PNGRI=\
-	"..\..\libpng\alloc.h"\
-	
-
-"$(INTDIR)\pngrio.obj" : $(SOURCE) $(DEP_CPP_PNGRI) "$(INTDIR)"
+"$(INTDIR)\pngrio.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "libpng - Win32 Debug"
-
-DEP_CPP_PNGRI=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	
-
-"$(INTDIR)\pngrio.obj" : $(SOURCE) $(DEP_CPP_PNGRI) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\libpng\pngrtran.c
 
-!IF  "$(CFG)" == "libpng - Win32 Release"
-
-DEP_CPP_PNGRT=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_PNGRT=\
-	"..\..\libpng\alloc.h"\
-	
-
-"$(INTDIR)\pngrtran.obj" : $(SOURCE) $(DEP_CPP_PNGRT) "$(INTDIR)"
+"$(INTDIR)\pngrtran.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "libpng - Win32 Debug"
-
-DEP_CPP_PNGRT=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	
-
-"$(INTDIR)\pngrtran.obj" : $(SOURCE) $(DEP_CPP_PNGRT) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\libpng\pngrutil.c
 
-!IF  "$(CFG)" == "libpng - Win32 Release"
-
-DEP_CPP_PNGRU=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_PNGRU=\
-	"..\..\libpng\alloc.h"\
-	
-
-"$(INTDIR)\pngrutil.obj" : $(SOURCE) $(DEP_CPP_PNGRU) "$(INTDIR)"
+"$(INTDIR)\pngrutil.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "libpng - Win32 Debug"
-
-DEP_CPP_PNGRU=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	
-
-"$(INTDIR)\pngrutil.obj" : $(SOURCE) $(DEP_CPP_PNGRU) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\libpng\pngset.c
 
-!IF  "$(CFG)" == "libpng - Win32 Release"
-
-DEP_CPP_PNGSE=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_PNGSE=\
-	"..\..\libpng\alloc.h"\
-	
-
-"$(INTDIR)\pngset.obj" : $(SOURCE) $(DEP_CPP_PNGSE) "$(INTDIR)"
+"$(INTDIR)\pngset.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "libpng - Win32 Debug"
-
-DEP_CPP_PNGSE=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	
-
-"$(INTDIR)\pngset.obj" : $(SOURCE) $(DEP_CPP_PNGSE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\libpng\pngtrans.c
 
-!IF  "$(CFG)" == "libpng - Win32 Release"
-
-DEP_CPP_PNGTR=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_PNGTR=\
-	"..\..\libpng\alloc.h"\
-	
-
-"$(INTDIR)\pngtrans.obj" : $(SOURCE) $(DEP_CPP_PNGTR) "$(INTDIR)"
+"$(INTDIR)\pngtrans.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "libpng - Win32 Debug"
-
-DEP_CPP_PNGTR=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	
-
-"$(INTDIR)\pngtrans.obj" : $(SOURCE) $(DEP_CPP_PNGTR) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\libpng\pngwio.c
 
-!IF  "$(CFG)" == "libpng - Win32 Release"
-
-DEP_CPP_PNGWI=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_PNGWI=\
-	"..\..\libpng\alloc.h"\
-	
-
-"$(INTDIR)\pngwio.obj" : $(SOURCE) $(DEP_CPP_PNGWI) "$(INTDIR)"
+"$(INTDIR)\pngwio.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "libpng - Win32 Debug"
-
-DEP_CPP_PNGWI=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	
-
-"$(INTDIR)\pngwio.obj" : $(SOURCE) $(DEP_CPP_PNGWI) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\libpng\pngwrite.c
 
-!IF  "$(CFG)" == "libpng - Win32 Release"
-
-DEP_CPP_PNGWR=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_PNGWR=\
-	"..\..\libpng\alloc.h"\
-	
-
-"$(INTDIR)\pngwrite.obj" : $(SOURCE) $(DEP_CPP_PNGWR) "$(INTDIR)"
+"$(INTDIR)\pngwrite.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "libpng - Win32 Debug"
-
-DEP_CPP_PNGWR=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	
-
-"$(INTDIR)\pngwrite.obj" : $(SOURCE) $(DEP_CPP_PNGWR) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\libpng\pngwtran.c
 
-!IF  "$(CFG)" == "libpng - Win32 Release"
-
-DEP_CPP_PNGWT=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_PNGWT=\
-	"..\..\libpng\alloc.h"\
-	
-
-"$(INTDIR)\pngwtran.obj" : $(SOURCE) $(DEP_CPP_PNGWT) "$(INTDIR)"
+"$(INTDIR)\pngwtran.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "libpng - Win32 Debug"
-
-DEP_CPP_PNGWT=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	
-
-"$(INTDIR)\pngwtran.obj" : $(SOURCE) $(DEP_CPP_PNGWT) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\libpng\pngwutil.c
 
-!IF  "$(CFG)" == "libpng - Win32 Release"
-
-DEP_CPP_PNGWU=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_PNGWU=\
-	"..\..\libpng\alloc.h"\
-	
-
-"$(INTDIR)\pngwutil.obj" : $(SOURCE) $(DEP_CPP_PNGWU) "$(INTDIR)"
+"$(INTDIR)\pngwutil.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "libpng - Win32 Debug"
-
-DEP_CPP_PNGWU=\
-	"..\..\libpng\png.h"\
-	"..\..\libpng\pngconf.h"\
-	"..\..\libpng\zlib\zconf.h"\
-	"..\..\libpng\zlib\zlib.h"\
-	
-
-"$(INTDIR)\pngwutil.obj" : $(SOURCE) $(DEP_CPP_PNGWU) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 
 !ENDIF 

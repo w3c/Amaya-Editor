@@ -18,6 +18,11 @@ PRS MathMLP
 TRA MathMLT
 TRA -DXML MathMLT MathMLTX
 APP MathML.A
+STR GraphML
+PRS GraphMLP
+TRA GraphMLT
+TRA -DXML GraphMLT GraphMLTX
+APP GraphML.A
 STR TextFile
 PRS TextFILEP
 PRS -DPAGE TextFileP TextFilePP
