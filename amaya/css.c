@@ -547,8 +547,9 @@ void RemoveDocCSSs (Document doc)
 void  RemoveStyleSheet (char *url, Document doc, ThotBool disabled,
 			ThotBool removed, Element styleEl)
 {
-  CSSInfoPtr          css;
-  ThotBool            found;
+  CSSInfoPtr      css;
+  ThotBool        found;
+  DisplayMode     dispMode;
 
   css = CSSList;
   found = FALSE;
@@ -567,7 +568,16 @@ void  RemoveStyleSheet (char *url, Document doc, ThotBool disabled,
     }
 
   if (css != NULL)
-    UnlinkCSS (css, doc, disabled, removed);
+    {
+      /* Change the Display Mode to take into account the new presentation */
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (doc, NoComputedDisplay);
+      UnlinkCSS (css, doc, disabled, removed);
+      /* Restore the display mode */
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (doc, dispMode);
+    }
 }
 
 /*----------------------------------------------------------------------
