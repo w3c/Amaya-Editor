@@ -3712,6 +3712,7 @@ static char *ParseSVGFill (Element element, PSchema tsch,
 	  TtaSetStylePresentation (PRFillPattern, element, tsch, context, best);
 	}
       cssRule = SkipWord (cssRule);
+      return (cssRule);
     }
   else if (!strncasecmp (cssRule, "currentColor", 12))
     {
