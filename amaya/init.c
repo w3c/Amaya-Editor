@@ -3717,8 +3717,14 @@ static void	SetFileSuffix ()
 #endif
 {
   CHAR_T	      suffix[6];
-  STRING              filename;
+  CHAR_T          sep[2] = {0,0};
+  STRING          filename;
   int		      i, len;
+
+  if (SavePath && SavePath[0] != 0 && ustrchr (SavePath, TEXT('/')))
+    sep[0] = URL_SEP;
+  else
+    sep[0] = DIR_SEP;
 
   if (SavingDocument != 0 && SaveName[0] != EOS)
     {
@@ -3760,7 +3766,7 @@ static void	SetFileSuffix ()
 	  /* display the new filename in the dialog box */
 	  filename = TtaAllocString (MAX_LENGTH);
 	  ustrcpy (filename,SavePath );
-	  ustrcat (filename, DIR_STR);
+	  ustrcat (filename, sep);
 	  ustrcat (filename, SaveName);
 #     ifdef _WINDOWS
       sprintf (DocToOpen, filename);
@@ -3792,7 +3798,7 @@ STRING              data;
 
   if (typedata == STRING_DATA && data && ustrchr (data, TEXT('/')))
     sep = URL_SEP;
-  else 
+  else
     sep = DIR_SEP;
 
    val = (int) data;
