@@ -6809,7 +6809,7 @@ void HelpAmaya (Document document, View view)
    char                  localname[MAX_LENGTH];
 #ifdef AMAYA_DEBUG
    Element             el;
-   View                structView, altView, tocView;
+   View                structView, altView, linksView, tocView;
    FILE               *list;
 
   /* get the root element */
@@ -6837,13 +6837,13 @@ void HelpAmaya (Document document, View view)
      {
        strcpy (localname, TempFileDirectory);
        strcat (localname, DIR_STR);
-	   strcat (localname, "structview.debug");
+       strcat (localname, "structview.debug");
        list = fopen (localname, "w");
        TtaListView (document, structView, list);
        fclose (list);
        strcpy (localname, TempFileDirectory);
        strcat (localname, DIR_STR);
-	   strcat (localname, "structboxes.debug");
+       strcat (localname, "structboxes.debug");
        list = fopen (localname, "w");
        TtaListBoxes (document, structView, list);
        fclose (list);
@@ -6853,15 +6853,31 @@ void HelpAmaya (Document document, View view)
      {
        strcpy (localname, TempFileDirectory);
        strcat (localname, DIR_STR);
-	   strcat (localname, "altview.debug");
+       strcat (localname, "altview.debug");
        list = fopen (localname, "w");
        TtaListView (document, altView, list);
        fclose (list);
        strcpy (localname, TempFileDirectory);
        strcat (localname, DIR_STR);
-	   strcat (localname, "altboxes.debug");
+       strcat (localname, "altboxes.debug");
        list = fopen (localname, "w");
        TtaListBoxes (document, altView, list);
+       fclose (list);
+     }
+   linksView = TtaGetViewFromName (document, "Links_view");
+   if (linksView != 0 && TtaIsViewOpen (document, linksView))
+     {
+       strcpy (localname, TempFileDirectory);
+       strcat (localname, DIR_STR);
+       strcat (localname, "linksview.debug");
+       list = fopen (localname, "w");
+       TtaListView (document, linksView, list);
+       fclose (list);
+       strcpy (localname, TempFileDirectory);
+       strcat (localname, DIR_STR);
+       strcat (localname, "linksboxes.debug");
+       list = fopen (localname, "w");
+       TtaListBoxes (document, linksView, list);
        fclose (list);
      }
    tocView = TtaGetViewFromName (document, "Table_of_contents");
@@ -6869,13 +6885,13 @@ void HelpAmaya (Document document, View view)
      {
        strcpy (localname, TempFileDirectory);
        strcat (localname, DIR_STR);
-	   strcat (localname, "tocview.debug");
+       strcat (localname, "tocview.debug");
        list = fopen (localname, "w");
        TtaListView (document, tocView, list);
        fclose (list);
        strcpy (localname, TempFileDirectory);
        strcat (localname, DIR_STR);
-	   strcat (localname, "tocboxes.debug");
+       strcat (localname, "tocboxes.debug");
        list = fopen (localname, "w");
        TtaListBoxes (document, tocView, list);
        fclose (list);
