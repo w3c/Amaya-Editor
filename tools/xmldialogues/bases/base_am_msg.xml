@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base version="5" last_update="Tue Jun 27 16:18:27 CEST 2000">
+<base last_update="Tue Jun 27 16:26:36 CEST 2000" version="7">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -1371,7 +1371,11 @@
 	<message xml:lang="de">Querformat</message>
 	<message xml:lang="it">Paesaggio</message>
 </label>
+<label define="AM_ENABLE_FTP">
+	<message xml:lang="en">Enable FTP (experimental)</message>
+	<message xml:lang="fr">Support FTP (experimental)</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>
-<!--end of base --></base>
+</base>
