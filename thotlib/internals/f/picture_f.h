@@ -6,6 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void FreeAllPicCache ( void );
+extern void FreeAllPicCacheFromFrame ( int frame );
 extern void FreePixmap ( Pixmap pixmap );
 extern Picture_Report PictureFileOk ( char *fileName,
                                       int *typeImage );
@@ -41,6 +43,8 @@ extern unsigned char *GetScreenshot ( int frame,
 
 #else /* __STDC__ */
 
+extern void FreeAllPicCache (/* void */);
+extern void FreeAllPicCacheFromFrame (/* int frame */);
 extern void FreePixmap (/* Pixmap pixmap */);
 extern Picture_Report PictureFileOk (/* char *fileName,
                                         int *typeImage */);

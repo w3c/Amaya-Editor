@@ -19,6 +19,9 @@
 #include "typemedia.h"
 #include "appdialogue.h"
 
+#ifdef _GL
+#include "content.h"
+#endif /* _GL */
 
 #define THOT_EXPORT extern
 #include "appdialogue_tv.h"
@@ -34,6 +37,10 @@
 #include "font_f.h"
 #include "units_f.h"
 #include "exceptions_f.h"
+#ifdef _GL
+#include "appli_f.h"
+#include "contentapi_f.h"
+#endif /* _GL */
 
 
 /*----------------------------------------------------------------------
@@ -379,6 +386,104 @@ ThotBool SetPageBreakPosition (PtrAbstractBox pAb, int *page)
    /* ******  *page = LogicalValue (height, UnPoint, pAb, 0); *******/
    *page = height;
    return result;
+}
+
+
+
+void AddBoxTransformation (PtrAbstractBox pAb, int visibility, 
+			   int frame,
+			   int X_trans,
+			   int Y_trans,
+			   ThotBool Editable)
+{
+#ifdef _GLTRANSFORMATION
+  PtrBox              box1;
+  PtrBox              pChildBox;
+  PtrAbstractBox      pChildAb;
+  int                 x, y, doc, view;
+
+  /* Transforme origines absolues des boites filles en origines relative au
+     systeme de coordonnee englobant */
+  if (pAb->AbVisibility >= visibility)
+    {
+      if (pAb->AbBox != NULL)
+	pAb->AbBox->BxEditable = Editable;
+
+      pChildAb = pAb->AbFirstEnclosed;
+
+      while (pChildAb != NULL)
+	{
+	  pChildBox = pChildAb->AbBox;
+	  if (pChildBox != NULL)
+	    {
+		if (pChildBox->BxTransformationComputed == FALSE)
+		{
+		  pChildBox->BxTransformationComputed = TRUE;
+		  pChildBox->BxRelX = 0;
+		  pChildBox->BxRelY = 0;
+		}
+	      
+	      if ((X_trans || Y_trans) &&
+		  (pChildBox->BxRelX != X_trans && 
+		   pChildBox->BxRelY != Y_trans))
+		{
+		  /* pChildBox->BxComputed = TRUE; */
+		  
+		  pChildBox->BxXOrg += pChildBox->BxRelX - X_trans;
+		  pChildBox->BxYOrg += pChildBox->BxRelY - Y_trans; 
+		 
+		  if (pChildBox->BxType == BoSplit || 
+		      pChildBox->BxType == BoMulScript)
+		    {
+		      box1 = pChildBox->BxNexChild;
+		      while (box1 != NULL)
+			{
+			  box1->BxXOrg += pChildBox->BxRelX - X_trans;
+			  box1->BxYOrg += pChildBox->BxRelY - Y_trans;
+			  box1 = box1->BxNexChild;
+			}
+		    }
+		  
+		  pChildBox->BxRelX = X_trans;
+		  pChildBox->BxRelY = Y_trans;
+		}
+	      
+	      /* est-ce un systeme de coordonnee ?*/
+	      if (pChildAb->AbElement->ElSystemOrigin)
+		{
+		  FrameToView (frame, &doc, &view);
+		  
+		  x = pChildBox->BxXOrg;
+		  y = pChildBox->BxYOrg;
+		  
+		  if (x || y)
+		    TtaReplaceTransform ((Element) pChildAb->AbElement, 
+					 TtaNewBoxTransformTranslate ((float) x, 
+								      (float) y),
+					 doc);
+		  if (Editable &&
+		      pChildAb->AbElement->ElTransform == NULL)
+		    AddBoxTransformation (pChildAb, visibility, frame,
+					  X_trans + x, 
+					  Y_trans + y, 
+					  TRUE);
+		  else
+		    AddBoxTransformation (pChildAb, visibility, frame,
+					  X_trans + x , 
+					  Y_trans + y, 
+					  FALSE);
+		}
+	      else		
+		AddBoxTransformation (pChildAb, visibility, frame,
+				      X_trans, 
+				      Y_trans, 
+				      Editable);
+	    }
+	  /* passe au suivant */
+	  pChildAb = pChildAb->AbNext;
+	}
+    }
+#endif /* _GL */
 }
 
 /*----------------------------------------------------------------------

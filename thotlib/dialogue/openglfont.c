@@ -641,24 +641,24 @@ static void MakeBitmapGlyph (GL_font *font,
   FT_Glyph        Glyph;
   unsigned        char *data, *ptr;
   int             err;
-  register short unsigned int x,y,w,h,p;
+  register short unsigned int y,w,h,p;
 
   data = NULL;
   if (g != 0)
+    /*use of FT_LOAD_DEFAULT when quality will be ok*/
     if (!FT_Load_Glyph (font->face, 
 		       g, 
-		       FT_LOAD_NO_HINTING))
+			FT_LOAD_NO_HINTING)) 
       if (!FT_Get_Glyph (font->face->glyph, 
 			 &Glyph))
 	{
 	  /*Last parameter tells that we destroy font's bitmap
 	    So we MUST cache it    */
-	  
-	  err = FT_Glyph_To_Bitmap (&Glyph, 
-				    /*ft_render_mode_mono,*/
-				    ft_render_mode_normal,
-				    0, 
-				    1);
+	  if (ft_glyph_format_bitmap != Glyph->format)
+	    err = FT_Glyph_To_Bitmap (&Glyph, 
+				      ft_render_mode_normal,
+				      0, 
+				      1);
       
       
 	  if (err || ft_glyph_format_bitmap != Glyph->format)
@@ -680,9 +680,8 @@ static void MakeBitmapGlyph (GL_font *font,
 		      p = y = 0;
 		      ptr = data;	      
 		      while (y++ < h)
-			{		
-			  for(x = 0; x < w; ++x)
-			    *ptr++ = *(source->buffer + p + x);
+			{
+			  memcpy (ptr + p, source->buffer + p, w);
 			  p += source->pitch;
 			}	    
 		    }	      
@@ -720,9 +719,8 @@ static void BitmapAppend (unsigned char *data,
 			  unsigned int width, 
 			  register unsigned int height,
 			  unsigned int Width)
-{  
+{   
   register unsigned int i = 0;
-
 
   /* We position origin in the big bitmap*/
   data += y*Width + x;
@@ -732,6 +730,7 @@ static void BitmapAppend (unsigned char *data,
     while (height)
       {      
 	append_data -= width;
+
 	while (i < width)
 	  {
 	    if (*(append_data + i) > ANTIALIASINGDEPTH)

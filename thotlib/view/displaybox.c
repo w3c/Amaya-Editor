@@ -1551,7 +1551,6 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
       TtaFreeMemory (buffer);
     }
 }
-
 /*----------------------------------------------------------------------
   DisplayBorders displays the box borders.
   Parameters x, y, w, h give the clipping region.
@@ -1776,6 +1775,59 @@ void DisplayBorders (PtrBox box, int frame, int x, int y, int w, int h)
 	}
     }
 }
+#ifndef _GL
+/*---------------------------------------------------
+  DisplayViewBox :
+----------------------------------------------------*/
+void DisplayViewBox (PtrTransform Trans, int Width, int Height)
+{
+  return;
+}
+/*---------------------------------------------------
+  DisplayTransformation :
+----------------------------------------------------*/
+void DisplayTransformation (PtrTransform Trans, int Width, int Height)
+{
+  while (Trans)
+    {
+      switch (Trans->Type)
+	{
+	case PtElScale:
+	  break;
+	case PtElTranslate:
+	  break;
+	case PtElRotate:
+	  break;
+	case PtElMatrix:
+	  break;
+	case PtElSkewX:
+	  break;
+	case PtElSkewY:
+	  break;
+	default:
+	  break;	  
+	}
+      Trans = Trans->Next;
+    }
+
+}
+/*---------------------------------------------------
+  DisplayTransformationExit :
+----------------------------------------------------*/
+void DisplayTransformationExit ()
+{
+  
+}
+/*---------------------------------------------------
+  ComputeBoundingBox :
+----------------------------------------------------*/
+void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
+{
+   
+}
+
+#endif /*_GL*/
+
 
 /*----------------------------------------------------------------------
   DisplayBox display a box depending on its content.
@@ -1788,13 +1840,21 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
   int                x, y;
   int                xd, yd, width, height;
   ThotBool           selected;
+#ifdef _GL
 #ifdef _GLLIST
   ThotBool           AbstractBoxModified;
 #endif /* _GLLIST */
+#endif /*_GL*/
   
+
+#ifdef _GL
+  if (box->BxBoundinBoxComputed == FALSE)
+    {
+      ComputeBoundingBox (box, frame, xmin, xmax, ymin, ymax);       
+    }
+#endif /* _GL */
   pFrame = &ViewFrameTable[frame - 1];
   pAb = box->BxAbstractBox;
-
   x = ViewFrameTable[frame - 1].FrXOrg;
   y = ViewFrameTable[frame - 1].FrYOrg;
   xd = box->BxXOrg + box->BxLMargin;
@@ -1841,11 +1901,8 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 	    }
 	}
     } 
-
-
     
 #ifdef _GL
-  
 #ifdef _GLLIST
   AbstractBoxModified =
     
@@ -1860,8 +1917,9 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
       pAb->AbSizeChange ||
       pAb->AbAspectChange ||
       pAb->AbMBPChange ||
-      pAb->AbChange;
-    
+      pAb->AbChange 
+    ;
+  
   /*does box need to be recomputed 
     in a new display list*/
   if (!AbstractBoxModified &&
@@ -1885,8 +1943,8 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 #endif /*_GL*/
       
   if (pAb->AbVolume == 0 ||
-      (pAb->AbLeafType == LtPolyLine
-       && box->BxNChars == 1))
+      (pAb->AbLeafType == LtPolyLine && 
+       box->BxNChars == 1))
     {
       /* Empty */
       selected = (box == pFrame->FrSelectionBegin.VsBox &&

@@ -960,7 +960,7 @@ if test "$ac_test_CFLAGS" = set; then
   CFLAGS="$ac_save_CFLAGS"
 elif test $ac_cv_prog_cc_g = yes; then
   if test "$GCC" = yes; then
-    CFLAGS="-g"
+    CFLAGS="-g -O2"
   else
     CFLAGS="-g"
   fi
@@ -1130,7 +1130,7 @@ fi
 
 fi
 
-for ac_prog in mawk gawk nawk awk
+for ac_prog in gawk mawk nawk awk
 do
 # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -6202,7 +6202,7 @@ GTK_INCLUDES="`gtk-config --cflags`"
 
 GTK_LIBRARIES="`gtk-config --libs` -lgdk_imlib"
 
-GTK_OPTIONS=-D_GTK
+GTK_OPTIONS="-D_GTK -D_SVGANIM -D_SVGLIB"
   no_motif=yes
   no_graphic=yes
 else
@@ -6639,7 +6639,7 @@ echo "configure:6585: checking gcc3" >&5
 				else
 				   GL_LIBRARIES=" -lXmu -lXft -lfreetype -lGL -lGLU -lgtkgl"
 				fi				
-				GL_OPTIONS=-D_GL 
+				GL_OPTIONS="-D_GL"
 	  			no_motif=yes
 			    fi
 			fi

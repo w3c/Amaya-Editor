@@ -8,6 +8,12 @@
 
 extern ThotBool SetPageBreakPosition ( PtrAbstractBox pAb,
                                        int *page );
+extern void AddBoxTransformation ( PtrAbstractBox pAb,
+                                   int visibility,
+                                   int frame,
+                                   int X_trans,
+                                   int Y_trans,
+                                   ThotBool Editable );
 extern void AddBoxTranslations ( PtrAbstractBox pAb,
                                  int visibility,
                                  int frame,
@@ -25,6 +31,12 @@ extern void SetBoxToTranslate ( PtrAbstractBox pAb,
 
 extern ThotBool SetPageBreakPosition (/* PtrAbstractBox pAb,
                                          int *page */);
+extern void AddBoxTransformation (/* PtrAbstractBox pAb,
+                                     int visibility,
+                                     int frame,
+                                     int X_trans,
+                                     int Y_trans,
+                                     ThotBool Editable */);
 extern void AddBoxTranslations (/* PtrAbstractBox pAb,
                                    int visibility,
                                    int frame,

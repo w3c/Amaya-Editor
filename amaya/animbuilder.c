@@ -1,0 +1,178 @@
+
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 2002
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
+/*
+ * This module contains browsing functions to handle SVG animations.
+ *
+ * Author: Paul Cheyrou-lagreze (INRIA)
+ *	  
+ */
+
+/* Included headerfiles */
+#define THOT_EXPORT
+#include "amaya.h"
+#include "css.h"
+#include "trans.h"
+#include "view.h"
+#include "content.h"
+
+#include "SVG.h"
+#include "HTML.h"
+#include "HTMLactions_f.h"
+#include "init_f.h"
+#include "HTMLedit_f.h"
+#include "EDITimage_f.h"
+#include "SVGbuilder_f.h"
+#include "AHTURLTools_f.h"
+#include "html2thot_f.h"
+#include "styleparser_f.h"
+
+#include "SVGedit_f.h"
+#include "anim_f.h"
+
+#ifdef _SVGANIM
+
+static int *get_int_attribute_from_el (Element el, int Attribut_Type)
+{
+  AttributeType attrType;
+  Attribute attr = NULL;
+  ElementType elType = TtaGetElementType (el);
+  int *result;
+  
+  result = TtaGetMemory (sizeof (int));
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = Attribut_Type;  
+  attr = TtaGetAttribute (el, attrType);
+  *result = TtaGetAttributeValue(attr);
+  
+  return result;
+}
+
+static char *get_char_attribute_from_el (Element el, int Attribut_Type)
+{
+  int length;
+  char *text = NULL, *ptr;
+  AttributeType attrType;
+  Attribute attr = NULL;
+  ElementType elType = TtaGetElementType (el);
+  
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = Attribut_Type;
+  attr = TtaGetAttribute (el, attrType);
+  length = TtaGetTextAttributeLength (attr);
+  if (length == 0)
+    return NULL;
+  text = TtaGetMemory (length+1);
+  if (text) 
+    {
+      /* get the value of the x attribute */
+      TtaGiveTextAttributeValue (attr, text, &length);
+      /* Parse the attribute value 
+	 (a number followed by a unit) */
+      ptr = text;
+      /*TtaFreeMemory (text);*/
+    }
+  return text;
+}
+
+
+#ifdef _GLANIM
+
+#ifndef _WINDOWS
+#include "xpm/animplay.xpm"
+#include "xpm/animstop.xpm"
+#endif /* _WINDOWS */
+
+void Anim_Play (Document document, View view)
+{
+ TtaPlay (document, view);
+}
+
+static Pixmap   iconAnim;
+static Pixmap   iconAnimNo;
+static int      AnimButton;
+
+#endif /*_GLANIM*/
+
+#endif /*_SVGANIM*/
+
+void AddAnimPlayButton (Document doc, View view)
+{
+#ifdef _GLANIM
+#ifdef _SVGANIM
+
+#ifndef _WINDOWS
+  iconAnim = TtaCreatePixmapLogo (animplay_xpm);
+  iconAnimNo = TtaCreatePixmapLogo (animstop_xpm);
+#endif /* _WINDOWS */
+
+  AnimButton = TtaAddButton (doc,
+ 			     1,  
+			     (ThotIcon)iconAnim,
+			     Anim_Play,
+			     "Anim_Play",
+			     TtaGetMessage (AMAYA, AM_BUTTON_ANIM),
+			     TBSTYLE_BUTTON, TRUE);
+#endif /*_SVGANIM*/
+#endif /*_GLANIM*/
+}
+
+void register_animated_element (Element animated)
+{
+#ifdef _SVGANIM
+  void *anim_info;
+  ElementType elType;
+  double start, duration;
+  
+  anim_info = TtaNewAnimInfo ();
+  Read_time_info (animated, &start, &duration);
+  TtaSetAnimationTime (anim_info, start, duration);
+  elType = TtaGetElementType (animated);
+  switch (elType.ElTypeNum)
+    {
+      
+    case SVG_EL_animateMotion :
+      TtaAddAnimFrom ((void *) get_char_attribute_from_el (animated, SVG_ATTR_path_), 
+		    anim_info); 
+      TtaSetAnimTypetoMotion (anim_info);
+      break;      
+
+    case SVG_EL_animateColor : 
+      TtaAddAnimFrom ((void *) get_char_attribute_from_el (animated, SVG_ATTR_from), 
+		      anim_info);
+      TtaAddAnimTo ((void *) get_char_attribute_from_el (animated, SVG_ATTR_to_), 
+		    anim_info);
+      TtaSetAnimTypetoColor (anim_info);
+      break;      
+
+    case SVG_EL_animateTransform :
+      TtaAddAnimAttrName ((void *) get_int_attribute_from_el (animated, SVG_ATTR_type_), 
+			  anim_info);
+      TtaAddAnimFrom ((void *) get_char_attribute_from_el (animated, SVG_ATTR_from), 
+		      anim_info);
+      TtaAddAnimTo ((void *) get_char_attribute_from_el (animated, SVG_ATTR_to_), 
+		    anim_info);
+      TtaSetAnimTypetoTransform (anim_info);
+      break;
+
+    case SVG_EL_animate : 
+      TtaAddAnimAttrName ((void *) get_char_attribute_from_el (animated, SVG_ATTR_attributeName_), 
+			  anim_info);
+      TtaAddAnimFrom ((void *) get_char_attribute_from_el (animated, SVG_ATTR_from), 
+		      anim_info);
+      TtaAddAnimTo ((void *) get_char_attribute_from_el (animated, SVG_ATTR_to_), 
+		    anim_info);
+      TtaSetAnimTypetoAnimate (anim_info);
+      break;
+    case SVG_EL_set_ : 	
+      TtaSetAnimTypetoSet (anim_info);
+      break;
+    }
+  TtaAppendAnim (animated, anim_info);
+#endif /* _SVGANIM */
+}

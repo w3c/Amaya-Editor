@@ -82,6 +82,7 @@ static PtrDocument  OldDocMsgSelect;
 #include "appdialogue_f.h"
 #include "inites_f.h"
 #include "uconvert_f.h"
+#include "picture_f.h"
 
 #ifdef _WINDOWS
 #define URL_TXTZONE     0
@@ -491,6 +492,17 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
    /* need to recompute the content of the window */
    RebuildConcreteImage (frame);
 #else /*_GL*/
+<<<<<<< appli.c
+   GL_MakeCurrent (frame);	
+   GLResize (width, height, 0 ,0);
+   /*Clear (frame, width, height, 0, 0);*/
+   GL_ActivateDrawing (frame);
+   /* need to recompute the content of the window */
+   RebuildConcreteImage (frame);    
+   GL_DrawAll ();
+   GL_Swap (frame);
+   glFinish();
+=======
    if (GL_prepare (frame))
    {
      GLResize (width, height, 0 ,0);
@@ -501,6 +513,7 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
       RedrawFrameBottom (frame, 0, NULL);
 	  GL_realize (frame);
    }
+>>>>>>> 1.367
 #endif/*_GL*/
    /* recompute the scroll bars */
    UpdateScrollbars (frame);
@@ -603,25 +616,7 @@ void FrameRedraw (int frame, Dimension width, Dimension height)
 
 #ifdef _GTK
 #ifdef _GL
-#ifdef GL_ANIM
-/*---------------------------------------------------------------------
- Idle_draw_GTK :
- Animation handling : 
- A timer is preferred to an idle function as it gives more control on
- animation
- (so I guess the function name is wrong...)
- ----------------------------------------------------------------------*/
-gboolean Idle_draw_GTK (GtkWidget *widget)
-{
-  int   frame;
-      
-  /* permits user to do dialog action*/
-  while (gtk_events_pending())  
-    gtk_main_iteration();         
-  frame = (int ) gtk_object_get_data (GTK_OBJECT (widget), "frame");
-  GL_DrawAll (widget, frame);      
-  return TRUE;
-}
+
 /*----------------------------------------------------------------------
   DrawGL :
   After all transformation Draw all canvas
@@ -629,16 +624,16 @@ gboolean Idle_draw_GTK (GtkWidget *widget)
   the pbox tree rendering by redrawframebottom with another function
   (use of pAb->change ...)
   ----------------------------------------------------------------------*/
-gboolean GL_DrawCallback (ThotWidget widget, GdkEventExpose *event, gpointer data)
+gboolean GL_DrawCallback (ThotWidget widget, 
+			  GdkEventExpose *event, 
+			  gpointer data)
 {
-  int nframe;
+  int frame;
 
-  nframe = (int ) gtk_object_get_data (GTK_OBJECT (widget), "frame");
-  if (nframe > 0 && nframe <= MAX_FRAME)
-     GL_DrawAll (widget, nframe); 
+  frame = (int ) gtk_object_get_data (GTK_OBJECT (widget), "frame");
+  FrameTable[frame].DblBuffNeedSwap = TRUE;
   return TRUE;
 }
-#endif /*GL_ANIM*/
 /*----------------------------------------------------------------------
   GL_FocusIn :
   Manage Drawing Timer upon Frame focus by user
@@ -700,6 +695,15 @@ gboolean  GL_Init (ThotWidget widget,
 	    InitDialogueFonts ("");
 	    dialogfont_enabled = TRUE;
 	  } 
+
+      /* gtk_idle_add (GTK_SIGNAL_FUNC (GL_DrawAll),  */
+      /* 		    NULL);  */
+
+      /* gtk_timeout_add (5,  */
+      /*                        GL_DrawAll,  */
+      /*                       (gpointer)   NULL);  */
+
+
       return TRUE;
     }
   else
@@ -749,14 +753,20 @@ gboolean FrameResizedGTK (GtkWidget *widget,
   Dimension           width, height;
 
   frame = (int )data;
-  width = widget->allocation.width;
-  height = widget->allocation.height;
+
+  width = event->width;
+  height = event->height;
+
+  /* width = widget->allocation.width; */
+  /*   height = widget->allocation.height; */
+
+  FrameTable[frame].FrWidth = width;
+  FrameTable[frame].FrHeight = height;
+  
   if ((width <= 0) || 
       (height <= 0))
     return TRUE;
-  if (FrameTable[frame].FrWidth == width && 
-      FrameTable[frame].FrHeight == height)
-     return TRUE;
+
   if (widget)
     if (GL_prepare (frame))
       {
@@ -769,8 +779,10 @@ gboolean FrameResizedGTK (GtkWidget *widget,
 	FrameRedraw (frame, width, height);
 	glFlush();
 	glFinish ();
-   FrameTable[frame].DblBuffNeedSwap = TRUE;
-	/*GL_Swap (frame);*/
+	GL_Swap (frame);
+	FrameTable[frame].DblBuffNeedSwap = TRUE;
+	while (gtk_events_pending ()) 
+	  gtk_main_iteration ();
       }
   return TRUE;
 }
@@ -915,7 +927,7 @@ void WIN_ChangeVScroll (int frame, int reason, int value)
 #ifdef _GL
 	GL_prepare (frame);
 	GL_DrawAll (NULL, frame);
-#endif /*_GL2*/
+#endif /*_GL*/
        break;
      } 
 }
@@ -1836,8 +1848,8 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
     if (frame >= 0 && frame <= MAX_FRAME)
       {
 #ifdef _GL 
-      GL_DestroyFrame (frame);	
-	  GL_Win32ContextClose (frame, hwnd);
+	GL_DestroyFrame (frame);	
+	GL_Win32ContextClose (frame, hwnd);
 #endif /*_GL*/
 	GetDocAndView (frame, &pDoc, &view);
 	if (pDoc && view)
@@ -2714,7 +2726,10 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  FrameToView (frame, &document, &view);
 	  if ((event->state & GDK_CONTROL_MASK) != 0)
 	    {
-	      ZoomIn (document, view);	      
+	      ;
+#ifdef _ZOOMSCROLL
+	      ZoomIn (document, view);	   
+#endif /* _ZOOMSCROLL    */
 	    }
 	  else
 	    { 
@@ -2728,7 +2743,10 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  FrameToView (frame, &document, &view); 
 	  if ((event->state & GDK_CONTROL_MASK) != 0)
 	    {
-	      ZoomOut (document, view);	      
+	      ;
+#ifdef _ZOOMSCROLL
+	      ZoomOut (document, view);	   
+#endif /* _ZOOMSCROLL    */      
 	    }
 	  else
 	    {
@@ -3494,7 +3512,7 @@ void UpdateScrollbars (int frame)
 #else /*_GTK*/
  
 
-  if ((width + vscroll->allocation.width) >= l && 
+  if ((width + vscroll->allocation.width) > l && 
       x == 0 && 
       width > 60)
     {
@@ -3527,7 +3545,7 @@ void UpdateScrollbars (int frame)
 	  }  
       }
   
-  if ((height + hscroll->allocation.height) >= h && 
+  if ((height + hscroll->allocation.height) > h && 
       y == 0)
     {
       if (GTK_WIDGET_VISIBLE(GTK_WIDGET (vscroll)))

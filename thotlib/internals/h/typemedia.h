@@ -187,6 +187,17 @@ typedef struct _Box
   int             BxIndChar;	/* 0 or position of the split box */
   int             BxXOrg;	/* X origin from the root */
   int             BxYOrg;	/* Y origin from the root */
+#ifdef _GL
+  int             BxRelX; 
+  int             BxRelY; 
+
+  int             BxClipX; 
+  int             BxClipY; 
+
+  int             BxClipW;
+  int             BxClipH;
+  
+#endif /* _GL */
   int             BxHeight;	        /* Box height including margins */
   int             BxWidth;	        /* Box width including margins */
 
@@ -205,9 +216,9 @@ typedef struct _Box
   int             BxLPadding;	        /* Left Padding */
   int             BxBPadding;	        /* Bottom Padding */
   int             BxRPadding;	        /* Right Padding */
-
 #ifdef _GL
-  int             DisplayList;
+  int             DisplayList;          /*Video Memory index
+					  of precomputed visual*/
 #endif /*_GL*/
   
   int             BxHorizRef;	        /* Current base */
@@ -241,7 +252,15 @@ typedef struct _Box
   ThotBool	  BxContentWidth;	/* Real width is the content width */
   ThotBool        BxShadow;		/* Characters are showed as '*' */
   ThotBool        BxFill;	        /* The box has borders or background */
-  ThotBool        BxDisplay;	        /* The box has borders or background */
+  ThotBool        BxDisplay;	        /* The box has borders or
+					   background */
+  
+#ifdef _GL
+  ThotBool        BxEditable;           /* If Box is Rotated or Scaled,
+					   prevents edition*/
+  ThotBool        BxBoundinBoxComputed;
+  ThotBool        BxTransformationComputed;
+#endif /* _GL */
   int		  BxRuleHeigth;         /* Content height or minimum */
   int		  BxRuleWidth;	        /* Content width or minimum */
   PtrTextBuffer   BxBuffer;	        /* Pointer on the buffer list */

@@ -42,6 +42,9 @@
 #include "ustring_f.h"
 #include "views_f.h"
 
+#ifdef _GL
+#include "animbox_f.h"
+#endif /* _GL */
 
 #define MaxAsc 100
 static char BoxTypeName[MAX_TXT_LEN];
@@ -201,6 +204,9 @@ void FreeAbView (PtrAbstractBox pAb, int frame)
       /* dechaine pAb de son element */
       if (pAb->AbElement != NULL)
 	{
+#ifdef _GLANIM
+	  AnimatedBoxDel (pAb->AbElement);	  
+#endif/*  _GLANIM */
 	  if (pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1] == pAb)
 	    {
 	      if (pAb->AbNext != NULL)

@@ -353,6 +353,52 @@ extern void TtaAppendPathSeg (Element element, PathSegment segment,
 			      Document document);
 
 /*----------------------------------------------------------------------
+   TtaTransform
+  ----------------------------------------------------------------------*/
+extern void TtaInsertTransform (Element element, void *transform, 
+				 Document document);
+extern void TtaReplaceTransform (Element element, void *transform, 
+				 Document document);
+extern void TtaAppendTransform (Element element, void *transform, 
+				Document document);
+
+extern void *TtaNewTransformScale (float x_scale, float y_scale, ThotBool viewbox);
+extern void *TtaNewTransformTranslate (float x, float y, ThotBool viewbox);
+extern void *TtaNewTransformRotate (float angle, float x_scale, float y_scale);
+extern void *TtaNewTransformSkewX (float factor);
+extern void *TtaNewTransformSkewY (float factor);
+extern void *TtaNewTransformMatrix (float a, float b, float c,
+				    float d, float e, float f);
+
+extern void TtaFreeTransform (void *transform);
+
+extern void TtaSetElCoordinateSystem (Element element);
+
+extern void TtaPlay (Document doc, View view);
+
+
+/*----------------------------------------------------------------------
+   TtaAnim
+  ----------------------------------------------------------------------*/
+
+extern void *TtaNewAnimInfo ();
+
+extern void TtaAppendAnim (Element element, void *anim);
+
+extern void TtaSetAnimationTime (void *anim_info, double start, double duration);
+
+extern void TtaAddAnimTo (void *info, void *anim);
+extern void TtaAddAnimFrom (void *info, void *anim);
+extern void TtaAddAnimAttrName (void *info, void *anim);
+
+extern void TtaSetAnimTypetoSet (void *anim);
+
+extern void TtaSetAnimTypetoColor (void *anim);
+extern void TtaSetAnimTypetoAnimate (void *anim);
+extern void TtaSetAnimTypetoTransform (void *anim);
+extern void TtaSetAnimTypetoMotion (void *anim);
+     
+/*----------------------------------------------------------------------
    TtaCopyPage
 
    Copies the page element source into the page element destination.

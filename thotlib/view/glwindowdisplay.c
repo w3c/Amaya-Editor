@@ -21,6 +21,7 @@
 #include "typemedia.h"
 #include "frame.h"
 #include "appdialogue.h"
+#include "picture.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -45,6 +46,8 @@
 #include "units_f.h"
 #include "xwindowdisplay_f.h"
 #include "frame_f.h"
+#include "animbox_f.h"
+#include "picture_f.h"
 
 #define ALLOC_POINTS    300
 
@@ -76,10 +79,11 @@
   performance bottleneck...*/
 #define DCOS(A) (cos (A))
 #define DSIN(A) (sin (A))
+#define DTAN(A) (tan (A))
+#define DACOS(A) (acos (A))
 #define DACOS(A) (acos (A))
 
-#define A_DEGREE 0.017453293
-
+/*#define A_DEGREE 0.017453293*/
 #define A_DEGREE ((M_PI / 24))
 
 /* Precision of a degree/1 
@@ -104,11 +108,9 @@
 
 #ifdef _GTK
 #include <gtkgl/gtkglarea.h>
-#ifdef _PCLDEBUGTIME
 /* Unix timer */
 #include <unistd.h>
 #include <sys/timeb.h>
-#endif /*_PCLDEBUG*/
 /*#define GLU_CALLBACK_CAST (void (*)())*/
 #else /*WINDOWS*/
 #include <windows.h>
@@ -150,7 +152,7 @@ ThotBool GL_Err()
 
   if((errCode = glGetError()) != GL_NO_ERROR)
     {
-      /*g_print ("\n%s :", (char*) gluErrorString(errCode));*/
+      g_print ("\n%s :", (char*) gluErrorString(errCode));
       return TRUE;
     }
   else 
@@ -791,7 +793,7 @@ static void tesse(ThotPoint *contours, int contour_cnt, ThotBool only_countour)
       SAddedVertex.next = 0;
       gluTessCallback (tobj, GLU_TESS_COMBINE, 
 		      (void (CALLBACK*)()) myCombine);
-      gluTessBeginPolygon( tobj, NULL );
+      gluTessBeginPolygon (tobj, NULL);
       gluTessBeginContour (tobj);
       for (i = 0; i < contour_cnt; i++) 
 	{ 
@@ -836,7 +838,7 @@ static void tesse(ThotPoint *contours, int contour_cnt, ThotBool only_countour)
 #define SLICES_SIZE 361
 
 
-void GL_DrawArc (int x, int y, 
+void GL_DrawArc2 (int x, int y, 
 		 int w, int h, 
 		 int startAngle, int sweepAngle, 
 		 ThotBool filled)
@@ -846,15 +848,22 @@ void GL_DrawArc (int x, int y,
   PRECISION angleOffset;
   PRECISION sinCache[SLICES_SIZE];
   PRECISION cosCache[SLICES_SIZE];
+  PRECISION y_cache[SLICES_SIZE];
+  PRECISION x_cache[SLICES_SIZE];
   PRECISION angle;
   PRECISION fastx, fasty, width, height;
 
 
+  width  = ((PRECISION)w) / 2;
+  height = ((PRECISION)h) / 2;
+  fastx  = ((PRECISION)x) + width; 
+  fasty  = ((PRECISION)y) + height;
+
 
   if (w < 10 && h < 10)
-	slices = 36;
-else
-	slices = SLICES;
+    slices = 36;
+  else
+    slices = SLICES;
 
   startAngle = startAngle / 64;
   sweepAngle = sweepAngle / 64;
@@ -864,15 +873,8 @@ else
   for (i = 0; i <= slices; i++) 
     {
       angle = angleOffset + ((M_PI * sweepAngle) / 180.0) * i / slices;
-      sinCache[i] = DSIN(angle);
       cosCache[i] = DCOS(angle);
-    }
-
-  for (i = 0; i <= slices; i++) 
-    {
-      angle = angleOffset + ((M_PI * sweepAngle) / 180.0) * i / slices;
       sinCache[i] = DSIN(angle);
-      cosCache[i] = DCOS(angle);
     }
 
   if (sweepAngle == 360.0) 
@@ -881,72 +883,53 @@ else
       cosCache[slices] = cosCache[0];
     }
 
-  width  = ((PRECISION)w) / 2;
-  height = ((PRECISION)h) / 2;
-  fastx  = ((PRECISION)x) + width;
-  fasty  = ((PRECISION)y) + height;
+  
+  for (i = 0; i <= slices; i++)
+    {	
+      x_cache[i] = fastx + (width * cosCache[i]);
+      y_cache[i] = fasty - (height * sinCache[i]);
+    }
 
- if (filled)
+  if (filled)
     {
       glBegin (GL_TRIANGLE_FAN);
       /* The center */
       glVertex2d (fastx, fasty);
-	  for (i = 0; i <= slices; i++)
-	 {
-	   glVertex2d (fastx + width * sinCache[i], 
-		          fasty + height * cosCache[i]);
-	 }
-  glEnd();
+      for (i = 0; i <= slices; i++)
+	{
+	  glVertex2d (x_cache[i], 
+		      y_cache[i]);
+	}
+      glEnd();
     }
-  else
-    {
-     glDisable (GL_BLEND); 
-      /*glBegin (GL_LINE_STRIP);*/
-      /*glBegin (GL_POLYGON);*/ 
-	for (i = 0; i <= slices; i++)
-	 {	
-	   sinCache[i] = fastx + width * sinCache[i]; 
-	   cosCache[i] = fasty + height * cosCache[i];
-	 }
-	  glBegin (GL_LINES);
-		slices--;
-	  for (i = 0; i <= slices; i++)
-	 {
-		glVertex2d (sinCache[i], 
-		            cosCache[i]);
-
-	    glVertex2d (sinCache[i+1], 
-		            cosCache[i+1]);
-	 }
-  glEnd();
-
-    }
-       
 
   if (!filled)
-    glEnable (GL_BLEND);
+    {
+      
+      glPolygonMode(GL_FRONT, GL_LINE);
+      glBegin (GL_POLYGON); 
+      slices--;
+      for (i = 0; i <= slices; i++)
+	{
+	  glVertex2d (x_cache[i], 
+		      y_cache[i]);
+	}
+      glEnd();
+      glPolygonMode(GL_FRONT, GL_FILL);
+    }
+  
 }
-
-
-
-
-
-
-
-
 /*----------------------------------------------------------------------
  GL_DrawArc : receive angle at 64* their values...
  but
   ----------------------------------------------------------------------*/
-void GL_DrawArc2 (int x, int y, 
+void GL_DrawArc3 (int x, int y, 
 		 int w, int h, 
 		 int angle_int1, int angle_int2, 
 		 ThotBool filled)
 {  
   PRECISION angle, anglefinal, angle1, angle2;
   PRECISION fastx, fasty, width, height;
-
-  PRECISION Testx, Testy;
 
   /*The formula is simple :
     y + (h/2)*(1 - sin (DEG_TO_RAD (Angle/64)))
@@ -971,11 +954,11 @@ void GL_DrawArc2 (int x, int y,
     }
   else
     {
-     /*  glDisable (GL_BLEND); */
-      glBegin (GL_LINE_STRIP);
+      glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
+      glBegin (GL_POLYGON); 
     }
   
-  if (1 || w == h)
+  if (w == h)
     {
       width  = ((PRECISION)w) / 2;
       height = ((PRECISION)h) / 2;
@@ -986,7 +969,7 @@ void GL_DrawArc2 (int x, int y,
       while (anglefinal <= angle)
 	{
 	  glVertex2d (fastx + (width * DSIN(angle)),
-		          fasty +  (height * DCOS(angle)));
+		      fasty +  (height * DCOS(angle)));
 	  angle -= A_DEGREE;
 	}
       glVertex2d (fastx + (width * DSIN(angle)),
@@ -1014,8 +997,102 @@ void GL_DrawArc2 (int x, int y,
   glEnd();
 
   if (!filled)
-    glEnable (GL_BLEND);
+    glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
 }
+
+/*----------------------------------------------------------------------
+ GL_DrawArc : receive angle at 64* their values...
+ but
+  ----------------------------------------------------------------------*/
+void GL_DrawArc (int x, int y, int w, int h, int angle1, int angle2, ThotBool filled)
+
+
+
+{  
+  float angle, anglefinal, fastx, fasty;
+
+
+  /*The formula is simple :
+       y + (h/2)*(1 - sin (DEG_TO_RAD (Angle/64)))
+       x + (w/2)*(1 + cos (DEG_TO_RAD (Angle/64)))
+    But if we put all those calculation in the while
+    Cpu will overheat with 5 *,  2 / and 2 +!!!
+    That's why there is those preliminary steps */
+
+
+  angle2 = angle1 + angle2;
+  angle1 = angle1 / 64;
+  angle2 = angle2 / 64;
+  w =  w / 2;
+  h =  h / 2;
+  fastx = x + w;
+  fasty = y + h;
+  
+  angle =  DEG_TO_RAD (angle2);
+  anglefinal = DEG_TO_RAD (angle1);
+  /* A good optimization is that
+   cos(A)*cos(B)=(cos(A+B)+cos(A-B))/2 
+   based on trigo decomposition
+   sin(A+B)=sin A cos B + cos A sin B
+   sin(A-B)=sin A cos B - cos A sin B
+   cos(A+B)=cos A cos B - sin A sin B
+   cos(A-B)=cos A cos B + sin A sin B
+  it could eliminate MULs... 
+  but need to calculate cos and sin more times
+  perhaps precalculated tables...*/  
+  if (!filled && 0)
+    {
+      angle =  DEG_TO_RAD (angle2);
+      glBegin (GL_POINTS);
+      /* another one is to extend the use of Vertex array...
+	 but not only for here... for all computations*/
+      while (angle1 <= angle2)
+	{
+	  glVertex2f ( fastx + w * DCOS(angle),
+		       fasty - h * DSIN(angle));
+	  angle -= A_DEGREE;
+	  angle2--;
+	}
+      glVertex2f ( fastx + w * DCOS (angle),
+		   fasty - h * DSIN (angle));
+      glEnd();
+    }
+  angle = DEG_TO_RAD (angle2);
+  if (filled)
+    {
+      glBegin (GL_TRIANGLE_FAN);
+      /* The center */
+      glVertex2f (fastx, fasty);
+    }
+  else
+    {
+      glDisable (GL_BLEND);
+      /* glDisable (GL_LINE_SMOOTH);  */
+      /* glPolygonMode (GL_FRONT, GL_LINE); */
+      /* glBegin (GL_POLYGON);   */
+      glBegin (GL_LINE_STRIP); 
+    }
+  while (angle1 <= angle2)
+
+    {
+      glVertex2f ( fastx + w * DCOS(angle),
+		   fasty - h * DSIN(angle));
+      angle -= A_DEGREE;
+      angle2--;
+    }
+  glVertex2f ( fastx + w * DCOS (angle),
+	       fasty - h * DSIN (angle));
+  glEnd();
+  if (!filled)
+    {
+      glEnable (GL_BLEND); 
+      /* glEnable (GL_LINE_SMOOTH);  */
+      /*     glPolygonMode (GL_FRONT, GL_FILL);  */
+    }
+  
+}
+
+
 /*----------------------------------------------------------------------
    GL_DrawLines
    (Not static because used in geom.c)
@@ -1056,6 +1133,7 @@ void GL_DrawLines (ThotPoint *point, int npoints)
   ----------------------------------------------------------------------*/
 void GL_DrawPolygon (ThotPoint *points, int npoints)
 {
+      
   if (0 && Software_Mode)
     {
       glEnable (GL_POLYGON_SMOOTH); 
@@ -1309,6 +1387,374 @@ int CharacterWidth (int c, PtrFont font)
     }
   return l;
 }
+#ifdef _GLTRANSFORMATION
+/*---------------------------------------------------
+  DisplayBoxTransformation :
+----------------------------------------------------*/
+static void DisplayBoxTransformation (PtrTransform Trans)
+{
+  
+  while (Trans)
+    {
+      switch (Trans->Type)
+	{
+	case  PtElBoxTranslate:
+	  glTranslatef (Trans->XScale, 
+			Trans->YScale, 
+			0);
+	  break;
+	default:
+	  break;	  
+	}
+      Trans = Trans->Next;
+    }
+}
+/*---------------------------------------------------
+  DisplayViewBoxTransformation
+----------------------------------------------------*/
+static void DisplayViewBoxTransformation (PtrTransform Trans, int Width, int Height)
+{
+  
+  while (Trans)
+    {
+      switch (Trans->Type)
+	{
+	case  PtElviewboxScale:
+	  glScaled ((double) (Width / Trans->XScale), 
+		    (double) (Height / Trans->YScale), 
+		    0);
+	  break;
+	case PtElviewboxTranslate:
+	  glTranslatef (Trans->XScale, 
+			Trans->YScale, 
+			0);
+	  break;
+	default:
+	  break;	  
+	}
+      Trans = Trans->Next;
+    }
+}
+#endif /* _GLTRANSFORMATION */
+/*---------------------------------------------------
+  DisplayTransformation :
+  Modify the current transformation matrix
+  this is a GL Matrix         this is SVG Matrix
+   |a0  a4  a8   a12|        | a d f |
+   |		    |        | b c d |
+   |a1  a5  a9   a13|        | 0 0 1 |
+   |		    |
+   |a2  a6  a10  a14|
+   |		    |
+   |a3  a7  a11  a15|
+----------------------------------------------------*/
+void DisplayTransformation (PtrTransform Trans, int Width, int Height)
+{
+#ifdef _GLTRANSFORMATION
+  double trans_matrix[16];
+  
+  
+  glPushMatrix ();
+  DisplayBoxTransformation (Trans);
+  DisplayViewBoxTransformation (Trans, Width, Height);
+  while (Trans)
+    {
+      switch (Trans->Type)
+	{
+	case  PtElScale:
+	  glScalef (Trans->XScale, 
+		    Trans->YScale, 
+		    0);
+	  break;
+	case PtElTranslate:
+	  glTranslatef (Trans->XScale, 
+			Trans->YScale, 
+			0);
+	  break;
+	case PtElRotate:
+	  glTranslatef (Trans->XRotate, 
+			Trans->YRotate, 
+			0);
+	  glRotatef (Trans->Angle, 0, 0, 1);
+	  glTranslatef (-Trans->XRotate, 
+			-Trans->YRotate, 
+			0);
+	  break;
+	case PtElMatrix:
+	  /* Matrix 
+	   GlMatrix is 4*4
+	   Svg is 3*3 but 
+	   only 2*3 is specified */
+	  trans_matrix[0] = Trans->AMatrix;
+	  trans_matrix[1] = Trans->BMatrix;
+	  trans_matrix[2] = 0;
+	  trans_matrix[3] = 0;
+
+	  trans_matrix[4] = Trans->CMatrix;
+	  trans_matrix[5] = Trans->DMatrix;
+	  trans_matrix[6] = 0;
+	  trans_matrix[7] = 0;
+
+	  trans_matrix[8] = Trans->EMatrix;
+	  trans_matrix[9] = Trans->FMatrix;
+	  trans_matrix[10] = 1;
+	  trans_matrix[11] = 0;
+
+	  trans_matrix[12] = 0;
+	  trans_matrix[13] = 0;
+	  trans_matrix[14] = 0;
+	  trans_matrix[15] = 1;
+
+	  glMultMatrixd (trans_matrix);
+	  break;
+	case PtElSkewX:
+	  /* SkewX */
+	  trans_matrix[0] = 1;
+	  trans_matrix[1] = 0;
+	  trans_matrix[2] = 0;
+	  trans_matrix[3] = 0;
+
+	  trans_matrix[4] = DTAN (DEG_TO_RAD(Trans->Factor));
+	  trans_matrix[5] = 1;
+	  trans_matrix[6] = 0;
+	  trans_matrix[7] = 0;
+
+	  trans_matrix[8] = 0;
+	  trans_matrix[9] = 0;
+	  trans_matrix[10] = 1;
+	  trans_matrix[11] = 0;
+
+	  trans_matrix[12] = 0;
+	  trans_matrix[13] = 0;
+	  trans_matrix[14] = 0;
+	  trans_matrix[15] = 1;
+
+	  glMultMatrixd (trans_matrix);
+	  break;
+	case PtElSkewY:
+	  /* SkewY */
+	  trans_matrix[0] = 1;
+	  trans_matrix[1] = DTAN (DEG_TO_RAD(Trans->Factor));
+	  trans_matrix[2] = 0;
+	  trans_matrix[3] = 0;
+
+	  trans_matrix[4] = 0;
+	  trans_matrix[5] = 1;
+	  trans_matrix[6] = 0;
+	  trans_matrix[7] = 0;
+
+	  trans_matrix[8] = 0;
+	  trans_matrix[9] = 0;
+	  trans_matrix[10] = 1;
+	  trans_matrix[11] = 0;
+
+	  trans_matrix[12] = 0;
+	  trans_matrix[13] = 0;
+	  trans_matrix[14] = 0;
+	  trans_matrix[15] = 1;
+
+	  glMultMatrixd (trans_matrix);
+	  break;	  
+	default:
+	  break;
+	}
+      Trans = Trans->Next;
+    }
+#endif /* _GLTRANSFORMATION */
+}
+
+
+
+/*---------------------------------------------------
+  DisplayTransformationExit :
+----------------------------------------------------*/
+void DisplayTransformationExit ()
+{
+#ifdef _GLTRANSFORMATION
+  glPopMatrix ();
+#endif /* _GLTRANSFORMATION */
+}
+
+
+
+
+/* Write contents of one vertex to stdout.	*/
+void print2DVertex (GLint size,
+		    GLint *count, 
+		    GLfloat *buffer)
+{
+  int i;
+  
+  printf ("  ");
+  for (i = 0; i < 2; i++) 
+    {
+      printf ("%4.2f ", buffer[size-(*count)]);
+      *count = *count - 1;
+    }
+  printf ("\t");
+}
+
+/*  Write contents of entire buffer.  (Parse tokens!)	*/
+void printBuffer(GLint size, GLfloat *buffer)
+{
+   GLint  token, count, vertex_count;
+
+   count = size;
+   printf ("\n------------------------------------------\n");
+   
+   while (count) 
+     {
+       token = buffer[size-count]; 
+       count--;
+       /*
+	 GL_POLYGON_TOKEN
+	 GL_POINT_TOKEN
+	 GL_LINE_TOKEN
+	 *_RESET => stipple change
+	 */
+       switch (token)
+	 {
+	   
+	 case GL_POINT_TOKEN:
+	   {
+	     
+	     /*pour les points*/
+	     printf ("GL_POINT_TOKEN\n");
+	     print2DVertex (size, &count, buffer);
+	     printf ("\n");
+	   }
+	   break;
+       
+	 case  GL_LINE_TOKEN:
+	   {
+	     /*pour les lignes*/
+	     printf ("GL_LINE_TOKEN\n");
+	     print2DVertex (size, &count, buffer);
+	     print2DVertex (size, &count, buffer);
+	     printf ("\n");
+	   }
+	   break;	   
+	   
+	 case GL_POLYGON_TOKEN:
+	   {
+	     /*pour les lignes*/
+	     printf ("GL_POLYGON_TOKEN\n");
+	     vertex_count = buffer[size - count];
+	     count--;	     
+	     while (vertex_count--)
+		 print2DVertex (size, &count, buffer);
+	     printf ("\n");
+	   }
+	   break;
+
+	 default:
+	   break;
+	 }
+     }
+}
+
+static void computeisminmax (double number, double *min, double *max)
+{
+  if (number < *min)
+    *min = number;
+  else if (number > *max)
+    *max = number;
+}
+
+
+static void getboundingbox (GLint size, GLfloat *buffer, int frame,
+			    int *xorig, int *yorig, 
+			    int *worig, int *horig)
+{
+  GLint  token, count, vertex_count;
+  double x,y,w,h, TotalHeight;
+  
+  x = (double) *xorig;
+  y = (double) *yorig;
+  w = (double) *xorig + *worig;
+  h = (double) *yorig + *horig;
+  
+  TotalHeight = (double) FrameTable[frame].FrHeight;
+  
+  count = size;
+  while (count) 
+     {
+       token = buffer[size-count]; 
+       count--;
+       switch (token)
+	 {
+	 case GL_POINT_TOKEN:
+	   {
+	     computeisminmax (buffer[size-count], &x, &w);count--;
+	     computeisminmax (TotalHeight - buffer[size-count], &y, &h);count--;
+	   }
+	   break;
+	 case  GL_LINE_TOKEN:
+	   {
+	     computeisminmax (buffer[size-count], &x, &w);count--;
+	     computeisminmax (TotalHeight - buffer[size-count], &y, &h);count--;
+
+	     computeisminmax (buffer[size-count], &x, &w);count--;
+	     computeisminmax (TotalHeight - buffer[size-count], &y, &h);count--;
+	   }
+	   break;
+	 case GL_POLYGON_TOKEN:
+	   {
+	     vertex_count = buffer[size - count];
+	     count--;	     
+	     while (vertex_count--)
+	       {
+		 computeisminmax (buffer[size-count], &x, &w);count--;
+		 computeisminmax (TotalHeight - buffer[size-count], &y, &h);count--;
+	       }
+	   }
+	   break;
+	 default:
+	   break;
+	 }
+     }
+
+
+
+   *xorig = (int) x;
+   *yorig = (int) y;
+   *worig = (int) (w - x);
+   *horig = (int) (h - y);
+}
+
+
+/*---------------------------------------------------
+  ComputeBoundingBox :
+  Modify Bounding Box according to opengl feedback mechanism
+  (after transformation, coordinates may have changed)			    
+----------------------------------------------------*/
+void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
+{
+  GLfloat feedBuffer[4096];
+  GLint size;
+  
+  box->BxBoundinBoxComputed = TRUE; 
+  glFeedbackBuffer (2048, GL_2D, feedBuffer);
+  glRenderMode (GL_FEEDBACK);
+  DisplayBox (box, frame, xmin, xmax, ymin, ymax);
+  size = glRenderMode (GL_RENDER);
+  if (size > 0)
+    {
+
+      box->BxClipX = box->BxXOrg;
+      box->BxClipY = box->BxYOrg;
+      /* box->BxClipW = box->BxWidth; */
+      /* box->BxClipH = box->BxHeight; */
+
+      getboundingbox (size, feedBuffer, frame,
+		      &box->BxClipX,
+		      &box->BxClipY,
+		      &box->BxClipW,
+		      &box->BxClipH);
+      
+      /* printBuffer (size, feedBuffer); */
+    }
+}
 /*----------------------------------------------------------------------
    GL_Swap : swap frontbuffer with backbuffer (display changes)
   ----------------------------------------------------------------------*/
@@ -1369,6 +1815,7 @@ ThotBool GL_prepare (int frame)
   ----------------------------------------------------------------------*/
 void GL_realize (int frame)
 {
+
   FrameTable[frame].DblBuffNeedSwap = TRUE;
   /* FrameTable[frame].DblBuffNeedSwap = FALSE;
      GL_Swap (frame);*/
@@ -1382,73 +1829,113 @@ void GL_ActivateDrawing(int frame)
   if (frame < MAX_FRAME)
     FrameTable[frame].DblBuffNeedSwap = TRUE;
 }
-/*----------------------------------------------------------------------
- GL_DrawAll : Only function that Really Draw opengl !!
-  ----------------------------------------------------------------------*/
-void GL_DrawAll (ThotWidget widget, int frame)
-{  
-#ifdef _PCLDEBUGTIME
 
+
+void TtaPlay (Document doc, View view)
+{
+  int frame = 0;
+  
+  for (frame = 0; frame <= MAX_FRAME; frame++)
+    if (FrameTable[frame].FrDoc && 
+	FrameTable[frame].Animated_Boxes)
+      {
+	FrameTable[frame].Anim_play = !FrameTable[frame].Anim_play;
+	if (FrameTable[frame].Anim_play)
+	  {
+	     if (FrameTable[frame].Timer == 0)
+	       FrameTable[frame].Timer = gtk_timeout_add (5, 
+							  (gpointer) GL_DrawAll, 
+							  (gpointer)   NULL); 	      
+	    FrameTable[frame].BeginTime = 0;
+	  }
+	else
+	  if (FrameTable[frame].Timer)
+	    {
+	      gtk_timeout_remove (FrameTable[frame].Timer);
+	      FrameTable[frame].Timer = 0;
+	    }	
+      }  
+}
+
+
+/*----------------------------------------------------------------------
+  GL_DrawAll : Really Draws opengl !!
+  ----------------------------------------------------------------------*/
+ThotBool GL_DrawAll ()
+{  
+  int frame;
+#ifdef _GLANIM
+#ifdef _GTK
   /* draw and calculate draw time 
      bench that helps finding bottlenecks...*/
-  struct timeb	before;
   struct timeb	after;
-  int	dsec, dms; 
-#endif /*_PCLDEBUG*/
+  AnimTime current_time; 
+#endif /*_GTK*/
+#endif /* _GLANIM */
+  static ThotBool frame_animating = FALSE;  
   
-  /* if (GL_ANIM)
-     RefreshAnimation (frame); */
- 
   if (!FrameUpdating )
     {
-      for (frame = 1 ; frame < MAX_FRAME; frame++)
-	{
-	  if (FrRef[frame] != 0)
-	    {
-	      
-	    if (FrameTable[frame].DblBuffNeedSwap)
-	      {
-
-	
-		if (documentDisplayMode[FrameTable[frame].FrDoc - 1] 
-		    != NoComputedDisplay)
-		  {
-		    widget = FrameTable[frame].WdFrame;
-		    if (GL_prepare (frame))
-		      	{
-#ifdef _PCLDEBUGTIME
-			  ftime(&before);
-
-#endif /*_PCLDEBUG*/ 	   
-			  glFinish ();glFlush();
-			  GL_Swap (frame);
-			  if (GL_Err())
+      if (!frame_animating)
+	{	
+	  frame_animating = TRUE;      
 #ifdef _GTK
-			    g_print ("Bad drawing\n"); 
-#else /*_GTK*/
-			  WinErrorBox (NULL, "Bad drawing\n");
+	  gtk_main_iteration_do (FALSE);
+	  while (gtk_events_pending ()) 
+	    gtk_main_iteration ();
+#endif /* _GTK */
+	  
+  
+	  for (frame = 1 ; frame < MAX_FRAME; frame++)
+	    {
+	      if (FrRef[frame] != 0)
+		{
+#ifdef _GLANIM
+		  if (FrameTable[frame].Anim_play &&
+		      FrameTable[frame].Animated_Boxes)
+		    {
+		      
+#ifdef _GTK
+		      ftime (&after);
+		      current_time = after.time + (((double)after.millitm)/1000);
+		      
+		      if (FrameTable[frame].BeginTime == 0)
+			FrameTable[frame].BeginTime = current_time;
+		      current_time -= FrameTable[frame].BeginTime;		      
 #endif /*_GTK*/
-			  
-
-#ifdef _PCLDEBUGTIME
-			  ftime(&after);	
-			  
-			  dsec = after.time - before.time;	
-			  dms = after.millitm - before.millitm;
-			  if (dms > 0 )
+	    
+		      Animate_boxes (frame, current_time);
+		    }
+#endif /* _GLANIM */		    
+		      if (FrameTable[frame].DblBuffNeedSwap)
+			{
+			  if (documentDisplayMode[FrameTable[frame].FrDoc - 1] 
+			      != NoComputedDisplay)
 			    {
-			      g_print ("%d fps \t", (int) 1000/dms);
-			      g_print ("=>\t %is %ims / frame\n", dsec, dms);
-			    } 
-			  
-#endif /*_PCLDEBUG*/
-			  FrameTable[frame].DblBuffNeedSwap = FALSE;
+			      if (GL_prepare (frame))
+			    {
+			      
+			      RedrawFrameBottom (frame, 0, NULL);
+			      glFinish ();glFlush();
+			      GL_Swap (frame);  
+			      /* All transformation reseted*/   
+			      glLoadIdentity (); 
+			      if (GL_Err ())
+#ifdef _GTK
+				g_print ("Bad drawing\n"); 
+#else /*_GTK*/
+			      WinErrorBox (NULL, "Bad drawing\n");
+#endif /*_GTK*/
+			      FrameTable[frame].DblBuffNeedSwap = FALSE;
+			    }
 			}
-		  }
-	      }
+		    }
+		}
 	    }
-	}
-    }    
+	  frame_animating  = FALSE;      
+	}  
+    }
+  return TRUE;  
 }
 
 #define GLU_ERROR_MSG "\nSorry, Amaya requires GLU 1.2 or later.\n"
@@ -1460,7 +1947,7 @@ void SetGlPipelineState ()
 {  
   const char *version = (const char *) gluGetString (GLU_VERSION);
   const char *renderer = glGetString (GL_RENDERER);
-
+  
   Software_Mode = FALSE;
   if (strstr (renderer, "Mesa")
       || strstr (renderer, "Microsoft")
@@ -1489,73 +1976,77 @@ void SetGlPipelineState ()
 	   (char *)gluGetString (GLU_VERSION));
 #endif /*_PCLDEBUG*/
   /*glClearColor (1, 0, 0, 0);*/
-      /* no fog*/
-      glDisable (GL_FOG);
-      /* No lights */
-      glDisable (GL_LIGHTING);
-      glDisable (GL_LIGHT0);
-      glDisable (GL_AUTO_NORMAL);
-      glDisable (GL_NORMALIZE);
-      glDisable (GL_COLOR_MATERIAL);
-      /* No z axis (SVG is 2d)  */
-      glDisable (GL_DEPTH_TEST);
-      glDepthMask (FALSE);
-      /* No stencil buffer (one day perhaps, for background)*/
-      glDisable (GL_STENCIL_TEST);
-      /* At the beginning, 
-	 there was no clipping*/
-      glDisable (GL_SCISSOR_TEST);
-
-      /* Modulated Transparency*/
-      glDisable (GL_ALPHA_TEST); 	 
-      /* Polygon are alway filled (until now)
-	 Because Thot draws outlined polygons with lines
-	 so...  if blending svg => GL_FRONT_AND_BACK*/
-      glPolygonMode (GL_FRONT, GL_FILL);
-      
-      glDisable (GL_DITHER);
-      /*  Antialiasing 
-	  Those Options give better 
-	  quality image upon performance loss
-	  Must be a user Option  */
-      glEnable (GL_LINE_SMOOTH); 
-      glEnable (GL_POINT_SMOOTH); 
-      glHint (GL_POINT_SMOOTH_HINT, 
-	      GL_NICEST);
-      /*glHint (GL_LINE_SMOOTH_HINT, 
-	GL_NICEST); */
-      /* For transparency and beautiful antialiasing*/
-      glEnable (GL_BLEND); 
-      glBlendFunc (GL_SRC_ALPHA, 
-		   GL_ONE_MINUS_SRC_ALPHA); 
-      /* Fastest Texture Mapping*/
-      glHint (GL_PERSPECTIVE_CORRECTION_HINT, 
-	      GL_FASTEST );    
-      /* Bitmap font Text writing (even in texture font)*/
-      glPixelStorei (GL_UNPACK_ALIGNMENT, 1); 
-      /* Needs to clear buffer after allocating it before drawing*/
-      glClear (GL_COLOR_BUFFER_BIT);
-      /*(needed for gradients)*/
-      /*glShadeModel (GL_SMOOTH);*/
-      /* no gradients for now => */
-      glShadeModel (GL_FLAT);
-
-      /* Not recommended for hardware cards... 
-	 Global Antialiasing is done elsewhere...*/
-      /*  glEnable (GL_POLYGON_SMOOTH);   */
-      /* smooth polygon antialiasing */
-      /* glBlendFunc (GL_SRC_ALPHA_SATURATE, GL_ONE); */
-      /* glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST); */
+  /* no fog*/
+  glDisable (GL_FOG);
+  /*No Dithering*/
+  glDisable (GL_DITHER);
+  /* No lights */
+  glDisable (GL_LIGHTING);
+  glDisable (GL_LIGHT0);
+  glDisable (GL_AUTO_NORMAL);
+  glDisable (GL_NORMALIZE);
+  glDisable (GL_COLOR_MATERIAL);
+  /* No z axis (SVG is 2d)  */
+  glDisable (GL_DEPTH_TEST);
+  glDepthMask (FALSE);
+  /* No stencil buffer (one day perhaps, for background)*/
+  glDisable (GL_STENCIL_TEST);
+  /* At the beginning, 
+     there was no clipping*/
+  glDisable (GL_SCISSOR_TEST);
+  /* Modulated Transparency*/
+  glDisable (GL_ALPHA_TEST); 	 
+  /* Polygon are alway filled (until now)
+     Because Thot draws outlined polygons with lines
+     so...  if blending svg => GL_FRONT_AND_BACK*/
+  glPolygonMode (GL_FRONT, GL_FILL);
   
-   
-      /* Doesn't compute hidden drawing 
-	 Doesn't work for our tesselated
-	 polygons   not CGW oriented...
-      50 % performance on geometry drawing...*/
-      /* glEnable (GL_CULL_FACE); */
-      /* glCullFace (GL_FRONT_AND_BACK.,GL_BACK, GL_FRONT); */
+  /*  Antialiasing 
+      Those Options give better 
+      quality image upon performance loss
+      Must be a user Option  */
+  glEnable (GL_LINE_SMOOTH); 
+/*   glHint (GL_LINE_SMOOTH_HINT,  */
+/* 	  GL_NICEST);  */
 
-      GL_SetOpacity (1000);
+  glEnable (GL_POINT_SMOOTH); 
+  glHint (GL_POINT_SMOOTH_HINT, 
+	  GL_NICEST);
+     
+      /* For transparency and beautiful antialiasing*/
+  glEnable (GL_BLEND); 
+
+  glBlendFunc (GL_SRC_ALPHA, 
+	       GL_ONE_MINUS_SRC_ALPHA); 
+
+  /* Fastest Texture Mapping*/
+  glHint (GL_PERSPECTIVE_CORRECTION_HINT, 
+	  GL_NICEST );    
+      /* Bitmap font Text writing (even in texture font)*/
+  glPixelStorei (GL_UNPACK_ALIGNMENT, 1); 
+  /* Needs to clear buffer after allocating it before drawing*/
+  glClear (GL_COLOR_BUFFER_BIT);
+  /*(needed for gradients)*/
+  /*glShadeModel (GL_SMOOTH);*/
+  /* no gradients for now => */
+  glShadeModel (GL_FLAT);
+
+  /* Not recommended for hardware cards... 
+     Global Antialiasing is done elsewhere...*/
+  /*  glEnable (GL_POLYGON_SMOOTH);   */
+  /* smooth polygon antialiasing */
+  /* glBlendFunc (GL_SRC_ALPHA_SATURATE, GL_ONE); */
+  /* glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST); */
+  
+  
+  /* Doesn't compute hidden drawing 
+     Doesn't work for our tesselated
+     polygons   not CGW oriented...
+     50 % performance on geometry drawing...*/
+  /* glEnable (GL_CULL_FACE); */
+  /* glCullFace (GL_FRONT_AND_BACK.,GL_BACK, GL_FRONT); */
+  
+  GL_SetOpacity (1000);
       if (GL_Err())
 #ifdef _GTK
 	g_print ("Bad INIT\n"); 
@@ -1674,8 +2165,6 @@ void GL_window_copy_area (int frame,
 	  y_source = (FrameTable[frame].FrHeight) -
 	    (y_source + height + 
 	    FrameTable[frame].FrTopMargin);
-	  
-	  
 
 	  /* Copy from backbuffer to backbuffer */
 	  glFinish ();
@@ -1704,7 +2193,7 @@ void GL_window_copy_area (int frame,
 			GL_COLOR); 
 	  glEnable (GL_BLEND);
 	  /*copy from back to front */
-	  GL_realize (frame);	 
+	  GL_realize (frame);	  
 	}
 }
 /*-----------------------------------
@@ -1730,7 +2219,6 @@ void GLResize (int width, int height, int x, int y)
   /* Needed for 3d only...*/
   glMatrixMode (GL_MODELVIEW);
   glLoadIdentity (); 
-
 }
 
 /*-----------------------------------
@@ -1744,6 +2232,7 @@ void gl_window_resize (int frame, int width, int height)
 #ifdef _GTK
   GtkWidget *widget;
 #endif /*_GTK*/
+
   if (GL_prepare (frame))
       {
 #ifdef _GTK
@@ -1776,7 +2265,7 @@ void gl_window_resize (int frame, int width, int height)
   make black swapbuffer...
 ------------------------------------*/
 int glMatroxBUG (int frame, int x, int y, 
-			int width, int height)
+		 int width, int height)
 {
   if (!Software_Mode)
     {
@@ -1787,8 +2276,6 @@ int glMatroxBUG (int frame, int x, int y,
     }
   return 0;  
 }
-
-
 /*-------------------------------
  SaveBuffer :
  Take a picture (png) of the backbuffer.

@@ -116,11 +116,11 @@ STRUCT
 	      requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
 	      transform;
+	      opacity; 
 	      x; 
 	      y;
               width_;
-              height_;
-	      opacity)		
+              height_)		
         = AGGREGATE
               desc; ? title; ? metadata;
 	      LIST OF (Anim);

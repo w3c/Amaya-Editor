@@ -271,7 +271,7 @@ GTK_INCLUDES="`gtk-config --cflags`"
 AC_SUBST(GTK_INCLUDES)
 GTK_LIBRARIES="`gtk-config --libs` -lgdk_imlib"
 AC_SUBST(GTK_LIBRARIES)
-GTK_OPTIONS=-D_GTK
+GTK_OPTIONS="-D_GTK -D_SVGANIM -D_SVGLIB"
   no_motif=yes
   no_graphic=yes
 else
@@ -704,7 +704,7 @@ if test "$with_gl" = "yes" ; then
 				else
 				   GL_LIBRARIES=" -lXmu -lXft -lfreetype -lGL -lGLU -lgtkgl"
 				fi				
-				GL_OPTIONS=-D_GL 
+				GL_OPTIONS="-D_GL"
 	  			no_motif=yes
 			    fi
 			fi

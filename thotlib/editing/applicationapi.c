@@ -32,12 +32,14 @@
 #endif /* NODISPLAY */
 #include "appdialogue.h"
 #include "dictionary.h"
+#include "picture.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "platform_tv.h"
 #include "appevents_tv.h"
 #include "units_tv.h"
+
 #undef THOT_EXPORT
 #define THOT_EXPORT
 #include "print_tv.h"

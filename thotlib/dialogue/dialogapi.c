@@ -1160,8 +1160,6 @@ static void formKillGTK (GtkWidget *widget, GdkEvent *event, gpointer data)
 }
 
 #ifdef _GTK
-
-
 /*----------------------------------------------------------------------
   Callback for a scrolled window (click) @JK
   ----------------------------------------------------------------------*/
@@ -1912,7 +1910,7 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
    char               *arg;
 #endif /* _WINDOWS && GTK */
 #ifdef _GTK
-   char   *ptr;
+   /* char   *ptr; */
 
    /* Sets the current locale according to the program environment */
    /* ptr = TtaGetEnvString ("ENABLE_MULTIKEY");

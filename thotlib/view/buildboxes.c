@@ -1647,7 +1647,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
       pCurrentBox->BxUnderline = pAb->AbUnderline;
       pCurrentBox->BxThickness = pAb->AbThickness;
       split = FALSE;		/* A priori la boite n'est pas eclatee */
-      
+  
       /* Dimensionnement de la boite par contraintes */
       /* Il faut initialiser le trace reel et l'indication */
       /* des reperes inverses (en cas de boite elastique)  */
@@ -2696,6 +2696,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      AddBoxTranslations (pAb, pFrame->FrVisibility, frame,
 				  (ThotBool)(!orgXComplete),
 				  (ThotBool)(!orgYComplete));
+
 	    }
 
 	  /* On prepare le reaffichage */
@@ -2736,6 +2737,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  pAb->AbChange = FALSE;
 	  pAb->AbMBPChange = FALSE;
 	}
+
     }
   /* AbstractBox MORT */
   else if (pAb->AbDead)
@@ -4245,10 +4247,16 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 	      if (!lock)
 		/* unlock table formatting */
 		(*ThotLocalActions[T_unlock]) ();
-
 	     /* Est-ce que l'on a de nouvelles boites dont le contenu est */
 	     /* englobe et depend de relations hors-structure ?           */
 	     ComputeEnclosing (frame);
+
+#ifdef _GL
+	     AddBoxTransformation (pAb, pFrame->FrVisibility, frame,
+				   0,
+				   0,
+				   TRUE);
+#endif /* _GL */
 	     /* Verification de la mise en page */
 	     if (*pageHeight > 0)
 		/* changement de la signification de page */

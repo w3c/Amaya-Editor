@@ -53,6 +53,11 @@
 #include "structmodif_f.h"
 #include "tree_f.h"
 
+#ifdef _GL
+#include "animbox_f.h"
+#endif /* _GL */
+
+
 /*----------------------------------------------------------------------
    SetAbsBoxAccessMode met a` jour le mode d'acces accessMode sur  
    le pave pAb et tous ses descendants.                    
@@ -465,6 +470,7 @@ PtrAbstractBox InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib,
 	pAb->AbLeafType = LtText;
 	pAb->AbLang = TtaGetDefaultLanguage ();
      }
+   
    return pAb;
 }
 
@@ -2698,6 +2704,7 @@ static void GetAtt (PtrPRule * pR, PtrAbstractBox * pAbb, PtrPSchema * pSP,
 		    PtrAttribute * pA, PtrAttribute queuePA[MAX_QUEUE_LEN],
 		    PtrPSchema queuePS[MAX_QUEUE_LEN],
 		    PtrAbstractBox queuePP[MAX_QUEUE_LEN],
+
 		    PtrPRule queuePR[MAX_QUEUE_LEN], int *lqueue, int *pqueue)
 {
    *pR = NULL;

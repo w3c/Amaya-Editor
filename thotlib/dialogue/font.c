@@ -115,7 +115,6 @@ void *GL_LoadFont (char alphabet, int family,
 		      highlight, size, 
 		      UseLucidaFamily, UseAdobeFamily,
 		      filename))
-    if (TtaFileExist (filename))
       return (gl_font_init (filename, alphabet, size)); 
   return NULL;
 }

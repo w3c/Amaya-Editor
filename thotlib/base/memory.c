@@ -21,6 +21,7 @@
 #include "libmsg.h"
 #include "message.h"
 #include "fileaccess.h"
+#include "content.h"
 /*#define DEBUG_MEMORY*/
 
 #undef  THOT_EXPORT
@@ -634,6 +635,9 @@ void GetElement (PtrElement * pEl)
        pNewEl->ElTerminal = FALSE;
        pNewEl->ElFirstChild = NULL;
        pNewEl->ElLineNb = 0;
+       pNewEl->ElTransform = NULL;
+       pNewEl->ElSystemOrigin = FALSE;
+       pNewEl->animation = NULL;       
        NbUsed_Element++;
      }
 }
@@ -645,6 +649,10 @@ void FreeElement (PtrElement pEl)
 {
    PtrPathSeg       pPa, pPaNext;
 
+#ifdef _GL
+   if (pEl->ElTransform)
+     TtaFreeTransform (pEl->ElTransform);
+#endif /*_GL*/
    if (pEl->ElLeafType == LtText && pEl->ElText)
      {
        FreeTextBuffer (pEl->ElText);
@@ -663,7 +671,7 @@ void FreeElement (PtrElement pEl)
      }
    pEl->ElStructSchema = NULL;
 #ifdef DEBUG_MEMORY
-       TtaFreeMemory (pEl);
+   TtaFreeMemory (pEl);
 #else
    pEl->ElNext = PtFree_Element;
    PtFree_Element = pEl;
@@ -1773,6 +1781,20 @@ PtrBox GetBox (PtrAbstractBox pAb)
 	pBox->BxType = BoComplete;
 	pBox->BxHorizEdge = Left;
 	pBox->BxVertEdge = Top;
+	    
+#ifdef _GL
+      pBox->BxEditable = FALSE;
+      pBox->BxBoundinBoxComputed = FALSE;
+      pBox->BxTransformationComputed = FALSE;
+      pBox->BxRelX = 0;
+      pBox->BxRelY = 0;
+      pBox->BxClipX = 0; 
+      pBox->BxClipY = 0; 
+      pBox->BxClipW = 0;
+      pBox->BxClipH = 0;
+      pBox->DisplayList = 0;      
+#endif /*_GL*/
+
 	NbUsed_Box++;
      }
    return pBox;

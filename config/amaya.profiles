@@ -452,6 +452,7 @@ HelpMath
 [svg]
 ShowGraphicsPalette
 ShowTimeLineWindow
+Anim_Play
 ShowLibrary
 AddNewModelIntoLibraryForm
 HelpSVG

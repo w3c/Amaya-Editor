@@ -305,6 +305,112 @@ typedef struct _PathSeg
 #define LargeArc u.s1._LargeArc_
 #define Sweep u.s1._Sweep_
 
+/* type of a SVG Transform */
+typedef enum
+{
+  PtElScale,
+  PtElTranslate,
+  PtElviewboxScale,
+  PtElviewboxTranslate,
+  PtElBoxTranslate,
+  PtElRotate,
+  PtElMatrix,
+  PtElSkewX,
+  PtElSkewY
+} TransformType;
+
+typedef struct _Transform *PtrTransform;
+
+/* Description of a SVG Transformation */
+typedef struct _Transform
+{
+  PtrTransform      Next;
+  TransformType     Type;
+  union
+  {
+    struct /* Scale, Translate*/
+    {
+      float _X;
+      float _Y;
+    } s0;
+    struct /*SkewX, SkewY*/
+    {
+      float _Factor;
+    } s1;
+    struct /* Matrix */
+    {
+      float M[6];
+    } s2;
+    struct /* Rotate */
+    {
+      float _Angle;
+      float _X;
+      float _Y;
+    } s3;    
+  } u;
+} Transform;
+
+#define XScale u.s0._X
+#define YScale u.s0._Y
+#define Factor u.s1._Factor
+#define Matrix u.s2.M
+#define AMatrix u.s2.M[0]
+#define BMatrix u.s2.M[1]
+#define CMatrix u.s2.M[2]
+#define DMatrix u.s2.M[3]
+#define EMatrix u.s2.M[4]
+#define FMatrix u.s2.M[5]
+#define XRotate u.s3._X
+#define YRotate u.s3._Y
+#define Angle u.s3._Angle
+
+/* Animation structures */
+typedef enum
+  {
+    Set,
+    Motion,
+    Color,
+    Transformation,
+    Animate,
+    OtherAnim
+  } Type_anim;
+
+typedef enum
+  {
+    Freeze,
+    Repeat,
+    Otherfill
+  } Type_fill;
+
+typedef enum
+  {
+    Css,
+    Xml,
+    OtherAttr
+  } Type_Attribute;
+
+typedef double AnimTime;
+
+typedef struct _Animated_Element
+{
+  struct _Animated_Element  *next;/*to build linked list of animation*/
+  AnimTime                  start;/*...*/
+  AnimTime                  duration;/*...*/
+  AnimTime                  action_time;/*Time of last render*/
+  void                      *from;/*Initial Value*/
+  void                      *to;/*final value*/
+  Type_anim                 Type;/*Color, Transform....*/
+  Type_fill                 Fill;/*if anim continues forever... or not*/
+  Type_Attribute             Attr;/*class of Attr*/
+  char                      *AttrName;/*permits to select attr ie opacity*/
+} Animated_Element;
+
+typedef struct _Animated_Cell
+{
+  PtrElement El;
+  struct _Animated_Cell *Next;
+} Animated_Cell;
+
 /* Descriptor representing an element that is kept after a Cut or Copy
    operation and is to be Pasted */
 typedef struct _PasteElemDescr *PtrPasteElem;
@@ -339,12 +445,12 @@ typedef struct _ElementDescr
 					   attribute, NULL if no attribute */
   PtrPRule    	        ElFirstPRule;	/* pointer on the first rule of the
 					   specific presentation rule string
-					   to beiedapply to the element */
+					   to be applied to the element */
   PtrAbstractBox	ElAbstractBox[MAX_VIEW_DOC]; /* pointer on the first
 					   abstract box corresponding to the
 					   element for each view of the doc. */
   PtrSSchema    	ElStructSchema;	/* pointer on the structure schema
-					   where te element type is defined */
+					   where the element type is defined */
   int			ElTypeNumber;	/* number of the rule defining the type
 					   of the element in the structure
 					   schema */
@@ -370,11 +476,18 @@ typedef struct _ElementDescr
   ThotBool		ElHolophrast;	/* holophrasted element */
   ThotBool		ElTransContent;	/* element contents have been alreay
 					   translated */
-  ThotBool		ElTransAttr;	/* element attributes have been alreay
+  ThotBool		ElTransAttr;	/* element attributes have been already
 					   translated */
   ThotBool		ElTransPres;	/* element presentation rules have been
 					   alreay translated */
-  ThotBool 		ElTerminal;	/* the element is a leaf in the tree */
+  ThotBool 		ElTerminal;	/* the element is a leaf in the
+					   tree */
+  ThotBool              ElSystemOrigin;/*If the element defines a new
+					 coodinates system*/
+ 
+  PtrTransform          ElTransform;    /* the element is transformed */
+  void                  *animation;
+ 
   union
   {
     struct		      /* ElTerminal = False */

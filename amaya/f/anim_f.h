@@ -11,6 +11,9 @@ extern void Get_timeline_of_doc ( Document basedoc,
                                   View* timelineview );
 extern void Free_timeline_of_doc ( Document doc );
 extern void InitSVGAnim ( void );
+extern void Read_time_info ( Element el,
+                             double* start,
+                             double* duration );
 extern void SwitchIconAnim ( Document doc,
                              View view,
                              ThotBool state );
@@ -46,6 +49,9 @@ extern void Get_timeline_of_doc (/* Document basedoc,
                                     View* timelineview */);
 extern void Free_timeline_of_doc (/* Document doc */);
 extern void InitSVGAnim (/* void */);
+extern void Read_time_info (/* Element el,
+                               double* start,
+                               double* duration */);
 extern void SwitchIconAnim (/* Document doc,
                                View view,
                                ThotBool state */);

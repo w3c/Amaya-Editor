@@ -158,6 +158,9 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
 		pFrame->FrClipYEnd = yf;
 	  }
      }
+#ifdef _GL
+   FrameTable[frame].DblBuffNeedSwap = TRUE;  
+#endif /* _GL */
 }
 
 
@@ -240,7 +243,7 @@ static void    AddBoxToCreate (PtrBox * tocreate, PtrBox pBox, int frame)
    Clipping is done by xmin, xmax, ymin, ymax.
   ----------------------------------------------------------------------*/
 static void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
-						   int xmax, int ymin, int ymax)
+			   int xmax, int ymin, int ymax)
 {
   PtrBox              pBox;
   ViewFrame          *pFrame;
@@ -443,6 +446,14 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 	    {
 	      /* box in the current plane */
 	      pBox = pAb->AbBox;
+
+	      if (pAb->AbElement && pAb->AbDepth == plane)
+		if (pAb->AbElement->ElTransform)
+		  DisplayTransformation (pAb->AbElement->ElTransform, 
+					 pBox->BxWidth, 
+					 pBox->BxHeight);
+
+
 	      if (pAb->AbLeafType == LtCompound)
 		{
 		  /* if pAp->Transform : start */
@@ -537,7 +548,8 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 			}
 		      if (!userSpec)
 			{
-			  if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
+			  if (pBox->BxType == BoSplit || 
+			      pBox->BxType == BoMulScript)
 			    while (pBox->BxNexChild)
 			      {
 				pBox = pBox->BxNexChild;
@@ -581,9 +593,13 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 	    /* get the first child */
 	    pAb = pAb->AbFirstEnclosed;
 	  else if (pAb->AbNext)
+	    /* get the next sibling */
 	    {
-	      /* get the next sibling */
-	      /* if pAp->Transform && pAb->AbDepth = plane: stop */
+
+	      if (pAb->AbElement && pAb->AbDepth == plane)
+		if (pAb->AbElement->ElTransform)
+		  DisplayTransformationExit ();
+
 	      pAb = pAb->AbNext;
 	    }
 	  else
@@ -591,13 +607,21 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 	      /* go up in the tree */
 	      while (pAb->AbEnclosing && pAb->AbEnclosing->AbNext == NULL)
 		{
-		  /* if pAp->Transform && pAb->AbDepth = plane: stop */
 		  pAb = pAb->AbEnclosing;
+
+		  if (pAb->AbElement && pAb->AbDepth == plane)
+		    if (pAb->AbElement->ElTransform)
+			DisplayTransformationExit ();
+
 		}
 	      pAb = pAb->AbEnclosing;
 	      if (pAb)
 		{
-		  /* if pAp->Transform && pAb->AbDepth = plane: stop */
+		  
+		  if (pAb->AbElement && pAb->AbDepth == plane)
+		    if (pAb->AbElement->ElTransform)
+			DisplayTransformationExit ();
+
 		  pAb = pAb->AbNext;
 		}
 	    }
@@ -815,9 +839,11 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
   xmax = pFrame->FrClipXEnd;
   ymin = pFrame->FrClipYBegin;
   ymax = pFrame->FrClipYEnd;
-  if (pFrame->FrAbstractBox && pFrame->FrAbstractBox->AbElement == NULL)
+  if (pFrame->FrAbstractBox && 
+      pFrame->FrAbstractBox->AbElement == NULL)
     pFrame->FrAbstractBox = NULL;
-  if (!pFrame->FrReady || pFrame->FrAbstractBox == NULL)
+  if (!pFrame->FrReady || 
+      pFrame->FrAbstractBox == NULL)
     return toadd;
   else if (xmin < xmax &&
 	   ymin < ymax &&
@@ -862,14 +888,16 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 		{
 		  /* if needed complete the partial existing image */
 		  pRootBox = pFrame->FrAbstractBox->AbBox;
-		  if (!FrameUpdating && (!TextInserting || scroll > 0))
+		  if (!FrameUpdating && 
+		      (!TextInserting || scroll > 0))
 		    {
 		      /* The concrete image is being updated */
 		      FrameUpdating = TRUE;
 		      y = top - pRootBox->BxYOrg;
 		      if (pFrame->FrAbstractBox->AbInLine)
 			FrameUpdating = FALSE;
-		      else if (pFrame->FrAbstractBox->AbTruncatedHead && y < 0)
+		      else if (pFrame->FrAbstractBox->AbTruncatedHead && 
+			       y < 0)
 			{
 			  /* it lacks a piece of the concrete image at the frame top */
 			  /* filling on top will shift the whole concrete image */

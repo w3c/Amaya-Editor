@@ -1072,7 +1072,12 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 	     /* Force le placement des boites filles */
 	     XMoveAllEnclosed (pBox, x, frame);
 	   else
-	     XMove (pBox, NULL, x, frame);
+	     {
+	       XMove (pBox, NULL, x, frame);
+#ifdef _GL
+	       pBox->BxRelX = pBox->BxXOrg;      
+#endif /* _GL */
+	     }
 	 }
        /* la regle de position est interpretee */
        pAb->AbHorizPosChange = FALSE;
@@ -1087,7 +1092,12 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 	     /* Force le placement des boites filles */
 	     YMoveAllEnclosed (pBox, y, frame);
 	   else
-	     YMove (pBox, NULL, y, frame);
+	     {
+	       YMove (pBox, NULL, y, frame);
+#ifdef _GL
+	       pBox->BxRelY = pBox->BxYOrg;    
+#endif /* _GL */
+	     }
 	 }
        /* la regle de position est interpretee */
        pAb->AbVertPosChange = FALSE;

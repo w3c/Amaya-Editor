@@ -2516,10 +2516,6 @@ static void Moving (int frame, int *x, int *y, int width, int height,
   while (ret == 0)
     {
 #ifdef _WINDOWS
-#ifdef _GL
-	  GL_ActivateDrawing();
-	  GL_DrawAll(0, frame);
-#endif /*_GL*/
       GetMessage (&event, NULL, 0, 0);
       switch (event.message)
 	{

@@ -54,6 +54,11 @@
 #include "viewapi_f.h"
 #include "writepivot_f.h"
 
+#ifdef _GL
+#include "animbox_f.h"
+#endif /* _GL */
+
+
 /*----------------------------------------------------------------------
    InsertText   inserts the string "content" in the element 
    pEl (which must be of type text), at the position
@@ -1660,6 +1665,403 @@ void TtaAppendPathSeg (Element element, PathSegment segment, Document document)
 	 }
      }
 }
+/*----------------------------------------------------------------------
+   TtaNewTransformScale
+   ---------------------------------------------------------------------- */
+void *TtaNewTransformScale (float x_scale, float y_scale, ThotBool viewbox)	   
+{
+   PtrTransform pPa;
+
+   pPa = TtaGetMemory (sizeof (Transform));
+   pPa->Next = NULL;
+   if (viewbox)
+     pPa->Type = PtElviewboxScale;
+   else
+     pPa->Type = PtElScale;   
+   pPa->XScale = x_scale;
+   pPa->YScale = y_scale;
+   return (pPa);
+}
+/*----------------------------------------------------------------------
+   TtaNewBoxTransformTranslate
+   ---------------------------------------------------------------------- */
+void *TtaNewBoxTransformTranslate (float x, float y)   
+{
+   PtrTransform pPa;
+
+   pPa = TtaGetMemory (sizeof (Transform));
+   pPa->Next = NULL;
+   pPa->Type = PtElBoxTranslate;
+   pPa->XScale = x;
+   pPa->YScale = y;
+   return (pPa);
+}
+/*----------------------------------------------------------------------
+   TtaNewTransformTranslate
+   ---------------------------------------------------------------------- */
+void *TtaNewTransformTranslate (float x, float y, ThotBool viewbox)   
+{
+   PtrTransform pPa;
+
+   pPa = TtaGetMemory (sizeof (Transform));
+   pPa->Next = NULL;
+   if (viewbox)
+     pPa->Type = PtElviewboxTranslate;
+   else
+     pPa->Type = PtElTranslate;
+   pPa->XScale = x;
+   pPa->YScale = y;
+   return (pPa);
+}
+/*----------------------------------------------------------------------
+   TtaNewTransformRotate
+   ---------------------------------------------------------------------- */
+void *TtaNewTransformRotate (float angle, float x_scale, 
+			     float y_scale)				   
+{
+   PtrTransform pPa;
+
+   pPa = TtaGetMemory (sizeof (Transform));
+   pPa->Next = NULL;
+   pPa->Type = PtElRotate;
+   pPa->Angle = angle;
+   pPa->XRotate = x_scale;
+   pPa->YRotate = y_scale;
+   return (pPa);
+}
+
+/*----------------------------------------------------------------------
+   TtaNewTransformSkewX
+   ---------------------------------------------------------------------- */
+void *TtaNewTransformSkewX (float factor)
+				   
+{
+   PtrTransform pPa;
+
+   pPa = TtaGetMemory (sizeof (Transform));
+   pPa->Next = NULL;
+   pPa->Type = PtElSkewX;
+   pPa->Factor = factor;
+   return (pPa);
+}
+/*----------------------------------------------------------------------
+   TtaNewTransformSkewY
+   ---------------------------------------------------------------------- */
+void *TtaNewTransformSkewY (float factor)
+{
+   PtrTransform pPa;
+
+   pPa = TtaGetMemory (sizeof (Transform));
+   pPa->Next = NULL;
+   pPa->Type = PtElSkewY;
+   pPa->Factor = factor;
+   return (pPa);
+}
+/*----------------------------------------------------------------------
+   TtaNewTransformMatrix
+   ---------------------------------------------------------------------- */
+void *TtaNewTransformMatrix (float a, float b, float c,
+			     float d, float e, float f)
+{
+   PtrTransform pPa;
+
+   pPa = TtaGetMemory (sizeof (Transform));   
+   pPa->Next = NULL;
+   pPa->Type = PtElMatrix;
+   pPa->AMatrix = a;
+   pPa->BMatrix = b;
+   pPa->CMatrix = c;
+   pPa->DMatrix = d;
+   pPa->EMatrix = e;
+   pPa->FMatrix = f;
+   return (pPa);
+}
+/*----------------------------------------------------------------------
+   TtaAppendTransform
+
+   Appends a Transform at the end of a Graphics basic element
+
+   Parameters:
+   element: the Graphics element to be modified.
+   transform: the path segment to be appended.
+   document: the document containing the element.
+  ----------------------------------------------------------------------*/
+void TtaAppendTransform (Element element, void *transform, 
+			 Document document)
+{
+   PtrTransform       pPa, pPrevPa;
+     
+   UserErrorCode = 0;
+   if (element == NULL)
+      TtaError (ERR_invalid_parameter);
+   else
+     /* verifies the parameter document */
+     if (document < 1 || document > MAX_DOCUMENTS)
+       TtaError (ERR_invalid_document_parameter);
+     else if (LoadedDocument[document - 1] == NULL)
+       TtaError (ERR_invalid_document_parameter);
+   else
+      /* parameter document is correct */
+     {
+       if (element && transform)
+	 {
+	   pPa = ((PtrElement) element)->ElTransform;
+	   pPrevPa = NULL;
+	   while (pPa)
+	     {
+	       pPrevPa = pPa;
+	       pPa = pPa->Next;
+	     }
+	   if (pPrevPa == NULL)
+	     ((PtrElement) element)->ElTransform = (PtrTransform) transform;
+	   else
+	     {
+	       pPrevPa->Next = (PtrTransform) transform;
+	     }
+#ifndef NODISPLAY
+	   RedisplayLeaf ((PtrElement) element, document, 1);
+#endif
+	 }
+     }
+}
+/*----------------------------------------------------------------------
+   TtaReplaceTransform
+
+   Insert or Replace a Transform at the beginning of a Graphics basic element
+   if a transformation of the same type exists in the list, it is replaced
+
+   Parameters:
+   element: the Graphics element to be modified.
+   transform: the path segment to be inserted.
+   document: the document containing the element.
+  ----------------------------------------------------------------------*/
+void TtaReplaceTransform (Element element, void *transform, 
+			 Document document)
+{
+   PtrTransform       pPa, pPrevPa;
+     
+   UserErrorCode = 0;
+   if (element == NULL)
+      TtaError (ERR_invalid_parameter);
+   else
+     /* verifies the parameter document */
+     if (document < 1 || document > MAX_DOCUMENTS)
+       TtaError (ERR_invalid_document_parameter);
+     else if (LoadedDocument[document - 1] == NULL)
+       TtaError (ERR_invalid_document_parameter);
+   else
+      /* parameter document is correct */
+     {
+       if (element && transform)
+	 {
+	  pPa = ((PtrElement) element)->ElTransform;
+	   pPrevPa = NULL;
+	   while (pPa)
+	     {
+	       if (pPa->Type == ((PtrTransform)transform)->Type)
+		 {
+		   if (pPrevPa == NULL)
+		     ((PtrElement) element)->ElTransform = (PtrTransform) transform;
+		   else
+		     pPrevPa->Next = (PtrTransform) transform;
+		   ((PtrTransform) transform)->Next = pPa->Next;
+		   TtaFreeMemory (pPa);		   
+#ifndef NODISPLAY
+		   RedisplayLeaf ((PtrElement) element, document, 1);
+#endif /* NODISPLAY */
+		  return;
+		 }	       
+	       pPrevPa = pPa;
+	       pPa = pPa->Next;
+	     }
+	   if (pPrevPa == NULL)
+	     ((PtrElement) element)->ElTransform = (PtrTransform) transform;
+	   else
+	     pPrevPa->Next = (PtrTransform) transform;
+#ifndef NODISPLAY
+	   RedisplayLeaf ((PtrElement) element, document, 1);
+#endif /* NODISPLAY */
+	 }
+     }
+}
+/*----------------------------------------------------------------------
+   TtaInsertTransform
+
+   Insert a Transform at the beginning of a Graphics basic element
+
+   Parameters:
+   element: the Graphics element to be modified.
+   transform: the path segment to be inserted.
+   document: the document containing the element.
+  ----------------------------------------------------------------------*/
+void TtaInsertTransform (Element element, void *transform, 
+			 Document document)
+{
+   PtrTransform       pPa;
+     
+   UserErrorCode = 0;
+   if (element == NULL)
+      TtaError (ERR_invalid_parameter);
+   else
+     /* verifies the parameter document */
+     if (document < 1 || document > MAX_DOCUMENTS)
+       TtaError (ERR_invalid_document_parameter);
+     else if (LoadedDocument[document - 1] == NULL)
+       TtaError (ERR_invalid_document_parameter);
+   else
+      /* parameter document is correct */
+     {
+       if (element && transform)
+	 {
+	   pPa = ((PtrElement) element)->ElTransform;
+	   ((PtrTransform) transform)->Next = pPa;
+	   ((PtrElement) element)->ElTransform = (PtrTransform) transform;
+#ifndef NODISPLAY
+	   RedisplayLeaf ((PtrElement) element, document, 1);
+#endif
+	 }
+     }
+}
+/*----------------------------------------------------------------------
+   TtaFreeTransform
+  ----------------------------------------------------------------------*/
+void TtaFreeTransform (void *transform)
+{
+  PtrTransform       pPa = (PtrTransform) transform;
+    
+  if (pPa->Next)
+    TtaFreeTransform (pPa->Next);
+  TtaFreeMemory (pPa);
+}
+/*----------------------------------------------------------------------
+   TtaSetElCoordinateSystem : make this element the start of a new
+    coordinate system
+  ----------------------------------------------------------------------*/
+void TtaSetElCoordinateSystem (Element element)
+{
+   ((PtrElement)element)->ElSystemOrigin = TRUE;
+}
+/*----------------------------------------------------------------------
+   TtaFreeAnimation
+  ----------------------------------------------------------------------*/
+void TtaFreeAnimation (Animated_Element *a_list)
+{  
+  if (a_list->next)
+    TtaFreeAnimation (a_list->next);
+  if (a_list->from)
+    TtaFreeMemory (a_list->from);
+  if (a_list->to)
+    TtaFreeMemory (a_list->to);
+  if (a_list->AttrName)
+    TtaFreeMemory (a_list->AttrName);
+  TtaFreeMemory (a_list);
+}
+/*----------------------------------------------------------------------
+   TtaAppendAnim
+  ----------------------------------------------------------------------*/
+void TtaAppendAnim (Element element, void *anim)
+{
+  Animated_Element *a_list;
+  
+  if (((PtrElement)element)->ElParent->animation)
+    {
+      a_list = (Animated_Element *)((PtrElement)element)->ElParent->animation;
+      while (a_list->next)
+	a_list = a_list->next;
+      a_list->next = anim;
+    }
+  else
+    ((PtrElement)element)->ElParent->animation = anim; 
+#ifndef NODISPLAY
+#ifdef _GLANIM
+  AnimatedBoxAdd ((PtrElement)element);
+#endif /* _GLANIM */
+#endif /* _NODISPLAY */
+}
+/*----------------------------------------------------------------------
+   TtaNewAniminfo
+  ----------------------------------------------------------------------*/
+void *TtaNewAnimInfo ()
+{
+  Animated_Element *anim_info;
+
+  anim_info = TtaGetMemory (sizeof (Animated_Element));
+  anim_info->next = NULL;
+  anim_info->duration = 0;
+  anim_info->start = 0;
+  anim_info->action_time = 0;
+  anim_info->from = NULL;
+  anim_info->to = NULL;
+  anim_info->AttrName = NULL;
+  
+  return anim_info;
+}
+/*----------------------------------------------------------------------
+   TtaSetAnimTypetoMotion
+  ----------------------------------------------------------------------*/
+void TtaSetAnimTypetoMotion (void *anim)
+{
+  ((Animated_Element *) anim)->Type = Motion;
+}
+/*----------------------------------------------------------------------
+   TtaSetAnimTypetoTransform
+  ----------------------------------------------------------------------*/
+void TtaSetAnimTypetoTransform (void *anim)
+{
+  ((Animated_Element *) anim)->Type = Transformation;
+}
+/*----------------------------------------------------------------------
+   TtaSetAnimTypetoAnimate
+  ----------------------------------------------------------------------*/
+void TtaSetAnimTypetoAnimate (void *anim)
+{
+  ((Animated_Element *) anim)->Type = Animate;
+}
+/*----------------------------------------------------------------------
+   TtaSetAnimTypetoColor
+  ----------------------------------------------------------------------*/
+void TtaSetAnimTypetoColor (void *anim)
+{
+  ((Animated_Element *) anim)->Type = Color;
+}
+/*----------------------------------------------------------------------
+   TtaSetAnimTypetoSet
+  ----------------------------------------------------------------------*/
+void TtaSetAnimTypetoSet (void *anim)
+{
+  ((Animated_Element *) anim)->Type = Set;
+}
+/*----------------------------------------------------------------------
+   TtaAddAnimFrom
+  ----------------------------------------------------------------------*/
+void TtaAddAnimFrom (void *info, void *anim)
+{    
+  ((Animated_Element *) anim)->from = info;
+}
+/*----------------------------------------------------------------------
+   TtaAddAnimTo
+  ----------------------------------------------------------------------*/
+void TtaAddAnimTo (void *info, void *anim)
+{    
+  ((Animated_Element *) anim)->to = info;
+}
+/*----------------------------------------------------------------------
+   TtaAddAnimTo
+  ----------------------------------------------------------------------*/
+void TtaAddAnimAttrName (void *info, void *anim)
+{    
+  ((Animated_Element *) anim)->AttrName = info;
+}
+/*----------------------------------------------------------------------
+   TtaSetAnimationTime
+  ----------------------------------------------------------------------*/
+void TtaSetAnimationTime (void *anim_info, double start, double duration)
+{    
+  ((Animated_Element *) anim_info)->duration = duration;
+  ((Animated_Element *) anim_info)->start = start;
+}
+
+
 
 /*----------------------------------------------------------------------
    TtaCopyPage

@@ -3178,6 +3178,14 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   FrameTable[frame].MenuUndo = -1;
 	   FrameTable[frame].MenuRedo = -1;
 
+#ifdef _GL
+	   FrameTable[frame].DblBuffNeedSwap = TRUE;
+	   FrameTable[frame].BeginTime = 0;
+	   FrameTable[frame].Anim_play = FALSE;
+	   FrameTable[frame].Animated_Boxes = NULL;
+	   FrameTable[frame].Timer = 0;	   
+#endif /* _GL */
+
 #if !defined(_GTK) && !defined(_WINDOWS)
 	   n = 0;
 	   XtSetArg (args[n], XmNbackground, BgMenu_Color);
@@ -3417,6 +3425,17 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     GTK_SIGNAL_FUNC (ExposeCallbackGTK),
 			     (gpointer)frame); 
 #ifdef _GL
+
+	  
+	  
+	  /* when widget is initialized, 
+	      we define opengl pipeline state */
+	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
+			     "draw",
+			     GTK_SIGNAL_FUNC (GL_DrawCallback),
+			     (gpointer)frame); 
+
+
 	   /* when widget is initialized, 
 	      we define opengl pipeline state */
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
@@ -3433,8 +3452,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     "focus-in-event",
 			     GTK_SIGNAL_FUNC (GL_FocusIn),
 			     (gpointer)frame);
-	    /* when widget is initialized, 
-	    we define opengl pipeline state*/
+	    /* wwhen widget is focused*/
 	  ConnectSignalGTK (GTK_OBJECT (Main_Wd),
 			     "focus-out-event",
 			     GTK_SIGNAL_FUNC (GL_FocusOut),

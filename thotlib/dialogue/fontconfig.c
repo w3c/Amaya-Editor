@@ -494,6 +494,16 @@ char *FontLoadFromConfig (char script,
 	return NULL;
 
 #else /*_GL*/
+      if (Fonttab[intscript]->family[font_face_index]->is_xlfd_checked[font_style] == FALSE)
+	{
+	  Fonttab[intscript]->family[font_face_index]->is_xlfd[font_style] = TtaFileExist (Fonttab[intscript]->family[font_face_index]->highlight[font_style]);
+	  Fonttab[intscript]->family[font_face_index]->is_xlfd_checked[font_style] = TRUE;
+	}
+      if (Fonttab[intscript]->family[font_face_index]->is_xlfd[font_style])
+	return (Fonttab[intscript]->family[font_face_index]->highlight[font_style]);
+      else
+	return NULL;
+
       return  (Fonttab[intscript]->family[font_face_index]->highlight[font_style]);
 #endif /*_GL*/
     }

@@ -120,6 +120,7 @@ DISPLAY_OBJ = \
 	content/dictionary.o \
 	view/glwindowdisplay.o \
 	view/gldisplay.o \
+	view/animbox.o \
 	dialogue/openglfont.o \
 	image/encdec.o \
 	dialogue/fontserver.o \

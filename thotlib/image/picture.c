@@ -148,47 +148,7 @@ static void FreeAPicCache (int texbind, int frame)
       Cache = NULL;
     }
 }
-/*--------------------------------------------------
-  FreePicsCacheFromFrame : index Cache freeing  
- upon a frame destroy event
- ---------------------------------------------------*/
-void FreeAllPicCacheFromFrame (int frame)
-{
-  Pic_Cache *Cache = PicCache;
-  Pic_Cache *Before;
-  
- Before = PicCache;
-  while (Cache)
-    {
-      if (Cache->frame == frame)
-	{
 
-		  if (Before == PicCache)
-		  {
-			  Before = Before->next;
-			  PicCache = Before;
-		  }
-	  else
-	    Before->next = Cache->next; 
-
-	if (GL_prepare (frame))
-	  Free_Pic_Chache (Cache);
-
-	if (PicCache != Before)
-	  Cache = Before->next;
-	else
-	  Cache = Before;
-	
-	}
-	  else
-	  {
-		  Before = Cache; 
-		  Cache = Cache->next;
-	      
-	  }     
-      
-    }
-}
 
 /*--------------------------------------------------
  Free index Cache freeing recursive function 
@@ -287,14 +247,7 @@ static void CacheLookupHeightAndWidth (PictInfo *Image,
   *height = 0;
   return;  
 }
-/*--------------------------------------------------
- Free All pics in video card memory and empty cache list
- ---------------------------------------------------*/
-void FreeAllPicCache ()
-{
-  if (PicCache)
-    FreePicCache (PicCache);  
-}
+
 /*----------------------------------------------------------------------
  Free video card memory from this texture.
   ----------------------------------------------------------------------*/
@@ -504,6 +457,7 @@ static void GL_TextureMap (PictInfo *Image,
 }
 #endif /* _GL */
 
+
 static char*    PictureMenu;
 #ifdef _GL
 static unsigned char *PictureLogo;
@@ -652,6 +606,60 @@ static void TransparentPicture (HBITMAP pixmap, int xFrame, int yFrame,
 }
 #endif /* _WINDOWS */
 
+/*--------------------------------------------------
+ Free All pics in video card memory and empty cache list
+ in GL
+ ---------------------------------------------------*/
+void FreeAllPicCache ()
+{
+#ifdef _GL
+  if (PicCache)
+    FreePicCache (PicCache);  
+#endif /* _GL */
+}
+/*--------------------------------------------------
+  FreePicsCacheFromFrame : index Cache freeing  
+ upon a frame destroy event
+ ---------------------------------------------------*/
+void FreeAllPicCacheFromFrame (int frame)
+{
+#ifdef _GL
+  Pic_Cache *Cache = PicCache;
+  Pic_Cache *Before;
+  
+ Before = PicCache;
+  while (Cache)
+    {
+      if (Cache->frame == frame)
+	{
+
+		  if (Before == PicCache)
+		  {
+			  Before = Before->next;
+			  PicCache = Before;
+		  }
+	  else
+	    Before->next = Cache->next; 
+
+	if (GL_prepare (frame))
+	  Free_Pic_Chache (Cache);
+
+	if (PicCache != Before)
+	  Cache = Before->next;
+	else
+	  Cache = Before;
+	
+	}
+	  else
+	  {
+		  Before = Cache; 
+		  Cache = Cache->next;
+	      
+	  }     
+      
+    }
+#endif /* _GL */
+}
 /*----------------------------------------------------------------------
   Match_Format returns TRUE if the considered header file matches   
   the image file description, FALSE in the the other cases        
@@ -3157,9 +3165,9 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
   return NULL;
 #else /*_GL*/
   unsigned char   *screenshot = NULL;
-  int              widthb, heightb;
   int              k, line, i = 0;
   unsigned char   *pixel;
+  int              widthb, heightb;
 #ifdef _GTK
   GdkImage        *View;
   int              cpt1, cpt2, line2, mi_h, NbOctetsPerLine;

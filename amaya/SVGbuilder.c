@@ -30,6 +30,8 @@
 #include "html2thot_f.h"
 #include "styleparser_f.h"
 #include "Xml2thot_f.h"
+#include "anim_f.h"
+#include "animbuilder_f.h"
 
 /*----------------------------------------------------------------------
    SVGGetDTDName
@@ -229,7 +231,8 @@ void   ParseCSSequivAttribute (int attrType,
    does not exist yet.
    Return that GRAPHICS_UNIT element.
   ----------------------------------------------------------------------*/
-static Element CreateGraphicalLeaf (char shape, Element el, Document doc)
+static Element CreateGraphicalLeaf (char shape, Element el, 
+				    Document doc)
 {
   ElementType	   elType;
   Element	   leaf, child;
@@ -245,11 +248,11 @@ static Element CreateGraphicalLeaf (char shape, Element el, Document doc)
 	{
 	  oldShape = TtaGetGraphicsShape (child);
 	  leaf = child;
-	  if (oldShape == EOS || oldShape != shape)
+	  if (oldShape == EOS || 
+	      oldShape != shape)
 	    TtaSetGraphicsShape (child, shape, doc);
 	}
     }
-
   elType = TtaGetElementType (el);
   if (leaf == NULL)
     /* create the graphical element */
@@ -314,7 +317,6 @@ static Element  CreateGraphicLeaf (Element el, Document doc, ThotBool *closed)
        leaf = CreateGraphicalLeaf (EOS, el, doc);
        *closed = FALSE;
        break;
-
      default:
        break;
      }
@@ -1020,9 +1022,26 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 	 if (attr)
 	   SetTextAnchor (attr, el, doc, FALSE);
        }
+     /*
+     if (elType.ElTypeNum == SVG_EL_SVG ||
+	 elType.ElTypeNum == SVG_EL_symbol_ ||
+	 elType.ElTypeNum == SVG_EL_foreignObject)
+     */
+
+     if (elType.ElTypeNum == SVG_EL_animate ||    
+	 elType.ElTypeNum == SVG_EL_animateColor ||       
+	 elType.ElTypeNum == SVG_EL_animateMotion ||
+	 elType.ElTypeNum == SVG_EL_animateTransform)
+       register_animated_element (el);
 
      switch (elType.ElTypeNum)
        {
+       case SVG_EL_foreignObject:
+       case SVG_EL_SVG:
+       case SVG_EL_symbol_:
+       /* case SVG_EL_view: */
+	 TtaSetElCoordinateSystem (el);
+	 break;
        case SVG_EL_image:
 	 /* it's an image element */
 	 /* create a PICTURE_UNIT child */
@@ -1977,11 +1996,300 @@ void ParsePointsAttribute (Attribute attr, Element el, Document doc)
       TtaFreeMemory (text);
       }
 }
-
+/*----------------------------------------------------------------------
+   ParseviewBoxAttribute
+   Parse the value of a viewbox attribute
+  ----------------------------------------------------------------------*/
+void ParseviewBoxAttribute (Attribute attr, Element el, Document doc,
+			      ThotBool delete)
+{
+   int                  length;
+   float                 x, y, width, height;
+   char                *text, *ptr;
+   ThotBool             error;
+   Element              leaf;
+   
+   leaf = el;
+   length = TtaGetTextAttributeLength (attr) + 2;
+   text = TtaGetMemory (length);
+   if (text)
+     {
+       /* get the content of the transform attribute */
+       TtaGiveTextAttributeValue (attr, text, &length);
+       /* parse the attribute content */
+       ptr = text;
+       error = FALSE;
+       if (*ptr != EOS)
+	 {
+	   /* skip space characters */
+	   ptr = TtaSkipBlanks (ptr);
+	   ptr = GetFloat (ptr, &x);
+	   ptr = TtaSkipBlanks (ptr);
+	   ptr = GetFloat (ptr, &y);
+	   ptr = TtaSkipBlanks (ptr);
+	   ptr = GetFloat (ptr, &width);
+	   ptr = TtaSkipBlanks (ptr);
+	   ptr = GetFloat (ptr, &height);
+	   TtaInsertTransform (leaf, 
+			       TtaNewTransformScale (width, height, TRUE),
+			       doc);
+	   TtaInsertTransform (leaf, 
+			       TtaNewTransformTranslate (x, y, TRUE),
+			       doc);/*Make sure transformation is first...*/
+	   
+	 }       
+       TtaFreeMemory (text);
+     }
+}
+#ifdef _GLTRANSFORMATION
 /*----------------------------------------------------------------------
    ParseTransformAttribute
    Parse the value of a transform attribute
   ----------------------------------------------------------------------*/
+void ParseTransformAttribute (Attribute attr, Element el, Document doc,
+ 			      ThotBool delete)
+{
+   int                  length;
+   float                scaleX, scaleY, x, y, a, b, c, d, e, f, angle;
+   char                *text, *ptr;
+   ThotBool             error;
+   Element              leaf;
+   
+   leaf = el;
+   length = TtaGetTextAttributeLength (attr) + 2;
+   text = TtaGetMemory (length);
+   if (text)
+     {
+       /* get the content of the transform attribute */
+       TtaGiveTextAttributeValue (attr, text, &length);
+       /* parse the attribute content */
+       ptr = text;
+       error = FALSE;
+       while (*ptr != EOS && !error)
+	 {
+	   /* skip space characters */
+	   ptr = TtaSkipBlanks (ptr);
+	   if (!strncmp (ptr, "matrix", 6))
+	     {
+	       ptr += 6;
+	       ptr = TtaSkipBlanks (ptr);
+	       if (*ptr != '(')
+		 error = TRUE;
+	       else
+		 {
+		   ptr++;
+		   ptr = TtaSkipBlanks (ptr);
+		   ptr = GetFloat (ptr, &a);
+		   if (*ptr == ',')
+		     {
+		       ptr++;
+		       ptr = TtaSkipBlanks (ptr);
+		     }
+		   ptr = GetFloat (ptr, &b);
+		   if (*ptr == ',')
+		     {
+		       ptr++;
+		       ptr = TtaSkipBlanks (ptr);
+		     }
+		   ptr = GetFloat (ptr, &c);
+		   if (*ptr == ',')
+		     {
+		       ptr++;
+		       ptr = TtaSkipBlanks (ptr);
+		     }
+		   ptr = GetFloat (ptr, &d);
+		   if (*ptr == ',')
+		     {
+		       ptr++;
+		       ptr = TtaSkipBlanks (ptr);
+		     }
+		   ptr = GetFloat (ptr, &e);
+		   if (*ptr == ',')
+		     {
+		       ptr++;
+		       ptr = TtaSkipBlanks (ptr);
+		     }
+		   ptr = GetFloat (ptr, &f);
+		   if (*ptr != ')')
+		     error = TRUE;
+		   else
+		     {
+		       ptr++;
+		       TtaAppendTransform (leaf, 
+					   TtaNewTransformMatrix (a, b, c,
+								  d, e, f),
+					   doc);
+		     }
+		 }
+	     }
+	   else if (!strncmp (ptr, "translate", 9))
+	     {
+	       x = 0;  y = 0;
+	       ptr += 9;
+	       ptr = TtaSkipBlanks (ptr);
+	       if (*ptr != '(')
+		 error = TRUE;
+	       else
+		 {
+		   ptr++;
+		   ptr = TtaSkipBlanks (ptr);
+		   ptr = GetFloat (ptr, &x);
+		   /* New Version */
+		   if (*ptr != ')')
+		     {
+		       if (*ptr == ',')
+			 {
+			   ptr++;
+			   ptr = TtaSkipBlanks (ptr);
+			 }
+		       ptr = GetFloat (ptr, &y);
+		     }
+		   if (*ptr == ')')
+		     ptr++;
+		   else
+		     error = TRUE;
+		   TtaAppendTransform (leaf, 
+				       TtaNewTransformTranslate (x, y, FALSE),
+				       doc);
+		 }
+	     }
+	   else if (!strncmp (ptr, "scale", 5))
+	     {
+	       ptr += 5;
+	       ptr = TtaSkipBlanks (ptr);
+	       if (*ptr != '(')
+		 error = TRUE;
+	       else
+		 {
+		   ptr++;
+		   ptr = TtaSkipBlanks (ptr);
+		   ptr = GetFloat (ptr, &scaleX);
+		   if (*ptr == ')')
+		     scaleY = scaleX;
+		   else
+		     {
+		       if (*ptr == ',')
+			 {
+			   ptr++;
+			   ptr = TtaSkipBlanks (ptr);
+			 }
+		       ptr = GetFloat (ptr, &scaleY);
+		     }
+		   if (*ptr == ')')
+		     {
+		       ptr++;
+		       TtaAppendTransform (leaf, 
+					   TtaNewTransformScale (scaleX, 
+								 scaleY,
+								 FALSE),
+					   doc);
+		     }
+		   else
+		     error = TRUE;
+		 }
+	     }
+	   else if (!strncmp (ptr, "rotate", 6))
+	     {
+	       ptr += 6;
+	       ptr = TtaSkipBlanks (ptr);
+	       if (*ptr != '(')
+		 error = TRUE;
+	       else
+		 {
+		   ptr++;
+		   ptr = TtaSkipBlanks (ptr);
+		   ptr = GetFloat (ptr, &angle);
+		   if (*ptr == ')')
+		     {
+		       x = 0;
+		       y = 0;
+		     }
+		   else
+		     {
+		       if (*ptr == ',')
+			 {
+			   ptr++;
+			   ptr = TtaSkipBlanks (ptr);
+			 }
+		       ptr = GetFloat (ptr, &x);
+		       if (*ptr == ',')
+			 {
+			   ptr++;
+			   ptr = TtaSkipBlanks (ptr);
+			 }
+		       ptr = GetFloat (ptr, &y);
+		     }
+		   if (*ptr == ')')
+		     {
+		       ptr++;
+		       TtaAppendTransform (leaf, 
+					   TtaNewTransformRotate (angle, x, y),
+					   doc);
+		     }
+		   else
+		     error = TRUE;
+		 }
+	     }
+	   else if (!strncmp (ptr, "skewX", 5))
+	     {
+	       ptr += 5;
+	       ptr = TtaSkipBlanks (ptr);
+	       if (*ptr != '(')
+		 error = TRUE;
+	       else
+		 {
+		   ptr++;
+		   ptr = TtaSkipBlanks (ptr);
+		   ptr = GetFloat (ptr, &x);
+		   if (*ptr == ')')
+		     {
+		       ptr++;
+		       TtaAppendTransform (leaf, 
+					   TtaNewTransformSkewX (x),
+					   doc);
+		     }
+		   else
+		     error = TRUE;
+		 }
+	     }
+	   else if (!strncmp (ptr, "skewY", 5))
+	     {
+	       ptr += 5;
+	       ptr = TtaSkipBlanks (ptr);
+	       if (*ptr != '(')
+		 error = TRUE;
+	       else
+		 {
+		   ptr++;
+		   ptr = TtaSkipBlanks (ptr);
+		   ptr = GetFloat (ptr, &y);
+		   if (*ptr == ')')
+		     {
+		       ptr++;
+		       TtaAppendTransform (leaf, 
+					   TtaNewTransformSkewY (y),
+					   doc);
+		     }
+		   else
+		     error = TRUE;
+		 }
+	     }
+	   else
+	     /* unexpected token, ignore the rest */
+	     error = TRUE;
+
+	   if (!error)
+	     {
+	       /* skip spaces and the optional comma */
+	       ptr = TtaSkipBlanks (ptr);
+	       if (*ptr == ',')
+		 ptr++;
+	     }
+         }
+       TtaFreeMemory (text);
+     }
+}
+#else /* _GLTRANSFORMATION */
 void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 			      ThotBool delete)
 {
@@ -2073,6 +2381,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 						    ctxt, pval);
 			 }
 		       TtaFreeMemory (ctxt);
+
 		     }
 		 }
 	     }
@@ -2114,6 +2423,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 		   else
 		     error = TRUE;
 		   TtaFreeMemory (ctxt);
+
 		 }
 	     }
 	   else if (!strncmp (ptr, "scale", 5))
@@ -2191,6 +2501,8 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 		     {
 		       ptr++;
 		       /****** process angle, x and y ******/
+
+
 		     }
 		   else
 		     error = TRUE;
@@ -2211,6 +2523,8 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 		     {
 		       ptr++;
 		       /****** process x ******/
+
+
 		     }
 		   else
 		     error = TRUE;
@@ -2231,6 +2545,8 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 		     {
 		       ptr++;
 		       /****** process y ******/
+
+
 		     }
 		   else
 		     error = TRUE;
@@ -2252,6 +2568,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
      }
 }
 
+#endif /* _GLTRANSFORMATION */
 /*----------------------------------------------------------------------
    ParsePathDataAttribute
    Parse the value of a path data attribute
@@ -2625,6 +2942,9 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
 	break;
      case SVG_ATTR_transform:
         ParseTransformAttribute (attr, el, doc, FALSE);
+	break;
+     case SVG_ATTR_viewBox:
+        ParseviewBoxAttribute (attr, el, doc, FALSE);
 	break;
      case SVG_ATTR_points:
 	ParsePointsAttribute (attr, el, doc);

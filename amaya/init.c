@@ -86,6 +86,7 @@
 #include "XPointer_f.h"
 #ifdef _SVGANIM
 #include "anim_f.h"
+#include "animbuilder_f.h"
 #endif /* _SVGANIM */
 #ifdef _SVGLIB
 #include "libmanag_f.h"
@@ -2681,7 +2682,10 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   AddLibraryButton (doc, 1);
 #endif /* _SVGLIB */
 #ifdef _SVGANIM
+
 	   AddAnimButton (doc, 1);
+	   AddAnimPlayButton (doc, 1);
+	   
 #endif /* _SVGANIM */
 #endif /* _SVG */
 	   if (docType == docAnnot)

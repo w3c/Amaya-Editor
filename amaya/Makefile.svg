@@ -8,6 +8,7 @@ AMAYA_SVG_OPTIONS=-D_SVG
 
 AMAYA_SVG_OBJ= \
 	anim.o \
+	animbuilder.o \
 	SVGAPP.o \
 	SVGbuilder.o \
 	SVGedit.o \
@@ -15,6 +16,7 @@ AMAYA_SVG_OBJ= \
 
 AMAYA_SVG_SRC= \
 	anim.c \
+	animbuilder.c \
         SVG.h \
 	SVGAPP.c \
 	SVGbuilder.c \

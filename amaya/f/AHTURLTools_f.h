@@ -63,6 +63,7 @@ extern char *MakeRelativeURL ( char *aName,
 extern ThotBool AM_GetFileSize ( char *filename,
                                  unsigned long *file_size );
 extern ThotBool AM_UseXHTMLMimeType ( void );
+extern void AM_gen_tempname ( char *tmpl );
 extern char *GetTempName ( const char *dir,
                            const char *prefix );
 
@@ -125,6 +126,7 @@ extern char *MakeRelativeURL (/* char *aName,
 extern ThotBool AM_GetFileSize (/* char *filename,
                                    unsigned long *file_size */);
 extern ThotBool AM_UseXHTMLMimeType (/* void */);
+extern void AM_gen_tempname (/* char *tmpl */);
 extern char *GetTempName (/* const char *dir,
                              const char *prefix */);
 
