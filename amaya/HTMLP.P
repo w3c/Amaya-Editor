@@ -1602,6 +1602,23 @@ BOXES
 		END;	
 	END;
 
+ VALUE_EntityName: BEGIN
+        Content: (EntityName);
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: ATTR_Visibility;	
+		Size: DOC_FONTSIZE;
+		Foreground: TAG_Color;
+		if NOT within Comment_line
+		   BEGIN
+		   HorizPos: Left = Previous . Right;
+		   VertPos: HRef = Previous . HRef;
+		   END;
+		if within Comment_line
+		   HorizPos: Left = Previous . Right;
+                END;
+        END;
+
  APPLET_S: BEGIN
 	Content: Text 'APPLET';
 	Visibility: 0;
@@ -10147,6 +10164,13 @@ ATTRIBUTES
 	   CreateBefore(VALUE_Invalid_attribute);
 	if NOT TEXT_UNIT and NOT PICTURE_UNIT and NOT Invalid_element and NOT Anchor
 	   CreateBefore(VALUE_Invalid_attribute);
+	END;
+
+  EntityName:
+	BEGIN
+	CreateBefore(VALUE_EntityName);
+	IN Structure_view
+		Visibility: 1;
 	END;
 
 #ifndef PAGE

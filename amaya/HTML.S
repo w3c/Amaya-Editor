@@ -28,7 +28,8 @@ ATTR
    Invalid_attribute = Text;
    Ghost_restruct = Text;
    Highlight = Yes_;
-   IntEntity = Yes_; 
+   IntEntity = Yes_;	{ do not translate & into &amp; in output file }
+   EntityName = Text;   { the content of the element is the name of an entity }
 
 CONST
 
@@ -870,7 +871,8 @@ EXCEPT
 	rowspan_:	RowSpan;
 	Object_Content: Hidden, NoCreate, NoCut;
 	Ghost_restruct:	Invisible;
-        IntEntity:	Invisible; 
+        IntEntity:	Invisible;
+        EntityName:	Invisible;
 	onclick:	EventAttr;
 	ondblclick:	EventAttr;
 	onmousedown:	EventAttr;

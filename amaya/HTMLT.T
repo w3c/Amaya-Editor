@@ -2066,6 +2066,12 @@ ATTRIBUTES
 	NoTranslation;	{ do not translate & into &amp; }
 	END;
 
+ EntityName:
+	BEGIN
+	Create EntityName;
+	Remove;	{ do no output the element content }
+	END;
+
 TextTRANSLATE
 	BEGIN
 { 	'\42' -> '&quot;'; }	{ quotation mark = APL quote, U+0022 ISOnum }
