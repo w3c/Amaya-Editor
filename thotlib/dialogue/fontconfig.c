@@ -55,7 +55,11 @@ typedef struct FontScript
   */
 } FontScript;
 
+#undef MAX_TXT_LEN
+#define MAX_TXT_LEN 8144 
+
 static FontScript **Fonttab = NULL;
+
 
 #ifdef O
 /*----------------------------------------------------------------------
@@ -143,14 +147,17 @@ int isnum (char c)
 static int AdvanceNextWord (unsigned char *line, int indline)
 {
   
-  while (!isnum (line[indline]) 
-	 && line[indline] != '\0')
+  while (!isnum (line[indline]) &&
+	 line[indline] != '\0' &&
+	 indline < MAX_TXT_LEN)
     {
       if (line[indline] == '#')
-	while (line[indline] != EOL 
-	       && line[indline] != EOS)
+	while (line[indline] != EOL &&
+	       line[indline] != EOS &&
+	       indline < MAX_TXT_LEN)
 	  indline++;
-      indline++;
+      else
+	indline++;
     }
   return indline;
 }
@@ -167,8 +174,9 @@ static int getWord (int indline, unsigned char *line, char *word)
    /* copy the word from the line*/
    indword = 0;
    word[0] = EOS;
-   while ( line[indline] != ';' &&
-	   line[indline] != EOS)
+   while (line[indline] != ';' &&
+	  line[indline] != EOS &&
+	  indline < MAX_TXT_LEN)
      word[indword++] = line[indline++];
    /* marque la fin du mot trouve' */
    word[indword] = EOS;
@@ -190,8 +198,9 @@ static int getFontFace (int indline, unsigned char *line, char *word)
    indword = 0;
    word[0] = EOS;   
    /* skip all char if there are */
-   while (line[indline] != EOL 
-	  && line[indline] != EOS)
+   while (line[indline] != EOL &&
+	  line[indline] != EOS &&
+	  indline < MAX_TXT_LEN)
      {
        if (line[indline] == '=')
 	 {
@@ -202,7 +211,8 @@ static int getFontFace (int indline, unsigned char *line, char *word)
 	   /*we return to the '1=' */
 	   while (line[indline] >= SPACE && 
 		  line[indline] != ';' &&
-		  line[indline] != EOS)
+		  line[indline] != EOS &&
+		  indline < MAX_TXT_LEN)
 	     word[indword++] = line[indline++];
 	   indline++;	   
 	   /* marque la fin du mot trouve' */
@@ -225,22 +235,25 @@ static int getFontFamily (int indline, unsigned char *line, char *word)
    indword = 0;
    word[0] = EOS;
 #ifdef _WINDOWS
-   while ( !(line[indline-4] == EOL &&
-	      line[indline-2] == EOL &&
-	      line[indline] == EOL) &&
-	  line[indline] != EOS)
+   while (!(line[indline-4] == EOL &&
+	    line[indline-2] == EOL &&
+	    line[indline] == EOL) &&
+	  line[indline] != EOS &&
+	  indline < MAX_TXT_LEN)
 #else     
-   while ( !(line[indline-2] == EOL &&
+     while (!(line[indline-2] == EOL &&
 	      line[indline-1] == EOL &&
 	      line[indline] == EOL) &&
-	  line[indline] != EOS)
+	    line[indline] != EOS &&
+	    indline < MAX_TXT_LEN)
 #endif
      {
        if (isnum (line[indline]))
 	 {
 	   while (line[indline] > SPACE && 
 		  line[indline] != ';' &&
-		  line[indline] != EOS)
+		  line[indline] != EOS &&
+		  indline < MAX_TXT_LEN)
 	     word[indword++] = line[indline++];
 	   /* marque la fin du mot trouve' */
 	   word[indword] = EOS;
@@ -251,20 +264,18 @@ static int getFontFamily (int indline, unsigned char *line, char *word)
    return (indline);
 }
 
-#undef MAX_TXT_LEN
-#define MAX_TXT_LEN 8144 
 /*----------------------------------------------------------------------
    FontConfigLoad : Fill a structure for name - font correspondance
   ----------------------------------------------------------------------*/
 static FontScript **FontConfigLoad ()
 {  
-  FontScript        **Fonts;
+  FontScript        **fontsscript_tab;
   FILE               *file;
   char                line[MAX_TXT_LEN];
   char                word[MAX_TXT_LEN];
   char                fname[MAX_TXT_LEN];
   char *Thot_Dir;
-  int indline, script, highlight, family;
+  int indline, script, font_style, font_face_index;
   char *fontface;
 
   Thot_Dir = TtaGetEnvString ("THOTDIR");
@@ -293,9 +304,9 @@ static FontScript **FontConfigLoad ()
      }
 
    /*Big Alloc*/
-   Fonts = TtaGetMemory (31 * sizeof (FontScript *));
+   fontsscript_tab = TtaGetMemory (31 * sizeof (FontScript *));
    for (script = 0; script < 30; script++)
-     Fonts[script] = NULL;
+     fontsscript_tab[script] = NULL;
    line[0] = EOS;
    while (fread (line, 1, MAX_TXT_LEN - 1, file))
        {
@@ -309,38 +320,38 @@ static FontScript **FontConfigLoad ()
 		 script = atoi (word);
 		 if (script >= 0 && 
 		     script < 30 )
-		   if ( Fonts[script] == NULL)
+		   if ( fontsscript_tab[script] == NULL)
 		   {
-		     Fonts[script] = TtaGetMemory (sizeof (FontScript));
-		     for (family = 0; family < 6; family++)
-		      Fonts[script]->family[family] = NULL;
-		     family = 0;
+		     fontsscript_tab[script] = TtaGetMemory (sizeof (FontScript));
+		     for (font_face_index = 0; font_face_index < 6; font_face_index++)
+		      fontsscript_tab[script]->family[font_face_index] = NULL;
+		     font_face_index = 0;
 		     /*reads all family for a script*/
 		     while (indline != 0)
 		       {
 			 indline = getFontFamily (indline, line, word);
 			 if (word[0] == EOS)
 			   break;
-			 family = atoi (word);	
-			 if (family < 6 && 
-			     family >= 0)
-			   if (Fonts[script]->family[family] == NULL)
+			 font_face_index = atoi (word);	
+			 if (font_face_index < 6 && 
+			     font_face_index >= 0)
+			   if (fontsscript_tab[script]->family[font_face_index] == NULL)
 			   {
-			     Fonts[script]->family[family] = 
+			     fontsscript_tab[script]->family[font_face_index] = 
 			       TtaGetMemory (sizeof (FontFamilyConfig));
 			     /*reads all highlights*/
-			     for (highlight = 0;highlight < 6; highlight++)
-			       Fonts[script]->family[family]->highlight[highlight] = NULL;
-			     highlight = 0;
+			     for (font_style = 0;font_style < 6; font_style++)
+			       fontsscript_tab[script]->family[font_face_index]->highlight[font_style] = NULL;
+			     font_style = 0;
 			     while (indline != 0)
 			       {			 
 				 indline = getFontFace (indline, line, word);  
 				 if (word[0] == EOS)
 				   break;
-				 highlight = atoi (word);
-				 if (highlight < 6 && 
-				     highlight >= 0)
-				   if (Fonts[script]->family[family]->highlight[highlight] == NULL)
+				 font_style = atoi (word);
+				 if (font_style < 6 && 
+				     font_style >= 0)
+				   if (fontsscript_tab[script]->family[font_face_index]->highlight[font_style] == NULL)
 				   {
 				     /*Get the font-face in 
 				       1=font-face 
@@ -348,7 +359,7 @@ static FontScript **FontConfigLoad ()
 				     fontface = TtaGetMemory (sizeof (char) 
 							      * (strlen (&word[2]) + 1));
 				     strcpy (fontface, &word[2]);
-				     Fonts[script]->family[family]->highlight[highlight]
+				     fontsscript_tab[script]->family[font_face_index]->highlight[font_style]
 				       = fontface;
 				   }
 			       }
@@ -359,15 +370,15 @@ static FontScript **FontConfigLoad ()
 	   }
        }
    TtaReadClose (file);
-   return Fonts;
+   return fontsscript_tab;
 }
 
 /*----------------------------------------------------------------------
    FontLoadFromConfig : GEt a font dame upon its characteristics
   ----------------------------------------------------------------------*/
 char *FontLoadFromConfig (char script, 
-			  int family, 
-			  int highlight)
+			  int font_face_index, 
+			  int font_style)
 {
   int intscript = 1;
 
@@ -388,32 +399,32 @@ char *FontLoadFromConfig (char script,
     case 'E':
       /* ESSTIX FONTS ???*/
 	intscript = 21;
-	switch (family)
+	switch (font_face_index)
 	{
 	case 6:
-	    family = 2;
-	    highlight = 1;
+	    font_face_index = 2;
+	    font_style = 1;
 	    break;
 	case 7:
-	    family = 2;
-	    highlight = 2;
+	    font_face_index = 2;
+	    font_style = 2;
 	    break;	  
 	case 10:
-	    family = 3;
-	    highlight = 1;
+	    font_face_index = 3;
+	    font_style = 1;
 	    break;
 	default:
 	    intscript = 20;
-	    family = 1;
-	    highlight = 1;
+	    font_face_index = 1;
+	    font_style = 1;
 	    break;
 	}
       break;
     case 'G':
       /*Symbols*/
       intscript = 20;
-      family = 1;
-      highlight = 1;
+      font_face_index = 1;
+      font_style = 1;
       break;
     case 'L':
       /* Latin ? */
@@ -422,8 +433,8 @@ char *FontLoadFromConfig (char script,
     case 'Z':
       /*unicode ??*/
       intscript = 0;
-      family = 1;
-      highlight = 1;
+      font_face_index = 1;
+      font_style = 1;
       break;
     default:
       intscript = atoi (&script);
@@ -434,42 +445,42 @@ char *FontLoadFromConfig (char script,
 
   if (intscript != 21)
     {
-      switch (highlight)
+      switch (font_style)
 	{
 	 case 2:
      case 3:
-	  highlight = 3;
+	  font_style = 3;
 	  break;
      case 1:
      case 4:
      case 5:
-	  highlight = 2;
+	  font_style = 2;
 	  break;
 	default:
-	   highlight = 1;
+	   font_style = 1;
 	  break;
 	}
     }
   
-    if (family < 0 || family > 5)
-    family = 1;
+    if (font_face_index < 0 || font_face_index > 5)
+    font_face_index = 1;
 
   if (Fonttab[intscript])
-    if (Fonttab[intscript]->family[family])
-		if (Fonttab[intscript]->family[family]->highlight[highlight])
+    if (Fonttab[intscript]->family[font_face_index])
+		if (Fonttab[intscript]->family[font_face_index]->highlight[font_style])
 		{
 
 #ifdef _PCLFONTDEBUG
 		g_print ("\n%s",
-	       Fonttab[intscript]->family[family]->highlight[highlight]);
+	       Fonttab[intscript]->family[font_face_index]->highlight[font_style]);
 #endif /*_PCLFONTDEBUG*/
 #ifndef _GL
-      if (IsXLFDPatterneAFont (Fonttab[intscript]->family[family]->highlight[highlight]))
-      	return (Fonttab[intscript]->family[family]->highlight[highlight]);
+      if (IsXLFDPatterneAFont (Fonttab[intscript]->family[font_face_index]->highlight[font_style]))
+      	return (Fonttab[intscript]->family[font_face_index]->highlight[font_style]);
       else
 	return NULL;
 #else /*_GL*/
-      return  (Fonttab[intscript]->family[family]->highlight[highlight]);
+      return  (Fonttab[intscript]->family[font_face_index]->highlight[font_style]);
 #endif /*_GL*/
     }
   
@@ -482,7 +493,7 @@ char *FontLoadFromConfig (char script,
   ----------------------------------------------------------------------*/
 void FreeFontConfig ()
 {
-  int script, family, highlight;
+  int script, font_face_index, font_style;
   
   if (Fonttab == NULL)
     return;
@@ -492,21 +503,21 @@ void FreeFontConfig ()
     {
       if (Fonttab[script])
 	{
-	  family = 0;
-	  while (family < 5)
+	  font_face_index = 0;
+	  while (font_face_index < 5)
 	    {
-	      if (Fonttab[script]->family[family])
+	      if (Fonttab[script]->family[font_face_index])
 		{
-		  highlight = 0;
-		  while (highlight < 5)
+		  font_style = 0;
+		  while (font_style < 5)
 		    {
-		      if (Fonttab[script]->family[family]->highlight[highlight])
-			TtaFreeMemory (Fonttab[script]->family[family]->highlight[highlight]);
-		      highlight++;
+		      if (Fonttab[script]->family[font_face_index]->highlight[font_style])
+			TtaFreeMemory (Fonttab[script]->family[font_face_index]->highlight[font_style]);
+		      font_style++;
 		    }
-		  TtaFreeMemory (Fonttab[script]->family[family]);
+		  TtaFreeMemory (Fonttab[script]->family[font_face_index]);
 		}
-	      family++;
+	      font_face_index++;
 	    }
 	  TtaFreeMemory (Fonttab[script]);
 	}
