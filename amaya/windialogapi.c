@@ -215,15 +215,7 @@ void ReusePrinterDC ()
 /*-----------------------------------------------------------------------
  AltDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK AltDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK AltDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   switch (msg)
     {
@@ -270,15 +262,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  CSSDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK CSSDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK CSSDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   int     index = 0;
   UINT    i = 0;
@@ -343,15 +327,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  TextDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK TextDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK TextDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   switch (msg)
     {
@@ -415,15 +391,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  HRefDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK HRefDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK HRefDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   switch (msg)
     {
@@ -512,15 +480,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  HelpDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK HelpDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK HelpDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   switch (msg)
     {
@@ -554,15 +514,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  MathDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK MathDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK MathDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   switch (msg)
     {
@@ -640,15 +592,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  PrintDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK PrintDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK PrintDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   int      orientation, paper;
 
@@ -711,15 +655,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  TableDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK TableDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK TableDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow    hwndParent;
-UINT    msg;
-WPARAM  wParam;
-LPARAM  lParam;
-#endif /* __STDC__ */
 {
   ThotBool ok;
   int      val;
@@ -785,15 +721,7 @@ LPARAM  lParam;
 /*-----------------------------------------------------------------------
   AttrItemsDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK AttrItemsDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   int        ndx = 0;
   int        i   = 0;
@@ -1000,15 +928,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  SaveAsDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK SaveAsDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   CHAR_T      txt [500];
 
@@ -1146,15 +1066,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  OpenDocDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK OpenDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK OpenDocDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   switch (msg)
     {
@@ -1242,15 +1154,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  OpenImgDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK OpenImgDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK OpenImgDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
     switch (msg)
       {
@@ -1335,15 +1239,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  GraphicsDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK GraphicsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK GraphicsDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   switch (msg)
     {
@@ -1426,15 +1322,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
   SaveListDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK SaveListDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK SaveListDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   static ThotWindow  wndSaveList;
   int          index = 0;
@@ -1492,15 +1380,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  CloseDocDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK CloseDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK CloseDocDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   switch (msg)
     {
@@ -1546,15 +1426,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  LanguageDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK LanguageDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK LanguageDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   int  index = 0;
   UINT  i = 0; 
@@ -1638,15 +1510,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  CharacterDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK CharacterDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK CharacterDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   switch (msg)
     {
@@ -1873,15 +1737,7 @@ LPARAM lParam;
 
 /*-----------------------------------------------------------------------
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK MathEntityDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK MathEntityDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* !__STDC__ */
 {
   switch (msg)
     {
@@ -1915,15 +1771,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  ApplyClassDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK ApplyClassDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK ApplyClassDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   int   index = 0;
   UINT  i = 0;
@@ -2040,15 +1888,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  InitConfirmDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK InitConfirmDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK InitConfirmDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   ThotWindow messageWnd;
 
@@ -2087,15 +1927,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  InitConfirm3LDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK InitConfirm3LDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK InitConfirm3LDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
     switch (msg)
       {
@@ -2135,15 +1967,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  ChangeFormatDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK ChangeFormatDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK ChangeFormatDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   ThotBool ok;	  
   int  val;
@@ -2334,15 +2158,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  GreekKeyboardDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK GreekKeyboardDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK GreekKeyboardDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   int    car;
 
@@ -2862,15 +2678,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  AuthentificationDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK AuthentificationDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK AuthentificationDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   static ThotWindow hwnNameEdit;
   static ThotWindow hwnPasswdEdit;
@@ -2959,15 +2767,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  BackgroundImageDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK BackgroundImageDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK BackgroundImageDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
     switch (msg)
       {
@@ -3067,15 +2867,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  MakeIDDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK MakeIDDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK MakeIDDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   switch (msg)
     {
@@ -3168,16 +2960,8 @@ void CreateAltDlgWindow ()
 /*-----------------------------------------------------------------------
  CreateCSSDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
-void       CreateCSSDlgWindow (ThotWindow parent, int nb_item, STRING buffer, STRING title, CHAR_T* msg_text)
-#else  /* __STDC__ */
-void       CreateCSSDlgWindow (parent, nb_item, buffer, title, msg_text)
-ThotWindow parent;
-int        nb_item;
-STRING     buffer;
-STRING     title;
-STRING     msg_text;
-#endif /* __STDC__ */
+void CreateCSSDlgWindow (ThotWindow parent, int nb_item, STRING buffer,
+			 STRING title, CHAR_T* msg_text)
 {
   nbItem     = (UINT)nb_item;
   cssList    = buffer;
@@ -3193,13 +2977,7 @@ STRING     msg_text;
 /*-----------------------------------------------------------------------
  CreateTitleDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void       CreateTitleDlgWindow (ThotWindow parent, STRING title)
-#else  /* !__STDC__ */
-void       CreateTitleDlgWindow (parent, title)
-ThotWindow parent;
-STRING     title;
-#endif /* __STDC__ */
 {  
   ustrcpy (urlToOpen, title);
   ReleaseFocus = FALSE;
@@ -3211,16 +2989,7 @@ STRING     title;
 /*-----------------------------------------------------------------------
  CreateHRefDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void   CreateHRefDlgWindow (ThotWindow parent, STRING HRefValue, int doc_select, int dir_select, int doc_type)
-#else  /* !__STDC__ */
-void   CreateHReflgWindow (parent, HRefValue, doc_select, dir_select, doc_type)
-ThotWindow   parent;
-STRING HRefValue;
-int    doc_select;
-int    dir_select;
-int    doc_type;
-#endif /* __STDC__ */
 {  	
   docSelect = doc_select;
   dirSelect = dir_select;
@@ -3239,15 +3008,7 @@ int    doc_type;
 /*-----------------------------------------------------------------------
  CreateHelpDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void       CreateHelpDlgWindow (ThotWindow parent, STRING localname, STRING msg1, STRING msg2)
-#else  /* !__STDC__ */
-void       CreateHelpDlgWindow (parent, localname, msg1, msg2)
-ThotWindow parent;
-STRING     localname;
-STRING     msg1;
-STRING     msg2;
-#endif /* __STDC__ */
 {  
   ustrcpy (currentPathName, localname);
   ustrcpy (message, msg1);
@@ -3258,13 +3019,8 @@ STRING     msg2;
 /*-----------------------------------------------------------------------
  CreateMathDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void        CreateMathDlgWindow (ThotWindow parent)
-#else  /* !__STDC__ */
-void        CreateMathDlgWindow (parent)
-ThotWindow  parent;
-#endif /* __STDC__ */
-{  
+{
   if (MathPal)
     SetFocus (MathPal);
   else
@@ -3274,13 +3030,7 @@ ThotWindow  parent;
 /*-----------------------------------------------------------------------
  CreatePrintDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void       CreatePrintDlgWindow (ThotWindow parent, STRING ps_dir)
-#else  /* !__STDC__ */
-void       CreatePrintDlgWindow (parent, ps_dir)
-ThotWindow parent;
-STRING     ps_dir;
-#endif /* __STDC__ */
 {  
   gbAbort            = FALSE;
   ghwndMain          = parent;
@@ -3297,14 +3047,7 @@ STRING     ps_dir;
 /*-----------------------------------------------------------------------
  CreateTableDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void   CreateTableDlgWindow (int num_cols, int num_rows, int t_border)
-#else  /* !__STDC__ */
-void   CreateTableDlgWindow (num_cols, num_rows, t_border)
-int    num_cols;
-int    num_rows;
-int    t_border;
-#endif /* __STDC__ */
 {
   numCols   = num_cols;
   numRows   = num_rows;
@@ -3316,13 +3059,7 @@ int    t_border;
 /*-----------------------------------------------------------------------
  CreateMatrixDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void   CreateMatrixDlgWindow (int num_cols, int num_rows)
-#else  /* !__STDC__ */
-void   CreateMatrixDlgWindow (num_cols, num_rows)
-int    num_cols;
-int    num_rows;
-#endif /* __STDC__ */
 {
   numCols   = num_cols;
   numRows   = num_rows;
@@ -3333,13 +3070,7 @@ int    num_rows;
 /*-----------------------------------------------------------------------
  CreateSaveAsDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void   CreateSaveAsDlgWindow (ThotWindow parent, STRING path_name)
-#else  /* !__STDC__ */
-void   CreateSaveAsDlgWindow (parent, path_name)
-ThotWindow   parent;
-STRING path_name;
-#endif /* __STDC__ */
 {
   HTMLFormat = (DocumentTypes[SavingDocument] != docText &&
 		        DocumentTypes[SavingDocument] != docCSS &&
@@ -3355,17 +3086,7 @@ STRING path_name;
 /*-----------------------------------------------------------------------
  CreateOPenDocDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void   CreateOpenDocDlgWindow (ThotWindow parent, STRING title, STRING docName, int doc_select, int dir_select, int doc_type)
-#else  /* !__STDC__ */
-void   CreateOpenDocDlgWindow (parent, title, docName, doc_select, dir_select, doc_type)
-ThotWindow   parent;
-STRING title;
-STRING docName;
-int    doc_select;
-int    dir_select;
-int    doc_type;
-#endif /* __STDC__ */
 {  
   docSelect = doc_select;
   dirSelect = dir_select;
@@ -3386,16 +3107,7 @@ int    doc_type;
 /*-----------------------------------------------------------------------
  CreateOPenImgDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void CreateOpenImgDlgWindow (ThotWindow parent, STRING imgName, int doc_select, int dir_select, int doc_type)
-#else  /* !__STDC__ */
-void CreateOpenImgDlgWindow (parent, imgName, doc_select, dir_select, doc_type)
-ThotWindow  parent;
-STRING imgName;
-int   doc_select;
-int   dir_select;
-int   doc_type;
-#endif /* __STDC__ */
 {  
   docSelect = doc_select;
   dirSelect = dir_select;
@@ -3414,12 +3126,7 @@ int   doc_type;
 /*-----------------------------------------------------------------------
  CreateGraphicsDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void  CreateGraphicsDlgWindow (ThotWindow frame)
-#else  /* !__STDC__ */
-void  CreateGraphicsDlgWindow (frame)
-ThotWindow frame;
-#endif /* __STDC__ */
 {
   if (GraphPal)
     SetFocus (GraphPal);
@@ -3430,14 +3137,7 @@ ThotWindow frame;
 /*-----------------------------------------------------------------------
  CreateSaveListDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void       CreateSaveListDlgWindow (ThotWindow parent, int nb_item, STRING save_list)
-#else  /* !__STDC__ */
-void       CreateSaveListDlgWindow (parent, nb_item, save_list)
-ThotWindow parent;
-int        nb_item;
-STRING     save_list;
-#endif /* __STDC__ */
 {  
   nbItem      = (UINT)nb_item;
   saveList    = save_list;
@@ -3447,15 +3147,7 @@ STRING     save_list;
 /*-----------------------------------------------------------------------
  CreateCloseDocDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void       CreateCloseDocDlgWindow (ThotWindow parent, STRING msg, ThotBool* save_befor, ThotBool* close_dont_save)
-#else  /* !__STDC__ */
-void       CreateCloseDocDlgWindow (parent, msg, save_befor, close_dont_save)
-ThotWindow parent;
-STRING    msg;
-ThotBool *save_befor;
-ThotBool *close_dont_save;
-#endif /* __STDC__ */
 {  
   ustrcpy (message, msg);
   DialogBox (hInstance, MAKEINTRESOURCE (CLOSEDOCDIALOG), parent, (DLGPROC) CloseDocDlgProc);
@@ -3466,20 +3158,7 @@ ThotBool *close_dont_save;
 /*-----------------------------------------------------------------------
  CreateLanguageDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void        CreateLanguageDlgWindow (ThotWindow parent, STRING title, STRING msg1, int nb_item, STRING lang_list, STRING msg2, int lang_value, STRING curLang)
-#else  /* !__STDC__ */
-void        CreateLanguageDlgWindow (parent, title, msg1, nb_item, lang_list, msg2, lang_value, curLang)
-ThotWindow  parent;
-STRING      title;
-STRING      msg1;
-int         nb_item;
-STRING      lang_list;
-STRING      msg2;
-int         nmenuLanguage;
-int         lang_value;
-STRING      curLang;
-#endif /* __STDC__ */
 {  
   ustrcpy (wndTitle, title);
   ustrcpy (message, msg1);
@@ -3494,17 +3173,7 @@ STRING      curLang;
 /*-----------------------------------------------------------------------
  CreateCharacterDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void CreateCharacterDlgWindow (ThotWindow parent, int font_num, int font_style, int font_weight, int font_underline, int font_size)
-#else  /* !__STDC__ */
-void CreateCharacterDlgWindow (parentint font_num, font_style, font_weight, font_underline, font_size)
-ThotWindow  parent;
-int   font_num;
-int   font_style;
-int   font_weight;
-int   font_underline;
-int   font_size;
-#endif /* __STDC__ */
 {  
     fontNum       = font_num;
     fontStyle     = font_style;
@@ -3519,15 +3188,7 @@ int   font_size;
 /*-----------------------------------------------------------------------
  CreateAttributeDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void CreateAttributeDlgWindow (STRING title, int curr_val, int nb_items) 
-#else  /* __STDC__ */
-void CreateAttributeDlgWindow (title, curr_val, nb_items) 
-STRING title;
-int   attr_val;
-int   nb_items;
-STRING buffer;
-#endif /* __STDC__ */
 {
   ustrcpy (attDlgTitle, title);
   currAttrVal = curr_val;
@@ -3566,13 +3227,7 @@ STRING buffer;
 /*-----------------------------------------------------------------------
  CreateMCHARDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void       CreateMCHARDlgWindow (ThotWindow parent, STRING math_entity_name) 
-#else  /* __STDC__ */
-void       CreateMCHARDlgWindow (parent, math_entity_name) 
-ThotWindow parent; 
-STRING     math_entity_name;
-#endif /* __STDC__ */
 {
     ustrcpy (mathEntityName, math_entity_name);
     DialogBox (hInstance, MAKEINTRESOURCE (MATH_ENTITY_DLG), NULL, (DLGPROC) MathEntityDlgProc);
@@ -3582,14 +3237,7 @@ STRING     math_entity_name;
 /*-----------------------------------------------------------------------
  CreateRuleDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void CreateRuleDlgWindow (ThotWindow parent, int nb_class, STRING class_list)
-#else  /* !__STDC__ */
-void CreateRuleDlgWindow (parent, nb_class, class_list)
-ThotWindow  parent;
-int   nb_class;
-STRING class_list;
-#endif /* __STDC__ */
 {  
   nbClass     = (UINT)nb_class;
   classList   = class_list;
@@ -3600,14 +3248,7 @@ STRING class_list;
 /*-----------------------------------------------------------------------
  CreateApplyClassDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void CreateApplyClassDlgWindow (ThotWindow parent, int nb_class, STRING class_list)
-#else  /* !__STDC__ */
-void CreateApplyClassDlgWindow (parent, nb_class, class_list)
-ThotWindow   parent;
-int    nb_class;
-STRING class_list;
-#endif /* __STDC__ */
 {  
   nbClass     = (UINT)nb_class;
   classList   = class_list;
@@ -3618,15 +3259,7 @@ STRING class_list;
 /*-----------------------------------------------------------------------
  CreateInitConfirmDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void CreateInitConfirmDlgWindow (ThotWindow parent, int ref, STRING title, STRING msg)
-#else  /* !__STDC__ */
-void CreateInitConfirmDlgWindow (parent, ref, title, msg)
-ThotWindow  parent;
-int   ref;
-STRING title;
-STRING msg;
-#endif /* __STDC__ */
 {  
   ustrcpy (message, msg);
   ustrcpy (wndTitle, title);
@@ -3638,18 +3271,7 @@ STRING msg;
 /*-----------------------------------------------------------------------
  CreateInitConfirm3LDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void        CreateInitConfirm3LDlgWindow (ThotWindow parent, int ref, STRING title, STRING msg, STRING msg2, STRING msg3, ThotBool withCancel)
-#else  /* !__STDC__ */
-void        CreateInitConfirm3LDlgWindow (parent, ref, title, msg, msg2, msg3)
-ThotWindow  parent;
-int         ref;
-STRING      title;
-STRING      msg;
-STRING      msg2;
-STRING      msg3;
-ThotBool    withCancel;
-#endif /* __STDC__ */
 {
   ustrcpy (message, msg);
   if (msg2 && *msg2 != WC_EOS)
@@ -3691,12 +3313,7 @@ void CreateChangeFormatDlgWindow (int num_zone_recess, int num_zone_line_spacing
 /*-----------------------------------------------------------------------
  CreateGreekKeyboardDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void CreateGreekKeyboardDlgWindow (ThotWindow parent)
-#else  /* !__STDC__ */
-void CreateGreekKeyboardDlgWindow (parent)
-ThotWindow  parent;
-#endif /* __STDC__ */
 {  
   if (GreekPal)
     SetFocus (GreekPal);
@@ -3707,14 +3324,7 @@ ThotWindow  parent;
 /*-----------------------------------------------------------------------
  CreateAuthentificationDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
-void         CreateAuthenticationDlgWindow (ThotWindow parent, const STRING realm, STRING server)
-#else  /* !__STDC__ */
-void         CreateAuthenticationDlgWindow (parent, realm, server)
-ThotWindow   parent;
-const STRING realm;
-STRING       server;
-#endif /* __STDC__ */
+void CreateAuthenticationDlgWindow (ThotWindow parent, const STRING realm, STRING server)
 {  
   string_par1 = realm;
   string_par2 = server;
@@ -3725,13 +3335,7 @@ STRING       server;
 /*-----------------------------------------------------------------------
  CreateBackgroundImageDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void CreateBackgroundImageDlgWindow (ThotWindow parent, STRING image_location)
-#else /* !__STDC__ */
-void CreateBackgroundImageDlgWindow (parent, image_location)
-ThotWindow  parent;
-STRING image_location;
-#endif /* __STDC__ */
 {
   szFilter         = APPIMAGENAMEFILTER;
   ustrcpy (currentPathName, image_location);
@@ -3741,12 +3345,7 @@ STRING image_location;
 /*-----------------------------------------------------------------------
  CreateMakeIDDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void CreateMakeIDDlgWindow (ThotWindow parent)
-#else /* !__STDC__ */
-void CreateMakeIDDlgWindow (parent)
-ThotWindow  parent;
-#endif /* __STDC__ */
 {
   /* we only use one such dialog at the time */
   if (MakeIDHwnd)
