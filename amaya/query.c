@@ -150,9 +150,9 @@ char *filename;
   
   if (status == -1)
     { 
-      if (fd_cachelock)
+      if (fd_cachelock > 0)
 	close (fd_cachelock);
-    fd_cachelock = 0;
+      fd_cachelock = 0;
     }
   
   return (status);
