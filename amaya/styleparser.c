@@ -5361,12 +5361,18 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 			    base = strstr (&CSSbuffer[import], "all");
 			  if (base == NULL)
 			    ignore = TRUE;
+			  noRule = TRUE;
 			}
 		      else if (!strncasecmp (&CSSbuffer[import+1], "page", 4))
-			page = TRUE;
+			{
+			  page = TRUE;
+			  noRule = TRUE;
+			}
 		      else if (!strncasecmp (&CSSbuffer[import+1], "font-face", 9))
-			fontface = TRUE;
-		      noRule = TRUE;
+			{
+			  fontface = TRUE;
+			  noRule = TRUE;
+			}
 		    }
 		}
 	      break;
