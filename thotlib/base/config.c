@@ -1740,6 +1740,7 @@ char               *schemaName;
    char                lastStyle[MAX_TXT_LEN];
    char		       bestStyle[MAX_TXT_LEN];
    int		       lastPrefixLen, bestPrefixLen;
+   int		       score,i;
    boolean             stop;
 
    schemaName[0] = '\0';
@@ -1773,6 +1774,17 @@ char               *schemaName;
 			  (pSS->SsDefaultPSchema)[lastPrefixLen]!='\0' &&
 			  lastStyle[lastPrefixLen]==(pSS->SsDefaultPSchema)[lastPrefixLen])
 		      lastPrefixLen ++;
+		    score = lastPrefixLen;
+		    i = 0;
+		    while(lastStyle[lastPrefixLen]!='\0')
+		      {
+			if(pageSize[i] =='\0' ||
+			   pageSize[i]!= lastStyle[lastPrefixLen])
+			  score --;
+			lastPrefixLen++;
+			i++;
+		      }
+			  
 		  }
 		else if (strcmp (word, "pagesize") == 0)
 		   /* c'est une ligne "pagesize", on la traite */
@@ -1783,10 +1795,10 @@ char               *schemaName;
 				 pSS->SsName, line);
 		     else if (strcmp (seqLine, pageSize) == 0)
 			/* c'est le format de page cherche'. On a fini */
-		       if(lastPrefixLen >= bestPrefixLen)
+		       if(score > bestPrefixLen)
 			 {
 			   strcpy (bestStyle, lastStyle);
-			   bestPrefixLen = lastPrefixLen;
+			   bestPrefixLen = score;
 			 }
 		  }
 	     }

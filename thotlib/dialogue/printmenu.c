@@ -325,6 +325,11 @@ char               *viewNames;
    ConfigGetPSchemaForPageSize (pDoc->DocSSchema, PageSize, newPres);
    if (newPres[0] != '\0')
       strcpy (pDoc->DocSSchema->SsDefaultPSchema, newPres);
+   if (ThotLocalActions[T_rextprint]!=NULL && 
+       strcmp(pDoc->DocSSchema->SsDefaultPSchema,savePres))
+     {
+       TtaDisplayMessage(INFO,TtaGetMessage(LIB,TMSG_CHANGE_PSCH),newPres);
+     }
    strcpy(tmpDirName,"/tmp");
    strcpy(tmpDocName,"ThotXXXXXX");
 #ifdef WWW_MSWINDOWS
