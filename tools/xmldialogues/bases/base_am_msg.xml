@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Tue Jul  3 10:35:35 CEST 2001" version="33">
+<base last_update="Wed Jul  4 18:11:00 CEST 2001" version="34">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -1863,6 +1863,14 @@
 	<message xml:lang="it">I stili sono ignorati - vedi Viste/Mostra le errore</message>
 	<message xml:lang="de">Stilvorlagen sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen</message>
 	<message xml:lang="es">>Se ignoran estili - vea Vistas/Mostrar fichero log</message>
+</label>
+<label define="AM_DOUBLE_LOAD">
+	<message xml:lang="en">This document is already loaded in another Window</message>
+	<message xml:lang="fr">Ce document est déjà affiché dans une autre fenêtre.</message>
+</label>
+<label define="AM_UNSAVE">
+	<message xml:lang="en">Saving that instance may cause a lost update problem</message>
+	<message xml:lang="fr">Sauver cette instance peut provoquer des problèmes de mise à jour.</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

@@ -248,3 +248,5 @@
 246 **Error: invalid MIME type
 247 **Unknown
 248 **Styles are ignored - see Views/Show parsing errors
+249 **This document is already loaded in another Window
+250 **Saving that instance may cause a lost update problem

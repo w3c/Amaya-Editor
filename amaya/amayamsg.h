@@ -249,4 +249,6 @@
 #define AM_INVALID_MIMETYPE		246
 #define AM_UNKNOWN		247
 #define AM_CSS_ERROR		248
-#define AMAYA_MSG_MAX		249
+#define AM_DOUBLE_LOAD		249
+#define AM_UNSAVE		250
+#define AMAYA_MSG_MAX		251

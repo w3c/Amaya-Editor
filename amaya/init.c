@@ -2789,7 +2789,8 @@ static Document LoadDocument (Document doc, char *pathname,
 	}
       /* if the document was already loaded, warn the user */
       if (IsDocumentLoaded (s, form_data))
-	InitConfirm3L (newdoc, 1, "Warning: this document is already loaded in another Window", "Saving that instance may cause a lost update problem", NULL, FALSE);
+	InitConfirm3L (newdoc, 1,  TtaGetMessage (AMAYA, AM_DOUBLE_LOAD),
+		       TtaGetMessage (AMAYA, AM_UNSAVE), NULL, FALSE);
       DocumentURLs[newdoc] = s;
 
       /* save the document's formdata into the document table */
