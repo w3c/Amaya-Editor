@@ -947,13 +947,25 @@ LPARAM lParam;
                 if (toPrinter) {
                    CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_PRINTER);
                    SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, "Printer ...");
+#                  if 0
+                   if (TtPrinterDC)
+                      DeleteDC (TtPrinterDC);
+
+                   CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_PRINTER);
+
+                   TtPrinterDC = GetPrinterDC ();
+                   if (TtPrinterDC) {
+                      SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, lpPrintTemplateName);
+                      WinInitPrinterColors ();
+                      ghwndAbort = CreateDialog (hInstance, MAKEINTRESOURCE (PRINTPROGRESSDLG), ghwndMain, (DLGPROC) AbortDlgProc);
+				   }
+#                  endif /* 0 */
                 } else if (toPostscript) {
                      CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_POSTSCRIPT);
                      SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, currentFileToPrint);
 					 TtPrinterDC = NULL;
 				}
 				break;
-
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
                        case IDC_MANUALFEED:

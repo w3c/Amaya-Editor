@@ -536,6 +536,7 @@ View                view;
 	       }
 	  }
      }
+   Xbuffer [i] = 0;
    return i;
 }
 #endif /* _WIN_PRINT */
@@ -552,7 +553,9 @@ View                view;
 #endif
 {
 #  ifdef _WINDOWS
+#  ifndef _WIN_PRINT
    ClipboardLength = CopyXClipboard (&Xbuffer, view);
+#  endif /* _WIN_PRINT */
 #  else /* _WINDOWS */
    int                 frame;
 

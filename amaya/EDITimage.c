@@ -357,10 +357,6 @@ View                view;
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseImage + FormImage, FALSE);
    TtaWaitShowDialogue ();
-#  else /* _WINDOWS */
-   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), LastURLImage, BaseImage, FormImage, -1, -1) ;
-
-#  endif /* _WINDOWS */
    if (IsHTTPPath (DocumentURLs[document]) && !IsHTTPPath (LastURLImage))
      {
        /*
@@ -373,6 +369,9 @@ View                view;
        desc->status = IMAGE_MODIFIED;
        TtaFileCopy (LastURLImage, desc->localName);
      }
+#  else /* _WINDOWS */
+   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), LastURLImage, BaseImage, FormImage, -1, -1) ;
+#  endif /* _WINDOWS */
    return (LastURLImage);
 }
 

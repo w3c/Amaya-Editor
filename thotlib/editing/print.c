@@ -153,7 +153,6 @@ extern HDC       TtPrinterDC;
 extern int       currentFrame;
 extern HINSTANCE hInstance;
 
-
 BOOL             bError;
 BOOL             gbAbort;
 FARPROC          lpfnAbortProc = NULL;
@@ -3005,6 +3004,7 @@ char              **argv;
   DOT_PER_INCHE    = ScreenDPI;
   WIN_ReleaseDeviceContext ();
   PrinterDPI       = GetDeviceCaps (TtPrinterDC, LOGPIXELSY);
+  ghwndAbort       = hWnd;
 # endif /* _WINDOWS */
 
   removeDirectory = FALSE;
@@ -3264,6 +3264,7 @@ char              **argv;
          else
            {
 #            ifdef _WINDOWS
+             /* sprintf (cmd, "%s\\%s.PIV", tempDir, name); */
 #            else  /* _WINDOWS */
 	     if (NCopies > 1)
 	       sprintf (cmd, "%s -#%d -T%s %s/%s.ps\n", printer, NCopies, realName, tempDir, name);
@@ -3289,7 +3290,7 @@ char              **argv;
     {
 #      ifdef _WINDOWS
 	   int i;
-       if (!DeleteFile (cmd))
+       if (!strcmp (destination, "PSFILE") && !DeleteFile (cmd))
           WinErrorBox (NULL);
 	   else {
              char* pivDoc = (char*) TtaGetMemory (strlen (tmpDocName) + strlen (tmpDir) + 6);

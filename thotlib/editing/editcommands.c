@@ -100,6 +100,27 @@ static boolean      FromKeyboard;
 #include "views_f.h"
 #include "windowdisplay_f.h"
 
+#ifdef _WINDOWS
+#ifdef __STDC__
+static BOOL sameString (unsigned char* str1, unsigned char* str2)
+#else  /* __STDC__ */
+static BOOL sameString (unsigned char* str1, unsigned char* str2)
+unsigned char* str1;
+unsigned char* str2;
+#endif /* __STDC__ */
+{
+   int i;
+
+   int l1 = strlen (str1);
+   int l2 = strlen (str2);
+   if (l1 != l2)
+      return FALSE;
+   for (i = 0; i < l1; i++)
+       if ((unsigned int) str1[i] != (unsigned int) str2 [i])
+          return FALSE ;
+   return TRUE;
+}
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    CopyString computes the width of the source text and copies it into the
@@ -3526,6 +3547,7 @@ View                view;
 #  ifdef _WINDOWS
    HANDLE hMem   = 0;
    LPSTR lpData = 0;
+   LPSTR pBuff;
    int    ndx;
    int    frame;
 
@@ -3540,8 +3562,9 @@ View                view;
 
       hMem   = GlobalAlloc (GHND, ClipboardLength + 1);
       lpData = (LPSTR) GlobalLock (hMem);
+	  pBuff  = (LPSTR) Xbuffer;
       for (ndx = 0; ndx < ClipboardLength; ndx++)
-          *lpData++ = *Xbuffer++;
+          *lpData++ = *pBuff++;
    /* 
       lstrcpy (lpData, Xbuffer); */
 
@@ -3567,7 +3590,27 @@ View                view;
 
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS
+   HANDLE hMem;
+   LPSTR  lpData;
+   int    lpDatalength;
+   int    frame = GetWindowNumber (document, view);
+   
+   OpenClipboard (FrRef [frame]);
+   if (hMem = GetClipboardData (CF_TEXT)) {
+      lpData = GlobalLock (hMem);
+      lpDatalength = strlen (lpData);
+	  if ((Xbuffer == NULL) || !sameString (Xbuffer, (unsigned char*)lpData))
+         PasteXClipboard ((unsigned char*) lpData, lpDatalength);
+	  else  
+         ContentEditing (TEXT_PASTE);
+      GlobalUnlock (hMem);
+   } else 
+        ContentEditing (TEXT_PASTE);
+   CloseClipboard ();
+#  else /* _WINDOWS */
    ContentEditing (TEXT_PASTE);
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
