@@ -91,10 +91,10 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {"plaintext", SPACE, HTML_EL_Preformatted, L_TransitionalValue, FALSE},/* converted to PRE */
    {"pre", SPACE, HTML_EL_Preformatted, L_BasicValue, FALSE},
    {"q", SPACE, HTML_EL_Quotation, L_BasicValue, TRUE},
-   {"rb", SPACE, HTML_EL_rb, L_RubyValue, TRUE},
+   {"rb", SPACE, HTML_EL_rb, L_RubyValue, FALSE},
    {"rbc", SPACE, HTML_EL_rbc, L_RubyValue, FALSE},
    {"rp", SPACE, HTML_EL_rp, L_RubyValue, FALSE},
-   {"rt", SPACE, HTML_EL_rt, L_RubyValue, TRUE},
+   {"rt", SPACE, HTML_EL_rt, L_RubyValue, FALSE},
    {"rtc", SPACE, HTML_EL_rtc1, L_RubyValue, FALSE},
    {"rtc", SPACE, HTML_EL_rtc2, L_RubyValue, FALSE},
    {"ruby", SPACE, HTML_EL_simple_ruby, L_RubyValue, TRUE},
