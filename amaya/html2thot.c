@@ -1038,7 +1038,8 @@ Document            document;
    text = TtaAllocString (length + 1);
    TtaGiveTextAttributeValue (attrCoords, text, &length);
 
-   if (shape == HTML_ATTR_shape_VAL_rectangle || shape == HTML_ATTR_shape_VAL_circle)
+   if (shape == HTML_ATTR_shape_VAL_rectangle ||
+       shape == HTML_ATTR_shape_VAL_circle)
      {
 	/* Search the x_coord attribute */
 	attrType.AttrTypeNum = HTML_ATTR_x_coord;
@@ -3942,7 +3943,8 @@ CHAR_T                c;
       that character.  This is to accept the XML syntax for empty elements or
       processing instructions, such as <img src="SomeUrl" /> or
       <?xml version="1.0"?>  */
-   if (LgBuffer == 1 && (inputBuffer[0] == TEXT('/') || inputBuffer[0] == TEXT('?')))
+   if (LgBuffer == 1 &&
+       (inputBuffer[0] == TEXT('/') || inputBuffer[0] == TEXT('?')))
       {
       InitBuffer ();
       return;
@@ -3955,7 +3957,19 @@ CHAR_T                c;
    else
       tableEntry = MapAttr (inputBuffer, &schema, lastElemEntry, theDocument);
 
-   if (tableEntry == NULL)
+   if (tableEntry)
+     /* this is a known attribute. Can it be associated with the current
+	element ? */
+     {
+       /* reject attribute height on a table */
+       if (tableEntry->ThotAttribute == HTML_ATTR_Height_)
+	 {
+	   elType = TtaGetElementType (lastElement);
+	   if (elType.ElTypeNum == HTML_EL_Table)
+	     tableEntry = NULL;
+	 }
+     }
+   if (!tableEntry)
       /* this attribute is not in the HTML mapping table */
      {
 	if (ustrcasecmp (inputBuffer, TEXT("xmlns")) == 0 ||
@@ -3973,7 +3987,7 @@ CHAR_T                c;
 	   {
            if (ustrlen (inputBuffer) > MaxMsgLength - 30)
 	      inputBuffer[MaxMsgLength - 30] = WC_EOS;
-	   usprintf (msgBuffer, TEXT("Unknown attribute \"%s\""), inputBuffer);
+	   usprintf (msgBuffer, TEXT("Invalid attribute \"%s\""), inputBuffer);
 	   ParseHTMLError (theDocument, msgBuffer);
 	   /* attach an Invalid_attribute to the current element */
 	   tableEntry = &pHTMLAttributeMapping[0];
@@ -4008,8 +4022,10 @@ CHAR_T                c;
 			   {
 			      attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
 			      attr = TtaNewAttribute (attrType);
-			      TtaAttachAttribute (lastElement, attr, theDocument);
-			      TtaSetAttributeText (attr, TEXT("link"), lastElement, theDocument);
+			      TtaAttachAttribute (lastElement, attr,
+						  theDocument);
+			      TtaSetAttributeText (attr, TEXT("link"),
+						   lastElement, theDocument);
 			   }
 		      }
 		    else if (attrType.AttrTypeNum == HTML_ATTR_Checked)
