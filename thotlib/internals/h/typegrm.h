@@ -17,7 +17,7 @@ typedef enum
 	err
 } nature;
 
-typedef char    lineBuffer[linelen];	/* une ligne de texte */
+typedef unsigned char lineBuffer[linelen]; /* une ligne de texte */
 typedef int	iline;			/* 0 .. linelen, index dans une ligne*/
 
 typedef struct _kwelem
