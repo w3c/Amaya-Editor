@@ -254,6 +254,7 @@
 #define IDD_DIALOG4                     550
 #define IDC_CURSOR1                     551
 #define MIMETYPEDIALOG                  552
+#define CHARSETDIALOG                   553
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -701,6 +702,11 @@
 #define IDC_CHARSET                     1561
 #define IDC_MIMETYPE                    1562
 #define IDC_MTEDIT                      1564
+#define IDC_STATUS                      1566
+#define IDC_USASCII                     1567
+#define IDC_UTF8                        1568
+#define IDC_ISOL1                       1569
+#define IDC_ISOL2                       1570
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -745,9 +751,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        553
+#define _APS_NEXT_RESOURCE_VALUE        554
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1566
+#define _APS_NEXT_CONTROL_VALUE         1570
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

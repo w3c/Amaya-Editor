@@ -156,7 +156,6 @@ static OPENFILENAME OpenFileName;
 static char        *szFilter;
 static char         szFileName[256];
 static char         szBuffer [MAX_BUFF];
-static ThotWindow   currentDlg;
 static ThotWindow   wndCSSList;
 static ThotWindow   wndLangList;
 static ThotWindow   wndListRule;
@@ -172,6 +171,8 @@ static ThotWindow   FormatForm = NULL;
 static ThotWindow   PrintForm = NULL;
 static ThotWindow   LangForm = NULL;
 static ThotWindow   AttrForm = NULL;
+static ThotWindow   SaveAsForm = NULL;
+static ThotWindow   MimeTypeDlg = NULL;
 static ThotWindow   DocInfo[DocumentTableLength];
 static UINT         itemIndex;
 static UINT         nbClass;
@@ -1017,6 +1018,75 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
 }
 
 /*-----------------------------------------------------------------------
+ CharsetDlgProc
+ ------------------------------------------------------------------------*/
+LRESULT CALLBACK CharsetDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
+					 		     LPARAM lParam)
+{
+  int             index = 0;
+  UINT            i = 0; 
+  static ThotWindow   wndMTlist;
+
+  switch (msg)
+    {
+    case WM_INITDIALOG:
+      /* get the default GUI font */
+      SetWindowText (hwnDlg, "Select a Charset");
+	  SetWindowText (GetDlgItem (hwnDlg, ID_APPLY), TtaGetMessage (LIB, TMSG_APPLY));
+      SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+      CheckRadioButton (hwnDlg, IDC_USASCII, IDC_ISOL2, IDC_USASCII);
+	  SetFocus (GetDlgItem (hwnDlg, IDC_USASCII));
+	  return FALSE;
+      break;
+
+    case WM_CLOSE:
+    case WM_DESTROY:
+      EndDialog (hwnDlg, ID_DONE);
+      break;
+
+    case WM_COMMAND:      
+      switch (LOWORD (wParam))
+	{		  
+	 case IDC_USASCII:
+	   strcpy (UserCharset, "us-ascii");
+	   break;
+  	 case IDC_UTF8:
+	   strcpy (UserCharset, "UTF-8");
+	   break;
+   	 case IDC_ISOL1:
+	   strcpy (UserCharset, "iso-8859-1");
+	   break;
+	case IDC_ISOL2:
+	   strcpy (UserCharset, "iso-8859-2");
+	  break;
+
+	case ID_APPLY:
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	  
+	case IDCANCEL:
+	case WM_CLOSE:
+	  UserCharset[0] = EOS;
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	}
+      break;
+    default: return FALSE;
+    }
+  return TRUE;
+}
+
+/*-----------------------------------------------------------------------
+ MimeTypeDlgStatus
+ Updates the status bar of the MimeType dialog
+ ------------------------------------------------------------------------*/
+void MimeTypeDlgStatus (char *msg)
+{
+  if (MimeTypeDlg && msg)
+  	  SetWindowText (GetDlgItem (MimeTypeDlg, IDC_STATUS), msg);
+}
+
+/*-----------------------------------------------------------------------
  MimeTypeDlgProc
  ------------------------------------------------------------------------*/
 LRESULT CALLBACK MimeTypeDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
@@ -1031,14 +1101,15 @@ LRESULT CALLBACK MimeTypeDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
     {
     case WM_INITDIALOG:
       /* get the default GUI font */
+	  MimeTypeDlg = hwnDlg;
       newFont = GetStockObject (DEFAULT_GUI_FONT); 
-      SetWindowText (hwnDlg, "MIME type query");
+      SetWindowText (hwnDlg, "Select a MIME type");
 	  SetWindowText (GetDlgItem (hwnDlg, ID_APPLY), TtaGetMessage (LIB, TMSG_APPLY));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
       
       wndMTlist = CreateWindow ("listbox", NULL,
 		  WS_CHILD | WS_VISIBLE | LBS_STANDARD | WS_VSCROLL | WS_TABSTOP,
-				  10, 20, 310, 100, hwnDlg, (HMENU) 1, 
+				  10, 5, 310, 100, hwnDlg, (HMENU) 1, 
 				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
        /* set the font of the window */
       if (newFont)
@@ -1050,20 +1121,18 @@ LRESULT CALLBACK MimeTypeDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  index += strlen (&mimeType[index]) + 1;/* Longueur de l'intitule */
 	  i++;
       }
-	  i = 0;
-	  index = 0;
-      while (i < nbItem && mimeType[index] != '\0')
-	  {
-	  SendMessage (wndMTlist, LB_INSERTSTRING, i, (LPARAM) &mimeType[index]); 
-	  index += strlen (&mimeType[index]) + 1;/* Longueur de l'intitule */
-	  i++;
-      }
-
-      SetWindowText (GetDlgItem (hwnDlg, IDC_MTEDIT), UserMimeType);
+      SetDlgItemText (hwnDlg, IDC_MTEDIT, &mimeType[0]);
+	  /* select the first list item */
+	  SendMessage (wndMTlist, LB_SETCURSEL, 0, 0);
+	  /* put the focus on the first list item */
+	  SetFocus (wndMTlist);
+	  return FALSE;
       break;
 
     case WM_CLOSE:
     case WM_DESTROY:
+ 	  /* ThotCallback (BaseDialog + MimeTypeForm, INTEGER_DATA, (char *) 0); */
+	  MimeTypeDlg = NULL;
       EndDialog (hwnDlg, ID_DONE);
       break;
 
@@ -1087,7 +1156,11 @@ LRESULT CALLBACK MimeTypeDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  if (HIWORD (wParam) == LBN_DBLCLK)
 	    {
           GetDlgItemText (hwnDlg, IDC_MTEDIT, UserMimeType, sizeof (UserMimeType) - 1);
+	      if (UserMimeType[0] != EOS)
+		  {
+		  MimeTypeDlg = NULL;
 		  EndDialog (hwnDlg, ID_DONE);
+		  }
 	      break;
 	    }
 	}
@@ -1096,11 +1169,18 @@ LRESULT CALLBACK MimeTypeDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	{	  	  
 	case ID_APPLY:
       GetDlgItemText (hwnDlg, IDC_MTEDIT, UserMimeType, sizeof (UserMimeType) - 1);
+   	  ThotCallback (BaseDialog + MimeTypeForm, INTEGER_DATA, (char *) 1);
+	  if (UserMimeType[0] != EOS)
+	  {
+  	  MimeTypeDlg = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
+	  }
 	  break;
 	  
 	case IDCANCEL:
 	case WM_CLOSE:
+ 	  ThotCallback (BaseDialog + MimeTypeForm, INTEGER_DATA, (char *) 0);
+ 	  MimeTypeDlg = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	}
@@ -1108,6 +1188,16 @@ LRESULT CALLBACK MimeTypeDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
     default: return FALSE;
     }
   return TRUE;
+}
+
+/*-----------------------------------------------------------------------
+ SaveAsDlgStatus
+ Updates the status bar of the SaveAs dialog
+ ------------------------------------------------------------------------*/
+void SaveAsDlgStatus (char *msg)
+{
+  if (SaveAsForm && msg)
+  	  SetWindowText (GetDlgItem (SaveAsForm, IDC_STATUS), msg);
 }
 
 /*-----------------------------------------------------------------------
@@ -1122,7 +1212,7 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
   switch (msg)
     {
     case WM_INITDIALOG:
-      currentDlg = hwnDlg;
+      SaveAsForm = hwnDlg;
       SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_SAVE_AS));
       SetWindowText (GetDlgItem (hwnDlg, IDC_DOCLOCATION), 
 		  TtaGetMessage (AMAYA, AM_DOC_LOCATION));
@@ -1173,7 +1263,7 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  
 	  if (UpdateURLs)
 	    CheckRadioButton (hwnDlg, IDC_TRANSFORMURL, IDC_TRANSFORMURL, IDC_TRANSFORMURL);
-
+	}
 	  /* mime type */
       if (DocumentMeta[SavingDocument] && DocumentMeta[SavingDocument]->content_type)
           ptr = DocumentMeta[SavingDocument]->content_type;
@@ -1193,7 +1283,7 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       _snprintf (buff, 500, "Charset: %s", ptr);
   	  SetDlgItemText (hwnDlg, IDC_CHARSET, buff);
       SetDlgItemText (hwnDlg, ID_CHANGECHARSET, "Change");
-	}
+
 	  /* set the default focus and return FALSE to validate it */
 	  SetFocus (GetDlgItem (hwnDlg, IDC_EDITDOCSAVE));
 	  return FALSE;
@@ -1279,13 +1369,13 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	case IDCANCEL:
 	  EndDialog (hwnDlg, IDCANCEL);
 	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 0);
-	  currentDlg = NULL;
+	  SaveAsForm = NULL;
 	  break;
 	  
 	case ID_CONFIRM:
 	  EndDialog (hwnDlg, ID_CONFIRM);
 	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 1);
-	  currentDlg = NULL;
+	  SaveAsForm = NULL;
 	  break;
 	}
       break;
@@ -1614,7 +1704,7 @@ LRESULT CALLBACK SaveListDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	case ID_CONFIRM:
 	  ThotCallback (BaseDialog + ConfirmSaveList, INTEGER_DATA, (char*)1);
 	  EndDialog (hwnDlg, ID_CONFIRM);
-	  SendMessage (currentDlg, WM_DESTROY, 0, 0);
+	  SendMessage (SaveAsForm, WM_DESTROY, 0, 0);
 	  break;
 	  
 	case IDCANCEL:
@@ -3529,13 +3619,21 @@ void  CreateMatrixDlgWindow (int num_cols, int num_rows)
 }
 
 /*-----------------------------------------------------------------------
+ CreateCharsetDlgWindow
+ ------------------------------------------------------------------------*/
+void CreateCharsetDlgWindow (ThotWindow parent)
+{
+   DialogBox (hInstance, MAKEINTRESOURCE (CHARSETDIALOG), SaveAsForm, (DLGPROC) CharsetDlgProc);
+}
+
+/*-----------------------------------------------------------------------
  CreateMimeTypeDlgWindow
  ------------------------------------------------------------------------*/
 void CreateMimeTypeDlgWindow (ThotWindow parent, int nb_item, char *mimetype_list)
 {
    mimeType                = mimetype_list;
    nbItem                  = (UINT)nb_item;
-   DialogBox (hInstance, MAKEINTRESOURCE (MIMETYPEDIALOG), NULL, (DLGPROC) MimeTypeDlgProc);
+   DialogBox (hInstance, MAKEINTRESOURCE (MIMETYPEDIALOG), SaveAsForm, (DLGPROC) MimeTypeDlgProc);
 }
 
 /*-----------------------------------------------------------------------

@@ -1467,6 +1467,8 @@ void InitCharset (Document document, View view, char *url)
    TtaShowDialogue (BaseDialog + CharsetForm, FALSE);
    /* wait for an answer */
    TtaWaitShowDialogue ();
+#else
+   CreateCharsetDlgWindow (TtaGetViewFrame (document, view));
 #endif /* _WINDOWS */
 }
 
@@ -1516,7 +1518,7 @@ void InitMimeType (Document document, View view, char *url)
    /* status */
    TtaNewLabel (BaseDialog + MimeFormStatus,
 		BaseDialog + MimeTypeForm,
-		"jose");
+		"     ");
    TtaSetSelector (BaseDialog + MimeTypeSel, -1, UserMimeType);
 
    TtaSetDialoguePosition ();
@@ -4410,13 +4412,15 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	     {
 	       if ((!DocumentMeta[SavingDocument] 
 		    || !DocumentMeta[SavingDocument]->content_type
-		    || !DocumentMeta[SavingDocument]->content_type[0] == EOS)
+		    || DocumentMeta[SavingDocument]->content_type[0] == EOS)
 		   && (UserMimeType[0] == EOS))
 		 {
 #ifndef _WINDOWS
 		   TtaNewLabel (BaseDialog + SaveFormStatus,
 				BaseDialog + SaveForm,
 				"Error: invalid MIME type");
+#else
+ 		   SaveAsDlgStatus ("Error: invalid MIME type");
 #endif /* _WINDOWS */
 		   break;
 		 }
@@ -4468,6 +4472,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		   TtaNewLabel (BaseDialog + SaveFormStatus,
 				BaseDialog + SaveForm,
 				" ");
+#else
+ 		   SaveAsDlgStatus ("");
 #endif /* _WINDOWS */
 		   InitCharset (SavingDocument, 1, SavePath);
 		   if (UserCharset[0] != EOS)
@@ -4484,6 +4490,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		   TtaNewLabel (BaseDialog + SaveFormStatus,
 				BaseDialog + SaveForm,
 				"This type of document doesn't support charsets");
+#else
+		   SaveAsDlgStatus ("The target must be an HTTP URL to use this option");
 #endif /* _WINDOWS */
 		 }
 	     }
@@ -4500,6 +4508,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		   TtaNewLabel (BaseDialog + SaveFormStatus,
 				BaseDialog + SaveForm,
 				" ");
+#else
+		   SaveAsDlgStatus ("");
 #endif /* _WINDOWS */
 		   InitMimeType (SavingDocument, 1, SavePath);
 		   if (UserMimeType[0] != EOS)
@@ -4516,6 +4526,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		   TtaNewLabel (BaseDialog + SaveFormStatus,
 				BaseDialog + SaveForm,
 			      "The target must be an HTTP URL to use this option");
+#else
+		   SaveAsDlgStatus ("The target must be an HTTP URL to use this option");
 #endif /* _WINDOWS */
 		 }
 	     }
@@ -4993,12 +5005,16 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	       /* validate the mime type */
 	       if (UserMimeType[0] == EOS ||!strchr (UserMimeType, '/'))
 		 {
+		   UserMimeType[0] = EOS;
+#ifndef _WINDOWS
 		   InitMimeType (SavingDocument, 1, 
 				 SavePath);
-#ifndef _WINDOWS
 		   TtaNewLabel (BaseDialog + SaveFormStatus,
 				BaseDialog + MimeTypeForm,
 				"Error: invalid MIME type");
+#else
+		   /* the Window dialog won't be closed */
+ 		   MimeTypeDlgStatus ("Error: invalid MIME type");
 #endif /* _WINDOWS */
 		 }
 	       else
