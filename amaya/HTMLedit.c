@@ -1298,7 +1298,7 @@ boolaen             link;
    attr = NULL;
    elType = TtaGetElementType (element);
    if (link && elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT)
-      /* search an ancestor of type Anchor */
+      /* search an ancestor of type AREA */
       typeNum = HTML_EL_AREA;
    else
       /* search an ancestor of type Anchor */

@@ -626,8 +626,6 @@ static boolean      StartOfFile = TRUE;		/* no printable character has been
 static boolean      NotHTML = TRUE;	/* input file is not HTML. It's
 
 					   plain ISO-Latin-1 */
-static boolean      LastTagIsBR = FALSE;	/* last tag read is <BR> */
-
 static boolean      AfterTagPRE = FALSE;	/* <PRE> has just been read */
 static boolean      ParsingCSS = FALSE;		/* reading the content of a STYLE element */
 
@@ -1404,7 +1402,7 @@ static void         TextToDocument ()
    ElementType         elType;
    Element             elText, parent, ancestor, prev;
    int                 i;
-   boolean             first;
+   boolean             ignoreLeadingSpaces;
 
    CloseBuffer ();
    if (lastElement != NULL)
@@ -1416,23 +1414,26 @@ static void         TextToDocument ()
 	     parent = TtaGetParent (lastElement);
 	     if (parent == NULL)
 		parent = lastElement;
-	     first = FALSE;
+	     ignoreLeadingSpaces = FALSE;
+	     elType = TtaGetElementType (lastElement);
+	     if (elType.ElTypeNum == HTML_EL_BR)
+		ignoreLeadingSpaces = TRUE;
 	  }
 	else
 	   /* the new Text element should be the first child of the latest
 	      element encountered */
 	  {
 	     parent = lastElement;
-	     first = TRUE;
+	     ignoreLeadingSpaces = TRUE;
 	     ancestor = parent;
-	     while (first && IsCharacterLevelElement (ancestor))
+	     while (ignoreLeadingSpaces && IsCharacterLevelElement (ancestor))
 		{
 		prev = ancestor;
 		TtaPreviousSibling (&prev);
 		if (prev == NULL)
 		   ancestor = TtaGetParent (ancestor);
 		else
-		   first = FALSE;
+		   ignoreLeadingSpaces = FALSE;
 		}
 	  }
 	elType = TtaGetElementType (parent);
@@ -1444,9 +1445,9 @@ static void         TextToDocument ()
 	     InitBuffer ();
 	     return;
 	  }
-	if (first || LastTagIsBR || CannotContainText (elType))
+	if (ignoreLeadingSpaces || CannotContainText (elType))
 	   if (!Within (HTML_EL_Preformatted))
-	      /*suppress leading spaces */
+	      /* suppress leading spaces */
 	      while (inputBuffer[i] <= SPACE && inputBuffer[i] != EOS)
 		 i++;
 	if (inputBuffer[i] != EOS)
@@ -1471,7 +1472,6 @@ static void         TextToDocument ()
 	  }
      }
    InitBuffer ();
-   LastTagIsBR = FALSE;
 }
 
 
@@ -3000,12 +3000,9 @@ char               *GIname;
 	      }
 
 	    if (strcmp (GIMappingTable[entry].htmlGI, "BR") == 0)
-	      {
 		if (Within (HTML_EL_Preformatted))
 		  /* new line within a PRE. Create a Thot element Pre_Line */
 		  CreatePreLine();
-		LastTagIsBR = TRUE;
-	      }
 	  }
      }
 }
@@ -4306,11 +4303,8 @@ char               *HTMLbuf;
 			    }
 			  else
 			    {
-			       /* new line is equivalent to space, except after <BR> */
-			       if (LastTagIsBR)
-				  charRead = EOS;
-			       else
-				  charRead = SPACE;
+			       /* new line is equivalent to space */
+			       charRead = SPACE;
 			       TextToDocument ();
 			    }
 		        }

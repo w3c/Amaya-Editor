@@ -1323,6 +1323,7 @@ int                 frame;
 		      {
 			 /* Changement de graphique simple a polyline */
 			 pAb->AbLeafType = LtPolyLine;
+			 pAb->AbElement->ElLeafType = LtPolyLine;
 			 /* creation du buffer initial pour ranger les points de la polyline */
 			 GetTextBuffer (&(pAb->AbPolyLineBuffer));
 			 pAb->AbPolyLineBuffer->BuLength = 1;
