@@ -1825,7 +1825,8 @@ void         SimplifyUrl (char **url)
 #ifdef _WINDOWS
 	   && (*url)[1] != ':'
 #endif /* _WINDOWS */
-	   && !IsW3Path(*url) 
+	   && !IsW3Path (*url) 
+	   && !IsFilePath (*url)
 	   && (strlen (*url) + 8) < MAX_LENGTH)
    {
        if (TtaFileExist (*url) == 0)
