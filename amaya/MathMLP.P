@@ -674,7 +674,6 @@ RULES
 	BEGIN
 	Visibility: Enclosing =;
 	IN Structure_view BEGIN
-		Visibility: Enclosing =;
 		Width: Enclosing . Width;
 		END;
 	END;

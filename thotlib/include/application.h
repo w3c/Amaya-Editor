@@ -149,6 +149,12 @@ extern void TtaExtractName (char *text, char *aDirectory, char *aName);
   ----------------------------------------------------------------------*/
 extern ThotBool TtaIsPrinting ();
 
+/*----------------------------------------------------------------------
+  TtaGetTime returns the current date in a formatted string.
+  Inspired from the hypermail source code: hypermail/src/date.c
+  ----------------------------------------------------------------------*/
+extern void TtaGetTime (char *s, CHARSET charset);
+
 #ifndef IV_DEBUG
 
 extern void  *TtaGetMemory ( unsigned int n );

@@ -198,6 +198,7 @@ MENUS
 	Types button:BBlockQuote -> CreateBlockQuote;
 	Types button:BIFrame -> CreateIFrame;
 	Types button:BRuby -> CreateRuby;
+	Types button:BDate -> CreateDate;
 
 	Types Separator;
         Types.Phrase toggle:TEmphasis -> SetOnOffEmphasis;

@@ -7,6 +7,8 @@
 #ifdef __STDC__
 
 extern void TtaSetEntityFunction ( Proc procedure );
+extern void TtaGetTime ( char *s,
+                         CHARSET charset );
 extern ThotBool ExportDocument ( PtrDocument pDoc,
                                  char *fName,
                                  char *tschema,
@@ -28,6 +30,8 @@ extern ThotBool TtaExportDocumentWithNewLineNumbers ( Document document,
 #else /* __STDC__ */
 
 extern void TtaSetEntityFunction ( Proc procedure );
+extern void TtaGetTime ( char *s,
+                           CHARSET charset );
 extern ThotBool ExportDocument ( PtrDocument pDoc,
                                    char *fName,
                                    char *tschema,

@@ -1105,6 +1105,81 @@ void CreateComment (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void CreateDate (Document doc, View view)
+{
+  Element             el, parent = NULL, comment, child, text;
+  ElementType         elType, elTypeText;
+  char               *s;
+  char                tm[500];
+  int                 first, last;
+
+  TtaGiveFirstSelectedElement (doc, &el, &first, &last);
+  if (el)
+    {
+      /* get the structure schema of the parent element */
+      parent = TtaGetParent (el);
+      if (parent)
+	el = parent;
+      elType = TtaGetElementType (el);
+    }
+  else
+    elType.ElSSchema = TtaGetDocumentSSchema (doc);
+  s = TtaGetSSchemaName (elType.ElSSchema);
+  if (!strcmp (s, "MathML"))
+    elType.ElTypeNum = MathML_EL_XMLcomment;
+#ifdef _SVG
+  else if (!strcmp (s, "SVG"))
+    elType.ElTypeNum = SVG_EL_XMLcomment;
+#endif /* _SVG */
+  else
+    elType.ElTypeNum = HTML_EL_Comment_;
+
+  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+  /* insert the text element */
+  elTypeText.ElSSchema = elType.ElSSchema;
+  elTypeText.ElTypeNum = HTML_EL_TEXT_UNIT;
+  TtaInsertElement (elTypeText, doc);
+  TtaGiveFirstSelectedElement (doc, &el, &first, &last);
+  TtaGetTime (tm, UTF_8);
+  TtaSetTextContent (el, (unsigned char*)tm, UTF_8, doc);
+  TtaExtendUndoSequence (doc);
+
+  /* insert the first comment */
+  comment = TtaNewTree (doc, elType, "");
+  TtaInsertSibling (comment, el, TRUE, doc);
+  child = text = comment;
+  while (child)
+    {
+      text = child;
+      child = TtaGetFirstChild (text);
+    }
+  TtaSetTextContent (text, (unsigned char*)"$date=", UTF_8, doc);
+  TtaRegisterElementCreate (comment, doc);
+  text = TtaNewTree (doc, elTypeText, "");
+  TtaInsertSibling (text, comment, TRUE, doc);
+  TtaSetTextContent (text, (unsigned char*)" ", UTF_8, doc);
+  TtaRegisterElementCreate (text, doc);
+
+  /* insert the last comment */
+  comment = TtaNewTree (doc, elType, "");
+  TtaInsertSibling (comment, el, FALSE, doc);
+  child = text = comment;
+  while (child)
+    {
+      text = child;
+      child = TtaGetFirstChild (text);
+    }
+  TtaSetTextContent (text, (unsigned char*)"$", UTF_8, doc);
+  TtaRegisterElementCreate (comment, doc);
+  text = TtaNewTree (doc, elTypeText, "");
+  TtaInsertSibling (text, comment, FALSE, doc);
+  TtaSetTextContent (text, (unsigned char*)" ", UTF_8, doc);
+  TtaRegisterElementCreate (text, doc);
+  TtaCloseUndoSequence (doc);
+}
+
+/*----------------------------------------------------------------------
   CreateScript
   ----------------------------------------------------------------------*/
 void CreateScript (Document doc, View view)

@@ -64,6 +64,8 @@ extern void CreateStyle ( Document document,
                           View view );
 extern void CreateComment ( Document doc,
                             View view );
+extern void CreateDate ( Document doc,
+                         View view );
 extern void CreateScript ( Document doc,
                            View view );
 extern void CreateParagraph ( Document document,
@@ -326,6 +328,8 @@ extern void CreateStyle ( Document document,
                             View view );
 extern void CreateComment ( Document doc,
                               View view );
+extern void CreateDate ( Document doc,
+                           View view );
 extern void CreateScript ( Document doc,
                              View view );
 extern void CreateParagraph ( Document document,

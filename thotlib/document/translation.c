@@ -470,10 +470,10 @@ static void ExportChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 
 
 /*----------------------------------------------------------------------
-  GetTime returns the current date in a formatted string.
+  TtaGetTime returns the current date in a formatted string.
   Inspired from the hypermail source code: hypermail/src/date.c
   ----------------------------------------------------------------------*/
-static void GetTime (char *s, PtrDocument pDoc)
+void TtaGetTime (char *s, CHARSET charset)
 {
   time_t         tp;
   struct tm     *tmptr;
@@ -500,7 +500,7 @@ static void GetTime (char *s, PtrDocument pDoc)
 	{
 #ifdef _WINDOWS
 	  wcsftime(ws, DATESTRLEN, L"%A %d %B %Y - %H:%M:%S", tmptr);
-	  ptr = TtaConvertWCToByte (ws, pDoc->DocCharset);
+	  ptr = TtaConvertWCToByte (ws, charset);
 	  strncpy (s, (char *)ptr, DATESTRLEN);
 	  TtaFreeMemory (ptr);
 #else /* _WINDOWS */
@@ -524,13 +524,13 @@ static ThotBool CheckDate (unsigned char c, int fnum, char *outBuf,
 
   if (StartDate)
     {
-      if (c == '-' || c == '>'|| c == SPACE)
+      if (c == '-' || c == '>' || c == SPACE)
 	/* keep this character */
 	return FALSE;
       else
 	{
 	  /* generate the current date */
-	  GetTime (tm, pDoc);
+	  TtaGetTime (tm, pDoc->DocCharset);
 	  for (index = 0; tm[index] != EOS; index++)
 	    ExportChar ((wchar_t) tm[index], fnum, outBuf, pDoc,
 			FALSE, FALSE, FALSE);
@@ -565,7 +565,7 @@ static ThotBool CheckDate (unsigned char c, int fnum, char *outBuf,
 	    /* it's a character of the previous date */
 	    return TRUE;
 	}
-      else if (c == ':')
+      else if (c == ':' || c == '=')
 	{
 	  if (!StartDate && DateIndex > 0 &&
 	      !strncasecmp ((char *)DateString, "Date", DateIndex))

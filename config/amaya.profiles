@@ -67,23 +67,10 @@
 #&InsertBefore
 #&InsertAfter
 
-################# AMAYA BROWSER
-<Browser>
-+amayabase
-+browsing
-+config
-+css-browsing
-+print
-+source-view
-+views
-ShowMapAreas
-+bookmarks
-
 ################# AMAYA DISPLAY
 <Display>
 HelpAmaya
 HelpAtW3C
-
 
 ################# XHTML-TRANSITIONAL
 {XHTML Transitional}
@@ -341,6 +328,7 @@ SetupAndPrint
 &SetOnOffSample
 &SetOnOffStrong
 &SetOnOffVariable
+&CreateDate
 HelpCreating
 HelpEditChar
 

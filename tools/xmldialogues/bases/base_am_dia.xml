@@ -795,12 +795,19 @@
 <label define="BInsertBefore">
 	<message xml:lang="en">&amp;Insert before</message>
 	<message xml:lang="fr">&amp;Insérer avant</message>
-	<message xml:lang="es">Insertar &amp;antes</message>
+	<message xml:lang="es">&amp;Insertar delante</message>
+	<message xml:lang="it">&amp;Inserisci prima</message>
+	<message xml:lang="de">&amp;Einfügen (davor)</message>
 </label>
 <label define="BInsertAfter">
-	<message xml:lang="en">Insert &amp;after</message>
-	<message xml:lang="fr">Insérer &amp;après</message>
-	<message xml:lang="es">Insertar &amp;después</message>
+	<message xml:lang="en">&amp;Append after</message>
+	<message xml:lang="fr">&amp;Ajoutér après</message>
+	<message xml:lang="es">&amp;Añadir detrás</message>
+	<message xml:lang="it">&amp;Aggiungi dopo</message>
+	<message xml:lang="de">&amp;Inzufügen (danach)</message>
+	<message xml:lang="pt">&amp;Adicionar</message>
+	<message xml:lang="fi">&amp;Lisää</message>
+	<message xml:lang="tr">&amp;Ekle</message>
 </label>
 <label define="TEditMode">
 	<message xml:lang="en">&amp;Editor Mode</message>
@@ -1315,15 +1322,15 @@
 	<message xml:lang="en">Insert a row before</message>
 	<message xml:lang="fr">Insérer une ligne avant</message>
 	<message xml:lang="it">Inserisci una riga prima</message>
-	<message xml:lang="de">Zeile einfügen (darüber)</message>
+	<message xml:lang="de">Zeile einfügen (davor)</message>
 	<message xml:lang="es">Insertar fila delante</message>
 </label>
 <label define="BCreateRowA">
-	<message xml:lang="en">Insert a row after</message>
-	<message xml:lang="fr">Insérer une ligne après</message>
-	<message xml:lang="it">Inserisci una riga dopo</message>
-	<message xml:lang="de">Zeile einfügen (dahinter)</message>
-	<message xml:lang="es">Insertar fila detrás</message>
+	<message xml:lang="en">Append a row after</message>
+	<message xml:lang="fr">Ajouter une ligne après</message>
+	<message xml:lang="it">Aggiungi una riga dopo</message>
+	<message xml:lang="de">Zeile inzufügen (danach)</message>
+	<message xml:lang="es">Añadir fila detrás</message>
 </label>
 <label define="BSelectColumn">
 	<message xml:lang="en">Select the column</message>
@@ -1340,11 +1347,11 @@
 	<message xml:lang="es">Insertar columna delante</message>
 </label>
 <label define="BCreateColumnA">
-	<message xml:lang="en">Insert a column after</message>
-	<message xml:lang="fr">Insérer une colonne après</message>
-	<message xml:lang="it">Inserisci una colonna dopo</message>
-	<message xml:lang="de">Spalte einfügen (danach)</message>
-	<message xml:lang="es">Insertar columna detrás</message>
+	<message xml:lang="en">Append a column after</message>
+	<message xml:lang="fr">Ajouter une colonne après</message>
+	<message xml:lang="it">Aggiungi una colonna dopo</message>
+	<message xml:lang="de">Spalte inzufügen (danach)</message>
+	<message xml:lang="es">Añadir columna detrás</message>
 </label>
 <label define="BPasteBefore">
 	<message xml:lang="en">Paste before</message>
@@ -1583,6 +1590,10 @@
 	<message xml:lang="es">ruby</message>
 	<message xml:lang="pt">rubi</message>
 	<message xml:lang="fi">ruby</message>
+</label>
+<label define="BDate">
+	<message xml:lang="en">New updated date</message>
+	<message xml:lang="fr">Nouvelle date calculée</message>
 </label>
 <label define="Phrase">
 	<message xml:lang="en">Information type</message>
@@ -2092,15 +2103,15 @@
 	<message xml:lang="en">Insert a row before</message>
 	<message xml:lang="fr">Insérer une ligne avant</message>
 	<message xml:lang="it">Inserisci una riga prima</message>
-	<message xml:lang="de">Zeile einfügen (darüber)</message>
+	<message xml:lang="de">Zeile einfügen (davor)</message>
 	<message xml:lang="es">Insertar fila delante</message>
 </label>
 <label define="BMCreateRowA">
-	<message xml:lang="en">Insert a row after</message>
-	<message xml:lang="fr">Insérer une ligne après</message>
-	<message xml:lang="it">Inserisci una riga dopo</message>
-	<message xml:lang="de">Zeile einfügen (dahinter)</message>
-	<message xml:lang="es">Insertar fila detrás</message>
+	<message xml:lang="en">Append a row after</message>
+	<message xml:lang="fr">Ajouter une ligne après</message>
+	<message xml:lang="it">Aggiungi una riga dopo</message>
+	<message xml:lang="de">Zeile inzufügen (danach)</message>
+	<message xml:lang="es">Añadir fila detrás</message>
 </label>
 <label define="BMSelectColumn">
 	<message xml:lang="en">Select the column</message>
@@ -2117,11 +2128,11 @@
 	<message xml:lang="es">Insertar columna delante</message>
 </label>
 <label define="BMCreateColumnA">
-	<message xml:lang="en">Insert a column after</message>
-	<message xml:lang="fr">Insérer une colonne après</message>
-	<message xml:lang="it">Inserisci una colonna dopo</message>
-	<message xml:lang="de">Spalte einfügen (danach)</message>
-	<message xml:lang="es">Insertar columna detrás</message>
+	<message xml:lang="en">Append a column after</message>
+	<message xml:lang="fr">Ajouter une colonne après</message>
+	<message xml:lang="it">Aggiungi una colonna dopo</message>
+	<message xml:lang="de">Spalte inzufügen (danach)</message>
+	<message xml:lang="es">Añadir columna detrás</message>
 </label>
 <label define="BMPasteBefore">
 	<message xml:lang="en">Paste before</message>

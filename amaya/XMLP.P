@@ -349,7 +349,6 @@ RULES
 	Visibility: Enclosing =;
 	MarginBottom: 0.4;
 	IN Structure_view BEGIN
-		Visibility: Enclosing =;
 		Width: Enclosed . Width;
 	        MarginBottom: 0;
 		END;
