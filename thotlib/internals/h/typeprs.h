@@ -193,7 +193,7 @@ typedef struct _PresBoxTable
 /* Alignment of the lines in an abstract box */
 typedef enum
 {
-  AlignLeft, AlignRight, AlignCenter, AlignLeftDots, AlignJustify
+  AlignLeft, AlignRight, AlignCenter, AlignJustify, AlignLeftDots
 } BAlignment;	/* AlignLeftDots = aligned to the left, the last
 		   line is filled with dots */
 

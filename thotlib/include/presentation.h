@@ -130,8 +130,8 @@ typedef int        *PRule;
 #define AdjustLeft 1
 #define AdjustRight 2
 #define Centered 3
-#define LeftWithDots 4
-#define Justify 5
+#define Justify 4
+#define LeftWithDots 5
 
 /* values for rule PRDirection */
 #define LeftToRight 1

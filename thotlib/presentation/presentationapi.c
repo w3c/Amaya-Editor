@@ -1662,11 +1662,11 @@ void TtaSetPRuleValue (Element element, PRule pRule, int value, Document documen
 	     case Centered:
 	       ((PtrPRule) pRule)->PrAdjust = AlignCenter;
 	       break;
-	     case LeftWithDots:
-	       ((PtrPRule) pRule)->PrAdjust = AlignLeftDots;
-	       break;
 	     case Justify:
 	       ((PtrPRule) pRule)->PrAdjust = AlignJustify;
+	       break;
+	     case LeftWithDots:
+	       ((PtrPRule) pRule)->PrAdjust = AlignLeftDots;
 	       break;
 	     default:
 #ifndef NODISPLAY
@@ -2631,11 +2631,11 @@ int TtaGetPRuleValue (PRule pRule)
 	  case AlignCenter:
 	    value = Centered;
 	    break;
-	  case AlignLeftDots:
-	    value = LeftWithDots;
-	    break;
 	  case AlignJustify:
 	    value = Justify;
+	    break;
+	  case AlignLeftDots:
+	    value = LeftWithDots;
 	    break;
 	  default:
 	    TtaError (ERR_invalid_parameter);
