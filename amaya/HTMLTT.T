@@ -1,4 +1,3 @@
-
 TRANSLATION HTML;
 
 LINELENGTH 78;
@@ -51,13 +50,16 @@ RULES
 	END;
 
  Styles:BEGIN
+	Remove;
 	END;
 
  StyleRule:
 	BEGIN
+	Remove;
 	END;
 
  SCRIPT: BEGIN
+	Remove;
 	END;
 
  META: BEGIN
@@ -79,43 +81,43 @@ RULES
 	END;
 
  H1:	BEGIN
-	Create '\12';
 	Indent -3;
+	if not within Preformatted Create '\12';
 	Indent +3 After;
-	if not within Preformatted Create '\12' After;
+	if not within Preformatted Create '\12\12' After;
 	END;
 
  H2:	BEGIN
-	Create '\12';
-	if not within Preformatted Create '\12' After;
+	if not within Preformatted Create '\12';
+	if not within Preformatted Create '\12\12' After;
 	END;
 
  H3:	BEGIN
-	Create '\12';
 	Indent +3;
+	if not within Preformatted Create '\12';
 	Indent -3 After;
-	if not within Preformatted Create '\12' After;
+	if not within Preformatted Create '\12\12' After;
 	END;
 
  H4:	BEGIN
-	Create '\12';
 	Indent +6;
+	if not within Preformatted Create '\12';
 	Indent -6 After;
-	if not within Preformatted Create '\12' After;
+	if not within Preformatted Create '\12\12' After;
 	END;
 
  H5:	BEGIN
-	Create '\12';
 	Indent +9;
+	if not within Preformatted Create '\12';
 	Indent -9 After;
-	if not within Preformatted Create '\12' After;
+	if not within Preformatted Create '\12\12' After;
 	END;
 
  H6:	BEGIN
-	Create '\12';
 	Indent +12;
+	if not within Preformatted Create '\12';
 	Indent -12 After;
-	if not within Preformatted Create '\12' After;
+	if not within Preformatted Create '\12\12' After;
 	END;
 
  BaseFont:
@@ -210,28 +212,27 @@ RULES
 	END;
 
  Pseudo_paragraph: BEGIN
-	Create '\12' After;
+	If NOT within Paragraph AND NOT within Pseudo_paragraph
+       	   Create '\12\12' After;
 	END;
 
  TEXT_UNIT: BEGIN
 	IF *Style\240 and not Within HEAD
 	    BEGIN
-	    Create '<span';
-	    Create Attributes;
-	    Create '>';
-	    Create '</span>' After;
+   	    Remove;
 	    END;
 	IF *Class and not Within HEAD
 	    BEGIN
-	    Create '<span';
-	    Create Attributes;
-	    Create '>';
-	    Create '</span>' After;
+            Remove;
 	    END;
 	IF Within Text_Area
 		Remove;
 	IF Within Text_Input
 		Remove;
+        IF Within HEAD
+	        Remove;
+        IF Within STYLE 
+                Remove;
 	END;
 
  Definition_List: BEGIN
@@ -247,18 +248,17 @@ RULES
  Definition: BEGIN
 	Indent +5;
 	Indent -5 After;
-	Create '\12' After;
 	END;
 
  Unnumbered_List: BEGIN
-	Create '\12';	
-        Indent +3;	
+	Create '\12';
+	Indent +3;
 	Indent -3 After;
 	END;
 
  Numbered_List:	BEGIN
-	Create '\12';	
-        Indent +3;	
+	Create '\12';
+	Indent +3;
 	Indent -3 After;
 	END;
 
@@ -269,18 +269,20 @@ RULES
 
  Menu:	BEGIN
 	Create '\12';
-	Create '\12\12'  After;
+	Indent +3;
+	Indent -3 After;
 	END;
 
  Directory: BEGIN
 	Create '\12';
+	Indent +3;
+	Indent -3 After;
 	END;
 
  List_Item: BEGIN
 	Create Attributes;
 	Indent +3;
-	Indent -3 After;
-	Create '\12' After;
+	Indent -3 after;
 	END;
 
  Preformatted: BEGIN
@@ -290,6 +292,8 @@ RULES
 	END;
 
  Horizontal_Rule: BEGIN
+	If NOT within Paragraph AND NOT within  Pseudo_paragraph
+           Create '\12';
 	Create '-----------------------------\12';	
 	Remove;
 	END;
@@ -480,13 +484,12 @@ RULES
 	END;
 
  Division: BEGIN
-	Create '\12<div';
-	Create Attributes;
-	Create '>\12';
-	Create '</div>\12' After;
+	Create '\12';
 	END;
 
  Center: BEGIN
+	Create '\12';
+
 	END;
 
  Invalid_element:
@@ -514,18 +517,23 @@ RULES
 ATTRIBUTES
 
  http_equiv: BEGIN
+	Remove;
 	END;
 
  meta_name: BEGIN
+	Remove;
 	END;
 
  meta_content: BEGIN
+	Remove;
 	END;
 
  REL:	BEGIN
+	Remove;
 	END;
 
  REV:	BEGIN
+	Remove;
 	END;
 
  HREF_ :
@@ -574,7 +582,7 @@ ATTRIBUTES
 	BEGIN
 	END;
 
- Clear = Right_:
+ Clear = Right_: 
 	BEGIN
 	END;
  Clear = All_:
@@ -636,9 +644,11 @@ ATTRIBUTES
 	END;
 
  Class: BEGIN
+	Remove;
 	END;
 
  Style\240: BEGIN
+	Remove;
 	END;
 
  COMPACT: BEGIN
@@ -885,16 +895,4 @@ GraphTRANSLATE
 	END;
 
 END
-
-
-
-
-
-
-
-
-
-
-
-
 
