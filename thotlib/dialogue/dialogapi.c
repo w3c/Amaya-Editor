@@ -1444,6 +1444,26 @@ static void CallListGTK (ThotWidget w, struct Cat_Context *catalogue)
 #endif /* !_GTK */
 }
 
+#ifdef _GTK
+gboolean CallTextEnterGTK (ThotWidget w,  GdkEventButton *bu, struct Cat_Context *catalogue)
+{
+  gchar              *text = NULL;
+  ThotWidget         tmpw;
+  
+  if (bu->button == 1) 
+    {
+      if (bu->type == GDK_2BUTTON_PRESS) 
+	{ 
+	  while (catalogue->Cat_PtParent != NULL)
+	    catalogue = catalogue->Cat_PtParent;
+	    (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, (char *)1);
+	  return TRUE;
+	}
+      return FALSE;
+    }
+  return FALSE;
+}
+#endif /* _GTK */
 
 /*----------------------------------------------------------------------
    Callback de saisie de texte.                                   
@@ -5955,11 +5975,6 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 #endif /* !_GTK */
    ThotWidget          row;
 
-#ifdef _GTK
-   /* a supprimer plus tard */   
-   /*   printf("appel de NewSheet\n");*/
-#endif
-
    if (ref == 0)
      {
 	TtaError (ERR_invalid_reference);
@@ -5992,7 +6007,7 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	    n++;
 	    PopShell = XtCreatePopupShell ("", applicationShellWidgetClass, RootShell, args, 0);
 #else /* _GTK */
-	    PopShell = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	    PopShell = gtk_window_new (GTK_WINDOW_TOPLEVEL); 
 	    /*PopShell->style->font=DefaultFont;*/
 	    gtk_widget_realize (PopShell);
 	    gtk_window_set_title (GTK_WINDOW (PopShell), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
@@ -7120,9 +7135,13 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
 	    gtk_object_set_data (GTK_OBJECT(w), "GList", (gpointer)g_list_length(item));
 	    gtk_widget_show_all (tmpw);
 	    if (react)
+	      {
 	      ConnectSignalGTK (GTK_OBJECT(w), "selection_changed",
 				GTK_SIGNAL_FUNC(CallListGTK), (gpointer)catalogue);
-	  }
+	      ConnectSignalGTK (GTK_OBJECT(w), "button_press_event",
+				GTK_SIGNAL_FUNC (CallTextEnterGTK),  (gpointer)catalogue);
+	      }
+	    }
 	else
 	  {
 	    /* A list and a text entry zone */
@@ -7132,6 +7151,7 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
 	    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (tmpw),
 					    GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	    gtk_box_pack_start (GTK_BOX(row), tmpw, TRUE, TRUE, 0);
+	    gtk_widget_set_usize (tmpw, width, height*30);
 	    w = gtk_list_new ();
 	    gtk_widget_show (GTK_WIDGET(w));
 	    gtk_list_set_selection_mode (GTK_LIST(w), GTK_SELECTION_SINGLE);
@@ -7142,7 +7162,8 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
 	    /* on connecte le changement de selection pour mettre a jour la zone text */
 	    ConnectSignalGTK (GTK_OBJECT(w), "selection_changed",
 			      GTK_SIGNAL_FUNC(CallListGTK), (gpointer)catalogue);
-	    
+	    ConnectSignalGTK (GTK_OBJECT(w), "button_press_event",
+			       GTK_SIGNAL_FUNC (CallTextEnterGTK),  (gpointer)catalogue);
 	    tmpw = gtk_entry_new ();
 	    gtk_widget_show (tmpw);
 	    tmpw->style->font = DefaultFont;
@@ -7315,7 +7336,10 @@ void TtaSetSelector (int ref, int entry, char *text)
 	      RemoveSignalGTK (GTK_OBJECT(wt), "changed");  
 	  }
 	else if (catalogue->Cat_React)
-	  RemoveSignalGTK (GTK_OBJECT(select), "selection_changed");  
+	  {
+	    RemoveSignalGTK (GTK_OBJECT(select), "selection_changed"); 
+	    RemoveSignalGTK (GTK_OBJECT(select), "button_press_event"); 
+	  }
 #endif /* !_GTK */
 	if (entry >= 0 && entry < catalogue->Cat_ListLength)
 	  {
@@ -7373,9 +7397,13 @@ void TtaSetSelector (int ref, int entry, char *text)
 	      XtAddCallback (wt, XmNvalueChangedCallback,
 			     (XtCallbackProc) CallTextChange, catalogue);
 #else /* _GTK */
-	   if (catalogue->Cat_SelectList)
+	   if (catalogue->Cat_SelectList){
 	     ConnectSignalGTK (GTK_OBJECT(select),"selection_changed"
 			       , GTK_SIGNAL_FUNC(CallListGTK), (gpointer)catalogue);
+	     ConnectSignalGTK (GTK_OBJECT(select), "button_press_event",
+			       GTK_SIGNAL_FUNC (CallTextEnterGTK),
+			       (gpointer)catalogue);
+	   }
 	   else
 	     ConnectSignalGTK (GTK_OBJECT(wt),"changed",
 			       GTK_SIGNAL_FUNC(CallTextChangeGTK), (gpointer)catalogue);
@@ -7709,9 +7737,12 @@ void TtaNewTextForm (int ref, int ref_parent, char *title, int width,
 	       }
 	     /* if the widget is reactive */
 	     if (react)
-	       ConnectSignalGTK (GTK_OBJECT(w), "changed",
-				 GTK_SIGNAL_FUNC (CallTextChangeGTK),
-				 (gpointer)catalogue);
+	       {
+		 ConnectSignalGTK (GTK_OBJECT(w), "changed",
+				   GTK_SIGNAL_FUNC (CallTextChangeGTK),
+				   (gpointer)catalogue); 
+		
+	       } 
 	     /* report Enter to the form */
 	     ConnectSignalGTK (GTK_OBJECT(w), "activate",
 				 GTK_SIGNAL_FUNC (CallEnter),
