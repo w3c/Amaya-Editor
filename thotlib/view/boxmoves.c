@@ -3393,6 +3393,7 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 
 	  /* Keep in mind if the box positionning is absolute or not */
 	  absoluteMove = IsYPosComplete (pBox);
+
 	  /*
 	   * Move only the origin if we're building the box
 	   * and it's not a stretchable box.
