@@ -29,6 +29,7 @@ public:
 
   void AddTool( wxWindow * p_tool, bool expand = FALSE, int border = 0 );
   void AddSeparator();
+  void AddSpacer( int width = 2 );
 
  protected:
   DECLARE_EVENT_TABLE()
