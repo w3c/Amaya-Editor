@@ -14,8 +14,7 @@ body  {
   word-spacing: normal;
   letter-spacing: normal;
   text-transform: none;
-  font-family:  Verdana, Myriad Web, Syntax, sans-serif;
-  background:white;  color : Black;
+  background-color: #F9F7F4; color: #666666; font-family: arial, helvetica;
   }
 
 small {

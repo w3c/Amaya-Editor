@@ -8,12 +8,24 @@
   <style type="text/css">
 
 .xml {color: #E50000}
-.exercice {color: #A9B200}</style>
-  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+.exercice {color: #A9B200}
+h1 {color: #FFFFFF; background-color: #7995B6; padding: 5px 1px}
+address {margin-bottom: 30px}
+body {background-color: #F9F7F4; color: #666666; font-family: helvetica; }</style>
+  <meta name="generator" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr">
 <h1 id="Amaya">Amaya - Guide utilisateur</h1>
+<address>
+  <p>Irène Vatton <br />
+  $date: Wednesday 25 February 2004 - 11:47:48$</p>
+
+</address>
+
+<p>Ce document a pour but d'aider les nouveaux utilisateurs d'Amaya. Pour
+plus de détail sur l'interface, il faut se reporter au <a
+href="Manual.html.fr">manuel de référence</a>.</p>
 
 <div>
 <h3>Plan</h3>
@@ -142,7 +154,6 @@ des "frames" pour faire que les sites Web soient accessibles aux handicapés
 <span class="xml">&lt;/html&gt;</span></pre>
 
 <h3>Les familles HTML</h3>
-
 <table border="1">
   <caption></caption>
   <tbody>
@@ -319,7 +330,6 @@ final du document tel qu'il est vu par un navigateur Web</p>
 certain nombre de paramètres. Pour cela il faut ouvrir au moins deux des dix
 menus de préférences disponibles dans <strong>Spécial/Préférences</strong>.
 Chaque menu présente trois boutons d'action :</p>
-
 <table border="0" cellspacing="5" cellpadding="5"
 summary="action button chart">
   <tbody>
@@ -1405,10 +1415,6 @@ correct, on peut alors sauver le document corrigé.</p>
 le document comme un document HTML au lieu de XHTML et donc éviter de bloquer
 sur le parseur XML.</p>
 </div>
-<address>
-  <p>Irène Vatton $date: Monday 16 February 2004 - 15:29:21$</p>
-
-</address>
 
 <p></p>
 </body>

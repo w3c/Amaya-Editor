@@ -43,8 +43,8 @@
       <text y="38px" x="0px">Amaya au W3C
       </text>
     </a>
-    <a xlink:href="../doc/html/Manual.html.fr">
-      <text y="68px" x="0px">Manuel en ligne
+    <a xlink:href="../doc/html/Tutorial.html.fr">
+      <text y="68px" x="0px">Guide
       </text>
     </a>
     <a xlink:href="../doc/html/Index.html.fr">
@@ -154,15 +154,12 @@ What You Get). La version courante supporte les recommandations HTML
 MathML (Mathematical Markup Language), SVG (Scalable Vector Graphics), CSS
 (Cascading Style Sheets), et &nbsp;HTTP (Hypertext Transfer Protocol).</p>
 
-<h3>Quoi de neuf ?</h3>
-
 <p>Les versions OpenGL implémentent les transformations, la transparence et
 l'animation des éléments SVG. Comme Amaya supporte complètement les documents
 composés, toutes ces nouvelles propriétés s'appliquent aussi aux éléments
 XHTML et MathML inclus. Vous pouvez voir une <a
 href="Amaya.svg">démonstration d'animation</a> si vous avez téléchagé une
-version OpenGL d'Amaya. Cette version inclut aussi le support de la propriété
-float de CSS.</p>
+version OpenGL d'Amaya.</p>
 </div>
 
 <div>
