@@ -519,12 +519,20 @@ ThotBool            withinForm;
   Language            lang;
   int                 length;
   int                 modified = FALSE;
+  DisplayMode         dispMode;
 
   if (el)
     {
       if (mode == HTML_EL_Reset_Input)
-	/* save current status of the document */
-	modified = TtaIsDocumentModified (doc);
+	{
+	  /* save current status of the document */
+	  modified = TtaIsDocumentModified (doc);
+	  /* change display mode to avoid flicker due to callbacks executed 
+	     when resetting the elements */
+	  dispMode = TtaGetDisplayMode (doc);
+	  if (dispMode == DisplayImmediately)
+	    TtaSetDisplayMode (doc, DeferredDisplay);
+	}
       
       lang = TtaGetDefaultLanguage ();      
       attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
@@ -727,13 +735,19 @@ ThotBool            withinForm;
 	}
       
       if (mode == HTML_EL_Reset_Input)
-	/* restore status of the document */
-	if (!modified)
-	  {
-	    TtaSetDocumentUnmodified (doc);
-	    /* switch Amaya buttons and menus */
-	    DocStatusUpdate (doc, modified);
-	  }
+	{
+	  /* restore original display mode */
+	  if (dispMode == DisplayImmediately)
+	    TtaSetDisplayMode (doc, dispMode);
+
+	  /* restore status of the document */
+	  if (!modified)
+	    {
+	      TtaSetDocumentUnmodified (doc);
+	      /* switch Amaya buttons and menus */
+	      DocStatusUpdate (doc, modified);
+	    }
+	}
     }
 }
 
