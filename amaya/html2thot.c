@@ -3664,18 +3664,30 @@ int                 start;
 	       parent = TtaGetParent (lastElement);
 	     else
 	       parent = lastElement;
-	     while (parent != NULL && !ret)
-	       {
-		 parentType = TtaGetElementType (parent);
-		 if (elType.ElTypeNum == parentType.ElTypeNum)
-		   {
-		     lastElement = parent;
-		     lastElementClosed = TRUE;
-		     ret = TRUE;
-		   }
-		 else
-		     parent = TtaGetParent (parent);
-	       }
+             if (parent != NULL)
+               {
+                 parentType = TtaGetElementType (parent);
+                 if (elType.ElTypeNum == parentType.ElTypeNum)
+                   {
+                     lastElement = parent;
+                     lastElementClosed = TRUE;
+                     ret = TRUE;
+                   }
+                 else if (TtaIsLeaf (TtaGetElementType (lastElement)))
+                   {
+                     parent = TtaGetParent (parent);
+                     if (parent != NULL)
+                       {
+                         parentType = TtaGetElementType (parent);
+                         if (elType.ElTypeNum == parentType.ElTypeNum)
+                           {
+                             lastElement = parent;
+                             lastElementClosed = TRUE;
+                             ret = TRUE;
+                           }
+                       }
+                   }
+               }
 	   }
        if (ret)
 	 /* successful close */
@@ -6705,6 +6717,15 @@ char               *pathURL;
 	if (elBody != NULL)
 	  CheckHeadElements (elBody, &elHead, &elBody, theDocument);
 
+	if (elHead == NULL)
+	   /* there is no HEAD element. Create one */
+	  {
+	     newElType.ElSSchema = HTMLSSchema;
+	     newElType.ElTypeNum = HTML_EL_HEAD;
+	     elHead = TtaNewTree (theDocument, newElType, "");
+	     TtaInsertFirstChild (&elHead, rootElement, theDocument);
+	  }
+
 	if (elHead != NULL)
 	  {
 	     headElType = TtaGetElementType (elHead);
@@ -6878,15 +6899,6 @@ char               *pathURL;
 	       }
 	     /* get next child of the root */
 	     el = nextEl;
-	  }
-
-	if (elHead == NULL && elBody != NULL)
-	   /* there is no HEAD element. Create one */
-	  {
-	     newElType.ElSSchema = HTMLSSchema;
-	     newElType.ElTypeNum = HTML_EL_HEAD;
-	     elHead = TtaNewTree (theDocument, newElType, "");
-	     TtaInsertSibling (elHead, elBody, TRUE, theDocument);
 	  }
 
 	/* handle character-level elements which contain block-level elements*/
