@@ -111,6 +111,10 @@ SOURCE=..\..\thotlib\base\AmayaAppInstance.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\AmayaApplyClassPanel.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\dialogue\AmayaAttributePanel.cpp
 # End Source File
 # Begin Source File
