@@ -144,7 +144,7 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {"accesskey", "", 'A', HTML_ATTR_accesskey, L_BasicValue},
    {"action", "", 'A', HTML_ATTR_Script_URL, L_BasicValue},
    {"align", "applet", 'A', HTML_ATTR_Alignment, L_TransitionalValue},
-   {"align", "caption", 'A', HTML_ATTR_Position, L_StrictValue},
+   {"align", "caption", 'A', HTML_ATTR_Position, L_TransitionalValue},
    {"align", "col", 'A', HTML_ATTR_Cell_align, L_StrictValue},
    {"align", "colgroup", 'A', HTML_ATTR_Cell_align, L_StrictValue},
    {"align", "div", 'A', HTML_ATTR_TextAlign, L_TransitionalValue},
