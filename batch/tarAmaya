@@ -4,7 +4,7 @@
 #
 #       amaya-$MACH-$AMAYAVERSION.tgz
 # 
-AMAYAVERSION=3.1a
+AMAYAVERSION=3.2.1
 THOTDIR=$PWD/../..
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX-ELF"
@@ -96,6 +96,7 @@ echo "Plarform ------->" $MACH
    Amaya/amaya/TextFile.STR \
    Amaya/amaya/TextFile*.PRS \
    Amaya/amaya/TextFile*.TRA \
+   Amaya/amaya/TextFile.conf \
    Amaya/fonts/Families.list \
    Amaya/fonts/fonts.dir \
    Amaya/fonts/icones*
