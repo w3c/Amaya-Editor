@@ -42,6 +42,7 @@ extern int PutObjectWWW ( int docid,
                           TTcbf * terminate_cbf,
                           void *context_tcbf );
 extern void StopRequest ( int docid );
+extern void StopAllRequests ( int docid );
 extern boolean AmayaIsAlive ( void );
 
 #else /* __STDC__ */
@@ -82,6 +83,7 @@ extern int PutObjectWWW (/* int docid,
                             TTcbf * terminate_cbf,
                             void *context_tcbf */);
 extern void StopRequest (/* int docid */);
+extern void StopAllRequests (/* int docid */);
 extern boolean AmayaIsAlive (/* void */);
 
 #endif /* __STDC__ */

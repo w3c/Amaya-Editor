@@ -2192,6 +2192,7 @@ View view;
 {
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 #else
+ StopAllRequests ();
   libwww_CleanCache ();
 #endif /* AMAYA_JAVA */
 }

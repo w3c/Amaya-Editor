@@ -409,81 +409,80 @@ AHTReqContext      *me;
      {
 
 #ifdef DEBUG_LIBWWW
-        fprintf (stderr, "AHTReqContext_delete: Deleting object %p\n", me);
+       fprintf (stderr, "AHTReqContext_delete: Deleting object %p\n", me);
 #endif   
-
-	if (Amaya->reqlist)
-	   HTList_removeObject (Amaya->reqlist, (void *) me);
-
-	docid_status = GetDocIdStatus (me->docid, Amaya->docid_status);
-
-	if (docid_status)
-	  {
-	     docid_status->counter--;
-
-	     if (docid_status->counter == 0)
-	       {
-		  HTList_removeObject (Amaya->docid_status, (void *) docid_status);
-		  TtaFreeMemory ((void *) docid_status);
-	       }
-	  }
-	if (me->method != METHOD_PUT && HTRequest_outputStream (me->request))
-	  AHTFWriter_FREE (me->request->output_stream);
-	HTRequest_delete (me->request);
-
-	if (me->output && me->output != stdout)
-	  {	
+       if (Amaya->reqlist)
+	 HTList_removeObject (Amaya->reqlist, (void *) me);
+       
+       docid_status = GetDocIdStatus (me->docid, Amaya->docid_status);
+       if (docid_status)
+	 {
+	   docid_status->counter--;
+	   
+	   if (docid_status->counter == 0)
+	     {
+	       HTList_removeObject (Amaya->docid_status, (void *) docid_status);
+	       TtaFreeMemory ((void *) docid_status);
+	     }
+	 }
+       if (me->method != METHOD_PUT && HTRequest_outputStream (me->request))
+	 AHTFWriter_FREE (me->request->output_stream);
+       
+       HTRequest_delete (me->request);
+       
+       if (me->output && me->output != stdout)
+	 {	
 #ifdef DEBUG_LIBWWW       
-	    fprintf (stderr, "AHTReqContext_delete: URL is  %s, closing "
-		     "FILE %p\n", me->urlName, me->output); 
+	   fprintf (stderr, "AHTReqContext_delete: URL is  %s, closing "
+		    "FILE %p\n", me->urlName, me->output); 
 #endif
-	    fclose (me->output);
-	    me->output = NULL;
-	  }
+	   fclose (me->output);
+	   me->output = NULL;
+	 }
 	  
-	if (me->error_stream != (char *) NULL)
-	  HT_FREE (me->error_stream);
-#     ifndef _WINDOWS
-#     ifdef WWW_XWINDOWS	
-	if (me->read_xtinput_id || me->write_xtinput_id ||
-            me->except_xtinput_id)
-          RequestKillAllXtevents(me);
-#     endif /* WWW_XWINDOWS */
-#     endif /* !_WINDOWS */
-
-    if (me->reqStatus == HT_ABORT)
-      {
-      if (me->outputfile && me->outputfile[0] != EOS)
-	{
-	  TtaFileUnlink (me->outputfile);
-	  me->outputfile[0] = EOS;
-	}
-      }
-
-    if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC))
-      /* for the ASYNC mode, free the memory we allocated in GetObjectWWW
-	 or in PutObjectWWW */
-      {
-	if (me->urlName)
-	  TtaFreeMemory (me->urlName);
-	if (me->outputfile)
-	  TtaFreeMemory (me->outputfile);
-      }
-    
-    if (me->content_type)
-      TtaFreeMemory (me->content_type);
-    
-    if (me->formdata)
-      HTAssocList_delete (me->formdata);
-    
-    /* to trace bugs */
-    memset ((void *) me, 0, sizeof (AHTReqContext));
-    
-    TtaFreeMemory ((void *) me);
-    
-    Amaya->open_requests--;
-    
-    return TRUE;
+       if (me->error_stream != (char *) NULL)
+	 HT_FREE (me->error_stream);
+#ifndef _WINDOWS
+#ifdef WWW_XWINDOWS	
+       if (me->read_xtinput_id || me->write_xtinput_id ||
+	   me->except_xtinput_id)
+	 RequestKillAllXtevents(me);
+#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
+       
+       if (me->reqStatus == HT_ABORT)
+	 {
+	   if (me->outputfile && me->outputfile[0] != EOS)
+	     {
+	       TtaFileUnlink (me->outputfile);
+	       me->outputfile[0] = EOS;
+	     }
+	 }
+       
+       if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC))
+	 /* for the ASYNC mode, free the memory we allocated in GetObjectWWW
+	    or in PutObjectWWW */
+	 {
+	   if (me->urlName)
+	     TtaFreeMemory (me->urlName);
+	   if (me->outputfile)
+	     TtaFreeMemory (me->outputfile);
+	 }
+       
+       if (me->content_type)
+	 TtaFreeMemory (me->content_type);
+       
+       if (me->formdata)
+	 HTAssocList_delete (me->formdata);
+       
+       /* to trace bugs */
+       memset ((void *) me, 0, sizeof (AHTReqContext));
+       
+       TtaFreeMemory ((void *) me);
+       
+       Amaya->open_requests--;
+       
+       return TRUE;
      }
    return FALSE;
 }
@@ -518,9 +517,9 @@ static void         Thread_deleteAll ()
 	    {
 	      if (me->request)
 		{
-#              ifndef _WINDOWS 
+#ifndef _WINDOWS 
 		  RequestKillAllXtevents (me);
-#              endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 
 		  if (me->request->net)
 		    HTRequest_kill (me->request);
@@ -1725,48 +1724,31 @@ void                QueryInit ()
    HTTimer_registerDeleteTimerCallback ((void *) AMAYA_DeleteTimer);
 #endif /* !_WINDOWS */
 
-#ifdef AMAYA_WWW_CACHE
-   /*** 
-	WWW_TraceFlag = CACHE_TRACE;
-   ***/
-#endif
-
 #ifdef DEBUG_LIBWWW
   /* forwards error messages to our own function */
    WWW_TraceFlag = THD_TRACE;
-  HTTrace_setCallback(LineTrace);
+   HTTrace_setCallback(LineTrace);
 #endif
 
    /* Trace activation (for debugging) */
-   /*
-     WWW_TraceFlag = SHOW_CORE_TRACE | SHOW_THREAD_TRACE | PROT_TRACE;
-
-      WWW_TraceFlag = SHOW_APP_TRACE | SHOW_UTIL_TRACE |
-      SHOW_BIND_TRACE | SHOW_THREAD_TRACE |
-      SHOW_STREAM_TRACE | SHOW_PROTOCOL_TRACE |
-      SHOW_URI_TRACE | SHOW_AUTH_TRACE | SHOW_ANCHOR_TRACE |
-      SHOW_CORE_TRACE;
-
-    */
-
-   /***
-     WWW_TraceFlag = SHOW_CORE_TRACE | SHOW_AUTH_TRACE | SHOW_ANCHOR_TRACE |
-     SHOW_PROTOCOL_TRACE| SHOW_APP_TRACE | SHOW_UTIL_TRACE;
-     ***/
-
-   /* Setting up other user interfaces */
-
-   /* Setting up different network parameters */
-   /* Maximum number of simultaneous open sockets */
-   HTNet_setMaxSocket (8);
-   /* different network services timeouts */
-   HTDNS_setTimeout (60);
-   HTHost_setPersistTimeout (60L);
-   /* default timeout in ms */
-   HTHost_setEventTimeout (20000);
-
+  /***
+    WWW_TraceFlag = SHOW_CORE_TRACE | SHOW_THREAD_TRACE | SHOW_PROTOCOL_TRACE;
+    WWW_TraceFlag |= 0xFFFFFFFFl;
+    ***/
+  
+  /* Setting up other user interfaces */
+  
+  /* Setting up different network parameters */
+  /* Maximum number of simultaneous open sockets */
+  HTNet_setMaxSocket (8);
+  /* different network services timeouts */
+  HTDNS_setTimeout (60);
+  HTHost_setPersistTimeout (60L);
+  /* default timeout in ms */
+  HTHost_setEventTimeout (20000);
+  
 #ifdef CATCH_SIG
-   signal (SIGPIPE, SIG_IGN);
+  signal (SIGPIPE, SIG_IGN);
 #endif
 }
 
@@ -2495,7 +2477,7 @@ void               *context_tcbf;
 }
 
 /*----------------------------------------------------------------------
-  Stop Request
+  StopRequest
   stops (kills) all active requests associated with a docid 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2505,151 +2487,66 @@ void                StopRequest (docid)
 int                 docid;
 #endif
 {
-   HTList             *cur;
-   AHTDocId_Status    *docid_status;
-   AHTReqContext      *me;
-#ifdef DEBUG_LIBWWW
-   int                 open_requests;
-#endif /* DEBUG_LIBWWW */
-
+  AHTDocId_Status    *docid_status;
  
    if (Amaya && libDoStop)
-     {
-#ifdef DEBUG_LIBWWW
-       fprintf (stderr, "StopRequest: number of Amaya requests : %d\n", 
-		Amaya->open_requests);
-#endif /* DEBUG_LIBWWW */
-
+     { 
+       /* verify if there are any requests at all associated with docid */
        docid_status = (AHTDocId_Status *) GetDocIdStatus (docid,
 							  Amaya->docid_status);
-       /* verify if there are any requests at all associated with docid */
-       
        if (docid_status == (AHTDocId_Status *) NULL)
 	 return;
-#ifdef DEBUG_LIBWWW
-       open_requests = docid_status->counter;
-#endif /* DEBUG_LIBWWW */
+       /* temporary call to stop all requests, as libwww changed its API */
+       StopAllRequests (docid);
+     }
+}
 
-       /* First, kill all pending requests */
-       /* We first inhibit the activation of pending requests */
-       HTHost_disable_PendingReqLaunch ();
+/*----------------------------------------------------------------------
+  StopAllRequests
+  stops (kills) all active requests. We use the docid 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                StopAllRequests (int docid)
+#else
+void                StopRequest (docid)
+int                 docid;
+#endif
+{
+   HTList             *cur;
+   AHTReqContext      *me;
+
+   /* only do the stop if we're not being called while processing a 
+      request */
+   if (Amaya && libDoStop)
+     {
+
+#ifdef DEBUG_LIBWWW
+       fprintf (stderr, "StopRequest: number of Amaya requests "
+		"before kill: %d\n", Amaya->open_requests);
+#endif /* DEBUG_LIBWWW */
+       
+       HTNet_killAll();
+       EventOrder_deleteAll();
+
        cur = Amaya->reqlist;
        while ((me = (AHTReqContext *) HTList_nextObject (cur))) 
 	 {
-	   if (me->docid == docid && me->reqStatus == HT_NEW)
-	     {
-	       /* If we have an ASYNC request, we kill it.
-	       ** If it's a SYNC request, we just mark it as aborted
-	       */
-	       me->reqStatus = HT_ABORT;
-	       if (((me->mode & AMAYA_IASYNC)
-		    || (me->mode & AMAYA_ASYNC))
-		   && !(me->mode & AMAYA_ASYNC_SAFE_STOP))
-		 {
-		   /* delete the amaya/libwww request context */
-		   if (!HTRequest_kill (me->request))
-		     /* if the above function returns NO (0), it means
-		     ** that there was no network context and that 
-		     ** terminate_handler wasn't called. So, we erase
-		     ** this context ourselves
-		     */
-		     AHTReqContext_delete (me);
-		   
-		   cur = Amaya->reqlist;
-#ifdef DEBUG_LIBWWW
-		   /* update the number of open requests */
-		   open_requests--;		   
-#endif /* DEBUG_LIBWWW */
-		 }
-	     }
+	   if (AmayaIsAlive ()  && me->terminate_cbf)
+	     (*me->terminate_cbf) (me->docid, -1, me->urlName, me->outputfile,
+				   me->content_type, me->context_tcbf);
+	   if (!HTRequest_kill (me->request))
+	       AHTReqContext_delete (me);
 	 }
 
-	/* enable the activation of pending requests */
-       HTHost_enable_PendingReqLaunch ();
-
-       cur = Amaya->reqlist;
-       while ((me = (AHTReqContext *) HTList_nextObject (cur)))
-	 {
-	   if (me->docid == docid)
-	     {
-	       /* kill this request */
-	       
-	       switch (me->reqStatus)
-		 {
-		 case HT_ABORT:
-#ifdef DEBUG_LIBWWW
-		   fprintf (stderr, "Stop: url %s says abort", me->urlName);
-#endif /* DEBUG_LIBWWW */
-		   break;
-		  
-		 case HT_END:
-#ifdef DEBUG_LIBWWW
-		   fprintf (stderr, "Stop: url %s says end", me->urlName);
-#endif /* DEBUG_LIBWWW */
-		   break;
-
-		 case HT_BUSY:
-		   me->reqStatus = HT_ABORT;
-#ifdef DEBUG_LIBWWW
-		   fprintf (stderr, "Stop: url %s going from busy to abort\n",
-			    me->urlName);
-#endif /* DEBUG_LIBWWW */
-		   break;
-
-		 case HT_NEW_PENDING:
-		 case HT_WAITING:
-		 default:
-#ifdef DEBUG_LIBWWW
-		   fprintf (stderr, "Stop: url %s says NEW_PENDING, WAITING",
-			    me->urlName);
-#endif /* DEBUG_LIBWWW */
-		   me->reqStatus = HT_ABORT;
-
-		   if (((me->mode & AMAYA_IASYNC)
-			|| (me->mode & AMAYA_ASYNC))
-		       && !(me->mode & AMAYA_ASYNC_SAFE_STOP))
-		     {
-		       /* delete the amaya/libwww request context */
-		       if (!HTRequest_kill (me->request))
-			 /* if the above function returns NO (0), it means
-			 ** that there was no network context and that 
-			 ** terminate_handler wasn't called. So, we erase
-			 ** this context ourselves
-			 */
-			 AHTReqContext_delete (me);
-
-		       cur = Amaya->reqlist;
-#ifdef DEBUG_LIBWWW
-		       /* update the number of open requests */
-		       open_requests--;		   
-#endif /* DEBUG_LIBWWW */
-		     }
-
-#ifdef DEBUG_LIBWWW
-		   if (HTHost_isIdle (reqHost))
-		     fprintf (stderr, "StopRequst: After killing, Host is "
-			      "idle\n");
-		   else
-		     fprintf (stderr, "StopRequest: After killing, Host isn't "
-			      "idle\n");
-#endif /* DEBUG_LIBWWW */
-
-#ifdef DEBUG_LIBWWW		     
-	       open_requests--;
-#endif /* DEBUG_LIBWWW */		     
-		     break;
-		     
-		 }	/* switch */
-	     }		/* if me docid */
-	 }			/* while */
+       /* Delete remaining channels */
+	 HTChannel_deleteAll(); 
        
 #ifdef DEBUG_LIBWWW
-       fprintf (stderr, "StopRequest: number of Amaya requests : "
-		"%d\n", Amaya->open_requests);
+       fprintf (stderr, "StopRequest: number of Amaya requests "
+		"after kill: %d\n", Amaya->open_requests);
 #endif /* DEBUG_LIBWWW */
-     }				/* if amaya open requests */
-   
-} /* StopRequest */
+     }
+} /* StopAllRequests */
 
 
 /*----------------------------------------------------------------------
