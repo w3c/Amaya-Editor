@@ -3523,7 +3523,8 @@ CHAR_T                c;
 			TtaSetDisplayMode (document, DisplayImmediately);
 		      return;
 		    }
-		  else if (pAb->AbLeafType == LtPicture || pAb->AbLeafType == LtGraphics)
+		  else if (pAb->AbLeafType == LtPicture ||
+			   pAb->AbLeafType == LtGraphics)
 		    ContentEditing (TEXT_SUP);
 		  else if (pAb->AbLeafType != LtCompound || pAb->AbVolume != 0)
 		    TtcPreviousChar (document, view);
@@ -3942,6 +3943,7 @@ View                view;
 {
   DisplayMode         dispMode;
   PtrAbstractBox      pAb;
+  PtrAbstractBox      draw;
   ViewSelection      *pViewSel;
 #ifdef _WINDOWS
   HANDLE              hMem;
@@ -3986,10 +3988,12 @@ View                view;
 	      if (pViewSel->VsBox != NULL)
 		{
 		  pAb = pViewSel->VsBox->BxAbstractBox;
-		  if (pAb->AbLeafType == LtPicture
-		      ||  pAb->AbLeafType == LtSymbol
-		      ||  pAb->AbLeafType == LtGraphics
-		      ||  pAb->AbLeafType == LtText)
+		  draw = GetParentDraw (pViewSel->VsBox);
+		  if (pAb->AbLeafType == LtText || pAb->AbLeafType == LtSymbol)
+		    ContentEditing (TEXT_SUP);
+
+		  else if (!draw && (pAb->AbLeafType == LtPicture ||
+				     pAb->AbLeafType == LtGraphics))
 		    ContentEditing (TEXT_SUP);
 		  else if (pAb->AbLeafType != LtCompound || pAb->AbVolume != 0)
 		    TtcPreviousChar (document, view);

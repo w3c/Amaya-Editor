@@ -3301,6 +3301,7 @@ void               *ctx_cbf;
    int                 toparse;
    int                 slash;
    int                 mode;
+   int                 docType;
    ThotBool            ok;
    GETHTMLDocument_context *ctx = NULL;
 
@@ -3342,6 +3343,16 @@ void               *ctx_cbf;
    usprintf (wTitle, TEXT("%s"), documentname);
 #endif /* _WINDOWS */
 
+   /* check the document suffix */
+   if (IsMathMLName (documentname))
+     docType = docMath;
+   else if (IsSVGName (documentname))
+     docType = docSVG;
+   else if (IsCSSName (documentname))
+     docType = docCSS;
+   else
+     docType = docHTML;
+    
    /* we skip the file: prefix if it is present and do other local
     file urls conversions */
    if (!IsW3Path (pathname))
@@ -3445,7 +3456,7 @@ void               *ctx_cbf;
        else if (CE_event == CE_HELP)
 	 {
 	   /* need to create a new window for the document */
-	   newdoc = InitDocView (doc, documentname, docHTML, 0, TRUE);
+	   newdoc = InitDocView (doc, documentname, docType, 0, TRUE);
 	   if (newdoc)
 	     {
 	       /* help document has to be in read-only mode */
@@ -3467,7 +3478,7 @@ void               *ctx_cbf;
 #endif /* ANNOTATIONS */
        else if (doc == 0)
 	 /* In case of initial document, open the view before loading */
-	 newdoc = InitDocView (doc, documentname, docHTML, 0, FALSE);
+	 newdoc = InitDocView (doc, documentname, docType, 0, FALSE);
        else
 	 {
 	   newdoc = doc;

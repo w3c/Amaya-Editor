@@ -7,6 +7,9 @@ DEFAULT
 	ElemPaste.Post -> MathElementPasted;
 	ElemDelete.Pre -> MathElementWillBeDeleted;
 	ElemDelete.Post -> MathElementDeleted;
+	PRuleCreate.Pre -> ChangePRule;
+	PRuleModify.Pre -> ChangePRule;
+	PRuleDelete.Post -> PRuleDeleted;
    END;
 
 ELEMENTS
