@@ -1200,6 +1200,10 @@ void                UpdateAttrMenu (PtrDocument pDoc)
 	      /* le menu Attributs contient au moins un attribut */
 	      TtaSetMenuOff (document, view, menuID);
 	      TtaDestroyDialogue (ref);
+#ifdef _WINDOWS
+		  /* Remove that reference in the window list of catalogues */
+		  CleanFrameCatList (frame, ref);
+#endif /* _WINDOWS */
 	    }
 	  else
 	    {
@@ -1218,6 +1222,7 @@ void                UpdateAttrMenu (PtrDocument pDoc)
 		  /* destroy the submenu event */
 		  TtaDestroyDialogue (EventMenu[frame - 1]);
 #ifdef _WINDOWS
+		  /* Remove that reference in the window list of catalogues */
 		  CleanFrameCatList (frame, EventMenu[frame - 1]);
 		  if (subMenuID[frame])
 		    DeleteMenu (FrameTable[frame].WdMenus[menu], subMenuID[frame],
