@@ -16,11 +16,14 @@ mkdir $DIR
    cp -p Thot/config/en-libdialogue $DIR/config/
    cp -p Thot/config/en-transdialogue $DIR/config/
    cp -p Thot/config/en-corrdialogue $DIR/config/
+   cp -p Thot/config/en-javamsg $DIR/config/
    cp -p Thot/config/fr-amayadialogue $DIR/config/
    cp -p Thot/config/fr-amayamsg $DIR/config/
    cp -p Thot/config/fr-libdialogue $DIR/config/
    cp -p Thot/config/fr-transdialogue $DIR/config/
    cp -p Thot/config/fr-corrdialogue $DIR/config/
+   cp -p Thot/config/fr-javamsg $DIR/config/
+   cp -p Thot/config/java.properties $DIR/config/
  ln -s ../../thot/Current/dicopar $DIR/dicopar
  mkdir $DIR/amaya
    cp -p Thot/amaya/COPYRIGHT $DIR/amaya/
@@ -32,6 +35,8 @@ mkdir $DIR
    cp -p Thot/amaya/HTML.fr $DIR/amaya/
    cp -p Thot/amaya/HTML*.PRS $DIR/amaya/
    cp -p Thot/amaya/HTML*.TRA $DIR/amaya/
+ mkdir $DIR/classes
+   cp -p Thot/classes/*.zip $DIR/classes/
  ln -s ../../thot/Current/fonts $DIR/fonts
 
 for MACH in $PLATFORMS
