@@ -183,8 +183,6 @@ static void DisplayWords (void)
 static LRESULT CALLBACK SpellCheckDlgProc (ThotWindow hwnDlg, UINT msg,
 					   WPARAM wParam, LPARAM lParam)
 {
-  ThotBool ok;	  
-  int  val;
   char currentRejectedchars [MAX_REJECTED_CHARS];
 
   switch (msg)
