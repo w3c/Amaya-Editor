@@ -557,7 +557,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
   ----------------------------------------------------------------------*/
 ThotBool            RedrawFrameTop (int frame, int scroll)
 {
-  PtrBox              topBox;
+  PtrBox              topBox = NULL;
   PtrBox              create;
   PtrBox              pRootBox;
   ViewFrame          *pFrame;
