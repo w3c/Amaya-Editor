@@ -87,6 +87,15 @@ SOURCE=..\..\thotlib\base\actions.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\base\AmayaApp.cpp
+
+!IF  "$(CFG)" == "LibThotKernel - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "LibThotKernel - Win32 Debug"
+
+# ADD CPP /D "WWW_WIN_DLL"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
@@ -243,14 +252,41 @@ SOURCE=..\..\thotlib\document\writepivot.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\base\wxAmayaSocketEvent.cpp
+
+!IF  "$(CFG)" == "LibThotKernel - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "LibThotKernel - Win32 Debug"
+
+# ADD CPP /D "WWW_WIN_DLL"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\thotlib\base\wxAmayaSocketEventLoop.cpp
+
+!IF  "$(CFG)" == "LibThotKernel - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "LibThotKernel - Win32 Debug"
+
+# ADD CPP /D "WWW_WIN_DLL"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\thotlib\base\wxAmayaTimer.cpp
+
+!IF  "$(CFG)" == "LibThotKernel - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "LibThotKernel - Win32 Debug"
+
+# ADD CPP /D "WWW_WIN_DLL"
+
+!ENDIF 
+
 # End Source File
 # End Target
 # End Project
