@@ -47,10 +47,6 @@ the tools used by the Amaya Team, and very few testings have been done with
 other flavours of make and C compilers.
 </li>
 <li>
-You need the Thot library source code archive thot-src-xxx.tar.gz and the
-Amaya source code archive amaya-src-yyy.tar.gz.
-</li>
-<li>
 Having usual Unix development tools, at least <code>sed</code>,
 <code>awk</code> and <code>cpp</code> should be available.
 </li>
@@ -133,10 +129,9 @@ directory:</p>
 If amaya binary seems fine you can install it:
 <pre>make install</pre>
 <p>
-By default, the binaries are installed in /usr/local/bin, libraries in
-/usr/local/lib and all data are in /usr/local/share/thot. This can be
-overrided by specifying different values for prefix(es) using configure
-command line options in step 2.</p>
+By default, links to binaries are installed in /usr/local/bin, binaries and
+data are in /usr/local/thot. This can be overrided by specifying different
+values for prefix(es) using configure command line options in step 2.</p>
 <p>
 Ultimately, if you're not satisfied with your current Amaya installation, you
 can clean up with:</p>
@@ -169,10 +164,6 @@ make <strong>clean</strong> : removes all object files, but keep the binaries
 in <code>Thot/</code><strong>obj </strong><code>/bin</code> .
 </li>
 <li>
-make <strong>kaffe</strong> : rebuild the kaffe libraries and binaries (if
-sources are available).
-</li>
-<li>
 make <strong>libwww</strong> : rebuild the libwww.a library from Thot/libww
 tree.
 </li>
@@ -188,14 +179,8 @@ Thot/libpng tree.
 make without argument rebuild everything.
 </li>
 <li>
-make <strong>amaya</strong> rebuild <strong>Amaya</strong> binary.
-</li>
-<li>
-make <strong>classes</strong> rebuild <strong>Java</strong>
-<code>.class</code> files from their <code>.java</code> sources. With some
-versions of kaffe it may be a good idea to increase the maximum size of a Java
-V.M. while compiling by adding " <code>-mx 64000000</code> " before
-<code>sun.tools.javac.Main</code> in <code>bin/javac</code> file.
+make <strong>amaya</strong> rebuild <strong>Print</strong> and
+<strong>Amaya</strong> binaries.
 </li>
 </ul>
 <p>
