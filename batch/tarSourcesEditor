@@ -1,5 +1,12 @@
 #!/bin/sh
-EDITORVERSION=2.0b
+#
+# This script builds the Source tar files for Thot Editor
+#
+#       thoteditor-src-$EDITORVERSION.tar.gz
+#
+# And the associated Librairies for supported versions.
+#
+EDITORVERSION=2.1
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 

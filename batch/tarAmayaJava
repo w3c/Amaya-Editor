@@ -1,13 +1,14 @@
 #!/bin/sh
 #
 # This script builds all the binary tar files for Amaya
+# running the Kaffe interpreter.
 #
-#       amaya-$MACH-$AMAYAVERSION.tar.gz
+#       amaya-java-$MACH-$AMAYAVERSION.tar.gz
 # 
 AMAYAVERSION=1.0
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
-PLATFORMS="solaris2 LINUX-ELF LINUX-SPARC SUN4 SGI RS6000 osf1"
+PLATFORMS="solaris2 LINUX-ELF LINUX-SPARC"
 
 TAR="tar cvbfh 200"
 COMPRESS="gzip -9"
@@ -19,9 +20,8 @@ cd ..
 for MACH in $PLATFORMS
 do
    $TAR - \
-        Thot/NEWS.Amaya.095\
+   Thot/NEWS.Amaya.1\
    Thot/COPYRIGHT \
-   Thot/README \
    Thot/config/XKeysymDB \
    Thot/config/thot.ini \
    Thot/config/amaya.css \
@@ -43,6 +43,19 @@ do
    Thot/dicopar/clavier \
    Thot/$MACH/bin/amaya \
    Thot/$MACH/bin/print \
+   Thot/$MACH/bin/kaffe \
+   Thot/$MACH/bin/javac \
+   Thot/classes/amaya.zip \
+   Thot/classes/biss.zip \
+   Thot/classes/classes.zip \
+   Thot/classes/jigsaw.zip \
+   Thot/classes/sources.zip \
+   Thot/classes/thotlib.zip \
+   Thot/classes/lib/biss \
+   Thot/classes/lib/biss.awt \
+   Thot/classes/lib/biss.awt.kernel \
+   Thot/classes/lib/javac.properties \
+   Thot/classes/lib/appletviewer.properties \
    Thot/batch/MachineType \
    Thot/amaya/COPYRIGHT \
    Thot/amaya/COPYRIGHT.html \
@@ -56,6 +69,6 @@ do
    Thot/fonts/Families.list \
    Thot/fonts/fonts.dir \
    Thot/fonts/icones* \
-   | $COMPRESS  > $DEST/amaya-$MACH-$AMAYAVERSION.tar.gz
+   | $COMPRESS  > $DEST/amaya-java-$MACH-$AMAYAVERSION.tar.gz
 done
 

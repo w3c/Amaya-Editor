@@ -1,8 +1,22 @@
 #!/bin/sh
-VERSION=2.0b
+#
+# This script builds the Source tar files for Amaya
+#
+#       thot-src-$THOTVERSION.tar.gz
+#
+# The Libraries distributions for the supported platforms
+#
+#       thot-libs-$MACH-$THOTVERSION.tar.gz
+#
+# And the dictionnaries :
+#
+#       English.tar.gz
+# and   French.tar.gz
+#
+THOTVERSION=2.1
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
-PLATFORMS="solaris2 LINUX LINUX-ELF LINUX-SPARC SUN4 SGI RS6000 osf1"
+PLATFORMS="solaris2 LINUX-ELF LINUX-SPARC SUN4 SGI RS6000 osf1"
 
 TAR="tar cvbfh 200"
 COMPRESS="gzip -9"
@@ -48,6 +62,7 @@ Thot/fonts/ivgraf6.fb \
 Thot/fonts/ivsymb1.fb \
 Thot/fonts/ivsymb6.fb \
 Thot/makes/Makefile \
+Thot/makes/Makefile.template \
 Thot/makes/Imakefile \
 Thot/makes/Imake.tmpl \
 Thot/makes/Imake.rules \
@@ -805,7 +820,7 @@ Thot/tools/cextract-1.7/parse.c \
 Thot/tools/cextract-1.7/patchlevel.h \
 Thot/tools/cextract-1.7/proto.h \
 Thot/tools/cextract-1.7/xtract.h \
- | $COMPRESS  > $DEST/thot-src-$VERSION.tar.gz
+ | $COMPRESS  > $DEST/thot-src-$THOTVERSION.tar.gz
 
 for MACH in $PLATFORMS
 do
@@ -815,7 +830,7 @@ do
     Thot/$MACH/libjpeg.a \
     Thot/$MACH/libpng.a \
     Thot/$MACH/libz.a \
-    | $COMPRESS  > $DEST/thot-libs-$MACH-$VERSION.tar.gz
+    | $COMPRESS  > $DEST/thot-libs-$MACH-$THOTVERSION.tar.gz
 done
 
 $TAR - \
