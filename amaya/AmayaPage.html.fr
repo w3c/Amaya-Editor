@@ -90,11 +90,11 @@ height="349">
       <polygon points="416,178  431,178  431,193  416,193"/>
     </g>
   </g>
-  <text id="logo" x="304" y="140"
-  style="font: 24pt helvetica; font-weight: bold; color: #488B9B;">AMAYA
+  <text id="logo" x="304" y="162"
+  style="font: 24pt helvetica; font-weight: bold; fill: #488B9B;">AMAYA
   </text>
   <text id="version" x="360" y="306"
-  style="font: bold 16pt italic; color: #0192BF;">Release 4.0
+  style="font: bold 16pt italic; fill: #0192BF;">Release 4.0
   </text>
   <g id="polygonMask" style="stroke: none;">
     <polygon style="fill: #0192BF;" points="30,60  30,230  108,208"/>
@@ -196,7 +196,7 @@ modifications que vous effectuez.</p>
 <p class="buttonbar"><span class="button"><a href="http://www.w3.org/">Serveur
 W3C</a></span> <span class="button"><a
 href="http://www.w3.org/Amaya/">Amaya</a></span> <span class="button"><a
-href="../doc/amaya/Manual.html">Manuel en ligne</a></span></p>
+href="../doc/amaya/Manual.html.fr">Manuel en ligne</a></span></p>
 </div>
 </body>
 </html>

@@ -1239,8 +1239,12 @@ RULES
 	HorizRef: *.Bottom;
         Width: 10 cm;
         Height: 5 cm;
-        if NOT within GraphML
+        if NOT within GraphML BEGIN
            VertPos: Top = Previous . Bottom;
+	   Foreground: transparent;
+	   Background: Black;
+	   FillPattern: backgroundcolor;
+	END;
 	PageBreak: No;
 	LineBreak: No;
 	Justify: No;
@@ -1655,6 +1659,9 @@ RULES
 	CreateWith (VerticalLine);
    	HorizPos: Left = Enclosing . Left + 1 pt Userspecified;
    	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
+	Foreground: Black;
+	FillPattern: nopattern;
+	Background: transparent;
 	if within defs
 	   Visibility: 0;
 	IN Structure_view BEGIN

@@ -899,10 +899,19 @@ ThotBool            selected;
     withline = TRUE;
   else
     withline = FALSE;
-
-  fg = pAb->AbForeground;
-  bg = pAb->AbBackground;
-  withbackground = (pAb->AbFillPattern == 2);
+  /* in SVG foreground and background are inverted */
+  if (!ustrcmp(pAb->AbElement->ElStructSchema->SsName, TEXT("GraphML")))
+    {
+    bg = pAb->AbForeground;
+    fg = pAb->AbBackground;
+    withbackground = FALSE;
+    }
+  else
+    {
+    fg = pAb->AbForeground;
+    bg = pAb->AbBackground;
+    withbackground = (pAb->AbFillPattern == 2);
+    }
   pFrame = &ViewFrameTable[frame - 1];
   left = 0;
   right = 0;

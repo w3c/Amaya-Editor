@@ -2647,7 +2647,7 @@ ThotBool            isHTML;
 
   best.typed_data.unit = STYLE_UNIT_INVALID;
   best.typed_data.real = FALSE;
-  if (!ustrncasecmp (cssRule, TEXT("none"), strlen ("none")))
+  if (!ustrncasecmp (cssRule, TEXT("none"), 4))
     {
       best.typed_data.value = -2;  /* -2 means transparent */
       best.typed_data.unit = STYLE_UNIT_REL;
@@ -2684,7 +2684,7 @@ ThotBool            isHTML;
 
   best.typed_data.unit = STYLE_UNIT_INVALID;
   best.typed_data.real = FALSE;
-  if (!ustrncasecmp (cssRule, TEXT("none"), strlen ("none")))
+  if (!ustrncasecmp (cssRule, TEXT("none"), 4))
     {
       best.typed_data.value = STYLE_PATTERN_NONE;
       best.typed_data.unit = STYLE_UNIT_REL;
@@ -3538,25 +3538,8 @@ ThotBool            isHTML;
 	      /* try to parse the value associated with this property */
 	      if (CSSProperties[i].parsing_function != NULL)
 		{
-		  done = FALSE;
-		  /* if it's the "fill" SVG property applied to a SVG text element,
-		     generate a Foreground P rule */
-		  if (!ustrcmp (CSSProperties[i].name, TEXT("fill")))
-		    {
-		      elType = TtaGetElementType (element);
-		      if (elType.ElTypeNum == GraphML_EL_text_ ||
-			  elType.ElTypeNum == GraphML_EL_tspan)
-			if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
-				      TEXT("GraphML")))
-			  {
-			    p = ParseCSSForeground (element, tsch, context, cssRule,
-						    css, isHTML);
-			    done = TRUE;
-			  }
-		    }
-		  if (!done)
-		    p = CSSProperties[i].parsing_function (element, tsch, context,
-							   cssRule, css, isHTML);
+		  p = CSSProperties[i].parsing_function (element, tsch, context,
+							 cssRule, css, isHTML);
 		  /* update index and skip the ";" separator if present */
 		  cssRule = p;
 		}

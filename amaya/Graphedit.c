@@ -1131,7 +1131,6 @@ NotifyPresentation *event;
      return (TRUE);   /* don't let Thot do it */
 
   presRule = event->pRule;
- 
   if (TtaGetConstruct (el) == ConstructBasicType)
     /* it's a basic type. Move the PRule to the parent element */
     {
@@ -1147,17 +1146,22 @@ NotifyPresentation *event;
 	}
     }
 
-  if (presType == PRSize        ||  presType == PRStyle      ||
-      presType == PRWeight      ||  presType == PRFont       ||
-      presType == PRLineStyle   ||  presType == PRLineWeight ||
-      presType == PRBackground  ||  presType == PRForeground ||
+  if (presType == PRBackground || presType == PRForeground ||
       presType == PRFillPattern)
+    {
+      
+      SetStyleAttribute (doc, el);
+      TtaSetDocumentModified (doc);
+    }
+  else if (presType == PRSize      ||  presType == PRStyle    ||
+	   presType == PRWeight    ||  presType == PRFont     ||
+	   presType == PRLineStyle ||  presType == PRLineWeight)
     {
       SetStyleAttribute (doc, el);
       TtaSetDocumentModified (doc);
     }
   else if (presType == PRVertPos || presType == PRHorizPos ||
-           presType == PRHeight ||  presType == PRWidth)
+           presType == PRHeight  || presType == PRWidth)
     {
       unit = TtaGetPRuleUnit (presRule);
       mainView = TtaGetViewFromName (doc, "Formatted_view");
