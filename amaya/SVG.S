@@ -8,14 +8,17 @@ DEFPRES SVGP;
 ATTR
 
    { global attributes for all SVG elements }
-   id = text;
-   PseudoClass = Text;
-   xml_space = xml_space_default, xml_space_preserve;
-   { xml_base = Text; }
 	
-   { global attributes for internal processing }
+   {stdAttrs}
+   id = text;
+   xml_base = text;
+
+   xml_space = xml_space_default, xml_space_preserve;
+
+   { attributes for internal processing }
    Unknown_attribute = text;
    Ghost_restruct = text;
+   PseudoClass = text;
    Highlight = Yes_;        { to show the SVG element corresponding to the
 			      current selection in the source view }
    Namespace = text;        { for children of element foreignObject }
@@ -29,92 +32,394 @@ STRUCT
 { Document Structure }
 
    SVG
-	(ATTR requiredFeatures = text;
-	      requiredExtensions = text;
-	      systemLanguage = text;
+	(ATTR requiredFeatures = text;      {testAttrs}
+	      requiredExtensions = text;    {testAttrs}
+	      systemLanguage = text;        {testAttrs}
 	      baseProfile = text;
 	      externalResourcesRequired = false, true;
               class = text;
               style_ = text;
-	      fill = text;
-	      fill_opacity =  text; 
-	      stroke = text;
-	      stroke_width = text;
-	      stroke_opacity = text; 
-	      opacity_ = text; 
-	      font_family = text;
-	      font_size = text;
+	      { PresentationAttributes-All }
+	      color = text;                      {PresentationAttributes-Color}
+	      color_interpolation = auto, sRGB, linearRGB, inherit;
+	                                         {PresentationAttributes-Color}
+	      color_rendering = auto, optimizeSpeed, optimizeQuality, inherit;
+	                                         {PresentationAttributes-Color}
+	      enable_background = text;     {PresentationAttributes-Containers}
+	      flood_color = text;              {PresentationAttributes-feFlood}
+	      flood_opacity = text;            {PresentationAttributes-feFlood}
+	      fill = text;                  {PresentationAttributes-FillStroke}
+	      fill_opacity =  text;         {PresentationAttributes-FillStroke}
+	      fill_rule = nonzero, evenodd, inherit;
+	                                    {PresentationAttributes-FillStroke}
+	      stroke = text;                {PresentationAttributes-FillStroke}
+	      stroke_dasharray = text;      {PresentationAttributes-FillStroke}
+	      stroke_dashoffset = text;     {PresentationAttributes-FillStroke}
+	      stroke_linecap = butt, round, square, inherit;
+	                                    {PresentationAttributes-FillStroke}
+	      stroke_linejoin = miter, round, bevel, inherit;
+	                                    {PresentationAttributes-FillStroke}
+	      stroke_miterlimit = text;     {PresentationAttributes-FillStroke}
+	      stroke_opacity = text;        {PresentationAttributes-FillStroke}
+	      stroke_width = text;          {PresentationAttributes-FillStroke}
+	      color_interpolation_filters = auto, sRGB, linearRGB, inherit;
+	                              {PresentationAttributes-FilterPrimitives}
+	      font_family = text;    {PresentationAttributes-FontSpecification}
+	      font_size = text;      {PresentationAttributes-FontSpecification}
+	      font_size_adjust =text;{PresentationAttributes-FontSpecification}
+	      font_stretch = normal_, wider, narrower, ultra_condensed,
+	           extra_condensed, condensed, semi_condensed, semi_expanded,
+	           expanded, extra_expanded, ultra_expanded, inherit;
+	                             {PresentationAttributes-FontSpecification}
 	      font_style = normal_, italic, oblique_, inherit;
+	                             {PresentationAttributes-FontSpecification}
 	      font_variant = normal_, small_caps, inherit;
+	                             {PresentationAttributes-FontSpecification}
 	      font_weight = normal_, bold_, bolder, lighter, w100, w200, w300,
 			    w400, w500, w600, w700, w800, w900, inherit;
+	                             {PresentationAttributes-FontSpecification}
+	      stop_color = text;             {PresentationAttributes-Gradients}
+	      stop_opacity = text;           {PresentationAttributes-Gradients}
+	      clip_path = text;               {PresentationAttributes-Graphics}
+	      clip_rule = nonzero, evenodd, inherit;
+	                                      {PresentationAttributes-Graphics}
+	      cursor_ = text;                 {PresentationAttributes-Graphics}
+	      display = inline, block, list_item, run_in, compact, marker_,
+                        table, inline_table, table_row_group,
+	                table_header_group, table_footer_group, table_row,
+	                table_column_group, table_column, table_cell,
+	                table_caption, none, inherit; 
+	                                      {PresentationAttributes-Graphics}
+	      filter = text;                  {PresentationAttributes-Graphics}
+	      image_rendering = auto, optimizeSpeed, optimizeQuality, inherit;
+		                              {PresentationAttributes-Graphics}
+	      mask_ = text;                   {PresentationAttributes-Graphics}
+              opacity_ = text;                {PresentationAttributes-Graphics}
+	      pointer_events = visiblePainted, visibleFill, visibleStroke,
+	                 visible, painted, fill__, stroke_, all, none, inherit;
+			                      {PresentationAttributes-Graphics}
+	      shape_rendering = auto, optimizeSpeed, crispEdges,
+	                        geometricPrecision, inherit;
+			                      {PresentationAttributes-Graphics}
+	      text_rendering = auto, optimizeSpeed, optimizeLegibility,
+	                       geometricPrecision, inherit;
+			                      {PresentationAttributes-Graphics}
+	      visibility_ = visible, hidden_, inherit;
+			                      {PresentationAttributes-Graphics}
+	      color_profile_ = text;            {PresentationAttributes-Images}
+	      lighting_color = text;   {PresentationAttributes-LightingEffects}
+	      marker_start = text;             {PresentationAttributes-Markers}
+	      marker_mid = text;               {PresentationAttributes-Markers}
+	      marker_end = text;               {PresentationAttributes-Markers}
+	      alignment_baseline = baseline, top, before_edge, text_top,
+	                text_before_edge, middle, bottom, after_edge,
+	                text_bottom, text_after_edge, ideographic_, lower,
+	                hanging_, mathematical_, inherit;
+				   {PresentationAttributes-TextContentElements}
+	      baseline_shift = text;
+	                           {PresentationAttributes-TextContentElements}
 	      direction_ = ltr_, rtl_, inherit;
+				   {PresentationAttributes-TextContentElements}
+	      dominant_baseline = auto, autosense_script, no_change, reset,
+                      ideographic_, lower, hanging_, mathematical_, inherit;
+				   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_horizontal = text;
+				   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_vertical = text;
+				   {PresentationAttributes-TextContentElements}
+	      kerning = text;      {PresentationAttributes-TextContentElements}
+	      letter_spacing = text;
+				   {PresentationAttributes-TextContentElements}
 	      text_anchor = start, middle, end__, inherit;
+				   {PresentationAttributes-TextContentElements}
 	      text_decoration = text;
+				   {PresentationAttributes-TextContentElements}
 	      unicode_bidi = normal_, embed_, bidi_override, inherit;
+				   {PresentationAttributes-TextContentElements}
+	      word_spacing = text; {PresentationAttributes-TextContentElements}
+	      writing_mode = lr_tb, rl_tb, tb_rl, lr, rl, tb, inherit;
+	                                  {PresentationAttributes-TextElements}
+	      clip = text;		     {PresentationAttributes-Viewports}
+	      overflow = visible, hidden_, scroll, auto, inherit;
+					     {PresentationAttributes-Viewports}
 	      viewBox = text;
+	      preserveAspectRatio = text;
+	      zoomAndPan = disable, magnify; 
+	      onfocusin = text;              {graphicsElementEvents}
+	      onfocusout = text;             {graphicsElementEvents}
+	      onactivate = text;             {graphicsElementEvents}
+	      onclick = text;                {graphicsElementEvents}
+	      onmousedown = text;            {graphicsElementEvents}
+	      onmouseup = text;              {graphicsElementEvents}
+	      onmouseover = text;            {graphicsElementEvents}
+	      onmousemove = text;            {graphicsElementEvents}
+	      onmouseout = text;             {graphicsElementEvents}
+	      onload = text;                 {graphicsElementEvents}
+	      onunload = text;               {documentEvents}
+	      onabort = text;                {documentEvents}
+	      onerror = text;                {documentEvents}
+	      onresize = text;               {documentEvents}
+	      onscroll = text;               {documentEvents}
+	      onzoom = text;                 {documentEvents}
 	      version = text;
 	      x = text;
               y = text; 
 	      width_ = text;
 	      height_ = text;
+	      contentScriptType = text;
+	      contentStyleType = text;
 	      RealLang = Yes_;
 	      Charset = text)
         = LIST OF (GraphicsElement) + (XMLcomment, XMLPI, CDATA,
 	                               Unknown_namespace);
 
    g
-        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired;
 	      class; style_;
-	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
-	      opacity_; 
-	      font_family; font_size; font_style; font_variant; font_weight;
-	      direction_; text_anchor; text_decoration; unicode_bidi;
-	      transform = text)
+	      { PresentationAttributes-All }
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      enable_background;          {PresentationAttributes-Containers}
+	      flood_color; flood_opacity; {PresentationAttributes-feFlood}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      font_family; font_size;{PresentationAttributes-FontSpecification}
+	      font_size_adjust;      {PresentationAttributes-FontSpecification}
+	      font_stretch;          {PresentationAttributes-FontSpecification}
+	      font_style;            {PresentationAttributes-FontSpecification}
+	      font_variant;          {PresentationAttributes-FontSpecification}
+	      font_weight;           {PresentationAttributes-FontSpecification}
+	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      color_profile_;             {PresentationAttributes-Images}
+	      lighting_color;         {PresentationAttributes-LightingEffects}
+	      marker_start; marker_mid;       {PresentationAttributes-Markers}
+	      marker_end;                     {PresentationAttributes-Markers}
+	      alignment_baseline;  {PresentationAttributes-TextContentElements}
+	      baseline_shift;      {PresentationAttributes-TextContentElements}
+	      direction_;	   {PresentationAttributes-TextContentElements}
+	      dominant_baseline;   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_horizontal;
+				   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_vertical;
+				   {PresentationAttributes-TextContentElements}
+	      kerning;		   {PresentationAttributes-TextContentElements}
+	      letter_spacing;	   {PresentationAttributes-TextContentElements}
+	      text_anchor;	   {PresentationAttributes-TextContentElements}
+	      text_decoration;	   {PresentationAttributes-TextContentElements}
+	      unicode_bidi;	   {PresentationAttributes-TextContentElements}
+	      word_spacing;	   {PresentationAttributes-TextContentElements}
+	      writing_mode;		 {PresentationAttributes-TextElements}
+	      clip; overflow;	         {PresentationAttributes-Viewports}
+	      transform = text;
+	      onfocusin; onfocusout; onactivate;    {graphicsElementEvents}
+	      onclick; onmousedown; onmouseup;      {graphicsElementEvents}
+	      onmouseover; onmousemove; onmouseout; {graphicsElementEvents}
+	      onload)                               {graphicsElementEvents}
         = LIST OF (GraphicsElement);
 
    defs
-        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired;
 	      class; style_;
-	      fill; stroke; stroke_width;
-	      font_family; font_size; font_style; font_variant; font_weight;
-	      direction_; text_anchor; text_decoration; unicode_bidi;
+	      { PresentationAttributes-All }
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      enable_background;          {PresentationAttributes-Containers}
+	      flood_color; flood_opacity; {PresentationAttributes-feFlood}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      font_family; font_size;{PresentationAttributes-FontSpecification}
+	      font_size_adjust;      {PresentationAttributes-FontSpecification}
+	      font_stretch;          {PresentationAttributes-FontSpecification}
+	      font_style;            {PresentationAttributes-FontSpecification}
+	      font_variant;          {PresentationAttributes-FontSpecification}
+	      font_weight;           {PresentationAttributes-FontSpecification}
+	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      color_profile_;             {PresentationAttributes-Images}
+	      lighting_color;         {PresentationAttributes-LightingEffects}
+	      marker_start; marker_mid;       {PresentationAttributes-Markers}
+	      marker_end;                     {PresentationAttributes-Markers}
+	      alignment_baseline;  {PresentationAttributes-TextContentElements}
+	      baseline_shift;      {PresentationAttributes-TextContentElements}
+	      direction_;	   {PresentationAttributes-TextContentElements}
+	      dominant_baseline;   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_horizontal;
+				   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_vertical;
+				   {PresentationAttributes-TextContentElements}
+	      kerning;		   {PresentationAttributes-TextContentElements}
+	      letter_spacing;	   {PresentationAttributes-TextContentElements}
+	      text_anchor;	   {PresentationAttributes-TextContentElements}
+	      text_decoration;	   {PresentationAttributes-TextContentElements}
+	      unicode_bidi;	   {PresentationAttributes-TextContentElements}
+	      word_spacing;	   {PresentationAttributes-TextContentElements}
+	      writing_mode;		 {PresentationAttributes-TextElements}
+	      clip; overflow;	         {PresentationAttributes-Viewports}
 	      transform;
-	      { graphicsElementEvents })
+	      onfocusin; onfocusout; onactivate;    {graphicsElementEvents}
+	      onclick; onmousedown; onmouseup;      {graphicsElementEvents}
+	      onmouseover; onmousemove; onmouseout; {graphicsElementEvents}
+	      onload)                               {graphicsElementEvents}
         = LIST OF (GraphicsElement);
 
    desc
-	(ATTR  class; style_)
+	(ATTR  class; style_;
+	       content_ = text)                      {StructuredText}
 	= TEXT;
 	
    title
-	(ATTR  class; style_)
+	(ATTR  class; style_;
+	       content_)                             {StructuredText}
 	= TEXT;
 	
    symbol_  { not in SVG Tiny }
 	(ATTR externalResourcesRequired;
 	      class; style_;
-	      fill; stroke; stroke_width;
-	      font_family; font_size; font_style; font_variant; font_weight;
-	      direction_; text_anchor; text_decoration; unicode_bidi;
+	      { PresentationAttributes-All }
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      enable_background;          {PresentationAttributes-Containers}
+	      flood_color; flood_opacity; {PresentationAttributes-feFlood}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      font_family; font_size;{PresentationAttributes-FontSpecification}
+	      font_size_adjust;      {PresentationAttributes-FontSpecification}
+	      font_stretch;          {PresentationAttributes-FontSpecification}
+	      font_style;            {PresentationAttributes-FontSpecification}
+	      font_variant;          {PresentationAttributes-FontSpecification}
+	      font_weight;           {PresentationAttributes-FontSpecification}
+	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      color_profile_;             {PresentationAttributes-Images}
+	      lighting_color;         {PresentationAttributes-LightingEffects}
+	      marker_start; marker_mid;       {PresentationAttributes-Markers}
+	      marker_end;                     {PresentationAttributes-Markers}
+	      alignment_baseline;  {PresentationAttributes-TextContentElements}
+	      baseline_shift;      {PresentationAttributes-TextContentElements}
+	      direction_;	   {PresentationAttributes-TextContentElements}
+	      dominant_baseline;   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_horizontal;
+				   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_vertical;
+				   {PresentationAttributes-TextContentElements}
+	      kerning;		   {PresentationAttributes-TextContentElements}
+	      letter_spacing;	   {PresentationAttributes-TextContentElements}
+	      text_anchor;	   {PresentationAttributes-TextContentElements}
+	      text_decoration;	   {PresentationAttributes-TextContentElements}
+	      unicode_bidi;	   {PresentationAttributes-TextContentElements}
+	      word_spacing;	   {PresentationAttributes-TextContentElements}
+	      writing_mode;		 {PresentationAttributes-TextElements}
+	      clip; overflow;	         {PresentationAttributes-Viewports}
 	      viewBox;
-	      preserveAspectRatio = text; 
-	      { graphicsElementEvents })
+	      preserveAspectRatio; 
+	      onfocusin; onfocusout; onactivate;    {graphicsElementEvents}
+	      onclick; onmousedown; onmouseup;      {graphicsElementEvents}
+	      onmouseover; onmousemove; onmouseout; {graphicsElementEvents}
+	      onload)                               {graphicsElementEvents}
         = LIST OF (GraphicsElement);
 
    use_
-        (ATTR xlink_href = text;
-	      requiredFeatures; requiredExtensions; systemLanguage;
+        (ATTR xlink_type = simple;       {xlinkRefAttrs}
+              xlink_role = text;         {xlinkRefAttrs}
+              xlink_arcrole = text;      {xlinkRefAttrs}
+              xlink_title = text;        {xlinkRefAttrs}
+              xlink_show = other, embed; {xlinkRefAttrs}
+              xlink_actuate = onLoad;    {xlinkRefAttrs}
+              xlink_href = text;
+	      requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired;
 	      class; style_;
-	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
-	      opacity_;
-	      font_family; font_size; font_style; font_variant; font_weight;
-	      direction_; text_anchor; text_decoration; unicode_bidi;
+	      { PresentationAttributes-All }
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      enable_background;          {PresentationAttributes-Containers}
+	      flood_color; flood_opacity; {PresentationAttributes-feFlood}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      font_family; font_size;{PresentationAttributes-FontSpecification}
+	      font_size_adjust;      {PresentationAttributes-FontSpecification}
+	      font_stretch;          {PresentationAttributes-FontSpecification}
+	      font_style;            {PresentationAttributes-FontSpecification}
+	      font_variant;          {PresentationAttributes-FontSpecification}
+	      font_weight;           {PresentationAttributes-FontSpecification}
+	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      color_profile_;             {PresentationAttributes-Images}
+	      lighting_color;         {PresentationAttributes-LightingEffects}
+	      marker_start; marker_mid;       {PresentationAttributes-Markers}
+	      marker_end;                     {PresentationAttributes-Markers}
+	      alignment_baseline;  {PresentationAttributes-TextContentElements}
+	      baseline_shift;      {PresentationAttributes-TextContentElements}
+	      direction_;	   {PresentationAttributes-TextContentElements}
+	      dominant_baseline;   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_horizontal;
+				   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_vertical;
+				   {PresentationAttributes-TextContentElements}
+	      kerning;		   {PresentationAttributes-TextContentElements}
+	      letter_spacing;	   {PresentationAttributes-TextContentElements}
+	      text_anchor;	   {PresentationAttributes-TextContentElements}
+	      text_decoration;	   {PresentationAttributes-TextContentElements}
+	      unicode_bidi;	   {PresentationAttributes-TextContentElements}
+	      word_spacing;	   {PresentationAttributes-TextContentElements}
+	      writing_mode;		 {PresentationAttributes-TextElements}
+	      clip; overflow;	         {PresentationAttributes-Viewports}
 	      transform;
-	      { graphicsElementEvents }
+	      onfocusin; onfocusout; onactivate;    {graphicsElementEvents}
+	      onclick; onmousedown; onmouseup;      {graphicsElementEvents}
+	      onmouseover; onmousemove; onmouseout; {graphicsElementEvents}
+	      onload;                               {graphicsElementEvents}
 	      x; 
 	      y;
               width_;
@@ -127,12 +432,28 @@ STRUCT
 { Images }
 
    image
-	(ATTR xlink_href;
-	      requiredFeatures; requiredExtensions; systemLanguage;
+	(ATTR xlink_type; xlink_role; xlink_arcrole;   {xlinkRefAttrs}
+	      xlink_title; xlink_show; xlink_actuate;  {xlinkRefAttrs}
+	      xlink_href;
+	      requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired; 
 	      class; style_;
-	      opacity_; 
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      color_profile_;             {PresentationAttributes-Images}
+	      clip; overflow;	          {PresentationAttributes-Viewports}
 	      transform;
+	      preserveAspectRatio;
+	      onfocusin; onfocusout; onactivate;    {graphicsElementEvents}
+	      onclick; onmousedown; onmouseup;      {graphicsElementEvents}
+	      onmouseover; onmousemove; onmouseout; {graphicsElementEvents}
+	      onload;                               {graphicsElementEvents}
 	      x; 
 	      y;
               width_;
@@ -147,15 +468,61 @@ STRUCT
 { Conditional Processing }
 
    switch
-	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	(ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired;
 	      class; style_;
 	      { PresentationAttributes-All }
-	      fill; stroke; stroke_width;
-	      font_family; font_size; font_style; font_variant; font_weight;
-	      direction_; text_anchor; text_decoration; unicode_bidi;
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      enable_background;          {PresentationAttributes-Containers}
+	      flood_color; flood_opacity; {PresentationAttributes-feFlood}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      font_family; font_size;{PresentationAttributes-FontSpecification}
+	      font_size_adjust;      {PresentationAttributes-FontSpecification}
+	      font_stretch;          {PresentationAttributes-FontSpecification}
+	      font_style;            {PresentationAttributes-FontSpecification}
+	      font_variant;          {PresentationAttributes-FontSpecification}
+	      font_weight;           {PresentationAttributes-FontSpecification}
+	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      color_profile_;             {PresentationAttributes-Images}
+	      lighting_color;         {PresentationAttributes-LightingEffects}
+	      marker_start; marker_mid;       {PresentationAttributes-Markers}
+	      marker_end;                     {PresentationAttributes-Markers}
+	      alignment_baseline;  {PresentationAttributes-TextContentElements}
+	      baseline_shift;      {PresentationAttributes-TextContentElements}
+	      direction_;	   {PresentationAttributes-TextContentElements}
+	      dominant_baseline;   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_horizontal;
+				   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_vertical;
+				   {PresentationAttributes-TextContentElements}
+	      kerning;		   {PresentationAttributes-TextContentElements}
+	      letter_spacing;	   {PresentationAttributes-TextContentElements}
+	      text_anchor;	   {PresentationAttributes-TextContentElements}
+	      text_decoration;	   {PresentationAttributes-TextContentElements}
+	      unicode_bidi;	   {PresentationAttributes-TextContentElements}
+	      word_spacing;	   {PresentationAttributes-TextContentElements}
+	      writing_mode;		 {PresentationAttributes-TextElements}
+	      clip; overflow;	         {PresentationAttributes-Viewports}
 	      transform;
-	      { graphicsElementEvents })
+	      onfocusin; onfocusout; onactivate;    {graphicsElementEvents}
+	      onclick; onmousedown; onmouseup;      {graphicsElementEvents}
+	      onmouseover; onmousemove; onmouseout; {graphicsElementEvents}
+	      onload;)                              {graphicsElementEvents}
 	= LIST OF (CASE OF
 	      desc; title; metadata;
 	      path; text_; rect; circle; ellipse; line_; polyline; polygon;
@@ -175,12 +542,32 @@ STRUCT
 { Paths }
 
    path
-	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	(ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired; 
 	      class; style_;
-	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
-	      opacity_;
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      marker_start; marker_mid;       {PresentationAttributes-Markers}
+	      marker_end;                     {PresentationAttributes-Markers}
               transform;
+	      onfocusin; onfocusout; onactivate;    {graphicsElementEvents}
+	      onclick; onmousedown; onmouseup;      {graphicsElementEvents}
+	      onmouseover; onmousemove; onmouseout; {graphicsElementEvents}
+	      onload;                               {graphicsElementEvents}
 	      d = text;
 	      pathLength = text)
         = LIST OF (CASE OF
@@ -192,12 +579,30 @@ STRUCT
 { Basic Shapes }
 
    rect
-        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired; 
 	      class; style_;
-	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
-	      opacity_;
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
 	      transform;
+	      onfocusin; onfocusout; onactivate;    {graphicsElementEvents}
+	      onclick; onmousedown; onmouseup;      {graphicsElementEvents}
+	      onmouseover; onmousemove; onmouseout; {graphicsElementEvents}
+	      onload;                               {graphicsElementEvents}
 	      x;
               y;
               width_;
@@ -211,12 +616,30 @@ STRUCT
 	      END);
 	
    circle
-        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired; 
 	      class; style_;
-	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
-	      opacity_;
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
 	      transform;
+	      onfocusin; onfocusout; onactivate;    {graphicsElementEvents}
+	      onclick; onmousedown; onmouseup;      {graphicsElementEvents}
+	      onmouseover; onmousemove; onmouseout; {graphicsElementEvents}
+	      onload;                               {graphicsElementEvents}
 	      cx = text;
 	      cy = text;
               r = text)
@@ -227,12 +650,30 @@ STRUCT
 	      END);
 	
    ellipse
-        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired; 
 	      class; style_;
-	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
-	      opacity_;
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
 	      transform;
+	      onfocusin; onfocusout; onactivate;    {graphicsElementEvents}
+	      onclick; onmousedown; onmouseup;      {graphicsElementEvents}
+	      onmouseover; onmousemove; onmouseout; {graphicsElementEvents}
+	      onload;                               {graphicsElementEvents}
 	      cx;
 	      cy;
 	      rx;
@@ -244,12 +685,32 @@ STRUCT
 	      END);
 	
    line_
-        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired; 
 	      class; style_;
-	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
-	      opacity_;
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      marker_start; marker_mid;       {PresentationAttributes-Markers}
+	      marker_end;                     {PresentationAttributes-Markers}
 	      transform;
+	      onfocusin; onfocusout; onactivate;    {graphicsElementEvents}
+	      onclick; onmousedown; onmouseup;      {graphicsElementEvents}
+	      onmouseover; onmousemove; onmouseout; {graphicsElementEvents}
+	      onload;                               {graphicsElementEvents}
 	      x1 = text;
 	      y1 = text;
               x2 = text;
@@ -261,12 +722,32 @@ STRUCT
 	      END);
 	
    polyline
-        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired; 
 	      class; style_;
-	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
-	      opacity_;
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      marker_start; marker_mid;       {PresentationAttributes-Markers}
+	      marker_end;                     {PresentationAttributes-Markers}
 	      transform;
+	      onfocusin; onfocusout; onactivate;    {graphicsElementEvents}
+	      onclick; onmousedown; onmouseup;      {graphicsElementEvents}
+	      onmouseover; onmousemove; onmouseout; {graphicsElementEvents}
+	      onload;                               {graphicsElementEvents}
               points = text)
         = LIST OF (CASE OF
               desc; title; metadata;
@@ -275,12 +756,32 @@ STRUCT
 	      END);
 
    polygon
-        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired; 
 	      class; style_;
-	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
-	      opacity_;
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      marker_start; marker_mid;       {PresentationAttributes-Markers}
+	      marker_end;                     {PresentationAttributes-Markers}
 	      transform;
+	      onfocusin; onfocusout; onactivate;    {graphicsElementEvents}
+	      onclick; onmousedown; onmouseup;      {graphicsElementEvents}
+	      onmouseover; onmousemove; onmouseout; {graphicsElementEvents}
+	      onload;                               {graphicsElementEvents}
               points)
         = LIST OF (CASE OF
               desc; title; metadata;
@@ -291,20 +792,58 @@ STRUCT
 { Text }
 	
    text_
-        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired; 
 	      class; style_;
-	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
-	      font_family; font_size; font_style; font_variant; font_weight;
-	      direction_; text_anchor; text_decoration; unicode_bidi;
-	      opacity_;
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      font_family; font_size;{PresentationAttributes-FontSpecification}
+	      font_size_adjust;      {PresentationAttributes-FontSpecification}
+	      font_stretch;          {PresentationAttributes-FontSpecification}
+	      font_style;            {PresentationAttributes-FontSpecification}
+	      font_variant;          {PresentationAttributes-FontSpecification}
+	      font_weight;           {PresentationAttributes-FontSpecification}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      alignment_baseline;  {PresentationAttributes-TextContentElements}
+	      baseline_shift;      {PresentationAttributes-TextContentElements}
+	      direction_;	   {PresentationAttributes-TextContentElements}
+	      dominant_baseline;   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_horizontal;
+				   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_vertical;
+				   {PresentationAttributes-TextContentElements}
+	      kerning;		   {PresentationAttributes-TextContentElements}
+	      letter_spacing;	   {PresentationAttributes-TextContentElements}
+	      text_anchor;	   {PresentationAttributes-TextContentElements}
+	      text_decoration;	   {PresentationAttributes-TextContentElements}
+	      unicode_bidi;	   {PresentationAttributes-TextContentElements}
+	      word_spacing;	   {PresentationAttributes-TextContentElements}
+	      writing_mode;		 {PresentationAttributes-TextElements}
 	      transform;
-	      writing_mode = lr_tb, rl_tb, tb_rl, lr, rl, tb, inherit;
+	      onfocusin; onfocusout; onactivate;    {graphicsElementEvents}
+	      onclick; onmousedown; onmouseup;      {graphicsElementEvents}
+	      onmouseover; onmousemove; onmouseout; {graphicsElementEvents}
+	      onload;                               {graphicsElementEvents}
 	      x;
 	      y;
 	      dx = text;
 	      dy = text;
-	      rotate = text)
+	      rotate = text;
+	      textLength = text;
+	      lengthAdjust = spacing_, spacingAndGlyphs;)
         = LIST OF (CASE OF
 		   tspan;	{ must be the first option, to allow the Return
 				  key to create tspan elements }
@@ -314,20 +853,57 @@ STRUCT
 		   END);
 
    tspan  { not in SVG Tiny }
-	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	(ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired; 
 	      class; style_;
-	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
-	      font_family; font_size; font_style; font_variant; font_weight;
-	      baseline_shift = text;
-	      opacity_;
-	      direction_; text_anchor; text_decoration; unicode_bidi;
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      font_family; font_size;{PresentationAttributes-FontSpecification}
+	      font_size_adjust;      {PresentationAttributes-FontSpecification}
+	      font_stretch;          {PresentationAttributes-FontSpecification}
+	      font_style;            {PresentationAttributes-FontSpecification}
+	      font_variant;          {PresentationAttributes-FontSpecification}
+	      font_weight;           {PresentationAttributes-FontSpecification}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      alignment_baseline;  {PresentationAttributes-TextContentElements}
+	      baseline_shift;      {PresentationAttributes-TextContentElements}
+	      direction_;	   {PresentationAttributes-TextContentElements}
+	      dominant_baseline;   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_horizontal;
+				   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_vertical;
+				   {PresentationAttributes-TextContentElements}
+	      kerning;		   {PresentationAttributes-TextContentElements}
+	      letter_spacing;	   {PresentationAttributes-TextContentElements}
+	      text_anchor;	   {PresentationAttributes-TextContentElements}
+	      text_decoration;	   {PresentationAttributes-TextContentElements}
+	      unicode_bidi;	   {PresentationAttributes-TextContentElements}
+	      word_spacing;	   {PresentationAttributes-TextContentElements}
 	      writing_mode;
+	      onfocusin; onfocusout; onactivate;    {graphicsElementEvents}
+	      onclick; onmousedown; onmouseup;      {graphicsElementEvents}
+	      onmouseover; onmousemove; onmouseout; {graphicsElementEvents}
+	      onload;                               {graphicsElementEvents}
 	      x;
               y;
 	      dx;
 	      dy;
-	      rotate)
+	      rotate;
+	      textLength;
+	      lengthAdjust;)
 	= LIST OF (SpanElement = CASE OF
 		      TEXT;
 		      desc; title; metadata;
@@ -337,42 +913,118 @@ STRUCT
 		      END);
 	
    tref  { not in SVG Tiny }
-	(ATTR xlink_href;
-	      requiredFeatures; requiredExtensions; systemLanguage;
+	(ATTR xlink_type; xlink_role; xlink_arcrole;   {xlinkRefAttrs}
+	      xlink_title; xlink_show; xlink_actuate;  {xlinkRefAttrs}
+              xlink_href;
+	      requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired; 
 	      class; style_;
-	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
-	      font_family; font_size; font_style; font_variant; font_weight;
-	      baseline_shift;
-	      direction_; text_anchor; text_decoration; unicode_bidi;
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      font_family; font_size;{PresentationAttributes-FontSpecification}
+	      font_size_adjust;      {PresentationAttributes-FontSpecification}
+	      font_stretch;          {PresentationAttributes-FontSpecification}
+	      font_style;            {PresentationAttributes-FontSpecification}
+	      font_variant;          {PresentationAttributes-FontSpecification}
+	      font_weight;           {PresentationAttributes-FontSpecification}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      alignment_baseline;  {PresentationAttributes-TextContentElements}
+	      baseline_shift;      {PresentationAttributes-TextContentElements}
+	      direction_;	   {PresentationAttributes-TextContentElements}
+	      dominant_baseline;   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_horizontal;
+				   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_vertical;
+				   {PresentationAttributes-TextContentElements}
+	      kerning;		   {PresentationAttributes-TextContentElements}
+	      letter_spacing;	   {PresentationAttributes-TextContentElements}
+	      text_anchor;	   {PresentationAttributes-TextContentElements}
+	      text_decoration;	   {PresentationAttributes-TextContentElements}
+	      unicode_bidi;	   {PresentationAttributes-TextContentElements}
+	      word_spacing;	   {PresentationAttributes-TextContentElements}
 	      writing_mode;
-	      opacity_;
+	      onfocusin; onfocusout; onactivate;    {graphicsElementEvents}
+	      onclick; onmousedown; onmouseup;      {graphicsElementEvents}
+	      onmouseover; onmousemove; onmouseout; {graphicsElementEvents}
+	      onload;                               {graphicsElementEvents}
 	      x;
               y;
 	      dx;
 	      dy;
-	      rotate)
+	      rotate;
+	      textLength;
+	      lengthAdjust;)
 	= LIST OF (CASE OF
 		   desc; title; metadata;
 	           animate; set_; animateColor;
 		   END);
 
-   textPath  { not in SVG Tiny } {@@@@@}
-	(ATTR xlink_href;
-	      requiredFeatures; requiredExtensions; systemLanguage;
+   textPath  { not in SVG Tiny }
+	(ATTR xlink_type; xlink_role; xlink_arcrole;   {xlinkRefAttrs}
+	      xlink_title; xlink_show; xlink_actuate;  {xlinkRefAttrs}
+              xlink_href;
+	      requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired; 
 	      class; style_;
-	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
-	      font_family; font_size; font_style; font_variant; font_weight;
-	      baseline_shift;
-	      direction_; text_anchor; text_decoration; unicode_bidi;
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      font_family; font_size;{PresentationAttributes-FontSpecification}
+	      font_size_adjust;      {PresentationAttributes-FontSpecification}
+	      font_stretch;          {PresentationAttributes-FontSpecification}
+	      font_style;            {PresentationAttributes-FontSpecification}
+	      font_variant;          {PresentationAttributes-FontSpecification}
+	      font_weight;           {PresentationAttributes-FontSpecification}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      alignment_baseline;  {PresentationAttributes-TextContentElements}
+	      baseline_shift;      {PresentationAttributes-TextContentElements}
+	      direction_;	   {PresentationAttributes-TextContentElements}
+	      dominant_baseline;   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_horizontal;
+				   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_vertical;
+				   {PresentationAttributes-TextContentElements}
+	      kerning;		   {PresentationAttributes-TextContentElements}
+	      letter_spacing;	   {PresentationAttributes-TextContentElements}
+	      text_anchor;	   {PresentationAttributes-TextContentElements}
+	      text_decoration;	   {PresentationAttributes-TextContentElements}
+	      unicode_bidi;	   {PresentationAttributes-TextContentElements}
+	      word_spacing;	   {PresentationAttributes-TextContentElements}
 	      writing_mode;
-	      opacity_;
-	      startOffset = text; {@@@@@}
-	      textLength = text; {@@@@@}
-	      lengthAdjust = spacing_, spacingAndGlyphs;  {@@@@@}
-	      method = align, stretch;  {@@@@@}
-	      spacing = auto, exact) {@@@@@}
+	      onfocusin; onfocusout; onactivate;    {graphicsElementEvents}
+	      onclick; onmousedown; onmouseup;      {graphicsElementEvents}
+	      onmouseover; onmousemove; onmouseout; {graphicsElementEvents}
+	      onload;                               {graphicsElementEvents}
+	      startOffset = text;
+	      textLength;
+	      lengthAdjust; 
+	      method = align, stretch; 
+	      spacing = auto, exact)
 	= LIST OF (CASE OF
 		   TEXT;
 		   desc; title; metadata;
@@ -380,19 +1032,56 @@ STRUCT
 	           animate; set_; animateColor;
 		   END);
 
-   altGlyph  { not in SVG Tiny } {@@@@@}
-	(ATTR xlink_href;
-	      glyphRef_ = text;  {@@@@@}
-	      format = text; {@@@@@}
-	      requiredFeatures; requiredExtensions; systemLanguage;
+   altGlyph  { not in SVG Tiny }
+	(ATTR xlink_type; xlink_role; xlink_arcrole;   {xlinkRefAttrs}
+	      xlink_title; xlink_show; xlink_actuate;  {xlinkRefAttrs}
+              xlink_href;
+	      glyphRef_ = text; 
+	      format = text;
+	      requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired; 
 	      class; style_;
-	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
-	      font_family; font_size; font_style; font_variant; font_weight;
-	      baseline_shift;
-	      opacity_;
-	      direction_; text_anchor; text_decoration; unicode_bidi;
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      font_family; font_size;{PresentationAttributes-FontSpecification}
+	      font_size_adjust;      {PresentationAttributes-FontSpecification}
+	      font_stretch;          {PresentationAttributes-FontSpecification}
+	      font_style;            {PresentationAttributes-FontSpecification}
+	      font_variant;          {PresentationAttributes-FontSpecification}
+	      font_weight;           {PresentationAttributes-FontSpecification}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      alignment_baseline;  {PresentationAttributes-TextContentElements}
+	      baseline_shift;      {PresentationAttributes-TextContentElements}
+	      direction_;	   {PresentationAttributes-TextContentElements}
+	      dominant_baseline;   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_horizontal;
+				   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_vertical;
+				   {PresentationAttributes-TextContentElements}
+	      kerning;		   {PresentationAttributes-TextContentElements}
+	      letter_spacing;	   {PresentationAttributes-TextContentElements}
+	      text_anchor;	   {PresentationAttributes-TextContentElements}
+	      text_decoration;	   {PresentationAttributes-TextContentElements}
+	      unicode_bidi;	   {PresentationAttributes-TextContentElements}
+	      word_spacing;	   {PresentationAttributes-TextContentElements}
 	      writing_mode;
+	      onfocusin; onfocusout; onactivate;    {graphicsElementEvents}
+	      onclick; onmousedown; onmouseup;      {graphicsElementEvents}
+	      onmouseover; onmousemove; onmouseout; {graphicsElementEvents}
+	      onload;                               {graphicsElementEvents}
 	      x;
               y;
 	      dx;
@@ -400,7 +1089,7 @@ STRUCT
 	      rotate)
 	= TEXT;
 
-   altGlyphDef  { not in SVG Tiny } {@@@@@}
+   altGlyphDef  { not in SVG Tiny }
 	= BEGIN
 	  CASE OF
 	      LIST OF (glyphRef);
@@ -408,13 +1097,20 @@ STRUCT
 	      END;
 	  END;
 
-   altGlyphItem  { not in SVG Tiny } {@@@@@}
+   altGlyphItem  { not in SVG Tiny }
 	= LIST OF (glyphRef);
 	
-   glyphRef { not in SVG Tiny } {@@@@@}
-	(ATTR xlink_href;
+   glyphRef { not in SVG Tiny }
+	(ATTR xlink_type; xlink_role; xlink_arcrole;   {xlinkRefAttrs}
+	      xlink_title; xlink_show; xlink_actuate;  {xlinkRefAttrs}
+              xlink_href;
 	      class; style_;
-	      font_family; font_size; font_style; font_variant; font_weight;
+	      font_family; font_size;{PresentationAttributes-FontSpecification}
+	      font_size_adjust;      {PresentationAttributes-FontSpecification}
+	      font_stretch;          {PresentationAttributes-FontSpecification}
+	      font_style;            {PresentationAttributes-FontSpecification}
+	      font_variant;          {PresentationAttributes-FontSpecification}
+	      font_weight;           {PresentationAttributes-FontSpecification}
 	      glyphRef_;
 	      format;
 	      x;
@@ -425,31 +1121,76 @@ STRUCT
 
 { Marker Symbols }
 
-   marker  { not in SVG Tiny, not in SVG Basic } {@@@@@}
+   marker  { not in SVG Tiny, not in SVG Basic }
 	(ATTR externalResourcesRequired; 
 	      class; style_;
-	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
-	      opacity_; 
-	      font_family; font_size; font_style; font_variant; font_weight;
-	      direction_; text_anchor; text_decoration; unicode_bidi;
+	      { PresentationAttributes-All }
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      enable_background;          {PresentationAttributes-Containers}
+	      flood_color; flood_opacity; {PresentationAttributes-feFlood}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      font_family; font_size;{PresentationAttributes-FontSpecification}
+	      font_size_adjust;      {PresentationAttributes-FontSpecification}
+	      font_stretch;          {PresentationAttributes-FontSpecification}
+	      font_style;            {PresentationAttributes-FontSpecification}
+	      font_variant;          {PresentationAttributes-FontSpecification}
+	      font_weight;           {PresentationAttributes-FontSpecification}
+	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      color_profile_;             {PresentationAttributes-Images}
+	      lighting_color;         {PresentationAttributes-LightingEffects}
+	      marker_start; marker_mid;       {PresentationAttributes-Markers}
+	      marker_end;                     {PresentationAttributes-Markers}
+	      alignment_baseline;  {PresentationAttributes-TextContentElements}
+	      baseline_shift;      {PresentationAttributes-TextContentElements}
+	      direction_;	   {PresentationAttributes-TextContentElements}
+	      dominant_baseline;   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_horizontal;
+				   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_vertical;
+				   {PresentationAttributes-TextContentElements}
+	      kerning;		   {PresentationAttributes-TextContentElements}
+	      letter_spacing;	   {PresentationAttributes-TextContentElements}
+	      text_anchor;	   {PresentationAttributes-TextContentElements}
+	      text_decoration;	   {PresentationAttributes-TextContentElements}
+	      unicode_bidi;	   {PresentationAttributes-TextContentElements}
+	      word_spacing;	   {PresentationAttributes-TextContentElements}
+	      writing_mode;		 {PresentationAttributes-TextElements}
+	      clip; overflow;	         {PresentationAttributes-Viewports}
 	      viewBox;
 	      preserveAspectRatio;
-	      refX = text;  {@@@@@}
-	      refY = text;  {@@@@@}
-	      markerUnits = strokeWidth, userSpaceOnUse; {@@@@@}
-	      markerWidth = text;  {@@@@@}
-	      markerHeight = text;  {@@@@@}
-	      orient = text) {@@@@@}
+	      refX = text; 
+	      refY = text; 
+	      markerUnits = strokeWidth, userSpaceOnUse;
+	      markerWidth = text; 
+	      markerHeight = text; 
+	      orient = text)
         = LIST OF (GraphicsElement);
 	
 { Color }
 
-   color_profile  { not in SVG Tiny }  {@@@@@}
-	(ATTR xlink_href;
-	      local = text; {@@@@@}
-	      name = text; {@@@@@}
+   color_profile  { not in SVG Tiny } 
+	(ATTR xlink_type; xlink_role; xlink_arcrole;   {xlinkRefAttrs}
+	      xlink_title; xlink_show; xlink_actuate;  {xlinkRefAttrs}
+              xlink_href;
+	      local = text;
+	      name = text;
 	      rendering_intent = auto, perceptual, relative_colorimetric,
-	                         saturation, absolute_colorimetric) {@@@@@}
+	                         saturation, absolute_colorimetric)
 	= LIST OF
 	    (CASE OF
 	      desc; title; metadata;
@@ -457,32 +1198,39 @@ STRUCT
 
 { Gradients and Patterns }
 
-   linearGradient  { not in SVG Tiny }  {@@@@@}
-	(ATTR xlink_href;
+   linearGradient  { not in SVG Tiny } 
+	(ATTR xlink_type; xlink_role; xlink_arcrole;   {xlinkRefAttrs}
+	      xlink_title; xlink_show; xlink_actuate;  {xlinkRefAttrs}
+              xlink_href;
 	      externalResourcesRequired;
 	      class; style_;
-	      stop_color = text;  {@@@@@}
-	      stop_opacity = text; {@@@@@}
-	      gradientUnits = userSpaceOnUse, objectBoundingBox; {@@@@@}
-	      gradientTransform = text; {@@@@@}
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
+	      gradientUnits = userSpaceOnUse, objectBoundingBox;
+	      gradientTransform = text;
 	      x1; y1; x2; y2;      
-              spreadMethod = pad, reflect, repeat) {@@@@@}
+              spreadMethod = pad, reflect, repeat)
 	= LIST OF
 	    (CASE OF
 	      desc; title; metadata;
 	      stop; animate; set_; animateTransform;
 	     END);
 
-   radialGradient  { not in SVG Tiny }  {@@@@@}
-	(ATTR xlink_href;
+   radialGradient  { not in SVG Tiny } 
+	(ATTR xlink_type; xlink_role; xlink_arcrole;   {xlinkRefAttrs}
+	      xlink_title; xlink_show; xlink_actuate;  {xlinkRefAttrs}
+              xlink_href;
 	      externalResourcesRequired;
 	      class; style_;
-	      stop_color; stop_opacity;
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      gradientUnits;
 	      gradientTransform;
 	      cx; cy; r;
-	      fx = text;  {@@@@@}
-	      fy = text;  {@@@@@}
+	      fx = text; 
+	      fy = text; 
 	      spreadMethod)
 	= LIST OF
 	    (CASE OF
@@ -490,30 +1238,77 @@ STRUCT
 	      stop; animate; set_; animateTransform;
 	     END);	
 
-   stop  { not in SVG Tiny }  {@@@@@}
+   stop  { not in SVG Tiny } 
 	(ATTR 
 	      class; style_;	      
-	      stop_color; stop_opacity;
-	      offset = text)  {@@@@@}
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
+	      offset = text) 
 	= LIST OF
 	     (CASE OF
 		animate; set_; animateColor;
 	      END);
 	
-   pattern  { not in SVG Tiny }  {@@@@@}
-	(ATTR xlink_href;
-	      requiredFeatures; requiredExtensions; systemLanguage;
+   pattern  { not in SVG Tiny } 
+	(ATTR xlink_type; xlink_role; xlink_arcrole;   {xlinkRefAttrs}
+	      xlink_title; xlink_show; xlink_actuate;  {xlinkRefAttrs}
+              xlink_href;
+	      requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired;
 	      class; style_;
-	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
-	      opacity_; 
-	      font_family; font_size; font_style; font_variant; font_weight;
-	      direction_; text_anchor; text_decoration; unicode_bidi;
+	      { PresentationAttributes-All }
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      enable_background;          {PresentationAttributes-Containers}
+	      flood_color; flood_opacity; {PresentationAttributes-feFlood}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      font_family; font_size;{PresentationAttributes-FontSpecification}
+	      font_size_adjust;      {PresentationAttributes-FontSpecification}
+	      font_stretch;          {PresentationAttributes-FontSpecification}
+	      font_style;            {PresentationAttributes-FontSpecification}
+	      font_variant;          {PresentationAttributes-FontSpecification}
+	      font_weight;           {PresentationAttributes-FontSpecification}
+	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      color_profile_;             {PresentationAttributes-Images}
+	      lighting_color;         {PresentationAttributes-LightingEffects}
+	      marker_start; marker_mid;       {PresentationAttributes-Markers}
+	      marker_end;                     {PresentationAttributes-Markers}
+	      alignment_baseline;  {PresentationAttributes-TextContentElements}
+	      baseline_shift;      {PresentationAttributes-TextContentElements}
+	      direction_;	   {PresentationAttributes-TextContentElements}
+	      dominant_baseline;   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_horizontal;
+				   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_vertical;
+				   {PresentationAttributes-TextContentElements}
+	      kerning;		   {PresentationAttributes-TextContentElements}
+	      letter_spacing;	   {PresentationAttributes-TextContentElements}
+	      text_anchor;	   {PresentationAttributes-TextContentElements}
+	      text_decoration;	   {PresentationAttributes-TextContentElements}
+	      unicode_bidi;	   {PresentationAttributes-TextContentElements}
+	      word_spacing;	   {PresentationAttributes-TextContentElements}
+	      writing_mode;		 {PresentationAttributes-TextElements}
+	      clip; overflow;	         {PresentationAttributes-Viewports}
 	      viewBox;
 	      preserveAspectRatio;
-	      patternUnits = userSpaceOnUse, objectBoundingBox; {@@@@@}
-	      patternContentUnits = userSpaceOnUse, objectBoundingBox; {@@@@@}
-	      patternTransform = text; {@@@@@}
+	      patternUnits = userSpaceOnUse, objectBoundingBox;
+	      patternContentUnits = userSpaceOnUse, objectBoundingBox;
+	      patternTransform = text;
 	      x;
               y;
               width_;
@@ -523,12 +1318,46 @@ STRUCT
 { Clipping, Masking and Compositing }
 
    clipPath  { not in SVG Tiny }
-        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired;
 	      class; style_;
-	      fill; stroke; stroke_width;
-	      font_family; font_size; font_style; font_variant; font_weight;
-	      direction_; text_anchor; text_decoration; unicode_bidi;
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      font_family; font_size;{PresentationAttributes-FontSpecification}
+	      font_size_adjust;      {PresentationAttributes-FontSpecification}
+	      font_stretch;          {PresentationAttributes-FontSpecification}
+	      font_style;            {PresentationAttributes-FontSpecification}
+	      font_variant;          {PresentationAttributes-FontSpecification}
+	      font_weight;           {PresentationAttributes-FontSpecification}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      alignment_baseline;  {PresentationAttributes-TextContentElements}
+	      baseline_shift;      {PresentationAttributes-TextContentElements}
+	      direction_;	   {PresentationAttributes-TextContentElements}
+	      dominant_baseline;   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_horizontal;
+				   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_vertical;
+				   {PresentationAttributes-TextContentElements}
+	      kerning;		   {PresentationAttributes-TextContentElements}
+	      letter_spacing;	   {PresentationAttributes-TextContentElements}
+	      text_anchor;	   {PresentationAttributes-TextContentElements}
+	      text_decoration;	   {PresentationAttributes-TextContentElements}
+	      unicode_bidi;	   {PresentationAttributes-TextContentElements}
+	      word_spacing;	   {PresentationAttributes-TextContentElements}
+	      writing_mode;		 {PresentationAttributes-TextElements}
 	      transform;
 	      clipPathUnits = userSpaceOnUse, objectBoundingBox;)
 	= AGGREGATE
@@ -541,15 +1370,59 @@ STRUCT
 	       END);
 	  END;
 
-   mask  { not in SVG Tiny }  {@@@@@}
-        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+   mask  { not in SVG Tiny } 
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired;
 	      class; style_;
-	      fill; stroke; stroke_width;
-	      font_family; font_size; font_style; font_variant; font_weight;
-	      direction_; text_anchor; text_decoration; unicode_bidi;
-	      maskUnits = userSpaceOnUse, objectBoundingBox; {@@@@@}
-	      maskContentUnits = userSpaceOnUse, objectBoundingBox; {@@@@@}
+	      { PresentationAttributes-All }
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      enable_background;          {PresentationAttributes-Containers}
+	      flood_color; flood_opacity; {PresentationAttributes-feFlood}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      font_family; font_size;{PresentationAttributes-FontSpecification}
+	      font_size_adjust;      {PresentationAttributes-FontSpecification}
+	      font_stretch;          {PresentationAttributes-FontSpecification}
+	      font_style;            {PresentationAttributes-FontSpecification}
+	      font_variant;          {PresentationAttributes-FontSpecification}
+	      font_weight;           {PresentationAttributes-FontSpecification}
+	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      color_profile_;             {PresentationAttributes-Images}
+	      lighting_color;         {PresentationAttributes-LightingEffects}
+	      marker_start; marker_mid;       {PresentationAttributes-Markers}
+	      marker_end;                     {PresentationAttributes-Markers}
+	      alignment_baseline;  {PresentationAttributes-TextContentElements}
+	      baseline_shift;      {PresentationAttributes-TextContentElements}
+	      direction_;	   {PresentationAttributes-TextContentElements}
+	      dominant_baseline;   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_horizontal;
+				   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_vertical;
+				   {PresentationAttributes-TextContentElements}
+	      kerning;		   {PresentationAttributes-TextContentElements}
+	      letter_spacing;	   {PresentationAttributes-TextContentElements}
+	      text_anchor;	   {PresentationAttributes-TextContentElements}
+	      text_decoration;	   {PresentationAttributes-TextContentElements}
+	      unicode_bidi;	   {PresentationAttributes-TextContentElements}
+	      word_spacing;	   {PresentationAttributes-TextContentElements}
+	      writing_mode;		 {PresentationAttributes-TextElements}
+	      clip; overflow;	         {PresentationAttributes-Viewports}
+	      maskUnits = userSpaceOnUse, objectBoundingBox;
+	      maskContentUnits = userSpaceOnUse, objectBoundingBox;
 	      x;
               y;
               width_;
@@ -586,31 +1459,99 @@ STRUCT
 
 { Interactivity }
 
-   { cursor }
+   cursor { not in SVG Tiny, not in SVG Basic}
+	(ATTR xlink_type; xlink_role; xlink_arcrole;   {xlinkRefAttrs}
+	      xlink_title; xlink_show; xlink_actuate;  {xlinkRefAttrs}
+              xlink_href;
+	      requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
+	      externalResourcesRequired;
+	      x; y)
+	= AGGREGATE
+	    desc; title; metadata;
+	  END;
 
 { Linking }
 
    a
         (ATTR xlink_href;
-	      requiredFeatures; requiredExtensions; systemLanguage;
+	      requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired;
 	      class; style_;
-	      fill; stroke; stroke_width;
-	      font_family; font_size; font_style; font_variant; font_weight;
-	      direction_; text_anchor; text_decoration; unicode_bidi;
+	      { PresentationAttributes-All }
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      enable_background;          {PresentationAttributes-Containers}
+	      flood_color; flood_opacity; {PresentationAttributes-feFlood}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      font_family; font_size;{PresentationAttributes-FontSpecification}
+	      font_size_adjust;      {PresentationAttributes-FontSpecification}
+	      font_stretch;          {PresentationAttributes-FontSpecification}
+	      font_style;            {PresentationAttributes-FontSpecification}
+	      font_variant;          {PresentationAttributes-FontSpecification}
+	      font_weight;           {PresentationAttributes-FontSpecification}
+	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      color_profile_;             {PresentationAttributes-Images}
+	      lighting_color;         {PresentationAttributes-LightingEffects}
+	      marker_start; marker_mid;       {PresentationAttributes-Markers}
+	      marker_end;                     {PresentationAttributes-Markers}
+	      alignment_baseline;  {PresentationAttributes-TextContentElements}
+	      baseline_shift;      {PresentationAttributes-TextContentElements}
+	      direction_;	   {PresentationAttributes-TextContentElements}
+	      dominant_baseline;   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_horizontal;
+				   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_vertical;
+				   {PresentationAttributes-TextContentElements}
+	      kerning;		   {PresentationAttributes-TextContentElements}
+	      letter_spacing;	   {PresentationAttributes-TextContentElements}
+	      text_anchor;	   {PresentationAttributes-TextContentElements}
+	      text_decoration;	   {PresentationAttributes-TextContentElements}
+	      unicode_bidi;	   {PresentationAttributes-TextContentElements}
+	      word_spacing;	   {PresentationAttributes-TextContentElements}
+	      writing_mode;		 {PresentationAttributes-TextElements}
+	      clip; overflow;	         {PresentationAttributes-Viewports}
 	      transform;
-	      { graphicsElementEvents }
+	      onfocusin; onfocusout; onactivate;    {graphicsElementEvents}
+	      onclick; onmousedown; onmouseup;      {graphicsElementEvents}
+	      onmouseover; onmousemove; onmouseout; {graphicsElementEvents}
+	      onload;                               {graphicsElementEvents}
 	      target_ = text)
 	= LIST OF (CASE OF
 		   TEXT; 
 		   GraphicsElement;
 	           END);
-   { view }
+
+   view { not in SVG Tiny }
+        (ATTR externalResourcesRequired;
+	      viewBox;
+	      preserveAspectRatio;
+	      zoomAndPan;
+	      viewTarget = text)
+	= AGGREGATE
+	    desc; title; metadata;
+	  END;
 
 { Scripting }
 
    script_  { not in SVG Tiny }
-	(ATTR externalResourcesRequired;
+	(ATTR xlink_type; xlink_role; xlink_arcrole;   {xlinkRefAttrs}
+	      xlink_title; xlink_show; xlink_actuate;  {xlinkRefAttrs}
+              xlink_href;
+	      externalResourcesRequired;
 	      type)
 	= TEXT;
 
@@ -619,11 +1560,12 @@ STRUCT
    animate
 	(ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired;
-	      onbegin = text;  {animationEvents}
-	      onend = text;
-	      onrepeat = text;
-	      {animElementAttrs - see XLink.S}
-              xlink_href;
+	      onbegin = text;   {animationEvents}
+	      onend = text;     {animationEvents}
+	      onrepeat = text;  {animationEvents}
+              xlink_type; xlink_role; xlink_arcrole;  {animElementAttrs}
+	      xlink_title; xlink_show; xlink_actuate; {animElementAttrs}
+              xlink_href;                             {animElementAttrs}
               attributeName_ = text;  {animAttributeAttrs}
 	      attributeType = text;
 	      begin_ = text;  {animTimingAttrs}
@@ -652,7 +1594,9 @@ STRUCT
 	(ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired;
 	      onbegin; onend; onrepeat; {animationEvents}
-	      xlink_href; {animElementAttrs - see XLink.S}
+              xlink_type; xlink_role; xlink_arcrole;  {animElementAttrs}
+	      xlink_title; xlink_show; xlink_actuate; {animElementAttrs}
+              xlink_href;                             {animElementAttrs}
               attributeName_; attributeType; {animAttributeAttrs}
 	      begin_; dur; end_; min_; max_; restart; repeatCount; repeatDur; fill_;
 	                                                      {animTimingAttrs}
@@ -665,7 +1609,9 @@ STRUCT
 	(ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired;
 	      onbegin; onend; onrepeat; {animationEvents}
-	      xlink_href; {animElementAttrs - see XLink.S}
+              xlink_type; xlink_role; xlink_arcrole;  {animElementAttrs}
+	      xlink_title; xlink_show; xlink_actuate; {animElementAttrs}
+              xlink_href;                             {animElementAttrs}
               attributeName_; attributeType; {animAttributeAttrs}
 	      begin_; dur; end_; min_; max_; restart; repeatCount; repeatDur; fill_;
 	                                                      {animTimingAttrs}
@@ -680,9 +1626,10 @@ STRUCT
 	  END;
 
    mpath
-	(ATTR
-	   xlink_href;  {xlinkRefAttrs - see XLink.S}
-	   externalResourcesRequired;)
+	(ATTR xlink_type; xlink_role; xlink_arcrole;   {xlinkRefAttrs}
+	      xlink_title; xlink_show; xlink_actuate;  {xlinkRefAttrs}
+              xlink_href;  {see XLink.S}
+	      externalResourcesRequired;)
 	= AGGREGATE
 	      desc; title; metadata;
 	  END;
@@ -691,7 +1638,9 @@ STRUCT
 	(ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired;
 	      onbegin; onend; onrepeat; {animationEvents}
-	      xlink_href; {animElementAttrs - see XLink.S}
+              xlink_type; xlink_role; xlink_arcrole;  {animElementAttrs}
+	      xlink_title; xlink_show; xlink_actuate; {animElementAttrs}
+              xlink_href;                             {animElementAttrs}
               attributeName_; attributeType; {animAttributeAttrs}
 	      begin_; dur; end_; min_; max_; restart; repeatCount; repeatDur; fill_;
 	                                                      {animTimingAttrs}
@@ -706,7 +1655,9 @@ STRUCT
 	(ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired;
 	      onbegin; onend; onrepeat; {animationEvents}
-	      xlink_href; {animElementAttrs - see XLink.S}
+              xlink_type; xlink_role; xlink_arcrole;  {animElementAttrs}
+	      xlink_title; xlink_show; xlink_actuate; {animElementAttrs}
+              xlink_href;                             {animElementAttrs}
               attributeName_; attributeType; {animAttributeAttrs}
 	      begin_; dur; end_; min_; max_; restart; repeatCount; repeatDur; fill_;
 	                                                      {animTimingAttrs}
@@ -720,18 +1671,250 @@ STRUCT
 
 { Fonts }
 
-   { font }
-   { glyph }
-   { missing-glyph }
-   { hkern }
-   { vkern }
-   { font-face }
-   { font-face-src }
-   { font-face-uri }
-   { font-face-format }
-   { font-face-name }
-   { definition-src }
-   { cursor }
+   font_
+	(ATTR externalResourcesRequired;
+	      class; style_;
+	      { PresentationAttributes-All }
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      enable_background;          {PresentationAttributes-Containers}
+	      flood_color; flood_opacity; {PresentationAttributes-feFlood}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      font_family; font_size;{PresentationAttributes-FontSpecification}
+	      font_size_adjust;      {PresentationAttributes-FontSpecification}
+	      font_stretch;          {PresentationAttributes-FontSpecification}
+	      font_style;            {PresentationAttributes-FontSpecification}
+	      font_variant;          {PresentationAttributes-FontSpecification}
+	      font_weight;           {PresentationAttributes-FontSpecification}
+	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      color_profile_;             {PresentationAttributes-Images}
+	      lighting_color;         {PresentationAttributes-LightingEffects}
+	      marker_start; marker_mid;       {PresentationAttributes-Markers}
+	      marker_end;                     {PresentationAttributes-Markers}
+	      alignment_baseline;  {PresentationAttributes-TextContentElements}
+	      baseline_shift;      {PresentationAttributes-TextContentElements}
+	      direction_;	   {PresentationAttributes-TextContentElements}
+	      dominant_baseline;   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_horizontal;
+				   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_vertical;
+				   {PresentationAttributes-TextContentElements}
+	      kerning;		   {PresentationAttributes-TextContentElements}
+	      letter_spacing;	   {PresentationAttributes-TextContentElements}
+	      text_anchor;	   {PresentationAttributes-TextContentElements}
+	      text_decoration;	   {PresentationAttributes-TextContentElements}
+	      unicode_bidi;	   {PresentationAttributes-TextContentElements}
+	      word_spacing;	   {PresentationAttributes-TextContentElements}
+	      writing_mode;		 {PresentationAttributes-TextElements}
+	      clip; overflow;	         {PresentationAttributes-Viewports}
+	      horiz_origin_x = text;
+	      horiz_origin_y = text;
+              horiz_adv_x = text;
+	      vert_origin_x = text;
+	      vert_origin_y = text;
+              vert_adv_y = text)
+	= AGGREGATE
+	    desc; title; metadata;
+	    font_face; missing_glyph;
+	    LIST OF
+	      (CASE OF
+	         glyph; hkern; vkern;
+	       END);
+	  END;
+
+   glyph
+	(ATTR class; style_;
+	      { PresentationAttributes-All }
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      enable_background;          {PresentationAttributes-Containers}
+	      flood_color; flood_opacity; {PresentationAttributes-feFlood}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      font_family; font_size;{PresentationAttributes-FontSpecification}
+	      font_size_adjust;      {PresentationAttributes-FontSpecification}
+	      font_stretch;          {PresentationAttributes-FontSpecification}
+	      font_style;            {PresentationAttributes-FontSpecification}
+	      font_variant;          {PresentationAttributes-FontSpecification}
+	      font_weight;           {PresentationAttributes-FontSpecification}
+	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      color_profile_;             {PresentationAttributes-Images}
+	      lighting_color;         {PresentationAttributes-LightingEffects}
+	      marker_start; marker_mid;       {PresentationAttributes-Markers}
+	      marker_end;                     {PresentationAttributes-Markers}
+	      alignment_baseline;  {PresentationAttributes-TextContentElements}
+	      baseline_shift;      {PresentationAttributes-TextContentElements}
+	      direction_;	   {PresentationAttributes-TextContentElements}
+	      dominant_baseline;   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_horizontal;
+				   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_vertical;
+				   {PresentationAttributes-TextContentElements}
+	      kerning;		   {PresentationAttributes-TextContentElements}
+	      letter_spacing;	   {PresentationAttributes-TextContentElements}
+	      text_anchor;	   {PresentationAttributes-TextContentElements}
+	      text_decoration;	   {PresentationAttributes-TextContentElements}
+	      unicode_bidi;	   {PresentationAttributes-TextContentElements}
+	      word_spacing;	   {PresentationAttributes-TextContentElements}
+	      writing_mode;		 {PresentationAttributes-TextElements}
+	      clip; overflow;	         {PresentationAttributes-Viewports}
+	      unicode = text;
+	      glyph_name = text;
+	      d;
+	      orientation = text;
+	      arabic_form = text;
+	      lang = text;
+	      horiz_adv_x; vert_origin_x; vert_origin_y; vert_adv_y)
+        = LIST OF (GraphicsElement);
+
+   missing_glyph
+	(ATTR class; style_;
+	      { PresentationAttributes-All }
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      enable_background;          {PresentationAttributes-Containers}
+	      flood_color; flood_opacity; {PresentationAttributes-feFlood}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      font_family; font_size;{PresentationAttributes-FontSpecification}
+	      font_size_adjust;      {PresentationAttributes-FontSpecification}
+	      font_stretch;          {PresentationAttributes-FontSpecification}
+	      font_style;            {PresentationAttributes-FontSpecification}
+	      font_variant;          {PresentationAttributes-FontSpecification}
+	      font_weight;           {PresentationAttributes-FontSpecification}
+	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      color_profile_;             {PresentationAttributes-Images}
+	      lighting_color;         {PresentationAttributes-LightingEffects}
+	      marker_start; marker_mid;       {PresentationAttributes-Markers}
+	      marker_end;                     {PresentationAttributes-Markers}
+	      alignment_baseline;  {PresentationAttributes-TextContentElements}
+	      baseline_shift;      {PresentationAttributes-TextContentElements}
+	      direction_;	   {PresentationAttributes-TextContentElements}
+	      dominant_baseline;   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_horizontal;
+				   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_vertical;
+				   {PresentationAttributes-TextContentElements}
+	      kerning;		   {PresentationAttributes-TextContentElements}
+	      letter_spacing;	   {PresentationAttributes-TextContentElements}
+	      text_anchor;	   {PresentationAttributes-TextContentElements}
+	      text_decoration;	   {PresentationAttributes-TextContentElements}
+	      unicode_bidi;	   {PresentationAttributes-TextContentElements}
+	      word_spacing;	   {PresentationAttributes-TextContentElements}
+	      writing_mode;		 {PresentationAttributes-TextElements}
+	      clip; overflow;	         {PresentationAttributes-Viewports}
+	      d;
+	      horiz_adv_x; vert_origin_x; vert_origin_y; vert_adv_y)	      
+        = LIST OF (GraphicsElement);
+
+   hkern
+	(ATTR u1 = text;
+	      g1 = text;
+	      u2 = text;
+	      g2 = text;
+	      k = text)
+	= CONSTANT C_Empty;
+
+   vkern { not in SVG Tiny }
+	(ATTR u1; g1; u2; g2; k)
+	= CONSTANT C_Empty;
+
+   font_face
+	(ATTR font_family; font_style; font_variant; font_weight; font_size;
+	      font_stretch_ = text;
+	      unicode_range = text;
+	      units_per_em = text;
+	      panose_1 = text;
+	      stemv = text;
+	      stemh = text;
+	      slope = text;
+	      cap_height = text;
+	      x_height = text;
+	      accent_height = text;
+	      ascent = text;
+	      descent = text;
+	      widths = text;
+	      bbox = text;
+	      ideographic = text;
+	      alphabetic = text;
+	      mathematical = text;
+	      hanging = text;
+	      v_ideographic = text;
+	      v_alphabetic = text;
+	      v_mathematical = text;
+	      v_hanging = text;
+	      underline_position = text;
+	      underline_thickness = text;
+	      strikethrough_position = text;
+	      strikethrough_thickness = text;
+	      overline_position = text;
+	      overline_thickness = text)
+	= AGGREGATE
+	     desc; title; metadata; ? font_face_src; ? definition_src;
+	  END;
+
+   font_face_src
+	= LIST OF (CASE OF font_face_uri; font_face_name; END);
+
+   font_face_uri { not in SVG Tiny }
+	(ATTR xlink_type; xlink_role; xlink_arcrole;   {xlinkRefAttrs}
+	      xlink_title; xlink_show; xlink_actuate;  {xlinkRefAttrs}
+              xlink_href)
+	= LIST OF (font_face_format);
+
+   font_face_format { not in SVG Tiny }
+	(ATTR string = text)
+	= CONSTANT C_Empty;
+
+   font_face_name
+	(ATTR name)
+	= CONSTANT C_Empty;
+
+   definition_src
+	(ATTR xlink_type; xlink_role; xlink_arcrole;   {xlinkRefAttrs}
+	      xlink_title; xlink_show; xlink_actuate;  {xlinkRefAttrs}
+              xlink_href)
+	= CONSTANT C_Empty;
 
 { Metadata }
 	
@@ -740,19 +1923,69 @@ STRUCT
 { Extensibility }
 
    foreignObject  { not in SVG Tiny }
-        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
+
 	      externalResourcesRequired; 
 	      class; style_;
-	      opacity_; fill_opacity; stroke_opacity; fill; stroke; stroke_width;
-	      font_family; font_size; font_style; font_variant; font_weight;
-	      direction_; text_anchor; text_decoration; unicode_bidi;
+	      { PresentationAttributes-All }
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      enable_background;          {PresentationAttributes-Containers}
+	      flood_color; flood_opacity; {PresentationAttributes-feFlood}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      font_family; font_size;{PresentationAttributes-FontSpecification}
+	      font_size_adjust;      {PresentationAttributes-FontSpecification}
+	      font_stretch;          {PresentationAttributes-FontSpecification}
+	      font_style;            {PresentationAttributes-FontSpecification}
+	      font_variant;          {PresentationAttributes-FontSpecification}
+	      font_weight;           {PresentationAttributes-FontSpecification}
+	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter;               {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      color_profile_;             {PresentationAttributes-Images}
+	      lighting_color;         {PresentationAttributes-LightingEffects}
+	      marker_start; marker_mid;       {PresentationAttributes-Markers}
+	      marker_end;                     {PresentationAttributes-Markers}
+	      alignment_baseline;  {PresentationAttributes-TextContentElements}
+	      baseline_shift;      {PresentationAttributes-TextContentElements}
+	      direction_;	   {PresentationAttributes-TextContentElements}
+	      dominant_baseline;   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_horizontal;
+				   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_vertical;
+				   {PresentationAttributes-TextContentElements}
+	      kerning;		   {PresentationAttributes-TextContentElements}
+	      letter_spacing;	   {PresentationAttributes-TextContentElements}
+	      text_anchor;	   {PresentationAttributes-TextContentElements}
+	      text_decoration;	   {PresentationAttributes-TextContentElements}
+	      unicode_bidi;	   {PresentationAttributes-TextContentElements}
+	      word_spacing;	   {PresentationAttributes-TextContentElements}
+	      writing_mode;		 {PresentationAttributes-TextElements}
+	      clip; overflow;	         {PresentationAttributes-Viewports}
 	      transform;
+	      onfocusin; onfocusout; onactivate;    {graphicsElementEvents}
+	      onclick; onmousedown; onmouseup;      {graphicsElementEvents}
+	      onmouseover; onmousemove; onmouseout; {graphicsElementEvents}
+	      onload;                               {graphicsElementEvents}
 	      x; 
               y;
               width_;
-              height_)
+              height_;
+	      content_)                              {StructuredText}
 	= BEGIN CASE OF
-	      HTML; MathML;
+	      HTML; MathML; TEXT;
 	      END;
           END;
 
@@ -771,11 +2004,11 @@ STRUCT
 	= CASE OF
 	      desc; title; metadata; defs;
 	      path; text_; rect; circle; ellipse; line_; polyline; polygon;
-	      use_; image; SVG; g; switch; a; altGlyphDef;
+	      use_; image; SVG; g; view; switch; a; altGlyphDef;
 	      script_; style__; symbol_; marker; clipPath; mask;
-	      linearGradient; radialGradient; pattern;
+	      linearGradient; radialGradient; pattern; cursor; font_;
 	      animate; set_; animateMotion; animateColor; animateTransform;
-	      color_profile;
+	      color_profile; font_face;
 	      Timeline_cross; 
 	      END;
 

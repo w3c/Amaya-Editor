@@ -447,7 +447,6 @@ void ThotInitDisplay (char* name, int dx, int dy)
    WIN_ReleaseDeviceContext ();
 #else /* _WINDOWS */
 #ifdef _GTK
-   int x, y, width, height, depth;
    
    /* Declaration of a DefaultDrawable useful for the creation of Pixmap and the
       initialization of GraphicContexts */
@@ -457,7 +456,8 @@ void ThotInitDisplay (char* name, int dx, int dy)
    gtk_widget_set_parent (DefaultDrawingarea, DefaultWindow); 
    gtk_widget_realize (DefaultDrawingarea);
    DefaultDrawable = DefaultDrawingarea->window;
-   /*gdk_window_get_geometry (DefaultDrawable, &x, &y, &width, &height, &depth);*/
+   /* int x, y, width, height, depth;
+      gdk_window_get_geometry (DefaultDrawable, &x, &y, &width, &height, &depth);*/
    TtRootWindow = DefaultWindow->window;
 
 #ifndef _GL

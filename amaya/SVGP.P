@@ -967,6 +967,20 @@ RULES
 		END;
 	END;
 
+   cursor:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
    a:
 	BEGIN
 	CreateBefore (ElementName);
@@ -989,6 +1003,20 @@ RULES
 		Width: Enclosed . Width;
 		Height: Enclosed . Height;
 		END;		
+	END;
+
+   view:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
 	END;
 
    script_:
@@ -1076,6 +1104,160 @@ RULES
 	END;
 
    animateTransform:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
+   font_:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
+   glyph:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
+   missing_glyph:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
+   hkern:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
+   vkern:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
+   font_face:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
+   font_face_src:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
+   font_face_uri:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
+   font_face_format:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
+   font_face_name:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
+   definition_src:
 	BEGIN
 	CreateBefore (ElementName);
 	CreateWith (VerticalLine);
@@ -1355,6 +1537,12 @@ ATTRIBUTES
         CreateBefore(AttrValue);
         END;
 
+  xml_base:
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
+
   xml_space = xml_space_default:
 	CreateBefore (ATTR_xml_space_default);
   xml_space = xml_space_preserve:
@@ -1400,9 +1588,6 @@ ATTRIBUTES
 	CreateBefore (AttrValue);
 	END;
 
-  baseProfile:
-	CreateBefore (AttrNameAndValue);
-
   externalResourcesRequired:
 	CreateBefore (AttrNameAndValue);
 
@@ -1418,6 +1603,36 @@ ATTRIBUTES
         CreateBefore(AttrValue);
         END;
  
+  color:
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
+ 
+  color_interpolation:
+	CreateBefore(AttrNameAndValue);
+
+  color_rendering:
+	CreateBefore(AttrNameAndValue);
+
+  enable_background:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  flood_color:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  flood_opacity:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
   fill:
 	BEGIN
 	CreateBefore (AttrName);
@@ -1430,13 +1645,34 @@ ATTRIBUTES
 	CreateBefore (AttrValue);
 	END;
 
+  fill_rule:
+	CreateBefore(AttrNameAndValue);
+
   stroke:
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
 	END;
 
-  stroke_width:
+  stroke_dasharray:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  stroke_dashoffset:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  stroke_linecap:
+	CreateBefore(AttrNameAndValue);
+
+  stroke_linejoin:
+	CreateBefore(AttrNameAndValue);
+
+  stroke_miterlimit:
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
@@ -1448,11 +1684,14 @@ ATTRIBUTES
 	CreateBefore (AttrValue);
 	END;
 
-  opacity_:
+  stroke_width:
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
 	END;
+
+  color_interpolation_filters:
+	CreateBefore(AttrNameAndValue);
 
   font_family:
 	BEGIN
@@ -1465,6 +1704,15 @@ ATTRIBUTES
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 	END;
+
+  font_size_adjust:
+	BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;
+
+  font_stretch:
+	CreateBefore(AttrNameAndValue);
 
   font_style = normal_:
 	BEGIN
@@ -1581,6 +1829,111 @@ ATTRIBUTES
 	Weight: Enclosing =;
 	END;
 
+  stop_color:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  stop_opacity:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  clip_path:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  clip_rule:
+	CreateBefore(AttrNameAndValue);
+
+  cursor_:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  display:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  filter:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  image_rendering:
+	CreateBefore(AttrNameAndValue);
+
+  mask_:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  opacity_:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  pointer_events:
+	CreateBefore(AttrNameAndValue);
+
+  shape_rendering:
+	CreateBefore(AttrNameAndValue);
+
+  text_rendering:
+	CreateBefore(AttrNameAndValue);
+
+  visibility_:
+	CreateBefore(AttrNameAndValue);
+
+  color_profile_:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  lighting_color:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  marker_start:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  marker_mid:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  marker_end:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  alignment_baseline:
+	CreateBefore(AttrNameAndValue);
+
+  baseline_shift:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
   direction_ = ltr_:
 	BEGIN
 	CreateBefore(AttrNameAndValue);
@@ -1595,6 +1948,33 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(AttrNameAndValue);
 	Direction: Enclosing =;
+	END;
+
+  dominant_baseline:
+	CreateBefore(AttrNameAndValue);
+
+  glyph_orientation_horizontal:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  glyph_orientation_vertical:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  kerning:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  letter_spacing:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
 	END;
 
   text_anchor:
@@ -1627,12 +2007,168 @@ ATTRIBUTES
 	UnicodeBidi: Enclosing =;
 	END;
 
+  word_spacing:
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
+
+  writing_mode = lr_tb:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Direction: ltr;
+	END;
+  writing_mode = rl_tb:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Direction: rtl;
+	END;
+  writing_mode = tb_rl:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Direction: rtl;
+	END;
+  writing_mode = lr:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Direction: ltr;
+	END;
+  writing_mode = rl:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Direction: rtl;
+	END;
+  writing_mode = tb:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Direction: ltr;
+	END;
+  writing_mode = inherit:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Direction: Enclosing =;
+	END;
+
+  clip:
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
+
+  overflow:
+	CreateBefore(AttrNameAndValue);
+
   viewBox:
         BEGIN
         CreateBefore(AttrName);
         CreateBefore(AttrValue);
         END;
 
+  preserveAspectRatio:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  zoomAndPan:
+	CreateBefore(AttrNameAndValue);
+
+  onfocusin:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+  
+  onfocusout:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+  
+  onactivate:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+  
+  onclick:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+  
+  onmousedown:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+  
+  onmouseup:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+  
+  onmouseover:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+  
+  onmousemove:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+  
+  onmouseout:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+  
+  onload:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+  
+  onunload:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+  
+  onabort:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+  
+  onerror:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+  
+  onresize:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+  
+  onscroll:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+  
+  onzoom:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+  
   version:
         BEGIN
         CreateBefore(AttrName);
@@ -1682,17 +2218,56 @@ ATTRIBUTES
 	CreateBefore (AttrValue);
 	END;
 
+  contentScriptType:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  contentStyleType:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
   transform:
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
 	END;
 
-  preserveAspectRatio:
+  content_:
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
 	END;
+
+  xlink_type:
+	CreateBefore(AttrNameAndValue);
+
+  xlink_role:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  xlink_arcrole:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  xlink_title:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  xlink_show:
+	CreateBefore(AttrNameAndValue);
+
+  xlink_actuate:
+	CreateBefore(AttrNameAndValue);
 
   xlink_href:
 	BEGIN
@@ -1798,42 +2373,6 @@ ATTRIBUTES
 	CreateBefore (AttrValue);
 	END;
 
-  writing_mode = lr_tb:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Direction: ltr;
-	END;
-  writing_mode = rl_tb:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Direction: rtl;
-	END;
-  writing_mode = tb_rl:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Direction: rtl;
-	END;
-  writing_mode = lr:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Direction: ltr;
-	END;
-  writing_mode = rl:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Direction: rtl;
-	END;
-  writing_mode = tb:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Direction: ltr;
-	END;
-  writing_mode = inherit:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Direction: Enclosing =;
-	END;
-
   dx:
 	BEGIN
 	CreateBefore (AttrName);
@@ -1852,18 +2391,6 @@ ATTRIBUTES
 	CreateBefore (AttrValue);
 	END;
 
-  baseline_shift:
-	BEGIN
-	CreateBefore (AttrName);
-	CreateBefore (AttrValue);
-	END;
-
-  startOffset:
-	BEGIN
-	CreateBefore (AttrName);
-	CreateBefore (AttrValue);
-	END;
-
   textLength:
 	BEGIN
 	CreateBefore (AttrName);
@@ -1872,6 +2399,12 @@ ATTRIBUTES
 
   lengthAdjust:
 	CreateBefore(AttrNameAndValue);
+
+  startOffset:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
 
   method:
 	CreateBefore(AttrNameAndValue);
@@ -1939,18 +2472,6 @@ ATTRIBUTES
   rendering_intent:
 	CreateBefore(AttrNameAndValue);
 
-  stop_color:
-	BEGIN
-	CreateBefore (AttrName);
-	CreateBefore (AttrValue);
-	END;
-
-  stop_opacity:
-	BEGIN
-	CreateBefore (AttrName);
-	CreateBefore (AttrValue);
-	END;
-
   gradientUnits:
 	CreateBefore(AttrNameAndValue);
 
@@ -2000,6 +2521,12 @@ ATTRIBUTES
 	CreateBefore(AttrNameAndValue);
 
   target_:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  viewTarget:
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
@@ -2148,5 +2675,275 @@ ATTRIBUTES
 
   type_:
 	CreateBefore(AttrNameAndValue);
+
+  horiz_origin_x:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  horiz_origin_y:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  horiz_adv_x:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  vert_origin_x:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  vert_origin_y:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  vert_adv_y:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  unicode:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  glyph_name:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  orientation:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  arabic_form:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  lang:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  u1:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  g1:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  u2:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  g2:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  k:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  font_stretch_:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  unicode_range:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  units_per_em:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  panose_1:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  stemv:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  stemh:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  slope:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  cap_height:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  x_height:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  accent_height:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  ascent:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  descent:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  widths:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  bbox:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  ideographic:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  alphabetic:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  mathematical:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  hanging:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  v_ideographic:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  v_alphabetic:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  v_mathematical:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  v_hanging:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  underline_position:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  underline_thickness:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  strikethrough_position:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  strikethrough_thickness:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  overline_position:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  overline_thickness:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  string:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
 
 END

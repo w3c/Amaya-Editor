@@ -663,6 +663,27 @@ RULES
 		END;
 	END;
 
+   cursor:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'cursor';
+	indent +8;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -8;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'cursor>\14' after;
+		END;
+	END;
+
    a:
 	BEGIN
 	if immediately within use_
@@ -676,6 +697,27 @@ RULES
 	indent -2 after;
 	create SCT after;
 	create 'a>\12' after;
+	END;
+
+   view:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'view';
+	indent +6;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -6;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'view>\14' after;
+		END;
 	END;
 
    script_:
@@ -809,6 +851,197 @@ RULES
 		END;
 	END;
 
+   font_:
+	BEGIN
+	create SOT;
+	create 'font';
+	indent +6;
+	create attributes;
+	create '>';
+	indent -4;
+	indent -2 after;
+	create SCT after;
+	create 'font>\12' after;
+	END;
+
+   glyph:
+	BEGIN
+	create SOT;
+	create 'glyph';
+	indent +7;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -7;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'glyph>\12' after;		
+		END;
+	END;
+
+   missing_glyph:
+	BEGIN
+	create SOT;
+	create 'missing-glyph';
+	indent +15;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -15;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'missing-glyph>\12' after;		
+		END;
+	END;
+
+   hkern:
+	BEGIN
+	create SOT;
+	create 'hkern';
+	indent +7;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -7;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'hkern>\12' after;		
+		END;
+	END;
+
+   vkern:
+	BEGIN
+	create SOT;
+	create 'vkern';
+	indent +7;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -7;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'vkern>\12' after;		
+		END;
+	END;
+
+   font_face:
+	BEGIN
+	create SOT;
+	create 'font-face';
+	indent +11;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -11;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'font-face>\12' after;		
+		END;
+	END;
+
+   font_face_src:
+	BEGIN
+	create SOT;
+	create 'font-face-src';
+	indent +15;
+	create attributes;
+	create '>';
+	indent -13;
+	indent -2 after;
+	create SCT after;
+	create 'font-face-src>\12' after;
+	END;
+
+   font_face_uri:
+	BEGIN
+	create SOT;
+	create 'font-face-uri';
+	indent +15;
+	create attributes;
+	create '>';
+	indent -13;
+	indent -2 after;
+	create SCT after;
+	create 'font-face-uri>\12' after;
+	END;
+
+   font_face_format:
+	BEGIN
+	create SOT;
+	create 'font-face-format';
+	indent +18;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -18;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'font-face-format>\12' after;		
+		END;
+	END;
+
+   font_face_name:
+	BEGIN
+	create SOT;
+	create 'font-face-name';
+	indent +16;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -16;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'font-face-name>\12' after;		
+		END;
+	END;
+
+   definition_src:
+	BEGIN
+	create SOT;
+	create 'definition-src';
+	indent +16;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -16;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'definition-src>\12' after;		
+		END;
+	END;
+
    metadata:
 	BEGIN
 	create SOT;
@@ -936,7 +1169,15 @@ ATTRIBUTES
         create id;
         create DoubleQuote;
         end;
- 
+
+   xml_base:
+	BEGIN
+	create SAN;
+	create 'xml:base="';
+	create xml_base;
+	create DoubleQuote;
+	END;
+
    xml_space = xml_space_default:
 	BEGIN
 	create SAN;
@@ -1021,6 +1262,67 @@ ATTRIBUTES
         create style_;
         create DoubleQuote;
         end;
+
+   color:
+        begin
+        create SAN;
+        create 'color="';
+        create color;
+        create DoubleQuote;
+        end;
+
+   color_interpolation = auto:
+	BEGIN
+	create SAN;
+	create 'color-interpolation=="auto"';
+	END;
+   color_interpolation = sRGB:
+	BEGIN
+	create SAN;
+	create 'color-interpolation=="sRGB"';
+	END;
+   color_interpolation = linearRGB:
+	BEGIN
+	create SAN;
+	create 'color-interpolation=="linearRGB"';
+	END;
+   color_interpolation = inherit:
+	BEGIN
+	create SAN;
+	create 'color-interpolation="inherit"';
+	END;
+
+   color_rendering:
+        begin
+        create SAN;
+        create 'color-rendering="';
+        create color_rendering;
+        create DoubleQuote;
+        end;
+ 
+   enable_background:
+        begin
+        create SAN;
+        create 'enable-background="';
+        create enable_background;
+        create DoubleQuote;
+        end;
+ 
+   flood_color:
+        begin
+        create SAN;
+        create 'flood-color="';
+        create flood_color;
+        create DoubleQuote;
+        end;
+ 
+   flood_opacity:
+        begin
+        create SAN;
+        create 'flood-opacity="';
+        create flood_opacity;
+        create DoubleQuote;
+        end;
  
    fill:
 	BEGIN
@@ -1038,11 +1340,101 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
+   fill_rule = nonzero:
+	BEGIN
+	create SAN;
+	create 'fill-rule="nonzero"';
+	END;
+   fill_rule = evenodd:
+	BEGIN
+	create SAN;
+	create 'fill-rule="evenodd"';
+	END;
+   fill_rule = inherit:
+	BEGIN
+	create SAN;
+	create 'fill-rule="inherit"';
+	END;
+
    stroke:
 	BEGIN
 	create SAN;
 	create 'stroke="';
 	create stroke;
+	create DoubleQuote;
+	END;
+
+   stroke_dasharray:
+        begin
+        create SAN;
+        create 'stroke-dasharray="';
+        create stroke_dasharray;
+        create DoubleQuote;
+        end;
+ 
+   stroke_dashoffset:
+        begin
+        create SAN;
+        create 'stroke-dashoffset="';
+        create stroke_dashoffset;
+        create DoubleQuote;
+        end;
+ 
+   stroke_linecap = butt:
+	BEGIN
+	create SAN;
+	create 'stroke-linecap="butt"';
+	END;
+   stroke_linecap = round:
+	BEGIN
+	create SAN;
+	create 'stroke-linecap="round"';
+	END;
+   stroke_linecap = square:
+	BEGIN
+	create SAN;
+	create 'stroke-linecap="square"';
+	END;
+   stroke_linecap = inherit:
+	BEGIN
+	create SAN;
+	create 'stroke-linecap="inherit"';
+	END;
+
+   stroke_linejoin = miter:
+	BEGIN
+	create SAN;
+	create 'stroke-linejoin="miter"';
+	END;
+   stroke_linejoin = round:
+	BEGIN
+	create SAN;
+	create 'stroke-linejoin="round"';
+	END;
+   stroke_linejoin = bevel:
+	BEGIN
+	create SAN;
+	create 'stroke-linejoin="bevel"';
+	END;
+   stroke_linejoin = inherit:
+	BEGIN
+	create SAN;
+	create 'stroke-linejoin="inherit"';
+	END;
+
+   stroke_miterlimit:
+        begin
+        create SAN;
+        create 'stroke-miterlimit="';
+        create stroke_miterlimit;
+        create DoubleQuote;
+        end;
+ 
+   stroke_opacity:
+	BEGIN
+	create SAN;
+	create 'stroke-opacity="';
+	create stroke_opacity;
 	create DoubleQuote;
 	END;
 
@@ -1054,20 +1446,25 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
-   stroke_opacity:
+   color_interpolation_filters = auto:
 	BEGIN
 	create SAN;
-	create 'stroke-opacity="';
-	create stroke_opacity;
-	create DoubleQuote;
+	create 'color-interpolation-filters="auto"';
 	END;
-
-   opacity_:
+   color_interpolation_filters = sRGB:
 	BEGIN
 	create SAN;
-	create 'opacity="';
-	create opacity_;
-	create DoubleQuote;
+	create 'color-interpolation-filters="sRGB"';
+	END;
+   color_interpolation_filters = linearRGB:
+	BEGIN
+	create SAN;
+	create 'color-interpolation-filters="linearRGB"';
+	END;
+   color_interpolation_filters = inherit:
+	BEGIN
+	create SAN;
+	create 'color-interpolation-filters="inherit"';
 	END;
 
    font_family:
@@ -1084,6 +1481,75 @@ ATTRIBUTES
 	create 'font-size="';
 	create font_size;
 	create DoubleQuote;
+	END;
+
+   font_size_adjust:
+        begin
+        create SAN;
+        create 'font-size-adjust="';
+        create font_size_adjust;
+        create DoubleQuote;
+        end;
+ 
+   font_stretch = normal_:
+	BEGIN
+	create SAN;
+	create 'font-stretch="normal"';
+	END;
+   font_stretch = wider:
+	BEGIN
+	create SAN;
+	create 'font-stretch="wider"';
+	END;
+   font_stretch = narrower:
+	BEGIN
+	create SAN;
+	create 'font-stretch="narrower"';
+	END;
+   font_stretch = ultra_condensed:
+	BEGIN
+	create SAN;
+	create 'font-stretch="ultra-condensed"';
+	END;
+   font_stretch = extra_condensed:
+	BEGIN
+	create SAN;
+	create 'font-stretch="extra-condensed"';
+	END;
+   font_stretch = condensed:
+	BEGIN
+	create SAN;
+	create 'font-stretch="condensed"';
+	END;
+   font_stretch = semi_condensed:
+	BEGIN
+	create SAN;
+	create 'font-stretch="semi-condensed"';
+	END;
+   font_stretch = semi_expanded:
+	BEGIN
+	create SAN;
+	create 'font-stretch="semi-expanded"';
+	END;
+   font_stretch = expanded:
+	BEGIN
+	create SAN;
+	create 'font-stretch="expanded"';
+	END;
+   font_stretch = extra_expanded:
+	BEGIN
+	create SAN;
+	create 'font-stretch="extra-expanded"';
+	END;
+   font_stretch = ultra_expanded:
+	BEGIN
+	create SAN;
+	create 'font-stretch="ultra-expanded"';
+	END;
+   font_stretch = inherit:
+	BEGIN
+	create SAN;
+	create 'font-stretch="inherit"';
 	END;
 
    font_style = normal_:
@@ -1194,6 +1660,433 @@ ATTRIBUTES
 	create 'font-weight="inherit"';
 	END;
 
+   stop_color:
+	BEGIN
+	create SAN;
+	create 'stop-color="';
+	create stop_color;
+	create DoubleQuote;
+	END;
+
+   stop_opacity:
+	BEGIN
+	create SAN;
+	create 'stop-opacity="';
+	create stop_opacity;
+	create DoubleQuote;
+	END;
+
+   clip_path:
+        begin
+        create SAN;
+        create 'clip-path="';
+        create clip_path;
+        create DoubleQuote;
+        end;
+
+   clip_rule = nonzero:
+	BEGIN
+	create SAN;
+	create 'clip-rule="nonzero"';
+	END;
+   clip_rule = evenodd:
+	BEGIN
+	create SAN;
+	create 'clip-rule="evenodd"';
+	END;
+   clip_rule = inherit:
+	BEGIN
+	create SAN;
+	create 'clip-rule="inherit"';
+	END;
+
+   cursor_:
+	BEGIN
+	create SAN;
+	create 'cursor="';
+	create cursor_;
+	create DoubleQuote;
+	END;
+
+   display = inline:
+	BEGIN
+	create SAN;
+	create 'display="inline"';
+	END;
+   display = block:
+	BEGIN
+	create SAN;
+	create 'display="block"';
+	END;
+   display = list_item:
+	BEGIN
+	create SAN;
+	create 'display="list-item"';
+	END;
+   display = run_in:
+	BEGIN
+	create SAN;
+	create 'display="run-in"';
+	END;
+   display = compact:
+	BEGIN
+	create SAN;
+	create 'display="compact"';
+	END;
+   display = marker_:
+	BEGIN
+	create SAN;
+	create 'display="marker"';
+	END;
+   display = table:
+	BEGIN
+	create SAN;
+	create 'display="table"';
+	END;
+   display = inline_table:
+	BEGIN
+	create SAN;
+	create 'display="inline-table"';
+	END;
+   display = table_row_group:
+	BEGIN
+	create SAN;
+	create 'display="table-row-group"';
+	END;
+   display = table_header_group:
+	BEGIN
+	create SAN;
+	create 'display="table-header-group"';
+	END;
+   display = table_footer_group:
+	BEGIN
+	create SAN;
+	create 'display="table-footer-group"';
+	END;
+   display = table_row:
+	BEGIN
+	create SAN;
+	create 'display="table-row"';
+	END;
+   display = table_column_group:
+	BEGIN
+	create SAN;
+	create 'display="table-column-group"';
+	END;
+   display = table_column:
+	BEGIN
+	create SAN;
+	create 'display="table-column"';
+	END;
+   display = table_cell:
+	BEGIN
+	create SAN;
+	create 'display="table-cell"';
+	END;
+   display = table_caption:
+	BEGIN
+	create SAN;
+	create 'display="table-caption"';
+	END;
+   display = none:
+	BEGIN
+	create SAN;
+	create 'display="none"';
+	END;
+   display = inherit:
+	BEGIN
+	create SAN;
+	create 'display="inherit"';
+	END;
+
+   filter:
+	BEGIN
+	create SAN;
+	create 'filter="';
+	create filter;
+	create DoubleQuote;
+	END;
+
+   image_rendering = auto:
+	BEGIN
+	create SAN;
+	create 'image-rendering="auto"';
+	END;
+   image_rendering = optimizeSpeed:
+	BEGIN
+	create SAN;
+	create 'image-rendering="optimizeSpeed"';
+	END;
+   image_rendering = optimizeQuality:
+	BEGIN
+	create SAN;
+	create 'image-rendering="optimizeQuality"';
+	END;
+   image_rendering = inherit:
+	BEGIN
+	create SAN;
+	create 'image-rendering="inherit"';
+	END;
+
+   mask_:
+	BEGIN
+	create SAN;
+	create 'mask="';
+	create mask_;
+	create DoubleQuote;
+	END;
+
+   opacity_:
+	BEGIN
+	create SAN;
+	create 'opacity="';
+	create opacity_;
+	create DoubleQuote;
+	END;
+
+   pointer_events = visiblePainted:
+	BEGIN
+	create SAN;
+	create 'pointer-events="visiblePainted"';
+	END;
+   pointer_events = visibleFill:
+	BEGIN
+	create SAN;
+	create 'pointer-events="visibleFill"';
+	END;
+   pointer_events = visibleStroke:
+	BEGIN
+	create SAN;
+	create 'pointer-events="visibleStroke"';
+	END;
+   pointer_events = visible:
+	BEGIN
+	create SAN;
+	create 'pointer-events="visible"';
+	END;
+   pointer_events = painted:
+	BEGIN
+	create SAN;
+	create 'pointer-events="painted"';
+	END;
+   pointer_events = fill__:
+	BEGIN
+	create SAN;
+	create 'pointer-events="fill"';
+	END;
+   pointer_events = stroke_:
+	BEGIN
+	create SAN;
+	create 'pointer-events="stroke"';
+	END;
+   pointer_events = all:
+	BEGIN
+	create SAN;
+	create 'pointer-events="all"';
+	END;
+   pointer_events = none:
+	BEGIN
+	create SAN;
+	create 'pointer-events="none"';
+	END;
+   pointer_events = inherit:
+	BEGIN
+	create SAN;
+	create 'pointer-events="inherit"';
+	END;
+
+   shape_rendering = auto:
+	BEGIN
+	create SAN;
+	create 'shape-rendering="auto"';
+	END;
+   shape_rendering = optimizeSpeed:
+	BEGIN
+	create SAN;
+	create 'shape-rendering="optimizeSpeed"';
+	END;
+   shape_rendering = crispEdges:
+	BEGIN
+	create SAN;
+	create 'shape-rendering="crispEdges"';
+	END;
+   shape_rendering = geometricPrecision:
+	BEGIN
+	create SAN;
+	create 'shape-rendering="geometricPrecision"';
+	END;
+   shape_rendering = inherit:
+	BEGIN
+	create SAN;
+	create 'shape-rendering="inherit"';
+	END;
+
+   text_rendering = auto:
+	BEGIN
+	create SAN;
+	create 'text-rendering="auto"';
+	END;
+   text_rendering = optimizeSpeed:
+	BEGIN
+	create SAN;
+	create 'text-rendering="optimizeSpeed"';
+	END;
+   text_rendering = optimizeLegibility:
+	BEGIN
+	create SAN;
+	create 'text-rendering="optimizeLegibility"';
+	END;
+   text_rendering = geometricPrecision:
+	BEGIN
+	create SAN;
+	create 'text-rendering="geometricPrecision"';
+	END;
+   text_rendering = inherit:
+	BEGIN
+	create SAN;
+	create 'text-rendering="inherit"';
+	END;
+
+   visibility_ = visible:
+	BEGIN
+	create SAN;
+	create 'visibility="visible"';
+	END;
+   visibility_ = hidden_:
+	BEGIN
+	create SAN;
+	create 'visibility="hidden"';
+	END;
+   visibility_ = inherit:
+	BEGIN
+	create SAN;
+	create 'visibility="inherit"';
+	END;
+
+   color_profile_:
+	BEGIN
+	create SAN;
+	create 'color-profile="';
+	create color_profile_;
+	create DoubleQuote;
+	END;
+
+   lighting_color:
+	BEGIN
+	create SAN;
+	create 'lighting-color="';
+	create lighting_color;
+	create DoubleQuote;
+	END;
+
+   marker_start:
+	BEGIN
+	create SAN;
+	create 'marker-start="';
+	create marker_start;
+	create DoubleQuote;
+	END;
+
+   marker_mid:
+	BEGIN
+	create SAN;
+	create 'marker-mid="';
+	create marker_mid;
+	create DoubleQuote;
+	END;
+
+   marker_end:
+	BEGIN
+	create SAN;
+	create 'marker-end="';
+	create marker_end;
+	create DoubleQuote;
+	END;
+
+   alignment_baseline = baseline:
+	BEGIN
+	create SAN;
+	create 'alignment-baseline="baseline"';
+	END;
+   alignment_baseline = top:
+	BEGIN
+	create SAN;
+	create 'alignment-baseline="top"';
+	END;
+   alignment_baseline = before_edge:
+	BEGIN
+	create SAN;
+	create 'alignment-baseline="before-edge"';
+	END;
+   alignment_baseline = text_top:
+	BEGIN
+	create SAN;
+	create 'alignment-baseline="text-top"';
+	END;
+   alignment_baseline = text_before_edge:
+	BEGIN
+	create SAN;
+	create 'alignment-baseline="text-before-edge"';
+	END;
+   alignment_baseline = middle:
+	BEGIN
+	create SAN;
+	create 'alignment-baseline="middle"';
+	END;
+   alignment_baseline = bottom:
+	BEGIN
+	create SAN;
+	create 'alignment-baseline="bottom"';
+	END;
+   alignment_baseline = after_edge:
+	BEGIN
+	create SAN;
+	create 'alignment-baseline="after-edge"';
+	END;
+   alignment_baseline = text_bottom:
+	BEGIN
+	create SAN;
+	create 'alignment-baseline="text-bottom"';
+	END;
+   alignment_baseline = text_after_edge:
+	BEGIN
+	create SAN;
+	create 'alignment-baseline="text-after-edge"';
+	END;
+   alignment_baseline = ideographic_:
+	BEGIN
+	create SAN;
+	create 'alignment-baseline="ideographic"';
+	END;
+   alignment_baseline = lower:
+	BEGIN
+	create SAN;
+	create 'alignment-baseline="lower"';
+	END;
+   alignment_baseline = hanging_:
+	BEGIN
+	create SAN;
+	create 'alignment-baseline="hanging"';
+	END;
+   alignment_baseline = mathematical_:
+	BEGIN
+	create SAN;
+	create 'alignment-baseline="mathematical"';
+	END;
+   alignment_baseline = inherit:
+	BEGIN
+	create SAN;
+	create 'alignment-baseline="inherit"';
+	END;
+
+   baseline_shift:
+	BEGIN
+	create SAN;
+	create 'baseline-shift="';
+	create baseline_shift;
+	create DoubleQuote;
+	END;
+
    direction_ = ltr_:
 	BEGIN
 	create SAN;
@@ -1208,6 +2101,84 @@ ATTRIBUTES
 	BEGIN
 	create SAN;
 	create 'direction="inherit"';
+	END;
+
+   dominant_baseline = auto:
+	BEGIN
+	create SAN;
+	create 'dominant-baseline="auto"';
+	END;
+   dominant_baseline = autosense_script:
+	BEGIN
+	create SAN;
+	create 'dominant-baseline="autosense-script"';
+	END;
+   dominant_baseline = no_change:
+	BEGIN
+	create SAN;
+	create 'dominant-baseline="no-change"';
+	END;
+   dominant_baseline = reset:
+	BEGIN
+	create SAN;
+	create 'dominant-baseline="reset"';
+	END;
+   dominant_baseline = ideographic_:
+	BEGIN
+	create SAN;
+	create 'dominant-baseline="ideographic"';
+	END;
+   dominant_baseline = lower:
+	BEGIN
+	create SAN;
+	create 'dominant-baseline="lower"';
+	END;
+   dominant_baseline = hanging_:
+	BEGIN
+	create SAN;
+	create 'dominant-baseline="hanging"';
+	END;
+   dominant_baseline = mathematical_:
+	BEGIN
+	create SAN;
+	create 'dominant-baseline="mathematical"';
+	END;
+   dominant_baseline = inherit:
+	BEGIN
+	create SAN;
+	create 'dominant-baseline="inherit"';
+	END;
+
+   glyph_orientation_horizontal:
+	BEGIN
+	create SAN;
+	create 'glyph-orientation-horizontal="';
+	create glyph_orientation_horizontal;
+	create DoubleQuote;
+	END;
+
+   glyph_orientation_vertical:
+	BEGIN
+	create SAN;
+	create 'glyph-orientation-vertical="';
+	create glyph_orientation_vertical;
+	create DoubleQuote;
+	END;
+
+   kerning:
+	BEGIN
+	create SAN;
+	create 'kerning="';
+	create kerning;
+	create DoubleQuote;
+	END;
+
+   letter_spacing:
+	BEGIN
+	create SAN;
+	create 'letter-spacing="';
+	create letter_spacing;
+	create DoubleQuote;
 	END;
 
    text_anchor = start:
@@ -1260,11 +2231,236 @@ ATTRIBUTES
 	create 'unicode-bidi="inherit"';
 	END;
 
+   word_spacing:
+	BEGIN
+	create SAN;
+	create 'word-spacing="';
+	create word_spacing;
+	create DoubleQuote;
+	END;
+
+  writing_mode = lr_tb:
+	BEGIN
+	create SAN;
+	create 'writing-mode="lr-tb"';
+	END;
+  writing_mode = rl_tb:
+	BEGIN
+	create SAN;
+	create 'writing-mode="rl-tb"';
+	END;
+  writing_mode = tb_rl:
+	BEGIN
+	create SAN;
+	create 'writing-mode="tb-rl"';
+	END;
+  writing_mode = lr:
+	BEGIN
+	create SAN;
+	create 'writing-mode="lr"';
+	END;
+  writing_mode = rl:
+	BEGIN
+	create SAN;
+	create 'writing-mode="rl"';
+	END;
+  writing_mode = tb:
+	BEGIN
+	create SAN;
+	create 'writing-mode="tb"';
+	END;
+  writing_mode = inherit:
+	BEGIN
+	create SAN;
+	create 'writing-mode="inherit"';
+	END;
+
+   clip:
+	BEGIN
+	create SAN;
+	create 'clip="';
+	create clip;
+	create DoubleQuote;
+	END;
+
+  overflow  = visible:
+	BEGIN
+	create SAN;
+	create 'overflow="visible"';
+	END;
+  overflow  = hidden_:
+	BEGIN
+	create SAN;
+	create 'overflow="hidden"';
+	END;
+  overflow  = scroll:
+	BEGIN
+	create SAN;
+	create 'overflow="scroll"';
+	END;
+  overflow  = auto:
+	BEGIN
+	create SAN;
+	create 'overflow="auto"';
+	END;
+  overflow  = inherit:
+	BEGIN
+	create SAN;
+	create 'overflow="inherit"';
+	END;
+
    viewBox:
 	BEGIN
 	create SAN;
 	create 'viewBox="';
 	create viewBox;
+	create DoubleQuote;
+	END;
+
+   preserveAspectRatio:
+	BEGIN
+	create SAN;
+	create 'preserveAspectRatio="';
+	create preserveAspectRatio;
+	create DoubleQuote;
+	END;
+
+   zoomAndPan = disable:
+	BEGIN
+	create SAN;
+	create 'zoomAndPan="disable"';
+	END;
+   zoomAndPan = magnify:
+	BEGIN
+	create SAN;
+	create 'zoomAndPan="magnify"';
+	END;
+
+   onfocusin:
+	BEGIN
+	create SAN;
+	create 'onfocusin="';
+	create onfocusin;
+	create DoubleQuote;
+	END;
+
+   onfocusout:
+	BEGIN
+	create SAN;
+	create 'onfocusout="';
+	create onfocusout;
+	create DoubleQuote;
+	END;
+
+   onactivate:
+	BEGIN
+	create SAN;
+	create 'onactivate="';
+	create onactivate;
+	create DoubleQuote;
+	END;
+
+   onclick:
+	BEGIN
+	create SAN;
+	create 'onclick="';
+	create onclick;
+	create DoubleQuote;
+	END;
+
+   onmousedown:
+	BEGIN
+	create SAN;
+	create 'onmousedown="';
+	create onmousedown;
+	create DoubleQuote;
+	END;
+
+   onmouseup:
+	BEGIN
+	create SAN;
+	create 'onmouseup="';
+	create onmouseup;
+	create DoubleQuote;
+	END;
+
+   onmouseover:
+	BEGIN
+	create SAN;
+	create 'onmouseover="';
+	create onmouseover;
+	create DoubleQuote;
+	END;
+
+   onmousemove:
+	BEGIN
+	create SAN;
+	create 'onmousemove="';
+	create onmousemove;
+	create DoubleQuote;
+	END;
+
+   onmouseout:
+	BEGIN
+	create SAN;
+	create 'onmouseout="';
+	create onmouseout;
+	create DoubleQuote;
+	END;
+
+   onload:
+	BEGIN
+	create SAN;
+	create 'onload="';
+	create onload;
+	create DoubleQuote;
+	END;
+
+   onunload:
+	BEGIN
+	create SAN;
+	create 'onunload="';
+	create onunload;
+	create DoubleQuote;
+	END;
+
+   onabort:
+	BEGIN
+	create SAN;
+	create 'onabort="';
+	create onabort;
+	create DoubleQuote;
+	END;
+
+   onerror:
+	BEGIN
+	create SAN;
+	create 'onerror="';
+	create onerror;
+	create DoubleQuote;
+	END;
+
+   onresize:
+	BEGIN
+	create SAN;
+	create 'onresize="';
+	create onresize;
+	create DoubleQuote;
+	END;
+
+   onscroll:
+	BEGIN
+	create SAN;
+	create 'onscroll="';
+	create onscroll;
+	create DoubleQuote;
+	END;
+
+   onzoom:
+	BEGIN
+	create SAN;
+	create 'onzoom="';
+	create onzoom;
 	create DoubleQuote;
 	END;
 
@@ -1277,7 +2473,7 @@ ATTRIBUTES
 	END;
 
    x:
-	if not Timeline_cross 
+    if not Timeline_cross 
 	BEGIN
 	create SAN;
 	create 'x="';
@@ -1312,11 +2508,19 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 	
-   gradientUnits:
+   contentScriptType:
 	BEGIN
 	create SAN;
-	create 'gradientUnits="';
-	create gradientUnits;
+	create 'contentScriptType="';
+	create contentScriptType;
+	create DoubleQuote;
+	END;
+
+   contentStyleType:
+	BEGIN
+	create SAN;
+	create 'contentStyleType="';
+	create contentStyleType;
 	create DoubleQuote;
 	END;
 
@@ -1328,17 +2532,62 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
-   preserveAspectRatio:
+   content_:
 	BEGIN
 	create SAN;
-	create 'preserveAspectRatio="';
-	create preserveAspectRatio;
+	create 'content="';
+	create content_;
 	create DoubleQuote;
+	END;
+
+   xlink_type = simple:
+	BEGIN
+	create SAN;
+	create 'xlink:type="simple"';
+	END;
+
+   xlink_role:
+	BEGIN
+	create 'xlink:role="';
+	create xlink_role;
+	create DoubleQuote;
+	END;
+
+   xlink_arcrole:
+	BEGIN
+	create 'xlink:arcrole="';
+	create xlink_arcrole;
+	create DoubleQuote;
+	END;
+
+   xlink_title:
+	BEGIN
+	create 'xlink:title="';
+	create xlink_title;
+	create DoubleQuote;
+	END;
+
+   xlink_show = other:
+	BEGIN
+	create SAN;
+	create 'xlink:show="other"';
+	END;
+   xlink_show = embed:
+	BEGIN
+	create SAN;
+	create 'xlink:show="embed"';
+	END;
+
+   xlink_actuate = onLoad:
+	BEGIN
+	create SAN;
+	create 'xlink:actuate="onLoad"';
 	END;
 
    xlink_href:
 	BEGIN
-	create ' xlink:href="';
+	create SAN;
+	create 'xlink:href="';
 	create xlink_href;
 	create DoubleQuote;
 	END;
@@ -1463,42 +2712,6 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
-  writing_mode = lr_tb:
-	BEGIN
-	create SAN;
-	create 'writing-mode="lr-tb"';
-	END;
-  writing_mode = rl_tb:
-	BEGIN
-	create SAN;
-	create 'writing-mode="rl-tb"';
-	END;
-  writing_mode = tb_rl:
-	BEGIN
-	create SAN;
-	create 'writing-mode="tb-rl"';
-	END;
-  writing_mode = lr:
-	BEGIN
-	create SAN;
-	create 'writing-mode="lr"';
-	END;
-  writing_mode = rl:
-	BEGIN
-	create SAN;
-	create 'writing-mode="rl"';
-	END;
-  writing_mode = tb:
-	BEGIN
-	create SAN;
-	create 'writing-mode="tb"';
-	END;
-  writing_mode = inherit:
-	BEGIN
-	create SAN;
-	create 'writing-mode="inherit"';
-	END;
-
    dx:
 	BEGIN
 	create SAN;
@@ -1515,27 +2728,11 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
-  rotate:
+   rotate:
 	BEGIN
 	create SAN;
 	create 'rotate="';
 	create rotate;
-	create DoubleQuote;
-	END;
-
-   baseline_shift:
-	BEGIN
-	create SAN;
-	create 'baseline-shift="';
-	create baseline_shift;
-	create DoubleQuote;
-	END;
-
-   startOffset:
-	BEGIN
-	create SAN;
-	create 'startOffset="';
-	create startOffset;
 	create DoubleQuote;
 	END;
 
@@ -1556,6 +2753,14 @@ ATTRIBUTES
 	BEGIN
 	create SAN;
 	create 'lengthAdjust="spacingAndGlyphs"';
+	END;
+
+   startOffset:
+	BEGIN
+	create SAN;
+	create 'startOffset="';
+	create startOffset;
+	create DoubleQuote;
 	END;
 
    method = align:
@@ -1689,22 +2894,6 @@ ATTRIBUTES
 	create 'rendering-intent="absolute-colorimetric"';
 	END;
 
-   stop_color:
-	BEGIN
-	create SAN;
-	create 'stop-color="';
-	create stop_color;
-	create DoubleQuote;
-	END;
-
-   stop_opacity:
-	BEGIN
-	create SAN;
-	create 'stop-opacity="';
-	create stop_opacity;
-	create DoubleQuote;
-	END;
-
    gradientUnits = userSpaceOnUse:
 	BEGIN
 	create SAN;
@@ -1832,6 +3021,14 @@ ATTRIBUTES
 	create SAN;
 	create 'target="';
 	create target_;
+	create DoubleQuote;
+	END;
+
+  viewTarget:
+	BEGIN
+	create SAN;
+	create 'viewTarget="';
+	create viewTarget;
 	create DoubleQuote;
 	END;
 
@@ -2097,6 +3294,366 @@ ATTRIBUTES
 	BEGIN
 	create SAN;
 	create 'type="skewY"';
+	END;
+
+  horiz_origin_x:
+	BEGIN
+	create SAN;
+	create 'horiz-origin-x="';
+	create horiz_origin_x;
+	create DoubleQuote;
+	END;
+
+  horiz_origin_y:
+	BEGIN
+	create SAN;
+	create 'horiz-origin-y="';
+	create horiz_origin_y;
+	create DoubleQuote;
+	END;
+
+  horiz_adv_x:
+	BEGIN
+	create SAN;
+	create 'horiz-adv-x="';
+	create horiz_adv_x;
+	create DoubleQuote;
+	END;
+
+  vert_origin_x:
+	BEGIN
+	create SAN;
+	create 'vert-origin-x="';
+	create vert_origin_x;
+	create DoubleQuote;
+	END;
+
+  vert_origin_y:
+	BEGIN
+	create SAN;
+	create 'vert-origin-y="';
+	create vert_origin_y;
+	create DoubleQuote;
+	END;
+
+  vert_adv_y:
+	BEGIN
+	create SAN;
+	create 'vert-adv-y="';
+	create vert_adv_y;
+	create DoubleQuote;
+	END;
+
+  unicode:
+	BEGIN
+	create SAN;
+	create 'unicode="';
+	create unicode;
+	create DoubleQuote;
+	END;
+
+  glyph_name:
+	BEGIN
+	create SAN;
+	create 'glyph-name="';
+	create glyph_name;
+	create DoubleQuote;
+	END;
+
+  orientation:
+	BEGIN
+	create SAN;
+	create 'orientation="';
+	create orientation;
+	create DoubleQuote;
+	END;
+
+  arabic_form:
+	BEGIN
+	create SAN;
+	create 'arabic-form="';
+	create arabic_form;
+	create DoubleQuote;
+	END;
+
+  lang:
+	BEGIN
+	create SAN;
+	create 'lang="';
+	create lang;
+	create DoubleQuote;
+	END;
+
+  u1:
+	BEGIN
+	create SAN;
+	create 'u1="';
+	create u1;
+	create DoubleQuote;
+	END;
+
+  g1:
+	BEGIN
+	create SAN;
+	create 'g1="';
+	create g1;
+	create DoubleQuote;
+	END;
+
+  u2:
+	BEGIN
+	create SAN;
+	create 'u2="';
+	create u2;
+	create DoubleQuote;
+	END;
+
+  g2:
+	BEGIN
+	create SAN;
+	create 'g2="';
+	create g2;
+	create DoubleQuote;
+	END;
+
+  k:
+	BEGIN
+	create SAN;
+	create 'k="';
+	create k;
+	create DoubleQuote;
+	END;
+
+  font_stretch_:
+	BEGIN
+	create SAN;
+	create 'font-stretch="';
+	create font_stretch_;
+	create DoubleQuote;
+	END;
+
+  unicode_range:
+	BEGIN
+	create SAN;
+	create 'unicode-range="';
+	create unicode_range;
+	create DoubleQuote;
+	END;
+
+  units_per_em:
+	BEGIN
+	create SAN;
+	create 'units-per-em="';
+	create units_per_em;
+	create DoubleQuote;
+	END;
+
+  panose_1:
+	BEGIN
+	create SAN;
+	create 'panose-1="';
+	create panose_1;
+	create DoubleQuote;
+	END;
+
+  stemv:
+	BEGIN
+	create SAN;
+	create 'panose_1="';
+	create panose_1;
+	create DoubleQuote;
+	END;
+
+  stemh:
+	BEGIN
+	create SAN;
+	create 'stemh="';
+	create stemh;
+	create DoubleQuote;
+	END;
+
+  slope:
+	BEGIN
+	create SAN;
+	create 'slope="';
+	create slope;
+	create DoubleQuote;
+	END;
+
+  cap_height:
+	BEGIN
+	create SAN;
+	create 'cap-height="';
+	create cap_height;
+	create DoubleQuote;
+	END;
+
+  x_height:
+	BEGIN
+	create SAN;
+	create 'x-height="';
+	create x_height;
+	create DoubleQuote;
+	END;
+
+  accent_height:
+	BEGIN
+	create SAN;
+	create 'accent-height="';
+	create accent_height;
+	create DoubleQuote;
+	END;
+
+  ascent:
+	BEGIN
+	create SAN;
+	create 'ascent="';
+	create ascent;
+	create DoubleQuote;
+	END;
+
+  descent:
+	BEGIN
+	create SAN;
+	create 'descent="';
+	create descent;
+	create DoubleQuote;
+	END;
+
+  widths:
+	BEGIN
+	create SAN;
+	create 'widths="';
+	create widths;
+	create DoubleQuote;
+	END;
+
+  bbox:
+	BEGIN
+	create SAN;
+	create 'bbox="';
+	create bbox;
+	create DoubleQuote;
+	END;
+
+  ideographic:
+	BEGIN
+	create SAN;
+	create 'ideographic="';
+	create ideographic;
+	create DoubleQuote;
+	END;
+
+  alphabetic:
+	BEGIN
+	create SAN;
+	create 'alphabetic="';
+	create alphabetic;
+	create DoubleQuote;
+	END;
+
+  mathematical:
+	BEGIN
+	create SAN;
+	create 'mathematical="';
+	create mathematical;
+	create DoubleQuote;
+	END;
+
+  hanging:
+	BEGIN
+	create SAN;
+	create 'hanging="';
+	create hanging;
+	create DoubleQuote;
+	END;
+
+  v_ideographic:
+	BEGIN
+	create SAN;
+	create 'v-ideographic="';
+	create v_ideographic;
+	create DoubleQuote;
+	END;
+
+  v_alphabetic:
+	BEGIN
+	create SAN;
+	create 'v-alphabetic="';
+	create v_alphabetic;
+	create DoubleQuote;
+	END;
+
+  v_mathematical:
+	BEGIN
+	create SAN;
+	create 'v-mathematical="';
+	create v_mathematical;
+	create DoubleQuote;
+	END;
+
+  v_hanging:
+	BEGIN
+	create SAN;
+	create 'v-hanging="';
+	create v_hanging;
+	create DoubleQuote;
+	END;
+
+  underline_position:
+	BEGIN
+	create SAN;
+	create 'underline-position="';
+	create underline_position;
+	create DoubleQuote;
+	END;
+
+  underline_thickness:
+	BEGIN
+	create SAN;
+	create 'underline-thickness="';
+	create underline_thickness;
+	create DoubleQuote;
+	END;
+
+  strikethrough_position:
+	BEGIN
+	create SAN;
+	create 'strikethrough-position="';
+	create strikethrough_position;
+	create DoubleQuote;
+	END;
+
+  strikethrough_thickness:
+	BEGIN
+	create SAN;
+	create 'strikethrough-thickness="';
+	create strikethrough_thickness;
+	create DoubleQuote;
+	END;
+
+  overline_position:
+	BEGIN
+	create SAN;
+	create 'overline-position="';
+	create overline_position;
+	create DoubleQuote;
+	END;
+
+  overline_thickness:
+	BEGIN
+	create SAN;
+	create 'overline-thickness="';
+	create overline_thickness;
+	create DoubleQuote;
+	END;
+
+  string:
+	BEGIN
+	create SAN;
+	create 'string="';
+	create string;
+	create DoubleQuote;
 	END;
 
 TextTRANSLATE
