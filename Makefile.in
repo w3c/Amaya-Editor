@@ -211,7 +211,12 @@ libz libz.a : force
 kaffe_get :
 	@(if [ ! -d $(THOTDIR)/$(KAFFE) ] ; \
 	  then \
-	      cd $(THOTDIR) ; cvs get $(KAFFE) ; \
+	      if [ -f $(THOTDIR)/$(KAFFE).tar.gz ] \
+	      then \
+	          cd $(THOTDIR) ; gunzip -c $(KAFFE).tar.gz | tar xvf - ; \
+	      else \
+		  cd $(THOTDIR) ; cvs get $(KAFFE) ; \
+	      fi \
 	  fi)
 	@(if [ ! -d $(THOTDIR)/classes ] ; \
 	  then \

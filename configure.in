@@ -318,7 +318,7 @@ dnl  ***************************************************************
 
 THOT_VER="2.2"
 AMAYA_VER="1.3"
-KAFFE_VER="snap"
+KAFFE_VER="cvs"
 
 dnl
 dnl We use a special versoin of cextract patched for alignment
@@ -544,7 +544,8 @@ fi
 
 if test "$build_amaya" = "yes" ; then
 
-    if test ! -f $srcdir/kaffe-$KAFFE_VER/Makefile.in ; then
+    if test ! -f $srcdir/kaffe-$KAFFE_VER/Makefile.in \
+            -a ! -f $srcdir/kaffe-$KAFFE_VER.tar.gz ; then
 	if test "$with_java" = "yes" ; then
 	    AC_MSG_WARN(kaffe-$KAFFE_VER sources not found, disabling Java !)
 	    with_java="no"
@@ -567,9 +568,7 @@ if test "$build_amaya" = "yes" ; then
 	#
 	# Then check for precompiled classes packages.
 	#
-	if test -f $srcdir/classes/thotlib.zip -a \
-		-f $srcdir/classes/amaya.zip -a \
-		-f $srcdir/classes/jigsaw.zip \
+	if test -f $srcdir/classes/jigsaw.zip \
 		; then
 	    with_java_package="yes"
 	else

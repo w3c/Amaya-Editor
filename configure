@@ -901,7 +901,7 @@ echo "$ac_t""$ac_cv_prog_cc_g" 1>&6
   if test "$ac_test_CFLAGS" = set; then
     CFLAGS="$ac_save_CFLAGS"
   elif test $ac_cv_prog_cc_g = yes; then
-    CFLAGS="-O2"
+    CFLAGS="-g -O2"
   else
     CFLAGS="-O2"
   fi
@@ -6091,7 +6091,7 @@ fi
 
 THOT_VER="2.2"
 AMAYA_VER="1.3"
-KAFFE_VER="snap"
+KAFFE_VER="cvs"
 
 CEXTRACT_VER="1.7"
 CEXTRACT_FLAGS="+O"
@@ -6355,7 +6355,8 @@ fi
 
 if test "$build_amaya" = "yes" ; then
 
-    if test ! -f $srcdir/kaffe-$KAFFE_VER/Makefile.in ; then
+    if test ! -f $srcdir/kaffe-$KAFFE_VER/Makefile.in \
+            -a ! -f $srcdir/kaffe-$KAFFE_VER.tar.gz ; then
 	if test "$with_java" = "yes" ; then
 	    echo "configure: warning: kaffe-$KAFFE_VER sources not found" 1>&2
 	    with_java="no"
@@ -6378,9 +6379,7 @@ if test "$build_amaya" = "yes" ; then
 	#
 	# Then check for precompiled classes packages.
 	#
-	if test -f $srcdir/classes/thotlib.zip -a \
-		-f $srcdir/classes/amaya.zip -a \
-		-f $srcdir/classes/jigsaw.zip \
+	if test -f $srcdir/classes/jigsaw.zip \
 		; then
 	    with_java_package="yes"
 	else
@@ -6399,7 +6398,7 @@ if test "$build_amaya" = "yes" ; then
 	    # kaffe may require libgmp ...
 	    #
 	    echo $ac_n "checking for mpz_abs in -lgmp""... $ac_c" 1>&6
-echo "configure:6404: checking for mpz_abs in -lgmp" >&5
+echo "configure:6402: checking for mpz_abs in -lgmp" >&5
 ac_lib_var=`echo gmp'_'mpz_abs | sed 'y%./+-%__p_%'`
 if eval "test \"`echo '$''{'ac_cv_lib_$ac_lib_var'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
@@ -6407,7 +6406,7 @@ else
   ac_save_LIBS="$LIBS"
 LIBS="-lgmp  $LIBS"
 cat > conftest.$ac_ext <<EOF
-#line 6412 "configure"
+#line 6410 "configure"
 #include "confdefs.h"
 /* Override any gcc2 internal prototype to avoid an error.  */
 /* We use char because int might match the return type of a gcc2
@@ -6418,7 +6417,7 @@ int main() {
 mpz_abs()
 ; return 0; }
 EOF
-if { (eval echo configure:6423: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest; then
+if { (eval echo configure:6421: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest; then
   rm -rf conftest*
   eval "ac_cv_lib_$ac_lib_var=yes"
 else
