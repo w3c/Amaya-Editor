@@ -481,6 +481,7 @@ void TtaRefreshTopMenuStats( int doc_id, int menu_id )
 #ifdef _WX
   int           window_id  = TtaGetDocumentWindowId( doc_id, -1 );
   AmayaWindow * p_window   = TtaGetWindowFromId(window_id);
+  wxASSERT(p_window);
   wxMenuBar *   p_menu_bar = p_window->GetMenuBar();
   PtrDocument   pDoc       = LoadedDocument[doc_id-1];
   wxMenu *      p_top_menu = NULL;
@@ -677,6 +678,7 @@ void TtaRefreshToolbarStats( int changed_action_id )
 
   int            window_id = TtaGetDocumentWindowId( doc_id, -1 );
   AmayaWindow *   p_window = TtaGetWindowFromId(window_id);
+  wxASSERT(p_window);
   AmayaToolBar * p_toolbar = p_window->GetAmayaToolBar();
   ThotBool   action_enable = FALSE;
 
