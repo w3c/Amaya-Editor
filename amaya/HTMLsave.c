@@ -1403,7 +1403,8 @@ void RestartParser (Document doc, char *localFile,
     }
   
   if (isXML || IsMathMLName (localFile) ||
-      IsSVGName (localFile) || IsXMLName (localFile))
+      IsSVGName (localFile) || IsXMLName (localFile) ||
+      DocumentTypes[doc] == docXml)
     DocumentMeta[doc]->xmlformat = TRUE;
   else
     DocumentMeta[doc]->xmlformat = FALSE;
@@ -2067,7 +2068,7 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
 {
    Element           el;
    DisplayMode       dispMode;
-   Document          xmlDoc, otherDoc;
+   Document          otherDoc;
    char             *tempdoc = NULL;
    char              docname[MAX_LENGTH];
    char              tempdir[MAX_LENGTH];
@@ -2079,7 +2080,18 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
    if (!DocumentURLs[doc])
      /* the document is not loaded yet */
      return;
-   otherDoc = 0;
+
+   if (DocumentTypes[doc] == docHTML ||
+       DocumentTypes[doc] == docSVG ||
+       DocumentTypes[doc] == docLibrary ||
+       DocumentTypes[doc] == docMath)
+     /* it's a structured document */
+     otherDoc = DocumentSource[doc];
+   else if (DocumentTypes[doc] == docSource)
+     otherDoc = GetDocFromSource (doc);
+   else
+     otherDoc = 0;
+
    saveBefore = TtaIsDocumentUpdated (doc);
    if (DocumentTypes[doc] == docCSS)
      {
@@ -2090,20 +2102,11 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
      /* nothing new to be saved in this view of the document. Let see if
         the other view has been modified */
      {
-       if (DocumentTypes[doc] == docHTML ||
-	   DocumentTypes[doc] == docSVG ||
-	   DocumentTypes[doc] == docLibrary ||
-	   DocumentTypes[doc] == docMath)
-           /* it's a structured document */
-	  otherDoc = DocumentSource[doc];
-       else if (DocumentTypes[doc] == docSource)
-          otherDoc = GetDocFromSource (doc);
-       else
-	 otherDoc = 0;
        if (otherDoc && TtaIsDocumentUpdated (otherDoc))
 	  /* the other view has not been modified either */
 	  saveBefore = TRUE;
      }
+
    /* Only one synchronize at the same time */
    if (Synchronizing)
      return;
@@ -2167,21 +2170,19 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
    else if (DocumentTypes[doc] == docSource)
      /* it's a source document */
      {
-       xmlDoc = GetDocFromSource (doc);
-       otherDoc = xmlDoc;
        if (saveBefore)
 	 {
 	   /* close log files */
-	   CloseLogs (xmlDoc);
+	   CloseLogs (otherDoc);
 	   /* get the current position in the document */
-	   position = RelativePosition (xmlDoc, &distance);
-	   TtaClearUndoHistory (xmlDoc);
+	   position = RelativePosition (otherDoc, &distance);
+	   TtaClearUndoHistory (otherDoc);
 
 	   /* save the current state of the document into the temporary file */
-	   tempdoc = GetLocalPath (xmlDoc, DocumentURLs[xmlDoc]);
+	   tempdoc = GetLocalPath (otherDoc, DocumentURLs[otherDoc]);
 	   TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "TextFileT");
 	   TtaExtractName (tempdoc, tempdir, docname);
-	   RestartParser (xmlDoc, tempdoc, tempdir, docname, TRUE);
+	   RestartParser (otherDoc, tempdoc, tempdir, docname, TRUE);
 	   /* the other document is now different from the original file. It can
 	      be saved */
 	   TtaSetDocumentModified (otherDoc);
@@ -2191,8 +2192,8 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
 	   /* restore original display mode */
 	   TtaSetDisplayMode (doc, dispMode);
 	   /* restore the current position in the document */
-	   el = ElementAtPosition (DocumentSource[doc], position);
-	   TtaShowElement (DocumentSource[doc], 1, el, distance);
+	   el = ElementAtPosition (otherDoc, position);
+	   TtaShowElement (otherDoc, 1, el, distance);
 	   /* but it could be saved too */
 	   TtaSetItemOn (doc, 1, File, BSave);
 	 }

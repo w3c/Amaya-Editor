@@ -1721,7 +1721,7 @@ void FreeDocumentResource (Document doc)
 	{
 	  /* free access keys table */
 	  TtaRemoveDocAccessKeys (doc);
-	  if (DocumentSource[doc])
+	  if (!Synchronizing && DocumentSource[doc])
 	    {
 	      sourceDoc = DocumentSource[doc];
 	      TtcCloseDocument (sourceDoc, 1);
