@@ -2080,7 +2080,7 @@ static void Resizing (int frame, int *x, int *y, int *width, int *height,
 		      else
 			BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
 #else /* _GL */
-		      DefBoxRegion (frame, box, -1, -1, -1 -1);
+		      DefBoxRegion (frame, box, -1, -1, -1, -1);
 		      if (percentW)
 			NewDimension (box->BxAbstractBox, 0, *height, frame, TRUE);
 		      else if (percentH)
