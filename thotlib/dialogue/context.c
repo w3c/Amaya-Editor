@@ -44,6 +44,11 @@ static ThotColorStruct cwhite;
 #include "registry_f.h"
 
 #ifdef _WINDOWS
+static int palSize ;
+static int nbPalEntries;
+PALETTEENTRY palEntries[256];
+int nbSysColors;
+
 /*----------------------------------------------------------------------
  *      WinCreateGC is an emulation of the XWindows XCreateGC under
  *         MS-Windows.
@@ -113,7 +118,6 @@ void WinInitColors ()
 #endif /* __STDC__ */
 {
    int        i;
-   int        palSize ;
    static int initialized = 0;
    char       msg[200];
 
@@ -126,40 +130,43 @@ void WinInitColors ()
 
    WIN_GetDeviceContext (-1);
 
+   ptrLogPal = HeapAlloc (GetProcessHeap (), HEAP_ZERO_MEMORY, 
+                          sizeof (LOGPALETTE) + (MAX_COLOR * sizeof (PALETTEENTRY)));
+
+   ptrLogPal->palVersion    = 0x300;
+   ptrLogPal->palNumEntries = MAX_COLOR;
+       
+   for (i = 0; i < MAX_COLOR; i++) {
+       ptrLogPal->palPalEntry[i].peRed   = RGB_Table[i].red;
+       ptrLogPal->palPalEntry[i].peGreen = RGB_Table[i].green;
+       ptrLogPal->palPalEntry[i].peBlue  = RGB_Table[i].blue;
+       ptrLogPal->palPalEntry[i].peFlags = PC_RESERVED;
+   }
+
+   TtCmap = CreatePalette (ptrLogPal);
+      
+   if (TtCmap == NULL) {
+#     ifdef _WIN_DEBUG
+      fprintf (stderr, "couldn't CreatePalette\n");												  
+#     endif 
+	  WinErrorBox (WIN_Main_Wd);
+   } else {
+          SelectPalette (TtDisplay, TtCmap, FALSE);
+          nbPalEntries = RealizePalette (TtDisplay);
+          if (nbPalEntries == 0)
+             WinErrorBox ();
+   }
+
    palSize = GetDeviceCaps (TtDisplay, SIZEPALETTE);
    if (palSize == 0)
       TtIsTrueColor = TRUE ;
-   else
-      TtIsTrueColor = FALSE ;
+   else  {
+       TtIsTrueColor = FALSE ;
+       nbSysColors = GetSystemPaletteEntries (TtDisplay, 0, palSize, palEntries);
+   }
 
 
-      /* Create a color palette for the Thot set of colors. */
-      ptrLogPal = HeapAlloc (GetProcessHeap (), HEAP_ZERO_MEMORY, 
-                             sizeof (LOGPALETTE) + (MAX_COLOR * sizeof (PALETTEENTRY)));
-      /*
-       ptrLogPal = (LPLOGPALETTE) malloc (sizeof (LOGPALETTE) + (MAX_COLOR * sizeof (PALETTEENTRY)));
-       */
-
-      ptrLogPal->palVersion    = 0x300;
-      ptrLogPal->palNumEntries = MAX_COLOR;
-      
-      for (i = 0; i < MAX_COLOR; i++) {
-	  ptrLogPal->palPalEntry[i].peRed   = RGB_Table[i].red;
-	  ptrLogPal->palPalEntry[i].peGreen = RGB_Table[i].green;
-	  ptrLogPal->palPalEntry[i].peBlue  = RGB_Table[i].blue;
-	  ptrLogPal->palPalEntry[i].peFlags = PC_RESERVED;
-      }
-
-      TtCmap = CreatePalette (ptrLogPal);
-      
-      if (TtCmap == NULL) {
-#        ifdef _WIN_DEBUG
-	 fprintf (stderr, "couldn't CreatePalette\n");
-#        endif /* _WIN_DEBUG */
-	 WinErrorBox (WIN_Main_Wd);
-      }
-   /* HeapFree (GetProcessHeap (), 0, ptrLogPal); */
-   /* free (ptrLogPal); */
+   /* Create a color palette for the Thot set of colors. */
 
    /* fill-in the Pix_Color table */
    for (i = 0; i < MAX_COLOR; i++) 
@@ -181,6 +188,7 @@ void WinInitColors ()
        BackgroundColor[i] = 0;
 
    initialized = 1;
+
 }
 #endif /* _WINDOWS */
 

@@ -58,6 +58,17 @@ static XmString     null_string;
 #define TITLE_TXTZONE   1
 #define ID_TOOLBAR    165
 
+#define MENU_VIEWS            551
+#define SHOW_STRUCTURE        553
+#define SHOW_ALTERNATE        554
+#define SHOW_LINKS            555
+#define SHOW_TAB_OF_CONTENTS  556
+							  
+#define CLOSE_STRUCTURE       232
+#define CLOSE_ALTERNATE       272
+#define CLOSE_LINKS           312
+#define CLOSE_TAB_OF_CONTENTS 352
+
 #define WM_ENTER (WM_USER)
 
 #define MAX_MENUS 5
@@ -1029,7 +1040,7 @@ CONST char         *name;
 
 #            ifdef _WINDOWS
 	     SendMessage (FrameTable[frame].WdStatus, SB_SETTEXT, (WPARAM) 0, (LPARAM) & s[0]);
-		 SendMessage (FrameTable[frame].WdStatus, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
+		 /*SendMessage (FrameTable[frame].WdStatus, WM_PAINT, (WPARAM) 0, (LPARAM) 0);*/
 #            else  /* !_WINDOWS */
 	     XtSetArg (args[0], XmNlabelString, title_string);
 	     XtSetValues (FrameTable[frame].WdStatus, args, 1);
@@ -1155,9 +1166,20 @@ LPARAM      lParam;
             case WM_COMMAND:
 			     if (LOWORD (wParam) >= TBBUTTONS_BASE)
 					   APP_ButtonCallback (FrameTable[frame].Button[LOWORD (wParam) - TBBUTTONS_BASE], frame, "\n");
-				else 
-	                WIN_ThotCallBack (hwnd, wParam, lParam);
-	         return (0);
+				 else {
+					  if (wParam >= SHOW_STRUCTURE && wParam <= SHOW_TAB_OF_CONTENTS) {
+				 	     HMENU hmenu = GetMenu(hwnd); 
+				 	     DWORD fdwMenu;
+                         fdwMenu = GetMenuState(hmenu, LOWORD (wParam), MF_BYCOMMAND); 
+                         if (!(fdwMenu & MF_CHECKED)) 
+                            CheckMenuItem(hmenu, (UINT) LOWORD (wParam), MF_BYCOMMAND | MF_CHECKED); 
+                         else  
+                             CheckMenuItem(hmenu, (UINT) LOWORD (wParam), MF_BYCOMMAND | MF_UNCHECKED); 
+					  } 
+					  
+	                  WIN_ThotCallBack (hwnd, wParam, lParam);
+				 }
+	             return (0);
 
             case WM_DESTROY:
                  SendMessage (FrRef [frame], "WM_DESTROY", (WPARAM) 0, (LPARAM) 0) ;
@@ -1826,8 +1848,10 @@ int                *pave;
 	TtaFetchOneEvent (&event);
 	TtaHandleOneEvent (&event);
 #   else  /* _WINDOWS */
+	/*
 	GetMessage (&event, NULL, 0, 0);
 	TtaHandleOneWindowEvent (&event);
+	*/
 #   endif /* _WINDOWS */
      }				/*while */
 

@@ -144,6 +144,7 @@ static Display*       GDp;
 #endif
 
 #ifdef _WINDOWS
+static OPENFILENAME OpenFileName;
 static int cyValue = 10;
 #endif /* _WINDOWS */
 
@@ -302,7 +303,9 @@ ThotWindow win ;
        if (FrMainRef[frame] == win)
 	  return (frame);
 
+#  ifdef AMAYA_DEBUG
    fprintf (stderr, "Could not get MS-Windows number for %X\n", win);
+#  endif /* AMAYA_DEBUG */
    return -1;
 }
 
@@ -402,14 +405,18 @@ int frame;
 	     break;
    }
    if ((frame < 0) || (frame > MAX_FRAME)) {
+#     ifdef AMAYA_DEBUG
       fprintf (stderr, "Could not get Device Context for Window #%d\n", frame);
+#     endif /* AMAYA_DEBUG */
       return;
    }
    
    win = FrRef[frame];
    
    if (win == 0) {
+#     ifdef AMAYA_DEBUG
       fprintf (stderr, "WIN_GetDeviceContext : No Window #%d\n", frame);
+#     endif /* AMAYA_DEBUG */
       return;
    }
 
@@ -426,10 +433,12 @@ int frame;
 
    /* load the new Context. */
    TtDisplay = GetDC (win);
+#  ifdef AMAYA_DEBUG
    if (TtDisplay == 0)
       fprintf (stderr, "Could not get Device Context for Window %X\n", win);
-   else
-       WIN_curWin = win;
+#  endif/*  AMAYA_DEBUG */
+   if (TtDisplay != 0)
+      WIN_curWin = win;
 }
 
 /*----------------------------------------------------------------------
@@ -459,10 +468,12 @@ ThotWindow win;
 
    /* load the new Context. */
    TtDisplay = GetDC (win);
+#  ifdef AMAYA_DEBUG
    if (TtDisplay == 0)
       fprintf (stderr, "Could not get Device Context for Window %X\n", win);
-   else
-       WIN_curWin = win;
+#  endif /* AMAYA_DEBUG */
+   if (TtDisplay != 0)
+      WIN_curWin = win;
 }
 
 /*----------------------------------------------------------------------
@@ -629,8 +640,9 @@ HWND hWnd;
       sprintf (str, "Error %d : not registered\n", WinLastError);
    else
        sprintf (str, "Error %d : %s\n", WinLastError, win_errtab[msg].errstr);
-
-   fprintf (stderr, str);
+#  ifdef AMAYA_DEBUG
+   printf (stderr, str);
+#  endif /* AMAYA_DEBUG */
    MessageBox (hWnd, str, tszAppName, MB_OK);
 }
 
@@ -2332,10 +2344,9 @@ HWND parent;
 char* fileName;
 #endif /* __STDC__ */
 {
-    static OPENFILENAME OpenFileName;
 
- 	char                szFilter[] = APPFILENAMEFILTER;
-	char                szFileName[256];
+ 	TCHAR szFilter[] = APPFILENAMEFILTER;
+	TCHAR szFileName[256];
 
     OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
     OpenFileName.hwndOwner         = parent; 
@@ -2371,7 +2382,6 @@ int   parentRef;
 char* fileName; 
 #endif /* __STDC__ */
 {
-	static OPENFILENAME OpenFileName;
 
     struct Cat_Context* parentCatalogue = CatEntry (parentRef);
  	TCHAR               szFilter[] = APPFILENAMEFILTER;
@@ -2549,9 +2559,11 @@ char               *equiv;
 #  endif /* _WINDOWS */
 
 #  ifdef _WINDOWS
+#  ifdef AMAYA_DEBUG
    fprintf (stderr, "TtaNewPulldown(ref %d, parent %X, title %s, number %d,\n text %s, equiv %s)\n",
 	    ref, parent, title, number, text, equiv);
    fprintf (stderr, "catalogue : %X\n", catalogue);
+#  endif /* AMAYA_DEBUG */
 #  endif /* _WINDOWS */
    if (catalogue == NULL)
       TtaError (ERR_cannot_create_dialogue);
@@ -2758,7 +2770,10 @@ char               *equiv;
 		       {
 			  /* un toggle a faux */
 #                         ifdef _WINDOWS
-			  AppendMenu (menu, MF_STRING | MF_CHECKED, ref + i, &text[index + 1]);
+              if (i == 0 || i == 1) 
+			     AppendMenu (menu, MF_STRING | MF_CHECKED, ref + i, &text[index + 1]);
+			  else
+			      AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, &text[index + 1]);
 			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
                           WIN_AddFrameCatalogue (parent, catalogue) ;
 #                         else  /* _WINDOWS */
@@ -2979,9 +2994,11 @@ char                button;
      }
    catalogue = CatEntry (ref);
 #  ifdef _WINDOWS
+#  ifdef AMAYA_DEBUG
    fprintf (stderr, "TtaNewPopup(ref %d, parent %X, title %s, number %d,\n text %s, equiv %s, button %d)\n",
 	    ref, parent, title, number, text, equiv, button);
    fprintf (stderr, "catalogue : %X\n", catalogue);
+#  endif AMAYA_DEBUG
 #  else  /* _WINDOWS */
    title_string = 0;
 #  endif /* !_WINDOWS */
@@ -3625,17 +3642,13 @@ boolean             react;
 
 #  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
-#  endif /* !_WINDOWS */
-
-   ThotWidget          w;
-   ThotWidget          row;
-
-#  ifndef _WINDOWS
    XmString            title_string;
    ThotWidget          menu;
    char                heading[200];
 #  endif /* !_WINDOWS */
 
+   ThotWidget          w;
+   ThotWidget          row;
    char                button;
 
 #  ifdef _WINDOWS
@@ -4186,15 +4199,14 @@ int                 val;
 
 #endif /* __STDC__ */
 {
+#  ifndef _WINDOWS
    register int        i, n;
    register int        ent;
    boolean             visible;
    struct E_List      *adbloc;
-   struct Cat_Context *catalogue;
-
-#  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
-#  endif /* _WINDOWS */
+#  endif /* !_WINDOWS */
+   struct Cat_Context *catalogue;
 
    catalogue = CatEntry (ref);
    if (catalogue == NULL)
@@ -4556,16 +4568,15 @@ boolean             on;
 
 #endif /* __STDC__ */
 {
+#  ifndef _WINDOWS 
+   ThotWidget          w;
+   Arg                 args[MAX_ARGS];
    register int        i, n;
    register int        ent;
    boolean             visible;
-   struct Cat_Context *catalogue;
    struct E_List      *adbloc;
-
-#  ifndef _WINDOWS
-   Arg                 args[MAX_ARGS];
-#  endif /* _WINDOWS */
-   ThotWidget          w;
+/* #  endif  _WINDOWS */
+   struct Cat_Context *catalogue;
 
    catalogue = CatEntry (ref);
    if (catalogue == NULL)
@@ -4590,7 +4601,7 @@ boolean             on;
 	     return;
 	  }
 	/* Est-ce que le sous-menu est actuellement affiche */
-#       ifndef _WINDOWS
+/* #       ifndef _WINDOWS */
 	else if (XtIsManaged (catalogue->Cat_Widget))
 	   visible = TRUE;
 	else
@@ -4663,8 +4674,10 @@ boolean             on;
 
 	if (!visible)
 	   XtUnmanageChild (catalogue->Cat_Widget);
-#       endif /* _WINDOWS */
+/* #       endif _WINDOWS */
      }
+#  else /* _WINDOWS */
+#  endif /* _WINDOWS */
 }
 
 
@@ -4685,10 +4698,10 @@ char               *text;
    ThotWidget          w;
    struct Cat_Context *catalogue;
    struct E_List      *adbloc;
-   int                 n;
    int                 ent;
 
 #  ifndef _WINDOWS
+   int                 n;
    Arg                 args[MAX_ARGS];
    XmString            title_string;
 #  endif /* _WINDOWS */
@@ -4765,10 +4778,10 @@ int                 activate;
    ThotWidget          w;
    struct Cat_Context *catalogue;
    struct E_List      *adbloc;
-   int                 n;
    int                 ent;
 
 #  ifndef _WINDOWS
+   int                 n;
    Arg                 args[MAX_ARGS];
    XmFontList          font;
 #  endif /* _WINDOWS */
@@ -5170,10 +5183,10 @@ char               *title;
 
 #endif /* __STDC__ */
 {
-   int                 n;
    struct Cat_Context *catalogue;
 
 #  ifndef _WINDOWS
+   int                 n;
    Arg                 args[MAX_ARGS];
    XmString            title_string;
 #  endif /* _WINDOWS */
@@ -5230,7 +5243,6 @@ int                 cattype;
    struct Cat_Context* catalogue;
    struct E_List*      adbloc;
    ThotWidget          form;
-   ThotWidget          row;
    ThotWidget          w;
    char*               ptr = NULL;
 
@@ -5245,6 +5257,7 @@ int                 cattype;
    Arg                 args[MAX_ARGS];
    Arg                 argform[1];
    XmString            title_string;
+   ThotWidget          row;
 #  endif /* _WINDOWS */
 
 #  ifdef _WINDOWS
@@ -5551,11 +5564,10 @@ int                 cattype;
 	  		     CW_USEDEFAULT, CW_USEDEFAULT, bAbsBase + 20, 400,
 			     w, 0, hInstance, 0); 
 
+#   ifdef AMAYA_DEBUG
 	fprintf (stderr, "Created ComboBox %X\n", form);
-	/*
-	ShowWindow (form, SW_SHOWNORMAL);
-	UpdateWindow (form);
-	*/
+#   endif /* AMAYA_DEBUG */
+
 	catalogue->Cat_Widget = form;
         WIN_AddFrameCatalogue (parent, catalogue) ;
         bIndex   =  0;
@@ -5577,18 +5589,22 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-   struct Cat_Context *catalogue;
+   struct Cat_Context* catalogue;
    int                 no = 0;
-   int frame = GetMainFrameNumber (hWnd);
+   int                 frame = GetMainFrameNumber (hWnd);
 
+#  ifdef AMAYA_DEBUG
    fprintf (stderr, "Got WIN_ThotCallBack(%X, %X(%d:%d), %X(%d))\n",
 	    hWnd, wParam, HIWORD (wParam), LOWORD (wParam), lParam, lParam);
+#  endif /* AMAYA_DEBUG */
 
    if (frame != - 1) {
       catalogue = WinLookupCatEntry (hWnd, LOWORD (wParam));
       if (catalogue != NULL)
 	 no = LOWORD (wParam) - catalogue->Cat_Ref;
+#     ifdef AMAYA_DEBUG
       fprintf (stderr, "catalogue : %X, entry %d\n", catalogue, no);
+#     endif /* AMAYA_DEBUG */
 
       if (catalogue == NULL)
 	 return;
@@ -5609,7 +5625,9 @@ LPARAM lParam;
              case CAT_FMENU:
 	          CallRadio (no, catalogue, NULL);
              default:
+#             ifdef AMAYA_DEBUG
 	          fprintf (stderr, "unknown Cat_Type %d\n", catalogue->Cat_Type);
+#             endif /* AMAYA_DEBUG */
 	          break;
       }
    }
@@ -5940,23 +5958,19 @@ boolean             react;
 
 #endif /* __STDC__ */
 {
-   int                 ent;
-   int                 n;
-   int                 i;
-   int                 index;
    struct Cat_Context *catalogue;
    struct Cat_Context *parentCatalogue;
-   struct E_List      *adbloc;
 
 #  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
-#  endif /* _WINDOWS */
-
-   ThotWidget          w;
-   ThotWidget          row;
    ThotWidget          wt;
-
-#  ifndef _WINDOWS
+   int                 ent;
+   int                 index;
+   int                 i;
+   int                 n;
+   ThotWidget          row;
+   ThotWidget          w;
+   struct E_List      *adbloc;
    XmString            title_string;
    XmString           *item;
 #  endif /* _WINDOWS */
@@ -6366,7 +6380,9 @@ char               *text;
 
 #endif /* __STDC__ */
 {
+#  ifndef _WINDOWS
    ThotWidget          w;
+#  endif /* !_WINDOWS */
    ThotWidget          wt;
    ThotWidget          select;
    struct Cat_Context *catalogue;
@@ -6454,12 +6470,12 @@ char               *text;
 #  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
    XmString            title_string;
+   int                 n;
 #  else  /* _WINDOWS */
    HDC         hdc ;
    RECT        rect ;
    PAINTSTRUCT ps ;
 #  endif /* _WINDOWS */
-   int                 n;
    int                 i;
    int                 ent;
    int                 rebuilded;
@@ -6609,7 +6625,6 @@ boolean             react;
 #endif /* __STDC__ */
 {
    int                 ent;
-   int                 n;
    int                 i;
    struct Cat_Context *catalogue;
    struct Cat_Context *parentCatalogue;
@@ -6619,6 +6634,7 @@ boolean             react;
 #  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
    XmString            title_string;
+   int                 n;
 #  endif  /* !_WINDOWS */
 
    if (ref == 0)
@@ -6793,7 +6809,9 @@ char               *text;
 
 #endif /* __STDC__ */
 {
+#  ifndef _WINDOWS
    int                 lg;
+#  endif  /* !_WINDOWS */
    struct Cat_Context *catalogue;
    ThotWidget          w;
 
@@ -7052,9 +7070,11 @@ int                 val;
 
 #endif /* __STDC__ */
 {
+#  ifndef _WINDOWS 
    char                text[10];
-   ThotWidget          wtext;
    int                 lg;
+#  endif /* !_WINDOWS */
+   ThotWidget          wtext;
    struct Cat_Context *catalogue;
 
    catalogue = CatEntry (ref);
@@ -7102,12 +7122,12 @@ int                 val;
   ----------------------------------------------------------------------*/
 void                TtaSetDialoguePosition ()
 {
+#  ifndef _WINDOWS
    ThotWindow          wdum;
    int                 xdum;
    int                 ydum;
 
    /* Enregistre la position courante du curseur pour les futurs show */
-#  ifndef _WINDOWS
    wdum = RootWindow (GDp, DefaultScreen (GDp));
    XQueryPointer (GDp, wdum, &wdum, &wdum, &xdum, &ydum, &ShowX, &ShowY, &xdum);
 #  endif /* _WINDOWS */

@@ -470,7 +470,11 @@ caddr_t             call_d;
    /* Recupere la table des items */
    car = (unsigned char) param % 256;
    /* Recupere le widget de la palette */
+#  ifndef _WINDOWS
    wp=XtParent(XtParent(XtParent(XtParent(w))));
+#  else  /* _WINDOWS */
+   wp = GetParent (GetParent (GetParent (GetParent (w))));
+#  endif /* _WINDOWS */
    /* met a jour l'indicateur de palette */
    if(Keyboards[KeyboardMode] != wp)
      {
@@ -840,15 +844,18 @@ void                KeyboardsLoadResources ()
 	for (i = 0; i < MAX_KEYBOARD; i++)
 	   Keyboards[i] = 0;
 
+#   ifndef _WINDOWS
 	SymbolIcons = LoadFont ("ivsymb");
+#   endif /* _WINDOWS */
 	if (SymbolIcons == NULL)
 	  {
 	     /*Fonte 'ivsymb' inaccessible */
 	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), "ivsymb");
 	     SymbolIcons = FontDialogue;
 	  }
-
+#   ifndef _WINDOWS
 	GraphicsIcons = LoadFont ("ivgraf");
+#   endif /* _WINDOWS */
 	if (GraphicsIcons == NULL)
 	  {
 	     /*Fonte 'ivgraf' inaccessible */
