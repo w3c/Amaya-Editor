@@ -227,11 +227,11 @@ STRING              data;
 	  switch (val) 
 	    {
 	    case 0:
-	      TtaDestroyDialogue (NetworkBase);
+	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1:
 	      SetNetworkConf ();
-	      TtaDestroyDialogue (NetworkBase);
+	      TtaDestroyDialogue (ref);
 	      break;
 	    case 2:
 	      GetDefaultNetworkConf ();
@@ -376,8 +376,6 @@ static void RefreshNetworkMenu ()
   TtaSetNumberForm (NetworkBase + mMaxCacheFile, MaxCacheFile);
   TtaSetTextForm (NetworkBase + mHttpProxy, HttpProxy);
   TtaSetTextForm (NetworkBase + mNoProxy, NoProxy);
-  /* display the menu */
-  TtaShowDialogue (NetworkBase + NetworkMenu, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -398,15 +396,13 @@ STRING              pathname;
 
    /* Create the dialogue form */
    i = 0;
-   strcpy (&s[i], "Cancel");
-   i += strlen (&s[i]) + 1;
-   strcpy (&s[i], "Done");
+   strcpy (&s[i], "Apply");
    i += strlen (&s[i]) + 1;
    strcpy (&s[i], "Defaults");
 
-   TtaNewDialogSheet (NetworkBase + NetworkMenu, 
+   TtaNewSheet (NetworkBase + NetworkMenu, 
 		TtaGetViewFrame (document, view),
-	       "Network Configuration", 3, s, TRUE, 3, 'L');
+	       "Network Configuration", 3, s, TRUE, 3, 'L', D_DONE);
 
    sprintf (s, "%s%c%s", "BEnable cache", EOS, 
 	    "BCache protected documents");
@@ -451,6 +447,8 @@ STRING              pathname;
    /* load and display the current values */
    GetNetworkConf ();
    RefreshNetworkMenu ();
+  /* display the menu */
+  TtaShowDialogue (NetworkBase + NetworkMenu, TRUE);
 }
 
 /**********************
@@ -495,11 +493,11 @@ STRING              data;
 	  switch (val) 
 	    {
 	    case 0:
-	      TtaDestroyDialogue (BrEdBase);
+	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1:
 	      SetBrEdConf ();
-	      TtaDestroyDialogue (BrEdBase);
+	      TtaDestroyDialogue (ref);
 	      break;
 	    case 2:
 	      GetDefaultBrEdConf ();
@@ -652,8 +650,6 @@ static void RefreshBrEdMenu ()
   TtaSetTextForm (BrEdBase + mDefaultName, DefaultName);
   TtaSetTextForm (BrEdBase + mHomePage, HomePage);
   TtaSetTextForm (BrEdBase + mThotPrint, ThotPrint);
-  /* display the menu */
-  TtaShowDialogue (BrEdBase + BrEdMenu, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -675,15 +671,13 @@ STRING              pathname;
 
    /* Create the dialogue form */
    i = 0;
-   strcpy (&s[i], "Cancel");
-   i += strlen (&s[i]) + 1;
-   strcpy (&s[i], "Done");
+   strcpy (&s[i], "Apply");
    i += strlen (&s[i]) + 1;
    strcpy (&s[i], "Defaults");
 
-   TtaNewDialogSheet (BrEdBase + BrEdMenu, 
+   TtaNewSheet (BrEdBase + BrEdMenu, 
 		TtaGetViewFrame (document, view),
-	       "Editing/Browsing Configuration", 3, s, TRUE, 3, 'L');
+	       "Editing/Browsing Configuration", 2, s, TRUE, 3, 'L', D_DONE);
    TtaNewNumberForm (BrEdBase + mToolTipDelay,
 		     BrEdBase + BrEdMenu,
 		     "ToolTip delay (ms)",
@@ -739,6 +733,8 @@ STRING              pathname;
    /* load and display the current values */
    GetBrEdConf ();
    RefreshBrEdMenu ();
+  /* display the menu */
+  TtaShowDialogue (BrEdBase + BrEdMenu, TRUE);
 }
 
 
@@ -787,7 +783,7 @@ STRING              pathname;
 		TtaGetViewFrame (document, view),
 		"Appearance Configuration", 2, s, TRUE, 3, 'L', D_DONE);
 
-   TtaShowDialogue (AppearanceBase + AppearanceMenu, FALSE);
+   TtaShowDialogue (AppearanceBase + AppearanceMenu, TRUE);
 }
 
 #endif /* CONF_MENU */
