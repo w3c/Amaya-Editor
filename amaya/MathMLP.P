@@ -2451,8 +2451,10 @@ ATTRIBUTES
 	END;
   IntVertStretch (UnderOverBase):
 	BEGIN
-	VertPos: Top = Overscript . Bottom;
-	Height: Bottom = Underscript . Top;
+{***}	VertPos: Top = Enclosing . Top + 0.8;
+{***}	Height:  Enclosing . Height - 1.6;
+{****	VertPos: Top = Overscript . Bottom;
+	Height: Bottom = Underscript . Top; ****}
 	IN Structure_view BEGIN
 		Height: Enclosed . Height;
 		VertPos: Top = Enclosing . Top;
