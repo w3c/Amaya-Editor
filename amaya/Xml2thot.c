@@ -1424,137 +1424,166 @@ STRING      data;
 {
    ElementType     elType;
    Element         elText, parent, ancestor, prev;
-   int             i;
+   int             i=0;
    int             length;
-   ThotBool        ignoreLeadingSpaces;
-   static ThotBool EmptyLine;
-
-   length = ustrlen (data);
-   i = 0;
+   ThotBool        removeLeadingSpaces;
+   static ThotBool previousEndingSpace;
+   static ThotBool newLine;
+   CHAR_T         *bufferws;
 
 #ifdef LC
-   printf ("\n  PutInXmlElement - length : %d, data \"%s\"", length, data);
+   printf ("\n  PutInXmlElement - length : %d, data \"%s\"",
+	   ustrlen (data), data);
 #endif /* LC */
 
    /* remove leading spaces for merged text and */
    /* replace single CR character by space character */
    /* except for elements for which white spaces are meaninful */
+   length = ustrlen (data);
    if (!IsMeaninfulWS)
      {
        if (length == 1 &&
 	   (data[0] == WC_EOL  || data[0] == WC_CR))
 	 {
-	   EmptyLine = 1;
+	   newLine = 1;
 	   return;
 	 }
      }
 
    if (XMLcontext.lastElement != NULL)
      {
-	if (InsertSibling ())
-	   /* There is a previous sibling (XMLcontext.lastElement) 
-	      for the new Text element */
-	  {
-	     parent = TtaGetParent (XMLcontext.lastElement);
-	     if (parent == NULL)
-		 parent = XMLcontext.lastElement;
-	     elType = TtaGetElementType (parent);
-	     if (IsCharacterLevelElement (XMLcontext.lastElement) &&
-		 elType.ElTypeNum != HTML_EL_Option_Menu &&
-		 elType.ElTypeNum != HTML_EL_OptGroup)
-	       {
-		 ignoreLeadingSpaces = FALSE;
-		 elType = TtaGetElementType (XMLcontext.lastElement);
-		 if (elType.ElTypeNum == HTML_EL_BR)
-		     ignoreLeadingSpaces = TRUE;
-	       }
-	     else
-	         ignoreLeadingSpaces = TRUE;
-	  }
-	else
-	   /* the new Text element should be the first child of the latest
-	      element encountered */
-	  {
-	    parent = XMLcontext.lastElement;
-	    ignoreLeadingSpaces = TRUE;
-	    elType = TtaGetElementType (XMLcontext.lastElement);
-	    if (elType.ElTypeNum != HTML_EL_Option_Menu &&
-		elType.ElTypeNum != HTML_EL_OptGroup)
-	      {
-	        ancestor = parent;
-	        while (ignoreLeadingSpaces &&
-		       IsCharacterLevelElement (ancestor))
-		  {
-		    prev = ancestor;
-		    TtaPreviousSibling (&prev);
-		    if (prev == NULL)
-		        ancestor = TtaGetParent (ancestor);
-		    else
-		        ignoreLeadingSpaces = FALSE;
-		  }
-	      }
-	  }
-
+      bufferws  = TtaAllocString (length+2);
+       if (newLine)
+	 {
+	   strcpy (bufferws, " ");
+	   strcat (bufferws, data);
+	 }
+       else
+	 strcpy (bufferws, data);
+       
+       if (InsertSibling ())
+	 /* There is a previous sibling (XMLcontext.lastElement) 
+	    for the new Text element */
+	 {
+	   parent = TtaGetParent (XMLcontext.lastElement);
+	   if (parent == NULL)
+	     parent = XMLcontext.lastElement;
+	   elType = TtaGetElementType (parent);
+	   if (IsCharacterLevelElement (XMLcontext.lastElement) &&
+	       elType.ElTypeNum != HTML_EL_Option_Menu &&
+	       elType.ElTypeNum != HTML_EL_OptGroup)
+	     {
+	       removeLeadingSpaces = FALSE;
+	       elType = TtaGetElementType (XMLcontext.lastElement);
+	       if (elType.ElTypeNum == HTML_EL_BR)
+		 removeLeadingSpaces = TRUE;
+	     }
+	   else
+	     removeLeadingSpaces = TRUE;
+	 }
+       else
+	 /* the new Text element should be the first child 
+	    of the latest element encountered */
+	 {
+	   parent = XMLcontext.lastElement;
+	   removeLeadingSpaces = TRUE;
+	   elType = TtaGetElementType (XMLcontext.lastElement);
+	   if (elType.ElTypeNum != HTML_EL_Option_Menu &&
+	       elType.ElTypeNum != HTML_EL_OptGroup)
+	     {
+	       ancestor = parent;
+	       while (removeLeadingSpaces &&
+		      IsCharacterLevelElement (ancestor))
+		 {
+		   prev = ancestor;
+		   TtaPreviousSibling (&prev);
+		   if (prev == NULL)
+		     ancestor = TtaGetParent (ancestor);
+		   else
+		     removeLeadingSpaces = FALSE;
+		 }
+	     }
+	 }
+       
 #ifdef LC
-   printf ("\n  PutInXmlElement ignoreLeadingSpaces %d, EmptyLine %d",
-	   ignoreLeadingSpaces, EmptyLine);
+       printf ("\n  removeLeadingSpaces %d, newLine %d, previousEndingSpace %d",
+	       removeLeadingSpaces, newLine, previousEndingSpace);
 #endif /* LC */
 
-	if (ignoreLeadingSpaces || EmptyLine)
-	  {
-	    if (!XmlWithin (HTML_EL_Preformatted, DocumentSSchema) &&
-		!XmlWithin (HTML_EL_STYLE_, DocumentSSchema) &&
-		!XmlWithin (HTML_EL_SCRIPT, DocumentSSchema))
-	      { 
-		/* suppress leading spaces */
-	        while (data[i] <= WC_SPACE && data[i] != WC_EOS)
-		  i++;
-	      }	    
-	  }
+       if (removeLeadingSpaces)
+	 {
+	   /* suppress leading spaces */
+	   if (!XmlWithin (HTML_EL_Preformatted, DocumentSSchema) &&
+	       !XmlWithin (HTML_EL_STYLE_, DocumentSSchema) &&
+	       !XmlWithin (HTML_EL_SCRIPT, DocumentSSchema))
+	     { 
+	       while (bufferws[i] <= WC_SPACE && bufferws[i] != WC_EOS)
+		 i++;
+	     }	    
+	 }
+       
+       if (bufferws[i] != WC_EOS)
+	 {
+CHAR_T  *buffer;
+int      i1, i2=0, i3=0;
 
-	if (data[i] != WC_EOS)
-	  {
-	    elType = TtaGetElementType (XMLcontext.lastElement);
-	    if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && XMLcontext.mergeText)
-	      {
-		if (EmptyLine)
-		  TtaAppendTextContent (XMLcontext.lastElement,
-					" ", XMLcontext.doc);
-
-		TtaAppendTextContent (XMLcontext.lastElement,
-				      &(data[i]), XMLcontext.doc);
+           /* Concat adjoining whitespace characters */ 
+           length = ustrlen (bufferws);
+	   buffer = TtaAllocString (length+1);
+	   for (i1 = i; i1 <= length; i1++)
+	     {
+	       if (bufferws[i1] <= WC_SPACE && bufferws[i1] != WC_EOS)
+		 i3++;
+	       else
+		 i3 = 0;
+	       if (i3 <= 1)
+		 buffer[i2++] = bufferws[i1];
+	     }
+	   i1 = 0;
+	   
+	   /* Filling of the element value */
+	   elType = TtaGetElementType (XMLcontext.lastElement);
+	   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && XMLcontext.mergeText)
+	     {
+	       if (newLine && previousEndingSpace && !removeLeadingSpaces)
+		 i1++;
+	       TtaAppendTextContent (XMLcontext.lastElement,
+				     &(buffer[i1]), XMLcontext.doc);
 #ifdef LC
-		printf ("\n  PutInXmlElement : Merge \n");
+	       printf ("\n  PutInXmlElement : Merge \n");
 #endif /* LC */
-	      }
-	    else
-	      {
-		/* create a TEXT element */
-		elType.ElSSchema = currentParserCtxt->XMLSSchema;
-		elType.ElTypeNum = 1;
-		elText = TtaNewElement (XMLcontext.doc, elType);
-		XmlSetElemLineNumber (elText);
-		InsertElement (&elText);
-		XMLcontext.lastElementClosed = TRUE;
-		XMLcontext.mergeText = TRUE;
-		/* put the content of the input buffer into the TEXT element */
-		if (elText != NULL)
-		  {
-		    TtaSetTextContent (elText,
-				       &(data[i]),
-				       XMLcontext.language,
-				       XMLcontext.doc);
-		  }
+	     }
+	   else
+	     {
+	       /* create a TEXT element */
+	       elType.ElSSchema = currentParserCtxt->XMLSSchema;
+	       elType.ElTypeNum = 1;
+	       elText = TtaNewElement (XMLcontext.doc, elType);
+	       XmlSetElemLineNumber (elText);
+	       InsertElement (&elText);
+	       XMLcontext.lastElementClosed = TRUE;
+	       XMLcontext.mergeText = TRUE;
+	       /* put the content of the input buffer into the TEXT element */
+	       if (elText != NULL)
+		 TtaSetTextContent (elText, &(buffer[i1]),
+				    XMLcontext.language,
+				    XMLcontext.doc);
 #ifdef LC
-		printf ("\n  PutInXmlElement : Create \n");
+	       printf ("\n  PutInXmlElement : Create \n");
 #endif /* LC */
-	      }
-	    EmptyLine = 0;
-	  }
+	     }
+	   newLine = 0;
+	   if (buffer[i2-2] == WC_SPACE)
+	     previousEndingSpace = TRUE;
+	   else
+	     previousEndingSpace = FALSE;
+	   TtaFreeMemory (buffer);
+	 }
 #ifdef LC
-	else
-	  printf ("\n  PutInXmlElement : No create \n");
+       else
+	 printf ("\n  PutInXmlElement : No create \n");
 #endif /* LC */
+       TtaFreeMemory (bufferws);
      }
 }
 /*----------------------  Data  (end)  ---------------------------*/
@@ -2865,7 +2894,7 @@ const XML_Char **attlist;
    ThotBool        attrOK;
 
 #ifdef LC
-   printf ("\n Hndl_ElementStart '%s'", name);
+   printf ("\n Hndl_ElementStart '%s'\n", name);
 #endif /* LC */
   
    /* Treatment for the GI */
