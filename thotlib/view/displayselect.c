@@ -591,10 +591,7 @@ void DisplayStringSelection (int frame, int leftX, int rightX, int t,
 	  else
 	    width = rightX - leftX;
 	}
-      if (width <= 2)
-	col = BgSelColor;
-      else
-	col = BgSelColor;
+      col = BgSelColor;
       DrawRectangle (frame, 0, 0, leftX, topY, width, h, 0, col, 2);
     }
 }

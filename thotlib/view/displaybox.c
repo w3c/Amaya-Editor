@@ -1298,8 +1298,9 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  else
 		    right = pBox->BxW;
 		  DisplayStringSelection (frame, left, right, t, pBox);
-		  left += x;
-		  right += x;
+		  /* extra margins are already taken into account */
+		  left += x - l;
+		  right += x - l;
 		}
 	    }
 	  else if (selected &&
@@ -1377,11 +1378,9 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      else
 			prevChar = 0x0020;
 		    }
-       		  
 		  val = GetArabFontAndIndex (c, prevChar, nextChar, font, &nextfont);
 		}
 	      else
-		
 		val = GetFontAndIndexFromSpec (c, font, &nextfont);
 	      if (val == SPACE)
 		{
@@ -1495,9 +1494,8 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  c == EOL || c == BREAK_LINE)
 		/* do nothing */;
 	      else if (!Printing && selected &&
-		       ((!withinSel &&
-			 (right != left + 2 || pBox->BxW <= 2) &&
-			 xpos >= left && xpos <= right) ||
+		       (right > left + 2 || pBox->BxW <= 2) &&
+		       ((!withinSel && xpos >= left && xpos <= right) ||
 			(withinSel && xpos >= right)))
 		{
 		  if (nbcar > 0)

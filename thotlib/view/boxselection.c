@@ -634,7 +634,8 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		  if (pAb->AbLeafType == LtPicture && firstChar > 0)
 		    pViewSel->VsXPos = l + pBox->BxW;
 		  else if (pAb->AbLeafType == LtCompound)
-		    pViewSelEnd->VsXPos = l - shift;
+		    /* select the whole compound box including paddings, etc. */
+		    pViewSel->VsXPos = l - shift;
 		  else
 		    pViewSel->VsXPos = l;
 		  pViewSel->VsNSpaces = 0;
@@ -666,7 +667,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		    /* select the right side of the picture or symbol */
 		    pViewSelEnd->VsXPos = l + pBox->BxW;
 		  else if (pAb->AbLeafType == LtCompound)
-		    /* select the whole box */
+		    /* select the whole compound box including paddings, etc. */
 		    pViewSelEnd->VsXPos = pBox->BxWidth - r;
 		  else
 		    pViewSelEnd->VsXPos = l;
@@ -710,7 +711,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		  if (pBox->BxNChars == 0 && pBox->BxType == BoComplete)
 		    /* select the whole box */
 		    pViewSelEnd->VsXPos += pBox->BxW;
-		  else if (pViewSel->VsIndBox >= pBox->BxNChars)
+		  else if (pViewSelEnd->VsIndBox >= pBox->BxNChars)
 		    /* select the end of the box */
 		    pViewSelEnd->VsXPos += 2;
 		  else if (SelPosition)

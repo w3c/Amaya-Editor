@@ -2153,7 +2153,6 @@ void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin
 #ifdef _GTK
    gtk_claim_selection();
 #endif /*_GTK*/
-
   if (!pEl)
     return;
 
@@ -2483,6 +2482,10 @@ void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin
 	  SelPosition = FALSE;
 	  if (!change && drag && FirstSelectedElement == LastSelectedElement &&
 	      FirstSelectedElement->ElVolume == 0)
+	    SelPosition = TRUE;
+	  else if (FirstSelectedElement == LastSelectedElement &&
+		   LastSelectedChar <= FirstSelectedChar)
+	    /* In this case there is no longer an extended selection */
 	    SelPosition = TRUE;
 	  
 	  if (change || !drag)
