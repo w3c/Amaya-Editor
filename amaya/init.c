@@ -67,6 +67,7 @@ int  Window_Curs;
 
 char docToOpen [256];
 extern boolean viewClosed;
+extern int     iconID;
 #define AMAYA_PAGE "\\amaya\\AmayaPage.html"
 #else  /* _WINDOWS */
 #define AMAYA_PAGE "/amaya/AmayaPage.html"
@@ -940,6 +941,7 @@ char               *pathname;
 
 #  ifdef _WINDOWS
    Window_Curs = IDC_WINCURSOR;
+   iconID      = IDI_APPICON;
 #  endif /* _WINDOWS */
 
    old_doc = doc;		/* previous document */

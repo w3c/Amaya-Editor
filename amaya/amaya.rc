@@ -1411,6 +1411,15 @@ IDB_GKEY160             BITMAP  DISCARDABLE     "gkey160.bmp"
 //
 
 IDC_WINCURSOR           CURSOR  DISCARDABLE     "wincurso.cur"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_APPICON             ICON    DISCARDABLE     "appicon.ico"
 #endif    // French (France) resources
 /////////////////////////////////////////////////////////////////////////////
 
