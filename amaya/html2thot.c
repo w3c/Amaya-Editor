@@ -1072,15 +1072,19 @@ static void         TextToDocument ()
 		 }
 	     else
 	       {
-		 elType = TtaGetElementType (HTMLcontext.lastElement);
-		 if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) &&
-		     ((elType.ElTypeNum == HTML_EL_Comment_) ||
-		     (elType.ElTypeNum == HTML_EL_XMLPI)))
-		   ignoreLeadingSpaces = FALSE;
+		 lastType = TtaGetElementType (HTMLcontext.lastElement);
+		 if ((strcmp (TtaGetSSchemaName (lastType.ElSSchema), "HTML") == 0) &&
+		     ((lastType.ElTypeNum == HTML_EL_Comment_) ||
+		     (lastType.ElTypeNum == HTML_EL_XMLPI)))
+		   {
+		     if (elType.ElTypeNum != HTML_EL_Definition_List &&
+			 elType.ElTypeNum != HTML_EL_Unnumbered_List &&
+			 elType.ElTypeNum != HTML_EL_Numbered_List)
+		       ignoreLeadingSpaces = FALSE;
+		   }
 
 		 if (ignoreLeadingSpaces)
 		   {
-		     lastType = TtaGetElementType (HTMLcontext.lastElement);
 		     if ((strcmp (TtaGetSSchemaName (lastType.ElSSchema), "MathML") == 0) &&
 			 (lastType.ElTypeNum == MathML_EL_MathML))
 		       ignoreLeadingSpaces = FALSE;

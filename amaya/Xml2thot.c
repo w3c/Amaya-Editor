@@ -52,9 +52,9 @@
 /* maximum length of a Thot structure schema name */
 #define MAX_SS_NAME_LENGTH 32
 
-/* elements that cannot contain text as immediate children.
-   When some text is present in the HTML file it must be surrounded
-   by a Thot Paragraph (or Pseudo_paragraph) element */
+/* Elements that cannot contain text as immediate children.
+   When some text is present in the HTML file it must be 
+   surrounded by a Pseudo_paragraph element */
 static int          NoTextChild[] =
 {
    HTML_EL_HTML, HTML_EL_HEAD, HTML_EL_BODY,
@@ -1857,7 +1857,12 @@ static ThotBool  IsLeadingSpaceUseless ()
 	   if ((strcmp (TtaGetSSchemaName (lastElType.ElSSchema), "HTML") == 0) &&
 	       ((lastElType.ElTypeNum == HTML_EL_Comment_) ||
 		(lastElType.ElTypeNum == HTML_EL_XMLPI)))
-	     removeLeadingSpaces = FALSE;
+	     {
+	       if (elType.ElTypeNum != HTML_EL_Definition_List &&
+		   elType.ElTypeNum != HTML_EL_Unnumbered_List &&
+		   elType.ElTypeNum != HTML_EL_Numbered_List)
+		 removeLeadingSpaces = FALSE;
+	     }
 	 }
      }
    else
