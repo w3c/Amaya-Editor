@@ -50,12 +50,12 @@ extern void TtaChangeWindowTitle ( Document document,
                                    char *title );
 extern void TtaRaiseView ( Document document,
                            View view );
+extern void DisplaySelMessage ( char *text,
+                                PtrDocument pDoc );
 extern void TtaSetStatus ( Document document,
                            View view,
                            char *text,
                            char *name );
-extern void DisplaySelMessage ( char *text,
-                                PtrDocument pDoc );
 extern void FrameCallback ( int frame,
                             void *evnt );
 extern void ThotGrab ( ThotWindow win,
@@ -136,12 +136,12 @@ extern void TtaChangeWindowTitle (/* Document document,
                                      char *title */);
 extern void TtaRaiseView (/* Document document,
                              View view */);
+extern void DisplaySelMessage (/* char *text,
+                                  PtrDocument pDoc */);
 extern void TtaSetStatus (/* Document document,
                              View view,
                              char *text,
                              char *name */);
-extern void DisplaySelMessage (/* char *text,
-                                  PtrDocument pDoc */);
 extern void FrameCallback (/* int frame,
                               void *evnt */);
 extern void ThotGrab (/* ThotWindow win,

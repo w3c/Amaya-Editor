@@ -1397,8 +1397,8 @@ void SelectOneOption (Document doc, Element el)
 
 #if defined (_WINDOWS) || defined (_GTK)
 	       if (nbsubmenus == 0)
-		 TtaNewScrollPopup2 (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
-				     NULL, nbitems, buffer, NULL, multipleOptions, 'L');
+		 TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
+				    NULL, nbitems, buffer, NULL, multipleOptions, 'L');
 	       else
 #endif /* _GTK */
 		 TtaNewPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
