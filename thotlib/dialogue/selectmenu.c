@@ -531,7 +531,7 @@ PtrDocument         pDoc;
 	     ref = (menu * MAX_FRAME) + frame + MAX_LocalMenu;
 	     if (NbItemSel == 0)
 	       {
-		  /* le menu Attributs contient au moins un attribut */
+		  /* le menu Selection contient au moins un item */
 		  TtaSetMenuOff (document, vue, menuID);
 		  TtaDestroyDialogue (ref);
 	       }
@@ -555,13 +555,13 @@ PtrDocument         pDoc;
 	     ref = (menu * MAX_FRAME) + frame + MAX_LocalMenu;
 	     if (NbItemSel == 0)
 	       {
-		  /* le menu Attributs contient au moins un attribut */
+		  /* le menu Selection contient au moins un item */
 		  TtaSetMenuOff (document, vue, menu);
 		  TtaDestroyDialogue (ref);
 	       }
 	     else
 	       {
-		  TtaNewPulldown (ref, FrameTable[frame].WdMenus[menu - 1], NULL,
+		  TtaNewPulldown (ref, FrameTable[frame].WdMenus[menu], NULL,
 				  NbItemSel, BufMenuSel, NULL);
 		  TtaSetMenuOn (document, vue, menu);
 	       }

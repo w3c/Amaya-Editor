@@ -634,7 +634,7 @@ PtrDocument         pDoc;
 	       }
 	     else
 	       {
-		  TtaNewPulldown (ref, FrameTable[frame].WdMenus[menu - 1], NULL,
+		  TtaNewPulldown (ref, FrameTable[frame].WdMenus[menu], NULL,
 				  nbItemAttr, bufMenuAttr, NULL);
 		  /* marque les attributs actifs */
 		  for (i = 0; i < nbItemAttr; i++)
