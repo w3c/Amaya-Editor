@@ -951,7 +951,9 @@ int            zoom;
 #endif /* _WINPRINT */
     
   if (buffer == NULL) {
+#     ifdef _WINDOWS
       WinErrorBox (NULL, "PngCreate: (1)");
+#     endif /* _WINDOWS */
     return (ThotBitmapNone);
   }
 
@@ -970,7 +972,9 @@ int            zoom;
     imageDesc->PicNbColors = ncolors;
   TtaFreeMemory (buffer);
   if (pixmap == None) {
+#    ifdef _WINDOWS
      WinErrorBox (NULL, "PngCreate: (2)");
+#    endif /* _WINDOWS */
     return (ThotBitmapNone); 
   } else
     { 
