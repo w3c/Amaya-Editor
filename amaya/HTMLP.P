@@ -10202,6 +10202,8 @@ ATTRIBUTES
 	Height: height\240 px min;
 	IN Structure_view
 	   Height: Enclosed . Height;
+	IN Alternate_view
+	   Height: Enclosed . Height;
 	END;
 
   shape = rectangle:
