@@ -98,7 +98,7 @@ int                 IdentDocument (PtrDocument pDoc)
 /*----------------------------------------------------------------------
    Termine l'insertion de caracteres dans une boite de texte       
   ----------------------------------------------------------------------*/
-void                CloseInsertion ()
+void CloseInsertion ()
 {
    if (ThotLocalActions[T_stopinsert] != NULL)
       (*ThotLocalActions[T_stopinsert]) ();
@@ -142,7 +142,7 @@ void GetViewInfo (Document document, View view, int *viewnumber, ThotBool *assoc
    Return value:                                                   
    corresponding window.                                   
   ----------------------------------------------------------------------*/
-int                 GetWindowNumber (Document document, View view)
+int GetWindowNumber (Document document, View view)
 {
    PtrDocument         pDoc;
    ThotBool            assoc;

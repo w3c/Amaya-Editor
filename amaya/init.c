@@ -1504,7 +1504,7 @@ void OpenNew (Document document, View view, int docType)
 /*----------------------------------------------------------------------
   Load the Home page
   ----------------------------------------------------------------------*/
-void            GoToHome (Document doc, View view)
+void GoToHome (Document doc, View view)
 {
   char     *s, *lang;
 
@@ -2087,7 +2087,7 @@ static void MoveImageFile (Document source_doc, Document dest_doc,
    LatinReading
    Load current document considering it's encoding to ISO-8859-1     
   ----------------------------------------------------------------------*/
-void               LatinReading (Document document, View view)
+void LatinReading (Document document, View view)
 {
    char*         tempdocument = NULL;
    char          documentname[MAX_LENGTH];

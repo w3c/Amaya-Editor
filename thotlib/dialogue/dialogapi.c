@@ -747,7 +747,7 @@ static struct Cat_Context *CatEntry (int ref)
    /* Si le catalogue n'existe pas encore */
    if (catval == NULL && catlib != NULL)
      {
-#ifndef _GTK
+       /*#ifndef _GTK*/
        /* COMPREND PAS ????
        * 
        *
@@ -756,7 +756,7 @@ static struct Cat_Context *CatEntry (int ref)
        *
        */
 	catlib->Cat_PtParent = NULL;
-#endif /* _GTK */
+	/*#endif*/ /* _GTK */
 	return (catlib);
      }
    else
@@ -989,7 +989,6 @@ static void INITform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t
 	/* Le premier bloc contient les boutons de la feuille de saisie */
 	adbloc = adbloc->E_Next;
 
-#ifndef _GTK
 	ent = 1;
 	while (adbloc->E_ThotWidget[ent] != 0)
 	  {
@@ -998,7 +997,18 @@ static void INITform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t
 	       {
 		  catalogue = (struct Cat_Context *) adbloc->E_ThotWidget[ent];
 		  if (catalogue->Cat_Widget != 0)
-		     XtManageChild (catalogue->Cat_Widget);
+#ifndef _GTK
+		    XtManageChild (catalogue->Cat_Widget);
+#else /* _GTK */
+		  /*
+		   * A VERIFIER
+		   *
+		   *
+		   *
+		   *
+		   */
+		  gtk_widget_show_all (catalogue->Cat_Widget);
+#endif /* !_GTK */
 	       }
 
 	     /* Faut-il passer au bloc suivant ? */
@@ -1012,23 +1022,6 @@ static void INITform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t
 		     adbloc = adbloc->E_Next;
 	       }
 	  }			/*while */
-#else
-	/* A FAIRE
-	*
-	*regarder si il y a des fct gtk qui font la meme chose que
-	*XtManageChild
-	*
-	*necessaire ou pas pour GTK ...
-	*
-	*
-	*
-	*/
-
-
-
-
-
-#endif /* !_GTK */
 	
 #ifndef _GTK
 	/*** Positionne le formulaire a la position courante du show ***/
@@ -1049,19 +1042,29 @@ static void INITform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t
 	    XtPopup (PopShell, XtGrabNonexclusive);
 	  }
 #else
-	/* A FAIRE
+	/* A VERIFIER
 	* 
-	* on positionne quel formulaire ???
-	*
+	* popushell c bien un widget qu'on doit
+	* positionner et afficher ?
 	*
 	*
 	*
 	*
 	*/
+	w = parentCatalogue->Cat_Widget;
+	gtk_widget_set_uposition(GTK_WIDGET(gtk_widget_get_parent_window(w)),
+				 (gint)ShowX,
+				 (gint)ShowY);
 
-
-
-
+	gtk_widget_show_all (w);
+	gtk_widget_show_all (GTK_WIDGET(gtk_widget_get_parent_window(w)));
+	if (PopShell != 0)
+	  {
+	    gtk_widget_set_uposition(PopShell,
+				     (gint)ShowX,
+				     (gint)ShowY);
+	    gtk_widget_show_all (PopShell);
+	  }
 #endif /* !_GTK */
      }
 }
@@ -1071,10 +1074,10 @@ static void INITform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t
   ----------------------------------------------------------------------*/
 static void INITetPOSform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t call_d)
 {
-#ifndef _GTK
+  /*#ifndef _GTK*/
    TtaSetDialoguePosition ();
    INITform (w, parentCatalogue, call_d);
-#else
+   /*#else*/
    /*
    * A FAIRE
    *il suffit d'enlever les ifndef ...
@@ -1085,7 +1088,7 @@ static void INITetPOSform (ThotWidget w, struct Cat_Context *parentCatalogue, ca
    **/
 
 
-#endif /*_GTK */
+   /*#endif*/ /*_GTK */
 }
 #endif /* !_WINDOWS */
 
@@ -1167,15 +1170,16 @@ static void CallValueSet (ThotWidget w, struct Cat_Context *catalogue, caddr_t c
   ----------------------------------------------------------------------*/
 static void CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t call_d)
 {
-#ifndef _GTK
   register int        n;
   int                 i;
   int                 ent;
   int                 entry;
   char                text[100];
   char               *ptr;
+#ifndef _GTK
   Arg                 args[MAX_ARGS];
   XmStringTable       strings;
+#endif /* !_GTK */
   struct E_List      *adbloc;
   struct Cat_Context *catalogue;
   ThotWidget          wtext;
@@ -1216,7 +1220,11 @@ static void CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_
 	      if (catalogue->Cat_Widget != 0)
 		{
 		  if (entry == 0)
+#ifndef _GTK
 		    XtUnmanageChild (catalogue->Cat_Widget);
+#else /* _GTK */
+		  gtk_widget_hide_all(catalogue->Cat_Widget);
+#endif /* !_GTK */
 		  
 		  /* Sinon il faut retourner la valeur du sous-catalogue */
 		  else
@@ -1236,8 +1244,18 @@ static void CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_
 		      else if (catalogue->Cat_Type == CAT_INT)
 			{
 			  CallValueSet (catalogue->Cat_Entries->E_ThotWidget[1], catalogue, NULL);
+#ifndef _GTK			  
 			  strncpy (text, XmTextGetString (catalogue->Cat_Entries->E_ThotWidget[1]), 10);
-			  
+#else /* _GTK */
+			  /*
+			   * A VERIFIER
+			   *
+			   *
+			   *
+			   *
+			   */
+			  strncpy (text, gtk_entry_get_text (catalogue->Cat_Entries->E_ThotWidget[1]), 10);
+#endif /* !_GTK */	  
 			  text[10] = EOS;
 			  if (text[0] != EOS)
 			    sscanf (text, "%d", &i);
@@ -1248,14 +1266,28 @@ static void CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_
 		      /*______________________________ Une feuille de saisie de texte __*/
 		      else if (catalogue->Cat_Type == CAT_TEXT)
 			{
+#ifndef _GTK
 			  (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA,
 					       XmTextGetString ((ThotWidget) catalogue->Cat_Entries));
+#else /* _GTK */
+			  /*
+			   * A VERIFIER
+			   *
+			   *
+			   *
+			   *
+			   *
+			   */
+			  (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA,
+					       gtk_entry_get_text (catalogue->Cat_Entries));
+#endif /* !_GTK */
 			}
 		      /*_______________________________________________ Un selecteur __*/
 		      else if (catalogue->Cat_Type == CAT_SELECT)
 			{
 			  if (catalogue->Cat_SelectList)
 			    {
+#ifndef _GTK
 			      text[0] = EOS;
 			      n = 0;
 			      XtSetArg (args[n], XmNselectedItems, &strings);
@@ -1267,12 +1299,41 @@ static void CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_
 			      (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, ptr);
 			      if (strings)
 				TtaFreeMemory (ptr);
+#else /* _GTK */
+			      /*
+			       * A FAIRE
+			       *
+			       *
+			       *
+			       *
+			       *
+			       */
+
+
+
+
+#endif /* !_GTK */
 			    }
 			  else
 			    {
+#ifndef _GTK
 			      wtext = XmSelectionBoxGetChild ((ThotWidget) catalogue->Cat_Entries, XmDIALOG_TEXT);
 			      /* Retourne la valeur dans tous les cas */
 			      (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, XmTextGetString (wtext));
+#else /* _GTK */
+			      /*
+			       * A FAIRE
+			       *
+			       *
+			       *
+			       *
+			       *
+			       */
+
+
+
+
+#endif /* !_GTK */
 			    }
 			}
 		    }
@@ -1294,9 +1355,23 @@ static void CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_
       /*** On fait disparaitre le formulaire ***/
       if (entry == 0 || parentCatalogue->Cat_Type == CAT_DIALOG || parentCatalogue->Cat_Type == CAT_FORM)
 	{
+#ifndef _GTK
 	  XtUnmanageChild (parentCatalogue->Cat_Widget);
 	  XtUnmanageChild (XtParent (parentCatalogue->Cat_Widget));
-	  
+#else /* _GTK */
+	  /*
+	   * A VERIFIER
+	   *
+	   *
+	   *
+	   *
+	   *
+	   *
+	   */
+
+	  gtk_widget_hide_all(parentCatalogue->Cat_Widget);
+	  gtk_widget_hide_all(gtk_widget_get_parent_window(parentCatalogue->Cat_Widget));
+#endif /* !_GTK */ 
 	  /* Si on en a fini avec la feuille de dialogue */
 	  catalogue = parentCatalogue;
 	  while (catalogue->Cat_PtParent != NULL)
@@ -1308,7 +1383,6 @@ static void CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_
 
       (*CallbackDialogue) (parentCatalogue->Cat_Ref, INTEGER_DATA, entry);
     }
-#endif /* _GTK */
 }
 
 
@@ -1540,6 +1614,8 @@ void       TtaInitDialogue (char *server, ThotAppContext *app_context, Display *
    *app_context = Def_AppCont;
    *Dp = GDp;
    RootShell = XtAppCreateShell ("", "Dialogue", applicationShellWidgetClass, GDp, NULL, 0);
+
+
 #ifndef _GTK
    /* 28/Nov/2000: Contribution by Johaness Zellner for enabling tear-off
       menus */
@@ -5394,12 +5470,9 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	     * XtCreateWidget
 	     */
 
-
-
-
-
-
-
+	  PopShell = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	  gtk_window_set_title (GTK_WINDOW (PopShell), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+	  /* faut rajouter la position et le reste (resize, geometrie)*/
 
 #endif /* !_GTK */
 	  }
@@ -5462,12 +5535,14 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	{
 	  form = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	  gtk_window_set_title (GTK_WINDOW (form), title);
-	  gtk_signal_connect (GTK_OBJECT (form), "delete_event", GTK_SIGNAL_FUNC(formKill), catalogue);
+	  gtk_widget_set_parent (form, w);
 	}
+	gtk_signal_connect (GTK_OBJECT (form), "delete_event", GTK_SIGNAL_FUNC(formKill), catalogue);
+
 	/* On fout le callback */
 	/* A FAIRE */
 	/*XtAddCallback (XtParent (form), XmNpopdownCallback, (XtCallbackProc) CallSheet, catalogue);*/
-
+	gtk_signal_connect (GTK_OBJECT (form), "show", GTK_SIGNAL_FUNC(CallSheet), catalogue);
 	/* On initialise les fonts (le style)*/
 	/*A FAIRE*/
 
@@ -5887,7 +5962,7 @@ void TtaNewDialogSheet (int ref, ThotWidget parent, char *title,
 			int number, char *text, ThotBool horizontal,
 			int package, char button)
 {
-#ifndef _GTK
+  /*#ifndef _GTK*/
   /*
   * A FAIRE
   *
@@ -5898,14 +5973,14 @@ void TtaNewDialogSheet (int ref, ThotWidget parent, char *title,
   **/
    NewSheet (ref, parent, title, number - 1, text, horizontal, package,
 	     button, D_DONE, CAT_DIALOG);
-#endif /* _GTK */
+   /*#endif*/ /* _GTK */
 }
 
 /*----------------------------------------------------------------------
    TtaAttachForm attache le catalogue au formulaire ou au feuillet    
    dont il de'pend. Les catalogues sont cre'e's attache's.            
   ----------------------------------------------------------------------*/
-void                TtaAttachForm (int ref)
+void TtaAttachForm (int ref)
 {
 #ifndef _GTK
   /*
@@ -7200,15 +7275,17 @@ void                TtaSetNumberForm (int ref, int val)
 void TtaSetDialoguePosition ()
 {
 #ifndef _WINDOWS
-#ifndef _GTK
+  /*#ifndef _GTK*/
    ThotWindow          wdum;
    int                 xdum;
    int                 ydum;
 
    /* Enregistre la position courante du curseur pour les futurs show */
    wdum = RootWindow (GDp, DefaultScreen (GDp));
+   /*
    XQueryPointer (GDp, wdum, &wdum, &wdum, &xdum, &ydum, &ShowX, &ShowY, &xdum);
-#else
+   */
+   /*#else*/
    /* A FAIRE
    *
    *position de la souris dans quelle fenetre ???
@@ -7220,7 +7297,7 @@ void TtaSetDialoguePosition ()
 
 
 
-#endif /* _GTK */
+   /*#endif*/ /* _GTK */
 #endif /* !_WINDOWS */
 }
 
@@ -7229,20 +7306,15 @@ void TtaSetDialoguePosition ()
   ----------------------------------------------------------------------*/
 void TtaShowDialogue (int ref, ThotBool remanent)
 {
-#ifndef _GTK
-  /*
-   * A FAIRE
-   *
-   *
-   *
-   *
-   */
-
 #ifdef _WINDOWS
   POINT               curPoint;
 #else  /* _WINDOWS */
+#ifndef _GTK
   int                 n;
   Arg                 args[MAX_ARGS];
+#else /* _GTK */
+
+#endif /* !_GTK */
 #endif /* _WINDOWS */
   ThotWidget          w;
   struct Cat_Context *catalogue;
@@ -7281,8 +7353,22 @@ void TtaShowDialogue (int ref, ThotBool remanent)
       UpdateWindow (w);
     }
 #else  /* !_WINDOWS */
+
+#ifndef _GTK
   if (XtIsManaged (w))
     XMapRaised (GDp, XtWindowOfObject (XtParent (w)));
+#else /* _GTK */
+  /*
+   * A FAIRE 
+   * CA VE DIRE KOI XtIsManaged et XMapRaised
+   *
+   *
+   *
+   */
+
+  if( GTK_WIDGET_VISIBLE(w) )
+    gtk_widget_show_all(w);
+#endif /* !_GTK */
   /*===========> Active un pop-up menu */
   else if (catalogue->Cat_Type == CAT_POPUP || catalogue->Cat_Type == CAT_PULL)
     {
@@ -7296,7 +7382,7 @@ void TtaShowDialogue (int ref, ThotBool remanent)
 	  ShowReturn = 1;
 	  ShowCat = catalogue;
 	}
-      
+#ifndef _GTK      
       /*** Positionne le pop-up a la position courante du show ***/
       n = 0;
       XtSetArg (args[n], XmNx, (Position) ShowX);
@@ -7305,6 +7391,20 @@ void TtaShowDialogue (int ref, ThotBool remanent)
       n++;
       XtSetValues (w, args, n);
       XtManageChild (w);
+#else /* _GTK */
+      /*
+       * A VERIFIER
+       *
+       *
+       *
+       *
+       *
+       */
+	gtk_widget_set_uposition(GTK_WIDGET(w),
+				 (gint)ShowX,
+				 (gint)ShowY);
+	gtk_widget_show_all (GTK_WIDGET(w));
+#endif /* !_GTK */
     } 
   /*===========> Active un formulaire */
   else if (((catalogue->Cat_Type == CAT_FORM) || 
@@ -7328,15 +7428,24 @@ void TtaShowDialogue (int ref, ThotBool remanent)
 	  catalogue->Cat_Type == CAT_FORM) &&
 	  catalogue->Cat_Entries != NULL)
 	{
+#ifndef _GTK
 	  XtSetArg (args[0], XmNdefaultButton, catalogue->Cat_Entries->E_ThotWidget[1]);
 	  XtSetValues (w, args, 1);
+#else /* _GTK */
+	  /*
+	   * A VERIFIER
+	   *
+	   *il faut mettre le focus au bon bouton
+	   *
+	   */
+	  gtk_widget_grab_default(catalogue->Cat_Entries->E_ThotWidget[1]);
+#endif /* !_GTK */
 	}
       INITform (w, catalogue, NULL);
     }
   else
     TtaError (ERR_invalid_reference);
 #endif /* !_WINDOWS */
-#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -7393,16 +7502,6 @@ ThotBool TtaTestWaitShowDialogue ()
   ----------------------------------------------------------------------*/
 void TtaAbortShowDialogue ()
 {
-#ifndef _GTK
-  /*
-   *
-   * A FAIRE
-   *
-   *
-   *
-   *
-   */
-
    if (ShowReturn == 1)
      {
 	/* Debloque l'attente courante */
@@ -7413,6 +7512,7 @@ void TtaAbortShowDialogue ()
 	  {
 	     if (ShowCat->Cat_Widget != 0)
 	       {
+#ifndef _GTK
 		  if (XtIsManaged (ShowCat->Cat_Widget))
 		    {
 		       /* Traitement particulier des formulaires */
@@ -7426,11 +7526,25 @@ void TtaAbortShowDialogue ()
 		       else
 			  XtUnmanageChild (ShowCat->Cat_Widget);
 		    }
+#else /* _GTK */  
+		  if( GTK_WIDGET_VISIBLE(ShowCat->Cat_Widget) )
+		    {
+		       /* Traitement particulier des formulaires */
+		       if (ShowCat->Cat_Type == CAT_FORM
+			   || ShowCat->Cat_Type == CAT_SHEET
+			   || ShowCat->Cat_Type == CAT_DIALOG)
+			 {
+			   gtk_widget_hide_all (GTK_WIDGET(gtk_widget_get_parent_window(ShowCat->Cat_Widget)));
+			   CallSheet (None, ShowCat, NULL);
+			 }
+		       else
+			  gtk_widget_hide_all (ShowCat->Cat_Widget);
+		    }
+#endif /* !_GTK */
 	       }
 
 	  }
      }
-#endif /* _GTK */
 }
 #endif /* !_WINDOWS */
 
