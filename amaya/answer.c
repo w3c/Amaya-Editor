@@ -300,7 +300,7 @@ HTAlertPar         *reply;
      }
 #  else /* _WINDOWS */
    /* it could be a problem to use this form */
-   CreateAuthenticationDlgWindow (TtaGetViewFrame (me->docid, 1));
+   /*CreateAuthenticationDlgWindow (TtaGetViewFrame (me->docid, 1));*/
 #  endif /* _WINDOWS */
    return NO;
 }
