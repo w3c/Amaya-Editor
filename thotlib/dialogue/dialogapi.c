@@ -732,7 +732,7 @@ static void UnmapMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call
 #ifndef _GTK
 static void CallMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 #else /* _GTK */
-static void CallMenuGTK (ThotWidget w, struct Cat_Context *catalogue)
+static ThotBool CallMenuGTK (ThotWidget w, struct Cat_Context *catalogue)
 #endif /* _GTK */
 {
   register int        i;
@@ -794,6 +794,7 @@ static void CallMenuGTK (ThotWidget w, struct Cat_Context *catalogue)
 	  (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, entry);
 	}
     }
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -842,7 +843,7 @@ static ThotBool CallToggle (ThotWidget w, struct Cat_Context *catalogue, caddr_t
 /*----------------------------------------------------------------------
   Callback pour un bouton du sous-menu de formulaire
   ----------------------------------------------------------------------*/
-static void CallRadio (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
+static ThotBool CallRadio (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 {
   register int        i;
   register int        index;
@@ -875,6 +876,8 @@ static void CallRadio (ThotWidget w, struct Cat_Context *catalogue, caddr_t call
       if (catalogue->Cat_React)
 	(*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, entry);
     }
+  return TRUE;
+  
 }
 
 #ifdef _WINDOWS
@@ -1668,7 +1671,7 @@ static void CallEnter (ThotWidget w, struct Cat_Context *parentCatalogue,
 /*----------------------------------------------------------------------
    CallbackSheet: a button was clicked.                                              
   ----------------------------------------------------------------------*/
-static void CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue,
+static ThotBool CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue,
 		       caddr_t call_d)
 {
   struct E_List      *adbloc;
@@ -1693,6 +1696,7 @@ static void CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue,
       if (entry != -1)
 	ReturnSheet (parentCatalogue, entry, adbloc);
     }
+  return TRUE;  
 }
 
 
@@ -1702,7 +1706,7 @@ static void CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue,
 #ifndef _GTK
 static void CallList (ThotWidget w, struct Cat_Context *catalogue, XmListCallbackStruct * infos)
 #else /* _GTK */
-static void CallListGTK (ThotWidget w, struct Cat_Context *catalogue)
+static ThotBool CallListGTK (ThotWidget w, struct Cat_Context *catalogue)
 #endif /* _GTK */
 {
 #ifndef _GTK
@@ -1747,6 +1751,7 @@ static void CallListGTK (ThotWidget w, struct Cat_Context *catalogue)
 	     }	      
 	 }
      }
+   return TRUE;   
 #endif /* _GTK */
 }
 
@@ -1788,7 +1793,7 @@ gboolean CallTextEnterGTK (ThotWidget w, GdkEventButton *bu, gpointer data)
 #ifndef _GTK
 static void CallTextChange (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 #else /* _GTK */
-static void CallTextChangeGTK (ThotWidget w, struct Cat_Context *catalogue)
+static ThotBool CallTextChangeGTK (ThotWidget w, struct Cat_Context *catalogue)
 #endif /* _GTK */
 {
 #ifndef _GTK
@@ -1824,13 +1829,14 @@ static void CallTextChangeGTK (ThotWidget w, struct Cat_Context *catalogue)
 #endif /* _GTK */
 	}
      }
+   return TRUE;
 }
 
 
 /*----------------------------------------------------------------------
   Callback pour un bouton du label de selecteur
   ----------------------------------------------------------------------*/
-static void CallLabel (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
+static ThotBool CallLabel (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 {
 #ifndef _GTK
   Arg                 args[MAX_ARGS];
@@ -1862,6 +1868,7 @@ static void CallLabel (ThotWidget w, struct Cat_Context *catalogue, caddr_t call
        gtk_label_get(GTK_LABEL(gtk_object_get_data (GTK_OBJECT(w),"ButtonLabel")),&str);
        (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, str);
      }
+   return TRUE;
 #endif /* _GTK */
 }
 
