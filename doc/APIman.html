@@ -10,7 +10,7 @@
 <pre>
 <em>ThotLib V3</em></pre>
 <pre>
-Date: 27 August, 1999</pre>
+Date: 20 September, 1999</pre>
 
 <h1>The Thot Tool Kit API</h1>
 <address>Vincent QUINT, Ir&egrave;ne VATTON - INRIA</address>
@@ -9394,7 +9394,7 @@ schema are given in the <em>.conf </em>file).</p>
 
 <hr>
 
-<p>void TtaPrint(Document document, char *viewName, char *ssNames)</p>
+<p>void TtaPrint(Document document, char *viewName, char cssNames)</p>
 
 <hr>
 
@@ -9566,7 +9566,26 @@ PostScript file.</p>
 <h3><a name="sectb203">20.3</a> Accessors</h3>
 
 <div class=Section>
-<h4><a name="sectc2031">20.3.1</a> TtaGetPrintParameter</h4>
+<h4><a name="sectc2031">20.3.1</a> TtaIsPrintting</h4>
+
+<p>This function returns TRUE when the current application is a print.ing
+process.</p>
+
+<hr>
+
+<p>ThotBool TtaIsprinting ()</p>
+
+<hr>
+
+<dl>
+<dt>Return value :</dt>
+
+<dd>TRUE when it's aprinting process, FALSE otherwise.
+</dl>
+</div>
+
+<div class=Section>
+<h4><a name="sectc2032">20.3.2</a> TtaGetPrintParameter</h4>
 
 <p>Thit procedure returns a print paramenter value. Modifiable parameters
 belongs to PrintParameter type. The different parameters are listed below,
@@ -9626,7 +9645,7 @@ with the range of their values.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc2032">20.3.2</a> TtaGetPrintCommand</h4>
+<h4><a name="sectc2033">20.3.3</a> TtaGetPrintCommand</h4>
 
 <p>This procedure returns the current printing command.</p>
 
@@ -9644,7 +9663,7 @@ with the range of their values.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc2033">20.3.3</a> TtaGetPsFile</h4>
+<h4><a name="sectc2034">20.3.4</a> TtaGetPsFile</h4>
 
 <p>This procedure returns the current path used by the editor when saving a
 PostScript file.</p>

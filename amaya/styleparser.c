@@ -3327,7 +3327,9 @@ CSSInfoPtr      css;
 	  k++;
 	}
 
-      if (i > 0 && (classes[i] || pseudoclasses[i] || ids[i] || attrs[i]))
+      if (i > 0 &&
+	  names[i] &&
+	  (classes[i] || pseudoclasses[i] || ids[i] || attrs[i]))
 	/* Thot is not able to manage this kind of selector
 	   -> abort the CSS parsing */
 	return (selector);
@@ -3361,22 +3363,25 @@ CSSInfoPtr      css;
   max = k;
   i = 1;
   while (i < max)
-    for (k = i + 1; k < max; k++)
-      if (ctxt->name[i] > ctxt->name[k])
-	{
-	  j = ctxt->name[i];
-	  ctxt->name[i] = ctxt->name[k];
-	  ctxt->name[k] = j;
-	  j = ctxt->names_nb[i];
-	  ctxt->names_nb[i] = ctxt->names_nb[k];
-	  ctxt->names_nb[k] = j;
-	  j = ctxt->attrType[i];
-	  ctxt->attrType[i] = ctxt->attrType[k];
-	  ctxt->attrType[k] = j;
-	  cur = ctxt->attrText[i];
-	  ctxt->attrText[i] = ctxt->attrText[k];
-	  ctxt->attrText[k] = cur;
-	}
+    {
+      for (k = i + 1; k < max; k++)
+	if (ctxt->name[i] > ctxt->name[k])
+	  {
+	    j = ctxt->name[i];
+	    ctxt->name[i] = ctxt->name[k];
+	    ctxt->name[k] = j;
+	    j = ctxt->names_nb[i];
+	    ctxt->names_nb[i] = ctxt->names_nb[k];
+	    ctxt->names_nb[k] = j;
+	    j = ctxt->attrType[i];
+	    ctxt->attrType[i] = ctxt->attrType[k];
+	    ctxt->attrType[k] = j;
+	    cur = ctxt->attrText[i];
+	    ctxt->attrText[i] = ctxt->attrText[k];
+	    ctxt->attrText[k] = cur;
+	  }
+      i++;
+    }
   
   /* Get the schema name of the main element */
   if (ctxt->schema == NULL)
