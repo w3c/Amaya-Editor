@@ -26,6 +26,8 @@ AmayaFloatingPanel::AmayaFloatingPanel( wxWindow * p_parent
   : wxFrame( p_parent, id, _T("AmayaFloatingPanel"), pos, size, style )
     ,m_pParentSubPanel(p_subpanel)
 {
+  
+  // load the right panel depending on sub-panel parent type
   m_pPanel = NULL;
   switch (m_pParentSubPanel->GetPanelType())
     {
@@ -39,11 +41,15 @@ AmayaFloatingPanel::AmayaFloatingPanel( wxWindow * p_parent
       break;
     }
 
-  // load resource, and take only the interesting part
-  //  wxPanel * p_panel_copy = wxXmlResource::Get()->LoadPanel(this, xrc_id);
-  m_pPanelContentDetach = (wxPanel *)wxWindow::FindWindowById(wxXmlResource::GetXRCID(_T("wxID_PANEL_CONTENT_DETACH")), m_pPanel);
-  //  m_pPanelContentParent = m_pPanelContent->GetParent();
-  //  m_pPanelContentDetach->Reparent(this);
+  // hide the title bar
+  wxPanel * p_panel_title = (wxPanel *)wxWindow::FindWindowById(wxXmlResource::GetXRCID(_T("wxID_PANEL_TITLE")), m_pPanel);
+  wxSizer * p_sizer_title = p_panel_title->GetContainingSizer();
+  p_sizer_title->Show(p_panel_title, false);
+  p_sizer_title->Layout();
+
+  // remove black borders
+  m_pPanelContentDetach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
+  m_pPanelContentDetach->SetWindowStyle( m_pPanelContentDetach->GetWindowStyle() & ~wxSIMPLE_BORDER );
   
   // set the frame title
   wxStaticText * p_title_widget = (wxStaticText *)wxWindow::FindWindowById(wxXmlResource::GetXRCID(_T("wxID_LABEL_TITLE")), m_pPanel);
@@ -52,7 +58,7 @@ AmayaFloatingPanel::AmayaFloatingPanel( wxWindow * p_parent
   // insert the subpanel into the frame
   m_pTopSizer = new wxBoxSizer( wxVERTICAL );
   SetSizer(m_pTopSizer);
-  m_pTopSizer->Add( m_pPanel /*m_pPanelContentDetach*/, 1, wxALL | wxEXPAND , 0 );
+  m_pTopSizer->Add( m_pPanel /*m_pPanelContentDetach*/, 1, wxALL | wxEXPAND , 2 );
   m_pTopSizer->Fit(this);
   
   Layout();
