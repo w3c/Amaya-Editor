@@ -1044,11 +1044,11 @@ CHAR_T           *documentname;
 	  TtaSetItemOff (doc, 1, Special, BShowLogFile);
 	}
   
-#ifdef EXPAT_PARSER
+  /* Calls the corresponding parser */
   if (DocumentMeta[doc]->xmlformat)       
-    StartXmlParser (doc, localFile, documentname, tempdir, localFile, xmlDec, withDoctype);
+    StartXmlParser (doc, localFile, documentname, tempdir,
+		    localFile, xmlDec, withDoctype);
   else
-#endif /* EXPAT_PARSER */
     StartParser (doc, localFile, documentname, tempdir, localFile, FALSE);
 
   /* check parsing errors */

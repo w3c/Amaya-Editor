@@ -17,22 +17,14 @@
 #include "amaya.h"
 #include "css.h"
 #include "html2thot_f.h"
+#include "Xml2thot_f.h"
 #include "MathML.h"
 #include "parser.h"
 #include "styleparser_f.h"
 #include "style.h"
 #include "undo.h"
 
-typedef CHAR_T  MathEntityName[30];
-typedef struct _MathEntity
-  {			 /* a Math entity representing an operator char */
-     MathEntityName      MentityName;	/* entity name */
-     int                 charCode;	/* decimal code of char */
-     CHAR_T		 alphabet;	/* 'L' = ISO-Latin-1, 'G' = Symbol */
-  }
-MathEntity;
-
-static MathEntity        MathEntityTable[] =
+XmlEntity  MathEntityTable[] =
 {
    /* This table MUST be in alphabetical order */
    /* This table contains characters from the Symbol font plus some
@@ -392,9 +384,9 @@ Document            doc;
    ThotAtt and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                MapMathMLAttributeValue (STRING AttrVal, AttributeType attrType, int *value)
+void        MapMathMLAttributeValue (STRING AttrVal, AttributeType attrType, int *value)
 #else
-void                MapMathMLAttributeValue (AttrVal, attrType, value)
+void        MapMathMLAttributeValue (AttrVal, attrType, value)
 STRING              AttrVal;
 AttributeType       attrType;
 int		   *value;
@@ -434,7 +426,7 @@ STRING  alphabet;
 
   found = FALSE;
   for (i = 0; MathEntityTable[i].charCode >= 0 && !found; i++)
-    found = !ustrcmp (MathEntityTable[i].MentityName, entityName);
+    found = !ustrcmp (MathEntityTable[i].charName, entityName);
 
   if (found)
     /* entity found */
@@ -442,13 +434,44 @@ STRING  alphabet;
       i--;
       entityValue[0] = (UCHAR_T) MathEntityTable[i].charCode;
       entityValue[1] = EOS;
-      *alphabet = MathEntityTable[i].alphabet;
+      *alphabet = MathEntityTable[i].charAlphabet;
     }
   else
     {
       entityValue[0] = EOS;
       *alphabet = EOS;
     }
+}
+
+/*---------------------------------------------------------------------------
+   MapMathMLEntity
+   Search that entity in the entity table and return the corresponding value.
+  ---------------------------------------------------------------------------*/
+#ifdef __STDC__
+void	MapMathMLEntity2 (STRING entityName, int* entityValue, STRING alphabet)
+#else
+void	MapMathMLEntity2 (entityName, entityValue, alphabet)
+STRING  entityName;
+int    *entityValue;
+STRING  alphabet;
+#endif
+{
+  int       i;
+  ThotBool  found;
+
+  found = FALSE;
+  for (i = 0; MathEntityTable[i].charCode >= 0 && !found; i++)
+    found = !ustrcmp (MathEntityTable[i].charName, entityName);
+
+  if (found)
+    /* entity found */
+    {
+      i--;
+      *entityValue = MathEntityTable[i].charCode;
+      *alphabet = MathEntityTable[i].charAlphabet;
+    }
+  else
+    *alphabet = EOS;
 }
 
 /*----------------------------------------------------------------------
@@ -514,6 +537,86 @@ Document    doc;
    buffer[len+1] = ';';
    buffer[len+2] = EOS;
    TtaSetAttributeText (attr, buffer, elText, doc);
+}
+
+/*----------------------------------------------------------------------
+   MathMLEntityCreated
+   A MathML entity has been created by the XML parser.
+   Create an attribute EntityName containing the entity name.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void        MathMLEntityCreated2 (int entityValue, Language lang,
+				  STRING  entityName, ParserData *XmlContext)
+#else
+void        MathMLEntityCreated2 (entityValue, lang, entityName, XmlContext)
+int         entityValue;
+Language    lang;
+STRING      entityName;
+ParserData *XmlContext;
+
+#endif
+{
+  ElementType	 elType;
+  Element	 elText;
+  AttributeType  attrType;
+  Attribute	 attr;
+  int		 len, code;
+#define MAX_ENTITY_LENGTH 80
+  CHAR_T	 buffer[MAX_ENTITY_LENGTH];
+  
+  if (lang < 0)
+    /* Unknown entity */
+    {
+      /* By default display a question mark */
+      buffer[0] = '?';
+      buffer[1] = WC_EOS;
+      lang = TtaGetLanguageIdFromAlphabet('L');
+      /* Let's see if we can do more */
+      if (entityName[0] == '#')
+	/* It's a number */
+	{
+	  if (entityName[1] == 'x')
+	    /* It's a hexadecimal number */
+	    usscanf (&entityName[2], TEXT("%x"), &code);
+	  else
+	    /* It's a decimal number */
+	    usscanf (&entityName[1], TEXT("%d"), &code);
+	  
+	  GetFallbackCharacter (code, buffer, &lang);
+	}
+    }
+  else
+    {
+      buffer[0] = ((UCHAR_T) entityValue);
+      buffer[1] = WC_EOS;
+    }
+  
+  elType.ElTypeNum = MathML_EL_TEXT_UNIT; 
+  elType.ElSSchema = GetMathMLSSchema (XmlContext->doc);
+  elText = TtaNewElement (XmlContext->doc, elType);
+  XmlSetElemLineNumber (elText);
+  InsertXmlElement (&elText);
+  TtaSetTextContent (elText, buffer, lang, XmlContext->doc);
+  XmlContext->lastElementClosed = TRUE;
+  XmlContext->mergeText = FALSE; 
+  
+  /* Make that text leaf read-only */
+  TtaSetAccessRight (elText, ReadOnly, XmlContext->doc);
+  
+  /* Associate an attribute EntityName with the new text leaf */
+  attrType.AttrSSchema = GetMathMLSSchema (XmlContext->doc);
+  attrType.AttrTypeNum = MathML_ATTR_EntityName;
+  attr = TtaNewAttribute (attrType);
+  TtaAttachAttribute (elText, attr, XmlContext->doc);
+  
+  len = ustrlen (entityName);
+  if (len > MAX_ENTITY_LENGTH -3)
+    len = MAX_ENTITY_LENGTH -3;
+  buffer[0] = '&';
+  ustrncpy (&buffer[1], entityName, len);
+  buffer[len+1] = ';';
+  buffer[len+2] = WC_EOS;
+  TtaSetAttributeText (attr, buffer, elText, XmlContext->doc);
 }
 
 /*----------------------------------------------------------------------
@@ -1537,11 +1640,11 @@ void SetMcharContent (el, doc)
 	   {
 	   lang = TtaGetLanguageIdFromAlphabet(alphabet);
 	   }
-#ifdef EXPAT_PARSER
-        XmlSetElemLineNumber (leaf);
-#else /* EXPAT_PARSER */
+#ifdef OLD_XML_PARSER
         SetElemLineNumber (leaf);
-#endif /* EXPAT_PARSER */
+#else /* OLD_XML_PARSER */
+        XmlSetElemLineNumber (leaf);
+#endif /* OLD_XML_PARSER */
 	TtaSetTextContent (leaf, value, lang, doc);
 	TtaSetAccessRight (leaf, ReadOnly, doc);
         }

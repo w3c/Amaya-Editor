@@ -73,9 +73,9 @@ STRING elementName;
    attribute of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           MapGraphMLAttribute (CHAR_T *attrName, AttributeType *attrType, CHAR_T* elementName, Document doc)
+void      MapGraphMLAttribute (CHAR_T *attrName, AttributeType *attrType, CHAR_T* elementName, Document doc)
 #else
-void           MapGraphMLAttribute (Attr, attrType, elementName, doc)
+void      MapGraphMLAttribute (Attr, attrType, elementName, doc)
 CHAR_T        *attrName;
 AttributeType *attrType;
 CHAR_T        *elementName;
@@ -93,9 +93,9 @@ Document       doc;
    ThotAtt and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                MapGraphMLAttributeValue (CHAR_T* AttrVal, AttributeType attrType, int *value)
+void      MapGraphMLAttributeValue (CHAR_T* AttrVal, AttributeType attrType, int *value)
 #else
-void                MapGraphMLAttributeValue (AttrVal, attrType, value)
+void      MapGraphMLAttributeValue (AttrVal, attrType, value)
 CHAR_T*             AttrVal;
 AttributeType       attrType;
 int		   *value;
@@ -122,15 +122,31 @@ int		   *value;
    Search that entity in the entity table and return the corresponding value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void	MapGraphMLEntity (STRING entityName, STRING entityValue, STRING alphabet)
+void   MapGraphMLEntity (STRING entityName, STRING entityValue, STRING alphabet)
 #else
-void	MapGraphMLEntity (entityName, entityValue, alphabet)
+void   MapGraphMLEntity (entityName, entityValue, alphabet)
 STRING  entityName;
 STRING  entityValue;
 STRING  alphabet;
 #endif
 {
-   entityValue[0] = EOS;
+  entityValue[0] = EOS;
+  *alphabet = EOS;
+}
+
+/*----------------------------------------------------------------------
+   MapGraphMLEntity
+   Search that entity in the entity table and return the corresponding value.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void   MapGraphMLEntity2 (STRING entityName, int* entityValue, STRING alphabet)
+#else
+void   MapGraphMLEntity2 (entityName, entityValue, alphabet)
+STRING  entityName;
+int    *entityValue;
+STRING  alphabet;
+#endif
+{
    *alphabet = EOS;
 }
 
@@ -146,6 +162,23 @@ USTRING     entityValue;
 Language    lang;
 STRING      entityName;
 Document    doc;
+#endif
+{
+}
+
+/*----------------------------------------------------------------------
+   GraphMLEntityCreated
+   A GraphML entity has been created by the XML parser.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void        GraphMLEntityCreated2 (int entityValue, Language lang,
+				   STRING entityName, ParserData *XmlContext)
+#else
+void        GraphMLEntityCreated2 (entityValue, lang, entityName, XmlContext)
+int         entityValue;
+Language    lang;
+STRING      entityName;
+ParserData *XmlContext;
 #endif
 {
 }

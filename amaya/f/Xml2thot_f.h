@@ -19,10 +19,6 @@ extern void XhtmlInsertElement ( Element *el );
 extern void InsertXmlElement ( Element *el );
 extern Element XmlLastLeafInElement ( Element el );
 extern void PutInXmlElement ( STRING data );
-extern void PutMathMLEntity ( USTRING entityValue,
-                              Language lang,
-                              STRING entityName,
-                              Document doc );
 extern void FreeXmlParserContexts ( void );
 extern ThotBool ParseXmlSubTree ( char *xmlBuffer,
                                   Element *el,
@@ -67,10 +63,6 @@ extern void XhtmlInsertElement (/* Element *el */);
 extern void InsertXmlElement (/* Element *el */);
 extern Element XmlLastLeafInElement (/* Element el */);
 extern void PutInXmlElement (/* STRING data */);
-extern void PutMathMLEntity (/* USTRING entityValue,
-                                Language lang,
-                                STRING entityName,
-                                Document doc */);
 extern void FreeXmlParserContexts (/* void */);
 extern ThotBool ParseXmlSubTree (/* char *xmlBuffer,
                                     Element *el,

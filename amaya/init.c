@@ -1287,7 +1287,6 @@ CHAR_T*             title;
 	TtaSetTextForm (BaseDialog + URLName, s);
      }
 
-
    TtaNewTextForm (BaseDialog + FilterText, BaseDialog + OpenForm,
 		   TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
    TtaSetTextForm (BaseDialog + FilterText, ScanFilter);
@@ -1305,6 +1304,25 @@ CHAR_T*             title;
 #endif /* _WINDOWS */
 }
 
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                OpenDoc (Document document, View view)
+#else
+void                OpenDoc (document, view)
+Document            document;
+View                view;
+
+#endif
+{
+   if (CanReplaceCurrentDocument (document, view))
+     {
+       /* load the new document */
+       InNewWindow = FALSE;
+       InitOpenDocForm (document, view, TtaGetMessage (1, BOpenDoc));
+     }
+}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1375,25 +1393,6 @@ ThotBool    isHTML;
 	ustrcpy (DocumentName, TEXT("New.css"));
       InitOpenDocForm (document, view, TtaGetMessage (1, BCss));
     }
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                OpenDoc (Document document, View view)
-#else
-void                OpenDoc (document, view)
-Document            document;
-View                view;
-
-#endif
-{
-   if (CanReplaceCurrentDocument (document, view))
-     {
-       /* load the new document */
-       InNewWindow = FALSE;
-       InitOpenDocForm (document, view, TtaGetMessage (1, BOpenDoc));
-     }
 }
 
 /*----------------------------------------------------------------------
@@ -2422,21 +2421,14 @@ ThotBool            history;
 	plainText = FALSE;
       else
 	plainText = (parsingLevel == L_Other);
-#ifdef EXPAT_PARSER
+
+      /* Calls the corresponding parser */
       if (DocumentMeta[newdoc]->xmlformat && !plainText)
-	StartXmlParser (newdoc,
-			tempdocument,
-			documentname,
-			tempdir,
-			pathname,
-			xmlDec,
-			withDoctype);
+	StartXmlParser (newdoc,	tempdocument, documentname,
+			tempdir, pathname, xmlDec, withDoctype);
       else
 	StartParser (newdoc, tempdocument, documentname, tempdir, pathname, plainText);
-#else /* EXPAT_PARSER */
-      StartParser (newdoc, tempdocument, documentname, tempdir, pathname, plainText);
-#endif /* EXPAT_PARSER */
-
+      
       TtaFreeMemory (tempdir);
 
       /* Set the document read-only when needed */
@@ -3804,6 +3796,7 @@ CHAR_T*             data;
 	     }
 	 }
        break;
+
      case URLName:
        RemoveNewLines (data);
        if (IsW3Path (data))
@@ -3826,9 +3819,9 @@ CHAR_T*             data;
 	   else
 	     TtaExtractName (tempfile, DirectoryName, DocumentName);
 	   TtaFreeMemory (tempfile);
-	 }
-       
+	 }       
        break;
+
      case DirSelect:
 #ifdef _WINDOWS
        usprintf (DirectoryName, TEXT("%s"), data);
@@ -4157,23 +4150,103 @@ CHAR_T*             data;
        
      case AttrHREFForm:
        /* *********HREF Attribute*********** */
+       printf ("\nAttrHREFvalue = %s\n", AttrHREFvalue);
        if (val == 1)
 	 /* create an attribute HREF for the Link_Anchor */
 	 SetREFattribute (AttrHREFelement, AttrHREFdocument, AttrHREFvalue, NULL);
-       else if (IsNewAnchor)
+       else if (val == 2)
+	 /* Clear button */
 	 {
-	   LinkAsCSS = FALSE;
-	   /* remove the link if it was just created */
-	   TtaCancelLastRegisteredSequence (AttrHREFdocument);	   
-	   DeleteAnchor (AttrHREFdocument, 1);
-	   TtaCancelLastRegisteredSequence (AttrHREFdocument);	   
+	   AttrHREFvalue[0] = WC_EOS;
+#ifndef _WINDOWS
+	   TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
+#endif /* !_WINDOWS */
 	 }
-
+       else if (val == 3)
+	 /* Filter button */
+	 {
+	   TtaListDirectory (DirectoryName, BaseDialog + AttrHREFForm,
+			     TtaGetMessage (LIB, TMSG_DOC_DIR),
+			     BaseDialog + HREFDirSelect,
+			     ScanFilter, TtaGetMessage (AMAYA, AM_FILES),
+			     BaseDialog + HREFDocSelect);
+	 }
+       else 
+	 /* "Cancel" button */
+	 if (IsNewAnchor)
+	   {
+	     LinkAsCSS = FALSE;
+	     /* remove the link if it was just created */
+	     TtaCancelLastRegisteredSequence (AttrHREFdocument);	   
+	     DeleteAnchor (AttrHREFdocument, 1);
+	     TtaCancelLastRegisteredSequence (AttrHREFdocument);	   
+	   }
        break;
 
      case AttrHREFText:
        /* save the HREF name */
        NormalizeFile (data, AttrHREFvalue, AM_CONV_NONE);
+       break;
+
+     case HREFDirSelect:
+#ifdef _WINDOWS
+       usprintf (DirectoryName, TEXT("%s"), data);
+#else  /* _WINDOWS */
+       printf ("\nHREFDirSelect DirectoryName = %s\n", DirectoryName);
+       if (DirectoryName[0] != EOS)
+	 {
+	   if (!ustrcmp (data, ".."))
+	     {
+	       /* suppress last directory */
+	       tempname = TtaAllocString (MAX_LENGTH);
+	       tempfile = TtaAllocString (MAX_LENGTH);
+	       ustrcpy (tempname, DirectoryName);
+	       TtaExtractName (tempname, DirectoryName, tempfile);
+	       TtaFreeMemory (tempfile);
+	       TtaFreeMemory (tempname);
+	     }
+	   else
+	     {
+	       ustrcat (DirectoryName, DIR_STR);
+	       ustrcat (DirectoryName, data);
+	     }
+	   TtaSetTextForm (BaseDialog + AttrHREFText, DirectoryName);
+	   TtaListDirectory (DirectoryName, BaseDialog + AttrHREFForm,
+			     TtaGetMessage (LIB, TMSG_DOC_DIR),
+			     BaseDialog + HREFDirSelect, ScanFilter,
+			     TtaGetMessage (AMAYA, AM_FILES),
+			     BaseDialog + HREFDocSelect);
+	   DocumentName[0] = EOS;
+	 }
+#endif /* _WINDOWS */
+       break;
+     case HREFDocSelect:
+       if (DirectoryName[0] == EOS)
+	 /* set path on current directory */
+	 ugetcwd (DirectoryName, MAX_LENGTH);
+       
+       /* Extract suffix from document name */
+       ustrcpy (DocumentName, data);
+       printf ("\nHREFDirSelect DocumentName = %s\n", DocumentName);
+       LastURLName[0] = WC_EOS;
+       /* construct the document full name */
+       tempfile = TtaAllocString (MAX_LENGTH);
+       ustrcpy (tempfile, DirectoryName);
+       ustrcat (tempfile, WC_DIR_STR);
+       ustrcat (tempfile, DocumentName);
+#ifndef _WINDOWS
+       TtaSetTextForm (BaseDialog + AttrHREFText, tempfile);
+#endif /* !_WINDOWS */
+       TtaFreeMemory (tempfile);
+       break;
+     case HREFFilterText:
+       /* Filter value */
+       if (ustrlen(data) <= NAME_LENGTH)
+	 ustrcpy (ScanFilter, data);
+#ifndef _WINDOWS
+       else
+	 TtaSetTextForm (BaseDialog + HREFFilterText, ScanFilter);
+#endif /* !_WINDOWS */
        break;
        
      case TitleForm:
@@ -4448,11 +4521,11 @@ void                FreeAmayaStructures ()
       TtaFreeMemory (AttrHREFvalue);
       TtaFreeMemory (UserCSS);
       FreeHTMLParser ();
-#ifdef EXPAT_PARSER
-      FreeXmlParserContexts ();
-#else /* EXPAT_PARSER */
+#ifdef OLD_XML_PARSER
       FreeXMLParser ();
-#endif /* EXPAT_PARSER */
+#else /* OLD_XML_PARSER */
+      FreeXmlParserContexts ();
+#endif /* OLD_XML_PARSER */
       FreeDocHistory ();
       FreeTransform ();
       QueryClose ();

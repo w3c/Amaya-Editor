@@ -323,8 +323,7 @@ static void            InitXmlParserContexts ()
    ctxt->MapAttribute = (Proc) MapHTMLAttribute;
    ctxt->MapAttributeValue = (Proc) MapHTMLAttributeValue;
    ctxt->MapEntity = (Proc) XhtmlMapEntity;
-   /* ctxt->EntityCreated = (Proc) XhtmlEntityCreated; */
-   ctxt->EntityCreated = NULL;
+   ctxt->EntityCreated = (Proc) XhtmlEntityCreated;
    ctxt->InsertElem = (Proc) XhtmlInsertElement;
    ctxt->ElementComplete = (Proc) XhtmlElementComplete;
    ctxt->AttributeComplete = NULL;
@@ -355,9 +354,8 @@ static void            InitXmlParserContexts ()
    ctxt->XMLtype = MATH_TYPE;
    ctxt->MapAttribute = (Proc) MapMathMLAttribute;
    ctxt->MapAttributeValue = (Proc) MapMathMLAttributeValue;
-   ctxt->MapEntity = (Proc) MapMathMLEntity;
-   /*   ctxt->EntityCreated = (Proc) MathMLEntityCreated; */
-   ctxt->EntityCreated = (Proc) PutMathMLEntity;
+   ctxt->MapEntity = (Proc) MapMathMLEntity2;
+   ctxt->EntityCreated = (Proc) MathMLEntityCreated2;
    ctxt->InsertElem = (Proc) XmlInsertElement;
    ctxt->ElementComplete = (Proc) MathMLElementComplete;
    ctxt->AttributeComplete = (Proc) MathMLAttributeComplete;
@@ -388,8 +386,8 @@ static void            InitXmlParserContexts ()
    ctxt->XMLtype = GRAPH_TYPE;
    ctxt->MapAttribute = (Proc) MapGraphMLAttribute;
    ctxt->MapAttributeValue = (Proc) MapGraphMLAttributeValue;
-   ctxt->MapEntity = (Proc) MapGraphMLEntity;
-   ctxt->EntityCreated = (Proc) GraphMLEntityCreated;
+   ctxt->MapEntity = (Proc) MapGraphMLEntity2;
+   ctxt->EntityCreated = (Proc) GraphMLEntityCreated2;
    ctxt->InsertElem = (Proc) XmlInsertElement;
    ctxt->ElementComplete = (Proc) GraphMLElementComplete;
    ctxt->AttributeComplete = (Proc) GraphMLAttributeComplete;
@@ -1718,10 +1716,10 @@ STRING      data;
    CHAR_T      *buffer, *bufferws, *buffertext;
    int          i1, i2=0, i3=0;
 
-#ifdef LC
+#ifdef EXPAT_PARSER_DEBUG
    printf ("\n  PutInXmlElement - length : %d, data \"%s\"",
 	   ustrlen (data), data);
-#endif /* LC */
+#endif /* EXPAT_PARSER_DEBUG */
 
    i = 0;
    /* Immediately after a start tag, treatment of the leading spaces */
@@ -2625,144 +2623,65 @@ CHAR_T     *attrValue;
 /*--------------------  Entities  (start)  ---------------------*/
 
 /*----------------------------------------------------------------------
-   PutMathMLEntity
-   A MathML entity has been created by the XML parser.
-   Create an attribute EntityName containing the entity name.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void        PutMathMLEntity (USTRING entityValue,
-			     Language lang,
-			     STRING entityName,
-			     Document doc)
-#else
-void        PutMathMLEntity (entityValue,
-			     lang,
-			     entityName,
-			     doc)
-USTRING   entityValue;
-Language  lang;
-STRING    entityName;
-Document  doc;
-
-#endif
-{
-  ElementType	 elType;
-  Element	 elText;
-  AttributeType attrType;
-  Attribute	 attr;
-  int		 len, code;
-#define MAX_ENTITY_LENGTH 80
-  CHAR_T	 buffer[MAX_ENTITY_LENGTH];
-  
-  if (lang < 0)
-    /* Unknown entity */
-    {
-      /* By default display a question mark */
-      entityValue[0] = '?';
-      entityValue[1] = WC_EOS;
-      lang = TtaGetLanguageIdFromAlphabet('L');
-      /* Let's see if we can do more */
-      if (entityName[0] == '#')
-	/* It's a number */
-	{
-	  if (entityName[1] == 'x')
-	    /* It's a hexadecimal number */
-	    usscanf (&entityName[2], TEXT("%x"), &code);
-	  else
-	    /* It's a decimal number */
-	    usscanf (&entityName[1], TEXT("%d"), &code);
-	  
-	  GetFallbackCharacter (code, entityValue, &lang);
-	}
-    }
-  
-  elType.ElTypeNum = MathML_EL_TEXT_UNIT; 
-  elType.ElSSchema = GetMathMLSSchema (doc);
-  elText = TtaNewElement (doc, elType);
-  XmlSetElemLineNumber (elText);
-  InsertXmlElement (&elText);
-  TtaSetTextContent (elText, entityValue, lang, doc);
-  XMLcontext.lastElementClosed = TRUE;
-  XMLcontext.mergeText = FALSE; 
-  
-  /* Make that text leaf read-only */
-  TtaSetAccessRight (elText, ReadOnly, doc);
-  
-  /* Associate an attribute EntityName with the new text leaf */
-  attrType.AttrSSchema = GetMathMLSSchema (doc);
-  attrType.AttrTypeNum = MathML_ATTR_EntityName;
-  attr = TtaNewAttribute (attrType);
-  TtaAttachAttribute (elText, attr, doc);
-  
-  len = ustrlen (entityName);
-  if (len > MAX_ENTITY_LENGTH -3)
-    len = MAX_ENTITY_LENGTH -3;
-  buffer[0] = '&';
-  ustrncpy (&buffer[1], entityName, len);
-  buffer[len+1] = ';';
-  buffer[len+2] = WC_EOS;
-  TtaSetAttributeText (attr, buffer, elText, doc);
-}
-
-/*----------------------------------------------------------------------
    CreateXmlEntity
    End of a XML entity. 
    Search that entity in the corresponding entity table and 
    put the corresponding character in the corresponding element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CreateXmlEntity (STRING entityName)
+static void         CreateXmlEntity (CHAR_T *data, int length)
 #else
-static void         CreateXmlEntity (entityName)
-STRING              entityName;
+static void         CreateXmlEntity (data, length)
+CHAR_T  *data;
+int      length;
 #endif
 {
    CHAR_T         msgBuffer[MaxMsgLength];
    STRING         buffer;
-   CHAR_T*        ptr;
    CHAR_T	  alphabet;
-   int            entityVal;	
-   UCHAR_T        entityValue[MaxEntityLength];	
-   Language	  lang;
+   int            entityValue;	
+   int            i;
+   Language	  lang = 0;
 
-#ifdef LC
-   printf ("\n CreateXmlEntity - Name : %s", entityName);
-#endif /* LC */
+   if (currentParserCtxt == NULL)
+     return;
 
-   buffer = TtaAllocString (ustrlen (entityName));
-   ustrcpy (buffer, &entityName[1]);
-   if ((ptr = ustrrchr (buffer, TEXT(';'))))
-       ustrcpy (ptr, TEXT("\0"));
-#ifdef LC
-   printf ("\n CreateXmlEntity - buffer:%s", buffer);
-#endif /* LC */
-   
-   
-   if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
-       XhtmlMapEntity (buffer, &entityVal, &alphabet);
+   /* Name of the entity without '&' or ';' */
+   buffer = TtaAllocString (length);
+   for (i = 0; i < length-1; i++)
+       buffer[i] = data[i+1];
+   if (buffer[i-1] == TEXT(';'))
+     buffer[i-1] = WC_EOS;
    else
-       (*(currentParserCtxt->MapEntity)) (buffer, entityValue, &alphabet);
+     buffer[i] = WC_EOS;
+
+#ifdef EXPAT_PARSER_DEBUG
+   printf ("\n CreateXmlEntity - name : %s", buffer);
+#endif /* EXPAT_PARSER_DEBUG */
    
-   lang = 0;
+   /* Search the entity in the corresponding table */
+   (*(currentParserCtxt->MapEntity)) (buffer, &entityValue, &alphabet);
+   
    if (alphabet == WC_EOS)
      {
        /* Unknown entity */
-       entityValue[0] = WC_EOS;
        lang = -1;
-       usprintf (msgBuffer, TEXT("Unknown entity %s;"), entityName);
+       usprintf (msgBuffer, TEXT("Unknown entity %s;"), buffer);
        XmlParseError (XMLcontext.doc, msgBuffer, 0);
      }
    else
-     {
-       if (entityValue[0] != WC_EOS)
-	 lang = TtaGetLanguageIdFromAlphabet(alphabet);
-     }
+     lang = TtaGetLanguageIdFromAlphabet(alphabet);
    
-   if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
-       XhtmlEntityCreated (entityVal, lang, entityName, &XMLcontext);
-   else
-       (*(currentParserCtxt->EntityCreated)) (entityValue, lang,
-					      buffer, XMLcontext.doc);       
+   /* Creation of the entity */
+   if (currentAttribute)
+     {
+       /* Entity in an attribute value */
+     }
+   else     
+     /* Entity in an element */
+     (*(currentParserCtxt->EntityCreated)) (entityValue, lang,
+					    buffer, &XMLcontext);
+
    TtaFreeMemory (buffer);
 }
 /*--------------------  Entities  (end)  ---------------------*/
@@ -2795,9 +2714,7 @@ CHAR_T     *commentValue;
 		 &mappedName, &cont, XMLcontext.doc);
    if (elType.ElTypeNum <= 0)
      {
-       usprintf (msgBuffer,
-		 TEXT("Unknown element %s"),
-		 commentValue);
+       usprintf (msgBuffer, TEXT("Unknown element %s"), commentValue);
        XmlParseError (XMLcontext.doc, msgBuffer, 0);
      }
    else
@@ -2822,8 +2739,8 @@ CHAR_T     *commentValue;
        commentText = TtaNewElement (XMLcontext.doc, elTypeTxt);
        XmlSetElemLineNumber (commentText);
        TtaInsertFirstChild (&commentText, commentLineEl, XMLcontext.doc);
-       TtaSetTextContent (commentText, TEXT(""), XMLcontext.language,
-			  XMLcontext.doc);
+       TtaSetTextContent (commentText, TEXT(""),
+			  XMLcontext.language, XMLcontext.doc);
        /* Look for line break in the comment and create as many */
        /* XMLcomment_line elements as needed */
        i = 0; start = 0;
@@ -2841,13 +2758,14 @@ CHAR_T     *commentValue;
 	       /* Inserts the new XMLcomment_line after the previous one */
 	       TtaInsertSibling (commentLineEl, TtaGetParent (commentText),
 				 FALSE, XMLcontext.doc);
-	       /* Create a TEXT element as the first child of new XMLcomment_line element */
+	       /* Create a TEXT element as the first child of */
+	       /* the new XMLcomment_line element */
 	       commentText = TtaNewElement (XMLcontext.doc, elTypeTxt);
 	       XmlSetElemLineNumber (commentText);
 	       TtaInsertFirstChild (&commentText, commentLineEl,
 				    XMLcontext.doc);
-	       TtaSetTextContent (commentText, TEXT(""), XMLcontext.language,
-				  XMLcontext.doc);
+	       TtaSetTextContent (commentText, TEXT(""),
+				  XMLcontext.language, XMLcontext.doc);
 	       i++;
 	       start = i;   /* Start of next comment line */
 	     }
@@ -2881,9 +2799,9 @@ void            *userData;
 #endif  /* __STDC__ */
 
 {
-#ifdef LC
+#ifdef EXPAT_PARSER_DEBUG
   printf ("\n Hndl_CdataStart");
-#endif /* LC */
+#endif /* EXPAT_PARSER_DEBUG */
 }
 
 /*----------------------------------------------------------------------
@@ -2898,9 +2816,9 @@ void            *userData;
 #endif  /* __STDC__ */
 
 {
-#ifdef LC
+#ifdef EXPAT_PARSER_DEBUG
   printf ("\n Hndl_CdataEnd");
-#endif /* LC */
+#endif /* EXPAT_PARSER_DEBUG */
 }
 
 /*----------------------------------------------------------------------
@@ -2925,9 +2843,9 @@ int              length;
    CHAR_T        *bufferwc;
    int            i;
 
-#ifdef LC
-   /* printf ("\n Hndl_CharacterData - length = %d - ", length); */
-#endif /* LC */
+#ifdef EXPAT_PARSER_DEBUG
+   printf ("\n Hndl_CharacterData - length = %d - ", length);
+#endif /* EXPAT_PARSER_DEBUG */
 
    buffer = TtaAllocString (length + 1);
    bufferwc = TtaAllocString (length + 1);
@@ -2935,9 +2853,6 @@ int              length;
    for (i=0; i<length; i++)
      {
        buffer[i] = data[i];
-#ifdef LC
-       /* printf ("%c", data[i]); */
-#endif /* LC */
      }
    buffer[length] = WC_EOS;
 
@@ -2965,9 +2880,9 @@ const XML_Char  *data;
 #endif  /* __STDC__ */
 
 {
-#ifdef LC
+#ifdef EXPAT_PARSER_DEBUG
    printf ("\n Hndl_Comment %s", data);
-#endif /* LC */
+#endif /* EXPAT_PARSER_DEBUG */
 
    CreateXmlComment ((CHAR_T*) data);
 }
@@ -2992,7 +2907,7 @@ int              length;
 #endif  /* __STDC__ */
 
 {
-#ifdef LC
+#ifdef EXPAT_PARSER_DEBUG
   int  i;
 
   printf ("\n Hndl_Default - length = %d - ", length);
@@ -3001,7 +2916,7 @@ int              length;
     {
       printf ("%c", data[i]);
     }
-#endif /* LC */
+#endif /* EXPAT_PARSER_DEBUG */
 }
 
 /*----------------------------------------------------------------------
@@ -3020,26 +2935,16 @@ int              length;
 #endif  /* __STDC__ */
 
 {
-   int        i;
-   STRING     buffer;
-
-#ifdef LC
+#ifdef EXPAT_PARSER_DEBUG
+   int i;
    printf ("\n Hndl_DefaultExpand - length = %d - ", length);
-
    for (i=0; i<length; i++)
        printf ("%c", data[i]);
-#endif /* LC */
+#endif /* EXPAT_PARSER_DEBUG */
    
-   /* Treatment for the entities */
+   /* Specefic treatment for the entities */
    if (length > 1 && data[0] == '&')
-     {
-       buffer = TtaAllocString (length + 1);
-       for (i = 0; i < length; i++)
-	 buffer[i] = data[i];
-       buffer[length] = WC_EOS;
-       CreateXmlEntity (buffer);
-       TtaFreeMemory (buffer);
-     }
+     CreateXmlEntity ((CHAR_T*) data, length);
 }
 
 /*----------------------------------------------------------------------
@@ -3057,9 +2962,9 @@ const XML_Char  *doctypeName;
 #endif  /* __STDC__ */
 
 {
-#ifdef LC
+#ifdef EXPAT_PARSER_DEBUG
    printf ("\n Hndl_DoctypeStart %s", doctypeName);
-#endif /* LC */
+#endif /* EXPAT_PARSER_DEBUG */
 }
 
 /*----------------------------------------------------------------------
@@ -3076,9 +2981,9 @@ void            *userData;
 #endif  /* __STDC__ */
 
 {
-#ifdef LC
+#ifdef EXPAT_PARSER_DEBUG
    printf ("\n Hndl_DoctypeEnd");
-#endif /* LC */
+#endif /* EXPAT_PARSER_DEBUG */
 }
 
 /*----------------------------------------------------------------------
@@ -3106,9 +3011,9 @@ const XML_Char **attlist;
    PtrParserCtxt   elementParserCtxt = NULL;
    CHAR_T          msgBuffer[MaxMsgLength];
 
-#ifdef LC
+#ifdef EXPAT_PARSER_DEBUG
    printf ("\n Hndl_ElementStart '%s'\n", name);
-#endif /* LC */
+#endif /* EXPAT_PARSER_DEBUG */
   
    /* Initialize root element name and parser context if not done yet */
    if (XMLrootName[0] == WC_EOS)
@@ -3170,9 +3075,9 @@ const XML_Char **attlist;
 	      /* Create the corresponding Thot attribute */
 	      bufAttr = TtaGetMemory ((strlen (*attlist)) + 1);
 	      strcpy (bufAttr, *attlist);
-#ifdef LC
+#ifdef EXPAT_PARSER_DEBUG
 	      printf ("\n  attr %s :", bufAttr);
-#endif /* LC */
+#endif /* EXPAT_PARSER_DEBUG */
 	      EndOfAttributeName (bufAttr);
 	      TtaFreeMemory (bufAttr);
 	      
@@ -3186,9 +3091,9 @@ const XML_Char **attlist;
 		{
 		  bufAttr = TtaGetMemory ((strlen (*attlist)) + 1);
 		  strcpy (bufAttr, *attlist);
-#ifdef LC
+#ifdef EXPAT_PARSER_DEBUG
 		  printf (" value=%s ", bufAttr);
-#endif /* LC */
+#endif /* EXPAT_PARSER_DEBUG */
 		  EndOfAttributeValue (bufAttr);
 		  TtaFreeMemory (bufAttr);
 		}
@@ -3228,9 +3133,9 @@ const XML_Char  *name
    CHAR_T       *buffer;
    CHAR_T       *ptr;
 
-#ifdef LC
+#ifdef EXPAT_PARSER_DEBUG
    printf ("\n Hndl_ElementEnd '%s'", name);
-#endif /* LC */
+#endif /* EXPAT_PARSER_DEBUG */
 
    ImmediatelyAfterTag = FALSE;
 
@@ -3294,13 +3199,13 @@ const XML_Char  *publicId;
 #endif  /* __STDC__ */
 
 {
-#ifdef LC
+#ifdef EXPAT_PARSER_DEBUG
   printf ("\n Hndl_ExternalEntityRef");
   printf ("\n   context  : %s", context);
   printf ("\n   base     : %s", base);
   printf ("\n   systemId : %s", systemId);
   printf ("\n   publicId : %s", publicId);
-#endif /* LC */
+#endif /* EXPAT_PARSER_DEBUG */
   return 1;
 }
 
@@ -3321,10 +3226,10 @@ const XML_Char  *uri;
 
 {   
 
-#ifdef LC
+#ifdef EXPAT_PARSER_DEBUG
   printf ("\n Hndl_NameSpaceStart");
   printf ("\n   prefix : %s; uri : %s", prefix, uri);
-#endif /* LC */
+#endif /* EXPAT_PARSER_DEBUG */
 }
 
 /*----------------------------------------------------------------------
@@ -3341,10 +3246,10 @@ const XML_Char  *prefix;
 #endif  /* __STDC__ */
 
 {
-#ifdef LC
+#ifdef EXPAT_PARSER_DEBUG
   printf ("\n Hndl_NameSpaceEnd");
   printf ("\n   prefix : %s", prefix);
-#endif /* LC */
+#endif /* EXPAT_PARSER_DEBUG */
 }
 
 /*----------------------------------------------------------------------
@@ -3371,13 +3276,13 @@ const XML_Char  *publicId;
 #endif  /* __STDC__ */
 
 {
-#ifdef LC
+#ifdef EXPAT_PARSER_DEBUG
   printf ("\n Hndl_Notation");
   printf ("\n   notationName : %s", notationName);
   printf ("\n   base         : %s", base);
   printf ("\n   systemId     : %s", systemId);
   printf ("\n   publicId     : %s", publicId);
-#endif /* LC */
+#endif /* EXPAT_PARSER_DEBUG */
 }
 
 /*----------------------------------------------------------------------
@@ -3397,9 +3302,9 @@ void            *userData;
 #endif  /* __STDC__ */
 
 {
-#ifdef LC
+#ifdef EXPAT_PARSER_DEBUG
   printf ("\n Hndl_NotStandalone");
-#endif /* LC */
+#endif /* EXPAT_PARSER_DEBUG */
   return 1;
 }
 
@@ -3422,12 +3327,14 @@ const XML_Char  *pidata;
 #endif  /* __STDC__ */
 
 {
-#ifdef LC
+#ifdef EXPAT_PARSER_DEBUG
   printf ("\n Hndl_PI");
   printf ("\n   target : %s", target);
   printf ("\n   pidata : %s", pidata);
   /* No treatment in Amaya for PI */
-#endif /* LC */
+#endif /* EXPAT_PARSER_DEBUG */
+
+  /* No treatment in Amaya for PI */
 }
 
 /*----------------------------------------------------------------------
@@ -3446,10 +3353,10 @@ XML_Encoding    *info
 #endif  /* __STDC__ */
 
 {
-#ifdef LC
+#ifdef EXPAT_PARSER_DEBUG
   printf ("\n Hndl_UnknownEncoding");
   printf ("\n   name : %s", name);
-#endif /* LC */
+#endif /* EXPAT_PARSER_DEBUG */
   return 1;
 }
 
@@ -3481,14 +3388,14 @@ const XML_Char  *notationName;
 #endif  /* __STDC__ */
 
 {
-#ifdef LC
+#ifdef EXPAT_PARSER_DEBUG
   printf ("\n Hndl_UnparsedEntity");
   printf ("\n   entityName   : %s", entityName);
   printf ("\n   base         : %s", base);
   printf ("\n   systemId     : %s", systemId);
   printf ("\n   publicId     : %s", publicId);
   printf ("\n   notationName : %s", notationName);
-#endif /* LC */
+#endif /* EXPAT_PARSER_DEBUG */
 }
 
 /*---------------- End of Handler definition ----------------*/

@@ -492,6 +492,8 @@ ThotBool	    withUndo;
    STRING              buffer = NULL;
    int                 length;
    ThotBool            isHTML;
+   CHAR_T              bufMenu[MAX_LENGTH];
+   int                 i;
 
    /* ask the user to select target document and target anchor */
    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SEL_TARGET), NULL);
@@ -567,6 +569,37 @@ ThotBool	    withUndo;
 	  }
 
 #ifndef _WINDOWS
+#ifdef LC
+	/* Dialogue form for open URL or local */
+	i = 0;
+	ustrcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+	i += ustrlen (&bufMenu[i]) + 1;
+	ustrcpy (&bufMenu[i], TtaGetMessage (AMAYA, AM_CLEAR));
+	i += ustrlen (&bufMenu[i]) + 1;
+	ustrcpy (&bufMenu[i], TtaGetMessage (AMAYA, AM_PARSE));
+	
+	TtaNewSheet (BaseDialog + AttrHREFForm, TtaGetViewFrame (doc, 1),
+		     TtaGetMessage (AMAYA, AM_ATTRIBUTE), 3, bufMenu,
+		     TRUE, 2, 'L', D_CANCEL);
+	TtaNewTextForm (BaseDialog + AttrHREFText, BaseDialog + AttrHREFForm,
+			TtaGetMessage (AMAYA, AM_HREF_VALUE), 50, 1, TRUE);
+	TtaNewLabel (BaseDialog + HREFLocalName,
+		     BaseDialog + AttrHREFForm, " ");
+	TtaListDirectory (DirectoryName, BaseDialog + AttrHREFForm,
+			  TtaGetMessage (LIB, TMSG_DOC_DIR),
+			  BaseDialog + HREFDirSelect, ScanFilter,
+			  TtaGetMessage (AMAYA, AM_FILES),
+			  BaseDialog + HREFDocSelect);
+	TtaNewTextForm (BaseDialog + HREFFilterText,
+			BaseDialog + AttrHREFForm,
+			TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
+	/* initialise the text fields in the dialogue box */
+	TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
+	TtaSetTextForm (BaseDialog + HREFFilterText, ScanFilter);
+	TtaSetDialoguePosition ();
+	TtaShowDialogue (BaseDialog + AttrHREFForm, FALSE);
+#else /* LC */
+	/* Dialogue form for open URL or local */
 	TtaNewForm (BaseDialog + AttrHREFForm, TtaGetViewFrame (doc, 1),
 		    TtaGetMessage (AMAYA, AM_ATTRIBUTE), TRUE, 2, 'L',
 		    D_CANCEL);
@@ -576,6 +609,7 @@ ThotBool	    withUndo;
 	TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
 	TtaSetDialoguePosition ();
 	TtaShowDialogue (BaseDialog + AttrHREFForm, FALSE);
+#endif /* LC */
 #else  /* _WINDOWS */
 	CreateTextDlgWindow (currentWindow, AttrHREFvalue);
 #endif  /* _WINDOWS */

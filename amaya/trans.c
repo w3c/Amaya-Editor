@@ -2484,11 +2484,11 @@ CHAR_T*             data;
 		{
 		  int error;
 		  TtaSetStructureChecking (0, TransDoc);
-#ifdef EXPAT_PARSER
-		  MathMLElementComplete (elParent, TransDoc, &error);
-#else /* EXPAT_PARSER */
+#ifdef OLD_XML_PARSER
 		  XMLElementComplete (elParent, TransDoc);
-#endif /* EXPAT_PARSER */
+#else /* OLD_XML_PARSER */
+		  MathMLElementComplete (elParent, TransDoc, &error);
+#endif /* OLD_XML_PARSER */
 		  TtaSetStructureChecking (1, TransDoc);
 		} 
 	    }

@@ -8,37 +8,37 @@
 
 extern void ParseCharset ( Element el,
                            Document doc );
+extern void XhtmlMapEntity ( STRING entityName,
+                             int *entityValue,
+                             STRING alphabet );
+extern void XhtmlEntityCreated ( int entityValue,
+                                 Language lang,
+                                 STRING entityName,
+                                 ParserData *context );
 extern void XhtmlElementComplete ( Element el,
                                    Document doc,
                                    int *error );
 extern void MapHTMLAttributeValue ( CHAR_T* AttrVal,
                                     AttributeType attrType,
                                     int* value );
-extern void XhtmlMapEntity ( STRING entityName,
-                             int *entityValue,
-                             STRING alphabet );
-extern void XhtmlEntityCreated ( int entityVal,
-                                 Language lang,
-                                 STRING entityName,
-                                 ParserData *context );
 
 #else /* __STDC__ */
 
 extern void ParseCharset (/* Element el,
                              Document doc */);
+extern void XhtmlMapEntity (/* STRING entityName,
+                               int *entityValue,
+                               STRING alphabet */);
+extern void XhtmlEntityCreated (/* int entityValue,
+                                   Language lang,
+                                   STRING entityName,
+                                   ParserData *context */);
 extern void XhtmlElementComplete (/* Element el,
                                      Document doc,
                                      int *error */);
 extern void MapHTMLAttributeValue (/* CHAR_T* AttrVal,
                                       AttributeType attrType,
                                       int* value */);
-extern void XhtmlMapEntity (/* STRING entityName,
-                               int *entityValue,
-                               STRING alphabet */);
-extern void XhtmlEntityCreated (/* int entityVal,
-                                   Language lang,
-                                   STRING entityName,
-                                   ParserData *context */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

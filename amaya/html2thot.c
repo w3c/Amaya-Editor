@@ -45,7 +45,7 @@
 
 /* tables defined in XHTMLbuilder.c */
 extern AttrValueMapping XhtmlAttrValueMappingTable[]; 
-extern XhtmlEntity      XhtmlEntityTable[];
+extern XmlEntity      XhtmlEntityTable[];
 
 typedef struct _UnicodeFallbackEntry
   {
@@ -3134,9 +3134,14 @@ CHAR_T              c;
 	     ustrcpy (schemaName, TEXT("MathML"));
 	  else
 	     ustrcpy (schemaName, TEXT("GraphML"));
-
 	  /* Parse the corresponding element with the XML parser */
-#ifdef EXPAT_PARSER
+#ifdef OLD_XML_PARSER
+	  if (!XMLparse (stream, &CurrentBufChar, schemaName,
+			 HTMLcontext.doc, &HTMLcontext.lastElement,
+			 &HTMLcontext.lastElementClosed,
+			 HTMLcontext.language))
+	    StopParsing ();   /* the XML parser raised an error */
+#else /* OLD_XML_PARSER */
 	  if (!ParseIncludedXml (stream, FileBuffer, INPUT_FILE_BUFFER_SIZE,
 				 &EndOfHtmlFile, &NotToReadFile, PreviousFileBuffer,
 				 InputText, &CurrentBufChar,
@@ -3146,17 +3151,7 @@ CHAR_T              c;
 				 &HTMLcontext.lastElementClosed,
 				 HTMLcontext.language))
 	    StopParsing ();   /* the XML parser raised an error */
-#else /* EXPAT_PARSER */
-	  if (!ustrcmp (theGI, TEXT("math")))
-	     ustrcpy (schemaName, TEXT("MathML"));
-	  else
-	     ustrcpy (schemaName, TEXT("GraphML"));
-	  if (!XMLparse (stream, &CurrentBufChar, schemaName,
-			 HTMLcontext.doc, &HTMLcontext.lastElement,
-			 &HTMLcontext.lastElementClosed,
-			 HTMLcontext.language))
-	    StopParsing ();   /* the XML parser raised an error */
-#endif /* EXPAT_PARSER */
+#endif /* OLD_XML_PARSER */
 	  /* the whole element has been read by the XML parser */
 	  /* reset the automaton state */
 	  NormalTransition = FALSE;
@@ -6981,14 +6976,15 @@ Document   doc;
        InputText = html_buff; 
        /* InputText = HTMLbuf; */
        CurrentBufChar = 0;
-#ifdef EXPAT_PARSER
-       if (!ParseXmlSubTree (InputText, &lastelem, &isclosed,
-			     doc, TtaGetDefaultLanguage()))
-#else /* EXPAT_PARSER */
+#ifdef OLD_XML_PARSER
        if (!XMLparse (NULL, &CurrentBufChar, schemaName, doc, &lastelem,
 		      &isclosed, TtaGetDefaultLanguage()))
-#endif /* EXPAT_PARSER */
-	  StopParsing ();
+	 StopParsing ();
+#else /* OLD_XML_PARSER */
+       if (!ParseXmlSubTree (InputText, &lastelem, &isclosed,
+			     doc, TtaGetDefaultLanguage()))
+	 StopParsing ();
+#endif /* OLD_XML_PARSER */
       }
 }
 

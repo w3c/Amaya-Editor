@@ -72,13 +72,14 @@ typedef struct _ParserData
 }
 ParserData;
 
-typedef CHAR_T XhtmlEntityName[10];
-typedef struct _XhtmlEntity
+typedef CHAR_T XmlEntityName[30];
+typedef struct _XmlEntity
 {
-  XhtmlEntityName  charName;  /* entity name */
-  int              charCode;  /* decimal code of ISO-Latin1 char */
+  XmlEntityName    charName;      /* entity name */
+  int              charCode;      /* decimal code of ISO-Latin1 char */
+  CHAR_T           charAlphabet;  /* 'L' = ISO-Latin-1, 'G' = Symbol */
 }
-XhtmlEntity;
+XmlEntity;
 
 #endif /* PARSER_H */
 

@@ -134,7 +134,11 @@ typedef enum _ClickEvent {
 #define AClassSelect    31
 #define ConfirmSave     32
 #define ConfirmSaveList 33
-#define OptionMenu	34
+#define HREFDirSelect   34
+#define HREFDocSelect   35
+#define HREFFilterText  36
+#define HREFLocalName   37
+#define OptionMenu	38
 /* MAX_SUBMENUS references reserved for submenus of Option menu */
 /* Do not insert new entries here */
 #define MAX_SUBMENUS    400
