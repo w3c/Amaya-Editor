@@ -674,9 +674,6 @@ int                 dy;
    if (Gdepth (0) == 1)
       Gdepth (0) = GetDeviceCaps (hdc, BITSPIXEL);
 
-   /* Position par defaut du 1er menu */
-   XCurs (0) = 100;
-   YCurs (0) = 100;
    ReleaseDC (WIN_Main_Wd, hdc);
 #endif /* NEW_WILLOWS */
 
@@ -691,10 +688,6 @@ int                 dy;
    GRootW (0) = RootWindow (GDp (0), ThotScreen (0));
    cmap (0) = XDefaultColormap (GDp (0), ThotScreen (0));
 #endif
-
-   /* Position par defaut du 1er menu */
-   XCurs (0) = 100;
-   YCurs (0) = 100;
 
    /* Largeur des bandes de scroll */
    InitDocColors (name);
