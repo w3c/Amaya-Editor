@@ -11,8 +11,9 @@ include ../Options
 
 INCLUDES= -DHAVE_CONFIG_H $(AMAYA_INCLUDES) @X_CFLAGS@
 LIBS	= -L../tablelib -L../thotlib -L.. -lThotTable -lThotEditor \
-          $(IMGLIBS) $(AMAYA_OPTION_LIBS) $(X_LIBS) -lXm -lXt -lXext \
-	  $(X_PRE_LIBS) -lX11 $(X_EXTRA_LIBS) @LIBS@ @EXTRA_LIBS@ -lm
+          $(IMGLIBS) $(AMAYA_OPTION_LIBS) $(MOTIF_LIBRARIES) -lXm \
+	  $(X_LIBS) -lXt -lXext $(X_PRE_LIBS) -lX11 $(X_EXTRA_LIBS) \
+	  @LIBS@ @EXTRA_LIBS@ -lm
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@

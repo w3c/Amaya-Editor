@@ -492,6 +492,17 @@ void               *param;
 	     strcat (string, ":");
 	     strcat (string, new->ctxt->class);
 	  }
+	if ((new->ctxt->class) && (new->ctxt->classattr == HTML_ATTR_ID))
+	  {
+	     if (string[0] != 0)
+		strcat (string, " ");
+	     if (new->ctxt->attrelem)
+	       {
+		  strcat (string, GITagNameByType (new->ctxt->attrelem));
+	       }
+	     strcat (string, "#");
+	     strcat (string, new->ctxt->class);
+	  }
 	new->selector = TtaGetMemory (strlen (string) + 4);
 	strcpy (new->selector, string);
      }

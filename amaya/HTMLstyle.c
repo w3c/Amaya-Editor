@@ -1373,6 +1373,7 @@ PSchema             gPres;
   char                sel[150];
   char                class[150];
   char                pseudoclass[150];
+  char                id[150];
   char                attrelemname[150];
   char               *deb = &sel[0];
   char               *elem = &sel[0];
@@ -1397,17 +1398,18 @@ PSchema             gPres;
   sel[0] = 0;
   class[0] = 0;
   pseudoclass[0] = 0;
+  id[0] = 0;
   attrelemname[0] = 0;
   while (1)
     {
       /* put one word in the sel buffer */
       while ((*selector != 0) && (*selector != ',') &&
 	     (*selector != '.') && (*selector != ':') &&
-	     (!IS_BLANK (selector)))
+	     (*selector != '#') && (!IS_BLANK (selector)))
 	*cur++ = *selector++;
       *cur++ = 0;
       
-      if ((*selector == ':') || (*selector == '.'))
+      if ((*selector == ':') || (*selector == '.') || (*selector == '#'))
 	{
 	  /* keep the name as attrelemname, it's not an ancestor */
 	  strcpy (attrelemname, elem);
@@ -1460,6 +1462,19 @@ PSchema             gPres;
 	  *cur++ = 0;
 	  cur = deb;
 	}
+      else if (*selector == '#')
+	{
+	  /* read the id : only one allowed by selector */
+	  id[0] = 0;
+	  cur = &id[0];
+	  selector++;
+	  while ((*selector != 0) && (*selector != ',') &&
+		 (*selector != '.') && (*selector != ':') &&
+		 (!IS_BLANK (selector)))
+	    *cur++ = *selector++;
+	  *cur++ = 0;
+	  cur = deb;
+	}
       else if (IS_BLANK (selector))
 	SKIP_BLANK (selector);
     }
@@ -1469,6 +1484,8 @@ PSchema             gPres;
     elem = &class[0];
   if (*elem == 0)
     elem = &pseudoclass[0];
+  if (*elem == 0)
+    elem = &id[0];
   if (*elem == 0)
     return (selector);
 
@@ -1485,6 +1502,11 @@ PSchema             gPres;
     {
       ctxt->class = &pseudoclass[0];
       ctxt->classattr = HTML_ATTR_PseudoClass;
+    }
+  else if (id[0] != 0)
+    {
+      ctxt->class = &id[0];
+      ctxt->classattr = HTML_ATTR_ID;
     }
   else
     {
