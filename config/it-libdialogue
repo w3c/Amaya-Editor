@@ -180,108 +180,107 @@
 178 File PostScript
 179 Stampante
 180 Cerca
-181 **UPPERCASE = lowercase
-182 MAIUSCOLE = minuscole
-183 Rimpiazza con
-184 Rimpiazza
-185 Non rimpiazzare
-186 Rimpiazza su richiesta
-187 Rimpiazzamento automatico
-188 Dove cercare
-189 Prima della selezione
-190 Nella selezione
-191 Dopo la selezione
-192 L\'intero documento
-193 Non rimpiazzare
-194 Colori di default
-195 prima di chiuderlo
-196 Chiudi un documento
-197 Senza_nome
-198 Crea un documento
-199 Tipo di documento
-200 Rinomina
-201 Simboli matematici
-202 Grafica
-203 Alfabeto latino
-204 Alfabeto greco
-205 Presentazione
-206 File
-207 Aprire un documento
-208 Tipo di documento
-209 Viste
-210 Cambia filtro
-211 Valore non modificato
-212 Incrementa
-213 Decrementa
-214 Visibilità
-215 Scarto sulla dimensione dei caratteri
-216 Zoom
-217 Salva con nome
-218 Salva
-219 Thot
-220 Formattazione
-221 Copia
-222 Testo
-223 Grafica
-224 Simbolo
-225 Immagine
-226 Tipo di elemento
-227 dopo
-228 prima
-229 intorno
-230 Includi
-231 Incolla
-232 da creare
-233 Inserisci
-234 Salto pagina
-235 (Sola lettura)
-236 Ingloba
-237 Cambia tipo
-238 Lingua dell'elemento
-239 Lingua ereditata:
-240 Non modificate il documento!
-241 Non trovato
-242 Cerca in
-243 Cerca gli elementi vuoti
-244 Cerca i riferimenti vuoti
-245 Cerca i riferimenti a questo elemento
-246 Collegamento
-247 Riferimento nel documento
-248 Cerca
-249 Elemento a sola lettura
-250 Nulla da rimpiazzare
-251 Apri
-252 Caratteri standard
-253 Grafica standard
-254 Formato standard
-255 Geometria standard
-256 pt
-257 Stile delle linee
-258 Spessore delle linee
-259 Motivo di riempimento
-260 Dividi
-261 Tipo di oggetto
-262 Vai a pagina numero:
-263 Any
-264 Attributo da cercare
-265 Tipo da cercare
-266 Nature
-267 Valore dell\'attributo:
-268 Attributo sconosciuto
-269 Crea l\'elemento riferito
-270 Mostra l\'elemento riferito
-271 Modo di inserzione
-272 Annulla
-273 Errore nella traduzione in PostScript
-274 Comando rifiutato dallo spooler "%s"
-275 Impossibile creare "%s"
-276 Presentazione generale
-277 Impossibile collegare il nuovo elemento
-278 Codifica dei caratteri
-279 Nessuna lingua
-280 Soprassegnato
-281 Formato del documento
-282 Eventi
-283 Rimuovi l\'attributo
-284 Il tasto di sinistra setta il colore della selezione
-285 l tasto centrale o di destra setta il colore del cursore
+181 MAIUSCOLE = minuscole
+182 Rimpiazza con
+183 Rimpiazza
+184 Non rimpiazzare
+185 Rimpiazza su richiesta
+186 Rimpiazzamento automatico
+187 Dove cercare
+188 Prima della selezione
+189 Nella selezione
+190 Dopo la selezione
+191 L\'intero documento
+192 Non rimpiazzare
+193 Colori di default
+194 prima di chiuderlo
+195 Chiudi un documento
+196 Senza_nome
+197 Crea un documento
+198 Tipo di documento
+199 Rinomina
+200 Simboli matematici
+201 Grafica
+202 Alfabeto latino
+203 Alfabeto greco
+204 Presentazione
+205 File
+206 Aprire un documento
+207 Tipo di documento
+208 Viste
+209 Cambia filtro
+210 Valore non modificato
+211 Incrementa
+212 Decrementa
+213 Visibilità
+214 Scarto sulla dimensione dei caratteri
+215 Zoom
+216 Salva con nome
+217 Salva
+218 Thot
+219 Formattazione
+220 Copia
+221 Testo
+222 Grafica
+223 Simbolo
+224 Immagine
+225 Tipo di elemento
+226 dopo
+227 prima
+228 intorno
+229 Includi
+230 Incolla
+231 da creare
+232 Inserisci
+233 Salto pagina
+234 (Sola lettura)
+235 Ingloba
+236 Cambia tipo
+237 Lingua dell'elemento
+238 Lingua ereditata:
+239 Non modificate il documento!
+240 Non trovato
+241 Cerca in
+242 Cerca gli elementi vuoti
+243 Cerca i riferimenti vuoti
+244 Cerca i riferimenti a questo elemento
+245 Collegamento
+246 Riferimento nel documento
+247 Cerca
+248 Elemento a sola lettura
+249 Nulla da rimpiazzare
+250 Apri
+251 Caratteri standard
+252 Grafica standard
+253 Formato standard
+254 Geometria standard
+255 pt
+256 Stile delle linee
+257 Spessore delle linee
+258 Motivo di riempimento
+259 Dividi
+260 Tipo di oggetto
+261 Vai a pagina numero:
+262 Any
+263 Attributo da cercare
+264 Tipo da cercare
+265 Nature
+266 Valore dell\'attributo:
+267 Attributo sconosciuto
+268 Crea l\'elemento riferito
+269 Mostra l\'elemento riferito
+270 Modo di inserzione
+271 Annulla
+272 Errore nella traduzione in PostScript
+273 Comando rifiutato dallo spooler "%s"
+274 Impossibile creare "%s"
+275 Presentazione generale
+276 Impossibile collegare il nuovo elemento
+277 Codifica dei caratteri
+278 Nessuna lingua
+279 Soprassegnato
+280 Formato del documento
+281 Eventi
+282 Rimuovi l\'attributo
+283 Il tasto di sinistra setta il colore della selezione
+284 l tasto centrale o di destra setta il colore del cursore

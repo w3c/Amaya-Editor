@@ -180,105 +180,105 @@
 178 PostScript dosya
 179 Yazýcý
 180 Arama
-181 **UPPERCASE = lowercase
-182 BÜYÜK HARF = küçük harf
-183 ile deðiþtir
-184 Deðiþtir
-185 Deðiþtirme
-186 Ýstek üzerine deðiþtir
-187 Otomatik olarak deðiþtir
-188 Arama nerede
-189 Seçimden önce
-190 Seçim içi
-191 Seçimden sonra
-192 Tüm belgede
-193 Deðiþtirme
-194 Öntanýmlý renkler
-195 kapamadan önce
-196 Belgeyi kapa
-197 Ýsimsiz
-198 Belge yarat
-199 Belge tarzý
-200 Ýsmini deðiþtir
-201 Matematik sembolleri
-202 Grafik
-203 Latin alfabesi
-204 Yunan alfabesi
-205 Sunum
-206 Dosyalar
-207 Belge aç
-208 Belge türü
-209 Görünümler
-210 Süzgeç deðiþtir
-211 Deðer deðiþtirilmedi
-212 Arttýr
-213 Azalt
-214 Görüþ mesafesi
-215 Karakter boyu farký
-216 Yaklaþ
-217 Ýsimle kaydet
-218 Kaydet
-219 Thot
-220 Biçim
-221 Kopyala
-222 Metin
-223 Grafik
-224 Simge
-225 Görüntü
-226 Birim tipi
-227 önce
-228 sonra
-229 civarýnda
-230 Ekle
-231 Yapýþtýr
-232 to create
-233 Ekle
-234 Sayfa kesmesi
-235 (Salt-Oku)
-236 Çevrele
-237 Tip deðiþtir
-238 Birimin dili
-239 Alýnan dil
-240 Belgeyi deðiþtirmeyin!
-241 Bulunamadý
-242 Ara
-243 Boþ birimleri ara
-244 Boþ kaynaklarý ara
-245 Bu birime kaynaklarý ara
-246 Baðlantý
-247 Belge içi kaynak
-248 Ara
-249 Salt-oku birim
-250 Deðiþtirilecek bir þey yok
-251 Aç
-252 Standart karakterler
-253 Standart grafikler
-254 Standart biçim
-255 Standart geometri
-256 pt
-257 Çizgi tarzý
-258 Çizgi aðýrlýðý
-259 Doldurma þekli
-260 Ayýr
-261 Nesne türü
-262 Numaralý sayfaya git
-263 Herhangi
-264 Aranacak olan özellik
-265 Aranacak olan tip
-266 Natures
-267 Özellik deðeri
-268 Bilinmeyen özellik
-269 Kaynaklý birim yarat
-270 Kaynaklý birim göster
-271 Ekleme kipi
-272 Vazgeç
-273 PostScript dönüþümünde hata
-274 Komut "%s" tarafýndan reddedildi.
-275 "%s" yaratýlamadý
-276 Genel biçim
-277 Yeni birime baðlantý yapýlamadý
-278 Karakter kodlamasý
-279 Dil yok
+181 BÜYÜK HARF = küçük harf
+182 ile deðiþtir
+183 Deðiþtir
+184 Deðiþtirme
+185 Ýstek üzerine deðiþtir
+186 Otomatik olarak deðiþtir
+187 Arama nerede
+188 Seçimden önce
+189 Seçim içi
+190 Seçimden sonra
+191 Tüm belgede
+192 Deðiþtirme
+193 Öntanýmlý renkler
+194 kapamadan önce
+195 Belgeyi kapa
+196 Ýsimsiz
+197 Belge yarat
+198 Belge tarzý
+199 Ýsmini deðiþtir
+200 Matematik sembolleri
+201 Grafik
+202 Latin alfabesi
+203 Yunan alfabesi
+204 Sunum
+205 Dosyalar
+206 Belge aç
+207 Belge türü
+208 Görünümler
+209 Süzgeç deðiþtir
+210 Deðer deðiþtirilmedi
+211 Arttýr
+212 Azalt
+213 Görüþ mesafesi
+214 Karakter boyu farký
+215 Yaklaþ
+216 Ýsimle kaydet
+217 Kaydet
+218 Thot
+219 Biçim
+220 Kopyala
+221 Metin
+222 Grafik
+223 Simge
+224 Görüntü
+225 Birim tipi
+226 önce
+227 sonra
+228 civarýnda
+229 Ekle
+230 Yapýþtýr
+231 to create
+232 Ekle
+233 Sayfa kesmesi
+234 (Salt-Oku)
+235 Çevrele
+236 Tip deðiþtir
+237 Birimin dili
+238 Alýnan dil
+239 Belgeyi deðiþtirmeyin!
+240 Bulunamadý
+241 Ara
+242 Boþ birimleri ara
+243 Boþ kaynaklarý ara
+244 Bu birime kaynaklarý ara
+245 Baðlantý
+246 Belge içi kaynak
+247 Ara
+248 Salt-oku birim
+249 Deðiþtirilecek bir þey yok
+250 Aç
+251 Standart karakterler
+252 Standart grafikler
+253 Standart biçim
+254 Standart geometri
+255 pt
+256 Çizgi tarzý
+257 Çizgi aðýrlýðý
+258 Doldurma þekli
+259 Ayýr
+260 Nesne türü
+261 Numaralý sayfaya git
+262 Herhangi
+263 Aranacak olan özellik
+264 Aranacak olan tip
+265 Natures
+266 Özellik deðeri
+267 Bilinmeyen özellik
+268 Kaynaklý birim yarat
+269 Kaynaklý birim göster
+270 Ekleme kipi
+271 Vazgeç
+272 PostScript dönüþümünde hata
+273 Komut "%s" tarafýndan reddedildi.
+274 "%s" yaratýlamadý
+275 Genel biçim
+276 Yeni birime baðlantý yapýlamadý
+277 Karakter kodlamasý
+278 Dil yok
+279 Üstçizgi
 280 Üstçizgi
 281 **Events
 282 **Remove attribute

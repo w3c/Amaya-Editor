@@ -180,108 +180,107 @@
 178 PostScript-Datei
 179 Drucker
 180 Suche nach
-181 **UPPERCASE = lowercase
-182 Groß-/Kleinschreibung ignorieren
-183 Ersetzen durch
-184 Ersetzen
-185 Nicht ersetzen
-186 Einzeln ersetzen
-187 Alle ersetzen
-188 Suche im Dokument
-189 Oberhalb der Markierung
-190 Innerhalb der Markierung
-191 Unterhalb der Markierung
-192 Im gesamten Dokument
-193 Nicht ersetzen
-194 Standardfarbe
-195 vorher?
-196 Schließe ein Dokument
-197 unbenannt
-198 Neues Dokument
-199 Dokumententyp
-200 Umbenennen
-201 Formelsatz
-202 Grafik
-203 Lateinisches Alphabet
-204 Griechiches Alphabet
-205 Ansicht
-206 Dateien
-207 Lade Dokument
-208 Dokumententyp
-209 Ansichten
-210 Ändere Filter
-211 Wert nicht geändert
-212 Erhöhe
-213 Verringere
-214 Sichtbarkeit
-215 Schiftgrößenunterschied
-216 Vergrößern
-217 Speichern unter
-218 Speichern
-219 Thot
-220 Format
-221 Kopiere
-222 Text
-223 Zeichnung
-224 Symbol
-225 Grafik
-226 Art des Elements
-227 nach
-228 vor
-229 um
+181 Groß-/Kleinschreibung ignorieren
+182 Ersetzen durch
+183 Ersetzen
+184 Nicht ersetzen
+185 Einzeln ersetzen
+186 Alle ersetzen
+187 Suche im Dokument
+188 Oberhalb der Markierung
+189 Innerhalb der Markierung
+190 Unterhalb der Markierung
+191 Im gesamten Dokument
+192 Nicht ersetzen
+193 Standardfarbe
+194 vorher?
+195 Schließe ein Dokument
+196 unbenannt
+197 Neues Dokument
+198 Dokumententyp
+199 Umbenennen
+200 Formelsatz
+201 Grafik
+202 Lateinisches Alphabet
+203 Griechiches Alphabet
+204 Ansicht
+205 Dateien
+206 Lade Dokument
+207 Dokumententyp
+208 Ansichten
+209 Ändere Filter
+210 Wert nicht geändert
+211 Erhöhe
+212 Verringere
+213 Sichtbarkeit
+214 Schiftgrößenunterschied
+215 Vergrößern
+216 Speichern unter
+217 Speichern
+218 Thot
+219 Format
+220 Kopiere
+221 Text
+222 Zeichnung
+223 Symbol
+224 Grafik
+225 Art des Elements
+226 nach
+227 vor
+228 um
+229 Einfügen
 230 Einfügen
-231 Einfügen
-232 erzeugen
-233 Einfügen
-234 Seitenumbruch
-235 (schreibgeschützt)
-236 Umgebung
-237 Typ ändern
-238 Sprache des Elements
-239 Sprachvoreinstellung:
-240 Bitte das Dokument nicht ändern!
-241 Nicht gefunden
-242 Suche in
-243 Suche nach leeren Elementen
-244 Suche nach leeren Verknüpfungen
-245 Suche nach Verknüpfungen zu diesem Dokument
-246 Verknüpfung
-247 Verknüpfungsziel im Dokument
-248 Suche
-249 Schreibgeschütztes Dokument
-250 Nichts zu ersetzen
-251 Öffne
-252 Standard Zeichensatz
-253 Standard Grafik
-254 Standard Format
-255 Standard Geometrie
-256 pt
-257 Linienart
-258 Linienstärke
-259 Füllmuster
-260 Teilen
-261 Objekttyp
-262 Gehe zu Seite Nr.:
-263 egal
-264 Attribut suchen
-265 Suche nach Typ
-266 Dokumententyp
-267 Wert des Attributs:
-268 Unbekanntes Attribut
-269 Erzeuge Verknüpfungsziel
-270 Zeige Verknüpfungsziel
-271 Einfügemodus
-272 Abbrechen
-273 Fehler in der PostScript-Erkennung
-274 Auftrag vom Druckspooler "%s" zurückgeweisen
-275 Kann "%s" nicht erzeugen
-276 Seitenformat
-277 Kann des erzeugte Element nicht verweisen
-278 Zeichensatz
-279 Keine Sprache
-280 Überstrichen
-281 Dokumentenformat
-282 Ereignisse (Events)
-283 Lösche Attribut
-284 Linke Maustaste: Auswahl der Farbe für markierten Text
-285 Mittlere oder rechte Maustaste: Auswahl der Cursorfarbe
+231 erzeugen
+232 Einfügen
+233 Seitenumbruch
+234 (schreibgeschützt)
+235 Umgebung
+236 Typ ändern
+237 Sprache des Elements
+238 Sprachvoreinstellung:
+239 Bitte das Dokument nicht ändern!
+240 Nicht gefunden
+241 Suche in
+242 Suche nach leeren Elementen
+243 Suche nach leeren Verknüpfungen
+244 Suche nach Verknüpfungen zu diesem Dokument
+245 Verknüpfung
+246 Verknüpfungsziel im Dokument
+247 Suche
+248 Schreibgeschütztes Dokument
+249 Nichts zu ersetzen
+250 Öffne
+251 Standard Zeichensatz
+252 Standard Grafik
+253 Standard Format
+254 Standard Geometrie
+255 pt
+256 Linienart
+257 Linienstärke
+258 Füllmuster
+259 Teilen
+260 Objekttyp
+261 Gehe zu Seite Nr.:
+262 egal
+263 Attribut suchen
+264 Suche nach Typ
+265 Dokumententyp
+266 Wert des Attributs:
+267 Unbekanntes Attribut
+268 Erzeuge Verknüpfungsziel
+269 Zeige Verknüpfungsziel
+270 Einfügemodus
+271 Abbrechen
+272 Fehler in der PostScript-Erkennung
+273 Auftrag vom Druckspooler "%s" zurückgeweisen
+274 Kann "%s" nicht erzeugen
+275 Seitenformat
+276 Kann des erzeugte Element nicht verweisen
+277 Zeichensatz
+278 Keine Sprache
+279 Überstrichen
+280 Dokumentenformat
+281 Ereignisse (Events)
+282 Lösche Attribut
+283 Linke Maustaste: Auswahl der Farbe für markierten Text
+284 Mittlere oder rechte Maustaste: Auswahl der Cursorfarbe

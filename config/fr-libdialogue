@@ -180,108 +180,107 @@
 178 Fichier PostScript
 179 Imprimante
 180 Texte à chercher
-181 **UPPERCASE = lowercase
-182 MAJUSCULES = minuscules
-183 Texte de remplacement
-184 Remplacement
-185 Sans remplacement
-186 Remplacement à la demande
-187 Remplacement automatique
-188 Où rechercher
-189 Avant la sélection
-190 Dans la sélection
-191 Après la sélection
-192 Dans tout le document
-193 Sauter
-194 Couleurs par défaut
-195 avant de le fermer
-196 Fermer un document
-197 Sans_nom
-198 Créer un document
-199 Type de document
-200 Renommer
-201 Symboles mathématiques
-202 Graphiques
-203 Alphabet latin
-204 Alphabet grec
-205 Présentation
-206 Fichiers
-207 Ouvrir un document
-208 Type du document
-209 Vues
-210 Changer le filtre sur la vue
-211 Valeur inchangée
-212 Augmenter
-213 Diminuer
-214 Visibilité
-215 Écart sur la taille des caractères
-216 Zoom
-217 Sauver comme
-218 Sauver
-219 Thot
-220 Format
-221 Copier
-222 Texte
-223 Graphique
-224 Symbole
-225 Image
-226 Type d'élément
-227 après
-228 avant
-229 autour
-230 Inclure
-231 Coller
-232 à créer
-233 Insérer
-234 Saut de page
-235 (Lecture seule)
-236 Englober dans
-237 Changer en
-238 Langue de l'élément
-239 Langue héritée :
-240 Ne changez pas de document !
-241 Pas trouvé
-242 Recherche dans
-243 Recherche élément vide
-244 Recherche référence vide
-245 Recherche les références à l'élément
-246 Lien
-247 Référence dans le document\240
-248 Recherche
-249 Elément en lecture seule
-250 Plus de remplacements
-251 Ouvrir
-252 Caractères standard
-253 Graphiques standard
-254 Format standard
-255 Géométrie standard
-256 pt
-257 Style des traits
-258 Epaisseur des traits
-259 Motif de remplissage
-260 Diviser
-261 Type d'objet
-262 Aller page numéro :
-263 any
-264 Attribut à chercher
-265 Type à chercher
-266 Natures
-267 Valeur de l'attribut :
-268 Attribut inconnu
-269 Créer l\'élément à référencer
-270 Le désigner
-271 Mode d\'insertion
-272 Annuler
-273 Erreur dans la traduction en PostScript
-274 Commande refusée par le spooler : %s
-275 Création impossible : %s
-276 Présentation générale
-277 Impossible de lier le nouvel élément
-278 Alphabet
-279 Aucun
-280 Surligné
-281 Format de document
-282 Événements
-283 Retire l'attribut
-284 Bouton gauche change la couleur de sélection
-285 Bouton milieu ou droit change la couleur du curseur
+181 MAJUSCULES = minuscules
+182 Texte de remplacement
+183 Remplacement
+184 Sans remplacement
+185 Remplacement à la demande
+186 Remplacement automatique
+187 Où rechercher
+188 Avant la sélection
+189 Dans la sélection
+190 Après la sélection
+191 Dans tout le document
+192 Sauter
+193 Couleurs par défaut
+194 avant de le fermer
+195 Fermer un document
+196 Sans_nom
+197 Créer un document
+198 Type de document
+199 Renommer
+200 Symboles mathématiques
+201 Graphiques
+202 Alphabet latin
+203 Alphabet grec
+204 Présentation
+205 Fichiers
+206 Ouvrir un document
+207 Type du document
+208 Vues
+209 Changer le filtre sur la vue
+210 Valeur inchangée
+211 Augmenter
+212 Diminuer
+213 Visibilité
+214 Écart sur la taille des caractères
+215 Zoom
+216 Sauver comme
+217 Sauver
+218 Thot
+219 Format
+220 Copier
+221 Texte
+222 Graphique
+223 Symbole
+224 Image
+225 Type d'élément
+226 après
+227 avant
+228 autour
+229 Inclure
+230 Coller
+231 à créer
+232 Insérer
+233 Saut de page
+234 (Lecture seule)
+235 Englober dans
+236 Changer en
+237 Langue de l'élément
+238 Langue héritée :
+239 Ne changez pas de document !
+240 Pas trouvé
+241 Recherche dans
+242 Recherche élément vide
+243 Recherche référence vide
+244 Recherche les références à l'élément
+245 Lien
+246 Référence dans le document\240
+247 Recherche
+248 Elément en lecture seule
+249 Plus de remplacements
+250 Ouvrir
+251 Caractères standard
+252 Graphiques standard
+253 Format standard
+254 Géométrie standard
+255 pt
+256 Style des traits
+257 Epaisseur des traits
+258 Motif de remplissage
+259 Diviser
+260 Type d'objet
+261 Aller page numéro :
+262 any
+263 Attribut à chercher
+264 Type à chercher
+265 Natures
+266 Valeur de l'attribut :
+267 Attribut inconnu
+268 Créer l\'élément à référencer
+269 Le désigner
+270 Mode d\'insertion
+271 Annuler
+272 Erreur dans la traduction en PostScript
+273 Commande refusée par le spooler : %s
+274 Création impossible : %s
+275 Présentation générale
+276 Impossible de lier le nouvel élément
+277 Alphabet
+278 Aucun
+279 Surligné
+280 Format de document
+281 Événements
+282 Retire l'attribut
+283 Bouton gauche change la couleur de sélection
+284 Bouton milieu ou droit change la couleur du curseur

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base version="6" last_update="Wed Sep 27 08:44:52 CEST 2000">
+<base version="16" last_update="Thu Sep 28 09:01:37 CEST 2000">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -1460,828 +1460,831 @@
 <label define="TMSG_UPPERCASE_EQ_LOWERCASE">
 	<message xml:lang="en">UPPERCASE = lowercase</message>
 	<message xml:lang="es">MAYÚSCULAS = minusculas</message>
-</label>
-<label define="TMSG_REPLACE_BY">
-	<message xml:lang="en">Replace by</message>
 	<message xml:lang="fr">MAJUSCULES = minuscules</message>
 	<message xml:lang="de">Groß-/Kleinschreibung ignorieren</message>
 	<message xml:lang="it">MAIUSCOLE = minuscole</message>
 	<message xml:lang="tr">BÜYÜK HARF = küçük harf</message>
-	<message xml:lang="es">Sustituir por</message>
 </label>
-<label define="TMSG_REPLACE">
-	<message xml:lang="en">Replace</message>
+<label define="TMSG_REPLACE_BY">
+	<message xml:lang="en">Replace by</message>
 	<message xml:lang="fr">Texte de remplacement</message>
 	<message xml:lang="de">Ersetzen durch</message>
 	<message xml:lang="it">Rimpiazza con</message>
 	<message xml:lang="tr">ile deðiþtir</message>
-	<message xml:lang="es">Sustituir</message>
+	<message xml:lang="es">Sustituir por</message>
 </label>
-<label define="TMSG_NO_REPLACE">
-	<message xml:lang="en">No replace</message>
+<label define="TMSG_REPLACE">
+	<message xml:lang="en">Replace</message>
 	<message xml:lang="fr">Remplacement</message>
 	<message xml:lang="de">Ersetzen</message>
 	<message xml:lang="it">Rimpiazza</message>
 	<message xml:lang="tr">Deðiþtir</message>
-	<message xml:lang="es">No sustituir</message>
+	<message xml:lang="es">Sustituir</message>
 </label>
-<label define="TMSG_REPLACE_ON_REQU">
-	<message xml:lang="en">Replace on request</message>
+<label define="TMSG_NO_REPLACE">
+	<message xml:lang="en">No replace</message>
 	<message xml:lang="fr">Sans remplacement</message>
 	<message xml:lang="de">Nicht ersetzen</message>
 	<message xml:lang="it">Non rimpiazzare</message>
 	<message xml:lang="tr">Deðiþtirme</message>
-	<message xml:lang="es">Sustituir a solicitud</message>
+	<message xml:lang="es">No sustituir</message>
 </label>
-<label define="TMSG_AUTO_REPLACE">
-	<message xml:lang="en">Automatic replace</message>
+<label define="TMSG_REPLACE_ON_REQU">
+	<message xml:lang="en">Replace on request</message>
 	<message xml:lang="fr">Remplacement à la demande</message>
 	<message xml:lang="de">Einzeln ersetzen</message>
 	<message xml:lang="it">Rimpiazza su richiesta</message>
 	<message xml:lang="tr">Ýstek üzerine deðiþtir</message>
-	<message xml:lang="es">Sustitución automatica</message>
+	<message xml:lang="es">Sustituir a solicitud</message>
 </label>
-<label define="TMSG_SEARCH_WHERE">
-	<message xml:lang="en">Search where</message>
+<label define="TMSG_AUTO_REPLACE">
+	<message xml:lang="en">Automatic replace</message>
 	<message xml:lang="fr">Remplacement automatique</message>
 	<message xml:lang="de">Alle ersetzen</message>
 	<message xml:lang="it">Rimpiazzamento automatico</message>
 	<message xml:lang="tr">Otomatik olarak deðiþtir</message>
-	<message xml:lang="es">Buscar donde</message>
+	<message xml:lang="es">Sustitución automatica</message>
 </label>
-<label define="TMSG_BEFORE_SEL">
-	<message xml:lang="en">Before selection</message>
+<label define="TMSG_SEARCH_WHERE">
+	<message xml:lang="en">Search where</message>
 	<message xml:lang="fr">Où rechercher</message>
 	<message xml:lang="de">Suche im Dokument</message>
 	<message xml:lang="it">Dove cercare</message>
 	<message xml:lang="tr">Arama nerede</message>
-	<message xml:lang="es">Antes selección</message>
+	<message xml:lang="es">Buscar donde</message>
 </label>
-<label define="TMSG_WITHIN_SEL">
-	<message xml:lang="en">Within selection</message>
+<label define="TMSG_BEFORE_SEL">
+	<message xml:lang="en">Before selection</message>
 	<message xml:lang="fr">Avant la sélection</message>
 	<message xml:lang="de">Oberhalb der Markierung</message>
 	<message xml:lang="it">Prima della selezione</message>
 	<message xml:lang="tr">Seçimden önce</message>
-	<message xml:lang="es">En seleccion</message>
+	<message xml:lang="es">Antes selección</message>
 </label>
-<label define="TMSG_AFTER_SEL">
-	<message xml:lang="en">After selection</message>
+<label define="TMSG_WITHIN_SEL">
+	<message xml:lang="en">Within selection</message>
 	<message xml:lang="fr">Dans la sélection</message>
 	<message xml:lang="de">Innerhalb der Markierung</message>
 	<message xml:lang="it">Nella selezione</message>
 	<message xml:lang="tr">Seçim içi</message>
-	<message xml:lang="es">Tras seleccion</message>
+	<message xml:lang="es">En seleccion</message>
 </label>
-<label define="TMSG_IN_WHOLE_DOC">
-	<message xml:lang="en">In the whole document</message>
+<label define="TMSG_AFTER_SEL">
+	<message xml:lang="en">After selection</message>
 	<message xml:lang="fr">Après la sélection</message>
 	<message xml:lang="de">Unterhalb der Markierung</message>
 	<message xml:lang="it">Dopo la selezione</message>
 	<message xml:lang="tr">Seçimden sonra</message>
-	<message xml:lang="es">En todo el documento</message>
+	<message xml:lang="es">Tras seleccion</message>
 </label>
-<label define="TMSG_DO_NOT_REPLACE">
-	<message xml:lang="en">Do not replace</message>
+<label define="TMSG_IN_WHOLE_DOC">
+	<message xml:lang="en">In the whole document</message>
 	<message xml:lang="fr">Dans tout le document</message>
 	<message xml:lang="de">Im gesamten Dokument</message>
 	<message xml:lang="it">L\'intero documento</message>
 	<message xml:lang="tr">Tüm belgede</message>
-	<message xml:lang="es">No sustituir</message>
+	<message xml:lang="es">En todo el documento</message>
 </label>
-<label define="TMSG_STD_COLORS">
-	<message xml:lang="en">Default colors</message>
+<label define="TMSG_DO_NOT_REPLACE">
+	<message xml:lang="en">Do not replace</message>
 	<message xml:lang="fr">Sauter</message>
 	<message xml:lang="de">Nicht ersetzen</message>
 	<message xml:lang="it">Non rimpiazzare</message>
 	<message xml:lang="tr">Deðiþtirme</message>
-	<message xml:lang="es">Colores por omisión</message>
+	<message xml:lang="es">No sustituir</message>
 </label>
-<label define="TMSG_BEFORE_CLOSING">
-	<message xml:lang="en">before closing it</message>
+<label define="TMSG_STD_COLORS">
+	<message xml:lang="en">Default colors</message>
 	<message xml:lang="fr">Couleurs par défaut</message>
 	<message xml:lang="de">Standardfarbe</message>
 	<message xml:lang="it">Colori di default</message>
 	<message xml:lang="tr">Öntanýmlý renkler</message>
-	<message xml:lang="es">antes de cerrarlo</message>
+	<message xml:lang="es">Colores por omisión</message>
 </label>
-<label define="TMSG_CLOSE_DOC">
-	<message xml:lang="en">Close a document</message>
+<label define="TMSG_BEFORE_CLOSING">
+	<message xml:lang="en">before closing it</message>
 	<message xml:lang="fr">avant de le fermer</message>
 	<message xml:lang="de">vorher?</message>
 	<message xml:lang="it">prima di chiuderlo</message>
 	<message xml:lang="tr">kapamadan önce</message>
-	<message xml:lang="es">Cierre un documento</message>
+	<message xml:lang="es">antes de cerrarlo</message>
 </label>
-<label define="TMSG_NO_NAME">
-	<message xml:lang="en">No_name</message>
+<label define="TMSG_CLOSE_DOC">
+	<message xml:lang="en">Close a document</message>
 	<message xml:lang="fr">Fermer un document</message>
 	<message xml:lang="de">Schließe ein Dokument</message>
 	<message xml:lang="it">Chiudi un documento</message>
 	<message xml:lang="tr">Belgeyi kapa</message>
-	<message xml:lang="es">Anónimo</message>
+	<message xml:lang="es">Cierre un documento</message>
 </label>
-<label define="TMSG_CREATE_DOC">
-	<message xml:lang="en">Create a document</message>
+<label define="TMSG_NO_NAME">
+	<message xml:lang="en">No_name</message>
 	<message xml:lang="fr">Sans_nom</message>
 	<message xml:lang="de">unbenannt</message>
 	<message xml:lang="it">Senza_nome</message>
 	<message xml:lang="tr">Ýsimsiz</message>
-	<message xml:lang="es">Crear un documento</message>
+	<message xml:lang="es">Anónimo</message>
 </label>
-<label define="TMSG_DOC_TYPE">
-	<message xml:lang="en">Document type</message>
+<label define="TMSG_CREATE_DOC">
+	<message xml:lang="en">Create a document</message>
 	<message xml:lang="fr">Créer un document</message>
 	<message xml:lang="de">Neues Dokument</message>
 	<message xml:lang="it">Crea un documento</message>
 	<message xml:lang="tr">Belge yarat</message>
-	<message xml:lang="es">Tipo de documento</message>
+	<message xml:lang="es">Crear un documento</message>
 </label>
-<label define="TMSG_RENAME">
-	<message xml:lang="en">Rename</message>
+<label define="TMSG_DOC_TYPE">
+	<message xml:lang="en">Document type</message>
 	<message xml:lang="fr">Type de document</message>
 	<message xml:lang="de">Dokumententyp</message>
 	<message xml:lang="it">Tipo di documento</message>
 	<message xml:lang="tr">Belge tarzý</message>
-	<message xml:lang="es">Renombrar</message>
+	<message xml:lang="es">Tipo de documento</message>
 </label>
-<label define="TMSG_MATH_SYMBOLS">
-	<message xml:lang="en">Math symbols</message>
+<label define="TMSG_RENAME">
+	<message xml:lang="en">Rename</message>
 	<message xml:lang="fr">Renommer</message>
 	<message xml:lang="de">Umbenennen</message>
 	<message xml:lang="it">Rinomina</message>
 	<message xml:lang="tr">Ýsmini deðiþtir</message>
-	<message xml:lang="es">Símbolos matemáticos</message>
+	<message xml:lang="es">Renombrar</message>
 </label>
-<label define="TMSG_GRAPHICS">
-	<message xml:lang="en">Graphics</message>
+<label define="TMSG_MATH_SYMBOLS">
+	<message xml:lang="en">Math symbols</message>
 	<message xml:lang="fr">Symboles mathématiques</message>
 	<message xml:lang="de">Formelsatz</message>
 	<message xml:lang="it">Simboli matematici</message>
 	<message xml:lang="tr">Matematik sembolleri</message>
-	<message xml:lang="es">Graficos</message>
+	<message xml:lang="es">Símbolos matemáticos</message>
 </label>
-<label define="TMSG_LATIN_ALPHABET">
-	<message xml:lang="en">Latin alphabet</message>
+<label define="TMSG_GRAPHICS">
+	<message xml:lang="en">Graphics</message>
 	<message xml:lang="fr">Graphiques</message>
 	<message xml:lang="de">Grafik</message>
 	<message xml:lang="it">Grafica</message>
 	<message xml:lang="tr">Grafik</message>
-	<message xml:lang="es">Alfabeto latino</message>
+	<message xml:lang="es">Graficos</message>
 </label>
-<label define="TMSG_GREEK_ALPHABET">
-	<message xml:lang="en">Greek alphabet</message>
+<label define="TMSG_LATIN_ALPHABET">
+	<message xml:lang="en">Latin alphabet</message>
 	<message xml:lang="fr">Alphabet latin</message>
 	<message xml:lang="de">Lateinisches Alphabet</message>
 	<message xml:lang="it">Alfabeto latino</message>
 	<message xml:lang="tr">Latin alfabesi</message>
-	<message xml:lang="es">Alfabet griego</message>
+	<message xml:lang="es">Alfabeto latino</message>
 </label>
-<label define="TMSG_PRES">
-	<message xml:lang="en">Presentation</message>
+<label define="TMSG_GREEK_ALPHABET">
+	<message xml:lang="en">Greek alphabet</message>
 	<message xml:lang="fr">Alphabet grec</message>
 	<message xml:lang="de">Griechiches Alphabet</message>
 	<message xml:lang="it">Alfabeto greco</message>
 	<message xml:lang="tr">Yunan alfabesi</message>
-	<message xml:lang="es">Presentacion</message>
+	<message xml:lang="es">Alfabet griego</message>
 </label>
-<label define="TMSG_FILES">
-	<message xml:lang="en">Files</message>
+<label define="TMSG_PRES">
+	<message xml:lang="en">Presentation</message>
 	<message xml:lang="fr">Présentation</message>
 	<message xml:lang="de">Ansicht</message>
 	<message xml:lang="it">Presentazione</message>
 	<message xml:lang="tr">Sunum</message>
-	<message xml:lang="es">Ficheros</message>
+	<message xml:lang="es">Presentacion</message>
 </label>
-<label define="TMSG_OPEN_DOC">
-	<message xml:lang="en">Open a document</message>
+<label define="TMSG_FILES">
+	<message xml:lang="en">Files</message>
 	<message xml:lang="fr">Fichiers</message>
 	<message xml:lang="de">Dateien</message>
 	<message xml:lang="it">File</message>
 	<message xml:lang="tr">Dosyalar</message>
-	<message xml:lang="es">Abrir un documento</message>
+	<message xml:lang="es">Ficheros</message>
 </label>
-<label define="TMSG_IMPORT_DOC_TYPE">
-	<message xml:lang="en">Document type</message>
+<label define="TMSG_OPEN_DOC">
+	<message xml:lang="en">Open a document</message>
 	<message xml:lang="fr">Ouvrir un document</message>
 	<message xml:lang="de">Lade Dokument</message>
 	<message xml:lang="it">Aprire un documento</message>
 	<message xml:lang="tr">Belge aç</message>
-	<message xml:lang="es">Tipo de documento</message>
+	<message xml:lang="es">Abrir un documento</message>
 </label>
-<label define="TMSG_VIEWS">
-	<message xml:lang="en">Views</message>
+<label define="TMSG_IMPORT_DOC_TYPE">
+	<message xml:lang="en">Document type</message>
 	<message xml:lang="fr">Type du document</message>
 	<message xml:lang="de">Dokumententyp</message>
 	<message xml:lang="it">Tipo di documento</message>
 	<message xml:lang="tr">Belge türü</message>
-	<message xml:lang="es">Vistas</message>
+	<message xml:lang="es">Tipo de documento</message>
 </label>
-<label define="TMSG_CHANGE_FILTER">
-	<message xml:lang="en">Change filter</message>
+<label define="TMSG_VIEWS">
+	<message xml:lang="en">Views</message>
 	<message xml:lang="fr">Vues</message>
 	<message xml:lang="de">Ansichten</message>
 	<message xml:lang="it">Viste</message>
 	<message xml:lang="tr">Görünümler</message>
-	<message xml:lang="es">Cambiar filtro</message>
+	<message xml:lang="es">Vistas</message>
 </label>
-<label define="TMSG_VALUE_NOT_CHANGED">
-	<message xml:lang="en">Value not changed</message>
+<label define="TMSG_CHANGE_FILTER">
+	<message xml:lang="en">Change filter</message>
 	<message xml:lang="fr">Changer le filtre sur la vue</message>
 	<message xml:lang="de">Ändere Filter</message>
 	<message xml:lang="it">Cambia filtro</message>
 	<message xml:lang="tr">Süzgeç deðiþtir</message>
-	<message xml:lang="es">Valor no modificado</message>
+	<message xml:lang="es">Cambiar filtro</message>
 </label>
-<label define="TMSG_INCREASE">
-	<message xml:lang="en">Increase</message>
+<label define="TMSG_VALUE_NOT_CHANGED">
+	<message xml:lang="en">Value not changed</message>
 	<message xml:lang="fr">Valeur inchangée</message>
 	<message xml:lang="de">Wert nicht geändert</message>
 	<message xml:lang="it">Valore non modificato</message>
 	<message xml:lang="tr">Deðer deðiþtirilmedi</message>
-	<message xml:lang="es">Incrementar</message>
+	<message xml:lang="es">Valor no modificado</message>
 </label>
-<label define="TMSG_DECREASE">
-	<message xml:lang="en">Decrease</message>
+<label define="TMSG_INCREASE">
+	<message xml:lang="en">Increase</message>
 	<message xml:lang="fr">Augmenter</message>
 	<message xml:lang="de">Erhöhe</message>
 	<message xml:lang="it">Incrementa</message>
 	<message xml:lang="tr">Arttýr</message>
-	<message xml:lang="es">Decrementar</message>
+	<message xml:lang="es">Incrementar</message>
 </label>
-<label define="TMSG_VISIB">
-	<message xml:lang="en">Visibility</message>
+<label define="TMSG_DECREASE">
+	<message xml:lang="en">Decrease</message>
 	<message xml:lang="fr">Diminuer</message>
 	<message xml:lang="de">Verringere</message>
 	<message xml:lang="it">Decrementa</message>
 	<message xml:lang="tr">Azalt</message>
-	<message xml:lang="es">Visibilidad</message>
+	<message xml:lang="es">Decrementar</message>
 </label>
-<label define="TMSG_CHANGE_ZOOM">
-	<message xml:lang="en">Character size difference</message>
+<label define="TMSG_VISIB">
+	<message xml:lang="en">Visibility</message>
 	<message xml:lang="fr">Visibilité</message>
 	<message xml:lang="de">Sichtbarkeit</message>
 	<message xml:lang="it">Visibilità</message>
 	<message xml:lang="tr">Görüþ mesafesi</message>
-	<message xml:lang="es">Diferencia de tamaño de caracter</message>
+	<message xml:lang="es">Visibilidad</message>
 </label>
-<label define="TMSG_LIB_ZOOM">
-	<message xml:lang="en">Zoom</message>
+<label define="TMSG_CHANGE_ZOOM">
+	<message xml:lang="en">Character size difference</message>
 	<message xml:lang="fr">Écart sur la taille des caractères</message>
 	<message xml:lang="de">Schiftgrößenunterschied</message>
 	<message xml:lang="it">Scarto sulla dimensione dei caratteri</message>
 	<message xml:lang="tr">Karakter boyu farký</message>
-	<message xml:lang="es">Zoom</message>
+	<message xml:lang="es">Diferencia de tamaño de caracter</message>
 </label>
-<label define="TMSG_SAVE_AS">
-	<message xml:lang="en">Save as</message>
+<label define="TMSG_LIB_ZOOM">
+	<message xml:lang="en">Zoom</message>
 	<message xml:lang="fr">Zoom</message>
 	<message xml:lang="de">Vergrößern</message>
 	<message xml:lang="it">Zoom</message>
 	<message xml:lang="tr">Yaklaþ</message>
-	<message xml:lang="es">Guardar como</message>
+	<message xml:lang="es">Zoom</message>
 </label>
-<label define="TMSG_SAVE">
-	<message xml:lang="en">Save</message>
+<label define="TMSG_SAVE_AS">
+	<message xml:lang="en">Save as</message>
 	<message xml:lang="fr">Sauver comme</message>
 	<message xml:lang="de">Speichern unter</message>
 	<message xml:lang="it">Salva con nome</message>
 	<message xml:lang="tr">Ýsimle kaydet</message>
-	<message xml:lang="es">Guardar</message>
+	<message xml:lang="es">Guardar como</message>
 </label>
-<label define="TMSG_THOT_APP">
-	<message xml:lang="en">Thot</message>
+<label define="TMSG_SAVE">
+	<message xml:lang="en">Save</message>
 	<message xml:lang="fr">Sauver</message>
 	<message xml:lang="de">Speichern</message>
 	<message xml:lang="it">Salva</message>
 	<message xml:lang="tr">Kaydet</message>
-	<message xml:lang="es">Thot</message>
+	<message xml:lang="es">Guardar</message>
 </label>
-<label define="TMSG_DOC_FORMAT">
-	<message xml:lang="en">Format</message>
+<label define="TMSG_THOT_APP">
+	<message xml:lang="en">Thot</message>
 	<message xml:lang="fr">Thot</message>
 	<message xml:lang="de">Thot</message>
 	<message xml:lang="it">Thot</message>
 	<message xml:lang="tr">Thot</message>
-	<message xml:lang="es">Formato</message>
+	<message xml:lang="es">Thot</message>
 </label>
-<label define="TMSG_COPY">
-	<message xml:lang="en">Copy</message>
+<label define="TMSG_DOC_FORMAT">
+	<message xml:lang="en">Format</message>
 	<message xml:lang="fr">Format</message>
 	<message xml:lang="de">Format</message>
 	<message xml:lang="it">Formattazione</message>
 	<message xml:lang="tr">Biçim</message>
-	<message xml:lang="es">Copiar</message>
+	<message xml:lang="es">Formato</message>
 </label>
-<label define="TMSG_TEXT">
-	<message xml:lang="en">Text</message>
+<label define="TMSG_COPY">
+	<message xml:lang="en">Copy</message>
 	<message xml:lang="fr">Copier</message>
 	<message xml:lang="de">Kopiere</message>
 	<message xml:lang="it">Copia</message>
 	<message xml:lang="tr">Kopyala</message>
-	<message xml:lang="es">Texto</message>
+	<message xml:lang="es">Copiar</message>
 </label>
-<label define="TMSG_GRAPHIC">
-	<message xml:lang="en">Graphic</message>
+<label define="TMSG_TEXT">
+	<message xml:lang="en">Text</message>
 	<message xml:lang="fr">Texte</message>
 	<message xml:lang="de">Text</message>
 	<message xml:lang="it">Testo</message>
 	<message xml:lang="tr">Metin</message>
-	<message xml:lang="es">Grafico</message>
+	<message xml:lang="es">Texto</message>
 </label>
-<label define="TMSG_SYMBOL">
-	<message xml:lang="en">Symbol</message>
+<label define="TMSG_GRAPHIC">
+	<message xml:lang="en">Graphic</message>
 	<message xml:lang="fr">Graphique</message>
 	<message xml:lang="de">Zeichnung</message>
 	<message xml:lang="it">Grafica</message>
 	<message xml:lang="tr">Grafik</message>
-	<message xml:lang="es">Símbolo</message>
+	<message xml:lang="es">Grafico</message>
 </label>
-<label define="TMSG_PICTURE">
-	<message xml:lang="en">Image</message>
+<label define="TMSG_SYMBOL">
+	<message xml:lang="en">Symbol</message>
 	<message xml:lang="fr">Symbole</message>
 	<message xml:lang="de">Symbol</message>
 	<message xml:lang="it">Simbolo</message>
 	<message xml:lang="tr">Simge</message>
-	<message xml:lang="es">Imagen</message>
+	<message xml:lang="es">Símbolo</message>
 </label>
-<label define="TMSG_EL_TYPE">
-	<message xml:lang="en">Element type</message>
+<label define="TMSG_PICTURE">
+	<message xml:lang="en">Image</message>
 	<message xml:lang="fr">Image</message>
 	<message xml:lang="de">Grafik</message>
 	<message xml:lang="it">Immagine</message>
 	<message xml:lang="tr">Görüntü</message>
-	<message xml:lang="es">Tipo de elemento</message>
+	<message xml:lang="es">Imagen</message>
 </label>
-<label define="TMSG_AFTER">
-	<message xml:lang="en">after</message>
+<label define="TMSG_EL_TYPE">
+	<message xml:lang="en">Element type</message>
 	<message xml:lang="fr">Type d'élément</message>
 	<message xml:lang="de">Art des Elements</message>
 	<message xml:lang="it">Tipo di elemento</message>
 	<message xml:lang="tr">Birim tipi</message>
-	<message xml:lang="es">después</message>
+	<message xml:lang="es">Tipo de elemento</message>
 </label>
-<label define="TMSG_BEFORE">
-	<message xml:lang="en">before</message>
+<label define="TMSG_AFTER">
+	<message xml:lang="en">after</message>
 	<message xml:lang="fr">après</message>
 	<message xml:lang="de">nach</message>
 	<message xml:lang="it">dopo</message>
 	<message xml:lang="tr">önce</message>
-	<message xml:lang="es">antes</message>
+	<message xml:lang="es">después</message>
 </label>
-<label define="TMSG_AROUND">
-	<message xml:lang="en">around</message>
+<label define="TMSG_BEFORE">
+	<message xml:lang="en">before</message>
 	<message xml:lang="fr">avant</message>
 	<message xml:lang="de">vor</message>
 	<message xml:lang="it">prima</message>
 	<message xml:lang="tr">sonra</message>
-	<message xml:lang="es">alrededor</message>
+	<message xml:lang="es">antes</message>
 </label>
-<label define="TMSG_INCLUDE">
-	<message xml:lang="en">Include</message>
+<label define="TMSG_AROUND">
+	<message xml:lang="en">around</message>
 	<message xml:lang="fr">autour</message>
 	<message xml:lang="de">um</message>
 	<message xml:lang="it">intorno</message>
 	<message xml:lang="tr">civarýnda</message>
-	<message xml:lang="es">Incluir</message>
+	<message xml:lang="es">alrededor</message>
 </label>
-<label define="TMSG_PASTE">
-	<message xml:lang="en">Paste</message>
+<label define="TMSG_INCLUDE">
+	<message xml:lang="en">Include</message>
 	<message xml:lang="fr">Inclure</message>
 	<message xml:lang="de">Einfügen</message>
 	<message xml:lang="it">Includi</message>
 	<message xml:lang="tr">Ekle</message>
-	<message xml:lang="es">Pegar</message>
+	<message xml:lang="es">Incluir</message>
 </label>
-<label define="TMSG_TO_CREATE">
-	<message xml:lang="en">to create</message>
+<label define="TMSG_PASTE">
+	<message xml:lang="en">Paste</message>
 	<message xml:lang="fr">Coller</message>
 	<message xml:lang="de">Einfügen</message>
 	<message xml:lang="it">Incolla</message>
 	<message xml:lang="tr">Yapýþtýr</message>
-	<message xml:lang="es">crear</message>
+	<message xml:lang="es">Pegar</message>
 </label>
-<label define="TMSG_INSERT">
-	<message xml:lang="en">Insert</message>
+<label define="TMSG_TO_CREATE">
+	<message xml:lang="en">to create</message>
 	<message xml:lang="fr">à créer</message>
 	<message xml:lang="de">erzeugen</message>
 	<message xml:lang="it">da creare</message>
 	<message xml:lang="tr">to create</message>
-	<message xml:lang="es">Insertar</message>
+	<message xml:lang="es">crear</message>
 </label>
-<label define="TMSG_PAGE_BRK">
-	<message xml:lang="en">Page break</message>
+<label define="TMSG_INSERT">
+	<message xml:lang="en">Insert</message>
 	<message xml:lang="fr">Insérer</message>
 	<message xml:lang="de">Einfügen</message>
 	<message xml:lang="it">Inserisci</message>
 	<message xml:lang="tr">Ekle</message>
-	<message xml:lang="es">Fin de página</message>
+	<message xml:lang="es">Insertar</message>
 </label>
-<label define="TMSG_READ_ONLY">
-	<message xml:lang="en">(Read only)</message>
+<label define="TMSG_PAGE_BRK">
+	<message xml:lang="en">Page break</message>
 	<message xml:lang="fr">Saut de page</message>
 	<message xml:lang="de">Seitenumbruch</message>
 	<message xml:lang="it">Salto pagina</message>
 	<message xml:lang="tr">Sayfa kesmesi</message>
-	<message xml:lang="es">(Sólo lectura)</message>
+	<message xml:lang="es">Fin de página</message>
 </label>
-<label define="TMSG_SURROUND">
-	<message xml:lang="en">Surround</message>
+<label define="TMSG_READ_ONLY">
+	<message xml:lang="en">(Read only)</message>
 	<message xml:lang="fr">(Lecture seule)</message>
 	<message xml:lang="de">(schreibgeschützt)</message>
 	<message xml:lang="it">(Sola lettura)</message>
 	<message xml:lang="tr">(Salt-Oku)</message>
-	<message xml:lang="es">Surround</message>
+	<message xml:lang="es">(Sólo lectura)</message>
 </label>
-<label define="TMSG_CHANGE_TYPE">
-	<message xml:lang="en">Change type</message>
+<label define="TMSG_SURROUND">
+	<message xml:lang="en">Surround</message>
 	<message xml:lang="fr">Englober dans</message>
 	<message xml:lang="de">Umgebung</message>
 	<message xml:lang="it">Ingloba</message>
 	<message xml:lang="tr">Çevrele</message>
-	<message xml:lang="es">Cambiar tipo</message>
+	<message xml:lang="es">Surround</message>
 </label>
-<label define="TMSG_LANG_OF_EL">
-	<message xml:lang="en">Language of element</message>
+<label define="TMSG_CHANGE_TYPE">
+	<message xml:lang="en">Change type</message>
 	<message xml:lang="fr">Changer en</message>
 	<message xml:lang="de">Typ ändern</message>
 	<message xml:lang="it">Cambia tipo</message>
 	<message xml:lang="tr">Tip deðiþtir</message>
-	<message xml:lang="es">Idioma de elemento</message>
+	<message xml:lang="es">Cambiar tipo</message>
 </label>
-<label define="TMSG_INHERITED_LANG">
-	<message xml:lang="en">Inherited language:</message>
+<label define="TMSG_LANG_OF_EL">
+	<message xml:lang="en">Language of element</message>
 	<message xml:lang="fr">Langue de l'élément</message>
 	<message xml:lang="de">Sprache des Elements</message>
 	<message xml:lang="it">Lingua dell'elemento</message>
 	<message xml:lang="tr">Birimin dili</message>
-	<message xml:lang="es">Idioma heredado:</message>
+	<message xml:lang="es">Idioma de elemento</message>
 </label>
-<label define="TMSG_DO_NOT_CHANGE_DOC">
-	<message xml:lang="en">Do not change document!</message>
+<label define="TMSG_INHERITED_LANG">
+	<message xml:lang="en">Inherited language:</message>
 	<message xml:lang="fr">Langue héritée :</message>
 	<message xml:lang="de">Sprachvoreinstellung:</message>
 	<message xml:lang="it">Lingua ereditata:</message>
 	<message xml:lang="tr">Alýnan dil</message>
-	<message xml:lang="es">¡No cambie el documento!</message>
+	<message xml:lang="es">Idioma heredado:</message>
 </label>
-<label define="TMSG_NOT_FOUND">
-	<message xml:lang="en">Not found</message>
+<label define="TMSG_DO_NOT_CHANGE_DOC">
+	<message xml:lang="en">Do not change document!</message>
 	<message xml:lang="fr">Ne changez pas de document !</message>
 	<message xml:lang="de">Bitte das Dokument nicht ändern!</message>
 	<message xml:lang="it">Non modificate il documento!</message>
 	<message xml:lang="tr">Belgeyi deðiþtirmeyin!</message>
-	<message xml:lang="es">No encontrado</message>
+	<message xml:lang="es">¡No cambie el documento!</message>
 </label>
-<label define="TMSG_SEARCH_IN">
-	<message xml:lang="en">Search in</message>
+<label define="TMSG_NOT_FOUND">
+	<message xml:lang="en">Not found</message>
 	<message xml:lang="fr">Pas trouvé</message>
 	<message xml:lang="de">Nicht gefunden</message>
 	<message xml:lang="it">Non trovato</message>
 	<message xml:lang="tr">Bulunamadý</message>
-	<message xml:lang="es">Buscar en</message>
+	<message xml:lang="es">No encontrado</message>
 </label>
-<label define="TMSG_SEARCH_EMPTY_EL">
-	<message xml:lang="en">Search empty elements</message>
+<label define="TMSG_SEARCH_IN">
+	<message xml:lang="en">Search in</message>
 	<message xml:lang="fr">Recherche dans</message>
 	<message xml:lang="de">Suche in</message>
 	<message xml:lang="it">Cerca in</message>
 	<message xml:lang="tr">Ara</message>
-	<message xml:lang="es">Buscar elementos vacíos</message>
+	<message xml:lang="es">Buscar en</message>
 </label>
-<label define="TMSG_SEARCH_EMPTY_REF">
-	<message xml:lang="en">Search empty references</message>
+<label define="TMSG_SEARCH_EMPTY_EL">
+	<message xml:lang="en">Search empty elements</message>
 	<message xml:lang="fr">Recherche élément vide</message>
 	<message xml:lang="de">Suche nach leeren Elementen</message>
 	<message xml:lang="it">Cerca gli elementi vuoti</message>
 	<message xml:lang="tr">Boþ birimleri ara</message>
-	<message xml:lang="es">Buscar referencias vacías</message>
+	<message xml:lang="es">Buscar elementos vacíos</message>
 </label>
-<label define="TMSG_SEARCH_REF_TO_EL">
-	<message xml:lang="en">Search references to this element</message>
+<label define="TMSG_SEARCH_EMPTY_REF">
+	<message xml:lang="en">Search empty references</message>
 	<message xml:lang="fr">Recherche référence vide</message>
 	<message xml:lang="de">Suche nach leeren Verknüpfungen</message>
 	<message xml:lang="it">Cerca i riferimenti vuoti</message>
 	<message xml:lang="tr">Boþ kaynaklarý ara</message>
-	<message xml:lang="es">Buscar referencias para este elemento</message>
+	<message xml:lang="es">Buscar referencias vacías</message>
 </label>
-<label define="TMSG_LINK">
-	<message xml:lang="en">Link</message>
+<label define="TMSG_SEARCH_REF_TO_EL">
+	<message xml:lang="en">Search references to this element</message>
 	<message xml:lang="fr">Recherche les références à l'élément</message>
 	<message xml:lang="de">Suche nach Verknüpfungen zu diesem Dokument</message>
 	<message xml:lang="it">Cerca i riferimenti a questo elemento</message>
 	<message xml:lang="tr">Bu birime kaynaklarý ara</message>
-	<message xml:lang="es">Enlace</message>
+	<message xml:lang="es">Buscar referencias para este elemento</message>
 </label>
-<label define="TMSG_REF_IN_DOC">
-	<message xml:lang="en">Reference in document</message>
+<label define="TMSG_LINK">
+	<message xml:lang="en">Link</message>
 	<message xml:lang="fr">Lien</message>
 	<message xml:lang="de">Verknüpfung</message>
 	<message xml:lang="it">Collegamento</message>
 	<message xml:lang="tr">Baðlantý</message>
-	<message xml:lang="es">Referencia en documento</message>
+	<message xml:lang="es">Enlace</message>
 </label>
-<label define="TMSG_SEARCH">
-	<message xml:lang="en">Search</message>
+<label define="TMSG_REF_IN_DOC">
+	<message xml:lang="en">Reference in document</message>
 	<message xml:lang="fr">Référence dans le document\240</message>
 	<message xml:lang="de">Verknüpfungsziel im Dokument</message>
 	<message xml:lang="it">Riferimento nel documento</message>
 	<message xml:lang="tr">Belge içi kaynak</message>
-	<message xml:lang="es">Buscar</message>
+	<message xml:lang="es">Referencia en documento</message>
 </label>
-<label define="TMSG_EL_RO">
-	<message xml:lang="en">Read only element</message>
+<label define="TMSG_SEARCH">
+	<message xml:lang="en">Search</message>
 	<message xml:lang="fr">Recherche</message>
 	<message xml:lang="de">Suche</message>
 	<message xml:lang="it">Cerca</message>
 	<message xml:lang="tr">Ara</message>
-	<message xml:lang="es">Elemento de sólo lectura</message>
+	<message xml:lang="es">Buscar</message>
 </label>
-<label define="TMSG_NOTHING_TO_REPLACE">
-	<message xml:lang="en">Nothing to replace</message>
+<label define="TMSG_EL_RO">
+	<message xml:lang="en">Read only element</message>
 	<message xml:lang="fr">Elément en lecture seule</message>
 	<message xml:lang="de">Schreibgeschütztes Dokument</message>
 	<message xml:lang="it">Elemento a sola lettura</message>
 	<message xml:lang="tr">Salt-oku birim</message>
-	<message xml:lang="es">Nada que sustituir</message>
+	<message xml:lang="es">Elemento de sólo lectura</message>
 </label>
-<label define="TMSG_OPEN">
-	<message xml:lang="en">Open</message>
+<label define="TMSG_NOTHING_TO_REPLACE">
+	<message xml:lang="en">Nothing to replace</message>
 	<message xml:lang="fr">Plus de remplacements</message>
 	<message xml:lang="de">Nichts zu ersetzen</message>
 	<message xml:lang="it">Nulla da rimpiazzare</message>
 	<message xml:lang="tr">Deðiþtirilecek bir þey yok</message>
-	<message xml:lang="es">Abrir</message>
+	<message xml:lang="es">Nada que sustituir</message>
 </label>
-<label define="TMSG_STD_CHAR">
-	<message xml:lang="en">Standard characters</message>
+<label define="TMSG_OPEN">
+	<message xml:lang="en">Open</message>
 	<message xml:lang="fr">Ouvrir</message>
 	<message xml:lang="de">Öffne</message>
 	<message xml:lang="it">Apri</message>
 	<message xml:lang="tr">Aç</message>
-	<message xml:lang="es">Caracteres estandar</message>
+	<message xml:lang="es">Abrir</message>
 </label>
-<label define="TMSG_STD_GRAPHICS">
-	<message xml:lang="en">Standard graphics</message>
+<label define="TMSG_STD_CHAR">
+	<message xml:lang="en">Standard characters</message>
 	<message xml:lang="fr">Caractères standard</message>
 	<message xml:lang="de">Standard Zeichensatz</message>
 	<message xml:lang="it">Caratteri standard</message>
 	<message xml:lang="tr">Standart karakterler</message>
-	<message xml:lang="es">Graficos estandar</message>
+	<message xml:lang="es">Caracteres estandar</message>
 </label>
-<label define="TMSG_STD_FORMAT">
-	<message xml:lang="en">Standard format</message>
+<label define="TMSG_STD_GRAPHICS">
+	<message xml:lang="en">Standard graphics</message>
 	<message xml:lang="fr">Graphiques standard</message>
 	<message xml:lang="de">Standard Grafik</message>
 	<message xml:lang="it">Grafica standard</message>
 	<message xml:lang="tr">Standart grafikler</message>
-	<message xml:lang="es">Formato etandar</message>
+	<message xml:lang="es">Graficos estandar</message>
 </label>
-<label define="TMSG_STD_GEOMETRY">
-	<message xml:lang="en">Standard geometry</message>
+<label define="TMSG_STD_FORMAT">
+	<message xml:lang="en">Standard format</message>
 	<message xml:lang="fr">Format standard</message>
 	<message xml:lang="de">Standard Format</message>
 	<message xml:lang="it">Formato standard</message>
 	<message xml:lang="tr">Standart biçim</message>
-	<message xml:lang="es">Geometria estandar</message>
+	<message xml:lang="es">Formato etandar</message>
 </label>
-<label define="TMSG_TYPOGRAPHIC_POINTS">
-	<message xml:lang="en">pt</message>
+<label define="TMSG_STD_GEOMETRY">
+	<message xml:lang="en">Standard geometry</message>
 	<message xml:lang="fr">Géométrie standard</message>
 	<message xml:lang="de">Standard Geometrie</message>
 	<message xml:lang="it">Geometria standard</message>
 	<message xml:lang="tr">Standart geometri</message>
-	<message xml:lang="es">pt</message>
+	<message xml:lang="es">Geometria estandar</message>
 </label>
-<label define="TMSG_LINE_STYLE">
-	<message xml:lang="en">Line style</message>
+<label define="TMSG_TYPOGRAPHIC_POINTS">
+	<message xml:lang="en">pt</message>
 	<message xml:lang="fr">pt</message>
 	<message xml:lang="de">pt</message>
 	<message xml:lang="it">pt</message>
 	<message xml:lang="tr">pt</message>
-	<message xml:lang="es">Estilo de línea</message>
+	<message xml:lang="es">pt</message>
 </label>
-<label define="TMSG_LINE_WEIGHT">
-	<message xml:lang="en">Line weight</message>
+<label define="TMSG_LINE_STYLE">
+	<message xml:lang="en">Line style</message>
 	<message xml:lang="fr">Style des traits</message>
 	<message xml:lang="de">Linienart</message>
 	<message xml:lang="it">Stile delle linee</message>
 	<message xml:lang="tr">Çizgi tarzý</message>
-	<message xml:lang="es">Ancho de línea</message>
+	<message xml:lang="es">Estilo de línea</message>
 </label>
-<label define="TMSG_FILL_PATTERN">
-	<message xml:lang="en">Fill pattern</message>
+<label define="TMSG_LINE_WEIGHT">
+	<message xml:lang="en">Line weight</message>
 	<message xml:lang="fr">Epaisseur des traits</message>
 	<message xml:lang="de">Linienstärke</message>
 	<message xml:lang="it">Spessore delle linee</message>
 	<message xml:lang="tr">Çizgi aðýrlýðý</message>
-	<message xml:lang="es">Rellenar modelo</message>
+	<message xml:lang="es">Ancho de línea</message>
 </label>
-<label define="TMSG_SPLIT">
-	<message xml:lang="en">Split</message>
+<label define="TMSG_FILL_PATTERN">
+	<message xml:lang="en">Fill pattern</message>
 	<message xml:lang="fr">Motif de remplissage</message>
 	<message xml:lang="de">Füllmuster</message>
 	<message xml:lang="it">Motivo di riempimento</message>
 	<message xml:lang="tr">Doldurma þekli</message>
-	<message xml:lang="es">Dividir</message>
+	<message xml:lang="es">Rellenar modelo</message>
 </label>
-<label define="TMSG_OBJECT_TYPE">
-	<message xml:lang="en">Object type</message>
+<label define="TMSG_SPLIT">
+	<message xml:lang="en">Split</message>
 	<message xml:lang="fr">Diviser</message>
 	<message xml:lang="de">Teilen</message>
 	<message xml:lang="it">Dividi</message>
 	<message xml:lang="tr">Ayýr</message>
-	<message xml:lang="es">Tipo de objeto</message>
+	<message xml:lang="es">Dividir</message>
 </label>
-<label define="TMSG_GOTO_PAGE">
-	<message xml:lang="en">Goto page number:</message>
+<label define="TMSG_OBJECT_TYPE">
+	<message xml:lang="en">Object type</message>
 	<message xml:lang="fr">Type d'objet</message>
 	<message xml:lang="de">Objekttyp</message>
 	<message xml:lang="it">Tipo di oggetto</message>
 	<message xml:lang="tr">Nesne türü</message>
-	<message xml:lang="es">Ir a página número:</message>
+	<message xml:lang="es">Tipo de objeto</message>
 </label>
-<label define="TMSG_ANY">
-	<message xml:lang="en">Any</message>
+<label define="TMSG_GOTO_PAGE">
+	<message xml:lang="en">Goto page number:</message>
 	<message xml:lang="fr">Aller page numéro :</message>
 	<message xml:lang="de">Gehe zu Seite Nr.:</message>
 	<message xml:lang="it">Vai a pagina numero:</message>
 	<message xml:lang="tr">Numaralý sayfaya git</message>
-	<message xml:lang="es">Cualquiera</message>
+	<message xml:lang="es">Ir a página número:</message>
 </label>
-<label define="TMSG_ATTR_TO_SEARCH">
-	<message xml:lang="en">Attribute to search</message>
+<label define="TMSG_ANY">
+	<message xml:lang="en">Any</message>
 	<message xml:lang="fr">any</message>
 	<message xml:lang="de">egal</message>
 	<message xml:lang="it">Any</message>
 	<message xml:lang="tr">Herhangi</message>
-	<message xml:lang="es">Atributo para buscar</message>
+	<message xml:lang="es">Cualquiera</message>
 </label>
-<label define="TMSG_TYPE_TO_SEARCH">
-	<message xml:lang="en">Type to search</message>
+<label define="TMSG_ATTR_TO_SEARCH">
+	<message xml:lang="en">Attribute to search</message>
 	<message xml:lang="fr">Attribut à chercher</message>
 	<message xml:lang="de">Attribut suchen</message>
 	<message xml:lang="it">Attributo da cercare</message>
 	<message xml:lang="tr">Aranacak olan özellik</message>
-	<message xml:lang="es">Tipo para buscar</message>
+	<message xml:lang="es">Atributo para buscar</message>
 </label>
-<label define="TMSG_NATURES">
-	<message xml:lang="en">Natures</message>
+<label define="TMSG_TYPE_TO_SEARCH">
+	<message xml:lang="en">Type to search</message>
 	<message xml:lang="fr">Type à chercher</message>
 	<message xml:lang="de">Suche nach Typ</message>
 	<message xml:lang="it">Tipo da cercare</message>
 	<message xml:lang="tr">Aranacak olan tip</message>
-	<message xml:lang="es">Natures</message>
+	<message xml:lang="es">Tipo para buscar</message>
 </label>
-<label define="TMSG_VALUE_OF_ATTR">
-	<message xml:lang="en">Attribute value:</message>
+<label define="TMSG_NATURES">
+	<message xml:lang="en">Natures</message>
 	<message xml:lang="fr">Natures</message>
 	<message xml:lang="de">Dokumententyp</message>
 	<message xml:lang="it">Nature</message>
 	<message xml:lang="tr">Natures</message>
-	<message xml:lang="es">Valores de atributo:</message>
+	<message xml:lang="es">Natures</message>
 </label>
-<label define="TMSG_UNKNOWN_ATTR">
-	<message xml:lang="en">Unknown attribute</message>
+<label define="TMSG_VALUE_OF_ATTR">
+	<message xml:lang="en">Attribute value:</message>
 	<message xml:lang="fr">Valeur de l'attribut :</message>
 	<message xml:lang="de">Wert des Attributs:</message>
 	<message xml:lang="it">Valore dell\'attributo:</message>
 	<message xml:lang="tr">Özellik deðeri</message>
-	<message xml:lang="es">Atributo desconocido</message>
+	<message xml:lang="es">Valores de atributo:</message>
 </label>
-<label define="TMSG_CREATE_EL_REF">
-	<message xml:lang="en">Create referenced element</message>
+<label define="TMSG_UNKNOWN_ATTR">
+	<message xml:lang="en">Unknown attribute</message>
 	<message xml:lang="fr">Attribut inconnu</message>
 	<message xml:lang="de">Unbekanntes Attribut</message>
 	<message xml:lang="it">Attributo sconosciuto</message>
 	<message xml:lang="tr">Bilinmeyen özellik</message>
-	<message xml:lang="es">Crear elemento referenciado</message>
+	<message xml:lang="es">Atributo desconocido</message>
 </label>
-<label define="TMSG_SHOW_EL_REF">
-	<message xml:lang="en">Show referenced element</message>
+<label define="TMSG_CREATE_EL_REF">
+	<message xml:lang="en">Create referenced element</message>
 	<message xml:lang="fr">Créer l\'élément à référencer</message>
 	<message xml:lang="de">Erzeuge Verknüpfungsziel</message>
 	<message xml:lang="it">Crea l\'elemento riferito</message>
 	<message xml:lang="tr">Kaynaklý birim yarat</message>
-	<message xml:lang="es">Mostrar elemento referenciado</message>
+	<message xml:lang="es">Crear elemento referenciado</message>
 </label>
-<label define="TMSG_MODE_INSERT">
-	<message xml:lang="en">Insertion mode</message>
+<label define="TMSG_SHOW_EL_REF">
+	<message xml:lang="en">Show referenced element</message>
 	<message xml:lang="fr">Le désigner</message>
 	<message xml:lang="de">Zeige Verknüpfungsziel</message>
 	<message xml:lang="it">Mostra l\'elemento riferito</message>
 	<message xml:lang="tr">Kaynaklý birim göster</message>
-	<message xml:lang="es">Modo insercion</message>
+	<message xml:lang="es">Mostrar elemento referenciado</message>
 </label>
-<label define="TMSG_CANCEL">
-	<message xml:lang="en">Cancel</message>
+<label define="TMSG_MODE_INSERT">
+	<message xml:lang="en">Insertion mode</message>
 	<message xml:lang="fr">Mode d\'insertion</message>
 	<message xml:lang="de">Einfügemodus</message>
 	<message xml:lang="it">Modo di inserzione</message>
 	<message xml:lang="tr">Ekleme kipi</message>
-	<message xml:lang="es">Cancelar</message>
+	<message xml:lang="es">Modo insercion</message>
 </label>
-<label define="TMSG_ERROR_PS_TRANSLATION">
-	<message xml:lang="en">Error in PostScript translation</message>
+<label define="TMSG_CANCEL">
+	<message xml:lang="en">Cancel</message>
 	<message xml:lang="fr">Annuler</message>
 	<message xml:lang="de">Abbrechen</message>
 	<message xml:lang="it">Annulla</message>
 	<message xml:lang="tr">Vazgeç</message>
-	<message xml:lang="es">Error in traducción PostScript</message>
+	<message xml:lang="es">Cancelar</message>
 </label>
-<label define="TMSG_UNKNOWN_PRINTER">
-	<message xml:lang="en">Command refused by the spooler "%s"</message>
+<label define="TMSG_ERROR_PS_TRANSLATION">
+	<message xml:lang="en">Error in PostScript translation</message>
 	<message xml:lang="fr">Erreur dans la traduction en PostScript</message>
 	<message xml:lang="de">Fehler in der PostScript-Erkennung</message>
 	<message xml:lang="it">Errore nella traduzione in PostScript</message>
 	<message xml:lang="tr">PostScript dönüþümünde hata</message>
-	<message xml:lang="es">Orden rechazada por el spooler "%s"</message>
+	<message xml:lang="es">Error in traducción PostScript</message>
 </label>
-<label define="TMSG_CANNOT_CREATE_PS">
-	<message xml:lang="en">Cannot create "%s"</message>
+<label define="TMSG_UNKNOWN_PRINTER">
+	<message xml:lang="en">Command refused by the spooler "%s"</message>
 	<message xml:lang="fr">Commande refusée par le spooler : %s</message>
 	<message xml:lang="de">Auftrag vom Druckspooler "%s" zurückgeweisen</message>
 	<message xml:lang="it">Comando rifiutato dallo spooler "%s"</message>
 	<message xml:lang="tr">Komut "%s" tarafýndan reddedildi.</message>
-	<message xml:lang="es">No puedo crear "%s"</message>
+	<message xml:lang="es">Orden rechazada por el spooler "%s"</message>
 </label>
-<label define="TMSG_GLOBAL_LAYOUT">
-	<message xml:lang="en">Global Layout</message>
+<label define="TMSG_CANNOT_CREATE_PS">
+	<message xml:lang="en">Cannot create "%s"</message>
 	<message xml:lang="fr">Création impossible : %s</message>
 	<message xml:lang="de">Kann "%s" nicht erzeugen</message>
 	<message xml:lang="it">Impossibile creare "%s"</message>
 	<message xml:lang="tr">"%s" yaratýlamadý</message>
-	<message xml:lang="es">Disposición global</message>
+	<message xml:lang="es">No puedo crear "%s"</message>
 </label>
-<label define="TMSG_UNABLE_LINK_NEW_ELEM">
-	<message xml:lang="en">Unable to link the new element</message>
+<label define="TMSG_GLOBAL_LAYOUT">
+	<message xml:lang="en">Global Layout</message>
 	<message xml:lang="fr">Présentation générale</message>
 	<message xml:lang="de">Seitenformat</message>
 	<message xml:lang="it">Presentazione generale</message>
 	<message xml:lang="tr">Genel biçim</message>
-	<message xml:lang="es">No puedo enlazar el nuevo elemento</message>
+	<message xml:lang="es">Disposición global</message>
 </label>
-<label define="TMSG_CHAR_ENCODING">
-	<message xml:lang="en">Character encoding</message>
+<label define="TMSG_UNABLE_LINK_NEW_ELEM">
+	<message xml:lang="en">Unable to link the new element</message>
 	<message xml:lang="fr">Impossible de lier le nouvel élément</message>
 	<message xml:lang="de">Kann des erzeugte Element nicht verweisen</message>
 	<message xml:lang="it">Impossibile collegare il nuovo elemento</message>
 	<message xml:lang="tr">Yeni birime baðlantý yapýlamadý</message>
-	<message xml:lang="es">Codificacion de caracter</message>
+	<message xml:lang="es">No puedo enlazar el nuevo elemento</message>
 </label>
-<label define="TMSG_NO_LANGUAGE">
-	<message xml:lang="en">No language</message>
+<label define="TMSG_CHAR_ENCODING">
+	<message xml:lang="en">Character encoding</message>
 	<message xml:lang="fr">Alphabet</message>
 	<message xml:lang="de">Zeichensatz</message>
 	<message xml:lang="it">Codifica dei caratteri</message>
 	<message xml:lang="tr">Karakter kodlamasý</message>
-	<message xml:lang="es">Sin idioma</message>
+	<message xml:lang="es">Codificacion de caracter</message>
 </label>
-<label define="TMSG_OVERLINE">
-	<message xml:lang="en">Overline</message>
+<label define="TMSG_NO_LANGUAGE">
+	<message xml:lang="en">No language</message>
 	<message xml:lang="fr">Aucun</message>
 	<message xml:lang="de">Keine Sprache</message>
 	<message xml:lang="it">Nessuna lingua</message>
 	<message xml:lang="tr">Dil yok</message>
+	<message xml:lang="es">Sin idioma</message>
+</label>
+<label define="TMSG_OVERLINE">
+	<message xml:lang="en">Overline</message>
+	<message xml:lang="fr">Surligné</message>
+	<message xml:lang="de">Überstrichen</message>
+	<message xml:lang="it">Soprassegnato</message>
+	<message xml:lang="tr">Üstçizgi</message>
 	<message xml:lang="es">Overline</message>
 </label>
 <label define="TMSG_DOCUMENT_FORMAT">
 	<message xml:lang="en">Document format</message>
-	<message xml:lang="fr">Surligné</message>
-	<message xml:lang="de">Überstrichen</message>
-	<message xml:lang="it">Soprassegnato</message>
+	<message xml:lang="fr">Format de document</message>
+	<message xml:lang="de">Dokumentenformat</message>
+	<message xml:lang="it">Formato del documento</message>
 	<message xml:lang="tr">Üstçizgi</message>
 	<message xml:lang="es">Formato de documento</message>
 </label>
 <label define="TMSG_EVENTS">
 	<message xml:lang="en">Events</message>
-	<message xml:lang="fr">Format de document</message>
-	<message xml:lang="de">Dokumentenformat</message>
-	<message xml:lang="it">Formato del documento</message>
+	<message xml:lang="fr">Événements</message>
+	<message xml:lang="de">Ereignisse (Events)</message>
+	<message xml:lang="it">Eventi</message>
 	<message xml:lang="es">Eventos</message>
 </label>
 <label define="TMSG_DEL_ATTR">
 	<message xml:lang="en">Remove attribute</message>
-	<message xml:lang="fr">Événements</message>
-	<message xml:lang="de">Ereignisse (Events)</message>
-	<message xml:lang="it">Eventi</message>
+	<message xml:lang="fr">Retire l'attribut</message>
+	<message xml:lang="de">Lösche Attribut</message>
+	<message xml:lang="it">Rimuovi l\'attributo</message>
 	<message xml:lang="es">Eliminar atributos</message>
 </label>
 <label define="TMSG_CPBUTTON_1">
-        <message xml:lang="en">Left button sets the selection color</message>
-	<message xml:lang="fr"></message>
-        <message xml:lang="de">Linke Maustaste: Auswahl der Farbe f�r markierten Text</message>
+	<message xml:lang="en">Left button sets the selection color</message>
+	<message xml:lang="fr">Bouton gauche change la couleur de sélection</message>
+	<message xml:lang="de">Linke Maustaste: Auswahl der Farbe für markierten Text</message>
 	<message xml:lang="it">Il tasto di sinistra setta il colore della selezione</message>
-	<message xml:lang="es">El bot�n izquierdo fija el color de la selecci�n</message>
+	<message xml:lang="es">El botón izquierdo fija el color de la selección</message>
 </label>
 <label define="TMSG_CPBUTTON_2">
-        <message xml:lang="en">Middle or Right button sets the caret color</message>
-	<message xml:lang="fr"></message>
+	<message xml:lang="en">Middle or Right button sets the caret color</message>
+	<message xml:lang="fr">Bouton milieu ou droit change la couleur du curseur</message>
 	<message xml:lang="de">Mittlere oder rechte Maustaste: Auswahl der Cursorfarbe</message>
-	<message xml:lang="it">Il tasto centrale o di destra setta il colore del cursore</message>
-	<message xml:lang="es">El bot�n central o derecho fija el color intercalado</message>
+	<message xml:lang="it">l tasto centrale o di destra setta il colore del cursore</message>
+	<message xml:lang="es">El botón central o derecho fija el color intercalado</message>
 </label>
-
 <label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>
