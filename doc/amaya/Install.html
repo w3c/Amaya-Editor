@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Draft//EN">
+<HTML>
+<HEAD>
+<TITLE>How to install the Amaya Binary Release</TITLE>
+<!-- Created by: Vincent Quint. 8 July 96 -->
+<!-- Changed by: Jose Kahan,  8-Jul-1996 -->
+<!-- Changed by: Daniel Veillard, 14-Nov-1996 -->
+</HEAD>
+<BODY>
+<P><A href="../../"><IMG BORDER="0" ALT="W3C" SRC="../../Icons/WWW/w3c_home"></A> <A
+href="../"><IMG BORDER="0" BORDER="0" SRC="amaya.gif" ALT="Amaya"></A> <A href="./"><IMG
+ BORDER="0" SRC="../../Icons/WWW/guide48x" ALT="Using"></A></P>
+<H1>How to install the Amaya Binary Release</H1>
+<H3>Choose a place for Amaya</H3>
+<P>Supposing the binary distribution was loaded fine, one must choose a place
+to install it. We suggest</P>
+<UL>
+<LI>/usr/local for a system wide installation
+<LI>the user home directory for a personnal installation
+</UL>
+<P>A Linux version doesn't need more that 5 Megabytes of disk space, even a
+RISC architecture distribution should not exceed 10 Megabytes.</P>
+<H3>Extract the distribution</H3>
+<P>Move the distribution to this directory, verify the rights on this
+directory allows you to create a directory and extract the distribution.</P>
+<P>On a <STRONG>Linux ELF</STRONG> platform one must invoke:</P>
+<P><CODE>tar xvzf amaya-linux-elf.tar.gz</CODE></P>
+<P>And for an <STRONG>Linux a.out</STRONG> platform:</P>
+<P><CODE>tar xvzf amaya-linux.tar.gz</CODE></P>
+<P>More generally if the distribution is a tar.gz file:</P>
+<P><CODE>gunzip -c amaya-system.tar.gz | tar xvf -</CODE></P>
+<P>If this is a tar.Z file:</P>
+<P><CODE>uncompress -c amaya-system.tar.gz | tar xvf -</CODE></P>
+<P>Whatever the method used, this should print around 40 lines of output and
+create a new directory called <CODE>Amaya</CODE> populated with a few files
+and directories. If not, your distribution file was probably corrupted during
+the transfer, please get a new one. Read carefully the COPYRIGHT and README
+files.</P>
+<H3>Set up the environment and start Amaya</H3>
+<P><STRONG>NOTE</STRONG> : This has changed for Amaya 0.9. The binary is
+lauched directly without an intermediate script shell.</P>
+<P>The file <CODE>Amaya/bin/amaya</CODE> is the starting script used to launch
+<STRONG>Amaya</STRONG>, the best thing is to add the path to the
+Amaya/bin/SYSTEM directory to your PATH environment variable. For example on a
+<STRONG>Linux-ELF</STRONG> system:</P>
+<P><CODE>setenv PATH $PATH:/usr/local/Amaya/bin/LINUX-ELF</CODE></P>
+<P>for a csh or tcsh shell. When using sh, bash or another variant of the
+Bourne shell</P>
+<P><CODE>PATH=$PATH:/usr/local/Amaya/bin/LINUX-ELF ; export $PATH</CODE></P>
+<P>Maybe this command should be added to the .login startup script. Once done
+one can lauch amaya simply by typing "amaya" to the shell prompt. The
+<STRONG>Amaya</STRONG> main window should open and display the first page of
+the <STRONG>Amaya</STRONG> documentation.</P>
+<H3>If something goes wrong and advice</H3>
+<UL>
+<LI>If <STRONG>Amaya</STRONG> doesn't seems to work, verify the few following
+points:
+<OL>
+<LI>the <CODE>DISPLAY</CODE> variable is correctly set.
+<LI>The binary just installed is the correct one, i.e. it is the correct
+binaries for the current machine (don't try to start the Linux-ELF version on
+a Solaris machine or an old Linux a.out installation).
+<LI>If the binary version is ok, check the availability of the dynamic
+libraries needed by the executable file amayamain (located under
+<CODE>Amaya/bin/SYSTEM/amaya</CODE>). for example on a
+<STRONG>Linux-ELF</STRONG> system type
+<P><CODE>ldd Amaya/bin/LINUX-ELF/amaya</CODE></P>
+<P>and check that there is no missing libraries.</P>
+</OL>
+<LI>One can install packages for different platform under the same directory
+(for example on a server filesystem exported via NFS to an heterogenous set of
+machines).
+<LI>Do not try to put a symbolic link directly to the Amaya/bin/amaya script
+from /usr/local/bin. The script would not be abble to guess correctly the
+value of the internal variable <CODE>THOTDIR</CODE> and the binary would not
+start.
+<LI>The same apply when trying to copy the script to a different location.
+<LI>All the traffic on the Amaya mailing-list is archived <A
+href="http://opera.inrialpes.fr/amaya/messages/">here</A>. Please have a look
+at it before sending us mail if something goes wrong. Remember, it's an Alpha
+release.
+</UL>
+
+<HR>
+<ADDRESS>
+<A href="mailto:Daniel.Veillard@w3.org">Daniel Veillard</A><BR><A
+href="../../Help/Webmaster">Webmaster</A><BR>$Date: 1996/07/08 16:04:56
+$</ADDRESS>
+</BODY>
+</HTML>

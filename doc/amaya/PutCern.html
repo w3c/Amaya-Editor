@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>CERN server put configuration</TITLE>
+<!-- Changed by: Jose Kahan, 10-Jul-1996 -->
+<!-- Created by Jose Kahan. 4 July 96 -->
+</HEAD>
+<BODY>
+<P><A href="../../"><IMG BORDER="0" ALT="W3C" SRC="../../Icons/WWW/w3c_home"></A> <A
+href="../"><IMG BORDER="0" SRC="amaya.gif" ALT="Amaya"></A>
+<A href="./"><IMG BORDER="0" SRC="../../Icons/WWW/guide48x" ALT="Using"></A> </P>
+<H1>PUT configuration for the CERN server</H1>
+<P>Setting up a CERN server to support the PUT method involves three
+operations:</P>
+<UL>
+<LI>Writing a PUT compliant cgi-script
+<LI>Changing  the httpd configuration file
+<LI>Granting access-rights in the file system
+</UL>
+<H2>Writing a PUT compliant CGI-script</H2>
+<P>CGI-scripts that are PUT compliant are basically the same kind of scripts
+used to handle POST requests, with the addition of extra code to save to a
+file  the data feed to them by a server. As a PUT script actually writes, or
+overwrites, files on a remote  information, the source code of this type of
+scripts must be carefully reviewed to avoid security and system mishaps.</P>
+<H3>For more information</H3>
+<UL>
+<LI><A href="http://hoohoo.ncsa.uiuc.edu/cgi/ ">NCSA's home page about
+CGI-scripts</A>
+<LI><A href="http://www.csclub.uwaterloo.ca/u/mlvanbie/cgisec/">CGI Security
+Tutorial</A>
+<LI><A href="../Distribution/put-1.0.tar.gz">A sample PUT script</A>
+</UL>
+<H2>Changing the httpd configuration file</H2>
+<P>In order to handle PUT requests, the httpd configuration file must
+include:</P>
+<UL>
+<LI>An <STRONG>Enable PUT</STRONG> directive, which allows the processing of PUT
+requests by the server
+<LI>A <STRONG>PUT-Script</STRONG> directive, which tells the server where to find the
+PUT script
+<LI>One or a set of protection rules which includes a <STRONG>PUT-Mask</STRONG>. Like
+for a <STRONG>GET-mask</STRONG>, the <STRONG>PUT-mask</STRONG> states who can do a PUT. This is
+necessary even if you want to grant PUT rights to user <STRONG>anybody</STRONG>
+<LI>Associations between URLs and the above protection rules
+<LI>A mapping from the URL space to the file system space. The CERN server
+feeds the PUT client the filename that results from this mapping
+</UL>
+<H3>For more information</H3>
+<UL>
+<LI><A href="http://www.w3.org/pub/WWW/Daemon/User/Admin.html">CERN Server
+reference  manual</A>
+<LI><A href="put.conf">A sample configuration file</A>
+</UL>
+<H2>Granting access-rights in the file system</H2>
+<P>If you're running the CERN server in a system which associates
+access-rights to files, such as Unix, you have to make sure that:</P>
+<UL>
+<LI>The CERN server has execute rights over the PUT script
+<LI>The PUT script has write rights on the directories where it may write
+information.
+</UL>
+<P>You might we wondering where are user access-rights actually enforced. The
+answer is that this happens inside the CERN server. Once the server authorizes
+a request, it just commands the PUT script to write a data file. If you
+consider it appropriate, you may do some additional access control inside the
+PUT script. In all cases, make sure the PUT script does not have write access
+on directories and files which should not be written by it! If you're using
+Unix, you can easily set this up by having the PUT script run under a
+specific-assigned user id.</P>
+
+<H3>For more information</H3>
+<UL>
+<LI> Your own operating system manuals
+</UL>
+<HR>
+<ADDRESS>
+<A href="mailto:jose.kahan@w3.org" name="L179">Jos&eacute; Kahan</A><BR>
+<A HREF="../../Help/Webmaster">Webmaster</A><BR>
+$Date$
+</ADDRESS>
+</BODY>
+</HTML>

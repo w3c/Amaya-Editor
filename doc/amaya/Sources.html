@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Draft//EN">
+<HTML>
+<HEAD>
+<TITLE>The Amaya source Tree</TITLE>
+</HEAD>
+<BODY>
+<P><A href="http://www.w3.org/pub/WWW"><IMG alt="W3C" src="w3c_48x48"></A><A
+href="http://www.w3.org/pub/WWW/Amaya"><IMG src="amaya.gif" alt="Amaya"></A>
+<A href="http://www.w3.org/pub/WWW/Amaya/User"><IMG src="guide48x"
+alt="Using"></A></P>
+<H1>How to install the Amaya Source Release</H1>
+<H3>The Amaya Source Tree</H3>
+<P>Below is the picture of the whole tree as stored in the main source archive
+<CODE>amaya-src-xxx.tar.gz</CODE>(where xxx is the <STRONG>Amaya</STRONG>
+version number).</P>
+<P>One will also need to extract the precompiled libraries set archive for the
+<STRONG>Target</STRONG>s of interest (see the <A
+href="Platforms.html">platform list</A>) named
+amaya-libs-<STRONG>Target</STRONG>-xxx.tar.gz , if available (otherwise see
+the document on <A href="Porting.html">porting to a new platform</A>).</P>
+<P>The tree is created by invoking the following commands:</P>
+<P><CODE>tar xvzf amaya-src-xxx.tar.gz</CODE></P>
+<P><CODE>tar xvzf amaya-libs-<STRONG>Target</STRONG>-xxx.tar.gz</CODE></P>
+<P>or</P>
+<P><CODE>gunzip -c amaya-src-xxx.tar.gz | tar xvf -</CODE></P>
+<P><CODE>gunzip -c amaya-libs-<STRONG>Target</STRONG>-xxx.tar.gz | tar xvf
+-</CODE></P>
+<P>(if you are not using GNU tar) in the directory of choice (it will create
+the Amaya sub-directory).</P>
+<P>Be sure to have plenty of room available, compiling a debug version of
+amaya can eat up to 150 Mbyte of disk space.</P>
+<P><IMG src="Sources.gif"></P>
+<P>The tree is made of (from top to bottom):</P>
+<UL>
+<LI><CODE>amaya</CODE> directory contains the <STRONG>amaya</STRONG>
+application code.
+<LI><CODE>thotlib</CODE> directory contains the Thot library sources. The
+headers defining the interfaces exported by the library are in the
+<CODE>include</CODE> sub-directory.
+<LI><CODE>makes</CODE> subdirectory, it contains most of the Makefiles and
+dependancies needed to rebuild <STRONG>amaya</STRONG> and the <A
+href="Compilers.html">compilers</A> from the sources.
+<LI><CODE>batch</CODE> directory contains the sources for the schema
+compilers.
+<LI><CODE>font</CODE> directory contains a few X-Windows specific fonts needed
+by <STRONG>amaya</STRONG>.
+<LI><CODE>dicopar</CODE> directory hold the dictionnaries and hyphenation
+rules.
+<LI><CODE>config</CODE> contains all the dialogs messages files both for
+english and french, as well as a few configuration files like the <A
+href="Registry.html">Thot registry</A> (stored in file thot.ini).
+<LI><CODE>doc</CODE> contains the programming documentation for Thot library
+and languages.
+<LI><CODE>libjpeg</CODE> and <CODE>libpng</CODE> contains the sources of two
+graphic libraries needed by Thot toolkit.
+<LI><CODE>w3c-libwww-5.0a</CODE> is a slightly patched version of the latest
+version of the <A href="http://www.w3.org/pub/WWW/Library/">WWW Library</A>.
+<LI><CODE>LINUX-ELF</CODE>, <CODE>solaris2</CODE>, etc.. are the
+<STRONG>Target</STRONG> specific files. Here is a <A
+href="Platforms.html">list of all current</A> <STRONG>Targets</STRONG>.
+</UL>
+<P>Each Target specific archive amaya-libs-<STRONG>Target</STRONG>-xxx.tar.gz
+contains a customized Makefile, precompiled versions of the graphic and WWW
+libraries, as well as the config.h file describing the specific issues on the
+programming interface of the given Target. These files are stored in a
+specific subdirectory <CODE>Amaya/</CODE><STRONG>Target</STRONG>. This
+directory is also the base for the build tree related to each
+<STRONG>Target</STRONG>. See next step <A href="Compiling.html">Compiling
+Amaya</A> for more information on how to populate this subtree.</P>
+<P></P>
+
+<HR>
+<ADDRESS>
+<A href="mailto:daniel.veillard@w3.org">Daniel Veillard</A><BR><A
+href="../../Help/Webmaster">Webmaster</A><BR>$Date$</ADDRESS>
+</BODY>
+</HTML>

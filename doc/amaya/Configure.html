@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Draft//EN">
+<HTML>
+<HEAD>
+<TITLE>Configuring Amaya</TITLE>
+<!-- Created by: Irene Vatton, 22 August 1996 -->
+<!-- Changed by: Jose Kahan, 22 August 1996 -->
+<!-- Last change: Irene Vatton 14 November 1996 -->
+</HEAD>
+<BODY>
+<P><A href="http://www.w3.org/member/WWW"><IMG ALT="W3C" BORDER="0"
+ALT="W3C" SRC="../../Icons/w3c_home"></A> <A href="http://www.w3.org/member/WWW/Amaya"><IMG BORDER="0"
+ALT="Amaya" BORDER="0" SRC="amaya.gif"></A> <A
+href="http://www.w3.org/member/WWW/Amaya/User"><IMG ALT="Using" BORDER="0"
+SRC="../../Icons/WWW/guide48x"></A></P>
+<H1 align=center>Configuring Amaya</H1>
+<P>This document explains how to configure <STRONG>Amaya</STRONG>. A user
+configures <STRONG>Amaya</STRONG> by means of the <CODE>thot.ini</CODE>
+registry file, normaly located in the HOME directory of the user. In this file
+there is a section <CODE>[amaya]</CODE> where user can change configuration
+options concerning :</P>
+<UL>
+<LI>default <A
+href="http://www.w3.org/member/WWW/Amaya/User/Configure.html#L138">home
+page</A>,
+<LI><A
+href="http://www.w3.org/member/WWW/Amaya/User/Configure.html#L139">default
+colors</A>,
+<LI><A
+href="http://www.w3.org/member/WWW/Amaya/User/Configure.html#L140">colors
+palette</A>, and
+<LI><A
+href="http://www.w3.org/member/WWW/Amaya/User/Configure.html#L141">dialogue
+language</A>.
+<LI><A href="#L242">printer command</A>
+<LI><A href="#L236">keyboard shortcuts</A>
+</UL>
+
+<HR>
+<H2><A name="L138">Home Page</A></H2>
+<P>It is possible to change the default home page of <STRONG>Amaya</STRONG> by
+defining the <CODE>HOME_PAGE</CODE> registry variable.</P>
+<H2><A name="L139">Default Colors</A></H2>
+<P>User interface colors have default values that can be modified in the
+<CODE>thot.ini</CODE>  registry file of the user. The following parameters are
+used:</P>
+<UL>
+<LI><CODE>BackgroundColor=</CODE> background color of document windows.
+<LI><CODE>DocSelectColor=</CODE> background color of the selected part and of
+the insertion cursor.
+<P><EM>The default value for Black and White screens is
+</EM><CODE>Black</CODE><EM>. If you can't see a selection in your screen,
+change this value to </EM><CODE>White</CODE><EM>.</EM></P>
+</UL>
+<UL>
+<LI><CODE>ForegroundColor=</CODE> default color of text in documents.
+<LI><CODE>MenuBgColor=</CODE> Background color of: menu bars at the top of
+windows, the area where the selection message is displayed at the top of
+document windows, menus, dialogue boxes.
+<LI><CODE>ButtonColor=</CODE> background color of buttons in dialogue forms.
+<LI><CODE>ScrollColor=</CODE> color of the scrolling bars.
+</UL>
+<P>Once the <CODE>thot.ini</CODE> file has been modified, restart
+<STRONG>Amaya</STRONG>.</P>
+<P></P>
+<H2><A name="L140">Colors Palette</A></H2>
+<P>CSS allows the user to color documents with one of the 152 predefined
+colors. During initialization, the editor loads its color table to present
+them in a palette. The number of colors loaded by the editor can be divided by
+two by editing the  <CODE>thot.ini</CODE>  file.</P>
+<UL>
+<LI><CODE>ReduceColor= yes</CODE>
+</UL>
+<P>Once the <CODE>thot.ini</CODE> file has been modified, restart
+<STRONG>Amaya</STRONG>.</P>
+<P></P>
+<H2><A name="L141">Dialogue Language</A></H2>
+<P>The dialogue language is defined by the  <CODE>LANG</CODE> registry
+variable. The default language is English (value <CODE>en_US</CODE>).</P>
+<P>For other languages support, please contact us.</P>
+<P></P>
+<H2><A name="L242">Printer command</A></H2>
+<P>The standard printer command is defined by the <CODE>THOTPRINTER</CODE>
+registry variable. If this command is not well adapted of the current system,
+the user have to update it before printing using the "Print Setup" command or
+change this variable in its t<CODE>hot.ini</CODE> registry.</P>
+<P></P>
+<H2><A name="L236">Keyboard Shortcuts</A></H2>
+<P>It is convenient to be able to invoke menu commands from the keyboard. The
+Thot toolkit provides a facility that let user accomplish this. When the
+application starts, the Thot toolkit looks for the keyboard shortcuts file for
+the application. This file defines a list of associations between a keyboard
+sequence an the invoked  corresponding command.</P>
+<P>The syntax used to define association is:</P>
+<PRE> Directive = KeySeq ':' IdentCommand ;
+ KeysSeq = KeySet [ ',' KeySet ] ;
+ KeySet = [ Modifier ] [ 'Shift' ] Key ;
+ Key = '&lt;Key>' KeyValue / '&lt;Key>' SpecialKey ;
+ Modifier = 'Ctrl' / 'Alt' / 'Meta' ;
+ KeyValue = 'a' / 'b' / ... ;
+ SpecialKey = 'Escape' / 'Delete' / 'Space' / 'BackSpace' / 
+              'Return' / 'Up' / 'Down' / 'Left' / 'Right' / 
+              'Home' / 'End' / 'F1' / ... / 'L1' / ... / 'R1' / ... ;
+ IdentCommand = 'TtcInsertChar(' Char ')' / NAME '()' ;
+ Char = KeyValue / OctalValue ;  OctalValue = '\' NUMBER ; </PRE>
+<P>See standard amaya.keyboard  file in bin directory.</P>
+<P>The list of available commands is:</P>
+<UL>
+<LI>Moving commands:
+<UL>
+<LI>TtcNextChar, TtcPreviousChar: move chararcter by character.
+<LI>TtcNextLine, TtcPreviousLine, TtcStartOfLine, TtcEndOfLine: move line by
+line.
+<LI>TtcNextElement, TtcPreviousElement, TtcChildElement, TtcParentElement:
+move element by element.
+<LI>TtcPageDown, TtcPageUp, TtcPageTop, TtcPageEnd: move page to page.
+</UL>
+<LI>In <CODE>File</CODE> menu:
+<P>New, OpenDoc, OpenDocInNewWindow, Reload, SaveDocument, SaveDocumentAs,
+TtcPrint, TtcPrintSetUp, TtcCloseDocument, AmayaClose</P>
+<P></P>
+<LI>In Edit menu:
+<P>TtcCutSelection, TtcCopySelection, TtcPaste, TtcDeleteSelection,
+TtcSearchText, EnSpellCheck, FrSpellCheck.</P>
+<P></P>
+<LI>In <CODE>Structure Types</CODE> menu:
+<P>CreateIsIndex, CreateBase, CreateMeta, CreateLinkInHead, CreateComment.</P>
+<P></P>
+<LI>In Types menu:
+<P>CreateParagraph, CreateImage, CreateHeading1, CreateHeading2,
+CreateHeading3, CreateHeading4, CreateHeading5, CreateHeading6, CreateList,
+CreateNumberedList, ThotCreateMenu, ThotCreateDirectory, CreateDefinitionList,
+CreateDefinitionTerm, CreateDefinitionDef, CreateHorizontalRule,
+CreateBlockQuote, CreatePreformatted, CreateAddress, CreateTable,
+CreateCaption, CreateTHead, CreateTBody, CreateTFoot, CreateRow,
+CreateDataCell, CreateHeadingCell, CreateToggle, CreateRadio, CreateOption,
+CreateTextInput, CreateTextArea, CreateCommandLine, CreateAreaRect,
+CreateAreaPoly, CreateDivision, CreateApplet, CreateParameter,
+TransformType.</P>
+<P></P>
+<LI>In <CODE>Links</CODE> menu:
+<P>CreateLink, CreateTarget, ChangeLink, DeleteAnchor.</P>
+<P></P>
+<LI>In Views menu:
+<P>TtcSwitchButtonBar, TtcSwitchCommands, ShowStructure, ShowAlternate,
+ShowMapAreas.</P>
+<P></P>
+<LI>In <CODE>Style</CODE> menu:
+<P>TtcChangeCharacters, TtcChangeColors, TtcChangeFormat, ChangeClass,
+ApplyClass, InitCSSDialog, CreateElemEmphasis, CreateElemStrong,
+CreateElemCite, CreateElemDefinition, CreateElemCode, CreateElemVariable,
+CreateElemSample, CreateElemItalic, CreateElemBold, CreateElemTeletype,
+CreateElemStrikeOut, CreateElemBig, CreateElemSmall, CreateSub, CreateSup,
+CreateElemFont.</P>
+<P></P>
+<LI>In <CODE>Help</CODE> menu:
+<P>HelpAmaya.</P>
+</UL>
+
+<HR>
+<ADDRESS>
+<A href="mailto:/opera/WWW/Amaya/User/vatton@w3.org">Ir&egrave;ne
+Vatton</A><BR><A
+href="http://www.w3.org/member/WWW/Help/Webmaster">Webmaster</A><BR>$Date$</ADDRESS>
+</BODY>
+</HTML>

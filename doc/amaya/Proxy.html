@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>Proxy support in Amaya</TITLE>
+<!-- Changed by: Jose Kahan,  8-Jul-1996 -->
+<!-- Created by Jose Kahan. 4 July 96 -->
+</HEAD>
+<BODY>
+<P><A href="../../"><IMG BORDER="0" ALT="W3C" SRC="../../Icons/WWW/w3c_home"></A> <A
+href="../"><IMG BORDER="0" SRC="amaya.gif" ALT="Amaya"></A>
+<A href="./"><IMG BORDER="0" SRC="../../Icons/WWW/guide48x" ALT="Using"></A> </P>
+<H1>Proxy support in Amaya</H1>
+<P>Proxy support is provided in <STRONG>Amaya</STRONG> by the W3C Reference Library. You use
+environment variables to tell <STRONG>Amaya</STRONG> whether you want to use a Proxy on
+a specific domain, server, URL, etc. These variables include:</P>
+<UL>
+<LI><STRONG>http_proxy</STRONG>, which indicates your HTTP proxies, and
+<LI><STRONG>no_proxy</STRONG>, which states when a proxy should not be used.
+</UL>
+<P>These variables take on a list of URL-like data, separated by colons. For
+example, to use the HTTP proxy <STRONG>groucho.marx.edu</STRONG>, running on port 1028,
+you would set up the proxy variable as follows (giving here below for a Unix
+tcsh):</P>
+<P><CODE>setenv http_proxy http://groucho.marx.edu:1028</CODE></P>
+<P>Now, if you don't want to use a proxy while accessing the
+<STRONG>harpo.marx.edu</STRONG> site, type in the following line:</P>
+<P><CODE>setenv no_proxy harpo.marx.edu</CODE></P>
+<H3>To do</H3>
+<UL>
+<LI>Add a menu item which will allow to reload the proxy settings without
+having  to quit and restart Amaya
+</UL>
+<H3>For more information</H3>
+<UL>
+<LI><A
+href="http://www.w3.org/pub/WWW/Library/User/Using/Proxy.html">Proxy-support
+inside libwww</A>
+</UL>
+<P><BR></P>
+
+<HR>
+<ADDRESS>
+<A href="mailto:jose.kahan@w3.org">Jos&eacute; Kahan</A> <BR>
+<A HREF="../../Help/Webmaster">Webmaster</A><BR>
+$Date$
+</ADDRESS>
+</BODY>
+</HTML>
+
+
+
+
+
+
