@@ -1622,7 +1622,11 @@ void CellCreated (NotifyElement * event)
   else
     /* a new cell in an existing row */
     {
+      /* the creation of the cell must be registered after
+	 the created colhead */
+      TtaCancelLastRegisteredOperation (doc);
       NewCell (cell, doc, TRUE, TRUE);
+      TtaRegisterElementCreate (cell, doc);
       HandleColAndRowAlignAttributes (row, doc);
     }
 }
