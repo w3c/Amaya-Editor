@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Edition des graphiques</title>
-  <meta name="GENERATOR" content="amaya V4.01" />
+  <meta name="GENERATOR" content="amaya V4.2" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -48,40 +48,44 @@ sont :</p>
 <ul>
   <li>Une ligne, <code>line</code> en SVG, <svg
     xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
-      <line y1="3px" x1="0px" x2="17px" y2="20px" style="stroke: #B20000"/>
+      <line y1="3px" x1="0px" x2="17px" y2="20px" style="stroke: #B20000"
+            stroke="1"/>
     </svg>
   </li>
   <li>Un rectangle, <code>rect</code> en SVG sans attributs <code>rx</code> ou
     <code>ry</code>, <svg xmlns="http://www.w3.org/2000/svg" width="2cm"
     height="0.6cm">
       <rect x="6px" width="22px" height="18px"
-            style="fill: #FFCB69; stroke: #0071FF"/>
+            style="fill: #FFCB69; stroke: #0071FF" stroke="1"/>
     </svg>
   </li>
   <li>Un rectangle avec des angles arrondis, <code>rect</code> en SVG, <svg
     xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
-      <rect rx="6px" width="23px" height="18px"
+      <rect rx="6px" stroke="1" width="23px" height="18px"
             style="fill: #E5E500; stroke: #4C00E5"/>
     </svg>
   </li>
   <li>Un cercle, <code>circle</code> en SVG, <svg
     xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
-      <circle cy="10px" cx="12px" r="10px" style="fill: #C1FFE9"/>
+      <circle cy="10px" cx="12px" r="10px" style="fill: #C1FFE9; stroke: red"
+              stroke="1"/>
     </svg>
   </li>
   <li>Une ellipse, <code>ellipse</code> en SVG, <svg
     xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
-      <ellipse cy="10px" cx="20px" rx="15px" ry="10px" style="fill: #B795FF"/>
+      <ellipse cy="10px" cx="20px" rx="15px" ry="10px" style="fill: #B795FF"
+            stroke="1"/>
     </svg>
   </li>
   <li>Une polyligne, <code>polyline</code> en SVG,<svg
     xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
-      <polyline points="4,16 23,0 37,16 55,6" style="stroke: #0000B2"/>
+      <polyline points="4,16 23,0 37,16 55,6" stroke="1"
+                style="stroke: #0000B2; fill: orange"/>
     </svg>
   </li>
   <li>Un polygone, <code>polygon</code> en SVG, <svg
     xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.7cm">
-      <polygon points="2,16 15,0 28,12 45,4 46,16 17,16 14,11"
+      <polygon points="2,16 15,0 28,12 45,4 46,16 17,16 14,11" stroke="1"
                style="fill: #C8FF95; stroke: #000000"/>
     </svg>
   </li>
@@ -91,7 +95,8 @@ sont :</p>
   </li>
   <li>Un fragment de HTML embarqué, <code>foreignObject</code> en SVG,<svg
     xmlns="http://www.w3.org/2000/svg" width="6cm" height="45px">
-      <rect y="0" x="27px" width="110px" height="45px" style="fill: #C1FFFF"/>
+      <rect y="0" x="27px" width="110px" height="45px" style="fill: #C1FFFF"
+            stroke="1"/>
       <foreignObject width="120px" y="0" x="20px">
 
         <div xmlns="http://www.w3.org/1999/xhtml">
@@ -144,6 +149,12 @@ l'utilisateur:</p>
     le dernier point, cliquez avec le bouton du milieu.</li>
 </ul>
 
+<p>Vous pouvez insérer une image dans un graphique. Choisissez l'entrée
+<strong>Image</strong> du menu <strong>Éléments</strong> ou cliquez sur le
+bouton <img alt="Image " border="0" src="../Icons/Image.gif" align="middle"
+longdesc="longdesc.htm" /> de la barre de boutons, puis procédez <a
+href="ImageMaps.html.fr#Adding">comme dans une page HTML</a>.</p>
+
 <p>Pour insérer des expressions mathématiques dans un dessin SVG, vous devez
 juste cliquer dans la palette Math alors que la sélection est dans le dessin
 SVG. Amaya engendrera un foreingObject pour embarquer les balises MathML.</p>
@@ -162,7 +173,7 @@ SVG. Amaya engendrera un foreingObject pour embarquer les balises MathML.</p>
     Control</strong> et le <strong>bouton du milieu</strong> ou le
     <strong>bouton droit</strong> de la souris à l'intérieur de la forme, vous
     pourrez redimensionner cette forme.</li>
-  <li>En éditant les attributs. </li>
+  <li>En éditant les attributs.</li>
 </ul>
 
 <h2>Peindre les graphiques</h2>
@@ -173,7 +184,7 @@ SVG. Amaya engendrera un foreingObject pour embarquer les balises MathML.</p>
 Mais vous pouvez changer ces valeurs :</p>
 <ul type="square">
   <li>Soit en éditant les attributs SVG <code>fill</code> et
-    <code>stroke</code> (<span style="color: #E55500">exemple, </span><span
+    <code>stroke</code> (<span style="color: #E55500">exemple,</span><span
     style="color: #E55500">fill=" #C8FF95" stroke=" #000000"</span>),</li>
   <li>Soit en éditant l'attribut SVG <code>style</code> avec les propriétés
     <code>fill</code> et <code>stroke</code> (<span

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Editing Graphics</title>
-  <meta name="GENERATOR" content="amaya V4.01" />
+  <meta name="GENERATOR" content="amaya V4.2" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -44,42 +44,44 @@ create. The available graphics elements are:</p>
 <ul>
   <li>A line, <code>line</code> in SVG, <svg
     xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
-      <line y1="3px" x1="0px" x2="17px" y2="20px" style="stroke: #B20000"/>
+      <line y1="3px" x1="0px" x2="17px" y2="20px" style="stroke: #B20000"
+            stroke="1"/>
     </svg>
   </li>
   <li>A rectangle, <code>rect</code> in SVG with no <code>rx</code> or
     <code>ry</code> attributes, <svg xmlns="http://www.w3.org/2000/svg"
     width="2cm" height="0.6cm">
       <rect x="6px" width="22px" height="18px"
-            style="fill: #FFCB69; stroke: #0071FF"/>
+            style="fill: #FFCB69; stroke: #0071FF" stroke="1"/>
     </svg>
   </li>
   <li>A rectangle with rounded corners, <code>rect</code> in SVG, <svg
     xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
-      <rect rx="6px" width="23px" height="18px"
+      <rect rx="6px" stroke="1" width="23px" height="18px"
             style="fill: #E5E500; stroke: #4C00E5"/>
     </svg>
   </li>
   <li>A circle, <code>circle</code> in SVG, <svg
     xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
       <circle cy="10px" cx="12px" r="10px"
-              style="fill: #C1FFE9; stroke: #FF0000"/>
+              style="fill: #C1FFE9; stroke: #FF0000" stroke="1"/>
     </svg>
   </li>
   <li>An ellipse, <code>ellipse</code> in SVG, <svg
     xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
-      <ellipse cy="10px" cx="20px" rx="15px" ry="10px" style="fill: #B795FF"/>
+      <ellipse cy="10px" cx="20px" rx="15px" ry="10px" style="fill: #B795FF"
+            stroke="1"/>
     </svg>
   </li>
   <li>A polyline, <code>polyline</code> in SVG,<svg
     xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
-      <polyline points="4,16 23,0 37,16 55,6"
+      <polyline points="4,16 23,0 37,16 55,6" stroke="1"
                 style="stroke: #0000B2; fill: #FFA069"/>
     </svg>
   </li>
   <li>A polygon, <code>polygon</code> in SVG, <svg
     xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.7cm">
-      <polygon points="2,16 15,0 28,12 45,4 46,16 17,16 14,11"
+      <polygon points="2,16 15,0 28,12 45,4 46,16 17,16 14,11" stroke="1"
                style="fill: #C8FF95; stroke: #000000"/>
     </svg>
   </li>
@@ -89,7 +91,8 @@ create. The available graphics elements are:</p>
   </li>
   <li>An embedded HTML fragment, <code>foreignObject</code> in SVG,<svg
     xmlns="http://www.w3.org/2000/svg" width="6cm" height="45px">
-      <rect y="0" x="27px" width="110px" height="45px" style="fill: #C1FFFF"/>
+      <rect y="0" x="27px" width="110px" height="45px" style="fill: #C1FFFF"
+            stroke="1"/>
       <foreignObject width="120px" y="0" x="20px">
 
         <div xmlns="http://www.w3.org/1999/xhtml">
@@ -139,9 +142,16 @@ overlap previous ones.</p>
     point, click with the middle or right button.</li>
 </ul>
 
+<p>You can insert an image within a SVG drawing. Choose <strong>Image</strong>
+from the <strong>Types</strong> menu or click on the image <img alt="Image "
+border="0" src="../Icons/Image.gif" align="middle" longdesc="longdesc.htm" />
+button from the button bar and proceed in the <a
+href="ImageMaps.html#Adding">same way as in HTML</a>.</p>
+
 <p>For inserting a mathematical expression into a SVG drawing, you have just
 to click in the <strong>Math</strong> palette when the selection in within a
-SVG. Amaya will generate a SVG foreignObject to embed the MathML mark-up.</p>
+SVG. Amaya will generate a SVG <code>foreignObject</code> to embed the MathML
+markup.</p>
 
 <h2>Moving graphics</h2>
 <ul>
