@@ -222,11 +222,9 @@ int            yr;
   - x1, y1 predecessor of point
   - x2, y2 point
   - x3, y3 successor of point
-  - xMin, yMin, xMax, yMax update the current bounding box excluding
-  the selected point.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void    RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer, int nb, int point, ThotBool close, int *x1, int *y1, int *x2, int *y2, int *x3, int *y3, int *xMin, int *yMin, int *xMax, int *yMax)
+static void    RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer, int nb, int point, ThotBool close, int *x1, int *y1, int *x2, int *y2, int *x3, int *y3)
 #else  /* __STDC__ */
 static void    RedrawPolyLine (frame, x, y, buffer, nb, point, close, x1, y1, x2, y2, x3, y3)
 int            frame;
@@ -275,14 +273,6 @@ int           *y3;
 	}
       else
 	{
-	  if (points[i].x < *xMin)
-	    *xMin = points[i].x;
-	  if (points[i].x > *xMax)
-	    *xMax = points[i].x;
-	  if (points[i].y < *yMin)
-	    *yMin = points[i].y;
-	  if (points[i].y > *yMax)
-	    *yMax = points[i].y;
 	  if (i + 1 == point - 1)
 	    {
 	      /* predecessor */
@@ -373,7 +363,6 @@ PtrTextBuffer    Bbuffer;
   float               ratioX, ratioY;
   int                 ret;
   int                 newx, newy;
-  int                 xMin, yMin, xMax, yMax;
   ThotBool            input;
   ThotBool            wrap;
 #ifdef _WINDOWS
@@ -563,15 +552,6 @@ PtrTextBuffer    Bbuffer;
 		  /* update the box buffer */
 		  newx = PixelToPoint (lastx - x) * 1000;
 		  newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
-		  /* register the min and the max */
-		  if (newx < xMin)
-		    xMin = newx;
-		  if (newx > xMax)
-		    xMax = newx;
-		  if (newy < yMin)
-		    yMin = newy;
-		  if (newy > yMax)
-		    yMax = newy;
 		  AddPointInPolyline (Bbuffer, point, newx, newy);
 		  /* update the abstract box buffer */
 		  newx = (int) ((float) newx * ratioX);
@@ -712,15 +692,6 @@ PtrTextBuffer    Bbuffer;
 		  /* update the box buffer */
 		  newx = PixelToPoint (lastx - x) * 1000;
 		  newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
-		  /* register the min and the max */
-		  if (newx < xMin)
-		    xMin = newx;
-		  if (newx > xMax)
-		    xMax = newx;
-		  if (newy < yMin)
-		    yMin = newy;
-		  if (newy > yMax)
-		    yMax = newy;
 		  AddPointInPolyline (Bbuffer, point, newx, newy);
 		  /* update the abstract box buffer */
 		  newx = (int) ((float) newx * ratioX);
@@ -802,7 +773,6 @@ PtrTextBuffer    Bbuffer;
   float               ratioX, ratioY;
   int                 ret;
   int                 newx, newy;
-  int                 xMin, yMin, xMax, yMax;
   ThotBool            input;
   ThotBool            wrap;
 #ifdef _WINDOWS
@@ -891,15 +861,6 @@ PtrTextBuffer    Bbuffer;
 	  /* update the box buffer */
 	  newx = PixelToPoint (lastx - x) * 1000;
 	  newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
-	  /* register the min and the max */
-	  if (newx < xMin)
-	    xMin = newx;
-	  if (newx > xMax)
-	    xMax = newx;
-	  if (newy < yMin)
-	    yMin = newy;
-	  if (newy > yMax)
-	    yMax = newy;
 	  ModifyPointInPolyline (Bbuffer, point, newx, newy);
 	  /* update the abstract box buffer */
 	  newx = (int) ((float) newx * ratioX);
@@ -982,15 +943,6 @@ PtrTextBuffer    Bbuffer;
 	  /* update the box buffer */
 	  newx = PixelToPoint (lastx - x) * 1000;
 	  newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
-	  /* register the min and the max */
-	  if (newx < xMin)
-	    xMin = newx;
-	  if (newx > xMax)
-	    xMax = newx;
-	  if (newy < yMin)
-	    yMin = newy;
-	  if (newy > yMax)
-	    yMax = newy;
 	  ModifyPointInPolyline (Bbuffer, point, newx, newy);
 	  /* update the abstract box buffer */
 	  newx = (int) ((float) newx * ratioX);
@@ -1127,7 +1079,6 @@ ThotBool            close;
   PtrTextBuffer       Bbuffer;
   int                 width, height;
   int                 lastx, lasty;
-  int                 xMin, yMin, xMax, yMax;
   int                 x1, y1, x3, y3;
   int                 x, y;
 
@@ -1146,9 +1097,8 @@ ThotBool            close;
   height = PointToPixel (height / 1000);
 
   /* get the current point */
-  xMin = yMin = xMax = yMax = 0;
   RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
-		  &x1, &y1, &lastx, &lasty, &x3, &y3, &xMin, &yMin, &xMax, &yMax);
+		  &x1, &y1, &lastx, &lasty, &x3, &y3);
   MoveApoint (frame, x, y, x1, y1, x3, y3, lastx, lasty, point, width, height, Pbuffer, Bbuffer);
   if (pBox->BxPictInfo != NULL)
     {
@@ -1189,7 +1139,6 @@ ThotBool         close;
   PtrTextBuffer       Pbuffer;
   PtrTextBuffer       Bbuffer;
   int                 width, height;
-  int                 xMin, yMin, xMax, yMax;
   int                 x, y;
   int                 lastx, lasty;
   int                 x1, y1, x3, y3;
@@ -1208,9 +1157,8 @@ ThotBool         close;
   height = Bbuffer->BuPoints[0].YCoord;
   height = PointToPixel (height / 1000);
 
-  xMin = yMin = xMax = yMax = 0;
   RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
-		  &x1, &y1, &lastx, &lasty, &x3, &y3, &xMin, &yMin, &xMax, &yMax);
+		  &x1, &y1, &lastx, &lasty, &x3, &y3);
   x1 = lastx;
   y1 = lasty;
   AddPoints (frame, x, y, x1, y1, x3, y3, lastx, lasty, point, &nbpoints, 0, width, height,
@@ -1302,7 +1250,6 @@ int                *yi;
   PtrTextBuffer       pBuffer;
   PtrAbstractBox      draw;
   int                 width, height;
-  int                 xMin, yMin, xMax, yMax;
   int                 x1, y1, x3, y3;
   int                 x, y, xorg, yorg;
   int                 lastx, lasty;
@@ -1367,11 +1314,10 @@ int                *yi;
   pBuffer->BuPoints[2].YCoord = PixelToPoint (y1) * 1000;
 
   /* get the current point */
-  xMin = yMin = xMax = yMax = 0;
   xorg -= pFrame->FrXOrg;
   yorg -= pFrame->FrYOrg;
   RedrawPolyLine (frame, xorg, yorg, pBuffer, 3, 1, FALSE,
-		  &x1, &y1, &lastx, &lasty, &x3, &y3, &xMin, &yMin, &xMax, &yMax);
+		  &x1, &y1, &lastx, &lasty, &x3, &y3);
   MoveApoint (frame, xorg, yorg, x1, y1, x3, y3, lastx, lasty, 1, width, height, pBuffer, pBuffer);
   *xi = PointToPixel (pBuffer->BuPoints[1].XCoord / 1000);
   *yi = PointToPixel (pBuffer->BuPoints[1].YCoord / 1000);
