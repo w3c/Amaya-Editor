@@ -3224,6 +3224,7 @@ void Set_slider_position (Document basedoc, Document timelinedoc, double f)
   ----------------------------------------------------------------------*/
 void Set_slider_position_from_doc (Document basedoc,  double f)
 {
+#ifdef _SVGANIM
   char buffer[512];
   Document timelinedoc;
   View timelineview;
@@ -3249,6 +3250,7 @@ void Set_slider_position_from_doc (Document basedoc,  double f)
       TtaSetTextContent (child, buffer, lang, timelinedoc);
     }
   Set_slider_position (basedoc, timelinedoc, f);
+#endif /* _SVGANIM */
 }
 
 
