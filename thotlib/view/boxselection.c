@@ -134,6 +134,7 @@ void ClearViewSelection (int frame)
 		  {
 		    if (/*pFrame->FrSelectionBegin.VsIndBox == 0 ||*/
 			pAb1->AbLeafType == LtPolyLine ||
+			pAb1->AbLeafType == LtGraphics ||
 			pAb1->AbLeafType == LtPath)
 		      {
 			/* the whole box is selected */
