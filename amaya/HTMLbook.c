@@ -1770,11 +1770,6 @@ void MakeToc (Document doc, View view)
 	      /* generate the list item */
 	      elType.ElTypeNum = HTML_EL_List_Item;
 	      item = TtaNewElement (doc, elType);
-	      child = TtaGetLastChild (*list);
-	      if (child)
-		TtaInsertSibling (item, child, FALSE, doc);
-	      else
-		TtaInsertFirstChild (&item, *list, doc);
 	      /* generate the HTML_EL_Pseudo_paragraph */
 	      elType.ElTypeNum =  HTML_EL_Pseudo_paragraph;
 	      parent = TtaNewElement (doc, elType);
@@ -1829,6 +1824,11 @@ void MakeToc (Document doc, View view)
 			TtaNextSibling (&srce);
 		    }
 		}
+	      child = TtaGetLastChild (*list);
+	      if (child)
+		TtaInsertSibling (item, child, FALSE, doc);
+	      else
+		TtaInsertFirstChild (&item, *list, doc);
 	      TtaRegisterElementCreate (item, doc);
 	    }
 	}
