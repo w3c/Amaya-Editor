@@ -1834,13 +1834,12 @@ void               *event;
 	       TtaUnlockMainLoop();
 	       
 	       /* S'il y a un drag on termine la selection */
+	       FrameToView (frame, &document, &view);
 	       if (comm == 1)
-		 {
-		   FrameToView (frame, &document, &view);
-		   LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 0);
-		 }
-	       else if (comm != 0)
-		 FrameToView (frame, &document, &view);
+	         LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 0);
+	       else if (comm == 0)
+		  /* click event */
+                 LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 4);
 
 	       if (comm != 0)
 		 TtcCopyToClipboard (document, view);

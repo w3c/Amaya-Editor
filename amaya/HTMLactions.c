@@ -905,6 +905,28 @@ NotifyElement      *event;
    return (FollowTheLink (anchor, element, event->document));
 }
 
+
+/*----------------------------------------------------------------------
+  SimpleClick     The user has clicked an element.         
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean             SimpleClick (NotifyElement * event)
+#else  /* __STDC__ */
+boolean             SimpleClick (event)
+NotifyElement      *event;
+
+#endif /* __STDC__ */
+{
+  boolean usedouble;
+
+  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);  
+  if (usedouble)
+    return TRUE;
+  else
+    /* don't let Thot perform normal operation */
+    return (DoubleClick (event));
+}
+
 /*----------------------------------------------------------------------
    UpdateTitle update the content of the Title field on top of the 
    main window, according to the contents of element el.   

@@ -127,6 +127,7 @@ STRING              RegisteredAppEvents[] =
    "ElemDelete",
    "ElemSelect",
    "ElemExtendSelect",
+   "ElemClick",
    "ElemActivate",
    "ElemSetReference",
    "ElemInclude",

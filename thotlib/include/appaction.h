@@ -48,6 +48,7 @@ typedef enum
      TteElemDelete,
      TteElemSelect,
      TteElemExtendSelect,
+     TteElemClick,
      TteElemActivate,
      TteElemSetReference,
      TteElemInclude,

@@ -72,6 +72,7 @@
     1 -> extend the current selection by draging
     2 -> replace the old selection
     3 -> activate a link
+    4 -> click an element
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                LocateSelectionInView (int frame, int x, int y, int button)
@@ -88,6 +89,10 @@ int                 button;
    PtrBox              pBox;
    PtrTextBuffer       pBuffer;
    PtrAbstractBox      pAb;
+   NotifyElement       notifyEl;
+   PtrElement          el;
+   Document            doc;
+   int                 view;
    int                 charsNumber;
    int                 spacesNumber;
    ViewFrame          *pFrame;
@@ -136,6 +141,22 @@ int                 button;
 	      ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE, FALSE);
 	   else if (button == 1)
 	      ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE, TRUE);
+          else /* button == 4 */
+	    {
+	      /* send event TteElemActivate.Pre to the application */
+	      el = pAb->AbElement;
+	      notifyEl.event = TteElemClick;
+	      notifyEl.document = FrameTable[frame].FrDoc;
+	      notifyEl.element = (Element) el;
+	      notifyEl.elementType.ElTypeNum = el->ElTypeNumber;
+	      notifyEl.elementType.ElSSchema = (SSchema) (el->ElStructSchema);
+	      notifyEl.position = 0;
+	      if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+		/* the application asks Thot to do nothing */
+		return;
+	      /* send event TteElemActivate.Pre to the application */
+	      CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+            }
      }
 }
 

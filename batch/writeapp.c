@@ -465,6 +465,7 @@ char               *fname;
 		      case TteElemDelete:
 		      case TteElemSelect:
 		      case TteElemExtendSelect:
+		      case TteElemClick:
 		      case TteElemActivate:
 		      case TteElemInclude:
 		      case TteElemCopy:
@@ -584,6 +585,7 @@ char               *fname;
 		      case TteElemDelete:
 		      case TteElemSelect:
 		      case TteElemExtendSelect:
+		      case TteElemClick:
 		      case TteElemActivate:
 		      case TteElemInclude:
 		      case TteElemCopy:

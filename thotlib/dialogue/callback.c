@@ -350,6 +350,7 @@ boolean             pre;
 	    case TteElemSave:
 	    case TteElemExport:
 	    case TteElemSelect:
+	    case TteElemClick:
 	    case TteElemActivate:
 	    case TteElemExtendSelect:
 	    case TteElemCopy:
