@@ -466,7 +466,9 @@ AnnotMeta* LINK_CreateMeta (source_doc, annot_doc, labf, c1, labl, cl)
   annot->mdate = TtaStrdup (annot->cdate);
 
   /* Annotation type */
-  annot->type = TEXT("comment");
+  annot->type = ANNOT_FindRDFResource (&annot_schema_list,
+				       DEFAULT_ANNOT_TYPE,
+				       FALSE);
 
   /* Annotation XPointer */
   annot->xptr = XPointer_build (source_doc, 1);

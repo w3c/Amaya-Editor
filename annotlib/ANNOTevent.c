@@ -1014,7 +1014,7 @@ NotifyElement *event;
   Element          el;
   Document         doc_annot;
   ThotBool         docModified;
-  CHAR_T          *new_type;
+  RDFResourceP     new_type;
 
   /* initialize from the context */
   el = event->element;

@@ -37,12 +37,37 @@
 #
 
 /* RDF Property names */
+#define DEFAULT_ANNOT_TYPE "http://www.w3.org/1999/xx/annotation-ns#Comment"
 #define RDF_TYPE  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
 #define RDFS_LABEL "http://www.w3.org/2000/01/rdf-schema#label"
 #define RDFS_SUBCLASSOF "http://www.w3.org/2000/01/rdf-schema#subClassOf"
 #define ANNOTATION_PROP "http://www.w3.org/1999/xx/annotation-ns#Annotation"
 
 /* Structures and global variables */
+
+/* basic linked list structure */
+typedef struct _List {
+  void *object;
+  struct _List *next;
+} List;
+
+typedef struct _RDFClassExt
+{
+  List *instances;		/* each item is an RDFResourceP */
+  List *subClasses;		/* each item is an RDFResourceP */
+} RDFClassExt, *RDFClassExtP;
+
+typedef struct _RDFResource
+{
+  char *name;
+  List *statements;		/* each item is an RDFStatementP */
+  RDFClassExtP class;		/* if type->Class, points to more data */
+#if 0
+  ThotBool isLiteral;		/* mostly a guess */
+#endif
+} RDFResource, *RDFResourceP,
+  RDFClass, *RDFClassP,
+  RDFProperty, *RDFPropertyP;
 
 /* the info we're interested in in an annotation */
 typedef struct _AnnotMeta {
@@ -58,7 +83,7 @@ typedef struct _AnnotMeta {
   CHAR_T *cdate; /* creation date of the annotation */
   CHAR_T *mdate; /* last modified date of the annotation */
   CHAR_T *author; /* author of the annotation */
-  CHAR_T *type; /* type of annotation */
+  RDFResourceP type; /* type of annotation */
   CHAR_T *content_type; /*content type of the body of the annotation,
 			  only used while posting */
   CHAR_T *content_length; /* content length of the body, only used while
@@ -70,12 +95,6 @@ typedef struct _AnnotMeta {
   CHAR_T *name;  /* the value of the name tag added to the source document 
 		  for making a reverse link */
 } AnnotMeta;
-
-/* basic linked list structure */
-typedef struct _List {
-  void *object;
-  struct _List *next;
-} List;
 
 /* the different kind of annotation searches we can do in an
    an annotation metadata list */
@@ -130,24 +149,6 @@ AnnotMetaDataList AnnotMetaData[DocumentTableLength];
 /* RDF Schema entry */
 
 extern List *annot_schema_list;  /* a list of schemas */
-
-typedef struct _RDFClassExt
-{
-  List *instances;		/* each item is an RDFResourceP */
-  List *subClasses;		/* each item is an RDFResourceP */
-} RDFClassExt, *RDFClassExtP;
-
-typedef struct _RDFResource
-{
-  char *name;
-  List *statements;		/* each item is an RDFStatementP */
-  RDFClassExtP class;		/* if type->Class, points to more data */
-#if 0
-  ThotBool isLiteral;		/* mostly a guess */
-#endif
-} RDFResource, *RDFResourceP,
-  RDFClass, *RDFClassP,
-  RDFProperty, *RDFPropertyP;
 
 typedef struct _RDFStatement
 {

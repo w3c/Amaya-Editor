@@ -147,7 +147,7 @@ int AnnotList_localCount (List *annot_list)
    Adds a new element to the beginning of a linked
    list if it doesn't exist in the list.
    ------------------------------------------------------------*/
-void AnnotFilter_add (List **me, CHAR_T *object)
+void AnnotFilter_add (List **me, void *object)
 {
   List *new;
   AnnotFilterData *filter;
@@ -198,7 +198,7 @@ List *AnnotFilter_search (List *list, CHAR_T *object)
    a given object should be shown. If no filter element is
    found, it returns TRUE.
    ------------------------------------------------------------*/
-ThotBool AnnotFilter_show (List *list, CHAR_T *object)
+ThotBool AnnotFilter_show (List *list, void *object)
 {
   List *list_item = list;
   AnnotFilterData *filter;
@@ -470,7 +470,6 @@ void Annot_free (AnnotMeta *annot)
     free (annot->source_url);
   if (annot->author) 
     free (annot->author);
-  /* annot->type @@ */
   if (annot->xptr)
     free (annot->xptr);
   if (annot->cdate) 
@@ -568,8 +567,8 @@ void AnnotList_writeIndex (CHAR_T *indexFile, List *annot_list)
 		   "<r:type resource=\"http://www.w3.org/1999/xx/annotation-ns#Annotation\" />\n");
 
 	  fprintf (fp, 
-		   "<r:type resource=\"http://www.w3.org/1999/xx/annotation-ns#%s\" />\n",
-		   annot->type);
+		   "<r:type resource=\"%s\" />\n",
+		   annot->type->name);
 
 	  fprintf (fp, 
 		   "<a:annotates r:resource=\"%s\" />\n",
@@ -676,7 +675,7 @@ Document doc;
 		   "<r:type resource=\"http://www.w3.org/1999/xx/annotation-ns#Annotation\" />\n");
 
 	  fprintf (fp, 
-		   "<r:type resource=\"http://www.w3.org/1999/xx/annotation-ns#%s\" />\n",
+		   "<r:type resource=\"%s\" />\n",
 		   annot->type);
 
 	  fprintf (fp, 
@@ -1133,11 +1132,11 @@ Document doc;
    type, if type is not empty.
   -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void ANNOT_SetType (Document doc, CHAR_T *type)
+void ANNOT_SetType (Document doc, RDFResourceP type)
 #else
 CHAR_T *ANNOT_SetType (doc, type)
 Document doc;
-CHAR_T *type;
+RDFResourceP type;
 #endif /* __STDC__ */
 {
   Element          el;
@@ -1146,8 +1145,9 @@ CHAR_T *type;
   CHAR_T          *ptr;
   int              i;
   AnnotMeta       *annot;
+  CHAR_T          *type_name;
   
-  if (!type || type[0] == WC_EOS)
+  if (!type)
     return;
 
    /* only HTML documents can be annotated */
@@ -1161,7 +1161,10 @@ CHAR_T *type;
     return;
   /* change the text content */
   el = TtaGetFirstChild (el);
-  TtaSetTextContent (el, type,
+  type_name = ANNOT_GetLabel(&annot_schema_list, type);
+  if (!type_name)
+    type_name = type->name;
+  TtaSetTextContent (el, type_name,
 		     TtaGetDefaultLanguage (), doc);
 
   /* update the metadata */
@@ -1202,10 +1205,7 @@ CHAR_T *type;
 	  if (ptr)
 	    TtaFreeMemory (ptr);
 	  if (annot)
-	    {
-	      TtaFreeMemory (annot->type);
-	      annot->type = TtaStrdup (type);
-	    }
+	      annot->type = type;
 	  break;
 	}
     }

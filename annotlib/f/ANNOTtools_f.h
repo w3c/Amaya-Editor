@@ -15,11 +15,11 @@ extern void List_delObject ( List **list,
 extern int List_count ( List *list );
 extern int AnnotList_localCount ( List *annot_list );
 extern void AnnotFilter_add ( List **me,
-                              CHAR_T *object );
+                              void *object );
 extern List *AnnotFilter_search ( List *list,
                                   CHAR_T *object );
 extern ThotBool AnnotFilter_show ( List *list,
-                                   CHAR_T *object );
+                                   void *object );
 extern ThotBool AnnotFilter_showServer ( List *list,
                                          CHAR_T *url );
 extern ThotBool AnnotFilter_showAuthor ( List *list,
@@ -63,7 +63,7 @@ extern void GetServerName ( CHAR_T *url,
                             CHAR_T *server );
 extern CHAR_T *ANNOT_GetHTMLTitle ( Document doc );
 extern void ANNOT_SetType ( Document doc,
-                            CHAR_T *type );
+                            RDFResourceP type );
 
 #else /* __STDC__ */
 
@@ -80,7 +80,7 @@ extern void AnnotFilter_add (/* List **me,
 extern List *AnnotFilter_search (/* List *list,
                                     CHAR_T *object */);
 extern ThotBool AnnotFilter_show (/* List *list,
-                                     CHAR_T *object */);
+                                     void *object */);
 extern ThotBool AnnotFilter_showServer (/* List *list,
                                            CHAR_T *url */);
 extern ThotBool AnnotFilter_showAuthor (/* List *list,

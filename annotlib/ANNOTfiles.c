@@ -220,8 +220,15 @@ void  ANNOT_InitDocumentMeta (doc, docAnnot, annot, title)
   source_url = annot->source_url;
   cdate = annot->cdate;
   mdate = annot->mdate;
-  /* @@@ if there's no annot->type use the default */
-  type = (annot->type) ? annot->type : TEXT("(comment)");
+
+  if (annot->type)
+    {
+      type = ANNOT_GetLabel(&annot_schema_list, annot->type);
+      if (!type)
+	  type = annot->type->name;
+    }
+  else
+      type = TEXT("(comment)");
 
   /* save the docid of the annotated document */
   DocumentMeta[docAnnot]->source_doc = doc;

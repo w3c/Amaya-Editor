@@ -208,25 +208,9 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
             } 
             else 
               {
-		RDFResourceP annotType =
-		  ANNOT_FindRDFResource (&annot_schema_list, object, FALSE);
-
-		if (annotType)
-		  annot->type = TtaStrdup (ANNOT_GetLabel(&annot_schema_list,
-							  annotType));
-		else
-		  {
-		    int len = strlen (ANNOT_NS) - 1;
-		    if (!strncmp (object, ANNOT_NS, len)) 
-		      {
-			if (*object + len)
-			    annot->type = TtaStrdup (object + len);
-			else
-			    annot->type = TtaStrdup (object);
-		      }
-		    else 
-		      annot->type = TtaStrdup (object);
-		  }
+		annot->type = ANNOT_FindRDFResource (&annot_schema_list,
+						     object,
+						     TRUE);
               }
         }
       else if (contains (predicate, ANNOT_NS, ANNOT_CONTEXT))

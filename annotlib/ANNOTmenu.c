@@ -59,6 +59,13 @@ static SelType  AnnotSelType;
 
 static int      AnnotTypesBase;
 static CHAR_T   AnnotTypesSelItem[MAX_LENGTH];
+static List     *typesList;
+
+typedef struct _typeSelector
+{
+  CHAR_T *name;
+  RDFResourceP type;
+} TypeSelector;
 
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
@@ -443,7 +450,7 @@ ThotBool show;
 	  break;
 	case BY_TYPE:
 	  annot_show = AnnotFilter_show (AnnotMetaData[doc].types, 
-					    annot->type);
+					 (void*)annot->type);
 	  break;
 	case BY_SERVER:
 	  annot_show = AnnotFilter_showServer (AnnotMetaData[doc].servers, 
@@ -775,6 +782,7 @@ static void BuildAnnotTypesSelector ()
   RDFClassP		annotClass;
 
   nb_entries = 0;
+  list_delAll (&typesList);
   ustrcpy (s, TEXT(""));
   i = 0;
 
@@ -789,8 +797,13 @@ static void BuildAnnotTypesSelector ()
       for (item=annotClass->class->subClasses; item; item=item->next)
 	{
 	  RDFClassP subType = (RDFClassP)item->object;
+	  TypeSelector *t = (TypeSelector*)TtaGetMemory (sizeof(TypeSelector));
 
-	  ustrcpy (&s[i], ANNOT_GetLabel(&annot_schema_list, subType));
+	  t->type = subType;
+	  t->name = ANNOT_GetLabel(&annot_schema_list, subType);
+	  List_add (&typesList, (void*)t);
+
+	  ustrcpy (&s[i], t->name);
 	  i += ustrlen (&s[i]);
 	  s[i] = WC_EOS;
 	  i++;
@@ -799,7 +812,7 @@ static void BuildAnnotTypesSelector ()
     }
   else
     {
-      /* use the default values */
+      /* use the default values @@ RRS */
       ustrcpy (&s[i], TEXT("positive comment"));
       i += ustrlen (&s[i]) + 1;
       ustrcpy (&s[i], TEXT("flame"));
@@ -877,14 +890,13 @@ CHAR_T             *data;
 
 /*----------------------------------------------------------------------
   AnnotTypes
-  Returns a pointer to a static string that represents the selection
-  of the user. It is an empty string if the user doesn't select 
-  anything.
+  Returns the RDF Resource pointer that represents the type selection
+  of the user. It is NULL if the user doesn't select a type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T      *AnnotTypes (Document document, View view)
+RDFResourceP AnnotTypes (Document document, View view)
 #else
-void        *AnnotTypes (document, view)
+RDFResourceP AnnotTypes (document, view)
 Document            document;
 View                view;
 #endif /* __STDC__*/
@@ -912,10 +924,18 @@ View                view;
   TtaShowDialogue (AnnotTypesBase + AnnotTypesMenu, FALSE);
   TtaWaitShowDialogue ();
 
-  return (AnnotTypesSelItem);
-#else /* !_WINDOWS */
-  return 0;
+  {
+    List *item;
+    for (item = typesList; item; item=item->next)
+      {
+	TypeSelector *t = (TypeSelector*)item->object;
+	if (!ustrcmp(t->name, AnnotTypesSelItem))
+	  return t->type;
+      }
+  }
 #endif /* !_WINDOWS */
+
+  return NULL;
 }
 
 

@@ -312,6 +312,8 @@ char *ANNOT_GetLabel (listP, r)
 
 	  r = s->object;
 	}
+      else
+	return NULL;
     }
   return NULL;
 }
