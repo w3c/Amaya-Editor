@@ -44,6 +44,7 @@ SSchema         sSchema;
 CSSInfoPtr      css;
 #endif
 {
+  CSSInfoPtr          oldcss;
   PInfoPtr            pInfo;
   PSchema             pSchema, nSchema, prevS;
   Element             prevLink, nextLink, parent;
@@ -156,26 +157,26 @@ CSSInfoPtr      css;
 	  prevLink = NULL;
 	  nextLink = NULL;
 	}
-      css = CSSList;
-      while (css != NULL)
+      oldcss = CSSList;
+      while (oldcss != NULL)
 	{
-	  if (css->documents[doc])
+	  if (oldcss->documents[doc])
 	    if (prevLink == NULL &&
-		((css->category == CSS_USER_STYLE && nextLink == NULL) ||
-		 css->category == CSS_DOCUMENT_STYLE))
+		((oldcss->category == CSS_USER_STYLE && nextLink == NULL) ||
+		 oldcss->category == CSS_DOCUMENT_STYLE))
 	      {
-		pInfo = css->infos;
+		pInfo = oldcss->infos;
 		while (pInfo != NULL && pInfo->PiDoc != doc)
 		  pInfo = pInfo->PiNext;
 		if (pInfo != NULL)
 		  prevS = pInfo->PiPSchema;
-		before = (css->category == CSS_USER_STYLE);
+		before = (oldcss->category == CSS_USER_STYLE);
 		break;
 	      }
-	    else if (css->category == CSS_EXTERNAL_STYLE)
+	    else if (oldcss->category == CSS_EXTERNAL_STYLE)
 	      {
 		/* check where the new css should be linked */
-		pInfo = css->infos;
+		pInfo = oldcss->infos;
 		while (pInfo != NULL && pInfo->PiDoc != doc)
 		  pInfo = pInfo->PiNext;
 		if (pInfo != NULL)
@@ -194,7 +195,7 @@ CSSInfoPtr      css;
 		      break;
 		    }
 	      }
-	  css = css->NextCSS;
+	  oldcss = oldcss->NextCSS;
 	}
     }
   /* link the new presentation schema */

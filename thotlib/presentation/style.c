@@ -272,49 +272,50 @@ unsigned int        extra;
     prev = NULL;
     cur = el->ElFirstPRule;
 
-    while (cur != NULL) {
+    while (cur != NULL)
+      {
 	/* shortcut : rules are sorted by type and view number */
-	if ((cur->PrType > type) ||
-	    ((cur->PrType == type) && (cur->PrViewNum > 1)) ||
-	    (((cur->PrType == type) && (type == PRFunction) &&
-	     (cur->PrPresFunction > (FunctionType) extra))))
+	if (cur->PrType > type ||
+	    (cur->PrType == type && cur->PrViewNum > 1) ||
+	    ((cur->PrType == type && type == PRFunction &&
+	      cur->PrPresFunction > (FunctionType) extra)))
 	  {
-	     cur = NULL;
-	     break;
+	    cur = NULL;
+	    break;
 	  }
 	
 	/* check for extra specification in case of function rule */
-	if ((type == PRFunction) && (cur->PrPresFunction != (FunctionType) extra)) {
+	if ((type == PRFunction) && (cur->PrPresFunction != (FunctionType) extra))
+	  {
 	    prev = cur;
 	    cur = cur->PrNextPRule;
 	    continue;
-	}
+	  }
 
 	/* check this rule */
 	if (type == cur->PrType)
-	   break;
+	  break;
 
 	/* jump to next and keep track of previous */
 	prev = cur;
 	cur = cur->PrNextPRule;
-    }
+      }
     if (cur == NULL)
-	return;
+      return;
 
     /* remove the rule from the chain */
     if (prev == NULL)
-	el->ElFirstPRule = cur->PrNextPRule;
+      el->ElFirstPRule = cur->PrNextPRule;
     else
-	prev->PrNextPRule = cur->PrNextPRule;
+      prev->PrNextPRule = cur->PrNextPRule;
     cur->PrNextPRule = NULL;
-
+    
     /* update the presentation */
-    doc = TtaGetDocument ((Element)el);
+    doc = TtaGetDocument ((Element) el);
     ApplyPRulesElement (cur, el, LoadedDocument[doc -1], TRUE);
 
     /* Free the PRule */
     FreePresentRule(cur);
-
     return;
 }
 
