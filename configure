@@ -6974,7 +6974,7 @@ if test "$build_amaya" = "yes" ; then
 	ANNOTLIB_COMPILE_BM='#'
     fi
 
-        if test "$with_raptor" = "yes" ; then
+        if test "$with_raptor" = "yes" -o "$with_redland" = "yes"; then
                      MAKE_LIBWWW_RDF_PARSER=
        LIBWWW_RDF_PARSER=
     else
@@ -7026,6 +7026,7 @@ APIINCLUDES=-I${API}
 if test "${VPATHOPT}" = "" ; then
 	VPATHOPT="VPATH"
 fi
+
 
 
 
@@ -7333,6 +7334,7 @@ s%@THOT_OPTIONS@%$THOT_OPTIONS%g
 s%@AMAYA_OPTIONS@%$AMAYA_OPTIONS%g
 s%@PLUGIN_OPTIONS@%$PLUGIN_OPTIONS%g
 s%@AMAYA_ANNOT_OPTIONS@%$AMAYA_ANNOT_OPTIONS%g
+s%@AMAYA_ANNOT_INCLUDES@%$AMAYA_ANNOT_INCLUDES%g
 s%@IMGLIBS@%$IMGLIBS%g
 s%@EXTRA_LIBS@%$EXTRA_LIBS%g
 s%@DAVDIR@%$DAVDIR%g
