@@ -2,7 +2,7 @@
 
 #include "AmayaCallback.h"
 
-
+#if 0
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaCallback
@@ -112,6 +112,6 @@ bool AmayaCallback::unregisterCallback( int p_widget, long id )
   // TODO faire attention si on desire enregistrer plusieurs callback pour le meme id
 }
 
-
+#endif /* 0 */
 
 #endif /* #ifdef _WX */
