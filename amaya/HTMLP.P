@@ -48,13 +48,11 @@ PRINT
 #define ATTR_Style_Links_view Italics
 #define ATTR_Visibility 6
 #define INPUT_Font Courier
-#define COMMENT_Visibility 5
 #define COMMENT_Font Helvetica
 #define COMMENT_Style Italics
 #define COMMENT_Weight Normal
 #define INVALID_Style Roman
 #define INVALID_Weight Normal
-#define INVALID_Visibility 5
 #define INVALID_Font Helvetica
 #define TableHSpace 0.2
 #define TableVSpace 0.3
@@ -647,7 +645,6 @@ BOXES
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
 		Style: INVALID_Style;
-		Visibility: INVALID_Visibility;
 #ifdef BLACK_WHITE
 		Underline: CrossedOut;
 #else
@@ -664,7 +661,6 @@ BOXES
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
 		Style: INVALID_Style;
-		Visibility: INVALID_Visibility;
 #ifdef BLACK_WHITE
 		Underline: CrossedOut;
 #else
@@ -853,7 +849,6 @@ BOXES
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
 		Style: INVALID_Style;
-		Visibility: INVALID_Visibility;
 #ifdef BLACK_WHITE
 		Underline: CrossedOut;
 #else
@@ -3948,9 +3943,7 @@ RULES
 	IN Structure_view BEGIN
 		Height: 0;
 		Width: 0;
-		if not Immediately within Object
-		   Visibility: 1;
-		if Immediately within Object
+		if within Object
 		   Visibility: 0;
 		VertPos: Top = Previous . Bottom;
 		HorizPos: Left = Enclosing . Left;
@@ -4689,7 +4682,6 @@ RULES
 	  CreateAfter(INVALID_E);
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Visibility: INVALID_Visibility;
 		Style: INVALID_Style; Weight: INVALID_Weight;
 #ifdef BLACK_WHITE
 		Underline: CrossedOut;
@@ -4707,7 +4699,6 @@ RULES
 	  CreateAfter(INVALID_E);
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Visibility: INVALID_Visibility;
 		Style: INVALID_Style; Weight: INVALID_Weight;
 #ifdef BLACK_WHITE
 		Underline: CrossedOut;
@@ -4722,7 +4713,7 @@ RULES
 	BEGIN
 	Visibility: 0;
 	IN Structure_view BEGIN
-		Visibility: COMMENT_Visibility;
+		Visibility: Enclosing =;
 		Font: COMMENT_Font;
 		Style: COMMENT_Style; Weight: COMMENT_Weight;
 		Width: Enclosing . Width;
@@ -4734,9 +4725,7 @@ RULES
 	BEGIN
 	if First CreateFirst(COMMENT_S);
 	if Last CreateLast(COMMENT_E);
-	Visibility: 0;
 	IN Structure_view BEGIN
-		Visibility: COMMENT_Visibility;
 		Width: Enclosed . Width;
 		VertPos: Top = Previous . Bottom + 0.2;
 		END;
@@ -4746,7 +4735,7 @@ RULES
 	BEGIN
 	Visibility: 0;
 	IN Structure_view BEGIN
-		Visibility: COMMENT_Visibility;
+		Visibility: Enclosing =;
 		Font: COMMENT_Font;
 		Style: COMMENT_Style; Weight: COMMENT_Weight;
 		Width: Enclosing . Width;
@@ -4757,9 +4746,7 @@ RULES
 	BEGIN
 	if First CreateFirst(PI_S);
 	if Last CreateLast(PI_E);
-	Visibility: 0;
 	IN Structure_view BEGIN
-		Visibility: COMMENT_Visibility;
 		Width: Enclosed . Width;
 		VertPos: Top = Previous . Bottom + 0.2;
 		END;
@@ -5975,6 +5962,7 @@ ATTRIBUTES
 	CreateFirst (SelectedInAltView);
 	Visibility: 5 {*****};
 	IN Structure_view BEGIN
+		Visibility: Enclosing =;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		END;
