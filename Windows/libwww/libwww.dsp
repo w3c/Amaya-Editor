@@ -60,7 +60,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /Z7 /Od /I "..\..\..\libwww\Library\src" /I "..\..\libpng\zlib" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /D "HT_ZLIB" /YX /FD /c
+# ADD CPP /nologo /W3 /GX /Z7 /Od /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\..\..\libwww\Library\src" /I "..\..\libpng\zlib" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /D "HT_ZLIB" /YX /FD /c
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -74,6 +74,14 @@ LIB32=link.exe -lib
 
 # Name "libwww - Win32 Release"
 # Name "libwww - Win32 Debug"
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\expat\xmltok\dllmain.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\expat\xmlparse\hashtable.c
+# End Source File
 # Begin Source File
 
 SOURCE=..\..\..\libwww\Library\src\HTAABrow.c
@@ -201,6 +209,10 @@ SOURCE=..\..\..\libwww\Library\src\HTFilter.c
 # Begin Source File
 
 SOURCE=..\..\..\libwww\Library\src\HTFormat.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\Library\src\HTFSave.c
 # End Source File
 # Begin Source File
 
@@ -366,6 +378,10 @@ SOURCE=..\..\..\libwww\Library\src\HTNewsRq.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\libwww\Library\src\HTNoFree.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\libwww\Library\src\HTParse.c
 # End Source File
 # Begin Source File
@@ -510,11 +526,19 @@ SOURCE=..\..\..\libwww\Library\src\HTZip.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\libwww\Library\src\md5.c
+SOURCE=..\..\..\libwww\modules\md5\md5.c
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\libwww\Library\src\SGML.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\expat\xmlparse\xmlparse.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\expat\xmltok\xmltok.c
 # End Source File
 # Begin Source File
 

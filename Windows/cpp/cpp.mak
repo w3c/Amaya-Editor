@@ -32,7 +32,7 @@ RSC=rc.exe
 !IF  "$(CFG)" == "cpp - Win32 Release"
 
 OUTDIR=.\..\bin
-INTDIR=.\Release
+INTDIR=.\cpp___Wi
 # Begin Custom Macros
 OutDir=.\..\bin
 # End Custom Macros
@@ -68,9 +68,9 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP_PROJ=/nologo /MT /W3 /GX /O2 /I "..\..\thotlib\internals\f" /D "NDEBUG" /D\
- "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_WINDOWS_COMPILERS"\
- /Fp"$(INTDIR)\cpp.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-CPP_OBJS=.\Release/
+ "WIN32" /D "_WINDOWS" /D "WINDOWS_COMPILERS" /Fp"$(INTDIR)\cpp.pch" /YX\
+ /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_OBJS=.\cpp___Wi/
 CPP_SBRS=.
 MTL_PROJ=/nologo /D "NDEBUG" /mktyplib203 /o NUL /win32 
 BSC32=bscmake.exe
@@ -101,7 +101,7 @@ LINK32_OBJS= \
 !ELSEIF  "$(CFG)" == "cpp - Win32 Debug"
 
 OUTDIR=.\..\bin
-INTDIR=.\Debug
+INTDIR=.\cpp___W0
 # Begin Custom Macros
 OutDir=.\..\bin
 # End Custom Macros
@@ -140,9 +140,9 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP_PROJ=/nologo /MTd /W3 /Gm /GX /Zi /Od /I "..\..\thotlib\internals\f" /D\
- "_DEBUG" /D "_WINDOWS_COMPILERS" /D "WIN32" /D "_WINDOWS"\
- /Fp"$(INTDIR)\cpp.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-CPP_OBJS=.\Debug/
+ "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "WINDOWS_COMPILERS" /Fp"$(INTDIR)\cpp.pch"\
+ /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_OBJS=.\cpp___W0/
 CPP_SBRS=.
 MTL_PROJ=/nologo /D "_DEBUG" /mktyplib203 /o NUL /win32 
 BSC32=bscmake.exe
@@ -265,6 +265,8 @@ DEP_CPP_CPPER=\
 	"..\..\cpp\tm.h"\
 	"..\..\cpp\winnt\win-nt.h"\
 	"..\..\cpp\winnt\xm-winnt.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\cpperror.obj" : $(SOURCE) $(DEP_CPP_CPPER) "$(INTDIR)"
@@ -311,6 +313,8 @@ DEP_CPP_CPPEX=\
 	"..\..\cpp\tm.h"\
 	"..\..\cpp\winnt\win-nt.h"\
 	"..\..\cpp\winnt\xm-winnt.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\cppexp.obj" : $(SOURCE) $(DEP_CPP_CPPEX) "$(INTDIR)"
@@ -347,6 +351,8 @@ SOURCE=..\..\cpp\cpphash.c
 DEP_CPP_CPPHA=\
 	"..\..\cpp\cpphash.h"\
 	"..\..\cpp\cpplib.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\cpphash.obj" : $(SOURCE) $(DEP_CPP_CPPHA) "$(INTDIR)"
@@ -384,6 +390,11 @@ DEP_CPP_CPPLI=\
 	"..\..\cpp\tm.h"\
 	"..\..\cpp\winnt\win-nt.h"\
 	"..\..\cpp\winnt\xm-winnt.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_CPPLI=\
+	"..\..\src\config.h"\
 	
 
 "$(INTDIR)\cpplib.obj" : $(SOURCE) $(DEP_CPP_CPPLI) "$(INTDIR)"
@@ -432,6 +443,8 @@ DEP_CPP_CPPMA=\
 	"..\..\cpp\winnt\win-nt.h"\
 	"..\..\cpp\winnt\xm-winnt.h"\
 	"..\..\thotlib\internals\f\compilers_f.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\cppmain.obj" : $(SOURCE) $(DEP_CPP_CPPMA) "$(INTDIR)"

@@ -43,12 +43,12 @@ ALL : "$(OUTDIR)\str.dll"
 
 !ELSE 
 
-ALL : "cpp - Win32 Release" "LibThotKernel - Win32 Release" "$(OUTDIR)\str.dll"
+ALL : "LibThotKernel - Win32 Release" "cpp - Win32 Release" "$(OUTDIR)\str.dll"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"LibThotKernel - Win32 ReleaseCLEAN" "cpp - Win32 ReleaseCLEAN" 
+CLEAN :"cpp - Win32 ReleaseCLEAN" "LibThotKernel - Win32 ReleaseCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -112,12 +112,12 @@ ALL : "$(OUTDIR)\str.dll"
 
 !ELSE 
 
-ALL : "cpp - Win32 Debug" "LibThotKernel - Win32 Debug" "$(OUTDIR)\str.dll"
+ALL : "LibThotKernel - Win32 Debug" "cpp - Win32 Debug" "$(OUTDIR)\str.dll"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"LibThotKernel - Win32 DebugCLEAN" "cpp - Win32 DebugCLEAN" 
+CLEAN :"cpp - Win32 DebugCLEAN" "LibThotKernel - Win32 DebugCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -207,6 +207,33 @@ LINK32_OBJS= \
 
 !IF  "$(CFG)" == "str - Win32 Release"
 
+"cpp - Win32 Release" : 
+   cd "..\cpp"
+   $(MAKE) /$(MAKEFLAGS) /F .\cpp.mak CFG="cpp - Win32 Release" 
+   cd "..\str"
+
+"cpp - Win32 ReleaseCLEAN" : 
+   cd "..\cpp"
+   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\cpp.mak CFG="cpp - Win32 Release" RECURSE=1\
+ 
+   cd "..\str"
+
+!ELSEIF  "$(CFG)" == "str - Win32 Debug"
+
+"cpp - Win32 Debug" : 
+   cd "..\cpp"
+   $(MAKE) /$(MAKEFLAGS) /F .\cpp.mak CFG="cpp - Win32 Debug" 
+   cd "..\str"
+
+"cpp - Win32 DebugCLEAN" : 
+   cd "..\cpp"
+   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\cpp.mak CFG="cpp - Win32 Debug" RECURSE=1 
+   cd "..\str"
+
+!ENDIF 
+
+!IF  "$(CFG)" == "str - Win32 Release"
+
 "LibThotKernel - Win32 Release" : 
    cd "..\LibThotKernel"
    $(MAKE) /$(MAKEFLAGS) /F .\LibThotKernel.mak\
@@ -235,33 +262,6 @@ LINK32_OBJS= \
 
 !ENDIF 
 
-!IF  "$(CFG)" == "str - Win32 Release"
-
-"cpp - Win32 Release" : 
-   cd "..\cpp"
-   $(MAKE) /$(MAKEFLAGS) /F .\cpp.mak CFG="cpp - Win32 Release" 
-   cd "..\str"
-
-"cpp - Win32 ReleaseCLEAN" : 
-   cd "..\cpp"
-   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\cpp.mak CFG="cpp - Win32 Release" RECURSE=1\
- 
-   cd "..\str"
-
-!ELSEIF  "$(CFG)" == "str - Win32 Debug"
-
-"cpp - Win32 Debug" : 
-   cd "..\cpp"
-   $(MAKE) /$(MAKEFLAGS) /F .\cpp.mak CFG="cpp - Win32 Debug" 
-   cd "..\str"
-
-"cpp - Win32 DebugCLEAN" : 
-   cd "..\cpp"
-   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\cpp.mak CFG="cpp - Win32 Debug" RECURSE=1 
-   cd "..\str"
-
-!ENDIF 
-
 SOURCE=..\..\thotlib\base\compilmsg.c
 
 !IF  "$(CFG)" == "str - Win32 Release"
@@ -283,6 +283,8 @@ DEP_CPP_COMPI=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\h\compilmsg.h"\
@@ -301,6 +303,11 @@ DEP_CPP_COMPI=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\compil_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_COMPI=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\compilmsg.obj" : $(SOURCE) $(DEP_CPP_COMPI) "$(INTDIR)"
@@ -378,6 +385,8 @@ DEP_CPP_PARSE=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\compilmsg_f.h"\
@@ -400,6 +409,11 @@ DEP_CPP_PARSE=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\analsynt_tv.h"\
 	"..\..\thotlib\internals\var\compil_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_PARSE=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\parser.obj" : $(SOURCE) $(DEP_CPP_PARSE) "$(INTDIR)"
@@ -484,6 +498,8 @@ DEP_CPP_STR_C=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\compilers_f.h"\
@@ -515,6 +531,11 @@ DEP_CPP_STR_C=\
 	"..\..\thotlib\internals\var\analsynt_tv.h"\
 	"..\..\thotlib\internals\var\compil_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_STR_C=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\str.obj" : $(SOURCE) $(DEP_CPP_STR_C) "$(INTDIR)"
@@ -605,6 +626,8 @@ DEP_CPP_WRITE=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -620,6 +643,11 @@ DEP_CPP_WRITE=\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_WRITE=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\writestr.obj" : $(SOURCE) $(DEP_CPP_WRITE) "$(INTDIR)"

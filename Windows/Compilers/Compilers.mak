@@ -45,14 +45,13 @@ ALL : "$(OUTDIR)\Compilers.exe"
 !ELSE 
 
 ALL : "tra - Win32 Release" "str - Win32 Release" "prs - Win32 Release"\
- "LibThotKernel - Win32 Release" "app - Win32 Release" "$(OUTDIR)\Compilers.exe"
+ "app - Win32 Release" "$(OUTDIR)\Compilers.exe"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"app - Win32 ReleaseCLEAN" "LibThotKernel - Win32 ReleaseCLEAN"\
- "prs - Win32 ReleaseCLEAN" "str - Win32 ReleaseCLEAN"\
- "tra - Win32 ReleaseCLEAN" 
+CLEAN :"app - Win32 ReleaseCLEAN" "prs - Win32 ReleaseCLEAN"\
+ "str - Win32 ReleaseCLEAN" "tra - Win32 ReleaseCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -110,13 +109,13 @@ ALL : "$(OUTDIR)\Compilers.exe"
 !ELSE 
 
 ALL : "tra - Win32 Debug" "str - Win32 Debug" "prs - Win32 Debug"\
- "LibThotKernel - Win32 Debug" "app - Win32 Debug" "$(OUTDIR)\Compilers.exe"
+ "app - Win32 Debug" "$(OUTDIR)\Compilers.exe"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"app - Win32 DebugCLEAN" "LibThotKernel - Win32 DebugCLEAN"\
- "prs - Win32 DebugCLEAN" "str - Win32 DebugCLEAN" "tra - Win32 DebugCLEAN" 
+CLEAN :"app - Win32 DebugCLEAN" "prs - Win32 DebugCLEAN"\
+ "str - Win32 DebugCLEAN" "tra - Win32 DebugCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -228,36 +227,6 @@ LINK32_OBJS= \
 
 !IF  "$(CFG)" == "Compilers - Win32 Release"
 
-"LibThotKernel - Win32 Release" : 
-   cd "..\LibThotKernel"
-   $(MAKE) /$(MAKEFLAGS) /F .\LibThotKernel.mak\
- CFG="LibThotKernel - Win32 Release" 
-   cd "..\Compilers"
-
-"LibThotKernel - Win32 ReleaseCLEAN" : 
-   cd "..\LibThotKernel"
-   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\LibThotKernel.mak\
- CFG="LibThotKernel - Win32 Release" RECURSE=1 
-   cd "..\Compilers"
-
-!ELSEIF  "$(CFG)" == "Compilers - Win32 Debug"
-
-"LibThotKernel - Win32 Debug" : 
-   cd "..\LibThotKernel"
-   $(MAKE) /$(MAKEFLAGS) /F .\LibThotKernel.mak\
- CFG="LibThotKernel - Win32 Debug" 
-   cd "..\Compilers"
-
-"LibThotKernel - Win32 DebugCLEAN" : 
-   cd "..\LibThotKernel"
-   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\LibThotKernel.mak\
- CFG="LibThotKernel - Win32 Debug" RECURSE=1 
-   cd "..\Compilers"
-
-!ENDIF 
-
-!IF  "$(CFG)" == "Compilers - Win32 Release"
-
 "prs - Win32 Release" : 
    cd "..\prs"
    $(MAKE) /$(MAKEFLAGS) /F .\prs.mak CFG="prs - Win32 Release" 
@@ -345,9 +314,18 @@ DEP_CPP_WINTH=\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
+	"..\..\thotlib\include\registry.h"\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
+	"..\..\thotlib\include\ustring.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_WINTH=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\winthotcompilers.obj" : $(SOURCE) $(DEP_CPP_WINTH) "$(INTDIR)"

@@ -25,6 +25,8 @@ NULL=
 NULL=nul
 !ENDIF 
 
+CPP=cl.exe
+
 !IF  "$(CFG)" == "libwww - Win32 Release"
 
 OUTDIR=.\..
@@ -48,6 +50,8 @@ CLEAN :"zlib - Win32 ReleaseCLEAN"
 !ELSE 
 CLEAN :
 !ENDIF 
+	-@erase "$(INTDIR)\dllmain.obj"
+	-@erase "$(INTDIR)\hashtable.obj"
 	-@erase "$(INTDIR)\HTAABrow.obj"
 	-@erase "$(INTDIR)\HTAAUtil.obj"
 	-@erase "$(INTDIR)\HTAccess.obj"
@@ -80,6 +84,7 @@ CLEAN :
 	-@erase "$(INTDIR)\HTFile.obj"
 	-@erase "$(INTDIR)\HTFilter.obj"
 	-@erase "$(INTDIR)\HTFormat.obj"
+	-@erase "$(INTDIR)\HTFSave.obj"
 	-@erase "$(INTDIR)\HTFTP.obj"
 	-@erase "$(INTDIR)\HTFTPDir.obj"
 	-@erase "$(INTDIR)\HTFWrite.obj"
@@ -118,6 +123,7 @@ CLEAN :
 	-@erase "$(INTDIR)\HTNews.obj"
 	-@erase "$(INTDIR)\HTNewsLs.obj"
 	-@erase "$(INTDIR)\HTNewsRq.obj"
+	-@erase "$(INTDIR)\HTNoFree.obj"
 	-@erase "$(INTDIR)\HTParse.obj"
 	-@erase "$(INTDIR)\HTPEP.obj"
 	-@erase "$(INTDIR)\HTPlain.obj"
@@ -157,6 +163,8 @@ CLEAN :
 	-@erase "$(INTDIR)\md5.obj"
 	-@erase "$(INTDIR)\SGML.obj"
 	-@erase "$(INTDIR)\vc50.idb"
+	-@erase "$(INTDIR)\xmlparse.obj"
+	-@erase "$(INTDIR)\xmltok.obj"
 	-@erase "$(OUTDIR)\libwww.lib"
 
 "$(OUTDIR)" :
@@ -165,43 +173,11 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\..\libwww\Library\src" /D "NDEBUG"\
  /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /Fp"$(INTDIR)\libwww.pch" /YX\
  /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
-
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libwww.bsc" 
 BSC32_SBRS= \
@@ -209,6 +185,8 @@ BSC32_SBRS= \
 LIB32=link.exe -lib
 LIB32_FLAGS=/nologo /out:"$(OUTDIR)\libwww.lib" 
 LIB32_OBJS= \
+	"$(INTDIR)\dllmain.obj" \
+	"$(INTDIR)\hashtable.obj" \
 	"$(INTDIR)\HTAABrow.obj" \
 	"$(INTDIR)\HTAAUtil.obj" \
 	"$(INTDIR)\HTAccess.obj" \
@@ -241,6 +219,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\HTFile.obj" \
 	"$(INTDIR)\HTFilter.obj" \
 	"$(INTDIR)\HTFormat.obj" \
+	"$(INTDIR)\HTFSave.obj" \
 	"$(INTDIR)\HTFTP.obj" \
 	"$(INTDIR)\HTFTPDir.obj" \
 	"$(INTDIR)\HTFWrite.obj" \
@@ -279,6 +258,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\HTNews.obj" \
 	"$(INTDIR)\HTNewsLs.obj" \
 	"$(INTDIR)\HTNewsRq.obj" \
+	"$(INTDIR)\HTNoFree.obj" \
 	"$(INTDIR)\HTParse.obj" \
 	"$(INTDIR)\HTPEP.obj" \
 	"$(INTDIR)\HTPlain.obj" \
@@ -317,6 +297,8 @@ LIB32_OBJS= \
 	"$(INTDIR)\HTZip.obj" \
 	"$(INTDIR)\md5.obj" \
 	"$(INTDIR)\SGML.obj" \
+	"$(INTDIR)\xmlparse.obj" \
+	"$(INTDIR)\xmltok.obj" \
 	"$(OUTDIR)\zlib.lib"
 
 "$(OUTDIR)\libwww.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
@@ -347,6 +329,8 @@ CLEAN :"zlib - Win32 DebugCLEAN"
 !ELSE 
 CLEAN :
 !ENDIF 
+	-@erase "$(INTDIR)\dllmain.obj"
+	-@erase "$(INTDIR)\hashtable.obj"
 	-@erase "$(INTDIR)\HTAABrow.obj"
 	-@erase "$(INTDIR)\HTAAUtil.obj"
 	-@erase "$(INTDIR)\HTAccess.obj"
@@ -379,6 +363,7 @@ CLEAN :
 	-@erase "$(INTDIR)\HTFile.obj"
 	-@erase "$(INTDIR)\HTFilter.obj"
 	-@erase "$(INTDIR)\HTFormat.obj"
+	-@erase "$(INTDIR)\HTFSave.obj"
 	-@erase "$(INTDIR)\HTFTP.obj"
 	-@erase "$(INTDIR)\HTFTPDir.obj"
 	-@erase "$(INTDIR)\HTFWrite.obj"
@@ -417,6 +402,7 @@ CLEAN :
 	-@erase "$(INTDIR)\HTNews.obj"
 	-@erase "$(INTDIR)\HTNewsLs.obj"
 	-@erase "$(INTDIR)\HTNewsRq.obj"
+	-@erase "$(INTDIR)\HTNoFree.obj"
 	-@erase "$(INTDIR)\HTParse.obj"
 	-@erase "$(INTDIR)\HTPEP.obj"
 	-@erase "$(INTDIR)\HTPlain.obj"
@@ -456,6 +442,8 @@ CLEAN :
 	-@erase "$(INTDIR)\md5.obj"
 	-@erase "$(INTDIR)\SGML.obj"
 	-@erase "$(INTDIR)\vc50.idb"
+	-@erase "$(INTDIR)\xmlparse.obj"
+	-@erase "$(INTDIR)\xmltok.obj"
 	-@erase "$(OUTDIR)\libwww.lib"
 
 "$(OUTDIR)" :
@@ -464,44 +452,14 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
-CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\..\libwww\Library\src" /I\
+CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\..\libwww\modules\md5" /I\
+ "..\..\..\libwww\modules\expat\xmlparse" /I\
+ "..\..\..\libwww\modules\expat\xmltok" /I "..\..\..\libwww\Library\src" /I\
  "..\..\libpng\zlib" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /D\
  "HT_ZLIB" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD\
  /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
-
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libwww.bsc" 
 BSC32_SBRS= \
@@ -509,6 +467,8 @@ BSC32_SBRS= \
 LIB32=link.exe -lib
 LIB32_FLAGS=/nologo /out:"$(OUTDIR)\libwww.lib" 
 LIB32_OBJS= \
+	"$(INTDIR)\dllmain.obj" \
+	"$(INTDIR)\hashtable.obj" \
 	"$(INTDIR)\HTAABrow.obj" \
 	"$(INTDIR)\HTAAUtil.obj" \
 	"$(INTDIR)\HTAccess.obj" \
@@ -541,6 +501,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\HTFile.obj" \
 	"$(INTDIR)\HTFilter.obj" \
 	"$(INTDIR)\HTFormat.obj" \
+	"$(INTDIR)\HTFSave.obj" \
 	"$(INTDIR)\HTFTP.obj" \
 	"$(INTDIR)\HTFTPDir.obj" \
 	"$(INTDIR)\HTFWrite.obj" \
@@ -579,6 +540,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\HTNews.obj" \
 	"$(INTDIR)\HTNewsLs.obj" \
 	"$(INTDIR)\HTNewsRq.obj" \
+	"$(INTDIR)\HTNoFree.obj" \
 	"$(INTDIR)\HTParse.obj" \
 	"$(INTDIR)\HTPEP.obj" \
 	"$(INTDIR)\HTPlain.obj" \
@@ -617,6 +579,8 @@ LIB32_OBJS= \
 	"$(INTDIR)\HTZip.obj" \
 	"$(INTDIR)\md5.obj" \
 	"$(INTDIR)\SGML.obj" \
+	"$(INTDIR)\xmlparse.obj" \
+	"$(INTDIR)\xmltok.obj" \
 	"$(OUTDIR)\zlib.lib"
 
 "$(OUTDIR)\libwww.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
@@ -625,6 +589,36 @@ LIB32_OBJS= \
 <<
 
 !ENDIF 
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
 
 
 !IF "$(CFG)" == "libwww - Win32 Release" || "$(CFG)" == "libwww - Win32 Debug"
@@ -657,12 +651,45 @@ LIB32_OBJS= \
 
 !ENDIF 
 
+SOURCE=..\..\..\libwww\modules\expat\xmltok\dllmain.c
+
+"$(INTDIR)\dllmain.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\libwww\modules\expat\xmlparse\hashtable.c
+
+!IF  "$(CFG)" == "libwww - Win32 Release"
+
+DEP_CPP_HASHT=\
+	"..\..\..\libwww\modules\expat\xmlparse\hashtable.h"\
+	
+NODEP_CPP_HASHT=\
+	"..\..\..\libwww\modules\expat\xmlparse\xmldef.h"\
+	
+
+"$(INTDIR)\hashtable.obj" : $(SOURCE) $(DEP_CPP_HASHT) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
+
+DEP_CPP_HASHT=\
+	"..\..\..\libwww\modules\expat\xmlparse\hashtable.h"\
+	"..\..\..\libwww\modules\expat\xmltok\xmldef.h"\
+	
+
+"$(INTDIR)\hashtable.obj" : $(SOURCE) $(DEP_CPP_HASHT) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
 SOURCE=..\..\..\libwww\Library\src\HTAABrow.c
 
 !IF  "$(CFG)" == "libwww - Win32 Release"
 
 DEP_CPP_HTAAB=\
-	"..\..\..\libwww\library\src\global.h"\
 	"..\..\..\libwww\library\src\htaabrow.h"\
 	"..\..\..\libwww\library\src\htaautil.h"\
 	"..\..\..\libwww\library\src\htalert.h"\
@@ -670,7 +697,6 @@ DEP_CPP_HTAAB=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdigest.h"\
@@ -679,7 +705,6 @@ DEP_CPP_HTAAB=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -691,6 +716,7 @@ DEP_CPP_HTAAB=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -705,7 +731,6 @@ DEP_CPP_HTAAB=\
 	"..\..\..\libwww\library\src\htutree.h"\
 	"..\..\..\libwww\library\src\htuu.h"\
 	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\library\src\md5.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
 	"..\..\..\libwww\library\src\wwwlib.h"\
@@ -716,6 +741,7 @@ DEP_CPP_HTAAB=\
 	
 NODEP_CPP_HTAAB=\
 	"..\..\..\libwww\library\src\HTVMSUtils.h"\
+	"..\..\..\libwww\library\src\md5.h"\
 	
 
 "$(INTDIR)\HTAABrow.obj" : $(SOURCE) $(DEP_CPP_HTAAB) "$(INTDIR)"
@@ -725,7 +751,6 @@ NODEP_CPP_HTAAB=\
 !ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
 
 DEP_CPP_HTAAB=\
-	"..\..\..\libwww\library\src\global.h"\
 	"..\..\..\libwww\library\src\htaabrow.h"\
 	"..\..\..\libwww\library\src\htaautil.h"\
 	"..\..\..\libwww\library\src\htalert.h"\
@@ -733,7 +758,6 @@ DEP_CPP_HTAAB=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdigest.h"\
@@ -742,7 +766,6 @@ DEP_CPP_HTAAB=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -754,6 +777,7 @@ DEP_CPP_HTAAB=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -768,12 +792,12 @@ DEP_CPP_HTAAB=\
 	"..\..\..\libwww\library\src\htutree.h"\
 	"..\..\..\libwww\library\src\htuu.h"\
 	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\library\src\md5.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
 	"..\..\..\libwww\library\src\wwwlib.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
+	"..\..\..\libwww\modules\md5\md5.h"\
 	
 
 "$(INTDIR)\HTAABrow.obj" : $(SOURCE) $(DEP_CPP_HTAAB) "$(INTDIR)"
@@ -793,7 +817,6 @@ DEP_CPP_HTAAU=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -801,7 +824,6 @@ DEP_CPP_HTAAU=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -813,6 +835,7 @@ DEP_CPP_HTAAU=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -851,7 +874,6 @@ DEP_CPP_HTAAU=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -859,7 +881,6 @@ DEP_CPP_HTAAU=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -871,6 +892,7 @@ DEP_CPP_HTAAU=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -909,15 +931,16 @@ DEP_CPP_HTACC=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htconlen.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
+	"..\..\..\libwww\library\src\hteptocl.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
+	"..\..\..\libwww\library\src\htfsave.h"\
 	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htguess.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
@@ -934,6 +957,8 @@ DEP_CPP_HTACC=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htmimprs.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnettxt.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htproxy.h"\
@@ -981,15 +1006,16 @@ DEP_CPP_HTACC=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htconlen.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
+	"..\..\..\libwww\library\src\hteptocl.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
+	"..\..\..\libwww\library\src\htfsave.h"\
 	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htguess.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
@@ -1006,6 +1032,8 @@ DEP_CPP_HTACC=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htmimprs.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnettxt.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htproxy.h"\
@@ -1050,7 +1078,6 @@ DEP_CPP_HTALE=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -1058,7 +1085,6 @@ DEP_CPP_HTALE=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -1070,6 +1096,7 @@ DEP_CPP_HTALE=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -1108,7 +1135,6 @@ DEP_CPP_HTALE=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -1116,7 +1142,6 @@ DEP_CPP_HTALE=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -1128,6 +1153,7 @@ DEP_CPP_HTALE=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -1261,7 +1287,6 @@ DEP_CPP_HTANS=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -1269,7 +1294,6 @@ DEP_CPP_HTANS=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -1282,6 +1306,7 @@ DEP_CPP_HTANS=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -1320,7 +1345,6 @@ DEP_CPP_HTANS=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -1328,7 +1352,6 @@ DEP_CPP_HTANS=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -1341,6 +1364,7 @@ DEP_CPP_HTANS=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -1602,7 +1626,6 @@ DEP_CPP_HTBINI=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -1614,6 +1637,7 @@ DEP_CPP_HTBINI=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -1660,7 +1684,6 @@ DEP_CPP_HTBINI=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -1672,6 +1695,7 @@ DEP_CPP_HTBINI=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -1709,18 +1733,14 @@ DEP_CPP_HTBOU=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htbound.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
-	"..\..\..\libwww\library\src\htconlen.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
-	"..\..\..\libwww\library\src\htguess.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -1735,17 +1755,15 @@ DEP_CPP_HTBOU=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htmimprs.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
-	"..\..\..\libwww\library\src\htreader.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
 	"..\..\..\libwww\library\src\htreqman.h"\
 	"..\..\..\libwww\library\src\htresponse.h"\
-	"..\..\..\libwww\library\src\htschunk.h"\
 	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
 	"..\..\..\libwww\library\src\htstruct.h"\
-	"..\..\..\libwww\library\src\httee.h"\
 	"..\..\..\libwww\library\src\httimer.h"\
 	"..\..\..\libwww\library\src\httrans.h"\
 	"..\..\..\libwww\library\src\htuser.h"\
@@ -1753,10 +1771,8 @@ DEP_CPP_HTBOU=\
 	"..\..\..\libwww\library\src\htutree.h"\
 	"..\..\..\libwww\library\src\htuu.h"\
 	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\library\src\htxparse.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
-	"..\..\..\libwww\library\src\wwwstream.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
 	{$(INCLUDE)}"sys\stat.h"\
@@ -1779,18 +1795,14 @@ DEP_CPP_HTBOU=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htbound.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
-	"..\..\..\libwww\library\src\htconlen.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
-	"..\..\..\libwww\library\src\htguess.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -1805,17 +1817,15 @@ DEP_CPP_HTBOU=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htmimprs.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
-	"..\..\..\libwww\library\src\htreader.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
 	"..\..\..\libwww\library\src\htreqman.h"\
 	"..\..\..\libwww\library\src\htresponse.h"\
-	"..\..\..\libwww\library\src\htschunk.h"\
 	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
 	"..\..\..\libwww\library\src\htstruct.h"\
-	"..\..\..\libwww\library\src\httee.h"\
 	"..\..\..\libwww\library\src\httimer.h"\
 	"..\..\..\libwww\library\src\httrans.h"\
 	"..\..\..\libwww\library\src\htuser.h"\
@@ -1823,10 +1833,8 @@ DEP_CPP_HTBOU=\
 	"..\..\..\libwww\library\src\htutree.h"\
 	"..\..\..\libwww\library\src\htuu.h"\
 	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\library\src\htxparse.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
-	"..\..\..\libwww\library\src\wwwstream.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
 	
@@ -1886,7 +1894,6 @@ DEP_CPP_HTBUF=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
@@ -1895,7 +1902,6 @@ DEP_CPP_HTBUF=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -1908,6 +1914,7 @@ DEP_CPP_HTBUF=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -1946,7 +1953,6 @@ DEP_CPP_HTBUF=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
@@ -1955,7 +1961,6 @@ DEP_CPP_HTBUF=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -1968,6 +1973,7 @@ DEP_CPP_HTBUF=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -2007,7 +2013,6 @@ DEP_CPP_HTCAC=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htcache.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
@@ -2020,7 +2025,6 @@ DEP_CPP_HTCAC=\
 	"..\..\..\libwww\library\src\htevtlst.h"\
 	"..\..\..\libwww\library\src\htfilter.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthist.h"\
 	"..\..\..\libwww\library\src\hthome.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
@@ -2036,6 +2040,7 @@ DEP_CPP_HTCAC=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htproxy.h"\
@@ -2084,7 +2089,6 @@ DEP_CPP_HTCAC=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htcache.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
@@ -2097,7 +2101,6 @@ DEP_CPP_HTCAC=\
 	"..\..\..\libwww\library\src\htevtlst.h"\
 	"..\..\..\libwww\library\src\htfilter.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthist.h"\
 	"..\..\..\libwww\library\src\hthome.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
@@ -2113,6 +2116,7 @@ DEP_CPP_HTCAC=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htproxy.h"\
@@ -2289,7 +2293,6 @@ DEP_CPP_HTCON=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htconlen.h"\
@@ -2298,7 +2301,6 @@ DEP_CPP_HTCON=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -2310,6 +2312,7 @@ DEP_CPP_HTCON=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -2347,7 +2350,6 @@ DEP_CPP_HTCON=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htconlen.h"\
@@ -2356,7 +2358,6 @@ DEP_CPP_HTCON=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -2368,6 +2369,7 @@ DEP_CPP_HTCON=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -2404,7 +2406,6 @@ DEP_CPP_HTDEM=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdemux.h"\
@@ -2413,7 +2414,6 @@ DEP_CPP_HTDEM=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -2427,6 +2427,7 @@ DEP_CPP_HTDEM=\
 	"..\..\..\libwww\library\src\htmuxch.h"\
 	"..\..\..\libwww\library\src\htmuxheader.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -2464,7 +2465,6 @@ DEP_CPP_HTDEM=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdemux.h"\
@@ -2473,7 +2473,6 @@ DEP_CPP_HTDEM=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -2487,6 +2486,7 @@ DEP_CPP_HTDEM=\
 	"..\..\..\libwww\library\src\htmuxch.h"\
 	"..\..\..\libwww\library\src\htmuxheader.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -2613,9 +2613,9 @@ DEP_CPP_HTDIA=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
+	"..\..\..\libwww\library\src\htcookie.h"\
 	"..\..\..\libwww\library\src\htdialog.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
@@ -2624,7 +2624,6 @@ DEP_CPP_HTDIA=\
 	"..\..\..\libwww\library\src\htevtlst.h"\
 	"..\..\..\libwww\library\src\htfilter.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthist.h"\
 	"..\..\..\libwww\library\src\hthome.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
@@ -2639,6 +2638,7 @@ DEP_CPP_HTDIA=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htpep.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
@@ -2692,9 +2692,9 @@ DEP_CPP_HTDIA=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
+	"..\..\..\libwww\library\src\htcookie.h"\
 	"..\..\..\libwww\library\src\htdialog.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
@@ -2703,7 +2703,6 @@ DEP_CPP_HTDIA=\
 	"..\..\..\libwww\library\src\htevtlst.h"\
 	"..\..\..\libwww\library\src\htfilter.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthist.h"\
 	"..\..\..\libwww\library\src\hthome.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
@@ -2718,6 +2717,7 @@ DEP_CPP_HTDIA=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htpep.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
@@ -2762,13 +2762,11 @@ SOURCE=..\..\..\libwww\Library\src\HTDigest.c
 !IF  "$(CFG)" == "libwww - Win32 Release"
 
 DEP_CPP_HTDIG=\
-	"..\..\..\libwww\library\src\global.h"\
 	"..\..\..\libwww\library\src\htalert.h"\
 	"..\..\..\libwww\library\src\htanchor.h"\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdigest.h"\
@@ -2777,7 +2775,6 @@ DEP_CPP_HTDIG=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -2789,6 +2786,7 @@ DEP_CPP_HTDIG=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -2803,7 +2801,6 @@ DEP_CPP_HTDIG=\
 	"..\..\..\libwww\library\src\htutree.h"\
 	"..\..\..\libwww\library\src\htuu.h"\
 	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\library\src\md5.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
 	"..\..\..\libwww\library\src\wwwlib.h"\
@@ -2814,6 +2811,7 @@ DEP_CPP_HTDIG=\
 	
 NODEP_CPP_HTDIG=\
 	"..\..\..\libwww\library\src\HTVMSUtils.h"\
+	"..\..\..\libwww\library\src\md5.h"\
 	
 
 "$(INTDIR)\HTDigest.obj" : $(SOURCE) $(DEP_CPP_HTDIG) "$(INTDIR)"
@@ -2823,13 +2821,11 @@ NODEP_CPP_HTDIG=\
 !ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
 
 DEP_CPP_HTDIG=\
-	"..\..\..\libwww\library\src\global.h"\
 	"..\..\..\libwww\library\src\htalert.h"\
 	"..\..\..\libwww\library\src\htanchor.h"\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdigest.h"\
@@ -2838,7 +2834,6 @@ DEP_CPP_HTDIG=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -2850,6 +2845,7 @@ DEP_CPP_HTDIG=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -2864,12 +2860,12 @@ DEP_CPP_HTDIG=\
 	"..\..\..\libwww\library\src\htutree.h"\
 	"..\..\..\libwww\library\src\htuu.h"\
 	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\library\src\md5.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
 	"..\..\..\libwww\library\src\wwwlib.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
+	"..\..\..\libwww\modules\md5\md5.h"\
 	
 
 "$(INTDIR)\HTDigest.obj" : $(SOURCE) $(DEP_CPP_HTDIG) "$(INTDIR)"
@@ -2889,6 +2885,7 @@ DEP_CPP_HTDIR=\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
 	"..\..\..\libwww\library\src\htbind.h"\
+	"..\..\..\libwww\library\src\htbinit.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdescpt.h"\
@@ -2897,8 +2894,10 @@ DEP_CPP_HTDIR=\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
+	"..\..\..\libwww\library\src\htext.h"\
+	"..\..\..\libwww\library\src\htfile.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
+	"..\..\..\libwww\library\src\hthinit.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\hticons.h"\
@@ -2910,16 +2909,21 @@ DEP_CPP_HTDIR=\
 	"..\..\..\libwww\library\src\htmemlog.h"\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
+	"..\..\..\libwww\library\src\html.h"\
 	"..\..\..\libwww\library\src\htmlgen.h"\
 	"..\..\..\libwww\library\src\htmlpdtd.h"\
+	"..\..\..\libwww\library\src\htmulti.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
+	"..\..\..\libwww\library\src\htplain.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
 	"..\..\..\libwww\library\src\htresponse.h"\
 	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
 	"..\..\..\libwww\library\src\htstruct.h"\
+	"..\..\..\libwww\library\src\htstyle.h"\
 	"..\..\..\libwww\library\src\httexgen.h"\
 	"..\..\..\libwww\library\src\httimer.h"\
 	"..\..\..\libwww\library\src\httrans.h"\
@@ -2931,6 +2935,7 @@ DEP_CPP_HTDIR=\
 	"..\..\..\libwww\library\src\sgml.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
+	"..\..\..\libwww\library\src\wwwfile.h"\
 	"..\..\..\libwww\library\src\wwwhtml.h"\
 	"..\..\..\libwww\library\src\wwwlib.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
@@ -2955,6 +2960,7 @@ DEP_CPP_HTDIR=\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
 	"..\..\..\libwww\library\src\htbind.h"\
+	"..\..\..\libwww\library\src\htbinit.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdescpt.h"\
@@ -2963,8 +2969,10 @@ DEP_CPP_HTDIR=\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
+	"..\..\..\libwww\library\src\htext.h"\
+	"..\..\..\libwww\library\src\htfile.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
+	"..\..\..\libwww\library\src\hthinit.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\hticons.h"\
@@ -2976,16 +2984,21 @@ DEP_CPP_HTDIR=\
 	"..\..\..\libwww\library\src\htmemlog.h"\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
+	"..\..\..\libwww\library\src\html.h"\
 	"..\..\..\libwww\library\src\htmlgen.h"\
 	"..\..\..\libwww\library\src\htmlpdtd.h"\
+	"..\..\..\libwww\library\src\htmulti.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
+	"..\..\..\libwww\library\src\htplain.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
 	"..\..\..\libwww\library\src\htresponse.h"\
 	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
 	"..\..\..\libwww\library\src\htstruct.h"\
+	"..\..\..\libwww\library\src\htstyle.h"\
 	"..\..\..\libwww\library\src\httexgen.h"\
 	"..\..\..\libwww\library\src\httimer.h"\
 	"..\..\..\libwww\library\src\httrans.h"\
@@ -2997,6 +3010,7 @@ DEP_CPP_HTDIR=\
 	"..\..\..\libwww\library\src\sgml.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
+	"..\..\..\libwww\library\src\wwwfile.h"\
 	"..\..\..\libwww\library\src\wwwhtml.h"\
 	"..\..\..\libwww\library\src\wwwlib.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
@@ -3371,7 +3385,6 @@ DEP_CPP_HTEVT=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -3380,7 +3393,6 @@ DEP_CPP_HTEVT=\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htevtlst.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -3394,6 +3406,7 @@ DEP_CPP_HTEVT=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htmimprs.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -3433,7 +3446,6 @@ DEP_CPP_HTEVT=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -3442,7 +3454,6 @@ DEP_CPP_HTEVT=\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htevtlst.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -3456,6 +3467,7 @@ DEP_CPP_HTEVT=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htmimprs.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -3507,7 +3519,6 @@ DEP_CPP_HTFIL=\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htfile.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -3524,6 +3535,7 @@ DEP_CPP_HTFIL=\
 	"..\..\..\libwww\library\src\htmimprs.h"\
 	"..\..\..\libwww\library\src\htmulti.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
@@ -3583,7 +3595,6 @@ DEP_CPP_HTFIL=\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htfile.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -3600,6 +3611,7 @@ DEP_CPP_HTFIL=\
 	"..\..\..\libwww\library\src\htmimprs.h"\
 	"..\..\..\libwww\library\src\htmulti.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
@@ -3647,17 +3659,16 @@ DEP_CPP_HTFILT=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htcache.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
+	"..\..\..\libwww\library\src\htcookie.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htfilter.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -3670,6 +3681,7 @@ DEP_CPP_HTFILT=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htpep.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
@@ -3723,17 +3735,16 @@ DEP_CPP_HTFILT=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htcache.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
+	"..\..\..\libwww\library\src\htcookie.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htfilter.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -3746,6 +3757,7 @@ DEP_CPP_HTFILT=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htpep.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
@@ -3876,6 +3888,123 @@ DEP_CPP_HTFOR=\
 
 !ENDIF 
 
+SOURCE=..\..\..\libwww\Library\src\HTFSave.c
+
+!IF  "$(CFG)" == "libwww - Win32 Release"
+
+DEP_CPP_HTFSA=\
+	"..\..\..\libwww\library\src\htalert.h"\
+	"..\..\..\libwww\library\src\htanchor.h"\
+	"..\..\..\libwww\library\src\htarray.h"\
+	"..\..\..\libwww\library\src\htassoc.h"\
+	"..\..\..\libwww\library\src\htatom.h"\
+	"..\..\..\libwww\library\src\htbind.h"\
+	"..\..\..\libwww\library\src\htchannl.h"\
+	"..\..\..\libwww\library\src\htchunk.h"\
+	"..\..\..\libwww\library\src\htdns.h"\
+	"..\..\..\libwww\library\src\hterror.h"\
+	"..\..\..\libwww\library\src\htescape.h"\
+	"..\..\..\libwww\library\src\htevent.h"\
+	"..\..\..\libwww\library\src\htformat.h"\
+	"..\..\..\libwww\library\src\htfsave.h"\
+	"..\..\..\libwww\library\src\htfwrite.h"\
+	"..\..\..\libwww\library\src\hthost.h"\
+	"..\..\..\libwww\library\src\hthstman.h"\
+	"..\..\..\libwww\library\src\htinet.h"\
+	"..\..\..\libwww\library\src\htiostream.h"\
+	"..\..\..\libwww\library\src\htlib.h"\
+	"..\..\..\libwww\library\src\htlink.h"\
+	"..\..\..\libwww\library\src\htlist.h"\
+	"..\..\..\libwww\library\src\htmemlog.h"\
+	"..\..\..\libwww\library\src\htmemory.h"\
+	"..\..\..\libwww\library\src\htmethod.h"\
+	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
+	"..\..\..\libwww\library\src\htparse.h"\
+	"..\..\..\libwww\library\src\htprot.h"\
+	"..\..\..\libwww\library\src\htreq.h"\
+	"..\..\..\libwww\library\src\htresponse.h"\
+	"..\..\..\libwww\library\src\htstream.h"\
+	"..\..\..\libwww\library\src\htstring.h"\
+	"..\..\..\libwww\library\src\htstruct.h"\
+	"..\..\..\libwww\library\src\httimer.h"\
+	"..\..\..\libwww\library\src\httrans.h"\
+	"..\..\..\libwww\library\src\htuser.h"\
+	"..\..\..\libwww\library\src\htutils.h"\
+	"..\..\..\libwww\library\src\htutree.h"\
+	"..\..\..\libwww\library\src\htuu.h"\
+	"..\..\..\libwww\library\src\htwwwstr.h"\
+	"..\..\..\libwww\library\src\windows\config.h"\
+	"..\..\..\libwww\library\src\wwwcore.h"\
+	"..\..\..\libwww\library\src\wwwsys.h"\
+	"..\..\..\libwww\library\src\wwwutil.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_HTFSA=\
+	"..\..\..\libwww\library\src\HTVMSUtils.h"\
+	
+
+"$(INTDIR)\HTFSave.obj" : $(SOURCE) $(DEP_CPP_HTFSA) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
+
+DEP_CPP_HTFSA=\
+	"..\..\..\libwww\library\src\htalert.h"\
+	"..\..\..\libwww\library\src\htanchor.h"\
+	"..\..\..\libwww\library\src\htarray.h"\
+	"..\..\..\libwww\library\src\htassoc.h"\
+	"..\..\..\libwww\library\src\htatom.h"\
+	"..\..\..\libwww\library\src\htbind.h"\
+	"..\..\..\libwww\library\src\htchannl.h"\
+	"..\..\..\libwww\library\src\htchunk.h"\
+	"..\..\..\libwww\library\src\htdns.h"\
+	"..\..\..\libwww\library\src\hterror.h"\
+	"..\..\..\libwww\library\src\htescape.h"\
+	"..\..\..\libwww\library\src\htevent.h"\
+	"..\..\..\libwww\library\src\htformat.h"\
+	"..\..\..\libwww\library\src\htfsave.h"\
+	"..\..\..\libwww\library\src\htfwrite.h"\
+	"..\..\..\libwww\library\src\hthost.h"\
+	"..\..\..\libwww\library\src\hthstman.h"\
+	"..\..\..\libwww\library\src\htinet.h"\
+	"..\..\..\libwww\library\src\htiostream.h"\
+	"..\..\..\libwww\library\src\htlib.h"\
+	"..\..\..\libwww\library\src\htlink.h"\
+	"..\..\..\libwww\library\src\htlist.h"\
+	"..\..\..\libwww\library\src\htmemlog.h"\
+	"..\..\..\libwww\library\src\htmemory.h"\
+	"..\..\..\libwww\library\src\htmethod.h"\
+	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
+	"..\..\..\libwww\library\src\htparse.h"\
+	"..\..\..\libwww\library\src\htprot.h"\
+	"..\..\..\libwww\library\src\htreq.h"\
+	"..\..\..\libwww\library\src\htresponse.h"\
+	"..\..\..\libwww\library\src\htstream.h"\
+	"..\..\..\libwww\library\src\htstring.h"\
+	"..\..\..\libwww\library\src\htstruct.h"\
+	"..\..\..\libwww\library\src\httimer.h"\
+	"..\..\..\libwww\library\src\httrans.h"\
+	"..\..\..\libwww\library\src\htuser.h"\
+	"..\..\..\libwww\library\src\htutils.h"\
+	"..\..\..\libwww\library\src\htutree.h"\
+	"..\..\..\libwww\library\src\htuu.h"\
+	"..\..\..\libwww\library\src\htwwwstr.h"\
+	"..\..\..\libwww\library\src\windows\config.h"\
+	"..\..\..\libwww\library\src\wwwcore.h"\
+	"..\..\..\libwww\library\src\wwwsys.h"\
+	"..\..\..\libwww\library\src\wwwutil.h"\
+	
+
+"$(INTDIR)\HTFSave.obj" : $(SOURCE) $(DEP_CPP_HTFSA) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
 SOURCE=..\..\..\libwww\Library\src\HTFTP.c
 
 !IF  "$(CFG)" == "libwww - Win32 Release"
@@ -3889,15 +4018,19 @@ DEP_CPP_HTFTP=\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
 	"..\..\..\libwww\library\src\htbind.h"\
+	"..\..\..\libwww\library\src\htbinit.h"\
 	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htconlen.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
+	"..\..\..\libwww\library\src\hteptocl.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
+	"..\..\..\libwww\library\src\htfile.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
+	"..\..\..\libwww\library\src\htfsave.h"\
 	"..\..\..\libwww\library\src\htftp.h"\
 	"..\..\..\libwww\library\src\htftpdir.h"\
 	"..\..\..\libwww\library\src\htfwrite.h"\
@@ -3916,8 +4049,11 @@ DEP_CPP_HTFTP=\
 	"..\..\..\libwww\library\src\htmerge.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htmimprs.h"\
+	"..\..\..\libwww\library\src\htmulti.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnettxt.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
@@ -3942,6 +4078,7 @@ DEP_CPP_HTFTP=\
 	"..\..\..\libwww\library\src\htxparse.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
+	"..\..\..\libwww\library\src\wwwfile.h"\
 	"..\..\..\libwww\library\src\wwwstream.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwtrans.h"\
@@ -3968,15 +4105,19 @@ DEP_CPP_HTFTP=\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
 	"..\..\..\libwww\library\src\htbind.h"\
+	"..\..\..\libwww\library\src\htbinit.h"\
 	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htconlen.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
+	"..\..\..\libwww\library\src\hteptocl.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
+	"..\..\..\libwww\library\src\htfile.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
+	"..\..\..\libwww\library\src\htfsave.h"\
 	"..\..\..\libwww\library\src\htftp.h"\
 	"..\..\..\libwww\library\src\htftpdir.h"\
 	"..\..\..\libwww\library\src\htfwrite.h"\
@@ -3995,8 +4136,11 @@ DEP_CPP_HTFTP=\
 	"..\..\..\libwww\library\src\htmerge.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htmimprs.h"\
+	"..\..\..\libwww\library\src\htmulti.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnettxt.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
@@ -4021,6 +4165,7 @@ DEP_CPP_HTFTP=\
 	"..\..\..\libwww\library\src\htxparse.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
+	"..\..\..\libwww\library\src\wwwfile.h"\
 	"..\..\..\libwww\library\src\wwwstream.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwtrans.h"\
@@ -4044,7 +4189,6 @@ DEP_CPP_HTFTPD=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
@@ -4057,7 +4201,6 @@ DEP_CPP_HTFTPD=\
 	"..\..\..\libwww\library\src\htformat.h"\
 	"..\..\..\libwww\library\src\htftp.h"\
 	"..\..\..\libwww\library\src\htftpdir.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\hticons.h"\
@@ -4071,6 +4214,7 @@ DEP_CPP_HTFTPD=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
@@ -4116,7 +4260,6 @@ DEP_CPP_HTFTPD=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
@@ -4129,7 +4272,6 @@ DEP_CPP_HTFTPD=\
 	"..\..\..\libwww\library\src\htformat.h"\
 	"..\..\..\libwww\library\src\htftp.h"\
 	"..\..\..\libwww\library\src\htftpdir.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\hticons.h"\
@@ -4143,6 +4285,7 @@ DEP_CPP_HTFTPD=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
@@ -4186,7 +4329,6 @@ DEP_CPP_HTFWR=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -4202,21 +4344,27 @@ DEP_CPP_HTFWR=\
 	"..\..\..\libwww\library\src\htlib.h"\
 	"..\..\..\libwww\library\src\htlink.h"\
 	"..\..\..\libwww\library\src\htlist.h"\
+	"..\..\..\libwww\library\src\htmemlog.h"\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
 	"..\..\..\libwww\library\src\htresponse.h"\
 	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
+	"..\..\..\libwww\library\src\htstruct.h"\
 	"..\..\..\libwww\library\src\httimer.h"\
 	"..\..\..\libwww\library\src\httrans.h"\
 	"..\..\..\libwww\library\src\htuser.h"\
 	"..\..\..\libwww\library\src\htutils.h"\
+	"..\..\..\libwww\library\src\htutree.h"\
 	"..\..\..\libwww\library\src\htuu.h"\
+	"..\..\..\libwww\library\src\htwwwstr.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
+	"..\..\..\libwww\library\src\wwwcore.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
 	{$(INCLUDE)}"sys\stat.h"\
@@ -4238,7 +4386,6 @@ DEP_CPP_HTFWR=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -4254,21 +4401,27 @@ DEP_CPP_HTFWR=\
 	"..\..\..\libwww\library\src\htlib.h"\
 	"..\..\..\libwww\library\src\htlink.h"\
 	"..\..\..\libwww\library\src\htlist.h"\
+	"..\..\..\libwww\library\src\htmemlog.h"\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
 	"..\..\..\libwww\library\src\htresponse.h"\
 	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
+	"..\..\..\libwww\library\src\htstruct.h"\
 	"..\..\..\libwww\library\src\httimer.h"\
 	"..\..\..\libwww\library\src\httrans.h"\
 	"..\..\..\libwww\library\src\htuser.h"\
 	"..\..\..\libwww\library\src\htutils.h"\
+	"..\..\..\libwww\library\src\htutree.h"\
 	"..\..\..\libwww\library\src\htuu.h"\
+	"..\..\..\libwww\library\src\htwwwstr.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
+	"..\..\..\libwww\library\src\wwwcore.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
 	
@@ -4290,7 +4443,6 @@ DEP_CPP_HTGOP=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
@@ -4300,9 +4452,10 @@ DEP_CPP_HTGOP=\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
+	"..\..\..\libwww\library\src\htext.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htgopher.h"\
+	"..\..\..\libwww\library\src\hthinit.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\hticons.h"\
@@ -4315,11 +4468,14 @@ DEP_CPP_HTGOP=\
 	"..\..\..\libwww\library\src\htmemlog.h"\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
+	"..\..\..\libwww\library\src\html.h"\
 	"..\..\..\libwww\library\src\htmlgen.h"\
 	"..\..\..\libwww\library\src\htmlpdtd.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
+	"..\..\..\libwww\library\src\htplain.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -4328,6 +4484,7 @@ DEP_CPP_HTGOP=\
 	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
 	"..\..\..\libwww\library\src\htstruct.h"\
+	"..\..\..\libwww\library\src\htstyle.h"\
 	"..\..\..\libwww\library\src\httcp.h"\
 	"..\..\..\libwww\library\src\httexgen.h"\
 	"..\..\..\libwww\library\src\httimer.h"\
@@ -4367,7 +4524,6 @@ DEP_CPP_HTGOP=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
@@ -4377,9 +4533,10 @@ DEP_CPP_HTGOP=\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
+	"..\..\..\libwww\library\src\htext.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htgopher.h"\
+	"..\..\..\libwww\library\src\hthinit.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\hticons.h"\
@@ -4392,11 +4549,14 @@ DEP_CPP_HTGOP=\
 	"..\..\..\libwww\library\src\htmemlog.h"\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
+	"..\..\..\libwww\library\src\html.h"\
 	"..\..\..\libwww\library\src\htmlgen.h"\
 	"..\..\..\libwww\library\src\htmlpdtd.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
+	"..\..\..\libwww\library\src\htplain.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -4405,6 +4565,7 @@ DEP_CPP_HTGOP=\
 	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
 	"..\..\..\libwww\library\src\htstruct.h"\
+	"..\..\..\libwww\library\src\htstyle.h"\
 	"..\..\..\libwww\library\src\httcp.h"\
 	"..\..\..\libwww\library\src\httexgen.h"\
 	"..\..\..\libwww\library\src\httimer.h"\
@@ -4443,14 +4604,15 @@ DEP_CPP_HTGUE=\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
 	"..\..\..\libwww\library\src\htbind.h"\
+	"..\..\..\libwww\library\src\htbinit.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
+	"..\..\..\libwww\library\src\htfile.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htguess.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -4462,7 +4624,9 @@ DEP_CPP_HTGUE=\
 	"..\..\..\libwww\library\src\htmemlog.h"\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
+	"..\..\..\libwww\library\src\htmulti.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -4479,6 +4643,7 @@ DEP_CPP_HTGUE=\
 	"..\..\..\libwww\library\src\htwwwstr.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
+	"..\..\..\libwww\library\src\wwwfile.h"\
 	"..\..\..\libwww\library\src\wwwlib.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
@@ -4502,14 +4667,15 @@ DEP_CPP_HTGUE=\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
 	"..\..\..\libwww\library\src\htbind.h"\
+	"..\..\..\libwww\library\src\htbinit.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
+	"..\..\..\libwww\library\src\htfile.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htguess.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -4521,7 +4687,9 @@ DEP_CPP_HTGUE=\
 	"..\..\..\libwww\library\src\htmemlog.h"\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
+	"..\..\..\libwww\library\src\htmulti.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -4538,6 +4706,7 @@ DEP_CPP_HTGUE=\
 	"..\..\..\libwww\library\src\htwwwstr.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
+	"..\..\..\libwww\library\src\wwwfile.h"\
 	"..\..\..\libwww\library\src\wwwlib.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
@@ -4654,7 +4823,6 @@ DEP_CPP_HTHIN=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -4662,7 +4830,6 @@ DEP_CPP_HTHIN=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthinit.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -4678,6 +4845,7 @@ DEP_CPP_HTHIN=\
 	"..\..\..\libwww\library\src\htmlgen.h"\
 	"..\..\..\libwww\library\src\htmlpdtd.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htplain.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
@@ -4719,7 +4887,6 @@ DEP_CPP_HTHIN=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -4727,7 +4894,6 @@ DEP_CPP_HTHIN=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthinit.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -4743,6 +4909,7 @@ DEP_CPP_HTHIN=\
 	"..\..\..\libwww\library\src\htmlgen.h"\
 	"..\..\..\libwww\library\src\htmlpdtd.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htplain.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
@@ -4872,7 +5039,6 @@ DEP_CPP_HTHOM=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -4880,7 +5046,6 @@ DEP_CPP_HTHOM=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthome.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -4893,6 +5058,7 @@ DEP_CPP_HTHOM=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -4931,7 +5097,6 @@ DEP_CPP_HTHOM=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -4939,7 +5104,6 @@ DEP_CPP_HTHOM=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthome.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -4952,6 +5116,7 @@ DEP_CPP_HTHOM=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -5090,7 +5255,6 @@ DEP_CPP_HTICO=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -5098,7 +5262,6 @@ DEP_CPP_HTICO=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\hticons.h"\
@@ -5111,6 +5274,7 @@ DEP_CPP_HTICO=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -5149,7 +5313,6 @@ DEP_CPP_HTICO=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -5157,7 +5320,6 @@ DEP_CPP_HTICO=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\hticons.h"\
@@ -5170,6 +5332,7 @@ DEP_CPP_HTICO=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -5311,30 +5474,37 @@ DEP_CPP_HTINI=\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
 	"..\..\..\libwww\library\src\htbind.h"\
+	"..\..\..\libwww\library\src\htbinit.h"\
 	"..\..\..\libwww\library\src\htbound.h"\
 	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htcache.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htconlen.h"\
+	"..\..\..\libwww\library\src\htcookie.h"\
 	"..\..\..\libwww\library\src\htdemux.h"\
 	"..\..\..\libwww\library\src\htdescpt.h"\
 	"..\..\..\libwww\library\src\htdialog.h"\
 	"..\..\..\libwww\library\src\htdir.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
+	"..\..\..\libwww\library\src\hteptocl.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htevtlst.h"\
+	"..\..\..\libwww\library\src\htext.h"\
 	"..\..\..\libwww\library\src\htfile.h"\
 	"..\..\..\libwww\library\src\htfilter.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
+	"..\..\..\libwww\library\src\htfsave.h"\
 	"..\..\..\libwww\library\src\htftp.h"\
 	"..\..\..\libwww\library\src\htftpdir.h"\
 	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htgopher.h"\
 	"..\..\..\libwww\library\src\htguess.h"\
+	"..\..\..\libwww\Library\src\HTHash.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
+	"..\..\..\libwww\library\src\hthinit.h"\
 	"..\..\..\libwww\library\src\hthist.h"\
 	"..\..\..\libwww\library\src\hthome.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
@@ -5355,6 +5525,7 @@ DEP_CPP_HTINI=\
 	"..\..\..\libwww\library\src\htmime.h"\
 	"..\..\..\libwww\library\src\htmimerq.h"\
 	"..\..\..\libwww\library\src\htmimimp.h"\
+	"..\..\..\libwww\library\src\html.h"\
 	"..\..\..\libwww\library\src\htmlgen.h"\
 	"..\..\..\libwww\library\src\htmlpdtd.h"\
 	"..\..\..\libwww\library\src\htmulpar.h"\
@@ -5364,13 +5535,17 @@ DEP_CPP_HTINI=\
 	"..\..\..\libwww\library\src\htmuxtx.h"\
 	"..\..\..\libwww\library\src\htndir.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnettxt.h"\
 	"..\..\..\libwww\library\src\htnews.h"\
 	"..\..\..\libwww\library\src\htnewsls.h"\
 	"..\..\..\libwww\library\src\htnewsrq.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htpep.h"\
+	"..\..\..\libwww\library\src\htplain.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htproxy.h"\
+	"..\..\..\libwww\Library\src\HTRDF.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
 	"..\..\..\libwww\library\src\htresponse.h"\
@@ -5380,6 +5555,7 @@ DEP_CPP_HTINI=\
 	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
 	"..\..\..\libwww\library\src\htstruct.h"\
+	"..\..\..\libwww\library\src\htstyle.h"\
 	"..\..\..\libwww\library\src\httchunk.h"\
 	"..\..\..\libwww\library\src\httcp.h"\
 	"..\..\..\libwww\library\src\httee.h"\
@@ -5400,6 +5576,7 @@ DEP_CPP_HTINI=\
 	"..\..\..\libwww\library\src\HTWAIS.h"\
 	"..\..\..\libwww\library\src\htwriter.h"\
 	"..\..\..\libwww\library\src\htwwwstr.h"\
+	"..\..\..\libwww\Library\src\HTXML.h"\
 	"..\..\..\libwww\library\src\htxparse.h"\
 	"..\..\..\libwww\library\src\htzip.h"\
 	"..\..\..\libwww\library\src\sgml.h"\
@@ -5423,6 +5600,7 @@ DEP_CPP_HTINI=\
 	"..\..\..\libwww\library\src\wwwtrans.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
 	"..\..\..\libwww\library\src\WWWWAIS.h"\
+	"..\..\..\libwww\Library\src\WWWXML.h"\
 	"..\..\..\libwww\library\src\wwwzip.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
@@ -5453,29 +5631,35 @@ DEP_CPP_HTINI=\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
 	"..\..\..\libwww\library\src\htbind.h"\
+	"..\..\..\libwww\library\src\htbinit.h"\
 	"..\..\..\libwww\library\src\htbound.h"\
 	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htcache.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htconlen.h"\
+	"..\..\..\libwww\library\src\htcookie.h"\
 	"..\..\..\libwww\library\src\htdescpt.h"\
 	"..\..\..\libwww\library\src\htdialog.h"\
 	"..\..\..\libwww\library\src\htdir.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
+	"..\..\..\libwww\library\src\hteptocl.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htevtlst.h"\
+	"..\..\..\libwww\library\src\htext.h"\
 	"..\..\..\libwww\library\src\htfile.h"\
 	"..\..\..\libwww\library\src\htfilter.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
+	"..\..\..\libwww\library\src\htfsave.h"\
 	"..\..\..\libwww\library\src\htftp.h"\
 	"..\..\..\libwww\library\src\htftpdir.h"\
 	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htgopher.h"\
 	"..\..\..\libwww\library\src\htguess.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
+	"..\..\..\libwww\library\src\hthinit.h"\
 	"..\..\..\libwww\library\src\hthist.h"\
 	"..\..\..\libwww\library\src\hthome.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
@@ -5496,17 +5680,21 @@ DEP_CPP_HTINI=\
 	"..\..\..\libwww\library\src\htmime.h"\
 	"..\..\..\libwww\library\src\htmimerq.h"\
 	"..\..\..\libwww\library\src\htmimimp.h"\
+	"..\..\..\libwww\library\src\html.h"\
 	"..\..\..\libwww\library\src\htmlgen.h"\
 	"..\..\..\libwww\library\src\htmlpdtd.h"\
 	"..\..\..\libwww\library\src\htmulpar.h"\
 	"..\..\..\libwww\library\src\htmulti.h"\
 	"..\..\..\libwww\library\src\htndir.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnettxt.h"\
 	"..\..\..\libwww\library\src\htnews.h"\
 	"..\..\..\libwww\library\src\htnewsls.h"\
 	"..\..\..\libwww\library\src\htnewsrq.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htpep.h"\
+	"..\..\..\libwww\library\src\htplain.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htproxy.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
@@ -5518,6 +5706,7 @@ DEP_CPP_HTINI=\
 	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
 	"..\..\..\libwww\library\src\htstruct.h"\
+	"..\..\..\libwww\library\src\htstyle.h"\
 	"..\..\..\libwww\library\src\httchunk.h"\
 	"..\..\..\libwww\library\src\httcp.h"\
 	"..\..\..\libwww\library\src\httee.h"\
@@ -5560,7 +5749,9 @@ DEP_CPP_HTINI=\
 	"..\..\..\libwww\library\src\wwwutil.h"\
 	"..\..\..\libwww\library\src\wwwzip.h"\
 	
-CPP_SWITCHES=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\libpng\zlib" /I\
+CPP_SWITCHES=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\..\libwww\modules\md5" /I\
+ "..\..\..\libwww\modules\expat\xmlparse" /I\
+ "..\..\..\libwww\modules\expat\xmltok" /I "..\..\libpng\zlib" /I\
  "..\..\..\..\libwww\Library\src" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D\
  "WWW_WIN_ASYNC" /D "HT_ZLIB" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\"\
  /Fd"$(INTDIR)\\" /FD /c 
@@ -5582,7 +5773,6 @@ DEP_CPP_HTLIB=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -5629,7 +5819,6 @@ DEP_CPP_HTLIB=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -5808,7 +5997,6 @@ DEP_CPP_HTLOC=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -5816,7 +6004,6 @@ DEP_CPP_HTLOC=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -5829,6 +6016,7 @@ DEP_CPP_HTLOC=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -5866,7 +6054,6 @@ DEP_CPP_HTLOC=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -5874,7 +6061,6 @@ DEP_CPP_HTLOC=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -5887,6 +6073,7 @@ DEP_CPP_HTLOC=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -5923,7 +6110,6 @@ DEP_CPP_HTLOG=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -5931,7 +6117,6 @@ DEP_CPP_HTLOG=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -5944,6 +6129,7 @@ DEP_CPP_HTLOG=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -5982,7 +6168,6 @@ DEP_CPP_HTLOG=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -5990,7 +6175,6 @@ DEP_CPP_HTLOG=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -6003,6 +6187,7 @@ DEP_CPP_HTLOG=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -6267,7 +6452,6 @@ DEP_CPP_HTMIM=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htcache.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
@@ -6277,8 +6461,6 @@ DEP_CPP_HTMIM=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
-	"..\..\..\libwww\library\src\htguess.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -6295,13 +6477,12 @@ DEP_CPP_HTMIM=\
 	"..\..\..\libwww\library\src\htmimprs.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
-	"..\..\..\libwww\library\src\htreader.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
 	"..\..\..\libwww\library\src\htreqman.h"\
 	"..\..\..\libwww\library\src\htresponse.h"\
-	"..\..\..\libwww\library\src\htschunk.h"\
 	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
 	"..\..\..\libwww\library\src\htstruct.h"\
@@ -6313,12 +6494,10 @@ DEP_CPP_HTMIM=\
 	"..\..\..\libwww\library\src\htutree.h"\
 	"..\..\..\libwww\library\src\htuu.h"\
 	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\library\src\htxparse.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcache.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
 	"..\..\..\libwww\library\src\wwwlib.h"\
-	"..\..\..\libwww\library\src\wwwstream.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
 	{$(INCLUDE)}"sys\stat.h"\
@@ -6341,7 +6520,6 @@ DEP_CPP_HTMIM=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htcache.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
@@ -6351,8 +6529,6 @@ DEP_CPP_HTMIM=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
-	"..\..\..\libwww\library\src\htguess.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -6369,13 +6545,12 @@ DEP_CPP_HTMIM=\
 	"..\..\..\libwww\library\src\htmimprs.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
-	"..\..\..\libwww\library\src\htreader.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
 	"..\..\..\libwww\library\src\htreqman.h"\
 	"..\..\..\libwww\library\src\htresponse.h"\
-	"..\..\..\libwww\library\src\htschunk.h"\
 	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
 	"..\..\..\libwww\library\src\htstruct.h"\
@@ -6387,12 +6562,10 @@ DEP_CPP_HTMIM=\
 	"..\..\..\libwww\library\src\htutree.h"\
 	"..\..\..\libwww\library\src\htuu.h"\
 	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\library\src\htxparse.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcache.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
 	"..\..\..\libwww\library\src\wwwlib.h"\
-	"..\..\..\libwww\library\src\wwwstream.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
 	
@@ -6415,7 +6588,6 @@ DEP_CPP_HTMIME=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -6423,7 +6595,6 @@ DEP_CPP_HTMIME=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -6439,6 +6610,7 @@ DEP_CPP_HTMIME=\
 	"..\..\..\libwww\library\src\htmimprs.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -6479,7 +6651,6 @@ DEP_CPP_HTMIME=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -6487,7 +6658,6 @@ DEP_CPP_HTMIME=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -6503,6 +6673,7 @@ DEP_CPP_HTMIME=\
 	"..\..\..\libwww\library\src\htmimprs.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -6540,7 +6711,6 @@ DEP_CPP_HTMIMI=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -6548,7 +6718,6 @@ DEP_CPP_HTMIMI=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -6562,6 +6731,7 @@ DEP_CPP_HTMIMI=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htmimimp.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -6600,7 +6770,6 @@ DEP_CPP_HTMIMI=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -6608,7 +6777,6 @@ DEP_CPP_HTMIMI=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -6622,6 +6790,7 @@ DEP_CPP_HTMIMI=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htmimimp.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -6750,7 +6919,6 @@ DEP_CPP_HTML_=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -6758,8 +6926,9 @@ DEP_CPP_HTML_=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htext.h"\
+	"..\..\..\libwww\library\src\htextimp.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
+	"..\..\..\libwww\library\src\hthinit.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -6774,7 +6943,9 @@ DEP_CPP_HTML_=\
 	"..\..\..\libwww\library\src\htmlgen.h"\
 	"..\..\..\libwww\library\src\htmlpdtd.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
+	"..\..\..\libwww\library\src\htplain.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
 	"..\..\..\libwww\library\src\htresponse.h"\
@@ -6794,6 +6965,7 @@ DEP_CPP_HTML_=\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
 	"..\..\..\libwww\library\src\wwwhtml.h"\
+	"..\..\..\libwww\library\src\wwwlib.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
 	{$(INCLUDE)}"sys\stat.h"\
@@ -6815,7 +6987,6 @@ DEP_CPP_HTML_=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -6823,8 +6994,9 @@ DEP_CPP_HTML_=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htext.h"\
+	"..\..\..\libwww\library\src\htextimp.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
+	"..\..\..\libwww\library\src\hthinit.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -6839,7 +7011,9 @@ DEP_CPP_HTML_=\
 	"..\..\..\libwww\library\src\htmlgen.h"\
 	"..\..\..\libwww\library\src\htmlpdtd.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
+	"..\..\..\libwww\library\src\htplain.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
 	"..\..\..\libwww\library\src\htresponse.h"\
@@ -6859,6 +7033,7 @@ DEP_CPP_HTML_=\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
 	"..\..\..\libwww\library\src\wwwhtml.h"\
+	"..\..\..\libwww\library\src\wwwlib.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
 	
@@ -7030,7 +7205,6 @@ DEP_CPP_HTMUL=\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htfile.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -7043,6 +7217,7 @@ DEP_CPP_HTMUL=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htmulti.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -7089,7 +7264,6 @@ DEP_CPP_HTMUL=\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htfile.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -7102,6 +7276,7 @@ DEP_CPP_HTMUL=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htmulti.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -7139,17 +7314,18 @@ DEP_CPP_HTMUX=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htconlen.h"\
 	"..\..\..\libwww\library\src\htdemux.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
+	"..\..\..\libwww\library\src\hteptocl.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
+	"..\..\..\libwww\library\src\htfsave.h"\
 	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htguess.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
@@ -7168,6 +7344,8 @@ DEP_CPP_HTMUX=\
 	"..\..\..\libwww\library\src\htmuxheader.h"\
 	"..\..\..\libwww\library\src\htmuxtx.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnettxt.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
@@ -7215,17 +7393,18 @@ DEP_CPP_HTMUX=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htconlen.h"\
 	"..\..\..\libwww\library\src\htdemux.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
+	"..\..\..\libwww\library\src\hteptocl.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
+	"..\..\..\libwww\library\src\htfsave.h"\
 	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htguess.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
@@ -7244,6 +7423,8 @@ DEP_CPP_HTMUX=\
 	"..\..\..\libwww\library\src\htmuxheader.h"\
 	"..\..\..\libwww\library\src\htmuxtx.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnettxt.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
@@ -7290,7 +7471,6 @@ DEP_CPP_HTMUXT=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
@@ -7299,7 +7479,6 @@ DEP_CPP_HTMUXT=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -7315,6 +7494,7 @@ DEP_CPP_HTMUXT=\
 	"..\..\..\libwww\library\src\htmuxheader.h"\
 	"..\..\..\libwww\library\src\htmuxtx.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
@@ -7358,7 +7538,6 @@ DEP_CPP_HTMUXT=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
@@ -7367,7 +7546,6 @@ DEP_CPP_HTMUXT=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -7383,6 +7561,7 @@ DEP_CPP_HTMUXT=\
 	"..\..\..\libwww\library\src\htmuxheader.h"\
 	"..\..\..\libwww\library\src\htmuxtx.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
@@ -7424,15 +7603,15 @@ DEP_CPP_HTNDI=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
+	"..\..\..\libwww\library\src\htext.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
+	"..\..\..\libwww\library\src\hthinit.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -7443,19 +7622,23 @@ DEP_CPP_HTNDI=\
 	"..\..\..\libwww\library\src\htmemlog.h"\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
+	"..\..\..\libwww\library\src\html.h"\
 	"..\..\..\libwww\library\src\htmlgen.h"\
 	"..\..\..\libwww\library\src\htmlpdtd.h"\
 	"..\..\..\libwww\library\src\htndir.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnews.h"\
 	"..\..\..\libwww\library\src\htnewsls.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
+	"..\..\..\libwww\library\src\htplain.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
 	"..\..\..\libwww\library\src\htresponse.h"\
 	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
 	"..\..\..\libwww\library\src\htstruct.h"\
+	"..\..\..\libwww\library\src\htstyle.h"\
 	"..\..\..\libwww\library\src\httexgen.h"\
 	"..\..\..\libwww\library\src\httimer.h"\
 	"..\..\..\libwww\library\src\httrans.h"\
@@ -7468,6 +7651,7 @@ DEP_CPP_HTNDI=\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
 	"..\..\..\libwww\library\src\wwwhtml.h"\
+	"..\..\..\libwww\library\src\wwwlib.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
 	{$(INCLUDE)}"sys\stat.h"\
@@ -7489,15 +7673,15 @@ DEP_CPP_HTNDI=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
+	"..\..\..\libwww\library\src\htext.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
+	"..\..\..\libwww\library\src\hthinit.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -7508,19 +7692,23 @@ DEP_CPP_HTNDI=\
 	"..\..\..\libwww\library\src\htmemlog.h"\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
+	"..\..\..\libwww\library\src\html.h"\
 	"..\..\..\libwww\library\src\htmlgen.h"\
 	"..\..\..\libwww\library\src\htmlpdtd.h"\
 	"..\..\..\libwww\library\src\htndir.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnews.h"\
 	"..\..\..\libwww\library\src\htnewsls.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
+	"..\..\..\libwww\library\src\htplain.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
 	"..\..\..\libwww\library\src\htresponse.h"\
 	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
 	"..\..\..\libwww\library\src\htstruct.h"\
+	"..\..\..\libwww\library\src\htstyle.h"\
 	"..\..\..\libwww\library\src\httexgen.h"\
 	"..\..\..\libwww\library\src\httimer.h"\
 	"..\..\..\libwww\library\src\httrans.h"\
@@ -7533,6 +7721,7 @@ DEP_CPP_HTNDI=\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
 	"..\..\..\libwww\library\src\wwwhtml.h"\
+	"..\..\..\libwww\library\src\wwwlib.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
 	
@@ -7698,16 +7887,17 @@ DEP_CPP_HTNEW=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htconlen.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
+	"..\..\..\libwww\library\src\hteptocl.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
+	"..\..\..\libwww\library\src\htfsave.h"\
 	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htguess.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
@@ -7725,9 +7915,11 @@ DEP_CPP_HTNEW=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htmimprs.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnettxt.h"\
 	"..\..\..\libwww\library\src\htnews.h"\
 	"..\..\..\libwww\library\src\htnewsls.h"\
 	"..\..\..\libwww\library\src\htnewsrq.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
@@ -7778,16 +7970,17 @@ DEP_CPP_HTNEW=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htconlen.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
+	"..\..\..\libwww\library\src\hteptocl.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
+	"..\..\..\libwww\library\src\htfsave.h"\
 	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htguess.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
@@ -7805,9 +7998,11 @@ DEP_CPP_HTNEW=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htmimprs.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnettxt.h"\
 	"..\..\..\libwww\library\src\htnews.h"\
 	"..\..\..\libwww\library\src\htnewsls.h"\
 	"..\..\..\libwww\library\src\htnewsrq.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
@@ -7854,7 +8049,6 @@ DEP_CPP_HTNEWS=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -7862,7 +8056,6 @@ DEP_CPP_HTNEWS=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -7877,6 +8070,7 @@ DEP_CPP_HTNEWS=\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnews.h"\
 	"..\..\..\libwww\library\src\htnewsls.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -7914,7 +8108,6 @@ DEP_CPP_HTNEWS=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -7922,7 +8115,6 @@ DEP_CPP_HTNEWS=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -7937,6 +8129,7 @@ DEP_CPP_HTNEWS=\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnews.h"\
 	"..\..\..\libwww\library\src\htnewsls.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -7975,7 +8168,6 @@ DEP_CPP_HTNEWSR=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -7983,7 +8175,6 @@ DEP_CPP_HTNEWSR=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -7999,6 +8190,7 @@ DEP_CPP_HTNEWSR=\
 	"..\..\..\libwww\library\src\htmimprs.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnewsrq.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -8039,7 +8231,6 @@ DEP_CPP_HTNEWSR=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -8047,7 +8238,6 @@ DEP_CPP_HTNEWSR=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -8063,6 +8253,7 @@ DEP_CPP_HTNEWSR=\
 	"..\..\..\libwww\library\src\htmimprs.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnewsrq.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -8085,6 +8276,47 @@ DEP_CPP_HTNEWSR=\
 	
 
 "$(INTDIR)\HTNewsRq.obj" : $(SOURCE) $(DEP_CPP_HTNEWSR) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
+SOURCE=..\..\..\libwww\Library\src\HTNoFree.c
+
+!IF  "$(CFG)" == "libwww - Win32 Release"
+
+DEP_CPP_HTNOF=\
+	"..\..\..\libwww\library\src\htarray.h"\
+	"..\..\..\libwww\library\src\htlist.h"\
+	"..\..\..\libwww\library\src\htmemory.h"\
+	"..\..\..\libwww\library\src\htstream.h"\
+	"..\..\..\libwww\library\src\htutils.h"\
+	"..\..\..\libwww\library\src\windows\config.h"\
+	"..\..\..\libwww\library\src\wwwsys.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_HTNOF=\
+	"..\..\..\libwww\library\src\HTVMSUtils.h"\
+	
+
+"$(INTDIR)\HTNoFree.obj" : $(SOURCE) $(DEP_CPP_HTNOF) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
+
+DEP_CPP_HTNOF=\
+	"..\..\..\libwww\library\src\htarray.h"\
+	"..\..\..\libwww\library\src\htlist.h"\
+	"..\..\..\libwww\library\src\htmemory.h"\
+	"..\..\..\libwww\library\src\htstream.h"\
+	"..\..\..\libwww\library\src\htutils.h"\
+	"..\..\..\libwww\library\src\windows\config.h"\
+	"..\..\..\libwww\library\src\wwwsys.h"\
+	
+
+"$(INTDIR)\HTNoFree.obj" : $(SOURCE) $(DEP_CPP_HTNOF) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -8155,7 +8387,6 @@ DEP_CPP_HTPEP=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -8163,7 +8394,6 @@ DEP_CPP_HTPEP=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -8175,6 +8405,7 @@ DEP_CPP_HTPEP=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htpep.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
@@ -8213,7 +8444,6 @@ DEP_CPP_HTPEP=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -8221,7 +8451,6 @@ DEP_CPP_HTPEP=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -8233,6 +8462,7 @@ DEP_CPP_HTPEP=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htpep.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
@@ -8275,6 +8505,7 @@ DEP_CPP_HTPLA=\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htext.h"\
+	"..\..\..\libwww\library\src\htextimp.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\htiostream.h"\
@@ -8282,8 +8513,6 @@ DEP_CPP_HTPLA=\
 	"..\..\..\libwww\library\src\htlist.h"\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
-	"..\..\..\libwww\library\src\html.h"\
-	"..\..\..\libwww\library\src\htmlpdtd.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htplain.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
@@ -8291,14 +8520,12 @@ DEP_CPP_HTPLA=\
 	"..\..\..\libwww\library\src\htresponse.h"\
 	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
-	"..\..\..\libwww\library\src\htstruct.h"\
 	"..\..\..\libwww\library\src\htstyle.h"\
 	"..\..\..\libwww\library\src\httimer.h"\
 	"..\..\..\libwww\library\src\httrans.h"\
 	"..\..\..\libwww\library\src\htuser.h"\
 	"..\..\..\libwww\library\src\htutils.h"\
 	"..\..\..\libwww\library\src\htuu.h"\
-	"..\..\..\libwww\library\src\sgml.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
@@ -8326,6 +8553,7 @@ DEP_CPP_HTPLA=\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htext.h"\
+	"..\..\..\libwww\library\src\htextimp.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\htiostream.h"\
@@ -8333,8 +8561,6 @@ DEP_CPP_HTPLA=\
 	"..\..\..\libwww\library\src\htlist.h"\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
-	"..\..\..\libwww\library\src\html.h"\
-	"..\..\..\libwww\library\src\htmlpdtd.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htplain.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
@@ -8342,14 +8568,12 @@ DEP_CPP_HTPLA=\
 	"..\..\..\libwww\library\src\htresponse.h"\
 	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
-	"..\..\..\libwww\library\src\htstruct.h"\
 	"..\..\..\libwww\library\src\htstyle.h"\
 	"..\..\..\libwww\library\src\httimer.h"\
 	"..\..\..\libwww\library\src\httrans.h"\
 	"..\..\..\libwww\library\src\htuser.h"\
 	"..\..\..\libwww\library\src\htutils.h"\
 	"..\..\..\libwww\library\src\htuu.h"\
-	"..\..\..\libwww\library\src\sgml.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
@@ -8383,22 +8607,27 @@ DEP_CPP_HTPRO=\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htconlen.h"\
+	"..\..\..\libwww\library\src\htcookie.h"\
 	"..\..\..\libwww\library\src\htdescpt.h"\
 	"..\..\..\libwww\library\src\htdialog.h"\
 	"..\..\..\libwww\library\src\htdir.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
+	"..\..\..\libwww\library\src\hteptocl.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htevtlst.h"\
+	"..\..\..\libwww\library\src\htext.h"\
 	"..\..\..\libwww\library\src\htfile.h"\
 	"..\..\..\libwww\library\src\htfilter.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
+	"..\..\..\libwww\library\src\htfsave.h"\
 	"..\..\..\libwww\library\src\htftp.h"\
 	"..\..\..\libwww\library\src\htftpdir.h"\
 	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htgopher.h"\
 	"..\..\..\libwww\library\src\htguess.h"\
+	"..\..\..\libwww\Library\src\HTHash.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthinit.h"\
 	"..\..\..\libwww\library\src\hthist.h"\
@@ -8428,15 +8657,18 @@ DEP_CPP_HTPRO=\
 	"..\..\..\libwww\library\src\htmulti.h"\
 	"..\..\..\libwww\library\src\htndir.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnettxt.h"\
 	"..\..\..\libwww\library\src\htnews.h"\
 	"..\..\..\libwww\library\src\htnewsls.h"\
 	"..\..\..\libwww\library\src\htnewsrq.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htpep.h"\
 	"..\..\..\libwww\library\src\htplain.h"\
 	"..\..\..\libwww\library\src\htprofil.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htproxy.h"\
+	"..\..\..\libwww\Library\src\HTRDF.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
 	"..\..\..\libwww\library\src\htresponse.h"\
@@ -8446,6 +8678,7 @@ DEP_CPP_HTPRO=\
 	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
 	"..\..\..\libwww\library\src\htstruct.h"\
+	"..\..\..\libwww\library\src\htstyle.h"\
 	"..\..\..\libwww\library\src\httchunk.h"\
 	"..\..\..\libwww\library\src\httcp.h"\
 	"..\..\..\libwww\library\src\httee.h"\
@@ -8466,6 +8699,7 @@ DEP_CPP_HTPRO=\
 	"..\..\..\libwww\library\src\HTWAIS.h"\
 	"..\..\..\libwww\library\src\htwriter.h"\
 	"..\..\..\libwww\library\src\htwwwstr.h"\
+	"..\..\..\libwww\Library\src\HTXML.h"\
 	"..\..\..\libwww\library\src\htxparse.h"\
 	"..\..\..\libwww\library\src\htzip.h"\
 	"..\..\..\libwww\library\src\sgml.h"\
@@ -8489,6 +8723,7 @@ DEP_CPP_HTPRO=\
 	"..\..\..\libwww\library\src\wwwtrans.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
 	"..\..\..\libwww\library\src\WWWWAIS.h"\
+	"..\..\..\libwww\Library\src\WWWXML.h"\
 	"..\..\..\libwww\library\src\wwwzip.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
@@ -8521,17 +8756,21 @@ DEP_CPP_HTPRO=\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htconlen.h"\
+	"..\..\..\libwww\library\src\htcookie.h"\
 	"..\..\..\libwww\library\src\htdescpt.h"\
 	"..\..\..\libwww\library\src\htdialog.h"\
 	"..\..\..\libwww\library\src\htdir.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
+	"..\..\..\libwww\library\src\hteptocl.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htevtlst.h"\
+	"..\..\..\libwww\library\src\htext.h"\
 	"..\..\..\libwww\library\src\htfile.h"\
 	"..\..\..\libwww\library\src\htfilter.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
+	"..\..\..\libwww\library\src\htfsave.h"\
 	"..\..\..\libwww\library\src\htftp.h"\
 	"..\..\..\libwww\library\src\htftpdir.h"\
 	"..\..\..\libwww\library\src\htfwrite.h"\
@@ -8566,9 +8805,11 @@ DEP_CPP_HTPRO=\
 	"..\..\..\libwww\library\src\htmulti.h"\
 	"..\..\..\libwww\library\src\htndir.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnettxt.h"\
 	"..\..\..\libwww\library\src\htnews.h"\
 	"..\..\..\libwww\library\src\htnewsls.h"\
 	"..\..\..\libwww\library\src\htnewsrq.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htpep.h"\
 	"..\..\..\libwww\library\src\htplain.h"\
@@ -8584,6 +8825,7 @@ DEP_CPP_HTPRO=\
 	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
 	"..\..\..\libwww\library\src\htstruct.h"\
+	"..\..\..\libwww\library\src\htstyle.h"\
 	"..\..\..\libwww\library\src\httchunk.h"\
 	"..\..\..\libwww\library\src\httcp.h"\
 	"..\..\..\libwww\library\src\httee.h"\
@@ -8738,9 +8980,9 @@ DEP_CPP_HTPROX=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
+	"..\..\..\libwww\library\src\htcookie.h"\
 	"..\..\..\libwww\library\src\htdialog.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
@@ -8749,7 +8991,6 @@ DEP_CPP_HTPROX=\
 	"..\..\..\libwww\library\src\htevtlst.h"\
 	"..\..\..\libwww\library\src\htfilter.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthist.h"\
 	"..\..\..\libwww\library\src\hthome.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
@@ -8764,6 +9005,7 @@ DEP_CPP_HTPROX=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htpep.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
@@ -8817,9 +9059,9 @@ DEP_CPP_HTPROX=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
+	"..\..\..\libwww\library\src\htcookie.h"\
 	"..\..\..\libwww\library\src\htdialog.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
@@ -8828,7 +9070,6 @@ DEP_CPP_HTPROX=\
 	"..\..\..\libwww\library\src\htevtlst.h"\
 	"..\..\..\libwww\library\src\htfilter.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthist.h"\
 	"..\..\..\libwww\library\src\hthome.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
@@ -8843,6 +9084,7 @@ DEP_CPP_HTPROX=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htpep.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
@@ -8892,7 +9134,6 @@ DEP_CPP_HTREA=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -8900,7 +9141,6 @@ DEP_CPP_HTREA=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -8913,6 +9153,7 @@ DEP_CPP_HTREA=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
@@ -8951,7 +9192,6 @@ DEP_CPP_HTREA=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -8959,7 +9199,6 @@ DEP_CPP_HTREA=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -8972,6 +9211,7 @@ DEP_CPP_HTREA=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
@@ -9028,6 +9268,7 @@ DEP_CPP_HTREQ=\
 	"..\..\..\libwww\library\src\htmimprs.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -9082,6 +9323,7 @@ DEP_CPP_HTREQ=\
 	"..\..\..\libwww\library\src\htmimprs.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -9218,14 +9460,15 @@ DEP_CPP_HTRUL=\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
 	"..\..\..\libwww\library\src\htbind.h"\
+	"..\..\..\libwww\library\src\htbinit.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
+	"..\..\..\libwww\library\src\htfile.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -9236,7 +9479,9 @@ DEP_CPP_HTRUL=\
 	"..\..\..\libwww\library\src\htmemlog.h"\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
+	"..\..\..\libwww\library\src\htmulti.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htproxy.h"\
@@ -9255,6 +9500,7 @@ DEP_CPP_HTRUL=\
 	"..\..\..\libwww\library\src\htwwwstr.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
+	"..\..\..\libwww\library\src\wwwfile.h"\
 	"..\..\..\libwww\library\src\wwwlib.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
@@ -9278,14 +9524,15 @@ DEP_CPP_HTRUL=\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
 	"..\..\..\libwww\library\src\htbind.h"\
+	"..\..\..\libwww\library\src\htbinit.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
+	"..\..\..\libwww\library\src\htfile.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -9296,7 +9543,9 @@ DEP_CPP_HTRUL=\
 	"..\..\..\libwww\library\src\htmemlog.h"\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
+	"..\..\..\libwww\library\src\htmulti.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htproxy.h"\
@@ -9315,6 +9564,7 @@ DEP_CPP_HTRUL=\
 	"..\..\..\libwww\library\src\htwwwstr.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
+	"..\..\..\libwww\library\src\wwwfile.h"\
 	"..\..\..\libwww\library\src\wwwlib.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
@@ -9336,7 +9586,6 @@ DEP_CPP_HTSCH=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -9344,7 +9593,6 @@ DEP_CPP_HTSCH=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -9356,6 +9604,7 @@ DEP_CPP_HTSCH=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -9394,7 +9643,6 @@ DEP_CPP_HTSCH=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -9402,7 +9650,6 @@ DEP_CPP_HTSCH=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -9414,6 +9661,7 @@ DEP_CPP_HTSCH=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -9452,7 +9700,6 @@ DEP_CPP_HTSOC=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
@@ -9461,7 +9708,6 @@ DEP_CPP_HTSOC=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -9475,6 +9721,7 @@ DEP_CPP_HTSOC=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
@@ -9518,7 +9765,6 @@ DEP_CPP_HTSOC=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
@@ -9527,7 +9773,6 @@ DEP_CPP_HTSOC=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -9541,6 +9786,7 @@ DEP_CPP_HTSOC=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
@@ -9655,38 +9901,16 @@ SOURCE=..\..\..\libwww\Library\src\HTStyle.c
 !IF  "$(CFG)" == "libwww - Win32 Release"
 
 DEP_CPP_HTSTY=\
-	"..\..\..\libwww\library\src\htanchor.h"\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
-	"..\..\..\libwww\library\src\htdns.h"\
-	"..\..\..\libwww\library\src\hterror.h"\
-	"..\..\..\libwww\library\src\htevent.h"\
-	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\hthost.h"\
-	"..\..\..\libwww\library\src\htiostream.h"\
-	"..\..\..\libwww\library\src\htlink.h"\
 	"..\..\..\libwww\library\src\htlist.h"\
 	"..\..\..\libwww\library\src\htmemory.h"\
-	"..\..\..\libwww\library\src\htmethod.h"\
-	"..\..\..\libwww\library\src\html.h"\
-	"..\..\..\libwww\library\src\htmlpdtd.h"\
-	"..\..\..\libwww\library\src\htnet.h"\
-	"..\..\..\libwww\library\src\htprot.h"\
-	"..\..\..\libwww\library\src\htreq.h"\
-	"..\..\..\libwww\library\src\htresponse.h"\
-	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
-	"..\..\..\libwww\library\src\htstruct.h"\
 	"..\..\..\libwww\library\src\htstyle.h"\
-	"..\..\..\libwww\library\src\httimer.h"\
-	"..\..\..\libwww\library\src\httrans.h"\
-	"..\..\..\libwww\library\src\htuser.h"\
 	"..\..\..\libwww\library\src\htutils.h"\
 	"..\..\..\libwww\library\src\htuu.h"\
-	"..\..\..\libwww\library\src\sgml.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
@@ -9704,38 +9928,16 @@ NODEP_CPP_HTSTY=\
 !ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
 
 DEP_CPP_HTSTY=\
-	"..\..\..\libwww\library\src\htanchor.h"\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
-	"..\..\..\libwww\library\src\htdns.h"\
-	"..\..\..\libwww\library\src\hterror.h"\
-	"..\..\..\libwww\library\src\htevent.h"\
-	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\hthost.h"\
-	"..\..\..\libwww\library\src\htiostream.h"\
-	"..\..\..\libwww\library\src\htlink.h"\
 	"..\..\..\libwww\library\src\htlist.h"\
 	"..\..\..\libwww\library\src\htmemory.h"\
-	"..\..\..\libwww\library\src\htmethod.h"\
-	"..\..\..\libwww\library\src\html.h"\
-	"..\..\..\libwww\library\src\htmlpdtd.h"\
-	"..\..\..\libwww\library\src\htnet.h"\
-	"..\..\..\libwww\library\src\htprot.h"\
-	"..\..\..\libwww\library\src\htreq.h"\
-	"..\..\..\libwww\library\src\htresponse.h"\
-	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
-	"..\..\..\libwww\library\src\htstruct.h"\
 	"..\..\..\libwww\library\src\htstyle.h"\
-	"..\..\..\libwww\library\src\httimer.h"\
-	"..\..\..\libwww\library\src\httrans.h"\
-	"..\..\..\libwww\library\src\htuser.h"\
 	"..\..\..\libwww\library\src\htutils.h"\
 	"..\..\..\libwww\library\src\htuu.h"\
-	"..\..\..\libwww\library\src\sgml.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
@@ -9757,7 +9959,6 @@ DEP_CPP_HTTCH=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -9765,7 +9966,6 @@ DEP_CPP_HTTCH=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -9777,6 +9977,7 @@ DEP_CPP_HTTCH=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -9815,7 +10016,6 @@ DEP_CPP_HTTCH=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -9823,7 +10023,6 @@ DEP_CPP_HTTCH=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -9835,6 +10034,7 @@ DEP_CPP_HTTCH=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -9873,7 +10073,6 @@ DEP_CPP_HTTCP=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -9881,7 +10080,6 @@ DEP_CPP_HTTCP=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -9896,6 +10094,7 @@ DEP_CPP_HTTCP=\
 	"..\..\..\libwww\library\src\htmimprs.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -9936,7 +10135,6 @@ DEP_CPP_HTTCP=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -9944,7 +10142,6 @@ DEP_CPP_HTTCP=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -9959,6 +10156,7 @@ DEP_CPP_HTTCP=\
 	"..\..\..\libwww\library\src\htmimprs.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -10052,7 +10250,6 @@ DEP_CPP_HTTEL=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -10060,7 +10257,6 @@ DEP_CPP_HTTEL=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -10073,6 +10269,7 @@ DEP_CPP_HTTEL=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -10111,7 +10308,6 @@ DEP_CPP_HTTEL=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -10119,7 +10315,6 @@ DEP_CPP_HTTEL=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -10132,6 +10327,7 @@ DEP_CPP_HTTEL=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -10265,7 +10461,6 @@ DEP_CPP_HTTIM=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -10273,7 +10468,6 @@ DEP_CPP_HTTIM=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -10287,6 +10481,7 @@ DEP_CPP_HTTIM=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htmimprs.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -10326,7 +10521,6 @@ DEP_CPP_HTTIM=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -10334,7 +10528,6 @@ DEP_CPP_HTTIM=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -10348,6 +10541,7 @@ DEP_CPP_HTTIM=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htmimprs.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -10383,21 +10577,19 @@ DEP_CPP_HTTP_=\
 	"..\..\..\libwww\library\src\htaabrow.h"\
 	"..\..\..\libwww\library\src\htalert.h"\
 	"..\..\..\libwww\library\src\htanchor.h"\
-	"..\..\..\libwww\library\src\htansi.h"\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
-	"..\..\..\libwww\library\src\htbound.h"\
-	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htconlen.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
+	"..\..\..\libwww\library\src\hteptocl.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
+	"..\..\..\libwww\library\src\htfsave.h"\
 	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htguess.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
@@ -10408,17 +10600,16 @@ DEP_CPP_HTTP_=\
 	"..\..\..\libwww\library\src\htlib.h"\
 	"..\..\..\libwww\library\src\htlink.h"\
 	"..\..\..\libwww\library\src\htlist.h"\
-	"..\..\..\libwww\library\src\htlocal.h"\
 	"..\..\..\libwww\library\src\htmemlog.h"\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmerge.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
-	"..\..\..\libwww\library\src\htmime.h"\
 	"..\..\..\libwww\library\src\htmimerq.h"\
-	"..\..\..\libwww\library\src\htmimimp.h"\
 	"..\..\..\libwww\library\src\htmimprs.h"\
-	"..\..\..\libwww\library\src\htmulpar.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnettxt.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
@@ -10426,11 +10617,9 @@ DEP_CPP_HTTP_=\
 	"..\..\..\libwww\library\src\htreqman.h"\
 	"..\..\..\libwww\library\src\htresponse.h"\
 	"..\..\..\libwww\library\src\htschunk.h"\
-	"..\..\..\libwww\library\src\htsocket.h"\
 	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
 	"..\..\..\libwww\library\src\htstruct.h"\
-	"..\..\..\libwww\library\src\httcp.h"\
 	"..\..\..\libwww\library\src\httee.h"\
 	"..\..\..\libwww\library\src\httimer.h"\
 	"..\..\..\libwww\library\src\http.h"\
@@ -10441,15 +10630,12 @@ DEP_CPP_HTTP_=\
 	"..\..\..\libwww\library\src\htutils.h"\
 	"..\..\..\libwww\library\src\htutree.h"\
 	"..\..\..\libwww\library\src\htuu.h"\
-	"..\..\..\libwww\library\src\htwriter.h"\
 	"..\..\..\libwww\library\src\htwwwstr.h"\
 	"..\..\..\libwww\library\src\htxparse.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
-	"..\..\..\libwww\library\src\wwwmime.h"\
 	"..\..\..\libwww\library\src\wwwstream.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
-	"..\..\..\libwww\library\src\wwwtrans.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
@@ -10468,21 +10654,19 @@ DEP_CPP_HTTP_=\
 	"..\..\..\libwww\library\src\htaabrow.h"\
 	"..\..\..\libwww\library\src\htalert.h"\
 	"..\..\..\libwww\library\src\htanchor.h"\
-	"..\..\..\libwww\library\src\htansi.h"\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
-	"..\..\..\libwww\library\src\htbound.h"\
-	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htconlen.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
+	"..\..\..\libwww\library\src\hteptocl.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
+	"..\..\..\libwww\library\src\htfsave.h"\
 	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htguess.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
@@ -10493,17 +10677,16 @@ DEP_CPP_HTTP_=\
 	"..\..\..\libwww\library\src\htlib.h"\
 	"..\..\..\libwww\library\src\htlink.h"\
 	"..\..\..\libwww\library\src\htlist.h"\
-	"..\..\..\libwww\library\src\htlocal.h"\
 	"..\..\..\libwww\library\src\htmemlog.h"\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmerge.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
-	"..\..\..\libwww\library\src\htmime.h"\
 	"..\..\..\libwww\library\src\htmimerq.h"\
-	"..\..\..\libwww\library\src\htmimimp.h"\
 	"..\..\..\libwww\library\src\htmimprs.h"\
-	"..\..\..\libwww\library\src\htmulpar.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnettxt.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
@@ -10511,11 +10694,9 @@ DEP_CPP_HTTP_=\
 	"..\..\..\libwww\library\src\htreqman.h"\
 	"..\..\..\libwww\library\src\htresponse.h"\
 	"..\..\..\libwww\library\src\htschunk.h"\
-	"..\..\..\libwww\library\src\htsocket.h"\
 	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
 	"..\..\..\libwww\library\src\htstruct.h"\
-	"..\..\..\libwww\library\src\httcp.h"\
 	"..\..\..\libwww\library\src\httee.h"\
 	"..\..\..\libwww\library\src\httimer.h"\
 	"..\..\..\libwww\library\src\http.h"\
@@ -10526,15 +10707,12 @@ DEP_CPP_HTTP_=\
 	"..\..\..\libwww\library\src\htutils.h"\
 	"..\..\..\libwww\library\src\htutree.h"\
 	"..\..\..\libwww\library\src\htuu.h"\
-	"..\..\..\libwww\library\src\htwriter.h"\
 	"..\..\..\libwww\library\src\htwwwstr.h"\
 	"..\..\..\libwww\library\src\htxparse.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
-	"..\..\..\libwww\library\src\wwwmime.h"\
 	"..\..\..\libwww\library\src\wwwstream.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
-	"..\..\..\libwww\library\src\wwwtrans.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
 	
 
@@ -10551,13 +10729,9 @@ SOURCE=..\..\..\libwww\Library\src\HTTPGen.c
 DEP_CPP_HTTPG=\
 	"..\..\..\libwww\library\src\htalert.h"\
 	"..\..\..\libwww\library\src\htanchor.h"\
-	"..\..\..\libwww\library\src\htansi.h"\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
-	"..\..\..\libwww\library\src\htbound.h"\
-	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -10565,7 +10739,6 @@ DEP_CPP_HTTPG=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -10574,25 +10747,18 @@ DEP_CPP_HTTPG=\
 	"..\..\..\libwww\library\src\htlib.h"\
 	"..\..\..\libwww\library\src\htlink.h"\
 	"..\..\..\libwww\library\src\htlist.h"\
-	"..\..\..\libwww\library\src\htlocal.h"\
 	"..\..\..\libwww\library\src\htmemlog.h"\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
-	"..\..\..\libwww\library\src\htmime.h"\
-	"..\..\..\libwww\library\src\htmimerq.h"\
-	"..\..\..\libwww\library\src\htmimimp.h"\
-	"..\..\..\libwww\library\src\htmulpar.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
-	"..\..\..\libwww\library\src\htreader.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
 	"..\..\..\libwww\library\src\htresponse.h"\
-	"..\..\..\libwww\library\src\htsocket.h"\
 	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
 	"..\..\..\libwww\library\src\htstruct.h"\
-	"..\..\..\libwww\library\src\httcp.h"\
 	"..\..\..\libwww\library\src\httimer.h"\
 	"..\..\..\libwww\library\src\httpreq.h"\
 	"..\..\..\libwww\library\src\httputil.h"\
@@ -10601,13 +10767,10 @@ DEP_CPP_HTTPG=\
 	"..\..\..\libwww\library\src\htutils.h"\
 	"..\..\..\libwww\library\src\htutree.h"\
 	"..\..\..\libwww\library\src\htuu.h"\
-	"..\..\..\libwww\library\src\htwriter.h"\
 	"..\..\..\libwww\library\src\htwwwstr.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
-	"..\..\..\libwww\library\src\wwwmime.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
-	"..\..\..\libwww\library\src\wwwtrans.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
@@ -10625,13 +10788,9 @@ NODEP_CPP_HTTPG=\
 DEP_CPP_HTTPG=\
 	"..\..\..\libwww\library\src\htalert.h"\
 	"..\..\..\libwww\library\src\htanchor.h"\
-	"..\..\..\libwww\library\src\htansi.h"\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
-	"..\..\..\libwww\library\src\htbound.h"\
-	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -10639,7 +10798,6 @@ DEP_CPP_HTTPG=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -10648,25 +10806,18 @@ DEP_CPP_HTTPG=\
 	"..\..\..\libwww\library\src\htlib.h"\
 	"..\..\..\libwww\library\src\htlink.h"\
 	"..\..\..\libwww\library\src\htlist.h"\
-	"..\..\..\libwww\library\src\htlocal.h"\
 	"..\..\..\libwww\library\src\htmemlog.h"\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
-	"..\..\..\libwww\library\src\htmime.h"\
-	"..\..\..\libwww\library\src\htmimerq.h"\
-	"..\..\..\libwww\library\src\htmimimp.h"\
-	"..\..\..\libwww\library\src\htmulpar.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
-	"..\..\..\libwww\library\src\htreader.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
 	"..\..\..\libwww\library\src\htresponse.h"\
-	"..\..\..\libwww\library\src\htsocket.h"\
 	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
 	"..\..\..\libwww\library\src\htstruct.h"\
-	"..\..\..\libwww\library\src\httcp.h"\
 	"..\..\..\libwww\library\src\httimer.h"\
 	"..\..\..\libwww\library\src\httpreq.h"\
 	"..\..\..\libwww\library\src\httputil.h"\
@@ -10675,13 +10826,10 @@ DEP_CPP_HTTPG=\
 	"..\..\..\libwww\library\src\htutils.h"\
 	"..\..\..\libwww\library\src\htutree.h"\
 	"..\..\..\libwww\library\src\htuu.h"\
-	"..\..\..\libwww\library\src\htwriter.h"\
 	"..\..\..\libwww\library\src\htwwwstr.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
-	"..\..\..\libwww\library\src\wwwmime.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
-	"..\..\..\libwww\library\src\wwwtrans.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
 	
 
@@ -10701,7 +10849,6 @@ DEP_CPP_HTTPR=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -10709,7 +10856,6 @@ DEP_CPP_HTTPR=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -10721,6 +10867,7 @@ DEP_CPP_HTTPR=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -10761,7 +10908,6 @@ DEP_CPP_HTTPR=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -10769,7 +10915,6 @@ DEP_CPP_HTTPR=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -10781,6 +10926,7 @@ DEP_CPP_HTTPR=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -10820,7 +10966,6 @@ DEP_CPP_HTTPRE=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -10828,7 +10973,6 @@ DEP_CPP_HTTPRE=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -10841,6 +10985,7 @@ DEP_CPP_HTTPRE=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -10881,7 +11026,6 @@ DEP_CPP_HTTPRE=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -10889,7 +11033,6 @@ DEP_CPP_HTTPRE=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -10902,6 +11045,7 @@ DEP_CPP_HTTPRE=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -10938,23 +11082,16 @@ SOURCE=..\..\..\libwww\Library\src\HTTPServ.c
 DEP_CPP_HTTPS=\
 	"..\..\..\libwww\library\src\htalert.h"\
 	"..\..\..\libwww\library\src\htanchor.h"\
-	"..\..\..\libwww\library\src\htansi.h"\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
-	"..\..\..\libwww\library\src\htbound.h"\
-	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
-	"..\..\..\libwww\library\src\htconlen.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
-	"..\..\..\libwww\library\src\htguess.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -10963,29 +11100,20 @@ DEP_CPP_HTTPS=\
 	"..\..\..\libwww\library\src\htlib.h"\
 	"..\..\..\libwww\library\src\htlink.h"\
 	"..\..\..\libwww\library\src\htlist.h"\
-	"..\..\..\libwww\library\src\htlocal.h"\
 	"..\..\..\libwww\library\src\htmemlog.h"\
 	"..\..\..\libwww\library\src\htmemory.h"\
-	"..\..\..\libwww\library\src\htmerge.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
-	"..\..\..\libwww\library\src\htmime.h"\
 	"..\..\..\libwww\library\src\htmimerq.h"\
-	"..\..\..\libwww\library\src\htmimimp.h"\
-	"..\..\..\libwww\library\src\htmulpar.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
-	"..\..\..\libwww\library\src\htreader.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
 	"..\..\..\libwww\library\src\htresponse.h"\
-	"..\..\..\libwww\library\src\htschunk.h"\
-	"..\..\..\libwww\library\src\htsocket.h"\
 	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
 	"..\..\..\libwww\library\src\htstruct.h"\
-	"..\..\..\libwww\library\src\httcp.h"\
-	"..\..\..\libwww\library\src\httee.h"\
 	"..\..\..\libwww\library\src\httimer.h"\
 	"..\..\..\libwww\library\src\httpres.h"\
 	"..\..\..\libwww\library\src\httpserv.h"\
@@ -10995,15 +11123,10 @@ DEP_CPP_HTTPS=\
 	"..\..\..\libwww\library\src\htutils.h"\
 	"..\..\..\libwww\library\src\htutree.h"\
 	"..\..\..\libwww\library\src\htuu.h"\
-	"..\..\..\libwww\library\src\htwriter.h"\
 	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\library\src\htxparse.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
-	"..\..\..\libwww\library\src\wwwmime.h"\
-	"..\..\..\libwww\library\src\wwwstream.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
-	"..\..\..\libwww\library\src\wwwtrans.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
@@ -11021,23 +11144,16 @@ NODEP_CPP_HTTPS=\
 DEP_CPP_HTTPS=\
 	"..\..\..\libwww\library\src\htalert.h"\
 	"..\..\..\libwww\library\src\htanchor.h"\
-	"..\..\..\libwww\library\src\htansi.h"\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
-	"..\..\..\libwww\library\src\htbound.h"\
-	"..\..\..\libwww\library\src\htbufwrt.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
-	"..\..\..\libwww\library\src\htconlen.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
 	"..\..\..\libwww\library\src\hterror.h"\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
-	"..\..\..\libwww\library\src\htguess.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
@@ -11046,29 +11162,20 @@ DEP_CPP_HTTPS=\
 	"..\..\..\libwww\library\src\htlib.h"\
 	"..\..\..\libwww\library\src\htlink.h"\
 	"..\..\..\libwww\library\src\htlist.h"\
-	"..\..\..\libwww\library\src\htlocal.h"\
 	"..\..\..\libwww\library\src\htmemlog.h"\
 	"..\..\..\libwww\library\src\htmemory.h"\
-	"..\..\..\libwww\library\src\htmerge.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
-	"..\..\..\libwww\library\src\htmime.h"\
 	"..\..\..\libwww\library\src\htmimerq.h"\
-	"..\..\..\libwww\library\src\htmimimp.h"\
-	"..\..\..\libwww\library\src\htmulpar.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
-	"..\..\..\libwww\library\src\htreader.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
 	"..\..\..\libwww\library\src\htresponse.h"\
-	"..\..\..\libwww\library\src\htschunk.h"\
-	"..\..\..\libwww\library\src\htsocket.h"\
 	"..\..\..\libwww\library\src\htstream.h"\
 	"..\..\..\libwww\library\src\htstring.h"\
 	"..\..\..\libwww\library\src\htstruct.h"\
-	"..\..\..\libwww\library\src\httcp.h"\
-	"..\..\..\libwww\library\src\httee.h"\
 	"..\..\..\libwww\library\src\httimer.h"\
 	"..\..\..\libwww\library\src\httpres.h"\
 	"..\..\..\libwww\library\src\httpserv.h"\
@@ -11078,15 +11185,10 @@ DEP_CPP_HTTPS=\
 	"..\..\..\libwww\library\src\htutils.h"\
 	"..\..\..\libwww\library\src\htutree.h"\
 	"..\..\..\libwww\library\src\htuu.h"\
-	"..\..\..\libwww\library\src\htwriter.h"\
 	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\library\src\htxparse.h"\
 	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
-	"..\..\..\libwww\library\src\wwwmime.h"\
-	"..\..\..\libwww\library\src\wwwstream.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
-	"..\..\..\libwww\library\src\wwwtrans.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
 	
 
@@ -11449,7 +11551,6 @@ DEP_CPP_HTWRI=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -11457,7 +11558,6 @@ DEP_CPP_HTWRI=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -11470,6 +11570,7 @@ DEP_CPP_HTWRI=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -11508,7 +11609,6 @@ DEP_CPP_HTWRI=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -11516,7 +11616,6 @@ DEP_CPP_HTWRI=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -11529,6 +11628,7 @@ DEP_CPP_HTWRI=\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
 	"..\..\..\libwww\library\src\htnetman.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -11776,7 +11876,6 @@ DEP_CPP_HTXPA=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -11785,7 +11884,6 @@ DEP_CPP_HTXPA=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -11797,6 +11895,7 @@ DEP_CPP_HTXPA=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
@@ -11836,7 +11935,6 @@ DEP_CPP_HTXPA=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -11845,7 +11943,6 @@ DEP_CPP_HTXPA=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -11857,6 +11954,7 @@ DEP_CPP_HTXPA=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
@@ -11895,7 +11993,6 @@ DEP_CPP_HTZIP=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -11903,7 +12000,6 @@ DEP_CPP_HTZIP=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -11915,6 +12011,7 @@ DEP_CPP_HTZIP=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -11934,8 +12031,6 @@ DEP_CPP_HTZIP=\
 	"..\..\..\libwww\library\src\wwwcore.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
-	"..\..\..\libwww\library\src\zconf.h"\
-	"..\..\..\libwww\library\src\zlib.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -11955,7 +12050,6 @@ DEP_CPP_HTZIP=\
 	"..\..\..\libwww\library\src\htarray.h"\
 	"..\..\..\libwww\library\src\htassoc.h"\
 	"..\..\..\libwww\library\src\htatom.h"\
-	"..\..\..\libwww\library\src\htbind.h"\
 	"..\..\..\libwww\library\src\htchannl.h"\
 	"..\..\..\libwww\library\src\htchunk.h"\
 	"..\..\..\libwww\library\src\htdns.h"\
@@ -11963,7 +12057,6 @@ DEP_CPP_HTZIP=\
 	"..\..\..\libwww\library\src\htescape.h"\
 	"..\..\..\libwww\library\src\htevent.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
-	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\hthost.h"\
 	"..\..\..\libwww\library\src\hthstman.h"\
 	"..\..\..\libwww\library\src\htinet.h"\
@@ -11975,6 +12068,7 @@ DEP_CPP_HTZIP=\
 	"..\..\..\libwww\library\src\htmemory.h"\
 	"..\..\..\libwww\library\src\htmethod.h"\
 	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htnofree.h"\
 	"..\..\..\libwww\library\src\htparse.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
@@ -11994,8 +12088,8 @@ DEP_CPP_HTZIP=\
 	"..\..\..\libwww\library\src\wwwcore.h"\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
-	"..\..\..\libwww\library\src\zconf.h"\
-	"..\..\..\libwww\library\src\zlib.h"\
+	"..\..\libpng\zlib\zconf.h"\
+	"..\..\libpng\zlib\zlib.h"\
 	
 
 "$(INTDIR)\HTZip.obj" : $(SOURCE) $(DEP_CPP_HTZIP) "$(INTDIR)"
@@ -12004,10 +12098,9 @@ DEP_CPP_HTZIP=\
 
 !ENDIF 
 
-SOURCE=..\..\..\libwww\Library\src\md5.c
+SOURCE=..\..\..\libwww\modules\md5\md5.c
 DEP_CPP_MD5_C=\
-	"..\..\..\libwww\library\src\global.h"\
-	"..\..\..\libwww\library\src\md5.h"\
+	"..\..\..\libwww\modules\md5\md5.h"\
 	
 
 "$(INTDIR)\md5.obj" : $(SOURCE) $(DEP_CPP_MD5_C) "$(INTDIR)"
@@ -12058,6 +12151,83 @@ DEP_CPP_SGML_=\
 	
 
 "$(INTDIR)\SGML.obj" : $(SOURCE) $(DEP_CPP_SGML_) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
+SOURCE=..\..\..\libwww\modules\expat\xmlparse\xmlparse.c
+
+!IF  "$(CFG)" == "libwww - Win32 Release"
+
+DEP_CPP_XMLPA=\
+	"..\..\..\libwww\modules\expat\xmlparse\hashtable.h"\
+	"..\..\..\libwww\modules\expat\xmlparse\xmlparse.h"\
+	
+NODEP_CPP_XMLPA=\
+	"..\..\..\libwww\modules\expat\xmlparse\xmldef.h"\
+	"..\..\..\libwww\modules\expat\xmlparse\xmlrole.h"\
+	"..\..\..\libwww\modules\expat\xmlparse\xmltok.h"\
+	
+
+"$(INTDIR)\xmlparse.obj" : $(SOURCE) $(DEP_CPP_XMLPA) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
+
+DEP_CPP_XMLPA=\
+	"..\..\..\libwww\modules\expat\xmlparse\hashtable.h"\
+	"..\..\..\libwww\modules\expat\xmlparse\xmlparse.h"\
+	"..\..\..\libwww\modules\expat\xmltok\xmldef.h"\
+	"..\..\..\libwww\modules\expat\xmltok\xmlrole.h"\
+	"..\..\..\libwww\modules\expat\xmltok\xmltok.h"\
+	
+
+"$(INTDIR)\xmlparse.obj" : $(SOURCE) $(DEP_CPP_XMLPA) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
+SOURCE=..\..\..\libwww\modules\expat\xmltok\xmltok.c
+
+!IF  "$(CFG)" == "libwww - Win32 Release"
+
+DEP_CPP_XMLTO=\
+	"..\..\..\libwww\modules\expat\xmltok\asciitab.h"\
+	"..\..\..\libwww\modules\expat\xmltok\iasciitab.h"\
+	"..\..\..\libwww\modules\expat\xmltok\latin1tab.h"\
+	"..\..\..\libwww\modules\expat\xmltok\nametab.h"\
+	"..\..\..\libwww\modules\expat\xmltok\utf8tab.h"\
+	"..\..\..\libwww\modules\expat\xmltok\xmldef.h"\
+	"..\..\..\libwww\modules\expat\xmltok\xmltok.h"\
+	"..\..\..\libwww\modules\expat\xmltok\xmltok_impl.c"\
+	"..\..\..\libwww\modules\expat\xmltok\xmltok_impl.h"\
+	
+NODEP_CPP_XMLTO=\
+	"..\..\..\libwww\modules\expat\xmltok\nspr.h"\
+	
+
+"$(INTDIR)\xmltok.obj" : $(SOURCE) $(DEP_CPP_XMLTO) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
+
+DEP_CPP_XMLTO=\
+	"..\..\..\libwww\modules\expat\xmltok\asciitab.h"\
+	"..\..\..\libwww\modules\expat\xmltok\iasciitab.h"\
+	"..\..\..\libwww\modules\expat\xmltok\latin1tab.h"\
+	"..\..\..\libwww\modules\expat\xmltok\nametab.h"\
+	"..\..\..\libwww\modules\expat\xmltok\utf8tab.h"\
+	"..\..\..\libwww\modules\expat\xmltok\xmldef.h"\
+	"..\..\..\libwww\modules\expat\xmltok\xmltok.h"\
+	"..\..\..\libwww\modules\expat\xmltok\xmltok_impl.c"\
+	"..\..\..\libwww\modules\expat\xmltok\xmltok_impl.h"\
+	
+
+"$(INTDIR)\xmltok.obj" : $(SOURCE) $(DEP_CPP_XMLTO) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

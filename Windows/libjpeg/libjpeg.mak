@@ -26,6 +26,8 @@ NULL=
 NULL=nul
 !ENDIF 
 
+CPP=cl.exe
+
 !IF  "$(CFG)" == "libjpeg - Win32 Release"
 
 OUTDIR=.\..
@@ -100,43 +102,11 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\libjpeg" /D "WIN32" /D "NDEBUG" /D\
  "_WINDOWS" /Fp"$(INTDIR)\libjpeg.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD\
  /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
-
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libjpeg.bsc" 
 BSC32_SBRS= \
@@ -270,43 +240,11 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\libjpeg" /I\
  "..\..\thotlib\include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS"\
  /Fp"$(INTDIR)\libjpeg.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
-
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libjpeg.bsc" 
 BSC32_SBRS= \
@@ -368,6 +306,36 @@ LIB32_OBJS= \
 
 !ENDIF 
 
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
 
 !IF "$(CFG)" == "libjpeg - Win32 Release" || "$(CFG)" ==\
  "libjpeg - Win32 Debug"
@@ -384,10 +352,6 @@ DEP_CPP_JCAPI=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JCAPI=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jcapimin.obj" : $(SOURCE) $(DEP_CPP_JCAPI) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -402,12 +366,6 @@ DEP_CPP_JCAPI=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jcapimin.obj" : $(SOURCE) $(DEP_CPP_JCAPI) "$(INTDIR)"
@@ -429,10 +387,6 @@ DEP_CPP_JCAPIS=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JCAPIS=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jcapistd.obj" : $(SOURCE) $(DEP_CPP_JCAPIS) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -447,12 +401,6 @@ DEP_CPP_JCAPIS=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jcapistd.obj" : $(SOURCE) $(DEP_CPP_JCAPIS) "$(INTDIR)"
@@ -474,10 +422,6 @@ DEP_CPP_JCCOE=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JCCOE=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jccoefct.obj" : $(SOURCE) $(DEP_CPP_JCCOE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -492,12 +436,6 @@ DEP_CPP_JCCOE=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jccoefct.obj" : $(SOURCE) $(DEP_CPP_JCCOE) "$(INTDIR)"
@@ -519,10 +457,6 @@ DEP_CPP_JCCOL=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JCCOL=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jccolor.obj" : $(SOURCE) $(DEP_CPP_JCCOL) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -537,12 +471,6 @@ DEP_CPP_JCCOL=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jccolor.obj" : $(SOURCE) $(DEP_CPP_JCCOL) "$(INTDIR)"
@@ -565,10 +493,6 @@ DEP_CPP_JCDCT=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JCDCT=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jcdctmgr.obj" : $(SOURCE) $(DEP_CPP_JCDCT) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -584,12 +508,6 @@ DEP_CPP_JCDCT=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jcdctmgr.obj" : $(SOURCE) $(DEP_CPP_JCDCT) "$(INTDIR)"
@@ -612,10 +530,6 @@ DEP_CPP_JCHUF=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JCHUF=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jchuff.obj" : $(SOURCE) $(DEP_CPP_JCHUF) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -631,12 +545,6 @@ DEP_CPP_JCHUF=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jchuff.obj" : $(SOURCE) $(DEP_CPP_JCHUF) "$(INTDIR)"
@@ -658,10 +566,6 @@ DEP_CPP_JCINI=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JCINI=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jcinit.obj" : $(SOURCE) $(DEP_CPP_JCINI) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -676,12 +580,6 @@ DEP_CPP_JCINI=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jcinit.obj" : $(SOURCE) $(DEP_CPP_JCINI) "$(INTDIR)"
@@ -703,10 +601,6 @@ DEP_CPP_JCMAI=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JCMAI=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jcmainct.obj" : $(SOURCE) $(DEP_CPP_JCMAI) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -721,12 +615,6 @@ DEP_CPP_JCMAI=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jcmainct.obj" : $(SOURCE) $(DEP_CPP_JCMAI) "$(INTDIR)"
@@ -748,10 +636,6 @@ DEP_CPP_JCMAR=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JCMAR=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jcmarker.obj" : $(SOURCE) $(DEP_CPP_JCMAR) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -766,12 +650,6 @@ DEP_CPP_JCMAR=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jcmarker.obj" : $(SOURCE) $(DEP_CPP_JCMAR) "$(INTDIR)"
@@ -793,10 +671,6 @@ DEP_CPP_JCMAS=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JCMAS=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jcmaster.obj" : $(SOURCE) $(DEP_CPP_JCMAS) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -811,12 +685,6 @@ DEP_CPP_JCMAS=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jcmaster.obj" : $(SOURCE) $(DEP_CPP_JCMAS) "$(INTDIR)"
@@ -838,10 +706,6 @@ DEP_CPP_JCOMA=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JCOMA=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jcomapi.obj" : $(SOURCE) $(DEP_CPP_JCOMA) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -856,12 +720,6 @@ DEP_CPP_JCOMA=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jcomapi.obj" : $(SOURCE) $(DEP_CPP_JCOMA) "$(INTDIR)"
@@ -883,10 +741,6 @@ DEP_CPP_JCPAR=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JCPAR=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jcparam.obj" : $(SOURCE) $(DEP_CPP_JCPAR) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -901,12 +755,6 @@ DEP_CPP_JCPAR=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jcparam.obj" : $(SOURCE) $(DEP_CPP_JCPAR) "$(INTDIR)"
@@ -929,10 +777,6 @@ DEP_CPP_JCPHU=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JCPHU=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jcphuff.obj" : $(SOURCE) $(DEP_CPP_JCPHU) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -948,12 +792,6 @@ DEP_CPP_JCPHU=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jcphuff.obj" : $(SOURCE) $(DEP_CPP_JCPHU) "$(INTDIR)"
@@ -975,10 +813,6 @@ DEP_CPP_JCPRE=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JCPRE=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jcprepct.obj" : $(SOURCE) $(DEP_CPP_JCPRE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -993,12 +827,6 @@ DEP_CPP_JCPRE=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jcprepct.obj" : $(SOURCE) $(DEP_CPP_JCPRE) "$(INTDIR)"
@@ -1020,10 +848,6 @@ DEP_CPP_JCSAM=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JCSAM=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jcsample.obj" : $(SOURCE) $(DEP_CPP_JCSAM) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1038,12 +862,6 @@ DEP_CPP_JCSAM=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jcsample.obj" : $(SOURCE) $(DEP_CPP_JCSAM) "$(INTDIR)"
@@ -1065,10 +883,6 @@ DEP_CPP_JCTRA=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JCTRA=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jctrans.obj" : $(SOURCE) $(DEP_CPP_JCTRA) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1083,12 +897,6 @@ DEP_CPP_JCTRA=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jctrans.obj" : $(SOURCE) $(DEP_CPP_JCTRA) "$(INTDIR)"
@@ -1110,10 +918,6 @@ DEP_CPP_JDAPI=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JDAPI=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jdapimin.obj" : $(SOURCE) $(DEP_CPP_JDAPI) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1128,12 +932,6 @@ DEP_CPP_JDAPI=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jdapimin.obj" : $(SOURCE) $(DEP_CPP_JDAPI) "$(INTDIR)"
@@ -1155,10 +953,6 @@ DEP_CPP_JDAPIS=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JDAPIS=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jdapistd.obj" : $(SOURCE) $(DEP_CPP_JDAPIS) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1173,12 +967,6 @@ DEP_CPP_JDAPIS=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jdapistd.obj" : $(SOURCE) $(DEP_CPP_JDAPIS) "$(INTDIR)"
@@ -1200,10 +988,6 @@ DEP_CPP_JDATA=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JDATA=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jdatadst.obj" : $(SOURCE) $(DEP_CPP_JDATA) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1217,12 +1001,6 @@ DEP_CPP_JDATA=\
 	"..\..\libjpeg\jinclude.h"\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jdatadst.obj" : $(SOURCE) $(DEP_CPP_JDATA) "$(INTDIR)"
@@ -1244,10 +1022,6 @@ DEP_CPP_JDATAS=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JDATAS=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jdatasrc.obj" : $(SOURCE) $(DEP_CPP_JDATAS) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1261,12 +1035,6 @@ DEP_CPP_JDATAS=\
 	"..\..\libjpeg\jinclude.h"\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jdatasrc.obj" : $(SOURCE) $(DEP_CPP_JDATAS) "$(INTDIR)"
@@ -1288,10 +1056,6 @@ DEP_CPP_JDCOE=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JDCOE=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jdcoefct.obj" : $(SOURCE) $(DEP_CPP_JDCOE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1306,12 +1070,6 @@ DEP_CPP_JDCOE=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jdcoefct.obj" : $(SOURCE) $(DEP_CPP_JDCOE) "$(INTDIR)"
@@ -1333,10 +1091,6 @@ DEP_CPP_JDCOL=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JDCOL=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jdcolor.obj" : $(SOURCE) $(DEP_CPP_JDCOL) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1351,12 +1105,6 @@ DEP_CPP_JDCOL=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jdcolor.obj" : $(SOURCE) $(DEP_CPP_JDCOL) "$(INTDIR)"
@@ -1379,10 +1127,6 @@ DEP_CPP_JDDCT=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JDDCT=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jddctmgr.obj" : $(SOURCE) $(DEP_CPP_JDDCT) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1398,12 +1142,6 @@ DEP_CPP_JDDCT=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jddctmgr.obj" : $(SOURCE) $(DEP_CPP_JDDCT) "$(INTDIR)"
@@ -1426,10 +1164,6 @@ DEP_CPP_JDHUF=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JDHUF=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jdhuff.obj" : $(SOURCE) $(DEP_CPP_JDHUF) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1445,12 +1179,6 @@ DEP_CPP_JDHUF=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jdhuff.obj" : $(SOURCE) $(DEP_CPP_JDHUF) "$(INTDIR)"
@@ -1472,10 +1200,6 @@ DEP_CPP_JDINP=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JDINP=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jdinput.obj" : $(SOURCE) $(DEP_CPP_JDINP) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1490,12 +1214,6 @@ DEP_CPP_JDINP=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jdinput.obj" : $(SOURCE) $(DEP_CPP_JDINP) "$(INTDIR)"
@@ -1517,10 +1235,6 @@ DEP_CPP_JDMAI=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JDMAI=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jdmainct.obj" : $(SOURCE) $(DEP_CPP_JDMAI) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1535,12 +1249,6 @@ DEP_CPP_JDMAI=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jdmainct.obj" : $(SOURCE) $(DEP_CPP_JDMAI) "$(INTDIR)"
@@ -1562,10 +1270,6 @@ DEP_CPP_JDMAR=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JDMAR=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jdmarker.obj" : $(SOURCE) $(DEP_CPP_JDMAR) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1580,12 +1284,6 @@ DEP_CPP_JDMAR=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jdmarker.obj" : $(SOURCE) $(DEP_CPP_JDMAR) "$(INTDIR)"
@@ -1607,10 +1305,6 @@ DEP_CPP_JDMAS=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JDMAS=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jdmaster.obj" : $(SOURCE) $(DEP_CPP_JDMAS) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1625,12 +1319,6 @@ DEP_CPP_JDMAS=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jdmaster.obj" : $(SOURCE) $(DEP_CPP_JDMAS) "$(INTDIR)"
@@ -1652,10 +1340,6 @@ DEP_CPP_JDMER=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JDMER=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jdmerge.obj" : $(SOURCE) $(DEP_CPP_JDMER) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1670,12 +1354,6 @@ DEP_CPP_JDMER=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jdmerge.obj" : $(SOURCE) $(DEP_CPP_JDMER) "$(INTDIR)"
@@ -1698,10 +1376,6 @@ DEP_CPP_JDPHU=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JDPHU=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jdphuff.obj" : $(SOURCE) $(DEP_CPP_JDPHU) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1717,12 +1391,6 @@ DEP_CPP_JDPHU=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jdphuff.obj" : $(SOURCE) $(DEP_CPP_JDPHU) "$(INTDIR)"
@@ -1744,10 +1412,6 @@ DEP_CPP_JDPOS=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JDPOS=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jdpostct.obj" : $(SOURCE) $(DEP_CPP_JDPOS) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1762,12 +1426,6 @@ DEP_CPP_JDPOS=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jdpostct.obj" : $(SOURCE) $(DEP_CPP_JDPOS) "$(INTDIR)"
@@ -1789,10 +1447,6 @@ DEP_CPP_JDSAM=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JDSAM=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jdsample.obj" : $(SOURCE) $(DEP_CPP_JDSAM) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1807,12 +1461,6 @@ DEP_CPP_JDSAM=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jdsample.obj" : $(SOURCE) $(DEP_CPP_JDSAM) "$(INTDIR)"
@@ -1834,10 +1482,6 @@ DEP_CPP_JDTRA=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JDTRA=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jdtrans.obj" : $(SOURCE) $(DEP_CPP_JDTRA) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1852,12 +1496,6 @@ DEP_CPP_JDTRA=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jdtrans.obj" : $(SOURCE) $(DEP_CPP_JDTRA) "$(INTDIR)"
@@ -1880,10 +1518,6 @@ DEP_CPP_JERRO=\
 	"..\..\libjpeg\jversion.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JERRO=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jerror.obj" : $(SOURCE) $(DEP_CPP_JERRO) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1898,12 +1532,6 @@ DEP_CPP_JERRO=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpeglib.h"\
 	"..\..\libjpeg\jversion.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jerror.obj" : $(SOURCE) $(DEP_CPP_JERRO) "$(INTDIR)"
@@ -1926,10 +1554,6 @@ DEP_CPP_JFDCT=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JFDCT=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jfdctflt.obj" : $(SOURCE) $(DEP_CPP_JFDCT) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1945,12 +1569,6 @@ DEP_CPP_JFDCT=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jfdctflt.obj" : $(SOURCE) $(DEP_CPP_JFDCT) "$(INTDIR)"
@@ -1973,10 +1591,6 @@ DEP_CPP_JFDCTF=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JFDCTF=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jfdctfst.obj" : $(SOURCE) $(DEP_CPP_JFDCTF) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1992,12 +1606,6 @@ DEP_CPP_JFDCTF=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jfdctfst.obj" : $(SOURCE) $(DEP_CPP_JFDCTF) "$(INTDIR)"
@@ -2020,10 +1628,6 @@ DEP_CPP_JFDCTI=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JFDCTI=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jfdctint.obj" : $(SOURCE) $(DEP_CPP_JFDCTI) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -2039,12 +1643,6 @@ DEP_CPP_JFDCTI=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jfdctint.obj" : $(SOURCE) $(DEP_CPP_JFDCTI) "$(INTDIR)"
@@ -2067,10 +1665,6 @@ DEP_CPP_JIDCT=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JIDCT=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jidctflt.obj" : $(SOURCE) $(DEP_CPP_JIDCT) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -2086,12 +1680,6 @@ DEP_CPP_JIDCT=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jidctflt.obj" : $(SOURCE) $(DEP_CPP_JIDCT) "$(INTDIR)"
@@ -2114,10 +1702,6 @@ DEP_CPP_JIDCTF=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JIDCTF=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jidctfst.obj" : $(SOURCE) $(DEP_CPP_JIDCTF) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -2133,12 +1717,6 @@ DEP_CPP_JIDCTF=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jidctfst.obj" : $(SOURCE) $(DEP_CPP_JIDCTF) "$(INTDIR)"
@@ -2161,10 +1739,6 @@ DEP_CPP_JIDCTI=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JIDCTI=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jidctint.obj" : $(SOURCE) $(DEP_CPP_JIDCTI) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -2180,12 +1754,6 @@ DEP_CPP_JIDCTI=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jidctint.obj" : $(SOURCE) $(DEP_CPP_JIDCTI) "$(INTDIR)"
@@ -2208,10 +1776,6 @@ DEP_CPP_JIDCTR=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JIDCTR=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jidctred.obj" : $(SOURCE) $(DEP_CPP_JIDCTR) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -2227,12 +1791,6 @@ DEP_CPP_JIDCTR=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jidctred.obj" : $(SOURCE) $(DEP_CPP_JIDCTR) "$(INTDIR)"
@@ -2255,10 +1813,6 @@ DEP_CPP_JMEMM=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JMEMM=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jmemmgr.obj" : $(SOURCE) $(DEP_CPP_JMEMM) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -2274,12 +1828,6 @@ DEP_CPP_JMEMM=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jmemmgr.obj" : $(SOURCE) $(DEP_CPP_JMEMM) "$(INTDIR)"
@@ -2302,10 +1850,6 @@ DEP_CPP_JMEMN=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JMEMN=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jmemnobs.obj" : $(SOURCE) $(DEP_CPP_JMEMN) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -2321,12 +1865,6 @@ DEP_CPP_JMEMN=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jmemnobs.obj" : $(SOURCE) $(DEP_CPP_JMEMN) "$(INTDIR)"
@@ -2348,10 +1886,6 @@ DEP_CPP_JQUAN=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JQUAN=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jquant1.obj" : $(SOURCE) $(DEP_CPP_JQUAN) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -2366,12 +1900,6 @@ DEP_CPP_JQUAN=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jquant1.obj" : $(SOURCE) $(DEP_CPP_JQUAN) "$(INTDIR)"
@@ -2393,10 +1921,6 @@ DEP_CPP_JQUANT=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JQUANT=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jquant2.obj" : $(SOURCE) $(DEP_CPP_JQUANT) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -2411,12 +1935,6 @@ DEP_CPP_JQUANT=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jquant2.obj" : $(SOURCE) $(DEP_CPP_JQUANT) "$(INTDIR)"
@@ -2438,10 +1956,6 @@ DEP_CPP_JUTIL=\
 	"..\..\libjpeg\jpeglib.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_JUTIL=\
-	"..\..\libjpeg\thot_sys.h"\
-	"..\..\libjpeg\typebase.h"\
-	
 
 "$(INTDIR)\jutils.obj" : $(SOURCE) $(DEP_CPP_JUTIL) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -2456,12 +1970,6 @@ DEP_CPP_JUTIL=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\jutils.obj" : $(SOURCE) $(DEP_CPP_JUTIL) "$(INTDIR)"

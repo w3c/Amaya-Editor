@@ -353,6 +353,9 @@ LIB32_OBJS= \
 !IF "$(CFG)" == "LibThotKernel - Win32 Release" || "$(CFG)" ==\
  "LibThotKernel - Win32 Debug"
 SOURCE=..\..\thotlib\base\actions.c
+
+!IF  "$(CFG)" == "LibThotKernel - Win32 Release"
+
 DEP_CPP_ACTIO=\
 	"..\..\thotlib\include\appaction.h"\
 	"..\..\thotlib\include\appstruct.h"\
@@ -367,6 +370,48 @@ DEP_CPP_ACTIO=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
+	"..\..\thotlib\include\ustring.h"\
+	"..\..\thotlib\include\view.h"\
+	"..\..\thotlib\internals\h\appdialogue.h"\
+	"..\..\thotlib\internals\h\constint.h"\
+	"..\..\thotlib\internals\h\constmedia.h"\
+	"..\..\thotlib\internals\h\constmenu.h"\
+	"..\..\thotlib\internals\h\constprs.h"\
+	"..\..\thotlib\internals\h\conststr.h"\
+	"..\..\thotlib\internals\h\frame.h"\
+	"..\..\thotlib\internals\h\thotkey.h"\
+	"..\..\thotlib\internals\var\appdialogue_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_ACTIO=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
+	
+
+"$(INTDIR)\actions.obj" : $(SOURCE) $(DEP_CPP_ACTIO) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "LibThotKernel - Win32 Debug"
+
+DEP_CPP_ACTIO=\
+	"..\..\thotlib\include\appaction.h"\
+	"..\..\thotlib\include\appstruct.h"\
+	"..\..\thotlib\include\attribute.h"\
+	"..\..\thotlib\include\document.h"\
+	"..\..\thotlib\include\interface.h"\
+	"..\..\thotlib\include\presentation.h"\
+	"..\..\thotlib\include\pschema.h"\
+	"..\..\thotlib\include\simx.h"\
+	"..\..\thotlib\include\sysdep.h"\
+	"..\..\thotlib\include\thot_gui.h"\
+	"..\..\thotlib\include\thot_sys.h"\
+	"..\..\thotlib\include\tree.h"\
+	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
@@ -382,6 +427,8 @@ DEP_CPP_ACTIO=\
 "$(INTDIR)\actions.obj" : $(SOURCE) $(DEP_CPP_ACTIO) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
+
+!ENDIF 
 
 SOURCE=..\..\thotlib\editing\applicationapi.c
 
@@ -408,6 +455,8 @@ DEP_CPP_APPLI=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\include\wininclude.h"\
@@ -415,6 +464,7 @@ DEP_CPP_APPLI=\
 	"..\..\thotlib\internals\f\checkaccess_f.h"\
 	"..\..\thotlib\internals\f\config_f.h"\
 	"..\..\thotlib\internals\f\dialogapi_f.h"\
+	"..\..\thotlib\internals\f\inites_f.h"\
 	"..\..\thotlib\internals\f\input_f.h"\
 	"..\..\thotlib\internals\f\language_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
@@ -453,6 +503,11 @@ DEP_CPP_APPLI=\
 	"..\..\thotlib\internals\var\thotcolor_tv.h"\
 	"..\..\thotlib\internals\var\thotpalette_tv.h"\
 	"..\..\thotlib\internals\var\units_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_APPLI=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\applicationapi.obj" : $(SOURCE) $(DEP_CPP_APPLI) "$(INTDIR)"
@@ -482,6 +537,8 @@ DEP_CPP_APPLI=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\include\wininclude.h"\
@@ -489,6 +546,7 @@ DEP_CPP_APPLI=\
 	"..\..\thotlib\internals\f\checkaccess_f.h"\
 	"..\..\thotlib\internals\f\config_f.h"\
 	"..\..\thotlib\internals\f\dialogapi_f.h"\
+	"..\..\thotlib\internals\f\inites_f.h"\
 	"..\..\thotlib\internals\f\input_f.h"\
 	"..\..\thotlib\internals\f\language_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
@@ -557,6 +615,8 @@ DEP_CPP_ATTRI=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\attributeapi_f.h"\
@@ -572,6 +632,7 @@ DEP_CPP_ATTRI=\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
+	"..\..\thotlib\internals\h\constmenu.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\consttra.h"\
@@ -587,6 +648,11 @@ DEP_CPP_ATTRI=\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\select_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_ATTRI=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\attributeapi.obj" : $(SOURCE) $(DEP_CPP_ATTRI) "$(INTDIR)"
@@ -613,6 +679,8 @@ DEP_CPP_ATTRI=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\attributeapi_f.h"\
@@ -652,15 +720,41 @@ DEP_CPP_ATTRI=\
 !ENDIF 
 
 SOURCE=..\..\thotlib\base\batchmessage.c
+
+!IF  "$(CFG)" == "LibThotKernel - Win32 Release"
+
 DEP_CPP_BATCH=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_sys.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
+	"..\..\thotlib\include\ustring.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_BATCH=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
+	
+
+"$(INTDIR)\batchmessage.obj" : $(SOURCE) $(DEP_CPP_BATCH) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "LibThotKernel - Win32 Debug"
+
+DEP_CPP_BATCH=\
+	"..\..\thotlib\include\sysdep.h"\
+	"..\..\thotlib\include\thot_sys.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\batchmessage.obj" : $(SOURCE) $(DEP_CPP_BATCH) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
+
+!ENDIF 
 
 SOURCE=..\..\thotlib\tree\checkaccess.c
 
@@ -673,7 +767,7 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -685,10 +779,11 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
 	"..\..\thotlib\internals\f\actions_f.h"\
 	"..\..\thotlib\internals\f\content_f.h"\
 	"..\..\thotlib\internals\f\draw_f.h"\
@@ -704,13 +799,14 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
+	"..\..\thotlib\internals\h\constmenu.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\consttra.h"\
 	"..\..\thotlib\internals\h\frame.h"\
 	"..\..\thotlib\internals\h\res.h"\
 	"..\..\thotlib\internals\h\resdynmsg.h"\
-	"..\..\thotlib\internals\h\selectrestruct.h"\
+	"..\..\thotlib\internals\h\SelectRestruct.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -721,6 +817,11 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\select_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_CHECK=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\checkaccess.obj" : $(SOURCE) $(DEP_CPP_CHECK) "$(INTDIR)"
@@ -736,7 +837,7 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -748,10 +849,11 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\abspictures_f.h"\
 	"..\..\thotlib\internals\f\actions_f.h"\
 	"..\..\thotlib\internals\f\content_f.h"\
 	"..\..\thotlib\internals\f\draw_f.h"\
@@ -773,7 +875,7 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\internals\h\frame.h"\
 	"..\..\thotlib\internals\h\res.h"\
 	"..\..\thotlib\internals\h\resdynmsg.h"\
-	"..\..\thotlib\internals\h\selectrestruct.h"\
+	"..\..\thotlib\internals\h\SelectRestruct.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -811,6 +913,8 @@ DEP_CPP_CONTE=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\applicationapi_f.h"\
@@ -832,6 +936,11 @@ DEP_CPP_CONTE=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\select_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_CONTE=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\content.obj" : $(SOURCE) $(DEP_CPP_CONTE) "$(INTDIR)"
@@ -855,6 +964,8 @@ DEP_CPP_CONTE=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\applicationapi_f.h"\
@@ -908,15 +1019,19 @@ DEP_CPP_CONTEN=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
+	"..\..\thotlib\internals\f\abspictures_f.h"\
 	"..\..\thotlib\internals\f\attributes_f.h"\
+	"..\..\thotlib\internals\f\boxselection_f.h"\
 	"..\..\thotlib\internals\f\changeabsbox_f.h"\
 	"..\..\thotlib\internals\f\changepresent_f.h"\
 	"..\..\thotlib\internals\f\content_f.h"\
 	"..\..\thotlib\internals\f\font_f.h"\
+	"..\..\thotlib\internals\f\geom_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
 	"..\..\thotlib\internals\f\structselect_f.h"\
 	"..\..\thotlib\internals\f\thotmsg_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
@@ -925,9 +1040,11 @@ DEP_CPP_CONTEN=\
 	"..\..\thotlib\internals\f\writepivot_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
+	"..\..\thotlib\internals\h\constmenu.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\consttra.h"\
+	"..\..\thotlib\internals\h\frame.h"\
 	"..\..\thotlib\internals\h\picture.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
@@ -937,6 +1054,12 @@ DEP_CPP_CONTEN=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	"..\..\thotlib\internals\var\frame_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_CONTEN=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\contentapi.obj" : $(SOURCE) $(DEP_CPP_CONTEN) "$(INTDIR)"
@@ -965,15 +1088,17 @@ DEP_CPP_CONTEN=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
+	"..\..\thotlib\internals\f\abspictures_f.h"\
 	"..\..\thotlib\internals\f\attributes_f.h"\
 	"..\..\thotlib\internals\f\changeabsbox_f.h"\
 	"..\..\thotlib\internals\f\changepresent_f.h"\
 	"..\..\thotlib\internals\f\content_f.h"\
 	"..\..\thotlib\internals\f\font_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
 	"..\..\thotlib\internals\f\structselect_f.h"\
 	"..\..\thotlib\internals\f\thotmsg_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
@@ -1024,6 +1149,8 @@ DEP_CPP_DOCUM=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\appdialogue_f.h"\
@@ -1052,6 +1179,7 @@ DEP_CPP_DOCUM=\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
+	"..\..\thotlib\internals\h\constmenu.h"\
 	"..\..\thotlib\internals\h\constpiv.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
@@ -1067,8 +1195,14 @@ DEP_CPP_DOCUM=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	"..\..\thotlib\internals\var\modif_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
 	"..\..\thotlib\internals\var\select_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_DOCUM=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\documentapi.obj" : $(SOURCE) $(DEP_CPP_DOCUM) "$(INTDIR)"
@@ -1095,6 +1229,8 @@ DEP_CPP_DOCUM=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\appdialogue_f.h"\
@@ -1169,6 +1305,8 @@ DEP_CPP_DRAW_=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\draw_f.h"\
@@ -1188,6 +1326,11 @@ DEP_CPP_DRAW_=\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_DRAW_=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\draw.obj" : $(SOURCE) $(DEP_CPP_DRAW_) "$(INTDIR)"
@@ -1213,6 +1356,8 @@ DEP_CPP_DRAW_=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\draw_f.h"\
@@ -1261,6 +1406,8 @@ DEP_CPP_EXCEP=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
@@ -1278,6 +1425,11 @@ DEP_CPP_EXCEP=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_EXCEP=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\exceptions.obj" : $(SOURCE) $(DEP_CPP_EXCEP) "$(INTDIR)"
@@ -1303,6 +1455,8 @@ DEP_CPP_EXCEP=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
@@ -1348,6 +1502,8 @@ DEP_CPP_EXTER=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -1370,6 +1526,11 @@ DEP_CPP_EXTER=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_EXTER=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\externalref.obj" : $(SOURCE) $(DEP_CPP_EXTER) "$(INTDIR)"
@@ -1394,6 +1555,8 @@ DEP_CPP_EXTER=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -1444,6 +1607,8 @@ DEP_CPP_FILEA=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -1463,6 +1628,11 @@ DEP_CPP_FILEA=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_FILEA=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\fileaccess.obj" : $(SOURCE) $(DEP_CPP_FILEA) "$(INTDIR)"
@@ -1487,6 +1657,8 @@ DEP_CPP_FILEA=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -1524,7 +1696,7 @@ DEP_CPP_LABEL=\
 	"..\..\thotlib\include\attribute.h"\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
@@ -1534,6 +1706,8 @@ DEP_CPP_LABEL=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\applicationapi_f.h"\
@@ -1543,6 +1717,11 @@ DEP_CPP_LABEL=\
 	"..\..\thotlib\internals\h\typeint.h"\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_LABEL=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\labelalloc.obj" : $(SOURCE) $(DEP_CPP_LABEL) "$(INTDIR)"
@@ -1557,7 +1736,7 @@ DEP_CPP_LABEL=\
 	"..\..\thotlib\include\attribute.h"\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
@@ -1567,6 +1746,8 @@ DEP_CPP_LABEL=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\applicationapi_f.h"\
@@ -1608,6 +1789,8 @@ DEP_CPP_LANGU=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\thotmsg_f.h"\
@@ -1624,6 +1807,11 @@ DEP_CPP_LANGU=\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_LANGU=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\language.obj" : $(SOURCE) $(DEP_CPP_LANGU) "$(INTDIR)"
@@ -1652,6 +1840,8 @@ DEP_CPP_LANGU=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\thotmsg_f.h"\
@@ -1698,6 +1888,8 @@ DEP_CPP_MEMOR=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -1716,6 +1908,11 @@ DEP_CPP_MEMOR=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\boxes_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_MEMOR=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\memory.obj" : $(SOURCE) $(DEP_CPP_MEMOR) "$(INTDIR)"
@@ -1742,6 +1939,8 @@ DEP_CPP_MEMOR=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -1790,6 +1989,8 @@ DEP_CPP_MESSA=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\dialogapi_f.h"\
@@ -1808,6 +2009,11 @@ DEP_CPP_MESSA=\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_MESSA=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\message.obj" : $(SOURCE) $(DEP_CPP_MESSA) "$(INTDIR)"
@@ -1834,6 +2040,8 @@ DEP_CPP_MESSA=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\dialogapi_f.h"\
@@ -1880,6 +2088,8 @@ DEP_CPP_NODIS=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
@@ -1890,6 +2100,7 @@ DEP_CPP_NODIS=\
 	"..\..\thotlib\internals\h\constprs.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\consttra.h"\
+	"..\..\thotlib\internals\h\picture.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -1898,6 +2109,11 @@ DEP_CPP_NODIS=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_NODIS=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\nodisplay.obj" : $(SOURCE) $(DEP_CPP_NODIS) "$(INTDIR)"
@@ -1922,6 +2138,8 @@ DEP_CPP_NODIS=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
@@ -1932,6 +2150,7 @@ DEP_CPP_NODIS=\
 	"..\..\thotlib\internals\h\constprs.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\consttra.h"\
+	"..\..\thotlib\internals\h\picture.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -1962,6 +2181,8 @@ DEP_CPP_PARSE=\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
 	"..\..\thotlib\include\language.h"\
+	"..\..\thotlib\include\libmsg.h"\
+	"..\..\thotlib\include\message.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
 	"..\..\thotlib\include\registry.h"\
@@ -1971,6 +2192,8 @@ DEP_CPP_PARSE=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\callback_f.h"\
@@ -1982,6 +2205,7 @@ DEP_CPP_PARSE=\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
+	"..\..\thotlib\internals\h\constmenu.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\consttra.h"\
@@ -1997,6 +2221,11 @@ DEP_CPP_PARSE=\
 	"..\..\thotlib\internals\h\typexml.h"\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_PARSE=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\parsexml.obj" : $(SOURCE) $(DEP_CPP_PARSE) "$(INTDIR)"
@@ -2015,6 +2244,8 @@ DEP_CPP_PARSE=\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
 	"..\..\thotlib\include\language.h"\
+	"..\..\thotlib\include\libmsg.h"\
+	"..\..\thotlib\include\message.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
 	"..\..\thotlib\include\registry.h"\
@@ -2024,6 +2255,8 @@ DEP_CPP_PARSE=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\callback_f.h"\
@@ -2070,7 +2303,7 @@ DEP_CPP_PIVOT=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
@@ -2081,6 +2314,8 @@ DEP_CPP_PIVOT=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\applicationapi_f.h"\
@@ -2107,6 +2342,11 @@ DEP_CPP_PIVOT=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_PIVOT=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\pivot.obj" : $(SOURCE) $(DEP_CPP_PIVOT) "$(INTDIR)"
@@ -2123,7 +2363,7 @@ DEP_CPP_PIVOT=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
@@ -2134,6 +2374,8 @@ DEP_CPP_PIVOT=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\applicationapi_f.h"\
@@ -2169,11 +2411,44 @@ DEP_CPP_PIVOT=\
 !ENDIF 
 
 SOURCE=..\..\thotlib\base\platform.c
+
+!IF  "$(CFG)" == "LibThotKernel - Win32 Release"
+
 DEP_CPP_PLATF=\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
+	"..\..\thotlib\include\ustring.h"\
+	"..\..\thotlib\internals\h\constint.h"\
+	"..\..\thotlib\internals\h\constmedia.h"\
+	"..\..\thotlib\internals\h\constprs.h"\
+	"..\..\thotlib\internals\h\conststr.h"\
+	"..\..\thotlib\internals\h\thotdir.h"\
+	"..\..\thotlib\internals\h\thotkey.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_PLATF=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
+	
+
+"$(INTDIR)\platform.obj" : $(SOURCE) $(DEP_CPP_PLATF) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "LibThotKernel - Win32 Debug"
+
+DEP_CPP_PLATF=\
+	"..\..\thotlib\include\fileaccess.h"\
+	"..\..\thotlib\include\sysdep.h"\
+	"..\..\thotlib\include\thot_sys.h"\
+	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
+	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
@@ -2185,6 +2460,8 @@ DEP_CPP_PLATF=\
 "$(INTDIR)\platform.obj" : $(SOURCE) $(DEP_CPP_PLATF) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
+
+!ENDIF 
 
 SOURCE=..\..\thotlib\presentation\presentationapi.c
 
@@ -2208,6 +2485,8 @@ DEP_CPP_PRESE=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\appli_f.h"\
@@ -2231,6 +2510,11 @@ DEP_CPP_PRESE=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\boxes_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_PRESE=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\presentationapi.obj" : $(SOURCE) $(DEP_CPP_PRESE) "$(INTDIR)"
@@ -2257,6 +2541,8 @@ DEP_CPP_PRESE=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\appli_f.h"\
@@ -2299,7 +2585,7 @@ DEP_CPP_READP=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -2312,6 +2598,8 @@ DEP_CPP_READP=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\abspictures_f.h"\
@@ -2323,6 +2611,7 @@ DEP_CPP_READP=\
 	"..\..\thotlib\internals\f\externalref_f.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
 	"..\..\thotlib\internals\f\font_f.h"\
+	"..\..\thotlib\internals\f\inites_f.h"\
 	"..\..\thotlib\internals\f\labelalloc_f.h"\
 	"..\..\thotlib\internals\f\language_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
@@ -2338,6 +2627,7 @@ DEP_CPP_READP=\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
+	"..\..\thotlib\internals\h\constmenu.h"\
 	"..\..\thotlib\internals\h\constpiv.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
@@ -2354,6 +2644,11 @@ DEP_CPP_READP=\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_READP=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\readpivot.obj" : $(SOURCE) $(DEP_CPP_READP) "$(INTDIR)"
@@ -2369,7 +2664,7 @@ DEP_CPP_READP=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -2382,6 +2677,8 @@ DEP_CPP_READP=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\abspictures_f.h"\
@@ -2393,6 +2690,7 @@ DEP_CPP_READP=\
 	"..\..\thotlib\internals\f\externalref_f.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
 	"..\..\thotlib\internals\f\font_f.h"\
+	"..\..\thotlib\internals\f\inites_f.h"\
 	"..\..\thotlib\internals\f\labelalloc_f.h"\
 	"..\..\thotlib\internals\f\language_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
@@ -2454,6 +2752,8 @@ DEP_CPP_READPR=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -2474,6 +2774,11 @@ DEP_CPP_READPR=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_READPR=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\readprs.obj" : $(SOURCE) $(DEP_CPP_READPR) "$(INTDIR)"
@@ -2500,6 +2805,8 @@ DEP_CPP_READPR=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -2550,6 +2857,8 @@ DEP_CPP_READS=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -2568,6 +2877,11 @@ DEP_CPP_READS=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_READS=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\readstr.obj" : $(SOURCE) $(DEP_CPP_READS) "$(INTDIR)"
@@ -2594,6 +2908,8 @@ DEP_CPP_READS=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -2642,6 +2958,8 @@ DEP_CPP_READT=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -2661,6 +2979,11 @@ DEP_CPP_READT=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_READT=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\readtra.obj" : $(SOURCE) $(DEP_CPP_READT) "$(INTDIR)"
@@ -2687,6 +3010,8 @@ DEP_CPP_READT=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -2739,6 +3064,8 @@ DEP_CPP_REFER=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\applicationapi_f.h"\
@@ -2766,6 +3093,11 @@ DEP_CPP_REFER=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_REFER=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\referenceapi.obj" : $(SOURCE) $(DEP_CPP_REFER) "$(INTDIR)"
@@ -2795,6 +3127,8 @@ DEP_CPP_REFER=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\applicationapi_f.h"\
@@ -2852,6 +3186,8 @@ DEP_CPP_REFERE=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\applicationapi_f.h"\
@@ -2877,6 +3213,11 @@ DEP_CPP_REFERE=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_REFERE=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\references.obj" : $(SOURCE) $(DEP_CPP_REFERE) "$(INTDIR)"
@@ -2903,6 +3244,8 @@ DEP_CPP_REFERE=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\applicationapi_f.h"\
@@ -2958,6 +3301,8 @@ DEP_CPP_REGIS=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -2975,7 +3320,13 @@ DEP_CPP_REGIS=\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
+	"..\..\thotlib\internals\h\winsys.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_REGIS=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\registry.obj" : $(SOURCE) $(DEP_CPP_REGIS) "$(INTDIR)"
@@ -3002,6 +3353,8 @@ DEP_CPP_REGIS=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -3019,6 +3372,7 @@ DEP_CPP_REGIS=\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
+	"..\..\thotlib\internals\h\winsys.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
 	
 
@@ -3052,6 +3406,8 @@ DEP_CPP_RES_C=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\resgen_f.h"\
@@ -3061,6 +3417,11 @@ DEP_CPP_RES_C=\
 	"..\..\thotlib\internals\h\constres.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_RES_C=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\res.obj" : $(SOURCE) $(DEP_CPP_RES_C) "$(INTDIR)"
@@ -3089,6 +3450,8 @@ DEP_CPP_RES_C=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\resgen_f.h"\
@@ -3130,12 +3493,19 @@ DEP_CPP_RESGE=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\resmatch_f.h"\
 	"..\..\thotlib\internals\h\constres.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_RESGE=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\resgen.obj" : $(SOURCE) $(DEP_CPP_RESGE) "$(INTDIR)"
@@ -3164,6 +3534,8 @@ DEP_CPP_RESGE=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\resmatch_f.h"\
@@ -3200,11 +3572,18 @@ DEP_CPP_RESMA=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\h\constres.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_RESMA=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\resmatch.obj" : $(SOURCE) $(DEP_CPP_RESMA) "$(INTDIR)"
@@ -3231,6 +3610,8 @@ DEP_CPP_RESMA=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\h\constres.h"\
@@ -3266,6 +3647,8 @@ DEP_CPP_SAVEX=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\applicationapi_f.h"\
@@ -3277,6 +3660,7 @@ DEP_CPP_SAVEX=\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
+	"..\..\thotlib\internals\h\constmenu.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\consttra.h"\
@@ -3289,6 +3673,11 @@ DEP_CPP_SAVEX=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_SAVEX=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\savexml.obj" : $(SOURCE) $(DEP_CPP_SAVEX) "$(INTDIR)"
@@ -3315,6 +3704,8 @@ DEP_CPP_SAVEX=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\applicationapi_f.h"\
@@ -3367,6 +3758,8 @@ DEP_CPP_SCHEM=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\config_f.h"\
@@ -3386,6 +3779,11 @@ DEP_CPP_SCHEM=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_SCHEM=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\schemastr.obj" : $(SOURCE) $(DEP_CPP_SCHEM) "$(INTDIR)"
@@ -3411,6 +3809,8 @@ DEP_CPP_SCHEM=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\config_f.h"\
@@ -3459,6 +3859,8 @@ DEP_CPP_SCHTR=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\readstr_f.h"\
@@ -3478,6 +3880,11 @@ DEP_CPP_SCHTR=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_SCHTR=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\schtrad.obj" : $(SOURCE) $(DEP_CPP_SCHTR) "$(INTDIR)"
@@ -3503,6 +3910,8 @@ DEP_CPP_SCHTR=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\readstr_f.h"\
@@ -3554,6 +3963,8 @@ DEP_CPP_STRUC=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\absboxes_f.h"\
@@ -3578,6 +3989,11 @@ DEP_CPP_STRUC=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\boxes_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_STRUC=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\structlist.obj" : $(SOURCE) $(DEP_CPP_STRUC) "$(INTDIR)"
@@ -3606,6 +4022,8 @@ DEP_CPP_STRUC=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\absboxes_f.h"\
@@ -3659,6 +4077,8 @@ DEP_CPP_STRUCT=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
@@ -3669,6 +4089,7 @@ DEP_CPP_STRUCT=\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
+	"..\..\thotlib\internals\h\constmenu.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\consttra.h"\
@@ -3683,6 +4104,11 @@ DEP_CPP_STRUCT=\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_STRUCT=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\structschema.obj" : $(SOURCE) $(DEP_CPP_STRUCT) "$(INTDIR)"
@@ -3708,6 +4134,8 @@ DEP_CPP_STRUCT=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
@@ -3763,6 +4191,8 @@ DEP_CPP_THOTM=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\changeabsbox_f.h"\
@@ -3771,6 +4201,7 @@ DEP_CPP_THOTM=\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
+	"..\..\thotlib\internals\h\constmenu.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\consttra.h"\
@@ -3786,6 +4217,11 @@ DEP_CPP_THOTM=\
 	"..\..\thotlib\internals\h\typexml.h"\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_THOTM=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\thotmodule.obj" : $(SOURCE) $(DEP_CPP_THOTM) "$(INTDIR)"
@@ -3813,6 +4249,8 @@ DEP_CPP_THOTM=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\changeabsbox_f.h"\
@@ -3866,6 +4304,8 @@ DEP_CPP_TRANS=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -3877,6 +4317,11 @@ DEP_CPP_TRANS=\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typexml.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_TRANS=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\translatexml.obj" : $(SOURCE) $(DEP_CPP_TRANS) "$(INTDIR)"
@@ -3903,6 +4348,8 @@ DEP_CPP_TRANS=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -3944,6 +4391,8 @@ DEP_CPP_TRANSL=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\absboxes_f.h"\
@@ -3977,6 +4426,11 @@ DEP_CPP_TRANSL=\
 	"..\..\thotlib\internals\var\platform_tv.h"\
 	"..\..\thotlib\internals\var\select_tv.h"\
 	"..\..\thotlib\internals\var\thotcolor_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_TRANSL=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\translation.obj" : $(SOURCE) $(DEP_CPP_TRANSL) "$(INTDIR)"
@@ -4003,6 +4457,8 @@ DEP_CPP_TRANSL=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\absboxes_f.h"\
@@ -4055,7 +4511,7 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -4067,6 +4523,8 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\absboxes_f.h"\
@@ -4085,13 +4543,15 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
+	"..\..\thotlib\internals\h\constmenu.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\consttra.h"\
 	"..\..\thotlib\internals\h\frame.h"\
+	"..\..\thotlib\internals\h\picture.h"\
 	"..\..\thotlib\internals\h\res.h"\
 	"..\..\thotlib\internals\h\resdynmsg.h"\
-	"..\..\thotlib\internals\h\selectrestruct.h"\
+	"..\..\thotlib\internals\h\SelectRestruct.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -4102,6 +4562,11 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\select_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_TREE_=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\tree.obj" : $(SOURCE) $(DEP_CPP_TREE_) "$(INTDIR)"
@@ -4117,7 +4582,7 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -4129,6 +4594,8 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\absboxes_f.h"\
@@ -4151,9 +4618,10 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\consttra.h"\
 	"..\..\thotlib\internals\h\frame.h"\
+	"..\..\thotlib\internals\h\picture.h"\
 	"..\..\thotlib\internals\h\res.h"\
 	"..\..\thotlib\internals\h\resdynmsg.h"\
-	"..\..\thotlib\internals\h\selectrestruct.h"\
+	"..\..\thotlib\internals\h\SelectRestruct.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -4184,7 +4652,7 @@ DEP_CPP_TREEA=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
@@ -4195,6 +4663,8 @@ DEP_CPP_TREEA=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\applicationapi_f.h"\
@@ -4214,6 +4684,7 @@ DEP_CPP_TREEA=\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
+	"..\..\thotlib\internals\h\constmenu.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\consttra.h"\
@@ -4229,6 +4700,11 @@ DEP_CPP_TREEA=\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\modif_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_TREEA=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\treeapi.obj" : $(SOURCE) $(DEP_CPP_TREEA) "$(INTDIR)"
@@ -4245,7 +4721,7 @@ DEP_CPP_TREEA=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
@@ -4256,6 +4732,8 @@ DEP_CPP_TREEA=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\applicationapi_f.h"\
@@ -4299,6 +4777,9 @@ DEP_CPP_TREEA=\
 !ENDIF 
 
 SOURCE=..\..\thotlib\unicode\uaccess.c
+
+!IF  "$(CFG)" == "LibThotKernel - Win32 Release"
+
 DEP_CPP_UACCE=\
 	"..\..\thotlib\include\uaccess.h"\
 	"..\..\thotlib\include\ustring.h"\
@@ -4308,7 +4789,23 @@ DEP_CPP_UACCE=\
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+!ELSEIF  "$(CFG)" == "LibThotKernel - Win32 Debug"
+
+DEP_CPP_UACCE=\
+	"..\..\thotlib\include\uaccess.h"\
+	"..\..\thotlib\include\ustring.h"\
+	
+
+"$(INTDIR)\uaccess.obj" : $(SOURCE) $(DEP_CPP_UACCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
 SOURCE=..\..\thotlib\unicode\uconvert.c
+
+!IF  "$(CFG)" == "LibThotKernel - Win32 Release"
+
 DEP_CPP_UCONV=\
 	"..\..\thotlib\include\uconvert.h"\
 	"..\..\thotlib\include\ustring.h"\
@@ -4317,6 +4814,19 @@ DEP_CPP_UCONV=\
 "$(INTDIR)\uconvert.obj" : $(SOURCE) $(DEP_CPP_UCONV) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
+
+!ELSEIF  "$(CFG)" == "LibThotKernel - Win32 Debug"
+
+DEP_CPP_UCONV=\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\ustring.h"\
+	
+
+"$(INTDIR)\uconvert.obj" : $(SOURCE) $(DEP_CPP_UCONV) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
 
 SOURCE=..\..\thotlib\base\units.c
 
@@ -4338,11 +4848,14 @@ DEP_CPP_UNITS=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\include\wininclude.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
+	"..\..\thotlib\internals\h\constmenu.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\consttra.h"\
@@ -4356,6 +4869,11 @@ DEP_CPP_UNITS=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\units_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_UNITS=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\units.obj" : $(SOURCE) $(DEP_CPP_UNITS) "$(INTDIR)"
@@ -4380,6 +4898,8 @@ DEP_CPP_UNITS=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\include\wininclude.h"\
@@ -4407,13 +4927,41 @@ DEP_CPP_UNITS=\
 !ENDIF 
 
 SOURCE=..\..\thotlib\unicode\ustring.c
+
+!IF  "$(CFG)" == "LibThotKernel - Win32 Release"
+
 DEP_CPP_USTRI=\
+	"..\..\thotlib\include\sysdep.h"\
+	"..\..\thotlib\include\thot_sys.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
+	"..\..\thotlib\include\ustring.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_USTRI=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
+	
+
+"$(INTDIR)\ustring.obj" : $(SOURCE) $(DEP_CPP_USTRI) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "LibThotKernel - Win32 Debug"
+
+DEP_CPP_USTRI=\
+	"..\..\thotlib\include\sysdep.h"\
+	"..\..\thotlib\include\thot_sys.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\ustring.obj" : $(SOURCE) $(DEP_CPP_USTRI) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
+
+!ENDIF 
 
 SOURCE=..\..\thotlib\document\writepivot.c
 
@@ -4426,7 +4974,7 @@ DEP_CPP_WRITE=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -4438,6 +4986,8 @@ DEP_CPP_WRITE=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\applicationapi_f.h"\
@@ -4447,6 +4997,7 @@ DEP_CPP_WRITE=\
 	"..\..\thotlib\internals\f\content_f.h"\
 	"..\..\thotlib\internals\f\externalref_f.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
+	"..\..\thotlib\internals\f\inites_f.h"\
 	"..\..\thotlib\internals\f\labelalloc_f.h"\
 	"..\..\thotlib\internals\f\language_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
@@ -4474,7 +5025,13 @@ DEP_CPP_WRITE=\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
+	"..\..\thotlib\internals\var\modif_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_WRITE=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\writepivot.obj" : $(SOURCE) $(DEP_CPP_WRITE) "$(INTDIR)"
@@ -4490,7 +5047,7 @@ DEP_CPP_WRITE=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelallocator.h"\
+	"..\..\thotlib\include\labelAllocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -4502,6 +5059,8 @@ DEP_CPP_WRITE=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\applicationapi_f.h"\
@@ -4511,6 +5070,7 @@ DEP_CPP_WRITE=\
 	"..\..\thotlib\internals\f\content_f.h"\
 	"..\..\thotlib\internals\f\externalref_f.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
+	"..\..\thotlib\internals\f\inites_f.h"\
 	"..\..\thotlib\internals\f\labelalloc_f.h"\
 	"..\..\thotlib\internals\f\language_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
@@ -4573,6 +5133,8 @@ DEP_CPP_WRITEX=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\callback_f.h"\
@@ -4580,6 +5142,7 @@ DEP_CPP_WRITEX=\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
+	"..\..\thotlib\internals\h\constmenu.h"\
 	"..\..\thotlib\internals\h\constpiv.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
@@ -4595,6 +5158,11 @@ DEP_CPP_WRITEX=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\h\typexml.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_WRITEX=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\writexml.obj" : $(SOURCE) $(DEP_CPP_WRITEX) "$(INTDIR)"
@@ -4625,6 +5193,8 @@ DEP_CPP_WRITEX=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\callback_f.h"\
@@ -4679,6 +5249,8 @@ DEP_CPP_XMLMO=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\parsexml_f.h"\
@@ -4697,6 +5269,12 @@ DEP_CPP_XMLMO=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\h\typexml.h"\
+	"..\..\thotlib\internals\var\edit_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_XMLMO=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\xmlmodule.obj" : $(SOURCE) $(DEP_CPP_XMLMO) "$(INTDIR)"
@@ -4725,6 +5303,8 @@ DEP_CPP_XMLMO=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\parsexml_f.h"\
@@ -4743,6 +5323,7 @@ DEP_CPP_XMLMO=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\h\typexml.h"\
+	"..\..\thotlib\internals\var\edit_tv.h"\
 	
 
 "$(INTDIR)\xmlmodule.obj" : $(SOURCE) $(DEP_CPP_XMLMO) "$(INTDIR)"

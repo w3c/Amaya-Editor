@@ -26,6 +26,8 @@ NULL=
 NULL=nul
 !ENDIF 
 
+CPP=cl.exe
+
 !IF  "$(CFG)" == "printlib - Win32 Release"
 
 OUTDIR=.\..
@@ -40,14 +42,14 @@ ALL : "$(OUTDIR)\printlib.lib"
 
 !ELSE 
 
-ALL : "libjpeg - Win32 Release" "libThotTable - Win32 Release"\
- "libpng - Win32 Release" "$(OUTDIR)\printlib.lib"
+ALL : "libThotTable - Win32 Release" "libpng - Win32 Release"\
+ "libjpeg - Win32 Release" "$(OUTDIR)\printlib.lib"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"libpng - Win32 ReleaseCLEAN" "libThotTable - Win32 ReleaseCLEAN"\
- "libjpeg - Win32 ReleaseCLEAN" 
+CLEAN :"libjpeg - Win32 ReleaseCLEAN" "libpng - Win32 ReleaseCLEAN"\
+ "libThotTable - Win32 ReleaseCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -150,7 +152,6 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I\
  "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
  "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I\
@@ -159,37 +160,6 @@ CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I\
  /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
-
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\printlib.bsc" 
 BSC32_SBRS= \
@@ -310,14 +280,14 @@ ALL : "$(OUTDIR)\printlib.lib"
 
 !ELSE 
 
-ALL : "libjpeg - Win32 Debug" "libThotTable - Win32 Debug"\
- "libpng - Win32 Debug" "$(OUTDIR)\printlib.lib"
+ALL : "libThotTable - Win32 Debug" "libpng - Win32 Debug"\
+ "libjpeg - Win32 Debug" "$(OUTDIR)\printlib.lib"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"libpng - Win32 DebugCLEAN" "libThotTable - Win32 DebugCLEAN"\
- "libjpeg - Win32 DebugCLEAN" 
+CLEAN :"libjpeg - Win32 DebugCLEAN" "libpng - Win32 DebugCLEAN"\
+ "libThotTable - Win32 DebugCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -420,46 +390,14 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I\
  "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
  "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I\
  "..\..\libpng\zlib" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D\
- "STDC_HEADERS" /D "_WIN_PRINT" /Fp"$(INTDIR)\printlib.pch" /YX /Fo"$(INTDIR)\\"\
- /Fd"$(INTDIR)\\" /FD /c 
+ "STDC_HEADERS" /D "_WIN_PRINT" /D "_AMAYA_RELEASE_" /Fp"$(INTDIR)\printlib.pch"\
+ /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
-
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\printlib.bsc" 
 BSC32_SBRS= \
@@ -568,9 +506,67 @@ LIB32_OBJS= \
 
 !ENDIF 
 
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
 
 !IF "$(CFG)" == "printlib - Win32 Release" || "$(CFG)" ==\
  "printlib - Win32 Debug"
+
+!IF  "$(CFG)" == "printlib - Win32 Release"
+
+"libjpeg - Win32 Release" : 
+   cd "..\libjpeg"
+   $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Release" 
+   cd "..\printlib"
+
+"libjpeg - Win32 ReleaseCLEAN" : 
+   cd "..\libjpeg"
+   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libjpeg.mak CFG="libjpeg - Win32 Release"\
+ RECURSE=1 
+   cd "..\printlib"
+
+!ELSEIF  "$(CFG)" == "printlib - Win32 Debug"
+
+"libjpeg - Win32 Debug" : 
+   cd "..\libjpeg"
+   $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Debug" 
+   cd "..\printlib"
+
+"libjpeg - Win32 DebugCLEAN" : 
+   cd "..\libjpeg"
+   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libjpeg.mak CFG="libjpeg - Win32 Debug"\
+ RECURSE=1 
+   cd "..\printlib"
+
+!ENDIF 
 
 !IF  "$(CFG)" == "printlib - Win32 Release"
 
@@ -626,34 +622,6 @@ LIB32_OBJS= \
    cd "..\libThotTable"
    $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libThotTable.mak\
  CFG="libThotTable - Win32 Debug" RECURSE=1 
-   cd "..\printlib"
-
-!ENDIF 
-
-!IF  "$(CFG)" == "printlib - Win32 Release"
-
-"libjpeg - Win32 Release" : 
-   cd "..\libjpeg"
-   $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Release" 
-   cd "..\printlib"
-
-"libjpeg - Win32 ReleaseCLEAN" : 
-   cd "..\libjpeg"
-   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libjpeg.mak CFG="libjpeg - Win32 Release"\
- RECURSE=1 
-   cd "..\printlib"
-
-!ELSEIF  "$(CFG)" == "printlib - Win32 Debug"
-
-"libjpeg - Win32 Debug" : 
-   cd "..\libjpeg"
-   $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Debug" 
-   cd "..\printlib"
-
-"libjpeg - Win32 DebugCLEAN" : 
-   cd "..\libjpeg"
-   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libjpeg.mak CFG="libjpeg - Win32 Debug"\
- RECURSE=1 
    cd "..\printlib"
 
 !ENDIF 
@@ -1019,6 +987,7 @@ DEP_CPP_ATTRI=\
 	"..\..\thotlib\internals\f\changeabsbox_f.h"\
 	"..\..\thotlib\internals\f\content_f.h"\
 	"..\..\thotlib\internals\f\createabsbox_f.h"\
+	"..\..\thotlib\internals\f\docs_f.h"\
 	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\frame_f.h"\
@@ -1094,6 +1063,7 @@ DEP_CPP_ATTRI=\
 	"..\..\thotlib\internals\f\changeabsbox_f.h"\
 	"..\..\thotlib\internals\f\content_f.h"\
 	"..\..\thotlib\internals\f\createabsbox_f.h"\
+	"..\..\thotlib\internals\f\docs_f.h"\
 	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\frame_f.h"\
@@ -1277,6 +1247,7 @@ DEP_CPP_BOXLO=\
 	"..\..\thotlib\internals\f\structselect_f.h"\
 	"..\..\thotlib\internals\f\textcommands_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
+	"..\..\thotlib\internals\f\undo_f.h"\
 	"..\..\thotlib\internals\f\units_f.h"\
 	"..\..\thotlib\internals\f\views_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
@@ -1351,6 +1322,7 @@ DEP_CPP_BOXLO=\
 	"..\..\thotlib\internals\f\structselect_f.h"\
 	"..\..\thotlib\internals\f\textcommands_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
+	"..\..\thotlib\internals\f\undo_f.h"\
 	"..\..\thotlib\internals\f\units_f.h"\
 	"..\..\thotlib\internals\f\views_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
@@ -2457,6 +2429,7 @@ DEP_CPP_CHANG=\
 	"..\..\thotlib\internals\f\content_f.h"\
 	"..\..\thotlib\internals\f\createabsbox_f.h"\
 	"..\..\thotlib\internals\f\createpages_f.h"\
+	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\frame_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\presrules_f.h"\
@@ -2523,6 +2496,7 @@ DEP_CPP_CHANG=\
 	"..\..\thotlib\internals\f\content_f.h"\
 	"..\..\thotlib\internals\f\createabsbox_f.h"\
 	"..\..\thotlib\internals\f\createpages_f.h"\
+	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\frame_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\presrules_f.h"\
@@ -2590,6 +2564,7 @@ DEP_CPP_CHANGE=\
 	"..\..\thotlib\internals\f\changeabsbox_f.h"\
 	"..\..\thotlib\internals\f\changepresent_f.h"\
 	"..\..\thotlib\internals\f\createabsbox_f.h"\
+	"..\..\thotlib\internals\f\docs_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\font_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
@@ -2665,6 +2640,7 @@ DEP_CPP_CHANGE=\
 	"..\..\thotlib\internals\f\changeabsbox_f.h"\
 	"..\..\thotlib\internals\f\changepresent_f.h"\
 	"..\..\thotlib\internals\f\createabsbox_f.h"\
+	"..\..\thotlib\internals\f\docs_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\font_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
@@ -2869,6 +2845,7 @@ DEP_CPP_CONFI=\
 	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
+	"..\..\thotlib\include\wininclude.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
 	"..\..\thotlib\internals\f\inites_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
@@ -2931,6 +2908,7 @@ DEP_CPP_CONFI=\
 	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
+	"..\..\thotlib\include\wininclude.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
 	"..\..\thotlib\internals\f\inites_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
@@ -7772,6 +7750,7 @@ DEP_CPP_REGIS=\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
+	"..\..\thotlib\internals\h\winsys.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
@@ -7823,6 +7802,7 @@ DEP_CPP_REGIS=\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
+	"..\..\thotlib\internals\h\winsys.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
 	
 
@@ -9531,9 +9511,6 @@ DEP_CPP_UACCE=\
 !ENDIF 
 
 SOURCE=..\..\thotlib\unicode\uconvert.c
-
-!IF  "$(CFG)" == "printlib - Win32 Release"
-
 DEP_CPP_UCONV=\
 	"..\..\thotlib\include\uconvert.h"\
 	"..\..\thotlib\include\ustring.h"\
@@ -9542,19 +9519,6 @@ DEP_CPP_UCONV=\
 "$(INTDIR)\uconvert.obj" : $(SOURCE) $(DEP_CPP_UCONV) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "printlib - Win32 Debug"
-
-DEP_CPP_UCONV=\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	
-
-"$(INTDIR)\uconvert.obj" : $(SOURCE) $(DEP_CPP_UCONV) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\thotlib\base\units.c
 
@@ -9697,6 +9661,7 @@ DEP_CPP_UNSTR=\
 	"..\..\thotlib\internals\f\content_f.h"\
 	"..\..\thotlib\internals\f\contentapi_f.h"\
 	"..\..\thotlib\internals\f\createabsbox_f.h"\
+	"..\..\thotlib\internals\f\docs_f.h"\
 	"..\..\thotlib\internals\f\editcommands_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\externalref_f.h"\
@@ -9790,6 +9755,7 @@ DEP_CPP_UNSTR=\
 	"..\..\thotlib\internals\f\content_f.h"\
 	"..\..\thotlib\internals\f\contentapi_f.h"\
 	"..\..\thotlib\internals\f\createabsbox_f.h"\
+	"..\..\thotlib\internals\f\docs_f.h"\
 	"..\..\thotlib\internals\f\editcommands_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\externalref_f.h"\
