@@ -1379,7 +1379,7 @@ void CutCommand (ThotBool save)
 			 and check if the delete operation is accepted */
 		      notifyEl.event = TteElemDelete;
 		      notifyEl.document = doc;
-		      notifyEl.element = (Element) SelectedColumn->ElParent;
+		      notifyEl.element = (Element) SelectedColumn;
 		      notifyEl.info = 0; /* not sent by undo */
 		      notifyEl.elementType.ElTypeNum = SelectedColumn->ElTypeNumber;
 		      notifyEl.elementType.ElSSchema = (SSchema) (SelectedColumn->ElStructSchema);

@@ -159,12 +159,21 @@ static Element GetCloseCell (Element row, Element colhead,
 	  colspan = TtaGetAttributeValue (attr);
 	  if (colspan - pos > 1)
 	    {
-	      if (add)
-		colspan++;
+	      if (!add && colspan == 2)
+		{
+		  ChangeColspan (cell, colspan, 1, doc);
+		  TtaRegisterAttributeDelete (attr, cell, doc);
+		  TtaRemoveAttribute (cell, attr, doc);
+		}
 	      else
-		colspan--;
-	      TtaRegisterAttributeReplace (attr, cell, doc);
-	      TtaSetAttributeValue (attr, colspan, cell, doc);
+		{
+		  if (add)
+		    colspan++;
+		  else
+		    colspan--;
+		  TtaRegisterAttributeReplace (attr, cell, doc);
+		  TtaSetAttributeValue (attr, colspan, cell, doc);
+		}
 	      *spanupdate = TRUE;
 	      /* check its rowspan attribute */
 	      if (inMath)
@@ -1752,57 +1761,65 @@ ThotBool DeleteColumn (NotifyElement * event)
   int                 rowspan, colspan;
   ThotBool            span, inMath;
 
-  colhead = event->element;
-  doc = event->document;
-  elType = TtaGetElementType (colhead);
-  attrTypeC.AttrSSchema = elType.ElSSchema;
-  attrTypeR.AttrSSchema = elType.ElSSchema;
-  inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
-  if (inMath)
+  if (event->info != 1)
     {
-      elType.ElTypeNum = MathML_EL_TableRow;
-      attrTypeC.AttrTypeNum = MathML_ATTR_columnspan;
-      attrTypeR.AttrTypeNum = MathML_ATTR_rowspan_;
-    }
-  else
-    {
-      elType.ElTypeNum = HTML_EL_Table_row;
-      attrTypeC.AttrTypeNum = HTML_ATTR_colspan_;
-      attrTypeR.AttrTypeNum = HTML_ATTR_rowspan_;
-    }
-  /* get the first row in the table */
-  row = TtaSearchTypedElement (elType, SearchForward, colhead);
-  while (row)
-    {
-      /* check if the cell has span values*/
-      cell = GetCellFromColumnHead (row, colhead, inMath);
-      if (cell)
+      colhead = event->element;
+      doc = event->document;
+      elType = TtaGetElementType (colhead);
+      attrTypeC.AttrSSchema = elType.ElSSchema;
+      attrTypeR.AttrSSchema = elType.ElSSchema;
+      inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
+      if (inMath)
 	{
-	  attr = TtaGetAttribute (cell, attrTypeC);
-	  if (attr)
-	    {
-	      /* there is a colspan */
-	      colspan = TtaGetAttributeValue (attr);
-	      ChangeColspan (cell, colspan, 1, doc);
-	    }
-	  attr = TtaGetAttribute (cell, attrTypeR);
-	  if (attr)
-	    {
-	      /* there is a rowspan */
-	      rowspan = TtaGetAttributeValue (attr);
-	      if (rowspan == 0)
-		rowspan = 1;
-	    }
+	  elType.ElTypeNum = MathML_EL_TableRow;
+	  attrTypeC.AttrTypeNum = MathML_ATTR_columnspan;
+	  attrTypeR.AttrTypeNum = MathML_ATTR_rowspan_;
 	}
       else
 	{
-	  cell = GetCloseCell (row, colhead, doc, TRUE, inMath, FALSE, &span,
-			       &rowspan);
+	  elType.ElTypeNum = HTML_EL_Table_row;
+	  attrTypeC.AttrTypeNum = HTML_ATTR_colspan_;
+	  attrTypeR.AttrTypeNum = HTML_ATTR_rowspan_;
 	}
-      while (rowspan >= 1)
+      /* get the first row in the table */
+      row = TtaSearchTypedElement (elType, SearchForward, colhead);
+      while (row)
 	{
-	  row = GetSiblingRow (row, FALSE, inMath);
-	  rowspan--;
+	  /* check if the cell has span values*/
+	  rowspan = 1;
+	  cell = GetCellFromColumnHead (row, colhead, inMath);
+	  if (cell)
+	    {
+	      attr = TtaGetAttribute (cell, attrTypeC);
+	      if (attr)
+		{
+		  /* there is a colspan */
+		  colspan = TtaGetAttributeValue (attr);
+		  ChangeColspan (cell, colspan, 1, doc);
+		  TtaRegisterAttributeDelete (attr, cell, doc);
+		  TtaRemoveAttribute (cell, attr, doc);
+		}
+	      attr = TtaGetAttribute (cell, attrTypeR);
+	      if (attr)
+		{
+		  /* there is a rowspan */
+		  rowspan = TtaGetAttributeValue (attr);
+		  if (rowspan < 1)
+		    rowspan = 1;
+		}
+	    }
+	  else
+	    {
+	      cell = GetCloseCell (row, colhead, doc, TRUE, inMath, FALSE, &span,
+				   &rowspan);
+	    }
+	  while (rowspan >= 1)
+	    {
+	      row = GetSiblingRow (row, FALSE, inMath);
+	      rowspan--;
+	    }
+	  if (row == NULL)
+	    ;
 	}
     }
   return FALSE;		/* let Thot perform normal operation */
