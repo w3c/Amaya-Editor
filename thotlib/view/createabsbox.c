@@ -135,7 +135,7 @@ void SetAccessMode (PtrDocument pDoc, int accessMode)
    ces deux pointeurs sont mis a` jour pour la regle       
    suivante.                                               
   ----------------------------------------------------------------------*/
-PtrPRule GetRule (PtrPRule * pRSpecif, PtrPRule * pRDefault,
+PtrPRule GetRule (PtrPRule *pRSpecif, PtrPRule * pRDefault,
 		  PtrElement pEl, PtrAttribute pAttr, PtrSSchema pSS,
 		  PtrDocument pDoc)
 {
@@ -236,10 +236,10 @@ PtrPRule GetRule (PtrPRule * pRSpecif, PtrPRule * pRDefault,
    cette vue (dans ce cas, il faut alors appliquer la      
    regle de la vue 1).                                     
   ----------------------------------------------------------------------*/
-PtrPRule            GetRuleView (PtrPRule * pRSpecif, PtrPRule * pRDefault,
-				 PRuleType Typ, int Vue, PtrElement pEl,
-				 PtrAttribute pAttr, PtrSSchema pSS,
-				 PtrDocument pDoc)
+PtrPRule GetRuleView (PtrPRule *pRSpecif, PtrPRule * pRDefault,
+		      PRuleType Typ, int Vue, PtrElement pEl,
+		      PtrAttribute pAttr, PtrSSchema pSS,
+		      PtrDocument pDoc)
 {
    PtrPRule            pPR;
    ThotBool            stop;

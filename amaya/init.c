@@ -1542,7 +1542,7 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
   old_doc = doc;
   reinitialized = FALSE;
 
-  if (doc != 0 && docType != docLog && !TtaIsDocumentModified (doc))
+  if (doc != 0)
     /* the new document will replace another document in the same window */
     {
       /* keep in memory if the closed document is in read-only mode */
@@ -2152,11 +2152,11 @@ void               LatinReading (Document document, View view)
   For a remote loading, the parameter tempfile gives the file name that
   contains the current copy of the remote file.
   ----------------------------------------------------------------------*/
-static Document  LoadDocument (Document doc, char *pathname,
-			       char *form_data, char *initial_url,
-			       int method, char *tempfile,
-			       char *documentname, AHTHeaders *http_headers,
-			       ThotBool history)
+static Document LoadDocument (Document doc, char *pathname,
+			      char *form_data, char *initial_url,
+			      int method, char *tempfile,
+			      char *documentname, AHTHeaders *http_headers,
+			      ThotBool history)
 {
   CSSInfoPtr          css;
   Document            newdoc = 0;
@@ -2402,24 +2402,28 @@ static Document  LoadDocument (Document doc, char *pathname,
 			       DocumentMeta[doc]->method);
 	    }
 
-	  /*
-	   * free the previous document and prepare the window
-	   * for the new one
-	   */
-	  if (method == CE_RELATIVE && docType == docCSS)
+	  if (method == CE_RELATIVE)
 	    {
-	      /* display the CSS in a new window */
-	      newdoc = InitDocView (0, documentname, docType, 0, FALSE);
-	      ResetStop (doc);
-	      /* clear the status line of previous document */
-	      TtaSetStatus (doc, 1, " ", NULL);
-	      ActiveTransfer (newdoc);
+	      if (TtaIsDocumentModified (doc) || docType == docCSS)
+		{
+		  /* open a new window to display the new document */
+		  newdoc = InitDocView (0, documentname, docType, 0, FALSE);
+		  ResetStop (doc);
+		  /* clear the status line of previous document */
+		  TtaSetStatus (doc, 1, " ", NULL);
+		  ActiveTransfer (newdoc);
+		}
+	      else
+		/* replace the current document by a new one */
+		newdoc = InitDocView (doc, documentname, docType, 0, FALSE);
 	    }
+	  else if (method == CE_ABSOLUTE)
+	    /* replace the current document by a new one */
+	    newdoc = InitDocView (doc, documentname, docType, 0, FALSE);
 #ifdef ANNOTATIONS
 	  else if (method == CE_ANNOT && docType == docHTML)
 	    {
 	      docType = docAnnot;
-	      method = CE_RELATIVE;
 	      newdoc = doc;
 	      /* @@ IV: we are not currently able to use the XML parser for 
 		 annotations */
@@ -2431,9 +2435,8 @@ static Document  LoadDocument (Document doc, char *pathname,
 	      docType = docLog;
 	      newdoc = doc;
 	    }
-	  else if (method != CE_INIT || docType != DocumentTypes[doc])
-	    newdoc = InitDocView (doc, documentname, docType, 0, FALSE);
 	  else
+	    /* document already initialized */
 	    newdoc = doc;
 	}
       else
@@ -2676,21 +2679,21 @@ static Document  LoadDocument (Document doc, char *pathname,
 /*----------------------------------------------------------------------
   Reload_callback
   ----------------------------------------------------------------------*/
-void  Reload_callback (int doc, int status, char *urlName,
-		       char *outputfile, AHTHeaders *http_headers,
-		       void * context)
+void Reload_callback (int doc, int status, char *urlName,
+		      char *outputfile, AHTHeaders *http_headers,
+		      void * context)
 {
   Document newdoc;
-  char *pathname;
-  char *tempfile;
-  char *documentname;
-  char *form_data;
-  char *initial_url;
-  ClickEvent method;
-  Document res;
-  Element el;
-  RELOAD_context *ctx;
-  ThotBool stopped_flag = FALSE;
+  char              *pathname;
+  char              *tempfile;
+  char              *documentname;
+  char              *form_data;
+  char              *initial_url;
+  ClickEvent         method;
+  Document           res;
+  Element            el;
+  RELOAD_context    *ctx;
+  ThotBool           stopped_flag = FALSE;
 
   /* restore the context associated with the request */
   ctx = (RELOAD_context *) context;
@@ -2716,7 +2719,7 @@ void  Reload_callback (int doc, int status, char *urlName,
        /* parse and display the document, res contains the new document
 	identifier, as given by the thotlib */
        res = LoadDocument (newdoc, pathname, form_data, NULL, method,
-			       tempfile, documentname, http_headers, FALSE);
+			   tempfile, documentname, http_headers, FALSE);
 
        if (res == 0)
 	 {
@@ -2766,18 +2769,18 @@ void  Reload_callback (int doc, int status, char *urlName,
 /*----------------------------------------------------------------------
   Reload
   ----------------------------------------------------------------------*/
-void                Reload (Document doc, View view)
+void Reload (Document doc, View view)
 {
-   char *             tempfile;
-   char *             pathname;
-   char *             documentname;
-   int                 toparse;
-   char *            form_data;
+   char               *tempfile;
+   char               *pathname;
+   char               *documentname;
+   char               *form_data;
    ClickEvent          method;
+   RELOAD_context     *ctx;
+   int                 toparse;
    int                 mode;
    int		       position;
    int		       distance;
-   RELOAD_context     *ctx;
 
    if (DocumentURLs[doc] == NULL)
       /* the document has not been loaded yet */
@@ -2863,7 +2866,7 @@ void                Reload (Document doc, View view)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                ShowTargets (Document document, View view)
+void ShowTargets (Document document, View view)
 {
   int               visibility;
   View		    tocView;
@@ -2890,10 +2893,10 @@ void                ShowTargets (Document document, View view)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                ZoomIn (Document document, View view)
+void ZoomIn (Document document, View view)
 {
   int               zoom, zoomVal;
-  char *           zoomStr;
+  char             *zoomStr;
 
   zoom = TtaGetZoom (document, view);
   if (zoom < 10)
@@ -2924,10 +2927,10 @@ void                ZoomIn (Document document, View view)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                ZoomOut (Document document, View view)
+void ZoomOut (Document document, View view)
 {
   int               zoom, zoomVal;
-  char *           zoomStr;
+  char             *zoomStr;
 
   zoom = TtaGetZoom (document, view);
   if (zoom > -10)
@@ -2960,7 +2963,7 @@ void                ZoomOut (Document document, View view)
   ShowSource
   Display the source code of an HTML page.
   ----------------------------------------------------------------------*/
-void                ShowSource (Document document, View view)
+void ShowSource (Document document, View view)
 {
    char *       tempdocument;
    char *      s;
@@ -3070,7 +3073,7 @@ void                ShowSource (Document document, View view)
   ShowStructure
   Open the structure view(s) of an HTML document.
   ----------------------------------------------------------------------*/
-void                ShowStructure (Document document, View view)
+void ShowStructure (Document document, View view)
 {
    View                structView;
    int                 x, y, w, h;
@@ -3147,7 +3150,7 @@ void                ShowAlternate (Document document, View view)
   ShowLinks
   Open the Links view of an HTML document
   ----------------------------------------------------------------------*/
-void                ShowLinks (Document document, View view)
+void ShowLinks (Document document, View view)
 {
    View                linksView;
    int                 x, y, w, h;
@@ -3185,7 +3188,7 @@ void                ShowLinks (Document document, View view)
   ShowToC
   Open the Table of content view of an HTML document
   ----------------------------------------------------------------------*/
-void                ShowToC (Document document, View view)
+void ShowToC (Document document, View view)
 {
    View                tocView;
    int                 x, y, w, h;
@@ -3222,7 +3225,7 @@ void                ShowToC (Document document, View view)
 /*----------------------------------------------------------------------
    ViewToClose                                                      
   ----------------------------------------------------------------------*/
-ThotBool            ViewToClose (NotifyDialog * event)
+ThotBool ViewToClose (NotifyDialog * event)
 {
    Document      document;
    View          view, structView, altView, linksView, tocView;
@@ -3264,22 +3267,22 @@ void GetHTMLDocument_callback (int newdoc, int status, char *urlName,
    Document            doc;
    Document            baseDoc;
    Document            res;
-   char *            tempfile;
-   char *            target;
-   char *            pathname;
-   char *            initial_url;
-   char *            documentname;
-   char *            form_data;
+   GETHTMLDocument_context *ctx;
+   TTcbf              *cbf;
    ClickEvent          method;
-   char *            tempdocument;
-   char *            s;
+   char               *tempfile;
+   char               *target;
+   char               *pathname;
+   char               *initial_url;
+   char               *documentname;
+   char               *form_data;
+   char               *tempdocument;
+   char               *s;
    int                 i;
    ThotBool	       history;
    ThotBool            ok;
    ThotBool            stopped_flag = FALSE;
    ThotBool            local_link;
-   GETHTMLDocument_context *ctx;
-   TTcbf              *cbf;
    void               *ctx_cbf;
 
    /* restore GETHTMLDocument's context */  
@@ -3471,15 +3474,14 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
    /* Extract the target if necessary */
    ExtractTarget (tempdocument, target);
    /* Add the  base content if necessary */
-   if (CE_event == CE_RELATIVE || CE_event == CE_FORM_GET
-       || CE_event == CE_FORM_POST || CE_event == CE_MAKEBOOK)
+   if (CE_event == CE_RELATIVE || CE_event == CE_FORM_GET ||
+       CE_event == CE_FORM_POST || CE_event == CE_MAKEBOOK)
      NormalizeURL (tempdocument, baseDoc, pathname, documentname, NULL);
    else
      NormalizeURL (tempdocument, 0, pathname, documentname, NULL);
 
    /* if it's a file: url, we remove the protocol, as it
       is a local file */
-
 #ifdef _WINDOWS
    sprintf (wTitle, "%s", documentname);
 #endif /* _WINDOWS */
@@ -3623,8 +3625,14 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
 	 }
 #endif /* ANNOTATIONS */
        else if (doc == 0 || InNewWindow)
-	 /* In case of initial document, open the view before loading */
-	 newdoc = InitDocView (0, documentname, docType, 0, FALSE);
+	 {
+	   /* In case of initial document, open the view before loading */
+	   newdoc = InitDocView (0, documentname, docType, 0, FALSE);
+	   /* now the new window is open */
+	   if (CE_event == CE_RELATIVE || CE_event == CE_ABSOLUTE)
+	     /* don't free the current loaded document */
+	     ctx->method = CE_INIT;
+	 }
        else
 	 {
 	   newdoc = doc;

@@ -368,7 +368,7 @@ ThotBool IsHTMLName (const char *path)
   IsXMLName                                                         
   returns TRUE if path points to an XML resource.
   ----------------------------------------------------------------------*/
-ThotBool             IsXMLName (const char *path)
+ThotBool IsXMLName (const char *path)
 {
    char                temppath[MAX_LENGTH];
    char                suffix[MAX_LENGTH];
@@ -404,7 +404,7 @@ ThotBool             IsXMLName (const char *path)
   IsMathMLName                                                         
   returns TRUE if path points to an MathML resource.
   ----------------------------------------------------------------------*/
-ThotBool             IsMathMLName (const char *path)
+ThotBool IsMathMLName (const char *path)
 {
    char                temppath[MAX_LENGTH];
    char                suffix[MAX_LENGTH];
@@ -434,7 +434,7 @@ ThotBool             IsMathMLName (const char *path)
   IsSVGName                                                         
   returns TRUE if path points to an MathML resource.
   ----------------------------------------------------------------------*/
-ThotBool             IsSVGName (const char *path)
+ThotBool IsSVGName (const char *path)
 {
    char                temppath[MAX_LENGTH];
    char                suffix[MAX_LENGTH];
@@ -464,7 +464,7 @@ ThotBool             IsSVGName (const char *path)
   IsCSSName                                                         
   returns TRUE if path points to an XML resource.
   ----------------------------------------------------------------------*/
-ThotBool             IsCSSName (const char *path)
+ThotBool IsCSSName (const char *path)
 {
    char                temppath[MAX_LENGTH];
    char                suffix[MAX_LENGTH];
@@ -494,7 +494,7 @@ ThotBool             IsCSSName (const char *path)
   IsImageName                                
   returns TRUE if path points to an image resource.
   ----------------------------------------------------------------------*/
-ThotBool             IsImageName (const char *path)
+ThotBool IsImageName (const char *path)
 {
    char                temppath[MAX_LENGTH];
    char                suffix[MAX_LENGTH];
@@ -526,7 +526,7 @@ ThotBool             IsImageName (const char *path)
   IsImageType                                
   returns TRUE if type points to an image resource.
   ----------------------------------------------------------------------*/
-ThotBool             IsImageType (const char *type)
+ThotBool IsImageType (const char *type)
 {
    char                temptype[MAX_LENGTH];
    int                 i;
@@ -542,9 +542,9 @@ ThotBool             IsImageType (const char *type)
        temptype[i] = tolower (temptype[i]);
        i++;
      }
-   if ((!strcmp (temptype, "gif")) || (!strcmp (temptype, "x-xbitmap")) ||
-       (!strcmp (temptype, "x-xpixmap")) || (!strcmp (temptype, "jpeg")) ||
-       (!strcmp (temptype, "png")))
+   if (!strcmp (temptype, "gif") || !strcmp (temptype, "x-xbitmap") ||
+       !strcmp (temptype, "x-xpixmap") || !strcmp (temptype, "jpeg") ||
+       !strcmp (temptype, "png"))
       return (TRUE);
    return (FALSE);
 }
@@ -552,7 +552,7 @@ ThotBool             IsImageType (const char *type)
 /*----------------------------------------------------------------------
   IsTextName                                                         
   ----------------------------------------------------------------------*/
-ThotBool             IsTextName (const char *path)
+ThotBool IsTextName (const char *path)
 {
    char                temppath[MAX_LENGTH];
    char                suffix[MAX_LENGTH];
@@ -574,7 +574,7 @@ ThotBool             IsTextName (const char *path)
      }
    nsuffix[i] = EOS;
 
-   if ((!strcmp (nsuffix, "txt")) || (!strcmp (nsuffix, "dtd")))
+   if (!strcmp (nsuffix, "txt") || !strcmp (nsuffix, "dtd"))
       return (TRUE);
    else if (!strcmp (nsuffix, "gz"))
      {
@@ -588,7 +588,7 @@ ThotBool             IsTextName (const char *path)
 	   i++;
 	 }
        nsuffix[i] = EOS;
-       if ((!strcmp (nsuffix, "txt")) || (!strcmp (nsuffix, "dtd")))
+       if (!strcmp (nsuffix, "txt") || !strcmp (nsuffix, "dtd"))
 	 return (TRUE);
        else
 	 return (FALSE);

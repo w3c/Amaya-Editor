@@ -549,17 +549,22 @@ static ThotBool FollowTheLink (Element anchor, Element elSource, Document doc)
 {
    AttributeType          attrType;
    Attribute              HrefAttr, PseudoAttr, attr;
+   ElementType            elType;
+   Document               targetDocument, reldoc;
+   SSchema                HTMLSSchema;
+   char                   documentURL[MAX_LENGTH];
+   char                   buffer[MAX_LENGTH], documentname[MAX_LENGTH];
+   char                  *url, *info, *sourceDocUrl;
+   int                    length;
+   int                    method;
+   FollowTheLink_context *ctx;
+   ThotBool		  isHTML, history;
 #ifdef ANNOTATIONS
    ThotBool               isAnnotLink;
 #endif /* ANNOTATIONS */
-   ElementType            elType;
-   Document               targetDocument;
-   SSchema                HTMLSSchema;
-   char                   documentURL[MAX_LENGTH];
-   char                  *url, *info, *sourceDocUrl;
-   int                    length;
-   ThotBool		  isHTML;
-   FollowTheLink_context *ctx;
+
+   if (anchor == NULL)
+     return FALSE;
 
    info = NULL;
    HrefAttr = NULL;
@@ -567,49 +572,40 @@ static ThotBool FollowTheLink (Element anchor, Element elSource, Document doc)
    isAnnotLink = FALSE;
 #endif /* ANNOTATIONS */
    HTMLSSchema = TtaGetSSchema ("HTML", doc);
-
-   if (anchor)
+   elType = TtaGetElementType (anchor);
+   attrType.AttrSSchema = HTMLSSchema;
+   isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLSSchema);
+   /* search the HREF or CITE attribute */
+   if (isHTML &&
+       (elType.ElTypeNum == HTML_EL_Quotation ||
+	elType.ElTypeNum == HTML_EL_Block_Quote ||
+	elType.ElTypeNum == HTML_EL_INS ||
+	elType.ElTypeNum == HTML_EL_DEL))
+     attrType.AttrTypeNum = HTML_ATTR_cite;
+   else if (isHTML && elType.ElTypeNum == HTML_EL_FRAME)
+     attrType.AttrTypeNum = HTML_ATTR_FrameSrc;
+   else if (isHTML)
+     attrType.AttrTypeNum = HTML_ATTR_HREF_;
+   else if (elType.ElTypeNum == GraphML_EL_a &&
+	    !strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+     /* it's an SVG anchor element, look for an xlink:href attr. */
      {
-       elType = TtaGetElementType (anchor);
-       attrType.AttrSSchema = HTMLSSchema;
-       isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLSSchema);
-       /* search the HREF or CITE attribute */
-       if (isHTML &&
-	   (elType.ElTypeNum == HTML_EL_Quotation ||
-	    elType.ElTypeNum == HTML_EL_Block_Quote ||
-	    elType.ElTypeNum == HTML_EL_INS ||
-	    elType.ElTypeNum == HTML_EL_DEL))
-	 attrType.AttrTypeNum = HTML_ATTR_cite;
-       else if (isHTML && elType.ElTypeNum == HTML_EL_FRAME)
-	 attrType.AttrTypeNum = HTML_ATTR_FrameSrc;
-       else
-	 if (isHTML)
-	   attrType.AttrTypeNum = HTML_ATTR_HREF_;
-	 else
-	   {
-	     if (elType.ElTypeNum == GraphML_EL_a &&
-		 !strcmp (TtaGetSSchemaName (elType.ElSSchema),
-			   "GraphML"))
-	       /* it's an SVG anchor element, look for an xlink:href attr. */
-	       {
-		 attrType.AttrSSchema = elType.ElSSchema;
-		 attrType.AttrTypeNum = GraphML_ATTR_xlink_href;
-	       }
-	     else
-	       {
-		 attrType.AttrSSchema = TtaGetSSchema ("XLink", doc);
-		 attrType.AttrTypeNum = XLink_ATTR_href_;
+       attrType.AttrSSchema = elType.ElSSchema;
+       attrType.AttrTypeNum = GraphML_ATTR_xlink_href;
+     }
+   else
+     {
+       attrType.AttrSSchema = TtaGetSSchema ("XLink", doc);
+       attrType.AttrTypeNum = XLink_ATTR_href_;
 #ifdef ANNOTATIONS
-		 /* is it an annotation link? */
-		 if (elType.ElSSchema == attrType.AttrSSchema
-		     && elType.ElTypeNum == XLink_EL_XLink)
-		   isAnnotLink = TRUE;
+       /* is it an annotation link? */
+       if (elType.ElSSchema == attrType.AttrSSchema
+	   && elType.ElTypeNum == XLink_EL_XLink)
+	 isAnnotLink = TRUE;
 #endif /* ANNOTATIONS */
-	       }
-	   }
-       HrefAttr = TtaGetAttribute (anchor, attrType);
      }
 
+   HrefAttr = TtaGetAttribute (anchor, attrType);
    if (HrefAttr != NULL)
      {
        targetDocument = 0;
@@ -621,8 +617,7 @@ static ThotBool FollowTheLink (Element anchor, Element elSource, Document doc)
        if (url != NULL)
 	 {
 	   elType = TtaGetElementType (anchor);
-	   if (elType.ElTypeNum == HTML_EL_Anchor &&
-	       elType.ElSSchema == HTMLSSchema)
+	   if (isHTML && elType.ElTypeNum == HTML_EL_Anchor)
 	     {
 	       /* it's an HTML anchor */
 	       /* attach an attribute PseudoClass = active */
@@ -692,21 +687,50 @@ static ThotBool FollowTheLink (Element anchor, Element elSource, Document doc)
 	       StopTransfer (doc, 1);	   
 	       /* get the referred document */
 #ifdef ANNOTATIONS
-	       targetDocument = GetHTMLDocument (documentURL, NULL,
-						 (isAnnotLink) ? 0 : doc,
-						 doc,
-						 (isAnnotLink) ? CE_ANNOT : CE_RELATIVE, 
-						 (isAnnotLink) ? FALSE : TRUE, 
-						 (void *) FollowTheLink_callback,
-						 (void *) ctx);
-#else
-	       targetDocument = GetHTMLDocument (documentURL, NULL,
-						 doc, 
-						 doc, 
-						 CE_RELATIVE, TRUE, 
-						 (void *) FollowTheLink_callback,
-						 (void *) ctx);
+	       if (isAnnotLink)
+		 {
+		   /* loading an annotation */
+		   reldoc = 0;
+		   method = CE_ANNOT;
+		   history = FALSE;
+		 }
+	       else
 #endif /* ANNOTATIONS */
+		 {
+		   reldoc = doc;
+		   method = CE_RELATIVE;
+		   history = TRUE;
+		   if (isHTML && elType.ElTypeNum == HTML_EL_LINK)
+		     {
+		       attrType.AttrSSchema = HTMLSSchema;
+		       attrType.AttrTypeNum = HTML_ATTR_REL;
+		       attr = TtaGetAttribute (anchor, attrType);
+		       if (attr)
+			 {
+			   /* get a buffer for the attribute value */
+			   length = MAX_LENGTH;
+			   TtaGiveTextAttributeValue (attr, buffer, &length);
+			   if (!strcasecmp (buffer, "stylesheet") ||
+			       !strcasecmp (buffer, "style"))
+			     {
+			       /* opening a CSS */
+			       reldoc = 0;
+			       method = CE_CSS;
+			       history = FALSE;
+			       /* normalize the URL */
+			       strcpy (buffer, documentURL);
+			       NormalizeURL (buffer, doc, documentURL,
+					     documentname, NULL);
+			     }
+			 }
+		     }
+		 }
+	       targetDocument = GetHTMLDocument (documentURL, NULL,
+						 reldoc, 
+						 doc, 
+						 method, history, 
+						 (void *) FollowTheLink_callback,
+						 (void *) ctx);
 	     }
 	   return (TRUE);
 	 }

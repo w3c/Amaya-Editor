@@ -176,8 +176,7 @@ void                RemoveLink (Element el, Document doc)
    ElementType	       elType;
    AttributeType       attrType;
    Attribute           attr;
-   char              buffer[MAX_LENGTH];
-   char              pathname[MAX_LENGTH], documentname[MAX_LENGTH];   
+   char              buffer[MAX_LENGTH];   char              pathname[MAX_LENGTH], documentname[MAX_LENGTH];   
    int                 length;
 
    /* Search the refered image */

@@ -162,12 +162,12 @@ void GetViewFromFrame (int nframe, PtrDocument pDoc, int *viewNum, ThotBool * as
 }
 
 /*----------------------------------------------------------------------
-   GetDocAndView retourne le pointeur sur le document (pDoc) et le	
-   numero de vue (viewNum) dans ce document, correspondant a	
-   la fenetre de numero nframe. Si c'est une fenetre		
-   d'elements associes, rend assoc vrai et viewNum = numero	
-   d'element associe, sinon rend assoc faux.			
-   Rend pDoc = NULL si la selection a echoue.			
+   GetDocAndView retourne le pointeur sur le document (pDoc) et le
+   numero de vue (viewNum) dans ce document, correspondant a
+   la fenetre de numero nframe. Si c'est une fenetre
+   d'elements associes, rend assoc vrai et viewNum = numero
+   d'element associe, sinon rend assoc faux.
+   Rend pDoc = NULL si la selection a echoue.
   ----------------------------------------------------------------------*/
 void GetDocAndView (int frame, PtrDocument *pDoc, int *viewNum, ThotBool *assoc)
 {
@@ -187,8 +187,8 @@ void GetDocAndView (int frame, PtrDocument *pDoc, int *viewNum, ThotBool *assoc)
 }
 
 /*----------------------------------------------------------------------
-   BuildSSchemaViewList						
-   Construit la liste des vues possibles d'un document.		
+  BuildSSchemaViewList
+  Construit la liste des vues possibles d'un document.
   ----------------------------------------------------------------------*/
 static void BuildSSchemaViewList (PtrDocument pDoc, PtrSSchema pSS,
                                   AvailableView viewList, int *nViews,
@@ -260,8 +260,8 @@ static void BuildSSchemaViewList (PtrDocument pDoc, PtrSSchema pSS,
 }
 
 /*----------------------------------------------------------------------
-   BuildNatureList	cree la liste des natures du schema		
-   	de structure pSS.						
+  BuildNatureList cree la liste des natures du schema
+  de structure pSS.
   ----------------------------------------------------------------------*/
 static void BuildNatureList (PtrSSchema pSS, int *nViews,
                              AvailableView viewList, PtrDocument pDoc)
@@ -292,9 +292,9 @@ static void BuildNatureList (PtrSSchema pSS, int *nViews,
 }
 
 /*----------------------------------------------------------------------
-   BuildDocumentViewList	construit la liste des vues definies pour	
-   	le document pDoc: vues de l'arbre principal, vues des elements	
-   	assoocies et vues des natures.                                  
+   BuildDocumentViewList construit la liste des vues definies pour
+   le document pDoc: vues de l'arbre principal, vues des elements
+   assoocies et vues des natures.
   ----------------------------------------------------------------------*/
 int BuildDocumentViewList (PtrDocument pDoc, AvailableView viewList)
 {

@@ -87,7 +87,7 @@ static int          SelectedPictureEdge;/* if the current selection is a
    Parameter:
        keyboard: the keyboard to be displayed.
   ----------------------------------------------------------------------*/
-void                TtaSetCurrentKeyboard (int keyboard)
+void TtaSetCurrentKeyboard (int keyboard)
 {
    if (ThotLocalActions[T_keyboard] != NULL)
       (*ThotLocalActions[T_keyboard]) (keyboard);
@@ -101,7 +101,7 @@ void                TtaSetCurrentKeyboard (int keyboard)
 
    initialize variable describing the current selection.
   ----------------------------------------------------------------------*/
-void                InitSelection ()
+void InitSelection ()
 {
    SelectedDocument = NULL;
    FirstSelectedElement = NULL;
@@ -137,7 +137,7 @@ void                InitSelection ()
    "document" et si oui definit une nouvelle selection, sans cet   
    element.                                                        
   ----------------------------------------------------------------------*/
-void         CheckSelectedElement (PtrElement pEl, Document document)
+void CheckSelectedElement (PtrElement pEl, Document document)
 {
    PtrDocument         pDoc;
    PtrDocument         selDoc;
@@ -238,7 +238,7 @@ void         CheckSelectedElement (PtrElement pEl, Document document)
    Choses the abstract box that should receive the characters typed by
    the user.
   ----------------------------------------------------------------------*/
-void                TtaSetFocus ()
+void TtaSetFocus ()
 {
   PtrAbstractBox      pAb;
 
@@ -266,7 +266,7 @@ void                TtaSetFocus ()
    returns the first element in the descendants of element pEl which has
    an abstract box in the view.
   ----------------------------------------------------------------------*/
-static PtrElement   VisibleDescendant (PtrElement pEl, int view)
+static PtrElement VisibleDescendant (PtrElement pEl, int view)
 {
    PtrElement          pChild, pVisible;
 
@@ -295,7 +295,7 @@ static PtrElement   VisibleDescendant (PtrElement pEl, int view)
   Restore in all views the enclosing abstract boxes for associated element
   pEl, if this associated element is displayed in a page footer or header.
   ----------------------------------------------------------------------*/
-static void         EnclosingAssocAbsBox (PtrElement pEl)
+static void EnclosingAssocAbsBox (PtrElement pEl)
 {
    int                 view;
    PtrElement          pDesc;
@@ -347,7 +347,8 @@ static void         EnclosingAssocAbsBox (PtrElement pEl)
 	and if *firstChar == *lastChar, no character is selected, only the
 	position before firstChar is selected.
   ----------------------------------------------------------------------*/
-ThotBool  GetCurrentSelection (PtrDocument * pDoc, PtrElement * firstEl, PtrElement * lastEl, int *firstChar, int *lastChar)
+ThotBool GetCurrentSelection (PtrDocument *pDoc, PtrElement *firstEl,
+			      PtrElement *lastEl, int *firstChar, int *lastChar)
 {
    ThotBool            ret;
    PtrElement          pEl;
@@ -426,7 +427,7 @@ ThotBool  GetCurrentSelection (PtrDocument * pDoc, PtrElement * firstEl, PtrElem
    view: number of this view in the document (if assoc is FALSE)
          number of the corresponding associated element (if assoc is TRUE)
   ----------------------------------------------------------------------*/
-void     GetActiveView (PtrDocument *pDoc, int *view, ThotBool *assoc)
+void GetActiveView (PtrDocument *pDoc, int *view, ThotBool *assoc)
 {
   PtrDocument         pSelDoc;
   PtrElement          firstSel, lastSel;
@@ -447,7 +448,7 @@ void     GetActiveView (PtrDocument *pDoc, int *view, ThotBool *assoc)
 
    Cancels the current selection.
   ----------------------------------------------------------------------*/
-void                CancelSelection ()
+void CancelSelection ()
 {
    PtrDocument         pDoc;
 
@@ -488,7 +489,7 @@ void                CancelSelection ()
 
    If the current selection is in document pDoc, cancel this selection.
   ----------------------------------------------------------------------*/
-void                ResetSelection (PtrDocument pDoc)
+void ResetSelection (PtrDocument pDoc)
 {
    if (pDoc == SelectedDocument || pDoc == DocSelectedAttr)
      {

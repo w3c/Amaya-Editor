@@ -23,6 +23,7 @@
 #define THOT_EXPORT extern
 #include "platform_tv.h"
 #include "page_tv.h"
+#include "select_tv.h"
 
 #include "absboxes_f.h"
 #include "attributes_f.h"
@@ -43,6 +44,7 @@
 #include "search_f.h"
 #include "searchref_f.h"
 #include "structlist_f.h"
+#include "structselect_f.h"
 #include "tree_f.h"
 #include "writepivot_f.h"
 
@@ -2231,187 +2233,188 @@ void CreateNewAbsBoxes (PtrElement pEl, PtrDocument pDoc, int viewNb)
 void DestroyAbsBoxesView (PtrElement pEl, PtrDocument pDoc, ThotBool verify,
 			  int view)
 {
-   PtrAbstractBox      pAb, pAbbReDisp, pAbbR, pAbb, pElAscent, PcFirst;
-   PtrAbstractBox      pAbbox1, PcLast;
-   PtrElement          pElChild;
-   int                 v;
-   ThotBool            stop;
+  PtrAbstractBox      pAb, pAbbReDisp, pAbbR, pAbb, pElAscent, PcFirst;
+  PtrAbstractBox      pAbbox1, PcLast;
+  PtrElement          pElChild;
+  int                 v;
+  ThotBool            stop;
 
-   pAb = pEl->ElAbstractBox[view - 1];
-   if (pAb == NULL)
-     {
-	/* pas de pave pour cet element dans cette vue, alors que */
-	/* la vue existe */
-	if (!pEl->ElTerminal)
-	   /* cherche les paves des descendants de l'element */
-	  {
-	     pElChild = pEl->ElFirstChild;
-	     while (pElChild != NULL)
-	       {
-		  DestroyAbsBoxesView (pElChild, pDoc, verify, view);
-		  pElChild = pElChild->ElNext;
-	       }
-	  }
-     }
-   else
-      /* l'element a au moins un pave dans la vue */
-     {
-	/* si l'element cree un pave englobant par la regle FnCreateEnclosing, */
-	/* c'est ce pave englobant qu'il faut detruire */
-	if (pAb->AbEnclosing != NULL)
-	   if (pAb->AbEnclosing->AbPresentationBox)
-	      if (pAb->AbEnclosing->AbElement == pAb->AbElement)
-		 pAb = pAb->AbEnclosing;
+  pAb = pEl->ElAbstractBox[view - 1];
+  if (pAb == NULL)
+    {
+      /* pas de pave pour cet element dans cette vue, alors que */
+      /* la vue existe */
+      if (!pEl->ElTerminal)
+	/* cherche les paves des descendants de l'element */
+	{
+	  pElChild = pEl->ElFirstChild;
+	  while (pElChild != NULL)
+	    {
+	      DestroyAbsBoxesView (pElChild, pDoc, verify, view);
+	      pElChild = pElChild->ElNext;
+	    }
+	}
+    }
+  else
+    /* l'element a au moins un pave dans la vue */
+    {
+      /* si l'element cree un pave englobant par la regle FnCreateEnclosing, */
+      /* c'est ce pave englobant qu'il faut detruire */
+      if (pAb->AbEnclosing != NULL &&
+	  pAb->AbEnclosing->AbPresentationBox &&
+	  pAb->AbEnclosing->AbElement == pAb->AbElement)
+	pAb = pAb->AbEnclosing;
 
-	if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrAssocElem)
-	   /* traitement particulier des elements associes : le pere */
-	   /* de l'element a pour pave le pave englobant de l'element. */
-	   /* Dans le cas ou ces elements associes sont affiches dans */
-	   /* une boite de haut ou de bas de page, le pave de l'element */
-	   /* englobant pourrait etre dans une autre page... */
-	   pEl->ElParent->ElAbstractBox[view - 1] = pAb->AbEnclosing;
-	PcFirst = NULL;
-	PcLast = NULL;
-	pAbbReDisp = pAb;	/* on reaffichera ce pave */
-	/* traite tous les paves correspondant a cet element */
-	/* les marque d'abord tous 'morts' en verifiant si leur */
-	/* suppression complete le pave englobant */
-	do
-	  {
-	     if (verify)
-		if (pAb->AbLeafType == LtCompound && !pAb->AbInLine)
-		  {
-		     if (pAb->AbTruncatedHead)
-			if (pEl->ElPrevious == NULL)
-			   /* c'est le pave du premier element */
-			  {
-			     pElAscent = pAb->AbEnclosing;
-			     while (pElAscent != NULL)
-			       {
-				  pAbb = TruncateOrCompleteAbsBox (pElAscent, FALSE, TRUE, pDoc);
-				  if (pAbb != NULL)
-				     pAbbReDisp = Enclosing (pAbbReDisp, pAbb);
-				  if (pElAscent->AbElement->ElPrevious != NULL)
-				     pElAscent = NULL;
-				  else
-				     pElAscent = pElAscent->AbEnclosing;
-			       }
-			  }
-		     if (pAb->AbTruncatedTail)
-			if (pEl->ElNext == NULL)
-			   /* c'est le pave du dernier element */
-			  {
-			     pElAscent = pAb->AbEnclosing;
-			     while (pElAscent != NULL)
-			       {
-				  pAbb = TruncateOrCompleteAbsBox (pElAscent, FALSE, FALSE, pDoc);
-				  if (pAbb != NULL)
-				     pAbbReDisp = Enclosing (pAbbReDisp, pAbb);
-				  pElAscent = pElAscent->AbEnclosing;
-				  if (pElAscent != NULL)
-				     if (pElAscent->AbElement->ElNext != NULL)
-					pElAscent = NULL;
-			       }
-			  }
-		  }
-	     if (pAb->AbNew)
-	       {
-		 pAbbox1 = pAb;
-		 if (AssocView (pEl))
-		   {
-		     v = pEl->ElAssocNum - 1;
-		     FreeAbView (pAb, pDoc->DocAssocFrame[v]);
-		     /* update the assoc view if pAb if the root */
-		     if (pDoc->DocAssocRoot[v]->ElAbstractBox[0] == pAb)
-		       pDoc->DocAssocRoot[v]->ElAbstractBox[0] = NULL;
-		   }
-		 else
-		   FreeAbView (pAb, pDoc->DocViewFrame[view - 1]);
-		 pAb = pAbbox1;
-	       }
-	     else
-	       {
-		 SetDeadAbsBox (pAb);
-		 if (PcFirst == NULL)
-		   PcFirst = pAb;
-		 PcLast = pAb;
-		 /* passe au pave suivant du meme element */
-		 pAb = pAb->AbNext;
-	       }
-	     if (pAb != NULL)
-	       {
-		  pAbbox1 = pAb;
-		  if (pAbbox1->AbElement != pEl)
-		     /* il s'agit d'un autre element, on arrete */
-		     pAb = NULL;
-		  else if (pAbbox1->AbElement->ElTerminal
-			&& pAbbox1->AbElement->ElLeafType == LtPageColBreak)
-		     /* c'est un pave de haut ou bas de page, on n'en */
-		     /* traite qu'un */
-		     pAb = NULL;
-	       }
-	  }
-	while (pAb != NULL);
+      if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrAssocElem)
+	/* traitement particulier des elements associes : le pere */
+	/* de l'element a pour pave le pave englobant de l'element. */
+	/* Dans le cas ou ces elements associes sont affiches dans */
+	/* une boite de haut ou de bas de page, le pave de l'element */
+	/* englobant pourrait etre dans une autre page... */
+	pEl->ElParent->ElAbstractBox[view - 1] = pAb->AbEnclosing;
 
-	if (PcFirst == NULL)
-	  return;
-	else if (PcFirst != PcLast)
-	   /* il y a plusieurs paves pour cet element, on reaffichera */
-	   /* le pave englobant */
-	   pAbbReDisp = Enclosing (pAbbReDisp, PcFirst->AbEnclosing);
-
-	/* Est-ce un pave d'un element associe qui s'affiche en haut */
-	/* ou en bas de page ? */
-	if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrAssocElem)
-	   if (PcFirst->AbEnclosing->AbElement->ElTypeNumber == PageBreak + 1)
-	      /* le pave englobant est une boite de page */
-	      /* cherche si le pave englobant est vide (ne contient */
-	      /* que des paves morts ou de presentation) */
-	     {
-		pAbb = PcFirst->AbEnclosing->AbFirstEnclosed;
-		stop = FALSE;
-		do
-		   if (pAbb == NULL)
-		      stop = TRUE;
-		   else if (!pAbb->AbDead && !pAbb->AbPresentationBox)
-		      stop = TRUE;
-		   else
-		      pAbb = pAbb->AbNext;
-		while (!stop);
-		if (pAbb == NULL)
-		   /* il n'y a que des paves morts, on tue le pave */
-		   /* englobant */
-		  {
-		     PcFirst = PcFirst->AbEnclosing;
-		     PcLast = PcFirst;
-		     if (pEl->ElParent->ElAbstractBox[view - 1] == PcFirst)
-			pEl->ElParent->ElAbstractBox[view - 1] = NULL;
-		     SetDeadAbsBox (PcFirst);
-		     pAbbReDisp = Enclosing (pAbbReDisp, PcFirst);
-		     /* traite ensuite les paves qui se referent aux paves morts */
-		  }
-	     }
-	pAb = PcFirst;
-	do
-	  {
-	     /* cherche tous les paves qui font reference au pave a */
-	     /* detruire et pour ces paves, reapplique les regles qui font */
-	     /* reference au pave a detruire */
-	     ApplyRefAbsBoxSupp (pAb, &pAbbR, pDoc);
-	     pAbbReDisp = Enclosing (pAbbReDisp, pAbbR);
-	     /* passe au pave mort suivant */
-	     if (pAb == PcLast)
+      PcFirst = NULL;
+      PcLast = NULL;
+      pAbbReDisp = pAb;	/* on reaffichera ce pave */
+      /* traite tous les paves correspondant a cet element */
+      /* les marque d'abord tous 'morts' en verifiant si leur */
+      /* suppression complete le pave englobant */
+      do
+	{
+	  if (verify &&
+	      pAb->AbLeafType == LtCompound && !pAb->AbInLine)
+	    {
+	      if (pAb->AbTruncatedHead && pEl->ElPrevious == NULL)
+		/* c'est le pave du premier element */
+		{
+		  pElAscent = pAb->AbEnclosing;
+		  while (pElAscent != NULL)
+		    {
+		      pAbb = TruncateOrCompleteAbsBox (pElAscent, FALSE, TRUE, pDoc);
+		      if (pAbb != NULL)
+			pAbbReDisp = Enclosing (pAbbReDisp, pAbb);
+		      if (pElAscent->AbElement->ElPrevious != NULL)
+			pElAscent = NULL;
+		      else
+			pElAscent = pElAscent->AbEnclosing;
+		    }
+		}
+	      if (pAb->AbTruncatedTail && pEl->ElNext == NULL)
+		/* c'est le pave du dernier element */
+		{
+		  pElAscent = pAb->AbEnclosing;
+		  while (pElAscent != NULL)
+		    {
+		      pAbb = TruncateOrCompleteAbsBox (pElAscent, FALSE, FALSE, pDoc);
+		      if (pAbb != NULL)
+			pAbbReDisp = Enclosing (pAbbReDisp, pAbb);
+		      pElAscent = pElAscent->AbEnclosing;
+		      if (pElAscent != NULL &&
+			  pElAscent->AbElement->ElNext != NULL)
+			pElAscent = NULL;
+		    }
+		}
+	    }
+	  if (pAb->AbNew)
+	    {
+	      pAbbox1 = pAb;
+	      if (AssocView (pEl))
+		{
+		  v = pEl->ElAssocNum - 1;
+		  FreeAbView (pAb, pDoc->DocAssocFrame[v]);
+		  /* update the assoc view if pAb if the root */
+		  if (pDoc->DocAssocRoot[v]->ElAbstractBox[0] == pAb)
+		    pDoc->DocAssocRoot[v]->ElAbstractBox[0] = NULL;
+		}
+	      else
+		FreeAbView (pAb, pDoc->DocViewFrame[view - 1]);
+	      pAb = pAbbox1;
+	    }
+	  else
+	    {
+	      SetDeadAbsBox (pAb);
+	      if (pAb == AbsBoxSelectedAttr)
+		CancelSelection;
+	      if (PcFirst == NULL)
+		PcFirst = pAb;
+	      PcLast = pAb;
+	      /* passe au pave suivant du meme element */
+	      pAb = pAb->AbNext;
+	    }
+	  if (pAb != NULL)
+	    {
+	      pAbbox1 = pAb;
+	      if (pAbbox1->AbElement != pEl)
+		/* il s'agit d'un autre element, on arrete */
 		pAb = NULL;
-	     else
-		pAb = pAb->AbNext;
-	  }
-	while (pAb != NULL);
-	/* conserve le pointeur sur le pave a reafficher */
-	if (AssocView (pEl))
-	   pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] = Enclosing (pAbbReDisp, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
-	else
-	   pDoc->DocViewModifiedAb[view - 1] = Enclosing (pAbbReDisp, pDoc->DocViewModifiedAb[view - 1]);
-     }
+	      else if (pAbbox1->AbElement->ElTerminal
+		       && pAbbox1->AbElement->ElLeafType == LtPageColBreak)
+		/* c'est un pave de haut ou bas de page, on n'en */
+		/* traite qu'un */
+		pAb = NULL;
+	    }
+	}
+      while (pAb != NULL);
+
+      if (PcFirst == NULL)
+	return;
+      else if (PcFirst != PcLast)
+	/* il y a plusieurs paves pour cet element, on reaffichera */
+	/* le pave englobant */
+	pAbbReDisp = Enclosing (pAbbReDisp, PcFirst->AbEnclosing);
+
+      /* Est-ce un pave d'un element associe qui s'affiche en haut */
+      /* ou en bas de page ? */
+      if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrAssocElem &&
+	  PcFirst->AbEnclosing->AbElement->ElTypeNumber == PageBreak + 1)
+	/* le pave englobant est une boite de page */
+	/* cherche si le pave englobant est vide (ne contient */
+	/* que des paves morts ou de presentation) */
+	{
+	  pAbb = PcFirst->AbEnclosing->AbFirstEnclosed;
+	  stop = FALSE;
+	  do
+	    if (pAbb == NULL)
+	      stop = TRUE;
+	    else if (!pAbb->AbDead && !pAbb->AbPresentationBox)
+	      stop = TRUE;
+	    else
+	      pAbb = pAbb->AbNext;
+	  while (!stop);
+	  if (pAbb == NULL)
+	    /* il n'y a que des paves morts, on tue le pave */
+	    /* englobant */
+	    {
+	      PcFirst = PcFirst->AbEnclosing;
+	      PcLast = PcFirst;
+	      if (pEl->ElParent->ElAbstractBox[view - 1] == PcFirst)
+		pEl->ElParent->ElAbstractBox[view - 1] = NULL;
+	      SetDeadAbsBox (PcFirst);
+	      pAbbReDisp = Enclosing (pAbbReDisp, PcFirst);
+	      /* traite ensuite les paves qui se referent aux paves morts */
+	    }
+	}
+      pAb = PcFirst;
+      do
+	{
+	  /* cherche tous les paves qui font reference au pave a */
+	  /* detruire et pour ces paves, reapplique les regles qui font */
+	  /* reference au pave a detruire */
+	  ApplyRefAbsBoxSupp (pAb, &pAbbR, pDoc);
+	  pAbbReDisp = Enclosing (pAbbReDisp, pAbbR);
+	  /* passe au pave mort suivant */
+	  if (pAb == PcLast)
+	    pAb = NULL;
+	  else
+	    pAb = pAb->AbNext;
+	}
+      while (pAb != NULL);
+      /* conserve le pointeur sur le pave a reafficher */
+      if (AssocView (pEl))
+	pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] = Enclosing (pAbbReDisp, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
+      else
+	pDoc->DocViewModifiedAb[view - 1] = Enclosing (pAbbReDisp, pDoc->DocViewModifiedAb[view - 1]);
+    }
 }
 
 /*----------------------------------------------------------------------
