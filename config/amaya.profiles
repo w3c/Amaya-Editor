@@ -210,10 +210,10 @@ HelpChanging
 HelpPublishing
 HelpAccess
 &MenuAttribute
-&NewXHTMLBasic
-&NewXHTMLStrict
 &NewXHTML11
 &NewXHTMLTransitional
+&NewXHTMLStrict
+&NewXHTMLBasic
 &NewMathML
 &NewSVG
 SaveDocument
