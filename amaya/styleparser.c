@@ -1902,7 +1902,10 @@ static char *ParseCSSFontSize (Element element, PSchema tsch,
 	cssRule = SkipWord (cssRule);
      }
    else if (!isdigit (*cssRule) && *cssRule != '.')
-     return (cssRule);
+     {
+       cssRule = SkipValue ("Invalid font-size value", cssRule);
+       return (cssRule);
+     }
    else
      {
        /* look for a '/' within the current cssRule */
@@ -3350,10 +3353,10 @@ static char *ParseCSSContent (Element element, PSchema tsch,
        cssRule = SkipQuotedString (cssRule, quoteChar);
        cssRule = SkipBlanksAndComments (cssRule);
        if (*cssRule != EOS && *cssRule !=';')
-	 cssRule = SkipValue ("Invalid content value", cssRule);
+	 cssRule = SkipProperty (cssRule, FALSE);
      }
   else
-    cssRule = SkipValue ("Invalid content value", p);
+    cssRule = SkipProperty (cssRule, FALSE);
   return (cssRule);
 }
 
@@ -3383,6 +3386,9 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
   cssRule = SkipBlanksAndComments (cssRule);
   if (!strncasecmp (cssRule, "none", 4))
     {
+      cssRule += 4;
+      if (tsch)
+	cssRule = CheckImportantRule (cssRule, ctxt);
       if (DoApply)
 	{
 	  /* no background image */
@@ -3393,11 +3399,8 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 	  value.typed_data.real = FALSE;
 	  value.typed_data.value = PATTERN_NONE;
 	  value.typed_data.unit = UNIT_REL;
-	  if (tsch)
-	    cssRule = CheckImportantRule (cssRule, ctxt);
 	  TtaSetStylePresentation (PRFillPattern, element, tsch, ctxt, value);
 	}
-      cssRule += 4;
     }
   else if (!strncasecmp (cssRule, "url", 3))
     {  
@@ -3423,6 +3426,8 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 	  if (bg_image == NULL || !strcasecmp (bg_image, "yes"))
 	    /* background images are enabled */
 	    {
+	      if (tsch)
+		cssRule = CheckImportantRule (cssRule, ctxt);
 	      callblock = (BackgroundImageCallbackPtr) TtaGetMemory (sizeof (BackgroundImageCallbackBlock));
 	      if (callblock)
 		{
