@@ -225,11 +225,11 @@ NotifyPresentation *event;
    AttributeType       attrType;
    Attribute           styleAttr;
    Element	       elem, span;
-   PRule	       newPRule, PRule, oldPRule;
+   PRule	       newPRule, prule, oldPRule;
    Document	       doc;
 #define STYLELEN 1000
    char                style[STYLELEN];
-   int                 len, PRuleType;
+   int                 len, pruleType;
 
    elem = event->element;
    doc = event->document;
@@ -237,33 +237,33 @@ NotifyPresentation *event;
    if (event->event == TtePRuleCreate)
      /* a new presentation rule has been created */
      {
-     PRule = event->pRule;
-     PRuleType = TtaGetPRuleType (PRule);
+     prule = event->pRule;
+     pruleType = TtaGetPRuleType (prule);
      /* if the rule does not apply to the main view, applies it to the main
         view. */
      if (TtaGetPRuleView (event->pRule) > 1)
 	{
-	newPRule = TtaCopyPRule (PRule);
-	TtaRemovePRule (elem, PRule, doc);
+	newPRule = TtaCopyPRule (prule);
+	TtaRemovePRule (elem, prule, doc);
 	/* if that element already has a PRule of that type, remove that PRule
 	   first */
-        oldPRule = TtaGetPRule (elem, PRuleType);
+        oldPRule = TtaGetPRule (elem, pruleType);
 	if (oldPRule != NULL)
 	   if (TtaGetPRuleView (oldPRule) == 1)
 	       TtaRemovePRule (elem, oldPRule, doc);
 	TtaSetPRuleView (newPRule, 1);
 	TtaAttachPRule (elem, newPRule, doc);
-	PRule = newPRule;
+	prule = newPRule;
 	}
      /* if it is a new PRule on a text string, create a SPAN element that
         encloses this text string and move the PRule to that SPAN element */
      if (MakeASpan (elem, &span, doc))
         {
-        newPRule = TtaCopyPRule (PRule);
-        TtaRemovePRule (elem, PRule, doc);
+        newPRule = TtaCopyPRule (prule);
+        TtaRemovePRule (elem, prule, doc);
 	/* if the Span element already has a PRule of that type, remove
 	   that PRule from the Span element */
-        oldPRule = TtaGetPRule (span, PRuleType);
+        oldPRule = TtaGetPRule (span, pruleType);
 	if (oldPRule != NULL)
 	   if (TtaGetPRuleView (oldPRule) == 1)
 	       TtaRemovePRule (span, oldPRule, doc);
