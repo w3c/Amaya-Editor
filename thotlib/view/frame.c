@@ -118,7 +118,7 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
 {
    int                 width, height;
    ViewFrame          *pFrame;
-   int                xb, xe, yb, ye, y;
+   int                xb, xe, yb, ye;
 
    GetSizesFrame (frame, &width, &height);
 
@@ -806,7 +806,6 @@ ThotBool     RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
   int                 xmax;
   int                 ymin;
   int                 ymax;
-  ThotBool            stop;
   ThotBool            toadd;
  
   
