@@ -7,6 +7,12 @@
 #ifdef __STDC__
 
 extern void TtaSetEntityFunction ( Proc procedure );
+extern void PutChar ( wchar_t c,
+                      int fnum,
+                      char *outBuf,
+                      PtrDocument pDoc,
+                      ThotBool lineBreak,
+                      ThotBool translate );
 extern ThotBool ExportDocument ( PtrDocument pDoc,
                                  char *fName,
                                  char *tschema,
@@ -25,6 +31,12 @@ extern ThotBool TtaExportDocumentWithNewLineNumbers ( Document document,
 #else /* __STDC__ */
 
 extern void TtaSetEntityFunction (/* Proc procedure */);
+extern void PutChar (/* wchar_t c,
+                        int fnum,
+                        char *outBuf,
+                        PtrDocument pDoc,
+                        ThotBool lineBreak,
+                        ThotBool translate */);
 extern ThotBool ExportDocument (/* PtrDocument pDoc,
                                    char *fName,
                                    char *tschema,

@@ -1539,6 +1539,7 @@ TextTRANSLATE
 	'\46' -> '&amp;';	{ ampersand, U+0026 ISOnum }
 	'\74' -> '&lt;';	{ less-than sign, U+003C ISOnum }
 	'\76' -> '&gt;'; 	{ greater-than sign, U+003E ISOnum }
+	'\240' -> '&nbsp;';     { no-break space = non-breaking space, U+00A0 ISOnum }
 	END;
 
 TextTRANSLATE Grec

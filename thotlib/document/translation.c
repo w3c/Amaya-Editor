@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -156,8 +156,8 @@ static int GetSecondaryFile (char *fName, PtrDocument pDoc, ThotBool open)
   If the parameter translate is FALSE the charter is written as it is.
   In other case it will be translated according to the document encoding.
   ----------------------------------------------------------------------*/
-static void PutChar (wchar_t c, int fnum, char *outBuf,
-		     PtrDocument pDoc, ThotBool lineBreak, ThotBool translate)
+void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
+	      ThotBool lineBreak, ThotBool translate)
 {
   PtrTSchema          pTSch;
   FILE               *fileDesc;
@@ -186,6 +186,7 @@ static void PutChar (wchar_t c, int fnum, char *outBuf,
       /* translate the input character */
       else if (GetEntityFunction && c > 127 && pDoc->DocCharset == US_ASCII)
 	{
+	  /* generate an entity into an ASCII file */
 	  (*GetEntityFunction) (c, &entity);
 	  mbc[0] = '&';
 	  if (entity)
@@ -203,6 +204,7 @@ static void PutChar (wchar_t c, int fnum, char *outBuf,
 	}
       else if (GetEntityFunction && c > 255 && pDoc->DocCharset == ISO_8859_1)
 	{
+	  /* generate an entity into an ISO_8859_1 file */
 	  (*GetEntityFunction) (c, &entity);
 	  mbc[0] = '&';
 	  if (entity)
@@ -220,18 +222,38 @@ static void PutChar (wchar_t c, int fnum, char *outBuf,
 	}
       else if (pDoc->DocCharset == UTF_8)
 	{
+	  /* UTF-8 encoding */
 	  ptr = mbc;
 	  nb_bytes2write = TtaWCToMBstring ((wchar_t) c, &ptr);
 	}
       else
 	{
+	  /* other encodings */
 #ifdef _I18N_
 	  nb_bytes2write = 1;
 	  mbc[0] = TtaGetCharFromWC (c, pDoc->DocCharset);
-#else  /* !_I18N_ */
+	  if (mbc[0] == EOS && c != EOS)
+	    {
+	      /* generate an entity into an ISO_8859_1 file */
+	      (*GetEntityFunction) (c, &entity);
+	      mbc[0] = '&';
+	      if (entity)
+		{
+		  strncpy (&mbc[1], entity, 40);
+		  mbc[42] = EOS;
+		}
+	      else
+		{
+		  mbc[1] = '#';
+		  sprintf (&mbc[2], "%d", (int)c);
+		}
+	      nb_bytes2write = strlen (mbc);
+	      mbc[nb_bytes2write++] = ';';
+	    }
+#else  /* _I18N_ */
 	  nb_bytes2write = 1;
 	  mbc[0] = (unsigned char) c;
-#endif /* !_I18N_ */
+#endif /* _I18N_ */
 	}
     }
   else
