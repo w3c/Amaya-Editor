@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Links and Anchors</title>
+  <meta name="GENERATOR" content="amaya V3.2.1" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" width="100%" summary="toc">
+  <tbody>
+    <tr>
+      <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
+        border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
+      </td>
+      <td><p align="right"><a href="Creating.html"><img alt="previous"
+        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html"><img
+        alt="top" border="0" src="../Icons/up.gif" /></a> <a
+        href="Changing.html"><img alt="next" border="0"
+        src="../Icons/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="Creating">
+<h2>Creating and changing links and anchors</h2>
+
+<h3><a name="L557">Creating a target anchor</a></h3>
+
+<p>A target anchor is a piece of text that is referred to by a link (a source
+anchor). Before creating a link to such a piece of text, you must first turn
+it into a target anchor.</p>
+
+<p>Just select a character string with the mouse and choose <strong>Create
+Target</strong> from the <strong>Links</strong> menu. The selected text is now
+a target. If you have set the status "Show targets" to your current Formatted
+view, the text is preceded by an a <a href="Browsing.html#target">target icon
+<img src="../Icons/target.gif" alt=" target " /></a>. In the  Links view
+target icons, which identify target anchors are always displayed (there is no
+option to show or hide target icons). When a target anchor is created, Amaya
+automatically generates the NAME attribute value:</p>
+<ul>
+  <li><p>By extracting a word longer than 3 characters from the anchor
+    content</p>
+    <p> </p>
+    <p>OR</p>
+    <p> </p>
+  </li>
+  <li><p>By generating a number.</p>
+  </li>
+</ul>
+
+<p>In both cases, Amaya guarantees that the generated value is unique within
+the document.</p>
+
+<h3><a name="target1">Creating a target element</a></h3>
+
+<p>In HTML 4.0, an element can be used as a target of links. A target element
+is a typed element that has an ID attribute which is referred to by a link (a
+source anchor). Before creating a link to such an element, you must first turn
+it into a target element.</p>
+
+<p>You can create a target element in the same way you create a target anchor.
+Just select a character string within the element, use the Esc (F2 on Windows)
+key to select the element itself and choose <strong>Create Target</strong>
+from the <strong>Links</strong> menu. The selected element has now an ID
+attribute, which identifies it as a target element. Amaya automatically
+generated this unique ID value.</p>
+
+<p>If you have set the status "Show targets" to your current Formatted view ,
+the text is preceded by an a target icon <img src="../Icons/target.gif"
+alt=" target " />.</p>
+
+<p>It's also possible to directly create the ID attribute by using the
+<strong><a href="Attributes.html#Attributes">Attributes</a></strong> menu when
+the element is selected, or in the Links view or Structure view. When the
+value has been entered, Amaya checks this value and changes it if it is
+already used by another NAME or ID attribute in the same document.</p>
+
+<h3><a name="L245">Creating a link</a></h3>
+
+<h4>External links</h4>
+
+<p>To create an anchor that is a link to another document:</p>
+<ol>
+  <li><a href="Selecting.html#Selecting">Select</a> the extent of the anchor
+    to be created</li>
+  <li>Click the <img alt="Link " src="../Icons/Link.gif" align="middle" />
+    button, or choose <strong>Create Link</strong> from the
+    <strong>Links</strong> menu, or enter the shortcut (by default Ctrl Shift
+    L).</li>
+  <li>There are several solutions:
+    <ul>
+      <li>If the target document is displayed by <strong>Amaya</strong>
+        <ul>
+          <li>just click anywhere on it. The link is created.</li>
+        </ul>
+      </li>
+      <li>If you are not confortable with the mouse:
+        <ul>
+          <li>hitting any key will pop up a dialogue box: enter the URI of the
+            target document and the key <strong>Enter or Return</strong> to
+            confirm.  The link is created.</li>
+        </ul>
+      </li>
+      <li>If the target document is not displayed:
+        <ul>
+          <li>click anywhere in the current document, except on a local target
+            icon.</li>
+          <li>a dialog box pops up: enter the URI of the target document and
+            click on the <strong>Confirm</strong> button. The link is
+          created.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h4>Internal links</h4>
+
+<p>To create a link to a particular target anchor or a particular target
+element in the same document or in another, replace step 3 above by:</p>
+<ol>
+  <li value="3">In that case, you can click in any view on the <a
+    href="Browsing.html#target">target icon</a>, which should be displayed in
+    the Formatted view or in the Links view. The link is created.</li>
+</ol>
+
+<h3><a name="Removing">Removing a link or a target anchor</a></h3>
+
+<p>The <strong>Links</strong> menu contains a command that reverses the two
+commands above: <strong>Delete Anchor</strong>. Put the selection or the
+insertion point anywhere within the anchor to be removed (you do not need to
+select the whole anchor, but you can) and activate the <strong>Delete
+Anchor</strong> command. The anchor is removed, but its content remains.</p>
+
+<h3><a name="Changing">Changing a link</a></h3>
+
+<p>If you want to keep an anchor but to change the target of the corresponding
+link, select any part of that anchor or just put the insertion point within
+the anchor, and click the <img alt="Link " src="../Icons/Link.gif"
+align="middle" /> button or choose <strong>Change Link</strong> from the
+<strong>Links</strong> menu. Then designate the new target of the anchor as
+above (step 3 in the <a href="#L245">creation of a link</a>).</p>
+
+<p>To change the target of a link, you can also edit the <code>href</code>
+attribute, either directly in the Structure view or in the Links view or using
+the <a href="Attributes.html#Attributes"><strong>Attributes</strong></a>
+menu.</p>
+</div>
+
+<p align="right"><a href="Creating.html"><img alt="previous" border="0"
+src="../Icons/left.gif" /></a> <a href="Manual.html"><img alt="top" border="0"
+src="../Icons/up.gif" /></a> <a href="Changing.html"><img alt="next"
+border="0" src="../Icons/right.gif" /></a></p>
+<hr />
+</body>
+</html>

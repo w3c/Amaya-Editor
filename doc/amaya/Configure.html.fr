@@ -1,0 +1,643 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Configuring Amaya</title>
+  <style type="text/css">
+.menuItems { color: #E55500}</style>
+  <meta name="GENERATOR" content="amaya V3.2.1" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" width="100%" summary="toc">
+  <tbody>
+    <tr>
+      <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
+        border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
+      </td>
+      <td><p align="right"><a href="MakeBook.html"><img alt="previous"
+        border="0" src="../Icons/left.gif" /></a><a href="Manual.html"><img
+        alt="top" border="0" src="../Icons/up.gif" /></a><a
+        href="Access.html"><img alt="next" border="0" src="../Icons/right.gif"
+        /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="Configuring">
+<h2>Configuring Amaya</h2>
+
+<p><strong>Amaya</strong> uses different configuration files to get initial
+values for global parameters, dialogues, shortcuts, window size and position,
+user's style sheet, etc. You can change most of the configuration parameters
+by means of specific preferences menus. This document outlines the
+configuration directory and file <a href="#Conventions">conventions</a>, gives
+a walk-through of the different <a href="#preferences">preference menus</a>,
+and gives specific information on how to configure the <a
+href="#shortcuts">keyboard shortcuts</a>.</p>
+
+<h3><a name="Conventions">Conventions</a></h3>
+
+<h4><a name="L979">The <strong>Amaya/Config</strong> directory</a></h4>
+
+<p>This is the directory where most of the default values and all the dialogue
+messages are stored. The directory's parent is the one where Amaya was
+installed.</p>
+
+<h4><a name="AmayaHome">The AmayaHome Directory</a></h4>
+
+<p>Amaya stores the user preferences as well as other user configuration files
+in a directory which we call the <strong>AmayaHome</strong> directory. The
+following table shows where this directory is stored within different
+architectures:</p>
+
+<table border="1" summary="directory structure" align="center">
+  <thead>
+    <tr>
+      <td><strong>architecture</strong></td>
+      <td><strong>AmayaHome directory</strong></td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Unix</td>
+      <td>$HOME/.amaya</td>
+    </tr>
+    <tr>
+      <td>Windows 95/
+
+        <p>Windows 98</p>
+      </td>
+      <td>AMAYA-INSTALL-DIR\users\username
+
+        <p>or, if the user didn't login to Windows,</p>
+
+        <p>AMAYA-INSTALL-DIR\users\default</p>
+      </td>
+    </tr>
+    <tr>
+      <td>Windows NT</td>
+      <td>c:\winnt\profiles\username\amaya</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The <strong>AmayaHome</strong> directory is preserved even when installing
+new versions of Amaya and may contain the following files:</p>
+<ul>
+  <li><strong>thot.rc</strong> : the user preferences, changed through the
+    preferences menu.</li>
+  <li><a name="keyboard"><strong>amaya.keyboard</strong></a> (Unix) or
+    <strong>amaya.kb</strong> (Windows) : this file defines <a
+    href="#shortcuts">Amaya keyboard shortcuts</a>.</li>
+  <li><strong>amaya.css</strong> : contains the user's style sheet.</li>
+  <li><strong>dictionary.DCT</strong> : Amaya provides a <a
+    href="SpellChecking.html#Spell">multilingual spell checker</a>. By default
+    the spell checker works with  two dictionaries: the English dictionary and
+    the French dictionary (these two dictionaries can be downloaded from <a
+    href="http://www.w3.org/Amaya/User/BinDist.html">W3C servers</a>). When
+    the user wants to register a new word, the spell checker creates or
+    updates the "user's personal dictionary".</li>
+</ul>
+
+<p><strong>Note:</strong> the <strong>amaya.keyboard/amaya.kb</strong> and
+<strong>amaya.css</strong> files are loaded at launch time. If you change
+them, you will need to quit and restart Amaya to take them into account.</p>
+
+<h4><a name="AmayaTemp">The AmayaTemp Directory</a></h4>
+
+<p>Amaya stores all the temporary files it creates during its execution in a
+directory which we call the <strong>AmayaTemp</strong> directory. The
+following table shows where this directory is stored within different
+architectures:</p>
+
+<table border="1" summary="directory structure" align="center">
+  <thead>
+    <tr>
+      <td><strong>architecture</strong></td>
+      <td><strong>AmayaTemp directory</strong></td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Unix</td>
+      <td>$HOME/.amaya</td>
+    </tr>
+    <tr>
+      <td>Windows</td>
+      <td><p>c:\temp\amaya (default value)</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Amaya creates files in this directory while browsing remote documents or
+printing a document. The cache is stored in this directory. The user may
+change both the AmayaTemp and cache directories by means of the
+<strong>General Preferences</strong> and <strong>Cache</strong> menus.</p>
+
+<p>Amaya always tries to delete all the temporary files it creates. However,
+if Amaya crashes, the temporary files will not be deleted. This will not
+impact subsequent executions of Amaya.</p>
+
+<h3><a name="preferences">Preferences Menus</a></h3>
+
+<p>These menus are found under the <strong>Special/Preference</strong> menu.
+There are nine different preference menus available: <a
+href="#General">general</a>, <a href="#Publishing">publishing</a>, <a
+href="#Cache">cache</a>, <a href="#Specifying1">proxy</a>, <a
+href="#color">colors</a>, <a href="#HTML">Window geometry</a>, <a
+href="#lang">language negotiation</a>, <a href="#Profiles">profiles</a>, and
+<a href="#Templates">templates</a>. In each of these menus, there are three
+common action buttons:</p>
+
+<table border="0" cellspacing="10" cellpadding="5"
+summary="action button chart">
+  <tbody>
+    <tr>
+      <th bgcolor="C0C0C0">Apply</th>
+      <td>This button validates and store the options shown in the menu.</td>
+    </tr>
+    <tr>
+      <th bgcolor="C0C0C0">Defaults</th>
+      <td>This button restores, but not save, the default values. Use the
+        Apply button to validate the options.</td>
+    </tr>
+    <tr>
+      <th bgcolor="C0C0C0">Done</th>
+      <td>This button dismisses the menu.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4><a name="General">General preferences</a></h4>
+
+<p style="text-align: center"><img src="../Icons/GeneralMenu.gif"
+alt="General Preferences Menu" /></p>
+<dl>
+  <dt></dt>
+  <dt><strong>Amaya user directory</strong> (Windows platforms only, not shown
+  in the included figure)</dt>
+    <dd>Specifies the directory where the user preferences are stored.<br />
+      <strong>Note:</strong> the user can't change the location of this
+      directory.<br />
+      <br />
+    </dd>
+  <dt><strong>Amaya temporary directory</strong> (Windows platforms only, not
+  shown in the figure)</dt>
+    <dd>Specifies the directory where Amaya will store its temporary files,
+      for example, while printing a document. If not specified, the default
+      temporary directory will be <code>c:\temp</code>.<br />
+      <strong>Note:</strong> changing this directory will not erase the
+      previous one. You will have to remove the old directory manually. If the
+      <a href="#Cache">cache</a> was located under the previous temporary
+      directory, a new cache will be created under the new directory.<br />
+      <br />
+    </dd>
+  <dt><strong>Home Page</strong></dt>
+    <dd>Specifies the URI that Amaya will load when launched or when the user
+      presses the home page button. An example is
+      <code>http://www.w3.org</code>.<br />
+      <strong>Note:</strong> A complete URI must be used.<br />
+      <br />
+    </dd>
+  <dt><strong><a name="Enable">Enable multi-key</a></strong></dt>
+    <dd>Enables or disables the optional multi-key input method.
+      <p>The optional input method (Multi-Key) is based on a two key sequence
+      beginning with the "accent" followed by the "letter". For example to
+      obtain a 'ã' first press '~' then type 'a'. To obtain a '~' you have to
+      press '~' twice.</p>
+      <p>Character sequences used by the standard multi-key input method and
+      the optional multi-key input method are summarized in <a
+      href="Keyboard.html#Keyboard">two different tables</a>.</p>
+      <p></p>
+    </dd>
+  <dt> <strong>Show background images</strong></dt>
+    <dd>Controls whether background images should be shown. This option is
+      only effective when loading a new document.
+      <p></p>
+    </dd>
+  <dt><strong>Double click activates link</strong></dt>
+    <dd>Since the first version of Amaya, users need to double click on a link
+      to activate it. This allows one to differentiate between the edition of
+      a link or its activation. You can override this behavior by deactivating
+      this option.
+      <p></p>
+    </dd>
+  <dt><strong>Enable FTP (experimental)</strong></dt>
+    <dd>Allows Amaya to follow FTP URLs. This support is experimental and it's
+      not yet fully debugged. For example, for FTP URLs needing user
+      authentication, the authentication information is not always memorized.
+      Also, pressing the Stop button during an FTP download may crash Amaya.
+      Albeit these problems, we added this option to Amaya so that other
+      developer's may help us to debug it faster. By default this option is
+      turned off.<br />
+    </dd>
+  <dt><strong>Menu Font size</strong> (Unix platforms only)</dt>
+    <dd>Specifies the font size of all the Amaya menus. This option is only
+      taken into account at launch time.
+      <p><br />
+      </p>
+    </dd>
+  <dt><strong>Font Zoom</strong></dt>
+    <dd>It's possible to zoom in and zoom out, document window by document
+      window. Each document (text and images) displayed within a zoomed window
+      will be displayed larger or smaller than its real size according of the
+      current zoom.<br />
+      That option allows you to change the default font zoom for all windows.
+      This change affects only font sizes but not images and is reflected
+      immediately in all open document windows.<br />
+      <br />
+    </dd>
+  <dt><strong>Double click delay</strong> (Unix platforms only)</dt>
+    <dd>This option allows one to control the delay for which two mouse clicks
+      are classed as a double-click. This option is only taken into account at
+      launch time.<br />
+      <br />
+    </dd>
+  <dt><strong>Dialogue language</strong></dt>
+    <dd>Specifies the language for all of Amaya's menus and dialogue messages.
+      The default language is American English (value <code>en_US</code>). At
+      the present time only three alternate languages are available: English
+      (<code>en</code>), French (<code>fr</code>), and German
+      (<code>de</code>). When launched, Amaya loads dialogue files according
+      to the current dialogue language: en-, fr-, or de- files. These dialogue
+      files are located in the <strong>Amaya/config</strong> directory.
+      <p>In Thot, a document is specified according to a schema. In Amaya, the
+      dialogue messages that are displayed when parsing a document or when
+      saving it under a specific schema are located in the
+      <strong>Amaya/amaya/HTML.<em>code</em></strong> file, where the
+      <em>code</em> suffix is a language abbreviation (e.g. <code>en</code> or
+      <code>fr</code>). This file has 4 sections:</p>
+      <ul>
+        <li><strong>extension:</strong> not used by Amaya</li>
+        <li><strong>presentation:</strong> not used by Amaya</li>
+        <li><strong>export</strong>: give the text displayed for each
+          translation schema ("Save As" command)</li>
+        <li><strong>translation</strong>: give the text displayed for each
+          element and attribute in the Thot HTML structure.</li>
+      </ul>
+      <p>It is possible to adapt Amaya to new ISO-Latin-1 languages by writing
+      corresponding dialogue files. These dialogue files have to be located in
+      the same directory (i.e. <strong>Amaya/config</strong>) and must use the
+      correct ISO 639 code as a prefix (it- for Italian, de- for German,
+      etc.). The specific HTML.code file also has to be created.</p>
+      <p></p>
+    </dd>
+</dl>
+
+<h4><a name="Publishing">Publishing preferences</a></h4>
+
+<p style="text-align: center"><img src="../Icons/PublishMenu.gif"
+alt="Publish Preferences Menu" /></p>
+<dl>
+  <dt><strong>Use ETAGS and preconditions</strong></dt>
+    <dd>HTTP/1.1 introduces new headers that allow to avoid the <a
+      href="http://www.w3.org/WinCom/NoMoreLostUpdates.html">lost updates</a>
+      problem when publishing. With this mechanism, you can detect conflicts
+      when two users are publishing the same document.</dd>
+  <dt><strong>Verify each PUT with a GET</strong></dt>
+    <dd>If you don't trust your server, this option tells Amaya to retrieve
+      each document as soon as it has been published and compare it with the
+      copy stored in your workstation. If the documents differ, Amaya will
+      warn you.</dd>
+  <dt><strong>Default name for URLs finishing in '/'</strong></dt>
+    <dd>An HTTP server usually associate the URLs that finish in  '/' with a
+      default name, e.g., Overview.html. This option allows specifying the
+      default name that Amaya should use when publishing such a URL. Please
+      consult with your Webmaster to find out what the default name is for
+      your server.</dd>
+  <dt><strong>Allow automatic PUT redirections on these domains</strong></dt>
+    <dd>According to the HTTP/1.1 specification, PUT operations should not be
+      automatically redirected unless it can be confirmed by the user, since
+      this might change the conditions under which the request was issued. You
+      can avoid having Amaya prompt with a PUT redirection warning by entering
+      the name of the server's domain to which you are publishing. You may
+      specify one or more domains, each separated with a <em>space</em>, e.g.,
+      <code>www.w3.org groucho.marx.edu</code>.</dd>
+</dl>
+
+<h4><a name="Cache">Cache preferences</a></h4>
+
+<p style="text-align: center"><img src="../Icons/CacheMenu.gif"
+alt="Cache Preferences Menu" /></p>
+
+<p>Amaya provides a cache through libwww. By default, the cache is enabled by
+default and is stored in the <strong>AmayaTemp/libwww-cache</strong>
+directory. This menu also provides a <strong>Flush Cache</strong> button, for
+erasing the cache directory.</p>
+<dl>
+  <dt><strong>Enable cache</strong></dt>
+    <dd>Activates or deactivates the cache</dd>
+  <dt><strong>Cache protected documents</strong></dt>
+    <dd>By default, documents which are protected by a password are stored in
+      the cache. Use this flag to override this behavior.</dd>
+  <dt><strong>Disconnected mode</strong></dt>
+    <dd>Always retrieves documents from the cache.</dd>
+  <dt><strong>Ignore Expires: header</strong></dt>
+    <dd>Does not expire cache entries.</dd>
+  <dt><strong>Cache  directory</strong></dt>
+    <dd>Gives the parent directory for the libwww-cache directory. Changing
+      this directory does not erase the contents of the previous one. You will
+      have to remove it yourself.<br />
+      <strong>Note:</strong> File protection mechanisms prevent the use of NFS
+      (Network File System) directories for the cache directory as NFS allows
+      reuse by multiple processes or users.  Use a 'local' directory for the
+      cache.</dd>
+  <dt><strong>Cache size</strong></dt>
+    <dd>Gives the size, in megabytes, of the cache repository.</dd>
+  <dt><strong>Cache entry size limit</strong></dt>
+    <dd>Gives the maximum size for a cache entry.</dd>
+</dl>
+
+<h4><a name="Proxy">Proxy preferences</a></h4>
+
+<p style="text-align: center"><img src="../Icons/ProxyMenu.gif"
+alt="Proxy Preferences Menu" /></p>
+
+<p>You can specify a proxy and a set of domains where the proxy should or
+should not be used by means of this menu.</p>
+<dl>
+  <dt><strong>HTTP proxy</strong></dt>
+    <dd>Gives the proxy that should be used for HTTP requests. You must
+      specify the full name of the server. If the server is running in a port
+      other than 80, then, like in a URL, you need to add a ":" char to the
+      proxy name, followed by the port number. For example::
+      <pre>   groucho.marx.edu
+            </pre>
+      <p>declares a proxy called groucho.marx.edu running at the default port
+      80, and</p>
+      <pre>   groucho.marx.edu:1234
+            </pre>
+      <p>declares a proxy called groucho.marx.edu, running at port 1234</p>
+    </dd>
+</dl>
+<dl>
+  <dt><strong>Proxy domain list</strong></dt>
+    <dd>Gives a list of space separated domains where you want to use or not
+      use your proxy. For example:
+      <pre>harpo.marx.edu zeppo.marx.edu chico.marx.edu
+              ^--------------^----&gt; space separated entries
+            </pre>
+      <p>Use the switch buttons to specify if the proxy should or shouldn't be
+      used with this domain list.</p>
+    </dd>
+</dl>
+
+<h4><a name="color">Color preferences</a></h4>
+
+<p style="text-align: center"><img src="../Icons/ColorMenu.gif"
+alt="Color Preferences Menu" /></p>
+
+<p>This menu allows selection of the default foreground and background colors
+for documents. It allows also to control the colors: used by Amaya to display
+the current selection</p>
+<ul type="square">
+  <li><strong>Caret color</strong> gives the foreground color that shows the
+    selection when it's limited to an insert point;</li>
+  <li><strong>Selection colo</strong>r gives the background that shows the
+    current selection when it's extended.</li>
+</ul>
+
+<p>The Unix version also provides entries for changing the menu colors. To
+change menu colors in Windows, you will need to use the standard Windows
+configuration control, found in the Control Panel folder.</p>
+
+<p>All these colors may be selected by name, hex code, or rgb format:</p>
+<ul type="square">
+  <li>Valid names are: Aqua, Black, Blue, Fuchsia, Gray, Green, Lime, Maroon,
+    Navy, Olive, Purple, Red, Silver, Teal, Yellow, and White.</li>
+  <li>Valid hexcode format is #FF00FF as an example.</li>
+  <li>Valid rgb format is rgb(255, 0, 255) as an example.</li>
+</ul>
+
+<p>If you enter an invalid color, the default colors will be used instead.</p>
+
+<p>In Windows, you can also select colors by means of a color palette.</p>
+
+<p><strong>Note:</strong> the color changes will be effective when you open a
+new document window or when reloading a document.</p>
+
+<p>Setting or changing colors for links, visited links, and active links is
+done through the Amaya.css style sheet.</p>
+
+<h4><a name="HTML">Window geometry preferences</a></h4>
+
+<p style="text-align: center"><img src="../Icons/GeomMenu.gif"
+alt="Geometry Preferences Menu" /></p>
+
+<p>This menu allows you to save the current window position and size size of
+the different views of a document (formatted, structure, alternate, links, and
+Table of Contents.) or to restore the default values. Note that the values
+that are saved are those belonging to the views of the document where you
+called this menu. These changes will be reflected when you open new document
+windows.</p>
+
+<h4><a name="lang">Language negotiation preferences</a></h4>
+
+<p style="text-align: center"><img src="../Icons/LangueNegotiation.gif"
+alt="Language negotiation menu" /></p>
+
+<p>If a document exists in different languages and your server is configured
+to do language negotiation, you can use this menu to enter your language
+preferences (first one has the highest priority). Try browsing this <a
+href="http://www.w3.org/1999/05/WCAG-RECPressRelease.html"> press release</a>,
+which exists in French, English, and Japanese versions. By changing the
+language negotiation to the ISO codes for the above languages
+(<strong>fr</strong>, <strong>en</strong>, or <strong>ja</strong> you can
+transparently request any of these versions.</p>
+
+<h4><a name="Profiles">Profiles</a></h4>
+
+<p style="text-align: center"><img src="../Icons/ProfilesMenu.gif"
+alt="Profiles  menu" /></p>
+
+<p>In Amaya, a <strong>profile</strong> defines the look and feel of of the
+Amaya user interface. You can use profiles to hide or display the Amaya
+buttons and menus. This menu allows you to choose a given profile definition
+file and select among any of the profiles proposed by that file. Amaya
+proposes four  sample profiles: <em>editor</em>, <em>mini-editor</em>,
+<em>browser</em>, <em>mini-browser</em>, each one with different capabilities.
+Any profile change will be effective upon the next launch of Amaya.</p>
+
+<h4><a name="Templates">Templates</a></h4>
+
+<p style="text-align: center"><img src="../Icons/TemplatesMenu.gif"
+alt="Templates " /></p>
+
+<p>A <strong>template</strong> is a model, or skeleton, of a document that you
+may use for creating your own documents. This menu allows you to specify the
+URL of a template server, which may be either local to your station or stored
+in some server. You'll need to quit Amaya to validate this option. When you
+launch Amaya again., there will be a new <code>File/New/From Template</code>
+entry. Following this entry will open a new document showing you the results
+of browsing the template URL. The idea is that this page acts as an index to
+the templates available in your station or in the template server. A sample
+template server is available at <a
+href="http://cgi.w3.org/cgi-bin/createform.pl">http://cgi.w3.org/cgi-bin/createform.pl</a>.
+For more info, browse the <a
+href="http://www.w3.org/Amaya/User/Templates.html">using templates with
+Amaya</a> page.</p>
+
+<h3><a name="shortcuts">Keyboard shortcuts</a></h3>
+
+<p>It is useful to be able to invoke menu commands directly from the keyboard.
+The Thot toolkit provides a facility that lets user accomplish this by means
+of an application keyboard shortcuts file. This file defines a list of
+associations between a keyboard sequence and the corresponding invoked
+command.</p>
+
+<p>The syntax used to define an association is:</p>
+<pre> Directive = KeySeq ':' IdentCommand ;
+ KeysSeq = KeySet [ ',' KeySet ] ;
+ KeySet = [ Modifier ] [ 'Shift' ] Key ;
+ Key = '&lt;Key&gt;' KeyValue / '&lt;Key&gt;' SpecialKey ;
+ Modifier = 'Ctrl' / 'Alt' / 'Meta' ;
+ KeyValue = 'a' / 'b' / ... ;
+ SpecialKey = 'Escape' / 'Delete' / 'Space' / 'BackSpace' /
+              'Enter' / 'Up' / 'Down' / 'Left' / 'Right' /
+              'Home' / 'End' / 'F1' / ... / 'L1' / ... / 'R1' / ... ;
+ IdentCommand = 'TtcInsertChar(' Char ')' / NAME '()' ;
+ Char = KeyValue / OctalValue ;  OctalValue = '\' NUMBER ; </pre>
+
+<p>For an example, see the standard files <code>amaya.keyboard</code> (for
+Unix platforms) and <code>amaya.kb</code> (for Windows platforms), which are
+by default located in the directory <code>Amaya/config</code>.</p>
+
+<p>The list of available commands is:</p>
+<ul>
+  <li>Moving commands:
+    <ul>
+      <li><span style="color: #E55500" class="menuItems">TtcNextChar,
+        TtcPreviousChar</span>: move character by character.</li>
+      <li><span style="color: #E55500" class="menuItems">TtcNextLine,
+        TtcPreviousLine, TtcStartOfLine, TtcEndOfLine</span>: move line by
+        line.</li>
+      <li><span style="color: #E55500" class="menuItems">TtcNextElement,
+        TtcPreviousElement, TtcChildElement, TtcParentElement</span>: move
+        element by element.</li>
+      <li><span style="color: #E55500" class="menuItems">TtcPageDown,
+        TtcPageUp, TtcPageTop, TtcPageEnd</span>: scroll from page to
+      page.</li>
+      <li><span style="color: #E55500" class="menuItems">TtcLineUp,
+        TtcLineDown</span> scroll one line up or one line down.</li>
+    </ul>
+  </li>
+  <li>A command that allows one to follow a link or to activate a form element
+    (menu, button, etc.):
+    <p class="menuItems">DoAction.</p>
+  </li>
+  <li>In <code>File</code> menu:
+    <p class="menuItems">New, NewTemplate, NewCss, OpenDoc,
+    OpenDocInNewWindow, Reload, GotoPreviousHTML, GotoNextHTML, GoToHome,
+    SaveDocument, SaveDocumentAs, Synchronize, SetupAndPrint, PrintAs
+    CloseDocument, AmayaClose</p>
+  </li>
+  <li>In Edit menu:
+    <p class="menuItems">TtcUndo, TtcRedo, TtcCutSelection, TtcCopySelection,
+    TtcPaste, TtcDeleteSelection, SetBrowserEditor, TtcSearchText, SpellCheck,
+    TransformType.</p>
+  </li>
+  <li>In <code>Structure</code> menu:
+    <p class="menuItems">CreateBase, CreateMeta, CreateLinkInHead,
+    CreateScript, CreateStyle, CreateComment.</p>
+  </li>
+  <li>In Types menu:
+    <dl>
+      <dt>Main Menu:</dt>
+        <dd class="menuItems">ChangeTitle, CreateAddress, CreateParagraph,
+          CreateImage, CreateHorizontalRule, CreateBlockQuote,
+          CreatePreformatted, CreateAddress, CreateDivision, CreateNOSCRIPT,
+          CreateObject, CreateParameter, CreateIFrame,
+        CreateBreak("\212")</dd>
+      <dt>AREA submenu:</dt>
+        <dd class="menuItems">CreateAreaRect, CreateAreaCircle,
+        CreateAreaPoly</dd>
+      <dt>Form submenu:</dt>
+        <dd class="menuItems">CreateForm, CreateFileInput, CreateImageInput,
+          CreatePasswordInput, CreateHiddenInput, CreateLabel, CreateFieldset,
+          CreateOptGroup, CreateToggle, CreateRadio, CreateOption,
+          CreateTextInput, CreateTextArea, CreateSubmit, CreateReset,</dd>
+      <dt>Heading submenu:</dt>
+        <dd class="menuItems">CreateHeading1, CreateHeading2, CreateHeading3,
+          CreateHeading4, CreateHeading5, CreateHeading6</dd>
+      <dt>List submenu:</dt>
+        <dd class="menuItems">CreateList, CreateNumberedList, ThotCreateMenu,
+          ThotCreateDirectory, CreateDefinitionList, CreateDefinitionTerm,
+          CreateDefinitionDef</dd>
+      <dt>Math submenu:</dt>
+        <dd class="menuItems">CreateInlineMath, CreateMath, CreateMROOT,
+          CreateMSQRT, CreateMFRAC, CreateMSUBSUP, CreateMSUB, CreateMSUP,
+          CreateMUNDEROVER, CreateMUNDER, CreateMOVER, CreateMROW,
+          CreateMMULTISCRIPTS, CreateMTABLE</dd>
+      <dt>OBJECT submenu:</dt>
+        <dd class="menuItems">CreateObject, CreateParameter</dd>
+      <dt>Table submenu:</dt>
+        <dd class="menuItems">CreateTable, CreateCaption, CreateTHead,
+          CreateTBody, CreateTFoot, CreateRow, CreateDataCell,
+          CreateHeadingCell, DeleteColumn</dd>
+    </dl>
+  </li>
+  <li>In <code>Links</code> menu:
+    <p class="menuItems">LinkToPreviousTarget, CreateOrChangeLink,
+    CreateTarget, DeleteAnchor.</p>
+  </li>
+  <li>In <code>Views</code> menu:
+    <p class="menuItems">TtcSwitchButtonBar, TtcSwitchCommands, ShowMapAreas,
+    ShowTargets, ZoomIn, ZoomOut, ShowStructure, ShowAlternate, ShowLinks,
+    ShowToC., ShowSource</p>
+  </li>
+  <li>In <code>Style</code> menu:
+    <dl>
+      <dt>Main Menu:</dt>
+        <dd><p class="menuItems">TtcChangeCharacters, TtcChangeColors,
+          TtcChangeFormat, ChangeBackgroundImage, CreateClass, ApplyClass.</p>
+        </dd>
+      <dt>Style Sheets submenu:</dt>
+        <dd><p class="menuItems">LinkCSS, OpenCSS, DisableCSS, EnableCSS,
+          RemoveCSS.</p>
+        </dd>
+      <dt>Information Types submenu:</dt>
+        <dd><p class="menuItems">SetOnOffEmphasis, SetOnOffStrong,
+          SetOnOffCite, SetOnOffDefinition, SetOnOffCode, SetOnOffVariable,
+          SetOnOffSample, SetOnOffKeyboard, SetOnOffAbbr, SetOnOffAcronym,
+          SetOnOffINS, SetOnOffDEL.</p>
+        </dd>
+      <dt>Character Element submenu:</dt>
+        <dd><p class="menuItems">SetOnOffItalic, SetOnOffBold,
+          SetOnOffTeletype, SetOnOffBig, SetOnOffSmall, SetOnOffSub,
+          SetOnOffSup, SetOnOffQuotation, SetOnOffBDO.</p>
+        </dd>
+    </dl>
+  </li>
+  <li>In <code>Special</code> menu:
+    <p class="menuItems">SectionNumbering, MakeBook, ShowLogFile,
+    ConfigGeneral, ConfigPublish, ConfigCache, ConfigProxy, ConfigColor,
+    ConfigGeometry, ConfigLanNeg, ConfigProfile, ConfigTemplates.</p>
+  </li>
+  <li>In <code>Help</code> menu:
+    <p class="menuItems">HelpAmaya, HelpAtW3C, HelpBrowsing, HelpSelecting,
+    HelpSearching, HelpViews, HelpCreating, HelpLinks, HelpChanging,
+    HelpTables, HelpMath, HelpImageMaps, HelpStyleSheets, HelpAttributes,
+    HelpPublishing, HelpPrinting, HelpNumbering, HelpMakeBook,
+    HelpConfigure.</p>
+  </li>
+</ul>
+</div>
+
+<p align="right"><a href="MakeBook.html"><img alt="previous" border="0"
+src="../Icons/left.gif" /></a><a href="Manual.html"><img alt="top" border="0"
+src="../Icons/up.gif" /></a> <a href="Access.html"><img alt="next" border="0"
+src="../Icons/right.gif" /></a></p>
+<hr />
+<address>
+  <a href="mailto:vatton@w3.org">Irène Vatton</a><br />
+  <br />
+
+</address>
+</body>
+</html>

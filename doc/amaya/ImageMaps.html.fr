@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Images and Client-side image maps</title>
+  <meta name="GENERATOR" content="amaya V3.2.1" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" width="100%" summary="toc">
+  <tbody>
+    <tr>
+      <td><p><img border="0" alt="W3C"
+        src="http://www.w3.org/Icons/WWW/w3c_home" />             <img
+        border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
+      </td>
+      <td><p align="right"><a href="Math.html"><img alt="previous" border="0"
+        src="../Icons/left.gif" /></a> <a href="Manual.html"><img alt="top"
+        border="0" src="../Icons/up.gif" /></a> <a
+        href="StyleSheets.html"><img alt="next" border="0"
+        src="../Icons/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="Client-sid">
+<h2><a name="L1013">Images and Client-side image maps</a></h2>
+
+<h3><a name="Adding">Adding an image</a></h3>
+
+<p>To insert an image choose <strong>Image</strong> from the
+<strong>Types</strong> menu or click on the <img alt="Image " border="0"
+src="../Icons/Image.gif" align="middle" longdesc="longdesc.htm" /> button (or
+use the keyboard shortcut control-t, control-i in Unix). This brings up a
+dialog box that lets you enter the file name and <a
+href="#Alternative">alternative text</a> ('ALT' text) of the desired image. If
+you wish to provide a long description (for example if your image presents
+complex information) you should do so in a separate document and link it by
+giving the URI as a <strong>longdesc</strong>, also available in the
+<strong>Attributes</strong> menu. To help find an image file you can enter a
+<strong>filter</strong> field, and use the <strong>filter</strong> button, so
+the dialog lists only the files which match your pattern.</p>
+
+<h3><a name="Alternative">Alternative Text and Long Descriptions</a></h3>
+
+<p>For elements such as images (and other multimedia objects) you must provide
+alternative text. This will usually be presented instead of the image by a
+browser with a voice output system, or a Braille display (used by many people
+who are blind). It is also common for users with low-quality connections to
+request the alternative view, as text is transmitted much faster than
+images.</p>
+
+<p>The alternative text should replace the image in function. For example, if
+the image is used to provide an icon linking to a reference point (the first
+link on this page, to the W3C 'homepage', is such a link) then the title of
+the reference would be a good alternative text.</p>
+
+<p>There are also cases where an image is used for purely visual effect, and
+does not add any information value to the page. In this case it is appropriate
+to use a blank alternative, although that must still be defined - enter two
+double quotes for alternative (eg. alt="").</p>
+
+<p>In cases where the image conveys important information which is not
+available from the text of the document you must also provide a description of
+the information. The <strong>longdesc</strong> option of the
+<strong>Attributes</strong> menu allows you to link a description (which is a
+URI - a separate document, or named part of the current document) to the
+image.</p>
+
+<p>In order to give an idea of how a page might be presented without the
+images, Amaya provides a <strong>Show Alternate</strong> option in the
+<strong>Views</strong> menu. If the page were spoken, then the <a
+href="Views.html#Alternate">alternate view</a> might simply be read out.
+Without useful alternative text for images, many pages become difficult or
+impossible to navigate, and users are left 'feeling their way in the
+dark'.</p>
+
+<h3><a name="Using">Using client-side image maps</a></h3>
+
+<p><strong>Amaya</strong> allows you to use client-side image maps:</p>
+<ul>
+  <li>To activate an area in a map, double-click on the area with the left
+    mouse button. The URI attached to this area is then fetched.</li>
+  <li>To display existing areas, choose <strong>Show Map Areas</strong> from
+    the <strong>Views</strong> menu.</li>
+</ul>
+
+<h3><a name="Creating">Creating client-side image maps</a></h3>
+
+<p>To create a new image map, you insert an image into the document, and
+define areas as links.</p>
+
+<p>To create an area in a image, select the image or an existing area of that
+image. Then choose <strong>Rectangle</strong>, <strong>Circle</strong>,
+<strong>Polygon</strong> from the <strong>Area Map</strong> submenu of the
+<strong>Types</strong> menu, depending on the shape of the new area you want
+to create. The <strong>Show map areas</strong> option in the
+<strong>Views</strong> menu will outline each of the existing map areas on an
+image.</p>
+<ul>
+  <li>To create a rectangular or circular area, you must first select the
+    position of one corner by pressing the left mouse button. Keep the button
+    pressed down and move to the position of the opposite corner, then release
+    the button. The area is now defined.</li>
+  <li>For a Polygon, enter each point by clicking the corresponding position
+    with the left mouse button. To indicate the last point, click with the
+    middle button.</li>
+</ul>
+
+<p>When the area has been defined, you must first provide <a
+href="#Alternative">alternative text</a> in the dialogue provided and then
+enter the target of the link associated with that area. Just select the target
+(or enter its URI if it is not displayed), in the same way as you <a
+href="Links.html#L245">create links</a>.</p>
+
+<h3><a name="L11711">Moving image map areas</a></h3>
+
+<p>When the area has been defined, you can move this area:</p>
+<ul>
+  <li><p>By direct manipulation - combining the <strong>Control key</strong>
+    with the <strong>Left button</strong> of the mouse within an area of image
+    map allows you to move this area.</p>
+  </li>
+  <li><p>By editing the <strong>coords</strong> attribute of the area in the
+    Structure View.</p>
+  </li>
+</ul>
+
+<h3><a name="L1171">Resizing image map areas</a></h3>
+<ul>
+  <li>By direct manipulation - combining the <strong>Control key</strong> with
+    the <strong>Middle</strong> or the <strong>Right button</strong> of the
+    mouse within an area of image map allows you to resize this area.</li>
+  <li>By editing the <strong>coords</strong> attribute of the area in the
+    Structure View.
+    <p></p>
+  </li>
+</ul>
+</div>
+
+<p align="right"><a href="Math.html"><img alt="previous" border="0"
+src="../Icons/left.gif" /></a> <a href="Manual.html"><img alt="top" border="0"
+src="../Icons/up.gif" /></a> <a href="StyleSheets.html"><img alt="next"
+border="0" src="../Icons/right.gif" /></a></p>
+<hr />
+</body>
+</html>

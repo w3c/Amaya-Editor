@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Changing the structure</title>
+  <meta name="GENERATOR" content="amaya V3.2.1" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" width="100%" summary="toc">
+  <tbody>
+    <tr>
+      <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
+        border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
+      </td>
+      <td><p align="right"><a href="Links.html"><img alt="previous" border="0"
+        src="../Icons/left.gif" /></a> <a href="Manual.html"><img alt="top"
+        border="0" src="../Icons/up.gif" /></a> <a href="Tables.html"><img
+        alt="next" border="0" src="../Icons/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="Changing">
+<h2>Editing the document structure</h2>
+
+<h3><a name="L653">Changing element type</a></h3>
+
+<p>To change the type of an existing element, select it and choose the new
+type in the <strong>Types</strong> menu or by clicking on a button.  You can
+thus change a numbered list into an itemized list, for example, or a paragraph
+into a heading or a list. To remove a type that is selected from the
+<strong>Style</strong> menu (<a href="HTML-elements/inline.html">inline
+types</a> - those that can be a phrase in a paragraph or list use the relevant
+option in the submenus of the <strong>Style</strong> menu as a toggle. Most
+other types can be removed as a transformation of the element when it has been
+selected (see below).<strong></strong></p>
+
+<p>To select an entire element, place the insertion point anywhere within it
+and press the <a href="Selecting.html#Selecting1">Esc (F2 on Windows)
+key</a>.</p>
+
+<p>More complex <a href="#L631">structure transformations</a> are also
+possible.</p>
+
+<h3><a name="L631">Changing the document structure</a></h3>
+
+<p>Simple structure transformations can be achieved using the
+<strong>Types</strong> menu (see <a href="#L653">above</a>). More complex
+transformations can be obtained by other means.</p>
+
+<h3><a name="L141">The <strong>Transform</strong> command</a></h3>
+
+<p>The <strong>Transform</strong> command from the <strong>Edit</strong> menu
+performs complex structure transformations. This command is based on a
+structure transformation language that specifies how a given structural
+pattern can be transformed into different structures.</p>
+
+<p>The <strong>Transform</strong> command pops up a menu that lists all the
+transformations that can be applied to the current selection. Just choose the
+transformation you want.</p>
+
+<p>The available transformations are defined in the file
+<code>Amaya/amaya/HTML.trans</code>.  Please refer to the document <a
+href="Transform.html">Use of the file HTML.trans</a> for a description of the
+language in which the transformation rules are written.</p>
+
+<p>Additional transformations may be specified in the <code>HTML.trans</code>
+file. Some are provided as examples. For instance, it is possible to transform
+nested lists into a table and conversely.</p>
+
+<h3><a name="Inserting">Inserting a Division</a></h3>
+
+<p>One can easily group a set of paragraphs, headings, lists, tables, etc.
+within a division. To do that one has to select the elements to be grouped and
+select the entry DIV in the menu type.</p>
+
+<h3><a name="Back">The Back Space and Delete keys</a></h3>
+
+<p>Successive elements can be merged, even if they are not at the same level
+in the document structure. Merging is achieved with the Back Space and Delete
+keys. When the insertion point is at the end of an element, use the Delete
+key, when it is at the beginning, use the Back Space key. In both cases, these
+keys do not delete any characters, but merge elements which are separated by a
+structure boundary.</p>
+
+<p>When the insertion point in within an element, these two keys delete the
+next or previous character, as usual.</p>
+</div>
+
+<p align="right"><a href="Links.html"><img alt="previous" border="0"
+src="../Icons/left.gif" /></a> <a href="Manual.html"><img alt="top" border="0"
+src="../Icons/up.gif" /></a> <a href="Tables.html"><img alt="next" border="0"
+src="../Icons/right.gif" /></a></p>
+<hr />
+</body>
+</html>

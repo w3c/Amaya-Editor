@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Making Book</title>
+  <meta name="GENERATOR" content="amaya V3.2.1" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" width="100%" summary="toc">
+  <tbody>
+    <tr>
+      <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
+        border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
+      </td>
+      <td><p align="right"><a href="Numbering.html"><img alt="previous"
+        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html"><img
+        alt="top" border="0" src="../Icons/up.gif" /></a> <a
+        href="Configure.html"><img alt="next" border="0"
+        src="../Icons/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="Assembling">
+<h2><a name="L1065">Assembling large document collections</a></h2>
+
+<p>Amaya allows you to handle document collections. Such a collection may, for
+instance, represent a technical documentation constituted by several web
+pages. One of these pages contains the title of the whole documentation (an
+<code>H1</code> element), an introduction (some other elements), and a list
+(<code>OL</code> or <code>UL</code>) whose items contain links to each
+chapter. Chapters are separate documents which can also have the same type of
+structure.</p>
+
+<p>Such an organization is useful for browsing, but it has a number of
+drawbacks when the whole documentation has to be printed.
+<strong>Amaya</strong> addresses this problem with the "make book" function.
+You just have to use typed links for linking chapters: associate a
+<code>rel="chapter"</code> or <code>rel="subdocument</code>" attribute with
+the anchor that refers to a chapter (select the <code>A</code> element and use
+the <strong><a href="Attributes.html#L1073">Attributes</a></strong> menu).</p>
+
+<p>Each referred chapter or  sub-document can be:</p>
+<ul>
+  <li>either a whole external document,</li>
+  <li>or just a subset of a larger external document.</li>
+</ul>
+
+<p>To refer to a document subset, the usual manner is to define a DIV element.
+which delimits the part of the target document you want to include and to link
+to this <a href="Links.html#target1">target element</a>.</p>
+
+<p>Then, when activating the "make book" function, all blocks (<code>LI</code>
+elements in the above example) containing a typed link to a chapter will be
+replaced by the corresponding actual web pages (or web page subsets), and you
+will get a unique document containing the whole collection:</p>
+<ul>
+  <li><p>when the link refers to a web page, all the BODY content of the
+    target document is included.</p>
+  </li>
+  <li><p>if the link refers to a target element, this element with its content
+    is included.</p>
+  </li>
+  <li><p>if the link refers to a target anchor, the content of the anchor is
+    included, but not the anchor itself.</p>
+  </li>
+</ul>
+
+<p>Before each replacement, the "make book" function generates a new DIV
+element with an ID attribute. So each added pieces are clearly separated.</p>
+
+<p>Previous pieces of the new generated document could contain normal links,
+target anchors and target elements. During this operation, Amaya checks to
+ensure that each NAME and ID attribute values remain unique in the new
+document. If needed, Amaya changes these values and updates relative links. At
+the same time, external  links are automatically updated when they referred an
+external document or document subset which is now included. For example, if
+the link pointed to a whole external document, this link will refer the DIV
+enclosing element after the operation. So the new unique document containing
+the whole collection is still coherent.</p>
+
+<p>This large document can then be <a href="Numbering.html#L1064">numbered</a>
+and <a href="Printing.html#L1062">printed</a> with a complete table of
+contents and a list of all links.</p>
+
+<p>To activate this tool, choose the <strong>Make Book</strong> item from the
+<strong>Special</strong> menu.</p>
+</div>
+
+<p align="right"><a href="Numbering.html"><img alt="previous" border="0"
+src="../Icons/left.gif" /></a> <a href="Manual.html"><img alt="top" border="0"
+src="../Icons/up.gif" /></a> <a href="Configure.html"><img alt="next"
+border="0" src="../Icons/right.gif" /></a></p>
+<hr />
+</body>
+</html>
