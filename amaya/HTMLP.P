@@ -3754,6 +3754,7 @@ RULES
 	IF not within Text_Area
 		CreateLast (INSERTED_ALT);
 	Line;
+	Adjust: Left;
 	VertPos: Top = Enclosing . Top;
 	HorizPos: Left = Enclosing . Left + 0.3;
 	Width: Enclosing . Width - 0.5;
