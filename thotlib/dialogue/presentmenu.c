@@ -53,6 +53,7 @@
 #include "presrules_f.h"
 #include "boxselection_f.h"
 #include "structselect_f.h"
+#include "unstructchange_f.h"
 #include "actions_f.h"
 
 #define SINGLE_LINESPACING 11
@@ -199,6 +200,7 @@ int                 applyDomain;
   boolean             locChngHyphen;
   boolean             locChngIndent;
   boolean             locChngLineSp;
+  boolean	      addPresRule;
   boolean	      doIt;
 
   selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
@@ -222,8 +224,13 @@ int                 applyDomain;
 	  if (pLastSel != pFirstSel || (pFirstSel == pLastSel && firstChar == 0))
 	    lastChar = 0;
 
+	addPresRule = FALSE;
 	/* Set chngChars indicator */
 	locChngBodySize = ((StdBodySize || ChngBodySize)
+			   && (applyDomain == Apply_BodySize
+			        || applyDomain == Apply_AllChars
+			       || applyDomain == Apply_All));
+	addPresRule = addPresRule || (ChngBodySize
 			   && (applyDomain == Apply_BodySize
 			        || applyDomain == Apply_AllChars
 			       || applyDomain == Apply_All));
@@ -231,7 +238,15 @@ int                 applyDomain;
 			 && (applyDomain == Apply_Weigh
 			     || applyDomain == Apply_AllChars
 			     || applyDomain == Apply_All));
+	addPresRule = addPresRule || (ChngWeight
+			 && (applyDomain == Apply_Weigh
+			     || applyDomain == Apply_AllChars
+			     || applyDomain == Apply_All));
 	locChngUnderline = ((StdUnderline || ChngUnderline)
+			    && (applyDomain == Apply_Underline
+			        || applyDomain == Apply_AllChars
+				|| applyDomain == Apply_All));
+	addPresRule = addPresRule || (ChngUnderline
 			    && (applyDomain == Apply_Underline
 			        || applyDomain == Apply_AllChars
 				|| applyDomain == Apply_All));
@@ -239,7 +254,15 @@ int                 applyDomain;
 			&& (applyDomain == Apply_Style
 			    || applyDomain == Apply_AllChars
 			    || applyDomain == Apply_All));
+	addPresRule = addPresRule || (ChngStyle
+			&& (applyDomain == Apply_Style
+			    || applyDomain == Apply_AllChars
+			    || applyDomain == Apply_All));
 	locChngFontFamily = ((StdFontFamily || ChngFontFamily)
+			     && (applyDomain == Apply_FontFamily
+				 || applyDomain == Apply_AllChars
+				 || applyDomain == Apply_All));
+	addPresRule = addPresRule || (ChngFontFamily
 			     && (applyDomain == Apply_FontFamily
 				 || applyDomain == Apply_AllChars
 				 || applyDomain == Apply_All));
@@ -273,11 +296,23 @@ int                 applyDomain;
 			    && (applyDomain == Apply_LineStyle
 				|| applyDomain == Apply_AllGraphics
 				|| applyDomain == Apply_All));
+	addPresRule = addPresRule || (ChngLineStyle
+			    && (applyDomain == Apply_LineStyle
+				|| applyDomain == Apply_AllGraphics
+				|| applyDomain == Apply_All));
 	locChngLineWeight = ((StdLineWeight || ChngLineWeight)
 			     && (applyDomain == Apply_LineWeight
 				 || applyDomain == Apply_AllGraphics
 				 || applyDomain == Apply_All));
+	addPresRule = addPresRule || (ChngLineWeight
+			     && (applyDomain == Apply_LineWeight
+				 || applyDomain == Apply_AllGraphics
+				 || applyDomain == Apply_All));
 	locChngTrame = ((StdTrame || ChngTrame)
+			&& (applyDomain == Apply_Trame
+			    || applyDomain == Apply_AllGraphics
+			    || applyDomain == Apply_All));
+	addPresRule = addPresRule || (ChngTrame
 			&& (applyDomain == Apply_Trame
 			    || applyDomain == Apply_AllGraphics
 			    || applyDomain == Apply_All));
@@ -286,7 +321,7 @@ int                 applyDomain;
 	doIt = True;
 	if (ChngStandardColor || chngChars || chngGraphics || locChngHyphen)
 	  /* changement des caracteres */
-	  if (pFirstSel == pLastSel && firstChar == lastChar)
+	  if (pFirstSel == pLastSel && firstChar == lastChar && firstChar > 0)
 	     /* no character selected. Do nothing */
 	     doIt = FALSE;
 	  else
@@ -294,6 +329,26 @@ int                 applyDomain;
 	    /* s'ils sont partiellement selectionnes */
 	    if (firstChar > 1 || lastChar > 0)
 	      CutSelection (pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
+	if (!addPresRule && !chngFormat)
+	   /* only changes to standard presentation for characters, graphics
+	      and color */
+	   {
+	   /* set selection to the highest level elements having the same
+	      content */
+	   SelectSiblings (&pFirstSel, &pLastSel, &firstChar, &lastChar);
+	   if (firstChar == 0 && lastChar == 0)
+	      if (pFirstSel->ElPrevious == NULL && pLastSel->ElNext == NULL)
+		if (pFirstSel->ElParent == pLastSel->ElParent)
+		   {
+		   pFirstSel = pFirstSel->ElParent;
+		   while (pFirstSel->ElPrevious == NULL &&
+			  pFirstSel->ElNext == NULL &&
+			  pFirstSel->ElParent != NULL)
+		      pFirstSel = pFirstSel->ElParent;
+		   pLastSel = pFirstSel;
+		   }
+	   }
+
 	if (doIt)
 	 if (chngChars || chngFormat || chngGraphics
 	     || ChngStandardColor || ChngStandardGeom)

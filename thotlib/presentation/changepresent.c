@@ -55,6 +55,9 @@
 #include "structcreation_f.h"
 #include "structmodif_f.h"
 #include "structselect_f.h"
+#include "applicationapi_f.h"
+#include "unstructchange_f.h"
+#include "appli_f.h"
 #include "tree_f.h"
 
 #ifdef __STDC__
@@ -1895,14 +1898,51 @@ boolean             Background;
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
    else if (SelDoc->DocReadOnly)
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
-   else
+   else if (SelDoc != NULL && SelDoc->DocSSchema != NULL)
+     /* le document selectionne' n'a pas ete ferme' */
      {
+	/* eteint la selection courante */
 	TtaClearViewSelections ();
+
+	/* si une chaine de caracteres complete est selectionnee, */
+	/* selectionne l'element TEXTE */
+	if (pElFirstSel->ElTerminal && pElFirstSel->ElLeafType == LtText &&
+	    firstChar <= 1)
+	  if (pElLastSel != pElFirstSel ||
+	      (pElFirstSel == pElLastSel &&
+	       lastChar > pElFirstSel->ElTextLength))
+	    firstChar = 0;
+	if (pElLastSel->ElTerminal && pElLastSel->ElLeafType == LtText &&
+	    lastChar > pElLastSel->ElTextLength)
+	  if (pElLastSel != pElFirstSel ||
+	      (pElFirstSel == pElLastSel && firstChar == 0))
+	    lastChar = 0;
+
 	/* Coupe les elements du debut et de la fin de la selection */
 	/* s'ils sont partiellement selectionnes */
 	if (firstChar > 1 || lastChar > 0)
 	   CutSelection (SelDoc, &pElFirstSel, &pElLastSel, &firstChar,
 			 &lastChar);
+
+	if (colorNum < 0)
+	   /* standard color */
+	   {
+	   /* set selection to the highest level elements having the same
+	      content */
+	   SelectSiblings (&pElFirstSel, &pElLastSel, &firstChar, &lastChar);
+	   if (firstChar == 0 && lastChar == 0)
+	      if (pElFirstSel->ElPrevious == NULL && pElLastSel->ElNext == NULL)
+	        if (pElFirstSel->ElParent == pElLastSel->ElParent)
+	           {
+	           pElFirstSel = pElFirstSel->ElParent;
+	           while (pElFirstSel->ElPrevious == NULL &&
+	                  pElFirstSel->ElNext == NULL &&
+	                  pElFirstSel->ElParent != NULL)
+	              pElFirstSel = pElFirstSel->ElParent;
+	           pElLastSel = pElFirstSel;
+	           }
+	   }
+
 	/* parcourt les elements selectionnes */
 	pEl = pElFirstSel;
 	while (pEl != NULL)
@@ -1942,7 +1982,7 @@ boolean             Background;
 			       }
 			     else
 				RuleSetPut (rulesS, PtForeground);
-			     RemoveSpecifPres (pEl, SelDoc, rulesS, SelectedView);
+			     RemoveSpecPresTree (pEl, SelDoc, rulesS, SelectedView);
 			  }
 			else
 			   ModifyGraphics (pEl, SelDoc, SelectedView, FALSE,
@@ -2485,8 +2525,10 @@ boolean            remove;
   boolean         found;
 
   pDoc = LoadedDocument[doc - 1];
-  /* examine all abstract boxes of elements */
-  for (view = 0; view < MAX_VIEW_DOC; view++)
+  /* do nothing if the document no longer exists */
+  if (pDoc != NULL)
+    /* examine all abstract boxes of elements */
+    for (view = 0; view < MAX_VIEW_DOC; view++)
     {
       /* the abstract box of the root element */
       pAb = pDoc->DocViewRootAb[view];
@@ -2587,7 +2629,7 @@ int                 viewToApply;
 
 #endif /* __STDC__ */
 {
-   PtrElement          pEl;	/* traite la racine du sous-arbre */
+   PtrElement          pEl, pNext;	/* traite la racine du sous-arbre */
 
    RemoveSpecifPres (pElRoot, pDoc, RulesS, viewToApply);
    if (!pElRoot->ElTerminal)
@@ -2596,10 +2638,11 @@ int                 viewToApply;
 	pEl = pElRoot->ElFirstChild;
 	while (pEl != NULL)
 	  {
+	     pNext = pEl->ElNext;
 	     /* traite le sous-arbre de ce fils */
 	     RemoveSpecPresTree (pEl, pDoc, RulesS, viewToApply);
 	     /* passe au fils suivant */
-	     pEl = pEl->ElNext;
+	     pEl = pNext;
 	  }
      }
 }

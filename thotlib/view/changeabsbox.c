@@ -152,8 +152,9 @@ PtrPRule           *pRule;
   found = FALSE;
   while (!found && pR != NULL)
     {
-      if (pR->PrType == typeRule
-	  && (typeRule != PtFunction || typeFunc == FnAny || pR->PrPresFunction == typeFunc))
+      if (pR->PrType == typeRule &&
+	  (typeRule != PtFunction || typeFunc == FnAny ||
+	   pR->PrPresFunction == typeFunc))
 	{
 	  /* regle du type cherche' */
 	  if (pR->PrViewNum == view)
@@ -264,10 +265,10 @@ PtrAttribute       *pAttr;
 	     pRule = pEl->ElFirstPRule;
 	     stop = FALSE;
 	     while (pRule != NULL && !stop)
-		if (pRule->PrType == typeRule
-		    && (typeRule != PtFunction
-			|| typeFunc == FnAny || pRule->PrPresFunction == typeFunc)
-		    && pRule->PrViewNum == view)
+		if (pRule->PrType == typeRule &&
+		    (typeRule != PtFunction || typeFunc == FnAny ||
+		     pRule->PrPresFunction == typeFunc) &&
+		    pRule->PrViewNum == view)
 		   stop = TRUE;
 		else
 		   /* regle suivante */
@@ -329,9 +330,10 @@ PtrAttribute       *pAttr;
 		       stop = FALSE;
 		       while (pR != NULL && !stop)
 			 {
-			    if (pR->PrType == typeRule
-				&& (typeRule != PtFunction || typeFunc == FnAny || pR->PrPresFunction == typeFunc)
-				&& pR->PrViewNum == view)
+			    if (pR->PrType == typeRule &&
+				(typeRule != PtFunction	|| typeFunc == FnAny ||
+				 pR->PrPresFunction == typeFunc) &&
+				pR->PrViewNum == view)
 			       /* regle du type cherche' pour la vue voulue */
 			       if (pR->PrCond == NULL ||
 				   CondPresentation (pR->PrCond, pEl, pA, view, pA->AeAttrSSchema))
@@ -426,7 +428,11 @@ PtrAttribute       *pAttr;
 				     /* parcourt les regles de presentation de l'attribut */
 				     while (pRule != NULL && !stop)
 				       {
-					  if (pRule->PrType == typeRule && pRule->PrViewNum == view)
+					  if (pRule->PrType == typeRule &&
+					      (typeRule != PtFunction ||
+						typeFunc == FnAny ||
+						pRule->PrPresFunction == typeFunc) &&
+					      pRule->PrViewNum == view)
 					     /* regle du type cherche' pour la vue voulue */
 					     if (pRule->PrCond == NULL ||
 						 CondPresentation (pRule->PrCond, pEl, *pAttr,
