@@ -1335,31 +1335,47 @@ changer : l'attribut de classe se manipule comme un autre attribut.</p>
 <div>
 <h2 id="L1242">13. Détection des erreurs</h2>
 
-<p>Au chargement d'un document, Amaya peut détecter des erreurs de HTML (le
-parseur HTML est très tolérant) ou des incompatibilités avec la famille XHTML
-choisie. </p>
+<p>Au chargement d'un document, Amaya peut détecter des erreurs de HTML (mais
+le parseur HTML est très tolérant) ou des incompatibilités avec la famille
+XHTML choisie.</p>
+</div>
+<dl>
+  <dt>1er exemple&nbsp;:</dt>
+    <dd>Un document est déclaré comme HTML 4.0 Strict et contient des
+      attributs non acceptés.
+      <p><img alt="(profil invalide)" src="../images/invalid_profile-fr.png"
+      /></p>
+    </dd>
+  <dt>2ème exemple&nbsp;:</dt>
+    <dd>Un document XHTML mal formé
+      <p><img alt="(mal formé)" src="../images/not_well_formed-fr.png" /></p>
+    </dd>
+</dl>
 
-<p>1er exemple&nbsp;: http://www.inria.fr, le document est déclaré </p>
+<div>
+<h4>On peut corriger les erreurs</h4>
 
-<p><img alt="(profil invalide)" src="../images/invalid_profile-fr.png" /></p>
+<p>On peut voir le détail des erreurs détectées dans l'entrée <strong>Montrer
+les erreurs</strong> du menu <strong>Vues</strong>. Pour corriger ces
+erreurs, on active le lien vers la vue source du document pour visualiser la
+position de l'erreur dans le source.</p>
 
-<p>2ème exemple: http://www.inrialpes.fr, le document est déclaré </p>
+<p>Une fois les erreurs corrigées on synchronise pour voir si tout est
+correct, on peut alors sauver le document corrigé.</p>
 
-<p><img alt="(mal formé)" src="../images/not_well_formed-fr.png" /></p>
+<h4>On peut aussi modifier le type du document</h4>
 
-<p>Si le document n'a pas pu être chargé correctement dans son intégralité,
-un dialogue d'avertissement est affiché.</p>
+<p>L'entrée <strong>Modifier le doctype</strong> du menu
+<strong>Fichier</strong> permet de modifier le type du document.</p>
 
-<p>On peut voir le détail des erreurs détectées dans l'entrée
-<strong>Vue/Montrer les erreurs</strong>. Pour corriger ces erreurs, il faut
-suivre le lien vers la vue source du document, puis synchroniser après
-correction. On peut aussi choisir de ne pas corriger les erreurs et de
-charger le document comme un document HTML au lieu de XHTML.</p>
+<p>Dans le 2ème exemple, le bouton <strong>Recharger</strong> permet de lire
+le document comme un document HTML au lieu de XHTML et donc éviter de bloquer
+sur le parseur XML.</p>
 
 <p>Erreur d'encodage</p>
 </div>
 <address>
-  <p>Irène Vatton $date: Friday 09 January 2004 - 11:29:12$</p>
+  <p>Irène Vatton $date: Friday 09 January 2004 - 16:57:00$</p>
 
 </address>
 
