@@ -264,7 +264,7 @@ HTStream           *target;
    
    status = (*target->isa->put_block) (target, me->mem_ptr, len);
 
-   if (status == HT_LOADED) {
+   if (status == HT_LOADED || status == HT_OK) {
      if (PROT_TRACE) HTTrace("Posting Data Target is SAVED\n");
      (*target->isa->flush)(target);
      return HT_LOADED;

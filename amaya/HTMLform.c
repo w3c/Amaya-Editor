@@ -61,7 +61,7 @@ char               *orig;
        /* it is necessary to extend the buffer */
        if (lg < PARAM_INCREMENT)
 	 lg = PARAM_INCREMENT;
-       status = realloc (&buffer, (size_t) (lgbuffer + lg));
+       status = realloc (buffer, sizeof(char)*(lgbuffer + lg));
 
        if (status != NULL)
 	 {
