@@ -1012,6 +1012,43 @@ int                *len;
 }
 
 /*----------------------------------------------------------------------
+   TtaMakeDirectory
+
+   Platform independent call to the local mkdir function
+
+   Parameter:
+   directory: the directory name.
+   Return value:
+   TRUE if the directory could be created or if it existed already,
+   FALSE otherwise.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool            TtaMakeDirectory (STRING directory)
+
+#else  /* __STDC__ */
+ThotBool            TtaMakeDirectory (directory)
+STRING              directory;
+
+#endif /* __STDC__ */
+
+{
+  int i;
+
+  if (TtaCheckDirectory (directory))
+    return TRUE;
+
+#ifdef _WINDOWS
+  i = umkdir (directory);
+#else /* _WINDOWS */
+  i = umkdir (directory, S_IRWXU);
+#endif /* _WINDOWS */
+  if (i != 0 && errno != EEXIST)
+    return FALSE;
+  else
+    return TRUE;
+}
+
+/*----------------------------------------------------------------------
    TtaCheckDirectory
 
    Ckecks that a directory exists and can be accessed.

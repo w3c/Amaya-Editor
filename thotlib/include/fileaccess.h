@@ -106,6 +106,7 @@ extern ThotBool TtaWriteInteger ( BinFile file,
                                  int lval );
 extern ThotBool TtaCompareFiles ( CONST STRING file1,
                                  CONST STRING file2 );
+extern ThotBool TtaMakeDirectory ( STRING directory );
 extern ThotBool TtaCheckDirectory ( STRING directory );
 
 #else /* __STDC__ */
@@ -152,6 +153,7 @@ extern ThotBool TtaWriteInteger (/* BinFile file,
                                    int lval */);
 extern ThotBool TtaCompareFiles (/* CONST char *file1,
                                    CONST char *file2 */);
+extern ThotBool TtaMakeDirectory (/* char *directory */);
 extern ThotBool TtaCheckDirectory (/* char *directory */);
 
 #endif /* __STDC__ */

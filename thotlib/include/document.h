@@ -154,19 +154,6 @@ extern void         TtaRemoveDocument (Document document);
 extern void         TtaSetDocumentPath (STRING path);
 
 /*----------------------------------------------------------------------
-   TtaCheckDirectory
-
-   Ckecks that a directory exists and can be accessed.
-
-   Parameter:
-   directory: the directory name.
-   Return value:
-   TRUE if the directory is OK, FALSE if not.
-	
-  ----------------------------------------------------------------------*/
-extern ThotBool	    TtaCheckDirectory (STRING aDirectory );
-
-/*----------------------------------------------------------------------
    TtaCheckPath
 
    Checks if all directories in a path can be accessed.
@@ -710,7 +697,6 @@ extern ThotBool     TtaExportDocument ( /* Document document, char *fileName, ch
 extern void         TtaCloseDocument ( /* Document document */ );
 extern void         TtaRemoveDocument ( /* Document document */ );
 extern void         TtaSetDocumentPath ( /* char *path */ );
-extern ThotBool     TtaCheckDirectory (/* char *aDirectory */);
 extern ThotBool     TtaCheckPath (/* char *path */);
 extern ThotBool     TtaIsInDocumentPath ( /*char *aDirectory */ );
 extern void         TtaAppendDocumentPath ( /*char *aDirectory */ );

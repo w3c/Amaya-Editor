@@ -151,19 +151,6 @@ extern STRING       TtaGetStrError (int errorCode);
   ----------------------------------------------------------------------*/
 extern void         TtaExtractName (STRING text, /*OUT*/ STRING aDirectory, /*OUT*/ STRING aName);
 
-/*----------------------------------------------------------------------
-   TtaCheckDirectory
-
-   Ckecks that a directory exists and can be accessed.
-
-   Parameter:
-   directory: the directory name.
-   Return value:
-   TRUE if the directory is OK, FALSE if not.
-	
-  ----------------------------------------------------------------------*/
-extern ThotBool     TtaCheckDirectory (STRING aDirectory);
-
 extern void        *TtaGetMemory (unsigned int size);
 extern void         TtaFreeMemory (void *buffer);
 extern void        *TtaRealloc (void *ptr, unsigned int n);
@@ -181,7 +168,6 @@ extern STRING       TtaGetVersion ( /* void */ );
 extern int          TtaGetErrorCode ( /* void */ );
 extern STRING       TtaGetStrError ( /* int errorCode */ );
 extern void         TtaExtractName ( /* STRING text, STRING aDirectory, STRING aName */ );
-extern ThotBool     TtaCheckDirectory ( /* STRING aDirectory */ );
 extern STRING       TtaStrdup ( /* char *str */ );
 
 #endif /* __STDC__ */
