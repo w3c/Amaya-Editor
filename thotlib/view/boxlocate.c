@@ -191,38 +191,25 @@ ThotBool APPgraphicModify (PtrElement pEl, int value, int frame,
 static ThotBool NotifyClick (int event, ThotBool pre, PtrElement pEl, int doc)
 {
   PtrElement          pAsc;
-  ThotBool            result;
   NotifyElement       notifyEl;
-  ThotBool            ok, isGraph;
+  ThotBool            ok;
 
-  result = FALSE;
   ok = FALSE;
   pAsc = pEl;
-  isGraph = (pEl && pEl->ElTerminal &&
+  if (pEl && pEl->ElTerminal &&
 	     (pEl->ElLeafType == LtGraphics ||
 	      pEl->ElLeafType == LtSymbol ||
 	      pEl->ElLeafType == LtPolyLine ||
-	      pEl->ElLeafType == LtPath));
+	      pEl->ElLeafType == LtPath))
+     pAsc = pAsc->ElParent;
   notifyEl.event = event;
   notifyEl.document = doc;
   notifyEl.position = 0;
-  while (pAsc)
-    {
-      notifyEl.element = (Element) pAsc;
-      notifyEl.elementType.ElTypeNum = pAsc->ElTypeNumber;
-      notifyEl.elementType.ElSSchema = (SSchema)(pAsc->ElStructSchema);
-      ok = CallEventType ((NotifyEvent *) &notifyEl, pre);
-      result = result || ok;
-      if (isGraph)
-	{
-	  /* generates a callback for the encolsing element too */
-	  pAsc = pAsc->ElParent;
-	  isGraph = FALSE;
-	}
-      else
-	pAsc = NULL;
-    }
-  return result;
+  notifyEl.element = (Element) pAsc;
+  notifyEl.elementType.ElTypeNum = pAsc->ElTypeNumber;
+  notifyEl.elementType.ElSSchema = (SSchema)(pAsc->ElStructSchema);
+  ok = CallEventType ((NotifyEvent *) &notifyEl, pre);
+  return ok;
 }
 
 /*----------------------------------------------------------------------
