@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -9,12 +9,13 @@
    Chargement et liberation des schemas de structure et de presentation
  */
 
-#include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
 #include "libmsg.h"
 #include "message.h"
+
+#ifndef NODISPLAY
 #include "fileaccess.h"
 
 typedef struct _APresentation
@@ -27,32 +28,36 @@ APresentation;
 
 #include "appstruct.h"
 #include "appdialogue.h"
+#endif /* NODISPLAY */
 
 #define THOT_EXPORT extern
 #include "edit_tv.h"
+
+#ifndef NODISPLAY
 #include "appdialogue_tv.h"
 #include "modif_tv.h"
 
 /* table des schemas de presentation charges */
 static APresentation LoadedPSchema[MAX_PSCHEMAS];
+#endif /* NODISPLAY */
 
 #include "config_f.h"
 #include "memory_f.h"
 #include "readstr_f.h"
-#include "readprs_f.h"
 #include "schemas_f.h"
+
+#ifndef NODISPLAY
+#include "readprs_f.h"
 #include "tree_f.h"
+#endif /* NODISPLAY */
 
 /*----------------------------------------------------------------------
    InitNatures     initialise la table des schemas de presentation 
    charges.                                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                InitNatures ()
-#else  /* __STDC__ */
-void                InitNatures ()
-#endif /* __STDC__ */
 {
+#ifndef NODISPLAY
    int                 i;
 
    for (i = 0; i < MAX_PSCHEMAS; i++)
@@ -61,21 +66,16 @@ void                InitNatures ()
       LoadedPSchema[i].UsageCount = 0;
       LoadedPSchema[i].PresSchemaName[0] = EOS;
       }
+#endif /* NODISPLAY */
 }
 
+#ifndef NODISPLAY
 /*----------------------------------------------------------------------
    LoadPresentationSchema charge le schema de presentation de nom	
    schemaName pour le schema de structure pointe' par pSS et		
    retourne un pointeur sur le schema charge' ou NULL si echec.      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrPSchema          LoadPresentationSchema (Name schemaName, PtrSSchema pSS)
-#else  /* __STDC__ */
-PtrPSchema          LoadPresentationSchema (schemaName, pSS)
-Name                schemaName;
-PtrSSchema          pSS;
-#endif /* __STDC__ */
-
 {
    PtrPSchema          pPSchema;
    int                 i;
@@ -135,12 +135,7 @@ PtrSSchema          pSS;
    FreePRuleList  libere la liste de regles de presentation dont   
    l'ancre est firstPRule.                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         FreePRuleList (PtrPRule * firstPRule)
-#else  /* __STDC__ */
-static void         FreePRuleList (firstPRule)
-PtrPRule           *firstPRule;
-#endif /* __STDC__ */
 {
    PtrPRule            pPRule, pNextPRule;
 
@@ -161,13 +156,7 @@ PtrPRule           *firstPRule;
    pSS pointe le schema de structure auquel le schema de           
    presentation a liberer est associe.                             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                FreePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS)
-#else  /* __STDC__ */
-void                FreePresentationSchema (pPSchema, pSS)
-PtrPSchema          pPSchema;
-PtrSSchema          pSS;
-#endif /* __STDC__ */
+void               FreePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS)
 {
    APresentation      *pPres;
    AttributePres      *pAttrPres;
@@ -251,6 +240,7 @@ PtrSSchema          pSS;
       FreeSchPres (pPSchema);
       }
 }
+#endif /* NODISPLAY */
 
 /*----------------------------------------------------------------------
    LoadNatureSchema charge la nature definie dans la regle rule du	
@@ -259,28 +249,23 @@ PtrSSchema          pSS;
    defini dans le schema de structure, sinon on propose le schema de  
    presentation de nom PSchName.					
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                LoadNatureSchema (PtrSSchema pSS, CHAR_T* PSchName, int rule)
-#else  /* __STDC__ */
-void                LoadNatureSchema (pSS, PSchName, rule)
-PtrSSchema          pSS;
-CHAR_T*             PSchName;
-int                 rule;
-#endif /* __STDC__ */
+void             LoadNatureSchema (PtrSSchema pSS, CHAR_T* PSchName, int rule)
 {
-   Name                schName;
-   PtrSSchema          pNatureSS;
+   Name          schName;
+   PtrSSchema    pNatureSS;
 
    /* utilise le nom de la nature comme nom de fichier. */
    /* copie le nom de nature dans schName */
    ustrncpy (schName, pSS->SsRule[rule - 1].SrOrigNat, MAX_NAME_LENGTH);
    /* cree un schema de structure et le charge depuis le fichier */
    GetSchStruct (&pNatureSS);
-   if (!ReadStructureSchema (pSS->SsRule[rule - 1].SrOrigNat, pNatureSS))
+   if (!ReadStructureSchema (schName, pNatureSS))
       /* echec */
       {
+#ifndef NODISPLAY
       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_SCHEMA_NOT_FIND),
 			 schName);
+#endif /* NODISPLAY */
       FreeSchStruc (pNatureSS);
       pSS->SsRule[rule - 1].SrSSchemaNat = NULL;
       }
@@ -290,6 +275,7 @@ int                 rule;
       /* traduit le schema de structure dans la langue de l'utilisateur */
       ConfigTranslateSSchema (pNatureSS);
       pSS->SsRule[rule - 1].SrSSchemaNat = pNatureSS;
+#ifndef NODISPLAY
       if (PSchName != NULL && PSchName[0] != EOS)
 	 /* l'appelant indique un schema de presentation, on essaie de le
 	    charger */
@@ -326,6 +312,7 @@ int                 rule;
 	 }
       if (ThotLocalActions[T_initevents] != NULL)
 	 (*ThotLocalActions[T_initevents]) (pNatureSS);
+#endif /* NODISPLAY */
       }
 }
 
@@ -333,13 +320,7 @@ int                 rule;
    AppendSRule     ajoute une nouvelle regle a la fin de la table  
    des regles.                                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         AppendSRule (int *ret, PtrSSchema pSS)
-#else  /* __STDC__ */
-static void         AppendSRule (ret, pSS)
-int                *ret;
-PtrSSchema          pSS;
-#endif /* __STDC__ */
 {
    if (pSS->SsNRules >= MAX_RULES_SSCHEMA)
       {
@@ -369,18 +350,11 @@ PtrSSchema          pSS;
    le schema de presentation par defaut defini dans le schema de	
    structure, sauf si le premier octet de PSchName est nul.	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 CreateNature (CHAR_T* SSchName, CHAR_T* PSchName, PtrSSchema pSS)
-#else  /* __STDC__ */
-int                 CreateNature (SSchName, PSchName, pSS)
-CHAR_T*             SSchName;
-CHAR_T*             PSchName;
-PtrSSchema          pSS;
-#endif /* __STDC__ */
+int          CreateNature (CHAR_T* SSchName, CHAR_T* PSchName, PtrSSchema pSS)
 {
-   SRule              *pRule;
-   int                 ret;
-   ThotBool            found;
+   SRule     *pRule;
+   int       ret;
+   ThotBool  found;
 
    /* cherche si le type existe deja dans le schema de structure */
    found = FALSE;
@@ -425,10 +399,12 @@ PtrSSchema          pSS;
 	 pRule->SrNDefAttrs = 0;
 	 pRule->SrConstruct = CsNatureSchema;
 	 pRule->SrSSchemaNat = NULL;
+#ifndef NODISPLAY
 	 /* initialise le pointeur sur les regles de presentation qui */
 	 /* correspondent a cette nouvelle regle de structure */
 	 if (pSS->SsPSchema != NULL)
 	    pSS->SsPSchema->PsElemPRule[ret - 1] = NULL;
+#endif   /* NODISPLAY */
 	 }
       }
    if (ret > 0)
@@ -461,18 +437,11 @@ PtrSSchema          pSS;
    extension indique s'il s'agit d'une extension de schema ou d'un    
    schema de structure complet.                                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                LoadSchemas (CHAR_T* SSchName, CHAR_T* PSchName, PtrSSchema * pSS, PtrSSchema pLoadedSS, ThotBool extension)
-#else  /* __STDC__ */
-void                LoadSchemas (SSchName, PSchName, pSS, pLoadedSS, extension)
-CHAR_T*             SSchName;
-CHAR_T*             PSchName;
-PtrSSchema         *pSS;
-PtrSSchema          pLoadedSS;
-ThotBool            extension;
-#endif /* __STDC__ */
+void            LoadSchemas (CHAR_T *SSchName, CHAR_T *PSchName,
+			     PtrSSchema *pSS, PtrSSchema pLoadedSS,
+			     ThotBool extension)
 {
-   Name          schName;
+   Name         schName;
 
    ustrncpy (schName, SSchName, MAX_NAME_LENGTH);
    /* cree le schema de structure et charge le fichier dedans */
@@ -481,8 +450,10 @@ ThotBool            extension;
       GetSchStruct (pSS);
       if (!ReadStructureSchema (SSchName, *pSS))
 	 {
+#ifndef NODISPLAY
 	 TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_SCHEMA_NOT_FIND),
 			    SSchName);
+#endif  /* NODISPLAY */
          FreeSchStruc (*pSS);
          *pSS = NULL;	     
 	 }
@@ -497,10 +468,13 @@ ThotBool            extension;
 	 {
 	 /* traduit les noms du schema dans la langue de l'utilisateur */
 	 ConfigTranslateSSchema (*pSS);
+#ifndef NODISPLAY
 	 if (ThotLocalActions[T_initevents] != NULL)
 	    (*ThotLocalActions[T_initevents]) (*pSS);
+#endif  /* NODISPLAY */
 	 }
       }
+#ifndef NODISPLAY
    else
       *pSS = pLoadedSS;
    if (*pSS)
@@ -544,6 +518,7 @@ ThotBool            extension;
          *pSS = NULL;
 	 }
       }
+#endif  /* NODISPLAY */
 }
 
 /*----------------------------------------------------------------------
@@ -551,17 +526,10 @@ ThotBool            extension;
    d'extension de nom SSchName et son schema de presentation de    
    nom PSchName.                                                   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrSSchema          LoadExtension (CHAR_T* SSchName, CHAR_T* PSchName, PtrDocument pDoc)
-#else  /* __STDC__ */
-PtrSSchema          LoadExtension (SSchName, PSchName, pDoc)
-CHAR_T*             SSchName;
-CHAR_T*             PSchName;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
+PtrSSchema LoadExtension (CHAR_T* SSchName, CHAR_T* PSchName, PtrDocument pDoc)
 {
-   PtrSSchema          pExtens, pPrevExtens;
-   ThotBool            extensionExist;
+   PtrSSchema    pExtens, pPrevExtens;
+   ThotBool      extensionExist;
 
    pExtens = NULL;
    if (pDoc->DocSSchema != NULL)
@@ -578,11 +546,13 @@ PtrDocument         pDoc;
       if (!extensionExist)
 	 /* le schema d'extension n'existe pas, on le charge */
 	 {
+#ifndef NODISPLAY
 	 if (PSchName == NULL || PSchName[0] == EOS)
 	    /* pas de schema de presentation precise' */
 	    /* cherche le schema de presentation de l'extension prevu */
 	    /* dans le fichier .conf pour ce type de document */
 	    ConfigGetPSchemaNature (pDoc->DocSSchema, SSchName, PSchName);
+#endif /* NODISPLAY */
 	 /* charge le schema d'extension demande' */
 	 LoadSchemas (SSchName, PSchName, &pExtens, NULL, TRUE);
 	 if (pExtens != NULL)
@@ -596,7 +566,9 @@ PtrDocument         pDoc;
 	    pExtens->SsPrevExtens = pPrevExtens;
 	    pPrevExtens->SsNextExtens = pExtens;
 	    pExtens->SsNextExtens = NULL;
+#ifndef NODISPLAY
 	    AddSchemaGuestViews (pDoc, pExtens);
+#endif /* NODISPLAY */
 	    }
 	 }
       }
@@ -610,13 +582,7 @@ PtrDocument         pDoc;
    regles et traite de meme les autres natures. S'il n'y en a pas,	
    retourne Faux.                                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     FreeNatureRules (PtrSSchema pSS, PtrSSchema pNatureSS)
-#else  /* __STDC__ */
-static ThotBool     FreeNatureRules (pSS, pNatureSS)
-PtrSSchema          pSS;
-PtrSSchema          pNatureSS;
-#endif /* __STDC__ */
 {
    SRule              *pRule;
    int                 rule;
@@ -655,13 +621,7 @@ PtrSSchema          pNatureSS;
    pNatureSS et son schema de presentation.            		
    Retourne faux sinon.                                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            FreeNature (PtrSSchema pSS, PtrSSchema pNatureSS)
-#else  /* __STDC__ */
-ThotBool            FreeNature (pSS, pNatureSS)
-PtrSSchema          pSS;
-PtrSSchema          pNatureSS;
-#endif /* __STDC__ */
 {
    ThotBool            ret;
 
@@ -670,9 +630,11 @@ PtrSSchema          pNatureSS;
    if (FreeNatureRules (pSS, pNatureSS))
       {
       ret = TRUE;
+#ifndef NODISPLAY
       if (pNatureSS->SsPSchema != NULL)
 	 /* libere le schema de presentation associe' */
 	 FreePresentationSchema (pNatureSS->SsPSchema, pNatureSS);
+#endif  /* NODISPLAY */
       /* rend la memoire */
       FreeSchStruc (pNatureSS);
       }
@@ -686,16 +648,11 @@ PtrSSchema          pNatureSS;
    Pour les schemas de presentation, la liberation n'est effective 
    que s'ils ne sont pas utilises par d'autres documents.          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                FreeDocumentSchemas (PtrDocument pDoc)
-#else  /* __STDC__ */
-void                FreeDocumentSchemas (pDoc)
-PtrDocument         pDoc;
-#endif /* __STDC__ */
 {
-   PtrSSchema          pSS, pNextSS;
-   SRule              *pRule;
-   int                 i;
+   PtrSSchema       pSS, pNextSS;
+   SRule            *pRule;
+   int              i;
 
    pSS = pDoc->DocSSchema;
    /* libere le schema de structure du document et ses extensions */
@@ -710,27 +667,25 @@ PtrDocument         pDoc;
 	    if (pRule->SrSSchemaNat != NULL)
 	       FreeNature (pSS, pRule->SrSSchemaNat);
 	 }
-      /* libere le schema de presentation et de structure */
+#ifndef NODISPLAY
+      /* libere le schema de presentation */
       if (pSS->SsPSchema != NULL)
 	 FreePresentationSchema (pSS->SsPSchema, pSS);
+#endif  /* NODISPLAY */
+      /* libere le schema de structure */
       FreeSchStruc (pSS);
       pSS = pNextSS;
       }
    pDoc->DocSSchema = NULL;
 }
 
+#ifndef NODISPLAY
 /*----------------------------------------------------------------------
    AddGuestViews
    add the guest views defined in presentation schema assosicated with pSS
    to the list of guest views of document view pViewDescr.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void      AddGuestViews (PtrSSchema pSS, DocViewDescr *pViewDescr)
-#else  /* __STDC__ */
-static void      AddGuestViews (pSS, pViewDescr)
-PtrSSchema    pSS;
-DocViewDescr *pViewDescr;
-#endif /* __STDC__ */
 {
   PtrPSchema         pPresSch;
   PtrHostView        pHostView;
@@ -770,13 +725,7 @@ DocViewDescr *pViewDescr;
    add the guest views of presentation schema attached to pSS to the lists
    of guest views of document pDoc.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         AddSchemaGuestViews (PtrDocument pDoc, PtrSSchema pSS)
-#else  /* __STDC__ */
-void         AddSchemaGuestViews (pDoc, pSS)
-PtrDocument  pDoc;
-PtrSSchema   pSS;
-#endif /* __STDC__ */
 {
    int                 i;
 
@@ -796,13 +745,7 @@ PtrSSchema   pSS;
    Add also the guest views of presentation schemas attached to all
    natures used in pSS.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void      AddAllGuestViews (PtrSSchema pSS, DocViewDescr *pViewDescr)
-#else  /* __STDC__ */
-static void      AddAllGuestViews (pSS, pViewDescr)
-PtrSSchema   pSS;
-DocViewDescr *pViewDescr;
-#endif /* __STDC__ */
 {
    SRule              *pRule;
    int                 i;
@@ -828,13 +771,7 @@ DocViewDescr *pViewDescr;
    CreateGuestViewList
    create the guest view list for view view of document pDoc
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         CreateGuestViewList (PtrDocument pDoc, int view)
-#else  /* __STDC__ */
-void         CreateGuestViewList (pDoc, view)
-PtrDocument  pDoc;
-int          view
-#endif /* __STDC__ */
 {
    /* look for the presentation schemas of all structure schemas used in that
       document */
@@ -845,22 +782,13 @@ int          view
    AddNature  met dans la table des natures du document pDoc          
    les schemas references par le schema de structure pSS       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         AddNature (PtrSSchema pSS, PtrDocument pDoc)
-#else  /* __STDC__ */
-static void         AddNature (pSS, pDoc)
-PtrSSchema          pSS;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
 {
    int                 rule, nat, nObjects;
    ThotBool            present;
    SRule              *pSRule;
    ThotBool            attrSchema;
-#ifndef NODISPLAY
    PtrElement          pSaved;
-#endif
 
    for (rule = 0; rule < pSS->SsNRules; rule++)
       {
@@ -881,7 +809,6 @@ PtrDocument         pDoc;
                defines no element, only attributes */
 	    if (nObjects > 0 || attrSchema)
 	       {
-#ifndef NODISPLAY
 	       /* Decompte les objets de cette nature qui sont dans */
 	       /* le buffer de Copier-Couper-Coller */
 	       if (!attrSchema && FirstSavedElement != NULL)
@@ -898,7 +825,6 @@ PtrDocument         pDoc;
 		     }
 		  while (pSaved != NULL);
 		  }
-#endif
 	       if (attrSchema || nObjects > 0)
 		  {
 		    /* Si les natures contiennent elles-memes des natures  */
@@ -944,13 +870,7 @@ PtrDocument         pDoc;
    BuildDocNatureTable remplit la table des schemas utilises          
    par le document pDoc.                                   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                BuildDocNatureTable (PtrDocument pDoc)
-#else  /* __STDC__ */
-void                BuildDocNatureTable (pDoc)
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
 {
    PtrSSchema          pSSExtens;
 
@@ -986,3 +906,4 @@ PtrDocument         pDoc;
    /* reference's par le schema de structure du document. */
    AddNature (pDoc->DocSSchema, pDoc);
 }
+#endif   /* NODISPLAY */
