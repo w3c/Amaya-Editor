@@ -1033,7 +1033,7 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 		    if (callback)
 		      callback (doc, el, desc->tempfile, extra);
 		    else
-		      DisplayImage (doc, el, desc, NULL, NULL);
+		      DisplayImage (doc, el, desc, NULL, desc->content_type);
 		    /* get image type */
 		    desc->imageType = TtaGetPictureType (el);
 		  }
