@@ -137,15 +137,14 @@ AmayaFrame::~AmayaFrame()
 
   /* destroy the canvas (it should be automaticaly destroyed by 
      wxwidgets but due to a strange behaviour, I must explicitly delete it)*/
-  if (m_pCanvas)
+/*  if (m_pCanvas)
     m_pCanvas->Destroy();
   m_pCanvas = NULL;
-
+*/
   // it's possible to fall here if a frame is a child of a page but is not deleted
   // then if the page is closed, the frame is deleted by wxWidgets because the frame is a child of the page.
   // it's important to free the corresponding frame context
   //DestroyFrame( m_FrameId );
-  memset(&FrameTable[GetFrameId()], 0, sizeof(Frame_Ctl));
   //  FrameTable[GetFrameId()].WdFrame = NULL;
 }
 
@@ -769,12 +768,13 @@ void AmayaFrame::FreeFrame()
   // the drawind area could not be reused (sometimes black background), it must be recreated.
   //  ReplaceDrawingArea( CreateDrawingArea() );
 
-  
-  // do not delete realy the frame because there is a strange bug
-  Destroy();
-
   // the frame is destroyed so it hs no more page parent
   SetPageParent( NULL );
+
+  memset(&FrameTable[GetFrameId()], 0, sizeof(Frame_Ctl));
+
+  // do not delete realy the frame because there is a strange bug
+  Destroy();
 }
 
 /*
