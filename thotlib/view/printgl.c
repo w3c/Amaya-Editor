@@ -4,7 +4,7 @@
 #include <sys/types.h>
 #include <stdarg.h>
 #include <time.h>
-#include "gl2ps.h"
+#include "glprint.h"
 
 
 #define FORMAT GL_PS

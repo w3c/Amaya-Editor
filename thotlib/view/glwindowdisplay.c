@@ -2021,7 +2021,12 @@ ThotBool GL_NotInFeedbackMode ()
   return NotFeedBackMode;
 }
 
+#ifdef _GLPRINT
+static ThotBool TransText = TRUE;
+#else /* _GLPRINT */
 static ThotBool TransText = FALSE;
+#endif /* _GLPRINT */
+
 
 /*---------------------------------------------------
   GL_TransText : If text must be texture or polygon
