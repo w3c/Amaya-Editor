@@ -158,7 +158,7 @@ Document                document;
   Element		link, target;
   ElementType		elType;
   Attribute		HrefAttr, IntLinkAttr;
-  Attribute             ExtLinkAttr;
+  Attribute             attr, ExtLinkAttr;
   AttributeType	        attrType;
   char		       *text, *ptr, *url;
   char                  value[MAX_LENGTH];
@@ -215,10 +215,7 @@ Document                document;
 		  if (ptr == text)
 		      /* a local link */
 		      url = NULL;
-		  else if (ptr == NULL)
-		    /* no specific position */
-		    ptr = text;
-		  else
+		  else if (ptr != NULL)
 		    {
 		      /* split url and name part */
 		      ptr[0] = EOS;
@@ -244,23 +241,36 @@ Document                document;
 		  else
 		    {
 		      /* this link becomes internal */
-		      /* todo: check whether the name changed */
-		      strcpy (value, ptr);
-		      length = strlen (value);
-		      i = 0;
-		      target = SearchNAMEattribute (document, &value[1], NULL);
-		      while (target != NULL)
+		      if (ptr != NULL)
 			{
-			  /* is it the right NAME */
-			  if (TtaIsAncestor (target, div))
-			    target = NULL;
-			  else
+			  /* get the target name */
+			  strcpy (value, ptr);
+			  length = strlen (value);
+			  /* check whether the name changed */
+			  i = 0;
+			  target = SearchNAMEattribute (document, &value[1], NULL);
+			  while (target != NULL)
 			    {
-			      /* continue the search */
-			      i++;
-			      sprintf (&value[length], "%d", i);
-			      target = SearchNAMEattribute (document, &value[1], NULL);
+			      /* is it the right NAME */
+			      if (TtaIsAncestor (target, div))
+				target = NULL;
+			      else
+				{
+				  /* continue the search */
+				  i++;
+				  sprintf (&value[length], "%d", i);
+				  target = SearchNAMEattribute (document, &value[1], NULL);
+				}
 			    }
+			}
+		      else
+			{
+			  /* get the DIV name */
+			  attrType.AttrTypeNum = HTML_ATTR_ID;
+			  attr = TtaGetAttribute (div, attrType);
+			  length = 200;
+			  value[0] = '#';
+			  TtaGiveTextAttributeValue (attr, &value[1], &length);
 			}
 		      ptr = &value[1];
 		      TtaSetAttributeText (HrefAttr, value, link, document);
@@ -727,10 +737,14 @@ boolean        deleteTree;
       lastInserted = TtaNewElement (destDoc, elType);
       TtaInsertSibling (lastInserted, elem, TRUE, destDoc);
       RegisterSubDoc (lastInserted, url);
+      CreateTargetAnchor (destDoc, lastInserted);
 
       /* do copy */
       firstInserted = NULL;
-      srce = TtaGetFirstChild (root);
+      if (isID)
+	srce = root;
+      else
+	srce = TtaGetFirstChild (root);
       while (srce != NULL)
 	{
 	  copy = TtaCopyTree (srce, sourceDoc, destDoc, parent);

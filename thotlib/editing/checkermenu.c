@@ -118,7 +118,7 @@ static void         DisplayWords ()
 		   TtaGetMessage (CORR, Correct), i - 1,
 		   ((i < 2) ? "" : BufMenu), 3, entry, TRUE, FALSE);
    /* selectionner la proposition 0 dans le selecteur - si elle existe */
-   if (ChkrCorrection[1] != "$")
+   if (strcmp (ChkrCorrection[1], "$") != 0)
       TtaSetSelector (SpellingBase + ChkrSelectProp, -1, ChkrCorrection[1]);
    else
       TtaSetSelector (SpellingBase + ChkrSelectProp, -1, "");
