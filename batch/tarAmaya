@@ -24,6 +24,7 @@ do
    Thot/README \
    Thot/config/XKeysymDB \
    Thot/config/thot.ini \
+   Thot/config/java.properties \
    Thot/config/amaya.css \
    Thot/config/amaya.keyboard \
    Thot/config/en-amayadialogue \
@@ -43,6 +44,7 @@ do
    Thot/dicopar/clavier \
    Thot/$MACH/bin/amaya \
    Thot/$MACH/bin/print \
+   Thot/plugintest/$MACH/*.so \
    Thot/batch/MachineType \
    Thot/amaya/COPYRIGHT \
    Thot/amaya/COPYRIGHT.html \

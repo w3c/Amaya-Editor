@@ -363,9 +363,9 @@ Thot/pluginlib/f/pluginapi_f.h \
 Thot/pluginlib/f/pluginbrowse_f.h \
 Thot/pluginlib/f/pluginhandler_f.h \
 Thot/tablelib/table.c \
-Thot/tablelib/table2c \
-Thot/tablelib/f/table2_f.h \
+Thot/tablelib/table2.c \
 Thot/tablelib/f/table_f.h \
+Thot/tablelib/f/table2_f.h \
 Thot/thotlib/base/actions.c \
 Thot/thotlib/base/alloca.c \
 Thot/thotlib/base/batchmessage.c \
@@ -378,7 +378,7 @@ Thot/thotlib/base/platform.c \
 Thot/thotlib/base/registry.c \
 Thot/thotlib/base/structlist.c \
 Thot/thotlib/base/thotmsg.c \
-Thot/thotlib/base/unit.c \
+Thot/thotlib/base/units.c \
 Thot/thotlib/content/content.c \
 Thot/thotlib/content/contentapi.c \
 Thot/thotlib/content/dictionary.c \
@@ -457,6 +457,7 @@ Thot/thotlib/image/gifhandler.c \
 Thot/thotlib/image/jpeghandler.c \
 Thot/thotlib/image/picture.c \
 Thot/thotlib/image/pictureapi.c \
+Thot/thotlib/image/picturebase.c \
 Thot/thotlib/image/pnghandler.c \
 Thot/thotlib/image/xbmhandler.c \
 Thot/thotlib/image/xpmcrbuffri.c \
@@ -512,6 +513,7 @@ Thot/thotlib/include/view.h \
 Thot/thotlib/internals/f/LiteClue_f.h \
 Thot/thotlib/internals/f/absboxes_f.h \
 Thot/thotlib/internals/f/abspictures_f.h \
+Thot/thotlib/internals/f/actions_f.h \
 Thot/thotlib/internals/f/alloca_f.h \
 Thot/thotlib/internals/f/appdialogue_f.h \
 Thot/thotlib/internals/f/appli_f.h \
@@ -553,7 +555,6 @@ Thot/thotlib/internals/f/docs_f.h \
 Thot/thotlib/internals/f/documentapi_f.h \
 Thot/thotlib/internals/f/draw_f.h \
 Thot/thotlib/internals/f/editcommands_f.h \
-Thot/thotlib/internals/f/edition_f.h \
 Thot/thotlib/internals/f/epshandler_f.h \
 Thot/thotlib/internals/f/exceptions_f.h \
 Thot/thotlib/internals/f/externalref_f.h \
@@ -578,6 +579,7 @@ Thot/thotlib/internals/f/memory_f.h \
 Thot/thotlib/internals/f/message_f.h \
 Thot/thotlib/internals/f/modiftype_f.h \
 Thot/thotlib/internals/f/nodisplay_f.h \
+Thot/thotlib/internals/f/nodialog_f.h \
 Thot/thotlib/internals/f/opendoc_f.h \
 Thot/thotlib/internals/f/openview_f.h \
 Thot/thotlib/internals/f/pagecommands_f.h \
@@ -633,6 +635,7 @@ Thot/thotlib/internals/f/thotmsg_f.h \
 Thot/thotlib/internals/f/translation_f.h \
 Thot/thotlib/internals/f/tree_f.h \
 Thot/thotlib/internals/f/treeapi_f.h \
+Thot/thotlib/internals/f/units_f.h \
 Thot/thotlib/internals/f/unstructchange_f.h \
 Thot/thotlib/internals/f/unstructlocate_f.h \
 Thot/thotlib/internals/f/viewapi_f.h \
@@ -820,6 +823,11 @@ Thot/tools/cextract-1.7/parse.c \
 Thot/tools/cextract-1.7/patchlevel.h \
 Thot/tools/cextract-1.7/proto.h \
 Thot/tools/cextract-1.7/xtract.h \
+Thot/tools/dns_daemon/Makefile \
+Thot/tools/dns_daemon/dns_daemon.c \
+Thot/tools/javastub/Makefile \
+Thot/tools/javastub/javastub.c \
+Thot/schemas/exc_Table.h \
  | $COMPRESS  > $DEST/thot-src-$THOTVERSION.tar.gz
 
 for MACH in $PLATFORMS

@@ -1,6 +1,6 @@
 #!/bin/sh
-AMAYAVERSION=0.95b
-THOTVERSION=2.0b
+AMAYAVERSION=1.0
+THOTVERSION=2.1
 
 CC=gcc
 CFLAGS=-O2
@@ -16,23 +16,42 @@ then
     echo rm -rf $TESTDIR/Thot.old
 fi
 
+echo
 echo Creating the Test directory
+echo
 mkdir -p $TESTDIR
 cd $TESTDIR
+echo
 echo Extracting Thot library sources $THOTVERSION
+echo
 tar xvzf $THOTTAPE/thot-src-$THOTVERSION.tar.gz
+echo
 echo Extracting Thot libs $THOTVERSION for $MACHINE
+echo
 tar xvzf $THOTTAPE/thot-libs-$MACHINE-$THOTVERSION.tar.gz
 cd Thot
+echo
 echo Extracting Thot Editor sources $THOTVERSION
+echo
 tar xvzf $THOTTAPE/thoteditor-src-$THOTVERSION.tar.gz
+echo
 echo Extracting Amaya sources $AMAYAVERSION
+echo
 tar xvzf $THOTTAPE/amaya-src-$AMAYAVERSION.tar.gz
+echo
 echo Extracting Amaya libs $THOTVERSION for $MACHINE
+echo
 tar xvzf $THOTTAPE/amaya-libs-$MACHINE-$AMAYAVERSION.tar.gz
+echo
 echo Going to $MACHINE specific directory
+echo
 cd $MACHINE
+echo
 echo Setting up Makefile
-sed -e "s+/\^THOTDIR.*\$+THOTDIR=$TESTDIR/Thot+" < Makefile.orig > Makefile
-echo Starting compile with CC=$CC CFLAGS=$CFLAGS
-make CC=$CC CFLAGS=$CFLAGS amaya
+echo
+#sed -e "s+/\^THOTDIR.*\$+THOTDIR=$TESTDIR/Thot+" < Makefile.orig > Makefile
+cp Makefile.orig Makefile
+echo
+echo Starting compile with THOTDIR=$TESTDIR/Thot CC=$CC CFLAGS=$CFLAGS
+echo
+make THOTDIR=$TESTDIR/Thot CC=$CC CFLAGS=$CFLAGS amaya thot
