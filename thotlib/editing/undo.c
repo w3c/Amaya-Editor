@@ -1359,10 +1359,10 @@ void TtcUndo (Document doc, View view)
    /* Start a new sequence in the Redo queue */
    OpenRedoSequence (doc);
 
-   TtaUnselect (doc);
    dispMode = TtaGetDisplayMode (doc);
    if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (doc, DeferredDisplay);
+   TtaUnselect (doc);
    if (ThotLocalActions[T_islock])
      {
        (*(Proc1)ThotLocalActions[T_islock]) ((void*)&lock);

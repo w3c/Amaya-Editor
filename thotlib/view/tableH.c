@@ -930,11 +930,11 @@ printf ("Specific Widths ...\n");
     }
 
   pTabRel = pBox->BxRows;
-  /*if (pTabRel && pTabRel->TaRTable[0]->AbEnclosing)*/
+  if (pTabRel && pTabRel->TaRTable[0]->AbEnclosing)
     {
       /* update rows */
-      if (!PackRows && pBox->BxRows &&
-	  pBox->BxRows->TaRTable[0]->AbEnclosing->AbBox)
+      if (!PackRows &&
+	  pTabRel->TaRTable[0]->AbEnclosing->AbBox)
 	{
 	  /* pack all rows */
 	  PackRows = TRUE;

@@ -474,7 +474,8 @@ PtrElement GetCellInRow (PtrElement pRow, PtrElement pColHead)
   found = FALSE;
   while (pCell && !found)
     {
-      if (pColHead == GetColHeadOfCell (pCell))
+      if (pColHead == GetColHeadOfCell (pCell) ||
+	  pCell->ElNext == NULL)
 	found = TRUE;
       else
         pCell = pCell->ElNext;

@@ -23,6 +23,7 @@
 #include "Mathedit_f.h"
 
 static Element      CurrentRow = NULL;
+static Element      CurrentColumn = NULL;
 static Element      CurrentCell;
 static int          PreviousColSpan;
 static int          PreviousRowSpan;
@@ -1436,6 +1437,7 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
     TtaSetDisplayMode (doc, DeferredDisplay);
 
   elType = TtaGetElementType (cell);
+  attrType.AttrSSchema = elType.ElSSchema;
   inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
 
   if (!inMath && elType.ElTypeNum == HTML_EL_Table_cell)
@@ -1453,13 +1455,11 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
   if (inMath)
     {
       elType.ElTypeNum = MathML_EL_TableRow;
-      attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = MathML_ATTR_MRef_column;
     }
   else
     {
       elType.ElTypeNum = HTML_EL_Table_row;
-      attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = HTML_ATTR_Ref_column;
     }
   /* get the enclosing row element */
@@ -1512,22 +1512,24 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
 	    }
 	}
     }
+
   if (colhead)
     {
       if (generateColumn)
-	/* generate the new column */
-	colhead = NewColumnHead (colhead, before, FALSE, row, doc, inMath,
-				 generateEmptyCells);
+	  /* generate the new column */
+	  colhead = NewColumnHead (colhead, before, FALSE, row, doc, inMath,
+				   generateEmptyCells);
       else if (before)
 	/* select the previous column */
 	TtaPreviousSibling (&colhead);
       else
 	/* select the next column */
 	TtaNextSibling (&colhead);
+      /* next pasted cells with info = 3 should be linked to this column */
+      CurrentColumn = colhead;
       /* link the new cell to the new colhead */
       LinkCellToColumnHead (newcell, colhead, doc, inMath);
     }
-
    TtaSetDisplayMode (doc, dispMode);
 }
 
@@ -1567,9 +1569,10 @@ void CellCreated (NotifyElement * event)
   ----------------------------------------------------------------------*/
 void CellPasted (NotifyElement * event)
 {
-   Element             cell, nextcell, row;
+   Element             cell, row;
    ElementType         elType;
    Document            doc;
+   ThotBool            inMath;
 
   if (event->info != 4 && event->info != 3)
     return;
@@ -1587,9 +1590,13 @@ void CellPasted (NotifyElement * event)
 	cells in other rows */
      NewCell (cell, doc, TRUE, FALSE);
    else if (event->info == 3)
+     {
      /* undoing the deletion of any other cell in a "delete column"
 	command. Link the restored cell with the corresponding ColumnHead*/
-     NewCell (cell, doc, FALSE, FALSE);
+       elType = TtaGetElementType (cell);
+       inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
+       LinkCellToColumnHead (cell, CurrentColumn, doc, inMath);
+     }
    HandleColAndRowAlignAttributes (row, doc);
    /* Check attribute NAME or ID in order to make sure that its value */
    /* is unique in the document */
@@ -1964,6 +1971,7 @@ void ColumnDeleted (NotifyElement * event)
   ----------------------------------------------------------------------*/
 void ColumnPasted (NotifyElement * event)
 {
+  CurrentColumn = event->element;
 }
 
 /*----------------------------------------------------------------------

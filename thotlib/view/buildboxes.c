@@ -2679,6 +2679,7 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	    {
 	      /* unregister the box */
 	      pBox->BxDisplay = FALSE;
+	      pAb->AbDead = TRUE;
 	      if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock)
 		{
 		  /* free floating contexts */
