@@ -8,6 +8,7 @@
 
 extern void InitDAV ( void );
 extern void DAVFreeLock ( Document docid );
+extern void DAVSaveRegistry ( void );
 extern void DAVLockDocument ( Document document,
                               View view );
 extern void DAVUnlockDocument ( Document document,
@@ -23,6 +24,7 @@ extern void DAVLockIndicator ( Document document,
 
 extern void InitDAV (/* void */);
 extern void DAVFreeLock (/* Document docid */);
+extern void DAVSaveRegistry (/* void */);
 extern void DAVLockDocument (/* Document document,
                                 View view */);
 extern void DAVUnlockDocument (/* Document document,

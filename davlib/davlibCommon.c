@@ -15,7 +15,12 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.5  2002-06-06 17:10:46  kirschpi
+ ** Revision 1.6  2002-06-11 17:34:52  kirschpi
+ ** improving commentaries and format (for WebDAV code).
+ ** update DAV Resources list automatically
+ ** Manuele
+ **
+ ** Revision 1.5  2002/06/06 17:10:46  kirschpi
  ** Breaking the user messages in three lines
  ** Fixing some code format problems
  ** Fixing DAVLockIndicator, when Lock discovery is disabled.
@@ -144,6 +149,44 @@ char * DAVBreakString (char *original)
 
 
 /*----------------------------------------------------------------------
+   Adds a resource to a resource list
+   Parameters:
+        char *new_resource: new resource to be added        
+        char *list: resource list
+        char sep: separator in the list
+        int  len: the list len (allocated space)
+
+   Note: this function will add the resource, if it is a collection,
+         or this "father" collection, if it is not a collection.
+  ----------------------------------------------------------------------*/
+BOOL DAVAddResource (char *new_resource, char *list, char sep, int len) 
+{
+    char buf[LINE_MAX];
+    int i;
+    BOOL status = NO;
+    
+    fprintf (stderr,"list: %s resource %s\n",list,new_resource);
+    if (new_resource && *new_resource && list) 
+     {
+        sprintf (buf,"%c%s",sep,new_resource);
+        i =  strlen (buf) - 1;
+        i = (i<0)?0:i;
+        while (i>=0 && buf[i]!='/') 
+            i--; 
+        buf[++i] = '\0';
+
+        if (strlen(buf)<len)
+         {
+            strcat (list, buf);
+            status = YES;
+         }        
+     }
+    fprintf (stderr,"list: %s resource %s\n",list,new_resource);
+
+    return status;
+}
+
+/*----------------------------------------------------------------------
    Calculates a time_t value for the timeout string
   ----------------------------------------------------------------------*/
 time_t DAVTimeoutValue (char *timeout) 
@@ -221,7 +264,7 @@ BOOL DAVAllowResource (char *davlist, char *url)
     if (!match && separateUri (url, DAVFullHostName, &host, &rel)) 
      {
         entries = searchLockBase (host, rel);
-        if (entries)
+        if (entries && !HTList_isEmpty(entries))
             match = YES;
      }   
 
@@ -471,6 +514,13 @@ LockLine * DAVGetLockFromTree (AwTree * tree, char *owner)
     return lock;
 }
       
+
+
+
+/* ********************************************************************* *
+ *                 "If" HEADER MANIPULATION FUNCTIONS                    *
+ * ********************************************************************* */
+
 
 /*----------------------------------------------------------------------
  * DAVAddIfHeader - adds an If header (based on lock information found

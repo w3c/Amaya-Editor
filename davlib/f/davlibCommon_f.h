@@ -9,6 +9,10 @@
 extern char * DAVFQDN ( void );
 extern char * DAVDefaultEmail ( void );
 extern char * DAVBreakString ( char *original );
+extern BOOL DAVAddResource ( char *new_resource,
+                             char *list,
+                             char sep,
+                             int len );
 extern time_t DAVTimeoutValue ( char *timeout );
 extern char * DAVCopyFile ( char * filename,
                             int size );
@@ -38,6 +42,10 @@ extern AHTReqContext * DAVCopyContext ( AHTReqContext *context );
 extern char * DAVFQDN (/* void */);
 extern char * DAVDefaultEmail (/* void */);
 extern char * DAVBreakString (/* char *original */);
+extern BOOL DAVAddResource (/* char *new_resource,
+                               char *list,
+                               char sep,
+                               int len */);
 extern time_t DAVTimeoutValue (/* char *timeout */);
 extern char * DAVCopyFile (/* char * filename,
                               int size */);

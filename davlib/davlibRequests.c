@@ -15,7 +15,12 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.6  2002-06-06 17:10:46  kirschpi
+ ** Revision 1.7  2002-06-11 17:34:52  kirschpi
+ ** improving commentaries and format (for WebDAV code).
+ ** update DAV Resources list automatically
+ ** Manuele
+ **
+ ** Revision 1.6  2002/06/06 17:10:46  kirschpi
  ** Breaking the user messages in three lines
  ** Fixing some code format problems
  ** Fixing DAVLockIndicator, when Lock discovery is disabled.
@@ -58,6 +63,7 @@
 #include "davlibRequests_f.h"
 #include "davlibCommon_f.h"
 #include "davlibUI_f.h"
+#include "davlib_f.h"
 
 
 
@@ -504,6 +510,14 @@ int FilterFindAndPut_handler (HTRequest * request, HTResponse * response,
             
             if (DAVConfirmDialog (context->docid,label1, (ptr)?ptr:" ", label2))
              {
+                
+                /* add this url to the DAV Resources list */
+                if (DAVAllowResource (DAVResources,DocumentURLs[context->docid])!=YES) 
+                 {           
+                    if (DAVAddResource (context->urlName, DAVResources, ' ', LINE_MAX))
+                        DAVSaveRegistry();
+                 }
+
                 /* save lock info */
                 if (saveLockLine (davctx->absoluteURI, lockinfo)==YES) 
                  {
@@ -553,7 +567,7 @@ int FilterFindAndPut_handler (HTRequest * request, HTResponse * response,
 
                     TtaHandlePendingEvents ();      
                  } /* save */
-             } /*confirm dialog */
+             } /*confirm dialog */             
          } /* lockinfo */
             
         /* if status != YES, continue filters */
@@ -855,7 +869,6 @@ int FilterLock_handler (HTRequest * request, HTResponse * response,
     AHTDAVContext  *davctx  = (context)?context->dav_context:NULL;
     HTParentAnchor *anchor  = NULL;
     HTAssocList    *headers = NULL;
-    BOOL  saved  = YES;
     char *format = (response)?HTAtom_name(HTResponse_format(response)):"Unknwon";
 
     out = deb = NULL;
@@ -887,13 +900,19 @@ int FilterLock_handler (HTRequest * request, HTResponse * response,
         if (status == HT_LOADED && out) 
          {
             headers = HTAnchor_header(anchor);
+            
+            /* add this url to the DAV Resources list */
+            if (DAVAllowResource (DAVResources,DocumentURLs[context->docid])!=YES) 
+             {           
+                if (DAVAddResource (context->urlName, DAVResources, ' ', LINE_MAX))
+                    DAVSaveRegistry();
+             }
          
             if (saveLockBase (davctx->absoluteURI,davctx->relativeURI, out, headers)!=YES) 
              { 
                 DAVDisplayMessage (TtaGetMessage (AMAYA, AM_SAVE_LOCKBASE_FAILED), NULL);
-                saved = NO;
              }
- 
+            
             DAVLockIndicatorState = TRUE;
          }
          else if (status == HT_MULTI_STATUS && out) 
@@ -1540,6 +1559,13 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
             
                         if (DAVConfirmDialog (context->docid,label1, (ptr)?ptr:" ", label2)) 
                          {
+                           if (DAVAllowResource (DAVResources,DocumentURLs[context->docid])!=YES) 
+                            {
+                               /* add this url to the DAV Resources list */
+                               if (DAVAddResource (context->urlName, DAVResources, ' ', LINE_MAX))
+                                   DAVSaveRegistry();
+                            }
+
                             /* save lock info */
                             if (saveLockLine (davctx->absoluteURI, lockinfo)!=YES) 
                                 DAVDisplayMessage (TtaGetMessage (AMAYA, AM_SAVE_LOCKBASE_FAILED), NULL);
@@ -1777,13 +1803,19 @@ int FilterCopyLockInfo_handler (HTRequest *request, HTResponse *response,
 #endif            
             DAVLockIndicatorState = TRUE;
             
+            /* add this url to the DAV Resources list */
+            if (DAVAllowResource (DAVResources,DocumentURLs[context->docid])!=YES) 
+             {
+                if (DAVAddResource (context->urlName, DAVResources, ' ', LINE_MAX))
+                    DAVSaveRegistry();
+             }
+            
             /* save the lock info in local base */
             if (!saveLockLine (davctx->absoluteURI, lockinfo)) 
              {
                 DAVDisplayMessage (TtaGetMessage (AMAYA, AM_SAVE_LOCKBASE_FAILED), NULL);
                 davctx->showIt = NO;
              }
-            
          }
         else 
          { /* the resource is unlocked */ 

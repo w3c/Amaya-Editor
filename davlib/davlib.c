@@ -14,7 +14,12 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.6  2002-06-06 17:10:45  kirschpi
+ ** Revision 1.7  2002-06-11 17:34:52  kirschpi
+ ** improving commentaries and format (for WebDAV code).
+ ** update DAV Resources list automatically
+ ** Manuele
+ **
+ ** Revision 1.6  2002/06/06 17:10:45  kirschpi
  ** Breaking the user messages in three lines
  ** Fixing some code format problems
  ** Fixing DAVLockIndicator, when Lock discovery is disabled.
@@ -221,6 +226,9 @@ void InitDAV (void)
     fprintf (stderr,"InitDAV..... WebDAV User's preferences are \n");
     fprintf (stderr,"\tuser url: %s\n\tlock scope: %s\n",DAVUserURL,DAVLockScope); 
     fprintf (stderr,"\tdepth: %s\n\ttimeout: %s\n",DAVDepth,DAVTimeout); 
+    fprintf (stderr,"\tAwareness: %s\n",(DAVAwareness)?"yes":"no"); 
+    fprintf (stderr,"\tAwareness on exit: %s\n",(DAVAwarenessExit)?"yes":"no"); 
+    fprintf (stderr,"\tResources: %s\n",DAVResources); 
 
     /*HTSetTraceMessageMask("pl");*/
 #endif
@@ -253,6 +261,16 @@ void InitDAV (void)
 /*----------------------------------------------------------------------
    DAVFreeLock - ask to user if he/she wants to free pending locks 
                  when closing the session.   
+   
+  NEED: deal with last document when exiting the application.
+   
+        Now, when exiting the application, if the document is locked
+        by the user (the lock information must be in the local base),
+        this function will ask whether the user wants to unlock it.
+        If user agrees, an UNLOCK request will be sent. But, under
+        Windows machines, this request will be killed when the application
+        exit, and no unlock will be done.
+                      
   ----------------------------------------------------------------------*/
 void DAVFreeLock (Document docid) 
 {
@@ -300,6 +318,57 @@ void DAVFreeLock (Document docid)
          } /* lockinfo */
      }
 }
+
+
+
+/* ********************************************************************* *
+ *                           REGISTRY OPERATION                          *
+ * ********************************************************************* */
+
+
+/*----------------------------------------------------------------------
+   DAVSaveRegistry - save DAV information in the registry
+
+  ----------------------------------------------------------------------*/
+void DAVSaveRegistry (void)
+{
+    /***** DAVUserURL, DAVLockScope, DAVDepth, DAVTimeout *****/
+    TtaSetEnvString (DAV_USER_URL,DAVUserURL,TRUE);
+    TtaSetEnvString (DAV_LOCK_SCOPE,DAVLockScope,TRUE);
+    TtaSetEnvString (DAV_DEPTH,DAVDepth,TRUE);
+    TtaSetEnvString (DAV_TIMEOUT,DAVTimeout,TRUE);
+    
+    /************* DAVAwareness, DAVAwarenessOnExit ************ */
+    if (DAVAwareness == YES) 
+        TtaSetEnvString (DAV_AWARENESS,"yes",TRUE);
+    else 
+        TtaSetEnvString (DAV_AWARENESS,"no",TRUE);
+    
+    if (DAVAwarenessExit == YES)
+        TtaSetEnvString (DAV_AWARENESS_EXIT,"yes",TRUE);
+    else
+        TtaSetEnvString (DAV_AWARENESS_EXIT,"no",TRUE);
+    
+    
+    /************************** DAVResources ******************** */
+    TtaSetEnvString (DAV_URLS,DAVResources,TRUE);
+
+
+    /* *********************** SAVING REGISTRY ***************** */
+    TtaSaveAppRegistry();
+
+    
+#ifdef DEBUG_DAV
+    fprintf (stderr,"DAVSaveRegistry..... WebDAV User's preferences are \n");
+    fprintf (stderr,"\tuser url: %s\n\tlock scope: %s\n",DAVUserURL,DAVLockScope); 
+    fprintf (stderr,"\tdepth: %s\n\ttimeout: %s\n",DAVDepth,DAVTimeout); 
+    fprintf (stderr,"\tAwareness: %s\n",(DAVAwareness)?"yes":"no"); 
+    fprintf (stderr,"\tAwareness on exit: %s\n",(DAVAwarenessExit)?"yes":"no"); 
+    fprintf (stderr,"\tResources: %s\n",DAVResources); 
+#endif
+
+}
+
 
 
 /* ********************************************************************* *
