@@ -2735,6 +2735,14 @@ void               *context_tcbf;
 	   HTRequest_setPreconditions(me->request, HT_NO_MATCH);
 	   HTRequest_addAfter(me->request, check_handler, NULL, NULL, HT_ALL,
 			      HT_FILTER_MIDDLE, YES);
+	   HTRequest_addAfter (me->request, HTAuthFilter, "http://*", NULL, 
+			       HT_NO_ACCESS, HT_FILTER_MIDDLE, YES);
+	   HTRequest_addAfter (me->request, HTAuthFilter, "http://*", NULL,
+			       HT_REAUTH, HT_FILTER_MIDDLE, YES);
+	   HTRequest_addAfter (me->request, HTAuthInfoFilter, "http://*", NULL,
+			       HT_ALL, HT_FILTER_MIDDLE, YES);
+	   HTRequest_addAfter (me->request, HTUseProxyFilter, "http://*", NULL,
+			       HT_USE_PROXY, HT_FILTER_MIDDLE, YES);
 	 }
      }
    else
