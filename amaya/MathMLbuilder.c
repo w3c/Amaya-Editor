@@ -187,20 +187,21 @@ void MapMathMLAttribute (char *attrName, AttributeType *attrType,
 void MapMathMLAttributeValue (char *AttrVal, AttributeType attrType,
 			      int *value)
 {
-   int                 i;
+  int                 i;
 
-   *value = 0;
-   i = 0;
-   while (MathMLAttrValueMappingTable[i].ThotAttr != attrType.AttrTypeNum &&
-	  MathMLAttrValueMappingTable[i].ThotAttr != 0)
-       i++;
-   if (MathMLAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum)
-       do
-	   if (!strcasecmp (MathMLAttrValueMappingTable[i].XMLattrValue, AttrVal))
-	       *value = MathMLAttrValueMappingTable[i].ThotAttrValue;
-	   else
-	       i++;
-       while (*value <= 0 && MathMLAttrValueMappingTable[i].ThotAttr != 0);
+  *value = 0;
+  i = 0;
+  while (MathMLAttrValueMappingTable[i].ThotAttr != attrType.AttrTypeNum &&
+	 MathMLAttrValueMappingTable[i].ThotAttr != 0)
+    i++;
+  if (MathMLAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum)
+    do
+      if (!strcmp (MathMLAttrValueMappingTable[i].XMLattrValue, AttrVal))
+	*value = MathMLAttrValueMappingTable[i].ThotAttrValue;
+      else
+	i++;
+    while (*value == 0 &&
+	   MathMLAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum);
 }
 
 /*----------------------------------------------------------------------
@@ -717,55 +718,61 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
 	      {
 	      len = TtaGetTextLength (textEl);
 	      if (len == 1)
-		/* the TEXT element contains a single character */
-		{
-		/* get that character */
-		len = 2;
-		TtaGiveTextContent (textEl, text, &len, &lang);
-		alphabet = TtaGetAlphabet (lang);
-		if (alphabet == 'G')
-		   /* a single Symbol character */
-		   if ((int)text[0] == 172 || (int)text[0] == 174 ||
-		       (int)text[0] == 45  ||
-		       (int)text[0] == 132 || (int)text[0] == 133)
-		      /* horizontal arrow, horizontal bar, horizontal brace */
-		      {
-		      c = EOS;
-		      /* attach a IntHorizStretch attribute to the mo */
-		      attrType.AttrSSchema = elType.ElSSchema;
-		      attrType.AttrTypeNum = MathML_ATTR_IntHorizStretch;
-		      attr = TtaNewAttribute (attrType);
-		      TtaAttachAttribute (el, attr, doc);
-		      TtaSetAttributeValue (attr, MathML_ATTR_IntHorizStretch_VAL_yes_, el, doc);
-		      /* replace the TEXT element by a Thot SYMBOL element */
-		      elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
-		      symbolEl = TtaNewElement (doc, elType);
-		      TtaInsertSibling (symbolEl, textEl, FALSE, doc);
-		      if (selEl != NULL)
-			if (*selEl == textEl)
-			  *selEl = symbolEl;
-		      TtaDeleteTree (textEl, doc);
-		      if ((int)text[0] == 172)
-			c = 'L';  /* arrow left */
-		      else if ((int)text[0] == 174)
-			c = 'R';  /* arrow right */
-		      else if ((int)text[0] == 45)    /* - (minus) */
-			/* a horizontal line in the middle of the box */
-			c = 'h'; 
-		      else if ((int)text[0] == 132)
-			c = 'o';  /* Over brace */
-		      else if ((int)text[0] == 133)
-			c = 'u';  /* Under brace */
-		      if (c != EOS)
-			TtaSetGraphicsShape (symbolEl, c, doc);
-		      }
-		}
+		 /* the TEXT element contains a single character */
+		 {
+		 c = EOS;
+		 /* get that character */
+		 len = 2;
+		 TtaGiveTextContent (textEl, text, &len, &lang);
+		 alphabet = TtaGetAlphabet (lang);
+		 if (alphabet == 'L')
+		    {
+		    if (text[0] == '-' || text[0] == '_' ||
+			(int)text[0] == 175)
+		      /* a horizontal line in the middle of the box */
+		      c = 'h'; 
+		    }
+		 else if (alphabet == 'G')
+		    /* a single Symbol character */
+		    {
+		    if ((int)text[0] == 172)
+		      c = 'L';  /* arrow left */
+		    else if ((int)text[0] == 174)
+		      c = 'R';  /* arrow right */
+		    else if ((int)text[0] == 45)    /* - (minus) */
+		      /* a horizontal line in the middle of the box */
+		      c = 'h'; 
+		    else if ((int)text[0] == 132)
+		      c = 'o';  /* Over brace */
+		    else if ((int)text[0] == 133)
+		      c = 'u';  /* Under brace */
+		    }
+		 if (c != EOS)
+		    {
+		    /* attach a IntHorizStretch attribute to the mo */
+		    attrType.AttrSSchema = elType.ElSSchema;
+		    attrType.AttrTypeNum = MathML_ATTR_IntHorizStretch;
+		    attr = TtaNewAttribute (attrType);
+		    TtaAttachAttribute (el, attr, doc);
+		    TtaSetAttributeValue (attr, MathML_ATTR_IntHorizStretch_VAL_yes_, el, doc);
+		    /* replace the TEXT element by a Thot SYMBOL element */
+		    elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
+		    symbolEl = TtaNewElement (doc, elType);
+		    TtaInsertSibling (symbolEl, textEl, FALSE, doc);
+		    if (selEl != NULL)
+		      if (*selEl == textEl)
+			*selEl = symbolEl;
+		    TtaDeleteTree (textEl, doc);
+		    if (c != EOS)
+		      TtaSetGraphicsShape (symbolEl, c, doc);
+		    }
+		 }
 	      }
 	   }
 	}
      }
 }
-
+ 
 /*----------------------------------------------------------------------
    SetIntHorizStretchAttr
 
