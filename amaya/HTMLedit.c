@@ -649,7 +649,7 @@ boolean             createLink;
   Attribute           attr;
   DisplayMode         dispMode;
   int                 c1, cN, lg, i;
-  boolean             noAnchor, oldStructureChecking, new;
+  boolean             noAnchor;
 
   parag = NULL;
   HTMLSSchema = TtaGetSSchema ("HTML", doc);
@@ -875,7 +875,7 @@ boolean             createLink;
       TtaSetAttributeText (attr, "link", anchor, doc);
     }
   else
-    CreateTargetAnchor (doc, anchor, TRUE);
+    CreateTargetAnchor (doc, anchor, FALSE);
 
   if (parag)
     TtaRegisterElementCreate (parag, doc);

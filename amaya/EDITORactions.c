@@ -2116,6 +2116,12 @@ int                 attrNum;
 }
 
 /*----------------------------------------------------------------------
+  CreateAreaMap
+  create an area in a map. shape indicates the shape of the area to be
+  created:
+  'R': rectangle
+  'a': circle
+  'p': polygon
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CreateAreaMap (Document doc, View view, STRING shape)
@@ -2127,7 +2133,7 @@ STRING              shape;
 
 #endif /* __STDC__ */
 {
-   Element             el, map, parent, image, child;
+   Element             el, map, parent, image, child, newElem;
    ElementType         elType;
    AttributeType       attrType;
    Attribute           attr, attrRef, attrShape;
@@ -2136,27 +2142,29 @@ STRING              shape;
    int                 firstchar, lastchar;
    DisplayMode         dispMode;
 
-   dispMode = TtaGetDisplayMode (doc);
-   url = NULL;
    /* get the first selected element */
    TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
    if (el == NULL)
-     /* no selection */
+     /* no selection. Nothing to do */
      return;
 
    elType = TtaGetElementType (el);
    if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
-     /* not within HTML element */
+     /* not within an HTML element. Nothing to do */
      return;
 
    /* ask Thot to stop displaying changes made in the document */
+   dispMode = TtaGetDisplayMode (doc);
    if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (doc, DeferredDisplay);
 
+   TtaOpenUndoSequence (doc, el, el, 0, 0);
+   newElem = NULL;
+
    if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+     /* an image is selected. Create an area for it */
      {
         url = (STRING) TtaGetMemory (MAX_LENGTH);
-	/* The selection is on a IMG */
 	image = el;
 	/* Search the USEMAP attribute */
 	attrType.AttrSSchema = elType.ElSSchema;
@@ -2176,6 +2184,7 @@ STRING              shape;
 	     /* create the MAP element */
 	     elType.ElTypeNum = HTML_EL_MAP;
 	     map = TtaNewElement (doc, elType);
+	     newElem = map;
 	     parent = image;
 	     do
 	       {
@@ -2189,7 +2198,7 @@ STRING              shape;
 	     attrType.AttrTypeNum = HTML_ATTR_NAME;
 	     attr = TtaGetAttribute (map, attrType);
 
-	     /* create the USEMAP attribute */
+	     /* create the USEMAP attribute for the image */
 	     length = TtaGetTextAttributeLength (attr) + 1;
 	     url[0] = '#';
 	     TtaGiveTextAttributeValue (attr, &url[1], &length);
@@ -2199,8 +2208,14 @@ STRING              shape;
 	       {
 		 attr = TtaNewAttribute (attrType);
 		 TtaAttachAttribute (image, attr, doc);
+	         TtaSetAttributeText (attr, url, image, doc);
+		 TtaRegisterAttributeCreate (attr, image, doc);
 	       }
-	     TtaSetAttributeText (attr, url, image, doc);
+	     else
+	       {
+		 TtaRegisterAttributeReplace (attr, image, doc);
+	         TtaSetAttributeText (attr, url, image, doc);
+	       }
 
 	     /* create the Ref_IMG attribute */
 	     attrType.AttrTypeNum = HTML_ATTR_Ref_IMG;
@@ -2211,8 +2226,9 @@ STRING              shape;
 	TtaFreeMemory (url);
      }
    else
+     /* the selected element is not an image */
      {
-	/* Is the selection within a MAP ? */
+	/* is the selection within a MAP element ? */
 	if (elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT)
 	  {
 	     el = TtaGetParent (el);
@@ -2223,37 +2239,41 @@ STRING              shape;
 	else if (elType.ElTypeNum == HTML_EL_MAP)
 	   map = el;
 	else
-	  {
 	   /* cannot create the AREA */
-	    /* ask Thot to display changes made in the document */
-	    TtaSetDisplayMode (doc, dispMode);
-	   return;
-	  }
+	   map = NULL;
 
-	/* Search the Ref_IMG attribute */
-	attrType.AttrSSchema = elType.ElSSchema;
-	attrType.AttrTypeNum = HTML_ATTR_Ref_IMG;
-	attr = TtaGetAttribute (map, attrType);
-	image = NULL;
-	if (attr != NULL)
+	if (map)
 	  {
-	     /* Search the IMAGE element associated with the MAP */
-	     length = MAX_LENGTH;
-	     url = (STRING) TtaGetMemory (MAX_LENGTH);
-	     TtaGiveReferenceAttributeValue (attr, &image, url, &length);
-	     TtaFreeMemory (url);
+	    /* Search the Ref_IMG attribute */
+	    attrType.AttrSSchema = elType.ElSSchema;
+	    attrType.AttrTypeNum = HTML_ATTR_Ref_IMG;
+	    attr = TtaGetAttribute (map, attrType);
+	    image = NULL;
+	    if (attr != NULL)
+	      {
+		/* Search the IMAGE element associated with the MAP */
+		length = MAX_LENGTH;
+		url = (STRING) TtaGetMemory (MAX_LENGTH);
+		TtaGiveReferenceAttributeValue (attr, &image, url, &length);
+		TtaFreeMemory (url);
+	      }
 	  }
      }
 
-   /* Create the AREA */
-   if (map != NULL && image != NULL)
+   if (map == NULL || image == NULL)
+     /* Nothing to do. Just reset display mode */
+     TtaSetDisplayMode (doc, dispMode);
+   else
+     /* Create an AREA element */
      {
 	elType.ElTypeNum = HTML_EL_AREA;
-	/* Is it necessary to ask user coordinates */
+	/* Should we ask the user to give coordinates */
 	if (shape[0] == 'R' || shape[0] == 'a')
 	   TtaAskFirstCreation ();
 
 	el = TtaNewTree (doc, elType, "");
+	if (!newElem)
+	   newElem = el;
 	child = TtaGetLastChild (map);
 	if (child == NULL)
 	   TtaInsertFirstChild (&el, map, doc);
@@ -2275,9 +2295,11 @@ STRING              shape;
 	TtaAttachAttribute (el, attr, doc);
 
 	if (shape[0] == 'R')
-	   TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_rectangle, el, doc);
+	   TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_rectangle,
+				 el, doc);
 	else if (shape[0] == 'a')
-	   TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_circle, el, doc);
+	   TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_circle,
+				 el, doc);
 	else if (shape[0] == 'p')
 	  {
 	     /* create the AreaRef_IMG attribute */
@@ -2285,7 +2307,8 @@ STRING              shape;
 	     attrRef = TtaNewAttribute (attrType);
 	     TtaAttachAttribute (el, attrRef, doc);
 	     TtaSetAttributeReference (attrRef, el, doc, image, doc);
-	     TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_polygon, el, doc);
+	     TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_polygon,
+				   el, doc);
 	     TtaGiveBoxSize (image, doc, 1, UnPixel, &w, &h);
 	     /*TtaChangeLimitOfPolyline (child, UnPixel, w, h, doc);*/
 	  }
@@ -2299,9 +2322,9 @@ STRING              shape;
 	/* FrameUpdating creation of Area and selection of destination */
 	SelectDestination (doc, el, FALSE);	/******* check last param *****/
      }
-   else
-     /* ask Thot to display changes made in the document */
-     TtaSetDisplayMode (doc, dispMode);
+   if (newElem)
+      TtaRegisterElementCreate (newElem, doc);
+   TtaCloseUndoSequence (doc);
 }
 
 /*----------------------------------------------------------------------
@@ -2517,7 +2540,8 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
-   DeleteAnchor deletes the surrounding anchor.                    
+   DeleteAnchor
+   Delete the surrounding anchor.                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DeleteAnchor (Document doc, View view)
@@ -2534,74 +2558,85 @@ View                view;
    ElementType         elType;
    DisplayMode         dispMode;
 
-   dispMode = TtaGetDisplayMode (doc);
-   /* ask Thot to stop displaying changes made in the document */
-   if (dispMode == DisplayImmediately)
-     TtaSetDisplayMode (doc, DeferredDisplay);
-
    /* get the first selected element */
    TtaGiveFirstSelectedElement (doc, &firstSelectedElement,
 				&firstSelectedChar, &lastSelectedChar);
-   if (firstSelectedElement != NULL)
-     {
-       TtaGiveLastSelectedElement (doc, &lastSelectedElement, &i, &lastSelectedChar);
-       TtaUnselect (doc);
-	elType = TtaGetElementType (firstSelectedElement);
-	if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
-	  return;
-    	if (elType.ElTypeNum == HTML_EL_Anchor)
-	   /* the first selected element is an anchor */
-	  {
-	     anchor = firstSelectedElement;
-	     /* the selected element will be deleted */
-	     /* prepare the elements to be selected later */
-	     firstSelectedElement = TtaGetFirstChild (anchor);
-	     lastSelectedElement = TtaGetLastChild (anchor);
-	     firstSelectedChar = 0;
-	     lastSelectedChar = 0;
-	  }
-	else
-	  {
-	     /* search the surrounding Anchor element */
-	     elType.ElTypeNum = HTML_EL_Anchor;
-	     anchor = TtaGetTypedAncestor (firstSelectedElement, elType);
-	  }
-	if (anchor != NULL)
-	  {
-	     /* move all chidren of element anchor as sibling of that element */
-	     child = TtaGetFirstChild (anchor);
-	     previous = anchor;
-	     while (child != NULL)
-	       {
-		  next = child;
-		  TtaNextSibling (&next);
-		  TtaRemoveTree (child, doc);
-		  TtaInsertSibling (child, previous, FALSE, doc);
-		  previous = child;
-		  child = next;
-	       }
-	     TtaDeleteTree (anchor, doc);
-	     TtaSetDocumentModified (doc);
-	  }
+   if (firstSelectedElement == NULL)
+      /* no selection. Do nothing */
+      return;
+   elType = TtaGetElementType (firstSelectedElement);
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
+      /* the first selected element is not an HTML element. Do nothing */
+      return;
 
-	/* ask Thot to display changes made in the document */
-	TtaSetDisplayMode (doc, dispMode);
-	/* set the selection */
-	if (firstSelectedChar > 1)
-	  {
-	    if (firstSelectedElement == lastSelectedElement)
-	      i = lastSelectedChar;
-	    else
-	      i = TtaGetTextLength (firstSelectedElement);
-	    TtaSelectString (doc, firstSelectedElement, firstSelectedChar, i);
-	  }
-	else
-	  TtaSelectElement (doc, firstSelectedElement);
-	if (firstSelectedElement != lastSelectedElement)
-	  TtaExtendSelection (doc, lastSelectedElement, lastSelectedChar);
+   TtaGiveLastSelectedElement (doc, &lastSelectedElement, &i, 
+			       &lastSelectedChar);
+   TtaOpenUndoSequence (doc, firstSelectedElement, lastSelectedElement,
+			firstSelectedChar, lastSelectedChar);
+   if (elType.ElTypeNum == HTML_EL_Anchor)
+     /* the first selected element is an anchor */
+     {
+       anchor = firstSelectedElement;
+       /* prepare the elements to be selected later */
+       firstSelectedElement = TtaGetFirstChild (anchor);
+       lastSelectedElement = TtaGetLastChild (anchor);
+       firstSelectedChar = 0;
+       lastSelectedChar = 0;
      }
+   else
+     {
+       /* search the surrounding Anchor element */
+       elType.ElTypeNum = HTML_EL_Anchor;
+       anchor = TtaGetTypedAncestor (firstSelectedElement, elType);
+     }
+   if (anchor != NULL)
+     {
+       /* ask Thot to stop displaying changes made in the document */
+       dispMode = TtaGetDisplayMode (doc);
+       if (dispMode == DisplayImmediately)
+          TtaSetDisplayMode (doc, DeferredDisplay);
+       TtaUnselect (doc);
+       TtaRegisterElementDelete (anchor, doc);
+       /* move all chidren of element anchor as sibling of the anchor */
+       child = TtaGetFirstChild (anchor);
+       previous = anchor;
+       while (child != NULL)
+	  {
+	  next = child;
+	  TtaNextSibling (&next);
+	  TtaRemoveTree (child, doc);
+	  TtaInsertSibling (child, previous, FALSE, doc);
+          TtaRegisterElementCreate (child, doc);
+	  previous = child;
+	  child = next;
+	  }
+       /* delete the anchor element itself */
+       TtaDeleteTree (anchor, doc);
+       TtaSetDocumentModified (doc);
+       /* ask Thot to display changes made in the document */
+       TtaSetDisplayMode (doc, dispMode);
+     }
+
+   TtaCloseUndoSequence (doc);
+   /* set the selection */
+   if (firstSelectedChar > 1)
+     {
+       if (firstSelectedElement == lastSelectedElement)
+	  i = lastSelectedChar;
+       else
+	  i = TtaGetTextLength (firstSelectedElement);
+       TtaSelectString (doc, firstSelectedElement, firstSelectedChar, i);
+     }
+   else
+      TtaSelectElement (doc, firstSelectedElement);
+   if (firstSelectedElement != lastSelectedElement)
+      TtaExtendSelection (doc, lastSelectedElement, lastSelectedChar);
 }
 
+/*----------------------------------------------------------------------
+  ShowLogFile
+  Show error messages generated by the parser.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void ShowLogFile (Document doc, View view)
 #else  /* __STDC__ */
