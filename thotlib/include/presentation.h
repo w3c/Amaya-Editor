@@ -80,7 +80,10 @@ typedef int        *PRule;
 #define PRPictureMode 54
 #define PRNotInLine 55
 #define PRNone 56
-#define LAST_PRES_RULE_TYPE 56
+#define PRPageBefore 57
+#define PRPageAfter 58
+#define PRPageInside 59
+#define LAST_PRES_RULE_TYPE 59
 
 /* values for rule PRStyle */
 #define StyleRoman 1

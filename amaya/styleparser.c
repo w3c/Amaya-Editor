@@ -48,7 +48,7 @@ BackgroundImageCallbackBlock, *BackgroundImageCallbackPtr;
 /*
  * A PropertyParser is a function used to parse  the
  * description substring associated to a given style attribute
- * e.g. : "red" for a color attribute or "12pt bold helvetica"
+ * e.g.: "red" for a color attribute or "12pt bold helvetica"
  * for a font attribute.
  */
 #ifdef __STDC__
@@ -220,7 +220,7 @@ CHAR_T*     ptr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSUnit :                                                  
+   ParseCSSUnit:                                                  
    parse a CSS Unit substring and returns the corresponding      
    value and its unit.                                           
   ----------------------------------------------------------------------*/
@@ -431,7 +431,7 @@ PresentationValue *border
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSColor : parse a CSS color attribute string    
+   ParseCSSColor: parse a CSS color attribute string    
    we expect the input string describing the attribute to be     
    either a color name, a 3 tuple or an hexadecimal encoding.    
    The color used will be approximed from the current color      
@@ -474,7 +474,7 @@ PresentationValue    *val;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderTopWidth : parse a CSS BorderTopWidth
+   ParseCSSBorderTopWidth: parse a CSS BorderTopWidth
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -504,7 +504,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderBottomWidth : parse a CSS BorderBottomWidth
+   ParseCSSBorderBottomWidth: parse a CSS BorderBottomWidth
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -535,7 +535,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderLeftWidth : parse a CSS BorderLeftWidth
+   ParseCSSBorderLeftWidth: parse a CSS BorderLeftWidth
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -566,7 +566,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderRightWidth : parse a CSS BorderRightWidth
+   ParseCSSBorderRightWidth: parse a CSS BorderRightWidth
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -597,7 +597,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderWidth : parse a CSS BorderWidth
+   ParseCSSBorderWidth: parse a CSS BorderWidth
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -661,7 +661,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderColorTop : parse a CSS BorderColorTop
+   ParseCSSBorderColorTop: parse a CSS BorderColorTop
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -687,7 +687,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderColorLeft : parse a CSS BorderColorLeft
+   ParseCSSBorderColorLeft: parse a CSS BorderColorLeft
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -713,7 +713,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderColorBottom : parse a CSS BorderColorBottom
+   ParseCSSBorderColorBottom: parse a CSS BorderColorBottom
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -739,7 +739,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderColorRight : parse a CSS BorderColorRight
+   ParseCSSBorderColorRight: parse a CSS BorderColorRight
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -765,7 +765,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderColor : parse a CSS border-color        
+   ParseCSSBorderColor: parse a CSS border-color        
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -829,7 +829,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderStyleTop : parse a CSS BorderStyleTop
+   ParseCSSBorderStyleTop: parse a CSS BorderStyleTop
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -855,7 +855,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderStyleLeft : parse a CSS BorderStyleLeft
+   ParseCSSBorderStyleLeft: parse a CSS BorderStyleLeft
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -881,7 +881,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderStyleBottom : parse a CSS BorderStyleBottom
+   ParseCSSBorderStyleBottom: parse a CSS BorderStyleBottom
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -907,7 +907,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderStyleRight : parse a CSS BorderStyleRight
+   ParseCSSBorderStyleRight: parse a CSS BorderStyleRight
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -933,7 +933,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderStyleStyle : parse a CSS border-style        
+   ParseCSSBorderStyleStyle: parse a CSS border-style        
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -997,7 +997,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderTop : parse a CSS BorderTop
+   ParseCSSBorderTop: parse a CSS BorderTop
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1033,7 +1033,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderLeft : parse a CSS BorderLeft
+   ParseCSSBorderLeft: parse a CSS BorderLeft
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1069,7 +1069,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderBottom : parse a CSS BorderBottom
+   ParseCSSBorderBottom: parse a CSS BorderBottom
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1105,7 +1105,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderRight : parse a CSS BorderRight
+   ParseCSSBorderRight: parse a CSS BorderRight
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1141,7 +1141,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorder : parse a CSS border        
+   ParseCSSBorder: parse a CSS border        
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1175,7 +1175,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSClear : parse a CSS clear attribute string    
+   ParseCSSClear: parse a CSS clear attribute string    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*        ParseCSSClear (Element element, PSchema tsch,
@@ -1195,7 +1195,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSDisplay : parse a CSS display attribute string        
+   ParseCSSDisplay: parse a CSS display attribute string        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*        ParseCSSDisplay (Element element, PSchema tsch,
@@ -1242,7 +1242,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSFloat : parse a CSS float attribute string    
+   ParseCSSFloat: parse a CSS float attribute string    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*        ParseCSSFloat (Element element, PSchema tsch,
@@ -1262,7 +1262,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSLetterSpacing : parse a CSS letter-spacing    
+   ParseCSSLetterSpacing: parse a CSS letter-spacing    
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1283,7 +1283,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSListStyleType : parse a CSS list-style-type
+   ParseCSSListStyleType: parse a CSS list-style-type
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1304,7 +1304,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSListStyleImage : parse a CSS list-style-image
+   ParseCSSListStyleImage: parse a CSS list-style-image
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1325,7 +1325,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSListStylePosition : parse a CSS list-style-position
+   ParseCSSListStylePosition: parse a CSS list-style-position
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1346,7 +1346,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSListStyle : parse a CSS list-style            
+   ParseCSSListStyle: parse a CSS list-style            
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1367,7 +1367,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSTextAlign : parse a CSS text-align            
+   ParseCSSTextAlign: parse a CSS text-align            
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1436,7 +1436,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSTextIndent : parse a CSS text-indent          
+   ParseCSSTextIndent: parse a CSS text-indent          
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1464,7 +1464,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSTextTransform : parse a CSS text-transform    
+   ParseCSSTextTransform: parse a CSS text-transform    
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1485,7 +1485,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSVerticalAlign : parse a CSS vertical-align    
+   ParseCSSVerticalAlign: parse a CSS vertical-align    
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1506,7 +1506,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSWhiteSpace : parse a CSS white-space          
+   ParseCSSWhiteSpace: parse a CSS white-space          
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1533,7 +1533,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSWordSpacing : parse a CSS word-spacing        
+   ParseCSSWordSpacing: parse a CSS word-spacing        
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1554,7 +1554,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSLineSpacing : parse a CSS font leading string 
+   ParseCSSLineSpacing: parse a CSS font leading string 
    we expect the input string describing the attribute to be     
    value% or value                                               
   ----------------------------------------------------------------------*/
@@ -1585,7 +1585,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSFontSize : parse a CSS font size attr string  
+   ParseCSSFontSize: parse a CSS font size attr string  
    we expect the input string describing the attribute to be     
    xx-small, x-small, small, medium, large, x-large, xx-large      
    or an absolute size, or an imcrement relative to the parent     
@@ -1708,7 +1708,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSFontFamily : parse a CSS font family string   
+   ParseCSSFontFamily: parse a CSS font family string   
    we expect the input string describing the attribute to be     
    a common generic font style name                                
   ----------------------------------------------------------------------*/
@@ -1779,7 +1779,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSFontWeight : parse a CSS font weight string   
+   ParseCSSFontWeight: parse a CSS font weight string   
    we expect the input string describing the attribute to be     
    normal, bold, bolder, lighter, 100, 200, 300, ... 900, inherit.
   ----------------------------------------------------------------------*/
@@ -1871,7 +1871,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSFontVariant : parse a CSS font variant string     
+   ParseCSSFontVariant: parse a CSS font variant string     
    we expect the input string describing the attribute to be     
    normal or small-caps
   ----------------------------------------------------------------------*/
@@ -1917,7 +1917,7 @@ ThotBool            isHTML;
 
 
 /*----------------------------------------------------------------------
-   ParseCSSFontStyle : parse a CSS font style string     
+   ParseCSSFontStyle: parse a CSS font style string     
    we expect the input string describing the attribute to be     
    italic, oblique or normal                         
   ----------------------------------------------------------------------*/
@@ -1990,9 +1990,9 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSFont : parse a CSS font attribute string      
-   we expect the input string describing the attribute to be     
-   !!!!!!                                                  
+  ParseCSSFont: parse a CSS font attribute string
+  we expect the input string describing the attribute to be
+  !!!!!!                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*        ParseCSSFont (Element element, PSchema tsch,
@@ -2049,10 +2049,10 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSTextDecoration : parse a CSS text decor string   
-   we expect the input string describing the attribute to be     
-   underline, overline, line-through, box, shadowbox, box3d,       
-   cartouche, blink or none                                        
+  ParseCSSTextDecoration: parse a CSS text decor string   
+  we expect the input string describing the attribute to be     
+  underline, overline, line-through, box, shadowbox, box3d,       
+  cartouche, blink or none
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*        ParseCSSTextDecoration (Element element, PSchema tsch,
@@ -2135,7 +2135,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSHeight : parse a CSS height attribute                 
+   ParseCSSHeight: parse a CSS height attribute
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*        ParseCSSHeight (Element element, PSchema tsch,
@@ -2156,7 +2156,7 @@ ThotBool            isHTML;
    if (!ustrcasecmp (cssRule, TEXT("auto")))
      {
 	cssRule = SkipWord (cssRule);
-	/* ParseCSSHeight : auto */
+	/* ParseCSSHeight: auto */
 	return (cssRule);
      }
    else
@@ -2165,7 +2165,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSWidth : parse a CSS width attribute           
+   ParseCSSWidth: parse a CSS width attribute
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*        ParseCSSWidth (Element element, PSchema tsch,
@@ -2194,7 +2194,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSMarginTop : parse a CSS margin-top attribute  
+   ParseCSSMarginTop: parse a CSS margin-top attribute
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*        ParseCSSMarginTop (Element element, PSchema tsch,
@@ -2224,8 +2224,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSMarginBottom : parse a CSS margin-bottom      
-   attribute                                                 
+  ParseCSSMarginBottom: parse a CSS margin-bottom attribute
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*        ParseCSSMarginBottom (Element element, PSchema tsch,
@@ -2251,8 +2250,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSMarginLeft : parse a CSS margin-left          
-   attribute string.                                          
+  ParseCSSMarginLeft: parse a CSS margin-left attribute string
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*        ParseCSSMarginLeft (Element element, PSchema tsch,
@@ -2282,8 +2280,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSMarginRight : parse a CSS margin-right        
-   attribute string.                                          
+  ParseCSSMarginRight: parse a CSS margin-right attribute string
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*        ParseCSSMarginRight (Element element, PSchema tsch,
@@ -2309,7 +2306,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSMargin : parse a CSS margin attribute string. 
+  ParseCSSMargin: parse a CSS margin attribute string
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*        ParseCSSMargin (Element element, PSchema tsch,
@@ -2372,8 +2369,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSPaddingTop : parse a CSS PaddingTop
-   attribute string.                                          
+   ParseCSSPaddingTop: parse a CSS PaddingTop attribute string
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*        ParseCSSPaddingTop (Element element, PSchema tsch,
@@ -2399,8 +2395,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSPaddingBottom : parse a CSS PaddingBottom
-   attribute string.                                          
+  ParseCSSPaddingBottom: parse a CSS PaddingBottom attribute string
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*        ParseCSSPaddingBottom (Element element, PSchema tsch,
@@ -2426,8 +2421,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSPaddingLeft : parse a CSS PaddingLeft
-   attribute string.                                          
+  ParseCSSPaddingLeft: parse a CSS PaddingLeft attribute string.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*        ParseCSSPaddingLeft (Element element, PSchema tsch,
@@ -2453,8 +2447,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSPaddingRight : parse a CSS PaddingRight
-   attribute string.                                          
+  ParseCSSPaddingRight: parse a CSS PaddingRight attribute string.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*        ParseCSSPaddingRight (Element element, PSchema tsch,
@@ -2480,7 +2473,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSPadding : parse a CSS padding attribute string. 
+   ParseCSSPadding: parse a CSS padding attribute string. 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*        ParseCSSPadding (Element element, PSchema tsch,
@@ -2543,7 +2536,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSForeground : parse a CSS foreground attribute 
+   ParseCSSForeground: parse a CSS foreground attribute 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*        ParseCSSForeground (Element element, PSchema tsch,
@@ -2568,7 +2561,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBackgroundColor : parse a CSS background color attribute 
+  ParseCSSBackgroundColor: parse a CSS background color attribute 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*      ParseCSSBackgroundColor (Element element, PSchema tsch,
@@ -2615,7 +2608,7 @@ ThotBool            isHTML;
 	{
 	  /* install the new presentation. */
 	  TtaSetStylePresentation (PRBackground, element, tsch, context, best);
-	  /* thot specificity : need to set fill pattern for background color */
+	  /* thot specificity: need to set fill pattern for background color */
 	  best.typed_data.value = STYLE_PATTERN_BACKGROUND;
 	  best.typed_data.unit = STYLE_UNIT_REL;
 	  TtaSetStylePresentation (PRFillPattern, element, tsch, context, best);
@@ -2633,8 +2626,8 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBackgroundImageCallback : Callback called asynchronously by
-   FetchImage when a background image has been fetched.
+  ParseCSSBackgroundImageCallback: Callback called asynchronously by
+  FetchImage when a background image has been fetched.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void ParseCSSBackgroundImageCallback (Document doc, Element element, STRING file, void *extra)
@@ -2750,8 +2743,7 @@ CHAR_T*             styleString;
 
 
 /*----------------------------------------------------------------------
-   ParseCSSBackgroundImage : parse a CSS BackgroundImage
-   attribute string.                                          
+  ParseCSSBackgroundImage: parse a CSS BackgroundImage attribute string.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*      ParseCSSBackgroundImage (Element element, PSchema tsch,
@@ -2894,8 +2886,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBackgroundRepeat : parse a CSS BackgroundRepeat
-   attribute string.                                          
+  ParseCSSBackgroundRepeat: parse a CSS BackgroundRepeat attribute string.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*        ParseCSSBackgroundRepeat (Element element, PSchema tsch,
@@ -2953,7 +2944,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBackgroundAttachment : parse a CSS BackgroundAttachment
+   ParseCSSBackgroundAttachment: parse a CSS BackgroundAttachment
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2998,7 +2989,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBackgroundPosition : parse a CSS BackgroundPosition
+   ParseCSSBackgroundPosition: parse a CSS BackgroundPosition
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -3065,7 +3056,7 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBackground : parse a CSS background attribute 
+   ParseCSSBackground: parse a CSS background attribute 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static CHAR_T*      ParseCSSBackground (Element element, PSchema tsch,
@@ -3121,6 +3112,166 @@ ThotBool            isHTML;
    return (cssRule);
 }
 
+/*----------------------------------------------------------------------
+ ParseCSSPageBreakBefore: parse a CSS background attribute 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static CHAR_T*      ParseCSSPageBreakBefore (Element element, PSchema tsch,
+				    PresentationContext context, CHAR_T* cssRule, CSSInfoPtr css, ThotBool isHTML)
+#else
+static CHAR_T*      ParseCSSPageBreakBefore (element, tsch, context, cssRule, css, isHTML)
+Element             element;
+PSchema             tsch;
+PresentationContext context;
+CHAR_T*             cssRule;
+CSSInfoPtr          css;
+ThotBool            isHTML;
+#endif
+{
+  PresentationValue   page;
+
+  page.typed_data.unit = STYLE_UNIT_INVALID;
+  page.typed_data.real = FALSE;
+  cssRule = SkipWCBlanksAndComments (cssRule);
+  if (!ustrncasecmp (cssRule, TEXT("auto"), 4))
+    {
+      /*page.typed_data.unit = STYLE_UNIT_REL;*/
+      page.typed_data.value = STYLE_AUTO;
+    }
+  else if (!ustrncasecmp (cssRule, TEXT("always"), 6))
+    {
+      page.typed_data.unit = STYLE_UNIT_REL;
+      page.typed_data.value = STYLE_ALWAYS;
+    }
+  else if (!ustrncasecmp (cssRule, TEXT("avoid"), 5))
+    {
+      page.typed_data.unit = STYLE_UNIT_REL;
+      page.typed_data.value = STYLE_AVOID;
+    }
+  else if (!ustrncasecmp (cssRule, TEXT("left"), 4))
+    {
+      page.typed_data.unit = STYLE_UNIT_REL;
+      page.typed_data.value = STYLE_PAGELEFT;
+    }
+  else if (!ustrncasecmp (cssRule, TEXT("right"), 5))
+    {
+      page.typed_data.unit = STYLE_UNIT_REL;
+      page.typed_data.value = STYLE_PAGERIGHT;
+    }
+  else if (!ustrncasecmp (cssRule, TEXT("inherit"), 7))
+    {
+      /*page.typed_data.unit = STYLE_UNIT_REL;*/
+      page.typed_data.value = STYLE_INHERIT;
+    }
+  cssRule = SkipWord (cssRule);
+  /* install the new presentation */
+  if (page.typed_data.unit == STYLE_UNIT_REL &&
+      page.typed_data.value == STYLE_ALWAYS)
+    TtaSetStylePresentation (PRPageBefore, element, tsch, context, page);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+ ParseCSSPageBreakAfter: parse a CSS background attribute 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static CHAR_T*      ParseCSSPageBreakAfter (Element element, PSchema tsch,
+				    PresentationContext context, CHAR_T* cssRule, CSSInfoPtr css, ThotBool isHTML)
+#else
+static CHAR_T*      ParseCSSPageBreakAfter (element, tsch, context, cssRule, css, isHTML)
+Element             element;
+PSchema             tsch;
+PresentationContext context;
+CHAR_T*             cssRule;
+CSSInfoPtr          css;
+ThotBool            isHTML;
+#endif
+{
+  PresentationValue   page;
+
+  page.typed_data.unit = STYLE_UNIT_INVALID;
+  page.typed_data.real = FALSE;
+  cssRule = SkipWCBlanksAndComments (cssRule);
+  if (!ustrncasecmp (cssRule, TEXT("auto"), 4))
+    {
+      /*page.typed_data.unit = STYLE_UNIT_REL;*/
+      page.typed_data.value = STYLE_AUTO;
+    }
+  else if (!ustrncasecmp (cssRule, TEXT("always"), 6))
+    {
+      page.typed_data.unit = STYLE_UNIT_REL;
+      page.typed_data.value = STYLE_ALWAYS;
+    }
+  else if (!ustrncasecmp (cssRule, TEXT("avoid"), 5))
+    {
+      page.typed_data.unit = STYLE_UNIT_REL;
+      page.typed_data.value = STYLE_AVOID;
+    }
+  else if (!ustrncasecmp (cssRule, TEXT("left"), 4))
+    {
+      page.typed_data.unit = STYLE_UNIT_REL;
+      page.typed_data.value = STYLE_PAGELEFT;
+    }
+  else if (!ustrncasecmp (cssRule, TEXT("right"), 5))
+    {
+      page.typed_data.unit = STYLE_UNIT_REL;
+      page.typed_data.value = STYLE_PAGERIGHT;
+    }
+  else if (!ustrncasecmp (cssRule, TEXT("inherit"), 7))
+    {
+      /*page.typed_data.unit = STYLE_UNIT_REL;*/
+      page.typed_data.value = STYLE_INHERIT;
+    }
+  cssRule = SkipWord (cssRule);
+  /* install the new presentation */
+  /*if (page.typed_data.unit == STYLE_UNIT_REL)
+    TtaSetStylePresentation (PRPageAfter, element, tsch, context, page);*/
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+ ParseCSSPageBreakInside: parse a CSS background attribute 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static CHAR_T*      ParseCSSPageBreakInside (Element element, PSchema tsch,
+				    PresentationContext context, CHAR_T* cssRule, CSSInfoPtr css, ThotBool isHTML)
+#else
+static CHAR_T*      ParseCSSPageBreakInside (element, tsch, context, cssRule, css, isHTML)
+Element             element;
+PSchema             tsch;
+PresentationContext context;
+CHAR_T*             cssRule;
+CSSInfoPtr          css;
+ThotBool            isHTML;
+#endif
+{
+  PresentationValue   page;
+
+  page.typed_data.unit = STYLE_UNIT_INVALID;
+  page.typed_data.real = FALSE;
+  cssRule = SkipWCBlanksAndComments (cssRule);
+  if (!ustrncasecmp (cssRule, TEXT("auto"), 4))
+    {
+      /*page.typed_data.unit = STYLE_UNIT_REL;*/
+      page.typed_data.value = STYLE_AUTO;
+    }
+  else if (!ustrncasecmp (cssRule, TEXT("avoid"), 5))
+    {
+      page.typed_data.unit = STYLE_UNIT_REL;
+      page.typed_data.value = STYLE_AVOID;
+    }
+  else if (!ustrncasecmp (cssRule, TEXT("inherit"), 7))
+    {
+      /*page.typed_data.unit = STYLE_UNIT_REL;*/
+      page.typed_data.value = STYLE_INHERIT;
+    }
+  cssRule = SkipWord (cssRule);
+  /* install the new presentation */
+  if (page.typed_data.unit == STYLE_UNIT_REL &&
+      page.typed_data.value == STYLE_AVOID)
+    TtaSetStylePresentation (PRPageInside, element, tsch, context, page);
+  return (cssRule);
+}
 
 
 /************************************************************************
@@ -3129,7 +3280,7 @@ ThotBool            isHTML;
  *									*  
  ************************************************************************/
 /*
- * NOTE : Long attribute name MUST be placed before shortened ones !
+ * NOTE: Long attribute name MUST be placed before shortened ones !
  *        e.g. "FONT-SIZE" must be placed before "FONT"
  */
 static CSSProperty CSSProperties[] =
@@ -3202,14 +3353,18 @@ static CSSProperty CSSProperties[] =
    {TEXT("list-style-type"), ParseCSSListStyleType},
    {TEXT("list-style-image"), ParseCSSListStyleImage},
    {TEXT("list-style-position"), ParseCSSListStylePosition},
-   {TEXT("list-style"), ParseCSSListStyle}
+   {TEXT("list-style"), ParseCSSListStyle},
+
+   {TEXT("page-break-before"), ParseCSSPageBreakBefore},
+   {TEXT("page-break-after"), ParseCSSPageBreakAfter},
+   {TEXT("page-break-inside"), ParseCSSPageBreakInside}
 };
 #define NB_CSSSTYLEATTRIBUTE (sizeof(CSSProperties) / sizeof(CSSProperty))
 
 /*----------------------------------------------------------------------
-   ParseCSSRule : parse a CSS Style string                        
+   ParseCSSRule: parse a CSS Style string                        
    we expect the input string describing the style to be of the  
-   form : PRORPERTY : DESCRIPTION [ ; PROPERTY : DESCRIPTION ] * 
+   form: PRORPERTY: DESCRIPTION [ ; PROPERTY: DESCRIPTION ] * 
    but tolerate incorrect or incomplete input                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -3287,7 +3442,7 @@ ThotBool            isHTML;
 
 
 /*----------------------------------------------------------------------
- PToCss :  translate a PresentationSetting to the
+ PToCss:  translate a PresentationSetting to the
      equivalent CSS string, and add it to the buffer given as the
       argument. It is used when extracting the CSS string from actual
       presentation.
@@ -3550,7 +3705,7 @@ int                  len
 }
 
 /*----------------------------------------------------------------------
-   ParseHTMLSpecificStyle : parse and apply a CSS Style string.
+   ParseHTMLSpecificStyle: parse and apply a CSS Style string.
    This function must be called when a specific style is applied to an
    element.
   ----------------------------------------------------------------------*/
@@ -3584,7 +3739,7 @@ ThotBool            destroy;
 }
 
 /*----------------------------------------------------------------------
-   ParseGenericSelector : Create a generic context for a given 
+   ParseGenericSelector: Create a generic context for a given 
    selector string. If the selector is made of multiple comma- 
    separated selector items, it parses them one at a time and  
    return the end of the selector string to be handled or NULL 
@@ -3876,9 +4031,9 @@ CSSInfoPtr      css;
 }
 
 /*----------------------------------------------------------------------
-   ParseStyleDeclaration : parse one HTML style declaration    
+   ParseStyleDeclaration: parse one HTML style declaration    
    stored in the header of a HTML document                       
-   We expect the style string to be of the form :                   
+   We expect the style string to be of the form:                   
    [                                                                
    e.g: pinky, awful { color: pink, font-family: helvetica }        
   ----------------------------------------------------------------------*/
@@ -3924,7 +4079,7 @@ ThotBool            destroy;
     decl_end++;
   if (*decl_end == WC_EOS)
     {
-      fprintf (stderr, "Invalid STYLE declaration : %s\n", cssRule);
+      fprintf (stderr, "Invalid STYLE declaration: %s\n", cssRule);
       return;
     }
   saved2 = *decl_end;
@@ -3955,7 +4110,7 @@ ThotBool            destroy;
  ************************************************************************/
 
 /*----------------------------------------------------------------------
-   IsImplicitClassName : return wether the Class name is an        
+   IsImplicitClassName: return wether the Class name is an        
    implicit one, eg "H1" or "H2 EM" meaning it's a GI name       
    or an HTML context name.                                      
   ----------------------------------------------------------------------*/
@@ -3997,12 +4152,12 @@ Document            doc;
 
 /************************************************************************
  *									*  
- *  Functions Needed for support of HTML 3.2 : translate to CSS equiv   *
+ *  Functions Needed for support of HTML 3.2: translate to CSS equiv   *
  *									*  
  ************************************************************************/
 
 /*----------------------------------------------------------------------
-   HTMLSetBackgroundColor :
+   HTMLSetBackgroundColor:
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HTMLSetBackgroundColor (Document doc, Element el, CHAR_T* color)
@@ -4020,7 +4175,7 @@ CHAR_T*             color;
 }
 
 /*----------------------------------------------------------------------
-   HTMLSetBackgroundImage :
+   HTMLSetBackgroundImage:
    repeat = repeat value
    image = url of background image
   ----------------------------------------------------------------------*/
@@ -4050,7 +4205,7 @@ CHAR_T*             image;
 }
 
 /*----------------------------------------------------------------------
-   HTMLSetForegroundColor :                                        
+   HTMLSetForegroundColor:                                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HTMLSetForegroundColor (Document doc, Element el, CHAR_T* color)
@@ -4068,7 +4223,7 @@ CHAR_T*             color;
 }
 
 /*----------------------------------------------------------------------
-   HTMLResetBackgroundColor :                                      
+   HTMLResetBackgroundColor:                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HTMLResetBackgroundColor (Document doc, Element el)
@@ -4085,7 +4240,7 @@ Element             el;
 }
 
 /*----------------------------------------------------------------------
-   HTMLResetBackgroundImage :                                      
+   HTMLResetBackgroundImage:                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HTMLResetBackgroundImage (Document doc, Element el)
@@ -4102,7 +4257,7 @@ Element             el;
 }
 
 /*----------------------------------------------------------------------
-   HTMLResetForegroundColor :                                      
+   HTMLResetForegroundColor:                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HTMLResetForegroundColor (Document doc, Element el)
@@ -4120,7 +4275,7 @@ Element             el;
 }
 
 /*----------------------------------------------------------------------
-   HTMLSetAlinkColor :                                             
+   HTMLSetAlinkColor:                                             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HTMLSetAlinkColor (Document doc, CHAR_T* color)
@@ -4132,12 +4287,12 @@ CHAR_T*             color;
 {
    CHAR_T           css_command[100];
 
-   usprintf (css_command, TEXT("a:link { color : %s }"), color);
+   usprintf (css_command, TEXT("a:link { color: %s }"), color);
    ApplyCSSRules (NULL, css_command, doc, FALSE);
 }
 
 /*----------------------------------------------------------------------
-   HTMLSetAactiveColor :                                           
+   HTMLSetAactiveColor:                                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HTMLSetAactiveColor (Document doc, CHAR_T* color)
@@ -4149,12 +4304,12 @@ CHAR_T*             color;
 {
    CHAR_T           css_command[100];
 
-   usprintf (css_command, TEXT("a:active { color : %s }"), color);
+   usprintf (css_command, TEXT("a:active { color: %s }"), color);
    ApplyCSSRules (NULL, css_command, doc, FALSE);
 }
 
 /*----------------------------------------------------------------------
-   HTMLSetAvisitedColor :                                          
+   HTMLSetAvisitedColor:                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HTMLSetAvisitedColor (Document doc, CHAR_T* color)
@@ -4166,12 +4321,12 @@ CHAR_T*             color;
 {
    CHAR_T           css_command[100];
 
-   usprintf (css_command, TEXT("a:visited { color : %s }"), color);
+   usprintf (css_command, TEXT("a:visited { color: %s }"), color);
    ApplyCSSRules (NULL, css_command, doc, FALSE);
 }
 
 /*----------------------------------------------------------------------
-   HTMLResetAlinkColor :                                           
+   HTMLResetAlinkColor:                                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HTMLResetAlinkColor (Document doc)
@@ -4182,12 +4337,12 @@ Document            doc;
 {
    CHAR_T           css_command[100];
 
-   usprintf (css_command, TEXT("a:link { color : red }"));
+   usprintf (css_command, TEXT("a:link { color: red }"));
    ApplyCSSRules (NULL, css_command, doc, TRUE);
 }
 
 /*----------------------------------------------------------------------
-   HTMLResetAactiveColor :                                                 
+   HTMLResetAactiveColor:                                                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HTMLResetAactiveColor (Document doc)
@@ -4198,12 +4353,12 @@ Document            doc;
 {
    CHAR_T           css_command[100];
 
-   usprintf (css_command, TEXT("a:active { color : red }"));
+   usprintf (css_command, TEXT("a:active { color: red }"));
    ApplyCSSRules (NULL, css_command, doc, TRUE);
 }
 
 /*----------------------------------------------------------------------
-   HTMLResetAvisitedColor :                                        
+   HTMLResetAvisitedColor:                                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HTMLResetAvisitedColor (Document doc)
@@ -4214,7 +4369,7 @@ Document            doc;
 {
    CHAR_T           css_command[100];
 
-   usprintf (css_command, TEXT("a:visited { color : red }"));
+   usprintf (css_command, TEXT("a:visited { color: red }"));
    ApplyCSSRules (NULL, css_command, doc, TRUE);
 }
 
@@ -4242,7 +4397,7 @@ ThotBool            destroy;
 }
 
 /*----------------------------------------------------------------------
-   ReadCSSRules :  is the front-end function called by the HTML parser
+   ReadCSSRules:  is the front-end function called by the HTML parser
    when detecting a <STYLE TYPE="text/css"> indicating it's the
    beginning of a CSS fragment or when reading a file .css.
   

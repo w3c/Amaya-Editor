@@ -25,7 +25,7 @@ my $directory_for_file_to_translate = "$path_amaya/Amaya/tools/xmldialogues/docs
 my $specific_sufix = ".amaya.trans"; #used to indicate those specific files
 
 # commentary for begining of the ".h" file
-my $comment_for_begining_of_h_file  = "/*that is the real begin of labels used*/";
+my $comment_for_begining_of_h_file  = "/* Beginning of labels */";
 
 
 ############# TABLES key/value

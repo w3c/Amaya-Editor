@@ -823,51 +823,76 @@ static void         UpdateClass (Document doc)
 #else  /* __STDC__ */
 static void         UpdateClass (doc)
 Document            doc;
-
 #endif /* __STDC__ */
 {
   Attribute           attr;
   AttributeType       attrType;
   Element             el, parent, child, title, head, line, prev;
   ElementType         elType, selType;
-#define STYLE_LEN 1000
-  CHAR_T              stylestring[STYLE_LEN];
-#define BU_LEN 100
+  STRING              stylestring;
   STRING              text;
   STRING              a_class;
+  STRING              schName;
   int                 len, base, i;
   Language            lang;
   ThotBool            found, empty, insertNewLine;
+#define BU_LEN 100
 
   /* check whether it's an element type or a class name */
   elType = TtaGetElementType (ClassReference);
   GIType (CurrentClass, &selType, doc);
-  /* create a string containing the new CSS definition. */
-  ustrcpy (stylestring, TEXT(""));
-  if (selType.ElTypeNum == 0)
-    /* it's not an element type */
-    {
-      if (CurrentClass[0] != '.' && CurrentClass[0] != '#')
-	/* it's an invalid class name, insert a dot */
-	ustrcat (stylestring, TEXT("."));
-    }
-  else if (selType.ElTypeNum != elType.ElTypeNum)
+  if (selType.ElTypeNum != elType.ElTypeNum && selType.ElTypeNum != 0)
     {
       /* it's an invalid element type */
       TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_TYPE), NULL);
       return;
     }
+
+  /* get the current style attribute*/
+  schName = TtaGetSSchemaName (elType.ElSSchema);
+  if (ustrcmp (schName, TEXT("MathML")) == 0)
+    attrType.AttrTypeNum = MathML_ATTR_style_;
+  else
+#ifdef GRAPHML
+  if (ustrcmp (schName, TEXT("GraphML")) == 0)
+    attrType.AttrTypeNum = GraphML_ATTR_style_;
+  else
+#endif
+    {
+      attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+      attrType.AttrTypeNum = HTML_ATTR_Style_;
+    }
+  attr = TtaGetAttribute (ClassReference, attrType);
+  base = ustrlen (CurrentClass) + 3;
+  if (attr)
+    len = TtaGetTextAttributeLength (attr) + base + 3;
+  else
+    len = base + 3;
+  /* create a string containing the new CSS definition. */
+  stylestring = TtaAllocString (len);
+  stylestring[0] = WC_EOS;
+  if (selType.ElTypeNum == 0)
+    {
+      /* it's not an element type */
+      if (CurrentClass[0] != '.' && CurrentClass[0] != '#')
+	{
+	  /* it's an invalid class name, insert a dot */
+	  ustrcat (stylestring, TEXT("."));
+	  base++;
+	}
+    }
   ustrcat (stylestring, CurrentClass);
-  ustrcat (stylestring, TEXT(" { "));
-  base = ustrlen (stylestring);
-  len = STYLE_LEN - base - 4;
-  GetHTMLStyleString (ClassReference, doc, &stylestring[base], &len);
+  ustrcat (stylestring, TEXT(" {"));
+  if (attr)
+    {
+      len = len - base;
+      TtaGiveTextAttributeValue (attr, &stylestring[base], &len);
+    }
   ustrcat (stylestring, TEXT("}"));
-  
   TtaOpenUndoSequence (doc, ClassReference, ClassReference, 0, 0);
 
   /* create the class attribute */
-  if (stylestring[0] == TEXT('.'))
+  if (selType.ElTypeNum == 0)
     {
       a_class = &CurrentClass[0];
       if (*a_class == '.')
@@ -1058,8 +1083,11 @@ Document            doc;
   if (!found)
     /* Register the created STYLE or child element in the Undo queue */
     TtaRegisterElementCreate (el, doc);
-
   TtaCloseUndoSequence (doc);
+
+  /* free the stylestring now */
+  TtaFreeMemory (stylestring);
+  stylestring = NULL;
 }
 
 /*----------------------------------------------------------------------

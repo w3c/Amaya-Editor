@@ -43,7 +43,7 @@ use Iso qw( &return_code_in_ISO_639
 	#my $head_dir = "";
 	#my $head_file = $head_dir.$head_name;
 	
-	my $begin_label = "/*that is the real begin of labels used*/";
+	my $begin_label = "/* Beginning of labels */";
 	my $begin_message = "";
 	
 

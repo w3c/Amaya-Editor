@@ -161,6 +161,13 @@ typedef struct _PresentationSetting
 #define STYLE_VREPEAT			4
 #define STYLE_HREPEAT			5
 
+#define STYLE_AUTO			0
+#define STYLE_ALWAYS			1
+#define STYLE_AVOID			2
+#define STYLE_PAGELEFT			3
+#define STYLE_PAGERIGHT			4
+#define STYLE_INHERIT			5
+
 /* keep this in sync with $THOTDIR/config/thot.pattern */
 #define STYLE_PATTERN_NONE		0
 #define STYLE_PATTERN_FOREGROUND	1

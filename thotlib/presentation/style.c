@@ -1667,6 +1667,15 @@ ThotBool            generic;
 	      rule->PrPresBox[0] = RealSize;
 	    }
 	  break;
+	case FnPage:
+	  rule->PrPresFunction = (FunctionType) funcType;
+	  rule->PrPresBoxRepeat = FALSE;
+	  rule->PrExternal = FALSE;
+	  rule->PrElement = FALSE;
+	  rule->PrNPresBoxes = 0;
+	  rule->PrPresBox[0] = 0;
+	  rule->PrPresBoxName[0] = WC_EOS;
+	  break;
 	}
       break;
     }
@@ -1976,10 +1985,14 @@ PtrPRule                   rule;
 	      value = STYLE_HREPEAT; break;
 	    case YRepeat:
 	      value = STYLE_VREPEAT; break;
+	      break;
 	    default:
 	      unit = STYLE_UNIT_INVALID;
 	      value = 0;
 	    }
+	case FnPage:
+	  value = STYLE_ALWAYS;
+	  unit = STYLE_UNIT_REL;
 	  break;
 	default:
 	  break;
@@ -2189,6 +2202,10 @@ ThotBool           *absolute;
     case PRLine:
       *intRule = PtFunction;
       *func = FnLine;
+      break;
+    case PRPageBefore:
+      *intRule = PtFunction;
+      *func = FnPage;
       break;
     default:
       *intRule = PtFunction;
@@ -2449,6 +2466,9 @@ int                 extra;
 	  break;
 	case FnPictureMode:
 	  setting->type = PRPictureMode;
+	  break;
+	case FnPage:
+	  setting->type = PRPageBefore;
 	  break;
 	default:
 	  /* not yet supported by the driver */

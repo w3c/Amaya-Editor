@@ -995,6 +995,7 @@ FILE               *dialogueFile;
 
    /* liste tous les noms de menus et d'items reellement utilises */
    num = 0;
+   fprintf (dotHFile, "\n/* Beginning of labels */\n");
    fprintf (dotHFile, "\n/* Pull-down menus */\n");
    name = MenusUsed;
    while (name != NULL)

@@ -52,7 +52,7 @@ sub init_label {
 	unless (defined ( $comment_for_begining_of_h_file) ) {
 						
 		print "There must be a specific commentary at the begining like:\n"
-				. "\t/*that is the real begin of labels used*/\n"
+				. "\t/* Beginning of labels */\n"
 				. "please fill the comment_for_begining_of_h_file variable into "									
 				. "Am_dial_managment and verify that this parameter is given to "
 				. "Read_label::init_label\n"
