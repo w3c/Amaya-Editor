@@ -16,9 +16,7 @@ AMAYA_LIBWWW_OBJ= \
 	AHTMemConv.o \
 	AHTInit.o
 
-AMAYA_LIBWWW_OPTION_LIBS = \
-		../$(LIBWWW)/Library/src/.libs/*.a \
-		../$(LIBWWW)/modules/md5/.libs/*.a \
+AMAYA_LIBWWW_OPTION_LIBS=
 
 AMAYA_LIBWWW_LIBS= \
 		-L../$(LIBWWW)/Library/src/.libs \
