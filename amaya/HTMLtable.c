@@ -1979,10 +1979,15 @@ void CellPasted (NotifyElement * event)
    Element             cell, row;
    ElementType         elType;
    Document            doc;
+   AttributeType       rowspanType;
+   Attribute           attr;
+   int                 span;
    ThotBool            inMath;
 
    cell = event->element;
    doc = event->document;
+   elType = TtaGetElementType (cell);
+   inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
    row = TtaGetParent (cell);
    /* regenerate the corresponding ColumnHead except if it's called by
       undo for reinserting the cells deleted by a "Delete Column"
@@ -2006,7 +2011,24 @@ void CellPasted (NotifyElement * event)
      /* undoing/redoing. Link the cell with ColumnHead elements, but do not
 	generate empty cells in other rows */
      NewCell (cell, doc, FALSE, FALSE);
-    HandleColAndRowAlignAttributes (row, doc);
+
+   /* update row extensions */
+   rowspanType.AttrSSchema = elType.ElSSchema;
+   if (inMath)
+     rowspanType.AttrTypeNum = MathML_ATTR_rowspan_;
+   else
+     rowspanType.AttrTypeNum = HTML_ATTR_rowspan_;
+   attr = TtaGetAttribute (cell, rowspanType);
+   if (attr)
+     {
+       span = TtaGetAttributeValue (attr);
+       if (span < 0)
+	 span = 1;
+     }
+   if (span > 1 || span == 0)
+     SetRowExt (cell, span, doc, inMath);
+   
+   HandleColAndRowAlignAttributes (row, doc);
    /* Check attribute NAME or ID in order to make sure that its value */
    /* is unique in the document */
    MakeUniqueName (cell, doc);
@@ -2533,127 +2555,114 @@ void RowPasted (NotifyElement * event)
   else
     elType.ElTypeNum = HTML_EL_Table;
   table = TtaGetTypedAncestor (row, elType);
-#ifdef IV
-  if (NewTable)
+
+  /* only if we're not pasting a whole table */
+  /* link each cell to the appropriate column head and add empty cells
+     if the pasted row is too short */
+  rowspanType.AttrSSchema = elType.ElSSchema;
+  rowextType.AttrSSchema = elType.ElSSchema;
+  colspanType.AttrSSchema = elType.ElSSchema;
+  if (inMath)
     {
-      /* the table element is just created now
-       We need to create the table_head element */
-      if (inMath)
-	CheckMTable (table, doc, FALSE);
-      else
-	CheckTable (table, doc);
-      NewTable = FALSE;
+      elType.ElTypeNum = MathML_EL_MColumn_head;
+      rowspanType.AttrTypeNum = MathML_ATTR_rowspan_;
+      rowextType.AttrTypeNum = MathML_ATTR_MRowExt;
+      colspanType.AttrTypeNum = MathML_ATTR_columnspan;
     }
   else
-#endif
     {
-      /* only if we're not pasting a whole table */
-      /* link each cell to the appropriate column head and add empty cells
-         if the pasted row is too short */
-      rowspanType.AttrSSchema = elType.ElSSchema;
-      rowextType.AttrSSchema = elType.ElSSchema;
-      colspanType.AttrSSchema = elType.ElSSchema;
-      if (inMath)
-	{
-	  elType.ElTypeNum = MathML_EL_MColumn_head;
-	  rowspanType.AttrTypeNum = MathML_ATTR_rowspan_;
-	  rowextType.AttrTypeNum = MathML_ATTR_MRowExt;
-	  colspanType.AttrTypeNum = MathML_ATTR_columnspan;
-	}
-      else
-	{
-	  elType.ElTypeNum = HTML_EL_Column_head;
-	  rowspanType.AttrTypeNum = HTML_ATTR_rowspan_;
-	  rowextType.AttrTypeNum = HTML_ATTR_RowExt;
-	  colspanType.AttrTypeNum = HTML_ATTR_colspan_;
-	}
+      elType.ElTypeNum = HTML_EL_Column_head;
+      rowspanType.AttrTypeNum = HTML_ATTR_rowspan_;
+      rowextType.AttrTypeNum = HTML_ATTR_RowExt;
+      colspanType.AttrTypeNum = HTML_ATTR_colspan_;
+    }
       /* get the first column */
-      colhead = TtaSearchTypedElement (elType, SearchInTree, table);
-      prevCell = NULL;
-      /* get the first cell in the pasted row */
-      cell = TtaGetFirstChild (row);
-      cellType = TtaGetElementType (cell);
-      if (cellType.ElSSchema != elType.ElSSchema ||
-	  (inMath && elType.ElTypeNum != MathML_EL_MTD) ||
-	  (!inMath && (cellType.ElTypeNum != HTML_EL_Data_cell &&
-	               cellType.ElTypeNum != HTML_EL_Heading_cell)))
-	cell = GetSiblingCell (cell, FALSE, inMath);
-      while (colhead)
+  colhead = TtaSearchTypedElement (elType, SearchInTree, table);
+  prevCell = NULL;
+  /* get the first cell in the pasted row */
+  cell = TtaGetFirstChild (row);
+  cellType = TtaGetElementType (cell);
+  if (cellType.ElSSchema != elType.ElSSchema ||
+      (inMath && elType.ElTypeNum != MathML_EL_MTD) ||
+      (!inMath && (cellType.ElTypeNum != HTML_EL_Data_cell &&
+		   cellType.ElTypeNum != HTML_EL_Heading_cell)))
+    cell = GetSiblingCell (cell, FALSE, inMath);
+  while (colhead)
+    {
+      nextCell = GetSiblingCell (cell, FALSE, inMath);
+      /* handle the colspan attribute */
+      span = 1;
+      if (cell)
 	{
-	  nextCell = GetSiblingCell (cell, FALSE, inMath);
-	  /* handle the colspan attribute */
-	  span = 1;
+	  attr = TtaGetAttribute (cell, colspanType);
+	  if (attr)
+	    {
+	      span = TtaGetAttributeValue (attr);
+	      if (span < 0)
+		span = 1;
+	    }
+	}
+      /* is there a cell in a row above that spans this row? */
+      prev = SpanningCellForRow (row, colhead, doc, inMath, TRUE, TRUE,
+				 &colspan);
+      if (!prev)
+	/* no cell from a row above is covering the current cell position*/
+	{
 	  if (cell)
 	    {
-	      attr = TtaGetAttribute (cell, colspanType);
-	      if (attr)
-		{
-		  span = TtaGetAttributeValue (attr);
-		  if (span < 0)
-		    span = 1;
-		}
-	    }
-	  /* is there a cell in a row above that spans this row? */
-	  prev = SpanningCellForRow (row, colhead, doc, inMath, TRUE, TRUE,
-				     &colspan);
-	  if (!prev)
-	    /* no cell from a row above is covering the current cell position*/
-	    {
-	      if (cell)
-		{
-		  LinkCellToColumnHead (cell, colhead, doc, inMath);
-		  if (span > 1 || span == 0)
-		    SetColExt (cell, span, doc, inMath, FALSE);
-		}
-	      else
-		/* the pasted row has no cell for this column.
-		   Add an empty cell */
-		cell = AddEmptyCellInRow (row, colhead, prevCell, FALSE, doc,
-					  inMath, FALSE, FALSE);
+	      LinkCellToColumnHead (cell, colhead, doc, inMath);
+	      if (span > 1 || span == 0)
+		SetColExt (cell, span, doc, inMath, FALSE);
 	    }
 	  else
-	    /* this position is taken by a cell from a row above */
-	    if (cell)
-	      /* the pasted row has a cell at this position. Remove it */
-	      {
-		TtaDeleteTree (cell, doc);
-	        cell = NULL;
-	      }
-	  /* get the next column where there is a free slot for the pasted
-	     row */
-          if (colspan == 0)
-	    colspan = THOT_MAXINT;
-          if (span == 0)
-	    span = THOT_MAXINT;
-	  while ((colspan >= 1 || span >= 1) && colhead)
+	    /* the pasted row has no cell for this column.
+	       Add an empty cell */
+	    cell = AddEmptyCellInRow (row, colhead, prevCell, FALSE, doc,
+				      inMath, FALSE, FALSE);
+	}
+      else
+	/* this position is taken by a cell from a row above */
+	if (cell)
+	  /* the pasted row has a cell at this position. Remove it */
+	  {
+	    TtaDeleteTree (cell, doc);
+	    cell = NULL;
+	  }
+      /* get the next column where there is a free slot for the pasted
+	 row */
+      if (colspan == 0)
+	colspan = THOT_MAXINT;
+      if (span == 0)
+	span = THOT_MAXINT;
+      while ((colspan >= 1 || span >= 1) && colhead)
+	{
+	  TtaNextSibling (&colhead);
+	  span--;
+	  if (span == 0)
 	    {
-	      TtaNextSibling (&colhead);
-	      span--;
-	      if (span == 0)
-		{
-		  if (cell)
-		    prevCell = cell;
-		  cell = nextCell;
-		}
-	      colspan--;
-	      if (colspan > 0)
-		{
-		  nextCell = GetSiblingCell (cell, FALSE, inMath);
-		  if (cell)
-		    TtaDeleteTree (cell, doc);
-		}
+	      if (cell)
+		prevCell = cell;
+	      cell = nextCell;
+	    }
+	  colspan--;
+	  if (colspan > 0)
+	    {
+	      nextCell = GetSiblingCell (cell, FALSE, inMath);
+	      if (cell)
+		TtaDeleteTree (cell, doc);
 	    }
 	}
-      if (nextCell)
-	/* we have checked all columns of the table and there are extra cells.
-	   Remove them */
-	while (nextCell)
-	  {
-	    cell = nextCell;
-	    nextCell = GetSiblingCell (cell, FALSE, inMath);
-	    TtaDeleteTree (cell, doc);
-	  }
     }
+  if (nextCell)
+    /* we have checked all columns of the table and there are extra cells.
+       Remove them */
+    while (nextCell)
+      {
+	cell = nextCell;
+	nextCell = GetSiblingCell (cell, FALSE, inMath);
+	TtaDeleteTree (cell, doc);
+      }
+
   HandleColAndRowAlignAttributes (row, doc);
   /* avoid processing the cells of the created row */
   CurrentCell = TtaGetLastChild (row);
