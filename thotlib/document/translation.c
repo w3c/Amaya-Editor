@@ -3451,11 +3451,13 @@ ThotBool ExportDocument (PtrDocument pDoc, char *fName,
   int                 i;
   ThotBool            ok = TRUE;
 
+  /*
   if (tschema == NULL)
     {
       printf ("\nSave of XML documents not yet available\n");
       return TRUE;
     }
+  */
   
   /* does it have to generate simple LF or CRLF */
   TtaGetEnvBoolean ("EXPORT_CRLF", &ExportCRLF);
@@ -3509,7 +3511,10 @@ ThotBool ExportDocument (PtrDocument pDoc, char *fName,
 	  ResetTranslTags (pDoc->DocDocElement);
 	  /* traduit l'arbre principal du document */
 	  if (tschema == NULL)
-	    TtaExportXmlDoc (pDoc, pDoc->DocDocElement, outputFile);
+	    {
+	      if (pDoc->DocDocElement != NULL)
+		ExportXmlDocument (pDoc, pDoc->DocDocElement, 0, outputFile, FALSE);
+	    }
 	  else
 	    TranslateTree (pDoc->DocDocElement, pDoc, TRUE, TRUE, FALSE,
 			   recordLineNb);
@@ -3659,24 +3664,4 @@ ThotBool TtaExportDocumentWithNewLineNumbers (Document document,
     ok = ExportDocument (LoadedDocument[document - 1], fileName, tschema,
 			 TRUE);
   return (ok);
-}
-
-/*----------------------------------------------------------------------
-   TtaExportXmlDoc
-
-   Produces in a file a human-readable form of an XML abstract tree.
-   Parameters:
-   root: the root element of the tree to be exported.
-   fileDescriptor: file descriptor of the file that will contain the document.
-   This file must be open when calling the function.
-  ----------------------------------------------------------------------*/
-void TtaExportXmlDoc (PtrDocument pDoc, PtrElement root, FILE *fileDescriptor)
-{
-   UserErrorCode = 0;
-   if (root == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
-   else
-      ExportXmlDoc (pDoc, root, 0, fileDescriptor, FALSE);
 }
