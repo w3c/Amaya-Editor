@@ -5863,7 +5863,7 @@ CHARSET    *charset;
 {
   gzFile        stream;
   char          file_name[MAX_LENGTH];
-  char         *ptr, *end, *meta, *body, *http;
+  char         *ptr, *end, *meta, *content, *body, *http;
   char          charsetname[MAX_LENGTH];
   int           res, i, j, k;
   ThotBool      endOfSniffedFile;
@@ -5884,40 +5884,52 @@ CHARSET    *charset;
 	  i = 0;
 	  endOfSniffedFile = (res < INPUT_FILE_BUFFER_SIZE);
 	  
-	  /* looks for the <body> element */
-	  body = strstr (&FileBuffer[i], "<body");
-	  if (!body)
-	    body = strstr (&FileBuffer[i], "<BODY");
-	  if (body)
+	  /* looks for the first <meta> element */
+	  meta = strstr (&FileBuffer[i], "<meta");
+	  if (!meta)
+	    meta = strstr (&FileBuffer[i], "<META");
+	  if (meta)
 	    {
-	      endOfSniffedFile = TRUE;
-	      /* looks for the first <meta> element */
-	      meta = strstr (&FileBuffer[i], "<meta");
-	      if (!meta)
-		meta = strstr (&FileBuffer[i], "<META");
-	      if (meta && meta < body)
+	      /* looks for the first "http-equiv" declaration */
+	      http = strstr (meta, "http-equiv");
+	      if (!http)
+		http = strstr (meta, "HTTP-EQUIV");
+	      if (http)
 		{
-		  http = strstr (meta, "http-equiv");
-		  if (http && http < body)
+		  /* looks for the "Content-Type" declaration */
+		  content = strstr (http, "Content-Type");
+		  if (content)
 		    {
 		      /* check whether there is a charset */
-		      ptr = strstr (http, "charset");
-		      end = NULL;
+		      ptr = strstr (content, "charset");
 		      if (ptr)
-			ptr = strstr (ptr, "=");
-		      if (ptr)
-			end = strstr (&ptr[1], "\"");
-		      if (end && end != ptr && end < body)
 			{
-			  /* get the document charset */
-			  k = 0; j = 1;
-			  while (&ptr[j] != end)
-			    charsetname[k++] = ptr[j++];
-			  charsetname[k] = WC_EOS;
-			  *charset = TtaGetCharset (charsetname);
+			  endOfSniffedFile = TRUE;
+			  end = NULL;
+			  ptr = strstr (ptr, "=");
+			  if (ptr)
+			    end = strstr (&ptr[1], "\"");
+			  if (end && end != ptr)
+			    {
+			      /* get the document charset */
+			      k = 0; j = 1;
+			      while (&ptr[j] != end)
+				charsetname[k++] = ptr[j++];
+			      charsetname[k] = WC_EOS;
+			      *charset = TtaGetCharset (charsetname);
+			    }
 			}
 		    }
 		}
+	    }
+	  /* looks for the <body> element */
+	  if (!endOfSniffedFile)
+	    {
+	      body = strstr (&FileBuffer[i], "<body");
+	      if (!body)
+		body = strstr (&FileBuffer[i], "<BODY");
+	      if (body)
+		endOfSniffedFile = TRUE;
 	    }
 	}
       gzclose (stream);
