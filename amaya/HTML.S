@@ -105,7 +105,8 @@ STRUCT
 	     {* add Font_ to the exclusion list *}
   Pre_Line = Basic_Set;
 
-  Anchor (ATTR HREF_; NAME = Text; REL; REV; Title)
+  Anchor (ATTR HREF_; NAME = Text; REL; REV; Title;
+	       InternalLink = Reference(Anchor))
 	= Basic_Set;
 
   Basic_Elem = CASE OF
@@ -363,6 +364,7 @@ EXCEPT
 
 	Langue:		Invisible;
 	Style\240:	Invisible;
+	InternalLink:	Invisible;
 	WidthElement:	NewWidth;
 	IntWidthPercent:Invisible;
 	IntWidthPxl:	Invisible;

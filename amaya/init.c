@@ -1872,19 +1872,70 @@ Document            document;
 	       /* its a remote document */
 	       includedDocument = TtaNewDocument ("HTML", "tmp");
 	       newdoc = GetHTMLDocument (text, NULL, includedDocument, document, DC_TRUE);
-	       TtaFreeMemory (text);
 	       if (newdoc != 0 && newdoc != document)
 		   /* it's not the document itself */
 		   MoveDocumentBody (&next, document, newdoc, newdoc == includedDocument);
 	       FreeDocumentResource (includedDocument);
 	       TtaCloseDocument (includedDocument);
 	     }
+	   TtaFreeMemory (text);
 	 }
        GetIncludedDocuments (next, document);
      }
 }
-#endif /* PRINTBOOK */
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void                SetInternaLinks (Element el, Document document)
+#else
+static void                SetInternaLinks (el, document)
+Element		    el;
+Document            document;
+#endif
+{
+   Element		link, target;
+   ElementType		elType;
+   Attribute		HrefAttr, IntLinkAttr;
+   AttributeType	attrType;
+   int			length;
+   char			*text;
+
+   elType.ElSSchema = TtaGetDocumentSSchema (document);
+   elType.ElTypeNum = HTML_EL_Anchor;
+   attrType.AttrSSchema = elType.ElSSchema;
+   link = el;
+   while (link != NULL)
+     {
+       link = TtaSearchTypedElement (elType, SearchForward, link);
+       if (link != NULL)
+	 {
+	 attrType.AttrTypeNum = HTML_ATTR_HREF_;
+         HrefAttr = TtaGetAttribute (link, attrType);
+         if (HrefAttr != NULL)
+	   {
+	   length = TtaGetTextAttributeLength (HrefAttr);
+	   text = TtaGetMemory (length + 1);
+	   TtaGiveTextAttributeValue (HrefAttr, text, &length);
+	   if (text[0] == '#')
+	      /* it'a an internal link. Attach an attribute InternalLink to */
+	      /* the link */
+	      {
+	        attrType.AttrTypeNum = HTML_ATTR_InternalLink;
+		IntLinkAttr = TtaNewAttribute (attrType);
+		TtaAttachAttribute (link, IntLinkAttr, document);
+		/* looks for the target element */
+		target = SearchNAMEattribute (document, &text[1], NULL);
+		if (target != NULL)
+		   TtaSetAttributeReference (IntLinkAttr, link, document,
+					     target, document);
+	      }
+	   TtaFreeMemory (text);
+	   }
+	 }
+     }
+}
+#endif /* PRINTBOOK */
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1905,10 +1956,13 @@ View                view;
    elType.ElTypeNum = HTML_EL_BODY;
    body = TtaSearchTypedElement (elType, SearchForward, root);
    if (body != NULL)
-       GetIncludedDocuments (body, document);
-   /********
-   TtaPrint (document, "Formatted_view Table_of_contents ");
-   *********/
+      {
+      GetIncludedDocuments (body, document);
+      SetInternaLinks (body, document);		
+      /********
+      TtaPrint (document, "Formatted_view Table_of_contents Links_view");
+      *********/
+      }
 #endif /* PRINTBOOK */
 }
 

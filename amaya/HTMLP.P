@@ -5,7 +5,7 @@
 PRESENTATION HTML;
 
 VIEWS
-   Formatted_view, Structure_view, Anchors_view, Alternate_view, Table_of_contents;
+   Formatted_view, Structure_view, Links_view, Alternate_view, Table_of_contents;
 
 #ifdef PAGE
 PRINT
@@ -31,10 +31,12 @@ PRINT
 #define INVALID_Color Red
 #define UNKNOWNTAG_Color Orange
 #define LINK_Color DarkIndigo1
+#define TARGET_Color DarkGreen2
 #endif
 
 #define TAG_Font Helvetica
 #define ATTR_Style Bold
+#define ATTR_Style_Links_view Italics
 #define ATTR_Visibility 6
 #define INPUT_Font Courier
 #define COMMENT_Visibility 5
@@ -98,10 +100,12 @@ DEFAULT
 BOXES
 
 #ifdef LINK_NUMBER
- AnchorNumFormattedView:
+ AnchorNumInFormattedView:
 	BEGIN
 	Content: (Text ' [' Value(AnchorCounter, Arabic) Text ']');
 	Visibility: Creator =;
+	HorizPos: Left = Creator . Right;
+	VertPos: HRef = Creator . HRef;
 	Font: Creator =;
 	Style: Creator =;
 	Size: Creator =;
@@ -111,15 +115,15 @@ BOXES
 		Visibility: 0;
 	IN Table_of_contents
 		Visibility: 0;
-	IN Anchors_view
+	IN Links_view
 		Visibility: 0;
 	END;
 
- AnchorNumToC:
+ AnchorNumInLinkView:
 	BEGIN
 	Content: (Text '[' Value(AnchorCounter, Arabic) Text ']  ');
 	Visibility: 0;
-	IN Anchors_view
+	IN Links_view
 		BEGIN
 		Visibility: Creator =;
 		Font: Creator =;
@@ -128,6 +132,32 @@ BOXES
 		VertPos: HRef = Creator . HRef;
 		END;
 	END;
+
+ TargetPageNumber:
+	BEGIN
+	Content: (Text ' (cf. p. ' Value(PageNumber(Formatted_view), Arabic) Text ')');
+	Visibility: 0;
+	END;
+
+ SeeTargetPage:
+	BEGIN
+	Copy (TargetPageNumber);
+	Visibility: Creator =;
+	HorizPos: Left = Creator . Right;
+	VertPos: HRef = Creator . HRef;
+	Font: Creator =;
+	Style: Creator =;
+	Size: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	IN Table_of_contents
+		Visibility: 0;
+	IN Links_view
+		Visibility: 0;
+	END;
+
 #endif
 
 #ifdef SECTION_NUMBER
@@ -144,7 +174,7 @@ BOXES
 		Visibility: 0;
 	IN Alternate_view
 		Visibility: 0;
-	IN Anchors_view
+	IN Links_view
 		Visibility: 0;
 	END;
 
@@ -162,7 +192,7 @@ BOXES
 		Visibility: 0;
 	IN Alternate_view
 		Visibility: 0;
-	IN Anchors_view
+	IN Links_view
 		Visibility: 0;
 	END;
 
@@ -181,7 +211,7 @@ BOXES
 		Visibility: 0;
 	IN Alternate_view
 		Visibility: 0;
-	IN Anchors_view
+	IN Links_view
 		Visibility: 0;
 	END;
 
@@ -201,7 +231,7 @@ BOXES
 		Visibility: 0;
 	IN Alternate_view
 		Visibility: 0;
-	IN Anchors_view
+	IN Links_view
 		Visibility: 0;
 	END;
 
@@ -222,7 +252,7 @@ BOXES
 		Visibility: 0;
 	IN Alternate_view
 		Visibility: 0;
-	IN Anchors_view
+	IN Links_view
 		Visibility: 0;
 	END;
 #endif
@@ -290,13 +320,6 @@ BOXES
 		END;
 	END;
 
- LINK_ANCH: BEGIN
-	Content: Text 'LINK';
-	Visibility: 0;
-	IN Anchors_view
-		Visibility: 5;
-	END;
-
  ATTR_REL: BEGIN
 	Content: Text ' rel=';
 	HorizPos: Left = Previous . Right;
@@ -307,11 +330,7 @@ BOXES
 		Style: ATTR_Style;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
-	IN Anchors_view BEGIN
-		Visibility: Enclosing =;
-		END;
 	END;
-
  VALUE_REL: BEGIN
 	Content: (REL);
 	HorizPos: Left = Previous . Right;
@@ -322,9 +341,25 @@ BOXES
 		Style: ATTR_Style;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
-	IN Anchors_view BEGIN
-		Visibility: Enclosing =;
+	END;
+
+ ATTR_REL_ANCH: BEGIN
+	Content: Text ' rel=';
+	Visibility: 0;
+	IN Links_view BEGIN
+#ifdef PAGE
+		Style: ATTR_Style_Links_view;
+#else
+		Foreground: ATTR_Color;
+#endif
+		Visibility: 5;
 		END;
+	END;
+ VALUE_REL_ANCH: BEGIN
+	Content: (REL);
+	Visibility: 0;
+	IN Links_view
+		Visibility: 5;
 	END;
 
  ATTR_REV: BEGIN
@@ -337,11 +372,7 @@ BOXES
 		Style: ATTR_Style;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
-	IN Anchors_view BEGIN
-		Visibility: Enclosing =;
-		END;
 	END;
-
  VALUE_REV: BEGIN
 	Content: (REV);
 	HorizPos: Left = Previous . Right;
@@ -352,9 +383,25 @@ BOXES
 		Style: ATTR_Style;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
-	IN Anchors_view BEGIN
-		Visibility: Enclosing =;
+	END;
+
+ ATTR_REV_ANCH: BEGIN
+	Content: Text ' rev=';
+	Visibility: 0;
+	IN Links_view BEGIN
+#ifdef PAGE
+		Style: ATTR_Style_Links_view;
+#else
+		Foreground: ATTR_Color;
+#endif
+		Visibility: 5;
 		END;
+	END;
+ VALUE_REV_ANCH: BEGIN
+	Content: (REV);
+	Visibility: 0;
+	IN Links_view
+		Visibility: 5;
 	END;
 
  BASE_S: BEGIN
@@ -364,23 +411,6 @@ BOXES
 		Size: TAG_FONTSIZE;
 		Style: TAG_Style;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
-		END;
-	END;
-
- BASE_ANCH: BEGIN
-	Content: Text 'BASE';
-	Visibility: 0;
-	IN Anchors_view
-		Visibility: 5;
-	END;
-
- ATTR_E_ANCH: BEGIN
-	Content: Text ' ';
-	Visibility: 0;
-	IN Anchors_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Creator . HRef;
-		Visibility: 5;
 		END;
 	END;
 
@@ -942,7 +972,7 @@ BOXES
 	Visibility: 5;
 	IN Structure_view
 		Visibility: 0;
-	IN Anchors_view
+	IN Links_view
 		Visibility: 0;
 	END;
 
@@ -959,7 +989,7 @@ BOXES
 	Visibility: 5;
 	IN Structure_view
 		Visibility: 0;
-	IN Anchors_view
+	IN Links_view
 		Visibility: 0;
 	END;
 
@@ -975,7 +1005,7 @@ BOXES
 	Visibility: Creator =;
 	IN Structure_view
 		Visibility: 0;
-	IN Anchors_view
+	IN Links_view
 		Visibility: 0;
 	END;
 
@@ -991,7 +1021,7 @@ BOXES
 	Visibility: Creator =;
 	IN Structure_view
 		Visibility: 0;
-	IN Anchors_view
+	IN Links_view
 		Visibility: 0;
 	END;
 
@@ -1010,7 +1040,7 @@ BOXES
 		Visibility: 0;
 	IN Alternate_view
 		Visibility: 0;
-	IN Anchors_view
+	IN Links_view
 		Visibility: 0;
 	END;
 
@@ -1110,7 +1140,7 @@ BOXES
 	IN Alternate_view BEGIN
 		Visibility: Enclosing =;
 		END;
-	IN Anchors_view BEGIN
+	IN Links_view BEGIN
 		HorizPos: Left = Previous . Right;
 		HorizRef: * . Top + 1;
 		VertPos: HRef = Previous . HRef;
@@ -1880,15 +1910,23 @@ BOXES
 		END;
 	END;
 
- NAME_S_A: BEGIN
-	Content: (Text ' name=' NAME);
+ ATTR_NAME_ANCH: BEGIN
+	Content: Text ' name=';
 	Visibility: 0;
-	IN Anchors_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Creator . HRef;
-		Foreground: Black;
+	IN Links_view BEGIN
+#ifdef PAGE
+		Style: ATTR_Style_Links_view;
+#else
+		Foreground: ATTR_Color;
+#endif
 		Visibility: 5;
 		END;
+	END;
+ VALUE_NAME_ANCH: BEGIN
+	Content: (NAME);
+	Visibility: 0;
+	IN Links_view
+		Visibility: 5;
 	END;
 
  ATTR_HREF: BEGIN
@@ -1918,9 +1956,12 @@ BOXES
  ATTR_HREF_ANCH: BEGIN
 	Content: Text ' href=';
 	Visibility: 0;
-	IN Anchors_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Creator . HRef;
+	IN Links_view BEGIN
+#ifdef PAGE
+		Style: ATTR_Style_Links_view;
+#else
+		Foreground: ATTR_Color;
+#endif
 		Visibility: 5;
 		END;
 	END;
@@ -1928,21 +1969,8 @@ BOXES
  VALUE_HREF_ANCH: BEGIN
 	Content: (HREF_);
 	Visibility: 0;
-	IN Anchors_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Creator . HRef;
+	IN Links_view
 		Visibility: 5;
-		END;
-	END;
-
- VALUE_HREF_LINK_ANCH: BEGIN
-	Content: (HREF_);
-	Visibility: 0;
-	IN Anchors_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Creator . HRef;
-		Visibility: 5;
-		END;
 	END;
 
  ATTR_TITLE: BEGIN
@@ -1970,11 +1998,14 @@ BOXES
 	END;
 
  ATTR_TITLE_ANCH: BEGIN
-	Content: Text 'title=';
+	Content: Text ' title=';
 	Visibility: 0;
-	IN Anchors_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Creator . HRef;
+	IN Links_view BEGIN
+#ifdef PAGE
+		Style: ATTR_Style_Links_view;
+#else
+		Foreground: ATTR_Color;
+#endif
 		Visibility: 5;
 		END;
 	END;
@@ -1982,11 +2013,8 @@ BOXES
  VALUE_TITLE_ANCH: BEGIN
 	Content: (Title);
 	Visibility: 0;
-	IN Anchors_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Creator . HRef;
+	IN Links_view
 		Visibility: 5;
-		END;
 	END;
 
  ATTR_ActURL: BEGIN
@@ -3464,6 +3492,18 @@ BOXES
 	   Content: (Value (PageNumber(Formatted_view), Arabic));
 	   END;
 	END;
+
+  LinkPageNumber:
+	BEGIN
+	Visibility: 0;
+	IN Links_view
+	   BEGIN
+	   Visibility: Creator =;
+	   VertPos: HRef = Creator . HRef;
+	   HorizPos: Right = Enclosing . Right;
+	   Content: (Value (PageNumber(Formatted_view), Arabic));
+	   END;
+	END;
 #endif /* PAGE */
 
 RULES
@@ -3493,10 +3533,13 @@ RULES
 		HorizPos: Left = Enclosing . Left + 1;
 		Font: Helvetica;
 		END;
-	IN Anchors_view BEGIN
+	IN Links_view BEGIN
+#ifdef PAGE
+		Page(ThePage);
+#endif
 		Width: Enclosing . Width - 2;
 		HorizPos: Left = Enclosing . Left + 1;
-		Visibility: 5;
+		Visibility: 7;
 		END;
 	IN Table_of_contents BEGIN
 #ifdef PAGE
@@ -3518,7 +3561,7 @@ RULES
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
-	IN Anchors_view
+	IN Links_view
 		Visibility: 0;
 	IN Table_of_contents
 		Visibility: 0;
@@ -3567,12 +3610,10 @@ RULES
 		Width: Enclosing . Width - STRUCT_INDENT;
 #endif
 		END;
-	IN Anchors_view BEGIN
+	IN Links_view
+		Visibility: Enclosing =;
+	IN Table_of_contents
 		Visibility: 0;
-		END;
-	IN Table_of_contents BEGIN
-		Visibility: 0;
-		END;
 	END;
 
  ISINDEX: BEGIN
@@ -3595,8 +3636,6 @@ RULES
 		Style: TAG_Style;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
-	IN Anchors_view
-		Visibility: 0;
 	END;
 
  Document_URL:	BEGIN
@@ -3605,7 +3644,7 @@ RULES
 #else /* PAGE */
 	IN Structure_view
 		Visibility: 0;
-	IN Anchors_view
+	IN Links_view
 		Visibility: 0;
 	IN Table_of_contents
 		Visibility: 0;
@@ -3626,8 +3665,6 @@ RULES
 		FillPattern: nopattern;
 		Visibility: Enclosing =;
 		END;
-	IN Anchors_view
-		Visibility: 0;
 	IN Table_of_contents
 		Visibility: 0;
 	IN Alternate_view
@@ -3684,7 +3721,6 @@ RULES
 
  LINK:	BEGIN
 	CreateBefore(LINK_S);
-	CreateBefore(LINK_ANCH);
 #ifndef BLACK_WHITE
 	Foreground: Blue;
 #endif
@@ -3695,10 +3731,6 @@ RULES
 		VertPos: Top = Previous LINK_S . Top;
 		Foreground: Enclosing =;
 		Visibility: Enclosing =;
-		END;
-	IN Anchors_view BEGIN
-		Foreground: Enclosing =;
-		Visibility: 6;
 		END;
 	END;
 
@@ -3715,7 +3747,6 @@ RULES
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	CreateBefore(BASE_S);
-	CreateBefore(BASE_ANCH);
 #ifndef BLACK_WHITE
 	Foreground: Blue;
 #endif
@@ -3728,10 +3759,8 @@ RULES
 		Visibility: ATTR_Visibility;
 		Size: TAG_FONTSIZE;
 		END;
-	IN Anchors_view BEGIN
-		Foreground: Black;
-		Visibility: 5;
-		END;
+	IN Links_view
+		Visibility: 0;
 	END;
 #ifdef R_HTML
  Entity: BEGIN
@@ -3740,7 +3769,7 @@ RULES
 	Width: Enclosed . Width;
 	IN Structure_view
 	   Visibility: 0;
-	IN Anchors_view
+	IN Links_view
 	   Visibility: 0;
 	END;
 #endif
@@ -3787,6 +3816,8 @@ RULES
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
 		HorizPos: Left = Enclosing . Left;
 		END;
+	IN Links_view
+		Visibility: 0;
 	END;
 
  H2:	BEGIN
@@ -3832,6 +3863,8 @@ RULES
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
 		HorizPos: Left = Enclosing . Left + 1;
 		END;
+	IN Links_view
+		Visibility: 0;
 	END;
 
  H3:	BEGIN
@@ -3877,6 +3910,8 @@ RULES
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
 		HorizPos: Left = Enclosing . Left + 2;
 		END;
+	IN Links_view
+		Visibility: 0;
 	END;
 
  H4:	BEGIN
@@ -3922,6 +3957,8 @@ RULES
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
 		HorizPos: Left = Enclosing . Left + 3;
 		END;
+	IN Links_view
+		Visibility: 0;
 	END;
 
  H5:	BEGIN
@@ -3962,6 +3999,8 @@ RULES
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
 		HorizPos: Left = Enclosing . Left + 4;
 		END;
+	IN Links_view
+		Visibility: 0;
 	END;
 
  H6:	BEGIN
@@ -3999,6 +4038,8 @@ RULES
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
 		HorizPos: Left = Enclosing . Left + 5;
 		END;
+	IN Links_view
+		Visibility: 0;
 	END;
 
  BaseFont:
@@ -4020,7 +4061,10 @@ RULES
 	LineBreak: Yes;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
+	IN Links_view
+		Visibility: 0;
 	END;
+
  Italic_text:
 	BEGIN
 	CreateBefore(I_S);
@@ -4320,6 +4364,8 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		END;	
+	IN Links_view
+		Visibility: 0;
 	END;
 
  Parameter: BEGIN
@@ -4350,6 +4396,8 @@ RULES
 		END;	
 	IN Alternate_view
 		Height: Enclosed . Height;
+	IN Links_view
+		Visibility: 0;
 	END;
 
  Object_Content: BEGIN
@@ -4392,6 +4440,8 @@ RULES
 		VertPos: Top = Previous . Bottom;
 		NoLine;
 		END;
+	IN Links_view
+		Visibility: 0;
 	END;
 
  Definition_List: BEGIN
@@ -4405,6 +4455,8 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		END;
+	IN Links_view
+		Visibility: 0;
 	END;
 
  Definition_Item: BEGIN
@@ -4473,6 +4525,8 @@ RULES
 		VertPos: Top = Previous . Bottom;
 		Justify: No;
 		END;
+	IN Links_view
+		Visibility: 0;
 	END;
 
  Numbered_List:	BEGIN
@@ -4500,6 +4554,8 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		END;
+	IN Links_view
+		Visibility: 0;
 	END;
 
  Address: BEGIN
@@ -4517,6 +4573,8 @@ RULES
 		VertPos: Top = Previous . Bottom;
 		NoLine;
 		END;
+	IN Links_view
+		Visibility: 0;
 	END;
 
  Menu:	BEGIN
@@ -4531,6 +4589,8 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		END;
+	IN Links_view
+		Visibility: 0;
 	END;
 
  Directory: BEGIN
@@ -4545,6 +4605,8 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		END;
+	IN Links_view
+		Visibility: 0;
 	END;
 
  List_Item: BEGIN
@@ -4577,6 +4639,8 @@ RULES
 		VertPos: Top = Previous . Bottom;
 		Font: Enclosing =;
 		END;
+	IN Links_view
+		Visibility: 0;
 	END;
 
   Pre_Line: BEGIN
@@ -4597,6 +4661,8 @@ RULES
 	LineWeight: 1 pt;
 	IN Structure_view
 	    Height: 1 pt;
+	IN Links_view
+		Visibility: 0;
 	END;
 
  Form:	BEGIN
@@ -4610,6 +4676,8 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		END;
+	IN Links_view
+		Visibility: 0;
 	END;
 
  Option_Menu: BEGIN
@@ -4867,6 +4935,8 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		END;
+	IN Links_view
+		Visibility: 0;
 	END;
 
  PICTURE_UNIT: BEGIN
@@ -4908,14 +4978,20 @@ RULES
 		Visibility: 1;
 #endif
 		END;
+	IN Links_view
+#ifndef PAGE
+		if Immediately within BODY
+#endif
+		   Visibility: 0;
+	IN Table_of_contents
+		Visibility: 0;
 	END;
 
  Anchor: BEGIN
 	CreateBefore(A_S);
 	CreateWith(VerticalLine);
-#ifdef LINK_NUMBER
-	CreateBefore(AnchorNumToC);
-	CreateAfter(AnchorNumFormattedView);
+#ifdef PAGE
+	CreateAfter(LinkPageNumber);
 #endif
 	IN Structure_view BEGIN
 		Foreground: Enclosing =;
@@ -4928,13 +5004,30 @@ RULES
 		Foreground: Enclosing =;
 		Underline: Underlined;
 		END;
-	IN Anchors_view BEGIN
+	IN Links_view BEGIN
+#ifdef PAGE
+		Visibility: 0;	{ attribute HREF_ changes visibility }
+		Adjust: LeftWithDots;
+#else
 		Visibility: 7;
-		VertPos: Top = Previous Anchor . Bottom + 0.1;
+#endif
+		Line;
+		VertPos : Top = Previous Anchor . Bottom + 0.2;
 #ifdef LINK_NUMBER
-		HorizPos: Left = Previous AnchorNumToC . Right;
+		HorizPos: Left = Previous AnchorNumInLinkView . Right;
+#ifdef PAGE
+		Width: Right = Enclosing . Right - 28 pt;
+#else
+		Width: Right = Enclosing . Right;
+#endif
 #else
 		HorizPos: Left = Enclosing . Left;
+		Indent: -2;
+#ifdef PAGE
+		Width: Right = Enclosing . Right - 28 pt;
+#else
+		Width : Enclosing . Width;
+#endif
 #endif
 		END;
 	END;
@@ -4981,6 +5074,8 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		END;
+	IN Links_view
+		Visibility: 0;
 	END;
 
  AREA:	BEGIN
@@ -5024,6 +5119,8 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		END;
+	IN Links_view
+		Visibility: 0;
 	END;
 
  CAPTION:
@@ -5224,6 +5321,8 @@ RULES
 		Width: Enclosing . Width - STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;	
 		END;
+	IN Links_view
+		Visibility: 0;
 	END;
 
   Center:
@@ -5239,6 +5338,8 @@ RULES
 		VertPos: Top = Previous . Bottom;
 		Adjust: Enclosing =;	
 		END;
+	IN Links_view
+		Visibility: 0;
 	END;
 
   Invalid_element:
@@ -5284,21 +5385,33 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ATTR_HREF);
 	CreateBefore(VALUE_HREF);
-	CreateAfter(ATTR_HREF_ANCH);
-	IF LINK
-	   CreateAfter(VALUE_HREF_LINK_ANCH);
-	IF NOT LINK
-	   CreateAfter(VALUE_HREF_ANCH);
+	IF Anchor
+	   BEGIN
+	   CreateLast(ATTR_HREF_ANCH);
+	   CreateLast(VALUE_HREF_ANCH);
+	   END;
+#ifdef LINK_NUMBER
+	IF Anchor and not InternalLink
+	   BEGIN
+	   CreateBefore(AnchorNumInLinkView);
+	   CreateAfter(AnchorNumInFormattedView);
+	   END;
+#endif
 #ifdef PAGE
 	IF Anchor
 	   Underline: Underlined;
+	IN Links_view
+		if Anchor
+		   BEGIN
+		   Visibility: 7;
+		   Underline: Enclosing =;
+		   END;
 #else
 #ifdef BLACK_WHITE
 	IF Anchor
 	   Underline: Underlined;
 #endif
 #endif
-	CreateAfter(ATTR_E_ANCH);
 	IN Structure_view BEGIN
 		Foreground: Enclosing =;
 		Underline: Enclosing =;
@@ -5309,6 +5422,17 @@ ATTRIBUTES
 		END;
 	END;
 
+ InternalLink:
+	BEGIN
+#ifdef LINK_NUMBER
+	CreateAfter(SeeTargetPage);
+#endif
+#ifdef PAGE
+	IN Links_view
+	   Visibility: 0;
+#endif
+	END;
+
 #ifndef PAGE
 #ifndef BLACK_WHITE
  PseudoClass = 'link':
@@ -5317,6 +5441,8 @@ ATTRIBUTES
 	IN Structure_view
 		Foreground: Enclosing =;
 	IN Alternate_view
+		Foreground: Enclosing =;
+	IN Links_view
 		Foreground: Enclosing =;
 	END;
  PseudoClass = 'visited':
@@ -5366,21 +5492,24 @@ ATTRIBUTES
  Title:	BEGIN
 	CreateBefore(ATTR_TITLE);
 	CreateBefore(VALUE_TITLE);
-	CreateAfter(ATTR_TITLE_ANCH);
-	CreateAfter(VALUE_TITLE_ANCH);
-	CreateAfter(ATTR_E_ANCH);
+	CreateLast(ATTR_TITLE_ANCH);
+	CreateLast(VALUE_TITLE_ANCH);
 	END;
 
  NAME(Anchor):
 	BEGIN
 	CreateBefore(ATTR_NAME);
 	CreateBefore(VALUE_NAME);
-	CreateAfter(NAME_S_A);
+	CreateLast(ATTR_NAME_ANCH);
+	CreateLast(VALUE_NAME_ANCH);
+#ifdef LINK_NUMBER
+	CreateAfter(TargetPageNumber);
+#endif
 #ifndef PAGE
 #ifdef BLACK_WHITE
 	Underline: Underlined;
 #else
-	Foreground: DarkGreen2;
+	Foreground: TARGET_Color;
 #endif
 #endif
 	IN Structure_view BEGIN
@@ -5397,12 +5526,13 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ATTR_NAME);
 	CreateBefore(VALUE_NAME);
-	CreateAfter(NAME_S_A);
+	CreateLast(ATTR_NAME_ANCH);
+	CreateLast(VALUE_NAME_ANCH);
 #ifndef PAGE
 #ifdef BLACK_WHITE
 	Underline: Underlined;
 #else
-	Foreground: DarkGreen2;
+	Foreground: TARGET_Color;
 #endif
 #endif
 	IN Structure_view BEGIN
@@ -5482,14 +5612,16 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ATTR_REL);
 	CreateBefore(VALUE_REL);
-	CreateBefore(ATTR_E_ANCH);
+	CreateLast(ATTR_REL_ANCH);
+	CreateLast(VALUE_REL_ANCH);
 	END;
 
  REV:
 	BEGIN
 	CreateBefore(ATTR_REV);
 	CreateBefore(VALUE_REV);
-	CreateBefore(ATTR_E_ANCH);
+	CreateLast(ATTR_REV_ANCH);
+	CreateLast(VALUE_REV_ANCH);
 	END;
 
  WidthElement:
@@ -5844,7 +5976,7 @@ dans des paragraphes s affichent a cote de leur cadre...
 	Size: Enclosing + IntSizeIncr;
 	In Structure_view
 	    Size: Enclosing =;
-	In Anchors_view
+	In Links_view
 	    Size: Enclosing =;
 	In Alternate_view
 	    Size: Enclosing =;
@@ -5854,7 +5986,7 @@ dans des paragraphes s affichent a cote de leur cadre...
 	Size: Enclosing - IntSizeDecr;
 	In Structure_view
 	    Size: Enclosing =;
-	In Anchors_view
+	In Links_view
 	    Size: Enclosing =;
 	In Alternate_view
 	    Size: Enclosing =;
@@ -5864,7 +5996,7 @@ dans des paragraphes s affichent a cote de leur cadre...
 	Size: IntSizeRel;
 	In Structure_view
 	    Size: Enclosing =;
-	In Anchors_view
+	In Links_view
 	    Size: Enclosing =;
 	In Alternate_view
 	    Size: Enclosing =;
@@ -6313,7 +6445,7 @@ dans des paragraphes s affichent a cote de leur cadre...
 		END;
 	IN Alternate_view
 		Visibility: 0;
-	IN Anchors_view
+	IN Links_view
 		 Visibility: 0;
 	END;
 

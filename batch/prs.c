@@ -2001,10 +2001,7 @@ indLine             wi;
    PtrPRule            pPRule;
 
    ConditionEnd ();
-   if (PresBoxDef)
-      /* interdit pour les boites de presentation */
-      CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_A_PRES_BOX, inputLine, LineNum);
-   else if (DefaultRuleDef)
+   if (DefaultRuleDef)
       CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);
    else if (RuleDef && CurType <= MAX_BASIC_TYPE)
       CompilerMessage (wi, PRS, FATAL, BAD_RULE_FOR_A_TERMINAL_ELEM, inputLine, LineNum);
