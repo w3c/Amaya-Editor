@@ -869,6 +869,7 @@ void KeyboardMap (int kb)
 	    XMapRaised (TtDisplay, XtWindowOfObject (Keyboards[kb]));
 #else /* _GTK */
 	    gtk_widget_show_all (GTK_WIDGET(Keyboards[kb]));
+	    gdk_window_raise (GTK_WIDGET(Keyboards[kb])->window);
 #endif /* !_GTK */
 	  }
      }
