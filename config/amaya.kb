@@ -1,3 +1,40 @@
+# Be careful when using Alt key to define short cuts. 
+# Alt key, referenced by Windows API as VK_MENU is
+# usually used by Windows for some particular purposes
+# and especially default short cuts. Amaya also uses this
+# particular key to introduce its own short cuts without using
+# the Windows standard accelerator table.
+#
+# How to combine Alt key with other keys to define Amaya short cuts:
+#
+# You have to distinguish between <Alt><Key> sequence and
+# <Shift><Alt><Key> sequence. And if you combine Alt with 
+# another character from ‘a’ to ‘z’ always use uppercase.
+# For example:
+# Alt <Key>-		ZoonOut()	## is correct
+# Alt <Key>+		ZoomIn()	## is WRONG
+# Shift Alt <Key>+	ZoomIn()	## is correct
+#
+# Alt <Key>R is different than Shift Alt <Key>R and we can
+# use both each for a given short cut. For example:
+# Alt <Key>R		Reload()	## is correct
+# Shift Alt <Key>R	CreateMROOT()	## is correct
+#
+# Alt <Key>r				## WRONG
+# Shift Alt <Key>r			## WRONG
+#
+# WARNING WARNING WARNING WARNING WARNING
+# =============================================
+# ACCORDING TO WHAT MENTIONNED ABOVE, THIS 
+# AMAYA.KB FILE MAY NOT WORK WITH YOUR 
+# KEYBOARD BECAUSE IT DEPENDS ON IT. THIS FILE
+# WAS DEVELOPED FOR A GIVEN **QWERTY** AND 
+# YOU HAVE TO ADAPT IT TO YOUR OWN ONE.
+#
+# Ramzi GUETARI (Ramzi.Guetari@w3.org)
+# 
+#
+
 # personnal keyboard
 
 <Key>Delete:	TtcDeleteSelection()
@@ -29,7 +66,7 @@ Ctrl <Key>n:	TtcNextElement()
 Ctrl <Key>l:    CreateOrChangeLink()
 Ctrl <Key>o:	OpenDoc()
 Ctrl <Key>p:    SetupAndPrint()
-Ctrl <Key>q:	AmayaClose()
+# Ctrl <Key>q:	AmayaClose()
 Ctrl <Key>s:	SaveDocument()
 Ctrl <Key>t:	CreateTarget()
 Ctrl <Key>v:	TtcPaste()
@@ -49,21 +86,22 @@ Shift Ctrl <Key>R:	CreateMROW()
 Alt <Key>-:	ZoomOut()
 Alt <Key>F3:	TtcSearchText()
 Alt <Key>F4:	TtcCloseDocument()
-Alt <Key>R:	Reload()
 
-Shift Alt <Key>+:	ZoomIn()
-Alt <Key>!:	CreateMSUBSUP()
-Alt <Key>_:	CreateMUNDEROVER()
+Alt <Key>R:	Reload()
 Alt <Key>E:	CreateMath()
 Alt <Key>F:	CreateMFRAC()
 Alt <Key>M:	CreateMMULTISCRIPTS()
 Alt <Key>O:	CreateMOVER()
 Alt <Key>P:	CreateMSUP()
 Alt <Key>Q:	CreateMSQRT()
-Shift Alt <Key>R:	CreateMROOT()
 Alt <Key>S:	CreateMSUB()
 Alt <Key>U:	CreateMUNDER()
 Alt <Key>W:	CreateMROW()
 Alt <Key>X:	CreateMSUBSUP()
 Alt <Key>Y:	CreateMUNDEROVER()
+
+Shift Alt <Key>!:	CreateMSUBSUP()
+Shift Alt <Key>_:	CreateMUNDEROVER()
+Shift Alt <Key>+:	ZoomIn()
+Shift Alt <Key>R:	CreateMROOT()
 
