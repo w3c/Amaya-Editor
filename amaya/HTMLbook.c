@@ -914,7 +914,7 @@ View                view;
    el = body;
    while (el != NULL)
       el = GetIncludedDocuments (el, document);
-   TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), "");
+   TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
    /* update internal links */
    SetInternalLinks (document);
    /* remove registered  sub-documents */
