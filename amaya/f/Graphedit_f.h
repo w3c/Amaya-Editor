@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void InitGraphML ( void );
+extern void InitSVG ( void );
 extern void AddGraphicsButton ( Document doc,
                                 View view );
 extern void SwitchIconGraph ( Document doc,
@@ -21,7 +21,7 @@ extern ThotBool DeleteAttrXlinkHref ( NotifyAttribute *event );
 
 #else /* __STDC__ */
 
-extern void InitGraphML (/* void */);
+extern void InitSVG (/* void */);
 extern void AddGraphicsButton (/* Document doc,
                                   View view */);
 extern void SwitchIconGraph (/* Document doc,

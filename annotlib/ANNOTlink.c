@@ -36,7 +36,7 @@
 #include "XLink.h"
 #include "HTML.h"
 #include "MathML.h"
-#include "GraphML.h"
+#include "SVG.h"
 
 
 /*-----------------------------------------------------------------------
@@ -266,7 +266,7 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
       TtaInsertFirstChild (&anchor, el, source_doc);
       TtaSetStructureChecking (check_mode, source_doc);
     }
-  else if (!strcmp (docSchemaName, "GraphML"))
+  else if (!strcmp (docSchemaName, "SVG"))
     {
       /* An annotation on a GraphMl structure. We backtrace the tree
 	 until we find the Math root element and then add the annotation as
@@ -275,7 +275,7 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
       while (el)
 	{
 	  elType = TtaGetElementType (el);
-	  if (elType.ElTypeNum == GraphML_EL_GraphML)
+	  if (elType.ElTypeNum == SVG_EL_SVG)
 	    break;
 	  el = TtaGetParent (el);
 	}

@@ -16,8 +16,8 @@
 #include "css.h"
 #include "undo.h"
 #include "MathML.h"
-#ifdef GRAPHML
-#include "GraphML.h"
+#ifdef _SVG
+#include "SVG.h"
 #endif
 #include "fetchHTMLname.h"
 
@@ -68,13 +68,13 @@ static void  RemoveElementStyle (Element el, Document doc, ThotBool removeSpan)
       attrType.AttrTypeNum = MathML_ATTR_style_;
       }
    else
-#ifdef GRAPHML
-   /* if it's a GraphML element, remove the style attribute defined in the
-      GraphML DTD */
-   if (!strcmp (name, "GraphML"))
+#ifdef _SVG
+   /* if it's a SVG element, remove the style attribute defined in the
+      SVG DTD */
+   if (!strcmp (name, "SVG"))
       {
       attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = GraphML_ATTR_style_;
+      attrType.AttrTypeNum = SVG_ATTR_style_;
       }
    else
 #endif
@@ -276,10 +276,10 @@ void           EnableStyleElement (Document doc)
   el = TtaGetMainRoot (doc);
   elType = TtaGetElementType (el);
   name = TtaGetSSchemaName (elType.ElSSchema);
-#ifdef GRAPHML
-   /* if it's a SVG document, remove the style defined in the GraphML DTD */
-   if (!strcmp (name, "GraphML"))
-     elType.ElTypeNum = GraphML_EL_style__;
+#ifdef _SVG
+   /* if it's a SVG document, remove the style defined in the SVG DTD */
+   if (!strcmp (name, "SVG"))
+     elType.ElTypeNum = SVG_EL_style__;
    else
 #endif
      elType.ElTypeNum = HTML_EL_STYLE_;
@@ -307,10 +307,10 @@ void           DeleteStyleElement (Document doc)
   el = TtaGetMainRoot (doc);
   elType = TtaGetElementType (el);
   name = TtaGetSSchemaName (elType.ElSSchema);
-#ifdef GRAPHML
-   /* if it's a SVG document, remove the style defined in the GraphML DTD */
-   if (!strcmp (name, "GraphML"))
-     elType.ElTypeNum = GraphML_EL_style__;
+#ifdef _SVG
+   /* if it's a SVG document, remove the style defined in the SVG DTD */
+   if (!strcmp (name, "SVG"))
+     elType.ElTypeNum = SVG_EL_style__;
    else
 #endif
      elType.ElTypeNum = HTML_EL_STYLE_;
@@ -500,13 +500,13 @@ void UpdateStylePost (NotifyAttribute * event)
 	   atType.AttrTypeNum = MathML_ATTR_style_;
 	   }
 	else
-#ifdef GRAPHML
-        /* if it's a GraphML element, delete the style attribute defined in the
-           GraphML DTD */
-	if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+#ifdef _SVG
+        /* if it's a SVG element, delete the style attribute defined in the
+           SVG DTD */
+	if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
 	   {
 	   atType.AttrSSchema = elType.ElSSchema;
-	   atType.AttrTypeNum = GraphML_ATTR_style_;
+	   atType.AttrTypeNum = SVG_ATTR_style_;
 	   }
 	else
 #endif
@@ -741,11 +741,11 @@ static void         DoApplyClass (Document doc)
 	      attrType.AttrTypeNum = MathML_ATTR_class;
 	    }
 	  else
-#ifdef GRAPHML
-	    if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+#ifdef _SVG
+	    if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
 	      {
 		attrType.AttrSSchema = elType.ElSSchema;
-		attrType.AttrTypeNum = GraphML_ATTR_class;
+		attrType.AttrTypeNum = SVG_ATTR_class;
 	      }
 	    else
 #endif
@@ -907,11 +907,11 @@ static void         UpdateClass (Document doc)
       attrType.AttrTypeNum = MathML_ATTR_style_;
     }
   else
-#ifdef GRAPHML
-  if (strcmp (schName, "GraphML") == 0)
+#ifdef _SVG
+  if (strcmp (schName, "SVG") == 0)
     {
       attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = GraphML_ATTR_style_;
+      attrType.AttrTypeNum = SVG_ATTR_style_;
     }
   else
 #endif
@@ -960,11 +960,11 @@ static void         UpdateClass (Document doc)
 	   attrType.AttrTypeNum = MathML_ATTR_class;
 	 }
       else
-#ifdef GRAPHML
-      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+#ifdef _SVG
+      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
 	 {
 	   attrType.AttrSSchema = elType.ElSSchema;
-	   attrType.AttrTypeNum = GraphML_ATTR_class;
+	   attrType.AttrTypeNum = SVG_ATTR_class;
 	 }
       else
 #endif
@@ -1265,13 +1265,13 @@ static int BuildClassList (Document doc, char *buf, int size, char *first)
 	   PutClassName (attr, buf, &index, &free, &nb);
         }
      }
-#ifdef GRAPHML
-  /* looks for the class attribute defined in the GraphML DTD */
-  attrType.AttrSSchema = TtaGetSSchema ("GraphML", doc);
+#ifdef _SVG
+  /* looks for the class attribute defined in the SVG DTD */
+  attrType.AttrSSchema = TtaGetSSchema ("SVG", doc);
   if (attrType.AttrSSchema)
-     /* there are some GraphML elements in this document */
+     /* there are some SVG elements in this document */
      {
-     attrType.AttrTypeNum = GraphML_ATTR_class;
+     attrType.AttrTypeNum = SVG_ATTR_class;
      el = TtaGetMainRoot (doc);
      while (el != NULL)
         {
@@ -1333,11 +1333,11 @@ void CreateClass (Document doc, View view)
       attrType.AttrTypeNum = MathML_ATTR_style_;
     }
   else
-#ifdef GRAPHML
-  if (strcmp (schName, "GraphML") == 0)
+#ifdef _SVG
+  if (strcmp (schName, "SVG") == 0)
     {
       attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = GraphML_ATTR_style_;
+      attrType.AttrTypeNum = SVG_ATTR_style_;
     }
   else
 #endif
@@ -1371,9 +1371,9 @@ void CreateClass (Document doc, View view)
       if (!strcmp (schName, "MathML"))
 	attrType.AttrTypeNum = MathML_ATTR_class;
       else
-#ifdef GRAPHML
-	if (!strcmp (schName, "GraphML"))
-	  attrType.AttrTypeNum = GraphML_ATTR_class;
+#ifdef _SVG
+	if (!strcmp (schName, "SVG"))
+	  attrType.AttrTypeNum = SVG_ATTR_class;
 	else
 #endif
 	  attrType.AttrTypeNum = HTML_ATTR_Class;
@@ -1452,12 +1452,12 @@ void                ApplyClass (Document doc, View view)
      attrType.AttrTypeNum = MathML_ATTR_class;
      }
   else
-#ifdef GRAPHML
+#ifdef _SVG
   elType = TtaGetElementType (firstSelectedEl);
-  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
      {
      attrType.AttrSSchema = elType.ElSSchema;
-     attrType.AttrTypeNum = GraphML_ATTR_class;
+     attrType.AttrTypeNum = SVG_ATTR_class;
      }
   else
 #endif

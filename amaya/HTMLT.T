@@ -27,7 +27,7 @@ RULES
 
  HTML : BEGIN
 	Use MathMLT for MathML;
-	Use GraphMLT for GraphML;
+	Use SVGT for SVG;
 	Use XLinkT for XLink;
 	Create HtmlDTD;
 #ifdef XML

@@ -1,7 +1,7 @@
 extension
 
 export
- GraphMLT:   GraphML
+ SVGT:   SVG
 
 translation
 
@@ -9,7 +9,7 @@ TEXT_UNIT: \240
 GRAPHICS_UNIT: \240
 PICTURE_UNIT: \240
 
-GraphML: svg
+SVG: svg
 style_: style
 xml_space: xml:space
 xml_space_default: default

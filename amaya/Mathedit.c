@@ -20,9 +20,9 @@
 #include "undo.h"
 #include "interface.h"
 #include "MathML.h"
-#ifdef GRAPHML
-#include "GraphML.h"
-#endif /* GRAPHML */
+#ifdef _SVG
+#include "SVG.h"
+#endif /* _SVG */
 
 #ifdef _WINDOWS
 #define iconMath   21 
@@ -56,7 +56,7 @@ static ThotBool	IsLastDeletedElement = FALSE;
 static Element	LastDeletedElement = NULL;
 
 #include "fetchXMLname_f.h"
-#include "GraphMLbuilder_f.h"
+#include "SVGbuilder_f.h"
 #include "html2thot_f.h"
 #include "HTMLtable_f.h"
 #include "HTMLactions_f.h"
@@ -629,12 +629,12 @@ static void         CreateMathConstruct (int construct)
   /* Get the type of the first selected element */
   elType = TtaGetElementType (sibling);
   name = TtaGetSSchemaName (elType.ElSSchema);
-#ifdef GRAPHML
-  if (construct == 1 && strcmp (name, "GraphML"))
+#ifdef _SVG
+  if (construct == 1 && strcmp (name, "SVG"))
     /* Math button and selection is not in a SVG element */
-#else /* GRAPHML */
+#else /* _SVG */
   if (construct == 1)
-#endif /* GRAPHML */
+#endif /* _SVG */
     /* Math button */
     {
       if (strcmp (name, "MathML"))
@@ -865,12 +865,12 @@ static void         CreateMathConstruct (int construct)
 	  if (!ok)
 	    /* cannot insert a Math element here */
 	    {
-#ifdef GRAPHML
+#ifdef _SVG
 	      elType = TtaGetElementType (sibling);
-	      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
-		/* selection is within a GraphML element */
+	      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+		/* selection is within a SVG element */
 		{
-		  elType.ElTypeNum = GraphML_EL_foreignObject;
+		  elType.ElTypeNum = SVG_EL_foreignObject;
 		  if (TtaCanInsertSibling (elType, sibling, FALSE, doc))
 		    /* insert a foreignObject element as a sibling */
 		    insertSibling = TRUE;
@@ -914,8 +914,8 @@ static void         CreateMathConstruct (int construct)
 		    }
 		}
 	      else
-		/* not within a GraphML element */
-#endif /* GRAPHML */
+		/* not within a SVG element */
+#endif /* _SVG */
 		/* cannot insert any MathML element here */
 		sibling = NULL;
 	    }

@@ -1,4 +1,4 @@
-APPLICATION GraphML;
+APPLICATION SVG;
 
 DEFAULT
    BEGIN
@@ -9,12 +9,12 @@ DEFAULT
 	PRuleCreate.Pre -> GraphicsPRuleChange;
 	PRuleModify.Pre -> GraphicsPRuleChange;
         ElemSelect.Post -> GraphicsSelectionChanged;
-	ElemExtendSelect.Pre -> ExtendSelectGraphMLElement;
+	ElemExtendSelect.Pre -> ExtendSelectSVGElement;
    END;
 
 ELEMENTS
 
-   GraphML:
+   SVG:
 	BEGIN
 	ElemNew.Post ->         SVGCreated;
 	ElemExport.Pre ->       SetEmptyShapeAttribute;

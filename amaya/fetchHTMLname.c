@@ -113,7 +113,7 @@ int MapGI (char *gi, SSchema *schema, Document doc)
 	  
 	  if (!ptr || !strcmp (ptr, "MathML"))
 	    MapXMLElementType (MATH_TYPE, gi, &elType, &ptr, &c, &level, doc);
-	  if (elType.ElTypeNum == 0 && (!ptr || !strcmp (ptr, "GraphML")))
+	  if (elType.ElTypeNum == 0 && (!ptr || !strcmp (ptr, "SVG")))
 	    MapXMLElementType (GRAPH_TYPE, gi, &elType, &ptr, &c, &level, doc);
 	  if (elType.ElTypeNum == 0)
 	    {

@@ -210,9 +210,9 @@ extern char      LostPicturePath [512];
 #include "EDITimage_f.h"
 #include "EDITstyle_f.h"
 #include "fetchXMLname_f.h"
-#ifdef GRAPHML
+#ifdef _SVG
 #include "Graphedit_f.h"
-#endif /* GRAPHML */
+#endif /* _SVG */
 #include "HTMLactions_f.h"
 #include "HTMLbook_f.h"
 #include "HTMLedit_f.h"
@@ -821,9 +821,9 @@ static void  UpdateBrowserMenus (Document doc)
       TtaChangeButton (doc, 1, iTable, iconTableNo, FALSE);
       SwitchIconMath (doc, 1, FALSE);
 
-#ifdef GRAPHML
+#ifdef _SVG
       SwitchIconGraph (doc, 1, FALSE);
-#endif /* GRAPHML */
+#endif /* _SVG */
       
       TtaSetItemOff (doc, 1, Edit_, BSpellCheck);
       TtaSetItemOff (doc, 1, Edit_, BTransform);
@@ -933,9 +933,9 @@ static void  UpdateEditorMenus (Document doc)
 	  TtaChangeButton (doc, 1, iNum, iconNum, TRUE);
 	  TtaChangeButton (doc, 1, iDL, iconDL, TRUE);
 	  TtaChangeButton (doc, 1, iTable, iconTable, TRUE);
-#ifdef GRAPHML
+#ifdef _SVG
 	  SwitchIconGraph (doc, 1, TRUE);
-#endif /* GRAPHML */
+#endif /* _SVG */
 	}
 
       TtaChangeButton (doc, 1, iLink, iconLink, TRUE);
@@ -1860,7 +1860,7 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
    else if (docType == docAnnot)
      doc = TtaInitDocument ("Annot", docname, requested_doc);
    else if (docType == docSVG)
-     doc = TtaInitDocument ("GraphML", docname, requested_doc);
+     doc = TtaInitDocument ("SVG", docname, requested_doc);
    else if (docType == docMath)
      doc = TtaInitDocument ("MathML", docname, requested_doc);
 #ifdef XML_GENERIC      
@@ -1883,7 +1883,7 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
        else if (docType == docAnnot)
 	   TtaSetPSchema (doc, "AnnotP");
        else if (docType == docSVG)
-	   TtaSetPSchema (doc, "GraphMLP");
+	   TtaSetPSchema (doc, "SVGP");
        else if (docType == docMath)
 	   TtaSetPSchema (doc, "MathMLP");
 #ifdef XML_GENERIC      
@@ -2078,9 +2078,9 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 #endif /* !_WINDOWS */
 #endif /* AMAYA_PLUGIN */
 	   AddMathButton (doc, 1);
-#ifdef GRAPHML
+#ifdef _SVG
 	   AddGraphicsButton (doc, 1);
-#endif /* GRAPHML */
+#endif /* _SVG */
 	   if (docType == docAnnot)
 	     TtcSwitchCommands (doc, 1); /* no command open */
 	   else
@@ -2177,9 +2177,9 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 	 TtaChangeButton (doc, 1, iNum, iconNumNo, FALSE);
 	 TtaChangeButton (doc, 1, iDL, iconDLNo, FALSE);
 	 TtaChangeButton (doc, 1, iTable, iconTableNo, FALSE);
-#ifdef GRAPHML
+#ifdef _SVG
 	 SwitchIconGraph (doc, 1, FALSE);
-#endif /* GRAPHML */
+#endif /* _SVG */
 	 if (ReadOnlyDocument[doc] || DocumentTypes[doc] != docMath)
 	   {
 	     TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
@@ -3298,7 +3298,7 @@ void ShowSource (Document document, View view)
 	   }
 	 else if (DocumentTypes[document] == docSVG)
 	   TtaExportDocumentWithNewLineNumbers (document, tempdocument,
-						"GraphMLT");
+						"SVGT");
 	 else if (DocumentTypes[document] == docMath)
 	   TtaExportDocumentWithNewLineNumbers (document, tempdocument,
 						"MathMLT");
@@ -5420,9 +5420,9 @@ void                InitAmaya (NotifyEvent * event)
 #endif /* AMAYA_PLUGIN */
 #endif /* !_WINDOWS */
    InitMathML ();
-#ifdef GRAPHML
-   InitGraphML ();
-#endif /* GRAPHML */
+#ifdef _SVG
+   InitSVG ();
+#endif /* _SVG */
 
    /* init transformation callback */
    TtaSetTransformCallback ((Func) TransformIntoType);

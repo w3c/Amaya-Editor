@@ -21,8 +21,8 @@
 #include "css.h"
 #include "XLink.h"
 #include "MathML.h"
-#ifdef GRAPHML
-#include "GraphML.h"
+#ifdef _SVG
+#include "SVG.h"
 #endif
 
 #include "HTMLhistory_f.h"
@@ -62,9 +62,9 @@ static AttSearch    URL_attr_tab[] = {
    {HTML_ATTR_cite, XHTML_TYPE},
    {XLink_ATTR_href_, XLINK_TYPE},
    {MathML_ATTR_style_, MATH_TYPE},
-#ifdef GRAPHML
-   {GraphML_ATTR_style_, GRAPH_TYPE},
-   {GraphML_ATTR_xlink_href, GRAPH_TYPE}
+#ifdef _SVG
+   {SVG_ATTR_style_, GRAPH_TYPE},
+   {SVG_ATTR_xlink_href, GRAPH_TYPE}
 #endif
 };
 /* list of attributes checked for updating images */
@@ -74,9 +74,9 @@ static AttSearch    SRC_attr_tab[] = {
    {HTML_ATTR_background_, XHTML_TYPE},
    {HTML_ATTR_Style_, XHTML_TYPE},
    {MathML_ATTR_style_, MATH_TYPE},
-#ifdef GRAPHML
-   {GraphML_ATTR_style_, GRAPH_TYPE},
-   {GraphML_ATTR_xlink_href, GRAPH_TYPE}
+#ifdef _SVG
+   {SVG_ATTR_style_, GRAPH_TYPE},
+   {SVG_ATTR_xlink_href, GRAPH_TYPE}
 #endif
 };
 static char        *QuotedText;
@@ -365,7 +365,7 @@ void SetRelativeURLs (Document doc, char *newpath)
 #endif
   XHTMLSSchema = TtaGetSSchema ("HTML", doc);
   MathSSchema = TtaGetSSchema ("MathML", doc);
-  GraphSSchema = TtaGetSSchema ("GraphML", doc);
+  GraphSSchema = TtaGetSSchema ("SVG", doc);
   XLinkSSchema = TtaGetSSchema ("XLink", doc);
   root = TtaGetMainRoot (doc);
 
@@ -376,7 +376,7 @@ void SetRelativeURLs (Document doc, char *newpath)
       if (elType.ElSSchema == XHTMLSSchema)
 	elType.ElTypeNum = HTML_EL_STYLE_;
       else if (elType.ElSSchema == GraphSSchema)
-	elType.ElTypeNum = GraphML_EL_style__;
+	elType.ElTypeNum = SVG_EL_style__;
       el = TtaSearchTypedElement (elType, SearchInTree, root);
     }
   else
@@ -447,7 +447,7 @@ void SetRelativeURLs (Document doc, char *newpath)
 		   attrType.AttrSSchema == XHTMLSSchema) ||
 		  (attrType.AttrTypeNum == MathML_ATTR_style_ &&
 		   attrType.AttrSSchema == MathSSchema) ||
-		  (attrType.AttrTypeNum == GraphML_ATTR_style_  &&
+		  (attrType.AttrTypeNum == SVG_ATTR_style_  &&
 		   attrType.AttrSSchema == GraphSSchema))
 		{
 		  /* manage background-image rule within style attribute */
@@ -849,14 +849,14 @@ void SetNamespacesAndDTD (Document doc)
 #define MAX_CHARSET_LEN 50
    char                 Charset[MAX_CHARSET_LEN];
    char		        buffer[200];
-   ThotBool		useMathML, useGraphML, useFrames;
+   ThotBool		useMathML, useSVG, useFrames;
    int                  oldStructureChecking;
 
    root = TtaGetRootElement (doc);
    if (DocumentTypes[doc] == docHTML)
      {
      useMathML = FALSE;
-     useGraphML = FALSE;
+     useSVG = FALSE;
      /* look for all natures used in the document */
      nature = NULL;
      do
@@ -867,8 +867,8 @@ void SetNamespacesAndDTD (Document doc)
 	     ptr = TtaGetSSchemaName (nature);
              if (!strcmp (ptr, "MathML"))
 	       useMathML = TRUE;
-	     if (!strcmp (ptr, "GraphML"))
-	       useGraphML = TRUE;
+	     if (!strcmp (ptr, "SVG"))
+	       useSVG = TRUE;
 	   }
        }
      while (nature);
@@ -889,7 +889,7 @@ void SetNamespacesAndDTD (Document doc)
 
      attrType.AttrTypeNum = HTML_ATTR_Namespaces;
      attr = TtaGetAttribute (root, attrType);
-     if (!useMathML && !useGraphML)
+     if (!useMathML && !useSVG)
        {
        /* delete the Namespaces attribute */
        if (attr)
@@ -963,13 +963,13 @@ void SetNamespacesAndDTD (Document doc)
 	  }
 	TtaSetAttributeText (attr, buffer, root, doc);
        }
-     else if (useMathML || useGraphML)
+     else if (useMathML || useSVG)
        {
        /* prepare the value of attribute Namespaces */
        buffer[0] = EOS;
        if (useMathML)
 	 strcat (buffer, "\n      xmlns:m=\"http://www.w3.org/1998/Math/MathML/\"");
-       if (useGraphML)
+       if (useSVG)
 	 strcat (buffer, "\n      xmlns:g=\"http://www.w3.org/Graphics/SVG/Amaya2D\"");
        /* set the value of attribute Namespaces */
        if (attr == NULL)
@@ -1009,7 +1009,7 @@ void SetNamespacesAndDTD (Document doc)
        else if (DocumentTypes[doc] == docMath)
 	 attrType.AttrTypeNum = MathML_ATTR_Charset;
        else if (DocumentTypes[doc] == docSVG)
-	 attrType.AttrTypeNum = GraphML_ATTR_Charset;
+	 attrType.AttrTypeNum = SVG_ATTR_Charset;
        docEl = TtaGetParent (root);
        charsetAttr = TtaGetAttribute (docEl, attrType); 
 
@@ -1230,7 +1230,7 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
       if (DocumentTypes[doc] == docHTML)
          ok = TtaExportDocument (doc, tempname, "HTMLTT");
       else if (DocumentTypes[doc] == docSVG)
-         ok = TtaExportDocument (doc, tempname, "GraphMLT");
+         ok = TtaExportDocument (doc, tempname, "SVGT");
       if (DocumentTypes[doc] == docMath)
          ok = TtaExportDocument (doc, tempname, "MathMLT");
     }
@@ -1256,7 +1256,7 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
 	}
       else if (DocumentTypes[doc] == docSVG)
 	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
-						  "GraphMLT");
+						  "SVGT");
       else if (DocumentTypes[doc] == docMath)
 	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
 						  "MathMLT");
@@ -1562,7 +1562,7 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
 	DocumentMeta[doc]->xmlformat = FALSE;
       }
   else if (DocumentTypes[doc] == docSVG)
-    TtaExportDocumentWithNewLineNumbers (doc, tempname, "GraphMLT");
+    TtaExportDocumentWithNewLineNumbers (doc, tempname, "SVGT");
   else if (DocumentTypes[doc] == docMath)
     TtaExportDocumentWithNewLineNumbers (doc, tempname, "MathMLT");
   else if (DocumentTypes[doc] == docImage)
@@ -1815,7 +1815,7 @@ void Synchronize (Document document, View view)
 	 }
        else if (DocumentTypes[document] == docSVG)
 	 TtaExportDocumentWithNewLineNumbers (document, tempdocument,
-					      "GraphMLT");
+					      "SVGT");
        else if (DocumentTypes[document] == docMath)
 	 TtaExportDocumentWithNewLineNumbers (document, tempdocument,
 					      "MathMLT");
@@ -2063,7 +2063,7 @@ void SaveDocument (Document doc, View view)
 	    }
 	else if (DocumentTypes[doc] == docSVG)
 	  ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
-						    "GraphMLT");
+						    "SVGT");
 	else if (DocumentTypes[doc] == docMath)
 	  ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
 						    "MathMLT");
@@ -2417,7 +2417,7 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 
       XHTMLSSchema = TtaGetSSchema ("HTML", doc);
       MathSSchema = TtaGetSSchema ("MathML", doc);
-      GraphSSchema = TtaGetSSchema ("GraphML", doc);
+      GraphSSchema = TtaGetSSchema ("SVG", doc);
       XLinkSSchema = TtaGetSSchema ("XLink", doc);
       root = TtaGetMainRoot (doc);
       /* handle style elements */
@@ -2427,7 +2427,7 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 	  if (elType.ElSSchema == XHTMLSSchema)
 	    elType.ElTypeNum = HTML_EL_STYLE_;
 	  else if (elType.ElSSchema == GraphSSchema)
-	    elType.ElTypeNum = GraphML_EL_style__;
+	    elType.ElTypeNum = SVG_EL_style__;
 	  el = TtaSearchTypedElement (elType, SearchInTree, root);
 	}
       else
@@ -2597,7 +2597,7 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 			attrType.AttrSSchema == XHTMLSSchema) ||
 		       (attrType.AttrTypeNum == MathML_ATTR_style_ &&
 			attrType.AttrSSchema == MathSSchema) ||
-		       (attrType.AttrTypeNum == GraphML_ATTR_style_  &&
+		       (attrType.AttrTypeNum == SVG_ATTR_style_  &&
 			attrType.AttrSSchema == GraphSSchema))
 		     {
 		       /* It's an attribute Style: look for url()*/

@@ -32,7 +32,7 @@
 #include "EDITOR.h"
 #include "HTML.h"
 #include "MathML.h"
-#include "GraphML.h"
+#include "SVG.h"
 #include "TextFile.h"
 #include "amayamsg.h"
 #include "parser.h"
@@ -233,11 +233,11 @@ typedef enum _ClickEvent {
 #define MenuMaths 1
 #define MAX_MATHS  2
 
-#ifdef GRAPHML
+#ifdef _SVG
 #define FormGraph 0
 #define MenuGraph 1
 #define MAX_GRAPH 2
-#endif /* GRAPHML */
+#endif /* _SVG */
 
 /* The possible GET/POST/PUT request modes */
 /*synchronous request*/
@@ -337,9 +337,9 @@ THOT_EXPORT int        BaseDialog;
 THOT_EXPORT int        BasePrint;
 THOT_EXPORT int        BaseImage;
 THOT_EXPORT int	       MathsDialogue;
-#ifdef GRAPHML
+#ifdef _SVG
 THOT_EXPORT int	       GraphDialogue;
-#endif /* GRAPHML */
+#endif /* _SVG */
 THOT_EXPORT int	       BaseCSS;
 THOT_EXPORT int        ReturnOption;
 THOT_EXPORT int        NumberRows;

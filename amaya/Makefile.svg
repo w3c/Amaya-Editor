@@ -1,0 +1,67 @@
+#
+# Makefile.svg
+# Autoconf Fragment when using Graph
+# Irene Vatton 1998-2001
+#
+
+AMAYA_SVG_OPTIONS=-D_SVG
+
+AMAYA_SVG_OBJ= \
+	SVGAPP.o \
+	SVGbuilder.o \
+	SVGedit.o
+
+AMAYA_SVG_SRC= \
+        SVG.h \
+	SVGAPP.c \
+	SVGbuilder.c \
+	SVGedit.c
+
+
+AMAYA_SVG_INCLUDES= 
+
+SVG_SCHEMAS= $(AMAYA)/SVG.S $(AMAYA)/SVGP.P $(AMAYA)/SVGT.T
+
+graph_schema= compSVG compSVGP compSVGT
+
+#
+# Structure schema compilation.
+#
+compSVG : $(AMAYA)/SVG.STR
+$(AMAYA)/SVG.STR : $(AMAYA)/SVG.S ../bin/str ../bin/prs ../bin/tra
+	STR=`pwd`/../bin/str;PRS=`pwd`/../bin/prs;TRA=`pwd`/../bin/tra;\
+	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$STR $(ALL_AMAYA_OPTIONS) SVG ; \
+	$$PRS $(ALL_AMAYA_OPTIONS) SVGP ; \
+	$$TRA $(ALL_AMAYA_OPTIONS) -DXML SVGT SVGTX ; \
+	$$TRA $(ALL_AMAYA_OPTIONS) SVGT
+
+#
+# Presentation schemas compilation
+#
+compSVGP : $(AMAYA)/SVGP.PRS
+$(AMAYA)/SVGP.PRS : $(AMAYA)/SVGP.P ../bin/prs
+	PRS=`pwd`/../bin/prs;\
+	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$PRS $(ALL_AMAYA_OPTIONS) SVGP
+
+#
+# Traduction schemas compilation
+#
+compSVGT : $(AMAYA)/SVGT.TRA
+$(AMAYA)/SVGT.TRA : $(AMAYA)/SVGT.T ../bin/tra
+	TRA=`pwd`/../bin/tra;\
+	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$TRA $(ALL_AMAYA_OPTIONS) -DXML SVGT SVGTX ; \
+	$$TRA $(ALL_AMAYA_OPTIONS) SVGT
+
+#
+# Interface schemas compilation
+#
+SVG.h SVGAPP.c : $(AMAYA)/SVG.STR $(AMAYA)/SVG.A ../bin/app
+	(if test "$(AMAYA)" != "" -a "$(AMAYA)" != "." ; then \
+	    $(CP) $(AMAYA)/SVG.A .  ; \
+	    $(CP) $(AMAYA)/SVG.STR .  ; \
+	fi)
+	THOTDIR=$(THOTDIR) ; export THOTDIR ; \
+	../bin/app $(ALL_AMAYA_OPTIONS) SVG.A

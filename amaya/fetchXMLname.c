@@ -19,7 +19,7 @@
 #include "parser.h"
 #include "HTMLnames.h"
 #include "MathMLnames.h"
-#include "GraphMLnames.h"
+#include "SVGnames.h"
 #include "XLinknames.h"
 
 /* define some pointers to let other parser functions access the local table */
@@ -66,19 +66,19 @@ SSchema         GetMathMLSSchema (Document doc)
 }
 
 /*----------------------------------------------------------------------
-   GetGraphMLSSchema returns the GraphML Thot schema for document doc.
+   GetSVGSSchema returns the SVG Thot schema for document doc.
   ----------------------------------------------------------------------*/
-SSchema         GetGraphMLSSchema (Document doc)
+SSchema         GetSVGSSchema (Document doc)
 
 {
-  SSchema	GraphMLSSchema;
+  SSchema	SVGSSchema;
 
-  GraphMLSSchema = TtaGetSSchema ("GraphML", doc);
-  if (GraphMLSSchema == NULL)
-    GraphMLSSchema = TtaNewNature(doc,
+  SVGSSchema = TtaGetSSchema ("SVG", doc);
+  if (SVGSSchema == NULL)
+    SVGSSchema = TtaNewNature(doc,
 				  TtaGetDocumentSSchema(doc),
-				  "GraphML", "GraphMLP");
-  return (GraphMLSSchema);
+				  "SVG", "SVGP");
+  return (SVGSSchema);
 }
 
 /*----------------------------------------------------------------------
@@ -140,7 +140,7 @@ SSchema GetXMLSSchema (int XMLtype, Document doc)
   else if (XMLtype == MATH_TYPE)
     return GetMathMLSSchema (doc);
   else if (XMLtype == GRAPH_TYPE)
-    return GetGraphMLSSchema (doc);
+    return GetSVGSSchema (doc);
   else if (XMLtype == XLINK_TYPE)
     return GetXLinkSSchema (doc);
   else
@@ -196,7 +196,7 @@ void MapXMLElementType (int XMLtype,
 	   *highEnoughLevel = FALSE;
 	 }
        else
-	 ptr = GraphMLElemMappingTable;
+	 ptr = SVGElemMappingTable;
      }
    else
      ptr = NULL;
@@ -252,8 +252,8 @@ char*           GetXMLElementName (ElementType elType, Document doc)
       name = TtaGetSSchemaName (elType.ElSSchema);
       if (strcmp ("MathML", name) == 0)
 	ptr = MathMLElemMappingTable;
-      else if (strcmp ("GraphML", name) == 0)
-	ptr = GraphMLElemMappingTable;
+      else if (strcmp ("SVG", name) == 0)
+	ptr = SVGElemMappingTable;
       else
 	ptr = XHTMLElemMappingTable;
       
@@ -300,8 +300,8 @@ ThotBool         IsXMLElementInline (ElementType elType)
       name = TtaGetSSchemaName (elType.ElSSchema);
       if (strcmp ("MathML", name) == 0)
 	ptr = MathMLElemMappingTable;
-      else if (strcmp ("GraphML", name) == 0)
-	ptr = GraphMLElemMappingTable;
+      else if (strcmp ("SVG", name) == 0)
+	ptr = SVGElemMappingTable;
       else
 	ptr = XHTMLElemMappingTable;
       
@@ -341,7 +341,7 @@ int       MapXMLAttribute (int XMLtype, char *attrName,
    else if (XMLtype == MATH_TYPE)
      ptr = MathMLAttributeMappingTable;
    else if (XMLtype == GRAPH_TYPE)
-     ptr = GraphMLAttributeMappingTable;
+     ptr = SVGAttributeMappingTable;
    else if (XMLtype == XLINK_TYPE)
      ptr = XLinkAttributeMappingTable;
    else
@@ -404,8 +404,8 @@ char*           GetXMLAttributeName (AttributeType attrType,
       name = TtaGetSSchemaName (attrType.AttrSSchema);
       if (strcmp ("MathML", name) == 0)
 	ptr = MathMLAttributeMappingTable;
-      else if (strcmp ("GraphML", name) == 0)
-	ptr = GraphMLAttributeMappingTable;
+      else if (strcmp ("SVG", name) == 0)
+	ptr = SVGAttributeMappingTable;
       else if (strcmp ("XLink", name) == 0)
 	ptr = XLinkAttributeMappingTable;
       else

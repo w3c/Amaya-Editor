@@ -1,8 +1,8 @@
-	{ Thot presentation schema for GraphML
+	{ Thot presentation schema for SVG
 
-	  V. Quint	February 1998	}
+	  V. Quint	February 1998-2001	}
 
-PRESENTATION GraphML;
+PRESENTATION SVG;
 
 VIEWS
    Formatted_view,
@@ -226,14 +226,14 @@ RULES
 		END;
 	END;
 
-   GraphML:
+   SVG:
 	BEGIN
 	CreateBefore(ElementName);
         CreateWith(VerticalLine);
 	Width: Enclosing . Width;
         Height: Enclosing . Height;
 	HorizRef: *.Bottom;
-        if NOT within GraphML BEGIN
+        if NOT within SVG BEGIN
            VertPos: Top = Previous . Bottom;
 	   Foreground: transparent;
 	   Background: Black;

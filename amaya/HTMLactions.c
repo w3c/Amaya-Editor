@@ -21,8 +21,8 @@
 #include "trans.h"
 #include "XLink.h"
 #include "MathML.h"
-#ifdef GRAPHML
-#include "GraphML.h"
+#ifdef _SVG
+#include "SVG.h"
 #endif
 
 #include "css_f.h"
@@ -409,7 +409,7 @@ static Element GetElemWithAttr (Document doc, AttributeType attrType,
 /*----------------------------------------------------------------------
    SearchNAMEattribute
    search in document doc an element having an attribut NAME or ID (defined
-   in DTD HTML, MathML or GraphML) whose value is nameVal.         
+   in DTD HTML, MathML or SVG) whose value is nameVal.         
    Return that element or NULL if not found.               
    If ignore is not NULL, it is an attribute that should be ignored when
    comparing NAME attributes.              
@@ -442,16 +442,16 @@ Element SearchNAMEattribute (Document doc, char *nameVal, Attribute ignore)
           elFound = GetElemWithAttr (doc, attrType, nameVal, ignore);
 	  }
      }
-#ifdef GRAPHML
+#ifdef _SVG
    if (!elFound)
      {
        /* search all elements having an attribute ID (defined in the
-	  GraphML DTD) */
-       attrType.AttrSSchema = TtaGetSSchema ("GraphML", doc);
+	  SVG DTD) */
+       attrType.AttrSSchema = TtaGetSSchema ("SVG", doc);
        if (attrType.AttrSSchema)
-	  /* this document uses the GraphML DTD */
+	  /* this document uses the SVG DTD */
 	  {
-          attrType.AttrTypeNum = GraphML_ATTR_id;
+          attrType.AttrTypeNum = SVG_ATTR_id;
           elFound = GetElemWithAttr (doc, attrType, nameVal, ignore);
 	  }
      }
@@ -835,7 +835,7 @@ static ThotBool ActivateElement (Element element, Document document)
 				  TtaGetSSchema ("XLink", document));
        if (!isXLink)
 	 isSVG = TtaSameSSchemas (elType.ElSSchema, 
-				  TtaGetSSchema ("GraphML", document));
+				  TtaGetSSchema ("SVG", document));
      }
 
    /* Check if the current element is interested in double clicks */
@@ -868,8 +868,8 @@ static ThotBool ActivateElement (Element element, Document document)
    else if (isXLink)
      ok = TRUE;
    else if (isSVG &&
-	    (elType.ElTypeNum == GraphML_EL_use_ ||
-	     elType.ElTypeNum == GraphML_EL_a))
+	    (elType.ElTypeNum == SVG_EL_use_ ||
+	     elType.ElTypeNum == SVG_EL_a))
      ok = TRUE;
 
    if (!ok)
@@ -2219,10 +2219,10 @@ void SynchronizeSourceView (NotifyElement * event)
 		 }
 	       else if (DocumentTypes[otherDoc] == docSVG)
 		 {
-		   attrType.AttrSSchema = TtaGetSSchema ("GraphML",
+		   attrType.AttrSSchema = TtaGetSSchema ("SVG",
 							 otherDoc);
-		   attrType.AttrTypeNum = GraphML_ATTR_Highlight;
-		   val = GraphML_ATTR_Highlight_VAL_Yes_;
+		   attrType.AttrTypeNum = SVG_ATTR_Highlight;
+		   val = SVG_ATTR_Highlight_VAL_Yes_;
 		 }
 	       else
 		 {

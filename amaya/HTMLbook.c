@@ -418,7 +418,7 @@ static void         PrintDocument (Document doc, View view)
 	}
     }
   else if (DocumentTypes[doc] == docSVG)
-    TtaSetPrintSchema ("GraphMLP");
+    TtaSetPrintSchema ("SVGP");
   else if (DocumentTypes[doc] == docMath)
     TtaSetPrintSchema ("MathMLP");
   else if (DocumentTypes[doc] == docAnnot)

@@ -18,7 +18,7 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
-#include "GraphML.h"
+#include "SVG.h"
 
 static Document     BgDocument;
 static int          RepeatValue;
@@ -844,14 +844,14 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
   char               imagename[MAX_LENGTH];
 
   elType = TtaGetElementType (el);
-  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
     /* it's not a SVG element, it's then a HTML img element, which is
        itself a Thot picture element */
     pict = el;
   else
     /* it's a SVG image. The Thot picture element is one of its children */
     {
-      elType.ElTypeNum = GraphML_EL_PICTURE_UNIT;
+      elType.ElTypeNum = SVG_EL_PICTURE_UNIT;
       pict = TtaSearchTypedElement (elType, SearchInTree, el);
       if (!pict)
 	/* no Thot picture element. Create one */
@@ -1024,7 +1024,7 @@ void SvgImageCreated (NotifyElement *event)
    /* search the xlink:href attribute */
    elType = TtaGetElementType (el);
    attrType.AttrSSchema = elType.ElSSchema;
-   attrType.AttrTypeNum = GraphML_ATTR_xlink_href;
+   attrType.AttrTypeNum = SVG_ATTR_xlink_href;
    attr = TtaGetAttribute (el, attrType);
    if (attr == 0)
      {
@@ -1033,7 +1033,7 @@ void SvgImageCreated (NotifyElement *event)
      }
    ComputeSRCattribute (el, doc, 0, attr, text);
    /* set the desc child */
-   elType.ElTypeNum = GraphML_EL_desc;
+   elType.ElTypeNum = SVG_EL_desc;
    desc = TtaSearchTypedElement (elType, SearchInTree, el);
    if (!desc)
      {
@@ -1144,8 +1144,8 @@ void                CreateImage (Document doc, View view)
       /* Get the type of the first selected element */
       elType = TtaGetElementType (sibling);
       name = TtaGetSSchemaName (elType.ElSSchema);
-      if (!strcmp (name, "GraphML"))
-	elType.ElTypeNum = GraphML_EL_image;
+      if (!strcmp (name, "SVG"))
+	elType.ElTypeNum = SVG_EL_image;
       else
 	{
 	  elType.ElSSchema = TtaGetSSchema ("HTML", doc);

@@ -18,8 +18,8 @@
 #include "amaya.h"
 #include "css.h"
 #include "MathML.h"
-#ifdef GRAPHML
-#include "GraphML.h"
+#ifdef _SVG
+#include "SVG.h"
 #endif
 #include "presentation.h"
 
@@ -46,8 +46,8 @@ ThotBool MakeASpan (Element elem, Element *span, Document doc)
   *span = NULL;
   elType = TtaGetElementType (elem);
   if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") ||
-      !strcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
-    /* it's an HTML or GraphML element */
+      !strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+    /* it's an HTML or SVG element */
     if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
 	elType.ElTypeNum == HTML_EL_Basic_Elem)
       /* it's a text leaf */
@@ -59,8 +59,8 @@ ThotBool MakeASpan (Element elem, Element *span, Document doc)
 	elType = TtaGetElementType (parent);
 	if ((elType.ElTypeNum == HTML_EL_Span &&
 	     !strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML")) ||
-	    (elType.ElTypeNum == GraphML_EL_tspan &&
-	     !strcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML")))
+	    (elType.ElTypeNum == SVG_EL_tspan &&
+	     !strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG")))
 	   /* element parent is a span element */
 	   {
 	   sibling = elem;
@@ -85,7 +85,7 @@ ThotBool MakeASpan (Element elem, Element *span, Document doc)
 	   if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
 	      elType.ElTypeNum = HTML_EL_Span;
 	   else
-	      elType.ElTypeNum = GraphML_EL_tspan;
+	      elType.ElTypeNum = SVG_EL_tspan;
 	   *span = TtaNewElement (doc, elType);
 	   TtaInsertSibling (*span, elem, FALSE, doc);
 	   TtaRemoveTree (elem, doc);
@@ -312,14 +312,14 @@ void                SetStyleAttribute (Document doc, Element elem)
        attrType.AttrTypeNum = MathML_ATTR_style_;
      }
    else
-#ifdef GRAPHML
-   if (strcmp (schName, "GraphML") == 0)
+#ifdef _SVG
+   if (strcmp (schName, "SVG") == 0)
      {
        attrType.AttrSSchema = elType.ElSSchema;
-       attrType.AttrTypeNum = GraphML_ATTR_style_;
+       attrType.AttrTypeNum = SVG_ATTR_style_;
      }
    else
-#endif /* GRAPHML */
+#endif /* _SVG */
       {
 	attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
 	attrType.AttrTypeNum = HTML_ATTR_Style_;

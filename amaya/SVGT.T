@@ -1,5 +1,5 @@
 
-TRANSLATION GraphML;
+TRANSLATION SVG;
 
 LINELENGTH 78;
 
@@ -34,7 +34,7 @@ RULES
            Create '?>\12';
 	END;
 
-   GraphML:
+   SVG:
 	BEGIN
         if within use_
 	   Ignore;

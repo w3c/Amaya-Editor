@@ -2836,7 +2836,7 @@ static void     EndOfStartGI (char c)
 	  if (!strcmp (theGI, "math"))
 	     strcpy (schemaName, "MathML");
 	  else
-	     strcpy (schemaName, "GraphML");
+	     strcpy (schemaName, "SVG");
 	  /* Parse the corresponding element with the XML parser */
 #ifdef OLD_XML_PARSER
 	  if (!XMLparse (stream, &CurrentBufChar, schemaName,

@@ -1852,7 +1852,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 		     /* simulate a delete */
 		     TtcDeleteSelection (IdentDocument (pDoc), 0);
 		   }
-	       else if (strcmp (pSibling->ElStructSchema->SsName, "GraphML"))
+	       else if (strcmp (pSibling->ElStructSchema->SsName, "SVG"))
 		 /* don't delete a graphic element when the user enters
 		    Backspace at the beginning of a svg:text element */
 		 {

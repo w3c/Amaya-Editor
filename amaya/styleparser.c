@@ -18,7 +18,7 @@
 #include "amaya.h"
 #include "css.h"
 #include "fetchHTMLname.h"
-#include "GraphML.h"
+#include "SVG.h"
 
 typedef struct _BackgroundImageCallbackBlock
 {
@@ -3255,29 +3255,29 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
     case PRBackground:
       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
       elType = TtaGetElementType(el);
-#ifdef GRAPHML
-      if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
+#ifdef _SVG
+      if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG") == 0)
 	sprintf (buffer, "fill: #%02X%02X%02X", red, green, blue);
       else
-#endif /* GRAPHML */
+#endif /* _SVG */
          sprintf (buffer, "background-color: #%02X%02X%02X", red, green,
 		   blue);
       break;
     case PRForeground:
       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
       elType = TtaGetElementType(el);
-#ifdef GRAPHML
-      if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
+#ifdef _SVG
+      if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG") == 0)
 	sprintf (buffer, "stroke: #%02X%02X%02X", red, green, blue);
       else
-#endif /* GRAPHML */
+#endif /* _SVG */
 	sprintf (buffer, "color: #%02X%02X%02X", red, green, blue);
       break;
     case PRLineWeight:
       elType = TtaGetElementType(el);
-#ifdef GRAPHML
-      if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
-#endif /* GRAPHML */
+#ifdef _SVG
+      if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+#endif /* _SVG */
 	{
 	  if (real)
 	    sprintf (buffer, "stroke-width: %g", fval);
@@ -3652,8 +3652,8 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       if (classes[i])
 	{
 	  ctxt->attrText[j] = classes[i];
-	  if (!strcmp (ptr, "GraphML"))
-	    ctxt->attrType[j] = GraphML_ATTR_class;
+	  if (!strcmp (ptr, "SVG"))
+	    ctxt->attrType[j] = SVG_ATTR_class;
 	  else if (!strcmp (ptr, "MathML"))
 	    ctxt->attrType[j] = MathML_ATTR_class;
 	  else
@@ -3664,8 +3664,8 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       if (pseudoclasses[i])
 	{
 	  ctxt->attrText[j] = pseudoclasses[i];
-	  if (!strcmp (ptr, "GraphML"))
-	    ctxt->attrType[j] = GraphML_ATTR_PseudoClass;
+	  if (!strcmp (ptr, "SVG"))
+	    ctxt->attrType[j] = SVG_ATTR_PseudoClass;
 	  else if (!strcmp (ptr, "MathML"))
 	    ctxt->attrType[j] = MathML_ATTR_PseudoClass;
 	  else
@@ -3676,8 +3676,8 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       if (ids[i])
 	{
 	  ctxt->attrText[j] = ids[i];
-	  if (!strcmp (ptr, "GraphML"))
-	    ctxt->attrType[j] = GraphML_ATTR_id;
+	  if (!strcmp (ptr, "SVG"))
+	    ctxt->attrType[j] = SVG_ATTR_id;
 	  else if (!strcmp (ptr, "MathML"))
 	    ctxt->attrType[j] = MathML_ATTR_id;
 	  else
@@ -3687,7 +3687,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	}
       if (attrs[i])
 	{
-	  if (!strcmp (ptr, "GraphML"))
+	  if (!strcmp (ptr, "SVG"))
 	    MapXMLAttribute (GRAPH_TYPE, attrs[i], names[i], &level, doc, &att);
 	  else if (!strcmp (ptr, "MathML"))
 	    MapXMLAttribute (MATH_TYPE, attrs[i], names[i], &level, doc, &att);

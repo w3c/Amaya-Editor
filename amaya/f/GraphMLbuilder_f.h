@@ -6,24 +6,24 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void GraphMLGetDTDName ( char *DTDname,
+extern void SVGGetDTDName ( char *DTDname,
                                 char *elementName );
-extern void MapGraphMLAttribute ( char *attrName,
+extern void MapSVGAttribute ( char *attrName,
                                   AttributeType *attrType,
                                   char* elementName,
                                   ThotBool *level,
                                   Document doc );
-extern void MapGraphMLAttributeValue ( char* AttrVal,
+extern void MapSVGAttributeValue ( char* AttrVal,
                                        AttributeType attrType,
                                        int *value );
-extern void MapGraphMLEntity ( char *entityName,
+extern void MapSVGEntity ( char *entityName,
                                char *entityValue,
                                char *alphabet );
-extern void GraphMLEntityCreated ( unsigned char *entityValue,
+extern void SVGEntityCreated ( unsigned char *entityValue,
                                    Language lang,
                                    char *entityName,
                                    Document doc );
-extern void GraphMLEntityCreatedWithExpat ( int entityValue,
+extern void SVGEntityCreatedWithExpat ( int entityValue,
                                             char * entityName,
                                             ThotBool entityFound,
                                             ParserData *XmlContext );
@@ -37,7 +37,7 @@ extern void SetGraphicDepths ( Document doc,
 extern void CopyUseContent ( Element el,
                              Document doc,
                              char *href );
-extern void GraphMLElementComplete ( Element el,
+extern void SVGElementComplete ( Element el,
                                      Document doc,
                                      int *error );
 extern void UpdatePositionOfPoly ( Element el,
@@ -63,30 +63,30 @@ extern void ParseTransformAttribute ( Attribute attr,
 extern void ParsePathDataAttribute ( Attribute attr,
                                      Element el,
                                      Document doc );
-extern void GraphMLAttributeComplete ( Attribute attr,
+extern void SVGAttributeComplete ( Attribute attr,
                                        Element el,
                                        Document doc );
 
 #else /* __STDC__ */
 
-extern void GraphMLGetDTDName (/* char *DTDname,
+extern void SVGGetDTDName (/* char *DTDname,
                                   char *elementName */);
-extern void MapGraphMLAttribute (/* char *attrName,
+extern void MapSVGAttribute (/* char *attrName,
                                     AttributeType *attrType,
                                     char* elementName,
                                     ThotBool *level,
                                     Document doc */);
-extern void MapGraphMLAttributeValue (/* char* AttrVal,
+extern void MapSVGAttributeValue (/* char* AttrVal,
                                          AttributeType attrType,
                                          int *value */);
-extern void MapGraphMLEntity (/* char *entityName,
+extern void MapSVGEntity (/* char *entityName,
                                  char *entityValue,
                                  char *alphabet */);
-extern void GraphMLEntityCreated (/* unsigned char *entityValue,
+extern void SVGEntityCreated (/* unsigned char *entityValue,
                                      Language lang,
                                      char *entityName,
                                      Document doc */);
-extern void GraphMLEntityCreatedWithExpat (/* int entityValue,
+extern void SVGEntityCreatedWithExpat (/* int entityValue,
                                               char * entityName,
                                               ThotBool entityFound,
                                               ParserData *XmlContext */);
@@ -100,7 +100,7 @@ extern void SetGraphicDepths (/* Document doc,
 extern void CopyUseContent (/* Element el,
                                Document doc,
                                char *href */);
-extern void GraphMLElementComplete (/* Element el,
+extern void SVGElementComplete (/* Element el,
                                        Document doc,
                                        int *error */);
 extern void UpdatePositionOfPoly (/* Element el,
@@ -126,7 +126,7 @@ extern void ParseTransformAttribute (/* Attribute attr,
 extern void ParsePathDataAttribute (/* Attribute attr,
                                        Element el,
                                        Document doc */);
-extern void GraphMLAttributeComplete (/* Attribute attr,
+extern void SVGAttributeComplete (/* Attribute attr,
                                          Element el,
                                          Document doc */);
 

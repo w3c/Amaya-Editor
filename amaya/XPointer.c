@@ -29,7 +29,7 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "MathML.h"
-#include "GraphML.h"
+#include "SVG.h"
 #include "XLink.h"
 #ifdef ANNOTATIONS
 #include "Annot.h"
@@ -332,8 +332,8 @@ static char * GetIdValue (Element el)
     return NULL;
   else if (!strcmp (schema_name, "MathML"))
     attrType.AttrTypeNum = MathML_ATTR_id;
-  else if (!strcmp (schema_name, "GraphML"))
-    attrType.AttrTypeNum = GraphML_ATTR_id;
+  else if (!strcmp (schema_name, "SVG"))
+    attrType.AttrTypeNum = SVG_ATTR_id;
   else
     attrType.AttrTypeNum = HTML_ATTR_ID;
 
@@ -819,7 +819,7 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
       && strcmp(schemaName, "XHTML")
       && strcmp(schemaName, "XML")
       && strcmp(schemaName, "MathML")
-      && strcmp(schemaName, "GraphML")
+      && strcmp(schemaName, "SVG")
       && strcmp(schemaName, "Annot"))
     return NULL;
 

@@ -157,7 +157,7 @@ STRUCT
 	Object;							{ OBJECT }
 	Applet;							{ APPLET }
 	MathML;						        { MATH }
-        GraphML;		                                { SVG }
+        SVG;			                                { SVG }
 	map; MAP;						{ MAP }
 	XLink;							{ Annotations }
 	SVG_Image						{ GRAPHIC }
@@ -177,7 +177,7 @@ STRUCT
 		  hspace; vspace) =
 		{ hspace  vspace }
 		 SVG_ImageContent;
-	SVG_ImageContent  = GraphML;
+	SVG_ImageContent  = SVG;
 	END;
 
 	HTMLfragment = LIST OF (Element);

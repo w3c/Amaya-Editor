@@ -19,8 +19,8 @@
 #include "css.h"
 #include "XLink.h"
 #include "MathML.h"
-#ifdef GRAPHML
-#include "GraphML.h"
+#ifdef _SVG
+#include "SVG.h"
 #endif
 
 static char        *TargetDocumentURL = NULL;
@@ -34,8 +34,8 @@ static int          OldHeight;
 #include "EDITORactions_f.h"
 #include "fetchHTMLname_f.h"
 #include "fetchXMLname_f.h"
-#ifdef GRAPHML
-#include "GraphMLbuilder_f.h"
+#ifdef _SVG
+#include "SVGbuilder_f.h"
 #endif
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
@@ -626,13 +626,13 @@ Attribute           GetNameAttr (Document doc, Element selectedElement)
 		 attr = TtaGetAttribute (selectedElement, attrType);
 		 }
 	       }
-#ifdef GRAPHML
+#ifdef _SVG
 	    if (!attr)
 	       {
-	       attrType.AttrSSchema = TtaGetSSchema ("GraphML", doc);
+	       attrType.AttrSSchema = TtaGetSSchema ("SVG", doc);
 	       if (attrType.AttrSSchema)
 		 {
-		 attrType.AttrTypeNum = GraphML_ATTR_id;
+		 attrType.AttrTypeNum = SVG_ATTR_id;
 		 attr = TtaGetAttribute (selectedElement, attrType);
 		 }
 	       }
@@ -687,11 +687,11 @@ void CreateTargetAnchor (Document doc, Element el, ThotBool forceID,
 	 attrType.AttrTypeNum = MathML_ATTR_id;
        }
      else
-#ifdef GRAPHML
-     if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
+#ifdef _SVG
+     if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG") == 0)
        {
 	 attrType.AttrSSchema = elType.ElSSchema;
-	 attrType.AttrTypeNum = GraphML_ATTR_id;
+	 attrType.AttrTypeNum = SVG_ATTR_id;
        }
      else
 #endif
@@ -1136,11 +1136,11 @@ void MakeUniqueName (Element el, Document doc)
          id attribute from the same namespace */
       attrType.AttrTypeNum = MathML_ATTR_id;
     else
-#ifdef GRAPHML
-      if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+#ifdef _SVG
+      if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG"))
 	/* it's an element from the SVG namespace, look for the
 	   id attribute from the same namespace */
-	attrType.AttrTypeNum = GraphML_ATTR_id;
+	attrType.AttrTypeNum = SVG_ATTR_id;
       else
 #endif
 	attrType.AttrTypeNum = 0;
@@ -1318,8 +1318,8 @@ void         CreateRemoveIDAttribute (char *elName, Document doc, ThotBool creat
     }
   else if (!strcmp (schema_name, "MathML"))
     attrType.AttrTypeNum = MathML_ATTR_id;
-  else if (!strcmp (schema_name, "GraphML"))
-    attrType.AttrTypeNum = GraphML_ATTR_id;
+  else if (!strcmp (schema_name, "SVG"))
+    attrType.AttrTypeNum = SVG_ATTR_id;
 
   /* we didn't find an attribute or we can't put an ID attribute
      in this element */
@@ -2672,15 +2672,15 @@ Element    SearchAnchor (Document doc, Element element, Attribute *HrefAttr,
 	     }
 	 }
        else if (!attr &&
-		!strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+		!strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
 	 /* the current element belongs to the SVG namespace */
 	 {
-	   if (elType.ElTypeNum == GraphML_EL_use_ ||
-	       elType.ElTypeNum == GraphML_EL_a)
+	   if (elType.ElTypeNum == SVG_EL_use_ ||
+	       elType.ElTypeNum == SVG_EL_a)
 	     /* look for the corresponding href attribute */
 	     {
 	       attrType.AttrSSchema = elType.ElSSchema;
-	       attrType.AttrTypeNum = GraphML_ATTR_xlink_href;
+	       attrType.AttrTypeNum = SVG_ATTR_xlink_href;
 	       attr = TtaGetAttribute (ancestor, attrType);
 	     }
 	 }

@@ -15,9 +15,9 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
-#ifdef GRAPHML
-#include "GraphML.h"
-#endif /* GRAPHML */
+#ifdef _SVG
+#include "SVG.h"
+#endif /* _SVG */
 #ifdef _WINDOWS
 #include "wininclude.h"
 #endif /* _WINDOWS */
@@ -357,13 +357,13 @@ char *CssToPrint (Document doc, char *printdir)
 	      elType.ElTypeNum = HTML_EL_STYLE_;
 	      el = head;
 	    }
-#ifdef GRAPHML
-	  else if (!strcmp (name, "GraphML"))
+#ifdef _SVG
+	  else if (!strcmp (name, "SVG"))
 	    {
-	    elType.ElTypeNum = GraphML_EL_style__;
+	    elType.ElTypeNum = SVG_EL_style__;
 	    head = el;
 	    }
-#endif /* GRAPHML */
+#endif /* _SVG */
 	  else
 	    {
 	      el = NULL;

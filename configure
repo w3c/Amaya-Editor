@@ -18,7 +18,7 @@ ac_help="$ac_help
 ac_help="$ac_help
   --with-gtk              use GTK instead of Motif"
 ac_help="$ac_help
-  --disable-graph         remove Graphics support "
+  --disable-svg           remove SVG support "
 ac_help="$ac_help
   --disable-annot         remove Annotations support "
 
@@ -938,7 +938,7 @@ if test "$ac_test_CFLAGS" = set; then
   CFLAGS="$ac_save_CFLAGS"
 elif test $ac_cv_prog_cc_g = yes; then
   if test "$GCC" = yes; then
-    CFLAGS="-O2"
+    CFLAGS="-g "
   else
     CFLAGS="-g"
   fi
@@ -6352,7 +6352,7 @@ if test "${GCC}" = "yes"; then
 fi
 
 
-AMAYA_VER="5.1"
+AMAYA_VER="6.0"
 
 CEXTRACT_VER="1.7"
 CEXTRACT_FLAGS="+O"
@@ -6385,9 +6385,9 @@ else
 fi
 
  
-# Check whether --enable-graph or --disable-graph was given.
-if test "${enable_graph+set}" = set; then
-  enableval="$enable_graph"
+# Check whether --enable-svg or --disable-svg was given.
+if test "${enable_svg+set}" = set; then
+  enableval="$enable_svg"
   :
 fi
 
@@ -6407,11 +6407,11 @@ if test "$with_plugin" = "" ; then
   fi
 fi  
 
-if test "$with_graph" = "" ; then
-    if test "$enable_graph" = "no" ; then
-	with_graph="no"
+if test "$with_svg" = "" ; then
+    if test "$enable_svg" = "no" ; then
+	with_svg="no"
     else
-	with_graph="yes"
+	with_svg="yes"
     fi
 fi
 
@@ -6440,12 +6440,12 @@ if test "$build_amaya" = "yes" ; then
 	fi
     fi
 
-    if test ! -f $srcdir/amaya/GraphML.S ; then
-	if test "$with_graph" = "yes" ; then
-	    echo "configure: warning: GraphML sources not found !!" 1>&2
-	    echo "configure: warning: Disabling Graphics build !" 1>&2
-	    with_graph="no"
-	    GRAPH_OPTIONS=
+    if test ! -f $srcdir/amaya/SVG.S ; then
+	if test "$with_svg" = "yes" ; then
+	    echo "configure: warning: SVG sources not found !!" 1>&2
+	    echo "configure: warning: Disabling SVG build !" 1>&2
+	    with_svg="no"
+	    SVG_OPTIONS=
 	fi
     fi
 
@@ -6467,7 +6467,7 @@ fi
 
 
 THOT_OPTIONS="$GTK_OPTIONS"
-AMAYA_OPTIONS="$MATH_OPTIONS $GRAPH_OPTIONS $GTK_OPTIONS"
+AMAYA_OPTIONS="$MATH_OPTIONS $SVG_OPTIONS $GTK_OPTIONS"
 #PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
 AMAYA_ANNOT_OPTIONS=
 IMGLIBS="-ljpeg -lpng -lz"
@@ -6532,12 +6532,12 @@ else
     math_frag=$srcdir/amaya/Makefile.math
 fi
 
-if test "$with_graph" = "no" ; then
+if test "$with_svg" = "no" ; then
     
-    graph_frag=/dev/null
+    svg_frag=/dev/null
 else
     
-    graph_frag=$srcdir/amaya/Makefile.graph
+    svg_frag=$srcdir/amaya/Makefile.svg
 fi
 
 if test "$with_annot" = "yes" ; then
@@ -6780,8 +6780,8 @@ s%@plugin_frag@%%g
 s%@www_frag@%%g
 /@math_frag@/r $math_frag
 s%@math_frag@%%g
-/@graph_frag@/r $graph_frag
-s%@graph_frag@%%g
+/@svg_frag@/r $svg_frag
+s%@svg_frag@%%g
 /@annot_frag@/r $annot_frag
 s%@annot_frag@%%g
 s%@EXTRA_MAKEFILE_IN@%$EXTRA_MAKEFILE_IN%g
@@ -7028,8 +7028,8 @@ if test "$build_amaya" = "yes" ; then
     if test "$with_math" = "yes" ; then
 	echo Amaya configured with Math support
     fi
-    if test "$with_graph" = "yes" ; then
-	echo Amaya configured with Graph support
+    if test "$with_svg" = "yes" ; then
+	echo Amaya configured with SVG support
     fi
     if test "$with_annot" = "yes" ; then
 	echo Amaya configured with Annotations support

@@ -41,7 +41,7 @@
 #include "styleparser_f.h"
 #include "XHTMLbuilder_f.h"
 #include "MathMLbuilder_f.h"
-#include "GraphMLbuilder_f.h"
+#include "SVGbuilder_f.h"
 #ifdef XML_GENERIC
 #include "Xmlbuilder_f.h"
 #endif /* XML_GENERIC */
@@ -113,7 +113,7 @@ static PtrParserCtxt	XmlGenericParserCtxt = NULL;
 #define MAX_URI_NAME_LENGTH  60
 #define XHTML_URI            "http://www.w3.org/1999/xhtml"
 #define MathML_URI           "http://www.w3.org/1998/Math/MathML"
-#define GraphML_URI          "http://www.w3.org/2000/svg"
+#define SVG_URI          "http://www.w3.org/2000/svg"
 #define XLink_URI            "http://www.w3.org/1999/xlink"
 #define NAMESPACE_URI        "http://www.w3.org/XML/1998/namespace"
 
@@ -255,7 +255,7 @@ static void     ChangeXmlParserContextTagName (char *tagName)
   else
     if (!strcmp (tagName, "svg") ||
 	!strcmp (tagName, "xmlgraphics"))
-      ChangeXmlParserContextDTD ("GraphML");
+      ChangeXmlParserContextDTD ("SVG");
     else
       if (!strcmp (tagName, "html"))
 	ChangeXmlParserContextDTD ("HTML");
@@ -347,19 +347,19 @@ static void    InitXmlParserContexts (void)
       prevCtxt->NextParserCtxt = ctxt;
    ctxt->NextParserCtxt = NULL;
    ctxt->SSchemaName = TtaGetMemory (MAX_SS_NAME_LENGTH);
-   strcpy (ctxt->SSchemaName, "GraphML");
+   strcpy (ctxt->SSchemaName, "SVG");
    ctxt->UriName = TtaGetMemory (MAX_URI_NAME_LENGTH);
-   strcpy (ctxt->UriName, GraphML_URI);
+   strcpy (ctxt->UriName, SVG_URI);
    ctxt->XMLSSchema = NULL;
    ctxt->XMLtype = GRAPH_TYPE;
-   ctxt->MapAttribute = (Proc) MapGraphMLAttribute;
-   ctxt->MapAttributeValue = (Proc) MapGraphMLAttributeValue;
-   ctxt->EntityCreated = (Proc) GraphMLEntityCreatedWithExpat;
+   ctxt->MapAttribute = (Proc) MapSVGAttribute;
+   ctxt->MapAttributeValue = (Proc) MapSVGAttributeValue;
+   ctxt->EntityCreated = (Proc) SVGEntityCreatedWithExpat;
    ctxt->CheckContext = (Proc) XmlCheckContext;
    ctxt->CheckInsert = (Proc) XmlCheckInsert;
-   ctxt->ElementComplete = (Proc) GraphMLElementComplete;
-   ctxt->AttributeComplete = (Proc) GraphMLAttributeComplete;
-   ctxt->GetDTDName = (Proc) GraphMLGetDTDName;
+   ctxt->ElementComplete = (Proc) SVGElementComplete;
+   ctxt->AttributeComplete = (Proc) SVGAttributeComplete;
+   ctxt->GetDTDName = (Proc) SVGGetDTDName;
    ctxt->DefaultLineBreak = TRUE;
    ctxt->DefaultLeadingSpace = TRUE;   
    ctxt->DefaultTrailingSpace = TRUE;  
@@ -1551,7 +1551,7 @@ static void       StartOfXmlStartElement (char *uriName, char *elementName)
     {
       if (strcmp (currentParserCtxt->SSchemaName, "HTML") == 0)
 	strcpy (schemaName, "XHTML");
-      else if (strcmp (currentParserCtxt->SSchemaName, "GraphML") == 0)
+      else if (strcmp (currentParserCtxt->SSchemaName, "SVG") == 0)
 	strcpy (schemaName, "SVG");
       else
 	strcpy (schemaName, currentParserCtxt->SSchemaName);
@@ -1736,7 +1736,7 @@ static void       EndOfXmlElement (char *uriName, char *elementName)
      {
        if (strcmp (currentParserCtxt->SSchemaName, "HTML") == 0)
 	 strcpy (schemaName, "XHTML");
-       else if (strcmp (currentParserCtxt->SSchemaName, "GraphML") == 0)
+       else if (strcmp (currentParserCtxt->SSchemaName, "SVG") == 0)
 	 strcpy (schemaName, "SVG");
        else
 	 strcpy (schemaName, currentParserCtxt->SSchemaName);
@@ -2158,7 +2158,7 @@ static void         EndOfXmlAttributeName (char *attrName,
    if (attrType.AttrTypeNum <= 0)
      /* this attribute is not in a mapping table */
      {
-       if (strcmp (currentParserCtxt->SSchemaName, "GraphML") == 0)
+       if (strcmp (currentParserCtxt->SSchemaName, "SVG") == 0)
 	 strcpy (schemaName, "SVG");
        else
 	 strcpy (schemaName, currentParserCtxt->SSchemaName);
@@ -2471,7 +2471,7 @@ static void     CreateXmlEntity (char *data, int length)
 	   /* Entity not supported */
 	   if (strcmp (currentParserCtxt->SSchemaName, "HTML") == 0)
 	     strcpy (schemaName, "XHTML");
-	   else if (strcmp (currentParserCtxt->SSchemaName, "GraphML") == 0)
+	   else if (strcmp (currentParserCtxt->SSchemaName, "SVG") == 0)
 	     strcpy (schemaName, "SVG");
 	   else
 	     strcpy (schemaName, currentParserCtxt->SSchemaName);
@@ -3830,11 +3830,11 @@ Element         ChangeSvgImageType (Element el, Document doc)
 	    }
 	}
     }
-  else if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0) &&
-	   elType.ElTypeNum == GraphML_EL_PICTURE_UNIT)
+  else if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG") == 0) &&
+	   elType.ElTypeNum == SVG_EL_PICTURE_UNIT)
     {
       /* create a SVG_Image element within a SVG element*/
-      elType.ElTypeNum = GraphML_EL_SVG_Image;
+      elType.ElTypeNum = SVG_EL_SVG_Image;
       svgImageContent = TtaNewElement (doc, elType);
       if (svgImageContent != NULL)
 	{
@@ -3914,7 +3914,7 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
       if (svgEl == NULL)
 	return FALSE;
       InitializeXmlParsingContext (doc, svgEl, isclosed, TRUE);
-      ChangeXmlParserContextDTD ("GraphML");
+      ChangeXmlParserContextDTD ("SVG");
       /* When we parse an external xml file, we don't consider comments and PI */
       IgnoreCommentAndPi = TRUE;
     }
@@ -4403,8 +4403,8 @@ void StartXmlParser (Document doc,
       /* Select root context */
       if (strcmp (TtaGetSSchemaName (DocumentSSchema), "HTML") == 0)
 	ChangeXmlParserContextDTD ("HTML");
-      else if (strcmp (TtaGetSSchemaName (DocumentSSchema), "GraphML") == 0)
-	ChangeXmlParserContextDTD ("GraphML");
+      else if (strcmp (TtaGetSSchemaName (DocumentSSchema), "SVG") == 0)
+	ChangeXmlParserContextDTD ("SVG");
       else if (strcmp (TtaGetSSchemaName (DocumentSSchema), "MathML") == 0)
 	ChangeXmlParserContextDTD ("MathML");
       else

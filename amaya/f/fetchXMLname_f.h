@@ -8,7 +8,7 @@
 
 extern SSchema GetXHTMLSSchema ( Document doc );
 extern SSchema GetMathMLSSchema ( Document doc );
-extern SSchema GetGraphMLSSchema ( Document doc );
+extern SSchema GetSVGSSchema ( Document doc );
 extern SSchema GetXLinkSSchema ( Document doc );
 extern SSchema GetGenericXMLSSchema ( Document doc );
 extern SSchema GetGenericXMLSSchemaByUri ( char *uriName,
@@ -45,7 +45,7 @@ extern void MapEntityByCode ( int entityValue,
 
 extern SSchema GetXHTMLSSchema (/* Document doc */);
 extern SSchema GetMathMLSSchema (/* Document doc */);
-extern SSchema GetGraphMLSSchema (/* Document doc */);
+extern SSchema GetSVGSSchema (/* Document doc */);
 extern SSchema GetXLinkSSchema (/* Document doc */);
 extern SSchema GetGenericXMLSSchema (/* Document doc */);
 extern SSchema GetGenericXMLSSchemaByUri (/* char *uriName,

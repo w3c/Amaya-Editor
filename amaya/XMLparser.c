@@ -129,8 +129,8 @@ static Element	    commentText = NULL;	  /* Text element representing the
 					     contents of the current comment */
 
 #include "MathMLbuilder_f.h"
-#ifdef GRAPHML
-#include "GraphMLbuilder_f.h"
+#ifdef _SVG
+#include "SVGbuilder_f.h"
 #endif
 #include "XLinkbuilder_f.h"
 #include "fetchXMLname_f.h"
@@ -166,24 +166,24 @@ static void            InitParserContexts (void)
    ctxt->AttributeComplete = (Proc) MathMLAttributeComplete;
    ctxt->GetDTDName = (Proc) MathMLGetDTDName;
    prevCtxt = ctxt;
-#ifdef GRAPHML
-   /* create and initialize a context for the GraphML parser */
+#ifdef _SVG
+   /* create and initialize a context for the SVG parser */
    ctxt = TtaGetMemory (sizeof (XMLparserContext));
    prevCtxt->NextParserCtxt = ctxt;
    ctxt->NextParserCtxt = NULL;	/* last context */
    ctxt->SSchemaName = TtaGetMemory (MAX_SS_NAME_LENGTH);
-   strcpy (ctxt->SSchemaName, "GraphML");
+   strcpy (ctxt->SSchemaName, "SVG");
    ctxt->XMLSSchema = NULL;
    ctxt->XMLtype = GRAPH_TYPE;
-   ctxt->MapAttribute = (Proc) MapGraphMLAttribute;
-   ctxt->MapAttributeValue = (Proc) MapGraphMLAttributeValue;
-   ctxt->MapEntity = (Proc) MapGraphMLEntity;
-   ctxt->EntityCreated = (Proc) GraphMLEntityCreated;
-   ctxt->ElementComplete = (Proc) GraphMLElementComplete;
-   ctxt->AttributeComplete = (Proc) GraphMLAttributeComplete;
-   ctxt->GetDTDName = (Proc) GraphMLGetDTDName;
+   ctxt->MapAttribute = (Proc) MapSVGAttribute;
+   ctxt->MapAttributeValue = (Proc) MapSVGAttributeValue;
+   ctxt->MapEntity = (Proc) MapSVGEntity;
+   ctxt->EntityCreated = (Proc) SVGEntityCreated;
+   ctxt->ElementComplete = (Proc) SVGElementComplete;
+   ctxt->AttributeComplete = (Proc) SVGAttributeComplete;
+   ctxt->GetDTDName = (Proc) SVGGetDTDName;
    prevCtxt = ctxt;
-#endif /* GRAPHML */
+#endif /* _SVG */
    /* create and initialize a context for the XLink parser */
    ctxt = TtaGetMemory (sizeof (XMLparserContext));
    prevCtxt->NextParserCtxt = ctxt;

@@ -16,7 +16,7 @@
 /* Included headerfiles */
 #define THOT_EXPORT extern
 #include "amaya.h"
-#include "GraphML.h"
+#include "SVG.h"
 
 #include "init_f.h"
 #include "query_f.h"
@@ -809,7 +809,7 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 	  /* prepare the attribute to be searched */
 	  elType = TtaGetElementType (el);
 	  attrType.AttrSSchema = elType.ElSSchema;
-	  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+	  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
 	    /* it's not a SVG element, it's then a HTML img element */
 	    {
 	    attrType.AttrTypeNum = HTML_ATTR_SRC;
@@ -817,7 +817,7 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 	    }
           else
 	    {
-            attrType.AttrTypeNum = GraphML_ATTR_xlink_href;
+            attrType.AttrTypeNum = SVG_ATTR_xlink_href;
 	    elAttr = TtaGetParent (el);
 	    }
 	  attr = TtaGetAttribute (elAttr, attrType);
@@ -1032,10 +1032,10 @@ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
 
    /* Now, load all SVG images */
    /* prepare the attribute to be searched */
-   attrType.AttrSSchema = TtaGetSSchema ("GraphML", doc);
+   attrType.AttrSSchema = TtaGetSSchema ("SVG", doc);
    if (attrType.AttrSSchema)
      {
-       attrType.AttrTypeNum = GraphML_ATTR_xlink_href;
+       attrType.AttrTypeNum = SVG_ATTR_xlink_href;
        /* Search the next element having an attribute xlink_href */
        /* Start from the root element */
        if (elSubTree == NULL)
@@ -1073,7 +1073,7 @@ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
 
 	       /* get the PICTURE_UNIT element within the image element */
 	       elType = TtaGetElementType (el);
-	       elType.ElTypeNum = GraphML_EL_PICTURE_UNIT;
+	       elType.ElTypeNum = SVG_EL_PICTURE_UNIT;
 	       pic = TtaSearchTypedElement (elType, SearchInTree, el);
 	       if (pic)
 		 {

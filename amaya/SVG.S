@@ -1,13 +1,13 @@
 
       { Thot structure schema for Scalable Vector Graphics }
 
-STRUCTURE GraphML;
+STRUCTURE SVG;
 
-DEFPRES GraphMLP;
+DEFPRES SVGP;
 
 ATTR
 
-   { global attributes for all GraphML elements }
+   { global attributes for all SVG elements }
    id = text;
    class = text;
    PseudoClass = Text;
@@ -24,7 +24,7 @@ ATTR
 
 STRUCT
 
-   GraphML
+   SVG
 	(ATTR viewBox = text;
 	      x = text;
               y = text;
@@ -288,7 +288,7 @@ STRUCT
 	= CASE OF
 	      desc; title; metadata; defs;
 	      path; text_; rect; circle; ellipse; line_; polyline; polygon;
-	      use_; image; GraphML; g; a;
+	      use_; image; SVG; g; a;
 	      script; style__; symbol_;
 	      foreignObject; XLink;
 	      END;
@@ -312,7 +312,7 @@ STRUCT
 	      metadata;
 	      END;
 	
-   SVG_Image = GraphML;
+   SVG_Image = SVG;
    
    XMLcomment = LIST OF (XMLcomment_line = TEXT);
 
@@ -320,7 +320,7 @@ STRUCT
 
 EXCEPT
 
-   GraphML:             IsDraw, MoveResize, NoMove;
+   SVG:                 IsDraw, MoveResize, NoMove;
    g:                   NoMove, NoResize, HighlightChildren, NoShowBox,
                         NoCreate;
    defs:                NoMove, NoResize, NoShowBox, NoCreate;

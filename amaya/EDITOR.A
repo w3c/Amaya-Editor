@@ -10,8 +10,8 @@ USES
        , XLink
 #endif
        , MathML
-#ifdef GRAPHML
-       , GraphML
+#ifdef _SVG
+       , SVG
 #endif
        , TableH;
 

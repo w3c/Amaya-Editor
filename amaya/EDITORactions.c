@@ -254,7 +254,7 @@ void InitializeNewDoc (char *url, int docType, Document doc)
       DocumentMeta[doc]->xmlformat = TRUE;
 
       /* Search the first element to set initial selection */
-      elType.ElTypeNum = GraphML_EL_GraphicsElement;
+      elType.ElTypeNum = SVG_EL_GraphicsElement;
       el = TtaSearchTypedElement (elType, SearchInTree, docEl);
       el = TtaGetFirstLeaf (el);
       /* set the initial selection */

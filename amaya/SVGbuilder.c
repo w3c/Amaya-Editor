@@ -7,7 +7,7 @@
  
 /*
  *
- * GraphMLbuilder
+ * SVGbuilder
  *
  * Authors: V. Quint
  *          I. Vatton
@@ -16,17 +16,17 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
-#include "GraphML.h"
+#include "SVG.h"
 #include "HTML.h"
 #include "parser.h"
 #include "style.h"
 
 /* mapping table of attribute values */
 
-static AttrValueMapping GraphMLAttrValueMappingTable[] =
+static AttrValueMapping SVGAttrValueMappingTable[] =
 { 
-   {GraphML_ATTR_xml_space, "default", GraphML_ATTR_xml_space_VAL_xml_space_default},
-   {GraphML_ATTR_xml_space, "preserve", GraphML_ATTR_xml_space_VAL_xml_space_preserve},
+   {SVG_ATTR_xml_space, "default", SVG_ATTR_xml_space_VAL_xml_space_default},
+   {SVG_ATTR_xml_space, "preserve", SVG_ATTR_xml_space_VAL_xml_space_preserve},
    {0, "", 0}			/* Last entry. Mandatory */
 };
 
@@ -40,12 +40,12 @@ static AttrValueMapping GraphMLAttrValueMappingTable[] =
 #include "Xml2thot_f.h"
 
 /*----------------------------------------------------------------------
-   GraphMLGetDTDName
+   SVGGetDTDName
    Return in DTDname the name of the DTD to be used for parsing the
    content of element named elementName.
    This element type appear with an 'X' in the ElemMappingTable.
   ----------------------------------------------------------------------*/
-void      GraphMLGetDTDName (char *DTDname, char *elementName)
+void      SVGGetDTDName (char *DTDname, char *elementName)
 {
    if (strcmp (elementName, "math") == 0)
       strcpy (DTDname, "MathML");
@@ -54,65 +54,65 @@ void      GraphMLGetDTDName (char *DTDname, char *elementName)
 }
 
 /*----------------------------------------------------------------------
-   MapGraphMLAttribute
+   MapSVGAttribute
    Search in the Attribute Mapping Table the entry for the
    attribute of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
-void   MapGraphMLAttribute (char *attrName, AttributeType *attrType,
+void   MapSVGAttribute (char *attrName, AttributeType *attrType,
 			    char* elementName, ThotBool *level, Document doc)
 {
-  attrType->AttrSSchema = GetGraphMLSSchema (doc);
+  attrType->AttrSSchema = GetSVGSSchema (doc);
   MapXMLAttribute (GRAPH_TYPE, attrName, elementName, level, doc, &(attrType->AttrTypeNum));
 }
 
 /*----------------------------------------------------------------------
-   MapGraphMLAttributeValue
+   MapSVGAttributeValue
    Search in the Attribute Value Mapping Table the entry for the attribute
    ThotAtt and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
-void    MapGraphMLAttributeValue (char* AttrVal, AttributeType attrType, int *value)
+void    MapSVGAttributeValue (char* AttrVal, AttributeType attrType, int *value)
 {
    int                 i;
 
    *value = 0;
    i = 0;
-   while (GraphMLAttrValueMappingTable[i].ThotAttr != attrType.AttrTypeNum &&
-	  GraphMLAttrValueMappingTable[i].ThotAttr != 0)
+   while (SVGAttrValueMappingTable[i].ThotAttr != attrType.AttrTypeNum &&
+	  SVGAttrValueMappingTable[i].ThotAttr != 0)
      i++;
-   if (GraphMLAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum)
+   if (SVGAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum)
      do
-       if (!strcmp (GraphMLAttrValueMappingTable[i].XMLattrValue, AttrVal))
-	 *value = GraphMLAttrValueMappingTable[i].ThotAttrValue;
+       if (!strcmp (SVGAttrValueMappingTable[i].XMLattrValue, AttrVal))
+	 *value = SVGAttrValueMappingTable[i].ThotAttrValue;
        else
 	 i++;
      while (*value == 0 &&
-	    GraphMLAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum);
+	    SVGAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum);
 }
 
 /*----------------------------------------------------------------------
-   MapGraphMLEntity
+   MapSVGEntity
    Search that entity in the entity table and return the corresponding value.
   ----------------------------------------------------------------------*/
-void   MapGraphMLEntity (char *entityName, char *entityValue, char *alphabet)
+void   MapSVGEntity (char *entityName, char *entityValue, char *alphabet)
 {
   entityValue[0] = EOS;
   *alphabet = EOS;
 }
 
 /*----------------------------------------------------------------------
-   GraphMLEntityCreated
-   A GraphML entity has been created by the XML parser.
+   SVGEntityCreated
+   A SVG entity has been created by the XML parser.
   ----------------------------------------------------------------------*/
-void    GraphMLEntityCreated (unsigned char *entityValue, Language lang,
+void    SVGEntityCreated (unsigned char *entityValue, Language lang,
 			      char *entityName, Document doc)
 {
 }
 
 /*----------------------------------------------------------------------
-   GraphMLEntityCreatedWithExpat
-   A GraphML entity has been created by the XML parser.
+   SVGEntityCreatedWithExpat
+   A SVG entity has been created by the XML parser.
   ----------------------------------------------------------------------*/
-void  GraphMLEntityCreatedWithExpat (int         entityValue,
+void  SVGEntityCreatedWithExpat (int         entityValue,
 				     char *     entityName,
 				     ThotBool    entityFound,
 				     ParserData *XmlContext)
@@ -138,11 +138,11 @@ void   ParseFillStrokeAttributes (int attrType, Attribute attr, Element el, Docu
       /* get the value of the attribute */
       TtaGiveTextAttributeValue (attr, text, &length);
       /* builds the equivalent CSS rule */
-      if (attrType == GraphML_ATTR_fill)
+      if (attrType == SVG_ATTR_fill)
 	  sprintf (css_command, "fill: %s", text);
-      else if (attrType == GraphML_ATTR_stroke)
+      else if (attrType == SVG_ATTR_stroke)
           sprintf (css_command, "stroke: %s", text);
-      else if (attrType == GraphML_ATTR_stroke_width)
+      else if (attrType == SVG_ATTR_stroke_width)
           sprintf (css_command, "stroke-width: %s", text);
       /* parse the CSS rule */
       ParseHTMLSpecificStyle (el, css_command, doc, 0, delete);
@@ -168,7 +168,7 @@ static Element CreateGraphicalLeaf (char shape, Element el, Document doc)
     /* there is a child element */
     {
       elType = TtaGetElementType (child);
-      if (elType.ElTypeNum == GraphML_EL_GRAPHICS_UNIT)
+      if (elType.ElTypeNum == SVG_EL_GRAPHICS_UNIT)
 	{
 	  oldShape = TtaGetGraphicsShape (child);
 	  leaf = child;
@@ -181,7 +181,7 @@ static Element CreateGraphicalLeaf (char shape, Element el, Document doc)
   if (leaf == NULL)
     /* create the graphical element */
     {
-      elType.ElTypeNum = GraphML_EL_GRAPHICS_UNIT;
+      elType.ElTypeNum = SVG_EL_GRAPHICS_UNIT;
       leaf = TtaNewElement (doc, elType);
       if (child == NULL)
 	TtaInsertFirstChild (&leaf, el, doc);
@@ -209,35 +209,35 @@ static Element  CreateGraphicLeaf (Element el, Document doc, ThotBool *closed)
    elType = TtaGetElementType (el);
    switch (elType.ElTypeNum)
      {
-     case GraphML_EL_rect:
+     case SVG_EL_rect:
        leaf = CreateGraphicalLeaf ('C', el, doc);
        *closed = TRUE;
        break;
 
-     case GraphML_EL_circle:
+     case SVG_EL_circle:
        leaf = CreateGraphicalLeaf ('a', el, doc);
        *closed = TRUE;
        break;
 
-     case GraphML_EL_ellipse:
+     case SVG_EL_ellipse:
        leaf = CreateGraphicalLeaf ('c', el, doc);
        *closed = TRUE;
        break;
 
-     case GraphML_EL_line_:
+     case SVG_EL_line_:
        leaf = CreateGraphicalLeaf ('g', el, doc);
        break;
 
-     case GraphML_EL_polyline:
+     case SVG_EL_polyline:
        leaf = CreateGraphicalLeaf ('S', el, doc);
        break;
 
-     case GraphML_EL_polygon:
+     case SVG_EL_polygon:
        leaf = CreateGraphicalLeaf ('p', el, doc);
        *closed = TRUE;
        break;
 
-     case GraphML_EL_path:
+     case SVG_EL_path:
        leaf = CreateGraphicalLeaf (EOS, el, doc);
        *closed = FALSE;
        break;
@@ -288,11 +288,11 @@ void             SetGraphicDepths (Document doc, Element el)
   PresentationContext  ctxt;
 
   /* look for the SVG root */
-  graphSchema = GetGraphMLSSchema (doc);
+  graphSchema = GetSVGSSchema (doc);
   elType = TtaGetElementType (el);
-  if (elType.ElTypeNum != GraphML_EL_GraphML || elType.ElSSchema != graphSchema)
+  if (elType.ElTypeNum != SVG_EL_SVG || elType.ElSSchema != graphSchema)
     {
-      elType.ElTypeNum = GraphML_EL_GraphML;
+      elType.ElTypeNum = SVG_EL_SVG;
       elType.ElSSchema = graphSchema;
       el = TtaGetTypedAncestor (el, elType);
     }
@@ -334,7 +334,7 @@ void  CopyUseContent (Element el, Document doc, char *href)
      href attribute */
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = GraphML_ATTR_id;
+  attrType.AttrTypeNum = SVG_ATTR_id;
   /* search backwards first */
   direction = SearchBackward;
   source = NULL;
@@ -398,10 +398,10 @@ void  CopyUseContent (Element el, Document doc, char *href)
 }
 
 /*----------------------------------------------------------------------
-   GraphMLElementComplete
-   Check the Thot structure of the GraphML element el.
+   SVGElementComplete
+   Check the Thot structure of the SVG element el.
   ----------------------------------------------------------------------*/
-void GraphMLElementComplete (Element el, Document doc, int *error)
+void SVGElementComplete (Element el, Document doc, int *error)
 {
    ElementType		elType, parentType, newType;
    Element		child, parent, new, leaf;
@@ -409,26 +409,26 @@ void GraphMLElementComplete (Element el, Document doc, int *error)
    Attribute            attr;
    int                  length;
    PRule		fillPatternRule, newPRule;
-   SSchema	        GraphMLSSchema;
+   SSchema	        SVGSSchema;
    char                *text, *href;
    ThotBool		closedShape, parseCSS;
 
    *error = 0;
    elType = TtaGetElementType (el);
-   GraphMLSSchema = GetGraphMLSSchema (doc);
-   if (elType.ElSSchema != GraphMLSSchema)
-     /* this is not a GraphML element. It's the HTML element <XMLGraphics>, or
-	any other element containing a GraphML expression */
+   SVGSSchema = GetSVGSSchema (doc);
+   if (elType.ElSSchema != SVGSSchema)
+     /* this is not a SVG element. It's the HTML element <XMLGraphics>, or
+	any other element containing a SVG expression */
      {
      if (TtaGetFirstChild (el) == NULL && !TtaIsLeaf (elType))
-	/* this element is empty. Create a GraphML element as it's child */
+	/* this element is empty. Create a SVG element as it's child */
 	{
-	newType.ElSSchema = GraphMLSSchema;
-	newType.ElTypeNum = GraphML_EL_GraphML;
+	newType.ElSSchema = SVGSSchema;
+	newType.ElTypeNum = SVG_EL_SVG;
 	new = TtaNewElement (doc, newType);
 	TtaInsertFirstChild (&new, el, doc);
-	/* Create a placeholder within the GraphML element */
-        newType.ElTypeNum = GraphML_EL_GraphicsElement;
+	/* Create a placeholder within the SVG element */
+        newType.ElTypeNum = SVG_EL_GraphicsElement;
 	child = TtaNewElement (doc, newType);
 	TtaInsertFirstChild (&child, new, doc);
 	}
@@ -436,17 +436,17 @@ void GraphMLElementComplete (Element el, Document doc, int *error)
    else
      {
      /* if the parent element is defined by a different SSchema, insert
-        a GraphML root element between the element and its parent */
+        a SVG root element between the element and its parent */
      parent = TtaGetParent (el);
      if (parent)
         {
         parentType = TtaGetElementType (parent);
         if (parentType.ElSSchema != elType.ElSSchema)
            {
-           if (elType.ElTypeNum != GraphML_EL_GraphML)
+           if (elType.ElTypeNum != SVG_EL_SVG)
 	      {
-	      newType.ElSSchema = GraphMLSSchema;
-	      newType.ElTypeNum = GraphML_EL_GraphML;
+	      newType.ElSSchema = SVGSSchema;
+	      newType.ElTypeNum = SVG_EL_SVG;
 	      CreateEnclosingElement (el, newType, doc);
 	      }
 	   else
@@ -457,21 +457,21 @@ void GraphMLElementComplete (Element el, Document doc, int *error)
 
      switch (elType.ElTypeNum)
        {
-       case GraphML_EL_image:
+       case SVG_EL_image:
 	 /* it's an image element, create a PICTURE_UNIT child */
 	 /* create the graphical element */
 	 newType.ElSSchema = elType.ElSSchema;
-	 newType.ElTypeNum = GraphML_EL_PICTURE_UNIT;
+	 newType.ElTypeNum = SVG_EL_PICTURE_UNIT;
 	 leaf = TtaNewElement (doc, newType);
 	 TtaInsertFirstChild (&leaf, el, doc);
 	 break;
 
-       case GraphML_EL_use_:
+       case SVG_EL_use_:
 	 /* it's a use element, make a transclusion of the element addressed
 	    by its xlink_href attribute after the last child */
          /* first, get the xlink:href attribute */
 	 attrType.AttrSSchema = elType.ElSSchema;
-	 attrType.AttrTypeNum = GraphML_ATTR_xlink_href;
+	 attrType.AttrTypeNum = SVG_ATTR_xlink_href;
 	 attr = TtaGetAttribute (el, attrType);
 	 if (attr)
 	   /* the use element has a xlink:href attribute */
@@ -485,11 +485,11 @@ void GraphMLElementComplete (Element el, Document doc, int *error)
 	   }
 	 break;
 
-       case GraphML_EL_style__:
+       case SVG_EL_style__:
 	 /* it's a style element, parse its contents as a style sheet */
 	 /* Search the  type attribute */
 	 attrType.AttrSSchema = elType.ElSSchema;
-	 attrType.AttrTypeNum = GraphML_ATTR_type;
+	 attrType.AttrTypeNum = SVG_ATTR_type;
 	 attr = TtaGetAttribute (el, attrType);
 	 parseCSS = FALSE;
 	 if (attr == NULL)
@@ -692,25 +692,25 @@ void ParseCoordAttribute (Attribute attr, Element el, Document doc)
 	{
 	  /* decide of the presentation rule to be created or updated */
 	  TtaGiveAttributeType (attr, &attrType, &attrKind);
-	  if (attrType.AttrTypeNum == GraphML_ATTR_x)
+	  if (attrType.AttrTypeNum == SVG_ATTR_x)
 	    ruleType = PRHorizPos;
-	  else if (attrType.AttrTypeNum == GraphML_ATTR_y)
+	  else if (attrType.AttrTypeNum == SVG_ATTR_y)
 	    ruleType = PRVertPos;
-	  else if (attrType.AttrTypeNum == GraphML_ATTR_cx)
+	  else if (attrType.AttrTypeNum == SVG_ATTR_cx)
 	    ruleType = PRHorizPos;
-	  else if (attrType.AttrTypeNum == GraphML_ATTR_cy)
+	  else if (attrType.AttrTypeNum == SVG_ATTR_cy)
 	    ruleType = PRVertPos;
-	  else if (attrType.AttrTypeNum == GraphML_ATTR_x1)
+	  else if (attrType.AttrTypeNum == SVG_ATTR_x1)
 	    ruleType = PRHorizPos;
-	  else if (attrType.AttrTypeNum == GraphML_ATTR_y1)
+	  else if (attrType.AttrTypeNum == SVG_ATTR_y1)
 	    ruleType = PRVertPos;
-	  else if (attrType.AttrTypeNum == GraphML_ATTR_x2)
+	  else if (attrType.AttrTypeNum == SVG_ATTR_x2)
 	    ruleType = PRWidth;
-	  else if (attrType.AttrTypeNum == GraphML_ATTR_y2)
+	  else if (attrType.AttrTypeNum == SVG_ATTR_y2)
 	    ruleType = PRHeight;
-	  else if (attrType.AttrTypeNum == GraphML_ATTR_dx)
+	  else if (attrType.AttrTypeNum == SVG_ATTR_dx)
 	    ruleType = PRHorizPos;
-	  else if (attrType.AttrTypeNum == GraphML_ATTR_dy)
+	  else if (attrType.AttrTypeNum == SVG_ATTR_dy)
 	    ruleType = PRVertPos;
 	  else
 	    return;
@@ -758,19 +758,19 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
    ctxt->destroy = FALSE;
    /* decide of the presentation rule to be created or updated */
    TtaGiveAttributeType (attr, &attrType, &attrKind);
-   if (attrType.AttrTypeNum == GraphML_ATTR_width_)
+   if (attrType.AttrTypeNum == SVG_ATTR_width_)
      ruleType = PRWidth;
-   else if (attrType.AttrTypeNum == GraphML_ATTR_height_)
+   else if (attrType.AttrTypeNum == SVG_ATTR_height_)
      ruleType = PRHeight;
-   else if (attrType.AttrTypeNum == GraphML_ATTR_r)
+   else if (attrType.AttrTypeNum == SVG_ATTR_r)
      ruleType = PRWidth;
-   else if (attrType.AttrTypeNum == GraphML_ATTR_rx)
-     if (elType.ElTypeNum == GraphML_EL_rect)
+   else if (attrType.AttrTypeNum == SVG_ATTR_rx)
+     if (elType.ElTypeNum == SVG_EL_rect)
        ruleType = PRXRadius;
      else
        ruleType = PRWidth;
-   else if (attrType.AttrTypeNum == GraphML_ATTR_ry)
-     if (elType.ElTypeNum == GraphML_EL_rect)
+   else if (attrType.AttrTypeNum == SVG_ATTR_ry)
+     if (elType.ElTypeNum == SVG_EL_rect)
        ruleType = PRYRadius;
      else
        ruleType = PRHeight;
@@ -822,11 +822,11 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
 		 ctxt->destroy = FALSE;
 	       }
 	   }
-	 if ((elType.ElTypeNum == GraphML_EL_ellipse ||
-	      elType.ElTypeNum == GraphML_EL_circle) &&
-	     (attrType.AttrTypeNum == GraphML_ATTR_r ||
-	      attrType.AttrTypeNum == GraphML_ATTR_rx ||
-	      attrType.AttrTypeNum == GraphML_ATTR_ry))
+	 if ((elType.ElTypeNum == SVG_EL_ellipse ||
+	      elType.ElTypeNum == SVG_EL_circle) &&
+	     (attrType.AttrTypeNum == SVG_ATTR_r ||
+	      attrType.AttrTypeNum == SVG_ATTR_rx ||
+	      attrType.AttrTypeNum == SVG_ATTR_ry))
 	   /* that's the radius of a circle or an ellipse,
 	      multiply the value by 2 to set the width or height of the box */
 	   pval.typed_data.value *= 2;
@@ -1450,10 +1450,10 @@ void ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
-   GraphMLAttributeComplete
+   SVGAttributeComplete
    The XML parser has read attribute attr for element el in document doc.
   ----------------------------------------------------------------------*/
-void      GraphMLAttributeComplete (Attribute attr, Element el, Document doc)
+void      SVGAttributeComplete (Attribute attr, Element el, Document doc)
 {
    AttributeType	attrType;
    ElementType          elType;
@@ -1465,45 +1465,45 @@ void      GraphMLAttributeComplete (Attribute attr, Element el, Document doc)
 
    switch (attrType.AttrTypeNum)
      {
-     case GraphML_ATTR_height_:
-     case GraphML_ATTR_width_:
-     case GraphML_ATTR_r:
+     case SVG_ATTR_height_:
+     case SVG_ATTR_width_:
+     case SVG_ATTR_r:
 	ParseWidthHeightAttribute (attr, el, doc, FALSE);
 	break;
-     case GraphML_ATTR_fill:
-     case GraphML_ATTR_stroke:
-     case GraphML_ATTR_stroke_width:
+     case SVG_ATTR_fill:
+     case SVG_ATTR_stroke:
+     case SVG_ATTR_stroke_width:
         ParseFillStrokeAttributes (attrType.AttrTypeNum, attr, el, doc, FALSE);
 	break;
-     case GraphML_ATTR_transform:
+     case SVG_ATTR_transform:
         ParseTransformAttribute (attr, el, doc, FALSE);
 	break;
-     case GraphML_ATTR_points:
+     case SVG_ATTR_points:
 	CreatePoints (attr, el, doc);
 	break;
-     case GraphML_ATTR_x:
-     case GraphML_ATTR_y:
-     case GraphML_ATTR_cx:
-     case GraphML_ATTR_cy:
-     case GraphML_ATTR_x1:
-     case GraphML_ATTR_y1:
-     case GraphML_ATTR_x2:
-     case GraphML_ATTR_y2:
-     case GraphML_ATTR_dx:
-     case GraphML_ATTR_dy:
+     case SVG_ATTR_x:
+     case SVG_ATTR_y:
+     case SVG_ATTR_cx:
+     case SVG_ATTR_cy:
+     case SVG_ATTR_x1:
+     case SVG_ATTR_y1:
+     case SVG_ATTR_x2:
+     case SVG_ATTR_y2:
+     case SVG_ATTR_dx:
+     case SVG_ATTR_dy:
 	ParseCoordAttribute (attr, el, doc);
 	break;
-     case GraphML_ATTR_rx:
-     case GraphML_ATTR_ry:
+     case SVG_ATTR_rx:
+     case SVG_ATTR_ry:
         elType = TtaGetElementType (el);
-	if (elType.ElTypeNum == GraphML_EL_rect)
+	if (elType.ElTypeNum == SVG_EL_rect)
 	  /* attribute rx or ry for a rect element.
 	     create the GRAPHICS_UNIT child to put the corresponding
              specific presentation rule on it */
 	   leaf = CreateGraphicLeaf (el, doc, &closed);	   
 	ParseWidthHeightAttribute (attr, el, doc, FALSE);
 	break;
-     case GraphML_ATTR_d:
+     case SVG_ATTR_d:
 	ParsePathDataAttribute (attr, el, doc);
         break;
      default:
