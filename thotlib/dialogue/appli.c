@@ -613,6 +613,7 @@ gboolean  GL_Init (ThotWidget widget,
   frame = (int) data;
   if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
     {       
+
       SetGlPipelineState ();
       if (!dialogfont_enabled)
 	  {
@@ -643,7 +644,7 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
     if (event->count > 0)
       return TRUE;
   */
-  frame = (int )data;
+  frame = (int) data;
   x = event->area.x;
   y = event->area.y;
   width = event->area.width;
@@ -681,12 +682,12 @@ gboolean FrameResizedGTK (GtkWidget *widget,
   if (widget)
     if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
       {
-	GLResize (width, height, x ,y);
+	GLResize (width, height, 0, 0);
 	Clear (frame, width, height, 0, 0);
 	GL_ActivateDrawing ();
 	DefRegion (frame, 
 		   0, 0,
-		   FrameTable[frame].FrWidth, FrameTable[frame].FrHeight);
+		   width, height);
 	FrameRedraw (frame, width, height);
 	GL_DrawAll (widget, frame);
 	while (gtk_events_pending ()) 
