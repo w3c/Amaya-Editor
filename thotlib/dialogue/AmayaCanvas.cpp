@@ -2,6 +2,7 @@
 
 #include "wx/wx.h"
 #include "wx/button.h"
+#include "wx/string.h"
 
 #include "thot_gui.h"
 #include "thot_sys.h"

@@ -1,4 +1,5 @@
 #ifdef _WX
+#include "wx/string.h"
 
 #include "AmayaNotebook.h"
 #include "AmayaPage.h"
