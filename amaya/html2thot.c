@@ -7362,7 +7362,7 @@ Document            doc;
    Element             el, parent, child, first, last, next, copy, newparent,
 		       elem, prev, firstNotCharElem;
    PtrElemToBeChecked  elTBC, nextElTBC, TBC;
-   ElementType	       elType;
+   ElementType	       elType, parentType;
 
    /* check all block-level elements whose parent was a character-level
       element */
@@ -7402,9 +7402,12 @@ Document            doc;
 	   elem = first;
 	   prev = NULL;
 	   firstNotCharElem = NULL;
+	   parentType = TtaGetElementType (parent);
 	   do
 	     {
-	     if (elem == last)
+	     /* if the character level element (parent) is an anchor, don't
+		repeat it several times */
+	     if (elem == last || parentType.ElTypeNum == HTML_EL_Anchor)
 	       next = NULL;
 	     else
 	       {

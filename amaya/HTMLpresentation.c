@@ -79,6 +79,8 @@ boolean MakeASpan (elem, span, doc)
 	   TtaInsertSibling (*span, elem, FALSE, doc);
 	   TtaRemoveTree (elem, doc);
 	   TtaInsertFirstChild (&elem, *span, doc);
+	   /* mark the document as modified */
+	   TtaSetDocumentModified (doc);
 	   ret = TRUE;
 	   }
 	}
