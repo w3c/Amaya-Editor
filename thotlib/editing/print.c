@@ -2322,7 +2322,7 @@ static int       n = 1;
 	    /* demande au Mediateur la position du saut de page */
 	    {
 	      nextPageBreak = 0;
-	      SetPageHeight (pAb, TRUE, &pageHeight, &nextPageBreak, &nChars);
+	      SetPageHeight (pAb, &pageHeight, &nextPageBreak, &nChars);
 	    }
 	}
 

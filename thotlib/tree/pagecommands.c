@@ -238,7 +238,7 @@ PtrAbstractBox     *RedispAbsBox;
 	if (pP->AbElement->ElTypeNumber != PageBreak + 1)
 	  /* demande au Mediateur la position et la hauteur du pave */
 	  {
-	    SetPageHeight (pP, TRUE, &haut, &y, &NCar);
+	    SetPageHeight (pP, &haut, &y, &NCar);
 	    if (y < limit)
 	      /* le haut du pave est au-dessus de la limite */
 	      /* on ne tue pas les paves qui contiennent une marque de page */
@@ -313,7 +313,7 @@ int                *clipOrg;
 	stop = TRUE;
 	/* get the new page break line position */
 	pPageLine = pAb;
-	SetPageHeight (pAb, TRUE, &h, &yThread, &NbCar);
+	SetPageHeight (pAb, &h, &yThread, &NbCar);
       }
     else
       {
@@ -381,7 +381,7 @@ int                *clipOrg;
 	      if (!pNext->AbDead)
 		{
 		  /* get the new page break line position */
-		  SetPageHeight (pNext, TRUE, &h, &yTop, &NbCar);
+		  SetPageHeight (pNext, &h, &yTop, &NbCar);
 		  if (yTop < yThread)
 		    if (yTop + h <= yThread && !pNext->AbOnPageBreak)
 		      {
@@ -409,7 +409,7 @@ int                *clipOrg;
   ret = ChangeConcreteImage (frame, &RealPageHeight, rootAbsBox);
   /* free killed abstract boxes */
   FreeDeadAbstractBoxes (rootAbsBox, frame);
-  SetPageHeight (pPage, TRUE, &h, clipOrg, &NbCar);
+  SetPageHeight (pPage, &h, clipOrg, &NbCar);
   /* compute AbOnPageBreak and AbAfterPageBreak according to the new situation */
   RealPageHeight = PageHeight + *clipOrg;
   ret = ChangeConcreteImage (frame, &RealPageHeight, rootAbsBox);

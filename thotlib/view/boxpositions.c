@@ -781,30 +781,23 @@ ThotBool            vertRef;
 
 
 /*----------------------------------------------------------------------
-   SetPageHeight indique quelles sont les conditions de coupure du   
-   pave' passe' en parame`tre :                            
-   - ht = hauteur de la boi^te du pave'.                   
-   - pos = position de la boite du pave dans la page.      
-   - nChars = nombre de caracte`res du pave' qui entrent    
-   dans la page s'il est de type texte, sinon le volume du 
-   pave'.                                                  
-   Les hauteurs sont exprime'es suivant la valeur du       
-   parame`tre pointVal, en points typographiques (valeur Vrai) 
-   ou en unite's logiques (Valeur Faux).                   
+  SetPageHeight returns:
+   - ht: the inside height of the box (in point or pixel).                   
+   - pos: the position of the inside box (in point or pixel).      
+   - nChars: the number of characters that can be inserted in the page
+             or the volume of the box.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SetPageHeight (PtrAbstractBox pAb, ThotBool pointVal, int *ht, int *pos, int *nChars)
+void                SetPageHeight (PtrAbstractBox pAb, int *ht, int *pos, int *nChars)
 #else  /* __STDC__ */
-void                SetPageHeight (pAb, pointVal, ht, pos, nChars)
+void                SetPageHeight (pAb, ht, pos, nChars)
 PtrAbstractBox      pAb;
-ThotBool            pointVal;
 int                *ht;
 int                *pos;
 int                *nChars;
-
 #endif /* __STDC__ */
 {
-   PtrBox              box1;
+   PtrBox              box;
    PtrBox              pChildBox;
    PtrTextBuffer       adbuff;
    int                 height;
@@ -815,116 +808,100 @@ int                *nChars;
    *nChars = 0;
    *pos = 0;
    *ht = 0;
-   /* calcule la position et la hauteur du pave */
-   box1 = pAb->AbBox;
-   if (box1 != NULL)
+   box = pAb->AbBox;
+   if (box != NULL)
      {
-
-	/* La boite du pave est coupee en lignes */
-	if (box1->BxType == BoSplit)
+	if (box->BxType == BoSplit)
 	  {
-	     pChildBox = box1->BxNexChild;
+	    /* the box is split into different lines */
+	     pChildBox = box->BxNexChild;
 	     org = pChildBox->BxYOrg;
-
-	     /* recherche la derniere boite de coupure */
+	     /* look for the last piece */
 	     while (pChildBox->BxNexChild != NULL)
 		pChildBox = pChildBox->BxNexChild;
 
 	     height = pChildBox->BxYOrg + pChildBox->BxHeight - org;
-
-	     /* BxMoved est la boite sur laquelle passe la limite */
-	     box1 = box1->BxMoved;
-
-	     /* Nombre de caracteres qui entrent dans la page */
-	     if (pAb->AbOnPageBreak && box1 != NULL)
+	     /* BxMoved gives the plit box */
+	     box = box->BxMoved;
+	     /* number of characters included in the page */
+	     if (pAb->AbOnPageBreak && box != NULL)
 	       {
-		  *nChars = box1->BxIndChar;
+		  *nChars = box->BxIndChar;
 		  /* Il ne faut pas couper le dernier mot d'une page     */
 		  /* donc si la boite precedente est de type BtAvectrait */
 		  /* la limite de la page est deplacee sur le blanc qui  */
 		  /* precede ce mot */
-		  if (*nChars != 0)
-		     if (box1->BxPrevious->BxType == BoDotted)
-			if (box1->BxPrevious->BxNSpaces != 0)
+		  if (*nChars != 0 &&
+		      box->BxPrevious->BxType == BoDotted &&
+		      box->BxPrevious->BxNSpaces != 0)
+		    {
+		      /* get the previous space */
+		      adbuff = box->BxBuffer;
+		      i = box->BxFirstChar - 1;
+		      still = TRUE;
+		      while (still)
+			if (adbuff->BuContent[i] == SPACE)
 			  {
-			     /* recheche en arriere le blanc precedent */
-			     adbuff = box1->BxBuffer;
-			     i = box1->BxFirstChar - 1;
-			     still = TRUE;
-			     while (still)
-				if (adbuff->BuContent[i] == SPACE)
-				  {
-				     /* a trouve le blanc */
-				     still = FALSE;
-				     /* Debute le nouveau mot au caractere suivant */
-				     (*nChars)++;
-				  }
-				else
-				  {
-				     (*nChars)--;
-				     if (i == 0)
-					if (adbuff->BuPrevious != NULL)
-					  {
-					     adbuff = adbuff->BuPrevious;
-					     i = adbuff->BuLength - 1;
-					  }
-					else
-					   /* arrete */
-					   still = FALSE;
-				     else
-					i--;
-				  }
+			    /* found */
+			    still = FALSE;
+			    /* the next word starts with the next character */
+			    (*nChars)++;
 			  }
+			else
+			  {
+			    (*nChars)--;
+			    if (i == 0)
+			      if (adbuff->BuPrevious != NULL)
+				{
+				  adbuff = adbuff->BuPrevious;
+				  i = adbuff->BuLength - 1;
+				}
+			      else
+				/* stop */
+				still = FALSE;
+			    else
+			      i--;
+			  }
+		    }
 	       }
 	  }
-	/* La boite du pave est eclatee sur plusieurs lignes */
-	else if (box1->BxType == BoGhost)
+	else if (box->BxType == BoGhost)
 	  {
-	     /* Il faut descendre tant que l'on a des boites eclatees */
-	     while (box1->BxType == BoGhost)
-		box1 = box1->BxAbstractBox->AbFirstEnclosed->AbBox;
-	     /* prend la position de la premiere boite */
-	     if (box1->BxType == BoSplit)
-		/* Il faut prendre la position de la 1ere boite de coupure */
-		box1 = box1->BxNexChild;
-	     org = box1->BxYOrg;
+	     /* check enclosed boxes */
+	     while (box->BxType == BoGhost)
+		box = box->BxAbstractBox->AbFirstEnclosed->AbBox;
+
+	     if (box->BxType == BoSplit)
+		box = box->BxNexChild;
+	     /* get the position of the first child */
+	     org = box->BxYOrg;
 	     height = 0;
-	     while (box1 != NULL)
+	     while (box != NULL)
 	       {
-		  /* prend la limite inferieur */
-		  if (box1->BxType == BoPiece)
-		     /* il faut aller chercher la derniere boite de coupure */
-		     while (box1->BxNexChild != NULL)
-			box1 = box1->BxNexChild;
-		  i = box1->BxYOrg + box1->BxHeight;
+		  /* get the bottom limit */
+		  if (box->BxType == BoPiece)
+		     /* look for the last piece */
+		     while (box->BxNexChild != NULL)
+			box = box->BxNexChild;
+		  i = box->BxYOrg + box->BxHeight;
 		  if (i > height)
 		     height = i;
-		  if (box1->BxAbstractBox->AbNext == NULL)
-		     box1 = NULL;
+		  if (box->BxAbstractBox->AbNext == NULL)
+		     box = NULL;
 		  else
-		     box1 = box1->BxAbstractBox->AbNext->AbBox;
+		     box = box->BxAbstractBox->AbNext->AbBox;
 	       }
-	     /* La hauteur de la boite eclatee */
+	     /* box height */
 	     height -= org;
 	  }
 	else
 	  {
-	     org = box1->BxYOrg;
-	     height = box1->BxHeight;
+	     org = box->BxYOrg + box->BxTMargin + box->BxTBorder + box->BxTPadding;
+	     height = box->BxH;
 	  }
 
-	/* traduit les valeurs pixel dans l'unite demandee */
-	if (pointVal)
-	  {
-	     *pos = org;
-	     *ht = height;
-	  }
-	else
-	  {
-	     hfont = FontHeight (box1->BxFont);
-	     *pos = org * 10 / hfont;
-	     *ht = height * 10 / hfont;
-	  }
+	*pos = org;
+	*ht = height;
      }
 }
 

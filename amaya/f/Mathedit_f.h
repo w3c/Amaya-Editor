@@ -94,11 +94,19 @@ extern ThotBool AttrScriptShiftDelete ( NotifyAttribute *event );
 extern void HandleRowalignAttribute ( Attribute attr,
                                       Element el,
                                       Document doc,
-				      ThotBool delete );
+                                      ThotBool delete );
+extern void AttrRowAlignCreated ( NotifyAttribute *event );
+extern void AttrRowAlignDeleted ( NotifyAttribute *event );
+extern void AttrRowAlignMtrCreated ( NotifyAttribute *event );
+extern void AttrRowAlignMtrDeleted ( NotifyAttribute *event );
 extern void HandleColalignAttribute ( Attribute attr,
                                       Element el,
                                       Document doc,
-				      ThotBool delete );
+                                      ThotBool delete );
+extern void AttrColAlignCreated ( NotifyAttribute *event );
+extern void AttrColAlignDeleted ( NotifyAttribute *event );
+extern void AttrColAlignMtdCreated ( NotifyAttribute *event );
+extern void AttrColAlignMtdDeleted ( NotifyAttribute *event );
 
 #else /* __STDC__ */
 
@@ -190,11 +198,19 @@ extern ThotBool AttrScriptShiftDelete (/* NotifyAttribute *event */);
 extern void HandleRowalignAttribute (/* Attribute attr,
                                         Element el,
                                         Document doc,
-				        ThotBool delete */);
+                                        ThotBool delete */);
+extern void AttrRowAlignCreated (/* NotifyAttribute *event */);
+extern void AttrRowAlignDeleted (/* NotifyAttribute *event */);
+extern void AttrRowAlignMtrCreated (/* NotifyAttribute *event */);
+extern void AttrRowAlignMtrDeleted (/* NotifyAttribute *event */);
 extern void HandleColalignAttribute (/* Attribute attr,
                                         Element el,
                                         Document doc,
-				        ThotBool delete */);
+                                        ThotBool delete */);
+extern void AttrColAlignCreated (/* NotifyAttribute *event */);
+extern void AttrColAlignDeleted (/* NotifyAttribute *event */);
+extern void AttrColAlignMtdCreated (/* NotifyAttribute *event */);
+extern void AttrColAlignMtdDeleted (/* NotifyAttribute *event */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

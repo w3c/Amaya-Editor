@@ -14,7 +14,6 @@ extern void AddBoxTranslations ( PtrAbstractBox pAb,
                                  ThotBool horizRef,
                                  ThotBool vertRef );
 extern void SetPageHeight ( PtrAbstractBox pAb,
-                            ThotBool pointVal,
                             int *ht,
                             int *pos,
                             int *nChars );
@@ -32,7 +31,6 @@ extern void AddBoxTranslations (/* PtrAbstractBox pAb,
                                    ThotBool horizRef,
                                    ThotBool vertRef */);
 extern void SetPageHeight (/* PtrAbstractBox pAb,
-                              ThotBool pointVal,
                               int *ht,
                               int *pos,
                               int *nChars */);
