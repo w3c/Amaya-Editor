@@ -6300,7 +6300,7 @@ RULES
 	END;
 
  H1:	BEGIN
-	MarginTop: 4 px;
+{***	MarginTop: 4 px;
 	MarginLeft: 4 px;
 	MarginBottom: 4 px;
 	MarginRight: 4 px;
@@ -6319,7 +6319,7 @@ RULES
 	BorderTopStyle: Solid;
 	BorderLeftStyle: Dashed;
 	BorderBottomStyle: Double;
-	BorderRightStyle: Dotted;
+	BorderRightStyle: Dotted; ***}
 	Line;
 	LineBreak: No;
 #ifdef PAGE
