@@ -15,10 +15,13 @@
 #include "amaya.h"
 #include "helpmenu.h"
 #include "css.h"
-
+#ifdef _WINGUI
+#include "wininclude.h"
+#endif /* _WINGUI */
+#
+#include "AHTURLTools_f.h"
 #include "HTMLhistory_f.h"
 #include "init_f.h"
-#include "AHTURLTools_f.h"
 
 #define DOC_HISTORY_SIZE 32
 
