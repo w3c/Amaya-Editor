@@ -180,7 +180,7 @@ LRESULT CALLBACK AbortDlgProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
      {
      case WM_INITDIALOG:
        GHwnAbort = hwnd;
-       EnableMenuItem (GetSystemMenu (hwnd, FALSE), SC_CLOSE, MF_GRAYED);
+       /* EnableMenuItem (GetSystemMenu (hwnd, FALSE), SC_CLOSE, MF_GRAYED); */
 	   ShowWindow (hwnd, SW_NORMAL);
 	   SetFocus (hwnd);
 	   UpdateWindow (hwnd);
@@ -212,7 +212,7 @@ BOOL CALLBACK AbortProc (HDC hdc, int error)
    MSG msg;
 
    while (!gbAbort && PeekMessage (&msg, NULL, 0, 0, PM_REMOVE))
-       if (!GHwnAbort || !IsDialogMessage (GHwnAbort, &msg))
+       if ( !IsDialogMessage (GHwnAbort, &msg) )
 	  {
           TranslateMessage (&msg);
           DispatchMessage (&msg);
@@ -1971,7 +1971,7 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
       if ((EndDoc (TtPrinterDC)) <= 0)
         WinErrorBox (NULL, "PrintDocument (2)");    
 	}
-     TtPrinterDC = NULL;
+    GHwnAbort = NULL;
     return 0;
     }
   else
