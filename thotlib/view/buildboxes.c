@@ -1666,8 +1666,9 @@ PtrLine SearchLine (PtrBox pBox)
 		pBoxInLine = pLine->LiFirstBox;
 
 	     /* Boucle sur les boites de la ligne */
-	     do
-	       {
+	     if (pBoxInLine)
+	       do
+		 {
 		  if (pBoxInLine->BxType == BoSplit)
 		     pBoxPiece = pBoxInLine->BxNexChild;
 		  else
@@ -1681,10 +1682,10 @@ PtrLine SearchLine (PtrBox pBox)
 		  /* Sinon on passe a la boite suivante */
 		  else
 		     pBoxInLine = GetNextBox (pBoxInLine->BxAbstractBox);
-	       }
-	     while (pBoxPiece != pLine->LiLastBox
-		    && pBoxPiece != pLine->LiLastPiece
-		    && pBoxInLine != NULL);
+		 }
+	       while (pBoxPiece != pLine->LiLastBox
+		      && pBoxPiece != pLine->LiLastPiece
+		      && pBoxInLine != NULL);
 
 	     if (still)
 	       /* On passe a la ligne suivante */

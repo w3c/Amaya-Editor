@@ -1242,6 +1242,8 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
   ok = FALSE;
   pER = NULL;
   viewIndex = viewNb - 1;
+  viewSch = 0;
+
   if (DoesViewExist (pEl, pDoc, viewNb))	/* la vue existe */
     {
       viewSch = AppliedView (pEl, pAttr, pDoc, viewNb);
@@ -1893,6 +1895,8 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
      pAPRule->ApElemType = pEl->ElTypeNumber */
 
   pPRdef = pPRinherit = NULL;
+  len = 0;
+  attrValue = NULL;
 
   if (pAttr->AeAttrType != AtTextAttr)
     *valueNum = 0;
@@ -1903,8 +1907,6 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 	CopyBuffer2MBs (pAttr->AeAttrText, 0, buffer, 399);
 	attrValue = buffer;
       }
-    else
-      attrValue = NULL;
     if (!AttrHasException (ExcCssClass, pAttr->AeAttrNum,pAttr->AeAttrSSchema))
       /* the content of the attribute is considered as a single value */
       {
