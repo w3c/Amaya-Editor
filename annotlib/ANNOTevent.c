@@ -641,7 +641,8 @@ View view;
 	{
 	  server = ptr->object;
 	  ptr = ptr->next;
-	  if (!ustrcasecmp (server, TEXT("localhost")))
+	  if (!server || !ustrcasecmp (server, TEXT("localhost"))
+	      || server[0] == '-')
 	    continue;
 	  /* create the context for the callback */
 	  ctx = TtaGetMemory (sizeof (REMOTELOAD_context));
