@@ -591,7 +591,7 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 {
   PtrAbstractBox      pAbb;
   PtrElement          pElInherit;
-  int                 val, i;
+  int                 val, i, sign;
   ThotBool            done;
 
   val = 0;
@@ -678,9 +678,10 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 		  case PtSize:
 		    *unit = pAbb->AbSizeUnit;
 		    if (pPRule->PrInhPercent)
+		      /* a percentage is applied to the inherited value */
 		      {
-			/* convert relative units into points */ 
 			if (*unit == UnRelative)
+			  /* convert the relative inherited value into points*/
 			  {
 			  val = (FontPointSize (pAbb->AbSize) * i) / 100;
 			  *unit = UnPoint;
@@ -689,17 +690,54 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 			  val = (pAbb->AbSize * i) / 100;
 		      }
 		    else if (pPRule->PrInhUnit == *unit || i == 0)
+		      /* same units, just add values */
 		      val = pAbb->AbSize + i;
-		    else if (pPRule->PrInhUnit == UnRelative)
+		    else if (*unit == UnRelative)
+		      /* the inherited value is relative, but the delta is
+			 absolute. Convert the inherited value */
 		      {
-			/* convert to relative units */ 
-			val = FontRelSize (pAbb->AbSize) + i;
-			*unit = UnRelative;
-		      }
-		    else
-		      {
-			val = FontPointSize (pAbb->AbSize) + i;
+			val = FontPointSize (pAbb->AbSize);
+			if (pPRule->PrInhUnit == UnPoint)
+			  val = val + i;
+			else
+			  val = val + PixelToPoint (i);
 			*unit = UnPoint;
+		      }
+		    else if (*unit == UnPoint)
+		      /* the inherited value is in points */
+		      {
+			if (pPRule->PrInhUnit == UnRelative)
+			  /* a increment of 1 relative unit equals 20% */
+			  val = pAbb->AbSize + ((pAbb->AbSize * i * 20) / 100);
+			else if (pPRule->PrInhUnit == UnPixel)
+			  /* delta is in pixels. Convert it to points */
+			  val = pAbb->AbSize + PixelToPoint (i);
+		      }
+		    else if (*unit == UnPixel)
+		      /* the inherited value is in pixels */
+		      {
+			if (pPRule->PrInhUnit == UnRelative)
+			  /* a increment of 1 relative unit equals 20% */
+			  val = pAbb->AbSize + ((pAbb->AbSize * i * 20) / 100);
+			else if (pPRule->PrInhUnit == UnPoint)
+			  /* delta is in pixels. Convert it to pixels */
+			  val = pAbb->AbSize + PointToPixel (i);
+		      }
+		    else if (*unit == UnPercent)
+		      /* the inherited value is a percentage */
+		      {
+			if (i < 0)
+			  {
+			    sign = -1;
+			    i = -i;
+			  }
+			else
+			  sign = 1;
+			if (pPRule->PrInhUnit == UnPixel)
+			  i = FontRelSize (PixelToPoint (i));
+			else if (pPRule->PrInhUnit == UnPoint)
+			  i = FontRelSize (i);
+			val = pAbb->AbSize + (sign * i * 20);
 		      }
 
 		    if (*unit == UnRelative)
