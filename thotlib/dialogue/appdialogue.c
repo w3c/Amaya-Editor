@@ -2954,15 +2954,14 @@ void RemoveSignalGTK (GtkObject *w, gchar *signal_name)
   -------------------------------------------------------------------------*/
 void get_targets (GtkWidget *widget, gpointer data)
 {  
-  static GdkAtom targets_atom = GDK_NONE;
 
-  if (targets_atom == GDK_NONE)
-    targets_atom = gdk_atom_intern ("UTF8_STRING", FALSE);
   if (FrameTable[ActiveFrame].WdFrame)
-    gtk_selection_convert (GTK_WIDGET (FrameTable[ActiveFrame].WdFrame), 
-			   GDK_SELECTION_PRIMARY, 
-			   targets_atom,  
-			   GDK_CURRENT_TIME);
+    {
+      gtk_selection_convert (GTK_WIDGET (FrameTable[ActiveFrame].WdFrame), 
+			     GDK_SELECTION_PRIMARY, 
+			     Selection_Type,  
+			     GDK_CURRENT_TIME);
+    }
 }
 
 /*-----------------------------------------------------------------------
@@ -2984,7 +2983,9 @@ void gtk_claim_selection()
 -------------------------------------------------------------------------*/
 void selection_received (GtkWidget *widget, GtkSelectionData *sel_data,
 			 gpointer data)
-{   
+{
+  static GdkAtom target_atom = GDK_NONE;
+
   if (sel_data->length > 0)
     {
       /* if ClipboardLength is not zero, the last Xbuffer comes from Thot */
@@ -3000,7 +3001,19 @@ void selection_received (GtkWidget *widget, GtkSelectionData *sel_data,
 	  strncpy ((char *)Xbuffer, (char *)sel_data->data, sel_data->length);
 	  Xbuffer[sel_data->length] = EOS;
 	}
-      PasteXClipboard (Xbuffer, strlen((char *)Xbuffer));
+      if (sel_data->type != Selection_Type)
+	PasteXClipboard (Xbuffer, strlen((char *)Xbuffer), TtaGetDefaultCharset ());
+      else
+	PasteXClipboard (Xbuffer, strlen((char *)Xbuffer), UTF_8);
+    }
+  else if (sel_data->target == Selection_Type)
+    {
+      if (target_atom == GDK_NONE)
+	target_atom = gdk_atom_intern ("STRING", FALSE);
+      gtk_selection_convert (widget, 
+			     GDK_SELECTION_PRIMARY, 
+			     target_atom,  
+			     GDK_CURRENT_TIME);
     }
 } 
 

@@ -616,13 +616,8 @@ void SelectionEvents (void *ev)
 	       /* No current selection, look for the cut buffer */
 	       buffer = (unsigned char *) XFetchBytes (TtDisplay, &r);
 	       if (buffer != NULL)
-		 {
-		   /* returns the cut buffer */
-		   if (ThotLocalActions[T_pasteclipboard] != NULL)
-		     (*(Proc2)ThotLocalActions[T_pasteclipboard]) (
-			(void *)buffer,
-			(void *)r);
-		 }
+		 /* returns the cut buffer */
+		 PasteXClipboard (buffer, r, TtaGetDefaultCharset ());
 	     }
 	   else
 	     {
@@ -663,10 +658,7 @@ void SelectionEvents (void *ev)
 		   else
 		     buffer = partbuffer;
 		   /* paste the content of the selection */
-		   if (ThotLocalActions[T_pasteclipboard])
-		     (*(Proc2)ThotLocalActions[T_pasteclipboard]) (
-				(void *)buffer,
-			       	(void *)((int) nbitems));
+		   PasteXClipboard (buffer, (int) nbitems, TtaGetDefaultCharset ());
 		   if (buffer != partbuffer)
 		     TtaFreeMemory (buffer);
 		 }

@@ -3400,7 +3400,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
    PasteXCliboard reads nbytes from the buffer and calls Paste_X as
    many times as necessary with the characters read.     
   ----------------------------------------------------------------------*/
-void PasteXClipboard (unsigned char *src, int nbytes)
+void PasteXClipboard (unsigned char *src, int nbytes, CHARSET charset)
 {
   PtrTextBuffer       clipboard;
   PtrAbstractBox      pAb;
@@ -3444,11 +3444,7 @@ void PasteXClipboard (unsigned char *src, int nbytes)
   if (src)
     {
       /* What is the encoding used by external applications ??? */
-#ifdef _GTK
-      buffer = TtaConvertByteToCHAR (src, UTF_8);
-#else /* _GTK */
-      buffer = TtaConvertByteToCHAR (src, TtaGetDefaultCharset ());
-#endif /* _GTK */
+      buffer = TtaConvertByteToCHAR (src, charset);
       doc = IdentDocument (pDoc);
       dispMode = TtaGetDisplayMode (doc);
       if (dispMode == DisplayImmediately)
@@ -4051,7 +4047,7 @@ void TtcPasteFromClipboard (Document doc, View view)
 	/* it concerns a thot window -> paste the cutbuffer */
 	Xbuffer = (unsigned char *)XFetchBytes (TtDisplay, &i);
 	if (Xbuffer)
-	   PasteXClipboard (Xbuffer, i);
+	   PasteXClipboard (Xbuffer, i, TtaGetDefaultCharset ());
      }
    else
       XConvertSelection (TtDisplay, XA_PRIMARY, XA_STRING, XA_CUT_BUFFER0,
@@ -4230,7 +4226,7 @@ void TtcPaste (Document doc, View view)
 	      lpData = GlobalLock (hMem);
 	      lpDatalength = strlen (lpData);	      
 	      if (Xbuffer == NULL || strcmp (Xbuffer, lpData)) /****/
- 	        PasteXClipboard (lpData, lpDatalength);
+ 	        PasteXClipboard (lpData, lpDatalength, TtaGetDefaultCharset ());
 	      else 
 	        ContentEditing (TEXT_PASTE);
 	      GlobalUnlock (hMem);
@@ -4268,7 +4264,6 @@ void                EditingLoadResources ()
 	/* Connecte les actions d'edition */
 	TteConnectAction (T_updateparagraph, (Proc) CloseParagraphInsertion);
 	TteConnectAction (T_stopinsert, (Proc) CloseTextInsertion);
-	TteConnectAction (T_pasteclipboard, (Proc) PasteXClipboard);
 	TteConnectAction (T_editfunc, (Proc) ContentEditing);
 	TteConnectAction (T_insertchar, (Proc) InsertChar);
 	TteConnectAction (T_AIupdate, (Proc) AbstractImageUpdated);
