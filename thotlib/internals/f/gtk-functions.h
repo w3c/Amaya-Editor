@@ -4,6 +4,9 @@
  */
 
 extern gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey *event, gpointer data);
+extern gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data);
+extern gboolean CallTextEnterGTK (ThotWidget w,  GdkEventButton *bu, struct Cat_Context *catalogue)
+
 extern void FrameToView ( int frame,
                           int *doc,
                           int *view );

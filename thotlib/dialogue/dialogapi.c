@@ -1446,10 +1446,7 @@ static void CallListGTK (ThotWidget w, struct Cat_Context *catalogue)
 
 #ifdef _GTK
 gboolean CallTextEnterGTK (ThotWidget w,  GdkEventButton *bu, struct Cat_Context *catalogue)
-{
-  gchar              *text = NULL;
-  ThotWidget         tmpw;
-  
+{  
   if (bu->button == 1) 
     {
       if (bu->type == GDK_2BUTTON_PRESS) 
