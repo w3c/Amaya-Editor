@@ -304,7 +304,7 @@ HTAlertPar         *reply;
 #endif /* __STDC */
 {
    AHTReqContext      *me = HTRequest_context (request);
-   char const *realm = HTRequest_realm (request);
+   const char      *realm = HTRequest_realm (request);
    char *label;
    char *host;
 
