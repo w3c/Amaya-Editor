@@ -10,7 +10,7 @@
  * rdfparse.c : parses an annotation RDF schema and intializes
                 the corresponding memory elements 
  *
- * Author: J. Kahan (W3C/INRIA)
+ * Author: Jose Kahan (W3C/INRIA)
  *
  */
 
