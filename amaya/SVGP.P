@@ -216,6 +216,18 @@ BOXES
 		END;
 	END;
 
+
+ DOCTYPE_S: BEGIN
+	Content: Text '<!DOCTYPE>';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		HorizRef: Enclosed . HRef;
+		Foreground: TAG_Color;
+		Size: TAG_FONTSIZE;
+		END;
+	END;
+
  Unknown_End: BEGIN
 	Content: Text '>';
 	Visibility: 0;
@@ -758,6 +770,18 @@ RULES
 		END;
         END;
 
+  DOCTYPE:
+	BEGIN
+	Visibility: 0;
+	CreateFirst(DOCTYPE_S);
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+	        HorizPos: Left = Enclosing . Left;
+	        VertPos: Top = Previous . Bottom + 0.2;
+	        Width: Enclosed . Width;
+		END;
+	END;
+
    Unknown_namespace:
 	BEGIN
 	Visibility: 0;
@@ -781,7 +805,7 @@ RULES
 	Width: Enclosed . Width;
         Height: Enclosed . Height;
 	IN Structure_view BEGIN
-		if NOT within XMLcomment_line AND NOT within XMLPI_line
+		if NOT within XMLcomment_line AND NOT within XMLPI_line AND NOT within DOCTYPE
 		   BEGIN
 		   HorizPos: Left = Enclosing . Left;
 		   VertPos: Top = Previous . Bottom;
@@ -793,6 +817,10 @@ RULES
 		if within XMLPI_line BEGIN
 		   HorizPos: Left = Previous . Right;
                    VertPos: HRef = Previous . HRef;
+		   END;
+		if within DOCTYPE BEGIN
+		   HorizPos: Left = Enclosing . Left;
+		   VertPos: Top = Previous . Bottom;
 		   END;
 		END;
 	IN Alternate_view BEGIN

@@ -769,6 +769,16 @@ BOXES
 		END;
 	END;
 
+ DOCTYPE_S: BEGIN
+	Content: Text '<!DOCTYPE>';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Foreground: TAG_Color;
+		Size: TAG_FONTSIZE;
+		END;
+	END;
+
  VALUE_ALT: BEGIN
 	Visibility: 0;
 	Content: (ALT);
@@ -3737,7 +3747,7 @@ RULES
 	if within Inserted_Text
 		Depth: Enclosing - 1;
 	IN Structure_view BEGIN
-		if NOT within Comment_line AND NOT within PI_line
+		if NOT within Comment_line AND NOT within PI_line AND NOT within DOCTYPE
 		   BEGIN
 		   HorizPos: Left = Enclosing . Left;
 		   VertPos: Top = Previous . Bottom;
@@ -3750,6 +3760,11 @@ RULES
 		   HorizPos: Left = Previous . Right;
 		if within PI_line
 		   HorizPos: Left = Previous . Right;
+		if within DOCTYPE
+                   BEGIN
+		   HorizPos: Left = Enclosing . Left;
+		   VertPos: Top = Previous . Bottom;
+                   END;
 		if within Preformatted
 		   Font: Courier;
 		Depth: 0;
@@ -4347,6 +4362,20 @@ RULES
 		Visibility: COMMENT_Visibility;
 		Width: Enclosed . Width;
 		VertPos: Top = Previous . Bottom + 0.2;
+		END;
+	END;
+
+  DOCTYPE:
+	BEGIN
+	Visibility: 0;
+	CreateFirst(DOCTYPE_S);
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Font: COMMENT_Font;
+		Style: COMMENT_Style; Weight: COMMENT_Weight;
+		Width: Enclosed . Width;
+	        HorizPos: Left = Previous . Right;
+	        VertPos: Top = Previous . Bottom + 0.2;
 		END;
 	END;
 

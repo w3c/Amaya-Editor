@@ -17,8 +17,11 @@ ATTR
 
 STRUCT
 
-   XML
-       = LIST OF (XML_Gen) + (XMLcomment, XMLPI);
+   XML =
+       BEGIN
+	? DOCTYPE = TEXT;
+	LIST OF (XML_Gen); 
+       END + (XMLcomment, XMLPI);
 	
    XML_Gen = LIST OF (XML_Elements);
 

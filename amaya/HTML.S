@@ -51,6 +51,7 @@ STRUCT
 	HEAD;
       ? BODY;	{ only one of BODY, document type }
       ? FRAMESET;
+      ? DOCTYPE = TEXT;
 	END + (Invalid_element, Unknown_namespace, Comment\240, XMLPI);
 
   BODY								{ BODY }

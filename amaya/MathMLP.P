@@ -391,6 +391,16 @@ BOXES
                 END;
         END;
 
+ DOCTYPE_S: BEGIN
+	Content: Text '<!DOCTYPE>';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Foreground: TAG_Color;
+		Size: TAG_FONTSIZE;
+		END;
+	END;
+
  Unknown_End: BEGIN
 	Content: Text '>';
 	Visibility: 0;
@@ -498,6 +508,18 @@ RULES
         	Width: Enclosed . Width;
                 END;
         END;
+
+  DOCTYPE:
+	BEGIN
+	Visibility: 0;
+	CreateFirst(DOCTYPE_S);
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		HorizPos: Left = Enclosing . Left;
+        	VertPos: Top = Previous . Bottom + 0.2;
+        	Width: Enclosed . Width;
+		END;
+	END;
 
    Unknown_namespace:
 	BEGIN
@@ -1453,8 +1475,16 @@ RULES
 	IN Structure_view BEGIN
 		IF immediately within MGLYPH
 		   Visibility: 0;
-		HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
+		IF NOT within DOCTYPE
+		   BEGIN
+		   HorizPos: Left = Previous . Right;
+                   VertPos: HRef = Previous . HRef;
+		   END;
+		IF within DOCTYPE
+                   BEGIN
+		   HorizPos: Left = Enclosing . Left;
+		   VertPos: Top = Previous . Bottom;
+                   END;
 		Size: DOC_FONTSIZE;
 		END;
 	END;

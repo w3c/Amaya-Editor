@@ -219,6 +219,16 @@ BOXES
 		Visibility: 0;
 	END;
 
+ DOCTYPE_S: BEGIN
+	Content: Text '<!DOCTYPE>';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Foreground: TAG_Color;
+		Size: TAG_FONTSIZE;
+		END;
+	END;
+
 RULES
 
    Document:
@@ -303,6 +313,19 @@ RULES
 		VertPos: Top = Previous . Bottom + 0.2;
 		END;
         END;
+
+  DOCTYPE:
+	BEGIN
+	Visibility: 0;
+	CreateFirst(DOCTYPE_S);
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Font: COMMENT_Font;
+		Style: COMMENT_Style; Weight: COMMENT_Weight;
+		Width: Enclosed . Width;
+		VertPos: Top = Previous . Bottom + 0.2;
+		END;
+	END;
 
    TEXT_UNIT:
 	BEGIN

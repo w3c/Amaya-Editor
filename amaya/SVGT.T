@@ -420,6 +420,11 @@ RULES
 	Remove;
 	END;
 
+ DOCTYPE: BEGIN
+	Create '<!DOCTYPE ';
+	Create '>\12' After;
+	END;
+
    TEXT_UNIT:
         if immediately within text_
 	    create '\12' after;

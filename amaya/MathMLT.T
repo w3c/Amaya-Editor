@@ -79,6 +79,11 @@ RULES
 	Create '>';
 	end;
 
+ DOCTYPE: BEGIN
+	Create '<!DOCTYPE ';
+	Create '>\12' After;
+	END;
+
    MROW:
 	begin
 	create SOT;
