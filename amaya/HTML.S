@@ -247,6 +247,7 @@ STRUCT
 	BDO = Basic_Set;					{ BDO }
 	Object;							{ OBJECT }
 	IFRAME;							{ IFRAME }
+	ruby;                                                   { ruby }
 	MathML;							{ MATH }
 	XLink;							{ Annotations }
 	END;
@@ -772,6 +773,32 @@ STRUCT
 	 { align      width    height }
 	LIST OF (Element);
 
+  ruby =                                                        { ruby }
+        CASE OF
+	simple_ruby;
+	complex_ruby;
+	END;
+
+  simple_ruby =
+	BEGIN
+	rb = Basic_Set - (ruby);
+	CASE OF
+	      rt (ATTR rbspan = Integer) = Basic_Set - (ruby);
+	      BEGIN
+		  rp = TEXT;
+		  rt;
+		  rp;
+		  END;
+	      END;
+	END;
+
+  complex_ruby =
+	BEGIN
+	rbc = LIST OF (rb);
+	rtc1 = LIST OF (rt);
+      ? rtc2 = LIST OF (rt);
+	END;	
+	
   { AnyLink is an alias for all elements with an attribute
     of type URI.  Only elements to be shown in the Links view
     are taken into account }

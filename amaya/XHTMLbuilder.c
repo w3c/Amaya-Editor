@@ -351,11 +351,11 @@ void              XhtmlElementComplete (Element el, Document doc, int *error)
 {
    ElementType    elType, newElType, childType;
    Element        constElem, child, desc, leaf, prev, next, last,
-	          elFrames, lastFrame, lastChild;
+	          elFrames, lastFrame, lastChild, parent;
    Attribute      attr;
    AttributeType  attrType;
    Language       lang;
-   char          *text;
+   char           *text;
    char           lastChar[2];
    char           *name1;
    int            length;
@@ -702,7 +702,42 @@ void              XhtmlElementComplete (Element el, Document doc, int *error)
        /* show the TITLE in the main window */
        UpdateTitle (el, doc);
        break;
-       
+
+     case HTML_EL_rbc:
+       /* an rbc element has been read. Its parent should be a complex_ruby.
+	  Change the type of the parent, as simple_ruby are created by
+	  default */
+       parent = TtaGetParent (el);
+       if (parent)
+	 {
+	   newElType = TtaGetElementType (parent);
+	   if (newElType.ElSSchema == elType.ElSSchema &&
+	       newElType.ElTypeNum == HTML_EL_simple_ruby)
+	      ChangeElementType (parent, HTML_EL_complex_ruby);
+	 }
+       break;
+
+     case HTML_EL_rtc1:
+       /* an rtc element has been parsed. If it has already a rtc1 sibling,
+	  change its type to rtc2 */
+       prev = el;
+       do
+	 {
+	   TtaPreviousSibling(&prev);
+	   if (prev)
+	     {
+	       newElType = TtaGetElementType (prev);
+	       if (newElType.ElSSchema == elType.ElSSchema &&
+		   newElType.ElTypeNum == HTML_EL_rtc1)
+		 {
+		   ChangeElementType (el, HTML_EL_rtc2);
+		   prev = NULL;
+		 }
+	     }
+	 }
+       while (prev);
+       break;
+
      default:
        break;
      }

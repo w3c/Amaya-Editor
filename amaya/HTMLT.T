@@ -1025,6 +1025,67 @@ RULES
 	Create '</iframe>\12' After;	
 	END;
 
+ ruby: BEGIN
+	Create '<ruby';
+	Create Attributes;
+	Create '>';
+	Create '</ruby>' After;	
+	END;
+ simple_ruby: BEGIN
+	Create '<ruby';
+	Create Attributes;
+	Create '>';
+	Create '</ruby>' After;	
+	END;
+ complex_ruby: BEGIN
+	Create '<ruby';
+	Create Attributes;
+	Create '>';
+	Create '</ruby>' After;	
+	END;
+
+ rb:    BEGIN
+	Create '<rb';
+	Create Attributes;
+	Create '>';
+	Create '</rb>' After;	
+	END;
+
+ rt:	BEGIN
+	Create '<rt';
+	Create Attributes;
+	Create '>';
+	Create '</rt>' After;	
+	END;
+
+ rp:	BEGIN
+	Create '<rp';
+	Create Attributes;
+	Create '>';
+	Create '</rp>' After;	
+	END;
+
+ rbc:	BEGIN
+	Create '<rbc';
+	Create Attributes;
+	Create '>';
+	Create '</rbc>' After;	
+	END;
+
+ rtc1:	BEGIN
+	Create '<rtc';
+	Create Attributes;
+	Create '>';
+	Create '</rtc>' After;	
+	END;
+
+ rtc2:	BEGIN
+	Create '<rtc';
+	Create Attributes;
+	Create '>';
+	Create '</rtc>' After;	
+	END;
+
 ATTRIBUTES
 
  profile: BEGIN
@@ -2009,6 +2070,12 @@ ATTRIBUTES
 	Create ' scrolling="no"';
  scrolling = auto_:
 	Create ' scrolling="auto"';
+
+ rbspan: BEGIN
+	Create ' rbspan="';
+	Create rbspan;
+	Create DoubleQuote;
+	END;
 
  Invalid_attribute:
 	BEGIN

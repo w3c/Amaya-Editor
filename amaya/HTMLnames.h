@@ -89,6 +89,13 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {"plaintext", SPACE, HTML_EL_Preformatted, L_Transitional, FALSE},/* converted to PRE */
    {"pre", SPACE, HTML_EL_Preformatted, L_Basic, FALSE},
    {"q", SPACE, HTML_EL_Quotation, L_Basic, TRUE},
+   {"rb", SPACE, HTML_EL_rb, L_Strict, TRUE},
+   {"rbc", SPACE, HTML_EL_rbc, L_Strict, FALSE},
+   {"rp", SPACE, HTML_EL_rp, L_Strict, FALSE},
+   {"rt", SPACE, HTML_EL_rt, L_Strict, TRUE},
+   {"rtc", SPACE, HTML_EL_rtc1, L_Strict, FALSE},
+   {"rtc", SPACE, HTML_EL_rtc2, L_Strict, FALSE},
+   {"ruby", SPACE, HTML_EL_simple_ruby, L_Strict, TRUE},
    {"s", SPACE, HTML_EL_Struck_text, L_Strict, TRUE},
    {"samp", SPACE, HTML_EL_Sample, L_Basic, TRUE},
    {"script", SPACE, HTML_EL_SCRIPT, L_Strict, FALSE},
@@ -267,6 +274,7 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {"profile", "head", 'A', HTML_ATTR_profile, L_Basic},
    {"prompt", "", 'A', HTML_ATTR_Prompt, L_Strict},
 
+   {"rbspan", "rt", 'A', HTML_ATTR_rbspan, L_Strict},
    {"readonly", "", 'A', HTML_ATTR_readonly, L_Basic},
    {"rel", "", 'A', HTML_ATTR_REL, L_Basic},
    {"rev", "", 'A', HTML_ATTR_REV, L_Basic},

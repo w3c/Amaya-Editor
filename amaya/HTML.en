@@ -139,6 +139,10 @@ Frames: frames
 NOFRAMES: noframes
 FRAME: frame
 IFRAME: iframe
+simple_ruby: ruby
+complex_ruby: ruby
+rtc1: rtc
+rtc2: rtc
 Langue: lang
 ID: id
 Class: class

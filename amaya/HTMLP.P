@@ -1342,6 +1342,30 @@ BOXES
 		END;
 	END;
 
+ ATTR_RBSPAN: BEGIN
+	Content: Text ' rbspan=';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ VALUE_RBSPAN: BEGIN
+	Content: (rbspan);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
   ATTR_LANG: BEGIN
 	Content: Text ' lang=';
 	HorizPos: Left = Previous . Right;
@@ -3352,6 +3376,86 @@ BOXES
 
  IFRAME_S: BEGIN
 	Content: Text 'iframe';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Weight: TAG_Weight;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ RUBY_S: BEGIN
+	Content: Text 'ruby';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Weight: TAG_Weight;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ RB_S: BEGIN
+	Content: Text 'rb';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Weight: TAG_Weight;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ RT_S: BEGIN
+	Content: Text 'rt';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Weight: TAG_Weight;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ OpeningParen: BEGIN
+	Content: Text '[';
+	Visibility: 0;
+	IN Alternate_view BEGIN
+		Visibility: Enclosing =;
+	  	HorizPos: Left = Previous . Right;
+	   	VertPos: HRef = Previous . HRef;
+		END;
+	END;
+	
+ ClosingParen: BEGIN
+	Content: Text ']';
+	Visibility: 0;
+	IN Alternate_view BEGIN
+		Visibility: Enclosing =;
+	  	HorizPos: Left = Previous . Right;
+	   	VertPos: HRef = Previous . HRef;
+		END;
+	END;
+	
+ RP_S: BEGIN
+	Content: Text 'rp';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Weight: TAG_Weight;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ RBC_S: BEGIN
+	Content: Text 'rbc';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Weight: TAG_Weight;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ RTC_S: BEGIN
+	Content: Text 'rtc';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -8418,6 +8522,180 @@ RULES
 		END;
 	END;
 
+  simple_ruby: BEGIN
+	CreateBefore(RUBY_S);
+	CreateWith(VerticalLine);
+	LineBreak: No;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Weight: Enclosing =;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;
+{****
+	IN Alternate_view BEGIN
+		LineBreak: Yes;
+		END;
+****}
+	END;
+
+  complex_ruby: BEGIN
+	CreateBefore(RUBY_S);
+	CreateWith(VerticalLine);
+	LineBreak: No;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Weight: Enclosing =;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;
+{****
+	IN Alternate_view BEGIN
+		LineBreak: Yes;
+		END;
+****}
+	END;
+
+  rb:   BEGIN
+	CreateBefore(RB_S);
+	CreateWith(VerticalLine);
+	if immediately within rbc
+	   BEGIN
+	   HorizPos: Left = Previous . Right;
+	   VertPos: HRef = Previous . HRef;
+	   END;
+	if not immediately within rbc
+	   BEGIN
+	   HorizPos: Nil;
+	   VertPos: Nil;
+	   END;
+	IN Structure_view BEGIN
+		Weight: Enclosing =;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;
+	END;
+
+  rt:   BEGIN
+	CreateBefore(RT_S);
+	CreateWith(VerticalLine);
+	if immediately within simple_ruby and last
+	   BEGIN
+           CreateBefore (OpeningParen);
+	   CreateAfter (ClosingParen);
+	   END;
+	if immediately within rtc1
+	   BEGIN
+	   Size: Enclosing =;
+	   HorizPos: Left = Previous . Right;
+	   VertPos: HRef = Previous . HRef;
+	   END;
+	if immediately within rtc2
+	   BEGIN
+	   Size: Enclosing =;
+	   HorizPos: Left = Previous . Right;
+	   VertPos: HRef = Previous . HRef;
+	   END;
+	otherwise
+	   BEGIN
+	   Size: Enclosing * 70 %;
+	   HorizPos: VMiddle = rb . VMiddle;
+	   VertPos: Bottom = rb . Top;
+	   END;
+	IN Structure_view BEGIN
+		Weight: Enclosing =;
+		Size: Enclosing =;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;
+	IN Alternate_view BEGIN
+		Size: Enclosing =;
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		END;
+	END;
+
+  rp:   BEGIN
+	CreateBefore(RP_S);
+	CreateWith(VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Weight: Enclosing =;
+		Visibility: Enclosing =;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;
+	IN Alternate_view BEGIN
+		Visibility: Enclosing =;
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		END;
+	END;
+
+  rbc:  BEGIN
+	CreateBefore(RBC_S);
+	CreateWith(VerticalLine);
+	HorizPos: Nil;
+	VertPos: Nil;
+	IN Structure_view BEGIN
+		Weight: Enclosing =;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;
+	END;
+
+  rtc1: BEGIN
+	CreateBefore(RTC_S);
+	CreateWith(VerticalLine);
+        CreateFirst (OpeningParen);
+	CreateLast (ClosingParen);
+	Size: Enclosing * 70 %;
+	HorizPos: VMiddle = rbc . VMiddle;
+	VertPos: Bottom = rbc . Top;
+	IN Structure_view BEGIN
+		Weight: Enclosing =;
+		Size: Enclosing =;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;
+	IN Alternate_view BEGIN
+		Size: Enclosing =;
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		END;
+	END;
+
+  rtc2: BEGIN
+	CreateBefore(RTC_S);
+	CreateWith(VerticalLine);
+        CreateFirst (OpeningParen);
+	CreateLast (ClosingParen);
+	Size: Enclosing * 70 %;
+	HorizPos: VMiddle = rbc . VMiddle;
+	VertPos: Top = rbc . Bottom;
+	IN Structure_view BEGIN
+		Weight: Enclosing =;
+		Size: Enclosing =;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;
+	IN Alternate_view BEGIN
+		Size: Enclosing =;
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		END;
+	END;
+
 ATTRIBUTES
 
  Langue:
@@ -10410,6 +10688,12 @@ ATTRIBUTES
 	CreateBefore(ATTR_SCROLLING_NO);
   scrolling = auto_:
 	CreateBefore(ATTR_SCROLLING_AUTO);
+
+  rbspan:
+	BEGIN
+	CreateBefore(ATTR_RBSPAN);
+	CreateBefore(VALUE_RBSPAN);
+	END;
 
   Invalid_attribute:
 	BEGIN
