@@ -1,14 +1,6 @@
 /*
- * Copyright (c) 1996 INRIA, All rights reserved
- */
-
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- *
+ *  (c) COPYRIGHT INRIA, 1996-2001
+ *  Please first read the full copyright statement in file COPYRIGHT.
  */
 
 /*
@@ -17,7 +9,6 @@
  *
  * Authors: I. Vatton (INRIA)
  * Changed: S. Bonhomme (INRIA) 
- *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  */
 
 #include "thot_gui.h"
@@ -33,14 +24,7 @@
 /*----------------------------------------------------------------------
    TteConnectAction rend accessible une action locale (Callback).
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TteConnectAction (int id, Proc procedure)
-#else  /* __STDC__ */
-void                TteConnectAction (id, procedure)
-int                 id;
-Proc                procedure;
-
-#endif /* __STDC__ */
+void TteConnectAction (int id, Proc procedure)
 {
    ThotLocalActions[id] = procedure;
 }
@@ -48,12 +32,7 @@ Proc                procedure;
 /*----------------------------------------------------------------------
    TtaSetBackup connects the backup function: procedure().
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetBackup (Proc procedure)
-#else  /* __STDC__ */
-void                TtaSetBackup (procedure)
-Proc                procedure;
-#endif /* __STDC__ */
+void TtaSetBackup (Proc procedure)
 {
   TteConnectAction (T_backuponfatal, procedure);
 }
@@ -64,12 +43,8 @@ Proc                procedure;
    - doc which is the concerned document
    - modified which gives the new status (TRUE if it's modified) of the document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetDocStatusUpdate (Proc procedure)
-#else  /* __STDC__ */
-void                TtaSetDocStatusUpdate (procedure)
-Proc                procedure;
-#endif /* __STDC__ */
+void TtaSetDocStatusUpdate (Proc procedure)
 {
   TteConnectAction (T_docmodified, procedure);
 }
+

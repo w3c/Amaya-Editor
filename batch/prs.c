@@ -6309,7 +6309,7 @@ int main (int argc, char **argv)
 	       else if (inputLine[0] == '#')
 		 {
 		   /* cette ligne contient une directive du preprocesseur cpp */
-		   usscanf (inputLine, "# %d %s", &LineNum, buffer);
+		   sscanf (inputLine, "# %d %s", &LineNum, buffer);
 		   LineNum--;
 		 }
 	       else

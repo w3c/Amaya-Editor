@@ -317,9 +317,9 @@ static int LoadDict (FILE *dictFile, PtrDict dict)
    plineGotten = &lineGotten[0];
 
    /* Loading the dictionary */
-   while (ufgets (plineGotten, MAXLIGNE, dictFile) != NULL)
+   while (fgets (plineGotten, MAXLIGNE, dictFile) != NULL)
      {
-	nbGotten = usscanf (plineGotten, "%s", wordGotten);
+	nbGotten = sscanf (plineGotten, "%s", wordGotten);
 	if ((nbGotten > 0)
 	    && (dict->DictNbWords < maxWord - 1)
 	    && ((length = strlen (wordGotten)) < MAX_WORD_LEN)
@@ -460,10 +460,10 @@ static void PrepareDictionary (PtrDict *pDictionary, char *dictName,
 	{
 	  /* Get the length of strings required at the begenning of the file. */
 	  tempbuffer[0] = EOS;
-	  ufgets (tempbuffer, 100, dictFile);
+	  fgets (tempbuffer, 100, dictFile);
 	  if (tempbuffer[0] != EOS)
 	    {
-	      if (usscanf (tempbuffer, "%d%d", &im, &ic) == 2)
+	      if (sscanf (tempbuffer, "%d%d", &im, &ic) == 2)
 		{
 		  pdict->DictMaxWords = im;
 		  pdict->DictMaxChars = ic;

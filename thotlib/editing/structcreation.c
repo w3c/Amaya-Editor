@@ -925,7 +925,7 @@ void                NewContent (PtrAbstractBox pAb)
 	     switch (pNewAttr->AeAttrType)
 		   {
 		      case AtNumAttr:
-			 usscanf (pAb->AbText->BuContent, "%d", &pNewAttr->AeAttrValue);
+			 sscanf (pAb->AbText->BuContent, "%d", &pNewAttr->AeAttrValue);
 			 break;
 		      case AtTextAttr:
 			 if (pNewAttr->AeAttrText == NULL)

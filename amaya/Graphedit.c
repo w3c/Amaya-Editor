@@ -540,7 +540,7 @@ static void   UpdateAttrText (Element el, Document doc, AttributeType attrType, 
 	  if (buffer[i] == '.')
 	    {
 	      buffer[i] = EOS;
-	      usscanf (buffer, "%d", &pval);	      
+	      sscanf (buffer, "%d", &pval);	      
 	      v = i + 1;
 	    }
 	  i++;
@@ -548,9 +548,9 @@ static void   UpdateAttrText (Element el, Document doc, AttributeType attrType, 
       unit[0] = EOS;
       pe = 0;
       if (v)
-	usscanf (&buffer[v], "%d%s", &pe, unit);
+	sscanf (&buffer[v], "%d%s", &pe, unit);
       else
-	usscanf (buffer, "%d%s", &pval, unit);
+	sscanf (buffer, "%d%s", &pval, unit);
       /* convert the value according to the current unit */
       if (!strcmp (unit, "em") || !strcmp (unit, "ex"))
 	{
@@ -1998,7 +1998,7 @@ ThotBool TextWillChangeInGroup (NotifyOnTarget *event)
   len = TtaGetTextLength (leaf) + 1;
   text = TtaGetMemory (len);
   TtaGiveTextContent (leaf, text, &len, &lang);
-  usscanf (text, "%d", &oldValue);
+  sscanf (text, "%d", &oldValue);
   TtaFreeMemory (text);
   return FALSE; /* let Thot perform normal operation */
 }
@@ -2050,7 +2050,7 @@ void                TextChangedInGroup (NotifyOnTarget *event)
   text = TtaGetMemory (len);
   TtaGiveTextContent (leaf1, text, &len, &lang);
   /* convert that content into a number */
-  usscanf (text, "%d", &num);
+  sscanf (text, "%d", &num);
   TtaFreeMemory (text);
   /* only cubes 4 to 9 can be moved */
   if (num < 4 || num > 9 || oldValue < 4 || oldValue > 9)
@@ -2093,7 +2093,7 @@ void                TextChangedInGroup (NotifyOnTarget *event)
 			    text = TtaGetMemory (len);
 			    TtaGiveTextContent (leaf2, text, &len, &lang);
 			    /* convert the content into a number */
-			    usscanf (text, "%d", &i);
+			    sscanf (text, "%d", &i);
 			    TtaFreeMemory (text);
 			    if (i == num)
 			      /* that's the same number */

@@ -6,9 +6,9 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern ThotBool SearchRegularExpression ( PtrElement * firstEl,
+extern ThotBool SearchRegularExpression ( PtrElement *firstEl,
                                           int *firstChar,
-                                          PtrElement * lastEl,
+                                          PtrElement *lastEl,
                                           int *lastChar,
                                           ThotBool forward,
                                           ThotBool caseEquiv,
@@ -16,9 +16,9 @@ extern ThotBool SearchRegularExpression ( PtrElement * firstEl,
 
 #else /* __STDC__ */
 
-extern ThotBool SearchRegularExpression (/* PtrElement * firstEl,
+extern ThotBool SearchRegularExpression (/* PtrElement *firstEl,
                                             int *firstChar,
-                                            PtrElement * lastEl,
+                                            PtrElement *lastEl,
                                             int *lastChar,
                                             ThotBool forward,
                                             ThotBool caseEquiv,

@@ -166,14 +166,7 @@ void RedisplayCopies ()
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void DrawSupprAttr (PtrAttribute pAttr, PtrElement pEl)
-#else  /* __STDC__ */
-void DrawSupprAttr (pAttr, pEl)
-PtrAttribute        pAttr;
-PtrElement          pEl;
-
-#endif /* __STDC__ */
 {
 }
 

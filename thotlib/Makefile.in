@@ -94,8 +94,7 @@ THOTK_OBJ = \
 	tree/checkaccess.o \
 	tree/labelalloc.o \
 	unicode/uconvert.o \
-	unicode/ustring.o \
-	unicode/uio.o
+	unicode/ustring.o
 
 KERNEL_OBJ = \
 	base/batchmessage.o \

@@ -171,7 +171,7 @@ static unsigned char *ReadJpegToData (char *datafile, int * w, int* h,
   unsigned char      *bit_data;
   FILE               *fp;
   
-  fp = ufopen (datafile, "rb");
+  fp = fopen (datafile, "rb");
   if (fp != NULL)
     {
       bit_data = (unsigned char *) ReadJPEG (fp, w, h, colrs);

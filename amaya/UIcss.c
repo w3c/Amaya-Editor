@@ -85,7 +85,7 @@ ThotBool  LoadRemoteStyleSheet (char *url, Document doc, Element el,
 	      tempdocument = GetLocalPath (0, completeURL);
 	      TtaFileUnlink (tempdocument);
 	      /* now we can rename the local name of a remote document */
-	      urename (localfile, tempdocument);
+	      rename (localfile, tempdocument);
 	      strcpy (localfile, tempdocument);
 	      TtaFreeMemory (tempdocument);
 	    }

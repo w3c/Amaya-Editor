@@ -35,7 +35,7 @@
    du compteur.  On cree l'alias  MAX_RULES_SSCHEMA + 1 pour les 
    elements add du compteur.                               
   ----------------------------------------------------------------------*/
-static int MakeAliasTypeCount (Counter * pCounter, CounterOp op,
+static int MakeAliasTypeCount (Counter *pCounter, CounterOp op,
 			       PtrSSchema pSchStr)
 {
    SRule              *NewAlias;
@@ -903,7 +903,7 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
    TtAttribute        *pAttr1;
    PtrElement          pEl;
    Counter            *pCo1;
-   CHAR_T              number[20];
+   char               *number[20];
    PtrTextBuffer       pBTN, pBTA, pBTAPrec;
 
    /* sauve temporairement le contenu de ce pave de presentation */

@@ -764,7 +764,7 @@ static void         EndOfAttrValue (char c)
 	   break;
 
 	case 1:       /* integer */
-	   usscanf (inputBuffer, "%d", &val);
+	   sscanf (inputBuffer, "%d", &val);
 	   TtaSetAttributeValue (currentAttribute, val, currentElement,
 				 currentDocument);
 	   break;
@@ -897,7 +897,7 @@ static void         EndOfDecEntity (char c)
    unsigned char	       entityValue[MAX_ENTITY_LENGTH];	
 
    entityName[entityNameLength] = EOS;
-   usscanf (entityName, "%d", &code);
+   sscanf (entityName, "%d", &code);
    if (code < 255)
       /* that's an ISO Latin character */
       PutInBuffer ((char) code);
@@ -967,7 +967,7 @@ static void         EndOfHexEntity (char c)
    unsigned char	       entityValue[MAX_ENTITY_LENGTH];	
 
    entityName[entityNameLength] = EOS;
-   usscanf (entityName, "%x", &code);
+   sscanf (entityName, "%x", &code);
    if (code < 255)
       /* that's an ISO Latin character */
       PutInBuffer ((char) code);

@@ -294,13 +294,9 @@ static char         miniso[] =
 #define SYNTAX(c) re_syntax_table[c]
 static int          re_syntax_table[256];
 
-#ifdef __STDC__
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static void         InitSyntaxTable ()
-
-#else  /* __STDC__ */
-static void         InitSyntaxTable ()
-#endif				/* __STDC__ */
-
 {
    register int        c, i;
    int                 lg;
@@ -394,18 +390,7 @@ static void         InitSyntaxTable ()
    Store where `from' points a jump operation to jump to where `to'   
    points. `opcode' is the opcode to store.                         
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         store_jump (char *from, char opcode, char *to)
-
-#else  /* __STDC__ */
-static void         store_jump (from, opcode, to)
-char               *from;
-char                opcode;
-char               *to;
-
-#endif /* __STDC__ */
-
+static void store_jump (char *from, char opcode, char *to)
 {
    from[0] = opcode;
    from[1] = (to - (from + 3)) & 0377;
@@ -419,19 +404,7 @@ char               *to;
    OP is the opcode of the jump to insert.                         
    If you call this function, you must zero out pending_exact.     
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         insert_jump (char op, char *from, char *to, char *current_end)
-
-#else  /* __STDC__ */
-static void         insert_jump (op, from, to, current_end)
-char                op;
-char               *from;
-char               *to;
-char               *current_end;
-
-#endif /* __STDC__ */
-
+static void insert_jump (char op, char *from, char *to, char *current_end)
 {
    register char      *pto = current_end + 3;
    register char      *pfrom = current_end;
@@ -447,18 +420,7 @@ char               *current_end;
    if the regular-expression is correctly compiled, it returns 0;   
    otherwise, it returns a number of an error message.              
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static int          ReCompilePattern (char *pattern, int size, struct re_pattern_buffer *bufp)
-
-#else  /* __STDC__ */
-static int          ReCompilePattern (pattern, size, bufp)
-char               *pattern;
-int                 size;
-struct re_pattern_buffer *bufp;
-
-#endif /* __STDC__ */
-
+static int ReCompilePattern (char *pattern, int size, struct re_pattern_buffer *bufp)
 {
    register char      *b = bufp->buffer;
    register char      *p = pattern;
@@ -858,16 +820,7 @@ struct re_pattern_buffer *bufp;
    This fastmap is used by re_search to skip quickly over totally
    implausible text.                                             
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         ReCompileFastmap (struct re_pattern_buffer *bufp)
-
-#else  /* __STDC__ */
-static void         ReCompileFastmap (bufp)
-struct re_pattern_buffer *bufp;
-
-#endif /* __STDC__ */
-
 {
    unsigned char      *pattern = (unsigned char *) bufp->buffer;
    int                 size = bufp->used;
@@ -1054,18 +1007,7 @@ struct re_pattern_buffer *bufp;
    If the next element is a text element return TRUE       
    Otherwise return FALSE.                                 
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static ThotBool     NextStruct (ThotBool Forward, PtrElement * pEl, int *charNb)
-
-#else  /* __STDC__ */
-static ThotBool     NextStruct (Forward, pEl, charNb)
-ThotBool            Forward;
-PtrElement         *pEl;
-int                *charNb;
-
-#endif /* __STDC__ */
-
+static ThotBool NextStruct (ThotBool Forward, PtrElement *pEl, int *charNb)
 {
 
    PtrElement          pElTmp, pEl1;
@@ -1146,18 +1088,7 @@ int                *charNb;
    to by pEl. The value is placed in textChar. If pEl is   
    not a text-struct, -1 is returned in textChar.          
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         GetOrd (int *textChar, PtrElement pEl, int charNb)
-
-#else  /* __STDC__ */
-static void         GetOrd (textChar, pEl, charNb)
-int                *textChar;
-PtrElement          pEl;
-int                 charNb;
-
-#endif /* __STDC__ */
-
+static void GetOrd (int *textChar, PtrElement pEl, int charNb)
 {
    int                 skipChar;
    PtrTextBuffer       textBuffer, PtrTmp;
@@ -1191,19 +1122,7 @@ int                 charNb;
    While advancing through the text pEl and charNb is      
    kept up to date.                                        
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         NextChar (ThotBool Forward, int *textChar, PtrElement * pEl, int *charNb)
-
-#else  /* __STDC__ */
-static void         NextChar (Forward, textChar, pEl, charNb)
-ThotBool            Forward;
-int                *textChar;
-PtrElement         *pEl;
-int                *charNb;
-
-#endif /* __STDC__ */
-
+static void NextChar (ThotBool Forward, int *textChar, PtrElement *pEl, int *charNb)
 {
    ThotBool            nextstructure;
 
@@ -1254,19 +1173,7 @@ int                *charNb;
    	and returns that number.					
    Used in backwards search.					
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static int          nbmatch (PtrElement pEl1, int pos1, PtrElement pEl2, int pos2)
-
-#else  /* __STDC__ */
-static int          nbmatch (pEl1, pos1, pEl2, pos2)
-PtrElement          pEl1;
-int                 pos1;
-PtrElement          pEl2;
-int                 pos2;
-
-#endif /* __STDC__ */
-
+static int nbmatch (PtrElement pEl1, int pos1, PtrElement pEl2, int pos2)
 {
    int                 textchar;
    int                 nbmatched = 1;
@@ -1287,23 +1194,9 @@ int                 pos2;
    -2 is returned if there is an error (such as match stack      
    overflow).                                                    
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static int          ReMatch (struct re_pattern_buffer *pbufp, PtrElement pEl1, int pos1, PtrElement * pEl2, int *pos2, PtrElement pEndEl, int endCharNb, ThotBool forw)
-
-#else  /* __STDC__ */
-static int          ReMatch (pbufp, pEl1, pos1, pEl2, pos2, pEndEl, endCharNb, forw)
-struct re_pattern_buffer *pbufp;
-PtrElement          pEl1;
-int                 pos1;
-PtrElement         *pEl2;
-int                *pos2;
-PtrElement          pEndEl;
-int                 endCharNb;
-ThotBool            forw;
-
-#endif /* __STDC__ */
-
+static int ReMatch (struct re_pattern_buffer *pbufp, PtrElement pEl1,
+		    int pos1, PtrElement * pEl2, int *pos2, PtrElement pEndEl,
+		    int endCharNb, ThotBool forw)
 {
    PtrElement          pElBack;
    int                 posBack;
@@ -1892,22 +1785,10 @@ ThotBool            forw;
 /*----------------------------------------------------------------------
    SearchRegularExpression	search a regular expression				
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-ThotBool            SearchRegularExpression (PtrElement * firstEl, int *firstChar, PtrElement * lastEl, int *lastChar, ThotBool forward, ThotBool caseEquiv, char *expression)
-
-#else  /* __STDC__ */
-ThotBool            SearchRegularExpression (firstEl, firstChar, lastEl, lastChar, forward, caseEquiv, expression)
-PtrElement         *firstEl;
-int                *firstChar;
-PtrElement         *lastEl;
-int                *lastChar;
-ThotBool            forward;
-ThotBool            caseEquiv;
-char               *expression;
-
-#endif /* __STDC__ */
-
+ThotBool SearchRegularExpression (PtrElement *firstEl, int *firstChar,
+				  PtrElement *lastEl, int *lastChar,
+				  ThotBool forward, ThotBool caseEquiv,
+				  char *expression)
 {
 
    PtrElement          pEl1, pEl1old;

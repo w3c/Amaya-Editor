@@ -1541,7 +1541,7 @@ ThotBool IsGifFormat (char *datafile)
    FILE               *fp;
    char                version[4];
 
-   fp = ufopen (datafile, "r");
+   fp = fopen (datafile, "r");
    if (fp == NULL)
      {
 	if (fp != stdin)

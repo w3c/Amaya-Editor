@@ -262,10 +262,10 @@ void MathMLEntityCreated (unsigned char *entityValue, Language lang,
 	  {
 	  if (entityName[1] == 'x')
 	     /* it's a hexadecimal number */
-	     usscanf (&entityName[2], "%x", &code);
+	     sscanf (&entityName[2], "%x", &code);
 	  else
 	     /* it's a decimal number */
-	     usscanf (&entityName[1], "%d", &code);
+	     sscanf (&entityName[1], "%d", &code);
 	  GetFallbackCharacter (code, entityValue, &lang);
 	  }
      }

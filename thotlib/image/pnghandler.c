@@ -785,17 +785,14 @@ ThotBool IsPngFormat(char *fn)
    char   buf[8];
    int    ret;
 
-   fp = ufopen(fn , "rb");
+   fp = fopen(fn , "rb");
    if (!fp)
       return 0;
    ret = fread(buf, 1, 8, fp);
    fclose(fp);
-
    if (ret != 8)
       return FALSE;
-
    ret = png_check_sig(buf, 8);
-
    if (ret) return (TRUE);
    return(FALSE);
 }

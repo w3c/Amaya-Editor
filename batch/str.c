@@ -2971,7 +2971,7 @@ int main (int argc, char **argv)
                  else if (inputLine[0] == '#')
 		   {
 		     /* this line contains a cpp directive */
-		     usscanf (inputLine, "# %d %s", &LineNum, buffer);
+		     sscanf (inputLine, "# %d %s", &LineNum, buffer);
 		     LineNum--;
 		   }
 		 else

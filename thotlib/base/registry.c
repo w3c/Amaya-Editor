@@ -104,7 +104,7 @@ int errno;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static char*       SkipToEqual (char* ptr)
+static char *SkipToEqual (char *ptr)
 {
   while (*ptr != EOS && *ptr != '=' && *ptr != EOL && *ptr != __CR__)
     ptr++;
@@ -115,7 +115,7 @@ static char*       SkipToEqual (char* ptr)
    TtaSkipBlanks skips all spaces, tabs, linefeeds and newlines at the
    beginning of the string and returns the pointer to the new position. 
   ----------------------------------------------------------------------*/
-char* TtaSkipBlanks (char* ptr)
+char *TtaSkipBlanks (char *ptr)
 {
   while (*ptr == SPACE || *ptr == BSPACE || *ptr == EOL ||
 	  *ptr == TAB || *ptr == __CR__)
@@ -127,7 +127,7 @@ char* TtaSkipBlanks (char* ptr)
    TtaIsBlank returns True if the first character is a space, a tab, a
    linefeed or a newline.
   ----------------------------------------------------------------------*/
-ThotBool            TtaIsBlank (char* ptr)
+ThotBool TtaIsBlank (char *ptr)
 {
   if (*ptr == SPACE || *ptr == BSPACE || *ptr == EOL ||
       *ptr == TAB || *ptr == __CR__)
@@ -142,13 +142,13 @@ ThotBool            TtaIsBlank (char* ptr)
     string of all $(xxx) references by the values of xxx.
    and return a modified output string.
   ----------------------------------------------------------------------*/
-static void DoVariableSubstitution (char* input, int i_len, char* output,
+static void DoVariableSubstitution (char *input, int i_len, char *output,
 				    int o_len)
 {
-  char* cour = input;
-  char* base = input;
-  char* res  = output;
-  char* value;
+  char *cour = input;
+  char *base = input;
+  char *res  = output;
+  char *value;
   char  save;
 
 #define CHECK_OVERFLOW (cour - input > i_len || res - output >= o_len - 1)
@@ -222,7 +222,7 @@ static void DoVariableSubstitution (char* input, int i_len, char* output,
 /*----------------------------------------------------------------------
  NewRegisterEntry : add a fresh new entry in the Register.
   ----------------------------------------------------------------------*/
-static int NewRegisterEntry (char* appli, char* name, char* value,
+static int NewRegisterEntry (char *appli, char *name, char *value,
 			     RegistryLevel level)
 {
    char        resu[2000];
@@ -315,7 +315,7 @@ static int NewRegisterEntry (char* appli, char* name, char* value,
  AddRegisterEntry : add an entry in the Register, we first check
  that it doesn't already exist especially if the value is empty.
   ----------------------------------------------------------------------*/
-static int AddRegisterEntry (char* appli, char *name, char* value,
+static int AddRegisterEntry (char *appli, char *name, char *value,
 			     RegistryLevel level, int overwrite)
 {
   char        resu[2000];
@@ -387,7 +387,7 @@ static int AddRegisterEntry (char* appli, char *name, char* value,
 /*----------------------------------------------------------------------
  PrintEnv : print the Registry to an open File.
   ----------------------------------------------------------------------*/
-static void         PrintEnv (FILE * output)
+static void         PrintEnv (FILE *output)
 {
   RegistryEntry       cour, next;
   
@@ -482,9 +482,9 @@ static void         SortEnv (void)
   environment string.
   Returns TRUE if the env variables exists or FALSE if it isn't the case.
   ----------------------------------------------------------------------*/
-ThotBool TtaGetEnvInt (char* name, int *value)
+ThotBool TtaGetEnvInt (char *name, int *value)
 {
-  char* strptr;
+  char *strptr;
 
   if (!name || *name == EOS)
    {
@@ -510,9 +510,9 @@ ThotBool TtaGetEnvInt (char* name, int *value)
   environment string.
   Returns TRUE if the env variables exists or FALSE if it isn't the case.
   ----------------------------------------------------------------------*/
-ThotBool TtaGetEnvBoolean (char* name, ThotBool *value)
+ThotBool TtaGetEnvBoolean (char *name, ThotBool *value)
 {
- char* strptr;
+ char *strptr;
 
  if (!name || *name == EOS)
    {
@@ -543,7 +543,7 @@ ThotBool TtaGetEnvBoolean (char* name, ThotBool *value)
   TtaGetEnvString : read the value associated to an environment string
   if not present return NULL.
   ----------------------------------------------------------------------*/
-char* TtaGetEnvString (char* name)
+char *TtaGetEnvString (char *name)
 {
    RegistryEntry  cour;
    char          *value;
@@ -664,7 +664,7 @@ void TtaSetEnvInt (char *name, int value, int overwrite)
   ----------------------------------------------------------------------*/
 void TtaSetEnvBoolean (char *name, ThotBool value, int overwrite)
 {
-   char* ptr;
+   char *ptr;
 
    if (value)
       ptr = "yes";
@@ -677,9 +677,9 @@ void TtaSetEnvBoolean (char *name, ThotBool value, int overwrite)
  TtaSetEnvString : set the value associated to an environment string,
                    for the current application.
   ----------------------------------------------------------------------*/
-void TtaSetEnvString (char *name, char* value, int overwrite)
+void TtaSetEnvString (char *name, char *value, int overwrite)
 {
-   char* tmp = value;
+   char *tmp = value;
   
    if (!tmp)
       tmp = "";
@@ -690,9 +690,9 @@ void TtaSetEnvString (char *name, char* value, int overwrite)
  TtaSetDefEnvString : set the defaul value associated to an environment
                       string, for the current application.
   ----------------------------------------------------------------------*/
-void TtaSetDefEnvString (char *name, char* value, int overwrite)
+void TtaSetDefEnvString (char *name, char *value, int overwrite)
 {
-  char* tmp = value; /* ??? */
+  char *tmp = value; /* ??? */
                          /* ??? */
   if (!tmp)              /* ??? */
     tmp = "";   /* ??? */
@@ -705,9 +705,9 @@ void TtaSetDefEnvString (char *name, char* value, int overwrite)
   environment string.
   Returns TRUE if the env variables exists or FALSE if it isn't the case.
   ----------------------------------------------------------------------*/
-ThotBool TtaGetDefEnvInt (char* name, int *value)
+ThotBool TtaGetDefEnvInt (char *name, int *value)
 {
- char* strptr;
+ char *strptr;
 
  if (!name || *name == EOS)
    {
@@ -735,7 +735,7 @@ ThotBool TtaGetDefEnvInt (char* name, int *value)
   environment string.
   Returns TRUE if the env variables exists or FALSE if it isn't the case.
   ----------------------------------------------------------------------*/
-ThotBool TtaGetDefEnvBoolean (char* name, ThotBool *value)
+ThotBool TtaGetDefEnvBoolean (char *name, ThotBool *value)
 {
  char   *strptr;
 
@@ -767,7 +767,7 @@ ThotBool TtaGetDefEnvBoolean (char* name, ThotBool *value)
   TtaGetDefEnvString : read the default value associated to an 
   environment string. If not present, returns NULL.
   ----------------------------------------------------------------------*/
-char* TtaGetDefEnvString (char* name)
+char *TtaGetDefEnvString (char *name)
 {
   RegistryEntry  cour;
   char          *value;
@@ -847,7 +847,7 @@ char* TtaGetDefEnvString (char* name)
          The heuristic is to find a subdir named "config" and containing 
          the registry file.                                              
   ----------------------------------------------------------------------*/
-static int          IsThotDir (CONST char* path)
+static int          IsThotDir (CONST char *path)
 {
   char           filename[MAX_PATH];
 
@@ -987,15 +987,15 @@ void TtaSaveAppRegistry ()
 /*----------------------------------------------------------------------
   ImportRegistryFile : import a registry file.
   ----------------------------------------------------------------------*/
-static void ImportRegistryFile (char* filename, RegistryLevel level)
+static void ImportRegistryFile (char *filename, RegistryLevel level)
 {
-  FILE*     input;
-  char*     str; 
-  char*     base;
+  FILE     *input;
+  char     *str; 
+  char     *base;
   char      string[MAX_LENGTH];
-  char    appli[MAX_LENGTH];
-  char*     name;
-  char*     value;
+  char      appli[MAX_LENGTH];
+  char     *name;
+  char     *value;
 
   strcpy (appli, THOT_LIB_DEFAULTNAME);
   input = fopen (filename, "r");
@@ -1060,9 +1060,9 @@ static void ImportRegistryFile (char* filename, RegistryLevel level)
   ----------------------------------------------------------------------*/
 static void         InitEnviron ()
 {
-   char* pT;
-   char* Thot_Sys_Sch;
-   char* Thot_Sch;
+   char *pT;
+   char *Thot_Sys_Sch;
+   char *Thot_Sch;
 
    /* default values for various global variables */
    FirstCreation = FALSE;
@@ -1160,14 +1160,14 @@ static void         InitEnviron ()
   We load the ressources file from the installation directory and
   the specific user values from the user HOME dir.
   ----------------------------------------------------------------------*/
-void TtaInitializeAppRegistry (char* appArgv0)
+void TtaInitializeAppRegistry (char *appArgv0)
 {
   char      app_home[MAX_PATH];
   char      filename[MAX_PATH];
-  char*     my_path;
-  char*     dir_end = NULL;
-  char*     appName;
-  char*     ptr;
+  char     *my_path;
+  char     *dir_end = NULL;
+  char     *appName;
+  char     *ptr;
 #ifdef _WINDOWS
   /* name in Windows NT 4 is 20 chars */
   char      username[MAX_LENGTH];
@@ -1225,7 +1225,7 @@ void TtaInitializeAppRegistry (char* appArgv0)
    */
   else if (TtaFileExist (appArgv0))
     {
-      ugetcwd (&execname[0], sizeof (execname) / sizeof (char));
+      getcwd (&execname[0], sizeof (execname) / sizeof (char));
       strcat (execname, DIR_STR);
       strcat (execname, appArgv0);
     }
@@ -1559,10 +1559,10 @@ void                TtaFreeAppRegistry (void)
    - 2 : ThotDir/bin                                       
    - 3 : ThotDir/compil                                    
   ----------------------------------------------------------------------*/
-int SearchFile (char* fileName, int dir, char* fullName)
+int SearchFile (char *fileName, int dir, char *fullName)
 {
-   char  tmpbuf[200];
-   char* imagepath;
+   char                tmpbuf[200];
+   char               *imagepath;
    int                 i, j;
    int                 ret;
 

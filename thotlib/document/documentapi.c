@@ -58,17 +58,16 @@
 #include "thotmsg_f.h"
 #include "translation_f.h"
 #include "tree_f.h"
-#include "ustring_f.h"
 #include "viewapi_f.h"
 #include "views_f.h"
 #include "writepivot_f.h"
 
-static CHAR_T nameBuffer[MAX_NATURES_DOC];
-static CHAR_T ISObuffer[MAX_NATURES_DOC];
+static char nameBuffer[MAX_NATURES_DOC];
+static char ISObuffer[MAX_NATURES_DOC];
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                CreateWithException (PtrElement pEl, PtrDocument pDoc)
+void CreateWithException (PtrElement pEl, PtrDocument pDoc)
 {
    /* If table creation */
    if (ThotLocalActions[T_createtable] != NULL)
@@ -79,7 +78,7 @@ void                CreateWithException (PtrElement pEl, PtrDocument pDoc)
   TtaGetDocumentCharset gets the document charset
   Returns UNDEFINED_CHARSET when the document uses the default charset.
  ----------------------------------------------------------------------*/
-CHARSET     TtaGetDocumentCharset (Document document)
+CHARSET TtaGetDocumentCharset (Document document)
 {
   PtrDocument pDoc;
 
@@ -104,7 +103,7 @@ CHARSET     TtaGetDocumentCharset (Document document)
 /*----------------------------------------------------------------------
   TtaSetDocumentCharset sets the document charset
  ----------------------------------------------------------------------*/
-void         TtaSetDocumentCharset (Document document, CHARSET charSet)
+void TtaSetDocumentCharset (Document document, CHARSET charSet)
 {
   PtrDocument pDoc;
 
@@ -126,17 +125,15 @@ void         TtaSetDocumentCharset (Document document, CHARSET charSet)
    TtaOpenDocument
 
    Opens an existing document for subsequent operations.
-
    Parameters:
    documentName: name of the file containing the document to be open
    (maximum length 19 characters). The directory name is not part of
    this parameter (see TtaSetDocumentPath).
    accessMode: 0 = read only, 1 = read-write.
-
    Return value:
    the opened document, or 0 if the document cannot be open.
   ----------------------------------------------------------------------*/
-Document            TtaOpenDocument (STRING documentName, int accessMode)
+Document TtaOpenDocument (char *documentName, int accessMode)
 {
   PtrDocument         pDoc;
   Document            document;
@@ -152,19 +149,19 @@ Document            TtaOpenDocument (STRING documentName, int accessMode)
      TtaError (ERR_too_many_documents);
   else
     {
-      lg = ustrlen (documentName);
+      lg = strlen (documentName);
       if (lg >= MAX_NAME_LENGTH)
 	TtaError (ERR_string_too_long);
       else
 	{
-	  ustrncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
+	  strncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
 	  pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 	     /* suppresses the .PIV suffix if found */
 	  if (lg > 4)
-	    if (ustrcmp (&(pDoc->DocDName[lg - 4]), ".PIV") == 0)
+	    if (strcmp (&(pDoc->DocDName[lg - 4]), ".PIV") == 0)
 	      pDoc->DocDName[lg - 4] = EOS;
 	  GetDocIdent (&pDoc->DocIdent, pDoc->DocDName);
-	  ustrncpy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
+	  strncpy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
 	  ok = OpenDocument (pDoc->DocDName, pDoc, TRUE, FALSE, NULL,
 			     FALSE, TRUE);
 	  if (!ok)
@@ -176,7 +173,7 @@ Document            TtaOpenDocument (STRING documentName, int accessMode)
 	  else
 	    {
 	      /* keep the actual schema path into the document context */
-		 ustrncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
+		 strncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
 		 if (!pDoc->DocReadOnly)
 		   pDoc->DocReadOnly = (accessMode == 0);
 	       }
@@ -189,7 +186,7 @@ Document            TtaOpenDocument (STRING documentName, int accessMode)
 /*----------------------------------------------------------------------
    UnloadTree free the document tree of pDoc				
   ----------------------------------------------------------------------*/
-void                UnloadTree (Document document)
+void UnloadTree (Document document)
 {
   PtrDocument      pDoc;
 
@@ -212,7 +209,7 @@ void                UnloadTree (Document document)
 /*----------------------------------------------------------------------
    UnloadDocument free the document contexts of pDoc				
   ----------------------------------------------------------------------*/
-void                UnloadDocument (PtrDocument * pDoc)
+void UnloadDocument (PtrDocument * pDoc)
 {
   int                 d;
 
@@ -248,7 +245,7 @@ void                UnloadDocument (PtrDocument * pDoc)
    Parameter:
    document: the document to be closed.
   ----------------------------------------------------------------------*/
-void                TtaCloseDocument (Document document)
+void TtaCloseDocument (Document document)
 {
 #ifndef NODISPLAY
   int              nv;
@@ -297,15 +294,13 @@ void                TtaCloseDocument (Document document)
    path: the directory list, where directory names are separated by
    the character PATH_SEP.
   ----------------------------------------------------------------------*/
-void                TtaSetDocumentPath (STRING path)
+void TtaSetDocumentPath (char *path)
 {
    UserErrorCode = 0;
-   if (ustrlen (path) >= MAX_PATH)
-      TtaError (ERR_string_too_long);
+   if (strlen (path) >= MAX_PATH)
+     TtaError (ERR_string_too_long);
    else
-     {
-	ustrcpy (DocumentPath, path);
-     }
+     strcpy (DocumentPath, path);
 }
 
 /*----------------------------------------------------------------------
@@ -318,7 +313,7 @@ void                TtaSetDocumentPath (STRING path)
    TRUE if all directories are OK, FALSE if at least one cannot be
    accessed.
   ----------------------------------------------------------------------*/
-ThotBool            TtaCheckPath (char* path)
+ThotBool TtaCheckPath (char *path)
 {
    int                 i, j;
    PathBuffer          single_directory;
@@ -354,19 +349,19 @@ ThotBool            TtaCheckPath (char* path)
    Parameter:
    directory: the new directory name.
   ----------------------------------------------------------------------*/
-ThotBool            TtaIsInDocumentPath (CHAR_T* directory)
+ThotBool TtaIsInDocumentPath (char *directory)
 {
-   int                 i;
-   CHAR_T*             ptr;
+   int              i;
+   char            *ptr;
 
    /* Verify if this directory is already in the list  */
-   ptr = ustrstr (DocumentPath, directory);
-   i = ustrlen (directory);
-   while (ptr != NULL && ptr[i] != WC_PATH_SEP && ptr[i] != WC_EOS)
+   ptr = strstr (DocumentPath, directory);
+   i = strlen (directory);
+   while (ptr != NULL && ptr[i] != PATH_SEP && ptr[i] != EOS)
      {
-        ptr = ustrstr (ptr, WC_PATH_STR);
+        ptr = strstr (ptr, PATH_STR);
         if (ptr != NULL)
-           ptr = ustrstr (ptr, directory);
+           ptr = strstr (ptr, directory);
      }
    return (ptr != NULL);
 }
@@ -380,13 +375,13 @@ ThotBool            TtaIsInDocumentPath (CHAR_T* directory)
    Parameter:
    directory: the new directory name.
   ----------------------------------------------------------------------*/
-void                TtaAppendDocumentPath (CHAR_T* directory)
+void TtaAppendDocumentPath (char *directory)
 {
    int                 i;
    int                 lg;
 
    UserErrorCode = 0;
-   lg = ustrlen (directory);
+   lg = strlen (directory);
 
    if (lg >= MAX_PATH)
       TtaError (ERR_string_too_long);
@@ -395,14 +390,14 @@ void                TtaAppendDocumentPath (CHAR_T* directory)
    else if (!TtaIsInDocumentPath (directory))
      {
 	/* add the directory in the path */
-	i = ustrlen (DocumentPath);
+	i = strlen (DocumentPath);
 	if (i + lg + 2 >= MAX_PATH)
 	   TtaError (ERR_string_too_long);
 	else
 	  {
 	     if (i > 0)
-            ustrcat (DocumentPath, WC_PATH_STR);
-         ustrcat (DocumentPath, directory);
+            strcat (DocumentPath, PATH_STR);
+         strcat (DocumentPath, directory);
 	  }
      }
 }
@@ -416,13 +411,13 @@ void                TtaAppendDocumentPath (CHAR_T* directory)
    path: the directory list, where directory names are separated by
    the character PATH_SEP.
   ----------------------------------------------------------------------*/
-void                TtaSetSchemaPath (STRING path)
+void TtaSetSchemaPath (char *path)
 {
    UserErrorCode = 0;
-   if (ustrlen (path) >= MAX_PATH)
+   if (strlen (path) >= MAX_PATH)
       TtaError (ERR_string_too_long);
    else
-      ustrcpy (SchemaPath, path);
+      strcpy (SchemaPath, path);
 }
 
 /*----------------------------------------------------------------------
@@ -443,8 +438,8 @@ void                TtaSetSchemaPath (STRING path)
    the structure schema of the new nature; NULL if the structure schema
    has not been loaded.
   ----------------------------------------------------------------------*/
-SSchema TtaNewNature (Document document, SSchema schema, CHAR_T* natureName,
-		      CHAR_T* presentationName)
+SSchema TtaNewNature (Document document, SSchema schema, char *natureName,
+		      char *presentationName)
 {
   int                 natureRule;
   PtrSSchema          natureSchema;
@@ -491,8 +486,8 @@ SSchema TtaNewNature (Document document, SSchema schema, CHAR_T* natureName,
    Return value:
    the extension schema, NULL if the extension schema has not been loaded.
   ----------------------------------------------------------------------*/
-SSchema TtaNewSchemaExtension (Document document, CHAR_T* extensionName,
-			       CHAR_T* presentationName)
+SSchema TtaNewSchemaExtension (Document document, char *extensionName,
+			       char *presentationName)
 {
    PtrSSchema          extension;
 
@@ -530,7 +525,7 @@ SSchema TtaNewSchemaExtension (Document document, CHAR_T* extensionName,
    presentationName: Name of the presentation schema to be associated
    with the document.
   ----------------------------------------------------------------------*/
-void       TtaSetPSchema (Document document, CHAR_T* presentationName)
+void TtaSetPSchema (Document document, char *presentationName)
 {
    PtrDocument         pDoc;
 #ifndef NODISPLAY
@@ -550,13 +545,13 @@ void       TtaSetPSchema (Document document, CHAR_T* presentationName)
       pDoc = LoadedDocument[document - 1];
 #ifdef NODISPLAY
       if (pDoc->DocSSchema != NULL)
-	 ustrncpy (pDoc->DocSSchema->SsDefaultPSchema, presentationName,
+	 strncpy (pDoc->DocSSchema->SsDefaultPSchema, presentationName,
 		   MAX_NAME_LENGTH - 1);
 #else
       /* verifies that there is no open views */
       ok = TRUE;
-      for (view = 1; view <= MAX_VIEW_DOC && ok; view++)
-	 if (pDoc->DocView[view - 1].DvPSchemaView != 0)
+      for (view = 0; view < MAX_VIEW_DOC && ok; view++)
+	 if (pDoc->DocView[view].DvPSchemaView != 0)
 	    ok = FALSE;
       if (!ok)
 	 TtaError (ERR_there_are_open_views);
@@ -577,7 +572,7 @@ void       TtaSetPSchema (Document document, CHAR_T* presentationName)
    document: the document whose directory is set.
    directory: new document directory.
   ----------------------------------------------------------------------*/
-void     TtaSetDocumentDirectory (Document document, CHAR_T* directory)
+void TtaSetDocumentDirectory (Document document, char *directory)
 {
    UserErrorCode = 0;
    /* verifies the parameter document */
@@ -588,9 +583,9 @@ void     TtaSetDocumentDirectory (Document document, CHAR_T* directory)
    else
       /* parameter document is correct */
      {
-	if (ustrlen (directory) >= MAX_PATH)
+	if (strlen (directory) >= MAX_PATH)
 	   TtaError (ERR_buffer_too_small);
-	ustrcpy (LoadedDocument[document - 1]->DocDirectory, directory);
+	strcpy (LoadedDocument[document - 1]->DocDirectory, directory);
      }
 }
 
@@ -603,7 +598,7 @@ void     TtaSetDocumentDirectory (Document document, CHAR_T* directory)
    document: the document whose access mode is changed.
    accessMode: 0 = read only, 1 = read-write.
   ----------------------------------------------------------------------*/
-void                TtaSetDocumentAccessMode (Document document, int accessMode)
+void TtaSetDocumentAccessMode (Document document, int accessMode)
 {
   PtrDocument      pDoc;
 
@@ -657,7 +652,7 @@ void                TtaSetDocumentAccessMode (Document document, int accessMode)
    positive integer : number of characters typed which triggers
    automatic save of the document into a .BAK file.
   ----------------------------------------------------------------------*/
-void    TtaSetDocumentBackUpInterval (Document document, int interval)
+void TtaSetDocumentBackUpInterval (Document document, int interval)
 {
   UserErrorCode = 0;
   /* verifies the parameter document */
@@ -734,7 +729,7 @@ void  SetDocumentModified (PtrDocument pDoc, ThotBool status, int length)
    Parameter:
    document: the document.
   ----------------------------------------------------------------------*/
-void                TtaSetDocumentModified (Document document)
+void TtaSetDocumentModified (Document document)
 {
    UserErrorCode = 0;
    /* verifies the parameter document */
@@ -757,7 +752,7 @@ void                TtaSetDocumentModified (Document document)
    Parameter:
    document: the document.
   ----------------------------------------------------------------------*/
-void                TtaSetDocumentUnmodified (Document document)
+void TtaSetDocumentUnmodified (Document document)
 {
    UserErrorCode = 0;
    /* verifies the parameter document */
@@ -780,7 +775,7 @@ void                TtaSetDocumentUnmodified (Document document)
    Parameter:
    document: the document.
   ----------------------------------------------------------------------*/
-void                TtaSetDocumentUnupdated (Document document)
+void TtaSetDocumentUnupdated (Document document)
 {
    UserErrorCode = 0;
    /* verifies the parameter document */
@@ -802,24 +797,18 @@ void                TtaSetDocumentUnupdated (Document document)
    Return value:
    name of that document.
   ----------------------------------------------------------------------*/
-CHAR_T*             TtaGetDocumentName (Document document)
+char *TtaGetDocumentName (Document document)
 {
    UserErrorCode = 0;
-   nameBuffer[0] = WC_EOS;
+   nameBuffer[0] = EOS;
    /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else
-      /* parameter document is correct */
-     {
-	ustrcpy (nameBuffer, LoadedDocument[document - 1]->DocDName);
-     }
+     /* parameter document is correct */
+     strcpy (nameBuffer, LoadedDocument[document - 1]->DocDName);
    return nameBuffer;
 }
 
@@ -833,7 +822,7 @@ CHAR_T*             TtaGetDocumentName (Document document)
    Return value:
    the document having that name.
   ----------------------------------------------------------------------*/
-Document TtaGetDocumentFromName (STRING documentName)
+Document TtaGetDocumentFromName (char *documentName)
 {
    int                 document;
    ThotBool            found;
@@ -843,10 +832,10 @@ Document TtaGetDocumentFromName (STRING documentName)
    found = FALSE;
    while (!found && document < MAX_DOCUMENTS)
      {
-	if (LoadedDocument[document - 1] != NULL)
-	   if (ustrcmp (documentName, LoadedDocument[document - 1]->DocDName) == 0)
-	      found = TRUE;
-	if (!found)
+	if (LoadedDocument[document - 1] != NULL &&
+	    (strcmp (documentName, LoadedDocument[document - 1]->DocDName) == 0))
+	  found = TRUE;
+	else
 	   document++;
      }
    if (!found)
@@ -866,10 +855,10 @@ Document TtaGetDocumentFromName (STRING documentName)
    Return parameter:
    buffer: the document directory.
   ----------------------------------------------------------------------*/
-void TtaGetDocumentDirectory (Document document, STRING buffer, int bufferLength)
+void TtaGetDocumentDirectory (Document document, char *buffer, int bufferLength)
 {
   UserErrorCode = 0;
-  nameBuffer[0] = WC_EOS;
+  nameBuffer[0] = EOS;
   /* verifies the parameter document */
   if (document < 1 || document > MAX_DOCUMENTS)
     TtaError (ERR_invalid_document_parameter);
@@ -878,9 +867,9 @@ void TtaGetDocumentDirectory (Document document, STRING buffer, int bufferLength
   else
     /* parameter document is correct */
     {
-      if (ustrlen (LoadedDocument[document - 1]->DocDirectory) >= (size_t) bufferLength)
+      if (strlen (LoadedDocument[document - 1]->DocDirectory) >= (size_t) bufferLength)
 	TtaError (ERR_buffer_too_small);
-      ustrncpy (buffer, LoadedDocument[document - 1]->DocDirectory, bufferLength - 1);
+      strncpy (buffer, LoadedDocument[document - 1]->DocDirectory, bufferLength - 1);
     }
 }
 
@@ -919,18 +908,16 @@ SSchema  TtaGetDocumentSSchema (Document document)
    Return value:
    name of that structure schema.
   ----------------------------------------------------------------------*/
-CHAR_T*             TtaGetSSchemaName (SSchema schema)
+char *TtaGetSSchemaName (SSchema schema)
 {
    UserErrorCode = 0;
    if (schema == NULL)
      {
-	ISObuffer[0] = WC_EOS;
-	TtaError (ERR_invalid_parameter);
+       ISObuffer[0] = EOS;
+       TtaError (ERR_invalid_parameter);
      }
    else
-     {
-	ustrcpy (ISObuffer, ((PtrSSchema) schema)->SsName);
-     }
+     strcpy (ISObuffer, ((PtrSSchema) schema)->SsName);
    return ISObuffer;
 }
 
@@ -944,18 +931,16 @@ CHAR_T*             TtaGetSSchemaName (SSchema schema)
    Return value:
    name of the associated presentation schema.
   ----------------------------------------------------------------------*/
-CHAR_T*              TtaGetPSchemaName (SSchema schema)
+char *TtaGetPSchemaName (SSchema schema)
 {
    UserErrorCode = 0;
    if (schema == NULL)
      {
-	ISObuffer[0] = EOS;
-	TtaError (ERR_invalid_parameter);
+       ISObuffer[0] = EOS;
+       TtaError (ERR_invalid_parameter);
      }
    else
-     {
-	ustrcpy (ISObuffer, ((PtrSSchema) schema)->SsDefaultPSchema);
-     }
+     strcpy (ISObuffer, ((PtrSSchema) schema)->SsDefaultPSchema);
    return ISObuffer;
 }
 
@@ -971,13 +956,13 @@ CHAR_T*              TtaGetPSchemaName (SSchema schema)
    the structure schema having this name, or NULL if this structure
    schema is not loaded or not used by the document.
   ----------------------------------------------------------------------*/
-SSchema             TtaGetSSchema (CHAR_T* name, Document document)
+SSchema TtaGetSSchema (char *name, Document document)
 {
    SSchema          schema;
 
    UserErrorCode = 0;
    schema = NULL;
-   if (name == NULL || name[0] == WC_EOS)
+   if (name == NULL || name[0] == EOS)
      TtaError (ERR_invalid_parameter);
    /* verifies the parameter document */
    else if (document < 1 || document > MAX_DOCUMENTS)
@@ -1001,7 +986,7 @@ SSchema             TtaGetSSchema (CHAR_T* name, Document document)
    Return value:
    0 if both schemas are different, 1 if they are identical.
   ----------------------------------------------------------------------*/
-int                 TtaSameSSchemas (SSchema schema1, SSchema schema2)
+int TtaSameSSchemas (SSchema schema1, SSchema schema2)
 {
   int                 result;
 
@@ -1009,7 +994,7 @@ int                 TtaSameSSchemas (SSchema schema1, SSchema schema2)
   result = 0;
   if (schema1 == NULL || schema2 == NULL)
     TtaError (ERR_invalid_parameter);
-  else if (!ustrcmp (((PtrSSchema) schema1)->SsName, ((PtrSSchema) schema2)->SsName))
+  else if (!strcmp (((PtrSSchema) schema1)->SsName, ((PtrSSchema) schema2)->SsName))
     result = 1;
   return result;
 }
@@ -1029,12 +1014,12 @@ int                 TtaSameSSchemas (SSchema schema1, SSchema schema2)
    structureName: Name of the document structure schema.
    presentationName: Name of the document presentation schema.
   ----------------------------------------------------------------------*/
-void TtaGiveSchemasOfDocument (STRING documentName, char *structureName,
+void TtaGiveSchemasOfDocument (char *documentName, char *structureName,
 			       char *presentationName)
 {
    PathBuffer          DirBuffer;
    BinFile             file;
-   CHAR_T              text[MAX_TXT_LEN];
+   char              text[MAX_TXT_LEN];
    int                 i;
    ThotBool            error;
    char                charGotten;
@@ -1045,7 +1030,7 @@ void TtaGiveSchemasOfDocument (STRING documentName, char *structureName,
    structureName[0] = EOS;
    presentationName[0] = EOS;
    /* Arrange the name of the file to be opened with the documents directory name */
-   ustrncpy (DirBuffer, DocumentPath, MAX_PATH);
+   strncpy (DirBuffer, DocumentPath, MAX_PATH);
    MakeCompleteName (documentName, "PIV", DirBuffer, text, &i);
    /* Verify if the file exists */
    file = TtaReadOpen (text);
@@ -1059,7 +1044,7 @@ void TtaGiveSchemasOfDocument (STRING documentName, char *structureName,
 	/* Gets the version number if it exists */
 	if (!TtaReadByte (file, &charGotten))
 	   error = TRUE;
-	if (charGotten == (CHAR_T) C_PIV_VERSION)
+	if (charGotten == (char) C_PIV_VERSION)
 	  {
 	     if (!TtaReadByte (file, &charGotten))
 		error = TRUE;
@@ -1071,8 +1056,10 @@ void TtaGiveSchemasOfDocument (STRING documentName, char *structureName,
 		error = TRUE;
 	  }
 	/* Gets the label max. of the document if it is present */
-	if (!error && ((CHAR_T) charGotten == (CHAR_T) C_PIV_SHORT_LABEL || (CHAR_T) charGotten == (CHAR_T) C_PIV_LONG_LABEL ||
-		       charGotten == (CHAR_T) C_PIV_LABEL))
+	if (!error &&
+	    ((char) charGotten == (char) C_PIV_SHORT_LABEL ||
+	     (char) charGotten == (char) C_PIV_LONG_LABEL ||
+	     charGotten == (char) C_PIV_LABEL))
 	  {
 	     ReadLabel (charGotten, lab, file);
 	     if (!TtaReadByte (file, &charGotten))
@@ -1082,7 +1069,7 @@ void TtaGiveSchemasOfDocument (STRING documentName, char *structureName,
 	if (currentVersion >= 4)
 	  {
 	     /* Gets the table of laguages used by the document */
-	     while (charGotten == (CHAR_T) C_PIV_LANG && !error)
+	     while (charGotten == (char) C_PIV_LANG && !error)
 	       {
 		  do
 		     if (!TtaReadByte (file, &charGotten))
@@ -1098,7 +1085,7 @@ void TtaGiveSchemasOfDocument (STRING documentName, char *structureName,
 	  }
 
 	/* Gets the name of the schema structure which is at the begenning of the pivot file */
-	if (!error && charGotten != (CHAR_T) C_PIV_NATURE)
+	if (!error && charGotten != (char) C_PIV_NATURE)
 	   error = TRUE;
 	if (!error)
 	  {
@@ -1179,7 +1166,7 @@ void   TtaNextSchemaExtension (Document document, SSchema * extension)
    when calling.
    NULL if there is no more nature for the document.
   ----------------------------------------------------------------------*/
-void                TtaNextNature (Document document, SSchema * nature)
+void  TtaNextNature (Document document, SSchema * nature)
 {
    PtrSSchema          nextNature;
 #ifndef NODISPLAY
@@ -1256,7 +1243,7 @@ void                TtaNextNature (Document document, SSchema * nature)
    1 if the document has been modified by the user since it has been saved,
    loaded or created, 0 if it has not been modified.
   ----------------------------------------------------------------------*/
-int                 TtaIsDocumentModified (Document document)
+int TtaIsDocumentModified (Document document)
 {
    int                 modified;
 
@@ -1286,7 +1273,7 @@ int                 TtaIsDocumentModified (Document document)
    1 if the document has been modified by the user since it has been saved,
    loaded or created, 0 if it has not been modified.
   ----------------------------------------------------------------------*/
-int                 TtaIsDocumentUpdated (Document document)
+int TtaIsDocumentUpdated (Document document)
 {
    int                 updated;
 
@@ -1343,7 +1330,7 @@ int TtaGetDocumentAccessMode (Document document)
    positive integer : number of typed characters which trigger an autamatic
    save of the document into a .BAK file.
   ----------------------------------------------------------------------*/
-int                 TtaGetDocumentBackUpInterval (Document document)
+int TtaGetDocumentBackUpInterval (Document document)
 {
   int                 result;
 
@@ -1371,7 +1358,7 @@ int                 TtaGetDocumentBackUpInterval (Document document)
    0 = if only roots of created and deleted subtrees must be notified,
    1 = all elements of created and deleted subtrees must be notified.
   ----------------------------------------------------------------------*/
-int                 TtaGetNotificationMode (Document document)
+int TtaGetNotificationMode (Document document)
 {
   int                 result;
 
@@ -1403,13 +1390,13 @@ int                 TtaGetNotificationMode (Document document)
    buffer: the list of directories. Directory names are separated by
    the character PATH_SEP.
   ----------------------------------------------------------------------*/
-void                TtaGetDocumentPath (STRING buffer, int bufferLength)
+void TtaGetDocumentPath (char *buffer, int bufferLength)
 {
 
    UserErrorCode = 0;
-   if (ustrlen (DocumentPath) >= (size_t)bufferLength)
+   if (strlen (DocumentPath) >= (size_t)bufferLength)
       TtaError (ERR_buffer_too_small);
-   ustrncpy (buffer, DocumentPath, bufferLength - 1);
+   strncpy (buffer, DocumentPath, bufferLength - 1);
 }
 
 /*----------------------------------------------------------------------
@@ -1423,13 +1410,13 @@ void                TtaGetDocumentPath (STRING buffer, int bufferLength)
    buffer: the list of directories. Directory names are separated by
    the character PATH_SEP.
   ----------------------------------------------------------------------*/
-void                TtaGetSchemaPath (STRING buffer, int bufferLength)
+void TtaGetSchemaPath (char *buffer, int bufferLength)
 {
 
    UserErrorCode = 0;
-   if (ustrlen (SchemaPath) >= (size_t)bufferLength)
+   if (strlen (SchemaPath) >= (size_t)bufferLength)
       TtaError (ERR_buffer_too_small);
-   ustrncpy (buffer, SchemaPath, bufferLength - 1);
+   strncpy (buffer, SchemaPath, bufferLength - 1);
 }
 
 #ifndef NODISPLAY

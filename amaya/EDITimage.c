@@ -351,10 +351,8 @@ void CallbackImage (int ref, int typedata, char *data)
       break;
     case ImageSel:
       if (DirectoryImage[0] == EOS)
-	{
-	  /* set path on current directory */
-	  ugetcwd (DirectoryImage, MAX_LENGTH);
-	} 
+	/* set path on current directory */
+	getcwd (DirectoryImage, MAX_LENGTH);
       /* construct the image full name */
       strcpy (LastURLImage, DirectoryImage);
       val = strlen (LastURLImage) - 1;
@@ -372,14 +370,14 @@ void CallbackImage (int ref, int typedata, char *data)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                InitImage (void)
+void InitImage (void)
 {
    BaseImage = TtaSetCallback (CallbackImage, IMAGE_MAX_REF);
    RepeatValue = 0;
    LastURLImage[0] = EOS;
    strcpy (ImgFilter, ".gif");
    /* set path on current directory */
-   ugetcwd (DirectoryImage, MAX_LENGTH);
+   getcwd (DirectoryImage, MAX_LENGTH);
 }
 
 

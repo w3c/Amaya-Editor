@@ -607,7 +607,7 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 #ifndef _WINDOWS
 	    rename (outputfile, tempfile);
 #else /* _WINDOWS */
-	    if (urename (outputfile, tempfile) != 0)
+	    if (rename (outputfile, tempfile) != 0)
 	      sprintf (tempfile, "%s", outputfile); 
 #endif /* _WINDOWS */
 	  }

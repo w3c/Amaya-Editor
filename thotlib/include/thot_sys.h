@@ -62,7 +62,6 @@ and must be removed at the end of the debug */
 #include "sysdep.h"
 #include "ustring.h"
 #include "uconvert.h"
-#include "thot_uio.h"
 
 /* If const does work, or hasn't been redefined before */
 #ifndef CONST
@@ -82,6 +81,12 @@ and must be removed at the end of the debug */
 
 /********************************************************WINDOWS**/
 #ifdef _WINDOWS
+#define access _access 
+#define open   _open
+#define unlink _unlink
+#define stat   _stat
+#define rmdir  _rmdir
+#define getcwd _getcwd
 
 #define WM_ENTER (WM_USER)
 

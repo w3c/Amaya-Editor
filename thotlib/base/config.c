@@ -9,7 +9,6 @@
  * gestion des fichiers de configuration et de langue.
  *
  * Authors: V. Quint (INRIA)
- *          R. Guetari (W3C/INRIA): Unicode.
  *
  */
 
@@ -1294,7 +1293,7 @@ void             ConfigKeyboard (int *x, int *y)
    getStringAfterColon (line, seqLine);
    if (seqLine[0] != EOS)
      /* extrait les 4 entiers */
-     nbIntegers = usscanf (seqLine, "%d %d", x, y);
+     nbIntegers = sscanf (seqLine, "%d %d", x, y);
    TtaReadClose (file);
 }
 
@@ -1317,7 +1316,7 @@ static ThotBool getXYWidthHeight (char *line, PtrDocument pDoc, int *x,
   if (seqLine[0] != EOS)
     {
       /* extrait les 4 entiers */
-      nbIntegers = usscanf (seqLine, "%d %d %d %d", x, y, width, height);
+      nbIntegers = sscanf (seqLine, "%d %d %d %d", x, y, width, height);
       if (nbIntegers != 4)
 	fprintf (stderr, "invalid line in file %s.conf\n   %s\n",
 		 pDoc->DocSSchema->SsName, line);

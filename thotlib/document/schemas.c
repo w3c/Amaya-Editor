@@ -403,7 +403,7 @@ ThotBool LoadPresentationSchema (Name schemaName, PtrSSchema pSS,
      schemaName = pSS->SsDefaultPSchema;
    pPfS = StructSchemaForDoc (pDoc, pSS, &pPrevPfS);
    if (pPfS && pPfS->PfPSchema &&
-       !ustrcmp (schemaName, pPfS->PfPSchema->PsPresentName))
+       !strcmp (schemaName, pPfS->PfPSchema->PsPresentName))
      /* this presentation schema is already associated with this structure
 	schema for this document */
      return TRUE;
@@ -643,7 +643,7 @@ PtrSSchema          LoadStructureSchema (Name schemaName, PtrDocument pDoc)
 
    /* is this schema already used by the document? */
    pPfS = pDoc->DocFirstSchDescr;
-   while (pPfS && ustrcmp (schemaName, pPfS->PfSSchema->SsName))
+   while (pPfS && strcmp (schemaName, pPfS->PfSSchema->SsName))
      pPfS = pPfS->PfNext;
    if (pPfS)
      /* this schema is already used by the document */
@@ -651,7 +651,7 @@ PtrSSchema          LoadStructureSchema (Name schemaName, PtrDocument pDoc)
 
    /* Look at the table of loaded schemas */
    for (i = 0; i < MAX_SSCHEMAS &&
-	       ustrcmp (schemaName, LoadedSSchema[i].StructSchemaName); i++);
+	       strcmp (schemaName, LoadedSSchema[i].StructSchemaName); i++);
    if (i < MAX_SSCHEMAS)
       /* This schema is in the table, no need to load it */
       {
@@ -689,7 +689,7 @@ PtrSSchema          LoadStructureSchema (Name schemaName, PtrDocument pDoc)
 	    {
 	    LoadedSSchema[i].UsageCount = 1;
 	    LoadedSSchema[i].pStructSchema = pSSchema;
-	    ustrncpy (LoadedSSchema[i].StructSchemaName, schemaName,
+	    strncpy (LoadedSSchema[i].StructSchemaName, schemaName,
 		      MAX_NAME_LENGTH);
 	    }
 	 /* translate the structure schema in the user's language */

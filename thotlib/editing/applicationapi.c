@@ -189,12 +189,9 @@ static void ErrorHandler ()
 #else
    signal (SIGIOT, SIG_DFL);
 #endif
-   ufprintf (stderr, TtaGetMessage (LIB, TMSG_DEBUG_ERROR));
-
+   fprintf (stderr, TtaGetMessage (LIB, TMSG_DEBUG_ERROR));
    if (ThotLocalActions [T_backuponfatal] != NULL)
-     {
        (*ThotLocalActions [T_backuponfatal]) ();
-     }
    exit (1);
 }
 

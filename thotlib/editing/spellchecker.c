@@ -634,7 +634,7 @@ static void         SaveDictFile (PtrDict docDict)
    FindCompleteName (docDict->DictName, "", docDict->DictDirectory, tempbuffer, &i);
    if (docDict->DictNbWords >= 0)
      {
-	f = ufopen (tempbuffer, "w");
+	f = fopen (tempbuffer, "w");
 	if (f != NULL)
 	  {
 	    /* enregistrer d'abord nb words and nb chars effectifs */
@@ -930,7 +930,7 @@ int                 ParametrizeChecker ()
 	     strcpy (paramnom, corrpath);
          strcat (paramnom, DIR_STR);
 	     strcat (paramnom, "param");
-	     if ((fparam = ufopen (paramnom, "r")) != NULL)
+	     if ((fparam = fopen (paramnom, "r")) != NULL)
 	       /* Existence du fichier */
 		init_param (fparam);
 	     else
@@ -943,7 +943,7 @@ int                 ParametrizeChecker ()
 	     strcpy (clavnom, corrpath);
          strcat (clavnom, DIR_STR);
 	     strcat (clavnom, "clavier");
-	     if ((ftsub = ufopen (clavnom, "r")) != NULL)
+	     if ((ftsub = fopen (clavnom, "r")) != NULL)
 	       /* Existence du fichier */
 	       {
 		  init_Tsub (ftsub);

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -41,30 +41,18 @@
    TtaAllocateDocument
 
    Allocates a new document context.
-
    Parameter:
    documentName: name of the document to be created (maximum length
                  19 characters). The directory name is not part of
                  this parameter (see TtaSetDocumentPath).
    documentIdentifier: internal/external document identifier.
    documentSchemasPath: Path des schemas du document.
-
    Return value:
    the allocated document.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-Document        TtaAllocateDocument (STRING documentName,
-				     STRING documentIdentifier,
-				     STRING documentSchemasPath)
-#else  /* __STDC__ */
-Document        TtaAllocateDocument (documentName,
-				     documentIdentifier,
-				     documentSchemasPath)
-STRING          documentName;
-STRING          documentIdentifier;
-STRING          documentSchemasPath;
-#endif /* __STDC__ */
+Document TtaAllocateDocument (char *documentName,
+			      char *documentIdentifier,
+			      char *documentSchemasPath)
 {
   Document            doc;
   PtrDocument         pDoc;
@@ -81,12 +69,12 @@ STRING          documentSchemasPath;
       pDoc->DocDocElement = NULL;
       pDoc->DocLabels = NULL;
       /* on donne son nom au document */
-      ustrncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
+      strncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
       pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
       /* on acquiert un identificateur pour le document */
       GetDocIdent (&pDoc->DocIdent, documentIdentifier);
       /* on stocke le path de schemas du document */
-      ustrncpy (pDoc->DocSchemasPath, documentSchemasPath, MAX_PATH);
+      strncpy (pDoc->DocSchemasPath, documentSchemasPath, MAX_PATH);
       /* document en lecture-ecriture */
       pDoc->DocReadOnly = FALSE;
     }
@@ -98,23 +86,11 @@ STRING          documentSchemasPath;
    TtaWritePivotHeader
 
    Writes the header of a pivot file.
-
    Parameters:
    pivotFile: the pivot file. This file must be open.
    document: the document for which the pivot file is written.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaWritePivotHeader (BinFile pivotFile, Document document)
-
-#else  /* __STDC__ */
-void                TtaWritePivotHeader (pivotFile, document)
-BinFile             pivotFile;
-Document            document;
-
-#endif /* __STDC__ */
-
+void TtaWritePivotHeader (BinFile pivotFile, Document document)
 {
    UserErrorCode = 0;
    /* verifie le parametre document */
@@ -132,27 +108,13 @@ Document            document;
    TtaReadPivotHeader
 
    Reads the header of a pivot file.
-
    Parameters:
    pivotFile: the pivot file. This file must be open.
    document: the document for which the header is read.
-
    Return parameter:
    nextChar: first byte that follows the header in the pivot file.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaReadPivotHeader (BinFile pivotFile, Document document, char* nextChar)
-
-#else  /* __STDC__ */
-void                TtaReadPivotHeader (pivotFile, document, nextChar)
-BinFile             pivotFile;
-Document            document;
-char*               nextChar;
-
-#endif /* __STDC__ */
-
+void TtaReadPivotHeader (BinFile pivotFile, Document document, char *nextChar)
 {
    UserErrorCode = 0;
    /* verifie le parametre document */
@@ -170,24 +132,12 @@ char*               nextChar;
    TtaWriteLanguageTable
 
    Writes into a pivot file the names of all languages used in a document.
-
    Parameters:
    pivotFile: the pivot file. This file must be open and at the
    correct position.
    document: the document for which the language names must be written.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaWriteLanguageTable (BinFile pivotFile, Document document)
-
-#else  /* __STDC__ */
-void                TtaWriteLanguageTable (pivotFile, document)
-BinFile             pivotFile;
-Document            document;
-
-#endif /* __STDC__ */
-
+void TtaWriteLanguageTable (BinFile pivotFile, Document document)
 {
    UserErrorCode = 0;
    /* verifie le parametre document */
@@ -206,28 +156,14 @@ Document            document;
 
    Reads from a pivot file the names of all languages used in a document.
    The language names read are stored in the context of the document.
-
    Parameters:
    pivotFile: the pivot file. This file must be open and at the correct
    position.
    document: the document for which the languages are read.
-
    Return parameter:
    nextChar: first byte that follows the language names in the pivot file.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaReadLanguageTable (BinFile pivotFile, Document document, char* nextChar)
-
-#else  /* __STDC__ */
-void                TtaReadLanguageTable (pivotFile, document, nextChar)
-BinFile             pivotFile;
-Document            document;
-char*               nextChar;
-
-#endif /* __STDC__ */
-
+void TtaReadLanguageTable (BinFile pivotFile, Document document, char* nextChar)
 {
    UserErrorCode = 0;
    /* verifie le parametre document */
@@ -245,24 +181,12 @@ char*               nextChar;
 
    Writes into a pivot file the names of all structure schemas and presentation
    schemas used by a document.
-
    Parameters:
    pivotFile: the pivot file. This file must be open and at the
    correct position.
    document: the document.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaWriteSchemaNames (BinFile pivotFile, Document document)
-
-#else  /* __STDC__ */
-void                TtaWriteSchemaNames (pivotFile, document)
-BinFile             pivotFile;
-Document            document;
-
-#endif /* __STDC__ */
-
+void TtaWriteSchemaNames (BinFile pivotFile, Document document)
 {
    UserErrorCode = 0;
    /* verifie le parametre document */
@@ -282,29 +206,15 @@ Document            document;
    Reads from a pivot file the names of all structure schemas and presentation
    schemas used by a document. The names read are stored in the context of the
    document.
-
    Parameters:
    pivotFile: the pivot file. This file must be open and at the correct
    position.
    document: the document.
-
    Return parameter:
    nextChar: first byte that follows the schema names in the pivot file.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaReadSchemaNames (BinFile pivotFile, Document document, char* nextChar, void (*withThisPSchema) (Document document, CHAR_T* natSchema, CHAR_T* presentSchema))
-
-#else  /* __STDC__ */
-void                TtaReadSchemaNames (pivotFile, document, nextChar, withThisPSchema)
-BinFile             pivotFile;
-Document            document;
-char*               nextChar;
-void (*withThisPSchema) ();
-
-#endif /* __STDC__ */
-
+void TtaReadSchemaNames (BinFile pivotFile, Document document, char *nextChar,
+			 void (*withThisPSchema) (Document document, char *natSchema, char *presentSchema))
 {
    UserErrorCode = 0;
    /* verifie le parametre document */
@@ -322,7 +232,6 @@ void (*withThisPSchema) ();
 
    Reads an attribute from a pivot file.
    ATTENTION: TtaReadAttribute uses the nature table of the document.
-
    Parameters:
    pivotFile: the pivot file. This file must be open and the current position
    must be after the MAttribute byte introducing the attribute to be
@@ -333,26 +242,11 @@ void (*withThisPSchema) ();
    document: the document corresponding to the pivot file.
    create: 1 means that an attribute must be created, 0 means that the
    attribute must just be skipped in the pivot file.
-
    Return parameter:
    attribute: the attribute that has been read if create = 1.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaReadAttribute (BinFile pivotFile, Element element, Document document,
-				      ThotBool create, Attribute * attribute)
-
-#else  /* __STDC__ */
-void                TtaReadAttribute (pivotFile, element, document, create, attribute)
-BinFile             pivotFile;
-Element             element;
-Document            document;
-ThotBool            create;
-Attribute          *attribute;
-
-#endif /* __STDC__ */
-
+void TtaReadAttribute (BinFile pivotFile, Element element, Document document,
+		       ThotBool create, Attribute *attribute)
 {
    PtrAttribute        pAttr;
 
@@ -373,7 +267,6 @@ Attribute          *attribute;
    TtaReadPRule
 
    Reads a presentation rule from a pivot file.
-
    Parameters:
    pivotFile: the pivot file. This file must be open and the current position
    must be after the C_PIV_PRESENT byte introducing the presentation
@@ -383,25 +276,11 @@ Attribute          *attribute;
    create: 1 means that a presentation rule must be created and associated
    with the element, 0 means that the presentation rule must just be
    skipped in the pivot file.
-
    Return parameter:
    pRule: the presentation rule that has been read if create = 1.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaReadPRule (BinFile pivotFile, Element element, Document document, ThotBool create, PRule * pRule)
-
-#else  /* __STDC__ */
-void                TtaReadPRule (pivotFile, element, document, create, pRule)
-BinFile             pivotFile;
-Element             element;
-Document            document;
-ThotBool            create;
-PRule              *pRule;
-
-#endif /* __STDC__ */
-
+void TtaReadPRule (BinFile pivotFile, Element element, Document document,
+		   ThotBool create, PRule *pRule)
 {
    UserErrorCode = 0;
    /* verifie le parametre document */
@@ -419,7 +298,6 @@ PRule              *pRule;
    TtaReadTree
 
    Reads a tree from a pivot file.
-
    Parameters:
    pivotFile: the pivot file. This file must be open and the current position
    must be after the C_PIV_TYPE or MClass byte introducing the tree
@@ -428,27 +306,12 @@ PRule              *pRule;
    element: parent element of the tree to be read.
    document: the document corresponding to the pivot file.
    byte: the C_PIV_TYPE or MClass byte introducing the tree to be read.
-
    Return parameters:
    byte: the next byte that follows the tree read.
    elementRead: the root of the tree that has been read.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaReadTree (BinFile pivotFile, SSchema pSchema, Element element, Document document, char* byte, Element * elementRead)
-
-#else  /* __STDC__ */
-void                TtaReadTree (pivotFile, pSchema, element, document, byte, elementRead)
-BinFile             pivotFile;
-SSchema             pSchema;
-Element             element;
-Document            document;
-char*               byte;
-Element*            elementRead;
-
-#endif /* __STDC__ */
-
+void TtaReadTree (BinFile pivotFile, SSchema pSchema, Element element,
+		  Document document, char *byte, Element *elementRead)
 {
    int                 TypeCont;
    PtrSSchema          pSchStrCont;
@@ -489,27 +352,13 @@ Element*            elementRead;
    TtaWriteTree
 
    Writes a tree into a pivot file.
-
    Parameters:
    pivotFile: the pivot file. This file must be open and the tree will
    be written at the current position.
    element: root element of the tree to be written.
    document: the document to which the tree belongs.
-
   ----------------------------------------------------------------------*/
-
-
-#ifdef __STDC__
-void                TtaWriteTree (BinFile pivotFile, Element element, Document document)
-
-#else  /* __STDC__ */
-void                TtaWriteTree (pivotFile, element, document)
-BinFile             pivotFile;
-Element             element;
-Document            document;
-
-#endif /* __STDC__ */
-
+void TtaWriteTree (BinFile pivotFile, Element element, Document document)
 {
    PtrElement          pEl;
    NotifyElement       notifyEl;
@@ -564,26 +413,13 @@ Document            document;
 
    Writes a single element into a pivot file. The descendants of that element
    are not written.
-
    Parameters:
    pivotFile: the pivot file. This file must be open and the element will
    be written at the current position.
    element: element to be written.
    document: the document to which the element belongs.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaWriteElement (BinFile pivotFile, Element element, Document document)
-
-#else  /* __STDC__ */
-void                TtaWriteElement (pivotFile, element, document)
-BinFile             pivotFile;
-Element             element;
-Document            document;
-
-#endif /* __STDC__ */
-
+void TtaWriteElement (BinFile pivotFile, Element element, Document document)
 {
    PtrElement          pEl;
    NotifyElement       notifyEl;
@@ -638,26 +474,14 @@ Document            document;
 
    Reads the pivot version number from a pivot file. The version number read
    is stored in the context of the document.
-
    Parameters:
    pivotFile: the pivot file. This file must be open and at the position
    where a version number is expected. When returning, the current
    position in the pivot file is just after the version number that
    has been read.
    document: the document for which the pivot version number is read.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaReadPivotVersion (BinFile pivotFile, Document document)
-
-#else  /* __STDC__ */
-void                TtaReadPivotVersion (pivotFile, document)
-BinFile             pivotFile;
-Document            document;
-
-#endif /* __STDC__ */
-
+void TtaReadPivotVersion (BinFile pivotFile, Document document)
 {
    UserErrorCode = 0;
    /* verifie le parametre document */
@@ -676,24 +500,12 @@ Document            document;
    TtaWritePivotVersion
 
    Writes the current pivot version number into a pivot file.
-
    Parameters:
    pivotFile: the pivot file. This file must be open and the pivot
    version number will be written at the current position.
    document: the document for which the pivot version number is written.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaWritePivotVersion (BinFile pivotFile, Document document)
-
-#else  /* __STDC__ */
-void                TtaWritePivotVersion (pivotFile, document)
-BinFile             pivotFile;
-Document            document;
-
-#endif /* __STDC__ */
-
+void TtaWritePivotVersion (BinFile pivotFile, Document document)
 {
    UserErrorCode = 0;
    /* verifie le parametre document */
@@ -711,7 +523,6 @@ Document            document;
    TtaReadLabel
 
    Reads a label from a pivot file.
-
    Parameters:
    pivotFile: the pivot file. This file must be open and the current
    position must be just after a C_PIV_SHORT_LABEL, MLongLabel or MNameLabel
@@ -719,23 +530,10 @@ Document            document;
    label that has been read.
    byte: the C_PIV_SHORT_LABEL, MLongLabel or MNameLabel byte that precedes the label
    to be read.
-
    Return parameter:
    labelRead: the label that has been read.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaReadLabel (BinFile pivotFile, char byte, char* labelRead)
-
-#else  /* __STDC__ */
-void                TtaReadLabel (pivotFile, byte, labelRead)
-BinFile             pivotFile;
-char                byte;
-char*               labelRead;
-
-#endif /* __STDC__ */
-
+void TtaReadLabel (BinFile pivotFile, char byte, char *labelRead)
 {
    UserErrorCode = 0;
    ReadLabel (byte, labelRead, pivotFile);
@@ -753,17 +551,7 @@ char*               labelRead;
    label: the label to be written.
 
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaWriteLabel (BinFile pivotFile, char* label)
-
-#else  /* __STDC__ */
-void                TtaWriteLabel (pivotFile, label)
-BinFile             pivotFile;
-char*               label;
-
-#endif /* __STDC__ */
-
+void                TtaWriteLabel (BinFile pivotFile, char *label)
 {
    UserErrorCode = 0;
    PutLabel (pivotFile, label);
@@ -774,29 +562,16 @@ char*               label;
    TtaNewElementWithLabel
 
    Creates a new element of a given type.
-
    Parameters:
    document: the document for which the element is created.
    elemType: type of the element to be created.
    label: label of the element to be created. Empty string if the value
    of the label is undefined.
-
    Return value:
    the created element.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-Element             TtaNewElementWithLabel (Document document, ElementType elemType, char* label)
-
-#else  /* __STDC__ */
-Element             TtaNewElementWithLabel (document, elemType, label)
-Document            document;
-ElementType         elemType;
-char*               label;
-
-#endif /* __STDC__ */
-
+Element TtaNewElementWithLabel (Document document, ElementType elemType,
+				char *label)
 {
    Element             element;
 
@@ -832,24 +607,12 @@ char*               label;
    TtaGetLabelMax
 
    Returns the value of the highest label used in a document.
-
    Parameter:
    document: the document.
-
    Return value:
    highest label used in the document.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-int                 TtaGetLabelMax (Document document)
-
-#else  /* __STDC__ */
-int                 TtaGetLabelMax (document)
-Document            document;
-
-#endif /* __STDC__ */
-
+int TtaGetLabelMax (Document document)
 {
    int                 label;
 
@@ -872,23 +635,11 @@ Document            document;
    TtaSetLabelMax
 
    Sets the value of the next label to be created in a document.
-
    Parameters:
    document: the document.
    label: value of the next label to be created.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaSetLabelMax (Document document, int label)
-
-#else  /* __STDC__ */
-void                TtaSetLabelMax (document, label)
-Document            document;
-int                 label;
-
-#endif /* __STDC__ */
-
+void TtaSetLabelMax (Document document, int label)
 {
    UserErrorCode = 0;
    /* verifie le parametre document */

@@ -2189,7 +2189,7 @@ int ppStartParser (char *name, SSchema tStrSchema, strTransSet **resTrSet)
    /* check if the file is newer than last read */
    StatBuffer = (struct stat *) TtaGetMemory (sizeof (struct stat));
    
-   status = ustat (fileName, StatBuffer);
+   status = stat (fileName, StatBuffer);
    if (status != -1)
      {
 	if (StatBuffer->st_mtime == ppTransSet->timeLastWrite)

@@ -2138,23 +2138,14 @@ void DisplayConfirmMessage (char *text)
   ----------------------------------------------------------------------*/
 void DisplayMessage (char *text, int msgType)
 {
-#ifndef _WINDOWS
-  char              cmd[800];
-#endif /* _WINDOWS */
-
   if (msgType == FATAL)
     {
       ClientSend (thotWindow, text, TMSG_LIB_STRING);
       /* if the request comes from the Thotlib we have to remove the directory */
       if (removeDirectory)
 	{
-#ifdef _WINDOWS
-      if ((uunlink (tempDir)) == -1)
-         fprintf (stderr, "Cannot remove directory %s\n", tempDir);
-#else  /* !_WINDOWS */
-	 sprintf (cmd, "/bin/rm -rf %s\n", tempDir);
-	  system (cmd);
-#endif /* _WINDOWS */
+	  if ((unlink (tempDir)) == -1)
+	    fprintf (stderr, "Cannot remove directory %s\n", tempDir);
 	}
       exit (1);
     }
@@ -2614,7 +2605,7 @@ int main (int argc, char **argv)
 	    if (CSSName[cssNDX] && CSSName[cssNDX][0] != EOS &&
 		TtaFileExist (CSSName[cssNDX]))
 	      DeleteFile (CSSName[cssNDX]); 
-	  if (urmdir (tempDir))
+	  if (rmdir (tempDir))
 	    WinErrorBox (NULL, "PrintDoc (4)");
       }
 #else  /* _WINDOWS */

@@ -255,7 +255,7 @@ ThotBool IsXpmFormat (char *fn)
   ThotBool            res;
 
   res = FALSE;
-  f = ufopen (fn, "r");
+  f = fopen (fn, "r");
   if (f != NULL)
     {
       c = getc (f);

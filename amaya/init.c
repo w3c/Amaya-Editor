@@ -1353,7 +1353,7 @@ static void   BrowserForm (Document doc, View view, char *urlname)
 	 TtaExtractName (tempfile, DirectoryName, DocumentName);
        if (DirectoryName[0] == EOS)
 	 {
-	   ugetcwd (DirectoryName, MAX_LENGTH);
+	   getcwd (DirectoryName, MAX_LENGTH);
 	   DocumentName[0] = EOS;
 	 }
        strcpy (s, DirectoryName);
@@ -1364,14 +1364,14 @@ static void   BrowserForm (Document doc, View view, char *urlname)
      {
        if (tempfile[0] != EOS && IsW3Path (tempfile))
 	 {
-	   ugetcwd (DirectoryName, MAX_LENGTH);
+	   getcwd (DirectoryName, MAX_LENGTH);
 	   DocumentName[0] = EOS;
 	 }
        else
 	 {
 	   if (DirectoryName[0] == EOS)
 	     {
-	       ugetcwd (DirectoryName, MAX_LENGTH);
+	       getcwd (DirectoryName, MAX_LENGTH);
 	       DocumentName[0] = EOS;
 	     }
 	 }
@@ -2040,10 +2040,10 @@ static void CreateHTMLContainer (char *pathname, char *docname,
 #ifndef _WINDOWS
       rename (tempfile, tempfile_new);
 #else /* _WINDOWS */
-      if (urename (tempfile, tempfile_new)  != 0)
+      if (rename (tempfile, tempfile_new)  != 0)
 	sprintf (tempfile_new, "%s", tempfile); 
 #endif /* _WINDOWS */
-      urename (tempfile, tempfile_new);
+      rename (tempfile, tempfile_new);
       TtaFreeMemory (tempfile_new);
     }
   /* create a temporary file for the container and make Amaya think
@@ -2532,7 +2532,7 @@ static Document LoadDocument (Document doc, char *pathname,
 	    /* now we can rename the local name of a remote document */
 	  else
 	    /* now we can rename the local name of a remote document */
-	    urename (tempfile, tempdocument);
+	    rename (tempfile, tempdocument);
 	}
       else
 	{
@@ -2963,7 +2963,7 @@ void ZoomIn (Document document, View view)
     zoomVal = 0;
   else
     {
-      usscanf (zoomStr, "%d", &zoomVal);
+      sscanf (zoomStr, "%d", &zoomVal);
       if (zoomVal > 10 || zoomVal < -10)
 	zoomVal = 0;
     }
@@ -2997,7 +2997,7 @@ void ZoomOut (Document document, View view)
     zoomVal = 0;
   else
     {
-      usscanf (zoomStr, "%d", &zoomVal);
+      sscanf (zoomStr, "%d", &zoomVal);
       if (zoomVal > 10 || zoomVal < -10)
 	zoomVal = 0;
     }
@@ -4078,7 +4078,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
      case DocSelect:
        if (DirectoryName[0] == EOS)
 	 /* set path on current directory */
-	 ugetcwd (DirectoryName, MAX_LENGTH);
+	 getcwd (DirectoryName, MAX_LENGTH);
        
        /* Extract suffix from document name */
        strcpy (DocumentName, data);
@@ -4328,7 +4328,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
        /* Files */
        if (SaveName[0] == EOS)
 	 /* set path on current directory */
-	 ugetcwd (SavePath, MAX_LENGTH);
+	 getcwd (SavePath, MAX_LENGTH);
        
        strcpy (SaveName, data);
        /* construct the document full name */
@@ -4545,7 +4545,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
      case BrowserDocSelect:
        /* set path on current directory */
        if (DirectoryName[0] == EOS)
-	 ugetcwd (DirectoryName, MAX_LENGTH);
+	 getcwd (DirectoryName, MAX_LENGTH);
 
        /* Extract suffix from document name */
        strcpy (DocumentName, data);
@@ -5103,7 +5103,7 @@ void                InitAmaya (NotifyEvent * event)
    SavedDocumentURL = NULL;
 
    /* set path on current directory */
-   ugetcwd (DirectoryName, MAX_LENGTH);
+   getcwd (DirectoryName, MAX_LENGTH);
    DocumentName = TtaGetMemory (MAX_LENGTH);
    memset (DocumentName, EOS, MAX_LENGTH);
    SavePath = TtaGetMemory (MAX_LENGTH);

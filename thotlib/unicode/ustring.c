@@ -32,9 +32,9 @@ typedef struct {
 
 static CharsetCode CharsetCodeTable[] =
 {
+    {"us-ascii",         US_ASCII},
     {"ascii",            US_ASCII},
     {"iso646-US",        US_ASCII},
-    {"us-ascii",         US_ASCII},
     {"us",               US_ASCII},
     {"iso-8859-1",      ISO_8859_1},
     {"iso_8859-1:1987", ISO_8859_1},

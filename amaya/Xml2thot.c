@@ -2273,7 +2273,7 @@ static void         EndOfXmlAttributeValue (char *attrValue)
 			       XMLcontext.lastElement, XMLcontext.doc);
        break;
      case 1:       /* integer */
-       usscanf (attrValue, "%d", &val);
+       sscanf (attrValue, "%d", &val);
        TtaSetAttributeValue (currentAttribute, val,
 			     XMLcontext.lastElement, XMLcontext.doc);
        break;

@@ -31,18 +31,7 @@
 /*----------------------------------------------------------------------
    ConvertIntToLabel converts integer num into a Thot label		
   ----------------------------------------------------------------------*/
-
-
-#ifdef __STDC__
-void                ConvertIntToLabel (int num, LabelString strng)
-
-#else  /* __STDC__ */
-void                ConvertIntToLabel (num, strng)
-int                 num;
-LabelString         strng;
-
-#endif /* __STDC__ */
-
+void ConvertIntToLabel (int num, LabelString strng)
 {
    sprintf (strng, "L%d", num);
 }
@@ -52,18 +41,7 @@ LabelString         strng;
    ReadLabel reads a label from a file				
    		The label type is specified by labelType.		
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                ReadLabel (char labelType, LabelString label, BinFile file)
-
-#else  /* __STDC__ */
-void                ReadLabel (labelType, label, file)
-char                labelType;
-LabelString         label;
-BinFile             file;
-
-#endif /* __STDC__ */
-
+void ReadLabel (char labelType, LabelString label, BinFile file)
 {
    int                 j, k;
 

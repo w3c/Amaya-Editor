@@ -11,7 +11,6 @@
  * for a Thot document of type HTML.
  *
  * Author: V. Quint
- *         R. Guetari (W3C/INRIA): Unicode version
  *         I. Vatton (W3C/INRIA): XML extension
  */
 
@@ -613,18 +612,18 @@ void ParseAreaCoords (Element element, Document document)
 	     x1 = x2 = y1 = y2 = 0;
 	     ptr3 = text;
 	     if (ptr3)
-	       usscanf (ptr3, "%d", &x1);
+	       sscanf (ptr3, "%d", &x1);
 	     ptr3 = SkipInt (ptr3);
 	     ptr3 = SkipSep (ptr3);
 	     if (ptr3)
-	       usscanf (ptr3, "%d", &y1);
+	       sscanf (ptr3, "%d", &y1);
 	     ptr3 = SkipInt (ptr3);
 	     ptr3 = SkipSep (ptr3);
 	     if (ptr3)
-	       usscanf (ptr3, "%d", &x2);
+	       sscanf (ptr3, "%d", &x2);
 	     ptr3 = SkipInt (ptr3);
 	     ptr3 = SkipSep (ptr3);
-	     usscanf (ptr3, "%d", &y2);
+	     sscanf (ptr3, "%d", &y2);
 	     TtaSetAttributeValue (attrX, x1, element, document);
 	     TtaSetAttributeValue (attrY, y1, element, document);
 	     TtaSetAttributeValue (attrW, x2 - x1, element, document);
@@ -635,15 +634,15 @@ void ParseAreaCoords (Element element, Document document)
 	     x1 = y1 = r = 0;
 	     ptr3 = text;
 	     if (ptr3)
-	       usscanf (ptr3, "%d", &x1);
+	       sscanf (ptr3, "%d", &x1);
 	     ptr3 = SkipInt (ptr3);
 	     ptr3 = SkipSep (ptr3);
 	     if (ptr3)
-	       usscanf (ptr3, "%d", &y1);
+	       sscanf (ptr3, "%d", &y1);
 	     ptr3 = SkipInt (ptr3);
 	     ptr3 = SkipSep (ptr3);
 	     if (ptr3)
-	       usscanf (ptr3, "%d", &r);
+	       sscanf (ptr3, "%d", &r);
 	     TtaSetAttributeValue (attrX, x1 - r, element, document);
 	     TtaSetAttributeValue (attrY, y1 - r, element, document);
 	     TtaSetAttributeValue (attrW, 2 * r, element, document);
@@ -666,11 +665,11 @@ void ParseAreaCoords (Element element, Document document)
 	while (*ptr3 != EOS)
 	  {
 	     x1 = y1 = 0;
-	     usscanf (ptr3, "%d", &x1);
+	     sscanf (ptr3, "%d", &x1);
 	     ptr3 = SkipInt (ptr3);
 	     ptr3 = SkipSep (ptr3);
 	     if (ptr3)
-	       usscanf (ptr3, "%d", &y1);
+	       sscanf (ptr3, "%d", &y1);
 	     ptr3 = SkipInt (ptr3);
 	     ptr3 = SkipSep (ptr3);
 	     TtaAddPointInPolyline (element, length, UnPixel, x1, y1,document);
@@ -3683,7 +3682,7 @@ static void      EndOfDecEntity (char c)
    int           i;
 
    EntityName[LgEntityName] = EOS;
-   usscanf (EntityName, "%d", &code);
+   sscanf (EntityName, "%d", &code);
    if (code > 255)
      {
        if (ReadingAnAttrValue)
@@ -3751,7 +3750,7 @@ static void         EndOfHexEntity (char c)
    int              i;
 
    EntityName[LgEntityName] = EOS;
-   usscanf (EntityName, "%x", &code);
+   sscanf (EntityName, "%x", &code);
    if (code > 255)
      {
        if (ReadingAnAttrValue)

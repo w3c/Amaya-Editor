@@ -9,7 +9,7 @@
  * platform.c : basic system functions
  *
  * Authors: I. Vatton, D. Veillard (INRIA)
- *          R. Guetari (W3C/INRIA) - Unicode and Windows version
+ *          R. Guetari (W3C/INRIA) Windows version
  *
  */
 
@@ -500,7 +500,7 @@ void TtaFileCopy (CONST char *sourceFileName, CONST char *targetFileName)
 	       {
 		  /* cannot read the source file */
 		  fclose (targetf);
-		  uunlink (targetFileName);
+		  unlink (targetFileName);
 		  return;
 	       }
 	     else

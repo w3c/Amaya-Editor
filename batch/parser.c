@@ -117,7 +117,7 @@ static void CheckLongKeyword (indLine index, indLine len, SyntacticCode *ret)
    pas dans la table. Rend dans rank le rang de              
    l'identificateur dans la table Identifier.              
   ----------------------------------------------------------------------*/
-static void         CheckIdent (indLine index, indLine len, SyntacticCode * ret, int *rank)
+static void CheckIdent (indLine index, indLine len, SyntacticCode *ret, int *rank)
 {
    int                 i;
 
@@ -145,7 +145,7 @@ static void         CheckIdent (indLine index, indLine len, SyntacticCode * ret,
    Rend dans rank le rang de cet identificateur dans la    
    table Identifier.                                       
   ----------------------------------------------------------------------*/
-static void         NewIdent (indLine index, indLine len, SyntacticCode code, int *rank)
+static void NewIdent (indLine index, indLine len, SyntacticCode code, int *rank)
 {
   indLine             i;
 
@@ -174,11 +174,11 @@ static void         NewIdent (indLine index, indLine len, SyntacticCode code, in
    position index de la ligne courante et qui est de       
    longueur len.                                            
   ----------------------------------------------------------------------*/
-int                 AsciiToInt (indLine index, indLine len)
+int AsciiToInt (indLine index, indLine len)
 {
   int                 num;
 
-  usscanf (&inputLine[index - 1], "%d", &num);
+  sscanf (&inputLine[index - 1], "%d", &num);
   if (num > 65535)
     {
       CompilerMessage (index, COMPIL, FATAL, NUMBER_OVERFLOW, inputLine,
@@ -193,7 +193,7 @@ int                 AsciiToInt (indLine index, indLine len)
    sequences \nn par le caractere dont le code octal est   
    nn. Remplace aussi \\ par \.                            
   ----------------------------------------------------------------------*/
-void                OctalToChar ()
+void OctalToChar ()
 {
   int                 i, shift, k, n;
 

@@ -1740,7 +1740,7 @@ static void RecCleanCache (char *dirname)
 	      strcpy (ptr, ffd.cFileName);
 	      strcat (ptr, DIR_STR);
 	      RecCleanCache (t_dir);
-	      urmdir (t_dir);
+	      rmdir (t_dir);
 	    }
 	}
 	else

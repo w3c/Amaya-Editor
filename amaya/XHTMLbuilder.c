@@ -1032,7 +1032,7 @@ void              CreateAttrWidthPercentPxl (char *buffer, Element el,
 
   if (attrOld != NULL)
     TtaRemoveAttribute (el, attrOld, doc);
-  if (usscanf (buffer, "%d", &val))
+  if (sscanf (buffer, "%d", &val))
     TtaSetAttributeValue (attrNew, val, el, doc);
   else
     /* its not a number. Delete attribute and send an error message */
@@ -1085,7 +1085,7 @@ void              CreateAttrIntSize (char *buffer,
      }
    attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
    attr = TtaGetAttribute (el, attrType);
-   if (usscanf (&buffer[ind], "%d", &val))
+   if (sscanf (&buffer[ind], "%d", &val))
      {
        val = val * factor + delta;
        if (attr == NULL)

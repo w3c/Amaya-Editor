@@ -1,17 +1,8 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
- */
-
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
  */
 
 /*
@@ -41,15 +32,7 @@ static ThotBool     InProcedureQuitThot = FALSE;
    TtcQuit
    Initializes and shows the quit form.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcQuit (Document document, View view)
-
-#else  /* __STDC__ */
-void                TtcQuit (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    int                 doc;
    NotifyEvent         notifyEvt;

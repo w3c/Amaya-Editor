@@ -295,7 +295,7 @@ static char  BorderStyleCharValue (int borderStyle)
   return the numeric value of the border style whose character value
   is borderStyle
   ----------------------------------------------------------------------*/
-static int BorderStyleIntValue (CHAR_T borderStyle)
+static int BorderStyleIntValue (char borderStyle)
 {
    int ret;
 
@@ -2914,8 +2914,8 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
   AbPosition          Posit;
   PresConstant	     *pConst;
   PathBuffer	      directoryName;
-  CHAR_T	      fname[MAX_PATH];
-  CHAR_T              c;
+  char                fname[MAX_PATH];
+  char                c;
   int                 viewSch, i;
   ThotBool            appl;
   ThotBool            insidePage, afterPageBreak;

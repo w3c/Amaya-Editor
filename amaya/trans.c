@@ -755,7 +755,7 @@ static ThotBool ExportSubTree (Element subTree, Document doc)
       TtaExportTree (subTree, doc, tmpfilename, "HTMLT");     
 
   StatBuffer = (struct stat *) TtaGetMemory (sizeof (struct stat));
-  status = ustat (tmpfilename, StatBuffer);
+  status = stat (tmpfilename, StatBuffer);
   if (status != -1)
     if (StatBuffer->st_size < len)
       inputFile = TtaReadOpen (tmpfilename);

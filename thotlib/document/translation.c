@@ -2385,10 +2385,6 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
   PathBuffer          directoryName;
   FILE               *newFile;
   ThotBool            found, possibleRef;
-#ifndef _WINDOWS 
-  char		       cmd[MAX_PATH];
-  char                fileNameStr[MAX_PATH];
-#endif /* _WINDOWS */
 
   if (*ignoreEl)
     return;
@@ -2920,15 +2916,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
       PutVariable (pEl, pAttr, pTSch, pSSch, pTRule->TrNewFileVar,
 		   FALSE, currentFileName, 0, pDoc, *lineBreak);
       if (currentFileName[0] != EOS)
-	{
-#ifdef _WINDOWS
-	  uunlink (currentFileName);
-#else  /* !_WINDOWS */
-	  wc2iso_strcpy (fileNameStr, currentFileName);
-	  sprintf (cmd, "/bin/rm %s\n", fileNameStr);
-	  system (cmd);
-#endif /* _WINDOWS */
-	}
+	unlink (currentFileName);
       break;
 
     case TSetCounter:

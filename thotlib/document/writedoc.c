@@ -275,11 +275,11 @@ ThotBool StoreDocument (PtrDocument pDoc, PathBuffer docName,
 	     if (!copy)
 	       {
 		  FindCompleteName (pDoc->DocDName, "OLD", oldDir, backName, &i);
-		  i = urename (pivName, backName);
+		  i = rename (pivName, backName);
 	       }
 	     /* 2- faire mv du .Tmp sur le .PIV */
 	     FindCompleteName (docName, "PIV", dirName, pivName, &i);
-	     i = urename (tempName, pivName);
+	     i = rename (tempName, pivName);
 	     if (i >= 0)
 		/* >> tout s'est bien passe' << */
 		/* detruit l'ancienne sauvegarde */

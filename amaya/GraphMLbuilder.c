@@ -701,7 +701,7 @@ void CreatePoints (Attribute attr, Element el, Document doc)
       while (*ptr != EOS)
          {
          x = y = 0;
-         usscanf (ptr, "%d", &x);
+         sscanf (ptr, "%d", &x);
          if (x > maxX)
             maxX = x;
          if (x < minX)
@@ -709,7 +709,7 @@ void CreatePoints (Attribute attr, Element el, Document doc)
          ptr = SkipInt (ptr);
          ptr = SkipSep (ptr);
          if (ptr)
-            usscanf (ptr, "%d", &y);
+            sscanf (ptr, "%d", &y);
          if (y > maxY)
             maxY = y;
          if (y < minY)

@@ -9,7 +9,7 @@
  * Module dedicated to font handling.
  *
  * Authors: I. Vatton (INRIA)
- *          R. Guetari (W3C/INRIA) - Unicode and Windows version
+ *          R. Guetari (W3C/INRIA) Windows version
  *          D. Veillard (W3C/INRIA): Windows NT/95 routines
  *
  */
@@ -70,91 +70,87 @@ static HFONT OldFont;
 #ifdef _WINDOWS
 #include "wininclude.h"
 
-static char  WIN_lpszFace [MAX_LENGTH];
-static int   WIN_nHeight;
-static int   WIN_nWidth;
-static int   WIN_fnWeight;
-static int   WIN_fdwItalic;
-static int   WIN_fdwUnderline;
-static int   WIN_fdwStrikeOut;
-
 /*----------------------------------------------------------------------
  *    WIN_LoadFont :  load a Windows TRUEType with a defined set of
  *                    characteristics.
   ----------------------------------------------------------------------*/
-static HFONT WIN_LoadFont (char alphabet, char family, int highlight, int size, TypeUnit unit)
+static HFONT WIN_LoadFont (char alphabet, char family, int highlight,
+			   int size, TypeUnit unit)
 {
    HFONT hFont;
-   char lpszFace [MAX_LENGTH];
+   char  lpszFace[MAX_LENGTH];
+   int   nHeight;
+   int   nWidth;
+   int   fnWeight;
+   int   fdwItalic;
+   int   fdwUnderline;
+   int   fdwStrikeOut;
 
-   WIN_nHeight      = 0;
-   WIN_nWidth       = 0;
-   WIN_fnWeight     = FW_NORMAL;
-   WIN_fdwItalic    = FALSE;
-   WIN_fdwUnderline = FALSE;
-   WIN_fdwStrikeOut = FALSE;
+   nHeight = 0;
+   nWidth = 0;
+   fnWeight = FW_NORMAL;
+   fdwItalic = FALSE;
+   fdwUnderline = FALSE;
+   fdwStrikeOut = FALSE;
 
    if (alphabet != 'L' && alphabet != 'G' && alphabet != 'g')
       return NULL;
-
    if (alphabet == 'g' || alphabet == 'G')
-   {
+     {
       family    = 's';
       highlight = 0 ;
-   }
+     }
 
    switch (family)
-   {
+     {
      case 'T':
      case 't':
-       sprintf (&WIN_lpszFace[0], "Times New Roman");
+       sprintf (&lpszFace[0], "Times New Roman");
        break;
 
      case 'H':
      case 'h':
-       sprintf (&WIN_lpszFace[0], "Arial");
+       sprintf (&lpszFace[0], "Arial");
        break;
 
      case 'C':
      case 'c':
-       sprintf (&WIN_lpszFace[0], "Courier New");
+       sprintf (&lpszFace[0], "Courier New");
        break;
 
      case 'S':
      case 's':
-       sprintf (&WIN_lpszFace[0], "Symbol");
+       sprintf (&lpszFace[0], "Symbol");
        break;
 
      default:
        return NULL;
-   }
+     }
 
    switch (StylesTable[highlight])
-   {
+     {
      case 'r':
        break;
 
      case 'i':
      case 'o':
-       WIN_fdwItalic = TRUE;
+       fdwItalic = TRUE;
        break;
 
      case 'b':
      case 'g':
      case 'q':
-       WIN_fnWeight = FW_BOLD;
+       fnWeight = FW_BOLD;
        break;
 
      default:
        return NULL;
-   }
+     }
 
-   /*if (unit == UnPixel)*/
-     WIN_nHeight = size;
-   WIN_nHeight = -MulDiv (size, DOT_PER_INCHE, 83);
-   iso2wc_strcpy (lpszFace, WIN_lpszFace);
-   hFont = CreateFont (WIN_nHeight, WIN_nWidth, 0, 0, WIN_fnWeight,
-                       WIN_fdwItalic, WIN_fdwUnderline, WIN_fdwStrikeOut,
+   nHeight = size;
+   nHeight = -MulDiv (size, DOT_PER_INCHE, 83);
+   hFont = CreateFont (nHeight, nWidth, 0, 0, fnWeight,
+                       fdwItalic, fdwUnderline, fdwStrikeOut,
                        DEFAULT_CHARSET, OUT_TT_ONLY_PRECIS, CLIP_DEFAULT_PRECIS,
                        PROOF_QUALITY, DEFAULT_PITCH | FF_DONTCARE,
                        lpszFace);
@@ -1119,7 +1115,7 @@ void InitDialogueFonts (char* name)
    /* Is there any predefined size for menu fonts ? */
    value = TtaGetEnvString ("FontMenuSize");
    if (value != NULL)
-      usscanf (value, "%d", &MenuSize);
+      sscanf (value, "%d", &MenuSize);
    f3 = MenuSize + 2;
 
 #ifndef _WINDOWS
