@@ -495,8 +495,8 @@ void LINK_SaveLink (Document source_doc, ThotBool isReplyTo)
 	  doc_url = DocumentURLs[rootDoc];
 	}
     }
-#endif /* ANNOT_ON ANNOT */
   else
+#endif /* ANNOT_ON ANNOT */
     {
       /* the annotations on this URL */
       annot_list = AnnotMetaData[source_doc].annotations;  
