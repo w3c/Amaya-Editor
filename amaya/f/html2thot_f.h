@@ -38,11 +38,11 @@ extern void CreateAttrIntSize ( STRING buffer,
 extern void InitAutomaton ( void );
 extern void FreeHTMLParser ( void );
 extern void SetElemLineNumber ( Element el );
-extern CHAR_T GetNextInputChar ( FILE *infile,
+extern char GetNextInputChar ( FILE *infile,
                                  int *index,
                                  ThotBool *endOfFile );
 extern ThotBool IsXHTMLDocType ( STRING fileName );
-extern ThotBool ContentIsXML ( STRING fileName );
+extern ThotBool ContentIsXML ( CharUnit* fileName );
 extern void CheckAbstractTree ( STRING pathURL );
 extern void ParseIncludedHTML ( Element elem,
                                 STRING closingTag );
@@ -51,10 +51,10 @@ extern void ParseSubTree ( STRING HTMLbuf,
                            ThotBool isclosed,
                            Document doc );
 extern void StartParser ( Document doc,
-                          STRING htmlFileName,
-                          STRING documentName,
-                          STRING documentDirectory,
-                          STRING pathURL,
+                          CharUnit* htmlFileName,
+                          CharUnit* documentName,
+                          CharUnit* documentDirectory,
+                          CharUnit* pathURL,
                           ThotBool plainText );
 
 #else /* __STDC__ */
@@ -91,7 +91,7 @@ extern void CreateAttrIntSize (/* STRING buffer,
 extern void InitAutomaton (/* void */);
 extern void FreeHTMLParser (/* void */);
 extern void SetElemLineNumber (/* Element el */);
-extern CHAR_T GetNextInputChar (/* FILE *infile,
+extern char GetNextInputChar (/* FILE *infile,
                                    int *index,
                                    ThotBool *endOfFile */);
 extern ThotBool IsXHTMLDocType (/* STRING fileName */);

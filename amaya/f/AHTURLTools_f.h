@@ -17,7 +17,7 @@ extern void ExplodeURL ( char *url,
                          char **file );
 extern void ExtractSuffix ( STRING aName,
                             STRING aSuffix );
-extern ThotBool  IsHTMLName ( const STRING path );
+extern ThotBool  IsHTMLName ( const CharUnit* path );
 extern ThotBool  IsXMLName ( const STRING path );
 extern ThotBool  IsCSSName ( const STRING path );
 extern ThotBool  IsImageName ( const STRING path );
@@ -28,8 +28,8 @@ extern ThotBool  IsWithParameters ( const char *url );
 extern ThotBool  IsW3Path ( const CharUnit* path );
 extern ThotBool  IsValidProtocol ( const STRING url );
 extern CharUnit* GetBaseURL ( Document doc );
-extern STRING    GetLocalPath ( Document doc,
-                             STRING url );
+extern CharUnit* GetLocalPath ( Document doc,
+                             CharUnit* url );
 extern void ExtractTarget ( CharUnit* aName,
                             CharUnit* target );
 extern void ConvertFileURL ( CharUnit* url );
@@ -76,8 +76,8 @@ extern ThotBool  IsWithParameters (/* const char *url */);
 extern ThotBool  IsW3Path (/* const STRING path */);
 extern ThotBool  IsValidProtocol (/* const STRING url */);
 extern CharUnit* GetBaseURL (/* Document doc */);
-extern STRING    GetLocalPath (/* Document doc,
-                               STRING url */);
+extern CharUnit* GetLocalPath (/* Document doc,
+                               CharUnit* url */);
 extern void ExtractTarget (/* CharUnit* aName,
                               CharUnit* target */);
 extern void ConvertFileURL (/* CharUnit* url */);

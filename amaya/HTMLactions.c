@@ -94,7 +94,7 @@ int                 notType;
    ElementType         elType, parentType;
    Element             elFont, parent, prev, next, added, child, last;
 
-   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
+   elType.ElSSchema = TtaGetSSchema ("HTML", document);
    elType.ElTypeNum = notType;
    /* is this element already within an element of the requested type? */
    elFont = TtaGetTypedAncestor (elem, elType);
@@ -185,7 +185,7 @@ int                 newtype;
    ElementType         elType, siblingType;
    Element             prev, next, child, added, parent;
 
-   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
+   elType.ElSSchema = TtaGetSSchema ("HTML", document);
    elType.ElTypeNum = newtype;
    /* is this element already within an element of the requested type? */
    if (TtaGetTypedAncestor (elem, elType) == NULL)
@@ -432,7 +432,7 @@ Attribute           ignore;
    AttributeType       attrType;
 
    /* search all elements having an attribute NAME */
-   attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
    attrType.AttrTypeNum = HTML_ATTR_NAME;
    elFound = GetElemWithAttr (doc, attrType, nameVal, ignore);
 
@@ -446,7 +446,7 @@ Attribute           ignore;
      {
        /* search all elements having an attribute ID (defined in the
 	  MathML DTD) */
-       attrType.AttrSSchema = TtaGetSSchema (TEXT("MathML"), doc);
+       attrType.AttrSSchema = TtaGetSSchema ("MathML", doc);
        if (attrType.AttrSSchema)
 	  /* this document uses the MathML DTD */
 	  {
@@ -621,7 +621,7 @@ Document         doc;
 #ifdef ANNOTATIONS
    isAnnotLink = NULL;
 #endif /* ANNOTATIONS */
-   HTMLSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+   HTMLSSchema = TtaGetSSchema ("HTML", doc);
 
    if (anchor != NULL)
      {
@@ -940,14 +940,14 @@ Document            document;
       else
 	{
 	   elType1.ElTypeNum = HTML_EL_LINK;
-	   elType1.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
+	   elType1.ElSSchema = TtaGetSSchema ("HTML", document);
 	   anchor = TtaGetTypedAncestor (element, elType1);
 	}
    /* if not found, search a cite or href attribute on an ancestor */
    if (anchor == NULL)
       {
 	ancestor = element;
-	attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), document);
+	attrType.AttrSSchema = TtaGetSSchema ("HTML", document);
 	do
 	   {
 	   attrType.AttrTypeNum = HTML_ATTR_HREF_;
@@ -1184,7 +1184,7 @@ Document            doc
      {
 #ifdef ANNOTATIONS
 	/* a quick hack before the commit */
-        elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+        elType.ElSSchema = TtaGetSSchema ("HTML", doc);
 #else
 	elType.ElSSchema = TtaGetDocumentSSchema (doc);
 #endif /* ANNOTATIONS */
@@ -1812,13 +1812,13 @@ NotifyElement* event;
 	    /* Put a Highlight attribute on the element found */
 	    if (otherDocIsHTML)
 	       {
-	       attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), otherDoc);
+	       attrType.AttrSSchema = TtaGetSSchema ("HTML", otherDoc);
 	       attrType.AttrTypeNum = HTML_ATTR_Highlight;
 	       val = HTML_ATTR_Highlight_VAL_Yes_;
 	       }
 	    else
 	       {
-	       attrType.AttrSSchema = TtaGetSSchema (TEXT("TextFile"), otherDoc);
+	       attrType.AttrSSchema = TtaGetSSchema ("TextFile", otherDoc);
 	       attrType.AttrTypeNum = TextFile_ATTR_Highlight;
 	       val = TextFile_ATTR_Highlight_VAL_Yes_;
 	       }

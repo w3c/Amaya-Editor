@@ -23,6 +23,7 @@
 
 extern ThotWindow  FrRef[MAX_FRAME + 2];
 extern int         currentFrame;
+extern ThotBool    searchEnd;
 #ifdef  APPFILENAMEFILTER
 #       undef  APPFILENAMEFILTER
 #endif  /* APPFILENAMEFILTER */
@@ -92,6 +93,9 @@ static CHAR_T       currentPathName [100];
 static CHAR_T       winCurLang [100];
 static CHAR_T       currentFileToPrint [MAX_PATH];
 static CHAR_T       attDlgTitle [100];
+static CHAR_T       BM_Entity[MAX_TXT_LEN];
+static CHAR_T       entityName[MAX_TXT_LEN];
+static CHAR_T       mathEntityName[MAX_TXT_LEN];
 static STRING       lpPrintTemplateName = (STRING) 0;
 static int          numFormClose;
 static int          currentDoc;
@@ -163,6 +167,8 @@ static int          baseImage;
 static int          formAlt;
 static int          imgeAlt;
 static int          imageLabel;
+static int          mathForm;
+static int          mathText;
 static STRING       classList;
 static STRING       langList;
 static STRING       saveList;
@@ -217,6 +223,7 @@ LRESULT CALLBACK Attr3ItemsDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK Attr4ItemsDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK Attr5ItemsDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK CreateRuleDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK MathEntityDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK ApplyClassDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK SpellCheckDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK MathAttribDlgProc (HWND, UINT, WPARAM, LPARAM);
@@ -249,6 +256,7 @@ LRESULT CALLBACK Attr3ItemsDlgProc ();
 LRESULT CALLBACK Attr4ItemsDlgProc ();
 LRESULT CALLBACK Attr5ItemsDlgProc ();
 LRESULT CALLBACK CreateRuleDlgProc ();
+LRESULT CALLBACK MathEntityDlgProc ();
 LRESULT CALLBACK ApplyClassDlgProc ();
 LRESULT CALLBACK SpellCheckDlgProc ();
 LRESULT CALLBACK MathAttribDlgProc ();
@@ -1004,6 +1012,34 @@ STRING buffer;
 }
 
 /*-----------------------------------------------------------------------
+ CreateMathEntityDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateMathEntityDlgWindow (HWND parent, int base_dlg, int math_form, int math_txt, STRING math_entity_name, STRING bm_entity, STRING entity_name) 
+#else  /* __STDC__ */
+void CreateMathEntityDlgWindow (parent, base_dlg, math_form, math_txt, math_entity_name, bm_entity, entity_name) 
+HWND   parent; 
+int    base_dlg; 
+int    math_form; 
+int    math_txt; 
+STRING math_entity_name;
+STRING bm_entity; 
+STRING entity_name;
+#endif /* __STDC__ */
+{
+	baseDlg  = base_dlg;
+    mathForm = math_form;
+    mathText = math_txt;
+
+    usprintf (mathEntityName, math_entity_name);
+    usprintf (BM_Entity, bm_entity);
+    usprintf (entityName, entity_name);
+
+    DialogBox (hInstance, MAKEINTRESOURCE (MATH_ENTITY_DLG), NULL, (DLGPROC) MathEntityDlgProc);
+    usprintf (math_entity_name, mathEntityName);
+}
+
+/*-----------------------------------------------------------------------
  CreateCreateRuleDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1588,65 +1624,64 @@ LPARAM lParam;
 #endif /* __STDC__ */
 {
   switch (msg) {
-  case WM_INITDIALOG:
-    CheckDlgButton (hwnDlg, IDC_PRINTURL, PrintURL);
-    CheckDlgButton (hwnDlg, IDC_IGNORE_CSS, IgnoreCSS);
-    CheckDlgButton (hwnDlg, IDC_TABOFCONTENTS, WithToC);
-    CheckDlgButton (hwnDlg, IDC_LINKS, NumberLinks);
-    break;
+         case WM_INITDIALOG:
+              CheckDlgButton (hwnDlg, IDC_PRINTURL, PrintURL);
+              CheckDlgButton (hwnDlg, IDC_IGNORE_CSS, IgnoreCSS);
+              CheckDlgButton (hwnDlg, IDC_TABOFCONTENTS, WithToC);
+              CheckDlgButton (hwnDlg, IDC_LINKS, NumberLinks);
+              break;
     
-  case WM_COMMAND:
-    switch (LOWORD (wParam)) {
-    case IDC_TABOFCONTENTS:
-      ThotCallback (numMenuOptions + baseDlg, INTEGER_DATA, (STRING)1);
-      break;
+         case WM_COMMAND:
+              switch (LOWORD (wParam)) {
+                     case IDC_TABOFCONTENTS:
+                          ThotCallback (numMenuOptions + baseDlg, INTEGER_DATA, (STRING)1);
+                          break;
       
-    case IDC_LINKS:
-      ThotCallback (numMenuOptions + baseDlg, INTEGER_DATA, (STRING)2);
-      break;
+                     case IDC_LINKS:
+                          ThotCallback (numMenuOptions + baseDlg, INTEGER_DATA, (STRING)2);
+                          break;
       
-    case IDC_PRINTURL:
-      ThotCallback (numMenuOptions + baseDlg, INTEGER_DATA, (STRING)3);
-      break;
+                     case IDC_PRINTURL:
+                          ThotCallback (numMenuOptions + baseDlg, INTEGER_DATA, (STRING)3);
+                          break;
       
-    case IDC_IGNORE_CSS:
-      ThotCallback (numMenuOptions + baseDlg, INTEGER_DATA, (STRING)4);
-      break;
+                     case IDC_IGNORE_CSS:
+                          ThotCallback (numMenuOptions + baseDlg, INTEGER_DATA, (STRING)4);
+                          break;
       
-    case ID_PRINT:
-      ThotCallback (numMenuSupport + baseDlg, INTEGER_DATA, (STRING)0);
-      EndDialog (hwnDlg, ID_PRINT);
-      if (TtPrinterDC)
-	DeleteDC (TtPrinterDC);
+                     case ID_PRINT:
+                          ThotCallback (numMenuSupport + baseDlg, INTEGER_DATA, (STRING)0);
+                          EndDialog (hwnDlg, ID_PRINT);
+                          if (TtPrinterDC)
+                             DeleteDC (TtPrinterDC);
       
-      TtPrinterDC = GetPrinterDC ();
-      if (TtPrinterDC) {
-	WinInitPrinterColors ();
-	/* ghwndAbort = CreateDialog (hInstance, MAKEINTRESOURCE (PRINTPROGRESSDLG), ghwndMain, (DLGPROC) AbortDlgProc);*/
+                          TtPrinterDC = GetPrinterDC ();
+                          if (TtPrinterDC) {
+                             WinInitPrinterColors ();
 	
-	EnableWindow (ghwndMain, FALSE);
-	ThotCallback (numMenuPaperFormat + baseDlg, INTEGER_DATA, (STRING)0);
-	ThotCallback (numZonePrinterName + baseDlg, STRING_DATA, currentFileToPrint);
-	ThotCallback (numFormPrint + baseDlg, INTEGER_DATA, (STRING)1);
-	if (TtPrinterDC) {
-	  DeleteDC (TtPrinterDC);
-	  TtPrinterDC = NULL;
-	}
-      }
-      break;
+                             EnableWindow (ghwndMain, FALSE);
+                             ThotCallback (numMenuPaperFormat + baseDlg, INTEGER_DATA, (STRING)0);
+                             ThotCallback (numZonePrinterName + baseDlg, STRING_DATA, currentFileToPrint);
+                             ThotCallback (numFormPrint + baseDlg, INTEGER_DATA, (STRING)1);
+                             if (TtPrinterDC) {
+                                DeleteDC (TtPrinterDC);
+                                TtPrinterDC = NULL;
+							 }
+						  }
+                          break;
       
-    case IDCANCEL:
-      if (TtPrinterDC) {
-	DeleteDC (TtPrinterDC);
-	TtPrinterDC = NULL;
-      }
-      ThotCallback (numFormPrint + baseDlg, INTEGER_DATA, (STRING)0);
-      EndDialog (hwnDlg, IDCANCEL);
-      break;
-    }
-    break;
-  default: return FALSE;
-  }
+                     case IDCANCEL:
+                          if (TtPrinterDC) {
+                             DeleteDC (TtPrinterDC);
+                             TtPrinterDC = NULL;
+						  }
+                          ThotCallback (numFormPrint + baseDlg, INTEGER_DATA, (STRING)0);
+                          EndDialog (hwnDlg, IDCANCEL);
+                          break;
+			  }
+              break;
+         default: return FALSE;
+  } 
   return TRUE;
 }
 
@@ -2233,6 +2268,7 @@ LPARAM lParam;
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
 				       case ID_CONFIRM:
+                            searchEnd = FALSE;
 						    GetDlgItemText (hwnDlg, IDC_SEARCHEDIT, textToSearch, sizeof (textToSearch) - 1);
 						    GetDlgItemText (hwnDlg, IDC_REPLACEDIT, newText, sizeof (newText) - 1);
 							if (newText && newText[0] != '\0' && iMode == 0) {
@@ -2247,7 +2283,7 @@ LPARAM lParam;
 						    ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (STRING) iMode);
 						    ThotCallback (NumMenuOrSearchText, INTEGER_DATA, (STRING) iLocation);
 						    ThotCallback (NumFormSearchText, INTEGER_DATA, (STRING) 1);
-							if (iLocation == 3) {
+							if (!searchEnd && iLocation == 3) {
 				               CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
 							   iLocation = 2;
 							}
@@ -3180,6 +3216,44 @@ LPARAM lParam;
 				default: return FALSE;
 	}
 	return TRUE;
+}
+
+/*-----------------------------------------------------------------------
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK MathEntityDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK MathEntityDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent;
+UINT   msg;
+WPARAM wParam;
+LPARAM lParam;
+#endif /* !__STDC__ */
+{
+    switch (msg) {
+	       case WM_INITDIALOG:
+                SetWindowText (hwnDlg, BM_Entity);
+                SetWindowText (GetDlgItem (hwnDlg, IDC_ENTITY_NAME), entityName);
+                SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+                SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+                break;
+
+		   case WM_COMMAND:
+			    switch (LOWORD (wParam)) {
+				       case ID_CONFIRM:
+                            GetDlgItemText (hwnDlg, IDC_EDIT_NAME, mathEntityName, sizeof (mathEntityName) - 1);
+                            ThotCallback (baseDlg + mathText, STRING_DATA, mathEntityName);
+                            ThotCallback (baseDlg + mathForm, INTEGER_DATA, (STRING) 1);
+						    EndDialog (hwnDlg, ID_CONFIRM);
+							break;
+
+                       case IDCANCEL:
+                            EndDialog (hwnDlg, IDCANCEL);
+                            ThotCallback (baseDlg + mathForm, INTEGER_DATA, (STRING) 0);
+				}
+           default: return FALSE; 
+	}
+    return TRUE;
 }
 
 /*-----------------------------------------------------------------------

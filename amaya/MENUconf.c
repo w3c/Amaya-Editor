@@ -56,7 +56,7 @@ extern HINSTANCE hInstance;
 #endif /* _WINDOWS */
 
 /* this one should be exported from the thotlib */
-extern CharUnit* ColorName (int num);
+extern CHAR_T* ColorName (int num);
 
 static int CacheStatus;
 static int ProxyStatus;
@@ -3247,7 +3247,7 @@ static void BuildProfileList (void)
   while (i < nbprofiles && MenuText[i] != '\0')
     {
       /* keep in mind the current selected entry */
-      if (ptr && !ucsiso_strcmp (ptr, MenuText[i]))
+      if (ptr && !cus2iso_strcmp (ptr, MenuText[i]))
          CurrentProfile = i;
       SendMessage (wndProfilesList, LB_INSERTSTRING, i, (LPARAM) MenuText[i]);
       i++;

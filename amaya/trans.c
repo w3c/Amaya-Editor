@@ -1430,7 +1430,7 @@ strNode            *TN;
   if (elType.ElSSchema == NULL)
     {
       /*specifique a MathML */
-      elType.ElSSchema = TtaGetSSchema (TEXT("MathML"), TransDoc);
+      elType.ElSSchema = TtaGetSSchema ("MathML", TransDoc);
     }
 
   NS->Idf = idfCounter++;
@@ -2850,7 +2850,7 @@ Document            doc;
 	  if (best == -1)
 	    /* no transformation for the actual selection : take another one */
 	    best = last;
-	  TransCallbackDialog (TransBaseDialog + TransMenu, 0, (STRING) best);
+	  TransCallbackDialog (TransBaseDialog + TransMenu, 0, best);
 	}
     }
   TtaFreeMemory (nameSet);  

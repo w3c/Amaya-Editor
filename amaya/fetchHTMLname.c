@@ -500,7 +500,7 @@ Document            doc;
       if (!strcasecmp (HTMLGIMappingTable[i].htmlGI, gi))
       {
 	if (doc != 0)
-        elType->ElSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+        elType->ElSSchema = TtaGetSSchema ("HTML", doc);
 	elType->ElTypeNum = HTMLGIMappingTable[i].ThotType;
 	return;
       }
@@ -590,7 +590,7 @@ Document       doc;
 	{
 	  attrType->AttrTypeNum = tableEntry->ThotAttribute;
 	  if (schema == NULL && doc != 0)
-	    attrType->AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+	    attrType->AttrSSchema = TtaGetSSchema ("HTML", doc);
 	  else	    
 	    attrType->AttrSSchema = schema;
 	}

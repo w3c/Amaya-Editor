@@ -600,7 +600,7 @@ Document        doc;
   TtaSetDocumentAccessMode (doc, 0);
   el = TtaGetMainRoot (doc);
   elType = TtaGetElementType (el);
-  if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
     {
       elType.ElTypeNum = HTML_EL_Form;
       elForm = TtaSearchTypedElement (elType, SearchForward, el);
@@ -735,7 +735,7 @@ Document            doc;
 #ifdef ANNOTATIONS
 	   TtaSetMenuOff (document, 1, Annotations_);
 #endif /* ANNOTATIONS */
-	   view = TtaGetViewFromName (document, TEXT("Structure_view"));
+	   view = TtaGetViewFromName (document, "Structure_view");
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
 	       TtaSetItemOff (document, view, Edit_, BCut);
@@ -746,7 +746,7 @@ Document            doc;
 	       TtaSetMenuOff (document, view, StructTypes);
 	       TtaSetMenuOff (document, view, Types);
 	     }
-	   view = TtaGetViewFromName (document, TEXT("Math_Structure_view"));
+	   view = TtaGetViewFromName (document, "Math_Structure_view");
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
 	       TtaSetItemOff (document, view, Edit_, BCut);
@@ -768,7 +768,7 @@ Document            doc;
 	       TtaSetMenuOff (document, view, Types);
 	     }
 #endif /* GRAPHML */
-	   view = TtaGetViewFromName (document, TEXT("Alternate_view"));
+	   view = TtaGetViewFromName (document, "Alternate_view");
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
 	       TtaSetItemOff (document, view, Edit_, BCut);
@@ -778,7 +778,7 @@ Document            doc;
 	       TtaSetMenuOff (document, view, StructTypes);
 	       TtaSetMenuOff (document, view, Types);
 	     }
-	   view = TtaGetViewFromName (document, TEXT("Links_view"));
+	   view = TtaGetViewFromName (document, "Links_view");
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
 	       TtaSetItemOff (document, view, Edit_, BCut);
@@ -788,7 +788,7 @@ Document            doc;
 	       TtaSetItemOff (document, view, Edit_, BTransform);
 	       TtaSetMenuOff (document, view, Types);
 	     }
-	   view = TtaGetViewFromName (document, TEXT("Table_of_contents"));
+	   view = TtaGetViewFromName (document, "Table_of_contents");
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
 	       TtaSetItemOff (document, view, Edit_, BCut);
@@ -860,7 +860,7 @@ Document            doc;
 #ifdef ANNOTATIONS
 	   TtaSetMenuOn (document, 1, Annotations_);
 #endif /* ANNOTATIONS */
-	   view = TtaGetViewFromName (document, TEXT("Structure_view"));
+	   view = TtaGetViewFromName (document, "Structure_view");
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
 	       TtaSetItemOn (document, view, Edit_, BCut);
@@ -871,7 +871,7 @@ Document            doc;
 	       TtaSetMenuOn (document, view, StructTypes);
 	       TtaSetMenuOn (document, view, Types);
 	     }
-	   view = TtaGetViewFromName (document, TEXT("Math_Structure_view"));
+	   view = TtaGetViewFromName (document, "Math_Structure_view");
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
 	       TtaSetItemOn (document, view, Edit_, BCut);
@@ -893,7 +893,7 @@ Document            doc;
 	       TtaSetMenuOn (document, view, Types);
 	     }
 #endif /* GRAPHML */
-	   view = TtaGetViewFromName (document, TEXT("Alternate_view"));
+	   view = TtaGetViewFromName (document, "Alternate_view");
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
 	       TtaSetItemOn (document, view, Edit_, BCut);
@@ -903,7 +903,7 @@ Document            doc;
 	       TtaSetMenuOn (document, view, StructTypes);
 	       TtaSetMenuOn (document, view, Types);
 	     }
-	   view = TtaGetViewFromName (document, TEXT("Links_view"));
+	   view = TtaGetViewFromName (document, "Links_view");
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
 	       TtaSetItemOn (document, view, Edit_, BCut);
@@ -913,7 +913,7 @@ Document            doc;
 	       TtaSetItemOn (document, view, Edit_, BTransform);
 	       TtaSetMenuOn (document, view, Types);
 	     }
-	   view = TtaGetViewFromName (document, TEXT("Table_of_contents"));
+	   view = TtaGetViewFromName (document, "Table_of_contents");
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
 	       TtaSetItemOn (document, view, Edit_, BCut);
@@ -1074,7 +1074,7 @@ STRING              text;
    /* search the Title element */
    el = TtaGetMainRoot (document);
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+   if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
      {
        elType.ElTypeNum = HTML_EL_TITLE;
        el = TtaSearchTypedElement (elType, SearchForward, el);
@@ -1131,7 +1131,7 @@ View                view;
 
    el = TtaGetMainRoot (sourceDoc);
    elType.ElSSchema = TtaGetDocumentSSchema (sourceDoc);
-   if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+   if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
      /* sourceDoc is a HTML document */
      {
        /* search the Title element in sourceDoc */
@@ -1500,15 +1500,15 @@ ThotBool     logFile;
 	  TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);
 	  TtaSetToggleItem (doc, 1, Special, TSectionNumber, FALSE);
 	  /* close the Alternate view if it is open */
-	  altView = TtaGetViewFromName (doc, TEXT("Alternate_view"));
+	  altView = TtaGetViewFromName (doc, "Alternate_view");
 	  if (altView != 0 && TtaIsViewOpened (doc, altView))
 	    TtaCloseView (doc, altView);
 	  /* close the Structure view if it is open */
-	  structView = TtaGetViewFromName (doc, TEXT("Structure_view"));
+	  structView = TtaGetViewFromName (doc, "Structure_view");
 	  if (structView != 0 && TtaIsViewOpened (doc, structView))
 	    TtaCloseView (doc, structView);
 	  /* close the Math_structure view if it is open */
-	  structView = TtaGetViewFromName (doc, TEXT("Math_Structure_view"));
+	  structView = TtaGetViewFromName (doc, "Math_Structure_view");
 	  if (structView != 0 && TtaIsViewOpened (doc, structView))
 	    TtaCloseView (doc, structView);
 #ifdef GRAPHML
@@ -1518,11 +1518,11 @@ ThotBool     logFile;
 	    TtaCloseView (doc, structView);
 #endif /* GRAPHML */
 	  /* close the Links view if it is open */
-	  linksView = TtaGetViewFromName (doc, TEXT("Links_view"));
+	  linksView = TtaGetViewFromName (doc, "Links_view");
 	  if (linksView != 0 && TtaIsViewOpened (doc, linksView))
 	    TtaCloseView (doc, linksView);
 	  /* close the Table_of_contents view if it is open */
-	  tocView = TtaGetViewFromName (doc, TEXT("Table_of_contents"));
+	  tocView = TtaGetViewFromName (doc, "Table_of_contents");
 	  if (tocView != 0 && TtaIsViewOpened (doc, tocView))
 	    TtaCloseView (doc, tocView);
 	}
@@ -2102,27 +2102,27 @@ STRING documentname;
   contains the current copy of the remote file.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Document     LoadHTMLDocument (Document doc, STRING pathname, STRING form_data, int method, STRING tempfile, STRING documentname, STRING content_type, ThotBool history)
+static Document     LoadHTMLDocument (Document doc, CharUnit* pathname, CharUnit* form_data, int method, CharUnit* tempfile, CharUnit* documentname, STRING content_type, ThotBool history)
 #else
 static Document     LoadHTMLDocument (doc, pathname, form_data, method, tempfile, documentname, content_type, history)
 Document            doc;
-STRING              pathname;
-STRING              form_data;
+CharUnit*           pathname;
+CharUnit*           form_data;
 int                 method;
-STRING              tempfile;
-STRING              documentname;
+CharUnit*           tempfile;
+CharUnit*           documentname;
 STRING              content_type;
-ThotBool	    history;
+ThotBool            history;
 #endif
 {
   CSSInfoPtr          css;
   Document            newdoc = 0;
   DocumentType        docType;
-  STRING              tempdocument;
-  STRING              tempdir;
-  STRING              s;
+  CharUnit*           tempdocument;
+  CharUnit*           tempdir;
+  CharUnit*           s;
   int                 i, j;
-  ThotBool	      otherFile;
+  ThotBool            otherFile;
   ThotBool            plainText;
   ThotBool            XHTMLdoc;
 
@@ -2139,16 +2139,16 @@ ThotBool	    history;
 	  /* it seems to be an HTML document */
 	  docType = docHTML;
 	  /* it may be an XHTML document. Look for <?xml ...?> in it */
-	  if ((tempfile[0] != EOS && ContentIsXML (tempfile)) ||
-	      (tempfile[0] == EOS && ContentIsXML (pathname)))
+	  if ((tempfile[0] != CUS_EOS && ContentIsXML (tempfile)) ||
+	      (tempfile[0] == CUS_EOS && ContentIsXML (pathname)))
 	     XHTMLdoc = TRUE;
 	  otherFile = FALSE;
 	}
       else if (IsXMLName (pathname))
 	{
 	/* it's a document written in XML: check its doctype */
-	  if ((tempfile[0] != EOS && IsXHTMLDocType (tempfile)) ||
-	      (tempfile[0] == EOS && IsXHTMLDocType (pathname)))
+	  if ((tempfile[0] != CUS_EOS && IsXHTMLDocType (tempfile)) ||
+	      (tempfile[0] == CUS_EOS && IsXHTMLDocType (pathname)))
 	    {
 	    docType = docHTML;
 	    XHTMLdoc = TRUE;
@@ -2167,7 +2167,7 @@ ThotBool	    history;
 	  docType = docText;
 	  otherFile = FALSE;
 	}
-      else if (tempfile[0] != EOS)
+      else if (tempfile[0] != CUS_EOS)
 	{
 	/* It's a document loaded from the Web */
 	/* Let's suppose it's HTML */
@@ -2199,8 +2199,8 @@ ThotBool	    history;
 		   docType = docHTML;
 		   otherFile = FALSE;
 		   /* check if it's an XHTML document */
-		   if ((tempfile[0] != EOS && ContentIsXML (tempfile)) ||
-		       (tempfile[0] == EOS && ContentIsXML (pathname)))
+		   if ((tempfile[0] != CUS_EOS && ContentIsXML (tempfile)) ||
+		       (tempfile[0] == CUS_EOS && ContentIsXML (pathname)))
 		     XHTMLdoc = TRUE;
 		 }
 	       else if (!ustrncasecmp (&content_type[i+1], TEXT("xhtml"), 5))
@@ -2213,8 +2213,8 @@ ThotBool	    history;
 	       else if (!ustrncasecmp (&content_type[i+1], TEXT("xml"), 3))
 		 {
 		   /* it's an XML document: check its content */
-		   if ((tempfile[0] != EOS && IsXHTMLDocType (tempfile)) ||
-		       (tempfile[0] == EOS && IsXHTMLDocType (pathname)))
+		   if ((tempfile[0] != CUS_EOS && IsXHTMLDocType (tempfile)) ||
+		       (tempfile[0] == CUS_EOS && IsXHTMLDocType (pathname)))
 		     {
 		     docType = docHTML;
 		     XHTMLdoc = TRUE;
@@ -2247,7 +2247,7 @@ ThotBool	    history;
   if (otherFile)
     {
       if (content_type && !ustrcmp (content_type, TEXT("image")) 
-	  && tempfile[0] != EOS)
+	  && tempfile[0] != CUS_EOS)
 	{
 	  /* get a pointer to the type ('/' substituted with an EOS
 	     earlier in this function */
@@ -2263,7 +2263,7 @@ ThotBool	    history;
 	      otherFile = FALSE;
 	    }
 	}
-      else if (IsImageName (pathname) && tempfile[0] == EOS)
+      else if (IsImageName (pathname) && tempfile[0] == CUS_EOS)
 	{
 	  /* It's a local image file that we can display. We change the 
 	     doctype flag so that we can create an HTML container later on */
@@ -2272,25 +2272,25 @@ ThotBool	    history;
 	}
     }
 
-  if (otherFile && tempfile[0] != EOS)
+  if (otherFile && tempfile[0] != CUS_EOS)
     {
       /* The document is not an HTML file and cannot be parsed */
       /* rename the temporary file */
-      ustrcpy (SavingFile, tempfile);
+      StringCopy (SavingFile, tempfile);
       SavingDocument = 0;
       SavingObject = 0;
-      tempdocument = TtaAllocString (MAX_LENGTH);
+      tempdocument = TtaAllocCUString (MAX_LENGTH);
       TtaExtractName (pathname, tempfile, tempdocument);
       /* reinitialize directories and document lists */
-      ustrcpy (pathname, DirectoryName);
-      ustrcat (pathname, DIR_STR);
-      ustrcat (pathname, tempdocument);
-      ustrcpy (SavePath, DirectoryName);
-      ustrcpy (SaveName, tempdocument);
+      StringCopy (pathname, DirectoryName);
+      StringConcat (pathname, CUS_DIR_STR);
+      StringConcat (pathname, tempdocument);
+      StringCopy (SavePath, DirectoryName);
+      StringCopy (SaveName, tempdocument);
       ResetStop (doc);
       InitSaveObjectForm (doc, 1, SavingFile, pathname);
     }
-  else if (pathname[0] != EOS)
+  else if (pathname[0] != CUS_EOS)
     {
       if (method != CE_MAKEBOOK)
 	{
@@ -2349,14 +2349,13 @@ ThotBool	    history;
 	  else 
 	    {
 	      /* It's a local image file */
-	      usprintf (tempfile, TEXT("%s%c%d%c%s"), 
-		       TempFileDirectory, DIR_SEP, 0, DIR_SEP, "contain.html");
+	      cus_sprintf (tempfile, CUSTEXT("%s%c%d%c%s"), TempFileDirectory, CUS_DIR_SEP, 0, CUS_DIR_SEP, CUSTEXT("contain.html"));
 	      CreateHTMLContainer (pathname, documentname, tempfile, TRUE);
 	    }
 	}
 
       /* what we have to do if doc and targetDocument are different */
-      if (tempfile[0] != EOS)
+      if (tempfile[0] != CUS_EOS)
 	{
 	  /* It is a document loaded from the Web */
 	  if (!TtaFileExist (tempfile))
@@ -2406,7 +2405,7 @@ ThotBool	    history;
 	      s = GetLocalPath (0, pathname);
 	      TtaFileCopy (tempdocument, s);
 	      /* initialize a new CSS context */
-	      if (UserCSS && !ustrcmp (pathname, UserCSS))
+	      if (UserCSS && !StringCompare (pathname, UserCSS))
 		AddCSS (newdoc, 0, CSS_USER_STYLE, NULL, s);
 	      else
 		AddCSS (newdoc, 0, CSS_EXTERNAL_STYLE, pathname, s);
@@ -2417,7 +2416,7 @@ ThotBool	    history;
 	}
       
       /* save the document name into the document table */
-      s = TtaStrdup (pathname);
+      s = StringDuplicate (pathname);
       if (DocumentURLs[newdoc] != NULL)
 	TtaFreeMemory (DocumentURLs[newdoc]);
       DocumentURLs[newdoc] = s;
@@ -2426,7 +2425,7 @@ ThotBool	    history;
 	  TtaFreeMemory (DocumentMeta[newdoc]->form_data);
       else
 	DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
-      DocumentMeta[newdoc]->form_data = TtaStrdup (form_data);
+      DocumentMeta[newdoc]->form_data = StringDuplicate (form_data);
       DocumentMeta[newdoc]->method = (ClickEvent) method;
       DocumentMeta[newdoc]->put_default_name = FALSE;
       DocumentMeta[newdoc]->xmlformat = XHTMLdoc;
@@ -2437,21 +2436,21 @@ ThotBool	    history;
 	{
 	  /* concatenate the URL and its form_data and then
 	     display it on the amaya URL box */
-	  i = ustrlen (pathname) + 5;
+	  i = StringLength (pathname) + 5;
 	  if (form_data && method != CE_FORM_POST)
-	    i += ustrlen (form_data);
-	  s = TtaAllocString (i);
+	    i += StringLength (form_data);
+	  s = TtaAllocCUString (i);
 
 	  if (form_data && method != CE_FORM_POST)
-	    usprintf (s, TEXT("%s?%s"), pathname, form_data);
+	    cus_sprintf (s, CUSTEXT("%s?%s"), pathname, form_data);
 	  else
-	    ustrcpy (s, pathname);
+	    StringCopy (s, pathname);
 
 	  TtaSetTextZone (newdoc, 1, 1, s);
 	  TtaFreeMemory (s);
 	}
 
-      tempdir = TtaAllocString (MAX_LENGTH);
+      tempdir = TtaAllocCUString (MAX_LENGTH);
       TtaExtractName (tempdocument, tempdir, documentname);
       plainText = (DocumentTypes[newdoc] == docText ||
 		   DocumentTypes[newdoc] == docTextRO ||
@@ -2590,7 +2589,7 @@ View                view;
    STRING              pathname;
    STRING              documentname;
    int                 toparse;
-   STRING              form_data;
+   CharUnit*           form_data;
    ClickEvent          method;
    int                 mode;
    int		       position;
@@ -2616,7 +2615,7 @@ View                view;
       ReloadTemplateParams (&(DocumentURLs[doc]), &(DocumentMeta[doc]->method));
    NormalizeURL (DocumentURLs[doc], 0, pathname, documentname, NULL);
    if (DocumentMeta[doc]->form_data)
-     form_data = TtaStrdup (DocumentMeta[doc]->form_data);
+     form_data = StringDuplicate (DocumentMeta[doc]->form_data);
    else
      form_data = NULL;
    method = DocumentMeta[doc]->method;
@@ -2718,7 +2717,7 @@ View                view;
   /* Change visibility threshold in the main view */
   TtaSetSensibility (document, view, visibility);
   /* Change visibility threshold in the table of content view if it's open */
-  tocView = TtaGetViewFromName (document, TEXT("Table_of_contents"));
+  tocView = TtaGetViewFromName (document, "Table_of_contents");
   if (tocView && TtaIsViewOpened (document, tocView))
      TtaSetSensibility (document, tocView, visibility);
 }
@@ -2816,10 +2815,11 @@ Document            document;
 View                view;
 #endif
 {
-   STRING        tempdocument, s;
-   CHAR_T	 documentname[MAX_LENGTH];
-   CHAR_T	 tempdir[MAX_LENGTH];
-   Document	 sourceDoc;
+   STRING        tempdocument;
+   CharUnit*     s;
+   CHAR_T	     documentname[MAX_LENGTH];
+   CHAR_T	     tempdir[MAX_LENGTH];
+   Document	     sourceDoc;
    NotifyElement event;
 
    if (!DocumentURLs[document])
@@ -2847,7 +2847,7 @@ View                view;
      if (sourceDoc > 0)
        {
 	 DocumentSource[document] = sourceDoc;
-	 s = TtaStrdup (DocumentURLs[document]);
+	 s = StringDuplicate (DocumentURLs[document]);
 	 DocumentURLs[sourceDoc] = s;
 	 DocumentMeta[sourceDoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
 	 DocumentMeta[sourceDoc]->form_data = NULL;
@@ -2909,7 +2909,7 @@ View                view;
 #endif /* GRAPHML */
    int                 x, y, w, h;
 
-   structView = TtaGetViewFromName (document, TEXT("Structure_view"));
+   structView = TtaGetViewFromName (document, "Structure_view");
    if (structView != 0 && TtaIsViewOpened (document, structView))
      TtaRaiseView (document, structView);
    else
@@ -2934,7 +2934,7 @@ View                view;
 	     }
 	 }
      }
-   mathView = TtaGetViewFromName (document, TEXT("Math_Structure_view"));
+   mathView = TtaGetViewFromName (document, "Math_Structure_view");
    if (mathView != 0 && TtaIsViewOpened (document, mathView))
      TtaRaiseView (document, mathView);
    else
@@ -3005,7 +3005,7 @@ View                view;
    View                altView;
    int                 x, y, w, h;
 
-   altView = TtaGetViewFromName (document, TEXT("Alternate_view"));
+   altView = TtaGetViewFromName (document, "Alternate_view");
    if (view == altView)
       TtaRaiseView (document, view);
    else if (altView != 0 && TtaIsViewOpened (document, altView))
@@ -3050,7 +3050,7 @@ View                view;
    View                linksView;
    int                 x, y, w, h;
 
-   linksView = TtaGetViewFromName (document, TEXT("Links_view"));
+   linksView = TtaGetViewFromName (document, "Links_view");
    if (view == linksView)
       TtaRaiseView (document, view);
    else if (linksView != 0 && TtaIsViewOpened (document, linksView))
@@ -3094,7 +3094,7 @@ View                view;
    View                tocView;
    int                 x, y, w, h;
 
-   tocView = TtaGetViewFromName (document, TEXT("Table_of_contents"));
+   tocView = TtaGetViewFromName (document, "Table_of_contents");
    if (view == tocView)
       TtaRaiseView (document, view);
    else if (tocView != 0 && TtaIsViewOpened (document, tocView))
@@ -3144,11 +3144,11 @@ NotifyDialog       *event;
 
    view = event->view;
    document = event->document;
-   structView = TtaGetViewFromName (document, TEXT("Structure_view"));
-   altView = TtaGetViewFromName (document, TEXT("Alternate_view"));
-   linksView = TtaGetViewFromName (document, TEXT("Links_view"));
-   tocView = TtaGetViewFromName (document, TEXT("Table_of_contents"));
-   mathView = TtaGetViewFromName (document, TEXT("Math_Structure_view"));
+   structView = TtaGetViewFromName (document, "Structure_view");
+   altView = TtaGetViewFromName (document, "Alternate_view");
+   linksView = TtaGetViewFromName (document, "Links_view");
+   tocView = TtaGetViewFromName (document, "Table_of_contents");
+   mathView = TtaGetViewFromName (document, "Math_Structure_view");
 #ifdef GRAPHML
    graphView = TtaGetViewFromName (document, "Graph_Structure_view");
 #endif /* GRAPHML */
@@ -3182,21 +3182,15 @@ NotifyDialog       *event;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               GetHTMLDocument_callback (int newdoc, int status, 
-					     STRING urlName,
-					     STRING outputfile, 
-					     STRING content_type,
-					     void * context)
+void GetHTMLDocument_callback (int newdoc, int status, CharUnit* urlName, STRING outputfile, STRING content_type, void * context)
 #else  /* __STDC__ */
-void               GetHTMLDocument_callback (newdoc, status, urlName,
-                                             outputfile, content_type, 
-                                             context)
-int newdoc;
-int status;
-STRING urlName;
-STRING outputfile;
-STRING content_type;
-void *context;
+void GetHTMLDocument_callback (newdoc, status, urlName, outputfile, content_type, context)
+int       newdoc;
+int       status;
+CharUnit* urlName;
+STRING    outputfile;
+STRING    content_type;
+void*     context;
 
 #endif
 {
@@ -3206,12 +3200,12 @@ void *context;
    Document            res;
    STRING              tempfile;
    STRING              target;
-   STRING              pathname;
-   STRING              documentname;
-   STRING              form_data;
+   CharUnit*           pathname;
+   CharUnit*           documentname;
+   CharUnit*           form_data;
    ClickEvent          method;
    STRING              tempdocument;
-   STRING              s;
+   CharUnit*           s;
    int                 i;
    ThotBool	       history;
    ThotBool            ok;
@@ -3240,9 +3234,9 @@ void *context;
    ctx_cbf = ctx->ctx_cbf;
    local_link = ctx->local_link;
    
-   pathname = TtaAllocString (MAX_LENGTH + 1);
-   ustrncpy (pathname, urlName, MAX_LENGTH);
-   pathname[MAX_LENGTH] = EOS;
+   pathname = TtaAllocCUString (MAX_LENGTH + 1);
+   StringNCopy (pathname, urlName, MAX_LENGTH);
+   pathname[MAX_LENGTH] = CUS_EOS;
    tempfile = TtaAllocString (MAX_LENGTH + 1);
    if (outputfile != NULL)
      {
@@ -3262,9 +3256,7 @@ void *context;
 	     NormalizeURL (pathname, 0, tempdocument, documentname, NULL);
 
 	   /* do we need to control the last slash here? */
-	   res = LoadHTMLDocument (newdoc, pathname, form_data, method, 
-				   tempfile, documentname, content_type, 
-				   history);
+	   res = LoadHTMLDocument (newdoc, pathname, form_data, method, tempfile, documentname, content_type, history);
 	   W3Loading = 0;		/* loading is complete now */
 	   if (res == 0)
 	     {
@@ -3289,7 +3281,7 @@ void *context;
 	   if (DocumentURLs[newdoc] == NULL)
 	     {
 	       /* save the document name into the document table */
-	       s = TtaStrdup (pathname);
+	       s = StringDuplicate (pathname);
 	       DocumentURLs[newdoc] = s;
 	       TtaSetTextZone (newdoc, 1, 1, s);
 	       /* save the document's formdata into the document table */
@@ -3297,7 +3289,7 @@ void *context;
 		 TtaFreeMemory (DocumentMeta[(int) newdoc]->form_data);
 	       else
 		 DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
-	       DocumentMeta[newdoc]->form_data = TtaStrdup (form_data);
+	       DocumentMeta[newdoc]->form_data = StringDuplicate (form_data);
 	       DocumentMeta[newdoc]->method = method;
 	       DocumentMeta[newdoc]->put_default_name = FALSE;
 	       DocumentMeta[newdoc]->xmlformat = FALSE;
@@ -3360,14 +3352,7 @@ void *context;
     - history: record the URL in the browsing history
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document            GetHTMLDocument (const CharUnit* documentPath, 
-				     STRING form_data, 
-				     Document doc, 
-				     Document baseDoc, 
-				     ClickEvent CE_event, 
-				     ThotBool history, 
-				     TTcbf *cbf, 
-				     void *ctx_cbf)
+Document            GetHTMLDocument (const CharUnit* documentPath, STRING form_data, Document doc, Document baseDoc, ClickEvent CE_event, ThotBool history, TTcbf *cbf, void *ctx_cbf)
 #else
 Document            GetHTMLDocument (documentPath, const STRING form_data, doc, baseDoc, CE_event, history, void *cbf, void *ctx_cbf)
 STRING              documentPath;
@@ -3375,7 +3360,7 @@ STRING              form_data;
 Document            doc;
 Document            baseDoc;
 ClickEvent          CE_event;
-ThotBool	    history;
+ThotBool            history;
 TTcbf              *cbf;
 void               *ctx_cbf;
 #endif
@@ -3580,34 +3565,20 @@ void               *ctx_cbf;
 		     if (CE_event != CE_FORM_POST
 			 && !ustrcmp (documentname, TEXT("noname.html")))
 		       {
-			 slash = ustrlen (pathname);
-			 if (slash && pathname[slash - 1] != TEXT('/'))
-			   ustrcat (pathname, TEXT("/"));
+			 slash = StringLength (pathname);
+			 if (slash && pathname[slash - 1] != CUSTEXT('/'))
+			   StringConcat (pathname, CUSTEXT("/"));
 		       }
 		     css = SearchCSS (0, pathname);
 		     if (css == NULL)
-		       toparse =  GetObjectWWW (newdoc,
-						pathname,
-						form_data, 
-						tempfile,
-						mode,
-						NULL,
-						NULL, 
-						(void *) GetHTMLDocument_callback,
-						(void *) ctx,
-						YES,
-						NULL);
+		       toparse =  GetObjectWWW (newdoc, pathname, form_data, tempfile, mode, NULL, NULL, (void *) GetHTMLDocument_callback, (void *) ctx, YES, NULL);
 		     else
 		       {
 			 /* it was already loaded, we need to open it */
 			 TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
 			 /* just take a copy of the local temporary file */
 			 ustrcpy (tempfile, css->localName);
-			 GetHTMLDocument_callback (newdoc, 0,
-						   pathname,
-						   tempfile, 
-						   NULL,
-						   (void *) ctx);
+			 GetHTMLDocument_callback (newdoc, 0, pathname, tempfile, NULL, (void *) ctx);
 			 TtaHandlePendingEvents ();
 		       }
 		   }
@@ -3615,11 +3586,7 @@ void               *ctx_cbf;
 		   {
 		     /* wasn't a document off the web, we need to open it */
 		     TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
-		     GetHTMLDocument_callback (newdoc, 0,
-					       pathname,
-					       tempfile, 
-					       NULL,
-					       (void *) ctx);
+		     GetHTMLDocument_callback (newdoc, 0, pathname, tempfile, NULL, (void *) ctx);
 		     TtaHandlePendingEvents ();
 		   }
 	     }
@@ -3630,11 +3597,7 @@ void               *ctx_cbf;
      {
        TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
        ctx->local_link = 1;
-       GetHTMLDocument_callback (newdoc, 0,
-				 pathname,
-				 tempfile, 
-				 NULL,
-				 (void *) ctx);
+       GetHTMLDocument_callback (newdoc, 0, pathname, tempfile, NULL, (void *) ctx);
        TtaHandlePendingEvents ();
      }
 

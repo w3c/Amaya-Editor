@@ -87,7 +87,7 @@ ThotBool          removeSpan;
    else
 #endif
       {
-      attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+      attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
       attrType.AttrTypeNum = HTML_ATTR_Style_;
       }
    attr = TtaGetAttribute (el, attrType);
@@ -179,7 +179,7 @@ STRING              styleString;
 		{
 		  oldptr = ptr;
 		  len = - len + ustrlen (oldptr) + ustrlen (new_url) + 1;
-		  ptr = (STRING) TtaGetMemory (len);	  
+		  ptr = TtaAllocString (len);	  
 		  len = (int)(b - oldptr);
 		  ustrncpy (ptr, oldptr, len);
 		  sString = &ptr[len];
@@ -192,7 +192,7 @@ STRING              styleString;
 	      else
 		{
 		  len = - len + ustrlen (styleString) + ustrlen (new_url) + 1;
-		  ptr = (STRING) TtaGetMemory (len);
+		  ptr = TtaAllocString (len);
 		  len = (int)(b - styleString);
 		  ustrncpy (ptr, styleString, len);
 		  sString = &ptr[len];
@@ -441,7 +441,7 @@ NotifyAttribute    *event;
 	else
 #endif
 	   {
-    	atType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+    	atType.AttrSSchema = TtaGetSSchema ("HTML", doc);
     	atType.AttrTypeNum = HTML_ATTR_Style_;
 	   }
 	at = TtaGetAttribute (el, atType);
@@ -666,7 +666,7 @@ Document            doc;
 	  else
 #endif
 	     {
-	     attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+	     attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
 	     attrType.AttrTypeNum = HTML_ATTR_Class;
 	     }
 	  /* set the Class attribute of the element */
@@ -871,7 +871,7 @@ Document            doc;
       else
 #endif
 	 {
-	   attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+	   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
 	   attrType.AttrTypeNum = HTML_ATTR_Class;
 	 }
       attr = TtaGetAttribute (ClassReference, attrType);
@@ -1136,7 +1136,7 @@ STRING              first;
 
   /* list all class values */
   /* looks first for the Class attribute defined in the HTML DTD */
-  attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
   attrType.AttrTypeNum = HTML_ATTR_Class;
   el = TtaGetMainRoot (doc);
   while (el != NULL)
@@ -1146,7 +1146,7 @@ STRING              first;
 	PutClassName (attr, buf, &index, &free, &nb);
      }
   /* looks for the class attribute defined in the MathML DTD */
-  attrType.AttrSSchema = TtaGetSSchema (TEXT("MathML"), doc);
+  attrType.AttrSSchema = TtaGetSSchema ("MathML", doc);
   if (attrType.AttrSSchema)
      /* there are some MathML elements in this document */
      {
@@ -1251,7 +1251,7 @@ View                view;
 	else
 #endif
 	  {
-	    attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+	    attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
 	    attrType.AttrTypeNum = HTML_ATTR_Class;
 	  }
       attr = TtaGetAttribute (ClassReference, attrType);
@@ -1340,7 +1340,7 @@ View                view;
   else
 #endif
      {
-     attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+     attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
      attrType.AttrTypeNum = HTML_ATTR_Class;
      }
   attr = TtaGetAttribute (firstSelectedEl, attrType);

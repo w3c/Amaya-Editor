@@ -289,10 +289,10 @@ typedef enum
 /* a record for data associated with a request */
 typedef struct _DocumentMetaDataElement
 {
-  STRING form_data;  /* form data associated with a URL */
-  ClickEvent method;  /* method used to send this data */
-  ThotBool put_default_name; /* URL name was concatenated with DEFAULT_NAME */
-  ThotBool xmlformat; /* the document should be exported in xml format */
+  CharUnit*  form_data;        /* form data associated with a URL               */
+  ClickEvent method;           /* method used to send this data                 */
+  ThotBool   put_default_name; /* URL name was concatenated with DEFAULT_NAME   */
+  ThotBool   xmlformat;        /* the document should be exported in xml format */
 } DocumentMetaDataElement;
 
 #define DocumentTableLength 10

@@ -49,20 +49,20 @@ BackgroundImageCallbackBlock, *BackgroundImageCallbackPtr;
  * for a font attribute.
  */
 #ifdef __STDC__
-typedef STRING (*PropertyParser) (Element element,
+typedef char* (*PropertyParser) (Element element,
 				    PSchema tsch,
 				    PresentationContext context,
-				    STRING cssRule,
+				    char* cssRule,
 				    CSSInfoPtr css,
 				    ThotBool isHTML);
 #else
-typedef STRING (*PropertyParser) ();
+typedef char* (*PropertyParser) ();
 #endif
 
 /* Description of the set of CSS properties supported */
 typedef struct CSSProperty
   {
-     STRING               name;
+     char*                name;
      PropertyParser       parsing_function;
   }
 CSSProperty;
@@ -71,21 +71,21 @@ CSSProperty;
 
 struct unit_def
 {
-   STRING              sign;
+   char*               sign;
    unsigned int        unit;
 };
 
 static struct unit_def CSSUnitNames[] =
 {
-   {TEXT ("pt"), STYLE_UNIT_PT},
-   {TEXT ("pc"), STYLE_UNIT_PC},
-   {TEXT ("in"), STYLE_UNIT_IN},
-   {TEXT ("cm"), STYLE_UNIT_CM},
-   {TEXT ("mm"), STYLE_UNIT_MM},
-   {TEXT ("em"), STYLE_UNIT_EM},
-   {TEXT ("px"), STYLE_UNIT_PX},
-   {TEXT ("ex"), STYLE_UNIT_XHEIGHT},
-   {TEXT ("%"), STYLE_UNIT_PERCENT}
+   {"pt", STYLE_UNIT_PT},
+   {"pc", STYLE_UNIT_PC},
+   {"in", STYLE_UNIT_IN},
+   {"cm", STYLE_UNIT_CM},
+   {"mm", STYLE_UNIT_MM},
+   {"em", STYLE_UNIT_EM},
+   {"px", STYLE_UNIT_PX},
+   {"ex", STYLE_UNIT_XHEIGHT},
+   {"%", STYLE_UNIT_PERCENT}
 };
 
 #define NB_UNITS (sizeof(CSSUnitNames) / sizeof(struct unit_def))
@@ -93,10 +93,10 @@ static struct unit_def CSSUnitNames[] =
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static unsigned int hexa_val (CHAR_T c)
+static unsigned int hexa_val (char c)
 #else
 static unsigned int hexa_val (c)
-CHAR_T                c;
+char                c;
 #endif
 {
    if (c >= '0' && c <= '9')
@@ -112,10 +112,10 @@ CHAR_T                c;
    SkipWord:                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       SkipWord (STRING ptr)
+static char*       SkipWord (char* ptr)
 #else
-static STRING       SkipWord (ptr)
-STRING              ptr;
+static char*       SkipWord (ptr)
+char*              ptr;
 #endif
 {
   while (isalnum(*ptr) || *ptr == '-' || *ptr == '%')
@@ -127,10 +127,10 @@ STRING              ptr;
    SkipBlanksAndComments:                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-STRING       SkipBlanksAndComments (STRING ptr)
+char*        SkipBlanksAndComments (char* ptr)
 #else
-STRING       SkipBlanksAndComments (ptr)
-STRING       ptr;
+char*        SkipBlanksAndComments (ptr)
+char*        ptr;
 #endif
 {
   ptr = TtaSkipBlanks (ptr);
@@ -151,11 +151,11 @@ STRING       ptr;
    SkipQuotedString:                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       SkipQuotedString (STRING ptr, CHAR_T quote)
+static char*        SkipQuotedString (char* ptr, char quote)
 #else
-static STRING       SkipQuotedString (ptr, quote)
-STRING              ptr;
-CHAR_T		   quote;
+static char*        SkipQuotedString (ptr, quote)
+char*               ptr;
+char                quote;
 #endif
 {
   ThotBool	stop;
@@ -195,10 +195,10 @@ CHAR_T		   quote;
    SkipProperty:                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-STRING       SkipProperty (STRING ptr)
+char*       SkipProperty (char* ptr)
 #else
-STRING       SkipProperty (ptr)
-STRING              ptr;
+char*       SkipProperty (ptr)
+char*       ptr;
 #endif
 {
   while (*ptr != EOS && *ptr != ';' && *ptr != '}')
@@ -212,10 +212,10 @@ STRING              ptr;
    value and its unit.                                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSUnit (STRING cssRule, PresentationValue *pval)
+static char*       ParseCSSUnit (char* cssRule, PresentationValue *pval)
 #else
-static STRING       ParseCSSUnit (cssRule, pval)
-STRING              cssRule;
+static char*       ParseCSSUnit (cssRule, pval)
+char*              cssRule;
 PresentationValue  *pval;
 #endif
 {
@@ -289,8 +289,7 @@ PresentationValue  *pval;
       cssRule = SkipBlanksAndComments (cssRule);
       for (uni = 0; uni < NB_UNITS; uni++)
 	{
-	  if (!ustrncasecmp (CSSUnitNames[uni].sign, cssRule,
-			     ustrlen (CSSUnitNames[uni].sign)))
+	  if (!strncasecmp (CSSUnitNames[uni].sign, cssRule, strlen (CSSUnitNames[uni].sign)))
 	    {
 	      pval->typed_data.unit = CSSUnitNames[uni].unit;
 	      pval->typed_data.real = real;
@@ -308,7 +307,7 @@ PresentationValue  *pval;
 		  else
 		    pval->typed_data.value = val;
 		}
-	      return (cssRule + ustrlen (CSSUnitNames[uni].sign));
+	      return (cssRule + strlen (CSSUnitNames[uni].sign));
 	    }
 	}
 
@@ -337,10 +336,10 @@ PresentationValue  *pval;
    ParseBorderValue                                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING      ParseBorderValue (STRING cssRule, PresentationValue *border)
+static char*      ParseBorderValue (char* cssRule, PresentationValue *border)
 #else
-static STRING      ParseBorderValue (cssRule, border)
-STRING             cssRule;
+static char*      ParseBorderValue (cssRule, border)
+char*             cssRule;
 PresentationValue *border
 #endif
 {
@@ -348,19 +347,19 @@ PresentationValue *border
    border->typed_data.value = 0;
    border->typed_data.unit = STYLE_UNIT_INVALID;
    border->typed_data.real = FALSE;
-   if (!ustrncasecmp (cssRule, TEXT("thin"), 4))
+   if (!strncasecmp (cssRule, "thin", 4))
      {
        border->typed_data.unit = STYLE_UNIT_PX;
        border->typed_data.value = 1;
        cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("medium"), 6))
+   else if (!strncasecmp (cssRule, "medium", 6))
      {
        border->typed_data.unit = STYLE_UNIT_PX;
        border->typed_data.value = 3;
        cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("thick"), 5))
+   else if (!strncasecmp (cssRule, "thick", 5))
      {
        border->typed_data.unit = STYLE_UNIT_PX;
        border->typed_data.value = 5;
@@ -375,10 +374,10 @@ PresentationValue *border
    ParseBorderStyle                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING      ParseBorderStyle (STRING cssRule, PresentationValue *border)
+static char*      ParseBorderStyle (char* cssRule, PresentationValue *border)
 #else
-static STRING      ParseBorderStyle (cssRule, border)
-STRING             cssRule;
+static char*      ParseBorderStyle (cssRule, border)
+char*             cssRule;
 PresentationValue *border
 #endif
 {
@@ -386,25 +385,25 @@ PresentationValue *border
    border->typed_data.value = 0;
    border->typed_data.unit = STYLE_UNIT_PX;
    border->typed_data.real = FALSE;
-   if (!ustrncasecmp (cssRule, TEXT("none"), 4))
+   if (!strncasecmp (cssRule, "none", 4))
      border->typed_data.value = STYLE_BORDERNONE;
-   else if (!ustrncasecmp (cssRule, TEXT("hidden"), 6))
+   else if (!strncasecmp (cssRule, "hidden", 6))
      border->typed_data.value = STYLE_BORDERHIDDEN;
-   else if (!ustrncasecmp (cssRule, TEXT("dotted"), 6))
+   else if (!strncasecmp (cssRule, "dotted", 6))
      border->typed_data.value = STYLE_BORDERDOTTED;
-   else if (!ustrncasecmp (cssRule, TEXT("dashed"), 6))
+   else if (!strncasecmp (cssRule, "dashed", 6))
      border->typed_data.value = STYLE_BORDERDASHED;
-   else if (!ustrncasecmp (cssRule, TEXT("solid"), 5))
+   else if (!strncasecmp (cssRule, "solid", 5))
      border->typed_data.value = STYLE_BORDERSOLID;
-   else if (!ustrncasecmp (cssRule, TEXT("double"), 6))
+   else if (!strncasecmp (cssRule, "double", 6))
      border->typed_data.value = STYLE_BORDERDOUBLE;
-   else if (!ustrncasecmp (cssRule, TEXT("groove"), 6))
+   else if (!strncasecmp (cssRule, "groove", 6))
      border->typed_data.value = STYLE_BORDERGROOVE;
-   else if (!ustrncasecmp (cssRule, TEXT("ridge"), 5))
+   else if (!strncasecmp (cssRule, "ridge", 5))
      border->typed_data.value = STYLE_BORDERRIDGE;
-   else if (!ustrncasecmp (cssRule, TEXT("inset"), 5))
+   else if (!strncasecmp (cssRule, "inset", 5))
      border->typed_data.value = STYLE_BORDERINSET;
-   else if (!ustrncasecmp (cssRule, TEXT("outset"), 6))
+   else if (!strncasecmp (cssRule, "outset", 6))
      border->typed_data.value = STYLE_BORDEROUTSET;
    else
      {
@@ -425,15 +424,15 @@ PresentationValue *border
    table                                                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSColor (STRING cssRule, PresentationValue * val)
+static char*       ParseCSSColor (char* cssRule, PresentationValue * val)
 #else
-static STRING       ParseCSSColor (cssRule, val)
-STRING              cssRule;
+static char*       ParseCSSColor (cssRule, val)
+char*              cssRule;
 PresentationValue  *val;
 #endif
 {
-  CHAR_T              colname[100];
-  STRING              ptr;
+  char                colname[100];
+  char*               ptr;
   unsigned short      redval = (unsigned short) -1;
   unsigned short      greenval = 0;	/* composant of each RGB       */
   unsigned short      blueval = 0;	/* default to red if unknown ! */
@@ -486,7 +485,7 @@ PresentationValue  *val;
 	  cssRule = &cssRule[6];
 	}
     }
-  else if (!ustrncasecmp (cssRule, TEXT("rgb"), 3))
+  else if (!strncasecmp (cssRule, "rgb", 3))
     {
       cssRule = &cssRule[3];
       cssRule = SkipBlanksAndComments (cssRule);
@@ -498,15 +497,15 @@ PresentationValue  *val;
 	  if (*cssRule == '%')
 	    {
 	      /* encoded as rgb(%red,%green,&blue) */
-	      usscanf (cssRule, TEXT("%%%d"), &r);
+	      sscanf (cssRule, "%%%d", &r);
 	      while (*cssRule != EOS && *cssRule != TEXT(','))
 		cssRule++;
 	      cssRule++;
-	      usscanf (cssRule, TEXT("%%%d"), &g);
+	      sscanf (cssRule, "%%%d", &g);
 	      while (*cssRule != EOS && *cssRule != TEXT(','))
 		cssRule++;
 	      cssRule++;
-	      usscanf (cssRule, TEXT("%%%d"), &b);
+	      sscanf (cssRule, "%%%d", &b);
 	      redval = (unsigned short)(r * 255 / 100);
 	      greenval = (unsigned short)(g * 255 / 100);
 	      blueval = (unsigned short)(b * 255 / 100);
@@ -514,15 +513,15 @@ PresentationValue  *val;
 	  else
 	    {
 	      /* encoded as rgb(red,green,blue) */
-	      usscanf (cssRule, TEXT("%d"), &r);
-	      while (*cssRule != EOS && *cssRule != TEXT(','))
+	      sscanf (cssRule, "%d", &r);
+	      while (*cssRule != EOS && *cssRule != ',')
 		cssRule++;
 	      cssRule++;
-	      usscanf (cssRule, TEXT("%d"), &g);
-	      while (*cssRule != EOS && *cssRule != TEXT(','))
+	      sscanf (cssRule, "%d", &g);
+	      while (*cssRule != EOS && *cssRule != ',')
 		cssRule++;
 	      cssRule++;
-	      usscanf (cssRule, TEXT("%d"), &b);
+	      sscanf (cssRule, "%d", &b);
 	      redval = (unsigned short)r;
 	      greenval = (unsigned short)g;
 	      blueval = (unsigned short)b;
@@ -553,7 +552,7 @@ PresentationValue  *val;
       
       /* Lookup the color name in our own color name database */
       for (i = 0; i < NBCOLORNAME; i++)
-	if (!ustrcasecmp (ColornameTable[i].name, colname))
+	if (!strcasecmp (ColornameTable[i].name, colname))
 	  {
 	    redval = ColornameTable[i].red;
 	    greenval = ColornameTable[i].green;
@@ -584,14 +583,14 @@ PresentationValue  *val;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBorderTopWidth (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBorderTopWidth (Element element, PSchema tsch,
+                    PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBorderTopWidth (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBorderTopWidth (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
@@ -614,14 +613,14 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBorderBottomWidth (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBorderBottomWidth (Element element, PSchema tsch,
+                    PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBorderBottomWidth (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBorderBottomWidth (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
@@ -645,14 +644,14 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBorderLeftWidth (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBorderLeftWidth (Element element, PSchema tsch,
+                    PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBorderLeftWidth (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBorderLeftWidth (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
@@ -676,14 +675,14 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBorderRightWidth (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBorderRightWidth (Element element, PSchema tsch,
+                    PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBorderRightWidth (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBorderRightWidth (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
@@ -707,19 +706,19 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBorderWidth (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBorderWidth (Element element, PSchema tsch,
+                    PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBorderWidth (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBorderWidth (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
 {
-  STRING            ptrT, ptrR, ptrB, ptrL;
+  char *ptrT, *ptrR, *ptrB, *ptrL;
 
   ptrT = SkipBlanksAndComments (cssRule);
   /* First parse Border-Top */
@@ -771,14 +770,14 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBorderColorTop (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBorderColorTop (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBorderColorTop (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBorderColorTop (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
@@ -797,10 +796,10 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBorderColorLeft (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBorderColorLeft (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBorderColorLeft (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBorderColorLeft (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -823,10 +822,10 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBorderColorBottom (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBorderColorBottom (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBorderColorBottom (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBorderColorBottom (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -849,10 +848,10 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBorderColorRight (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBorderColorRight (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBorderColorRight (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBorderColorRight (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -875,19 +874,19 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBorderColor (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBorderColor (Element element, PSchema tsch,
+                    PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBorderColor (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBorderColor (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
 {
-  STRING            ptrT, ptrR, ptrB, ptrL;
+  char *ptrT, *ptrR, *ptrB, *ptrL;
 
   ptrT = SkipBlanksAndComments (cssRule);
   /* First parse Border-Top */
@@ -939,14 +938,14 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBorderStyleTop (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBorderStyleTop (Element element, PSchema tsch,
+                    PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBorderStyleTop (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBorderStyleTop (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
@@ -965,14 +964,14 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBorderStyleLeft (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBorderStyleLeft (Element element, PSchema tsch,
+                    PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBorderStyleLeft (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBorderStyleLeft (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
@@ -991,14 +990,14 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBorderStyleBottom (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBorderStyleBottom (Element element, PSchema tsch,
+                    PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBorderStyleBottom (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBorderStyleBottom (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
@@ -1017,14 +1016,14 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBorderStyleRight (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBorderStyleRight (Element element, PSchema tsch,
+                    PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBorderStyleRight (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBorderStyleRight (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
@@ -1043,19 +1042,19 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBorderStyle (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBorderStyle (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBorderStyle (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBorderStyle (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
 {
-  STRING            ptrT, ptrR, ptrB, ptrL;
+  char *ptrT, *ptrR, *ptrB, *ptrL;
 
   ptrT = SkipBlanksAndComments (cssRule);
   /* First parse Border-Top */
@@ -1107,19 +1106,19 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBorderTop (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBorderTop (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBorderTop (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBorderTop (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
 {
-  STRING            ptr;
+  char*            ptr;
 
   cssRule = SkipBlanksAndComments (cssRule);
   while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
@@ -1143,19 +1142,19 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBorderLeft (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBorderLeft (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBorderLeft (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBorderLeft (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
 {
-  STRING            ptr;
+  char* ptr;
 
   cssRule = SkipBlanksAndComments (cssRule);
   while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
@@ -1179,19 +1178,19 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBorderBottom (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBorderBottom (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBorderBottom (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBorderBottom (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
 {
-  STRING            ptr;
+  char*             ptr;
 
   cssRule = SkipBlanksAndComments (cssRule);
   while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
@@ -1215,19 +1214,19 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBorderRight (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBorderRight (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBorderRight (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBorderRight (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
 {
-  STRING            ptr;
+  char*            ptr;
 
   cssRule = SkipBlanksAndComments (cssRule);
   while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
@@ -1251,19 +1250,19 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBorder (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBorder (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBorder (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBorder (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
 {
-  STRING            ptrT, ptrR, ptrB, ptrL;
+  char *ptrT, *ptrR, *ptrB, *ptrL;
 
   ptrT = SkipBlanksAndComments (cssRule);
   /* First parse Border-Top */
@@ -1284,14 +1283,14 @@ ThotBool            isHTML;
    ParseCSSClear : parse a CSS clear attribute string    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSClear (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSClear (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSClear (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSClear (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
@@ -1304,14 +1303,14 @@ ThotBool            isHTML;
    ParseCSSDisplay : parse a CSS display attribute string        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSDisplay (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSDisplay (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSDisplay (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSDisplay (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
@@ -1321,25 +1320,25 @@ ThotBool            isHTML;
    pval.typed_data.unit = STYLE_UNIT_REL;
    pval.typed_data.real = FALSE;
    cssRule = SkipBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, TEXT("block"), 5))
+   if (!strncasecmp (cssRule, "block", 5))
      {
 	pval.typed_data.value = STYLE_NOTINLINE;
 	TtaSetStylePresentation (PRLine, element, tsch, context, pval);
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("inline"), 6))
+   else if (!strncasecmp (cssRule, "inline", 6))
      {
 	pval.typed_data.value = STYLE_INLINE;
 	TtaSetStylePresentation (PRLine, element, tsch, context, pval);
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("none"), 4))
+   else if (!strncasecmp (cssRule, "none", 4))
      {
 	pval.typed_data.value = STYLE_HIDE;
 	TtaSetStylePresentation (PRVisibility, element, tsch, context, pval);
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("list-item"), 9))
+   else if (!strncasecmp (cssRule, "list-item", 9))
      cssRule = SkipProperty (cssRule);
    else
      fprintf (stderr, "invalid display value %s\n", cssRule);
@@ -1351,14 +1350,14 @@ ThotBool            isHTML;
    ParseCSSFloat : parse a CSS float attribute string    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSFloat (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSFloat (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSFloat (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSFloat (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
@@ -1372,14 +1371,14 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSLetterSpacing (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSLetterSpacing (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSLetterSpacing (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSLetterSpacing (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
@@ -1393,14 +1392,14 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSListStyleType (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSListStyleType (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSListStyleType (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSListStyleType (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
@@ -1414,14 +1413,14 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSListStyleImage (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSListStyleImage (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSListStyleImage (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSListStyleImage (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
@@ -1435,14 +1434,14 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSListStylePosition (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSListStylePosition (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSListStylePosition (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSListStylePosition (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
@@ -1456,14 +1455,14 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSListStyle (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSListStyle (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSListStyle (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSListStyle (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
@@ -1477,14 +1476,14 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSTextAlign (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSTextAlign (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSTextAlign (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSTextAlign (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
@@ -1500,22 +1499,22 @@ ThotBool            isHTML;
    justify.typed_data.real = FALSE;
 
    cssRule = SkipBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, TEXT("left"), 4))
+   if (!strncasecmp (cssRule, "left", 4))
      {
 	align.typed_data.value = AdjustLeft;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("right"), 5))
+   else if (!strncasecmp (cssRule, "right", 5))
      {
 	align.typed_data.value = AdjustRight;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("center"), 6))
+   else if (!strncasecmp (cssRule, "center", 6))
      {
 	align.typed_data.value = Centered;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("justify"), 7))
+   else if (!strncasecmp (cssRule, "justify", 7))
      {
 	justify.typed_data.value = Justified;
 	cssRule = SkipWord (cssRule);
@@ -1546,14 +1545,14 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSTextIndent (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSTextIndent (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSTextIndent (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSTextIndent (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
@@ -1574,14 +1573,14 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSTextTransform (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSTextTransform (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSTextTransform (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSTextTransform (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
@@ -1595,10 +1594,10 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSVerticalAlign (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSVerticalAlign (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSVerticalAlign (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSVerticalAlign (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -1616,10 +1615,10 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSWhiteSpace (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSWhiteSpace (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSWhiteSpace (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSWhiteSpace (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -1629,9 +1628,9 @@ ThotBool            isHTML;
 #endif
 {
    cssRule = SkipBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, TEXT("normal"), 6))
+   if (!strncasecmp (cssRule, "normal", 6))
      cssRule = SkipWord (cssRule);
-   else if (!ustrncasecmp (cssRule, TEXT("pre"), 3))
+   else if (!strncasecmp (cssRule, "pre", 3))
      cssRule = SkipWord (cssRule);
    else
      return (cssRule);
@@ -1643,10 +1642,10 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSWordSpacing (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSWordSpacing (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSWordSpacing (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSWordSpacing (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -1665,10 +1664,10 @@ ThotBool            isHTML;
    value% or value                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSLineSpacing (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSLineSpacing (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSLineSpacing (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSLineSpacing (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -1697,10 +1696,10 @@ ThotBool            isHTML;
    or an absolute size, or an imcrement relative to the parent     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSFontSize (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSFontSize (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSFontSize (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSFontSize (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -1710,60 +1709,60 @@ ThotBool            isHTML;
 #endif
 {
    PresentationValue   pval;
-   STRING              ptr = NULL;
+   char*               ptr = NULL;
    ThotBool	       real;
 
    pval.typed_data.real = FALSE;
    cssRule = SkipBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, TEXT("larger"), 6))
+   if (!strncasecmp (cssRule, "larger", 6))
      {
 	pval.typed_data.unit = STYLE_UNIT_PERCENT;
 	pval.typed_data.value = 130;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("smaller"), 7))
+   else if (!strncasecmp (cssRule, "smaller", 7))
      {
 	pval.typed_data.unit = STYLE_UNIT_PERCENT;
 	pval.typed_data.value = 80;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("xx-small"), 8))
+   else if (!strncasecmp (cssRule, "xx-small", 8))
      {
 	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 1;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("x-small"), 7))
+   else if (!strncasecmp (cssRule, "x-small", 7))
      {
 	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 2;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("small"), 5))
+   else if (!strncasecmp (cssRule, "small", 5))
      {
 	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 3;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("medium"), 6))
+   else if (!strncasecmp (cssRule, "medium", 6))
      {
 	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 4;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("large"), 5))
+   else if (!strncasecmp (cssRule, "large", 5))
      {
 	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 5;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("x-large"), 7))
+   else if (!strncasecmp (cssRule, "x-large", 7))
      {
 	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 6;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("xx-large"), 8))
+   else if (!strncasecmp (cssRule, "xx-large", 8))
      {
 	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 7;
@@ -1772,7 +1771,7 @@ ThotBool            isHTML;
    else
      {
        /* look for a '/' within the current cssRule */
-       ptr = ustrchr (cssRule, TEXT('/'));
+       ptr = strchr (cssRule, '/');
        if (ptr != NULL)
 	 {
 	   /* keep the line spacing rule */
@@ -1819,10 +1818,10 @@ ThotBool            isHTML;
    a common generic font style name                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSFontFamily (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSFontFamily (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSFontFamily (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSFontFamily (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -1832,7 +1831,7 @@ ThotBool            isHTML;
 #endif
 {
   PresentationValue   font;
-  CHAR_T		      quoteChar;
+  char                quoteChar;
 
   font.typed_data.value = 0;
   font.typed_data.unit = STYLE_UNIT_REL;
@@ -1846,18 +1845,18 @@ ThotBool            isHTML;
   else
      quoteChar = '\0';
 
-  if (!ustrncasecmp (cssRule, TEXT("times"), 5))
+  if (!strncasecmp (cssRule, "times", 5))
       font.typed_data.value = STYLE_FONT_TIMES;
-  else if (!ustrncasecmp (cssRule, TEXT("serif"), 5))
+  else if (!strncasecmp (cssRule, "serif", 5))
       font.typed_data.value = STYLE_FONT_TIMES;
-  else if (!ustrncasecmp (cssRule, TEXT("helvetica"), 9) ||
-	   !ustrncasecmp (cssRule, TEXT("verdana"), 7))
+  else if (!strncasecmp (cssRule, "helvetica", 9) ||
+	   !strncasecmp (cssRule, "verdana", 7))
       font.typed_data.value = STYLE_FONT_HELVETICA;
-  else if (!ustrncasecmp (cssRule, TEXT("sans-serif"), 10))
+  else if (!strncasecmp (cssRule, "sans-serif", 10))
       font.typed_data.value = STYLE_FONT_HELVETICA;
-  else if (!ustrncasecmp (cssRule, TEXT("courier"), 7))
+  else if (!strncasecmp (cssRule, "courier", 7))
       font.typed_data.value = STYLE_FONT_COURIER;
-  else if (!ustrncasecmp (cssRule, TEXT("monospace"), 9))
+  else if (!strncasecmp (cssRule, "monospace", 9))
       font.typed_data.value = STYLE_FONT_COURIER;
   else
     /* unknown font name.  Skip it */
@@ -1890,10 +1889,10 @@ ThotBool            isHTML;
    normal, bold, bolder, lighter, 100, 200, 300, ... 900, inherit.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSFontWeight (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSFontWeight (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSFontWeight (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSFontWeight (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -1908,56 +1907,56 @@ ThotBool            isHTML;
    weight.typed_data.unit = STYLE_UNIT_REL;
    weight.typed_data.real = FALSE;
    cssRule = SkipBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, TEXT("100"), 3) && !isalpha (cssRule[3]))
+   if (!strncasecmp (cssRule, "100", 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = -3;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("200"), 3) && !isalpha (cssRule[3]))
+   else if (!strncasecmp (cssRule, "200", 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = -2;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("300"), 3) && !isalpha (cssRule[3]))
+   else if (!strncasecmp (cssRule, "300", 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = -1;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("normal"), 6) ||
-	    (!ustrncasecmp (cssRule, TEXT("400"), 3) && !isalpha (cssRule[3])))
+   else if (!strncasecmp (cssRule, "normal", 6) ||
+	    (!strncasecmp (cssRule, "400", 3) && !isalpha (cssRule[3])))
      {
 	weight.typed_data.value = 0;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("500"), 3) && !isalpha (cssRule[3]))
+   else if (!strncasecmp (cssRule, "500", 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = +1;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("600"), 3) && !isalpha (cssRule[3]))
+   else if (!strncasecmp (cssRule, "600", 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = +2;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("bold"), 4) ||
-	    (!ustrncasecmp (cssRule, TEXT("700"), 3) && !isalpha (cssRule[3])))
+   else if (!strncasecmp (cssRule, "bold", 4) ||
+	    (!strncasecmp (cssRule, "700", 3) && !isalpha (cssRule[3])))
      {
 	weight.typed_data.value = +3;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("800"), 3) && !isalpha (cssRule[3]))
+   else if (!strncasecmp (cssRule, "800", 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = +4;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("900"), 3) && !isalpha (cssRule[3]))
+   else if (!strncasecmp (cssRule, "900", 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = +5;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("inherit"), 7) ||
-	    !ustrncasecmp (cssRule, TEXT("bolder"), 6) ||
-	    !ustrncasecmp (cssRule, TEXT("lighter"), 7))
+   else if (!strncasecmp (cssRule, "inherit", 7) ||
+	    !strncasecmp (cssRule, "bolder", 6) ||
+	    !strncasecmp (cssRule, "lighter", 7))
      {
      /* not implemented */
      cssRule = SkipWord (cssRule);
@@ -1986,10 +1985,10 @@ ThotBool            isHTML;
    normal or small-caps
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSFontVariant (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSFontVariant (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSFontVariant (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSFontVariant (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -2004,17 +2003,17 @@ ThotBool            isHTML;
    style.typed_data.unit = STYLE_UNIT_REL;
    style.typed_data.real = FALSE;
    cssRule = SkipBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, TEXT("small-caps"), 10))
+   if (!strncasecmp (cssRule, "small-caps", 10))
      {
        /* Not supported yet */
        cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("normal"), 6))
+   else if (!strncasecmp (cssRule, "normal", 6))
      {
        /* Not supported yet */
        cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("inherit"), 7))
+   else if (!strncasecmp (cssRule, "inherit", 7))
      {
        /* Not supported yet */
        cssRule = SkipWord (cssRule);
@@ -2032,10 +2031,10 @@ ThotBool            isHTML;
    italic, oblique or normal                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSFontStyle (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSFontStyle (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSFontStyle (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSFontStyle (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -2054,17 +2053,17 @@ ThotBool            isHTML;
    size.typed_data.unit = STYLE_UNIT_REL;
    size.typed_data.real = FALSE;
    cssRule = SkipBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, TEXT("italic"), 6))
+   if (!strncasecmp (cssRule, "italic", 6))
      {
 	style.typed_data.value = STYLE_FONT_ITALICS;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("oblique"), 7))
+   else if (!strncasecmp (cssRule, "oblique", 7))
      {
 	style.typed_data.value = STYLE_FONT_OBLIQUE;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("normal"), 6))
+   else if (!strncasecmp (cssRule, "normal", 6))
      {
 	style.typed_data.value = STYLE_FONT_ROMAN;
 	cssRule = SkipWord (cssRule);
@@ -2105,10 +2104,10 @@ ThotBool            isHTML;
    !!!!!!                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSFont (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSFont (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSFont (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSFont (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -2117,20 +2116,20 @@ CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
 {
-  STRING            ptr;
+  char*             ptr;
 
   cssRule = SkipBlanksAndComments (cssRule);
-  if (!ustrncasecmp (cssRule, TEXT("caption"), 7))
+  if (!strncasecmp (cssRule, "caption", 7))
     ;
-  else if (!ustrncasecmp (cssRule, TEXT("icon"), 4))
+  else if (!strncasecmp (cssRule, "icon", 4))
     ;
-  else if (!ustrncasecmp (cssRule, TEXT("menu"), 4))
+  else if (!strncasecmp (cssRule, "menu", 4))
     ;
-  else if (!ustrncasecmp (cssRule, TEXT("message-box"), 11))
+  else if (!strncasecmp (cssRule, "message-box", 11))
     ;
-  else if (!ustrncasecmp (cssRule, TEXT("small-caption"), 13))
+  else if (!strncasecmp (cssRule, "small-caption", 13))
     ;
-  else if (!ustrncasecmp (cssRule, TEXT("status-bar"), 10))
+  else if (!strncasecmp (cssRule, "status-bar", 10))
     ;
   else
     {
@@ -2165,10 +2164,10 @@ ThotBool            isHTML;
    cartouche, blink or none                                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSTextDecoration (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSTextDecoration (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSTextDecoration (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSTextDecoration (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -2183,47 +2182,47 @@ ThotBool            isHTML;
    decor.typed_data.unit = STYLE_UNIT_REL;
    decor.typed_data.real = FALSE;
    cssRule = SkipBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, TEXT("underline"), ustrlen (TEXT("underline"))))
+   if (!strncasecmp (cssRule, "underline", strlen ("underline")))
      {
 	decor.typed_data.value = Underline;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("overline"), ustrlen (TEXT("overline"))))
+   else if (!strncasecmp (cssRule, "overline", strlen ("overline")))
      {
 	decor.typed_data.value = Overline;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("line-through"), ustrlen (TEXT("line-through"))))
+   else if (!strncasecmp (cssRule, "line-through", strlen ("line-through")))
      {
 	decor.typed_data.value = CrossOut;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("box"), ustrlen (TEXT("box"))))
+   else if (!strncasecmp (cssRule, "box", strlen ("box")))
      {
        /* the box text-decoration attribute is not yet supported */
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("boxshadow"), ustrlen (TEXT("boxshadow"))))
+   else if (!strncasecmp (cssRule, "boxshadow", strlen ("boxshadow")))
      {
        /* the boxshadow text-decoration attribute is not yet supported */
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("box3d"), ustrlen (TEXT("box3d"))))
+   else if (!strncasecmp (cssRule, "box3d", strlen ("box3d")))
      {
        /* the box3d text-decoration attribute is not yet supported */
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("cartouche"), ustrlen (TEXT("cartouche"))))
+   else if (!strncasecmp (cssRule, "cartouche", strlen ("cartouche")))
      {
 	/*the cartouche text-decoration attribute is not yet supported */
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("blink"), ustrlen (TEXT("blink"))))
+   else if (!strncasecmp (cssRule, "blink", strlen ("blink")))
      {
 	/*the blink text-decoration attribute will not be supported */
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("none"), ustrlen (TEXT("none"))))
+   else if (!strncasecmp (cssRule, "none", strlen ("none")))
      {
 	decor.typed_data.value = NoUnderline;
 	cssRule = SkipWord (cssRule);
@@ -2248,10 +2247,10 @@ ThotBool            isHTML;
    ParseCSSHeight : parse a CSS height attribute                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSHeight (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSHeight (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSHeight (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSHeight (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -2263,7 +2262,7 @@ ThotBool            isHTML;
    cssRule = SkipBlanksAndComments (cssRule);
 
    /* first parse the attribute string */
-   if (!ustrcasecmp (cssRule, TEXT("auto")))
+   if (!strcasecmp (cssRule, "auto"))
      {
 	cssRule = SkipWord (cssRule);
 	/* ParseCSSHeight : auto */
@@ -2278,10 +2277,10 @@ ThotBool            isHTML;
    ParseCSSWidth : parse a CSS width attribute           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSWidth (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSWidth (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSWidth (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSWidth (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -2293,7 +2292,7 @@ ThotBool            isHTML;
    cssRule = SkipBlanksAndComments (cssRule);
 
    /* first parse the attribute string */
-   if (!ustrcasecmp (cssRule, TEXT("auto")))
+   if (!strcasecmp (cssRule, "auto"))
      {
 	cssRule = SkipWord (cssRule);
 	return (cssRule);
@@ -2307,10 +2306,10 @@ ThotBool            isHTML;
    ParseCSSMarginTop : parse a CSS margin-top attribute  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSMarginTop (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSMarginTop (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSMarginTop (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSMarginTop (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -2338,10 +2337,10 @@ ThotBool            isHTML;
    attribute                                                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSMarginBottom (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSMarginBottom (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSMarginBottom (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSMarginBottom (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -2365,10 +2364,10 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSMarginLeft (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSMarginLeft (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSMarginLeft (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSMarginLeft (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -2396,10 +2395,10 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSMarginRight (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSMarginRight (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSMarginRight (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSMarginRight (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -2422,10 +2421,10 @@ ThotBool            isHTML;
    ParseCSSMargin : parse a CSS margin attribute string. 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSMargin (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSMargin (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSMargin (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSMargin (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -2434,7 +2433,7 @@ CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
 {
-  STRING            ptrT, ptrR, ptrB, ptrL;
+  char *ptrT, *ptrR, *ptrB, *ptrL;
 
   ptrT = SkipBlanksAndComments (cssRule);
   /* First parse Margin-Top */
@@ -2486,10 +2485,10 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSPaddingTop (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSPaddingTop (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSPaddingTop (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSPaddingTop (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -2513,10 +2512,10 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSPaddingBottom (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSPaddingBottom (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSPaddingBottom (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSPaddingBottom (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -2540,10 +2539,10 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSPaddingLeft (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSPaddingLeft (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSPaddingLeft (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSPaddingLeft (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -2567,10 +2566,10 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSPaddingRight (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSPaddingRight (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSPaddingRight (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSPaddingRight (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -2593,10 +2592,10 @@ ThotBool            isHTML;
    ParseCSSPadding : parse a CSS padding attribute string. 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSPadding (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSPadding (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSPadding (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSPadding (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -2605,7 +2604,7 @@ CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
 {
-  STRING            ptrT, ptrR, ptrB, ptrL;
+  char *ptrT, *ptrR, *ptrB, *ptrL;
 
   ptrT = SkipBlanksAndComments (cssRule);
   /* First parse Padding-Top */
@@ -2656,10 +2655,10 @@ ThotBool            isHTML;
    ParseCSSForeground : parse a CSS foreground attribute 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSForeground (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSForeground (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSForeground (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSForeground (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -2681,14 +2680,14 @@ ThotBool            isHTML;
    ParseCSSBackgroundColor : parse a CSS background color attribute 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBackgroundColor (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBackgroundColor (Element element, PSchema tsch,
+                    PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBackgroundColor (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBackgroundColor (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
@@ -2712,7 +2711,7 @@ ThotBool            isHTML;
 
   best.typed_data.unit = STYLE_UNIT_INVALID;
   best.typed_data.real = FALSE;
-  if (!ustrncasecmp (cssRule, TEXT("transparent"), ustrlen (TEXT("transparent"))))
+  if (!strncasecmp (cssRule, "transparent", strlen ("transparent")))
     {
       best.typed_data.value = STYLE_PATTERN_NONE;
       best.typed_data.unit = STYLE_UNIT_REL;
@@ -2810,17 +2809,17 @@ void    *extra;
    Returns NULL or a new allocated url string.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-STRING              GetCSSBackgroundURL (STRING styleString)
+char*               GetCSSBackgroundURL (char* styleString)
 #else
-STRING              GetCSSBackgroundURL (styleString)
-STRING              styleString;
+char*               GetCSSBackgroundURL (styleString)
+char*               styleString;
 #endif
 {
-  STRING              b, e, ptr;
+  char *b, *e, *ptr;
   int                 len;
 
   ptr = NULL;
-  b = ustrstr (styleString, TEXT("url"));
+  b = strstr (styleString, "url");
   if (b != NULL)
     {
       b += 3;
@@ -2850,8 +2849,8 @@ STRING              styleString;
 	  if (*e != EOS)
 	    {
 	      len = (int)(e - b);
-	      ptr = (STRING) TtaGetMemory (len+1);
-	      ustrncpy (ptr, b, len);
+	      ptr = (char*) TtaGetMemory (len+1);
+	      strncpy (ptr, b, len);
 	      ptr[len] = EOS;
 	    }
 	}
@@ -2865,10 +2864,10 @@ STRING              styleString;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBackgroundImage (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBackgroundImage (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBackgroundImage (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBackgroundImage (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -2882,10 +2881,10 @@ ThotBool            isHTML;
   PresentationContextBlock  *sblock;
   BackgroundImageCallbackPtr callblock;
   PresentationValue     image, value;
-  STRING                url;
+  char*                 url;
   STRING                bg_image;
-  CHAR_T                saved;
-  STRING                base;
+  char                  saved;
+  char*                 base;
   CHAR_T                tempname[MAX_LENGTH];
   CHAR_T                imgname[MAX_LENGTH];
   unsigned int          savedtype = 0;
@@ -2910,7 +2909,7 @@ ThotBool            isHTML;
 
   url = NULL;
   cssRule = SkipBlanksAndComments (cssRule);
-  if (!ustrncasecmp (cssRule, TEXT("url"), 3))
+  if (!strncasecmp (cssRule, "url", 3))
     {  
       cssRule += 3;
       cssRule = SkipBlanksAndComments (cssRule);
@@ -3011,10 +3010,10 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBackgroundRepeat (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBackgroundRepeat (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBackgroundRepeat (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBackgroundRepeat (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -3044,13 +3043,13 @@ ThotBool            isHTML;
   repeat.typed_data.unit = STYLE_UNIT_REL;
   repeat.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
-  if (!ustrncasecmp (cssRule, TEXT("no-repeat"), 9))
+  if (!strncasecmp (cssRule, "no-repeat", 9))
     repeat.typed_data.value = STYLE_REALSIZE;
-  else if (!ustrncasecmp (cssRule, TEXT("repeat-y"), 8))
+  else if (!strncasecmp (cssRule, "repeat-y", 8))
     repeat.typed_data.value = STYLE_VREPEAT;
-  else if (!ustrncasecmp (cssRule, TEXT("repeat-x"), 8))
+  else if (!strncasecmp (cssRule, "repeat-x", 8))
     repeat.typed_data.value = STYLE_HREPEAT;
-  else if (!ustrncasecmp (cssRule, TEXT("repeat"), 6))
+  else if (!strncasecmp (cssRule, "repeat", 6))
     repeat.typed_data.value = STYLE_REPEAT;
   else
     return (cssRule);
@@ -3070,10 +3069,10 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBackgroundAttachment (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBackgroundAttachment (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBackgroundAttachment (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBackgroundAttachment (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -3099,9 +3098,9 @@ ThotBool            isHTML;
     }
 
    cssRule = SkipBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, TEXT("scroll"), 6))
+   if (!strncasecmp (cssRule, "scroll", 6))
      cssRule = SkipWord (cssRule);
-   else if (!ustrncasecmp (cssRule, TEXT("fixed"), 5))
+   else if (!strncasecmp (cssRule, "fixed", 5))
      cssRule = SkipWord (cssRule);
 
   /* restore the refered element */
@@ -3115,10 +3114,10 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBackgroundPosition (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBackgroundPosition (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBackgroundPosition (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBackgroundPosition (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -3147,15 +3146,15 @@ ThotBool            isHTML;
 
    cssRule = SkipBlanksAndComments (cssRule);
    ok = TRUE;
-   if (!ustrncasecmp (cssRule, TEXT("left"), 4))
+   if (!strncasecmp (cssRule, "left", 4))
      cssRule = SkipWord (cssRule);
-   else if (!ustrncasecmp (cssRule, TEXT("right"), 5))
+   else if (!strncasecmp (cssRule, "right", 5))
      cssRule = SkipWord (cssRule);
-   else if (!ustrncasecmp (cssRule, TEXT("center"), 6))
+   else if (!strncasecmp (cssRule, "center", 6))
      cssRule = SkipWord (cssRule);
-   else if (!ustrncasecmp (cssRule, TEXT("top"), 3))
+   else if (!strncasecmp (cssRule, "top", 3))
      cssRule = SkipWord (cssRule);
-   else if (!ustrncasecmp (cssRule, TEXT("bottom"), 6))
+   else if (!strncasecmp (cssRule, "bottom", 6))
      cssRule = SkipWord (cssRule);
    else if (isdigit (*cssRule))
      cssRule = SkipWord (cssRule);
@@ -3181,10 +3180,10 @@ ThotBool            isHTML;
    ParseCSSBackground : parse a CSS background attribute 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBackground (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static char*        ParseCSSBackground (Element element, PSchema tsch,
+				 PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBackground (element, tsch, context, cssRule, css, isHTML)
+static char*        ParseCSSBackground (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -3193,30 +3192,30 @@ CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
 {
-  STRING            ptr;
+  char*            ptr;
 
   cssRule = SkipBlanksAndComments (cssRule);
   while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
     {
       /* perhaps a Backgroud Image */
-      if (!ustrncasecmp (cssRule, TEXT("url"), 3))
+      if (!strncasecmp (cssRule, "url", 3))
 	cssRule = ParseCSSBackgroundImage (element, tsch, context, cssRule, css, isHTML);
       /* perhaps a Background Attachment */
-      else if (!ustrncasecmp (cssRule, TEXT("scroll"), 6) ||
-	       !ustrncasecmp (cssRule, TEXT("fixed"), 5))
+      else if (!strncasecmp (cssRule, "scroll", 6) ||
+	       !strncasecmp (cssRule, "fixed", 5))
 	cssRule = ParseCSSBackgroundAttachment (element, tsch, context, cssRule, css, isHTML);
       /* perhaps a Background Repeat */
-      else if (!ustrncasecmp (cssRule, TEXT("no-repeat"), 9) ||
-	       !ustrncasecmp (cssRule, TEXT("repeat-y"), 8) ||
-	       !ustrncasecmp (cssRule, TEXT("repeat-x"), 8) ||
-	       !ustrncasecmp (cssRule, TEXT("repeat"), 6))
+      else if (!strncasecmp (cssRule, "no-repeat", 9) ||
+	       !strncasecmp (cssRule, "repeat-y", 8) ||
+	       !strncasecmp (cssRule, "repeat-x", 8) ||
+	       !strncasecmp (cssRule, "repeat", 6))
 	cssRule = ParseCSSBackgroundRepeat (element, tsch, context, cssRule, css, isHTML);
       /* perhaps a Background Position */
-      else if (!ustrncasecmp (cssRule, TEXT("left"), 4) ||
-	       !ustrncasecmp (cssRule, TEXT("right"), 5) ||
-	       !ustrncasecmp (cssRule, TEXT("center"), 6) ||
-	       !ustrncasecmp (cssRule, TEXT("top"), 3) ||
-	       !ustrncasecmp (cssRule, TEXT("bottom"), 6) ||
+      else if (!strncasecmp (cssRule, "left", 4) ||
+	       !strncasecmp (cssRule, "right", 5) ||
+	       !strncasecmp (cssRule, "center", 6) ||
+	       !strncasecmp (cssRule, "top", 3) ||
+	       !strncasecmp (cssRule, "bottom", 6) ||
 	       isdigit (*cssRule))
 	cssRule = ParseCSSBackgroundPosition (element, tsch, context, cssRule, css, isHTML);
       /* perhaps a Background Color */
@@ -3247,75 +3246,75 @@ ThotBool            isHTML;
  */
 static CSSProperty CSSProperties[] =
 {
-   {TEXT ("font-family"), ParseCSSFontFamily},
-   {TEXT ("font-style"), ParseCSSFontStyle},
-   {TEXT ("font-variant"), ParseCSSFontVariant},
-   {TEXT ("font-weight"), ParseCSSFontWeight},
-   {TEXT ("font-size"), ParseCSSFontSize},
-   {TEXT ("font"), ParseCSSFont},
+   {"font-family", ParseCSSFontFamily},
+   {"font-style", ParseCSSFontStyle},
+   {"font-variant", ParseCSSFontVariant},
+   {"font-weight", ParseCSSFontWeight},
+   {"font-size", ParseCSSFontSize},
+   {"font", ParseCSSFont},
 
-   {TEXT ("color"), ParseCSSForeground},
-   {TEXT ("background-color"), ParseCSSBackgroundColor},
-   {TEXT ("background-image"), ParseCSSBackgroundImage},
-   {TEXT ("background-repeat"), ParseCSSBackgroundRepeat},
-   {TEXT ("background-attachment"), ParseCSSBackgroundAttachment},
-   {TEXT ("background-position"), ParseCSSBackgroundPosition},
-   {TEXT ("background"), ParseCSSBackground},
+   {"color", ParseCSSForeground},
+   {"background-color", ParseCSSBackgroundColor},
+   {"background-image", ParseCSSBackgroundImage},
+   {"background-repeat", ParseCSSBackgroundRepeat},
+   {"background-attachment", ParseCSSBackgroundAttachment},
+   {"background-position", ParseCSSBackgroundPosition},
+   {"background", ParseCSSBackground},
 
-   {TEXT ("word-spacing"), ParseCSSWordSpacing},
-   {TEXT ("letter-spacing"), ParseCSSLetterSpacing},
-   {TEXT ("text-decoration"), ParseCSSTextDecoration},
-   {TEXT ("vertical-align"), ParseCSSVerticalAlign},
-   {TEXT ("text-transform"), ParseCSSTextTransform},
-   {TEXT ("text-align"), ParseCSSTextAlign},
-   {TEXT ("text-indent"), ParseCSSTextIndent},
-   {TEXT ("line-height"), ParseCSSLineSpacing},
+   {"word-spacing", ParseCSSWordSpacing},
+   {"letter-spacing", ParseCSSLetterSpacing},
+   {"text-decoration", ParseCSSTextDecoration},
+   {"vertical-align", ParseCSSVerticalAlign},
+   {"text-transform", ParseCSSTextTransform},
+   {"text-align", ParseCSSTextAlign},
+   {"text-indent", ParseCSSTextIndent},
+   {"line-height", ParseCSSLineSpacing},
 
-   {TEXT ("margin-top"), ParseCSSMarginTop},
-   {TEXT ("margin-right"), ParseCSSMarginRight},
-   {TEXT ("margin-bottom"), ParseCSSMarginBottom},
-   {TEXT ("margin-left"), ParseCSSMarginLeft},
-   {TEXT ("margin"), ParseCSSMargin},
+   {"margin-top", ParseCSSMarginTop},
+   {"margin-right", ParseCSSMarginRight},
+   {"margin-bottom", ParseCSSMarginBottom},
+   {"margin-left", ParseCSSMarginLeft},
+   {"margin", ParseCSSMargin},
 
-   {TEXT ("padding-top"), ParseCSSPaddingTop},
-   {TEXT ("padding-right"), ParseCSSPaddingRight},
-   {TEXT ("padding-bottom"), ParseCSSPaddingBottom},
-   {TEXT ("padding-left"), ParseCSSPaddingLeft},
-   {TEXT ("padding"), ParseCSSPadding},
+   {"padding-top", ParseCSSPaddingTop},
+   {"padding-right", ParseCSSPaddingRight},
+   {"padding-bottom", ParseCSSPaddingBottom},
+   {"padding-left", ParseCSSPaddingLeft},
+   {"padding", ParseCSSPadding},
 
-   {TEXT ("border-top-width"), ParseCSSBorderTopWidth},
-   {TEXT ("border-right-width"), ParseCSSBorderRightWidth},
-   {TEXT ("border-bottom-width"), ParseCSSBorderBottomWidth},
-   {TEXT ("border-left-width"), ParseCSSBorderLeftWidth},
-   {TEXT ("border-width"), ParseCSSBorderWidth},
-   {TEXT ("border-top-color"), ParseCSSBorderColorTop},
-   {TEXT ("border-right-color"), ParseCSSBorderColorRight},
-   {TEXT ("border-bottom-color"), ParseCSSBorderColorBottom},
-   {TEXT ("border-left-color"), ParseCSSBorderColorLeft},
-   {TEXT ("border-color"), ParseCSSBorderColor},
-   {TEXT ("border-top-style"), ParseCSSBorderStyleTop},
-   {TEXT ("border-right-style"), ParseCSSBorderStyleRight},
-   {TEXT ("border-bottom-style"), ParseCSSBorderStyleBottom},
-   {TEXT ("border-left-style"), ParseCSSBorderStyleLeft},
-   {TEXT ("border-style"), ParseCSSBorderStyle},
-   {TEXT ("border-top"), ParseCSSBorderTop},
-   {TEXT ("border-right"), ParseCSSBorderRight},
-   {TEXT ("border-bottom"), ParseCSSBorderBottom},
-   {TEXT ("border-left"), ParseCSSBorderLeft},
-   {TEXT ("border"), ParseCSSBorder},
+   {"border-top-width", ParseCSSBorderTopWidth},
+   {"border-right-width", ParseCSSBorderRightWidth},
+   {"border-bottom-width", ParseCSSBorderBottomWidth},
+   {"border-left-width", ParseCSSBorderLeftWidth},
+   {"border-width", ParseCSSBorderWidth},
+   {"border-top-color", ParseCSSBorderColorTop},
+   {"border-right-color", ParseCSSBorderColorRight},
+   {"border-bottom-color", ParseCSSBorderColorBottom},
+   {"border-left-color", ParseCSSBorderColorLeft},
+   {"border-color", ParseCSSBorderColor},
+   {"border-top-style", ParseCSSBorderStyleTop},
+   {"border-right-style", ParseCSSBorderStyleRight},
+   {"border-bottom-style", ParseCSSBorderStyleBottom},
+   {"border-left-style", ParseCSSBorderStyleLeft},
+   {"border-style", ParseCSSBorderStyle},
+   {"border-top", ParseCSSBorderTop},
+   {"border-right", ParseCSSBorderRight},
+   {"border-bottom", ParseCSSBorderBottom},
+   {"border-left", ParseCSSBorderLeft},
+   {"border", ParseCSSBorder},
 
-   {TEXT ("width"), ParseCSSWidth},
-   {TEXT ("height"), ParseCSSHeight},
-   {TEXT ("float"), ParseCSSFloat},
-   {TEXT ("clear"), ParseCSSClear},
+   {"width", ParseCSSWidth},
+   {"height", ParseCSSHeight},
+   {"float", ParseCSSFloat},
+   {"clear", ParseCSSClear},
 
-   {TEXT ("display"), ParseCSSDisplay},
-   {TEXT ("white-space"), ParseCSSWhiteSpace},
+   {"display", ParseCSSDisplay},
+   {"white-space", ParseCSSWhiteSpace},
 
-   {TEXT ("list-style-type"), ParseCSSListStyleType},
-   {TEXT ("list-style-image"), ParseCSSListStyleImage},
-   {TEXT ("list-style-position"), ParseCSSListStylePosition},
-   {TEXT ("list-style"), ParseCSSListStyle}
+   {"list-style-type", ParseCSSListStyleType},
+   {"list-style-image", ParseCSSListStyleImage},
+   {"list-style-position", ParseCSSListStylePosition},
+   {"list-style", ParseCSSListStyle}
 };
 #define NB_CSSSTYLEATTRIBUTE (sizeof(CSSProperties) / sizeof(CSSProperty))
 
@@ -3326,19 +3325,19 @@ static CSSProperty CSSProperties[] =
    but tolerate incorrect or incomplete input                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ParseCSSRule (Element element, PSchema tsch, PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+static void         ParseCSSRule (Element element, PSchema tsch, PresentationContext context, char* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static void         ParseCSSRule (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-STRING              cssRule;
+char*               cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
 {
   DisplayMode         dispMode;
-  STRING              p = NULL;
+  char*               p = NULL;
   int                 lg;
   unsigned int        i;
   ThotBool            found;
@@ -3356,8 +3355,8 @@ ThotBool            isHTML;
       /* look for the type of property */
       for (i = 0; i < NB_CSSSTYLEATTRIBUTE && !found; i++)
 	{
-	  lg = ustrlen (CSSProperties[i].name);
-	  if (!ustrncasecmp (cssRule, CSSProperties[i].name, lg))
+	  lg = strlen (CSSProperties[i].name);
+	  if (!strncasecmp (cssRule, CSSProperties[i].name, lg))
 	    {
 	      cssRule += lg;
 	      found = TRUE;
@@ -3409,11 +3408,11 @@ ThotBool            isHTML;
   described in thotlib/include/presentation.h
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                 PToCss (PresentationSetting settings, STRING buffer, int len)
+void                 PToCss (PresentationSetting settings, char* buffer, int len)
 #else
 void                 PToCss (settings, buffer, len)
 PresentationSetting  settings;
-STRING               param;
+char*                param;
 int                  len
 #endif
 {
@@ -3443,13 +3442,13 @@ int                  len
       switch (settings->value.typed_data.value)
 	{
 	case STYLE_FONT_HELVETICA:
-	  ustrcpy (buffer, TEXT("font-family: helvetica"));
+	  strcpy (buffer, "font-family: helvetica");
 	  break;
 	case STYLE_FONT_TIMES:
-	  ustrcpy (buffer, TEXT("font-family: times"));
+	  strcpy (buffer, "font-family: times");
 	  break;
 	case STYLE_FONT_COURIER:
-	  ustrcpy (buffer, TEXT("font-family: courier"));
+	  strcpy (buffer, "font-family: courier");
 	  break;
 	}
       break;
@@ -3457,13 +3456,13 @@ int                  len
       switch (settings->value.typed_data.value)
 	{
 	case STYLE_FONT_ROMAN:
-	  ustrcpy (buffer, TEXT("font-style: normal"));
+	  strcpy (buffer, "font-style: normal");
 	  break;
 	case STYLE_FONT_ITALICS:
-	  ustrcpy (buffer, TEXT("font-style: italic"));
+	  strcpy (buffer, "font-style: italic");
 	  break;
 	case STYLE_FONT_OBLIQUE:
-	  ustrcpy (buffer, TEXT("font-style: oblique"));
+	  strcpy (buffer, "font-style: oblique");
 	  break;
 	}
       break;
@@ -3471,10 +3470,10 @@ int                  len
       switch (settings->value.typed_data.value)
 	{
 	case STYLE_WEIGHT_BOLD:
-	  ustrcpy (buffer, TEXT("font-weight: bold"));
+	  strcpy (buffer, "font-weight: bold");
 	  break;
 	case STYLE_WEIGHT_NORMAL:
-	  ustrcpy (buffer, TEXT("font-weight: normal"));
+	  strcpy (buffer, "font-weight: normal");
 	  break;
 	}
       break;
@@ -3483,29 +3482,29 @@ int                  len
 	{
 	  if (real)
 	    {
-	      usprintf (buffer, TEXT("font-size: %g"), fval);
+	      sprintf (buffer, "font-size: %g", fval);
 	      add_unit = 1;
 	    }
 	  else
 	    switch (settings->value.typed_data.value)
 	      {
 	      case 1:
-		ustrcpy (buffer, TEXT("font-size: xx-small"));
+		strcpy (buffer, "font-size: xx-small");
 		break;
 	      case 2:
-		ustrcpy (buffer, TEXT("font-size: x-small"));
+		strcpy (buffer, "font-size: x-small");
 		break;
 	      case 3:
-		ustrcpy (buffer, TEXT("font-size: small"));
+		strcpy (buffer, "font-size: small");
 		break;
 	      case 4:
-		ustrcpy (buffer, TEXT("font-size: medium"));
+		strcpy (buffer, "font-size: medium");
 		break;
 	      case 5:
-		ustrcpy (buffer, TEXT("font-size: large"));
+		strcpy (buffer, "font-size: large");
 		break;
 	      case 6:
-		ustrcpy (buffer, TEXT("font-size: x-large"));
+		strcpy (buffer, "font-size: x-large");
 		break;
 	      case 7:
 	      case 8:
@@ -3513,16 +3512,16 @@ int                  len
 	      case 10:
 	      case 11:
 	      case 12:
-		ustrcpy (buffer, TEXT("font-size: xx-large"));
+		strcpy (buffer, "font-size: xx-large");
 		break;
 	      }
 	}
       else
 	{
 	  if (real)
-	    usprintf (buffer, TEXT("font-size: %g"), fval);
+	    sprintf (buffer, "font-size: %g", fval);
 	  else
-	    usprintf (buffer, TEXT("font-size: %d"), settings->value.typed_data.value);
+	    sprintf (buffer, "font-size: %d", settings->value.typed_data.value);
 	  add_unit = 1;
 	}
       break;
@@ -3530,48 +3529,48 @@ int                  len
       switch (settings->value.typed_data.value)
 	{
 	case STYLE_UNDERLINE:
-	  ustrcpy (buffer, TEXT("text-decoration: underline"));
+	  strcpy (buffer, "text-decoration: underline");
 	  break;
 	case STYLE_OVERLINE:
-	  ustrcpy (buffer, TEXT("text-decoration: overline"));
+	  strcpy (buffer, "text-decoration: overline");
 	  break;
 	case STYLE_CROSSOUT:
-	  ustrcpy (buffer, TEXT("text-decoration: line-through"));
+	  strcpy (buffer, "text-decoration: line-through");
 	  break;
 	}
       break;
     case PRIndent:
       if (real)
-	usprintf (buffer, TEXT("text-indent: %g"), fval);
+	sprintf (buffer, "text-indent: %g", fval);
       else
-	usprintf (buffer, TEXT("text-indent: %d"), settings->value.typed_data.value);
+	sprintf (buffer, "text-indent: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRLineSpacing:
       if (real)
-	usprintf (buffer, TEXT("line-height: %g"), fval);
+	sprintf (buffer, "line-height: %g", fval);
       else
-	usprintf (buffer, TEXT("line-height: %d"), settings->value.typed_data.value);
+	sprintf (buffer, "line-height: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRJustify:
       if (settings->value.typed_data.value == STYLE_JUSTIFIED)
-	usprintf (buffer, TEXT("text-align: justify"));
+	sprintf (buffer, "text-align: justify");
       break;
     case PRAdjust:
       switch (settings->value.typed_data.value)
 	{
 	case STYLE_ADJUSTLEFT:
-	  ustrcpy (buffer, TEXT("text-align: left"));
+	  strcpy (buffer, "text-align: left");
 	  break;
 	case STYLE_ADJUSTRIGHT:
-	  ustrcpy (buffer, TEXT("text-align: right"));
+	  strcpy (buffer, "text-align: right");
 	  break;
 	case STYLE_ADJUSTCENTERED:
-	  ustrcpy (buffer, TEXT("text-align: center"));
+	  strcpy (buffer, "text-align: center");
 	  break;
 	case STYLE_ADJUSTLEFTWITHDOTS:
-	  ustrcpy (buffer, TEXT("text-align: left"));
+	  strcpy (buffer, "text-align: left");
 	  break;
 	}
       break;
@@ -3581,66 +3580,66 @@ int                  len
       break;
     case PRBackground:
       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-      usprintf (buffer, TEXT("background-color: #%02X%02X%02X"), red, green, blue);
+      sprintf (buffer, "background-color: #%02X%02X%02X", red, green, blue);
       break;
     case PRForeground:
       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-      usprintf (buffer, TEXT("color: #%02X%02X%02X"), red, green, blue);
+      sprintf (buffer, "color: #%02X%02X%02X", red, green, blue);
       break;
     case PRMarginTop:
       if (real)
-	usprintf (buffer, TEXT("marging-top: %g"), fval);
+	sprintf (buffer, "marging-top: %g", fval);
       else
-	usprintf (buffer, TEXT("marging-top: %d"), settings->value.typed_data.value);
+	sprintf (buffer, "marging-top: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRMarginLeft:
       if (real)
-	usprintf (buffer, TEXT("margin-left: %g"), fval);
+	sprintf (buffer, "margin-left: %g", fval);
       else
-	usprintf (buffer, TEXT("margin-left: %d"), settings->value.typed_data.value);
+	sprintf (buffer, "margin-left: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRHeight:
       if (real)
-	usprintf (buffer, TEXT("height: %g"), fval);
+	sprintf (buffer, "height: %g", fval);
       else
-	usprintf (buffer, TEXT("height: %d"), settings->value.typed_data.value);
+	sprintf (buffer, "height: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRWidth:
       if (real)
-	usprintf (buffer, TEXT("width: %g"), fval);
+	sprintf (buffer, "width: %g", fval);
       else
-	usprintf (buffer, TEXT("width: %d"), settings->value.typed_data.value);
+	sprintf (buffer, "width: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRLine:
       if (settings->value.typed_data.value == STYLE_INLINE)
-	ustrcpy (buffer, TEXT("display: inline"));
+	strcpy (buffer, "display: inline");
       else if (settings->value.typed_data.value == STYLE_NOTINLINE)
-	ustrcpy (buffer, TEXT("display: block"));
+	strcpy (buffer, "display: block");
       break;
     case PRBackgroundPicture:
       if (settings->value.pointer != NULL)
-	usprintf (buffer, TEXT("background-image: url(%s)"), (STRING)(settings->value.pointer));
+	sprintf (buffer, "background-image: url(%s)", (char*)(settings->value.pointer));
       else
-	usprintf (buffer, TEXT("background-image: none"));
+	sprintf (buffer, "background-image: none");
       break;
     case PRPictureMode:
       switch (settings->value.typed_data.value)
 	{
 	case STYLE_REALSIZE:
-	  usprintf (buffer, TEXT("background-repeat: no-repeat"));
+	  sprintf (buffer, "background-repeat: no-repeat");
 	  break;
 	case STYLE_REPEAT:
-	  usprintf (buffer, TEXT("background-repeat: repeat"));
+	  sprintf (buffer, "background-repeat: repeat");
 	  break;
 	case STYLE_VREPEAT:
-	  usprintf (buffer, TEXT("background-repeat: repeat-y"));
+	  sprintf (buffer, "background-repeat: repeat-y");
 	  break;
 	case STYLE_HREPEAT:
-	  usprintf (buffer, TEXT("background-repeat: repeat-x"));
+	  sprintf (buffer, "background-repeat: repeat-x");
 	  break;
 	}
       break;
@@ -3655,7 +3654,7 @@ int                  len
 	{
 	  if (CSSUnitNames[i].unit == unit)
 	    {
-	      ustrcat (buffer, CSSUnitNames[i].sign);
+	      strcat (buffer, CSSUnitNames[i].sign);
 	      break;
 	    }
 	}
@@ -3668,11 +3667,11 @@ int                  len
    element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ParseHTMLSpecificStyle (Element el, STRING cssRule, Document doc, ThotBool destroy)
+void                ParseHTMLSpecificStyle (Element el, char* cssRule, Document doc, ThotBool destroy)
 #else
 void                ParseHTMLSpecificStyle (el, cssRule, doc, destroy)
 Element             elem;
-STRING              cssRule;
+char*               cssRule;
 Document            doc;
 ThotBool            destroy;
 #endif
@@ -3683,7 +3682,7 @@ ThotBool            destroy;
 
    /*  A rule applying to BODY is really meant to address HTML */
    elType = TtaGetElementType (el);
-   isHTML = (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0);
+   isHTML = (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0);
    /* create the context of the Specific presentation driver */
    context = TtaGetSpecificStyleContext (doc);
    if (context == NULL)
@@ -3703,12 +3702,12 @@ ThotBool            destroy;
    return the end of the selector string to be handled or NULL 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING  ParseGenericSelector (STRING selector, STRING cssRule,
+static char*   ParseGenericSelector (char* selector, char* cssRule,
 			   GenericContext ctxt, Document doc, CSSInfoPtr css)
 #else
-static STRING  ParseGenericSelector (selector, cssRule, ctxt, doc, css)
-STRING         selector;
-STRING         cssRule;
+static char*   ParseGenericSelector (selector, cssRule, ctxt, doc, css)
+char*          selector;
+char*          cssRule;
 GenericContext  ctxt;
 Document        doc;
 CSSInfoPtr      css;
@@ -3717,15 +3716,15 @@ CSSInfoPtr      css;
   ElementType         elType;
   PSchema             tsch;
   AttributeType       attrType;
-  CHAR_T              sel[MAX_ANCESTORS * 50];
-  STRING              deb, cur;
-  STRING              structName;
-  STRING              names[MAX_ANCESTORS];
-  STRING              ids[MAX_ANCESTORS];
-  STRING              classes[MAX_ANCESTORS];
-  STRING              pseudoclasses[MAX_ANCESTORS];
-  STRING              attrs[MAX_ANCESTORS];
-  STRING              attrvals[MAX_ANCESTORS];
+  char                sel[MAX_ANCESTORS * 50];
+  char                *deb, *cur;
+  char*               structName;
+  char*               names[MAX_ANCESTORS];
+  char*               ids[MAX_ANCESTORS];
+  char*               classes[MAX_ANCESTORS];
+  char*               pseudoclasses[MAX_ANCESTORS];
+  char*               attrs[MAX_ANCESTORS];
+  char*               attrvals[MAX_ANCESTORS];
   int                 i, j, k, max, maxAttr;
   ThotBool            isHTML;
 
@@ -3980,7 +3979,7 @@ CSSInfoPtr      css;
   /* Get the schema name of the main element */
   if (ctxt->schema == NULL)
     ctxt->schema = TtaGetDocumentSSchema (doc);
-  isHTML = (ustrcmp(TtaGetSSchemaName (ctxt->schema), TEXT("HTML")) == 0);
+  isHTML = (strcmp(TtaGetSSchemaName (ctxt->schema), "HTML") == 0);
   tsch = GetPExtension (doc, ctxt->schema, css);
   structName = TtaGetSSchemaName (ctxt->schema);
   if (cssRule)
@@ -3996,7 +3995,7 @@ CSSInfoPtr      css;
    e.g: pinky, awful { color: pink, font-family: helvetica }        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ParseStyleDeclaration (Element el, STRING cssRule, Document doc, CSSInfoPtr css, ThotBool destroy)
+static void         ParseStyleDeclaration (Element el, char* cssRule, Document doc, CSSInfoPtr css, ThotBool destroy)
 #else
 static void         ParseStyleDeclaration (el, cssRule, doc, css, destroy)
 Element             el;
@@ -4007,11 +4006,11 @@ ThotBool            destroy;
 #endif
 {
   GenericContext      ctxt;
-  STRING              decl_end;
-  STRING              sel_end;
-  STRING              selector;
-  CHAR_T                saved1;
-  CHAR_T                saved2;
+  char*               decl_end;
+  char*               sel_end;
+  char*               selector;
+  char                saved1;
+  char                saved2;
 
   /* separate the selectors string */
   cssRule = SkipBlanksAndComments (cssRule);
@@ -4073,20 +4072,21 @@ ThotBool            destroy;
    or an HTML context name.                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 IsImplicitClassName (STRING class, Document doc)
+int                 IsImplicitClassName (char* class, Document doc)
 #else
 int                 IsImplicitClassName (class, doc)
-STRING              class;
+char*               class;
 Document            doc;
 #endif
 {
-   CHAR_T           name[200];
-   STRING           cur = name, first; 
-   CHAR_T           save;
-   SSchema	    schema;
+   char             name[200];
+   char*            cur = name;
+   char*            first; 
+   char             save;
+   SSchema          schema;
 
    /* make a local copy */
-   ustrncpy (name, class, 199);
+   strncpy (name, class, 199);
    name[199] = 0;
 
    /* loop looking if each word is a GI */
@@ -4117,17 +4117,17 @@ Document            doc;
    HTMLSetBackgroundColor :
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                HTMLSetBackgroundColor (Document doc, Element el, STRING color)
+void                HTMLSetBackgroundColor (Document doc, Element el, char* color)
 #else
 void                HTMLSetBackgroundColor (doc, el, color)
 Document            doc;
 Element             el;
-STRING              color;
+char*               color;
 #endif
 {
-   CHAR_T             css_command[100];
+   char             css_command[100];
 
-   usprintf (css_command, TEXT("background-color: %s"), color);
+   sprintf (css_command, "background-color: %s", color);
    ParseHTMLSpecificStyle (el, css_command, doc, FALSE);
 }
 
@@ -4137,27 +4137,27 @@ STRING              color;
    image = url of background image
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                HTMLSetBackgroundImage (Document doc, Element el, int repeat, STRING image)
+void                HTMLSetBackgroundImage (Document doc, Element el, int repeat, char* image)
 #else
 void                HTMLSetBackgroundImage (doc, el, repeat, image)
 Document            doc;
 Element             el;
 int                 repeat;
-STRING              image;
+char*               image;
 #endif
 {
-   CHAR_T                css_command[400];
+   char             css_command[400];
 
    /******* check buffer overflow ********/
-   usprintf (css_command, TEXT("background-image: url(%s); background-repeat: "), image);
+   sprintf (css_command, "background-image: url(%s); background-repeat: ", image);
    if (repeat == STYLE_REPEAT)
-     ustrcat (css_command, TEXT("repeat"));
+     strcat (css_command, "repeat");
    else if (repeat == STYLE_HREPEAT)
-     ustrcat (css_command, TEXT("repeat-x"));
+     strcat (css_command, "repeat-x");
    else if (repeat == STYLE_VREPEAT)
-     ustrcat (css_command, TEXT("repeat-y"));
+     strcat (css_command, "repeat-y");
    else
-     ustrcat (css_command, TEXT("no-repeat"));
+     strcat (css_command, "no-repeat");
    ParseHTMLSpecificStyle (el, css_command, doc, FALSE);
 }
 
@@ -4165,17 +4165,17 @@ STRING              image;
    HTMLSetForegroundColor :                                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                HTMLSetForegroundColor (Document doc, Element el, STRING color)
+void                HTMLSetForegroundColor (Document doc, Element el, char* color)
 #else
 void                HTMLSetForegroundColor (doc, el, color)
 Document            doc;
 Element             el;
-STRING              color;
+char*               color;
 #endif
 {
-   CHAR_T             css_command[100];
+   char             css_command[100];
 
-   usprintf (css_command, TEXT("color: %s"), color);
+   sprintf (css_command, "color: %s", color);
    ParseHTMLSpecificStyle (el, css_command, doc, FALSE);
 }
 
@@ -4190,9 +4190,9 @@ Document            doc;
 Element             el;
 #endif
 {
-   CHAR_T             css_command[100];
+   char             css_command[100];
 
-   usprintf (css_command, TEXT("background: red"));
+   sprintf (css_command, "background: red");
    ParseHTMLSpecificStyle (el, css_command, doc, TRUE);
 }
 
@@ -4207,9 +4207,9 @@ Document            doc;
 Element             el;
 #endif
 {
-   CHAR_T             css_command[1000];
+   char             css_command[1000];
 
-   usprintf (css_command, TEXT("background-image: url(xx); background-repeat: repeat"));
+   sprintf (css_command, "background-image: url(xx); background-repeat: repeat");
    ParseHTMLSpecificStyle (el, css_command, doc, TRUE);
 }
 
@@ -4224,10 +4224,10 @@ Document            doc;
 Element             el;
 #endif
 {
-   CHAR_T             css_command[100];
+   char             css_command[100];
 
    /* it's not necessary to well know the current color but it must be valid */
-   usprintf (css_command, TEXT("color: red"));
+   sprintf (css_command, "color: red");
    ParseHTMLSpecificStyle (el, css_command, doc, TRUE);
 }
 
@@ -4235,16 +4235,16 @@ Element             el;
    HTMLSetAlinkColor :                                             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                HTMLSetAlinkColor (Document doc, STRING color)
+void                HTMLSetAlinkColor (Document doc, char* color)
 #else
 void                HTMLSetAlinkColor (doc, color)
 Document            doc;
-STRING              color;
+char*               color;
 #endif
 {
-   CHAR_T                css_command[100];
+   char             css_command[100];
 
-   usprintf (css_command, TEXT("a:link { color : %s }"), color);
+   sprintf (css_command, "a:link { color : %s }", color);
    ApplyCSSRules (NULL, css_command, doc, FALSE);
 }
 
@@ -4252,16 +4252,16 @@ STRING              color;
    HTMLSetAactiveColor :                                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                HTMLSetAactiveColor (Document doc, STRING color)
+void                HTMLSetAactiveColor (Document doc, char* color)
 #else
 void                HTMLSetAactiveColor (doc, color)
 Document            doc;
-STRING              color;
+char*               color;
 #endif
 {
-   CHAR_T                css_command[100];
+   char             css_command[100];
 
-   usprintf (css_command, TEXT("a:active { color : %s }"), color);
+   sprintf (css_command, "a:active { color : %s }", color);
    ApplyCSSRules (NULL, css_command, doc, FALSE);
 }
 
@@ -4269,16 +4269,16 @@ STRING              color;
    HTMLSetAvisitedColor :                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                HTMLSetAvisitedColor (Document doc, STRING color)
+void                HTMLSetAvisitedColor (Document doc, char* color)
 #else
 void                HTMLSetAvisitedColor (doc, color)
 Document            doc;
-STRING              color;
+char*               color;
 #endif
 {
-   CHAR_T                css_command[100];
+   char             css_command[100];
 
-   usprintf (css_command, TEXT("a:visited { color : %s }"), color);
+   sprintf (css_command, "a:visited { color : %s }", color);
    ApplyCSSRules (NULL, css_command, doc, FALSE);
 }
 
@@ -4292,9 +4292,9 @@ void                HTMLResetAlinkColor (doc)
 Document            doc;
 #endif
 {
-   CHAR_T                css_command[100];
+   char             css_command[100];
 
-   usprintf (css_command, TEXT("a:link { color : red }"));
+   sprintf (css_command, "a:link { color : red }");
    ApplyCSSRules (NULL, css_command, doc, TRUE);
 }
 
@@ -4308,9 +4308,9 @@ void                HTMLResetAactiveColor (doc)
 Document            doc;
 #endif
 {
-   CHAR_T                css_command[100];
+   char             css_command[100];
 
-   usprintf (css_command, TEXT("a:active { color : red }"));
+   sprintf (css_command, "a:active { color : red }");
    ApplyCSSRules (NULL, css_command, doc, TRUE);
 }
 
@@ -4324,9 +4324,9 @@ void                HTMLResetAvisitedColor (doc)
 Document            doc;
 #endif
 {
-   CHAR_T                css_command[100];
+   char             css_command[100];
 
-   usprintf (css_command, TEXT("a:visited { color : red }"));
+   sprintf (css_command, "a:visited { color : red }");
    ApplyCSSRules (NULL, css_command, doc, TRUE);
 }
 
@@ -4335,11 +4335,11 @@ Document            doc;
   header of a HTML document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ApplyCSSRules (Element el, STRING cssRule, Document doc, ThotBool destroy)
+void                ApplyCSSRules (Element el, char* cssRule, Document doc, ThotBool destroy)
 #else
 void                ApplyCSSRules (el, cssRule, doc, destroy)
 Element             el;
-STRING              cssRule;
+char*               cssRule;
 Document            doc;
 ThotBool            destroy;
 #endif
@@ -4373,17 +4373,17 @@ ThotBool            destroy;
    structure and content have to be registered in the Undo queue or not
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T                ReadCSSRules (Document docRef, CSSInfoPtr css, STRING buffer, ThotBool withUndo)
+char                ReadCSSRules (Document docRef, CSSInfoPtr css, char* buffer, ThotBool withUndo)
 #else
-CHAR_T                ReadCSSRules (docRef, css, buffer, withUndo)
+char                ReadCSSRules (docRef, css, buffer, withUndo)
 Document            docRef;
 CSSInfoPtr          css;
-STRING              buffer;
+char*               buffer;
 ThotBool            withUndo;
 #endif
 {
-  CHAR_T              c;
-  STRING              cssRule, base;
+  char                c;
+  char                *cssRule, *base;
   DisplayMode         dispMode;
   int                 index;
   int                 CSSindex;
@@ -4435,7 +4435,7 @@ ThotBool            withUndo;
 	    case ';':
 	      if (import != MAX_CSS_LENGTH && !media)
 		{
-		  if (ustrncasecmp (&CSSbuffer[import+1], TEXT("import"), 6))
+		  if (strncasecmp (&CSSbuffer[import+1], "import", 6))
 		    /* it's not an import */
 		    import = MAX_CSS_LENGTH;
 		  /* save the text */
@@ -4494,7 +4494,7 @@ ThotBool            withUndo;
 	      break;
 	    case ' ':
 	      if (import != MAX_CSS_LENGTH && openRule == 0)
-		media = !ustrncmp (&CSSbuffer[import+1], TEXT("media"), 5);
+		media = !strncmp (&CSSbuffer[import+1], "media", 5);
 	      break;
 	    case '{':
 	      openRule++;
@@ -4503,9 +4503,9 @@ ThotBool            withUndo;
 		  /* is it the screen concerned? */
 		  CSSbuffer[CSSindex+1] = EOS;
 		  if (TtaIsPrinting ())
-		    base = ustrstr (&CSSbuffer[import], TEXT("print"));
+		    base = strstr (&CSSbuffer[import], "print");
 		  else
-		    base = ustrstr (&CSSbuffer[import], TEXT("screen"));
+		    base = strstr (&CSSbuffer[import], "screen");
 		  if (base == NULL)
 		    ignoreMedia = TRUE;
 		  noRule = TRUE;
@@ -4544,12 +4544,12 @@ ThotBool            withUndo;
 	      if (!noRule && !ignoreMedia)
 		ParseStyleDeclaration (NULL, CSSbuffer, docRef, css, FALSE);
 	      else if (import != MAX_CSS_LENGTH &&
-		       !ustrncasecmp (&CSSbuffer[import+1], TEXT("import"), 6))
+		       !strncasecmp (&CSSbuffer[import+1], "import", 6))
 		{
 		  /* import section */
 		  cssRule = &CSSbuffer[import+7];
 		  cssRule = TtaSkipBlanks (cssRule);
-		  if (!ustrncasecmp (cssRule, TEXT("url"), 3))
+		  if (!strncasecmp (cssRule, "url", 3))
 		    {
 		      cssRule = &cssRule[3];
 		      cssRule = TtaSkipBlanks (cssRule);

@@ -2173,7 +2173,7 @@ Document	doc;
          length = buflen - 1;
       if (length > 0)
 	 {
-	   value = (STRING) TtaGetMemory (sizeof (CHAR_T) * buflen);
+	   value = TtaAllocString (buflen);
 	   value[0] = EOS;
 	   TtaGiveTextAttributeValue (attr, value, &length);
 	   switch (attrType.AttrTypeNum)

@@ -59,6 +59,6 @@ typedef struct _CSSInfo
 
 THOT_EXPORT CSSInfoPtr   CSSList;
 THOT_EXPORT CharUnit*    UserCSS; /* name of the User style sheet */
-THOT_EXPORT CHAR_T       CSSbuffer[MAX_CSS_LENGTH + 1];
+THOT_EXPORT char         CSSbuffer[MAX_CSS_LENGTH + 1];
 
 #endif /* CSS_INC_H */

@@ -2789,6 +2789,16 @@ BEGIN
     LTEXT           "Profile selection",-1,7,42,200,11
 END
 
+MATH_ENTITY_DLG DIALOG DISCARDABLE  0, 0, 186, 74
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "",ID_CONFIRM,21,53,70,14
+    PUSHBUTTON      "",IDCANCEL,101,53,65,14
+    EDITTEXT        IDC_EDIT_NAME,7,22,172,21,ES_AUTOHSCROLL
+    LTEXT           "",IDC_ENTITY_NAME,7,7,172,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -3072,6 +3082,14 @@ BEGIN
         RIGHTMARGIN, 207
         TOPMARGIN, 7
         BOTTOMMARGIN, 160
+    END
+
+    MATH_ENTITY_DLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 67
     END
 END
 #endif    // APSTUDIO_INVOKED

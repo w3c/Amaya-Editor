@@ -52,7 +52,7 @@ ThotBool	 WithToC;
 ThotBool         IgnoreCSS;
 
 static struct _SubDoc  *SubDocs;
-static CHAR_T           PSdir[MAX_PATH];
+static CharUnit         PSdir[MAX_PATH];
 static CHAR_T           PPrinter[MAX_PATH];
 static Document		DocPrint;
 static int              PaperPrint;
@@ -374,9 +374,9 @@ static void         CheckPrintingDocument (document)
 Document            document;
 #endif
 {
-   CHAR_T             docName[MAX_LENGTH];
-   STRING           ptr; 
-   CHAR_T             suffix[MAX_LENGTH];
+   CharUnit         docName[MAX_LENGTH];
+   CharUnit*        ptr; 
+   CharUnit         suffix[MAX_LENGTH];
    int              lg;
 
    if (DocPrint != document)
@@ -387,23 +387,23 @@ Document            document;
        /* define the new default PS file */
        ptr = TtaGetEnvString ("APP_TMPDIR");
        if (ptr != NULL && TtaCheckDirectory (ptr))
-	     ustrcpy(PSdir, ptr);
+	     StringCopy (PSdir, ptr);
        else
-	     ustrcpy (PSdir, TtaGetDefEnvString ("APP_TMPDIR"));
-	   lg = ustrlen(PSdir);
-	   if (PSdir[lg - 1] == DIR_SEP)
-	     PSdir[--lg] = EOS;
+	     StringCopy (PSdir, TtaGetDefEnvString ("APP_TMPDIR"));
+	   lg = StringLength (PSdir);
+	   if (PSdir[lg - 1] == CUS_DIR_SEP)
+	     PSdir[--lg] = CUS_EOS;
 
-       ustrcpy (docName, TtaGetDocumentName (document));
+       StringCopy (docName, TtaGetDocumentName (document));
        ExtractSuffix (docName, suffix);
-       usprintf (&PSdir[lg], TEXT("%c%s.ps"), DIR_SEP, docName);
+       cus_sprintf (&PSdir[lg], CUSTEXT("%c%s.ps"), CUS_DIR_SEP, docName);
        TtaSetPsFile (PSdir);
        /* define the new default PrintSchema */
        NumberLinks = FALSE;
        WithToC = FALSE;
        IgnoreCSS = FALSE;
        PrintURL = TRUE;
-       TtaSetPrintSchema (_EMPTYSTR_);
+       TtaSetPrintSchema ("");
        /* no manual feed */
        ManualFeed = PP_OFF;
        TtaSetPrintParameter (PP_ManualFeed, ManualFeed);
@@ -445,9 +445,9 @@ Document            doc;
 	  properly */
        SetInternalLinks (DocPrint);
        if (PageSize == PP_A4)
-	 TtaSetPrintSchema (TEXT("HTMLPLP"));
+	 TtaSetPrintSchema ("HTMLPLP");
        else
-	 TtaSetPrintSchema (TEXT("HTMLPLPUS"));
+	 TtaSetPrintSchema ("HTMLPLPUS");
        ustrcat (viewsToPrint, TEXT("Links_view "));
      }
    else
@@ -455,16 +455,16 @@ Document            doc;
        if (PageSize == PP_A4)
 	 {
 	   if (textFile)
-	     TtaSetPrintSchema (TEXT("TextFilePP"));
+	     TtaSetPrintSchema ("TextFilePP");
 	   else
-	     TtaSetPrintSchema (TEXT("HTMLPP"));
+	     TtaSetPrintSchema ("HTMLPP");
 	 }
        else
 	 {
 	   if (textFile)
-	     TtaSetPrintSchema (TEXT("TextFilePPUS"));
+	     TtaSetPrintSchema ("TextFilePPUS");
 	   else
-	     TtaSetPrintSchema (TEXT("HTMLPPUS"));
+	     TtaSetPrintSchema ("HTMLPPUS");
 	 }    
      }
    /* post or remove the PrintURL attribute */
@@ -1077,7 +1077,7 @@ IncludeCtxt *prev;
 
   /* look for anchors with the attribute rel within the element  el */
   attr = NULL;
-  attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), document);
+  attrType.AttrSSchema = TtaGetSSchema ("HTML", document);
   elType.ElSSchema = attrType.AttrSSchema;
   elType.ElTypeNum = HTML_EL_Anchor;
 
@@ -1129,7 +1129,7 @@ IncludeCtxt *prev;
 	    /* this link designates an external document */
 	    {
 	      /* create a new document and loads the target document */
-	      IncludedDocument = TtaNewDocument (TEXT("HTML"), TEXT("tmp"));
+	      IncludedDocument = TtaNewDocument ("HTML", CUSTEXT("tmp"));
 	      if (IncludedDocument != 0)
 		{
 		  TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_FETCHING), url);

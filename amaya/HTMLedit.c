@@ -287,7 +287,7 @@ STRING              targetName;
       TtaOpenUndoSequence (doc, element, element, 0, 0);
 
    elType = TtaGetElementType (element);
-   HTMLSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+   HTMLSSchema = TtaGetSSchema ("HTML", doc);
    attrType.AttrSSchema = HTMLSSchema;
    if (elType.ElTypeNum == HTML_EL_Quotation ||
        elType.ElTypeNum == HTML_EL_Block_Quote ||
@@ -539,7 +539,7 @@ Element             selectedElement;
    if (selectedElement != NULL)
      {
         elType = TtaGetElementType (selectedElement);
-	HTMLSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+	HTMLSSchema = TtaGetSSchema ("HTML", doc);
 	attrType.AttrSSchema = HTMLSSchema;
 	if (elType.ElSSchema == HTMLSSchema &&
 	    elType.ElTypeNum == HTML_EL_Anchor)
@@ -566,7 +566,7 @@ Element             selectedElement;
 	    attr = TtaGetAttribute (selectedElement, attrType);
 	    if (!attr)
 	       {
-	       attrType.AttrSSchema = TtaGetSSchema (TEXT("MathML"), doc);
+	       attrType.AttrSSchema = TtaGetSSchema ("MathML", doc);
 	       if (attrType.AttrSSchema)
 		 {
 		 attrType.AttrTypeNum = MathML_ATTR_id;
@@ -621,7 +621,7 @@ Boolean		    withUndo;
    withinHTML = (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0);
 
    /* get a NAME or ID attribute */
-   HTMLSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+   HTMLSSchema = TtaGetSSchema ("HTML", doc);
    attrType.AttrSSchema = HTMLSSchema;
    if (withinHTML && (elType.ElTypeNum == HTML_EL_Anchor ||
 		      elType.ElTypeNum == HTML_EL_MAP))
@@ -756,7 +756,7 @@ ThotBool            createLink;
   ThotBool            noAnchor;
 
   parag = NULL;
-  HTMLSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+  HTMLSSchema = TtaGetSSchema ("HTML", doc);
   dispMode = TtaGetDisplayMode (doc);
   /* get the first and last selected element */
   TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
@@ -1029,7 +1029,7 @@ Document     doc;
   int               length, i;
   ThotBool          change, isHTML;
 
-  HTMLSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+  HTMLSSchema = TtaGetSSchema ("HTML", doc);
   elType = TtaGetElementType (el);
   isHTML = (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0);
   attrType.AttrSSchema = HTMLSSchema;
@@ -1129,7 +1129,7 @@ Document	doc;
   ElementType		elType;
   
   elType = TtaGetElementType (el);
-  if (!TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("HTML"), doc)))
+  if (!TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("HTML", doc)))
     /* it's not an HTML element */
     return;
 
@@ -1313,7 +1313,7 @@ NotifyElement      *event;
 
   el = event->element;
   doc = event->document;
-  HTMLschema = TtaGetSSchema (TEXT("HTML"), doc);
+  HTMLschema = TtaGetSSchema ("HTML", doc);
   CheckPseudoParagraph (el, doc);
   elType = TtaGetElementType (el);
   anchor = NULL;
@@ -1985,7 +1985,7 @@ NotifyAttribute    *event;
    ElementType         elType;
    SSchema	       HTMLSSchema;
 
-   HTMLSSchema = TtaGetSSchema (TEXT("HTML"), event->document);
+   HTMLSSchema = TtaGetSSchema ("HTML", event->document);
    elType = TtaGetElementType (event->element);
    if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
      /* it's not a HTML document */
@@ -2440,7 +2440,7 @@ ThotBool   name;
       /* search an ancestor of type Anchor */
       typeNum = HTML_EL_Anchor;
 
-   HTMLschema = TtaGetSSchema (TEXT("HTML"), doc);
+   HTMLschema = TtaGetSSchema ("HTML", doc);
    if (elType.ElTypeNum == typeNum && elType.ElSSchema == HTMLschema)
       elAnchor = element;
    else

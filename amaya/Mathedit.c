@@ -566,7 +566,7 @@ int                 construct;
       if (construct == 1)
 	/* Math button */
 	{
-	if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
+	if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
 	   /* selection is in an HTML element */
 	   {
            newType.ElTypeNum = HTML_EL_Math;
@@ -574,7 +574,7 @@ int                 construct;
            TtaCreateElement (newType, doc);
 	   }
 #ifdef GRAPHML
-	if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
+	if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
 	   /* selection is in a GraphML element */
 	   {
            newType.ElTypeNum = GraphML_EL_Math;
@@ -598,7 +598,7 @@ int                 construct;
       mrowCreated = FALSE;
 
       /* Check whether the selected element is a MathML element */
-      if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0)
+      if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
 	{
 	  /* current selection is within a MathML element */
 	  mathSchema = elType.ElSSchema;
@@ -628,8 +628,8 @@ int                 construct;
 	{
 	  /* get the MathML schema for this document or associate it to the
 	     document if it is not associated yet */
-	  mathSchema = TtaNewNature (docSchema, TEXT("MathML"), TEXT("MathMLP"));
-	  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0 &&
+	  mathSchema = TtaNewNature (docSchema, "MathML", "MathMLP");
+	  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
 	      elType.ElTypeNum != HTML_EL_Math)
 	    /* the current selection is in an HTML element, but it's not
 	       a Math element */
@@ -699,7 +699,7 @@ int                 construct;
 		}
 	    }
 
-	  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0 &&
+	  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
 	      elType.ElTypeNum == HTML_EL_Math)
 	    /* the current selection is in an HTML element, and it's a
 	       Math element */
@@ -718,7 +718,7 @@ int                 construct;
 	      insertSibling = TRUE;
 	      ok = TRUE;
 	      /* try to create a Math element at the current position */
-	      elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+	      elType.ElSSchema = TtaGetSSchema ("HTML", doc);
 	      elType.ElTypeNum = HTML_EL_Math;
               if (emptySel)
 		/* selection is empty */
@@ -752,7 +752,7 @@ int                 construct;
 		 {
 #ifdef GRAPHML
 		 elType = TtaGetElementType (sibling);
-		 if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
+		 if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
 		    /* selection is within a GraphML element */
 		    {
 		    elType.ElTypeNum = GraphML_EL_Math;
@@ -1497,7 +1497,7 @@ void CreateCharStringElement (typeNum, doc)
 
    /* if not within a MathML element, nothing to do */
    elType = TtaGetElementType (firstSel);
-   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
+   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
       return;
 
    TtaSetDisplayMode (doc, DeferredDisplay);
@@ -2048,7 +2048,7 @@ static void SeparateFunctionNames (firstEl, lastEl, doc, newSelEl, newSelChar)
 		     stop = FALSE;
 		     do
 		       {
-		       flen = ustrlen (functionName[func]);
+		       flen = strlen (functionName[func]);
 		       if (ustrncmp (functionName[func], &text[i], flen) == 0)
 			 /* this substring is a function name */
 			 {
@@ -2128,8 +2128,7 @@ static void SeparateFunctionNames (firstEl, lastEl, doc, newSelEl, newSelChar)
 			 elType.ElTypeNum = MathML_EL_TEXT_UNIT;
 			 newText = TtaNewElement (doc, elType);
 			 TtaInsertFirstChild (&newText, newEl, doc);
-			 TtaSetTextContent (newText, functionName[func], lang,
-					    doc);
+			 TtaSetTextContent (newText, functionName[func], lang, doc);
 			 MathSetAttributes (newEl, doc, NULL);
 			 TtaRegisterElementCreate (newEl, doc);
 			 if (!firstElChanged)
@@ -2154,7 +2153,7 @@ static void SeparateFunctionNames (firstEl, lastEl, doc, newSelEl, newSelChar)
                        func++; 
                        }
 		     while (!stop &&
-			    ustrcmp (functionName[func], _EMPTYSTR_) != 0);
+			    strcmp (functionName[func], "") != 0);
 		     }
 	        }
 	     /* the whole text leaf has been checked */
@@ -2639,14 +2638,14 @@ void CreateMathEntity (document, view)
 
    /* if not within a MathML element, nothing to do */
    elType = TtaGetElementType (firstSel);
-   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
+   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
       return;
    
    MathMLEntityName[0] = EOS;
-#ifdef _WINDOWS
-   CreateMathEntityDlgWindow (TtaGetViewFrame (document, view));
-
-#else
+#  ifdef _WINDOWS
+   CreateMathEntityDlgWindow (TtaGetViewFrame (document, view), BaseDialog, MathEntityForm, MathEntityText,
+                              MathMLEntityName, TtaGetMessage (1, BMEntity), TtaGetMessage (AMAYA, AM_MATH_ENTITY_NAME));
+#  else
    TtaNewForm (BaseDialog + MathEntityForm, TtaGetViewFrame (document, view), 
 	       TtaGetMessage (1, BMEntity), TRUE, 1, 'L', D_CANCEL);
    TtaNewTextForm (BaseDialog + MathEntityText, BaseDialog + MathEntityForm,
@@ -2656,7 +2655,7 @@ void CreateMathEntity (document, view)
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + MathEntityForm, FALSE);
    TtaWaitShowDialogue ();
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
    if (MathMLEntityName[0] != EOS)
      {
       if (!TtaIsSelectionEmpty ())
@@ -2664,7 +2663,7 @@ void CreateMathEntity (document, view)
       TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
       /* if not within a MathML element, nothing to do */
       elType = TtaGetElementType (firstSel);
-      if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
+      if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
          return;
       TtaGiveLastSelectedElement (document, &lastSel, &i, &lastChar);
       TtaOpenUndoSequence (document, firstSel, lastSel, firstChar, lastChar);
@@ -3194,8 +3193,8 @@ void MathAttrFontsizeCreated(event)
   STRING           value;
   int              length;
 
-  value = (STRING) TtaGetMemory (sizeof (CHAR_T) * buflen);
-  value[0] = EOS;
+  value = TtaAllocString (buflen);
+  value[0] = WC_EOS;
   length = TtaGetTextAttributeLength (event->attribute);
   if (length >= buflen)
      length = buflen - 1;
@@ -3221,8 +3220,7 @@ ThotBool MathAttrFontsizeDelete(event)
   /* ask the CSS handler to remove the effect of the CSS property font-size */
   /* in the statement below, "10pt" is meaningless. It's here just to
      make the CSS parser happy */
-  ParseHTMLSpecificStyle (event->element, TEXT("font-size: 10pt"), event->document,
-			  TRUE);
+  ParseHTMLSpecificStyle (event->element, TEXT("font-size: 10pt"), event->document, TRUE);
   return FALSE; /* let Thot perform normal operation */
 }
 
@@ -3241,8 +3239,8 @@ void MathAttrFontfamilyCreated (event)
   STRING           value;
   int              length;
 
-  value = (STRING) TtaGetMemory (sizeof (CHAR_T) * buflen);
-  value[0] = EOS;
+  value = TtaAllocString (buflen);
+  value[0] = WC_EOS;
   length = TtaGetTextAttributeLength (event->attribute);
   if (length >= buflen)
      length = buflen - 1;
@@ -3267,8 +3265,7 @@ ThotBool MathAttrFontfamilyDelete (event)
   /* ask the CSS handler to remove the effect of property font-family */
   /* in the statement below, "serif" is meaningless. It's here just to
      make the CSS parser happy */
-  ParseHTMLSpecificStyle (event->element, TEXT("font-family: serif"), event->document,
-			  TRUE);
+  ParseHTMLSpecificStyle (event->element, TEXT("font-family: serif"), event->document, TRUE);
   return FALSE; /* let Thot perform normal operation */
 }
 
@@ -3286,8 +3283,8 @@ void MathAttrColorCreated (event)
   STRING           value;
   int              length;
 
-  value = (STRING) TtaGetMemory (sizeof (CHAR_T) * buflen);
-  value[0] = EOS;
+  value = TtaAllocString (buflen);
+  value[0] = WC_EOS;
   length = TtaGetTextAttributeLength (event->attribute);
   if (length >= buflen)
      length = buflen - 1;
@@ -3327,8 +3324,8 @@ void MathAttrBackgroundCreated (event)
   STRING           value;
   int              length;
 
-  value = (STRING) TtaGetMemory (sizeof (CHAR_T) * buflen);
-  value[0] = EOS;
+  value = TtaAllocString (buflen);
+  value[0] = WC_EOS;
   length = TtaGetTextAttributeLength (event->attribute);
   if (length >= buflen)
      length = buflen - 1;

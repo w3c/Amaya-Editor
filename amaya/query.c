@@ -1415,7 +1415,7 @@ HTList             *c;
                else
                    cus2iso_strncpy (s, lang_list, 2);
                count--;
-               HTLanguage_add (c, WideChar2ISO(s), quality);
+               HTLanguage_add (c, s, quality);
                quality += 0.1;
 			}
             ptr--;
@@ -2045,7 +2045,6 @@ static void SafePut_init ()
   if (strptr && *strptr)
     {
       /* Get copy we can mutilate */
-      str = StringDuplicate (strptr);
       strptrA = (char*) TtaGetMemory (StringLength (strptr) + 1);
       cus2iso_strcpy (strptrA, strptr);
       ptr2 = strptrA;
@@ -2060,6 +2059,8 @@ static void SafePut_init ()
       /* create the list container */
       safeput_list = HTList_new ();   
       /* store the domain list */
+
+      ptr = strptrA;
       while ((domain = HTNextField (&strptrA)) != NULL)
 	  HTList_addObject (safeput_list, TtaStrdup (domain)); 
 
@@ -3091,11 +3092,11 @@ void               *context_tcbf;
    */
    if (DocumentMeta[docid]->put_default_name)
      {
-       char *ptr1, *ptr2;
+       CharUnit *ptr1, *ptr2;
        ptr1 = TtaGetEnvString ("DEFAULTNAME");
        if (ptr1 && *ptr1) 
 	 {
-	   ptr2 = strstr (urlName, ptr1);
+	   ptr2 = StringSubstring (urlName, ptr1);
 	   if (ptr2) 
 	     {
 	       me->default_put_name = TtaStrdup (urlName);

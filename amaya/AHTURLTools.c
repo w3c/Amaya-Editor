@@ -322,58 +322,58 @@ STRING              aSuffix;
   returns TRUE if path points to an HTML resource.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool             IsHTMLName (const STRING path)
+ThotBool             IsHTMLName (const CharUnit* path)
 #else  /* __STDC__ */
 ThotBool             IsHTMLName (path)
-const STRING        path;
+const CharUnit*      path;
 #endif /* __STDC__ */
 {
-   CHAR_T              temppath[MAX_LENGTH];
-   CHAR_T              suffix[MAX_LENGTH];
-   CHAR_T              nsuffix[MAX_LENGTH];
-   int                 i;
+   CharUnit          temppath[MAX_LENGTH];
+   CharUnit          suffix[MAX_LENGTH];
+   CharUnit          nsuffix[MAX_LENGTH];
+   int               i;
 
    if (!path)
       return (FALSE);
 
-   ustrcpy (temppath, path);
+   StringCopy (temppath, path);
    ExtractSuffix (temppath, suffix);
 
    /* Normalize the suffix */
    i = 0;
-   while (suffix[i] != EOS && i < MAX_LENGTH -1)
+   while (suffix[i] != CUS_EOS && i < MAX_LENGTH -1)
      {
-       nsuffix[i] = utolower (suffix[i]);
+       nsuffix[i] = ToLower (suffix[i]);
        i++;
      }
    nsuffix[i] = EOS;
-   if (!ustrcmp (nsuffix, TEXT("html")) ||
-       !ustrcmp (nsuffix, TEXT("htm")) ||
-       !ustrcmp (nsuffix, TEXT("shtml")) ||
-       !ustrcmp (nsuffix, TEXT("jsp")) ||
-       !ustrcmp (nsuffix, TEXT("xht")) ||
-       !ustrcmp (nsuffix, TEXT("xhtm")) ||
-       !ustrcmp (nsuffix, TEXT("xhtml")))
+   if (!StringCompare (nsuffix, CUSTEXT("html")) ||
+       !StringCompare (nsuffix, CUSTEXT("htm")) ||
+       !StringCompare (nsuffix, CUSTEXT("shtml")) ||
+       !StringCompare (nsuffix, CUSTEXT("jsp")) ||
+       !StringCompare (nsuffix, CUSTEXT("xht")) ||
+       !StringCompare (nsuffix, CUSTEXT("xhtm")) ||
+       !StringCompare (nsuffix, CUSTEXT("xhtml")))
      return (TRUE);
-   else if (!ustrcmp (nsuffix, TEXT("gz")))
+   else if (!StringCompare (nsuffix, CUSTEXT("gz")))
      {
        /* take into account compressed files */
        ExtractSuffix (temppath, suffix);       
        /* Normalize the suffix */
        i = 0;
-       while (suffix[i] != EOS && i < MAX_LENGTH -1)
+       while (suffix[i] != CUS_EOS && i < MAX_LENGTH -1)
 	 {
-	   nsuffix[i] = tolower (suffix[i]);
+	   nsuffix[i] = ToLower (suffix[i]);
 	   i++;
 	 }
-       nsuffix[i] = EOS;
-       if (!ustrcmp (nsuffix, TEXT("html")) ||
-	   !ustrcmp (nsuffix, TEXT("htm")) ||
-	   !ustrcmp (nsuffix, TEXT("shtml")) ||
-	   !ustrcmp (nsuffix, TEXT("jsp")) ||
-	   !ustrcmp (nsuffix, TEXT("xht")) ||
-	   !ustrcmp (nsuffix, TEXT("xhtm")) ||
-	   !ustrcmp (nsuffix, TEXT("xhtml")))
+       nsuffix[i] = CUS_EOS;
+       if (!StringCompare (nsuffix, CUSTEXT("html")) ||
+           !StringCompare (nsuffix, CUSTEXT("htm")) ||
+           !StringCompare (nsuffix, CUSTEXT("shtml")) ||
+           !StringCompare (nsuffix, CUSTEXT("jsp")) ||
+           !StringCompare (nsuffix, CUSTEXT("xht")) ||
+           !StringCompare (nsuffix, CUSTEXT("xhtm")) ||
+           !StringCompare (nsuffix, CUSTEXT("xhtml")))
  
 	 return (TRUE);
        else
@@ -779,52 +779,53 @@ Document            doc;
    Allocate and return the local document path associated to the url
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-STRING     GetLocalPath (Document doc, STRING url)
+CharUnit*  GetLocalPath (Document doc, CharUnit* url)
 #else  /* __STDC__ */
-STRING     GetLocalPath (doc, url)
+CharUnit*  GetLocalPath (doc, url)
 Document   doc;
-STRING     url;
+CharUnit*  url;
 #endif /* __STDC__ */
 {
-  STRING   ptr, n;
-  STRING   documentname;
-  CHAR_T   url_sep;
-  int      len;
+  CharUnit* ptr;
+  CharUnit* n;
+  CharUnit* documentname;
+  CharUnit  url_sep;
+  int       len;
   ThotBool  noFile;
 
   if (url != NULL)
     {
       /* check whether the file name exists */
-      len = ustrlen (url) - 1;
+      len = StringLength (url) - 1;
       if (IsW3Path (url))
-	url_sep = TEXT('/');
+         url_sep = CUSTEXT('/');
       else 
-	url_sep = DIR_SEP;
+          url_sep = CUS_DIR_SEP;
       noFile = (url[len] == url_sep);
       if (noFile)
-	url[len] = EOS;
-      ptr = TtaAllocString (MAX_LENGTH);
-      documentname = TtaAllocString (MAX_LENGTH);
+         url[len] = CUS_EOS;
+      ptr = TtaAllocCUString (MAX_LENGTH);
+      documentname = TtaAllocCUString (MAX_LENGTH);
       TtaExtractName (url, ptr, documentname);
-      usprintf (ptr, TEXT("%s%s%d%s"), TempFileDirectory, DIR_STR, doc, DIR_STR);
+      cus_sprintf (ptr, CUSTEXT("%s%s%d%s"), TempFileDirectory, CUS_DIR_STR, doc, CUS_DIR_STR);
       if (!TtaCheckDirectory (ptr))
 	/* directory did not exist */
 	TtaMakeDirectory (ptr);
 
       /* don't include the query string within document name */
-      n = ustrrchr(documentname, TEXT('?'));
+      n = StrRChr (documentname, CUSTEXT('?'));
       if (n != NULL)
-	*n = EOS;
+         *n = CUS_EOS;
       /* don't include ':' within document name */
-      n = ustrchr (documentname, TEXT(':'));
+      n = StrChr (documentname, CUSTEXT(':'));
       if (n != NULL)
-	*n = EOS;
+         *n = CUS_EOS;
       /* if after all this operations document name
 	 is empty, let's use noname.html instead */
-      if (documentname[0] == EOS)
-	ustrcat (ptr, TEXT("noname.html"));
+      if (documentname[0] == CUS_EOS)
+         StringConcat (ptr, CUSTEXT("noname.html"));
       else
-	ustrcat (ptr, documentname);
+          StringConcat (ptr, documentname);
       TtaFreeMemory (documentname);
       /* restore the url */
       if (noFile)
