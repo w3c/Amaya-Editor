@@ -1643,9 +1643,9 @@ void TtaRegisterOpenURLCallback( void (*callback) (void *) )
   params:
   returns:
   ----------------------------------------------------------------------*/
+#ifdef _WX
 void TtaSendDataToPanel( int panel_type, AmayaParams& params )
 {
-#ifdef _WX
   AmayaSubPanelManager::GetInstance()->SendDataToPanel( panel_type, params );
-#endif /* _WX */
 }
+#endif /* _WX */
