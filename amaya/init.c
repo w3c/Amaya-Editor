@@ -3377,7 +3377,7 @@ void ZoomOut (Document document, View view)
 
 /*----------------------------------------------------------------------
   ShowSource
-  Display the source code of an HTML page.
+  Display the source code of a document
   ----------------------------------------------------------------------*/
 void ShowSource (Document document, View view)
 {
@@ -3496,6 +3496,9 @@ void ShowSource (Document document, View view)
 	 TtaSetItemOff (sourceDoc, 1, Views, TShowTextZone);
 	 TtaSetMenuOff (sourceDoc, 1, Special);
 	 TtaSetMenuOff (sourceDoc, 1, Help_);
+#ifdef ANNOTATIONS
+	 TtaSetMenuOff (sourceDoc, 1, Annotations_);
+#endif /* ANNOTATIONS */
 
     	 /* Switch the synchronization entry */
     	 if (TtaIsDocumentModified (document))
