@@ -977,106 +977,105 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry, int frame)
 static void BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotMenu button,
 			  int frame, int doc)
 {
-   char                string[700];
-   char                equiv[MaxEquivLen];
-   Item_Ctl           *ptritem;
-   char               *ptr;
-   char                LastItemType = 'S';
-   int                 nbremovedsep = 0;
-   int                 i, j;
-   int                 lg;
-   int                 item, entries;
-   int                 action;
-   ThotBool            withEquiv, emptyMenu;
+  Item_Ctl           *ptritem;
+  char                string[700];
+  char                equiv[MaxEquivLen];
+  char               *ptr;
+  char                LastItemType = 'S';
+  int                 nbremovedsep = 0;
+  int                 i, j;
+  int                 lg;
+  int                 item, entries;
+  int                 action;
+  ThotBool            withEquiv, emptyMenu;
    
 #ifdef _WINDOWS 
-   currentFrame = frame;
+  currentFrame = frame;
 #endif /* _WINDOWS */
-   /* Construit le pulldown attache au bouton */
-   item = 0;
-   entries = 0;
-   i = 0;
-   j = 0;
-   withEquiv = FALSE;
-   equiv[0] = EOS;
-   ptritem = ptrmenu->ItemsList;
-   while (item < ptrmenu->ItemsNb)
-     {
-       action = ptritem[item].ItemAction;
-       emptyMenu = FALSE;
-       /* Regarde si le texte des commandes ne deborde pas */
-       ptr = TtaGetMessage (THOT, ptritem[item].ItemID);
-       lg = strlen (ptr) + 1;
-       if (ptritem[item].ItemType == 'S' && i + 2 < 700)
-	 {
-
-	   if ( ptrmenu != NULL ) 
-	     {
-	       if ( Prof_ShowSeparator(ptrmenu, item,LastItemType))
-		 {
-		   strcpy (&string[i], "S");
-		   i += 2;
-		 }
-	       else
-		 nbremovedsep ++;
-	     }
-	 }
-       else if (i + lg < 699)
-	 {
- 	   if ( ptritem[item].ItemType == 'M' &&
- 		ptritem[item].SubMenu->ItemsNb == 0)
-	     emptyMenu = TRUE;
-	   else
- 	     {
-	       if (ptritem[item].ItemType == 'D')
-		 string[i] = 'B';
-	       else
-		 string[i] = ptritem[item].ItemType;
-	       strcpy (&string[i + 1], ptr);
-	       i += lg + 1;
- 	     }
-	 }
-       else
-	 /* sinon on reduit le nombre d'items */
-	 ptrmenu->ItemsNb = item - 1;
-       
-       /* traite le contenu de l'item de menu */
-       if (action != -1)
-	 {
-	   if (ptritem[item].ItemType == 'B' ||
-	       ptritem[item].ItemType == 'T')
-	     {
-	       /* Active l'action correspondante pour cette fenetre */
-	       if (MenuActionList[action].ActionEquiv != NULL)
-		 {
-		   withEquiv = TRUE;
-		   lg = strlen (MenuActionList[action].ActionEquiv);
-		   if (lg + j < MaxEquivLen)
-		     {
-		       strcpy (&equiv[j], MenuActionList[action].ActionEquiv);
-		       j += lg;
-		     }
-		 }
-	       /* Is it the Paste command */
-	       if (!strcmp (MenuActionList[action].ActionName, "TtcPaste"))
-		 {
-		   FrameTable[frame].MenuPaste = ref;
-		   FrameTable[frame].EntryPaste = entries;
-		 }
-	       /* Is it the Undo command */
-	       if (!strcmp (MenuActionList[action].ActionName, "TtcUndo"))
-		 {
-		   FrameTable[frame].MenuUndo = ref;
-		   FrameTable[frame].EntryUndo = entries;
-		 }
-	       /* Is it the Redo command */
-	       if (!strcmp (MenuActionList[action].ActionName, "TtcRedo"))
-		 {
-		   FrameTable[frame].MenuRedo = ref;
-		   FrameTable[frame].EntryRedo = entries;
-		 }
-	       MenuActionList[action].ActionActive[frame] = TRUE;
-	     }
+  /* Construit le pulldown attache au bouton */
+  item = 0;
+  entries = 0;
+  i = 0;
+  j = 0;
+  withEquiv = FALSE;
+  equiv[0] = EOS;
+  ptritem = ptrmenu->ItemsList;
+  while (item < ptrmenu->ItemsNb)
+    {
+      action = ptritem[item].ItemAction;
+      emptyMenu = FALSE;
+      /* Regarde si le texte des commandes ne deborde pas */
+      ptr = TtaGetMessage (THOT, ptritem[item].ItemID);
+      lg = strlen (ptr) + 1;
+      if (ptritem[item].ItemType == 'S' && i + 2 < 700)
+	{
+	  if ( ptrmenu != NULL ) 
+	    {
+	      if ( Prof_ShowSeparator(ptrmenu, item,LastItemType))
+		{
+		  strcpy (&string[i], "S");
+		  i += 2;
+		}
+	      else
+		nbremovedsep ++;
+	    }
+	}
+      else if (i + lg < 699)
+	{
+	  if ( ptritem[item].ItemType == 'M' &&
+	       ptritem[item].SubMenu->ItemsNb == 0)
+	    emptyMenu = TRUE;
+	  else
+	    {
+	      if (ptritem[item].ItemType == 'D')
+		string[i] = 'B';
+	      else
+		string[i] = ptritem[item].ItemType;
+	      strcpy (&string[i + 1], ptr);
+	      i += lg + 1;
+	    }
+	}
+      else
+	/* sinon on reduit le nombre d'items */
+	ptrmenu->ItemsNb = item - 1;
+      
+      /* traite le contenu de l'item de menu */
+      if (action != -1)
+	{
+	  if (ptritem[item].ItemType == 'B' ||
+	      ptritem[item].ItemType == 'T')
+	    {
+	      /* Active l'action correspondante pour cette fenetre */
+	      if (MenuActionList[action].ActionEquiv != NULL)
+		{
+		  withEquiv = TRUE;
+		  lg = strlen (MenuActionList[action].ActionEquiv);
+		  if (lg + j < MaxEquivLen)
+		    {
+		      strcpy (&equiv[j], MenuActionList[action].ActionEquiv);
+		      j += lg;
+		    }
+		}
+	      /* Is it the Paste command */
+	      if (!strcmp (MenuActionList[action].ActionName, "TtcPaste"))
+		{
+		  FrameTable[frame].MenuPaste = ref;
+		  FrameTable[frame].EntryPaste = entries;
+		}
+	      /* Is it the Undo command */
+	      else if (!strcmp (MenuActionList[action].ActionName, "TtcUndo"))
+		{
+		  FrameTable[frame].MenuUndo = ref;
+		  FrameTable[frame].EntryUndo = entries;
+		}
+	      /* Is it the Redo command */
+	      else if (!strcmp (MenuActionList[action].ActionName, "TtcRedo"))
+		{
+		  FrameTable[frame].MenuRedo = ref;
+		  FrameTable[frame].EntryRedo = entries;
+		}
+	      MenuActionList[action].ActionActive[frame] = TRUE;
+	    }
 	 }
        if (!emptyMenu)
 	 {
@@ -1084,37 +1083,41 @@ static void BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotMenu button,
 	   equiv[j++] = EOS;
 	   entries++;
 	 }
-        item++;
-     }
+       item++;
+    }
    
-   /* Creation du Pulldown avec ou sans equiv */
-   if (withEquiv)
-      TtaNewPulldown (ref, button, NULL, entries - nbremovedsep,
-		      string, equiv);
-   else
-      TtaNewPulldown (ref, button, NULL, entries - nbremovedsep, 
-		      string, NULL);
-
-   /* traite les sous-menus de l'item de menu */
-   item = 0;
-   ptritem = ptrmenu->ItemsList;
-   while (item < ptrmenu->ItemsNb)
-     {
-	action = ptritem[item].ItemAction;
-	if (action != -1)
-	  {
-	    if (ptritem[item].ItemType == 'M' &&
- 		ptritem[item].SubMenu->ItemsNb != 0)
-	      {
-		if (action != 0 && item < MAX_MENU)
-		  /* creation du sous-menu */
-
-		  if (Prof_ShowSubMenu(ptritem[item].SubMenu))
-		    BuildSubMenu (ptritem[item].SubMenu, ref, item, frame);
-	       }
-	  }
-	item++;
-     }
+  /* Creation du Pulldown avec ou sans equiv */
+  if (withEquiv)
+    TtaNewPulldown (ref, button, NULL, entries - nbremovedsep,
+		    string, equiv);
+  else
+    TtaNewPulldown (ref, button, NULL, entries - nbremovedsep, 
+		    string, NULL);
+  
+  /* traite les sous-menus de l'item de menu */
+  item = 0;
+  entries = 0;
+  ptritem = ptrmenu->ItemsList;
+  while (item < ptrmenu->ItemsNb)
+    {
+      action = ptritem[item].ItemAction;
+      if (action != -1)
+	{
+	  /* skip empty menus */
+	  if (ptritem[item].ItemType == 'M' &&
+	      ptritem[item].SubMenu->ItemsNb != 0)
+	    {
+	      entries++;
+	      if (action != 0 && item < MAX_MENU &&
+		  Prof_ShowSubMenu(ptritem[item].SubMenu))
+		/* creation du sous-menu */
+		BuildSubMenu (ptritem[item].SubMenu, ref, entries, frame);
+	    }
+	  else if (ptritem[item].ItemType != 'M')
+	    entries++;
+	}
+      item++;
+    }
 }
 
 /*----------------------------------------------------------------------
