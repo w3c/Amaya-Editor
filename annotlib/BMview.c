@@ -20,9 +20,13 @@
 /* bookmarks includes */
 #include "bookmarks.h"
 #include "Topics.h"
+#include "f/BMevent_f.h"
 
 /* annotlib inckudes */
 #include "annotlib.h"
+#include "f/ANNOTtools_f.h"
+#include "f/BMfile_f.h"
+#include "f/BMtools_f.h"
 
 /*-----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
@@ -64,6 +68,59 @@ void BM_topicSetTitle (Document doc, Element topic_item, char *title)
     TtaSetTextContent (el, title, TtaGetDefaultLanguage (), doc); 
   else
     TtaSetTextContent (el, "", TtaGetDefaultLanguage (), doc); 
+}
+
+/*-----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
+static char * BM_topicGetTitle (Element topic_item)
+{
+  ElementType elType;
+  Element el;
+  char *buffer = NULL;
+  int length;
+  Language  lang;
+
+  if (!topic_item)
+    return NULL;
+
+ /* topic title  */
+  elType = TtaGetElementType (topic_item);
+  elType.ElTypeNum = Topics_EL_Topic_title;
+  el = TtaSearchTypedElement (elType, SearchInTree, topic_item);
+  el = TtaGetFirstChild (el);
+  if (el)
+    {
+      length = TtaGetTextLength (el) + 1;
+      buffer = TtaGetMemory (length);
+      TtaGiveTextContent (el, buffer, &length, &lang);
+    }
+  return buffer;
+}
+
+/*-----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
+char * BM_topicGetModelHref (Element topic_item)
+{
+  ElementType elType;
+  Attribute attr;
+  AttributeType attrType;
+  char *buffer = NULL;
+  int length;
+  
+  if (!topic_item)
+    return NULL;
+
+  elType = TtaGetElementType (topic_item);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = Topics_ATTR_Model_HREF_;
+  attr = TtaGetAttribute (topic_item, attrType);
+  if (attr)
+    {
+       length = TtaGetTextAttributeLength (attr) + 1;
+       buffer = TtaGetMemory (length);
+       TtaGiveTextAttributeValue (attr, buffer, &length);
+    }
+  return buffer;
 }
 
 /*-----------------------------------------------------------------------
@@ -417,8 +474,12 @@ void BM_OpenTopic (Document doc, List *bm_list)
 Document BM_NewDocument (void)
 {
   Document doc;
+  char *ptr;
+
+  /* I would probably need to do here the same initializations as in LoadDocument
+     or even call that function instead. */
   doc = InitDocAndView (0, "bookmarks.rdf", docBookmark, 0, FALSE, L_Other, CE_ABSOLUTE);
-  
+
   if (doc == 0)
     return 0;
 
@@ -426,11 +487,127 @@ Document BM_NewDocument (void)
   ** initialize the document 
   */
 
+  if (DocumentURLs[doc])
+    TtaFreeMemory (DocumentURLs[doc]);
+  ptr = GetLocalBookmarksFile ();
+  DocumentURLs[doc] = TtaStrdup (ptr);
+
+  if (DocumentMeta[doc])
+    DocumentMetaClear (DocumentMeta[doc]);
+  else
+    DocumentMeta[doc] = DocumentMetaDataAlloc ();
+
   /* set the charset to be UTF-8 by default */
   TtaSetDocumentCharset (doc, TtaGetCharset ("UTF-8"), FALSE);
 
   return (doc);
 }
 
+/*-----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
+static Element BM_GetFirstChild (Element topic_item)
+{
+  Element el;
+  ElementType elType;
 
+  elType = TtaGetElementType (topic_item);
+  elType.ElTypeNum = Topics_EL_Topic_item;
+  el = TtaSearchTypedElement (elType, SearchInTree, topic_item);
+  return (el);
+}
+
+/*-----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
+static void RecursiveInitTreeWidget (ThotWidget root_tree, Element root_el, void *cbf)
+{
+  ThotWidget tree_item, child_tree;
+  char *label;
+  Element el, child_el;
+
+  el = root_el;
+
+  while (el) 
+    {
+      /* insert the element */
+      /* get its label */
+      label = BM_topicGetTitle (el);
+      tree_item = TtaAddTreeItem (root_tree, label, cbf,
+				  (void *) el);
+
+      if (label)
+	TtaFreeMemory (label);
+
+      /* insert all its children recusrively */
+      child_el = BM_GetFirstChild (el);
+      if (child_el)
+	{
+	  child_tree = TtaAddSubTree (tree_item);
+	  RecursiveInitTreeWidget (child_tree, child_el, cbf);
+	}
+      /* do the same with its siblings */
+      TtaNextSibling (&el);
+    }
+}
+
+/*----------------------------------------------------------------------
+  BM_InitTreeWidget
+  Initializes the tree widget according to the topic tree
+  ----------------------------------------------------------------------*/
+void BM_InitTreeWidget (ThotWidget tree, Document TopicTree, void *cbf)
+{
+  Element el;
+  ElementType elType;
+  
+  el = TtaGetRootElement (TopicTree);
+  el = TtaGetFirstChild (el);
+
+  /* @@ just to make sure */
+  elType = TtaGetElementType (el);
+
+  RecursiveInitTreeWidget (tree, el, cbf);
+}
+
+
+/*-----------------------------------------------------------
+  BM_GetTopicTree
+  Creates a thottree with the topics neatly sorted.
+  Caller must free the document.
+  ------------------------------------------------------------*/
+Document BM_GetTopicTree (void)
+{
+  Document doc;
+  List *topics =  NULL;
+  int count;
+  Element el;
+  ElementType elType;
+  DisplayMode      dispMode;
+
+  doc = TtaInitDocument ("Topics", "sorted topics", 0);
+  if (doc == 0)
+    return 0;
+  TtaSetDisplayMode (doc, NoComputedDisplay);
+  dispMode = TtaGetDisplayMode (doc);
+
+  count = Model_dumpAsList (&topics, True);
+  if (count > 1)
+    BM_bookmarksSort (&topics);
+
+  el = TtaGetRootElement (doc);
+  elType = TtaGetElementType (el);
+      
+  /* create the item itself */
+  elType.ElTypeNum = Topics_EL_Topic_item;
+  dispMode = TtaGetDisplayMode (doc);
+  TtaNewTree (doc, elType, "");
+  TtaSetDisplayMode (doc, NoComputedDisplay);
+  dispMode = TtaGetDisplayMode (doc);
+  /* set the charset to be UTF-8 by default */
+  TtaSetDocumentCharset (doc, TtaGetCharset ("UTF-8"), FALSE);
+
+  BM_InitDocumentStructure (doc, topics);
+
+  List_delAll (&topics, BMList_delItem);
+
+  return (doc);
+}
 

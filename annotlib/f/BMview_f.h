@@ -11,6 +11,7 @@ extern Element BM_topicGetCreateContent ( Document doc,
 extern void BM_topicSetTitle ( Document doc,
                                Element topic_item,
                                char *title );
+extern char * BM_topicGetModelHref ( Element topic_item );
 extern Element BM_topicAdd ( Document doc,
                              Element topic_item );
 extern void BM_bookmarkSetTitle ( Document doc,
@@ -30,6 +31,10 @@ extern void BM_CloseTopic ( Document doc,
 extern void BM_OpenTopic ( Document doc,
                            List *bm_list );
 extern Document BM_NewDocument ( void );
+extern void BM_InitTreeWidget ( ThotWidget tree,
+                                Document TopicTree,
+                                void *cbf );
+extern Document BM_GetTopicTree ( void );
 
 #else /* __STDC__ */
 
@@ -38,6 +43,7 @@ extern Element BM_topicGetCreateContent (/* Document doc,
 extern void BM_topicSetTitle (/* Document doc,
                                  Element topic_item,
                                  char *title */);
+extern char * BM_topicGetModelHref (/* Element topic_item */);
 extern Element BM_topicAdd (/* Document doc,
                                Element topic_item */);
 extern void BM_bookmarkSetTitle (/* Document doc,
@@ -57,6 +63,10 @@ extern void BM_CloseTopic (/* Document doc,
 extern void BM_OpenTopic (/* Document doc,
                              List *bm_list */);
 extern Document BM_NewDocument (/* void */);
+extern void BM_InitTreeWidget (/* ThotWidget tree,
+                                  Document TopicTree,
+                                  void *cbf */);
+extern Document BM_GetTopicTree (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

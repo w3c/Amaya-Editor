@@ -10,6 +10,7 @@ extern char *GetLocalBookmarksFile ( void );
 extern char *GetLocalBookmarksBaseURI ( void );
 extern char *GetHomeTopicURI ( void );
 extern void BM_Init ( void );
+extern void BM_FreeConf ( void );
 extern void BM_Quit ( void );
 extern void BM_CreateBM ( Document doc,
                           View view );
@@ -19,7 +20,7 @@ extern void BM_ViewBookmarks ( Document doc,
                                View view );
 extern ThotBool BM_SimpleRClick ( NotifyElement *event );
 extern ThotBool BM_ShowProperties ( NotifyElement *event );
-extern ThotBool BM_ElemDelete ( NotifyElement *event );
+extern ThotBool BM_ItemDelete ( NotifyElement *event );
 
 #else /* __STDC__ */
 
@@ -27,6 +28,7 @@ extern char *GetLocalBookmarksFile (/* void */);
 extern char *GetLocalBookmarksBaseURI (/* void */);
 extern char *GetHomeTopicURI (/* void */);
 extern void BM_Init (/* void */);
+extern void BM_FreeConf (/* void */);
 extern void BM_Quit (/* void */);
 extern void BM_CreateBM (/* Document doc,
                             View view */);
@@ -36,7 +38,7 @@ extern void BM_ViewBookmarks (/* Document doc,
                                  View view */);
 extern ThotBool BM_SimpleRClick (/* NotifyElement *event */);
 extern ThotBool BM_ShowProperties (/* NotifyElement *event */);
-extern ThotBool BM_ElemDelete (/* NotifyElement *event */);
+extern ThotBool BM_ItemDelete (/* NotifyElement *event */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

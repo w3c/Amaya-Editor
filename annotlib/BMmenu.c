@@ -27,6 +27,7 @@
 #include "f/BMfile_f.h"
 #include "f/BMevent_f.h"
 #include "f/BMtools_f.h"
+#include "f/BMview_f.h"
 
 /* amaya includes */
 #include "AHTURLTools_f.h"
@@ -36,6 +37,8 @@ static char    s[MAX_LENGTH]; /* general purpose buffer */
 static int       BookmarkBase;
 static int       TopicBase;
 static BookmarkP aBookmark;
+static Document  BTopicTree; /* points to a thot sorted topic tree */
+static Document  TTopicTree; /* points to a thot sorted topic tree */
 
 /*----------------------------------------------------------------------
   Bookmark_new_init
@@ -154,9 +157,25 @@ static void InitBookmarkMenu (Document doc, BookmarkP bookmark)
 	ptr = ANNOT_MakeFileURL (DocumentURLs[doc]);
       else 
 	ptr = DocumentURLs[doc];
+
+      if (DocumentMeta[doc] && DocumentMeta[doc]->form_data)
+	{
+	  char *ptr2;
+
+	  ptr2 = TtaGetMemory (strlen (ptr) 
+			       + strlen (DocumentMeta[doc]->form_data)
+			       + 2);
+
+	  sprintf (ptr2, "%s#%s", ptr, DocumentMeta[doc]->form_data);
+	  if (ptr != DocumentURLs[doc])
+	    TtaFreeMemory (ptr);
+	  ptr = ptr2;
+	}
       strcpy (aBookmark->bookmarks, ptr);
+
       if (ptr != DocumentURLs[doc])
 	TtaFreeMemory (ptr);
+      
       strcpy (aBookmark->title, ANNOT_GetHTMLTitle (doc));
       strcpy (aBookmark->author, GetAnnotUser ());
       aBookmark->created = StrdupDate ();
@@ -180,6 +199,30 @@ static void RefreshBookmarkMenu ()
   TtaSetTextForm (BookmarkBase + mBMDescription, aBookmark->description);
 }
 
+/*-----------------------------------------------------------------------
+  Update the parent topic
+  -----------------------------------------------------------------------*/
+static void BookmarkMenuSelect_cbf (ThotWidget w, ThotBool state, void *cdata)
+{
+  char *url;
+  Element el = (Element) cdata;
+
+  url = BM_topicGetModelHref (el);
+  
+  if (url)
+    {
+      if (state)
+	printf ("Selected URL %s\n", url);
+      else
+	printf ("Deselected URL %s\n", url);
+      strcpy (aBookmark->parent_url, url);
+      /* @@ JK: just for debugging */
+      TtaSetTextForm (BookmarkBase + mBMTopic, aBookmark->parent_url);
+      TtaFreeMemory (url);
+    }
+}
+
+
 /*----------------------------------------------------------------------
   BookmarkMenuCallbackDialog
   callback of the Bookmark menu
@@ -191,7 +234,7 @@ static void BookmarkMenuCallbackDialog (int ref, int typedata, char *data)
 
   if (ref == -1)
     {
-      /* removes the cache conf menu */
+      /* removes the bookmark menu */
       TtaDestroyDialogue (BookmarkBase + BookmarkMenu);
     }
   else
@@ -205,6 +248,8 @@ static void BookmarkMenuCallbackDialog (int ref, int typedata, char *data)
 	    {
 	    case 0: /* done */
 	      Bookmark_free (aBookmark);
+	      TtaCloseDocument (BTopicTree);
+	      BTopicTree = 0;
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1: /* create bookmark */
@@ -217,11 +262,15 @@ static void BookmarkMenuCallbackDialog (int ref, int typedata, char *data)
 		{
 		  /* if successful, close the dialog */
 		  Bookmark_free (aBookmark);
+		  TtaCloseDocument (BTopicTree);
+		  BTopicTree = 0;
 		  TtaDestroyDialogue (ref);
 		}
 	      break;
 	    case 2: /* browse */
 	      Bookmark_free (aBookmark);
+	      TtaCloseDocument (BTopicTree);
+	      BTopicTree = 0;
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 3:
@@ -281,10 +330,15 @@ void BM_BookmarkMenu (Document doc, View view, BookmarkP bookmark)
 {
 #ifndef _WINDOWS
    int i;
+   ThotWidget tree;
 
    if (BookmarkBase == 0)
      BookmarkBase = TtaSetCallback (BookmarkMenuCallbackDialog, MAX_BOOKMARKMENU_DLG);
-  
+   /* dump the topics as a thot three */
+   if (BTopicTree != 0)
+     TtaCloseDocument (BTopicTree);
+   BTopicTree = BM_GetTopicTree ();
+
    /* Create the dialogue form */
    i = 0;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
@@ -292,24 +346,16 @@ void BM_BookmarkMenu (Document doc, View view, BookmarkP bookmark)
    TtaNewSheet (BookmarkBase + BookmarkMenu, 
 		TtaGetViewFrame (doc, view),
 		"Bookmark Properties",
-		2, s, FALSE, 8, 'L', D_DONE);
+		2, s, FALSE, 9, 'L', D_DONE);
 
-#if 0
-   TtaNewScrollPopup (BookmarkBase +mBMTopic,
-		      BookmarkBase + BookmarkMenu,
-		      "Topic",
-		      1,
-		      "To do",
-		      FALSE,
-		      'L')
 
-   TtaNewTextForm (BookmarkBase + mBMParentTopic,
-		   BookmarkBase + BookmarkMenu,
-		   "Parent Topic:",
-		   30,
-		   1,
-		   TRUE);
-#endif
+   tree = TtaNewTreeForm (BookmarkBase + mBMTopicTree,
+			  BookmarkBase + BookmarkMenu,
+			  "Topic hierarchy:",
+			  FALSE);
+   
+   if (tree)
+     BM_InitTreeWidget (tree, BTopicTree, (void *) BookmarkMenuSelect_cbf);
 
    TtaNewTextForm (BookmarkBase + mBMTopic,
 		   BookmarkBase + BookmarkMenu,
@@ -409,6 +455,29 @@ static void RefreshTopicMenu ()
   TtaSetTextForm (TopicBase + mTMDescription, aBookmark->description);
 }
 
+/*-----------------------------------------------------------------------
+  Update the parent topic
+  -----------------------------------------------------------------------*/
+static void TopicMenuSelect_cbf (ThotWidget w, ThotBool state, void *cdata)
+{
+  char *url;
+  Element el = (Element) cdata;
+
+  url = BM_topicGetModelHref (el);
+  
+  if (url)
+    {
+      if (state)
+	printf ("Selected URL %s\n", url);
+      else
+	printf ("Deselected URL %s\n", url);
+      strcpy (aBookmark->parent_url, url);
+      /* @@ JK: just for debugging */
+      TtaSetTextForm (TopicBase + mTMParentTopic, aBookmark->parent_url);
+      TtaFreeMemory (url);
+    }
+}
+
 /*----------------------------------------------------------------------
   TopicMenuCallbackDialog
   callback of the Topic menu
@@ -420,7 +489,7 @@ static void TopicMenuCallbackDialog (int ref, int typedata, char *data)
 
   if (ref == -1)
     {
-      /* removes the cache conf menu */
+      /* removes the topic menu */
       TtaDestroyDialogue (TopicBase + TopicMenu);
     }
   else
@@ -434,6 +503,8 @@ static void TopicMenuCallbackDialog (int ref, int typedata, char *data)
 	    {
 	    case 0: /* done */
 	      Bookmark_free (aBookmark);
+	      TtaCloseDocument (TTopicTree);
+	      TTopicTree = 0;
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1: /* create topic */
@@ -446,6 +517,8 @@ static void TopicMenuCallbackDialog (int ref, int typedata, char *data)
 		{
 		  /* if successful, close the dialog */
 		  Bookmark_free (aBookmark);
+		  TtaCloseDocument (TTopicTree);
+		  TTopicTree = 0;
 		  TtaDestroyDialogue (ref);
 		}
 	      break;
@@ -504,10 +577,16 @@ void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
 {
 #ifndef _WINDOWS
    int i;
+   ThotWidget tree;
 
    if (TopicBase == 0)
      TopicBase = TtaSetCallback (TopicMenuCallbackDialog, MAX_TOPICMENU_DLG);
   
+   /* dump the topics as a thot three */
+   if (TTopicTree != 0)
+     TtaCloseDocument (TTopicTree);
+   TTopicTree = BM_GetTopicTree ();
+
    /* Create the dialogue form */
    i = 0;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
@@ -515,18 +594,15 @@ void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
    TtaNewSheet (TopicBase + TopicMenu, 
 		TtaGetViewFrame (doc, view),
 		"Topic Properties",
-		1, s, FALSE, 8, 'L', D_DONE);
+		1, s, FALSE, 9, 'L', D_DONE);
 
-#if 0
-   TtaNewScrollPopup (TopicBase +mTMParentTopic,
-		      TopicBase + TopicMenu,
-		      "Parent Topic",
-		      1,
-		      "To do",
-		      FALSE,
-		      'L')
+   tree = TtaNewTreeForm (TopicBase + mTMTopicTree,
+		   TopicBase + TopicMenu,
+		   "Topic hierarchy:",
+		   FALSE);
 
-#endif
+   if (tree)
+     BM_InitTreeWidget (tree, TTopicTree, (void *) TopicMenuSelect_cbf);
 
    TtaNewTextForm (TopicBase + mTMParentTopic,
 		   TopicBase + TopicMenu,
