@@ -48,7 +48,7 @@
 
 #include "parser.h"
 
-typedef UCHAR entityName[10];
+typedef UCHAR_T entityName[10];
 typedef struct _CharEntityEntry
   {			 /* a SGML entity representing an ISO-Latin1 char */
      entityName          charName;	/* entity name */
@@ -509,12 +509,12 @@ typedef struct _ClosedElement
 ClosedElement;
 
 #define MaxGIlength 14
-typedef UCHAR GI[MaxGIlength];
+typedef UCHAR_T GI[MaxGIlength];
 
 typedef struct _GIMapping
   {                                     /* mapping of a HTML element */
      GI                  htmlGI;        /* name of the HTML element */
-     CHAR                htmlContents;  /* info about the contents of the HTML element:
+     CHAR_T                htmlContents;  /* info about the contents of the HTML element:
                                            'E'=empty,  space=some contents */
      int                 ThotType;      /* type of the Thot element or attribute */
      PtrClosedElement    firstClosedElem;/* first element closed by the start
@@ -707,7 +707,7 @@ static int          BlockLevelElement[] =
 /* start tags that imply the end of a current element */
 /* any tag of each line implies the end of the current element if the type of
    that element is in the same line */
-typedef CHAR        oneLine[100];
+typedef CHAR_T        oneLine[100];
 static oneLine      EquivEndingElem[] =
 {
    "DT DD LI OPTION",
@@ -1159,7 +1159,7 @@ static int          StackLevel = 0;	     /* first free element on the
 /* information about the input file */
 
 #define INPUT_FILE_BUFFER_SIZE 2000
-static CHAR	    FileBuffer[INPUT_FILE_BUFFER_SIZE+1];
+static CHAR_T	    FileBuffer[INPUT_FILE_BUFFER_SIZE+1];
 static int	    CurCharInFileBuffer = 0;
 static int	    LastCharInFileBuffer = 0;
 static STRING       InputText = NULL;
@@ -1177,13 +1177,13 @@ static boolean      AfterTagPRE = FALSE;  /* <PRE> has just been read */
 static boolean      ParsingCSS = FALSE;	  /* reading the content of a STYLE
 					     element */
 static int          WithinTable = 0;      /* <TABLE> has been read */
-static CHAR	    prevChar = EOS;	  /* last character read */
+static CHAR_T	    prevChar = EOS;	  /* last character read */
 static STRING       docURL = NULL;	  /* path or URL of the document */
 
 /* input buffer */
 #define MaxBufferLength 1000
 #define AllmostFullBuffer 700
-static UCHAR inputBuffer[MaxBufferLength];
+static UCHAR_T inputBuffer[MaxBufferLength];
 static int          LgBuffer = 0;	  /* actual length of text in input
 					     buffer */
 
@@ -1224,7 +1224,7 @@ static boolean      NormalTransition;
 
 /* information about an entity being read */
 #define MaxEntityLength 50
-static CHAR         EntityName[MaxEntityLength];/* name of entity being read */
+static CHAR_T         EntityName[MaxEntityLength];/* name of entity being read */
 static int          LgEntityName = 0;	  /* length of entity name read so
 					     far */
 static int          EntityTableEntry = 0; /* entry of the entity table that
@@ -1241,7 +1241,7 @@ static void         ProcessStartGI ();
 #endif
 
 static FILE*   ErrFile = (FILE*) 0;
-static CHAR    ErrFileName [80];
+static CHAR_T    ErrFileName [80];
 
 extern boolean HTMLErrorsFound;
  
@@ -1453,7 +1453,7 @@ Document            doc;
   int                 entry;
   ElementType	      elType;
   STRING              mappedName; 
-  CHAR                content;
+  CHAR_T                content;
   boolean	      isHTML;
 
   entry = -1;
@@ -1512,7 +1512,7 @@ Document	    doc;
 {
   int                 i;
   STRING	      mappedName; 
-  CHAR                content;
+  CHAR_T                content;
 
   elType->ElSSchema = NULL;
   elType->ElTypeNum = 0;
@@ -2279,10 +2279,10 @@ static void         TextToDocument ()
    Put the preceding text into the Thot document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         StartOfTag (CHAR c)
+static void         StartOfTag (CHAR_T c)
 #else
 static void         StartOfTag (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -2295,10 +2295,10 @@ CHAR                c;
    PutInBuffer     put character c in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutInBuffer (UCHAR c)
+static void         PutInBuffer (UCHAR_T c)
 #else
 static void         PutInBuffer (c)
-UCHAR               c;
+UCHAR_T               c;
 #endif
 {
   int                 len;
@@ -2813,7 +2813,7 @@ Element             el;
    Attribute           attr;
    AttributeType       attrType;
    STRING              text;
-   CHAR                lastChar[2];
+   CHAR_T                lastChar[2];
    Language            lang;
 #ifdef STANDALONE
    STRING              name1, name2;
@@ -3224,7 +3224,7 @@ Element el;
    int                 length, nbspaces;
    ElementType         elType;
    Element             lastLeaf;
-   CHAR                lastChar[2];
+   CHAR_T                lastChar[2];
    boolean             endingSpacesDeleted;
 
    endingSpacesDeleted = FALSE;
@@ -3473,7 +3473,7 @@ STRING              val;
 #endif
 {
    int                 value;
-   UCHAR       msgBuffer[MaxMsgLength];
+   UCHAR_T       msgBuffer[MaxMsgLength];
    ElementType         elType;
    Element             newChild;
    AttributeType       attrType;
@@ -3656,10 +3656,10 @@ Document            doc;
    of a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfStartTag (CHAR c)
+static void         EndOfStartTag (CHAR_T c)
 #else
 static void         EndOfStartTag (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -3965,7 +3965,7 @@ STRING              GIname;
   ElementType         elType;
   Element             el;
   int                 entry;
-  UCHAR       msgBuffer[MaxMsgLength];
+  UCHAR_T       msgBuffer[MaxMsgLength];
   PtrClosedElement    pClose;
   boolean             sameLevel;
   SSchema	      schema;
@@ -4064,13 +4064,13 @@ STRING              GIname;
    EndOfStartGI    An HTML GI has been read in a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfStartGI (CHAR c)
+static void         EndOfStartGI (CHAR_T c)
 #else
 static void         EndOfStartGI (c)
-CHAR                c;
+CHAR_T                c;
 #endif
 {
-   CHAR                theGI[MaxMsgLength];
+   CHAR_T                theGI[MaxMsgLength];
 
    /* if the last character in the GI is a '/', ignore it.  This is to
       accept the XML syntax for empty elements, for instance <br/> */
@@ -4094,10 +4094,10 @@ CHAR                c;
    end of a GI and the end of a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfStartGIandTag (CHAR c)
+static void         EndOfStartGIandTag (CHAR_T c)
 #else
 static void         EndOfStartGIandTag (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -4110,15 +4110,15 @@ CHAR                c;
    Terminate all corresponding Thot elements.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfEndTag (CHAR c)
+static void         EndOfEndTag (CHAR_T c)
 #else
 static void         EndOfEndTag (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
    SSchema	       schema;
-   UCHAR       msgBuffer[MaxMsgLength];
+   UCHAR_T       msgBuffer[MaxMsgLength];
    int                 entry;
    int                 i;
    boolean             ok;
@@ -4255,10 +4255,10 @@ STRING              ChrString;
    corresponding Thot attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfAttrName (CHAR c)
+static void         EndOfAttrName (CHAR_T c)
 #else
 static void         EndOfAttrName (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -4268,8 +4268,8 @@ CHAR                c;
    Element             child;
    Attribute           attr;
    SSchema	       schema;
-   CHAR                translation;
-   UCHAR       msgBuffer[MaxMsgLength];
+   CHAR_T                translation;
+   UCHAR_T       msgBuffer[MaxMsgLength];
 
    CloseBuffer ();
    /* if a single '/' or '?' has been read instead of an attribute name, ignore
@@ -4384,10 +4384,10 @@ CHAR                c;
    end of an attribute name and the end of a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfAttrNameAndTag (CHAR c)
+static void         EndOfAttrNameAndTag (CHAR_T c)
 #else
 static void         EndOfAttrNameAndTag (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -4400,10 +4400,10 @@ CHAR                c;
    attribute value has been read.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         StartOfAttrValue (CHAR c)
+static void         StartOfAttrValue (CHAR_T c)
 #else
 static void         StartOfAttrValue (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -4434,7 +4434,7 @@ int                 oldWidth;
   AttributeType      attrTypePxl, attrTypePercent;
   Attribute          attrOld, attrNew;
   int                length, val;
-  UCHAR      msgBuffer[MaxMsgLength];
+  UCHAR_T      msgBuffer[MaxMsgLength];
 #ifndef STANDALONE
   ElementType	     elType;
   int                w, h;
@@ -4533,7 +4533,7 @@ Document            doc;
    AttributeType       attrType;
    int                 val, ind, factor, delta;
    Attribute           attr;
-   UCHAR       msgBuffer[MaxMsgLength];
+   UCHAR_T       msgBuffer[MaxMsgLength];
 
    /* is the first character a '+' or a '-' ? */
    ind = 0;
@@ -4585,10 +4585,10 @@ Document            doc;
    Put that value in the current Thot attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfAttrValue (CHAR c)
+static void         EndOfAttrValue (CHAR_T c)
 #else
 static void         EndOfAttrValue (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -4597,15 +4597,15 @@ CHAR                c;
    ElementType	       elType;
    Element             child;
    Language	       lang;
-   CHAR                translation;
-   CHAR                shape;
+   CHAR_T                translation;
+   CHAR_T                shape;
    STRING              buffer;
    STRING              attrName;
    int                 val;
    int                 length;
    int                 attrKind;
    boolean             done;
-   UCHAR       msgBuffer[MaxMsgLength];
+   UCHAR_T       msgBuffer[MaxMsgLength];
 
    if (UnknownAttr)
       /* this is the end of value of an invalid attribute. Keep the */
@@ -4834,10 +4834,10 @@ CHAR                c;
    end of an attribute value and the end of a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfAttrValueAndTag (CHAR c)
+static void         EndOfAttrValueAndTag (CHAR_T c)
 #else
 static void         EndOfAttrValueAndTag (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -4849,10 +4849,10 @@ CHAR                c;
    StartOfEntity   A character '&' has been encountered in text.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         StartOfEntity (CHAR c)
+static void         StartOfEntity (CHAR_T c)
 #else
 static void         StartOfEntity (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -4903,14 +4903,14 @@ int                 code;
      lang = TtaGetLanguageIdFromAlphabet('L');
 
    if (lang == currentLanguage)
-      PutInBuffer ((CHAR) c);
+      PutInBuffer ((CHAR_T) c);
    else
       {
       TextToDocument ();
       MergeText = FALSE;
       l = currentLanguage;
       currentLanguage = lang;
-      PutInBuffer ((CHAR) c);
+      PutInBuffer ((CHAR_T) c);
       TextToDocument ();
       MergeText = FALSE;
       currentLanguage = l;
@@ -4943,15 +4943,15 @@ int                 code;
    entity table and put the corresponding character in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfEntity (CHAR c)
+static void         EndOfEntity (CHAR_T c)
 #else
 static void         EndOfEntity (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
    int                 i;
-   UCHAR       msgBuffer[MaxMsgLength];
+   UCHAR_T       msgBuffer[MaxMsgLength];
 
    EntityName[LgEntityName] = EOS;
    if (CharEntityTable[EntityTableEntry].charName[CharRank] == EOS)
@@ -4959,7 +4959,7 @@ CHAR                c;
       if (CharEntityTable[EntityTableEntry].charCode > 255)
 	 PutNonISOlatin1Char (CharEntityTable[EntityTableEntry].charCode);
       else
-	 PutInBuffer ((CHAR) (CharEntityTable[EntityTableEntry].charCode));
+	 PutInBuffer ((CHAR_T) (CharEntityTable[EntityTableEntry].charCode));
    else
       /* entity not in the table. Print an error message */
      {
@@ -4979,15 +4979,15 @@ CHAR                c;
    read.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EntityChar (UCHAR c)
+static void         EntityChar (UCHAR_T c)
 #else
 static void         EntityChar (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
    int                 i;
-   UCHAR       msgBuffer[MaxMsgLength];
+   UCHAR_T       msgBuffer[MaxMsgLength];
    boolean	       OK, done, stop;
 
    done = FALSE;
@@ -5020,7 +5020,7 @@ UCHAR       c;
 	if (CharEntityTable[EntityTableEntry].charCode > 255)
 	   PutNonISOlatin1Char (CharEntityTable[EntityTableEntry].charCode);
 	else
-	   PutInBuffer ((CHAR) (CharEntityTable[EntityTableEntry].charCode));
+	   PutInBuffer ((CHAR_T) (CharEntityTable[EntityTableEntry].charCode));
 	if (c != SPACE)
 	   /* print an error message */
 	   ParseHTMLError (theDocument, "Missing semicolon");
@@ -5089,10 +5089,10 @@ UCHAR       c;
    having that code in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfNumEntity (CHAR c)
+static void         EndOfNumEntity (CHAR_T c)
 #else
 static void         EndOfNumEntity (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -5103,7 +5103,7 @@ CHAR                c;
    if (code > 255)
       PutNonISOlatin1Char (code);
    else
-      PutInBuffer ((CHAR) code);
+      PutInBuffer ((CHAR_T) code);
    LgEntityName = 0;
 }
 
@@ -5113,10 +5113,10 @@ CHAR                c;
    the entity buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         NumEntityChar (CHAR c)
+static void         NumEntityChar (CHAR_T c)
 #else
 static void         NumEntityChar (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -5153,10 +5153,10 @@ static void         EndOfDocument ()
    PutLess put '<' in the input buffer
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutLess (CHAR c)
+static void         PutLess (CHAR_T c)
 #else
 static void         PutLess (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -5167,10 +5167,10 @@ CHAR                c;
    PutAmpersandSpace       put '& ' in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutAmpersandSpace (CHAR c)
+static void         PutAmpersandSpace (CHAR_T c)
 #else
 static void         PutAmpersandSpace (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -5182,10 +5182,10 @@ CHAR                c;
    PutLessAndSpace put '<' and the space read in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutLessAndSpace (CHAR c)
+static void         PutLessAndSpace (CHAR_T c)
 #else
 static void         PutLessAndSpace (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -5198,10 +5198,10 @@ CHAR                c;
    StartOfComment  Beginning of a HTML comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         StartOfComment (CHAR c)
+static void         StartOfComment (CHAR_T c)
 #else
 static void         StartOfComment (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -5248,10 +5248,10 @@ CHAR                c;
    PutInComment    put character c in the current HTML comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutInComment (UCHAR c)
+static void         PutInComment (UCHAR_T c)
 #else
 static void         PutInComment (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -5298,10 +5298,10 @@ UCHAR       c;
    EndOfComment    End of a HTML comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfComment (CHAR c)
+static void         EndOfComment (CHAR_T c)
 #else
 static void         EndOfComment (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -5319,10 +5319,10 @@ CHAR                c;
    PutDash put a dash character in the current comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutDash (CHAR c)
+static void         PutDash (CHAR_T c)
 #else
 static void         PutDash (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -5334,10 +5334,10 @@ CHAR                c;
    PutDashDash     put 2 dash characters in the current comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutDashDash (CHAR c)
+static void         PutDashDash (CHAR_T c)
 #else
 static void         PutDashDash (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -5350,10 +5350,10 @@ CHAR                c;
    PutQuestionMark put a question mark in the current PI.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutQuestionMark (CHAR c)
+static void         PutQuestionMark (CHAR_T c)
 #else
 static void         PutQuestionMark (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -5365,10 +5365,10 @@ CHAR                c;
    EndOfDoctypeDecl	A Doctype declaration has been read
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfDoctypeDecl (CHAR c)
+static void         EndOfDoctypeDecl (CHAR_T c)
 #else
 static void         EndOfDoctypeDecl (c)
-CHAR                c;
+CHAR_T                c;
  
 #endif
 {
@@ -5393,10 +5393,10 @@ CHAR                c;
    EndOfPI	A Processing Instruction has been read
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfPI (CHAR c)
+static void         EndOfPI (CHAR_T c)
 #else
 static void         EndOfPI (c)
-CHAR                c;
+CHAR_T                c;
  
 #endif
 {
@@ -5411,10 +5411,10 @@ CHAR                c;
    Do_nothing      Do nothing.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         Do_nothing (CHAR c)
+static void         Do_nothing (CHAR_T c)
 #else
 static void         Do_nothing (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -5427,7 +5427,7 @@ typedef struct _Transition *PtrTransition;
 typedef struct _Transition
   {				/* a transition of the automaton in
 				   "executable" form */
-     UCHAR       trigger;	/* the imput character that triggers
+     UCHAR_T       trigger;	/* the imput character that triggers
 					   the transition */
      Proc                action;	/* the procedure to be called when
 					   the transition occurs */
@@ -5453,7 +5453,7 @@ typedef struct _sourceTransition
   {				/* a transition of the automaton in
 				   "source" form */
      State               initState;	/* initial state of transition */
-     CHAR                trigger;	/* the imput character that triggers
+     CHAR_T                trigger;	/* the imput character that triggers
 					   the transition */
      Proc                transitionAction;	/* the procedure to be called when
 						   the transition occurs */
@@ -5679,13 +5679,13 @@ void                FreeHTMLParser ()
    whatever it is.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static CHAR     GetNextChar (boolean *endOfFile)
+static CHAR_T     GetNextChar (boolean *endOfFile)
 #else
-static CHAR     GetNextChar (endOfFile)
+static CHAR_T     GetNextChar (endOfFile)
 boolean *endOfFile;
 #endif
 {
-   CHAR		charRead;
+   CHAR_T		charRead;
    int		res;
 
    charRead = EOS;
@@ -5733,13 +5733,13 @@ boolean *endOfFile;
    input file or buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR          GetNextInputChar (boolean *endOfFile)
+CHAR_T          GetNextInputChar (boolean *endOfFile)
 #else
-CHAR          GetNextInputChar (endOfFile)
+CHAR_T          GetNextInputChar (endOfFile)
 boolean *endOfFile;
 #endif
 {
-  CHAR		charRead;
+  CHAR_T		charRead;
 
   charRead = EOS;
   *endOfFile = FALSE;
@@ -5766,7 +5766,7 @@ boolean *endOfFile;
 	    /* next character is not LF. Store next character and return LF */
 	    {
 	      prevChar = charRead;
-	      charRead = (CHAR) 10;
+	      charRead = (CHAR_T) 10;
 	    }
 	}
       /* update the counters of characters and lines read */
@@ -5795,7 +5795,7 @@ STRING              HTMLbuf;
 
 #endif
 {
-   UCHAR       charRead;
+   UCHAR_T       charRead;
    boolean             match;
    PtrTransition       trans;
    boolean             endOfFile;
@@ -6056,7 +6056,7 @@ STRING	           pathURL;
 {
   Element             parent, el, prev;
   ElementType         elType;
-  UCHAR               charRead;
+  UCHAR_T               charRead;
   boolean             endOfFile;
 
   InputText = textbuf;
@@ -7154,7 +7154,7 @@ boolean             isclosed;
 Document            doc;
 #endif  /* __STDC__ */
 {
-   CHAR                tag[20];
+   CHAR_T                tag[20];
    Element             elem;
    int                 i;
    SSchema	       schema;
@@ -7313,10 +7313,10 @@ char              **argv;
   Document            doc;
   FILE               *infile;
   STRING              pathURL = NULL;
-  CHAR                htmlFileName[200];
-  CHAR                pivotFileName[200];
-  CHAR                documentDirectory[200];
-  CHAR                documentName[200];
+  CHAR_T                htmlFileName[200];
+  CHAR_T                pivotFileName[200];
+  CHAR_T                documentDirectory[200];
+  CHAR_T                documentName[200];
   int                 returnCode;
   boolean	       plainText;
 
@@ -7398,8 +7398,8 @@ boolean	            plainText;
   AttributeType       attrType;
   Attribute           attr;
   STRING              s;
-  CHAR                tempname[MAX_LENGTH];
-  CHAR                temppath[MAX_LENGTH];
+  CHAR_T                tempname[MAX_LENGTH];
+  CHAR_T                temppath[MAX_LENGTH];
   int		       length;
   boolean             isHTML;
 

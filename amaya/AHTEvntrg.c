@@ -103,7 +103,7 @@ boolean AHTEventInit (void)
     **  the async select() call in the async version of the event loop in
     **	the Internal event manager (HTEvntrg.c)
     */
-    static CHAR className[] = "AsyncWindowClass";
+    static CHAR_T className[] = "AsyncWindowClass";
     WNDCLASS wc;
     OSVERSIONINFO osInfo;
     
@@ -129,7 +129,7 @@ boolean AHTEventInit (void)
     }
     if (!(HTSocketWin = CreateWindow(className, "WWW_WIN_ASYNC", WS_POPUP, CW_USEDEFAULT, CW_USEDEFAULT, 
                                      CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, wc.hInstance,0))) {
-       STRING space = (STRING) TtaGetMemory (50 * sizeof (CHAR));
+       STRING space = (STRING) TtaGetMemory (50 * sizeof (CHAR_T));
        HTTrace("HTLibInit.. Can't CreateWindow \"WWW_WIN_ASYNC\" - error:");
        sprintf(space, "%ld\n", GetLastError());
        HTTrace(space);

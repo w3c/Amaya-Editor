@@ -78,7 +78,7 @@
 */
 int  Window_Curs;
 
-CHAR docToOpen [256];
+CHAR_T docToOpen [256];
 extern boolean viewClosed;
 /* extern bmpID;  */
 #endif _WINDOWS
@@ -196,7 +196,7 @@ static ThotIcon       iconJava;
 static boolean itemChecked = FALSE;
 extern int     currentFrame;
 extern int     menu_item;
-extern CHAR    LostPicturePath [512];
+extern CHAR_T    LostPicturePath [512];
 
 boolean        tbStringsInitialized = FALSE;
 int            tipIndex;
@@ -292,7 +292,7 @@ STRING              form_data;
 
 #endif
 {
-  CHAR                otherURL[MAX_LENGTH];
+  CHAR_T                otherURL[MAX_LENGTH];
   int                 i;
   boolean             found;
 
@@ -1216,7 +1216,7 @@ View                view;
    /* For Windoz have a look to OPENFILENAME structure and
       GetOpenFileName function */
    int               i;
-   CHAR              s[MAX_LENGTH];
+   CHAR_T              s[MAX_LENGTH];
 
    CurrentDocument = document;
    /* Dialogue form for open URL or local */
@@ -3321,7 +3321,7 @@ static void	SetFileSuffix ()
 
 #endif
 {
-  CHAR		      suffix[6];
+  CHAR_T		      suffix[6];
   STRING              filename;
   int		      i, len;
 
@@ -3387,7 +3387,7 @@ STRING              data;
 {
   STRING              tempfile;
   STRING              tempname;
-  CHAR                sep;
+  CHAR_T                sep;
   int                 val, i;
   boolean             change;
 
@@ -3841,7 +3841,7 @@ STRING           docname;
 DocumentType     docType;
 #endif
 {
-  CHAR                tempfile[MAX_LENGTH];
+  CHAR_T                tempfile[MAX_LENGTH];
   int                 newdoc, len;
   boolean             stopped_flag;
 
@@ -3904,8 +3904,8 @@ static boolean        RestoreAmayaDocs ()
 {
   FILE               *f;
   DocumentType        docType;
-  CHAR                tempname[MAX_LENGTH], tempdoc[MAX_LENGTH];
-  CHAR                docname[MAX_LENGTH];  
+  CHAR_T                tempname[MAX_LENGTH], tempdoc[MAX_LENGTH];
+  CHAR_T                docname[MAX_LENGTH];  
   boolean             aDoc;
 
   /* check if Amaya has crashed */
@@ -4339,7 +4339,7 @@ View                view;
 
 #endif
 {
-   CHAR                localname[MAX_LENGTH];
+   CHAR_T                localname[MAX_LENGTH];
 #ifdef AMAYA_DEBUG
    Element             el;
    View                structView, tocView;
@@ -4420,7 +4420,7 @@ View                view;
 
 #endif
 {
-  CHAR    localname[MAX_LENGTH];
+  CHAR_T    localname[MAX_LENGTH];
   
   ustrcpy (localname, AMAYA_PAGE_DOC);
   ustrcat (localname, "BinDist.html");
@@ -4440,7 +4440,7 @@ int         index;
 #endif /* __STDC__*/
 {
   Document    document;
-  CHAR    localname[MAX_LENGTH];
+  CHAR_T    localname[MAX_LENGTH];
   STRING  s;
   
   localname[0] = EOS;
@@ -4717,7 +4717,7 @@ Document doc;
 View     view;
 #endif /* __STDC__ */
 {
-  CHAR    localname[MAX_LENGTH];
+  CHAR_T    localname[MAX_LENGTH];
 
   sprintf (localname, "%s%c%d%cHTML.ERR", TempFileDirectory, DIR_SEP, doc, DIR_SEP);
   doc = GetHTMLDocument (localname, NULL, 0, 0, CE_LOG, FALSE, NULL, NULL);

@@ -22,8 +22,8 @@
 
 #ifdef _WINDOWS
 #include "resource.h"
-static CHAR         currentDocToSave[MAX_LENGTH];
-static CHAR         currentPathName[MAX_LENGTH];
+static CHAR_T         currentDocToSave[MAX_LENGTH];
+static CHAR_T         currentPathName[MAX_LENGTH];
 extern HINSTANCE    hInstance;
 
 #ifdef __STDC__
@@ -35,8 +35,8 @@ LRESULT CALLBACK GetSaveDlgProc (HWND, UINT, WPARAM, LPARAM);
 
 
 static STRING       DefaultName;
-static CHAR         StdDefaultName[] = "Overview.html";
-static CHAR         tempSavedObject[MAX_LENGTH];
+static CHAR_T         StdDefaultName[] = "Overview.html";
+static CHAR_T         tempSavedObject[MAX_LENGTH];
 static int          URL_attr_tab[] = {
    HTML_ATTR_HREF_,
    HTML_ATTR_codebase,
@@ -97,7 +97,7 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-  static CHAR txt [500];
+  static CHAR_T txt [500];
   
   switch (msg)
     {
@@ -151,7 +151,7 @@ NotifyElement      *event;
 {
   AttributeType      attrType;
   Attribute          attr;
-  CHAR               buff[MAX_LENGTH];
+  CHAR_T               buff[MAX_LENGTH];
   STRING             ptr;
   int                length;
 
@@ -264,9 +264,9 @@ STRING              newpath;
   Attribute           attr;
   AttributeType       attrType;
   Language            lang;
-  CHAR                old_url[MAX_LENGTH];
-  CHAR                oldpath[MAX_LENGTH];
-  CHAR                tempname[MAX_LENGTH];
+  CHAR_T                old_url[MAX_LENGTH];
+  CHAR_T                oldpath[MAX_LENGTH];
+  CHAR_T                tempname[MAX_LENGTH];
   STRING              new_url;
   int                 index, max;
   int                 len;
@@ -370,8 +370,8 @@ STRING              pathname;
 #endif
 {
 #  ifndef _WINDOWS
-   CHAR             buffer[3000];
-   CHAR             s[MAX_LENGTH];
+   CHAR_T             buffer[3000];
+   CHAR_T             s[MAX_LENGTH];
    int              i;
 
    /* Dialogue form for saving a document */
@@ -461,7 +461,7 @@ STRING              pathname;
 #endif
 {
 #  ifndef _WINDOWS
-   CHAR                tempdir[MAX_LENGTH];
+   CHAR_T                tempdir[MAX_LENGTH];
 #  endif /* _WINDOWS */
 
    if (SavingDocument != 0 || SavingObject != 0)
@@ -508,8 +508,8 @@ void                DoSaveObjectAs (void)
 void                DoSaveObjectAs ()
 #endif
 {
-   CHAR                tempfile[MAX_LENGTH];
-   CHAR                msg[MAX_LENGTH];
+   CHAR_T                tempfile[MAX_LENGTH];
+   CHAR_T                msg[MAX_LENGTH];
    boolean             dst_is_local;
    int                 res;
 
@@ -578,7 +578,7 @@ View                view;
 
 #endif
 {
-   CHAR             tempname[MAX_LENGTH];
+   CHAR_T             tempname[MAX_LENGTH];
    int              i;
 
    if ((SavingDocument != 0 && SavingDocument != doc) ||
@@ -678,7 +678,7 @@ Document            doc;
    ElementType		elType;
    AttributeType	attrType;
    Attribute		attr;
-   CHAR			buffer[200];
+   CHAR_T			buffer[200];
    boolean		useMathML, useGraphML, useFrames;
 
    useMathML = FALSE;
@@ -755,8 +755,8 @@ STRING            documentName;
 #endif
 {
   DisplayMode         dispMode;
-  CHAR                tempname[MAX_LENGTH];
-  CHAR                docname[100];
+  CHAR_T                tempname[MAX_LENGTH];
+  CHAR_T                docname[100];
   boolean             ok;
 
 #ifdef AMAYA_DEBUG
@@ -815,8 +815,8 @@ STRING             url;
 boolean           *ok;
 #endif
 {
-   CHAR            msg[MAX_LENGTH];
-   CHAR            documentname[MAX_LENGTH];
+   CHAR_T            msg[MAX_LENGTH];
+   CHAR_T            documentname[MAX_LENGTH];
    int             len;
 
   len = ustrlen (url);
@@ -871,9 +871,9 @@ PicType             filetype;
 boolean             use_preconditions;
 #endif
 {
-  CHAR              msg[MAX_LENGTH];
-  CHAR              tempfile[MAX_LENGTH]; /* File name used to refetch */
-  CHAR              tempURL[MAX_LENGTH];  /* May be redirected */
+  CHAR_T              msg[MAX_LENGTH];
+  CHAR_T              tempfile[MAX_LENGTH]; /* File name used to refetch */
+  CHAR_T              tempURL[MAX_LENGTH];  /* May be redirected */
   STRING            verify_publish;
   int               res;
   int               mode = 0;
@@ -1270,7 +1270,7 @@ View                view;
 
 #endif
 {
-  CHAR                tempname[MAX_LENGTH];
+  CHAR_T                tempname[MAX_LENGTH];
   int                 i, res;
   boolean             ok;
 
@@ -1368,8 +1368,8 @@ void                   BackUpDocs ()
 {
   Document             doc;
   FILE                *f;
-  CHAR                 pathname[MAX_LENGTH];
-  CHAR                 docname[MAX_LENGTH];
+  CHAR_T                 pathname[MAX_LENGTH];
+  CHAR_T                 docname[MAX_LENGTH];
   STRING               ptr;
   int                  l;
 
@@ -1459,13 +1459,13 @@ STRING                 newURL;
    Element             el, root, content;
    LoadedImageDesc    *pImage;
    Language            lang;
-   CHAR                tempfile[MAX_LENGTH];
-   CHAR                localpath[MAX_LENGTH];
-   CHAR                oldpath[MAX_LENGTH];
-   CHAR                oldname[MAX_LENGTH];
-   CHAR                tempname[MAX_LENGTH];
-   CHAR                imgname[MAX_LENGTH];
-   CHAR                url[MAX_LENGTH];
+   CHAR_T                tempfile[MAX_LENGTH];
+   CHAR_T                localpath[MAX_LENGTH];
+   CHAR_T                oldpath[MAX_LENGTH];
+   CHAR_T                oldname[MAX_LENGTH];
+   CHAR_T                tempname[MAX_LENGTH];
+   CHAR_T                imgname[MAX_LENGTH];
+   CHAR_T                url[MAX_LENGTH];
    STRING              buf, ptr;
    STRING              sStyle, stringStyle;
    STRING              oldStyle;
@@ -1823,8 +1823,8 @@ void                DoSaveAs ()
   STRING              documentFile;
   STRING              tempname, localPath;
   STRING              imagePath, base;
-  CHAR                imgbase[MAX_LENGTH];
-  CHAR                url_sep;
+  CHAR_T                imgbase[MAX_LENGTH];
+  CHAR_T                url_sep;
   int                 res;
   int                 len;
   boolean             src_is_local;

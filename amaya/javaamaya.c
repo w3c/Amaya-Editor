@@ -52,14 +52,14 @@ Document doc;
    AmayaGetMessage returns an amaya message
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char *AmayaGetMessage (int msg)
+STRING AmayaGetMessage (int msg)
 #else
-char *AmayaGetMessage (msg)
+STRING AmayaGetMessage (msg)
 int msg;
 
 #endif
 {
-    char *str = TtaGetMessage (AMAYA, msg);
+    char STRING = TtaGetMessage (AMAYA, msg);
     if (str == NULL) 
       {
         fprintf (stderr,"AmayaGetMessage(%d) failed\n", msg);

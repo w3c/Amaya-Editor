@@ -92,10 +92,10 @@ static struct unit_def CSSUnitNames[] =
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static unsigned int hexa_val (CHAR c)
+static unsigned int hexa_val (CHAR_T c)
 #else
 static unsigned int hexa_val (c)
-CHAR                c;
+CHAR_T                c;
 #endif
 {
    if (c >= '0' && c <= '9')
@@ -126,11 +126,11 @@ STRING              ptr;
    SkipQuotedString:                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       SkipQuotedString (STRING ptr, CHAR quote)
+static STRING       SkipQuotedString (STRING ptr, CHAR_T quote)
 #else
 static STRING       SkipQuotedString (ptr, quote)
 STRING              ptr;
-CHAR		   quote;
+CHAR_T		   quote;
 #endif
 {
   boolean	stop;
@@ -659,7 +659,7 @@ void                *param;
 {
   LoadedImageDesc    *imgInfo;
   STRING              css_rules = param;
-  CHAR                string[150];
+  CHAR_T                string[150];
   STRING              ptr;
 
   string[0] = EOS;
@@ -1511,7 +1511,7 @@ boolean             isHTML;
 #endif
 {
   PresentationValue   font;
-  CHAR		      quoteChar;
+  CHAR_T		      quoteChar;
 
   font.typed_data.value = 0;
   font.typed_data.unit = STYLE_UNIT_REL;
@@ -2012,7 +2012,7 @@ STRING              cssRule;
 PresentationValue  *val;
 #endif
 {
-  CHAR                colname[100];
+  CHAR_T                colname[100];
   unsigned short      redval = (unsigned short) -1;
   unsigned short      greenval = 0;	/* composant of each RGB       */
   unsigned short      blueval = 0;	/* default to red if unknown ! */
@@ -2673,9 +2673,9 @@ STRING              styleString;
 #endif
 {
   STRING              b, e, ptr, oldptr, sString;
-  CHAR                old_url[MAX_LENGTH];
-  CHAR                tempname[MAX_LENGTH];
-  CHAR                imgname[MAX_LENGTH];
+  CHAR_T                old_url[MAX_LENGTH];
+  CHAR_T                tempname[MAX_LENGTH];
+  CHAR_T                imgname[MAX_LENGTH];
   STRING              new_url;
   int                 len;
 
@@ -2842,10 +2842,10 @@ boolean             isHTML;
   PresentationValue     image, value;
   STRING                url;
   STRING                bg_image;
-  CHAR                  saved;
+  CHAR_T                  saved;
   STRING                base;
-  CHAR                  tempname[MAX_LENGTH];
-  CHAR                  imgname[MAX_LENGTH];
+  CHAR_T                  tempname[MAX_LENGTH];
+  CHAR_T                  imgname[MAX_LENGTH];
   unsigned int          savedtype = 0;
   boolean               moved;
 
@@ -3409,11 +3409,11 @@ CSSInfoPtr      css;
 {
   ElementType         elType;
   PSchema             tsch;
-  CHAR                sel[150];
-  CHAR                class[150];
-  CHAR                pseudoclass[150];
-  CHAR                id[150];
-  CHAR                attrelemname[150];
+  CHAR_T                sel[150];
+  CHAR_T                class[150];
+  CHAR_T                pseudoclass[150];
+  CHAR_T                id[150];
+  CHAR_T                attrelemname[150];
   STRING              deb;
   STRING              elem, structName;
   STRING              cur;
@@ -3645,8 +3645,8 @@ boolean             destroy;
   STRING              decl_end;
   STRING              sel_end;
   STRING              selector;
-  CHAR                saved1;
-  CHAR                saved2;
+  CHAR_T                saved1;
+  CHAR_T                saved2;
 
   /* separate the selectors string */
   cssRule = TtaSkipBlanks (cssRule);
@@ -3827,9 +3827,9 @@ STRING              class;
 Document            doc;
 #endif
 {
-   CHAR             name[200];
+   CHAR_T             name[200];
    STRING           cur = &name[0], first; 
-   CHAR             save;
+   CHAR_T             save;
    SSchema	    schema;
 
    /* make a local copy */
@@ -3872,7 +3872,7 @@ Element             el;
 STRING              color;
 #endif
 {
-   CHAR             css_command[100];
+   CHAR_T             css_command[100];
 
    sprintf (css_command, "background-color: %s", color);
    ParseHTMLSpecificStyle (el, css_command, doc, FALSE);
@@ -3893,7 +3893,7 @@ int                 repeat;
 STRING              image;
 #endif
 {
-   CHAR                css_command[400];
+   CHAR_T                css_command[400];
 
    /******* check buffer overflow ********/
    sprintf (css_command, "background-image: url(%s); background-repeat: ", image);
@@ -3920,7 +3920,7 @@ Element             el;
 STRING              color;
 #endif
 {
-   CHAR             css_command[100];
+   CHAR_T             css_command[100];
 
    sprintf (css_command, "color: %s", color);
    ParseHTMLSpecificStyle (el, css_command, doc, FALSE);
@@ -3937,7 +3937,7 @@ Document            doc;
 Element             el;
 #endif
 {
-   CHAR             css_command[100];
+   CHAR_T             css_command[100];
 
    sprintf (css_command, "background: xx");
    ParseHTMLSpecificStyle (el, css_command, doc, TRUE);
@@ -3954,7 +3954,7 @@ Document            doc;
 Element             el;
 #endif
 {
-   CHAR             css_command[1000];
+   CHAR_T             css_command[1000];
 
    sprintf (css_command, "background-image: url(xx); background-repeat: repeat");
    ParseHTMLSpecificStyle (el, css_command, doc, TRUE);
@@ -3971,7 +3971,7 @@ Document            doc;
 Element             el;
 #endif
 {
-   CHAR             css_command[100];
+   CHAR_T             css_command[100];
 
    sprintf (css_command, "color: xx");
    ParseHTMLSpecificStyle (el, css_command, doc, TRUE);
@@ -3988,7 +3988,7 @@ Document            doc;
 STRING              color;
 #endif
 {
-   CHAR                css_command[100];
+   CHAR_T                css_command[100];
 
    sprintf (css_command, "A:link { color : %s }", color);
    ApplyCSSRules (NULL, css_command, doc, FALSE);
@@ -4005,7 +4005,7 @@ Document            doc;
 STRING              color;
 #endif
 {
-   CHAR                css_command[100];
+   CHAR_T                css_command[100];
 
    sprintf (css_command, "A:active { color : %s }", color);
    ApplyCSSRules (NULL, css_command, doc, FALSE);
@@ -4022,7 +4022,7 @@ Document            doc;
 STRING              color;
 #endif
 {
-   CHAR                css_command[100];
+   CHAR_T                css_command[100];
 
    sprintf (css_command, "A:visited { color : %s }", color);
    ApplyCSSRules (NULL, css_command, doc, FALSE);
@@ -4038,7 +4038,7 @@ void                HTMLResetAlinkColor (doc)
 Document            doc;
 #endif
 {
-   CHAR                css_command[100];
+   CHAR_T                css_command[100];
 
    sprintf (css_command, "A:link { color : red }");
    ApplyCSSRules (NULL, css_command, doc, TRUE);
@@ -4054,7 +4054,7 @@ void                HTMLResetAactiveColor (doc)
 Document            doc;
 #endif
 {
-   CHAR                css_command[100];
+   CHAR_T                css_command[100];
 
    sprintf (css_command, "A:active { color : red }");
    ApplyCSSRules (NULL, css_command, doc, TRUE);
@@ -4070,7 +4070,7 @@ void                HTMLResetAvisitedColor (doc)
 Document            doc;
 #endif
 {
-   CHAR                css_command[100];
+   CHAR_T                css_command[100];
 
    sprintf (css_command, "A:visited { color : red }");
    ApplyCSSRules (NULL, css_command, doc, TRUE);
@@ -4120,9 +4120,9 @@ boolean             destroy;
    structure and content have to be registered in the Undo queue or not
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR                ReadCSSRules (Document doc, Document docRef, CSSInfoPtr css, STRING buffer, boolean withUndo)
+CHAR_T                ReadCSSRules (Document doc, Document docRef, CSSInfoPtr css, STRING buffer, boolean withUndo)
 #else
-CHAR                ReadCSSRules (doc, docRef, css, buffer, withUndo)
+CHAR_T                ReadCSSRules (doc, docRef, css, buffer, withUndo)
 Document            doc;
 Document            docRef;
 CSSInfoPtr          css;
@@ -4134,7 +4134,7 @@ boolean             withUndo;
   AttributeType       attrType;
   ElementType         elType;
   Element             parent, el, title, createdEl;
-  CHAR                c;
+  CHAR_T                c;
   STRING              cssRule, base;
   STRING              schemaName;
   DisplayMode         dispMode;

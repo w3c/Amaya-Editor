@@ -31,7 +31,7 @@
 #endif
 
 
-extern CHAR   SchemaPath[MAX_PATH];
+extern CHAR_T   SchemaPath[MAX_PATH];
 
 
 /* pattern and rules internal representation */
@@ -56,7 +56,7 @@ static boolean      ppIsNamed;
 static boolean      ppOptional;
 static boolean      ppIterTag;
 static boolean	    selRuleFlag;
-static CHAR         ppName[20];
+static CHAR_T         ppName[20];
 static parChoice   *ppChoice;	/* current forest descriptor */
 static parForest   *ppForest;	/* cuurent forest descriptor */
 static parChoice   *ppLastChoice;
@@ -67,7 +67,7 @@ static strAttrDesc    *ppAttr;	/* attribute descriptor */
 static strNodeDesc    *ppNode;	/* node descriptor */
 static strRuleDesc    *ppRule;	/* rule descriptor */
 static parChoice   *choiceStack[MAX_STACK];
-static CHAR         opStack[MAX_STACK];
+static CHAR_T         opStack[MAX_STACK];
 static strSymbDesc    *symbolStack[MAX_STACK];
 static int          sizeStack;
 static int          patDepth;
@@ -77,7 +77,7 @@ static boolean      normalTransition;
 
 #define MaxBufferLength   1000
 #define AllmostFullBuffer  700
-static UCHAR inputBuffer[MaxBufferLength];
+static UCHAR_T inputBuffer[MaxBufferLength];
 static int          ppLgBuffer = 0;	/* actual length of text in input buffer */
 typedef int         State;	/* a state of the automaton */
 static State        currentState;	/* current state of the automaton */
@@ -326,7 +326,7 @@ USTRING     msg;
 #endif
 {
 #ifndef PPSTANDALONE
-   CHAR                numline[5];
+   CHAR_T                numline[5];
 
    sprintf (numline, "%d", numberOfLinesRead);
    TtaSetStatus (TransDoc, 1, TtaGetMessage (AMAYA, AM_TRANS_PARSE_ERROR), numline);
@@ -458,7 +458,7 @@ static void         ProcessSymbol ()
 #endif
 {
    strSymbDesc     *sd;
-   CHAR             msgBuffer[MaxBufferLength];
+   CHAR_T             msgBuffer[MaxBufferLength];
    SSchema	    schema;
 
    if (ppLgBuffer != 0)
@@ -582,10 +582,10 @@ static void         NewSymbol ()
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SymbolName (UCHAR c)
+static void         SymbolName (UCHAR_T c)
 #else
 static void         SymbolName (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -603,10 +603,10 @@ UCHAR       c;
   a transformation name has been read, allocates a new trasformation descriptor
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndNameTrans (UCHAR c)
+static void         EndNameTrans (UCHAR_T c)
 #else
 static void         EndNameTrans (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -649,10 +649,10 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         Option (UCHAR c)
+static void         Option (UCHAR_T c)
 #else
 static void         Option (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -664,10 +664,10 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         BeginExp (UCHAR c)
+static void         BeginExp (UCHAR_T c)
 #else
 static void         BeginExp (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -690,10 +690,10 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndExp (UCHAR c)
+static void         EndExp (UCHAR_T c)
 #else
 static void         EndExp (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -817,10 +817,10 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         IterationTag (UCHAR c)
+static void         IterationTag (UCHAR_T c)
 #else
 static void         IterationTag (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -830,10 +830,10 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         Iteration (UCHAR c)
+static void         Iteration (UCHAR_T c)
 #else
 static void         Iteration (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -874,10 +874,10 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         BeginChild (UCHAR c)
+static void         BeginChild (UCHAR_T c)
 #else
 static void         BeginChild (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -901,10 +901,10 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndChild (UCHAR c)
+static void         EndChild (UCHAR_T c)
 #else
 static void         EndChild (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -967,10 +967,10 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndChoice (UCHAR c)
+static void         EndChoice (UCHAR_T c)
 #else
 static void         EndChoice (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -994,10 +994,10 @@ UCHAR       c;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         EndPatNode (UCHAR c)
+static void         EndPatNode (UCHAR_T c)
 #else
 static void         EndPatNode (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -1015,10 +1015,10 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndPattern (UCHAR c)
+static void         EndPattern (UCHAR_T c)
 #else
 static void         EndPattern (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -1066,10 +1066,10 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         BeginOfTag (UCHAR c)
+static void         BeginOfTag (UCHAR_T c)
 #else
 static void         BeginOfTag (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -1103,10 +1103,10 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         BeginRuleTag (UCHAR c)
+static void         BeginRuleTag (UCHAR_T c)
 #else
 static void         BeginRuleTag (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -1126,10 +1126,10 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfTagName (UCHAR c)
+static void         EndOfTagName (UCHAR_T c)
 #else
 static void         EndOfTagName (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -1151,10 +1151,10 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndRuleTagName (UCHAR c)
+static void         EndRuleTagName (UCHAR_T c)
 #else
 static void         EndRuleTagName (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -1173,15 +1173,15 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ppEndOfAttrName (UCHAR c)
+static void         ppEndOfAttrName (UCHAR_T c)
 #else
 static void         ppEndOfAttrName (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
    int                 ThotAttrNum;
-   CHAR                msgBuffer[MaxBufferLength];
+   CHAR_T                msgBuffer[MaxBufferLength];
 
    if (ppLgBuffer != 0)
      {
@@ -1241,15 +1241,15 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ppEndRuleAttrName (UCHAR c)
+static void         ppEndRuleAttrName (UCHAR_T c)
 #else
 static void         ppEndRuleAttrName (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
    int                 ThotAttrNum;
-   CHAR                msgBuffer[MaxBufferLength];
+   CHAR_T                msgBuffer[MaxBufferLength];
 
    if (ppLgBuffer != 0)
      {
@@ -1312,10 +1312,10 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ppTransAttr (UCHAR c)
+static void         ppTransAttr (UCHAR_T c)
 #else
 static void         ppTransAttr (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -1379,10 +1379,10 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ppTransAttrValue (UCHAR c)
+static void         ppTransAttrValue (UCHAR_T c)
 #else
 static void         ppTransAttrValue (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -1403,10 +1403,10 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ppEndTransAttr (UCHAR c)
+static void         ppEndTransAttr (UCHAR_T c)
 #else
 static void         ppEndTransAttr (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -1431,10 +1431,10 @@ UCHAR       c;
    	ppPutInBuffer	put character c in the input buffer.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ppPutInBuffer (UCHAR c)
+static void         ppPutInBuffer (UCHAR_T c)
 #else
 static void         ppPutInBuffer (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -1481,10 +1481,10 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ppStartOfAttrValue (UCHAR c)
+static void         ppStartOfAttrValue (UCHAR_T c)
 #else
 static void         ppStartOfAttrValue (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -1495,10 +1495,10 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ppEndOfAttrValue (UCHAR c)
+static void         ppEndOfAttrValue (UCHAR_T c)
 #else
 static void         ppEndOfAttrValue (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -1508,7 +1508,7 @@ UCHAR       c;
    if (ppLgBuffer == 0)
      {
 	ppAttr->IsInt = FALSE;
-	ppAttr->TextVal = TtaGetMemory (sizeof (CHAR) * (ppLgBuffer + 2));
+	ppAttr->TextVal = TtaGetMemory (sizeof (CHAR_T) * (ppLgBuffer + 2));
 
 	ustrcpy (ppAttr->TextVal, "");
      }
@@ -1536,7 +1536,7 @@ UCHAR       c;
 	       }
 	     else
 	       {
-		  ppAttr->TextVal = (STRING) TtaGetMemory (sizeof (CHAR) * (ppLgBuffer + 2));
+		  ppAttr->TextVal = (STRING) TtaGetMemory (sizeof (CHAR_T) * (ppLgBuffer + 2));
 		  if (inputBuffer [0] == '\"')
 		    ustrcpy (ppAttr->TextVal, &(inputBuffer[1]));
 		  else
@@ -1552,10 +1552,10 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         BeginRules (UCHAR c)
+static void         BeginRules (UCHAR_T c)
 #else
 static void         BeginRules (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -1566,10 +1566,10 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndLeftPartRule (UCHAR c)
+static void         EndLeftPartRule (UCHAR_T c)
 #else
 static void         EndLeftPartRule (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -1600,10 +1600,10 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         DeleteElementRule(UCHAR c)
+static void         DeleteElementRule(UCHAR_T c)
 #else
 static void          DeleteElementRule (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -1630,14 +1630,14 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndNode (UCHAR c)
+static void         EndNode (UCHAR_T c)
 #else
 static void         EndNode (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
-   CHAR                msgBuffer[MaxBufferLength];
+   CHAR_T                msgBuffer[MaxBufferLength];
    SSchema	       schema;
 
    if (ppLgBuffer != 0)
@@ -1665,15 +1665,15 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOptNodes (UCHAR c)
+static void         EndOptNodes (UCHAR_T c)
 #else
 static void         EndOptNodes (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
    strAttrDesc		*ad, *ad2;
-   CHAR			msgBuffer[MaxBufferLength];
+   CHAR_T			msgBuffer[MaxBufferLength];
    SSchema		schema;
 
    if (ppLgBuffer != 0)
@@ -1721,13 +1721,13 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SelectionRule (UCHAR c)
+static void         SelectionRule (UCHAR_T c)
 #else
 static void         SelectionRule (c)
-UCHAR       c;
+UCHAR_T       c;
 #endif
 {
-  CHAR                   msgBuffer[MaxBufferLength];
+  CHAR_T                   msgBuffer[MaxBufferLength];
   strAttrDesc		*ppAttr;
 
   if (selRuleFlag)
@@ -1777,10 +1777,10 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndRule (UCHAR c)
+static void         EndRule (UCHAR_T c)
 #else
 static void         EndRule (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -1789,7 +1789,7 @@ UCHAR       c;
   strSymbDesc           *psymb;
   strNodeDesc           *pnode;
   strAttrDesc           *ad, *ad2;
-  CHAR                   msgBuffer[MaxBufferLength];
+  CHAR_T                   msgBuffer[MaxBufferLength];
   SSchema		  schema;
 
   if (ppLgBuffer != 0)
@@ -1916,10 +1916,10 @@ UCHAR       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndTransformation (UCHAR c)
+static void         EndTransformation (UCHAR_T c)
 #else
 static void         EndTransformation (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -1957,10 +1957,10 @@ UCHAR       c;
    	Do_nothing	Do nothing.				       	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         Do_nothing (CHAR c)
+static void         Do_nothing (CHAR_T c)
 #else
 static void         Do_nothing (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -1977,7 +1977,7 @@ typedef struct _Transition *PtrTransition;
 
 typedef struct _Transition
   {				/* a transition of the automaton in   "executable" form */
-     UCHAR       trigger;	/* the imput character that triggers
+     UCHAR_T       trigger;	/* the imput character that triggers
 					   the transition */
      Proc                action;	/* the procedure to be called when
 					   the transition occurs */
@@ -2003,7 +2003,7 @@ typedef struct _sourceTransition
   {				/* a transition of the automaton in
 				   "source" form */
      State               initState;	/* initial state of transition */
-     CHAR                trigger;	/* the imput character that triggers
+     CHAR_T                trigger;	/* the imput character that triggers
 					   the transition */
      Proc                transitionAction;	/* the procedure to be called when
 						   the transition occurs */
@@ -2212,7 +2212,7 @@ BinFile               infile;
 #endif
 #endif
 {
-   UCHAR       charRead, oldcharRead;
+   UCHAR_T       charRead, oldcharRead;
    boolean             match, readOk;
    PtrTransition       trans;
 
@@ -2437,14 +2437,14 @@ SSchema            tStrSchema;
 strTransSet        **resTrSet;
 #endif
 {
-   CHAR                msg[200];
+   CHAR_T                msg[200];
 
 #ifdef PPSTANDALONE
    FILE               *infile = (FILE *)0;
 #else
    BinFile             infile = (BinFile)0;
-   CHAR		       fileName[MAX_LENGTH];
-   CHAR                pathes[MAX_LENGTH];
+   CHAR_T		       fileName[MAX_LENGTH];
+   CHAR_T                pathes[MAX_LENGTH];
    STRING              next, cour;
    boolean             found = FALSE;
    struct stat        *StatBuffer;

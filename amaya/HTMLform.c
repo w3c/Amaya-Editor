@@ -86,11 +86,11 @@ void RestoreDocumentStatus (event)
   writes the equivalent escape code of a car in a string		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EscapeChar (STRING string, UCHAR c)
+static void         EscapeChar (STRING string, UCHAR_T c)
 #else
 static void         EscapeChar (string, c)
 STRING              string;
-UCHAR               c;
+UCHAR_T               c;
 
 #endif
 {
@@ -119,7 +119,7 @@ STRING              orig;
 	/* it is necessary to extend the buffer */
 	if (lg < PARAM_INCREMENT)
 	   lg = PARAM_INCREMENT;
-	status = TtaRealloc (buffer, sizeof (CHAR) * (lgbuffer + lg));
+	status = TtaRealloc (buffer, sizeof (CHAR_T) * (lgbuffer + lg));
 
 	if (status != NULL)
 	  {
@@ -145,8 +145,8 @@ USTRING             element;
 
 #endif
 {
-   CHAR                tmp[4] = "%";
-   CHAR                tmp2[2] = "a";
+   CHAR_T                tmp[4] = "%";
+   CHAR_T                tmp2[2] = "a";
 
    if (buffer == (STRING) NULL)
      {
@@ -278,7 +278,7 @@ Document	    doc;
   Attribute           attr;
   AttributeType       attrType;
   int                 length;
-  CHAR                value[MAX_LENGTH];
+  CHAR_T                value[MAX_LENGTH];
   Language            lang;
 
   /* check if element is selected */
@@ -327,7 +327,7 @@ Document	   doc;
   ElementType         elType;
   Element             option, child;
   int                 length;
-  CHAR                name[MAX_LENGTH];
+  CHAR_T                name[MAX_LENGTH];
   
   /* get the name of the Option Menu */
   length = MAX_LENGTH - 1;
@@ -515,7 +515,7 @@ int                 mode;
    Attribute           attr, attrS, def;
    AttributeType       attrType, attrTypeS;
    int                 length;
-   CHAR                name[MAX_LENGTH], value[MAX_LENGTH];
+   CHAR_T                name[MAX_LENGTH], value[MAX_LENGTH];
    int                 modified = FALSE;
    Language            lang;
 
@@ -1087,7 +1087,7 @@ Element             el;
    Attribute           attr, attrN;
    AttributeType       attrType, attrTypeN;
    int                 modified, length;
-   CHAR                name[MAX_LENGTH], buffer[MAX_LENGTH];
+   CHAR_T                name[MAX_LENGTH], buffer[MAX_LENGTH];
 
    if (el == NULL)
       return;
@@ -1252,8 +1252,8 @@ Element             el;
    Attribute	       attr;
    SSchema	       htmlSch;
    int                 length, nbitems, lgmenu, i, nbsubmenus, nbsubitems;
-   CHAR                text[MAX_LABEL_LENGTH];
-   CHAR                buffmenu[MAX_LENGTH];
+   CHAR_T                text[MAX_LABEL_LENGTH];
+   CHAR_T                buffmenu[MAX_LENGTH];
    Language            lang;
    int                 modified;
    boolean	       multipleOptions, sel;

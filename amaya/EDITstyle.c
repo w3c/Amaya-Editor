@@ -28,9 +28,9 @@
 #include "wininclude.h"
 #endif /* _WINDOWS */
 
-static CHAR         ListBuffer[MAX_CSS_LENGTH + 1];
+static CHAR_T         ListBuffer[MAX_CSS_LENGTH + 1];
 static int          NbClass = 0;
-static CHAR         CurrentClass[80];
+static CHAR_T         CurrentClass[80];
 static Element      ClassReference;
 static Document     DocReference;
 static Document	    ApplyClassDoc;
@@ -146,7 +146,7 @@ NotifyAttribute    *event;
   Language            lang;
   STRING              buffer, ptr1, ptr2;
   STRING              pEnd, nEnd;
-  CHAR                c;
+  CHAR_T                c;
   int                 buflen, i, j;
   int                 previousEnd, nextEnd;
   int                 braces;
@@ -547,7 +547,7 @@ Document            doc;
   Attribute           attr;
   AttributeType       attrType;
   ElementType         elType, selType;
-  CHAR                stylestring[1000];
+  CHAR_T                stylestring[1000];
   STRING              a_class;
   int                 len, base;
 
@@ -628,7 +628,7 @@ STRING              first;
   Element             el;
   Attribute           attr;
   AttributeType       attrType;
-  CHAR                selector[100];
+  CHAR_T                selector[100];
   int                 Free;
   int                 len;
   int                 nb, i;
@@ -709,7 +709,7 @@ View                view;
   AttributeType       attrType;
   Element             last_elem;
   ElementType         elType;
-  CHAR                a_class[50];
+  CHAR_T                a_class[50];
   STRING              elHtmlName;
   int                 len, i, j;
   int                 firstSelectedChar, lastSelectedChar;
@@ -790,7 +790,7 @@ View                view;
   Attribute           attr;
   AttributeType       attrType;
   Element             firstSelectedEl;
-  CHAR                a_class[50];
+  CHAR_T                a_class[50];
   int                 len;
   int                 firstSelectedChar, lastSelectedChar;
 

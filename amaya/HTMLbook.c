@@ -45,8 +45,8 @@ static struct _SubDoc  *SubDocs;
 static int              PaperPrint;
 static int              ManualFeed;
 static int              PageSize;
-static CHAR             PSdir[MAX_PATH];
-static CHAR             pPrinter[MAX_PATH];
+static CHAR_T             PSdir[MAX_PATH];
+static CHAR_T             pPrinter[MAX_PATH];
 static Document		docPrint;
 static boolean		numberLinks;
 static boolean		withToC;
@@ -181,8 +181,8 @@ Document                document;
   Attribute             attr, ExtLinkAttr;
   AttributeType	        attrType;
   STRING		text, ptr, url; 
-  CHAR                  number[10];
-  CHAR                  value[MAX_LENGTH];
+  CHAR_T                  number[10];
+  CHAR_T                  value[MAX_LENGTH];
   int			length, i, volume;
   int                   status, position;
   boolean               split;
@@ -375,9 +375,9 @@ static void         CheckPrintingDocument (document)
 Document            document;
 #endif
 {
-   CHAR             docName[MAX_LENGTH];
+   CHAR_T             docName[MAX_LENGTH];
    STRING           ptr; 
-   CHAR             suffix[MAX_LENGTH];
+   CHAR_T             suffix[MAX_LENGTH];
    int              lg;
 
    if (docPrint != document)
@@ -432,7 +432,7 @@ Document            doc;
   AttributeType      attrType;
   Attribute          attr;
   Element            el;
-  CHAR               viewsToPrint[MAX_PATH];
+  CHAR_T               viewsToPrint[MAX_PATH];
   boolean            status, textFile;
 
   textFile = (DocumentTypes[doc] == docText ||
@@ -649,7 +649,7 @@ View                view;
 #endif
 {
 #  ifndef _WINDOWS
-   CHAR             bufMenu[MAX_LENGTH];
+   CHAR_T             bufMenu[MAX_LENGTH];
    int              i;
 #  endif /* !_WINDOWS */
    boolean            status, textFile;

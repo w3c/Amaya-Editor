@@ -71,24 +71,24 @@ int                WIN_NormalLineSpacing;
 extern HINSTANCE    hInstance;
 extern HDC          TtPrinterDC;
 extern STRING        AttrHREFvalue;
-extern CHAR         WIN_buffMenu [MAX_TXT_LEN];
-extern CHAR         ChkrCorrection[MAX_PROPOSAL_CHKR+1][MAX_WORD_LEN];
+extern CHAR_T         WIN_buffMenu [MAX_TXT_LEN];
+extern CHAR_T         ChkrCorrection[MAX_PROPOSAL_CHKR+1][MAX_WORD_LEN];
 extern BOOL         TtIsPrinterTrueColor;
 extern BOOL         bUserAbort;
 extern HWND         hWndParent;
 extern int          WIN_MenuAlphabet;
 
-static CHAR         urlToOpen [256];
-static CHAR         altText [256];
-static CHAR         message [300];
-static CHAR         message2 [300];
-static CHAR         wndTitle [100];
-static CHAR         currentLabel [100];
-static CHAR         currentRejectedchars [100];
-static CHAR         currentPathName [100];
-static CHAR         winCurLang [100];
-static CHAR         currentFileToPrint [MAX_PATH];
-static CHAR         attDlgTitle [100];
+static CHAR_T         urlToOpen [256];
+static CHAR_T         altText [256];
+static CHAR_T         message [300];
+static CHAR_T         message2 [300];
+static CHAR_T         wndTitle [100];
+static CHAR_T         currentLabel [100];
+static CHAR_T         currentRejectedchars [100];
+static CHAR_T         currentPathName [100];
+static CHAR_T         winCurLang [100];
+static CHAR_T         currentFileToPrint [MAX_PATH];
+static CHAR_T         attDlgTitle [100];
 static STRING       lpPrintTemplateName = (STRING) 0;
 static int          currentDoc ;
 static int          currentView ;
@@ -175,7 +175,7 @@ static BOOL	        saveBeforeClose ;
 static BOOL         closeDontSave ;
 static OPENFILENAME OpenFileName;
 static LPSTR        szFilter;
-static TCHAR        szFileName[256];
+static CHAR_T       szFileName[256];
 static HWND         currentWnd;
 static HWND         parentWnd;
 static HWND         currentDlg;
@@ -188,7 +188,7 @@ HWND hwndCurrentWord;
 HWND hwndLanguage;
 HWND ghwndAbort;
 HWND ghwndMain;
-CHAR currentWord [MAX_WORD_LEN];
+CHAR_T currentWord [MAX_WORD_LEN];
 BOOL gbAbort;
 
 #ifdef __STDC__
@@ -1283,15 +1283,16 @@ LPARAM lParam;
 
 			    switch (LOWORD (wParam)) {
 				       case ID_CONFIRM:
-							/* ThotCallback (NumFormLanguage, INTEGER_DATA, (STRING) 2); */
+							ThotCallback (baseDlg + formCss, INTEGER_DATA, (STRING) 1);
 					        EndDialog (hwnDlg, ID_CONFIRM);
 							break;
 
 				       case ID_DONE:
-							/* ThotCallback (NumFormLanguage, INTEGER_DATA, (STRING) 0); */
+							ThotCallback (baseDlg + formCss, INTEGER_DATA, (STRING) 0);
 					        EndDialog (hwnDlg, ID_DONE);
 							break;
 
+                       case WM_CLOSE:
                        case WM_DESTROY:
 					        EndDialog (hwnDlg, ID_DONE);
 							break;
@@ -1336,6 +1337,7 @@ LPARAM lParam;
 					        EndDialog (hwnDlg, ID_DONE);
 					        break;
 
+				       case WM_CLOSE:
 				       case WM_DESTROY:
 					        EndDialog (hwnDlg, ID_DONE);
 					        break;
@@ -1384,6 +1386,7 @@ LPARAM lParam;
 							EndDialog (hwnDlg, ID_CONFIRM);
 					        break;
 
+				       case WM_CLOSE:
 				       case WM_DESTROY:
 							EndDialog (hwnDlg, ID_CONFIRM);
 					        break;
@@ -1416,6 +1419,7 @@ LPARAM lParam;
 							EndDialog (hwnDlg, ID_DONE);
 					        break;
 
+					   case WM_CLOSE:
 				       case WM_DESTROY:
 							EndDialog (hwnDlg, ID_DONE);
 					        break;
@@ -1750,6 +1754,7 @@ LPARAM lParam;
 					 	    EndDialog (hwnDlg, IDCANCEL);
 							break;
 
+				       case WM_CLOSE:
 					   case WM_DESTROY:
 					 	    EndDialog (hwnDlg, IDCANCEL);
 							break;
@@ -1851,6 +1856,7 @@ LPARAM lParam;
 					 	    EndDialog (hwnDlg, IDCANCEL);
 							break;
 
+				       case WM_CLOSE:
 					   case WM_DESTROY:
 					 	    EndDialog (hwnDlg, IDCANCEL);
 							break;
@@ -1964,6 +1970,7 @@ LPARAM lParam;
 					 	    EndDialog (hwnDlg, IDCANCEL);
 							break;
 
+				       case WM_CLOSE:
 					   case WM_DESTROY:
 					 	    EndDialog (hwnDlg, IDCANCEL);
 							break;
@@ -2090,6 +2097,7 @@ LPARAM lParam;
 					 	    EndDialog (hwnDlg, IDCANCEL);
 							break;
 
+				       case WM_CLOSE:
 					   case WM_DESTROY:
 					 	    EndDialog (hwnDlg, IDCANCEL);
 							break;
@@ -2115,8 +2123,8 @@ LPARAM lParam;
 #endif /* __STDC__ */
 {
 	static int iMode, iLocation;
-	static CHAR textToSearch [255];
-	static CHAR newText [255];
+	static CHAR_T textToSearch [255];
+	static CHAR_T newText [255];
 	static BOOL upper_lower = FALSE ;
     switch (msg) {
 	       case WM_INITDIALOG:
@@ -2164,6 +2172,7 @@ LPARAM lParam;
 							}
 						    break;
 
+				       case WM_CLOSE:
 				       case WM_DESTROY:
 					        EndDialog (hwnDlg, ID_DONE);
 							break;
@@ -2231,7 +2240,7 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-	static CHAR txt [500];
+	static CHAR_T txt [500];
 	static HWND transURLWnd;
 	static HWND copyImgWnd;
     switch (msg) {
@@ -2500,6 +2509,7 @@ LPARAM lParam;
 							EndDialog (hwnDlg, ID_DONE);
 					        break;
 
+				       case WM_CLOSE:
 				       case WM_DESTROY:
 							EndDialog (hwnDlg, ID_DONE);
 					        break;
@@ -2577,7 +2587,7 @@ LPARAM lParam;
 	UINT  i = 0;
 
 	static UINT itemIndex; 
-	static CHAR szBuffer [MAX_BUFF];
+	static CHAR_T szBuffer [MAX_BUFF];
 
     switch (msg) {
 	       case WM_INITDIALOG:
@@ -2688,7 +2698,7 @@ LPARAM lParam;
 
 	static HWND wndLangList;
 	static UINT itemIndex; 
-	static CHAR szBuffer [MAX_BUFF];
+	static CHAR_T szBuffer [MAX_BUFF];
 
     switch (msg) {
 	       case WM_INITDIALOG:
@@ -2847,6 +2857,7 @@ LPARAM lParam;
 					        EndDialog (hwnDlg, ID_DONE);
 							break;
 
+				       case WM_CLOSE:
                        case WM_DESTROY:
 					        EndDialog (hwnDlg, ID_DONE);
 							break;
@@ -2947,6 +2958,7 @@ LPARAM lParam;
 						    EndDialog (hwnDlg, ID_DONE);
 							break;
 
+				       case WM_CLOSE:
 				       case WM_DESTROY:
 						    EndDialog (hwnDlg, ID_DONE);
 							break;
@@ -3093,7 +3105,7 @@ LPARAM lParam;
 	static HWND wndListRule;
 	static HWND wndEditRule;
 	static int  itemIndex;
-	static CHAR szBuffer [MAX_BUFF];
+	static CHAR_T szBuffer [MAX_BUFF];
 
     switch (msg) {
 	       case WM_INITDIALOG:
@@ -3136,6 +3148,7 @@ LPARAM lParam;
 						    EndDialog (hwnDlg, ID_DONE);
 							break;
 
+				       case WM_CLOSE:
 				       case WM_DESTROY:
 						    EndDialog (hwnDlg, ID_DONE);
 							break;
@@ -3164,7 +3177,7 @@ LPARAM lParam;
 
 	static HWND wndListRule;
 	static UINT  itemIndex;
-	static CHAR szBuffer [MAX_BUFF];
+	static CHAR_T szBuffer [MAX_BUFF];
 
     switch (msg) {
 	       case WM_INITDIALOG:
@@ -3208,6 +3221,7 @@ LPARAM lParam;
 						    EndDialog (hwnDlg, ID_DONE);
 							break;
 
+				       case WM_CLOSE:
 				       case WM_DESTROY:
 						    EndDialog (hwnDlg, ID_DONE);
 							break;
@@ -3383,6 +3397,7 @@ LPARAM lParam;
 						    EndDialog (hwnDlg, ID_DONE);
 							break;
 
+				       case WM_CLOSE:
 					   case WM_DESTROY:
 						    EndDialog (hwnDlg, ID_DONE);
 							break;
@@ -3498,6 +3513,7 @@ LPARAM lParam;
 						    ThotCallback (NumFormPresFormat, INTEGER_DATA, (STRING) 1);
 							break;
 
+				       case WM_CLOSE:
 					   case WM_DESTROY:
 						    EndDialog (hwnDlg, ID_DONE);
 							break;

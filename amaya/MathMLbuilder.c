@@ -25,12 +25,12 @@
 #define EOS     '\0'
 #define SPACE    ' '
 
-typedef UCHAR  MathEntityName[20];
+typedef UCHAR_T  MathEntityName[20];
 typedef struct _MathEntity
   {			 /* a Math entity representing an operator char */
      MathEntityName      MentityName;	/* entity name */
      int                 charCode;	/* decimal code of char */
-     CHAR		 alphabet;	/* 'L' = ISO-Latin-1, 'G' = Symbol */
+     CHAR_T		 alphabet;	/* 'L' = ISO-Latin-1, 'G' = Symbol */
   }
 MathEntity;
 
@@ -498,7 +498,7 @@ STRING alphabet;
    if (!ustrcmp (MathEntityTable[i].MentityName, entityName))
       /* entity found */
       {
-      entityValue[0] = (UCHAR) MathEntityTable[i].charCode;
+      entityValue[0] = (UCHAR_T) MathEntityTable[i].charCode;
       entityValue[1] = EOS;
       *alphabet = MathEntityTable[i].alphabet;
       }
@@ -531,7 +531,7 @@ Document doc;
    Language	 lang;
    int		 len;
 #define MAX_ENTITY_LENGTH 80
-   CHAR		 buffer[MAX_ENTITY_LENGTH];
+   CHAR_T		 buffer[MAX_ENTITY_LENGTH];
 
    if (ustrlen (entityValue) <= 1)
      if (entityValue[0] == EOS || entityValue[0] == SPACE ||
@@ -580,8 +580,8 @@ Document doc;
    Element	parent, new;
    int		len;
    Language	lang;
-   CHAR		alphabet;
-   CHAR		text[4];
+   CHAR_T		alphabet;
+   CHAR_T		text[4];
 
    len = TtaGetTextLength (*el);
    if (len == 1)
@@ -912,8 +912,8 @@ void SetSingleHorizStretchAttr (el, doc, selEl)
   AttributeType	attrType;
   int		len;
   Language	lang;
-  CHAR		alphabet;
-  UCHAR	        text[2], c;
+  CHAR_T		alphabet;
+  UCHAR_T	        text[2], c;
 
   if (el == NULL)
      return;
@@ -1024,8 +1024,8 @@ void SetVertStretchAttr (el, doc, base, selEl)
   AttributeType	attrType;
   int		len;
   Language	lang;
-  CHAR		alphabet;
-  UCHAR	        text[2], c;
+  CHAR_T		alphabet;
+  UCHAR_T	        text[2], c;
 
   if (el == NULL)
      return;
@@ -1525,9 +1525,9 @@ void SetAddspaceAttr (el, doc)
   Attribute	attr;
   int		len, val;
 #define BUFLEN 10
-  UCHAR    	text[BUFLEN];
+  UCHAR_T    	text[BUFLEN];
   Language	lang;
-  CHAR		alphabet;
+  CHAR_T		alphabet;
 
   textEl = TtaGetFirstChild (el);
   if (textEl != NULL)
@@ -1664,8 +1664,8 @@ Document		doc;
    Attribute	attr;
    int		len;
    Language	lang;
-   CHAR		alphabet;
-   UCHAR	text[2], c;
+   CHAR_T		alphabet;
+   UCHAR_T	text[2], c;
 
    elType = TtaGetElementType (el);
    if (elType.ElTypeNum == MathML_EL_MO)
@@ -1741,7 +1741,7 @@ Document	doc;
    Attribute     attr;
    int		 length, sep, i;
    Language	 lang;
-   CHAR		 text[32], sepValue[4];
+   CHAR_T		 text[32], sepValue[4];
 
    /* get the separators attribute */
    mfenced = TtaGetParent (fencedExpression);
@@ -1824,7 +1824,7 @@ Document	doc;
    AttributeType attrType;
    Attribute     attr;
    int		 length;
-   CHAR		 text[32], c;
+   CHAR_T		 text[32], c;
 
    child = TtaGetFirstChild (el);
    if (child != NULL)

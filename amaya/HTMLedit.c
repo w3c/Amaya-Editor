@@ -100,8 +100,8 @@ Document            doc;
    ElementType	       elType;
    AttributeType       attrType;
    Attribute           attr;
-   CHAR                buffer[MAX_LENGTH];
-   CHAR                pathname[MAX_LENGTH], documentname[MAX_LENGTH];   
+   CHAR_T                buffer[MAX_LENGTH];
+   CHAR_T                pathname[MAX_LENGTH], documentname[MAX_LENGTH];   
    int                 length;
 
    /* Search the refered image */
@@ -214,7 +214,7 @@ STRING              targetName;
    Attribute           attr;
    SSchema	       HTMLSSchema;
    STRING              value, base;
-   CHAR                tempURL[MAX_LENGTH];
+   CHAR_T                tempURL[MAX_LENGTH];
    int                 length;
    boolean	       new, oldStructureChecking;
 
@@ -524,7 +524,7 @@ Boolean		    withUndo;
    SSchema	       HTMLSSchema;
    Language            lang;
    STRING              text;
-   STRING               url = (STRING) TtaGetMemory (sizeof (CHAR) * MAX_LENGTH);
+   STRING               url = (STRING) TtaGetMemory (sizeof (CHAR_T) * MAX_LENGTH);
    int                 length, i, space;
    boolean             found;
    boolean             withinHTML, new;
@@ -906,7 +906,7 @@ Document     doc;
   SSchema	    HTMLSSchema;
   Attribute         attr;
   STRING            value;
-  CHAR              url[MAX_LENGTH];
+  CHAR_T              url[MAX_LENGTH];
   int               length, i;
   boolean           change, isHTML;
 
@@ -1277,9 +1277,9 @@ NotifyElement      *event;
 
   if (anchor != NULL)
     {
-      tempURL = (STRING) TtaGetMemory (sizeof (CHAR) * MAX_LENGTH);
-      documentURL = (STRING) TtaGetMemory (sizeof (CHAR) * MAX_LENGTH);
-      path = (STRING) TtaGetMemory (sizeof (CHAR) * MAX_LENGTH);
+      tempURL = (STRING) TtaGetMemory (sizeof (CHAR_T) * MAX_LENGTH);
+      documentURL = (STRING) TtaGetMemory (sizeof (CHAR_T) * MAX_LENGTH);
+      path = (STRING) TtaGetMemory (sizeof (CHAR_T) * MAX_LENGTH);
       TtaSetDisplayMode (doc, DeferredDisplay);
       oldStructureChecking = TtaGetStructureChecking (doc);
       TtaSetStructureChecking (0, doc);
@@ -1494,7 +1494,7 @@ NotifyAttribute    *event;
    ElementType         elType;
    AttributeType       attrType;
    Attribute	       attr;
-   CHAR		       buffer[15];
+   CHAR_T		       buffer[15];
 
    el = event->element;
    elType = TtaGetElementType (el);
@@ -1639,7 +1639,7 @@ NotifyAttribute    *event;
 
 #endif /* __STDC__ */
 {
-   STRING               buffer = (STRING) TtaGetMemory (sizeof (CHAR) * buflen);
+   STRING               buffer = (STRING) TtaGetMemory (sizeof (CHAR_T) * buflen);
    int                 length;
    DisplayMode         dispMode;
 
@@ -1699,7 +1699,7 @@ NotifyAttribute    *event;
 
 #endif /* __STDC__ */
 {
-   STRING           value = (STRING) TtaGetMemory (sizeof (CHAR) * buflen);
+   STRING           value = (STRING) TtaGetMemory (sizeof (CHAR_T) * buflen);
    int              length;
 
    value[0] = EOS;

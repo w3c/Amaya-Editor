@@ -1331,7 +1331,7 @@ View                view;
   Attribute           attr;
   Document            refDoc;
   SSchema	      HTMLSSchema;
-  CHAR                name[50];
+  CHAR_T                name[50];
   int                 firstchar, lastchar, len;
   boolean             selBefore;
 

@@ -28,7 +28,7 @@
 #define MAX_LENGTH     512
 
 /* an entity name */
-typedef UCHAR entName[10];
+typedef UCHAR_T entName[10];
 
 /* an entity representing an ISO-Latin-1 character */
 typedef struct _EntityDictEntry
@@ -101,7 +101,7 @@ static boolean      immAfterTag = FALSE;  /* A tag has just been read */
 /* input buffer */
 #define MAX_BUFFER_LENGTH 1000
 #define ALLMOST_FULL_BUFFER 700
-static UCHAR inputBuffer[MAX_BUFFER_LENGTH];
+static UCHAR_T inputBuffer[MAX_BUFFER_LENGTH];
 static int   bufferLength = 0;	  /* actual length of text in input
 					     buffer */
 
@@ -110,7 +110,7 @@ static Document     currentDocument = 0;	  /* the Thot document */
 static Language     currentLanguage;	  /* language used in the document */
 static Element	    currentElement = NULL;
 static boolean	    currentElementClosed = FALSE;
-static CHAR	    currentElementContent = ' ';
+static CHAR_T	    currentElementContent = ' ';
 static Attribute    currentAttribute = NULL;
 static boolean	    HTMLStyleAttribute = FALSE;
 static boolean	    XMLrootClosed = FALSE;
@@ -135,7 +135,7 @@ static boolean      normalTransition;
 
 /* information about an entity being read */
 #define MAX_ENTITY_LENGTH 80
-static CHAR         entityName[MAX_ENTITY_LENGTH]; /* name of entity being
+static CHAR_T         entityName[MAX_ENTITY_LENGTH]; /* name of entity being
 					     read */
 static int          entityNameLength = 0; /* length of entity name read so
 					     far */
@@ -354,10 +354,10 @@ void         XMLTextToDocument ()
    Put the preceding text in the Thot document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         StartOfTag (CHAR c)
+static void         StartOfTag (CHAR_T c)
 #else
 static void         StartOfTag (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -370,10 +370,10 @@ CHAR                c;
    Put character c in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutInBuffer (UCHAR c)
+static void         PutInBuffer (UCHAR_T c)
 #else
 static void         PutInBuffer (c)
-UCHAR               c;
+UCHAR_T               c;
 
 #endif
 {
@@ -439,10 +439,10 @@ STRING              DTDname;
    Close the corresponding Thot element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfXMLEndTag (CHAR c)
+static void         EndOfXMLEndTag (CHAR_T c)
 #else
 static void         EndOfXMLEndTag (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -471,15 +471,15 @@ CHAR                c;
    A ">" or a "/" has been read. It indicates the end of a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfStartTag (CHAR c)
+static void         EndOfStartTag (CHAR_T c)
 #else
 static void         EndOfStartTag (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
-  CHAR	  DTDname[100];
-  UCHAR   msgBuffer[MAX_BUFFER_LENGTH];
+  CHAR_T	  DTDname[100];
+  UCHAR_T   msgBuffer[MAX_BUFFER_LENGTH];
   USTRING s;
 
   if (currentElementContent == 'X' && c != '/')
@@ -538,10 +538,10 @@ CHAR                c;
     A ">" after a "/" has been read. It indicates the end of a empty tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfEmptyTag (CHAR c)
+static void         EndOfEmptyTag (CHAR_T c)
 #else
 static void         EndOfEmptyTag (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -609,17 +609,17 @@ Document            doc;
    Create the corresponding Thot element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfStartGI (CHAR c)
+static void         EndOfStartGI (CHAR_T c)
 #else
 static void         EndOfStartGI (c)
-CHAR                c;
+CHAR_T                c;
 #endif
 {
    Element		newElement;
    ElementType		elType;
    int			i;
    STRING		typeName;
-   UCHAR                msgBuffer[MAX_BUFFER_LENGTH];
+   UCHAR_T                msgBuffer[MAX_BUFFER_LENGTH];
 
    /* close the input buffer */
    inputBuffer[bufferLength] = EOS;
@@ -673,10 +673,10 @@ CHAR                c;
    end of a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfStartGIandTag (CHAR c)
+static void         EndOfStartGIandTag (CHAR_T c)
 #else
 static void         EndOfStartGIandTag (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -690,15 +690,15 @@ CHAR                c;
    Check that it closes the right element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfClosingTagName (CHAR c)
+static void         EndOfClosingTagName (CHAR_T c)
 #else
 static void         EndOfClosingTagName (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
   int		    i;
-  UCHAR             msgBuffer[MAX_BUFFER_LENGTH];
+  UCHAR_T             msgBuffer[MAX_BUFFER_LENGTH];
 
   /* close the input buffer */
   inputBuffer[bufferLength] = EOS;
@@ -747,10 +747,10 @@ CHAR                c;
    An element name followed by a '>' has been read in a closing tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfNameAndClosingTag (CHAR c)
+static void         EndOfNameAndClosingTag (CHAR_T c)
 #else
 static void         EndOfNameAndClosingTag (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -764,17 +764,17 @@ CHAR                c;
    Create the corresponding Thot attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfAttrName (CHAR c)
+static void         EndOfAttrName (CHAR_T c)
 #else
 static void         EndOfAttrName (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
   Attribute	attr, oldAttr;
   AttributeType	attrType;
   int		i;
-  UCHAR         msgBuffer[MAX_BUFFER_LENGTH];
+  UCHAR_T         msgBuffer[MAX_BUFFER_LENGTH];
 
   /* close the input buffer */
   inputBuffer[bufferLength] = EOS;
@@ -845,10 +845,10 @@ CHAR                c;
    name and the end of a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfAttrNameAndTag (CHAR c)
+static void         EndOfAttrNameAndTag (CHAR_T c)
 #else
 static void         EndOfAttrNameAndTag (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -862,16 +862,16 @@ CHAR                c;
    Put that value in the current Thot attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfAttrValue (CHAR c)
+static void         EndOfAttrValue (CHAR_T c)
 #else
 static void         EndOfAttrValue (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
    AttributeType	attrType;
    int			attrKind, val;
-   UCHAR                msgBuffer[MAX_BUFFER_LENGTH];
+   UCHAR_T                msgBuffer[MAX_BUFFER_LENGTH];
 
    /* close the input buffer */
    inputBuffer[bufferLength] = EOS;
@@ -926,10 +926,10 @@ CHAR                c;
    A character '&' has been encountered.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         StartOfEntity (CHAR c)
+static void         StartOfEntity (CHAR_T c)
 #else
 static void         StartOfEntity (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -942,17 +942,17 @@ CHAR                c;
    and put the corresponding content in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfEntity (CHAR c)
+static void         EndOfEntity (CHAR_T c)
 #else
 static void         EndOfEntity (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
    int         i;
-   UCHAR       msgBuffer[MAX_BUFFER_LENGTH];
-   UCHAR       entityValue[MAX_ENTITY_LENGTH];	
-   CHAR	       alphabet;
+   UCHAR_T       msgBuffer[MAX_BUFFER_LENGTH];
+   UCHAR_T       entityValue[MAX_ENTITY_LENGTH];	
+   CHAR_T	       alphabet;
    Language    lang;
 
    entityName[entityNameLength] = EOS;
@@ -963,7 +963,7 @@ CHAR                c;
 	       i++);
    if (!ustrcmp (XMLpredifinedEntities[i].charName, entityName))
       /* entity found in the predifined table */
-      PutInBuffer ((CHAR) (XMLpredifinedEntities[i].charCode));
+      PutInBuffer ((CHAR_T) (XMLpredifinedEntities[i].charCode));
    else
       /* entity not in the predifined table */
       {
@@ -1014,10 +1014,10 @@ CHAR                c;
    A character belonging to an XML entity has been read.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EntityChar (UCHAR c)
+static void         EntityChar (UCHAR_T c)
 #else
 static void         EntityChar (c)
-UCHAR       c;
+UCHAR_T       c;
 
 #endif
 {
@@ -1051,10 +1051,10 @@ UCHAR       c;
    having that code in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfNumEntity (CHAR c)
+static void         EndOfNumEntity (CHAR_T c)
 #else
 static void         EndOfNumEntity (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -1062,7 +1062,7 @@ CHAR                c;
 
    entityName[entityNameLength] = EOS;
    sscanf (entityName, "%d", &code);
-   PutInBuffer ((CHAR) code);
+   PutInBuffer ((CHAR_T) code);
    entityNameLength = 0;
 }
 
@@ -1072,10 +1072,10 @@ CHAR                c;
    Put that character in the entity buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         NumEntityChar (CHAR c)
+static void         NumEntityChar (CHAR_T c)
 #else
 static void         NumEntityChar (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -1103,10 +1103,10 @@ CHAR                c;
    The character following '/' in a start tag is not '>'.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         XMLerror (CHAR c)
+static void         XMLerror (CHAR_T c)
 #else
 static void         XMLerror (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -1118,10 +1118,10 @@ CHAR                c;
    Put '& ' in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutAmpersandSpace (CHAR c)
+static void         PutAmpersandSpace (CHAR_T c)
 #else
 static void         PutAmpersandSpace (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -1135,18 +1135,18 @@ CHAR                c;
    Beginning of an XML comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         StartOfComment (CHAR c)
+static void         StartOfComment (CHAR_T c)
 #else
 static void         StartOfComment (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
    ElementType	elType;
    Element	commentEl, commentLineEl;
    STRING	typeName;
-   UCHAR msgBuffer[MAX_BUFFER_LENGTH];
-   CHAR		cont;
+   UCHAR_T msgBuffer[MAX_BUFFER_LENGTH];
+   CHAR_T		cont;
 
    /* create a Thot element for the comment */
    elType.ElSSchema = NULL;
@@ -1184,17 +1184,17 @@ CHAR                c;
    Put character c in the current XML comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutInComment (UCHAR c)
+static void         PutInComment (UCHAR_T c)
 #else
 static void         PutInComment (c)
-UCHAR       c;
+UCHAR_T       c;
  
 #endif
 {
    ElementType	elType;
    Element	commentLineEl;
    STRING	typeName;
-   CHAR		cont;
+   CHAR_T		cont;
 
    if (c != EOS)
       if ((int) c == 10 || (int) c == 13)
@@ -1236,10 +1236,10 @@ UCHAR       c;
    End of an XML comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfComment (CHAR c)
+static void         EndOfComment (CHAR_T c)
 #else
 static void         EndOfComment (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -1259,10 +1259,10 @@ CHAR                c;
    Put a dash character in the current comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutDash (CHAR c)
+static void         PutDash (CHAR_T c)
 #else
 static void         PutDash (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -1274,10 +1274,10 @@ CHAR                c;
    PutQuestionMark put a question mark in the current PI.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutQuestionMark (CHAR c)
+static void         PutQuestionMark (CHAR_T c)
 #else
 static void         PutQuestionMark (c)
-CHAR                c;
+CHAR_T                c;
  
 #endif
 {
@@ -1289,10 +1289,10 @@ CHAR                c;
    EndOfDeclaration
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfDeclaration (CHAR c)
+static void         EndOfDeclaration (CHAR_T c)
 #else
 static void         EndOfDeclaration (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -1306,10 +1306,10 @@ CHAR                c;
    EndOfPI      A Processing Instruction has been read
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfPI (CHAR c)
+static void         EndOfPI (CHAR_T c)
 #else
 static void         EndOfPI (c)
-CHAR                c;
+CHAR_T                c;
  
 #endif
 {
@@ -1332,10 +1332,10 @@ CHAR                c;
    Do nothing.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         Do_nothing (CHAR c)
+static void         Do_nothing (CHAR_T c)
 #else
 static void         Do_nothing (c)
-CHAR                c;
+CHAR_T                c;
 
 #endif
 {
@@ -1348,7 +1348,7 @@ typedef struct _Transition *PtrTransition;
 /* a transition of the automaton in "executable" form */
 typedef struct _Transition
   {
-     UCHAR       trigger;	/* the imput character that triggers
+     UCHAR_T       trigger;	/* the imput character that triggers
 					   the transition */
      Proc                action;	/* the procedure to be called when
 					   the transition occurs */
@@ -1374,7 +1374,7 @@ static StateDescr	XMLautomaton[MAX_STATE];
 typedef struct _sourceTransition
   {
      state               initState;	/* initial state of transition */
-     CHAR                trigger;	/* the imput character that triggers
+     CHAR_T                trigger;	/* the imput character that triggers
 					   the transition */
      Proc                transitionAction;/* the procedure to be called when
 					   the transition occurs */
@@ -1600,7 +1600,7 @@ STRING closingTag;
 
 #endif
 {
-  UCHAR       charRead;
+  UCHAR_T       charRead;
   boolean             match;
   PtrTransition       trans;
   boolean	      endOfFile;

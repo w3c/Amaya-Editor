@@ -410,7 +410,7 @@ void *context;
 	/* the image could not be loaded */
 	if ((status != 200) && (status != 0))
 	   return;
-	tempfile = (STRING) TtaGetMemory (sizeof (CHAR) * MAX_LENGTH);
+	tempfile = (STRING) TtaGetMemory (sizeof (CHAR_T) * MAX_LENGTH);
 	/* rename the local file of the image */
 	ustrcpy (tempfile, desc->localName);
 	
@@ -564,8 +564,8 @@ void               *extra;
   Attribute           attr;
   LoadedImageDesc    *desc;
   STRING              imageName;
-  CHAR                pathname[MAX_LENGTH];
-  CHAR                tempfile[MAX_LENGTH];
+  CHAR_T                pathname[MAX_LENGTH];
+  CHAR_T                tempfile[MAX_LENGTH];
   int                 length, i;
   boolean             update;
   boolean             newImage;

@@ -61,7 +61,7 @@ static boolean EnableCache;
 static boolean CacheProtectedDocs;
 static boolean CacheDisconnectMode;
 static boolean CacheExpireIgnore;
-static CHAR CacheDirectory [MAX_LENGTH+1];
+static CHAR_T CacheDirectory [MAX_LENGTH+1];
 static int CacheSize;
 static int MaxCacheFile;
 
@@ -71,14 +71,14 @@ static boolean ProxyActive = FALSE;
 static HWND ProxyHwnd;
 #endif _WINDOWS
 static int ProxyBase;
-static CHAR HttpProxy [MAX_LENGTH+1];
-static CHAR NoProxy [MAX_LENGTH+1];
+static CHAR_T HttpProxy [MAX_LENGTH+1];
+static CHAR_T NoProxy [MAX_LENGTH+1];
 
 /* General menu options */
 #ifdef _WINDOWS
 static boolean GeneralActive = FALSE;
-static CHAR AppHome [MAX_LENGTH+1];
-static CHAR TmpDir [MAX_LENGTH+1];
+static CHAR_T AppHome [MAX_LENGTH+1];
+static CHAR_T TmpDir [MAX_LENGTH+1];
 static HWND GeneralHwnd;
 #endif _WINDOWS
 static int GeneralBase;
@@ -86,10 +86,10 @@ static int ToolTipDelay;
 static int DoubleClickDelay;
 static int Zoom;
 static boolean Multikey;
-static CHAR DefaultName [MAX_LENGTH+1];
+static CHAR_T DefaultName [MAX_LENGTH+1];
 static boolean BgImages;
 static boolean DoubleClick;
-static CHAR DialogueLang [MAX_LENGTH+1];
+static CHAR_T DialogueLang [MAX_LENGTH+1];
 static int FontMenuSize;
 
 /* Publish menu options */
@@ -100,33 +100,33 @@ static HWND PublishHwnd;
 static int PublishBase;
 static boolean LostUpdateCheck;
 static boolean VerifyPublish;
-static CHAR HomePage [MAX_LENGTH+1];
+static CHAR_T HomePage [MAX_LENGTH+1];
 
 /* Color menu options */
 #ifdef _WINDOWS
 static boolean ColorActive = FALSE;
 #endif _WINDOWS
 static int ColorBase;
-static CHAR FgColor [MAX_LENGTH+1];
-static CHAR BgColor [MAX_LENGTH+1];
-static CHAR MenuFgColor [MAX_LENGTH+1];
-static CHAR MenuBgColor [MAX_LENGTH+1];
+static CHAR_T FgColor [MAX_LENGTH+1];
+static CHAR_T BgColor [MAX_LENGTH+1];
+static CHAR_T MenuFgColor [MAX_LENGTH+1];
+static CHAR_T MenuBgColor [MAX_LENGTH+1];
 
 /* Geometry menu options */
 #ifdef _WINDOWS
 static boolean GeometryActive = FALSE;
 #endif _WINDOWS
 static int GeometryBase;
-static CHAR FormattedView [MAX_GEOMETRY_LENGTH+1];
-static CHAR StructureView [MAX_GEOMETRY_LENGTH+1];
-static CHAR MathStructureView [MAX_GEOMETRY_LENGTH+1];
-static CHAR GraphStructureView [MAX_GEOMETRY_LENGTH+1];
-static CHAR AlternateView [MAX_GEOMETRY_LENGTH+1];
-static CHAR LinksView [MAX_GEOMETRY_LENGTH+1];
-static CHAR TableOfContentsView [MAX_GEOMETRY_LENGTH+1];
+static CHAR_T FormattedView [MAX_GEOMETRY_LENGTH+1];
+static CHAR_T StructureView [MAX_GEOMETRY_LENGTH+1];
+static CHAR_T MathStructureView [MAX_GEOMETRY_LENGTH+1];
+static CHAR_T GraphStructureView [MAX_GEOMETRY_LENGTH+1];
+static CHAR_T AlternateView [MAX_GEOMETRY_LENGTH+1];
+static CHAR_T LinksView [MAX_GEOMETRY_LENGTH+1];
+static CHAR_T TableOfContentsView [MAX_GEOMETRY_LENGTH+1];
 
 /* common local variables */
-CHAR s[300]; /* general purpose buffer */
+CHAR_T s[300]; /* general purpose buffer */
 
 /* 
 ** function prototypes
@@ -354,7 +354,7 @@ const STRING name;
 STRING value;
 #endif /* __STDC__ */
 {
-  CHAR *ptr;
+  CHAR_T *ptr;
   ptr = TtaGetEnvString (name);
   if (ptr) {
     ustrncpy (value, ptr, MAX_LENGTH);
@@ -402,7 +402,7 @@ const STRING name;
 STRING value;
 #endif /* __STDC__ */
 {
-  CHAR *ptr;
+  CHAR_T *ptr;
   ptr = TtaGetDefEnvString (name);
   if (ptr) {
     ustrncpy (value, ptr, MAX_LENGTH);
@@ -1449,7 +1449,7 @@ STRING              pathname;
 #endif
 {
 #ifndef _WINDOWS 
-   CHAR             s[MAX_LENGTH];
+   CHAR_T             s[MAX_LENGTH];
    int              i;
 
    /* Create the dialogue form */
@@ -1791,7 +1791,7 @@ STRING              pathname;
 #endif
 {
 #ifndef _WINDOWS
-   CHAR             s[MAX_LENGTH];
+   CHAR_T             s[MAX_LENGTH];
    int              i;
 
    /* Create the dialogue form */
@@ -1966,7 +1966,7 @@ STRING              pathname;
 #endif
 {
 #ifndef _WINDOWS
-   CHAR             s[MAX_LENGTH];
+   CHAR_T             s[MAX_LENGTH];
    int              i;
 
    /* Create the dialogue form */
@@ -2232,7 +2232,7 @@ STRING              pathname;
 #endif
 {
 #ifndef _WINDOWS
-   CHAR             s[MAX_LENGTH];
+   CHAR_T             s[MAX_LENGTH];
    int              i;
 
    /* Create the dialogue form */

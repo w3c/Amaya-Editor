@@ -281,7 +281,7 @@ static void UpdatePointsAttribute (el, doc, minX, minY, maxX, maxY)
   AttributeType	        attrType;
   Attribute		attr, attrX, attrY;
   TypeUnit		unit;
-  CHAR			buffer[512], buffer1[8];
+  CHAR_T			buffer[512], buffer1[8];
   int			nbPoints, point, x, y, posX, posY;
   int                   mainView;
 
@@ -375,7 +375,7 @@ static void UpdatePositionAttribute (attr, el, doc)
 {
    AttributeType	attrType;
    ElementType		elType;
-   CHAR			buffer[32], buffer1[8];
+   CHAR_T			buffer[32], buffer1[8];
    int			attrKind, posX, posY, minX, minY, maxX, maxY;
    boolean		changePoints;
 
@@ -478,7 +478,7 @@ static void UpdateWidthHeightAttribute (attr, el, doc)
   ElementType           elType;
    AttributeType	attrType;
    Attribute		extAttr;
-   CHAR			buffer[10];
+   CHAR_T			buffer[10];
    int			attrKind, val;
    int                  minX, minY, maxX, maxY;
 
@@ -829,7 +829,7 @@ int                 construct;
    Attribute	        attr;
    SSchema	        docSchema, GraphMLSSchema;
    DisplayMode	        dispMode;
-   CHAR		        shape;
+   CHAR_T		        shape;
    int		        c1, c2, i, j, w, h, minX, minY, maxX, maxY;
    boolean	        found, automaticPlacement;
    int	                oldStructureChecking;

@@ -1216,11 +1216,11 @@ static void CheckMROW (el, doc)
    returns the type of character c (MN, MI or MO).
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int GetCharType (UCHAR c, CHAR alphabet)
+static int GetCharType (UCHAR_T c, CHAR_T alphabet)
 #else /* __STDC__*/
 static int GetCharType (c, alphabet)
-UCHAR c;
-CHAR  alphabet;
+UCHAR_T c;
+CHAR_T  alphabet;
 #endif /* __STDC__*/
 {
   int	ret;
@@ -1462,12 +1462,12 @@ static void ParseMathString (theText, theElem, doc)
   SSchema	MathMLSchema;
   int		firstSelChar, lastSelChar, newSelChar, len, totLen, i, j,
 		start;
-  CHAR		alphabet, c;
+  CHAR_T		alphabet, c;
   Language	lang;
 #define TXTBUFLEN 200
-  UCHAR         text[TXTBUFLEN];
-  CHAR		language[TXTBUFLEN];
-  UCHAR         mathType[TXTBUFLEN];
+  UCHAR_T         text[TXTBUFLEN];
+  CHAR_T		language[TXTBUFLEN];
+  UCHAR_T         mathType[TXTBUFLEN];
   int           oldStructureChecking;
 
   /* get the current selection */
@@ -1529,7 +1529,7 @@ static void ParseMathString (theText, theElem, doc)
 	  for (j = 0; j < len; j++)
 	     {
 	     language[i+j] = lang;
-	     mathType[i+j] = (UCHAR) GetCharType (text[i+j], alphabet);
+	     mathType[i+j] = (UCHAR_T) GetCharType (text[i+j], alphabet);
 	     }
 	  i+= len;
 	  totLen += len;
@@ -1545,7 +1545,7 @@ static void ParseMathString (theText, theElem, doc)
 	/* comma or point between two digits: the comma or point is part of
 	   the number */
 	  {
-	  mathType[i] = (UCHAR) MathML_EL_MN;
+	  mathType[i] = (UCHAR_T) MathML_EL_MN;
 	  i++;
 	  }
     }
@@ -1917,7 +1917,7 @@ View                view;
    AttributeType       attrType;
    Attribute           attr;
    Document            refDoc;
-   CHAR                name[50];
+   CHAR_T                name[50];
    int                 firstchar, lastchar, len;
    boolean             selBefore;
 
@@ -2140,7 +2140,7 @@ void FenceModified(event)
   ElementType	elType;
   AttributeType	attrType;
   Attribute	attr;
-  UCHAR         text[2];
+  UCHAR_T         text[2];
 
   mfencedEl = TtaGetParent (event->element);
   elType = TtaGetElementType (event->element);
@@ -2156,7 +2156,7 @@ void FenceModified(event)
      attr =  TtaNewAttribute (attrType);
      TtaAttachAttribute (mfencedEl, attr, event->document);
      }
-  text[0] = (UCHAR) event->value;
+  text[0] = (UCHAR_T) event->value;
   text[1] = '\0';
   TtaSetAttributeText (attr, text, mfencedEl, event->document);
 }
@@ -2176,7 +2176,7 @@ void AttrOpenCloseChanged (event)
 {
   Element	fence, content;
   int		length;
-  UCHAR         text[8];
+  UCHAR_T         text[8];
 
   if (event->attributeType.AttrTypeNum == MathML_ATTR_open)
      fence = TtaGetFirstChild (event->element);
@@ -2223,7 +2223,7 @@ void FencedSeparatorModified(event)
   AttributeType	attrType;
   int		i, len;
   Language	lang;
-  UCHAR         text[32];
+  UCHAR_T         text[32];
 
   fencedExpEl = TtaGetParent (event->element);
   if (fencedExpEl == NULL)

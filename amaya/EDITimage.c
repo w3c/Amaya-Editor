@@ -36,11 +36,11 @@
 static Document     BgDocument;
 static int          BaseImage;
 static int          RepeatValue;
-static CHAR         DirectoryImage[MAX_LENGTH];
-static CHAR         LastURLImage[MAX_LENGTH];
-static CHAR         ImageName[MAX_LENGTH];
-static CHAR         ImgFilter[NAME_LENGTH];
-static CHAR         ImgAlt[NAME_LENGTH];
+static CHAR_T         DirectoryImage[MAX_LENGTH];
+static CHAR_T         LastURLImage[MAX_LENGTH];
+static CHAR_T         ImageName[MAX_LENGTH];
+static CHAR_T         ImgFilter[NAME_LENGTH];
+static CHAR_T         ImgAlt[NAME_LENGTH];
 
 #include "AHTURLTools_f.h"
 #include "HTMLactions_f.h"

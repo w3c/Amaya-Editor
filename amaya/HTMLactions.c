@@ -42,7 +42,7 @@
 #include "wininclude.h"
 
 HWND currentWindow = NULL;
-static CHAR WIN_buffer [1024];
+static CHAR_T WIN_buffer [1024];
 #endif /* _WINDOWS */
 
 /**** Some prototypes *****/
@@ -564,7 +564,7 @@ Document            doc;
    ElementType         elType;
    Document            targetDocument;
    SSchema             HTMLSSchema;
-   CHAR                documentURL[MAX_LENGTH];
+   CHAR_T                documentURL[MAX_LENGTH];
    STRING              url, info, sourceDocUrl;
    int                 length;
    boolean		isHTML;
@@ -951,7 +951,7 @@ Document       doc;
 {
   int                i;
   STRING             tempdocument;
-  CHAR               htmlErrFile [80];
+  CHAR_T               htmlErrFile [80];
 
   if (doc == 0)
     return;

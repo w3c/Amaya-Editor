@@ -334,10 +334,10 @@ Document doc;
    Return that GRAPHICS_UNIT element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Element      CreateGraphicalLeaf (CHAR shape, Element el, Document doc, boolean changeShape)
+static Element      CreateGraphicalLeaf (CHAR_T shape, Element el, Document doc, boolean changeShape)
 #else
 static Element      CreateGraphicalLeaf (shape, el, doc, changeShape)
-CHAR		shape;
+CHAR_T		shape;
 Element		el;
 Document	doc;
 boolean		changeShape;
@@ -346,7 +346,7 @@ boolean		changeShape;
 {
    ElementType	elType;
    Element	leaf, child;
-   CHAR		oldShape;
+   CHAR_T		oldShape;
 
    leaf = NULL;
    child = TtaGetLastChild (el);
@@ -397,7 +397,7 @@ int		arrowHead;
 {
    ElementType		elType;
    Element		leaf;
-   CHAR			shape;
+   CHAR_T			shape;
 
    leaf = NULL;
    *closed = FALSE;

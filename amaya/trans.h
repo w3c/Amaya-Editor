@@ -165,7 +165,7 @@ strTransDesc;
 typedef struct _TransSet
 {
   /* name of the transformation set (eg, name of file without suffix .trans) */
-  CHAR		      TransFileName [20];
+  CHAR_T		      TransFileName [20];
 #ifndef PPSTANDALONE
   SSchema	      Schema;
 #endif

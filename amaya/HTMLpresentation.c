@@ -182,7 +182,7 @@ void  AttrToSpan (elem, attr, doc)
 	span = parent;
       if (span != NULL)
         {
-          oldValue = (STRING) TtaGetMemory (sizeof (CHAR) * ATTRLEN);
+          oldValue = (STRING) TtaGetMemory (sizeof (CHAR_T) * ATTRLEN);
           TtaGiveAttributeType (attr, &attrType, &kind);
 	  newAttr = TtaGetAttribute (span, attrType);
 	  if (newAttr == NULL)
@@ -353,7 +353,7 @@ Element             elem;
    styleAttr = TtaGetAttribute (elem, attrType);
    /* keep the new style string */
    len = STYLELEN;
-   style = (STRING) TtaGetMemory (sizeof (CHAR) * STYLELEN);
+   style = (STRING) TtaGetMemory (sizeof (CHAR_T) * STYLELEN);
    GetHTMLStyleString (elem, doc, style, &len);
    if (len == 0)
      {
@@ -407,7 +407,7 @@ NotifyPresentation *event;
   AttributeType      attrType;
   Attribute          attr;
 #define STYLELEN 1000
-  CHAR               buffer[15];
+  CHAR_T               buffer[15];
   int                presType;
   int                w, h, unit, value, i;
   boolean            ret;
@@ -668,8 +668,8 @@ static void MoveAttrLang (oldAttr, el, doc)
   Attribute	newAttr, attr;
   AttributeType	attrType;
   int		kind, len;
-  STRING	value    = (STRING) TtaGetMemory (sizeof (CHAR) * ATTRLEN); 
-  STRING oldValue = (STRING) TtaGetMemory (sizeof (CHAR) * ATTRLEN);
+  STRING	value    = (STRING) TtaGetMemory (sizeof (CHAR_T) * ATTRLEN); 
+  STRING oldValue = (STRING) TtaGetMemory (sizeof (CHAR_T) * ATTRLEN);
   boolean	sameLang;
 
   /* if all siblings have the same LANG attribute, move that attibute to
@@ -746,7 +746,7 @@ void AttrLangCreated(event)
 {
   Element	elem;
   int		len;
-  STRING	value    = (STRING) TtaGetMemory (sizeof (CHAR) * ATTRLEN); 
+  STRING	value    = (STRING) TtaGetMemory (sizeof (CHAR_T) * ATTRLEN); 
 
   /* move the LANG attribute to the parent element if all sibling have the
      same attribute with the same value */

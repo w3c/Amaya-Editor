@@ -57,7 +57,7 @@ strGenStack;
 static strGenStack *generationStack[MAX_STACK];
 
 static int          topGenerStack;
-static UCHAR      TransferMode;
+static UCHAR_T      TransferMode;
 #define ByAttribute 0
 #define InBuffer 1
 static STRING       bufHTML;		/* HTML text buffer */
@@ -839,8 +839,8 @@ Element subTree;
 Document doc;
 #endif
 {
-  CHAR		      tmpfilename[25];
-  CHAR		      charRead;
+  CHAR_T		      tmpfilename[25];
+  CHAR_T		      charRead;
   STRING              s;
   FILE		     *inputFile = NULL;
   int                 len;
@@ -1317,7 +1317,7 @@ Document            doc;
    Element             elCour, elOriginal;
    AttributeType       attrType;
    Attribute           attrFound;
-   CHAR                label[10];
+   CHAR_T                label[10];
    int                 l, rank, idf, delta;
 
    attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
@@ -1359,7 +1359,7 @@ Document            doc;
 
 #endif
 {
-   CHAR                label[10];
+   CHAR_T                label[10];
    int                 l, idf, rank, delta;
    AttributeType       attrType;
    Attribute           attrFound;
@@ -2407,7 +2407,7 @@ STRING              data;
   Attribute	       attr;
   AttributeType       attrType;
   boolean	       found;
-  CHAR		       buf [MAX_LENGTH];
+  CHAR_T		       buf [MAX_LENGTH];
   SearchDomain	       domain;
 
   val = (int) data;
@@ -2735,7 +2735,7 @@ Document            doc;
 
 #endif
 {
-  CHAR                DestTag[20];
+  CHAR_T                DestTag[20];
   boolean             ok, chglev;
   int                 i,last,best;
   Element             elemSelect;
