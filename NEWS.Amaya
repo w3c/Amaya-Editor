@@ -11,6 +11,13 @@ Extensions 2.2:
 * CSS:
   - Amaya is now able to print with CSS
 
+* A Source view is now available from the Views menu. When you select in
+  the main view, an index points at the corresponding markup in the
+  source view and conversely.
+  You can edit the source code.  Every time you save the source code or
+  you press the "Apply Changes" button, the other views are updated to
+  reflect the latest changes.
+
 * 4 different Amaya profiles are proposed: editor, mini-editor, browser,
   mini-browser. Amaya menus and buttons are displayed according to the
   current profile.

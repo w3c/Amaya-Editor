@@ -16,7 +16,7 @@ PRINT
 
 COUNTERS
    CptPage: Rank of Page(Formatted_view);
-#endif
+#endif  { PAGE }
 
 DEFAULT
 
@@ -130,7 +130,7 @@ BOXES
 	Height: 25.9 cm;
 	VertPos: Top = Enclosing . Top + 1.7 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
-#endif
+#endif { US_PAPER }
 	CreateAfter (Spacehead);
 	if PrintURL
 	   CreateAfter (URLhead);
@@ -138,7 +138,7 @@ BOXES
 	IF Not One(CptPage) CreateBefore (BottomSpace);
 	Underline: NoUnderline;
 	END;
-#else
+#else { PAGE }
 
   RightSpace:
 	BEGIN
@@ -156,7 +156,17 @@ BOXES
 	Weight: Normal;
 	END;
 
-#endif
+ IndexBox: BEGIN
+        Content: Picture 'index.gif';
+        HorizPos: Left = Root . Left;
+        VertPos: Top = Enclosing . Top;
+        VertOverflow : Yes;
+        HorizOverflow : Yes;
+        Inline: No;
+        Visibility: Creator =;
+        END;
+
+#endif { PAGE }
 
 RULES
 
@@ -210,12 +220,9 @@ RULES
 
 ATTRIBUTES
 
+#ifndef PAGE
  Highlight:
-        BEGIN
-        Foreground : Black;
-        Background : Yellow;
-	FillPattern: backgroundcolor;
-        ShowBox;
-        END;
+	CreateFirst (IndexBox);
+#endif
 
 END

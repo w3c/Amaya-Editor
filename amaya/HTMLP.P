@@ -6003,6 +6003,26 @@ BOXES
 	END;
 #endif
 
+#ifndef PAGE
+ IndexBox: BEGIN
+	Content: Picture 'index.gif';
+	HorizPos: Left = Root . Left;
+	VertPos: Top = Creator . Top;
+	VertOverflow : Yes;
+	HorizOverflow : Yes;
+	Inline: No;
+	Visibility: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	IN Links_view
+		Visibility: 0;
+	IN Table_of_contents
+		Visibility: 0;
+	END;
+#endif
+
 RULES
 
  HTML:	BEGIN
@@ -10035,14 +10055,10 @@ ATTRIBUTES
 #ifndef PAGE
   Highlight:
 	BEGIN
-	Foreground : Black;
-	Background : Yellow;
-	FillPattern: backgroundcolor;
-	ShowBox;
-	IN Structure_view ShowBox;
-	IN Links_view ShowBox;
-	IN Alternate_view ShowBox;
-	IN Table_of_contents ShowBox;
+        if TEXT_UNIT
+	   CreateAfter (IndexBox);
+	if NOT TEXT_UNIT
+	   CreateLast (IndexBox);
 	END;
 #endif
 
@@ -10062,4 +10078,3 @@ ATTRIBUTES
 	   CreateAfter(INVALID_E);
 
 END
-
