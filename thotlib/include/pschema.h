@@ -26,11 +26,15 @@ typedef int        *PSchema;
    userStyleSheet: indicates whether the presentation schema is created
                    for a user stylesheet (TRUE) of for an author stylesheet
                    (FALSE).
+   refElement: if NULL, the presentation schema applies to the whole
+               document, otherwise it applies to the subtree of that
+	       element.
 
    Return value:
    the new presentation schema.
   ----------------------------------------------------------------------*/
-extern PSchema      TtaNewPSchema (SSchema nature, ThotBool userStyleSheet);
+extern PSchema      TtaNewPSchema (SSchema nature, ThotBool userStyleSheet,
+				   Element refElement);
 
 /*----------------------------------------------------------------------
    TtaUnlinkPSchema

@@ -268,6 +268,10 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 	  /* Note that schema extensions (pHd != NULL), aka CSS stylesheets,
 	     apply only to the main view (view = 1) */
 	  if (view == 1 || pHd == NULL)
+	    /* consider this P schema only if it applies to the whole tree or
+	    if the element is within the subtree to which the schema applies */
+	    if (!pSP->PsSubtree ||
+		ElemIsWithinSubtree (pEl, pSP->PsSubtree))
 	    {
 	      /* look at the rules associated with the element type in this
 		 P schema extension */
@@ -3428,7 +3432,11 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
     /* process all values of the attribute, in case of a text attribute
        with multiple values */
     valNum = 1;
-    do
+    /* consider this P schema only if it applies to the whole tree or
+       if the element is within the subtree to which the schema applies */
+    if (!pSchP->PsSubtree ||
+	ElemIsWithinSubtree (pEl, pSchP->PsSubtree))
+     do
       {
       /* pR: premiere regle correspondant a cette valeur de l'attribut */
       pR = AttrPresRule (pAttr, pEl, inherit, pAttrComp, pSchP, &valNum);
@@ -3783,7 +3791,7 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 	  firstOfType = pR;
 	}
       }
-    while (valNum > 0);  /* fin de la boucle sut les valeurs de l'attribut */
+     while (valNum > 0);  /* fin de la boucle sut les valeurs de l'attribut */
 
     /* on traite les schemas de presentation de plus forte priorite' */
     if (pHd)

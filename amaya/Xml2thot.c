@@ -59,7 +59,7 @@
 static XML_Parser  Parser = NULL;
 
 /* global data used by the HTML parser */
-static ParserData  XMLcontext = {0, 0, UTF_8, 0, NULL, 0, FALSE, FALSE, FALSE, FALSE, FALSE};
+static ParserData  XMLcontext = {0, 0, NULL, UTF_8, 0, NULL, 0, FALSE, FALSE, FALSE, FALSE, FALSE};
 
 /* a parser context. It describes the specific actions to be executed
 when parsing an XML document fragment according to a given DTD */
@@ -4339,6 +4339,7 @@ static void  InitializeXmlParsingContext (Document doc,
 {
   XMLcontext.doc = doc;
   XMLcontext.docRef = doc;
+  XMLcontext.elementRef = NULL;
   XMLcontext.lastElement = lastElem;
   XMLcontext.lastElementClosed = isClosed;
   ParsingSubTree = isSubTree;
@@ -4599,6 +4600,7 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
 	      InitializeXmlParsingContext (externalDoc, RootElement, FALSE, FALSE);
 	      /* Set the document reference */
 	      XMLcontext.docRef = doc;
+	      XMLcontext.elementRef = el;
 	      /* Disable structure checking for the external document*/
 	      TtaSetStructureChecking (0, externalDoc);
 	      /* Delete all element except the root element */
@@ -4612,7 +4614,10 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
 	    }
 	}
       else
-	InitializeXmlParsingContext (doc, extEl, isclosed, TRUE);
+	{
+	  InitializeXmlParsingContext (doc, extEl, isclosed, TRUE);
+	  XMLcontext.elementRef = extEl;
+	}
       ChangeXmlParserContextByDTD (DTDname);
     }
   else

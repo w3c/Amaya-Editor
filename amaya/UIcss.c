@@ -107,7 +107,7 @@ ThotBool  LoadRemoteStyleSheet (char *url, Document doc, Element el,
 
 
 /*----------------------------------------------------------------------
-   LoadUserStyleSheet : Load the user Style Sheet found in it's    
+   LoadUserStyleSheet : Load the user Style Sheet found in his/her   
    home directory or the default one in THOTDIR.           
   ----------------------------------------------------------------------*/
 void LoadUserStyleSheet (Document doc)
@@ -189,7 +189,7 @@ void LoadUserStyleSheet (Document doc)
       /* parse the whole thing and free the buffer */
       if (buffer != NULL)
 	{
-	  ReadCSSRules (doc, css, buffer, css->url, 0, FALSE, NULL);
+	  ReadCSSRules (doc, css, buffer, css->url, 0, FALSE, NULL, NULL);
 	  TtaFreeMemory (buffer);
 	}
     }

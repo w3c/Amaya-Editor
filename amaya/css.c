@@ -128,7 +128,8 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
     }
 
   /* create the presentation schema for this structure */
-  nSchema = TtaNewPSchema (sSchema, css->category == CSS_USER_STYLE);
+  nSchema = TtaNewPSchema (sSchema, css->category == CSS_USER_STYLE,
+			   css->refEl);
   pSchema = TtaGetFirstPSchema (doc, sSchema);
   pIS->PiPSchema = nSchema;
   /* chain the presentation schema at the right position */
@@ -363,6 +364,7 @@ CSSInfoPtr AddCSS (Document doc, Document docRef, CSSCategory category,
       css->url = TtaStrdup (url);
       css->localName = TtaStrdup (localName);
       css->styleEl = styleElement;
+      css->refEl = NULL;
       css->category = category;
 
       /* that CSS is only used by the document docRef */
@@ -730,7 +732,7 @@ void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
 	  tmpBuff[buf.st_size] = 0;
 	  fclose (res);
 
-	  ReadCSSRules (doc, oldcss, tmpBuff, tempURL, 0, FALSE, NULL);
+	  ReadCSSRules (doc, oldcss, tmpBuff, tempURL, 0, FALSE, NULL, NULL);
 	  TtaFreeMemory (tmpBuff);
 	}
     }

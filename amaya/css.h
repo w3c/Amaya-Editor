@@ -50,6 +50,8 @@ typedef struct _CSSInfo
   char               *url;
   char               *localName;
   Element             styleEl;  /* the style element which contains this CSS */
+  Element             refEl;    /* the element that references the document
+				   containing this CSS */
   CSSCategory         category;
   PInfoPtr            infos; /* the document Presentation Schemas */
   /* documents using this CSS */

@@ -2407,15 +2407,15 @@ static void  SetVerticalSpace (PtrAbstractBox pAb, ThotBool head,
 
 /*----------------------------------------------------------------------
    TruncateOrCompleteAbsBox
-   Coupe ou complete le pave pAb. pAb est coupe' si    
-   truncate est vrai ou complete si truncate est faux. La coupure 
-   ou la completion concerne la tete du pave si head est   
-   vrai ou la queue du pave si head est faux. Marque cette 
-   information dans le pave. S'il s'agit d'un pave qui     
-   devient complet, cree ses paves de presentation a`      
-   l'extremite qui devient complet. Retourne un pointeur  
-   sur le dernier pave de presentation cree ou NULL si     
-   aucun pave n'est cree.                                  
+   Coupe ou complete le pave pAb. pAb est coupe' si
+   truncate est vrai ou complete si truncate est faux. La coupure
+   ou la completion concerne la tete du pave si head est
+   vrai ou la queue du pave si head est faux. Marque cette
+   information dans le pave. S'il s'agit d'un pave qui
+   devient complet, cree ses paves de presentation a`
+   l'extremite qui devient complet. Retourne un pointeur
+   sur le dernier pave de presentation cree ou NULL si
+   aucun pave n'est cree.
   ----------------------------------------------------------------------*/
 PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 					 ThotBool head, PtrDocument pDoc)
@@ -2544,20 +2544,29 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 			     pHd = NULL;
 			     while (pSchP != NULL)
 			       {
-				 /* process all values of the attribute, in
-				    case of a text attribute with multiple
-				    values */
-				 valNum = 1;
-				 do
+				 /* consider this P schema only if it applies
+				    to the whole tree or if the element is
+				    within the subtree to which the schema
+				    applies */
+				 if (!pSchP->PsSubtree ||
+				     ElemIsWithinSubtree (pAb->AbElement,
+							  pSchP->PsSubtree))
 				   {
-				   pRule = AttrPresRule (pAttr, pAb->AbElement,
-						   TRUE, NULL, pSchP, &valNum);
-				   ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
-					       &pAbbCreated, pAttr, pDoc, pAb,
-					       head, pRule);
+				     /* process all values of the attribute, in
+					case of a text attribute with multiple
+					values */
+				     valNum = 1;
+				     do
+				       {
+					 pRule = AttrPresRule (pAttr,
+						   pAb->AbElement, TRUE, NULL, 
+						   pSchP, &valNum);
+					 ApplCrPresRule (pAttr->AeAttrSSchema,
+						   pSchP, &pAbbCreated, pAttr,
+						   pDoc, pAb, head, pRule);
+				       }
+				     while (valNum > 0);
 				   }
-				 while (valNum > 0);
-
 				 if (pHd == NULL)
 				   /* on n'a pas encore cherche' dans les schemas
 				   de presentation additionnels. On prend le
@@ -2598,14 +2607,19 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 		       /* process all values of the attribute, in case of a
 			  text attribute with multiple values */
 		       valNum = 1;
-		       do
-			 {
+		       /* consider this P schema only if it applies to the
+			  whole tree or if the element is within the subtree
+			  to which the schema applies */
+		       if (!pSchP->PsSubtree ||
+			   ElemIsWithinSubtree (pAb->AbElement, pSchP->PsSubtree))
+		         do
+			   {
 			   pRule = AttrPresRule (pAttr, pAb->AbElement, FALSE,
 						 NULL, pSchP, &valNum);
 			   ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
 				  &pAbbCreated, pAttr, pDoc, pAb, head, pRule);
-			 }
-		       while (valNum > 0);
+			   }
+		         while (valNum > 0);
 
 		       if (pHd == NULL)
 			 /* on n'a pas encore cherche' dans les schemas de
@@ -2950,11 +2964,16 @@ static void ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
   /* additionnels */
   while (pSchP != NULL)
     {
-      /* process all values of the attribute, in case of a text attribute
-	 with multiple values */
-      valNum = 1;
-      do
+      /* consider this P schema only if it applies to the whole tree or if the
+	 element is within the subtree to which the schema applies */
+      if (!pSchP->PsSubtree ||
+	  ElemIsWithinSubtree (pEl, pSchP->PsSubtree))
 	{
+	/* process all values of the attribute, in case of a text attribute
+	   with multiple values */
+	valNum = 1;
+	do
+	  {
 	  /* cherche la premiere regle de presentation pour cette valeur */
 	  /* de l'attribut, dans ce schema de presentation */
 	  pR = AttrPresRule (pAttr, pEl, inheritRule, NULL, pSchP, &valNum);
@@ -3017,9 +3036,10 @@ static void ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
 		  *vis = IntegerRule (pRuleView1, pEl, viewNb, ok, &unit,
 				      pAttr, NULL);
 	      }
+	  }
+        while (valNum > 0);
 	}
-      while (valNum > 0);
-      
+
       if (pHd == NULL)
 	{
 	  /* on n'a pas encore traite' les schemas de presentation additionnels
@@ -3428,7 +3448,11 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
       if (viewSch == 1 && pHd)
 	/* we are interested in the main view and it's not the default
 	   style sheet */
-        {
+	/* consider this P schema only if it applies to the whole tree or
+	   if the element is within the subtree to which the schema applies */
+	if (!pSchPres->PsSubtree ||
+	    ElemIsWithinSubtree (pEl, pSchPres->PsSubtree))
+	  {
 	  /* first rule associated with the element type in this P schema
 	     extension */
 	  pRule = pSchPres->PsElemPRule->ElemPres[pEl->ElTypeNumber - 1];
@@ -3453,13 +3477,17 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 	      /* next rule for the element type in the same P schema extens. */
 	      pRule = pRule->PrNextPRule;
 	    }
-        }
+	  }
 
       /* now, get the rules associated with attributes of ancestors that apply
          to the element, for all views if it's the main P schema, but only
          for view 1 if it's a P schema extension */
       if (viewSch == 1 || pHd == NULL)
-	{
+	/* consider this P schema only if it applies to the whole tree or
+	   if the element is within the subtree to which the schema applies */
+	if (!pSchPres->PsSubtree ||
+	    ElemIsWithinSubtree (pEl, pSchPres->PsSubtree))
+	  {
 	  if (pSP->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
 	    /* the element type inherit some attributes */
 	    {
@@ -3640,7 +3668,7 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 	      /* get the next attribute of the element */
 	      pAttr = pAttr->AeNext;
 	    }
-	}
+	  }
       /* next style sheet (P schema extension) */
       if (pHd)
 	pHd = pHd->HdNextPSchema;

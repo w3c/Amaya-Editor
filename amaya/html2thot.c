@@ -445,7 +445,7 @@ static int	    BufferLineNumber = 0; /* line number in the source file of
 
 /* information about the Thot document under construction */
 /* global data used by the HTML parser */
-static ParserData   HTMLcontext = {0, 0, ISO_8859_1, 0, NULL, 0, FALSE, FALSE, FALSE, FALSE, FALSE};
+static ParserData   HTMLcontext = {0, 0, NULL, ISO_8859_1, 0, NULL, 0, FALSE, FALSE, FALSE, FALSE, FALSE};
 
 static SSchema      DocumentSSchema = NULL;  /* the HTML structure schema */
 static Element      rootElement = NULL;	  /* root element of the document */
@@ -4745,6 +4745,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
   HTMLcontext.lastElementClosed = False;
   HTMLcontext.doc = doc;
   HTMLcontext.docRef = doc;
+  HTMLcontext.elementRef = NULL;
   HTMLcontext.mergeText = FALSE;
   HTMLcontext.language = TtaGetDefaultLanguage ();
   /* initialize input buffer */
@@ -6389,6 +6390,7 @@ static void InitializeHTMLParser (Element lastelem, ThotBool isclosed,
 	/* initialize the stack with ancestors of lastelem */
 	HTMLcontext.doc = doc;
 	HTMLcontext.docRef = doc;
+	HTMLcontext.elementRef = NULL;
 	DocumentSSchema = TtaGetDocumentSSchema (HTMLcontext.doc);
 #ifdef ANNOTATIONS
 	  if (DocumentTypes[doc] == docAnnot)
@@ -6541,6 +6543,7 @@ void StartParser (Document doc, char *fileName,
 
   HTMLcontext.doc = doc;
   HTMLcontext.docRef = doc;
+  HTMLcontext.elementRef = NULL;
   FirstElemToBeChecked = NULL;
   LastElemToBeChecked = NULL;
   HTMLcontext.lastElement = NULL;
@@ -6750,6 +6753,7 @@ void StartParser (Document doc, char *fileName,
   TtaSetDocumentUnmodified (doc);
   HTMLcontext.doc = 0;
   HTMLcontext.docRef = 0;
+  HTMLcontext.elementRef = NULL;
 }
 
 /* end of module */

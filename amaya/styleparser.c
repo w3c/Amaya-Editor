@@ -4818,16 +4818,15 @@ void ApplyCSSRules (Element el, char *cssRule, Document doc, ThotBool destroy)
 }
 
 /*----------------------------------------------------------------------
-   ReadCSSRules:  is the front-end function called by the HTML parser
-   when detecting a <STYLE TYPE="text/css"> indicating it's the
+   ReadCSSRules:  is the front-end function called by the document parser
+   when detecting a <style type="text/css"> indicating it's the
    beginning of a CSS fragment or when reading a file .css.
   
    The CSS parser has to handle <!-- ... --> constructs used to
    prevent prehistoric browser from displaying the CSS as a text
    content. It will stop on any sequence "<x" where x is different
    from ! and will return x as to the caller. Theorically x should
-   be equal to / for the </STYLE> end of style.
-
+   be equal to / for the </style> end of style.
    The parameter doc gives the document tree that contains CSS information.
    The parameter docRef gives the document to which CSS are to be applied.
    This function uses the current css context or creates it. It's able
@@ -4837,11 +4836,13 @@ void ApplyCSSRules (Element el, char *cssRule, Document doc, ThotBool destroy)
    Parameter numberOfLinesRead indicates the number of lines already
    read in the file.
    Parameter withUndo indicates whether the changes made in the document
-   structure and content have to be registered in the Undo queue or not
+   structure and content have to be registered in the Undo queue or not.
+   refElement is the element (image or use, for instance) that references
+   the document containing the style element to be parsed.
   ----------------------------------------------------------------------*/
 char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		   int numberOfLinesRead, ThotBool withUndo,
-		   Element styleElement)
+		   Element styleElement, Element refElement)
 {
   DisplayMode         dispMode;
   char                c;
@@ -4885,6 +4886,8 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   if (css == NULL)
     css = AddCSS (docRef, docRef, CSS_DOCUMENT_STYLE, NULL, NULL,
 		  styleElement);
+  if (css)
+    css->refEl = refElement;
 
   /* register parsed CSS file and the document to which CSS are to be applied*/
   ParsedDoc = docRef;

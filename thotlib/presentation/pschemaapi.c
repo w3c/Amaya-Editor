@@ -74,11 +74,15 @@ static PtrHandlePSchema HandleOfPSchema (PSchema schema, Document doc,
    userStyleSheet: indicates whether the presentation schema is created
                    for a user stylesheet (TRUE) of for an author stylesheet
                    (FALSE).
+   refElement: if NULL, the presentation schema applies to the whole
+               document, otherwise it applies to the subtree of that
+	       element.
 
    Return value:
    the new presentation schema.
   ----------------------------------------------------------------------*/
-PSchema             TtaNewPSchema (SSchema nature, ThotBool userStyleSheet)
+PSchema             TtaNewPSchema (SSchema nature, ThotBool userStyleSheet,
+				   Element refElement)
 {
    PtrPSchema          pSchPres;
    PtrSSchema          pSS;
@@ -94,6 +98,7 @@ PSchema             TtaNewPSchema (SSchema nature, ThotBool userStyleSheet)
 	     pSchPres->PsOrigin = User;
 	   else
 	     pSchPres->PsOrigin = Author;
+	   pSchPres->PsSubtree = refElement;
 	   pSS = (PtrSSchema) nature;
 	   size = pSS->SsAttrTableSize * sizeof (PtrAttributePres);
 	   pSchPres->PsAttrPRule =  (AttrPresTable*) malloc (size);

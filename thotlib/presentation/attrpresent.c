@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -65,15 +65,21 @@ void  CreateInheritedAttrTable (PtrElement pEl, PtrDocument pDoc)
 	  pHd = NULL;
 	  while (pSchP)
 	    {
-	      pAttrPR = pSchP->PsAttrPRule->AttrPres[attr];
-	      if (pAttrPR != NULL)
-		/* check all presentation rules associated with that attr. */
-		for (rule = 0; rule < pSchP->PsNAttrPRule->Num[attr]; rule++)
-		  {
-		    if (pAttrPR->ApElemType == pEl->ElTypeNumber)
-		      (*table)[attr] = TRUE;
-		    pAttrPR = pAttrPR->ApNextAttrPres;
-		  }
+	      /* consider this schema only if it applies to the whole tree orif
+	      the element is within the subtree to which the schema applies */
+	      if (!pSchP->PsSubtree ||
+		  ElemIsWithinSubtree (pEl, pSchP->PsSubtree))
+		{
+		  pAttrPR = pSchP->PsAttrPRule->AttrPres[attr];
+		  if (pAttrPR != NULL)
+		    /* check all presentation rules associated with that attr*/
+		    for (rule = 0; rule < pSchP->PsNAttrPRule->Num[attr]; rule++)
+		      {
+			if (pAttrPR->ApElemType == pEl->ElTypeNumber)
+			  (*table)[attr] = TRUE;
+			pAttrPR = pAttrPR->ApNextAttrPres;
+		      }
+		}
 	      /* next P schema */
 	      if (pHd == NULL)
 		/* extension schemas have not been checked yet */

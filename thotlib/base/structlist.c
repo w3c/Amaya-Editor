@@ -3353,6 +3353,8 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 		   case Author: fprintf (fileDescriptor, "Author");
 		     break;
 		   }
+		 if (pSc1->PsSubtree)
+		   fprintf (fileDescriptor, " - subtree");
 		 fprintf (fileDescriptor, " -----------------------}\n\n");
 		 fprintf (fileDescriptor, "PRESENTATION ");
 		 wrtext (pSchemaStr->SsName, fileDescriptor);
