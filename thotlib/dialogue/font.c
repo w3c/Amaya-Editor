@@ -1,9 +1,5 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
-   font.c -- Module de gestion des polices de caracteres
-   I. Vatton - Juillet 87       
+ * font.c : Module dedicated to font handling.
  */
 
 #include "thot_sys.h"
@@ -14,8 +10,8 @@
 #include "frame.h"
 #include "xpmP.h"
 
-/*  tolower(c) is a macro defined in ctypes.h that returns
-   something wrong if c is not an upper case letter. */
+/*  tolower(c) was a macro defined in ctypes.h that returns
+    something wrong if c is not an upper case letter. */
 #define TOLOWER(c)	(isupper(c)? tolower(c) : (c))
 
 #define EXPORT extern
@@ -25,11 +21,11 @@
 #include "font.var"
 
 
-/* La table des polices de caracteres */
-static int          FirstRemovableFont = 1;	/* premiere fonte qu'on peut virer */
+/* that table for the character glyphs */
+static int          FirstRemovableFont = 1;
 
 static char         EvidenceT[MAX_HIGHLIGHT] = "rbiogq";
-static int          NbMaxTaille;	/* Nombre maximum de tailles de fontes */
+static int          NbMaxTaille;  /* Maximum number of font size handled */
 static int          TenPoints[MAX_LOG_SIZE] =
 {6, 8, 10, 12, 14, 16, 20, 24, 30, 40, 60};
 static char        *FontFamily;
@@ -51,9 +47,9 @@ extern char        *TtaGetEnvString ();
 #endif /* __STDC__ */
 
 #ifdef NEW_WILLOWS
-/* ---------------------------------------------------------------------- */
-/* |    WinLoadFont : Load a Windows font in a Device context.          | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      WinLoadFont : Load a Windows font in a Device context.
+ **/
 void                WinLoadFont (HDC hdc, ptrfont font)
 {
 #if 0
@@ -74,10 +70,9 @@ void                WinLoadFont (HDC hdc, ptrfont font)
 }
 #endif /* NEW_WILLOWS */
 
-/* ---------------------------------------------------------------------- */
-/* |    VolumCar transforme le volume pixels en volume equivalent       | */
-/* |            caracteres.                                             | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      VolumCar convert from pixel volume to char size
+ **/
 #ifdef __STDC__
 int                 VolumCar (int volpixel)
 
@@ -91,17 +86,17 @@ int                 volpixel;
    return volpixel / 200;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    NumberOfFonts rend le nombre de tailles de caracteres definies. | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      NumberOfFonts returns the number of fonts.
+ **/
 int                 NumberOfFonts ()
 {
    return NbMaxTaille + 1;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    PointToPixel convert point value to pixel.              | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      PointToPixel convert from points to pixels.
+ **/
 #ifdef __STDC__
 int                 PointToPixel (int valeur)
 #else  /* __STDC__ */
@@ -109,12 +104,12 @@ int                 PointToPixel (valeur)
 int                 valeur;
 #endif /* __STDC__ */
 {
-   return ((valeur * PTS_POUCE) / PTS_POUCE);
+   return ((valeur * DOT_PER_INCHE) / DOT_PER_INCHE);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    PixelToPoint convert pixel to point.              | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      PixelToPoint convert from pixels to points.
+ **/
 #ifdef __STDC__
 int                 PixelToPoint (int valeur)
 #else  /* __STDC__ */
@@ -122,12 +117,12 @@ int                 PixelToPoint (valeur)
 int                 valeur;
 #endif /* __STDC__ */
 {
-   return ((valeur * PTS_POUCE + PTS_POUCE / 2) / PTS_POUCE);
+   return ((valeur * DOT_PER_INCHE + DOT_PER_INCHE / 2) / DOT_PER_INCHE);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CarWidth rend la largeur du caractere c dans la fonte font.     | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      CarWidth returns the width of a char in a given font.
+ **/
 #ifdef __STDC__
 int                 CarWidth (unsigned char c, ptrfont font)
 #else  /* __STDC__ */
@@ -162,9 +157,9 @@ ptrfont             font;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CarHeight rend la hauteur du caractere c dans la fonte font.    | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      CarHeight returns the height of a char in a given font.
+ **/
 
 #ifdef __STDC__
 int                 CarHeight (unsigned char c, ptrfont font)
@@ -199,9 +194,9 @@ ptrfont             font;
 #endif /* !NEW_WILLOWS */
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CarAscent rend l'ascent du caractere c dans la fonte font.      | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      CarAscent returns the ascent of a char in a given font.
+ **/
 
 #ifdef __STDC__
 int                 CarAscent (unsigned char c, ptrfont font)
@@ -239,9 +234,9 @@ ptrfont             font;
 
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    FontAscent rend l'ascent de la fonte font.                      | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      FontAscent returns a global ascent for a font.
+ **/
 
 #ifdef __STDC__
 int                 FontAscent (ptrfont font)
@@ -275,9 +270,9 @@ ptrfont             font;
 #endif /* !NEW_WILLOWS */
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    FontHeight retourne la hauteur de la police courante utilisee.  | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      FontHeight returns the height of a given font.
+ **/
 
 #ifdef __STDC__
 int                 FontHeight (ptrfont font)
@@ -311,13 +306,11 @@ ptrfont             font;
 #endif /* !NEW_WILLOWS */
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    PixelValue calcule la valeur pixel en fonction de l'unite       | */
-/* |            logique associee.                                       | */
-/* |            Le parametre pAb donne l'adresse du pave courant,    | */
-/* |            sauf dans le cas UnPercent, ou pAb contient la       | */
-/* |            valeur de reference.                                    | */
-/* ---------------------------------------------------------------------- */
+/**
+ *  PixelValue computes the pixel size for a given logical unit.
+ *		pAb is the current Pave except for UnPercent unit
+ *		here it hold the comparison value.
+ **/
 #ifdef __STDC__
 int                 PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb)
 #else  /* __STDC__ */
@@ -358,13 +351,11 @@ PtrAbstractBox             pAb;
    return (dist);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    PixelValue calcule la valeur logique a partir de la valeur      | */
-/* |            pixel en fonction de l'unite logique associee.          | */
-/* |            Le parametre pAb donne l'adresse du pave courant,    | */
-/* |            sauf dans le cas UnPercent, ou pAb contient la       | */
-/* |            valeur de reference.                                    | */
-/* ---------------------------------------------------------------------- */
+/**
+ *  PixelValue computes the logical value for a given pixel size.
+ *		pAb is the current Pave except for UnPercent unit
+ *		here it hold the comparison value.
+ **/
 #ifdef __STDC__
 int                 LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb)
 #else  /* __STDC__ */
@@ -411,10 +402,9 @@ PtrAbstractBox             pAb;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    FontBase rend le decalage de la ligne de base par rapport a`    | */
-/* |            l'origine pour la fonte font.                           | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      FontBase returns the shifting of the base line for a given font.
+ **/
 
 #ifdef __STDC__
 int                 FontBase (ptrfont font)
@@ -432,49 +422,49 @@ ptrfont             font;
       return (FontAscent (font));
 }
 
-/* ---------------------------------------------------------------------- */
-/* | PseudoTaille convertit une taille en points en taille relative     | */
-/* ---------------------------------------------------------------------- */
+/**
+ *   FontRelSize converts between a size in points and the logical size.
+ **/
 #ifdef __STDC__
-int                 PseudoTaille (int taille)
+int                 FontRelSize (int size)
 #else  /* __STDC__ */
-int                 PseudoTaille (taille)
-int                 taille;
+int                 FontRelSize (size)
+int                 size;
 
 #endif /* __STDC__ */
 {
    int                 j;
 
    j = 0;
-   while ((taille > TenPoints[j]) && (j < NbMaxTaille))
+   while ((size > TenPoints[j]) && (j < NbMaxTaille))
       j++;
 
    return (j);
 }
 
-/* ---------------------------------------------------------------------- */
-/* | TailleEnPoints convertit une taille relative en taille en points   | */
-/* ---------------------------------------------------------------------- */
+/**
+ *   FontPointSize convert a logical size to the point value.
+ **/
 #ifdef __STDC__
-int                 TailleEnPoints (int taille)
+int                 FontPointSize (int size)
 #else  /* __STDC__ */
-int                 TailleEnPoints (taille)
-int                 taille;
+int                 FontPointSize (size)
+int                 size;
 
 #endif /* __STDC__ */
 {
 
-   if (taille > NbMaxTaille)
-      taille = NbMaxTaille;
-   else if (taille < 0)
-      taille = 0;
+   if (size > NbMaxTaille)
+      size = NbMaxTaille;
+   else if (size < 0)
+      size = 0;
 
-   return (TenPoints[taille]);
+   return (TenPoints[size]);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    LoadFont charge une fonte par acces via FONT_PATH.              | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      LoadFont load a given font designed by its name.
+ **/
 #ifdef __STDC__
 ptrfont             LoadFont (char name[100])
 #else  /* __STDC__ */
@@ -516,17 +506,17 @@ char                name[100];
 #endif /* !NEW_WILLOWS */
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    NomFonte calcule le nom Thot d'une fonte.                       | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      NomFonte computes the name of a Thot font.
+ **/
 #ifdef __STDC__
-void                NomFonte (char alphabet, char police, int evidence, int taille, TypeUnit unit, char r_nom[10], char r_nomX[100])
+void                NomFonte (char alphabet, char family, int highlight, int size, TypeUnit unit, char r_nom[10], char r_nomX[100])
 #else  /* __STDC__ */
-void                NomFonte (alphabet, police, evidence, taille, unit, r_nom, r_nomX)
+void                NomFonte (alphabet, family, highlight, size, unit, r_nom, r_nomX)
 char                alphabet;
-char                police;
-int                 evidence;
-int                 taille;
+char                family;
+int                 highlight;
+int                 size;
 TypeUnit            unit;
 char                r_nom[10];
 char                r_nomX[100];
@@ -534,12 +524,12 @@ char                r_nomX[100];
 #endif /* __STDC__ */
 {
 
-   if (evidence > MAX_HIGHLIGHT)
-      evidence = MAX_HIGHLIGHT;
+   if (highlight > MAX_HIGHLIGHT)
+      highlight = MAX_HIGHLIGHT;
    if (alphabet == 'g' || alphabet == 'G')
      {
-	evidence = 0;		/* romain uniquement pour les symboles */
-	police = 's';		/* times uniquement pour les symboles */
+	highlight = 0;		/* romain only for symbols */
+	family = 's';		/* times only for symbols */
 	strcpy (r_nomX, "-*");
      }
    else
@@ -547,20 +537,20 @@ char                r_nomX[100];
 
    if (unit == UnRelative)
      {
-	/* La taille est relative */
-	if (taille < 0)
-	   taille = TenPoints[0];
-	else if (taille > NbMaxTaille)
-	   taille = TenPoints[NbMaxTaille];
+	/* La size est relative */
+	if (size < 0)
+	   size = TenPoints[0];
+	else if (size > NbMaxTaille)
+	   size = TenPoints[NbMaxTaille];
 	else
-	   taille = TenPoints[taille];
+	   size = TenPoints[size];
      }
    else if (unit == UnPixel)
-      taille = PixelToPoint (taille);
+      size = PixelToPoint (size);
 
    if (Enlucida)
      {
-	switch ((char) TOLOWER (police))
+	switch ((char) TOLOWER (family))
 	      {
 		 case 't':
 		    strcat (r_nomX, "bright");
@@ -574,7 +564,7 @@ char                r_nomX[100];
      }
    else
      {
-	switch ((char) TOLOWER (police))
+	switch ((char) TOLOWER (family))
 	      {
 		 case 't':
 		    strcat (r_nomX, "-times");
@@ -593,14 +583,14 @@ char                r_nomX[100];
 	      }
      }
 
-   switch ((char) TOLOWER (EvidenceT[evidence]))
+   switch ((char) TOLOWER (EvidenceT[highlight]))
 	 {
 	    case 'r':
 	       strcat (r_nomX, "-medium-r");
 	       break;
 	    case 'i':
 	    case 'o':
-	       if ((char) TOLOWER (police) == 'h' || (char) TOLOWER (police) == 'c')
+	       if ((char) TOLOWER (family) == 'h' || (char) TOLOWER (family) == 'c')
 		  strcat (r_nomX, "-medium-o");
 	       else
 		  strcat (r_nomX, "-medium-i");
@@ -608,33 +598,32 @@ char                r_nomX[100];
 	    case 'b':
 	    case 'g':
 	    case 'q':
-	       if (Enlucida && (char) TOLOWER (police) == 't')
+	       if (Enlucida && (char) TOLOWER (family) == 't')
 		  strcat (r_nomX, "-demibold-r");
 	       else
 		  strcat (r_nomX, "-bold-r");
 	       break;
 	 }
 
-   if ((char) TOLOWER (police) == 'h')
-      strcat (r_nomX, "-normal");	/* pas de narrow helvetica */
+   if ((char) TOLOWER (family) == 'h')
+      strcat (r_nomX, "-normal");	/* narrow helvetica does not exist */
    else
       strcat (r_nomX, "-*");
 
-   if ((char) TOLOWER (police) == 's')
+   if ((char) TOLOWER (family) == 's')
      {
 	if (EnBitStream)
-	   /* il manque le champ corps */
-	   sprintf (r_nomX, "%s-*-*-%d-83-83-p-*-*-fontspecific", r_nomX, taille * 10);
+	   sprintf (r_nomX, "%s-*-*-%d-83-83-p-*-*-fontspecific", r_nomX, size * 10);
 	else
-	   sprintf (r_nomX, "%s-*-%d-*-75-75-p-*-*-fontspecific", r_nomX, taille);
+	   sprintf (r_nomX, "%s-*-%d-*-75-75-p-*-*-fontspecific", r_nomX, size);
      }
    else
      {
 	if (EnBitStream)
-	   sprintf (r_nomX, "%s-*-*-%d-83-83", r_nomX, taille * 10);
+	   sprintf (r_nomX, "%s-*-*-%d-83-83", r_nomX, size * 10);
 	else
-	   sprintf (r_nomX, "%s-*-%d-*-75-75", r_nomX, taille);
-	if ((char) TOLOWER (police) == 'c')
+	   sprintf (r_nomX, "%s-*-%d-*-75-75", r_nomX, size);
+	if ((char) TOLOWER (family) == 'c')
 	   strcat (r_nomX, "-m-*");
 	else
 	   strcat (r_nomX, "-p-*");
@@ -646,46 +635,45 @@ char                r_nomX[100];
      }
 
    sprintf (r_nom, "%c%c%c%d",
-	    TOLOWER (alphabet), TOLOWER (police),
-	    EvidenceT[evidence], taille);
+	    TOLOWER (alphabet), TOLOWER (family),
+	    EvidenceT[highlight], size);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    LireFonte fait un chargement simple d'une fonte Thot (pas       | */
-/* |            d'utilisation du cache).                                | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      LireFonte do a raw Thot font loading (bypasses the font cache).
+ **/
 #ifdef __STDC__
-ptrfont             LireFonte (char alphabet, char police, int evidence, int taille, TypeUnit unit)
+ptrfont             LireFonte (char alphabet, char family, int highlight, int size, TypeUnit unit)
 #else  /* __STDC__ */
-ptrfont             LireFonte (alphabet, police, evidence, taille, unit)
+ptrfont             LireFonte (alphabet, family, highlight, size, unit)
 char                alphabet;
-char                police;
-int                 evidence;
-int                 taille;
+char                family;
+int                 highlight;
+int                 size;
 TypeUnit            unit;
 
 #endif /* __STDC__ */
 {
    char                nom[10], nomX[100];
 
-   NomFonte (alphabet, police, evidence, taille, unit, nom, nomX);
+   NomFonte (alphabet, family, highlight, size, unit, nom, nomX);
    return LoadFont (nomX);
 }
 
 #ifdef NEW_WILLOWS
-/* ---------------------------------------------------------------------- */
-/* |  WIN_LoadFont :  load a Windows TRUEType with a defined set of     | */
-/* |                  characteristics.                                  | */
-/* ---------------------------------------------------------------------- */
+/**
+ *    WIN_LoadFont :  load a Windows TRUEType with a defined set of
+ *                    characteristics.
+ **/
 #ifdef __STDC__
-static HFONT        WIN_LoadFont (char alphabet, char police, int evidence,
-				  int taille, TypeUnit unit, int frame)
+static HFONT        WIN_LoadFont (char alphabet, char family, int highlight,
+				  int size, TypeUnit unit, int frame)
 #else  /* __STDC__ */
-static HFONT        WIN_LoadFont (alphabet, police, evidence, taille, unit, frame)
+static HFONT        WIN_LoadFont (alphabet, family, highlight, size, unit, frame)
 char                alphabet;
-char                police;
-int                 evidence;
-int                 taille;
+char                family;
+int                 highlight;
+int                 size;
 TypeUnit            unit;
 int                 frame;
 
@@ -701,7 +689,7 @@ int                 frame;
    HFONT               hFont;
 
    fprintf (stderr, "WIN_LoadFont('%c','%c',%d,%d,%d,%d)\n",
-	    alphabet, police, evidence, taille, unit, frame);
+	    alphabet, family, highlight, size, unit, frame);
 
    switch (alphabet)
 	 {
@@ -717,7 +705,7 @@ int                 frame;
 	       fprintf (stderr, "unknown alphabet '%c'\n", alphabet);
 	       goto no_win;
 	 }
-   switch (police)
+   switch (family)
 	 {
 	    case 'T':
 	    case 't':
@@ -732,11 +720,11 @@ int                 frame;
 	       WIN_lpszFace = "Courier New";
 	       break;
 	    default:
-	       fprintf (stderr, "unknown police '%c'\n", police);
+	       fprintf (stderr, "unknown family '%c'\n", family);
 	       goto no_win;
 	 }
    fprintf (stderr, "'%s', ", WIN_lpszFace);
-   switch (EvidenceT[evidence])
+   switch (EvidenceT[highlight])
 	 {
 	    case 'r':
 	       break;
@@ -752,11 +740,11 @@ int                 frame;
 	       fprintf (stderr, "bold, ");
 	       break;
 	    default:
-	       fprintf (stderr, "unknown evidence %d\n", evidence);
+	       fprintf (stderr, "unknown highlight %d\n", highlight);
 	       goto no_win;
 	 }
-   fprintf (stderr, "%d pt, ", taille);
-   WIN_nHeight = -MulDiv (taille, PTS_POUCE, 72);
+   fprintf (stderr, "%d pt, ", size);
+   WIN_nHeight = -MulDiv (size, DOT_PER_INCHE, 72);
 
    hFont = CreateFont (WIN_nHeight, WIN_nWidth, 0, 0, WIN_fnWeight,
 		       WIN_fdwItalic, WIN_fdwUnderline, WIN_fdwStrikeOut,
@@ -775,115 +763,113 @@ int                 frame;
 }
 #endif /* NEW_WILLOWS */
 
-/* ---------------------------------------------------------------------- */
-/* |    ChargePoliceVoisine charge la police de caracteres identifie par| */
-/* |            l'alphabet, la police, le niveau de mise en evidence et | */
-/* |            la taille, exprimee en points typographiques (Enpt = 1) | */
-/* |            ou relative, pour le compte de la fenetre frame.                | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      LoadNearestFont load the nearest possible font given a set
+ *		of attributes like alphabet, family, the size and for
+ *		a given frame.
+ **/
 #ifdef __STDC__
-static ptrfont      ChargePoliceVoisine (char alphabet, char police, int evidence, int taille, TypeUnit unit, int frame, boolean Croissant)
+static ptrfont      LoadNearestFont (char alphabet, char family, int highlight, int size, TypeUnit unit, int frame, boolean increase)
 #else  /* __STDC__ */
-static ptrfont      ChargePoliceVoisine (alphabet, police, evidence, taille, unit, frame, Croissant)
+static ptrfont      LoadNearestFont (alphabet, family, highlight, size, unit, frame, increase)
 char                alphabet;
-char                police;
-int                 evidence;
-int                 taille;
+char                family;
+int                 highlight;
+int                 size;
 TypeUnit            unit;
 int                 frame;
-boolean             Croissant;
+boolean             increase;
 
 #endif /* __STDC__ */
 {
    int                 i, j, deb, index;
-   int                 masque;
-   char                texte[10], EnPs[10], texteX[100];
+   int                 mask;
+   char                text[10], PsName[10], textX[100];
    ptrfont             ptfont;
 
-   /* on s'aligne systematiquement sur des tailles standards */
+   /* use only standard sizes */
    if (unit == UnPoint)
      {
-	/* recherche la taille standard voisine */
+	/* nearest standard size lookup */
 	index = 0;
-	while (TenPoints[index] < taille && index <= NbMaxTaille)
+	while (TenPoints[index] < size && index <= NbMaxTaille)
 	   index++;
      }
    else
-      index = taille;
+      index = size;
 
 
-   if (EnBitStream && taille == 11)
-      /* accepte la police 11 pt dans le cas des polices bitstream */
-      NomFonte (alphabet, police, evidence, taille, TRUE, texte, texteX);
+   if (EnBitStream && size == 11)
+      /* in the case of Bitstream, accept 11 points font size */
+      NomFonte (alphabet, family, highlight, size, TRUE, text, textX);
    else
-      NomFonte (alphabet, police, evidence, index, FALSE, texte, texteX);
+      NomFonte (alphabet, family, highlight, index, FALSE, text, textX);
 
-   /* On prepare le nom de la police PostScript associee */
-   strcpy (EnPs, texte);
+   /* initialize the Proscript font name */
+   strcpy (PsName, text);
 
-   /* On recherche si la police est deja chargee */
-   j = 0;			/* initialisation (pour le compilateur !) */
+   /* Font cache lookup */
+   j = 0;
    i = 0;
    deb = 0;
    ptfont = NULL;
    while ((ptfont == NULL) && (i < MAX_FONT) && (TtFonts[i] != NULL))
      {
-	j = strcmp (&TtFontName[deb], texte);
+	j = strcmp (&TtFontName[deb], text);
 	if (j == 0)
 	  {
-	     /* Entree trouvee */
+	     /* Font cache lookup succeeded */
 	     ptfont = TtFonts[i];
-	     /*Fin de la recherche */
 	  }
 	else
 	   i++;
 	deb += MAX_NFONT;
      }
 
-   /* On charge une nouvelle police de caracteres */
+   /* Load a new font */
    if (ptfont == NULL)
      {
-	/* Est-ce que la table des fontes est pleine */
+	/* Check for table font overflow */
 	if (i >= MAX_FONT)
-	   TtaDisplayMessage (INFO, TtaGetMessage(LIB, NO_PLACE_FOR_FONT), texteX);
+	   TtaDisplayMessage (INFO, TtaGetMessage(LIB, NO_PLACE_FOR_FONT), textX);
 	else
 	  {
-	     strcpy (&TtFontName[i * MAX_NFONT], texte);
-	     strcpy (&TtPsFontName[i * 8], EnPs);
+	     strcpy (&TtFontName[i * MAX_NFONT], text);
+	     strcpy (&TtPsFontName[i * 8], PsName);
 
 #ifdef NEW_WILLOWS
-	     ptfont = WIN_LoadFont (alphabet, police, evidence, taille, unit, frame);
+	     ptfont = WIN_LoadFont (alphabet, family, highlight, size, unit, frame);
 #else  /* NEW_WILLOWS */
-	     ptfont = LoadFont (texteX);
+	     ptfont = LoadFont (textX);
 #endif /* !NEW_WILLOWS */
-	     /* Le chargement a echoue, il faut essayer une police voisine */
+	     /* Loading failed try to find a neighbour */
 	     if (ptfont == NULL)
 	       {
-		  /* Il faut changer de taille */
+		  /* Change size */
 		  if (index == NbMaxTaille)
 		    {
-		       /* on ne peut plus augmenter la taille */
-		       Croissant = FALSE;
+		       /* size cannot increase */
+		       increase = FALSE;
 		       index--;
 		    }
-		  else if (Croissant)
+		  else if (increase)
 		     index++;
 		  else
 		     index--;
 
 		  if (index < NbMaxTaille && index >= 0)
-		     ptfont = ChargePoliceVoisine (alphabet, police, evidence, index, FALSE, frame, Croissant);
+		     ptfont = LoadNearestFont (alphabet, family, highlight, index, FALSE, frame, increase);
 		  else if (index >= NbMaxTaille)
-		     ptfont = ChargePoliceVoisine (alphabet, police, evidence, NbMaxTaille, FALSE, frame, FALSE);
+		     ptfont = LoadNearestFont (alphabet, family, highlight, NbMaxTaille, FALSE, frame, FALSE);
 		  if (ptfont == NULL)
-		     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), texteX);
+		     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), textX);
 	       }
 
 	  }
 
 	if (ptfont == NULL)
 	  {
-	     /* On prend eventuellement une police de meme alphabet */
+	     /* Try to load another family from the same alphabet */
 	     j = 0;
 	     while (j < MAX_FONT)
 	       {
@@ -898,7 +884,7 @@ boolean             Croissant;
 		     j++;
 	       }
 
-	     /* Ou a defaut la police standard */
+	     /* last case the default font */
 	     if (ptfont == NULL)
 	       {
 		  ptfont = FontMenu;
@@ -907,52 +893,50 @@ boolean             Croissant;
 	  }
 
 	if (i >= MAX_FONT)
-	   i = j;		/* c'est une ancienne entree */
+	   i = j;		/* existing entry in the cache */
 	else
 	  {
-	     /* c'est une nouvelle entree qu'il faut initialiser */
+	     /* initialize a new cache entry */
 	     TtFonts[i] = ptfont;
 	     TtFontFrames[i] = 0;
 	  }
      }
 
-   /* On calcule le masque de la fenetre */
-   masque = 1 << (frame - 1);
-   /* On memorise le numero de la fenetre */
-   TtFontFrames[i] = TtFontFrames[i] | masque;
+   /* Compute window frame */
+   mask = 1 << (frame - 1);
+   /* store window frame number */
+   TtFontFrames[i] = TtFontFrames[i] | mask;
    return (ptfont);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ChargeFonte charge la police de caracteres identifie par        | */
-/* |            l'alphabet, la police, le niveau de mise en evidence et | */
-/* |            la taille, exprimee en points typographiques (Enpt = 1) | */
-/* |            ou relative, pour le compte de la fenetre frame.        | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      ThotLoadFont try to load a font given a set
+ *		of attributes like alphabet, family, the size and for
+ *		a given frame.
+ **/
 #ifdef __STDC__
-ptrfont             ChargeFonte (char alphabet, char police, int evidence, int taille, TypeUnit unit, int frame)
+ptrfont             ThotLoadFont (char alphabet, char family, int highlight, int size, TypeUnit unit, int frame)
 #else  /* __STDC__ */
-ptrfont             ChargeFonte (alphabet, police, evidence, taille, unit, frame)
+ptrfont             ThotLoadFont (alphabet, family, highlight, size, unit, frame)
 char                alphabet;
-char                police;
-int                 evidence;
-int                 taille;
+char                family;
+int                 highlight;
+int                 size;
 TypeUnit            unit;
 int                 frame;
 
 #endif /* __STDC__ */
 {
-   /* pas de police inferieure a 6 points */
-   if (taille < 6 && unit == UnPoint)
-      taille = 6;
-   return ChargePoliceVoisine (alphabet, police, evidence, taille, unit, frame, TRUE);
+   /* pas de family inferieure a 6 points */
+   if (size < 6 && unit == UnPoint)
+      size = 6;
+   return LoadNearestFont (alphabet, family, highlight, size, unit, frame, TRUE);
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    InitFont charge les intitules qui determineront les polices de  | */
-/* |            caracteres.                                             | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      InitFont initialize the standard fonts used by the Thot Toolkit.
+ **/
 #ifdef __STDC__
 void                InitFont (char *name)
 #else  /* __STDC__ */
@@ -970,7 +954,7 @@ char               *name;
    char               *value;
    int                 f3, f4, f5;
 
-   /* Lecture eventuelle de la famille de caracteres */
+   /* is there a predefined font family ? */
    MenuSize = 12;
    value = TtaGetEnvString ("FontFamily");
    NbMaxTaille = 10;
@@ -991,7 +975,7 @@ char               *name;
 	     if (!strcmp (FontFamily, "gipsi-bitstream"))
 	       {
 		  EnBitStream = TRUE;
-		  /* Modifie les tailles 30, 40 et 60 en 36, 48 et 72 */
+		  /* Changes size 30, 40 and 60 to resp. 36, 48 et 72 */
 		  TenPoints[NbMaxTaille] = 72;
 		  TenPoints[NbMaxTaille - 1] = 48;
 		  TenPoints[NbMaxTaille - 2] = 36;
@@ -1001,14 +985,13 @@ char               *name;
 		EnBitStream = FALSE;
 	  }
      }
-   PTS_POUCE = 72;		/* Nombre de points typographiques par pouce */
+   DOT_PER_INCHE = 72;
 
 
-   /* Lecture eventuelle de la taille des caracteres dans les menus */
+   /* Is there any predefined size for menu fonts ? */
    value = TtaGetEnvString ("FontMenuSize");
    if (value != NULL)
       sscanf (value, "%d", &MenuSize);
-   /* Autres valeurs des polices de menus choisies */
    f3 = MenuSize + 2;
    f4 = MenuSize - 2;
    f5 = MenuSize;
@@ -1020,11 +1003,10 @@ char               *name;
 	strcpy (FONT_PATH, fontpath);
 	strcat (FONT_PATH, "/");
 
-	/* Ajoute le repertoire FONT_PATH dans la liste du serveur */
+	/* Add the directory to the X server font path */
 	currentlist = XGetFontPath (TtDisplay, &ncurrent);
 	ndir = 1;
-	/* 1 repertoire a ajouter */
-	/* Verifie que le repertoire n'est pas deja enregistre */
+	/* check that the directory is not already in the list */
 	i = 0;
 	while ((ndir == 1) && (i < ncurrent))
 	  {
@@ -1034,7 +1016,7 @@ char               *name;
 		i++;
 	  }
 
-	/* Faut-il mettre a jour la liste des repertoires ? */
+	/* Should we write down the new value ? */
 	if (ndir > 0)
 	  {
 	     ndir += ncurrent;
@@ -1056,53 +1038,53 @@ char               *name;
      }
 #endif /* NEW_WILLOWS */
 
-   /* Initialisation des fontes locales au Mediateur */
+   /* Initialize the Thot Lib standards fonts */
    FontMenu = FontMenu2 = FontMenu3 = FontMenu4 = NULL;
    FontIS = NULL;
    FontIGr = NULL;
    FonteLeg = NULL;
 
-   /* Initialisation des tables de fontes */
+   /* Initialize the font table */
    for (i = 0; i < MAX_FONT; i++)
       TtFonts[i] = NULL;
 
-   /*premiere fonte chargee */
-   FontMenu = ChargeFonte ('L', 't', 0, MenuSize, UnPoint, 0);
+   /* load first five predefined fonts */
+   FontMenu = ThotLoadFont ('L', 't', 0, MenuSize, UnPoint, 0);
    if (FontMenu == NULL)
      {
-	FontMenu = ChargeFonte ('L', 'l', 0, MenuSize, UnPoint, 0);
+	FontMenu = ThotLoadFont ('L', 'l', 0, MenuSize, UnPoint, 0);
 	if (FontMenu == NULL)
 	   TtaDisplaySimpleMessage (FATAL, LIB, MISSING_FONT);
      }
-   /*deuxieme fonte chargee */
-   FontMenu2 = ChargeFonte ('L', 't', 2, 12, UnPoint, 0);
+
+   FontMenu2 = ThotLoadFont ('L', 't', 2, 12, UnPoint, 0);
    if (FontMenu2 == NULL)
      {
-	FontMenu2 = ChargeFonte ('L', 'l', 2, 12, UnPoint, 0);
+	FontMenu2 = ThotLoadFont ('L', 'l', 2, 12, UnPoint, 0);
 	if (FontMenu2 == NULL)
 	   FontMenu2 = FontMenu;
      }
-   /*troisieme fonte chargee */
-   FontMenu3 = ChargeFonte ('L', 't', 1, f3, UnPoint, 0);
+
+   FontMenu3 = ThotLoadFont ('L', 't', 1, f3, UnPoint, 0);
    if (FontMenu3 == NULL)
      {
-	FontMenu3 = ChargeFonte ('L', 't', 1, f3, UnPoint, 0);
+	FontMenu3 = ThotLoadFont ('L', 't', 1, f3, UnPoint, 0);
 	if (FontMenu3 == NULL)
 	   FontMenu3 = FontMenu2;
      }
-   /*quatrieme fonte chargee */
-   FontMenu4 = ChargeFonte ('L', 'h', 1, f4, UnPoint, 0);
+
+   FontMenu4 = ThotLoadFont ('L', 'h', 1, f4, UnPoint, 0);
    if (FontMenu4 == NULL)
      {
-	FontMenu4 = ChargeFonte ('L', 'h', 1, f4, UnPoint, 0);
+	FontMenu4 = ThotLoadFont ('L', 'h', 1, f4, UnPoint, 0);
 	if (FontMenu4 == NULL)
 	   FontMenu4 = FontMenu;
      }
-   /*cinquieme fonte chargee */
-   FontGraph = ChargeFonte ('L', 't', 1, f5, UnPoint, 0);
+
+   FontGraph = ThotLoadFont ('L', 't', 1, f5, UnPoint, 0);
    if (FontGraph == NULL)
      {
-	FontGraph = ChargeFonte ('L', 't', 1, f5, UnPoint, 0);
+	FontGraph = ThotLoadFont ('L', 't', 1, f5, UnPoint, 0);
 	if (FontGraph == NULL)
 	   FontGraph = FontMenu;
      }
@@ -1110,34 +1092,32 @@ char               *name;
    FirstRemovableFont = 5;
 }				/*InitFont */
 
-/* ---------------------------------------------------------------------- */
-/* |    LibFont libere les polices de caracteres chargees  a` la demande| */
-/* |            pour le compte de la fenetre frame.                     | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      ThotFreeFont free the font familly loaded by a frame.
+ **/
 #ifdef __STDC__
-void                LibFont (int frame)
+void                ThotFreeFont (int frame)
 #else  /* __STDC__ */
-void                LibFont (frame)
+void                ThotFreeFont (frame)
 int                 frame;
 
 #endif /* __STDC__ */
 {
-   int                 i, j, masque;
+   int                 i, j, mask;
    int                 flag;
 
    if (frame > 0)
      {
-	/* On calcule le masque de la fenetre */
-	masque = 1 << (frame - 1);
+	/* compute the frame mask */
+	mask = 1 << (frame - 1);
 
 	i = FirstRemovableFont;
-	/* On garde les premieres fontes */
+	/* keep the first fonts */
 	while (i < MAX_FONT && TtFonts[i] != NULL)
 	  {
-	     /* Est-ce que la police n'est utilisee que par cette frame */
-	     if (TtFontFrames[i] == masque)
+	     /* if this font family is only used by this frame */
+	     if (TtFontFrames[i] == mask)
 	       {
-		  /* Est-ce que la police de caracteres a une copie */
 		  j = 0;
 		  flag = 0;
 		  while (flag == 0)
@@ -1151,7 +1131,7 @@ int                 frame;
 		       else
 			  j++;
 		    }
-		  /* On libere la police ? */
+		  /* Shall we free this family ? */
 #ifdef NEW_WILLOWS
 		  if (j == MAX_FONT)
 		    {
@@ -1165,11 +1145,11 @@ int                 frame;
 		  TtFonts[i] = NULL;
 	       }
 	     else
-		TtFontFrames[i] = TtFontFrames[i] & (~masque);
+		TtFontFrames[i] = TtFontFrames[i] & (~mask);
 	     i++;
 	  }
 
-	/* On reorganise la table des fontes */
+	/* pack the font table */
 	j = FirstRemovableFont;
 	i--;
 	while (j < i)
@@ -1177,16 +1157,15 @@ int                 frame;
 	     while (TtFonts[j] != NULL)
 	       {
 		  j++;
-		  /* On saute les entrees pleines */
+		  /* skip the used entries */
 	       }
 	     while (TtFonts[i] == NULL)
 	       {
 		  i--;
-		  /* On saute les entrees vides */
+		  /* skip the empty entries */
 	       }
 	     if (j < i)
 	       {
-		  /* On remplace l'entree j par l'entree i */
 		  TtFonts[j] = TtFonts[i];
 		  TtFonts[i] = NULL;
 		  TtFontFrames[j] = TtFontFrames[i];
@@ -1196,4 +1175,4 @@ int                 frame;
 	       }
 	  }
      }
-}				/*LibFont */
+}				/*ThotFreeFont */

@@ -573,7 +573,7 @@ int                 y;
 	       break;
 	    case 'C':
 	    case 'P':		/* rectangles aux bords arrondis */
-	       arc = (3 * PTS_POUCE) / 25.4 + 0.5;
+	       arc = (3 * DOT_PER_INCHE) / 25.4 + 0.5;
 	       point[0][0] = 0;
 	       point[0][1] = arc;
 	       point[1][0] = 0;
@@ -795,7 +795,7 @@ int                 y;
 	       break;
 	    case 'C':
 	    case 'P':
-	       arc = (3 * PTS_POUCE) / 25.4 + 0.5;
+	       arc = (3 * DOT_PER_INCHE) / 25.4 + 0.5;
 	       if (pointOnLine (x, y, arc, 0, box->BxWidth - arc, 0)
 		   || pointOnLine (x, y, 0, arc, 0, box->BxHeight - arc)
 		   || pointOnLine (x, y, arc, box->BxHeight, box->BxWidth - arc, box->BxHeight)

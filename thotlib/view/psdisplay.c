@@ -2127,7 +2127,7 @@ int                 fg;
    /* Faut-il changer de RGB */
    CouleurCourante (fout, fg);
 
-   font = (ptrfont) ChargeFonte ('L', 't', 0, 6, UnPoint, frame);
+   font = (ptrfont) ThotLoadFont ('L', 't', 0, 6, UnPoint, frame);
    if (lgboite > 0)
      {
 	fout = (FILE *) FrRef[frame];

@@ -697,9 +697,9 @@ int                 horiz;
 #endif /* __STDC__ */
 {
    if (horiz)
-      return (PTS_POUCE * N * 10) / 254;
+      return (DOT_PER_INCHE * N * 10) / 254;
    else
-      return (PTS_POUCE * N * 10) / 254;
+      return (DOT_PER_INCHE * N * 10) / 254;
 }
 
 
@@ -936,7 +936,7 @@ Pixmap              icon;
      {
 	/* Police de caracteres utilisee dans les menus */
 #ifndef NEW_WILLOWS
-	DefaultFont = XmFontListCreate ((XFontStruct *) ChargeFonte ('L', 'H', 0, MenuSize, UnPoint, 0), XmSTRING_DEFAULT_CHARSET);
+	DefaultFont = XmFontListCreate ((XFontStruct *) ThotLoadFont ('L', 'H', 0, MenuSize, UnPoint, 0), XmSTRING_DEFAULT_CHARSET);
 #endif
 	/* Compte le nombre de menus a creer */
 	n = 0;
@@ -2399,7 +2399,7 @@ int                 frame;
 	/* Elimine les evenements ButtonRelease, DestroyNotify, FocusOut */
 
 	RazVue (frame);
-	LibFont (frame);	/* On libere les polices de caracteres utilisees */
+	ThotFreeFont (frame);	/* On libere les polices de caracteres utilisees */
      }				/*if */
 }
 

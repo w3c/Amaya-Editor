@@ -176,7 +176,7 @@ static void         AppliqueModPresent ()
 			  if (pAb->AbSizeUnit == UnPoint)
 			     CorpsCourant = pAb->AbSize;
 			  else
-			     CorpsCourant = TailleEnPoints (pAb->AbSize);
+			     CorpsCourant = FontPointSize (pAb->AbSize);
 
 			  /* famille de polices de caracteres */
 			  if (ChngFamille)
@@ -555,7 +555,7 @@ char               *txt;
 	       if (val >= 0 && val < NumberOfFonts ())
 		 {
 		    ChngCorps = TRUE;
-		    Corps = TailleEnPoints (val);
+		    Corps = FontPointSize (val);
 		 }
 	       else
 		  ChngCorps = FALSE;
@@ -830,7 +830,7 @@ View                view;
 	     /* les corps relatifs successivement */
 	     for (CorpsRelat = 0; CorpsRelat < max && i < MAX_TXT_LEN - 30; CorpsRelat++)
 	       {
-		  CorpsPt = TailleEnPoints (CorpsRelat);
+		  CorpsPt = FontPointSize (CorpsRelat);
 		  /* ajoute ce nouveau corps dans le buffer du menu */
 		  sprintf (&chaine[i], "%s%d %s", "B", CorpsPt, s);
 		  i += strlen (&chaine[i]) + 1;
@@ -868,7 +868,7 @@ View                view;
 	     /* initialise le sous-menu 'Corps des caracteres' */
 	     if (pAb->AbSizeUnit == UnPoint)
 		/* convertit la taille */
-		i = PseudoTaille (pAb->AbSize);
+		i = FontRelSize (pAb->AbSize);
 	     else
 		i = pAb->AbSize;
 	     TtaSetMenuForm (NumMenuCorpsCaract, i);
@@ -983,7 +983,7 @@ View                view;
 		  if (pAb->AbSizeUnit == UnPoint)
 		     CorpsCourant = pAb->AbSize;
 		  else
-		     CorpsCourant = TailleEnPoints (pAb->AbSize);
+		     CorpsCourant = FontPointSize (pAb->AbSize);
 		  i = (CorpsCourant * pAb->AbLineWeight) / 10;
 		  if ((CorpsCourant * i) % 10 >= 5)
 		     i++;
@@ -1114,7 +1114,7 @@ View                view;
 	     if (pAb->AbSizeUnit == UnPoint)
 		CorpsCourant = pAb->AbSize;
 	     else
-		CorpsCourant = TailleEnPoints (pAb->AbSize);
+		CorpsCourant = FontPointSize (pAb->AbSize);
 	     ValIndent = abs (pAb->AbIndent);
 	     if (pAb->AbIndentUnit == UnRelative)
 		/* convertit ValIndent en points typographiques */
@@ -1182,7 +1182,7 @@ View                view;
 	     if (pAb->AbSizeUnit == UnPoint)
 		CorpsCourant = pAb->AbSize;
 	     else
-		CorpsCourant = TailleEnPoints (pAb->AbSize);
+		CorpsCourant = FontPointSize (pAb->AbSize);
 	     i = pAb->AbLineSpacing;
 	     if (pAb->AbLineSpacingUnit == UnRelative)
 		/* convertit l'interligne en points typographiques */

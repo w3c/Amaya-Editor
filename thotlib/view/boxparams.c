@@ -161,7 +161,7 @@ int                 Zoom;
 	x = pFrame->FrXOrg;
 	y = pFrame->FrYOrg;
 	DispBoite (pAb, TRUE, frame);
-	LibFont (frame);
+	ThotFreeFont (frame);
 	/* On libere les polices de caracteres utilisees */
 	pFrame->FrAbstractBox = NULL;
 	/* Recreation de la vue */

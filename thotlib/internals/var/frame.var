@@ -9,7 +9,7 @@ EXPORT Frame_Ctl        FrameTable[MAX_FRAME+1];
 EXPORT ThotWindow  FrRef[MAX_FRAME + 1 + 1]; /* ref des fenetres de travail */
 EXPORT ThotColor BackgroundColor[MAX_FRAME + 1 + 1]; /* Background colors   */
 
-EXPORT int  PTS_POUCE;             /* Precision en points par pouce */
+EXPORT int  DOT_PER_INCHE;         /* Precision en points par pouce */
 EXPORT ThotColor Black_Color;      /* Couleur d'ecriture          */
 EXPORT ThotColor White_Color;      /* Couleur de fond             */
 EXPORT ThotColor Scroll_Color;     /* Couleur des bandeaux        */

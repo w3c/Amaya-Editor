@@ -1428,12 +1428,12 @@ int                *height;
 	else
 	  {
 	     /* convertit si necessaire en fonction de la resolution de l'ecran */
-	     if (PTS_POUCE != 83)
+	     if (DOT_PER_INCHE != 83)
 	       {
-		  *x = (int) ((float) (*x * 83) / (float) PTS_POUCE);
-		  *width = (int) ((float) (*width * 83) / (float) PTS_POUCE);
-		  *y = (int) ((float) (*y * 83) / (float) PTS_POUCE);
-		  *height = (int) ((float) (*height * 83) / (float) PTS_POUCE);
+		  *x = (int) ((float) (*x * 83) / (float) DOT_PER_INCHE);
+		  *width = (int) ((float) (*width * 83) / (float) DOT_PER_INCHE);
+		  *y = (int) ((float) (*y * 83) / (float) DOT_PER_INCHE);
+		  *height = (int) ((float) (*height * 83) / (float) DOT_PER_INCHE);
 	       }
 	     result = TRUE;
 	  }

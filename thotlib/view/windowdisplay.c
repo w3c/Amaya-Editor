@@ -563,7 +563,7 @@ int                 fg;
    int                 xcour, large, nb;
    char               *ptcar;
 
-   font = ChargeFonte ('L', 't', 0, 6, UnPoint, frame);
+   font = ThotLoadFont ('L', 't', 0, 6, UnPoint, frame);
    if (lgboite > 0)
      {
 	w = FrRef[frame];
@@ -2223,7 +2223,7 @@ int                 motif;
    y += epais / 2;
    /* On definit la longueur des arcs */
    /* rayon des arcs a 3mm */
-   arc = (3 * PTS_POUCE) / 25.4 + 0.5;
+   arc = (3 * DOT_PER_INCHE) / 25.4 + 0.5;
    xf = x + larg - 1;
    yf = y + haut - 1;
 
@@ -2670,7 +2670,7 @@ int                 motif;
    x += FrameTable[frame].FrLeftMargin + epais / 2;
    y += FrameTable[frame].FrTopMargin + epais / 2;
    /* rayon des arcs a 3mm */
-   arc = (3 * PTS_POUCE) / 25.4 + 0.5;
+   arc = (3 * DOT_PER_INCHE) / 25.4 + 0.5;
    arc2 = 2 * arc;
 
    xf = x + larg;
@@ -2862,7 +2862,7 @@ int                 motif;
 	XDrawArc (TtDisplay, FrRef[frame], TtLineGC,
 		  x, y, larg, haut, 0, 360 * 64);
 
-	px7mm = (7 * PTS_POUCE) / 25.4 + 0.5;
+	px7mm = (7 * DOT_PER_INCHE) / 25.4 + 0.5;
 	if (haut > 2 * px7mm)
 	  {
 	     A = ((double) haut - 2 * px7mm) / haut;

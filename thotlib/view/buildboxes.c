@@ -1010,7 +1010,7 @@ int                *carIndex;
 	else if (pAb->AbLeafType == LtCompound)
 	   alphabet = 'L';
 	/* teste l'unite */
-	font = ChargeFonte (alphabet, pAb->AbFont, pAb->AbHighlight, height, unit, frame);
+	font = ThotLoadFont (alphabet, pAb->AbFont, pAb->AbHighlight, height, unit, frame);
      }
    else
       font = FontMenu;
@@ -1894,13 +1894,13 @@ int                 frame;
 	     height += pFrame->FrMagnification;
 
 	     if (pAb->AbLeafType == LtText)
-		pBox->BxFont = ChargeFonte (TtaGetAlphabet (pAb->AbLanguage), pAb->AbFont,
+		pBox->BxFont = ThotLoadFont (TtaGetAlphabet (pAb->AbLanguage), pAb->AbFont,
 				    pAb->AbHighlight, height, unit, frame);
 	     else if (pAb->AbLeafType == LtSymbol)
-		pBox->BxFont = ChargeFonte ('G', pAb->AbFont,
+		pBox->BxFont = ThotLoadFont ('G', pAb->AbFont,
 				    pAb->AbHighlight, height, unit, frame);
 	     else
-		pBox->BxFont = ChargeFonte ('L', 'T', 0, height, unit, frame);
+		pBox->BxFont = ThotLoadFont ('L', 'T', 0, height, unit, frame);
 
 	     /* On transmet l'information souligne dans la boite */
 	     pBox->BxUnderline = pAb->AbUnderline;

@@ -25,8 +25,8 @@ extern int LogicalValue ( int val,
                           TypeUnit unit,
                           PtrAbstractBox pAb );
 extern int FontBase ( ptrfont font );
-extern int PseudoTaille ( int taille );
-extern int TailleEnPoints ( int taille );
+extern int FontRelSize ( int taille );
+extern int FontPointSize ( int taille );
 extern ptrfont LoadFont ( char name[100] );
 extern void NomFonte ( char alphabet,
                        char police,
@@ -40,14 +40,14 @@ extern ptrfont LireFonte ( char alphabet,
                            int evidence,
                            int taille,
                            TypeUnit unit );
-extern ptrfont ChargeFonte ( char alphabet,
+extern ptrfont ThotLoadFont ( char alphabet,
                              char police,
                              int evidence,
                              int taille,
                              TypeUnit unit,
                              int frame );
 extern void InitFont ( char *name );
-extern void LibFont ( int frame );
+extern void ThotFreeFont ( int frame );
 
 #else /* __STDC__ */
 
@@ -70,8 +70,8 @@ extern int LogicalValue (/* int val,
                             TypeUnit unit,
                             PtrAbstractBox pAb */);
 extern int FontBase (/* ptrfont font */);
-extern int PseudoTaille (/* int taille */);
-extern int TailleEnPoints (/* int taille */);
+extern int FontRelSize (/* int taille */);
+extern int FontPointSize (/* int taille */);
 extern ptrfont LoadFont (/* char name[100] */);
 extern void NomFonte (/* char alphabet,
                          char police,
@@ -85,14 +85,14 @@ extern ptrfont LireFonte (/* char alphabet,
                              int evidence,
                              int taille,
                              TypeUnit unit */);
-extern ptrfont ChargeFonte (/* char alphabet,
+extern ptrfont ThotLoadFont (/* char alphabet,
                                char police,
                                int evidence,
                                int taille,
                                TypeUnit unit,
                                int frame */);
 extern void InitFont (/* char *name */);
-extern void LibFont (/* int frame */);
+extern void ThotFreeFont (/* int frame */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

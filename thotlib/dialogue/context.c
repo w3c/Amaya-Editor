@@ -24,7 +24,6 @@ ThotColorStruct     cblack;
 static ThotColorStruct cwhite;
 
 #include "appli_f.h"
-#include "curs_f.h"
 #include "textcommands_f.h"
 #include "editcommands_f.h"
 #include "checkermenu_f.h"
@@ -389,6 +388,19 @@ unsigned long      *colorpixel;
       return (FALSE);
 }
 
+/**
+ *      InitCurs load the cursors used by the graphic interface.
+ **/
+static void         InitCurs ()
+{
+#ifndef NEW_WILLOWS
+   WindowCurs = XCreateFontCursor (TtDisplay, XC_hand2);
+   VCurs = XCreateFontCursor (TtDisplay, XC_sb_v_double_arrow);
+   HCurs = XCreateFontCursor (TtDisplay, XC_sb_h_double_arrow);
+   HVCurs = XCreateFontCursor (TtDisplay, XC_fleur);
+   WaitCurs = XCreateFontCursor (TtDisplay, XC_watch);
+#endif /* NEW_WILLOWS */
+}
 
 /**
  *      InitColors initialize the Thot predefined X-Window colors.
