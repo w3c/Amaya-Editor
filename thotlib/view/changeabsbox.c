@@ -3102,6 +3102,7 @@ void SetChange (PtrAbstractBox pAb, PRuleType typeRule, FunctionType func)
   switch (typeRule)
     {
     case PtVisibility:
+    case PtDisplay:
       pAb->AbWidthChange = TRUE;
       pAb->AbHeightChange = TRUE;
       pAb->AbHorizPosChange = TRUE;
@@ -3632,12 +3633,21 @@ void UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 					       pDoc->DocViewRootAb[view - 1],
 					       pDoc);
 		  if (createBox && pEl->ElAbstractBox[view - 1] == NULL &&
-		      typeRule == PtVisibility)
+		      (typeRule == PtVisibility || typeRule == PtDisplay))
 		    {
 		      /* the abstract box doesn't exist and it's a Visibility
 			 rule */
-		      val = IntegerRule (pR, pEl, view, &appl, &unit, pAttr,
-					 NULL);
+		      if (typeRule == PtVisibility)
+			val = IntegerRule (pR, pEl, view, &appl, &unit, pAttr,
+					   NULL);
+		      else if (typeRule == PtDisplay)
+			{
+			  if (CharRule (pR, pEl, view, &appl) == 'N')
+			    /* display: none */
+			    val = 0;
+			  else
+			    val = 10;
+			}
 		      if ((!remove && val > 0) || (remove && val <= 0))
 			/* cette regle rend le pave visible et ce n'est pas
 			   une suppression ou c'est une suppression et le pave

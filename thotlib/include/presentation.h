@@ -193,12 +193,13 @@ typedef int        *PRule;
 
 /* values for rule PRDisplay */
 #define Undefined 1
-#define Inline 2
-#define Block 3
-#define ListItem 4
-#define RunIn 5
-#define Compact 6
-#define Marker 7
+#define DisplayNone 2
+#define Inline 3
+#define Block 4
+#define ListItem 5
+#define RunIn 6
+#define Compact 7
+#define Marker 8
 
 /* values for rule PRHyphenate */
 #define Hyphenation 1

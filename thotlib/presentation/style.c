@@ -1518,6 +1518,9 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	case Undefined:
 	  rule->PrChrValue = 'U';
 	  break;
+	case DisplayNone:
+	  rule->PrChrValue = 'N';
+	  break;
 	case Inline:
 	  rule->PrChrValue = 'I';
 	  break;
@@ -2160,6 +2163,9 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
 	{
 	case 'U':
 	  value = Undefined;
+	  break;
+	case 'N':
+	  value = DisplayNone;
 	  break;
 	case 'I':
 	  value = Inline;

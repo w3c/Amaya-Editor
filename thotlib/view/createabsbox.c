@@ -1578,7 +1578,9 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 	     }
 	   else
 	     {
-	       /* s'il y a une regle de visibilite pour cette vue, on la prend */
+	       /* if there is a visibility rule for that view, take it */
+	       /* no need to check a display rule: presentation boxes don't
+		  use that kind of rule */
 	       pR = GetRuleView (&pRS, &pRD, PtVisibility, view, pEl, pAttr,
 				 pEl->ElStructSchema, pDoc);
 	       if (pR == NULL)
@@ -3093,6 +3095,8 @@ static void ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
   /* l'attribut */
   pSchP = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
   pHd = NULL;
+  *ok = FALSE;
+  view = AppliedView (pEl, pAttr, pDoc, viewNb);
   /* on examine le schema de presentation principal, puis les schemas */
   /* additionnels */
   while (pSchP != NULL)
@@ -3106,16 +3110,15 @@ static void ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
 	  /* de l'attribut, dans ce schema de presentation */
 	  pR = AttrPresRule (pAttr, pEl, inheritRule, NULL, pSchP, &valNum,
 			     &attrBlock);
-	  pRuleView1 = NULL;
-	  if (pR != NULL)
+	  while (pR != NULL)
+	    {
 	    if (pR->PrType == PtVisibility)
 	      /* cette valeur d'attribut a une regle de visibilite' */
 	      /* calcule le numero de la vue concernee par l'attribut */
 	      {
-		view = AppliedView (pEl, pAttr, pDoc, viewNb);
 		stop = FALSE;
 		useView1 = TRUE;
-		
+		pRuleView1 = NULL;
 		/* cherche s'il y a une regle de visibilite pour la vue */
 		while (!stop)
 		  {
@@ -3128,8 +3131,8 @@ static void ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
 			  if (view == 1)
 			    stop = TRUE;
 			  else
-				/* saute les regles de visibilite' suivantes
-				   de la vue 1 */
+			    /* saute les regles de visibilite suivantes
+			       de la vue 1 */
 			    while (pR->PrNextPRule != NULL &&
 				   pR->PrNextPRule->PrType == PtVisibility &&
 				   pR->PrNextPRule->PrViewNum == 1)
@@ -3165,6 +3168,17 @@ static void ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
 		  *vis = IntegerRule (pRuleView1, pEl, viewNb, ok, &unit,
 				      pAttr, NULL);
 	      }
+	    if (pR->PrType == PtDisplay)
+	      {
+		if (pR->PrViewNum == view &&
+		    CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
+				      view, pAttr->AeAttrSSchema, pDoc))
+		  if (CharRule (pR, pEl, viewNb, ok) == 'N')
+		    /* display: none */
+		    *vis = 0;
+	      }
+	    pR = pR->PrNextPRule;
+	    }
 	}
       while (valNum > 0);
 
@@ -3201,7 +3215,7 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
 			  int *TypeP, PtrPSchema * pSchPPage)
 {
    int                 view, l;
-   PtrPRule            pRule, pRegleV;
+   PtrPRule            pRule, pRuleV, pRuleDisplay;
    PtrElement          pPrevious, pNext, pElAssociatedPage, pAsc, pElAttr,
                        pFirstAncest;
    PtrAttribute        pAttr;
@@ -3227,7 +3241,8 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
      /* applique une regle si elle concerne la vue */
      /* et si ce n'est pas une hauteur de page */
      {
-       if (pRule->PrType == PtVisibility && pRule->PrViewNum == viewSch)
+       if ((pRule->PrType == PtVisibility || pRule->PrType == PtDisplay)
+	   && pRule->PrViewNum == viewSch)
 	 {
 	   if (pRule->PrSpecifAttr == 0)
 	     /* cette regle ne depend pas d'un attribut */
@@ -3245,7 +3260,16 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
 		 else
 		   pAttr = pAttr->AeNext;
 	     }
-	   *vis = IntegerRule (pRule, pEl, viewNb, &ok, &unit, pAttr, NULL);
+	   if (pRule->PrType == PtVisibility)
+	      *vis = IntegerRule (pRule, pEl, viewNb, &ok, &unit, pAttr, NULL);
+	   else if (pRule->PrType == PtDisplay)
+	     {
+	       if (CharRule (pRule, pEl, viewNb, &ok) == 'N')
+		 /* display: none */
+		 *vis = 0;
+	       else
+		 ok = FALSE;
+	     }
 	   if (ok)
 	     return;
 	 }
@@ -3264,20 +3288,28 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
      {
 	/* Cherche la regle de visibilite a appliquer */
 	if (view == 1)
-	   pRegleV = NULL;
+	   pRuleV = NULL;
 	else
-	   pRegleV = GetRuleView (pRSpec, pRDef, PtVisibility, view, pEl, NULL,
+	   pRuleV = GetRuleView (pRSpec, pRDef, PtVisibility, view, pEl, NULL,
 				  pEl->ElStructSchema, pDoc);
 	if (view == viewSch && DoesViewExist (pEl, pDoc, viewNb))
 	  {
 	   /* s'il y a une regle de visibilite pour cette vue, on */
 	   /* la prend */
-	   if (pRegleV != NULL)
-	      *vis = IntegerRule (pRegleV, pEl, viewNb, &ok, &unit, NULL,
+	   if (pRuleV != NULL)
+	      *vis = IntegerRule (pRuleV, pEl, viewNb, &ok, &unit, NULL,
 				  NULL);
 	   /* sinon, on prend celle de la vue 1 */
 	   else
 	      *vis = IntegerRule (pRule, pEl, viewNb, &ok, &unit, NULL, NULL);
+	   /* is there a display rule with value none? */
+	   pRuleDisplay = GetRuleView (pRSpec, pRDef, PtDisplay, view, pEl,
+				       NULL, pEl->ElStructSchema, pDoc);
+	   if (pRuleDisplay)
+	     if (CharRule (pRuleDisplay, pEl, viewNb, &ok) == 'N')
+	       if (ok)
+		 /* display: none */
+		 *vis = 0;
 	  }
      }
 

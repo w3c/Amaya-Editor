@@ -467,6 +467,9 @@ static void         wrfontstyle (PtrPRule pR)
       else if (pR->PrType == PtDisplay)
 	 switch (pR->PrChrValue)
 	       {
+		  case 'N':
+		     printf ("none");
+		     break;
 		  case 'I':
 		     printf ("inline");
 		     break;

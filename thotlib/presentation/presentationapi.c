@@ -1579,6 +1579,9 @@ void TtaSetPRuleValue (Element element, PRule pRule, int value, Document documen
 	     case Undefined:
 	       ((PtrPRule) pRule)->PrChrValue = 'U';
 	       break;
+	     case DisplayNone:
+	       ((PtrPRule) pRule)->PrChrValue = 'N';
+	       break;
 	     case Inline:
 	       ((PtrPRule) pRule)->PrChrValue = 'I';
 	       break;
@@ -2675,6 +2678,9 @@ int TtaGetPRuleValue (PRule pRule)
 	  {
 	  case 'U':
 	    value = Undefined;
+	    break;
+	  case 'N':
+	    value = DisplayNone;
 	    break;
 	  case 'I':
 	    value = Inline;

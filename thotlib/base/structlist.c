@@ -2515,6 +2515,9 @@ static void wrfontstyle (PtrPRule pR, FILE *fileDescriptor)
       else if (pR->PrType == PtDisplay)
 	switch (pR->PrChrValue)
 	  {
+	  case 'N':
+	    fprintf (fileDescriptor, "none");
+	    break;
 	  case 'I':
 	    fprintf (fileDescriptor, "inline");
 	    break;

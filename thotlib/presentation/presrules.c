@@ -349,8 +349,8 @@ static int BorderStyleIntValue (char borderStyle)
    		par pEl. Au retour, ok indique si l'evaluation a pu	
    		etre faite. 						
   ----------------------------------------------------------------------*/
-static char CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
-		      ThotBool *ok)
+char CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
+	       ThotBool *ok)
 {
    PtrAbstractBox      pAbb;
    char                val;
@@ -3922,7 +3922,14 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 				     &appl);
 	  if (appl)
 	    {
-	      if (pAb->AbDisplay == 'I')
+	      if (pAb->AbDisplay == 'N')
+		/* display: none */
+		{
+		  if (pAb->AbElement->ElParent)
+		    /* the root element must be visible */
+		    pAb->AbVisibility = 0;
+		}
+	      else if (pAb->AbDisplay == 'I')
 		/* display: inline */
 		{
 		  if (pAb->AbEnclosing)
