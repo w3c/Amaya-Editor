@@ -133,7 +133,7 @@ static void LoadColor (int fg)
   ----------------------------------------------------------------------*/
 static void DoDrawOneLine (int frame, int x1, int y1, int x2, int y2)
 {
-  GL_DrawLine (x1, y1, x2, y2);
+  GL_DrawLine (x1, y1, x2, y2, FALSE);
 }
 
 
@@ -1135,8 +1135,8 @@ void DrawSegments (int frame, int thick, int style, int x, int y,
   /* Draw the border */
   InitDrawing (style, thick, fg);
   for (k=0; k< nb-2; k++)
-  GL_DrawLine( points[k].x, points[k].y,
-	       points[k+1].x, points[k+1].y);
+    GL_DrawLine( points[k].x, points[k].y,
+		 points[k+1].x, points[k+1].y, TRUE);
 
   /* Forward arrow */
   if (arrow == 1 || arrow == 3)
@@ -1817,8 +1817,8 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
       else
 	Y = y + thick / 2;
 
-      x += thick / 2;
-      l -= thick;
+      /* x += thick / 2; */
+      /*       l -= thick; */
             
       InitDrawing (style, thick, fg);
       DoDrawOneLine (frame, x, Y, x + l, Y);
@@ -1843,8 +1843,8 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y,
       else
 	X = x + thick / 2;
       
-      y += thick / 2;
-      h -= thick;
+      /* y += thick / 2; */
+      /*       h -= thick; */
 
       y += FrameTable[frame].FrTopMargin;
       InitDrawing (style, thick, fg);
@@ -1873,8 +1873,8 @@ void DrawDoubleVerticalLine (int frame, int thick, int style, int x, int y,
       
       y += FrameTable[frame].FrTopMargin;
 
-      y += thick / 2;
-      h -= thick;  
+      /* y += thick / 2; */
+      /*       h -= thick;   */
 
       InitDrawing (style, thick, fg);
       DoDrawOneLine (frame, X, y, X, y + h);
@@ -2195,7 +2195,7 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
 	     A = ((double) height - 2 * px7mm) / height;
 	     A = 1.0 - sqrt (1 - A * A);
 	     shiftX = width * A * 0.5 + 0.5;
-	     GL_DrawLine(x + shiftX, y + px7mm, x + width - shiftX, y + px7mm);
+	     GL_DrawLine(x + shiftX, y + px7mm, x + width - shiftX, y + px7mm, TRUE);
 	  }
      }
 }

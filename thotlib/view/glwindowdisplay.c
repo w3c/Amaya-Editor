@@ -751,9 +751,9 @@ void GL_DrawRectangle (int fg, int x, int y, int width, int height)
 /*----------------------------------------------------------------------
   GL_DrawLine
   ----------------------------------------------------------------------*/
-void GL_DrawLine (int x1, int y1, int x2, int y2)
+void GL_DrawLine (int x1, int y1, int x2, int y2, ThotBool round)
 {
-  if (S_thick > 1)
+  if (S_thick > 1 && round)
     {
       /* round line join*/ 
       glBegin (GL_POINTS);
