@@ -12,6 +12,7 @@ extern void GetPictHandlersList ( int *count,
 extern void DrawPicture ( PtrBox box,
                           PictInfo * imageDesc,
                           int frame );
+extern void UnmapImage ( PictInfo* imageDesc );
 extern void LoadPicture ( int frame,
                           PtrBox box,
                           PictInfo * imageDesc );
@@ -34,6 +35,7 @@ extern void GetPictHandlersList (/* int *count,
 extern void DrawPicture (/* PtrBox box,
                             PictInfo * imageDesc,
                             int frame */);
+extern void UnmapImage (/* PictInfo* imageDesc */);
 extern void LoadPicture (/* int frame,
                             PtrBox box,
                             PictInfo * imageDesc */);

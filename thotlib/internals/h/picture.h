@@ -28,7 +28,8 @@
 #define GIF_FORMAT        	3     /* gif */
 #define JPEG_FORMAT             4     /* Jpeg */
 #define PNG_FORMAT              5     /* Png */
-#define MAX_PICT_FORMATS        6
+#define PLUGIN_FORMAT           6     /* Plugin files format */
+#define MAX_PICT_FORMATS       30
 
 /* A few constants */
 
@@ -43,6 +44,9 @@
 #define JpegName "Jpeg (.jpg)"
 #define XpmName  "Pixmap (.xpm)"
 #define PngName  "Ping (.png)"
+#define CgmName  "Cgm (.cgm)"
+#define XpgName  "Xpg (.xpg)"
+#define TclName  "Tcl (.tcl)"
 
 typedef struct 
 {
@@ -53,6 +57,11 @@ typedef struct
   char          *PicFileName; 
   Pixmap         PicPixmap;
   Pixmap         PicMask;
+#ifdef AMAYA_PLUGIN
+  boolean        mapped;
+  boolean        created;
+  Widget         wid;
+#endif /* AMAYA_PLUGIN */
 } PictInfo;
 
 typedef enum
@@ -69,6 +78,9 @@ typedef struct
   Drawable (*Produce_Picture) ();
   void     (*Produce_Postscript) ();
   boolean  (*Match_Format) ();
+#ifdef AMAYA_PLUGIN
+  void     (*DrawPicture) ();
+#endif /* AMAYA_PLUGIN */
 } PictureHandler;
 
 

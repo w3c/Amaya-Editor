@@ -136,7 +136,7 @@ int                 number;
    char                namef1[100];
    char                namef2[100];
    char                text[100];
-   char               *servername;
+   /*   char               *servername; */
 
 #ifndef _WINDOWS
    Display            *Dp;

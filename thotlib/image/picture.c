@@ -18,7 +18,9 @@
  * Picture Handling
  * Authors: I. Vatton (INRIA)
  *          N. Layaida (INRIA) - New picture formats
+ *          R. Guetari (INRIA) - Plugins
  *
+ * Last modification: Jan 09 1997
  */
 
 #include "thot_gui.h"
@@ -39,10 +41,11 @@
 #include "frame_tv.h"
 #include "font_tv.h"
 #include "platform_tv.h"
+#include "picture_tv.h"
+
 #include "appli_f.h"
 #include "tree_f.h"
 #include "views_f.h"
-
 #include "platform_f.h"
 #include "font_f.h"
 #include "frame_f.h"
@@ -57,23 +60,29 @@
 #include "epshandler_f.h"
 #include "fileaccess_f.h"
 
-static PictureHandler PictureHandlerTable[MAX_PICT_FORMATS];
-static int            PictureIdType[MAX_PICT_FORMATS];
-static int            PictureMenuType[MAX_PICT_FORMATS];
-static char          *PictureMenu;
-static int            HandlersCounter;
-static Pixmap         PictureLogo;
-Pixmap                EpsfPictureLogo;
-static boolean        Printing;
-ThotGC                GCpicture;
-THOT_VInfo            THOT_vInfo;
+#ifdef AMAYA_PLUGIN
+int currentPlugin;
+#endif /* AMAYA_PLUGIN */
+
+PictureHandler  PictureHandlerTable[MAX_PICT_FORMATS];
+int             PictureIdType[MAX_PICT_FORMATS];
+int             PictureMenuType[MAX_PICT_FORMATS];
+int             InlineHandlers;
+int             HandlersCounter;
+static char*    PictureMenu;
+static Pixmap   PictureLogo;
+
+boolean         Printing;
+ThotGC          GCpicture;
+THOT_VInfo      THOT_vInfo;
+Pixmap          EpsfPictureLogo;
 
 #ifndef _WINDOWS
-XVisualInfo        *vptr;
-Visual             *theVisual;
-
+XVisualInfo*    vptr;
+Visual*         theVisual;
 #endif
-char               *FileExtension[] =
+
+char*           FileExtension[] =
 {".xbm", ".eps", ".xpm", ".gif", ".jpg", ".png"};
 
 static unsigned char MirrorBytes[0x100] =
@@ -112,7 +121,6 @@ static unsigned char MirrorBytes[0x100] =
    0x1f, 0x9f, 0x5f, 0xdf, 0x3f, 0xbf, 0x7f, 0xff
 };
 
-
 /*----------------------------------------------------------------------
    Match_Format returns TRUE if the considered header file matches   
    the image file description, FALSE in the the other cases        
@@ -129,7 +137,7 @@ char               *fileName;
    if (PictureHandlerTable[typeImage].Match_Format != NULL)
       return (*(PictureHandlerTable[typeImage].Match_Format)) (fileName);
    else
-      return MAX_PICT_FORMATS;
+      return FALSE;
 }
 
 
@@ -327,7 +335,7 @@ int                 desory;
    both directions.                                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      IsValid (PtrBox box, PictInfo * imageDesc)
+static boolean      IsValid (PtrBox box, PictInfo* imageDesc)
 #else  /* __STDC__ */
 static boolean      IsValid (box, imageDesc)
 PtrBox              box;
@@ -385,7 +393,8 @@ char               *fileName;
    int                 i;
    int                 l = 0;
 
-   i = MAX_PICT_FORMATS - 1;
+   /* i = MAX_PICT_FORMATS - 1; */
+   i = HandlersCounter - 1 ;
    l = strlen (fileName);
    if (l > 4)
      {
@@ -405,7 +414,7 @@ char               *fileName;
 	  {
 	     return GIF_FORMAT;
 	  }
-	if (strcmp (fileName + l - 4, ".jpg") == 0)
+	if ((strcmp (fileName + l - 4, ".jpg") == 0) || (strcmp (fileName + l - 5, ".jpeg") == 0))
 	  {
 	     return JPEG_FORMAT;
 	  }
@@ -414,6 +423,7 @@ char               *fileName;
 	     return PNG_FORMAT;
 	  }
      }
+
    while (i > UNKNOWN_FORMAT)
      {
 	if (Match_Format (i, fileName))
@@ -423,6 +433,9 @@ char               *fileName;
 	else
 	  {
 	     i--;
+#ifdef AMAYA_PLUGIN
+             currentPlugin--;
+#endif /* AMAYA_PLUGIN */
 	  }
      }
    return UNKNOWN_FORMAT;
@@ -491,7 +504,6 @@ boolean             printing;
 
 #endif /* __STDC__ */
 {
-   int                 i;
 
 #ifdef _WINDOWS
 #if 0
@@ -509,7 +521,7 @@ boolean             printing;
 
 #endif /* 0 */
 #else  /* _WINDOWS */
-   XVisualInfo         vinfo, *vptr;
+   XVisualInfo         vinfo;
 
    TtGraphicGC = XCreateGC (TtDisplay, TtRootWindow, 0, NULL);
    XSetForeground (TtDisplay, TtGraphicGC, Black_Color);
@@ -530,73 +542,69 @@ boolean             printing;
 						  White_Color,
 						  TtWDepth);
    vinfo.visualid = XVisualIDFromVisual (XDefaultVisual (TtDisplay, TtScreen));
-   vptr = XGetVisualInfo (TtDisplay, VisualIDMask, &vinfo, &i);
+   vptr = XGetVisualInfo (TtDisplay, VisualIDMask, &vinfo, &HandlersCounter);
    THOT_vInfo.class = vptr->class;
    THOT_vInfo.depth = vptr->depth;
    theVisual = DefaultVisual (TtDisplay, TtScreen);
 
-#ifdef AMAYA_PLUGIN
-   Ap_OpenPluginDriver (printing) ;
-#endif /* AMAYA_PLUGIN */
-
 #endif /* !_WINDOWS */
 
    Printing = printing;
-   i = 0;
-   strncpy (PictureHandlerTable[i].GUI_Name, XbmName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[i].Produce_Picture = XbmCreate;
-   PictureHandlerTable[i].Produce_Postscript = XbmPrint;
-   PictureHandlerTable[i].Match_Format = IsXbmFormat;
+   HandlersCounter = 0;
+   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, XbmName, MAX_FORMAT_NAMELENGHT);
+   PictureHandlerTable[HandlersCounter].Produce_Picture = XbmCreate;
+   PictureHandlerTable[HandlersCounter].Produce_Postscript = XbmPrint;
+   PictureHandlerTable[HandlersCounter].Match_Format = IsXbmFormat;
 
-   PictureIdType[i] = XBM_FORMAT;
-   PictureMenuType[i] = XBM_FORMAT;
-   i++;
+   PictureIdType[HandlersCounter] = XBM_FORMAT;
+   PictureMenuType[HandlersCounter] = XBM_FORMAT;
+   HandlersCounter++;
 
-   strncpy (PictureHandlerTable[i].GUI_Name, EpsName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[i].Produce_Picture = EpsCreate;
-   PictureHandlerTable[i].Produce_Postscript = EpsPrint;
-   PictureHandlerTable[i].Match_Format = IsEpsFormat;
+   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, EpsName, MAX_FORMAT_NAMELENGHT);
+   PictureHandlerTable[HandlersCounter].Produce_Picture = EpsCreate;
+   PictureHandlerTable[HandlersCounter].Produce_Postscript = EpsPrint;
+   PictureHandlerTable[HandlersCounter].Match_Format = IsEpsFormat;
 
-   PictureIdType[i] = EPS_FORMAT;
-   PictureMenuType[i] = EPS_FORMAT;
-   i++;
+   PictureIdType[HandlersCounter] = EPS_FORMAT;
+   PictureMenuType[HandlersCounter] = EPS_FORMAT;
+   HandlersCounter++;
 
-   strncpy (PictureHandlerTable[i].GUI_Name, XpmName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[i].Produce_Picture = XpmCreate;
-   PictureHandlerTable[i].Produce_Postscript = XpmPrint;
-   PictureHandlerTable[i].Match_Format = IsXpmFormat;
+   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, XpmName, MAX_FORMAT_NAMELENGHT);
+   PictureHandlerTable[HandlersCounter].Produce_Picture = XpmCreate;
+   PictureHandlerTable[HandlersCounter].Produce_Postscript = XpmPrint;
+   PictureHandlerTable[HandlersCounter].Match_Format = IsXpmFormat;
 
-   PictureIdType[i] = XPM_FORMAT;
-   PictureMenuType[i] = XPM_FORMAT;
-   i++;
+   PictureIdType[HandlersCounter] = XPM_FORMAT;
+   PictureMenuType[HandlersCounter] = XPM_FORMAT;
+   HandlersCounter++;
 
-   strncpy (PictureHandlerTable[i].GUI_Name, GifName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[i].Produce_Picture = GifCreate;
-   PictureHandlerTable[i].Produce_Postscript = GifPrint;
-   PictureHandlerTable[i].Match_Format = IsGifFormat;
+   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, GifName, MAX_FORMAT_NAMELENGHT);
+   PictureHandlerTable[HandlersCounter].Produce_Picture = GifCreate;
+   PictureHandlerTable[HandlersCounter].Produce_Postscript = GifPrint;
+   PictureHandlerTable[HandlersCounter].Match_Format = IsGifFormat;
 
-   PictureIdType[i] = GIF_FORMAT;
-   PictureMenuType[i] = GIF_FORMAT;
-   i++;
+   PictureIdType[HandlersCounter] = GIF_FORMAT;
+   PictureMenuType[HandlersCounter] = GIF_FORMAT;
+   HandlersCounter++;
 
-   strncpy (PictureHandlerTable[i].GUI_Name, JpegName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[i].Produce_Picture = JpegCreate;
-   PictureHandlerTable[i].Produce_Postscript = JpegPrint;
-   PictureHandlerTable[i].Match_Format = IsJpegFormat;
+   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, JpegName, MAX_FORMAT_NAMELENGHT);
+   PictureHandlerTable[HandlersCounter].Produce_Picture = JpegCreate;
+   PictureHandlerTable[HandlersCounter].Produce_Postscript = JpegPrint;
+   PictureHandlerTable[HandlersCounter].Match_Format = IsJpegFormat;
 
-   PictureIdType[i] = JPEG_FORMAT;
-   PictureMenuType[i] = JPEG_FORMAT;
-   i++;
+   PictureIdType[HandlersCounter] = JPEG_FORMAT;
+   PictureMenuType[HandlersCounter] = JPEG_FORMAT;
+   HandlersCounter++;
 
-   strncpy (PictureHandlerTable[i].GUI_Name, PngName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[i].Produce_Picture = PngCreate;
-   PictureHandlerTable[i].Produce_Postscript = PngPrint;
-   PictureHandlerTable[i].Match_Format = IsPngFormat;
+   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, PngName, MAX_FORMAT_NAMELENGHT);
+   PictureHandlerTable[HandlersCounter].Produce_Picture = PngCreate;
+   PictureHandlerTable[HandlersCounter].Produce_Postscript = PngPrint;
+   PictureHandlerTable[HandlersCounter].Match_Format = IsPngFormat;
 
-   PictureIdType[i] = PNG_FORMAT;
-   PictureMenuType[i] = PNG_FORMAT;
-   i++;
-   HandlersCounter = i;
+   PictureIdType[HandlersCounter] = PNG_FORMAT;
+   PictureMenuType[HandlersCounter] = PNG_FORMAT;
+   HandlersCounter++;
+   InlineHandlers = HandlersCounter;
 }
 
 
@@ -878,7 +886,13 @@ int                 frame;
 		     wif = PicWArea;
 		  if (PicHArea < hif)
 		     hif = PicHArea;
-		  LayoutPicture (imageDesc->PicPixmap, drawable, pxorig, pyorig,
+#ifdef AMAYA_PLUGIN
+                  if (typeImage >= InlineHandlers)
+                     (*(PictureHandlerTable[typeImage].DrawPicture)) (imageDesc, xif + xtranslate, yif + ytranslate);
+		  /* Ap_DrawPicture (imageDesc, xif + xtranslate, yif + ytranslate); */
+                  else
+#endif /* AMAYA_PLUGIN */
+		      LayoutPicture (imageDesc->PicPixmap, drawable, pxorig, pyorig,
 			      wif, hif, xif + xtranslate, yif + ytranslate);
 		  if (imageDesc->PicMask)
 		    {
@@ -889,13 +903,13 @@ int                 frame;
 	  }
 	ResetCursorWatch (frame);
      }
-   else if (typeImage < HandlersCounter && typeImage > -1)
+   else if (typeImage < InlineHandlers && typeImage > -1)
       (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea,
 					(FILE *) drawable, BackGroundPixel);
 #endif /* _WINDOWS */
 }
 
-#ifdef AMAYA_PLUGIN 
+#ifdef AMAYA_PLUGIN
 /*----------------------------------------------------------------------
   For plugins   
   ----------------------------------------------------------------------*/
@@ -1000,9 +1014,18 @@ PictInfo           *imageDesc;
 		 }
 
 	       Bgcolor = ColorPixel (box->BxAbstractBox->AbBackground);
-
-	       myDrawable = (*(PictureHandlerTable[typeImage].
-			       Produce_Picture)) (fileName, pres, &xif, &yif, &wif, &hif, Bgcolor, &PicMask);
+#ifdef AMAYA_PLUGIN
+               if (typeImage >= InlineHandlers) {
+                  myDrawable = (*(PictureHandlerTable[typeImage].Produce_Picture)) (frame, imageDesc, fileName) ;
+                  /* myDrawable = Ap_ProducePicture (frame, imageDesc, fileName) ; */
+                  xif = imageDesc->PicXArea;
+                  yif = imageDesc->PicYArea;
+                  wif = imageDesc->PicWArea;
+                  hif = imageDesc->PicHArea;
+               } else 
+#endif /* AMAYA_PLUGIN */
+	           myDrawable = (*(PictureHandlerTable[typeImage].
+			           Produce_Picture)) (fileName, pres, &xif, &yif, &wif, &hif, Bgcolor, &PicMask);
 
 	       noCroppingFrame = ((wif == 0) && (hif == 0));
 

@@ -8,7 +8,8 @@
 /*
  * frame.c : incremental display in frames.
  *
- * Author: I. Vatton (INRIA)
+ * Authors: I. Vatton (INRIA)
+ *          R. Guetari (INRIA) - Plugins
  *
  */
 
@@ -267,6 +268,19 @@ int                 delta;
 			     vol += pBo1->BxAbstractBox->AbVolume;
 		       if (pBo1->BxPrevious == NULL)
 			  isbelow = FALSE;
+#ifdef AMAYA_PLUGIN */
+                       else {
+			   if ((pBox->BxType == BoPicture) &&
+                               !((y >= pFrame->FrYOrg)     &&
+                                 (pBox->BxYOrg <= (pFrame->FrYOrg + h)) &&
+                                 (x >= pFrame->FrXOrg)                  &&
+                                 (pBox->BxXOrg <= (pFrame->FrXOrg + l)))) {
+                              UnmapImage (pBox->BxPictInfo);
+                           } else {
+                                  DisplayBox (pBox, frame);
+                           }
+                       }
+#endif /* AMAYA_PLUGIN */
 		       pBox = pBo1->BxPrevious;
 		    }
 	       }
@@ -301,11 +315,23 @@ int                 delta;
 				    max = pBox;
 				 min = pBox;
 			      }
-			    if (y >= frameymin
-				&& pBo1->BxYOrg <= frameymax
-				&& x >= framexmin
-				&& pBo1->BxXOrg <= framexmax)
-			       DisplayBox (pBox, frame);
+#ifdef AMAYA_PLUGIN
+                            if (pBox->BxType == BoPicture) {
+                               if (!((y >= pFrame->FrYOrg) &&
+                                     (pBox->BxYOrg <= (pFrame->FrYOrg + h)) &&
+                                     (x >= pFrame->FrXOrg) &&
+                                     (pBox->BxXOrg <= (pFrame->FrXOrg + l)))) {
+                                  UnmapImage (pBox->BxPictInfo);
+                               } else {
+                                      DisplayBox (pBox, frame);
+                               }
+                            } else 
+#endif /* AMAYA_PLUGIN */
+			           if (y >= frameymin
+				       && pBo1->BxYOrg <= frameymax
+				       && x >= framexmin
+				       && pBo1->BxXOrg <= framexmax)
+			              DisplayBox (pBox, frame);
 
 			    /* Skip to next box */
 			    pBox = pBo1->BxPrevious;
@@ -684,16 +710,29 @@ int                 delta;
 		       else
 			  pAbbox1 = NULL;
 
-/** skip box to create dynamically **/
+                       /** skip box to create dynamically **/
 		       if (pAbbox1 != NULL)
 			  /* store the box to create */
 			  AddBoxToCreate (&ToCreate, pAbbox1->AbBox, frame);
-		       else if (y >= frameymin
-				&& pBox->BxYOrg <= frameymax
-				&& x >= framexmin
-				&& pBox->BxXOrg <= framexmax)
-			  DisplayBox (pBox, frame);
-
+		       else  { 
+#ifdef AMAYA_PLUGIN
+			     if (pBox->BxType == BoPicture) {
+                                if (!((y >= pFrame->FrYOrg) &&
+                                      (pBox->BxYOrg <= (pFrame->FrYOrg + h)) &&
+                                      (x >= pFrame->FrXOrg) &&
+                                      (pBox->BxXOrg <= (pFrame->FrXOrg + l)))) {
+                                   UnmapImage (pBox->BxPictInfo);
+                                } else {
+                                       DisplayBox (pBox, frame);
+                                }
+                             } else 
+#endif /* AMAYA_PLUGIN */
+                                   if (y >= frameymin            && 
+                                       pBox->BxYOrg <= frameymax && 
+                                       x >= framexmin            && 
+                                       pBox->BxXOrg <= framexmax)
+			              DisplayBox (pBox, frame);
+                       }
 		       /* Skip to next box */
 		       pBox = pBox->BxNext;
 		    }

@@ -127,16 +127,6 @@ char *typecouleur[] = {"grayscale", "undefined type", "RGB",
 			  "undefined type", "RGB+alpha"};
     
 
-#ifdef __STDC__
-extern int PixelEnPt (int, int) ;
-extern Pixmap MakeMask (Display*, char*, int, int, int) ;
-extern Pixmap DataToPixmap (char*, int, int, int,  ThotColorStruct []) ;
-#else  /* __STDC__ */
-extern int PixelEnPt () ;
-extern Pixmap MakeMask () ;
-extern Pixmap DataToPixmap () ;
-#endif /* __STDC__ */
-
 void png_error(png_struct *png_ptr, char *message)
 {
   fprintf(stderr,"libpng error: %s\n", message);

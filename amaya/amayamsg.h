@@ -111,4 +111,5 @@ int                 AMAYA;
 #define AM_BUTTON_LINK		       99
 #define AM_BUTTON_TABLE               100
 #define AM_NO_NAME                    101
-#define AMAYA_MSG_MAX                 102
+#define AM_BUTTON_PLUGIN              102
+#define AMAYA_MSG_MAX                 103
