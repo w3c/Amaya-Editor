@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -36,16 +36,7 @@
    For already loaded remote images the function returns the      
    descriptor entry and the value FALSE.                           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            AddLoadedImage (STRING name, STRING pathname, Document doc, LoadedImageDesc ** desc)
-#else  /* __STDC__ */
-ThotBool            AddLoadedImage (name, pathname, doc, desc)
-STRING              name;
-STRING              pathname;
-Document            doc;
-LoadedImageDesc   **desc;
-
-#endif /* __STDC__ */
 {
    LoadedImageDesc    *pImage, *previous, *sameImage;
    STRING               localname;
@@ -126,13 +117,7 @@ LoadedImageDesc   **desc;
    its local name.
    The function returns the descriptor entry or NULL.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 LoadedImageDesc    *SearchLoadedImage (STRING localpath, Document doc)
-#else  /* __STDC__ */
-LoadedImageDesc    *SearchLoadedImage (localpath, doc)
-STRING              localpath;
-Document            doc;
-#endif /* __STDC__ */
 {
   LoadedImageDesc    *pImage;
   
@@ -160,14 +145,7 @@ Document            doc;
    SetAreaCoords computes the coords attribute value from x, y,       
    width and height of the box.                           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetAreaCoords (Document document, Element element, int attrNum)
-#else  /* __STDC__ */
-void                SetAreaCoords (document, element, attrNum)
-Document            document;
-Element             element;
-int                 attrNum;
-#endif /* __STDC__ */
 {
    ElementType         elType;
    Element             child, map;
@@ -342,15 +320,7 @@ int                 attrNum;
   oldWidth is -1 or the old image width.
   oldHeight is -1 or the old image height.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                UpdateImageMap (Element image, Document document, int oldWidth, int oldHeight)
-#else  /* __STDC__ */
-void                UpdateImageMap (image, document, oldWidth, oldHeight)
-Element             image;
-Document            document;
-int                 oldWidth;
-int                 oldHeight;
-#endif /* __STDC__ */
 {
    AttributeType       attrType;
    Attribute           attr;
@@ -487,36 +457,45 @@ int                 oldHeight;
    TtaSetDisplayMode (document, dispMode);
 }
 
-
 /*----------------------------------------------------------------------
+  DisplayImage
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DisplayImage (Document doc, Element el, STRING imageName)
-#else  /* __STDC__ */
-void                DisplayImage (doc, el, imageName)
-Document            doc;
-Element             el;
-STRING              imageName;
-#endif /* __STDC__ */
 {
   ElementType         elType;
-  int                 modified;
+  int                 modified, i;
+  Document            newdoc;
+  int                 parsingLevel;
+  CHARSET             charset;
+  DocumentType        thotType;
+  ThotBool            xmlDec, withDoctype, isXML;
 
   modified = TtaIsDocumentModified (doc);
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
     {
-      /* display the content of a picture element */
-      TtaSetTextContent (el, imageName, SPACE, doc);
-      UpdateImageMap (el, doc, -1, -1);
+      for (i = ustrlen (imageName); i > 0 && imageName[i] != '.'; i--);
+      if (imageName[i] == '.' && !ustrcmp (&imageName[i+1], TEXT("svg")))
+	{
+	  /* it's an SVG image */
+	  /* parse the SVG file and include the parse tree at the
+             position of the image element */
+	  ;
+	} 
+      else
+	{
+	  /* display the content of a picture element */
+	  TtaSetTextContent (el, imageName, SPACE, doc);
+	  UpdateImageMap (el, doc, -1, -1);
+	}
     }
   else
     {
-#      ifndef _WINDOWS
-       fprintf(stderr,"Background image !\n");
-#      endif /* _WINDOWS */
       /* create a background image for the element */
       /* set the value */
+#ifndef _WINDOWS
+      fprintf(stderr,"Background image !\n");
+#endif /* _WINDOWS */
     }
   
   /* if the document was not modified before this update reset it unmodified */
@@ -535,18 +514,10 @@ STRING              imageName;
    HandleImageLoaded is the callback procedure when the image is loaded	
    		from the web.						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                HandleImageLoaded (int doc, int status, STRING urlName,
-                                     STRING outputfile, void * context)
-#else  /* __STDC__ */
-void                HandleImageLoaded (doc, status, urlName, outputfile, context)
-int doc;
-int status;
-STRING urlName;
-STRING outputfile;
-void *context;
-
-#endif /* __STDC__ */
+static void         HandleImageLoaded (int doc, int status, STRING urlName,
+				       STRING outputfile,
+				       AHTHeaders *http_headers,
+				       void * context)
 {
 /***
    STRING              pathname;	***/
@@ -648,21 +619,9 @@ void *context;
    libWWWImageLoaded is the libWWW callback procedure when the image
                 is loaded from the web.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                libWWWImageLoaded (int doc, int status, STRING urlName,
-                                     STRING outputfile, AHTHeaders *http_headers,
-				       void * context)
-#else  /* __STDC__ */
-void                libWWWImageLoaded (doc, status, urlName, outputfile, 
-				       http_headers, context)
-int doc;
-int status;
-STRING urlName;
-STRING outputfile;
-AHTHeaders *http_headers;
-void *context;
-
-#endif /* __STDC__ */
+static void     libWWWImageLoaded (int doc, int status, STRING urlName,
+				   STRING outputfile, AHTHeaders *http_headers,
+				   void * context)
 {
   FetchImage_context *FetchImage_ctx;
 
@@ -688,7 +647,8 @@ void *context;
 	}
 
       /* rename the local file of the image */
-      HandleImageLoaded (doc, status, urlName, outputfile, context);
+      HandleImageLoaded (doc, status, urlName, outputfile, http_headers,
+			 context);
      }
 }
 
@@ -697,14 +657,7 @@ void *context;
    element is an image map and NULL if it is not.          
    The non-null returned string has the form "?X,Y"        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 STRING              GetActiveImageInfo (Document document, Element element)
-#else  /* __STDC__ */
-STRING              GetActiveImageInfo (document, element)
-Document            document;
-Element             element;
-
-#endif /* __STDC__ */
 {
    STRING              ptr;
    int                 X, Y;
@@ -733,18 +686,7 @@ Element             element;
    FetchImage loads an image from local file or from the web. The flags
    may indicate extra transfer parameters, for example bypassing the cache.		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                FetchImage (Document doc, Element el, STRING URL, int flags, LoadedImageCallback callback, void *extra)
-#else  /* __STDC__ */
-void                FetchImage (doc, el, URL, flags, callback, extra)
-Document            doc;
-Element             el;
-STRING              URL;
-int                 flags;
-LoadedImageCallback callback;
-void               *extra;
-
-#endif /* __STDC__ */
 {
   ElemImage           *ctxEl;
   ElementType         elType;
@@ -855,7 +797,7 @@ void               *extra;
 	    {
 	      if (desc == NULL)
 		{
-		  /* it is a local image */
+		/* it is a local image */
 		if (callback)
 		  {
 		    if (!ustrncmp(pathname, TEXT("file:/"), 6))
@@ -865,7 +807,7 @@ void               *extra;
 		  }
 		else
 		  DisplayImage (doc, el, pathname);
-	      }
+		}
 	      else
 		if (TtaFileExist (desc->localName))
 		  {
@@ -910,14 +852,7 @@ void               *extra;
    Returns TRUE if the the transfer succeeds without being stopped;
    Otherwise, returns FALSE.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            FetchAndDisplayImages (Document doc, int flags)
-#else  /* __STDC__ */
-ThotBool            FetchAndDisplayImages (doc, flags)
-Document            doc;
-int                 flags;
-
-#endif /* __STDC__ */
 {
    AttributeType       attrType;
    Attribute           attr;
