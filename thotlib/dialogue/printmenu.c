@@ -65,8 +65,6 @@ static PtrDocument  pDocPrint;
 static char         PageSize[MAX_NAME_LENGTH];
 static char         Orientation[MAX_NAME_LENGTH];
 
-int numOfJobs = 0 ;
-
 /*----------------------------------------------------------------------
   PrintInit: 
   ----------------------------------------------------------------------*/
@@ -150,7 +148,6 @@ char               *viewsToPrint;
       thotDir = ThotDir ();
    tempDir = (char *) TtaGetMemory (40);
    sprintf (tempDir, "/tmp/Thot%d", pid + numOfJobs);
-   numOfJobs++ ;
 
    PrintInit (userOrientation, tempDir, dir, name);
    if (printer[0] != '\0')
@@ -217,7 +214,6 @@ char               *viewsToPrint;
      }
    tempDir = (char *) TtaGetMemory (40);
    sprintf (tempDir, "/tmp/Thot%d", pid + numOfJobs);
-   numOfJobs++ ;
    PrintInit (userOrientation, tempDir, dir, name);
 
    if (psName[0] != '\0')
@@ -252,7 +248,7 @@ static void         ConnectPrint ()
 	   strcpy (pPrinter, "");
 	else
 	   strcpy (pPrinter, ptr);
-        sprintf (PSdir, "/tmp/out.ps") ;
+        sprintf (PSdir, "/tmp/out%d.ps", numOfJobs) ;
 	/*PSdir[0] = '\0';*/
 	PaperPrint = TRUE;
 	ManualFeed = FALSE;
@@ -352,6 +348,7 @@ char               *viewNames;
      }
    strncpy (pDocPrint->DocDirectory, dirName, MAX_PATH);
    strncpy (pDocPrint->DocDName, docName, MAX_NAME_LENGTH);
+   numOfJobs++ ;
 }
 
 
