@@ -5454,16 +5454,16 @@ void CallbackDialogue (int ref, int typedata, char *data)
 
     case AttrHREFText:
       /* save the HREF name */
-      RemoveNewLines (tmp);
-      if (IsW3Path (tmp))
+      RemoveNewLines (data);
+      if (IsW3Path (data))
 	{
 	  /* save the URL name */
-	  strcpy (AttrHREFvalue, tmp);
+	  strcpy (AttrHREFvalue, data);
 	  DocumentName[0] = EOS;
 	}
       else
 	{
-	  change = NormalizeFile (tmp, tempfile, AM_CONV_NONE);
+	  change = NormalizeFile (data, tempfile, AM_CONV_NONE);
 	  if (TtaCheckDirectory (tempfile))
 	    {
 	      strcpy (DirectoryName, tempfile);
