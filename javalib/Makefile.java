@@ -16,7 +16,12 @@ AMAYA_JAVA_LIBS= ../javalib/libThotJava.a ../javalib/libAmayaJava.a \
    ../libkaffe_bissawt.a ../libkaffe_vm.a ../libkaffe_native.a \
    ../libkaffe_agent.a ../libkaffe_net.a
 
+AMAYA_JAVA_SRC= java_stubs
+
 java_force :
+
+java_stubs : 
+	@(cd ../javalib ; make stubs)
 
 ../javalib/libThotJava.a ../javalib/libAmayaJava.a : java_force
 	@(cd ../javalib ; make libThotJava libAmayaJava)
