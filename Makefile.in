@@ -306,16 +306,19 @@ libraptor: @MAKERAPTOR@ libraptor_config libraptor_make
 # Rules to build the redland RDF library
 #
 
+# Previous rule used to link and compile expat inside redland... to be removed
+# after checking all is ok in all the platforms
+# we're using the expat from inside libwww
+# @(if test ! -e "$(THOTDIR)/../$(REDLAND)/expat"  ; then \
+#   libwwwdir="$(THOTDIR)/../$(LIBWWW)" ; \
+#    echo $$libwwwdir ; \
+#    $(LN_S) "$$libwwwdir/modules/expat" "$(THOTDIR)/../$(REDLAND)/expat" ; \
+# fi)
+
 redland_config: @MAKEREDLAND@ force
 	@(if test ! -e "$(THOTDIR)/../$(REDLAND)"  ; then \
 	      $(ECHO) "Error redland dir not found at $(THOTDIR)/$(REDLAND)" ; \
 	  fi)
-	# we're using the expat from inside libwww
-	#@(if test ! -e "$(THOTDIR)/../$(REDLAND)/expat"  ; then \
-	#      libwwwdir="$(THOTDIR)/../$(LIBWWW)" ; \
-	#      echo $$libwwwdir ; \
-	#      $(LN_S) "$$libwwwdir/modules/expat" "$(THOTDIR)/../$(REDLAND)/expat" ; \
-	#  fi)
 	 @(if test ! -d "$(REDLAND)"  ; then \
 		$(MKDIR) $(REDLAND) ; \
           fi)
