@@ -136,6 +136,14 @@ static int          FirstPrinted;
 static int          LastPrinted;
 extern int          errno;
 
+#ifdef _GTK
+  GtkWidget *window;
+  GtkWidget *pbar;
+/* Printed page counter  */
+static int pg_counter = 0;
+/* permits to cancel current printing */
+static int gabort = FALSE;
+#endif /* _GTK */
 
 #ifdef _WINDOWS
 HBITMAP          WIN_LastBitmap = 0;
@@ -1653,6 +1661,10 @@ static void PrintView (PtrDocument pDoc)
        SetMargins (NULL, NULL, NULL);
        /* Document sans marques de pages */
        /* probablement un graphique: il ne faut pas clipper */
+#ifdef _GTK 
+       if (gabort)
+	   return;
+#endif /* _GTK  */
 #ifdef _WINDOWS
 	   /* control the Abort printing button */
        if (gbAbort)
@@ -1679,7 +1691,10 @@ static void PrintView (PtrDocument pDoc)
 		 if (gbAbort)
 			 return;
 #endif /* _WINDOWS */
-
+#ifdef _GTK 
+		 if (gabort)
+		     return;
+#endif /* _GTK  */
 	   /* cherche la premiere marque de la page suivante, en ignorant */
 	   /* les rappels de page. */
 	   pNextPageAb = NextPage (pPageAb);
@@ -1777,7 +1792,11 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
   /* imprime l'une apres l'autre les vues a imprimer indiquees dans */
   /* les parametres d'appel du programme print */
   for (v = 0; v < viewsCounter; v++)
-    {
+   {
+#ifdef _GTK
+      if (gabort)
+	  return 1;
+#endif /* _GTK */
       CurrentView = 0;
       withPages = FALSE;
       /* cherche si la vue est une vue de l'arbre principal */
@@ -1931,6 +1950,15 @@ static int       n = 1;
    ListAbsBoxes(rootAbsBox, 1, list);
    fclose (list);
 #endif
+
+#ifdef _GTK
+   if (gabort)
+    return;
+   pg_counter++;
+   gtk_progress_set_value (GTK_PROGRESS (pbar), (gfloat) pg_counter);
+   while (gtk_events_pending())
+                gtk_main_iteration();
+#endif /* _GTK */
 
 #ifdef _WINDOWS
   /* control the Abort printing button */
@@ -2133,7 +2161,11 @@ static void  ClientSend (ThotWindow clientWindow, char *name, int messageID)
   ----------------------------------------------------------------------*/
 void DisplayConfirmMessage (char *text)
 {
+#ifdef _GTK
+    gtk_window_set_title (GTK_WINDOW (window),text);
+#else	/* _GTK */
   ClientSend (thotWindow, text, TMSG_LIB_STRING);
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -2144,7 +2176,11 @@ void DisplayMessage (char *text, int msgType)
 {
   if (msgType == FATAL)
     {
+#ifdef _GTK
+      gtk_window_set_title (GTK_WINDOW (window),text);
+#else	/* _GTK */
       ClientSend (thotWindow, text, TMSG_LIB_STRING);
+#endif /* _GTK */
       /* if the request comes from the Thotlib we have to remove the directory */
       if (removeDirectory)
 	{
@@ -2153,8 +2189,9 @@ void DisplayMessage (char *text, int msgType)
 	}
 #ifdef _GTK
       gtk_exit (1);
-#endif /* _GTK */	
+#else	/* _GTK */
       exit (1);
+#endif /* _GTK */
     }
 }
 
@@ -2208,7 +2245,83 @@ static void LoadReferedDocuments (PtrDocument pDoc)
     }
 }
 
-		    
+#ifdef _GTK
+/* Callback that cancel printing */
+void set_cancel( GtkWidget    *widget, void *nothing )
+{
+    gabort = TRUE;
+}
+/* Create and display dialog box 
+   that permits cancel and viewing page number */
+void gtk_print_dialog(){
+  GtkAdjustment *adj;
+  GtkWidget *separator;
+  GtkWidget *button;
+  GtkWidget *vbox;
+  int timer;
+  
+  /* #include "amaya.h" */
+  /* AMAYA = TtaGetMessageTable ("amayamsg", AMAYA_MSG_MAX); */
+
+  /* create a new window */
+   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+   gtk_window_set_policy (GTK_WINDOW (window), FALSE, FALSE, TRUE);
+
+   gtk_container_set_border_width (GTK_CONTAINER (window), 0);
+   gtk_window_set_title (GTK_WINDOW (window),"Print Box");
+
+   vbox = gtk_vbox_new (FALSE, 5);
+   gtk_container_set_border_width (GTK_CONTAINER (vbox), 10);
+   gtk_container_add (GTK_CONTAINER (window), vbox);
+   gtk_widget_show(vbox);
+   /* Create a GtkAdjusment object to hold the range of the
+      progress bar */
+    adj = (GtkAdjustment *) gtk_adjustment_new (0, 1, 150, 0, 0, 0);
+    pbar = gtk_progress_bar_new_with_adjustment (adj);
+
+     gtk_progress_bar_set_bar_style (GTK_PROGRESS_BAR (pbar),
+                                    GTK_PROGRESS_CONTINUOUS);
+
+     /*gtk_progress_set_activity_mode (GTK_PROGRESS (pbar),
+       TRUE);*/
+
+   /* Set the format of the string that can be displayed in the
+      trough of the progress bar:
+      %p - percentage
+      %v - value
+      %l - lower range value
+      %u - upper range value */
+    gtk_progress_set_format_string (GTK_PROGRESS (pbar), "Page : %v");
+    gtk_progress_set_show_text (GTK_PROGRESS (pbar), TRUE);
+
+    gtk_container_add (GTK_CONTAINER (vbox), pbar);
+    gtk_widget_show_now(pbar);
+    gtk_widget_show(vbox);
+ 
+    /* Creates a new button with the label "Printing". */
+    /* button = gtk_button_new_with_label (TtaGetMessage(AMAYA, AM_CANCEL)); */
+    button = gtk_button_new_with_label ("cancel");
+    /* This will cause the window to be destroyed by calling
+      gtk_widget_destroy(window) when "clicked".  The destroy
+      signal could come from here, or the window manager. */
+    gtk_signal_connect_object (GTK_OBJECT (button), 
+			"clicked",
+                        GTK_SIGNAL_FUNC (set_cancel), 
+			NULL);
+    /* This makes it so the button is the default. */
+    GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+    gtk_container_add (GTK_CONTAINER (vbox), button);
+    gtk_widget_show_now (button);
+    gtk_widget_show(vbox);
+
+    /* and the window */
+    gtk_widget_show (window);
+
+    /* Force display */
+    while (gtk_events_pending())
+                gtk_main_iteration();
+}
+#endif /* _GTK */	    
 /*----------------------------------------------------------------------
    Main program                                                           
   ----------------------------------------------------------------------*/
@@ -2273,6 +2386,7 @@ int main (int argc, char **argv)
 #ifdef _GTK
   /* Initialization of gtk libraries */
    gtk_init_check (&argc, &argv);
+   gtk_print_dialog();
 #endif /* _GTK */
 
   /* if present the argument -lang should be the first */
