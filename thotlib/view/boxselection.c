@@ -550,12 +550,20 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		  if (pAb->AbLeafType == LtText)
 		    /* select the whole text */
 		    pViewSelEnd->VsXPos = pBox->BxW + l;
-		  else if ((pAb->AbLeafType == LtPicture && firstChar > 0) ||
-		      (pAb->AbLeafType == LtSymbol && firstChar == 0))
+		  else if (pAb->AbLeafType == LtPicture)
+		    {
+		      if (!SelPosition)
+			pViewSelEnd->VsXPos = pBox->BxW + l;
+		      else if (firstChar == 0)
+			pViewSelEnd->VsXPos = l + 2;
+		      else
+			/* select the right side of the picture or symbol */
+			pViewSelEnd->VsXPos = pBox->BxW + l + 2;
+		    }
+		  else if (pAb->AbLeafType == LtSymbol && firstChar == 0)
 		    /* select the right side of the picture or symbol */
 		    pViewSelEnd->VsXPos = pBox->BxW + l;
-		  else if (!SelPosition && (pAb->AbLeafType == LtPicture ||
-					    pAb->AbLeafType == LtSymbol))
+		  else if (!SelPosition && pAb->AbLeafType == LtSymbol)
 		    /* select the right side of the picture or symbol */
 		    pViewSelEnd->VsXPos = pBox->BxW;
 		  else if (pAb->AbLeafType == LtCompound)
@@ -680,7 +688,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 			  pBox = pBox->BxNexChild;
 			}
 		    }
-		  else if (graphSel)
+		  else if (graphSel && firstChar > 0)
                       DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
                                pBox->BxXOrg + pBox->BxWidth,
                                pBox->BxYOrg + pBox->BxHeight);
