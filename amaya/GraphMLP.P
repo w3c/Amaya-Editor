@@ -36,7 +36,7 @@ VIEWS
 DEFAULT
 
    BEGIN
-   HorizRef: * . Top;
+   HorizRef: Enclosed . HRef;
    VertRef: * . Left;
    HorizPos: Left = Enclosing . Left;
    VertPos:  Top = Enclosing . Top;
@@ -1412,6 +1412,7 @@ RULES
 
    GRAPHICS_UNIT:
 	BEGIN
+	HorizRef: * . Top;
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
 	Depth: Enclosing + 2;
@@ -1423,6 +1424,7 @@ RULES
 
    PICTURE_UNIT:
 	BEGIN
+	HorizRef: * . Top;
 	Width: Enclosing . Width;
         Height: Enclosing . Height;
 	Depth: Enclosing + 2;
