@@ -770,7 +770,11 @@ void ANNOT_UpdateThread (Document doc, AnnotMeta *annot)
     return;
 
   /* find the document where the thread is being shown */
-  thread_doc = AnnotThread_searchRoot (AnnotMetaData[doc].thread->rootOfThread);
+  if (AnnotMetaData[doc].thread)
+    thread_doc = AnnotThread_searchRoot (AnnotMetaData[doc].thread->rootOfThread);
+  else
+    thread_doc = 0;
+
   if (thread_doc == 0)
     return;
 
