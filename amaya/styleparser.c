@@ -98,14 +98,8 @@ static ThotBool      DoApply = TRUE;
   ----------------------------------------------------------------------*/
 static char *SkipWord (char *ptr)
 {
-# ifdef _WINDOWS
-  /* iswalnum is supposed to be supported by the i18n veriosn of libc 
-     use it when available */
-  while (iswalnum (*ptr) || *ptr == '-' || *ptr == '%')
-# else  /* !_WINDOWS */
-  while (isalnum((int)*ptr) || *ptr == '-' || *ptr == '%')
-# endif /* !_WINDOWS */
-        ptr++;
+  while (isalnum((int)*ptr) || *ptr == '-' || *ptr == '#' || *ptr == '%')
+    ptr++;
   return (ptr);
 }
 
@@ -187,11 +181,11 @@ static char *SkipQuotedString (char *ptr, char quote)
 }
 
 /*----------------------------------------------------------------------
-   CSSParseError
+   CSSPrintError
    print the error message msg on stderr.
    When the line is 0 ask to expat the current line number
   ----------------------------------------------------------------------*/
-static void  CSSParseError (char *msg, char *value)
+static void CSSPrintError (char *msg, char *value)
 {
   if (!TtaIsPrinting () && ParsedDoc > 0)
     {
@@ -216,9 +210,29 @@ static void  CSSParseError (char *msg, char *value)
     }
 }
 
+/*----------------------------------------------------------------------
+   CSSParseError
+   print the error message msg on stderr.
+   When the line is 0 ask to expat the current line number
+  ----------------------------------------------------------------------*/
+static void CSSParseError (char *msg, char *value, char *endvalue)
+{
+  char        c = EOS;
+
+  if (endvalue)
+    {
+      /* close the string here */
+      c = *endvalue;
+      *endvalue = EOS;
+    }
+  CSSPrintError (msg, value);
+  if (endvalue)
+    *endvalue = c;
+}
+
 
 /*----------------------------------------------------------------------
-   SkipProperty:                                                  
+   SkipProperty skips a property and display and error message
   ----------------------------------------------------------------------*/
 static char *SkipProperty (char *ptr)
 {
@@ -242,16 +256,17 @@ static char *SkipProperty (char *ptr)
   *ptr = EOS;
 #ifdef CSS_WARNING
   if (*deb != EOS)
-    CSSParseError ("CSS property ignored \"", deb);
+    CSSPrintError ("CSS property ignored", deb);
 #endif /* CSS_WARNING */
   *ptr = c;
   return (ptr);
 }
 
 /*----------------------------------------------------------------------
-   SkipProperty:                                                  
+   SkipValue
+   skips the value and display an error message if msg is not NULL
   ----------------------------------------------------------------------*/
-static char *SkipValue (char *ptr, ThotBool error)
+static char *SkipValue (char *msg, char *ptr)
 {
   char       *deb;
   char        c;
@@ -271,15 +286,8 @@ static char *SkipValue (char *ptr, ThotBool error)
   /* print the skipped property */
   c = *ptr;
   *ptr = EOS;
-  if (*deb != EOS && *deb != ',')
-    {
-      if (error)
-	CSSParseError ("invalid CSS value \"", deb);
-#ifdef CSS_WARNING
-      else
-	CSSParseError ("CSS value ignored \"", deb);
-#endif /* CSS_WARNING */
-    }
+  if (msg && *deb != EOS && *deb != ',')
+    CSSPrintError (msg, deb);
   *ptr = c;
   return (ptr);
 }
@@ -448,6 +456,8 @@ char *ParseCSSUnit (char *cssRule, PresentationValue *pval)
   ----------------------------------------------------------------------*/
 static char *ParseBorderValue (char *cssRule, PresentationValue *border)
 {
+  char             *ptr;
+
   /* first parse the attribute string */
    border->typed_data.value = 0;
    border->typed_data.unit = STYLE_UNIT_INVALID;
@@ -472,9 +482,17 @@ static char *ParseBorderValue (char *cssRule, PresentationValue *border)
      }
    else if (isdigit (*cssRule) || *cssRule == '.')
      {
+       ptr = cssRule;
        cssRule = ParseCSSUnit (cssRule, border);
-       if (border->typed_data.unit == STYLE_UNIT_BOX)
-	 border->typed_data.unit = STYLE_UNIT_EM;
+       if (border->typed_data.value == 0)
+	 border->typed_data.unit = STYLE_UNIT_PX;
+       else if (border->typed_data.unit == STYLE_UNIT_INVALID ||
+		border->typed_data.unit == STYLE_UNIT_BOX)
+	 {
+	   border->typed_data.unit = STYLE_UNIT_INVALID;
+	   border->typed_data.value = 0;
+	   CSSParseError ("Invalid border-width value", ptr, cssRule);
+	 }
      }
    return (cssRule);
 }
@@ -546,7 +564,8 @@ static char *ParseCSSColor (char *cssRule, PresentationValue * val)
     }
   if (ptr == cssRule)
     {
-      cssRule = SkipValue (cssRule, TRUE);
+      cssRule = SkipWord (cssRule);
+      CSSParseError ("Invalid color value", ptr, cssRule);
       val->typed_data.value = 0;
       val->typed_data.unit = STYLE_UNIT_INVALID;
     }
@@ -1080,7 +1099,7 @@ static char *ParseCSSBorderTop (Element element, PSchema tsch,
 	cssRule = ParseCSSBorderColorTop (element, tsch, context, cssRule, css, isHTML);
       if (ptr == cssRule)
 	/* rule not found */
-	cssRule = SkipValue (cssRule, TRUE);
+	cssRule = SkipValue ("Invalid border value", cssRule);
       cssRule = SkipBlanksAndComments (cssRule);
     }
   return (cssRule);
@@ -1107,7 +1126,7 @@ static char *ParseCSSBorderLeft (Element element, PSchema tsch,
 	cssRule = ParseCSSBorderColorLeft (element, tsch, context, cssRule, css, isHTML);
       if (ptr == cssRule)
 	/* rule not found */
-	cssRule = SkipValue (cssRule, TRUE);
+	cssRule = SkipValue ("Invalid border value", cssRule);
       cssRule = SkipBlanksAndComments (cssRule);
     }
   return (cssRule);
@@ -1134,7 +1153,7 @@ static char *ParseCSSBorderBottom (Element element, PSchema tsch,
 	cssRule = ParseCSSBorderColorBottom (element, tsch, context, cssRule, css, isHTML);
       if (ptr == cssRule)
 	/* rule not found */
-	cssRule = SkipValue (cssRule, TRUE);
+	cssRule = SkipValue ("Invalid border value", cssRule);
       cssRule = SkipBlanksAndComments (cssRule);
     }
   return (cssRule);
@@ -1161,7 +1180,7 @@ static char *ParseCSSBorderRight (Element element, PSchema tsch,
 	cssRule = ParseCSSBorderColorRight (element, tsch, context, cssRule, css, isHTML);
       if (ptr == cssRule)
 	/* rule not found */
-	cssRule = SkipValue (cssRule, TRUE);
+	cssRule = SkipValue ("Invalid border value", cssRule);
       cssRule = SkipBlanksAndComments (cssRule);
     }
   return (cssRule);
@@ -1203,7 +1222,7 @@ static char *ParseCSSClear (Element element, PSchema tsch,
 			    PresentationContext context, char *cssRule,
 			    CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipValue (cssRule, FALSE);
+  cssRule = SkipValue (NULL, cssRule);
   return (cssRule);
 }
 
@@ -1215,6 +1234,7 @@ static char *ParseCSSDisplay (Element element, PSchema tsch,
 			      CSSInfoPtr css, ThotBool isHTML)
 {
    PresentationValue   pval;
+   char               *ptr;
 
    pval.typed_data.unit = STYLE_UNIT_REL;
    pval.typed_data.real = FALSE;
@@ -1256,8 +1276,11 @@ static char *ParseCSSDisplay (Element element, PSchema tsch,
 	       strncasecmp (cssRule, "table-caption", 13) &&
 	       strncasecmp (cssRule, "table", 5) &&
 	       strncasecmp (cssRule, "inherit", 7))
-	   CSSParseError ("Invalid display value", cssRule);
-	   cssRule = SkipWord (cssRule);
+	     {
+	       ptr = cssRule;
+	       cssRule = SkipWord (cssRule);
+	       CSSParseError ("Invalid display value", ptr, cssRule);
+	     }
 	   return (cssRule);
 	 }
 
@@ -1279,7 +1302,7 @@ static char *ParseCSSFloat (Element element, PSchema tsch,
 			    PresentationContext context, char *cssRule,
 			    CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipValue (cssRule, FALSE);
+  cssRule = SkipValue (NULL, cssRule);
   return (cssRule);
 }
 
@@ -1291,7 +1314,7 @@ static char *ParseCSSLetterSpacing (Element element, PSchema tsch,
 				    PresentationContext context, char *cssRule,
 				    CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipValue (cssRule, FALSE);
+  cssRule = SkipValue (NULL, cssRule);
   return (cssRule);
 }
 
@@ -1303,7 +1326,7 @@ static char *ParseCSSListStyleType (Element element, PSchema tsch,
 				    PresentationContext context, char *cssRule,
 				    CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipValue (cssRule, FALSE);
+  cssRule = SkipValue (NULL, cssRule);
   return (cssRule);
 }
 
@@ -1315,7 +1338,7 @@ static char *ParseCSSListStyleImage (Element element, PSchema tsch,
 				     PresentationContext context, char *cssRule,
 				     CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipValue (cssRule, FALSE);
+  cssRule = SkipValue (NULL, cssRule);
   return (cssRule);
 }
 
@@ -1328,7 +1351,7 @@ static char *ParseCSSListStylePosition (Element element, PSchema tsch,
 					char *cssRule, CSSInfoPtr css,
 					ThotBool isHTML)
 {
-  cssRule = SkipValue (cssRule, FALSE);
+  cssRule = SkipValue (NULL, cssRule);
   return (cssRule);
 }
 
@@ -1340,7 +1363,7 @@ static char *ParseCSSListStyle (Element element, PSchema tsch,
 				PresentationContext context, char *cssRule,
 				CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipValue (cssRule, FALSE);
+  cssRule = SkipValue (NULL, cssRule);
   return (cssRule);
 }
 
@@ -1353,6 +1376,7 @@ static char *ParseCSSTextAlign (Element element, PSchema tsch,
 				CSSInfoPtr css, ThotBool isHTML)
 {
    PresentationValue   align;
+   char               *ptr;
 
    align.typed_data.value = 0;
    align.typed_data.unit = STYLE_UNIT_REL;
@@ -1381,7 +1405,9 @@ static char *ParseCSSTextAlign (Element element, PSchema tsch,
      }
    else
      {
-	CSSParseError ("Invalid align value", cssRule);
+       ptr = cssRule;
+       cssRule = SkipWord (cssRule);
+       CSSParseError ("Invalid text-align value", ptr, cssRule);
 	return (cssRule);
      }
 
@@ -1405,6 +1431,7 @@ static char *ParseCSSDirection (Element element, PSchema tsch,
 				CSSInfoPtr css, ThotBool isHTML)
 {
    PresentationValue   direction;
+   char               *ptr;
 
    direction.typed_data.value = 0;
    direction.typed_data.unit = STYLE_UNIT_REL;
@@ -1429,7 +1456,9 @@ static char *ParseCSSDirection (Element element, PSchema tsch,
      }
    else
      {
-       CSSParseError ("Invalid direction value", cssRule);
+       ptr = cssRule;
+       cssRule = SkipWord (cssRule);
+       CSSParseError ("Invalid direction value", ptr, cssRule);
        return (cssRule);
      }
 
@@ -1453,6 +1482,7 @@ static char *ParseCSSUnicodeBidi (Element element, PSchema tsch,
 				  CSSInfoPtr css, ThotBool isHTML)
 {
    PresentationValue   bidi;
+   char               *ptr;
 
    bidi.typed_data.value = 0;
    bidi.typed_data.unit = STYLE_UNIT_REL;
@@ -1482,7 +1512,9 @@ static char *ParseCSSUnicodeBidi (Element element, PSchema tsch,
      }
    else
      {
-       CSSParseError ("Invalid unicode-bidi value", cssRule);
+       ptr = cssRule;
+       cssRule = SkipWord (cssRule);
+       CSSParseError ("Invalid unicode-bidi value", ptr, cssRule);
        return (cssRule);
      }
 
@@ -1499,7 +1531,7 @@ static char *ParseCSSUnicodeBidi (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSTextIndent: parse a CSS text-indent          
+   ParseCSSTextIndent: parse a CSS text-indent
    attribute string.                                          
   ----------------------------------------------------------------------*/
 static char *ParseCSSTextIndent (Element element, PSchema tsch,
@@ -1507,13 +1539,19 @@ static char *ParseCSSTextIndent (Element element, PSchema tsch,
 				 CSSInfoPtr css, ThotBool isHTML)
 {
    PresentationValue   pval;
+   char               *ptr;
 
    cssRule = SkipBlanksAndComments (cssRule);
+   ptr = cssRule;
    cssRule = ParseCSSUnit (cssRule, &pval);
-   if (pval.typed_data.unit == STYLE_UNIT_INVALID)
-     return (cssRule);
-   else if (pval.typed_data.unit == STYLE_UNIT_BOX)
+   if (pval.typed_data.value == 0)
      pval.typed_data.unit = STYLE_UNIT_PX;
+   else if (pval.typed_data.unit == STYLE_UNIT_INVALID ||
+       pval.typed_data.unit == STYLE_UNIT_BOX)
+     {
+       CSSParseError ("Invalid text-indent value", ptr, cssRule);
+       return (cssRule);
+     }
    /* install the attribute */
    if (DoApply)
      {
@@ -1532,7 +1570,7 @@ static char *ParseCSSTextTransform (Element element, PSchema tsch,
 				    PresentationContext context, char *cssRule,
 				    CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipValue (cssRule, FALSE);
+  cssRule = SkipValue (NULL, cssRule);
   return (cssRule);
 }
 
@@ -1544,7 +1582,7 @@ static char *ParseCSSVerticalAlign (Element element, PSchema tsch,
 				    PresentationContext context, char *cssRule,
 				    CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipValue (cssRule, FALSE);
+  cssRule = SkipValue (NULL, cssRule);
   return (cssRule);
 }
 
@@ -1574,7 +1612,7 @@ static char *ParseCSSWordSpacing (Element element, PSchema tsch,
 				  PresentationContext context, char *cssRule,
 				  CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipValue (cssRule, FALSE);
+  cssRule = SkipValue (NULL, cssRule);
   return (cssRule);
 }
 
@@ -1605,7 +1643,7 @@ static char *ParseCSSLineHeight (Element element, PSchema tsch,
     cssRule = ParseCSSUnit (cssRule, &pval);
 
   if (pval.typed_data.unit == STYLE_UNIT_INVALID)
-    CSSParseError ("Invalid line-height value", ptr);
+    CSSParseError ("Invalid line-height value", ptr, cssRule);
   else if (DoApply)
     {
       /* install the new presentation */
@@ -1702,8 +1740,11 @@ static char *ParseCSSFontSize (Element element, PSchema tsch,
        else
 	 ptr = NULL;
        cssRule = ParseCSSUnit (cssRule, &pval);
-       if (pval.typed_data.unit == STYLE_UNIT_INVALID ||
-           pval.typed_data.value < 0)
+       if (pval.typed_data.value != 0 &&
+	   (pval.typed_data.unit == STYLE_UNIT_INVALID ||
+	    pval.typed_data.unit == STYLE_UNIT_BOX ||
+	    pval.typed_data.value < 0))
+	 /* not a valid value */
 	 return (cssRule);
        else if (pval.typed_data.unit == STYLE_UNIT_REL && pval.typed_data.value > 0)
 	 /* CSS relative sizes have to be higher than Thot ones */
@@ -1711,9 +1752,7 @@ static char *ParseCSSFontSize (Element element, PSchema tsch,
        else 
 	 {
 	   real = pval.typed_data.real;
-	   if (pval.typed_data.unit == STYLE_UNIT_BOX)
-	     pval.typed_data.unit = STYLE_UNIT_PX;
-	   else if (pval.typed_data.unit == STYLE_UNIT_EM)
+	   if (pval.typed_data.unit == STYLE_UNIT_EM)
 	     {
 	       if (real)
 		 {
@@ -1743,7 +1782,6 @@ static char *ParseCSSFontSize (Element element, PSchema tsch,
 	       pval.typed_data.unit = STYLE_UNIT_PERCENT;
 	     }
 	 }
-
      }
 
    /* install the presentation style */
@@ -1858,7 +1896,7 @@ static char *ParseCSSFontFamily (Element element, PSchema tsch,
       if (*cssRule == ',')
 	{
 	  cssRule++;
-	  cssRule = SkipValue (cssRule, FALSE);
+	  cssRule = SkipValue (NULL, cssRule);
 	}
        /* install the new presentation */
        if (DoApply)
@@ -2123,7 +2161,7 @@ static char *ParseCSSFont (Element element, PSchema tsch,
 	      cssRule = ParseCSSFontFamily (element, tsch, context, cssRule, css, isHTML);
 	    }
 	  if (ptr == cssRule)
-	    cssRule = SkipValue (cssRule, TRUE);
+	    cssRule = SkipValue ("Invalid font value", cssRule);
 	  cssRule = SkipBlanksAndComments (cssRule);
 	}
     }
@@ -2140,6 +2178,7 @@ static char *ParseCSSTextDecoration (Element element, PSchema tsch,
 				     CSSInfoPtr css, ThotBool isHTML)
 {
    PresentationValue   decor;
+   char               *ptr;
 
    decor.typed_data.value = 0;
    decor.typed_data.unit = STYLE_UNIT_REL;
@@ -2177,7 +2216,9 @@ static char *ParseCSSTextDecoration (Element element, PSchema tsch,
      }
    else
      {
-	CSSParseError ("Invalid text decoration", cssRule);
+       ptr = cssRule;
+       cssRule = SkipWord (cssRule);
+       CSSParseError ("Invalid text-decoration value", ptr, cssRule);
 	return (cssRule);
      }
 
@@ -2201,8 +2242,10 @@ static char *ParseCSSHeight (Element element, PSchema tsch,
 			     CSSInfoPtr css, ThotBool isHTML)
 {
   PresentationValue   val;
+  char               *ptr;
 
   cssRule = SkipBlanksAndComments (cssRule);
+  ptr = cssRule;
   /* first parse the attribute string */
   if (!strncasecmp (cssRule, "auto", 4))
     {
@@ -2212,12 +2255,12 @@ static char *ParseCSSHeight (Element element, PSchema tsch,
       cssRule = SkipWord (cssRule);
     }
   else
-    {
-      cssRule = ParseCSSUnit (cssRule, &val);
-      if (val.typed_data.unit == STYLE_UNIT_BOX)
-	val.typed_data.unit = STYLE_UNIT_PX;
-    }
-  if (val.typed_data.unit != STYLE_UNIT_INVALID && DoApply)
+    cssRule = ParseCSSUnit (cssRule, &val);
+  if (val.typed_data.value != 0 &&
+      (val.typed_data.unit == STYLE_UNIT_INVALID ||
+       val.typed_data.unit == STYLE_UNIT_BOX))
+    CSSParseError ("height value", ptr, cssRule);
+  else if (DoApply)
     {
       if (tsch)
 	cssRule = CheckImportantRule (cssRule, context);
@@ -2236,8 +2279,10 @@ static char *ParseCSSWidth (Element element, PSchema tsch,
 			      ThotBool isHTML)
 {
   PresentationValue   val;
+  char               *ptr;
 
   cssRule = SkipBlanksAndComments (cssRule);
+  ptr = cssRule;
   /* first parse the attribute string */
   if (!strncasecmp (cssRule, "auto", 4))
     {
@@ -2247,12 +2292,12 @@ static char *ParseCSSWidth (Element element, PSchema tsch,
       cssRule = SkipWord (cssRule);
     }
   else
-    {
       cssRule = ParseCSSUnit (cssRule, &val);
-      if (val.typed_data.unit == STYLE_UNIT_BOX)
-	val.typed_data.unit = STYLE_UNIT_PX;
-    }
-  if (val.typed_data.unit != STYLE_UNIT_INVALID && DoApply)
+  if (val.typed_data.value != 0 &&
+      (val.typed_data.unit == STYLE_UNIT_INVALID ||
+       val.typed_data.unit == STYLE_UNIT_BOX))
+    CSSParseError ("Invalid width value", ptr, cssRule);
+  else if (DoApply)
     {
       if (tsch)
 	cssRule = CheckImportantRule (cssRule, context);
@@ -2271,8 +2316,10 @@ static char *ParseCSSMarginTop (Element element, PSchema tsch,
 				  ThotBool isHTML)
 {
   PresentationValue   margin;
+  char               *ptr;
   
   cssRule = SkipBlanksAndComments (cssRule);
+  ptr = cssRule;
   /* first parse the attribute string */
   if (!strncasecmp (cssRule, "auto", 4))
     {
@@ -2282,12 +2329,12 @@ static char *ParseCSSMarginTop (Element element, PSchema tsch,
       cssRule = SkipWord (cssRule);
     }
   else
-    {
-      cssRule = ParseCSSUnit (cssRule, &margin);
-      if (margin.typed_data.unit == STYLE_UNIT_BOX)
-	margin.typed_data.unit = STYLE_UNIT_EM;
-    }
-  if (margin.typed_data.unit != STYLE_UNIT_INVALID && DoApply)
+    cssRule = ParseCSSUnit (cssRule, &margin);
+  if (margin.typed_data.value != 0 &&
+      (margin.typed_data.unit == STYLE_UNIT_INVALID ||
+       margin.typed_data.unit == STYLE_UNIT_BOX))
+    CSSParseError ("Invalid top-margin value", ptr, cssRule);
+  else if (DoApply)
      {
        if (tsch)
 	 cssRule = CheckImportantRule (cssRule, context);
@@ -2305,8 +2352,10 @@ static char *ParseCSSMarginBottom (Element element, PSchema tsch,
 				     ThotBool isHTML)
 {
   PresentationValue   margin;
+  char               *ptr;
   
   cssRule = SkipBlanksAndComments (cssRule);
+  ptr = cssRule;
   /* first parse the attribute string */
   if (!strncasecmp (cssRule, "auto", 4))
     {
@@ -2316,12 +2365,12 @@ static char *ParseCSSMarginBottom (Element element, PSchema tsch,
       cssRule = SkipWord (cssRule);
     }
   else
-    {
-      cssRule = ParseCSSUnit (cssRule, &margin);
-      if (margin.typed_data.unit == STYLE_UNIT_BOX)
-	margin.typed_data.unit = STYLE_UNIT_EM;
-    }
-  if (margin.typed_data.unit != STYLE_UNIT_INVALID && DoApply)
+    cssRule = ParseCSSUnit (cssRule, &margin);
+  if (margin.typed_data.value != 0 &&
+      (margin.typed_data.unit == STYLE_UNIT_INVALID ||
+       margin.typed_data.unit == STYLE_UNIT_BOX))
+    CSSParseError ("Invalid bottom-margin value", ptr, cssRule);
+  else if (DoApply)
      {
        if (tsch)
 	 cssRule = CheckImportantRule (cssRule, context);
@@ -2339,8 +2388,10 @@ static char *ParseCSSMarginLeft (Element element, PSchema tsch,
 				   ThotBool isHTML)
 {
   PresentationValue   margin;
+  char               *ptr;
   
   cssRule = SkipBlanksAndComments (cssRule);
+  ptr = cssRule;
   /* first parse the attribute string */
   if (!strncasecmp (cssRule, "auto", 4))
     {
@@ -2350,11 +2401,12 @@ static char *ParseCSSMarginLeft (Element element, PSchema tsch,
       cssRule = SkipWord (cssRule);
     }
   else
-    {
-      cssRule = ParseCSSUnit (cssRule, &margin);
-      if (margin.typed_data.unit == STYLE_UNIT_BOX)
-	margin.typed_data.unit = STYLE_UNIT_EM;
-    }
+    cssRule = ParseCSSUnit (cssRule, &margin);
+  if (margin.typed_data.value != 0 &&
+      (margin.typed_data.unit == STYLE_UNIT_INVALID ||
+       margin.typed_data.unit == STYLE_UNIT_BOX))
+    CSSParseError ("Invalid left-margin value", ptr, cssRule);
+  else if (DoApply)
   if (margin.typed_data.unit != STYLE_UNIT_INVALID && DoApply)
      {
        if (tsch)
@@ -2373,8 +2425,10 @@ static char *ParseCSSMarginRight (Element element, PSchema tsch,
 				    ThotBool isHTML)
 {
   PresentationValue   margin;
+  char               *ptr;
   
   cssRule = SkipBlanksAndComments (cssRule);
+  ptr = cssRule;
   /* first parse the attribute string */
   if (!strncasecmp (cssRule, "auto", 4))
     {
@@ -2384,12 +2438,12 @@ static char *ParseCSSMarginRight (Element element, PSchema tsch,
       cssRule = SkipWord (cssRule);
     }
   else
-    {
-      cssRule = ParseCSSUnit (cssRule, &margin);
-      if (margin.typed_data.unit == STYLE_UNIT_BOX)
-	margin.typed_data.unit = STYLE_UNIT_EM;
-    }
-  if (margin.typed_data.unit != STYLE_UNIT_INVALID && DoApply)
+    cssRule = ParseCSSUnit (cssRule, &margin);
+  if (margin.typed_data.value != 0 &&
+      (margin.typed_data.unit == STYLE_UNIT_INVALID ||
+       margin.typed_data.unit == STYLE_UNIT_BOX))
+    CSSParseError ("Invalid right-margin value", ptr, cssRule);
+  else if (DoApply)
      {
        if (tsch)
 	 cssRule = CheckImportantRule (cssRule, context);
@@ -2468,13 +2522,20 @@ static char *ParseCSSPaddingTop (Element element, PSchema tsch,
 				   ThotBool isHTML)
 {
   PresentationValue   padding;
+  char               *ptr;
   
   cssRule = SkipBlanksAndComments (cssRule);
+  ptr = cssRule;
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &padding);
-  if (padding.typed_data.unit == STYLE_UNIT_BOX)
-    padding.typed_data.unit = STYLE_UNIT_EM;
-  if (padding.typed_data.unit != STYLE_UNIT_INVALID && DoApply)
+  if (padding.typed_data.value != 0 &&
+      (padding.typed_data.unit == STYLE_UNIT_INVALID ||
+       padding.typed_data.unit == STYLE_UNIT_BOX))
+    {
+      CSSParseError ("Invalid top-padding value", ptr, cssRule);
+      padding.typed_data.value = 0;
+    }
+  else if (DoApply)
      {
        if (tsch)
 	 cssRule = CheckImportantRule (cssRule, context);
@@ -2492,13 +2553,22 @@ static char *ParseCSSPaddingBottom (Element element, PSchema tsch,
 				      ThotBool isHTML)
 {
   PresentationValue   padding;
+  char               *ptr;
   
   cssRule = SkipBlanksAndComments (cssRule);
+  ptr = cssRule;
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &padding);
-  if (padding.typed_data.unit == STYLE_UNIT_BOX)
+  if (padding.typed_data.value == 0)
     padding.typed_data.unit = STYLE_UNIT_EM;
-  if (padding.typed_data.unit != STYLE_UNIT_INVALID && DoApply)
+  if (padding.typed_data.value != 0 &&
+      (padding.typed_data.unit == STYLE_UNIT_INVALID ||
+       padding.typed_data.unit == STYLE_UNIT_BOX))
+    {
+      CSSParseError ("Invalid bottom-padding value", ptr, cssRule);
+      padding.typed_data.value = 0;
+    }
+  else if (DoApply)
      {
        if (tsch)
 	 cssRule = CheckImportantRule (cssRule, context);
@@ -2516,13 +2586,22 @@ static char *ParseCSSPaddingLeft (Element element, PSchema tsch,
 				    ThotBool isHTML)
 {
   PresentationValue   padding;
+  char               *ptr;
   
   cssRule = SkipBlanksAndComments (cssRule);
+  ptr = cssRule;
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &padding);
-  if (padding.typed_data.unit == STYLE_UNIT_BOX)
+  if (padding.typed_data.value == 0)
     padding.typed_data.unit = STYLE_UNIT_EM;
-  if (padding.typed_data.unit != STYLE_UNIT_INVALID && DoApply)
+  if (padding.typed_data.value != 0 &&
+      (padding.typed_data.unit == STYLE_UNIT_INVALID ||
+       padding.typed_data.unit == STYLE_UNIT_BOX))
+    {
+      CSSParseError ("Invalid left-padding value", ptr, cssRule);
+      padding.typed_data.value = 0;
+    }
+  else if (DoApply)
     {
       if (tsch)
 	cssRule = CheckImportantRule (cssRule, context);
@@ -2540,13 +2619,22 @@ static char *ParseCSSPaddingRight (Element element, PSchema tsch,
 				     ThotBool isHTML)
 {
   PresentationValue   padding;
+  char               *ptr;
   
   cssRule = SkipBlanksAndComments (cssRule);
+  ptr = cssRule;
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &padding);
-  if (padding.typed_data.unit == STYLE_UNIT_BOX)
+  if (padding.typed_data.value == 0)
     padding.typed_data.unit = STYLE_UNIT_EM;
-  if (padding.typed_data.unit != STYLE_UNIT_INVALID && DoApply)
+  if (padding.typed_data.value != 0 &&
+      (padding.typed_data.unit == STYLE_UNIT_INVALID ||
+       padding.typed_data.unit == STYLE_UNIT_BOX))
+    {
+      CSSParseError ("Invalid right-padding value", ptr, cssRule);
+      padding.typed_data.value = 0;
+    }
+  else if (DoApply)
     {
       if (tsch)
 	cssRule = CheckImportantRule (cssRule, context);
@@ -3513,7 +3601,7 @@ static void  ParseCSSRule (Element element, PSchema tsch,
       if (*cssRule == '}')
 	{
 	  cssRule++;
-	  CSSParseError ("Invalid character", "}");
+	  CSSPrintError ("Invalid character", "}");
 	  cssRule = SkipBlanksAndComments (cssRule);
 	}
       if (*cssRule == ',' ||
@@ -4174,7 +4262,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	    /* point to the class in sel[] if it's valid name */
 	    if (deb[0] <= 64)
 	      {
-		CSSParseError ("Invalid class", deb);
+		CSSPrintError ("Invalid class", deb);
 		DoApply = FALSE;
 	      }
 	    else
@@ -4195,7 +4283,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	    /* point to the pseudoclass in sel[] if it's valid name */
 	    if (deb[0] <= 64)
 	      {
-		CSSParseError ("Invalid pseudoclass", deb);
+		CSSPrintError ("Invalid pseudoclass", deb);
 		DoApply = FALSE;
 	      }
 	    else
@@ -4223,7 +4311,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	    /* point to the attribute in sel[] if it's valid name */
 	    if (deb[0] <= 64)
 	      {
-		CSSParseError ("Invalid id", deb);
+		CSSPrintError ("Invalid id", deb);
 		DoApply = FALSE;
 	      }
 	    else
@@ -4258,7 +4346,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	    /* point to the attribute in sel[] if it's valid name */
 	    if (deb[0] <= 64)
 	      {
-		CSSParseError ("Invalid attribute", deb);
+		CSSPrintError ("Invalid attribute", deb);
 		DoApply = FALSE;
 	      }
 	    else
@@ -4272,7 +4360,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		selector++;
 		if (*selector != '"')
 		  {
-		    CSSParseError ("Invalid attribute value", deb);
+		    CSSPrintError ("Invalid attribute value", deb);
 		    DoApply = FALSE;
 		  }
 		else
@@ -4284,7 +4372,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		      {
 			if (*selector == EOS)
 			  {
-			    CSSParseError ("Invalid attribute value", deb);
+			    CSSPrintError ("Invalid attribute value", deb);
 			    DoApply = FALSE;
 			  }
 			else
@@ -4306,7 +4394,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	    if (*selector != ']')
 	      {
 		selector[1] = EOS;
-		CSSParseError ("Not supported selector", selector);
+		CSSPrintError ("Not supported selector", selector);
 		selector += 2;
 		DoApply = FALSE;
 	      }
@@ -4322,7 +4410,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	      *cur++ = *selector++;
 	    /* close the word */
 	    *cur++ = EOS;
-	    CSSParseError ("Not supported selector", deb);
+	    CSSPrintError ("Not supported selector", deb);
 	    DoApply = FALSE;	    
 	  }
       }
@@ -4714,7 +4802,7 @@ static void  ParseStyleDeclaration (Element el, char *cssRule, Document doc,
     decl_end++;
   if (*decl_end == EOS)
     {
-      CSSParseError ("Invalid selector", cssRule);
+      CSSPrintError ("Invalid selector", cssRule);
       return;
     }
   /* verify and clean the selector string */
