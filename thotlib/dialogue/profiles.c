@@ -704,6 +704,8 @@ void Prof_InitTable (char *prof_file)
 		FunctionMask[i] = (FunctionMask[i] | L_BasicValue);
 	      else if (strstr (DoctypeTable->ProEntries[j].ProName, "1.1"))
 		FunctionMask[i] = (FunctionMask[i] | L_StrictValue | L_RubyValue);
+	      else if (strstr (DoctypeTable->ProEntries[j].ProName, "Ruby"))
+		FunctionMask[i] = (FunctionMask[i] | L_RubyValue);
 	      else if (strstr (DoctypeTable->ProEntries[j].ProName, "MathML"))
 		FunctionMask[i] = (FunctionMask[i] | L_MathMLValue);
 	    }

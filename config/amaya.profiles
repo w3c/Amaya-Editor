@@ -60,6 +60,7 @@
 +tables
 +templates
 +views
+&CreateRuby
 
 ################# AMAYA MINI-EDITOR
 <Mini-editor>
@@ -126,7 +127,6 @@ ShowMapAreas
 +presentation-module
 +maths
 &CreateMath
-
 +object-module
 +script-module
 +struct-module
@@ -148,7 +148,6 @@ ShowMapAreas
 
 ################# XHTML1.1
 {XHTML 1.1}
-&CreateRuby
 +base-module
 +bdi-text-module
 +clientside-module
@@ -166,11 +165,17 @@ ShowMapAreas
 +script-module
 +svg
 +tables
++text-module
++Ruby
 
 ################# MathML
 {MathML}
 +hypertext-module
 +maths
+
+################# Ruby
+{Ruby}
+&CreateRuby
 
 ################# AMAYA FUNCTIONS
 [amayabase]
