@@ -218,28 +218,28 @@ MENUS
 	Types button:BMakeBook -> MakeBook;
 
 	Types Separator;
-        Types.Phrase toggle:TEmphasis -> SetOnOffEmphasis;
-        Types.Phrase toggle:TStrong -> SetOnOffStrong;
-        Types.Phrase toggle:TCite -> SetOnOffCite;
-        Types.Phrase toggle:TDefinition -> SetOnOffDefinition;
-        Types.Phrase toggle:TCode -> SetOnOffCode;
-        Types.Phrase toggle:TVariable -> SetOnOffVariable;
-        Types.Phrase toggle:TSample -> SetOnOffSample;
-        Types.Phrase toggle:TKeyboard -> SetOnOffKeyboard;
+    Types.Phrase toggle:TEmphasis -> SetOnOffEmphasis;
+    Types.Phrase toggle:TStrong -> SetOnOffStrong;
+    Types.Phrase toggle:TCite -> SetOnOffCite;
+    Types.Phrase toggle:TDefinition -> SetOnOffDefinition;
+    Types.Phrase toggle:TCode -> SetOnOffCode;
+    Types.Phrase toggle:TVariable -> SetOnOffVariable;
+    Types.Phrase toggle:TSample -> SetOnOffSample;
+    Types.Phrase toggle:TKeyboard -> SetOnOffKeyboard;
 	Types.Phrase toggle:TAbbreviation -> SetOnOffAbbr;
 	Types.Phrase toggle:TAcronym -> SetOnOffAcronym;
 	Types.Phrase toggle:TInsertion -> SetOnOffINS;
 	Types.Phrase toggle:TDeletion -> SetOnOffDEL;
 
-        Types.Font toggle:TItalic -> SetOnOffItalic;
-        Types.Font toggle:TBold -> SetOnOffBold;
-        Types.Font toggle:TTeletype -> SetOnOffTeletype;
-        Types.Font toggle:TBig -> SetOnOffBig;
-        Types.Font toggle:TSmall -> SetOnOffSmall;
-        Types.Font toggle:TSub -> SetOnOffSub;
-        Types.Font toggle:TSup -> SetOnOffSup;
-        Types.Font toggle:TQuotation -> SetOnOffQuotation;
-        Types.Font toggle:TBDO -> SetOnOffBDO;
+    Types.Font toggle:TItalic -> SetOnOffItalic;
+    Types.Font toggle:TBold -> SetOnOffBold;
+    Types.Font toggle:TTeletype -> SetOnOffTeletype;
+    Types.Font toggle:TBig -> SetOnOffBig;
+    Types.Font toggle:TSmall -> SetOnOffSmall;
+    Types.Font toggle:TSub -> SetOnOffSub;
+    Types.Font toggle:TSup -> SetOnOffSup;
+    Types.Font toggle:TQuotation -> SetOnOffQuotation;
+    Types.Font toggle:TBDO -> SetOnOffBDO;
 
 	XMLTypes button:BDisplayMath -> CreateMath;
 	XMLTypes.MathElement button:BMText -> CreateMTEXT;

@@ -250,7 +250,7 @@ void AmayaFrame::HideScrollbar( int scrollbar_id )
 	 if (!m_pScrollBarV) return;
 
 	 m_pHSizer->SetItemMinSize( m_pScrollBarV,
-				    wxSize( 0, m_pScrollBarV->GetSize().GetHeight() ) );
+				    wxSize( 0, /*m_pScrollBarV->GetSize().GetHeight()*/ -1 ) );
        }
       break;
     case 2:
@@ -259,7 +259,7 @@ void AmayaFrame::HideScrollbar( int scrollbar_id )
 	 if (!m_pScrollBarH) return;
 
 	 m_pVSizer->SetItemMinSize( m_pScrollBarH,
-				    wxSize( m_pScrollBarV->GetSize().GetWidth(), 0 ) );
+				    wxSize( -1 /*m_pScrollBarV->GetSize().GetWidth()*/, 0 ) );
        }
       break;
    }
@@ -295,7 +295,7 @@ void AmayaFrame::ShowScrollbar( int scrollbar_id )
 	 else
 	   {
 	     m_pHSizer->SetItemMinSize( m_pScrollBarV,
-					wxSize( 15, m_pScrollBarV->GetSize().GetHeight() ) );
+					wxSize( 15, -1/*m_pScrollBarV->GetSize().GetHeight()*/ ) );
 	   }
 	 
 	 m_pScrollBarV->Show();
@@ -313,7 +313,7 @@ void AmayaFrame::ShowScrollbar( int scrollbar_id )
 	 else
 	   {
 	     m_pVSizer->SetItemMinSize( m_pScrollBarH,
-					wxSize( 15, m_pScrollBarV->GetSize().GetWidth() ) );
+					wxSize( 15, /*m_pScrollBarV->GetSize().GetWidth()*/ -1 ) );
 	   }
 	 m_pScrollBarH->Show();
       }

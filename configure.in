@@ -283,6 +283,21 @@ if test "$with_wx" = "yes" ; then
   fi
 fi
 
+
+# setup the AMAYAGUI variable used to identify used GUI when 'make install' is called
+# now several amaya gui can coexist.
+if test "$with_gtk" = "yes" ; then
+  AMAYAGUI="gtk"
+fi
+if test "$with_gl" = "yes" ; then
+  AMAYAGUI="gl"
+fi
+if test "$with_wx" = "yes" ; then
+  AMAYAGUI="wx"
+fi
+AC_SUBST(AMAYAGUI)
+
+
 if test "$with_gtk" = "yes" ; then
   gdkimlib_h_found="no"
 
@@ -347,7 +362,7 @@ if test "$with_mesa" = "yes" ; then
 
   OLDDIR=`pwd`
   cd ../../Mesa
-
+  GL_BUILDDIR="${OLDDIR}/Mesa"
 
   echo "---> Compiling Mesa library."
   if test "$OS_OPTIONS" = "-D_UNIX" ; then
@@ -361,26 +376,26 @@ if test "$with_mesa" = "yes" ; then
   echo "---> Compiling Mesa library. - DONE"
 
 
-  echo "---> Install Mesa library into Amaya/Mesa/"
+  echo "---> Install Mesa library into ${GL_BUILDDIR}"
   # remove old lib
-  rm -rf $OLDDIR/../Mesa/lib/*
+  rm -rf ${GL_BUILDDIR}/lib/*
   # create directories
-  mkdir -p $OLDDIR/../Mesa
-  mkdir -p $OLDDIR/../Mesa/include
-  mkdir -p $OLDDIR/../Mesa/lib
+  mkdir -p ${GL_BUILDDIR}
+  mkdir -p ${GL_BUILDDIR}/include
+  mkdir -p ${GL_BUILDDIR}/lib
   # copy includes
-  cp -r include/GL $OLDDIR/../Mesa/include/
+  cp -r include/GL ${GL_BUILDDIR}/include/
   # copy libraries (only .a because we dont want to share)
-  cp lib/*.a $OLDDIR/../Mesa/lib/
-  echo "---> Install Mesa library into Amaya/Mesa/ - DONE"
-
+  cp lib/*.a ${GL_BUILDDIR}/lib/
+  echo "---> Install Mesa library into ${GL_BUILDDIR} - DONE"
 
   cd $OLDDIR
 
   # this is the flags used to build amaya with OpenGL
   GL_OPTIONS="-D_GL"
-  GL_INCLUDES="-I../../Mesa/include"
-  GL_LIBRARIES="-Wl,-rpath,../../Mesa/lib -L../../Mesa/lib -lGL -lGLU"
+  GL_INCLUDES="-I${GL_BUILDDIR}/include"
+  GL_LIBRARIES="-Wl,-rpath,${GL_BUILDDIR}/lib -L${GL_BUILDDIR}/lib -lGL -lGLU"
+  AC_SUBST(GL_BUILDDIR)
   AC_SUBST(GL_INCLUDES)
   AC_SUBST(GL_LIBRARIES)
 fi
@@ -392,18 +407,18 @@ if test "$with_wx" = "yes" ; then
     AC_MSG_ERROR(wxWidgets library sources not found. Please download wxWidgets sources (http://www.wxwidgets.org/) or remove --with-wx option !)
   fi
 
-  # --------- compile wxWidgets library --------------- #
+  # --------- configure wxWidgets library --------------- #
   echo "---> Configuring wxWidgets library."
   OLDDIR=`pwd`
   # create the build directory (debug or release)
-  cd ../../wxWidgets/
   if test $with_wxdebug = yes ; then
-    WXBUILD_DIR="AMAYABUILD_DEBUG"
+    WX_BUILDDIR="wxWidgets_DEBUG"
   else
-    WXBUILD_DIR="AMAYABUILD_RELEASE"
+    WX_BUILDDIR="wxWidgets_RELEASE"
   fi
-  mkdir -p $WXBUILD_DIR
-  cd $WXBUILD_DIR
+  mkdir -p $WX_BUILDDIR
+  cd $WX_BUILDDIR
+  AC_SUBST(WX_BUILDDIR)
 
   # remove old configure cached options
   rm -f configarg.cache
@@ -416,7 +431,8 @@ if test "$with_wx" = "yes" ; then
     #   --enable-unicode        compile wxString with Unicode support
     #   --with-gtk              use GTK+
     #   --with-opengl           use OpenGL (or Mesa)
-    WXCONFIGURE_OPTION="--with-opengl --with-gtk --enable-gtk2 --enable-unicode --enable-shared=no"
+    #   --with-xrc              use XRC resources system
+    WXCONFIGURE_OPTION="--with-opengl --with-gtk --enable-gtk2 --enable-unicode --with-xrc --enable-shared=no"
   fi
   if test "$OS_OPTIONS" = "-D_UNIX -D_MACOS" ; then
     # MACOSX
@@ -437,78 +453,26 @@ if test "$with_wx" = "yes" ; then
   # launch the configure
   if test "$with_mesa" = "yes" ; then
     # use internal OpenGL (mesa) libraries
-    ../configure CFLAGS="-I../../Mesa/include" CXXFLAGS="-I../../Mesa/include" CPPFLAGS="-I../../Mesa/include" LDFLAGS_GL="-Wl,-rpath,../../Mesa/lib -L../../Mesa/lib" OPENGL_LIBS="-lGL -lGLU" $WXCONFIGURE_OPTION
+    ../../../wxWidgets/configure CFLAGS="-I${GL_BUILDDIR}/include" CXXFLAGS="-I${GL_BUILDDIR}/include" CPPFLAGS="-I${GL_BUILDDIR}/include" OPENGL_LIBS="-lGL -lGLU" $WXCONFIGURE_OPTION
     if test $? != 0 ; then
       AC_MSG_ERROR(A problem occurs durring wxWidgets library configuration. Please fix the problem and try again.)
     fi
   else
     # use OpenGL system libraries
-    ../configure $WXCONFIGURE_OPTION    
+    ../../../wxWidgets/configure $WXCONFIGURE_OPTION    
   fi
-
+  cd $OLDDIR
   echo "---> Configuring wxWidgets library. - DONE"
-  echo "---> Compiling wxWidgets library."
-  # compile the lib
-  make
-  if test $? != 0 ; then
-    AC_MSG_ERROR(A problem occurs durring wxWidgets library compilation. Please fix the problem and try again.)
-  fi
-  echo "---> Compiling wxWidgets contrib xrc library."
-  cd contrib/src/xrc
-  # compile xrc lib (xml resource lib)
-  make
-  cd $OLDDIR
-  echo "---> Compiling wxWidgets library. - DONE"
-  # --------- compile wxWidgets library - DONE --------------- #
-
-
-  # --------- install wxWidgets library  --------------- #
-  echo "---> Install wxWidgets library into Amaya."
-  OLDDIR=$(pwd)
-  cd ../../wxWidgets
-  # create destination directories
-  if test $with_wxdebug = yes ; then
-    WXAMAYA_DIR="wxWidgets_debug"
-  else
-    WXAMAYA_DIR="wxWidgets_release"
-  fi
-  mkdir -p $OLDDIR/../$WXAMAYA_DIR
-  mkdir -p $OLDDIR/../$WXAMAYA_DIR/include
-  mkdir -p $OLDDIR/../$WXAMAYA_DIR/contrib
-  mkdir -p $OLDDIR/../$WXAMAYA_DIR/contrib/include
-  mkdir -p $OLDDIR/../$WXAMAYA_DIR/lib
-  # remove old lib
-  rm -rf $OLDDIR/../$WXAMAYA_DIR/lib/*
-  # copy includes
-  cp -r include/* $OLDDIR/../$WXAMAYA_DIR/include/
-  cp -r contrib/include/* $OLDDIR/../$WXAMAYA_DIR/contrib/include/
-  cp -r $WXBUILD_DIR/lib/wx $OLDDIR/../$WXAMAYA_DIR/lib/
-  # copy libraries (only .a because we dont want to share)
-  cp -pd $WXBUILD_DIR/lib/*.a $OLDDIR/../$WXAMAYA_DIR/lib/
-  # copy autoconfig script (needed to setup 'Option' file)
-  cp -pd $WXBUILD_DIR/*-config* $OLDDIR/../$WXAMAYA_DIR/
-  cd $OLDDIR
-  echo "---> Install wxWidgets library into Amaya. - DONE"
-  # --------- install wxWidgets library - DONE --------------- #
-
 
   # --------- configuring wxWidgets paths --------------- #
-  WXCONFIG=../$WXAMAYA_DIR/wx-config
-  # TODO: pour la version suivante de wxWidgets
-  #WXCONFIG=../$WXAMAYA_DIR/lib/wx/config/gtk2ud-2.5
-  # look for relative wxWidgets path : necessary to install into different paths amaya
-  WXCONFIG_ARGS="--prefix=../../$WXAMAYA_DIR --exec-prefix=../../$WXAMAYA_DIR"
-  WXCONFIG_TOOLKIT=""
-  # TODO: pour la version suivante de wxWidgets
-  #WXCONFIG_TOOLKIT="--toolkit=gtk2 --unicode --debug"
+  WXCONFIG=$WX_BUILDDIR/wx-config
   # check that wx-config exists
   if test ! -f $WXCONFIG ; then
     AC_MSG_ERROR(Cannot find wx-config. Please download wxWidgets (http://www.wxwidgets.org/))
   fi
 
   # setup include paths  
-  WX_INCLUDES="`$WXCONFIG $WXCONFIG_ARGS $WXCONFIG_TOOLKIT --cxxflags`"
-  WX_INCLUDES="-I../../$WXAMAYA_DIR/contrib/include/ ${WX_INCLUDES}"
+  WX_INCLUDES="`$WXCONFIG --cxxflags`"
   AC_SUBST(WX_INCLUDES)
 
   # setup libraries paths
@@ -523,9 +487,8 @@ if test "$with_wx" = "yes" ; then
       WX_LIBRARIES_EXTRA_PARAM="-framework OpenGL -framework AGL"
     fi
   fi
-  # TODO: pour la version suivante de wxWidgets
-  #WX_LIBRARIES="-Wl,-rpath,../../$WXAMAYA_DIR/lib `$WXCONFIG $WXCONFIG_ARGS $WXCONFIG_TOOLKIT --libs ${WXCONFIG_LIBS_PARAM}` ${WX_LIBRARIES_EXTRA_PARAM}"
-  WX_LIBRARIES="-Wl,-rpath,../../$WXAMAYA_DIR/lib `$WXCONFIG $WXCONFIG_ARGS $WXCONFIG_TOOLKIT --libs=${WXCONFIG_LIBS_PARAM}` ${WX_LIBRARIES_EXTRA_PARAM}"
+  WX_LIBRARIES="`$WXCONFIG --libs $WXCONFIG_LIBS_PARAM` ${WX_LIBRARIES_EXTRA_PARAM}"
+#  WX_LIBRARIES="`$WXCONFIG --libs=$WXCONFIG_LIBS_PARAM` ${WX_LIBRARIES_EXTRA_PARAM}"
   AC_SUBST(WX_LIBRARIES)
 
   WX_OPTIONS="-D_WX"

@@ -19,7 +19,7 @@ LIBPNG	   = libpng
 
 #MKP: adding davlib
 SUBDIRS	= @SUBDIRS@ tools thotlib batch drawlib indexlib annotlib amaya thot @DAVDIR@
-EXTRA_SUBDIRS= misc pluginlib $(LIBRAPTOR) $(REDLAND) $(LIBWWW)
+EXTRA_SUBDIRS= misc pluginlib $(LIBRAPTOR) $(REDLAND) $(LIBWWW) $(WX_BUILDDIR) $(GL_BUILDDIR)
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@
@@ -28,8 +28,7 @@ bindir = @bindir@
 
 srcdir	= $(THOTDIR)
 
-
-default : tools thotlib batch amaya_prog @PRINTIFNOTGL@
+default : tools wxwidgets thotlib batch amaya_prog @PRINTIFNOTGL@
 
 amaya : amaya_prog tools thotlib @PRINTIFNOTGL@
 
@@ -55,6 +54,10 @@ thotlib: rebuild force
 amaya_prog: rebuild force bin/str
 	@(if test -d amaya ; then cd amaya ; \
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" amaya ; fi)
+
+wxwidgets: rebuild force
+	@(if test -d "$(WX_BUILDDIR)" ; then cd $(WX_BUILDDIR) ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" ; fi)
 
 @NOPRINT@print_prog: rebuild force bin/str
 @NOPRINT@	@(if test -d thotlib ; then cd thotlib ; \
@@ -394,7 +397,6 @@ libpng libpng.a : force
 libz libz.a : force
 	@($(RM) $(THOTDIR)/libpng/libz/*.o)
 	@(cd libpng/zlib ; $(MAKE) CC="$(CC)" CFLAGS="-O -x c")
-
 
 #
 # This section try to maintain the Makefile(s) up-to-date in

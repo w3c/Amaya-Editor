@@ -3974,6 +3974,41 @@
 	<message xml:lang="ru">Не определена</message>
 	<message xml:lang="de">Keine Einfügeposition definiert. Bitte zuerst auswählen</message>
 </label>
+<label define="AM_DOCINFO_TITLE">
+	<message xml:lang="en">Document information</message>
+	<message xml:lang="fr">Informations du document</message>
+</label>
+<label define="AM_DOCINFO_TYPE">
+	<message xml:lang="en">Document Type</message>
+	<message xml:lang="fr">Type du document</message>
+</label>
+<label define="AM_DOCINFO_TYPEMIME">
+	<message xml:lang="en">MIME Type</message>
+	<message xml:lang="fr">Type MIME</message>
+</label>
+<label define="AM_DOCINFO_CHARSET">
+	<message xml:lang="en">Charset</message>
+	<message xml:lang="fr">Code de caractère</message>
+</label>
+<label define="AM_DOCINFO_CLENGTH">
+	<message xml:lang="en">Content Length</message>
+	<message xml:lang="fr">Taille du contenu</message>
+</label>
+<label define="AM_DOCINFO_CLOCATION">
+	<message xml:lang="en">Content Location</message>
+	<message xml:lang="fr">Provenance</message>
+</label>
+<label define="AM_DLGPREFERENCE_TITLE">
+	<message xml:lang="en">Preferences</message>
+	<message xml:lang="fr">Préférences</message>
+	<message xml:lang="de">Einstellungen</message>
+	<message xml:lang="it">Preferenze</message>
+	<message xml:lang="es">Preferencias</message>
+	<message xml:lang="pt">Preferências</message>
+	<message xml:lang="fi">Asetukset</message>
+	<message xml:lang="tr">Tercih</message>
+	<message xml:lang="ru">Настройки</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

@@ -53,17 +53,22 @@ InitConfirmDlgWX::InitConfirmDlgWX( int ref,
   XRCCTRL(*this, "wxID_CANCELBUTTON",  wxButton)->SetLabel( cancelbutton );
   
   // now hide unused field and buttons (destroy it)
+  wxSizer * p_sizer = XRCCTRL(*this, "wxID_LABEL", wxStaticText)->GetContainingSizer();
   if (label2.IsEmpty())
-    XRCCTRL(*this, "wxID_LABEL_2", wxStaticText)->Destroy();
+    XRCCTRL(*this, "wxID_LABEL_2", wxStaticText)->Hide();
   if (label3.IsEmpty())
-    XRCCTRL(*this, "wxID_LABEL_3", wxStaticText)->Destroy();
-  if (extrabutton.IsEmpty())
-    XRCCTRL(*this, "wxID_EXTRABUTTON",     wxButton)->Destroy();
-  if (confirmbutton.IsEmpty())
-    XRCCTRL(*this, "wxID_CONFIRMBUTTON",   wxButton)->Destroy();
-  if (cancelbutton.IsEmpty())
-    XRCCTRL(*this, "wxID_CANCELBUTTON",    wxButton)->Destroy();
+    XRCCTRL(*this, "wxID_LABEL_3", wxStaticText)->Hide();
+  p_sizer->Layout();
 
+  p_sizer = XRCCTRL(*this, "wxID_EXTRABUTTON", wxButton)->GetContainingSizer();
+  if (extrabutton.IsEmpty())
+    p_sizer->Show(XRCCTRL(*this, "wxID_EXTRABUTTON", wxButton), false);
+  if (confirmbutton.IsEmpty())
+    p_sizer->Show(XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton), false);
+  if (cancelbutton.IsEmpty())
+    p_sizer->Show(XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton), false);
+  p_sizer->Layout();
+  
   // give default focus to ... 
   //XRCCTRL(*this, "wxID_EXTRABUTTON",     wxButton)->SetDefault();
   
@@ -74,10 +79,9 @@ InitConfirmDlgWX::InitConfirmDlgWX( int ref,
   //GetSizer()->Fit( this );
   //GetSizer()->SetSizeHints( this );  
 
-  //Layout();
-
-  Refresh();
   Fit();
+  Refresh();
+  
 
   SetAutoLayout( TRUE );
 }

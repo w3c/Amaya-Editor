@@ -21,8 +21,8 @@ LIBS	=  $(AMAYA_PLUGIN_LIBS) $(AMAYA_ANNOT_LIBS) $(AMAYA_DAV_LIBS) \
            -L../thotlib -L.. -lThotEditor \
           $(AMAYA_OPTION_EXTRA_LIBS) $(IMGLIBS) $(EXPAT_LIBRARIES) \
 	  $(AMAYA_LIBWWW_LIBS) \
-	  $(GTK_LIBRARIES) $(WX_LIBRARIES) \
-	  @LIBS@ @EXTRA_LIBS@ $(GL_LIBRARIES) $(GTK_GL_LIBRARIES) $(FREETYPE_LIBRARIES) $(XFT_LIBRARIES)
+	  @LIBS@ @EXTRA_LIBS@ $(GL_LIBRARIES) $(GTK_GL_LIBRARIES) $(FREETYPE_LIBRARIES) $(XFT_LIBRARIES) \
+          $(GTK_LIBRARIES) $(WX_LIBRARIES)
 
 CONFIGFILES=XKeysymDB unix-thot.rc amaya.keyboard amaya.profiles\
 	    *-amayadialogue *-amayamsg *-libdialogue *-corrdialogue \
@@ -226,7 +226,6 @@ libCSS.a : $(CSS_OBJ)
 	$(RANLIB) libCSS.a
 
 AMAYA_OBJ = \
-	wxdialog/AmayaDialog.o \
 	wxdialog/AuthentDlgWX.o \
 	wxdialog/CheckedListDlgWX.o \
 	wxdialog/CreateTableDlgWX.o \
@@ -526,15 +525,15 @@ install : all @NOPRINT@../bin/print
 	@(if test ! -d $(prefix)/Amaya/fonts ; then $(MKDIR) $(prefix)/Amaya/fonts ; fi)
 	@(if test ! -d $(prefix)/Amaya/dicopar ; then $(MKDIR) $(prefix)/Amaya/dicopar ; fi)
 	@(if test ! -d $(prefix)/Amaya/doc ; then $(MKDIR) $(prefix)/Amaya/doc ; fi)
-	@(if test ! -d $(prefix)/Amaya/applis ; then $(MKDIR) $(prefix)/Amaya/applis ; fi)
-	@(if test ! -d $(prefix)/Amaya/applis/bin ; then $(MKDIR) $(prefix)/Amaya/applis/bin ; fi)
+	@(if test ! -d $(prefix)/Amaya/$(AMAYAGUI) ; then $(MKDIR) $(prefix)/Amaya/$(AMAYAGUI) ; fi)
+	@(if test ! -d $(prefix)/Amaya/$(AMAYAGUI)/bin ; then $(MKDIR) $(prefix)/Amaya/$(AMAYAGUI)/bin ; fi)
 	@(if test ! -d $(prefix)/Amaya/davlib ; then $(MKDIR) $(prefix)/Amaya/davlib ; fi)
 	@(if test ! -d $(prefix)/Amaya/config/libconfig ; then $(MKDIR) $(prefix)/Amaya/config/libconfig ; fi)
 	@(if test ! -d $(bindir) ; then $(MKDIR) $(bindir) ; fi)
-	$(INSTALL_BIN) ../bin/amaya $(prefix)/Amaya/applis/bin
-@NOPRINT@	$(INSTALL_BIN) ../bin/print $(prefix)/Amaya/applis/bin
-	$(RM) $(bindir)/amaya
-	$(LN_S) $(prefix)/Amaya/applis/bin/amaya $(bindir)/amaya
+	$(INSTALL_BIN) ../bin/amaya $(prefix)/Amaya/$(AMAYAGUI)/bin
+@NOPRINT@	$(INSTALL_BIN) ../bin/print $(prefix)/Amaya/$(AMAYAGUI)/bin
+	$(RM) $(bindir)/amaya-$(AMAYAGUI)
+	$(LN_S) $(prefix)/Amaya/$(AMAYAGUI)/bin/amaya $(bindir)/amaya-$(AMAYAGUI)
 	(for i in $(AMAYAFILES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/amaya/$$i` ; do \
 	    $(INSTALL_DATA) $$file $(prefix)/Amaya/amaya ; \
@@ -571,11 +570,9 @@ install : all @NOPRINT@../bin/print
 	    $(INSTALL_DATA) $$file $(prefix)/Amaya/fonts ; \
 	  done ; done)
 
-uninstall : $(AMAYA_PLUGIN_UNINSTALL) \
-		$(AMAYA_ANNOT_UNINSTALL) \
-	$(RM) -rf $(prefix)/thot
-	$(RM) -rf $(prefix)/Amaya
-	$(RM) $(bindir)/amaya
+uninstall :
+	$(RM) -r $(prefix)/Amaya
+	$(RM) $(bindir)/amaya-$(AMAYAGUI)
 
 CEXTRACT= ../bin/cextract
 

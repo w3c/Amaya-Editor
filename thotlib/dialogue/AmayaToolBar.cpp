@@ -36,7 +36,7 @@ AmayaToolBar::AmayaToolBar( wxWindow * p_parent, AmayaWindow * p_amaya_window_pa
   wxPanel( p_parent,
 	   -1,
 	   wxDefaultPosition,
-	   /*wxDefaultSize */wxSize(22, 22), /* here it's possible to setup the toolbar size (height) */
+	   wxDefaultSize /*wxSize(-1, 28)*/, /* here it's possible to setup the toolbar size (height) */
 	   wxTAB_TRAVERSAL )
 {
   m_pAmayaWindowParent = p_amaya_window_parent;
@@ -76,17 +76,10 @@ void AmayaToolBar::AddTool( wxWindow * p_tool, bool expand, int border )
   
   if (expand)
     proportion = 1;
-  
-  /*
-  if ( p_tool->GetSize().GetHeight() > GetSize().GetHeight() )
-    {
-      SetSize(-1, p_tool->GetSize().GetHeight()+2);
-    }
-  */
 
   m_pTopSizer->Add( p_tool, proportion, flag, border );
   m_pTopSizer->Layout();
-
+  GetParent()->Layout();
 }
 
 /*

@@ -43,7 +43,7 @@ AmayaXHTMLPanel::AmayaXHTMLPanel( wxWindow * p_parent_window, AmayaNormalWindow 
   : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_XHTML") )
 {
   wxLogDebug( _T("AmayaXHTMLPanel::AmayaXHTMLPanel") );
-  
+
   m_OffColour = XRCCTRL(*this, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->GetBackgroundColour();
   m_OnColour  = wxColour(250, 200, 200);
 }

@@ -75,7 +75,6 @@ void AmayaFloatingPanel::OnClose( wxCloseEvent& event )
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaFloatingPanel, wxFrame)
-  //  EVT_BUTTON( XRCID("wxID_BUTTON_DETACH"), AmayaFloatingPanel::OnDetach )
   EVT_CLOSE( AmayaFloatingPanel::OnClose )
 END_EVENT_TABLE()
 

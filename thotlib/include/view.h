@@ -355,6 +355,12 @@ extern void TtaRaiseView (Document document, View view);
 extern void TtaGiveActiveView (Document *document, View *view);
 
 /*----------------------------------------------------------------------
+ *    TtaGiveActiveFrame
+ *       Returns the active frame.
+ *----------------------------------------------------------------------*/
+extern int TtaGiveActiveFrame ();
+
+/*----------------------------------------------------------------------
    TtaSetDisplayMode
 
    Changes display mode for a document. Three display modes are available.

@@ -1812,6 +1812,22 @@
 	<message xml:lang="en">Not available in this version</message>
 	<message xml:lang="en">Pas disponible dans cette version</message>
 </label>
+<label define="TMSG_VALUE">
+	<message xml:lang="en">Value</message>
+	<message xml:lang="fr">Valeur</message>
+</label>
+<label define="TMSG_ATTACHDETACH">
+	<message xml:lang="en">Enable/Disable floating panel</message>
+	<message xml:lang="fr">Activer/Desactiver la fenetre volante</message>
+</label>
+<label define="TMSG_TOOLS">
+	<message xml:lang="en">Tools</message>
+	<message xml:lang="fr">Outils</message>
+</label>
+<label define="TMSG_AUTOREFRESH">
+	<message xml:lang="en">Auto refresh</message>
+	<message xml:lang="fr">Mise à jour auto</message>
+</label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>

@@ -18,6 +18,7 @@
 #include "message.h"
 #include "libmsg.h"
 #include "frame.h"
+#include "registry_wx.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -72,6 +73,7 @@ AmayaWindow::AmayaWindow (  int            window_id
   m_ActiveFrameId( 0 )
 {
   wxLogDebug( _T("AmayaWindow::AmayaWindow: window_id=%d"), m_WindowId );
+  SetIcon( wxIcon(TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"logo.png"),wxBITMAP_TYPE_PNG) );
 }
 
 /*

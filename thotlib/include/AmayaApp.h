@@ -32,6 +32,7 @@ public:
 #endif /* _GL */
 
   static wxImageList * GetDocumentIconList();
+  static wxIcon GetAppIcon();
 
 protected:
   DECLARE_EVENT_TABLE()
@@ -51,7 +52,7 @@ protected:
   void ClearAmayaArgs();
 
   static wxImageList * m_pDocImageList; /* this is the list where documents icons are stored */
-
+  static wxIcon m_AppIcon;
 };
 
 DECLARE_APP(AmayaApp)

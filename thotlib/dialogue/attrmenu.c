@@ -13,6 +13,10 @@
  *
  */
 
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "dialog.h"
@@ -29,6 +33,13 @@
   #include "resource.h"
   #include "wininclude.h"
 #endif /* _WINGUI */
+
+#ifdef _WX
+  #include "AmayaWindow.h"
+  #include "AmayaPanel.h"
+  #include "AmayaAttributePanel.h"
+  #include "appdialogue_wx.h"
+#endif /* _WX */
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -117,6 +128,25 @@ extern UINT      subMenuID[MAX_FRAME];
 #include "uconvert_f.h"
 #include "dialogapi_f.h"
 
+#ifdef _WX
+/*
+ * Return the Attribut dialog reference.
+ */
+static AmayaAttributePanel * TtaGetAttributePanel()
+{
+  AmayaWindow * p_window = TtaGetWindowFromId(TtaGetActiveWindowId());
+  wxASSERT(p_window);
+  if (!p_window)
+    return NULL;
+  AmayaPanel * p_panel = p_window->GetAmayaPanel();
+  wxASSERT(p_panel);
+  if (!p_panel)
+    return NULL;
+
+  return p_panel->GetAttributePanel();
+}
+#endif /* _WX */
+
 /*----------------------------------------------------------------------
   InitFormLangue
   initializes a form for capturing the values of the Language attribute.
@@ -132,10 +162,10 @@ static void InitFormLanguage (Document doc, View view,
    char                languageCode[MAX_TXT_LEN];
    char                label[200];
    int                 defItem, nbItem;
-#ifdef _GTK
+#if defined(_GTK) || defined(_WX)
    char                bufMenu[MAX_TXT_LEN];
    int                 i;
-#endif /* _GTK */
+#endif /* _GTK || _WX */
 
    /* Initialize the language selector */
    languageCode[0] = EOS;
@@ -192,6 +222,13 @@ static void InitFormLanguage (Document doc, View view,
      }
    else
      label[0] = EOS;
+
+#ifdef _WX
+   ptr = GetListOfLanguages (bufMenu, MAX_TXT_LEN, languageCode, &nbItem, &defItem);
+   AmayaAttributePanel * p_dlg = TtaGetAttributePanel();
+   p_dlg->SetupLangValue( ptr, label, bufMenu, nbItem, defItem );
+   p_dlg->ShowAttributValue( AmayaAttributePanel::wxATTR_TYPE_LANG );
+#endif /* _WX */
 
 #ifdef _GTK
    TtaNewLabel (NumLabelHeritedLanguage, NumFormLanguage, label);
@@ -567,104 +604,135 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
    switch (pAttr1->AttrType)
      {
      case AtNumAttr: /* attribut a valeur numerique */
-       subform = form + 1;
+       {
+	 subform = form + 1;
 #ifdef _GTK
-       TtaNewNumberForm (subform, form, title, -MAX_INT_ATTR_VAL,
-			 MAX_INT_ATTR_VAL, TRUE);
-       TtaAttachForm (subform);
+	 TtaNewNumberForm (subform, form, title, -MAX_INT_ATTR_VAL,
+			   MAX_INT_ATTR_VAL, TRUE);
+	 TtaAttachForm (subform);
 #endif /* _GTK */
-       if (currAttr == NULL)
-	 i = 0;
-       else
-	 i = currAttr->AeAttrValue;
+	 if (currAttr == NULL)
+	   i = 0;
+	 else
+	   i = currAttr->AeAttrValue;
 #ifdef _GTK
-       /* initialize the input area only when an attribute already exists */
-       if (currAttr)
-	 TtaSetNumberForm (subform, i);
+	 /* initialize the input area only when an attribute already exists */
+	 if (currAttr)
+	   TtaSetNumberForm (subform, i);
 #endif /* _GTK */
 #ifdef _WINGUI
-       WIN_AtNumAttr  = TRUE;
-       WIN_AtTextAttr = FALSE;
-       WIN_AtEnumAttr = FALSE;
-       sprintf (formRange, "%d .. %d", -MAX_INT_ATTR_VAL,
-		 MAX_INT_ATTR_VAL); 
-       formValue = i;
+	 WIN_AtNumAttr  = TRUE;
+	 WIN_AtTextAttr = FALSE;
+	 WIN_AtEnumAttr = FALSE;
+	 sprintf (formRange, "%d .. %d", -MAX_INT_ATTR_VAL,
+		  MAX_INT_ATTR_VAL); 
+	 formValue = i;
 #endif /* _WINGUI */
+#ifdef _WX
+	 AmayaAttributePanel * p_dlg = TtaGetAttributePanel();
+	 p_dlg->SetupNumValue( i );
+	 p_dlg->ShowAttributValue( AmayaAttributePanel::wxATTR_TYPE_NUM );
+#endif /* _WX */
+       }
        break;
        
      case AtTextAttr: /* attribut a valeur textuelle */
-       subform = form + 2;
-       if (currAttr && currAttr->AeAttrText)
-	 {
-	   i = LgMaxAttrText - 2;
-	   i = CopyBuffer2MBs (currAttr->AeAttrText, 0,
-			       (unsigned char*)TextAttrValue, i);
-	   /* convert to the dialogue encoding */
-	   tmp = (char *)TtaConvertMbsToByte ((unsigned char *)TextAttrValue,
-					      TtaGetDefaultCharset ());
-	   strcpy (TextAttrValue, tmp);
-	   TtaFreeMemory (tmp);
-	 }
-       else
+       {
+	 subform = form + 2;
+	 if (currAttr && currAttr->AeAttrText)
+	   {
+	     i = LgMaxAttrText - 2;
+	     i = CopyBuffer2MBs (currAttr->AeAttrText, 0,
+				 (unsigned char*)TextAttrValue, i);
+	     /* convert to the dialogue encoding */
+	     tmp = (char *)TtaConvertMbsToByte ((unsigned char *)TextAttrValue,
+						TtaGetDefaultCharset ());
+	     strcpy (TextAttrValue, tmp);
+	     TtaFreeMemory (tmp);
+	   }
+	 else
 	   TextAttrValue[0] = EOS;
+#ifdef _WX
+	 AmayaAttributePanel * p_dlg = TtaGetAttributePanel();
+	 p_dlg->SetupTextValue( TextAttrValue );
+	 p_dlg->ShowAttributValue( AmayaAttributePanel::wxATTR_TYPE_TEXT );
+#endif /* _WX */
 #ifdef _GTK
-       TtaNewTextForm (subform, form, title, 40, 1, FALSE);
-       TtaAttachForm (subform);
-       TtaSetTextForm (subform, TextAttrValue);       
+	 TtaNewTextForm (subform, form, title, 40, 1, FALSE);
+	 TtaAttachForm (subform);
+	 TtaSetTextForm (subform, TextAttrValue);       
 #endif /* _GTK */
 #ifdef _WINGUI
-       WIN_AtNumAttr  = FALSE;
-       WIN_AtTextAttr = TRUE;
-       WIN_AtEnumAttr = FALSE;
+	 WIN_AtNumAttr  = FALSE;
+	 WIN_AtTextAttr = TRUE;
+	 WIN_AtEnumAttr = FALSE;
 #endif /* _WINGUI */
+       }
        break;
        
      case AtEnumAttr: /* attribut a valeurs enumerees */
-       subform = form + 3;
-       /* cree un menu de toutes les valeurs possibles de l'attribut */
-       lgmenu = 0;
-       val = 0;
-       /* boucle sur les valeurs possibles de l'attribut */
-       while (val < pAttr1->AttrNEnumValues)
-	 {
-#ifdef _WINGUI 
-	   i = strlen (pAttr1->AttrEnumValue[val]) + 1; /* for EOS */
-	   if (lgmenu + i < MAX_TXT_LEN)
-	     {
-	       strcpy (&WIN_buffMenu[lgmenu], pAttr1->AttrEnumValue[val]);
-	       val++;
-	     } 
+       {
+	 subform = form + 3;
+	 /* cree un menu de toutes les valeurs possibles de l'attribut */
+	 lgmenu = 0;
+	 val = 0;
+	 /* boucle sur les valeurs possibles de l'attribut */
+	 while (val < pAttr1->AttrNEnumValues)
+	   {
+#if defined(_WINGUI)
+	     i = strlen (pAttr1->AttrEnumValue[val]) + 1; /* for EOS */
+	     if (lgmenu + i < MAX_TXT_LEN)
+	       {
+		 strcpy (&WIN_buffMenu[lgmenu], pAttr1->AttrEnumValue[val]);
+		 val++;
+	       } 
 #endif /* _WINGUI */
 #ifdef _GTK
-	   i = strlen (pAttr1->AttrEnumValue[val]) + 2; /* for 'B' and EOS */
-	   if (lgmenu + i < MAX_TXT_LEN)
-	     {
-	       bufMenu[lgmenu] = 'B';
-	       strcpy (&bufMenu[lgmenu + 1], pAttr1->AttrEnumValue[val]);
-	       val++;
-	     } 
+	     i = strlen (pAttr1->AttrEnumValue[val]) + 2; /* for 'B' and EOS */
+	     if (lgmenu + i < MAX_TXT_LEN)
+	       {
+		 bufMenu[lgmenu] = 'B';
+		 strcpy (&bufMenu[lgmenu + 1], pAttr1->AttrEnumValue[val]);
+		 val++;
+	       } 
 #endif /* _GTK */
-	   lgmenu += i;
-	 }
+#if defined(_WX)
+	     i = strlen (pAttr1->AttrEnumValue[val]) + 1; /* for EOS */
+	     if (lgmenu + i < MAX_TXT_LEN)
+	       {
+		 strcpy (&bufMenu[lgmenu], pAttr1->AttrEnumValue[val]);
+		 val++;
+	       } 
+#endif /* _WX */
+	     lgmenu += i;
+	   }
+#ifdef _WX
+	 AmayaAttributePanel * p_dlg = TtaGetAttributePanel();
+	 p_dlg->SetupEnumValue( bufMenu, val, currAttr ? (currAttr->AeAttrValue-1) : -1 );
+	 p_dlg->ShowAttributValue( AmayaAttributePanel::wxATTR_TYPE_ENUM );
+#endif /* _WX */
 #ifdef _GTK
-       /* cree le menu des valeurs de l'attribut */
-       TtaNewSubmenu (subform, form, 0, title, val, bufMenu, NULL, 0, TRUE);
-       TtaAttachForm (subform);
-       /* initialise le menu avec la valeur courante */
-       val = -1;
-       if (currAttr != NULL)
-         val = currAttr->AeAttrValue - 1;
-       TtaSetMenuForm (subform, val);
+	 /* cree le menu des valeurs de l'attribut */
+	 TtaNewSubmenu (subform, form, 0, title, val, bufMenu, NULL, 0, TRUE);
+	 TtaAttachForm (subform);
+	 /* initialise le menu avec la valeur courante */
+	 val = -1;
+	 if (currAttr != NULL)
+	   val = currAttr->AeAttrValue - 1;
+	 TtaSetMenuForm (subform, val);
 #endif /* _GTK */
 #ifdef _WINGUI
-       nbDlgItems = val;
-       WIN_AtNumAttr  = FALSE;
-       WIN_AtTextAttr = FALSE;
-       WIN_AtEnumAttr = TRUE;
+	 nbDlgItems = val;
+	 WIN_AtNumAttr  = FALSE;
+	 WIN_AtTextAttr = FALSE;
+	 WIN_AtEnumAttr = TRUE;
 #endif /* _WINGUI */
+       }
        break;
-
+       
      case AtReferenceAttr: /* attribut reference, on ne fait rien */
+       {
+       }
        break;
        
      default: break;
@@ -1019,6 +1087,13 @@ void UpdateAttrMenu (PtrDocument pDoc)
   int                 nbOldItems;
 #endif /* _WINGUI */
 
+#ifdef _WX
+  /* do nothing if the attribute dialog is not updatable (auto refresh checkbox activate) */
+  AmayaAttributePanel * p_dlg = TtaGetAttributePanel();
+  if (!p_dlg || p_dlg->IsFreezed())
+    return;
+#endif /* _WX */
+
   /* Compose le menu des attributs */
   if (pDoc == SelectedDocument && !pDoc->DocReadOnly)
     nbItemAttr = BuildAttrMenu (bufMenuAttr, pDoc, &nbEvent, bufEventAttr);
@@ -1028,6 +1103,14 @@ void UpdateAttrMenu (PtrDocument pDoc)
       nbEvent = 0;
     }
 
+#ifdef _WX
+  /* update the attribute dialog */
+  if (p_dlg)
+    p_dlg->UpdateAttributeList( bufMenuAttr, nbItemAttr, ActiveAttr, bufEventAttr, nbEvent, ActiveEventAttr );
+#endif /* _WX */
+
+#ifndef _WX
+  /* Now update the menu widget */
   document = (Document) IdentDocument (pDoc);
   /* Traite toutes les vues de l'arbre principal */
   for (view = 1; view <= MAX_VIEW_DOC; view++)
@@ -1094,11 +1177,11 @@ void UpdateAttrMenu (PtrDocument pDoc)
 					  (ThotBool) (ActiveEventAttr[i] == 1),
 					  FrMainRef[frame]);
 #endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
+#if defined(_GTK)
 		  for (i = 0; i < nbEvent; i++)
 		    TtaSetToggleMenu (EventMenu[frame - 1], i,
 				      (ActiveEventAttr[i] == 1));
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) */
 		}
 	      
 	      /* post active attributes */
@@ -1111,13 +1194,14 @@ void UpdateAttrMenu (PtrDocument pDoc)
 		WIN_TtaSetToggleMenu (ref, i, (ThotBool) (ActiveAttr[i] == 1),
 				      FrMainRef[frame]);
 #endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
+#if defined(_GTK)
 	        TtaSetToggleMenu (ref, i, (ActiveAttr[i] == 1));
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) */
 	      TtaSetMenuOn (document, view, menuID);
 	    }
 	}
     }
+#endif /* !_WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1392,6 +1476,15 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
   FrameToView (frame, &doc, &view);
   item = att;
   /* get the right entry in the attributes list */
+#if _WX
+  /* on wxWidgets, attributs is not a menu but a dialog, this dialog do not have reference */
+  /* here we must simulate the default behaviour */
+  if (refmenu == -1)
+    {
+      /* this is the events attribut menu */
+      refmenu = EventMenu[frame - 1];
+    }
+#endif /* _WX */
   if (refmenu == EventMenu[frame - 1])
     att = AttrEventNumber[att];
   else

@@ -3,8 +3,35 @@
 #include "wx/wx.h"
 #include "wx/xrc/xmlres.h"              // XRC XML resouces
 
+#include "thot_gui.h"
+#include "thot_sys.h"
+#include "constmedia.h"
+#include "typemedia.h"
+#include "appdialogue.h"
+#include "dialog.h"
+#include "selection.h"
+#include "application.h"
+#include "dialog.h"
+#include "document.h"
+#include "message.h"
+#include "libmsg.h"
+#include "frame.h"
+#include "view.h"
+
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
+#include "attrmenu_f.h"
+#include "frame_tv.h"
+
+#include "message_wx.h"
+#include "paneltypes_wx.h"
+#include "appdialogue_wx.h"
+#include "appdialogue_wx_f.h"
+
+
 #include "AmayaPanel.h"
 #include "AmayaXHTMLPanel.h"
+#include "AmayaAttributePanel.h"
 #include "AmayaNormalWindow.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaPanel, wxPanel)
@@ -31,34 +58,26 @@ AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
 {
   wxLogDebug( _T("AmayaPanel::AmayaPanel") );
 
+  // load title area
   m_pTitlePanel = wxXmlResource::Get()->LoadPanel(this, _T("wxID_TITLEPANEL"));
  
-  // load static sub-panels
-  
-  // XHTML sub-panel
-  m_pPanel_xhtml = new AmayaXHTMLPanel( this, p_parent_nwindow );
-  //  wxXmlResource::Get()->LoadPanel(m_pPanel_xhtml, this, _T("wxID_PANEL_XHTML"));
+  // load static sub-panels  
+  m_pPanel_xhtml     = new AmayaXHTMLPanel( this, p_parent_nwindow );
+  m_pPanel_attribute = new AmayaAttributePanel( this, p_parent_nwindow );
 
-  /*  long panel_xhtml_style = m_pPanel_xhtml->GetWindowStyleFlag();
-  panel_xhtml_style |= wxSIMPLE_BORDER;
-  m_pPanel_xhtml->SetWindowStyleFlag( panel_xhtml_style );
-  p_panel_xhtml->Refresh();
-*/
-
-  //  AmayaSubPanel * p_extra = new AmayaSubPanel( this, _T("wxID_PANEL_XHTML") );
-  //p_extra->Expand();
-
+  // attach subpanels & title to the panel
   wxBoxSizer * p_TopSizer = new wxBoxSizer ( wxVERTICAL );
   SetSizer(p_TopSizer);
   p_TopSizer->Add( m_pTitlePanel, 0, wxALL | wxEXPAND , 5 );
   p_TopSizer->Add( m_pPanel_xhtml, 0, wxALL | wxEXPAND , 5 );
+  p_TopSizer->Add( m_pPanel_attribute, 0, wxALL | wxEXPAND , 5 );
   
-//  p_TopSizer->Fit(this);
-  /*  Layout();*/
-  //Fit();
+  // setup labels
+  XRCCTRL(*this, "wxID_LABEL_TOOLS", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_TOOLS)));
+  XRCCTRL(*this, "wxID_BUTTON_CLOSE", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_DONE)));
+
+  Layout();
   SetAutoLayout(TRUE);
-  
-  //  SetBackgroundColour( wxColour(_T("BLUE")) );
 }
 
 /*
@@ -123,6 +142,18 @@ void AmayaPanel::OnClose( wxCommandEvent& event )
 AmayaXHTMLPanel * AmayaPanel::GetXHTMLPanel() const
 {
   return m_pPanel_xhtml;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPanel
+ *      Method:  GetAttributePanel
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+AmayaAttributePanel * AmayaPanel::GetAttributePanel() const
+{
+  return m_pPanel_attribute;
 }
 
 /*

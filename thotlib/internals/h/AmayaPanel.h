@@ -12,6 +12,7 @@
 
 
 class AmayaXHTMLPanel;
+class AmayaAttributePanel;
 class AmayaNormalWindow;
 
 /*
@@ -73,7 +74,9 @@ class AmayaPanel : public wxPanel
 
   void ShowWhenUnsplit( bool show );
 
-  AmayaXHTMLPanel * GetXHTMLPanel() const;
+  AmayaXHTMLPanel *     GetXHTMLPanel() const;
+  AmayaAttributePanel * GetAttributePanel() const;
+
   void RefreshToolTips();
 
  protected:
@@ -85,7 +88,9 @@ class AmayaPanel : public wxPanel
   int          m_ParentWindowId; // amaya parent window id
   AmayaNormalWindow * m_pParentNWindow  ;
 
-  AmayaXHTMLPanel *  m_pPanel_xhtml;
+  AmayaXHTMLPanel *      m_pPanel_xhtml;
+  AmayaAttributePanel *  m_pPanel_attribute;
+
   wxPanel *        m_pTitlePanel;
 };
 

@@ -61,6 +61,7 @@ class AmayaSubPanel : public wxPanel
   wxSize    m_TitleSize;
   bool      m_IsExpanded;
   bool      m_IsFloating;
+  bool      m_IsExpBeforeDetach;
 
   bool m_DoUnstick_Lock;
 

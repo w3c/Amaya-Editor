@@ -86,7 +86,7 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
 #endif /* _WINDOWS */
 
   // setup dialog title
-  SetTitle( TtaConvMessageToWX("TODO (ex: Preferences)") );
+  SetTitle( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DLGPREFERENCE_TITLE)));
 
   // send labels to dialog (labels depends on language)
   SetupLabelDialog_General();
@@ -103,9 +103,9 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
   SetupLabelDialog_DAV();
 #endif /* DAV */
 
-  XRCCTRL(*this, "wxID_OK",      wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage (AMAYA, AM_APPLY_BUTTON)));
-  XRCCTRL(*this, "wxID_CANCEL",  wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_DONE)) );
-  XRCCTRL(*this, "wxID_DEFAULT", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON)));
+  XRCCTRL(*this, "wxID_OK",      wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_APPLY_BUTTON)));
+  XRCCTRL(*this, "wxID_CANCEL",  wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_DONE)));
+  XRCCTRL(*this, "wxID_DEFAULT", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DEFAULT_BUTTON)));
 
   // load current values and send it to the dialog
   SetupDialog_General( GetProp_General() );

@@ -778,6 +778,14 @@ void TtaGiveActiveView (Document * document, View * view)
      }
 }
 
+/*----------------------------------------------------------------------
+   TtaGiveActiveFrame
+   Returns the active frame.
+  ----------------------------------------------------------------------*/
+int TtaGiveActiveFrame ()
+{
+  return ActiveFrame;
+}
 
 /*----------------------------------------------------------------------
    DisplayHolophrasted reaffiche un element sous forme holphrastee 

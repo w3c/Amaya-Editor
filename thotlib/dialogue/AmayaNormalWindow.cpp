@@ -61,7 +61,7 @@ AmayaNormalWindow::AmayaNormalWindow (  int             window_id
   AmayaWindow( window_id, p_parent_window, pos, size, WXAMAYAWINDOW_NORMAL ),
   m_pURLBar( NULL ),
   m_pDummyMenuBar( NULL ),
-  m_SlashPos( 115 )
+  m_SlashPos( 135 )
 {
   // Create a background panel to contain everything : better look on windows
   wxBoxSizer * p_TopSizer = new wxBoxSizer ( wxVERTICAL );
@@ -124,7 +124,7 @@ AmayaNormalWindow::AmayaNormalWindow (  int             window_id
   p_TopLayoutSizer->Add( m_pToolBar, 0, wxALL | wxEXPAND, 1 );
   p_TopLayoutSizer->Add( p_SizerFrame, 1, wxALL | wxEXPAND, 0 );
   p_TopParent->SetSizer(p_TopLayoutSizer);
-  p_TopLayoutSizer->Fit(p_TopParent);
+  //  p_TopLayoutSizer->Fit(p_TopParent);
 
   // Creation of the statusbar
   CreateStatusBar( 1 );

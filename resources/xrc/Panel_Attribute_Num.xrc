@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
-  <object class="wxPanel" name="wxID_ATTRIBUTE_TEXT">
+  <object class="wxPanel" name="wxID_ATTRIBUTE_NUM">
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
-        <object class="wxTextCtrl" name="wxID_TEXT_LANG_VALUE">
+        <object class="wxSpinCtrl" name="wxID_ATTR_NUM_VALUE">
           <value></value>
           <style></style>
         </object>
@@ -12,5 +12,6 @@
         <flag>wxEXPAND</flag>
       </object>
     </object>
+    <style>wxTAB_TRAVERSAL</style>
   </object>
 </resource>

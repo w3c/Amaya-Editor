@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
+  <object class="wxPanel" name="wxID_ATTRIBUTE_LANG">
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxComboBox" name="wxID_ATTR_COMBO_LANG_LIST">
+          <content/>
+          <style>wxCB_SORT|wxCB_READONLY</style>
+        </object>
+        <option>0</option>
+        <flag>wxEXPAND</flag>
+      </object>
+      <object class="sizeritem">
+        <object class="wxStaticText" name="wxID_ATTR_LABEL_LANG_INHER">
+          <label>Inherited language: French</label>
+        </object>
+      </object>
+    </object>
+    <style>wxTAB_TRAVERSAL</style>
+  </object>
+</resource>

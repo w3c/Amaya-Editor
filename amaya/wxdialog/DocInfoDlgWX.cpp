@@ -35,11 +35,11 @@ END_EVENT_TABLE()
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("DocInfoDlgWX"));
   wxLogDebug( _T("DocInfoDlgWX::DocInfoDlgWX"));
 
-  wxString wx_title = TtaConvMessageToWX("Document Information");
+  wxString wx_title = TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DOCINFO_TITLE));
   SetTitle( wx_title );
 
    /* Document URL */
-  XRCCTRL(*this, "wxID_URL_LABEL", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_HREF_VALUE) ));
+  XRCCTRL(*this, "wxID_URL_LABEL", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_HREF_VALUE)));
   if (DocumentURLs[doc] != NULL)
     content = DocumentURLs[doc];
   else
@@ -47,14 +47,14 @@ END_EVENT_TABLE()
   XRCCTRL(*this, "wxID_URL_CONTENT", wxStaticText)->SetLabel(TtaConvMessageToWX(content));
 
    /* Document type */
-  XRCCTRL(*this, "wxID_DOCUMENT_TYPE_LABEL", wxStaticText)->SetLabel(TtaConvMessageToWX("Document Type"));
+  XRCCTRL(*this, "wxID_DOCUMENT_TYPE_LABEL", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DOCINFO_TYPE)));
   content = DocumentTypeString (doc);
   if (!content)
     content = TtaGetMessage (AMAYA, AM_UNKNOWN);
   XRCCTRL(*this, "wxID_DOCUMENT_TYPE_CONTENT", wxStaticText)->SetLabel(TtaConvMessageToWX(content));
 
    /* Mime Type */
-  XRCCTRL(*this, "wxID_MIME_TYPE_LABEL", wxStaticText)->SetLabel(TtaConvMessageToWX("MIME Type"));
+  XRCCTRL(*this, "wxID_MIME_TYPE_LABEL", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DOCINFO_TYPEMIME)));
   if (DocumentMeta[doc] && DocumentMeta[doc]->content_type)
     content = DocumentMeta[doc]->content_type;
   else
@@ -62,7 +62,7 @@ END_EVENT_TABLE()
   XRCCTRL(*this, "wxID_MIME_TYPE_CONTENT", wxStaticText)->SetLabel(TtaConvMessageToWX(content));
 
    /* Charset */
-  XRCCTRL(*this, "wxID_CHARSET_LABEL", wxStaticText)->SetLabel(TtaConvMessageToWX("Charset"));
+  XRCCTRL(*this, "wxID_CHARSET_LABEL", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DOCINFO_CHARSET)));
   if (DocumentMeta[doc] && DocumentMeta[doc]->charset != NULL)
     content = DocumentMeta[doc]->charset;
   else
@@ -70,7 +70,7 @@ END_EVENT_TABLE()
   XRCCTRL(*this, "wxID_CHARSET_CONTENT", wxStaticText)->SetLabel(TtaConvMessageToWX(content));
 
    /* Content Length */
-  XRCCTRL(*this, "wxID_LENGTH_LABEL", wxStaticText)->SetLabel(TtaConvMessageToWX("Content Length"));
+  XRCCTRL(*this, "wxID_LENGTH_LABEL", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DOCINFO_CLENGTH)));
   if (DocumentMeta[doc] && DocumentMeta[doc]->content_length)
     content = DocumentMeta[doc]->content_length;
   else
@@ -78,7 +78,7 @@ END_EVENT_TABLE()
   XRCCTRL(*this, "wxID_LENGTH_CONTENT", wxStaticText)->SetLabel(TtaConvMessageToWX(content));
 
    /* Content Location */
-  XRCCTRL(*this, "wxID_LOCATION_LABEL", wxStaticText)->SetLabel(TtaConvMessageToWX("Content Location"));
+  XRCCTRL(*this, "wxID_LOCATION_LABEL", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DOCINFO_CLOCATION)));
   if (DocumentMeta[doc] 
       && DocumentMeta[doc]->full_content_location != NULL)
     content = DocumentMeta[doc]->full_content_location;
@@ -87,7 +87,7 @@ END_EVENT_TABLE()
   XRCCTRL(*this, "wxID_LOCATION_CONTENT", wxStaticText)->SetLabel(TtaConvMessageToWX(content));
 
   // update dialog labels
-  XRCCTRL(*this, "wxID_DONEBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_DONE) ));
+  XRCCTRL(*this, "wxID_DONEBUTTON", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_DONE)));
 
   Layout();
   
@@ -106,10 +106,8 @@ DocInfoDlgWX::~DocInfoDlgWX()
   ----------------------------------------------------------------------*/
 void DocInfoDlgWX::OnDoneButton( wxCommandEvent& event )
 {
-
   wxLogDebug( _T("DocInfoDlgWX::OnDoneButton") );
   Close ();
-
 }
 
 #endif /* _WX */

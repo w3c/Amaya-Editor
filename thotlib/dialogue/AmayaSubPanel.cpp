@@ -3,6 +3,32 @@
 #include "wx/wx.h"
 #include "wx/xrc/xmlres.h"              // XRC XML resouces
 
+#include "thot_gui.h"
+#include "thot_sys.h"
+#include "constmedia.h"
+#include "typemedia.h"
+#include "appdialogue.h"
+#include "dialog.h"
+#include "selection.h"
+#include "application.h"
+#include "dialog.h"
+#include "document.h"
+#include "message.h"
+#include "libmsg.h"
+#include "frame.h"
+#include "view.h"
+
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
+#include "attrmenu_f.h"
+#include "frame_tv.h"
+
+#include "message_wx.h"
+#include "paneltypes_wx.h"
+#include "appdialogue_wx.h"
+#include "appdialogue_wx_f.h"
+
+
 #include "AmayaSubPanel.h"
 #include "AmayaFloatingPanel.h"
 #include "AmayaNormalWindow.h"
@@ -56,6 +82,9 @@ AmayaSubPanel::AmayaSubPanel( wxWindow *      p_parent_window
   m_Bitmap_ExpandOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON, "expand_on.gif" ) );
   m_Bitmap_ExpandOff = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON, "expand_off.gif" ) );
 
+  // setup labels
+  XRCCTRL(*this, "wxID_BUTTON_DETACH", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_ATTACHDETACH)));
+
   DebugPanelSize(_T("AmayaSubPanel()"));
 }
 
@@ -81,8 +110,8 @@ void AmayaSubPanel::UnExpand()
 {
   wxLogDebug( _T("AmayaSubPanel::UnExpand") );
 
-  // do nothing if the content is allready unexpanded
-  if (!m_IsExpanded && !m_IsFloating)
+  // do nothing if the content is allready unexpanded or if it is floating
+  if (!m_IsExpanded || m_IsFloating)
     return;
 
   // setup bitmaps
@@ -94,9 +123,8 @@ void AmayaSubPanel::UnExpand()
 
   // setup content parnel size
   wxSizer * p_sizer = m_pPanelContent->GetContainingSizer();
-  p_sizer->SetItemMinSize( m_pPanelContent, wxSize( m_pPanelContent->GetSize().GetWidth(), 0 ) );
   p_sizer->Show(m_pPanelContent,false);
-  p_sizer->Layout();
+  GetParent()->Layout();
 
   //  m_pPanelContent->SetClientSize( wxSize(-1, 0) );
   DebugPanelSize( _T("UnExpand") );
@@ -113,8 +141,8 @@ void AmayaSubPanel::Expand()
 {
   wxLogDebug( _T("AmayaSubPanel::Expand") );
 
-  // do nothing if the content is allready expanded
-  if (m_IsExpanded && !m_IsFloating)
+  // do nothing if the content is allready expanded or if it is floating
+  if (m_IsExpanded || m_IsFloating)
     return;
 
   // setup bitmaps
@@ -126,9 +154,8 @@ void AmayaSubPanel::Expand()
 
   // setup content panel size
   wxSizer * p_sizer = m_pPanelContent->GetContainingSizer();
-  p_sizer->SetItemMinSize( m_pPanelContent, wxSize( m_pPanelContent->GetSize().GetWidth(), -1 ) );
   p_sizer->Show(m_pPanelContent,true);
-  p_sizer->Layout();
+  GetParent()->Layout();
 
   //m_pPanelContent->SetClientSize( wxSize(-1, m_ContentSize.y) );
   DebugPanelSize( _T("Expand") );
@@ -144,17 +171,11 @@ void AmayaSubPanel::OnExpand( wxCommandEvent& event )
 {
   wxLogDebug( _T("AmayaSubPanel::OnExpand") );
 
-  // TODO : faire fonctionner le systeme de expand/unexpand
-  // switch state ...
+  // switch the expand state
   if (m_IsExpanded)
     UnExpand();
   else
     Expand();
-
-  //  Fit();
-  //  GetParent()->Layout();
-  //m_pTopSizer->SetSizeHints( this );
-  Layout();
 
   DebugPanelSize( _T("After-OnExpand") );
 }
@@ -169,9 +190,28 @@ void AmayaSubPanel::OnDetach( wxCommandEvent& event )
   wxLogDebug( _T("AmayaSubPanel::OnDetach") );
 
   if (m_IsFloating)
-    DoUnstick();
+    {
+      // the panel is floating, we must reattach it
+      DoUnstick();
+
+      // restore the old expand state
+      if (m_IsExpBeforeDetach)
+	Expand();
+      else
+	UnExpand();
+    }
   else
-    DoStick();
+    {
+      // the panel is attached
+
+      // save the expand state to be able to restore it when reattaching the panel
+      m_IsExpBeforeDetach = m_IsExpanded;
+      // force the panel to unexpand
+      UnExpand();
+
+      // detach the panel
+      DoStick();
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -193,6 +233,10 @@ void AmayaSubPanel::DebugPanelSize( const wxString & prefix )
   ----------------------------------------------------------------------*/
 void AmayaSubPanel::DoStick()
 {
+  // disable the expand button
+  wxBitmapButton* p_button_exp = XRCCTRL(*this, "wxID_BUTTON_EXPAND", wxBitmapButton);
+  p_button_exp->Disable();
+
   // setup bitmaps
   wxBitmapButton* p_button = XRCCTRL(*this, "wxID_BUTTON_DETACH", wxBitmapButton);
   p_button->SetBitmapLabel(    m_Bitmap_DetachOn );
@@ -223,6 +267,10 @@ void AmayaSubPanel::DoUnstick()
     return;
   m_DoUnstick_Lock = true;
 
+  // enable the expand button
+  wxBitmapButton* p_button_exp = XRCCTRL(*this, "wxID_BUTTON_EXPAND", wxBitmapButton);
+  p_button_exp->Enable();
+
   // setup bitmaps
   wxBitmapButton* p_button = XRCCTRL(*this, "wxID_BUTTON_DETACH", wxBitmapButton);
   p_button->SetBitmapLabel(    m_Bitmap_DetachOff );
@@ -230,7 +278,8 @@ void AmayaSubPanel::DoUnstick()
 //  p_button->SetBitmapFocus(    wxBitmap() );
 
   // close the floating window
-  m_pFloatingPanel->Close();
+  if (m_pFloatingPanel)
+    m_pFloatingPanel->Close();
   m_pFloatingPanel = NULL;
   m_IsFloating = false;
 
