@@ -3123,7 +3123,7 @@ static void SetContentAfterEntity (char *entityName, Element el, Document doc)
     {
       /* get the UTF-8 string of the unicode character */
       ptr = bufEntity;
-      i = TtaWCToMBstring (value, &ptr);
+      i = TtaWCToMBstring ((wchar_t) value, &ptr);
       bufEntity[i] = EOS;
     }
 #endif /* _I18N_ */

@@ -188,6 +188,7 @@ ThotBool            gbAbort;
 Document            TmpDoc; /* used to pass the Document id to the
 			       callback when setting up a menu */
 
+#include "init_f.h"
 /*----------------------------------------------------------------------
    ReusePrinterDC()
    Call the Windows print dialogue or reuse the previous context.

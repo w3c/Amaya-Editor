@@ -3320,7 +3320,7 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
     {
       /* get the UTF-8 string of the unicode character */
       ptr = fallback;
-      i = TtaWCToMBstring (code, &ptr);
+      i = TtaWCToMBstring ((wchar_t) code, &ptr);
       fallback[i] = EOS;
     }
 #endif /* _I18N_ */
@@ -3368,7 +3368,7 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
 	  /* get the UTF-8 string */
 	  code = fallback[0];
 	  ptr = fallback;
-	  i = TtaWCToMBstring (code, &ptr);
+	  i = TtaWCToMBstring ((wchar_t) code, &ptr);
 	  fallback[i] = EOS;
 	}
 #endif /* _I18N_ */
@@ -3497,7 +3497,7 @@ static void EndOfEntity (unsigned char c)
 	{
 	  /* generate the UTF-8 string */
 	  ptr = fallback;
-	  TtaWCToMBstring (XhtmlEntityTable[EntityTableEntry].charCode, &ptr);
+	  TtaWCToMBstring ((wchar_t) (XhtmlEntityTable[EntityTableEntry].charCode), &ptr);
 	  for (i = 0; i < 7 && fallback[i] != EOS; i++)
 	    PutInBuffer (fallback[i]);
 	}
@@ -3685,7 +3685,7 @@ static void EndOfDecEntity (unsigned char c)
     {
       /* generate the UTF-8 string */
       ptr = fallback;
-      TtaWCToMBstring (code, &ptr);
+      TtaWCToMBstring ((wchar_t) code, &ptr);
       for (i = 0; i < 7 && fallback[i] != EOS; i++)
 	PutInBuffer (fallback[i]);
     }
@@ -3767,7 +3767,7 @@ static void EndOfHexEntity (unsigned char c)
     {
       /* generate the UTF-8 string */
       ptr = fallback;
-      TtaWCToMBstring (code, &ptr);
+      TtaWCToMBstring ((wchar_t) code, &ptr);
       for (i = 0; i < 7 && fallback[i] != EOS; i++)
 	PutInBuffer (fallback[i]);
     }
@@ -4376,16 +4376,18 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
   wchar_t        wcharRead = EOS;
   unsigned char  charRead;
   unsigned char  fallback[5];
-  unsigned char  extrabuf[7];
   unsigned char *ptr;
   int            res;
-  int            nbBytes;
-  long           nbBytesToRead;
-  int            i;
+#ifndef _I18N_
+  unsigned char  extrabuf[7];
   Language       lang;
   ElementType    elType;
   Element        elLeaf;
+  int            i;
+  int            nbBytes;
+  long           nbBytesToRead;
   ThotBool       isHTML;
+#endif /* _I18N_ */
 
   charRead = EOS;
   *endOfFile = FALSE;
