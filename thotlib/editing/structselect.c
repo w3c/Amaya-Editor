@@ -1595,9 +1595,7 @@ ThotBool            createView;
 				/* search in the config file the */
 				/* position and size of the view */
 				/* to be open */
-				ConfigGetViewGeometry (SelectedDocument,
-						       viewTable[i].VdViewName,
-						       &X, &Y, &width, &height);
+				ConfigGetViewGeometry (SelectedDocument, viewTable[i].VdViewName, &X, &Y, &width, &height); 
 				/* send an event to the application*/
 				notifyDoc.event = TteViewOpen;
 				notifyDoc.document = doc;

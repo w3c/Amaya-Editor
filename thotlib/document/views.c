@@ -488,7 +488,7 @@ STRING              newName;
    ustrncpy (pDoc->DocIdent, newName, MAX_DOC_IDENT_LEN);
    pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
    len = ustrlen (newName);
-   if (ustrcmp (newName + len - 4, ".PIV") == 0)
+   if (ustrcmp (newName + len - 4, TEXT(".PIV")) == 0)
      {
 	buffer[len - 4] = EOS;
 	pDoc->DocDName[len - 4] = EOS;
@@ -976,10 +976,10 @@ int                 height;
       if (assoc) {
          schView = 1;
          pEl = pDoc->DocAssocRoot[view - 1];
-         strncpy (viewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
+         ustrncpy (viewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
 	  } else {
              schView = pDoc->DocView[view - 1].DvPSchemaView;
-             strncpy (viewName, pDoc->DocView[view - 1].DvSSchema->SsPSchema->PsView[schView - 1], MAX_NAME_LENGTH);
+             ustrncpy (viewName, pDoc->DocView[view - 1].DvSSchema->SsPSchema->PsView[schView - 1], MAX_NAME_LENGTH);
 	  } 
       /* creation d'une fenetre pour la vue */
       frame = CreateWindowWithTitle (pDoc, schView, viewName, &volume, X, Y, width, height);

@@ -283,8 +283,7 @@ SSchema		    nature;
 	/* number of documents using this schema */
 	((PtrPSchema) schema)->PsStructCode++;
 	/* name of associated structure schema */
-	strncpy (((PtrPSchema) schema)->PsStructName, pSchS->SsName,
-		 MAX_NAME_LENGTH);
+	ustrncpy (((PtrPSchema) schema)->PsStructName, pSchS->SsName, MAX_NAME_LENGTH);
      }
 }
 

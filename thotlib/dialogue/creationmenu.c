@@ -107,11 +107,11 @@ int                 Val;
   BuildChoiceMenu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                BuildChoiceMenu (STRING bufMenu, WCName menuTitle, int nbEntries, ThotBool natureChoice)
+void                BuildChoiceMenu (STRING bufMenu, Name menuTitle, int nbEntries, ThotBool natureChoice)
 #else  /* __STDC__ */
 void                BuildChoiceMenu (bufMenu, menuTitle, nbEntries, natureChoice)
 STRING              bufMenu;
-WCName              menuTitle;
+Name                menuTitle;
 int                 nbEntries;
 ThotBool            natureChoice;
 
@@ -210,12 +210,12 @@ STRING              bufMenu;
   BuildPasteMenu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                BuildPasteMenu (int RefMenu, STRING bufMenu, WCName title, int nbEntries, char button)
+void                BuildPasteMenu (int RefMenu, STRING bufMenu, Name title, int nbEntries, char button)
 #else  /* __STDC__ */
 void                BuildPasteMenu (RefMenu, bufMenu, title, nbEntries, button)
 int                 RefMenu;
 STRING              bufMenu;
-WCName              title;
+Name                title;
 int                 nbEntries;
 char                button;
 

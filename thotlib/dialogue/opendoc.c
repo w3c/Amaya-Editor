@@ -186,8 +186,6 @@ Name                name;
 #endif /* __STDC__ */
 
 {
-   CHAR_T wcName[MAX_LENGTH];
-   iso2wc_strcpy (wcName, name);
 #  ifndef _WINDOWS
    /* Formulaire du schema de presentation */
    TtaNewForm (NumFormPresentationSchema, 0, TtaGetMessage (LIB, TMSG_PRES), TRUE, 1, 'L', D_DONE);
@@ -206,11 +204,11 @@ Name                name;
       /* pas traduit */
       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ENTER_PRS_SCH), pSchStr->SsRule[pSchStr->SsRootElem - 1].SrName);
    /* demande un autre nom de fichier a l'utilisateur */
-   TtaSetTextForm (NumZonePresentationSchema, wcName);
+   TtaSetTextForm (NumZonePresentationSchema, name);
    TtaShowDialogue (NumFormPresentationSchema, FALSE);
    /* attend la reponse de l'utilisateur */
    TtaWaitShowDialogue ();
-   strncpy (name, NewSchemaName, MAX_NAME_LENGTH);
+   ustrncpy (name, NewSchemaName, MAX_NAME_LENGTH);
    /* efface le message */
 
    /* detruit le formulaire */
@@ -241,7 +239,7 @@ STRING              data;
 	       break;
 	    case NumZonePresentationSchema:
 	       /* zone de saisie du nom du schema de presentation */
-	       wc2iso_strncpy (NewSchemaName, data, MAX_NAME_LENGTH);
+	       ustrncpy (NewSchemaName, data, MAX_NAME_LENGTH);
 	       break;
 	 }
 }

@@ -44,7 +44,7 @@
 #include "tree_f.h"
 #include "viewapi_f.h"
 
-static WCName         bufferName;
+static Name bufferName;
 
 
 /*----------------------------------------------------------------------
@@ -760,11 +760,11 @@ int                *attrKind;
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                TtaGiveAttributeTypeFromName (char* name, Element element, AttributeType * attributeType, int *attrKind)
+void                TtaGiveAttributeTypeFromName (CHAR_T* name, Element element, AttributeType * attributeType, int *attrKind)
 
 #else  /* __STDC__ */
 void                TtaGiveAttributeTypeFromName (name, element, attributeType, attrKind)
-char*               name;
+CHAR_T*             name;
 Element             element;
 AttributeType      *attributeType;
 int                *attrKind;
@@ -778,7 +778,7 @@ int                *attrKind;
    (*attributeType).AttrSSchema = NULL;
    (*attributeType).AttrTypeNum = 0;
    *attrKind = 0;
-   if (name[0] == EOS || strlen (name) >= MAX_NAME_LENGTH || element == NULL)
+   if (name[0] == WC_EOS || ustrlen (name) >= MAX_NAME_LENGTH || element == NULL)
       TtaError (ERR_invalid_parameter);
    else
      {
@@ -828,11 +828,11 @@ int                *attrKind;
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                TtaGiveAttributeTypeFromOriginalName (char* name, Element element, AttributeType * attributeType, int *attrKind)
+void                TtaGiveAttributeTypeFromOriginalName (CHAR_T* name, Element element, AttributeType * attributeType, int *attrKind)
 
 #else  /* __STDC__ */
 void                TtaGiveAttributeTypeFromOriginalName (name, element, attributeType, attrKind)
-char*               name;
+CHAR_T*             name;
 Element             element;
 AttributeType      *attributeType;
 int                *attrKind;
@@ -846,7 +846,7 @@ int                *attrKind;
    (*attributeType).AttrSSchema = NULL;
    (*attributeType).AttrTypeNum = 0;
    *attrKind = 0;
-   if (name[0] == EOS || strlen (name) >= MAX_NAME_LENGTH || element == NULL)
+   if (name[0] == WC_EOS || ustrlen (name) >= MAX_NAME_LENGTH || element == NULL)
       TtaError (ERR_invalid_parameter);
    else
      {

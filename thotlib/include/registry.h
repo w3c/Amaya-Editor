@@ -28,6 +28,9 @@
  */
 extern char*      TtaSkipBlanks (char* ptr);
 
+extern CHAR_T*    TtaSkipWCBlanks (CHAR_T* ptr);
+
+
 /*
  * TtaIsBlank returns True if the first character is a space, a tab, a
  * linefeed or a newline.
@@ -130,6 +133,7 @@ extern void         TtaSaveAppRegistry (void);
 
 #else  /* __STDC__ */
 extern char*        TtaSkipBlanks (/* char* ptr */);
+extern CHAR_T*      TtaSkipWCBlanks (/* CHAR_T* ptr */);
 extern ThotBool     TtaIsBlank (/* char* ptr */);
 extern ThotBool     TtaIsCUSBlank (/* CharUnit* */);
 extern void         TtaInitializeAppRegistry ( /* CharUnit* appArgv0 */ );

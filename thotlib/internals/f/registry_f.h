@@ -7,6 +7,7 @@
 #ifdef __STDC__
 
 extern char* TtaSkipBlanks ( char* ptr );
+extern CHAR_T* TtaSkipWCBlanks (CHAR_T* ptr);
 extern ThotBool TtaIsBlank ( char* ptr );
 extern ThotBool TtaIsCUSBlank ( CharUnit* ptr );
 extern ThotBool TtaIsWCBlank ( CharUnit* ptr );
@@ -43,6 +44,7 @@ extern int SearchFile ( CharUnit* fileName,
 #else /* __STDC__ */
 
 extern char* TtaSkipBlanks (/* char* ptr */);
+extern CHAR_T* TtaSkipWCBlanks (/* CHAR_T* ptr */);
 extern ThotBool TtaIsBlank (/* char* ptr */);
 extern ThotBool TtaIsCUSBlank (/* CharUnit* ptr */);
 extern ThotBool TtaIsWCBlank (/* CharUnit* ptr */);

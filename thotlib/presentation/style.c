@@ -590,7 +590,7 @@ AttributePres     **attrblock;
   PtrPRule           *ppRule;
   PtrSSchema          pSS;
   AttributePres      *attrs;
-  STRING              attrVal;
+  CHAR_T*             attrVal;
   unsigned int        elementType;
   int                 nbrules;
   int                 i, j, val;

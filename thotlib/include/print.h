@@ -47,7 +47,7 @@ extern void TtaSetPrintCommand (STRING command);
 extern void TtaGetPrintCommand (STRING command);
 extern void TtaSetPsFile (STRING path);
 extern void TtaGetPsFile (STRING path);
-extern void TtaSetPrintSchema (char* name);
+extern void TtaSetPrintSchema (CHAR_T* name);
 
 #else /* __STDC__ */
 extern void TtaGetPrintNames (/*STRING *printDocName, STRING *printDirName*/);
@@ -59,7 +59,7 @@ extern void TtaSetPrintCommand (/*STRING command*/);
 extern void TtaGetPrintCommand (/*STRING command*/);
 extern void TtaSetPsFile (/*STRING path*/);
 extern void TtaGetPsFile (/*STRING path*/);
-extern void TtaSetPrintSchema (/*char* name*/);
+extern void TtaSetPrintSchema (/*CHAR_T* name*/);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

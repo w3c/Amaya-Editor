@@ -62,7 +62,7 @@ static CharUnit*    nat_items[MAX_ITEM_CONF];
 static CharUnit*    nat_items_menu[MAX_ITEM_CONF];
 static CharUnit*    ext_items[MAX_ITEM_CONF];
 static CharUnit*    ext_items_menu[MAX_ITEM_CONF];
-static char*        pres_items[MAX_ITEM_CONF];
+static CHAR_T*      pres_items[MAX_ITEM_CONF];
 static CHAR_T*      pres_items_menu[MAX_ITEM_CONF];
 static char*        export_items[MAX_ITEM_CONF];
 static CHAR_T*      export_items_menu[MAX_ITEM_CONF];
@@ -798,27 +798,27 @@ ThotBool            Doc;
    openConfigFile                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static FILE        *openConfigFile (CharUnit* name, ThotBool lang)
+static FILE        *openConfigFile (CHAR_T* name, ThotBool lang)
 
 #else  /* __STDC__ */
 static FILE        *openConfigFile (name, lang)
-CharUnit*           name;
+CHAR_T*             name;
 ThotBool            lang;
 
 #endif /* __STDC__ */
 
 {
  
-   CharUnit*           suffix;
+   CHAR_T*             suffix;
    int                 i;
    PathBuffer          DirBuffer, filename;
    FILE               *file;
-   CharUnit*           app_home;
+   CHAR_T*             app_home;
 
    if (lang)
         suffix = TtaGetVarLANG ();
    else
-      suffix = CUSTEXT("conf");
+      suffix = TEXT("conf");
 
    /* Search in HOME directory */
    app_home = TtaGetEnvString ("APP_HOME");
@@ -899,7 +899,7 @@ CHAR_T*             BufMenu;
 			       if (pres_items[nbitem] != NULL)
 				  TtaFreeMemory (pres_items[nbitem]);
 			       pres_items[nbitem] = TtaGetMemory (strlen (word) + 1);
-			       strcpy (pres_items[nbitem], word);
+			       iso2wc_strcpy (pres_items[nbitem], word);
 			       if (pres_items_menu[nbitem] != NULL)
 				  TtaFreeMemory (pres_items_menu[nbitem]);
 			       len = ustrlen (textISO) + 1;
@@ -927,17 +927,17 @@ CHAR_T*             BufMenu;
    a l'entree de rang choix.                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ConfigGetPSchemaName (int choix, char* schpres)
+void                ConfigGetPSchemaName (int choix, CHAR_T* schpres)
 
 #else  /* __STDC__ */
 void                ConfigGetPSchemaName (choix, schpres)
 int                 choix;
-char*               schpres;
+CHAR_T*             schpres;
 
 #endif /* __STDC__ */
 
 {
-   strcpy (schpres, pres_items[choix - 1]);
+   ustrcpy (schpres, pres_items[choix - 1]);
 }
 
 /*----------------------------------------------------------------------
@@ -1172,13 +1172,11 @@ PtrSSchema          pSS;
    char*    line;
    char*    text;
    char*    word;
-   CharUnit pSS_SsName[MAX_LENGTH];
 
    if (pSS == NULL)
       return;
    /* ouvre le fichier de configuration langue associe' au schema */
-   iso2cus_strcpy (pSS_SsName, pSS->SsName);
-   file = openConfigFile (pSS_SsName, TRUE);
+   file = openConfigFile (pSS->SsName, TRUE);
    if (file == NULL) 
       /* pas de fichier langue associe' a ce schema de structure */
       return;
@@ -1245,12 +1243,12 @@ PtrSSchema          pSS;
    Retourne FALSE si pas trouve', TRUE si OK.                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            ConfigDefaultPSchema (CharUnit* schstr, char* schpres)
+ThotBool            ConfigDefaultPSchema (CHAR_T* schstr, CHAR_T* schpres)
 
 #else  /* __STDC__ */
 ThotBool            ConfigDefaultPSchema (schstr, schpres)
-CharUnit*           schstr;
-char*               schpres;
+CHAR_T*             schstr;
+CHAR_T*             schpres;
 
 #endif /* __STDC__ */
 
@@ -1285,7 +1283,7 @@ char*               schpres;
 		     if (word[0] != EOS)
 			/* il y a bien un 2eme mot : succes */
 		       {
-			  strcpy (schpres, word);
+			  iso2wc_strcpy (schpres, word);
 			  ok = TRUE;
 		       }
 		     stop = TRUE;
@@ -1304,11 +1302,11 @@ char*               schpres;
    Retourne TRUE si trouve, FALSE sinon.                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool     readUntilStyle (FILE * file, char* namePSchema)
+static ThotBool     readUntilStyle (FILE * file, CHAR_T* namePSchema)
 #else  /* __STDC__ */
 static ThotBool     readUntilStyle (file, namePSchema)
 FILE               *file;
-char*               namePSchema;
+CHAR_T*             namePSchema;
 
 #endif /* __STDC__ */
 {
@@ -1316,23 +1314,25 @@ char*               namePSchema;
    ThotBool            ok;
    char                line[MAX_TXT_LEN];
    char                word[MAX_TXT_LEN];
+   CHAR_T              name[MAX_TXT_LEN];
 
    stop = FALSE;
    ok = FALSE;
    do
-      if (fgets (line, MAX_TXT_LEN - 1, file) == NULL)
-	 /* fin de fichier */
-	 stop = TRUE;
-      else
-	{
-	   getFirstWord (line, word);
-	   if (strcmp (word, "style") == 0)
-	     {
-		getSecondWord (line, word);
-		if (strcmp (word, namePSchema) == 0)
-		   ok = TRUE;
-	     }
-	}
+     if (fgets (line, MAX_TXT_LEN - 1, file) == NULL)
+        /* fin de fichier */
+        stop = TRUE;
+     else
+        {
+           getFirstWord (line, word);
+           if (strcmp (word, "style") == 0)
+              {
+                 getSecondWord (line, word);
+                 iso2wc_strcpy (name, word);
+                 if (ustrcmp (name, namePSchema) == 0)
+                    ok = TRUE;
+              }
+        }
    while (!stop && !ok);
    return ok;
 }
@@ -1355,14 +1355,12 @@ char*               sectName;
 #endif /* __STDC__ */
 {
    FILE*    file;
-   CharUnit pSS_SsName[MAX_LENGTH];
 
    /* ouvre le fichier .conf */
    file = NULL;
-   if (pSS != NULL) {
-      iso2cus_strcpy (pSS_SsName, pSS->SsName);
-      file = openConfigFile (&pSS_SsName[0], FALSE);
-   } 
+   if (pSS != NULL) 
+      file = openConfigFile (pSS->SsName, FALSE);
+  
    if (file != NULL)
       /* on a ouvert le fichier */
       /* cherche la ligne "style xxxx" qui correspond au schema P concerne' */
@@ -1567,25 +1565,27 @@ PtrDocument         pDoc;
    int                 x, y, width, height;
    char                line[MAX_TXT_LEN];
    char                nameview[MAX_TXT_LEN];
+   CHAR_T              name[MAX_TXT_LEN];
 
    /* ouvre le fichier .conf du document et avance jusqu'a la section "open" */
    file = openConfFileAndReadUntil (pDoc->DocSSchema, "open");
    if (file != NULL)
-     {
-	/* on a trouve' le debut de la section open. On lit le fichier .conf */
-	/* ligne par ligne, jusqu'a la fin de cette section */
-	while (getNextLineInSection (file, line))
-	  {
-	     /* le 1er mot de la ligne est le nom d'une vue a ouvrir */
-	     getFirstWord (line, nameview);
-	     /* lit les coordonnees (x, y) et dimensions (width, height) de la */
-	     /* frame ou doit s'afficher la vue */
-	     if (getXYWidthHeight (line, pDoc, &x, &y, &width, &height))
-		/* lecture reussie, on ouvre la vue */
-		OpenViewByName (pDoc, nameview, x, y, width, height);
-	  }
-	TtaReadClose (file);
-     }
+      {
+         /* on a trouve' le debut de la section open. On lit le fichier .conf */
+         /* ligne par ligne, jusqu'a la fin de cette section */
+         while (getNextLineInSection (file, line))
+               {
+                  /* le 1er mot de la ligne est le nom d'une vue a ouvrir */
+                  getFirstWord (line, nameview);
+                  iso2wc_strcpy (name, nameview);
+                  /* lit les coordonnees (x, y) et dimensions (width, height) de la */
+                  /* frame ou doit s'afficher la vue */
+                  if (getXYWidthHeight (line, pDoc, &x, &y, &width, &height))
+                     /* lecture reussie, on ouvre la vue */
+                     OpenViewByName (pDoc, name, x, y, width, height);
+               }
+         TtaReadClose (file);
+      }
 }
 
 /*----------------------------------------------------------------------
@@ -1594,11 +1594,11 @@ PtrDocument         pDoc;
    s'afficher la vue de non view pour le document pDoc.     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ConfigGetViewGeometry (PtrDocument pDoc, char* view, int *x, int *y, int *width, int *height)
+void                ConfigGetViewGeometry (PtrDocument pDoc, CHAR_T* view, int *x, int *y, int *width, int *height)
 #else  /* __STDC__ */
 void                ConfigGetViewGeometry (pDoc, view, x, y, width, height)
 PtrDocument         pDoc;
-char*               view;
+CHAR_T*             view;
 int                *x;
 int                *y;
 int                *width;
@@ -1609,7 +1609,8 @@ int                *height;
    FILE               *file;
    char               line[MAX_TXT_LEN];
    char               nameview[MAX_TXT_LEN];
-   ThotBool            found;
+   ThotBool           found;
+   CHAR_T             name[MAX_TXT_LEN];
 
    *x = 0;
    *y = 0;
@@ -1629,8 +1630,9 @@ int                *height;
 	 {
 	   /* le 1er mot de la ligne est le nom d'une vue */
 	   getFirstWord (line, nameview);
+       iso2wc_strcpy (name, nameview);
 	   /* est-ce le nom de la vue cherchee ? */
-	   found = (strcmp (nameview, view) == 0);
+	   found = (ustrcmp (name, view) == 0);
 	 }
        if (!found)
 	 /* on n'a pas trouve' dans la section "open". On cherche dans la
@@ -1643,8 +1645,9 @@ int                *height;
 		 {
 		   /* le 1er mot de la ligne est le nom d'une vue */
 		   getFirstWord (line, nameview);
+           iso2wc_strcpy (name, nameview);
 		   /* est-ce le nom de la vue cherchee ? */
-		   found = (strcmp (nameview, view) == 0);
+		   found = (ustrcmp (name, view) == 0);
 		 }
 	 }
        TtaReadClose (file);
@@ -1764,14 +1767,11 @@ int           *height;
    name: the name of the view in P schema.  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaGetViewGeometryRegistry (Document document, char* name,
-						int *x, int *y, 
-						int *width, int *height)
+void               TtaGetViewGeometryRegistry (Document document, CHAR_T* name, int *x, int *y, int *width, int *height)
 #else  /* __STDC__ */
-void                TtaGetViewGeometryRegistry (document, name, x, y, width, 
-						height)
-Document            document;
-char*              name;
+void               TtaGetViewGeometryRegistry (document, name, x, y, width, height)
+Document           document;
+CHAR_T*            name;
 int                *x;
 int                *y;
 int                *width;
@@ -1783,6 +1783,7 @@ int                *height;
   char      line[MAX_TXT_LEN];
   CharUnit* ptr;
   ThotBool  found;
+  char      varName[MAX_TXT_LEN];
 
   UserErrorCode = 0;
   *x = 0;
@@ -1790,12 +1791,13 @@ int                *height;
   *width = 0;
   *height = 0;
 
+  wc2iso_strcpy (varName, name);
   if (document < 1 || document > MAX_DOCUMENTS)
     TtaError (ERR_invalid_document_parameter);
   else if (document != 0)
     {
       pDoc = LoadedDocument[document - 1];
-      ptr = TtaGetEnvString (name);
+      ptr = TtaGetEnvString (varName);
       if (!ptr || ptr[0] == CUS_EOS)
 	found = FALSE;
       else
@@ -1818,11 +1820,11 @@ int                *height;
    name: the name of the view in P schema.  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaGetViewGeometry (Document document, char* name, int *x, int *y, int *width, int *height)
+void                TtaGetViewGeometry (Document document, CHAR_T* name, int *x, int *y, int *width, int *height)
 #else  /* __STDC__ */
 void                TtaGetViewGeometry (document, name, x, y, width, height)
 Document            document;
-char*               name;
+CHAR_T*             name;
 int                *x;
 int                *y;
 int                *width;
@@ -1849,11 +1851,11 @@ int                *height;
    name: the name of the view in P schema.  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaGetViewGeometryMM (Document document, char* name, int *x, int *y, int *width, int *height)
+void                TtaGetViewGeometryMM (Document document, CHAR_T* name, int *x, int *y, int *width, int *height)
 #else  /* __STDC__ */
 void                TtaGetViewGeometryMM (document, name, x, y, width, height)
 Document            document;
-char*               name;
+CHAR_T*             name;
 int                *x;
 int                *y;
 int                *width;
@@ -1884,12 +1886,12 @@ int                *height;
    nameNature dans le contexte du schema de structure pSS   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            ConfigGetPSchemaNature (PtrSSchema pSS, char* nameNature, char* presNature)
+ThotBool            ConfigGetPSchemaNature (PtrSSchema pSS, CHAR_T* nameNature, CHAR_T* presNature)
 #else  /* __STDC__ */
 ThotBool            ConfigGetPSchemaNature (pSS, nameNature, presNature)
 PtrSSchema          pSS;
-char*               nameNature;
-char*               presNature;
+CHAR_T*             nameNature;
+CHAR_T*             presNature;
 
 #endif /* __STDC__ */
 {
@@ -1897,6 +1899,7 @@ char*               presNature;
    char                line[MAX_TXT_LEN];
    char                seqLine[MAX_TXT_LEN];
    char                name[MAX_TXT_LEN];
+   CHAR_T              Word[MAX_TXT_LEN];
    ThotBool            found;
    ThotBool            ok;
 
@@ -1913,8 +1916,9 @@ char*               presNature;
 	  {
 	     /* le 1er mot de la ligne est le nom d'une nature */
 	     getFirstWord (line, name);
+         iso2wc_strcpy (Word, name);
 	     /* est-ce le nom de la nature cherchee ? */
-	     found = (strcmp (name, nameNature) == 0);
+	     found = (ustrcmp (Word, nameNature) == 0);
 	  }
 	if (found)
 	   /* on a trouve' la ligne de la section presentation qui commence par */
@@ -1927,7 +1931,7 @@ char*               presNature;
 		fprintf (stderr, "invalid line in file %s.conf\n   %s\n", pSS->SsName, line);
 	     else
 	       {
-		  strncpy (presNature, seqLine, MAX_NAME_LENGTH - 1);
+		  iso2wc_strncpy (presNature, seqLine, MAX_NAME_LENGTH - 1);
 		  ok = TRUE;
 	       }
 	  }
@@ -2004,13 +2008,13 @@ char*               optionValue;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                ConfigGetPSchemaForPageSize (PtrSSchema pSS, char* pageSize, char* schemaName)
+void                ConfigGetPSchemaForPageSize (PtrSSchema pSS, CHAR_T* pageSize, CHAR_T* schemaName)
 
 #else  /* __STDC__ */
 void                ConfigGetPSchemaForPageSize (pSS, pageSize)
 PtrSSchema          pSS;
-char*               pageSize;
-char*               schemaName;
+CHAR_T*             pageSize;
+CHAR_T*             schemaName;
 
 #endif /* __STDC__ */
 
@@ -2023,17 +2027,16 @@ char*               schemaName;
    char     bestStyle[MAX_TXT_LEN];
    int      lastPrefixLen, bestPrefixLen;
    int      score, i;
-   ThotBool stop;
-   CharUnit pSS_SsName[MAX_LENGTH];
+   ThotBool stop; 
+   CHAR_T   name[MAX_TXT_LEN];
 
    schemaName[0] = EOS;
    score = 0;
    /* ouvre le fichier .conf correspondant au type du document */
    file = NULL;
-   if (pSS != NULL) {
-      iso2cus_strcpy (pSS_SsName, pSS->SsName);
-      file = openConfigFile (pSS_SsName, FALSE);
-   }
+   if (pSS != NULL) 
+      file = openConfigFile (pSS->SsName, FALSE);
+  
    if (file != NULL)
       /* on a ouvert le fichier, on va le lire ligne par ligne */
      {
@@ -2076,21 +2079,21 @@ char*               schemaName;
 		   /* c'est une ligne "pagesize", on la traite */
 		  {
 		     getStringAfterColon (line, seqLine);
+             iso2wc_strcpy (name, seqLine);
 		     if (seqLine[0] == EOS)
-			fprintf (stderr, "invalid line in file %s.conf\n   %s\n",
-				 pSS->SsName, line);
-		     else if (strcmp (seqLine, pageSize) == 0)
-			/* c'est le format de page cherche'. On a fini */
-		       if(score > bestPrefixLen)
-			 {
-			   strcpy (bestStyle, lastStyle);
-			   bestPrefixLen = score;
-			 }
-		  }
+                fprintf (stderr, "invalid line in file %s.conf\n   %s\n", pSS->SsName, line);
+             else if (ustrcmp (name, pageSize) == 0)
+                  /* c'est le format de page cherche'. On a fini */
+                  if (score > bestPrefixLen)
+                     {
+                        strcpy (bestStyle, lastStyle);
+                        bestPrefixLen = score;
+                     }
+          }
 	     }
 	while (!stop);
 	TtaReadClose (file);
-	strcpy (schemaName, bestStyle);
+	iso2wc_strcpy (schemaName, bestStyle);
      }
 }
 

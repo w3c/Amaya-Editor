@@ -35,12 +35,12 @@ void                InitNatures ()
    du schema de structure pointe par pSS.				
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                LoadNatureSchema (PtrSSchema pSS, unsigned char* PSchName, int rule)
+void                LoadNatureSchema (PtrSSchema pSS, CHAR_T* PSchName, int rule)
 
 #else  /* __STDC__ */
 void                LoadNatureSchema (pSS, PSchName, rule)
 PtrSSchema          pSS;
-unsigned char*      PSchName;
+CHAR_T*             PSchName;
 int                 rule;
 #endif /* __STDC__ */
 
@@ -118,11 +118,11 @@ PtrSSchema          pSS;
    creee ou 0 si echec creation.                                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                CreateNature (USTRING SSchName, USTRING PSchName, PtrSSchema pSS)
+int                CreateNature (CHAR_T* SSchName, CHAR_T* PSchName, PtrSSchema pSS)
 #else  /* __STDC__ */
 int                CreateNature (SSchName, PSchName, pSS)
-USTRING             SSchName;
-USTRING             PSchName;
+CHAR_T*            SSchName;
+CHAR_T*            PSchName;
 PtrSSchema         pSS;
 
 #endif /* __STDC__ */
@@ -248,12 +248,12 @@ ThotBool            Extension;
    d'extension de nom SSchName.                                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrSSchema          LoadExtension (char* SSchName, char* PSchName, PtrDocument pDoc)
+PtrSSchema          LoadExtension (CHAR_T* SSchName, CHAR_T* PSchName, PtrDocument pDoc)
 
 #else  /* __STDC__ */
 PtrSSchema          LoadExtension (SSchName, PSchName, pDoc)
-char*               SSchName;
-char*               PSchName;
+CHAR_T*             SSchName;
+CHAR_T*             PSchName;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */

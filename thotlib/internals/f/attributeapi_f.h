@@ -28,11 +28,11 @@ extern void TtaNextAttribute ( Element element,
 extern void TtaGiveAttributeType ( Attribute attribute,
                                    AttributeType * attributeType,
                                    int *attrKind );
-extern void TtaGiveAttributeTypeFromName ( char* name,
+extern void TtaGiveAttributeTypeFromName ( CHAR_T* name,
                                            Element element,
                                            AttributeType * attributeType,
                                            int *attrKind );
-extern void TtaGiveAttributeTypeFromOriginalName ( char* name,
+extern void TtaGiveAttributeTypeFromOriginalName ( CHAR_T* name,
                                                    Element element,
                                                    AttributeType * attributeType,
                                                    int *attrKind );
@@ -79,11 +79,11 @@ extern void TtaNextAttribute (/* Element element,
 extern void TtaGiveAttributeType (/* Attribute attribute,
                                      AttributeType * attributeType,
                                      int *attrKind */);
-extern void TtaGiveAttributeTypeFromName (/* char* name,
+extern void TtaGiveAttributeTypeFromName (/* CHAR_T* name,
                                              Element element,
                                              AttributeType * attributeType,
                                              int *attrKind */);
-extern void TtaGiveAttributeTypeFromOriginalName (/* char* name,
+extern void TtaGiveAttributeTypeFromOriginalName (/* CHAR_T* name,
                                                      Element element,
                                                      AttributeType * attributeType,
                                                      int *attrKind */);

@@ -56,8 +56,8 @@ extern void ReadSchemaNamesPiv ( BinFile file,
                                  char* tag,
                                  PtrSSchema pLoadedSS,
                                  void (*withThisPSchema) (Document document,
-                                 char* natSchema,
-                                 char* presentSchema) );
+                                 CHAR_T* natSchema,
+                                 CHAR_T* presentSchema) );
 extern void ReadLanguageTablePiv ( BinFile file,
                                    PtrDocument pDoc,
                                    char* tag );
@@ -126,8 +126,8 @@ extern void ReadSchemaNamesPiv (/* BinFile file,
                                    char* tag,
                                    PtrSSchema pLoadedSS,
                                    void (*withThisPSchema) (Document document,
-                                   char* natSchema,
-                                   char* presentSchema) */);
+                                   CHAR_T* natSchema,
+                                   CHAR_T* presentSchema) */);
 extern void ReadLanguageTablePiv (/* BinFile file,
                                      PtrDocument pDoc,
                                      char* tag */);

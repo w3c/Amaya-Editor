@@ -2130,11 +2130,11 @@ PtrTextBuffer       clipboard;
 		 }
 	       break;
 	    case LtSymbol:
-	       LoadSymbol (clipboard->BuContent[0], pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
+	       LoadSymbol ((char)clipboard->BuContent[0], pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
 	       break;
 	    case LtPolyLine:
 	    case LtGraphics:
-	       LoadShape (clipboard->BuContent[0], pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
+	       LoadShape ((char)clipboard->BuContent[0], pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
 	       break;
 	    default:
 	       break;
@@ -2571,9 +2571,9 @@ int                 editType;
 		else if (pAb->AbLeafType == LtPicture && FromKeyboard)
 		  LoadPictFile (pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
 		else if (pAb->AbLeafType == LtSymbol && FromKeyboard)
-		  LoadSymbol ((CHAR_T) (editType), pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
+		  LoadSymbol ((char) editType, pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
 		else if ((pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine) && FromKeyboard)
-		  LoadShape ((CHAR_T) (editType), pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
+		  LoadShape ((char) editType, pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
 	      }
           }
 

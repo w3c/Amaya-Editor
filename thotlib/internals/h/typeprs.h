@@ -150,7 +150,7 @@ typedef enum
 /* a presentation box */
 typedef struct _PresentationBox
 {
-  WCName    PbName;		/* box name */	
+  Name      PbName;		/* box name */	
   PtrPRule	PbFirstPRule;	/* first presentation rule defining the box */
   ThotBool	PbAcceptPageBreak;	/* indicates whether the box may be
 					   broken at the bottom of a page */
@@ -355,7 +355,7 @@ typedef struct _Condition
       int       _CoTypeAncestor_;	/* type of the ancestor */	
       ThotBool  _CoImmediate_;	/* Immediately */
       ArithRel  _CoAncestorRel_;
-      WCName    _CoAncestorName_;	/* Ancestor type name, if defined
+      Name      _CoAncestorName_;	/* Ancestor type name, if defined
 					   in another schema */
       Name      _CoSSchemaName_;	/* name of the schema where the
 					   ancestor is defined if
@@ -439,7 +439,7 @@ typedef struct _PresRule
 					   for the column rule only) */
       int          _PrPresBox_[MAX_COLUMN_PAGE]; /* number of the
 					            presentation boxes */
-      WCName      _PrPresBoxName_;	/* Name of the first (or only) presentation
+      Name        _PrPresBoxName_;	/* Name of the first (or only) presentation
 					   box to which the function applies */
     } s1;
     struct			 /* PrPresMode = PresImmediate */
@@ -564,7 +564,7 @@ typedef struct _Counter
   ThotBool	 CnMinMaxPresBox[MAX_PRES_COUNT_USER];
   int		 CnNTransmAttrs; /* number of external attributes to which
 				    the counter value is transmitted */ 
-  WCName     CnTransmAttr[MAX_TRANSM_ATTR]; /* names of the attributes
+  Name       CnTransmAttr[MAX_TRANSM_ATTR]; /* names of the attributes
 					   to which the counter value is transmitted */
   int		 CnTransmSSchemaAttr[MAX_TRANSM_ATTR]; 	/* type number of
 					   the external documents where the
@@ -643,7 +643,7 @@ typedef struct _AttributePres
     } s1;
     struct
     {
-      WCName	   _ApString_;	/* the value triggering the application of the
+      Name  	   _ApString_;	/* the value triggering the application of the
 			   presentation rules */
       PtrPRule _ApTextFirstPRule_;    /* first rule in the string of rules
 			   to apply for this value */
@@ -666,7 +666,7 @@ typedef struct _AttributePres
 #define ApEnumFirstPRule u.s3._ApEnumFirstPRule_
 
 /* view names table */
-typedef WCName     ViewTable[MAX_VIEW]; 
+typedef Name       ViewTable[MAX_VIEW]; 
 
 /* description of a view to print */
 typedef struct _PrintedView
@@ -685,7 +685,7 @@ typedef struct _TransmitElem
 {
     int		TeTargetDoc;	/* index of the structure rule defining
 				   the included document type */
-    WCName		TeTargetAttr;  /* name of the included document
+    Name 		TeTargetAttr;  /* name of the included document
 				   attribute to which the element value
 				   is transmitted */
 } TransmitElem;

@@ -367,7 +367,7 @@ PtrDocument         pDoc;
    n = 0;
    stop = FALSE;
    do
-      if (strcmp (pSS->SsName, pDoc->DocNatureName[n]) == 0)
+      if (ustrcmp (pSS->SsName, pDoc->DocNatureName[n]) == 0)
 	 stop = TRUE;
       else if (n < pDoc->DocNNatures - 1)
 	 n++;
@@ -509,7 +509,7 @@ PtrDocument         pDoc;
 	n = 0;
 	stop = FALSE;
 	do
-	   if (strcmp (pAttr->AeAttrSSchema->SsName, pDoc->DocNatureName[n]) == 0)
+	   if (ustrcmp (pAttr->AeAttrSSchema->SsName, pDoc->DocNatureName[n]) == 0)
 	      stop = TRUE;
 	   else if (n < pDoc->DocNNatures - 1)
 	      n++;
@@ -1050,7 +1050,7 @@ Name                N;
    int                 j;
 
    for (j = 0; j < MAX_NAME_LENGTH - 1 && N[j] != EOS; j++)
-      TtaWriteByte (pivFile, N[j]);
+      TtaWriteWideChar (pivFile, N[j]);
    TtaWriteByte (pivFile, EOS);
 }
 

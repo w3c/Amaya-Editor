@@ -32,6 +32,7 @@
 #include "thotcolor_tv.h"
 
 extern ThotColorStruct cblack;
+extern int             ColorPs;
 
 #define	MAX_STACK	50
 #define	MIDDLE_OF(v1, v2)	(((v1)+(v2))/2.0)
@@ -49,9 +50,14 @@ typedef struct stack_point
 StackPoint;
 static StackPoint   stack[MAX_STACK];
 static int          stack_deep;
-static DWORD fontLangInfo = -1;
+static DWORD        fontLangInfo = -1;
+static int          SameBox = 0; /* 1 if the text is in the same box */
+static int          NbWhiteSp;
 
 extern BOOL autoScroll;
+extern int          LastPageNumber, LastPageWidth, LastPageHeight;
+
+int                 X, Y;
 
 #include "buildlines_f.h"
 #include "context_f.h"
@@ -153,7 +159,7 @@ int                 style;
 
    SelectObject (TtPrinterDC, hOldPen);
    if (!DeleteObject (pen))
-      WinErrorBox (WIN_Main_Wd, "psdisplay.c - DoPrintOneLine");
+      WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DoPrintOneLine"));
    pen = (HPEN) 0;
 }
 
@@ -217,7 +223,7 @@ int                 fg;
       Polyline (TtPrinterDC, point, 4);
       SelectObject (TtPrinterDC, hOldPen);
 	  if (!DeleteObject (hPen))
-         WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawArrowHead");
+         WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawArrowHead"));
       hPen = (HPEN) 0;
    }
 }
@@ -610,7 +616,7 @@ int                 shadow;
    /* NonJustifiedWhiteSp is > 0 if writing a fixed lenght is needed */
    /* and equal to 0 if a justified space is to be printed */
 
-   NonJustifiedWhiteSp = StartOfCurrentBlock;
+   NonJustifiedWhiteSp = debutbloc;
    /* Is this a new box ? */
    if (SameBox == 0)
      {
@@ -658,11 +664,11 @@ int                 shadow;
 
       if (lg > 0)
          if (!TextOut (TtPrinterDC, x, y, (USTRING) ptcar, lg))
-            WinErrorBox (NULL, "psdisplay.c - DrawString (1)");
+            WinErrorBox (NULL, TEXT("windowdisplay.c - DrawString (1)"));
 
       if (hyphen) /* draw the hyphen */
          if (!TextOut (TtPrinterDC, x + width, y, TEXT("\255"), 1))
-            WinErrorBox (NULL, "psdisplay.c - DrawString (2)");
+            WinErrorBox (NULL, TEXT("windowdisplay.c - DrawString (2)"));
       if (lgboite != 0)
           SameBox = 0;
    }
@@ -878,7 +884,6 @@ int                 fg;
 
 #endif /* __STDC__ */
 {
-   ThotWindow          w;
    int                 fheight;	/* font height           */
    int                 ascent;	/* font ascent           */
    int                 bottom;	/* underline position    */
@@ -886,8 +891,11 @@ int                 fg;
    int                 height;	/* overline position     */
    int                 thickness;	/* thickness of drawing */
    int                 shift;	/* shifting of drawing   */
+#  ifndef _WIN_PRINT
+   ThotWindow          w;
+#  endif  /* !_WIN_PRINT */
+
 #ifdef _WIN_PRINT
-   FILE               *fout;
 
    if (y < 0)
      return;
@@ -1170,14 +1178,14 @@ int                 fg;
          xm = x + ((l - CharacterWidth ('\362', font)) / 2);
          yf = y + ((h - CharacterHeight ('\362', font)) / 2) - FontAscent (font) +
          CharacterAscent ('\362', font);
-         DrawChar ('\362', frame, xm, yf, font, RO, func, fg);
+         DrawChar ('\362', frame, xm, yf, font, RO, active, fg);
 	  } else { /* Need more than one glyph */
            xm = x + ((l - CharacterWidth ('\363', font)) / 2);
            yf = y - FontAscent (font) + CharacterAscent ('\363', font);
-           DrawChar ('\363', frame, xm, yf, font, RO, func, fg);
+           DrawChar ('\363', frame, xm, yf, font, RO, active, fg);
            yend = y + h - CharacterHeight ('\365', font) - FontAscent (font) +
            CharacterAscent ('\365', font) - 1;
-           DrawChar ('\365', frame, xm, yend, font, RO, func, fg);
+           DrawChar ('\365', frame, xm, yend, font, RO, active, fg);
 	 
            yf += CharacterHeight ('\363', font);
            delta = yend - yf;
@@ -1186,21 +1194,21 @@ int                 fg;
            wd = (CharacterWidth ('\363', font) - CharacterWidth ('\364', font)) / 2;
            if (delta >= 0) {
               for (yf += asc, yend -= hd; yf < yend; yf += CharacterHeight ('\364', font), exnum++)
-                  DrawChar ('\364', frame, xm+wd, yf, font, RO, func, fg);
+                  DrawChar ('\364', frame, xm+wd, yf, font, RO, active, fg);
               if (exnum)
-                 DrawChar ('\364', frame, xm+wd, yend, font, RO, func, fg);
+                 DrawChar ('\364', frame, xm+wd, yend, font, RO, active, fg);
               else
-                 DrawChar ('\364', frame, xm+wd, yf + ((delta - hd) / 2), font, RO, func, fg);
+                 DrawChar ('\364', frame, xm+wd, yf + ((delta - hd) / 2), font, RO, active, fg);
 		   }
 	  }
 
       if (type == 2) /* double integral */
-         DrawIntegral (frame, thick, x + (CharacterWidth ('\364', font) / 2), y, l, h, -1, font, RO, func, fg);
+         DrawIntegral (frame, thick, x + (CharacterWidth ('\364', font) / 2), y, l, h, -1, font, RO, active, fg);
        
       else if (type == 1) /* contour integral */
               DrawChar ('o', frame, x + ((l - CharacterWidth ('o', font)) / 2),
                             y + (h - CharacterHeight ('o', font)) / 2 - FontAscent (font) + CharacterAscent ('o', font),
-                            font, RO, func, fg);
+                            font, RO, active, fg);
    }
 #else  /* _WIN_PRINT */
    exnum = 0;
@@ -1314,7 +1322,7 @@ int                 fg;
      {
        fh = FontHeight (font);
        if (h < fh * 2 && l <= CharacterWidth ('\345', font)) /* Only one glyph needed */
-         DrawMonoSymb ('\345', frame, x, y, l, h, RO, func, font, fg);
+         DrawMonoSymb ('\345', frame, x, y, l, h, RO, active, font, fg);
        else {
          xm = x + (l / 3);
          ym = y + (h / 2) - 1;
@@ -1383,7 +1391,7 @@ int                 fg;
    if (TtPrinterDC) {
       fh = FontHeight (font);
       if (h < fh * 2 && l <= CharacterWidth ('\325', font)) /* Only one glyph needed */
-         DrawMonoSymb ('\325', frame, x, y, l, h, RO, func, font, fg);
+         DrawMonoSymb ('\325', frame, x, y, l, h, RO, active, font, fg);
       else {
            /* Vertical part */
            DoPrintOneLine (fg, x + 2, y + 1, x + 2, y + h, 1, 5);
@@ -1506,7 +1514,7 @@ int                 fg;
       fh = FontHeight (font);
       if (h < fh * 2 && l <= CharacterWidth ('\310', font)) {
          /* Only one glyph needed */
-         DrawMonoSymb ('\310', frame, x, y, l, h, RO, func, font, fg);
+         DrawMonoSymb ('\310', frame, x, y, l, h, RO, active, font, fg);
       } else {
              /* radius of arcs is 3mm */
              arc = h / 4;
@@ -1519,7 +1527,7 @@ int                 fg;
              Arc (TtPrinterDC, x + 1, y + h - arc , x + l - 2, y + h, x + 1, y + h - arc, x + l - 2, y + h - arc);
              SelectObject (TtPrinterDC, hOldPen);
              if (!DeleteObject (pen))
-                WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawUnion");
+                WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawUnion"));
              pen = (HPEN) 0;
 	  }
    }
@@ -1590,34 +1598,34 @@ int                 fg;
    ym = y + ((h - thick) / 2);
    yf = y + h - 1;
 
-   if (direction == 0) {
+   if (orientation == 0) {
       /* draw a right arrow */
       DoPrintOneLine (fg, x, ym, xf, ym, thick, style);
-      DrawArrowHead (x, ym, xf, ym, thick, RO, func, fg);
-   } else if (direction == 45) {
+      DrawArrowHead (x, ym, xf, ym, thick, RO, active, fg);
+   } else if (orientation == 45) {
           DoPrintOneLine (fg, x, yf, xf - thick + 1, y, thick, style);
-          DrawArrowHead (x, yf, xf - thick + 1, y, thick, RO, func, fg);
-   } else if (direction == 90) {
+          DrawArrowHead (x, yf, xf - thick + 1, y, thick, RO, active, fg);
+   } else if (orientation == 90) {
           /* draw a bottom-up arrow */
           DoPrintOneLine (fg, xm, y, xm, yf, thick, style);
-          DrawArrowHead (xm, yf, xm, y, thick, RO, func, fg);
-   } else if (direction == 135) {
+          DrawArrowHead (xm, yf, xm, y, thick, RO, active, fg);
+   } else if (orientation == 135) {
           DoPrintOneLine (fg, x, y, xf - thick + 1, yf, thick, style);
-          DrawArrowHead (xf - thick + 1, yf, x, y, thick, RO, func, fg);
-   } else if (direction == 180) {
+          DrawArrowHead (xf - thick + 1, yf, x, y, thick, RO, active, fg);
+   } else if (orientation == 180) {
           /* draw a left arrow */
           DoPrintOneLine (fg, x, ym, xf, ym, thick, style);
-          DrawArrowHead (xf, ym, x, ym, thick, RO, func, fg);
-   } else if (direction == 225) {
+          DrawArrowHead (xf, ym, x, ym, thick, RO, active, fg);
+   } else if (orientation == 225) {
           DoPrintOneLine (frame, x, yf, xf - thick + 1, y, thick, style);
-          DrawArrowHead (xf - thick + 1, y, x, yf, thick, RO, func, fg);
-   } else if (direction == 270) {
+          DrawArrowHead (xf - thick + 1, y, x, yf, thick, RO, active, fg);
+   } else if (orientation == 270) {
           /* draw a top-down arrow */
           DoPrintOneLine (fg, xm, y, xm, yf, thick, style);
-          DrawArrowHead (xm, y, xm, yf, thick, RO, func, fg);
-   } else if (direction == 315) {
+          DrawArrowHead (xm, y, xm, yf, thick, RO, active, fg);
+   } else if (orientation == 315) {
           DoPrintOneLine (frame, x, y, xf - thick + 1, yf, thick, style);
-          DrawArrowHead (x, y, xf - thick + 1, yf, thick, RO, func, fg);
+          DrawArrowHead (x, y, xf - thick + 1, yf, thick, RO, active, fg);
    } 
 #else  /* _WIN_PRINT */
    if (thick <= 0)
@@ -1794,20 +1802,20 @@ int                 fg;
 		 if (direction == 0) { /* draw an opening parenthesis */
             xm = x + ((l - CharacterWidth ('(', font)) / 2);
             yf = y + ((h - CharacterHeight ('(', font)) / 2) - FontAscent (font) + CharacterAscent ('(', font);
-            DrawChar ('(', frame, xm, yf, font, RO, func, fg);
+            DrawChar ('(', frame, xm, yf, font, RO, active, fg);
 		 } else { /* draw a closing parenthesis */
                xm = x + ((l - CharacterWidth (')', font)) / 2);
                yf = y + ((h - CharacterHeight (')', font)) / 2) - FontAscent (font) + CharacterAscent (')', font);
-               DrawChar (')', frame, xm, yf, font, RO, func, fg);
+               DrawChar (')', frame, xm, yf, font, RO, active, fg);
 		 }
 	  } else { /* Need more than one glyph */
              if (direction == 0) {
                 /* draw a opening parenthesis */
                 xm = x + ((l - CharacterWidth ('\346', font)) / 2);
                 yf = y - FontAscent (font) + CharacterAscent ('\346', font);
-                DrawChar ('\346', frame, xm, yf, font, RO, func, fg);
+                DrawChar ('\346', frame, xm, yf, font, RO, active, fg);
                 yend = y + h - CharacterHeight ('\350', font) - FontAscent (font) + CharacterAscent ('\350', font) - 1;
-                DrawChar ('\350', frame, xm, yend, font, RO, func, fg);
+                DrawChar ('\350', frame, xm, yend, font, RO, active, fg);
 
                 yf += CharacterHeight ('\346', font) - 1;
                 delta = yend - yf;
@@ -1816,19 +1824,19 @@ int                 fg;
                    yend -= CharacterHeight ('\347', font) - 1;
                    yf < yend;
                    yf += CharacterHeight ('\347', font), exnum++)
-                   DrawChar ('\347', frame, xm, yf, font, RO, func, fg);
+                   DrawChar ('\347', frame, xm, yf, font, RO, active, fg);
                    if (exnum)
-                      DrawChar ('\347', frame, xm, yend, font, RO, func, fg);
+                      DrawChar ('\347', frame, xm, yend, font, RO, active, fg);
                    else
-                      DrawChar ('\347', frame, xm, yf + ((delta - CharacterHeight ('\347', font)) / 2), font, RO, func, fg);
+                      DrawChar ('\347', frame, xm, yf + ((delta - CharacterHeight ('\347', font)) / 2), font, RO, active, fg);
 				}
 			 } else {
                     /* draw a closing parenthesis */
                     xm = x + ((l - CharacterWidth ('\366', font)) / 2);
                     yf = y - FontAscent (font) + CharacterAscent ('\366', font);
-                    DrawChar ('\366', frame, xm, yf, font, RO, func, fg);
+                    DrawChar ('\366', frame, xm, yf, font, RO, active, fg);
                     yend = y + h - CharacterHeight ('\370', font) - FontAscent (font) + CharacterAscent ('\370', font) - 1;
-                    DrawChar ('\370', frame, xm, yend, font, RO, func, fg);
+                    DrawChar ('\370', frame, xm, yend, font, RO, active, fg);
 
                     yf += CharacterHeight ('\366', font) - 1;
                     delta = yend - yf;
@@ -1837,11 +1845,11 @@ int                 fg;
                             yend -= CharacterHeight ('\367', font) - 1;
                             yf < yend;
                             yf += CharacterHeight ('\367', font), exnum++)
-                           DrawChar ('\367', frame, xm, yf, font, RO, func, fg);
+                           DrawChar ('\367', frame, xm, yf, font, RO, active, fg);
                        if (exnum)
-                          DrawChar ('\367', frame, xm, yend, font, RO, func, fg);
+                          DrawChar ('\367', frame, xm, yend, font, RO, active, fg);
                        else
-                           DrawChar ('\367', frame, xm, yf + ((delta - CharacterHeight ('\367', font)) / 2), font, RO, func, fg);
+                           DrawChar ('\367', frame, xm, yf + ((delta - CharacterHeight ('\367', font)) / 2), font, RO, active, fg);
 					}
 			 }
 	  }
@@ -2120,10 +2128,10 @@ int                 pattern;
 
    /* Fill in the rectangle */
    if (TtPrinterDC) {
-      xf = x + larg;
+      xf = x + width;
       yf = y + height;
-      if (larg > thick + 1)
-         larg = larg - thick - 1;
+      if (width > thick + 1)
+         width = width - thick - 1;
       if (height > thick + 1)
          height = height - thick - 1;
       x += thick / 2;
@@ -2135,16 +2143,16 @@ int                 pattern;
    
          hBrush = CreateSolidBrush (ColorPixel (bg));
          hOldBrush = SelectObject (TtPrinterDC, hBrush);
-         PatBlt (TtPrinterDC, x, y, larg, height, PATCOPY);
+         PatBlt (TtPrinterDC, x, y, width, height, PATCOPY);
          SelectObject (TtPrinterDC, hOldBrush);
          if (!DeleteObject (hBrush))
-            WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawRectangle (1)");
+            WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawRectangle (1)"));
          hBrush = (HBRUSH) 0;
 	  }
 
       if (thick > 0) {
          if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg))))
-            WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawRectangle (2)");
+            WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawRectangle (2)"));
          hOldPen = SelectObject (TtPrinterDC, hPen) ;
          SelectObject (TtPrinterDC, GetStockObject (NULL_BRUSH)) ;
          Rectangle (TtPrinterDC, x, y, xf, yf);
@@ -2433,13 +2441,13 @@ int                 pattern;
    HPEN                hOldPen;
    HBRUSH              hBrush;
    HBRUSH              hOldBrush;
-#ifdef _WIN_PRINT
+#  ifdef _WIN_PRINT
    LOGBRUSH            logBrush;
    int                 t;
-#else /* _WIN_PRINT */
+#  else /* _WIN_PRINT */
    Pixmap              pat = (Pixmap) 0;
    int                 result;
-#endif /* _WIN_PRINT */
+#  endif /* _WIN_PRINT */
 
 #ifdef _WIN_PRINT
    /* Allocate a table of points */
@@ -2506,7 +2514,7 @@ int                 pattern;
      Polyline (TtPrinterDC, points, nb);
      SelectObject (TtPrinterDC, hOldPen);
      if (!DeleteObject (hPen))
-       WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawPolygon");
+       WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawPolygon"));
      hPen = (HPEN) 0;
    }
 
@@ -3028,7 +3036,7 @@ int                 pattern;
 #endif /* _WIN_PRINT */
 
 #  ifdef _WIN_PRINT 
-   if (larg <= 0 || height <= 0) 
+   if (width <= 0 || height <= 0) 
       return;
 
    pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
@@ -3040,8 +3048,8 @@ int                 pattern;
 
    arc = (int) ((3 * DOT_PER_INCHE) / 25.4 + 0.5);
 
-   if (larg > thick + 1)
-      larg = larg - thick - 1;
+   if (width > thick + 1)
+      width = width - thick - 1;
    if (height > thick + 1)
       height = height - thick - 1;
    x += thick / 2;
@@ -3097,21 +3105,21 @@ int                 pattern;
    else
      {
        if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
-	 WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawOval (1)");
+	 WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawOval (1)"));
      }
 
    hOldPen = SelectObject (TtPrinterDC, hPen) ;
 
-   if (!RoundRect (TtPrinterDC, x, y, x + larg, y + height, arc * 2, arc * 2))
-      WinErrorBox (FrRef  [frame], "psdisplay.c - DrawOval (2)");
+   if (!RoundRect (TtPrinterDC, x, y, x + width, y + height, arc * 2, arc * 2))
+      WinErrorBox (FrRef  [frame], TEXT("windowdisplay.c - DrawOval (2)"));
    SelectObject (TtPrinterDC, hOldPen);
    if (!DeleteObject (hPen))
-      WinErrorBox (FrRef [frame], "psdisplay.c - DrawOval (3)");
+      WinErrorBox (FrRef [frame], TEXT("windowdisplay.c - DrawOval (3)"));
    hPen = (HPEN) 0;
    if (hBrush) {
       SelectObject (TtPrinterDC, hOldBrush);
       if (!DeleteObject (hBrush))
-         WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawOval (4)");
+         WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawOval (4)"));
       hBrush = (HBRUSH)0;
    }
 #else  /* _WIN_PRINT */
@@ -3241,6 +3249,7 @@ int                 pattern;
    LOGBRUSH logBrush;
 #ifdef _WIN_PRINT 
    int      t;
+   int      xm, ym;    
 #else  /* _WIN_PRINT */
    int      result;
 #endif  /* _WIN_PRINT */
@@ -3283,7 +3292,7 @@ int                 pattern;
 		     hBrush = (HBRUSH) 0;
 	  }
 
-      xm = x + larg;
+      xm = x + width;
       ym = y + height;
 
       if (thick > 0)
@@ -3327,21 +3336,21 @@ int                 pattern;
       else
 	{
 	  if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
-	    WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawEllips (1)");
+	    WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawEllips (1)"));
 	}
 
       hOldPen = SelectObject (TtPrinterDC, hPen) ;
 
-      if (!Ellipse (TtPrinterDC, x, y, x + larg, y + height))
-         WinErrorBox (FrRef  [frame], "psdisplay.c - DrawEllips (2)");
+      if (!Ellipse (TtPrinterDC, x, y, x + width, y + height))
+         WinErrorBox (FrRef  [frame], TEXT("windowdisplay.c - DrawEllips (2)"));
       SelectObject (TtPrinterDC, hOldPen);
       if (!DeleteObject (hPen))
-         WinErrorBox (FrRef [frame], "psdisplay.c - DrawEllipse (3)");
+         WinErrorBox (FrRef [frame], TEXT("windowdisplay.c - DrawEllipse (3)"));
       hPen = (HPEN) 0;
       if (hBrush) {
          SelectObject (TtPrinterDC, hOldBrush);
          if (!DeleteObject (hBrush))
-            WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawEllips (4)");
+            WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawEllips (4)"));
          hBrush = (HBRUSH)0;
 	  }
    }
@@ -3659,9 +3668,10 @@ int                 fg;
    int                 xf, yf;
    HPEN                hPen;
    HPEN                hOldPen;
-#ifdef _WIN_PRINT
+#  ifdef _WIN_PRINT
+   LOGBRUSH            logBrush;
    int                 t;
-#endif /* _WIN_PRINT */
+#  endif /* _WIN_PRINT */
 
 #ifdef _WIN_PRINT
    if (y < 0)
@@ -3881,11 +3891,11 @@ int                 width;
 int                 height;
 #endif /* __STDC__ */
 {
-#ifdef _WIN_PRINT
+#  ifdef _WIN_PRINT
    LastPageNumber = pagenum;
    LastPageWidth = width;
    LastPageHeight = height;
-#endif /* WIN_PRINT */
+#  endif /* WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -3934,7 +3944,6 @@ int                 y;
     hBrush = (HBRUSH) 0;
      }
 }
-
 
 /*----------------------------------------------------------------------
   WChaine draw a string in frame, at location (x, y) and using font.

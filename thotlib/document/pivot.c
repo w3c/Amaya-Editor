@@ -311,7 +311,7 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaReadSchemaNames (BinFile pivotFile, Document document, char* nextChar, void (*withThisPSchema) (Document document, char* natSchema, char* presentSchema))
+void                TtaReadSchemaNames (BinFile pivotFile, Document document, char* nextChar, void (*withThisPSchema) (Document document, CHAR_T* natSchema, CHAR_T* presentSchema))
 
 #else  /* __STDC__ */
 void                TtaReadSchemaNames (pivotFile, document, nextChar, withThisPSchema)

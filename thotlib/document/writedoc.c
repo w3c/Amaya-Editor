@@ -466,7 +466,7 @@ ThotBool       withMove;
 #endif /* __STDC__ */
 {
   ustrcpy (SaveFileName, fileName);
-  ustrcat (SaveFileName, ".PIV");
+  ustrcat (SaveFileName, TEXT(".PIV"));
   ustrcpy (SaveDirectoryName, directoryName);
   SaveDocWithCopy = withCopy;
   SaveDocWithMove = withMove;

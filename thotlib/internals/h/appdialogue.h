@@ -69,7 +69,7 @@ typedef struct _Menu_Ctl
 /* Structure to associate menus and specific structure schemas */
 typedef struct _SchemaMenu_Ctl
 {
-  char*     SchemaName;                  /* Structure schema name     */
+  CHAR_T*   SchemaName;                  /* Structure schema name     */
   Menu_Ctl* SchemaMenu;	                 /* Pointer to the first menu */
   struct    _SchemaMenu_Ctl *NextSchema; /* Next association          */
 }SchemaMenu_Ctl;

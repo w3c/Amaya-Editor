@@ -93,7 +93,7 @@ PtrSSchema          pSS;
      {
 	if (LoadedPSchema[i].pPresSchema != NULL)
 	   /* compare les noms schemaName et PresSchemaName */
-	   if (strcmp (schemaName, LoadedPSchema[i].PresSchemaName) == 0)
+	   if (ustrcmp (schemaName, LoadedPSchema[i].PresSchemaName) == 0)
 	      found = TRUE;
 	if (!found)
 	   i++;
@@ -110,7 +110,7 @@ PtrSSchema          pSS;
      {
 	Name pschemaName;
 
-	strncpy (pschemaName, schemaName, MAX_NAME_LENGTH);
+	ustrncpy (pschemaName, schemaName, MAX_NAME_LENGTH);
 	pPSchema = ReadPresentationSchema (pschemaName, pSS);
 	if (pPSchema != NULL)
 	   /* met le nouveau schema dans la table des schemas charges */
@@ -125,12 +125,12 @@ PtrSSchema          pSS;
 	       {
 		  LoadedPSchema[i].UsageCount = 1;
 		  LoadedPSchema[i].pPresSchema = pPSchema;
-		  strncpy (LoadedPSchema[i].PresSchemaName, schemaName, MAX_NAME_LENGTH);
+		  ustrncpy (LoadedPSchema[i].PresSchemaName, schemaName, MAX_NAME_LENGTH);
 	       }
 	  }
      }
    if (pPSchema != NULL)
-      strncpy (pSS->SsDefaultPSchema, schemaName, MAX_NAME_LENGTH);
+      ustrncpy (pSS->SsDefaultPSchema, schemaName, MAX_NAME_LENGTH);
    /* rend la valeur de retour */
    return pPSchema;
 }
@@ -260,12 +260,12 @@ PtrSSchema          pSS;
    presentation de nom PSchName.					
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                LoadNatureSchema (PtrSSchema pSS, unsigned char* PSchName, int rule)
+void                LoadNatureSchema (PtrSSchema pSS, CHAR_T* PSchName, int rule)
 
 #else  /* __STDC__ */
 void                LoadNatureSchema (pSS, PSchName, rule)
 PtrSSchema          pSS;
-unsigned char*      PSchName;
+CHAR_T*             PSchName;
 int                 rule;
 
 #endif /* __STDC__ */
@@ -273,15 +273,13 @@ int                 rule;
 {
    Name                schName;
    PtrSSchema          pNatureSS;
-   CUSName             cusSchName; 
 
    /* utilise le nom de la nature comme nom de fichier. */
    /* copie le nom de nature dans schName */
-   strncpy (schName, pSS->SsRule[rule - 1].SrOrigNat, MAX_NAME_LENGTH);
-   iso2cus_strncpy (cusSchName, pSS->SsRule[rule - 1].SrOrigNat, MAX_NAME_LENGTH);
+   ustrncpy (schName, pSS->SsRule[rule - 1].SrOrigNat, MAX_NAME_LENGTH);
    /* cree un schema de structure et le charge depuis le fichier */
    GetSchStruct (&pNatureSS);
-   if (!ReadStructureSchema (cusSchName, pNatureSS))
+   if (!ReadStructureSchema (pSS->SsRule[rule - 1].SrOrigNat, pNatureSS))
       /* echec */
      {
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_SCHEMA_NOT_FIND), schName);
@@ -298,7 +296,7 @@ int                 rule;
 	   /* l'appelant indique un schema de presentation, on essaie de le
 	      charger */
 	  {
-	     strncpy (schName, PSchName, MAX_NAME_LENGTH);
+	     ustrncpy (schName, PSchName, MAX_NAME_LENGTH);
 	     pNatureSS->SsPSchema = LoadPresentationSchema (schName, pNatureSS);
 	  }
 	if (PSchName == NULL || PSchName[0] == EOS || pNatureSS->SsPSchema == NULL)
@@ -306,12 +304,11 @@ int                 rule;
 	   /* ou schema demande' inaccessible */
 	  {
 	     /* on consulte le fichier .conf */
-	     if (!ConfigGetPSchemaNature (pSS, pSS->SsRule[rule - 1].SrOrigNat,
-					  schName))
+	     if (!ConfigGetPSchemaNature (pSS, pSS->SsRule[rule - 1].SrOrigNat, schName))
 		/* le fichier .conf ne donne pas de schema de presentation pour */
 		/* cette nature, on le demande a l'utilisateur */
 	       {
-		  strncpy (schName, pNatureSS->SsDefaultPSchema, MAX_NAME_LENGTH);
+		  ustrncpy (schName, pNatureSS->SsDefaultPSchema, MAX_NAME_LENGTH);
 		  if (ThotLocalActions[T_presentchoice] != NULL)
 		     (*ThotLocalActions[T_presentchoice]) (pNatureSS, schName);
 	       }
@@ -379,12 +376,12 @@ PtrSSchema          pSS;
    structure, sauf si le premier octet de PSchName est nul.	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 CreateNature (unsigned char* SSchName, unsigned char* PSchName, PtrSSchema pSS)
+int                 CreateNature (CHAR_T* SSchName, CHAR_T* PSchName, PtrSSchema pSS)
 
 #else  /* __STDC__ */
 int                 CreateNature (SSchName, PSchName, pSS)
-unsigned char*      SSchName;
-unsigned char*      PSchName;
+CHAR_T*             SSchName;
+CHAR_T*             PSchName;
 PtrSSchema          pSS;
 
 #endif /* __STDC__ */
@@ -401,7 +398,7 @@ PtrSSchema          pSS;
      {
 	pRule = &pSS->SsRule[ret++];
 	if (pRule->SrConstruct == CsNatureSchema)
-	   if (strcmp (pRule->SrOrigNat, SSchName) == 0)
+	   if (ustrcmp (pRule->SrOrigNat, SSchName) == 0)
 	      found = TRUE;
      }
    while (!found && ret < pSS->SsNRules);
@@ -431,8 +428,8 @@ PtrSSchema          pSS;
 	   /* remplit la regle nature */
 	  {
 	     pRule = &pSS->SsRule[ret - 1];
-	     strncpy (pRule->SrOrigNat, SSchName, MAX_NAME_LENGTH);
-	     iso2wc_strncpy (pRule->SrName, SSchName, MAX_NAME_LENGTH);
+	     ustrncpy (pRule->SrOrigNat, SSchName, MAX_NAME_LENGTH);
+	     ustrncpy (pRule->SrName, SSchName, MAX_NAME_LENGTH);
 	     pRule->SrAssocElem = FALSE;
 	     pRule->SrNDefAttrs = 0;
 	     pRule->SrConstruct = CsNatureSchema;
@@ -493,7 +490,7 @@ ThotBool            extension;
    CUSName       cusSchName;
 
    StringNCopy (cusSchName, SSchName, MAX_NAME_LENGTH);
-   cus2iso_strncpy (schName, SSchName, MAX_NAME_LENGTH);
+   ustrncpy (schName, SSchName, MAX_NAME_LENGTH);
    /* cree le schema de structure et charge le fichier dedans */
    if (pLoadedSS == NULL) {
       GetSchStruct (pSS);
@@ -519,7 +516,7 @@ ThotBool            extension;
          (*pSS)->SsRootElem = 1;
       if (PSchName != NULL && PSchName[0] != CUS_EOS) {
          /* l'appelant specifie le schema de presentation a prendre, on essaie de le charger */
-	     cus2iso_strncpy (schName, PSchName, MAX_NAME_LENGTH);
+	     ustrncpy (schName, PSchName, MAX_NAME_LENGTH);
 	     (*pSS)->SsPSchema = LoadPresentationSchema (schName, *pSS);
 	  }
       if (PSchName == NULL || PSchName[0] == CUS_EOS || (*pSS)->SsPSchema == NULL) {
@@ -528,7 +525,7 @@ ThotBool            extension;
 		  if (!ConfigDefaultPSchema ((*pSS)->SsName, schName)) {
              /* le fichier de configuration ne dit rien, on demande a l'utilisateur */
              /* propose la presentation par defaut definie dans le schema de structure */
-             strncpy (schName, (*pSS)->SsDefaultPSchema, MAX_NAME_LENGTH);
+             ustrncpy (schName, (*pSS)->SsDefaultPSchema, MAX_NAME_LENGTH);
              if (ThotLocalActions[T_presentchoice] != NULL)
                 (*ThotLocalActions[T_presentchoice]) (*pSS, schName);
 	      }
@@ -550,12 +547,12 @@ ThotBool            extension;
    nom PSchName.                                                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrSSchema          LoadExtension (char* SSchName, char* PSchName, PtrDocument pDoc)
+PtrSSchema          LoadExtension (CHAR_T* SSchName, CHAR_T* PSchName, PtrDocument pDoc)
 
 #else  /* __STDC__ */
 PtrSSchema          LoadExtension (SSchName, PSchName, pDoc)
-char*               SSchName;
-char*               PSchName;
+CHAR_T*             SSchName;
+CHAR_T*             PSchName;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -571,7 +568,7 @@ PtrDocument         pDoc;
 	pExtens = pDoc->DocSSchema->SsNextExtens;
 	extensionExist = FALSE;
 	while (pExtens != NULL && !extensionExist)
-	   if (strcmp (pExtens->SsName, SSchName) == 0)
+	   if (ustrcmp (pExtens->SsName, SSchName) == 0)
 	      /* le schema d'extension existe deja */
 	      extensionExist = TRUE;
 	   else
@@ -784,7 +781,7 @@ PtrDocument         pDoc;
 			nat = 0;
 			present = FALSE;
 			while (nat < pDoc->DocNNatures && !present)
-			   if (strcmp (pDoc->DocNatureName[nat], pSRule->SrSSchemaNat->SsName) == 0)
+			   if (ustrcmp (pDoc->DocNatureName[nat], pSRule->SrSSchemaNat->SsName) == 0)
 			      present = TRUE;
 			   else
 			      nat++;
@@ -794,7 +791,7 @@ PtrDocument         pDoc;
 			  {
 			     if (pDoc->DocNNatures < MAX_NATURES_DOC)
 			       {
-				  strncpy (pDoc->DocNatureName[pDoc->DocNNatures], pSRule->SrSSchemaNat->SsName, MAX_NAME_LENGTH);
+				  ustrncpy (pDoc->DocNatureName[pDoc->DocNNatures], pSRule->SrSSchemaNat->SsName, MAX_NAME_LENGTH);
 				  ustrncpy (pDoc->DocNaturePresName[pDoc->DocNNatures], pSRule->SrSSchemaNat->SsDefaultPSchema, MAX_NAME_LENGTH);
 				  pDoc->DocNatureSSchema[pDoc->DocNNatures] = pSRule->SrSSchemaNat;
 				  pDoc->DocNNatures++;
@@ -827,8 +824,8 @@ PtrDocument         pDoc;
    /* met le schema de structure du document en tete de la table des */
    /* natures utilisees */
    pDoc->DocNatureSSchema[0] = pDoc->DocSSchema;
-   strncpy (pDoc->DocNatureName[0], pDoc->DocSSchema->SsName, MAX_NAME_LENGTH);
-   strncpy (pDoc->DocNaturePresName[0], pDoc->DocSSchema->SsDefaultPSchema, MAX_NAME_LENGTH);
+   ustrncpy (pDoc->DocNatureName[0], pDoc->DocSSchema->SsName, MAX_NAME_LENGTH);
+   ustrncpy (pDoc->DocNaturePresName[0], pDoc->DocSSchema->SsDefaultPSchema, MAX_NAME_LENGTH);
    pDoc->DocNNatures = 1;
    /* met dans la table des natures du document les */
    /* extensions du schema de structure du document */

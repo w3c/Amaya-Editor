@@ -63,8 +63,8 @@
 #include "views_f.h"
 #include "writepivot_f.h"
 
-static CharUnit nameBuffer[MAX_NATURES_DOC];
-static char     ISObuffer[MAX_NATURES_DOC];
+static CHAR_T nameBuffer[MAX_NATURES_DOC];
+static CHAR_T ISObuffer[MAX_NATURES_DOC];
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -575,13 +575,13 @@ STRING              path;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-SSchema             TtaNewNature (SSchema schema, char* natureName, char* presentationName)
+SSchema             TtaNewNature (SSchema schema, CHAR_T* natureName, CHAR_T* presentationName)
 
 #else  /* __STDC__ */
 SSchema             TtaNewNature (schema, natureName, presentationName)
 SSchema             schema;
-char*               natureName;
-char*               presentationName;
+CHAR_T*             natureName;
+CHAR_T*             presentationName;
 
 #endif /* __STDC__ */
 
@@ -628,13 +628,13 @@ char*               presentationName;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-SSchema             TtaNewSchemaExtension (Document document, char* extensionName, char* presentationName)
+SSchema             TtaNewSchemaExtension (Document document, CHAR_T* extensionName, CHAR_T* presentationName)
 
 #else  /* __STDC__ */
 SSchema             TtaNewSchemaExtension (document, extensionName, presentationName)
 Document            document;
-char*               extensionName;
-char*               presentationName;
+CHAR_T*             extensionName;
+CHAR_T*             presentationName;
 
 #endif /* __STDC__ */
 
@@ -655,8 +655,7 @@ char*               presentationName;
    else
       /* parameter document is correct */
      {
-	extension = LoadExtension (extensionName, presentationName,
-				   LoadedDocument[document - 1]);
+	extension = LoadExtension (extensionName, presentationName, LoadedDocument[document - 1]);
 	if (extension == NULL)
 	  {
 	     TtaError (ERR_cannot_read_struct_schema);
@@ -679,11 +678,11 @@ char*               presentationName;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetPSchema (Document document, char* presentationName)
+void                TtaSetPSchema (Document document, CHAR_T* presentationName)
 #else  /* __STDC__ */
 void                TtaSetPSchema (document, presentationName)
 Document            document;
-char*               presentationName;
+CHAR_T*             presentationName;
 #endif /* __STDC__ */
 
 {
@@ -725,7 +724,7 @@ char*               presentationName;
                {
                    Name pschemaName;
 
-                   strncpy (pschemaName, presentationName, MAX_NAME_LENGTH);
+                   ustrncpy (pschemaName, presentationName, MAX_NAME_LENGTH);
                    if (pDoc->DocSSchema->SsPSchema != NULL)
                       /* a presentation schema already exist. One release it */
                       {
@@ -1201,10 +1200,10 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-char*              TtaGetSSchemaName (SSchema schema)
+CHAR_T*             TtaGetSSchemaName (SSchema schema)
 
 #else  /* __STDC__ */
-char*              TtaGetSSchemaName (schema)
+CHAR_T*             TtaGetSSchemaName (schema)
 SSchema             schema;
 
 #endif /* __STDC__ */
@@ -1213,12 +1212,12 @@ SSchema             schema;
    UserErrorCode = 0;
    if (schema == NULL)
      {
-	ISObuffer[0] = EOS;
+	ISObuffer[0] = WC_EOS;
 	TtaError (ERR_invalid_parameter);
      }
    else
      {
-	strcpy (ISObuffer, ((PtrSSchema) schema)->SsName);
+	ustrcpy (ISObuffer, ((PtrSSchema) schema)->SsName);
      }
    return ISObuffer;
 }
@@ -1238,10 +1237,10 @@ SSchema             schema;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-char*               TtaGetPSchemaName (SSchema schema)
+CHAR_T*              TtaGetPSchemaName (SSchema schema)
 
 #else  /* __STDC__ */
-char*               TtaGetPSchemaName (schema)
+CHAR_T*              TtaGetPSchemaName (schema)
 SSchema             schema;
 
 #endif /* __STDC__ */
@@ -1255,7 +1254,7 @@ SSchema             schema;
      }
    else
      {
-	strcpy (ISObuffer, ((PtrSSchema) schema)->SsDefaultPSchema);
+	ustrcpy (ISObuffer, ((PtrSSchema) schema)->SsDefaultPSchema);
      }
    return ISObuffer;
 }
@@ -1264,12 +1263,12 @@ SSchema             schema;
    nature schema and extension schema used by pSS. It returns a pointer
    which references this schema or NULL if not found. */
 #ifdef __STDC__
-static SSchema      ChSchStruct (PtrSSchema pSS, char* name)
+static SSchema      ChSchStruct (PtrSSchema pSS, CHAR_T* name)
 
 #else  /* __STDC__ */
 static SSchema      ChSchStruct (pSS, name)
 PtrSSchema          pSS;
-char*               name;
+CHAR_T*             name;
 
 #endif /* __STDC__ */
 
@@ -1279,7 +1278,7 @@ char*               name;
 
    retour = NULL;
    if (pSS != NULL)
-      if (strcmp (name, pSS->SsName) == 0)
+      if (ustrcmp (name, pSS->SsName) == 0)
 	 /* The schema itself */
 	 retour = (SSchema) pSS;
       else
@@ -1311,10 +1310,10 @@ char*               name;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-SSchema             TtaGetSSchema (char* name, Document document)
+SSchema             TtaGetSSchema (CHAR_T* name, Document document)
 #else  /* __STDC__ */
 SSchema             TtaGetSSchema (name, document)
-char*               name;
+CHAR_T*             name;
 Document            document;
 #endif /* __STDC__ */
 
@@ -1323,7 +1322,7 @@ Document            document;
 
    UserErrorCode = 0;
    schema = NULL;
-   if (name == NULL || name[0] == EOS)
+   if (name == NULL || name[0] == WC_EOS)
      TtaError (ERR_invalid_parameter);
    /* verifies the parameter document */
    else if (document < 1 || document > MAX_DOCUMENTS)

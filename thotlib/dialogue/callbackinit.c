@@ -52,15 +52,15 @@ PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 {
-   char             schemaName[MAX_NAME_LENGTH];
+   CHAR_T           schemaName[MAX_NAME_LENGTH];
    PtrEventsSet     schemaActions;
 
-   strcpy (schemaName, pSS->SsName);
+   ustrcpy (schemaName, pSS->SsName);
    pSS->SsActionList = NULL;
-   if (pSS->SsName[0] != EOS)
+   if (pSS->SsName[0] != WC_EOS)
      {
 	schemaActions = SchemasEvents;
-	while (schemaActions != NULL && strcmp (schemaActions->EvSName, schemaName) != 0)
+	while (schemaActions != NULL && ustrcmp (schemaActions->EvSName, schemaName) != 0)
 	   schemaActions = schemaActions->EvSNext;
 	if (schemaActions != NULL)
 	   pSS->SsActionList = schemaActions;
@@ -211,17 +211,17 @@ void               *arg;
    TteGetEventsSet returns a pointer to an existing events set.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrEventsSet        TteGetEventsSet (char* name)
+PtrEventsSet        TteGetEventsSet (CHAR_T* name)
 #else  /* __STDC__ */
 PtrEventsSet        TteGetEventsSet (name)
-char*               name;
+CHAR_T*             name;
 
 #endif /* __STDC__ */
 {
    PtrEventsSet        pevset;
 
    /* Find it */
-   if (strcmp (name, "EDITOR") == 0)
+   if (ustrcmp (name, TEXT("EDITOR")) == 0)
      /* it is the global set */
      return(EditorEvents);
    else
@@ -229,7 +229,7 @@ char*               name;
        pevset = SchemasEvents;
        while (pevset != NULL)
 	 {
-	   if (!strcmp(pevset->EvSName, name))
+	   if (!ustrcmp(pevset->EvSName, name))
 	     return(pevset);
 	   pevset = pevset->EvSNext;
 	 }
@@ -243,11 +243,11 @@ char*               name;
    It is added to the global list.       			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrEventsSet        TteNewEventsSet (int structureId, char* name)
+PtrEventsSet        TteNewEventsSet (int structureId, CHAR_T* name)
 #else  /* __STDC__ */
 PtrEventsSet        TteNewEventsSet (structureId, name)
 int                 structureId;
-char*               name;
+CHAR_T*             name;
 
 #endif /* __STDC__ */
 {
@@ -267,7 +267,7 @@ char*               name;
    newEvSet->EvSNext = NULL;
 
    /* Link it */
-   if (strcmp (name, "EDITOR") == 0)
+   if (ustrcmp (name, TEXT("EDITOR")) == 0)
      {
 	/* it is the global set */
 	EditorEvents = newEvSet;

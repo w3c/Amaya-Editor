@@ -549,13 +549,13 @@ PtrAbstractBox      pAb;
 	 {
 	    case GraphicElem:
 	       pAb->AbLeafType = LtGraphics;
-	       pAb->AbShape = pConst->PdString[0];
+	       pAb->AbShape = (char)pConst->PdString[0];
 	       pAb->AbGraphAlphabet = 'L';
 	       pAb->AbVolume = 1;
 	       break;
 	    case Symbol:
 	       pAb->AbLeafType = LtSymbol;
-	       pAb->AbShape = pConst->PdString[0];
+	       pAb->AbShape = (char)pConst->PdString[0];
 	       pAb->AbGraphAlphabet = 'G';
 	       if (pAb->AbShape == EOS)
 		  pAb->AbVolume = 0;
@@ -1251,7 +1251,7 @@ PtrSSchema          pSS;
 						(pAsc->ElStructSchema->SsCode == pSS->SsCode));
 				    else
 				       equal = (ustrcmp (pCond->CoAncestorName, pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0 &&
-						strcmp (pCond->CoSSchemaName, pAsc->ElStructSchema->SsName) == 0);
+                                ustrcmp (pCond->CoSSchemaName, pAsc->ElStructSchema->SsName) == 0);
 				    if (equal)
 				      {
 					 i++;
@@ -1270,7 +1270,7 @@ PtrSSchema          pSS;
 						(pAsc->ElStructSchema->SsCode == pSS->SsCode));
 				    else
 				       equal = (ustrcmp (pCond->CoAncestorName, pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0 &&
-						strcmp (pCond->CoSSchemaName, pAsc->ElStructSchema->SsName) == 0); 
+                                ustrcmp (pCond->CoSSchemaName, pAsc->ElStructSchema->SsName) == 0); 
 				    if (equal)
 				       i++;
 				    pAsc = pAsc->ElParent;	/* passe a l'element ascendant */

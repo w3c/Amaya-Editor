@@ -759,7 +759,7 @@ STRING              presentationName;
    else
      {
 	/* Gets the corresponding structure schema name */
-	TtaReadName (file, gotStructName);
+	TtaReadWCName (file, gotStructName);
 	if (ustrcmp (structureName, gotStructName) == 0)
 	   result = 1;
 	TtaReadClose (file);
@@ -950,11 +950,11 @@ View                view;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-View                TtaGetViewFromName (Document document, char* viewName)
+View                TtaGetViewFromName (Document document, CHAR_T* viewName)
 #else  /* __STDC__ */
 View                TtaGetViewFromName (document, viewName)
 Document            document;
-char*               viewName;
+CHAR_T*             viewName;
 #endif /* __STDC__ */
 {
    View                view;

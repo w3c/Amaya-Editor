@@ -221,7 +221,7 @@ TtAttribute        *pAttr;
 		    break;
 		 case AtReferenceAttr:
 		    TtaReadShort (file, &pAttr->AttrTypeRef);
-		    TtaReadName (file, pAttr->AttrTypeRefNature);
+		    TtaReadWCName (file, pAttr->AttrTypeRefNature);
 		    break;
 		 case AtEnumAttr:
 		    TtaReadShort (file, &pAttr->AttrNEnumValues);
@@ -283,7 +283,7 @@ SRule              *pSRule;
    if (pSRule->SrExportedElem)
      {
 	TtaReadShort (file, &pSRule->SrExportContent);
-	TtaReadName (file, pSRule->SrNatExpContent);
+	TtaReadWCName (file, pSRule->SrNatExpContent);
      }
 
    TtaReadShort (file, &pSRule->SrFirstExcept);
@@ -304,7 +304,7 @@ SRule              *pSRule;
    switch (pSRule->SrConstruct)
 	 {
 	    case CsNatureSchema:
-	       wc2iso_strcpy (pSRule->SrOrigNat, pSRule->SrName);
+	       ustrcpy (pSRule->SrOrigNat, pSRule->SrName);
 	       pSRule->SrSSchemaNat = NULL;
 	       break;
 	    case CsBasicElement:
@@ -313,7 +313,7 @@ SRule              *pSRule;
 	       break;
 	    case CsReference:
 	       TtaReadShort (file, &pSRule->SrReferredType);
-	       TtaReadName (file, pSRule->SrRefTypeNat);
+	       TtaReadWCName (file, pSRule->SrRefTypeNat);
 
 	       break;
 	    case CsIdentity:
@@ -435,9 +435,9 @@ PtrSSchema          pSS;
      {
 	pSS->SsActionList = NULL;
 	/* lit la partie fixe du schema de structure */
-	TtaReadName (file, pSS->SsName);
+	TtaReadWCName (file, pSS->SsName);
 	TtaReadShort (file, &pSS->SsCode);
-	TtaReadName (file, pSS->SsDefaultPSchema);
+	TtaReadWCName (file, pSS->SsDefaultPSchema);
 	pSS->SsPSchema = NULL;
 	TtaReadBool (file, &pSS->SsExtension);
 	pSS->SsNExtensRules = 0;

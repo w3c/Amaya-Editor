@@ -2644,13 +2644,13 @@ FunctionType        pageType;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static ThotBool     FindAbsBox (int Ntype, PtrPSchema pSchP, WCName presBoxName, PtrAbstractBox * pAb)
+static ThotBool     FindAbsBox (int Ntype, PtrPSchema pSchP, Name presBoxName, PtrAbstractBox * pAb)
 
 #else  /* __STDC__ */
 static ThotBool     FindAbsBox (Ntype, pSchP, presBoxName, pAb)
 int                 Ntype;
 PtrPSchema          pSchP;
-WCName              presBoxName;
+Name                presBoxName;
 PtrAbstractBox     *pAb;
 
 #endif /* __STDC__ */
@@ -2699,13 +2699,13 @@ PtrAbstractBox     *pAb;
    		pEl pointe sur l'element trouve'.			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool     SearchElCrPresBoxCopy (int *presBoxType, PtrPSchema * pSchP, PtrSSchema * pSchS, WCName presBoxName, PtrElement * pEl)
+static ThotBool     SearchElCrPresBoxCopy (int *presBoxType, PtrPSchema * pSchP, PtrSSchema * pSchS, Name presBoxName, PtrElement * pEl)
 #else  /* __STDC__ */
 static ThotBool     SearchElCrPresBoxCopy (presBoxType, pSchP, pSchS, presBoxName, pEl)
 int                *presBoxType;
 PtrPSchema         *pSchP;
 PtrSSchema         *pSchS;
-WCName              presBoxName;
+Name                presBoxName;
 PtrElement         *pEl;
 #endif /* __STDC__ */
 
@@ -2743,7 +2743,7 @@ PtrElement         *pEl;
 		{
 		   result = pPRule->PrPresBox[0] == *presBoxType;
 		   if (result)
-		      result = strcmp (pSS->SsName, (*pSchS)->SsName) == 0;
+		      result = ustrcmp (pSS->SsName, (*pSchS)->SsName) == 0;
 		   /* on supprime le test sur l'egalite des schemas P et on teste uniquement */
 		   /* les schemas de structure : cela permet a des chapitres de se referencer */
 		   /* mutuellement meme si leur schema de presentation different legerement */
@@ -2868,14 +2868,14 @@ PtrTextBuffer      *pBuffPrec;
 
 
 #ifdef __STDC__
-static PtrElement   SearchElInSubTree (PtrElement pElRoot, int elType, PtrSSchema pSS, WCName typeName)
+static PtrElement   SearchElInSubTree (PtrElement pElRoot, int elType, PtrSSchema pSS, Name typeName)
 
 #else  /* __STDC__ */
 static PtrElement   SearchElInSubTree (pElRoot, elType, pSS, typeName)
 PtrElement          pElRoot;
 int                 elType;
 PtrSSchema          pSS;
-WCName              typeName;
+Name                typeName;
 
 #endif /* __STDC__ */
 
@@ -2964,7 +2964,7 @@ ThotBool            withDescCopy;
    PtrSSchema          pSchS;
    PtrTextBuffer       pBuffPrec;
    int                 boxType;
-   WCName              boxName;
+   Name                boxName;
    DocumentIdentifier  IDoc;
    PtrDocument         pDocRef;
    PtrElement          pEl1;

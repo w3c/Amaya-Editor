@@ -683,12 +683,12 @@ char*               actionName;
    fenentre.                                                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteZeroMenu (WindowType windowtype, char* schemaName)
+void                TteZeroMenu (WindowType windowtype, CHAR_T* schemaName)
 
 #else  /* __STDC__ */
 void                TteZeroMenu (windowtype, schemaName)
 WindowType          windowtype;
-char*               schemaName;
+CHAR_T*             schemaName;
 
 #endif /* __STDC__ */
 {
@@ -702,8 +702,8 @@ char*               schemaName;
 	  {
 	     /* creation et initialisation du contexte specifique au schema */
 	     ptrschema = (SchemaMenu_Ctl *) TtaGetMemory (sizeof (SchemaMenu_Ctl));
-	     ptrschema->SchemaName = TtaGetMemory (strlen (schemaName) + 1);
-	     strcpy (ptrschema->SchemaName, schemaName);
+	     ptrschema->SchemaName = TtaAllocString (ustrlen (schemaName) + 1);
+	     ustrcpy (ptrschema->SchemaName, schemaName);
 	     ptrschema->SchemaMenu = NULL;
 	     ptrschema->NextSchema = NULL;
 	     SchemasMenuList = ptrschema;
@@ -711,11 +711,11 @@ char*               schemaName;
 	else
 	  {
 	     ptrschema = SchemasMenuList;
-	     ok = strcmp (schemaName, ptrschema->SchemaName);
+	     ok = ustrcmp (schemaName, ptrschema->SchemaName);
 	     while (!ok && ptrschema->NextSchema != NULL)
 	       {
 		  ptrschema = ptrschema->NextSchema;
-		  ok = strcmp (schemaName, ptrschema->SchemaName);
+		  ok = ustrcmp (schemaName, ptrschema->SchemaName);
 	       }
 
 	     if (!ok)
@@ -723,8 +723,8 @@ char*               schemaName;
 		  /* creation et initialisation du contexte specifique au schema */
 		  ptrschema->NextSchema = (SchemaMenu_Ctl *) TtaGetMemory (sizeof (SchemaMenu_Ctl));
 		  ptrschema = ptrschema->NextSchema;
-		  ptrschema->SchemaName = TtaGetMemory (strlen (schemaName) + 1);
-		  strcpy (ptrschema->SchemaName, schemaName);
+		  ptrschema->SchemaName = TtaAllocString (ustrlen (schemaName) + 1);
+		  ustrcpy (ptrschema->SchemaName, schemaName);
 		  ptrschema->SchemaMenu = NULL;
 		  ptrschema->NextSchema = NULL;
 	       }
@@ -738,12 +738,12 @@ char*               schemaName;
    nom de schema est Null, il s'agit des menus pris par defaut.    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteAddMenu (WindowType windowtype, char* schemaName, int view, int menuID, int itemsNumber, char* menuName)
+void                TteAddMenu (WindowType windowtype, CHAR_T* schemaName, int view, int menuID, int itemsNumber, char* menuName)
 
 #else  /* __STDC__ */
 void                TteAddMenu (windowtype, schemaName, view, menuID, itemsNumber, menuName)
 WindowType          windowtype;
-char*               schemaName;
+CHAR_T*             schemaName;
 int                 view;
 int                 menuID;
 int                 itemsNumber;
@@ -816,8 +816,8 @@ char*               menuName;
 		 {
 		    /* creation et initialisation du contexte specifique au schema */
 		    ptrschema = (SchemaMenu_Ctl *) TtaGetMemory (sizeof (SchemaMenu_Ctl));
-		    ptrschema->SchemaName = TtaGetMemory (strlen (schemaName) + 1);
-		    strcpy (ptrschema->SchemaName, schemaName);
+		    ptrschema->SchemaName = TtaAllocString (ustrlen (schemaName) + 1);
+		    ustrcpy (ptrschema->SchemaName, schemaName);
 		    ptrschema->SchemaMenu = newmenu;
 		    ptrschema->NextSchema = NULL;
 		    ptrmenu = NULL;
@@ -826,11 +826,11 @@ char*               menuName;
 	       else
 		 {
 		    ptrschema = SchemasMenuList;
-		    ok = strcmp (schemaName, ptrschema->SchemaName);
+		    ok = ustrcmp (schemaName, ptrschema->SchemaName);
 		    while (ok && ptrschema->NextSchema != NULL)
 		      {
 			 ptrschema = ptrschema->NextSchema;
-			 ok = strcmp (schemaName, ptrschema->SchemaName);
+			 ok = ustrcmp (schemaName, ptrschema->SchemaName);
 		      }
 
 		    if (ok)
@@ -838,8 +838,8 @@ char*               menuName;
 			 /* creation et initialisation du contexte specifique au schema */
 			 ptrschema->NextSchema = (SchemaMenu_Ctl *) TtaGetMemory (sizeof (SchemaMenu_Ctl));
 			 ptrschema = ptrschema->NextSchema;
-			 ptrschema->SchemaName = TtaGetMemory (strlen (schemaName) + 1);
-			 strcpy (ptrschema->SchemaName, schemaName);
+			 ptrschema->SchemaName = TtaAllocString (ustrlen (schemaName) + 1);
+			 ustrcpy (ptrschema->SchemaName, schemaName);
 			 ptrschema->SchemaMenu = newmenu;
 			 ptrschema->NextSchema = NULL;
 			 ptrmenu = NULL;
@@ -864,12 +864,12 @@ char*               menuName;
    TteAddSubMenu ajoute un sous-menu pour le schema donne.            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteAddSubMenu (WindowType windowtype, char* schemaName, int menuID, int itemID, int itemsNumber)
+void                TteAddSubMenu (WindowType windowtype, CHAR_T* schemaName, int menuID, int itemID, int itemsNumber)
 
 #else  /* __STDC__ */
 void                TteAddSubMenu (windowtype, schemaName, menuID, itemID, itemsNumber)
 WindowType          windowtype;
-char*               schemaName;
+CHAR_T*             schemaName;
 int                 menuID;
 int                 itemID;
 int                 itemsNumber;
@@ -901,7 +901,7 @@ int                 itemsNumber;
 	    case DocTypeWindow:
 	       /* il s'agit d'un menu d'un schema particulier */
 	       ptrschema = SchemasMenuList;
-	       while (ptrschema != NULL && strcmp (schemaName, ptrschema->SchemaName))
+	       while (ptrschema != NULL && ustrcmp (schemaName, ptrschema->SchemaName))
 		  ptrschema = ptrschema->NextSchema;
 	       if (ptrschema != NULL)
 		  ptrmenu = ptrschema->SchemaMenu;
@@ -953,7 +953,7 @@ int                 itemsNumber;
    TteAddMenuItem ajoute une nouvel item dans un menu.                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteAddMenuItem (WindowType windowtype, char* schemaName, int menuID, int subMenu, int itemID, char* actionName, char itemType)
+void                TteAddMenuItem (WindowType windowtype, CHAR_T* schemaName, int menuID, int subMenu, int itemID, char* actionName, char itemType)
 
 #else  /* __STDC__ */
 void                TteAddMenuItem (windowtype, schemaName, menuID, subMenu, itemID, actionName, itemType)
@@ -962,7 +962,7 @@ char*               schemaName;
 int                 menuID;
 int                 subMenu;
 int                 itemID;
-char*               actionName;
+CHAR_T*             actionName;
 char                itemType;
 
 #endif /* __STDC__ */
@@ -991,7 +991,7 @@ char                itemType;
     case DocTypeWindow:
       /* il s'agit d'un menu d'un schema particulier */
       ptrschema = SchemasMenuList;
-      while (ptrschema != NULL && strcmp (schemaName, ptrschema->SchemaName))
+      while (ptrschema != NULL && ustrcmp (schemaName, ptrschema->SchemaName))
 	ptrschema = ptrschema->NextSchema;
       if (ptrschema != NULL)
 	ptrmenu = ptrschema->SchemaMenu;
@@ -2707,10 +2707,10 @@ gint ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data)
    - L'indice de la fenetre allouee ou 0 en cas d'echec.              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 MakeFrame (char* schema, int view, STRING name, int X, int Y, int width, int height, int *volume, int doc)
+int                 MakeFrame (CHAR_T* schema, int view, STRING name, int X, int Y, int width, int height, int *volume, int doc)
 #else  /* __STDC__ */
 int                 MakeFrame (schema, view, name, X, Y, width, height, volume, doc)
-char*               schema;
+CHAR_T*             schema;
 int                 view;
 STRING              name;
 int                 X;
@@ -2948,7 +2948,7 @@ int                 doc;
 	   ptrmenu = NULL;
 	   while (SCHmenu != NULL && ptrmenu == NULL)
 	     {
-	       if (!strcmp (schema, SCHmenu->SchemaName))
+	       if (!ustrcmp (schema, SCHmenu->SchemaName))
 		 /* that document has specific menus */
 		 ptrmenu = SCHmenu->SchemaMenu;
 	       else

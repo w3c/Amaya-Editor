@@ -105,8 +105,7 @@ void           *css;
    may indicate extra transfer parameters, for example bypassing the cache.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FetchImage (Document doc, Element el, STRING URL, int flags,
-                                Proc callback, void *extra)
+void                FetchImage (Document doc, Element el, STRING URL, int flags, Proc callback, void *extra)
 #else  /* __STDC__ */
 void                FetchImage (doc, el, URL, flags, callback, extra)
 Document            doc;
@@ -170,12 +169,12 @@ PtrSSchema          pSS;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            ConfigGetPSchemaNature (PtrSSchema pSS, STRING nomNature, STRING presNature)
+ThotBool            ConfigGetPSchemaNature (PtrSSchema pSS, CHAR_T* nomNature, CHAR_T* presNature)
 #else  /* __STDC__ */
 ThotBool            ConfigGetPSchemaNature (pSS, nomNature, presNature)
 PtrSSchema          pSS;
-STRING              nomNature;
-STRING              presNature;
+CHAR_T*             nomNature;
+CHAR_T*             presNature;
 #endif /* __STDC__ */
 {
    return FALSE;
@@ -185,11 +184,11 @@ STRING              presNature;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            ConfigDefaultPSchema (char* schema, char* schpres)
+ThotBool            ConfigDefaultPSchema (CHAR_T* schema, CHAR_T* schpres)
 #else  /* __STDC__ */
 ThotBool            ConfigDefaultPSchema (schema, schpres)
-char*               schema;
-char*               schpres;
+CHAR_T*             schema;
+CHAR_T*             schpres;
 #endif /* __STDC__ */
 {
    return FALSE;

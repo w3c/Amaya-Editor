@@ -1557,9 +1557,9 @@ PtrAttribute       *pAttr;
 	   /* ignore les attributs definis dans les anciennes extensions */
 	   /* ExtCorr et ExtMot */
 	   if (pSchAttr->SsExtension)
-	      if (strcmp (pSchAttr->SsName, "ExtCorr") == 0)
+	      if (ustrcmp (pSchAttr->SsName, TEXT("ExtCorr")) == 0)
 		 create = FALSE;
-	      else if (strcmp (pSchAttr->SsName, "ExtMot") == 0)
+	      else if (ustrcmp (pSchAttr->SsName, TEXT("ExtMot")) == 0)
 		 create = FALSE;
 	if (!create)
 	   *pAttr = NULL;
@@ -3058,7 +3058,7 @@ int                 rank;
    i = 1;
    found = FALSE;
    while (i <= pDoc->DocNNatures && !found)
-      if (strncmp (SSName, pDoc->DocNatureName[i - 1], MAX_NAME_LENGTH) == 0)
+      if (ustrncmp (SSName, pDoc->DocNatureName[i - 1], MAX_NAME_LENGTH) == 0)
 	 found = TRUE;
       else
 	 i++;
@@ -3071,14 +3071,14 @@ int                 rank;
 	   /* y est */
 	  {
 	     pSS = pDoc->DocNatureSSchema[rank - 1];
-	     strncpy (N1, pDoc->DocNatureName[rank - 1], MAX_NAME_LENGTH);
-	     strncpy (N2, pDoc->DocNaturePresName[rank - 1], MAX_NAME_LENGTH);
+	     ustrncpy (N1, pDoc->DocNatureName[rank - 1], MAX_NAME_LENGTH);
+	     ustrncpy (N2, pDoc->DocNaturePresName[rank - 1], MAX_NAME_LENGTH);
 	     pDoc->DocNatureSSchema[rank - 1] = pDoc->DocNatureSSchema[i - 1];
-	     strncpy (pDoc->DocNatureName[rank - 1], pDoc->DocNatureName[i - 1], MAX_NAME_LENGTH);
-	     strncpy (pDoc->DocNaturePresName[rank - 1], pDoc->DocNaturePresName[i - 1], MAX_NAME_LENGTH);
+	     ustrncpy (pDoc->DocNatureName[rank - 1], pDoc->DocNatureName[i - 1], MAX_NAME_LENGTH);
+	     ustrncpy (pDoc->DocNaturePresName[rank - 1], pDoc->DocNaturePresName[i - 1], MAX_NAME_LENGTH);
 	     pDoc->DocNatureSSchema[i - 1] = pSS;
-	     strncpy (pDoc->DocNatureName[i - 1], N1, MAX_NAME_LENGTH);
-	     strncpy (pDoc->DocNaturePresName[i - 1], N2, MAX_NAME_LENGTH);
+	     ustrncpy (pDoc->DocNatureName[i - 1], N1, MAX_NAME_LENGTH);
+	     ustrncpy (pDoc->DocNaturePresName[i - 1], N2, MAX_NAME_LENGTH);
 	  }
      }
    else
@@ -3091,12 +3091,12 @@ int                 rank;
 	else
 	  {
 	     pDoc->DocNatureSSchema[pDoc->DocNNatures] = pDoc->DocNatureSSchema[rank - 1];
-	     strncpy (pDoc->DocNatureName[pDoc->DocNNatures], pDoc->DocNatureName[rank - 1], MAX_NAME_LENGTH);
-	     strncpy (pDoc->DocNaturePresName[pDoc->DocNNatures], pDoc->DocNaturePresName[rank - 1], MAX_NAME_LENGTH);
+	     ustrncpy (pDoc->DocNatureName[pDoc->DocNNatures], pDoc->DocNatureName[rank - 1], MAX_NAME_LENGTH);
+	     ustrncpy (pDoc->DocNaturePresName[pDoc->DocNNatures], pDoc->DocNaturePresName[rank - 1], MAX_NAME_LENGTH);
 	     pDoc->DocNNatures++;
 	  }
 	pDoc->DocNatureSSchema[rank - 1] = NULL;
-	strncpy (pDoc->DocNatureName[rank - 1], SSName, MAX_NAME_LENGTH);
+	ustrncpy (pDoc->DocNatureName[rank - 1], SSName, MAX_NAME_LENGTH);
      }
 }
 
@@ -3107,7 +3107,7 @@ int                 rank;
    	schemas								
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char* tag, PtrSSchema pLoadedSS, void (*withThisPSchema) (Document document, char* natSchema, char* presentSchema))
+void                ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char* tag, PtrSSchema pLoadedSS, void (*withThisPSchema) (Document document, CHAR_T* natSchema, CHAR_T* presentSchema))
 #else  /* __STDC__ */
 void                ReadSchemaNamesPiv (file, pDoc, tag, pLoadedSS, withThisPSchema)
 BinFile             file;
@@ -3120,7 +3120,6 @@ void (*withThisPSchema) ();
 
 {
    Name                SSName, PSchemaName;
-   CUSName             cusSSName, cusPSchemaName;
    PtrSSchema          pSS;
    int                 i, rank;
    ThotBool            ExtensionSch;
@@ -3130,9 +3129,9 @@ void (*withThisPSchema) ();
    rank = 1;
    /* lit le type du document */
    do
-      if (!TtaReadByte (file, &SSName[i++]))
+      if (!TtaReadWideChar (file, &SSName[i++]))
          PivotError (file);
-   while (!error && SSName[i - 1] != EOS && i != MAX_NAME_LENGTH) ;
+   while (!error && SSName[i - 1] != WC_EOS && i != MAX_NAME_LENGTH) ;
    if (SSName[i - 1] != CUS_EOS)
      {
         PivotError (file);
@@ -3148,9 +3147,9 @@ void (*withThisPSchema) ();
             /* Lit le nom du schema de presentation associe' */
             i = 0;
             do
-              if (!TtaReadByte (file, &PSchemaName[i++]))
+              if (!TtaReadWideChar (file, &PSchemaName[i++]))
                  PivotError (file);
-            while (!error && PSchemaName[i - 1] != EOS && i != MAX_NAME_LENGTH) ;
+            while (!error && PSchemaName[i - 1] != WC_EOS && i != MAX_NAME_LENGTH) ;
 
          if (!TtaReadByte (file, tag))
             PivotError (file);
@@ -3158,11 +3157,9 @@ void (*withThisPSchema) ();
             (*withThisPSchema) ((Document) IdentDocument (pDoc), SSName, PSchemaName);
          PutNatureInTable (pDoc, SSName, rank);
          /* charge les schemas de structure et de presentation du document */
-		 if (pDoc->DocSSchema == NULL) {
-            iso2cus_strcpy (cusSSName, SSName);
-            iso2cus_strcpy (cusPSchemaName, PSchemaName);
-           LoadSchemas (cusSSName, cusPSchemaName, &pDoc->DocSSchema, pLoadedSS, FALSE);
-		 }
+		 if (pDoc->DocSSchema == NULL) 
+           LoadSchemas (SSName, PSchemaName, &pDoc->DocSSchema, pLoadedSS, FALSE);
+		 
         if (pDoc->DocSSchema == NULL)
            PivotError (file);
         else if (pDoc->DocPivotVersion >= 4)
@@ -3177,14 +3174,14 @@ void (*withThisPSchema) ();
    if (pDoc->DocNatureSSchema[rank - 1] == NULL)
      {
         pDoc->DocNatureSSchema[rank - 1] = pDoc->DocSSchema;
-        strncpy (pDoc->DocNatureName[rank - 1], SSName, MAX_NAME_LENGTH);
-        strncpy (pDoc->DocNaturePresName[rank - 1], PSchemaName, MAX_NAME_LENGTH);
+        ustrncpy (pDoc->DocNatureName[rank - 1], SSName, MAX_NAME_LENGTH);
+        ustrncpy (pDoc->DocNaturePresName[rank - 1], PSchemaName, MAX_NAME_LENGTH);
         if (pDoc->DocSSchema != NULL)
            if (pDoc->DocSSchema->SsPSchema == NULL)
               /* le schema de presentation n'a pas ete charge' (librairie  */
               /* Kernel, par exemple). On memorise dans le schema de */
               /* structure charge' le nom du schema P associe' */
-              strncpy (pDoc->DocSSchema->SsDefaultPSchema, PSchemaName, MAX_NAME_LENGTH);
+              ustrncpy (pDoc->DocSSchema->SsDefaultPSchema, PSchemaName, MAX_NAME_LENGTH);
      }
    /* lit les noms des fichiers contenant les schemas de nature  */
    /* dynamiques et charge ces schemas, sauf si on ne charge que */
@@ -3196,7 +3193,7 @@ void (*withThisPSchema) ();
 	i = 0;
 	rank++;
 	do
-	   if (!TtaReadByte (file, &SSName[i++]))
+	   if (!TtaReadWideChar (file, &SSName[i++]))
 	      PivotError (file);
 	while (SSName[i - 1] != EOS && !error) ;
 	if (pDoc->DocPivotVersion >= 4)
@@ -3214,7 +3211,7 @@ void (*withThisPSchema) ();
 	     PSchemaName[0] = *tag;
 	     i = 1;
 	     do
-		if (!TtaReadByte (file, &PSchemaName[i++]))
+		if (!TtaReadWideChar (file, &PSchemaName[i++]))
 		   PivotError (file);
 	     while (!error && PSchemaName[i - 1] != EOS && i != MAX_NAME_LENGTH) ;
 
@@ -3254,12 +3251,12 @@ void (*withThisPSchema) ();
 		    TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_STR_SCH_CHANGED), pSS->SsName);
 		  }
 	     pDoc->DocNatureSSchema[rank - 1] = pSS;
-	     strncpy (pDoc->DocNaturePresName[rank - 1], PSchemaName, MAX_NAME_LENGTH);
+	     ustrncpy (pDoc->DocNaturePresName[rank - 1], PSchemaName, MAX_NAME_LENGTH);
 	     if (pSS->SsPSchema == NULL)
 		/* le schema de presentation n'a pas ete charge' (librairie
 		   Kernel, par exemple). On memorise dans le schema de structure
 		   charge' le nom du schema P associe' */
-		strncpy (pSS->SsDefaultPSchema, PSchemaName, MAX_NAME_LENGTH);
+		ustrncpy (pSS->SsDefaultPSchema, PSchemaName, MAX_NAME_LENGTH);
 	  }
      }
 }
@@ -3279,7 +3276,7 @@ char*               tag;
 #endif /* __STDC__ */
 
 {
-   WCName           languageName;
+   Name             languageName;
    int              i;
 
    /* lit la table des langues utilisees par le document */
@@ -3786,8 +3783,8 @@ ThotBool		    removeExclusions
 	     previousSSchema = pDoc->DocSSchema;
 	     curExtension = previousSSchema->SsNextExtens;
 	     while (curExtension != NULL)
-		if (strcmp (curExtension->SsName, "ExtCorr") == 0 ||
-		    strcmp (curExtension->SsName, "ExtMot") == 0)
+		if (ustrcmp (curExtension->SsName, TEXT("ExtCorr")) == 0 ||
+		    ustrcmp (curExtension->SsName, TEXT("ExtMot")) == 0)
 		  {
 		     previousSSchema->SsNextExtens = curExtension->SsNextExtens;
 		     if (curExtension->SsNextExtens != NULL)

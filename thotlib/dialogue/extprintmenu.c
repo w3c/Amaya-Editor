@@ -98,12 +98,12 @@ int                *nbEntry;
 	if (trouve)
 	  {
 	     /* met le nom de la vue dans le menu */
-	     lgentree = strlen (LesVuesImprimables[i - 1].VdViewName) + 1;
+	     lgentree = ustrlen (LesVuesImprimables[i - 1].VdViewName) + 1;
 	     if (lgmenu + lgentree < MAX_TXT_LEN)
 	       {
 		  buffer[lgmenu] = TEXT('B');
 		  lgmenu++;
-		  iso2wc_strcpy (buffer + lgmenu, LesVuesImprimables[i - 1].VdViewName);
+		  ustrcpy (buffer + lgmenu, LesVuesImprimables[i - 1].VdViewName);
 		  lgmenu += lgentree;
 		  if (!LesVuesImprimables[i - 1].VdPaginated)
 		     /* vue sans pages, on met une etoile a la fin du nom */
@@ -128,12 +128,12 @@ int                *nbEntry;
 	   /* (pas encore) imprimer les vues de natures */
 	   if (!LesVuesImprimables[i - 1].VdNature)
 	     {
-		lgentree = strlen (LesVuesImprimables[i - 1].VdViewName) + 1;
+		lgentree = ustrlen (LesVuesImprimables[i - 1].VdViewName) + 1;
 		if (lgmenu + lgentree < MAX_TXT_LEN)
 		  {
 		     buffer[lgmenu] = TEXT('B');
 		     lgmenu++;
-		     iso2wc_strcpy (buffer + lgmenu, LesVuesImprimables[i - 1].VdViewName);
+		     ustrcpy (buffer + lgmenu, LesVuesImprimables[i - 1].VdViewName);
 		     lgmenu += lgentree;
 		     if (!LesVuesImprimables[i - 1].VdPaginated)
 			/* vue sans pages, on met une etoile a la fin du nom */
@@ -165,9 +165,9 @@ STRING              txt;
 
 #endif /* __STDC__ */
 {
-  int i;
+  int      i;
+  CHAR_T   BufMenu[MAX_TXT_LEN];
   ThotBool okprint;
-  char     BufMenu[MAX_TXT_LEN];
 
   switch (ref)
     {
@@ -214,14 +214,14 @@ STRING              txt;
 	  if( LesVuesImprimables[EntreesMenuVuesAImprimer[i]-1].VdOpen )
 	    {
 	      okprint=TRUE;
-	      strcat (BufMenu, LesVuesImprimables[EntreesMenuVuesAImprimer[i]-1].VdViewName);
-	      strcat (BufMenu, " ");
+	      ustrcat (BufMenu, LesVuesImprimables[EntreesMenuVuesAImprimer[i]-1].VdViewName);
+	      ustrcat (BufMenu, TEXT(" "));
 	    }
 	}
       if(okprint)
 	{
-	  i = strlen (BufMenu);
-	  BufMenu[i - 1] = EOS;
+	  i = ustrlen (BufMenu);
+	  BufMenu[i - 1] = WC_EOS;
 	  TtaPrint (docPrint, BufMenu, NULL);
 	}
       break;
@@ -371,7 +371,7 @@ View                view;
    usprintf (&BufMenu[i], TEXT("%s"), TtaGetMessage (LIB, TMSG_US));
    TtaNewSubmenu (NumMenuPaperFormat, NumFormPrint, 0,
 	     TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, BufMenu, NULL, FALSE);
-   if (!strcmp (PageSize, "US"))
+   if (!ustrcmp (PageSize, TEXT("US")))
       TtaSetMenuForm (NumMenuPaperFormat, 1);
    else
       TtaSetMenuForm (NumMenuPaperFormat, 0);

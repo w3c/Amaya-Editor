@@ -377,7 +377,6 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
    int                 nbitem;
-   CharUnit            cusSsName[MAX_LENGTH];
    CHAR_T              BufMenu[MAX_TXT_LEN];
    CHAR_T              BufMenuB[MAX_TXT_LEN];   
    CHAR_T              BufDir[MAX_PATH];
@@ -410,8 +409,7 @@ PtrDocument         pDoc;
 	      ustrcpy (SaveDirectoryName, pDoc->DocDirectory);
 	      /* compose le menu des formats de sauvegarde applicables */
 	      /* a ce document, d'apres sa classe */
-          iso2cus_strcpy (cusSsName, pDoc->DocSSchema->SsName);
-	      nbitem = ConfigMakeMenuExport (cusSsName, BufMenu);
+	      nbitem = ConfigMakeMenuExport (pDoc->DocSSchema->SsName, BufMenu);
 	      /* met le format Thot en tete */
 	      BufMenuB[0] = TEXT('B');
 	      ustrcpy (&BufMenuB[1], TtaGetMessage (LIB, TMSG_THOT_APP));

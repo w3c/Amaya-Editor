@@ -1028,13 +1028,13 @@ View                view;
 #endif /* __STDC__ */
 {
 #define LgMaxTableNature 20
-   PtrSSchema        TableNatures[LgMaxTableNature];
+   PtrSSchema          TableNatures[LgMaxTableNature];
    int                 entreeDesact[LgMaxTableNature];
    int                 LgTableNatures;
    int                 nbPres;
-   CHAR_T                BufMenuNatures[MAX_TXT_LEN];
-   CHAR_T                BufMenu[MAX_TXT_LEN];
-   CHAR_T                BufMenuB[MAX_TXT_LEN];
+   CHAR_T              BufMenuNatures[MAX_TXT_LEN];
+   CHAR_T              BufMenu[MAX_TXT_LEN];
+   CHAR_T              BufMenuB[MAX_TXT_LEN];
    STRING              ptrBufNat;
    STRING              src;
    STRING              dest;
@@ -1042,8 +1042,8 @@ View                view;
    int                 NumSousMenu;
    int                 MenuAActiver;
    int                 i, k, l;
-   Name                 NomPres;
-   CHAR_T                NomUtilisateur[50];
+   Name                NomPres;
+   CHAR_T              NomUtilisateur[50];
    PtrDocument         pDoc;
 
    if (ThotLocalActions[T_rchangepres] == NULL)

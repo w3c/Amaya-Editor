@@ -130,6 +130,22 @@ char* ptr;
 }
 
 /*----------------------------------------------------------------------
+   TtaSkipWCBlanks skips all spaces, tabs, linefeeds and newlines at the
+   beginning of the string and returns the pointer to the new position. 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T* TtaSkipWCBlanks (CHAR_T* ptr)
+#else
+CHAR_T* TtaSkipWCBlanks (ptr)
+CHAR_T* ptr;
+#endif
+{
+  while (*ptr == WC_SPACE || *ptr == WC_BSPACE || *ptr == WC_EOL || *ptr == WC_TAB || *ptr == WC_CR)
+    ptr++;
+  return (ptr);
+}
+
+/*----------------------------------------------------------------------
    TtaIsBlank returns True if the first character is a space, a tab, a
    linefeed or a newline.
   ----------------------------------------------------------------------*/

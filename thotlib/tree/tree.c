@@ -1193,7 +1193,7 @@ ThotBool            Check;
 		    {
 		       pAsc = pEl2;
 		       do
-			  if (strcmp (pAsc->ElStructSchema->SsName, pAttr2->AeAttrSSchema->SsName) == 0)
+			  if (ustrcmp (pAsc->ElStructSchema->SsName, pAttr2->AeAttrSSchema->SsName) == 0)
 			    {
 			       pAttr2->AeAttrSSchema = pAsc->ElStructSchema;
 			       found = TRUE;
@@ -2702,8 +2702,7 @@ PtrDocument         pDoc;
 		    break;
 		 case AtTextAttr:
 		    GetTextBuffer (&pAttr->AeAttrText);
-		    CopyStringToText (pSS->SsConstBuffer + pSRule->SrDefAttrValue[i] - 1,
-				      pAttr->AeAttrText, &l);
+		    CopyStringToText (pSS->SsConstBuffer + pSRule->SrDefAttrValue[i] - 1, pAttr->AeAttrText, &l);
 		    break;
 		 case AtReferenceAttr:
 		    /* gets a reference descriptor */
@@ -3716,7 +3715,7 @@ ThotBool            shareRef;
 		     pEl->ElComment = CopyText (pSource->ElComment, pEl);
 		  if (shareRef)
 		    {
-		       ustrncpy (pEl->ElLabel, pSource->ElLabel, MAX_LABEL_LEN);
+		       strncpy (pEl->ElLabel, pSource->ElLabel, MAX_LABEL_LEN);
 		       pEl->ElReferredDescr = pSource->ElReferredDescr;	
 		       /* (temporarily) shares the descriptor of the element
 			  referenced between the source element and the copy element

@@ -41,10 +41,10 @@ extern void TtaHandlePendingEvents ( void );
 extern void ConfigInit ( void );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
 extern ThotBool ConfigGetPSchemaNature ( PtrSSchema pSS,
-                                         STRING nomNature,
-                                         STRING presNature );
-extern ThotBool ConfigDefaultPSchema ( char* schema,
-                                       char* schpres );
+                                         CHAR_T* nomNature,
+                                         CHAR_T* presNature );
+extern ThotBool ConfigDefaultPSchema ( CHAR_T* schema,
+                                       CHAR_T* schpres );
 extern void FreeTranslations ( void );
 extern void DrawAddAttr ( PtrAttribute * pAttr,
                           PtrElement pEl );
@@ -150,10 +150,10 @@ extern void TtaHandlePendingEvents (/* void */);
 extern void ConfigInit (/* void */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
 extern ThotBool ConfigGetPSchemaNature (/* PtrSSchema pSS,
-                                           STRING nomNature,
-                                           STRING presNature */);
-extern ThotBool ConfigDefaultPSchema (/* char* schema,
-                                         char* schpres */);
+                                           CHAR_T* nomNature,
+                                           CHAR_T* presNature */);
+extern ThotBool ConfigDefaultPSchema (/* CHAR_T* schema,
+                                         CHAR_T* schpres */);
 extern void FreeTranslations (/* void */);
 extern void DrawAddAttr (/* PtrAttribute * pAttr,
                             PtrElement pEl */);

@@ -290,7 +290,7 @@ int                 typeNum2;
 		       break;
 		    case CsReference:
 		       ret = (pSRule1->SrReferredType == pSRule2->SrReferredType &&
-			      strcmp (pSRule1->SrRefTypeNat, pSRule2->SrRefTypeNat) == 0);
+			      ustrcmp (pSRule1->SrRefTypeNat, pSRule2->SrRefTypeNat) == 0);
 		       break;
 		    case CsIdentity:
 		       ret = (pSRule1->SrIdentRule == pSRule2->SrIdentRule);
@@ -3400,7 +3400,7 @@ int                *NItems;
 	for (i = 0; i < NElSurround; i++)
 	  {
 	     GetExternalTypeName (pSSSurround[i], typeNumSurround[i], typeName);
-	     len = strlen (typeName) + 2;
+	     len = ustrlen (typeName) + 2;
 	     if (len + menuInd + 1 < MAX_TXT_LEN)
 	       {
 		  /* indique une nouvelle entree */
@@ -3428,7 +3428,7 @@ View                view;
    PtrElement          firstSel, lastSel;
    PtrDocument         pSelDoc;
    int                 firstChar, lastChar, NItems;
-   WCName              title;
+   Name                title;
    CHAR_T              menuBuffer[MAX_TXT_LEN];
    ThotBool            protected;
 
@@ -3551,11 +3551,11 @@ PtrElement   pEl;
    for (i = 0; i < NChangeTypeItems; i++)
      {
        GetExternalTypeName (ChangeTypeSSchema[i], ChangeTypeTypeNum[i], typeName);
-       len = strlen (typeName) + 2;
+       len = ustrlen (typeName) + 2;
        if (len + menuInd + 1 < MAX_TXT_LEN)
 	 {
 	   menuBuffer[menuInd] = TEXT('B');
-	   iso2wc_strcpy (&(menuBuffer[menuInd + 1]), typeName);
+	   ustrcpy (&(menuBuffer[menuInd + 1]), typeName);
 	   menuInd += len;
 	   (*NItems)++;
 	 }
@@ -3578,7 +3578,7 @@ View                view;
    PtrDocument         pSelDoc;
    int                 firstChar, lastChar, NItems;
    CHAR_T              menuBuffer[MAX_TXT_LEN];
-   WCName              title;
+   Name                title;
 
    if (ThotLocalActions[T_rchangetype] == NULL)
      TteConnectAction (T_rchangetype, (Proc) ChangeTypeMenuInput);

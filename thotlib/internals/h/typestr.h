@@ -31,9 +31,8 @@
  
 #include "appstruct.h"
  
-typedef char      Name[MAX_NAME_LENGTH]; /* a name is terminated by a null byte*/
+typedef CHAR_T    Name[MAX_NAME_LENGTH]; /* a name is terminated by a null byte*/
 typedef CharUnit  CUSName[MAX_NAME_LENGTH];
-typedef CHAR_T    WCName[MAX_NAME_LENGTH];
 
 /* values for using schema or user attribute and element type names */ 
 #define USER_NAME 1
@@ -84,9 +83,9 @@ typedef enum
  
 typedef struct _TtAttribute
 {
-        WCName           AttrName;      /* name of the attribute, may be
+        Name             AttrName;      /* name of the attribute, may be
                                            translated in the user's language */
-        WCName           AttrOrigName;  /* real name of the attribute */
+        Name             AttrOrigName;  /* real name of the attribute */
         ThotBool         AttrGlobal;    /* the attribute can apply to all
                                            the elements defined in the schema */
         int       AttrFirstExcept;      /* index in SsException of the first
@@ -113,8 +112,8 @@ typedef struct _TtAttribute
 	    /* number of possible values (effective size of the table
 	       AttrEnumValue) */
 	    int   _AttrNEnumValues_;
-	    WCName           _AttrEnumValue_[MAX_ATTR_VAL]; /* names of those values (may be translated */
-	    WCName           _AttrEnumOrigValue_[MAX_ATTR_VAL]; /* original nameS */
+	    Name           _AttrEnumValue_[MAX_ATTR_VAL]; /* names of those values (may be translated */
+	    Name           _AttrEnumOrigValue_[MAX_ATTR_VAL]; /* original nameS */
 	    
 	  } s3;
 	} u;
@@ -132,8 +131,8 @@ typedef struct _StructSchema *PtrSSchema;
 /* A rule defining a type in a structure schema */
 typedef struct _SRule
 {
-	WCName      SrName;	/* left-hand symbol of the rule = type defined by the rule */
-    WCName      SrOrigName;      /* real name of the rule */
+	Name        SrName;	/* left-hand symbol of the rule = type defined by the rule */
+    Name        SrOrigName;      /* real name of the rule */
 	int 		SrNDefAttrs; 	/* 0..MAX_DEFAULT_ATTR, number of
 					   attributes with a default value */
         /* numbers of default value attributes */
@@ -319,7 +318,7 @@ typedef struct _StructSchema
    int              SsNExceptions;                    /* number of entries in SsException */
                                                       /* All the exception numbers associated with the element types and the attributes */
    int              SsException[MAX_EXCEPT_SSCHEMA];  /* buffer for the text of the constants */
-   char             SsConstBuffer[MAX_LEN_ALL_CONST]; /* number of the rule defining the first dynamically loaded nature */
+   CHAR_T           SsConstBuffer[MAX_LEN_ALL_CONST]; /* number of the rule defining the first dynamically loaded nature */
    int              SsFirstDynNature;                 /* attributes for this schema */
    TtAttribute      SsAttribute[MAX_ATTR_SSCHEMA];    /* structure rules defining the elements */
    SRule            SsRule[MAX_RULES_SSCHEMA + 2];    /* +2 to be sure to have two free rules at the end of the arrays */

@@ -1205,7 +1205,7 @@ PtrPRule           *pNextPRule;
 			      if (pCond->CoTypeAncestor == 0)
 				{
 				   TtaReadWCName (file, pCond->CoAncestorName);
-				   TtaReadName (file, pCond->CoSSchemaName);
+				   TtaReadWCName (file, pCond->CoSSchemaName);
 				}
 			      else
 				{
@@ -1394,22 +1394,19 @@ PtrSSchema          pSS;
    CharUnit            buf[MAX_TXT_LEN];
    int                 InitialNElems, i, j, l;
    ThotBool            ret;
-   CharUnit            file_name[MAX_LENGTH];
-   CharUnit            PsStructName[MAX_LENGTH];
 
    error = FALSE;
    pPSch = NULL;
    /* compose le nom du fichier a ouvrir */
-   iso2cus_strcpy (file_name, fileName);
    StringNCopy (dirBuffer, SchemaPath, MAX_PATH);
-   MakeCompleteName (file_name, CUSTEXT("PRS"), dirBuffer, buf, &i);
+   MakeCompleteName (fileName, CUSTEXT("PRS"), dirBuffer, buf, &i);
 
    /* teste si le fichier existe */
    file = TtaReadOpen (buf);
    if (file == 0)
      {
 	/* message 'Fichier inaccessible' */
-	StringNCopy (buf, file_name, MAX_NAME_LENGTH);
+	StringNCopy (buf, fileName, MAX_NAME_LENGTH);
 	StringConcat (buf, CUSTEXT(".PRS"));
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), buf);
      }
@@ -1422,10 +1419,10 @@ PtrSSchema          pSS;
 	GetPresentRule (&pNextPRule);
 	pNextPRule->PrCond = NULL;
 	/* met son nom dans le schema de presentation */
-	strncpy (pPSch->PsPresentName, fileName, MAX_NAME_LENGTH - 1);
+	ustrncpy (pPSch->PsPresentName, fileName, MAX_NAME_LENGTH - 1);
 	/* lit la partie fixe du schema de presentation */
 	/* lit le nom du schema de structure correspondant */
-	TtaReadName (file, pPSch->PsStructName);
+	TtaReadWCName (file, pPSch->PsStructName);
 	TtaReadShort (file, &pPSch->PsStructCode);
 	error = !TtaReadShort (file, &pPSch->PsNViews);
 	if (!error)
@@ -1454,10 +1451,9 @@ PtrSSchema          pSS;
 	TtaReadShort (file, &pPSch->PsNPresentBoxes);
 	pPSch->PsFirstDefaultPRule = ReadPRulePtr (file, &pNextPRule);
 	ret = !error;
-	if (pSS->SsRootElem == 0) {
-       iso2cus_strcpy (PsStructName, pPSch->PsStructName);
-	   ret = ReadStructureSchema (PsStructName, pSS);
-	} 
+	if (pSS->SsRootElem == 0) 
+	   ret = ReadStructureSchema (pPSch->PsStructName, pSS);
+
 	if (!ret || pPSch->PsStructCode != pSS->SsCode)
 	  {
 	     FreeSchPres (pPSch);

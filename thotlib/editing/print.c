@@ -174,7 +174,7 @@ STRING source;
 {
    CHAR_T                str[200];
 
-   sprintf (str, "Error - Source: %s", source);
+   usprintf (str, TEXT("Error - Source: %s"), source);
    MessageBox (hWnd, str, TEXT("Amaya"), MB_OK);
 
 }
@@ -283,28 +283,28 @@ LPSTR  msg;
 #  ifdef _WINDOWS
    suffix = TtaGetVarLANG ();
 
-   if (!ustrncasecmp (suffix, "fr", 2))
+   if (!ustrncasecmp (suffix, TEXT("fr"), 2))
       app_lang = FR_LANG;
-   else if (!ustrncasecmp (suffix, "en", 2))
+   else if (!ustrncasecmp (suffix, TEXT("en"), 2))
       app_lang = EN_LANG;
-   else if (!ustrncasecmp (suffix, "de", 2))
+   else if (!ustrncasecmp (suffix, TEXT("de"), 2))
       app_lang = DE_LANG;
 #  endif /* _WINDOWS */
 
 	switch (app_lang) {
            case FR_LANG:
                if (!(ghwndAbort = CreateDialog (hInst, (LPCTSTR) "FR_Printinprogress", ghwndMain, (DLGPROC) AbortDlgProc)))
-                  WinErrorBox (ghwndMain, "InitPrinting: FR_LANG");
+                  WinErrorBox (ghwndMain, TEXT("InitPrinting: FR_LANG"));
                break;
 
 		   case EN_LANG:
                 if (!(ghwndAbort = CreateDialog (hInst, (LPCTSTR) "EN_Printinprogress", ghwndMain, (DLGPROC) AbortDlgProc)))
-                   WinErrorBox (ghwndMain, "InitPrinting: EN_LANG");
+                   WinErrorBox (ghwndMain, TEXT("InitPrinting: EN_LANG"));
                 break;
 
 		   case DE_LANG:
                 if (!(ghwndAbort = CreateDialog (hInst, (LPCTSTR) "DE_Printinprogress", ghwndMain, (DLGPROC) AbortDlgProc)))
-                   WinErrorBox (ghwndMain, "InitPrinting: DE_LANG");
+                   WinErrorBox (ghwndMain, TEXT("InitPrinting: DE_LANG"));
 				break;
 	} 
 
@@ -354,7 +354,7 @@ void WIN_ReleaseDeviceContext ()
   /* if ((TtDisplay != 0) && (WIN_curWin != (ThotWindow) (-1))) */
   if (TtDisplay != 0)
     if (!ReleaseDC (WIN_curWin, TtDisplay))
-      WinErrorBox (NULL, "PRINT: WIN_ReleaseDeviceContext");
+      WinErrorBox (NULL, TEXT("PRINT: WIN_ReleaseDeviceContext"));
   
   WIN_curWin = (ThotWindow) (-1);
   TtDisplay = 0;
@@ -1881,7 +1881,7 @@ PtrDocument         pDoc;
        if (TtPrinterDC)
 	 {
 	   if ((StartPage (TtPrinterDC)) <= 0)
-	     WinErrorBox (NULL, "PrintView (1)");
+	     WinErrorBox (NULL, TEXT("PrintView (1)"));
 	 }
        else
 #      endif /* _WINDOWS */
@@ -2005,7 +2005,7 @@ int                viewsCounter;
     Escape (TtPrinterDC, SET_BOUNDS, sizeof (RECT), (LPSTR)&Rect, NULL);
     
     if (!InitPrinting (TtPrinterDC, ghwndMain, hCurrentInstance, NULL))
-      WinErrorBox (NULL, "PrintDocument (1)");
+      WinErrorBox (NULL, TEXT("PrintDocument (1)"));
   }
    #  endif /* _WINDOWS */
 
@@ -2163,7 +2163,7 @@ int                viewsCounter;
 #  ifdef _WINDOWS
   if (TtPrinterDC) {
     if ((EndDoc (TtPrinterDC)) <= 0)
-      WinErrorBox (NULL, "PrintDocument (2)");
+      WinErrorBox (NULL, TEXT("PrintDocument (2)"));
     
     DeleteDC (TtPrinterDC);
     TtPrinterDC = NULL;
@@ -2243,7 +2243,7 @@ static int       n = 1;
   if (TtPrinterDC)
     {
       if ((StartPage (TtPrinterDC)) <= 0)
-        WinErrorBox (NULL, "PrintOnePage (1)");
+        WinErrorBox (NULL, TEXT("PrintOnePage (1)"));
     }
   else
 # endif /* _WINDOWS */
@@ -2944,19 +2944,19 @@ char              **argv;
     {
 #ifdef _WINDOWS
       if (!ustrcmp (destination, TEXT("PSFILE")) && !DeleteFile (cmd))
-         WinErrorBox (NULL, "PrintDoc (1)");
+         WinErrorBox (NULL, TEXT("PrintDoc (1)"));
       else {
            int cssNDX;
            STRING pivDoc = TtaAllocString (ustrlen (tmpDocName) + ustrlen (tmpDir) + 6);
            usprintf (pivDoc, TEXT("%s\\%s.PIV"), tmpDir, tmpDocName); 
            if (!DeleteFile (pivDoc))
-              WinErrorBox (NULL, "PrintDoc (2)");
+              WinErrorBox (NULL, TEXT("PrintDoc (2)"));
            for (cssNDX = 0; cssNDX < MAX_CSS; cssNDX++)
                if (CSSName[cssNDX] && CSSName[cssNDX][0] != EOS && TtaFileExist (CSSName[cssNDX]))
                   if (!DeleteFile (CSSName[cssNDX]))
-                     WinErrorBox (NULL, "PrintDoc (3)"); 
+                     WinErrorBox (NULL, TEXT("PrintDoc (3)")); 
            if (urmdir (tempDir))
-              WinErrorBox (NULL, "PrintDoc (4)");
+              WinErrorBox (NULL, TEXT("PrintDoc (4)"));
       }
 #else  /* _WINDOWS */
       sprintf (cmd, "/bin/rm -rf %s\n", tempDir);

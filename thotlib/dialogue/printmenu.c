@@ -308,13 +308,13 @@ Document            document;
      }
 
    /* transmit page format */
-   if (strcmp (PageSize, "A4"))
+   if (ustrcmp (PageSize, TEXT("A4")))
      {
 #ifdef _WINDOWS
-       char tmp [MAX_TXT_LEN];
-       sprintf (tmp, "-P%s", PageSize);
-       printArgv[printArgc] = TtaAllocString (strlen (PageSize) + 3);
-       iso2wc_strcpy (printArgv[printArgc], tmp);
+       CHAR_T tmp [MAX_TXT_LEN];
+       usprintf (tmp, TEXT("-P%s"), PageSize);
+       printArgv[printArgc] = TtaAllocString (ustrlen (PageSize) + 3);
+       ustrcpy (printArgv[printArgc], tmp);
        printArgc++;
 #else  /* _WINDOWS */
        ustrcat (cmd, " -P");
@@ -671,9 +671,9 @@ Document document;
        PagesPerSheet = defPagesPerSheet;
        Paginate = defPaginate;
        if (defPageSize == PP_A4)
-          strcpy(PageSize, "A4");
+          ustrcpy(PageSize, TEXT("A4"));
        else
-           strcpy(PageSize, "US");
+           ustrcpy(PageSize, TEXT("US"));
        if (pDoc != NULL)
 	 {
 	   if (pDoc->DocDirectory[0] == DIR_SEP)
@@ -794,21 +794,21 @@ STRING              cssNames;
    Name                savePres, newPres;
    STRING              tmpDirName, tmpDocName;
    int                 orientation;
-   ThotBool	       docReadOnly;
+   ThotBool	           docReadOnly;
    ThotBool            ok;
 
    pDoc = LoadedDocument[document - 1];
    /* prepares the execution of the print command */
-   strcpy (savePres, pDoc->DocSSchema->SsDefaultPSchema);
+   ustrcpy (savePres, pDoc->DocSSchema->SsDefaultPSchema);
    if (PresSchema[0] != EOS)
-      strcpy (newPres, PresSchema);
+      ustrcpy (newPres, PresSchema);
    else
      ConfigGetPSchemaForPageSize (pDoc->DocSSchema, PageSize, newPres);
      
    if (newPres[0] != EOS)
-      strcpy (pDoc->DocSSchema->SsDefaultPSchema, newPres);
+      ustrcpy (pDoc->DocSSchema->SsDefaultPSchema, newPres);
    if (ThotLocalActions[T_rextprint]!=NULL && 
-      strcmp(pDoc->DocSSchema->SsDefaultPSchema, savePres))
+      ustrcmp(pDoc->DocSSchema->SsDefaultPSchema, savePres))
      {
        TtaDisplayMessage(INFO, TtaGetMessage(LIB,TMSG_CHANGE_PSCH), newPres);
      }
@@ -846,7 +846,7 @@ STRING              cssNames;
      orientation = 0;
 
    /* restores the presentation scheme */
-   strcpy (pDoc->DocSSchema->SsDefaultPSchema, savePres);
+   ustrcpy (pDoc->DocSSchema->SsDefaultPSchema, savePres);
 
    /* make an automatic backup */
    if (ok)
@@ -881,7 +881,7 @@ STRING              cssNames;
 		document);
      }
    /* restores the presentation scheme */
-   strcpy (pDoc->DocSSchema->SsDefaultPSchema, savePres);
+   ustrcpy (pDoc->DocSSchema->SsDefaultPSchema, savePres);
 }
 
 /*----------------------------------------------------------------------
@@ -962,9 +962,9 @@ int value;
        break;
      case PP_PaperSize:
        if (value == PP_A4)
-          strcpy (PageSize, "A4");
+          ustrcpy (PageSize, TEXT("A4"));
        else if (value == PP_US)
-            strcpy (PageSize, "US");
+            ustrcpy (PageSize, TEXT("US"));
        else
 	 TtaError(ERR_invalid_parameter);
        break;
@@ -1023,7 +1023,7 @@ int value;
       return (PagesPerSheet);
       break;
     case PP_PaperSize:
-      if (!strcmp (PageSize, "A4"))
+      if (!ustrcmp (PageSize, TEXT("A4")))
 	return (PP_A4);
       else
 	return (PP_US);
@@ -1076,16 +1076,16 @@ STRING command;
   TtaSetPrintSchema fixes the printing schema.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetPrintSchema (char* name)
+void                TtaSetPrintSchema (CHAR_T* name)
 #else  /* __STDC__ */
 void                TtaSetPrintSchema (name)
-char*               name;
+CHAR_T*             name;
 #endif /* __STDC__ */
 {
-  if (strlen(name) >= MAX_NAME_LENGTH)
+  if (ustrlen(name) >= MAX_NAME_LENGTH)
     TtaError(ERR_invalid_parameter);
   else
-    strcpy (PresSchema, name);
+    ustrcpy (PresSchema, name);
 }
 
 
@@ -1173,10 +1173,10 @@ STRING              txt;
 	  switch (val)
 	    {
 	    case 0:
-	      strcpy (PageSize, "A4");
+	      ustrcpy (PageSize, TEXT("A4"));
 	      break;
 	    case 1:
-	      strcpy (PageSize, "US");
+	      ustrcpy (PageSize, TEXT("US"));
 	      break;
 	    }
 	  break;
