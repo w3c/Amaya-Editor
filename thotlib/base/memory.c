@@ -1335,7 +1335,6 @@ void FreeSchStruc (PtrSSchema pSS)
   for (i = 0; i < pSS->SsNAttributes; i++)
     free (pSS->SsAttribute->TtAttr[i]);
   free (pSS->SsAttribute);
-  TtaFreeMemory (pSS);
   for (i = 0; i < MAX_RULES_SSCHEMA + 2; i++)
     {
       if (pSS->SsRule[i].SrLocalAttr)
@@ -1343,6 +1342,7 @@ void FreeSchStruc (PtrSSchema pSS)
       if (pSS->SsRule[i].SrRequiredAttr)
 	TtaFreeMemory (pSS->SsRule[i].SrRequiredAttr);
     }
+  TtaFreeMemory (pSS);
   NbUsed_SchStruct--;
 }
 
