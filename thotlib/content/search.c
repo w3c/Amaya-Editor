@@ -107,7 +107,7 @@ void ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar,
   ibuf1 = firstChar - len - 1;
   /* buffer of the character after the replaced string */
   pBuf2 = pBuf1;
-  while (len + pBuf2->BuLength < firstChar + stringLen)
+  while (len + pBuf2->BuLength < firstChar + stringLen && pBuf2->BuNext)
     {
       len += pBuf2->BuLength;
       pBuf2 = pBuf2->BuNext;
