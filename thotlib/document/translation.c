@@ -2650,7 +2650,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 			  while (i < pBuf->BuLength)
 			    {
 			      c = pBuf->BuContent[i++];
-			      if (c == 0x22)
+			      if (encode && c == 0x22)
 				{
 				  /* write a numeric entity */
 				  PutChar ((wchar_t) '&', fnum, NULL, pDoc,
@@ -2663,7 +2663,8 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 				}
 			      else
 				{
-				  if (c == 0X26 || c == 0X3C || c == 0X3E || c == 0XA0)
+				  if (encode &&
+				      (c == 0X26 || c == 0X3C || c == 0X3E || c == 0XA0))
 				    entityName = TRUE;
 				  PutChar ((wchar_t) c, fnum, NULL, pDoc,
 					   FALSE, encode, entityName);
