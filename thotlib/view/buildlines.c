@@ -1748,7 +1748,8 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 		     pNextBox = pLine->LiFirstPiece;
 		 }
 
-	       if (pNextBox->BxAbstractBox->AbLeafType == LtText &&
+	       if (pNextBox && 
+		   pNextBox->BxAbstractBox->AbLeafType == LtText &&
 		   !pNextBox->BxAbstractBox->AbNotInLine &&
 		   pNextBox->BxAbstractBox->AbHorizEnclosing &&
 		   pNextBox->BxW != 0 &&
