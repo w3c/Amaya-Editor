@@ -7320,7 +7320,7 @@ fi
 fi
 fi
 
-echo "Now type \"make all\" (GNU make preferably) to build the binaries"
+echo "Now type \"make\" (GNU make preferably) to build the binaries"
 
 
 
