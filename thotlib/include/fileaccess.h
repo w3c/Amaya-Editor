@@ -64,6 +64,7 @@ typedef long ThotFileOffset;
 #endif /* !_WINDOWS */
 
 #ifndef __CEXTRACT__
+extern int TtaDirExists ( CONST char *dirpath );
 extern int TtaFileExist ( CONST char *filename );
 extern int TtaFileUnlink ( CONST char *filename );
 extern ThotFileHandle TtaFileOpen ( CONST char *name,

@@ -18,6 +18,30 @@
 #include "fileaccess.h"
 
 /*----------------------------------------------------------------------
+   TtaDirExists returns TRUE if the dirpath points to a directory.
+   FALSE if the path points to a filename or doesn't
+   point to anything.
+  ----------------------------------------------------------------------*/
+int TtaDirExists (CONST char *dirpath)
+{
+  int         status = 0;
+#ifdef _WINDOWS
+  DWORD       attribs;
+
+  attribs = GetFileAttributes ((LPCTSTR)dirpath);
+  if (attribs == 0xFFFFFFFF)
+    status = 0;
+  else if (attribs & FILE_ATTRIBUTE_DIRECTORY)
+    status = 1;
+  else
+    status = 0;
+#else /* _WINDOWS */
+  status = stat(dirpath, &buf) == 0 && S_ISDIR (buf.st_mode);
+#endif /* _WINDOWS */
+  return status;
+}
+
+/*----------------------------------------------------------------------
    TtaFileExist teste l'existence d'un fichier.                       
    Rend 1 si le fichier a e't'e trouve' et 0 sinon.        
    Si filename est un repertoire, on retourne 0.           
