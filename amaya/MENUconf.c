@@ -3008,9 +3008,9 @@ Document    doc;
   /* in order to read the default values from HTML.conf, we erase the 
      registry entry */
   TtaClearEnvString (env_var);
-  TtaGetViewGeometry (doc, EnvVar, &x, &y, &w, &h); 
+  /*TtaGetViewGeometry (doc, EnvVar, &x, &y, &w, &h); 
   usprintf (s, TEXT("%d %d %d %d"), x, y, w, h);
-  TtaSetEnvString (env_var, s, TRUE);
+  TtaSetEnvString (env_var, s, TRUE);*/
 }
 
 /*----------------------------------------------------------------------
