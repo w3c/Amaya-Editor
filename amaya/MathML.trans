@@ -8,14 +8,14 @@
 !!! Root Transformations
 
 !surround an element with a root
-root : *;
+surrounding root : *;
 	{
 	* > MROOT:*;
 	* > MROOT:NONE % ;
 	}
 
 !surround a sequence of elements with a root
-root: *+,last:*;
+surrounding root: *+,last:*;
         {
         * > MROOT.MROW:*;
 	last > MROOT.MROW:*;
@@ -33,14 +33,14 @@ remove root: MROOT{base:*,? index:*};
 !!! Square Root Transformations
 
 !surround an element with a square root
-square root: *;
+surrounding square root: *;
         {
         * > MSQRT:*;
         }
 
 
 !surround a sequence of elements with a square root
-square root: *,*+;
+surrounding square root: *,*+;
         {
         * > MSQRT.MROW:*;
         }
@@ -51,6 +51,12 @@ remove square root: MSQRT{*};
         * > :*;
         }
 
+!transform a square root into a root
+root with index: MSQRT{*};
+	{
+	* > MROOT:*;
+	* > MROOT:NONE %;
+	}
 
 !!! Fraction transformations
 

@@ -160,49 +160,29 @@ Document doc;
 #endif
 {
 Element		sibling, placeholderEl;
-Attribute	attr;
 ElementType	elType;
+Attribute	attr;
 AttributeType	attrType;
 boolean		createConstruct;
 
      placeholderEl = NULL;
-     createConstruct = FALSE;
-     elType = TtaGetElementType (el);
 
-     if (elType.ElTypeNum == MathML_EL_Construct)
+     if (!ElementNeedsPlaceholder (el))
+	/* this element does not need placeholders.  Delete its previous
+	   and next siblings if they are place holders */
 	{
-        attrType.AttrSSchema = elType.ElSSchema;
-        attrType.AttrTypeNum = MathML_ATTR_placeholder;
-	attr = TtaGetAttribute (el, attrType);	if (attr != NULL)
-	   /* this element is a placeholder. Delete its next or previous
-	      siblings if they are placeholders too */
-	   {	
-	   sibling = el;
-	   TtaPreviousSibling (&sibling);
-	   DeleteIfPlaceholder (&sibling, doc);
-	   sibling = el;
-	   TtaNextSibling (&sibling);
-	   DeleteIfPlaceholder (&sibling, doc);
-	   }
+	sibling = el;
+	TtaPreviousSibling (&sibling);
+	DeleteIfPlaceholder (&sibling, doc);
+	sibling = el;
+	TtaNextSibling (&sibling);
+	DeleteIfPlaceholder (&sibling, doc);
 	}
-     else if (elType.ElTypeNum == MathML_EL_MO)
-	/* a MO element that contains a single SYMBOL needs a placeholder */
-	createConstruct = ElementNeedsPlaceholder (el);
-     else if (elType.ElTypeNum == MathML_EL_MROW ||
-	 elType.ElTypeNum == MathML_EL_MROOT ||
-	 elType.ElTypeNum == MathML_EL_MSQRT ||
-	 elType.ElTypeNum == MathML_EL_MFRAC ||
-	 elType.ElTypeNum == MathML_EL_MSUBSUP ||
-	 elType.ElTypeNum == MathML_EL_MSUB ||
-	 elType.ElTypeNum == MathML_EL_MSUP ||
-	 elType.ElTypeNum == MathML_EL_MUNDER ||
-	 elType.ElTypeNum == MathML_EL_MOVER ||
-	 elType.ElTypeNum == MathML_EL_MUNDEROVER ||
-	 elType.ElTypeNum == MathML_EL_MMULTISCRIPTS)
-        /* this element accepts a Construct as its neighbour */
-	createConstruct = TRUE;
-     if (createConstruct)
+     else
+	/* this element needs placeholders.  Create placeholders if the
+	   previous and/or next sibling are absent or need placeholders too */
 	{
+	createConstruct = TRUE;
 	sibling = el;
 	if (before)
 	   TtaPreviousSibling (&sibling);
@@ -213,6 +193,7 @@ boolean		createConstruct;
 	      createConstruct = FALSE;
 	if (createConstruct)
 	   {
+	   elType = TtaGetElementType (el);
 	   elType.ElTypeNum = MathML_EL_Construct;
 	   placeholderEl = TtaNewElement (doc, elType);
 	   /* do not check the Thot abstract tree against the structure */
@@ -1279,6 +1260,42 @@ static Element ClosestLeaf (el, pos)
 }
 
 /*----------------------------------------------------------------------
+   ChangeTypeOfElement
+   Change the type of element elem into newTypeNum
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void ChangeTypeOfElement (Element elem, Document doc, int newTypeNum)
+#else /* __STDC__*/
+static void ChangeTypeOfElement (elem, doc, newTypeNum)
+     Element elem;
+     Document doc;
+     int newTypeNum;
+#endif /* __STDC__*/
+
+{
+     Element	prev, next, parent;
+
+     prev = elem;
+     TtaPreviousSibling (&prev);
+     if (prev == NULL)
+	{
+	next = elem;
+	TtaNextSibling (&next);
+	if (next == NULL)
+	   parent = TtaGetParent (elem);
+	}
+     TtaRemoveTree (elem, doc);
+     ChangeElementType (elem, newTypeNum);
+     if (prev != NULL)
+        TtaInsertSibling (elem, prev, FALSE, doc);
+     else if (next != NULL)
+        TtaInsertSibling (elem, next, TRUE, doc);
+     else
+        TtaInsertFirstChild (&elem, parent, doc);
+}
+
+
+/*----------------------------------------------------------------------
    ParseMathString
    The content of an element MTEXT, MI, MO, or MN, has been modified
    or created.
@@ -1420,6 +1437,8 @@ static void ParseMathString (theText, theElem, doc)
 	  TtaDeleteTree (theElem, doc);
 	  theElem = NULL;
 
+	  /* The deletion of the parent element may require a Placeholder
+	     instead of the deleted element */
 	  placeholderEl = NULL;
 	  if (prev != NULL)
 	     placeholderEl = InsertPlaceholder (prev, FALSE, doc);
@@ -1480,23 +1499,7 @@ static void ParseMathString (theText, theElem, doc)
 		   }
 		MathSetAttributes (newEl, doc, &newSelEl);
 		}
-	     prev = theElem;
-	     TtaPreviousSibling (&prev);
-	     if (prev == NULL)
-		{
-		next = theElem;
-		TtaNextSibling (&next);
-		if (next == NULL)
-		   parent = TtaGetParent (theElem);
-		}
-	     TtaRemoveTree (theElem, doc);
-	     ChangeElementType (theElem, mathType[i-1]);
-	     if (prev != NULL)
-	        TtaInsertSibling (theElem, prev, FALSE, doc);
-	     else if (next != NULL)
-	        TtaInsertSibling (theElem, next, TRUE, doc);
-	     else
-	        TtaInsertFirstChild (&theElem, parent, doc);	     
+	     ChangeTypeOfElement (theElem, doc, mathType[i-1]);
 	     }
 	  next = theText;
 	  TtaNextSibling (&next);
@@ -1559,7 +1562,7 @@ static void ParseMathString (theText, theElem, doc)
 	  /* the new element is an operator */
 	  {
 	  /* if the new element contains a single SYMBOL, placeholders may
-	     be needed before or after that operator */
+	     be needed before and/or after that operator */
 	  placeholderEl = InsertPlaceholder (newEl, TRUE, doc);
 	  placeholderEl = InsertPlaceholder (newEl, FALSE, doc);
 	  /* the new contents may be an horizontally stretchable symbol */
@@ -1668,7 +1671,7 @@ void NewMathString(event)
 /*----------------------------------------------------------------------
  MathElementPasted
  An element has been pasted in a MathML structure.
- Create place holders before and after the pasted elements if necessary.
+ Create placeholders before and after the pasted elements if necessary.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
 void MathElementPasted (NotifyElement *event)
@@ -1688,6 +1691,8 @@ void MathElementPasted(event)
 
 /*----------------------------------------------------------------------
  MathElementWillBeDeleted
+ This function is called by the DELETE command for each selected element
+ and for all their descendants.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean MathElementWillBeDeleted (NotifyElement *event)
@@ -1696,6 +1701,12 @@ boolean MathElementWillBeDeleted(event)
      NotifyElement *event;
 #endif /* __STDC__*/
 {
+  /* TTE_STANDARD_DELETE_LAST_ITEM indicates the last element to be
+     deleted, but function MathElementWillBeDeleted is called afterwards
+     for all decendants of this last selected element, without
+     TTE_STANDARD_DELETE_LAST_ITEM.
+     Function MathElementDeleted is called only for the selected elements,
+     not for their descendants */
   if (!IsLastDeletedElement)
      {
      IsLastDeletedElement = (event->position == TTE_STANDARD_DELETE_LAST_ITEM);
@@ -1726,28 +1737,123 @@ void MathElementDeleted(event)
      NotifyElement *event;
 #endif /* __STDC__*/
 {
-   Element	child, placeholderEl;
-   int		i;
+   Element	sibling, placeholderEl, parent, child, grandChild;
+   ElementType	elType;
+   int		i, newTypeNum;
 
-   child = TtaGetFirstChild (event->element);
+   parent = event->element; /* parent of the deleted element */
+
+   /* If there are several successive placeholders at the place where the
+      element has been deleted, remove all unneeded placeholders.
+      If the deletion makes a placeholder necessary at the position of the
+      deleted element, insert a placeholder at that position */
+   sibling = TtaGetFirstChild (parent); /* first sibling of the deleted
+					   element */
    if (event->position == 0)
       {
-      /* the first child of event->element has been deleted.
+      /* the first child of parent has been deleted.
 	 Create a placeholder before the new first child */
-      if (child != NULL)
-         placeholderEl = InsertPlaceholder (child, TRUE, event->document);
+      if (sibling != NULL)
+         placeholderEl = InsertPlaceholder (sibling, TRUE, event->document);
       }
    else if (IsLastDeletedElement)
       {
-      for (i = 1; i < event->position && child != NULL; i++)
-         TtaNextSibling (&child);
-      if (child != NULL)
-         placeholderEl = InsertPlaceholder (child, FALSE, event->document);
+      for (i = 1; i < event->position && sibling != NULL; i++)
+         TtaNextSibling (&sibling);
+      if (sibling != NULL)
+         placeholderEl = InsertPlaceholder (sibling, FALSE, event->document);
       }
    IsLastDeletedElement = FALSE;
    LastDeletedElement = NULL;
-   
-   CheckMROW (&event->element, event->document);
+
+   /* If there is an enclosing MROW that is no longer neede, remove
+      that MROW */
+   CheckMROW (&parent, event->document);
+
+   /* The deletion of this component may lead to a structure change of its
+      siblings and its parent */
+   elType = TtaGetElementType (parent);
+   newTypeNum = 0;
+   switch (event->elementType.ElTypeNum)
+      {
+      case MathML_EL_Index:		/* an Index has been deleted */
+	/* transform the MROOT into a MSQRT */
+	newTypeNum = MathML_EL_MSQRT;
+	break;
+
+      case MathML_EL_Numerator:		/* a Numerator has been deleted */
+      case MathML_EL_Denominator:	/* a Denominator has been deleted */
+	/* remove the enclosing MFRAC */
+	newTypeNum = -1;
+	break;
+
+      case MathML_EL_Subscript:		/* a Subscript has been deleted */
+	if (elType.ElTypeNum == MathML_EL_MSUBSUP)
+	   /* a Subscript in a MSUBSUP. Transform the MSUBSUP into a MSUP */
+	   newTypeNum = MathML_EL_MSUP;
+	else if (elType.ElTypeNum == MathML_EL_MSUB)
+	   /* a Subscript in a MSUB. Remove the MSUB and the Base */
+	   newTypeNum = -1;
+	break;
+
+      case MathML_EL_Superscript:	/* a Superscript has been deleted */
+	if (elType.ElTypeNum == MathML_EL_MSUBSUP)
+	   /* a Superscript in a MSUBSUP. Transform the MSUBSUP into a MSUB */
+	   newTypeNum = MathML_EL_MSUB;
+	else if (elType.ElTypeNum == MathML_EL_MSUP)
+	   /* a Superscript in a MSUP. Remove the MSUP and the Base */
+	   newTypeNum = -1;
+	break;
+
+      case MathML_EL_Underscript:	/* an Underscript has been deleted */
+	if (elType.ElTypeNum == MathML_EL_MUNDEROVER)
+	   /* an Underscript in a MUNDEROVER. Transform the MUNDEROVER into
+	      a MOVER */
+	   newTypeNum = MathML_EL_MOVER;
+	else if (elType.ElTypeNum == MathML_EL_MUNDER)
+	   /* an Underscript in a MUNDER. Remove the MUNDER and the
+	      UnderOverBase */
+	   newTypeNum = -1;
+	break;
+
+      case MathML_EL_Overscript:	/* an Overscript has been deleted */
+	if (elType.ElTypeNum == MathML_EL_MUNDEROVER)
+	   /* an Overscript in a MUNDEROVER. Transform the MUNDEROVER into
+	      a MUNDER */
+	   newTypeNum = MathML_EL_MUNDER;
+	else if (elType.ElTypeNum == MathML_EL_MOVER)
+	   /* an Overscript in a MOVER. Remove the MOVER and the
+	      UnderOverBase */
+	   newTypeNum = -1;
+	break;
+
+      default:
+	break;
+      }
+
+   TtaSetStructureChecking (0, event->document);
+   if (newTypeNum > 0)
+      /* transform the parent element */
+      ChangeTypeOfElement (parent, event->document, newTypeNum);
+   else if (newTypeNum < 0)
+      /* put the content of the single sibling of the deleted element
+	 instead of the parent element */
+      {
+      child = TtaGetFirstChild (parent);
+      if (child != NULL)
+	{
+	grandChild = TtaGetFirstChild (child);
+	if (grandChild != NULL)
+	   {
+	   TtaRemoveTree (grandChild, event->document);
+	   TtaInsertSibling (grandChild, parent, TRUE, event->document);
+	   TtaDeleteTree (parent, event->document);
+	   placeholderEl = InsertPlaceholder (grandChild, FALSE, event->document);
+	   placeholderEl = InsertPlaceholder (grandChild, TRUE, event->document);
+	   }
+	}
+      }
+   TtaSetStructureChecking (1, event->document);
 }
 
 #endif /* MATHML */

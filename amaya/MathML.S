@@ -87,16 +87,16 @@ EXCEPT
 
    MathML:		Hidden;
    Construct:		Hidden;
-   Index:		Hidden, NoCut;
+   Index:		Hidden;
    RootBase:		Hidden, NoCut;
-   Numerator:		Hidden, NoCut;
-   Denominator:	 	Hidden, NoCut;
+   Numerator:		Hidden;
+   Denominator:	 	Hidden;
    Base:	 	Hidden, NoCut;
-   Subscript:	 	Hidden, NoCut;
-   Superscript:	 	Hidden, NoCut;
+   Subscript:	 	Hidden;
+   Superscript:	 	Hidden;
    UnderOverBase:	Hidden, NoCut;
-   Underscript:		Hidden, NoCut;
-   Overscript:		Hidden, NoCut;
+   Underscript:		Hidden;
+   Overscript:		Hidden;
    MultiscriptBase:	Hidden, NoCut;
    PostscriptPairs:	Hidden, NoCut;
    PostscriptPair:	Hidden;

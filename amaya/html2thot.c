@@ -1927,22 +1927,25 @@ Element el;
   Element	child, parent;
   boolean	ret;
  
-  ret = TRUE;
+  ret = FALSE;
   elType = TtaGetElementType (el);
-  if (elType.ElTypeNum == MathML_EL_Construct ||
-      elType.ElTypeNum == MathML_EL_SEP ||
-      elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
-      elType.ElTypeNum == MathML_EL_MI  ||
-      elType.ElTypeNum == MathML_EL_MN ||
-      elType.ElTypeNum == MathML_EL_MS ||
-      elType.ElTypeNum == MathML_EL_MTEXT)
-     ret = FALSE;
+  if (elType.ElTypeNum == MathML_EL_MROW ||
+      elType.ElTypeNum == MathML_EL_MROOT ||
+      elType.ElTypeNum == MathML_EL_MSQRT ||
+      elType.ElTypeNum == MathML_EL_MFRAC ||
+      elType.ElTypeNum == MathML_EL_MSUBSUP ||
+      elType.ElTypeNum == MathML_EL_MSUB ||
+      elType.ElTypeNum == MathML_EL_MSUP ||
+      elType.ElTypeNum == MathML_EL_MUNDER ||
+      elType.ElTypeNum == MathML_EL_MOVER ||
+      elType.ElTypeNum == MathML_EL_MUNDEROVER ||
+      elType.ElTypeNum == MathML_EL_MMULTISCRIPTS)
+     ret = TRUE;
   else
      if (elType.ElTypeNum == MathML_EL_MO)
 	/* an operator that contains a single Symbol needs a placeholder,
 	   except when it is in a Base or UnderOverBase */
 	{
-	ret = FALSE;
 	child = TtaGetFirstChild (el);
 	if (child != NULL)
 	   {
@@ -1956,7 +1959,7 @@ Element el;
 		elType = TtaGetElementType (parent);
 		if (elType.ElTypeNum == MathML_EL_Base ||
 		    elType.ElTypeNum == MathML_EL_UnderOverBase)
-		   ret = False;
+		   ret = FALSE;
 		}
 	      }
 	   }
