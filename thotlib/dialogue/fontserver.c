@@ -30,6 +30,9 @@ int GetFontFilename (char script, int family,
   pat = XftPatternCreate ();
   if (!pat)
     return ok;   
+  XftPatternAddBool (pat, XFT_RENDER, True);
+  XftPatternAddBool (pat, XFT_CORE, True);
+  XftPatternAddBool (pat, XFT_ANTIALIAS, True); 
   if (script != 'L' && script != 'G')
     {      
       switch (script)
@@ -75,12 +78,16 @@ int GetFontFilename (char script, int family,
   else if (script == 'G' || family == 0)
     {
       XftPatternAddString (pat, XFT_FAMILY, "symbol");
+      XftPatternAddString (pat, XFT_FAMILY, "Symbol");
+      XftPatternAddString (pat, XFT_FAMILY, "Standard Symbols L");
       XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_MEDIUM);
       XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ROMAN);
     }
   else
     {
       XftPatternAddString (pat, XFT_ENCODING, "iso8859-1");
+      XftPatternAddString (pat, XFT_FOUNDRY, "adobe");
+      XftPatternAddString (pat, XFT_FOUNDRY, "microsoft");
       if (UseLucidaFamily)
 	{
 	  switch (family)
@@ -107,6 +114,14 @@ int GetFontFilename (char script, int family,
 		XftPatternAddString (pat, XFT_FAMILY, "Times New Roman");
 		XftPatternAddString (pat, XFT_FAMILY, "times");
 		XftPatternAddString (pat, XFT_FAMILY, "Times");
+		XftPatternAddString (pat, XFT_FAMILY, "lucidux");
+		XftPatternAddString (pat, XFT_FAMILY, "terminus");
+		XftPatternAddString (pat, XFT_FAMILY, "lucidabright");
+		XftPatternAddString (pat, XFT_FAMILY, "new century schoolbook");
+		XftPatternAddString (pat, XFT_FAMILY, "utopia");
+		/* XftPatternAddString (pat, XFT_FAMILY, "charter"); */
+		XftPatternAddString (pat, XFT_FAMILY, "terminal");
+		XftPatternAddString (pat, XFT_FAMILY, "georgia");
 	      break;
 	    case 2:
 	      XftPatternAddString (pat, XFT_FAMILY, "helvetica");
@@ -114,6 +129,14 @@ int GetFontFilename (char script, int family,
 	      XftPatternAddString (pat, XFT_FAMILY, "ArmNet Helvetica");
 	      XftPatternAddString (pat, XFT_FAMILY, "verdana");
 	      XftPatternAddString (pat, XFT_FAMILY, "Verdana");
+	      XftPatternAddString (pat, XFT_FAMILY, "lucidux");
+	      XftPatternAddString (pat, XFT_FAMILY, "terminus");
+	      XftPatternAddString (pat, XFT_FAMILY, "lucidabright");
+	      XftPatternAddString (pat, XFT_FAMILY, "new century schoolbook");
+	      XftPatternAddString (pat, XFT_FAMILY, "utopia");
+	      /* XftPatternAddString (pat, XFT_FAMILY, "charter"); */
+	      XftPatternAddString (pat, XFT_FAMILY, "terminal");
+	      XftPatternAddString (pat, XFT_FAMILY, "trebuchet");
 	      break;
 	    case 3:
 	      XftPatternAddString (pat, XFT_FAMILY, "courier");
