@@ -4313,7 +4313,13 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
       else
 	{
 	  pLine = SearchLine (pBox, frame);
-	  if (pLine)
+	  if (pLine &&
+	      (pBlock->BxLeftFloat || pBlock->BxRightFloat))
+	    {
+	      RecomputeLines (pBlock->BxAbstractBox, pLine, NULL, frame);
+	      h = pBlock->BxH;
+	    }
+	  else if (pLine)
 	    {
 	      pNextLine = pLine->LiNext;
 	      /* current delta with the next line */
@@ -4355,12 +4361,16 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 			box = pPieceBox->BxNexChild;
 		      else
 			box = pPieceBox;
-		      
-		      if (ascent < box->BxHorizRef)
-			ascent = box->BxHorizRef;
-		      i = box->BxHeight - box->BxHorizRef;
-		      if (descent < i)
-			descent = i;
+
+		      //skip floated boxes
+                      if (box->BxAbstractBox)
+			{
+			  if (ascent < box->BxHorizRef)
+			    ascent = box->BxHorizRef;
+			  i = box->BxHeight - box->BxHorizRef;
+			  if (descent < i)
+			    descent = i;
+			}
 		      /* next box */
 		      pPieceBox = GetNextBox (box->BxAbstractBox, frame);
 		    }
