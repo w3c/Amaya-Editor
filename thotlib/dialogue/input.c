@@ -1144,7 +1144,7 @@ CHAR_T*               appliname;
    ThotTranslations    table = 0;
 
    appHome = TtaGetEnvString ("APP_HOME");
-   ustrcat (name, appliname);
+   ustrcpy (name, appliname);
 #  ifdef _WINDOWS
    ustrcat (name, TEXT(".kb"));
 #  else  /* _WINDOWS */
