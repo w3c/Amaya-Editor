@@ -250,6 +250,13 @@ ATTRIBUTES
         AttrDelete.Pre ->  AttrScriptShiftDelete;
         END;
 
+   alt:
+	BEGIN
+	AttrCreate.Post -> AttrAltModified;
+	AttrModify.Post -> AttrAltModified;
+	AttrDelete.Post -> AttrAltModified;
+	END;
+
    rowalign:
         BEGIN
         AttrCreate.Post -> AttrRowAlignCreated;

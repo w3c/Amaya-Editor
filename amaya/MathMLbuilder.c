@@ -1373,85 +1373,107 @@ void SetFontstyleAttr (Element el, Document doc)
   ThotBool      italic;
 
   if (el != NULL)
-     {
-     /* search the fontstyle attribute */
-     elType = TtaGetElementType (el);
-     attrType.AttrSSchema = elType.ElSSchema;
-     attrType.AttrTypeNum = MathML_ATTR_fontstyle;
-     attr = TtaGetAttribute (el, attrType);
-     attrType.AttrTypeNum = MathML_ATTR_IntFontstyle;
-     IntAttr = TtaGetAttribute (el, attrType);
-     if (attr != NULL)
+    {
+      /* search the fontstyle attribute */
+      elType = TtaGetElementType (el);
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = MathML_ATTR_fontstyle;
+      attr = TtaGetAttribute (el, attrType);
+      attrType.AttrTypeNum = MathML_ATTR_IntFontstyle;
+      IntAttr = TtaGetAttribute (el, attrType);
+      if (attr != NULL)
 	/* there is a fontstyle attribute. Remove the corresponding
 	   internal attribute that is not needed */
 	{
-	if (IntAttr != NULL)
-	  TtaRemoveAttribute (el, IntAttr, doc);
+	  if (IntAttr != NULL)
+	    TtaRemoveAttribute (el, IntAttr, doc);
 	}
-     else
+      else
 	/* there is no fontstyle attribute. Create an internal attribute
 	   IntFontstyle with a value that depends on the content of the MI */
 	{
-        /* get content length */
-        len = TtaGetElementVolume (el);
-        if (len > 1)
-           /* put an attribute IntFontstyle = IntNormal */
-	   {
-	   if (IntAttr == NULL)
-	      {
-	      IntAttr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (el, IntAttr, doc);
-	      }
-	   TtaSetAttributeValue (IntAttr, MathML_ATTR_IntFontstyle_VAL_IntNormal,
-				 el, doc);
-	   }
-        else
-	   /* MI contains a single character. Remove attribute IntFontstyle
-	      if it exists, except if it's ImaginaryI, ExponentialE or
-	      DifferentialD */
-	   {
-	   italic = TRUE;
-	   textEl = TtaGetFirstChild (el);
-	   if (textEl != NULL)
-	     {
-	     /* is there an attribute EntityName on that character? */
-	     attrType.AttrTypeNum = MathML_ATTR_EntityName;
-	     attr = TtaGetAttribute (textEl, attrType);
-	     if (attr)
-	       {
-	       len = TtaGetTextAttributeLength (attr);
-	       if (len > 0)
-		  {
-		  value = TtaGetMemory (len+1);
-		  TtaGiveTextAttributeValue (attr, value, &len);
-		  if (strcmp (&value[1], "ImaginaryI;") == 0 ||
-		      strcmp (&value[1], "ExponentialE;") == 0 ||
-		      strcmp (&value[1], "DifferentialD;") == 0)
-		    italic = FALSE;
-		  TtaFreeMemory (value);
-		  }
-	       }
-	     if (italic)
-	       {
-		 if (IntAttr != NULL)
-		   TtaRemoveAttribute (el, IntAttr, doc);
-	       }
-	     else
-	       {
-		 /* put an attribute IntFontstyle = IntNormal */
-		 if (IntAttr == NULL)
-		   {
-		     attrType.AttrTypeNum = MathML_ATTR_IntFontstyle;
-		     IntAttr = TtaNewAttribute (attrType);
-		     TtaAttachAttribute (el, IntAttr, doc);
-		   }
-		 TtaSetAttributeValue (IntAttr, MathML_ATTR_IntFontstyle_VAL_IntNormal,
-				       el, doc);
-	       }
-	     }
-	   }
+	  /* get content length */
+	  len = TtaGetElementVolume (el);
+	  if (len > 1)
+	    /* put an attribute IntFontstyle = IntNormal */
+	    {
+	      if (IntAttr == NULL)
+		{
+		  IntAttr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (el, IntAttr, doc);
+		}
+	      TtaSetAttributeValue (IntAttr,
+				    MathML_ATTR_IntFontstyle_VAL_IntNormal,
+				    el, doc);
+	    }
+	  else
+	    /* MI contains a single character. Remove attribute IntFontstyle
+	       if it exists, except if it's ImaginaryI, ExponentialE or
+	       DifferentialD */
+	    {
+	      italic = TRUE;
+	      textEl = TtaGetFirstChild (el);
+	      if (textEl != NULL)
+		{
+		  elType = TtaGetElementType (textEl);
+		  if (elType.ElTypeNum == MathML_EL_MGLYPH)
+		    /* the content of the MI element is a MGLYPH element */
+		    /* check the length if it's alt attribute */
+		    {
+		      /* by default, use normal style */
+		      italic = FALSE;
+		      attrType.AttrTypeNum = MathML_ATTR_alt;
+		      attr = TtaGetAttribute (textEl, attrType);
+		      if (attr)
+			/* the MGLYPH element has an alt attribute */
+			{
+			  len = TtaGetTextAttributeLength (attr);
+			  if (len == 1)
+			    italic = TRUE;
+			}
+		    }
+		  else
+		    {
+		      /* is there an attribute EntityName on that character? */
+		      attrType.AttrTypeNum = MathML_ATTR_EntityName;
+		      attr = TtaGetAttribute (textEl, attrType);
+		      if (attr)
+			{
+			  len = TtaGetTextAttributeLength (attr);
+			  if (len > 0)
+			    {
+			      value = TtaGetMemory (len+1);
+			      TtaGiveTextAttributeValue (attr, value, &len);
+			      if (strcmp (&value[1], "ImaginaryI;") == 0 ||
+				  strcmp (&value[1], "ExponentialE;") == 0 ||
+				  strcmp (&value[1], "DifferentialD;") == 0)
+				italic = FALSE;
+			      TtaFreeMemory (value);
+			    }
+			}
+		    }
+		  if (italic)
+		    {
+		      if (IntAttr != NULL)
+			TtaRemoveAttribute (el, IntAttr, doc);
+		    }
+		  else
+		    {
+		      /* put an attribute IntFontstyle = IntNormal */
+		      if (IntAttr == NULL)
+			{
+			  attrType.AttrTypeNum = MathML_ATTR_IntFontstyle;
+			  IntAttr = TtaNewAttribute (attrType);
+			  TtaAttachAttribute (el, IntAttr, doc);
+			}
+		      TtaSetAttributeValue (IntAttr,
+					MathML_ATTR_IntFontstyle_VAL_IntNormal,
+					el, doc);
+		    }
+		}
+	    }
         }
-     }
+    }
 }
 
 /*----------------------------------------------------------------------

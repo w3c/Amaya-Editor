@@ -55,7 +55,7 @@ DEFAULT
    HorizPos: Left = Previous . Right;
    LineBreak: No;
    Font: Enclosing =;
-   Style: Roman;
+   Style: Enclosing =;
    Weight: Enclosing =;
    Size: Enclosing =;
    Indent: 0;
@@ -181,6 +181,12 @@ BOXES
 		Visibility: INVALID_Visibility;
 		Foreground: INVALID_Color;
 		END;	
+	END;
+
+ AltValue: BEGIN
+	Content: (AttributeValue);
+	IN Structure_view
+		Visibility: 0;
 	END;
 
  VALUE_EntityName: BEGIN
@@ -457,6 +463,7 @@ RULES
 
    MathML:
 	BEGIN
+	Style: Roman;
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	PageBreak: No;
@@ -1253,7 +1260,6 @@ RULES
 	BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
-	Style: Enclosing = ;
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
@@ -1424,7 +1430,8 @@ RULES
    MGLYPH:
 	BEGIN
 	CreateBefore(ElementName);
-	CreateFirst (QuestionMark);
+	if not alt
+	   CreateFirst (QuestionMark);
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
@@ -1487,7 +1494,6 @@ RULES
 	BEGIN
 	VertRef: Enclosed . VRef;
 	LineBreak: Yes;
-	Style: Enclosing =;
 	IF immediately within MF
 	   VertPos: HMiddle = Enclosing . HMiddle;
 	IN Structure_view BEGIN
@@ -2329,6 +2335,8 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
+	if MGLYPH
+	   CreateFirst (AltValue);
 	END;
 
   index:

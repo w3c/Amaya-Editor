@@ -4678,6 +4678,27 @@ ThotBool AttrScriptShiftDelete (NotifyAttribute *event)
 }
 
 /*----------------------------------------------------------------------
+ AttrAltModified
+ An attribute ALT has been created or modified by the user.
+ -----------------------------------------------------------------------*/
+void AttrAltModified (NotifyAttribute *event)
+{
+  ElementType      elType;
+  Element          parent;
+
+  parent = TtaGetParent (event->element);
+  if (parent)
+    {
+      elType = TtaGetElementType (parent);
+      if (elType.ElTypeNum == MathML_EL_MI)
+	/* the parent element is a mi */
+	/* set the internal FonstStyle attribute according to the value
+	   of the alt attribute */
+	SetFontstyleAttr (parent, event->document);
+    }
+}
+
+/*----------------------------------------------------------------------
  DeleteIntRowAlign
  Remove attribute IntRowAlign from element row if there is no rowalign_mtr
  attribut on this element.
