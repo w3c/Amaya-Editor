@@ -57,15 +57,15 @@ static symTableCtx symtable;
 /***************************************************
  local function prototypes 
 ***************************************************/
-static void Expr (parserContextPtr ctx);
-static void Term (parserContextPtr ctx);
-static void Factor (parserContextPtr ctx);
+static void Expr (XPointerContextPtr ctx);
+static void Term (XPointerContextPtr ctx);
+static void Factor (XPointerContextPtr ctx);
 
 /*----------------------------------------------------------------------
   CtxAddError
   puts an error code in the context
   ----------------------------------------------------------------------*/
-static void CtxAddError (parserContextPtr ctx, char *msg)
+static void CtxAddError (XPointerContextPtr ctx, char *msg)
 {
   if (!ctx->error)
     ctx->error = TtaStrdup (msg);
@@ -78,7 +78,7 @@ static void CtxAddError (parserContextPtr ctx, char *msg)
 /*----------------------------------------------------------------------
   LookupSymbol
   ----------------------------------------------------------------------*/
-int LookupSymbol (parserContextPtr ctx, char *s)
+int LookupSymbol (XPointerContextPtr ctx, char *s)
 {
   symTableCtxPtr me = ctx->symtable;
 
@@ -92,7 +92,7 @@ int LookupSymbol (parserContextPtr ctx, char *s)
 /*----------------------------------------------------------------------
   InsertSymbol
   ----------------------------------------------------------------------*/
-static int InsertSymbol (parserContextPtr ctx, char *s, int tok)
+static int InsertSymbol (XPointerContextPtr ctx, char *s, int tok)
 {
   int len;
   symTableCtx *me = ctx->symtable;
@@ -124,7 +124,7 @@ static int InsertSymbol (parserContextPtr ctx, char *s, int tok)
   Actions
  **************************************************/
 
-static void AddChild (parserContextPtr ctx, char *node)
+static void AddChild (XPointerContextPtr ctx, char *node)
 {
   nodeInfo *curNode = ctx->curNode;
 
@@ -134,7 +134,7 @@ static void AddChild (parserContextPtr ctx, char *node)
   strcpy (curNode->node, node);
 }
 
-static void AddIndex (parserContextPtr ctx, int index)
+static void AddIndex (XPointerContextPtr ctx, int index)
 {
   nodeInfo *curNode = ctx->curNode;
 
@@ -144,7 +144,7 @@ static void AddIndex (parserContextPtr ctx, int index)
   curNode->index = index;
 }
 
-static void GotoChild (parserContextPtr ctx)
+static void GotoChild (XPointerContextPtr ctx)
 {
   nodeInfo *curNode = ctx->curNode;
 
@@ -178,7 +178,7 @@ static void GotoChild (parserContextPtr ctx)
     CtxAddError (ctx, "GotoChild: no such node");
 }
 
-static void GotoId (parserContextPtr ctx, char *id)
+static void GotoId (XPointerContextPtr ctx, char *id)
 {
   nodeInfo *curNode = ctx->curNode;
   
@@ -199,7 +199,7 @@ static void GotoId (parserContextPtr ctx, char *id)
     CtxAddError (ctx, "GotoId: no such id\n");
 }
 
-static void RangeTo (parserContextPtr ctx)
+static void RangeTo (XPointerContextPtr ctx)
 {
   nodeInfo *curNode = ctx->curNode;
   
@@ -219,7 +219,7 @@ static void RangeTo (parserContextPtr ctx)
     }
 }
 
-static void StringRange (parserContextPtr ctx, int startC, int len)
+static void StringRange (XPointerContextPtr ctx, int startC, int len)
 {
   int pos = startC;
 
@@ -254,7 +254,7 @@ static void StringRange (parserContextPtr ctx, int startC, int len)
 #endif
 }
 
-static void StartPoint (parserContextPtr ctx)
+static void StartPoint (XPointerContextPtr ctx)
 {
   nodeInfo *curNode = ctx->curNode;
 
@@ -262,7 +262,7 @@ static void StartPoint (parserContextPtr ctx)
   curNode->endC = curNode->startC -1;
 }
 
-static void EndPoint (parserContextPtr ctx)
+static void EndPoint (XPointerContextPtr ctx)
 {
   nodeInfo *curNode = ctx->curNode;
 
@@ -297,7 +297,7 @@ static int IsValidChar (char c)
   LexAn
   The lexical analyzer
   ----------------------------------------------------------------------*/
-static int LexAn (parserContextPtr ctx) 
+static int LexAn (XPointerContextPtr ctx) 
 {
   char lexbuf[BSIZE];
 
@@ -394,7 +394,7 @@ static int LexAn (parserContextPtr ctx)
 /*----------------------------------------------------------------------
   Match
   ----------------------------------------------------------------------*/
-static void Match (parserContextPtr ctx, int t)
+static void Match (XPointerContextPtr ctx, int t)
 {
   if (ctx->error)
     return;
@@ -408,7 +408,7 @@ static void Match (parserContextPtr ctx, int t)
 /*----------------------------------------------------------------------
   Term
   ----------------------------------------------------------------------*/
-static void Term (parserContextPtr ctx)
+static void Term (XPointerContextPtr ctx)
 {
   int i;
 
@@ -506,7 +506,7 @@ static void Term (parserContextPtr ctx)
 /*----------------------------------------------------------------------
   Factor
   ----------------------------------------------------------------------*/
-static void Factor (parserContextPtr ctx)
+static void Factor (XPointerContextPtr ctx)
 {
   int startC;
   int len;
@@ -587,7 +587,7 @@ static void Factor (parserContextPtr ctx)
 /*----------------------------------------------------------------------
   Expr
   ----------------------------------------------------------------------*/
-static void Expr (parserContextPtr ctx)
+static void Expr (XPointerContextPtr ctx)
 {
   Factor (ctx);
 
@@ -627,7 +627,7 @@ static void Expr (parserContextPtr ctx)
 /*----------------------------------------------------------------------
   InitSymTable
   ----------------------------------------------------------------------*/
-static void InitSymtable (parserContextPtr ctx)
+static void InitSymtable (XPointerContextPtr ctx)
 {
   struct entry *p;
 
@@ -655,7 +655,7 @@ static void SelectToNode (Document doc, nodeInfo *node)
 /*----------------------------------------------------------------------
   XPointer_select
   ----------------------------------------------------------------------*/
-void XPointer_select (parserContextPtr ctx)
+void XPointer_select (XPointerContextPtr ctx)
 {
   if (!ctx || ctx->error)
     return;
@@ -671,7 +671,7 @@ void XPointer_select (parserContextPtr ctx)
 /*----------------------------------------------------------------------
   XPointer_free
   ----------------------------------------------------------------------*/
-void XPointer_free (parserContextPtr ctx)
+void XPointer_free (XPointerContextPtr ctx)
 {
   if (!ctx)
     return;
@@ -685,7 +685,7 @@ void XPointer_free (parserContextPtr ctx)
 /*----------------------------------------------------------------------
   XPointer_isRangeTo
   ----------------------------------------------------------------------*/
-ThotBool XPointer_isRangeTo (parserContextPtr ctx)
+ThotBool XPointer_isRangeTo (XPointerContextPtr ctx)
 {
   if (!ctx)
     return FALSE;
@@ -707,7 +707,7 @@ ThotBool XPointer_isStringRange (nodeInfo *node)
 /*----------------------------------------------------------------------
   XPointer_nodeStart
   ----------------------------------------------------------------------*/
-nodeInfo *XPointer_nodeStart (parserContextPtr ctx)
+nodeInfo *XPointer_nodeStart (XPointerContextPtr ctx)
 {
   if (!ctx)
     return NULL;
@@ -718,7 +718,7 @@ nodeInfo *XPointer_nodeStart (parserContextPtr ctx)
 /*----------------------------------------------------------------------
   XPointer_nodeEnd
   ----------------------------------------------------------------------*/
-nodeInfo *XPointer_nodeEnd (parserContextPtr ctx)
+nodeInfo *XPointer_nodeEnd (XPointerContextPtr ctx)
 {
   if (!ctx)
     return NULL;
@@ -762,13 +762,13 @@ int XPointer_endC (nodeInfo *node)
 /*----------------------------------------------------------------------
   XPointer_parse
   ----------------------------------------------------------------------*/
-parserContextPtr XPointer_parse (Document doc, char *buffer) 
+XPointerContextPtr XPointer_parse (Document doc, char *buffer) 
 {
-  parserContextPtr context;
+  XPointerContextPtr context;
   
   /* init the context */
-  context = (parserContextPtr) TtaGetMemory (sizeof (parserContext));
-  memset (context, 0, sizeof (parserContext));
+  context = (XPointerContextPtr) TtaGetMemory (sizeof (XPointerContext));
+  memset (context, 0, sizeof (XPointerContext));
 
   /* verify the schema */
   if (!buffer || buffer[0] == EOS)

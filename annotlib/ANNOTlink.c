@@ -148,7 +148,7 @@ AnnotMeta *annot;
   
   if (annot->xptr)
     {
-      parserContextPtr ctx;
+      XPointerContextPtr ctx;
       nodeInfo *node;
       ctx = XPointer_parse (source_doc, annot->xptr);
       node = XPointer_nodeStart (ctx);

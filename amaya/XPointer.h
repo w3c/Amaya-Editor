@@ -69,7 +69,7 @@ typedef struct _nodeInfo {
   int  processed;
 } nodeInfo;
 
-typedef struct _parserContext {
+typedef struct _XPointerContext {
   Document doc; /* document where we are resolving the XPointer */
   Element root; /* root element of the document */
 
@@ -88,8 +88,11 @@ typedef struct _parserContext {
   nodeInfo  *curNode;
   nodeInfo   nodeStart;
   nodeInfo   nodeEnd;
-} parserContext;
+} XPointerContext;
 
-typedef parserContext *parserContextPtr;
+typedef XPointerContext *XPointerContextPtr;
 
 #endif /* AMAYA_XPOINTER_H */
+
+
+

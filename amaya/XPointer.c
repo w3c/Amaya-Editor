@@ -686,7 +686,7 @@ View view;
 
 #ifdef ANNOTATIONS  
   {
-    parserContextPtr ctx;
+    XPointerContextPtr ctx;
     fprintf (stderr, "final expression is: %s\n", xptr_expr);
     printf ("first el is %p\n", firstEl);
     printf ("last el is %p\n", lastEl);
