@@ -601,6 +601,9 @@ void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
      TtaCloseDocument (TTopicTree);
    TTopicTree = BM_GetTopicTree ();
 
+   /* remove the child entries. We cannot move a topic to its children */
+   BM_topicsPrune (TTopicTree, bookmark);
+
    /* select the topics in the tree that correspond to those in the bookmark */
    BM_topicsPreSelect (TTopicTree, bookmark);
 

@@ -493,6 +493,7 @@ Document BM_NewDocument (void)
     TtaFreeMemory (DocumentURLs[doc]);
   ptr = GetLocalBookmarksFile ();
   DocumentURLs[doc] = TtaStrdup (ptr);
+  TtaSetTextZone (doc, 1, DocumentURLs[doc]);
 
   if (DocumentMeta[doc])
     DocumentMetaClear (DocumentMeta[doc]);
@@ -517,6 +518,61 @@ static Element BM_GetFirstChild (Element topic_item)
   el = TtaSearchTypedElement (elType, SearchInTree, topic_item);
   return (el);
 }
+
+/*----------------------------------------------------------------------
+  BM_topicsPrune
+  ---------------------------------------------------------------------*/
+void BM_topicsPrune (Document doc, BookmarkP me)
+{
+  Element el, root;
+  ElementType elType;
+  Attribute      attr;
+  AttributeType  attrType;
+  char          *url;
+  int            i;
+
+  if (doc == 0 || !me || !me->self_url)
+    return;
+
+   /* point to the first node */
+  root = TtaGetRootElement (doc);
+  elType = TtaGetElementType (root);
+
+  if (!root)
+    return;
+
+  /* try to find the topic and delete its children */
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = Topics_ATTR_Model_HREF_;
+
+  TtaSearchAttribute (attrType, SearchForward, root, &el, &attr);
+  while (el)
+    {
+      i = TtaGetTextAttributeLength (attr) + 1;
+      url = TtaGetMemory (i);
+      TtaGiveTextAttributeValue (attr, url, &i);
+      if (!strcasecmp (url, me->self_url))
+	{
+	  TtaFreeMemory (url);
+	  break;
+	}
+      TtaFreeMemory (url);
+      root = el;
+      TtaSearchAttribute (attrType, SearchForward, root, &el, &attr);
+    }
+  if (el)
+    {
+    /* delete the subtopics, if they exist */
+      TtaDeleteTree (el, doc);
+      /* 
+      elType.ElTypeNum = Topics_EL_Topic_content;
+      el = TtaSearchTypedElement (elType, SearchInTree, el);
+      if (el)
+	TtaDeleteTree (el, doc);
+      */
+    }
+}
+
 
 /*-----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
@@ -758,8 +814,8 @@ void BM_topicsPreSelect (Document TopicTree, BookmarkP bookmark)
   if (!bookmark)
     return;
 
-  if (bookmark->isTopic)
-      BM_topicSelectToggle (TopicTree, bookmark->self_url, TRUE);
+  if (bookmark->isTopic && bookmark->parent_url)
+      BM_topicSelectToggle (TopicTree, bookmark->parent_url, TRUE);
   else
     {
       count = Model_dumpBookmarkTopics (bookmark, &topics);

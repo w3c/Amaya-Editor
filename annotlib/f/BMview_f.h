@@ -31,6 +31,8 @@ extern void BM_CloseTopic ( Document doc,
 extern void BM_OpenTopic ( Document doc,
                            List *bm_list );
 extern Document BM_NewDocument ( void );
+extern void BM_topicsPrune ( Document doc,
+                             BookmarkP me );
 extern void BM_InitTreeWidget ( ThotWidget tree,
                                 Document TopicTree,
                                 void *cbf );
@@ -71,6 +73,8 @@ extern void BM_CloseTopic (/* Document doc,
 extern void BM_OpenTopic (/* Document doc,
                              List *bm_list */);
 extern Document BM_NewDocument (/* void */);
+extern void BM_topicsPrune (/* Document doc,
+                               BookmarkP me */);
 extern void BM_InitTreeWidget (/* ThotWidget tree,
                                   Document TopicTree,
                                   void *cbf */);
