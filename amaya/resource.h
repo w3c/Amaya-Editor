@@ -265,7 +265,7 @@
 #define CREATEHREF                      561
 #define NUMATTRDIALOG                   566
 #define TEXTATTRDIALOG                  567
-#define IDC_CURSOR2                     568
+#define REQATTRDIALOG                   570
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -793,7 +793,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        569
+#define _APS_NEXT_RESOURCE_VALUE        571
 #define _APS_NEXT_COMMAND_VALUE         40052
 #define _APS_NEXT_CONTROL_VALUE         1599
 #define _APS_NEXT_SYMED_VALUE           101

@@ -239,66 +239,39 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg,
   
   switch (iMsg)
     {
-    case WM_CREATE:
-      /* get the default GUI font */
-      /* Create static window for the title */
-      hwnTitle = CreateWindow ("STATIC", WIN_pAttr1->AttrName, 
-			       WS_CHILD | WS_VISIBLE | SS_LEFT,
-			       10, 5, 100, 15, hwnd, (HMENU) 99, 
-			       ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
-      /* set the font of the window */
+
+ case WM_INITDIALOG:
+      SetWindowText (hwnd, TtaGetMessage (LIB, TMSG_ATTR));
+      WIN_SetDialogfont (hwnd);
+      hwnTitle = GetDlgItem (hwnd, IDC_ATTRNAME);
+	  SetWindowText (hwnTitle, WIN_pAttr1->AttrName);
       WIN_SetDialogfont (hwnTitle);
-      /* Create Edit Window autoscrolled */
-      hwnEdit = CreateWindow ("EDIT", TextAttrValue, 
-			      WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT |
-			         ES_AUTOHSCROLL,
-			      10, 25, 320, 20, hwnd, (HMENU) 1,
-			      ((LPCREATESTRUCT) lParam)->hInstance, NULL);
-      /* set the font of the window */
+
+      hwnEdit = GetDlgItem (hwnd, ID_EDITVALUE);
       WIN_SetDialogfont (hwnEdit);
-      if (lpfnTextZoneWndProc == (WNDPROC) 0)
-	lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (hwnEdit, GWL_WNDPROC,
+      SetDlgItemText (hwnd, ID_EDITVALUE, TextAttrValue);
+     if (lpfnTextZoneWndProc == (WNDPROC) 0)
+	     lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (hwnEdit, GWL_WNDPROC,
 						       (DWORD) TextAttrProc);
       else
-	SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) TextAttrProc);
-      
-      /* Create Confirm button */
-      confirmButton = CreateWindow ("BUTTON",
-				    TtaGetMessage (LIB, TMSG_LIB_CONFIRM), 
-				    WS_CHILD | BS_DEFPUSHBUTTON | WS_VISIBLE,
-				    65, 50, 100, 20, hwnd, 
-				    (HMENU) ID_CONFIRM,
- 				    ((LPCREATESTRUCT)lParam)->hInstance, NULL);
-      /* set the font of the window */
+	     SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) TextAttrProc);
+ 	  
+      /* Confirm button */
+      confirmButton = GetDlgItem (hwnd, ID_CONFIRM);
+	  SetWindowText (confirmButton, TtaGetMessage (LIB, TMSG_APPLY));
       WIN_SetDialogfont (confirmButton);
-      /* Create Done Button */
-      doneButton = CreateWindow ("BUTTON", TtaGetMessage(LIB, TMSG_DONE),
-				 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-				 185, 50, 100, 20, hwnd, 
-				 (HMENU) ID_DONE,
-				 ((LPCREATESTRUCT) lParam)->hInstance, NULL);
-      /* set the font of the window */
+
+      /* Done Button */
+      doneButton = GetDlgItem (hwnd, ID_DONE);
+	  SetWindowText (doneButton, TtaGetMessage (LIB, TMSG_DONE));
       WIN_SetDialogfont (doneButton);
+
       SetFocus (hwnEdit);
-      break;
-      
+	  return FALSE;
+	  break;
+	  
     case WM_DESTROY :
       PostQuitMessage (0);
-      break;
-      
-    case WM_ENTER:
-      txtLength = GetWindowTextLength (hwnEdit);
-      if (txtLength >= LgMaxAttrText)
-	txtLength = LgMaxAttrText - 1;
-      GetWindowText (hwnEdit, TextAttrValue, txtLength + 1);
-      i = 0;
-      while (i < txtLength && TextAttrValue[i] != __CR__)
-	i++;
-      if (i < txtLength)
-	TextAttrValue[i] = EOS;
-      ThotCallback (NumMenuAttrTextNeeded, STRING_DATA, TextAttrValue);
-      ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (char *) 1);
-      DestroyWindow (hwnd);
       break;
       
     case WM_COMMAND:
@@ -319,6 +292,7 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg,
 	  DestroyWindow (hwnd);
 	  break;
 	  
+	case IDCANCEL:
 	case ID_DONE:
 	  ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (char *) 0);
 	  DestroyWindow (hwnd);
@@ -326,60 +300,8 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg,
 	  break;
 	}
       break;
-    }
-  return DefWindowProc (hwnd, iMsg, wParam, lParam);
-}
-
-/*----------------------------------------------------------------------
-  WIN_InitFormDialog
-  ----------------------------------------------------------------------*/
-static ThotBool WIN_InitFormDialog (ThotWindow parent, char *title)
-{
-  WNDCLASS        wndFormClass;
-  char           *szAppName; 
-  ThotWindow      hwnFromDialog;
-  MSG             msg;
-  int             frame;
-
-  szAppName = "FormClass";
-  if (!wndRegistered)
-    {
-      wndRegistered = TRUE;
-      wndFormClass.style         = CS_HREDRAW | CS_VREDRAW;
-      wndFormClass.lpfnWndProc   = InitFormDialogWndProc;
-      wndFormClass.cbClsExtra    = 0;
-      wndFormClass.cbWndExtra    = 0;
-      wndFormClass.hInstance     = hInstance;
-      wndFormClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION);
-      wndFormClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
-      wndFormClass.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
-      wndFormClass.lpszClassName = szAppName;
-      wndFormClass.lpszMenuName  = NULL;
-      if (IS_WIN95)
-	{
-	  if (!RegisterWin95 (&wndFormClass))
-	    return (FALSE);
-	}
-      else if (!RegisterClass (&wndFormClass))
-	return (FALSE);
-    }
-  
-  /* get the default GUI font */
-  hwnFromDialog = CreateWindow (szAppName, title,
-				DS_MODALFRAME | WS_POPUP | 
-				WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
-				ClickX, ClickY,
-				340, 100,
-				parent, NULL, hInstance, NULL);
-  /* set the font of the window */
-  WIN_SetDialogfont (hwnFromDialog);
-  ShowWindow (hwnFromDialog, SW_SHOWNORMAL);
-  UpdateWindow (hwnFromDialog);
-  while (GetMessage (&msg, NULL, 0, 0))
-    {
-      frame = GetFrameNumber (msg.hwnd);
-      TranslateMessage (&msg);
-      DispatchMessage (&msg);
+    default:
+      return FALSE;
     }
   return TRUE;
 }
@@ -399,7 +321,6 @@ LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg,
 
   switch (iMsg)
     {
-
  case WM_INITDIALOG:
       SetWindowText (hwnd, TtaGetMessage (LIB, TMSG_ATTR));
       WIN_SetDialogfont (hwnd);
@@ -610,8 +531,8 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
 		   TtaGetMessage (LIB, TMSG_ATTR), FALSE, 2, 'L', D_DONE);
 #else  /* _WINDOWS */
        isForm = TRUE;
-       WIN_InitFormDialog (TtaGetViewFrame (doc, view),
-			   TtaGetMessage (LIB, TMSG_ATTR));
+       DialogBox (hInstance, MAKEINTRESOURCE (REQATTRDIALOG), NULL, 
+		         (DLGPROC) InitFormDialogWndProc);
 #endif /* _WINDOWS */
        MandatoryAttrFormExists = TRUE;
      }
