@@ -6,14 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void Javalong2CElementType ( jlong in,
-                                    ElementType *out );
-extern void Javalong2CAttributeType ( jlong in,
-                                      AttributeType *out );
-extern void CElementType2Javalong ( ElementType in,
-                                    jlong *out );
-extern void CAttributeType2Javalong ( AttributeType in,
-                                      jlong *out );
+extern void *JavaLong2CPtr ( jlong in );
+extern jlong CPtr2JavaLong ( void *in );
+extern void do_ptr_need_shift ( void );
+extern int *JavaLongPtr2CIntPtr ( jlong *in );
 extern void JavaElement2CElement ( struct Hthotlib_Element *in,
                                    Element *out );
 extern void JavaElement2CElementPtr ( struct Hthotlib_Element* in,
@@ -24,6 +20,8 @@ extern void JavaElementType2CElementTypePtr ( struct Hthotlib_ElementType* in,
                                               ElementType **out );
 extern void CElementTypePtr2JavaElementType ( ElementType *in,
                                               struct Hthotlib_ElementType** out );
+extern void CElementType2JavaElementType ( ElementType in,
+                                           struct Hthotlib_ElementType* out );
 extern void JavaDocument2CDocumentPtr ( struct Hthotlib_Document* in,
                                         Document **out );
 extern void CDocumentPtr2JavaDocument ( Document *in,
@@ -83,14 +81,10 @@ extern void Javalong2CThotWidget ( jlong in,
 
 #else /* __STDC__ */
 
-extern void Javalong2CElementType (/* jlong in,
-                                      ElementType *out */);
-extern void Javalong2CAttributeType (/* jlong in,
-                                        AttributeType *out */);
-extern void CElementType2Javalong (/* ElementType in,
-                                      jlong *out */);
-extern void CAttributeType2Javalong (/* AttributeType in,
-                                        jlong *out */);
+extern void *JavaLong2CPtr (/* jlong in */);
+extern jlong CPtr2JavaLong (/* void *in */);
+extern void do_ptr_need_shift (/* void */);
+extern int *JavaLongPtr2CIntPtr (/* jlong *in */);
 extern void JavaElement2CElement (/* struct Hthotlib_Element *in,
                                      Element *out */);
 extern void JavaElement2CElementPtr (/* struct Hthotlib_Element* in,
@@ -101,6 +95,8 @@ extern void JavaElementType2CElementTypePtr (/* struct Hthotlib_ElementType* in,
                                                 ElementType **out */);
 extern void CElementTypePtr2JavaElementType (/* ElementType *in,
                                                 struct Hthotlib_ElementType** out */);
+extern void CElementType2JavaElementType (/* ElementType in,
+                                             struct Hthotlib_ElementType* out */);
 extern void JavaDocument2CDocumentPtr (/* struct Hthotlib_Document* in,
                                           Document **out */);
 extern void CDocumentPtr2JavaDocument (/* Document *in,

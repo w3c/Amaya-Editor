@@ -12,6 +12,8 @@
 #include "thotlib_Action.h"
 #include "thotlib_Extra.h"
 
+#include "JavaTypes_f.h"
+
 /*
  * The C Callback interface.
  */
@@ -19,7 +21,8 @@ void
 thotlib_Extra_Java2CCallback(struct Hthotlib_Extra* none,
                              struct Hjava_lang_Object* arg, jlong callback)
 {
-    Java2CCallback callback_func = (Java2CCallback)((void *) callback);
+    Java2CCallback callback_func = (Java2CCallback)
+                        JavaLong2CPtr(callback);
 
     JavaThotlibLock();
     callback_func((void *) arg);
@@ -109,9 +112,12 @@ thotlib_Extra_JavaActionEventCallback(void *arg, NotifyEvent *event)
 	case TteAttrDelete: {
 	    NotifyAttribute *ev = (NotifyAttribute *) event;
 	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
-		     "callbackAttribute", "(IIJJJ)I", NULL, FALSE,
-		     ev->event, ev->document, ev->element,
-		     ev->attribute, ev->attributeType);
+		     "callbackAttribute", "(IIJJJI)I", NULL, FALSE,
+		     ev->event, ev->document,
+		     CPtr2JavaLong(ev->element),
+		     CPtr2JavaLong(ev->attribute),
+		     CPtr2JavaLong(ev->attributeType.AttrSSchema),
+		     ev->attributeType.AttrTypeNum);
 	    break;
 	}
 	case TteElemMenu:
@@ -131,9 +137,12 @@ thotlib_Extra_JavaActionEventCallback(void *arg, NotifyEvent *event)
 	case TteElemMouseOut: {
 	    NotifyElement *ev = (NotifyElement *) event;
 	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
-		     "callbackElement", "(IIJJI)I", NULL, FALSE,
-		     ev->event, ev->document, ev->element,
-		     ev->elementType, ev->position);
+		     "callbackElement", "(IIJJII)I", NULL, FALSE,
+		     ev->event, ev->document,
+		     CPtr2JavaLong(ev->element),
+		     CPtr2JavaLong(ev->elementType.ElSSchema),
+		     ev->elementType.ElTypeNum,
+		     ev->position);
 	    break;
 	}
 	case TteElemPaste:
@@ -141,8 +150,10 @@ thotlib_Extra_JavaActionEventCallback(void *arg, NotifyEvent *event)
 	    NotifyOnValue *ev = (NotifyOnValue *) event;
 	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
 		     "callbackValue", "(IIJJI)I", NULL, FALSE,
-		     ev->event, ev->document, ev->element,
-		     ev->target, ev->value);
+		     ev->event, ev->document,
+		     CPtr2JavaLong(ev->element),
+		     CPtr2JavaLong(ev->target),
+		     ev->value);
 	    break;
 	}
 	case TteElemSetReference:
@@ -150,16 +161,22 @@ thotlib_Extra_JavaActionEventCallback(void *arg, NotifyEvent *event)
 	    NotifyOnTarget *ev = (NotifyOnTarget *) event;
 	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
 		     "callbackTarget", "(IIJJI)I", NULL, FALSE,
-		     ev->event, ev->document, ev->element,
-		     ev->target, ev->targetdocument);
+		     ev->event, ev->document,
+		     CPtr2JavaLong(ev->element),
+		     CPtr2JavaLong(ev->target),
+		     ev->targetdocument);
 	    break;
 	}
 	case TteElemTransform: {
 	    NotifyOnElementType *ev = (NotifyOnElementType *) event;
 	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
-		     "callbackElementType", "(IIJJI)I", NULL, FALSE,
-		     ev->event, ev->document, ev->element,
-		     ev->elementType, ev->targetElementType);
+		     "callbackElementType", "(IIJJIJI)I", NULL, FALSE,
+		     ev->event, ev->document,
+		     CPtr2JavaLong(ev->element),
+		     CPtr2JavaLong(ev->elementType.ElSSchema),
+		     ev->elementType.ElTypeNum,
+		     CPtr2JavaLong(ev->targetElementType.ElSSchema),
+		     ev->targetElementType.ElTypeNum);
 	    break;
 	}
 	case TtePRuleCreate:
@@ -168,8 +185,10 @@ thotlib_Extra_JavaActionEventCallback(void *arg, NotifyEvent *event)
 	    NotifyPresentation *ev = (NotifyPresentation *) event;
 	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
 		     "callbackPresentation", "(IIJJI)I", NULL, FALSE,
-		     ev->event, ev->document, ev->element,
-		     ev->pRule, ev->pRuleType);
+		     ev->event, ev->document,
+		     CPtr2JavaLong(ev->element),
+		     CPtr2JavaLong(ev->pRule),
+		     ev->pRuleType);
 	    break;
 	}
 	case TteDocOpen:
@@ -239,7 +258,8 @@ thotlib_Extra_JavaRegisterAction(struct Hthotlib_Extra* none,
     javaString2CString(actionName, actionname, sizeof(actionname));
 
     JavaThotlibLock();
-    TteAddUserAction (TtaStrdup(actionname), thotlib_Extra_JavaActionEventCallback,
+    TteAddUserAction (TtaStrdup(actionname),
+                      thotlib_Extra_JavaActionEventCallback,
 		      (void *) handler);
     JavaThotlibRelease();
 }
@@ -255,8 +275,9 @@ thotlib_Extra_JavaRegisterMenuAction(struct Hthotlib_Extra* none,
     javaString2CString(actionName, actionname, sizeof(actionname));
 
     JavaThotlibLock();
-    TteAddUserMenuAction (TtaStrdup(actionname), thotlib_Extra_JavaActionMenuCallback,
-                      (void *) handler);
+    TteAddUserMenuAction (TtaStrdup(actionname),
+                          thotlib_Extra_JavaActionMenuCallback,
+                          (void *) handler);
     JavaThotlibRelease();
 }
 
@@ -353,7 +374,7 @@ thotlib_Extra_TtaGetElementType(struct Hthotlib_Extra* none,
     ElementType et;
 
     JavaThotlibLock();
-    et = TtaGetElementType((Element) el);
+    et = TtaGetElementType((Element) JavaLong2CPtr(el));
     JavaThotlibRelease();
     CElementType2JavaElementType(et, elType);
 }
@@ -364,7 +385,7 @@ thotlib_Extra_TtaGetElementTypeName(struct Hthotlib_Extra* none,
     char *res;
     ElementType et;
 
-    et.ElSSchema = (SSchema) sschema;
+    et.ElSSchema = (SSchema) JavaLong2CPtr(sschema);
     et.ElTypeNum = (int) type;
     JavaThotlibLock();
     res = TtaGetElementTypeName(et);
@@ -381,12 +402,12 @@ thotlib_Extra_TtaNewAttribute(struct Hthotlib_Extra* none,
     AttributeType att;
     Attribute at;
 
-    att.AttrSSchema = (SSchema) (unhand(atType)->sschema);
+    att.AttrSSchema = (SSchema) JavaLong2CPtr(unhand(atType)->sschema);
     att.AttrTypeNum = (int) (unhand(atType)->type);
     JavaThotlibLock();
     at = TtaNewAttribute(att);
     JavaThotlibRelease();
-    return((jlong) at);
+    return(CPtr2JavaLong(at));
 }
 
 jlong
@@ -394,13 +415,14 @@ thotlib_Extra_TtaGetAttribute(struct Hthotlib_Extra* none,
 		jlong element, struct Hthotlib_AttributeType* atType) {
     AttributeType att;
     Attribute at;
+    Element el = JavaLong2CPtr(element);
 
-    att.AttrSSchema = (SSchema) (unhand(atType)->sschema);
+    att.AttrSSchema = (SSchema) JavaLong2CPtr(unhand(atType)->sschema);
     att.AttrTypeNum = (int) (unhand(atType)->type);
     JavaThotlibLock();
-    at = TtaGetAttribute((Element) element, att);
+    at = TtaGetAttribute(el, att);
     JavaThotlibRelease();
-    return((jlong) at);
+    return(CPtr2JavaLong(at));
 }
 
 void
@@ -411,14 +433,16 @@ thotlib_Extra_TtaSearchAttribute(struct Hthotlib_Extra* none,
     AttributeType att;
     Attribute lat;
     Element lel;
+    Element elem;
 
-    att.AttrSSchema = (SSchema) (unhand(atType)->sschema);
+    att.AttrSSchema = (SSchema) JavaLong2CPtr(unhand(atType)->sschema);
     att.AttrTypeNum = (int) (unhand(atType)->type);
+    elem = (Element) JavaLong2CPtr(element);
     JavaThotlibLock();
-    TtaSearchAttribute(att, (SearchDomain) scope, (Element) element, &lel, &lat);
+    TtaSearchAttribute(att, (SearchDomain) scope, elem, &lel, &lat);
     JavaThotlibRelease();
-    unhand(at)->attribute = (jlong) lat;
-    unhand(el)->element = (jlong) lel;
+    unhand(at)->attribute = CPtr2JavaLong(lat);
+    unhand(el)->element = CPtr2JavaLong(lel);
 }
 
 jlong
@@ -428,13 +452,13 @@ thotlib_Extra_TtaSearchTypedElement(struct Hthotlib_Extra* none,
     ElementType lelt;
     Element lel;
 
-    lelt.ElSSchema = (SSchema) (unhand(elType)->sschema);
+    lelt.ElSSchema = (SSchema) JavaLong2CPtr(unhand(elType)->sschema);
     lelt.ElTypeNum = (int) (unhand(elType)->type);
-    lel = (Element) (unhand(el)->element);
+    lel = (Element) JavaLong2CPtr(unhand(el)->element);
     JavaThotlibLock();
     lel = TtaSearchTypedElement(lelt, (SearchDomain) scope, lel);
     JavaThotlibRelease();
-    return((jlong) lel);
+    return(CPtr2JavaLong(lel));
 }
 
 jlong
@@ -443,12 +467,12 @@ thotlib_Extra_TtaNewElement(struct Hthotlib_Extra* none,
     ElementType elt;
     Element el;
 
-    elt.ElSSchema = (SSchema) (unhand(elType)->sschema);
+    elt.ElSSchema = (SSchema) JavaLong2CPtr(unhand(elType)->sschema);
     elt.ElTypeNum = (int) (unhand(elType)->type);
     JavaThotlibLock();
     el = TtaNewElement((Document) document, elt);
     JavaThotlibRelease();
-    return((jlong) el);
+    return(CPtr2JavaLong(el));
 }
 
 jlong
@@ -465,12 +489,12 @@ thotlib_Extra_TtaNewTree(struct Hthotlib_Extra* none,
     else
         label_ptr = NULL;
 
-    elt.ElSSchema = (SSchema) (unhand(elType)->sschema);
+    elt.ElSSchema = (SSchema) JavaLong2CPtr(unhand(elType)->sschema);
     elt.ElTypeNum = (int) (unhand(elType)->type);
     JavaThotlibLock();
     el = TtaNewTree((Document) document, elt, label_ptr);
     JavaThotlibRelease();
-    return((jlong) el);
+    return(CPtr2JavaLong(el));
 }
 
 jlong
@@ -478,14 +502,14 @@ thotlib_Extra_TtaCreateDescent(struct Hthotlib_Extra* none,
 		jint document, jlong element,
 		struct Hthotlib_ElementType* elType) {
     ElementType elt;
-    Element el;
+    Element el = (Element) JavaLong2CPtr(element);
 
-    elt.ElSSchema = (SSchema) (unhand(elType)->sschema);
+    elt.ElSSchema = (SSchema) JavaLong2CPtr(unhand(elType)->sschema);
     elt.ElTypeNum = (int) (unhand(elType)->type);
     JavaThotlibLock();
-    el = TtaCreateDescent((Document) document, (Element) element, elt);
+    el = TtaCreateDescent((Document) document, el, elt);
     JavaThotlibRelease();
-    return((jlong) el);
+    return(CPtr2JavaLong(el));
 }
 
 jlong
@@ -493,14 +517,14 @@ thotlib_Extra_TtaCreateDescentWithContent(struct Hthotlib_Extra* none,
 		jint document, jlong element,
 		struct Hthotlib_ElementType* elType) {
     ElementType elt;
-    Element el;
+    Element el = (Element) JavaLong2CPtr(element);
 
-    elt.ElSSchema = (SSchema) (unhand(elType)->sschema);
+    elt.ElSSchema = (SSchema) JavaLong2CPtr(unhand(elType)->sschema);
     elt.ElTypeNum = (int) (unhand(elType)->type);
     JavaThotlibLock();
-    el = TtaCreateDescentWithContent((Document) document, (Element) element, elt);
+    el = TtaCreateDescentWithContent((Document) document, el, elt);
     JavaThotlibRelease();
-    return((jlong) el);
+    return(CPtr2JavaLong(el));
 }
 
 

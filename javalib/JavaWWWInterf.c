@@ -131,11 +131,11 @@ void *arg;
 
     struct Hamaya_HTTPRequest* request = (struct Hamaya_HTTPRequest*) arg;
 
-    callback = (GetObjectWWWCCallback) ((void *)
-                                        unhand(request)->callback_f);
+    callback = (GetObjectWWWCCallback) 
+               JavaLong2CPtr(unhand(request)->callback_f);
     doc = unhand(request)->doc;
     status = unhand(request)->status;
-    context = (void *) unhand(request)->callback_arg;
+    context = JavaLong2CPtr(unhand(request)->callback_arg);
     javaString2CString(unhand(request)->urlName, urlName, sizeof(urlName));
     javaString2CString(unhand(request)->filename, outputfile, sizeof(outputfile));
 
@@ -254,13 +254,15 @@ boolean             error_html;
     switch (mode) {
         case AMAYA_SYNC:
 	    unhand(request)->callback = (jlong) 0;
+	    unhand(request)->callback_f = CPtr2JavaLong(0x12ABCDEF);
+	    unhand(request)->callback_arg = CPtr2JavaLong(0x12345678);
 	    do_execute_java_method(0, (void *) request, "Get", "(I)I",
 	                           0, 0, flag);
 	    break;
         case AMAYA_ASYNC:
-	    unhand(request)->callback = (jlong) GetObjectWWWCallback;
-	    unhand(request)->callback_f = (jlong) terminate;
-	    unhand(request)->callback_arg = (jlong) tcontext;
+	    unhand(request)->callback = CPtr2JavaLong(GetObjectWWWCallback);
+	    unhand(request)->callback_f = CPtr2JavaLong(terminate);
+	    unhand(request)->callback_arg = CPtr2JavaLong(tcontext);
 	    do_execute_java_method(0, (void *) request, "AsyncGet", "(I)I",
 	                           0, 0, flag);
 	    break;

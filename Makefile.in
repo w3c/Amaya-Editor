@@ -16,7 +16,7 @@ LIBPNG	= libpng
 LIBZ	= libz
 
 LINKS	= schemas schemasOPERA config
-SUBDIRS	= tools tablelib thotlib batch drawlib indexlib thot amaya
+SUBDIRS	= tools tablelib thotlib batch drawlib indexlib thot amaya javalib 
 EXTRA_SUBDIRS= misc
 
 prefix = @prefix@
@@ -236,13 +236,9 @@ kaffe_install:
 	  then \
 	      $(MKDIR) $(THOTDIR)/classes/lib ; \
 	  fi)
-	@($(MV) include/kaffe/StubPreamble.h $(THOTDIR)/javalib)
-	@($(MV) include/kaffe/jtypes.h $(THOTDIR)/javalib)
-	@($(MV) include/kaffe/native.h $(THOTDIR)/javalib)
-	@($(MV) include/kaffe/java_lang_String.h $(THOTDIR)/javalib)
 	@($(CP) -R share/kaffe/. $(THOTDIR)/classes)
 	@$(ECHO) Cleaning temp $(KAFFE) files
-	@($(RM) -r share include man )
+	@($(RM) -r share man )
 
 kaffe : kaffe_get kaffe_clean kaffe_config kaffe_make kaffe_install
 	@(echo $(KAFFE) reinstalled)

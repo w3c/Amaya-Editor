@@ -17,20 +17,20 @@ typedef struct Classamaya_HTTPRequest {
 #define amaya_HTTPRequest_POST_REQUEST 3
 #define amaya_HTTPRequest_AGET_REQUEST 4
 #define amaya_HTTPRequest_FAILED_REQUEST 400
+  struct Hamaya_HTTPRequest* next;
   jlong callback;
   jlong callback_f;
   jlong callback_arg;
-  struct Hamaya_HTTPRequest* next;
   jint type;
   jint doc;
-  struct Hjava_lang_String* urlName;
-  struct Hjava_lang_String* mimeType;
-  struct Hjava_lang_String* postCmd;
   jint contentLenght;
   jint currentLenght;
   jint status;
-  struct Hjava_lang_String* filename;
   jint flags;
+  struct Hjava_lang_String* urlName;
+  struct Hjava_lang_String* mimeType;
+  struct Hjava_lang_String* postCmd;
+  struct Hjava_lang_String* filename;
   struct Hjava_lang_Thread* thread;
   struct Hamaya_HTTPConnection* conn;
 } Classamaya_HTTPRequest;

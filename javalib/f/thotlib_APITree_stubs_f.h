@@ -6,26 +6,14 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern jlong thotlib_APITree_TtaNewElement ( struct Hthotlib_APITree* none,
-                                             jint document,
-                                             jlong jelementType );
-extern jlong thotlib_APITree_TtaNewTree ( struct Hthotlib_APITree* none,
-                                          jint document,
-                                          jlong jelementType,
-                                          struct Hjava_lang_String* jlabel );
+extern void thotlib_APITree_ChangeElementType ( struct Hthotlib_APITree* none,
+                                                jlong jelement,
+                                                jint typeNum );
 extern jlong thotlib_APITree_TtaCopyTree ( struct Hthotlib_APITree* none,
                                            jlong jsourceElement,
                                            jint sourceDocument,
                                            jint destinationDocument,
                                            jlong jparent );
-extern jlong thotlib_APITree_TtaCreateDescent ( struct Hthotlib_APITree* none,
-                                                jint document,
-                                                jlong jelement,
-                                                jlong jelementType );
-extern jlong thotlib_APITree_TtaCreateDescentWithContent ( struct Hthotlib_APITree* none,
-                                                           jint document,
-                                                           jlong jelement,
-                                                           jlong jelementType );
 extern void thotlib_APITree_TtaDeleteTree ( struct Hthotlib_APITree* none,
                                             jlong jelement,
                                             jint document );
@@ -41,12 +29,6 @@ extern void thotlib_APITree_TtaInsertFirstChild ( struct Hthotlib_APITree* none,
                                                   struct Hthotlib_Element* jnewElement,
                                                   jlong jparent,
                                                   jint document );
-extern void thotlib_APITree_TtaCreateElement ( struct Hthotlib_APITree* none,
-                                               jlong jelementType,
-                                               jint document );
-extern void thotlib_APITree_TtaInsertElement ( struct Hthotlib_APITree* none,
-                                               jlong jelementType,
-                                               jint document );
 extern void thotlib_APITree_TtaRemoveTree ( struct Hthotlib_APITree* none,
                                             jlong jelement,
                                             jint document );
@@ -87,37 +69,15 @@ extern jlong thotlib_APITree_TtaGetParent ( struct Hthotlib_APITree* none,
 extern jlong thotlib_APITree_TtaGetCommonAncestor ( struct Hthotlib_APITree* none,
                                                     jlong jelement1,
                                                     jlong jelement2 );
-extern jlong thotlib_APITree_TtaGetTypedAncestor ( struct Hthotlib_APITree* none,
-                                                   jlong jelement,
-                                                   jlong jancestorType );
-extern jlong thotlib_APITree_TtaGetElementType ( struct Hthotlib_APITree* none,
-                                                 jlong jelement );
 extern jint thotlib_APITree_TtaIsExtensionElement ( struct Hthotlib_APITree* none,
                                                     jlong jelement );
-extern struct Hjava_lang_String* thotlib_APITree_TtaGetElementTypeName ( struct Hthotlib_APITree* none,
-                                                                         jlong jelementType );
 extern void thotlib_APITree_TtaGiveTypeFromName ( struct Hthotlib_APITree* none,
                                                   struct Hthotlib_ElementType* jelementType,
                                                   struct Hjava_lang_String* jname );
-extern jint thotlib_APITree_TtaSameTypes ( struct Hthotlib_APITree* none,
-                                           jlong jtype1,
-                                           jlong jtype2 );
 extern struct Hjava_lang_String* thotlib_APITree_TtaGetElementLabel ( struct Hthotlib_APITree* none,
                                                                       jlong jelement );
 extern jint thotlib_APITree_TtaGetElementVolume ( struct Hthotlib_APITree* none,
                                                   jlong jelement );
-extern jint thotlib_APITree_TtaIsConstant ( struct Hthotlib_APITree* none,
-                                            jlong jelementType );
-extern jint thotlib_APITree_TtaIsLeaf ( struct Hthotlib_APITree* none,
-                                        jlong jelementType );
-extern jint thotlib_APITree_TtaGetCardinalOfType ( struct Hthotlib_APITree* none,
-                                                   jlong jelementType );
-extern jint thotlib_APITree_TtaGetRankInAggregate ( struct Hthotlib_APITree* none,
-                                                    jlong jcomponentType,
-                                                    jlong jaggregateType );
-extern jint thotlib_APITree_TtaIsOptionalInAggregate ( struct Hthotlib_APITree* none,
-                                                       jint rank,
-                                                       jlong jelementType );
 extern jint thotlib_APITree_TtaGetAccessRight ( struct Hthotlib_APITree* none,
                                                 jlong jelement );
 extern jint thotlib_APITree_TtaIsHolophrasted ( struct Hthotlib_APITree* none,
@@ -136,24 +96,11 @@ extern jint thotlib_APITree_TtaIsBefore ( struct Hthotlib_APITree* none,
                                           jlong jelement2 );
 extern jint thotlib_APITree_TtaIsFirstPairedElement ( struct Hthotlib_APITree* none,
                                                       jlong jelement );
-extern jint thotlib_APITree_TtaCanInsertSibling ( struct Hthotlib_APITree* none,
-                                                  jlong jelementType,
-                                                  jlong jsibling,
-                                                  jint before,
-                                                  jint document );
-extern jint thotlib_APITree_TtaCanInsertFirstChild ( struct Hthotlib_APITree* none,
-                                                     jlong jelementType,
-                                                     jlong jparent,
-                                                     jint document );
 extern jint thotlib_APITree_TtaGetDocument ( struct Hthotlib_APITree* none,
                                              jlong jelement );
 extern void thotlib_APITree_TtaNextCopiedElement ( struct Hthotlib_APITree* none,
                                                    struct Hthotlib_Element* jelement );
 extern jint thotlib_APITree_TtaGetCopiedDocument ( struct Hthotlib_APITree* none );
-extern jlong thotlib_APITree_TtaSearchTypedElement ( struct Hthotlib_APITree* none,
-                                                     jlong jsearchedType,
-                                                     jint scope,
-                                                     jlong jelement );
 extern jlong thotlib_APITree_TtaSearchElementByLabel ( struct Hthotlib_APITree* none,
                                                        struct Hjava_lang_String* jsearchedLabel,
                                                        jlong jelement );
@@ -170,26 +117,14 @@ extern void register_thotlib_APITree_stubs ( void );
 
 #else /* __STDC__ */
 
-extern jlong thotlib_APITree_TtaNewElement (/* struct Hthotlib_APITree* none,
-                                               jint document,
-                                               jlong jelementType */);
-extern jlong thotlib_APITree_TtaNewTree (/* struct Hthotlib_APITree* none,
-                                            jint document,
-                                            jlong jelementType,
-                                            struct Hjava_lang_String* jlabel */);
+extern void thotlib_APITree_ChangeElementType (/* struct Hthotlib_APITree* none,
+                                                  jlong jelement,
+                                                  jint typeNum */);
 extern jlong thotlib_APITree_TtaCopyTree (/* struct Hthotlib_APITree* none,
                                              jlong jsourceElement,
                                              jint sourceDocument,
                                              jint destinationDocument,
                                              jlong jparent */);
-extern jlong thotlib_APITree_TtaCreateDescent (/* struct Hthotlib_APITree* none,
-                                                  jint document,
-                                                  jlong jelement,
-                                                  jlong jelementType */);
-extern jlong thotlib_APITree_TtaCreateDescentWithContent (/* struct Hthotlib_APITree* none,
-                                                             jint document,
-                                                             jlong jelement,
-                                                             jlong jelementType */);
 extern void thotlib_APITree_TtaDeleteTree (/* struct Hthotlib_APITree* none,
                                               jlong jelement,
                                               jint document */);
@@ -205,12 +140,6 @@ extern void thotlib_APITree_TtaInsertFirstChild (/* struct Hthotlib_APITree* non
                                                     struct Hthotlib_Element* jnewElement,
                                                     jlong jparent,
                                                     jint document */);
-extern void thotlib_APITree_TtaCreateElement (/* struct Hthotlib_APITree* none,
-                                                 jlong jelementType,
-                                                 jint document */);
-extern void thotlib_APITree_TtaInsertElement (/* struct Hthotlib_APITree* none,
-                                                 jlong jelementType,
-                                                 jint document */);
 extern void thotlib_APITree_TtaRemoveTree (/* struct Hthotlib_APITree* none,
                                               jlong jelement,
                                               jint document */);
@@ -251,37 +180,15 @@ extern jlong thotlib_APITree_TtaGetParent (/* struct Hthotlib_APITree* none,
 extern jlong thotlib_APITree_TtaGetCommonAncestor (/* struct Hthotlib_APITree* none,
                                                       jlong jelement1,
                                                       jlong jelement2 */);
-extern jlong thotlib_APITree_TtaGetTypedAncestor (/* struct Hthotlib_APITree* none,
-                                                     jlong jelement,
-                                                     jlong jancestorType */);
-extern jlong thotlib_APITree_TtaGetElementType (/* struct Hthotlib_APITree* none,
-                                                   jlong jelement */);
 extern jint thotlib_APITree_TtaIsExtensionElement (/* struct Hthotlib_APITree* none,
                                                       jlong jelement */);
-extern struct Hjava_lang_String* thotlib_APITree_TtaGetElementTypeName (/* struct Hthotlib_APITree* none,
-                                                                           jlong jelementType */);
 extern void thotlib_APITree_TtaGiveTypeFromName (/* struct Hthotlib_APITree* none,
                                                     struct Hthotlib_ElementType* jelementType,
                                                     struct Hjava_lang_String* jname */);
-extern jint thotlib_APITree_TtaSameTypes (/* struct Hthotlib_APITree* none,
-                                             jlong jtype1,
-                                             jlong jtype2 */);
 extern struct Hjava_lang_String* thotlib_APITree_TtaGetElementLabel (/* struct Hthotlib_APITree* none,
                                                                         jlong jelement */);
 extern jint thotlib_APITree_TtaGetElementVolume (/* struct Hthotlib_APITree* none,
                                                     jlong jelement */);
-extern jint thotlib_APITree_TtaIsConstant (/* struct Hthotlib_APITree* none,
-                                              jlong jelementType */);
-extern jint thotlib_APITree_TtaIsLeaf (/* struct Hthotlib_APITree* none,
-                                          jlong jelementType */);
-extern jint thotlib_APITree_TtaGetCardinalOfType (/* struct Hthotlib_APITree* none,
-                                                     jlong jelementType */);
-extern jint thotlib_APITree_TtaGetRankInAggregate (/* struct Hthotlib_APITree* none,
-                                                      jlong jcomponentType,
-                                                      jlong jaggregateType */);
-extern jint thotlib_APITree_TtaIsOptionalInAggregate (/* struct Hthotlib_APITree* none,
-                                                         jint rank,
-                                                         jlong jelementType */);
 extern jint thotlib_APITree_TtaGetAccessRight (/* struct Hthotlib_APITree* none,
                                                   jlong jelement */);
 extern jint thotlib_APITree_TtaIsHolophrasted (/* struct Hthotlib_APITree* none,
@@ -300,24 +207,11 @@ extern jint thotlib_APITree_TtaIsBefore (/* struct Hthotlib_APITree* none,
                                             jlong jelement2 */);
 extern jint thotlib_APITree_TtaIsFirstPairedElement (/* struct Hthotlib_APITree* none,
                                                         jlong jelement */);
-extern jint thotlib_APITree_TtaCanInsertSibling (/* struct Hthotlib_APITree* none,
-                                                    jlong jelementType,
-                                                    jlong jsibling,
-                                                    jint before,
-                                                    jint document */);
-extern jint thotlib_APITree_TtaCanInsertFirstChild (/* struct Hthotlib_APITree* none,
-                                                       jlong jelementType,
-                                                       jlong jparent,
-                                                       jint document */);
 extern jint thotlib_APITree_TtaGetDocument (/* struct Hthotlib_APITree* none,
                                                jlong jelement */);
 extern void thotlib_APITree_TtaNextCopiedElement (/* struct Hthotlib_APITree* none,
                                                      struct Hthotlib_Element* jelement */);
 extern jint thotlib_APITree_TtaGetCopiedDocument (/* struct Hthotlib_APITree* none */);
-extern jlong thotlib_APITree_TtaSearchTypedElement (/* struct Hthotlib_APITree* none,
-                                                       jlong jsearchedType,
-                                                       jint scope,
-                                                       jlong jelement */);
 extern jlong thotlib_APITree_TtaSearchElementByLabel (/* struct Hthotlib_APITree* none,
                                                          struct Hjava_lang_String* jsearchedLabel,
                                                          jlong jelement */);

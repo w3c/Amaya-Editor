@@ -10,6 +10,10 @@ extern jlong thotlib_APIPresentation_TtaNewPRule ( struct Hthotlib_APIPresentati
                                                    jint presentationType,
                                                    jint view,
                                                    jint document );
+extern jlong thotlib_APIPresentation_TtaNewPRuleForView ( struct Hthotlib_APIPresentation* none,
+                                                          jint presentationType,
+                                                          jint view,
+                                                          jint document );
 extern jlong thotlib_APIPresentation_TtaNewPRuleForNamedView ( struct Hthotlib_APIPresentation* none,
                                                                jint presentationType,
                                                                struct Hjava_lang_String* jviewName,
@@ -88,6 +92,10 @@ extern jlong thotlib_APIPresentation_TtaNewPRule (/* struct Hthotlib_APIPresenta
                                                      jint presentationType,
                                                      jint view,
                                                      jint document */);
+extern jlong thotlib_APIPresentation_TtaNewPRuleForView (/* struct Hthotlib_APIPresentation* none,
+                                                            jint presentationType,
+                                                            jint view,
+                                                            jint document */);
 extern jlong thotlib_APIPresentation_TtaNewPRuleForNamedView (/* struct Hthotlib_APIPresentation* none,
                                                                  jint presentationType,
                                                                  struct Hjava_lang_String* jviewName,

@@ -28,13 +28,18 @@ extern void thotlib_APIReference_TtaCopyAttributeReference ( struct Hthotlib_API
                                                              jlong jattribute,
                                                              jlong jelement,
                                                              jlong jsource );
+extern void thotlib_APIReference_TtaCopyIncludedElem ( struct Hthotlib_APIReference* none,
+                                                       jlong jelement,
+                                                       jint document );
+extern void thotlib_APIReference_TtaUpdateInclusionElements ( struct Hthotlib_APIReference* none,
+                                                              jint document,
+                                                              jint loadExternalDoc,
+                                                              jint removeExclusions );
 extern void thotlib_APIReference_TtaGiveReferredElement ( struct Hthotlib_APIReference* none,
                                                           jlong jelement,
                                                           struct Hthotlib_Element* jtarget,
                                                           struct Hjava_lang_StringBuffer* jtargetDocumentName,
                                                           struct Hthotlib_Document* jtargetDocument );
-extern jint thotlib_APIReference_TtaIsElementTypeReference ( struct Hthotlib_APIReference* none,
-                                                             jlong jelementType );
 extern jint thotlib_APIReference_TtaSameReferences ( struct Hthotlib_APIReference* none,
                                                      jlong jelement1,
                                                      jlong jelement2 );
@@ -87,13 +92,18 @@ extern void thotlib_APIReference_TtaCopyAttributeReference (/* struct Hthotlib_A
                                                                jlong jattribute,
                                                                jlong jelement,
                                                                jlong jsource */);
+extern void thotlib_APIReference_TtaCopyIncludedElem (/* struct Hthotlib_APIReference* none,
+                                                         jlong jelement,
+                                                         jint document */);
+extern void thotlib_APIReference_TtaUpdateInclusionElements (/* struct Hthotlib_APIReference* none,
+                                                                jint document,
+                                                                jint loadExternalDoc,
+                                                                jint removeExclusions */);
 extern void thotlib_APIReference_TtaGiveReferredElement (/* struct Hthotlib_APIReference* none,
                                                             jlong jelement,
                                                             struct Hthotlib_Element* jtarget,
                                                             struct Hjava_lang_StringBuffer* jtargetDocumentName,
                                                             struct Hthotlib_Document* jtargetDocument */);
-extern jint thotlib_APIReference_TtaIsElementTypeReference (/* struct Hthotlib_APIReference* none,
-                                                               jlong jelementType */);
 extern jint thotlib_APIReference_TtaSameReferences (/* struct Hthotlib_APIReference* none,
                                                        jlong jelement1,
                                                        jlong jelement2 */);

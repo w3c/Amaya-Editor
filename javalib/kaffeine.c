@@ -814,6 +814,9 @@ void                InitJava ()
     initialiseKaffe();
     /* biss_awt_kernel_NativeLib_initialize(); */
 
+    /* Initialize the type conversion unit */
+    initJavaTypes();
+
     /* Register Thotlib stubs */
     register_stubs();
 

@@ -11,6 +11,10 @@ extern jint thotlib_APISelection_TtaIsDocumentSelected ( struct Hthotlib_APISele
 extern void thotlib_APISelection_TtaSelectElement ( struct Hthotlib_APISelection* none,
                                                     jint document,
                                                     jlong jselectedElement );
+extern jint thotlib_APISelection_TtaGetSelectedDocument ( struct Hthotlib_APISelection* none );
+extern void thotlib_APISelection_TtaSelectView ( struct Hthotlib_APISelection* none,
+                                                 jint document,
+                                                 jint view );
 extern void thotlib_APISelection_TtaSelectString ( struct Hthotlib_APISelection* none,
                                                    jint document,
                                                    jlong jtextElement,
@@ -40,9 +44,6 @@ extern void thotlib_APISelection_TtaGiveLastSelectedElement ( struct Hthotlib_AP
                                                               struct Hthotlib_Element* jselectedElement,
                                                               struct Hthotlib_IntPtr* jfirstCharacter,
                                                               struct Hthotlib_IntPtr* jlastCharacter );
-extern void thotlib_APISelection_TtaSelectView ( struct Hthotlib_APISelection* none,
-                                                 jint document,
-                                                 jint view );
 extern void register_thotlib_APISelection_stubs ( void );
 
 #else /* __STDC__ */
@@ -52,6 +53,10 @@ extern jint thotlib_APISelection_TtaIsDocumentSelected (/* struct Hthotlib_APISe
 extern void thotlib_APISelection_TtaSelectElement (/* struct Hthotlib_APISelection* none,
                                                       jint document,
                                                       jlong jselectedElement */);
+extern jint thotlib_APISelection_TtaGetSelectedDocument (/* struct Hthotlib_APISelection* none */);
+extern void thotlib_APISelection_TtaSelectView (/* struct Hthotlib_APISelection* none,
+                                                   jint document,
+                                                   jint view */);
 extern void thotlib_APISelection_TtaSelectString (/* struct Hthotlib_APISelection* none,
                                                      jint document,
                                                      jlong jtextElement,
@@ -81,9 +86,6 @@ extern void thotlib_APISelection_TtaGiveLastSelectedElement (/* struct Hthotlib_
                                                                 struct Hthotlib_Element* jselectedElement,
                                                                 struct Hthotlib_IntPtr* jfirstCharacter,
                                                                 struct Hthotlib_IntPtr* jlastCharacter */);
-extern void thotlib_APISelection_TtaSelectView (/* struct Hthotlib_APISelection* none,
-                                                   jint document,
-                                                   jint view */);
 extern void register_thotlib_APISelection_stubs (/* void */);
 
 #endif /* __STDC__ */

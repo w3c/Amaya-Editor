@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern void thotlib_APIApplication_TtaInitialize ( struct Hthotlib_APIApplication* none,
                                                    struct Hjava_lang_String* japplicationName );
 extern void thotlib_APIApplication_TtaQuit ( struct Hthotlib_APIApplication* none );
@@ -25,6 +26,7 @@ extern struct Hjava_lang_String* thotlib_APIApplication_TtaStrdup ( struct Hthot
 extern void register_thotlib_APIApplication_stubs ( void );
 
 #else /* __STDC__ */
+
 extern void thotlib_APIApplication_TtaInitialize (/* struct Hthotlib_APIApplication* none,
                                                      struct Hjava_lang_String* japplicationName */);
 extern void thotlib_APIApplication_TtaQuit (/* struct Hthotlib_APIApplication* none */);

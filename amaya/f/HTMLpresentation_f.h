@@ -14,6 +14,7 @@ extern void AttrClassChanged ( NotifyAttribute * event );
 extern void SetStyleAttribute ( Document doc,
                                 Element elem );
 extern boolean ChangePRule ( NotifyPresentation * event );
+extern void SetStyle ( NotifyPresentation * event );
 extern void AttrLangDeleted ( NotifyAttribute *event );
 extern void AttrLangCreated ( NotifyAttribute *event );
 
@@ -27,6 +28,7 @@ extern void AttrClassChanged (/* NotifyAttribute * event */);
 extern void SetStyleAttribute (/* Document doc,
                                   Element elem */);
 extern boolean ChangePRule (/* NotifyPresentation * event */);
+extern void SetStyle (/* NotifyPresentation * event */);
 extern void AttrLangDeleted (/* NotifyAttribute *event */);
 extern void AttrLangCreated (/* NotifyAttribute *event */);
 

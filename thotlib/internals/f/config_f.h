@@ -7,7 +7,6 @@
 #ifdef __STDC__
 
 extern void ConfigInit ( void );
-extern void ConfigKeyboard (int *x, int *y);
 extern void TtaConfigReadConfigFiles ( char *aSchemaPath );
 extern int ConfigMakeDocTypeMenu ( char *BufMenu,
                                    int *lgmenu,
@@ -30,6 +29,8 @@ extern void ConfigGetExportSchemaName ( int choix,
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
 extern boolean ConfigDefaultPSchema ( char *schstr,
                                       char *schpres );
+extern void ConfigKeyboard ( int *x,
+                             int *y );
 extern void ConfigOpenFirstViews ( PtrDocument pDoc );
 extern void ConfigGetViewGeometry ( PtrDocument pDoc,
                                     char *view,
@@ -63,7 +64,6 @@ extern boolean ConfigDefaultTypoSchema ( PtrSSchema pSS,
 #else /* __STDC__ */
 
 extern void ConfigInit (/* void */);
-extern void ConfigKeyboard (/* int *x, int *y */);
 extern void TtaConfigReadConfigFiles (/* char *aSchemaPath */);
 extern int ConfigMakeDocTypeMenu (/* char *BufMenu,
                                      int *lgmenu,
@@ -86,6 +86,8 @@ extern void ConfigGetExportSchemaName (/* int choix,
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
 extern boolean ConfigDefaultPSchema (/* char *schstr,
                                         char *schpres */);
+extern void ConfigKeyboard (/* int *x,
+                               int *y */);
 extern void ConfigOpenFirstViews (/* PtrDocument pDoc */);
 extern void ConfigGetViewGeometry (/* PtrDocument pDoc,
                                       char *view,

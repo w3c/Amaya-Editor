@@ -6,7 +6,7 @@
 #include "JavaTypes.h"
 #include "JavaTypes_f.h"
 
-/* #define DEBUG_ARCH */
+#define DEBUG_ARCH
 
 /*
  * General conversion routines between java types and C types.
@@ -29,6 +29,10 @@ void *JavaLong2CPtr(jlong in)
 #else
 #error "couldn't find an appropriate type to hold pointers"
 #endif
+#ifdef DEBUG_ARCH
+    fprintf(stderr, "JavaLong2CPtr(0x%X%08X) = 0x08%X\n",
+            (unsigned int) (in >> 32), (unsigned int) (in & 0xFFFFFFFFL), tmp);
+#endif
     return ((void *) tmp);
 }
 
@@ -49,11 +53,16 @@ jlong CPtr2JavaLong(void *in)
 #else
 #error "couldn't find an appropriate type to hold pointers"
 #endif
+#ifdef DEBUG_ARCH
+    fprintf(stderr, "CPtr2JavaLong(0x%08X) = 0x%X%08X\n", in,
+            (unsigned int) (((jlong) tmp) >> 32),
+	    (unsigned int) (((jlong) tmp) & 0xFFFFFFFFL));
+#endif
     return ((jlong) tmp);
 }
 
 /*
- * Broblem when storing pointers in Java long and passing them
+ * Problem when storing pointers in Java long and passing them
  * by address :
  *
  * a Java long is a 64 bit entity by definition,
@@ -110,6 +119,13 @@ int *JavaLongPtr2CIntPtr(jlong *in)
     if (int_ptr_need_shift < 0) do_ptr_need_shift();
 
     if (int_ptr_need_shift) res++;
+#ifdef DEBUG_ARCH
+    fprintf(stderr, "JavaLongPtr2CIntPtr(0x%X%08X) = 0x%X%08X\n",
+            (unsigned int) (((jlong) in) >> 32),
+	    (unsigned int) (((jlong) in) & 0xFFFFFFFFL),
+            (unsigned int) (((jlong) res) >> 32),
+	    (unsigned int) (((jlong) res) & 0xFFFFFFFFL));
+#endif
     return (res);
 }
 
@@ -145,6 +161,11 @@ void is_lsbf_architecture(void) {
     }
     fprintf(stderr,"is_lsbf_architecture() : memory storage error !\n");
     exit(1);
+}
+
+void initJavaTypes() {
+    is_lsbf_architecture();
+    do_ptr_need_shift();
 }
 
 /*

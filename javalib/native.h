@@ -19,28 +19,7 @@ struct _methods;
 struct _classes;
 struct _thread;
 
-/* From locks.h */
-#if !defined(__locks_h)
-#define	__locks_h
-typedef struct _iMux {
-	struct _thread*		holder;
-	int			count;
-	struct _thread*		muxWaiters;
-} iMux;
-typedef struct _iCv {
-	struct _thread*		cvWaiters;
-	struct _iMux*		mux;
-} iCv;
-#endif
-
-/* From object.h */
-#ifndef __object_h
-typedef struct Hjava_lang_Object {
-	struct _dispatchTable*	dtable;
-	iMux			mux;
-	iCv			cv;
-} Hjava_lang_Object;
-#endif
+#include <java_lang_Object.h>
 
 /* Build an object handle */
 #define	HandleTo(class)					\
@@ -61,6 +40,7 @@ typedef	struct Hjava_lang_Class*	HClass;
 	double			align[0]
 
 /* Array types */
+typedef struct { Hjava_lang_Object base; ARRAY_FIELDS; struct { jbyte body[1]; } data[1]; } HArrayOfBoolean;
 typedef struct { Hjava_lang_Object base; ARRAY_FIELDS; struct { jbyte body[1]; } data[1]; } HArrayOfByte;
 typedef struct { Hjava_lang_Object base; ARRAY_FIELDS; struct { jchar body[1]; } data[1]; } HArrayOfChar;
 typedef struct { Hjava_lang_Object base; ARRAY_FIELDS; struct { jdouble body[1]; } data[1]; } HArrayOfDouble;
