@@ -655,6 +655,22 @@ const CHAR_T*        path;
 }
 
 /*----------------------------------------------------------------------
+  IsFilePath                                           
+  returns TRUE if path is in fact a URL.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static ThotBool             IsFilePath (const CHAR_T* path)
+#else  /* __STDC__ */
+static ThotBool             IsFilePath (path)
+const CHAR_T*        path;
+#endif /* __STDC__ */
+{
+  if (ustrncmp (path, TEXT("file:"), 5))
+    return FALSE;
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
   IsValidProtocol                                                    
   returns true if the url protocol is supported by Amaya.
   ----------------------------------------------------------------------*/
@@ -884,39 +900,81 @@ CHAR_T*      target;
 }
 
 /*----------------------------------------------------------------------
-   ConvertFileURL
-   If the URL starts with file: prefix, it removes the protocol so that we
-   can use it as a local filename. It also changes the URL_SEP into
-   DIR_SEPs if they are not the same character.
+   RemoveNewLines (text)
+   Removes any '\n' chars that are found in text. 
+   Returns TRUE if it did the operation, FALSE otherwise.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void ConvertFileURL (CHAR_T* url)
+ThotBool RemoveNewLines (CHAR_T *text)
 #else
-void ConvertFileURL (url)
-CHAR_T* url
+ThotBool RemoveNewLines (text)
+CHAR_T *text;
+
 #endif /* __STDC__ */
 {
-  CHAR_T *src, *dest;
+  ThotBool change = FALSE;
+  CHAR_T *src;
+  CHAR_T *dest;
 
-  if (!ustrncasecmp (url, TEXT("file:"), 5))
+  src = text;
+  dest = text;
+
+  while (*src)
     {
-      /* skip the file prefix */
-      dest = url;
-      src = url + 5;
-      while (*src)
+      switch (*src)
+	{
+	case TEXT('\n'):
+	  /* don't copy the newline */
+	  change = 1;
+	  break;
+	default:
+	  *dest = *src;
+	  dest++;
+	  break;
+	}
+      src++;
+    }
+  /* copy the last EOS char */
+  *dest = *src;
+
+  return (change);
+}
+
+/*----------------------------------------------------------------------
+   CleanCopyFileURL
+   Copies a file url from a src string to destination string.
+   It changes the URL_SEP into DIR_SEPs if they are not the same 
+   character.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void CleanCopyFileURL (CHAR_T *dest, CHAR_T *src)
+#else
+static void CleanCopyFileURL (dest, src)
+CHAR_T* dest;
+CHAR_T* src;
+
+#endif /* __STDC__ */
+{
+  while (*src)
+    {
+      switch (*src)
 	{
 #ifdef _WINDOWS
-	  if (*dest == URL_SEP)
-	    /* make the transformation */
-	    *dest = DIR_SEP;
-	  else
-#endif /* _WINDOWS */
-	    *dest = *src;
-	  src++;
+	case WC_URL_SEP:
+	  /* make the transformation */
+	  *dest = WC_DIR_SEP;
 	  dest++;
+	  break;
+#endif /* _WINDOWS */
+	default:
+	  *dest = *src;
+	  dest++;
+	  break;
 	}
-      *src = WC_EOS;
+      src++;
     }
+  /* copy the EOS char */
+  *dest = *src;
 }
 
 /*----------------------------------------------------------------------
@@ -998,7 +1056,7 @@ CHAR_T*             otherPath;
        && (length == 0 || tempOrgName[length-1] != TEXT('.')))
 	 tempOrgName[length] = WC_EOS;
 
-   if (IsW3Path (tempOrgName))
+   if (IsW3Path (tempOrgName) || IsFilePath (tempOrgName))
      {
        /* the name is complete, go to the Sixth Step */
        ustrcpy (newName, tempOrgName);
@@ -1755,48 +1813,73 @@ CHAR_T**     url;
    Return TRUE if target and src differ.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool             NormalizeFile (CHAR_T* src, CHAR_T* target)
+ThotBool     NormalizeFile (CHAR_T* src, CHAR_T* target)
 #else
-ThotBool             NormalizeFile (src, target)
+ThotBool     NormalizeFile (src, target)
 CHAR_T*              src;
 CHAR_T*              target;
 
 #endif
 {
-   CHAR_T*           s;
+   CHAR_T            *s;
    ThotBool          change;
+   int               i;
+   int               start_index; /* the first char that we'll copy */
 
    change = FALSE;
+   start_index = 0;
+
+   if (!src || src[0] == WC_EOS)
+     return FALSE;
+
+   /* @@ do I need file: or file:/ here? */
    if (ustrncmp (src, TEXT("file:"), 5) == 0)
      {
-	/* remove the prefix file: */
-	if (src[5] == WC_EOS)
-	   ustrcpy (target, WC_DIR_STR);
-	else if (src[0] == TEXT('~'))
-	  {
-	    /* replace ~ */
-	    s = TtaGetEnvString ("HOME");
-	    ustrcpy (target, s);
-	    ustrcat (target, &src[5]);
-	  }
-	else
-	   ustrcpy (target, &src[5]);
-	change = TRUE;
+       /* remove the prefix file: */
+       start_index += 5;
+   
+       if (ustrncmp (&src[start_index], TEXT("/localhost"), 10) == 0)
+       /* remove the localhost prefix */
+	 start_index += 10;
+
+       if (src[start_index] == WC_EOS)
+       /* if there's nothing afterwards, add a DIR_STR */
+	 ustrcpy (target, WC_DIR_STR);
+#ifndef _WINDOWS
+       else if (src[start_index] == TEXT('~'))
+	 {
+	   /* replace ~ */
+	   s = TtaGetEnvString ("HOME");
+	   ustrcpy (target, s);
+	   start_index++;
+	   i = ustrlen (target);
+	   ustrcat (&target[i], &src[start_index]);
+	 }
+#endif /* _WINDOWS */
+       else
+	 {
+	   CleanCopyFileURL (target, &src[start_index]);
+	   change = TRUE;
+	 }
      }
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    else if (src[0] == TEXT('~'))
      {
 	/* replace ~ */
 	s = TtaGetEnvString ("HOME");
 	ustrcpy (target, s);
+#if 0
 	if (src[1] != WC_DIR_SEP)
 	  ustrcat (target, WC_DIR_STR);
-	ustrcat (target, &src[1]);
+#endif
+	i = ustrlen (target);
+	CleanCopyFileURL (&target[i], &src[1]);
 	change = TRUE;
      }
-#   endif /* _WINDOWS */
+#endif /* _WINDOWS */
+
    else
-      ustrcpy (target, src);
+     CleanCopyFileURL (target, src);
 
    /* remove /../ and /./ */
    SimplifyUrl (&target);

@@ -985,6 +985,10 @@ CHAR_T*              text;
   change = FALSE;
   if (text)
     {
+      /* remove any trailing '\n' chars that may have gotten there
+	 after a cut and pase */
+      change = RemoveNewLines (text);
+
       if (!IsW3Path (text))
 	{
 	  s = TtaAllocString (MAX_LENGTH);
@@ -3354,7 +3358,19 @@ void               *ctx_cbf;
 #  ifdef _WINDOWS
    usprintf (wTitle, TEXT("%s"), documentname);
 #  endif /* _WINDOWS */
-   ConvertFileURL (pathname);
+
+   /* we skip the file: prefix if it is present and do other local
+    file urls conversions */
+   if (!IsW3Path (pathname))
+       {
+	 /* we take the long way around to get the result
+	    of normalizeFile, as the function doesn't allocate
+	    memory dynamically (note: this can generate some MAX_LENGTH
+	    problems) */
+	 NormalizeFile (pathname, tempfile);
+	 ustrcpy (pathname, tempfile);
+	 tempfile[0] = WC_EOS;
+       }
 
    if (parameters[0] == WC_EOS)
      {
@@ -4650,12 +4666,8 @@ NotifyEvent        *event;
      }
    else
      {
-       if (ustrncmp (s, TEXT("file:/"), 6) == 0)
-          s += 6;
-       if (ustrncmp (s, TEXT("/localhost"), 10) == 0)
-          s += 10;
-       if (TtaFileExist (s)) {
-          NormalizeFile (s, LastURLName);
+       NormalizeFile (s, LastURLName);
+       if (TtaFileExist (LastURLName)) {
           /* check if it is an absolute or a relative name */
 #          ifdef _WINDOWS
            if ((LastURLName[0] == WC_DIR_SEP) || (LastURLName[1] == TEXT(':')))

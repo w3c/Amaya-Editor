@@ -32,7 +32,7 @@ extern CHAR_T* GetLocalPath ( Document doc,
                               CHAR_T* url );
 extern void ExtractTarget ( CHAR_T* aName,
                             CHAR_T* target );
-extern void ConvertFileURL ( CHAR_T* url );
+extern ThotBool RemoveNewLines ( CHAR_T *text );
 extern void NormalizeURL ( CHAR_T* orgName,
                            Document doc,
                            CHAR_T* newName,
@@ -80,7 +80,7 @@ extern CHAR_T* GetLocalPath (/* Document doc,
                                 CHAR_T* url */);
 extern void ExtractTarget (/* CHAR_T* aName,
                               CHAR_T* target */);
-extern void ConvertFileURL (/* CHAR_T* url */);
+extern ThotBool RemoveNewLines (/* CHAR_T *text */);
 extern void NormalizeURL (/* CHAR_T* orgName,
                              Document doc,
                              CHAR_T* newName,
