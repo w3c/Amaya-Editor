@@ -1138,6 +1138,7 @@ static ThotBool   SelectAbsBoxes (PtrElement pEl, ThotBool createView)
 		  }
 	      }
 
+#ifdef VQ   /* 13 DEC 2001 */
 	  if (!abExist && createView)
 	    /* there is no existing abstract box for this element */
 	    /* try to create a view where this element has an abstract box */
@@ -1172,7 +1173,7 @@ static ThotBool   SelectAbsBoxes (PtrElement pEl, ThotBool createView)
 							     viewTable[i].VdView,
 							     viewTable[i].VdSSchema, 1,
 							     FALSE, NULL);
-			  /* now, try to select the elment */
+			  /* now, try to select the element */
 			  abExist = SelectAbsBoxes (pEl, FALSE);
 			  deleteView = TRUE;
 			  if (pEl->ElAbstractBox[createdView - 1] != NULL)
@@ -1218,6 +1219,7 @@ static ThotBool   SelectAbsBoxes (PtrElement pEl, ThotBool createView)
 		    }
 		}
 	    }
+#endif  /* VQ - 13 DEC 2001 */
 	}
     }
   return abExist;
