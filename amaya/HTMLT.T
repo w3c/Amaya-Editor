@@ -867,7 +867,7 @@ RULES
 	Create '>';
 	Indent +2;
 	Indent -2 after;
-	Create '</caption>\12' after;
+	Create '</colgroup>\12' after;
 	END;
 
  COL:
@@ -875,7 +875,6 @@ RULES
 	Create '<col';
 	Create Attributes;
 	Create '>';
-	Create '</col>\12' after;
 	END;
 
  Table_head:
