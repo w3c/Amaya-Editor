@@ -143,7 +143,7 @@ Ctrl <Key>f , Ctrl <Key>m:         CreateOption()
 #math (types submenu) This doesn't seem brilliant
 #either - should try them out some more.
 Ctrl <Key>m , Ctrl <Key>t:         CreateMTABLE() 
-Ctrl <Key>m , Ctrl <Key>P:         CreateMROW() 
+Ctrl <Key>m , Ctrl <Key>p:         CreateMROW() 
 Ctrl <Key>m , Ctrl <Key>m:         CreateMath() 
 Ctrl <Key>m , Ctrl <Key>-:         CreateMFRAC() 
 Ctrl <Key>m , Ctrl <Key>x:         CreateMMULTISCRIPTS() 
