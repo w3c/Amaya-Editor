@@ -938,16 +938,16 @@ static ThotBool GiveAbsBoxForLanguage (int frame, PtrAbstractBox *pAb, int keybo
       language = plang;
   else if (keyboard == 2)
     /* une langue latine saisie */
-    if (TtaGetAlphabet (plang) == TEXT('L'))
+    if (TtaGetAlphabet (plang) == 'L')
       language = plang;
     else
-      language = TtaGetLanguageIdFromAlphabet (TEXT('L'));
+      language = TtaGetLanguageIdFromAlphabet ('L');
   else if (keyboard == 3)
     /* une langue greque saisie */
-    if (TtaGetAlphabet (plang) == TEXT('G'))
+    if (TtaGetAlphabet (plang) == 'G')
       language = plang;
     else
-      language = TtaGetLanguageIdFromAlphabet (TEXT('G'));
+      language = TtaGetLanguageIdFromAlphabet ('G');
   else
     language = 0;
 
@@ -2066,7 +2066,7 @@ static void         ContentEditing (int editType)
 		{
 		  if (ThotLocalActions[T_insertpaste] != NULL)
 		    (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE,
-							TEXT('L'), &ok);
+							'L', &ok);
 		  else
 		    ok = FALSE;
 		  if (ok)
@@ -2078,7 +2078,7 @@ static void         ContentEditing (int editType)
 	    {
 	      if (ThotLocalActions[T_insertpaste] != NULL)
 		(*ThotLocalActions[T_insertpaste]) (TRUE, FALSE,
-						    TEXT('L'), &ok);
+						    'L', &ok);
 	      else
 		ok = FALSE;
 	      if (ok)
@@ -3428,7 +3428,7 @@ void                TtcCutSelection (Document doc, View view)
    TtcCopyToClipboard (doc, view);
 
    if (!OpenClipboard (FrRef[frame]))
-     WinErrorBox (FrRef [frame], TEXT("TtcCutSelection (1)"));
+     WinErrorBox (FrRef [frame], "TtcCutSelection (1"));
    else
      {
        EmptyClipboard ();
@@ -3599,7 +3599,7 @@ void                TtcInclude (Document document, View view)
 	      /* table formatting is not loked, lock it now */
 	      (*ThotLocalActions[T_lock]) ();
 	  }
-	(*ThotLocalActions[T_insertpaste]) (FALSE, FALSE, TEXT('L'), &ok);
+	(*ThotLocalActions[T_insertpaste]) (FALSE, FALSE, 'L', &ok);
 
 	if (!lock)
 	  /* unlock table formatting */
@@ -3710,7 +3710,7 @@ void TtcCopySelection (Document doc, View view)
 	      lstrcpy (lpData, Xbuffer);
 	      GlobalUnlock (hMem);
 	      if (!SetClipboardData (CF_TEXT, hMem))
-		WinErrorBox (NULL, TEXT(""));
+		WinErrorBox (NULL, "");
 	      CloseClipboard ();
 	    }
 	} 

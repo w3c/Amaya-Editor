@@ -174,7 +174,7 @@ static void         AttachMandatoryAttrSRule (PtrElement pEl, PtrDocument
 				
 			      case AtTextAttr:
 				/* attribut a valeur textuelle */
-				CopyStringToText (TEXT(" "), pAttr->AeAttrText,
+				CopyStringToText (" ", pAttr->AeAttrText,
 						  &len);
 				break;
 				
@@ -1150,11 +1150,11 @@ void                TtaSearchAttribute (AttributeType searchedAttribute,
     {
     if (scope == SearchBackward)
       pEl = BackSearchAttribute ((PtrElement) element,
-				 searchedAttribute.AttrTypeNum, 0, TEXT(""),
+				 searchedAttribute.AttrTypeNum, 0, "",
 				 (PtrSSchema) (searchedAttribute.AttrSSchema));
     else
       pEl = FwdSearchAttribute ((PtrElement) element,
-				searchedAttribute.AttrTypeNum, 0, TEXT(""),
+				searchedAttribute.AttrTypeNum, 0, "",
 				(PtrSSchema) (searchedAttribute.AttrSSchema));
     if (pEl != NULL && scope == SearchInTree &&
 	!ElemIsWithinSubtree (pEl, (PtrElement) element))

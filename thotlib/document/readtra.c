@@ -38,7 +38,7 @@ void                TSchemaError (err)
 int                 err;
 #endif /* __STDC__ */
 {
-   TtaDisplayMessage (INFO, TEXT("Error %d in translation schema\n"), err);
+   TtaDisplayMessage (INFO, "Error %d in translation schema\n", err);
    error = TRUE;
 }
 
@@ -1094,14 +1094,14 @@ PtrSSchema          pSS;
    pTSch = NULL;
    /* compose le nom du fichier a ouvrir */
    ustrncpy (dirBuffer, SchemaPath, MAX_PATH);
-   MakeCompleteName (fileName, TEXT("TRA"), dirBuffer, buf, &i);
+   MakeCompleteName (fileName, "TRA", dirBuffer, buf, &i);
 
    /* ouvre le fichier */
    file = TtaReadOpen (buf);
    if (file == 0)
      {
 	ustrncpy (buf, fileName, MAX_PATH);
-	ustrcat (buf, TEXT(".TRA"));
+	ustrcat (buf, ".TRA");
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), buf);
      }
    else

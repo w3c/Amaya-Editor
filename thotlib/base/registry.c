@@ -46,20 +46,20 @@
 #include <direct.h>
 #include <winbase.h>
 #include "winsys.h"
-#define WIN_DEF_USERNAME       TEXT("default")
-#define THOT_INI_FILENAME      TEXT("win-thot.rc")
-#define WIN_USERS_HOME_DIR     TEXT("users")
-#define DEF_TMPDIR             TEXT("c:\\temp")
+#define WIN_DEF_USERNAME       "default"
+#define THOT_INI_FILENAME      "win-thot.rc"
+#define WIN_USERS_HOME_DIR     "users"
+#define DEF_TMPDIR             "c:\\temp"
 STRING WIN_Home;
 #else /* _WINDOWS */
-#define THOT_INI_FILENAME      TEXT("unix-thot.rc")
-#define DEF_TMPDIR             TEXT("/tmp")
+#define THOT_INI_FILENAME      "unix-thot.rc"
+#define DEF_TMPDIR             "/tmp"
 #endif /*  _WINDOWS */
 
-#define THOT_RC_FILENAME      TEXT("thot.rc")
-#define THOT_CONFIG_FILENAME  TEXT("config")
-#define THOT_BIN_FILENAME     TEXT("bin")
-#define THOT_LIB_DEFAULTNAME  TEXT("thot_lib")
+#define THOT_RC_FILENAME      "thot.rc"
+#define THOT_CONFIG_FILENAME  "config"
+#define THOT_BIN_FILENAME     "bin"
+#define THOT_LIB_DEFAULTNAME  "thot_lib"
 #define MAX_REGISTRY_ENTRIES 100
 
 typedef enum
@@ -188,7 +188,7 @@ static void DoVariableSubstitution (CHAR_T* input, int i_len, CHAR_T* output, in
     {
       if CHECK_OVERFLOW
 	break;
-      if (*cour != TEXT('$'))
+      if (*cour != '$')
 	{
 	  *res++ = *cour++;
 	  continue;
@@ -197,9 +197,9 @@ static void DoVariableSubstitution (CHAR_T* input, int i_len, CHAR_T* output, in
       cour++;
       if CHECK_OVERFLOW
 	break;
-      if (*cour != TEXT('('))
+      if (*cour != '(')
 	{
-	  *res++ = TEXT('$');
+	  *res++ = '$';
 	  if CHECK_OVERFLOW
 	    break;
 	  *res++ = *cour++;
@@ -214,13 +214,13 @@ static void DoVariableSubstitution (CHAR_T* input, int i_len, CHAR_T* output, in
 	  if CHECK_OVERFLOW
 	    break;
 	}
-      while (*cour != TEXT(')') && !TtaIsWCBlank (cour));
+      while (*cour != ')' && !TtaIsWCBlank (cour));
       if CHECK_OVERFLOW
 	break;
       
       save = *cour;
       *cour = WC_EOS;
-      if (save != TEXT(')'))
+      if (save != ')')
 	fprintf (stderr, "invalid variable name %s in %s\n", base, THOT_INI_FILENAME);
 
       /* We are ready to fetch the base value from the Registry */
@@ -435,7 +435,7 @@ static void         PrintEnv (FILE * output)
   while (cour != NULL)
     {
       /* don't save any system entry */
-      if (!ustrcasecmp (cour->appli, TEXT("System")))
+      if (!ustrcasecmp (cour->appli, "System"))
 	{
 	  cour = cour->next;
 	  continue;
@@ -567,7 +567,7 @@ ThotBool TtaGetEnvBoolean (char* name, ThotBool *value)
    }
 
  /* make the convertion */
- if ( ustrcasecmp (strptr, TEXT("yes")))
+ if ( ustrcasecmp (strptr, "yes"))
    *value = FALSE;
  else
    *value = TRUE;
@@ -608,7 +608,7 @@ CHAR_T* TtaGetEnvString (char* name)
    /* first lookup in the System defaults */
    cour = AppRegistryEntry;
    while (cour != NULL) {
-         if (!ustrcasecmp (cour->appli, TEXT("System")) && !strcmp (cour->name, name) && cour->value[0] != WC_EOS) {
+         if (!ustrcasecmp (cour->appli, "System") && !strcmp (cour->name, name) && cour->value[0] != WC_EOS) {
 #ifdef DEBUG_REGISTRY
             fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
 #endif
@@ -666,7 +666,7 @@ CHAR_T* TtaGetEnvString (char* name)
    value = getenv (name);
 
    if (value == NULL)
-      TtaSetEnvString (name, TEXT(""), FALSE); 
+      TtaSetEnvString (name, "", FALSE); 
    else {
 #ifdef _I18N_
        mbstowcs (EnvString, value, MAX_TXT_LEN);
@@ -696,7 +696,7 @@ CHAR_T* TtaGetEnvString (char* name)
   ----------------------------------------------------------------------*/
 void TtaClearEnvString (char *name)
 {
-   AddRegisterEntry (AppRegistryEntryAppli, name, TEXT(""), REGISTRY_USER, TRUE);
+   AddRegisterEntry (AppRegistryEntryAppli, name, "", REGISTRY_USER, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -710,7 +710,7 @@ void TtaSetEnvInt (char *name, int value, int overwrite)
    int    r_val;
 
    r_val = value % 65537;
-   usprintf (ptr, TEXT("%d"), r_val);
+   usprintf (ptr, "%d", r_val);
    AddRegisterEntry (AppRegistryEntryAppli, name, ptr, REGISTRY_USER, overwrite);
 }
 
@@ -723,9 +723,9 @@ void TtaSetEnvBoolean (char *name, ThotBool value, int overwrite)
    CHAR_T* ptr;
 
    if (value)
-      ptr = TEXT("yes");
+      ptr = "yes";
    else
-       ptr = TEXT("no");
+       ptr = "no";
    AddRegisterEntry (AppRegistryEntryAppli, name, ptr, REGISTRY_USER, overwrite);
 }
 
@@ -738,7 +738,7 @@ void TtaSetEnvString (char *name, CHAR_T* value, int overwrite)
    CHAR_T* tmp = value;
   
    if (!tmp)
-      tmp = TEXT("");
+      tmp = "";
    AddRegisterEntry (AppRegistryEntryAppli, name, value, REGISTRY_USER, overwrite);
 }
 
@@ -751,7 +751,7 @@ void TtaSetDefEnvString (char *name, CHAR_T* value, int overwrite)
   CHAR_T* tmp = value; /* ??? */
                          /* ??? */
   if (!tmp)              /* ??? */
-    tmp = TEXT("");   /* ??? */
+    tmp = "";   /* ??? */
 
   AddRegisterEntry (AppRegistryEntryAppli, name, value, REGISTRY_SYSTEM, overwrite);
 }
@@ -811,7 +811,7 @@ ThotBool TtaGetDefEnvBoolean (char* name, ThotBool *value)
    }
 
  /* make the convertion */
- if (ustrcasecmp (strptr, TEXT("yes")))
+ if (ustrcasecmp (strptr, "yes"))
    *value = FALSE;
  else
    *value = TRUE;
@@ -856,7 +856,7 @@ CHAR_T* TtaGetDefEnvString (char* name)
   cour = AppRegistryEntry;
   while (cour != NULL)
     {
-      if (!ustrcasecmp (cour->appli, TEXT("System")) && !strcmp (cour->name, name) 
+      if (!ustrcasecmp (cour->appli, "System") && !strcmp (cour->name, name) 
 	  && cour->level == REGISTRY_SYSTEM && cour->value[0] != EOS)
 	{
 #ifdef DEBUG_REGISTRY
@@ -976,9 +976,9 @@ static STRING    WINReg_get (CONST STRING env)
   static CHAR_T  ret[MAX_PATH];	/* thread unsafe! */
   DWORD          retLen = sizeof (ret);
 
-  userBase = TEXT("Software");
+  userBase = "Software";
   
-  usprintf (textKey, TEXT("%s\\%s\\%s"), userBase, AppNameW, env);	                    
+  usprintf (textKey, "%s\\%s\\%s", userBase, AppNameW, env);	                    
   success = RegOpenKeyEx (HKEY_CURRENT_USER, textKey, 0, KEY_ALL_ACCESS, &hKey);
   if (success == ERROR_SUCCESS)
     {
@@ -1004,16 +1004,16 @@ static ThotBool WINReg_set (CONST STRING key, CONST STRING value)
    DWORD            protValueLen = sizeof (protValue);
    DWORD            dwDisposition;
  
-   userBase = TEXT("Software");
+   userBase = "Software";
 
    /* protect against values bigger than what we can write in
       the registry */
    ustrncpy (protValue, value, protValueLen - 1);
    protValue[protValueLen-1] = WC_EOS;
 
-   usprintf (textKey,TEXT("%s\\%s\\%s"), userBase, AppNameW, key);	                    
+   usprintf (textKey,"%s\\%s\\%s", userBase, AppNameW, key);	                    
    success = RegCreateKeyEx (HKEY_CURRENT_USER, textKey, 0, 
-	                         TEXT(""), REG_OPTION_VOLATILE, KEY_ALL_ACCESS,
+	                         "", REG_OPTION_VOLATILE, KEY_ALL_ACCESS,
 		                     NULL, &hKey, &dwDisposition);  
    if (success == ERROR_SUCCESS)
    /* create the userBase entry */
@@ -1033,7 +1033,7 @@ static STRING          WINIni_get (CONST STRING env)
    DWORD               res;
    static CHAR_T         ret[MAX_PATH];	/* thread unsafe! */
 
-   res = GetPrivateProfileString (TEXT("Amaya"), env, TEXT(""), ret, sizeof (ret), TEXT("Amaya.ini"));
+   res = GetPrivateProfileString ("Amaya", env, "", ret, sizeof (ret), "Amaya.ini");
    return res ? ret : NULL;
 }
 #endif
@@ -1058,13 +1058,13 @@ void                TtaSaveAppRegistry ()
 
    app_home = TtaGetEnvString ("APP_HOME");
    if (app_home != NULL)
-     usprintf (filename, TEXT("%s%c%s"), app_home, DIR_SEP, THOT_RC_FILENAME);
+     usprintf (filename, "%s%c%s", app_home, DIR_SEP, THOT_RC_FILENAME);
    else
      {
 	fprintf (stderr, "Cannot save Registry no APP_HOME dir\n");
 	return;
      }
-   output = ufopen (filename, TEXT("w"));
+   output = ufopen (filename, "w");
    if (output == NULL)
      {
 	fprintf (stderr, "Cannot save Registry to %s :\n", filename);
@@ -1094,7 +1094,7 @@ static void   ImportRegistryFile (CHAR_T* filename, RegistryLevel level)
    CHAR_T*   wc_value;
 #endif /* _I18N_ */
    ustrcpy (appli, THOT_LIB_DEFAULTNAME);
-   input = ufopen (filename, TEXT("r"));
+   input = ufopen (filename, "r");
    if (input == NULL)
      {
 	fprintf (stderr, "Cannot read Registry from %s :\n", filename);
@@ -1179,7 +1179,7 @@ static void         InitEnviron ()
    HighlightBoxErrors = FALSE;
    InsertionLevels = 4;
 #ifndef _WINDOWS
-   TtaSetDefEnvString ("DOUBLECLICKDELAY", TEXT("500"), TRUE);
+   TtaSetDefEnvString ("DOUBLECLICKDELAY", "500", TRUE);
    pT = TtaGetEnvString ("DOUBLECLICKDELAY");
    if (pT != NULL)
      DoubleClickDelay = uatoi (pT);
@@ -1218,16 +1218,16 @@ static void         InitEnviron ()
        SchemaPath[0] = WC_EOS;
 
    /* set up the default values common to all the thotlib applications */
-   TtaSetDefEnvString ("LANG", TEXT("en-us"), FALSE);
-   TtaSetDefEnvString ("ZOOM", TEXT("0"), FALSE);
-   TtaSetDefEnvString ("TOOLTIPDELAY", TEXT("500"), FALSE);
-   TtaSetDefEnvString ("FontMenuSize", TEXT("12"), FALSE);
-   TtaSetDefEnvString ("ForegroundColor", TEXT("Black"), FALSE);
-   TtaSetDefEnvString ("BackgroundColor", TEXT("LightGrey1"), FALSE);
-   TtaSetDefEnvString ("InserPointColor", TEXT("Red"), FALSE);
-   TtaSetDefEnvString ("DocSelectColor", TEXT("LightGold3"), FALSE);
-   TtaSetDefEnvString ("MenuFgColor", TEXT("Black"), FALSE);
-   TtaSetDefEnvString ("MenuBgColor", TEXT("Grey"), FALSE);
+   TtaSetDefEnvString ("LANG", "en-us", FALSE);
+   TtaSetDefEnvString ("ZOOM", "0", FALSE);
+   TtaSetDefEnvString ("TOOLTIPDELAY", "500", FALSE);
+   TtaSetDefEnvString ("FontMenuSize", "12", FALSE);
+   TtaSetDefEnvString ("ForegroundColor", "Black", FALSE);
+   TtaSetDefEnvString ("BackgroundColor", "LightGrey1", FALSE);
+   TtaSetDefEnvString ("InserPointColor", "Red", FALSE);
+   TtaSetDefEnvString ("DocSelectColor", "LightGold3", FALSE);
+   TtaSetDefEnvString ("MenuFgColor", "Black", FALSE);
+   TtaSetDefEnvString ("MenuBgColor", "Grey", FALSE);
 
    /*
    ** set up the defaul TMPDIR 
@@ -1300,7 +1300,7 @@ void TtaInitializeAppRegistry (CHAR_T* appArgv0)
   if ((appArgv0 == NULL) || (*appArgv0 == WC_EOS))
     {
 #ifdef _WINDOWS
-      MessageBox (NULL, TEXT("TtaInitializeAppRegistry called with invalid argv[0] value"), TEXT("Amaya"), MB_OK);
+      MessageBox (NULL, "TtaInitializeAppRegistry called with invalid argv[0] value", "Amaya", MB_OK);
 #else  /* _WINDOWS */
       fprintf (stderr, "TtaInitializeAppRegistry called with invalid argv[0] value\n");
 #endif /* _WINDOWS */
@@ -1316,7 +1316,7 @@ void TtaInitializeAppRegistry (CHAR_T* appArgv0)
    */
 
 #ifdef _WINDOWS
-  if (appArgv0[0] == WC_DIR_SEP || (appArgv0[1] == TEXT(':') && appArgv0[2] == WC_DIR_SEP))
+  if (appArgv0[0] == WC_DIR_SEP || (appArgv0[1] == ':' && appArgv0[2] == WC_DIR_SEP))
      ustrncpy (&execname[0], appArgv0, sizeof (execname) / sizeof (CHAR_T));
 #else  /* _WINDOWS */
   if (appArgv0[0] == WC_DIR_SEP)
@@ -1356,9 +1356,9 @@ void TtaInitializeAppRegistry (CHAR_T* appArgv0)
        
       execname_len = sizeof (execname) / sizeof (CHAR_T);
 #ifdef _WINDOWS
-      MakeCompleteName (appArgv0, TEXT("EXE"), path, execname, &execname_len);
+      MakeCompleteName (appArgv0, "EXE", path, execname, &execname_len);
 #else
-      MakeCompleteName (appArgv0, TEXT(""), path, execname, &execname_len);
+      MakeCompleteName (appArgv0, "", path, execname, &execname_len);
 #endif
       if (execname[0] == WC_EOS)
 	{
@@ -1385,8 +1385,8 @@ void TtaInitializeAppRegistry (CHAR_T* appArgv0)
    
 #ifdef _WINDOWS
   /* remove the .exe extension. */
-  ptr = ustrchr (appName, TEXT('.'));
-  if (ptr && !ustrcasecmp (ptr, TEXT(".exe")))
+  ptr = ustrchr (appName, '.');
+  if (ptr && !ustrcasecmp (ptr, ".exe"))
     *ptr = WC_EOS;
   ptr = appName;
   while (*ptr)
@@ -1474,9 +1474,9 @@ void TtaInitializeAppRegistry (CHAR_T* appArgv0)
 	   if (*dir_end == WC_DIR_SEP)
 	     {
                *dir_end = WC_EOS;
-               if (!ustrcmp (&dir_end[1], TEXT("..")))
+               if (!ustrcmp (&dir_end[1], ".."))
 		 round ++;
-               else if (ustrcmp (&dir_end[1], TEXT(".")))
+               else if (ustrcmp (&dir_end[1], "."))
 		 {
 		   round --;
 		   /* a directory name has been found */
@@ -1494,7 +1494,7 @@ void TtaInitializeAppRegistry (CHAR_T* appArgv0)
 	 {
 	   *dir_end = WC_EOS;
 	   if (IsThotDir (execname))
-	     AddRegisterEntry (TEXT("System"), "THOTDIR", execname, REGISTRY_INSTALL, TRUE);
+	     AddRegisterEntry ("System", "THOTDIR", execname, REGISTRY_INSTALL, TRUE);
 	 }
 #ifdef COMPILED_IN_THOTDIR
        /* Check a compiled-in value */
@@ -1502,7 +1502,7 @@ void TtaInitializeAppRegistry (CHAR_T* appArgv0)
 	 {
            iso2wc_strcpy (UCOMPILED_IN_THOTDIR, COMPILED_IN_THOTDIR);
            ustrcpy (execname, UCOMPILED_IN_THOTDIR);
-           AddRegisterEntry (TEXT("System"), "THOTDIR", UCOMPILED_IN_THOTDIR, REGISTRY_INSTALL, TRUE);
+           AddRegisterEntry ("System", "THOTDIR", UCOMPILED_IN_THOTDIR, REGISTRY_INSTALL, TRUE);
 	 } 
 #else /* COMPILED_IN_THOTDIR */
 #ifdef COMPILED_IN_THOTDIR2
@@ -1511,7 +1511,7 @@ void TtaInitializeAppRegistry (CHAR_T* appArgv0)
 	 {
            iso2wc_strcpy (UCOMPILED_IN_THOTDIR2, COMPILED_IN_THOTDIR2);
            ustrcpy (execname, COMPILED_IN_THOTDIR2);
-           AddRegisterEntry (TEXT("System"), "THOTDIR", UCOMPILED_IN_THOTDIR2, REGISTRY_INSTALL, TRUE);
+           AddRegisterEntry ("System", "THOTDIR", UCOMPILED_IN_THOTDIR2, REGISTRY_INSTALL, TRUE);
 	 }
 #endif /* COMPILED_IN_THOTDIR2 */
 #endif /* COMPILED_IN_THOTDIR */
@@ -1525,11 +1525,11 @@ void TtaInitializeAppRegistry (CHAR_T* appArgv0)
 #ifdef MACHINE
    /* if MACHINE is set up, add it to the registry */
    iso2wc_strcpy (UMACHINE, MACHINE);
-   AddRegisterEntry (TEXT("System"), "MACHINE", UMACHINE, REGISTRY_INSTALL, TRUE);
+   AddRegisterEntry ("System", "MACHINE", UMACHINE, REGISTRY_INSTALL, TRUE);
 #endif
 
    /* load the system settings, stored in THOTDIR/config/thot.ini */
-   usprintf (filename, TEXT("%s%c%s%c%s"), execname, WC_DIR_SEP, THOT_CONFIG_FILENAME, WC_DIR_SEP, THOT_INI_FILENAME);
+   usprintf (filename, "%s%c%s%c%s", execname, WC_DIR_SEP, THOT_CONFIG_FILENAME, WC_DIR_SEP, THOT_INI_FILENAME);
    if (TtaFileExist (filename))
      {
 #ifdef DEBUG_REGISTRY
@@ -1563,14 +1563,14 @@ void TtaInitializeAppRegistry (CHAR_T* appArgv0)
      {
        dwSize = MAX_PATH;
        GetWindowsDirectory (windir, dwSize);
-       usprintf (app_home, TEXT("%s\\profiles\\%s\\%s"), windir, ptr, AppNameW);
+       usprintf (app_home, "%s\\profiles\\%s\\%s", windir, ptr, AppNameW);
      }
    else
      /* win95: apphome is  thotdir\users\username */
-     usprintf (app_home, TEXT("%s\\%s\\%s"), execname, WIN_USERS_HOME_DIR, ptr);   
+     usprintf (app_home, "%s\\%s\\%s", execname, WIN_USERS_HOME_DIR, ptr);   
 #else /* _WINDOWS */
    ptr = getenv ("HOME");
-   usprintf (app_home, TEXT("%s%c.%s"), ptr, WC_DIR_SEP, AppNameW); 
+   usprintf (app_home, "%s%c.%s", ptr, WC_DIR_SEP, AppNameW); 
 #endif _WINDOWS
    /* store the value of APP_HOME in the registry */
    AddRegisterEntry (AppRegistryEntryAppli, "APP_HOME", app_home, REGISTRY_SYSTEM, FALSE);
@@ -1586,7 +1586,7 @@ void TtaInitializeAppRegistry (CHAR_T* appArgv0)
    /* set the default APP_TMPDIR */
 #ifdef _WINDOWS
    /* the tmpdir is DEF_TMPDIR\app-name */
-   usprintf (filename, TEXT("%s%c%s"), DEF_TMPDIR, WC_DIR_SEP, AppNameW);
+   usprintf (filename, "%s%c%s", DEF_TMPDIR, WC_DIR_SEP, AppNameW);
    AddRegisterEntry (AppRegistryEntryAppli, "APP_TMPDIR", filename, REGISTRY_SYSTEM, TRUE);
 #else
    /* under Unix, APP_TMPDIR == APP_HOME */
@@ -1596,7 +1596,7 @@ void TtaInitializeAppRegistry (CHAR_T* appArgv0)
    /* read the user's preferences (if they exist) */
    if (app_home != NULL && *app_home != WC_EOS)
      {
-       usprintf (filename, TEXT("%s%c%s"), app_home, WC_DIR_SEP, THOT_RC_FILENAME);
+       usprintf (filename, "%s%c%s", app_home, WC_DIR_SEP, THOT_RC_FILENAME);
        if (TtaFileExist (&filename[0]))
 	 {
 #ifdef DEBUG_REGISTRY
@@ -1692,7 +1692,7 @@ int                 SearchFile (CHAR_T* fileName, int dir, CHAR_T* fullName)
 		    tmpbuf[j] = WC_EOS;
 		    i++;
 		    j = 0;
-		    usprintf (fullName, TEXT("%s%s%s"), tmpbuf, WC_DIR_STR, fileName);
+		    usprintf (fullName, "%s%s%s", tmpbuf, WC_DIR_STR, fileName);
 		    ret = TtaFileExist (fullName);
 		 }
 
@@ -1708,7 +1708,7 @@ int                 SearchFile (CHAR_T* fileName, int dir, CHAR_T* fullName)
 		    tmpbuf[j] = WC_EOS;
 		    i++;
 		    j = 0;
-		    usprintf (fullName, TEXT("%s%s%s"), tmpbuf, WC_DIR_STR, fileName);
+		    usprintf (fullName, "%s%s%s", tmpbuf, WC_DIR_STR, fileName);
 		    ret = TtaFileExist (fullName);
 		 }
 	       break;
@@ -1716,7 +1716,7 @@ int                 SearchFile (CHAR_T* fileName, int dir, CHAR_T* fullName)
 	    case 2:
 	       /* lookup in config */
 	       ustrcat (fullName, WC_DIR_STR);
-	       ustrcat (fullName, TEXT("config"));
+	       ustrcat (fullName, "config");
 	       ustrcat (fullName, WC_DIR_STR);
 	       ustrcat (fullName, fileName);
 	       break;
@@ -1724,7 +1724,7 @@ int                 SearchFile (CHAR_T* fileName, int dir, CHAR_T* fullName)
 	    case 3:
 	       /* lookup in batch */
 	       ustrcat (fullName, WC_DIR_STR);
-	       ustrcat (fullName, TEXT("batch"));
+	       ustrcat (fullName, "batch");
 	       ustrcat (fullName, WC_DIR_STR);
 	       ustrcat (fullName, fileName);
 	       break;

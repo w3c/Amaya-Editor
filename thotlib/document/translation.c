@@ -127,7 +127,7 @@ static int GetSecondaryFile (STRING fName, PtrDocument pDoc, ThotBool open)
      }
    else
      {
-     OutputFile[NOutputFiles].OfFileDesc = ufopen (fName, TEXT("w"));
+     OutputFile[NOutputFiles].OfFileDesc = ufopen (fName, "w");
      if (OutputFile[NOutputFiles].OfFileDesc == NULL)
        {
        if (!OutputFile[NOutputFiles].OfCannotOpen)
@@ -424,7 +424,7 @@ static void PutInt (int n, int fileNum, STRING outBuffer, PtrDocument pDoc,
   UCHAR_T             buffer[20];
   int                 i;
 
-  usprintf (buffer, TEXT("%d"), n);
+  usprintf (buffer, "%d", n);
   i = 0;
   while (buffer[i] != EOS)
     PutChar ((wchar_t) buffer[i++], fileNum, outBuffer, pDoc, lineBreak,
@@ -455,7 +455,7 @@ static PtrTSchema GetTransSchForContent (PtrElement pEl, LeafType leafType,
    if (pEl->ElTerminal && pEl->ElLeafType == LtText)
       alphabet = TtaGetAlphabet (pEl->ElLanguage);
    else
-      alphabet = TEXT('L');
+      alphabet = 'L';
    do
      {
      if (pSS != pAncestor->ElStructSchema)
@@ -773,12 +773,12 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
 	  else
 	    {
 	      /* write a numeric entity */
-	      PutChar ((wchar_t) TEXT('&'), fileNum, NULL, pDoc, lineBreak,
+	      PutChar ((wchar_t) '&', fileNum, NULL, pDoc, lineBreak,
 		       FALSE);
-	      PutChar ((wchar_t) TEXT('#'), fileNum, NULL, pDoc, lineBreak,
+	      PutChar ((wchar_t) '#', fileNum, NULL, pDoc, lineBreak,
 		       FALSE);
 	      PutInt (pEl->ElWideChar, fileNum, NULL, pDoc, lineBreak);
-	      PutChar ((wchar_t) TEXT(';'), fileNum, NULL, pDoc, lineBreak,
+	      PutChar ((wchar_t) ';', fileNum, NULL, pDoc, lineBreak,
 		       FALSE);
 	    }
 	}
@@ -844,11 +844,11 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
 		{
 		  for (i = 0; i < pBufT->BuLength; i++)
 		    {
-		      PutChar ((wchar_t) TEXT(' '), fileNum, NULL, pDoc, lineBreak,
+		      PutChar ((wchar_t) ' ', fileNum, NULL, pDoc, lineBreak,
 			       FALSE);
 		      PutInt (pBufT->BuPoints[i].XCoord, fileNum, NULL, pDoc,
 			      lineBreak);
-		      PutChar ((wchar_t) TEXT(','), fileNum, NULL, pDoc, lineBreak,
+		      PutChar ((wchar_t) ',', fileNum, NULL, pDoc, lineBreak,
 			       FALSE);
 		      PutInt (pBufT->BuPoints[i].YCoord, fileNum, NULL, pDoc,
 			      lineBreak);
@@ -919,27 +919,27 @@ static UCHAR_T      PresRuleValue (PtrPRule pPRule)
        break;
      case PtHyphenate:
        if (pPRule->PrBoolValue)
-	 val = TEXT('Y');
+	 val = 'Y';
        else
-	 val = TEXT('N');
+	 val = 'N';
        break;
      case PtAdjust:
        switch (pPRule->PrAdjust)
 	 {
 	 case AlignLeft:
-	   val = TEXT('L');
+	   val = 'L';
 	   break;
 	 case AlignRight:
-	   val = TEXT('R');
+	   val = 'R';
 	   break;
 	 case AlignCenter:
-	   val = TEXT('C');
+	   val = 'C';
 	   break;
 	 case AlignLeftDots:
-	   val = TEXT('D');
+	   val = 'D';
 	   break;
 	 case AlignJustify:
-	   val = TEXT('J');
+	   val = 'J';
 	   break;
 	 }
        break;
@@ -2228,7 +2228,7 @@ static void PutVariable (PtrElement pEl, PtrAttribute pAttr,
 	       {
 		 j = j * 10;
 		 if (j > i)
-		   PutChar ((wchar_t) TEXT('0'), fileNum, outBuffer,
+		   PutChar ((wchar_t) '0', fileNum, outBuffer,
 			    pDoc, lineBreak, FALSE);
 	       }
 	   }
@@ -2291,9 +2291,9 @@ static void PutVariable (PtrElement pEl, PtrAttribute pAttr,
 		    }
 		  break;
 		case AtReferenceAttr:
-		  PutChar ((wchar_t) TEXT('R'), fileNum, outBuffer, pDoc, lineBreak, FALSE);
-		  PutChar ((wchar_t) TEXT('E'), fileNum, outBuffer, pDoc, lineBreak, FALSE);
-		  PutChar ((wchar_t) TEXT('F'), fileNum, outBuffer, pDoc, lineBreak, FALSE);
+		  PutChar ((wchar_t) 'R', fileNum, outBuffer, pDoc, lineBreak, FALSE);
+		  PutChar ((wchar_t) 'E', fileNum, outBuffer, pDoc, lineBreak, FALSE);
+		  PutChar ((wchar_t) 'F', fileNum, outBuffer, pDoc, lineBreak, FALSE);
 		  break;
 		case AtEnumAttr:
 		  i = 0;
@@ -2562,27 +2562,27 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 		break;
 	      case PtHyphenate:
 		if (pRPres->PrBoolValue)
-		  PutChar ((wchar_t) TEXT('Y'), fileNum, NULL, pDoc, *lineBreak, FALSE);
+		  PutChar ((wchar_t) 'Y', fileNum, NULL, pDoc, *lineBreak, FALSE);
 		else
-		  PutChar ((wchar_t) TEXT('N'), fileNum, NULL, pDoc, *lineBreak, FALSE);
+		  PutChar ((wchar_t) 'N', fileNum, NULL, pDoc, *lineBreak, FALSE);
 		break;
 	      case PtAdjust:
 		switch (pRPres->PrAdjust)
 		  {
 		  case AlignLeft:
-		    PutChar ((wchar_t) TEXT('L'), fileNum, NULL, pDoc, *lineBreak, FALSE);
+		    PutChar ((wchar_t) 'L', fileNum, NULL, pDoc, *lineBreak, FALSE);
 		    break;
 		  case AlignRight:
-		    PutChar ((wchar_t) TEXT('R'), fileNum, NULL, pDoc, *lineBreak, FALSE);
+		    PutChar ((wchar_t) 'R', fileNum, NULL, pDoc, *lineBreak, FALSE);
 		    break;
 		  case AlignCenter:
-		    PutChar ((wchar_t) TEXT('C'), fileNum, NULL, pDoc, *lineBreak, FALSE);
+		    PutChar ((wchar_t) 'C', fileNum, NULL, pDoc, *lineBreak, FALSE);
 		    break;
 		  case AlignLeftDots:
-		    PutChar ((wchar_t) TEXT('D'), fileNum, NULL, pDoc, *lineBreak, FALSE);
+		    PutChar ((wchar_t) 'D', fileNum, NULL, pDoc, *lineBreak, FALSE);
 		    break;
 		  case AlignJustify:
-		    PutChar ((wchar_t) TEXT('J'), fileNum, NULL, pDoc, *lineBreak, FALSE);
+		    PutChar ((wchar_t) 'J', fileNum, NULL, pDoc, *lineBreak, FALSE);
 		    break;
 		  }
 		break;
@@ -2691,7 +2691,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 			/* le document reference' n'est pas charge' */
 			{
 			  ustrncpy (directoryName, DocumentPath, MAX_PATH);
-			  MakeCompleteName (docIdent, TEXT("PIV"), directoryName,
+			  MakeCompleteName (docIdent, "PIV", directoryName,
 					    fullName, &i);
 			  if (fullName[0] != EOS)
 			    /* on a trouve' le fichier */
@@ -2899,7 +2899,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 		   currentFileName, 0, pDoc, *lineBreak);
       if (currentFileName[0] != WC_EOS)
 	{
-	  newFile = ufopen (currentFileName, TEXT("w"));
+	  newFile = ufopen (currentFileName, "w");
 	  if (newFile == NULL)
 	    TtaDisplayMessage (CONFIRM,TtaGetMessage (LIB,TMSG_CREATE_FILE_IMP),
 			       currentFileName);
@@ -3122,7 +3122,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
       if (fname[0] == EOS)
 	/* pas de nom de fichier */
 	fullName[0] = EOS;
-      else if (fname[0] == TEXT('/'))
+      else if (fname[0] == '/')
 	/* nom de fichier absolu */
 	ustrcpy (fullName, fname);
       else
@@ -3130,7 +3130,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	  /* compose le nom du fichier a ouvrir avec le nom du
 	     directory des schemas... */
 	  ustrncpy (directoryName, SchemaPath, MAX_PATH);
-	  MakeCompleteName (fname, TEXT(""), directoryName, fullName, &i);
+	  MakeCompleteName (fname, "", directoryName, fullName, &i);
 	}
       /* si le fichier a inclure est deja ouvert en ecriture, on le flush.  */
       i = GetSecondaryFile (fullName, pDoc, FALSE);
@@ -3472,7 +3472,7 @@ ThotBool      ExportDocument (PtrDocument pDoc, STRING fName,
    ThotBool            ok = TRUE;
 
    /* cree le fichier de sortie principal */
-   outputFile = ufopen (fName, TEXT("w"));
+   outputFile = ufopen (fName, "w");
    if (outputFile == NULL)
      ok = FALSE;
    else
@@ -3507,9 +3507,9 @@ ThotBool      ExportDocument (PtrDocument pDoc, STRING fName,
        fileExtension[0] = EOS;
        i = ustrlen (fileName);
        i--;
-       while (i > 0 && fileName[i] != TEXT('.'))
+       while (i > 0 && fileName[i] != '.')
 	 i--;
-       if (fileName[i] == TEXT('.'))
+       if (fileName[i] == '.')
 	 {
 	 ustrncpy (fileExtension, &fileName[i], MAX_PATH);
 	 fileName[i] = EOS;
@@ -3558,7 +3558,7 @@ void ExportTree (PtrElement pEl, PtrDocument pDoc, STRING fName,
 
  
   /* cree le fichier de sortie principal */
-  outputFile = ufopen (fName, TEXT("w"));
+  outputFile = ufopen (fName, "w");
   
   if (outputFile == NULL)
     TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_CREATE_FILE_IMP),
@@ -3593,9 +3593,9 @@ void ExportTree (PtrElement pEl, PtrDocument pDoc, STRING fName,
       fileExtension[0] = EOS;
       i = ustrlen (fileName);
       i--;
-      while (i > 0 && fileName[i] != TEXT('.'))
+      while (i > 0 && fileName[i] != '.')
 	i--;
-      if (fileName[i] == TEXT('.'))
+      if (fileName[i] == '.')
 	{
 	ustrncpy (fileExtension, &fileName[i], MAX_PATH);
 	fileName[i] = EOS;

@@ -1859,7 +1859,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 		     SelectPositionWithEvent (pDoc, pSibling,
 					      pSibling->ElTextLength + 1);
 		     /* simulate a backspace */
-		     InsertChar (frame, TEXT('\177'), -1);
+		     InsertChar (frame, '\177', -1);
 		   }
 		 else
 		   {

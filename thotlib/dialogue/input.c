@@ -1185,9 +1185,9 @@ ThotTranslations      InitTranslations (char *appliname)
   appHome = TtaGetEnvString ("APP_HOME");
   ustrcpy (name, appliname);
 #ifdef _WINDOWS
-  ustrcat (name, TEXT(".kb"));
+  ustrcat (name, ".kb");
 #else  /* _WINDOWS */
-  ustrcat (name, TEXT(".keyboard"));
+  ustrcat (name, ".keyboard");
 #endif /* _WINDOWS */
 
   ustrcpy (home, appHome);
@@ -1196,7 +1196,7 @@ ThotTranslations      InitTranslations (char *appliname)
   if (!SearchFile (home, 0, fullName))
     SearchFile (name, 2, fullName);
 
-  file = ufopen (fullName, TEXT("r"));
+  file = ufopen (fullName, "r");
   if (!file)
     {
       /*Fichier inaccessible */

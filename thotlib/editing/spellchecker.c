@@ -81,12 +81,12 @@ ThotBool TtaLoadDocumentDictionary (PtrDocument document, int *pDictionary,
     {
       TtaExtractName (extenddic, path, dictname);
       if (dictname[0] == EOS)
-	ustrcpy (dictname, TEXT("dictionary.DCT"));
+	ustrcpy (dictname, "dictionary.DCT");
     }
   else
     {
       path[0] = EOS;
-      ustrcpy (dictname, TEXT("dictionary.DCT"));
+      ustrcpy (dictname, "dictionary.DCT");
     }
 
   if (path[0] == EOS ||  !TtaCheckDirectory (path))
@@ -230,7 +230,7 @@ ThotBool            IsIso (STRING string)
 
    while (string[i] != EOS && (iso != 0))
      {
-	iso = isalphiso (string[i]) || string[i] == TEXT('-') || string[i] == TEXT('\'');
+	iso = isalphiso (string[i]) || string[i] == '-' || string[i] == '\'';
 	i++;
      }
    return (iso == 0) ? FALSE : TRUE;
@@ -624,10 +624,10 @@ static void         SaveDictFile (PtrDict docDict)
    CHAR_T                tempbuffer[THOT_MAX_CHAR];
    CHAR_T                word[MAX_WORD_LEN];
 
-   FindCompleteName (docDict->DictName, TEXT(""), docDict->DictDirectory, tempbuffer, &i);
+   FindCompleteName (docDict->DictName, "", docDict->DictDirectory, tempbuffer, &i);
    if (docDict->DictNbWords >= 0)
      {
-	f = ufopen (tempbuffer, TEXT("w"));
+	f = ufopen (tempbuffer, "w");
 	if (f != NULL)
 	  {
 	    /* enregistrer d'abord nb words and nb chars effectifs */
@@ -751,7 +751,7 @@ static void            InitChecker ()
 
    /* Initialisation de la correction */
    for (j = 0; j <= NC; j++)
-      ustrcpy (ChkrCorrection[j],TEXT("$"));
+      ustrcpy (ChkrCorrection[j],"$");
 }
 
 
@@ -816,15 +816,15 @@ static void         init_Tsub (FILE * ftsub)
 	int                 coeff;
 	UCHAR_T       x, y, valeur;
 
-	usscanf (ch1, TEXT("%c"), &x);
-	usscanf (ch2, TEXT("%c"), &y);
-	usscanf (ch3, TEXT("%c"), &valeur);
+	usscanf (ch1, "%c", &x);
+	usscanf (ch2, "%c", &y);
+	usscanf (ch3, "%c", &valeur);
 	switch (valeur)
 	      {
-		 case TEXT('b'):
+		 case 'b':
 		    coeff = KB;
 		    break;
-		 case TEXT('m'):
+		 case 'm':
 		    coeff = KM;
 		    break;
 		 default:
@@ -927,8 +927,8 @@ int                 ParametrizeChecker ()
 	     /* Lecture du fichier parametres */
 	     ustrcpy (paramnom, corrpath);
          ustrcat (paramnom, WC_DIR_STR);
-	     ustrcat (paramnom, TEXT("param"));
-	     if ((fparam = ufopen (paramnom, TEXT("r"))) != NULL)
+	     ustrcat (paramnom, "param");
+	     if ((fparam = ufopen (paramnom, "r")) != NULL)
 	       /* Existence du fichier */
 		init_param (fparam);
 	     else
@@ -940,8 +940,8 @@ int                 ParametrizeChecker ()
 	     /* Lecture du  fichier clavier */
 	     ustrcpy (clavnom, corrpath);
          ustrcat (clavnom, WC_DIR_STR);
-	     ustrcat (clavnom, TEXT("clavier"));
-	     if ((ftsub = ufopen (clavnom, TEXT("r"))) != NULL)
+	     ustrcat (clavnom, "clavier");
+	     if ((ftsub = ufopen (clavnom, "r")) != NULL)
 	       /* Existence du fichier */
 	       {
 		  init_Tsub (ftsub);
@@ -1119,7 +1119,7 @@ static ThotBool     IncludeANumber (CHAR_T word[MAX_WORD_LEN])
    if (longueur > 0)
      {
 	for (i = 0; i < longueur && (result == FALSE); i++)
-	   if (word[i] >= TEXT('0') && word[i] <= TEXT('9'))
+	   if (word[i] >= '0' && word[i] <= '9')
 	      result = TRUE;
      }
    return result;
@@ -1143,7 +1143,7 @@ static ThotBool     IsANumber (CHAR_T word[MAX_WORD_LEN])
 
 	result = TRUE;
 	for (i = 0; i < longueur && result; i++)
-	   if (word[i] < TEXT('0') || word[i] > TEXT('9'))
+	   if (word[i] < '0' || word[i] > '9')
 	      result = FALSE;
      }
    return result;
@@ -1212,7 +1212,7 @@ static ThotBool     InRoman (CHAR_T word[MAX_WORD_LEN])
 	  }
 
 	/* ne pas considerer "M" comme un romain */
- if (ustrlen (word) == 1 && word[0] == TEXT('M'))
+ if (ustrlen (word) == 1 && word[0] == 'M')
  result = FALSE;
 	/* verifier aussi l'ordre des I V X L C D M */
 	/* A FAIRE */

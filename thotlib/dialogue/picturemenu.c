@@ -144,7 +144,7 @@ static void         InitPathImage ()
       bufDir[j] = EOS;
    else
       bufDir[j - 1] = EOS;
-   TtaNewSelector (BaseDlgImage + _ZONE_DIR_IMAGE, BaseDlgImage + _IMAGE_FORM, TEXT("Dossiers documents"),
+   TtaNewSelector (BaseDlgImage + _ZONE_DIR_IMAGE, BaseDlgImage + _IMAGE_FORM, "Dossiers documents",
 		   nb, bufDir, 9, NULL, FALSE, TRUE);
 }
 
@@ -159,8 +159,8 @@ void CallbackPictureMenu (int ref, int typeData, STRING txt)
    int                 i, val;
    CHAR_T                URL_DIR_SEP;
 
-   if (typeData == STRING_DATA && txt && ustrchr (txt, TEXT('/')))
-     URL_DIR_SEP = TEXT('/');
+   if (typeData == STRING_DATA && txt && ustrchr (txt, '/'))
+     URL_DIR_SEP = '/';
    else 
      URL_DIR_SEP = DIR_SEP;
 
@@ -210,14 +210,14 @@ void CallbackPictureMenu (int ref, int typeData, STRING txt)
 	   /* compose le path complet du fichier pivot */
 	   ustrncpy (DirectoryImage, DocumentPath, MAX_PATH);
 	   /* recheche indirectement le directory */
-	   MakeCompleteName (txt, TEXT(""), DirectoryImage, completeName, &i);
+	   MakeCompleteName (txt, "", DirectoryImage, completeName, &i);
 	   /* separe directory et nom */
 	   TtaExtractName (completeName, DirectoryImage, ImageName);
 	 }
        else
 	 {
 	   ustrcpy (completeName, DirectoryImage);
-	   ustrcat (completeName, TEXT("/"));
+	   ustrcat (completeName, "/");
 	   ustrcat (completeName, txt);
 	   ustrcpy (ImageName, txt);
 	 }
@@ -237,7 +237,7 @@ void CallbackPictureMenu (int ref, int typeData, STRING txt)
 		     i = ustrlen (DocumentPath);
 		     if (i + ustrlen (DirectoryImage) + 2 < MAX_PATH)
 		       {
-			 ustrcat (DocumentPath, TEXT(":"));
+			 ustrcat (DocumentPath, ":");
 			 ustrcat (DocumentPath, DirectoryImage);
 			 InitPathImage ();
 		       }
@@ -299,7 +299,7 @@ void BuildPictureMenu (STRING name, ThotBool * result, int *typim, int *pres, Pt
    InitPathImage ();
 
    /* liste des fichiers existants */
-   TtaListDirectory (DirectoryImage, BaseDlgImage + _IMAGE_FORM, NULL, -1, TEXT(""), TtaGetMessage (LIB, TMSG_FILES), BaseDlgImage + _IMAGE_SEL);
+   TtaListDirectory (DirectoryImage, BaseDlgImage + _IMAGE_FORM, NULL, -1, "", TtaGetMessage (LIB, TMSG_FILES), BaseDlgImage + _IMAGE_SEL);
 
    /* sous-menu des types d'image du formulaire Picture */
    indx = 0;
@@ -308,7 +308,7 @@ void BuildPictureMenu (STRING name, ThotBool * result, int *typim, int *pres, Pt
    source = &bufTypeImage[0];
    for (i = 1; i <= imageTypeCount; i++)
      {
-	bufMenu[indx] = TEXT('B');
+	bufMenu[indx] = 'B';
 	indx++;
 	length = strlen (source) + 1;
 	if (indx + length < MAX_TXT_LEN)
@@ -322,21 +322,21 @@ void BuildPictureMenu (STRING name, ThotBool * result, int *typim, int *pres, Pt
 
    /* sous-menu cadrage du formulaire Picture */
    indx = 0;
-   usprintf (&bufMenu[indx], TEXT("B%s"), TtaGetMessage (LIB, TMSG_REALSIZE));
+   usprintf (&bufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_REALSIZE));
    indx += ustrlen (&bufMenu[indx]) + 1;
-   usprintf (&bufMenu[indx], TEXT("B%s"), TtaGetMessage (LIB, TMSG_RESCALE));
+   usprintf (&bufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_RESCALE));
    indx += ustrlen (&bufMenu[indx]) + 1;
-   usprintf (&bufMenu[indx], TEXT("B%s"), TtaGetMessage (LIB, TMSG_FILLFRAME));
+   usprintf (&bufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_FILLFRAME));
    indx += ustrlen (&bufMenu[indx]) + 1;
-   usprintf (&bufMenu[indx], TEXT("B%s"), TtaGetMessage (LIB, TMSG_XREPEAT));
+   usprintf (&bufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_XREPEAT));
    indx += ustrlen (&bufMenu[indx]) + 1;
-   usprintf (&bufMenu[indx], TEXT("B%s"), TtaGetMessage (LIB, TMSG_YREPEAT));
+   usprintf (&bufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_YREPEAT));
    TtaNewSubmenu (BaseDlgImage + _MENU_IMAGE_FRAME, BaseDlgImage + _IMAGE_FORM, 0, TtaGetMessage (LIB, TMSG_PICT_PRES), 5, bufMenu, NULL, FALSE);
 
    /* zone de saisie du nom du fichier image */
    TtaNewTextForm (BaseDlgImage + _ZONE_IMAGE_FILE, BaseDlgImage + _IMAGE_FORM, TtaGetMessage (LIB, TMSG_PICT_FILE), 50, 1, TRUE);
 
-   TtaSetSelector (BaseDlgImage + _ZONE_DIR_IMAGE, -1, TEXT(""));
+   TtaSetSelector (BaseDlgImage + _ZONE_DIR_IMAGE, -1, "");
    TtaSetTextForm (BaseDlgImage + _ZONE_IMAGE_FILE, name);
    TtaSetMenuForm (BaseDlgImage + _MENU_IMAGE_TYPE, IndexTypeImage);
    TtaSetMenuForm (BaseDlgImage + _MENU_IMAGE_FRAME, IndexPresImage);

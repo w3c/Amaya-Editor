@@ -1012,7 +1012,7 @@ static int          CopyXClipboard (USTRING *buffer, View view)
                   pBlock = SearchEnclosingType (pEl->ElAbstractBox[v], BoBlock);
 		  if (i != 0 && pBlock != pOldBlock && pOldBlock != NULL)
 		     /* Ajoute un \n en fin d'element */
-		     ustrcpy (&Xbuffer[i++], TEXT("\n\n"));
+		     ustrcpy (&Xbuffer[i++], "\n\n");
 
 		  /* Recopie le texte de l'element */
 		  pOldBlock = pBlock;

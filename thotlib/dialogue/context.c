@@ -190,24 +190,24 @@ void TtaUpdateEditorColors (void)
 
   name = TtaGetEnvString ("appname");
   /* background color */
-  found = FindColor (0, name, "BackgroundColor", TEXT("LightGrey1"), &White_Color);
+  found = FindColor (0, name, "BackgroundColor", "LightGrey1", &White_Color);
   /* drawing color */
-  found = FindColor (0, name, "ForegroundColor", TEXT("Black"), &Black_Color);
+  found = FindColor (0, name, "ForegroundColor", "Black", &Black_Color);
   /* selection colors */
-  found = FindColor (0, name, "InserPointColor", TEXT("Red"), &Select_Color);
-  found = FindColor (0, name, "DocSelectColor", TEXT("LightGold3"), &Select_Color);
+  found = FindColor (0, name, "InserPointColor", "Red", &Select_Color);
+  found = FindColor (0, name, "DocSelectColor", "LightGold3", &Select_Color);
   /* The reference color */
-  found = FindColor (0, name, "ActiveBoxColor", TEXT("Red"), &(Box_Color));
+  found = FindColor (0, name, "ActiveBoxColor", "Red", &(Box_Color));
   /* color for read-only sections */
-  found = FindColor (0, name, "ReadOnlyColor", TEXT("Black"), &(RO_Color));
+  found = FindColor (0, name, "ReadOnlyColor", "Black", &(RO_Color));
   /* color for the menu background */
-  found = FindColor (0, name, "MenuBgColor", TEXT("Grey"), &BgMenu_Color);
+  found = FindColor (0, name, "MenuBgColor", "Grey", &BgMenu_Color);
   /* color for the menu foregroundground */
-  found = FindColor (0, name, "MenuFgColor", TEXT("Black"), &FgMenu_Color);
+  found = FindColor (0, name, "MenuFgColor", "Black", &FgMenu_Color);
   /* scrolls color */
   Scroll_Color = BgMenu_Color;
   /* color for the inactive entries */
-  found = FindColor (0, name, "InactiveItemColor", TEXT("LightGrey2"), &InactiveB_Color);
+  found = FindColor (0, name, "InactiveItemColor", "LightGrey2", &InactiveB_Color);
 #ifdef _WINDOWS
   /*WinInitColors ();*/
 #endif /* _WINDOWS */
@@ -313,7 +313,7 @@ static void         InitColors (CHAR_T* name)
      }
    else
      /* at least allocate the selection color */
-     found = FindColor (0, name, "DocSelectColor", TEXT("White"), &Select_Color);
+     found = FindColor (0, name, "DocSelectColor", "White", &Select_Color);
 
 }
 
@@ -460,7 +460,7 @@ void ThotInitDisplay (CHAR_T* name, int dx, int dy)
    InitColors (name);
    
    if (WIN_LastBitmap && !DeleteObject (WIN_LastBitmap))
-      WinErrorBox (WIN_Main_Wd, TEXT("Init"));
+      WinErrorBox (WIN_Main_Wd, "Init");
    WIN_LastBitmap = 0;
    InitCurs ();
    WIN_InitDialogueFonts (TtDisplay, name);

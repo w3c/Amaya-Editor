@@ -1446,15 +1446,15 @@ void                TtcStandardPresentation (Document document, View view)
 
    /* choix multiple presentation standard */
    i = 0;
-   usprintf (&string[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_STD_CHAR));
+   usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_CHAR));
    i += ustrlen (&string[i]) + 1;
-   usprintf (&string[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_STD_GRAPHICS));
+   usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_GRAPHICS));
    i += ustrlen (&string[i]) + 1;
-   usprintf (&string[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_STD_COLORS));
+   usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_COLORS));
    i += ustrlen (&string[i]) + 1;
-   usprintf (&string[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_STD_FORMAT));
+   usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_FORMAT));
    i += ustrlen (&string[i]) + 1;
-   usprintf (&string[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_STD_GEOMETRY));
+   usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_GEOMETRY));
 
    TtaNewToggleMenu (NumMenuPresentStandard, NumFormPresentStandard,
 		TtaGetMessage (LIB, TMSG_STD_PRES), 5, string, NULL, TRUE);
@@ -2150,18 +2150,18 @@ void                TtcChangeGraphics (Document document, View view)
 
 	     /* sous-menu style des traits */
 	     i = 0;
-	     usprintf (&string[i], TEXT("%s"), TEXT("Bsssss"));	/* Traits_continu */
+	     usprintf (&string[i], "%s", "Bsssss");	/* Traits_continu */
 	     i += ustrlen (&string[i]) + 1;
-	     usprintf (&string[i], TEXT("%s"), TEXT("Bttttt"));	/* Traits_tirete */
+	     usprintf (&string[i], "%s", "Bttttt");	/* Traits_tirete */
 	     i += ustrlen (&string[i]) + 1;
-	     usprintf (&string[i], TEXT("%s"), TEXT("Buuuuu"));	/* Traits_pointilles */
+	     usprintf (&string[i], "%s", "Buuuuu");	/* Traits_pointilles */
 	     i += ustrlen (&string[i]) + 1;
-	     usprintf (&string[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_UNCHANGED));
+	     usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewSubmenu (NumMenuStrokeStyle, NumFormPresGraphics, 0, TtaGetMessage (LIB, TMSG_LINE_STYLE), 4, string, NULL, TRUE);
 	     /* change la police des 3 premieres entrees du style des traits */
 #ifndef _WINDOWS
 	     for (i = 0; i < 3; i++)
-             TtaRedrawMenuEntry (NumMenuStrokeStyle, i, TEXT("icones"), ThotColorNone, -1);
+             TtaRedrawMenuEntry (NumMenuStrokeStyle, i, "icones", ThotColorNone, -1);
 #endif /* !_WINDOWS */
 	     /* initialise le sous-menu style des traits */
 	     ChngLineStyle = TRUE;
@@ -2169,13 +2169,13 @@ void                TtcChangeGraphics (Document document, View view)
 	     LineStyle = pAb->AbLineStyle;
 	     switch (LineStyle)
 	       {
-	       case TEXT('S'):
+	       case 'S':
 		 i = 1;	/* trait continu (Solid) */
 		 break;
-	       case TEXT('-'):
+	       case '-':
 		 i = 2;	/* tirete' */
 		 break;
-	       case TEXT('.'):
+	       case '.':
 		 i = 3;	/* pointille' */
 		 break;
 	       default:
@@ -2192,7 +2192,7 @@ void                TtcChangeGraphics (Document document, View view)
 	     StdLineWeight = FALSE;
 	     LineWeight = pAb->AbLineWeight;
 	     /* Toggle button Epaisseur des traits standard */
-	     usprintf (string, TEXT("B%s"), TtaGetMessage (LIB, TMSG_UNCHANGED));
+	     usprintf (string, "B%s", TtaGetMessage (LIB, TMSG_UNCHANGED));
 #ifndef _WINDOWS
 	     TtaNewToggleMenu (NumToggleWidthUnchanged, NumFormPresGraphics,
 			       NULL, 1, string, NULL, TRUE);
@@ -2226,13 +2226,13 @@ void                TtcChangeGraphics (Document document, View view)
 #ifndef _WINDOWS 
 		  TtaNewSelector (NumSelectPattern, NumFormPresGraphics, TtaGetMessage (LIB, TMSG_FILL_PATTERN), nbItems, string, i, NULL, TRUE, TRUE);
 		  /* initialise le selecteur sur sa premiere entree */
-		  TtaSetSelector (NumSelectPattern, pAb->AbFillPattern, TEXT(""));
+		  TtaSetSelector (NumSelectPattern, pAb->AbFillPattern, "");
 #endif /* _WINDOWS */
 	       }
 	     /* Toggle button Motif de remplissage standard */
 #ifndef _WINDOWS
 	     i = 0;
-	     usprintf (&string[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_UNCHANGED));
+	     usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewToggleMenu (NumTogglePatternUnchanged, NumFormPresGraphics,
 			       NULL, 1, string, NULL, TRUE);
 #endif /* !_WINDOWS */

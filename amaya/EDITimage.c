@@ -323,7 +323,7 @@ STRING              data;
       ImgAlt[NAME_LENGTH-1] = WC_EOS;
       break;
     case ImageDir:
-      if (!ustrcmp (data, TEXT("..")))
+      if (!ustrcmp (data, ".."))
 	{
 	  /* suppress last directory */
 	  ustrcpy (tempname, DirectoryImage);
@@ -375,7 +375,7 @@ void                InitImage ()
    BaseImage = TtaSetCallback (CallbackImage, IMAGE_MAX_REF);
    RepeatValue = 0;
    LastURLImage[0] = WC_EOS;
-   ustrcpy (ImgFilter, TEXT(".gif"));
+   ustrcpy (ImgFilter, ".gif");
    /* set path on current directory */
    ugetcwd (DirectoryImage, MAX_LENGTH);
 }
@@ -453,7 +453,7 @@ char*               shape;
      return;
 
    elType = TtaGetElementType (el);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) != 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
      /* not within an HTML element. Nothing to do */
      return;
 
@@ -900,7 +900,7 @@ STRING              text;
   LoadedImageDesc   *desc;
 
   elType = TtaGetElementType (el);
-  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
+  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
     /* it's not a SVG element, it's then a HTML img element, which is
        itself a Thot picture element */
     pict = el;
@@ -1005,7 +1005,7 @@ NotifyElement      *event;
 
    /* if it's not an HTML picture (it could be an SVG image for instance),
       ignore */
-   if (ustrcmp(TtaGetSSchemaName (event->elementType.ElSSchema), TEXT("HTML")))
+   if (ustrcmp(TtaGetSSchemaName (event->elementType.ElSSchema), "HTML"))
      return;
 
    /* Select an image name */
@@ -1042,9 +1042,9 @@ NotifyElement      *event;
      {
        imagename = TtaAllocString (MAX_LENGTH);
        pathimage = TtaAllocString (MAX_LENGTH);
-       ustrcpy (imagename, TEXT(" "));
+       ustrcpy (imagename, " ");
        TtaExtractName (text, pathimage, &imagename[1]);
-       ustrcat (imagename, TEXT(" "));
+       ustrcat (imagename, " ");
        TtaSetAttributeText (attr, imagename, elSRC, doc);
        TtaFreeMemory (pathimage);
        TtaFreeMemory (imagename);
@@ -1115,9 +1115,9 @@ NotifyElement      *event;
      {
        imagename = TtaAllocString (MAX_LENGTH);
        pathimage = TtaAllocString (MAX_LENGTH);
-       ustrcpy (imagename, TEXT(" "));
+       ustrcpy (imagename, " ");
        TtaExtractName (text, pathimage, &imagename[1]);
-       ustrcat (imagename, TEXT(" "));
+       ustrcat (imagename, " ");
        /* set the element content */
        TtaSetTextContent (leaf, imagename, SPACE, doc);
        TtaFreeMemory (pathimage);
@@ -1225,11 +1225,11 @@ View                view;
       /* Get the type of the first selected element */
       elType = TtaGetElementType (sibling);
       name = TtaGetSSchemaName (elType.ElSSchema);
-      if (!ustrcmp (name, TEXT("GraphML")))
+      if (!ustrcmp (name, "GraphML"))
 	elType.ElTypeNum = GraphML_EL_image;
       else
 	{
-	  elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+	  elType.ElSSchema = TtaGetSSchema ("HTML", doc);
 	  elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
 	}
       TtaCreateElement (elType, doc);

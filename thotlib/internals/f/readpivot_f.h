@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern PtrDocument GetPtrDocument ( DocumentIdentifier docIdent );
-extern ThotBool OpenDocument ( CHAR_T* docName,
+extern ThotBool OpenDocument ( char *docName,
                                PtrDocument pDoc,
                                ThotBool loadIncludedDoc,
                                ThotBool skeleton,
@@ -21,26 +21,26 @@ extern void ReadAttributePiv ( BinFile pivFile,
                                PtrElement pEl,
                                PtrDocument pDoc,
                                ThotBool create,
-                               PtrAttribute * pReadAttr,
-                               PtrAttribute * pAttr );
+                               PtrAttribute *pReadAttr,
+                               PtrAttribute *pAttr );
 extern void ReadPRulePiv ( PtrDocument pDoc,
                            BinFile pivFile,
                            PtrElement pEl,
                            ThotBool create,
-                           PtrPRule * pRuleRead,
+                           PtrPRule *pRuleRead,
                            ThotBool link );
 extern void SendEventAttrRead ( PtrElement pEl,
                                 PtrDocument pDoc );
 extern PtrElement ReadTreePiv ( BinFile pivFile,
                                 PtrSSchema pSSchema,
                                 PtrDocument pDoc,
-                                char* tag,
+                                char *tag,
                                 int assocNum,
                                 ThotBool createAll,
                                 int *contentType,
-                                PtrSSchema * pContSS,
+                                PtrSSchema *pContSS,
                                 int *typeRead,
-                                PtrSSchema * pSSRead,
+                                PtrSSchema *pSSRead,
                                 ThotBool createPage,
                                 PtrElement pParent,
                                 ThotBool createDesc );
@@ -49,19 +49,19 @@ extern ThotBool AbstractTreeOK ( PtrElement pEl,
 extern void AssociatePairs ( PtrElement pRoot );
 extern void ReadSchemaNamesPiv ( BinFile file,
                                  PtrDocument pDoc,
-                                 char* tag,
+                                 char *tag,
                                  PtrSSchema pLoadedSS,
                                  void (*withThisPSchema) (Document document,
-                                 CHAR_T* natSchema,
-                                 CHAR_T* presentSchema) );
+                                 char *natSchema,
+                                 char *presentSchema) );
 extern void ReadLanguageTablePiv ( BinFile file,
                                    PtrDocument pDoc,
-                                   char* tag );
+                                   char *tag );
 extern int ReadVersionNumberPiv ( BinFile file,
                                   PtrDocument pDoc );
 extern void ReadPivotHeader ( BinFile file,
                               PtrDocument pDoc,
-                              char* tag );
+                              char *tag );
 extern void LoadDocumentPiv ( BinFile file,
                               PtrDocument pDoc,
                               ThotBool loadExternalDoc,
@@ -73,7 +73,7 @@ extern void LoadDocumentPiv ( BinFile file,
 #else /* __STDC__ */
 
 extern PtrDocument GetPtrDocument (/* DocumentIdentifier docIdent */);
-extern ThotBool OpenDocument (/* CHAR_T* docName,
+extern ThotBool OpenDocument (/* char *docName,
                                  PtrDocument pDoc,
                                  ThotBool loadIncludedDoc,
                                  ThotBool skeleton,
@@ -87,26 +87,26 @@ extern void ReadAttributePiv (/* BinFile pivFile,
                                  PtrElement pEl,
                                  PtrDocument pDoc,
                                  ThotBool create,
-                                 PtrAttribute * pReadAttr,
-                                 PtrAttribute * pAttr */);
+                                 PtrAttribute *pReadAttr,
+                                 PtrAttribute *pAttr */);
 extern void ReadPRulePiv (/* PtrDocument pDoc,
                              BinFile pivFile,
                              PtrElement pEl,
                              ThotBool create,
-                             PtrPRule * pRuleRead,
+                             PtrPRule *pRuleRead,
                              ThotBool link */);
 extern void SendEventAttrRead (/* PtrElement pEl,
                                   PtrDocument pDoc */);
 extern PtrElement ReadTreePiv (/* BinFile pivFile,
                                   PtrSSchema pSSchema,
                                   PtrDocument pDoc,
-                                  char* tag,
+                                  char *tag,
                                   int assocNum,
                                   ThotBool createAll,
                                   int *contentType,
-                                  PtrSSchema * pContSS,
+                                  PtrSSchema *pContSS,
                                   int *typeRead,
-                                  PtrSSchema * pSSRead,
+                                  PtrSSchema *pSSRead,
                                   ThotBool createPage,
                                   PtrElement pParent,
                                   ThotBool createDesc */);
@@ -115,19 +115,19 @@ extern ThotBool AbstractTreeOK (/* PtrElement pEl,
 extern void AssociatePairs (/* PtrElement pRoot */);
 extern void ReadSchemaNamesPiv (/* BinFile file,
                                    PtrDocument pDoc,
-                                   char* tag,
+                                   char *tag,
                                    PtrSSchema pLoadedSS,
                                    void (*withThisPSchema) (Document document,
-                                   CHAR_T* natSchema,
-                                   CHAR_T* presentSchema) */);
+                                   char *natSchema,
+                                   char *presentSchema) */);
 extern void ReadLanguageTablePiv (/* BinFile file,
                                      PtrDocument pDoc,
-                                     char* tag */);
+                                     char *tag */);
 extern int ReadVersionNumberPiv (/* BinFile file,
                                     PtrDocument pDoc */);
 extern void ReadPivotHeader (/* BinFile file,
                                 PtrDocument pDoc,
-                                char* tag */);
+                                char *tag */);
 extern void LoadDocumentPiv (/* BinFile file,
                                 PtrDocument pDoc,
                                 ThotBool loadExternalDoc,

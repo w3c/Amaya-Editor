@@ -623,7 +623,7 @@ AnnotMeta *AnnotList_searchAnnot (List *list, CHAR_T *url, AnnotMetaDataSearch s
 
 	case AM_BODY_FILE:
 	  if (annot->body_url && IsFilePath (annot->body_url))
-	    ptr = annot->body_url + sizeof (TEXT("file://")) -1;
+	    ptr = annot->body_url + sizeof ("file://") -1;
 	  else
 	    ptr = annot->body_url;
 	  break;
@@ -1087,7 +1087,7 @@ Element SearchAnnotation (Document doc, STRING annotDoc)
   Element     elCour;
   STRING ancName = NULL;
 
-  elType.ElSSchema = TtaGetSSchema (TEXT("XLink"), doc);
+  elType.ElSSchema = TtaGetSSchema ("XLink", doc);
   if (!elType.ElSSchema)
     /* there are no XLink annotations in this document! */
     return NULL;
@@ -1098,7 +1098,7 @@ Element SearchAnnotation (Document doc, STRING annotDoc)
 				  TtaGetMainRoot (doc));
   while (elCour != NULL) 
   {
-    ancName = SearchAttributeInEl (doc, elCour, XLink_ATTR_id, TEXT("XLink"));
+    ancName = SearchAttributeInEl (doc, elCour, XLink_ATTR_id, "XLink");
     if (ancName) 
       {
 	if (!ustrcmp (ancName, annotDoc))
@@ -1289,20 +1289,20 @@ void GetServerName (CHAR_T *url, CHAR_T *server)
   CHAR_T      *file;
 
   if (!url || IsFilePath (url))
-      ustrcpy (server, TEXT("localhost"));
+      ustrcpy (server, "localhost");
   else
     {
       scratch_url = TtaStrdup (url);
       ExplodeURL (scratch_url, &protocol, &host, &dir, &file);
-      ustrcpy (server, host ? host : TEXT("?"));
+      ustrcpy (server, host ? host : "?");
       if (dir && dir[0])
 	{
-	  ustrcat (server, TEXT("/"));
+	  ustrcat (server, "/");
 	  ustrcat (server, dir);
 	}
       TtaFreeMemory (scratch_url);
       /* remove the query string */
-      scratch_url = ustrrchr (server, TEXT('?'));
+      scratch_url = ustrrchr (server, '?');
       if (scratch_url)
 	*scratch_url = WC_EOS;
     }
@@ -1380,10 +1380,10 @@ void ANNOT_SetType (Document doc, RDFResourceP type)
   el = TtaSearchTypedElement (elType, SearchInTree, el);
   if (!el)
     return;
-  url = SearchAttributeInEl (doc, el, Annot_ATTR_HREF_, TEXT("Annot"));
+  url = SearchAttributeInEl (doc, el, Annot_ATTR_HREF_, "Annot");
   if (!url)
     return;
-  ptr = ustrchr (url, TEXT('#'));
+  ptr = ustrchr (url, '#');
   if (ptr)
     *ptr = WC_EOS;
   for (i = 1; i <=DocumentTableLength; i++)
@@ -1427,7 +1427,7 @@ CHAR_T * ANNOT_MakeFileURL (const CHAR_T *path)
   CHAR_T *url;
   /* @@ add the file:// (why it wasn't there before? */
   url = TtaGetMemory (ustrlen (path)
-		      + sizeof (TEXT("file://"))
+		      + sizeof ("file://")
 		      + 1);
   if (url)
     usprintf (url, "file://%s", path);

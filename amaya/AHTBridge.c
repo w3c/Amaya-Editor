@@ -315,7 +315,7 @@ HTAlertPar         *reply;
        if (!(me->output)
 	   && (me->output != stdout) 
 	   && me->outputfile
-	   &&  (me->output = ufopen (me->outputfile, TEXT("wb"))) == NULL) {
+	   &&  (me->output = ufopen (me->outputfile, "wb")) == NULL) {
 	 /* the request is associated with a file */
 	 me->outputfile[0] = WC_EOS;	/* file could not be opened */
 	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE), me->outputfile);

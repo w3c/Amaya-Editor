@@ -178,7 +178,7 @@ int                 AsciiToInt (indLine index, indLine len)
 {
   int                 num;
 
-  usscanf (&inputLine[index - 1], TEXT("%d"), &num);
+  usscanf (&inputLine[index - 1], "%d", &num);
   if (num > 65535)
     {
       CompilerMessage (index, COMPIL, FATAL, NUMBER_OVERFLOW, inputLine,
@@ -198,21 +198,21 @@ void                OctalToChar ()
   int                 i, shift, k, n;
 
   i = 0;
-  while (inputLine[i] != TEXT('\0'))
+  while (inputLine[i] != '\0')
     {
-      if (inputLine[i] == TEXT('\\'))
+      if (inputLine[i] == '\\')
 	{
 	  shift = 0;
-	  if (inputLine[i + 1] == TEXT('\\'))
+	  if (inputLine[i + 1] == '\\')
 	    shift = 1;
-	  else if (inputLine[i + 1] >= TEXT('0') &&
-		   inputLine[i + 1] <= TEXT('7'))
+	  else if (inputLine[i + 1] >= '0' &&
+		   inputLine[i + 1] <= '7')
 	    {
 	      /* \ suivi d'un chiffre octal */
 	      k = i + 1;
 	      n = 0;
-	      while (inputLine[k] >= TEXT('0') &&
-		     inputLine[k] <= TEXT('7') && k < i + 4)
+	      while (inputLine[k] >= '0' &&
+		     inputLine[k] <= '7' && k < i + 4)
 		n = n * 8 + ((int) inputLine[k++]) - ((int) '0');
 	      if (n < 1 || n > 255)
 		CompilerMessage (i, COMPIL, FATAL, INVALID_CHAR, inputLine,
@@ -232,11 +232,11 @@ void                OctalToChar ()
 		  inputLine[k] = inputLine[k + shift];
 		  k++;
 		}
-	      while (inputLine[k - 1] != TEXT('\0'));
+	      while (inputLine[k - 1] != '\0');
 	       }
 	}
-      else if (inputLine[i] < TEXT(' '))
-	inputLine[i] = TEXT(' ');
+      else if (inputLine[i] < ' ')
+	inputLine[i] = ' ';
       i++;
     }
 }
@@ -268,25 +268,25 @@ void                GetNextToken (indLine start, indLine * wi, indLine * wl, Syn
        if (Comment)
 	 {
 	   /* cherche la fin du commentaire ou de la ligne */
-	   while (inputLine[j] != TEXT('}') && inputLine[j] != TEXT('\0'))
+	   while (inputLine[j] != '}' && inputLine[j] != '\0')
 	     j++;
-	   if (inputLine[j] == TEXT('}'))
+	   if (inputLine[j] == '}')
 	     {
 	       Comment = False;
 	       j++;
 	     }
 	 }
-       if (inputLine[j] != TEXT(' '))
+       if (inputLine[j] != ' ')
 	 {
-	   if (inputLine[j] == TEXT('\0'))
+	   if (inputLine[j] == '\0')
 	     stop = True;
-	   else if (inputLine[j] == TEXT('{'))
+	   else if (inputLine[j] == '{')
 	     {
 	       /* debut de commentaire */
 	       Comment = True;
-	       while (inputLine[j] != TEXT('}') && inputLine[j] != TEXT('\0'))
+	       while (inputLine[j] != '}' && inputLine[j] != '\0')
 		 j++;
-	       if (inputLine[j] == TEXT('\0'))
+	       if (inputLine[j] == '\0')
 	       stop = True;
 	       else
 		 Comment = False;
@@ -308,15 +308,15 @@ void                GetNextToken (indLine start, indLine * wi, indLine * wl, Syn
        j = *wi - 1;
        *wl = 1;
        /* SyntacticType du mot trouve, d'apres son premier caractere */
-       if (inputLine[j] >= TEXT('0') && inputLine[j] <= TEXT('9')) 
+       if (inputLine[j] >= '0' && inputLine[j] <= '9') 
          *wn = SynInteger;
-       else if ((inputLine[j] >= TEXT('A') && inputLine[j] <= TEXT('Z')) ||
+       else if ((inputLine[j] >= 'A' && inputLine[j] <= 'Z') ||
                 inputLine[j] == NBSP || /*nobreakspace */
-                (inputLine[j] >= TEXT('a') && inputLine[j] <= TEXT('z')) ||
+                (inputLine[j] >= 'a' && inputLine[j] <= 'z') ||
                 (((int) inputLine[j]) >= 192 &&
                  ((int) inputLine[j]) <= 255))
 	 *wn = SynIdentifier;
-       else if (inputLine[j] == TEXT('\''))
+       else if (inputLine[j] == '\'')
 	 *wn = SynString;
        else
 	 *wn = SynShortKeyword;
@@ -325,14 +325,14 @@ void                GetNextToken (indLine start, indLine * wi, indLine * wl, Syn
          /* verifie que le mot est bien forme et cherche la fin */
          do
 	   {
-	     if (inputLine[j] == TEXT('\0') || 
-		 inputLine[j] == TEXT(' ')  || 
-		 (inputLine[j] >= TEXT('!') && inputLine[j] <= TEXT('/')) ||
-		 (inputLine[j] >= TEXT(':') && inputLine[j] <= TEXT('@')) ||
-		 (inputLine[j] >= TEXT('[') && inputLine[j] <= TEXT('^')) || 
-		 (inputLine[j] >= TEXT('{') && inputLine[j] <= TEXT('~')) || 
+	     if (inputLine[j] == '\0' || 
+		 inputLine[j] == ' '  || 
+		 (inputLine[j] >= '!' && inputLine[j] <= '/') ||
+		 (inputLine[j] >= ':' && inputLine[j] <= '@') ||
+		 (inputLine[j] >= '[' && inputLine[j] <= '^') || 
+		 (inputLine[j] >= '{' && inputLine[j] <= '~') || 
 		 inputLine[j] == 127 || 
-		 inputLine[j] == TEXT('`'))
+		 inputLine[j] == '`')
                /* on a trouve un separateur */
                stop = True;	/* verifie l'homogeneite */
             else
@@ -340,7 +340,7 @@ void                GetNextToken (indLine start, indLine * wi, indLine * wl, Syn
 		switch (*wn)
 		  {
 		  case SynInteger:
-		    if (inputLine[j] < TEXT('0') || inputLine[j] > TEXT('9'))
+		    if (inputLine[j] < '0' || inputLine[j] > '9')
 		      {
 			CompilerMessage (j + 1, COMPIL, FATAL, BAD_NUMBER,
 					 inputLine, LineNum);
@@ -353,20 +353,20 @@ void                GetNextToken (indLine start, indLine * wi, indLine * wl, Syn
 		       replaced by another one if you want to handle Unicode
 		       indentifiers and text.
 		       For instance the test
-		       (inputLine[j] >= TEXT('A') && inputLine[j] <= TEXT('Z')
+		       (inputLine[j] >= 'A' && inputLine[j] <= 'Z'
 		       or
-		       TEXT('a') && inputLine[j] <= TEXT('z') or
-		       (inputLine[j] >= TEXT('0') && inputLine[j] <= TEXT('9')
+		       'a' && inputLine[j] <= 'z' or
+		       (inputLine[j] >= '0' && inputLine[j] <= '9'
 		       should be:
 		       if (iswalnum (inputLine[j])) to see if inputLine[j] is
 		       alphabetical or numerical value @@@@@@@@@@ */
 
-		    if (!((inputLine[j] >= TEXT('A') && inputLine[j] <= TEXT('Z')) || 
-			  (inputLine[j] >= TEXT('a') && inputLine[j] <= TEXT('z')) || 
+		    if (!((inputLine[j] >= 'A' && inputLine[j] <= 'Z') || 
+			  (inputLine[j] >= 'a' && inputLine[j] <= 'z') || 
 			  (inputLine[j] == NBSP) || /*nobreakspace */
-			  (inputLine[j] >= TEXT('0') && inputLine[j] <= TEXT('9')) || 
+			  (inputLine[j] >= '0' && inputLine[j] <= '9') || 
 			  ((int)inputLine[j] >= 192 && (int) inputLine[j] <= 255)  || /* lettre accentuee */
-			  inputLine[j] == TEXT('_'))) {
+			  inputLine[j] == '_')) {
 		      CompilerMessage (j + 1, COMPIL, FATAL, BAD_WORD,
 				       inputLine, LineNum);
 		      *wn = SynError;
@@ -388,7 +388,7 @@ void                GetNextToken (indLine start, indLine * wi, indLine * wl, Syn
 	   (*wi)++;
 	   *wl = 0;
 	   do 
-	     if (inputLine[j] == TEXT('\0'))
+	     if (inputLine[j] == '\0')
 	       {
 		 CompilerMessage (*wi, COMPIL, FATAL,
 				  MULTIPLE_LINE_STRINGS_ERROR, inputLine,
@@ -398,8 +398,8 @@ void                GetNextToken (indLine start, indLine * wi, indLine * wl, Syn
 	       }
 	     else
 	       {
-		 if (inputLine[j] == TEXT('\''))
-		   if (inputLine[j + 1] == TEXT('\''))
+		 if (inputLine[j] == '\'')
+		   if (inputLine[j + 1] == '\'')
 		     {
 		       /* represente un seul quote */
 		       k = j;
@@ -409,7 +409,7 @@ void                GetNextToken (indLine start, indLine * wi, indLine * wl, Syn
 			   k++;
 			   inputLine[k] = inputLine[k + 1];
 			 }
-		       while (inputLine[k] != TEXT('\0'));
+		       while (inputLine[k] != '\0');
 		       j++;
 		     }
 		   else
@@ -850,12 +850,12 @@ void                InitSyntax (STRING fileName)
 	    }
 #ifdef _WINDOWS
 	  while (j < LINE_LENGTH && inputLine [j-1] != 13 &&
-		 inputLine[j - 1] != TEXT('\n') && fileOK);
+		 inputLine[j - 1] != '\n' && fileOK);
 #else
-	     while (j < LINE_LENGTH && inputLine[j - 1] != TEXT('\n') && fileOK);
+	     while (j < LINE_LENGTH && inputLine[j - 1] != '\n' && fileOK);
 #endif
 	     /* marque la fin reelle de la ligne */
-	     inputLine[j - 1] = TEXT('\0');
+	     inputLine[j - 1] = '\0';
 	     /* traite la ligne */
 	     j = 1;
 	     do

@@ -214,7 +214,7 @@ void         FreeDocColors ()
 #ifdef _WINDOWS
   /* free extended colors */
   if (!TtIsTrueColor && TtCmap && !DeleteObject (TtCmap))
-    WinErrorBox (WIN_Main_Wd, TEXT("FreeDocColors (1)"));
+    WinErrorBox (WIN_Main_Wd, "FreeDocColors (1"));
   TtCmap = 0;
 #else /* _WINDOWS */
   int        i;
@@ -272,7 +272,7 @@ void                InitDocColors (CHAR_T* name)
    value = TtaGetEnvString ("ReduceColor");
    if (value == NULL)
       reducecolor = FALSE;
-   else if (!ustrcasecmp (value, TEXT("yes")))
+   else if (!ustrcasecmp (value, "yes"))
       reducecolor = TRUE;
    else
       reducecolor = FALSE;
@@ -670,7 +670,7 @@ Pixmap      CreatePattern (int disp, int fg, int bg, int motif)
      {
 	if (!DeleteObject (WIN_LastBitmap))
 #ifndef _WIN_PRINT
-	  WinErrorBox (WIN_Main_Wd, TEXT("CreatePattern (1)"));
+	  WinErrorBox (WIN_Main_Wd, "CreatePattern (1"));
 #endif /* _WIN_PRINT */
 	;
 	WIN_LastBitmap = 0;

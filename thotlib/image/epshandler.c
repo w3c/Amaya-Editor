@@ -74,7 +74,7 @@ int                *hif;
    *yif = 0;
    *wif = 590;
    *hif = 840;
-   fin = ufopen (fn, TEXT("r"));
+   fin = ufopen (fn, "r");
    if (fin)
      {
 	pt = buff;
@@ -86,8 +86,8 @@ int                *hif;
 	       {
 		  *(--pt) = EOS;
 		  pt = buff;
-		  if ((buff[0] == TEXT('%'))
-		      && (usscanf (buff, TEXT("%%%%BoundingBox: %d %d %d %d"), xif, yif, &X2, &Y2) == 4))
+		  if ((buff[0] == '%')
+		      && (usscanf (buff, "%%%%BoundingBox: %d %d %d %d", xif, yif, &X2, &Y2) == 4))
 		    {
 		       *wif = ABS (X2 - *xif) + 1;
 		       *hif = ABS (Y2 - *yif) + 1;
@@ -226,7 +226,7 @@ unsigned long       BackGroundPixel;
 	    default:
 	       break;
 	 }
-   fin = ufopen (fn, TEXT("r"));
+   fin = ufopen (fn, "r");
    if (fin)
      {
 	c = getc (fin);
@@ -260,7 +260,7 @@ char*               fn;
    ThotBool            res;
 
    res = FALSE;
-   fin = ufopen (fn, TEXT("r"));
+   fin = ufopen (fn, "r");
    if (fin)
      {
 	/* search for %! signature of the eps and ps files */

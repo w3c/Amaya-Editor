@@ -81,7 +81,7 @@ static void ResetFontOrPhraseOnText (Document document, Element elem, int notTyp
    ElementType         elType, parentType;
    Element             elFont, parent, prev, next, added, child, last;
 
-   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
+   elType.ElSSchema = TtaGetSSchema ("HTML", document);
    elType.ElTypeNum = notType;
    /* is this element already within an element of the requested type? */
    elFont = TtaGetTypedAncestor (elem, elType);
@@ -164,7 +164,7 @@ static void         SetFontOrPhraseOnText (Document document, Element elem,
    ElementType         elType, siblingType;
    Element             prev, next, child, added, parent;
 
-   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
+   elType.ElSSchema = TtaGetSSchema ("HTML", document);
    elType.ElTypeNum = newtype;
    /* is this element already within an element of the requested type? */
    if (TtaGetTypedAncestor (elem, elType) == NULL)
@@ -386,7 +386,7 @@ Element             SearchNAMEattribute (Document doc, STRING nameVal, Attribute
    AttributeType       attrType;
 
    /* search all elements having an attribute NAME */
-   attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
    attrType.AttrTypeNum = HTML_ATTR_NAME;
    elFound = GetElemWithAttr (doc, attrType, nameVal, ignore);
 
@@ -400,7 +400,7 @@ Element             SearchNAMEattribute (Document doc, STRING nameVal, Attribute
      {
        /* search all elements having an attribute ID (defined in the
 	  MathML DTD) */
-       attrType.AttrSSchema = TtaGetSSchema (TEXT("MathML"), doc);
+       attrType.AttrSSchema = TtaGetSSchema ("MathML", doc);
        if (attrType.AttrSSchema)
 	  /* this document uses the MathML DTD */
 	  {
@@ -413,7 +413,7 @@ Element             SearchNAMEattribute (Document doc, STRING nameVal, Attribute
      {
        /* search all elements having an attribute ID (defined in the
 	  GraphML DTD) */
-       attrType.AttrSSchema = TtaGetSSchema (TEXT("GraphML"), doc);
+       attrType.AttrSSchema = TtaGetSSchema ("GraphML", doc);
        if (attrType.AttrSSchema)
 	  /* this document uses the GraphML DTD */
 	  {
@@ -427,7 +427,7 @@ Element             SearchNAMEattribute (Document doc, STRING nameVal, Attribute
      {
        /* search all elements having an attribute ID (defined in the
 	  XLink S schema) */
-       attrType.AttrSSchema = TtaGetSSchema (TEXT("XLink"), doc);
+       attrType.AttrSSchema = TtaGetSSchema ("XLink", doc);
        if (attrType.AttrSSchema)
 	  /* this document uses the XLink DTD */
 	  {
@@ -498,10 +498,10 @@ void FollowTheLink_callback (int targetDocument, int status, STRING urlName,
 	  if (url[0] == '#')
 	    {
 	      if (targetDocument != 0 && elFound)
-		TtaSetAttributeText (PseudoAttr, TEXT("visited"), anchor, doc);
+		TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
 	    }
 	  else
-	    TtaSetAttributeText (PseudoAttr, TEXT("visited"), anchor, doc);
+	    TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
 	}
     }
 
@@ -566,7 +566,7 @@ static ThotBool  FollowTheLink (Element anchor, Element elSource, Document doc)
 #ifdef ANNOTATIONS
    isAnnotLink = FALSE;
 #endif /* ANNOTATIONS */
-   HTMLSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+   HTMLSSchema = TtaGetSSchema ("HTML", doc);
 
    if (anchor)
      {
@@ -589,7 +589,7 @@ static ThotBool  FollowTheLink (Element anchor, Element elSource, Document doc)
 	   {
 	     if (elType.ElTypeNum == GraphML_EL_a &&
 		 !ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
-			   TEXT("GraphML")))
+			   "GraphML"))
 	       /* it's an SVG anchor element, look for an xlink:href attr. */
 	       {
 		 attrType.AttrSSchema = elType.ElSSchema;
@@ -597,7 +597,7 @@ static ThotBool  FollowTheLink (Element anchor, Element elSource, Document doc)
 	       }
 	     else
 	       {
-		 attrType.AttrSSchema = TtaGetSSchema (TEXT("XLink"), doc);
+		 attrType.AttrSSchema = TtaGetSSchema ("XLink", doc);
 		 attrType.AttrTypeNum = XLink_ATTR_href_;
 #ifdef ANNOTATIONS
 		 /* is it an annotation link? */
@@ -634,7 +634,7 @@ static ThotBool  FollowTheLink (Element anchor, Element elSource, Document doc)
 		   PseudoAttr = TtaNewAttribute (attrType);
 		   TtaAttachAttribute (anchor, PseudoAttr, doc);
 		 }
-	       TtaSetAttributeText (PseudoAttr, TEXT("active"), anchor, doc);
+	       TtaSetAttributeText (PseudoAttr, "active", anchor, doc);
 	     }
 	   /* get the URL itself */
 	   TtaGiveTextAttributeValue (HrefAttr, url, &length);
@@ -759,11 +759,11 @@ static ThotBool     ActivateElement (Element element, Document document)
    ThotBool	       ok, isHTML, isXLink;
 
    elType = TtaGetElementType (element);
-   HTMLschema = TtaGetSSchema (TEXT("HTML"), document);
+   HTMLschema = TtaGetSSchema ("HTML", document);
    isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLschema);
    if (!isHTML)
        isXLink = TtaSameSSchemas (elType.ElSSchema, 
-				  TtaGetSSchema (TEXT("XLink"), document));
+				  TtaGetSSchema ("XLink", document));
    else
      isXLink = 0;
 
@@ -907,7 +907,7 @@ static ThotBool     ActivateElement (Element element, Document document)
 	   if (!anchor)
 	     {
 	       /* look for an enclosing SVG anchor */
-	       SvgSchema =  TtaGetSSchema (TEXT("GraphML"), document);
+	       SvgSchema =  TtaGetSSchema ("GraphML", document);
 	       if (SvgSchema)
 		 {
 		   elType1.ElTypeNum = GraphML_EL_a;
@@ -925,7 +925,7 @@ static ThotBool     ActivateElement (Element element, Document document)
    if (anchor == NULL)
       {
 	ancestor = element;
-        XLinkSchema = TtaGetSSchema (TEXT("XLink"), document);
+        XLinkSchema = TtaGetSSchema ("XLink", document);
 	do
 	   {
 	   attrType.AttrSSchema = HTMLschema;
@@ -968,11 +968,11 @@ static void     DisplayUrlAnchor (Element element, Document document)
    int                 length;
 
    elType = TtaGetElementType (element);
-   HTMLschema = TtaGetSSchema (TEXT("HTML"), document);
+   HTMLschema = TtaGetSSchema ("HTML", document);
    isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLschema);
    if (!isHTML)
      isXLink = TtaSameSSchemas (elType.ElSSchema, 
-				TtaGetSSchema (TEXT("XLink"), document));
+				TtaGetSSchema ("XLink", document));
    else
      isXLink = 0;
    
@@ -1017,7 +1017,7 @@ static void     DisplayUrlAnchor (Element element, Document document)
    if (anchor == NULL)
      {
        ancestor = element;
-       XLinkSchema = TtaGetSSchema (TEXT("XLink"), document);
+       XLinkSchema = TtaGetSSchema ("XLink", document);
        do
 	 {
 	   attrType.AttrSSchema = HTMLschema;
@@ -1062,7 +1062,7 @@ static void     DisplayUrlAnchor (Element element, Document document)
 	   attrType.AttrTypeNum = HTML_ATTR_HREF_;
 	 else
 	   {
-	     attrType.AttrSSchema = TtaGetSSchema (TEXT("XLink"), document);
+	     attrType.AttrSSchema = TtaGetSSchema ("XLink", document);
 	     attrType.AttrTypeNum = XLink_ATTR_href_;
 	   }
        
@@ -1130,7 +1130,7 @@ void            AccessKeyHandler (Document doc, void * param)
   if (el)
     {
       elType = TtaGetElementType (el);
-      HTMLschema = TtaGetSSchema (TEXT("HTML"), doc);
+      HTMLschema = TtaGetSSchema ("HTML", doc);
       if (TtaSameSSchemas (elType.ElSSchema, HTMLschema) &&
 	  (elType.ElTypeNum == HTML_EL_LEGEND ||
 	   elType.ElTypeNum == HTML_EL_LABEL))
@@ -1297,7 +1297,7 @@ void                FreeDocumentResource (Document doc)
 	  TtaFileUnlink (tempdocument);
 	  TtaFreeMemory (tempdocument);
 	  /* remove the log file */
-	  usprintf (htmlErrFile, TEXT("%s%c%d%cPARSING.ERR"),
+	  usprintf (htmlErrFile, "%s%c%d%cPARSING.ERR",
 		    TempFileDirectory, DIR_SEP, doc, DIR_SEP);
 	  if (TtaFileExist (htmlErrFile))
 	    TtaFileUnlink (htmlErrFile);
@@ -1390,7 +1390,7 @@ void                UpdateContextSensitiveMenus (Document doc)
      {
 #ifdef ANNOTATIONS
 	/* a quick hack before the commit */
-        elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+        elType.ElSSchema = TtaGetSSchema ("HTML", doc);
 #else
 	elType.ElSSchema = TtaGetDocumentSSchema (doc);
 #endif /* ANNOTATIONS */
@@ -2012,21 +2012,21 @@ void                SynchronizeSourceView (NotifyElement * event)
 	       {
 	       if (DocumentTypes[otherDoc] == docHTML)
 		 {
-		   attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"),
+		   attrType.AttrSSchema = TtaGetSSchema ("HTML",
 							 otherDoc);
 		   attrType.AttrTypeNum = HTML_ATTR_Highlight;
 		   val = HTML_ATTR_Highlight_VAL_Yes_;
 		 }
 	       else if (DocumentTypes[otherDoc] == docMath)
 		 {
-		   attrType.AttrSSchema = TtaGetSSchema (TEXT("MathML"),
+		   attrType.AttrSSchema = TtaGetSSchema ("MathML",
 							 otherDoc);
 		   attrType.AttrTypeNum = MathML_ATTR_Highlight;
 		   val = MathML_ATTR_Highlight_VAL_Yes_;
 		 }
 	       else if (DocumentTypes[otherDoc] == docSVG)
 		 {
-		   attrType.AttrSSchema = TtaGetSSchema (TEXT("GraphML"),
+		   attrType.AttrSSchema = TtaGetSSchema ("GraphML",
 							 otherDoc);
 		   attrType.AttrTypeNum = GraphML_ATTR_Highlight;
 		   val = GraphML_ATTR_Highlight_VAL_Yes_;
@@ -2040,7 +2040,7 @@ void                SynchronizeSourceView (NotifyElement * event)
 	       }
 	    else
 	       {
-	       attrType.AttrSSchema = TtaGetSSchema (TEXT("TextFile"),
+	       attrType.AttrSSchema = TtaGetSSchema ("TextFile",
 						     otherDoc);
 	       attrType.AttrTypeNum = TextFile_ATTR_Highlight;
 	       val = TextFile_ATTR_Highlight_VAL_Yes_;

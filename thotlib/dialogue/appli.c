@@ -1209,19 +1209,19 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 			    0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0);
     SendMessage (ToolBar, TB_BUTTONSTRUCTSIZE, (WPARAM) sizeof (TBBUTTON), 0L);
     if ((SendMessage (ToolBar, TB_ADDBITMAP, (WPARAM) MAX_BUTTON, (LPARAM) (LPTBADDBITMAP) &ThotTBBitmap)) == -1)
-      WinErrorBox (NULL, TEXT("WndProc: WM_CREATE"));
+      WinErrorBox (NULL, "WndProc: WM_CREATE");
     
     hwndToolTip = ToolBar_GetToolTips (ToolBar);
     if (dwToolBarStyles & TBSTYLE_TOOLTIPS)
       InitToolTip (ToolBar);	
     
     /* Create status bar  */
-    StatusBar = CreateStatusWindow (dwStatusBarStyles, TEXT(""), hwnd, 2);
+    StatusBar = CreateStatusWindow (dwStatusBarStyles, "", hwnd, 2);
     ShowWindow (StatusBar, SW_SHOWNORMAL);
     UpdateWindow (StatusBar);
     
     /* Create client window */
-    hwndClient = CreateWindowEx (WS_EX_CLIENTEDGE, TEXT("ClientWndProc"), NULL,
+    hwndClient = CreateWindowEx (WS_EX_CLIENTEDGE, "ClientWndProc", NULL,
 				 WS_CHILD | WS_VISIBLE | WS_BORDER, 0, 0, 0, 0,
 				 hwnd, (HMENU) 2, hInstance, NULL);
     ShowWindow (hwndClient, SW_SHOWNORMAL);
@@ -1886,7 +1886,7 @@ void                FrameCallback (int frame, void *evnt)
 	     {
 	       TtaSetDialoguePosition ();
 	       if (ThotLocalActions[T_insertpaste] != NULL)
-		 (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, TEXT('R'), &ok);
+		 (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, 'R', &ok);
 	     }
 	   
 	 default:
@@ -2273,7 +2273,7 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
 #ifdef _WINDOWS
     if (!(clipRgn = CreateRectRgn (clipx, clipy, 
                              clipx + clipwidth, clipy + clipheight)))
-       WinErrorBox (NULL, TEXT("DefineClipping"));
+       WinErrorBox (NULL, "DefineClipping");
 #else  /* _WINDOWS */ 
 #ifdef _GTK 
 	rect.x = clipx;

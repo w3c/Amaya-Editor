@@ -43,10 +43,10 @@ SSchema            GetXHTMLSSchema (Document doc)
 {
   SSchema	XHTMLSSchema;
 
-   XHTMLSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+   XHTMLSSchema = TtaGetSSchema ("HTML", doc);
    if (XHTMLSSchema == NULL)
        XHTMLSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc),
-				    TEXT("HTML"), TEXT("HTMLP"));
+				    "HTML", "HTMLP");
    return (XHTMLSSchema);
 }
 
@@ -58,11 +58,11 @@ SSchema            GetMathMLSSchema (Document doc)
 {
   SSchema	MathMLSSchema;
 
-  MathMLSSchema = TtaGetSSchema (TEXT("MathML"), doc);
+  MathMLSSchema = TtaGetSSchema ("MathML", doc);
   if (MathMLSSchema == NULL)
      MathMLSSchema = TtaNewNature(doc, 
-				  TtaGetDocumentSSchema(doc), TEXT("MathML"),
-				  TEXT("MathMLP"));
+				  TtaGetDocumentSSchema(doc), "MathML",
+				  "MathMLP");
   return (MathMLSSchema);
 }
 
@@ -74,11 +74,11 @@ SSchema            GetGraphMLSSchema (Document doc)
 {
   SSchema	GraphMLSSchema;
 
-  GraphMLSSchema = TtaGetSSchema (TEXT("GraphML"), doc);
+  GraphMLSSchema = TtaGetSSchema ("GraphML", doc);
   if (GraphMLSSchema == NULL)
     GraphMLSSchema = TtaNewNature(doc,
-				  TtaGetDocumentSSchema(doc), TEXT("GraphML"),
-				  TEXT("GraphMLP"));
+				  TtaGetDocumentSSchema(doc), "GraphML",
+				  "GraphMLP");
   return (GraphMLSSchema);
 }
 
@@ -90,10 +90,10 @@ SSchema            GetXLinkSSchema (Document doc)
 {
   SSchema	XLinkSSchema;
 
-  XLinkSSchema = TtaGetSSchema (TEXT("XLink"), doc);
+  XLinkSSchema = TtaGetSSchema ("XLink", doc);
   if (XLinkSSchema == NULL)
-    XLinkSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc), TEXT("XLink"),
-				TEXT("XLinkP"));
+    XLinkSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc), "XLink",
+				"XLinkP");
   return (XLinkSSchema);
 }
 
@@ -218,9 +218,9 @@ CHAR_T*           GetXMLElementName (ElementType elType, Document doc)
       i = 0;
       /* Select the table which matches with the element schema */
       name = TtaGetSSchemaName (elType.ElSSchema);
-      if (ustrcmp (TEXT("MathML"), name) == 0)
+      if (ustrcmp ("MathML", name) == 0)
 	ptr = MathMLElemMappingTable;
-      else if (ustrcmp (TEXT("GraphML"), name) == 0)
+      else if (ustrcmp ("GraphML", name) == 0)
 	ptr = GraphMLElemMappingTable;
       else
 	ptr = XHTMLElemMappingTable;
@@ -242,9 +242,9 @@ CHAR_T*           GetXMLElementName (ElementType elType, Document doc)
 	while (ptr[i].XMLname[0] != WC_EOS);	  
     }
   if (invalid)
-    return TEXT("");
+    return "";
   else
-    return TEXT("???");
+    return "???";
 }
 
 
@@ -267,9 +267,9 @@ ThotBool         IsXMLElementInline (ElementType elType)
       i = 0;
       /* Select the table which matches with the element schema */
       name = TtaGetSSchemaName (elType.ElSSchema);
-      if (ustrcmp (TEXT("MathML"), name) == 0)
+      if (ustrcmp ("MathML", name) == 0)
 	ptr = MathMLElemMappingTable;
-      else if (ustrcmp (TEXT("GraphML"), name) == 0)
+      else if (ustrcmp ("GraphML", name) == 0)
 	ptr = GraphMLElemMappingTable;
       else
 	ptr = XHTMLElemMappingTable;
@@ -365,16 +365,16 @@ CHAR_T*           GetXMLAttributeName (AttributeType attrType,
       if (elType.ElTypeNum > 0)
 	tag = GetXMLElementName (elType, doc);
       else
-	tag = TEXT("");
+	tag = "";
 
       i = 0;
       /* Select the table which matches with the element schema */
       name = TtaGetSSchemaName (attrType.AttrSSchema);
-      if (ustrcmp (TEXT("MathML"), name) == 0)
+      if (ustrcmp ("MathML", name) == 0)
 	ptr = MathMLAttributeMappingTable;
-      else if (ustrcmp (TEXT("GraphML"), name) == 0)
+      else if (ustrcmp ("GraphML", name) == 0)
 	ptr = GraphMLAttributeMappingTable;
-      else if (ustrcmp (TEXT("XLink"), name) == 0)
+      else if (ustrcmp ("XLink", name) == 0)
 	ptr = XLinkAttributeMappingTable;
       else
 	ptr = XHTMLAttributeMappingTable;
@@ -396,9 +396,9 @@ CHAR_T*           GetXMLAttributeName (AttributeType attrType,
 	while (ptr[i].XMLattribute[0] != WC_EOS);	  
     }
   if (invalid)
-    return TEXT("");
+    return "";
   else
-    return TEXT("???");
+    return "???";
 }
 
 /*----------------------------------------------------------------------

@@ -1015,7 +1015,7 @@ char              **argv;
    ThotBool            premattrlocal;
 
    TtaInitializeAppRegistry (argv[0]);
-   STR = TtaGetMessageTable (TEXT("strdialogue"), STR_MSG_MAX);
+   STR = TtaGetMessageTable ("strdialogue", STR_MSG_MAX);
    exec = argv[0];
 
    for (argc--, argv++; argc > 0; argc--, argv++)

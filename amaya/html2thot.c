@@ -466,20 +466,20 @@ static int          lastElemEntry = 0;	  /* index in the pHTMLGIMapping of the
 static Attribute    lastAttribute = NULL; /* last attribute created */
 static Attribute    lastAttrElement = NULL;/* element with which the last
 					     attribute has been associated */
-static AttributeMapping* lastAttrEntry = NULL; /* entry in the AttributeMappingTable
+static AttributeMapping *lastAttrEntry = NULL; /* entry in the AttributeMappingTable
 					     of the attribute being created */
 static ThotBool     UnknownAttr = FALSE;  /* the last attribute encountered is
 					     invalid */
 static ThotBool     ReadingAnAttrValue = FALSE;
 static ThotBool     TruncatedAttrValue = FALSE;
-static STRING       BufferAttrValue = NULL;
+static char        *BufferAttrValue = NULL;
 static int          LgBufferAttrValue = 0;
 static Element      CommentText = NULL;	  /* TEXT element of the current
 					     Comment element */
 static ThotBool     UnknownTag = FALSE;	  /* the last start tag encountered is
 					     invalid */
 static ThotBool     HTMLrootClosed = FALSE;
-static CHAR_T*      HTMLrootClosingTag = NULL;
+static char        *HTMLrootClosingTag = NULL;
 
 static PtrElemToBeChecked FirstElemToBeChecked = NULL;
 static PtrElemToBeChecked LastElemToBeChecked = NULL;
@@ -492,7 +492,7 @@ static ThotBool     CharProcessed;
 
 
 /* information about an entity being read */
-static CHAR_T       EntityName[MaxEntityLength];/* name of entity being read */
+static char         EntityName[MaxEntityLength];/* name of entity being read */
 static int          LgEntityName = 0;	  /* length of entity name read so
 					     far */
 static int          EntityTableEntry = 0; /* entry of the entity table that
@@ -505,18 +505,18 @@ static void         EndOfAttrValue (CHAR_T c);
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-STRING       SkipSep (STRING ptr)
+char *SkipSep (char *ptr)
 {
-  while (*ptr == WC_SPACE || *ptr == TEXT(','))
+  while (*ptr == SPACE || *ptr == ',')
     ptr++;
   return (ptr);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-STRING      SkipInt (STRING ptr)
+char *SkipInt (char *ptr)
 {
-  while (*ptr != WC_EOS && *ptr != WC_SPACE && *ptr != TEXT(','))
+  while (*ptr != EOS && *ptr != SPACE && *ptr != ',')
     ptr++;
   return (ptr);
 }
@@ -525,7 +525,7 @@ STRING      SkipInt (STRING ptr)
    ParseAreaCoords 
    Computes x, y, width and height of the box from the coords attribute value.
   ----------------------------------------------------------------------*/
-void                ParseAreaCoords (Element element, Document document)
+void ParseAreaCoords (Element element, Document document)
 {
    ElementType      elType;
    AttributeType    attrType;
@@ -608,18 +608,18 @@ void                ParseAreaCoords (Element element, Document document)
 	     x1 = x2 = y1 = y2 = 0;
 	     ptr3 = text;
 	     if (ptr3)
-	       usscanf (ptr3, TEXT("%d"), &x1);
+	       usscanf (ptr3, "%d", &x1);
 	     ptr3 = SkipInt (ptr3);
 	     ptr3 = SkipSep (ptr3);
 	     if (ptr3)
-	       usscanf (ptr3, TEXT("%d"), &y1);
+	       usscanf (ptr3, "%d", &y1);
 	     ptr3 = SkipInt (ptr3);
 	     ptr3 = SkipSep (ptr3);
 	     if (ptr3)
-	       usscanf (ptr3, TEXT("%d"), &x2);
+	       usscanf (ptr3, "%d", &x2);
 	     ptr3 = SkipInt (ptr3);
 	     ptr3 = SkipSep (ptr3);
-	     usscanf (ptr3, TEXT("%d"), &y2);
+	     usscanf (ptr3, "%d", &y2);
 	     TtaSetAttributeValue (attrX, x1, element, document);
 	     TtaSetAttributeValue (attrY, y1, element, document);
 	     TtaSetAttributeValue (attrW, x2 - x1, element, document);
@@ -630,15 +630,15 @@ void                ParseAreaCoords (Element element, Document document)
 	     x1 = y1 = r = 0;
 	     ptr3 = text;
 	     if (ptr3)
-	       usscanf (ptr3, TEXT("%d"), &x1);
+	       usscanf (ptr3, "%d", &x1);
 	     ptr3 = SkipInt (ptr3);
 	     ptr3 = SkipSep (ptr3);
 	     if (ptr3)
-	       usscanf (ptr3, TEXT("%d"), &y1);
+	       usscanf (ptr3, "%d", &y1);
 	     ptr3 = SkipInt (ptr3);
 	     ptr3 = SkipSep (ptr3);
 	     if (ptr3)
-	       usscanf (ptr3, TEXT("%d"), &r);
+	       usscanf (ptr3, "%d", &r);
 	     TtaSetAttributeValue (attrX, x1 - r, element, document);
 	     TtaSetAttributeValue (attrY, y1 - r, element, document);
 	     TtaSetAttributeValue (attrW, 2 * r, element, document);
@@ -661,11 +661,11 @@ void                ParseAreaCoords (Element element, Document document)
 	while (*ptr3 != EOS)
 	  {
 	     x1 = y1 = 0;
-	     usscanf (ptr3, TEXT("%d"), &x1);
+	     usscanf (ptr3, "%d", &x1);
 	     ptr3 = SkipInt (ptr3);
 	     ptr3 = SkipSep (ptr3);
 	     if (ptr3)
-	       usscanf (ptr3, TEXT("%d"), &y1);
+	       usscanf (ptr3, "%d", &y1);
 	     ptr3 = SkipInt (ptr3);
 	     ptr3 = SkipSep (ptr3);
 	     TtaAddPointInPolyline (element, length, UnPixel, x1, y1,document);
@@ -907,9 +907,9 @@ void               ParseHTMLError (Document doc, CHAR_T* msg)
    HTMLErrorsFound = TRUE;
    if (!ErrFile)
      {
-      usprintf (ErrFileName, TEXT("%s%c%d%cPARSING.ERR"), TempFileDirectory,
+      usprintf (ErrFileName, "%s%c%d%cPARSING.ERR", TempFileDirectory,
 		DIR_SEP, doc, DIR_SEP);
-      if ((ErrFile = ufopen (ErrFileName, TEXT("w"))) == NULL)
+      if ((ErrFile = fopen (ErrFileName, "w")) == NULL)
          return;
      }
 
@@ -937,7 +937,7 @@ void               ParseHTMLError (Document doc, CHAR_T* msg)
   ----------------------------------------------------------------------*/
 static void         CloseBuffer ()
 {
-   inputBuffer[LgBuffer] = WC_EOS;
+   inputBuffer[LgBuffer] = EOS;
 }
 
 /*----------------------------------------------------------------------
@@ -1036,7 +1036,7 @@ static ThotBool     CannotContainText (ElementType elType)
    int              i;
    ThotBool         ret;
 
-   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
       /* not an HTML element */
       ret = TRUE;
    else
@@ -1113,9 +1113,9 @@ static void         TextToDocument ()
 	    !Within (HTML_EL_STYLE_, DocumentSSchema) &&
 	    !Within (HTML_EL_SCRIPT, DocumentSSchema))
 	  /* suppress leading spaces */
-	  while (inputBuffer[i] <= WC_SPACE && inputBuffer[i] != WC_EOS)
+	  while (inputBuffer[i] <= SPACE && inputBuffer[i] != EOS)
 	    i++;
-	if (inputBuffer[i] != WC_EOS)
+	if (inputBuffer[i] != EOS)
 	  {
 	    elType = TtaGetElementType (HTMLcontext.lastElement);
 	    if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && HTMLcontext.mergeText)
@@ -1166,11 +1166,11 @@ static void         PutInBuffer (UCHAR_T c)
   int               len;
 
   /* put the character into the buffer if it is not an ignored char. */
-  if ((int) c == WC_TAB)		/* HT */
+  if ((int) c == TAB)		/* HT */
     len = 8;			/* HT = 8 spaces */
   else
     len = 1;
-  if (c != WC_EOS)
+  if (c != EOS)
     {
       if (LgBuffer + len >= AllmostFullBuffer && currentState == 0)
 	TextToDocument ();
@@ -1186,7 +1186,7 @@ static void         PutInBuffer (UCHAR_T c)
 	    }
 	  else
 	    ParseHTMLError (HTMLcontext.doc,
-			    TEXT("Buffer overflow"));
+			    "Buffer overflow");
 	  
 	  LgBuffer = 0;
 	}
@@ -1200,7 +1200,7 @@ static void         PutInBuffer (UCHAR_T c)
 	/* HT */
 	do
 	  {
-	    inputBuffer[LgBuffer++] = WC_SPACE;
+	    inputBuffer[LgBuffer++] = SPACE;
 	    len--;
 	  }
 	while (len > 0);
@@ -1601,8 +1601,8 @@ void         CheckCSSLink (Element el, Document doc, SSchema schema)
 	    length = TtaGetTextAttributeLength (attr);
 	    name1 = TtaAllocString (length + 1);
 	    TtaGiveTextAttributeValue (attr, name1, &length);
-	    if (!ustrcasecmp (name1, TEXT("stylesheet")) ||
-		!ustrcasecmp (name1, TEXT("style")))
+	    if (!strcasecmp (name1, "stylesheet") ||
+		!strcasecmp (name1, "style"))
 	      {
 		 /* it's a link to a style sheet */
 		 /* get the media specification */
@@ -1613,11 +1613,11 @@ void         CheckCSSLink (Element el, Document doc, SSchema schema)
 		      length = TtaGetTextAttributeLength (attr);
 		      name2 = TtaAllocString (length + 1);
 		      TtaGiveTextAttributeValue (attr, name2, &length);
-		      if (!ustrcasecmp (name2, TEXT ("screen")))
+		      if (!strcasecmp (name2, "screen"))
 			media = CSS_SCREEN;
-		      else if (!ustrcasecmp (name2, TEXT ("print")))
+		      else if (!strcasecmp (name2, "print"))
 			media = CSS_PRINT;
-		      else if (!ustrcasecmp (name2, TEXT ("all")))
+		      else if (!strcasecmp (name2, "all"))
 			media = CSS_ALL;
 		      else
 			media = CSS_OTHER;
@@ -2095,14 +2095,14 @@ static ThotBool     CloseElement (int entry, int start, ThotBool onStartTag)
 	      looks for that element in the stack, but not at
 	      a higher level as a table element */
 	   if (!onStartTag &&
-	       (!ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("form")) ||
-            !ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("font")) ||
-            !ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("center"))))
+	       (!strcmp (pHTMLGIMapping[entry].XMLname, "form") ||
+            !strcmp (pHTMLGIMapping[entry].XMLname, "font") ||
+            !strcmp (pHTMLGIMapping[entry].XMLname, "center")))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("tbody")) ||
-               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("tr"))    ||
-               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("th"))    ||
-               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("td")))
+	       if (!strcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, "tbody") ||
+               !strcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, "tr")    ||
+               !strcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, "th")    ||
+               !strcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, "td"))
 		 {
 		   /* ignore this end tag */
 		   ret = FALSE;
@@ -2123,40 +2123,40 @@ static ThotBool     CloseElement (int entry, int start, ThotBool onStartTag)
 	      equivalent), looks for that element in the
 	      stack, but not at a higher level as the list (or
 	      equivalent) element */
-	   if (!ustrcmp (pHTMLGIMapping[start].XMLname, TEXT("li")))
+	   if (!strcmp (pHTMLGIMapping[start].XMLname, "li"))
 	     {
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("ol"))  ||
-               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("ul"))  ||
-               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("dir")) ||
-               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("menu")))
+	       if (!strcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, "ol")  ||
+               !strcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, "ul")  ||
+               !strcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, "dir") ||
+               !strcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, "menu"))
 		 stop = TRUE;
 	       else
 		 i--;
 	     }
-	   else if (!ustrcmp (pHTMLGIMapping[start].XMLname, TEXT("option")))
+	   else if (!strcmp (pHTMLGIMapping[start].XMLname, "option"))
 	     {
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("select")))
+	       if (!strcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, "select"))
 		 stop = TRUE;
 	       else
 		 i--;
 	     }
-	   else if (!ustrcmp (pHTMLGIMapping[start].XMLname, TEXT("dd")) ||
-                !ustrcmp (pHTMLGIMapping[start].XMLname, TEXT("dt")))
+	   else if (!strcmp (pHTMLGIMapping[start].XMLname, "dd") ||
+                !strcmp (pHTMLGIMapping[start].XMLname, "dt"))
 	     {
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("dl")))
+	       if (!strcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, "dl"))
 		 stop = TRUE;
 	       else
 		 i--;
 	     }
-	   else if (!ustrcmp (pHTMLGIMapping[start].XMLname, TEXT("tr")) ||
-                !ustrcmp (pHTMLGIMapping[start].XMLname, TEXT("td")) ||
-                !ustrcmp (pHTMLGIMapping[start].XMLname, TEXT("th")))
+	   else if (!strcmp (pHTMLGIMapping[start].XMLname, "tr") ||
+                !strcmp (pHTMLGIMapping[start].XMLname, "td") ||
+                !strcmp (pHTMLGIMapping[start].XMLname, "th"))
 	     {
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-		 if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("table")))
+		 if (!strcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, "table"))
 		   stop = TRUE;
 		 else
 		   i--;
@@ -2266,7 +2266,7 @@ int           MapAttrValue (int thotAttr, CHAR_T* attrVal)
       i++;
    if (XhtmlAttrValueMappingTable[i].ThotAttr == thotAttr)
       do
-	 if (attrVal[1] == WC_EOS && (thotAttr == HTML_ATTR_NumberStyle ||
+	 if (attrVal[1] == EOS && (thotAttr == HTML_ATTR_NumberStyle ||
 				   thotAttr == HTML_ATTR_ItemStyle))
 	    /* attributes NumberStyle (which is always 1 character long) */
 	    /* and ItemStyle (only when its length is 1) are */
@@ -2278,7 +2278,7 @@ int           MapAttrValue (int thotAttr, CHAR_T* attrVal)
 	 else
 	    /* for other attributes, uppercase and lowercase are */
 	    /* equivalent */
-	    if (!ustrcasecmp (XhtmlAttrValueMappingTable[i].XMLattrValue, attrVal))
+	    if (!strcasecmp (XhtmlAttrValueMappingTable[i].XMLattrValue, attrVal))
 	       value = XhtmlAttrValueMappingTable[i].ThotAttrValue;
 	    else
 	       i++;
@@ -2456,12 +2456,12 @@ static void           EndOfStartTag (CHAR_T c)
   UnknownTag = FALSE;
   if ((HTMLcontext.lastElement != NULL) && (lastElemEntry != -1))
     {
-      if (!ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("pre")) ||
-	  !ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("style")) ||
-	  !ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("script")))
+      if (!strcmp (pHTMLGIMapping[lastElemEntry].XMLname, "pre") ||
+	  !strcmp (pHTMLGIMapping[lastElemEntry].XMLname, "style") ||
+	  !strcmp (pHTMLGIMapping[lastElemEntry].XMLname, "script"))
 	/* a <PRE>, <STYLE> or <SCRIPT> tag has been read */
 	AfterTagPRE = TRUE;
-      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("table")))
+      else if (!strcmp (pHTMLGIMapping[lastElemEntry].XMLname, "table"))
 	/* <TABLE> has been read */
 	HTMLcontext.withinTable++;
       else if (pHTMLGIMapping[lastElemEntry].XMLcontents == 'E')
@@ -2495,7 +2495,7 @@ static void           EndOfStartTag (CHAR_T c)
 	      length = TtaGetTextAttributeLength (attr);
 	      text = TtaAllocString (length + 1);
 	      TtaGiveTextAttributeValue (attr, text, &length);
-	      if (!ustrcasecmp (text, TEXT("text/css")))
+	      if (!strcasecmp (text, "text/css"))
 		HTMLcontext.parsingCSS = TRUE;
 	      TtaFreeMemory (text);
 	    }
@@ -2525,31 +2525,31 @@ static ThotBool     ContextOK (int entry)
    else
      {
        ok = TRUE;
-       if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, TEXT("tr")) &&
-	   ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("th")) &&
-	   ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("td")))
+       if (!strcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, "tr") &&
+	   strcmp (pHTMLGIMapping[entry].XMLname, "th") &&
+	   strcmp (pHTMLGIMapping[entry].XMLname, "td"))
 	 /* only TH and TD elements are allowed as children of a TR element */
 	 ok = FALSE;
        if (ok &&
-	   !ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, TEXT("table")) &&
-	   ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("caption"))  &&
-	   ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("thead"))    &&
-	   ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("tfoot"))    &&
-	   ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("tbody"))    &&
-	   ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("colgroup")) &&
-	   ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("col"))      &&
-	   ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("tr")))
+	   !strcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, "table") &&
+	   strcmp (pHTMLGIMapping[entry].XMLname, "caption")  &&
+	   strcmp (pHTMLGIMapping[entry].XMLname, "thead")    &&
+	   strcmp (pHTMLGIMapping[entry].XMLname, "tfoot")    &&
+	   strcmp (pHTMLGIMapping[entry].XMLname, "tbody")    &&
+	   strcmp (pHTMLGIMapping[entry].XMLname, "colgroup") &&
+	   strcmp (pHTMLGIMapping[entry].XMLname, "col")      &&
+	   strcmp (pHTMLGIMapping[entry].XMLname, "tr"))
 	 {
 	   /* only CAPTION, THEAD, TFOOT, TBODY, COLGROUP, COL and TR are */
 	   /* allowed as children of a TABLE element */
-	   if (!ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("td")) ||
-	       !ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("th")))
+	   if (!strcmp (pHTMLGIMapping[entry].XMLname, "td") ||
+	       !strcmp (pHTMLGIMapping[entry].XMLname, "th"))
 	     /* Table cell within a table, without a tr. Assume tr */
 	     {
 	       /* save the last last identifier read from the input file */
 	       saveLastElemEntry = lastElemEntry;
 	       /* simulate a <TR> tag */
-	       ProcessStartGI (TEXT("tr"));
+	       ProcessStartGI ("tr");
 	       /* restore the last tag that has actually been read */
 	       lastElemEntry = saveLastElemEntry;
 	     }
@@ -2557,31 +2557,31 @@ static ThotBool     ContextOK (int entry)
 	     ok = FALSE;
 	 }
        if (ok &&
-	   (!ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("caption")) ||
-	    !ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("thead")) ||
-	    !ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("tfoot")) ||
-	    !ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("tbody")) ||
-	    !ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("colgroup"))) &&
-	   ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, TEXT("table")))
+	   (!strcmp (pHTMLGIMapping[entry].XMLname, "caption") ||
+	    !strcmp (pHTMLGIMapping[entry].XMLname, "thead") ||
+	    !strcmp (pHTMLGIMapping[entry].XMLname, "tfoot") ||
+	    !strcmp (pHTMLGIMapping[entry].XMLname, "tbody") ||
+	    !strcmp (pHTMLGIMapping[entry].XMLname, "colgroup")) &&
+	   strcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, "table"))
 	 /* CAPTION, THEAD, TFOOT, TBODY, COLGROUP are allowed only as
 	    children of a TABLE element */
 	 ok = FALSE;
        if (ok &&
-	   (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, TEXT("thead")) ||
-	    !ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, TEXT("tfoot")) ||
-	    !ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, TEXT("tbody"))) &&
-	   ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("tr")))
+	   (!strcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, "thead") ||
+	    !strcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, "tfoot") ||
+	    !strcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, "tbody")) &&
+	   strcmp (pHTMLGIMapping[entry].XMLname, "tr"))
 	 /* only TR is allowed as a child of a THEAD, TFOOT or TBODY element */
 	 {
-	   if (!ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("td")) ||
-	       !ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("th")))
+	   if (!strcmp (pHTMLGIMapping[entry].XMLname, "td") ||
+	       !strcmp (pHTMLGIMapping[entry].XMLname, "th"))
 	     /* Table cell within a thead, tfoot or tbody without a tr. */
 	     /* Assume tr */
 	     {
 	       /* save the last last identifier read from the input file */
 	       saveLastElemEntry = lastElemEntry;
 	       /* simulate a <tr> tag */
-	       ProcessStartGI (TEXT("tr"));
+	       ProcessStartGI ("tr");
 	       /* restore the last tag that has actually been read */
 	       lastElemEntry = saveLastElemEntry;
 	     }
@@ -2590,17 +2590,17 @@ static ThotBool     ContextOK (int entry)
 	 }
        if (ok)
 	 /* refuse BODY within BODY */
-	 if (ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("body")) == 0)
+	 if (strcmp (pHTMLGIMapping[entry].XMLname, "body") == 0)
 	   if (Within (HTML_EL_BODY, DocumentSSchema))
 	     ok = FALSE;
        if (ok)
 	 /* refuse HEAD within HEAD */
-	 if (ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("head")) == 0)
+	 if (strcmp (pHTMLGIMapping[entry].XMLname, "head") == 0)
 	   if (Within (HTML_EL_HEAD, DocumentSSchema))
 	     ok = FALSE;
        if (ok)
 	 /* refuse STYLE within STYLE */
-	 if (ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("style")) == 0)
+	 if (strcmp (pHTMLGIMapping[entry].XMLname, "style") == 0)
 	   if (Within (HTML_EL_STYLE_, DocumentSSchema))
 	     ok = FALSE;
        return ok;
@@ -2616,10 +2616,10 @@ static void         SpecialImplicitEnd (int entry)
 
    /* if current element is DD, Hn closes that DD only when there is */
    /* no enclosing DL */
-   if (pHTMLGIMapping[entry].XMLname[0] == TEXT('H') &&
-       pHTMLGIMapping[entry].XMLname[1] >= TEXT('1') &&
-       pHTMLGIMapping[entry].XMLname[1] <= TEXT('6') &&
-       pHTMLGIMapping[entry].XMLname[2] == WC_EOS)
+   if (pHTMLGIMapping[entry].XMLname[0] == 'H' &&
+       pHTMLGIMapping[entry].XMLname[1] >= '1' &&
+       pHTMLGIMapping[entry].XMLname[1] <= '6' &&
+       pHTMLGIMapping[entry].XMLname[2] == EOS)
       /* the new element is a Hn */
       if (StackLevel > 1)
 	 if (ElementStack[StackLevel - 1] != NULL)
@@ -2693,7 +2693,7 @@ static void           ProcessStartGI (CHAR_T* GIname)
 
   /* ignore tag <P> within PRE */
   if (Within (HTML_EL_Preformatted, DocumentSSchema))
-    if (ustrcasecmp (GIname, TEXT("p")) == 0)
+    if (strcasecmp (GIname, "p") == 0)
       return;
 
   /* search the HTML element name in the mapping table */
@@ -2705,11 +2705,11 @@ static void           ProcessStartGI (CHAR_T* GIname)
     {
       /* check if it's the math or svg tag with a namespace prefix */
       /* So, look for a colon in the element name */
-      for (i = 0; GIname[i] != TEXT(':') && GIname[i] != WC_EOS; i++);
-      if (GIname[i] == TEXT(':') &&
-	      (ustrcasecmp (&GIname[i+1], TEXT("math")) == 0 ||
-	       ustrcasecmp (&GIname[i+1], TEXT("xmlgraphics")) == 0 ||
-	       ustrcasecmp (&GIname[i+1], TEXT("svg")) == 0))
+      for (i = 0; GIname[i] != ':' && GIname[i] != EOS; i++);
+      if (GIname[i] == ':' &&
+	      (strcasecmp (&GIname[i+1], "math") == 0 ||
+	       strcasecmp (&GIname[i+1], "xmlgraphics") == 0 ||
+	       strcasecmp (&GIname[i+1], "svg") == 0))
 	/* it's a math or svg tag with a namespace prefix. OK */
 	{
          entry = MapGI (&GIname[i+1], &schema, HTMLcontext.doc);
@@ -2718,13 +2718,13 @@ static void           ProcessStartGI (CHAR_T* GIname)
       else
 	/* unknown tag */
 	{
-	  if (ustrlen (GIname) > MaxMsgLength - 20)
-	    GIname[MaxMsgLength - 20] = WC_EOS;
-	  usprintf (msgBuffer, TEXT("warning - unknown tag <%s>"), GIname);
+	  if (strlen (GIname) > MaxMsgLength - 20)
+	    GIname[MaxMsgLength - 20] = EOS;
+	  usprintf (msgBuffer, "warning - unknown tag <%s>", GIname);
 	  ParseHTMLError (HTMLcontext.doc, msgBuffer);
 	  UnknownTag = TRUE;
 	  /* create an Invalid_element */
-	  usprintf (msgBuffer, TEXT("<%s"), GIname);
+	  usprintf (msgBuffer, "<%s", GIname);
 	  InsertInvalidEl (msgBuffer, FALSE);
 	}
     }
@@ -2742,11 +2742,11 @@ static void           ProcessStartGI (CHAR_T* GIname)
       if (!ContextOK (entry))
 	/* element not allowed in the current structural context */
 	{
-	  usprintf (msgBuffer, TEXT("Tag <%s> is not allowed here"), GIname);
+	  usprintf (msgBuffer, "Tag <%s> is not allowed here", GIname);
 	  ParseHTMLError (HTMLcontext.doc, msgBuffer);
 	  UnknownTag = TRUE;
 	  /* create an Invalid_element */
-	  usprintf (msgBuffer, TEXT("<%s"), GIname);
+	  usprintf (msgBuffer, "<%s", GIname);
 	  InsertInvalidEl (msgBuffer, TRUE);
 	}
       else
@@ -2820,8 +2820,8 @@ static void     EndOfStartGI (CHAR_T c)
       for (i = LgBuffer; i > 0; i--)
 	inputBuffer[i] = inputBuffer[i - 1];
       LgBuffer++;
-      inputBuffer[0] = TEXT('<');
-      inputBuffer[LgBuffer] = WC_EOS;
+      inputBuffer[0] = '<';
+      inputBuffer[LgBuffer] = EOS;
       /* copy the input buffer in the document */
       TextToDocument ();
     }
@@ -2829,11 +2829,11 @@ static void     EndOfStartGI (CHAR_T c)
      {
       /* if the last character in the GI is a '/', ignore it.  This is to
          accept the XML syntax for empty elements, for instance <br/> */
-      if (LgBuffer > 0 && inputBuffer[LgBuffer-1] == TEXT('/'))
+      if (LgBuffer > 0 && inputBuffer[LgBuffer-1] == '/')
          LgBuffer--;
       CloseBuffer ();
-      ustrncpy (theGI, inputBuffer, MaxMsgLength - 1);
-      theGI[MaxMsgLength - 1] = WC_EOS;
+      strncpy (theGI, inputBuffer, MaxMsgLength - 1);
+      theGI[MaxMsgLength - 1] = EOS;
       /*** there may be a namespace prefix in front of the tag name ****/
       /*** We consider ":" as separator character ***/      
       /* Must the first or the last ":" character be considered ? */
@@ -2843,12 +2843,12 @@ static void     EndOfStartGI (CHAR_T c)
 	  (HTMLcontext.lastElement == rootElement))
          /* an element after the tag </html>, ignore it */
          {
-         ParseHTMLError (HTMLcontext.doc, TEXT("Element after tag </html>. Ignored"));
+         ParseHTMLError (HTMLcontext.doc, "Element after tag </html>. Ignored");
          return;
          }
-      if (!ustrcmp (theGI, TEXT("math")) ||
-	  !ustrcmp (theGI, TEXT("svg")) ||
-	  !ustrcmp (theGI, TEXT("xmlgraphics")))
+      if (!strcmp (theGI, "math") ||
+	  !strcmp (theGI, "svg") ||
+	  !strcmp (theGI, "xmlgraphics"))
 	/* a <math> or <svg> tag has been read */
 	{
 	  /* get back to the beginning of the tag in the input buffer */
@@ -2869,10 +2869,10 @@ static void     EndOfStartGI (CHAR_T c)
 	  else
 	    CurrentBufChar = StartOfTagIndx;
 
-	  if (!ustrcmp (theGI, TEXT("math")))
-	     ustrcpy (schemaName, TEXT("MathML"));
+	  if (!strcmp (theGI, "math"))
+	     strcpy (schemaName, "MathML");
 	  else
-	     ustrcpy (schemaName, TEXT("GraphML"));
+	     strcpy (schemaName, "GraphML");
 	  /* Parse the corresponding element with the XML parser */
 #ifdef OLD_XML_PARSER
 	  if (!XMLparse (stream, &CurrentBufChar, schemaName,
@@ -2928,7 +2928,7 @@ static void        EndOfEndTag (CHAR_T c)
    CloseBuffer ();
 
    if (HTMLcontext.parsingTextArea)
-      if (ustrcasecmp (inputBuffer, TEXT("textarea")) != 0)
+      if (strcasecmp (inputBuffer, "textarea") != 0)
          /* We are parsing the contents of a textarea element. The end
 	    tag is not the one closing the current textarea, consider it
 	    as plain text */
@@ -2940,9 +2940,9 @@ static void        EndOfEndTag (CHAR_T c)
          for (i = LgBuffer; i > 0; i--)
 	   inputBuffer[i + 1] = inputBuffer[i - 1];
          LgBuffer += 2;
-         inputBuffer[0] = TEXT('<');
-         inputBuffer[1] = TEXT('/');
-         inputBuffer[LgBuffer] = WC_EOS;
+         inputBuffer[0] = '<';
+         inputBuffer[1] = '/';
+         inputBuffer[LgBuffer] = EOS;
 	 /* copy the input buffer into the document */
          TextToDocument ();
          return;
@@ -2954,12 +2954,12 @@ static void        EndOfEndTag (CHAR_T c)
       {
 	/* look for a colon in the element name (namespaces) and ignore the
 	   prefix if there is one */
-	for (i = 0; i < LgBuffer && inputBuffer[i] != TEXT(':'); i++);
-	if (inputBuffer[i] == TEXT(':'))
+	for (i = 0; i < LgBuffer && inputBuffer[i] != ':'; i++);
+	if (inputBuffer[i] == ':')
 	   i++;
 	else
 	   i = 0;
-        if (ustrcasecmp (&inputBuffer[i], HTMLrootClosingTag) == 0)
+        if (strcasecmp (&inputBuffer[i], HTMLrootClosingTag) == 0)
 	   {
 	   HTMLrootClosed = TRUE;
 	   ok = TRUE;
@@ -2973,29 +2973,29 @@ static void        EndOfEndTag (CHAR_T c)
       entry = MapGI (inputBuffer, &schema, HTMLcontext.doc);
       if (entry < 0)
         {
-        if (ustrlen (inputBuffer) > MaxMsgLength - 20)
-	   inputBuffer[MaxMsgLength - 20] = WC_EOS;
-	usprintf (msgBuffer, TEXT("warning - unknown tag </%s>"), inputBuffer);
+        if (strlen (inputBuffer) > MaxMsgLength - 20)
+	   inputBuffer[MaxMsgLength - 20] = EOS;
+	usprintf (msgBuffer, "warning - unknown tag </%s>", inputBuffer);
 	ParseHTMLError (HTMLcontext.doc, msgBuffer);
 	/* create an Invalid_element */
-	usprintf (msgBuffer, TEXT("</%s"), inputBuffer);
+	usprintf (msgBuffer, "</%s", inputBuffer);
 	InsertInvalidEl (msgBuffer, FALSE);
         }
       else if (!CloseElement (entry, -1, FALSE))
         /* the end tag does not close any current element */
         {
 	/* print an error message... */
-	usprintf (msgBuffer, TEXT("Unexpected end tag </%s>"), inputBuffer);
+	usprintf (msgBuffer, "Unexpected end tag </%s>", inputBuffer);
 	ParseHTMLError (HTMLcontext.doc, msgBuffer);
 	/* ... and try to recover */
-	if ((inputBuffer[0] == TEXT('H') || inputBuffer[0] == TEXT('h')) &&
-	    inputBuffer[1] >= TEXT('1') && inputBuffer[1] <= TEXT('6') &&
-	    inputBuffer[2] == WC_EOS)
+	if ((inputBuffer[0] == 'H' || inputBuffer[0] == 'h') &&
+	    inputBuffer[1] >= '1' && inputBuffer[1] <= '6' &&
+	    inputBuffer[2] == EOS)
 	   /* the end tag is </Hn>. Consider all Hn as equivalent. */
 	   /* </H3> is considered as an end tag for <H2>, for instance */
 	  {
-	     ustrcpy (msgBuffer, inputBuffer);
-	     msgBuffer[1] = TEXT('1');
+	     strcpy (msgBuffer, inputBuffer);
+	     msgBuffer[1] = '1';
 	     i = 1;
 	     do
 	       {
@@ -3008,27 +3008,27 @@ static void        EndOfEndTag (CHAR_T c)
 	     while (i <= 6 && !ok);
 	  }
 	if (!ok &&
-	    (!ustrcasecmp (inputBuffer, TEXT("ol"))   ||
-	     !ustrcasecmp (inputBuffer, TEXT("ul"))   ||
-	     !ustrcasecmp (inputBuffer, TEXT("menu")) ||
-	     !ustrcasecmp (inputBuffer, TEXT("dir"))))
+	    (!strcasecmp (inputBuffer, "ol")   ||
+	     !strcasecmp (inputBuffer, "ul")   ||
+	     !strcasecmp (inputBuffer, "menu") ||
+	     !strcasecmp (inputBuffer, "dir")))
 	  /* the end tag is supposed to close a list */
 	  /* try to close another type of list */
 	  {
 	    ok = TRUE;
 	    schema = DocumentSSchema;
-	    if (!CloseElement (MapGI (TEXT("ol"), &schema, HTMLcontext.doc), -1, FALSE) &&
-            !CloseElement (MapGI (TEXT("ul"), &schema, HTMLcontext.doc), -1, FALSE) &&
-            !CloseElement (MapGI (TEXT("menu"), &schema, HTMLcontext.doc), -1, FALSE) &&
-            !CloseElement (MapGI (TEXT("dir"), &schema, HTMLcontext.doc), -1, FALSE))
+	    if (!CloseElement (MapGI ("ol", &schema, HTMLcontext.doc), -1, FALSE) &&
+            !CloseElement (MapGI ("ul", &schema, HTMLcontext.doc), -1, FALSE) &&
+            !CloseElement (MapGI ("menu", &schema, HTMLcontext.doc), -1, FALSE) &&
+            !CloseElement (MapGI ("dir", &schema, HTMLcontext.doc), -1, FALSE))
 	      ok = FALSE;
 	  }
 	if (!ok)
 	  /* unrecoverable error. Create an Invalid_element */
 	  {
-            if (ustrlen (inputBuffer) > MaxMsgLength - 10)
-	       inputBuffer[MaxMsgLength - 10] = WC_EOS;
-	    usprintf (msgBuffer, TEXT("</%s"), inputBuffer);
+            if (strlen (inputBuffer) > MaxMsgLength - 10)
+	       inputBuffer[MaxMsgLength - 10] = EOS;
+	    usprintf (msgBuffer, "</%s", inputBuffer);
 	    InsertInvalidEl (msgBuffer, TRUE);
 	  }
         }
@@ -3057,7 +3057,7 @@ static void            EndOfAttrName (CHAR_T c)
       processing instructions, such as <img src="SomeUrl" /> or
       <?xml version="1.0"?>  */
    if (LgBuffer == 1 &&
-       (inputBuffer[0] == TEXT('/') || inputBuffer[0] == TEXT('?')))
+       (inputBuffer[0] == '/' || inputBuffer[0] == '?'))
       {
       InitBuffer ();
       return;
@@ -3087,22 +3087,22 @@ static void            EndOfAttrName (CHAR_T c)
    if (!tableEntry)
       /* this attribute is not in the HTML mapping table */
      {
-	if (ustrcasecmp (inputBuffer, TEXT("xmlns")) == 0 ||
-	    ustrncasecmp (inputBuffer, TEXT("xmlns:"), 6) == 0)
+	if (strcasecmp (inputBuffer, "xmlns") == 0 ||
+	    strncasecmp (inputBuffer, "xmlns:", 6) == 0)
 	   /* this is a namespace declaration */
 	   {
 	   lastAttrEntry = NULL;
 	   /**** register this namespace ****/;
 	   }
-	else if (ustrcasecmp (inputBuffer, TEXT("xml:lang")) == 0)
+	else if (strcasecmp (inputBuffer, "xml:lang") == 0)
 	   /* attribute xml:lang is not considered as invalid, but it is
 	      ignored */
 	   lastAttrEntry = NULL;
 	else
 	   {
-           if (ustrlen (inputBuffer) > MaxMsgLength - 30)
-	      inputBuffer[MaxMsgLength - 30] = WC_EOS;
-	   usprintf (msgBuffer, TEXT("Invalid attribute \"%s\""), inputBuffer);
+           if (strlen (inputBuffer) > MaxMsgLength - 30)
+	      inputBuffer[MaxMsgLength - 30] = EOS;
+	   usprintf (msgBuffer, "Invalid attribute \"%s\"", inputBuffer);
 	   ParseHTMLError (HTMLcontext.doc, msgBuffer);
 	   /* attach an Invalid_attribute to the current element */
 	   tableEntry = &pHTMLAttributeMapping[0];
@@ -3141,7 +3141,7 @@ static void            EndOfAttrName (CHAR_T c)
 		   attr = TtaNewAttribute (attrType);
 		   TtaAttachAttribute (HTMLcontext.lastElement, attr,
 				       HTMLcontext.doc);
-		   TtaSetAttributeText (attr, TEXT("link"),
+		   TtaSetAttributeText (attr, "link",
 					HTMLcontext.lastElement,
 					HTMLcontext.doc);
 		 }
@@ -3233,15 +3233,15 @@ static void         EndOfAttrValue (CHAR_T c)
 	{
 	  lg = 2 * MaxBufferLength;
 	  BufferAttrValue = TtaGetMemory (lg + 1);
-	  ustrcpy (BufferAttrValue, inputBuffer);
+	  strcpy (BufferAttrValue, inputBuffer);
           LgBufferAttrValue = lg;
 	}
       else
 	{
 	  LgBufferAttrValue += MaxBufferLength;
 	  newBufferAttrValue = TtaGetMemory (LgBufferAttrValue + 1);
-	  ustrcpy (newBufferAttrValue, BufferAttrValue);
-	  ustrcat (newBufferAttrValue, inputBuffer);
+	  strcpy (newBufferAttrValue, BufferAttrValue);
+	  strcat (newBufferAttrValue, inputBuffer);
 	  TtaFreeMemory (BufferAttrValue);
 	  BufferAttrValue = newBufferAttrValue;
 	}
@@ -3253,7 +3253,7 @@ static void         EndOfAttrValue (CHAR_T c)
 	/* this is the end of value of an invalid attribute. Keep the */
 	/* quote character that ends the value for copying it into the */
 	/* Invalid_attribute. */
-	if (c == TEXT('\'') || c == TEXT('\"'))
+	if (c == '\'' || c == '\"')
 	  PutInBuffer (c);
       CloseBuffer ();
       /* inputBuffer contains the attribute value */
@@ -3273,7 +3273,7 @@ static void         EndOfAttrValue (CHAR_T c)
 	{
 	  if (isAttrValueTruncated)
 	    {
-	      ustrcat (BufferAttrValue, inputBuffer);
+	      strcat (BufferAttrValue, inputBuffer);
 	      EndOfHTMLAttributeValue (BufferAttrValue, lastAttrEntry,
 				       lastAttribute, lastAttrElement,
 				       UnknownAttr, &HTMLcontext,
@@ -3318,7 +3318,7 @@ static void         StartOfEntity (CHAR_T c)
 /*----------------------------------------------------------------------
    GetFallbackCharacter
   ----------------------------------------------------------------------*/
-void         GetFallbackCharacter (int code, USTRING fallback, Language* lang)
+void         GetFallbackCharacter (int code, STRING fallback, Language* lang)
 {
    int	     i;
 
@@ -3434,9 +3434,9 @@ static void      PutNonISOlatin1Char (int code, STRING prefix)
        attr = TtaNewAttribute (attrType);
        TtaAttachAttribute (elLeaf, attr, HTMLcontext.doc);
        buffer[0] = '&';
-       ustrcpy (&buffer[1], prefix);
-       ustrcat (buffer, EntityName);
-       ustrcat (buffer, TEXT(";"));
+       strcpy (&buffer[1], prefix);
+       strcat (buffer, EntityName);
+       strcat (buffer, ";");
        TtaSetAttributeText (attr, buffer, elLeaf, HTMLcontext.doc);
        HTMLcontext.mergeText = FALSE;
      }
@@ -3464,7 +3464,7 @@ static void         PutAmpersandInDoc ()
    InsertElement (&elText);
    HTMLcontext.lastElementClosed = TRUE;
    HTMLcontext.mergeText = FALSE;
-   TtaSetTextContent (elText, TEXT("&"), HTMLcontext.language, HTMLcontext.doc);
+   TtaSetTextContent (elText, "&", HTMLcontext.language, HTMLcontext.doc);
    attrType.AttrSSchema = DocumentSSchema;
    attrType.AttrTypeNum = HTML_ATTR_IntEntity;
    attr = TtaNewAttribute (attrType);
@@ -3483,7 +3483,7 @@ static void      EndOfEntity (CHAR_T c)
    int           i;
    CHAR_T        msgBuffer[MaxMsgLength];
 
-   EntityName[LgEntityName] = WC_EOS;
+   EntityName[LgEntityName] = EOS;
    if (XhtmlEntityTable[EntityTableEntry].charName[CharRank] == EOS)
      {
        /* the entity read matches the current entry of entity table */
@@ -3497,7 +3497,7 @@ static void      EndOfEntity (CHAR_T c)
 	       PutInBuffer (';');
 	     }
 	   else
-	     PutNonISOlatin1Char (XhtmlEntityTable[EntityTableEntry].charCode, TEXT(""));
+	     PutNonISOlatin1Char (XhtmlEntityTable[EntityTableEntry].charCode, "");
 	 }
        else
 	 PutInBuffer ((CHAR_T)XhtmlEntityTable[EntityTableEntry].charCode);
@@ -3537,7 +3537,7 @@ static void      EntityChar (unsigned char c)
        stop = FALSE;
        do
 	 {
-	   if (ustrncmp (EntityName, XhtmlEntityTable[i].charName, LgEntityName) != 0)
+	   if (strncmp (EntityName, XhtmlEntityTable[i].charName, LgEntityName) != 0)
 	     stop = TRUE;
 	   else
 	     if (XhtmlEntityTable[i].charName[CharRank] < c)
@@ -3554,7 +3554,7 @@ static void      EntityChar (unsigned char c)
 	 {
 	   /* If we are not reading an attribute value, assume that semicolon is
 	      missing and put the corresponding char in the document content */
-	   EntityName[LgEntityName] = WC_EOS;
+	   EntityName[LgEntityName] = EOS;
 	   if (XhtmlEntityTable[EntityTableEntry].charCode > 255)
 	     {
 	       if (ReadingAnAttrValue)
@@ -3565,7 +3565,7 @@ static void      EntityChar (unsigned char c)
 		   PutInBuffer (';');
 		 }
 	       else
-		 PutNonISOlatin1Char (XhtmlEntityTable[EntityTableEntry].charCode, TEXT (""));
+		 PutNonISOlatin1Char (XhtmlEntityTable[EntityTableEntry].charCode, "");
 	     }
 	   else
 	     PutInBuffer ((char)(XhtmlEntityTable[EntityTableEntry].charCode));
@@ -3593,7 +3593,7 @@ static void      EntityChar (unsigned char c)
        else
 	 {
 	   if (LgEntityName > 0 &&
-	       ustrncmp (EntityName,
+	       strncmp (EntityName,
 			 XhtmlEntityTable[EntityTableEntry].charName,
 			 LgEntityName) != 0)
 	     OK = FALSE;
@@ -3620,7 +3620,7 @@ static void      EntityChar (unsigned char c)
 	     {
 	       /* print an error message */
 	       EntityName[LgEntityName++] = c;
-	       EntityName[LgEntityName++] = WC_EOS;
+	       EntityName[LgEntityName++] = EOS;
 	       usprintf (msgBuffer, "Entity not supported\"&%s\"", EntityName);
 	       ParseHTMLError (HTMLcontext.doc, msgBuffer);
 	     }
@@ -3645,8 +3645,8 @@ static void      EndOfDecEntity (CHAR_T c)
    int           code;
    int           i;
 
-   EntityName[LgEntityName] = WC_EOS;
-   usscanf (EntityName, TEXT("%d"), &code);
+   EntityName[LgEntityName] = EOS;
+   usscanf (EntityName, "%d", &code);
    if (code > 255)
      {
        if (ReadingAnAttrValue)
@@ -3693,7 +3693,7 @@ static void     DecEntityChar (char c)
 		PutInBuffer (EntityName[i]);
 	      LgEntityName = 0;
 	      /* error message */
-	      ParseHTMLError (HTMLcontext.doc, TEXT("Invalid decimal entity"));
+	      ParseHTMLError (HTMLcontext.doc, "Invalid decimal entity");
 	    }
 	  /* next state is state 0, not the state computed by the automaton */
 	  /* and the character read has not been processed yet */
@@ -3713,8 +3713,8 @@ static void         EndOfHexEntity (CHAR_T c)
    int              code;
    int              i;
 
-   EntityName[LgEntityName] = WC_EOS;
-   usscanf (EntityName, TEXT("%x"), &code);
+   EntityName[LgEntityName] = EOS;
+   usscanf (EntityName, "%x", &code);
    if (code > 255)
      {
        if (ReadingAnAttrValue)
@@ -3727,7 +3727,7 @@ static void         EndOfHexEntity (CHAR_T c)
 	   PutInBuffer (';');
 	 }
        else
-	 PutNonISOlatin1Char (code, TEXT ("#x"));
+	 PutNonISOlatin1Char (code, "#x");
      }
    else
       PutInBuffer ((char) code);
@@ -3766,7 +3766,7 @@ static void     HexEntityChar (char c)
 		PutInBuffer (EntityName[i]);
 	      LgEntityName = 0;
 	      /* error message */
-	    ParseHTMLError (HTMLcontext.doc, TEXT("Invalid hexadecimal entity"));
+	    ParseHTMLError (HTMLcontext.doc, "Invalid hexadecimal entity");
 	    }
 	  /* next state is state 0, not the state computed by the automaton */
 	  /* and the character read has not been processed yet */
@@ -3855,7 +3855,7 @@ static void         StartOfComment (CHAR_T c)
 	CommentText = TtaNewElement (HTMLcontext.doc, elType);
 	TtaSetElementLineNumber (CommentText, NumberOfLinesRead);
 	TtaInsertFirstChild (&CommentText, elCommentLine, HTMLcontext.doc);
-	TtaSetTextContent (CommentText, TEXT(""), HTMLcontext.language, HTMLcontext.doc);
+	TtaSetTextContent (CommentText, "", HTMLcontext.language, HTMLcontext.doc);
      }
    InitBuffer ();
 }
@@ -3868,9 +3868,9 @@ static void         PutInComment (UCHAR_T c)
   ElementType       elType;
   Element           elCommentLine, prevElCommentLine;
   
-  if (c != WC_EOS)
+  if (c != EOS)
     {
-      if (!HTMLcontext.parsingCSS && ((int) c == WC_EOL || (int) c == WC_CR))
+      if (!HTMLcontext.parsingCSS && ((int) c == EOL || (int) c == CR))
 	 /* new line in a comment */
 	{
 	   /* put the content of the inputBuffer into the current */
@@ -3892,7 +3892,7 @@ static void         PutInComment (UCHAR_T c)
 	   CommentText = TtaNewElement (HTMLcontext.doc, elType);
 	   TtaSetElementLineNumber (CommentText, NumberOfLinesRead);
 	   TtaInsertFirstChild (&CommentText, elCommentLine, HTMLcontext.doc);
-	   TtaSetTextContent (CommentText, TEXT(""), HTMLcontext.language, HTMLcontext.doc);
+	   TtaSetTextContent (CommentText, "", HTMLcontext.language, HTMLcontext.doc);
 	}
       else
 	{
@@ -3959,10 +3959,10 @@ static void         EndOfDoctypeDecl (char c)
 
    CloseBuffer ();
    /* process the Doctype declaration available in inputBuffer */
-   if (!ustrcasecmp (inputBuffer, TEXT("DOCTYPE")))
+   if (!strcasecmp (inputBuffer, "DOCTYPE"))
       {
-      for (i = 7; inputBuffer[i] <= WC_SPACE && inputBuffer[i] != WC_EOS; i++);
-      if (!ustrcasecmp (&inputBuffer[i], TEXT("HTML")))
+      for (i = 7; inputBuffer[i] <= SPACE && inputBuffer[i] != EOS; i++);
+      if (!strcasecmp (&inputBuffer[i], "HTML"))
 	 /* it's a HTML document */
 	 {
          /***** TO DO *****/;
@@ -4232,7 +4232,7 @@ void                   FreeHTMLParser (void)
       }
 
    /* free descriptors of elements closed by a start tag */
-   for (entry = 0; pHTMLGIMapping[entry].XMLname[0] != WC_EOS; entry++)
+   for (entry = 0; pHTMLGIMapping[entry].XMLname[0] != EOS; entry++)
       {
       pClose = FirstClosedElem[entry];
       while (pClose != NULL)
@@ -4269,7 +4269,7 @@ static CHAR_T    GetNextChar (FILE *infile, char* buffer, int *index,
   ThotBool       isHTML;
 
   wcharRead = 0;
-  charRead = WC_EOS;
+  charRead = EOS;
   *endOfFile = FALSE;
   if (buffer != NULL)
     {
@@ -4301,7 +4301,7 @@ static CHAR_T    GetNextChar (FILE *infile, char* buffer, int *index,
 		{
 		  /* error or end of file */
 		  *endOfFile = TRUE;
-		  charRead = WC_EOS;
+		  charRead = EOS;
 		  LastCharInFileBuffer = 0;
 		}
 	      else
@@ -4332,7 +4332,7 @@ static CHAR_T    GetNextChar (FILE *infile, char* buffer, int *index,
 		    {
 		      /* error or end of file */
 		      *endOfFile = TRUE;
-		      charRead = WC_EOS;
+		      charRead = EOS;
 		    }
 		  ptrextrabuf = (unsigned char *) &extrabuf[0];
 		  nbBytes = TtaGetNextWideCharFromMultibyteString (&wcharRead,
@@ -4358,7 +4358,7 @@ static CHAR_T    GetNextChar (FILE *infile, char* buffer, int *index,
 		    TextToDocument ();
 		  else if (HTMLcontext.lastElement && LgBuffer != 0)
 		    {
-		      inputBuffer[LgBuffer] = WC_EOS;
+		      inputBuffer[LgBuffer] = EOS;
 		      TtaSetTextContent (HTMLcontext.lastElement, inputBuffer,
 					 HTMLcontext.language,
 					 HTMLcontext.doc);
@@ -4438,12 +4438,12 @@ CHAR_T      GetNextInputChar (FILE *infile, int *index, ThotBool *endOfFile)
 {
   CHAR_T    charRead;
 
-  charRead = WC_EOS;
+  charRead = EOS;
   *endOfFile = FALSE;
-  if (PreviousBufChar != WC_EOS)
+  if (PreviousBufChar != EOS)
     {
       charRead = PreviousBufChar;
-      PreviousBufChar = WC_EOS;
+      PreviousBufChar = EOS;
     }
   else 
     {
@@ -4451,7 +4451,7 @@ CHAR_T      GetNextInputChar (FILE *infile, int *index, ThotBool *endOfFile)
       if (InputText == NULL)
 	NumberOfCharRead++;
       /* skip null characters*/
-      while (charRead == WC_EOS && !*endOfFile)
+      while (charRead == EOS && !*endOfFile)
 	{
 	charRead = GetNextChar (infile, InputText, index, endOfFile);
 	if (InputText == NULL)
@@ -4460,20 +4460,20 @@ CHAR_T      GetNextInputChar (FILE *infile, int *index, ThotBool *endOfFile)
     }
   if (*endOfFile == FALSE)
     {
-      if ((int) charRead == WC_CR)
+      if ((int) charRead == CR)
 	/* CR has been read */
 	{
 	  /* Read next character */
 	  charRead = GetNextChar (infile, InputText, index, endOfFile);
-	  if ((int) charRead != WC_EOL)
+	  if ((int) charRead != EOL)
 	    /* next character is not LF. Store next character and return LF */
 	    {
 	      PreviousBufChar = charRead;
-	      charRead = WC_EOL;
+	      charRead = EOL;
 	    }
 	}
       /* update the counters of characters and lines read */
-      if ((int) charRead == WC_EOL || (int) charRead == WC_CR)
+      if ((int) charRead == EOL || (int) charRead == CR)
 	/* new line in HTML file */
 	{
 	  if (InputText == NULL)
@@ -4502,7 +4502,7 @@ static void        HTMLparse (FILE * infile, char* HTMLbuf)
       InputText = HTMLbuf;
       EndOfHtmlFile = FALSE;
       }
-   charRead = WC_EOS;
+   charRead = EOS;
    HTMLrootClosed = FALSE;
 
    /* read the HTML file sequentially */
@@ -4510,9 +4510,9 @@ static void        HTMLparse (FILE * infile, char* HTMLbuf)
      {
 	/* read one character from the source if the last character */
 	/* read has been processed */
-	if (charRead == WC_EOS)
+	if (charRead == EOS)
 	  charRead = GetNextInputChar (infile, &CurrentBufChar, &EndOfHtmlFile);
-	if (charRead != WC_EOS)
+	if (charRead != EOS)
 	  {
 	     /* Check the character read */
 	     /* Consider LF and FF as the end of an input line. */
@@ -4520,7 +4520,7 @@ static void        HTMLparse (FILE * infile, char* HTMLbuf)
 	     /* Replace HT by space, except in preformatted text. */
 	     /* Ignore spaces at the beginning and at the end of input lines */
 	     /* Ignore non printable characters except HT, LF, FF. */
-	     if ((int) charRead == WC_EOL)
+	     if ((int) charRead == EOL)
 		/* LF = end of input line */
 	       {
 		if (currentState != 12)
@@ -4532,20 +4532,20 @@ static void        HTMLparse (FILE * infile, char* HTMLbuf)
 			if (currentState == 6 || currentState == 9)
 			  /* within an attribute value between quotes */
 			  if (lastAttrEntry != NULL &&
-			      !ustrcmp (lastAttrEntry->XMLattribute, TEXT("src")))
+			      !strcmp (lastAttrEntry->XMLattribute, "src"))
 			    /* value of an SRC attribute */
 			    /* consider new line as an empty char*/
-			    charRead = WC_EOS;
-			if (charRead != WC_EOS)
+			    charRead = EOS;
+			if (charRead != EOS)
 			  {
 			    /* Replace new line by a space, except if an entity is
 			       being read */
 			    if (currentState == 30 &&
 				Within (HTML_EL_Preformatted, DocumentSSchema) &&
 				!Within (HTML_EL_Option_Menu, DocumentSSchema))
-			      charRead = WC_EOL; /* new line character */
+			      charRead = EOL; /* new line character */
 			    else
-			      charRead = WC_SPACE;
+			      charRead = SPACE;
 			  }
 		      }
 		    else if ((Within (HTML_EL_Preformatted, DocumentSSchema) &&
@@ -4558,20 +4558,20 @@ static void        HTMLparse (FILE * infile, char* HTMLbuf)
 			/* within preformatted text */
 			if (AfterTagPRE)
 			  /* ignore NL after a <PRE> tag */
-			  charRead = WC_EOS;
+			  charRead = EOS;
 			else
 			  /* generate a new line character */
-			  charRead = WC_EOL;
+			  charRead = EOL;
 		      }
 		    else
 		      /* new line in ordinary text */
 		      {
 			/* suppress all spaces preceding the end of line */
 			while (LgBuffer > 0 &&
-			       inputBuffer[LgBuffer - 1] == WC_SPACE)
+			       inputBuffer[LgBuffer - 1] == SPACE)
 			  LgBuffer--;
 			/* new line is equivalent to space */
-			charRead = WC_SPACE;
+			charRead = SPACE;
 			if (LgBuffer > 0)
 			  TextToDocument ();
 		      }
@@ -4582,21 +4582,21 @@ static void        HTMLparse (FILE * infile, char* HTMLbuf)
 	     else
 		/* it's not an end of line */
 	       {
-		  if ((int) charRead == WC_TAB)
+		  if ((int) charRead == TAB)
 		     /* HT = Horizontal tabulation */
 		    {
 		       if (currentState != 0)
 			  /* not in a text element. Replace HT by space */
-			  charRead = WC_SPACE;
+			  charRead = SPACE;
 		       else
 			  /* in a text element. Replace HT by space except in */
 			  /* preformatted text */
 		          if (!Within (HTML_EL_Preformatted, DocumentSSchema) &&
 			      !Within (HTML_EL_STYLE_, DocumentSSchema) &&
 			      !Within (HTML_EL_SCRIPT, DocumentSSchema))
-			     charRead = WC_SPACE;
+			     charRead = SPACE;
 		    }
-		  if (charRead == WC_SPACE)
+		  if (charRead == SPACE)
 		     /* space character */
 		    {
 		      if (currentState == 12 ||
@@ -4608,14 +4608,14 @@ static void        HTMLparse (FILE * infile, char* HTMLbuf)
 			   that is not preformatted text */
 			/* ignore spaces at the beginning of an input line */
 			if (EmptyLine)
-			  charRead = WC_EOS;
+			  charRead = EOS;
 		    }
 #ifndef _I18N_
 		  else if (((int)charRead < 32 ||
 			    ((int) charRead >= 127 && (int) charRead <= 143))
-			   && (int) charRead != WC_TAB)
+			   && (int) charRead != TAB)
 		    /* it's not a printable character, ignore it */
-		    charRead = WC_EOS;
+		    charRead = EOS;
 #endif /* !_I18N_ */
 		  else
 		     /* it's a printable character. Keep it as it is and */
@@ -4627,7 +4627,7 @@ static void        HTMLparse (FILE * infile, char* HTMLbuf)
 	       }
 	     AfterTagPRE = FALSE;
 
-	     if (charRead != WC_EOS)
+	     if (charRead != EOS)
 		/* a valid character has been read */
 	       {
 		  /* first transition of the automaton for the current state */
@@ -4644,8 +4644,8 @@ static void        HTMLparse (FILE * infile, char* HTMLbuf)
 			  match = TRUE;
 		       else if (trans->trigger == SPACE)
 			  /* any space is a trigger */
-			  if ((int) charRead == WC_TAB ||
-			      (int) charRead == WC_EOL ||
+			  if ((int) charRead == TAB ||
+			      (int) charRead == EOL ||
 			      (int) charRead == 12)
 			    /* a delimiter has been read */
 			    match = TRUE;
@@ -4667,7 +4667,7 @@ static void        HTMLparse (FILE * infile, char* HTMLbuf)
 					text buffer */
 				     PutInBuffer ('<');
 				     PutInBuffer (charRead);
-				     charRead = WC_EOS;
+				     charRead = EOS;
 				     /* and return to state 0: reading text */
 				     currentState = 0;
 				     NormalTransition = FALSE;
@@ -4679,7 +4679,7 @@ static void        HTMLparse (FILE * infile, char* HTMLbuf)
 			       (*(trans->action)) (charRead);
 			    if (NormalTransition || CharProcessed)
 			       /* the input character has been processed */
-			       charRead = WC_EOS;
+			       charRead = EOS;
 			      
 			    if (NormalTransition)
 			      {
@@ -4708,7 +4708,7 @@ static void        HTMLparse (FILE * infile, char* HTMLbuf)
 			    /* an exception: when reading the value of an HREF attribute,
 			       SGML entities (&xxx;) should not be interpreted */
 			    if (trans == NULL)
-			       charRead = WC_EOS;
+			       charRead = EOS;
 			 }
 		    }
 	       }
@@ -4817,31 +4817,31 @@ void           ReadTextFile (FILE *infile, char* textbuf,
 
       /* Check the character read */
       /* Consider LF and FF as the end of an input line. */
-      if ((int) charRead == WC_EOL || (int) charRead == 0)
+      if ((int) charRead == EOL || (int) charRead == 0)
 	{
 	  /* LF = end of line */
-	  inputBuffer[LgBuffer] = WC_EOS;
+	  inputBuffer[LgBuffer] = EOS;
 	  if (LgBuffer != 0)
 	    TtaAppendTextContent (el, inputBuffer, doc);
 	  LgBuffer = 0;
 	  el = NULL;
-	  charRead = WC_EOS;
+	  charRead = EOS;
 	}
 #ifndef _I18N_
       else if (((int) charRead < 32 ||
 	        ((int) charRead >= 127 && (int) charRead <= 143)) &&
-	       (int) charRead != WC_TAB)
+	       (int) charRead != TAB)
 	/* Ignore non printable characters except HT */
 	/* it's not a printable character, ignore it */
-	charRead = WC_EOS;
+	charRead = EOS;
 #endif /* !_I18N_ */
-      if (charRead != WC_EOS)
+      if (charRead != EOS)
 	{
 	  /* a valid character has been read */
 	  if (LgBuffer + 1 >= AllmostFullBuffer)
 	    {
 	      /* store the current buffer contents and continue */
-	      inputBuffer[LgBuffer] = WC_EOS;
+	      inputBuffer[LgBuffer] = EOS;
 	      TtaAppendTextContent (el, inputBuffer, doc);
 	      LgBuffer = 0;
 	    }
@@ -4868,7 +4868,7 @@ void           ReadTextFile (FILE *infile, char* textbuf,
   /* close the document */
   if (LgBuffer != 0)
     {
-      inputBuffer[LgBuffer] = WC_EOS;
+      inputBuffer[LgBuffer] = EOS;
       TtaAppendTextContent (el, inputBuffer, doc);
     }
 }
@@ -4970,7 +4970,7 @@ void CheckDocHeader (CHAR_T *fileName, ThotBool *xmlDec, ThotBool *docType,
 			  k = 0; j = 1;
 			  while (&ptr[j] != end && k < MAX_LENGTH)
 			    charsetname[k++] = ptr[j++];
-			  charsetname[k] = WC_EOS;
+			  charsetname[k] = EOS;
 			  *charset = TtaGetCharset (charsetname);
 			}
 		    }
@@ -5220,7 +5220,7 @@ void CheckCharsetInMeta (CHAR_T *fileName, CHARSET *charset, STRING charsetname)
 			      k = 0; j = 1;
 			      while (&ptr[j] != end && k < MAX_LENGTH)
 				charsetname[k++] = ptr[j++];
-			      charsetname[k] = WC_EOS;
+			      charsetname[k] = EOS;
 			      *charset = TtaGetCharset (charsetname);
 			    }
 			}
@@ -5621,7 +5621,7 @@ void            CheckAbstractTree (CHAR_T* pathURL, Document doc)
      {
        /* we search the start of HTML document in the annotation struct */
        elRoot = ANNOT_GetHTMLRoot (doc);
-       docSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+       docSSchema = TtaGetSSchema ("HTML", doc);
      }
    else
 #endif /* ANNOTATIONS */
@@ -6203,8 +6203,8 @@ static void     InitializeHTMLParser (Element lastelem, ThotBool isclosed, Docum
 	   elem = lastelem;
 	while (elem != NULL && elem != rootElement)
 	  {
-	     ustrcpy (tag, GetXMLElementName (TtaGetElementType (elem), doc));
-	     if (ustrcmp (tag, TEXT("???")))
+	     strcpy (tag, GetXMLElementName (TtaGetElementType (elem), doc));
+	     if (strcmp (tag, "???"))
 	       {
 		  for (i = StackLevel; i > 0; i--)
 		    {
@@ -6240,7 +6240,7 @@ static void     InitializeHTMLParser (Element lastelem, ThotBool isclosed, Docum
    /* initialize input buffer */
    EmptyLine = TRUE;
    StartOfFile = TRUE;
-   inputBuffer[0] = WC_EOS;
+   inputBuffer[0] = EOS;
    LgBuffer = 0;
    lastAttribute = NULL;
    lastAttrElement = NULL;
@@ -6257,7 +6257,7 @@ static void     InitializeHTMLParser (Element lastelem, ThotBool isclosed, Docum
 
    /* initialize the error file */
    ErrFile = (FILE*) 0;
-   ErrFileName[0] = WC_EOS;
+   ErrFileName[0] = EOS;
  }
 
 /*----------------------------------------------------------------------
@@ -6310,7 +6310,7 @@ void            ParseSubTree (CHAR_T* HTMLbuf, Element lastelem,
 #ifdef _I18N_
    TtaWCS2MBS (&HTMLbuf, &ptrHTMLbuf, HTMLcontext.encoding);
 #endif /* _I18N_ */
-   if (ustrcmp (schemaName, TEXT("HTML")) == 0)
+   if (strcmp (schemaName, "HTML") == 0)
      /* parse an HTML subtree */
      {
        InitializeHTMLParser (lastelem, isclosed, doc);
@@ -6380,32 +6380,32 @@ void              StartParser (Document doc, CHAR_T* htmlFileName,
     {
       FileBuffer[0] = EOS;
       HTMLcontext.withinTable = 0;
-      if (documentName[0] == WC_EOS && !TtaCheckDirectory (documentDirectory))
+      if (documentName[0] == EOS && !TtaCheckDirectory (documentDirectory))
 	{
-	  ustrcpy (documentName, documentDirectory);
-	  documentDirectory[0] = WC_EOS;
+	  strcpy (documentName, documentDirectory);
+	  documentDirectory[0] = EOS;
 	  s = TtaGetEnvString ("PWD");
 	  /* set path on current directory */
 	  if (s != NULL)
-	    ustrcpy (documentDirectory, s);
+	    strcpy (documentDirectory, s);
 	  else
-	    documentDirectory[0] = WC_EOS;
+	    documentDirectory[0] = EOS;
 	}
       TtaAppendDocumentPath (documentDirectory);
       /* create a Thot document of type HTML */
       /* the Thot document has been successfully created */
       {
-	length = ustrlen (pathURL);
-	if (ustrcmp (pathURL, htmlFileName) == 0)
+	length = strlen (pathURL);
+	if (strcmp (pathURL, htmlFileName) == 0)
 	  {
 	    docURL = TtaAllocString (length + 1);
-	    ustrcpy (docURL, pathURL);
+	    strcpy (docURL, pathURL);
 	  }
 	else
 	  {
-	    length += ustrlen (htmlFileName) + 20;
+	    length += strlen (htmlFileName) + 20;
 	    docURL = TtaAllocString (length+1);
-	    usprintf (docURL, TEXT("%s temp file: %s"), pathURL, htmlFileName);
+	    usprintf (docURL, "%s temp file: %s", pathURL, htmlFileName);
 	  }
 	/* do not check the Thot abstract tree against the structure */
 	/* schema while building the Thot document. */
@@ -6420,12 +6420,12 @@ void              StartParser (Document doc, CHAR_T* htmlFileName,
 	  {
 	    /* @@@ we know this is true, but we should try to protect */
 	    isHTML = 1;
-	    DocumentSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+	    DocumentSSchema = TtaGetSSchema ("HTML", doc);
 	    attrType.AttrSSchema = DocumentSSchema;
 	  }
 	else
 #endif /* ANNOTATIONS */
-	  isHTML = (ustrcmp (TtaGetSSchemaName (DocumentSSchema), TEXT("HTML")) == 0);
+	  isHTML = (strcmp (TtaGetSSchemaName (DocumentSSchema), "HTML") == 0);
 	if (plainText)
 	  {
 	    rootElement = TtaGetMainRoot (doc);
@@ -6458,11 +6458,11 @@ void              StartParser (Document doc, CHAR_T* htmlFileName,
 	      {
 		/* change the document type */
 		TtaFreeView (doc, 1);
-		doc = TtaNewDocument (TEXT("HTML"), documentName);
+		doc = TtaNewDocument ("HTML", documentName);
 		if (TtaGetScreenDepth () > 1)
-		  TtaSetPSchema (doc, TEXT("HTMLP"));
+		  TtaSetPSchema (doc, "HTMLP");
 		else
-		  TtaSetPSchema (doc, TEXT("HTMLPBW"));
+		  TtaSetPSchema (doc, "HTMLPBW");
 		DocumentSSchema = TtaGetDocumentSSchema (doc);
 		isHTML = TRUE;
 	      }
@@ -6536,13 +6536,13 @@ void              StartParser (Document doc, CHAR_T* htmlFileName,
      {
      if (XMLNotWellFormed)
        {
-	 InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_NOT_WELL_FORMED));
+	 InitInfo ("", TtaGetMessage (AMAYA, AM_XML_NOT_WELL_FORMED));
 	 ChangeToBrowserMode (doc);
 	 XMLErrorsFound = TRUE;
 	 XMLNotWellFormed = FALSE;
        }
      else if (XMLErrorsFound)
-	 InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_ERROR));
+	 InitInfo ("", TtaGetMessage (AMAYA, AM_XML_ERROR));
      }
    HTMLcontext.doc = 0;
 }

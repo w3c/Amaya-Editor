@@ -262,7 +262,7 @@ void                SetAreaCoords (Document document, Element element, int attrN
 	      }    
 	  }
 	if (shape == HTML_ATTR_shape_VAL_rectangle)
-	   usprintf (text, TEXT("%d,%d,%d,%d"), x1, y1, x1 + x2, y1 + y2);
+	   usprintf (text, "%d,%d,%d,%d", x1, y1, x1 + x2, y1 + y2);
 	else
 	  {
 	     /* to make a circle, height and width have to be equal */
@@ -287,7 +287,7 @@ void                SetAreaCoords (Document document, Element element, int attrN
 		 h = y2 / 2;
 	       else
 		 h = x2 / 2;
-	     usprintf (text, TEXT("%d,%d,%d"), x1 + h, y1 + h, h);
+	     usprintf (text, "%d,%d,%d", x1 + h, y1 + h, h);
 	  }
      }
    else if (shape == HTML_ATTR_shape_VAL_polygon)
@@ -301,10 +301,10 @@ void                SetAreaCoords (Document document, Element element, int attrN
 	while (i <= length)
 	  {
 	     TtaGivePolylinePoint (child, i, UnPixel, &x1, &y1);
-	     usprintf (buffer, TEXT("%d,%d"), x1, y1);
+	     usprintf (buffer, "%d,%d", x1, y1);
 	     ustrcat (text, buffer);
 	     if (i < length)
-	       ustrcat (text, TEXT(","));
+	       ustrcat (text, ",");
 	     i++;
 	  }
 	TtaFreeMemory (buffer);
@@ -470,7 +470,7 @@ void                DisplayImage (Document doc, Element el, STRING imageName)
   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
     {
       for (i = ustrlen (imageName); i > 0 && imageName[i] != '.'; i--);
-      if (imageName[i] == '.' && !ustrcmp (&imageName[i+1], TEXT("svg")))
+      if (imageName[i] == '.' && !ustrcmp (&imageName[i+1], "svg"))
 	{
 	  /* it's an SVG image */
 	  /* parse the SVG file and include the parse tree at the
@@ -501,7 +501,7 @@ void                DisplayImage (Document doc, Element el, STRING imageName)
       DocStatusUpdate (doc, modified);
     }
   /* the image is loaded */
-  TtaSetStatus (doc, 1, TEXT(" "), NULL);
+  TtaSetStatus (doc, 1, " ", NULL);
 }
 
 /*----------------------------------------------------------------------
@@ -560,10 +560,10 @@ static void         HandleImageLoaded (int doc, int status, STRING urlName,
 	    if (ptr) 
 	      {
 		ptr++;
-		ustrcpy (ptr, TEXT("html"));
+		ustrcpy (ptr, "html");
 	      }
 	    else
-	      ustrcat (tempfile, TEXT(".html"));
+	      ustrcat (tempfile, ".html");
 	    TtaFreeMemory (desc->localName);
 	    desc->localName = TtaWCSdup (tempfile);
 
@@ -575,7 +575,7 @@ static void         HandleImageLoaded (int doc, int status, STRING urlName,
 	    rename (outputfile, tempfile);
 #else /* _WINDOWS */
 	    if (urename (outputfile, tempfile) != 0)
-	      usprintf (tempfile, TEXT("%s"), outputfile); 
+	      usprintf (tempfile, "%s", outputfile); 
 #endif /* _WINDOWS */
 	  }
 
@@ -671,7 +671,7 @@ STRING              GetActiveImageInfo (Document document, Element element)
 	 Y = 0;
        /* create the search string to be appended to the URL */
        ptr = TtaAllocString (27);
-       usprintf (ptr, TEXT("?%d,%d"), X, Y);
+       usprintf (ptr, "?%d,%d", X, Y);
      }
    return ptr;
 }
@@ -709,7 +709,7 @@ void                FetchImage (Document doc, Element el, STRING URL, int flags,
 	  /* prepare the attribute to be searched */
 	  elType = TtaGetElementType (el);
 	  attrType.AttrSSchema = elType.ElSSchema;
-	  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
+	  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
 	    /* it's not a SVG element, it's then a HTML img element */
 	    {
 	    attrType.AttrTypeNum = HTML_ATTR_SRC;
@@ -794,7 +794,7 @@ void                FetchImage (Document doc, Element el, STRING URL, int flags,
 		/* it is a local image */
 		if (callback)
 		  {
-		    if (!ustrncmp(pathname, TEXT("file:/"), 6))
+		    if (!ustrncmp(pathname, "file:/", 6))
 		      callback(doc, el, &pathname[6], extra);
 		    else
 		      callback(doc, el, &pathname[0], extra);
@@ -873,7 +873,7 @@ ThotBool            FetchAndDisplayImages (Document doc, int flags)
    /* We are currently fetching images for this document */
    /* during this time LoadImage has not to stop transfer */
    /* prepare the attribute to be searched */
-   attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
    if (attrType.AttrSSchema)
      /* there are some HTML elements in this documents. Get all HTML img
 	elements */
@@ -906,7 +906,7 @@ ThotBool            FetchAndDisplayImages (Document doc, int flags)
 
    /* Now, load all SVG images */
    /* prepare the attribute to be searched */
-   attrType.AttrSSchema = TtaGetSSchema (TEXT("GraphML"), doc);
+   attrType.AttrSSchema = TtaGetSSchema ("GraphML", doc);
    if (attrType.AttrSSchema)
      {
      attrType.AttrTypeNum = GraphML_ATTR_xlink_href;

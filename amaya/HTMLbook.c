@@ -192,7 +192,7 @@ void             SetInternalLinks (Document document)
 	  while (sibling != NULL);
 	  el = TtaGetParent (el);
 	}
-      usprintf (number, TEXT("%d"), position*100/volume);
+      usprintf (number, "%d", position*100/volume);
       TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_UPDATED_LINK), number);
       TtaHandlePendingEvents ();
       link = TtaSearchTypedElement (elType, SearchForward, link);
@@ -278,7 +278,7 @@ void             SetInternalLinks (Document document)
 				{
 				  /* continue the search */
 				  i++;
-				  usprintf (&value[length], TEXT("%d"), i);
+				  usprintf (&value[length], "%d", i);
 				  target = SearchNAMEattribute (document,
 							&value[1], NULL);
 				}
@@ -372,7 +372,7 @@ static void         CheckPrintingDocument (Document document)
 	PSfile[--lg] = WC_EOS;
       ustrcpy (docName, TtaGetDocumentName (document));
       ExtractSuffix (docName, suffix);
-      usprintf (&PSfile[lg], TEXT("%c%s.ps"), WC_DIR_SEP, docName);
+      usprintf (&PSfile[lg], "%c%s.ps", WC_DIR_SEP, docName);
       TtaSetPsFile (PSfile);
     }
 }
@@ -396,33 +396,33 @@ static void         PrintDocument (Document doc, View view)
 
   /* initialize printing information */
   CheckPrintingDocument (doc);
-  ustrcpy (viewsToPrint, TEXT("Formatted_view "));
+  ustrcpy (viewsToPrint, "Formatted_view ");
   if (DocumentTypes[doc] == docHTML && WithToC)
-    ustrcat (viewsToPrint, TEXT("Table_of_contents "));
+    ustrcat (viewsToPrint, "Table_of_contents ");
   
   if (textFile)
     {
       if (PageSize == PP_A4)
 	{
 	  if (Orientation == PP_Landscape)
-	    TtaSetPrintSchema (TEXT("TextFilePL"));
+	    TtaSetPrintSchema ("TextFilePL");
 	  else
-	    TtaSetPrintSchema (TEXT("TextFilePP"));
+	    TtaSetPrintSchema ("TextFilePP");
 	}
       else
 	{
 	  if (Orientation == PP_Landscape)
-	    TtaSetPrintSchema (TEXT("TextFileUSL"));
+	    TtaSetPrintSchema ("TextFileUSL");
 	  else
-	    TtaSetPrintSchema (TEXT("TextFilePPUS"));
+	    TtaSetPrintSchema ("TextFilePPUS");
 	}
     }
   else if (DocumentTypes[doc] == docSVG)
-    TtaSetPrintSchema (TEXT("GraphMLP"));
+    TtaSetPrintSchema ("GraphMLP");
   else if (DocumentTypes[doc] == docMath)
-    TtaSetPrintSchema (TEXT("MathMLP"));
+    TtaSetPrintSchema ("MathMLP");
   else if (DocumentTypes[doc] == docAnnot)
-    TtaSetPrintSchema (TEXT("AnnotP"));
+    TtaSetPrintSchema ("AnnotP");
   else if (DocumentTypes[doc] == docHTML && NumberLinks)
     /* display numbered links */
     {
@@ -433,32 +433,32 @@ static void         PrintDocument (Document doc, View view)
       if (PageSize == PP_A4)
 	{
 	  if (Orientation == PP_Landscape)
-	    TtaSetPrintSchema (TEXT("HTMLPLL"));
+	    TtaSetPrintSchema ("HTMLPLL");
 	  else
-	    TtaSetPrintSchema (TEXT("HTMLPLP"));
+	    TtaSetPrintSchema ("HTMLPLP");
 	}
       else
 	{
 	  if (Orientation == PP_Landscape)
-	    TtaSetPrintSchema (TEXT("HTMLUSLL"));
+	    TtaSetPrintSchema ("HTMLUSLL");
 	  else
-	    TtaSetPrintSchema (TEXT("HTMLPLPUS"));
+	    TtaSetPrintSchema ("HTMLPLPUS");
 	}
-      ustrcat (viewsToPrint, TEXT("Links_view "));
+      ustrcat (viewsToPrint, "Links_view ");
     }
   else if (PageSize == PP_A4)
     {
       if (Orientation == PP_Landscape)
-	TtaSetPrintSchema (TEXT("HTMLPL"));
+	TtaSetPrintSchema ("HTMLPL");
       else
-	TtaSetPrintSchema (TEXT("HTMLPP"));
+	TtaSetPrintSchema ("HTMLPP");
     }
   else
     {
       if (Orientation == PP_Landscape)
-	TtaSetPrintSchema (TEXT("HTMLUSL"));
+	TtaSetPrintSchema ("HTMLUSL");
       else
-	TtaSetPrintSchema (TEXT("HTMLPPUS"));
+	TtaSetPrintSchema ("HTMLPPUS");
     }    
   
   status = TtaIsDocumentModified (doc);
@@ -653,7 +653,7 @@ void                InitPrint (void)
    /* read default printer variable */
    ptr = TtaGetEnvString ("THOTPRINT");
    if (ptr == NULL)
-     ustrcpy (PPrinter, TEXT(""));
+     ustrcpy (PPrinter, "");
    else
      ustrcpy (PPrinter, ptr);
    TtaSetPrintCommand (PPrinter);
@@ -666,7 +666,7 @@ void                InitPrint (void)
    IgnoreCSS = FALSE;
    PrintURL = TRUE;
    PageSize = TtaGetPrintParameter (PP_PaperSize);	  
-   TtaSetPrintSchema (TEXT(""));
+   TtaSetPrintSchema ("");
    /* no manual feed */
    ManualFeed = PP_OFF;
    TtaSetPrintParameter (PP_ManualFeed, ManualFeed);
@@ -814,7 +814,7 @@ static void         UpdateURLsInSubtree (NotifyElement *event, Element el)
   SSchema             HTMLschema;
 
   nextEl = TtaGetFirstChild (el);
-  HTMLschema = TtaGetSSchema (TEXT("HTML"), event->document);
+  HTMLschema = TtaGetSSchema ("HTML", event->document);
   elType.ElSSchema = HTMLschema;
   while (nextEl != NULL)
     {
@@ -1080,7 +1080,7 @@ static ThotBool  GetIncludedDocuments (Element el, Element link,
 
   /* look for anchors with the attribute rel within the element  el */
   attr = NULL;
-  attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), document);
+  attrType.AttrSSchema = TtaGetSSchema ("HTML", document);
   elType.ElSSchema = attrType.AttrSSchema;
   elType.ElTypeNum = HTML_EL_Anchor;
 
@@ -1099,8 +1099,8 @@ static ThotBool  GetIncludedDocuments (Element el, Element link,
 	  text = TtaAllocString (length + 1);
 	  TtaGiveTextAttributeValue (attr, text, &length);
 	  /* Valid rel values are rel="chapter" or rel="subdocument" */
-	  if (ustrcasecmp (text, TEXT("chapter")) &&
-	      ustrcasecmp (text, TEXT("subdocument")))
+	  if (ustrcasecmp (text, "chapter") &&
+	      ustrcasecmp (text, "subdocument"))
 	    attr = NULL;
 	  TtaFreeMemory (text);
 	}
@@ -1132,7 +1132,7 @@ static ThotBool  GetIncludedDocuments (Element el, Element link,
 	    /* this link designates an external document */
 	    {
 	      /* create a new document and loads the target document */
-	      IncludedDocument = TtaNewDocument (TEXT("HTML"), TEXT("tmp"));
+	      IncludedDocument = TtaNewDocument ("HTML", "tmp");
 	      if (IncludedDocument != 0)
 		{
 		  TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_FETCHING), url);

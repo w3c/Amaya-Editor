@@ -137,8 +137,8 @@ USTRING             element;
    CHAR_T                tmp2[2];
 
 
-   usprintf (tmp, TEXT("%s"), "%");
-   usprintf (tmp2, TEXT("%s"), "a");
+   usprintf (tmp, "%s", "%");
+   usprintf (tmp2, "%s", "a");
 
    if (buffer == (STRING) NULL)
      {
@@ -247,10 +247,10 @@ STRING              name, value,
 #endif
 {
    AddElement (name);
-   AddToBuffer (TEXT("="));
+   AddToBuffer ("=");
    if (value)
       AddElement (value);
-   AddToBuffer (TEXT("&"));
+   AddToBuffer ("&");
 }
 
 /*----------------------------------------------------------------------
@@ -274,7 +274,7 @@ Document	    doc;
   Language            lang;
 
   /* check if element is selected */
-  attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
   attrType.AttrTypeNum = HTML_ATTR_Selected;
   attr = TtaGetAttribute (option, attrType);
   if (attr && TtaGetAttributeValue (attr) == HTML_ATTR_Selected_VAL_Yes_)
@@ -376,7 +376,7 @@ Document	   doc;
    Attribute           attr, def;
    AttributeType       attrType;
 
-   attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
    attrType.AttrTypeNum = HTML_ATTR_DefaultSelected;
    def = TtaGetAttribute (option, attrType);
    attrType.AttrTypeNum = HTML_ATTR_Selected;
@@ -427,7 +427,7 @@ Document	   doc;
    ThotBool            multipleSelects, defaultSelected;
 
   /* reset according to the default attribute */
-  attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
   attrType.AttrTypeNum = HTML_ATTR_Multiple;
   attr = TtaGetAttribute (menu, attrType);
   if (attr && TtaGetAttributeValue (attr) == HTML_ATTR_Multiple_VAL_Yes_)
@@ -580,7 +580,7 @@ ThotBool            withinForm;
 			    }
 			  else
 			    /* give a default checkbox value (On) */
-			    AddNameValue (name, TEXT("on"));
+			    AddNameValue (name, "on");
 			}
 		    }
 		  else if (mode == HTML_EL_Reset_Input)
@@ -663,7 +663,7 @@ ThotBool            withinForm;
 		      length = MAX_LENGTH - 1;
 		      TtaGiveTextAttributeValue (attr, name, &length);
 		      AddElement (name);
-		      AddToBuffer (TEXT("="));
+		      AddToBuffer ("=");
 		      while (elForm)
 			{
 			  length = TtaGetTextLength (elForm) + 1;
@@ -673,7 +673,7 @@ ThotBool            withinForm;
 			  TtaFreeMemory (text);
 			  elForm = TtaSearchTypedElementInTree (elType, SearchForward, el, elForm);
 			}
-		      AddToBuffer (TEXT("&"));
+		      AddToBuffer ("&");
 		    }
 		  else if (mode == HTML_EL_Reset_Input)
 		    {
@@ -775,7 +775,7 @@ STRING              action;
   else
     {
       buffer_size = 0;
-      buffer = TEXT("");
+      buffer = "";
     }
   if (buffer_size != 0  && (buffer[buffer_size - 1] == '&'))
     {
@@ -898,7 +898,7 @@ Element             element;
 			length = TtaGetTextAttributeLength (attr);
 			name = TtaAllocString (length + 3);
 			TtaGiveTextAttributeValue (attr, name, &length);
-			ustrcat (name, TEXT(". "));
+			ustrcat (name, ". ");
 			length ++;
 			/* get the x and y coordinates */
 			info = GetActiveImageInfo (doc, element);
@@ -1024,7 +1024,7 @@ Element             element;
 	   DoSubmit (doc, method, action);
 	 }
        else
-	 InitConfirm3L (doc, 1, TEXT("Impossible to submit the form: missing action"), NULL, NULL, NO);
+	 InitConfirm3L (doc, 1, "Impossible to submit the form: missing action", NULL, NULL, NO);
      }
    else
      ParseForm (doc, ancestor, elForm, button_type, withinForm);   
@@ -1311,7 +1311,7 @@ Element             el;
 #ifdef _WINDOWS  
    opDoc = doc;
 #endif /* _WINDOWS */
-   htmlSch = TtaGetSSchema (TEXT("HTML"), doc);
+   htmlSch = TtaGetSSchema ("HTML", doc);
    /* search the enclosing option element */
    do
      {
@@ -1397,11 +1397,11 @@ Element             el;
 		     /* add an item */
 		     {
 		       if (elType.ElTypeNum == HTML_EL_OptGroup)
-			 usprintf (&buffmenu[lgmenu], TEXT("M%s"), text);
+			 usprintf (&buffmenu[lgmenu], "M%s", text);
 		       else if (multipleOptions)
-			 usprintf (&buffmenu[lgmenu], TEXT("T%s"), text);
+			 usprintf (&buffmenu[lgmenu], "T%s", text);
 		       else
-			 usprintf (&buffmenu[lgmenu], TEXT("B%s"), text);
+			 usprintf (&buffmenu[lgmenu], "B%s", text);
 		       nbitems++;
 		     }
 		   lgmenu += length;
@@ -1467,9 +1467,9 @@ Element             el;
 			 length++;
 			 if (lgmenu + length < MAX_LENGTH) { /* append that item to the buffer */
 			   if (multipleOptions)
-			     usprintf (&buffmenu[lgmenu], TEXT("T%s"), text);
+			     usprintf (&buffmenu[lgmenu], "T%s", text);
 			   else
-			     usprintf (&buffmenu[lgmenu], TEXT("B%s"), text);
+			     usprintf (&buffmenu[lgmenu], "B%s", text);
 			   nbsubitems++;
 			 } 
 			 lgmenu += length;

@@ -83,19 +83,8 @@ extern HWND         WIN_Main_Wd;
 /*----------------------------------------------------------------------
   SetImageRule updates or creates the picture descriptor of an element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         SetImageRule (PtrElement pEl, int x, int y, int w, int h, int typeimage, PictureScaling presimage)
-#else  /* __STDC__ */
-static void         SetImageRule (pEl, x, y, w, h, typeimage, presimage)
-PtrElement          pEl;
-int                 x;
-int                 y;
-int                 w;
-int                 h;
-PictureScaling      presimage;
-int                 typeimage;
-#endif /* __STDC__ */
-
+static void SetImageRule (PtrElement pEl, int x, int y, int w, int h,
+			  int typeimage, PictureScaling presimage)
 {
   PictInfo           *image;
 
@@ -131,13 +120,7 @@ int                 typeimage;
 /*----------------------------------------------------------------------
    	PivotError							
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PivotError (BinFile file, STRING code)
-#else  /* __STDC__ */
-static void         PivotError (file, code)
-BinFile             file;
-STRING              code;
-#endif /* __STDC__ */
 {
   int                 i, j;
   char                c;
@@ -184,12 +167,7 @@ STRING              code;
    Retourne un pointeur sur son contexte, ou NULL s'il	
    n'est pas charge'.                                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrDocument         GetPtrDocument (DocumentIdentifier docIdent)
-#else  /* __STDC__ */
-PtrDocument         GetPtrDocument (docIdent)
-DocumentIdentifier  docIdent;
-#endif /* __STDC__ */
 {
    int                 doc;
    PtrDocument         pDoc;
@@ -205,12 +183,7 @@ DocumentIdentifier  docIdent;
 /*----------------------------------------------------------------------
    	FreeUnusedReferredElemDesc					
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         FreeUnusedReferredElemDesc (PtrDocument pDoc)
-#else  /* __STDC__ */
-static void         FreeUnusedReferredElemDesc (pDoc)
-PtrDocument         pDoc;
-#endif /* __STDC__ */
 {
    PtrReferredDescr    pRefD, pPrevRefD;
 
@@ -248,18 +221,9 @@ PtrDocument         pDoc;
    squelette si skeleton est TRUE. Ne pas charger de       
    schema de structure et utiliser pSS si pSS <> NULL.     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            OpenDocument (CHAR_T* docName, PtrDocument pDoc, ThotBool loadIncludedDoc, ThotBool skeleton, PtrSSchema pSS, ThotBool withAppEvent, ThotBool removeExclusions)
-#else  /* __STDC__ */
-ThotBool            OpenDocument (docName, pDoc, loadIncludedDoc, skeleton, pSS, withAppEvent, removeExclusions)
-CHAR_T*             docName;
-PtrDocument         pDoc;
-ThotBool            loadIncludedDoc;
-ThotBool            skeleton;
-PtrSSchema          pSS;
-ThotBool            withAppEvent;
-ThotBool		    removeExclusions
-#endif /* __STDC__ */
+ThotBool OpenDocument (char *docName, PtrDocument pDoc, ThotBool loadIncludedDoc,
+		       ThotBool skeleton, PtrSSchema pSS, ThotBool withAppEvent,
+		       ThotBool removeExclusions)
 {  
    ThotBool            ret;
    int                 i;
@@ -300,7 +264,7 @@ ThotBool		    removeExclusions
 		ustrncpy (directoryName, DocumentPath, MAX_PATH);
 	     else
 		ustrncpy (directoryName, pDoc->DocDirectory, MAX_PATH);
-	     MakeCompleteName (pDoc->DocDName, TEXT("PIV"), directoryName,
+	     MakeCompleteName (pDoc->DocDName, "PIV", directoryName,
 			       text, &i);
 	     /* ouvre le fichier 'PIV' */
 	     pivotFile = TtaReadOpen (text);
@@ -336,12 +300,7 @@ ThotBool		    removeExclusions
    structure et de presentation utilises par le document   
    ne sont pas liberes...                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DeleteAllTrees (PtrDocument pDoc)
-#else  /* __STDC__ */
-void                DeleteAllTrees (pDoc)
-PtrDocument         pDoc;
-#endif /* __STDC__ */
 {
    int                  i, view;
 
@@ -375,17 +334,10 @@ PtrDocument         pDoc;
    correct et dans oldTypeImage et oldPres le type et la   
    presentation trouve ou 0.                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static STRING       NormalizeFileName (STRING fileName, int *oldTypeImage, PictureScaling *oldPres, ThotBool *found)
-#else  /* __STDC__ */
-static STRING       NormalizeFileName (fileName, oldTypeImage, oldPres, found)
-STRING              fileName;
-int                *oldTypeImage;
-PictureScaling     *oldPres;
-ThotBool           *found;
-#endif /* __STDC__ */
+static char *NormalizeFileName (char *fileName, int *oldTypeImage,
+				PictureScaling *oldPres, ThotBool *found)
 {
-   STRING              name;
+   char             *name;
 
    name = fileName;
    if (*name < SPACE)
@@ -409,20 +361,14 @@ ThotBool           *found;
    ReadDimensionType lit un type de dimension dans le fichier et	
    	retourne sa valeur.                                             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     ReadDimensionType (BinFile file)
-#else  /* __STDC__ */
-static ThotBool     ReadDimensionType (file)
-BinFile             file;
-
-#endif /* __STDC__ */
 {
    char c;
 
    if (!TtaReadByte (file, &c))
      {
 	c = EOS;
-	PivotError (file, TEXT("Dimension"));
+	PivotError (file, "Dimension");
      }
    if (c == C_PIV_ABSOLUTE)
       return TRUE;
@@ -434,20 +380,14 @@ BinFile             file;
 /*----------------------------------------------------------------------
    ReadUnit lit une unite dans le fichier et retourne sa valeur.	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static TypeUnit     ReadUnit (BinFile file)
-#else  /* __STDC__ */
-static TypeUnit     ReadUnit (file)
-BinFile             file;
-
-#endif /* __STDC__ */
 {
    char c;
 
    if (!TtaReadByte (file, &c))
      {
 	c = EOS;
-	PivotError (file, TEXT("Unit"));
+	PivotError (file, "Unit");
      }
    switch (c)
 	 {
@@ -472,19 +412,14 @@ BinFile             file;
 /*----------------------------------------------------------------------
    ReadSign lit un signe dans le fichier et retourne sa valeur.    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     ReadSign (BinFile file)
-#else  /* __STDC__ */
-static ThotBool     ReadSign (file)
-BinFile             file;
-#endif /* __STDC__ */
 {
    char c;
 
    if (!TtaReadByte (file, &c))
      {
 	c = EOS;
-	PivotError (file, TEXT("Sign"));
+	PivotError (file, "Sign");
      }
    if (c == C_PIV_PLUS)
       return TRUE;
@@ -495,19 +430,14 @@ BinFile             file;
 /*----------------------------------------------------------------------
    ReadBoolean lit un booleen dans le fichier et retourne sa valeur
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     ReadBoolean (BinFile file)
-#else  /* __STDC__ */
-static ThotBool     ReadBoolean (file)
-BinFile             file;
-#endif /* __STDC__ */
 {
    char c;
 
    if (!TtaReadByte (file, &c))
      {
 	c = EOS;
-	PivotError (file, TEXT("Boolean"));
+	PivotError (file, "Boolean");
      }
    if (c == C_PIV_TRUE)
       return TRUE;
@@ -518,12 +448,7 @@ BinFile             file;
 /*----------------------------------------------------------------------
    ReadAlign lit un BAlignment dans le fichier et retourne sa valeur. 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static BAlignment   ReadAlign (BinFile file)
-#else  /* __STDC__ */
-static BAlignment   ReadAlign (file)
-BinFile             file;
-#endif /* __STDC__ */
 {
    char       c;
    BAlignment align;
@@ -531,7 +456,7 @@ BinFile             file;
    if (!TtaReadByte (file, &c))
      {
 	c = EOS;
-	PivotError (file, TEXT("Align"));
+	PivotError (file, "Align");
      }
    switch (c)
 	 {
@@ -551,7 +476,7 @@ BinFile             file;
 	       align = AlignJustify;
 	       break;
 	    default:
-	       PivotError (file, TEXT("PivotError (Align 1)"));
+	       PivotError (file, "PivotError (Align 1)");
 	       align = AlignLeft;
 	       break;
 	 }
@@ -562,12 +487,7 @@ BinFile             file;
    ReadPageType	lit un Type de page dans le fichier et retourne	
    sa valeur.                                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PageType     ReadPageType (BinFile file)
-#else  /* __STDC__ */
-static PageType     ReadPageType (file)
-BinFile             file;
-#endif /* __STDC__ */
 {
    char     c;
    PageType typ;
@@ -575,7 +495,7 @@ BinFile             file;
    if (!TtaReadByte (file, &c))
      {
        c = EOS;
-       PivotError (file, TEXT("PivotError (PageType)"));
+       PivotError (file, "PivotError (PageType)");
      }
    switch (c)
      {
@@ -614,7 +534,7 @@ BinFile             file;
        typ = PgComputed;
        break;
      default:
-       PivotError (file, TEXT("PivotError (PageType 1)"));
+       PivotError (file, "PivotError (PageType 1)");
        typ = PgComputed;
        break;
      }
@@ -624,12 +544,7 @@ BinFile             file;
 /*----------------------------------------------------------------------
    ReadPicturePresentation lit la presentation d'un PictInfo	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PictureScaling ReadPicturePresentation (BinFile pivFile)
-#else  /* __STDC__ */
-static PictureScaling ReadPicturePresentation (pivFile)
-BinFile             pivFile;
-#endif /* __STDC__ */
 {
    char           c;
    PictureScaling scaling;
@@ -637,7 +552,7 @@ BinFile             pivFile;
    if (!TtaReadByte (pivFile, &c))
      {
 	c = EOS;
-	PivotError (pivFile, TEXT("PicturePresentation"));
+	PivotError (pivFile, "PicturePresentation)");
      }
    switch (c)
      {
@@ -669,13 +584,7 @@ BinFile             pivFile;
    LabelStringToInt convertit le label strn en un entier           
    retourne 0 si label mal construit.                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                LabelStringToInt (LabelString string, int *number)
-#else  /* __STDC__ */
-void                LabelStringToInt (string, number)
-LabelString         string;
-int                *number;
-#endif /* __STDC__ */
 {
    int                 i;
    int                 val;
@@ -684,7 +593,7 @@ int                *number;
 
    ok = FALSE;
    *number = 0;
-   if (string[0] == TEXT('L'))
+   if (string[0] == 'L')
      {
 	val = 0;
 	i = 1;
@@ -692,9 +601,9 @@ int                *number;
 	  {
 	     c = string[i];
 	     i++;
-	     if (c >= TEXT('0') && c <= TEXT('9'))
+	     if (c >= '0' && c <= '9')
 	       {
-		  val = (val * 10) + (c - TEXT('0'));
+		  val = (val * 10) + (c - '0');
 		  ok = TRUE;
 	       }
 	     else if (c != EOS)
@@ -715,16 +624,9 @@ int                *number;
    reference externe, le nom (docIdent) du document contenant	
    l'element reference'. 					
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ReadReference (ReferenceType * refType, LabelString label, ThotBool * refExt, DocumentIdentifier * docIdent, BinFile file)
-#else  /* __STDC__ */
-static void         ReadReference (refType, label, refExt, docIdent, file)
-ReferenceType      *refType;
-LabelString         label;
-ThotBool           *refExt;
-DocumentIdentifier *docIdent;
-BinFile             file;
-#endif /* __STDC__ */
+static void ReadReference (ReferenceType *refType, LabelString label,
+			   ThotBool *refExt, DocumentIdentifier *docIdent,
+			   BinFile file)
 {
    int  j;
    char c;
@@ -734,7 +636,7 @@ BinFile             file;
    if (!TtaReadByte (file, &c))
      {
 	c = EOS;
-	PivotError (file, TEXT("PivotError: Reference"));
+	PivotError (file, "PivotError: Reference");
      }
    /* cet octet represente-t-il un type de reference correct ? */
    if (c != C_PIV_REF_FOLLOW && c != C_PIV_REF_INCLUSION &&
@@ -744,7 +646,7 @@ BinFile             file;
      {
 	if (msgOldFormat)
 	  {
-	     PivotError (file, TEXT("PivotError: Reference 1"));
+	     PivotError (file, "PivotError: Reference 1");
 	     TtaDisplaySimpleMessage (INFO, LIB,
 				      TMSG_OLD_PIV_FORMAT_SAVE_DOC_WITH_THOT);
 	     msgOldFormat = FALSE;	/* c'est fait */
@@ -773,7 +675,7 @@ BinFile             file;
 	     if (!TtaReadByte (file, &c))
 	       {
 		  c = EOS;
-		  PivotError (file, TEXT("PivotError: Reference 3"));
+		  PivotError (file, "PivotError: Reference 3");
 	       }
 	     /* lit la valeur du label */
 	     ReadLabel (c, label, file);
@@ -792,7 +694,7 @@ BinFile             file;
 	     if (!TtaReadByte (file, &c))
 	       {
 		  c = EOS;
-		  PivotError (file, TEXT("PivotError: Reference 4"));
+		  PivotError (file, "PivotError: Reference 4");
 	       }
 	     j += (int) c;
 	     /* convertit le label numerique en chaine de caracteres */
@@ -822,7 +724,7 @@ BinFile             file;
 	if (!TtaReadByte (file, &c))
 	  {
 	     c = EOS;
-	     PivotError (file, TEXT("PivotError: Reference 5"));
+	     PivotError (file, "PivotError: Reference 5");
 	  }
 	/* lit la valeur du label */
 	ReadLabel (c, label, file);
@@ -845,14 +747,8 @@ BinFile             file;
    La fonction rend un pointeur sur le descripteur trouve' 
    ou cree'.                                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrReferredDescr GetElRefer (LabelString label, DocumentIdentifier docIdent, PtrDocument pDoc)
-#else  /* __STDC__ */
-static PtrReferredDescr GetElRefer (label, docIdent, pDoc)
-LabelString         label;
-DocumentIdentifier  docIdent;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
+static PtrReferredDescr GetElRefer (LabelString label,
+				    DocumentIdentifier docIdent, PtrDocument pDoc)
 {
    PtrReferredDescr    pRefD;
    int                 i;
@@ -910,17 +806,9 @@ PtrDocument         pDoc;
    document docIdent. Si docIdent est un identificateur	
    vide, il s'agit du document pDoc.			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CreateReference (PtrReference RefPtr, ReferenceType TRef, LabelString lab, ThotBool RExt, DocumentIdentifier I, PtrDocument pDoc)
-#else  /* __STDC__ */
-static void         CreateReference (RefPtr, TRef, lab, RExt, I, pDoc)
-PtrReference        RefPtr;
-ReferenceType       TRef;
-LabelString         lab;
-ThotBool            RExt;
-DocumentIdentifier  I;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
+static void CreateReference (PtrReference RefPtr, ReferenceType TRef,
+			     LabelString lab, ThotBool RExt,
+			     DocumentIdentifier I, PtrDocument pDoc)
 {
    PtrReferredDescr    r;
    PtrReference        pRf;
@@ -962,15 +850,7 @@ PtrDocument         pDoc;
    pSS contient un pointeur sur le schema de structure 
    de cette nature.                                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          ReadType (PtrDocument pDoc, PtrSSchema * pSS, BinFile pivFile, char* tag)
-#else  /* __STDC__ */
-static int          ReadType (pDoc, pSS, pivFile, tag)
-PtrDocument         pDoc;
-PtrSSchema         *pSS;
-BinFile             pivFile;
-char*               tag;
-#endif /* __STDC__ */
+static int ReadType (PtrDocument pDoc, PtrSSchema *pSS, BinFile pivFile, char *tag)
 {
    int                 nat, rule;
    ThotBool            Extension;
@@ -981,12 +861,12 @@ char*               tag;
        /* lit le numero de nature */
        TtaReadShort (pivFile, &nat);
        if (nat < 0 || nat >= pDoc->DocNNatures)
-	 PivotError (pivFile, TEXT("PivotError: Nature Num"));
+	 PivotError (pivFile, "PivotError: Nature Num");
        /* lit le tag de type qui suit */
        if (!error)
 	 {
 	 if (!TtaReadByte (pivFile, tag))
-	   PivotError (pivFile, TEXT("PivotError: TypeType"));
+	   PivotError (pivFile, "PivotError: TypeType");
          /* teste si le numero lu est celui de la structure generique du doc.*/
 	 else if (nat == 0)
 	   *pSS = pDoc->DocSSchema;
@@ -1008,7 +888,7 @@ char*               tag;
 				      pDoc->DocNaturePresName[nat], *pSS);
 		 /* recupere le numero de la regle de nature */
 		 if (rule == 0)
-		   PivotError (pivFile, TEXT("PivotError: Nature"));
+		   PivotError (pivFile, "PivotError: Nature");
 		 else
 		   *pSS = (*pSS)->SsRule[rule - 1].SrSSchemaNat;
 	       }
@@ -1029,7 +909,7 @@ char*               tag;
      else
        {
 	 rule = 0;
-	 PivotError (pivFile, TEXT("PivotError: Type"));
+	 PivotError (pivFile, "PivotError: Type");
        }
      }
    return rule;
@@ -1043,16 +923,8 @@ char*               tag;
    de l'element courant et qu'on ne cherche plus a` creer  
    de contenu.                                             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ExportedContent (ThotBool * createAll, int *elType, PtrSSchema * pSS, PtrSSchema * pContSS, int *contentType)
-#else  /* __STDC__ */
-static void         ExportedContent (createAll, elType, pSS, pContSS, contentType)
-ThotBool           *createAll;
-int                *elType;
-PtrSSchema         *pSS;
-PtrSSchema         *pContSS;
-int                *contentType;
-#endif /* __STDC__ */
+static void ExportedContent (ThotBool *createAll, int *elType, PtrSSchema *pSS,
+			     PtrSSchema *pContSS, int *contentType)
 {
    int                 i;
    ThotBool            ok;
@@ -1132,14 +1004,7 @@ int                *contentType;
    schema de structure pSS et, si certains attributs requis        
    manquent, affiche un message d'erreur.                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CheckMandatAttrSRule (PtrElement pEl, SRule * pSRule, PtrSSchema pSS)
-#else  /* __STDC__ */
-static void         CheckMandatAttrSRule (pEl, pSRule, pSS)
-PtrElement          pEl;
-SRule              *pSRule;
-PtrSSchema          pSS;
-#endif /* __STDC__ */
+static void CheckMandatAttrSRule (PtrElement pEl, SRule *pSRule, PtrSSchema pSS)
 {
    PtrAttribute        pAttr;
    int                 i, att;
@@ -1174,13 +1039,7 @@ PtrSSchema          pSS;
    les attributs requis et, si certains attributs requis   
    manquent, affiche un message d'erreur.                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CheckMandatoryAttr (PtrElement pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-static void         CheckMandatoryAttr (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
+static void CheckMandatoryAttr (PtrElement pEl, PtrDocument pDoc)
 {
 
    SRule              *pSRule;
@@ -1230,23 +1089,10 @@ PtrDocument         pDoc;
    dans pReadAttr.                                                 
    ATTENTION: ReadAttributePiv utilise la table des natures du document    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ReadAttributePiv (BinFile pivFile, PtrElement pEl,
-				      PtrDocument pDoc, ThotBool create,
-				      PtrAttribute * pReadAttr,
-				      PtrAttribute * pAttr)
-
-#else  /* __STDC__ */
-void                ReadAttributePiv (pivFile, pEl, pDoc, create, pReadAttr,
-				      pAttr)
-BinFile             pivFile;
-PtrElement          pEl;
-PtrDocument         pDoc;
-ThotBool            create;
-PtrAttribute       *pReadAttr;
-PtrAttribute       *pAttr;
-
-#endif /* __STDC__ */
+void ReadAttributePiv (BinFile pivFile, PtrElement pEl,
+		       PtrDocument pDoc, ThotBool create,
+		       PtrAttribute *pReadAttr,
+		       PtrAttribute *pAttr)
 
 {
    PtrSSchema          pSchAttr;
@@ -1272,11 +1118,11 @@ PtrAttribute       *pAttr;
    /* lit le numero du schema de structure definissant l'attribut */
    TtaReadShort (pivFile, &n);
    if (n < 0 || n >= pDoc->DocNNatures)
-     PivotError (pivFile, TEXT("PivotError: Nature Num 2"));
+     PivotError (pivFile, "PivotError: Nature Num 2");
    else
      pSchAttr = pDoc->DocNatureSSchema[n];
    if (pSchAttr == NULL)
-     PivotError (pivFile, TEXT("PivotError: Nature Num 3"));
+     PivotError (pivFile, "PivotError: Nature Num 3");
    /* lit l'attribut */
    TtaReadShort (pivFile, &attr);
    if (pDoc->DocPivotVersion < 4)
@@ -1307,7 +1153,7 @@ PtrAttribute       *pAttr;
 	   /* on consomme le texte de l'attribut, sans le garder */
 	   do
 	     if (!TtaReadByte (pivFile, &c))
-	       PivotError (pivFile, TEXT("Attribute"));
+	       PivotError (pivFile, "Attribute");
 	   while (!error && c != EOS) ;
 	     else
 	       { 
@@ -1321,7 +1167,7 @@ PtrAttribute       *pAttr;
 					 &pBT->BuContent[pBT->BuLength++],
 					 pDoc->DocCharset))
 		     /* erreur de lecture */
-		     PivotError (pivFile, TEXT("Attribute1"));
+		     PivotError (pivFile, "Attribute1");
 		   else
 		     /* on a lu correctement un caractere */
 		     if (pBT->BuContent[pBT->BuLength - 1] == EOS)
@@ -1343,8 +1189,8 @@ PtrAttribute       *pAttr;
 		 if (attr == 1)
 		   /* language attribute */
 		   if (ustrlen(pPremBuff->BuContent) != 2 &&
-		       pPremBuff->BuContent[1] != TEXT('-') &&
-		       pPremBuff->BuContent[2] != TEXT('-'))
+		       pPremBuff->BuContent[1] != '-' &&
+		       pPremBuff->BuContent[2] != '-')
 		     /* it's not a valid language code. Convert it */
 		     {
 		       iso2wc_strcpy (pPremBuff->BuContent,
@@ -1363,9 +1209,9 @@ PtrAttribute       *pAttr;
 	 /* ExtCorr et ExtMot */
 	 if (pSchAttr->SsExtension)
 	   {
-	   if (ustrcmp (pSchAttr->SsName, TEXT("ExtCorr")) == 0)
+	   if (ustrcmp (pSchAttr->SsName, "ExtCorr") == 0)
 	     create = FALSE;
-	   else if (ustrcmp (pSchAttr->SsName, TEXT("ExtMot")) == 0)
+	   else if (ustrcmp (pSchAttr->SsName, "ExtMot") == 0)
 	     create = FALSE;
 	   }
        if (!create)
@@ -1449,17 +1295,8 @@ PtrAttribute       *pAttr;
    dans pReadAttr.                                                 
    ATTENTION: ReadAttribute utilise la table des natures du document  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ReadAttribute (BinFile pivFile, PtrElement pEl, PtrDocument pDoc, ThotBool create, PtrAttribute * pReadAttr)
-#else  /* __STDC__ */
-static void         ReadAttribute (pivFile, pEl, pDoc, create, pReadAttr)
-BinFile             pivFile;
-PtrElement          pEl;
-PtrDocument         pDoc;
-ThotBool            create;
-PtrAttribute       *pReadAttr;
-#endif /* __STDC__ */
-
+static void ReadAttribute (BinFile pivFile, PtrElement pEl, PtrDocument pDoc,
+			   ThotBool create, PtrAttribute * pReadAttr)
 {
    PtrAttribute        pAttr, pA;
 
@@ -1500,18 +1337,8 @@ PtrAttribute       *pReadAttr;
    pointe' par pEl; un pointeur sur cette regle est retourne'      
    dans pRuleRead.                                                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl, ThotBool create, PtrPRule * pRuleRead, ThotBool link)
-#else  /* __STDC__ */
-void                ReadPRulePiv (pDoc, pivFile, pEl, create, pRuleRead, link)
-PtrDocument         pDoc;
-BinFile             pivFile;
-PtrElement          pEl;
-ThotBool            create;
-PtrPRule           *pRuleRead;
-ThotBool            link;
-
-#endif /* __STDC__ */
+void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
+		   ThotBool create, PtrPRule *pRuleRead, ThotBool link)
 {
   PRuleType           TypeRP;
   BAlignment          align;
@@ -1547,7 +1374,7 @@ ThotBool            link;
   TtaReadShort (pivFile, &box);
   /* lit le type de la regle */
   if (!TtaReadByte (pivFile, &ch))
-    PivotError (pivFile, TEXT("PresRule"));
+    PivotError (pivFile, "PresRule");
   switch (ch)
     {
     case C_PR_ADJUST:
@@ -1688,7 +1515,7 @@ ThotBool            link;
       TypeRP = PtPictInfo;
       break;
     default:
-      PivotError (pivFile, TEXT("PresRule1"));
+      PivotError (pivFile, "PresRule1");
       break;
     }
 
@@ -1795,7 +1622,7 @@ ThotBool            link;
       case PtBorderBottomStyle:
       case PtBorderLeftStyle:
 	if (!TtaReadByte (pivFile, &ch))
-	  PivotError (pivFile, TEXT("PivotError: PresRule 3"));
+	  PivotError (pivFile, "PivotError: PresRule 3");
 	break;
       case PtHyphenate:
 	just = ReadBoolean (pivFile);
@@ -2062,16 +1889,7 @@ ThotBool            link;
    SendEventAttrRead       envoie les evenements TteAttrRead       
    pour les attributs de l'element pEl qui vient d'etre lu 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         SendEventAttrRead (PtrElement pEl, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-void         SendEventAttrRead (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
 {
    PtrAttribute        pAttr, pNextAttr;
    NotifyAttribute     notifyAttr;
@@ -2142,25 +1960,11 @@ PtrDocument         pDoc;
    - createDesc: si cree<desc est faux, on ne cree pas     
    l'element lu ni sa descendance. Prioritaire sur createAll
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrElement          ReadTreePiv (BinFile pivFile, PtrSSchema pSSchema, PtrDocument pDoc, char* tag, int assocNum, ThotBool createAll, int *contentType, PtrSSchema * pContSS, int *typeRead, PtrSSchema * pSSRead, ThotBool createPage, PtrElement pParent, ThotBool createDesc)
-#else  /* __STDC__ */
-PtrElement          ReadTreePiv (pivFile, pSSchema, pDoc, tag, assocNum, createAll, contentType, pContSS, typeRead, pSSRead, createPage, pParent, createDesc)
-BinFile             pivFile;
-PtrSSchema          pSSchema;
-PtrDocument         pDoc;
-char*               tag;
-int                 assocNum;
-ThotBool            createAll;
-int                *contentType;
-PtrSSchema         *pContSS;
-int                *typeRead;
-PtrSSchema         *pSSRead;
-ThotBool            createPage;
-PtrElement          pParent;
-ThotBool            createDesc;
-#endif /* __STDC__ */
-
+PtrElement ReadTreePiv (BinFile pivFile, PtrSSchema pSSchema, PtrDocument pDoc
+			, char *tag, int assocNum, ThotBool createAll,
+			int *contentType, PtrSSchema *pContSS, int *typeRead,
+			PtrSSchema *pSSRead, ThotBool createPage,
+			PtrElement pParent, ThotBool createDesc)
 {
   PtrAttribute        pAttr;
   PtrTextBuffer       pBuf;
@@ -2195,7 +1999,7 @@ static  LabelString         label;
       while (!error && i < 200)
 	{
 	  if (!TtaReadByte (pivFile, &c))
-	    PivotError (pivFile, TEXT("Type 1"));
+	    PivotError (pivFile, "Type 1");
 	  else
 	    {
 	      if (c < SPACE)
@@ -2209,7 +2013,7 @@ static  LabelString         label;
 	    }
 	}
       printf ("\n");
-      PivotError (pivFile, TEXT("I"));
+      PivotError (pivFile, "I");
     }
   else
     {
@@ -2318,7 +2122,7 @@ static  LabelString         label;
 	    }
 
 	  if (!TtaReadByte (pivFile, tag))
-	    PivotError (pivFile, TEXT("PivotError: Type 2"));
+	    PivotError (pivFile, "PivotError: Type 2");
 	}
       inclusion = FALSE;	/* est-ce une reference a un element inclus? */
       if (!error && *tag == C_PIV_INCLUDED)
@@ -2335,7 +2139,7 @@ static  LabelString         label;
 	      pEl->ElIsCopy = TRUE;
 	    }
 	  if (!TtaReadByte (pivFile, tag))
-	    PivotError (pivFile, TEXT("PivotError: Type 3"));
+	    PivotError (pivFile, "PivotError: Type 3");
 	}
       
       /* lit le tag "Element-reference'" si elle est presente */
@@ -2345,7 +2149,7 @@ static  LabelString         label;
 	  {
 	    withReferences = TRUE;
 	    if (!TtaReadByte (pivFile, tag))
-	      PivotError (pivFile, TEXT("PivotError: Type 4"));
+	      PivotError (pivFile, "PivotError: Type 4");
 	  }
 	else
 	  withReferences = FALSE;
@@ -2360,7 +2164,7 @@ static  LabelString         label;
 	    ReadLabel (*tag, label, pivFile);
 	    /* lit le tag qui suit le label */
 	    if (!TtaReadByte (pivFile, tag))
-	      PivotError (pivFile, TEXT("PivotError: Label"));
+	      PivotError (pivFile, "PivotError: Label");
 	  }
       if (!error && label[0] != EOS && create)
 	/* l'element porte un label */
@@ -2388,7 +2192,7 @@ static  LabelString         label;
 		  /* portant ce label, erreur */
 		  {
 		    pEl->ElReferredDescr = NULL;
-		    /*uprintf (TEXT("Label"));*/
+		    /*uprintf ("Label");*/
 		  }
 		else
 		  pEl->ElReferredDescr->ReReferredElem = pEl;
@@ -2404,7 +2208,7 @@ static  LabelString         label;
 	    pEl->ElHolophrast = TRUE;
 	  /* lit l'octet qui suit */
 	  if (!TtaReadByte (pivFile, tag))
-	    PivotError (pivFile, TEXT("PivotError: Holophrast"));
+	    PivotError (pivFile, "PivotError: Holophrast");
 	}
       /* lit les attributs de l'element s'il y en a */
       while (*tag == C_PIV_ATTR && !error)
@@ -2412,7 +2216,7 @@ static  LabelString         label;
 	  ReadAttribute (pivFile, pEl, pDoc, create, &pAttr);
 	  if (!error)
 	    if (!TtaReadByte (pivFile, tag))
-	      PivotError (pivFile, TEXT("PivotError: Attr"));
+	      PivotError (pivFile, "PivotError: Attr");
 	}
       /* tous les attributs de l'element sont lus, on verifie qu'il ne */
       /* manque pas d'attributs locaux obligatoires pour l'element */
@@ -2431,7 +2235,7 @@ static  LabelString         label;
 	  if (!error)
 	    /* lit l'octet qui suit la regle */
 	    if (!TtaReadByte (pivFile, tag))
-	      PivotError (pivFile, TEXT("PivotError: Rule"));
+	      PivotError (pivFile, "PivotError: Rule");
 	}
       if (!error)
 	/* si l'element est une copie par inclusion, il n'a pas de contenu */
@@ -2442,7 +2246,7 @@ static  LabelString         label;
 	    {
 	    case CsReference:
 	      if (*tag != C_PIV_REFERENCE)
-		PivotError (pivFile, TEXT("Reference"));	/* erreur */
+		PivotError (pivFile, "Reference");	/* erreur */
 	      else
 		/* traitement des references : on lit la reference */
 		{
@@ -2451,13 +2255,13 @@ static  LabelString         label;
 		    CreateReference (pEl->ElReference, refType, label, refExt,
 				     docIdent, pDoc);
 		  if (!TtaReadByte (pivFile, tag))
-		    PivotError (pivFile, TEXT("Reference 1"));
+		    PivotError (pivFile, "Reference 1");
 		}
 	      break;
 	    case CsPairedElement:
 	      if (*tag != C_PIV_BEGIN)
 		/* erreur, pas de tag debut */
-		PivotError (pivFile, TEXT("PairedElement"));
+		PivotError (pivFile, "PairedElement");
 	      else
 		/* traitement des paires : on lit l'identificateur */
 		{
@@ -2467,12 +2271,12 @@ static  LabelString         label;
 		  if (i > pDoc->DocMaxPairIdent)
 		    pDoc->DocMaxPairIdent = i;
 		  if (!TtaReadByte (pivFile, tag))
-		    PivotError (pivFile, TEXT("PivotError: PairedElement 1"));
+		    PivotError (pivFile, "PivotError: PairedElement 1");
 		  if (*tag != C_PIV_END)
 		    /* erreur, pas de tag de fin */
-		    PivotError (pivFile, TEXT("PairedElement 2"));
+		    PivotError (pivFile, "PairedElement 2");
 		  else if (!TtaReadByte (pivFile, tag))
-		    PivotError (pivFile, TEXT("PivotError: PairedElement 3"));
+		    PivotError (pivFile, "PivotError: PairedElement 3");
 		}
 	      break;
 	    case CsBasicElement:
@@ -2490,12 +2294,12 @@ static  LabelString         label;
 			/* lit le numero de langue (pour la table des langues
 			   du document */
 			if (!TtaReadByte (pivFile, tag))
-			  PivotError (pivFile, TEXT("Language"));
+			  PivotError (pivFile, "Language");
 			else
 			  i = (int) (*tag);
 			/* lit l'octet suivant */
 			if (!TtaReadByte (pivFile, tag))
-			  PivotError (pivFile, TEXT("Laguage 1"));
+			  PivotError (pivFile, "Laguage 1");
 		      }
 		    if (create && !error)
 		      {
@@ -2513,7 +2317,7 @@ static  LabelString         label;
 		  /* version pivot < 4 */
 		  {
 		    /* alpabet par defaut = Latin */
-		    alphabet = TEXT('L');
+		    alphabet = 'L';
 		    /* dans le cas d'une inclusion sans expansion, il */
 		    /* n'y a pas d'alphabet. */
 		    /* dans les versions pivot anciennes, il peut y avoir un */
@@ -2525,7 +2329,7 @@ static  LabelString         label;
 			alphabet = *tag;
 			/* lit l'octet suivant */
 			if (!TtaReadByte (pivFile, tag))
-			  PivotError (pivFile, TEXT("PivotError: Alphabet"));
+			  PivotError (pivFile, "PivotError: Alphabet");
 		      }
 		    if (create)
 		      {
@@ -2552,7 +2356,7 @@ static  LabelString         label;
 		{
 		  if (leafType != PageBreak)
 		    if (!TtaReadByte (pivFile, tag))
-		      PivotError (pivFile, TEXT("PivotError: Text 1"));
+		      PivotError (pivFile, "PivotError: Text 1");
 		  if (*tag != C_PIV_END)	/* il y a un contenu */
 		    {
 		      switch (leafType)
@@ -2565,7 +2369,7 @@ static  LabelString         label;
 			      while (ch != EOS && !error)
 				if (!TtaReadByte (pivFile, &ch))
 				  PivotError (pivFile,
-					      TEXT("PivotError: Text 2"));
+					      "PivotError: Text 2");
 			    }
 			  else
 			    /* lit le texte et remplit les buffers de texte */
@@ -2622,7 +2426,7 @@ static  LabelString         label;
 				    pBuf->BuContent[n - 1] = ch;
 				    if (!TtaReadByte (pivFile, &ch))
 				      PivotError (pivFile,
-						  TEXT("PivotError: Text 3"));
+						  "PivotError: Text 3");
 				  }
 			      while (ch != EOS) ;
 			      pEl->ElTextLength += n;
@@ -2631,7 +2435,7 @@ static  LabelString         label;
 			      pEl->ElVolume = pEl->ElTextLength;
 			    }
 			  if (!TtaReadByte (pivFile, tag))
-			    PivotError (pivFile, TEXT("PivotError: Text 4"));
+			    PivotError (pivFile, "PivotError: Text 4");
 			  break;
 			case Picture:
 			  if (!create)
@@ -2641,7 +2445,7 @@ static  LabelString         label;
 			      while (ch != EOS)
 				if (!TtaReadByte (pivFile, &ch))
 				  PivotError (pivFile,
-					      TEXT("PivotError: Picture 1"));
+					      "PivotError: Picture 1");
 			    }
 			  else
 			    /* lit le texte et remplit les buffers de texte */
@@ -2656,13 +2460,13 @@ static  LabelString         label;
 				    /* TODO : nom d'image > THOT_MAX_CHAR */
 				    if (n == THOT_MAX_CHAR - 1)
 					PivotError (pivFile,
-					       TEXT("PiveotError: Picture 2"));
+					       "PiveotError: Picture 2");
 				    n++;
 				    /* range le caractere et lit le suivant */
 				    pBuf->BuContent[n - 1] = ch;
 				    if (!TtaReadByte (pivFile, &ch))
 				      PivotError (pivFile,
-						TEXT("PivotError: Picture 3"));
+						"PivotError: Picture 3");
 				  }
 			      while (ch != EOS);
 
@@ -2691,7 +2495,7 @@ static  LabelString         label;
 			    }
 			  if (!TtaReadByte (pivFile, tag))
 			    PivotError (pivFile,
-					TEXT("PivotError: Picture 4"));
+					"PivotError: Picture 4");
 			  break;
 			case Symbol:
 			case GraphicElem:
@@ -2700,14 +2504,14 @@ static  LabelString         label;
 			  /* lit l'octet qui suit */
 			  if (!TtaReadByte (pivFile, tag))
 			    PivotError (pivFile,
-					TEXT("PivotError: Graphic 1"));
+					"PivotError: Graphic 1");
 			  else if (*tag == C_PIV_POLYLINE)
 			    /* c'est une Polyline */
 			    {
 			      /* lit le nombre de points de la ligne */
 			      if (!TtaReadShort (pivFile, &n))
 				PivotError (pivFile,
-					    TEXT("PivotError: Polyline"));
+					    "PivotError: Polyline");
 			      /* lit tous les points */
 			      else if (!create)
 				for (i = 0; i < n; i++)
@@ -2742,7 +2546,7 @@ static  LabelString         label;
 			      /* lit l'octet qui suit (tag de fin d'element) */
 			      if (!TtaReadByte (pivFile, tag))
 				PivotError (pivFile,
-					    TEXT("PivotError: Polyline 1"));
+					    "PivotError: Polyline 1");
 			    }
 			  else if (*tag == C_PIV_PATH)
 			    /* c'est un path graphique */
@@ -2760,7 +2564,7 @@ static  LabelString         label;
 			         ou tag de fin d'element) */
 			      if (!TtaReadByte (pivFile, tag))
 				PivotError (pivFile,
-					    TEXT("PivotError: Path 1"));
+					    "PivotError: Path 1");
 			      else
 				{
 				while (*tag != C_PIV_END)
@@ -2857,14 +2661,14 @@ static  LabelString         label;
 				      break;
 				    default:
 				      PivotError (pivFile,
-					          TEXT("PivotError: Path 2"));
+					          "PivotError: Path 2");
 				      break;
 				    }
 				  /* lit l'octet qui suit (type d'element de
 				     path ou tag de fin d'element) */
 			          if (!TtaReadByte (pivFile, tag))
 				     PivotError (pivFile,
-					         TEXT("PivotError: Path 3"));
+					         "PivotError: Path 3");
 				  }
 				if (create)
 				  /* the volume of a path is the number of
@@ -2910,7 +2714,7 @@ static  LabelString         label;
 			    }
 			  if (!TtaReadByte (pivFile, tag))
 			    PivotError (pivFile,
-					TEXT("PivotError: PageBreak"));
+					"PivotError: PageBreak");
 			  break;
 			default:
 			  break;
@@ -2918,10 +2722,10 @@ static  LabelString         label;
 		      
 		    }
 		  if (*tag != C_PIV_END)
-		    PivotError (pivFile, TEXT("PivotError: End"));
+		    PivotError (pivFile, "PivotError: End");
 		  
 		  if (!TtaReadByte (pivFile, tag))
-		    PivotError (pivFile, TEXT("PivotError: End 1"));
+		    PivotError (pivFile, "PivotError: End 1");
 		}
 	      break;
 	    default:
@@ -2930,12 +2734,12 @@ static  LabelString         label;
 		{
 		  if (pEl != NULL)
 		    if (pEl->ElTerminal)
-		      PivotError (pivFile, TEXT("PivotError: Begin"));
+		      PivotError (pivFile, "PivotError: Begin");
 		  /* erreur: feuille avec contenu */
 		  if (!error)
 		    {
 		      if (!TtaReadByte (pivFile, tag))
-			PivotError (pivFile, TEXT("PivotError: Begin 1"));
+			PivotError (pivFile, "PivotError: Begin 1");
 		      pPrevEl = NULL;
 		      while (*tag != C_PIV_END && !error)
 			/* ce n'est pas un element vide, */
@@ -3013,7 +2817,7 @@ static  LabelString         label;
 		      if (!error)
 			if (!TtaReadByte (pivFile, tag))
 			  PivotError (pivFile,
-				      TEXT("PivotError: End element"));
+				      "PivotError: End element");
 		    }
 		}
 	      break;
@@ -3044,14 +2848,7 @@ static  LabelString         label;
    AbstractTreeOK verifie que l'element pEl et tous ses descendants  
    peuvent figurer a la place ou` ils sont dans leur arbre abstrait
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            AbstractTreeOK (PtrElement pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-ThotBool            AbstractTreeOK (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
+ThotBool AbstractTreeOK (PtrElement pEl, PtrDocument pDoc)
 {
    PtrElement          pChild;
    ThotBool            ok, childOK;
@@ -3105,13 +2902,7 @@ PtrDocument         pDoc;
    AssociatePairs  etablit les liens qui relient les elements de   
    paires deux a deux dans tout l'arbre de racine pRoot.		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                AssociatePairs (PtrElement pRoot)
-#else  /* __STDC__ */
-void                AssociatePairs (pRoot)
-PtrElement          pRoot;
-
-#endif /* __STDC__ */
 {
    PtrElement          pEl1, pEl2;
    ThotBool            found;
@@ -3154,14 +2945,7 @@ PtrElement          pRoot;
    SetLabel       affecte un label a tous les elements du         	
    sous-arbre de racine pEl qui n'en ont pas.                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         SetLabel (PtrElement pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-static void         SetLabel (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
 {
    PtrElement          pChild;
 
@@ -3191,15 +2975,7 @@ PtrDocument         pDoc;
    figure deja dans la table, soit en creant une nouvelle entree   
    au rang desire'.                                                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         PutNatureInTable (PtrDocument pDoc, Name SSName, int rank)
-#else  /* __STDC__ */
-static void         PutNatureInTable (pDoc, SSName, rank)
-PtrDocument         pDoc;
-Name                SSName;
-int                 rank;
-
-#endif /* __STDC__ */
+static void PutNatureInTable (PtrDocument pDoc, Name SSName, int rank)
 {
    int                 i;
    ThotBool            found;
@@ -3263,16 +3039,11 @@ int                 rank;
    	presentation qui se trouvent dans le fichier file et charge ces	
    	schemas								
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char* tag, PtrSSchema pLoadedSS, void (*withThisPSchema) (Document document, CHAR_T* natSchema, CHAR_T* presentSchema))
-#else  /* __STDC__ */
-void                ReadSchemaNamesPiv (file, pDoc, tag, pLoadedSS, withThisPSchema)
-BinFile             file;
-PtrDocument         pDoc;
-char*               tag;
-PtrSSchema          pLoadedSS;
-void (*withThisPSchema) ();
-#endif /* __STDC__ */
+void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
+			 PtrSSchema pLoadedSS,
+			 void (*withThisPSchema) (Document document,
+						  char *natSchema,
+						  char *presentSchema))
 {
    Name                SSName, PSchemaName;
    PtrSSchema          pSS;
@@ -3285,26 +3056,26 @@ void (*withThisPSchema) ();
    /* lit le type du document */
    do
      if (!TtaReadWideChar (file, &SSName[i++], ISO_8859_1))
-       PivotError (file, TEXT("PivotError: Schema"));
+       PivotError (file, "PivotError: Schema");
    while (!error && SSName[i - 1] != WC_EOS && i != MAX_NAME_LENGTH) ;
    if (SSName[i - 1] != WC_EOS)
-     PivotError (file, TEXT("PivotError: Schema 1"));
+     PivotError (file, "PivotError: Schema 1");
    else
      {
        if (pDoc->DocPivotVersion >= 4)
 	 /* Lit le code du schema de structure */
 	 if (!error)
 	   if (!TtaReadShort (file, &versionSchema))
-	     PivotError (file, TEXT("PivotError: Schema 2"));
+	     PivotError (file, "PivotError: Schema 2");
        /* Lit le nom du schema de presentation associe' */
        i = 0;
        do
 	 if (!TtaReadWideChar (file, &PSchemaName[i++], ISO_8859_1))
-	   PivotError (file, TEXT("PivotError: Schema 3"));
+	   PivotError (file, "PivotError: Schema 3");
        while (!error && PSchemaName[i - 1] != WC_EOS && i != MAX_NAME_LENGTH);
 
        if (!TtaReadByte (file, tag))
-	 PivotError (file, TEXT("PivotError: Schema 4"));
+	 PivotError (file, "PivotError: Schema 4");
        if (withThisPSchema != NULL)
 	 (*withThisPSchema) ((Document) IdentDocument (pDoc), SSName,
 			     PSchemaName);
@@ -3314,7 +3085,7 @@ void (*withThisPSchema) ();
 	 LoadSchemas (SSName, PSchemaName, &pDoc->DocSSchema, pLoadedSS,FALSE);
 
         if (pDoc->DocSSchema == NULL)
-	  PivotError (file, TEXT("PivotError: Schema 5"));
+	  PivotError (file, "PivotError: Schema 5");
         else if (pDoc->DocPivotVersion >= 4)
 	  /* on verifie que la version du schema charge' est la meme */
 	  /* que celle du document */
@@ -3351,29 +3122,29 @@ void (*withThisPSchema) ();
        rank++;
        do
 	 if (!TtaReadWideChar (file, &SSName[i++], ISO_8859_1))
-	   PivotError (file, TEXT("PivotError: Schema ext"));
+	   PivotError (file, "PivotError: Schema ext");
        while (SSName[i - 1] != EOS && !error) ;
        if (pDoc->DocPivotVersion >= 4)
 	 /* Lit le code du schema de structure */
 	 if (!error)
 	   if (!TtaReadShort (file, &versionSchema))
-	     PivotError (file, TEXT("PivotError: Schema 7"));
+	     PivotError (file, "PivotError: Schema 7");
        /* Lit le nom du schema de presentation associe' */
        if (!error)
 	 if (!TtaReadByte (file, tag))
-	   PivotError (file, TEXT("PivotError: Schema 8"));
-       if (*tag >= TEXT('!') && *tag <= TEXT('~') && !error)
+	   PivotError (file, "PivotError: Schema 8");
+       if (*tag >= '!' && *tag <= '~' && !error)
 	 /* il y a un nom de schema de presentation */
 	 {
 	   PSchemaName[0] = *tag;
 	   i = 1;
 	   do
 	     if (!TtaReadWideChar (file, &PSchemaName[i++], ISO_8859_1))
-	       PivotError (file, TEXT("PivotError: Schema 9"));
+	       PivotError (file, "PivotError: Schema 9");
 	   while (!error && PSchemaName[i - 1] != EOS && i != MAX_NAME_LENGTH);
 
 	   if (!TtaReadByte (file, tag))
-	     PivotError (file, TEXT("PivotError: Schema 10"));
+	     PivotError (file, "PivotError: Schema 10");
 	 }
        else
 	 /* il n'y a pas de nom */
@@ -3395,7 +3166,7 @@ void (*withThisPSchema) ();
 		   i = CreateNature (SSName, PSchemaName, pDoc->DocSSchema);
 		   if (i == 0)
 		     /* echec creation nature */
-		     PivotError (file, TEXT("PivotError: Schema 11"));
+		     PivotError (file, "PivotError: Schema 11");
 		   else
 		     pSS = pDoc->DocSSchema->SsRule[i - 1].SrSSchemaNat;
 		 }
@@ -3430,15 +3201,7 @@ void (*withThisPSchema) ();
    	ReadLanguageTablePiv
 	lit la table des langues qui se trouve en tete du fichier pivot.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ReadLanguageTablePiv (BinFile file, PtrDocument pDoc, char* tag)
-#else  /* __STDC__ */
-void                ReadLanguageTablePiv (file, pDoc, tag)
-BinFile             file;
-PtrDocument         pDoc;
-char*               tag;
-#endif /* __STDC__ */
-
+void ReadLanguageTablePiv (BinFile file, PtrDocument pDoc, char *tag)
 {
    Name             languageName;
    int              i;
@@ -3451,11 +3214,11 @@ char*               tag;
 	 i = 0;
 	 do
 	   if (!TtaReadWideChar (file, &languageName[i++], ISO_8859_1))
-	     PivotError (file, TEXT("PivotError: Language 2"));
+	     PivotError (file, "PivotError: Language 2");
 	 while (!error && languageName[i - 1] != WC_EOS &&
 		i != MAX_NAME_LENGTH) ;
 	 if (languageName[i - 1] != WC_EOS)
-	   PivotError (file, TEXT("PivotError: Language 3"));
+	   PivotError (file, "PivotError: Language 3");
 	 else
 	   {
 	     if (languageName[0] != WC_EOS)
@@ -3464,7 +3227,7 @@ char*               tag;
 		                       TtaGetLanguageIdFromName (languageName);
 	     /* lit l'octet suivant le nom de langue */
 	     if (!TtaReadByte (file, tag))
-	       PivotError (file, TEXT("PivotError: Laguage 4"));
+	       PivotError (file, "PivotError: Laguage 4");
 	   }
        }
 }
@@ -3474,14 +3237,7 @@ char*               tag;
    ReadVersionNumberPiv lit la version dans le fichier pivot et         
    met sa valeur dans le contexte pDoc. Retourne 0 si OK.          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 ReadVersionNumberPiv (BinFile file, PtrDocument pDoc)
-#else  /* __STDC__ */
-int                 ReadVersionNumberPiv (file, pDoc)
-BinFile             file;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
-
+int ReadVersionNumberPiv (BinFile file, PtrDocument pDoc)
 {
    char                c;
    int                 ret;
@@ -3506,18 +3262,7 @@ PtrDocument         pDoc;
 /*----------------------------------------------------------------------
    ReadPivotHeader   lit l'entete d'un fichier pivot.                
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                ReadPivotHeader (BinFile file, PtrDocument pDoc, char* tag)
-
-#else  /* __STDC__ */
-void                ReadPivotHeader (file, pDoc, tag)
-BinFile             file;
-PtrDocument         pDoc;
-char*               tag;
-
-#endif /* __STDC__ */
-
+void ReadPivotHeader (BinFile file, PtrDocument pDoc, char *tag)
 {
    LabelString         label;
    int                 i;
@@ -3525,18 +3270,18 @@ char*               tag;
 
    /* lit le numero de version s'il est present */
    if (!TtaReadByte (file, tag))
-      PivotError (file, TEXT("PivotError: Header"));
+      PivotError (file, "PivotError: Header");
    if (*tag == (CHAR_T) C_PIV_VERSION)
      {
 	if (!TtaReadByte (file, tag))
-	   PivotError (file, TEXT("PivotError: Header 1"));
+	   PivotError (file, "PivotError: Header 1");
 	else if (!TtaReadByte (file, &c))
-	   PivotError (file, TEXT("PivotError: Header 2"));
+	   PivotError (file, "PivotError: Header 2");
 	else
 	  {
 	     pDoc->DocPivotVersion = (int) c;
 	     if (!TtaReadByte (file, tag))
-		PivotError (file, TEXT("PivotError: Header 3"));
+		PivotError (file, "PivotError: Header 3");
 	  }
      }
    else				/* Pivot sans tag de version */
@@ -3551,7 +3296,7 @@ char*               tag;
 	LabelStringToInt (label, &i);
 	SetCurrentLabel (pDoc, i);
 	if (!TtaReadByte (file, tag))
-	   PivotError (file, TEXT("PivotError: Header 4"));
+	   PivotError (file, "PivotError: Header 4");
      }
    /* lit la table des langues utilisees par le document */
    ReadLanguageTablePiv (file, pDoc, tag);
@@ -3571,19 +3316,9 @@ char*               tag;
    sont decharge's au retour. Si skeleton est vrai, le     
    document est charge sous forme squelette.               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc, ThotBool skeleton, PtrSSchema pLoadedSS, ThotBool withEvent, ThotBool removeExclusions)
-#else  /* __STDC__ */
-void                LoadDocumentPiv (file, pDoc, loadExternalDoc, skeleton, pLoadedSS, withEvent, removeExclusions)
-BinFile             file;
-PtrDocument         pDoc;
-ThotBool            loadExternalDoc;
-ThotBool            skeleton;
-PtrSSchema          pLoadedSS;
-ThotBool            withEvent;
-ThotBool		    removeExclusions
-#endif /* __STDC__ */
-
+void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
+		      ThotBool skeleton, PtrSSchema pLoadedSS,
+		      ThotBool withEvent, ThotBool removeExclusions)
 {
    PtrElement          s, p, pFirst;
    PtrSSchema          pSS, pNat, pSchS1, curExtension, previousSSchema;
@@ -3609,7 +3344,7 @@ ThotBool		    removeExclusions
    /* Lit le nom du schema de structure qui est en tete du fichier pivot */
    if (!error && tag != (CHAR_T) C_PIV_NATURE)
      /* tag classe absent */
-     PivotError (file, TEXT("PivotError: Class"));
+     PivotError (file, "PivotError: Class");
    if (!error)
      /* lit les noms des schemas de structure et de presentation */
      ReadSchemaNamesPiv (file, pDoc, &tag, pLoadedSS, NULL);
@@ -3660,7 +3395,7 @@ ThotBool		    removeExclusions
 	 {
 	   assoc++;
 	   if (!TtaReadByte (file, &tag))
-	     PivotError (file, TEXT("PivotError: Assoc"));
+	     PivotError (file, "PivotError: Assoc");
 	   /* lit et cree le premier element associe de ce type */
 	   rule = 0;
 	   pNat = NULL;
@@ -3741,7 +3476,7 @@ ThotBool		    removeExclusions
 		     }
 		   while (!found && pSchS1 != NULL);
 		   if (!found)
-		     PivotError (file, TEXT("Schema extend"));
+		     PivotError (file, "Schema extend");
 		   else
 		     /* cree l'element liste pour ce type d'elements associes*/
 		     {
@@ -3802,13 +3537,13 @@ ThotBool		    removeExclusions
 	   tag != (CHAR_T) C_PIV_DOC_END)
 	 {
 	   if (tag != (CHAR_T) C_PIV_STRUCTURE)
-	     PivotError (file, TEXT("Open"));
+	     PivotError (file, "Open");
 	   else
 	     {
 	       if (!TtaReadByte (file, &tag))
-		 PivotError (file, TEXT("Open 1"));
+		 PivotError (file, "Open 1");
 	       if (tag != (CHAR_T) C_PIV_TYPE && tag != (CHAR_T) C_PIV_NATURE)
-		 PivotError (file, TEXT("Open 2"));
+		 PivotError (file, "Open 2");
 	       else
 		 {
 		   rule = 0;
@@ -3889,8 +3624,8 @@ ThotBool		    removeExclusions
 	   previousSSchema = pDoc->DocSSchema;
 	   curExtension = previousSSchema->SsNextExtens;
 	   while (curExtension != NULL)
-	     if (ustrcmp (curExtension->SsName, TEXT("ExtCorr")) == 0 ||
-		 ustrcmp (curExtension->SsName, TEXT("ExtMot")) == 0)
+	     if (ustrcmp (curExtension->SsName, "ExtCorr") == 0 ||
+		 ustrcmp (curExtension->SsName, "ExtMot") == 0)
 	       {
 		 previousSSchema->SsNextExtens = curExtension->SsNextExtens;
 		 if (curExtension->SsNextExtens != NULL)

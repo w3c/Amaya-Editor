@@ -513,7 +513,7 @@ unsigned char* ReadPngToData (STRING datafile, int *w, int *h, int *ncolors,
 #ifndef _WINDOWS  
      fp = ufopen (datafile, "r");
 #else  /* _WINDOWS */
-     fp = ufopen (datafile, TEXT("rb"));
+     fp = ufopen (datafile, "rb");
 #endif /* _WINDOWS */
      if (fp != NULL) {
 	bit_data = ReadPng (fp, w, h, ncolors, cpp, colrs, bg);
@@ -741,7 +741,7 @@ ThotBool IsPngFormat(CHAR_T* fn)
    char buf[8];
    int ret;
 
-   fp = ufopen(fn , TEXT("rb"));
+   fp = ufopen(fn , "rb");
    if (!fp)
       return 0;
    ret = fread(buf, 1, 8, fp);

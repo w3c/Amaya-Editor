@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -113,7 +113,7 @@ HTAlertPar         *reply;
 			 pro = 100;
 		       HTNumToStr ((unsigned long) cl, buf, 10);
                iso2wc_strcpy (Buff, buf);
-		       usprintf (tempbuf, TEXT("%s (%d%% of %s)\n"), me->status_urlName, (int) pro, Buff);
+		       usprintf (tempbuf, "%s (%d%% of %s\n)", me->status_urlName, (int) pro, Buff);
 		     }
 		   else 
 		     {
@@ -123,13 +123,13 @@ HTAlertPar         *reply;
 			 {
 			   HTNumToStr(bytes_rw, buf, 10); 
                iso2wc_strcpy (Buff, buf);
-			   usprintf (tempbuf, TEXT("%s bytes"), Buff);
+			   usprintf (tempbuf, "%s bytes", Buff);
 			 } 
 		       else if (raw_rw && *raw_rw>0) 
 			 {
 			   HTNumToStr(*raw_rw, buf, 10);
                iso2wc_strcpy (Buff, buf);
-			   usprintf (tempbuf, TEXT("%s bytes"), Buff);
+			   usprintf (tempbuf, "%s bytes", Buff);
 			 } 
 		       else 
 			 buf[0] = EOS;
@@ -153,7 +153,7 @@ HTAlertPar         *reply;
 			pro = (int) ((bytes_rw * 100l) / cl);
 			HTNumToStr ((unsigned long) cl, buf, 10);
             iso2wc_strcpy (Buff, buf);
-			usprintf (tempbuf, TEXT("%s: Writing (%d%% of %s)\n"), me->urlName, pro, Buff);
+			usprintf (tempbuf, "%s: Writing (%d%% of %s\n)", me->urlName, pro, Buff);
 			TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE), tempbuf);
 		    }
 		  else  
@@ -164,13 +164,13 @@ HTAlertPar         *reply;
 			{
 			  HTNumToStr(bytes_rw, buf, 10);
               iso2wc_strcpy (Buff, buf);
-			  usprintf (tempbuf, TEXT("%s bytes "), Buff);
+			  usprintf (tempbuf, "%s bytes ", Buff);
 			} 
 		      else if (raw_rw && *raw_rw >0) 
 			{
 			  HTNumToStr(*raw_rw, buf, 10);
               iso2wc_strcpy (Buff, buf);
-			  usprintf (tempbuf, TEXT("%s bytes "), Buff);
+			  usprintf (tempbuf, "%s bytes ", Buff);
 			} 
 		      else 
 			buf[0] = EOS;
@@ -372,7 +372,7 @@ HTAlertPar         *reply;
        iso2wc_strcpy (RealM, realm);
 #      endif /* _I18N_ */
        /* prepare the authentication realm message */
-       server = AmayaParseUrl (me->urlName, TEXT(""), AMAYA_PARSE_HOST);
+       server = AmayaParseUrl (me->urlName, "", AMAYA_PARSE_HOST);
        /* protection against having a stop kill this thread */
        old_reqStatus = me->reqStatus;
        me->reqStatus = HT_BUSY;
@@ -530,7 +530,7 @@ HTRequest          *request;
 
    /* force the error type (we're generating it anyway) */
    if (!me->http_headers.content_type)
-     me->http_headers.content_type = TtaWCSdup (TEXT("text/html"));
+     me->http_headers.content_type = TtaWCSdup ("text/html");
 
    while ((pres = (HTError *) HTList_nextObject (cur)))
      {
@@ -551,7 +551,7 @@ HTRequest          *request;
 		    }
 		  else
 		    {
-		      usprintf (buffer, TEXT("Error: Server is unavailable or doesn't exist"));
+		      usprintf (buffer, "Error: Server is unavailable or doesn't exist");
               wc2iso_strcpy (isoBuff, buffer);
 		      StrAllocCat (me->error_stream, isoBuff);
 		    }
@@ -567,7 +567,7 @@ HTRequest          *request;
 		}
 	      else
 		{
-		  usprintf (buffer, TEXT("Error: Server is unavailable or doesn't exist"));
+		  usprintf (buffer, "Error: Server is unavailable or doesn't exist");
           wc2iso_strcpy (isoBuff, buffer);
 		  StrAllocCat (me->error_stream, isoBuff);
 		}
@@ -700,8 +700,8 @@ int status;
   else if (status == -409)
     {
       TtaSetStatus (me->docid, 1,
-		    TEXT("Conflict with the current state of the resource"), NULL);
-      usprintf(AmayaLastHTTPErrorMsg, TEXT("409: Conflict with the current state of the resource"));
+		    "Conflict with the current state of the resource", NULL);
+      usprintf(AmayaLastHTTPErrorMsg, "409: Conflict with the current state of the resource");
     }
   else if (status <0)
     {
@@ -733,7 +733,7 @@ int status;
       if (error == (HTError *) NULL)
 	/* there's no error context */
 	{
-	  usprintf (msg_status, TEXT("%d"), status); 
+	  usprintf (msg_status, "%d", status); 
 	  TtaSetStatus (me->docid, 1, 
 			TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), 
 			msg_status);
@@ -748,22 +748,22 @@ int status;
       if (errorElement == HTERR_INTERRUPTED)
 	{
 	  TtaSetStatus (me->docid, 1,
-			TEXT("Transfer interrupted by user"), (STRING) NULL);
-	  usprintf (AmayaLastHTTPErrorMsg, TEXT("%s"), TEXT("Transfer interrupted by user"));
+			"Transfer interrupted by user", (STRING) NULL);
+	  usprintf (AmayaLastHTTPErrorMsg, "%s", "Transfer interrupted by user");
 	}
       else if (errorElement == HTERR_PRECON_FAILED) 
 	{
 	  TtaSetStatus (me->docid, 1,
-			TEXT("Document has changed (412)"), (STRING) NULL);
-	  usprintf (AmayaLastHTTPErrorMsg, TEXT("%s"), TEXT("Document has changed (412)"));
+			"Document has changed (412)", (STRING) NULL);
+	  usprintf (AmayaLastHTTPErrorMsg, "%s", "Document has changed (412)");
 	  status = -412;
 	}
       else if (errorElement == HTERR_TIME_OUT || errorElement == HTERR_TIMEOUT)
 	{
 	  TtaSetStatus (me->docid, 1,
-			TEXT("Connection Timeout"), (STRING) NULL);
+			"Connection Timeout", (STRING) NULL);
 	  usprintf (AmayaLastHTTPErrorMsg,
-		    TEXT("Connection Timeout"));
+		    "Connection Timeout");
 	}
       else if (errorElement == HTERR_NOT_IMPLEMENTED)
 	{
@@ -777,9 +777,9 @@ int status;
       else if (errorElement == HTERR_NO_REMOTE_HOST)
 	{
 	  TtaSetStatus (me->docid, 1,
-			TEXT("Host %s doesn't exist"), (char *) error->par);
+			"Host %s doesn't exist", (char *) error->par);
 	  usprintf (AmayaLastHTTPErrorMsg, 
-		    TEXT("Host %s doesn't exist"), (char *) error->par);
+		    "Host %s doesn't exist", (char *) error->par);
 	}
       else if (errorElement == HTERR_INTERNAL)
 	{
@@ -808,10 +808,10 @@ int status;
       else if (errorElement == HTERR_HTTP09)
 	{
 	  TtaSetStatus (me->docid, 1,
-			TEXT("Server or network forced libwww to downgrade to HTTP/0.9."),
+			"Server or network forced libwww to downgrade to HTTP/0.9.",
 			(STRING) NULL);
 	  usprintf (AmayaLastHTTPErrorMsg,
-		    TEXT("Server or network forced libwww to downgrade to HTTP/0.9 for this host. Please quit."));
+		    "Server or network forced libwww to downgrade to HTTP/0.9 for this host. Please quit.");
 	}
 #endif
       else if (server_status)
@@ -825,7 +825,7 @@ int status;
       else
 	{
 	  /* we don't have anything else, except for the status code */
-	  usprintf (msg_status, TEXT("%d"), status); 
+	  usprintf (msg_status, "%d", status); 
 	  TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
 	  usprintf (AmayaLastHTTPErrorMsg, 
 		    TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
@@ -841,7 +841,7 @@ int status;
 	  if (server_status && *server_status)
 	    {
 	      wc_tmp = TtaISO2WCdup (server_status);
-	      usprintf (AmayaLastHTTPErrorMsgR, TEXT("Server reason: %s"), 
+	      usprintf (AmayaLastHTTPErrorMsgR, "Server reason: %s", 
 			wc_tmp);
 	      TtaFreeMemory (wc_tmp);
 	    }

@@ -2,6 +2,9 @@
 #define _WIN_FCT_
 #include <windows.h>
 #include "fileaccess.h"
+#define APPFILENAMEFILTER "HTML files (*.htm[l])\0*.htm*\0XML files (*.xml)\0*.xml\0MathML Files (*.mml)\0*.mml\0SVG files (*.svg)\0*.svg\0All files (*.*)\0*.*\0"
+#define APPIMAGENAMEFILTER "Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0"
+#define APPALLFILESFILTER "All files (*.*)\0*.*\0"
 
 extern BOOL       RegisterWin95 (CONST WNDCLASS* lpwc);
 extern void       DropFile (Document, View, STRING);

@@ -78,7 +78,7 @@ static void ParseIdFragment (AnnotMeta *annot, char *buff)
 {
   CHAR_T *c, *d;
   
-  c = strchr (buff, TEXT('#'));
+  c = strchr (buff, '#');
   if (c)
     {
       *c = WC_EOS;
@@ -88,16 +88,16 @@ static void ParseIdFragment (AnnotMeta *annot, char *buff)
 	{
 	  switch (*d) 
 	    {
-	    case TEXT('|'):
+	    case '|':
 	      *d = ' ';
 	      break;
-	    case TEXT(')'):
+	    case ')':
 	      *d = WC_EOS;
 	      break;
 	    }
 	  d++;
 	}
-      usscanf (c, TEXT("%s %d %s %d"), annot->labf, (&annot->c1),
+      usscanf (c, "%s %d %s %d", annot->labf, (&annot->c1),
 	      annot->labl, &(annot->cl));
     }
 }
@@ -111,7 +111,7 @@ static void ParseXptrFragment (AnnotMeta *annot, char *buff)
 {
   CHAR_T *c;
   
-  c = strchr (buff, TEXT('#'));
+  c = strchr (buff, '#');
   if (c)
     {
       c++;

@@ -319,7 +319,7 @@ CHAR_T*                 fn;
    ThotBool            res;
 
    res = FALSE;
-   f = ufopen (fn, TEXT("r"));
+   f = ufopen (fn, "r");
    if (f != NULL)
      {
 	c = getc (f);

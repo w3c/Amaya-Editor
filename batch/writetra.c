@@ -57,7 +57,7 @@ void                WriteName (Name n)
    i = 0;
    do
       TtaWriteWideChar (outfile, n[i++], ISO_8859_1);
-   while (n[i - 1] != TEXT('\0'));
+   while (n[i - 1] != '\0');
 }
 
 
@@ -847,18 +847,18 @@ ThotBool             WriteTranslationSchema (Name fileName, PtrTSchema pTSch, Pt
 	j = 0;
 	do
 	   TtaWriteWideChar (outfile, pStrnTr->StSource[j++], ISO_8859_1);
-	while (pStrnTr->StSource[j - 1] != TEXT('\0'));
+	while (pStrnTr->StSource[j - 1] != '\0');
 	j = 0;
 	do
 	   TtaWriteWideChar (outfile, pStrnTr->StTarget[j++], ISO_8859_1);
-	while (pStrnTr->StTarget[j - 1] != TEXT('\0'));
+	while (pStrnTr->StTarget[j - 1] != '\0');
      }
    for (i = 0; i < pTSch->TsNConstants; i++)
      {
 	j = pTSch->TsConstBegin[i] - 1;
 	do
 	   TtaWriteWideChar (outfile, pTSch->TsConstant[j++], ISO_8859_1);
-	while (pTSch->TsConstant[j - 1] != TEXT('\0'));
+	while (pTSch->TsConstant[j - 1] != '\0');
      }
    for (i = 0; i < pSS->SsNRules; i++)
       WriteBlocks (pTSch->TsElemTRule[i], pSS);

@@ -91,9 +91,9 @@ void AskToConfirm (PtrDocument pDoc, Document document, View view,
   /* initialise le label du formulaire "Fermer" en y mettant le nom */
   /* du document */
   ustrcpy (buftext, TtaGetMessage (LIB, TMSG_SAVE_DOC));
-  ustrcat (buftext, TEXT(" "));
+  ustrcat (buftext, " ");
   ustrcat (buftext, pDoc->DocDName);
-  ustrcat (buftext, TEXT(" "));
+  ustrcat (buftext, " ");
   ustrcat (buftext, TtaGetMessage (LIB, TMSG_BEFORE_CLOSING));
 
 #ifndef _WINDOWS

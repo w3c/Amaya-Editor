@@ -86,7 +86,7 @@ char  *LINK_GetAnnotationIndexFile (char *source_url)
   annot_main_index_file = TtaGetMemory (ustrlen (annot_dir) 
 					+ ustrlen (annot_main_index) 
 					+ 10);
-  usprintf (annot_main_index_file, TEXT("%s%c%s"), 
+  usprintf (annot_main_index_file, "%s%c%s", 
 	    annot_dir, 
 	    DIR_SEP,  
 	    annot_main_index);
@@ -99,7 +99,7 @@ char  *LINK_GetAnnotationIndexFile (char *source_url)
 	{
 	  while (ufgets (buffer, MAX_LENGTH, fp))
 	    {
-	      usscanf (buffer, TEXT("%s %s\n"), url, index_file);
+	      usscanf (buffer, "%s %s\n", url, index_file);
 	      /* convert local URLs into local file system */
 	      WWWToLocal (url);
 	      WWWToLocal (index_file);
@@ -147,14 +147,14 @@ static void AddAnnotationIndexFile (char *source_url, char *index_file)
   www_source_url = LocalToWWW (source_url);
   www_index_file = LocalToWWW (index_file);
   usprintf (annot_main_index_file, 
-	    TEXT("%s%c%s"), 
+	    "%s%c%s", 
 	    annot_dir, 
 	    DIR_SEP, 
 	    annot_main_index);
 
   if ((fp = fopen (annot_main_index_file, "a")))
     {
-      ufprintf (fp, TEXT("%s %s\n"), 
+      ufprintf (fp, "%s %s\n", 
 		(www_source_url) ? www_source_url : source_url,
 		(www_index_file) ? www_index_file : index_file);
       fclose (fp);
@@ -236,7 +236,7 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
 	in the struct tree */
       TtaInsertSibling (anchor, el, TRUE, source_doc);
     }
-  else if (!ustrcmp (docSchemaName, TEXT("MathML")))
+  else if (!ustrcmp (docSchemaName, "MathML"))
     {
       /* An annotation on a MathMl structure. We backtrace the tree
 	 until we find the Math root element and then add the annotation as 
@@ -251,7 +251,7 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
 	}
       TtaInsertFirstChild (&anchor, el, source_doc);
     }
-  else if (!ustrcmp (docSchemaName, TEXT("GraphML")))
+  else if (!ustrcmp (docSchemaName, "GraphML"))
     {
       /* An annotation on a GraphMl structure. We backtrace the tree
 	 until we find the Math root element and then add the annotation as
@@ -483,13 +483,13 @@ void LINK_DeleteLink (Document source_doc)
 				      + ustrlen (main_index)
 				      + 14);
   usprintf (main_index_file_old, 
-	    TEXT("%s%c%s"), 
+	    "%s%c%s", 
 	    annot_dir, 
 	    DIR_SEP, 
 	    main_index);
 
   usprintf (main_index_file_new, 
-	    TEXT("%s%c%s.tmp"), 
+	    "%s%c%s.tmp", 
 	    annot_dir, 
 	    DIR_SEP, 
 	    main_index);
@@ -694,8 +694,8 @@ void LINK_LoadAnnotationIndex (Document doc, CHAR_T *annotIndex, ThotBool mark_v
   if (orphan_count)
     {
       /* warn the user there were some orphan annotations */
-      InitInfo (TEXT("Annotation load"), 
-		TEXT("There were some orphan annotations. You may See them with the Links view."));
+      InitInfo ("Annotation load", 
+		"There were some orphan annotations. You may See them with the Links view.");
     }
 
 }

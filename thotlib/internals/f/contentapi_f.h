@@ -56,6 +56,7 @@ extern void TtaChangeLimitOfPolyline ( Element element,
                                        int x,
                                        int y,
                                        Document document );
+extern STRING TtaTransformCurveIntoPath ( Element el );
 extern PathSegment TtaNewPathSegLine ( int xstart,
                                        int ystart,
                                        int xend,
@@ -160,6 +161,7 @@ extern void TtaChangeLimitOfPolyline (/* Element element,
                                          int x,
                                          int y,
                                          Document document */);
+extern STRING TtaTransformCurveIntoPath (/* Element el */);
 extern PathSegment TtaNewPathSegLine (/* int xstart,
                                          int ystart,
                                          int xend,

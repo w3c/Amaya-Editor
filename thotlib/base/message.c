@@ -69,25 +69,25 @@ CHAR_T*             pBuffer;
    while (pBuffer[i] != WC_EOS)
      {
 	/* On lit jusqu'au premier backslash rencontre */
-	while ((pBuffer[i] != TEXT('\\')) && (pBuffer[i] != WC_EOS))
+	while ((pBuffer[i] != '\\') && (pBuffer[i] != WC_EOS))
 	   result[j++] = pBuffer[i++];
 
 	/* Teste si on est en presence de deux backslashs ou */
 	/* si on se trouve devant un caractere special */
 	if (pBuffer[i] != WC_EOS)
 	  {
-	   if (pBuffer[i + 1] == TEXT('\\'))
+	   if (pBuffer[i + 1] == '\\')
 	     {
 		/* On est dans le cas de deux backslashs consecutifs;
 		   on les prend */
 		result[j++] = pBuffer[i++];
 		result[j++] = pBuffer[i++];
 	     }
-	   else if (pBuffer[i + 1] == TEXT('n'))
+	   else if (pBuffer[i + 1] == 'n')
 	     {
 		/* On est dans le cas d'un \n */
 		i += 2;
-		result[j++] = TEXT('\n');
+		result[j++] = '\n';
 	     }
 	   else
 	     {
@@ -95,8 +95,8 @@ CHAR_T*             pBuffer;
 		i++;
 		/* on construit le nombre correspondant au caractere */
 		k = 0;
-		while ((pBuffer[i] >= TEXT('0'))
-		       && (pBuffer[i] <= TEXT('9'))
+		while ((pBuffer[i] >= '0')
+		       && (pBuffer[i] <= '9')
 		       && (pBuffer[i] != WC_EOS)
 		       && (k <= 2))
 		   nombre[k++] = pBuffer[i++];
@@ -108,18 +108,18 @@ CHAR_T*             pBuffer;
 			    result[j++] = pBuffer[i++];
 			    break;
 			 case 1:
-			    uniteid = nombre[0] - TEXT('0');
+			    uniteid = nombre[0] - '0';
 			    result[j++] = uniteid;
 			    break;
 			 case 2:
-			    uniteid = nombre[1] - TEXT('0');
-			    dixid = nombre[0] - TEXT('0');
+			    uniteid = nombre[1] - '0';
+			    dixid = nombre[0] - '0';
 			    result[j++] = uniteid + 8 * dixid;
 			    break;
 			 case 3:
-			    uniteid = nombre[2] - TEXT('0');
-			    dixid = nombre[1] - TEXT('0');
-			    centid = nombre[0] - TEXT('0');
+			    uniteid = nombre[2] - '0';
+			    dixid = nombre[1] - '0';
+			    centid = nombre[0] - '0';
 			    result[j++] = uniteid + 8 * dixid + 64 * centid;
 			    break;
 		      }
@@ -244,10 +244,10 @@ int                 msgNumber;
 
   /* contruction du nom $THOTDIR/bin/$LANG-msgName */
   ustrcpy (fileName, TtaGetVarLANG ());
-  fileName[2] = TEXT('-');
+  fileName[2] = '-';
   ustrcpy (&fileName[3], msgName);
   SearchFile (fileName, 2, pBuffer);
-  file = ufopen (pBuffer, TEXT("r")); 
+  file = ufopen (pBuffer, "r"); 
   if (file == NULL)
     {
       printf ("WARNING: cannot open file %s\n", pBuffer);
@@ -397,7 +397,7 @@ STRING              fmt;
 #  ifdef _WINDOWS
    int len = ustrlen (fmt);
     for (i = 0; i < len; i++)
-        if (fmt [i] == TEXT('\n'))
+        if (fmt [i] == '\n')
            fmt [i] = SPACE;
 #  endif /* _WINDOWS */
 
@@ -412,26 +412,26 @@ STRING              fmt;
       i = 0;
       for (p = fmt; *p && i + 1 < MAX_PATH; p++)
 	{
-          if (*p != TEXT('%')) 
+          if (*p != '%') 
              pBuffer[i++] = *p;
           else {
                p++;
                switch (*p)
 		 {
-                      case TEXT('d'):
+                      case 'd':
                            /* it is a value */
                            vald = va_arg (pa, int);
 
                            if (i + 10 < MAX_PATH)
 			     {
-                              usprintf (&pBuffer[i], TEXT("%d"), vald);
+                              usprintf (&pBuffer[i], "%d", vald);
                               i += ustrlen (&pBuffer[i]);
 			     }
 			   else
 			     i = MAX_PATH;
 			   break;
 
-                      case TEXT('s'):
+                      case 's':
                            /* it is a string */
                            /* vals = va_arg (pa, char*); */
                            vals = va_arg (pa, STRING);

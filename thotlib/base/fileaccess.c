@@ -198,7 +198,7 @@ ThotBool TtaReadWideChar (BinFile file, CHAR_T* bval, CHARSET encoding)
       if (res <= 0xFFFF)
 	*bval = res;
       else 
-	*bval = TEXT('?');    
+	*bval = '?';    
       break;
     }
   return (TRUE);
@@ -595,8 +595,8 @@ void TtaExtractName (CHAR_T* text, CHAR_T* aDirectory, CHAR_T* aName)
    if (text == NULL || aDirectory == NULL || aName == NULL)
       return;			/* No input text or error in input parameters */
 
-   if (text && ustrchr (text, TEXT('/')))
-     URL_DIR_SEP = TEXT('/');
+   if (text && ustrchr (text, '/'))
+     URL_DIR_SEP = '/';
    else 
      URL_DIR_SEP = WC_DIR_SEP;
    
@@ -629,7 +629,7 @@ void TtaExtractName (CHAR_T* text, CHAR_T* aDirectory, CHAR_T* aName)
      }
 #    ifdef _WINDOWS
      lg = ustrlen (aName);
-     if (!ustrcasecmp (&aName[lg - 4], TEXT(".exe")))
+     if (!ustrcasecmp (&aName[lg - 4], ".exe"))
         aName[lg - 4] = WC_EOS;
 #    endif /* _WINDOWS */
 }
@@ -710,23 +710,23 @@ void GetPictureFileName (STRING name, STRING fileName)
    PathBuffer          directory;
    CHAR_T                URL_DIR_SEP;
 
-   if (name && ustrchr (name, TEXT('/')))
-     URL_DIR_SEP = TEXT('/');
+   if (name && ustrchr (name, '/'))
+     URL_DIR_SEP = '/';
    else 
      URL_DIR_SEP = DIR_SEP;
 
    /* Recherche le fichier dans les repertoires de documents */
-   if (name[0] == URL_DIR_SEP || name [1] == TEXT(':'))
+   if (name[0] == URL_DIR_SEP || name [1] == ':')
      ustrcpy (fileName, name);
    else
      {
        ustrcpy (directory, DocumentPath);
-       MakeCompleteName (name, TEXT(""), directory, fileName, &length);
+       MakeCompleteName (name, "", directory, fileName, &length);
        if (!TtaFileExist (fileName))
 	 {
 	   /* Recherche le fichier dans les repertoires de schemas */
 	   ustrcpy (directory, SchemaPath);
-	   MakeCompleteName (name, TEXT(""), directory, fileName, &length);
+	   MakeCompleteName (name, "", directory, fileName, &length);
 	 }
      }
 }
@@ -759,7 +759,7 @@ static ThotBool     IsExtended (CHAR_T* fileName, CHAR_T* extension)
 	     ok = (extension[i] == fileName[j]) && ok;
 	     j--;
 	  }
-	ok = ok && (fileName[j] == TEXT('.'));
+	ok = ok && (fileName[j] == '.');
      }
    else
       ok = FALSE;
@@ -788,7 +788,7 @@ void FindCompleteName (CHAR_T* fileName, CHAR_T* extension,
    j = ustrlen (fileName);
 
    /* check for tilde indicating the HOME directory */
-   if (directory[0] == TEXT('~'))
+   if (directory[0] == '~')
      {
 #   ifdef _WINDOWS
     home_dir = NULL;
@@ -809,17 +809,17 @@ void FindCompleteName (CHAR_T* fileName, CHAR_T* extension,
 
    /* si on cherche a ouvrir un fichier pivot et que le nom de fichier se
       termine par ".piv", on remplace ce suffixe par ".PIV" */
-   if (ustrcmp (extension, TEXT("PIV")) == 0)
+   if (ustrcmp (extension, "PIV") == 0)
      {
 	if (j > 4)
-	   if (fileName[j - 4] == TEXT('.'))
-	      if (fileName[j - 3] == TEXT('p'))
-		 if (fileName[j - 2] == TEXT('i'))
-		    if (fileName[j - 1] == TEXT('v'))
+	   if (fileName[j - 4] == '.')
+	      if (fileName[j - 3] == 'p')
+		 if (fileName[j - 2] == 'i')
+		    if (fileName[j - 1] == 'v')
 		      {
-			 fileName[j - 3] = TEXT('P');
-			 fileName[j - 2] = TEXT('I');
-			 fileName[j - 1] = TEXT('V');
+			 fileName[j - 3] = 'P';
+			 fileName[j - 2] = 'I';
+			 fileName[j - 1] = 'V';
 		      }
      }
    if (!IsExtended (fileName, extension) && extension[0] != WC_EOS)
@@ -847,7 +847,7 @@ void FindCompleteName (CHAR_T* fileName, CHAR_T* extension,
    if (k != 0)
      {
 	/* on ajoute l'extension */
-	ustrcat (completeName, TEXT("."));
+	ustrcat (completeName, ".");
 	ustrcat (completeName, extension);
      }
    /* on termine la chaine */
@@ -890,8 +890,8 @@ int FileWriteAccess (STRING fileName)
    CHAR_T                c;
    CHAR_T                URL_DIR_SEP;
 
-   if (fileName && ustrchr (fileName, TEXT('/')))
-	  URL_DIR_SEP = TEXT('/');
+   if (fileName && ustrchr (fileName, '/'))
+	  URL_DIR_SEP = '/';
    else 
 	   URL_DIR_SEP = DIR_SEP;
 
@@ -937,7 +937,7 @@ void GetCounterValue (int number, CounterStyle style, STRING string, int *len)
    *len = 0;
    if (number < 0)
      {
-	string[(*len)++] = TEXT('-');
+	string[(*len)++] = '-';
 	number = -number;
      }
 
@@ -946,7 +946,7 @@ void GetCounterValue (int number, CounterStyle style, STRING string, int *len)
 	    case CntArabic:
 	       if (number >= 100000)
 		 {
-		    string[(*len)++] = TEXT('?');
+		    string[(*len)++] = '?';
 		    number = number % 100000;
 		 }
 	       if (number >= 10000)
@@ -963,7 +963,7 @@ void GetCounterValue (int number, CounterStyle style, STRING string, int *len)
 	       i = *len;
 	       do
 		 {
-		    string[i - 1] = (CHAR_T) ((int) (TEXT('0')) + number % 10);
+		    string[i - 1] = (CHAR_T) ((int) ('0') + number % 10);
 		    i--;
 		    number = number / 10;
 		 }
@@ -973,85 +973,85 @@ void GetCounterValue (int number, CounterStyle style, STRING string, int *len)
 	    case CntURoman:
 	    case CntLRoman:
 	       if (number >= 4000)
-		  string[(*len)++] = TEXT('?');
+		  string[(*len)++] = '?';
 	       else
 		 {
 		    begin = *len + 1;
 		    while (number >= 1000)
 		      {
-			 string[(*len)++] = TEXT('M');
+			 string[(*len)++] = 'M';
 			 number -= 1000;
 		      }
 		    if (number >= 900)
 		      {
-			 string[(*len)++] = TEXT('C');
-			 string[(*len)++] = TEXT('M');
+			 string[(*len)++] = 'C';
+			 string[(*len)++] = 'M';
 			 number -= 900;
 		      }
 		    else if (number >= 500)
 		      {
-			 string[(*len)++] = TEXT('D');
+			 string[(*len)++] = 'D';
 			 number -= 500;
 		      }
 		    else if (number >= 400)
 		      {
-			 string[(*len)++] = TEXT('C');
-			 string[(*len)++] = TEXT('D');
+			 string[(*len)++] = 'C';
+			 string[(*len)++] = 'D';
 			 number -= 400;
 		      }
 		    while (number >= 100)
 		      {
-			 string[(*len)++] = TEXT('C');
+			 string[(*len)++] = 'C';
 			 number -= 100;
 		      }
 		    if (number >= 90)
 		      {
-			 string[(*len)++] = TEXT('X');
-			 string[(*len)++] = TEXT('C');
+			 string[(*len)++] = 'X';
+			 string[(*len)++] = 'C';
 			 number -= 90;
 		      }
 		    else if (number >= 50)
 		      {
-			 string[(*len)++] = TEXT('L');
+			 string[(*len)++] = 'L';
 			 number -= 50;
 		      }
 		    else if (number >= 40)
 		      {
-			 string[(*len)++] = TEXT('X');
-			 string[(*len)++] = TEXT('L');
+			 string[(*len)++] = 'X';
+			 string[(*len)++] = 'L';
 			 number -= 40;
 		      }
 		    while (number >= 10)
 		      {
-			 string[(*len)++] = TEXT('X');
+			 string[(*len)++] = 'X';
 			 number -= 10;
 		      }
 		    if (number >= 9)
 		      {
-			 string[(*len)++] = TEXT('I');
-			 string[(*len)++] = TEXT('X');
+			 string[(*len)++] = 'I';
+			 string[(*len)++] = 'X';
 			 number -= 9;
 		      }
 		    else if (number >= 5)
 		      {
-			 string[(*len)++] = TEXT('V');
+			 string[(*len)++] = 'V';
 			 number -= 5;
 		      }
 		    else if (number >= 4)
 		      {
-			 string[(*len)++] = TEXT('I');
-			 string[(*len)++] = TEXT('V');
+			 string[(*len)++] = 'I';
+			 string[(*len)++] = 'V';
 			 number -= 4;
 		      }
 		    while (number >= 1)
 		      {
-			 string[(*len)++] = TEXT('I');
+			 string[(*len)++] = 'I';
 			 number--;
 		      }
 		    if (style == CntLRoman)
 		       /* UPPERCASE --> lowercase */
 		       for (i = begin; i <= *len; i++)
-			  if (string[i - 1] != TEXT('?'))
+			  if (string[i - 1] != '?')
 			     string[i - 1] = (CHAR_T) ((int) (string[i - 1]) + 32);
 		 }
 	       break;
@@ -1060,7 +1060,7 @@ void GetCounterValue (int number, CounterStyle style, STRING string, int *len)
 	    case CntLowercase:
 	       if (number > 475354)
 		 {
-		  string[(*len)++] = TEXT('?');
+		  string[(*len)++] = '?';
 		  number = number % 475254;
 		 }
 	       if (number > 18278)
@@ -1077,9 +1077,9 @@ void GetCounterValue (int number, CounterStyle style, STRING string, int *len)
 		 {
 	          number --;
 	          if (style == CntUppercase)
-		     string[i - 1] = (CHAR_T) ((number % 26) + (int) (TEXT('A')));
+		     string[i - 1] = (CHAR_T) ((number % 26) + (int) ('A'));
 	          else
-		     string[i - 1] = (CHAR_T) ((number % 26) + (int) (TEXT('a')));
+		     string[i - 1] = (CHAR_T) ((number % 26) + (int) ('a'));
 		  i --;
 		  c --;
 		  number = number / 26;

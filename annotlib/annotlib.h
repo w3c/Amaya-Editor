@@ -19,22 +19,22 @@
 
 /* RDF Property names */
 
-#define RDFMS_NS TEXT("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
-#define RDF_TYPE  TEXT( RDFMS_NS "type")
-#define RDFS_LABEL TEXT("http://www.w3.org/2000/01/rdf-schema#label")
-#define RDFS_SUBCLASSOF TEXT("http://www.w3.org/2000/01/rdf-schema#subClassOf")
+#define RDFMS_NS "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+#define RDF_TYPE   RDFMS_NS "type"
+#define RDFS_LABEL "http://www.w3.org/2000/01/rdf-schema#label"
+#define RDFS_SUBCLASSOF "http://www.w3.org/2000/01/rdf-schema#subClassOf"
 
-#define DC_NS TEXT("http://purl.org/dc/elements/1.0/")
-#define HTTP_NS TEXT("http://www.w3.org/1999/xx/http#")
+#define DC_NS "http://purl.org/dc/elements/1.0/"
+#define HTTP_NS "http://www.w3.org/1999/xx/http#"
 
 #define ANNOT_LOCAL_NAME "Annotation"
 #define FALLBACK_ANNOTATION_NS "http://www.w3.org/1999/xx/annotation-ns#"
-#define FALLBACK_ANNOTATION_CLASSNAME TEXT( FALLBACK_ANNOTATION_NS ANNOT_LOCAL_NAME )
+#define FALLBACK_ANNOTATION_CLASSNAME  FALLBACK_ANNOTATION_NS ANNOT_LOCAL_NAME 
 
-#define ID_NS TEXT("http://www.w3.org/2000/08/palm56/addr#")
-#define EMAIL_PROPNAME TEXT( ID_NS "E-mail")
-#define NAME_PROPNAME TEXT( ID_NS "name")
-#define FIRSTNAME_PROPNAME TEXT( ID_NS "firstName")
+#define ID_NS "http://www.w3.org/2000/08/palm56/addr#"
+#define EMAIL_PROPNAME  ID_NS "E-mail"
+#define NAME_PROPNAME  ID_NS "name"
+#define FIRSTNAME_PROPNAME  ID_NS "firstName"
 
 /* Structures and global variables */
 

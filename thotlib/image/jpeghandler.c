@@ -186,7 +186,7 @@ unsigned char      *ReadJpegToData (CHAR_T* datafile, int* w, int* h, ThotColorS
    FILE               *fp;
 
 
-   fp = ufopen (datafile, TEXT("rb"));
+   fp = ufopen (datafile, "rb");
 
    if (fp != NULL)
      {
@@ -234,7 +234,7 @@ Drawable            JpegCreate (CHAR_T *fn, PictInfo *imageDesc, int *xif, int *
   if (!buffer)
     {
 #ifdef _WINDOWS 
-      WinErrorBox (NULL, TEXT("JpegCreate(1): buffer == 0x00000000"));
+      WinErrorBox (NULL, "JpegCreate(1: buffer == 0x00000000"));
 #endif /* _WINDOWS */
       return ((Drawable) NULL);
     }
@@ -275,7 +275,7 @@ Drawable            JpegCreate (CHAR_T *fn, PictInfo *imageDesc, int *xif, int *
   TtaFreeMemory (buffer);  
   if (pixmap == None) {
 #ifdef _WINDOWS
-     WinErrorBox (NULL, TEXT("JpegCreate(2): pixmap == 0x00000000"));
+     WinErrorBox (NULL, "JpegCreate(2: pixmap == 0x00000000"));
 #endif /* _WINDOWS */
     return ((Drawable) NULL);
   }
@@ -400,7 +400,7 @@ ThotBool           IsJpegFormat (CHAR_T* fn)
    /*JSAMPROW buffer[1]; *//* row pointer array for read_scanlines */
    FILE               *fd;
 
-   if ((fd = ufopen (fn, TEXT("rb"))) == NULL)
+   if ((fd = ufopen (fn, "rb")) == NULL)
      {
 	fprintf (stderr, "can't open %s\n", fn);
 	return FALSE;

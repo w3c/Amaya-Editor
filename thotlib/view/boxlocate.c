@@ -816,16 +816,16 @@ static ThotBool     IsInShape (PtrAbstractBox pAb, int x, int y)
   switch (pAb->AbRealShape)
     {
     case SPACE:
-    case TEXT('R'):
-    case TEXT('0'):
-    case TEXT('1'):
-    case TEXT('2'):
-    case TEXT('3'):
-    case TEXT('4'):
-    case TEXT('5'):
-    case TEXT('6'):
-    case TEXT('7'):
-    case TEXT('8'):		/* rectangles */
+    case 'R':
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':		/* rectangles */
       point[0][0] = 0;
       point[0][1] = 0;
       point[1][0] = 0;
@@ -1017,16 +1017,16 @@ static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
   switch (pAb->AbRealShape)
     {
     case SPACE:
-    case TEXT('R'):
-    case TEXT('0'):
-    case TEXT('1'):
-    case TEXT('2'):
-    case TEXT('3'):
-    case TEXT('4'):
-    case TEXT('5'):
-    case TEXT('6'):
-    case TEXT('7'):
-    case TEXT('8'):
+    case 'R':
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
       /* rectangle */
       if (IsOnSegment (x, y, 0, 0, pBox->BxWidth, 0) ||
 	  IsOnSegment (x, y, 0, pBox->BxHeight, pBox->BxWidth,

@@ -31,132 +31,132 @@ extern XmlEntity *pMathEntityTable;
 /* mapping table of attribute values */
 static AttrValueMapping MathMLAttrValueMappingTable[] =
 {
- {MathML_ATTR_accent, TEXT("true"), MathML_ATTR_accent_VAL_true},
- {MathML_ATTR_accent, TEXT("false"), MathML_ATTR_accent_VAL_false},
+ {MathML_ATTR_accent, "true", MathML_ATTR_accent_VAL_true},
+ {MathML_ATTR_accent, "false", MathML_ATTR_accent_VAL_false},
 
- {MathML_ATTR_accentunder, TEXT("true"), MathML_ATTR_accentunder_VAL_true},
- {MathML_ATTR_accentunder, TEXT("false"), MathML_ATTR_accentunder_VAL_false},
+ {MathML_ATTR_accentunder, "true", MathML_ATTR_accentunder_VAL_true},
+ {MathML_ATTR_accentunder, "false", MathML_ATTR_accentunder_VAL_false},
 
- {MathML_ATTR_align, TEXT("top"), MathML_ATTR_align_VAL_top_},
- {MathML_ATTR_align, TEXT("bottom"), MathML_ATTR_align_VAL_bottom_},
- {MathML_ATTR_align, TEXT("center"), MathML_ATTR_align_VAL_center},
- {MathML_ATTR_align, TEXT("baseline"), MathML_ATTR_align_VAL_baseline},
- {MathML_ATTR_align, TEXT("axis"), MathML_ATTR_align_VAL_axis},
+ {MathML_ATTR_align, "top", MathML_ATTR_align_VAL_top_},
+ {MathML_ATTR_align, "bottom", MathML_ATTR_align_VAL_bottom_},
+ {MathML_ATTR_align, "center", MathML_ATTR_align_VAL_center},
+ {MathML_ATTR_align, "baseline", MathML_ATTR_align_VAL_baseline},
+ {MathML_ATTR_align, "axis", MathML_ATTR_align_VAL_axis},
 
- {MathML_ATTR_bevelled, TEXT("true"), MathML_ATTR_bevelled_VAL_true},
- {MathML_ATTR_bevelled, TEXT("false"), MathML_ATTR_bevelled_VAL_false},
+ {MathML_ATTR_bevelled, "true", MathML_ATTR_bevelled_VAL_true},
+ {MathML_ATTR_bevelled, "false", MathML_ATTR_bevelled_VAL_false},
 
- {MathML_ATTR_columnalign_mtd, TEXT("center"), MathML_ATTR_columnalign_mtd_VAL_center_},
- {MathML_ATTR_columnalign_mtd, TEXT("left"), MathML_ATTR_columnalign_mtd_VAL_left_},
- {MathML_ATTR_columnalign_mtd, TEXT("right"), MathML_ATTR_columnalign_mtd_VAL_right_},
+ {MathML_ATTR_columnalign_mtd, "center", MathML_ATTR_columnalign_mtd_VAL_center_},
+ {MathML_ATTR_columnalign_mtd, "left", MathML_ATTR_columnalign_mtd_VAL_left_},
+ {MathML_ATTR_columnalign_mtd, "right", MathML_ATTR_columnalign_mtd_VAL_right_},
 
- {MathML_ATTR_denomalign, TEXT("center"), MathML_ATTR_denomalign_VAL_center_},
- {MathML_ATTR_denomalign, TEXT("left"), MathML_ATTR_denomalign_VAL_left_},
- {MathML_ATTR_denomalign, TEXT("right"), MathML_ATTR_denomalign_VAL_right_},
+ {MathML_ATTR_denomalign, "center", MathML_ATTR_denomalign_VAL_center_},
+ {MathML_ATTR_denomalign, "left", MathML_ATTR_denomalign_VAL_left_},
+ {MathML_ATTR_denomalign, "right", MathML_ATTR_denomalign_VAL_right_},
 
- {MathML_ATTR_display, TEXT("block"), MathML_ATTR_display_VAL_block},
- {MathML_ATTR_display, TEXT("display"), MathML_ATTR_display_VAL_block},
- {MathML_ATTR_display, TEXT("inline"), MathML_ATTR_display_VAL_inline_},
+ {MathML_ATTR_display, "block", MathML_ATTR_display_VAL_block},
+ {MathML_ATTR_display, "display", MathML_ATTR_display_VAL_block},
+ {MathML_ATTR_display, "inline", MathML_ATTR_display_VAL_inline_},
 
- {MathML_ATTR_displaystyle, TEXT("true"), MathML_ATTR_displaystyle_VAL_true},
- {MathML_ATTR_displaystyle, TEXT("false"), MathML_ATTR_displaystyle_VAL_false},
+ {MathML_ATTR_displaystyle, "true", MathML_ATTR_displaystyle_VAL_true},
+ {MathML_ATTR_displaystyle, "false", MathML_ATTR_displaystyle_VAL_false},
 
- {MathML_ATTR_edge, TEXT("left"), MathML_ATTR_edge_VAL_left_},
- {MathML_ATTR_edge, TEXT("right"), MathML_ATTR_edge_VAL_right_},
+ {MathML_ATTR_edge, "left", MathML_ATTR_edge_VAL_left_},
+ {MathML_ATTR_edge, "right", MathML_ATTR_edge_VAL_right_},
 
- {MathML_ATTR_equalcolumns, TEXT("true"), MathML_ATTR_equalcolumns_VAL_true},
- {MathML_ATTR_equalcolumns, TEXT("false"), MathML_ATTR_equalcolumns_VAL_false},
+ {MathML_ATTR_equalcolumns, "true", MathML_ATTR_equalcolumns_VAL_true},
+ {MathML_ATTR_equalcolumns, "false", MathML_ATTR_equalcolumns_VAL_false},
 
- {MathML_ATTR_equalrows, TEXT("true"), MathML_ATTR_equalrows_VAL_true},
- {MathML_ATTR_equalrows, TEXT("false"), MathML_ATTR_equalrows_VAL_false},
+ {MathML_ATTR_equalrows, "true", MathML_ATTR_equalrows_VAL_true},
+ {MathML_ATTR_equalrows, "false", MathML_ATTR_equalrows_VAL_false},
 
- {MathML_ATTR_fence, TEXT("true"), MathML_ATTR_fence_VAL_true},
- {MathML_ATTR_fence, TEXT("false"), MathML_ATTR_fence_VAL_false},
+ {MathML_ATTR_fence, "true", MathML_ATTR_fence_VAL_true},
+ {MathML_ATTR_fence, "false", MathML_ATTR_fence_VAL_false},
 
- {MathML_ATTR_fontstyle, TEXT("italic"), MathML_ATTR_fontstyle_VAL_italic},
- {MathML_ATTR_fontstyle, TEXT("normal"), MathML_ATTR_fontstyle_VAL_normal_},
+ {MathML_ATTR_fontstyle, "italic", MathML_ATTR_fontstyle_VAL_italic},
+ {MathML_ATTR_fontstyle, "normal", MathML_ATTR_fontstyle_VAL_normal_},
 
- {MathML_ATTR_fontweight, TEXT("normal"), MathML_ATTR_fontweight_VAL_normal_},
- {MathML_ATTR_fontweight, TEXT("bold"), MathML_ATTR_fontweight_VAL_bold_},
+ {MathML_ATTR_fontweight, "normal", MathML_ATTR_fontweight_VAL_normal_},
+ {MathML_ATTR_fontweight, "bold", MathML_ATTR_fontweight_VAL_bold_},
 
- {MathML_ATTR_form, TEXT("prefix"), MathML_ATTR_form_VAL_prefix},
- {MathML_ATTR_form, TEXT("infix"), MathML_ATTR_form_VAL_infix},
- {MathML_ATTR_form, TEXT("postfix"), MathML_ATTR_form_VAL_postfix},
+ {MathML_ATTR_form, "prefix", MathML_ATTR_form_VAL_prefix},
+ {MathML_ATTR_form, "infix", MathML_ATTR_form_VAL_infix},
+ {MathML_ATTR_form, "postfix", MathML_ATTR_form_VAL_postfix},
 
- {MathML_ATTR_frame, TEXT("none"), MathML_ATTR_frame_VAL_none_},
- {MathML_ATTR_frame, TEXT("solid"), MathML_ATTR_frame_VAL_solid_},
- {MathML_ATTR_frame, TEXT("dashed"), MathML_ATTR_frame_VAL_dashed_},
+ {MathML_ATTR_frame, "none", MathML_ATTR_frame_VAL_none_},
+ {MathML_ATTR_frame, "solid", MathML_ATTR_frame_VAL_solid_},
+ {MathML_ATTR_frame, "dashed", MathML_ATTR_frame_VAL_dashed_},
 
- {MathML_ATTR_groupalign_malgr, TEXT("left"), MathML_ATTR_groupalign_malgr_VAL_left_},
- {MathML_ATTR_groupalign_malgr, TEXT("center"), MathML_ATTR_groupalign_malgr_VAL_center_},
- {MathML_ATTR_groupalign_malgr, TEXT("right"), MathML_ATTR_groupalign_malgr_VAL_right_},
- {MathML_ATTR_groupalign_malgr, TEXT("decimalpoint"), MathML_ATTR_groupalign_malgr_VAL_decimalpoint},
+ {MathML_ATTR_groupalign_malgr, "left", MathML_ATTR_groupalign_malgr_VAL_left_},
+ {MathML_ATTR_groupalign_malgr, "center", MathML_ATTR_groupalign_malgr_VAL_center_},
+ {MathML_ATTR_groupalign_malgr, "right", MathML_ATTR_groupalign_malgr_VAL_right_},
+ {MathML_ATTR_groupalign_malgr, "decimalpoint", MathML_ATTR_groupalign_malgr_VAL_decimalpoint},
 
- {MathML_ATTR_largeop, TEXT("true"), MathML_ATTR_largeop_VAL_true},
- {MathML_ATTR_largeop, TEXT("false"), MathML_ATTR_largeop_VAL_false},
+ {MathML_ATTR_largeop, "true", MathML_ATTR_largeop_VAL_true},
+ {MathML_ATTR_largeop, "false", MathML_ATTR_largeop_VAL_false},
 
- {MathML_ATTR_linebreak_, TEXT("auto"), MathML_ATTR_linebreak__VAL_auto_},
- {MathML_ATTR_linebreak_, TEXT("newline"), MathML_ATTR_linebreak__VAL_newline},
- {MathML_ATTR_linebreak_, TEXT("indentingnewline"), MathML_ATTR_linebreak__VAL_indentingnewline},
- {MathML_ATTR_linebreak_, TEXT("nobreak"), MathML_ATTR_linebreak__VAL_nobreak_},
- {MathML_ATTR_linebreak_, TEXT("goodbreak"), MathML_ATTR_linebreak__VAL_goodbreak},
- {MathML_ATTR_linebreak_, TEXT("badbreak"), MathML_ATTR_linebreak__VAL_badbreak},
+ {MathML_ATTR_linebreak_, "auto", MathML_ATTR_linebreak__VAL_auto_},
+ {MathML_ATTR_linebreak_, "newline", MathML_ATTR_linebreak__VAL_newline},
+ {MathML_ATTR_linebreak_, "indentingnewline", MathML_ATTR_linebreak__VAL_indentingnewline},
+ {MathML_ATTR_linebreak_, "nobreak", MathML_ATTR_linebreak__VAL_nobreak_},
+ {MathML_ATTR_linebreak_, "goodbreak", MathML_ATTR_linebreak__VAL_goodbreak},
+ {MathML_ATTR_linebreak_, "badbreak", MathML_ATTR_linebreak__VAL_badbreak},
 
- {MathML_ATTR_mathvariant, TEXT("normal"), MathML_ATTR_mathvariant_VAL_normal_},
- {MathML_ATTR_mathvariant, TEXT("bold"), MathML_ATTR_mathvariant_VAL_bold_},
- {MathML_ATTR_mathvariant, TEXT("italic"), MathML_ATTR_mathvariant_VAL_italic},
- {MathML_ATTR_mathvariant, TEXT("bold-italic"), MathML_ATTR_mathvariant_VAL_bold_italic},
- {MathML_ATTR_mathvariant, TEXT("double-struck"), MathML_ATTR_mathvariant_VAL_double_struck},
- {MathML_ATTR_mathvariant, TEXT("bold-fraktur"), MathML_ATTR_mathvariant_VAL_bold_fraktur},
- {MathML_ATTR_mathvariant, TEXT("script"), MathML_ATTR_mathvariant_VAL_script},
- {MathML_ATTR_mathvariant, TEXT("bold-script"), MathML_ATTR_mathvariant_VAL_bold_script},
- {MathML_ATTR_mathvariant, TEXT("fraktur"), MathML_ATTR_mathvariant_VAL_fraktur},
- {MathML_ATTR_mathvariant, TEXT("sans-serif"), MathML_ATTR_mathvariant_VAL_sans_serif},
- {MathML_ATTR_mathvariant, TEXT("bold-sans-serif"), MathML_ATTR_mathvariant_VAL_bold_sans_serif},
- {MathML_ATTR_mathvariant, TEXT("sans-serif-italic"), MathML_ATTR_mathvariant_VAL_sans_serif_italic},
- {MathML_ATTR_mathvariant, TEXT("sans-serif-bold-italic"), MathML_ATTR_mathvariant_VAL_sans_serif_bold_italic},
- {MathML_ATTR_mathvariant, TEXT("monospace"), MathML_ATTR_mathvariant_VAL_monospace},
+ {MathML_ATTR_mathvariant, "normal", MathML_ATTR_mathvariant_VAL_normal_},
+ {MathML_ATTR_mathvariant, "bold", MathML_ATTR_mathvariant_VAL_bold_},
+ {MathML_ATTR_mathvariant, "italic", MathML_ATTR_mathvariant_VAL_italic},
+ {MathML_ATTR_mathvariant, "bold-italic", MathML_ATTR_mathvariant_VAL_bold_italic},
+ {MathML_ATTR_mathvariant, "double-struck", MathML_ATTR_mathvariant_VAL_double_struck},
+ {MathML_ATTR_mathvariant, "bold-fraktur", MathML_ATTR_mathvariant_VAL_bold_fraktur},
+ {MathML_ATTR_mathvariant, "script", MathML_ATTR_mathvariant_VAL_script},
+ {MathML_ATTR_mathvariant, "bold-script", MathML_ATTR_mathvariant_VAL_bold_script},
+ {MathML_ATTR_mathvariant, "fraktur", MathML_ATTR_mathvariant_VAL_fraktur},
+ {MathML_ATTR_mathvariant, "sans-serif", MathML_ATTR_mathvariant_VAL_sans_serif},
+ {MathML_ATTR_mathvariant, "bold-sans-serif", MathML_ATTR_mathvariant_VAL_bold_sans_serif},
+ {MathML_ATTR_mathvariant, "sans-serif-italic", MathML_ATTR_mathvariant_VAL_sans_serif_italic},
+ {MathML_ATTR_mathvariant, "sans-serif-bold-italic", MathML_ATTR_mathvariant_VAL_sans_serif_bold_italic},
+ {MathML_ATTR_mathvariant, "monospace", MathML_ATTR_mathvariant_VAL_monospace},
 
- {MathML_ATTR_movablelimits, TEXT("true"), MathML_ATTR_movablelimits_VAL_true},
- {MathML_ATTR_movablelimits, TEXT("false"), MathML_ATTR_movablelimits_VAL_false},
+ {MathML_ATTR_movablelimits, "true", MathML_ATTR_movablelimits_VAL_true},
+ {MathML_ATTR_movablelimits, "false", MathML_ATTR_movablelimits_VAL_false},
 
- {MathML_ATTR_notation, TEXT("longdiv"), MathML_ATTR_notation_VAL_longdiv},
- {MathML_ATTR_notation, TEXT("actuarial"), MathML_ATTR_notation_VAL_actuarial},
- {MathML_ATTR_notation, TEXT("radical"), MathML_ATTR_notation_VAL_radical},
+ {MathML_ATTR_notation, "longdiv", MathML_ATTR_notation_VAL_longdiv},
+ {MathML_ATTR_notation, "actuarial", MathML_ATTR_notation_VAL_actuarial},
+ {MathML_ATTR_notation, "radical", MathML_ATTR_notation_VAL_radical},
 
- {MathML_ATTR_numalign, TEXT("center"), MathML_ATTR_numalign_VAL_center_},
- {MathML_ATTR_numalign, TEXT("left"), MathML_ATTR_numalign_VAL_left_},
- {MathML_ATTR_numalign, TEXT("right"), MathML_ATTR_numalign_VAL_right_},
+ {MathML_ATTR_numalign, "center", MathML_ATTR_numalign_VAL_center_},
+ {MathML_ATTR_numalign, "left", MathML_ATTR_numalign_VAL_left_},
+ {MathML_ATTR_numalign, "right", MathML_ATTR_numalign_VAL_right_},
 
- {MathML_ATTR_overflow, TEXT("scroll"), MathML_ATTR_overflow_VAL_scroll},
- {MathML_ATTR_overflow, TEXT("elide"), MathML_ATTR_overflow_VAL_elide},
- {MathML_ATTR_overflow, TEXT("truncate"), MathML_ATTR_overflow_VAL_truncate},
- {MathML_ATTR_overflow, TEXT("scale"), MathML_ATTR_overflow_VAL_scale_},
+ {MathML_ATTR_overflow, "scroll", MathML_ATTR_overflow_VAL_scroll},
+ {MathML_ATTR_overflow, "elide", MathML_ATTR_overflow_VAL_elide},
+ {MathML_ATTR_overflow, "truncate", MathML_ATTR_overflow_VAL_truncate},
+ {MathML_ATTR_overflow, "scale", MathML_ATTR_overflow_VAL_scale_},
 
- {MathML_ATTR_rowalign_mtr, TEXT("top"), MathML_ATTR_rowalign_mtr_VAL_top_},
- {MathML_ATTR_rowalign_mtr, TEXT("bottom"), MathML_ATTR_rowalign_mtr_VAL_bottom_},
- {MathML_ATTR_rowalign_mtr, TEXT("center"), MathML_ATTR_rowalign_mtr_VAL_center},
- {MathML_ATTR_rowalign_mtr, TEXT("baseline"), MathML_ATTR_rowalign_mtr_VAL_baseline},
- {MathML_ATTR_rowalign_mtr, TEXT("axis"), MathML_ATTR_rowalign_mtr_VAL_axis},
+ {MathML_ATTR_rowalign_mtr, "top", MathML_ATTR_rowalign_mtr_VAL_top_},
+ {MathML_ATTR_rowalign_mtr, "bottom", MathML_ATTR_rowalign_mtr_VAL_bottom_},
+ {MathML_ATTR_rowalign_mtr, "center", MathML_ATTR_rowalign_mtr_VAL_center},
+ {MathML_ATTR_rowalign_mtr, "baseline", MathML_ATTR_rowalign_mtr_VAL_baseline},
+ {MathML_ATTR_rowalign_mtr, "axis", MathML_ATTR_rowalign_mtr_VAL_axis},
 
- {MathML_ATTR_separator, TEXT("true"), MathML_ATTR_separator_VAL_true},
- {MathML_ATTR_separator, TEXT("false"), MathML_ATTR_separator_VAL_false},
+ {MathML_ATTR_separator, "true", MathML_ATTR_separator_VAL_true},
+ {MathML_ATTR_separator, "false", MathML_ATTR_separator_VAL_false},
 
- {MathML_ATTR_side, TEXT("left"), MathML_ATTR_side_VAL_left_},
- {MathML_ATTR_side, TEXT("leftoverlap"), MathML_ATTR_side_VAL_leftoverlap},
- {MathML_ATTR_side, TEXT("right"), MathML_ATTR_side_VAL_right_},
- {MathML_ATTR_side, TEXT("rightoverlap"), MathML_ATTR_side_VAL_rightoverlap},
+ {MathML_ATTR_side, "left", MathML_ATTR_side_VAL_left_},
+ {MathML_ATTR_side, "leftoverlap", MathML_ATTR_side_VAL_leftoverlap},
+ {MathML_ATTR_side, "right", MathML_ATTR_side_VAL_right_},
+ {MathML_ATTR_side, "rightoverlap", MathML_ATTR_side_VAL_rightoverlap},
 
- {MathML_ATTR_stretchy, TEXT("true"), MathML_ATTR_stretchy_VAL_true},
- {MathML_ATTR_stretchy, TEXT("false"), MathML_ATTR_stretchy_VAL_false},
+ {MathML_ATTR_stretchy, "true", MathML_ATTR_stretchy_VAL_true},
+ {MathML_ATTR_stretchy, "false", MathML_ATTR_stretchy_VAL_false},
 
- {MathML_ATTR_symmetric, TEXT("true"), MathML_ATTR_symmetric_VAL_true},
- {MathML_ATTR_symmetric, TEXT("false"), MathML_ATTR_symmetric_VAL_false},
+ {MathML_ATTR_symmetric, "true", MathML_ATTR_symmetric_VAL_true},
+ {MathML_ATTR_symmetric, "false", MathML_ATTR_symmetric_VAL_false},
 
- {MathML_ATTR_xml_space, TEXT("default"), MathML_ATTR_xml_space_VAL_xml_space_default},
- {MathML_ATTR_xml_space, TEXT("preserve"), MathML_ATTR_xml_space_VAL_xml_space_preserve},
+ {MathML_ATTR_xml_space, "default", MathML_ATTR_xml_space_VAL_xml_space_default},
+ {MathML_ATTR_xml_space, "preserve", MathML_ATTR_xml_space_VAL_xml_space_preserve},
 
- {0, TEXT(""), 0}			/* Last entry. Mandatory */
+ {0, "", 0}			/* Last entry. Mandatory */
 };
 
 #define MaxMsgLength 200
@@ -264,10 +264,10 @@ void    MathMLEntityCreated (USTRING entityValue, Language lang,
 	  {
 	  if (entityName[1] == 'x')
 	     /* it's a hexadecimal number */
-	     usscanf (&entityName[2], TEXT("%x"), &code);
+	     usscanf (&entityName[2], "%x", &code);
 	  else
 	     /* it's a decimal number */
-	     usscanf (&entityName[1], TEXT("%d"), &code);
+	     usscanf (&entityName[1], "%d", &code);
 	  GetFallbackCharacter (code, entityValue, &lang);
 	  }
      }
@@ -1323,9 +1323,9 @@ void SetFontstyleAttr (Element el, Document doc)
 		  {
 		  value = TtaAllocString (len+1);
 		  TtaGiveTextAttributeValue (attr, value, &len);
-		  if (ustrcmp (value, TEXT("&ImaginaryI;")) == 0 ||
-		      ustrcmp (value, TEXT("&ExponentialE;")) == 0 ||
-		      ustrcmp (value, TEXT("&DifferentialD;")) == 0)
+		  if (ustrcmp (value, "&ImaginaryI;") == 0 ||
+		      ustrcmp (value, "&ExponentialE;") == 0 ||
+		      ustrcmp (value, "&DifferentialD;") == 0)
 		    italic = FALSE;
 		  TtaFreeMemory (value);
 		  }
@@ -1601,10 +1601,10 @@ void      CheckFence (Element el, Document doc)
 	     /* the MO element is a child of a MROW element */
 	      {
 	      if (((alphabet == 'L') &&
-		   (text[0] == TEXT('(') || text[0] == TEXT(')') ||
-		    text[0] == TEXT('[') || text[0] == TEXT(']') ||
-		    text[0] == TEXT('{') || text[0] == TEXT('}') ||
-		    text[0] == TEXT('|')))  ||
+		   (text[0] == '(' || text[0] == ')' ||
+		    text[0] == '[' || text[0] == ']' ||
+		    text[0] == '{' || text[0] == '}' ||
+		    text[0] == '|'))  ||
 		  ((alphabet == 'G') &&
 		   ((int)text[0] == 225 || (int)text[0] == 241)))
 		/* it's a stretchable parenthesis or equivalent */
@@ -2164,7 +2164,7 @@ void SetFontfamily (Document doc, Element el, STRING value)
 #define buflen 50
   CHAR_T           css_command[buflen+20];
  
-  usprintf (css_command, TEXT("font-family: %s"), value);
+  usprintf (css_command, "font-family: %s", value);
   ParseHTMLSpecificStyle (el, css_command, doc, 0, FALSE);
 }
 
@@ -2178,13 +2178,13 @@ void MathMLlinethickness (Document doc, Element el, STRING value)
 #define buflen 50
   CHAR_T           css_command[buflen+20];
 
-  if (ustrcmp (value, TEXT("thin")) == 0)
-     ustrcpy (value, TEXT("1pt"));
-  else if (ustrcmp (value, TEXT("medium")) == 0)
-     ustrcpy (value, TEXT("1pt"));
-  else if (ustrcmp (value, TEXT("thick")) == 0)
-     ustrcpy (value, TEXT("2pt"));
-  usprintf (css_command, TEXT("stroke-width: %s"), value);
+  if (ustrcmp (value, "thin") == 0)
+     ustrcpy (value, "1pt");
+  else if (ustrcmp (value, "medium") == 0)
+     ustrcpy (value, "1pt");
+  else if (ustrcmp (value, "thick") == 0)
+     ustrcpy (value, "2pt");
+  usprintf (css_command, "stroke-width: %s", value);
   ParseHTMLSpecificStyle (el, css_command, doc, 0, FALSE);
 }
 
@@ -2200,22 +2200,22 @@ void MathMLAttrToStyleProperty (Document doc, Element el, STRING value, int attr
   switch (attr)
     {
     case MathML_ATTR_fontsize:
-       usprintf (css_command, TEXT("font-size: %s"), value);
+       usprintf (css_command, "font-size: %s", value);
        break;
     case MathML_ATTR_mathsize:
-       if (ustrcmp (value, TEXT("small")) == 0)
-	 ustrcpy (value, TEXT("80%"));
-       else if (ustrcmp (value, TEXT("normal")) == 0)
-	 ustrcpy (value, TEXT("100%"));
-       else if (ustrcmp (value, TEXT("big")) == 0)
-	 ustrcpy (value, TEXT("125%"));
-       usprintf (css_command, TEXT("font-size: %s"), value);
+       if (ustrcmp (value, "small") == 0)
+	 ustrcpy (value, "80%");
+       else if (ustrcmp (value, "normal") == 0)
+	 ustrcpy (value, "100%");
+       else if (ustrcmp (value, "big") == 0)
+	 ustrcpy (value, "125%");
+       usprintf (css_command, "font-size: %s", value);
        break;
     case MathML_ATTR_lspace:
-       usprintf (css_command, TEXT("padding-left: %s"), value);
+       usprintf (css_command, "padding-left: %s", value);
        break;
     case MathML_ATTR_rspace:
-       usprintf (css_command, TEXT("padding-right: %s"), value);
+       usprintf (css_command, "padding-right: %s", value);
        break;
     }
   ParseHTMLSpecificStyle (el, css_command, doc, 0, FALSE);
@@ -2330,7 +2330,7 @@ void MathMLSpacingAttr (Document doc, Element el, STRING value, int attr)
       return;
     }
   ctxt = TtaGetSpecificStyleContext (doc);
-  if (!value || (ustrcmp (value, TEXT("auto")) == 0))
+  if (!value || (ustrcmp (value, "auto") == 0))
     /* remove the presentation rule */
     {
       ctxt->destroy = TRUE;
@@ -2493,7 +2493,7 @@ void      MathMLAttributeComplete (Attribute attr, Element el, Document doc)
 void      MathMLGetDTDName (STRING DTDname, STRING elementName)
 {
    /* no other DTD allowed within MathML elements */
-   ustrcpy (DTDname, TEXT(""));
+   ustrcpy (DTDname, "");
 }
 
 /* end of module */

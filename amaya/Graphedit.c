@@ -228,7 +228,7 @@ ThotBool       ExtendSelectGraphMLElement (NotifyElement *event)
    ancestor = TtaGetCommonAncestor (firstSel, event->element);
    if (ancestor == NULL)
       return TRUE;	/* Don't let Thot perform normal operation */
-   graphSSchema = TtaGetSSchema (TEXT("GraphML"), event->document);
+   graphSSchema = TtaGetSSchema ("GraphML", event->document);
    ancestType = TtaGetElementType (ancestor);
    if (ancestType.ElSSchema != graphSSchema)
       /* common ancestor is not a GraphML element */
@@ -387,7 +387,7 @@ static void TranslatePointsAttribute (Element el, Document doc, int delta, TypeU
 	    }
 	  else
 	    GetAttributeValueAndUnit (attr, &x, &unit);
-	  usprintf (buffer, TEXT("%dpx"), x);
+	  usprintf (buffer, "%dpx", x);
 	  TtaSetAttributeText (attr, buffer, el, doc);
 	  /* update the last point */
 	  attrType.AttrTypeNum = GraphML_ATTR_x2;
@@ -404,7 +404,7 @@ static void TranslatePointsAttribute (Element el, Document doc, int delta, TypeU
 	    {
 	      x = 0;
 	    }
-	  usprintf (buffer, TEXT("%dpx"), x);
+	  usprintf (buffer, "%dpx", x);
 	  TtaSetAttributeText (attr, buffer, el, doc);
 	}
       else
@@ -425,7 +425,7 @@ static void TranslatePointsAttribute (Element el, Document doc, int delta, TypeU
 	    {
 	      y = 0;
 	    }
-	  usprintf (buffer, TEXT("%dpx"), y);
+	  usprintf (buffer, "%dpx", y);
 	  TtaSetAttributeText (attr, buffer, el, doc);
 	  /* update the last point */
 	  attrType.AttrTypeNum = GraphML_ATTR_y2;
@@ -442,7 +442,7 @@ static void TranslatePointsAttribute (Element el, Document doc, int delta, TypeU
 	    {
 	      y = 0;
 	    }
-	  usprintf (buffer, TEXT("%dpx"), y);
+	  usprintf (buffer, "%dpx", y);
 	  TtaSetAttributeText (attr, buffer, el, doc);
 	}
 #endif /* IV */
@@ -482,11 +482,11 @@ static void TranslatePointsAttribute (Element el, Document doc, int delta, TypeU
 	    {
 	      TtaGivePolylinePoint (child, point, unit, &x, &y);
 	      if (point > 1)
-		ustrcat (buffer, TEXT(" "));
-	      usprintf (buffer1, TEXT("%d"), x + posX);
+		ustrcat (buffer, " ");
+	      usprintf (buffer1, "%d", x + posX);
 	      ustrcat (buffer, buffer1);
-	      ustrcat (buffer, TEXT(","));
-	      usprintf (buffer1, TEXT("%d"), y + posY);
+	      ustrcat (buffer, ",");
+	      usprintf (buffer1, "%d", y + posY);
 	      ustrcat (buffer, buffer1);
 	    }
 	  attrType.AttrTypeNum = GraphML_ATTR_points;
@@ -522,7 +522,7 @@ static void   UpdateAttrText (Element el, Document doc, AttributeType attrType, 
       TtaAttachAttribute (el, attr, doc);
 
       /* by default generate pixel values */
-      usprintf (buffer, TEXT("%dpx"), value);
+      usprintf (buffer, "%dpx", value);
       TtaSetAttributeText (attr, buffer, el, doc);
       TtaRegisterAttributeCreate (attr, el, doc);
     }
@@ -536,10 +536,10 @@ static void   UpdateAttrText (Element el, Document doc, AttributeType attrType, 
       v = 0;
       while (buffer[i] != WC_EOS && !v)
 	{
-	  if (buffer[i] == TEXT('.'))
+	  if (buffer[i] == '.')
 	    {
 	      buffer[i] = WC_EOS;
-	      usscanf (buffer, TEXT("%d"), &pval);	      
+	      usscanf (buffer, "%d", &pval);	      
 	      v = i + 1;
 	    }
 	  i++;
@@ -547,9 +547,9 @@ static void   UpdateAttrText (Element el, Document doc, AttributeType attrType, 
       unit[0] = WC_EOS;
       pe = 0;
       if (v)
-	usscanf (&buffer[v], TEXT("%d%s"), &pe, unit);
+	usscanf (&buffer[v], "%d%s", &pe, unit);
       else
-	usscanf (buffer, TEXT("%d%s"), &pval, unit);
+	usscanf (buffer, "%d%s", &pval, unit);
       /* convert the value according to the current unit */
       if (!ustrcmp (unit, "em") || !ustrcmp (unit, "ex"))
 	{
@@ -588,9 +588,9 @@ static void   UpdateAttrText (Element el, Document doc, AttributeType attrType, 
 	  e = e + pe;
 	}
       if (e > 0)
-	usprintf (buffer, TEXT("%d.%d%s"), v, e, unit);
+	usprintf (buffer, "%d.%d%s", v, e, unit);
       else
-	usprintf (buffer, TEXT("%d%s"), v, unit);
+	usprintf (buffer, "%d%s", v, unit);
       TtaRegisterAttributeReplace (attr, el, doc);
       TtaSetAttributeText (attr, buffer, el, doc);
     }
@@ -1163,10 +1163,10 @@ void ControlPointChanged (NotifyOnValue *event)
 	while (i <= length)
 	  {
 	     TtaGivePolylinePoint (child, i, UnPixel, &x, &y);
-	     usprintf (buffer, TEXT("%d,%d"), x, y);
+	     usprintf (buffer, "%d,%d", x, y);
 	     ustrcat (text, buffer);
 	     if (i < length)
-	       ustrcat (text, TEXT(" "));
+	       ustrcat (text, " ");
 	     i++;
 	  }
 	TtaFreeMemory (buffer);
@@ -1226,14 +1226,14 @@ ThotBool ExportForeignObject (NotifyElement *event)
   while (child)
     {
       elType = TtaGetElementType (child);
-      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
 	 /* child is an HTML element */
 	{
         attrType.AttrTypeNum = GraphML_ATTR_Namespace;
         attrType.AttrSSchema = TtaGetElementType (event->element).ElSSchema;
 	attr = TtaNewAttribute (attrType);
 	TtaAttachAttribute (child, attr, event->document);
-        TtaSetAttributeText (attr, TEXT("http://www.w3.org/1999/xhtml"), child,
+        TtaSetAttributeText (attr, "http://www.w3.org/1999/xhtml", child,
 			     event->document);
 	}
       TtaNextSibling (&child);
@@ -1330,14 +1330,14 @@ void         CreateGraphicElement (int entry)
 	/* the current selection is not in a GraphML element, create one */
 	{
 	  selType = TtaGetElementType (first);
-	  if (ustrcmp (TtaGetSSchemaName (selType.ElSSchema), TEXT("HTML")))
+	  if (ustrcmp (TtaGetSSchemaName (selType.ElSSchema), "HTML"))
 	    {
 	      /* selection is not in an HTML element. */
 	      TtaCancelLastRegisteredSequence (doc);
 	      return;
 	    }
-	  graphSchema = TtaNewNature (doc, docSchema, TEXT("GraphML"),
-				      TEXT("GraphMLP"));
+	  graphSchema = TtaNewNature (doc, docSchema, "GraphML",
+				      "GraphMLP");
 	  if (TtaIsSelectionEmpty ())
 	    {
 	      /* try to create the SVG here */
@@ -1489,7 +1489,7 @@ void         CreateGraphicElement (int entry)
 	    {
 	      attr = TtaNewAttribute (attrType);
 	      TtaAttachAttribute (newEl, attr, doc);
-	      TtaSetAttributeText (attr, TEXT("black"), newEl, doc);
+	      TtaSetAttributeText (attr, "black", newEl, doc);
 	      ParseFillStrokeAttributes (attrType.AttrTypeNum, attr, newEl,
 					 doc, FALSE);
 	    }
@@ -1501,7 +1501,7 @@ void         CreateGraphicElement (int entry)
 		{
 		  attr = TtaNewAttribute (attrType);
 		  TtaAttachAttribute (newEl, attr, doc);
-		  TtaSetAttributeText (attr, TEXT("none"), newEl, doc);
+		  TtaSetAttributeText (attr, "none", newEl, doc);
 		  ParseFillStrokeAttributes (attrType.AttrTypeNum, attr, newEl,
 					     doc, FALSE);
 		}
@@ -1524,7 +1524,7 @@ void         CreateGraphicElement (int entry)
 	      attrType.AttrTypeNum = GraphML_ATTR_rx;
 	      attr = TtaNewAttribute (attrType);
 	      TtaAttachAttribute (newEl, attr, doc);
-	      TtaSetAttributeText (attr, TEXT("5px"), newEl, doc);
+	      TtaSetAttributeText (attr, "5px", newEl, doc);
 	      ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
 	    }
 	}
@@ -1543,8 +1543,8 @@ void         CreateGraphicElement (int entry)
 	  attrType.AttrTypeNum = GraphML_ATTR_width_;
 	  UpdateAttrText (newEl, doc, attrType, 100, FALSE, TRUE);
 	    /* the document is supposed to be HTML */
-	  childType.ElSSchema = TtaNewNature (doc, docSchema, TEXT("HTML"),
-					      TEXT("HTMLP"));
+	  childType.ElSSchema = TtaNewNature (doc, docSchema, "HTML",
+					      "HTMLP");
 	  childType.ElTypeNum = HTML_EL_Division;
 	  child = TtaNewTree (doc, childType, "");
 	  /* do not check the Thot abstract tree against the structure */
@@ -1629,7 +1629,7 @@ void         CreateGraphicElement (int entry)
   TtaCloseUndoSequence (doc);
   TtaSetDocumentModified (doc);
   if (newType.ElTypeNum == 0)
-    InitInfo (TEXT("      "), TtaGetMessage (AMAYA, AM_NOT_AVAILABLE));
+    InitInfo ("      ", TtaGetMessage (AMAYA, AM_NOT_AVAILABLE));
 }
 
 /*----------------------------------------------------------------------
@@ -1866,7 +1866,7 @@ void                TspanCreated (NotifyElement * event)
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (event->element, attr, event->document);
     }
-  TtaSetAttributeText (attr, TEXT("0"), event->element, event->document);
+  TtaSetAttributeText (attr, "0", event->element, event->document);
   ParseCoordAttribute (attr, event->element, event->document);
 
   attrType.AttrTypeNum = GraphML_ATTR_dy;
@@ -1876,7 +1876,7 @@ void                TspanCreated (NotifyElement * event)
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (event->element, attr, event->document);
     }
-  TtaSetAttributeText (attr, TEXT("1em"), event->element, event->document);
+  TtaSetAttributeText (attr, "1em", event->element, event->document);
   ParseCoordAttribute (attr, event->element, event->document);
 }
 
@@ -1958,7 +1958,7 @@ ThotBool TextWillChangeInGroup (NotifyOnTarget *event)
   len = TtaGetTextLength (leaf) + 1;
   text = TtaAllocString (len);
   TtaGiveTextContent (leaf, text, &len, &lang);
-  usscanf (text, TEXT("%d"), &oldValue);
+  usscanf (text, "%d", &oldValue);
   TtaFreeMemory (text);
   return FALSE; /* let Thot perform normal operation */
 }
@@ -2010,13 +2010,13 @@ void                TextChangedInGroup (NotifyOnTarget *event)
   text = TtaAllocString (len);
   TtaGiveTextContent (leaf1, text, &len, &lang);
   /* convert that content into a number */
-  usscanf (text, TEXT("%d"), &num);
+  usscanf (text, "%d", &num);
   TtaFreeMemory (text);
   /* only cubes 4 to 9 can be moved */
   if (num < 4 || num > 9 || oldValue < 4 || oldValue > 9)
     {
       /* this cube can't be moved. Restore its original number */
-      usprintf (buffer, TEXT("%d"), oldValue);
+      usprintf (buffer, "%d", oldValue);
       TtaSetTextContent (leaf1, buffer, lang, doc);
       return;
     }
@@ -2053,7 +2053,7 @@ void                TextChangedInGroup (NotifyOnTarget *event)
 			    text = TtaAllocString (len);
 			    TtaGiveTextContent (leaf2, text, &len, &lang);
 			    /* convert the content into a number */
-			    usscanf (text, TEXT("%d"), &i);
+			    usscanf (text, "%d", &i);
 			    TtaFreeMemory (text);
 			    if (i == num)
 			      /* that's the same number */
@@ -2072,7 +2072,7 @@ void                TextChangedInGroup (NotifyOnTarget *event)
     /* there is no other cube with that number. Restore the original number
        and return */
     {
-      usprintf (buffer, TEXT("%d"), oldValue);
+      usprintf (buffer, "%d", oldValue);
       TtaSetTextContent (leaf1, buffer, lang, doc);
       return;
     }
@@ -2084,7 +2084,7 @@ void                TextChangedInGroup (NotifyOnTarget *event)
     neighbour = FALSE;
 
   /* the other cube take the previous number of the modified cube */
-  usprintf (buffer, TEXT("%d"), oldValue);
+  usprintf (buffer, "%d", oldValue);
   TtaSetTextContent (leaf2, buffer, lang, doc);
 
   /* get the original coordinates of both cubes */

@@ -488,7 +488,7 @@ void Prof_InitTable ()
     {
       if (SearchFile (ptr, 2, buffer))
 	{
-	  profFile = ufopen (buffer, TEXT("r"));
+	  profFile = ufopen (buffer, "r");
 	  /* what is the current active profile */  
 	  ptr = TtaGetEnvString ("Profile");
 	  if (ptr && *ptr)
@@ -671,7 +671,7 @@ ThotBool   Prof_ShowSubMenu (Menu_Ctl *ptrsubmenu)
     return FALSE;
   while (item < ptrsubmenu->ItemsNb)
     {
-      if (ptrsubmenu->ItemsList[item].ItemType != TEXT('S'))
+      if (ptrsubmenu->ItemsList[item].ItemType != 'S')
 	return TRUE;
       item ++;
     }
@@ -704,9 +704,9 @@ ThotBool   Prof_ShowMenu (Menu_Ctl *ptrmenu)
   /* check if the menu is only composed of empty sub menus and separators */
   while (item < ptrmenu->ItemsNb)
     {
-      if (ptrmenu->ItemsList[item].ItemType != TEXT('S'))
+      if (ptrmenu->ItemsList[item].ItemType != 'S')
 	{
-	  if (ptrmenu->ItemsList[item].ItemType == TEXT('M'))
+	  if (ptrmenu->ItemsList[item].ItemType == 'M')
 	    {
 	      if (Prof_ShowSubMenu (ptrmenu->ItemsList[item].SubMenu)) 
 		/* there is at least a non empty sub menu */

@@ -283,8 +283,8 @@ void                LoadDocument (PtrDocument * pDoc, STRING fileName)
    int                 i, j, len;
    ThotBool            ok;
 
-   if (fileName && ustrchr (fileName, TEXT('/')))
-     URL_DIR_SEP = TEXT('/');
+   if (fileName && ustrchr (fileName, '/'))
+     URL_DIR_SEP = '/';
    else 
      URL_DIR_SEP = DIR_SEP;
 
@@ -297,7 +297,7 @@ void                LoadDocument (PtrDocument * pDoc, STRING fileName)
 	 {
 	   len = ustrlen (fileName);
 	   if (len > 4)
-	     if (ustrcmp (fileName + len - 4, TEXT(".PIV")) == 0)
+	     if (ustrcmp (fileName + len - 4, ".PIV") == 0)
 	       fileName[len - 4] = EOS;
 	   if (fileName[0] != URL_DIR_SEP)
 	     {
@@ -420,14 +420,14 @@ void NewDocument (PtrDocument * pDoc, CHAR_T* SSchemaName, CHAR_T *docName,
 	 /* compose le nom du fichier a ouvrir avec le nom du directory */
 	 /* des schemas... */
 	 ustrncpy (directoryBuffer, SchemaPath, MAX_PATH);
-	 MakeCompleteName (docType, TEXT("STR"), directoryBuffer,
+	 MakeCompleteName (docType, "STR", directoryBuffer,
 			   fileNameBuffer, &i);
 	 /* teste si le fichier '.STR' existe */
 
 	 if (TtaFileExist (fileNameBuffer) == 0)
 	    {
 	    ustrncpy (fileNameBuffer, docType, MAX_NAME_LENGTH);
-	    ustrcat (fileNameBuffer, TEXT(".STR"));
+	    ustrcat (fileNameBuffer, ".STR");
 	    TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_SCHEMA_NOT_FIND),
 			       fileNameBuffer);
 	    }
@@ -444,7 +444,7 @@ void NewDocument (PtrDocument * pDoc, CHAR_T* SSchemaName, CHAR_T *docName,
 	    else
 	       {
 	       ustrncpy (docNameBuffer, SSchemaName, MAX_NAME_LENGTH);
-	       ustrcat (docNameBuffer, TEXT("X"));
+	       ustrcat (docNameBuffer, "X");
 	       }
 	    if ((*pDoc)->DocSSchema != NULL)
 	       if ((*pDoc)->DocSSchema->SsPSchema != NULL)
@@ -492,7 +492,7 @@ void NewDocument (PtrDocument * pDoc, CHAR_T* SSchemaName, CHAR_T *docName,
 		  i++;
 	       directoryBuffer[i] = EOS;
 	       }
-	    FindCompleteName (docNameBuffer, TEXT("PIV"), directoryBuffer,
+	    FindCompleteName (docNameBuffer, "PIV", directoryBuffer,
 			      fileNameBuffer, &i);
 	    ustrncpy ((*pDoc)->DocDName, docNameBuffer, MAX_NAME_LENGTH);
 	    (*pDoc)->DocDName[MAX_NAME_LENGTH - 1] = EOS;

@@ -909,7 +909,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   else
     withline = FALSE;
   /* in SVG foreground and background are inverted in the main view */
-  if (!ustrcmp(pAb->AbElement->ElStructSchema->SsName, TEXT("GraphML")) &&
+  if (!ustrcmp(pAb->AbElement->ElStructSchema->SsName, "GraphML") &&
       FrameTable[frame].FrView == 1)
     {
     bg = pAb->AbForeground;

@@ -22,24 +22,24 @@
 /* mapping table of attribute values */
 static AttrValueMapping XLinkAttrValueMappingTable[] =
 { 
-   {XLink_ATTR_actuate, TEXT("onLoad"), XLink_ATTR_actuate_VAL_onLoad},
-   {XLink_ATTR_actuate, TEXT("onRequest"), XLink_ATTR_actuate_VAL_onRequest},
-   {XLink_ATTR_actuate, TEXT("undefined"), XLink_ATTR_actuate_VAL_undefined},
+   {XLink_ATTR_actuate, "onLoad", XLink_ATTR_actuate_VAL_onLoad},
+   {XLink_ATTR_actuate, "onRequest", XLink_ATTR_actuate_VAL_onRequest},
+   {XLink_ATTR_actuate, "undefined", XLink_ATTR_actuate_VAL_undefined},
 
-   {XLink_ATTR_show, TEXT("embed"), XLink_ATTR_show_VAL_embed},
-   {XLink_ATTR_show, TEXT("new"), XLink_ATTR_show_VAL_new},
-   {XLink_ATTR_show, TEXT("replace"), XLink_ATTR_show_VAL_replace},
-   {XLink_ATTR_show, TEXT("undefined"), XLink_ATTR_show_VAL_undefined},
+   {XLink_ATTR_show, "embed", XLink_ATTR_show_VAL_embed},
+   {XLink_ATTR_show, "new", XLink_ATTR_show_VAL_new},
+   {XLink_ATTR_show, "replace", XLink_ATTR_show_VAL_replace},
+   {XLink_ATTR_show, "undefined", XLink_ATTR_show_VAL_undefined},
 
-   {XLink_ATTR_type, TEXT("arc"), XLink_ATTR_type_VAL_arc},
-   {XLink_ATTR_type, TEXT("extended"), XLink_ATTR_type_VAL_extended},
-   {XLink_ATTR_type, TEXT("locator"), XLink_ATTR_type_VAL_locator},
-   {XLink_ATTR_type, TEXT("none"), XLink_ATTR_type_VAL_none_},
-   {XLink_ATTR_type, TEXT("resource"), XLink_ATTR_type_VAL_resource},
-   {XLink_ATTR_type, TEXT("simple"), XLink_ATTR_type_VAL_simple},
-   {XLink_ATTR_type, TEXT("title"), XLink_ATTR_type_VAL_title_},
+   {XLink_ATTR_type, "arc", XLink_ATTR_type_VAL_arc},
+   {XLink_ATTR_type, "extended", XLink_ATTR_type_VAL_extended},
+   {XLink_ATTR_type, "locator", XLink_ATTR_type_VAL_locator},
+   {XLink_ATTR_type, "none", XLink_ATTR_type_VAL_none_},
+   {XLink_ATTR_type, "resource", XLink_ATTR_type_VAL_resource},
+   {XLink_ATTR_type, "simple", XLink_ATTR_type_VAL_simple},
+   {XLink_ATTR_type, "title", XLink_ATTR_type_VAL_title_},
 
-   {0, TEXT(""), 0}			/* Last entry. Mandatory */
+   {0, "", 0}			/* Last entry. Mandatory */
 };
 
 #include "fetchXMLname_f.h"

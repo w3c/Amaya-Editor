@@ -335,14 +335,14 @@ void                DocumentMetaClear (DocumentMetaDataElement *me)
    DocumentInfo
    Displays the document informations given by the header
   ----------------------------------------------------------------------*/
-void                DocumentInfo (Document document, View view)
+void DocumentInfo (Document document, View view)
 {
 #ifndef _WINDOWS
   CHAR_T         *content;
 
   /* Main form */
    TtaNewSheet (BaseDialog + DocInfoForm, TtaGetViewFrame (document, 1),
-		TEXT ("Document Information"),
+		"Document Information",
 		0, NULL, FALSE, 6, 'L', D_DONE);
 
    /* Document information labels */
@@ -353,21 +353,21 @@ void                DocumentInfo (Document document, View view)
    /* Document URL */
    TtaNewLabel (BaseDialog + DocInfoLocationTitle,
 		BaseDialog + DocInfoForm,
-		TEXT ("LOCATION"));
+		"LOCATION");
 
    /* Mime Type */
    TtaNewLabel (BaseDialog + DocInfoMimeTypeTitle,
 		BaseDialog + DocInfoForm,
-		TEXT ("MIME TYPE"));
+		"MIME TYPE");
    /* Charset */
    TtaNewLabel (BaseDialog + DocInfoCharsetTitle,
 		BaseDialog + DocInfoForm,
-		TEXT ("CHARSET"));
+		"CHARSET");
 
    /* Content Length */
    TtaNewLabel (BaseDialog + DocInfoContentTitle,
 		BaseDialog + DocInfoForm,
-		TEXT ("CONTENT LENGTH"));
+		"CONTENT LENGTH");
 
    TtaNewLabel (BaseDialog + DocInfoTitle2,
 		BaseDialog + DocInfoForm,
@@ -380,17 +380,17 @@ void                DocumentInfo (Document document, View view)
 
    /* Document URL */
    if (DocumentURLs[document] != NULL)
-     content = TEXT(DocumentURLs[document]);
+     content = DocumentURLs[document];
    else
-     content = TEXT("Unknown");
+     content = "Unknown";
    TtaNewLabel (BaseDialog + DocInfoLocation,
 		BaseDialog + DocInfoForm, content);
 
    /* Mime Type */
    if (DocumentMeta[document]->content_type != NULL)
-     content = TEXT(DocumentMeta[document]->content_type);
+     content = DocumentMeta[document]->content_type;
    else
-     content = TEXT("Unknown");
+     content = "Unknown";
    TtaNewLabel (BaseDialog + DocInfoMimeType,
 		BaseDialog + DocInfoForm, content);
 
@@ -398,7 +398,7 @@ void                DocumentInfo (Document document, View view)
    if (DocumentMeta[document]->charset != NULL)
      content = DocumentMeta[document]->charset;
    else
-     content = TEXT("Unknown");
+     content = "Unknown";
    TtaNewLabel (BaseDialog + DocInfoCharset,
 		BaseDialog + DocInfoForm, content);
 
@@ -406,7 +406,7 @@ void                DocumentInfo (Document document, View view)
    if (DocumentMeta[document]->content_length != NULL)
      content = DocumentMeta[document]->content_length;
    else
-     content = TEXT("Unknown");
+     content = "Unknown";
    TtaNewLabel (BaseDialog + DocInfoContent,
 		BaseDialog + DocInfoForm, content);
 

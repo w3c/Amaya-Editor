@@ -146,7 +146,7 @@ Document doc;
 	}
       else
 	{
-	  TtaSetDocumentDirectory (doc, TEXT(""));
+	  TtaSetDocumentDirectory (doc, "");
 	  TtaSetDocumentName (doc, buffer);
 	}
       SetWindowTitle (doc, doc, 0);

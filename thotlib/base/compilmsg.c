@@ -49,7 +49,7 @@ STRING              text;
 			SetFocus (COMPWnd);   
 			SendMessage (COMPWnd, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
 			/* Append text */
-			usprintf (pText, TEXT("%s\r\n"), text);
+			usprintf (pText, "%s\r\n", text);
 			SendMessage (COMPWnd, EM_REPLACESEL, 0, (LPARAM) ((LPSTR) pText));
 
 			free( pText );
@@ -82,7 +82,7 @@ int                 msgType;
        SetFocus (COMPWnd);   
        SendMessage (COMPWnd, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
        /* Append text */
-       usprintf (pText, TEXT("%s\r\n"), text);
+       usprintf (pText, "%s\r\n", text);
        SendMessage (COMPWnd, EM_REPLACESEL, 0, (LPARAM) ((LPTSTR) pText));
 	}
 	

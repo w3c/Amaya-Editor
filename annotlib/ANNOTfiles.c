@@ -87,7 +87,7 @@ Document ANNOT_NewDocument (doc)
   else
     {
 #if 0
-      TtaSetDocumentName (annotDoc, TEXT("Annotation");
+      TtaSetDocumentName (annotDoc, "Annotation";
       TtaSetDocumentDirectory (annotDoc, annot_dir);
 #endif
 
@@ -223,7 +223,7 @@ void  ANNOT_InitDocumentMeta (doc, docAnnot, annot, title)
   if (annot->type)
       type = ANNOT_GetLabel(&annot_schema_list, annot->type);
   else
-      type = TEXT(""); /* All local annotations should have a type, but
+      type = ""; /* All local annotations should have a type, but
 			  a service may forget to give us a type. */
 
   /* save the docid of the annotated document */
@@ -399,12 +399,12 @@ CHAR_T *title;
   attrType.AttrTypeNum = HTML_ATTR_meta_name;
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (meta, attr, docAnnot);
-  TtaSetAttributeText (attr, TEXT("GENERATOR"), meta, docAnnot);
+  TtaSetAttributeText (attr, "GENERATOR", meta, docAnnot);
   attrType.AttrTypeNum = HTML_ATTR_meta_content;
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (meta, attr, docAnnot);
   ustrcpy (tempfile, HTAppName);
-  ustrcat (tempfile, TEXT(" "));
+  ustrcat (tempfile, " ");
   ustrcat (tempfile, HTAppVersion);
   TtaSetAttributeText (attr, tempfile, meta, docAnnot);
   TtaInsertSibling (meta, child, FALSE, docAnnot);
@@ -527,12 +527,12 @@ void  ANNOT_InitDocumentStructure (docAnnot, document)
   attrType.AttrTypeNum = HTML_ATTR_meta_name;
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (meta, attr, docAnnot);
-  TtaSetAttributeText (attr, TEXT("GENERATOR"), meta, docAnnot);
+  TtaSetAttributeText (attr, "GENERATOR", meta, docAnnot);
   attrType.AttrTypeNum = HTML_ATTR_meta_content;
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (meta, attr, docAnnot);
   ustrcpy (tempfile, HTAppName);
-  ustrcat (tempfile, TEXT(" "));
+  ustrcat (tempfile, " ");
   ustrcat (tempfile, HTAppVersion);
   TtaSetAttributeText (attr, tempfile, meta, docAnnot);
   TtaInsertSibling (meta, child, FALSE, docAnnot);
@@ -741,7 +741,7 @@ CHAR_T             *html_filename;
   el = TtaGetFirstChild (el);
   TtaSetTextContent (el, annot->mdate, TtaGetDefaultLanguage (), doc_annot); 
 
-  return TtaExportDocument (doc_annot, html_filename, TEXT("AnnotT"));
+  return TtaExportDocument (doc_annot, html_filename, "AnnotT");
 }
 
 

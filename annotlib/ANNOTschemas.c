@@ -401,7 +401,7 @@ void SCHEMA_ReadSchema (doc, namespace_URI)
 			  (void *) ReadSchema_callback,
 			  (void *) ctx,
 			  NO,
-			  TEXT("application/xml"));
+			  "application/xml");
     }
 
   if (res != HT_OK)
@@ -502,11 +502,11 @@ void SCHEMA_InitSchemas (doc)
   len = strlen(thotdir) + strlen(app_home) + MAX_LENGTH + 32;
 
   buffer = TtaGetMemory(len);
-  usprintf (buffer, TEXT("%s%cannot.schemas"), app_home, DIR_SEP);
+  usprintf (buffer, "%s%cannot.schemas", app_home, DIR_SEP);
 
   if (!TtaFileExist (buffer))
     {
-      usprintf (buffer, TEXT("%s%cconfig%cannot.schemas"),
+      usprintf (buffer, "%s%cconfig%cannot.schemas",
 		thotdir, DIR_SEP, DIR_SEP);
 
       if (!TtaFileExist (buffer))
@@ -631,7 +631,7 @@ void SCHEMA_InitSchemas (doc)
   /* @@ RRS: ANNOT_DEFAULT_TYPE should be accessible from the config menu */
   buffer = TtaGetEnvString ("ANNOT_DEFAULT_TYPE");
   if (!buffer)
-    buffer = TEXT("Comment");	/* fallback default type */
+    buffer = "Comment";	/* fallback default type */
 
   /* two options; user can specify a full property URI or just the localname */
   if (IsW3Path (buffer)) /* full URI */

@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern ThotBool CheckGenerator ( NotifyElement * event );
-extern ThotBool GenerateQuoteBefore ( NotifyAttribute * event );
+extern ThotBool GenerateQuoteBefore ( NotifyAttribute *event );
 extern void GenerateQuoteAfter ( NotifyAttribute * event );
 extern ThotBool CheckValidID ( NotifyAttribute * event );
 extern void SetRelativeURLs ( Document document,
@@ -33,7 +33,7 @@ extern void DoSaveAs ( void );
 #else /* __STDC__ */
 
 extern ThotBool CheckGenerator (/* NotifyElement * event */);
-extern ThotBool GenerateQuoteBefore (/* NotifyAttribute * event */);
+extern ThotBool GenerateQuoteBefore (/* NotifyAttribute *event */);
 extern void GenerateQuoteAfter (/* NotifyAttribute * event */);
 extern ThotBool CheckValidID (/* NotifyAttribute * event */);
 extern void SetRelativeURLs (/* Document document,

@@ -613,7 +613,7 @@ int TtaIsPSchemaValid (STRING structureName, STRING presentationName)
    /* Arrange the name of the file to be opened with the schema directory
       name */
    ustrncpy (DirBuffer, SchemaPath, MAX_PATH);
-   MakeCompleteName (presentationName, TEXT("PRS"), DirBuffer, text, &i);
+   MakeCompleteName (presentationName, "PRS", DirBuffer, text, &i);
    /* Checks if the file exists */
    file = TtaReadOpen (text);
    if (file == 0)
@@ -987,7 +987,7 @@ void RedisplayLeaf (PtrElement element, Document document, int delta)
 	     case LtGraphics:
 	       pAbbox1->AbLeafType = element->ElLeafType;
 	       pAbbox1->AbShape = element->ElGraph;
-	       pAbbox1->AbGraphAlphabet = TEXT('G');
+	       pAbbox1->AbGraphAlphabet = 'G';
 	       if (element->ElLeafType == LtGraphics)
 		 {
 		   if (element->ElGraph == 'a' &&

@@ -111,12 +111,12 @@ static void         getFirstWord (unsigned char* line, CHAR_T* word)
          indline += nbBytes; 
    }
 
-   if (wChar == TEXT('#')) /* The line contains only a comment */
+   if (wChar == '#') /* The line contains only a comment */
       return;
 
    indword = 0;
 
-   while (wChar > WC_SPACE && wChar != TEXT(':') && wChar != WC_EOS) {
+   while (wChar > WC_SPACE && wChar != ':' && wChar != WC_EOS) {
          word[indword++] = wChar;
          mbcsStart = &line[indline];
          nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
@@ -169,7 +169,7 @@ static void         getSecondWord (unsigned char* line, CHAR_T* word)
          indline += nbBytes; 
    }
 
-   if (wChar == TEXT('#')) /* The line contains only a comment */
+   if (wChar == '#') /* The line contains only a comment */
       return;
 
    /* saute le 1er mot, jusqu'a rencontrer le 1er espace */
@@ -186,7 +186,7 @@ static void         getSecondWord (unsigned char* line, CHAR_T* word)
          nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
          indline += nbBytes; 
    }
-   if (wChar == TEXT('#'))
+   if (wChar == '#')
       /* le premier mot est suivi d'un commentaire */
       return;
    /* copie tous les caracteres du 2eme mot jusqu'a rencontrer le 1er */
@@ -203,7 +203,7 @@ static void         getSecondWord (unsigned char* line, CHAR_T* word)
    /* saute les espaces de debut de ligne */
    while (line[indline] <= SPACE && line[indline] != EOS)
       indline++;
-   if (line[indline] == TEXT('#'))
+   if (line[indline] == '#')
       /* cette ligne ne comporte qu'un commentaire */
       return;
    /* saute le 1er mot, jusqu'a rencontrer le 1er espace */
@@ -213,7 +213,7 @@ static void         getSecondWord (unsigned char* line, CHAR_T* word)
    /* saute les espaces qui suivent le 1er mot */
    while (line[indline] <= SPACE && line[indline] != EOS)
       indline++;
-   if (line[indline] == TEXT('#'))
+   if (line[indline] == '#')
       /* le premier mot est suivi d'un commentaire */
       return;
    /* copie tous les caracteres du 2eme mot jusqu'a rencontrer le 1er */
@@ -251,12 +251,12 @@ static ThotBool     singleWord (unsigned char* line)
          nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
          ind += nbBytes; 
    }
-   if (wChar == TEXT('#'))
+   if (wChar == '#')
       /* la ligne commence par un commentaire */
       return FALSE;
 
    /* saute le premier mot */
-   while (wChar > WC_SPACE && wChar != TEXT('#') && wChar != TEXT(':') && wChar != WC_EOS) {
+   while (wChar > WC_SPACE && wChar != '#' && wChar != ':' && wChar != WC_EOS) {
          mbcsStart = &line[ind];
          nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
          ind += nbBytes; 
@@ -269,7 +269,7 @@ static ThotBool     singleWord (unsigned char* line)
          ind += nbBytes; 
    }
 
-   if (wChar == TEXT('#') || wChar == WC_EOS)
+   if (wChar == '#' || wChar == WC_EOS)
       /* il ne reste rien dans la ligne ou seulement un commentaire */
       return TRUE;
    else
@@ -319,13 +319,13 @@ static void         getStringAfterColon (unsigned char* line, CHAR_T* text)
    nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
    indline += nbBytes; 
 
-   while (wChar != TEXT(':') && wChar != WC_EOS) {
+   while (wChar != ':' && wChar != WC_EOS) {
          mbcsStart = &line[indline];
          nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
          indline += nbBytes; 
    }
    
-   if (wChar == TEXT(':')) {
+   if (wChar == ':') {
       mbcsStart = &line[indline];
       nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
       indline += nbBytes; 
@@ -336,12 +336,12 @@ static void         getStringAfterColon (unsigned char* line, CHAR_T* text)
             indline += nbBytes; 
       }
       
-      if (wChar == TEXT('#') || wChar == WC_EOS)
+      if (wChar == '#' || wChar == WC_EOS)
          return;
 
       indtext = 0;
 
-      while (wChar != TEXT('#') && wChar != WC_EOS) {
+      while (wChar != '#' && wChar != WC_EOS) {
             text[indtext++] = wChar;
             mbcsStart = &line[indline];
             nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
@@ -438,8 +438,8 @@ static void         namesOfDocType (CHAR_T* fname, CHAR_T** doctypeOrig, CHAR_T*
    *typ = CONFIG_UNKNOWN_TYPE;
    *import = FALSE;
 
-   if (fname && ustrchr (fname, TEXT('/')))
-	  URL_DIR_SEP = TEXT('/');
+   if (fname && ustrchr (fname, '/'))
+	  URL_DIR_SEP = '/';
    else 
 	   URL_DIR_SEP = WC_DIR_SEP;
 
@@ -466,13 +466,13 @@ static void         namesOfDocType (CHAR_T* fname, CHAR_T** doctypeOrig, CHAR_T*
       /* le premier mot n'est pas seul dans la ligne, erreur */
       return;
 
-   if (ustrcmp (word, TEXT("document")) == 0)
+   if (ustrcmp (word, "document") == 0)
       *typ = CONFIG_DOCUMENT_STRUCT;
-   else if (ustrcmp (word, TEXT("nature")) == 0)
+   else if (ustrcmp (word, "nature") == 0)
       *typ = CONFIG_NATURE_STRUCT;
-   else if (ustrcmp (word, TEXT("extension")) == 0)
+   else if (ustrcmp (word, "extension") == 0)
       *typ = CONFIG_EXTENSION_STRUCT;
-   else if (ustrcmp (word, TEXT("document-nature")) == 0)
+   else if (ustrcmp (word, "document-nature") == 0)
       *typ = CONFIG_EXCLUSION;
    else
       /* le premier mot du fichier est invalide */
@@ -483,9 +483,9 @@ static void         namesOfDocType (CHAR_T* fname, CHAR_T** doctypeOrig, CHAR_T*
 
    /* cherche le "." marquant le suffixe a la fin du nom de fichier */
    i = ustrlen (fname);
-   while (i > 0 && fname[i] != TEXT('.'))
+   while (i > 0 && fname[i] != '.')
       i--;
-   if (fname[i] == TEXT('.'))
+   if (fname[i] == '.')
       point = i;
    else
       point = 0;
@@ -494,7 +494,7 @@ static void         namesOfDocType (CHAR_T* fname, CHAR_T** doctypeOrig, CHAR_T*
       i--;
    if (fname[i] == URL_DIR_SEP)
       i++;
-   if (fname[i] == TEXT('_'))
+   if (fname[i] == '_')
       /* ignore les fichiers dont le nom commence par "-" */
       return;
    l = ustrlen (&fname[i]) + 1;
@@ -504,22 +504,22 @@ static void         namesOfDocType (CHAR_T* fname, CHAR_T** doctypeOrig, CHAR_T*
    ustrcpy (*doctypeOrig, &fname[i]);
    /* retablit le '.' du suffixe dans le nom de fichier */
    if (point != 0)
-      fname[point] = TEXT('.');
+      fname[point] = '.';
 
    if (*typ == CONFIG_DOCUMENT_STRUCT || *typ == CONFIG_EXCLUSION)
       /* Il s'agit d'un type de document, on cherche une ligne */
       /* contenant un seul mot: "import" ou "translation" */
-      res = readUntil (file, TEXT("import"), TEXT("translation"));
+      res = readUntil (file, "import", "translation");
    else
       /* il s'agit d'une nature ou d'une extension, on ne cherche */
       /* que la ligne "translation" */
-      res = readUntil (file, TEXT(""), TEXT("translation"));
+      res = readUntil (file, "", "translation");
    if (res == 1)
       /* on a trouve' le mot "import" */
      {
 	*import = TRUE;
 	/* cherche la ligne comportant le seul mot "translation" */
-	res = readUntil (file, TEXT(""), TEXT("translation"));
+	res = readUntil (file, "", "translation");
      }
    if (res == 2)
       /* on a trouve' le mot translation */
@@ -633,7 +633,7 @@ void                TtaConfigReadConfigFiles (CHAR_T* aSchemaPath)
   ThotBool            stop;
 
   /* force the english language in schemas */
-  suffix = TEXT("en");
+  suffix = "en";
 #ifdef _WINDOWS
   app_lang = EN_LANG;
 #endif /* _WINDOWS */
@@ -669,7 +669,7 @@ void                TtaConfigReadConfigFiles (CHAR_T* aSchemaPath)
 	      thotDir.buf = fname;
 	      thotDir.bufLen = sizeof (fname) / sizeof (CHAR_T);
 	      thotDir.PicMask = ThotDirBrowse_FILES;
-	      if (ThotDirBrowse_first (&thotDir, Dir, TEXT("*."), suffix) == 1)
+	      if (ThotDirBrowse_first (&thotDir, Dir, "*.", suffix) == 1)
 		do
 		  {
 		    namesOfDocType (fname, &nameOrig, &nameTrans, &typ, &import);
@@ -892,9 +892,9 @@ static FILE        *openConfigFile (CHAR_T* name, ThotBool lang)
    CHAR_T*             app_home;
 
    if (lang)
-        suffix = TEXT("en");
+        suffix = "en";
    else
-      suffix = TEXT("conf");
+      suffix = "conf";
 
    /* Search in HOME directory */
    app_home = TtaGetEnvString ("APP_HOME");
@@ -935,7 +935,7 @@ int                 ConfigMakeMenuPres (CHAR_T* schema, CHAR_T* BufMenu)
    if (file == NULL)
       return 0;
    stop = FALSE;
-   if (readUntil (file, TEXT("presentation"), TEXT("")))
+   if (readUntil (file, "presentation", ""))
      do
        {
 	 if (fgets (line, MAX_TXT_LEN - 1, file) == NULL)
@@ -950,11 +950,11 @@ int                 ConfigMakeMenuPres (CHAR_T* schema, CHAR_T* BufMenu)
 		 /* d'une autre section, on a fini */
 		 if (singleWord (line))
 		   {
-		     if (ustrcmp (word, TEXT("export")) == 0)
+		     if (ustrcmp (word, "export") == 0)
 		       stop = TRUE;
-		     else if (ustrcmp (word, TEXT("import")) == 0)
+		     else if (ustrcmp (word, "import") == 0)
 		       stop = TRUE;
-		     else if (ustrcmp (word, TEXT("translation")) == 0)
+		     else if (ustrcmp (word, "translation") == 0)
 		       stop = TRUE;
 		   }
 		 if (!stop)
@@ -1065,7 +1065,7 @@ int                 ConfigMakeMenuExport (CHAR_T* schema, CHAR_T* BufMenu)
    if (file == NULL)
       return 0;
    stop = FALSE;
-   if (readUntil (file, TEXT("export"), TEXT("")))
+   if (readUntil (file, "export", ""))
       do
 	{
 	   if (fgets (line, MAX_TXT_LEN - 1, file) == NULL)
@@ -1080,11 +1080,11 @@ int                 ConfigMakeMenuExport (CHAR_T* schema, CHAR_T* BufMenu)
 		    /* d'une autre section, on a fini */
 		     if (singleWord (line))
 		       {
-			if (ustrcmp (word, TEXT("presentation")) == 0)
+			if (ustrcmp (word, "presentation") == 0)
 			   stop = TRUE;
-			else if (ustrcmp (word, TEXT("import")) == 0)
+			else if (ustrcmp (word, "import") == 0)
 			   stop = TRUE;
-			else if (ustrcmp (word, TEXT("translation")) == 0)
+			else if (ustrcmp (word, "translation") == 0)
 			   stop = TRUE;
 		       }
 		     if (!stop)
@@ -1203,7 +1203,7 @@ void                ConfigTranslateSSchema (PtrSSchema pSS)
    line = TtaGetMemory (MAX_TXT_LEN);
    text = TtaAllocString (MAX_TXT_LEN);
    word = TtaAllocString (MAX_TXT_LEN);
-   if (readUntil (file, TEXT("translation"), TEXT("")))
+   if (readUntil (file, "translation", ""))
       /* lit le fichier ligne a ligne */
       do
 	{
@@ -1224,11 +1224,11 @@ void                ConfigTranslateSSchema (PtrSSchema pSS)
 		    /* d'une autre section, on a fini */
 		    if (singleWord (line))
 		      {
-			if (ustrcmp (word, TEXT("presentation")) == 0)
+			if (ustrcmp (word, "presentation") == 0)
 			  stop = TRUE;
-			else if (ustrcmp (word, TEXT("export")) == 0)
+			else if (ustrcmp (word, "export") == 0)
 			  stop = TRUE;
-			else if (ustrcmp (word, TEXT("import")) == 0)
+			else if (ustrcmp (word, "import") == 0)
 			  stop = TRUE;
 			else
 			  {
@@ -1288,7 +1288,7 @@ ThotBool            ConfigDefaultPSchema (CHAR_T* schstr, CHAR_T* schpres)
 	     {
 		/* prend le premier mot de la ligne */
 		getFirstWord (line, word);
-		if (ustrcmp (word, TEXT("style")) == 0)
+		if (ustrcmp (word, "style") == 0)
 		  {
 		     /* le 1er mot est "style". Cherche le mot qui suit : c'est le */
 		     /* nom du schema de presentation cherche' */
@@ -1331,7 +1331,7 @@ static ThotBool     readUntilStyle (FILE * file, CHAR_T* namePSchema)
      else
         {
            getFirstWord (line, word);
-           if (ustrcmp (word, TEXT("style")) == 0)
+           if (ustrcmp (word, "style") == 0)
               {
                  getSecondWord (line, word);
                  ustrcpy (name, word);
@@ -1371,7 +1371,7 @@ static FILE  *openConfFileAndReadUntil (PtrSSchema pSS, CHAR_T* sectName)
 	}
       else
 	 /* cherche le debut de la section voulue */
-      if (!readUntil (file, sectName, TEXT("")))
+      if (!readUntil (file, sectName, ""))
 	 /* pas trouve' */
 	{
 	   TtaReadClose (file);
@@ -1413,13 +1413,13 @@ static ThotBool     getNextLineInSection (FILE * file, char* line)
 		if (singleWord (line))
 		   /* la ligne contient un seul mot */
 		  {
-		     if (ustrcmp (word1, TEXT("open")) == 0)
+		     if (ustrcmp (word1, "open") == 0)
 			stop = TRUE;
-		     else if (ustrcmp (word1, TEXT("geometry")) == 0)
+		     else if (ustrcmp (word1, "geometry") == 0)
 			stop = TRUE;
-		     else if (ustrcmp (word1, TEXT("presentation")) == 0)
+		     else if (ustrcmp (word1, "presentation") == 0)
 			stop = TRUE;
-		     else if (ustrcmp (word1, TEXT("options")) == 0)
+		     else if (ustrcmp (word1, "options") == 0)
 			stop = TRUE;
 		     else
 			/* ligne contenant un seul mot. on considere que c'est OK... */
@@ -1427,10 +1427,10 @@ static ThotBool     getNextLineInSection (FILE * file, char* line)
 		  }
 		else
 		   /* la ligne contient plus d'un mot */
-		if (ustrcmp (word1, TEXT("style")) == 0)
+		if (ustrcmp (word1, "style") == 0)
 		  {
 		     getSecondWord (line, word2);
-		     if (word2[0] != TEXT(':'))
+		     if (word2[0] != ':')
 			/* la ligne est du type "style xxxx". C'est une fin de section */
 			stop = TRUE;
 		     else
@@ -1457,7 +1457,7 @@ void             ConfigKeyboard (int *x, int *y)
 
    *x = 600;
    *y = 100;
-   file = openConfigFile (TEXT("keyboard"), FALSE);
+   file = openConfigFile ("keyboard", FALSE);
    if (file == NULL)
       return;
 
@@ -1467,7 +1467,7 @@ void             ConfigKeyboard (int *x, int *y)
    getStringAfterColon (line, seqLine);
    if (seqLine[0] != WC_EOS)
      /* extrait les 4 entiers */
-     nbIntegers = usscanf (seqLine, TEXT("%d %d"), x, y);
+     nbIntegers = usscanf (seqLine, "%d %d", x, y);
    TtaReadClose (file);
 }
 
@@ -1490,7 +1490,7 @@ static ThotBool  getXYWidthHeight (char* line, PtrDocument pDoc, int *x,
   if (seqLine[0] != WC_EOS)
     {
       /* extrait les 4 entiers */
-      nbIntegers = usscanf (seqLine, TEXT("%d %d %d %d"), x, y, width, height);
+      nbIntegers = usscanf (seqLine, "%d %d %d %d", x, y, width, height);
       if (nbIntegers != 4)
 	fprintf (stderr, "invalid line in file %s.conf\n   %s\n",
 		 pDoc->DocSSchema->SsName, line);
@@ -1513,7 +1513,7 @@ void                ConfigOpenFirstViews (PtrDocument pDoc)
    CHAR_T              nameview[MAX_TXT_LEN];
 
    /* ouvre le fichier .conf du document et avance jusqu'a la section "open" */
-   file = openConfFileAndReadUntil (pDoc->DocSSchema, TEXT("open"));
+   file = openConfFileAndReadUntil (pDoc->DocSSchema, "open");
    if (file != NULL)
       {
          /* on a trouve' le debut de la section open. On lit le fichier .conf */
@@ -1552,7 +1552,7 @@ void   ConfigGetViewGeometry (PtrDocument pDoc, CHAR_T* view, int *x,
 
    /* ouvre le fichier .conf du document et avance jusqu'a la section 
       "open" */
-   file = openConfFileAndReadUntil (pDoc->DocSSchema, TEXT("open"));
+   file = openConfFileAndReadUntil (pDoc->DocSSchema, "open");
    if (file != NULL)
      {
        /* on a trouve' le debut de la section open. On lit le fichier 
@@ -1571,7 +1571,7 @@ void   ConfigGetViewGeometry (PtrDocument pDoc, CHAR_T* view, int *x,
 	    section "geometry" */
 	 {
 	   TtaReadClose (file);
-	   file = openConfFileAndReadUntil (pDoc->DocSSchema, TEXT("geometry"));
+	   file = openConfFileAndReadUntil (pDoc->DocSSchema, "geometry");
 	   if (file != NULL)
 	       while (!found && getNextLineInSection (file, line))
 		 {
@@ -1723,7 +1723,7 @@ ThotBool  ConfigGetPSchemaNature (PtrSSchema pSS, CHAR_T* nameNature, CHAR_T* pr
    presNature[0] = EOS;
    ok = FALSE;
    /* ouvre le fichier .conf du document et avance jusqu'a la section "presentation" */
-   file = openConfFileAndReadUntil (pSS, TEXT("presentation"));
+   file = openConfFileAndReadUntil (pSS, "presentation");
    if (file != NULL)
      {
 	/* on a trouve' le debut de la section presentation. On lit le fichier */
@@ -1773,7 +1773,7 @@ void ConfigGetPresentationOption (PtrSSchema pSS, CHAR_T* optionName, CHAR_T* op
 
    optionValue[0] = EOS;
    /* ouvre le fichier .conf du document et avance jusqu'a la section "options" */
-   file = openConfFileAndReadUntil (pSS, TEXT("options"));
+   file = openConfFileAndReadUntil (pSS, "options");
    if (file != NULL)
      {
 	/* on a trouve' le debut de la section options. On lit le fichier */
@@ -1846,7 +1846,7 @@ void  ConfigGetPSchemaForPageSize (PtrSSchema pSS, CHAR_T* pageSize, CHAR_T* sch
 	     {
 		/* prend le 1er mot de la ligne lue */
 		getFirstWord (line, word);
-		if (ustrcmp (word, TEXT("style")) == 0)
+		if (ustrcmp (word, "style") == 0)
 		   /* c'est une ligne "style". On conserve le nom du schema de */
 		   /* presentation qui suit le mot-cle "style" */
 		  {
@@ -1868,7 +1868,7 @@ void  ConfigGetPSchemaForPageSize (PtrSSchema pSS, CHAR_T* pageSize, CHAR_T* sch
 		      }
 			  
 		  }
-		else if (ustrcmp (word, TEXT("pagesize")) == 0)
+		else if (ustrcmp (word, "pagesize") == 0)
 		   /* c'est une ligne "pagesize", on la traite */
 		  {
 		     getStringAfterColon (line, seqLine);
@@ -2004,7 +2004,7 @@ ThotBool  ConfigDefaultTypoSchema (PtrSSchema pSS, CHAR_T* nameNature, CHAR_T* s
 
    /* ouvre le fichier .conf du document */
    /* et avance jusqu'a la section "typography" */
-   file = openConfFileAndReadUntil (pSS, TEXT("typography"));
+   file = openConfFileAndReadUntil (pSS, "typography");
    ok = FALSE;
    if (file != NULL)
      {

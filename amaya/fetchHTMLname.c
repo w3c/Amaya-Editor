@@ -41,7 +41,7 @@ CHAR_T          *gi;
 
   for (i = 0; GI[i] != WC_EOS && i < MaxTypeNameLength-1; i++)
     {
-      if (GI[i] >= TEXT('A') && GI[i] <= TEXT('Z'))
+      if (GI[i] >= 'A' && GI[i] <= 'Z')
 	gi[i] = (CHAR_T) ((int) GI[i] + 32);
       else
 	gi[i] = GI[i];
@@ -84,7 +84,7 @@ Document            doc;
   else
     {
       ptr = TtaGetSSchemaName (*schema);
-      isHTML = !ustrcmp (ptr, TEXT("HTML"));
+      isHTML = !ustrcmp (ptr, "HTML");
     }
 
   i = 0;
@@ -124,9 +124,9 @@ Document            doc;
 	  elType.ElTypeNum = 0;
 	  elType.ElSSchema = *schema;
 	  
-	  if (!ptr || !ustrcmp (ptr, TEXT("MathML")))
+	  if (!ptr || !ustrcmp (ptr, "MathML"))
 	    MapXMLElementType (MATH_TYPE, gi, &elType, &ptr, &c, &level, doc);
-	  if (elType.ElTypeNum == 0 && (!ptr || !ustrcmp (ptr, TEXT("GraphML"))))
+	  if (elType.ElTypeNum == 0 && (!ptr || !ustrcmp (ptr, "GraphML")))
 	    MapXMLElementType (GRAPH_TYPE, gi, &elType, &ptr, &c, &level, doc);
 	  if (elType.ElTypeNum == 0)
 	    {
@@ -186,7 +186,7 @@ Document            doc;
       if (!ustrcasecmp (pHTMLGIMapping[i].XMLname, gi))
       {
 	if (doc != 0)
-        elType->ElSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+        elType->ElSSchema = TtaGetSSchema ("HTML", doc);
 	elType->ElTypeNum = pHTMLGIMapping[i].ThotType;
 	return;
       }

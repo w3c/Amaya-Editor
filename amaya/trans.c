@@ -194,7 +194,7 @@ static void         BuildStructureTree (Element elem, Document doc, StructureTre
    ustrcpy (tag, GetXMLElementName (elemType, doc));
    attr = NULL;
    TtaNextAttribute (elem, &attr);
-   if (ustrcmp (tag, TEXT("???")) && ustrcmp (tag, TEXT("none")) &&
+   if (ustrcmp (tag, "???") && ustrcmp (tag, "none") &&
        (TtaGetFirstChild (elem) != NULL || attr != NULL ||
 	TtaIsLeaf (elemType)))
      {
@@ -225,7 +225,7 @@ static void         BuildStructureTree (Element elem, Document doc, StructureTre
    else
       added = father;
    TtaFreeMemory (tag);
-   if ((ustrcmp ( TtaGetSSchemaName (elemType.ElSSchema), TEXT("HTML")) != 0) ||
+   if ((ustrcmp ( TtaGetSSchemaName (elemType.ElSSchema), "HTML") != 0) ||
        (elemType.ElTypeNum != HTML_EL_Comment_ && 
 	elemType.ElTypeNum != HTML_EL_Invalid_element))
      {
@@ -559,7 +559,7 @@ static ThotBool     MatchNode (strNode * n)
 		  if (sd->IsActiveSymb)
 		     if ((n->NodeDepth - sd->Depth <= maxSelDepth)
 			 && (n->NodeDepth - sd->Depth >= 0))
-			if (!ustrcmp (sd->Tag, TEXT("*")) ||
+			if (!ustrcmp (sd->Tag, "*") ||
 			    !ustrcmp (sd->Tag, n->Tag))
 			   if (sd->Attributes == NULL ||
 			       MatchAttributes (sd, n->Elem))
@@ -743,16 +743,16 @@ static ThotBool ExportSubTree (Element subTree, Document doc)
   len = BUFFER_LEN - szHTML;
   ustrcpy (tmpfilename, TtaGetEnvString ("TMPDIR"));
   ustrcat (tmpfilename, WC_DIR_STR);
-  ustrcat (tmpfilename, TEXT("amayatrans.tmp"));
+  ustrcat (tmpfilename, "amayatrans.tmp");
   
   sch = TtaGetDocumentSSchema (doc);
-  if (ustrcmp (TtaGetSSchemaName (sch), TEXT("MathML")) == 0)
-    TtaExportTree (subTree, doc, tmpfilename, TEXT("MathMLT"));     
+  if (ustrcmp (TtaGetSSchemaName (sch), "MathML") == 0)
+    TtaExportTree (subTree, doc, tmpfilename, "MathMLT");     
   else
     if (DocumentMeta[doc]->xmlformat)
-      TtaExportTree (subTree, doc, tmpfilename, TEXT("HTMLTX"));     
+      TtaExportTree (subTree, doc, tmpfilename, "HTMLTX");     
     else
-      TtaExportTree (subTree, doc, tmpfilename, TEXT("HTMLT"));     
+      TtaExportTree (subTree, doc, tmpfilename, "HTMLT");     
 
   StatBuffer = (struct stat *) TtaGetMemory (sizeof (struct stat));
   status = ustat (tmpfilename, StatBuffer);
@@ -798,7 +798,7 @@ static void RemoveFragment (Element elem, Document doc)
       while (parent != NULL && 
 	     TtaSameSSchemas (parSch, elSch) &&
 	     TtaGetFirstChild (parent) == TtaGetLastChild (parent) &&
-	     !ustrcmp (GetXMLElementName (TtaGetElementType (parent), doc), TEXT("???")))
+	     !ustrcmp (GetXMLElementName (TtaGetElementType (parent), doc), "???"))
 	{
 	  elem = parent;
 	  parent = TtaGetParent (parent);
@@ -848,7 +848,7 @@ static ThotBool StartFragmentParser (strMatchChildren * sMatch, Document doc)
        else
 	 courSch = (TtaGetElementType (courEl)).ElSSchema;
        if (TtaSameSSchemas (courSch, selSch) &&
-           !ustrcmp (GetXMLElementName (TtaGetElementType (courEl), doc), TEXT("???")))
+           !ustrcmp (GetXMLElementName (TtaGetElementType (courEl), doc), "???"))
 	 {
 	   myFirstSelect = courEl;
 	   TtaPreviousSibling (&myFirstSelect);
@@ -881,7 +881,7 @@ static ThotBool StartFragmentParser (strMatchChildren * sMatch, Document doc)
 	TtaNextSibling (&myLastSelect);
 	RemoveFragment (prevMatch->MatchNode->Elem, doc);
      }
-   if (ustrcmp (bufHTML, TEXT("")))
+   if (ustrcmp (bufHTML, ""))
      {
 #ifdef AMAYA_DEBUG
        printf("%s\n\n", bufHTML);
@@ -1281,7 +1281,7 @@ static ThotBool        PutBeginTag (strNodeDesc * ND, strNode * TN)
  
   if (elType.ElSSchema == NULL)
     /*specifique a MathML */
-    elType.ElSSchema = TtaGetSSchema (TEXT("MathML"), TransDoc);
+    elType.ElSSchema = TtaGetSSchema ("MathML", TransDoc);
 
   NS->Idf = idfCounter++;
   NS->Nbc = 0;
@@ -1290,7 +1290,7 @@ static ThotBool        PutBeginTag (strNodeDesc * ND, strNode * TN)
       /* create a ghost attribute with the identifier of the node */     
       NS->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
       NS->Attributes->NameAttr = TtaAllocString (NAME_LENGTH);
-      ustrcpy (NS->Attributes->NameAttr, TEXT("zzghost"));
+      ustrcpy (NS->Attributes->NameAttr, "zzghost");
       NS->Attributes->IsInt = TRUE;
       NS->Attributes->IsTransf = FALSE;
       NS->Attributes->IntVal = NS->Idf;
@@ -1301,7 +1301,7 @@ static ThotBool        PutBeginTag (strNodeDesc * ND, strNode * TN)
   generationStack[++topGenerStack] = NS;
 
   /* writing the tag name */
-  res = res && PutInHtmlBuffer (TEXT("<"));
+  res = res && PutInHtmlBuffer ("<");
   res = res && PutInHtmlBuffer (NS->Tag);
 
   AD = NS->Attributes;
@@ -1333,7 +1333,7 @@ static ThotBool        PutBeginTag (strNodeDesc * ND, strNode * TN)
 		{
 		  attr = NULL;
 		  attrType.AttrTypeNum = -1;
-		  if (ancestor->Tag && ustrcmp(ancestor->Tag, TEXT("Root")))
+		  if (ancestor->Tag && ustrcmp(ancestor->Tag, "Root"))
 		    {
 		      tag = TtaAllocString (NAME_LENGTH);
 		      ustrcpy (tag, GetXMLElementName (TtaGetElementType (ancestor->Elem), TransDoc));
@@ -1349,9 +1349,9 @@ static ThotBool        PutBeginTag (strNodeDesc * ND, strNode * TN)
 	      if (found)
 		{
 		  /* the attribute has been found, writing the attribute name*/
-		  res = res && PutInHtmlBuffer (TEXT(" "));
+		  res = res && PutInHtmlBuffer (" ");
 		  res = res && PutInHtmlBuffer (AD->AttrAttr);
-		  res = res && PutInHtmlBuffer (TEXT("="));
+		  res = res && PutInHtmlBuffer ("=");
 		  /* writing the attribute value */
 		  TtaGiveAttributeType (attr, &attrType, &attrKind);
 		  if (attrKind == 2)
@@ -1359,16 +1359,16 @@ static ThotBool        PutBeginTag (strNodeDesc * ND, strNode * TN)
 		      l = TtaGetTextAttributeLength (attr);
 		      attrValue = TtaAllocString (l+1);
 		      TtaGiveTextAttributeValue (attr, attrValue, &l);
-		      res = res && PutInHtmlBuffer (TEXT("\""));
+		      res = res && PutInHtmlBuffer ("\"");
 		      res = res && PutInHtmlBuffer (attrValue);
-		      res = res && PutInHtmlBuffer (TEXT("\""));
+		      res = res && PutInHtmlBuffer ("\"");
 		      TtaFreeMemory (attrValue);
 		    }
 		  else
 		    {
 		      /* int attribute */
 		      attrValue = TtaAllocString (NAME_LENGTH);
-		      usprintf (attrValue, TEXT("%d"), TtaGetAttributeValue (attr));
+		      usprintf (attrValue, "%d", TtaGetAttributeValue (attr));
 		      res = res && PutInHtmlBuffer (attrValue);
 		      TtaFreeMemory (attrValue);
 		    }
@@ -1380,14 +1380,14 @@ static ThotBool        PutBeginTag (strNodeDesc * ND, strNode * TN)
       else
 	{
 	  /* creation of an attribute */
-	  res = res && PutInHtmlBuffer (TEXT(" "));
+	  res = res && PutInHtmlBuffer (" ");
 	  res = res && PutInHtmlBuffer (AD->NameAttr);
-	  res = res && PutInHtmlBuffer (TEXT("="));
+	  res = res && PutInHtmlBuffer ("=");
 	  if (AD->IsInt)
 	    {
 	      /* int attribute */
 	      attrValue = TtaAllocString (NAME_LENGTH);
-	      usprintf (attrValue, TEXT("%d"), AD->IntVal);
+	      usprintf (attrValue, "%d", AD->IntVal);
 	      res = res && PutInHtmlBuffer (attrValue);
 	      TtaFreeMemory (attrValue);
 	    }
@@ -1397,9 +1397,9 @@ static ThotBool        PutBeginTag (strNodeDesc * ND, strNode * TN)
 		 bufHTML[l] = '"';
 		 bufHTML[l + 1] = EOS;
 		 szHTML++;*/
-	      res = res && PutInHtmlBuffer (TEXT("\""));
+	      res = res && PutInHtmlBuffer ("\"");
 	      res = res && PutInHtmlBuffer (AD->TextVal);
-	      res = res && PutInHtmlBuffer (TEXT("\""));
+	      res = res && PutInHtmlBuffer ("\"");
 	      /*l = ustrlen (bufHTML);
 		bufHTML[l] = '"';
 		bufHTML[l + 1] = EOS;
@@ -1409,7 +1409,7 @@ static ThotBool        PutBeginTag (strNodeDesc * ND, strNode * TN)
       AD = AD->Next;
     }
   /* closing the tag */
-  res = res && PutInHtmlBuffer (TEXT(">"));
+  res = res && PutInHtmlBuffer (">");
   if (TransferMode == ByAttribute)
     {
       /*free the zzghost attribute */
@@ -1427,13 +1427,13 @@ static ThotBool PutEndTag (strGenStack * ND)
 {
   ThotBool res = TRUE;
 
-  if (ustrcmp (ND->Tag, TEXT("hr")) && 
-      ustrcmp (ND->Tag, TEXT("br")) &&
-      ustrcmp (ND->Tag, TEXT("img")))
+  if (ustrcmp (ND->Tag, "hr") && 
+      ustrcmp (ND->Tag, "br") &&
+      ustrcmp (ND->Tag, "img"))
     {
-      res = res && PutInHtmlBuffer (TEXT("</"));
+      res = res && PutInHtmlBuffer ("</");
       res = res && PutInHtmlBuffer (ND->Tag);
-      res = res && PutInHtmlBuffer (TEXT(">"));
+      res = res && PutInHtmlBuffer (">");
     }
   return res;
 }
@@ -1627,8 +1627,8 @@ static ThotBool        TransformNode (strMatchChildren * sm)
 	   
 	   while (RNodeCour != NULL && 
 		  RNodeCour->Tag[0] != '"' &&
-		  ustrcmp (RNodeCour->Tag, TEXT("*")) != 0 &&
-		  ustrcmp (RNodeCour->Tag, TEXT("#")) != 0)
+		  ustrcmp (RNodeCour->Tag, "*") != 0 &&
+		  ustrcmp (RNodeCour->Tag, "#") != 0)
 	     { /* generates the new nodes */
 	       result = result && PutBeginTag (RNodeCour, sm->MatchNode);
 	       courNode++;
@@ -1701,7 +1701,7 @@ static ThotBool     ApplyTransformation (strMatch * sm, Document doc)
 	lastRulePlace = 1;
 	szHTML = 0;
 	bufHTML = TtaAllocString (BUFFER_LEN);
-	ustrcpy (bufHTML, TEXT(""));
+	ustrcpy (bufHTML, "");
 	
 	TransferMode = InBuffer;
 	/* applying the transformation */
@@ -1843,7 +1843,7 @@ static ThotBool     CheckSelectionLevel (Document doc)
 	     /* all selected elements are selected? */
 	     nextLast == NULL && prevFirst == NULL &&
 	     /* it's not the HTML element? */
-	     (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) ||
+	     (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") ||
 	      elType.ElTypeNum != HTML_EL_HTML))
 	{
 	  maxSelDepth++;
@@ -1934,16 +1934,16 @@ static ThotBool     IsValidHtmlChild (ElementType elemType, STRING tag, STRING p
       else
 	{
 	  name = GetXMLElementName (subTypes[0], TransDoc);
-	  if (!ustrcmp (name, TEXT("???")) ||
-    	      !ustrcmp (name, TEXT("none")))
+	  if (!ustrcmp (name, "???") ||
+    	      !ustrcmp (name, "none"))
 	    /* search if tag can be inserted as a child of the identity */
-	    result = IsValidHtmlChild (subTypes[0], tag, TEXT(""));
+	    result = IsValidHtmlChild (subTypes[0], tag, "");
 	}
       /* any math element can be inserted under <MATH> (only row in MathML.S)*/
       if (!result &&
-	  !ustrcmp (TtaGetElementTypeName (elemType), TEXT("MathML")) && 
-	  !ustrcmp (TtaGetSSchemaName (elemType.ElSSchema), TEXT("MathML")))
-	result = IsValidHtmlChild (subTypes[0], tag, TEXT(""));
+	  !ustrcmp (TtaGetElementTypeName (elemType), "MathML") && 
+	  !ustrcmp (TtaGetSSchemaName (elemType.ElSSchema), "MathML"))
+	result = IsValidHtmlChild (subTypes[0], tag, "");
       break;
 
     case ConstructList:
@@ -1952,10 +1952,10 @@ static ThotBool     IsValidHtmlChild (ElementType elemType, STRING tag, STRING p
       else
 	{
 	  name = GetXMLElementName (subTypes[0], TransDoc);
-	  if (!ustrcmp (name, TEXT("???")) ||
-	      !ustrcmp (name, TEXT("p*")) ||
-    	      !ustrcmp (name, TEXT("none")))
-	    result = IsValidHtmlChild (subTypes[0], tag, TEXT(""));
+	  if (!ustrcmp (name, "???") ||
+	      !ustrcmp (name, "p*") ||
+    	      !ustrcmp (name, "none"))
+	    result = IsValidHtmlChild (subTypes[0], tag, "");
 	}
       break;
 
@@ -1967,16 +1967,16 @@ static ThotBool     IsValidHtmlChild (ElementType elemType, STRING tag, STRING p
          for (i = 0; !result && i < cardinal; i++)
 	   {
 	     name = GetXMLElementName (subTypes[i], TransDoc);
-	     if (!ustrcmp (name, TEXT("???")) ||
-		 !ustrcmp (name, TEXT("p*")) ||
-		 !ustrcmp (name, TEXT("none")))
-	       result = IsValidHtmlChild (subTypes[i], tag, TEXT(""));
+	     if (!ustrcmp (name, "???") ||
+		 !ustrcmp (name, "p*") ||
+		 !ustrcmp (name, "none"))
+	       result = IsValidHtmlChild (subTypes[i], tag, "");
 	   }
       break;
 
     case ConstructOrderedAggregate:
       start = 0;
-      if (!ustrcmp (prevtag, TEXT("")))
+      if (!ustrcmp (prevtag, ""))
 	found = TRUE;
       else
 	/* there is a previous sibling */
@@ -1994,9 +1994,9 @@ static ThotBool     IsValidHtmlChild (ElementType elemType, STRING tag, STRING p
 	  else
 	    {
 	      name = GetXMLElementName (subTypes[i], TransDoc);
-	      if (ustrcmp (name, TEXT("???")) ||
-		  ustrcmp (name, TEXT("p*")) ||
-		  ustrcmp (name, TEXT("none")))
+	      if (ustrcmp (name, "???") ||
+		  ustrcmp (name, "p*") ||
+		  ustrcmp (name, "none"))
 		i = cardinal;
 	    }
 	  }
@@ -2011,9 +2011,9 @@ static ThotBool     IsValidHtmlChild (ElementType elemType, STRING tag, STRING p
 	      else
 		{
 		  name = GetXMLElementName (subTypes[i], TransDoc);
-		  if (!ustrcmp (name, TEXT("???")) ||
-		      !ustrcmp (name, TEXT("p*")) ||
-		      !ustrcmp (name, TEXT("none")) ||
+		  if (!ustrcmp (name, "???") ||
+		      !ustrcmp (name, "p*") ||
+		      !ustrcmp (name, "none") ||
 		      TtaIsOptionalInAggregate (i, elemType)) 
 		    i++;
 		  else
@@ -2026,11 +2026,11 @@ static ThotBool     IsValidHtmlChild (ElementType elemType, STRING tag, STRING p
 	    while (!result && i < cardinal)
 	      {
 		name = GetXMLElementName (subTypes[i], TransDoc);
-		if (!ustrcmp (name, TEXT("???")) ||
-		    !ustrcmp (name, TEXT("p*")) ||
-		    !ustrcmp (name, TEXT("none")))
+		if (!ustrcmp (name, "???") ||
+		    !ustrcmp (name, "p*") ||
+		    !ustrcmp (name, "none"))
 		  {
-		    result = IsValidHtmlChild (subTypes[i], tag, TEXT(""));
+		    result = IsValidHtmlChild (subTypes[i], tag, "");
 		    if (!result &&
 			TtaIsOptionalInAggregate(i, elemType)) 
 		      i++;
@@ -2052,10 +2052,10 @@ static ThotBool     IsValidHtmlChild (ElementType elemType, STRING tag, STRING p
 	for (i = 0; !result && i < cardinal; i++)
 	  {
 	    name = GetXMLElementName (subTypes[i], TransDoc);
-	    if (!ustrcmp (name, TEXT("???")) ||
-		!ustrcmp (name, TEXT("p*")) ||
-		!ustrcmp (name, TEXT("none")))
-	      result = IsValidHtmlChild (subTypes[i], tag, TEXT(""));
+	    if (!ustrcmp (name, "???") ||
+		!ustrcmp (name, "p*") ||
+		!ustrcmp (name, "none"))
+	      result = IsValidHtmlChild (subTypes[i], tag, "");
 	  }
       break;
 
@@ -2069,10 +2069,10 @@ static ThotBool     IsValidHtmlChild (ElementType elemType, STRING tag, STRING p
 	  else
 	    {
 	      name = GetXMLElementName (subTypes[0], TransDoc);
-	      if (!ustrcmp (name, TEXT("???")) ||
-		  !ustrcmp (name, TEXT("p*")) ||
-		  !ustrcmp (name, TEXT("none")))
-		result = IsValidHtmlChild (subTypes[0], tag, TEXT(""));
+	      if (!ustrcmp (name, "???") ||
+		  !ustrcmp (name, "p*") ||
+		  !ustrcmp (name, "none"))
+		result = IsValidHtmlChild (subTypes[0], tag, "");
 	    }
 	}
       break;
@@ -2156,7 +2156,7 @@ static ThotBool CheckValidTransRoot (strMatch * sm, ElementType elemTypeRoot,
 	      node = smc->MatchSymb->Rule->NewNodes;
 	      if (node != NULL)
 		{
-		  if (!ustrcmp (node->Tag, TEXT("*")))
+		  if (!ustrcmp (node->Tag, "*"))
 		    ustrcpy (curTag, smc->MatchNode->Tag);
 		  else
 		    ustrcpy (curTag, node->Tag);
@@ -2226,7 +2226,7 @@ void                TransCallbackDialog (int ref, int typedata, CHAR_T* data)
 
 	  /* transformation was succesful */ 
 	  sch = TtaGetElementType (myFirstSelect).ElSSchema;
-	  if (ustrcmp (TtaGetSSchemaName (sch), TEXT("MathML")) == 0)
+	  if (ustrcmp (TtaGetSSchemaName (sch), "MathML") == 0)
 	    {
 	      /* checking the MathML thot tree */
 	      if (isClosed)
@@ -2234,7 +2234,7 @@ void                TransCallbackDialog (int ref, int typedata, CHAR_T* data)
 	      else
 		elParent = myFirstSelect;
 	      while (elParent != NULL &&
-		     !ustrcmp (GetXMLElementName (TtaGetElementType (elParent), TransDoc), TEXT("???")))
+		     !ustrcmp (GetXMLElementName (TtaGetElementType (elParent), TransDoc), "???"))
 		elParent = TtaGetParent (elParent);
 	      if (elParent != NULL)
 		{
@@ -2260,7 +2260,7 @@ void                TransCallbackDialog (int ref, int typedata, CHAR_T* data)
 	    TtaNextSibling (&myFirstSelect);
 	  else
 	    myFirstSelect = TtaGetFirstChild (myFirstSelect);
-	  if (ustrcmp (TtaGetSSchemaName (sch), TEXT("HTML")) == 0)
+	  if (ustrcmp (TtaGetSSchemaName (sch), "HTML") == 0)
 	    {
 	      /* displaying the images */
 	      attrType.AttrSSchema = sch;
@@ -2288,9 +2288,9 @@ void                TransCallbackDialog (int ref, int typedata, CHAR_T* data)
 	  /* selecting the new elements */
 	  /* or setting the selction to the specified node */
 	  attrType.AttrSSchema = TtaGetElementType (myFirstSelect).ElSSchema;
-	  if (!ustrcmp (TtaGetSSchemaName (attrType.AttrSSchema), TEXT("HTML")))
+	  if (!ustrcmp (TtaGetSSchemaName (attrType.AttrSSchema), "HTML"))
 	    attrType.AttrTypeNum = HTML_ATTR_Ghost_restruct;
-	  else if (!ustrcmp (TtaGetSSchemaName (attrType.AttrSSchema), TEXT("MathML")))
+	  else if (!ustrcmp (TtaGetSSchemaName (attrType.AttrSSchema), "MathML"))
 	    attrType.AttrTypeNum = MathML_ATTR_Ghost_restruct;
 	  found = FALSE;
 	  elFound = NULL;
@@ -2305,7 +2305,7 @@ void                TransCallbackDialog (int ref, int typedata, CHAR_T* data)
 		{
 		  length = MAX_LENGTH;
 		  TtaGiveTextAttributeValue (attr, buf, &length);
-		  found = !ustrcmp (buf, TEXT("Select"));
+		  found = !ustrcmp (buf, "Select");
 		}
 	    }
 	  if (found)
@@ -2354,7 +2354,7 @@ void                TransformType (Document doc, View view)
   resultTrans = FALSE;
   TransDoc = doc;
   nameSet = TtaAllocString (NAME_LENGTH);
-  ustrcpy (nameSet, TEXT(""));
+  ustrcpy (nameSet, "");
   /* context initialisation -- checks the selection */
   ok = CheckSelectionLevel (TransDoc);
   
@@ -2398,7 +2398,7 @@ void                TransformType (Document doc, View view)
 		  if (ustrcmp (nameSet, TtaGetSSchemaName (elType.ElSSchema)))
 		    {
 		      /* the structure changes -> stop the process */
-		      ustrcpy (nameSet, TEXT(""));
+		      ustrcpy (nameSet, "");
 		      transSchema = NULL;
 		      elemSelect = NULL;
 		    }
@@ -2415,7 +2415,7 @@ void                TransformType (Document doc, View view)
   if (ok)
     { /* builds the source structure tree */
       menuBuf = TtaAllocString (MAX_LENGTH);
-      strMatchEnv.SourceTree = (StructureTree) NewNode (TEXT("Root"));
+      strMatchEnv.SourceTree = (StructureTree) NewNode ("Root");
       if (mySelect != NULL)
 	{
 	  (strMatchEnv.SourceTree)->Elem = TtaGetParent (mySelect);
@@ -2453,7 +2453,7 @@ void                TransformType (Document doc, View view)
 	  sm = node->Matches;
 	  while (sm != NULL)
 	    {		/* for each matching of the node */
-	      if (!ustrcmp (sm->MatchSymb->Tag, TEXT("pattern_root")))
+	      if (!ustrcmp (sm->MatchSymb->Tag, "pattern_root"))
 		{ /* if it is matching a pattern root : */
 		  /* insert the transformation name in the menu buffer */
 	
@@ -2463,15 +2463,15 @@ void                TransformType (Document doc, View view)
 		  if (elemSelect != NULL)
 		    ustrcpy (tag, GetXMLElementName (TtaGetElementType (elemSelect), TransDoc));
 		  while (elemSelect != NULL &&
-			 (!ustrcmp (tag, TEXT("???")) ||
-			  !ustrcmp (tag, TEXT("none"))))
+			 (!ustrcmp (tag, "???") ||
+			  !ustrcmp (tag, "none")))
 		    {
 		      TtaPreviousSibling (&elemSelect);
 		      if (elemSelect != NULL)
 			ustrcpy (tag, GetXMLElementName (TtaGetElementType (elemSelect), TransDoc));
 		    }
 		  if (elemSelect == NULL)
-		    ustrcpy (tag, TEXT(""));
+		    ustrcpy (tag, "");
 		  if (CheckValidTransRoot (sm,
 				TtaGetElementType (sm->MatchNode->Elem), tag))
 		    {
@@ -2485,7 +2485,7 @@ void                TransformType (Document doc, View view)
 			   k++);
 		      if (k == i)
 			{
-			   usprintf (&menuBuf[j], TEXT("%s%s"), "B",
+			   usprintf (&menuBuf[j], "%s%s", "B",
 				     sm->MatchSymb->SymbolName);
 			   j += ustrlen (&menuBuf[j]) + 1;
 			   menuTrans[i++] = (strMatch *) sm;
@@ -2547,7 +2547,7 @@ ThotBool TransformIntoType (ElementType resultType, Document doc)
   resultTrans = FALSE;
   TransDoc = doc;
   nameSet = TtaAllocString (NAME_LENGTH);
-  ustrcpy (nameSet, TEXT(""));
+  ustrcpy (nameSet, "");
   
   /* context initialisation -- checks the selection */
   ok = CheckSelectionLevel (TransDoc);
@@ -2590,7 +2590,7 @@ ThotBool TransformIntoType (ElementType resultType, Document doc)
 		}
 	      else
 		{
-		  ustrcpy (nameSet, TEXT(""));
+		  ustrcpy (nameSet, "");
 		  transSchema = NULL;
 		  elemSelect = NULL;
 		}
@@ -2630,7 +2630,7 @@ ThotBool TransformIntoType (ElementType resultType, Document doc)
       maxMatchDepth = CourTransSet->MaxDepth + maxSelDepth;
       
       /* builds the source structure tree */
-      strMatchEnv.SourceTree = (StructureTree) NewNode (TEXT("Root"));
+      strMatchEnv.SourceTree = (StructureTree) NewNode ("Root");
       if (mySelect != NULL)
 	{
 	  (strMatchEnv.SourceTree)->Elem = TtaGetParent (mySelect);
@@ -2671,11 +2671,11 @@ ThotBool TransformIntoType (ElementType resultType, Document doc)
 	     sm = NULL;
 	  while (sm != NULL)
 	    {		/* for each matching of the node */
-	      if (!ustrcmp (sm->MatchSymb->Tag, TEXT("pattern_root")))
+	      if (!ustrcmp (sm->MatchSymb->Tag, "pattern_root"))
 		{ /* if it is matching a pattern root : insert the
 		     transformation in the matched transformations list */
 		  
-		  ustrcpy (tag, TEXT(""));
+		  ustrcpy (tag, "");
 		  if (CheckValidTransRoot (sm,
 				 TtaGetElementType (sm->MatchNode->Elem), tag))
 		    {

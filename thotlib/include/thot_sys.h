@@ -98,10 +98,10 @@ and must be removed at the end of the debug */
 #define DIR_STR  "/"
 #define PATH_STR ":"
 
-#define WC_DIR_SEP  TEXT('/')
-#define WC_PATH_SEP TEXT(':')
-#define WC_DIR_STR  TEXT("/")
-#define WC_PATH_STR TEXT(":")
+#define WC_DIR_SEP  '/'
+#define WC_PATH_SEP ':'
+#define WC_DIR_STR  "/"
+#define WC_PATH_STR ":"
 
 #else /* __GNUC__ */ /*---------------------------------GNUC--*/
 /* Ugly patches to cope with Visual C++ */
@@ -128,10 +128,10 @@ int _getpid (void);
 #define DIR_STR  "\\"
 #define PATH_STR ";"
 
-#define WC_DIR_SEP  TEXT('\\')
-#define WC_PATH_SEP TEXT(';')
-#define WC_DIR_STR  TEXT("\\")
-#define WC_PATH_STR TEXT(";")
+#define WC_DIR_SEP  '\\'
+#define WC_PATH_SEP ';'
+#define WC_DIR_STR  "\\"
+#define WC_PATH_STR ";"
 
 #endif /* ! __GNUC__ */
 /*------------------------------------------------------GNUC--*/
@@ -179,10 +179,10 @@ typedef unsigned char   ThotBool;
 #define PATH_SEP ':'
 #define PATH_STR ":"
 
-#define WC_DIR_SEP  TEXT('/')
-#define WC_PATH_SEP TEXT(':')
-#define WC_DIR_STR  TEXT("/")
-#define WC_PATH_STR TEXT(":")
+#define WC_DIR_SEP  '/'
+#define WC_PATH_SEP ':'
+#define WC_DIR_STR  "/"
+#define WC_PATH_STR ":"
 
 #endif /* _WINDOWS */
 /********************************************************WINDOWS**/
@@ -193,7 +193,7 @@ typedef unsigned char   ThotBool;
 #endif /* _I18N_ */
 
 #ifndef TEXT
-#define TEXT(str) ___TEXT___(str)
+#define str ___TEXT___(str)
 #endif  /* TEXT */
 
 #define __CR__  '\r'
@@ -203,12 +203,12 @@ typedef unsigned char   ThotBool;
 #define SPACE   ' '
 #define BSPACE  '\b'
 
-#define WC_CR     TEXT('\r')
-#define WC_EOS    TEXT('\0')
-#define WC_EOL    TEXT('\n')
-#define WC_TAB    TEXT('\t')
-#define WC_SPACE  TEXT(' ')
-#define WC_BSPACE TEXT('\b')
+#define WC_CR     '\r'
+#define WC_EOS    '\0'
+#define WC_EOL    '\n'
+#define WC_TAB    '\t'
+#define WC_SPACE  ' '
+#define WC_BSPACE '\b'
 
 #define NBSP      0xA0
 

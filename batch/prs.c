@@ -280,7 +280,7 @@ indLine             wl;
    else
      {
 	ustrncpy (n, &inputLine[wi - 1], MAX_NAME_LENGTH);
-	n[wl] = TEXT('\0');
+	n[wl] = '\0';
      }
 }
 
@@ -6778,11 +6778,11 @@ char              **argv;
    COMPWnd = hwnd;
    compilersDC = GetDC (hwnd);
    _CY_ = *Y;
-   ustrcpy (msg, TEXT("Executing prs "));
+   ustrcpy (msg, "Executing prs ");
    for (ndx = 1; ndx < argc; ndx++)
      {
        ustrcat (msg, argv [ndx]);
-       ustrcat (msg, TEXT(" "));
+       ustrcat (msg, " ");
      }
 
    TtaDisplayMessage (INFO, msg);
@@ -6792,14 +6792,14 @@ char              **argv;
 #endif /* _WINDOWS */
 
    TtaInitializeAppRegistry (argv[0]);
-   i = TtaGetMessageTable (TEXT("libdialogue"), TMSG_LIB_MSG_MAX);
-   COMPIL = TtaGetMessageTable (TEXT("compildialogue"), COMP_MSG_MAX);
-   PRS = TtaGetMessageTable (TEXT("prsdialogue"), PRS_MSG_MAX);
+   i = TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);
+   COMPIL = TtaGetMessageTable ("compildialogue", COMP_MSG_MAX);
+   PRS = TtaGetMessageTable ("prsdialogue", PRS_MSG_MAX);
    error = False;
    /* initialize the parser */
    InitParser ();
    /* load the compiler grammar */
-   InitSyntax (TEXT("PRESEN.GRM"));
+   InitSyntax ("PRESEN.GRM");
    if (!error)
      {
        /* prepare the cpp command */
@@ -6842,8 +6842,8 @@ char              **argv;
        ptr = ustrrchr(fname, '.');
        nb = ustrlen (srceFileName);
        if (!ptr) /* there is no suffix */
-         ustrcat (srceFileName, TEXT(".P"));
-       else if (ustrcmp(ptr, TEXT(".P")))
+         ustrcat (srceFileName, ".P");
+       else if (ustrcmp(ptr, ".P"))
 	 {
 	   /* it's not the valid suffix */
 	   TtaDisplayMessage (FATAL, TtaGetMessage (PRS, INVALID_FILE), srceFileName);
@@ -6861,7 +6861,7 @@ char              **argv;
 	   nb -= 2; /* length without the suffix */
 	 } 
        /* add the suffix .SCH in srceFileName */
-       ustrcat (fname, TEXT(".SCH"));
+       ustrcat (fname, ".SCH");
        
        /* does the file to compile exist */
        if (TtaFileExist (srceFileName) == 0)
@@ -6879,7 +6879,7 @@ char              **argv;
 #ifdef _WINDOWS
 	       CHAR_T* CMD;
 	       CMD = TtaAllocString (3 + ustrlen (pwd));
-	       usprintf (CMD, TEXT("-I%s"), pwd);
+	       usprintf (CMD, "-I%s", pwd);
 	       cmd [pIndex] = TtaGetMemory (3 + ustrlen (pwd));
 	       wc2iso_strcpy (cmd [pIndex++], CMD);
 	       cmd [pIndex] = TtaGetMemory (3);
@@ -6906,7 +6906,7 @@ char              **argv;
 #endif /* _WINDOWS */
 	     }
 #ifdef _WINDOWS
-           cppLib = LoadLibrary (TEXT("cpp"));
+           cppLib = LoadLibrary ("cpp");
            ptrMainProc = GetProcAddress (cppLib, "CPPmain");
            i = ptrMainProc (hwnd, pIndex, cmd, &_CY_);
            FreeLibrary (cppLib);
@@ -6950,15 +6950,15 @@ char              **argv;
 		   fileOK = TtaReadWideChar (infile, &inputLine[i], ISO_8859_1);
                    i++;
 		 }
-	       while (i < LINE_LENGTH && inputLine[i - 1] != TEXT('\n') && fileOK);
+	       while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
 	       /* marque la fin reelle de la ligne */
-	       inputLine[i - 1] = TEXT('\0');
+	       inputLine[i - 1] = '\0';
 	       if (i >= LINE_LENGTH) /* ligne trop longue */
 		 CompilerMessage (1, PRS, FATAL, MAX_LINE_SIZE_OVERFLOW, inputLine, LineNum);
-	       else if (inputLine[0] == TEXT('#'))
+	       else if (inputLine[0] == '#')
 		 {
 		   /* cette ligne contient une directive du preprocesseur cpp */
-		   usscanf (inputLine, TEXT("# %d %s"), &LineNum, buffer);
+		   usscanf (inputLine, "# %d %s", &LineNum, buffer);
 		   LineNum--;
 		 }
 	       else
@@ -7017,7 +7017,7 @@ char              **argv;
 	       /* write the compiled schema into the output file */
 	       /* remove temporary file */
 	       TtaFileUnlink (fname);
-	       ustrcat (srceFileName, TEXT(".PRS"));
+	       ustrcat (srceFileName, ".PRS");
 	       fileOK = WritePresentationSchema (srceFileName, pPSchema,
 						 pSSchema);
 	       if (!fileOK)

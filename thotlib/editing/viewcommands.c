@@ -102,11 +102,11 @@ int                 height;
 
    /* met dans le buffer le nom du document... */
    ustrncpy (buf, pDoc->DocDName, MAX_NAME_LENGTH);
-   ustrcat (buf, TEXT("  "));
+   ustrcat (buf, "  ");
    /* ...suivi eventuellement de la mention 'Read only' */
    if (pDoc->DocReadOnly)
      {
-	ustrcat (buf, TEXT(" "));
+	ustrcat (buf, " ");
 	ustrcat (buf, TtaGetMessage (LIB, TMSG_READ_ONLY));
      }
    /* creation d'une frame pour la vue */
@@ -421,10 +421,10 @@ CHAR_T*             fileName;
 	/* pas de directory precise'. On prend le path des documents */
 	ustrncpy (directory, DocumentPath, MAX_PATH);
       /* construit le nom complet du fichier a importer */
-      MakeCompleteName (fileName, TEXT(""), directory, fullName, &i);
+      MakeCompleteName (fileName, "", directory, fullName, &i);
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_IMPORTING_FILE);
       /* ouvre le fichier a importer */
-      file = ufopen (fullName, TEXT("r"));
+      file = ufopen (fullName, "r");
       if (file != NULL)
 	/* le fichier a importer est ouvert */
 	{
@@ -1115,7 +1115,7 @@ View                view;
                 /* on ajoute cette nature dans le menu en construction */
                {
                   nbNatures++;
-                  *ptrBufNat = TEXT('M');     /* il y aura un sous-menu */
+                  *ptrBufNat = 'M';     /* il y aura un sous-menu */
                   ptrBufNat++;
                   if (TableNatures[nat] == pDoc->DocSSchema)
                      i = CONFIG_DOCUMENT_STRUCT; /* schema du document */
@@ -1143,7 +1143,7 @@ View                view;
           {
              TtaNewPopup (NumMenuPresNature, 0,
 			  TtaGetMessage (LIB, TMSG_GLOBAL_LAYOUT),
-                          nbNatures, BufMenuNatures, NULL, TEXT('L'));
+                          nbNatures, BufMenuNatures, NULL, 'L');
              MenuAActiver = NumMenuPresNature;
           }
         /* pour chacune de ces natures, on cree les sous-menus des */
@@ -1165,7 +1165,7 @@ View                view;
                      for (k = 1; k <= nbPres; k++)
                        {
                           /* ajoute 'B' au debut de chaque entree */
-                          ustrcpy (dest, TEXT("B"));
+                          ustrcpy (dest, "B");
                           dest++;
                           l = ustrlen (src);
                           ustrcpy (dest, src);

@@ -139,7 +139,7 @@ static void         PrintSubMenu (PtrAppMenuItem item, WindowType winType, STRIN
 	       fprintf (AppFile, "DocTypeWindow");
 	       break;
 	 }
-   fprintf (AppFile, ", TEXT(\"%s\"), %s, %s, %d);\n", schemaName, menuName, item->AppItemName, itemsNumber);
+   fprintf (AppFile, ", \"%s\", %s, %s, %d);\n", schemaName, menuName, item->AppItemName, itemsNumber);
 
    /* traite la liste des items du sous-menu */
    subitem = item->AppSubMenu;
@@ -158,7 +158,7 @@ static void         PrintSubMenu (PtrAppMenuItem item, WindowType winType, STRIN
 		    fprintf (AppFile, "DocTypeWindow");
 		    break;
 	      }
-	fprintf (AppFile, ", TEXT(\"%s\"), %s, %s", schemaName, menuName, item->AppItemName);
+	fprintf (AppFile, ", \"%s\", %s, %s", schemaName, menuName, item->AppItemName);
 
 	if (subitem->AppItemName == NULL)
 	   fprintf (AppFile, ", 0");
@@ -200,7 +200,7 @@ static void         PrintMenus (PtrAppMenu firstMenu, WindowType winType, char *
 	  fprintf (AppFile, "DocTypeWindow");
 	  break;
 	}
-      fprintf (AppFile, ", TEXT(\"%s\"));\n", schName);
+      fprintf (AppFile, ", \"%s\");\n", schName);
     }
   else
     {
@@ -230,7 +230,7 @@ static void         PrintMenus (PtrAppMenu firstMenu, WindowType winType, char *
 	      fprintf (AppFile, "DocTypeWindow");
 	      break;
 	    }
-	  fprintf (AppFile, ", TEXT(\"%s\"), %d, %s, %d", schName, menu->AppMenuView, menu->AppMenuName, itemsNumber);
+	  fprintf (AppFile, ", \"%s\", %d, %s, %d", schName, menu->AppMenuView, menu->AppMenuName, itemsNumber);
 	  /* Declare les menus dynamiques */
 	  if (!strcmp (menu->AppMenuName, "Attributes_"))
 	    {
@@ -269,7 +269,7 @@ static void         PrintMenus (PtrAppMenu firstMenu, WindowType winType, char *
 		      fprintf (AppFile, "DocTypeWindow");
 		      break;
 		    }
-		  fprintf (AppFile, ", TEXT(\"%s\"), %s, -1", schName, menu->AppMenuName);
+		  fprintf (AppFile, ", \"%s\", %s, -1", schName, menu->AppMenuName);
 		  
 		  if (item->AppItemName == NULL)
 		    fprintf (AppFile, ", 0");
@@ -308,7 +308,7 @@ static void     WriteAppliInit (char *fname, PtrEventsSet pAppli)
    fprintf (AppFile, "void %sApplicationInitialise ()\n", fname);
    fprintf (AppFile, "{\n PtrEventsSet appliActions;\n\n");
    fprintf (AppFile, "  /* Create the new application context*/\n");
-   fprintf (AppFile, "  appliActions = TteNewEventsSet (%d, TEXT(\"%s\"));\n", pAppli->EvSStructId, pAppli->EvSName);
+   fprintf (AppFile, "  appliActions = TteNewEventsSet (%d, \"%s\");\n", pAppli->EvSStructId, pAppli->EvSName);
 
    WriteEventsList (pAppli);
    fprintf (AppFile, "}\n\n");
@@ -599,7 +599,7 @@ static void         WriteActionList (char *fname)
 
       fprintf (AppFile, "  /* load appName+\"dialogue\" message file */\n");
       fprintf (AppFile, "  ustrcpy (workName, appName);\n");
-      fprintf (AppFile, "  ustrcat(workName, TEXT(\"dialogue\"));\n");
+      fprintf (AppFile, "  ustrcat(workName, \"dialogue\");\n");
       fprintf (AppFile, "  TtaGetMessageTable (workName, MAX_EDITOR_LABEL);\n");
       /* if necessary load editing Resources */
       if (editingResource)

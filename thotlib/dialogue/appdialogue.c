@@ -223,7 +223,7 @@ void TteInitMenus (CHAR_T* name, int number)
      {
 	i = 1;
 	while (i < appArgc - 1)
-	   if (ustrcmp (appArgv[i], TEXT("-display")) != 0)
+	   if (ustrcmp (appArgv[i], "-display") != 0)
 	      i++;
 	   else
 	     {
@@ -426,7 +426,7 @@ void    FreeMenus ()
     {
       ptrItem = ptrmenu->ItemsList;
       for (i = 0; i < ptrmenu->ItemsNb; i++)
-	if (ptrItem[i].ItemType == TEXT('M'))
+	if (ptrItem[i].ItemType == 'M')
 	  {
 	    /* free a submenu */
 	    TtaFreeMemory (ptrItem[i].SubMenu->ItemsList);
@@ -448,7 +448,7 @@ void    FreeMenus ()
     {
       ptrItem = ptrmenu->ItemsList;
       for (i = 0; i < ptrmenu->ItemsNb; i++)
-	if (ptrItem[i].ItemType == TEXT('M'))
+	if (ptrItem[i].ItemType == 'M')
 	  {
 	    /* free a submenu */
 	    TtaFreeMemory (ptrItem[i].SubMenu->ItemsList);
@@ -473,7 +473,7 @@ void    FreeMenus ()
 	{
 	  ptrItem = ptrmenu->ItemsList;
 	  for (i = 0; i < ptrmenu->ItemsNb; i++)
-	    if (ptrItem[i].ItemType == TEXT('M'))
+	    if (ptrItem[i].ItemType == 'M')
 	      {
 		/* free a submenu */
 		TtaFreeMemory (ptrItem[i].SubMenu->ItemsList);
@@ -918,18 +918,18 @@ static void BuildSubMenu (Menu_Ctl * ptrmenu, int ref, int entry, int frame)
        /* Regarde si le texte des commandes ne deborde pas */
        ptr = TtaGetMessage (THOT, ptritem[item].ItemID);
        lg = ustrlen (ptr) + 1;
-       if (ptritem[item].ItemType == TEXT('S') && i + 2 < 700  )
+       if (ptritem[item].ItemType == 'S' && i + 2 < 700  )
 	 {
 	   if (( ptrmenu != NULL ) &&  Prof_ShowSeparator(ptrmenu, item, LastItemType) )
 	     {
-	       ustrcpy (&string[i], TEXT("S"));
+	       ustrcpy (&string[i], "S");
 	       i += 2;
 	     }
 	 }
        else if (i + lg < 699)
 	 {
-	   if (ptritem[item].ItemType == TEXT('D'))
-	     string[i] = TEXT('B');
+	   if (ptritem[item].ItemType == 'D')
+	     string[i] = 'B';
 	   else
 	     string[i] = ptritem[item].ItemType;
 	   ustrcpy (&string[i + 1], ptr);
@@ -1008,14 +1008,14 @@ static void BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotMenu button, int fram
        /* Regarde si le texte des commandes ne deborde pas */
        ptr = TtaGetMessage (THOT, ptritem[item].ItemID);
        lg = ustrlen (ptr) + 1;
-       if (ptritem[item].ItemType == TEXT('S') && i + 2 < 700)
+       if (ptritem[item].ItemType == 'S' && i + 2 < 700)
 	 {
 
 	   if ( ptrmenu != NULL ) 
 	     {
 	       if ( Prof_ShowSeparator(ptrmenu, item,LastItemType))
 		 {
-		   ustrcpy (&string[i], TEXT("S"));
+		   ustrcpy (&string[i], "S");
 		   i += 2;
 		 }
 	       else
@@ -1024,13 +1024,13 @@ static void BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotMenu button, int fram
 	 }
        else if (i + lg < 699)
 	 {
- 	   if ( ptritem[item].ItemType == TEXT('M') &&
+ 	   if ( ptritem[item].ItemType == 'M' &&
  		ptritem[item].SubMenu->ItemsNb == 0)
 	     emptyMenu = TRUE;
 	   else
  	     {
-	       if (ptritem[item].ItemType == TEXT('D'))
-		 string[i] = TEXT('B');
+	       if (ptritem[item].ItemType == 'D')
+		 string[i] = 'B';
 	       else
 		 string[i] = ptritem[item].ItemType;
 	       ustrcpy (&string[i + 1], ptr);
@@ -1044,8 +1044,8 @@ static void BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotMenu button, int fram
        /* traite le contenu de l'item de menu */
        if (action != -1)
 	 {
-	   if (ptritem[item].ItemType == TEXT('B') ||
-	       ptritem[item].ItemType == TEXT('T'))
+	   if (ptritem[item].ItemType == 'B' ||
+	       ptritem[item].ItemType == 'T')
 	     {
 	       /* Active l'action correspondante pour cette fenetre */
 	       if (MenuActionList[action].ActionEquiv != NULL)
@@ -1104,7 +1104,7 @@ static void BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotMenu button, int fram
 	action = ptritem[item].ItemAction;
 	if (action != -1)
 	  {
-	    if (ptritem[item].ItemType == TEXT('M') &&
+	    if (ptritem[item].ItemType == 'M' &&
  		ptritem[item].SubMenu->ItemsNb != 0)
 	      {
 		if (action != 0 && item < MAX_MENU)
@@ -1433,7 +1433,7 @@ int    TtaAddButton (Document document, View view, ThotIcon picture,
 		  FrameTable[frame].Button[i] = w;
 		  FrameTable[frame].Call_Button[i] = (Proc) procedure;
 		  if (!w)
-		    WinErrorBox (NULL, TEXT("TtaAddButton"));
+		    WinErrorBox (NULL, "TtaAddButton");
 		  else
 		    {
 		      w->fsState      = TBSTATE_ENABLED;
@@ -1934,7 +1934,7 @@ int   TtaAddTextZone (Document document, View view, STRING label,
 #else  /* _WINDOWS */
 	      currentFrame = frame;
 	      GetClientRect (FrMainRef [frame], &rect);
-	      w = CreateWindow (TEXT("EDIT"), TEXT(""),
+	      w = CreateWindow ("EDIT", "",
 				WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER | ES_AUTOHSCROLL,
 				0, 0, 0, 0, FrMainRef[frame], (HMENU) i, hInstance, NULL);
 	      FrameTable[frame].Text_Zone[i] = w;
@@ -1944,7 +1944,7 @@ int   TtaAddTextZone (Document document, View view, STRING label,
 		lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (FrameTable[frame].Text_Zone[i], GWL_WNDPROC, (DWORD) TextZoneProc);
 	      else
 		SetWindowLong (FrameTable[frame].Text_Zone[i], GWL_WNDPROC, (DWORD) TextZoneProc);
-	      wLabel = CreateWindow (TEXT("STATIC"), label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
+	      wLabel = CreateWindow ("STATIC", label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
 				     0, 0, 0, 0, FrMainRef[frame], (HMENU) (i + MAX_TEXTZONE), hInstance, NULL);
 	      FrameTable[frame].Label[i] = wLabel;
 	      /* FrameTable[frame].showLogo = TRUE; */
@@ -2286,7 +2286,7 @@ gint ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data)
              {
                TtaSetDialoguePosition ();
                if (ThotLocalActions[T_insertpaste] != NULL)
-                 (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, TEXT('R'), &ok);
+                 (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, 'R', &ok);
              }
 
          default:
@@ -2437,7 +2437,7 @@ int  MakeFrame (CHAR_T* schema, int view, STRING name, int X, int Y,
 	     X = 2;
 	   if (Y < 0)
 	     Y = 2;
-	   Main_Wd = CreateWindowEx (0L, TEXT("Amaya"),    /* window class name */
+	   Main_Wd = CreateWindowEx (0L, "Amaya",    /* window class name */
 				     NULL,	/* window caption    */
 				     WS_OVERLAPPEDWINDOW, /* window style            */
 				     X,	    /* initial x pos           */
@@ -2450,7 +2450,7 @@ int  MakeFrame (CHAR_T* schema, int view, STRING name, int X, int Y,
 				     NULL);	/* creation parameters     */
 
 	   if (Main_Wd == 0)
-	     WinErrorBox (WIN_Main_Wd, TEXT("MakeFrame"));
+	     WinErrorBox (WIN_Main_Wd, "MakeFrame");
 	   else {
 	     /* store everything. */
 	     FrMainRef[frame]            = Main_Wd;
@@ -2461,7 +2461,7 @@ int  MakeFrame (CHAR_T* schema, int view, STRING name, int X, int Y,
                   
 	     menu_bar = CreateMenu ();
 	     if (!menu_bar) 
-	       WinErrorBox (Main_Wd, TEXT("MakeFrame"));
+	       WinErrorBox (Main_Wd, "MakeFrame");
 	     else 
 	       WinMenus[frame] = menu_bar;
 	   }
@@ -2995,7 +2995,7 @@ int  MakeFrame (CHAR_T* schema, int view, STRING name, int X, int Y,
 	   title_string = XmStringCreateSimple (" ");
 	   XtSetArg (args[n], XmNlabelString, title_string);
 	   n++;
-	   i = CharacterWidth (TEXT('M'), LargeFontDialogue) * 50;
+	   i = CharacterWidth ('M', LargeFontDialogue) * 50;
 	   XtSetArg (args[n], XmNwidth, (Dimension) i);
 	   n++;
 	   FrameTable[frame].WdStatus = XmCreateLabel (hbox2, "Thot_MSG", args, n);
@@ -3029,12 +3029,12 @@ int  MakeFrame (CHAR_T* schema, int view, STRING name, int X, int Y,
            FrameTable[frame].WdFrame =  drawing_area;
 #else  /* _WINDOWS */
 	   /*** scrollbars ***/
-	   hscrl = CreateWindow (TEXT("scrollbar"), NULL, WS_CHILD | WS_VISIBLE | SBS_HORZ,
+	   hscrl = CreateWindow ("scrollbar", NULL, WS_CHILD | WS_VISIBLE | SBS_HORZ,
 				 0, 0, 0, 0, Main_Wd, (HMENU) frame, hInstance, NULL);
 	   SetScrollRange (hscrl, SB_CTL, 0, 100, FALSE);
 	   SetScrollPos (hscrl, SB_CTL, 0, FALSE);
 
-	   vscrl = CreateWindow (TEXT("scrollbar"), NULL, WS_CHILD | WS_VISIBLE | SBS_VERT,
+	   vscrl = CreateWindow ("scrollbar", NULL, WS_CHILD | WS_VISIBLE | SBS_VERT,
 				 0, 0, 0, 0, Main_Wd, (HMENU) (frame + 1), hInstance, NULL);
 	   SetScrollRange (vscrl, SB_CTL, 0, 100, FALSE);
 	   SetScrollPos (vscrl, SB_CTL, 0, FALSE);
@@ -3130,7 +3130,7 @@ void                DestroyFrame (int frame)
 		    {
 		       action = ptr[item].ItemAction;
 		       if (action != -1
-			   && (ptr[item].ItemType == TEXT('B') || ptr[item].ItemType == TEXT('T')))
+			   && (ptr[item].ItemType == 'B' || ptr[item].ItemType == 'T'))
 			  /* Desactive l'action correspondante pour cette fenetre */
 			  MenuActionList[action].ActionActive[frame] = FALSE;
 		       item++;
@@ -3293,11 +3293,11 @@ static void   FindItemMenu (int frame, int menuID, int itemID, int *menu,
 		 {
 		   /* the entry is found */
 		   found = TRUE;
-		   if (ptr[i].ItemType == TEXT('M'))
+		   if (ptr[i].ItemType == 'M')
 		     /* it doesn't match an action */
 		     j = -1;
 		 }
-	       else if (ptr[i].ItemType == TEXT('M'))
+	       else if (ptr[i].ItemType == 'M')
 		 {
 		   if (ptr[i].SubMenu->ItemsNb == 0)
 		     i++;
@@ -4227,7 +4227,7 @@ void      ThotCallback (int ref, int typedata, STRING data)
 	      if (item < ptrmenu->ItemsNb && ptrmenu->ItemsList != NULL)
 		{
 		  for (i = 0; i < item; i++)
-		    if (ptrmenu->ItemsList[i].ItemType == TEXT('M') &&
+		    if (ptrmenu->ItemsList[i].ItemType == 'M' &&
 			ptrmenu->ItemsList[i].SubMenu->ItemsNb == 0)
 		      item++;
 		  ptrmenu = ptrmenu->ItemsList[item].SubMenu;

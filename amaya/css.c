@@ -143,7 +143,7 @@ PSchema         GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 		      /* get a buffer for the attribute value */
 		      length = MAX_LENGTH;
 		      TtaGiveTextAttributeValue (attr, buffer, &length);
-		      found = (!ustrcasecmp (buffer, TEXT("STYLESHEET")) || !ustrcasecmp (buffer, TEXT("STYLE")));
+		      found = (!ustrcasecmp (buffer, "STYLESHEET") || !ustrcasecmp (buffer, "STYLE"));
 		    }
 		  if (found)
 		    {
@@ -200,7 +200,7 @@ PSchema         GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 			  /* get a buffer for the attribute value */
 			  length = MAX_LENGTH;
 			  TtaGiveTextAttributeValue (attr, buffer, &length);
-			  found = (!ustrcasecmp (buffer, TEXT("STYLESHEET")) || !ustrcasecmp (buffer, TEXT("STYLE")));
+			  found = (!ustrcasecmp (buffer, "STYLESHEET") || !ustrcasecmp (buffer, "STYLE"));
 			}
 		      /* search if the previous CSS has a presentation schema */
 		      if (found)
@@ -645,7 +645,7 @@ void        LoadStyleSheet (STRING url, Document doc, Element el, CSSInfoPtr css
       if ( pInfo->PiSchemas == NULL || import)
 	{
 	  /* load the resulting file in memory */
-	  res = ufopen (tempfile, TEXT("r"));
+	  res = ufopen (tempfile, "r");
 	  if (res == NULL)
 	    {
 	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);

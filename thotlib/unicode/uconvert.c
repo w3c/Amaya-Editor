@@ -743,7 +743,7 @@ int TtaMBS2WCS (unsigned char** src, wchar_t** target, CHARSET encoding)
 	  if (res <= 0xFFFF)
 	    *ptrTarget++ = res;
 	  else 
-	    *ptrTarget++ = TEXT('?');
+	    *ptrTarget++ = '?';
 	}
       *ptrTarget = 0L;
     }

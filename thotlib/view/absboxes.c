@@ -58,7 +58,7 @@ CHAR_T*             AbsBoxType (PtrAbstractBox pAb, ThotBool origName)
 
   text = TtaAllocString (MAX_TXT_LEN);
   if (pAb == NULL)
-    ustrcpy (text, TEXT(" "));
+    ustrcpy (text, " ");
   else
     {
       pEl = pAb->AbElement;
@@ -70,7 +70,7 @@ CHAR_T*             AbsBoxType (PtrAbstractBox pAb, ThotBool origName)
       if (pAb->AbPresentationBox)
 	/* Ajoute le nom du type de boite de presentation */
 	{
-	  ustrcat (text, TEXT("."));
+	  ustrcat (text, ".");
 	  ustrcat (text, pAb->AbPSchema->PsPresentBox[pAb->AbTypeNum - 1].PbName);
 	}
     }

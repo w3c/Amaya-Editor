@@ -653,10 +653,10 @@ CHAR_T* TtaGetVarLANG ()
    CHAR_T   *langEVar = TtaGetEnvString ("LANG");
 
    if (langEVar == NULL)
-     ustrcpy (StandardLANG, TEXT("en"));
-   else if (!ustrcmp (langEVar, TEXT("C")) ||
-	    !ustrcasecmp (langEVar, TEXT("iso_8859_1")))
-     ustrcpy (StandardLANG, TEXT("fr"));
+     ustrcpy (StandardLANG, "en");
+   else if (!ustrcmp (langEVar, "C") ||
+	    !ustrcasecmp (langEVar, "iso_8859_1"))
+     ustrcpy (StandardLANG, "fr");
    else
      {
        ustrncpy (StandardLANG, langEVar, 2);
@@ -897,7 +897,7 @@ Language            langageId;
    lang = (int) langageId;
    ptPattern = LangTable[lang].LangPattern;
    ustrcat (patternFileName, ptPattern);
-   if ((in = ufopen (patternFileName, TEXT("r"))) == NULL)
+   if ((in = ufopen (patternFileName, "r")) == NULL)
      {
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_HYPHEN_FILE_NOT_OPEN), LangTable[lang].LangPattern);
 	return (FALSE);
@@ -1011,9 +1011,9 @@ CHAR_T              wordToCut[THOT_MAX_CHAR];
      }
    for (i = 0; i < THOT_MAX_CHAR; i++)
       tab_weight[i] = 0;
-   ustrcpy (wordToTreat, TEXT("."));
+   ustrcpy (wordToTreat, ".");
    ustrcat (wordToTreat, wordToCut);
-   ustrcat (wordToTreat, TEXT("."));
+   ustrcat (wordToTreat, ".");
    size_subword = 1;
    while ((size_subword <= wordLength) && (size_subword <= MAX_LET_PATTERN))
      {

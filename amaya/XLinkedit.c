@@ -37,7 +37,7 @@ ThotBool     withUndo;
   SSchema       XLinkSchema;
   ThotBool	new;
 
-  XLinkSchema = TtaGetSSchema (TEXT("XLink"), doc);
+  XLinkSchema = TtaGetSSchema ("XLink", doc);
   attrType.AttrSSchema = XLinkSchema;
   attrType.AttrTypeNum = XLink_ATTR_type;
   attr = TtaGetAttribute (el, attrType);
@@ -80,7 +80,7 @@ void XLinkPasted(event)
   if (originDocument > 0 && originDocument != event->document)
     /* this element has changed document. Check its links */
     {
-    XLinkSchema = TtaGetSSchema (TEXT("XLink"), event->document);
+    XLinkSchema = TtaGetSSchema ("XLink", event->document);
     if (XLinkSchema)
       {
       /* is there an href attribute from the XLink namespace? */

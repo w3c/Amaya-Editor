@@ -33,7 +33,7 @@
 static PathBuffer   DirectoryName;
 static Name         SchStrImport;
 static int          NbDocSuffix = 1;
-static CHAR_T       tabDocSuffix [10][10] = {TEXT(".PIV"), TEXT(""), TEXT(""), TEXT(""), TEXT(""), TEXT(""), TEXT(""), TEXT(""), TEXT(""), TEXT("")};
+static CHAR_T       tabDocSuffix [10][10] = {".PIV", "", "", "", "", "", "", "", "", ""};
 static CHAR_T       docSuffix [5];
 /* static PathBuffer DirectoryDocImport; */
 static Name         NewSchemaName;
@@ -197,7 +197,7 @@ static void BuildImportForm()
 #       ifndef _WINDOWS
 	    TtaNewSelector (NumSelectImportClass, NumFormImportClass, TtaGetMessage (LIB, TMSG_IMPORT_DOC_TYPE), nbItems, bufMenu, length, NULL, TRUE, FALSE);
 	    /* initialise le selecteur sur sa premiere entree */
-	    TtaSetSelector (NumSelectImportClass, 0, TEXT(""));
+	    TtaSetSelector (NumSelectImportClass, 0, "");
 #       endif /* !_WINDOWS */
    } 
 }
@@ -247,8 +247,8 @@ void CallbackOpenDocMenu (int ref, int typedata, STRING data)
   int                 i;
   int                 val;
 
-  if (typedata == STRING_DATA && data && ustrchr (data, TEXT('/')))
-    URL_DIR_SEP = TEXT('/');
+  if (typedata == STRING_DATA && data && ustrchr (data, '/'))
+    URL_DIR_SEP = '/';
   else 
     URL_DIR_SEP = DIR_SEP;
 
@@ -375,7 +375,7 @@ void CallbackOpenDocMenu (int ref, int typedata, STRING data)
 	{
 	  /* cherche s'il existe un fichier de ce nom, sans extension */
 	  ustrncpy (DirectoryName, DocumentPath, MAX_PATH);
-	  MakeCompleteName (DefaultDocumentName, TEXT(""), DirectoryName, docName, &i);
+	  MakeCompleteName (DefaultDocumentName, "", DirectoryName, docName, &i);
 	  if (TtaFileExist (docName) == 0)
 	    /* le fichier n'existe pas */
 	    TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), DefaultDocumentName);
@@ -439,8 +439,8 @@ void TtcOpenDocument (Document document, View view)
      }
    else if (DirectoryName[0] != WC_EOS)
      {
-       if (ustrchr (DirectoryName, TEXT('/')))
-	 URL_DIR_SEP = TEXT('/');
+       if (ustrchr (DirectoryName, '/'))
+	 URL_DIR_SEP = '/';
        else 
 	 URL_DIR_SEP = WC_DIR_SEP;
 
@@ -476,7 +476,7 @@ void TtcOpenDocument (Document document, View view)
    	length = 0;
    	for (entry=0; entry<NbDocSuffix; entry++)
      	  {
-            usprintf (&bufDir[length], TEXT("T%s"), tabDocSuffix[entry]+1);
+            usprintf (&bufDir[length], "T%s", tabDocSuffix[entry]+1);
             length += ustrlen (&bufDir[length])+1;
           }
         TtaNewSubmenu (NumToggleDocTypeToOpen, NumFormOpenDoc, 0, TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT),

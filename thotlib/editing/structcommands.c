@@ -3482,7 +3482,7 @@ int                *NItems;
 	     if (len + menuInd + 1 < MAX_TXT_LEN)
 	       {
 		  /* indique une nouvelle entree */
-		  menuBuffer[menuInd] = TEXT('B');
+		  menuBuffer[menuInd] = 'B';
 		  ustrcpy (&(menuBuffer[menuInd + 1]), typeName);
 		  menuInd += len;
 		  (*NItems)++;
@@ -3632,7 +3632,7 @@ PtrElement   pEl;
        len = ustrlen (typeName) + 2;
        if (len + menuInd + 1 < MAX_TXT_LEN)
 	 {
-	   menuBuffer[menuInd] = TEXT('B');
+	   menuBuffer[menuInd] = 'B';
 	   ustrcpy (&(menuBuffer[menuInd + 1]), typeName);
 	   menuInd += len;
 	   (*NItems)++;

@@ -2591,7 +2591,7 @@ Functions of the "Preferences" dialog box
 static void Initialisation_preferences ()/* il faudra faire un free */
 {
   general = (General *)TtaGetMemory (sizeof (General)); 
-  general->home_page = TEXT("www.w3c.org");
+  general->home_page = "www.w3c.org";
   general->multi_key = FALSE;
   general->show_bckgd_image = FALSE;
   general->dbl_click_activate = FALSE;
@@ -2606,7 +2606,7 @@ static void Initialisation_preferences ()/* il faudra faire un free */
   publish->default_url = TEXT ("www.w3c.org");
 
   cache = (Cache *)TtaGetMemory(sizeof (Cache));
-  cache->directory = TEXT("/HOME");
+  cache->directory = "/HOME";
   cache->enable = TRUE;
   cache->protected_document = TRUE;
   cache->disconnected = FALSE;
@@ -2615,8 +2615,8 @@ static void Initialisation_preferences ()/* il faudra faire un free */
   cache->limit_entry = 3;
 
   proxy = (Proxy *)TtaGetMemory (sizeof (Proxy));
-  proxy->http_proxy = TEXT("f");
-  proxy->no_proxy_domains = TEXT("h");
+  proxy->http_proxy = "f";
+  proxy->no_proxy_domains = "h";
 
   color = (Color *)TtaGetMemory (sizeof (Color));
   color->doc_forgrd = TEXT ("a");
@@ -2625,7 +2625,7 @@ static void Initialisation_preferences ()/* il faudra faire un free */
   color->menu_backgrd = TEXT ("d");
 
   list_language = (STRING *)TtaGetMemory(sizeof (STRING));
-  *list_language = TEXT("en, fr");
+  *list_language = "en, fr";
  }
 
 /************************************************************************/
@@ -4200,8 +4200,8 @@ static void Initialisation_search ()/* il faudra faire un free */
   search_form->replace = 1;
   search_form->selection = 3;
   search_form->uppercase = FALSE;
-  search_form->search_for = TEXT(" ");
-  search_form->replace_by = TEXT(" ");
+  search_form->search_for = " ";
+  search_form->replace_by = " ";
 }
 /*--------------------------------------------------------------------------
  Callback function called by the "Search for" text _entry 
@@ -4566,9 +4566,9 @@ static void Initialisation_spell ()/* il faudra faire un free */
   spell_form->numerals = FALSE;
   spell_form->containing = FALSE;
   spell_form->nb_proposals = 3;
-  spell_form->replaced_word = TEXT(" ");
-  spell_form->ignored_word = TEXT(" ");
-  spell_form->proposed_word = TEXT(" ");
+  spell_form->replaced_word = " ";
+  spell_form->ignored_word = " ";
+  spell_form->proposed_word = " ";
   
 /*spell_form->
 spell_form->*/

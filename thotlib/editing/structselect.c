@@ -2808,7 +2808,7 @@ void                BuildSelectionMessage ()
 	if (!HiddenType (pEl))
 	  {
 	     /* put a separator */
-	     ustrcat (&msgBuf[ustrlen (msgBuf)], TEXT(" \\ "));
+	     ustrcat (&msgBuf[ustrlen (msgBuf)], " \\ ");
 	     /* put the element type */
 	     ustrcat (&msgBuf[ustrlen (msgBuf)], pEl->ElStructSchema->
 		     SsRule[pEl->ElTypeNumber - 1].SrName);

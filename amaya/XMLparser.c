@@ -30,13 +30,13 @@ EntityDictEntry;
 static EntityDictEntry XMLpredifinedEntities[] =
 {
    /* This table MUST be in alphabetical order */
-   {TEXT("amp"), 38},
-   {TEXT("apos"), 39},
-   {TEXT("gt"), 62},
-   {TEXT("lt"), 60},
-   {TEXT("quot"), 34},
+   {"amp", 38},
+   {"apos", 39},
+   {"gt", 62},
+   {"lt", 60},
+   {"quot", 34},
 
-   {TEXT("zzzz"), 0}		/* this last entry is required */
+   {"zzzz", 0}		/* this last entry is required */
 };
 
 typedef int         state;	/* a state of the parser automaton */
@@ -159,7 +159,7 @@ static void            InitParserContexts ()
    firstParserCtxt = ctxt;
    ctxt->NextParserCtxt = NULL;	/* last context */
    ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
-   ustrcpy (ctxt->SSchemaName, TEXT("MathML"));
+   ustrcpy (ctxt->SSchemaName, "MathML");
    ctxt->XMLSSchema = NULL;
    ctxt->XMLtype = MATH_TYPE;
    ctxt->MapAttribute = (Proc) MapMathMLAttribute;
@@ -176,7 +176,7 @@ static void            InitParserContexts ()
    prevCtxt->NextParserCtxt = ctxt;
    ctxt->NextParserCtxt = NULL;	/* last context */
    ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
-   ustrcpy (ctxt->SSchemaName, TEXT("GraphML"));
+   ustrcpy (ctxt->SSchemaName, "GraphML");
    ctxt->XMLSSchema = NULL;
    ctxt->XMLtype = GRAPH_TYPE;
    ctxt->MapAttribute = (Proc) MapGraphMLAttribute;
@@ -193,7 +193,7 @@ static void            InitParserContexts ()
    prevCtxt->NextParserCtxt = ctxt;
    ctxt->NextParserCtxt = NULL;	/* last context */
    ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
-   ustrcpy (ctxt->SSchemaName, TEXT("XLink"));
+   ustrcpy (ctxt->SSchemaName, "XLink");
    ctxt->XMLSSchema = NULL;
    ctxt->XMLtype = XLINK_TYPE;
    ctxt->MapAttribute = (Proc) MapXLinkAttribute;
@@ -268,7 +268,7 @@ Document doc;
       {
       if (error == 1)
 	 {
-         ParseHTMLError (doc, TEXT("Invalid number of children"));
+         ParseHTMLError (doc, "Invalid number of children");
 	 /* XMLabort = TRUE;  should we abort??? */
 	 }
       }
@@ -375,7 +375,7 @@ UCHAR_T               c;
 	  if (currentState == 0)
 	    XMLTextToDocument ();
 	  else
-	    ParseHTMLError (currentDocument, TEXT("Panic: XML buffer overflow"));
+	    ParseHTMLError (currentDocument, "Panic: XML buffer overflow");
 	  bufferLength = 0;
 	}
       if (len == 1)
@@ -535,7 +535,7 @@ CHAR_T                c;
         if (currentParserCtxt->GetDTDName)
            (*(currentParserCtxt->GetDTDName)) (DTDname,
 					       XMLelementType[stackLevel-1]);
-     if (ustrcmp (DTDname, TEXT("HTML")) == 0)
+     if (ustrcmp (DTDname, "HTML") == 0)
 	{
 	ParseIncludedHTML (currentElement, XMLelementType[stackLevel-1]);
 	/* when returning from the HTML parser, the end tag has already
@@ -551,7 +551,7 @@ CHAR_T                c;
 	   else
 	     s = inputBuffer;
 	   usprintf (msgBuffer,
-		     TEXT("Don't know what DTD to use for element %s"), s);
+		     "Don't know what DTD to use for element %s", s);
 	   ParseHTMLError (currentDocument, msgBuffer);
 	   }
         else
@@ -617,10 +617,10 @@ CHAR_T                c;
    inputBuffer[bufferLength] = EOS;
 
    if (currentElement == NULL)
-       ParseHTMLError (currentDocument, TEXT("XML parser error 1"));
+       ParseHTMLError (currentDocument, "XML parser error 1");
    else if (stackLevel == MAX_STACK_HEIGHT)
      {
-       ParseHTMLError (currentDocument, TEXT("**FATAL** Too many XML levels"));
+       ParseHTMLError (currentDocument, "**FATAL** Too many XML levels");
        normalTransition = FALSE;
        XMLabort = TRUE;
      }
@@ -639,7 +639,7 @@ CHAR_T                c;
 			  &currentElementContent, currentDocument);
        if (elType.ElTypeNum <= 0)
 	  {
-	  usprintf (msgBuffer, TEXT("Unknown XML element %s"), inputBuffer);
+	  usprintf (msgBuffer, "Unknown XML element %s", inputBuffer);
 	  ParseHTMLError (currentDocument, msgBuffer);
 	  XMLelementType[stackLevel] = NULL;
 	  elementStack[stackLevel] = NULL;
@@ -716,7 +716,7 @@ CHAR_T                c;
       {
 	/* print an error message */
 	usprintf (msgBuffer,
-		  TEXT("Unexpected XML end tag </%s> instead of </%s>"),
+		  "Unexpected XML end tag </%s> instead of </%s>",
 		  inputBuffer, XMLelementType[stackLevel - 1]);
 	ParseHTMLError (currentDocument, msgBuffer);
 	normalTransition = FALSE;
@@ -771,7 +771,7 @@ CHAR_T                c;
      {
      attrType.AttrTypeNum = 0;
      i = 0;
-     if (ustrncmp (inputBuffer, TEXT("xml:"), 4) == 0)
+     if (ustrncmp (inputBuffer, "xml:", 4) == 0)
         /* special xml attributes */
         {
         if (currentParserCtxt->MapAttribute)
@@ -792,7 +792,7 @@ CHAR_T                c;
 	   /****** this is wrong: the prefix for the XLink namespace may be
 	      anything else. This is a trick, waiting for a full
 	      implementation of namespaces in this XML parser */
-	   if (ustrcmp(&inputBuffer[0], TEXT("xlink")) == 0)
+	   if (ustrcmp(&inputBuffer[0], "xlink") == 0)
 	      /* this attribute is in the XLink namespace */
 	      {
 	      XlinkAttribute = TRUE;
@@ -824,12 +824,12 @@ CHAR_T                c;
 			  &level, currentDocument);
      if (attrType.AttrTypeNum <= 0)
         {
-        usprintf (msgBuffer, TEXT("Unknown XML attribute %s"), inputBuffer);
+        usprintf (msgBuffer, "Unknown XML attribute %s", inputBuffer);
         ParseHTMLError (currentDocument, msgBuffer);
         }
      else
         {
-	if (ustrcasecmp (&inputBuffer[i], TEXT("style")) == 0)
+	if (ustrcasecmp (&inputBuffer[i], "style") == 0)
 	   HTMLStyleAttribute = TRUE;
         attr = TtaGetAttribute (currentElement, attrType);
         if (!attr)
@@ -899,7 +899,7 @@ CHAR_T                c;
 							    attrType, &val);
 	   if (val <= 0)
 	      {
-	      usprintf (msgBuffer, TEXT("Unknown XML attribute value: %s"),
+	      usprintf (msgBuffer, "Unknown XML attribute value: %s",
 			inputBuffer);
 	      ParseHTMLError (currentDocument, msgBuffer);	
 	      }
@@ -909,7 +909,7 @@ CHAR_T                c;
 	   break;
 
 	case 1:       /* integer */
-	   usscanf (inputBuffer, TEXT("%d"), &val);
+	   usscanf (inputBuffer, "%d", &val);
 	   TtaSetAttributeValue (currentAttribute, val, currentElement,
 				 currentDocument);
 	   break;
@@ -997,7 +997,7 @@ CHAR_T                c;
          entityValue[0] = EOS;
 	 lang = -1;
 	 /* print an error message */
-	 usprintf (msgBuffer, TEXT("Unknown XML entity \"&%s;\""), entityName);
+	 usprintf (msgBuffer, "Unknown XML entity \"&%s;\"", entityName);
 	 ParseHTMLError (currentDocument, msgBuffer);
 	 }
       else
@@ -1038,7 +1038,7 @@ UCHAR_T       c;
       /* entity too long */
       {
       /* error message */
-      ParseHTMLError (currentDocument, TEXT("XML entity too long"));
+      ParseHTMLError (currentDocument, "XML entity too long");
       /* consider the entity name read so far as ordinary text */
       PutInBuffer ('&');
       for (i = 0; i < entityNameLength; i++)
@@ -1072,14 +1072,14 @@ CHAR_T                c;
    UCHAR_T	       entityValue[MAX_ENTITY_LENGTH];	
 
    entityName[entityNameLength] = EOS;
-   usscanf (entityName, TEXT("%d"), &code);
+   usscanf (entityName, "%d", &code);
    if (code < 255)
       /* that's an ISO Latin character */
       PutInBuffer ((CHAR_T) code);
    else
       /* code of a Unicode character */
       {
-      ustrcpy (buffer, TEXT ("#"));
+      ustrcpy (buffer, "#");
       ustrcat (buffer, entityName);
       entityValue[0] = EOS;
       if (currentAttribute)
@@ -1128,7 +1128,7 @@ CHAR_T                c;
 	 normalTransition = FALSE;
 	 currentState = 0;
 	 /* error message */
-	 ParseHTMLError (currentDocument, TEXT("Invalid decimal entity"));
+	 ParseHTMLError (currentDocument, "Invalid decimal entity");
 	 normalTransition = FALSE;
 	 XMLabort = TRUE;
 	 }
@@ -1154,14 +1154,14 @@ CHAR_T                c;
    UCHAR_T	       entityValue[MAX_ENTITY_LENGTH];	
 
    entityName[entityNameLength] = EOS;
-   usscanf (entityName, TEXT("%x"), &code);
+   usscanf (entityName, "%x", &code);
    if (code < 255)
       /* that's an ISO Latin character */
       PutInBuffer ((CHAR_T) code);
    else
       /* code of a Unicode character */
       {
-      ustrcpy (buffer, TEXT ("#x"));
+      ustrcpy (buffer, "#x");
       ustrcat (buffer, entityName);
       entityValue[0] = EOS;
       if (currentAttribute)
@@ -1213,7 +1213,7 @@ CHAR_T                c;
 	 normalTransition = FALSE;
 	 currentState = 0;
 	 /* error message */
-	 ParseHTMLError (currentDocument, TEXT("Invalid hexadecimal entity"));
+	 ParseHTMLError (currentDocument, "Invalid hexadecimal entity");
 	 normalTransition = FALSE;
 	 XMLabort = TRUE;
 	 }
@@ -1232,7 +1232,7 @@ CHAR_T                c;
 
 #endif
 {
-   ParseHTMLError (currentDocument, TEXT("Invalid XML syntax"));
+   ParseHTMLError (currentDocument, "Invalid XML syntax");
    normalTransition = FALSE;
    XMLabort = TRUE;
 
@@ -1276,11 +1276,11 @@ CHAR_T                c;
    /* create a Thot element for the comment */
    elType.ElSSchema = NULL;
    elType.ElTypeNum = 0;
-   GetXMLElementType (TEXT("XMLcomment"), &elType, &mappedName, &cont,
+   GetXMLElementType ("XMLcomment", &elType, &mappedName, &cont,
 		      currentDocument);
    if (elType.ElTypeNum <= 0)
      {
-       usprintf (msgBuffer, TEXT("Unknown XML element %s"), inputBuffer);
+       usprintf (msgBuffer, "Unknown XML element %s", inputBuffer);
        ParseHTMLError (currentDocument, msgBuffer);
      }
    else
@@ -1292,7 +1292,7 @@ CHAR_T                c;
        /* element XMLcomment */
        elType.ElSSchema = NULL;
        elType.ElTypeNum = 0;
-       GetXMLElementType (TEXT("XMLcomment_line"), &elType, &mappedName,
+       GetXMLElementType ("XMLcomment_line", &elType, &mappedName,
 			  &cont, currentDocument);
        commentLineEl = TtaNewElement (currentDocument, elType);
        SetElemLineNumber (commentLineEl);
@@ -1302,7 +1302,7 @@ CHAR_T                c;
        commentText = TtaNewElement (currentDocument, elType);
        SetElemLineNumber (commentText);
        TtaInsertFirstChild (&commentText, commentLineEl, currentDocument);
-       TtaSetTextContent (commentText, TEXT(""), currentLanguage,
+       TtaSetTextContent (commentText, "", currentLanguage,
 			  currentDocument);
      }
    /* the input buffer is now empty */
@@ -1338,7 +1338,7 @@ UCHAR_T       c;
 	 /* create a new XMLcomment_line element */
 	 elType.ElSSchema = NULL;
 	 elType.ElTypeNum = 0;
-	 GetXMLElementType (TEXT("XMLcomment_line"), &elType, &mappedName,
+	 GetXMLElementType ("XMLcomment_line", &elType, &mappedName,
 			    &cont, currentDocument);
 	 commentLineEl = TtaNewElement (currentDocument, elType);
          SetElemLineNumber (commentLineEl);
@@ -1351,7 +1351,7 @@ UCHAR_T       c;
 	 commentText = TtaNewElement (currentDocument, elType);
          SetElemLineNumber (commentText);
 	 TtaInsertFirstChild (&commentText, commentLineEl, currentDocument);
-	 TtaSetTextContent (commentText, TEXT(""), currentLanguage,
+	 TtaSetTextContent (commentText, "", currentLanguage,
 			    currentDocument);
        }
      else
@@ -1454,7 +1454,7 @@ CHAR_T                c;
    inputBuffer[bufferLength] = EOS;
    if (bufferLength < 1 || inputBuffer[bufferLength-1] != '?')
      {
-      ParseHTMLError (currentDocument, TEXT("Missing question mark"));
+      ParseHTMLError (currentDocument, "Missing question mark");
       normalTransition = FALSE;
       XMLabort = TRUE;
      }

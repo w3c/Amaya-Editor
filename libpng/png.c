@@ -584,7 +584,7 @@ png_convert_to_rfc1123(png_structp png_ptr, png_timep ptime)
 #if defined(_WIN32_WCE)
   {
      wchar_t time_buf[29];
-     wsprintf(time_buf, TEXT("%d %S %d %02d:%02d:%02d +0000"),
+     wsprintf(time_buf, "%d %S %d %02d:%02d:%02d +0000",
               ptime->day % 32, short_months[(ptime->month - 1) % 12],
               ptime->year, ptime->hour % 24, ptime->minute % 60,
               ptime->second % 61);

@@ -39,15 +39,12 @@
 
 #define NAME_LENGTH     32
 
-#define HTAppName     TEXT("amaya")
-#define HTAppVersion  TEXT("V4.3.1")
-#define HTAppDate     TEXT ("15 March 2001")
+#define HTAppName     "amaya"
+#define HTAppVersion  "V4.3.1"
+#define HTAppDate     "15 March 2001"
 
 #define URL_STR       "/"
 #define URL_SEP       '/'
-#define WC_URL_STR    TEXT ("/")
-#define WC_URL_SEP    TEXT ('/')
-
 
 /* Number of views used in Amaya */
 #define AMAYA_MAX_VIEW_DOC  7
@@ -76,10 +73,10 @@ AHTHeaderName;
    and amaya */
 typedef struct _AHTHeaders
   {
-    CHAR_T *content_type;
-    CHAR_T *charset;
-    CHAR_T *content_length;
-    CHAR_T *reason;
+    char *content_type;
+    char *charset;
+    char *content_length;
+    char *reason;
   }
 AHTHeaders;
 
@@ -89,8 +86,8 @@ typedef void   TIcbf (Document doc, int status, char *urlName,
 		      const char *data_block, int data_block_size,
 		      void *context);
 
-typedef void  TTcbf (Document doc, int status, CHAR_T* urlName,
-                     CHAR_T* outputfile, const AHTHeaders *http_headers,
+typedef void  TTcbf (Document doc, int status, char *urlName,
+                     char *outputfile, const AHTHeaders *http_headers,
                      void *context);
 
 /* How are Network accesses provided ? */
@@ -280,92 +277,92 @@ typedef enum _ClickEvent {
 #define AMAYA_PARSE_PUNCTUATION 1   /* Include delimiters, e.g, "/" and ":" */
 #define AMAYA_PARSE_ALL         31  /* All the parts */
 
-THOT_EXPORT int          AMAYA;     /* Index of amaya message table */
-THOT_EXPORT int          appArgc;
-THOT_EXPORT CHAR_T**     appArgv;
-THOT_EXPORT CHAR_T       TempFileDirectory[MAX_LENGTH];
-THOT_EXPORT CHAR_T       Answer_text[MAX_LENGTH];
-THOT_EXPORT CHAR_T       Answer_name[NAME_LENGTH];
-THOT_EXPORT CHAR_T       Answer_password[NAME_LENGTH];
-THOT_EXPORT CHAR_T       Display_password[NAME_LENGTH];
-THOT_EXPORT CHAR_T       ScanFilter[NAME_LENGTH]; /* to scan directories    */
-THOT_EXPORT CHAR_T       MathMLEntityName[MAX_LENGTH]; /* entity name typed by the user for a MathML expression */
-THOT_EXPORT CHAR_T       IdElemName[MAX_LENGTH]; /* element name typed by the user from the MakeID menu */
-THOT_EXPORT CHAR_T       IdStatus[50]; /* element name typed by the user from the MakeID menu */
-THOT_EXPORT CHAR_T       ImgFilter[NAME_LENGTH];
-THOT_EXPORT CHAR_T*      LastURLName;	/* last URL requested               */
-THOT_EXPORT CHAR_T*      DirectoryName;	/* local path of the document       */
-THOT_EXPORT CHAR_T*      DocumentName;	/* document name                    */
-THOT_EXPORT CHAR_T*      SavePath;	/* saving path                      */
-THOT_EXPORT CHAR_T*      SaveName;	/* saving name of the document      */
-THOT_EXPORT STRING       ObjectName;	/* document name                    */
-THOT_EXPORT STRING       SaveImgsURL;	/* where to save remote Images      */
-THOT_EXPORT STRING       TargetName;
-THOT_EXPORT STRING       SavingFile;	/* complete path or URL of the document */
-THOT_EXPORT int          Lg_password;
-THOT_EXPORT int          BaseDialog;
-THOT_EXPORT int          BasePrint;
-THOT_EXPORT int          BaseImage;
-THOT_EXPORT int	         MathsDialogue;
+THOT_EXPORT int        AMAYA;     /* Index of amaya message table */
+THOT_EXPORT int        appArgc;
+THOT_EXPORT char     **appArgv;
+THOT_EXPORT char       TempFileDirectory[MAX_LENGTH];
+THOT_EXPORT char       Answer_text[MAX_LENGTH];
+THOT_EXPORT char       Answer_name[NAME_LENGTH];
+THOT_EXPORT char       Answer_password[NAME_LENGTH];
+THOT_EXPORT char       Display_password[NAME_LENGTH];
+THOT_EXPORT char       ScanFilter[NAME_LENGTH]; /* to scan directories    */
+THOT_EXPORT char       MathMLEntityName[MAX_LENGTH]; /* entity name typed by the user for a MathML expression */
+THOT_EXPORT char       IdElemName[MAX_LENGTH]; /* element name typed by the user from the MakeID menu */
+THOT_EXPORT char       IdStatus[50]; /* element name typed by the user from the MakeID menu */
+THOT_EXPORT char       ImgFilter[NAME_LENGTH];
+THOT_EXPORT char      *LastURLName;	/* last URL requested               */
+THOT_EXPORT char      *DirectoryName;	/* local path of the document       */
+THOT_EXPORT char      *DocumentName;	/* document name                    */
+THOT_EXPORT char      *SavePath;	/* saving path                      */
+THOT_EXPORT char      *SaveName;	/* saving name of the document      */
+THOT_EXPORT char      *ObjectName;	/* document name                    */
+THOT_EXPORT char      *SaveImgsURL;	/* where to save remote Images      */
+THOT_EXPORT char      *TargetName;
+THOT_EXPORT char      *SavingFile;	/* complete path or URL of the document */
+THOT_EXPORT int        Lg_password;
+THOT_EXPORT int        BaseDialog;
+THOT_EXPORT int        BasePrint;
+THOT_EXPORT int        BaseImage;
+THOT_EXPORT int	       MathsDialogue;
 #ifdef GRAPHML
-THOT_EXPORT int	         GraphDialogue;
+THOT_EXPORT int	       GraphDialogue;
 #endif /* GRAPHML */
-THOT_EXPORT int	         BaseCSS;
-THOT_EXPORT int          ReturnOption;
-THOT_EXPORT int          NumberRows;
-THOT_EXPORT int          NumberCols;
-THOT_EXPORT int          TBorder;
-THOT_EXPORT int          ReturnOptionMenu;
-THOT_EXPORT int          IdDoc;
-THOT_EXPORT Document     CurrentDocument;
-THOT_EXPORT Document     SavingDocument;
-THOT_EXPORT Document     SavingObject;
-THOT_EXPORT Document     AttrHREFdocument;
-THOT_EXPORT Document     DocBook;
-THOT_EXPORT Document     IncludedDocument;
-THOT_EXPORT Element      AttrHREFelement;
-THOT_EXPORT STRING       AttrHREFvalue;
-THOT_EXPORT Document     SelectionDoc;
-THOT_EXPORT ThotBool	 IsNewAnchor;
-THOT_EXPORT ThotBool	 UseLastTarget;
-THOT_EXPORT ThotBool	 LinkAsCSS;
-THOT_EXPORT ThotBool	 SaveAsHTML;
-THOT_EXPORT ThotBool	 SaveAsXML;
-THOT_EXPORT ThotBool	 SaveAsText;
-THOT_EXPORT ThotBool     CopyImages;	/* should we copy images in Save As */
-THOT_EXPORT ThotBool     UpdateURLs;	/* should we update URLs in Save As */
-THOT_EXPORT ThotBool     UserAnswer;
-THOT_EXPORT ThotBool     InNewWindow;
-THOT_EXPORT ThotBool     SelectionInPRE;
-THOT_EXPORT ThotBool     SelectionInComment;
-THOT_EXPORT ThotBool     SelectionInEM;
-THOT_EXPORT ThotBool     SelectionInSTRONG;
-THOT_EXPORT ThotBool     SelectionInCITE;
-THOT_EXPORT ThotBool     SelectionInABBR;
-THOT_EXPORT ThotBool     SelectionInACRONYM;
-THOT_EXPORT ThotBool     SelectionInINS;
-THOT_EXPORT ThotBool     SelectionInDEL;
-THOT_EXPORT ThotBool     SelectionInDFN;
-THOT_EXPORT ThotBool     SelectionInCODE;
-THOT_EXPORT ThotBool     SelectionInVAR;
-THOT_EXPORT ThotBool     SelectionInSAMP;
-THOT_EXPORT ThotBool     SelectionInKBD;
-THOT_EXPORT ThotBool     SelectionInI;
-THOT_EXPORT ThotBool     SelectionInB;
-THOT_EXPORT ThotBool     SelectionInTT;
-THOT_EXPORT ThotBool     SelectionInBIG;
-THOT_EXPORT ThotBool     SelectionInSMALL;
-THOT_EXPORT ThotBool     SelectionInSub;
-THOT_EXPORT ThotBool     SelectionInSup;
-THOT_EXPORT ThotBool     SelectionInQuote;
-THOT_EXPORT ThotBool     SelectionInBDO;
-THOT_EXPORT ThotBool     HTMLErrorsFound;
-THOT_EXPORT ThotBool     XMLErrorsFound;
-THOT_EXPORT ThotBool     XMLErrorsFoundInProfile;
-THOT_EXPORT ThotBool     XMLNotWellFormed;
-THOT_EXPORT ThotBool     IdApplyToSelection; /* used in the Make ID menu */
-THOT_EXPORT FILE*        ErrFile;
-THOT_EXPORT CHAR_T       ErrFileName [80];
+THOT_EXPORT int	       BaseCSS;
+THOT_EXPORT int        ReturnOption;
+THOT_EXPORT int        NumberRows;
+THOT_EXPORT int        NumberCols;
+THOT_EXPORT int        TBorder;
+THOT_EXPORT int        ReturnOptionMenu;
+THOT_EXPORT int        IdDoc;
+THOT_EXPORT Document   CurrentDocument;
+THOT_EXPORT Document   SavingDocument;
+THOT_EXPORT Document   SavingObject;
+THOT_EXPORT Document   AttrHREFdocument;
+THOT_EXPORT Document   DocBook;
+THOT_EXPORT Document   IncludedDocument;
+THOT_EXPORT Element    AttrHREFelement;
+THOT_EXPORT char      *AttrHREFvalue;
+THOT_EXPORT Document   SelectionDoc;
+THOT_EXPORT ThotBool  IsNewAnchor;
+THOT_EXPORT ThotBool  UseLastTarget;
+THOT_EXPORT ThotBool  LinkAsCSS;
+THOT_EXPORT ThotBool   SaveAsHTML;
+THOT_EXPORT ThotBool   SaveAsXML;
+THOT_EXPORT ThotBool   SaveAsText;
+THOT_EXPORT ThotBool   CopyImages;	/* should we copy images in Save As */
+THOT_EXPORT ThotBool   UpdateURLs;	/* should we update URLs in Save As */
+THOT_EXPORT ThotBool   UserAnswer;
+THOT_EXPORT ThotBool   InNewWindow;
+THOT_EXPORT ThotBool   SelectionInPRE;
+THOT_EXPORT ThotBool   SelectionInComment;
+THOT_EXPORT ThotBool   SelectionInEM;
+THOT_EXPORT ThotBool   SelectionInSTRONG;
+THOT_EXPORT ThotBool   SelectionInCITE;
+THOT_EXPORT ThotBool   SelectionInABBR;
+THOT_EXPORT ThotBool   SelectionInACRONYM;
+THOT_EXPORT ThotBool   SelectionInINS;
+THOT_EXPORT ThotBool   SelectionInDEL;
+THOT_EXPORT ThotBool   SelectionInDFN;
+THOT_EXPORT ThotBool   SelectionInCODE;
+THOT_EXPORT ThotBool   SelectionInVAR;
+THOT_EXPORT ThotBool   SelectionInSAMP;
+THOT_EXPORT ThotBool   SelectionInKBD;
+THOT_EXPORT ThotBool   SelectionInI;
+THOT_EXPORT ThotBool   SelectionInB;
+THOT_EXPORT ThotBool   SelectionInTT;
+THOT_EXPORT ThotBool   SelectionInBIG;
+THOT_EXPORT ThotBool   SelectionInSMALL;
+THOT_EXPORT ThotBool   SelectionInSub;
+THOT_EXPORT ThotBool   SelectionInSup;
+THOT_EXPORT ThotBool   SelectionInQuote;
+THOT_EXPORT ThotBool   SelectionInBDO;
+THOT_EXPORT ThotBool   HTMLErrorsFound;
+THOT_EXPORT ThotBool   XMLErrorsFound;
+THOT_EXPORT ThotBool   XMLErrorsFoundInProfile;
+THOT_EXPORT ThotBool   XMLNotWellFormed;
+THOT_EXPORT ThotBool   IdApplyToSelection; /* used in the Make ID menu */
+THOT_EXPORT FILE      *ErrFile;
+THOT_EXPORT char       ErrFileName [80];
 typedef enum
 {
   docHTML,
@@ -384,13 +381,13 @@ typedef enum
 /* a record for data associated with a request */
 typedef struct _DocumentMetaDataElement
 {
-  CHAR_T    *initial_url;      /* if the server returns a different URL name
-				  after a redirection, we store here the one
-				  that the browser first asked */
-  CHAR_T    *form_data;        /* form data associated with a URL */
-  CHAR_T    *content_type;     /* content type returned by the server */
-  CHAR_T    *charset;          /* charset returned by the server */
-  CHAR_T    *content_length;   /* content length returned by the server */
+  char    *initial_url;      /* if the server returns a different URL name
+				after a redirection, we store here the one
+				that the browser first asked */
+  char    *form_data;        /* form data associated with a URL */
+  char    *content_type;     /* content type returned by the server */
+  char    *charset;          /* charset returned by the server */
+  char    *content_length;   /* content length returned by the server */
   ClickEvent method;           /* method used to send this data */
   ThotBool   put_default_name; /* URL name was concatenated with DEFAULT_NAME*/
   ThotBool   xmlformat;        /* the document should be exported in xml format */
@@ -404,24 +401,24 @@ typedef struct _DocumentMetaDataElement
 
 #define DocumentTableLength 10
 /* URL of each loaded document */
-THOT_EXPORT CHAR_T* DocumentURLs[DocumentTableLength];
+THOT_EXPORT char                    *DocumentURLs[DocumentTableLength];
 /* Any formdata associated with a URL */
 THOT_EXPORT DocumentMetaDataElement *DocumentMeta[DocumentTableLength];
 /* Type of document */
-THOT_EXPORT DocumentType DocumentTypes[DocumentTableLength];
+THOT_EXPORT DocumentType             DocumentTypes[DocumentTableLength];
 /* Document is in read only mode */
-THOT_EXPORT ThotBool ReadOnlyDocument[DocumentTableLength];
+THOT_EXPORT ThotBool                 ReadOnlyDocument[DocumentTableLength];
 /* identifier of the document displaying the source code */
-THOT_EXPORT Document DocumentSource[DocumentTableLength];
+THOT_EXPORT Document                 DocumentSource[DocumentTableLength];
 /* The whole document is loaded when the corresponding entry in FilesLoading is 0 */
-THOT_EXPORT int          FilesLoading[DocumentTableLength];
+THOT_EXPORT int                      FilesLoading[DocumentTableLength];
 /* Status (error, success) of the download of the objects of a document */
-THOT_EXPORT int          DocNetworkStatus[DocumentTableLength];
+THOT_EXPORT int                      DocNetworkStatus[DocumentTableLength];
 /* Status of the XHTML document (basic, strict, transitional) */
-THOT_EXPORT int          ParsingLevel[DocumentTableLength];
+THOT_EXPORT int                      ParsingLevel[DocumentTableLength];
 
-THOT_EXPORT Document     W3Loading;	/* the document being loaded */
-THOT_EXPORT Document     BackupDocument;	/* the current backup */
+THOT_EXPORT Document                 W3Loading; /* the document being loaded */
+THOT_EXPORT Document                 BackupDocument; /* the current backup */
 
 /* button indexes */
 THOT_EXPORT int iStop;
@@ -452,12 +449,7 @@ THOT_EXPORT int iTable;
 #define IMAGE_MODIFIED		3
 
 
-#ifdef __STDC__
-typedef void (*LoadedImageCallback)(Document doc, Element el, CHAR_T* file, void *extra);
-#else
-typedef void (*LoadedImageCallback)();
-#endif
-
+typedef void (*LoadedImageCallback)(Document doc, Element el, char *file, void *extra);
 typedef struct _ElemImage
   {
      Element             currentElement;/* first element using this image */
@@ -469,8 +461,8 @@ ElemImage;
 
 typedef struct _LoadedImageDesc
   {
-     STRING          originalName;	/* complete URL of the image                */
-     STRING          localName;	/* local name (without path) of the image   */
+     char               *originalName;  /* complete URL of the image                */
+     char               *localName;     /* local name (without path) of the image   */
      struct _LoadedImageDesc *prevImage;/* double linked list                       */
      struct _LoadedImageDesc *nextImage;/* easier to unchain                        */
      Document            document;	/* document concerned                       */
@@ -483,7 +475,7 @@ LoadedImageDesc;
 /* the structure used for storing the context of the 
    FetchAndDisplayImages_callback function */
 typedef struct _FetchImage_context {
-  STRING base_url;
+  char               *base_url;
   LoadedImageDesc    *desc;
 } FetchImage_context;
 
@@ -492,8 +484,8 @@ THOT_EXPORT LoadedImageDesc *ImageURLs;
 THOT_EXPORT LoadedImageDesc *ImageLocal;
 
 /* The default Amaya HOME pages (page shown at boot time */
-#define AMAYA_PAGE  TEXT("AmayaPage.html")
-#define AMAYA_PAGE_DOC  TEXT("http://www.w3.org/Amaya/User/")
+#define AMAYA_PAGE  "AmayaPage.html"
+#define AMAYA_PAGE_DOC  "http://www.w3.org/Amaya/User/"
 
 #ifndef MAX_TXT_LEN
 #define MAX_TXT_LEN 1024	/* Max. length of strings */

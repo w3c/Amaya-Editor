@@ -123,7 +123,7 @@ CHAR_T              *data;
 	      CustomQueryFlag = FALSE;
 	      TtaFreeMemory (AlgaeText);
 	      AlgaeText = NULL;
-	      TtaSetTextForm (CustomQueryBase + mFreeText, TEXT(""));
+	      TtaSetTextForm (CustomQueryBase + mFreeText, "");
 	      TtaSetMenuForm (CustomQueryBase + mExpertMode, 0);
 	      break;
 
@@ -197,7 +197,7 @@ View         view;
 
    TtaNewSheet (CustomQueryBase + CustomQueryMenu,
 		TtaGetViewFrame (document, view),
-		TEXT("Query Customization Menu"),
+		"Query Customization Menu",
 		2, s, FALSE, 10, 'L', D_DONE);
 
    /* @@ JK: removed the following menus as they're not ready for the
@@ -205,54 +205,54 @@ View         view;
 #if 0
    TtaNewLabel (CustomQueryBase + mUsersGroups, 
 		CustomQueryBase + CustomQueryMenu,
-	       TEXT("Users and groups"));
+	       "Users and groups");
 
    TtaNewTextForm (CustomQueryBase + mUser1,
 		   CustomQueryBase + CustomQueryMenu,
-		   TEXT("user1"),
+		   "user1",
 		   20,
 		   1,
 		   TRUE);
 
    TtaNewTextForm (CustomQueryBase + mUser2,
 		   CustomQueryBase + CustomQueryMenu,
-		   TEXT("user2"),
+		   "user2",
 		   20,
 		   1,
 		   TRUE);
 
    TtaNewLabel (CustomQueryBase + mTime, 
 		CustomQueryBase + CustomQueryMenu,
-		TEXT("Time"));
+		"Time");
 
    TtaNewTextForm (CustomQueryBase + mBtime,
 		   CustomQueryBase + CustomQueryMenu,
-		   TEXT("Begin"),
+		   "Begin",
 		   20,
 		   1,
 		   TRUE);
 
    TtaNewTextForm (CustomQueryBase + mEtime,
 		   CustomQueryBase + CustomQueryMenu,
-		   TEXT("End"),
+		   "End",
 		   20,
 		   1,
 
    TtaNewLabel (CustomQueryBase + mExpertMode,
 		CustomQueryBase + CustomQueryMenu,
-		TEXT("Expert mode"));
+		"Expert mode");
 		   TRUE);
 #else
   /* create the radio buttons for choosing a selector */
   i = 0;
-  strcpy (&s[i], TEXT("BUse standard query"));
+  strcpy (&s[i], "BUse standard query");
   i += ustrlen (&s[i]) + 1;
-  strcpy (&s[i], TEXT("BUse free algae query with the following text"));
+  strcpy (&s[i], "BUse free algae query with the following text");
 
   TtaNewSubmenu (CustomQueryBase + mExpertMode,
 		 CustomQueryBase + CustomQueryMenu,
 		 0,
-		 TEXT("Query type"),
+		 "Query type",
 		 2,
 		 s,
 		 NULL,
@@ -261,7 +261,7 @@ View         view;
 
    TtaNewTextForm (CustomQueryBase + mFreeText,
 		   CustomQueryBase + CustomQueryMenu,
-		   TEXT("(%u stands for the URL of the document that's being browsed)"),
+		   "(%u stands for the URL of the document that's being browsed)",
 		   70,
 		   5,
 		   TRUE);
@@ -355,7 +355,7 @@ SelType  selector;
     }
 
   nb_entries = 0;
-  ustrcpy (s, TEXT(""));
+  ustrcpy (s, "");
   i = 0;
   while (list_item)
      {
@@ -370,16 +370,16 @@ SelType  selector;
 	   switch (status)
 	     {
 	     case 2: /* partial */
-	       status_char = TEXT('-');
+	       status_char = '-';
 	       break;
 
 	     default:
 	     case 1: /* show */
-	       status_char = TEXT(' ');
+	       status_char = ' ';
 	       break;
 
 	     case 0: /* hide */
-	       status_char = TEXT('*');
+	       status_char = '*';
 	       break;
 	     }
 	   if (selector == BY_TYPE)
@@ -387,7 +387,7 @@ SelType  selector;
 				    (RDFResourceP) filter->object);
 	   else
 	     name = (CHAR_T *) filter->object;
-	   usprintf (&s[i], TEXT("%c%s"), status_char, name);
+	   usprintf (&s[i], "%c%s", status_char, name);
 	   i += ustrlen (&s[i]) + 1;
 	   nb_entries++;
 	 }
@@ -446,7 +446,7 @@ ThotBool show;
   if (AnnotSelItem[0] == WC_EOS)
     return;
 
-  XLinkSchema = TtaGetSSchema (TEXT("XLink"), doc);
+  XLinkSchema = TtaGetSSchema ("XLink", doc);
   if (!XLinkSchema)
     /* there are no xlinks in this document */
     return;
@@ -581,9 +581,9 @@ ThotBool show;
   BuildAnnotFilterSelector (doc, selector);
   /* update the selector text */
   if (show)
-    AnnotSelItem[0] = TEXT(' ');
+    AnnotSelItem[0] = ' ';
   else
-    AnnotSelItem[0] = TEXT(' ');
+    AnnotSelItem[0] = ' ';
 #ifndef _WINDOWS
   TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, AnnotSelItem);
 #endif /* _WINDOWS */
@@ -613,7 +613,7 @@ ThotBool show;
   int		      position;
   int		      distance;
 
-  XLinkSchema = TtaGetSSchema (TEXT("XLink"), document);
+  XLinkSchema = TtaGetSSchema ("XLink", document);
   if (!XLinkSchema)
     /* there are no xlinks in this document */
     return;
@@ -689,7 +689,7 @@ ThotBool show;
   /* and clear the selector text */
   AnnotSelItem[0] = WC_EOS;
 #ifndef _WINDOWS
-  TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, TEXT(""));
+  TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, "");
 #endif /* !_WINDOWS */
 }
 
@@ -917,7 +917,7 @@ CHAR_T             *data;
 	      AnnotSelType = (SelType) val;
 	      AnnotSelItem[0] = WC_EOS;
 	      BuildAnnotFilterSelector (AnnotFilterDoc, val);
-	      TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, TEXT(""));
+	      TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, "");
 	    }
 	  break;
 
@@ -983,7 +983,7 @@ View                view;
   /* an empty text */
   TtaNewLabel (AnnotFilterBase + mAnnotFilterEmpty1,
 	       AnnotFilterBase + AnnotFilterMenu,
-	       TEXT("                 "));
+	       "                 ");
 
   /* the * = filter message */
   TtaNewLabel (AnnotFilterBase + mAnnotFilterLabelStars,
@@ -991,15 +991,15 @@ View                view;
 	       TtaGetMessage (AMAYA, AM_AFILTER_HELP));
 	       
   /* create the radio buttons for choosing a selector */
-  s[0] = TEXT('B');
+  s[0] = 'B';
   i = 1;
   strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_BYAUTHOR));
   i += ustrlen (&s[i]) + 1;
-  s[i] = TEXT('B');
+  s[i] = 'B';
   i++;
   strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_BYTYPE));
   i += ustrlen (&s[i]) + 1;
-  s[i] = TEXT('B');
+  s[i] = 'B';
   i++;
   strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_BYSERVER));
 
@@ -1055,7 +1055,7 @@ Document doc;
   nb_entries = 0;
   if (typesList)
     List_delAll (&typesList, List_delCharObj);
-  ustrcpy (s, TEXT(""));
+  ustrcpy (s, "");
   i = 0;
 
   annotClass = ANNOTATION_CLASS;

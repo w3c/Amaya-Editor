@@ -161,7 +161,7 @@ Document            TtaOpenDocument (STRING documentName, int accessMode)
 	  pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 	     /* suppresses the .PIV suffix if found */
 	  if (lg > 4)
-	    if (ustrcmp (&(pDoc->DocDName[lg - 4]), TEXT(".PIV")) == 0)
+	    if (ustrcmp (&(pDoc->DocDName[lg - 4]), ".PIV") == 0)
 	      pDoc->DocDName[lg - 4] = EOS;
 	  GetDocIdent (&pDoc->DocIdent, pDoc->DocDName);
 	  ustrncpy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
@@ -1120,7 +1120,7 @@ void TtaGiveSchemasOfDocument (STRING documentName, char *structureName,
    presentationName[0] = EOS;
    /* Arrange the name of the file to be opened with the documents directory name */
    ustrncpy (DirBuffer, DocumentPath, MAX_PATH);
-   MakeCompleteName (documentName, TEXT("PIV"), DirBuffer, text, &i);
+   MakeCompleteName (documentName, "PIV", DirBuffer, text, &i);
    /* Verify if the file exists */
    file = TtaReadOpen (text);
    if (file == 0)

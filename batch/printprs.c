@@ -1468,8 +1468,8 @@ char              **argv;
 
    TtaInitializeAppRegistry (argv[0]);
 
-   i = TtaGetMessageTable (TEXT("libdialogue"), TMSG_LIB_MSG_MAX);
-   PRS = TtaGetMessageTable (TEXT("prsdialogue"), PRS_MSG_MAX);
+   i = TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);
+   PRS = TtaGetMessageTable ("prsdialogue", PRS_MSG_MAX);
    /* recupere d'abord le nom du schema a lister */
    filename[0] = '\0';
    if (argc != 2)

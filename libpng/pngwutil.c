@@ -1472,9 +1472,9 @@ png_write_sCAL(png_structp png_ptr, int unit, double width,double height)
 /* sprintf() function is not supported on WindowsCE */
    {
       wchar_t wc_buf[32];
-      swprintf(wc_buf, TEXT("%12.12e"), width);
+      swprintf(wc_buf, "%12.12e", width);
       WideCharToMultiByte(CP_ACP, 0, wc_buf, -1, wbuf, 32, NULL, NULL);
-      swprintf(wc_buf, TEXT("%12.12e"), height);
+      swprintf(wc_buf, "%12.12e", height);
       WideCharToMultiByte(CP_ACP, 0, wc_buf, -1, hbuf, 32, NULL, NULL);
    }
 #else

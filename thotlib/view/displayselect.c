@@ -198,16 +198,16 @@ void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
 	switch (pAb->AbRealShape)
 	  {
 	  case SPACE:
-	  case TEXT('R'):
-	  case TEXT('0'):
-	  case TEXT('1'):
-	  case TEXT('2'):
-	  case TEXT('3'):
-	  case TEXT('4'):
-	  case TEXT('5'):
-	  case TEXT('6'):
-	  case TEXT('7'):
-	  case TEXT('8'):
+	  case 'R':
+	  case '0':
+	  case '1':
+	  case '2':
+	  case '3':
+	  case '4':
+	  case '5':
+	  case '6':
+	  case '7':
+	  case '8':
 	    /* 8 control points */
 	    DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
 			   0, InsertColor, 2);

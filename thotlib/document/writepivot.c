@@ -61,13 +61,7 @@
 /*----------------------------------------------------------------------
    Ecrit dans le fichier le numero de version pivot courant           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                WriteVersionNumber (BinFile pivFile)
-#else  /* __STDC__ */
-void                WriteVersionNumber (pivFile)
-BinFile             pivFile;
-
-#endif /* __STDC__ */
 {
    int                 version;
 
@@ -81,14 +75,7 @@ BinFile             pivFile;
 /*----------------------------------------------------------------------
    PutShort   ecrit un entier court dans le fichier sur deux octets   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PutShort (BinFile pivFile, int n)
-#else  /* __STDC__ */
-static void         PutShort (pivFile, n)
-BinFile             pivFile;
-int                 n;
-
-#endif /* __STDC__ */
 {
    TtaWriteByte (pivFile, (char) (n / 256));
    TtaWriteByte (pivFile, (char) (n % 256));
@@ -97,14 +84,7 @@ int                 n;
 /*----------------------------------------------------------------------
    PutInteger ecrit un entier long dans le fichier, sur 4 octets      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PutInteger (BinFile pivFile, int n)
-#else  /* __STDC__ */
-static void         PutInteger (pivFile, n)
-BinFile             pivFile;
-int                 n;
-
-#endif /* __STDC__ */
 {
    PutShort (pivFile, n / 65536);
    PutShort (pivFile, n % 65536);
@@ -114,14 +94,7 @@ int                 n;
    PutDimensionType ecrit dans le fichier un type de dimension sur	
    1 octet.								
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PutDimensionType (BinFile pivFile, ThotBool b)
-#else  /* __STDC__ */
-static void         PutDimensionType (pivFile, b)
-BinFile             pivFile;
-ThotBool            b;
-
-#endif /* __STDC__ */
 {
    if (b)
       TtaWriteByte (pivFile, C_PIV_ABSOLUTE);
@@ -132,14 +105,7 @@ ThotBool            b;
 /*----------------------------------------------------------------------
    PutUnit ecrit dans le fichier l'unite                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PutUnit (BinFile pivFile, TypeUnit unit)
-#else  /* __STDC__ */
-static void         PutUnit (pivFile, unit)
-BinFile             pivFile;
-TypeUnit            unit;
-
-#endif /* __STDC__ */
 {
    if (unit == UnPoint)
       TtaWriteByte (pivFile, C_PIV_PT);
@@ -152,14 +118,7 @@ TypeUnit            unit;
 /*----------------------------------------------------------------------
    PutSign   ecrit un signe dans le fichier sur un octet             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PutSign (BinFile pivFile, ThotBool b)
-#else  /* __STDC__ */
-static void         PutSign (pivFile, b)
-BinFile             pivFile;
-ThotBool            b;
-
-#endif /* __STDC__ */
 {
    if (b)
       TtaWriteByte (pivFile, C_PIV_PLUS);
@@ -171,14 +130,7 @@ ThotBool            b;
    PutDimension ecrit dans le fichier le contenu de la regle de       
    dimension pointee par pRegle                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PutDimension (BinFile pivFile, PtrPRule pPRule)
-#else  /* __STDC__ */
-static void         PutDimension (pivFile, pPRule)
-BinFile             pivFile;
-PtrPRule            pPRule;
-
-#endif /* __STDC__ */
 {
 
    PutDimensionType (pivFile, pPRule->PrDimRule.DrAbsolute);
@@ -193,14 +145,7 @@ PtrPRule            pPRule;
 /*----------------------------------------------------------------------
    PutBoolean ecrit un booleen dans le fichier sur un octet           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PutBoolean (BinFile pivFile, ThotBool b)
-#else  /* __STDC__ */
-static void         PutBoolean (pivFile, b)
-BinFile             pivFile;
-ThotBool            b;
-
-#endif /* __STDC__ */
 {
    if (b)
       TtaWriteByte (pivFile, C_PIV_TRUE);
@@ -211,14 +156,7 @@ ThotBool            b;
 /*----------------------------------------------------------------------
    PutAlignment ecrit un BAlignment dans le fichier sur un octet      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PutAlignment (BinFile pivFile, BAlignment c)
-#else  /* __STDC__ */
-static void         PutAlignment (pivFile, c)
-BinFile             pivFile;
-BAlignment          c;
-
-#endif /* __STDC__ */
 {
    switch (c)
 	 {
@@ -243,14 +181,7 @@ BAlignment          c;
 /*----------------------------------------------------------------------
    PutPageType ecrit un type de page dans le fichier sur un octet     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PutPageType (BinFile pivFile, PageType t)
-#else  /* __STDC__ */
-static void         PutPageType (pivFile, t)
-BinFile             pivFile;
-PageType            t;
-
-#endif /* __STDC__ */
 {
    switch (t)
 	 {
@@ -273,15 +204,8 @@ PageType            t;
    octet. S'il s'agit d'une inclusion, expansion indique si c'est	
    une inclusion avec ou sans expansion a l'ecran.                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         PutReferenceType (BinFile pivFile, ReferenceType t, ThotBool expansion)
-#else  /* __STDC__ */
-static void         PutReferenceType (pivFile, t, expansion)
-BinFile             pivFile;
-ReferenceType       t;
-ThotBool            expansion;
-
-#endif /* __STDC__ */
+static void PutReferenceType (BinFile pivFile, ReferenceType t,
+			      ThotBool expansion)
 {
    switch (t)
 	 {
@@ -301,16 +225,8 @@ ThotBool            expansion;
    WriteNatureNumber ecrit une marque de nature suivie du numero du schema    
    de structure pointe par pSS.                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                WriteNatureNumber (PtrSSchema pSS, BinFile pivFile,
-				       PtrDocument pDoc)
-#else  /* __STDC__ */
-void                WriteNatureNumber (pSS, pivFile, pDoc)
-PtrSSchema          pSS;
-BinFile             pivFile;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
+void WriteNatureNumber (PtrSSchema pSS, BinFile pivFile,
+			PtrDocument pDoc)
 {
    int                 n;
    ThotBool            stop;
@@ -320,7 +236,7 @@ PtrDocument         pDoc;
    n = 0;
    stop = FALSE;
    do
-      if (ustrcmp (pSS->SsName, pDoc->DocNatureName[n]) == 0)
+      if (strcmp (pSS->SsName, pDoc->DocNatureName[n]) == 0)
 	 stop = TRUE;
       else if (n < pDoc->DocNNatures - 1)
 	 n++;
@@ -336,14 +252,7 @@ PtrDocument         pDoc;
 /*----------------------------------------------------------------------
    PutLabel   ecrit le label label dans le fichier pivFile            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                PutLabel (BinFile pivFile, LabelString label)
-#else  /* __STDC__ */
-void                PutLabel (pivFile, label)
-BinFile             pivFile;
-LabelString         label;
-
-#endif /* __STDC__ */
+void PutLabel (BinFile pivFile, LabelString label)
 {
    int              i;
 
@@ -358,14 +267,7 @@ LabelString         label;
    PutReference ecrit dans le fichier pivFile la reference pointee	
    par pRef.                                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         PutReference (BinFile pivFile, PtrReference pRef)
-#else  /* __STDC__ */
-static void         PutReference (pivFile, pRef)
-BinFile             pivFile;
-PtrReference        pRef;
-
-#endif /* __STDC__ */
+static void PutReference (BinFile pivFile, PtrReference pRef)
 {
    PtrReferredDescr    pRefD;
    LabelString         label;
@@ -418,15 +320,7 @@ PtrReference        pRef;
    PutAttribut ecrit dans le fichier pivFile l'attribut pointe' par  
    pAttr.                                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                PutAttribut (BinFile pivFile, PtrAttribute pAttr, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                PutAttribut (pivFile, pAttr, pDoc)
-BinFile             pivFile;
-PtrAttribute        pAttr;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
+void PutAttribut (BinFile pivFile, PtrAttribute pAttr, PtrDocument pDoc)
 {
    ThotBool            attrOK;
    ThotBool            stop;
@@ -464,7 +358,7 @@ PtrDocument         pDoc;
 	n = 0;
 	stop = FALSE;
 	do
-	   if (ustrcmp (pAttr->AeAttrSSchema->SsName,
+	   if (strcmp (pAttr->AeAttrSSchema->SsName,
 			pDoc->DocNatureName[n]) == 0)
 	      stop = TRUE;
 	   else if (n < pDoc->DocNNatures - 1)
@@ -516,13 +410,7 @@ PtrDocument         pDoc;
    PutPresRule writes in file pivFile the specific presentation rule pPRule.
    The parameter isPicture is True if the element is a picture element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
-#else  /* __STDC__ */
-static void   PutPresRule (pivFile, pPRule)
-BinFile       pivFile;
-PtrPRule      pPRule;
-#endif /* __STDC__ */
 {
   PRuleType          rType;
   unsigned short     red, green, blue;
@@ -580,7 +468,7 @@ PtrPRule      pPRule;
 	rType == PtXRadius || rType == PtYRadius)))
     {
       /* ecrit la marque de regle */
-      TtaWriteByte (pivFile, (CHAR_T) C_PIV_PRESENT);
+      TtaWriteByte (pivFile, (char) C_PIV_PRESENT);
       /* ecrit le numero de vue */
       PutShort (pivFile, pPRule->PrViewNum);
       /* ecrit le numero de la boite de presentation concernee */
@@ -865,16 +753,8 @@ PtrPRule      pPRule;
    externalise's sous la forme d'un seul element, et au retour,    
    pEl pointe sur le dernier de ces elements successifs.           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                Externalise (BinFile pivFile, PtrElement * pEl, PtrDocument pDoc, ThotBool subTree)
-#else  /* __STDC__ */
-void                Externalise (pivFile, pEl, pDoc, subTree)
-BinFile             pivFile;
-PtrElement         *pEl;
-PtrDocument         pDoc;
-ThotBool            subTree;
-
-#endif /* __STDC__ */
+void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
+		  ThotBool subTree)
 {
   PtrElement          pChild, pEl1;
   PtrTextBuffer       pBuf;
@@ -890,7 +770,7 @@ ThotBool            subTree;
   /* on ecrit effectivement la forme pivot de l'element */
   pEl1 = *pEl;
   /* ecrit la marque de type */
-  TtaWriteByte (pivFile, (CHAR_T) C_PIV_TYPE);
+  TtaWriteByte (pivFile, (char) C_PIV_TYPE);
   /* ecrit le numero de la regle definissant le type */
   PutShort (pivFile, pEl1->ElTypeNumber);
   /* si c'est une copie d'element inclus, ecrit la reference a */
@@ -898,7 +778,7 @@ ThotBool            subTree;
   if (pEl1->ElSource != NULL)
     /* ecrit la marque d'element inclus */
     {
-      TtaWriteByte (pivFile, (CHAR_T) C_PIV_INCLUDED);
+      TtaWriteByte (pivFile, (char) C_PIV_INCLUDED);
       PutReference (pivFile, pEl1->ElSource);
     }
   /* ecrit la marque "Element-reference'" si l'element est */
@@ -907,13 +787,13 @@ ThotBool            subTree;
     if (pEl1->ElReferredDescr->ReFirstReference != NULL ||
 	pEl1->ElReferredDescr->ReExtDocRef != NULL)
       /* l'element est effectivement reference' */
-      TtaWriteByte (pivFile, (CHAR_T) C_PIV_REFERRED);
+      TtaWriteByte (pivFile, (char) C_PIV_REFERRED);
   /* ecrit le label de l'element */
   PutLabel (pivFile, pEl1->ElLabel);
   
   /* Ecrit la marque d'holophraste si l'element est holophraste' */
   if (pEl1->ElHolophrast)
-    TtaWriteByte (pivFile, (CHAR_T) C_PIV_HOLOPHRAST);
+    TtaWriteByte (pivFile, (char) C_PIV_HOLOPHRAST);
   
   /* ecrit les attributs de l'element, mais pas les attributs imposes, */
   /* a moins qu'ils soient du type reference */
@@ -951,7 +831,7 @@ ThotBool            subTree;
       pEl1->ElPictInfo != NULL)
     {
       /* write the rule mark */
-      TtaWriteByte (pivFile, (CHAR_T) C_PIV_PRESENT);
+      TtaWriteByte (pivFile, (char) C_PIV_PRESENT);
       /* write the view number */
       PutShort (pivFile, 1);
       /* write the presentation box number */
@@ -1022,7 +902,7 @@ ThotBool            subTree;
 		    }
 		}
 	      if (pEl1->ElLeafType != LtReference)
-		TtaWriteByte (pivFile, (CHAR_T) C_PIV_BEGIN);
+		TtaWriteByte (pivFile, (char) C_PIV_BEGIN);
 	      switch (pEl1->ElLeafType)
 		{
 		case LtPicture:
@@ -1077,7 +957,7 @@ ThotBool            subTree;
 		case LtReference:
 		  /* ecrit une marque de reference et le label de */
 		  /* l'element qui est reference' */
-		  TtaWriteByte (pivFile, (CHAR_T) C_PIV_REFERENCE);
+		  TtaWriteByte (pivFile, (char) C_PIV_REFERENCE);
 		  PutReference (pivFile, pEl1->ElReference);
 		  break;
 		case LtSymbol:
@@ -1099,7 +979,7 @@ ThotBool            subTree;
 		  /* ecrit le code representant la forme de la ligne */
 		  TtaWriteByte (pivFile, pEl1->ElPolyLineType);
 		  /* ecrit une marque indiquant que c'est une Polyline */
-		  TtaWriteByte (pivFile, (CHAR_T) C_PIV_POLYLINE);
+		  TtaWriteByte (pivFile, (char) C_PIV_POLYLINE);
 		  /* ecrit le nombre de points de la ligne */
 		  PutShort (pivFile, pEl1->ElNPoints);
 		  /* ecrit tous les points */
@@ -1120,7 +1000,7 @@ ThotBool            subTree;
 		  /* ecrit un caractere pour faciliter la lecture */
 		  TtaWriteByte (pivFile, ' ');
 		  /* ecrit une marque indiquant que c'est un Path */
-		  TtaWriteByte (pivFile, (CHAR_T) C_PIV_PATH);
+		  TtaWriteByte (pivFile, (char) C_PIV_PATH);
 		  pPa = pEl1->ElFirstPathSeg;
 		  while (pPa)
 		    {
@@ -1184,7 +1064,7 @@ ThotBool            subTree;
 		  break;
 		}
 	      if (pEl1->ElLeafType != LtReference)
-		TtaWriteByte (pivFile, (CHAR_T) C_PIV_END);
+		TtaWriteByte (pivFile, (char) C_PIV_END);
 	    }
 	}
       else
@@ -1193,7 +1073,7 @@ ThotBool            subTree;
 	  /* on veut ecrire les fils de l'element */
 	  {
 	    /* ecrit une marque de debut */
-	    TtaWriteByte (pivFile, (CHAR_T) C_PIV_BEGIN);
+	    TtaWriteByte (pivFile, (char) C_PIV_BEGIN);
 	    pChild = pEl1->ElFirstChild;
 	    /* ecrit successivement la representation pivot de tous */
 	    /* les fils de l'element */
@@ -1231,7 +1111,7 @@ ThotBool            subTree;
 		pChild = pChild->ElNext;
 	      }
 	    /* ecrit une marque de fin */
-	    TtaWriteByte (pivFile, (CHAR_T) C_PIV_END);
+	    TtaWriteByte (pivFile, (char) C_PIV_END);
 	  }
     }
 }
@@ -1239,14 +1119,7 @@ ThotBool            subTree;
 /*----------------------------------------------------------------------
    	PutName								
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PutName (BinFile pivFile, Name N)
-#else  /* __STDC__ */
-static void         PutName (pivFile, N)
-BinFile             pivFile;
-Name                N;
-
-#endif /* __STDC__ */
 {
    int                 j;
 
@@ -1260,14 +1133,7 @@ Name                N;
    les schemas de structure et de presentation utilises par le     
    document pDoc.                                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                WriteSchemaNamesOfDoc (BinFile pivFile, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                WriteSchemaNamesOfDoc (pivFile, pDoc)
-BinFile             pivFile;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
+void WriteSchemaNamesOfDoc (BinFile pivFile, PtrDocument pDoc)
 {
    int                 nat;
 
@@ -1277,9 +1143,9 @@ PtrDocument         pDoc;
      {
 	/* ecrit la marque de classe ou d'extension */
 	if (pDoc->DocNatureSSchema[nat]->SsExtension)
-	   TtaWriteByte (pivFile, (CHAR_T) C_PIV_SSCHEMA_EXT);
+	   TtaWriteByte (pivFile, (char) C_PIV_SSCHEMA_EXT);
 	else
-	   TtaWriteByte (pivFile, (CHAR_T) C_PIV_NATURE);
+	   TtaWriteByte (pivFile, (char) C_PIV_NATURE);
 	/* ecrit le nom de schema de structure dans le fichier */
 	PutName (pivFile, pDoc->DocNatureSSchema[nat]->SsName);
 	/* ecrit le code du schema de structure */
@@ -1294,14 +1160,7 @@ PtrDocument         pDoc;
    toutes les langues utilisees dans l'arbre de racine pEl et qui  
    ne sont pas encore dans la table.				
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         UpdateLanguageTable (PtrDocument pDoc, PtrElement pEl)
-#else  /* __STDC__ */
-static void         UpdateLanguageTable (pDoc, pEl)
-PtrDocument         pDoc;
-PtrElement          pEl;
-
-#endif /* __STDC__ */
+static void UpdateLanguageTable (PtrDocument pDoc, PtrElement pEl)
 {
    int                 i;
    ThotBool            found;
@@ -1326,14 +1185,7 @@ PtrElement          pEl;
    WriteTableLangues	ecrit dans le fichier pivFile la table des	
    		langues utilisees par le document pDoc.			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                WriteTableLangues (BinFile pivFile, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                WriteTableLangues (pivFile, pDoc)
-BinFile             pivFile;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
+void WriteTableLangues (BinFile pivFile, PtrDocument pDoc)
 {
    int                 i;
 
@@ -1343,7 +1195,7 @@ PtrDocument         pDoc;
    UpdateLanguageTable (pDoc, pDoc->DocRootElement);
    for (i = 0; i < pDoc->DocNLanguages; i++)
      {
-	TtaWriteByte (pivFile, (CHAR_T) C_PIV_LANG);
+	TtaWriteByte (pivFile, (char) C_PIV_LANG);
 	PutName (pivFile, TtaGetLanguageCode (pDoc->DocLanguages[i]));
      }
 }
@@ -1352,14 +1204,7 @@ PtrDocument         pDoc;
 /*----------------------------------------------------------------------
    WritePivotHeader ecrit l'entete d'un fichier pivot                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                WritePivotHeader (BinFile pivFile, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                WritePivotHeader (pivFile, pDoc)
-BinFile             pivFile;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
+void WritePivotHeader (BinFile pivFile, PtrDocument pDoc)
 {
    LabelString         label;
 
@@ -1378,14 +1223,7 @@ PtrDocument         pDoc;
    la forme pivot. Le fichier doit etre ouvert avant l'appel et est	
    toujours ouvert au retour.						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SauveDoc (BinFile pivFile, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                SauveDoc (pivFile, pDoc)
-BinFile             pivFile;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
+void SauveDoc (BinFile pivFile, PtrDocument pDoc)
 {
    int                 i;
    PtrElement          pEl, pNextEl;
@@ -1433,7 +1271,7 @@ PtrDocument         pDoc;
 			/* l'application accepte que Thot sauve l'element */
 		       {
 			  /* ecrit une marque d'element associe' */
-			  TtaWriteByte (pivFile, (CHAR_T) C_PIV_ASSOC);
+			  TtaWriteByte (pivFile, (char) C_PIV_ASSOC);
 			  /* si ces elements associes sont definis dans une
 			     extension du schema de structure du document,
 			     on ecrit un changement de nature */
@@ -1470,7 +1308,7 @@ PtrDocument         pDoc;
 	if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 	   /* l'application accepte que Thot sauve l'element */
 	  {
-	     TtaWriteByte (pivFile, (CHAR_T) C_PIV_STRUCTURE);
+	     TtaWriteByte (pivFile, (char) C_PIV_STRUCTURE);
 	     /* ecrit la forme pivot de tout l'arbre */
 	     Externalise (pivFile, &pEl, pDoc, TRUE);
 	     /* envoie l'evenement ElemSave.Post a l'application, si */
@@ -1484,7 +1322,7 @@ PtrDocument         pDoc;
 	     CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	  }
      }
-   TtaWriteByte (pivFile, (CHAR_T) C_PIV_DOC_END);
+   TtaWriteByte (pivFile, (char) C_PIV_DOC_END);
 }
 
 /*----------------------------------------------------------------------
@@ -1497,17 +1335,12 @@ PtrDocument         pDoc;
    Parameter:
    document: the document to be removed.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaRemoveDocument (Document document)
-#else  /* __STDC__ */
-void                TtaRemoveDocument (document)
-Document            document;
-#endif /* __STDC__ */
+void TtaRemoveDocument (Document document)
 {
   PtrDocument         pDoc;
   int                 i;
   PathBuffer          DirectoryOrig;
-  CHAR_T                text[MAX_TXT_LEN];
+  char                text[MAX_TXT_LEN];
 
   UserErrorCode = 0;
   /* verifies the parameter document */
@@ -1520,11 +1353,11 @@ Document            document;
     {
       pDoc = LoadedDocument[document - 1];
       /* destroys files .PIV, and .BAK of the document */
-      ustrncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
-      FindCompleteName (pDoc->DocDName, TEXT("PIV"), DirectoryOrig, text, &i);
+      strncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
+      FindCompleteName (pDoc->DocDName, "PIV", DirectoryOrig, text, &i);
       TtaFileUnlink (text);
-      ustrncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
-      FindCompleteName (pDoc->DocDName, TEXT("BAK"), DirectoryOrig, text, &i);
+      strncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
+      FindCompleteName (pDoc->DocDName, "BAK", DirectoryOrig, text, &i);
       /* now close the document */
       TtaCloseDocument (document);
     }

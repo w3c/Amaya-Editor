@@ -39,7 +39,7 @@
 
 #define CTRL_O   15
 
-#define NEW_LINE TEXT('\n')
+#define NEW_LINE '\n'
 #define CR         13
 
 #define ERROR_CMD          0
@@ -70,7 +70,7 @@ CHAR_T*    ThotPath;
 CHAR_T*    currentFile;
 CHAR_T*    currentDestFile;
 CHAR_T*    BinFiles [100];
-CHAR_T*    TbStrings [2] = {TEXT("Open (Ctrl+O)"), TEXT("Build (F7)")};
+CHAR_T*    TbStrings [2] = {"Open (Ctrl+O"), "Build (F7")};
 
 DWORD      dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 
@@ -88,7 +88,7 @@ LRESULT CALLBACK CompilersWndProc ();
 #endif /* __STDC__ */
 
 static OPENFILENAME OpenFileName;
-static STRING       szFilter = TEXT("Amaya Makefiles (*.mkf)\0*.mkf\0All files (*.*)\0*.*\0");
+static STRING       szFilter = "Amaya Makefiles (*.mkf\0*.mkf\0All files (*.*)\0*.*\0");
 static CHAR_T       szFileName[256];
 static CHAR_T       fileToOpen [256];
 static int          iVscrollPos = 0, iVscrollMax, iVscrollInc; 
@@ -125,7 +125,7 @@ int     msgType;
       SetFocus (hwnd);   
       SendMessage (hwnd, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
       /* Append text */
-      usprintf( pText, TEXT("%s\r\n"), errorMsg );
+      usprintf( pText, "%s\r\n", errorMsg );
       SendMessage (hwnd, EM_REPLACESEL, 0, (LPARAM) ((LPTSTR) pText));
    } 
 }
@@ -146,13 +146,13 @@ const CHAR_T* dest;
     CHAR_T errorMsg [800];
 	int   c;
 
-    if ((srcFile = ufopen (src, TEXT("r"))) == NULL) {
-       usprintf (errorMsg, TEXT("Error: Can't open file: %s"), src);
+    if ((srcFile = ufopen (src, "r")) == NULL) {
+       usprintf (errorMsg, "Error: Can't open file: %s", src);
        MakeMessage (hwnd, errorMsg, FATAL_EXIT_CODE);
        return FATAL_EXIT_CODE;
 	}
-    if ((destFile = ufopen (dest, TEXT("w"))) == NULL) {
-       usprintf (errorMsg, TEXT("Error: Can't open file: %s"), dest);
+    if ((destFile = ufopen (dest, "w")) == NULL) {
+       usprintf (errorMsg, "Error: Can't open file: %s", dest);
        MakeMessage (hwnd, errorMsg, FATAL_EXIT_CODE);
        return FATAL_EXIT_CODE;
 	}
@@ -231,13 +231,13 @@ char*     commandLine;
 	   ptr++;
 	   continue;
         }
-        if (*ptr == TEXT(' ') || *ptr == TEXT('\t')) {
+        if (*ptr == ' ' || *ptr == '\t') {
            *ptr = 0;
 	   ptr++;
 	   nowAt = nowAt_start;
 	   continue;
         }
-        if ((*ptr == TEXT('\'') || *ptr == TEXT('\"') || *ptr == TEXT('`')) && nowAt == nowAt_start) {
+        if ((*ptr == '\'' || *ptr == '\"' || *ptr == '`') && nowAt == nowAt_start) {
            lookFor = *ptr;
 	   nowAt = nowAt_start;
 	   ptr++;
@@ -263,7 +263,7 @@ char* fileName;
     HINSTANCE  hLib;
     FARPROC ptrMainProc;
     CHAR_T  msg [1024];
-    CHAR_T  seps[]   = TEXT(" \t=$()\n\r");
+    CHAR_T  seps[]   = " \t=$(\n\r");
 	CHAR_T  string [1024];
     CHAR_T* args [100];
 	CHAR_T* token;
@@ -280,9 +280,9 @@ char* fileName;
     int     result = COMP_SUCCESS;
 
     if (hwnd) {
-       if ((f = ufopen (fileName, TEXT("r"))) == NULL) {
-          usprintf (msg, TEXT("Cannot open file %s"), fileToOpen);
-          MessageBox (hwnd, msg, TEXT("Make error"), MB_OK | MB_ICONWARNING);
+       if ((f = ufopen (fileName, "r")) == NULL) {
+          usprintf (msg, "Cannot open file %s", fileToOpen);
+          MessageBox (hwnd, msg, "Make error", MB_OK | MB_ICONWARNING);
 	   } else {
               while (!feof (f)) {
                     if (currentFile) {
@@ -310,21 +310,21 @@ char* fileName;
                     if (*pChar != NEW_LINE && *pChar != WC_EOS && *pChar != CR) {
                        token = ustrtok (string, seps);
                        if (token != NULL) {
-                          if (!ustrcmp (token, TEXT("APP")))
+                          if (!ustrcmp (token, "APP"))
                              command = APP;
-                          else if (!ustrcmp (token, TEXT("PRS")))
+                          else if (!ustrcmp (token, "PRS"))
                                command = PRS;
-                          else if (!ustrcmp (token, TEXT("STR")))
+                          else if (!ustrcmp (token, "STR"))
                                command = STR;
-                          else if (!ustrcmp (token, TEXT("TRA")))
+                          else if (!ustrcmp (token, "TRA"))
                                command = TRA;
-                          else if (!ustrcmp (token, TEXT("SRC_DIR")))
+                          else if (!ustrcmp (token, "SRC_DIR"))
                                command = SRC_DIR;
-                          else if (!ustrcmp (token, TEXT("DEST_DIR")))
+                          else if (!ustrcmp (token, "DEST_DIR"))
                                command = DEST_DIR;
                           else {
                                command = ERROR_CMD;
-                               usprintf (msg, TEXT("%s (Line %3d): unknown command %s"), fileToOpen, line, token);
+                               usprintf (msg, "%s (Line %3d: unknown command %s"), fileToOpen, line, token);
                                MakeMessage (hwnd, msg, FATAL_EXIT_CODE);				   
 						  } 
 					   }
@@ -337,8 +337,8 @@ char* fileName;
                           ustrcpy (args [index++], cmdLine);
                           while ((token = ustrtok (NULL, seps)) != NULL) {
                                 /* While there are tokens in "string" */
-                                ptr = ustrrchr (token, TEXT('.'));
-                                if (ptr || (token [0] != TEXT('-'))) {
+                                ptr = ustrrchr (token, '.');
+                                if (ptr || (token [0] != '-')) {
                                    if (!currentFile) {
                                       currentFile = TtaAllocString (ustrlen (token) + 1);
                                       ustrcpy (currentFile, token);
@@ -366,7 +366,7 @@ char* fileName;
                                          free (SrcPath);
                                          SrcPath = (CHAR_T*) 0;
 									  } 
-                                      if (!ustrcmp (args [1], TEXT("THOTDIR"))) {
+                                      if (!ustrcmp (args [1], "THOTDIR")) {
                                          if (index > 2) {
                                             SrcPath = TtaAllocString (ustrlen (ThotPath) + ustrlen (args [2]) + 1);
                                             ustrcpy (SrcPath, ThotPath);
@@ -387,7 +387,7 @@ char* fileName;
                                          free (DestPath);
                                          DestPath = (CHAR_T*) 0;
 									  } 
-                                      if (!ustrcmp (args [1], TEXT("THOTDIR"))) {
+                                      if (!ustrcmp (args [1], "THOTDIR")) {
                                          if (index > 2) {
                                             DestPath = TtaAllocString (ustrlen (ThotPath) + ustrlen (args [2]) + 1);
                                             ustrcpy (DestPath, ThotPath);
@@ -404,7 +404,7 @@ char* fileName;
                                       break;
 
                                  case APP: 
-                                      hLib = LoadLibrary (TEXT("app"));
+                                      hLib = LoadLibrary ("app");
                                       if (!hLib)
                                          return FATAL_EXIT_CODE;
                                       ptrMainProc = GetProcAddress (hLib, "APPmain");
@@ -413,40 +413,40 @@ char* fileName;
                                          return FATAL_EXIT_CODE;
 									  }
 
-                                      ptr = ustrrchr (currentFile, TEXT('.'));
+                                      ptr = ustrrchr (currentFile, '.');
                                       if (ptr) {
                                          len = ustrlen (SrcPath);
-                                         if (len > 0 && SrcPath [len - 1] == TEXT('\\')) {
+                                         if (len > 0 && SrcPath [len - 1] == '\\') {
                                             SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 1);
-                                            usprintf (SrcFileName, TEXT("%s%s"), SrcPath, currentFile);
+                                            usprintf (SrcFileName, "%s%s", SrcPath, currentFile);
 										 } else {
                                                 SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 2);
-                                                usprintf (SrcFileName, TEXT("%s\\%s"), SrcPath, currentFile);
+                                                usprintf (SrcFileName, "%s\\%s", SrcPath, currentFile);
 										 }
                                          len = ustrlen (WorkPath);
-                                         if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                         if (len > 0 && WorkPath [len - 1] == '\\') {
                                             WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 1);
-                                            usprintf (WorkFileName, TEXT("%s%s"), WorkPath, currentFile);
+                                            usprintf (WorkFileName, "%s%s", WorkPath, currentFile);
 										 } else {
                                                 WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 2);
-                                                usprintf (WorkFileName, TEXT("%s\\%s"), WorkPath, currentFile);
+                                                usprintf (WorkFileName, "%s\\%s", WorkPath, currentFile);
 										 } 
 									  } else {
                                              len = ustrlen (SrcPath);
                                              if (len > 0 && SrcPath [len - 1] == '\\') {
                                                 SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 3);
-                                                usprintf (SrcFileName, TEXT("%s%s.A"), SrcPath, currentFile);
+                                                usprintf (SrcFileName, "%s%s.A", SrcPath, currentFile);
 											 } else {
                                                     SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 4);
-                                                    usprintf (SrcFileName, TEXT("%s\\%s.A"), SrcPath, currentFile);
+                                                    usprintf (SrcFileName, "%s\\%s.A", SrcPath, currentFile);
 											 }
                                              len = ustrlen (WorkPath);
-                                             if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                             if (len > 0 && WorkPath [len - 1] == '\\') {
                                                 WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 3);
-                                                usprintf (WorkFileName, TEXT("%s%s.A"), WorkPath, currentFile);
+                                                usprintf (WorkFileName, "%s%s.A", WorkPath, currentFile);
 											 } else {
                                                     WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 4);
-                                                    usprintf (WorkFileName, TEXT("%s\\%s.A"), WorkPath, currentFile);
+                                                    usprintf (WorkFileName, "%s\\%s.A", WorkPath, currentFile);
 											 }  
 									  } 
 
@@ -482,7 +482,7 @@ char* fileName;
                                       break;
 
                                  case PRS: 
-                                      hLib = LoadLibrary (TEXT("prs"));
+                                      hLib = LoadLibrary ("prs");
                                       if (!hLib)
                                          return FATAL_EXIT_CODE;
                                       ptrMainProc = GetProcAddress (hLib, "PRSmain");
@@ -491,60 +491,60 @@ char* fileName;
                                          return FATAL_EXIT_CODE;
 									  }
 
-                                      ptr = ustrrchr (currentFile, TEXT('.'));
+                                      ptr = ustrrchr (currentFile, '.');
                                       if (ptr) {
                                          len = ustrlen (SrcPath);
-                                         if (len > 0 && SrcPath [len - 1] == TEXT('\\')) {
+                                         if (len > 0 && SrcPath [len - 1] == '\\') {
                                             SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 1);
-                                            usprintf (SrcFileName, TEXT("%s%s"), SrcPath, currentFile);
+                                            usprintf (SrcFileName, "%s%s", SrcPath, currentFile);
 										 } else {
                                                 SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 2);
-                                                usprintf (SrcFileName, TEXT("%s\\%s"), SrcPath, currentFile);
+                                                usprintf (SrcFileName, "%s\\%s", SrcPath, currentFile);
 										 }
                                          len = ustrlen (WorkPath);
-                                         if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                         if (len > 0 && WorkPath [len - 1] == '\\') {
                                             WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 1);
-                                            usprintf (WorkFileName, TEXT("%s%s"), WorkPath, currentFile);
+                                            usprintf (WorkFileName, "%s%s", WorkPath, currentFile);
 										 } else {
                                                 WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 2);
-                                                usprintf (WorkFileName, TEXT("%s\\%s"), WorkPath, currentFile);
+                                                usprintf (WorkFileName, "%s\\%s", WorkPath, currentFile);
 										 } 
 									  } else {
                                              len = ustrlen (SrcPath);
-                                             if (len > 0 && SrcPath [len - 1] == TEXT('\\')) {
+                                             if (len > 0 && SrcPath [len - 1] == '\\') {
                                                 SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 3);
-                                                usprintf (SrcFileName, TEXT("%s%s.P"), SrcPath, currentFile);
+                                                usprintf (SrcFileName, "%s%s.P", SrcPath, currentFile);
 											 } else {
                                                     SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 4);
-                                                    usprintf (SrcFileName, TEXT("%s\\%s.P"), SrcPath, currentFile);
+                                                    usprintf (SrcFileName, "%s\\%s.P", SrcPath, currentFile);
 											 }
                                              len = ustrlen (WorkPath);
-                                             if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                             if (len > 0 && WorkPath [len - 1] == '\\') {
                                                 WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 3);
-                                                usprintf (WorkFileName, TEXT("%s%s.P"), WorkPath, currentFile);
+                                                usprintf (WorkFileName, "%s%s.P", WorkPath, currentFile);
 											 } else {
                                                     WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 4);
-                                                    usprintf (WorkFileName, TEXT("%s\\%s.P"), WorkPath, currentFile);
+                                                    usprintf (WorkFileName, "%s\\%s.P", WorkPath, currentFile);
 											 }  
 									  } 
 
                                       if (currentDestFile) {
-                                         ptr = ustrrchr (currentDestFile, TEXT('.'));
+                                         ptr = ustrrchr (currentDestFile, '.');
                                          if (ptr) {
                                             BinFiles [indexBinFiles] = TtaAllocString (ustrlen (currentDestFile) + 1);
                                             ustrcpy (BinFiles [indexBinFiles], currentDestFile);
 										 } else {
                                                 BinFiles [indexBinFiles] = TtaAllocString (ustrlen (currentDestFile) + 5);
-                                                usprintf (BinFiles [indexBinFiles], TEXT("%s.PRS"), currentDestFile);
+                                                usprintf (BinFiles [indexBinFiles], "%s.PRS", currentDestFile);
 										 }
 									  } else {
                                              currentFileName = TtaAllocString (ustrlen (currentFile) + 1);
                                              ustrcpy (currentFileName, currentFile);
-                                             ptr = ustrrchr (currentFileName, TEXT('.'));
+                                             ptr = ustrrchr (currentFileName, '.');
                                              if (ptr)
                                                 ptr [0] = 0;
                                              BinFiles [indexBinFiles] = TtaAllocString (ustrlen (currentFile) + 5);
-                                             usprintf (BinFiles [indexBinFiles], TEXT("%s.PRS"), currentFile);
+                                             usprintf (BinFiles [indexBinFiles], "%s.PRS", currentFile);
 									  }
 
                                       if ((result = Copy_File (hwnd, SrcFileName, WorkFileName)) != FATAL_EXIT_CODE) {
@@ -577,27 +577,27 @@ char* fileName;
                                       if (result == FATAL_EXIT_CODE)
                                          return result;
                                       len = ustrlen (WorkPath);
-                                      if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                      if (len > 0 && WorkPath [len - 1] == '\\') {
                                          SrcFileName = TtaAllocString (len + ustrlen (BinFiles [indexBinFiles]) + 1);
-                                         usprintf (SrcFileName, TEXT("%s%s"), WorkPath, BinFiles [indexBinFiles]);
+                                         usprintf (SrcFileName, "%s%s", WorkPath, BinFiles [indexBinFiles]);
 									  } else {
                                              SrcFileName = TtaAllocString (len + ustrlen (BinFiles [indexBinFiles]) + 2);
-                                             usprintf (SrcFileName, TEXT("%s\\%s"), WorkPath, BinFiles [indexBinFiles]);
+                                             usprintf (SrcFileName, "%s\\%s", WorkPath, BinFiles [indexBinFiles]);
 									  }  
                                       len = ustrlen (SrcPath);
-                                      if (len > 0 && SrcPath [len - 1] == TEXT('\\')) {
+                                      if (len > 0 && SrcPath [len - 1] == '\\') {
                                           WorkFileName = TtaAllocString (len + ustrlen (BinFiles [indexBinFiles]) + 1);
-                                          usprintf (WorkFileName, TEXT("%s%s"), SrcPath, BinFiles [indexBinFiles]);
+                                          usprintf (WorkFileName, "%s%s", SrcPath, BinFiles [indexBinFiles]);
 									  } else { 
                                              WorkFileName = TtaAllocString (len + ustrlen (BinFiles [indexBinFiles]) + 2);
-                                             usprintf (WorkFileName, TEXT("%s\\%s"), SrcPath, BinFiles [indexBinFiles]);
+                                             usprintf (WorkFileName, "%s\\%s", SrcPath, BinFiles [indexBinFiles]);
 									  } 
                                       Copy_File (hwnd, SrcFileName, WorkFileName);
                                       indexBinFiles++;
                                       break;
 
                                  case STR: 
-                                      hLib = LoadLibrary (TEXT("str"));
+                                      hLib = LoadLibrary ("str");
                                       if (!hLib)
                                          return FATAL_EXIT_CODE;
                                       ptrMainProc = GetProcAddress (hLib, "STRmain");
@@ -606,60 +606,60 @@ char* fileName;
                                          return FATAL_EXIT_CODE;
 									  }
 
-                                      ptr = ustrrchr(currentFile, TEXT('.'));
+                                      ptr = ustrrchr(currentFile, '.');
                                       if (ptr) {
                                          len = ustrlen (SrcPath);
-                                         if (len > 0 && SrcPath [len - 1] == TEXT('\\')) {
+                                         if (len > 0 && SrcPath [len - 1] == '\\') {
                                             SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 1);
-                                            usprintf (SrcFileName, TEXT("%s%s"), SrcPath, currentFile);
+                                            usprintf (SrcFileName, "%s%s", SrcPath, currentFile);
 										 } else {
                                                 SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 2);
-                                                usprintf (SrcFileName, TEXT("%s\\%s"), SrcPath, currentFile);
+                                                usprintf (SrcFileName, "%s\\%s", SrcPath, currentFile);
 										 }
                                          len = ustrlen (WorkPath);
-                                         if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                         if (len > 0 && WorkPath [len - 1] == '\\') {
                                             WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 1);
-                                            usprintf (WorkFileName, TEXT("%s%s"), WorkPath, currentFile);
+                                            usprintf (WorkFileName, "%s%s", WorkPath, currentFile);
 										 } else {
                                                 WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 2);
-                                                usprintf (WorkFileName, TEXT("%s\\%s"), WorkPath, currentFile);
+                                                usprintf (WorkFileName, "%s\\%s", WorkPath, currentFile);
 										 } 
 									  } else {
                                              len = ustrlen (SrcPath);
-                                             if (len > 0 && SrcPath [len - 1] == TEXT('\\')) {
+                                             if (len > 0 && SrcPath [len - 1] == '\\') {
                                                 SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 3);
-                                                usprintf (SrcFileName, TEXT("%s%s.S"), SrcPath, currentFile);
+                                                usprintf (SrcFileName, "%s%s.S", SrcPath, currentFile);
 											 } else {
                                                     SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 4);
-                                                    usprintf (SrcFileName, TEXT("%s\\%s.S"), SrcPath, currentFile);
+                                                    usprintf (SrcFileName, "%s\\%s.S", SrcPath, currentFile);
 											 }
                                              len = ustrlen (WorkPath);
-                                             if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                             if (len > 0 && WorkPath [len - 1] == '\\') {
                                                 WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 3);
-                                                usprintf (WorkFileName, TEXT("%s%s.S"), WorkPath, currentFile);
+                                                usprintf (WorkFileName, "%s%s.S", WorkPath, currentFile);
 											 } else {
                                                     WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 4);
-                                                    usprintf (WorkFileName, TEXT("%s\\%s.S"), WorkPath, currentFile);
+                                                    usprintf (WorkFileName, "%s\\%s.S", WorkPath, currentFile);
 											 }  
 									  } 
 
                                       if (currentDestFile) {
-                                         ptr = ustrrchr (currentDestFile, TEXT('.'));
+                                         ptr = ustrrchr (currentDestFile, '.');
                                          if (ptr) {
                                             BinFiles [indexBinFiles] = TtaAllocString (ustrlen (currentDestFile) + 1);
                                             ustrcpy (BinFiles [indexBinFiles], currentDestFile);
 										 } else {
                                                 BinFiles [indexBinFiles] = TtaAllocString (ustrlen (currentDestFile) + 5);
-                                                usprintf (BinFiles [indexBinFiles], TEXT("%s.STR"), currentDestFile);
+                                                usprintf (BinFiles [indexBinFiles], "%s.STR", currentDestFile);
 										 }
 									  } else {
                                              currentFileName = TtaAllocString (ustrlen (currentFile) + 1);
                                              ustrcpy (currentFileName, currentFile);
-                                             ptr = ustrrchr (currentFileName, TEXT('.'));
+                                             ptr = ustrrchr (currentFileName, '.');
                                              if (ptr)
                                                 ptr [0] = 0;
                                              BinFiles [indexBinFiles] = TtaAllocString (ustrlen (currentFile) + 5);
-                                             usprintf (BinFiles [indexBinFiles], TEXT("%s.STR"), currentFile);
+                                             usprintf (BinFiles [indexBinFiles], "%s.STR", currentFile);
 									  }
 
                                       if ((result = Copy_File (hwnd, SrcFileName, WorkFileName)) != FATAL_EXIT_CODE) {
@@ -693,27 +693,27 @@ char* fileName;
                                       if (result == FATAL_EXIT_CODE)
                                          return result;
                                       len = ustrlen (WorkPath);
-                                      if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                      if (len > 0 && WorkPath [len - 1] == '\\') {
                                          SrcFileName = TtaAllocString (len + ustrlen (BinFiles [indexBinFiles]) + 1);
-                                         usprintf (SrcFileName, TEXT("%s%s"), WorkPath, BinFiles [indexBinFiles]);
+                                         usprintf (SrcFileName, "%s%s", WorkPath, BinFiles [indexBinFiles]);
 									  } else {
                                              SrcFileName = TtaAllocString (len + ustrlen (BinFiles [indexBinFiles]) + 2);
-                                             usprintf (SrcFileName, TEXT("%s\\%s"), WorkPath, BinFiles [indexBinFiles]);
+                                             usprintf (SrcFileName, "%s\\%s", WorkPath, BinFiles [indexBinFiles]);
 									  }  
                                       len = ustrlen (SrcPath);
-                                      if (len > 0 && SrcPath [len - 1] == TEXT('\\')) {
+                                      if (len > 0 && SrcPath [len - 1] == '\\') {
                                           WorkFileName = TtaAllocString (len + ustrlen (BinFiles [indexBinFiles]) + 1);
-                                          usprintf (WorkFileName, TEXT("%s%s"), SrcPath, BinFiles [indexBinFiles]);
+                                          usprintf (WorkFileName, "%s%s", SrcPath, BinFiles [indexBinFiles]);
 									  } else { 
                                              WorkFileName = TtaAllocString (len + ustrlen (BinFiles [indexBinFiles]) + 2);
-                                             usprintf (WorkFileName, TEXT("%s\\%s"), SrcPath, BinFiles [indexBinFiles]);
+                                             usprintf (WorkFileName, "%s\\%s", SrcPath, BinFiles [indexBinFiles]);
 									  } 
                                       Copy_File (hwnd, SrcFileName, WorkFileName);
                                       indexBinFiles++;
                                       break;
 
                                  case TRA: 
-                                      hLib = LoadLibrary (TEXT("tra"));
+                                      hLib = LoadLibrary ("tra");
                                       if (!hLib)
                                          return FATAL_EXIT_CODE;
 
@@ -724,21 +724,21 @@ char* fileName;
 									  }
 
                                       len = ustrlen (SrcPath);
-                                      if (len > 0 && SrcPath [len - 1] == TEXT('\\')) {
+                                      if (len > 0 && SrcPath [len - 1] == '\\') {
                                          SrcFileName = TtaAllocString (len + 12);
-                                         usprintf (SrcFileName, TEXT("%sgreek.sgml"), SrcPath);
+                                         usprintf (SrcFileName, "%sgreek.sgml", SrcPath);
 									  } else {
                                              SrcFileName = TtaAllocString (len + 13);
-                                             usprintf (SrcFileName, TEXT("%s\\greek.sgml"), SrcPath);
+                                             usprintf (SrcFileName, "%s\\greek.sgml", SrcPath);
 									  }
 
                                       len = ustrlen (WorkPath);
-                                      if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                      if (len > 0 && WorkPath [len - 1] == '\\') {
                                          WorkFileName = TtaAllocString (len + 12);
-                                         usprintf (WorkFileName, TEXT("%sgreek.sgml"), WorkPath);
+                                         usprintf (WorkFileName, "%sgreek.sgml", WorkPath);
 									  } else {
                                              WorkFileName = TtaAllocString (len + 13);
-                                             usprintf (WorkFileName, TEXT("%s\\greek.sgml"), WorkPath);
+                                             usprintf (WorkFileName, "%s\\greek.sgml", WorkPath);
 									  }
 									  /* 2000/10/09 JK: we make an expection here so that we can
 									     compile the T schemas outside of the Amaya directory. A 
@@ -761,21 +761,21 @@ char* fileName;
 										      WorkFileName = NULL;
 										 }
                                          len = ustrlen (SrcPath);
-                                         if (len > 0 && SrcPath [len - 1] == TEXT('\\')) {
+                                         if (len > 0 && SrcPath [len - 1] == '\\') {
                                             SrcFileName = TtaAllocString (len + 14);
-                                            usprintf (SrcFileName, TEXT("%sText_SGML.inc"), SrcPath);
+                                            usprintf (SrcFileName, "%sText_SGML.inc", SrcPath);
 										 } else {
                                                 SrcFileName = TtaAllocString (len + 15);
-                                                usprintf (SrcFileName, TEXT("%s\\Text_SGML.inc"), SrcPath);
+                                                usprintf (SrcFileName, "%s\\Text_SGML.inc", SrcPath);
 										 }
 
                                          len = ustrlen (WorkPath);
-                                         if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                         if (len > 0 && WorkPath [len - 1] == '\\') {
                                             WorkFileName = TtaAllocString (len + 14);
-                                            usprintf (WorkFileName, TEXT("%sText_SGML.inc"), WorkPath);
+                                            usprintf (WorkFileName, "%sText_SGML.inc", WorkPath);
 										 } else {
                                                 WorkFileName = TtaAllocString (len + 15);
-                                                usprintf (WorkFileName, TEXT("%s\\Text_SGML.inc"), WorkPath);
+                                                usprintf (WorkFileName, "%s\\Text_SGML.inc", WorkPath);
 										 }
 										 /* JK: same exception as when compiling the greek inclusion */
                                          if (TtaFileExist (SrcFileName))
@@ -791,60 +791,60 @@ char* fileName;
 										        free (WorkFileName);
 										        WorkFileName = NULL;
 											}
-                                            ptr = ustrrchr (currentFile, TEXT('.'));
+                                            ptr = ustrrchr (currentFile, '.');
                                             if (ptr) {
                                                len = ustrlen (SrcPath);
-                                               if (len > 0 && SrcPath [len - 1] == TEXT('\\')) {
+                                               if (len > 0 && SrcPath [len - 1] == '\\') {
                                                   SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 1);
-                                                  usprintf (SrcFileName, TEXT("%s%s"), SrcPath, currentFile);
+                                                  usprintf (SrcFileName, "%s%s", SrcPath, currentFile);
 											   } else {
                                                       SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 2);
-                                                      usprintf (SrcFileName, TEXT("%s\\%s"), SrcPath, currentFile);
+                                                      usprintf (SrcFileName, "%s\\%s", SrcPath, currentFile);
 											   } 
                                                len = ustrlen (WorkPath);
-                                               if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                               if (len > 0 && WorkPath [len - 1] == '\\') {
                                                   WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 1);
-                                                  usprintf (WorkFileName, TEXT("%s%s"), WorkPath, currentFile);
+                                                  usprintf (WorkFileName, "%s%s", WorkPath, currentFile);
 											   } else {
                                                       WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 2);
-                                                      usprintf (WorkFileName, TEXT("%s\\%s"), WorkPath, currentFile);
+                                                      usprintf (WorkFileName, "%s\\%s", WorkPath, currentFile);
 											   } 
 											} else {
 												   len = ustrlen (SrcPath);
-                                                   if (len > 0 && SrcPath [len - 1] == TEXT('\\')) {
+                                                   if (len > 0 && SrcPath [len - 1] == '\\') {
                                                       SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 3);
-                                                      usprintf (SrcFileName, TEXT("%s%s.T"), SrcPath, currentFile);
+                                                      usprintf (SrcFileName, "%s%s.T", SrcPath, currentFile);
 												   } else {
                                                           SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 4);
-                                                          usprintf (SrcFileName, TEXT("%s\\%s.T"), SrcPath, currentFile);
+                                                          usprintf (SrcFileName, "%s\\%s.T", SrcPath, currentFile);
 												   }
                                                    len = ustrlen (WorkPath);
-                                                   if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                                   if (len > 0 && WorkPath [len - 1] == '\\') {
                                                       WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 3);
-                                                      usprintf (WorkFileName, TEXT("%s%s.T"), WorkPath, currentFile);
+                                                      usprintf (WorkFileName, "%s%s.T", WorkPath, currentFile);
 												   } else {
                                                           WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 4);
-                                                          usprintf (WorkFileName, TEXT("%s\\%s.T"), WorkPath, currentFile);
+                                                          usprintf (WorkFileName, "%s\\%s.T", WorkPath, currentFile);
 												   }  
 											} 
 
                                             if (currentDestFile) {
-                                               ptr = ustrrchr (currentDestFile, TEXT('.'));
+                                               ptr = ustrrchr (currentDestFile, '.');
                                                if (ptr) {
                                                   BinFiles [indexBinFiles] = TtaAllocString (ustrlen (currentDestFile) + 1);
                                                   ustrcpy (BinFiles [indexBinFiles], currentDestFile);
 											   } else {
                                                       BinFiles [indexBinFiles] = TtaAllocString (ustrlen (currentDestFile) + 5);
-                                                      usprintf (BinFiles [indexBinFiles], TEXT("%s.TRA"), currentDestFile);
+                                                      usprintf (BinFiles [indexBinFiles], "%s.TRA", currentDestFile);
 											   }
 											} else {
                                                    currentFileName = TtaAllocString (ustrlen (currentFile) + 1);
                                                    ustrcpy (currentFileName, currentFile);
-                                                   ptr = ustrrchr (currentFileName, TEXT('.'));
+                                                   ptr = ustrrchr (currentFileName, '.');
                                                    if (ptr)
                                                       ptr [0] = 0;
                                                    BinFiles [indexBinFiles] = TtaAllocString (ustrlen (currentFile) + 5);
-                                                   usprintf (BinFiles [indexBinFiles], TEXT("%s.TRA"), currentFile);
+                                                   usprintf (BinFiles [indexBinFiles], "%s.TRA", currentFile);
 											}
  
                                             if ((result = Copy_File (hwnd, SrcFileName, WorkFileName)) != FATAL_EXIT_CODE) {
@@ -882,20 +882,20 @@ char* fileName;
                                       if (result == FATAL_EXIT_CODE)
                                          return result;
                                       len = ustrlen (WorkPath);
-                                      if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                      if (len > 0 && WorkPath [len - 1] == '\\') {
                                          SrcFileName = TtaAllocString (len + ustrlen (BinFiles [indexBinFiles]) + 1);
-                                         usprintf (SrcFileName, TEXT("%s%s"), WorkPath, BinFiles [indexBinFiles]);
+                                         usprintf (SrcFileName, "%s%s", WorkPath, BinFiles [indexBinFiles]);
 									  } else {
                                              SrcFileName = TtaAllocString (len + ustrlen (BinFiles [indexBinFiles]) + 2);
-                                             usprintf (SrcFileName, TEXT("%s\\%s"), WorkPath, BinFiles [indexBinFiles]);
+                                             usprintf (SrcFileName, "%s\\%s", WorkPath, BinFiles [indexBinFiles]);
 									  }  
                                       len = ustrlen (SrcPath);
-                                      if (len > 0 && SrcPath [len - 1] == TEXT('\\')) {
+                                      if (len > 0 && SrcPath [len - 1] == '\\') {
                                           WorkFileName = TtaAllocString (len + ustrlen (BinFiles [indexBinFiles]) + 1);
-                                          usprintf (WorkFileName, TEXT("%s%s"), SrcPath, BinFiles [indexBinFiles]);
+                                          usprintf (WorkFileName, "%s%s", SrcPath, BinFiles [indexBinFiles]);
 									  } else { 
                                              WorkFileName = TtaAllocString (len + ustrlen (BinFiles [indexBinFiles]) + 2);
-                                             usprintf (WorkFileName, TEXT("%s\\%s"), SrcPath, BinFiles [indexBinFiles]);
+                                             usprintf (WorkFileName, "%s\\%s", SrcPath, BinFiles [indexBinFiles]);
 									  } 
                                       Copy_File (hwnd, SrcFileName, WorkFileName);
                                       indexBinFiles++;
@@ -927,12 +927,12 @@ char* fileName;
                   char sfname[MAX_LENGTH];
  #endif /* !_I18N_ */
                  len = ustrlen (WorkPath);
-                  if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                  if (len > 0 && WorkPath [len - 1] == '\\') {
                       SrcFileName = TtaAllocString (len + ustrlen (BinFiles[i]) + 1);
-                      usprintf (SrcFileName, TEXT("%s%s"), WorkPath, BinFiles [i]);
+                      usprintf (SrcFileName, "%s%s", WorkPath, BinFiles [i]);
 				  } else {
                          SrcFileName = TtaAllocString (len + ustrlen (BinFiles [i]) + 2);
-                         usprintf (SrcFileName, TEXT("%s\\%s"), WorkPath, BinFiles [i]);
+                         usprintf (SrcFileName, "%s\\%s", WorkPath, BinFiles [i]);
 				  }
 #ifdef _I18N_
                   wcstombs (sfname, SrcFileName, MAX_LENGTH);
@@ -946,7 +946,7 @@ char* fileName;
               fclose (f);
 	   }  
     }
-    MakeMessage (hwnd, TEXT("\r\n\r\nBuild process success ..."), COMP_SUCCESS);
+    MakeMessage (hwnd, "\r\n\r\nBuild process success ...", COMP_SUCCESS);
     /* MakeMessage (hwnd, "\r\n\r\nNow you can Build Amaya ...", COMP_SUCCESS); */
     SendMessage (StatusBar, SB_SETTEXT, (WPARAM) 0, (LPARAM) "Finished");
     SendMessage (StatusBar, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
@@ -963,7 +963,7 @@ PSTR      szCmdLine;
 int       iCmdShow;
 #endif /* __STDC__ */
 {
-     static CHAR_T  szAppName[] = TEXT("ThotCompilers");
+     static CHAR_T  szAppName[] = "ThotCompilers";
      CHAR_T         CMDLine[MAX_LENGTH];
      HWND           hwnd;
      MSG            msg;
@@ -1008,7 +1008,7 @@ int       iCmdShow;
 
      WorkPath = TtaAllocString (ustrlen (BinPath) + 7);
      ustrcpy (WorkPath, BinPath);
-     ustrcat (WorkPath, TEXT("\\amaya"));
+     ustrcat (WorkPath, "\\amaya");
      /*** sprintf (WorkPath, "%s\\amaya", BinPath); ***/
 
      ThotPath = TtaGetEnvString ("THOTDIR");
@@ -1029,7 +1029,7 @@ int       iCmdShow;
      if (!RegisterClassEx (&wndClass))
         return FALSE;
 
-     hwnd = CreateWindowEx (0, szAppName, TEXT("Thot compilers"),
+     hwnd = CreateWindowEx (0, szAppName, "Thot compilers",
                             DS_MODALFRAME | WS_POPUP |
                             WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
                             0, 0,
@@ -1072,11 +1072,11 @@ LPARAM lParam;
             case WM_CREATE:
                  menuBar = CreateMenu ();
                  popupMenu = CreateMenu ();
-                 AppendMenu (popupMenu, MF_STRING, OPEN, TEXT("&Open\tCtrl+O"));
-                 AppendMenu (popupMenu, MF_STRING, COMPILE, TEXT("&Build\tF7"));
+                 AppendMenu (popupMenu, MF_STRING, OPEN, "&Open\tCtrl+O");
+                 AppendMenu (popupMenu, MF_STRING, COMPILE, "&Build\tF7");
                  AppendMenu (popupMenu, MF_SEPARATOR, 0, NULL);
-                 AppendMenu (popupMenu, MF_STRING, QUIT, TEXT("&Quit\tAlt+F4"));
-                 AppendMenu (menuBar, MF_POPUP, (UINT)popupMenu, TEXT("&File"));
+                 AppendMenu (popupMenu, MF_STRING, QUIT, "&Quit\tAlt+F4");
+                 AppendMenu (menuBar, MF_POPUP, (UINT)popupMenu, "&File");
 				 SetMenu (hwnd, menuBar);
                  EnableMenuItem (popupMenu, COMPILE, MFS_GRAYED);
 
@@ -1085,15 +1085,15 @@ LPARAM lParam;
                                                 2, 32, 32, 32, 32, sizeof(TBBUTTON)); 
 
                  if (hWndToolBar == NULL ) {
-                    MessageBox (NULL, TEXT("Toolbar Bar not created!"), NULL, MB_OK );
+                    MessageBox (NULL, "Toolbar Bar not created!", NULL, MB_OK );
                     break;
 				 } 
 
                  SendMessage (hWndToolBar, TB_ENABLEBUTTON, (WPARAM) COMPILE, (LPARAM) MAKELONG (FALSE, 0));
 
                  GetClientRect( hwnd, &r );
-				 hEdit = CreateWindow( TEXT("EDIT"), 
-					                   TEXT(""), 
+				 hEdit = CreateWindow( "EDIT", 
+					                   "", 
 									   WS_CHILD|WS_BORDER|WS_HSCROLL|WS_VSCROLL|WS_VISIBLE|
 									   ES_AUTOHSCROLL|ES_AUTOVSCROLL|ES_MULTILINE|ES_READONLY,
 									   0,0,
@@ -1103,7 +1103,7 @@ LPARAM lParam;
 									   g_hInstance,
 									   NULL );
 
-                 StatusBar = CreateWindowEx (0L, STATUSCLASSNAME, TEXT(""), WS_CHILD | WS_BORDER | WS_VISIBLE, 
+                 StatusBar = CreateWindowEx (0L, STATUSCLASSNAME, "", WS_CHILD | WS_BORDER | WS_VISIBLE, 
                                              -100, -100, 10, 10,  hwnd, (HMENU)100, g_hInstance, NULL);
                  ShowWindow (StatusBar, SW_SHOWNORMAL);
                  UpdateWindow (StatusBar);
@@ -1121,7 +1121,7 @@ LPARAM lParam;
                     /* Set up tooltips for the combo box. */
                     SendMessage(hWndTT, TTM_ADDTOOL, 0, (LPARAM)(LPTOOLINFO)&lpToolInfo);
 				 } else
-                        MessageBox (NULL, TEXT("Could not get tooltip window handle."),NULL, MB_OK);
+                        MessageBox (NULL, "Could not get tooltip window handle.",NULL, MB_OK);
                  return 0;
 
             case WM_SIZE:
@@ -1154,13 +1154,13 @@ LPARAM lParam;
             case WM_KEYDOWN:
                  if ((wParam == VK_F7) && fileToOpen && (fileToOpen[0] != 0)) {
                     SetCursor(LoadCursor(NULL, IDC_WAIT));
-                    SetWindowText (hEdit, TEXT(""));
+                    SetWindowText (hEdit, "");
                     result = Makefile (hEdit, fileToOpen);
                     SetCursor(LoadCursor(NULL, IDC_ARROW));
                     if (result == FATAL_EXIT_CODE)
-                       MakeMessage (hEdit, TEXT("\r\n\r\nBuild process aborted because of errors"), FATAL_EXIT_CODE);
+                       MakeMessage (hEdit, "\r\n\r\nBuild process aborted because of errors", FATAL_EXIT_CODE);
                     else 
-                         MakeMessage (hEdit, TEXT("\r\n\r\nYou can build Amaya"), FATAL_EXIT_CODE);
+                         MakeMessage (hEdit, "\r\n\r\nYou can build Amaya", FATAL_EXIT_CODE);
 				 }
 		         break;
 
@@ -1181,7 +1181,7 @@ LPARAM lParam;
                              return TRUE;
 
                         case TBN_CUSTHELP: /* Need to display custom help. */
-                             MessageBox (hwnd, TEXT("This help is custom."), NULL, MB_OK);
+                             MessageBox (hwnd, "This help is custom.", NULL, MB_OK);
                              break;
 
                         case TBN_TOOLBARCHANGE: /* Done dragging a bitmap to the toolbar. */
@@ -1250,13 +1250,13 @@ LPARAM lParam;
 
                         case COMPILE: 
 							 SetCursor(LoadCursor(NULL, IDC_WAIT));
-							 SetWindowText (hEdit, TEXT(""));
+							 SetWindowText (hEdit, "");
                              result = Makefile (hEdit, fileToOpen);
  							 SetCursor(LoadCursor(NULL, IDC_ARROW));
                              if (result == FATAL_EXIT_CODE)
-                                MakeMessage (hEdit, TEXT("Build process aborted because of errors"), FATAL_EXIT_CODE);
+                                MakeMessage (hEdit, "Build process aborted because of errors", FATAL_EXIT_CODE);
                              else 
-                                 MakeMessage (hEdit, TEXT("\r\n\r\nYou can build Amaya"), COMP_SUCCESS);
+                                 MakeMessage (hEdit, "\r\n\r\nYou can build Amaya", COMP_SUCCESS);
                              break;
 
                         case QUIT: SendMessage (hwnd, WM_CLOSE, 0, 0);

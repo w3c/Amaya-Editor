@@ -73,61 +73,54 @@ static Element	LastDeletedElement = NULL;
 typedef CHAR_T     functName[10];
 static  functName  functionName[] =
 {
-   TEXT("Imaginary"),
-   TEXT("Real"),
-   TEXT("arccosh"),
-   TEXT("arccos"),
-   TEXT("arccoth"),
-   TEXT("arccot"),
-   TEXT("arccsch"),
-   TEXT("arccsc"),
-   TEXT("arcsech"),
-   TEXT("arcsec"),
-   TEXT("arcsinh"),
-   TEXT("arcsin"),
-   TEXT("arctanh"),
-   TEXT("arctan"),
-   TEXT("arg"),
-   TEXT("cosh"),
-   TEXT("cos"),
-   TEXT("coth"),
-   TEXT("cot"),
-   TEXT("csch"),
-   TEXT("csc"),
-   TEXT("curl"),
-   TEXT("det"),
-   TEXT("div"),
-   TEXT("gcd"),
-   TEXT("grad"),
-   TEXT("log"),
-   TEXT("ln"),
-   TEXT("max"),
-   TEXT("median"),
-   TEXT("min"),
-   TEXT("mode"),
-   TEXT("mod"),
-   TEXT("sech"),
-   TEXT("sec"),
-   TEXT("sinh"),
-   TEXT("sin"),
-   TEXT("tanh"),
-   TEXT("tan"),
-   TEXT("xor"),
-   TEXT("")
+   "Imaginary",
+   "Real",
+   "arccosh",
+   "arccos",
+   "arccoth",
+   "arccot",
+   "arccsch",
+   "arccsc",
+   "arcsech",
+   "arcsec",
+   "arcsinh",
+   "arcsin",
+   "arctanh",
+   "arctan",
+   "arg",
+   "cosh",
+   "cos",
+   "coth",
+   "cot",
+   "csch",
+   "csc",
+   "curl",
+   "det",
+   "div",
+   "gcd",
+   "grad",
+   "log",
+   "ln",
+   "max",
+   "median",
+   "min",
+   "mode",
+   "mod",
+   "sech",
+   "sec",
+   "sinh",
+   "sin",
+   "tanh",
+   "tan",
+   "xor",
+   ""
 };
 
 /*----------------------------------------------------------------------
    RemoveAttr
    Remove attribute of type attrTypeNum from element el, if it exists
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void RemoveAttr (Element el, Document doc, int attrTypeNum)
-#else /* __STDC__*/
-static void RemoveAttr (el, doc, attrTypeNum)
-     Element el;
-     Document doc;
-     int attrTypeNum;
-#endif /* __STDC__*/
 {
   ElementType	elType;
   AttributeType attrType;
@@ -145,14 +138,7 @@ static void RemoveAttr (el, doc, attrTypeNum)
    MathSetAttributes
    Set attributes of element el according to its content.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void MathSetAttributes (Element el, Document doc, Element* selEl)
-#else /* __STDC__*/
-static void MathSetAttributes (el, doc, selEl)
-     Element el;
-     Document doc;
-     Element* selEl;
-#endif /* __STDC__*/
 {
   ElementType	elType, parentType;
   Element	parent, grandParent;
@@ -209,15 +195,8 @@ static void MathSetAttributes (el, doc, selEl)
    Parameter index indicates the position where the text has to be split.
    Return the text element created within the next enclosing element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static Element      SplitTextInMathML (Document doc, Element el, int index, ThotBool *mrowCreated)
-#else
-static Element      SplitTextInMathML (doc, el, index, mrowCreated)
-Document            doc;
-Element             el;
-int                 index;
-ThotBool            *mrowCreated;
-#endif
+static Element SplitTextInMathML (Document doc, Element el, int index,
+				  ThotBool *mrowCreated)
 {
   Element            added, parent, row, leaf, prevLeaf, nextLeaf;
   ElementType        elType;
@@ -346,15 +325,7 @@ ThotBool            *mrowCreated;
   
   Delete element el if it's a placeholder.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void       DeleteIfPlaceholder (Element* el, Document doc, ThotBool record)
-#else
-static void       DeleteIfPlaceholder (el, doc, record)
-Element* el;
-Document doc;
-ThotBool record;
-
-#endif
+static void DeleteIfPlaceholder (Element *el, Document doc, ThotBool record)
 {
 Attribute	attr;
 ElementType	elType;
@@ -385,22 +356,14 @@ AttributeType	attrType;
   Return the new placeholder, if one has been created. Return NULL if
   no placeholder created.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static Element       InsertPlaceholder (Element el, ThotBool before, Document doc, ThotBool record)
-#else
-static Element       InsertPlaceholder (el, before, doc, record)
-Element el;
-ThotBool before;
-Document doc;
-ThotBool record;
-
-#endif
+static Element InsertPlaceholder (Element el, ThotBool before, Document doc,
+				  ThotBool record)
 {
-Element		sibling, placeholderEl;
-ElementType	elType;
-Attribute	attr;
-AttributeType	attrType;
-ThotBool		createConstruct, oldStructureChecking;
+  Element		sibling, placeholderEl;
+  ElementType	elType;
+  Attribute	attr;
+  AttributeType	attrType;
+  ThotBool		createConstruct, oldStructureChecking;
 
      placeholderEl = NULL;
 
@@ -460,14 +423,7 @@ ThotBool		createConstruct, oldStructureChecking;
   create an enclosing MROW, 
   except if el is a child of a MFENCED element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void	   CreateParentMROW (Element el, Document doc)
-#else
-static void        CreateParentMROW (el, doc)
-Element	el;
-Document doc;
-
-#endif
 {
   Element            sibling, row, parent, firstChild, lastChild, next,
                      previous;
@@ -576,15 +532,7 @@ Document doc;
    Delete all existing FencedSeparator elements in el and create new
    ones according to the value of attribute separators of parent MFENCED.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void RegenerateFencedSeparators (Element el, Document doc, ThotBool record)
-#else /* __STDC__*/
-static void RegenerateFencedSeparators (el, doc, record)
-     Element el;
-     Document doc;
-     ThotBool record;
-
-#endif /* __STDC__*/
 {
   Element	child, next;
   ElementType	elType;
@@ -614,13 +562,7 @@ static void RegenerateFencedSeparators (el, doc, record)
    Create two MF element at the beginning and at the end of the
    MROW element el.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         AddParen (Element el, Document doc)
-#else
-static void         AddParen (el, doc)
-Element             el;
-Document            doc;
-#endif
 {
   Element     child, fence, symbol, next;
   ElementType elType, symbType;
@@ -660,13 +602,7 @@ Document            doc;
    CreateMathConstruct
    Create a MathML construct at the current position
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CreateMathConstruct (int construct)
-#else
-static void         CreateMathConstruct (construct)
-int                 construct;
-
-#endif
 {
   Document           doc;
   Element            sibling, el, row, child, leaf, placeholderEl,
@@ -690,20 +626,20 @@ int                 construct;
   docSchema = TtaGetDocumentSSchema (doc);
   name = TtaGetSSchemaName (elType.ElSSchema);
 #ifdef GRAPHML
-  if (construct == 1 && ustrcmp (name, TEXT("GraphML")))
+  if (construct == 1 && ustrcmp (name, "GraphML"))
     /* Math button and selection is not in a SVG element */
 #else /* GRAPHML */
   if (construct == 1)
 #endif /* GRAPHML */
     /* Math button */
     {
-      if (ustrcmp (name, TEXT("MathML")))
+      if (ustrcmp (name, "MathML"))
 	/* selection is not in a MathML element */
 	{
 	  /* get the MathML schema for this document or associate it to the
 	     document if it is not associated yet */
-	  mathSchema = TtaNewNature (doc, docSchema, TEXT("MathML"),
-				     TEXT("MathMLP"));
+	  mathSchema = TtaNewNature (doc, docSchema, "MathML",
+				     "MathMLP");
 	  newType.ElTypeNum = MathML_EL_MathML;
 	  newType.ElSSchema = mathSchema;
 	  TtaCreateElement (newType, doc);
@@ -725,7 +661,7 @@ int                 construct;
   registered = FALSE;
   
   /* Check whether the selected element is a MathML element */
-  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0)
+  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
     {
       /* current selection is within a MathML element */
       mathSchema = elType.ElSSchema;
@@ -757,8 +693,8 @@ int                 construct;
       ok = FALSE;
       /* get the MathML schema for this document or associate it to the
 	 document if it is not associated yet */
-      mathSchema = TtaNewNature (doc, docSchema, TEXT("MathML"),
-				 TEXT("MathMLP"));
+      mathSchema = TtaNewNature (doc, docSchema, "MathML",
+				 "MathMLP");
       if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && c1 > 1)
 	{
 	  len = TtaGetTextLength (sibling);
@@ -885,7 +821,7 @@ int                 construct;
 #ifdef GRAPHML
 	      elType = TtaGetElementType (sibling);
 	      if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
-			   TEXT("GraphML")) == 0)
+			   "GraphML") == 0)
 		/* selection is within a GraphML element */
 		{
 		  elType.ElTypeNum = GraphML_EL_foreignObject;
@@ -1266,15 +1202,7 @@ int                 construct;
 /*----------------------------------------------------------------------
    CallbackMaths: manage Maths dialogue events.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CallbackMaths (int ref, int typedata, STRING data)
-#else
-static void         CallbackMaths (ref, typedata, data)
-int                 ref;
-int                 typedata;
-STRING              data;
-
-#endif
 {
   Document           doc;
 
@@ -1311,13 +1239,7 @@ STRING              data;
 /*----------------------------------------------------------------------
    CreateMathMenu creates the maths menus.           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CreateMathMenu (Document doc, View view)
-#else
-static void         CreateMathMenu (doc, view)
-Document            doc;
-View                view;
-#endif
 {
    if (!TtaGetDocumentAccessMode (doc))
      /* the document is in ReadOnly mode */
@@ -1346,13 +1268,7 @@ View                view;
 /*----------------------------------------------------------------------
    AddMathButton        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                AddMathButton (Document doc, View view)
-#else
-void                AddMathButton (doc, view)
-Document            doc;
-View                view;
-#endif
 {
   MathButton = TtaAddButton (doc, 1, iconMath, CreateMathMenu,
 			     "CreateMathMenu",
@@ -1363,14 +1279,7 @@ View                view;
 /*----------------------------------------------------------------------
   SwitchIconMath
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void              SwitchIconMath (Document doc, View view, ThotBool state)
-#else  /* __STDC__ */
-void              SwitchIconMath (doc, view, state)
-Document          doc;
- View             view;
-ThotBool          state;
-#endif /* __STDC__ */
 {
   if (state)
     TtaChangeButton (doc, view, MathButton, iconMath, state);
@@ -1381,14 +1290,7 @@ ThotBool          state;
 /*----------------------------------------------------------------------
   CreateMath
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateMath (Document document, View view)
-#else  /* __STDC__ */
-void                CreateMath (document, view)
-Document            document;
-View                view;
- 
-#endif /* __STDC__ */
 {
    CreateMathConstruct (1);
 }
@@ -1396,14 +1298,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateMROOT
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateMROOT (Document document, View view)
-#else  /* __STDC__ */
-void                CreateMROOT (document, view)
-Document            document;
-View                view;
- 
-#endif /* __STDC__ */
 {
    CreateMathConstruct (2);
 }
@@ -1411,14 +1306,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateMSQRT
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateMSQRT (Document document, View view)
-#else  /* __STDC__ */
-void                CreateMSQRT (document, view)
-Document            document;
-View                view;
- 
-#endif /* __STDC__ */
 {
    CreateMathConstruct (3);
 }
@@ -1426,14 +1314,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateMENCLOSE
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateMENCLOSE (Document document, View view)
-#else  /* __STDC__ */
-void                CreateMENCLOSE (document, view)
-Document            document;
-View                view;
- 
-#endif /* __STDC__ */
 {
    CreateMathConstruct (18);
 }
@@ -1441,14 +1322,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateMFRAC
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateMFRAC (Document document, View view)
-#else  /* __STDC__ */
-void                CreateMFRAC (document, view)
-Document            document;
-View                view;
- 
-#endif /* __STDC__ */
 {
    CreateMathConstruct (4);
 }
@@ -1456,14 +1330,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateMSUBSUP
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateMSUBSUP (Document document, View view)
-#else  /* __STDC__ */
-void                CreateMSUBSUP (document, view)
-Document            document;
-View                view;
- 
-#endif /* __STDC__ */
 {
    CreateMathConstruct (5);
 }
@@ -1471,14 +1338,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateMSUB
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateMSUB (Document document, View view)
-#else  /* __STDC__ */
-void                CreateMSUB (document, view)
-Document            document;
-View                view;
- 
-#endif /* __STDC__ */
 {
    CreateMathConstruct (6);
 }
@@ -1486,14 +1346,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateMSUP
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateMSUP (Document document, View view)
-#else  /* __STDC__ */
-void                CreateMSUP (document, view)
-Document            document;
-View                view;
- 
-#endif /* __STDC__ */
 {
    CreateMathConstruct (7);
 }
@@ -1501,14 +1354,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateMUNDEROVER
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateMUNDEROVER (Document document, View view)
-#else  /* __STDC__ */
-void                CreateMUNDEROVER (document, view)
-Document            document;
-View                view;
- 
-#endif /* __STDC__ */
 {
    CreateMathConstruct (8);
 }
@@ -1516,14 +1362,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateMUNDER
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateMUNDER (Document document, View view)
-#else  /* __STDC__ */
-void                CreateMUNDER (document, view)
-Document            document;
-View                view;
- 
-#endif /* __STDC__ */
 {
    CreateMathConstruct (9);
 }
@@ -1531,14 +1370,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateMOVER
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateMOVER (Document document, View view)
-#else  /* __STDC__ */
-void                CreateMOVER (document, view)
-Document            document;
-View                view;
- 
-#endif /* __STDC__ */
 {
    CreateMathConstruct (10);
 }
@@ -1546,14 +1378,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateMROW
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateMROW (Document document, View view)
-#else  /* __STDC__ */
-void                CreateMROW (document, view)
-Document            document;
-View                view;
- 
-#endif /* __STDC__ */
 {
    CreateMathConstruct (11);
 }
@@ -1561,14 +1386,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateMMULTISCRIPTS
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateMMULTISCRIPTS (Document document, View view)
-#else  /* __STDC__ */
-void                CreateMMULTISCRIPTS (document, view)
-Document            document;
-View                view;
- 
-#endif /* __STDC__ */
 {
    CreateMathConstruct (12);
 }
@@ -1576,14 +1394,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateMTABLE
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateMTABLE (Document document, View view)
-#else  /* __STDC__ */
-void                CreateMTABLE (document, view)
-Document            document;
-View                view;
- 
-#endif /* __STDC__ */
 {
    CreateMathConstruct (13);
 }
@@ -1594,13 +1405,7 @@ View                view;
  If el is a MROW element with only one child, remove the MROW element
  and replace it by its child.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void CheckMROW (Element* el, Document doc)
-#else /* __STDC__*/
-static void CheckMROW (el, doc)
-  Element* el;
-  Document doc;
-#endif /* __STDC__*/
 {
   Element	child, firstChild, next;
   ElementType	elType;
@@ -1664,15 +1469,8 @@ static void CheckMROW (el, doc)
 /*----------------------------------------------------------------------
  RoundSelection
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void RoundSelection (Element *firstSel, Element *lastSel, int *firstChar, int *lastChar)
-#else /* __STDC__*/
-static void RoundSelection (firstSel, lastSel, firstChar, lastChar)
-     Element *firstSel;
-     Element *lastSel;
-     int *firstChar;
-     int *lastChar;
-#endif /* __STDC__*/
+static void RoundSelection (Element *firstSel, Element *lastSel,
+			    int *firstChar, int *lastChar)
 {
    ElementType  elType;
    Element      sibling;
@@ -1731,13 +1529,7 @@ static void RoundSelection (firstSel, lastSel, firstChar, lastChar)
 /*----------------------------------------------------------------------
  CreateCharStringElement
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void CreateCharStringElement (int typeNum, Document doc)
-#else /* __STDC__*/
-static void CreateCharStringElement (typeNum, doc)
-     int typeNum;
-     Document doc;
-#endif /* __STDC__*/
 {
    ElementType    elType;
    AttributeType  attrType;
@@ -1762,7 +1554,7 @@ static void CreateCharStringElement (typeNum, doc)
       /* selection seems to be empty. Let's see... */
       {
 	elType = TtaGetElementType (firstSel);
-        if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0
+        if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0
             && (elType.ElTypeNum == MathML_EL_MTEXT ||
 		elType.ElTypeNum == MathML_EL_MI ||
 		elType.ElTypeNum == MathML_EL_MN ||
@@ -1804,7 +1596,7 @@ static void CreateCharStringElement (typeNum, doc)
 
    /* if not within a MathML element, nothing to do */
    elType = TtaGetElementType (firstSel);
-   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) != 0)
+   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
       return;
 
    TtaSetDisplayMode (doc, DeferredDisplay);
@@ -1971,13 +1763,7 @@ static void CreateCharStringElement (typeNum, doc)
 /*----------------------------------------------------------------------
  CreateMTEXT
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void CreateMTEXT (Document document, View view)
-#else /* __STDC__*/
-void CreateMTEXT (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
    CreateCharStringElement (MathML_EL_MTEXT, document);
 }
@@ -1985,13 +1771,7 @@ void CreateMTEXT (document, view)
 /*----------------------------------------------------------------------
  CreateMI
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void CreateMI (Document document, View view)
-#else /* __STDC__*/
-void CreateMI (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
    CreateCharStringElement (MathML_EL_MI, document);
 }
@@ -1999,13 +1779,7 @@ void CreateMI (document, view)
 /*----------------------------------------------------------------------
  CreateMN
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void CreateMN (Document document, View view)
-#else /* __STDC__*/
-void CreateMN (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
    CreateCharStringElement (MathML_EL_MN, document);
 }
@@ -2013,13 +1787,7 @@ void CreateMN (document, view)
 /*----------------------------------------------------------------------
 CreateMO
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void CreateMO (Document document, View view)
-#else /* __STDC__*/
-void CreateMO (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
    CreateCharStringElement (MathML_EL_MO, document);
 }
@@ -2027,13 +1795,7 @@ void CreateMO (document, view)
 /*----------------------------------------------------------------------
    A new element has been selected. Synchronize selection in source view.      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                MathSelectionChanged (NotifyElement * event)
-#else  /* __STDC__ */
-void                MathSelectionChanged (event)
-NotifyElement      *event;
-
-#endif /* __STDC__ */
 {
    SynchronizeSourceView (event);
 }
@@ -2042,12 +1804,7 @@ NotifyElement      *event;
  MathMoveForward
  Moves the caret to the next position in the MathML structure
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool MathMoveForward ()
-#else /* __STDC__*/
-static ThotBool MathMoveForward ()
-     
-#endif /* __STDC__*/
 {
   Document      doc;
   Element       el, nextEl, leaf;
@@ -2079,7 +1836,7 @@ static ThotBool MathMoveForward ()
       if (nextEl)
 	{
 	  elType = TtaGetElementType (nextEl);
-	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),TEXT("MathML")) &&
+	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),"MathML") &&
 	      (elType.ElTypeNum == MathML_EL_MSPACE ||
 	       elType.ElTypeNum == MathML_EL_MGLYPH ||
 	       elType.ElTypeNum == MathML_EL_MALIGNMARK ||
@@ -2092,7 +1849,7 @@ static ThotBool MathMoveForward ()
 	  else
 	    {
 	      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
-			    TEXT("MathML")) &&
+			    "MathML") &&
 		  elType.ElTypeNum == MathML_EL_MTABLE)
 		/* don't select within hidden element MTable_head. Skip it */
 		{
@@ -2108,7 +1865,7 @@ static ThotBool MathMoveForward ()
 		    {
 		      elType = TtaGetElementType (leaf);
 		      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
-				    TEXT("MathML")))
+				    "MathML"))
 			/* that leaf is still in the MathML namespace */
 			{
 			  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
@@ -2137,12 +1894,7 @@ static ThotBool MathMoveForward ()
  MathMoveBackward
  Moves the caret to the previous position in the MathML structure
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool MathMoveBackward ()
-#else /* __STDC__*/
-static ThotBool MathMoveBackward ()
-     
-#endif /* __STDC__*/
 {
   Document    doc;
   Element     el, prevEl, leaf;
@@ -2173,7 +1925,7 @@ static ThotBool MathMoveBackward ()
       if (prevEl)
 	{
 	  elType = TtaGetElementType (prevEl);
-	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),TEXT("MathML")) &&
+	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),"MathML") &&
 	      (elType.ElTypeNum == MathML_EL_MSPACE ||
 	       elType.ElTypeNum == MathML_EL_MGLYPH ||
 	       elType.ElTypeNum == MathML_EL_MALIGNMARK ||
@@ -2186,7 +1938,7 @@ static ThotBool MathMoveBackward ()
 	  else
 	    {
 	      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
-			    TEXT("MathML")) &&
+			    "MathML") &&
 		  elType.ElTypeNum == MathML_EL_MTable_head)
 		/* don't select within hidden element MTable_head. Skip it */
 		prevEl = TtaGetPredecessor (prevEl);
@@ -2198,7 +1950,7 @@ static ThotBool MathMoveBackward ()
 		    {
 		      elType = TtaGetElementType (leaf);
 		      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
-				    TEXT("MathML")))
+				    "MathML"))
 			/* that leaf is still in the MathML namespace */
 			{
 			  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
@@ -2258,13 +2010,7 @@ void                InitMathML ()
    GetCharType
    returns the type of character c (MN, MI or MO).
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int GetCharType (UCHAR_T c, CHAR_T alphabet)
-#else /* __STDC__*/
-static int GetCharType (c, alphabet)
-UCHAR_T c;
-CHAR_T  alphabet;
-#endif /* __STDC__*/
 {
   int	ret;
 
@@ -2299,18 +2045,8 @@ CHAR_T  alphabet;
    MergeMathEl
    merge element el2 with element el
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void MergeMathEl (Element el, Element el2, ThotBool before,
 			 Element *newSelEl, int *newSelChar, Document doc)
-#else /* __STDC__*/
-static void MergeMathEl (el, el2, before, newSelEl, newSelChar, doc)
-     Element el;
-     Element el2;
-     ThotBool before;
-     Element *newSelEl;
-     int *newSelChar;
-     Document doc;
-#endif /* __STDC__*/
 {
   Element	textEl2, nextEl, prevEl, nEl;
   int           len;
@@ -2371,13 +2107,7 @@ static void MergeMathEl (el, el2, before, newSelEl, newSelChar, doc)
    ClosestLeaf
    return the Closest TEXT element for element el;
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static Element ClosestLeaf (Element el, int* pos)
-#else /* __STDC__*/
-static Element ClosestLeaf (el, pos)
-     Element el;
-     int* pos;
-#endif /* __STDC__*/
 {
    Element	elem, prev, next, child, leaf, parent;
    ElementType	elType;
@@ -2450,17 +2180,9 @@ static Element ClosestLeaf (el, pos)
    SeparateFunctionNames
    
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void SeparateFunctionNames (Element *firstEl, Element lastEl, Document doc, Element *newSelEl, int *newSelChar)
-#else /* __STDC__*/
-static void SeparateFunctionNames (firstEl, lastEl, doc, newSelEl, newSelChar)
-   Element *firstEl;
-   Element lastEl;
-   Document doc;
-   Element *newSelEl;
-   int *newSelChar;
-#endif /* __STDC__*/
-
+static void SeparateFunctionNames (Element *firstEl, Element lastEl,
+				   Document doc, Element *newSelEl,
+				   int *newSelChar)
 {
   ElementType    elType;
   Element        el, nextEl, textEl, nextTextEl, firstTextEl, newEl, newText,
@@ -2632,7 +2354,7 @@ static void SeparateFunctionNames (firstEl, lastEl, doc, newSelEl, newSelChar)
                        func++; 
                        }
 		     while (!stop &&
-			    ustrcmp (functionName[func], TEXT("")) != 0);
+			    ustrcmp (functionName[func], "") != 0);
 		     }
 	        }
 	     /* the whole text leaf has been checked */
@@ -2696,15 +2418,7 @@ static void SeparateFunctionNames (firstEl, lastEl, doc, newSelEl, newSelChar)
    Parse the new content and create the appropriate MI, MO, MN elements
    according to the new contents.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void ParseMathString (Element theText, Element theElem, Document doc)
-#else /* __STDC__*/
-static void ParseMathString (theText, theElem, doc)
-     Element theText;
-     Element theElem;
-     Document doc;
-#endif /* __STDC__*/
-
 {
   Element	el, selEl, prevEl, nextEl, textEl, newEl, lastEl,
 		firstEl, newSelEl, prev, next, parent, placeholderEl;
@@ -3112,13 +2826,7 @@ static void ParseMathString (theText, theElem, doc)
    SetAttrParseMe
    associate a IntParseMe attribute with element el in document doc
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void SetAttrParseMe (Element el, Document doc)
-#else /* __STDC__*/
-static void SetAttrParseMe (el, doc)
-     Element el;
-     Document doc;
-#endif /* __STDC__*/
 {
   ElementType    elType;
   AttributeType  attrType;
@@ -3137,13 +2845,7 @@ static void SetAttrParseMe (el, doc)
    Insert an entity at the currently selected position.
    entityName is the name of the entity to be created.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void InsertMathEntity (USTRING entityName, Document document)
-#else /* __STDC__*/
-static void InsertMathEntity (entityName, document)
-     USTRING entityName;
-     Document document;
-#endif /* __STDC__*/
 {
   Element       firstSel, lastSel, el, el1, parent, sibling;
   ElementType   elType, elType1;
@@ -3161,7 +2863,7 @@ static void InsertMathEntity (entityName, document)
   TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
   /* if not within a MathML element, nothing to do */
   elType = TtaGetElementType (firstSel);
-  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) != 0)
+  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
     return;
   TtaGiveLastSelectedElement (document, &lastSel, &i, &lastChar);
   TtaOpenUndoSequence (document, firstSel, lastSel, firstChar, lastChar);
@@ -3233,9 +2935,9 @@ static void InsertMathEntity (entityName, document)
   attrType.AttrTypeNum = MathML_ATTR_EntityName;
   attr =  TtaNewAttribute (attrType);
   TtaAttachAttribute (el, attr, document);
-  ustrcpy (buffer, TEXT("&"));
+  ustrcpy (buffer, "&");
   ustrcat (buffer, entityName);
-  ustrcat (buffer, TEXT(";"));
+  ustrcat (buffer, ";");
   TtaSetAttributeText (attr, buffer, el, document);
 
   found = MapXMLEntity (MATH_TYPE, entityName, &value);
@@ -3251,7 +2953,7 @@ static void InsertMathEntity (entityName, document)
       if (value < 255)
 	{
 	  bufEntity[0] = ((UCHAR_T) value);
-	  bufEntity[1] = WC_EOS;
+	  bufEntity[1] = EOS;
 	  lang = TtaGetLanguageIdFromAlphabet('L');
 	}
       else
@@ -3273,13 +2975,7 @@ static void InsertMathEntity (entityName, document)
  Display a dialogue box to allow input of a character entity name
  and create the corresponding entity at the current selection position
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void CreateMathEntity (Document document, View view)
-#else /* __STDC__*/
-void CreateMathEntity (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
    Element       firstSel;
    ElementType   elType;
@@ -3295,7 +2991,7 @@ void CreateMathEntity (document, view)
 
    /* if not within a MathML element, nothing to do */
    elType = TtaGetElementType (firstSel);
-   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) != 0)
+   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
       return;
    
    MathMLEntityName[0] = EOS;
@@ -3320,13 +3016,7 @@ void CreateMathEntity (document, view)
  CreateInvisibleTimes
  Insert a character entity InvisibleTimes at the current position
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void CreateInvisibleTimes (Document document, View view)
-#else /* __STDC__*/
-void CreateInvisibleTimes (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
    Element       firstSel;
    ElementType   elType;
@@ -3342,22 +3032,16 @@ void CreateInvisibleTimes (document, view)
 
    /* if not within a MathML element, nothing to do */
    elType = TtaGetElementType (firstSel);
-   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) != 0)
+   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
       return;
-   InsertMathEntity (TEXT("InvisibleTimes"), document);
+   InsertMathEntity ("InvisibleTimes", document);
 }
 
 /*----------------------------------------------------------------------
  CreateApplyFunction
  Insert a character entity CreateAlppyFunction at the current position
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void CreateApplyFunction (Document document, View view)
-#else /* __STDC__*/
-void CreateApplyFunction (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
    Element       firstSel;
    ElementType   elType;
@@ -3373,9 +3057,9 @@ void CreateApplyFunction (document, view)
 
    /* if not within a MathML element, nothing to do */
    elType = TtaGetElementType (firstSel);
-   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) != 0)
+   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
       return;
-   InsertMathEntity (TEXT("ApplyFunction"), document);
+   InsertMathEntity ("ApplyFunction", document);
 }
 
 /*----------------------------------------------------------------------
@@ -3383,15 +3067,8 @@ void CreateApplyFunction (document, view)
    associate attribute attrType with value val to element el if it is
    of type MI, MTEXT, MO,..., or to its descendant of that type.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void SetElementCharFont (Element el, AttributeType attrType, int val, Document doc)
-#else /* __STDC__*/
-static void SetElementCharFont (el, attrType, val, doc)
-     Element el;
-     AttributeType attrType;
-     int val;
-     Document doc;
-#endif /* __STDC__*/
+static void SetElementCharFont (Element el, AttributeType attrType, int val,
+				Document doc)
 {
   ElementType         elType;
   Attribute           attr, intAttr;
@@ -3454,13 +3131,7 @@ static void SetElementCharFont (el, attrType, val, doc)
    SetMathCharFont
    The user has clicked one of the buttons: Emphasis, Strong, Code
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void SetMathCharFont (Document doc, int attribute)
-#else /* __STDC__*/
-void SetMathCharFont (doc, attribute)
-     Document doc;
-     int attribute;
-#endif /* __STDC__*/
 {
   Element             firstSel, lastSel, el, next, leaf;
   ElementType         elType;
@@ -3522,7 +3193,7 @@ void SetMathCharFont (doc, attribute)
 	   lastSel = firstSel;
 	}
      }
-  attrType.AttrSSchema = TtaGetSSchema (TEXT("MathML"), doc);
+  attrType.AttrSSchema = TtaGetSSchema ("MathML", doc);
   attrType.AttrTypeNum = attribute;
   attr = TtaGetAttribute (firstSel, attrType);
   val = 1;
@@ -3579,12 +3250,7 @@ void SetMathCharFont (doc, attribute)
    A new MTEXT element has just been created by the user, not with a
    command, but simply by starting to type some text.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void MtextCreated (NotifyElement *event)
-#else /* __STDC__*/
-void MtextCreated(event)
-     NotifyElement *event;
-#endif /* __STDC__*/
 {
   /* associate a IntParseMe attribute with the new MTEXT element */
   SetAttrParseMe (event->element, event->document);
@@ -3595,12 +3261,7 @@ void MtextCreated(event)
    The content of an element MTEXT, MI, MO, MN, or MS has been modified.
    Parse the new content and create the appropriate MI, MO, MN elements.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void MathStringModified (NotifyOnTarget *event)
-#else /* __STDC__*/
-void MathStringModified (event)
-     NotifyOnTarget *event;
-#endif /* __STDC__*/
 {
   /* if the event comes from function BreakElement, don't do anything:
      the user just want to split that character string */
@@ -3613,12 +3274,7 @@ void MathStringModified (event)
  An new text string has been created in a MathML element.
  Parse its contents.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void NewMathString (NotifyElement *event)
-#else /* __STDC__*/
-void NewMathString(event)
-     NotifyElement *event;
-#endif /* __STDC__*/
 {
    RemoveAttr (event->element, event->document, MathML_ATTR_EntityName);
    if (TtaGetTextLength (event->element) > 0)
@@ -3633,12 +3289,7 @@ void NewMathString(event)
  If the element is an XLink, update the link.
  If an enclosing MROW element is needed create it.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void MathElementPasted (NotifyElement *event)
-#else /* __STDC__*/
-void MathElementPasted(event)
-     NotifyElement *event;
-#endif /* __STDC__*/
 {
    Element	placeholderEl, parent;
    ElementType	elType, elTypeParent;
@@ -3693,12 +3344,7 @@ void MathElementPasted(event)
  This function is called by the DELETE command for each selected element
  and for all their descendants.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool MathElementWillBeDeleted (NotifyElement *event)
-#else /* __STDC__*/
-ThotBool MathElementWillBeDeleted(event)
-     NotifyElement *event;
-#endif /* __STDC__*/
 {
   /* TTE_STANDARD_DELETE_LAST_ITEM indicates the last element to be
      deleted, but function MathElementWillBeDeleted is called afterwards
@@ -3727,14 +3373,7 @@ ThotBool MathElementWillBeDeleted(event)
 /*----------------------------------------------------------------------
   DeleteMColumn
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DeleteMColumn (Document document, View view)
-#else  /* __STDC__ */
-void                DeleteMColumn (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
+void DeleteMColumn (Document document, View view)
 {
    Element             el, cell, colHead, selCell, leaf;
    ElementType         elType;
@@ -3820,12 +3459,7 @@ View                view;
  Create the necessary placeholders.
  Remove the enclosing MROW element if it has only one child.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void MathElementDeleted (NotifyElement *event)
-#else /* __STDC__*/
-void MathElementDeleted(event)
-     NotifyElement *event;
-#endif /* __STDC__*/
 {
    Element	sibling, placeholderEl, parent, child, grandChild;
    ElementType	parentType;
@@ -3965,12 +3599,7 @@ void MathElementDeleted(event)
  The opening or closing fence element in a MFENCED element has been modified
  by the user. Update the corresponding open or close attribute.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void FenceModified (NotifyOnValue *event)
-#else /* __STDC__*/
-void FenceModified(event)
-     NotifyOnValue *event;
-#endif /* __STDC__*/
 {
   Element	mfencedEl;
   ElementType	elType;
@@ -4002,12 +3631,7 @@ void FenceModified(event)
  An attribute other has been created by the user. If that attribute is on
  a TEXT element, move it to the parent.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void MathAttrOtherCreated (NotifyAttribute *event)
-#else /* __STDC__*/
-void MathAttrOtherCreated (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
    AttrToSpan (event->element, event->attribute, event->document);
 }
@@ -4017,13 +3641,7 @@ void MathAttrOtherCreated (event)
    Called by Thot when building the Attribute menu.
    Prevent Thot from including a deprecated attribute in the menu.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            MathStyleAttrInMenu (NotifyAttribute * event)
-#else  /* __STDC__ */
-ThotBool            MathStyleAttrInMenu (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
 {
   return TRUE;	/* don't put a deprecated attribute in the menu */
 }
@@ -4032,12 +3650,7 @@ NotifyAttribute    *event;
  MathPresentAttrCreated
  An attribute fontsize has been created or updated by the user.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void MathPresentAttrCreated (NotifyAttribute *event)
-#else /* __STDC__*/
-void MathPresentAttrCreated (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
 #define buflen 200
   STRING           value;
@@ -4045,7 +3658,7 @@ void MathPresentAttrCreated (event)
   AttributeType    attrType;
 
   value = TtaAllocString (buflen);
-  value[0] = WC_EOS;
+  value[0] = EOS;
   length = TtaGetTextAttributeLength (event->attribute);
   if (length >= buflen)
      length = buflen - 1;
@@ -4065,18 +3678,13 @@ void MathPresentAttrCreated (event)
  MathAttrFontsizeDelete
  The user is deleting an attribute fontsize.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool MathAttrFontsizeDelete (NotifyAttribute *event)
-#else /* __STDC__*/
-ThotBool MathAttrFontsizeDelete(event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   /* ask the CSS handler to remove the effect of the CSS property
      font-size */
   /* in the statement below, "10pt" is meaningless. It's here just to
      make the CSS parser happy */
-  ParseHTMLSpecificStyle (event->element, TEXT("font-size: 10pt"),
+  ParseHTMLSpecificStyle (event->element, "font-size: 10pt",
 			  event->document, 0, TRUE);
   return FALSE; /* let Thot perform normal operation */
 }
@@ -4085,18 +3693,13 @@ ThotBool MathAttrFontsizeDelete(event)
  MathAttrLspaceDelete
  The user is deleting an attribute lspace.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool MathAttrLspaceDelete (NotifyAttribute *event)
-#else /* __STDC__*/
-ThotBool MathAttrLspaceDelete(event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   /* ask the CSS handler to remove the effect of the CSS property
      padding-left */
   /* in the statement below, "10pt" is meaningless. It's here just to
      make the CSS parser happy */
-  ParseHTMLSpecificStyle (event->element, TEXT("padding-left: 10pt"),
+  ParseHTMLSpecificStyle (event->element, "padding-left: 10pt",
 			  event->document, 0, TRUE);
   return FALSE; /* let Thot perform normal operation */
 }
@@ -4105,18 +3708,13 @@ ThotBool MathAttrLspaceDelete(event)
  MathAttrRspaceDelete
  The user is deleting an attribute rspace.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool MathAttrRspaceDelete (NotifyAttribute *event)
-#else /* __STDC__*/
-ThotBool MathAttrRspaceDelete(event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   /* ask the CSS handler to remove the effect of the CSS property
      padding-right */
   /* in the statement below, "10pt" is meaningless. It's here just to
      make the CSS parser happy */
-  ParseHTMLSpecificStyle (event->element, TEXT("padding-right: 10pt"),
+  ParseHTMLSpecificStyle (event->element, "padding-right: 10pt",
 			  event->document, 0, TRUE);
   return FALSE; /* let Thot perform normal operation */
 }
@@ -4125,18 +3723,13 @@ ThotBool MathAttrRspaceDelete(event)
  MathAttrFontfamilyCreated
  An attribute fontfamily has been created or modified by the user.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void MathAttrFontfamilyCreated (NotifyAttribute *event)
-#else /* __STDC__*/
-void MathAttrFontfamilyCreated (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   STRING           value;
   int              length;
 
   value = TtaAllocString (buflen);
-  value[0] = WC_EOS;
+  value[0] = EOS;
   length = TtaGetTextAttributeLength (event->attribute);
   if (length >= buflen)
      length = buflen - 1;
@@ -4151,17 +3744,12 @@ void MathAttrFontfamilyCreated (event)
  MathAttrFontfamilyDelete
  The user is deleting an attribute fontfamily.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool MathAttrFontfamilyDelete (NotifyAttribute *event)
-#else /* __STDC__*/
-ThotBool MathAttrFontfamilyDelete (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   /* ask the CSS handler to remove the effect of property font-family */
   /* in the statement below, "serif" is meaningless. It's here just to
      make the CSS parser happy */
-  ParseHTMLSpecificStyle (event->element, TEXT("font-family: serif"),
+  ParseHTMLSpecificStyle (event->element, "font-family: serif",
 			  event->document, 0, TRUE);
   return FALSE; /* let Thot perform normal operation */
 }
@@ -4170,18 +3758,13 @@ ThotBool MathAttrFontfamilyDelete (event)
  MathAttrColorCreated
  An attribute color has been created or modified by the user.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void MathAttrColorCreated (NotifyAttribute *event)
-#else /* __STDC__*/
-void MathAttrColorCreated (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   STRING           value;
   int              length;
 
   value = TtaAllocString (buflen);
-  value[0] = WC_EOS;
+  value[0] = EOS;
   length = TtaGetTextAttributeLength (event->attribute);
   if (length >= buflen)
      length = buflen - 1;
@@ -4196,12 +3779,7 @@ void MathAttrColorCreated (event)
  MathAttrColorDelete
  The user is deleting an attribute color.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool MathAttrColorDelete (NotifyAttribute *event)
-#else /* __STDC__*/
-ThotBool MathAttrColorDelete(event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   HTMLResetForegroundColor (event->document, event->element);
   return FALSE; /* let Thot perform normal operation */
@@ -4211,12 +3789,7 @@ ThotBool MathAttrColorDelete(event)
  MathAttrFormChanged
  An attribute form has been created or modified by the user.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void MathAttrFormChanged (NotifyAttribute *event)
-#else /* __STDC__*/
-void MathAttrFormChanged (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   SetIntAddSpaceAttr (event->element, event->document);
 }
@@ -4225,18 +3798,13 @@ void MathAttrFormChanged (event)
  MathAttrBackgroundCreated
  An attribute background has been created or modified by the user.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void MathAttrBackgroundCreated (NotifyAttribute *event)
-#else /* __STDC__*/
-void MathAttrBackgroundCreated (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   STRING           value;
   int              length;
 
   value = TtaAllocString (buflen);
-  value[0] = WC_EOS;
+  value[0] = EOS;
   length = TtaGetTextAttributeLength (event->attribute);
   if (length >= buflen)
      length = buflen - 1;
@@ -4251,12 +3819,7 @@ void MathAttrBackgroundCreated (event)
  MathAttrBackgroundDelete
  The user is deleting an attribute background.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool MathAttrBackgroundDelete (NotifyAttribute *event)
-#else /* __STDC__*/
-ThotBool MathAttrBackgroundDelete(event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   HTMLResetBackgroundColor (event->document, event->element);
   return FALSE; /* let Thot perform normal operation */
@@ -4268,12 +3831,7 @@ ThotBool MathAttrBackgroundDelete(event)
  by the user.
  Change the Thot leaf child accordingly.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void AttrStretchyChanged (NotifyAttribute *event)
-#else /* __STDC__*/
-void AttrStretchyChanged (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   int		val;
   ElementType   elType;
@@ -4315,12 +3873,7 @@ void AttrStretchyChanged (event)
  Attribute width, height or depth in a mspace or mpadded element has been
  modified by the user.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void AttrSpacingCreated (NotifyAttribute *event)
-#else /* __STDC__*/
-void AttrSpacingCreated (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   STRING           value;
   int              length, attrKind;
@@ -4330,7 +3883,7 @@ void AttrSpacingCreated (event)
   if (length > 0)
      {
      value = TtaAllocString (length+1);
-     value[0] = WC_EOS;
+     value[0] = EOS;
      TtaGiveTextAttributeValue (event->attribute, value, &length);
      TtaGiveAttributeType (event->attribute, &attrType, &attrKind);
      MathMLSpacingAttr (event->document, event->element, value,
@@ -4343,12 +3896,7 @@ void AttrSpacingCreated (event)
  AttrSpacingDelete
  The user is deleting an attribute scriptlevel.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool AttrSpacingDelete (NotifyAttribute *event)
-#else /* __STDC__*/
-ThotBool AttrSpacingDelete (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   int              attrKind;
   AttributeType    attrType;
@@ -4363,17 +3911,12 @@ ThotBool AttrSpacingDelete (event)
  AttrLinethicknessDelete
  The user is deleting an attribute linethickness.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool AttrLinethicknessDelete (NotifyAttribute *event)
-#else /* __STDC__*/
-ThotBool AttrLinethicknessDelete (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   /* ask the CSS handler to remove the effect of property stroke-width */
   /* in the statement below, "1pt" is meaningless. It's here just to
      make the CSS parser happy */
-  ParseHTMLSpecificStyle (event->element, TEXT("stroke-width: 1pt"),
+  ParseHTMLSpecificStyle (event->element, "stroke-width: 1pt",
 			  event->document, 0, TRUE);
   return FALSE; /* let Thot perform normal operation */
 }
@@ -4384,12 +3927,7 @@ ThotBool AttrLinethicknessDelete (event)
  by the user.
  Change the type of the element (MFRAC/BevelledMFRAC) accordingly.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void AttrBevelledChanged (NotifyAttribute *event)
-#else /* __STDC__*/
-void AttrBevelledChanged (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   int		val;
   ElementType   elType;
@@ -4435,12 +3973,7 @@ void AttrBevelledChanged (event)
  AttrScriptlevelCreated
  An attribute scriptlevel has been created or updated by the user.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void AttrScriptlevelCreated (NotifyAttribute *event)
-#else /* __STDC__*/
-void AttrScriptlevelCreated (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   STRING           value;
   int              length;
@@ -4449,7 +3982,7 @@ void AttrScriptlevelCreated (event)
   if (length > 0)
      {
      value = TtaAllocString (length+1);
-     value[0] = WC_EOS;
+     value[0] = EOS;
      TtaGiveTextAttributeValue (event->attribute, value, &length);
      MathMLSetScriptLevel (event->document, event->element, value);
      TtaFreeMemory (value);
@@ -4460,12 +3993,7 @@ void AttrScriptlevelCreated (event)
  AttrScriptlevelDelete
  The user is deleting an attribute scriptlevel.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool AttrScriptlevelDelete (NotifyAttribute *event)
-#else /* __STDC__*/
-ThotBool AttrScriptlevelDelete (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   MathMLSetScriptLevel (event->document, event->element, NULL);
   return FALSE; /* let Thot perform normal operation */
@@ -4476,12 +4004,7 @@ ThotBool AttrScriptlevelDelete (event)
  Attribute open or close in a MFENCED element has been modified or deleted
  by the user. Update the corresponding fence element.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void AttrOpenCloseChanged (NotifyAttribute *event)
-#else /* __STDC__*/
-void AttrOpenCloseChanged (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   Element	fence, content;
   int		length;
@@ -4499,9 +4022,9 @@ void AttrOpenCloseChanged (event)
       if (event->attribute == NULL)
 	/* Attribute has been deleted */
 	if (event->attributeType.AttrTypeNum == MathML_ATTR_open)
-	   text[0] = TEXT('(');	/* default value for open */
+	   text[0] = '(';	/* default value for open */
 	else
-	   text[0] = TEXT(')');	/* default value for close */
+	   text[0] = ')';	/* default value for close */
       else
 	/* attribute has been modified, get its new value */
 	{
@@ -4519,12 +4042,7 @@ void AttrOpenCloseChanged (event)
  The content of a FenceSeparator element has been modified by the user
  in a MFENCED element.  Update the corresponding separators attribute.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void FencedSeparatorModified (NotifyOnTarget *event)
-#else /* __STDC__*/
-void FencedSeparatorModified(event)
-     NotifyOnTarget *event;
-#endif /* __STDC__*/
 {
   Element	mfencedEl, fencedExpEl, child, content;
   Attribute	attr;
@@ -4583,12 +4101,7 @@ void FencedSeparatorModified(event)
  An attribute separators has been created, modified or deleted by the user
  for a MFENCED element. Update the corresponding FenceSeparator elements.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void AttrSeparatorsChanged (NotifyAttribute *event)
-#else /* __STDC__*/
-void AttrSeparatorsChanged (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   Element	child, fencedExpression;
   ElementType	elType;
@@ -4617,12 +4130,7 @@ void AttrSeparatorsChanged (event)
  An attribute subscriptshift or superscriptshift has been created or
  updated by the user.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void AttrScriptShiftCreated (NotifyAttribute *event)
-#else /* __STDC__*/
-void AttrScriptShiftCreated (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   STRING           value;
   int              length, attrKind;
@@ -4632,7 +4140,7 @@ void AttrScriptShiftCreated (event)
   if (length > 0)
      {
      value = TtaAllocString (length+1);
-     value[0] = WC_EOS;
+     value[0] = EOS;
      TtaGiveTextAttributeValue (event->attribute, value, &length);
      TtaGiveAttributeType (event->attribute, &attrType, &attrKind);
      MathMLScriptShift (event->document, event->element, value,
@@ -4645,12 +4153,7 @@ void AttrScriptShiftCreated (event)
  AttrScriptShiftDelete
  The user is deleting an attribute subscriptshift or superscriptshift.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool AttrScriptShiftDelete (NotifyAttribute *event)
-#else /* __STDC__*/
-ThotBool AttrScriptShiftDelete (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   int              attrKind;
   AttributeType    attrType;
@@ -4666,13 +4169,7 @@ ThotBool AttrScriptShiftDelete (event)
  Remove attribute IntRowAlign from element row if there is no rowalign_mtr
  attribut on this element.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void DeleteIntRowAlign (Element row, Document doc)
-#else /* __STDC__*/
-static void DeleteIntRowAlign (row, doc)
-Element row;
-Document doc;
-#endif /* __STDC__*/
 {
   ElementType   elType;
   AttributeType attrType;
@@ -4696,14 +4193,7 @@ Document doc;
  Set attribute IntRowAlign for element row unless this element already has
  a rowalign_mtr attribute
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void SetIntRowAlign (Element row, int val, Document doc)
-#else /* __STDC__*/
-static void SetIntRowAlign (row, val, doc)
-Element row;
-int val;
-Document doc;
-#endif /* __STDC__*/
 {
   ElementType   elType;
   AttributeType attrType;
@@ -4732,17 +4222,8 @@ Document doc;
    (if delete) for element el in document doc. Update the IntRowAlign
    attributes of all enclosed mrow elements accordingly.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void      HandleRowalignAttribute (Attribute attr, Element el, Document doc,
 				   ThotBool delete)
-#else
-void      HandleRowalignAttribute (attr, el, doc, delete)
-Attribute	attr;
-Element		el;
-Document	doc;
-ThotBool        delete;
-
-#endif
 {
   STRING           value;
   CHAR_T*          ptr;
@@ -4763,7 +4244,7 @@ ThotBool        delete;
       if (length > 0)
 	{
 	  value = TtaAllocString (length+1);
-	  value[0] = WC_EOS;
+	  value[0] = EOS;
 	  TtaGiveTextAttributeValue (attr, value, &length);
 	}
     }
@@ -4787,27 +4268,27 @@ ThotBool        delete;
 	DeleteIntRowAlign (row, doc);
       else
 	{
-	  if (*ptr != WC_EOS)
+	  if (*ptr != EOS)
 	    {
 	      /* get next word in the attribute value */
 	      ptr = TtaSkipWCBlanks (ptr);
 	      /* process that word */
-	      if (*ptr != WC_EOS && *ptr != ' ')
+	      if (*ptr != EOS && *ptr != ' ')
 		{
-		  if (!ustrncasecmp (ptr, TEXT("top"), 3))
+		  if (!ustrncasecmp (ptr, "top", 3))
 		    val = MathML_ATTR_IntRowAlign_VAL_IntTop;
-		  else if (!ustrncasecmp (ptr, TEXT("bottom"), 6))
+		  else if (!ustrncasecmp (ptr, "bottom", 6))
 		    val = MathML_ATTR_IntRowAlign_VAL_IntBottom;
-		  else if (!ustrncasecmp (ptr, TEXT("center"), 6))
+		  else if (!ustrncasecmp (ptr, "center", 6))
 		    val = MathML_ATTR_IntRowAlign_VAL_IntCenter;
-		  else if (!ustrncasecmp (ptr, TEXT("baseline"), 8))
+		  else if (!ustrncasecmp (ptr, "baseline", 8))
 		    val = MathML_ATTR_IntRowAlign_VAL_IntBaseline;
-		  else if (!ustrncasecmp (ptr, TEXT("axis"), 4))
+		  else if (!ustrncasecmp (ptr, "axis", 4))
 		    val = MathML_ATTR_IntRowAlign_VAL_IntAxis;
 		  else
 		    val = 0;
 		  /* skip the word that has been processed */
-		  while (*ptr != WC_EOS && *ptr != ' ')
+		  while (*ptr != EOS && *ptr != ' ')
 		    ptr++;
 		}
 	    }
@@ -4827,12 +4308,7 @@ ThotBool        delete;
  or mtable element. Create or update the corresponding IntRowAlign attributes
  for the enclosed mrow elements.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void AttrRowAlignCreated (NotifyAttribute *event)
-#else /* __STDC__*/
-void AttrRowAlignCreated (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   HandleRowalignAttribute (event->attribute, event->element, event->document,
 			   FALSE);
@@ -4844,12 +4320,7 @@ void AttrRowAlignCreated (event)
  Remove the corresponding IntRowAlign attributes attached to the enclosed
  mrow elements.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void AttrRowAlignDeleted (NotifyAttribute *event)
-#else /* __STDC__*/
-void AttrRowAlignDeleted (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   HandleRowalignAttribute (NULL, event->element, event->document, TRUE);
 }
@@ -4859,12 +4330,7 @@ void AttrRowAlignDeleted (event)
  An attribute rowalign_mtr has been created or updated by the user.
  Create or update the corresponding IntRowAlign attribute
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void AttrRowAlignMtrCreated (NotifyAttribute *event)
-#else /* __STDC__*/
-void AttrRowAlignMtrCreated (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   MathMLAttributeComplete (event->attribute, event->element, event->document);
 }
@@ -4874,12 +4340,7 @@ void AttrRowAlignMtrCreated (event)
  The user has deleted an attribute rowalign_mtr. Delete the corresponding
  IntRowAlign attribute attached to the same element.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void AttrRowAlignMtrDeleted (NotifyAttribute *event)
-#else /* __STDC__*/
-void AttrRowAlignMtrDeleted (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   AttributeType    attrType;
   Attribute        intAttr, attr;
@@ -4910,13 +4371,7 @@ void AttrRowAlignMtrDeleted (event)
  Remove attribute IntColAlign from element cell if there is no columnalign_mtd
  attribut on this element.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void DeleteIntColAlign (Element cell, Document doc)
-#else /* __STDC__*/
-static void DeleteIntColAlign (cell, doc)
-Element cell;
-Document doc;
-#endif /* __STDC__*/
 {
   ElementType   elType;
   AttributeType attrType;
@@ -4940,14 +4395,7 @@ Document doc;
  Set attribute IntColAlign for element cell unless this element already has
  a columnalign_mtd attribute
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void SetIntColAlign (Element cell, int val, Document doc)
-#else /* __STDC__*/
-static void SetIntColAlign (cell, val, doc)
-Element cell;
-int val;
-Document doc;
-#endif /* __STDC__*/
 {
   ElementType   elType;
   AttributeType attrType;
@@ -4977,15 +4425,8 @@ Document doc;
  if not skip: always return the first cell in the row, and the columnalign
  attribute of that row if there is one.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void RowWithoutColalignAttr (Element* row, Element* cell, Attribute* attr, ThotBool skip)
-#else /* __STDC__*/
-static void RowWithoutColalignAttr (row, cell, attr, skip)
-Element* row;
-Element* cell;
-Attribute* attr;
-ThotBool skip;
-#endif /* __STDC__*/
+static void RowWithoutColalignAttr (Element *row, Element *cell,
+				    Attribute *attr, ThotBool skip)
 {
   ElementType      elType;
   AttributeType    attrType;
@@ -5026,18 +4467,8 @@ ThotBool skip;
    If allRows is TRUE, process also rows that have their own columnalign
    attribute, according to that attribute, otherwise skip those rows.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void      HandleColalignAttribute (Attribute attr, Element el, Document doc,
-				   ThotBool delete, ThotBool allRows)
-#else
-void      HandleColalignAttribute (attr, el, doc, delete, allRows)
-Attribute	attr;
-Element		el;
-Document	doc;
-ThotBool        delete;
-ThotBool        allRows;
-
-#endif
+void HandleColalignAttribute (Attribute attr, Element el, Document doc,
+			      ThotBool delete, ThotBool allRows)
 {
   STRING           value, localValue;
   CHAR_T*          ptr;
@@ -5064,7 +4495,7 @@ ThotBool        allRows;
       if (length > 0)
 	{
 	  value = TtaAllocString (length+1);
-	  value[0] = WC_EOS;
+	  value[0] = EOS;
 	  TtaGiveTextAttributeValue (attr, value, &length);
 	}
     }
@@ -5091,7 +4522,7 @@ ThotBool        allRows;
 	    if (localValue)
 	      TtaFreeMemory (localValue);
 	    localValue = TtaAllocString (length+1);
-	    localValue[0] = WC_EOS;
+	    localValue[0] = EOS;
 	    TtaGiveTextAttributeValue (localAttr, localValue, &length);
 	    ptr = localValue;
 	  }
@@ -5107,23 +4538,23 @@ ThotBool        allRows;
 	  DeleteIntColAlign (cell, doc);
         else
 	  {
-	  if (*ptr != WC_EOS)
+	  if (*ptr != EOS)
 	    {
 	      /* get next word in the attribute value */
 	      ptr = TtaSkipWCBlanks (ptr);
 	      /* process that word */
-	      if (*ptr != WC_EOS && *ptr != ' ')
+	      if (*ptr != EOS && *ptr != ' ')
 		{
-		  if (!ustrncasecmp (ptr, TEXT("left"), 4))
+		  if (!ustrncasecmp (ptr, "left", 4))
 		    val = MathML_ATTR_IntColAlign_VAL_IntLeft;
-		  else if (!ustrncasecmp (ptr, TEXT("center"), 6))
+		  else if (!ustrncasecmp (ptr, "center", 6))
 		    val = MathML_ATTR_IntColAlign_VAL_IntCenter;
-		  else if (!ustrncasecmp (ptr, TEXT("right"), 5))
+		  else if (!ustrncasecmp (ptr, "right", 5))
 		    val = MathML_ATTR_IntColAlign_VAL_IntRight;
 		  else
 		    val = 0;
 		  /* skip the word that has been processed */
-		  while (*ptr != WC_EOS && *ptr != ' ')
+		  while (*ptr != EOS && *ptr != ' ')
 		    ptr++;
 		}
 	    }
@@ -5150,7 +4581,7 @@ ThotBool        allRows;
 		  if (localValue)
 		    TtaFreeMemory (localValue);
 		  localValue = TtaAllocString (length+1);
-		  localValue[0] = WC_EOS;
+		  localValue[0] = EOS;
 		  TtaGiveTextAttributeValue (localAttr, localValue, &length);
 		  ptr = localValue;
 		}
@@ -5170,12 +4601,7 @@ ThotBool        allRows;
  mtable or mtr element. Create or update the corresponding IntColAlign
  attributes for all concerned cells.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void AttrColAlignCreated (NotifyAttribute *event)
-#else /* __STDC__*/
-void AttrColAlignCreated (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   HandleColalignAttribute (event->attribute, event->element, event->document,
 			   FALSE, FALSE);
@@ -5188,12 +4614,7 @@ void AttrColAlignCreated (event)
  Remove the corresponding IntColAlign attributes attached to the corresponding
  cells.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void AttrColAlignDeleted (NotifyAttribute *event)
-#else /* __STDC__*/
-void AttrColAlignDeleted (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   ElementType    elType;
   Element        asc;
@@ -5221,12 +4642,7 @@ void AttrColAlignDeleted (event)
  An attribute colalign_mtd has been created or updated by the user.
  Create or update the corresponding IntColAlign attribute
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void AttrColAlignMtdCreated (NotifyAttribute *event)
-#else /* __STDC__*/
-void AttrColAlignMtdCreated (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   MathMLAttributeComplete (event->attribute, event->element, event->document);
 }
@@ -5236,12 +4652,7 @@ void AttrColAlignMtdCreated (event)
  The user has deleted an attribute colalign_mtd. Delete the corresponding
  IntColAlign attribute attached to the same element.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void AttrColAlignMtdDeleted (NotifyAttribute *event)
-#else /* __STDC__*/
-void AttrColAlignMtdDeleted (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   AttributeType    attrType;
   Attribute        intAttr, attr;
@@ -5285,13 +4696,7 @@ void AttrColAlignMtdDeleted (event)
    if element row is a MathML mtd element, check the rowalign and columnalign
    attributes on the enclosing table element and on the row itself.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                HandleColAndRowAlignAttributes (Element row, Document doc)
-#else
-void                HandleColAndRowAlignAttributes (row, doc)
-Element  row;
-Document doc;
-#endif
+void HandleColAndRowAlignAttributes (Element row, Document doc)
 {
    Element          table;
    ElementType      elType;

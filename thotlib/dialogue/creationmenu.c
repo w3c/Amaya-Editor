@@ -51,9 +51,9 @@ ThotBool AskForNew_RemplRefer (ThotBool * generate, Name typeName)
 
    /* creates and activates the menu */
    i = 0;
-   usprintf (&bufMenu[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_CREATE_EL_REF));
+   usprintf (&bufMenu[i], "B%s", TtaGetMessage (LIB, TMSG_CREATE_EL_REF));
    i += ustrlen (&bufMenu[i]) + 1;
-   usprintf (&bufMenu[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_SHOW_EL_REF));
+   usprintf (&bufMenu[i], "B%s", TtaGetMessage (LIB, TMSG_SHOW_EL_REF));
    TtaNewPopup (NumMenuCreateReferenceElem, 0, TtaGetMessage (LIB, TMSG_MODE_INSERT), 2, bufMenu, NULL, 'L');
 #ifndef _WINDOWS
    TtaShowDialogue (NumMenuCreateReferenceElem, FALSE);
@@ -118,7 +118,7 @@ void BuildChoiceMenu (STRING bufMenu, Name menuTitle, int nbEntries, ThotBool na
 	     TtaNewSelector (NumSelectNatureName, NumFormNature,
 			     TtaGetMessage (LIB, TMSG_OBJECT_TYPE), nbitem, bufMenuB, length, NULL, TRUE, FALSE);
 	     /* sets the selector on its first entry */
-	     TtaSetSelector (NumSelectNatureName, 0, TEXT(""));
+	     TtaSetSelector (NumSelectNatureName, 0, "");
 #endif /* !_WINDOWS */
 	  }
 	else
@@ -137,7 +137,7 @@ void BuildChoiceMenu (STRING bufMenu, Name menuTitle, int nbEntries, ThotBool na
 	src = &bufMenu[0];
 	for (k = 1; k <= nbEntries; k++)
 	  {
-	     ustrcpy (dest, TEXT("B"));
+	     ustrcpy (dest, "B");
 	     dest++;
 	     l = ustrlen (src);
 	     ustrcpy (dest, src);
@@ -164,7 +164,7 @@ void InsertSeparatorInMenu (int *prevMenuInd, int *nbEntries, int *menuInd,
 {
    *prevMenuInd = *menuInd;
    /* indicates if it's a separator */
-   bufMenu[*menuInd] = TEXT('S');
+   bufMenu[*menuInd] = 'S';
    (*menuInd)++;
    bufMenu[*menuInd] = EOS;
    (*menuInd)++;
@@ -189,9 +189,9 @@ void BuildPasteMenu (int RefMenu, STRING bufMenu, Name title,
      {
 	l = ustrlen (src);
 	/* don't add 'B' to the beginning of separators */
-	if (*src != TEXT('S') || l != 1)
+	if (*src != 'S' || l != 1)
 	  {
-	     ustrcpy (dest, TEXT("B"));
+	     ustrcpy (dest, "B");
 	     dest++;
 	  }
 	ustrcpy (dest, src);

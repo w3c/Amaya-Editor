@@ -231,7 +231,7 @@ static void         InitFormLanguage (Document doc, View view,
    /* affiche le formulaire */
    TtaShowDialogue (NumFormLanguage, TRUE);
 #else  /* _WINDOWS */
-   usprintf (WIN_Lab, TEXT("%s"), Lab);
+   usprintf (WIN_Lab, "%s", Lab);
    WIN_nbItem = nbItem; 
    WIN_Language = language;
 #endif /* _WINDOWS */
@@ -254,13 +254,13 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wPara
     {
     case WM_CREATE:
       /* Create static window for the title */
-      hwnTitle = CreateWindow (TEXT("STATIC"), WIN_pAttr1->AttrName, 
+      hwnTitle = CreateWindow ("STATIC", WIN_pAttr1->AttrName, 
 			       WS_CHILD | WS_VISIBLE | SS_LEFT,
 			       10, 5, 100, 15, hwnd, (HMENU) 99, 
 			       ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
       
       /* Create Edit Window autoscrolled */
-      hwnEdit = CreateWindow (TEXT("EDIT"), TextAttrValue, 
+      hwnEdit = CreateWindow ("EDIT", TextAttrValue, 
 			      WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT |
 			         ES_AUTOHSCROLL,
 			      10, 25, 320, 20, hwnd, (HMENU) 1,
@@ -273,7 +273,7 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wPara
 	SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) TextZoneProc);
       
       /* Create Confirm button */
-      confirmButton = CreateWindow (TEXT("BUTTON"),
+      confirmButton = CreateWindow ("BUTTON",
 				    TtaGetMessage (LIB, TMSG_LIB_CONFIRM), 
 				    WS_CHILD | BS_DEFPUSHBUTTON | WS_VISIBLE,
 				    65, 50, 100, 20, hwnd, 
@@ -281,7 +281,7 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wPara
 				    ((LPCREATESTRUCT)lParam)->hInstance, NULL);
       
       /* Create Done Button */
-      doneButton = CreateWindow (TEXT("BUTTON"), TtaGetMessage(LIB, TMSG_DONE),
+      doneButton = CreateWindow ("BUTTON", TtaGetMessage(LIB, TMSG_DONE),
 				 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
 				 185, 50, 100, 20, hwnd, 
 				 (HMENU) ID_DONE,
@@ -349,7 +349,7 @@ static ThotBool WIN_InitFormDialog (ThotWindow parent, STRING title)
    MSG         msg;
    int         frame;
 
-   szAppName = TEXT("FormClass");
+   szAppName = "FormClass";
    if (!wndRegistered)
      {
        wndRegistered = TRUE;
@@ -408,13 +408,13 @@ LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wPar
     {
     case WM_CREATE:
      /* Create static window for the title */
-      hwnTitle = CreateWindow (TEXT("STATIC"), WIN_pAttr1->AttrName, 
+      hwnTitle = CreateWindow ("STATIC", WIN_pAttr1->AttrName, 
 			       WS_CHILD | WS_VISIBLE | SS_LEFT,
 			       10, 5, 100, 15, hwnd, (HMENU) 99, 
 			       ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
       
       /* Create Edit Window autoscrolled */
-      hwnEdit = CreateWindow (TEXT("EDIT"), TextAttrValue, 
+      hwnEdit = CreateWindow ("EDIT", TextAttrValue, 
 			      WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT |
 			        ES_AUTOHSCROLL | WS_TABSTOP,
 			      10, 25, 310, 20, hwnd, (HMENU) 1,
@@ -427,21 +427,21 @@ LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wPar
 	SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) TextZoneProc);
       
       /* Create Apply button */
-      applyButton = CreateWindow (TEXT("BUTTON"),
+      applyButton = CreateWindow ("BUTTON",
 				  TtaGetMessage (LIB, TMSG_APPLY), 
 				  WS_CHILD | BS_DEFPUSHBUTTON | WS_VISIBLE,
 				  10, 50, 80, 20, hwnd, (HMENU) ID_APPLY,
 				  ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       
       /* Create Delete Button */
-      deleteButton = CreateWindow (TEXT("BUTTON"),
+      deleteButton = CreateWindow ("BUTTON",
 				   TtaGetMessage (LIB, TMSG_DEL_ATTR), 
 				   WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
 				   100, 50, 120, 20, hwnd, (HMENU) ID_DELETE,
 				   ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       
       /* Create Done Button */
-      doneButton = CreateWindow (TEXT("BUTTON"),
+      doneButton = CreateWindow ("BUTTON",
 				 TtaGetMessage (LIB, TMSG_DONE), 
 				 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
 				 230, 50, 80, 20, hwnd, (HMENU) ID_DONE,
@@ -512,7 +512,7 @@ static ThotBool WIN_InitSheetDialog (ThotWindow parent)
    MSG           msg;
    int           frame;
 
-   szAppName = TEXT("SheetClass");
+   szAppName = "SheetClass";
    if (!wndSheetRegistered)
      {
        wndSheetRegistered = TRUE;
@@ -568,13 +568,13 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wP
     {
     case WM_CREATE:
       /* Create static window for the title */
-      hwnTitle = CreateWindow (TEXT("STATIC"), WIN_pAttr1->AttrName, 
+      hwnTitle = CreateWindow ("STATIC", WIN_pAttr1->AttrName, 
 			       WS_CHILD | WS_VISIBLE | SS_LEFT,
 			       10, 10, 160, 240, hwnd, (HMENU) 1,
 			       ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
       
       /* Create Edit Window autoscrolled */
-      hwnEdit = CreateWindow (TEXT("EDIT"), NULL, 
+      hwnEdit = CreateWindow ("EDIT", NULL, 
 			      WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT |
 			         ES_AUTOHSCROLL,
 			      10, 30, 120, 20, hwnd, (HMENU) ID_EDITVALUE,
@@ -587,21 +587,21 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wP
 	SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) TextZoneProc);
       
       /* Create Apply button */
-      applyButton = CreateWindow (TEXT("BUTTON"),
+      applyButton = CreateWindow ("BUTTON",
 				  TtaGetMessage (LIB, TMSG_APPLY), 
 				  WS_CHILD | BS_DEFPUSHBUTTON | WS_VISIBLE,
 				  10, 55, 65, 25, hwnd, (HMENU) ID_APPLY,
 				  ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       
       /* Create Delete Button */
-      deleteButton = CreateWindow (TEXT("BUTTON"),
+      deleteButton = CreateWindow ("BUTTON",
 				   TtaGetMessage (LIB, TMSG_DEL_ATTR), 
 				   WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
 				   80, 55, 120, 25, hwnd, (HMENU) ID_DELETE,
 				   ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       
       /* Create Done Button */
-      doneButton = CreateWindow (TEXT("BUTTON"),
+      doneButton = CreateWindow ("BUTTON",
 				 TtaGetMessage (LIB, TMSG_DONE), 
 				 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
 				 205, 55, 65, 25, hwnd, (HMENU) ID_DONE,
@@ -664,7 +664,7 @@ static ThotBool WIN_InitNumAttrDialog (ThotWindow parent)
    MSG           msg;
    int           frame;
 
-   szAppName = TEXT("NumAttrClass");
+   szAppName = "NumAttrClass";
    if (!wndNumAttrRegistered)
      {
        wndNumAttrRegistered = TRUE;
@@ -787,7 +787,7 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
        WIN_AtNumAttr  = TRUE;
        WIN_AtTextAttr = FALSE;
        WIN_AtEnumAttr = FALSE;
-       usprintf (formRange, TEXT("%d .. %d"), -MAX_INT_ATTR_VAL,
+       usprintf (formRange, "%d .. %d", -MAX_INT_ATTR_VAL,
 		 MAX_INT_ATTR_VAL); 
        formValue = i;
 #endif /* _WINDOWS */
@@ -1108,9 +1108,9 @@ static int    BuildAttrMenu (STRING bufMenu, PtrDocument pDoc, int *nbEvent,
 	      pAttrNew->AeDefAttr = FALSE;
 	      if (pAttr->AttrType == AtEnumAttr && pAttr->AttrNEnumValues == 1)
 		/* attribut enumere' a une seule valeur (attribut booleen) */
-		usprintf (tempBuffer, TEXT("T%s"), pAttr->AttrName);
+		usprintf (tempBuffer, "T%s", pAttr->AttrName);
 	      else
-		usprintf (tempBuffer, TEXT("T%s..."), pAttr->AttrName);
+		usprintf (tempBuffer, "T%s...", pAttr->AttrName);
 	      i = ustrlen (tempBuffer) + 1;
 	      if (AttrEvent[att])
 		{
@@ -1143,7 +1143,7 @@ static int    BuildAttrMenu (STRING bufMenu, PtrDocument pDoc, int *nbEvent,
       if (*nbEvent > 0)
 	{
 	  /* add the event entry if needed */
-	  usprintf (tempBuffer, TEXT("M%s"), TtaGetMessage (LIB, TMSG_EVENTS));
+	  usprintf (tempBuffer, "M%s", TtaGetMessage (LIB, TMSG_EVENTS));
 	  i = ustrlen (tempBuffer) + 1;
 	  if (lgmenu + i < MAX_TXT_LEN)
 	    {

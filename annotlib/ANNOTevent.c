@@ -252,9 +252,9 @@ List *CopyAnnotServers (CHAR_T *server_list)
   while (*ptr != WC_EOS)
     {
       server = ptr;
-      while (*ptr != TEXT(' ') && *ptr != WC_EOS)
+      while (*ptr != ' ' && *ptr != WC_EOS)
 	ptr++;
-      if (*ptr == TEXT(' '))
+      if (*ptr == ' ')
 	{
 	  *ptr = WC_EOS;
 	  ptr++;
@@ -294,7 +294,7 @@ CHAR_T *url;
   in = annotAlgaeText;
   while (in)
     {
-      tmp = ustrstr (in, TEXT("%u"));
+      tmp = ustrstr (in, "%u");
       if (tmp)
 	{
 	  i++;
@@ -310,7 +310,7 @@ CHAR_T *url;
   out = *dest;
   while (*in != WC_EOS)
     {
-      if (*in == TEXT('%') && *(in + 1) == TEXT('u'))
+      if (*in == '%' && *(in + 1) == 'u')
 	{
 	  /* copy the proto and the URL */
 	  usprintf (out, "%s%s", proto, url);
@@ -379,7 +379,7 @@ void ANNOT_Init ()
   if (tmp)
     annotPostServer = TtaWCSdup (tmp);
   else
-    annotPostServer = TtaWCSdup (TEXT("localhost"));
+    annotPostServer = TtaWCSdup ("localhost");
 
   /* @@@ temporary custom query, as we could use the configuration menu  ***/
   annotCustomQuery = FALSE;
@@ -580,16 +580,16 @@ void *context;
      {
        LINK_LoadAnnotationIndex (doc, ctx->remoteAnnotIndex, TRUE);
        /* clear the status line if there was no error*/
-       TtaSetStatus (doc, 1,  TEXT(""), NULL);
+       TtaSetStatus (doc, 1,  "", NULL);
      }
    else
      {
        CHAR_T *ptr;
        ptr = HTTP_headers (http_headers, AM_HTTP_REASON);
        if (ptr)
-	 TtaSetStatus (doc, 1, TEXT("Failed to load the annotation index: %s"), ptr);
+	 TtaSetStatus (doc, 1, "Failed to load the annotation index: %s", ptr);
        else
-	 TtaSetStatus (doc, 1, TEXT("Failed to load the annotation index"), NULL);
+	 TtaSetStatus (doc, 1, "Failed to load the annotation index", NULL);
      }
    
    TtaFreeMemory (source_doc_url);
@@ -648,7 +648,7 @@ AnnotLoadMode mode;
    * annotServers include the localhost
    */
   if ((mode & AM_LOAD_LOCAL)
-      && (!annotServers || AnnotList_search (annotServers, TEXT("localhost"))))
+      && (!annotServers || AnnotList_search (annotServers, "localhost")))
     {
       annotIndex = LINK_GetAnnotationIndexFile (DocumentURLs[doc]);
       LINK_LoadAnnotationIndex (doc, annotIndex, TRUE);
@@ -668,7 +668,7 @@ AnnotLoadMode mode;
 	{
 	  server = ptr->object;
 	  ptr = ptr->next;
-	  if (!server || !ustrcasecmp (server, TEXT("localhost"))
+	  if (!server || !ustrcasecmp (server, "localhost")
 	      || server[0] == '-')
 	    continue;
 	  /* create the context for the callback */
@@ -681,15 +681,15 @@ AnnotLoadMode mode;
 	  /* "compute" the url we're looking up in the annotation server */
 	  if (!IsW3Path (DocumentURLs[doc]) &&
 	      !IsFilePath (DocumentURLs[doc]))
-	    proto = TEXT("file://");
+	    proto = "file://";
 	  else
-	    proto = TEXT("");
+	    proto = "";
 	  if (!annotCustomQuery || !annotAlgaeText || 
 	      annotAlgaeText[0] == WC_EOS)
 	    {
 	      annotURL = TtaGetMemory (ustrlen (DocumentURLs[doc])
 				       + ustrlen (proto)
-				       + sizeof (TEXT("w3c_annotates="))
+				       + sizeof ("w3c_annotates=")
 				       + 50);
 	      sprintf (annotURL, "w3c_annotates=%s%s", proto, 
 		       DocumentURLs[doc]);
@@ -723,7 +723,7 @@ AnnotLoadMode mode;
 			      (void *)  RemoteLoad_callback,
 			      (void *) ctx,
 			      NO,
-			      TEXT("application/xml"));
+			      "application/xml");
 	  TtaFreeMemory (annotURL);
 	}
     }
@@ -802,8 +802,8 @@ void ANNOT_Create (doc, view)
 
   if (!annotUser || *annotUser == EOS)
     {
-      InitInfo (TEXT("Make a new annotation"), 
-		TEXT("No annotation user declared. Please open the Annotations/Configure menu."));
+      InitInfo ("Make a new annotation", 
+		"No annotation user declared. Please open the Annotations/Configure menu.");
       return;
     }
 
@@ -818,7 +818,7 @@ void ANNOT_Create (doc, view)
     {
       TtaSetStatus (doc, 1,
 		    /*		    TtaGetMessage (AMAYA, AM_CANNOT_ANNOTATE), */
-		    TEXT("Unable to build an XPointer for this annotation"),
+		    "Unable to build an XPointer for this annotation",
 		    NULL);
       return;
     }
@@ -867,7 +867,7 @@ void ANNOT_Create (doc, view)
      the annotated text? */
   /* select the new annotation document */
   el = TtaGetMainRoot (doc_annot);
-  elType.ElSSchema =  TtaGetSSchema (TEXT("HTML"), doc);
+  elType.ElSSchema =  TtaGetSSchema ("HTML", doc);
   elType.ElTypeNum = HTML_EL_BODY;
   el = TtaSearchTypedElement (elType, SearchInTree, el);
   /* then move the root variable so that it points to the beginning of the
@@ -1004,9 +1004,9 @@ void *context;
        CHAR_T *ptr;
        ptr = HTTP_headers (http_headers, AM_HTTP_REASON);
        if (ptr)
-	 TtaSetStatus (doc, 1, TEXT("Failed to post the annotation: %s"), ptr);
+	 TtaSetStatus (doc, 1, "Failed to post the annotation: %s", ptr);
        else
-	 TtaSetStatus (doc, 1, TEXT("Failed to post the annotation"), NULL);
+	 TtaSetStatus (doc, 1, "Failed to post the annotation", NULL);
      }
 
    /* erase the rdf container */
@@ -1042,7 +1042,7 @@ View view;
 
   /* @@ JK: while the post item isn't desactivated on the main window,
      forbid annotations from elsewhere */
-  if (ustrcmp (TtaGetSSchemaName (TtaGetDocumentSSchema (doc)), TEXT("Annot")))
+  if (ustrcmp (TtaGetSSchemaName (TtaGetDocumentSSchema (doc)), "Annot"))
     return;
 
   if (!annotPostServer || *annotPostServer == EOS)
@@ -1083,9 +1083,9 @@ View view;
 
       /* we're saving a modification to an existing annotation */
       url = TtaGetMemory (ustrlen (annotPostServer)
-			  + sizeof (TEXT("?replace_source="))
+			  + sizeof ("?replace_source=")
 			  + ustrlen (annot->annot_url)
-			  + sizeof (TEXT("&rdftype="))
+			  + sizeof ("&rdftype=")
 			  + strlen (ANNOTATION_CLASSNAME)
 			  + 1);
       usprintf (url,"%s?replace_source=%s&rdftype=%s",
@@ -1119,7 +1119,7 @@ View view;
   /* @@ JK: here we should delete the context or call the callback in case of
      error */
   if (res)
-    TtaSetStatus (doc, 1, TEXT("Failed to post the annotation"), NULL);
+    TtaSetStatus (doc, 1, "Failed to post the annotation", NULL);
 }
 
 /*----------------------------------------------------------------------
@@ -1184,7 +1184,7 @@ Element el;
 
   /* is it an annotation link? */
   elType = TtaGetElementType (el);
-  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("XLink"))
+  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "XLink")
       || (elType.ElTypeNum != XLink_EL_XLink))
     return;
 
@@ -1450,9 +1450,9 @@ void *context;
       CHAR_T *ptr;
       ptr = HTTP_headers (http_headers, AM_HTTP_REASON);
       if (ptr)
-	TtaSetStatus (doc, 1, TEXT("Failed to delete the annotation: %s"), ptr);
+	TtaSetStatus (doc, 1, "Failed to delete the annotation: %s", ptr);
       else
-	TtaSetStatus (doc, 1, TEXT("Failed to delete the annotation"), NULL);
+	TtaSetStatus (doc, 1, "Failed to delete the annotation", NULL);
     }
 
   if (output_file)
@@ -1465,7 +1465,7 @@ void *context;
   TtaFreeMemory (ctx);
   /* clear the status line if there was no error*/
   if (status == HT_OK && doc == source_doc)
-    TtaSetStatus (doc, 1,  TEXT("Annotation deleted!"), NULL);
+    TtaSetStatus (doc, 1,  "Annotation deleted!", NULL);
 }
 
 /*----------------------------------------------------------------------
@@ -1520,7 +1520,7 @@ void ANNOT_Delete (document, view)
 	    {
 	      annot_url = TtaGetMemory (ustrlen (DocumentURLs[doc])
 				       + ustrlen (DocumentMeta[doc]->form_data)
-					+ sizeof (TEXT("?"))
+					+ sizeof ("?")
 					+ 1);
 	      usprintf (annot_url, "%s?%s", DocumentURLs[doc], 
 			DocumentMeta[doc]->form_data);
@@ -1562,7 +1562,7 @@ void ANNOT_Delete (document, view)
 
       /* is it an annotation link? */
       elType = TtaGetElementType (annotEl);
-      if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("XLink"))
+      if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "XLink")
 	  || (elType.ElTypeNum != XLink_EL_XLink))
 	return;
       
@@ -1640,7 +1640,7 @@ void ANNOT_Delete (document, view)
       while (list_ptr)
 	{
 	  annot_server = list_ptr->object;
-	  if (ustrcasecmp (annot_server, TEXT("localhost"))
+	  if (ustrcasecmp (annot_server, "localhost")
 	      && !ustrncasecmp (annot_server, annot->annot_url, 
 				ustrlen (annot_server)))
 	    break;
@@ -1754,7 +1754,7 @@ void ANNOT_Move (Document doc, View view, ThotBool useSel)
 	    {
 	      annot_url = TtaGetMemory (ustrlen (DocumentURLs[doc])
 				       + ustrlen (DocumentMeta[doc]->form_data)
-					+ sizeof (TEXT("?"))
+					+ sizeof ("?")
 					+ 1);
 	      usprintf (annot_url, "%s?%s", DocumentURLs[doc], 
 			DocumentMeta[doc]->form_data);

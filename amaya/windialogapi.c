@@ -36,9 +36,6 @@ extern int         currentFrame;
 #define MAX_WORD_LEN 30
 #endif /* MAX_WORD_LEN */
 
-#define APPFILENAMEFILTER "HTML Files (*.htm[l])\0*.htm*\0XML Files (*.xml)\0*.xml\0All files (*.*)\0*.*\0"
-#define APPIMAGENAMEFILTER "Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0"
-#define APPALLFILESFILTER "All files (*.*)\0*.*\0"
 
 #define MAX_BUFF 4096
 /* JK: I think that some of these widgets, which are general, should
@@ -207,7 +204,7 @@ void ReusePrinterDC ()
     {
       /* EnableWindow (ghwndMain, FALSE); */
       ThotCallback (BasePrint + PPrinterName, STRING_DATA, currentFileToPrint);
-      ThotCallback (BasePrint + FormPrint, INTEGER_DATA, (CHAR_T*)1);
+      ThotCallback (BasePrint + FormPrint, INTEGER_DATA, (char *)1);
     }
 }
 
@@ -223,18 +220,19 @@ void ReusePrinterDC ()
  AltDlgProc
  ------------------------------------------------------------------------*/
 LRESULT CALLBACK AltDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
-							 LPARAM lParam)
+			     LPARAM lParam)
 {
   switch (msg)
     {
     case WM_INITDIALOG:
       SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_ALT));
       SetWindowText (GetDlgItem (hwnDlg, IDC_ALTTEXT),
-		  TtaGetMessage (AMAYA, AM_ALT));
+		     TtaGetMessage (AMAYA, AM_ALT));
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
-		  TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-      SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
-      SetDlgItemText (hwnDlg, IDC_GETALT, TEXT(""));
+		     TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+      SetWindowText (GetDlgItem (hwnDlg, ID_DONE),
+		     TtaGetMessage (LIB, TMSG_DONE));
+      SetDlgItemText (hwnDlg, IDC_GETALT, "");
       break;
       
     case WM_COMMAND:
@@ -288,7 +286,7 @@ LRESULT CALLBACK CSSDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 		  TtaGetMessage (LIB, TMSG_DONE));
       SetWindowText (GetDlgItem (hwnDlg, IDC_CSSFILES),
 		  TtaGetMessage (AMAYA, AM_CSS_FILE));
-      wndCSSList = CreateWindow (TEXT("listbox"), NULL,
+      wndCSSList = CreateWindow ("listbox", NULL,
 				 WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 				 10, 35, 400, 120, hwnDlg, (HMENU) 1, 
 				 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE),
@@ -420,14 +418,14 @@ LRESULT CALLBACK HRefDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 		  TtaGetMessage (AMAYA, AM_LOCATION));
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
 		  TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TEXT("Browse"));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_CLEAR), TEXT("Clear"));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), "Browse");
+      SetWindowText (GetDlgItem (hwnDlg, IDC_CLEAR), "Clear");
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
       
 	  if (tmpDocName[0] != WC_EOS)
 		  SetDlgItemText (hwnDlg, IDC_GETURL, tmpDocName);
 	  else
-		  SetDlgItemText (hwnDlg, IDC_GETURL, TEXT(""));
+		  SetDlgItemText (hwnDlg, IDC_GETURL, "");
       HrefUrl [0] = 0;
 
 	  /* set the default focus and return FALSE to validate it */
@@ -486,7 +484,7 @@ LRESULT CALLBACK HRefDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	case IDC_CLEAR:
 	  ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (CHAR_T*) 3);
 	  tmpDocName[0] = 0;
-	  SetDlgItemText (hwnDlg, IDC_GETURL, TEXT(""));
+	  SetDlgItemText (hwnDlg, IDC_GETURL, "");
 	  break;
 	  
 	case IDCANCEL:
@@ -621,7 +619,7 @@ LRESULT CALLBACK MathDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
  PrintDlgProc
  ------------------------------------------------------------------------*/
 LRESULT CALLBACK PrintDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
-							   LPARAM lParam)
+			       LPARAM lParam)
 {
   int      orientation, paper;
 
@@ -631,18 +629,19 @@ LRESULT CALLBACK PrintDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  PrintForm = hwnDlg;
       SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_LIB_PRINT));
       SetWindowText (GetDlgItem (hwnDlg, ID_PRINT),
-		  TtaGetMessage (AMAYA, AM_BUTTON_PRINT));
-      SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+		     TtaGetMessage (AMAYA, AM_BUTTON_PRINT));
+      SetWindowText (GetDlgItem (hwnDlg, IDCANCEL),
+		     TtaGetMessage (LIB, TMSG_CANCEL));
       SetWindowText (GetDlgItem (hwnDlg, IDC_OPTIONS),
-		  TtaGetMessage (LIB, TMSG_OPTIONS));
+		     TtaGetMessage (LIB, TMSG_OPTIONS));
       SetWindowText (GetDlgItem (hwnDlg, IDC_TABOFCONTENTS),
-		  TtaGetMessage (AMAYA, AM_PRINT_TOC));
+		     TtaGetMessage (AMAYA, AM_PRINT_TOC));
       SetWindowText (GetDlgItem (hwnDlg, IDC_LINKS),
-		  TtaGetMessage (AMAYA, AM_NUMBERED_LINKS));
+		     TtaGetMessage (AMAYA, AM_NUMBERED_LINKS));
       SetWindowText (GetDlgItem (hwnDlg, IDC_PRINTURL),
-		  TtaGetMessage (AMAYA, AM_PRINT_URL));
+		     TtaGetMessage (AMAYA, AM_PRINT_URL));
       SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE_CSS),
-		  TtaGetMessage (AMAYA, AM_WITH_CSS));
+		     TtaGetMessage (AMAYA, AM_WITH_CSS));
       CheckDlgButton (hwnDlg, IDC_PRINTURL, PrintURL);
       CheckDlgButton (hwnDlg, IDC_IGNORE_CSS, IgnoreCSS);
       CheckDlgButton (hwnDlg, IDC_TABOFCONTENTS, WithToC);
@@ -672,9 +671,11 @@ LRESULT CALLBACK PrintDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	    {
 	      EnableWindow (ghwndMain, FALSE);
 	      ThotCallback (BasePrint + PaperOrientation, INTEGER_DATA,
-			  (CHAR_T*) orientation);
-	      ThotCallback (BasePrint + PaperFormat, INTEGER_DATA, (CHAR_T*) paper);
-	      ThotCallback (BasePrint + PPrinterName, STRING_DATA, currentFileToPrint);
+			    (CHAR_T*) orientation);
+	      ThotCallback (BasePrint + PaperFormat, INTEGER_DATA,
+			    (CHAR_T*) paper);
+	      ThotCallback (BasePrint + PPrinterName, STRING_DATA,
+			    currentFileToPrint);
 	      ThotCallback (BasePrint + FormPrint, INTEGER_DATA, (CHAR_T*)1);
 	    }
 	  break;
@@ -694,7 +695,8 @@ LRESULT CALLBACK PrintDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 /*-----------------------------------------------------------------------
  TableDlgProc
  ------------------------------------------------------------------------*/
-LRESULT CALLBACK TableDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK TableDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
+			       LPARAM lParam)
 {
   ThotBool ok;
   int      val;
@@ -703,13 +705,17 @@ LRESULT CALLBACK TableDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARA
     {
     case WM_INITDIALOG:
       SetWindowText (hwnDlg, TtaGetMessage (1, BTable));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_NUMCOL), TtaGetMessage (AMAYA, AM_COLS));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_NUMROWS), TtaGetMessage (AMAYA, AM_ROWS));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_NUMCOL),
+		     TtaGetMessage (AMAYA, AM_COLS));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_NUMROWS),
+		     TtaGetMessage (AMAYA, AM_ROWS));
       if (WithBorder)
-	SetWindowText (GetDlgItem (hwnDlg, IDC_BORDER), TtaGetMessage (AMAYA, AM_BORDER));
-      SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), 
-		  TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-      SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+	SetWindowText (GetDlgItem (hwnDlg, IDC_BORDER),
+		       TtaGetMessage (AMAYA, AM_BORDER));
+      SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
+		     TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+      SetWindowText (GetDlgItem (hwnDlg, IDCANCEL),
+		     TtaGetMessage (LIB, TMSG_CANCEL));
 	
       SetDlgItemInt (hwnDlg, IDC_NUMCOLEDIT, numCols, FALSE);
       SetDlgItemInt (hwnDlg, IDC_NUMROWSEDIT, numRows, FALSE);
@@ -762,7 +768,7 @@ LRESULT CALLBACK TableDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARA
   AttrItemsDlgProc
  ------------------------------------------------------------------------*/
 LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
-								   LPARAM lParam)
+				   LPARAM lParam)
 {
   int        ndx = 0;
   int        i   = 0;
@@ -798,13 +804,13 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       SetWindowText (GetDlgItem (hwnDlg, ID_DELETE), TtaGetMessage (LIB, TMSG_DEL_ATTR));
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
       
-      radio1 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx],
+      radio1 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx],
 		  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 		  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 		  (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
       ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
       i++;
-      radio2 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx],
+      radio2 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx],
 		  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 		  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 		  (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
@@ -812,7 +818,7 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       i++;
       if (attDlgNbItems > 2)
 	{
-	  radio3 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx],
+	  radio3 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx],
 		  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 		  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 		  (HMENU) OPT3, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
@@ -820,7 +826,7 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  i++;
 	  if (attDlgNbItems > 3)
 	    {	  
-	      radio4 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx],
+	      radio4 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx],
 			  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 			  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 			  (HMENU) OPT4, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
@@ -828,7 +834,7 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	      i++;
 	      if (attDlgNbItems > 4)
 		{
-		  radio5 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx],
+		  radio5 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx],
 			  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 			  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 			  (HMENU) OPT5, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
@@ -836,7 +842,7 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 		  i++;
           if (attDlgNbItems > 5)
 		  {
-	         radio6 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx],
+	         radio6 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx],
 				 WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 				 cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 				 (HMENU) OPT6, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
@@ -844,7 +850,7 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	         i++;
 	         if (attDlgNbItems > 6)
 			 {	  
-	            radio7 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx],
+	            radio7 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx],
 					WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 					cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 					(HMENU) OPT7, (HINSTANCE) GetWindowLong (hwnDlg,
@@ -853,7 +859,7 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	            i++;
 	            if (attDlgNbItems > 7)
 				{
-		          radio8 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx],
+		          radio8 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx],
 					  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 					  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 					  (HMENU) OPT8, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
@@ -861,7 +867,7 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 		          i++;
 				  if (attDlgNbItems > 8)
 				  {
-		            radio9 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx],
+		            radio9 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx],
 					  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 					  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 					  (HMENU) OPT9, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
@@ -874,7 +880,7 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 		}
 	   }
 	}
-      groupBx = CreateWindow (TEXT("BUTTON"), attDlgTitle,
+      groupBx = CreateWindow ("BUTTON", attDlgTitle,
 		  WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0,
 		  rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg,
 		  (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
@@ -991,7 +997,7 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
 		  TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       SetWindowText (GetDlgItem (hwnDlg, ID_CLEAR), TtaGetMessage (AMAYA, AM_CLEAR));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TEXT("Browse"));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), "Browse");
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
       SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentPathName);
       
@@ -999,9 +1005,9 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	{
 	  SetWindowText (GetDlgItem (hwnDlg, IDC_OUTPUTGROUP),
 		  TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT));
-	  SetWindowText (GetDlgItem (hwnDlg, IDC_HTML), TEXT("HTML"));
-	  SetWindowText (GetDlgItem (hwnDlg, IDC_XML), TEXT("XML"));
-	  SetWindowText (GetDlgItem (hwnDlg, IDC_TEXT), TEXT("Text"));
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_HTML), "HTML");
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_XML), "XML");
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_TEXT), "Text");
 	  SetWindowText (GetDlgItem (hwnDlg, IDC_COPYIMG),
 		  TtaGetMessage (AMAYA, AM_BCOPY_IMAGES));
 	  SetWindowText (GetDlgItem (hwnDlg, IDC_TRANSFORMURL),
@@ -1089,8 +1095,8 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  break;
 	  
 	case ID_CLEAR:
-	  SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, TEXT(""));
-	  SetDlgItemText (hwnDlg, IDC_EDITIMGSAVE, TEXT(""));
+	  SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, "");
+	  SetDlgItemText (hwnDlg, IDC_EDITIMGSAVE, "");
 	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (CHAR_T*) 2);
 	  break;
 	  
@@ -1131,11 +1137,11 @@ LRESULT CALLBACK OpenDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
     case WM_INITDIALOG:
       SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_OPEN_URL));
       SetWindowText (GetDlgItem (hwnDlg, IDC_URLMESSAGE),
-		  TEXT("Type the URI or push the button Browse"));
+		  "Type the URI or push the button Browse");
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
 		  TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TEXT("Browse"));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_CLEAR), TEXT("Clear"));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), "Browse");
+      SetWindowText (GetDlgItem (hwnDlg, IDC_CLEAR), "Clear");
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
 
       SetWindowText (hwnDlg, wndTitle);
@@ -1197,7 +1203,7 @@ LRESULT CALLBACK OpenDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       case IDC_CLEAR:
 	ThotCallback (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 3);
 	tmpDocName[0] = 0;
-	SetDlgItemText (hwnDlg, IDC_GETURL, TEXT(""));
+	SetDlgItemText (hwnDlg, IDC_GETURL, "");
 	break;
       
       case IDCANCEL:
@@ -1228,12 +1234,12 @@ LRESULT CALLBACK OpenImgDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	SetWindowText (GetDlgItem (hwnDlg, IDC_ALTMESSAGE), TtaGetMessage (AMAYA, AM_ALT));
 	SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
 		TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-	SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TEXT("Browse"));
+	SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), "Browse");
 	SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
 	
-	SetDlgItemText (hwnDlg, IDC_GETURL, TEXT(""));
+	SetDlgItemText (hwnDlg, IDC_GETURL, "");
 	urlToOpen [0] = 0;
-	SetDlgItemText (hwnDlg, IDC_GETALT, TEXT(""));
+	SetDlgItemText (hwnDlg, IDC_GETALT, "");
 	altText [0] = 0;
 	break;
 	
@@ -1406,7 +1412,7 @@ LRESULT CALLBACK SaveListDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL),
 		  TtaGetMessage (LIB, TMSG_CANCEL));
       
-      wndSaveList = CreateWindow (TEXT("listbox"), NULL,
+      wndSaveList = CreateWindow ("listbox", NULL,
 		  WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 				  10, 30, 260, 180, hwnDlg, (HMENU) 1, 
 				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
@@ -1519,7 +1525,7 @@ LRESULT CALLBACK LanguageDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  SetWindowText (GetDlgItem (hwnDlg, IDC_LANGELEM), message);
 	  SetWindowText (GetDlgItem (hwnDlg, IDC_INHERITEDLANG), message2);
       
-      wndLangList = CreateWindow (TEXT("listbox"), NULL,
+      wndLangList = CreateWindow ("listbox", NULL,
 		  WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 				  10, 40, 310, 200, hwnDlg, (HMENU) 1, 
 				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
@@ -1608,9 +1614,9 @@ LRESULT CALLBACK CharacterDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_CHAR));
       SetWindowText (GetDlgItem (hwnDlg, IDC_FONTFAMILYGROUP),
 		  TtaGetMessage (LIB, TMSG_FONT_FAMILY));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_TIMES), TEXT("Times"));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_HELVETICA), TEXT("Helvetica"));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_COURIER), TEXT("Courrier"));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_TIMES), "Times");
+      SetWindowText (GetDlgItem (hwnDlg, IDC_HELVETICA), "Helvetica");
+      SetWindowText (GetDlgItem (hwnDlg, IDC_COURIER), "Courrier");
       SetWindowText (GetDlgItem (hwnDlg, IDC_DEFAULTFAMILY),
 		  TtaGetMessage (LIB, TMSG_UNCHANGED));
       
@@ -1641,17 +1647,17 @@ LRESULT CALLBACK CharacterDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       
       SetWindowText (GetDlgItem (hwnDlg, IDC_BODYSIZEGROUP),
 		  TtaGetMessage (LIB, TMSG_BODY_SIZE_PTS));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_06PT), TEXT(" 6 pt"));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_08PT), TEXT(" 8 pt"));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_10PT), TEXT("10 pt"));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_12PT), TEXT("12 pt"));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_14PT), TEXT("14 pt"));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_16PT), TEXT("16 pt"));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_20PT), TEXT("20 pt"));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_24PT), TEXT("24 pt"));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_30PT), TEXT("30 pt"));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_40PT), TEXT("40 pt"));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_60PT), TEXT("60 pt"));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_06PT), " 6 pt");
+      SetWindowText (GetDlgItem (hwnDlg, IDC_08PT), " 8 pt");
+      SetWindowText (GetDlgItem (hwnDlg, IDC_10PT), "10 pt");
+      SetWindowText (GetDlgItem (hwnDlg, IDC_12PT), "12 pt");
+      SetWindowText (GetDlgItem (hwnDlg, IDC_14PT), "14 pt");
+      SetWindowText (GetDlgItem (hwnDlg, IDC_16PT), "16 pt");
+      SetWindowText (GetDlgItem (hwnDlg, IDC_20PT), "20 pt");
+      SetWindowText (GetDlgItem (hwnDlg, IDC_24PT), "24 pt");
+      SetWindowText (GetDlgItem (hwnDlg, IDC_30PT), "30 pt");
+      SetWindowText (GetDlgItem (hwnDlg, IDC_40PT), "40 pt");
+      SetWindowText (GetDlgItem (hwnDlg, IDC_60PT), "60 pt");
       SetWindowText (GetDlgItem (hwnDlg, IDC_DEFAULTSIZE),
 		  TtaGetMessage (LIB, TMSG_UNCHANGED));
       
@@ -1901,7 +1907,7 @@ LRESULT CALLBACK ApplyClassDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, 
 	  }
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
       
-      wndListRule = CreateWindow (TEXT("listbox"), NULL,
+      wndListRule = CreateWindow ("listbox", NULL,
 		  WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 				  10, 10, 200, 120, hwnDlg, (HMENU) 1, 
 				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
@@ -1915,7 +1921,7 @@ LRESULT CALLBACK ApplyClassDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, 
 	}
       if (WithEdit)
 	{
-	  wndEditRule	= CreateWindow (TEXT("EDIT"), NULL,
+	  wndEditRule	= CreateWindow ("EDIT", NULL,
 		  WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
 					10, 130, 200, 30, hwnDlg, (HMENU) IDC_EDITRULE, 
 					(HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
@@ -2013,7 +2019,7 @@ LRESULT CALLBACK InitConfirmDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 		  TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
       
-      messageWnd = CreateWindow (TEXT("STATIC"), message,
+      messageWnd = CreateWindow ("STATIC", message,
 		  WS_CHILD | WS_VISIBLE | SS_LEFT,
 				 15, 10, 303, 60, hwnDlg, (HMENU) 99, 
 				 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
@@ -2095,25 +2101,25 @@ LRESULT CALLBACK ChangeFormatDlgProc (ThotWindow hwnDlg, UINT msg,
   {
   case WM_INITDIALOG:
 	   FormatForm = hwnDlg;	
-       SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_FORMAT));
+	   SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_FORMAT));
 	   SetWindowText (GetDlgItem (hwnDlg, IDCALIGNGROUP),
-		   TtaGetMessage (LIB, TMSG_ALIGN));
+			  TtaGetMessage (LIB, TMSG_ALIGN));
 	   SetWindowText (GetDlgItem (hwnDlg, IDC_DEFAULTALIGN),
-		   TtaGetMessage (LIB, TMSG_UNCHANGED));
+			  TtaGetMessage (LIB, TMSG_UNCHANGED));
 
 	   SetWindowText (GetDlgItem (hwnDlg, IDC_INDENTGROUP),
-		   TtaGetMessage (LIB, TMSG_INDENT));
+			  TtaGetMessage (LIB, TMSG_INDENT));
 	   SetWindowText (GetDlgItem (hwnDlg, IDC_INDENTDEFAULT),
-		   TtaGetMessage (LIB, TMSG_UNCHANGED));
+			  TtaGetMessage (LIB, TMSG_UNCHANGED));
 	   SetWindowText (GetDlgItem (hwnDlg, IDC_INDENTPT),
-		   TtaGetMessage (LIB, TMSG_INDENT_PTS));
+			  TtaGetMessage (LIB, TMSG_INDENT_PTS));
 
 	   SetWindowText (GetDlgItem (hwnDlg, IDC_LINESPACEGROUP),
-		   TtaGetMessage (LIB, TMSG_LINE_SPACING));
+			  TtaGetMessage (LIB, TMSG_LINE_SPACING));
 	   SetWindowText (GetDlgItem (hwnDlg, IDC_LINESPACINGPT),
-		   TtaGetMessage (LIB, TMSG_LINE_SPACING_PTS));
-       SetWindowText (GetDlgItem (hwnDlg, IDC_SPACINGDEFAULT),
-		   TtaGetMessage (LIB, TMSG_UNCHANGED));
+			  TtaGetMessage (LIB, TMSG_LINE_SPACING_PTS));
+	   SetWindowText (GetDlgItem (hwnDlg, IDC_SPACINGDEFAULT),
+			  TtaGetMessage (LIB, TMSG_UNCHANGED));
 
 	   SetWindowText (GetDlgItem (hwnDlg, ID_APPLY), TtaGetMessage (LIB, TMSG_APPLY));
 	   SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
@@ -2836,11 +2842,11 @@ LRESULT CALLBACK AuthentificationDlgProc (ThotWindow hwnDlg, UINT msg,
       if (label)
 	{
 	  usprintf (label, ptr,
-		    ((string_par1) ? string_par1 : TEXT("")));
+		    ((string_par1) ? string_par1 : ""));
 	  SetWindowText (GetDlgItem (hwnDlg, IDC_TAUTHREALM), label);
 	  ptr = TtaGetMessage (AMAYA, AM_AUTHENTICATION_SERVER);
 	  usprintf (label, ptr,
-		    ((string_par2) ? string_par2 : TEXT("")));
+		    ((string_par2) ? string_par2 : ""));
 	  SetWindowText (GetDlgItem (hwnDlg, IDC_TAUTHSERVER), label);
 	  TtaFreeMemory (label);
 	}
@@ -2853,8 +2859,8 @@ LRESULT CALLBACK AuthentificationDlgProc (ThotWindow hwnDlg, UINT msg,
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
       hwnNameEdit = GetDlgItem (hwnDlg, IDC_NAMEEDIT);
       hwnPasswdEdit = GetDlgItem (hwnDlg, IDC_PASSWDEDIT);
-      SetDlgItemText (hwnDlg, IDC_PASSWDEDIT, TEXT(""));
-      SetDlgItemText (hwnDlg, IDC_NAMEEDIT, TEXT(""));
+      SetDlgItemText (hwnDlg, IDC_PASSWDEDIT, "");
+      SetDlgItemText (hwnDlg, IDC_NAMEEDIT, "");
       
       setFirstFocus = FALSE;
       break;
@@ -2932,7 +2938,7 @@ LRESULT CALLBACK BackgroundImageDlgProc (ThotWindow hwnDlg, UINT msg,
 		TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
 	SetWindowText (GetDlgItem (hwnDlg, ID_CLEAR),
 		TtaGetMessage (AMAYA, AM_CLEAR));
-	SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TEXT("Browse"));
+	SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), "Browse");
 	SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
 	repeatMode = REPEAT;
 	break;
@@ -2969,7 +2975,7 @@ LRESULT CALLBACK BackgroundImageDlgProc (ThotWindow hwnDlg, UINT msg,
 	    break;
 	    
 	  case ID_CLEAR:
-	    SetDlgItemText (hwnDlg, IDC_BGLOCATION, TEXT(""));
+	    SetDlgItemText (hwnDlg, IDC_BGLOCATION, "");
 	    ThotCallback (BaseImage + RepeatImage, INTEGER_DATA, (CHAR_T*)repeatMode);
 	    ThotCallback (BaseImage + FormBackground, INTEGER_DATA, (CHAR_T*)2);
 	    break;
@@ -3024,14 +3030,14 @@ LRESULT CALLBACK MakeIDDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
     case WM_INITDIALOG:
       MakeIDHwnd = hwnDlg;
       /* init the dialog's text */
-      SetWindowText (hwnDlg, TEXT("ID Handler menu"));
+      SetWindowText (hwnDlg, "ID Handler menu");
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), 
 		     TtaGetMessage (LIB, TMSG_DONE));
       /* set up/clear the other options */
       /* elem name */
-      SetDlgItemText (hwnDlg, IDC_IDELEMNAME, TEXT(""));
+      SetDlgItemText (hwnDlg, IDC_IDELEMNAME, "");
       /* status bar */
-      SetDlgItemText (hwnDlg, IDC_IDSTATUS, TEXT(""));
+      SetDlgItemText (hwnDlg, IDC_IDSTATUS, "");
       /* radio buttons */
       if (IdApplyToSelection)
 	CheckRadioButton (hwnDlg, IDC_IDAPPLYTOSEL, 
@@ -3144,7 +3150,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
       if (DocumentURLs[doc] != NULL)
 	content = DocumentURLs[doc];
       else
-	content = TEXT("Unknown");
+	content = "Unknown";
       SetDlgItemText (hwnDlg, IDC_DIURL_VAL, content);
 
       /* MIME type */
@@ -3152,7 +3158,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
       if (DocumentMeta[doc]->content_type != NULL)
 	content  = DocumentMeta[doc]->content_type;
       else
-	content = TEXT("Unknown");
+	content = "Unknown";
       SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE_VAL, content);
 
       /* charset */
@@ -3160,7 +3166,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
       if (DocumentMeta[doc]->charset != NULL)
 	content = DocumentMeta[doc]->charset;
       else
-	content = TEXT("Unknown");
+	content = "Unknown";
       SetDlgItemText (hwnDlg, IDC_DICHARSET_VAL, content);
 
       /* content length */
@@ -3168,7 +3174,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
       if (DocumentMeta[doc]->content_length != NULL)
 	content = DocumentMeta[doc]->content_length;
       else
-	content = TEXT("Unknown");
+	content = "Unknown";
       SetDlgItemText (hwnDlg, IDC_DICONTENTLEN_VAL, content);
       break;
 

@@ -36,10 +36,10 @@
 AttrValueMapping XmlAttrValueMappingTable[] =
 {
    /* XML attribute xml:space */
-   {HTML_ATTR_xml_space, TEXT("default"), XML_ATTR_xml_space_VAL_xml_space_default},
-   {HTML_ATTR_xml_space, TEXT("preserve"), XML_ATTR_xml_space_VAL_xml_space_preserve},
+   {HTML_ATTR_xml_space, "default", XML_ATTR_xml_space_VAL_xml_space_default},
+   {HTML_ATTR_xml_space, "preserve", XML_ATTR_xml_space_VAL_xml_space_preserve},
 
-   {0, TEXT(""), 0}			/* Last entry. Mandatory */
+   {0, "", 0}			/* Last entry. Mandatory */
 };
 
 /* maximum size of error messages */

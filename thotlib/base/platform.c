@@ -202,7 +202,7 @@ CHAR_T*             ext;
    ustrcpy (me->buf, dir);
    ustrcpy (me->buf + (me->dirLen++), WC_DIR_STR);
 #if defined(_WINDOWS) && !defined(__GNUC__)
-   usprintf (space, TEXT("%s\\%s%s"), dir ? dir : TEXT(""), name ? name : TEXT(""), ext ? ext : TEXT(""));
+   usprintf (space, "%s\\%s%s", dir ? dir : "", name ? name : "", ext ? ext : "");
    me->handle = INVALID_HANDLE_VALUE;
    if ((me->handle = FindFirstFile (space, &me->data)) == INVALID_HANDLE_VALUE)
       return -1;
@@ -220,7 +220,7 @@ CHAR_T*             ext;
       avoid having the shell interpret them, for example, when the
       dir name contains ( chars. As a first attempt, we enclose the
       arguments between quotes */
-   usprintf (space, TEXT("/bin/ls -d \"%s\"/%s%s 2>/dev/null"), dir ? dir : TEXT(""), name ? name : TEXT(""), ext ? ext : TEXT(""));
+   usprintf (space, "/bin/ls -d \"%s\"/%s%s 2>/dev/null", dir ? dir : "", name ? name : "", ext ? ext : "");
    me->ls_stream = NULL;
    if ((me->ls_stream = popen (space, "r")) == NULL)
       return -1;
@@ -602,18 +602,18 @@ CONST CHAR_T*       targetFileName;
    if (ustrcmp (sourceFileName, targetFileName) != 0)
      {
 #ifdef _WINDOWS
-	if ((targetf = ufopen (targetFileName, TEXT("wb"))) == NULL)
+	if ((targetf = ufopen (targetFileName, "wb")) == NULL)
 #else
-	if ((targetf = ufopen (targetFileName, TEXT("w"))) == NULL)
+	if ((targetf = ufopen (targetFileName, "w")) == NULL)
 #endif
 	   /* cannot write into the target file */
 	   return;
 	else
 	  {
 #ifdef _WINDOWS
-	     if ((sourcef = ufopen (sourceFileName, TEXT("rb"))) == NULL)
+	     if ((sourcef = ufopen (sourceFileName, "rb")) == NULL)
 #else
-	     if ((sourcef = ufopen (sourceFileName, TEXT("r"))) == NULL)
+	     if ((sourcef = ufopen (sourceFileName, "r")) == NULL)
 #endif
 	       {
 		  /* cannot read the source file */
@@ -659,15 +659,15 @@ CONST STRING        file2;
     if (file1 == NULL) return(FALSE);
     if (file2 == NULL) return(FALSE);
 #ifdef _WINDOWS
-    f1 = ufopen(file1,TEXT("rb"));
+    f1 = ufopen(file1,"rb");
 #else
-    f1 = ufopen(file1, TEXT("r"));
+    f1 = ufopen(file1, "r");
 #endif
     if (f1 == NULL) return(FALSE);
 #ifdef _WINDOWS
-    f2 = ufopen(file2, TEXT("rb"));
+    f2 = ufopen(file2, "rb");
 #else
-    f2 = ufopen(file2, TEXT("r"));
+    f2 = ufopen(file2, "r");
 #endif
     if (f2 == NULL) {
 	fclose(f1);

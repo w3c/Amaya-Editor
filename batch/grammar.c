@@ -364,16 +364,16 @@ static void         InitGrammar ()
   Keywords[6].SrcKeyword[0] = '>';
   Keywords[6].SrcKeywordCode = 1007;
   LastShortKeyword = 7;
-  ustrncpy (Keywords[7].SrcKeyword, TEXT("END"), KEWWORD_LENGTH);
+  ustrncpy (Keywords[7].SrcKeyword, "END", KEWWORD_LENGTH);
   Keywords[7].SrcKeywordLen = ustrlen (Keywords[7].SrcKeyword);
   Keywords[7].SrcKeywordCode = 1101;
-  ustrncpy (Keywords[8].SrcKeyword, TEXT("NAME"), KEWWORD_LENGTH);
+  ustrncpy (Keywords[8].SrcKeyword, "NAME", KEWWORD_LENGTH);
   Keywords[8].SrcKeywordLen = ustrlen (Keywords[8].SrcKeyword);
   Keywords[8].SrcKeywordCode = 1102;
-  ustrncpy (Keywords[9].SrcKeyword, TEXT("STRING"), KEWWORD_LENGTH);
+  ustrncpy (Keywords[9].SrcKeyword, "STRING", KEWWORD_LENGTH);
   Keywords[9].SrcKeywordLen = ustrlen (Keywords[9].SrcKeyword);
   Keywords[9].SrcKeywordCode = 1103;
-  ustrncpy (Keywords[10].SrcKeyword, TEXT("NUMBER"), KEWWORD_LENGTH);
+  ustrncpy (Keywords[10].SrcKeyword, "NUMBER", KEWWORD_LENGTH);
   Keywords[10].SrcKeywordLen = ustrlen (Keywords[10].SrcKeyword);
   Keywords[10].SrcKeywordCode = 1104;
   NKeywords = 11;
@@ -461,9 +461,9 @@ static void         WriteFiles ()
   lineLength = 0;
   while (fileName[lineLength] != '.')
     lineLength++;
-  ustrcpy (&fileName[lineLength + 1], TEXT("GRM"));
+  ustrcpy (&fileName[lineLength + 1], "GRM");
   /* cree le fichier .GRM */
-  GRMfile = ufopen (fileName, TEXT("w"));
+  GRMfile = ufopen (fileName, "w");
   if (GRMfile == NULL)
     {
       TtaDisplayMessage (FATAL, TtaGetMessage (GRM, CANT_CREATE_HEADER_FILE),
@@ -472,8 +472,8 @@ static void         WriteFiles ()
     }
   
   /* cree le fichier .h */
-  ustrcpy (&fileName[lineLength + 1], TEXT("h"));
-  Hfile = ufopen (fileName, TEXT("w"));
+  ustrcpy (&fileName[lineLength + 1], "h");
+  Hfile = ufopen (fileName, "w");
   if (Hfile == NULL)
     {
       TtaDisplayMessage (FATAL, TtaGetMessage (GRM, CANT_CREATE_HEADER_FILE),
@@ -858,8 +858,8 @@ char              **argv;
 #endif /* !_WINDOWS */
 
   TtaInitializeAppRegistry (UArgv);
-  GRM = TtaGetMessageTable (TEXT("grmdialogue"), GRM_MSG_MAX);
-  COMPIL = TtaGetMessageTable (TEXT("compildialogue"), COMP_MSG_MAX);
+  GRM = TtaGetMessageTable ("grmdialogue", GRM_MSG_MAX);
+  COMPIL = TtaGetMessageTable ("compildialogue", COMP_MSG_MAX);
 
   if (argc != 2)
     TtaDisplaySimpleMessage (FATAL, GRM, UNKNOWN_FILE);

@@ -43,145 +43,145 @@
 /* Mapping table of HTML attribute values */
 AttrValueMapping XhtmlAttrValueMappingTable[] =
 {
-   {HTML_ATTR_dir, TEXT("ltr"), HTML_ATTR_dir_VAL_ltr},
-   {HTML_ATTR_dir, TEXT("rtl"), HTML_ATTR_dir_VAL_rtl},
+   {HTML_ATTR_dir, "ltr", HTML_ATTR_dir_VAL_ltr},
+   {HTML_ATTR_dir, "rtl", HTML_ATTR_dir_VAL_rtl},
 
-   {HTML_ATTR_TextAlign, TEXT("left"), HTML_ATTR_TextAlign_VAL_left_},
-   {HTML_ATTR_TextAlign, TEXT("center"), HTML_ATTR_TextAlign_VAL_center_},
-   {HTML_ATTR_TextAlign, TEXT("right"), HTML_ATTR_TextAlign_VAL_right_},
-   {HTML_ATTR_TextAlign, TEXT("justify"), HTML_ATTR_TextAlign_VAL_justify_},
+   {HTML_ATTR_TextAlign, "left", HTML_ATTR_TextAlign_VAL_left_},
+   {HTML_ATTR_TextAlign, "center", HTML_ATTR_TextAlign_VAL_center_},
+   {HTML_ATTR_TextAlign, "right", HTML_ATTR_TextAlign_VAL_right_},
+   {HTML_ATTR_TextAlign, "justify", HTML_ATTR_TextAlign_VAL_justify_},
 
-   {HTML_ATTR_Align, TEXT("left"), HTML_ATTR_Align_VAL_left_},
-   {HTML_ATTR_Align, TEXT("center"), HTML_ATTR_Align_VAL_center_},
-   {HTML_ATTR_Align, TEXT("right"), HTML_ATTR_Align_VAL_right_},
+   {HTML_ATTR_Align, "left", HTML_ATTR_Align_VAL_left_},
+   {HTML_ATTR_Align, "center", HTML_ATTR_Align_VAL_center_},
+   {HTML_ATTR_Align, "right", HTML_ATTR_Align_VAL_right_},
 
-   {HTML_ATTR_LAlign, TEXT("top"), HTML_ATTR_LAlign_VAL_Top_},
-   {HTML_ATTR_LAlign, TEXT("bottom"), HTML_ATTR_LAlign_VAL_Bottom_},
-   {HTML_ATTR_LAlign, TEXT("left"), HTML_ATTR_LAlign_VAL_Left_},
-   {HTML_ATTR_LAlign, TEXT("right"), HTML_ATTR_LAlign_VAL_Right_},
+   {HTML_ATTR_LAlign, "top", HTML_ATTR_LAlign_VAL_Top_},
+   {HTML_ATTR_LAlign, "bottom", HTML_ATTR_LAlign_VAL_Bottom_},
+   {HTML_ATTR_LAlign, "left", HTML_ATTR_LAlign_VAL_Left_},
+   {HTML_ATTR_LAlign, "right", HTML_ATTR_LAlign_VAL_Right_},
 
-   {HTML_ATTR_Clear, TEXT("left"), HTML_ATTR_Clear_VAL_Left_},
-   {HTML_ATTR_Clear, TEXT("right"), HTML_ATTR_Clear_VAL_Right_},
-   {HTML_ATTR_Clear, TEXT("all"), HTML_ATTR_Clear_VAL_All_},
-   {HTML_ATTR_Clear, TEXT("none"), HTML_ATTR_Clear_VAL_None_},
+   {HTML_ATTR_Clear, "left", HTML_ATTR_Clear_VAL_Left_},
+   {HTML_ATTR_Clear, "right", HTML_ATTR_Clear_VAL_Right_},
+   {HTML_ATTR_Clear, "all", HTML_ATTR_Clear_VAL_All_},
+   {HTML_ATTR_Clear, "none", HTML_ATTR_Clear_VAL_None_},
 
-   {HTML_ATTR_NumberStyle, TEXT("1"), HTML_ATTR_NumberStyle_VAL_Arabic_},
-   {HTML_ATTR_NumberStyle, TEXT("a"), HTML_ATTR_NumberStyle_VAL_LowerAlpha},
-   {HTML_ATTR_NumberStyle, TEXT("A"), HTML_ATTR_NumberStyle_VAL_UpperAlpha},
-   {HTML_ATTR_NumberStyle, TEXT("i"), HTML_ATTR_NumberStyle_VAL_LowerRoman},
-   {HTML_ATTR_NumberStyle, TEXT("I"), HTML_ATTR_NumberStyle_VAL_UpperRoman},
+   {HTML_ATTR_NumberStyle, "1", HTML_ATTR_NumberStyle_VAL_Arabic_},
+   {HTML_ATTR_NumberStyle, "a", HTML_ATTR_NumberStyle_VAL_LowerAlpha},
+   {HTML_ATTR_NumberStyle, "A", HTML_ATTR_NumberStyle_VAL_UpperAlpha},
+   {HTML_ATTR_NumberStyle, "i", HTML_ATTR_NumberStyle_VAL_LowerRoman},
+   {HTML_ATTR_NumberStyle, "I", HTML_ATTR_NumberStyle_VAL_UpperRoman},
 
-   {HTML_ATTR_BulletStyle, TEXT("disc"), HTML_ATTR_BulletStyle_VAL_disc},
-   {HTML_ATTR_BulletStyle, TEXT("square"), HTML_ATTR_BulletStyle_VAL_square},
-   {HTML_ATTR_BulletStyle, TEXT("circle"), HTML_ATTR_BulletStyle_VAL_circle},
+   {HTML_ATTR_BulletStyle, "disc", HTML_ATTR_BulletStyle_VAL_disc},
+   {HTML_ATTR_BulletStyle, "square", HTML_ATTR_BulletStyle_VAL_square},
+   {HTML_ATTR_BulletStyle, "circle", HTML_ATTR_BulletStyle_VAL_circle},
 
-   {HTML_ATTR_ItemStyle, TEXT("1"), HTML_ATTR_ItemStyle_VAL_Arabic_},
-   {HTML_ATTR_ItemStyle, TEXT("a"), HTML_ATTR_ItemStyle_VAL_LowerAlpha},
-   {HTML_ATTR_ItemStyle, TEXT("A"), HTML_ATTR_ItemStyle_VAL_UpperAlpha},
-   {HTML_ATTR_ItemStyle, TEXT("i"), HTML_ATTR_ItemStyle_VAL_LowerRoman},
-   {HTML_ATTR_ItemStyle, TEXT("I"), HTML_ATTR_ItemStyle_VAL_UpperRoman},
-   {HTML_ATTR_ItemStyle, TEXT("disc"), HTML_ATTR_ItemStyle_VAL_disc},
-   {HTML_ATTR_ItemStyle, TEXT("square"), HTML_ATTR_ItemStyle_VAL_square},
-   {HTML_ATTR_ItemStyle, TEXT("circle"), HTML_ATTR_ItemStyle_VAL_circle},
+   {HTML_ATTR_ItemStyle, "1", HTML_ATTR_ItemStyle_VAL_Arabic_},
+   {HTML_ATTR_ItemStyle, "a", HTML_ATTR_ItemStyle_VAL_LowerAlpha},
+   {HTML_ATTR_ItemStyle, "A", HTML_ATTR_ItemStyle_VAL_UpperAlpha},
+   {HTML_ATTR_ItemStyle, "i", HTML_ATTR_ItemStyle_VAL_LowerRoman},
+   {HTML_ATTR_ItemStyle, "I", HTML_ATTR_ItemStyle_VAL_UpperRoman},
+   {HTML_ATTR_ItemStyle, "disc", HTML_ATTR_ItemStyle_VAL_disc},
+   {HTML_ATTR_ItemStyle, "square", HTML_ATTR_ItemStyle_VAL_square},
+   {HTML_ATTR_ItemStyle, "circle", HTML_ATTR_ItemStyle_VAL_circle},
 
-   {HTML_ATTR_Button_type, TEXT("button"), HTML_ATTR_Button_type_VAL_button},
-   {HTML_ATTR_Button_type, TEXT("submit"), HTML_ATTR_Button_type_VAL_submit},
-   {HTML_ATTR_Button_type, TEXT("reset"), HTML_ATTR_Button_type_VAL_reset},
+   {HTML_ATTR_Button_type, "button", HTML_ATTR_Button_type_VAL_button},
+   {HTML_ATTR_Button_type, "submit", HTML_ATTR_Button_type_VAL_submit},
+   {HTML_ATTR_Button_type, "reset", HTML_ATTR_Button_type_VAL_reset},
 
-   {HTML_ATTR_frame, TEXT("void"), HTML_ATTR_frame_VAL_void},
-   {HTML_ATTR_frame, TEXT("above"), HTML_ATTR_frame_VAL_above},
-   {HTML_ATTR_frame, TEXT("below"), HTML_ATTR_frame_VAL_below},
-   {HTML_ATTR_frame, TEXT("hsides"), HTML_ATTR_frame_VAL_hsides},
-   {HTML_ATTR_frame, TEXT("lhs"), HTML_ATTR_frame_VAL_lhs},
-   {HTML_ATTR_frame, TEXT("rhs"), HTML_ATTR_frame_VAL_rhs},
-   {HTML_ATTR_frame, TEXT("vsides"), HTML_ATTR_frame_VAL_vsides},
-   {HTML_ATTR_frame, TEXT("box"), HTML_ATTR_frame_VAL_box},
-   {HTML_ATTR_frame, TEXT("border"), HTML_ATTR_frame_VAL_border},
+   {HTML_ATTR_frame, "void", HTML_ATTR_frame_VAL_void},
+   {HTML_ATTR_frame, "above", HTML_ATTR_frame_VAL_above},
+   {HTML_ATTR_frame, "below", HTML_ATTR_frame_VAL_below},
+   {HTML_ATTR_frame, "hsides", HTML_ATTR_frame_VAL_hsides},
+   {HTML_ATTR_frame, "lhs", HTML_ATTR_frame_VAL_lhs},
+   {HTML_ATTR_frame, "rhs", HTML_ATTR_frame_VAL_rhs},
+   {HTML_ATTR_frame, "vsides", HTML_ATTR_frame_VAL_vsides},
+   {HTML_ATTR_frame, "box", HTML_ATTR_frame_VAL_box},
+   {HTML_ATTR_frame, "border", HTML_ATTR_frame_VAL_border},
 
-   {HTML_ATTR_frameborder, TEXT("0"), HTML_ATTR_frameborder_VAL_Border0},
-   {HTML_ATTR_frameborder, TEXT("1"), HTML_ATTR_frameborder_VAL_Border1},
+   {HTML_ATTR_frameborder, "0", HTML_ATTR_frameborder_VAL_Border0},
+   {HTML_ATTR_frameborder, "1", HTML_ATTR_frameborder_VAL_Border1},
 
-   {HTML_ATTR_scrolling, TEXT("yes"), HTML_ATTR_scrolling_VAL_Yes_},
-   {HTML_ATTR_scrolling, TEXT("no"), HTML_ATTR_scrolling_VAL_No_},
-   {HTML_ATTR_scrolling, TEXT("auto"), HTML_ATTR_scrolling_VAL_auto_},
+   {HTML_ATTR_scrolling, "yes", HTML_ATTR_scrolling_VAL_Yes_},
+   {HTML_ATTR_scrolling, "no", HTML_ATTR_scrolling_VAL_No_},
+   {HTML_ATTR_scrolling, "auto", HTML_ATTR_scrolling_VAL_auto_},
 
-   {HTML_ATTR_rules_, TEXT("none"), HTML_ATTR_rules__VAL_none_},
-   {HTML_ATTR_rules_, TEXT("groups"), HTML_ATTR_rules__VAL_groups},
-   {HTML_ATTR_rules_, TEXT("rows"), HTML_ATTR_rules__VAL_rows},
-   {HTML_ATTR_rules_, TEXT("cols"), HTML_ATTR_rules__VAL_cols},
-   {HTML_ATTR_rules_, TEXT("all"), HTML_ATTR_rules__VAL_all},
+   {HTML_ATTR_rules_, "none", HTML_ATTR_rules__VAL_none_},
+   {HTML_ATTR_rules_, "groups", HTML_ATTR_rules__VAL_groups},
+   {HTML_ATTR_rules_, "rows", HTML_ATTR_rules__VAL_rows},
+   {HTML_ATTR_rules_, "cols", HTML_ATTR_rules__VAL_cols},
+   {HTML_ATTR_rules_, "all", HTML_ATTR_rules__VAL_all},
 
-   {HTML_ATTR_Cell_align, TEXT("left"), HTML_ATTR_Cell_align_VAL_Cell_left},
-   {HTML_ATTR_Cell_align, TEXT("center"), HTML_ATTR_Cell_align_VAL_Cell_center},
-   {HTML_ATTR_Cell_align, TEXT("right"), HTML_ATTR_Cell_align_VAL_Cell_right},
-   {HTML_ATTR_Cell_align, TEXT("justify"), HTML_ATTR_Cell_align_VAL_Cell_justify},
-   {HTML_ATTR_Cell_align, TEXT("char"), HTML_ATTR_Cell_align_VAL_Cell_char},
+   {HTML_ATTR_Cell_align, "left", HTML_ATTR_Cell_align_VAL_Cell_left},
+   {HTML_ATTR_Cell_align, "center", HTML_ATTR_Cell_align_VAL_Cell_center},
+   {HTML_ATTR_Cell_align, "right", HTML_ATTR_Cell_align_VAL_Cell_right},
+   {HTML_ATTR_Cell_align, "justify", HTML_ATTR_Cell_align_VAL_Cell_justify},
+   {HTML_ATTR_Cell_align, "char", HTML_ATTR_Cell_align_VAL_Cell_char},
 
-   {HTML_ATTR_Alignment, TEXT("top"), HTML_ATTR_Alignment_VAL_Top_},
-   {HTML_ATTR_Alignment, TEXT("middle"), HTML_ATTR_Alignment_VAL_Middle_},
-   {HTML_ATTR_Alignment, TEXT("bottom"), HTML_ATTR_Alignment_VAL_Bottom_},
-   {HTML_ATTR_Alignment, TEXT("left"), HTML_ATTR_Alignment_VAL_Left_},
-   {HTML_ATTR_Alignment, TEXT("right"), HTML_ATTR_Alignment_VAL_Right_},
+   {HTML_ATTR_Alignment, "top", HTML_ATTR_Alignment_VAL_Top_},
+   {HTML_ATTR_Alignment, "middle", HTML_ATTR_Alignment_VAL_Middle_},
+   {HTML_ATTR_Alignment, "bottom", HTML_ATTR_Alignment_VAL_Bottom_},
+   {HTML_ATTR_Alignment, "left", HTML_ATTR_Alignment_VAL_Left_},
+   {HTML_ATTR_Alignment, "right", HTML_ATTR_Alignment_VAL_Right_},
 
-   {HTML_ATTR_METHOD, TEXT("get"), HTML_ATTR_METHOD_VAL_Get_},
-   {HTML_ATTR_METHOD, TEXT("post"), HTML_ATTR_METHOD_VAL_Post_},
+   {HTML_ATTR_METHOD, "get", HTML_ATTR_METHOD_VAL_Get_},
+   {HTML_ATTR_METHOD, "post", HTML_ATTR_METHOD_VAL_Post_},
 
-   {HTML_ATTR_Position, TEXT("top"), HTML_ATTR_Position_VAL_Position_top},
-   {HTML_ATTR_Position, TEXT("bottom"), HTML_ATTR_Position_VAL_Position_bottom},
-   {HTML_ATTR_Position, TEXT("left"), HTML_ATTR_Position_VAL_Position_left},
-   {HTML_ATTR_Position, TEXT("right"), HTML_ATTR_Position_VAL_Position_right},
+   {HTML_ATTR_Position, "top", HTML_ATTR_Position_VAL_Position_top},
+   {HTML_ATTR_Position, "bottom", HTML_ATTR_Position_VAL_Position_bottom},
+   {HTML_ATTR_Position, "left", HTML_ATTR_Position_VAL_Position_left},
+   {HTML_ATTR_Position, "right", HTML_ATTR_Position_VAL_Position_right},
 
-   {HTML_ATTR_Row_valign, TEXT("top"), HTML_ATTR_Row_valign_VAL_Row_top},
-   {HTML_ATTR_Row_valign, TEXT("middle"), HTML_ATTR_Row_valign_VAL_Row_middle},
-   {HTML_ATTR_Row_valign, TEXT("bottom"), HTML_ATTR_Row_valign_VAL_Row_bottom},
-   {HTML_ATTR_Row_valign, TEXT("baseline"), HTML_ATTR_Row_valign_VAL_Row_baseline},
+   {HTML_ATTR_Row_valign, "top", HTML_ATTR_Row_valign_VAL_Row_top},
+   {HTML_ATTR_Row_valign, "middle", HTML_ATTR_Row_valign_VAL_Row_middle},
+   {HTML_ATTR_Row_valign, "bottom", HTML_ATTR_Row_valign_VAL_Row_bottom},
+   {HTML_ATTR_Row_valign, "baseline", HTML_ATTR_Row_valign_VAL_Row_baseline},
 
-   {HTML_ATTR_Cell_valign, TEXT("top"), HTML_ATTR_Cell_valign_VAL_Cell_top},
-   {HTML_ATTR_Cell_valign, TEXT("middle"), HTML_ATTR_Cell_valign_VAL_Cell_middle},
-   {HTML_ATTR_Cell_valign, TEXT("bottom"), HTML_ATTR_Cell_valign_VAL_Cell_bottom},
-   {HTML_ATTR_Cell_valign, TEXT("baseline"), HTML_ATTR_Cell_valign_VAL_Cell_baseline},
+   {HTML_ATTR_Cell_valign, "top", HTML_ATTR_Cell_valign_VAL_Cell_top},
+   {HTML_ATTR_Cell_valign, "middle", HTML_ATTR_Cell_valign_VAL_Cell_middle},
+   {HTML_ATTR_Cell_valign, "bottom", HTML_ATTR_Cell_valign_VAL_Cell_bottom},
+   {HTML_ATTR_Cell_valign, "baseline", HTML_ATTR_Cell_valign_VAL_Cell_baseline},
 
-   {HTML_ATTR_shape, TEXT("rect"), HTML_ATTR_shape_VAL_rectangle},
-   {HTML_ATTR_shape, TEXT("circle"), HTML_ATTR_shape_VAL_circle},
-   {HTML_ATTR_shape, TEXT("poly"), HTML_ATTR_shape_VAL_polygon},
+   {HTML_ATTR_shape, "rect", HTML_ATTR_shape_VAL_rectangle},
+   {HTML_ATTR_shape, "circle", HTML_ATTR_shape_VAL_circle},
+   {HTML_ATTR_shape, "poly", HTML_ATTR_shape_VAL_polygon},
 
-   {HTML_ATTR_valuetype, TEXT("data"), HTML_ATTR_valuetype_VAL_data_},
-   {HTML_ATTR_valuetype, TEXT("ref"), HTML_ATTR_valuetype_VAL_ref},
-   {HTML_ATTR_valuetype, TEXT("object"), HTML_ATTR_valuetype_VAL_object_},
+   {HTML_ATTR_valuetype, "data", HTML_ATTR_valuetype_VAL_data_},
+   {HTML_ATTR_valuetype, "ref", HTML_ATTR_valuetype_VAL_ref},
+   {HTML_ATTR_valuetype, "object", HTML_ATTR_valuetype_VAL_object_},
 
 /* HTML attribute TYPE generates a Thot element */
-   {DummyAttribute, TEXT("button"), HTML_EL_Button_Input},
-   {DummyAttribute, TEXT("checkbox"), HTML_EL_Checkbox_Input},
-   {DummyAttribute, TEXT("file"), HTML_EL_File_Input},
-   {DummyAttribute, TEXT("hidden"), HTML_EL_Hidden_Input},
-   {DummyAttribute, TEXT("image"), HTML_EL_PICTURE_UNIT},
-   {DummyAttribute, TEXT("password"), HTML_EL_Password_Input},
-   {DummyAttribute, TEXT("radio"), HTML_EL_Radio_Input},
-   {DummyAttribute, TEXT("reset"), HTML_EL_Reset_Input},
-   {DummyAttribute, TEXT("submit"), HTML_EL_Submit_Input},
-   {DummyAttribute, TEXT("text"), HTML_EL_Text_Input},
+   {DummyAttribute, "button", HTML_EL_Button_Input},
+   {DummyAttribute, "checkbox", HTML_EL_Checkbox_Input},
+   {DummyAttribute, "file", HTML_EL_File_Input},
+   {DummyAttribute, "hidden", HTML_EL_Hidden_Input},
+   {DummyAttribute, "image", HTML_EL_PICTURE_UNIT},
+   {DummyAttribute, "password", HTML_EL_Password_Input},
+   {DummyAttribute, "radio", HTML_EL_Radio_Input},
+   {DummyAttribute, "reset", HTML_EL_Reset_Input},
+   {DummyAttribute, "submit", HTML_EL_Submit_Input},
+   {DummyAttribute, "text", HTML_EL_Text_Input},
 
 /* The following declarations allow the parser to accept boolean attributes */
 /* written "checked=CHECKED"), for instance */
-   {HTML_ATTR_ISMAP, TEXT("ismap"), HTML_ATTR_ISMAP_VAL_Yes_},
-   {HTML_ATTR_nohref, TEXT("nohref"), HTML_ATTR_nohref_VAL_Yes_},
-   {HTML_ATTR_COMPACT, TEXT("compact"), HTML_ATTR_COMPACT_VAL_Yes_},
-   {HTML_ATTR_Multiple, TEXT("multiple"), HTML_ATTR_Multiple_VAL_Yes_},
-   {HTML_ATTR_Selected, TEXT("selected"), HTML_ATTR_Selected_VAL_Yes_},
-   {HTML_ATTR_Checked, TEXT("checked"), HTML_ATTR_Checked_VAL_Yes_},
-   {HTML_ATTR_No_wrap, TEXT("nowrap"), HTML_ATTR_No_wrap_VAL_no_wrap},
-   {HTML_ATTR_NoShade, TEXT("noshade"), HTML_ATTR_NoShade_VAL_NoShade_},
-   {HTML_ATTR_declare, TEXT("declare"), HTML_ATTR_declare_VAL_Yes_},
-   {HTML_ATTR_defer, TEXT("defer"), HTML_ATTR_defer_VAL_Yes_},
-   {HTML_ATTR_disabled, TEXT("disabled"), HTML_ATTR_disabled_VAL_Yes_},
-   {HTML_ATTR_readonly, TEXT("readonly"), HTML_ATTR_readonly_VAL_Yes_},
-   {HTML_ATTR_no_resize, TEXT("noresize"), HTML_ATTR_no_resize_VAL_Yes_},
+   {HTML_ATTR_ISMAP, "ismap", HTML_ATTR_ISMAP_VAL_Yes_},
+   {HTML_ATTR_nohref, "nohref", HTML_ATTR_nohref_VAL_Yes_},
+   {HTML_ATTR_COMPACT, "compact", HTML_ATTR_COMPACT_VAL_Yes_},
+   {HTML_ATTR_Multiple, "multiple", HTML_ATTR_Multiple_VAL_Yes_},
+   {HTML_ATTR_Selected, "selected", HTML_ATTR_Selected_VAL_Yes_},
+   {HTML_ATTR_Checked, "checked", HTML_ATTR_Checked_VAL_Yes_},
+   {HTML_ATTR_No_wrap, "nowrap", HTML_ATTR_No_wrap_VAL_no_wrap},
+   {HTML_ATTR_NoShade, "noshade", HTML_ATTR_NoShade_VAL_NoShade_},
+   {HTML_ATTR_declare, "declare", HTML_ATTR_declare_VAL_Yes_},
+   {HTML_ATTR_defer, "defer", HTML_ATTR_defer_VAL_Yes_},
+   {HTML_ATTR_disabled, "disabled", HTML_ATTR_disabled_VAL_Yes_},
+   {HTML_ATTR_readonly, "readonly", HTML_ATTR_readonly_VAL_Yes_},
+   {HTML_ATTR_no_resize, "noresize", HTML_ATTR_no_resize_VAL_Yes_},
 
    /* XML attribute xml:space */
-   {HTML_ATTR_xml_space, TEXT("default"), HTML_ATTR_xml_space_VAL_xml_space_default},
-   {HTML_ATTR_xml_space, TEXT("preserve"), HTML_ATTR_xml_space_VAL_xml_space_preserve},
+   {HTML_ATTR_xml_space, "default", HTML_ATTR_xml_space_VAL_xml_space_default},
+   {HTML_ATTR_xml_space, "preserve", HTML_ATTR_xml_space_VAL_xml_space_preserve},
 
-   {0, TEXT(""), 0}			/* Last entry. Mandatory */
+   {0, "", 0}			/* Last entry. Mandatory */
 };
 
 /* Define a pointer to let parser functions access the HTML entity table */
@@ -223,7 +223,7 @@ void             ParseCharset (Element el, Document doc)
 	 {
 	   text = TtaAllocString (length + 1);
 	   TtaGiveTextAttributeValue (attr, text, &length);
-	   if (!ustrcasecmp (text, TEXT("content-type")))
+	   if (!ustrcasecmp (text, "content-type"))
 	     {
 	       attrType.AttrTypeNum = HTML_ATTR_meta_content;
 	       attr = TtaGetAttribute (el, attrType);
@@ -241,7 +241,7 @@ void             ParseCharset (Element el, Document doc)
 			   ptrText++;
 			 }
 		       
-		       str = ustrstr (text2, TEXT("charset="));
+		       str = ustrstr (text2, "charset=");
 		       if (str)
 			 {
 			   pos = str - text2 + 8;
@@ -792,7 +792,7 @@ void           CreateHTMLAttribute (Element       el,
 	   length += TtaGetTextAttributeLength (attr);
 	   buffer = TtaAllocString (length + 1);
 	   TtaGiveTextAttributeValue (attr, buffer, &length);
-	   ustrcat (buffer, TEXT(" "));
+	   ustrcat (buffer, " ");
 	   ustrcat (buffer, text);
 	   TtaSetAttributeText (attr, buffer, el, doc);
 	   TtaFreeMemory (buffer);
@@ -824,11 +824,11 @@ void               HTMLTypeAttrValue (CHAR_T     *val,
     {
       if (ustrlen (val) > MaxMsgLength - 40)
          val[MaxMsgLength - 40] = WC_EOS;
-      usprintf (msgBuffer, TEXT("Unknown attribute value \"type = %s\""), val);
+      usprintf (msgBuffer, "Unknown attribute value \"type = %s\"", val);
       ParseHTMLError (context->doc, msgBuffer);
       attrType.AttrSSchema = TtaGetDocumentSSchema (context->doc);
       attrType.AttrTypeNum = pHTMLAttributeMapping[0].ThotAttribute;
-      usprintf (msgBuffer, TEXT("type=%s"), val);
+      usprintf (msgBuffer, "type=%s", val);
       CreateHTMLAttribute (context->lastElement, attrType, msgBuffer, TRUE,
 			   context->doc, &lastAttribute, &lastAttrElement);
     }
@@ -839,7 +839,7 @@ void               HTMLTypeAttrValue (CHAR_T     *val,
 	{
 	  if (ustrlen (val) > MaxMsgLength - 40)
 	    val[MaxMsgLength - 40] = WC_EOS;
-	  usprintf (msgBuffer, TEXT("Duplicate attribute \"type = %s\""), val);
+	  usprintf (msgBuffer, "Duplicate attribute \"type = %s\"", val);
 	}
       else
 	{
@@ -886,11 +886,11 @@ void              XhtmlTypeAttrValue (CHAR_T     *val,
   MapHTMLAttributeValue (val, attrType, &value);
   if (value < 0)
     {
-      usprintf (msgBuffer, TEXT("Unknown attribute value \"type=%s\""), val);
+      usprintf (msgBuffer, "Unknown attribute value \"type=%s\"", val);
       XmlParseError (errorParsing, msgBuffer, 0);
-      MapHTMLAttribute (TEXT("unknown_attr"), &attrType, NULL,
+      MapHTMLAttribute ("unknown_attr", &attrType, NULL,
 			&level, context->doc);
-      usprintf (msgBuffer, TEXT("type=%s"), val);
+      usprintf (msgBuffer, "type=%s", val);
       CreateHTMLAttribute (context->lastElement, attrType, msgBuffer, TRUE,
 			   context->doc, &currentAttribute, &lastAttrElement);
     }
@@ -899,7 +899,7 @@ void              XhtmlTypeAttrValue (CHAR_T     *val,
       elType = TtaGetElementType (context->lastElement);
       if (elType.ElTypeNum != HTML_EL_Input)
 	{
-	  usprintf (msgBuffer, TEXT("Duplicate attribute \"type = %s\""), val);
+	  usprintf (msgBuffer, "Duplicate attribute \"type = %s\"", val);
 	  XmlParseError (errorParsing, msgBuffer, 0);
 	}
       else
@@ -995,7 +995,7 @@ void              CreateAttrWidthPercentPxl (STRING buffer, Element el,
 
   if (attrOld != NULL)
     TtaRemoveAttribute (el, attrOld, doc);
-  if (usscanf (buffer, TEXT("%d"), &val))
+  if (usscanf (buffer, "%d", &val))
     TtaSetAttributeValue (attrNew, val, el, doc);
   else
     /* its not a number. Delete attribute and send an error message */
@@ -1003,7 +1003,7 @@ void              CreateAttrWidthPercentPxl (STRING buffer, Element el,
     TtaRemoveAttribute (el, attrNew, doc);
     if (ustrlen (buffer) > MaxMsgLength - 30)
         buffer[MaxMsgLength - 30] = EOS;
-    usprintf (msgBuffer, TEXT("Invalid attribute value \"%s\""), buffer);
+    usprintf (msgBuffer, "Invalid attribute value \"%s\"", buffer);
     ParseHTMLError (doc, msgBuffer);
     }
   if (isImage)
@@ -1048,7 +1048,7 @@ void              CreateAttrIntSize (STRING buffer,
      }
    attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
    attr = TtaGetAttribute (el, attrType);
-   if (usscanf (&buffer[ind], TEXT("%d"), &val))
+   if (usscanf (&buffer[ind], "%d", &val))
      {
        val = val * factor + delta;
        if (attr == NULL)
@@ -1066,7 +1066,7 @@ void              CreateAttrIntSize (STRING buffer,
          TtaRemoveAttribute (el, attr, doc);
        if (ustrlen (buffer) > MaxMsgLength - 30)
          buffer[MaxMsgLength - 30] = EOS;
-       usprintf (msgBuffer, TEXT("Invalid attribute value \"%s\""), buffer);
+       usprintf (msgBuffer, "Invalid attribute value \"%s\"", buffer);
        ParseHTMLError (doc, msgBuffer);
      }
 }
@@ -1100,7 +1100,7 @@ void               EndOfHTMLAttributeValue (CHAR_T     *attrValue,
    CHAR_T          msgBuffer[MaxMsgLength];
 
    /* treatments of some particular HTML attributes */
-   if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("style")))
+   if (!ustrcmp (lastMappedAttr->XMLattribute, "style"))
      {
        TtaSetAttributeText (currentAttribute, attrValue,
 			    lastAttrElement, context->doc);
@@ -1110,11 +1110,11 @@ void               EndOfHTMLAttributeValue (CHAR_T     *attrValue,
      }
    else
      {
-       if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("link")))
+       if (!ustrcmp (lastMappedAttr->XMLattribute, "link"))
 	   HTMLSetAlinkColor (context->doc, attrValue);
-       else if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("alink")))
+       else if (!ustrcmp (lastMappedAttr->XMLattribute, "alink"))
 	 HTMLSetAactiveColor (context->doc, attrValue);
-       else if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("vlink")))
+       else if (!ustrcmp (lastMappedAttr->XMLattribute, "vlink"))
 	 HTMLSetAvisitedColor (context->doc, attrValue);
      }
 
@@ -1128,7 +1128,7 @@ void               EndOfHTMLAttributeValue (CHAR_T     *attrValue,
 	 case 'C':	/* Content */
 	   child = PutInContent (attrValue, context);
 	   if (child != NULL)
-	       TtaAppendTextContent (child, TEXT("\" "), context->doc);
+	       TtaAppendTextContent (child, "\" ", context->doc);
 	   break;
 
 	 case 'A':
@@ -1149,7 +1149,7 @@ void               EndOfHTMLAttributeValue (CHAR_T     *attrValue,
 					     &attrType, &attrKind);
 		       attrName = TtaGetAttributeName (attrType);
 		       usprintf (msgBuffer,
-				 TEXT("Unknown attribute value \"%s = %s\""),
+				 "Unknown attribute value \"%s = %s\"",
 				 attrName, attrValue);
 		       if (isXML)
 			 XmlParseError (errorParsing, msgBuffer, 0);
@@ -1161,7 +1161,7 @@ void               EndOfHTMLAttributeValue (CHAR_T     *attrValue,
 		       TtaRemoveAttribute (lastAttrElement,
 					   currentAttribute, context->doc);
 		       if (isXML)
-			 MapHTMLAttribute (TEXT("unknown_attr"), &attrType,
+			 MapHTMLAttribute ("unknown_attr", &attrType,
 					   NULL, &level, context->doc);
 		       else
 			 {
@@ -1170,7 +1170,7 @@ void               EndOfHTMLAttributeValue (CHAR_T     *attrValue,
 			   attrType.AttrTypeNum =
 			     pHTMLAttributeMapping[0].ThotAttribute;
 			 }
-		       usprintf (msgBuffer, TEXT("%s=%s"), attrName, attrValue);
+		       usprintf (msgBuffer, "%s=%s", attrName, attrValue);
 		       CreateHTMLAttribute (lastAttrElement, attrType,
 					    msgBuffer, TRUE, context->doc,
 					    &currentAttribute, &lastAttrElement);
@@ -1181,14 +1181,14 @@ void               EndOfHTMLAttributeValue (CHAR_T     *attrValue,
 		   break;
 		 case 1:	/* integer */
 		   if (attrType.AttrTypeNum == HTML_ATTR_Border &&
-		       !ustrcasecmp (attrValue, TEXT("border")))
+		       !ustrcasecmp (attrValue, "border"))
 		     {
 		       /* border="border" for a table */
 		       val = 1;
 		       TtaSetAttributeValue (currentAttribute, val,
 					     lastAttrElement, context->doc);
 		     }
-		   else if (usscanf (attrValue, TEXT("%d"), &val))
+		   else if (usscanf (attrValue, "%d", &val))
 		     TtaSetAttributeValue (currentAttribute, val,
 					   lastAttrElement, context->doc);
 		   else
@@ -1196,7 +1196,7 @@ void               EndOfHTMLAttributeValue (CHAR_T     *attrValue,
 		       TtaRemoveAttribute (lastAttrElement, currentAttribute,
 					   context->doc);
 		       usprintf (msgBuffer,
-				 TEXT("Unknown attribute value \"%s\""),
+				 "Unknown attribute value \"%s\"",
 				 attrValue);
 		       if (isXML)
 			 XmlParseError (errorParsing, msgBuffer, 0);
@@ -1216,7 +1216,7 @@ void               EndOfHTMLAttributeValue (CHAR_T     *attrValue,
 			   if (lang == 0)
 			     {
 			       usprintf (msgBuffer,
-					 TEXT("warning - unsupported language: %s"),
+					 "warning - unsupported language: %s",
 					 attrValue);
 			       if (isXML)
 				 XmlParseError (errorParsing, msgBuffer, 0);
@@ -1260,7 +1260,7 @@ void               EndOfHTMLAttributeValue (CHAR_T     *attrValue,
 		       buffer = TtaAllocString (length + 1);
 		       TtaGiveTextAttributeValue (currentAttribute,
 						  buffer, &length);
-		       ustrcat (buffer, TEXT("="));
+		       ustrcat (buffer, "=");
 		       ustrcat (buffer, attrValue);
 		       TtaSetAttributeText (currentAttribute, buffer,
 					    lastAttrElement, context->doc);
@@ -1292,14 +1292,14 @@ void               EndOfHTMLAttributeValue (CHAR_T     *attrValue,
 	 /* IntWidthPxl */
 	 CreateAttrWidthPercentPxl (attrValue, lastAttrElement, context->doc, -1);
       else
-	 if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("size")))
+	 if (!ustrcmp (lastMappedAttr->XMLattribute, "size"))
 	   {
 	     TtaGiveAttributeType (currentAttribute, &attrType, &attrKind);
 	     if (attrType.AttrTypeNum == HTML_ATTR_Font_size)
 	         CreateAttrIntSize (attrValue, lastAttrElement, context->doc);
 	   }
       else
-	 if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("shape")))
+	 if (!ustrcmp (lastMappedAttr->XMLattribute, "shape"))
 	     {
 	       child = TtaGetFirstChild (lastAttrElement);
 	       if (child != NULL)
@@ -1323,7 +1323,7 @@ void               EndOfHTMLAttributeValue (CHAR_T     *attrValue,
 		 }
 	     }
 	   else
-	     if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("value")))
+	     if (!ustrcmp (lastMappedAttr->XMLattribute, "value"))
 	       {
 		 elType = TtaGetElementType (lastAttrElement);
 		 if (elType.ElTypeNum == HTML_EL_Text_Input ||
@@ -1347,21 +1347,21 @@ void               EndOfHTMLAttributeValue (CHAR_T     *attrValue,
        /*      text           ->                   color              */
        /*      color          ->                   color              */
 	     else
-	       if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("background")))
+	       if (!ustrcmp (lastMappedAttr->XMLattribute, "background"))
 		 {
 		   if (ustrlen (attrValue) > MaxMsgLength - 30)
 		       attrValue[MaxMsgLength - 30] = WC_EOS;
-		   usprintf (msgBuffer, TEXT("background: url(%s)"), attrValue);
+		   usprintf (msgBuffer, "background: url(%s)", attrValue);
 		   ParseHTMLSpecificStyle (context->lastElement, msgBuffer,
 					   context->doc, 1, FALSE);
 		 }
 	       else
-		 if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("bgcolor")))
+		 if (!ustrcmp (lastMappedAttr->XMLattribute, "bgcolor"))
 		     HTMLSetBackgroundColor (context->doc,
 					     context->lastElement, attrValue);
 		 else
-		   if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("text")) ||
-		       !ustrcmp (lastMappedAttr->XMLattribute, TEXT("color")))
+		   if (!ustrcmp (lastMappedAttr->XMLattribute, "text") ||
+		       !ustrcmp (lastMappedAttr->XMLattribute, "color"))
 		     HTMLSetForegroundColor (context->doc,
 					     context->lastElement, attrValue);
      }

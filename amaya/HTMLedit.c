@@ -190,8 +190,8 @@ void                RemoveLink (Element el, Document doc)
        /* get a buffer for the attribute value */
        length = MAX_LENGTH;
        TtaGiveTextAttributeValue (attr, buffer, &length);
-       if (!ustrcasecmp (buffer, TEXT("stylesheet")) ||
-	   !ustrcasecmp (buffer, TEXT("style")))
+       if (!ustrcasecmp (buffer, "stylesheet") ||
+	   !ustrcasecmp (buffer, "style"))
 	 {
 	   /* it's a link to a style sheet. Remove that style sheet */
 	   attrType.AttrTypeNum = HTML_ATTR_HREF_;
@@ -235,7 +235,7 @@ void                SetREFattribute (Element element, Document doc, STRING targe
    if (AttrHREFundoable)
       TtaOpenUndoSequence (doc, element, element, 0, 0);
 
-   HTMLSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+   HTMLSSchema = TtaGetSSchema ("HTML", doc);
    elType = TtaGetElementType (element);
    isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLSSchema);
    if (isHTML)
@@ -253,10 +253,10 @@ void                SetREFattribute (Element element, Document doc, STRING targe
      {
        /* the origin of the link is not a HTML element */
        /* create a XLink link */
-       attrType.AttrSSchema = TtaGetSSchema (TEXT("XLink"), doc);
+       attrType.AttrSSchema = TtaGetSSchema ("XLink", doc);
        if (!attrType.AttrSSchema)
 	 attrType.AttrSSchema = TtaNewNature (doc, TtaGetDocumentSSchema (doc),
-					      TEXT("XLink"), TEXT("XLinkP"));
+					      "XLink", "XLinkP");
        attrType.AttrTypeNum = XLink_ATTR_href_;
        /* create a xlink:type attribute with value "simple" */
        if (TtaIsLeaf (elType))
@@ -290,7 +290,7 @@ void                SetREFattribute (Element element, Document doc, STRING targe
      tempURL[0] = EOS;
    if (targetName != NULL)
      {
-       ustrcat (tempURL, TEXT("#"));
+       ustrcat (tempURL, "#");
        ustrcat (tempURL, targetName);
      }
 
@@ -300,7 +300,7 @@ void                SetREFattribute (Element element, Document doc, STRING targe
        length = TtaGetTextAttributeLength (attr);
        if (length == 0)
 	 /* no given value */
-	 TtaSetAttributeText (attr, TEXT("XX"), element, doc);
+	 TtaSetAttributeText (attr, "XX", element, doc);
      }
    else
      {
@@ -309,7 +309,7 @@ void                SetREFattribute (Element element, Document doc, STRING targe
        value = MakeRelativeURL (tempURL, base);
        TtaFreeMemory (base);
        if (*value == EOS)
-	 TtaSetAttributeText (attr, TEXT("./"), element, doc);
+	 TtaSetAttributeText (attr, "./", element, doc);
        else
 	 TtaSetAttributeText (attr, value, element, doc);
        TtaFreeMemory (value);
@@ -341,7 +341,7 @@ void                SetREFattribute (Element element, Document doc, STRING targe
 	       if (AttrHREFundoable)
                   TtaRegisterAttributeReplace (attr, element, doc);
 	     }
-	   TtaSetAttributeText (attr, TEXT("stylesheet"), element, doc);
+	   TtaSetAttributeText (attr, "stylesheet", element, doc);
 	   if (AttrHREFundoable && new)
 	       TtaRegisterAttributeCreate (attr, element, doc);
 
@@ -360,7 +360,7 @@ void                SetREFattribute (Element element, Document doc, STRING targe
 	       if (AttrHREFundoable)
                   TtaRegisterAttributeReplace (attr, element, doc);
 	     }
-	   TtaSetAttributeText (attr, TEXT("text/css"), element, doc);	   
+	   TtaSetAttributeText (attr, "text/css", element, doc);	   
 	   if (AttrHREFundoable && new)
 	       TtaRegisterAttributeCreate (attr, element, doc);
 	 }
@@ -370,7 +370,7 @@ void                SetREFattribute (Element element, Document doc, STRING targe
        AttrHREFundoable = FALSE;
      }
    TtaSetDocumentModified (doc);
-   TtaSetStatus (doc, 1, TEXT(" "), NULL);
+   TtaSetStatus (doc, 1, " ", NULL);
 }
 
 
@@ -392,7 +392,7 @@ void                ChangeTitle (Document doc, View view)
    /* search the Title element */
    el = TtaGetMainRoot (doc);
    elType.ElSSchema = TtaGetDocumentSSchema (doc);
-   if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+   if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
      {
        elType.ElTypeNum = HTML_EL_TITLE;
        el = TtaSearchTypedElement (elType, SearchForward, el);
@@ -439,7 +439,7 @@ void                SetNewTitle (Document doc)
    /* search the Title element */
    el = TtaGetMainRoot (doc);
    elType.ElSSchema = TtaGetDocumentSSchema (doc);
-   if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+   if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
      {
        elType.ElTypeNum = HTML_EL_TITLE;
        el = TtaSearchTypedElement (elType, SearchForward, el);
@@ -482,7 +482,7 @@ void                SelectDestination (Document doc, Element el, ThotBool withUn
    TtaClickElement (&targetDoc, &targetEl);
    if (targetDoc != 0)
      isHTML = !(ustrcmp (TtaGetSSchemaName (TtaGetDocumentSSchema (targetDoc)),
-			 TEXT("HTML")));
+			 "HTML"));
    else
      isHTML = FALSE;
 
@@ -520,7 +520,7 @@ void                SelectDestination (Document doc, Element el, ThotBool withUn
 
 	/* If the anchor has an HREF attribute, put its value in the form */
 	elType = TtaGetElementType (el);
-	if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
+	if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
 	  /* it's an HTML element */
 	  {
 	    attrType.AttrSSchema = elType.ElSSchema;
@@ -535,7 +535,7 @@ void                SelectDestination (Document doc, Element el, ThotBool withUn
 	  }
 	else
 	  {
-	    attrType.AttrSSchema = TtaGetSSchema (TEXT("XLink"), doc);
+	    attrType.AttrSSchema = TtaGetSSchema ("XLink", doc);
 	    attrType.AttrTypeNum = XLink_ATTR_href_;
 	  }
 	attr = TtaGetAttribute (el, attrType);
@@ -597,7 +597,7 @@ Attribute           GetNameAttr (Document doc, Element selectedElement)
    if (selectedElement != NULL)
      {
         elType = TtaGetElementType (selectedElement);
-	HTMLSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+	HTMLSSchema = TtaGetSSchema ("HTML", doc);
 	attrType.AttrSSchema = HTMLSSchema;
 	if (elType.ElSSchema == HTMLSSchema &&
 	    elType.ElTypeNum == HTML_EL_Anchor)
@@ -624,7 +624,7 @@ Attribute           GetNameAttr (Document doc, Element selectedElement)
 	    attr = TtaGetAttribute (selectedElement, attrType);
 	    if (!attr)
 	       {
-	       attrType.AttrSSchema = TtaGetSSchema (TEXT("MathML"), doc);
+	       attrType.AttrSSchema = TtaGetSSchema ("MathML", doc);
 	       if (attrType.AttrSSchema)
 		 {
 		 attrType.AttrTypeNum = MathML_ATTR_id;
@@ -634,7 +634,7 @@ Attribute           GetNameAttr (Document doc, Element selectedElement)
 #ifdef GRAPHML
 	    if (!attr)
 	       {
-	       attrType.AttrSSchema = TtaGetSSchema (TEXT("GraphML"), doc);
+	       attrType.AttrSSchema = TtaGetSSchema ("GraphML", doc);
 	       if (attrType.AttrSSchema)
 		 {
 		 attrType.AttrTypeNum = GraphML_ATTR_id;
@@ -670,10 +670,10 @@ void                CreateTargetAnchor (Document doc, Element el, ThotBool force
    ThotBool            withinHTML, new;
 
    elType = TtaGetElementType (el);
-   withinHTML = !ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML"));
+   withinHTML = !ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML");
 
    /* get a NAME or ID attribute */
-   HTMLSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+   HTMLSSchema = TtaGetSSchema ("HTML", doc);
    attrType.AttrSSchema = HTMLSSchema;
    if (withinHTML && (elType.ElTypeNum == HTML_EL_Anchor ||
 		      elType.ElTypeNum == HTML_EL_MAP))
@@ -685,14 +685,14 @@ void                CreateTargetAnchor (Document doc, Element el, ThotBool force
      }
    else
      {
-     if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0)
+     if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
        {
 	 attrType.AttrSSchema = elType.ElSSchema;
 	 attrType.AttrTypeNum = MathML_ATTR_id;
        }
      else
 #ifdef GRAPHML
-     if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")) == 0)
+     if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
        {
 	 attrType.AttrSSchema = elType.ElSSchema;
 	 attrType.AttrTypeNum = GraphML_ATTR_id;
@@ -720,12 +720,12 @@ void                CreateTargetAnchor (Document doc, Element el, ThotBool force
    if (withinHTML && elType.ElTypeNum == HTML_EL_MAP)
      {
        /* mapxxx for a map element */
-       ustrcpy (url, TEXT("map"));
+       ustrcpy (url, "map");
      }
    else if (withinHTML && elType.ElTypeNum == HTML_EL_LINK)
      {
        /* linkxxx for a link element */
-       ustrcpy (url, TEXT("link"));
+       ustrcpy (url, "link");
      }
    else
        /* get the content for other elements */
@@ -743,7 +743,7 @@ void                CreateTargetAnchor (Document doc, Element el, ThotBool force
 	    url[length++] = EOS;
 	    while (!found && i < length)
 	      {
-		if (url[i] == TEXT(' ') || url[i] == WC_EOS)
+		if (url[i] == ' ' || url[i] == WC_EOS)
 		  {
 		    found = (i - space > 3 || (i != space && url[i] == WC_EOS));
 		    if (found)
@@ -759,8 +759,8 @@ void                CreateTargetAnchor (Document doc, Element el, ThotBool force
 		    i++;
 		    space = i;
 		  }
-		else if (url[i] == TEXT('_') ||
-			 url[i] == TEXT(':') ||
+		else if (url[i] == '_' ||
+			 url[i] == ':' ||
 			 ((unsigned int) url[i] >= 65 &&
 			  (unsigned int) url[i] <= 90) ||
 			 ((unsigned int) url[i] >= 81 &&
@@ -817,7 +817,7 @@ void                CreateAnchor (Document doc, View view, ThotBool createLink)
   ThotBool            noAnchor;
 
   parag = NULL;
-  HTMLSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+  HTMLSSchema = TtaGetSSchema ("HTML", doc);
   dispMode = TtaGetDisplayMode (doc);
   /* get the first and last selected element */
   TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
@@ -1058,7 +1058,7 @@ void                CreateAnchor (Document doc, View view, ThotBool createLink)
 	  attr = TtaNewAttribute (attrType);
 	  TtaAttachAttribute (anchor, attr, doc);
 	}
-      TtaSetAttributeText (attr, TEXT("link"), anchor, doc);
+      TtaSetAttributeText (attr, "link", anchor, doc);
     }
   else
     CreateTargetAnchor (doc, anchor, FALSE, FALSE);
@@ -1090,7 +1090,7 @@ void         MakeUniqueName (Element el, Document doc)
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
   checkID = FALSE;
-  if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+  if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
     /* it's an element from the XHTML namespace */
     if (elType.ElTypeNum == HTML_EL_Anchor ||
 	elType.ElTypeNum == HTML_EL_MAP)
@@ -1110,13 +1110,13 @@ void         MakeUniqueName (Element el, Document doc)
       /* Look for an ID attribute */
       attrType.AttrTypeNum = HTML_ATTR_ID;
   else
-    if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
+    if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML"))
       /* it's an element from the MathML namespace, look for the
          id attribute from the same namespace */
       attrType.AttrTypeNum = MathML_ATTR_id;
     else
 #ifdef GRAPHML
-      if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
+      if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
 	/* it's an element from the SVG namespace, look for the
 	   id attribute from the same namespace */
 	attrType.AttrTypeNum = GraphML_ATTR_id;
@@ -1142,7 +1142,7 @@ void         MakeUniqueName (Element el, Document doc)
 		  /* Yes. Avoid duplicate NAMEs */
 		  change = TRUE;
 		  i++;
-		  usprintf (&value[length], TEXT("%d"), i);
+		  usprintf (&value[length], "%d", i);
 		}
 	      
 	      if (change)
@@ -1159,7 +1159,7 @@ void         MakeUniqueName (Element el, Document doc)
 			TtaSetAttributeText (attr, value, el, doc);
 		    }
 		  if ((ustrcmp(TtaGetSSchemaName (elType.ElSSchema),
-			       TEXT("HTML")) == 0) &&
+			       "HTML") == 0) &&
 		      elType.ElTypeNum == HTML_EL_MAP)
 		    /* it's a MAP element */
 		    {
@@ -1266,7 +1266,7 @@ void         CreateRemoveIDAttribute (CHAR_T *elName, Document doc, ThotBool cre
   /* the user must select something */
   if (inSelection && !TtaIsDocumentSelected (doc))
     {
-      ustrcpy (IdStatus, TEXT("Nothing selected"));
+      ustrcpy (IdStatus, "Nothing selected");
       return;
     }
   /* search for the elementType corresponding to the element name given
@@ -1275,14 +1275,14 @@ void         CreateRemoveIDAttribute (CHAR_T *elName, Document doc, ThotBool cre
   if (elType.ElTypeNum == 0)
     {
       /* element name not found */
-      ustrcpy (IdStatus, TEXT("Unknown element"));
+      ustrcpy (IdStatus, "Unknown element");
       return;
     }
   /* in function of the target elType, we choose the correct
      ATTR_ID value and schema */
   attrType.AttrTypeNum = 0;
   schema_name = TtaGetSSchemaName (elType.ElSSchema);
-  if (!ustrcmp (schema_name, TEXT("HTML")))
+  if (!ustrcmp (schema_name, "HTML"))
     {
       /* exception handling... we can't add an ID attribute everywhere
        in HTML documents */
@@ -1295,16 +1295,16 @@ void         CreateRemoveIDAttribute (CHAR_T *elName, Document doc, ThotBool cre
 	    || elType.ElTypeNum == HTML_EL_STYLE_))
 	attrType.AttrTypeNum = HTML_ATTR_ID;
     }
-  else if (!ustrcmp (schema_name, TEXT("MathML")))
+  else if (!ustrcmp (schema_name, "MathML"))
     attrType.AttrTypeNum = MathML_ATTR_id;
-  else if (!ustrcmp (schema_name, TEXT("GraphML")))
+  else if (!ustrcmp (schema_name, "GraphML"))
     attrType.AttrTypeNum = GraphML_ATTR_id;
 
   /* we didn't find an attribute or we can't put an ID attribute
      in this element */
   if (attrType.AttrTypeNum == 0)
     {
-      ustrcpy (IdStatus, TEXT("DTD forbids it"));
+      ustrcpy (IdStatus, "DTD forbids it");
       return;
     }
   attrType.AttrSSchema = elType.ElSSchema;
@@ -1379,7 +1379,7 @@ void         CreateRemoveIDAttribute (CHAR_T *elName, Document doc, ThotBool cre
     TtaSetDocumentModified (doc);
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, dispMode);
-  usprintf (IdStatus, TEXT("%d elements changed"), i);
+  usprintf (IdStatus, "%d elements changed", i);
 }
 
 /*----------------------------------------------------------------------
@@ -1398,7 +1398,7 @@ static void         CheckPseudoParagraph (Element el, Document doc)
   ElementType		elType;
   
   elType = TtaGetElementType (el);
-  if (!TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("HTML"), doc)))
+  if (!TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("HTML", doc)))
     /* it's not an HTML element */
     return;
 
@@ -1645,7 +1645,7 @@ void                ElementPasted (NotifyElement * event)
 
   el = event->element;
   doc = event->document;
-  HTMLschema = TtaGetSSchema (TEXT("HTML"), doc);
+  HTMLschema = TtaGetSSchema ("HTML", doc);
   CheckPseudoParagraph (el, doc);
   /* Check attribute NAME or ID in order to make sure that its value */
   /* is unique in the document */
@@ -1801,7 +1801,7 @@ void CheckNewLines (NotifyOnTarget *event)
   while (ancestor && !pre)
     {
     elType = TtaGetElementType (ancestor);
-    if ((ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0) &&
+    if ((ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) &&
         (elType.ElTypeNum == HTML_EL_STYLE_ ||
          elType.ElTypeNum == HTML_EL_SCRIPT ||
 	 elType.ElTypeNum == HTML_EL_Preformatted))
@@ -1905,7 +1905,7 @@ void                GraphicsModified (NotifyAttribute * event)
 	   attr = TtaGetAttribute (el, attrType);
 	   if (attr)
 	      {
-	      usprintf (buffer, TEXT("%d"),
+	      usprintf (buffer, "%d",
 			TtaGetAttributeValue (event->attribute));
 	      TtaSetAttributeText (attr, buffer, el, event->document);
 	      }
@@ -2215,7 +2215,7 @@ ThotBool            GlobalAttrInMenu (NotifyAttribute * event)
      /* it's not a global attribute. Accept it */
      return FALSE;
 
-   HTMLSSchema = TtaGetSSchema (TEXT("HTML"), event->document);
+   HTMLSSchema = TtaGetSSchema ("HTML", event->document);
    if (TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
      {
       /* it's a HTML element */
@@ -2342,10 +2342,10 @@ void                SetOnOffEmphasis (Document document, View view)
   if (selectedEl)
     {
     elType = TtaGetElementType (selectedEl);
-    if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+    if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
        /* it's a HTML element */
        SetCharFontOrPhrase (document, HTML_EL_Emphasis);
-    else if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
+    else if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML"))
        /* it's a MathML element */
        SetMathCharFont (document, MathML_ATTR_fontstyle);
     }
@@ -2365,10 +2365,10 @@ void                SetOnOffStrong (Document document, View view)
   if (selectedEl)
     {
     elType = TtaGetElementType (selectedEl);
-    if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+    if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
        /* it's a HTML element */
        SetCharFontOrPhrase (document, HTML_EL_Strong);
-    else if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
+    else if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML"))
        /* it's a MathML element */
        SetMathCharFont (document, MathML_ATTR_fontweight);
     }
@@ -2406,10 +2406,10 @@ void                SetOnOffCode (Document document, View view)
   if (selectedEl)
     {
     elType = TtaGetElementType (selectedEl);
-    if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+    if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
        /* it's a HTML element */
        SetCharFontOrPhrase (document, HTML_EL_Code);
-    else if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
+    else if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML"))
        /* it's a MathML element */
        SetMathCharFont (document, MathML_ATTR_fontfamily);
     }
@@ -2575,7 +2575,7 @@ Element    SearchAnchor (Document doc, Element element, ThotBool link, ThotBool 
    SSchema             HTMLschema;
 
    attr = NULL;
-   HTMLschema = TtaGetSSchema (TEXT("HTML"), doc);
+   HTMLschema = TtaGetSSchema ("HTML", doc);
    elType = TtaGetElementType (element);
    if (link && elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT &&
        TtaSameSSchemas (elType.ElSSchema, HTMLschema))

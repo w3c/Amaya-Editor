@@ -1512,11 +1512,11 @@ void   FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
       pAb->AbLeafType = LtText;
       GetConstantBuffer (pAb);
       pBu1 = pAb->AbText;
-      CopyStringToText (TEXT("<"), pBu1, &lg);
+      CopyStringToText ("<", pBu1, &lg);
       CopyStringToText (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber-1].SrName,
 			pBu1, &i);
       lg += i;
-      CopyStringToText (TEXT(">"), pBu1, &i);
+      CopyStringToText (">", pBu1, &i);
       lg += i;
       pAb->AbVolume = lg;
       pAb->AbCanBeModified = FALSE;
@@ -3048,7 +3048,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 			  /* relative file name */
 			  {
 			    ustrncpy (directoryName, SchemaPath, MAX_PATH - 1);
-			    MakeCompleteName (pConst->PdString, TEXT(""), directoryName, fname, &i);
+			    MakeCompleteName (pConst->PdString, "", directoryName, fname, &i);
 			  }
 			NewPictInfo (pAb, fname, UNKNOWN_FORMAT);
 			appl = TRUE;
@@ -3063,7 +3063,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		      pAb->AbElement->ElLeafType == LtPicture)
 		    {
 		      if (pAb->AbElement->ElPictInfo == NULL)
-			 NewPictInfo (pAb, TEXT(""), UNKNOWN_FORMAT);
+			 NewPictInfo (pAb, "", UNKNOWN_FORMAT);
 		      ((PictInfo *) (pAb->AbElement->ElPictInfo))->PicPresent =
 			                  (PictureScaling)pPRule->PrPresBox[0];
 		      appl = TRUE;
@@ -3071,7 +3071,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		  else if (pAb->AbPresentationBox)
 		    {
 		      if (pAb->AbPictInfo == NULL)
-			 NewPictInfo (pAb, TEXT(""), UNKNOWN_FORMAT);
+			 NewPictInfo (pAb, "", UNKNOWN_FORMAT);
 		      ((PictInfo *) (pAb->AbPictInfo))->PicPresent =
 			                  (PictureScaling)pPRule->PrPresBox[0];
 		      appl = TRUE;

@@ -132,18 +132,18 @@ static PtrParserCtxt	xhtmlParserCtxt = NULL;
 static PtrParserCtxt    XLinkParserCtxt = NULL;
 
 #define MAX_URI_NAME_LENGTH  60
-#define XHTML_URI            TEXT("http://www.w3.org/1999/xhtml")
-#define MathML_URI           TEXT("http://www.w3.org/1998/Math/MathML")
-#define GraphML_URI          TEXT("http://www.w3.org/2000/svg")
-#define XLink_URI            TEXT("http://www.w3.org/1999/xlink")
-#define NAMESPACE_URI        TEXT("http://www.w3.org/XML/1998/namespace")
+#define XHTML_URI            "http://www.w3.org/1999/xhtml"
+#define MathML_URI           "http://www.w3.org/1998/Math/MathML"
+#define GraphML_URI          "http://www.w3.org/2000/svg"
+#define XLink_URI            "http://www.w3.org/1999/xlink"
+#define NAMESPACE_URI        "http://www.w3.org/XML/1998/namespace"
 
 
 /* parser stack */
 	                /* maximum stack height */
 #define MAX_STACK_HEIGHT   200
                         /* XML element name */
-static USTRING       nameElementStack[MAX_STACK_HEIGHT]; 
+static char         *nameElementStack[MAX_STACK_HEIGHT]; 
                         /* element in the Thot abstract tree */
 static Element       elementStack[MAX_STACK_HEIGHT];
                         /* element language */
@@ -158,7 +158,7 @@ static int           stackLevel = 0;
                         /*  */
 static gzFile        stream = 0;
                         /* path or URL of the document */
-static CHAR_T*       docURL = NULL;
+static char         *docURL = NULL;
 
 /* information about the Thot document under construction */
                         /* Document structure schema */
@@ -168,7 +168,7 @@ static Element       rootElement;
                         /* type of the root element */
 static ElementType   rootElType;
                         /* name of the root element */
-static CHAR_T        XMLrootName[100];
+static char          XMLrootName[100];
                         /* root element is closed */
 static ThotBool	     XMLrootClosed = FALSE;
                         /* the last start tag encountered is invalid */
@@ -188,8 +188,8 @@ static ThotBool	    ParsingSubTree = FALSE;
 static ThotBool	    ImmediatelyAfterTag = FALSE;
 static ThotBool	    HTMLStyleAttribute = FALSE;
 static ThotBool	    XMLSpaceAttribute = FALSE;
-static CHAR_T	    currentElementContent = ' ';
-static CHAR_T	    currentElementName[40];
+static char	    currentElementContent = ' ';
+static char	    currentElementName[40];
 static ThotBool     XMLUnknownEncoding;
 
 /* Global variable to handle white-space in XML documents */
@@ -271,15 +271,15 @@ static void     ChangeXmlParserContextUri (STRING uriName)
 static void     ChangeXmlParserContextTagName (STRING tagName)
 
 {
-  if (!ustrcmp (tagName, TEXT("math")))
-    ChangeXmlParserContextDTD (TEXT("MathML"));
+  if (!ustrcmp (tagName, "math"))
+    ChangeXmlParserContextDTD ("MathML");
   else
-    if (!ustrcmp (tagName, TEXT("svg")) ||
-	!ustrcmp (tagName, TEXT("xmlgraphics")))
-      ChangeXmlParserContextDTD (TEXT("GraphML"));
+    if (!ustrcmp (tagName, "svg") ||
+	!ustrcmp (tagName, "xmlgraphics"))
+      ChangeXmlParserContextDTD ("GraphML");
     else
-      if (!ustrcmp (tagName, TEXT("html")))
-	ChangeXmlParserContextDTD (TEXT("HTML"));
+      if (!ustrcmp (tagName, "html"))
+	ChangeXmlParserContextDTD ("HTML");
       else
 	currentParserCtxt = NULL;
 }
@@ -305,7 +305,7 @@ static void    InitXmlParserContexts (void)
       prevCtxt->NextParserCtxt = ctxt;
    ctxt->NextParserCtxt = NULL;
    ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
-   ustrcpy (ctxt->SSchemaName, TEXT("HTML"));
+   ustrcpy (ctxt->SSchemaName, "HTML");
    ctxt->UriName = TtaAllocString (MAX_URI_NAME_LENGTH);
    ustrcpy (ctxt->UriName, XHTML_URI);
    ctxt->XMLSSchema = NULL;
@@ -337,7 +337,7 @@ static void    InitXmlParserContexts (void)
       prevCtxt->NextParserCtxt = ctxt;
    ctxt->NextParserCtxt = NULL;
    ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
-   ustrcpy (ctxt->SSchemaName, TEXT("MathML"));
+   ustrcpy (ctxt->SSchemaName, "MathML");
    ctxt->UriName = TtaAllocString (MAX_URI_NAME_LENGTH);
    ustrcpy (ctxt->UriName, MathML_URI);
    ctxt->XMLSSchema = NULL;
@@ -369,7 +369,7 @@ static void    InitXmlParserContexts (void)
       prevCtxt->NextParserCtxt = ctxt;
    ctxt->NextParserCtxt = NULL;
    ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
-   ustrcpy (ctxt->SSchemaName, TEXT("GraphML"));
+   ustrcpy (ctxt->SSchemaName, "GraphML");
    ctxt->UriName = TtaAllocString (MAX_URI_NAME_LENGTH);
    ustrcpy (ctxt->UriName, GraphML_URI);
    ctxt->XMLSSchema = NULL;
@@ -401,7 +401,7 @@ static void    InitXmlParserContexts (void)
       prevCtxt->NextParserCtxt = ctxt;
    ctxt->NextParserCtxt = NULL;	/* last context */
    ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
-   ustrcpy (ctxt->SSchemaName, TEXT("XLink"));
+   ustrcpy (ctxt->SSchemaName, "XLink");
    ctxt->UriName = TtaAllocString (MAX_URI_NAME_LENGTH);
    ustrcpy (ctxt->UriName, XLink_URI);
    ctxt->XMLSSchema = NULL;
@@ -434,9 +434,9 @@ static void    InitXmlParserContexts (void)
       prevCtxt->NextParserCtxt = ctxt;
    ctxt->NextParserCtxt = NULL;	/* last context */
    ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
-   ustrcpy (ctxt->SSchemaName, TEXT("XML"));
+   ustrcpy (ctxt->SSchemaName, "XML");
    ctxt->UriName = TtaAllocString (MAX_URI_NAME_LENGTH);
-   ctxt->UriName[0] = WC_EOS;
+   ctxt->UriName[0] = EOS;
    ctxt->XMLSSchema = NULL;
    ctxt->XMLtype = XML_TYPE;
    ctxt->MapAttribute = NULL;
@@ -497,9 +497,9 @@ void  XmlParseError (ErrorType type, CHAR_T *msg, int line)
 #endif /* _I18N_ */
    if (!ErrFile)
      {
-       usprintf (ErrFileName, TEXT("%s%c%d%cPARSING.ERR"),
+       usprintf (ErrFileName, "%s%c%d%cPARSING.ERR",
 		 TempFileDirectory, DIR_SEP, XMLcontext.doc, DIR_SEP);
-       if ((ErrFile = ufopen (ErrFileName, TEXT("w"))) == NULL)
+       if ((ErrFile = ufopen (ErrFileName, "w")) == NULL)
          return;
      }
 
@@ -689,7 +689,7 @@ static void    XmlWhiteSpaceInStack (CHAR_T  *attrValue)
       spacePreservedStack[stackLevel-1] = 'P';
   else
     {
-      if ((ustrcmp (attrValue, TEXT("default")) == 0))
+      if ((ustrcmp (attrValue, "default") == 0))
 	spacePreservedStack[stackLevel-1] = 'D';
       else
 	spacePreservedStack[stackLevel-1] = 'P';
@@ -809,7 +809,7 @@ static void  XmlGetFallbackCharacter (wchar_t wcharRead)
        for (j = 0; j < len; j++)
 	 bufName[i++] = buffer[j];
        bufName[i++] = ';';
-       bufName[i] = WC_EOS;
+       bufName[i] = EOS;
        TtaSetAttributeText (attr, bufName, elLeaf, XMLcontext.doc);
      }
 }
@@ -824,7 +824,7 @@ static ThotBool   XhtmlCannotContainText (ElementType elType)
    int            i;
    ThotBool       ret;
 
-   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
       /* not an HTML element */
       ret = TRUE;
    else
@@ -856,11 +856,11 @@ static void  XmlCheckInsert (Element *el, Element parent,
 
    elType = TtaGetElementType (*el);
    if (elType.ElTypeNum == MathML_EL_MathML &&
-       ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0)
+       ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
      {
        ancestor = parent;
        elType = TtaGetElementType (ancestor);
-       if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+       if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
 	 return;
 
        while (ancestor != NULL &&
@@ -1105,7 +1105,7 @@ static void   GetXmlElType (STRING XMLname, ElementType *elType,
   if (currentParserCtxt != NULL)
     {
 #ifdef XML_GEN
-      if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("XML")) == 0)
+      if (ustrcmp (currentParserCtxt->SSchemaName, "XML") == 0)
 	{
 	  elType->ElSSchema = currentParserCtxt->XMLSSchema;
 	  MapGenericXmlType (XMLname, elType, mappedName,
@@ -1240,9 +1240,9 @@ static void      RemoveTrailingSpaces (Element el)
 	       nbspaces = 0;
 	       /* Search for an Entity attribute  */
 	       attrType.AttrSSchema = elType.ElSSchema;
-	       if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
+	       if (ustrcmp (currentParserCtxt->SSchemaName, "HTML") == 0)
 		 attrType.AttrTypeNum = HTML_ATTR_EntityName;
-	       else if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("MathML")) == 0)
+	       else if (ustrcmp (currentParserCtxt->SSchemaName, "MathML") == 0)
 		 attrType.AttrTypeNum = MathML_ATTR_EntityName;
 	       else
 		 attrType.AttrTypeNum = 0;
@@ -1255,18 +1255,18 @@ static void      RemoveTrailingSpaces (Element el)
 		       do
 			 {
 			   TtaGiveSubString (lastLeaf, lastChar, length, 1);
-			   if (lastChar[0] == WC_SPACE)
+			   if (lastChar[0] == SPACE)
 			     {
 			       length--;
 			       nbspaces++;
 			     }
 			 }
-		       while (lastChar[0] == WC_SPACE && length > 0);
+		       while (lastChar[0] == SPACE && length > 0);
 		     }
 		   else
 		     {
 		       TtaGiveSubString (lastLeaf, lastChar, length, 1);
-		       if (lastChar[0] == WC_CR || lastChar[0] == WC_EOL)
+		       if (lastChar[0] == CR || lastChar[0] == EOL)
 			 {
 			   length--;
 			   nbspaces++;
@@ -1433,30 +1433,30 @@ static void   XhtmlCheckContext (STRING elName,
      {
        *isAllowed = TRUE;
        /* only TH and TD elements are allowed as children of a TR element */
-       if (!ustrcmp (nameElementStack[stackLevel - 1], TEXT("tr")))
-	 if (ustrcmp (elName, TEXT("th")) &&
-	     ustrcmp (elName, TEXT("td")))
+       if (!ustrcmp (nameElementStack[stackLevel - 1], "tr"))
+	 if (ustrcmp (elName, "th") &&
+	     ustrcmp (elName, "td"))
 	   *isAllowed = FALSE;
 
        if (*isAllowed &&
-	   !ustrcmp (nameElementStack[stackLevel - 1], TEXT("table")))
+	   !ustrcmp (nameElementStack[stackLevel - 1], "table"))
 	 /* only CAPTION, THEAD, TFOOT, TBODY, COLGROUP, COL and TR are */
 	 /* allowed as children of a TABLE element */
 	 {
-	   if (ustrcmp (elName, TEXT("caption"))  &&
-	       ustrcmp (elName, TEXT("thead"))    &&
-	       ustrcmp (elName, TEXT("tfoot"))    &&
-	       ustrcmp (elName, TEXT("tbody"))    &&
-	       ustrcmp (elName, TEXT("colgroup")) &&
-	       ustrcmp (elName, TEXT("col"))      &&
-	       ustrcmp (elName, TEXT("tr")))
+	   if (ustrcmp (elName, "caption")  &&
+	       ustrcmp (elName, "thead")    &&
+	       ustrcmp (elName, "tfoot")    &&
+	       ustrcmp (elName, "tbody")    &&
+	       ustrcmp (elName, "colgroup") &&
+	       ustrcmp (elName, "col")      &&
+	       ustrcmp (elName, "tr"))
 	     {
-	       if (!ustrcmp (elName, TEXT("td")) ||
-		   !ustrcmp (elName, TEXT("th")))
+	       if (!ustrcmp (elName, "td") ||
+		   !ustrcmp (elName, "th"))
 		 /* Table cell within a table, without a tr. Assume tr */
 		 {
 		   /* simulate a <TR> tag */
-		   StartOfXmlStartElement (TEXT("tr"));
+		   StartOfXmlStartElement ("tr");
 		 }
 	       else
 		 *isAllowed = FALSE;
@@ -1466,30 +1466,30 @@ static void   XhtmlCheckContext (STRING elName,
        if (*isAllowed)
 	 /* CAPTION, THEAD, TFOOT, TBODY, COLGROUP are allowed only as
 	    children of a TABLE element */
-	 if (ustrcmp (elName, TEXT("caption"))  == 0 ||
-	     ustrcmp (elName, TEXT("thead"))    == 0 ||
-	     ustrcmp (elName, TEXT("tfoot"))    == 0 ||
-	     ustrcmp (elName, TEXT("tbody"))    == 0 ||
-	     ustrcmp (elName, TEXT("colgroup")) == 0)
-	     if (ustrcmp (nameElementStack[stackLevel - 1], TEXT("table")) != 0)
+	 if (ustrcmp (elName, "caption")  == 0 ||
+	     ustrcmp (elName, "thead")    == 0 ||
+	     ustrcmp (elName, "tfoot")    == 0 ||
+	     ustrcmp (elName, "tbody")    == 0 ||
+	     ustrcmp (elName, "colgroup") == 0)
+	     if (ustrcmp (nameElementStack[stackLevel - 1], "table") != 0)
 		 *isAllowed = FALSE;
 
        if (*isAllowed)
 	 {
 	   /* only TR is allowed as a child of a THEAD, TFOOT or TBODY element */
-	   if (!ustrcmp (nameElementStack[stackLevel - 1], TEXT("thead")) ||
-	       !ustrcmp (nameElementStack[stackLevel - 1], TEXT("tfoot")) ||
-	       !ustrcmp (nameElementStack[stackLevel - 1], TEXT("tbody")))
+	   if (!ustrcmp (nameElementStack[stackLevel - 1], "thead") ||
+	       !ustrcmp (nameElementStack[stackLevel - 1], "tfoot") ||
+	       !ustrcmp (nameElementStack[stackLevel - 1], "tbody"))
 	     {
-	       if (ustrcmp (elName, TEXT("tr")))
+	       if (ustrcmp (elName, "tr"))
 		 {
-	         if (!ustrcmp (elName, TEXT("td")) ||
-		     !ustrcmp (elName, TEXT("th")))
+	         if (!ustrcmp (elName, "td") ||
+		     !ustrcmp (elName, "th"))
 		   /* Table cell within a thead, tfoot or tbody without a tr. */
 		   /* Assume tr */
 		   {
 		     /* simulate a <tr> tag */
-		     StartOfXmlStartElement (TEXT("tr"));
+		     StartOfXmlStartElement ("tr");
 		   }
 		 else
 		   *isAllowed = FALSE;
@@ -1500,26 +1500,26 @@ static void   XhtmlCheckContext (STRING elName,
        if (*isAllowed)
 	 {
 	   /* Block elements are not allowed within an anchor */
-	   if (!ustrcmp (nameElementStack[stackLevel - 1], TEXT("a")) &&
+	   if (!ustrcmp (nameElementStack[stackLevel - 1], "a") &&
 	       (!IsXMLElementInline (elType)))
 	       *isAllowed = FALSE;
 	 }
        
        if (*isAllowed &&
-	   ustrcmp (elName, TEXT("body")) == 0 &&
+	   ustrcmp (elName, "body") == 0 &&
 	   XmlWithinStack (HTML_EL_BODY, DocumentSSchema))
 	 /* refuse BODY within BODY */
 	 *isAllowed = FALSE;
        
        if (*isAllowed)
 	 /* refuse HEAD within HEAD */
-	 if (ustrcmp (elName, TEXT("head")) == 0)
+	 if (ustrcmp (elName, "head") == 0)
 	   if (XmlWithinStack (HTML_EL_HEAD, DocumentSSchema))
 	     *isAllowed = FALSE;
 
        if (*isAllowed)
 	 /* refuse STYLE within STYLE */
-	 if (ustrcmp (elName, TEXT("style")) == 0)
+	 if (ustrcmp (elName, "style") == 0)
 	   if (XmlWithinStack (HTML_EL_STYLE_, DocumentSSchema))
 	     *isAllowed = FALSE;
        
@@ -1548,9 +1548,9 @@ static void       StartOfXmlStartElement (CHAR_T* GIname)
 
   /* ignore tag <P> within PRE for Xhtml elements */
   if (currentParserCtxt != NULL &&
-      (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0) &&
+      (ustrcmp (currentParserCtxt->SSchemaName, "HTML") == 0) &&
       (XmlWithinStack (HTML_EL_Preformatted, currentParserCtxt->XMLSSchema)) &&
-      (ustrcasecmp (GIname, TEXT("p")) == 0))
+      (ustrcasecmp (GIname, "p") == 0))
     {
        UnknownTag = TRUE;
        return;
@@ -1558,7 +1558,7 @@ static void       StartOfXmlStartElement (CHAR_T* GIname)
 
   if (stackLevel == MAX_STACK_HEIGHT)
     {
-      XmlParseError (errorNotWellFormed, TEXT("**FATAL** Too many XML levels"), 0);
+      XmlParseError (errorNotWellFormed, "**FATAL** Too many XML levels", 0);
       UnknownTag = TRUE;
       return;
     }
@@ -1566,15 +1566,15 @@ static void       StartOfXmlStartElement (CHAR_T* GIname)
   /* search the XML element name in the corresponding mapping table */
   elType.ElSSchema = NULL;
   elType.ElTypeNum = 0;
-  currentElementName[0] = WC_EOS;
+  currentElementName[0] = EOS;
   GetXmlElType (GIname, &elType, &mappedName, &currentElementContent,
 		&highEnoughLevel, XMLcontext.doc);
 
   if (mappedName == NULL)
     {
-      if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
+      if (ustrcmp (currentParserCtxt->SSchemaName, "HTML") == 0)
 	ustrcpy (schemaName, "XHTML");
-      else if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("GraphML")) == 0)
+      else if (ustrcmp (currentParserCtxt->SSchemaName, "GraphML") == 0)
 	ustrcpy (schemaName, "SVG");
       else
 	ustrcpy (schemaName, currentParserCtxt->SSchemaName);
@@ -1582,7 +1582,7 @@ static void       StartOfXmlStartElement (CHAR_T* GIname)
 	{
 	  /* element not found in the corresponding DTD */
 	  /* don't process that element */
-	  usprintf (msgBuffer, TEXT("Unknown %s element %s"),
+	  usprintf (msgBuffer, "Unknown %s element %s",
 		   schemaName , GIname);
 	  XmlParseError (errorParsing, msgBuffer, 0);
 	  UnknownTag = TRUE;
@@ -1592,7 +1592,7 @@ static void       StartOfXmlStartElement (CHAR_T* GIname)
 	  /* element invalid for the current profile */
 	  /* doesn't process that element */
 	  usprintf (msgBuffer,
-		    TEXT("Unknown %s element %s for the current profile"),
+		    "Unknown %s element %s for the current profile",
 		    schemaName, GIname);
 	  XmlParseError (errorParsingProfile, msgBuffer, 0);
 	  UnknownTag = TRUE;
@@ -1609,7 +1609,7 @@ static void       StartOfXmlStartElement (CHAR_T* GIname)
     /* Element not allowed in the current structural context */
     {
       usprintf (msgBuffer,
-		TEXT("The XML element %s is not allowed here"), GIname);
+		"The XML element %s is not allowed here", GIname);
       XmlParseError (errorParsing, msgBuffer, 0);
       UnknownTag = TRUE;
       elInStack = FALSE;
@@ -1677,20 +1677,20 @@ static void       EndOfXmlStartElement (CHAR_T *name)
   if (UnknownTag)
     return;
 
-  if (XMLcontext.lastElement != NULL && currentElementName[0] != WC_EOS)
+  if (XMLcontext.lastElement != NULL && currentElementName[0] != EOS)
     {
       elType = TtaGetElementType (XMLcontext.lastElement);
       elSchemaName = TtaGetSSchemaName (elType.ElSSchema);
       
-      if (ustrcmp (TEXT("HTML"), elSchemaName) == 0)
+      if (ustrcmp ("HTML", elSchemaName) == 0)
 	{
-	  if (!ustrcmp (nameElementStack[stackLevel - 1], TEXT("pre"))   ||
-	      !ustrcmp (nameElementStack[stackLevel - 1], TEXT("style")) ||
-	      !ustrcmp (nameElementStack[stackLevel - 1], TEXT("script")))
+	  if (!ustrcmp (nameElementStack[stackLevel - 1], "pre")   ||
+	      !ustrcmp (nameElementStack[stackLevel - 1], "style") ||
+	      !ustrcmp (nameElementStack[stackLevel - 1], "script"))
 	    /* a <PRE>, <STYLE> or <SCRIPT> tag has been read */
 	    XmlWhiteSpaceInStack (NULL);
 	  else
-	    if (!ustrcmp (nameElementStack[stackLevel - 1], TEXT("table")))
+	    if (!ustrcmp (nameElementStack[stackLevel - 1], "table"))
 	      /* <TABLE> has been read */
 	      XMLcontext.withinTable++;
 	  
@@ -1719,7 +1719,7 @@ static void       EndOfXmlStartElement (CHAR_T *name)
 		  length = TtaGetTextAttributeLength (attr);
 		  text = TtaAllocString (length + 1);
 		  TtaGiveTextAttributeValue (attr, text, &length);
-		  if (!ustrcasecmp (text, TEXT("text/css")))
+		  if (!ustrcasecmp (text, "text/css"))
 		    XMLcontext.parsingCSS = TRUE;
 		  TtaFreeMemory (text);
 		}
@@ -1754,7 +1754,7 @@ static void       EndOfXmlElement (CHAR_T *GIname)
    CHAR_T         schemaName[MAX_SS_NAME_LENGTH];
 
    if (XMLcontext.parsingTextArea)
-     if (ustrcasecmp (GIname, TEXT("textarea")) != 0)
+     if (ustrcasecmp (GIname, "textarea") != 0)
        /* We are parsing the contents of a textarea element. */
        /* The end tag is not the one closing the current textarea, */
        /* consider it as plain text */
@@ -1767,15 +1767,15 @@ static void       EndOfXmlElement (CHAR_T *GIname)
    /* search the XML element name in the corresponding mapping table */
    elType.ElSSchema = NULL;
    elType.ElTypeNum = 0;
-   currentElementName[0] = WC_EOS;
+   currentElementName[0] = EOS;
    GetXmlElType (GIname, &elType, &mappedName, &currentElementContent,
 		 &highEnoughLevel, XMLcontext.doc);
 
    if (mappedName == NULL)
      {
-       if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
+       if (ustrcmp (currentParserCtxt->SSchemaName, "HTML") == 0)
 	 ustrcpy (schemaName, "XHTML");
-       else if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("GraphML")) == 0)
+       else if (ustrcmp (currentParserCtxt->SSchemaName, "GraphML") == 0)
 	 ustrcpy (schemaName, "SVG");
        else
 	 ustrcpy (schemaName, currentParserCtxt->SSchemaName);
@@ -1783,7 +1783,7 @@ static void       EndOfXmlElement (CHAR_T *GIname)
 	 {
 	   /* element not found in the corresponding DTD */
 	   /* don't process that element */
-	   usprintf (msgBuffer, TEXT("Unknown %s element %s"),
+	   usprintf (msgBuffer, "Unknown %s element %s",
 		     schemaName, GIname);
 	   XmlParseError (errorParsing, msgBuffer, 0);
 	   UnknownTag = TRUE;
@@ -1793,7 +1793,7 @@ static void       EndOfXmlElement (CHAR_T *GIname)
 	   /* element invalid for the current profile */
 	   /* doesn't process that element */
 	   usprintf (msgBuffer,
-		     TEXT("Unknown %s element %s for the current profile"),
+		     "Unknown %s element %s for the current profile",
 		     schemaName, GIname);
 	   XmlParseError (errorParsingProfile, msgBuffer, 0);
 	   UnknownTag = TRUE;
@@ -1805,7 +1805,7 @@ static void       EndOfXmlElement (CHAR_T *GIname)
        if (!XmlCloseElement (mappedName))
 	 {
 	   /* the end tag does not close any current element */
-	   usprintf (msgBuffer, TEXT("Unexpected end tag %s"), GIname);
+	   usprintf (msgBuffer, "Unexpected end tag %s", GIname);
 	   XmlParseError (errorParsing, msgBuffer, 0);
 	 }
      }
@@ -1837,15 +1837,15 @@ static ThotBool  IsLeadingSpaceUseless ()
        elSchemaName = TtaGetSSchemaName (elType.ElSSchema);
        lastElType = TtaGetElementType (XMLcontext.lastElement);
        if (IsXMLElementInline (lastElType) &&
-	   ((ustrcmp (TEXT("HTML"), elSchemaName) != 0) ||
-	   ((ustrcmp (TEXT("HTML"), elSchemaName) == 0) &&
+	   ((ustrcmp ("HTML", elSchemaName) != 0) ||
+	   ((ustrcmp ("HTML", elSchemaName) == 0) &&
 	    (elType.ElTypeNum != HTML_EL_Option_Menu) &&
 	    (elType.ElTypeNum != HTML_EL_OptGroup))))
 	 {
 	   removeLeadingSpaces = FALSE;
 	   elType = TtaGetElementType (XMLcontext.lastElement);
 	   if ((elType.ElTypeNum == HTML_EL_BR) && 
-	       (ustrcmp (TEXT("HTML"), elSchemaName) == 0))
+	       (ustrcmp ("HTML", elSchemaName) == 0))
 	     removeLeadingSpaces = TRUE;
 	 }
        else
@@ -1859,8 +1859,8 @@ static ThotBool  IsLeadingSpaceUseless ()
        removeLeadingSpaces = TRUE;
        elType = TtaGetElementType (XMLcontext.lastElement);
        elSchemaName = TtaGetSSchemaName (elType.ElSSchema);
-       if ((ustrcmp (TEXT("HTML"), elSchemaName) != 0) ||
-	   ((ustrcmp (TEXT("HTML"), elSchemaName) == 0) &&
+       if ((ustrcmp ("HTML", elSchemaName) != 0) ||
+	   ((ustrcmp ("HTML", elSchemaName) == 0) &&
 	   elType.ElTypeNum != HTML_EL_Option_Menu &&
 	   elType.ElTypeNum != HTML_EL_OptGroup))
 	 {
@@ -1907,21 +1907,21 @@ void            PutInXmlElement (CHAR_T * data)
      {
        if (RemoveLeadingSpace)
 	 {
-	   while (data[i] == WC_EOL || data[i] == WC_CR ||
-		   data[i] == WC_TAB || data[i] == WC_SPACE)
+	   while (data[i] == EOL || data[i] == CR ||
+		   data[i] == TAB || data[i] == SPACE)
 	     i++;
-	   if (data[i] != WC_EOS)
+	   if (data[i] != EOS)
 	     ImmediatelyAfterTag = FALSE;
 	 }
        else
 	 {
-	   if (data[0] == WC_EOL || data[0] == WC_CR)
+	   if (data[0] == EOL || data[0] == CR)
 	     i = 1;
 	   ImmediatelyAfterTag = FALSE;
 	 }
      }
  
-   if (data[i] == WC_EOS)
+   if (data[i] == EOS)
      return;
 
    length = ustrlen (&(data[i]));
@@ -1932,11 +1932,11 @@ void            PutInXmlElement (CHAR_T * data)
    i = 0;
    if (RemoveLineBreak)
      {
-       while (bufferws[i] != WC_EOS)
+       while (bufferws[i] != EOS)
 	 {
-	   if (bufferws[i] == WC_EOL || bufferws[i] == WC_CR ||
-	       bufferws[i] == WC_TAB)
-	     bufferws[i]= WC_SPACE;
+	   if (bufferws[i] == EOL || bufferws[i] == CR ||
+	       bufferws[i] == TAB)
+	     bufferws[i]= SPACE;
 	   i++;
 	 }
      }
@@ -1948,11 +1948,11 @@ void            PutInXmlElement (CHAR_T * data)
        uselessSpace = IsLeadingSpaceUseless ();
        if (RemoveLeadingSpace && uselessSpace)
 	 /* suppress leading spaces */
-	   while (bufferws[i] == WC_SPACE)
+	   while (bufferws[i] == SPACE)
 	     i++;
        
        /* Collapse contiguous spaces */ 
-       if (bufferws[i] != WC_EOS)
+       if (bufferws[i] != EOS)
 	 {
 	   length = ustrlen (bufferws);
 	   buffer = TtaAllocString (length+1);
@@ -1960,7 +1960,7 @@ void            PutInXmlElement (CHAR_T * data)
 	     {
 	       for (i1 = i; i1 <= length; i1++)
 		 {
-		   if ((unsigned int)bufferws[i1] <= WC_SPACE && bufferws[i1] != WC_EOS)
+		   if ((unsigned int)bufferws[i1] <= SPACE && bufferws[i1] != EOS)
 		     i3++;
 		   else
 		     i3 = 0;
@@ -1976,7 +1976,7 @@ void            PutInXmlElement (CHAR_T * data)
 	   elType = TtaGetElementType (XMLcontext.lastElement);
 	   if (elType.ElTypeNum == 1 && XMLcontext.mergeText)
 	     {
-	       if ((buffer[i1] == WC_SPACE) && RemoveContiguousSpace)
+	       if ((buffer[i1] == SPACE) && RemoveContiguousSpace)
 		 {
 		   /* Is the last character of text element a space */
 		   length = TtaGetTextLength (XMLcontext.lastElement) + 1;
@@ -1984,7 +1984,7 @@ void            PutInXmlElement (CHAR_T * data)
 		   TtaGiveTextContent (XMLcontext.lastElement,
 				       buffertext, &length, &lang);
 		   /* Remove leading space if last content was finished by a space */
-		   if ((buffertext[length-1] == WC_SPACE))
+		   if ((buffertext[length-1] == SPACE))
 		     TtaAppendTextContent (XMLcontext.lastElement,
 					   &(buffer[i1+1]), XMLcontext.doc);
 		   else
@@ -2048,25 +2048,25 @@ static void          EndOfXhtmlAttributeName (CHAR_T *attrName,
    if (attrType.AttrTypeNum <= 0)
      {
        /* this attribute is not in the mapping table */
-       if (ustrcasecmp (attrName, TEXT("xml:lang")) == 0)
+       if (ustrcasecmp (attrName, "xml:lang") == 0)
 	 /* attribute xml:lang is not considered as invalid, but it is ignored */
 	 lastMappedAttr = NULL;
        else
 	 {
 	   if (highEnoughLevel)
 	     {
-	       usprintf (msgBuffer, TEXT("Unknown XHTML attribute %s"), attrName);
+	       usprintf (msgBuffer, "Unknown XHTML attribute %s", attrName);
 	       XmlParseError (errorParsing, msgBuffer, 0);
 	     }
 	   else
 	     {
 	       usprintf (msgBuffer,
-			 TEXT("Unknown XHTML attribute %s for the current profile"),
+			 "Unknown XHTML attribute %s for the current profile",
 			 attrName);
 	       XmlParseError (errorParsingProfile, msgBuffer, 0);
 	     }
 	   /* attach an Invalid_attribute to the current element */
-	   mapAttr = MapHTMLAttribute (TEXT("unknown_attr"), &attrType,
+	   mapAttr = MapHTMLAttribute ("unknown_attr", &attrType,
 				       currentElementName,
 				       &highEnoughLevel, doc);
 	   UnknownAttr = TRUE;
@@ -2100,7 +2100,7 @@ static void          EndOfXhtmlAttributeName (CHAR_T *attrName,
 		   attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
 		   attr = TtaNewAttribute (attrType);
 		   TtaAttachAttribute (el, attr, doc);
-		   TtaSetAttributeText (attr, TEXT("link"), el, doc);
+		   TtaSetAttributeText (attr, "link", el, doc);
 		 }
 	     }
 	   else
@@ -2165,17 +2165,17 @@ static void       EndOfXmlAttributeName (CHAR_T  *attrName,
    if (attrType.AttrTypeNum <= 0)
       /* this attribute is not in a mapping table */
      {
-       if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("GraphML")) == 0)
+       if (ustrcmp (currentParserCtxt->SSchemaName, "GraphML") == 0)
 	 ustrcpy (schemaName, "SVG");
        else
 	 ustrcpy (schemaName, currentParserCtxt->SSchemaName);
-       usprintf (msgBuffer, TEXT("Unknown %s attribute %s"),
+       usprintf (msgBuffer, "Unknown %s attribute %s",
 		 schemaName, attrName);
        XmlParseError (errorParsing, msgBuffer, 0);
      }
    else
      {
-       if (ustrcasecmp (attrName, TEXT("style")) == 0)
+       if (ustrcasecmp (attrName, "style") == 0)
 	   HTMLStyleAttribute = TRUE;
        attr = TtaGetAttribute (el, attrType);
        if (!attr)
@@ -2214,7 +2214,7 @@ static void    EndOfAttributeName (CHAR_T *attrName)
    ustrcpy (buffer, (CHAR_T*) attrName);
    if ((ptr = ustrrchr (buffer, NS_SEP)) != NULL)
      {
-       *ptr = WC_EOS;
+       *ptr = EOS;
        ptr++;
 
        /* Specific treatment to get round a bug in EXPAT parser */
@@ -2222,7 +2222,7 @@ static void    EndOfAttributeName (CHAR_T *attrName)
        if (ustrcmp (buffer, NAMESPACE_URI) == 0)
 	 {
 	   bufName = TtaGetMemory (strlen (ptr) + 5);
-	   ustrcpy (bufName, TEXT("xml:"));
+	   ustrcpy (bufName, "xml:");
 	   ustrcat (bufName, ptr);
 	 }
        else
@@ -2243,20 +2243,20 @@ static void    EndOfAttributeName (CHAR_T *attrName)
    if (currentParserCtxt == NULL)
      {
        usprintf (msgBuffer,
-		 TEXT("Namespace not supported for attribute :\"%s\""), attrName);
+		 "Namespace not supported for attribute :\"%s\"", attrName);
        XmlParseError (errorParsing, msgBuffer, 0);
      }
    else
      {
        /* Is it a xml:space attribute */
-       if (ustrncmp (bufName, TEXT("xml:space"), 9) == 0)
+       if (ustrncmp (bufName, "xml:space", 9) == 0)
 	 XMLSpaceAttribute = TRUE;
 
        /* the attribute xml:lang is replaced by the attribute "lang" */
-       if (ustrncmp (bufName, TEXT("xml:lang"), 8) == 0)
-	 ustrcpy (bufName, TEXT("lang"));
+       if (ustrncmp (bufName, "xml:lang", 8) == 0)
+	 ustrcpy (bufName, "lang");
 
-       if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
+       if (ustrcmp (currentParserCtxt->SSchemaName, "HTML") == 0)
 	 EndOfXhtmlAttributeName (bufName, XMLcontext.lastElement, XMLcontext.doc);
        else
 	 EndOfXmlAttributeName (bufName, XMLcontext.lastElement, XMLcontext.doc);
@@ -2286,7 +2286,7 @@ static void         EndOfXmlAttributeValue (CHAR_T *attrValue)
        (*(currentParserCtxt->MapAttributeValue)) (attrValue, attrType, &val);
        if (val <= 0)
 	 {
-	   usprintf (msgBuffer, TEXT("Unknown attribute value %s"), attrValue);
+	   usprintf (msgBuffer, "Unknown attribute value %s", attrValue);
 	   XmlParseError (errorParsing, msgBuffer, 0);	
 	 }
        else
@@ -2294,7 +2294,7 @@ static void         EndOfXmlAttributeValue (CHAR_T *attrValue)
 			       XMLcontext.lastElement, XMLcontext.doc);
        break;
      case 1:       /* integer */
-       usscanf (attrValue, TEXT("%d"), &val);
+       usscanf (attrValue, "%d", &val);
        TtaSetAttributeValue (currentAttribute, val,
 			     XMLcontext.lastElement, XMLcontext.doc);
        break;
@@ -2343,7 +2343,7 @@ static void       EndOfAttributeValue (CHAR_T *attrValue, CHAR_T *attrName)
 	 {
 	   length = ustrlen (attrValue);
 	   buffer = TtaAllocString (2*length + 1);
-	   buffer[j] = WC_EOS;
+	   buffer[j] = EOS;
 	   entityName = TtaAllocString (length + 1);
 
 	   while (i < length)
@@ -2373,7 +2373,7 @@ static void       EndOfAttributeValue (CHAR_T *attrValue, CHAR_T *attrName)
 			   else if (attrValue[k] == ';')
 			     {
 			       /* End of the entity */
-			       entityName[l] = WC_EOS;
+			       entityName[l] = EOS;
 			       found = MapXMLEntity (currentParserCtxt->XMLtype,
 						     entityName, &entityValue);
 			       if (found && entityValue <= 255)
@@ -2406,11 +2406,11 @@ static void       EndOfAttributeValue (CHAR_T *attrValue, CHAR_T *attrName)
 		 }
 	     }
 
-	   if (buffer[0] != WC_EOS)
-	     buffer[j] = WC_EOS; 
+	   if (buffer[0] != EOS)
+	     buffer[j] = EOS; 
 	   if (XMLSpaceAttribute)
 	     XmlWhiteSpaceInStack (buffer);
-	   if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
+	   if (ustrcmp (currentParserCtxt->SSchemaName, "HTML") == 0)
 	     EndOfHTMLAttributeValue (buffer, lastMappedAttr,
 				      currentAttribute, lastAttrElement,
 				      UnknownAttr, &XMLcontext, TRUE);
@@ -2451,10 +2451,10 @@ static void     CreateXmlEntity (CHAR_T *data, int length)
    buffer = TtaAllocString (length);
    for (i = 0; i < length-1; i++)
        buffer[i] = data[i+1];
-   if (buffer[i-1] == TEXT(';'))
-     buffer[i-1] = WC_EOS;
+   if (buffer[i-1] == ';')
+     buffer[i-1] = EOS;
    else
-     buffer[i] = WC_EOS;
+     buffer[i] = EOS;
 
   /* Look at the current context if there is one */
    if (currentParserCtxt != NULL)
@@ -2470,13 +2470,13 @@ static void     CreateXmlEntity (CHAR_T *data, int length)
        else
  	 {
 	   /* Entity not supported */
-	   if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
+	   if (ustrcmp (currentParserCtxt->SSchemaName, "HTML") == 0)
 	     ustrcpy (schemaName, "XHTML");
-	   else if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("GraphML")) == 0)
+	   else if (ustrcmp (currentParserCtxt->SSchemaName, "GraphML") == 0)
 	     ustrcpy (schemaName, "SVG");
 	   else
 	     ustrcpy (schemaName, currentParserCtxt->SSchemaName);
-	   usprintf (msgBuffer, TEXT("%s entity not supported : &%s;"),
+	   usprintf (msgBuffer, "%s entity not supported : &%s;",
 		     schemaName, buffer);
 	   XmlParseError (errorParsing, msgBuffer, 0);
 	   (*(currentParserCtxt->EntityCreated)) (entityValue, buffer,
@@ -2487,7 +2487,7 @@ static void     CreateXmlEntity (CHAR_T *data, int length)
      {
        /* not found */
        usprintf (msgBuffer,
-		 TEXT("Namespace not supported for the XML entity %s"), buffer);
+		 "Namespace not supported for the XML entity %s", buffer);
        XmlParseError (errorParsing, msgBuffer, 0);
        return;
      }
@@ -2521,12 +2521,12 @@ static void       CreateXmlComment (CHAR_T *commentValue)
    length = strlen (commentValue);
    buffer = TtaAllocString (length + 1);
    i = 0; j = 0;
-   buffer[j] = WC_EOS;
+   buffer[j] = EOS;
 
    /* Create a Thot element for the comment */
    elType.ElSSchema = NULL;
    elType.ElTypeNum = 0;
-   GetXmlElType (TEXT("XMLcomment"), &elType, &mappedName,
+   GetXmlElType ("XMLcomment", &elType, &mappedName,
 		 &cont, &level, XMLcontext.doc);
    if (elType.ElTypeNum > 0)
      {
@@ -2537,7 +2537,7 @@ static void       CreateXmlComment (CHAR_T *commentValue)
        /* Element XMLcomment */
        elType.ElSSchema = NULL;
        elType.ElTypeNum = 0;
-       GetXmlElType (TEXT("XMLcomment_line"), &elType, &mappedName,
+       GetXmlElType ("XMLcomment_line", &elType, &mappedName,
 		     &cont, &level, XMLcontext.doc);
        commentLineEl = TtaNewElement (XMLcontext.doc, elType);
        XmlSetElemLineNumber (commentLineEl);
@@ -2558,7 +2558,7 @@ static void       CreateXmlComment (CHAR_T *commentValue)
 		 /* New line */
 		 {
 		   /* Put the current content into a text comment line */
-		   buffer[j] = WC_EOS;
+		   buffer[j] = EOS;
 		   elTypeLeaf.ElSSchema = elType.ElSSchema;
 		   elTypeLeaf.ElTypeNum = 1;
 		   commentLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
@@ -2572,7 +2572,7 @@ static void       CreateXmlComment (CHAR_T *commentValue)
 		   TtaSetTextContent (commentLeaf, &buffer[0],
 				      XMLcontext.language, XMLcontext.doc);
 		   j = 0;
-		   buffer[j] = WC_EOS;
+		   buffer[j] = EOS;
 		   /* Create a new XMLcomment_line element */
 		   commentLineEl = TtaNewElement (XMLcontext.doc, elType);
 		   XmlSetElemLineNumber (commentLineEl);
@@ -2586,10 +2586,10 @@ static void       CreateXmlComment (CHAR_T *commentValue)
 	   else
 	     {
 	       /* It's not an 8bits character */
-	       if (buffer[0] != WC_EOS)
+	       if (buffer[0] != EOS)
 		 {
 		   /* Put the current content into a text comment line */
-		   buffer[j] = WC_EOS;
+		   buffer[j] = EOS;
 		   /* Create a text element as child of element XMLcomment_line */
 		   elTypeLeaf.ElSSchema = elType.ElSSchema;
 		   elTypeLeaf.ElTypeNum = 1;
@@ -2604,7 +2604,7 @@ static void       CreateXmlComment (CHAR_T *commentValue)
 		   TtaSetTextContent (commentLeaf, &buffer[0],
 				      XMLcontext.language, XMLcontext.doc);
 		   j = 0;
-		   buffer[j] = WC_EOS;
+		   buffer[j] = EOS;
 		 }
 	       /* Try to find a fallback character */
 	       GetFallbackCharacter ((int) wcharRead, fallback, &lang);
@@ -2650,9 +2650,9 @@ static void       CreateXmlComment (CHAR_T *commentValue)
 	 }
 
        /* Process last line */
-       if (buffer[0] != WC_EOS)
+       if (buffer[0] != EOS)
 	 {
-	   buffer[j] = WC_EOS;
+	   buffer[j] = EOS;
 	   elTypeLeaf.ElSSchema = elType.ElSSchema;
 	   elTypeLeaf.ElTypeNum = 1;
 	   commentLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
@@ -2704,18 +2704,18 @@ static void      XmlStyleSheetPi (CHAR_T *PiData)
      {
        ptr = strstr (ptr, "=");
        ptr++;
-       while (ptr[0] != WC_EOS && ptr[0] == ' ')
+       while (ptr[0] != EOS && ptr[0] == ' ')
 	 ptr++;
-       if (ptr[0] != WC_EOS)
+       if (ptr[0] != EOS)
 	 {
 	   delimitor = ptr[0];
 	   tmpbuffer = TtaAllocString (length + 1);
 	   end = strchr (&ptr[1], delimitor);
-	   if (end && end[0] != WC_EOS && tmpbuffer != NULL)
+	   if (end && end[0] != EOS && tmpbuffer != NULL)
 	     {
-	       end[0] = WC_EOS;
+	       end[0] = EOS;
 	       ustrcpy (tmpbuffer, &ptr[1]);
-	       if (!ustrcmp (tmpbuffer, TEXT("text/css")))
+	       if (!ustrcmp (tmpbuffer, "text/css"))
 		 ok = TRUE;
 	     }
 	   if (tmpbuffer != NULL)
@@ -2726,7 +2726,7 @@ static void      XmlStyleSheetPi (CHAR_T *PiData)
    if (!ok)
      {
        usprintf (msgBuffer,
-		 TEXT("xml-stylesheet : attribute \"type\" not defined or not supported"));
+		 "xml-stylesheet : attribute \"type\" not defined or not supported");
        XmlParseError (errorParsing, msgBuffer, 0);
      }
 
@@ -2741,22 +2741,22 @@ static void      XmlStyleSheetPi (CHAR_T *PiData)
 	 {
 	   ptr = strstr (ptr, "=");
 	   ptr++;
-	   while (ptr[0] != WC_EOS && ptr[0] == ' ')
+	   while (ptr[0] != EOS && ptr[0] == ' ')
 	     ptr++;
-	   if (ptr[0] != WC_EOS)
+	   if (ptr[0] != EOS)
 	     {
 	       delimitor = ptr[0];
 	       end = strchr (&ptr[1], delimitor);
 	       tmpbuffer = TtaAllocString (length + 1);
-	       if (end && end[0] != WC_EOS && tmpbuffer != NULL)
+	       if (end && end[0] != EOS && tmpbuffer != NULL)
 		 {
-		   end[0] = WC_EOS;
+		   end[0] = EOS;
 		   ustrcpy (tmpbuffer, &ptr[1]);
-		   if (!ustrcasecmp (tmpbuffer, TEXT ("screen")))
+		   if (!ustrcasecmp (tmpbuffer, "screen"))
 		     css_media = CSS_SCREEN;
-		   else if (!ustrcasecmp (tmpbuffer, TEXT ("print")))
+		   else if (!ustrcasecmp (tmpbuffer, "print"))
 		     css_media = CSS_PRINT;
-		   else if (!ustrcasecmp (tmpbuffer, TEXT ("all")))
+		   else if (!ustrcasecmp (tmpbuffer, "all"))
 		     css_media = CSS_ALL;
 		   else
 		     css_media = CSS_OTHER;
@@ -2777,16 +2777,16 @@ static void      XmlStyleSheetPi (CHAR_T *PiData)
 	 {
 	   ptr = strstr (ptr, "=");
 	   ptr++;
-	   while (ptr[0] != WC_EOS && ptr[0] == ' ')
+	   while (ptr[0] != EOS && ptr[0] == ' ')
 	     ptr++;
-	   if (ptr[0] != WC_EOS)
+	   if (ptr[0] != EOS)
 	     {
 	       delimitor = ptr[0];
 	       css_href = TtaAllocString (length + 1);
 	       end = strchr (&ptr[1], delimitor);
-	       if (end && end[0] != WC_EOS && css_href != NULL)
+	       if (end && end[0] != EOS && css_href != NULL)
 		 {
-		   end[0] = WC_EOS;
+		   end[0] = EOS;
 		   ustrcpy (css_href, &ptr[1]);
 		   css_info = NULL;
 		   LoadStyleSheet (css_href, XMLcontext.doc, NULL,
@@ -2826,16 +2826,16 @@ static void       CreateXmlPi (CHAR_T *PiTarget, CHAR_T *PiData)
    length = strlen (PiTarget) + strlen (PiData);
    buffer = TtaAllocString (length + 2);
    i = 0; j = 0;
-   buffer[j] = WC_EOS;
+   buffer[j] = EOS;
    PiValue = TtaAllocString (length + 2);
    strcpy (PiValue, PiTarget);
-   strcat (PiValue, TEXT(" "));
+   strcat (PiValue, " ");
    strcat (PiValue, PiData);
  
    /* Create a Thot element for the PI */
    elType.ElSSchema = NULL;
    elType.ElTypeNum = 0;
-   GetXmlElType (TEXT("XMLPI"), &elType, &mappedName,
+   GetXmlElType ("XMLPI", &elType, &mappedName,
 		 &cont, &level, XMLcontext.doc);
    if (elType.ElTypeNum > 0)
      {
@@ -2845,13 +2845,13 @@ static void       CreateXmlPi (CHAR_T *PiTarget, CHAR_T *PiData)
        /* Create a XMLPI_line element as the first child of element XMLPI */
        elType.ElSSchema = NULL;
        elType.ElTypeNum = 0;
-       GetXmlElType (TEXT("XMLPI_line"), &elType,
+       GetXmlElType ("XMLPI_line", &elType,
 		     &mappedName, &cont, &level, XMLcontext.doc);
        PiLineEl = TtaNewElement (XMLcontext.doc, elType);
        XmlSetElemLineNumber (PiLineEl);
        TtaInsertFirstChild (&PiLineEl, PiEl, XMLcontext.doc);
 
-       while (i < length && PiValue[i] != WC_EOS)
+       while (i < length && PiValue[i] != EOS)
 	 {
 	   srcbuf = (unsigned char *) &PiValue[i];
 	   nbBytesRead = TtaGetNextWideCharFromMultibyteString (&wcharRead,
@@ -2866,7 +2866,7 @@ static void       CreateXmlPi (CHAR_T *PiTarget, CHAR_T *PiData)
 		 /* New line */
 		 {
 		   /* Put the current content into a text PI line */
-		   buffer[j] = WC_EOS;
+		   buffer[j] = EOS;
 		   elTypeLeaf.ElSSchema = elType.ElSSchema;
 		   elTypeLeaf.ElTypeNum = 1;
 		   PiLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
@@ -2878,7 +2878,7 @@ static void       CreateXmlPi (CHAR_T *PiTarget, CHAR_T *PiData)
 		   TtaSetTextContent (PiLeaf, &buffer[0],
 				      XMLcontext.language, XMLcontext.doc);
 		   j = 0;
-		   buffer[j] = WC_EOS;
+		   buffer[j] = EOS;
 		   /* Create a new XMLPI_line element */
 		   PiLineEl = TtaNewElement (XMLcontext.doc, elType);
 		   XmlSetElemLineNumber (PiLineEl);
@@ -2892,10 +2892,10 @@ static void       CreateXmlPi (CHAR_T *PiTarget, CHAR_T *PiData)
 	   else
 	     {
 	       /* It's not an 8bits character */
-	       if (buffer[0] != WC_EOS)
+	       if (buffer[0] != EOS)
 		 {
 		   /* Put the current content into a text PI line */
-		   buffer[j] = WC_EOS;
+		   buffer[j] = EOS;
 		   /* Create a text element as child of element XMLPI_line */
 		   elTypeLeaf.ElSSchema = elType.ElSSchema;
 		   elTypeLeaf.ElTypeNum = 1;
@@ -2908,7 +2908,7 @@ static void       CreateXmlPi (CHAR_T *PiTarget, CHAR_T *PiData)
 		   TtaSetTextContent (PiLeaf, &buffer[0],
 				      XMLcontext.language, XMLcontext.doc);
 		   j = 0;
-		   buffer[j] = WC_EOS;
+		   buffer[j] = EOS;
 		 }
 	       /* Try to find a fallback character */
 	       GetFallbackCharacter ((int) wcharRead, fallback, &lang);
@@ -2950,9 +2950,9 @@ static void       CreateXmlPi (CHAR_T *PiTarget, CHAR_T *PiData)
 	 }
 
        /* Process last line */
-       if (buffer[0] != WC_EOS)
+       if (buffer[0] != EOS)
 	 {
-	   buffer[j] = WC_EOS;
+	   buffer[j] = EOS;
 	   elTypeLeaf.ElSSchema = elType.ElSSchema;
 	   elTypeLeaf.ElTypeNum = 1;
 	   PiLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
@@ -2973,12 +2973,12 @@ static void       CreateXmlPi (CHAR_T *PiTarget, CHAR_T *PiData)
    
    /* Call the treatment that correspond to that PI */
    /* Actually, Amaya supports only the "xml-stylesheet" PI */
-   if (!ustrcmp (PiTarget, TEXT("xml-stylesheet")))
+   if (!ustrcmp (PiTarget, "xml-stylesheet"))
      XmlStyleSheetPi (PiData);
    else
      {
        usprintf (msgBuffer,
-		 TEXT("Processing Instruction not supported : %s"), PiTarget);
+		 "Processing Instruction not supported : %s", PiTarget);
        XmlParseError (errorParsing, msgBuffer, 0);
      }
 }
@@ -3036,7 +3036,7 @@ static void       Hndl_CharacterData (void *userData,
    buffer = TtaAllocString (length + 1);
    j = 0;
    i = 0;
-   buffer[j] = WC_EOS;
+   buffer[j] = EOS;
 
    while (i < length)
      {
@@ -3054,13 +3054,13 @@ static void       Hndl_CharacterData (void *userData,
        else
 	 {
 	   /* It's not an 8bits character */
-	   if (buffer[0] != WC_EOS)
+	   if (buffer[0] != EOS)
 	     {
 	       /* Put the current content of the buffer into the document */
-	       buffer[j] = WC_EOS;
+	       buffer[j] = EOS;
 	       PutInXmlElement (buffer);
 	       j = 0;
-	       buffer[j] = WC_EOS;
+	       buffer[j] = EOS;
 	     }
 	   /* Try to find a fallback character */
 	   XmlGetFallbackCharacter (wcharRead);
@@ -3068,9 +3068,9 @@ static void       Hndl_CharacterData (void *userData,
 	 }
      }
 
-   if (buffer[0] != WC_EOS)
+   if (buffer[0] != EOS)
      {
-       buffer[j] = WC_EOS;
+       buffer[j] = EOS;
        PutInXmlElement (buffer);
      }
 
@@ -3194,7 +3194,7 @@ static void       Hndl_ElementStart (void *userData,
 #endif /* EXPAT_PARSER_DEBUG */
   
    /* Initialize root element name and parser context if not done yet */
-   if (XMLrootName[0] == WC_EOS)
+   if (XMLrootName[0] == EOS)
      /* This is the first parsed element */
      {
        strcpy (XMLrootName, (CHAR_T*) name);
@@ -3205,7 +3205,7 @@ static void       Hndl_ElementStart (void *userData,
 #ifdef XML_GEN
 	   /* Instanciate the XML generic Root Element */
 	   if (ustrcmp (TtaGetSSchemaName (DocumentSSchema),
-			TEXT("XML")) == 0)
+			"XML") == 0)
 	     TtaChangeXMLRootElement (XMLrootName, XMLcontext.doc);
 #endif /* XML_GEN */
 	 }
@@ -3224,7 +3224,7 @@ static void       Hndl_ElementStart (void *userData,
        ustrcpy (buffer, (CHAR_T*) name);
        if ((ptr = ustrrchr (buffer, NS_SEP)))
 	 {
-	   *ptr = WC_EOS;
+	   *ptr = EOS;
 	    ptr++;
 	    bufName = TtaGetMemory ((strlen (ptr) + 1));
 	    ustrcpy (bufName, ptr);
@@ -3243,14 +3243,14 @@ static void       Hndl_ElementStart (void *userData,
 #ifdef XML_GEN
        /* We assign generic Thot XML schema if the context is null */ 
        if (currentParserCtxt == NULL)
-	 ChangeXmlParserContextDTD (TEXT("XML"));
+	 ChangeXmlParserContextDTD ("XML");
 #else /* XML_GEN */
        /* We stop parsing if the context is null, ie,
 	  if Thot doesn't know the corresponding namespaces */ 
        if (currentParserCtxt == NULL)
 	 {
 	   usprintf (msgBuffer, 
-		     TEXT("Namespace not supported for the element :\"%s\""), name);
+		     "Namespace not supported for the element :\"%s\"", name);
 	   XmlParseError (errorNotWellFormed, msgBuffer, 0);
 	   DisableExpatParser ();
 	   return;
@@ -3349,7 +3349,7 @@ static void     Hndl_ElementEnd (void *userData,
    ustrcpy (buffer, (CHAR_T*) name);
    if ((ptr = ustrrchr (buffer, NS_SEP)))
      {
-       *ptr = WC_EOS;
+       *ptr = EOS;
        ptr++;
        bufName = TtaGetMemory ((strlen (ptr) + 1));
        ustrcpy (bufName, ptr);
@@ -3751,7 +3751,7 @@ static void  InitializeXmlParsingContext (Document doc,
   lastMappedAttr = NULL;
   ImmediatelyAfterTag = FALSE;
   UnknownTag = FALSE;
-  XMLrootName[0] = WC_EOS;
+  XMLrootName[0] = EOS;
   XMLrootClosed = FALSE;
 
   XMLNotWellFormed = FALSE;
@@ -3834,13 +3834,13 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
       tmpLen = (strlen (xmlBuffer)) + 1;
       tmpLen = tmpLen + (2 * SUBTREE_ROOT_LEN) + 1;
       transBuffer = TtaGetMemory (tmpLen);
-      strcpy (transBuffer, TEXT("<"));
+      strcpy (transBuffer, "<");
       strcat (transBuffer, SUBTREE_ROOT);
-      strcat (transBuffer, TEXT(">"));
+      strcat (transBuffer, ">");
       strcat (transBuffer, xmlBuffer);
-      strcat (transBuffer, TEXT("</"));
+      strcat (transBuffer, "</");
       strcat (transBuffer, SUBTREE_ROOT);
-      strcat (transBuffer, TEXT(">"));
+      strcat (transBuffer, ">");
       tmpLen = strlen (transBuffer);
 
       if (!XML_Parse (parser, transBuffer, tmpLen, 1))
@@ -4097,7 +4097,7 @@ static void   XmlParse (FILE     *infile,
 	     /* There is a XML declaration */
 	     /* We look for the first '>' character */
 	     {
-	       while ((bufferRead[i] != TEXT('>')) && i < res)
+	       while ((bufferRead[i] != '>') && i < res)
 		 i++;
 	       if (i < res)
 		 {
@@ -4181,17 +4181,17 @@ void       StartXmlParser (Document doc,
 
   if (stream != 0)
     {
-      if (documentName[0] == WC_EOS &&
+      if (documentName[0] == EOS &&
 	  !TtaCheckDirectory (documentDirectory))
 	{
 	  ustrcpy (documentName, documentDirectory);
-	  documentDirectory[0] = WC_EOS;
+	  documentDirectory[0] = EOS;
 	  s = TtaGetEnvString ("PWD");
 	  /* Set path on current directory */
 	  if (s != NULL)
 	    ustrcpy (documentDirectory, s);
 	  else
-	    documentDirectory[0] = WC_EOS;
+	    documentDirectory[0] = EOS;
 	}
       TtaAppendDocumentPath (documentDirectory);
 
@@ -4206,7 +4206,7 @@ void       StartXmlParser (Document doc,
 	{
 	  length += ustrlen (htmlFileName) + 20;
 	  docURL = TtaAllocString (length+1);
-	  usprintf (docURL, TEXT("%s temp file: %s"), pathURL, htmlFileName);
+	  usprintf (docURL, "%s temp file: %s", pathURL, htmlFileName);
 	}
 
       /* Do not check the Thot abstract tree against the structure */
@@ -4221,10 +4221,10 @@ void       StartXmlParser (Document doc,
 
       /* Is the current document a XHTML document */
       isXHTML = (ustrcmp (TtaGetSSchemaName (DocumentSSchema),
-			  TEXT("HTML")) == 0);	
+			  "HTML") == 0);	
       if (isXHTML)
 	{
-	  strcpy (XMLrootName, (TEXT("html")));
+	  strcpy (XMLrootName, ("html"));
 	  /* Add the default attribute PrintURL */
 	  attrType.AttrSSchema = DocumentSSchema;
 	  attrType.AttrTypeNum = HTML_ATTR_PrintURL;
@@ -4261,22 +4261,22 @@ void       StartXmlParser (Document doc,
 	InitXmlParserContexts ();
 
       /* Select root context */
-      if (ustrcmp (TtaGetSSchemaName (DocumentSSchema), TEXT("HTML")) == 0)
-	ChangeXmlParserContextDTD (TEXT("HTML"));
-      else if (ustrcmp (TtaGetSSchemaName (DocumentSSchema), TEXT("GraphML")) == 0)
-	ChangeXmlParserContextDTD (TEXT("GraphML"));
-      else if (ustrcmp (TtaGetSSchemaName (DocumentSSchema), TEXT("MathML")) == 0)
-	ChangeXmlParserContextDTD (TEXT("MathML"));
+      if (ustrcmp (TtaGetSSchemaName (DocumentSSchema), "HTML") == 0)
+	ChangeXmlParserContextDTD ("HTML");
+      else if (ustrcmp (TtaGetSSchemaName (DocumentSSchema), "GraphML") == 0)
+	ChangeXmlParserContextDTD ("GraphML");
+      else if (ustrcmp (TtaGetSSchemaName (DocumentSSchema), "MathML") == 0)
+	ChangeXmlParserContextDTD ("MathML");
       else
 #ifdef XML_GEN
-	ChangeXmlParserContextDTD (TEXT("XML"));
+	ChangeXmlParserContextDTD ("XML");
 #else /* XML_GEN */
-      	ChangeXmlParserContextDTD (TEXT("HTML"));
+      	ChangeXmlParserContextDTD ("HTML");
 #endif /* XML_GEN */
 
       /* Initialize the error file */
       ErrFile = (FILE*) 0;
-      ErrFileName[0] = WC_EOS;
+      ErrFileName[0] = EOS;
 
       /* Gets the document charset */
       charset = TtaGetDocumentCharset (doc);
@@ -4326,7 +4326,7 @@ void       StartXmlParser (Document doc,
 
    if (XMLUnknownEncoding)
      {
-       InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING));
+       InitInfo ("", TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING));
        ChangeToBrowserMode (doc);
        XMLNotWellFormed = FALSE;
        XMLErrorsFound = TRUE;
@@ -4336,7 +4336,7 @@ void       StartXmlParser (Document doc,
        if (XMLNotWellFormed)
 	 {
 	   /* The document is not well-formed */
-	   InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_NOT_WELL_FORMED));
+	   InitInfo ("", TtaGetMessage (AMAYA, AM_XML_NOT_WELL_FORMED));
 	   ChangeToBrowserMode (doc);
 	   XMLErrorsFound = TRUE;
 	   XMLNotWellFormed = FALSE;
@@ -4344,13 +4344,13 @@ void       StartXmlParser (Document doc,
        else if (XMLCharacterNotSupported)
 	 {
 	   /* Some characters are not supported */
-	   InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_CHARACTER_ERROR));
+	   InitInfo ("", TtaGetMessage (AMAYA, AM_XML_CHARACTER_ERROR));
 	   XMLErrorsFound = TRUE;
 	 }
        else if (XMLErrorsFound)
 	 {
 	   /* Some elements or attributes are not supported */
-	   InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_ERROR));
+	   InitInfo ("", TtaGetMessage (AMAYA, AM_XML_ERROR));
 	 }
        else if (XMLErrorsFoundInProfile)
 	 {
@@ -4358,7 +4358,7 @@ void       StartXmlParser (Document doc,
 	   /* for the current profile */
 	   profile = TtaGetEnvString ("Profile");
 	   if (!profile)
-	     profile = TEXT("");
+	     profile = "";
 	   InitConfirm3L (XMLcontext.doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE),
 			  profile, TtaGetMessage (AMAYA, AM_XML_ERROR), FALSE);
 	   XMLErrorsFound = TRUE;

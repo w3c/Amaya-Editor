@@ -199,7 +199,7 @@ static ThotBool ElIsXLink (Element el)
   elType = TtaGetElementType (el);
   schema_name = TtaGetSSchemaName (elType.ElSSchema);
 
-  if (!ustrcmp (schema_name, TEXT("XLink"))
+  if (!ustrcmp (schema_name, "XLink")
       && elType.ElTypeNum == XLink_EL_XLink)
     return TRUE;
   else
@@ -310,13 +310,13 @@ static char * GetIdValue (Element el)
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
   schema_name = TtaGetSSchemaName (elType.ElSSchema);
-  if (!ustrcmp (schema_name, TEXT("XLink")))
+  if (!ustrcmp (schema_name, "XLink"))
     /* ignore all XLink elements (they are only annotation
        related, and invisible to the document */
     return NULL;
-  else if (!ustrcmp (schema_name, TEXT("MathML")))
+  else if (!ustrcmp (schema_name, "MathML"))
     attrType.AttrTypeNum = MathML_ATTR_id;
-  else if (!ustrcmp (schema_name, TEXT("GraphML")))
+  else if (!ustrcmp (schema_name, "GraphML"))
     attrType.AttrTypeNum = GraphML_ATTR_id;
   else
     attrType.AttrTypeNum = HTML_ATTR_ID;
@@ -762,11 +762,11 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
   /* only do this operation on XML and HTML documents */
   /* @@ JK: should be a function in AHTURLTools */
   schemaName = TtaGetSSchemaName (elType.ElSSchema);
-  if (ustrcmp(schemaName, TEXT("HTML"))
-      && ustrcmp(schemaName, TEXT("XHTML"))
-      && ustrcmp(schemaName, TEXT("XML"))
-      && ustrcmp(schemaName, TEXT("MathML"))
-      && ustrcmp(schemaName, TEXT("GraphML")))
+  if (ustrcmp(schemaName, "HTML")
+      && ustrcmp(schemaName, "XHTML")
+      && ustrcmp(schemaName, "XML")
+      && ustrcmp(schemaName, "MathML")
+      && ustrcmp(schemaName, "GraphML"))
     return NULL;
 
   /* is the document selected? */

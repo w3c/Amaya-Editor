@@ -100,7 +100,7 @@ ThotBool TtaIsSuffixFileIn (CHAR_T* aDirectory, CHAR_T* suffix)
       thotDir.bufLen = sizeof (command) / sizeof (CHAR_T);
       thotDir.PicMask = (ThotDirBrowse_mask)
 	(ThotDirBrowse_FILES | ThotDirBrowse_DIRECTORIES);
-      ret = ThotDirBrowse_first (&thotDir, aDirectory, TEXT("*"), suffix);
+      ret = ThotDirBrowse_first (&thotDir, aDirectory, "*", suffix);
       ThotDirBrowse_close (&thotDir);
     }
   return (ret);
@@ -135,9 +135,9 @@ void TtaListDirectory (STRING aDirectory, int formRef, STRING dirTitle,
 #define SELECTOR_WIDTH 150
 
   if (dirTitle == NULL)
-    dirTitle = TEXT("");
+    dirTitle = "";
   if (fileTitle == NULL)
-    fileTitle = TEXT("");
+    fileTitle = "";
 
   /* S'il s'agit d'un directory accessible */
   if (TtaCheckDirectory (aDirectory)
@@ -156,7 +156,7 @@ void TtaListDirectory (STRING aDirectory, int formRef, STRING dirTitle,
 	  thotDir.buf = word;
 	  thotDir.bufLen = sizeof (word);
 	  thotDir.PicMask = ThotDirBrowse_DIRECTORIES;
-	  if (ThotDirBrowse_first (&thotDir, aDirectory, TEXT("*"), TEXT("")) == 1)
+	  if (ThotDirBrowse_first (&thotDir, aDirectory, "*", "") == 1)
 	    {
 	      do
 		{
@@ -203,7 +203,7 @@ void TtaListDirectory (STRING aDirectory, int formRef, STRING dirTitle,
 	  ls_currentfile = 0;
 	  stop = FALSE;
 	  /* Commande ls sur le directory */
-	  if (ThotDirBrowse_first (&thotDir, aDirectory, TEXT("*"), suffix) == 1)
+	  if (ThotDirBrowse_first (&thotDir, aDirectory, "*", suffix) == 1)
 	    do
 	      {
 		/* c'est un fichier regulier -> compare le suffixe */

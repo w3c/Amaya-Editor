@@ -161,7 +161,7 @@ static HFONT WIN_LoadFont (char alphabet, char family, int highlight, int size, 
                        lpszFace);
 
    if (hFont == NULL)
-      WinErrorBox (WIN_Main_Wd, TEXT("WIN_LoadFont"));
+      WinErrorBox (WIN_Main_Wd, "WIN_LoadFont");
    return (hFont);
 }
 
@@ -927,7 +927,7 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
 		}
 	      /* SelectObject (TtDisplay, hOldFont); */
 	      if (!DeleteObject (SelectObject (TtDisplay, ActiveFont)))
-		WinErrorBox (NULL, TEXT("LoadNearestFont (1)"));
+		WinErrorBox (NULL, "LoadNearestFont (1"));
 	      ActiveFont = 0;
 	    }
 #else  /* _WINDOWS */
@@ -1118,7 +1118,7 @@ void                InitDialogueFonts (CHAR_T* name)
    /* Is there any predefined size for menu fonts ? */
    value = TtaGetEnvString ("FontMenuSize");
    if (value != NULL)
-      usscanf (value, TEXT("%d"), &MenuSize);
+      usscanf (value, "%d", &MenuSize);
    f3 = MenuSize + 2;
 
 #ifndef _WINDOWS

@@ -1320,9 +1320,9 @@ unsigned char *ReadGifToData (CHAR_T* datafile, int *w, int *h, int *ncolors,
    FILE               *fp;
 
 #  ifndef _WINDOWS
-   fp = ufopen (datafile, TEXT("r"));
+   fp = ufopen (datafile, "r");
 #  else  /* _WINDOWS */
-   fp = ufopen (datafile, TEXT("rb"));
+   fp = ufopen (datafile, "rb");
 #  endif /* _WINDOWS */
 
    if (fp != NULL)
@@ -1373,7 +1373,7 @@ Drawable GifCreate (CHAR_T* fn, PictInfo *imageDesc, int *xif, int *yif,
   if (buffer == NULL)
     {
 #ifdef _WINDOWS
-      WinErrorBox (NULL, TEXT("GifCreate(1): buffer == 0x00000000"));
+      WinErrorBox (NULL, "GifCreate(1: buffer == 0x00000000"));
 #endif /* _WINDOWS */
       return ((Drawable) NULL);
     }
@@ -1437,7 +1437,7 @@ Drawable GifCreate (CHAR_T* fn, PictInfo *imageDesc, int *xif, int *yif,
   if (pixmap == None)
     {
 #ifdef _WINDOWS
-      WinErrorBox (NULL, TEXT("GifCreate(2): pixmap == 0x00000000"));
+      WinErrorBox (NULL, "GifCreate(2: pixmap == 0x00000000"));
 #endif /* _WINDOWS */
       return ((Drawable) NULL);
     }
@@ -1592,7 +1592,7 @@ ThotBool            IsGifFormat (CHAR_T* datafile)
    showComment = FALSE;
 
 
-   fp = ufopen (datafile, TEXT("r"));
+   fp = ufopen (datafile, "r");
 
    if (fp == NULL)
      {

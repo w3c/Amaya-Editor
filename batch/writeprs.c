@@ -75,7 +75,7 @@ Name                n;
    i = 0;
    do
       TtaWriteWideChar (outfile, n[i++], ISO_8859_1 /* UTF_8 */);
-   while (n[i - 1] != TEXT('\0'));
+   while (n[i - 1] != '\0');
 }
 
 

@@ -26,16 +26,16 @@
 
 static AttrValueMapping GraphMLAttrValueMappingTable[] =
 { 
-   {GraphML_ATTR_arrowhead, TEXT("both"), GraphML_ATTR_arrowhead_VAL_both},
-   {GraphML_ATTR_arrowhead, TEXT("end"), GraphML_ATTR_arrowhead_VAL_end_},
-   {GraphML_ATTR_arrowhead, TEXT("none"), GraphML_ATTR_arrowhead_VAL_none_},
-   {GraphML_ATTR_arrowhead, TEXT("start"), GraphML_ATTR_arrowhead_VAL_start},
-   {GraphML_ATTR_linestyle_, TEXT("dashed"), GraphML_ATTR_linestyle__VAL_dashed_},
-   {GraphML_ATTR_linestyle_, TEXT("dotted"), GraphML_ATTR_linestyle__VAL_dotted_},
-   {GraphML_ATTR_linestyle_, TEXT("solid"), GraphML_ATTR_linestyle__VAL_solid_},
-   {GraphML_ATTR_xml_space, TEXT("default"), GraphML_ATTR_xml_space_VAL_xml_space_default},
-   {GraphML_ATTR_xml_space, TEXT("preserve"), GraphML_ATTR_xml_space_VAL_xml_space_preserve},
-   {0, TEXT(""), 0}			/* Last entry. Mandatory */
+   {GraphML_ATTR_arrowhead, "both", GraphML_ATTR_arrowhead_VAL_both},
+   {GraphML_ATTR_arrowhead, "end", GraphML_ATTR_arrowhead_VAL_end_},
+   {GraphML_ATTR_arrowhead, "none", GraphML_ATTR_arrowhead_VAL_none_},
+   {GraphML_ATTR_arrowhead, "start", GraphML_ATTR_arrowhead_VAL_start},
+   {GraphML_ATTR_linestyle_, "dashed", GraphML_ATTR_linestyle__VAL_dashed_},
+   {GraphML_ATTR_linestyle_, "dotted", GraphML_ATTR_linestyle__VAL_dotted_},
+   {GraphML_ATTR_linestyle_, "solid", GraphML_ATTR_linestyle__VAL_solid_},
+   {GraphML_ATTR_xml_space, "default", GraphML_ATTR_xml_space_VAL_xml_space_default},
+   {GraphML_ATTR_xml_space, "preserve", GraphML_ATTR_xml_space_VAL_xml_space_preserve},
+   {0, "", 0}			/* Last entry. Mandatory */
 };
 
 #define MaxMsgLength 200
@@ -55,10 +55,10 @@ static AttrValueMapping GraphMLAttrValueMappingTable[] =
   ----------------------------------------------------------------------*/
 void      GraphMLGetDTDName (STRING DTDname, STRING elementName)
 {
-   if (ustrcmp (elementName, TEXT("math")) == 0)
-      ustrcpy (DTDname, TEXT("MathML"));
+   if (ustrcmp (elementName, "math") == 0)
+      ustrcpy (DTDname, "MathML");
    else
-      ustrcpy (DTDname, TEXT(""));
+      ustrcpy (DTDname, "");
 }
 
 /*----------------------------------------------------------------------
@@ -146,11 +146,11 @@ void   ParseFillStrokeAttributes (int attrType, Attribute attr, Element el, Docu
       TtaGiveTextAttributeValue (attr, text, &length);
       /* builds the equivalent CSS rule */
       if (attrType == GraphML_ATTR_fill)
-	  usprintf (css_command, TEXT("fill: %s"), text);
+	  usprintf (css_command, "fill: %s", text);
       else if (attrType == GraphML_ATTR_stroke)
-          usprintf (css_command, TEXT("stroke: %s"), text);
+          usprintf (css_command, "stroke: %s", text);
       else if (attrType == GraphML_ATTR_stroke_width)
-          usprintf (css_command, TEXT("stroke-width: %s"), text);
+          usprintf (css_command, "stroke-width: %s", text);
       /* parse the CSS rule */
       ParseHTMLSpecificStyle (el, css_command, doc, 0, delete);
       TtaFreeMemory (text);
@@ -207,7 +207,7 @@ static Element      CreateGraphicalLeaf (char shape, Element el, Document doc, T
       /* it's a new attribute */
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (el, attr, doc);
-      TtaSetAttributeText (attr, TEXT("1"), el, doc);
+      TtaSetAttributeText (attr, "1", el, doc);
     }
   ParseFillStrokeAttributes (attrType.AttrTypeNum, attr, el, doc, FALSE);
   return leaf;
@@ -557,7 +557,7 @@ void      GraphMLElementComplete (Element el, Document doc, int *error)
 	     length = TtaGetTextAttributeLength (attr);
 	     text = TtaAllocString (length + 1);
 	     TtaGiveTextAttributeValue (attr, text, &length);
-	     if (!ustrcasecmp (text, TEXT("text/css")))
+	     if (!ustrcasecmp (text, "text/css"))
 	       parseCSS = TRUE;
 	     TtaFreeMemory (text);
 	   }
@@ -696,7 +696,7 @@ void            CreatePoints (Attribute attr, Element el, Document doc)
       while (*ptr != EOS)
          {
          x = y = 0;
-         usscanf (ptr, TEXT("%d"), &x);
+         usscanf (ptr, "%d", &x);
          if (x > maxX)
             maxX = x;
          if (x < minX)
@@ -704,7 +704,7 @@ void            CreatePoints (Attribute attr, Element el, Document doc)
          ptr = SkipInt (ptr);
          ptr = SkipSep (ptr);
          if (ptr)
-            usscanf (ptr, TEXT("%d"), &y);
+            usscanf (ptr, "%d", &y);
          if (y > maxY)
             maxY = y;
          if (y < minY)
@@ -916,25 +916,25 @@ static STRING      GetNumber (STRING ptr, int* coord)
   val = 0;
   negative = FALSE;
   /* read the sign */
-  if (*ptr == TEXT('+'))
+  if (*ptr == '+')
     ptr++;
-  else if (*ptr == TEXT('-'))
+  else if (*ptr == '-')
     {
       ptr++;
       negative = TRUE;
     }
   /* read the integer part */
-  while (*ptr != WC_EOS && *ptr >= TEXT('0') && *ptr <= TEXT('9'))
+  while (*ptr != WC_EOS && *ptr >= '0' && *ptr <= '9')
     {
       val *= 10;
-      val += *ptr - TEXT('0');
+      val += *ptr - '0';
       ptr++;
     }
-  if (*ptr == TEXT('.'))
+  if (*ptr == '.')
     /* skip the decimal part */
     {
       ptr++;
-      while (*ptr != WC_EOS &&  *ptr >= TEXT('0') && *ptr <= TEXT('9'))
+      while (*ptr != WC_EOS &&  *ptr >= '0' && *ptr <= '9')
 	ptr++;
     }
   if (negative)
@@ -943,7 +943,7 @@ static STRING      GetNumber (STRING ptr, int* coord)
     *coord = val;
   /* skip the following spaces */
   while (*ptr != WC_EOS &&
-         (*ptr == TEXT(',') || *ptr == WC_SPACE || *ptr == WC_BSPACE ||
+         (*ptr == ',' || *ptr == WC_SPACE || *ptr == WC_BSPACE ||
 	  *ptr == WC_EOL    || *ptr == WC_TAB   || *ptr == WC_CR))
     ptr++;
   return (ptr);
@@ -977,7 +977,7 @@ void      ParseTransformAttribute (Attribute attr, Element el, Document doc, Tho
 	   pval.typed_data.real = FALSE;
 	   ptr += 9;
 	   ptr = TtaSkipWCBlanks (ptr);
-	   if (*ptr == TEXT('('))
+	   if (*ptr == '(')
 	     {
 	       ptr++;
 	       ctxt = TtaGetSpecificStyleContext (doc);
@@ -989,7 +989,7 @@ void      ParseTransformAttribute (Attribute attr, Element el, Document doc, Tho
 	       ctxt->destroy = delete;
 	       TtaSetStylePresentation (PRHorizPos, el, NULL, ctxt, pval);
 	       ptr = TtaSkipWCBlanks (ptr);
-	       if (*ptr == TEXT(')'))
+	       if (*ptr == ')')
 		 pval.typed_data.value = 0;
 	       else
 		 {
@@ -998,7 +998,7 @@ void      ParseTransformAttribute (Attribute attr, Element el, Document doc, Tho
 		   pval.typed_data.value = y;
 		 }
 	       TtaSetStylePresentation (PRVertPos, el, NULL, ctxt, pval);
-	       if (*ptr == TEXT(')'))
+	       if (*ptr == ')')
 		 ptr++;
 	       TtaFreeMemory (ctxt);
 	     }
@@ -1181,8 +1181,8 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	       y += ycur;
 	       }
 	     /* compute the first control point */
-	     if (prevCommand == TEXT('C') || prevCommand == TEXT('c') || 
-		 prevCommand == TEXT('S') || prevCommand == TEXT('s'))
+	     if (prevCommand == 'C' || prevCommand == 'c' || 
+		 prevCommand == 'S' || prevCommand == 's')
 	       {
 		 x1 = 2*xcur - x2prev;
 		 y1 = 2*ycur - y2prev;
@@ -1245,8 +1245,8 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	       y += ycur;
 	       }
 	     /* compute the control point */
-	     if (prevCommand == TEXT('Q') || prevCommand == TEXT('q') || 
-		 prevCommand == TEXT('T') || prevCommand == TEXT('t'))
+	     if (prevCommand == 'Q' || prevCommand == 'q' || 
+		 prevCommand == 'T' || prevCommand == 't')
 	       {
 		 x1 = xcur + (xcur - x1prev);
 		 y1 = ycur + (ycur - y1prev);
@@ -1311,7 +1311,7 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	     ptr++;
 	     }
 	   else
-	     if (*ptr != TEXT('+') && *ptr != TEXT('-') &&
+	     if (*ptr != '+' && *ptr != '-' &&
 		 (*ptr < '0' || *ptr > '9'))
 	       /* no more coordinates. New command */
 	       {

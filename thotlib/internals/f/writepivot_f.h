@@ -16,7 +16,7 @@ extern void PutAttribut ( BinFile pivFile,
                           PtrAttribute pAttr,
                           PtrDocument pDoc );
 extern void Externalise ( BinFile pivFile,
-                          PtrElement * pEl,
+                          PtrElement *pEl,
                           PtrDocument pDoc,
                           ThotBool subTree );
 extern void WriteSchemaNamesOfDoc ( BinFile pivFile,
@@ -41,7 +41,7 @@ extern void PutAttribut (/* BinFile pivFile,
                             PtrAttribute pAttr,
                             PtrDocument pDoc */);
 extern void Externalise (/* BinFile pivFile,
-                            PtrElement * pEl,
+                            PtrElement *pEl,
                             PtrDocument pDoc,
                             ThotBool subTree */);
 extern void WriteSchemaNamesOfDoc (/* BinFile pivFile,

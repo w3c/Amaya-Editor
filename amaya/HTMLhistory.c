@@ -217,7 +217,7 @@ static ThotBool IsNextDocLoaded (const Document baseDoc, const STRING url,
        /* concatenate the parameters before making the test */
        if (parameters[0] != WC_EOS)
 	 {
-	   ustrcat (pathname, TEXT("?"));
+	   ustrcat (pathname, "?");
 	   ustrcat (pathname, parameters);
 	 }
        loaded = IsDocumentLoaded (pathname, NULL);

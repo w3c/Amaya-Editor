@@ -8,7 +8,7 @@
 /*
  *
  * Authors: V. Quint, I. Vatton (INRIA)
- *          R. Guetari (W3C/INRIA) - Unicode and Windows version
+ *          R. Guetari (W3C/INRIA) Windows version
  *
  */	
 
@@ -73,7 +73,7 @@
 #include "tree_f.h"
 
 static Proc         AppClosingFunction = NULL;
-#define VersionId TEXT ("V2.1")
+#define VersionId "V3.1"
 ThotBool            PrintErrorMessages = TRUE;
 
 #ifdef _WINDOWS
@@ -82,13 +82,7 @@ ThotBool            PrintErrorMessages = TRUE;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 IdentDocument (PtrDocument pDoc)
-#else  /* __STDC__ */
-int                 IdentDocument (pDoc)
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
 {
    int                 d;
 
@@ -123,16 +117,7 @@ void                CloseInsertion ()
    corresponding view number.                              
    corresponding assoc state.                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GetViewInfo (Document document, View view, int *viewnumber, ThotBool * assoc)
-#else  /* __STDC__ */
-void                GetViewInfo (document, view, viewnumber, assoc)
-Document            document;
-View                view;
-int                *viewnumber;
-ThotBool           *assoc;
-
-#endif /* __STDC__ */
+void GetViewInfo (Document document, View view, int *viewnumber, ThotBool *assoc)
 {
 
    *assoc = FALSE;
@@ -157,13 +142,7 @@ ThotBool           *assoc;
    Return value:                                                   
    corresponding window.                                   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 GetWindowNumber (Document document, View view)
-#else  /* __STDC__ */
-int                 GetWindowNumber (document, view)
-Document            document;
-View                view;
-#endif /* __STDC__ */
 {
    PtrDocument         pDoc;
    ThotBool            assoc;
@@ -194,7 +173,7 @@ View                view;
 /*----------------------------------------------------------------------
    TtaIsPrinting returns TRUE is the application is printing.    
   ----------------------------------------------------------------------*/
-ThotBool         TtaIsPrinting ()
+ThotBool TtaIsPrinting ()
 {
   return (Printing);
 }
@@ -202,13 +181,7 @@ ThotBool         TtaIsPrinting ()
 /*----------------------------------------------------------------------
    TtaGetViewFrame returns the frame widget of the document view.    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotWidget          TtaGetViewFrame (Document document, View view)
-#else  /* __STDC__ */
-ThotWidget          TtaGetViewFrame (document, view)
-Document            document;
-View                view;
-#endif /* __STDC__ */
+ThotWidget TtaGetViewFrame (Document document, View view)
 {
   int                 frame;
 
@@ -238,7 +211,7 @@ View                view;
 /*----------------------------------------------------------------------
    CoreHandler est un handler d'erreur fatale.                     
   ----------------------------------------------------------------------*/
-static void         ErrorHandler ()
+static void ErrorHandler ()
 {
 #  ifndef _WINDOWS
    signal (SIGBUS, SIG_DFL);
@@ -314,17 +287,12 @@ void                InitErrorHandler ()
    defined in file .Xdefaults.
 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaInitialize (CHAR_T* applicationName)
-#else  /* __STDC__ */
-void                TtaInitialize (applicationName)
-CHAR_T*             applicationName;
-#endif /* __STDC__ */
+void                TtaInitialize (char *applicationName)
 {
    int                 i;
 
    UserErrorCode = 0;
-   ustrcpy (DefaultDocumentName, TEXT(""));
+   ustrcpy (DefaultDocumentName, "");
    InitEditorMemory ();	      /* Initializes the memory managment of the editor */
    InitNatures ();	      /* Initializes the table of Natures */
 
@@ -360,11 +328,11 @@ CHAR_T*             applicationName;
 
    numOfJobs = 0;
    /* Initializes patterns */
-   NbPatterns = sizeof (Name_patterns) / sizeof (STRING);
+   NbPatterns = sizeof (Name_patterns) / sizeof (char *);
    Patterns = Name_patterns;
 #endif /* NODISPLAY */
    /* load the message table of the Thot Library */
-   i = TtaGetMessageTable (TEXT("libdialogue"), TMSG_LIB_MSG_MAX);
+   i = TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);
    switch (i)
      {
      case 0:
@@ -393,12 +361,7 @@ CHAR_T*             applicationName;
    just before the application will be closed.
    That procedure has no parameters.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetApplicationQuit (Proc procedure)
-#else  /* __STDC__ */
-void                TtaSetApplicationQuit (procedure)
-Proc                procedure;
-#endif /* __STDC__ */
+void TtaSetApplicationQuit (Proc procedure)
 {
   AppClosingFunction = procedure;
 }
@@ -409,9 +372,8 @@ Proc                procedure;
 
    Quit the Thot tool kit. No other function of the tool kit can then
    be called by the application.
-
   ----------------------------------------------------------------------*/
-void                TtaQuit ()
+void TtaQuit ()
 {
   PtrDocument       pDoc;
   NotifyDialog      notifyDoc;
@@ -455,17 +417,10 @@ void                TtaQuit ()
    TtaSetErrorMessages
 
    Indicates to the tool kit whether error messages must be printed or not.
-
    Parameter:
    on: 1 if error messages must be printed, 0 if not.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetErrorMessages (int on)
-#else  /* __STDC__ */
-void                TtaSetErrorMessages (on)
-int                 on;
-#endif /* __STDC__ */
+void TtaSetErrorMessages (int on)
 {
    PrintErrorMessages = (ThotBool) on;
 }
@@ -474,12 +429,10 @@ int                 on;
    TtaGetVersion
 
    Returns the identifier of the current version of the Thot editing tool kit.
-
    Return value:
    identifier of the current version.
-
   ----------------------------------------------------------------------*/
-STRING              TtaGetVersion ()
+char *TtaGetVersion ()
 {
    UserErrorCode = 0;
    return (VersionId);
@@ -490,12 +443,10 @@ STRING              TtaGetVersion ()
 
    Returns the error code set by the last call to the Thot editing tool kit.
    See file application.h for the possible values.
-
    Return value:
    last error code, 0 if the last call was successful.
-
   ----------------------------------------------------------------------*/
-int                 TtaGetErrorCode ()
+int TtaGetErrorCode ()
 {
    return UserErrorCode;
 }
@@ -504,129 +455,120 @@ int                 TtaGetErrorCode ()
    TtaGetStrError
 
    Returns a pointer to the message text for a given error code.
-
    Parameter:
    errorCode: an error code.
-
    Return value:
    No return value
-
    See also:
    TtaGetErrorCode
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-STRING              TtaGetStrError (int errorCode)
-#else  /* __STDC__ */
-STRING              TtaGetStrError (errorCode)
-int                 errorCode;
-
-#endif /* __STDC__ */
+char *TtaGetStrError (int errorCode)
 {
-   STRING              strError = NULL;
+   char             *strError = NULL;
 
    switch (errorCode)
 	 {
 	    case ERR_document_name:
-	       strError = TEXT("invalid document name");
+	       strError = "invalid document name";
 	       break;
 	    case ERR_too_many_documents:
-	       strError = TEXT("too many documents");
+	       strError = "too many documents";
 	       break;
 	    case ERR_cannot_read_struct_schema:
-	       strError = TEXT("cannot read structure schema");
+	       strError = "cannot read structure schema";
 	       break;
 	    case ERR_empty_document:
-	       strError = TEXT("empty document");
+	       strError = "empty document";
 	       break;
 	    case ERR_cannot_open_pivot_file:
-	       strError = TEXT("cannot open pivot file");
+	       strError = "cannot open pivot file";
 	       break;
 	    case ERR_invalid_document_parameter:
-	       strError = TEXT("invalid document parameter");
+	       strError = "invalid document parameter";
 	       break;
 	    case ERR_read_only_document:
-	       strError = TEXT("read only document");
+	       strError = "read only document";
 	       break;
 	    case ERR_invalid_associated_root:
-	       strError = TEXT("invalid associated root");
+	       strError = "invalid associated root";
 	       break;
 	    case ERR_invalid_parameter:
-	       strError = TEXT("invalid parameter");
+	       strError = "invalid parameter";
 	       break;
 	    case ERR_not_implemented:
-	       strError = TEXT("feature not implemented");
+	       strError = "feature not implemented";
 	       break;
 	    case ERR_invalid_attribute_value:
-	       strError = TEXT("invalid attribute value");
+	       strError = "invalid attribute value";
 	       break;
 	    case ERR_attribute_element_mismatch:
-	       strError = TEXT("attribute element mismatch");
+	       strError = "attribute element mismatch";
 	       break;
 	    case ERR_buffer_too_small:
-	       strError = TEXT("buffer too small");
+	       strError = "buffer too small";
 	       break;
 	    case ERR_invalid_element_type:
-	       strError = TEXT("invalid element type");
+	       strError = "invalid element type";
 	       break;
 	    case ERR_element_does_not_match_DTD:
-	       strError = TEXT("element does not match DTD");
+	       strError = "element does not match DTD";
 	       break;
 	    case ERR_invalid_attribute_type:
-	       strError = TEXT("invalid attribute type");
+	       strError = "invalid attribute type";
 	       break;
 	    case ERR_duplicate_attribute:
-	       strError = TEXT("duplicate attribute");
+	       strError = "duplicate attribute";
 	       break;
 	    case ERR_mandatory_attribute:
-	       strError = TEXT("mandatory attribute");
+	       strError = "mandatory attribute";
 	       break;
 	    case ERR_cannot_set_link:
-	       strError = TEXT("cannot set link");
+	       strError = "cannot set link";
 	       break;
 	    case ERR_no_selection_in_document:
-	       strError = TEXT("no selection in document");
+	       strError = "no selection in document";
 	       break;
 	    case ERR_incorrect_tree:
-	       strError = TEXT("incorrect tree");
+	       strError = "incorrect tree";
 	       break;
 	    case ERR_cannot_open_view:
-	       strError = TEXT("cannot open view");
+	       strError = "cannot open view";
 	       break;
 	    case ERR_there_are_open_views:
-	       strError = TEXT("there are open views");
+	       strError = "there are open views";
 	       break;
 	    case ERR_cannot_load_pschema:
-	       strError = TEXT("cannot load pschema");
+	       strError = "cannot load pschema";
 	       break;
 	    case ERR_duplicate_presentation_rule:
-	       strError = TEXT("duplicate presentation rule");
+	       strError = "duplicate presentation rule";
 	       break;
 	    case ERR_string_too_long:
-	       strError = TEXT("string too long");
+	       strError = "string too long";
 	       break;
 	    case ERR_cannot_holophrast_a_root:
-	       strError = TEXT("cannot holophrast a root");
+	       strError = "cannot holophrast a root";
 	       break;
 	    case ERR_cannot_holophrast_that_type:
-	       strError = TEXT("cannot holophrast that type");
+	       strError = "cannot holophrast that type";
 	       break;
 	    case ERR_main_window_not_open:
-	       strError = TEXT("main window not open");
+	       strError = "main window not open";
 	       break;
 	    case ERR_element_already_inserted:
-	       strError = TEXT("element already inserted");
+	       strError = "element already inserted";
 	       break;
 	    case ERR_too_many_languages:
-	       strError = TEXT("language table is full");
+	       strError = "language table is full";
 	       break;
 	    case ERR_language_not_found:
-	       strError = TEXT("language not found");
+	       strError = "language not found";
 	       break;
 	    case ERR_no_presentation_schema:
-	       strError = TEXT("no presentation schema");
+	       strError = "no presentation schema";
 	       break;
 	    case ERR_element_has_no_box:
-	       strError = TEXT("element has no box");
+	       strError = "element has no box";
 	       break;
 	    default:
 	       strError = NULL;
@@ -639,13 +581,7 @@ int                 errorCode;
 /*----------------------------------------------------------------------
    ThotExit termine l'application Thot.                             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ThotExit (int result)
-#else  /* __STDC__ */
-void                ThotExit (result)
-int                 result;
-
-#endif /* __STDC__ */
 {
    fflush (stderr);
    fflush (stdout);
@@ -655,4 +591,3 @@ int                 result;
       exit (result);
 }
 
-/* end of module */

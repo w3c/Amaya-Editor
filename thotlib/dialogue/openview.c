@@ -96,7 +96,7 @@ void TtcOpenView (Document document, View view)
 	     src = &buf[0];
 	     for (k = 1; k <= nbItems; k++)
 	       {
-		  ustrcpy (dest, TEXT("B"));
+		  ustrcpy (dest, "B");
 		  dest++;
 		  l = ustrlen (src);
 		  ustrcpy (dest, src);

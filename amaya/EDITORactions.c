@@ -144,9 +144,9 @@ void InitializeNewDoc (STRING url, int docType, Document doc)
       DocumentMeta[doc]->xmlformat = TRUE;
       /* check the current profile */
       profile = TtaGetEnvString ("Profile");
-      if (!ustrncmp (profile, TEXT("XHTML-basic"), 10))
+      if (!ustrncmp (profile, "XHTML-basic", 10))
 	ParsingLevel[doc] = L_Basic;
-      else if (!ustrncmp (profile, TEXT("XHTML-strict"), 10))
+      else if (!ustrncmp (profile, "XHTML-strict", 10))
 	ParsingLevel[doc] = L_Strict;
       
       LoadUserStyleSheet (doc);
@@ -160,7 +160,7 @@ void InitializeNewDoc (STRING url, int docType, Document doc)
       title = TtaSearchTypedElement (elType, SearchInTree, root);
       text = TtaGetFirstChild (title);
       if (TtaGetTextLength (text) == 0)
-	TtaSetTextContent (text, TEXT("No title"), language, doc);
+	TtaSetTextContent (text, "No title", language, doc);
       UpdateTitle (title, doc);
 
       elType.ElTypeNum = HTML_EL_HEAD;
@@ -195,12 +195,12 @@ void InitializeNewDoc (STRING url, int docType, Document doc)
       attrType.AttrTypeNum = HTML_ATTR_meta_name;
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (meta, attr, doc);
-      TtaSetAttributeText (attr, TEXT("GENERATOR"), meta, doc);
+      TtaSetAttributeText (attr, "GENERATOR", meta, doc);
       attrType.AttrTypeNum = HTML_ATTR_meta_content;
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (meta, attr, doc);
       ustrcpy (tempfile, HTAppName);
-      ustrcat (tempfile, TEXT(" "));
+      ustrcat (tempfile, " ");
       ustrcat (tempfile, HTAppVersion);
       TtaSetAttributeText (attr, tempfile, meta, doc);
       TtaInsertSibling (meta, child, FALSE, doc);
@@ -302,7 +302,7 @@ void                SpellCheck (Document document, View view)
 
    root = TtaGetMainRoot (document);
    elType = TtaGetElementType (root);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
      {
        elType.ElTypeNum = HTML_EL_BODY;
        body = TtaSearchTypedElement (elType, SearchInTree, root);
@@ -317,7 +317,7 @@ void                SpellCheck (Document document, View view)
 	   /* create the Language attribute */
 	   attr = TtaNewAttribute (attrType);
 	   TtaAttachAttribute (body, attr, document);
-	   TtaSetAttributeText (attr, TEXT("en"), body, document);
+	   TtaSetAttributeText (attr, "en", body, document);
 	 }
        /* get the current selection */
        TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
@@ -347,7 +347,7 @@ void                CreateBreak (Document document, View view)
    if (el == NULL)
      return;
    elType = TtaGetElementType (el);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) != 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
      /* not within HTML element */
      return;
 
@@ -402,7 +402,7 @@ static Element   InsertWithinHead (Document document, View view, int elementT)
    ThotBool            before;
 
    docSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (docSchema), TEXT("HTML")) != 0)
+   if (ustrcmp(TtaGetSSchemaName (docSchema), "HTML") != 0)
      /* not within an HTML document */
      return (NULL);
    else
@@ -539,7 +539,7 @@ void                CreateStyle (Document document, View view)
       attrType.AttrTypeNum = HTML_ATTR_Notation;
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (el, attr, document);
-      TtaSetAttributeText (attr, TEXT("text/css"), el, document);
+      TtaSetAttributeText (attr, "text/css", el, document);
       child = TtaGetFirstChild (el);
       if (child)
 	TtaSelectElement (document, child);
@@ -556,7 +556,7 @@ void                CreateComment (Document document, View view)
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
      {
        elType.ElTypeNum = HTML_EL_Comment_;
        TtaInsertElement (elType, document);
@@ -581,9 +581,9 @@ void                CreateScript (Document document, View view)
      {
        elType = TtaGetElementType (el);
        if (elType.ElTypeNum != HTML_EL_HEAD ||
-	   ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+	   ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
 	 {
-	   if (!ustrcmp(TtaGetSSchemaName (docSchema), TEXT("HTML")))
+	   if (!ustrcmp(TtaGetSSchemaName (docSchema), "HTML"))
 	     {
 	       /* it's a HTML document search the head element */
 	       elType.ElTypeNum = HTML_EL_HEAD;
@@ -601,8 +601,8 @@ void                CreateScript (Document document, View view)
        /* create Script in the body if we are within an HTML document
 	  and within an HTML element */
        elType = TtaGetElementType (el);
-       if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) &&
-           !ustrcmp(TtaGetSSchemaName (docSchema), TEXT("HTML")))
+       if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
+           !ustrcmp(TtaGetSSchemaName (docSchema), "HTML"))
 	 {
 	   elType.ElTypeNum = HTML_EL_SCRIPT;
 	   TtaCreateElement (elType, document);
@@ -629,7 +629,7 @@ static ThotBool     HTMLelementAllowed (Document document)
       return FALSE;
          
    elType = TtaGetElementType (el);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
      /* within an HTML element */
       return TRUE;
    else
@@ -654,7 +654,7 @@ static ThotBool     HTMLelementAllowed (Document document)
 	      {
 		elType = TtaGetElementType (ancestor);
 		if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema),
-			     TEXT("HTML")))
+			     "HTML"))
 		  /* this is an HTML element */
 		  return TRUE;
 		sibling = ancestor;
@@ -676,7 +676,7 @@ static ThotBool     HTMLelementAllowed (Document document)
 	      {
 		elType = TtaGetElementType (ancestor);
 		if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema),
-			     TEXT("HTML")))
+			     "HTML"))
 		  /* this is an HTML element */
 		  return TRUE;
 		sibling = ancestor;
@@ -699,7 +699,7 @@ static void         CreateHTMLelement (int typeNum, Document document)
    if (HTMLelementAllowed (document))
      {
      TtaSetDisplayMode (document, SuspendDisplay);
-     elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
+     elType.ElSSchema = TtaGetSSchema ("HTML", document);
      elType.ElTypeNum = typeNum;
      TtaCreateElement (elType, document);
      TtaSetDisplayMode (document, DisplayImmediately);
@@ -851,7 +851,7 @@ void                CreateTable (Document document, View view)
    if (!HTMLelementAllowed (document))
       return;
 
-   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
+   elType.ElSSchema = TtaGetSSchema ("HTML", document);
    if (elType.ElSSchema)
      {
        /* check the selection */
@@ -913,8 +913,8 @@ void                CreateTable (Document document, View view)
 	       attrType.AttrTypeNum = HTML_ATTR_Style_;
 	       attr = TtaNewAttribute (attrType);
 	       TtaAttachAttribute (el, attr, document);
-	       ustrcpy (stylebuff, TEXT("border:  "));
-	       usprintf (stylebuff, TEXT("border: solid %dpx"), TBorder);
+	       ustrcpy (stylebuff, "border:  ");
+	       usprintf (stylebuff, "border: solid %dpx", TBorder);
 	       TtaSetAttributeText (attr, stylebuff, el, document);	       
 	     }
 	   else
@@ -986,7 +986,7 @@ void                CreateCaption (Document document, View view)
    if (el != NULL)
      {
        elType = TtaGetElementType (el);
-       if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+       if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
 	 {
 	   /* it's an HTML element */
 	   if (elType.ElTypeNum != HTML_EL_Table && TtaIsSelectionEmpty ())
@@ -1022,7 +1022,7 @@ void                CreateColgroup (Document document, View view)
    if (el != NULL)
      {
        elType = TtaGetElementType (el);
-       if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+       if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
 	 {
 	   /* it's an HTML element */
 	   if (elType.ElTypeNum == HTML_EL_COLGROUP ||
@@ -1094,7 +1094,7 @@ void                CreateCol (Document document, View view)
    if (el != NULL)
      {
        elType = TtaGetElementType (el);
-       if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+       if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
 	 {
 	   /* it's an HTML element */
 	   if (elType.ElTypeNum == HTML_EL_COLGROUP)
@@ -1224,7 +1224,7 @@ void                DeleteColumn (Document document, View view)
   if (el != NULL)
     {
       elType = TtaGetElementType (el);
-      HTMLSSchema = TtaGetSSchema (TEXT("HTML"), document);
+      HTMLSSchema = TtaGetSSchema ("HTML", document);
       if (elType.ElSSchema == HTMLSSchema &&
 	  elType.ElTypeNum == HTML_EL_Data_cell)
 	  cell = el;
@@ -1301,7 +1301,7 @@ Element             GetEnclosingForm (Document document, View view)
      {
 	/* there is a selection */
 	elType = TtaGetElementType (el);
-	while (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) != 0
+	while (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0
 	       && elType.ElTypeNum != HTML_EL_BODY
 	       && elType.ElTypeNum != HTML_EL_Form)
 	  {
@@ -1350,7 +1350,7 @@ static Element      InsertForm (Document doc, View view, ThotBool *withinP)
        form = TtaGetTypedAncestor (el, elType);
        if (form == NULL)
 	 {
-	   if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+	   if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
 	     {
 	       /* create the form element */
 	       elType.ElTypeNum = HTML_EL_Form;
@@ -1371,7 +1371,7 @@ static Element      InsertForm (Document doc, View view, ThotBool *withinP)
 		  && elType.ElTypeNum != HTML_EL_Paragraph
 		  && elType.ElTypeNum != HTML_EL_Pseudo_paragraph
 		  && !ustrcmp(TtaGetSSchemaName (elType.ElSSchema),
-			      TEXT("HTML")))
+			      "HTML"))
 	     {
 	       parent = TtaGetParent (parent);
 	       elType = TtaGetElementType (parent);
@@ -1394,7 +1394,7 @@ static Element      InsertForm (Document doc, View view, ThotBool *withinP)
 		   len = TtaGetTextLength (el);
 		   if (len == 0)
 		     {
-		       TtaSetTextContent (el, TEXT(" "),
+		       TtaSetTextContent (el, " ",
 					  TtaGetDefaultLanguage (), doc);
 		       TtaSelectString (doc, el, 2, 2);
 		     }
@@ -1768,7 +1768,7 @@ void                CreateObject (Document document, View view)
    if (HTMLelementAllowed (document))
      {
        TtaSetDisplayMode (document, SuspendDisplay);
-       elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
+       elType.ElSSchema = TtaGetSSchema ("HTML", document);
        elType.ElTypeNum = HTML_EL_Object;
        TtaCreateElement (elType, document);
 
@@ -1870,7 +1870,7 @@ void                DeleteAnchor (Document doc, View view)
       /* no selection. Do nothing */
       return;
    elType = TtaGetElementType (firstSelectedElement);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) != 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
       /* the first selected element is not an HTML element. Do nothing */
       return;
 

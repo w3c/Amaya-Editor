@@ -96,7 +96,7 @@ BinFile             file;
 	       while (label[j - 1] != EOS);
 	       break;
 	    default:
-	       /*DisplayPivotMessage (TEXT("S"))*/;
+	       /*DisplayPivotMessage ("S")*/;
 	       break;
 	 }
 }
