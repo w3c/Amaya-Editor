@@ -70,7 +70,7 @@ Document ANNOT_NewDocument (doc)
   fname = urlname + 7;
 
   /* "annot is the title of the window */
-  annotDoc = InitDocView (0, "annotation", docAnnot, 0, FALSE);
+  annotDoc = InitDocView (0, "annotation", docAnnot, 0);
 
   if (annotDoc == 0) 
     {
