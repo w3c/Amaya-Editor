@@ -21,7 +21,6 @@
  *
  */
 
-#include "ustring.h"
 #include "thot_sys.h"
 #include "compilmsg.h"
 #include "appmsg.h"

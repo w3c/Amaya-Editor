@@ -26,7 +26,6 @@
  *
  */
 
-#include "ustring.h"
 #include "thot_sys.h"
 #include "tradef.h"
 #include "constgrm.h"

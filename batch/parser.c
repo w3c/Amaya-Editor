@@ -24,7 +24,6 @@
  *
  */
 
-#include "ustring.h"
 #include "thot_sys.h"
 #include "constgrm.h"
 #include "typegrm.h"

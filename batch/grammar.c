@@ -26,7 +26,6 @@
  *
  */
 
-#include "ustring.h"
 #include "thot_sys.h"
 #include "thot_gui.h"
 #include "grmmsg.h"
