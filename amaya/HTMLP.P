@@ -3756,8 +3756,9 @@ RULES
 	LineBreak: No;
 	HorizPos: Left = Enclosing . Left + 0.2;	
 	VertPos: Top = Enclosing . Top + 0.4;
-	HorizRef: * . HMiddle;
+	HorizRef: Enclosed . HRef;
 	IN Structure_view BEGIN
+	        VertPos: Top = Previous . Bottom;
 		Visibility: Enclosing =;
 		Width: 0;
 		Height: DOC_FONTSIZE;
@@ -3779,6 +3780,7 @@ RULES
 	VertPos: Top = Enclosing . Top + 0.4;
 	HorizRef: Enclosed . HRef;
 	IN Structure_view BEGIN
+	        VertPos: Top = Previous . Bottom;
 		Visibility: Enclosing =;
 		Width: 0;
 		Height: DOC_FONTSIZE;
@@ -3800,6 +3802,7 @@ RULES
 	VertPos: Top = Enclosing . Top + 0.4;
 	HorizRef: Enclosed . HRef;
 	IN Structure_view BEGIN
+	        VertPos: Top = Previous . Bottom;
 		Visibility: Enclosing =;
 		Width: 0;
 		Height: DOC_FONTSIZE;
