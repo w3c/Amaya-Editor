@@ -243,6 +243,10 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
 	  /* Line thickness */
 	  i = GetLineWeight (pBox->BxAbstractBox, frame);
 	  
+#ifdef _GL
+  SetTextureScale (IsBoxDeformed(pBox));
+#endif /* _GL */
+
 	  switch (pBox->BxAbstractBox->AbShape)
 	    {
 	    case 'r':
@@ -380,8 +384,11 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
 	      DrawChar (pBox->BxAbstractBox->AbShape, frame, xd,
 			yd + FontBase (font), font, fg);
 	      break;
-	    }
-	  
+	    } 
+#ifdef _GL
+      StopTextureScale ();
+#endif /* _GL */
+
 	  if (pBox->BxEndOfBloc > 0)
 	    {
 	      /* fill the end of the line with dots */

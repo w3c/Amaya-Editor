@@ -1106,7 +1106,7 @@ static void UpdateEditorMenus (Document doc)
 #ifdef _SVGANIM
 	 SwitchIconAnim (doc, 1, TRUE);
 #ifdef _GL
-      SwitchIconAnim (doc, 1, TRUE);
+      SwitchIconAnimPlay (doc, 1, TRUE);
 #endif /*_GL*/
 #endif /* _SVGANIM */
 #endif /* _SVG */
