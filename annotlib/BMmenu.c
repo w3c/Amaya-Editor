@@ -52,6 +52,7 @@ static char LastURLTopic[MAX_LENGTH];
 BookmarkP Bookmark_new_init (BookmarkP initial)
 {
   BookmarkP me;
+  char *tmp;
 
   me = (BookmarkP) TtaGetMemory (sizeof (Bookmark));
   memset (me, 0, sizeof (Bookmark));
@@ -80,13 +81,16 @@ BookmarkP Bookmark_new_init (BookmarkP initial)
     me->bookmarks[0] = EOS;
   me->title = TtaGetMemory (MAX_LENGTH + 1);
   if (initial && initial->title)
-    strcpy (me->title, initial->title);
+    {
+      tmp = TtaConvertMbsToByte (initial->author, ISO_8859_1);
+      strcpy (me->title, tmp);
+      TtaFreeMemory (tmp);
+    }
   else
     me->title[0] = EOS;
   me->author = TtaGetMemory (MAX_LENGTH + 1);
   if (initial && initial->author)
     {
-      char *tmp;
       tmp = TtaConvertMbsToByte (initial->author, ISO_8859_1);
       strcpy (me->author, tmp);
       TtaFreeMemory (tmp);
@@ -95,7 +99,11 @@ BookmarkP Bookmark_new_init (BookmarkP initial)
     me->author[0] = EOS;
   me->description = TtaGetMemory (MAX_LENGTH + 1);
   if (initial && initial->description)
-    strcpy (me->description, initial->description);
+    {
+      tmp = TtaConvertMbsToByte (initial->description, ISO_8859_1);
+      strcpy (me->description, tmp);
+      TtaFreeMemory (tmp);
+    }
   else
     me->description[0] = EOS;
   if (initial && initial->created)
@@ -158,7 +166,7 @@ static void ControlURIs (BookmarkP me)
 static void InitBookmarkMenu (Document doc, BookmarkP bookmark)
 {
   char *ptr;
-  char *annotUser;
+  char *ptr2;
 
   aBookmark = Bookmark_new_init (bookmark);
 
@@ -178,7 +186,7 @@ static void InitBookmarkMenu (Document doc, BookmarkP bookmark)
 			       + strlen (DocumentMeta[doc]->form_data)
 			       + 2);
 
-	  sprintf (ptr2, "%s#%s", ptr, DocumentMeta[doc]->form_data);
+	  sprintf (ptr2, "%s?%s", ptr, DocumentMeta[doc]->form_data);
 	  if (ptr != DocumentURLs[doc])
 	    TtaFreeMemory (ptr);
 	  ptr = ptr2;
@@ -187,12 +195,16 @@ static void InitBookmarkMenu (Document doc, BookmarkP bookmark)
 
       if (ptr != DocumentURLs[doc])
 	TtaFreeMemory (ptr);
-      
-      strcpy (aBookmark->title, ANNOT_GetHTMLTitle (doc));
-      annotUser = GetAnnotUser ();
-      ptr = TtaConvertMbsToByte (annotUser, ISO_8859_1);
-      strcpy (aBookmark->author, ptr);
+
+      ptr = ANNOT_GetHTMLTitle (doc);
+      ptr2 = TtaConvertMbsToByte (ptr, ISO_8859_1);
+      strcpy (aBookmark->title, ptr2);
       TtaFreeMemory (ptr);
+      TtaFreeMemory (ptr2);
+      ptr = GetAnnotUser ();
+      ptr2 = TtaConvertMbsToByte (ptr, ISO_8859_1);
+      strcpy (aBookmark->author, ptr2);
+      TtaFreeMemory (ptr2);
       aBookmark->created = StrdupDate ();
       aBookmark->modified = StrdupDate ();
     }

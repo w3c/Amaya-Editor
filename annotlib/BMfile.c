@@ -549,22 +549,26 @@ ThotBool BM_addBookmark (BookmarkP me)
 
 
   /* title */
+  tmp = TtaConvertByteToMbs (me->title, ISO_8859_1); 
   subject = librdf_new_node_from_uri_string (world, bookmarkid);
   predicate = librdf_new_node_from_uri_string (world, DCNS_TITLE);
   object =  librdf_new_node_from_literal (world, 
-					  me->title,  /* literal string value */
+					  tmp,   /* literal string value */
 					  NULL,  /* literal XML language */
  					  0);    /* non 0 if literal is XML */
   add_statement (world, model, subject, predicate, object);
+  TtaFreeMemory (tmp);
 
  /* description */
+  tmp = TtaConvertByteToMbs (me->description, ISO_8859_1); 
   subject = librdf_new_node_from_uri_string (world, bookmarkid);
   predicate = librdf_new_node_from_uri_string (world, DCNS_DESCRIPTION);
   object =  librdf_new_node_from_literal (world, 
-					  me->description,  /* literal string value */
+					  tmp,   /* literal string value */
 					  NULL,  /* literal XML language */
  					  0);    /* non 0 if literal is XML */
   add_statement (world, model, subject, predicate, object);
+  TtaFreeMemory (tmp);
 
   /* bookmarks */
   subject = librdf_new_node_from_uri_string (world, bookmarkid);
@@ -697,22 +701,26 @@ ThotBool BM_addTopic (BookmarkP me, ThotBool generateID)
 
 
   /* title */
+  tmp = TtaConvertByteToMbs (me->title, ISO_8859_1); 
   subject = librdf_new_node_from_uri_string (world, topicid);
   predicate = librdf_new_node_from_uri_string (world, DCNS_TITLE);
   object =  librdf_new_node_from_literal (world, 
-					  me->title,
+					  tmp,
 					  NULL,  /* literal XML language */
  					  0);    /* non 0 if literal is XML */
   add_statement (world, model, subject, predicate, object);
+  TtaFreeMemory (tmp);
 
  /* description */
+  tmp = TtaConvertByteToMbs (me->description, ISO_8859_1); 
   subject = librdf_new_node_from_uri_string (world, topicid);
   predicate = librdf_new_node_from_uri_string (world, DCNS_DESCRIPTION);
   object =  librdf_new_node_from_literal (world, 
-					  me->description,
+					  tmp,
 					  NULL,  /* literal XML language */
  					  0);    /* non 0 if literal is XML */
   add_statement (world, model, subject, predicate, object);
+  TtaFreeMemory (tmp);
 
   /* save the model */
   BM_save (GetLocalBookmarksFile ());
@@ -1416,15 +1424,18 @@ ThotBool BM_updateItem (BookmarkP me, ThotBool isTopic)
 
 
   /* title */
+  tmp = TtaConvertByteToMbs (me->title, ISO_8859_1); 
   subject = librdf_new_node_from_uri_string (world, me->self_url);
   predicate = librdf_new_node_from_uri_string (world, DCNS_TITLE);
   object =  librdf_new_node_from_literal (world, 
-					  me->title,  /* literal string value */
+					  tmp,  /* literal string value */
 					  NULL,  /* literal XML language */
  					  0);    /* non 0 if literal is XML */
   add_statement (world, model, subject, predicate, object);
+  TtaFreeMemory (tmp);
 
  /* description */
+  tmp = TtaConvertByteToMbs (me->description, ISO_8859_1); 
   subject = librdf_new_node_from_uri_string (world, me->self_url);
   predicate = librdf_new_node_from_uri_string (world, DCNS_DESCRIPTION);
   object =  librdf_new_node_from_literal (world, 
@@ -1432,6 +1443,7 @@ ThotBool BM_updateItem (BookmarkP me, ThotBool isTopic)
 					  NULL,  /* literal XML language */
  					  0);    /* non 0 if literal is XML */
   add_statement (world, model, subject, predicate, object);
+  TtaFreeMemory (tmp);
 
   /* bookmark / topic items differences */
   if (isTopic)
