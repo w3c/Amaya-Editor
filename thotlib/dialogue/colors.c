@@ -250,9 +250,9 @@ gboolean ApplyExtendedColorGTK (GtkWidget *widget, gpointer data)
   unsigned short blue;
   int color_id;
   gtk_color_selection_get_color (GTK_COLOR_SELECTION (data), couleur);
-  red = couleur[0]*255;
-  green = couleur[1]*255;
-  blue = couleur[2]*255;
+  red = (unsigned short) couleur[0] * 255;
+  green = (unsigned short) couleur[1] *255;
+  blue = (unsigned short) couleur[2] * 255;
   
   color_id = TtaGetThotColor (red, green, blue);
   if (ApplyBg)
