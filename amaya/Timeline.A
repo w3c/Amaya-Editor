@@ -1,0 +1,26 @@
+APPLICATION Timeline;
+
+DEFAULT
+   BEGIN
+	 ElemLClick.Pre -> TimelineElClicked;
+	 DocClose.Post -> TimelineWindowClose;
+   END;
+
+
+ELEMENTS
+
+   rect_period:
+	BEGIN
+	PRuleModify.Pre -> TimelineBeforeElModified;
+	PRuleModify.Post -> TimelineAfterElModified;
+	END;
+
+   image_slider:
+   BEGIN
+    PRuleModify.Post -> Timeline_finished_moving_slider;
+   END; 
+
+ATTRIBUTES
+
+ 
+END

@@ -1,0 +1,213 @@
+	{ Thot presentation schema for Timeline documents
+
+	  Pierre Geneves	June 2002	}
+
+PRESENTATION Timeline;
+
+
+
+DEFAULT
+
+   BEGIN
+   HorizRef: * . Top;
+   VertRef: * . Left;
+   HorizPos: Left = Enclosing . Left;
+   VertPos:  Top = Enclosing . Top;
+   Visibility: Enclosing =;
+   FillPattern: Enclosing =;
+   Depth: Enclosing =;
+   Font: Enclosing =;
+   END;
+
+BOXES
+
+
+  UnknownAttrValue: BEGIN
+	Content: (AttributeValue);
+	Visibility: 0;
+	END;
+
+{ presentation boxes }
+
+
+ Unknown_End: BEGIN
+	Content: Text '>';
+	Visibility: 0;
+	END;
+
+   IndexBox: BEGIN
+	Content: Picture 'AmayaSrcSyncIndex.gif';
+	HorizPos: Left = Root . Left;
+	VertPos: Top = Creator . Top;
+	VertOverflow : Yes;
+	HorizOverflow : Yes;
+	Inline: No;
+	Visibility: Creator =;
+	END;
+
+RULES
+
+   Document:
+	BEGIN
+	Size: 12 pt;
+	Font: helvetica;
+    Visibility: 10;
+	Width: Enclosing . Width;
+	Height: Enclosing . Height min;
+	END;
+
+   Timeline:
+	BEGIN
+	Width: Enclosing . Width;
+        Height: Enclosing . Height;
+	HorizRef: *.Bottom;
+        if NOT within Timeline BEGIN
+           VertPos: Top = Previous . Bottom;
+	   Foreground: transparent;
+	   Background: Black;
+	   FillPattern: backgroundcolor;
+	END;
+	PageBreak: No;
+	LineBreak: No;
+	Adjust: Left;
+	Hyphenate: No;
+	Gather: Yes;
+	LineWeight: 1 pt;
+	END;
+
+   groupe_abstrait:
+	BEGIN
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
+	END;
+
+   image_slider:
+   	BEGIN
+   	HorizPos: Left = Enclosing . Left Userspecified;
+   	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
+	Width: Enclosed . Width;
+    Height: Enclosed . Height;
+	END;
+
+   image_keypos:
+	BEGIN
+   	HorizPos: Left = Enclosing . Left Userspecified;
+   	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
+	Width: Enclosed . Width;
+    Height: Enclosed . Height;
+	END;
+
+   image_collapse:
+	BEGIN
+   	HorizPos: Left = Enclosing . Left Userspecified;
+   	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
+	Width: Enclosed . Width;
+    Height: Enclosed . Height;
+	END;
+
+
+   rect_interface:
+	BEGIN
+	Width: 2.5 cm UserSpecified;
+	Height: 1.5 cm  UserSpecified;
+	HorizPos: Left = Enclosing . Left UserSpecified;
+	VertPos:  Top = Enclosing . Top UserSpecified;
+	END;
+
+   rect_period:
+	BEGIN
+	Width: 2.5 cm UserSpecified;
+	Height: 1.5 cm  UserSpecified;
+	HorizPos: Left = Enclosing . Left UserSpecified;
+	VertPos:  Top = Enclosing . Top UserSpecified;
+	END;
+
+   tline:
+	BEGIN
+        HorizPos: Left = Enclosing . Left UserSpecified;
+        VertPos:  Top = Enclosing . Top UserSpecified;
+        Width: Right = Enclosing . Left;
+        Height:  Bottom = Enclosing . Top;
+    END;
+
+
+   text_:
+	BEGIN
+	Width: Enclosed . Width;
+   	HorizPos: Left = Enclosing . Left Userspecified;
+   	VertPos:  HRef = Enclosing . Top + 0.9 Userspecified;
+	HorizRef: Enclosed . HRef;
+	Foreground : Black;
+	FillPattern: nopattern;
+	END;
+
+ 
+   TEXT_UNIT:
+	BEGIN
+	HorizRef: Enclosed . HRef;
+	HorizPos: Left = Previous . Right;
+        VertPos: HRef = Previous . HRef;
+	Width: Enclosed . Width;
+        Height: Enclosed . Height;
+	END;
+
+   GRAPHICS_UNIT:
+	BEGIN
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
+	END;
+
+
+   PICTURE_UNIT:
+	BEGIN
+	Width: Enclosing . Width;
+        Height: Enclosing . Height;
+	END;
+
+   Timeline_Image: BEGIN
+	LineBreak: No;
+	PageBreak: No;
+	END;
+
+ATTRIBUTES
+
+
+
+  Highlight:
+	BEGIN
+        if TEXT_UNIT
+	   CreateAfter (IndexBox);
+	if NOT TEXT_UNIT
+	   CreateLast (IndexBox);
+	END;
+
+
+  x:
+	BEGIN
+   	HorizPos: Left = Enclosing not text_ . Left;
+	END;
+
+  y:
+	BEGIN
+	if not text_
+           VertPos:  Top = Enclosing not text_ . Top;
+	if text_
+	   VertPos:  HRef = Enclosing . Top;
+	END;
+
+
+  Unknown_attribute:
+	BEGIN
+	if TEXT_UNIT
+	   CreateBefore(UnknownAttrValue);
+	if PICTURE_UNIT
+	   CreateBefore(UnknownAttrValue);
+	if Unknown_namespace
+	   CreateAfter(UnknownAttrValue);
+	if Unknown_namespace and LastAttr
+	   CreateAfter(Unknown_End);
+	if NOT TEXT_UNIT and NOT PICTURE_UNIT and NOT Unknown_namespace
+  	   CreateBefore(UnknownAttrValue);
+	END;
+ 
+END
