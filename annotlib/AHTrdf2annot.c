@@ -110,6 +110,37 @@ static ThotBool contains(char *input, const char *s1, const char * s2)
   return FALSE;
 }
 
+static AnnotMeta* FindAnnot( List** listP, char* annot_url, ThotBool create )
+{
+  static char* last_annotURL = NULL;
+  static int last_length = 0;
+  static AnnotMeta *annot = NULL;
+
+  /*  uri = HTLocalToWWW (file_name, "file:"); */
+
+  if (!last_annotURL || strcmp(last_annotURL, annot_url)) {
+    /* search for annotation in list */
+    annot = AnnotList_searchAnnot (*listP, annot_url, TRUE);
+    if (!annot && create)
+      {
+	annot = AnnotMeta_new ();
+	annot->annot_url = TtaStrdup (annot_url);
+	List_add (listP, (void*) annot);
+      }
+    if (last_length < ustrlen(annot_url))
+      {
+	if (last_annotURL)
+	  TtaFreeMemory (last_annotURL);
+
+	last_length = 2*ustrlen(annot_url);
+	last_annotURL = TtaAllocString (last_length);
+      }
+    strcpy(last_annotURL, annot_url);
+  }
+
+  return annot;
+}
+
 /* ------------------------------------------------------------
    triple_handler
 
@@ -125,21 +156,23 @@ static ThotBool contains(char *input, const char *s1, const char * s2)
  ------------------------------------------------------------*/
 static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 {
-  AnnotMeta *annot = (AnnotMeta *) context;
+  List **listP = (List**)context;
 
   if (rdfp && triple) 
     {
       char * predicate = HTTriple_predicate(triple);
-#ifdef _RDFDEBUG
       char * subject = HTTriple_subject(triple);
-#endif
       char * object = HTTriple_object(triple);
+
+      AnnotMeta *annot;
 
 #ifdef _RDFDEBUG
       fprintf (stdout, "PRD = %s\n", predicate);
       fprintf (stdout, "SUB = %s\n", subject);
       fprintf (stdout, "OBJ = %s\n", object);
 #endif
+
+      annot = FindAnnot (listP, subject, TRUE);
 
       if (contains(predicate, ANNOT_NS, ANNOT_ANNOTATES))
           annot->source_url = TtaStrdup ((char *) object);
@@ -203,25 +236,15 @@ List *RDF_parseFile (char *file_name, AnnotFileType type)
 
   annot_list = NULL;
 
-  /* Only support a file with a single annotation */
   if (type != ANNOT_LIST)
       return NULL;
 
-  annot =  AnnotMeta_new ();
-  if (!annot) return NULL;
-
-  uri = HTLocalToWWW (file_name, "file:");
-  annot->annot_url = TtaStrdup(uri);
-  HT_FREE (uri);
-
-  if (HTRDF_parseFile(file_name, triple_handler, annot) != YES)
+  if (HTRDF_parseFile(file_name, triple_handler, &annot_list) != YES)
     {
       AnnotList_free (annot_list);
       annot_list = NULL;
       return NULL;
     }
-
-  List_add (&annot_list, (void *) annot);
 
   /* output whatever we parsed */
   AnnotList_print (annot_list);
