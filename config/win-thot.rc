@@ -15,5 +15,5 @@ HTTP_PROXY=
 NO_PROXY=
 ENABLE_PIPELINING=
 Profiles_File=$(THOTDIR)\config\amaya.profiles
-Profile=editor
+Profile=XHTML 1.0 Transitional (editor)
 ACCESSKEY_MOD=Alt

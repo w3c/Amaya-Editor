@@ -32,7 +32,7 @@ ENABLE_LOST_UPDATE_CHECK=Yes
 PERSIST_CX_TIMEOUT=600
 SAFE_PUT_REDIRECT=
 Profiles_File=amaya.profiles
-Profile=editor
+Profile=XHTML 1.0 Transitional (editor)
 ACCESSKEY_MOD=Alt
 
 [alliance]
