@@ -125,6 +125,8 @@ MENUS
 	Types.Math button:BMNumber -> CreateMN;
 	Types.Math button:BMOperator -> CreateMO;
 	Types.Math button:BMEntity -> CreateMathEntity;
+	Types.Math button:BMInvisibleTimes -> CreateInvisibleTimes;
+	Types.Math button:BMApplyFunction -> CreateAlppyFunction;
 	Types.Math Separator;
         Types.Math button:BNthRoot -> CreateMROOT;
         Types.Math button:BSquareRoot -> CreateMSQRT;

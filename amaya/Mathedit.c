@@ -3071,6 +3071,68 @@ void CreateMathEntity (document, view)
 }
 
 /*----------------------------------------------------------------------
+ CreateInvisibleTimes
+ Insert a character entity InvisibleTimes at the current position
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateInvisibleTimes (Document document, View view)
+#else /* __STDC__*/
+void CreateInvisibleTimes (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+   Element       firstSel;
+   ElementType   elType;
+   int           firstChar, i;
+
+   if (!TtaGetDocumentAccessMode (document))
+      /* the document is in ReadOnly mode */
+      return;
+
+   if (!TtaIsSelectionEmpty ())
+      return;
+   TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
+
+   /* if not within a MathML element, nothing to do */
+   elType = TtaGetElementType (firstSel);
+   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) != 0)
+      return;
+   InsertMathEntity (TEXT("InvisibleTimes"), document);
+}
+
+/*----------------------------------------------------------------------
+ CreateAlppyFunction
+ Insert a character entity CreateAlppyFunction at the current position
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateAlppyFunction (Document document, View view)
+#else /* __STDC__*/
+void CreateAlppyFunction (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+   Element       firstSel;
+   ElementType   elType;
+   int           firstChar, i;
+
+   if (!TtaGetDocumentAccessMode (document))
+      /* the document is in ReadOnly mode */
+      return;
+
+   if (!TtaIsSelectionEmpty ())
+      return;
+   TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
+
+   /* if not within a MathML element, nothing to do */
+   elType = TtaGetElementType (firstSel);
+   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) != 0)
+      return;
+   InsertMathEntity (TEXT("ApplyFunction"), document);
+}
+
+/*----------------------------------------------------------------------
    SetElementCharFont
    associate attribute attrType with value val to element el if it is
    of type MI, MTEXT, MO,..., or to its descendant of that type.

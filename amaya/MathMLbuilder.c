@@ -31,7 +31,7 @@ XmlEntity  MathEntityTable[] =
       specific MathML entities */
    {TEXT("Agr"), 65, 'G'},
    {TEXT("And"), 217, 'G'},
-   {TEXT("ApplyFunction"), 0, SPACE},
+   {TEXT("ApplyFunction"), 129, 'L'},   /* rendered as a thin space */
    {TEXT("Backslash"), 92, 'L'},
    {TEXT("Bgr"), 66, 'G'},
    {TEXT("Cap"), 199, 'G'},
@@ -67,8 +67,8 @@ XmlEntity  MathEntityTable[] =
    {TEXT("ImaginaryI"), 105, 'L'},
    {TEXT("Integral"), 242, 'G'},
    {TEXT("Intersection"), 199, 'G'},
-   {TEXT("InvisibleComma"), 129, 'L'},
-   {TEXT("InvisibleTimes"), 0, SPACE},
+   {TEXT("InvisibleComma"), 129, 'L'},   /* thin space */
+   {TEXT("InvisibleTimes"), 129, 'L'},   /* thin space */
    {TEXT("Kgr"), 75, 'G'},
    {TEXT("KHgr"), 67, 'G'},
    {TEXT("Lambda"), 76, 'G'},
@@ -127,7 +127,7 @@ XmlEntity  MathEntityTable[] =
    {TEXT("VerticalBar"), 124, 'L'},
    {TEXT("Xi"), 88, 'G'},
    {TEXT("Zgr"), 90, 'G'},
-   {TEXT("af"), 32, 'L'},             /* render as white space */
+   {TEXT("af"), 129, 'L'},             /* rendered as thin space */
    {TEXT("aleph"), 192, 'G'},
    {TEXT("alpha"), 97, 'G'},
    {TEXT("and"), 217, 'G'},
@@ -177,7 +177,7 @@ XmlEntity  MathEntityTable[] =
    {TEXT("int"), 242, 'G'},
    {TEXT("iota"), 105, 'G'},
    {TEXT("isin"), 206, 'G'},
-   {TEXT("it"), 0, SPACE},
+   {TEXT("it"), 129, 'L'},          /* rendered as a thin space */
    {TEXT("kappa"), 107, 'G'},
    {TEXT("lArr"), 220, 'G'},
    {TEXT("lambda"), 108, 'G'},

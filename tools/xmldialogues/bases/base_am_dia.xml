@@ -776,6 +776,20 @@
 	<message xml:lang="it">Carattere (&amp;xxx;)</message>
 	<message xml:lang="es">Carácter (&amp;xxx;)</message>
 </label>
+<label define="BMInvisibleTimes">
+	<message xml:lang="en">InvisibleTimes</message>
+	<message xml:lang="fr">InvisibleTimes</message>
+	<message xml:lang="de">InvisibleTimes</message>
+	<message xml:lang="it">InvisibleTimes</message>
+	<message xml:lang="es">InvisibleTimes</message>
+</label>
+<label define="BMApplyFunction">
+	<message xml:lang="en">ApplyFunction</message>
+	<message xml:lang="fr">ApplyFunction</message>
+	<message xml:lang="de">ApplyFunction</message>
+	<message xml:lang="it">ApplyFunction</message>
+	<message xml:lang="es">ApplyFunction</message>
+</label>
 <label define="BNthRoot">
 	<message xml:lang="en">Root (mroot)</message>
 	<message xml:lang="fr">Racine (mroot)</message>
