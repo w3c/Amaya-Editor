@@ -1041,7 +1041,7 @@ void SetNamespacesAndDTD (Document doc)
 	 TtaRemoveAttribute (root, attr, doc);
 
        /* check if XML declaration or the math PI are already defined */
-       xmlDecl = !doctype && DocumentMeta[doc]->xmlformat;
+       xmlDecl = DocumentMeta[doc]->xmlformat;
        el = TtaGetFirstChild (docEl);
        elType = TtaGetElementType (el);
        if (elType.ElTypeNum == HTML_EL_XMLPI)
