@@ -444,7 +444,12 @@ void  CopyUseContent (Element el, Document doc, char *href)
 	  TtaNextSibling (&nextChild);
 	  if (TtaIsTranscludedElement (child))
 	    /* that's an old copy. remove it */
-	    TtaRemoveTree (child, doc);
+	    {
+	      /* if there is a style element in the transcluded tree, release
+		 the corresponding CSS rules */
+	      /***** @@@@@ *****/
+	      TtaRemoveTree (child, doc);
+	    }
 	  child = nextChild;
 	}
 
@@ -460,12 +465,15 @@ void  CopyUseContent (Element el, Document doc, char *href)
 	  attr = TtaGetAttribute (copy, attrType);
 	  if (attr)
 	    TtaRemoveAttribute (copy, attr, doc);
-	  /* insert it as the last child of the use element */
+	  /* insert the copy as the last child of the use element */
 	  child = TtaGetLastChild (el);
 	  if (child)
 	    TtaInsertSibling (copy, child, FALSE, doc);
 	  else
 	    TtaInsertFirstChild (&copy, el, doc);
+	  /* if there is a style element in the copy, generate the
+	     corresponding CSS rules */
+	  /***** @@@@@ *****/
 	}
       else
 	/* it's a tref element. Copy all the contents of the source element */
@@ -872,6 +880,52 @@ void SetTextAnchor (Attribute attr, Element el, Document doc, ThotBool delete)
 }
 
 /*----------------------------------------------------------------------
+   CreateCSSRules
+   A style element is created within a SVG document. Parse its
+   content to create the equivalent style sheet.
+  ----------------------------------------------------------------------*/
+void CreateCSSRules (Element el, Document doc)
+{
+  ElementType     elType;
+  AttributeType   attrType;
+  Attribute       attr;
+  int             length;
+  char            *text;
+  ThotBool        parseCSS;
+
+  /* Search the  type attribute */
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = SVG_ATTR_type;
+  attr = TtaGetAttribute (el, attrType);
+  parseCSS = FALSE;
+  if (attr == NULL)
+    /* no type attribute. Assume CSS by default */
+    parseCSS = TRUE;
+  else
+    /* the style element has a type attribute */
+    /* get its value */
+    {
+      length = TtaGetTextAttributeLength (attr);
+      text = TtaGetMemory (length + 1);
+      TtaGiveTextAttributeValue (attr, text, &length);
+      if (!strcasecmp (text, "text/css"))
+	parseCSS = TRUE;
+      TtaFreeMemory (text);
+    }
+  if (parseCSS)
+    {
+      text = GetStyleContents (el);
+      if (text)
+	{
+	  ReadCSSRules (doc, NULL, text, NULL, TtaGetElementLineNumber (el),
+			FALSE, el); 
+	  TtaFreeMemory (text);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
    SVGElementComplete
    Check the Thot structure of the SVG element el.
   ----------------------------------------------------------------------*/
@@ -885,8 +939,8 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
    int                  length;
    PRule		fillPatternRule, newPRule;
    SSchema	        SVGSSchema;
-   char                *text, *href;
-   ThotBool		closedShape, parseCSS;
+   char                 *href;
+   ThotBool		closedShape;
 
    *error = 0;
    doc = context->doc;
@@ -1008,41 +1062,12 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 
        case SVG_EL_style__:
 	 /* it's a style element, parse its contents as a style sheet */
-	 /* Search the  type attribute */
-	 attrType.AttrSSchema = elType.ElSSchema;
-	 attrType.AttrTypeNum = SVG_ATTR_type;
-	 attr = TtaGetAttribute (el, attrType);
-	 parseCSS = FALSE;
-	 if (attr == NULL)
-	   /* no type attribute. Assume CSS by default */
-	   parseCSS = TRUE;
+	 if (doc != context->docRef)
+	   CreateCSSRules (el, context->docRef);
 	 else
-	   /* the style element has a type attribute */
-	   /* get its value */
-	   {
-	     length = TtaGetTextAttributeLength (attr);
-	     text = TtaGetMemory (length + 1);
-	     TtaGiveTextAttributeValue (attr, text, &length);
-	     if (!strcasecmp (text, "text/css"))
-	       parseCSS = TRUE;
-	     TtaFreeMemory (text);
-	   }
-	 if (parseCSS)
-	   {
-	     text = GetStyleContents (el);
-	     if (text)
-	       {
-		 if (doc != context->docRef)
-		   ReadCSSRules (context->docRef, NULL, text, NULL,
-				 TtaGetElementLineNumber (el), FALSE);
-		 else
- 		   ReadCSSRules (doc, NULL, text, NULL,
-				 TtaGetElementLineNumber (el), FALSE); 
-		 TtaFreeMemory (text);
-	       }
-	   }
+	   CreateCSSRules (el, doc);
 	 break;
- 
+
        default:
 	 /* if it's a graphic primitive, create a GRAPHIC_UNIT leaf as a child
 	    of the element, if it has not been done when creating attributes

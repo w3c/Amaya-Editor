@@ -502,7 +502,7 @@ void       XhtmlElementComplete (ParserData *context, Element el, int *error)
 	       if (text)
 		 {
 		   ReadCSSRules (doc, NULL, text, NULL,
-				 TtaGetElementLineNumber (el), FALSE);
+				 TtaGetElementLineNumber (el), FALSE, el);
 		   TtaFreeMemory (text);
 		 }
 	       SetXmlParsingCSS (FALSE);
@@ -516,7 +516,7 @@ void       XhtmlElementComplete (ParserData *context, Element el, int *error)
 	       if (text)
 		 {
 		   ReadCSSRules (doc, NULL, text, NULL,
-				 TtaGetElementLineNumber (el), FALSE);
+				 TtaGetElementLineNumber (el), FALSE, el);
 		   TtaFreeMemory (text);
 		 }
 	       SetHtmlParsingCSS (FALSE);

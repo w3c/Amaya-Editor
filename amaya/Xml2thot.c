@@ -4552,7 +4552,7 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
   ThotBool      use_ref = FALSE;
   DocumentType  thotType;
   Document      externalDoc = 0;
-  Element       idEl = NULL, extEl = NULL, copyEl = NULL;
+  Element       idEl = NULL, extEl = NULL;
   char          charsetname[MAX_LENGTH];
   char         *extUseUri = NULL, *extUseId = NULL, *s = NULL;
   AttributeType extAttrType;
@@ -4769,7 +4769,7 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
 
   if (use_ref && externalDoc != doc)
     {
-      /* Copy the target element of the external document */
+      /* Move the target element of the external document */
       /* as a sub-tree of the element extEl in the source document */
       /* Search the target element */
       extAttrType.AttrSSchema = TtaGetSSchema ("SVG", externalDoc);
@@ -4779,12 +4779,11 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
           extAttrType.AttrTypeNum = SVG_ATTR_id;
 	  idEl = GetElemWithAttr (externalDoc, extAttrType, extUseId, NULL);
 	}
-      /* Copy and insert the sub-tree */
+      /* Detach the target subtree and insert it as a child of the use element */
       if (idEl != NULL)
 	{
-	  copyEl = TtaCopyTree (idEl, externalDoc, doc, extEl);
-	  if (copyEl != NULL)
-	    TtaInsertFirstChild (&copyEl, extEl, doc);
+	  TtaRemoveTree (idEl, externalDoc);
+	  TtaInsertFirstChild (&idEl, extEl, doc);
 	}
       /* Copy the style sheets related to the external document */
       /* MoveExtDocCSSs (externalDoc, doc);*/

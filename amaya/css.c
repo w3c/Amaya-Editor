@@ -351,7 +351,7 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
    AddCSS adds a new CSS context in the list.
   ----------------------------------------------------------------------*/
 CSSInfoPtr AddCSS (Document doc, Document docRef, CSSCategory category,
-		   char *url, char *localName)
+		   char *url, char *localName, Element styleElement)
 {
   CSSInfoPtr          css, prev;
   int                 i;
@@ -360,8 +360,9 @@ CSSInfoPtr AddCSS (Document doc, Document docRef, CSSCategory category,
   if (css != NULL)
     {
       css->doc = doc;
-      css->localName = TtaStrdup (localName);
       css->url = TtaStrdup (url);
+      css->localName = TtaStrdup (localName);
+      css->styleEl = styleElement;
       css->category = category;
 
       /* that CSS is only used by the document docRef */
@@ -395,7 +396,7 @@ CSSInfoPtr AddCSS (Document doc, Document docRef, CSSCategory category,
    SearchCSS searchs the css corresponding to the specific url (doc == 0)
    or the CSS_DOCUMENT_STYLE css of the document.
   ----------------------------------------------------------------------*/
-CSSInfoPtr SearchCSS (Document doc, char *url)
+CSSInfoPtr SearchCSS (Document doc, char *url, Element styleEl)
 {
   CSSInfoPtr          css = CSSList;
  
@@ -407,9 +408,14 @@ CSSInfoPtr SearchCSS (Document doc, char *url)
 	return css;
       else if (doc != 0 && css->doc == doc)
 	/* a document CSS */
-	return css;
-      else
-	css = css->NextCSS;
+	{
+	  if (!styleEl)
+	    /* any document CSS is ok */
+	    return css;
+	  else if (css->styleEl == styleEl)
+	    return css;
+	}
+      css = css->NextCSS;
     }
   return css;
 }
@@ -537,7 +543,7 @@ void RemoveDocCSSs (Document doc)
    or the document Style element.
   ----------------------------------------------------------------------*/
 void  RemoveStyleSheet (char *url, Document doc, ThotBool disabled,
-			ThotBool removed)
+			ThotBool removed, Element styleEl)
 {
   CSSInfoPtr          css;
   ThotBool            found;
@@ -551,7 +557,8 @@ void  RemoveStyleSheet (char *url, Document doc, ThotBool disabled,
 	/* an external CSS */
 	found = TRUE;
       else if (!url && css->category == CSS_DOCUMENT_STYLE &&
-	       css->documents[doc])
+	       css->documents[doc] &&
+	       (styleEl == NULL || css->styleEl == styleEl))
 	found = TRUE;
       else
 	css = css->NextCSS;
@@ -560,7 +567,6 @@ void  RemoveStyleSheet (char *url, Document doc, ThotBool disabled,
   if (css != NULL)
     UnlinkCSS (css, doc, disabled, removed);
 }
-
 
 /*----------------------------------------------------------------------
   GetStyleContents returns a buffer that contains the whole text of the
@@ -626,7 +632,7 @@ void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
   if (TtaGetViewFrame (doc, 1) != 0 || TtaIsPrinting ())
     {
       LoadRemoteStyleSheet (url, doc, el, css, tempURL, tempfile);
-      oldcss = SearchCSS (0, tempURL);
+      oldcss = SearchCSS (0, tempURL, NULL);
       if (oldcss == NULL || oldcss->category != CSS_EXTERNAL_STYLE)
 	{
 	  /* It could be a @import CSS */
@@ -634,9 +640,10 @@ void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
 	    /* It's a new CSS file: allocate a new Presentation structure */
 	    {
 	    if (user)
-	      css = AddCSS (0, doc, CSS_USER_STYLE, tempURL, tempfile);
+	      css = AddCSS (0, doc, CSS_USER_STYLE, tempURL, tempfile, NULL);
 	    else
-	      css = AddCSS (0, doc, CSS_EXTERNAL_STYLE, tempURL, tempfile);
+	      css = AddCSS (0, doc, CSS_EXTERNAL_STYLE, tempURL, tempfile,
+			    NULL);
 	    }
 	  oldcss = css;
 	  oldcss->media[doc] = media;
@@ -723,7 +730,7 @@ void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
 	  tmpBuff[buf.st_size] = 0;
 	  fclose (res);
 
-	  ReadCSSRules (doc, oldcss, tmpBuff, tempURL, 0, FALSE);
+	  ReadCSSRules (doc, oldcss, tmpBuff, tempURL, 0, FALSE, NULL);
 	  TtaFreeMemory (tmpBuff);
 	}
     }

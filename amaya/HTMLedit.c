@@ -202,7 +202,7 @@ void RemoveLink (Element el, Document doc)
 	  length = MAX_LENGTH;
 	  TtaGiveTextAttributeValue (attr, buffer, &length);
 	  NormalizeURL (buffer, doc, pathname, documentname, NULL);
-	  RemoveStyleSheet (pathname, doc, TRUE, TRUE);
+	  RemoveStyleSheet (pathname, doc, TRUE, TRUE, NULL);
 	}
     }
 }
@@ -1997,9 +1997,9 @@ void ElementPasted (NotifyElement * event)
       value = TtaGetMemory (length + 1);
       TtaGiveTextContent (child, value, &length, &lang);
       /* parse the content */
-      css = AddCSS (doc, doc, CSS_DOCUMENT_STYLE, NULL, NULL);
-      ReadCSSRules (doc, css, value, NULL,
-		    TtaGetElementLineNumber (child), FALSE);
+      css = AddCSS (doc, doc, CSS_DOCUMENT_STYLE, NULL, NULL, el);
+      ReadCSSRules (doc, css, value, NULL, TtaGetElementLineNumber (child),
+		    FALSE, el);
       TtaFreeMemory (value);
     }
   else if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)

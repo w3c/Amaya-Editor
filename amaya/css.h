@@ -16,8 +16,8 @@ typedef enum
 {
   CSS_Unknown,		/* for detecting uninitialized fields */
   CSS_USER_STYLE,	/* the CSS associated to the browser */
-  CSS_DOCUMENT_STYLE,	/* CSS set in the document header */
-  CSS_EXTERNAL_STYLE,	/* external CSS */
+  CSS_DOCUMENT_STYLE,	/* a <style> element in the document */
+  CSS_EXTERNAL_STYLE,	/* an external CSS */
 } CSSCategory;
 
 typedef enum
@@ -39,7 +39,7 @@ typedef struct _PInfo
 {
   struct _PInfo      *PiNext;
   Document            PiDoc;
-  Element             PiLink; /* the element whcih links this CSS */
+  Element             PiLink; /* the element which links this CSS */
   PISchemaPtr         PiSchemas; /* list of schemas */
 } PInfo , *PInfoPtr;
 
@@ -49,6 +49,7 @@ typedef struct _CSSInfo
   int                 doc;   /* entry in the document table or 0 */
   char               *url;
   char               *localName;
+  Element             styleEl;  /* the style element which contains this CSS */
   CSSCategory         category;
   PInfoPtr            infos; /* the document Presentation Schemas */
   /* documents using this CSS */

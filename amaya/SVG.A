@@ -43,6 +43,7 @@ ELEMENTS
 	ElemTextModify.Pre ->   ChangeStyle;
 	ElemTextModify.Post ->  StyleChanged;
 	ElemDelete.Pre ->       DeleteStyle;
+	ElemPaste.Post ->       StylePasted;
 	END;
    foreignObject:
 	ElemExport.Pre ->       ExportForeignObject;

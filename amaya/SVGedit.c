@@ -195,6 +195,15 @@ ThotBool SetEmptyShapeAttribute (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
+ StyleElemPasted
+ An element style has been pasted.
+ -----------------------------------------------------------------------*/
+void StylePasted (NotifyElement *event)
+{
+  CreateCSSRules (event->element, event->document);
+}
+
+/*----------------------------------------------------------------------
  ExportForeignObject
  A foreignObject element will be generated in the output file.
  Associate a Namespace attribute with its child. This attribute will be

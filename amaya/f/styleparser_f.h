@@ -61,7 +61,8 @@ extern char ReadCSSRules ( Document docRef,
                            char *buffer,
                            char *url,
                            int numberOfLinesRead,
-                           ThotBool withUndo );
+                           ThotBool withUndo,
+			   Element styleElement );
 
 #else /* __STDC__ */
 
@@ -120,7 +121,8 @@ extern char ReadCSSRules (/* Document docRef,
                              char *buffer,
                              char *url,
                              int numberOfLinesRead,
-                             ThotBool withUndo */);
+                             ThotBool withUndo,
+			     Element styleElement */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

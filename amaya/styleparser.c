@@ -4810,10 +4810,10 @@ void ApplyCSSRules (Element el, char *cssRule, Document doc, ThotBool destroy)
 {
   CSSInfoPtr        css;
 
-  css = SearchCSS (doc, NULL);
+  css = SearchCSS (doc, NULL, el);
   if (css == NULL)
     /* create the document css */
-    css = AddCSS (doc, doc, CSS_DOCUMENT_STYLE, NULL, NULL);
+    css = AddCSS (doc, doc, CSS_DOCUMENT_STYLE, NULL, NULL, el);
   ParseStyleDeclaration (el, cssRule, doc, css, destroy); 
 }
 
@@ -4840,7 +4840,8 @@ void ApplyCSSRules (Element el, char *cssRule, Document doc, ThotBool destroy)
    structure and content have to be registered in the Undo queue or not
   ----------------------------------------------------------------------*/
 char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
-		   int numberOfLinesRead, ThotBool withUndo)
+		   int numberOfLinesRead, ThotBool withUndo,
+		   Element styleElement)
 {
   DisplayMode         dispMode;
   char                c;
@@ -4880,11 +4881,12 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 
   /* look for the CSS context */
   if (css == NULL)
-    css = SearchCSS (docRef, NULL);
+    css = SearchCSS (docRef, NULL, styleElement);
   if (css == NULL)
-    css = AddCSS (docRef, docRef, CSS_DOCUMENT_STYLE, NULL, NULL);
+    css = AddCSS (docRef, docRef, CSS_DOCUMENT_STYLE, NULL, NULL,
+		  styleElement);
 
-  /* register parsed CSS file and the document to which CSS are to be applied */
+  /* register parsed CSS file and the document to which CSS are to be applied*/
   ParsedDoc = docRef;
   if (url)
     DocURL = url;

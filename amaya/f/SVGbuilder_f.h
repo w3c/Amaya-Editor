@@ -39,6 +39,8 @@ extern void SetTextAnchor ( Attribute attr,
                             Element el,
                             Document doc,
                             ThotBool delete );
+extern void CreateCSSRules ( Element el,
+			     Document doc );
 extern void SVGElementComplete ( ParserData *context,
                                  Element el,
                                  int *error );
@@ -123,6 +125,8 @@ extern void SetTextAnchor (/* Attribute attr,
                               Element el,
                               Document doc,
                               ThotBool delete */);
+extern void CreateCSSRules (/* Element el,
+			       Document doc */);
 extern void SVGElementComplete (/* ParserData *context,
                                    Element el,
                                    int *error */);

@@ -3484,7 +3484,7 @@ static Document LoadDocument (Document doc, char *pathname,
       /* store a copy of CSS files in the directory 0 */
       if (DocumentTypes[newdoc] == docCSS)
 	{ 
-	  css = SearchCSS (0, pathname);
+	  css = SearchCSS (0, pathname, NULL);
 	  if (css == NULL)
 	    {
 	      /* store a copy of this new CSS context in .amaya/0 */
@@ -3492,9 +3492,9 @@ static Document LoadDocument (Document doc, char *pathname,
 	      TtaFileCopy (tempdocument, s);
 	      /* initialize a new CSS context */
 	      if (UserCSS && !strcmp (pathname, UserCSS))
-		AddCSS (newdoc, 0, CSS_USER_STYLE, NULL, s);
+		AddCSS (newdoc, 0, CSS_USER_STYLE, NULL, s, NULL);
 	      else
-		AddCSS (newdoc, 0, CSS_EXTERNAL_STYLE, pathname, s);
+		AddCSS (newdoc, 0, CSS_EXTERNAL_STYLE, pathname, s, NULL);
 	      TtaFreeMemory (s);
 	    }
 	  else
@@ -4749,7 +4749,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 		     strcat (pathname, "/");
 		 }
 #endif
-	       css = SearchCSS (0, pathname);
+	       css = SearchCSS (0, pathname, NULL);
 	       if (css == NULL)
 		 toparse =  GetObjectWWW (newdoc, pathname, form_data,
 					  tempfile, mode, NULL, NULL,

@@ -15,14 +15,17 @@ extern CSSInfoPtr AddCSS ( Document doc,
                            Document docRef,
                            CSSCategory category,
                            char *url,
-                           char *localName );
+                           char *localName,
+			   Element styleElement );
 extern CSSInfoPtr SearchCSS ( Document doc,
-                              char *url );
+                              char *url,
+			      Element styleEl );
 extern void RemoveDocCSSs ( Document doc );
 extern void RemoveStyleSheet ( char *url,
                                Document doc,
                                ThotBool disabled,
-                               ThotBool removed );
+                               ThotBool removed,
+			       Element styleEl );
 extern char *GetStyleContents ( Element el );
 extern void LoadStyleSheet ( char *url,
                              Document doc,
@@ -42,14 +45,17 @@ extern CSSInfoPtr AddCSS (/* Document doc,
                              Document docRef,
                              CSSCategory category,
                              char *url,
-                             char *localName */);
+                             char *localName,
+			     Element styleElement */);
 extern CSSInfoPtr SearchCSS (/* Document doc,
-                                char *url */);
+                                char *url,
+			        Element styleEl */);
 extern void RemoveDocCSSs (/* Document doc */);
 extern void RemoveStyleSheet (/* char *url,
                                  Document doc,
                                  ThotBool disabled,
-                                 ThotBool removed */);
+                                 ThotBool removed,
+			         Element styleEl */);
 extern char *GetStyleContents (/* Element el */);
 extern void LoadStyleSheet (/* char *url,
                                Document doc,

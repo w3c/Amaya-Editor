@@ -257,7 +257,7 @@ ThotBool            ChangeStyle (NotifyElement * event)
   ----------------------------------------------------------------------*/
 ThotBool            DeleteStyle (NotifyElement * event)
 {
-  RemoveStyleSheet (NULL, event->document, TRUE, TRUE);
+  RemoveStyleSheet (NULL, event->document, TRUE, TRUE, event->element);
   return FALSE;  /* let Thot perform normal operation */
 }
 
@@ -302,7 +302,6 @@ void           DeleteStyleElement (Document doc)
   ElementType		elType;
   char                 *name;
 
-  RemoveStyleSheet (NULL, doc, TRUE, TRUE);
   /* get the style element in the document head */
   el = TtaGetMainRoot (doc);
   elType = TtaGetElementType (el);
@@ -317,6 +316,7 @@ void           DeleteStyleElement (Document doc)
    el = TtaSearchTypedElement (elType, SearchForward, el);
    if (el)
      {
+       RemoveStyleSheet (NULL, doc, TRUE, TRUE, el);
        TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
        TtaRegisterElementDelete (el, doc);
        TtaDeleteTree (el, doc);
@@ -884,7 +884,7 @@ static void         UpdateClass (Document doc)
 {
   Attribute           attr;
   AttributeType       attrType;
-  Element             el, root, child, title, head, line, prev;
+  Element             el, root, child, title, head, line, prev, styleEl;
   ElementType         elType, selType;
   char               *stylestring;
   char               *text;
@@ -973,6 +973,7 @@ static void         UpdateClass (Document doc)
     /* there is no STYLE element and no way to create one */
     return;
 
+  styleEl = el;
   /* check whether it's an element type or a class name */
   /* get the current style attribute */
   elType = TtaGetElementType (ClassReference);
@@ -1169,7 +1170,7 @@ static void         UpdateClass (Document doc)
     TtaInsertTextContent (child, len, stylestring, doc);
     /* parse and apply this new CSS to the current document */
     ReadCSSRules (doc, NULL, stylestring, NULL,
-		  TtaGetElementLineNumber (child), TRUE);
+		  TtaGetElementLineNumber (child), TRUE, styleEl);
     }
   /* free the stylestring now */
   TtaFreeMemory (stylestring);

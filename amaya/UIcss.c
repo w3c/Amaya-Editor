@@ -66,7 +66,7 @@ ThotBool  LoadRemoteStyleSheet (char *url, Document doc, Element el,
   if (IsW3Path (completeURL))
     {
       /* check against double inclusion */
-      oldcss = SearchCSS (0, completeURL);
+      oldcss = SearchCSS (0, completeURL, NULL);
       if (oldcss != NULL)
 	strcpy (localfile, oldcss->localName);
       else
@@ -139,7 +139,7 @@ void LoadUserStyleSheet (Document doc)
       ptr = GetLocalPath (0, UserCSS);
       TtaFileCopy (UserCSS, ptr);
       /* allocate a new Presentation structure */ 
-      css = AddCSS (0, doc, CSS_USER_STYLE, UserCSS, ptr);
+      css = AddCSS (0, doc, CSS_USER_STYLE, UserCSS, ptr, NULL);
       TtaFreeMemory (ptr);
       ptr = css->localName;
     }
@@ -189,7 +189,7 @@ void LoadUserStyleSheet (Document doc)
       /* parse the whole thing and free the buffer */
       if (buffer != NULL)
 	{
-	  ReadCSSRules (doc, css, buffer, css->url, 0, FALSE);
+	  ReadCSSRules (doc, css, buffer, css->url, 0, FALSE, NULL);
 	  TtaFreeMemory (buffer);
 	}
     }
@@ -248,7 +248,7 @@ void AttrMediaChanged (NotifyAttribute *event)
        /* load the stylesheet file found here ! */
        NormalizeURL (name2, doc, completeURL, tempname, NULL);
        TtaFreeMemory (name2);
-       css = SearchCSS (0, completeURL);
+       css = SearchCSS (0, completeURL, NULL);
        if (css && css->media[doc] != media)
 	 {
 	   /* something changed and we are not printing */
@@ -260,7 +260,11 @@ void AttrMediaChanged (NotifyAttribute *event)
 	     {
 	       if ((media == CSS_PRINT || media == CSS_OTHER) &&
 	       (css->media[doc] == CSS_ALL || css->media[doc] == CSS_SCREEN))
-		 RemoveStyleSheet (completeURL, doc, FALSE, FALSE);
+		 {
+		   if (elType.ElTypeNum != HTML_EL_STYLE_)
+		     el = NULL;
+		   RemoveStyleSheet (completeURL, doc, FALSE, FALSE, el);
+		 }
 	       /* only update the CSS media info */
 	       css->media[doc] = media;
 	     }
@@ -451,21 +455,21 @@ static void CallbackCSS (int ref, int typedata, char *data)
 	    case 2:
 	      /* disable the CSS file, but not remove */
 	      if (!strcmp (CSSpath, TtaGetMessage (AMAYA, AM_LOCAL_CSS)))
-		RemoveStyleSheet (NULL, CSSdocument, TRUE, FALSE);
+		RemoveStyleSheet (NULL, CSSdocument, TRUE, FALSE, NULL);
 	      else
-		RemoveStyleSheet (CSSpath, CSSdocument, TRUE, FALSE);
+		RemoveStyleSheet (CSSpath, CSSdocument, TRUE, FALSE, NULL);
       	      break;
 	    case 3:
 	      /* enable the CSS file */
 	      if (!strcmp (CSSpath, TtaGetMessage (AMAYA, AM_LOCAL_CSS)))
 		{
-		  css = SearchCSS (CSSdocument, NULL);
+		  css = SearchCSS (CSSdocument, NULL, NULL);
 		  css ->enabled[CSSdocument] = TRUE;
 		  EnableStyleElement (CSSdocument);
 		}
 	      else
 		{
-		  css = SearchCSS (0, CSSpath);
+		  css = SearchCSS (0, CSSpath, NULL);
 		  css->enabled[CSSdocument] = TRUE;
 		  /* apply CSS rules */
 		  if (UserCSS && !strcmp (CSSpath, UserCSS))
