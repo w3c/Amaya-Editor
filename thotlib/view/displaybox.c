@@ -2096,6 +2096,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
   int                xd, yd, width, height;
   int                t, b, l, r;
   ThotBool           selfsel;
+  ThotBool           isOpenList = FALSE;
 
   pFrame = &ViewFrameTable[frame - 1];
   pAb = box->BxAbstractBox;
@@ -2167,7 +2168,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
   if (box->DisplayList)
     printf ( "GLBUG - DisplayBox : glIsList=%s\n", glIsList (box->DisplayList) ? "yes" : "no" );
 #endif /* _TRACE_GL_BUGS_GLISLIST */
-	  if (!(box->VisibleModification) && !selected &&
+	  if (!(box->VisibleModification) && 
 	      box->DisplayList && glIsList (box->DisplayList))
 	    {
 	      glCallList (box->DisplayList);
@@ -2179,6 +2180,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
 		glDeleteLists (box->DisplayList, 1);
 	        box->DisplayList = glGenLists (1);
 	      glNewList (box->DisplayList, GL_COMPILE_AND_EXECUTE);
+	      isOpenList = TRUE;
 	    }
 	}
       GL_SetFillOpacity (pAb->AbFillOpacity);
@@ -2262,9 +2264,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
 	GL_SetFillOpacity (1000);
 	GL_SetStrokeOpacity (1000);
 	box->VisibleModification = FALSE;  
-	if ((pAb->AbLeafType == LtPolyLine ||
-	     pAb->AbLeafType == LtPath) && 
-	    !selfsel)
+	if (isOpenList)
 	  glEndList ();
       }
 #endif /*_GL*/
