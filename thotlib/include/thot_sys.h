@@ -127,6 +127,7 @@ int _getpid (void);
 #define getcwd(buffer, len) _getcwd(buffer, len)
 #define access(f,m) _access((f),(m))
 #define unlink(f) _unlink((f))
+#define snprintf _snprintf
 
 /* Constants for PATHs */
 #define DIR_SEP  '\\'
