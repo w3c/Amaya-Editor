@@ -380,6 +380,7 @@ static TypeTree GetElemSourceTree()
   theTree->TPrintSymb = '*';
   theTree->TId = (RContext->CIdCount)++;
   theTree->TypeNum = 0;
+  theTree->TDepth = 0;
   nbTypes = 0;
   
   for (j = 0; j < RContext->CNbOldElems; j++)
@@ -1017,7 +1018,7 @@ Element elemLast;
       elType = TtaGetElementType (ptrElem);
       if (RContext->CSrcSchema == NULL)
 	RContext->CSrcSchema = elType.ElSSchema;
-      else if (! TtaSameSSchemas(RContext->CSrcSchema, elType.ElSSchema))
+      if (! TtaSameSSchemas(RContext->CSrcSchema, elType.ElSSchema))
 	{  
 	  ok = FALSE;
 	  ptrElem = NULL;
@@ -1082,14 +1083,17 @@ int typeNum;
   
   elType.ElTypeNum = typeNum;
   elType.ElSSchema = strSch;
-    
+
+#ifdef DEBUG
   /* allocation et calcul de l'empreinte destination */
   restCour = RestNewRestruct(elType);
-#ifdef DEBUG
   strcpy (msgbuf,  TtaGetElementTypeName(restCour->RDestType));
   printf("Destin : %s  -  %s\n",msgbuf,restCour->RDestPrint);  
   strcpy (msgbuf,  TtaGetElementTypeName(TtaGetElementType(elemFirst)));
+  TtaFreeMemory (restCour);
 #endif
+
+  restCour = NULL;
   pListRestruct = RContext->CListRestruct;
   if (pListRestruct != NULL)
     while (pListRestruct->RNext != NULL)
