@@ -564,7 +564,7 @@ void PasteCommand ()
   Document            doc;
   int                 firstChar, lastChar, view, i;
   ThotBool            ok, before, within, lock, cancelled;
-  
+
   before = FALSE;
   if (FirstSavedElement == NULL)
     return;
@@ -1193,7 +1193,10 @@ void TtcCreateElement (Document doc, View view)
 	{
 	  empty = TRUE;
 	  pElem = firstSel;
-	  while (pElem->ElParent != NULL && EmptyElement (pElem->ElParent))
+	  while (pElem->ElParent && EmptyElement (pElem->ElParent) &&
+		 !TypeHasException (ExcNoBreakByReturn,
+				    pElem->ElParent->ElTypeNumber,
+				    pElem->ElParent->ElStructSchema))
 	    pElem = pElem->ElParent;
 	  if (pElem != NULL)
 	    if (pElem->ElParent != NULL)

@@ -961,7 +961,7 @@ EXCEPT
 	Table_foot:	NoCut, Hidden, NoSelect, PageBreakRepBefore;
 	C_Foot:		Hidden, NoSelect;
 	Cols:		Hidden, NoSelect;
-	Table_body:	PageBreakAllowed, Hidden;
+	Table_body:	PageBreakAllowed, Hidden, NoBreakByReturn;
         tbody:	        NoBreakByReturn;
 	Table_row:	IsRow, PageBreakPlace, NoBreakByReturn;
 	IFRAME:	        NoBreakByReturn;
