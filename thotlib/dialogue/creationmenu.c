@@ -18,7 +18,7 @@
 #include "dialog.h"
 #include "constmedia.h"
 #include"constmenu.h"
-#define maxentree 20
+#define MAX_ENTRIES 20
 #define LgMaxMenu 20
 #include "typemedia.h"
 
@@ -73,9 +73,9 @@ Name                 NomType;
    sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, CREATE_EL_REF));
    i += strlen (&BufMenu[i]) + 1;
    sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, SHOW_EL_REF));
-   TtaNewPopup (NumMenuCreerElemReference, 0,
+   TtaNewPopup (NumMenuCreateReferenceElem, 0,
 		TtaGetMessage (LIB, MODE_INSERT), 2, BufMenu, NULL, 'L');
-   TtaShowDialogue (NumMenuCreerElemReference, FALSE);
+   TtaShowDialogue (NumMenuCreateReferenceElem, FALSE);
    /* attend que l'utilisateur aie repondu au menu */
    TtaWaitShowDialogue ();
    *Creer = CreerAskForNew;
@@ -111,13 +111,13 @@ int                 Val;
 /*  --------------------------------------------------------------------  */
 /*  --------------------------------------------------------------------  */
 #ifdef __STDC__
-void                CreeEtActiveMenuChoix (char *BufMenu, Name TitreMenu, int nbentree, boolean ChoixElemNature)
+void                CreeEtActiveMenuChoix (char *BufMenu, Name TitreMenu, int nbentree, boolean NatureChoice)
 #else  /* __STDC__ */
-void                CreeEtActiveMenuChoix (BufMenu, TitreMenu, nbentree, ChoixElemNature)
+void                CreeEtActiveMenuChoix (BufMenu, TitreMenu, nbentree, NatureChoice)
 char               *BufMenu;
 Name                 TitreMenu;
 int                 nbentree;
-boolean             ChoixElemNature;
+boolean             NatureChoice;
 
 #endif /* __STDC__ */
 {
@@ -127,7 +127,7 @@ boolean             ChoixElemNature;
    char               *dest;
    int                 k, l, nbitem, longueur;
 
-   if (ChoixElemNature)
+   if (NatureChoice)
      {
 	menu = NumFormNature;
 	/* selecteur de saisie de la nature de l'element a creer (ou zone de saisie */
@@ -144,20 +144,20 @@ boolean             ChoixElemNature;
 	     else
 		longueur = 5;
 	     /* cree le selecteur */
-	     TtaNewSelector (NumSelectNomNature, NumFormNature,
+	     TtaNewSelector (NumSelectNatureName, NumFormNature,
 			     TtaGetMessage (LIB, OBJECT_TYPE), nbitem, BufMenuB, longueur, NULL, TRUE, FALSE);
 	     /* initialise le selecteur sur sa premiere entree */
-	     TtaSetSelector (NumSelectNomNature, 0, "");
+	     TtaSetSelector (NumSelectNatureName, 0, "");
 	  }
 	else
 	   /* on n'a pas cree' de selecteur, on cree une zone de saisie */
 	   /* zone de saisie de la nature de l'element a creer */
-	   TtaNewTextForm (NumSelectNomNature, NumFormNature,
+	   TtaNewTextForm (NumSelectNatureName, NumFormNature,
 			TtaGetMessage (LIB, OBJECT_TYPE), 30, 1, FALSE);
      }
    else
      {
-	menu = NumMenuChoixEl;
+	menu = NumMenuElChoice;
 	/* ajoute 'B' au debut de chaque entree */
 	dest = &BufMenuB[0];
 	src = &BufMenu[0];
@@ -170,7 +170,7 @@ boolean             ChoixElemNature;
 	     dest += l + 1;
 	     src += l + 1;
 	  }
-	TtaNewPopup (NumMenuChoixEl, 0, TitreMenu, nbentree, BufMenuB, NULL, 'L');
+	TtaNewPopup (NumMenuElChoice, 0, TitreMenu, nbentree, BufMenuB, NULL, 'L');
      }
    TtaShowDialogue (menu, FALSE);
    /* attend que l'utilisateur ait repondu au menu et que le */

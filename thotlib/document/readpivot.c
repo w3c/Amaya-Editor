@@ -3710,12 +3710,12 @@ boolean             WithAPPEvent;
 			/* cherche le document dans la table */
 			/* des documents */
 			d = 1;
-			while (TabDocuments[d - 1] != TabDocExt[NumDocExt - 1]
+			while (LoadedDocument[d - 1] != TabDocExt[NumDocExt - 1]
 			       && d < MAX_DOCUMENTS)
 			   d++;
 			/* libere l'entree de la table des documents */
-			if (TabDocuments[d - 1] == TabDocExt[NumDocExt - 1])
-			   TabDocuments[d - 1] = NULL;
+			if (LoadedDocument[d - 1] == TabDocExt[NumDocExt - 1])
+			   LoadedDocument[d - 1] = NULL;
 			/* libere tout le document */
 			FreeDocument (TabDocExt[NumDocExt - 1]);
 		     }

@@ -761,7 +761,7 @@ Element             el;
 	        TtaGiveTextContent (elText, text, &length, &lang);
 	        if (length >= 50)
 		  {
-		    /* limit on entry name to 50 characters */
+		    /* CHKR_LIMIT on entry name to 50 characters */
 		    length = 50;
 		    text[length-1] = EOS;
 		  }

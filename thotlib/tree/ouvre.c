@@ -80,9 +80,9 @@ DocumentIdentifier     docIdent;
 
    pDoc = NULL;
    for (doc = 0; doc < MAX_DOCUMENTS; doc++)
-      if (TabDocuments[doc] != NULL)
-	 if (MemeIdentDoc (TabDocuments[doc]->DocIdent, docIdent))
-	    pDoc = TabDocuments[doc];
+      if (LoadedDocument[doc] != NULL)
+	 if (MemeIdentDoc (LoadedDocument[doc]->DocIdent, docIdent))
+	    pDoc = LoadedDocument[doc];
    return pDoc;
 }
 
@@ -143,7 +143,7 @@ boolean             withAppEvent;
 	     /* compose le nom du fichier a ouvrir avec le nom du directory */
 	     /* des documents... */
 	     if (pDoc->DocDirectory[0] == '\0')
-		strncpy (directoryName, DirectoryDoc, MAX_PATH);
+		strncpy (directoryName, DocumentPath, MAX_PATH);
 	     else
 		strncpy (directoryName, pDoc->DocDirectory, MAX_PATH);
 	     BuildFileName (pDoc->DocDName, "PIV", directoryName, text, &i);

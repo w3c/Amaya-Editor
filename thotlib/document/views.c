@@ -236,7 +236,7 @@ boolean            *assoc;
    *nv = 0;
    if (FrameTable[frame].FrDoc != 0)
      {
-	pDoc = TabDocuments[FrameTable[frame].FrDoc - 1];
+	pDoc = LoadedDocument[FrameTable[frame].FrDoc - 1];
 	if (pDoc != NULL)
 	  {
 	     /* il y a un document pour cette entree de la table des documents */
@@ -587,9 +587,9 @@ PtrDocument        *pDoc;
       /* cherche dans la table le descripteur de document a liberer */
      {
 	d = 1;
-	while (TabDocuments[d - 1] != *pDoc && d < MAX_DOCUMENTS)
+	while (LoadedDocument[d - 1] != *pDoc && d < MAX_DOCUMENTS)
 	   d++;
-	if (TabDocuments[d - 1] == *pDoc)
+	if (LoadedDocument[d - 1] == *pDoc)
 	   /* supprime la selection dans ce document */
 	  {
 	     /* fait disparaitre les menus et formulaires concernant le */
@@ -597,14 +597,14 @@ PtrDocument        *pDoc;
 	     /* enleve la selection de ce document */
 	     DeSelDoc (*pDoc);
 	     /* libere le contenu du buffer s'il s'agit d'une partie de ce docum. */
-	     if (DocDeSauve == *pDoc)
+	     if (DocOfSavedElements == *pDoc)
 		LibBufEditeur ();
 	     /* liberer tout l'arbre interne */
 	     DeleteAllTrees (*pDoc);
 	     /* liberer les schemas : document, natures, presentations */
 	     LibSchemas (*pDoc);
-	     FreeDocument (TabDocuments[d - 1]);
-	     TabDocuments[d - 1] = NULL;
+	     FreeDocument (LoadedDocument[d - 1]);
+	     LoadedDocument[d - 1] = NULL;
 	     *pDoc = NULL;
 	  }
      }
@@ -1633,7 +1633,7 @@ char               *nomfichier;
    SaveDirDoc[0] = '\0';
 
    if (nomfichier != NULL)
-      /* nom de document fourni a l'appel, on le recopie dans NomDocument */
+      /* nom de document fourni a l'appel, on le recopie dans DefaultDocumentName */
      {
 	lg = strlen (nomfichier);
 	if (lg > 4)
@@ -1642,13 +1642,13 @@ char               *nomfichier;
 	i = 1;
 	if (nomfichier[0] != DIR_SEP)
 	  {
-	     if (nomfichier != NomDocument)
-		strncpy (NomDocument, nomfichier, MAX_NAME_LENGTH);
+	     if (nomfichier != DefaultDocumentName)
+		strncpy (DefaultDocumentName, nomfichier, MAX_NAME_LENGTH);
 	     /* nom de document relatif */
-	     strncpy ((*pDoc)->DocDName, NomDocument, MAX_NAME_LENGTH);
-	     strncpy ((*pDoc)->DocIdent, NomDocument, MAX_DOC_IDENT_LEN);
+	     strncpy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
+	     strncpy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
 	     if ((*pDoc)->DocDirectory[0] == '\0')
-		strncpy ((*pDoc)->DocDirectory, DirectoryDoc, MAX_PATH);
+		strncpy ((*pDoc)->DocDirectory, DocumentPath, MAX_PATH);
 	  }
 	else
 	  {
@@ -1665,16 +1665,16 @@ char               *nomfichier;
 	     i = 1;
 	     while (nomfichier[i - 1] != '\0' && i < MAX_NAME_LENGTH)
 	       {
-		  NomDocument[i - 1] = nomfichier[j];
+		  DefaultDocumentName[i - 1] = nomfichier[j];
 		  i++;
 		  j++;
 	       }
-	     NomDocument[i - 1] = '\0';
-	     strncpy ((*pDoc)->DocDName, NomDocument, MAX_NAME_LENGTH);
-	     strncpy ((*pDoc)->DocIdent, NomDocument, MAX_DOC_IDENT_LEN);
+	     DefaultDocumentName[i - 1] = '\0';
+	     strncpy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
+	     strncpy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
 	     /* sauve le path des documents avant de l'ecraser */
-	     strncpy (SaveDirDoc, DirectoryDoc, MAX_PATH);
-	     strncpy (DirectoryDoc, (*pDoc)->DocDirectory, MAX_PATH);
+	     strncpy (SaveDirDoc, DocumentPath, MAX_PATH);
+	     strncpy (DocumentPath, (*pDoc)->DocDirectory, MAX_PATH);
 	  }
      }
 
@@ -1683,13 +1683,13 @@ char               *nomfichier;
 	/* on ouvre le document en chargeant temporairement les documents */
 	/* externes qui contiennent les elements inclus dans notre document */
 	TtaDisplaySimpleMessage (INFO, LIB, READING_DOC);
-	ok = OpenDocument (NomDocument, *pDoc, TRUE, FALSE, NULL, TRUE);
+	ok = OpenDocument (DefaultDocumentName, *pDoc, TRUE, FALSE, NULL, TRUE);
 	/* restaure le path des documents s'il a ete ecrase */
 	if (SaveDirDoc[0] != '\0')
-	   strncpy (DirectoryDoc, SaveDirDoc, MAX_PATH);
+	   strncpy (DocumentPath, SaveDirDoc, MAX_PATH);
 	if (!ok)
 	  {
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, OPEN_DOC_IMP), NomDocument);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, OPEN_DOC_IMP), DefaultDocumentName);
 	     LibDocument (pDoc);
 	     *pDoc = NULL;
 	  }
@@ -1698,7 +1698,7 @@ char               *nomfichier;
      {
 	pDo1 = *pDoc;
 	/* conserve le path actuel des schemas dans le contexte du document */
-	strncpy (pDo1->DocSchemasPath, DirectorySchemas, MAX_PATH);
+	strncpy (pDo1->DocSchemasPath, SchemaPath, MAX_PATH);
 	/* ouvre les vues a ouvrir */
 	OuvreVuesInit (pDo1);
 	if (pDo1->DocRootElement != NULL)
@@ -1755,7 +1755,7 @@ PathBuffer          nomdir;
       else
 	{
 	   pDo1 = *pDoc;
-	   strncpy (pDo1->DocDirectory, DirectoryDoc, MAX_PATH);
+	   strncpy (pDo1->DocDirectory, DocumentPath, MAX_PATH);
 	   /* si c'est un path, retient seulement le 1er directory */
 	   i = 1;
 	   while (pDo1->DocDirectory[i - 1] != '\0' &&
@@ -1771,7 +1771,7 @@ PathBuffer          nomdir;
 	      strncpy (NomClasse, (char *) nomschema, MAX_NAME_LENGTH);
 	   /* compose le nom du fichier a ouvrir avec le nom du directory */
 	   /* des schemas... */
-	   strncpy (NomDirectory, DirectorySchemas, MAX_PATH);
+	   strncpy (NomDirectory, SchemaPath, MAX_PATH);
 	   BuildFileName (NomClasse, "STR", NomDirectory, BufNomFichier, &i);
 	   /* teste si le fichier '.STR' existe */
 
@@ -1839,7 +1839,7 @@ PathBuffer          nomdir;
 		   strncpy (NomDirectory, nomdir, MAX_PATH);
 		else
 		  {
-		     strncpy (NomDirectory, DirectoryDoc, MAX_PATH);
+		     strncpy (NomDirectory, DocumentPath, MAX_PATH);
 		     /* si c'est un path, retient seulement le 1er directory */
 		     i = 1;
 		     while (NomDirectory[i - 1] != '\0' &&
@@ -1853,7 +1853,7 @@ PathBuffer          nomdir;
 		/* le document appartient au directory courant */
 		strncpy (pDo1->DocDirectory, NomDirectory, MAX_PATH);
 		/* conserve le path actuel des schemas dans le contexte du document */
-		strncpy (pDo1->DocSchemasPath, DirectorySchemas, MAX_PATH);
+		strncpy (pDo1->DocSchemasPath, SchemaPath, MAX_PATH);
 		notifyDoc.event = TteDocCreate;
 		notifyDoc.document = (Document) IdentDocument (pDo1);
 		notifyDoc.view = 0;
@@ -2645,7 +2645,7 @@ boolean             assoc;
 			    (*ThotLocalActions[T_confirmclose]) (pDoc, &ok, &Sauver);
 			    if (Sauver)
 			      {
-				 if (DocDeSauve == pDoc)
+				 if (DocOfSavedElements == pDoc)
 				    LibBufEditeur ();
 				 ok = SauveDocument (pDoc, 0);
 			      }

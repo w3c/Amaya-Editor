@@ -2298,7 +2298,7 @@ SyntRuleNum                 pr;
 
 				case RULE_ConstIdent:	/* ConstIdent */
 				   if (ConstDef)	/* une definition de constante */
-				      if (identtable[nb - 1].SrcIdentDefRule != 0)
+				      if (Identifier[nb - 1].SrcIdentDefRule != 0)
 					 /* nom deja declare' */
 					 CompilerError (wi, TRA, FATAL, TRA_NAME_ALREADY_DECLARED, inputLine, LineNum);
 				      else if (pTSchema->TsNConstants >= MAX_TRANSL_CONST)
@@ -2308,11 +2308,11 @@ SyntRuleNum                 pr;
 					 /* alloue un nouvelle entree dans la table des constantes */
 					{
 					   pTSchema->TsNConstants++;
-					   identtable[nb - 1].SrcIdentDefRule = pTSchema->TsNConstants;
+					   Identifier[nb - 1].SrcIdentDefRule = pTSchema->TsNConstants;
 					}
 				   else
 				      /* utilisation d'une constante */
-				   if (identtable[nb - 1].SrcIdentDefRule == 0)
+				   if (Identifier[nb - 1].SrcIdentDefRule == 0)
 				      /* ce nom n'a pas ete declare comme un identificateur */
 				      /* de constante */
 				      if (pr == RULE_Token || pr == RULE_Function)
@@ -2335,7 +2335,7 @@ SyntRuleNum                 pr;
 					     {
 						AttrInCreateOrWrite (i, pr, wi);
 						/* ce nom est maintenant un nom d'attribut */
-						identtable[nb - 1].SrcIdentCode = RULE_AttrIdent;
+						Identifier[nb - 1].SrcIdentCode = RULE_AttrIdent;
 					     }
 					}
 				      else
@@ -2352,7 +2352,7 @@ SyntRuleNum                 pr;
 					     pTransVar->TrvItem[pTransVar->TrvNItems].TvType =
 						VtText;
 					     pTransVar->TrvItem[pTransVar->TrvNItems].TvItem =
-						identtable[nb - 1].SrcIdentDefRule;
+						Identifier[nb - 1].SrcIdentDefRule;
 					     pTransVar->TrvNItems++;
 					  }
 				     }
@@ -2360,13 +2360,13 @@ SyntRuleNum                 pr;
 				      /* dans une regle Create ou Write */
 				     {
 					CurTRule->TrObject = ToConst;
-					CurTRule->TrObjectNum = identtable[nb - 1].SrcIdentDefRule;
+					CurTRule->TrObjectNum = Identifier[nb - 1].SrcIdentDefRule;
 				     }
 				   break;
 
 				case RULE_CounterIdent:	/* CounterIdent */
 				   if (ComptDef)	/* une definition de compteur */
-				      if (identtable[nb - 1].SrcIdentDefRule != 0)
+				      if (Identifier[nb - 1].SrcIdentDefRule != 0)
 					 /* nom deja declare' */
 					 CompilerError (wi, TRA, FATAL, TRA_NAME_ALREADY_DECLARED, inputLine, LineNum);
 				      else if (pTSchema->TsNCounters >= MAX_TRANSL_COUNTER)
@@ -2382,11 +2382,11 @@ SyntRuleNum                 pr;
 					   pTSchema->TsCounter[pTSchema->TsNCounters].
 					      TnAttrInit = 0;
 					   pTSchema->TsNCounters++;
-					   identtable[nb - 1].SrcIdentDefRule = pTSchema->TsNCounters;
+					   Identifier[nb - 1].SrcIdentDefRule = pTSchema->TsNCounters;
 					}
 				   else
 				      /* utilisation d'un compteur */
-				   if (identtable[nb - 1].SrcIdentDefRule == 0)
+				   if (Identifier[nb - 1].SrcIdentDefRule == 0)
 				      /* compteur non defini */
 				      CompilerError (wi, TRA, FATAL, TRA_COUNTER_NOT_DECLARED, inputLine, LineNum);
 				   else if (pr == RULE_Function)
@@ -2394,21 +2394,21 @@ SyntRuleNum                 pr;
 				     {
 					pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
 					pTransVar->TrvItem[pTransVar->TrvNItems - 1].TvItem =
-					   identtable[nb - 1].SrcIdentDefRule;
+					   Identifier[nb - 1].SrcIdentDefRule;
 					pTransVar->TrvItem[pTransVar->TrvNItems - 1].TvLength = 0;
 					pTransVar->TrvItem[pTransVar->TrvNItems - 1].TvCounterStyle = CntArabic;
 				     }
 				   else if (pr == RULE_Rule1)
 				      /* un compteur dans une instruction Set ou Add */
-				      if (pTSchema->TsCounter[identtable[nb - 1].SrcIdentDefRule - 1].TnOperation != TCntrNoOp)
+				      if (pTSchema->TsCounter[Identifier[nb - 1].SrcIdentDefRule - 1].TnOperation != TCntrNoOp)
 					 CompilerError (wi, TRA, FATAL, TRA_INVALID_COUNTER, inputLine, LineNum);
 				      else
-					 CurTRule->TrCounterNum = identtable[nb - 1].SrcIdentDefRule;
+					 CurTRule->TrCounterNum = Identifier[nb - 1].SrcIdentDefRule;
 				   break;
 
 				case RULE_BufferIdent:		/* BufferIdent */
 				   if (BuffDef)		/* une definition de  buffer */
-				      if (identtable[nb - 1].SrcIdentDefRule != 0)
+				      if (Identifier[nb - 1].SrcIdentDefRule != 0)
 					 /* nom deja declare' */
 					 CompilerError (wi, TRA, FATAL, TRA_NAME_ALREADY_DECLARED, inputLine, LineNum);
 				      else if (pTSchema->TsNBuffers >= MAX_TRANSL_BUFFER)
@@ -2417,11 +2417,11 @@ SyntRuleNum                 pr;
 				      else
 					{
 					   pTSchema->TsNBuffers++;
-					   identtable[nb - 1].SrcIdentDefRule = pTSchema->TsNBuffers;
+					   Identifier[nb - 1].SrcIdentDefRule = pTSchema->TsNBuffers;
 					}
 				   else
 				      /* utilisation d'un buffer */
-				   if (identtable[nb - 1].SrcIdentDefRule == 0)
+				   if (Identifier[nb - 1].SrcIdentDefRule == 0)
 				      /* buffer non defini */
 				      CompilerError (wi, TRA, FATAL, TRA_BUFFER_NOT_DECLARED, inputLine, LineNum);
 				   else if (VarDef)
@@ -2435,32 +2435,32 @@ SyntRuleNum                 pr;
 					  {
 					     pTransVar->TrvItem[pTransVar->TrvNItems].TvType = VtBuffer;
 					     pTransVar->TrvItem[pTransVar->TrvNItems].TvItem =
-						identtable[nb - 1].SrcIdentDefRule;
+						Identifier[nb - 1].SrcIdentDefRule;
 					     pTransVar->TrvNItems++;
 					  }
 				     }
 				   else if (pr == RULE_Rule1)
 				      /* dans une regle Read */
-				      CurTRule->TrBuffer = identtable[nb - 1].SrcIdentDefRule;
+				      CurTRule->TrBuffer = Identifier[nb - 1].SrcIdentDefRule;
 				   else if (pr == RULE_Token)
 
 				      /* dans une regle Create ou Write */
 				     {
 					CurTRule->TrObject = ToBuffer;
-					CurTRule->TrObjectNum = identtable[nb - 1].SrcIdentDefRule;
+					CurTRule->TrObjectNum = Identifier[nb - 1].SrcIdentDefRule;
 				     }
 				   else if (pr == RULE_File)
 				     {
 					/* dans une regle Include */
 					CurTRule->TrBufOrConst = ToBuffer;
-					CurTRule->TrInclFile = identtable[nb - 1].SrcIdentDefRule;
+					CurTRule->TrInclFile = Identifier[nb - 1].SrcIdentDefRule;
 				     }
 				   break;
 
 				case RULE_VariableIdent:	/* VariableIdent */
 				   if (VarDef)
 				      /* une definition de  variable */
-				      if (identtable[nb - 1].SrcIdentDefRule != 0)
+				      if (Identifier[nb - 1].SrcIdentDefRule != 0)
 					 /* nom deja declare' */
 					 CompilerError (wi, TRA, FATAL, TRA_NAME_ALREADY_DECLARED, inputLine, LineNum);
 				      else if (pTSchema->TsNVariables >= MAX_TRANSL_VARIABLE)
@@ -2469,23 +2469,23 @@ SyntRuleNum                 pr;
 				      else
 					{
 					   pTSchema->TsVariable[pTSchema->TsNVariables++].TrvNItems = 0;
-					   identtable[nb - 1].SrcIdentDefRule = pTSchema->TsNVariables;
+					   Identifier[nb - 1].SrcIdentDefRule = pTSchema->TsNVariables;
 					}
 				   else if (pr == RULE_Token)
 				      /* dans une regle Create  ou Write */
-				      if (identtable[nb - 1].SrcIdentDefRule == 0)
+				      if (Identifier[nb - 1].SrcIdentDefRule == 0)
 					 /* variable non definie */
 					 CompilerError (wi, TRA, FATAL, TRA_VARIABLE_NOT_DECLARED, inputLine, LineNum);
 				      else
 					{
 					   CurTRule->TrObject = ToVariable;
-					   CurTRule->TrObjectNum = identtable[nb - 1].SrcIdentDefRule;
+					   CurTRule->TrObjectNum = Identifier[nb - 1].SrcIdentDefRule;
 					}
 				   else if (pr == RULE_VarOrType)
 				      /* dans une regle Create  ou Write */
 				     {
 					VarDefinition = False;
-					if (identtable[nb - 1].SrcIdentDefRule == 0)
+					if (Identifier[nb - 1].SrcIdentDefRule == 0)
 					   /* variable non definie */
 					   /* c'est peut-etre un nom de type d'element */
 					  {
@@ -2497,18 +2497,18 @@ SyntRuleNum                 pr;
 					   /* la variable est bien definie */
 					  {
 					     CurTRule->TrObject = ToVariable;
-					     CurTRule->TrObjectNum = identtable[nb - 1].SrcIdentDefRule;
+					     CurTRule->TrObjectNum = Identifier[nb - 1].SrcIdentDefRule;
 					  }
 				     }
 				   else if (pr == RULE_Rule1)
-				      if (identtable[nb - 1].SrcIdentDefRule == 0)
+				      if (Identifier[nb - 1].SrcIdentDefRule == 0)
 					 /* variable non definie */
 					 CompilerError (wi, TRA, FATAL, TRA_VARIABLE_NOT_DECLARED, inputLine, LineNum);
 				      else if (CurTRule->TrType == TCreate)
 					 /* indication du fichier de sortie dans une regle Create */
-					 CurTRule->TrFileNameVar = identtable[nb - 1].SrcIdentDefRule;
+					 CurTRule->TrFileNameVar = Identifier[nb - 1].SrcIdentDefRule;
 				      else if (CurTRule->TrType == TChangeMainFile)
-					 CurTRule->TrNewFileVar = identtable[nb - 1].SrcIdentDefRule;
+					 CurTRule->TrNewFileVar = Identifier[nb - 1].SrcIdentDefRule;
 
 				   break;
 
@@ -3090,7 +3090,7 @@ char              **argv;
    SyntRuleNum                 r;	/* numero de regle */
    SyntRuleNum                 pr;	/* numero de la regle precedente */
    SyntacticCode             c;	/* code grammatical du mot trouve */
-   int                 nb;	/* indice dans identtable du mot trouve, si c'est un
+   int                 nb;	/* indice dans Identifier du mot trouve, si c'est un
 
 				   identificateur */
 
@@ -3125,7 +3125,7 @@ char              **argv;
 		  /* acquiert la memoire pour le schema de traduction */
 		  if ((pTSchema = (PtrTSchema) malloc (sizeof (TranslSchema))) == NULL)
 		     TtaDisplaySimpleMessage (FATAL, TRA, TRA_NOT_ENOUGH_MEM);
-		  lgidenttable = 0;	/* table des identificateurs vide */
+		  NIdentifiers = 0;	/* table des identificateurs vide */
 		  LineNum = 0;
 		  Initialize ();	/* prepare la generation */
 
@@ -3140,12 +3140,12 @@ char              **argv;
 			    fileOK = BIOreadByte (infile, &inputLine[i]);
 			    i++;
 			 }
-		       while (i < linelen && inputLine[i - 1] != '\n' && fileOK);
+		       while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
 		       /* marque la fin reelle de la ligne */
 		       inputLine[i - 1] = '\0';
 		       /* incremente le compteur de lignes */
 		       LineNum++;
-		       if (i >= linelen)
+		       if (i >= LINE_LENGTH)
 			  CompilerError (1, TRA, FATAL, TRA_LINE_TOO_LONG,
 					 inputLine, LineNum);
 		       else if (inputLine[0] == '#')

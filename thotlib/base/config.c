@@ -483,7 +483,7 @@ void                ConfigReadConfigFiles ()
    nbitemnat = 0;
    nbitemext = 0;
    /* traite successivement tous les directories du path des schemas */
-   strncpy (DirBuffer, DirectorySchemas, MAX_PATH);
+   strncpy (DirBuffer, SchemaPath, MAX_PATH);
    stop = FALSE;
    while (DirBuffer[i] != '\0' && i < MAX_PATH && !stop)
      {
@@ -769,7 +769,7 @@ boolean             lang;
 
    /* compose le nom du fichier a ouvrir avec le nom du directory */
    /* des schemas et le suffixe */
-   strncpy (DirBuffer, DirectorySchemas, MAX_PATH);
+   strncpy (DirBuffer, SchemaPath, MAX_PATH);
    BuildFileName (name, suffix, DirBuffer, filename, &i);
    /* ouvre le fichier */
    file = fopen (filename, "r");
@@ -1570,7 +1570,7 @@ int                *height;
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (document != 0)
-      ConfigGetViewGeometry (TabDocuments[document - 1], name, x, y, width, height);
+      ConfigGetViewGeometry (LoadedDocument[document - 1], name, x, y, width, height);
 }
 
 /* ---------------------------------------------------------------------- */

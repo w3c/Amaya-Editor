@@ -168,7 +168,7 @@ LONG AHTCallback_bridge (caddr_t cd, int* s)
      * Liberate the input, so that when a pending socket is activated,
      * the socket status will be ... available 
      * 
-     * verify if I can limit this to the unregister function 
+     * verify if I can CHKR_LIMIT this to the unregister function 
      * does not look so
      *
      * although it makes no sense, callbacks can be null 

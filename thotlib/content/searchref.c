@@ -423,7 +423,7 @@ LabelString         oldLabel;
 	   GetElemRefChng (&pChnRef);
 	   strncpy (pChnRef->CrOldLabel, oldLabel, MAX_LABEL_LEN);
 	   strncpy (pChnRef->CrNewLabel, pEl->ElLabel, MAX_LABEL_LEN);
-	   CopyIdentDoc (&pChnRef->CrOldDocument, DocDeSauve->DocIdent);
+	   CopyIdentDoc (&pChnRef->CrOldDocument, DocOfSavedElements->DocIdent);
 	   CopyIdentDoc (&pChnRef->CrNewDocument, pDoc->DocIdent);
 	   pChnRef->CrReferringDoc = NULL;
 	   /* chaine ce descripteur */
@@ -464,7 +464,7 @@ PtrDocument         pDoc;
 
    /* on se souvient du label de l'original */
    strncpy (oldLabel, pRoot->ElLabel, MAX_LABEL_LEN);
-   if (ChangerLabel || pDoc != DocDeSauve)
+   if (ChangeLabel || pDoc != DocOfSavedElements)
      {
 	/* on affecte un nouveau label a l'element */
 	l = NewLabel (pDoc);
@@ -490,10 +490,10 @@ PtrDocument         pDoc;
 	pRoot->ElReferredDescr = NewReferredElDescr (pDoc);
 	pRoot->ElReferredDescr->ReExternalRef = FALSE;
 	pRoot->ElReferredDescr->ReReferredElem = pRoot;
-	if (!ChangerLabel && pSource != NULL && pDoc == DocDeSauve)
+	if (!ChangeLabel && pSource != NULL && pDoc == DocOfSavedElements)
 	   /* l'element prend le meme label que l'element original */
 	   strncpy (pRoot->ElLabel, pSource->ElLabel, MAX_LABEL_LEN);
-	if (!ChangerLabel && pSource != NULL)
+	if (!ChangeLabel && pSource != NULL)
 	  {
 	     /* l'element prend les memes descripteurs de documents */
 	     /* externes referencants que l'element original */
@@ -510,14 +510,14 @@ PtrDocument         pDoc;
 	/* on cherche toutes les references a l'element original et on les */
 	/* fait pointer sur l'element colle'. */
 	/* cherche d'abord la premiere reference */
-	pRef = NextReferenceToEl (pSource, DocDeSauve, FALSE, NULL, &pDocRef, &pExtDoc, TRUE);
+	pRef = NextReferenceToEl (pSource, DocOfSavedElements, FALSE, NULL, &pDocRef, &pExtDoc, TRUE);
 	pNextDocRef = pDocRef;	/* a priori la reference suivante sera dans le */
 	/* meme document */
 	while (pRef != NULL)
 	  {
 	     /* cherche la reference suivante a l'original avant de modifier */
 	     /* la reference courante */
-	     pNextRef = NextReferenceToEl (pSource, DocDeSauve, FALSE, pRef, &pNextDocRef, &pExtDoc, TRUE);
+	     pNextRef = NextReferenceToEl (pSource, DocOfSavedElements, FALSE, pRef, &pNextDocRef, &pExtDoc, TRUE);
 	     /* traite la reference courante */
 	     /* si elle est dans le tampon, on n'y touche pas : sa copie dans */
 	     /* le document ou on colle a deja ete traitee ou sera traitee dans */
@@ -543,7 +543,7 @@ PtrDocument         pDoc;
 	     pRef = pNextRef;	/* passe a la reference suivante */
 	     pDocRef = pNextDocRef;
 	  }
-	if (!ChangerLabel && pDoc != DocDeSauve)
+	if (!ChangeLabel && pDoc != DocOfSavedElements)
 	   /* l'element a change' de document, on le note dans le */
 	   /* contexte de son nouveau document */
 	   RegisterPastedReferredElem (pRoot, pDoc, oldLabel);
@@ -573,7 +573,7 @@ PtrDocument         pDoc;
 		        if (ThotLocalActions[T_checkextens]!=NULL)
 			  (*ThotLocalActions[T_checkextens])
 			   (pAttr, pRoot, pRoot, TRUE);
-			if (DocDeSauve != pDoc)
+			if (DocOfSavedElements != pDoc)
 			   /* reference et objet reference' sont */
 			   /* dans des documents differents, on */
 			   /* supprime l'attribut, sauf dans le */
@@ -617,7 +617,7 @@ PtrDocument         pDoc;
 
    /* on n'a pas de traitement particulier a faire sur les references si */
    /* la copie est dans le meme document que l'original */
-   if (DocDeSauve != pDoc)
+   if (DocOfSavedElements != pDoc)
      {
 	/* l'element traite' est-il une reference ? */
 	if (pRoot->ElTerminal && pRoot->ElLeafType == LtReference)
@@ -644,7 +644,7 @@ PtrDocument         pDoc;
 			/* l'original etait une reference interne a son document */
 			/* d'origine, l'element reference' appartient donc au */
 			/* document d'origine */
-			pDocRef = DocDeSauve;
+			pDocRef = DocOfSavedElements;
 		     else
 			/* l'original etait une reference externe a son document */
 			/* d'origine */

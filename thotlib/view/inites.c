@@ -160,7 +160,7 @@ unsigned short     *blue;
 
 #endif /* __STDC__ */
 {
-   if (num < NbColors && num >= 0)
+   if (num < NColors && num >= 0)
      {
 	*red = RGB_Table[num].red;
 	*green = RGB_Table[num].green;
@@ -220,7 +220,7 @@ static void         ApproximateColors ()
    unsigned long       col;
    int                 line, b;
 
-   for (line = 1; line < (NbColors / 8); line++)
+   for (line = 1; line < (NColors / 8); line++)
      {
 	/*
 	 * on each line, colors are stored from the brightest to
@@ -268,7 +268,7 @@ char               *name;
 #endif
 
    /* clean up everything with white */
-   for (i = 2; i < NbColors; i++)
+   for (i = 2; i < NColors; i++)
       Pix_Color[i] = Pix_Color[0];
    reducecolor = FALSE;
    colormap_full = FALSE;
@@ -293,7 +293,7 @@ char               *name;
       InstallColor (i);
    /* install the first row of primary colors */
    i = 4;
-   for (i += 8; i < NbColors; i += 8)
+   for (i += 8; i < NColors; i += 8)
       InstallColor (i);
 
    /*
@@ -302,23 +302,23 @@ char               *name;
     */
    if (colormap_full)
      {
-	for (j = 1; j <= (NbColors / 8); j++)
-	   for (i = j * 8, k = 0; (i < NbColors) && (k < 8); i++, k++)
+	for (j = 1; j <= (NColors / 8); j++)
+	   for (i = j * 8, k = 0; (i < NColors) && (k < 8); i++, k++)
 	      Pix_Color[i] = Pix_Color[j * 8 + 4];
 	return;
      }
 
    /* install the second row of colors */
    i = 2;
-   for (i += 8; i < NbColors; i += 8)
+   for (i += 8; i < NColors; i += 8)
       InstallColor (i);
 
    /* install the the third and fourth rows of colors */
    i = 6;
-   for (i += 8; i < NbColors; i += 8)
+   for (i += 8; i < NColors; i += 8)
       InstallColor (i);
    i = 0;
-   for (i += 8; i < NbColors; i += 8)
+   for (i += 8; i < NColors; i += 8)
       InstallColor (i);
 
    /* here, if the user asked for reduced colormap, approximate colors */
@@ -328,16 +328,16 @@ char               *name;
      {
 	/* install the last rows of colors */
 	i = 3;
-	for (i += 8; i < NbColors; i += 8)
+	for (i += 8; i < NColors; i += 8)
 	   InstallColor (i);
 	i = 7;
-	for (i += 8; i < NbColors; i += 8)
+	for (i += 8; i < NColors; i += 8)
 	   InstallColor (i);
 	i = 5;
-	for (i += 8; i < NbColors; i += 8)
+	for (i += 8; i < NColors; i += 8)
 	   InstallColor (i);
 	i = 1;
-	for (i += 8; i < NbColors; i += 8)
+	for (i += 8; i < NColors; i += 8)
 	   InstallColor (i);
 
 	if (colormap_full)
@@ -351,7 +351,7 @@ char               *name;
 /* ---------------------------------------------------------------------- */
 int                 NumberOfColors ()
 {
-   return NbColors;
+   return NColors;
 }
 
 
@@ -366,7 +366,7 @@ int                 num;
 
 #endif /* __STDC__ */
 {
-   if (num < NbColors && num >= 0)
+   if (num < NColors && num >= 0)
       return Color_Table[num];
    else
       return NULL;
@@ -384,7 +384,7 @@ int                 num;
 
 #endif /* __STDC__ */
 {
-   if (num < NbColors && num >= 0)
+   if (num < NColors && num >= 0)
       return Pix_Color[num];
    else
       return 0;
@@ -415,7 +415,7 @@ char               *name;
 	 trouve = TRUE;
       else
 	 i++;
-   while (!trouve && i < NbColors);
+   while (!trouve && i < NColors);
    if (trouve)
       return i;
    else

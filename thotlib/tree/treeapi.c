@@ -112,7 +112,7 @@ ElementType         elementType;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
@@ -126,7 +126,7 @@ ElementType         elementType;
    else
      {
 	element = NewSubtree (elementType.ElTypeNum, (PtrSSchema) (elementType.ElSSchema),
-	     TabDocuments[document - 1], 0, FALSE, TRUE, TRUE, TRUE);
+	     LoadedDocument[document - 1], 0, FALSE, TRUE, TRUE, TRUE);
 	if (element->ElSructSchema->SsRule[element->ElTypeNumber - 1].SrConstruct == CsPairedElement)
 	   if (!element->ElSructSchema->SsRule[element->ElTypeNumber - 1].SrFirstOfPair)
 	      element->ElPairIdent = 0;
@@ -178,7 +178,7 @@ char               *label;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
@@ -192,7 +192,7 @@ char               *label;
    else
      {
 	element = NewSubtree (elementType.ElTypeNum, (PtrSSchema) (elementType.ElSSchema),
-		     TabDocuments[document - 1], 0, TRUE, TRUE, TRUE,
+		     LoadedDocument[document - 1], 0, TRUE, TRUE, TRUE,
 			      (*label) == '\0');
 	if (element->ElSructSchema->SsRule[element->ElTypeNumber - 1].SrConstruct == CsPairedElement)
 	   if (!element->ElSructSchema->SsRule[element->ElTypeNumber - 1].SrFirstOfPair)
@@ -337,8 +337,8 @@ Element             parent;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[sourceDocument - 1] == NULL ||
-	    TabDocuments[destinationDocument - 1] == NULL)
+   else if (LoadedDocument[sourceDocument - 1] == NULL ||
+	    LoadedDocument[destinationDocument - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
@@ -364,9 +364,9 @@ Element             parent;
 		else
 		   ancestor = ancestor->ElParent;
 	     if (pSS == NULL)
-		if (TabDocuments[destinationDocument - 1]->DocSSchema->SsCode ==
+		if (LoadedDocument[destinationDocument - 1]->DocSSchema->SsCode ==
 		    ((PtrElement) sourceElement)->ElSructSchema->SsCode)
-		   pSS = TabDocuments[destinationDocument - 1]->DocSSchema;
+		   pSS = LoadedDocument[destinationDocument - 1]->DocSSchema;
 		else if (((PtrElement) sourceElement)->ElTerminal)
 		   pSS = ((PtrElement) parent)->ElSructSchema;
 		else
@@ -374,11 +374,11 @@ Element             parent;
 	  }
 	/* effectue la copie */
 	element = CopyTree (((PtrElement) sourceElement),
-			      TabDocuments[sourceDocument - 1], 0, pSS,
-			      TabDocuments[destinationDocument - 1],
+			      LoadedDocument[sourceDocument - 1], 0, pSS,
+			      LoadedDocument[destinationDocument - 1],
 			      (PtrElement) parent,
 			      TRUE, TRUE);
-	TransRef (element, element, TabDocuments[destinationDocument - 1]);
+	TransRef (element, element, LoadedDocument[destinationDocument - 1]);
      }
    return ((Element) element);
 }
@@ -448,7 +448,7 @@ boolean             withContent;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
@@ -468,7 +468,7 @@ boolean             withContent;
 	   /* on ne cree pas de descendance dans une copie */
 	   if (!pEl->ElIsCopy)
 	      firstCreated = CreateDescendant (pEl->ElTypeNumber, pEl->ElSructSchema,
-		  TabDocuments[document - 1], &lastCreated, pEl->ElAssocNum,
+		  LoadedDocument[document - 1], &lastCreated, pEl->ElAssocNum,
 					  elementType.ElTypeNum,
 				    (PtrSSchema) (elementType.ElSSchema));
 	if (firstCreated != NULL)
@@ -503,7 +503,7 @@ boolean             withContent;
 		  else
 		     ident = FALSE;
 #ifndef NODISPLAY
-		  InsertOption (pEl, &firstCreated, TabDocuments[document - 1]);
+		  InsertOption (pEl, &firstCreated, LoadedDocument[document - 1]);
 #else
 		  InsertElemInChoice (pEl, &firstCreated, FALSE);
 #endif
@@ -513,7 +513,7 @@ boolean             withContent;
 	       }
 	     else
 	       {
-		  if (AllowedFirstChild (pEl, TabDocuments[document - 1],
+		  if (AllowedFirstChild (pEl, LoadedDocument[document - 1],
 			    firstCreated->ElTypeNumber, firstCreated->ElSructSchema,
 					   FALSE, FALSE))
 		    {
@@ -538,7 +538,7 @@ boolean             withContent;
 		       ok = FALSE;
 		       while (pFils != NULL && !ok)
 			 {
-			    if (AllowedSibling (pFils, TabDocuments[document - 1],
+			    if (AllowedSibling (pFils, LoadedDocument[document - 1],
 			    firstCreated->ElTypeNumber, firstCreated->ElSructSchema,
 						FALSE, FALSE, FALSE))
 			       /* notre arbre peut se placer apres pFils */
@@ -549,7 +549,7 @@ boolean             withContent;
 				  /* on verifie que notre arbre peut se placer */
 				  /* devant le frere suivant de pFils */
 				  ok = AllowedSibling (pFils->ElNext,
-						 TabDocuments[document - 1],
+						 LoadedDocument[document - 1],
 						       firstCreated->ElTypeNumber,
 						  firstCreated->ElSructSchema,
 						       TRUE, FALSE, FALSE);
@@ -576,7 +576,7 @@ boolean             withContent;
 		     if (!lastCreated->ElTerminal)
 			if (lastCreated->ElSructSchema->SsRule[lastCreated->ElTypeNumber - 1].SrConstruct != CsChoice)
 			  {
-			     pFils = NewSubtree (lastCreated->ElTypeNumber, lastCreated->ElSructSchema, TabDocuments[document - 1], lastCreated->ElAssocNum, TRUE, FALSE, TRUE, TRUE);
+			     pFils = NewSubtree (lastCreated->ElTypeNumber, lastCreated->ElSructSchema, LoadedDocument[document - 1], lastCreated->ElAssocNum, TRUE, FALSE, TRUE, TRUE);
 			     if (pFils != NULL)
 				InsertFirstChild (lastCreated, pFils);
 			  }
@@ -591,10 +591,10 @@ boolean             withContent;
 		       if (pE != NULL)
 			 {
 			    /* traitement des exceptions */
-			    TraiteExceptionCreation (pE, TabDocuments[document - 1]);
+			    TraiteExceptionCreation (pE, LoadedDocument[document - 1]);
 #ifndef NODISPLAY
 			    /* traite les attributs requis des elements crees */
-			    AttachMandatoryAttributes (pE, TabDocuments[document - 1]);
+			    AttachMandatoryAttributes (pE, LoadedDocument[document - 1]);
 			    RedispNewElement (document, pE, pVoisin,
 					      TRUE, TRUE);
 #endif
@@ -715,14 +715,14 @@ Document            document;
 	  {
 	     TtaError (ERR_invalid_document_parameter);
 	  }
-	else if (TabDocuments[document - 1] == NULL)
+	else if (LoadedDocument[document - 1] == NULL)
 	  {
 	     TtaError (ERR_invalid_document_parameter);
 	  }
 	else
 	   /* parametre document correct */
 	  {
-	     pDoc = TabDocuments[document - 1];
+	     pDoc = LoadedDocument[document - 1];
 	     pEl = (PtrElement) element;
 	     RegisterExternalRef (pEl, pDoc, FALSE);
 	     RegisterDeletedReferredElem (pEl, pDoc);
@@ -789,14 +789,14 @@ Document            document;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
    else
       /* parametre document correct */
      {
-	pDoc = TabDocuments[document - 1];
+	pDoc = LoadedDocument[document - 1];
 	/* verifie que le type de l'arbre est defini dans le schema */
 	/* du document ou dans l'une de ses extensions */
 	trouve = FALSE;
@@ -972,14 +972,14 @@ Document            document;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
    else
       /* parametre document correct */
       if (AvecControleStruct && !AllowedSibling ((PtrElement) sibling,
-						 TabDocuments[document - 1],
+						 LoadedDocument[document - 1],
 					  ((PtrElement) newElement)->ElTypeNumber,
 				     ((PtrElement) newElement)->ElSructSchema,
 						 before, FALSE, FALSE))
@@ -1015,7 +1015,7 @@ Document            document;
 	  {
 	     /* traitement des exceptions */
 	     TraiteExceptionCreation (pEl,
-				      TabDocuments[document - 1]);
+				      LoadedDocument[document - 1]);
 	     /* s'il s'agit d'un element de paire, etablit le */
 	     /* chainage avec son homologue */
 	     if (((PtrElement) newElement)->ElSructSchema->SsRule[((PtrElement) newElement)->ElTypeNumber - 1].SrConstruct == CsPairedElement)
@@ -1023,7 +1023,7 @@ Document            document;
 #ifndef NODISPLAY
 	     /* traite les attributs requis des elements crees */
 	     if (AvecControleStruct)
-		AttachMandatoryAttributes (pEl, TabDocuments[document - 1]);
+		AttachMandatoryAttributes (pEl, LoadedDocument[document - 1]);
 	     if (pVoisin != NULL)
 		/* l'element qui vient d'etre insere' n'est ni le */
 		/* premier ni le dernier parmi ses freres */
@@ -1090,7 +1090,7 @@ Document            document;
    else if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    /* parametre document correct ? */
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else if (((PtrElement) parent)->ElTerminal)
       TtaError (ERR_element_does_not_match_DTD);
@@ -1102,14 +1102,14 @@ Document            document;
 	     ((PtrElement) (*newElement))->ElAssocNum = ((PtrElement) parent)->ElAssocNum;
 #ifndef NODISPLAY
 	     InsertOption ((PtrElement) parent, (PtrElement *) newElement,
-			  TabDocuments[document - 1]);
+			  LoadedDocument[document - 1]);
 #else
 	     InsertElemInChoice ((PtrElement) parent, (PtrElement *) newElement, FALSE);
 #endif
 	     ok = TRUE;
 	  }
 	else if (AvecControleStruct
-		 && !AllowedFirstChild ((PtrElement) parent, TabDocuments[document - 1],
+		 && !AllowedFirstChild ((PtrElement) parent, LoadedDocument[document - 1],
 					  ((PtrElement) (*newElement))->ElTypeNumber, ((PtrElement) (*newElement))->ElSructSchema, FALSE, FALSE))
 	   TtaError (ERR_element_does_not_match_DTD);
 	else
@@ -1147,11 +1147,11 @@ Document            document;
 	       {
 		  /* traitement des exceptions */
 		  TraiteExceptionCreation ((PtrElement) (*newElement),
-					   TabDocuments[document - 1]);
+					   LoadedDocument[document - 1]);
 #ifndef NODISPLAY
 		  /* traite les attributs requis des elements crees */
 		  if (AvecControleStruct)
-		     AttachMandatoryAttributes ((PtrElement) (*newElement), TabDocuments[document - 1]);
+		     AttachMandatoryAttributes ((PtrElement) (*newElement), LoadedDocument[document - 1]);
 		  RedispNewElement (document, (PtrElement) (*newElement),
 				    pVoisin, TRUE, TRUE);
 #endif
@@ -1193,7 +1193,7 @@ Document            document;
    else if (document < 1 || document > MAX_DOCUMENTS)
       /* verifie le parametre document */
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else if (elementType.ElTypeNum < 1 ||
 	    elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
@@ -1202,7 +1202,7 @@ Document            document;
    else
       CreateNewElement (elementType.ElTypeNum,
 			(PtrSSchema) (elementType.ElSSchema),
-			TabDocuments[document - 1], FALSE);
+			LoadedDocument[document - 1], FALSE);
 }
 
 /* ----------------------------------------------------------------------
@@ -1235,7 +1235,7 @@ Document            document;
    else if (document < 1 || document > MAX_DOCUMENTS)
       /* verifie le parametre document */
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else if (elementType.ElTypeNum < 1 ||
 	    elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
@@ -1244,7 +1244,7 @@ Document            document;
    else
       CreateNewElement (elementType.ElTypeNum,
 			(PtrSSchema) (elementType.ElSSchema),
-			TabDocuments[document - 1], TRUE);
+			LoadedDocument[document - 1], TRUE);
 }
 
 #endif	/* NODISPLAY */
@@ -1277,12 +1277,12 @@ Document            document;
    /* verifie le parametre document */
    else if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
      {
-	pDoc = TabDocuments[document - 1];
+	pDoc = LoadedDocument[document - 1];
 	RegisterExternalRef ((PtrElement) element, pDoc, FALSE);
 	RegisterDeletedReferredElem ((PtrElement) element, pDoc);
 	racine = (((PtrElement) element)->ElParent == NULL);
@@ -1340,7 +1340,7 @@ Document            document;
 	/* verifie le parametre document */
 	if (document < 1 || document > MAX_DOCUMENTS)
 	   TtaError (ERR_invalid_document_parameter);
-	else if (TabDocuments[document - 1] == NULL)
+	else if (LoadedDocument[document - 1] == NULL)
 	   TtaError (ERR_invalid_document_parameter);
 	else
 	   /* parametre document correct */
@@ -1455,7 +1455,7 @@ boolean             CanHolo;
    else if (document < 1 || document > MAX_DOCUMENTS)
       /* verifie le parametre document */
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else if (((PtrElement) element)->ElParent == NULL)
       /* parametre document correct */
@@ -1594,14 +1594,14 @@ Document            document;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
    else
       /* parametre document correct */
      {
-	element = TabDocuments[document - 1]->DocRootElement;
+	element = LoadedDocument[document - 1]->DocRootElement;
      }
    return ((Element) element);
 }
@@ -1649,7 +1649,7 @@ Element            *root;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
@@ -1658,11 +1658,11 @@ Element            *root;
      {
 	if (*root == NULL)
 	  {
-	     nextRoot = TabDocuments[document - 1]->DocAssocRoot[0];
+	     nextRoot = LoadedDocument[document - 1]->DocAssocRoot[0];
 	  }
 	else
 	  {
-	     pDoc = TabDocuments[document - 1];
+	     pDoc = LoadedDocument[document - 1];
 	     pEl = (PtrElement) (*root);
 	     /* si l'element n'est pas une racine, on remonte jusqu'a la */
 	     /* racine de son arbre */
@@ -2914,7 +2914,7 @@ Document            document;
       TtaError (ERR_invalid_parameter);
    else if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
@@ -2924,7 +2924,7 @@ Document            document;
 	    elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
       TtaError (ERR_invalid_element_type);
    else
-      ret = AllowedSibling ((PtrElement) sibling, TabDocuments[document - 1],
+      ret = AllowedSibling ((PtrElement) sibling, LoadedDocument[document - 1],
 			    elementType.ElTypeNum,
 			    (PtrSSchema) (elementType.ElSSchema),
 			    before, FALSE, FALSE);
@@ -2968,7 +2968,7 @@ Document            document;
       TtaError (ERR_invalid_parameter);
    else if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
@@ -2978,7 +2978,7 @@ Document            document;
 	    elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
       TtaError (ERR_invalid_element_type);
    else
-      ret = AllowedFirstChild ((PtrElement) parent, TabDocuments[document - 1],
+      ret = AllowedFirstChild ((PtrElement) parent, LoadedDocument[document - 1],
 				 elementType.ElTypeNum,
 				 (PtrSSchema) (elementType.ElSSchema),
 				 FALSE, FALSE);
@@ -3061,7 +3061,7 @@ Element            *element;
    UserErrorCode = 0;
    next = NULL;
    if (*element == NULL)
-      next = ElemSauve;
+      next = FirstSavedElement;
    else if (!DansTampon ((PtrElement) (*element)))
       /* element is not in the clipboard */
       TtaError (ERR_invalid_parameter);
@@ -3069,7 +3069,7 @@ Element            *element;
       TtaError (ERR_invalid_parameter);
    else
      {
-	next = ElemSauve;
+	next = FirstSavedElement;
 	while (next != NULL &&
 	       next->PeElement != (PtrElement) (*element))
 	   next = next->PeNext;
@@ -3103,10 +3103,10 @@ Element            *element;
 Document            TtaGetCopiedDocument ()
 {
    UserErrorCode = 0;
-   if (DocDeSauve == NULL)
+   if (DocOfSavedElements == NULL)
       return 0;
    else
-      return IdentDocument (DocDeSauve);
+      return IdentDocument (DocOfSavedElements);
 }
 #endif
 

@@ -625,7 +625,7 @@ int                *height;
 		/* Est-ce que le pave est mort ? */
 		if (pFirstAb->AbDead)
 		  {
-		     pBox = Suivante (pFirstAb);
+		     pBox = GetNextBox (pFirstAb);
 		     still = FALSE;
 		  }
 		else if (pFirstAb->AbBox->BxType == BoGhost)
@@ -645,16 +645,16 @@ int                *height;
 		  pLine->LiFirstBox = pBox;
 		  pLine->LiXMax = 3000;	/* Dimension maximale possible */
 #ifdef __COLPAGE__
-		  RemplirLigne (pLine, FntrTable[frame - 1].FrAbstractBox, pAb->AbTruncatedTail, &still, &toJustify);
+		  FillLine (pLine, FntrTable[frame - 1].FrAbstractBox, pAb->AbTruncatedTail, &still, &toJustify);
 #else  /* __COLPAGE__ */
-		  RemplirLigne (pLine, FntrTable[frame - 1].FrAbstractBox, &still, &toJustify);
+		  FillLine (pLine, FntrTable[frame - 1].FrAbstractBox, &still, &toJustify);
 #endif /* __COLPAGE__ */
 		  pLine->LiXMax = pLine->LiRealLength;
 
 		  /* evalue si le positionnement en X et en Y doit etre absolu */
 		  XYEnAbsolu (pCurrentBox, &orgXComplete, &orgYComplete);
 
-		  Aligner (pCurrentBox, pLine, 0, frame, orgXComplete, orgYComplete);
+		  Align (pCurrentBox, pLine, 0, frame, orgXComplete, orgYComplete);
 		  *width = pLine->LiXMax;
 		  *height = pLine->LiHeight;
 	       }
@@ -672,14 +672,14 @@ int                *height;
 	  {
 	     pCurrentBox->BxFirstLine = NULL;
 	     pCurrentBox->BxLastLine = NULL;
-	     BlocDeLigne (pCurrentBox, frame, height);
+	     ComputeLines (pCurrentBox, frame, height);
 	     /* Si la largeur du contenu depasse le minimum */
 	     if (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum
 		 && pCurrentBox->BxFirstLine != pCurrentBox->BxLastLine)
 	       {
 		  /* Il faut prendre la largeur du contenu */
 		  pCurrentBox->BxContentWidth = TRUE;
-		  ReevalBloc (pAb, NULL, NULL, frame);
+		  RecomputeLines (pAb, NULL, NULL, frame);
 	       }
 	     else
 		*width = pCurrentBox->BxWidth;
@@ -704,7 +704,7 @@ int                *height;
 		      && pChildAb->AbWidth.DimAbRef != pAb)
 		    {
 		       /* Est-ce que la boite est mobile ? */
-		       pBox = BoiteHInclus (pChildBox, NULL);
+		       pBox = GetHPosRelativePos (pChildBox, NULL);
 		       if (pBox != NULL)
 			 {
 			    pCurrentAb = pBox->BxAbstractBox;
@@ -717,7 +717,7 @@ int                *height;
 		      && pChildAb->AbHeight.DimAbRef != pAb)
 		    {
 		       /* Est-ce que la boite est mobile ? */
-		       pBox = BoiteVInclus (pChildBox, NULL);
+		       pBox = GetVPosRelativeBox (pChildBox, NULL);
 		       if (pBox != NULL)
 			 {
 			    pCurrentAb = pBox->BxAbstractBox;
@@ -1042,8 +1042,8 @@ int                *carIndex;
 	     pCurrentBox->BxVertInverted = FALSE;
 	  }
 
-	enclosedWidth = Dimensionner (pAb, frame, TRUE);
-	enclosedHeight = Dimensionner (pAb, frame, FALSE);
+	enclosedWidth = ComputeDimRelation (pAb, frame, TRUE);
+	enclosedHeight = ComputeDimRelation (pAb, frame, FALSE);
 	pCurrentBox->BxXToCompute = FALSE;
 	pCurrentBox->BxYToCompute = FALSE;
 
@@ -1167,27 +1167,27 @@ int                *carIndex;
 	ChangeHtContenu (pCurrentBox, pCurrentBox, height, frame);
 
 	/* Positionnement des axes de la boite construite */
-	PlacerAxe (pAb->AbVertRef, pCurrentBox, frame, TRUE);
+	ComputeAxisRelation (pAb->AbVertRef, pCurrentBox, frame, TRUE);
 
 	/* On traite differemmment la base d'un bloc de lignes */
 	/* s'il depend de la premiere boite englobee           */
 	if (pAb->AbLeafType != LtCompound
 	    || !pAb->AbInLine
 	    || pAb->AbHorizRef.PosAbRef != pAb->AbFirstEnclosed)
-	   PlacerAxe (pAb->AbHorizRef, pCurrentBox, frame, FALSE);
+	   ComputeAxisRelation (pAb->AbHorizRef, pCurrentBox, frame, FALSE);
 
 	/* Positionnement des origines de la boite construite */
 	if (!inLines)
 	  {
-	     Positionner (pAb->AbHorizPos, pCurrentBox, frame, TRUE);
-	     Positionner (pAb->AbVertPos, pCurrentBox, frame, FALSE);
+	     ComputePosRelation (pAb->AbHorizPos, pCurrentBox, frame, TRUE);
+	     ComputePosRelation (pAb->AbVertPos, pCurrentBox, frame, FALSE);
 	  }
 	else
 	  {
 	     if (!pAb->AbHorizEnclosing)
-		Positionner (pAb->AbHorizPos, pCurrentBox, frame, TRUE);
+		ComputePosRelation (pAb->AbHorizPos, pCurrentBox, frame, TRUE);
 	     if (!pAb->AbVertEnclosing)
-		Positionner (pAb->AbVertPos, pCurrentBox, frame, FALSE);
+		ComputePosRelation (pAb->AbVertPos, pCurrentBox, frame, FALSE);
 	  }
 	pAb->AbNew = FALSE;	/* la regle de creation est interpretee */
      }
@@ -1299,7 +1299,7 @@ PtrBox            pBox;
 		    }
 		  /* Sinon on passe a la boite suivante */
 		  else
-		     pBoxInLine = Suivante (pBoxInLine->BxAbstractBox);
+		     pBoxInLine = GetNextBox (pBoxInLine->BxAbstractBox);
 	       }
 	     while (pBoxPiece != pLine->LiLastBox
 		    && pBoxPiece != pLine->LiLastPiece
@@ -1406,7 +1406,7 @@ boolean           splitBox;
 	   else
 	      pBox->BxWidth += adjustDelta;
 	   /* Puis refaire la mise en lignes */
-	   ReevalBloc (pAb->AbEnclosing, ligne, pBox, frame);
+	   RecomputeLines (pAb->AbEnclosing, ligne, pBox, frame);
 	}
    /* Box coupee */
       else if (pBox->BxType == BoSplit)
@@ -1422,7 +1422,7 @@ boolean           splitBox;
 	   if (Propage == ToAll)
 	     {
 		ligne = SearchLine (pBox->BxNexChild);
-		ReevalBloc (pAb->AbEnclosing, ligne, pBox, frame);
+		RecomputeLines (pAb->AbEnclosing, ligne, pBox, frame);
 	     }
 	}
    /* Box entiere ou de coupure */
@@ -1475,7 +1475,7 @@ int                 frame;
 	     /* Liberation des lignes et boites coupees */
 	     pCurrentBox = pAb->AbBox;
 	     if (pCurrentBox->BxType == BoBlock)
-		DispBloc (pCurrentBox, frame, pCurrentBox->BxFirstLine, &changeSelectBegin, &changeSelectEnd);
+		RemoveLines (pCurrentBox, frame, pCurrentBox->BxFirstLine, &changeSelectBegin, &changeSelectEnd);
 
 	     else if (pAb->AbLeafType == LtPlyLine)
 		FreePolyline (pCurrentBox);
@@ -1506,7 +1506,7 @@ int                 frame;
 		FntrTable[frame - 1].FrSelectionEnd.VsBox = NULL;
 
 	     /* Liberation des liens eventuels hors hierarchie */
-	     RazHorsEnglobe (pCurrentBox);
+	     ClearXOutOfStructRelation (pCurrentBox);
 
 	     /* Liberation de la boite */
 	     pAb->AbBox = FreeBox (pAb->AbBox);
@@ -1550,8 +1550,8 @@ int                 frame;
 			      && pNextAb->AbNum == 0)
 			    {
 			       /* Nouvelle position horizontale */
-			       RazPosition (pNextAb->AbBox, TRUE);
-			       Positionner (pNextAb->AbHorizPos, pNextAb->AbBox, frame, TRUE);
+			       ClearPosRelation (pNextAb->AbBox, TRUE);
+			       ComputePosRelation (pNextAb->AbHorizPos, pNextAb->AbBox, frame, TRUE);
 			    }	/*if !pNextAb->AbDead */
 			  pNextAb = NULL;
 
@@ -1574,8 +1574,8 @@ int                 frame;
 			      && pNextAb->AbNum == 0)
 			    {
 			       /* Nouvelle position verticale */
-			       RazPosition (pNextAb->AbBox, FALSE);
-			       Positionner (pNextAb->AbVertPos, pNextAb->AbBox, frame, FALSE);
+			       ClearPosRelation (pNextAb->AbBox, FALSE);
+			       ComputePosRelation (pNextAb->AbVertPos, pNextAb->AbBox, frame, FALSE);
 			    }	/*if !pNextAb->AbDead */
 			  pNextAb = NULL;
 		       }
@@ -1829,9 +1829,9 @@ int                 frame;
 	   pNextBox = pNextBox->BxNexChild;
 
 	/* Destruction */
-	RazLiens (pBox);
-	RazDim (pBox, TRUE, frame);
-	RazDim (pBox, FALSE, frame);
+	ClearAllRelations (pBox);
+	ClearDimRelation (pBox, TRUE, frame);
+	ClearDimRelation (pBox, FALSE, frame);
 	RemoveBoxes (pAb, FALSE, frame);
 
 	/* Mise a jour de la liste des boites terminales */
@@ -1912,7 +1912,7 @@ int                 frame;
 		  /* Si c'est un bloc de lignes qui est mis a jour */
 		  if (pAb->AbChange && pAb->AbInLine
 		      && pBox->BxType != BoGhost)
-		     ReevalBloc (pAb, NULL, pBox, frame);
+		     RecomputeLines (pAb, NULL, pBox, frame);
 	       }
 	     else
 	       {
@@ -2059,9 +2059,9 @@ int                 frame;
 	if (pAb->AbWidthChange)
 	  {
 	     /* Annulation ancienne largeur */
-	     RazDim (pBox, TRUE, frame);
+	     ClearDimRelation (pBox, TRUE, frame);
 	     /* Nouvelle largeur */
-	     condition = Dimensionner (pAb, frame, TRUE);
+	     condition = ComputeDimRelation (pAb, frame, TRUE);
 	     if (condition || (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum))
 	       {
 		  switch (pAb->AbLeafType)
@@ -2083,7 +2083,7 @@ int                 frame;
 				{
 				   /* La regle mise en lignes est prise en compte? */
 				   if (pBox->BxType != BoGhost)
-				      ReevalBloc (pAb, NULL, NULL, frame);
+				      RecomputeLines (pAb, NULL, NULL, frame);
 				   width = pBox->BxWidth;
 				}
 			      else
@@ -2106,9 +2106,9 @@ int                 frame;
 	if (pAb->AbHeightChange)
 	  {
 	     /* Annulation ancienne hauteur */
-	     RazDim (pBox, FALSE, frame);
+	     ClearDimRelation (pBox, FALSE, frame);
 	     /* Nouvelle hauteur */
-	     condition = Dimensionner (pAb, frame, FALSE);
+	     condition = ComputeDimRelation (pAb, frame, FALSE);
 	     if (condition || (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum))
 	       {
 		  switch (pAb->AbLeafType)
@@ -2183,9 +2183,9 @@ int                 frame;
 	     if (condition)
 	       {
 		  /* Annulation ancienne position horizontale */
-		  RazPosition (pBox, TRUE);
+		  ClearPosRelation (pBox, TRUE);
 		  /* Nouvelle position horizontale */
-		  Positionner (pAb->AbHorizPos, pBox, frame, TRUE);
+		  ComputePosRelation (pAb->AbHorizPos, pBox, frame, TRUE);
 		  result = TRUE;
 	       }
 	     else
@@ -2222,7 +2222,7 @@ int                 frame;
 			 {
 			    i = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb);
 			    pLine->LiYOrg += i;
-			    EnglLigne (pBox, frame, pAb->AbEnclosing);
+			    EncloseInLine (pBox, frame, pAb->AbEnclosing);
 			 }
 		    }
 		  condition = FALSE;
@@ -2233,9 +2233,9 @@ int                 frame;
 	     if (condition)
 	       {
 		  /* Annulation ancienne position verticale */
-		  RazPosition (pBox, FALSE);
+		  ClearPosRelation (pBox, FALSE);
 		  /* Nouvelle position verticale */
-		  Positionner (pAb->AbVertPos, pBox, frame, FALSE);
+		  ComputePosRelation (pAb->AbVertPos, pBox, frame, FALSE);
 		  result = TRUE;
 	       }
 	     else
@@ -2245,18 +2245,18 @@ int                 frame;
 	if (pAb->AbHorizRefChange)
 	  {
 	     /* Annulation ancien axe horizontal */
-	     RazAxe (pBox, FALSE);
+	     ClearAxisRelation (pBox, FALSE);
 	     /* Nouvel axe horizontal */
-	     PlacerAxe (pAb->AbHorizRef, pBox, frame, FALSE);
+	     ComputeAxisRelation (pAb->AbHorizRef, pBox, frame, FALSE);
 	     result = TRUE;
 	  }
 	/* CHANGEMENT D'AXE VERTICAL */
 	if (pAb->AbVertRefChange)
 	  {
 	     /* Annulation ancien axe verticale */
-	     RazAxe (pBox, TRUE);
+	     ClearAxisRelation (pBox, TRUE);
 	     /* Nouvel axe vertical */
-	     PlacerAxe (pAb->AbVertRef, pBox, frame, TRUE);
+	     ComputeAxisRelation (pAb->AbVertRef, pBox, frame, TRUE);
 	     result = TRUE;
 	  }
      }
@@ -2401,7 +2401,7 @@ int                 frame;
 		 || (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum))
 	       {
 		  /* la dimension de la boite depend de la fenetre */
-		  condition = Dimensionner (pAb, frame, TRUE);
+		  condition = ComputeDimRelation (pAb, frame, TRUE);
 		  /* S'il y a une regle de minimum il faut la verifier */
 		  if (!condition)
 		    {
@@ -2413,7 +2413,7 @@ int                 frame;
 		 || (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum))
 	       {
 		  /* la dimension de la boite depend de la fenetre */
-		  condition = Dimensionner (pAb, frame, FALSE);
+		  condition = ComputeDimRelation (pAb, frame, FALSE);
 		  /* S'il y a une regle de minimum il faut la verifier */
 		  if (!condition)
 		    {
@@ -2423,8 +2423,8 @@ int                 frame;
 	       }
 
 	     /* Faut-il deplacer la boite document dans la fenetre? */
-	     Positionner (pAb->AbHorizPos, pCurrentBox, frame, TRUE);
-	     Positionner (pAb->AbVertPos, pCurrentBox, frame, FALSE);
+	     ComputePosRelation (pAb->AbHorizPos, pCurrentBox, frame, TRUE);
+	     ComputePosRelation (pAb->AbVertPos, pCurrentBox, frame, FALSE);
 
 	     /* On elimine le scroll horizontal */
 	     DimFenetre (frame, &width, &height);
@@ -2488,12 +2488,12 @@ int                 frame;
 	     /* Annulation de la position */
 	     if (pAb->AbHorizPosChange)
 	       {
-		  RazPosition (pCurrentBox, TRUE);
+		  ClearPosRelation (pCurrentBox, TRUE);
 		  DepOrgX (pCurrentBox, NULL, -pCurrentBox->BxXOrg, frame);
 	       }
 
 	     /* Annulation ancienne largeur */
-	     RazDim (pCurrentBox, TRUE, frame);
+	     ClearDimRelation (pCurrentBox, TRUE, frame);
 	     /* Reinitialisation du trace reel */
 	     AjusteTrace (pAb, pCurrentBox->BxHorizInverted, pCurrentBox->BxVertInverted, FALSE);
 	  }
@@ -2506,12 +2506,12 @@ int                 frame;
 	     /* Annulation et reevaluation de la position */
 	     if (pAb->AbVertPosChange)
 	       {
-		  RazPosition (pCurrentBox, FALSE);
+		  ClearPosRelation (pCurrentBox, FALSE);
 		  DepOrgY (pCurrentBox, NULL, -pCurrentBox->BxYOrg, frame);
 	       }
 
 	     /* Annulation ancienne hauteur */
-	     RazDim (pCurrentBox, FALSE, frame);
+	     ClearDimRelation (pCurrentBox, FALSE, frame);
 	     /* Reinitialisation du trace reel */
 	     AjusteTrace (pAb, pCurrentBox->BxHorizInverted, pCurrentBox->BxVertInverted, FALSE);
 	  }
@@ -2709,7 +2709,7 @@ int                 frame;
 			  pLine = NULL;
 		    }
 
-		  ReevalBloc (pAb, pLine, pAb->AbBox, frame);
+		  RecomputeLines (pAb, pLine, pAb->AbBox, frame);
 	       }
 	     /* Mise a jour d'une boite composee */
 	     else if (!pAb->AbInLine
@@ -2912,7 +2912,7 @@ PtrAbstractBox      pAb;
 		  pParentBox = pParentAb->AbBox;
 		  /* Mise a jour d'un bloc de lignes */
 		  if (pParentBox->BxType == BoBlock)
-		     ReevalBloc (pParentAb, pLine, NULL, frame);
+		     RecomputeLines (pParentAb, pLine, NULL, frame);
 
 		  /* Mise a jour d'une boite composee */
 		  else

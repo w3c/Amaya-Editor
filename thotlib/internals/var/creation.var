@@ -1,16 +1,16 @@
 
 #include "constmenu.h"
 
-EXPORT int		NbNouveaux;	/* number of elements created */
-EXPORT PtrElement	Nouveaux[500];	/* pointers to the created elements */
+EXPORT int		NCreatedElements;	/* number of elements created */
+EXPORT PtrElement	CreatedElement[500];	/* pointers to the created elements */
 EXPORT boolean		IgnoreReadOnlyParent;
 
 /* data for the CHOICE menu */
-EXPORT boolean		ChoixElemNature;
-EXPORT int		ChoixElemNumType[LgMaxMenuChoix];
-EXPORT PtrSSchema	ChoixElemSchStruct[LgMaxMenuChoix];
+EXPORT boolean		NatureChoice;
+EXPORT int		ChoiceMenuTypeNum[LgMaxChoiceMenu];
+EXPORT PtrSSchema	ChoiceMenuSSchema[LgMaxChoiceMenu];
 
-EXPORT int		TypeChoisi;    /* type chosen by the user in the CHOICE
+EXPORT int		ChosenTypeNum;    /* type chosen by the user in the CHOICE
 					  menu */
-EXPORT PtrSSchema	SchStrTypeChoisi; /* structure schema defining that
+EXPORT PtrSSchema	ChosenTypeSSchema; /* structure schema defining that
 					      type */

@@ -181,7 +181,7 @@ int                 number;
    TtaChangeDialogueFonts (namef1, namef2);
 
    /* reserve les menus de Thot */
-   TtaGetReferencesBase (MAX_MenuThot);
+   TtaGetReferencesBase (MAX_ThotMenu);
 
    /* Il faut ajouter les actions internes liees a la structure */
    number += MAX_INTERNAL_CMD;
@@ -2942,7 +2942,7 @@ char               *data;
    /* Termine l'insertion courante s'il y en a une */
    EndInsert ();
 
-   if (ref >= MAX_MenuThot)
+   if (ref >= MAX_ThotMenu)
      {
 	if (firstCallbackAPI == NULL)
 	   return;		/* pas de callback definis */
@@ -2950,7 +2950,7 @@ char               *data;
 	  {
 	     /* recherche le bon callback */
 	     ctxCallback = firstCallbackAPI;
-	     base = MAX_MenuThot;
+	     base = MAX_ThotMenu;
 	     while (ref >= base + ctxCallback->callbackSet)
 	       {
 		  if (ctxCallback->callbackNext == NULL)
@@ -2978,148 +2978,148 @@ char               *data;
 	       case NumMenuInclude:
 		  (*ThotLocalActions[T_rcinsertpaste]) (FALSE, FALSE, (int) data + 1);
 		  break;
-	       case NumMenuChoixEl:
+	       case NumMenuElChoice:
 		  (*ThotLocalActions[T_rchoice]) ((int) data + 1, NULL);
 		  break;
-	       case NumSelectNomNature:
+	       case NumSelectNatureName:
 		  (*ThotLocalActions[T_rchoice]) (0, (char *) data);
 		  break;
-	       case NumMenuCreerElemReference:
+	       case NumMenuCreateReferenceElem:
 		  /* Pop-up menu 'Creation element reference'' */
 		  (*ThotLocalActions[T_raskfornew]) ((int) data);
 		  break;
 
-	       case NumMenuAttrRequis:
-	       case NumMenuAttrNumRequis:
-	       case NumMenuAttrTexteRequis:
-	       case NumMenuAttrEnumRequis:
+	       case NumMenuAttrRequired:
+	       case NumMenuAttrNumNeeded:
+	       case NumMenuAttrTextNeeded:
+	       case NumMenuAttrEnumNeeded:
 		  (*ThotLocalActions[T_rattrreq]) (ref, (int) data, data);
 		  break;
 	       case NumMenuAttr:
-	       case NumMenuAttrNum:
+	       case NumMenuAttrNumber:
 	       case NumMenuAttrText:
 	       case NumMenuAttrEnum:
 		  (*ThotLocalActions[T_rattrval]) (ref, (int) data, data);
 		  break;
 
-	       case NumSelectLangue:
+	       case NumSelectLanguage:
 		  (*ThotLocalActions[T_rattrlang]) (ref, 0, data);
 		  break;
-	       case NumFormLangue:
+	       case NumFormLanguage:
 		  (*ThotLocalActions[T_rattrlang]) (ref, (int) data, NULL);
 		  break;
 
-	       case NumFormCreerDoc:
-	       case NumZoneNomDocACreer:
-	       case NumZoneDirDocACreer:
-	       case NumSelClasseDocACreer:
+	       case NumFormCreateDoc:
+	       case NumZoneDocNameToCreate:
+	       case NumZoneDocDirToCreate:
+	       case NumSelDocClassToCreate:
 		  (*ThotLocalActions[T_createdoc]) (ref, typedata, data);
 		  break;
 	       case NumFormConfirm:
 		  (*ThotLocalActions[T_confirmcreate]) (ref, typedata, data);
 		  break;
-	       case NumFormOuvrirDoc:
-	       case NumZoneDirOuvrirDoc:
+	       case NumFormOpenDoc:
+	       case NumZoneDirOpenDoc:
 	       case NumSelDoc:
-	       case NumZoneNomDocAOuvrir:
+	       case NumZoneDocNameToOpen:
 		  (*ThotLocalActions[T_opendoc]) (ref, typedata, data);
 		  break;
-	       case NumSelectClasseImport:
-	       case NumFormClasseImport:
+	       case NumSelectImportClass:
+	       case NumFormImportClass:
 		  (*ThotLocalActions[T_import]) (ref, typedata, data);
 		  break;
-	       case NumFormSchemaPresentation:
-	       case NumZoneSchemaPresentation:
+	       case NumFormPresentationSchema:
+	       case NumZonePresentationSchema:
 		  (*ThotLocalActions[T_presentation]) (ref, typedata, data);
 		  break;
-	       case NumFormFermer:
+	       case NumFormClose:
 		  (*ThotLocalActions[T_rconfirmclose]) (ref, typedata, data);
 		  break;
 
 	       case NumMenuZoom:
 		  (*ThotLocalActions[T_chzoom]) (ref, typedata, data);
 		  break;
-	       case NumMenuVisibilite:
+	       case NumMenuVisibility:
 		  (*ThotLocalActions[T_chvisibility]) (ref, typedata, data);
 		  break;
-	       case NumMenuVuesAOuvrir:
+	       case NumMenuViewsToOpen:
 		  (*ThotLocalActions[T_openview]) (ref, typedata, data);
 		  break;
 
-	       case NumFormImprimer:
+	       case NumFormPrint:
 	       case NumMenuOptions:
 	       case NumMenuSupport:
-	       case NumMenuFormatPapier:
+	       case NumMenuPaperFormat:
 		  (*ThotLocalActions[T_rprint]) (ref, (int) data, NULL);
 		  break;
-	       case NumZoneNomImprimante:
+	       case NumZonePrinterName:
 		  (*ThotLocalActions[T_rprint]) (ref, 0, data);
 		  break;
 
-	       case NumZoneNomDocASauver:
-	       case NumZoneDirDocASauver:
-	       case NumMenuFormatDocASauver:
-	       case NumMenuCopierOuRenommer:
-	       case NumFormSauverComme:
+	       case NumZoneDocNameTooSave:
+	       case NumZoneDirDocToSave:
+	       case NumMenuFormatDocToSave:
+	       case NumMenuCopyOrRename:
+	       case NumFormSaveAs:
 		  (*ThotLocalActions[T_rsavedoc]) (ref, typedata, data);
 		  break;
-	       case NumFormPresCaract:
+	       case NumFormPresChar:
 	       case NumFormPresFormat:
-	       case NumFormPresGraphiques:
-	       case NumFormCouleurs:
-	       case NumMenuFamilleCaract:
-	       case NumMenuStyleCaract:
-	       case NumMenuCorpsCaract:
-	       case NumMenuTypeSouligne:
-	       case NumMenuEpaisSouligne:
-	       case NumMenuAlignement:
+	       case NumFormPresGraphics:
+	       case NumFormColors:
+	       case NumMenuCharFamily:
+	       case NumMenuStyleChar:
+	       case NumMenuCharFontSize:
+	       case NumMenuUnderlineType:
+	       case NumMenuUnderlineWeight:
+	       case NumMenuAlignment:
 	       case NumMenuJustification:
-	       case NumMenuCoupureMots:
-	       case NumZoneRenfoncement:
-	       case NumMenuSensRenfoncement:
-	       case NumZoneInterligne:
-	       case NumMenuInterligne:
-	       case NumMenuStyleTraits:
-	       case NumZoneEpaisseurTraits:
-	       case NumToggleEpaisseurInchangee:
-	       case NumTogglePatternInchange:
-	       case NumToggleForegroundInchange:
-	       case NumToggleBackgroundInchange:
+	       case NumMenuWordBreak:
+	       case NumZoneRecess:
+	       case NumMenuRecessSense:
+	       case NumZoneLineSpacing:
+	       case NumMenuLineSpacing:
+	       case NumMenuStrokeStyle:
+	       case NumZoneStrokeWeight:
+	       case NumToggleWidthUnchanged:
+	       case NumTogglePatternUnchanged:
+	       case NumToggleForegroundUnchanged:
+	       case NumToggleBackgroundUnchanged:
 		  (*ThotLocalActions[T_present]) (ref, (int) data, NULL);
 		  break;
 	       case NumSelectPattern:
-	       case NumSelectCouleurTrace:
-	       case NumSelectCouleurFond:
+	       case NumSelectForegroundColor:
+	       case NumSelectBackgroundColor:
 		  (*ThotLocalActions[T_present]) (ref, 0, data);
 		  break;
 	       case NumFormPresentStandard:
 	       case NumMenuPresentStandard:
 		  (*ThotLocalActions[T_presentstd]) (ref, (int) data);
 		  break;
-	       case NumZoneCherchePage:
-	       case NumFormCherchePage:
+	       case NumZoneSearchPage:
+	       case NumFormSearchPage:
 		  (*ThotLocalActions[T_searchpage]) (ref, (int) data);
 		  break;
-	       case NumFormChercheTexte:
-	       case NumMenuModeRemplacement:
-	       case NumToggleExpressionReguliere:
-	       case NumMenuChercherNature:
+	       case NumFormSearchText:
+	       case NumMenuReplaceMode:
+	       case NumToggleRegExp:
+	       case NumMenuSearchNature:
 		  /* sous-menu mode de remplacement */
 		  (*ThotLocalActions[T_searchtext]) (ref, (int) data, NULL);
 		  break;
-	       case NumZoneTexteCherche:
-	       case NumZoneTexteRemplacement:
-	       case NumSelTypeAChercher:
-	       case NumSelAttributAChercher:
+	       case NumZoneTextSearch:
+	       case NumZoneTextReplace:
+	       case NumSelTypeToSearch:
+	       case NumSelAttributeToSearch:
 		  /* zone de saisie du texte de remplacement */
 		  (*ThotLocalActions[T_searchtext]) (ref, 0, data);
 		  break;
-	       case NumMenuOuChercherTexte:
+	       case NumMenuOrSearchText:
 		  (*ThotLocalActions[T_locatesearch]) (ref, (int) data);
 		  break;
 
 	       default:
-		  if (ref >= NumMenuNomAttr && ref <= NumMenuNomAttr + MAX_FRAME)
+		  if (ref >= NumMenuAttrName && ref <= NumMenuAttrName + MAX_FRAME)
 		     /* retour du menu des attributs */
 		    {
 		       TtaSetDialoguePosition ();

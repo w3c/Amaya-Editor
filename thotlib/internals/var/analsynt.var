@@ -2,11 +2,11 @@
    Variables for parsing languages S, P, T, and A
 */
 
-EXPORT int 		lgkwtable;	    /* length of kwtable */
-EXPORT int 		lastshortkw;	    /* rank of last short keyword
-					       in kwtable */
-EXPORT SrcKeywordDesc  	kwtable[nbkw];	    /* table of short key words */
-EXPORT int 		lgidenttable;	    /* length of identtable */
-EXPORT SrcIdentDesc 	identtable[nbident];/* table of identifiers */
-EXPORT SyntRuleNum     	lgruletable;	    /* length of ruletable */
-EXPORT SyntacticRule    ruletable[maxrule]; /* table of syntactic rules */
+EXPORT int 		NKeywords;	    /* length of Keywords */
+EXPORT int 		LastShortKeyword;	    /* rank of last short keyword
+					       in Keywords */
+EXPORT SrcKeywordDesc  	Keywords[MAX_KEYWORDS];	    /* table of short key words */
+EXPORT int 		NIdentifiers;	    /* length of Identifier */
+EXPORT SrcIdentDesc 	Identifier[MAX_IDENTIFIERS];/* table of identifiers */
+EXPORT SyntRuleNum     	NGramRules;	    /* length of GramRule */
+EXPORT SyntacticRule    GramRule[MAX_RULES]; /* table of syntactic rules */

@@ -133,13 +133,13 @@ View                view;
    /* verifie les parametres */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else if (view < 1 || (view > MAX_VIEW_DOC && view < 100) || view > MAX_ASSOC_DOC + 100)
       TtaError (ERR_invalid_parameter);
    else
      {
-	pDoc = TabDocuments[document - 1];
+	pDoc = LoadedDocument[document - 1];
 	GetViewInfo (document, view, &vue, &assoc);
 	if (assoc)
 	   win = pDoc->DocAssocFrame[vue - 1];
@@ -191,12 +191,12 @@ int                 h;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
      {
-	pDoc = TabDocuments[document - 1];
+	pDoc = LoadedDocument[document - 1];
 	if (pDoc->DocSSchema != NULL)
 	   if (pDoc->DocSSchema->SsPSchema == NULL)
 	      TtaError (ERR_no_presentation_schema);
@@ -263,15 +263,15 @@ Element             subtree;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
-   if (TabDocuments[document - 1]->DocSSchema->SsPSchema == NULL)
+   if (LoadedDocument[document - 1]->DocSSchema->SsPSchema == NULL)
       TtaError (ERR_no_presentation_schema);
    else
      {
-	pDoc = TabDocuments[document - 1];
+	pDoc = LoadedDocument[document - 1];
 	assoc = FALSE;
 	nVue = 0;
 	/* etablit la liste de toutes les vues possibles pour ce document */
@@ -431,12 +431,12 @@ View                view;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
      {
-	pDoc = TabDocuments[document - 1];
+	pDoc = LoadedDocument[document - 1];
 	if (view < 100)
 	   /* vue de l'arbre principal */
 	   if (view < 1 || view > MAX_VIEW_DOC)
@@ -571,12 +571,12 @@ View                view;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
      {
-	pDoc = TabDocuments[document - 1];
+	pDoc = LoadedDocument[document - 1];
 	if (view < 100)
 	   /* vue de l'arbre principal */
 	   if (view < 1 || view > MAX_VIEW_DOC)
@@ -626,12 +626,12 @@ char               *title;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
      {
-	pDoc = TabDocuments[document - 1];
+	pDoc = LoadedDocument[document - 1];
 	if (view < 100)
 	   /* vue de l'arbre principal */
 	   if (view < 1 || view > MAX_VIEW_DOC)
@@ -790,8 +790,8 @@ int                 position;
 	      if (pEl->ElAbstractBox[vue - 1]->AbLeafType == LtCompound)
 		 if (pEl->ElAbstractBox[vue - 1]->AbTruncatedHead)
 		    /* on detruit les paves de l'element dans cette vue */
-		    DetPavVue (pEl, TabDocuments[document - 1], FALSE, vue);
-	   VerifAbsBoxe (pEl, vue, TabDocuments[document - 1], FALSE, FALSE);
+		    DetPavVue (pEl, LoadedDocument[document - 1], FALSE, vue);
+	   VerifAbsBoxe (pEl, vue, LoadedDocument[document - 1], FALSE, FALSE);
 	   if (pEl->ElAbstractBox[vue - 1] != NULL)
 	      MontrerBoite (frame, pEl->ElAbstractBox[vue - 1]->AbBox, 0, position);
 	}
@@ -916,7 +916,7 @@ char               *presentationName;
    result = 0;
    /* compose le nom du fichier a ouvrir avec le nom du directory */
    /* des schemas... */
-   strncpy (DirBuffer, DirectorySchemas, MAX_PATH);
+   strncpy (DirBuffer, SchemaPath, MAX_PATH);
    BuildFileName (presentationName, "PRS", DirBuffer, texte, &i);
    /* teste si le fichier existe */
    file = BIOreadOpen (texte);
@@ -966,11 +966,11 @@ int                *nbViews;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
-      MenuVuesAOuvrir (TabDocuments[document - 1], buffer, nbViews);
+      MenuVuesAOuvrir (LoadedDocument[document - 1], buffer, nbViews);
 }
 
 
@@ -1006,12 +1006,12 @@ View                view;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
      {
-	pDoc = TabDocuments[document - 1];
+	pDoc = LoadedDocument[document - 1];
 	if (view < 100)
 	   /* vue de l'arbre principal */
 	   if (view < 1 || view > MAX_VIEW_DOC)
@@ -1073,12 +1073,12 @@ View                view;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
      {
-	pDoc = TabDocuments[document - 1];
+	pDoc = LoadedDocument[document - 1];
 	if (view < 100)
 	   /* vue de l'arbre principal */
 	   if (view < 1 || view > MAX_VIEW_DOC)
@@ -1141,14 +1141,14 @@ char               *viewName;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
    else
       /* parametre document correct */
      {
-	pDoc = TabDocuments[document - 1];
+	pDoc = LoadedDocument[document - 1];
 	/* on cherche parmi les vues ouvertes de l'arbre principal */
 	for (vue = 1; vue <= MAX_VIEW_DOC && view == 0; vue++)
 	  {
@@ -1516,7 +1516,7 @@ boolean             creation;
    PtrDocument         pDoc;
    int                 vue;
 
-   pDoc = TabDocuments[document - 1];
+   pDoc = LoadedDocument[document - 1];
    if (pDoc == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
@@ -1653,7 +1653,7 @@ boolean             newPavModif;
    PtrElement          pFils;
    boolean             reaffiche;
 
-   pDoc = TabDocuments[document - 1];
+   pDoc = LoadedDocument[document - 1];
    if (pDoc == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
@@ -1672,7 +1672,7 @@ boolean             newPavModif;
 	   /* on traite tous les paves de l'element dans cette vue */
 	   ChPavModifDansVue (pEl, vue, newPavModif, reaffiche);
 	   if (reaffiche && pEl->ElAbstractBox[vue - 1] != NULL)
-	      PavReaff (pEl->ElAbstractBox[vue - 1], TabDocuments[document - 1]);
+	      PavReaff (pEl->ElAbstractBox[vue - 1], LoadedDocument[document - 1]);
 	}
    else
       /* vue d'elements associes */
@@ -1680,12 +1680,12 @@ boolean             newPavModif;
 	/* on traite tous les paves de l'element dans cette vue */
 	ChPavModifDansVue (pEl, 1, newPavModif, reaffiche);
 	if (reaffiche && pEl->ElAbstractBox[0] != NULL)
-	   PavReaff (pEl->ElAbstractBox[0], TabDocuments[document - 1]);
+	   PavReaff (pEl->ElAbstractBox[0], LoadedDocument[document - 1]);
      }
    if (reaffiche)
       /* on fait reafficher pour visualiser le changement de couleur */
      {
-	AbstractImageUpdated (TabDocuments[document - 1]);
+	AbstractImageUpdated (LoadedDocument[document - 1]);
 	RedisplayCommand (document);
      }
    /* meme traitement pour les fils qui heritent les droits d'acces */
@@ -1788,7 +1788,7 @@ Document            document;
    int                 premCar, derCar;
    boolean             ok, changeSelection;
 
-   pDoc = TabDocuments[document - 1];
+   pDoc = LoadedDocument[document - 1];
    ok = SelEditeur (&selDoc, &premSel, &derSel, &premCar, &derCar);
    if (ok && selDoc == pDoc)
       /* il y a une selection dans le document traite' */
@@ -1887,7 +1887,7 @@ Document            document;
    int                 SauveHauteurPage;
    int                 assoc;
 
-   pDoc = TabDocuments[document - 1];
+   pDoc = LoadedDocument[document - 1];
    if (pDoc == NULL)
       return;
    /* si le document n'a pas de schema de presentation, */
@@ -2056,7 +2056,7 @@ Document            document;
    PtrDocument         pDoc;
    int                 vue;
 
-   pDoc = TabDocuments[document - 1];
+   pDoc = LoadedDocument[document - 1];
    if (pDoc == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
@@ -2120,7 +2120,7 @@ Document            document;
    PtrDocument         pDoc;
    PtrElement          pFils;
 
-   pDoc = TabDocuments[document - 1];
+   pDoc = LoadedDocument[document - 1];
    if (pDoc == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
@@ -2169,7 +2169,7 @@ Document            document;
 {
    PtrDocument         pDoc;
 
-   pDoc = TabDocuments[document - 1];
+   pDoc = LoadedDocument[document - 1];
    if (pDoc == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
@@ -2209,7 +2209,7 @@ int                 delta;
    boolean             modif;
    PtrAbstractBox             pAbbox1;
 
-   pDoc = TabDocuments[document - 1];
+   pDoc = LoadedDocument[document - 1];
    if (pDoc == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
@@ -2337,7 +2337,7 @@ Document            document;
    int                 vue, dvol;
    PtrAbstractBox             pAb;
 
-   pDoc = TabDocuments[document - 1];
+   pDoc = LoadedDocument[document - 1];
    if (pDoc == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
@@ -2345,20 +2345,20 @@ Document            document;
       return;
    pEl = (PtrElement) element;
    /* check current selection */
-   if (SelDocument == pDoc)
+   if (SelectedDocument == pDoc)
      {
 	/* current selection is in that document */
-	if (pEl == SelDernier)
-	   if (position < SelDerCar)
+	if (pEl == LastSelectedElement)
+	   if (position < LastSelectedChar)
 	     {
-		SelDernier = ((PtrElement) element)->ElNext;
-		SelDerCar -= position;
+		LastSelectedElement = ((PtrElement) element)->ElNext;
+		LastSelectedChar -= position;
 	     }
-	if ((PtrElement) element == SelPremier)
-	   if (position < SelPremCar)
+	if ((PtrElement) element == FirstSelectedElement)
+	   if (position < FirstSelectedChar)
 	     {
-		SelPremier = ((PtrElement) element)->ElNext;
-		SelPremCar -= position;
+		FirstSelectedElement = ((PtrElement) element)->ElNext;
+		FirstSelectedChar -= position;
 	     }
      }
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
@@ -2409,7 +2409,7 @@ Document            document;
    int                 vue, dvol, h, frame;
    PtrAbstractBox             pAb;
 
-   pDoc = TabDocuments[document - 1];
+   pDoc = LoadedDocument[document - 1];
    if (pDoc == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
@@ -2495,10 +2495,10 @@ boolean             suppression;
    PtrAttribute         pOldAttr;
    PtrElement          pElFils, pElAttr;
 
-   if (TabDocuments[document - 1] == NULL)
+   if (LoadedDocument[document - 1] == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
-   if (TabDocuments[document - 1]->DocSSchema->SsPSchema == NULL)
+   if (LoadedDocument[document - 1]->DocSSchema->SsPSchema == NULL)
       return;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
@@ -2525,19 +2525,19 @@ boolean             suppression;
      {
 	/* on supprime d'abordles regles de presentation liees */
 	/* a l'attribut sur l'element lui-meme */
-	RemoveAttrPresentation (pEl, TabDocuments[document - 1], pOldAttr, FALSE, NULL);
+	RemoveAttrPresentation (pEl, LoadedDocument[document - 1], pOldAttr, FALSE, NULL);
 	/* puis on supprime sur pEl et sur les elements du sous arbre pEl */
 	/* les regles de presentation liees a l'heritage de cet attribut */
 	/* par le sous-arbre s'il existe des elements heritants de celui-ci */
 	if (heritage)
-	   RemoveInheritedAttrPresent (pEl, TabDocuments[document - 1], pOldAttr);
+	   RemoveInheritedAttrPresent (pEl, LoadedDocument[document - 1], pOldAttr);
 	/* puis on supprime sur les elements du sous-arbre pEl */
 	/* les regles de presentation liees a la comparaison d'un attribut */
 	/* du sous-arbre avec ce type d'attribut */
 	if (!pEl->ElTerminal && comparaison)
 	   for (pElFils = pEl->ElFirstChild; pElFils != NULL;
 		pElFils = pElFils->ElNext)
-	      RemoveComparAttrPresent (pElFils, TabDocuments[document - 1], pOldAttr);
+	      RemoveComparAttrPresent (pElFils, LoadedDocument[document - 1], pOldAttr);
      }
    else if (pAttrAsc != NULL)
      {
@@ -2547,12 +2547,12 @@ boolean             suppression;
 	/* liees a l'heritage de cet attribut par le sous-arbre s'il */
 	/* existe des elements heritants de celui-ci */
 	if (heritage)
-	   RemoveInheritedAttrPresent (pEl, TabDocuments[document - 1], pAttrAsc);
+	   RemoveInheritedAttrPresent (pEl, LoadedDocument[document - 1], pAttrAsc);
 	/* puis on supprime sur le sous-arbre pEl les regles de */
 	/* presentation liees a la comparaison d'un attribut */
 	/* du sous-arbre avec ce type d'attribut */
 	if (comparaison)
-	   RemoveComparAttrPresent (pEl, TabDocuments[document - 1], pAttrAsc);
+	   RemoveComparAttrPresent (pEl, LoadedDocument[document - 1], pAttrAsc);
      }
 }
 
@@ -2576,10 +2576,10 @@ Document            document;
    boolean             heritage, comparaison;
    PtrElement          pElFils;
 
-   if (TabDocuments[document - 1] == NULL)
+   if (LoadedDocument[document - 1] == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
-   if (TabDocuments[document - 1]->DocSSchema->SsPSchema == NULL)
+   if (LoadedDocument[document - 1]->DocSSchema->SsPSchema == NULL)
       return;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
@@ -2591,29 +2591,29 @@ Document            document;
 		  PsNComparAttrs[pAttr->AeAttrNum - 1] > 0);
    /* d'abord on applique les regles de presentation liees */
    /* a l'attribut sur l'element lui-meme */
-   ApplyAttrPRulesToElem (pEl, TabDocuments[document - 1], pAttr, FALSE);
+   ApplyAttrPRulesToElem (pEl, LoadedDocument[document - 1], pAttr, FALSE);
    /* puis on applique sur pEl et les elements du sous-arbre pEl */
    /* les regles de presentation liees a l'heritage de cet attribut */
    /* par le sous arbre s'il existe des elements heritants de celui-ci */
    if (heritage)
-      ApplyAttrPRulesToSubtree (pEl, TabDocuments[document - 1], pAttr);
+      ApplyAttrPRulesToSubtree (pEl, LoadedDocument[document - 1], pAttr);
    /* puis on applique sur les elements du sous arbre pEl */
    /* les regles de presentation liees a la comparaison d'un attribut */
    /* du sous-arbre avec cetype d'attribut */
    if (!pEl->ElTerminal && comparaison)
       for (pElFils = pEl->ElFirstChild; pElFils != NULL; pElFils = pElFils->ElNext)
-	 ApplyAttrPRules (pElFils, TabDocuments[document - 1], pAttr);
+	 ApplyAttrPRules (pElFils, LoadedDocument[document - 1], pAttr);
    if (pAttr->AeAttrType == AtNumAttr)
       /* s'il s'agit d'un attribut initialisant un compteur, il */
       /* faut mettre a jour les boites utilisant ce compteur */
-      UpdateCountersByAttr (pEl, pAttr, TabDocuments[document - 1]);
+      UpdateCountersByAttr (pEl, pAttr, LoadedDocument[document - 1]);
    /* on applique les regles retardee */
-   ApplReglesRetard (pEl, TabDocuments[document - 1]);
-   AbstractImageUpdated (TabDocuments[document - 1]);
+   ApplReglesRetard (pEl, LoadedDocument[document - 1]);
+   AbstractImageUpdated (LoadedDocument[document - 1]);
    RedisplayCommand (document);
    /* le nouvel attribut doit etre pris en compte dans */
    /* les copies-inclusions de l'element */
-   ReaffPaveCopie (pEl, TabDocuments[document - 1], (documentDisplayMode[document - 1] == DisplayImmediately));
+   ReaffPaveCopie (pEl, LoadedDocument[document - 1], (documentDisplayMode[document - 1] == DisplayImmediately));
 }
 
 
@@ -2637,10 +2637,10 @@ Document            document;
    PtrAttribute         pAttrAsc;
    PtrElement          pElAttr;
 
-   if (TabDocuments[document - 1] == NULL)
+   if (LoadedDocument[document - 1] == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
-   if (TabDocuments[document - 1]->DocSSchema->SsPSchema == NULL)
+   if (LoadedDocument[document - 1]->DocSSchema->SsPSchema == NULL)
       return;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
@@ -2664,18 +2664,18 @@ Document            document;
 	/* on applique sur les elements du sous arbre pEl  */
 	/* les regles de presentation liees a l'heritage de cet attribut */
 	/* par le sous-arbre s'il existe des elements heritants de celui-ci */
-	ApplyAttrPRulesToSubtree (pEl, TabDocuments[document - 1], pAttrAsc);
+	ApplyAttrPRulesToSubtree (pEl, LoadedDocument[document - 1], pAttrAsc);
 
 	/* puis on applique sur les elements du sous-arbre pEl */
 	/* les regles de presentation liees a la comparaison d'un attribut */
 	/* du sous-arbre avec ce type d'attribut */
-	ApplyAttrPRules (pEl, TabDocuments[document - 1], pAttrAsc);
+	ApplyAttrPRules (pEl, LoadedDocument[document - 1], pAttrAsc);
      }
-   AbstractImageUpdated (TabDocuments[document - 1]);
+   AbstractImageUpdated (LoadedDocument[document - 1]);
    RedisplayCommand (document);
    /* le nouvel attribut doit etre pris en compte dans */
    /* les copies-inclusions de l'element */
-   ReaffPaveCopie (pEl, TabDocuments[document - 1], (documentDisplayMode[document - 1] == DisplayImmediately));
+   ReaffPaveCopie (pEl, LoadedDocument[document - 1], (documentDisplayMode[document - 1] == DisplayImmediately));
 }
 
 
@@ -2695,20 +2695,20 @@ PtrPRule        pRegle;
 #endif /* __STDC__ */
 
 {
-   if (TabDocuments[document - 1] == NULL)
+   if (LoadedDocument[document - 1] == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
-   if (TabDocuments[document - 1]->DocSSchema->SsPSchema == NULL)
+   if (LoadedDocument[document - 1]->DocSSchema->SsPSchema == NULL)
       return;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
       return;
-   ApplNouvRegle (TabDocuments[document - 1], pRegle, pEl);
-   AbstractImageUpdated (TabDocuments[document - 1]);
+   ApplNouvRegle (LoadedDocument[document - 1], pRegle, pEl);
+   AbstractImageUpdated (LoadedDocument[document - 1]);
    RedisplayCommand (document);
    /* la nouvelle regle de presentation doit etre prise en compte dans */
    /* les copies-inclusions de l'element */
-   ReaffPaveCopie (pEl, TabDocuments[document - 1], (documentDisplayMode[document - 1] == DisplayImmediately));
+   ReaffPaveCopie (pEl, LoadedDocument[document - 1], (documentDisplayMode[document - 1] == DisplayImmediately));
 }
 
 /* ---------------------------------------------------------------------- */
@@ -2728,20 +2728,20 @@ int                 vue;
 
 {
 
-   if (TabDocuments[document - 1] == NULL)
+   if (LoadedDocument[document - 1] == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
-   if (TabDocuments[document - 1]->DocSSchema->SsPSchema == NULL)
+   if (LoadedDocument[document - 1]->DocSSchema->SsPSchema == NULL)
       return;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
       return;
-   AppliqueRegleStandard (pEl, TabDocuments[document - 1], typeRegleP, vue);
-   AbstractImageUpdated (TabDocuments[document - 1]);
+   AppliqueRegleStandard (pEl, LoadedDocument[document - 1], typeRegleP, vue);
+   AbstractImageUpdated (LoadedDocument[document - 1]);
    RedisplayCommand (document);
    /* le retrait de la regle de presentation doit etre pris en compte */
    /* dans les copies-inclusions de l'element */
-   ReaffPaveCopie (pEl, TabDocuments[document - 1], (documentDisplayMode[document - 1] == DisplayImmediately));
+   ReaffPaveCopie (pEl, LoadedDocument[document - 1], (documentDisplayMode[document - 1] == DisplayImmediately));
 }
 
 /* ---------------------------------------------------------------------- */
@@ -2759,19 +2759,19 @@ PtrElement          pEl;
 #endif /* __STDC__ */
 
 {
-   if (TabDocuments[document - 1] == NULL)
+   if (LoadedDocument[document - 1] == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
-   if (TabDocuments[document - 1]->DocSSchema->SsPSchema == NULL)
+   if (LoadedDocument[document - 1]->DocSSchema->SsPSchema == NULL)
       return;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
       return;
-   AbstractImageUpdated (TabDocuments[document - 1]);
+   AbstractImageUpdated (LoadedDocument[document - 1]);
    RedisplayCommand (document);
    /* la nouvelle regle de presentation doit etre prise en compte dans */
    /* les copies-inclusions de l'element */
-   ReaffPaveCopie (pEl, TabDocuments[document - 1], (documentDisplayMode[document - 1] == DisplayImmediately));
+   ReaffPaveCopie (pEl, LoadedDocument[document - 1], (documentDisplayMode[document - 1] == DisplayImmediately));
 }
 
 /* ---------------------------------------------------------------------- */
@@ -2789,11 +2789,11 @@ Document            document;
    if (documentDisplayMode[document - 1] == DisplayImmediately)
      {
 	/* eteint la selection */
-	EteintOuAllumeSelection (TabDocuments[document - 1], FALSE);
+	EteintOuAllumeSelection (LoadedDocument[document - 1], FALSE);
 	/* reaffiche ce qui a deja ete prepare' */
-	RedisplayDocViews (TabDocuments[document - 1]);
+	RedisplayDocViews (LoadedDocument[document - 1]);
 	/* rallume la selection */
-	EteintOuAllumeSelection (TabDocuments[document - 1], TRUE);
+	EteintOuAllumeSelection (LoadedDocument[document - 1], TRUE);
      }
 }
 
@@ -2835,13 +2835,13 @@ DisplayMode         newDisplayMode;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
      {
 	/* si le document n'a pas de schema de presentation, on ne fait rien */
-	if (TabDocuments[document - 1]->DocSSchema->SsPSchema == NULL)
+	if (LoadedDocument[document - 1]->DocSSchema->SsPSchema == NULL)
 	   return;
 	if (documentDisplayMode[document - 1] != newDisplayMode)
 	   /* il y a effectivement changement de mode */
@@ -2852,10 +2852,10 @@ DisplayMode         newDisplayMode;
 		/* le document passe en mode affichage differe' ou sans calcul d'image */
 	       {
 		  /* eteint la selection */
-		  EteintOuAllumeSelection (TabDocuments[document - 1], FALSE);
+		  EteintOuAllumeSelection (LoadedDocument[document - 1], FALSE);
 		  /* si on passe au mode sans calcul d'image il faut detruire l'image */
 		  if (newDisplayMode == NoComputedDisplay)
-		     DetruitImage (TabDocuments[document - 1]);
+		     DetruitImage (LoadedDocument[document - 1]);
 	       }
 	     else if ((documentDisplayMode[document - 1] == DeferredDisplay
 		  || documentDisplayMode[document - 1] == NoComputedDisplay)
@@ -2867,34 +2867,34 @@ DisplayMode         newDisplayMode;
 		      && (!documentNewSelection[document - 1].SDSelActive ||
 		      documentNewSelection[document - 1].SDElemSel == NULL))
 		     /* il faut recalculer l'image , la suite du code est pareil */
-		     RecreeImage (TabDocuments[document - 1]);
+		     RecreeImage (LoadedDocument[document - 1]);
 		  /* reaffiche ce qui a deja ete prepare' */
 		  if (documentDisplayMode[document - 1] == DeferredDisplay
 		      || (!documentNewSelection[document - 1].SDSelActive ||
 		      documentNewSelection[document - 1].SDElemSel == NULL))
-		     RedisplayDocViews (TabDocuments[document - 1]);
+		     RedisplayDocViews (LoadedDocument[document - 1]);
 
 		  if (!documentNewSelection[document - 1].SDSelActive)
 		     /* la selection n'a pas change', on la rallume */
-		     EteintOuAllumeSelection (TabDocuments[document - 1], TRUE);
+		     EteintOuAllumeSelection (LoadedDocument[document - 1], TRUE);
 		  else
 		     /* la selection a change', on etablit la selection */
 		     /* enregistree */
 		    {
 		       if (documentNewSelection[document - 1].SDElemSel == NULL)
 			  /* c'est une annulation de selection */
-			  DeSelDoc (TabDocuments[document - 1]);
+			  DeSelDoc (LoadedDocument[document - 1]);
 		       else
 			 {
 			    /* il y a effectivement une selection a etablir */
 			    if (documentNewSelection[document - 1].SDPremCar == 0 &&
 			    documentNewSelection[document - 1].SDDerCar == 0)
 			       /* selection d'un element complet */
-			       SelectEl (TabDocuments[document - 1],
+			       SelectEl (LoadedDocument[document - 1],
 					 (PtrElement) (documentNewSelection[document - 1].SDElemSel), TRUE, TRUE);
 			    else
 			       /* selection d'une chaine */
-			       SelectString (TabDocuments[document - 1],
+			       SelectString (LoadedDocument[document - 1],
 					     (PtrElement) (documentNewSelection[document - 1].SDElemSel),
 			       documentNewSelection[document - 1].SDPremCar,
 			       documentNewSelection[document - 1].SDDerCar);
@@ -2919,12 +2919,12 @@ DisplayMode         newDisplayMode;
 		      && newDisplayMode == NoComputedDisplay)
 		/* le document passe du mode affichage differe'  */
 		/* au mode d'affichage sans calcul d'image  */
-		DetruitImage (TabDocuments[document - 1]);
+		DetruitImage (LoadedDocument[document - 1]);
 	     else if (documentDisplayMode[document - 1] == NoComputedDisplay
 		      && newDisplayMode == DeferredDisplay)
 		/* le document passe du mode affichage sans calcul d'image   */
 		/* au mode d'affichage differe'  */
-		RecreeImage (TabDocuments[document - 1]);
+		RecreeImage (LoadedDocument[document - 1]);
 	     /* on met a jour le mode d'affichage */
 	     documentDisplayMode[document - 1] = newDisplayMode;
 	  }
@@ -2958,7 +2958,7 @@ Document            document;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */

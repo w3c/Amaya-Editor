@@ -78,7 +78,7 @@ int                 frame;
 	dy = pBox->BxYOrg;
 	haut = pBox->BxHeight;
 
-	/* limit the area to fill to the englobing box */
+	/* CHKR_LIMIT the area to fill to the englobing box */
 	pBo1 = pBox->BxAbstractBox->AbEnclosing->AbBox;
 	i = pBo1->BxXOrg - dx;
 	if (i > 0)
@@ -545,7 +545,7 @@ int                 frame;
 /**
  *      PolyTransform check whether a polyline Box need to be transformed
  *		to fit in the current area.
- *		If the limit point matches the current geometry, no need
+ *		If the CHKR_LIMIT point matches the current geometry, no need
  *		to change anything, otherwise, all points are moved using
  *		Box-Width/Lim-X ratio horizontally and Box-Height/Lim-Y
  *		ratio vertically.

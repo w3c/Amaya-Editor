@@ -379,7 +379,7 @@ BougerElement (Courant, XRef, YRef, LRef, HRef, Doc)
    *                            'G' pour Gauche ou 'D' pour Droite
    * Doc                Document        Document d'appartenance
    *
-   * Functionality : Aligner les objets de la selection.
+   * Functionality : Align les objets de la selection.
    *
    ------------------------------------------------------------------------------
    !EF */

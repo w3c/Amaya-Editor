@@ -166,12 +166,12 @@ char               *fn;
       strcpy (fn, name);
    else
      {
-	strcpy (Directory, DirectoryDoc);
+	strcpy (Directory, DocumentPath);
 	BuildFileName (name, "", Directory, fn, &lg);
 	if (!FileExist (fn))
 	  {
 	     /* Recherche le fichier dans les repertoires de schemas */
-	     strcpy (Directory, DirectorySchemas);
+	     strcpy (Directory, SchemaPath);
 	     BuildFileName (name, "", Directory, fn, &lg);
 	  }
      }

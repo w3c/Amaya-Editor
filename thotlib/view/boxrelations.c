@@ -76,9 +76,9 @@ boolean             horizRef;
 /* |            dimension de pOrginBox).                                | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void       RelPos (PtrBox pOrginBox, PtrBox pTargetBox, OpRelation op, BoxEdge originEdge, BoxEdge targetEdge)
+static void       InsertPosRelation (PtrBox pOrginBox, PtrBox pTargetBox, OpRelation op, BoxEdge originEdge, BoxEdge targetEdge)
 #else  /* __STDC__ */
-static void       RelPos (pOrginBox, pTargetBox, op, originEdge, targetEdge)
+static void       InsertPosRelation (pOrginBox, pTargetBox, op, originEdge, targetEdge)
 PtrBox            pOrginBox;
 PtrBox            pTargetBox;
 OpRelation        op;
@@ -184,9 +184,9 @@ BoxEdge           targetEdge;
 /* |         pTargetBox).                                               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void       RelDim (PtrBox pOrginBox, PtrBox pTargetBox, boolean sameDimension, boolean horizRef)
+static void       InsertDimRelation (PtrBox pOrginBox, PtrBox pTargetBox, boolean sameDimension, boolean horizRef)
 #else  /* __STDC__ */
-static void       RelDim (pOrginBox, pTargetBox, sameDimension, horizRef)
+static void       InsertDimRelation (pOrginBox, pTargetBox, sameDimension, horizRef)
 PtrBox            pOrginBox;
 PtrBox            pTargetBox;
 boolean           sameDimension;
@@ -411,9 +411,9 @@ boolean             enclosed;
 /* |            jour et les relations de dependance sont enregistrees.  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void              Positionner (AbPosition rule, PtrBox pBox, int frame, boolean horizRef)
+void              ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, boolean horizRef)
 #else  /* __STDC__ */
-void              Positionner (rule, pBox, frame, horizRef)
+void              ComputePosRelation (rule, pBox, frame, horizRef)
 AbPosition        rule;
 PtrBox            pBox;
 int               frame;
@@ -829,7 +829,7 @@ boolean           horizRef;
    /* Il faut mettre a jour les dependances des boites */
    if (pAb != NULL && pCurrentBox != NULL)
      {
-	RelPos (pBox, pCurrentBox, op, localEdge, refEdge);
+	InsertPosRelation (pBox, pCurrentBox, op, localEdge, refEdge);
 	pCurrentBox->BxMoved = NULL;
 
 	if (horizRef && pBox->BxHorizFlex)
@@ -852,9 +852,9 @@ boolean           horizRef;
 /* |            Retourne son adresse sinon NULL.                        | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-PtrBox            BoiteHInclus (PtrBox pBox, PtrBox pPreviousBox)
+PtrBox            GetHPosRelativePos (PtrBox pBox, PtrBox pPreviousBox)
 #else  /* __STDC__ */
-PtrBox            BoiteHInclus (pBox, pPreviousBox)
+PtrBox            GetHPosRelativePos (pBox, pPreviousBox)
 PtrBox            pBox;
 PtrBox            pPreviousBox;
 #endif /* __STDC__ */
@@ -934,7 +934,7 @@ PtrBox            pPreviousBox;
 			  if (pRelation->ReBox->BxHorizFlex)
 			     pRelativeBox = pRelation->ReBox;
 			  else
-			     pRelativeBox = BoiteHInclus (pRelation->ReBox, pBox);
+			     pRelativeBox = GetHPosRelativePos (pRelation->ReBox, pBox);
 
 
 			  /* Est-ce que l'on a trouve la boite qui donne la position ? */
@@ -982,9 +982,9 @@ PtrBox            pPreviousBox;
 /* |            Retourne son adresse sinon NULL.                        | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-PtrBox            BoiteVInclus (PtrBox pBox, PtrBox pPreviousBox)
+PtrBox            GetVPosRelativeBox (PtrBox pBox, PtrBox pPreviousBox)
 #else  /* __STDC__ */
-PtrBox            BoiteVInclus (pBox, pPreviousBox)
+PtrBox            GetVPosRelativeBox (pBox, pPreviousBox)
 PtrBox            pBox;
 PtrBox            pPreviousBox;
 
@@ -1065,7 +1065,7 @@ PtrBox            pPreviousBox;
 			  if (pRelation->ReBox->BxVertFlex)
 			     pRelativeBox = pRelation->ReBox;
 			  else
-			     pRelativeBox = BoiteVInclus (pRelation->ReBox, pBox);
+			     pRelativeBox = GetVPosRelativeBox (pRelation->ReBox, pBox);
 			  /* Est-ce que l'on a trouve la boite qui donne la position ? */
 			  if (pRelativeBox != NULL)
 			    {
@@ -1110,9 +1110,9 @@ PtrBox            pPreviousBox;
 /* |            les boites est enregistree.                             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean             Dimensionner (PtrAbstractBox pAb, int frame, boolean horizRef)
+boolean             ComputeDimRelation (PtrAbstractBox pAb, int frame, boolean horizRef)
 #else  /* __STDC__ */
-boolean             Dimensionner (pAb, frame, horizRef)
+boolean             ComputeDimRelation (pAb, frame, horizRef)
 PtrAbstractBox      pAb;
 int                 frame;
 boolean             horizRef;
@@ -1293,7 +1293,7 @@ boolean             horizRef;
 			     if (pDimAb->DimUnit == UnPercent)
 			       {
 				  delta = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) pParentAb->AbBox->BxWidth);
-				  RelDim (pParentAb->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
+				  InsertDimRelation (pParentAb->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
 			       }
 			     else
 				delta = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb);
@@ -1374,7 +1374,7 @@ boolean             horizRef;
 					    pBox->BxWOutOfStruct = TRUE;
 
 					 /* On note les dependances des largeurs des boites */
-					 RelDim (pDimAb->DimAbRef->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
+					 InsertDimRelation (pDimAb->DimAbRef->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
 				      }
 				 }
 			    }
@@ -1497,7 +1497,7 @@ boolean             horizRef;
 					      TtaDisplayMessage (INFO, TtaGetMessage(LIB, BAD_VERT_SIZING_SEE_PRS_SCH), AbsBoxType (pAb));
 
 					}
-				      RelDim (pDimAb->DimAbRef->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
+				      InsertDimRelation (pDimAb->DimAbRef->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
 				   }
 			      }
 			 }
@@ -1609,7 +1609,7 @@ boolean             horizRef;
 		  val = val - pBox->BxXOrg - pBox->BxWidth;
 		  /* La boite n'a pas de point fixe */
 		  pBox->BxHorizEdge = NoEdge;
-		  RelPos (pBox, pRefBox, op, pPosAb->PosEdge, pPosAb->PosRefEdge);
+		  InsertPosRelation (pBox, pRefBox, op, pPosAb->PosEdge, pPosAb->PosRefEdge);
 
 		  if (!XEnAbsolu (pBox))
 		     /* la boite  devient maintenant placee en absolu */
@@ -1705,7 +1705,7 @@ boolean             horizRef;
 		  val = val - pBox->BxYOrg - pBox->BxHeight;
 		  /* La boite n'a pas de point fixe */
 		  pBox->BxVertEdge = NoEdge;
-		  RelPos (pBox, pRefBox, op, pPosAb->PosEdge, pPosAb->PosRefEdge);
+		  InsertPosRelation (pBox, pRefBox, op, pPosAb->PosEdge, pPosAb->PosRefEdge);
 
 		  if (!YEnAbsolu (pBox))
 		     /* la boite  devient maintenant placee en absolu */
@@ -1751,9 +1751,9 @@ boolean             horizRef;
 /* |            est VRAI ou FAUX est mis a` jour.                       | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void              PlacerAxe (AbPosition rule, PtrBox pBox, int frame, boolean horizRef)
+void              ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, boolean horizRef)
 #else  /* __STDC__ */
-void              PlacerAxe (rule, pBox, frame, horizRef)
+void              ComputeAxisRelation (rule, pBox, frame, horizRef)
 AbPosition        rule;
 PtrBox            pBox;
 int               frame;
@@ -1892,7 +1892,7 @@ boolean           horizRef;
 	/* la regle axe de reference est interpretee */
 	pCurrentAb->AbVertRefChange = FALSE;
 	if (pCurrentBox != NULL)
-	   RelPos (pBox, pCurrentBox, OpHorizRef, localEdge, refEdge);
+	   InsertPosRelation (pBox, pCurrentBox, OpHorizRef, localEdge, refEdge);
      }
    else
      {
@@ -1901,7 +1901,7 @@ boolean           horizRef;
 	/* la regle axe de reference est interpretee */
 	pCurrentAb->AbHorizRefChange = FALSE;
 	if (pCurrentBox != NULL)
-	   RelPos (pBox, pCurrentBox, OpVertRef, localEdge, refEdge);
+	   InsertPosRelation (pBox, pCurrentBox, OpVertRef, localEdge, refEdge);
      }
 }
 
@@ -2208,9 +2208,9 @@ boolean             horizRef;
 /* |             de la boite pTargetBox.                                | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RazHorsEnglobe (PtrBox pTargetBox)
+void                ClearXOutOfStructRelation (PtrBox pTargetBox)
 #else  /* __STDC__ */
-void                RazHorsEnglobe (pTargetBox)
+void                ClearXOutOfStructRelation (pTargetBox)
 PtrBox              pTargetBox;
 #endif /* __STDC__ */
 {
@@ -2300,9 +2300,9 @@ PtrBox              pTargetBox;
 /* |            hors-structure.                                         | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RazPosition (PtrBox pOrginBox, boolean horizRef)
+void                ClearPosRelation (PtrBox pOrginBox, boolean horizRef)
 #else  /* __STDC__ */
-void                RazPosition (pOrginBox, horizRef)
+void                ClearPosRelation (pOrginBox, horizRef)
 PtrBox              pOrginBox;
 boolean             horizRef;
 
@@ -2316,7 +2316,7 @@ boolean             horizRef;
    /* Est-ce une relation hors-structure ? */
    if ((horizRef && pOrginBox->BxXOutOfStruct) || (!horizRef && pOrginBox->BxYOutOfStruct))
      {
-	/* Si la boite est detruite la procedure RazHorsEnglobe detruit */
+	/* Si la boite est detruite la procedure ClearXOutOfStructRelation detruit */
 	/* automatiquement cette relation                               */
 	if (!pAb->AbDead)
 	  {
@@ -2408,7 +2408,7 @@ boolean             horizRef;
 		pCurrentAb = pCurrentAb->AbNext;
 	  }			/*while */
      }
-}				/* RazPosition */
+}				/* ClearPosRelation */
 
 /* ---------------------------------------------------------------------- */
 /* | ClearAxisRelation recherche la boite dont depend l'axe de reference| */
@@ -2423,9 +2423,9 @@ boolean             horizRef;
 /* |            relation.                                               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void              RazAxe (PtrBox pOrginBox, boolean horizRef)
+void              ClearAxisRelation (PtrBox pOrginBox, boolean horizRef)
 #else  /* __STDC__ */
-void              RazAxe (pOrginBox, horizRef)
+void              ClearAxisRelation (pOrginBox, horizRef)
 PtrBox            pOrginBox;
 boolean           horizRef;
 #endif /* __STDC__ */
@@ -2477,9 +2477,9 @@ boolean           horizRef;
 /* |            hierarchie.                                             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RazLiens (PtrBox pTargetBox)
+void                ClearAllRelations (PtrBox pTargetBox)
 #else  /* __STDC__ */
-void                RazLiens (pTargetBox)
+void                ClearAllRelations (pTargetBox)
 PtrBox              pTargetBox;
 #endif /* __STDC__ */
 {
@@ -2515,7 +2515,7 @@ PtrBox              pTargetBox;
 	     pAb = pAb->AbNext;
 	  }
 	/* On detruit eventuellement les liens non hierarchiques */
-	RazHorsEnglobe (pTargetBox);
+	ClearXOutOfStructRelation (pTargetBox);
      }
 }
 
@@ -2534,9 +2534,9 @@ PtrBox              pTargetBox;
 /* |            la relation est hors-structure.                         | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RazDim (PtrBox pOrginBox, boolean horizRef, int frame)
+void                ClearDimRelation (PtrBox pOrginBox, boolean horizRef, int frame)
 #else  /* __STDC__ */
-void                RazDim (pOrginBox, horizRef, frame)
+void                ClearDimRelation (pOrginBox, horizRef, frame)
 PtrBox              pOrginBox;
 boolean             horizRef;
 int                 frame;
@@ -2555,7 +2555,7 @@ int                 frame;
    /* Est-ce une relation hors-structure en X ? */
    if ((horizRef && pOrginBox->BxWOutOfStruct) || (!horizRef && pOrginBox->BxHOutOfStruct))
      {
-	/* Si la boite est detruite la procedure RazHorsEnglobe detruit */
+	/* Si la boite est detruite la procedure ClearXOutOfStructRelation detruit */
 	/* automatiquement cette relation                               */
 	if (!pAb->AbDead)
 	  {

@@ -94,7 +94,7 @@ int                *nbitem;
 {
    int                 i, nb;
 
-   strncpy (BufDir, DirectoryDoc, MAX_PATH);
+   strncpy (BufDir, DocumentPath, MAX_PATH);
 
    /* remplace PATH_SEP par separator pour le formulaire de saisie des documents */
    nb = 1;
@@ -128,11 +128,11 @@ Name                 name;
 
    /* Formulaire du schema de presentation */
    /* ++++++++++++++++++++++++++++++++++++ */
-   TtaNewForm (NumFormSchemaPresentation, 0, 0, 0,
+   TtaNewForm (NumFormPresentationSchema, 0, 0, 0,
 	       TtaGetMessage (LIB, PRES), TRUE, 1, 'L', D_DONE);
 
    /* zone de saisie du nom du schema de presentation */
-   TtaNewTextForm (NumZoneSchemaPresentation, NumFormSchemaPresentation,
+   TtaNewTextForm (NumZonePresentationSchema, NumFormPresentationSchema,
 		   TtaGetMessage (LIB, PRES), 30, 1, FALSE);
 
    /* presentation par defaut */
@@ -147,15 +147,15 @@ Name                 name;
       TtaDisplayMessage (INFO, TtaGetMessage(LIB, ENTER_PRS_SCH),
 		     pSchStr->SsRule[pSchStr->SsRootElem - 1].SrName);
    /* demande un autre nom de fichier a l'utilisateur */
-   TtaSetTextForm (NumZoneSchemaPresentation, name);
-   TtaShowDialogue (NumFormSchemaPresentation, FALSE);
+   TtaSetTextForm (NumZonePresentationSchema, name);
+   TtaShowDialogue (NumFormPresentationSchema, FALSE);
    /* attend la reponse de l'utilisateur */
    TtaWaitShowDialogue ();
    strncpy (name, NomSchemaSaisi, MAX_NAME_LENGTH);
    /* efface le message */
 
    /* detruit le formulaire */
-   TtaDestroyDialogue (NumFormSchemaPresentation);
+   TtaDestroyDialogue (NumFormPresentationSchema);
 }
 
 
@@ -175,11 +175,11 @@ char               *data;
 {
    switch (ref)
 	 {
-	    case NumFormSchemaPresentation:
+	    case NumFormPresentationSchema:
 	       /* formulaire demandant le nom du schema de presentation */
 
 	       break;
-	    case NumZoneSchemaPresentation:
+	    case NumZonePresentationSchema:
 	       /* zone de saisie du nom du schema de presentation */
 	       strncpy (NomSchemaSaisi, data, MAX_NAME_LENGTH);
 	       break;
@@ -206,7 +206,7 @@ char               *data;
    val = (int) data;
    switch (ref)
 	 {
-	    case NumSelectClasseImport:
+	    case NumSelectImportClass:
 	       /* conserve le nom interne du schema de structure d'importation */
 	       ConfigNomInterneSSchema (data, SchStrImport, TRUE);
 	       if (SchStrImport[0] == '\0')
@@ -216,12 +216,12 @@ char               *data;
 		    SchStrImport[MAX_NAME_LENGTH - 1] = '\0';
 		 }
 	       break;
-	    case NumFormClasseImport:
+	    case NumFormImportClass:
 	       /* retour du formulaire lui-meme */
 	       if (val == 0)
 		  return;	/* abandon */
 	       /* le nom du fichier a importer a deja ete saisie par "Ouvrir" */
-	       TraiteMenuImporter (SchStrImport, NomDirectory, NomDocument);
+	       TraiteMenuImporter (SchStrImport, NomDirectory, DefaultDocumentName);
 	       break;
 	 }
 }
@@ -250,11 +250,11 @@ char               *data;
    val = (int) data;
    switch (ref)
 	 {
-	    case NumZoneNomDocAOuvrir:
+	    case NumZoneDocNameToOpen:
 	       if (TtaCheckDirectory (data) && data[strlen (data) - 1] != DIR_SEP)
 		 {
 		    strcpy (NomDirectory, data);
-		    NomDocument[0] = '\0';
+		    DefaultDocumentName[0] = '\0';
 		 }
 	       else
 		 {
@@ -266,7 +266,7 @@ char               *data;
 			 i = MAX_NAME_LENGTH;	/*Longueur du nom limitee */
 			 nomdoc[i] = '\0';
 		      }
-		    strcpy (NomDocument, nomdoc);
+		    strcpy (DefaultDocumentName, nomdoc);
 		 }
 
 	       if (TtaCheckDirectory (NomDirectory))
@@ -276,34 +276,34 @@ char               *data;
 		       if (TtaIsSuffixFileIn (NomDirectory, ".PIV"))
 			 {
 			    /* il faut ajouter le directory au path */
-			    i = strlen (DirectoryDoc);
+			    i = strlen (DocumentPath);
 			    if (i + strlen (NomDirectory) + 2 < MAX_PATH)
 			      {
-				 strcat (DirectoryDoc, PATH_STR);
-				 strcat (DirectoryDoc, NomDirectory);
+				 strcat (DocumentPath, PATH_STR);
+				 strcat (DocumentPath, NomDirectory);
 				 BuildPathDocBuffer (BufDir, '\0', &i);
-				 TtaNewSelector (NumZoneDirOuvrirDoc, NumFormOuvrirDoc,
+				 TtaNewSelector (NumZoneDirOpenDoc, NumFormOpenDoc,
 						 TtaGetMessage (LIB, DOC_DIR), i, BufDir, 9, NULL, FALSE, TRUE);
 
-				 TtaListDirectory (NomDirectory, NumFormOuvrirDoc, NULL, -1,
+				 TtaListDirectory (NomDirectory, NumFormOpenDoc, NULL, -1,
 						   ".PIV", TtaGetMessage (LIB, FILES), NumSelDoc);
 			      }
 			 }
 		 }
 	       break;
-	    case NumZoneDirOuvrirDoc:
+	    case NumZoneDirOpenDoc:
 	       strcpy (NomDirectory, data);
-	       TtaSetTextForm (NumZoneNomDocAOuvrir, NomDirectory);
-	       TtaListDirectory (data, NumFormOuvrirDoc, NULL, -1,
+	       TtaSetTextForm (NumZoneDocNameToOpen, NomDirectory);
+	       TtaListDirectory (data, NumFormOpenDoc, NULL, -1,
 			 ".PIV", TtaGetMessage (LIB, FILES), NumSelDoc);
 	       break;
 	    case NumSelDoc:
 	       if (NomDirectory[0] == '\0')
 		 {
 		    /* compose le path complet du fichier pivot */
-		    strncpy (NomDirectory, DirectoryDoc, MAX_PATH);
+		    strncpy (NomDirectory, DocumentPath, MAX_PATH);
 		    BuildFileName (nomdoc, "PIV", NomDirectory, data, &i);
-		    TtaExtractName (nomdoc, NomDirectory, NomDocument);
+		    TtaExtractName (nomdoc, NomDirectory, DefaultDocumentName);
 		 }
 	       else
 		 {
@@ -316,37 +316,37 @@ char               *data;
 			 if (!strcmp (&data[i - 4], ".PIV"))
 			    data[i - 4] = '\0';
 		      }
-		    strncpy (NomDocument, data, MAX_NAME_LENGTH);
-		    NomDocument[MAX_NAME_LENGTH - 1] = '\0';
-		    strcat (nomdoc, NomDocument);
+		    strncpy (DefaultDocumentName, data, MAX_NAME_LENGTH);
+		    DefaultDocumentName[MAX_NAME_LENGTH - 1] = '\0';
+		    strcat (nomdoc, DefaultDocumentName);
 		 }
-	       TtaSetTextForm (NumZoneNomDocAOuvrir, nomdoc);
+	       TtaSetTextForm (NumZoneDocNameToOpen, nomdoc);
 	       break;
-	    case NumFormOuvrirDoc:
+	    case NumFormOpenDoc:
 	       if (val == 0)
 		 {		/* abandon */
-		    TtaDestroyDialogue (NumFormOuvrirDoc);
-		    TtaDestroyDialogue (NumFormClasseImport);
+		    TtaDestroyDialogue (NumFormOpenDoc);
+		    TtaDestroyDialogue (NumFormImportClass);
 		    return;
 		 }
 	       /* le formulaire Ouvrir Document */
 	       if (NomDirectory[0] == '\0')
 		  /* compose le path complet du fichier pivot */
-		  strncpy (NomDirectory, DirectoryDoc, MAX_PATH);
+		  strncpy (NomDirectory, DocumentPath, MAX_PATH);
 	       else if (TtaCheckDirectory (NomDirectory))
 		  /* Est-ce un nouveau directory de documents */
 		  if (!TtaIsInDocumentPath (NomDirectory))
 		    {
 		       /* il faut ajouter le directory au path */
-		       i = strlen (DirectoryDoc);
+		       i = strlen (DocumentPath);
 		       if (i + strlen (NomDirectory) + 2 < MAX_PATH)
 			 {
-			    strcat (DirectoryDoc, PATH_STR);
-			    strcat (DirectoryDoc, NomDirectory);
+			    strcat (DocumentPath, PATH_STR);
+			    strcat (DocumentPath, NomDirectory);
 			 }
 		    }
 
-	       BuildFileName (NomDocument, "PIV", NomDirectory, nomdoc, &i);
+	       BuildFileName (DefaultDocumentName, "PIV", NomDirectory, nomdoc, &i);
 	       /* teste si le fichier 'PIV' existe */
 	       if (FileExist (nomdoc) != 0)
 		  /* le fichier PIV existe, on ouvre le document */
@@ -357,29 +357,29 @@ char               *data;
 		      {
 			 strcpy (pDoc->DocDirectory, NomDirectory);
 			 /* charge le document */
-			 LoadDocument (&pDoc, NomDocument);
+			 LoadDocument (&pDoc, DefaultDocumentName);
 		      }
 		 }
 	       else
 		  /* Le fichier PIV n'existe pas */
 		 {
 		    /* cherche s'il existe un fichier de ce nom, sans extension */
-		    strncpy (NomDirectory, DirectoryDoc, MAX_PATH);
-		    BuildFileName (NomDocument, "", NomDirectory, nomdoc, &i);
+		    strncpy (NomDirectory, DocumentPath, MAX_PATH);
+		    BuildFileName (DefaultDocumentName, "", NomDirectory, nomdoc, &i);
 		    if (FileExist (nomdoc) == 0)
 		       /* le fichier n'existe pas */
-		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), NomDocument);
+		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), DefaultDocumentName);
 		    else
 		       /* le fichier existe ; c'est sans doute une importation */
 		       /* demande le schema de structure d'importation */
 		      {
-			 TtaShowDialogue (NumFormClasseImport, TRUE);
+			 TtaShowDialogue (NumFormImportClass, TRUE);
 			 TtaWaitShowDialogue ();
 		      }
 		 }
 	       /* indique le nom du fichier charge */
-	       TtaDestroyDialogue (NumFormOuvrirDoc);
-	       TtaDestroyDialogue (NumFormClasseImport);
+	       TtaDestroyDialogue (NumFormOpenDoc);
+	       TtaDestroyDialogue (NumFormImportClass);
 	       break;
 	 }
 }
@@ -414,18 +414,18 @@ View                view;
      }
    /* Creation du Formulaire Ouvrir */
    /* +++++++++++++++++++++++++++++ */
-   TtaNewForm (NumFormOuvrirDoc, 0, 0, 0,
+   TtaNewForm (NumFormOpenDoc, 0, 0, 0,
 	  TtaGetMessage (LIB, OPEN_DOC), TRUE, 2, 'L', D_CANCEL);
    /* zone de saisie des dossiers documents */
    BuildPathDocBuffer (BufDir, '\0', &nbitem);
-   TtaNewSelector (NumZoneDirOuvrirDoc, NumFormOuvrirDoc,
+   TtaNewSelector (NumZoneDirOpenDoc, NumFormOpenDoc,
 		   TtaGetMessage (LIB, DOC_DIR), nbitem, BufDir, 6, NULL, FALSE, TRUE);
    if (NomDirectory[0] == '\0' && nbitem >= 1)
       /* si pas de dossier courant, on initialise avec le premier de BufDir */
      {
 	strcpy (NomDirectory, BufDir);
-	strcpy (NomDocument, BufDir);
-	TtaSetSelector (NumZoneDirOuvrirDoc, 0, NULL);
+	strcpy (DefaultDocumentName, BufDir);
+	TtaSetSelector (NumZoneDirOpenDoc, 0, NULL);
      }
    else if (NomDirectory[0] != '\0')
      {
@@ -433,25 +433,25 @@ View                view;
 	longueur = strlen (nomdoc);
 	nomdoc[longueur] = DIR_SEP;
 	nomdoc[longueur + 1] = '\0';
-	strcpy (NomDocument, nomdoc);
+	strcpy (DefaultDocumentName, nomdoc);
      }
    /* liste des fichiers existants */
-   TtaListDirectory (NomDirectory, NumFormOuvrirDoc, NULL, -1, ".PIV", TtaGetMessage (LIB, FILES), NumSelDoc);
+   TtaListDirectory (NomDirectory, NumFormOpenDoc, NULL, -1, ".PIV", TtaGetMessage (LIB, FILES), NumSelDoc);
    /* zone de saisie du nom du document a ouvrir */
-   TtaNewTextForm (NumZoneNomDocAOuvrir, NumFormOuvrirDoc,
+   TtaNewTextForm (NumZoneDocNameToOpen, NumFormOpenDoc,
 		   TtaGetMessage (LIB, DOCUMENT_NAME), 50, 1, TRUE);
-   TtaSetTextForm (NumZoneNomDocAOuvrir, NomDocument);
+   TtaSetTextForm (NumZoneDocNameToOpen, DefaultDocumentName);
 
    /* Formulaire Classe du document a importer */
    /* ++++++++++++++++++++++++++++++++++++++++ */
-   TtaNewForm (NumFormClasseImport, 0, 0, 0,
+   TtaNewForm (NumFormImportClass, 0, 0, 0,
 	   TtaGetMessage (LIB, IMPORT_DOC_TYPE), FALSE, 1, 'L', D_DONE);
    /* selecteur ou zone de saisie Classe du document a importer */
    nbitem = ConfigMakeImportMenu (BufMenu);
    if (nbitem == 0)
       /* pas d'import defini dans le fichier de langue, */
       /* on cree une simple zone de saisie de texte */
-      TtaNewTextForm (NumSelectClasseImport, NumFormClasseImport,
+      TtaNewTextForm (NumSelectImportClass, NumFormImportClass,
 		    TtaGetMessage (LIB, IMPORT_DOC_TYPE), 30, 1, FALSE);
    else
       /* on cree un selecteur */
@@ -460,11 +460,11 @@ View                view;
 	   longueur = 6;
 	else
 	   longueur = nbitem;
-	TtaNewSelector (NumSelectClasseImport, NumFormClasseImport,
+	TtaNewSelector (NumSelectImportClass, NumFormImportClass,
 			TtaGetMessage (LIB, IMPORT_DOC_TYPE), nbitem, BufMenu, longueur, NULL, TRUE, FALSE);
 	/* initialise le selecteur sur sa premiere entree */
-	TtaSetSelector (NumSelectClasseImport, 0, "");
+	TtaSetSelector (NumSelectImportClass, 0, "");
      }
    TtaSetDialoguePosition ();
-   TtaShowDialogue (NumFormOuvrirDoc, TRUE);
+   TtaShowDialogue (NumFormOpenDoc, TRUE);
 }

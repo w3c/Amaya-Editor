@@ -48,9 +48,9 @@ PtrDocument        *pDoc;
 
    /* cherche un pointeur de descripteur de document libre */
    doc = 0;
-   while (TabDocuments[doc] != NULL && doc < MAX_DOCUMENTS-1)
+   while (LoadedDocument[doc] != NULL && doc < MAX_DOCUMENTS-1)
       doc++;
-   if (TabDocuments[doc] != NULL)
+   if (LoadedDocument[doc] != NULL)
      {
 	TtaDisplaySimpleMessage (INFO, LIB, TOO_MANY_DOCS);
 	*pDoc = NULL;
@@ -58,8 +58,8 @@ PtrDocument        *pDoc;
    else
      {
 	/* acquiert un descripteur de document */
-	GetDocument (&TabDocuments[doc]);
-	*pDoc = TabDocuments[doc];
+	GetDocument (&LoadedDocument[doc]);
+	*pDoc = LoadedDocument[doc];
 	/* initialise le mode d'affichage */
 	documentDisplayMode[doc] = DisplayImmediately;
 	(*pDoc)->DocBackUpInterval = CurSaveInterval;
@@ -2201,7 +2201,7 @@ char               *NomExtension;
    PtrSSchema        pExtSS;
    PtrDocument         pDoc;
 
-   pDoc = TabDocuments[document - 1];
+   pDoc = LoadedDocument[document - 1];
    pExtSS = NULL;
    if (pDoc != NULL && NomExtension != NULL)
      {

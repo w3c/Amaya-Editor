@@ -60,7 +60,7 @@ PtrElement          pEl;
       the associated elements and parameters of those documents */
    for (i = 0; i < MAX_DOCUMENTS; i++)
      {
-	pDoc = TabDocuments[i];
+	pDoc = LoadedDocument[i];
 	if (pDoc != NULL)
 	  {
 	     if (pDoc->DocRootElement == pE)
@@ -3481,7 +3481,7 @@ PtrElement         *pEl;
 			    stop = FALSE;
 			    for (d = 0; d < MAX_DOCUMENTS && !stop; d++)
 			      {
-				 pDoc = TabDocuments[d];
+				 pDoc = LoadedDocument[d];
 				 if (pDoc != NULL)
 				   {
 				      for (n = 1; n <= pDoc->DocNNatures && !stop; n++)

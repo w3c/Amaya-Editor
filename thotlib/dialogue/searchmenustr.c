@@ -158,10 +158,10 @@ PtrDocument         pDoc;
 	     nbitem++;
 	  }
 	/* cree le selecteur des attributs a chercher */
-	TtaNewSelector (NumSelAttributAChercher, NumFormChercheTexte,
+	TtaNewSelector (NumSelAttributeToSearch, NumFormSearchText,
 			TtaGetMessage (LIB, ATTR_TO_SEARCH), nbitem, ListeAttr, 5, NULL, TRUE, FALSE);
 	/* initialise le selecteur (rien n'est selectionne') */
-	TtaSetSelector (NumSelAttributAChercher, -1, "");
+	TtaSetSelector (NumSelAttributeToSearch, -1, "");
      }
 }
 
@@ -216,13 +216,13 @@ static void         ConstruitSelecteurTypes ()
 	}
    /* cree le selecteur des types disponibles */
    if (nbitem == 0)
-      TtaNewSelector (NumSelTypeAChercher, NumFormChercheTexte,
+      TtaNewSelector (NumSelTypeToSearch, NumFormSearchText,
       TtaGetMessage (LIB, TYPE_TO_SEARCH), 1, " ", 5, NULL, TRUE, FALSE);
    else
-      TtaNewSelector (NumSelTypeAChercher, NumFormChercheTexte,
+      TtaNewSelector (NumSelTypeToSearch, NumFormSearchText,
 		      TtaGetMessage (LIB, TYPE_TO_SEARCH), nbitem, ListeTypes, 5, NULL, TRUE, FALSE);
    /* initialise le selecteur (rien n'est selectionne') */
-   TtaSetSelector (NumSelTypeAChercher, -1, "");
+   TtaSetSelector (NumSelTypeToSearch, -1, "");
 }
 
 
@@ -459,7 +459,7 @@ PtrDocument         pDoc;
    if (LgTableNaturesDoc == 1)
       /* une seule nature dans le document, on ne met pas le menu des */
       /* natures */
-      TtaDetachForm (NumMenuChercherNature);
+      TtaDetachForm (NumMenuSearchNature);
    else
      {
 	/* construit le menu des natures */
@@ -486,10 +486,10 @@ PtrDocument         pDoc;
 	       }
 	     nbitem++;
 	  }
-	TtaNewToggleMenu (NumMenuChercherNature, NumFormChercheTexte,
+	TtaNewToggleMenu (NumMenuSearchNature, NumFormSearchText,
 	  TtaGetMessage (LIB, NATURES), nbitem, ListeTypes, NULL, TRUE);
-	TtaSetToggleMenu (NumMenuChercherNature, 0, TRUE);
-	TtaAttachForm (NumMenuChercherNature);
+	TtaSetToggleMenu (NumMenuSearchNature, 0, TRUE);
+	TtaAttachForm (NumMenuSearchNature);
      }
    /* a priori on recherche la nature racine */
    TableNaturesCherchees[0] = TRUE;
@@ -501,27 +501,27 @@ PtrDocument         pDoc;
 void                ConstStrMenuCherche (pDoc)
 {
    /* menu des natures utilisees dans le document */
-   /* NumMenuChercherNature, cree' dynamiquement par cherche.c */
-   TtaNewToggleMenu (NumMenuChercherNature, NumFormChercheTexte,
+   /* NumMenuSearchNature, cree' dynamiquement par cherche.c */
+   TtaNewToggleMenu (NumMenuSearchNature, NumFormSearchText,
 	  TtaGetMessage (LIB, NATURES), 1, TtaGetMessage (LIB, ANY),
 		     NULL, TRUE);
 
    /* selecteur pour la saisie du type de l'element a chercher */
-   /* NumSelTypeAChercher, cree' dynamiquement par cherche.c */
-   TtaNewSelector (NumSelTypeAChercher, NumFormChercheTexte,
+   /* NumSelTypeToSearch, cree' dynamiquement par cherche.c */
+   TtaNewSelector (NumSelTypeToSearch, NumFormSearchText,
 		   TtaGetMessage (LIB, TYPE_TO_SEARCH), 1,
 		   TtaGetMessage (LIB, ANY), 5, NULL, TRUE, FALSE);
 
    /* selecteur de choix de l'attribut a chercher */
-   /* NumSelAttributAChercher, cree' dynamiquement par ChercherAttribut */
-   TtaNewSelector (NumSelAttributAChercher, NumFormChercheTexte,
+   /* NumSelAttributeToSearch, cree' dynamiquement par ChercherAttribut */
+   TtaNewSelector (NumSelAttributeToSearch, NumFormSearchText,
 		   TtaGetMessage (LIB, ATTR_TO_SEARCH), 1,
 		   TtaGetMessage (LIB, ANY), 5, NULL, TRUE, FALSE);
 
    /* label indiquant la valeur de l'attribut trouve' */
-   TtaNewLabel (NumLabelValeurAttribut, NumFormChercheTexte, " ");
+   TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, " ");
    /* annule le label donnant la valeur de l'attribut trouve' */
-   TtaNewLabel (NumLabelValeurAttribut, NumFormChercheTexte, " ");
+   TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, " ");
    NomTypeAChercher[0] = '\0';
    /* construit le menu des natures utilisees dans le document */
    InitMenuNatures ((PtrDocument) pDoc);
@@ -535,10 +535,10 @@ void                ConstStrMenuCherche (pDoc)
    if (NbEntreesTableAttr < 1)
       /* pas d'attributs declare's dans les schemas de structure */
       /* utilise's par le document, on detache le selecteur */
-      TtaDetachForm (NumSelAttributAChercher);
+      TtaDetachForm (NumSelAttributeToSearch);
    else
       /* il y a des attributs declares, on attache le selecteur */
-      TtaAttachForm (NumSelAttributAChercher);
+      TtaAttachForm (NumSelAttributeToSearch);
 }
 
 
@@ -701,18 +701,18 @@ PtrSearchContext           DomaineCherche;
 {
    switch (ref)
 	 {
-	    case NumMenuChercherNature:
+	    case NumMenuSearchNature:
 	       /* toggle menu des natures a chercher */
 	       TableNaturesCherchees[val] = !TableNaturesCherchees[val];
 	       /* l'utilisateur demande a changer les natures */
 	       ConstruitSelecteurTypes ();
 	       ConstruitSelecteurAttributs (DomaineCherche->SDocument);
 	       break;
-	    case NumSelTypeAChercher:
+	    case NumSelTypeToSearch:
 	       /* selecteur de saisie du type de l'element a chercher */
 	       strncpy (NomTypeAChercher, txt, MAX_NAME_LENGTH - 1);
 	       break;
-	    case NumSelAttributAChercher:
+	    case NumSelAttributeToSearch:
 	       /* selecteur de choix de l'attribut a chercher */
 	       strncpy (NomAttrAChercher, txt, MAX_NAME_LENGTH - 1);
 	       break;
@@ -740,7 +740,7 @@ PtrSearchContext           DomaineCherche;
 
 
    /* annule le label donnant la valeur de l'attribut trouve' */
-   TtaNewLabel (NumLabelValeurAttribut, NumFormChercheTexte, " ");
+   TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, " ");
    for (i = 1; i <= LgTableNaturesDoc; i++)
       TableNaturesCherchees[i - 1] = FALSE;
    /* cherche le nom de type dans le schema de structure */
@@ -752,8 +752,8 @@ PtrSearchContext           DomaineCherche;
 	if (NumTypeCherche == 0)
 	  {
 	     /* message 'Type inconnu' dans la feuille de saisie */
-	     TtaNewLabel (NumLabelValeurAttribut,
-			  NumFormChercheTexte,
+	     TtaNewLabel (NumLabelAttributeValue,
+			  NumFormSearchText,
 			  TtaGetMessage (LIB, UNKNOWN_TYPE));
 	     NomTypeAChercher[0] = '\0';
 	     *erreur = TRUE;
@@ -788,8 +788,8 @@ PtrSearchContext           DomaineCherche;
 	   if (!trouve)
 	     {
 		/* message 'TtAttribute inconnu' dans la feuille */
-		TtaNewLabel (NumLabelValeurAttribut,
-			     NumFormChercheTexte,
+		TtaNewLabel (NumLabelAttributeValue,
+			     NumFormSearchText,
 			     TtaGetMessage (LIB, UNKNOWN_ATTR));
 		NomAttrAChercher[0] = '\0';
 		*erreur = TRUE;
@@ -947,8 +947,8 @@ void                ChercheResValAttr ()
 					  LabelBuffer + lg, &lg1);
 		    break;
 	      }
-	TtaNewLabel (NumLabelValeurAttribut,
-		     NumFormChercheTexte, LabelBuffer);
+	TtaNewLabel (NumLabelAttributeValue,
+		     NumFormSearchText, LabelBuffer);
      }
 }
 

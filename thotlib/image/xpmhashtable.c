@@ -176,7 +176,7 @@ xpmHashTable       *table;
    t = atomTable;
    HASH_TABLE_GROWS
       table->size = size;
-   table->limit = size / 3;
+   table->CHKR_LIMIT = size / 3;
    atomTable = (xpmHashAtom *) XpmMalloc (size * sizeof (*atomTable));
    if (!atomTable)
       return (XpmNoMemory);
@@ -220,7 +220,7 @@ void               *data;
 	/* undefined, make a new atom with the given data */
 	if (!(*slot = AtomMake (tag, data)))
 	   return (XpmNoMemory);
-	if (table->used >= table->limit)
+	if (table->used >= table->CHKR_LIMIT)
 	  {
 	     int                 ErrorStatus;
 
@@ -254,7 +254,7 @@ xpmHashTable       *table;
    xpmHashAtom        *atomTable;
 
    table->size = INITIAL_HASH_SIZE;
-   table->limit = table->size / 3;
+   table->CHKR_LIMIT = table->size / 3;
    table->used = 0;
    atomTable = (xpmHashAtom *) XpmMalloc (table->size * sizeof (*atomTable));
    if (!atomTable)

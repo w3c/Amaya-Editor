@@ -1174,9 +1174,9 @@ PtrDocument         pDoc;
 		   /* le buffer de Copier-Couper-Coller */
 		   nObjects = pSRule->SrSSchemaNat->SsNObjects;
 #ifndef NODISPLAY
-		   if (ElemSauve != NULL)
+		   if (FirstSavedElement != NULL)
 		     {
-			pSaved = ElemSauve->PeElement;
+			pSaved = FirstSavedElement->PeElement;
 			do
 			  {
 			     if (pSaved->ElSructSchema == pSRule->SrSSchemaNat
@@ -1822,7 +1822,7 @@ PtrDocument         pDoc;
 	pFirstRefD = NULL;
 	/* Charge le fichier .EXT du document externe */
 	/* demande d'abord dans quel directory se trouve le fichier .PIV */
-	strncpy (directoryName, DirectoryDoc, MAX_PATH);
+	strncpy (directoryName, DocumentPath, MAX_PATH);
 	BuildFileName (extDocIdent, "PIV", directoryName, fileName, &i);
 	/* cherche le fichier .EXT dans le meme directory */
 	DoFileName (extDocIdent, "EXT", directoryName, fileName, &i);
@@ -2145,7 +2145,7 @@ PtrDocument         pDoc;
 		       CopyIdentDoc (&pFile->RcDocIdent, pExtDoc->EdDocIdent);
 		       /* demande d'abord dans quel directory se trouve le */
 		       /* fichier .PIV de ce document */
-		       strncpy (directoryName, DirectoryDoc, MAX_PATH);
+		       strncpy (directoryName, DocumentPath, MAX_PATH);
 		       BuildFileName (pFile->RcDocIdent, "PIV", directoryName, fileName, &i);
 		       /* cherche le fichier .REF dans le meme directory */
 		       DoFileName (pFile->RcDocIdent, "REF", directoryName, fileName, &i);
@@ -2368,7 +2368,7 @@ boolean             copyDoc;
 		  pFirstRefD = NULL;
 		  /* demande d'abord dans quel directory se trouve le */
 		  /* fichier .PIV */
-		  strncpy (directoryName, DirectoryDoc, MAX_PATH);
+		  strncpy (directoryName, DocumentPath, MAX_PATH);
 		  BuildFileName (pRefD->ReExtDocument, "PIV", directoryName,
 				 fileName, &i);
 		  /* cherche le fichier .EXT dans le meme directory */
@@ -2506,7 +2506,7 @@ Name                 newName;
 		       CopyIdentDoc (&pFile->RcDocIdent, pExtDoc->EdDocIdent);
 		       /* demande dans quel directory se trouve le fichier */
 		       /* .PIV de ce document */
-		       strncpy (directoryName, DirectoryDoc, MAX_PATH);
+		       strncpy (directoryName, DocumentPath, MAX_PATH);
 		       BuildFileName (pFile->RcDocIdent, "PIV", directoryName, fileName, &i);
 		       /* cherche le fichier .REF dans le meme directory */
 		       DoFileName (pFile->RcDocIdent, "REF", directoryName, pFile->RcFileName, &i);

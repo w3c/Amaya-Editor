@@ -1684,7 +1684,7 @@ int                 frame;
 				 || pAb->AbBox->BxType == BoGhost)
 			  {
 			     if (Propage == ToAll)
-				EnglLigne (pBox, frame, pAb);
+				EncloseInLine (pBox, frame, pAb);
 			  }
 		     /* Verifie l'englobement des boites de la hierarchie voisine */
 		     /* sauf si l'englobement des boites doit etre differe        */
@@ -1939,7 +1939,7 @@ int                 frame;
 		   /* ou elle est a l'interieur d'une boite hors-structure */
 		   /* ou elle n'herite pas de la taille de son contenu */
 		   if (pBox->BxType == BoBlock)
-		      ReevalBloc (pavebox, pBox->BxFirstLine, pSourceBox, frame);
+		      RecomputeLines (pavebox, pBox->BxFirstLine, pSourceBox, frame);
 		   else
 		     {
 			pAb = pavebox->AbFirstEnclosed;
@@ -2535,7 +2535,7 @@ int                 frame;
 		       {
 			  if (pAb->AbInLine)
 			     /* Inclusion dans un bloc de ligne */
-			     EnglLigne (pBox, frame, pAb);
+			     EncloseInLine (pBox, frame, pAb);
 			  /* Si l'englobement n'est pas prevu en fin de traitement */
 			  else if (pAb->AbBox != Englobement
 				 && !IsParentBox (pAb->AbBox, Englobement))
@@ -3054,7 +3054,7 @@ int                 frame;
 		 && pChildAb->AbWidth.DimAbRef != pAb)
 	       {
 		  /* Recherche la boite dont elle depend */
-		  box2 = BoiteHInclus (box1, NULL);
+		  box2 = GetHPosRelativePos (box1, NULL);
 		  if (box2 != NULL)
 		     if (box2->BxAbstractBox != NULL)
 		       {
@@ -3125,7 +3125,7 @@ int                 frame;
 
 		     /* Est-ce une boite mobile a deplacer ? */
 		     /* Recherche la boite dont elle depend */
-		     box2 = BoiteHInclus (box1, NULL);
+		     box2 = GetHPosRelativePos (box1, NULL);
 		     if (box2 != NULL)
 			if (box2->BxAbstractBox != NULL)
 			   if (box2->BxAbstractBox->AbHorizPos.PosAbRef == NULL)
@@ -3276,7 +3276,7 @@ int                 frame;
 		 && pChildAb->AbHeight.DimAbRef != pAb)
 	       {
 		  /* Recherche la boite dont elle depend */
-		  box2 = BoiteVInclus (box1, NULL);
+		  box2 = GetVPosRelativeBox (box1, NULL);
 		  if (box2 != NULL)
 		     if (box2->BxAbstractBox != NULL)
 		       {
@@ -3346,7 +3346,7 @@ int                 frame;
 		  {
 		     /* Est-ce une boite mobile a deplacer ? */
 		     /* Recherche la boite dont elle depend */
-		     box2 = BoiteVInclus (box1, NULL);
+		     box2 = GetVPosRelativeBox (box1, NULL);
 		     if (box2 != NULL)
 			if (box2->BxAbstractBox != NULL)
 			   if (box2->BxAbstractBox->AbVertPos.PosAbRef == NULL)
@@ -3410,13 +3410,13 @@ int                 frame;
 		   DepYContenu (pBo1, -pBo1->BxYOrg, frame);
 	     }
 	   else if (pAb->AbEnclosing->AbInLine)
-	      EnglLigne (pBo1, frame, pAb->AbEnclosing);
+	      EncloseInLine (pBo1, frame, pAb->AbEnclosing);
 	   else if (pAb->AbEnclosing->AbBox->BxType == BoGhost)
 	     {
 		/* Il faut remonter au pave de mise en lignes */
 		while (pAb->AbEnclosing->AbBox->BxType == BoGhost)
 		   pAb = pAb->AbEnclosing;
-		EnglLigne (pBo1, frame, pAb->AbEnclosing);
+		EncloseInLine (pBo1, frame, pAb->AbEnclosing);
 	     }
 	   else
 	      Engloby (pAb->AbEnclosing, pSourceBox, frame);

@@ -607,7 +607,7 @@ View                view;
      }
 #endif /* NEW_WILLOWS */
 
-   pDoc = TabDocuments[document - 1];
+   pDoc = LoadedDocument[document - 1];
    /* demande quelle est la selection courante */
    selok = SelEditeur (&SelDoc, &PremSel, &DerSel, &premcar, &dercar);
    if (!selok)

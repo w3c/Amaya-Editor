@@ -463,10 +463,10 @@ boolean             withAppEvent;
 				    CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 				 /* modifie la selection si l'element retire' constitue l'une */
 				 /* des extremites de cette selection */
-				 if (pEl2 == SelPremier)
-				    SelPremier = pEl;
-				 if (pEl2 == SelDernier)
-				    SelDernier = pEl;
+				 if (pEl2 == FirstSelectedElement)
+				    FirstSelectedElement = pEl;
+				 if (pEl2 == LastSelectedElement)
+				    LastSelectedElement = pEl;
 			      }
 			 }
      }

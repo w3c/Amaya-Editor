@@ -1120,7 +1120,7 @@ PtrSSchema        SS;
    pSchT = NULL;
    /* compose le nom du fichier a ouvrir avec le nom du directory */
    /* des schemas... */
-   strncpy (DirBuffer, (char *) DirectorySchemas, MAX_PATH);
+   strncpy (DirBuffer, (char *) SchemaPath, MAX_PATH);
    BuildFileName (fname, "TRA", DirBuffer, texte, &i);
 
    /* ouvre le fichier */

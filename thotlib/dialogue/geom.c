@@ -252,7 +252,7 @@ PtrTextBuffer      Bbuffer;
 	     newy += y;
 	     if (newx < x || newx > x + width || newy < y || newy > y + height)
 	       {
-		  /* limit to size of the box */
+		  /* CHKR_LIMIT to size of the box */
 		  if (newx < x)
 		     newx = x + FrameTable[frame].FrLeftMargin;		/* nouvelle position en X valide */
 		  else if (newx > x + width)
@@ -290,7 +290,7 @@ PtrTextBuffer      Bbuffer;
 	     /* coordinate checking */
 	     newx = x + ALIGNE ((int) event.xmotion.x - FrameTable[frame].FrLeftMargin - x);
 	     newy = y + ALIGNE ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - y);
-	     /* limit to size of the box */
+	     /* CHKR_LIMIT to size of the box */
 	     if (newx < x)
 		lastx = x + FrameTable[frame].FrLeftMargin;	/* nouvelle position en X valide */
 	     else if (newx > x + width)
@@ -625,7 +625,7 @@ boolean             close;
 	     newy += y;
 	     if (newx < x || newx > x + width || newy < y || newy > y + height)
 	       {
-		  /* limit them to the box area */
+		  /* CHKR_LIMIT them to the box area */
 		  if (newx < x)
 		     newx = x + FrameTable[frame].FrLeftMargin;
 		  else if (newx > x + width)
@@ -673,7 +673,7 @@ boolean             close;
 	     /* check the coordinates */
 	     newx = x + ALIGNE ((int) event.xmotion.x - FrameTable[frame].FrLeftMargin - x);
 	     newy = y + ALIGNE ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - y);
-	     /* limit them to the box area */
+	     /* CHKR_LIMIT them to the box area */
 	     if (newx < x)
 	       {
 		  newx = x + FrameTable[frame].FrLeftMargin;
@@ -1046,7 +1046,7 @@ int                 DimY;
 			 dx = *width;
 		      }
 
-		    /* Top or bottom limit to modify */
+		    /* Top or bottom CHKR_LIMIT to modify */
 		    if (dy != 0)
 		       if (BottomOrTop > 0)	/* bottom */
 			 {

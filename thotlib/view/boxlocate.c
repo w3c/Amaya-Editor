@@ -57,22 +57,22 @@ extern boolean      AfFinFenetre ();
 #endif /* __STDC__ */
 
 /* ---------------------------------------------------------------------- */
-/* |    ecrete rend 0 si val dans l'intervalle [-limit,+limit] et sinon | */
-/* |            abs(val)-limit. Avec limit = 0, donne la valeur absolue.| */
+/* |    ecrete rend 0 si val dans l'intervalle [-CHKR_LIMIT,+CHKR_LIMIT] et sinon | */
+/* |            abs(val)-CHKR_LIMIT. Avec CHKR_LIMIT = 0, donne la valeur absolue.| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static int          ecrete (int val, int limit)
+static int          ecrete (int val, int CHKR_LIMIT)
 #else  /* __STDC__ */
-static int          ecrete (val, limit)
+static int          ecrete (val, CHKR_LIMIT)
 int                 val;
-int                 limit;
+int                 CHKR_LIMIT;
 
 #endif /* __STDC__ */
 {
-   if (val > limit)
-      return (val - limit);
-   else if (val < -limit)
-      return (-val - limit);
+   if (val > CHKR_LIMIT)
+      return (val - CHKR_LIMIT);
+   else if (val < -CHKR_LIMIT)
+      return (-val - CHKR_LIMIT);
    else
       return (0);
 }

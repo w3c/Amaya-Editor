@@ -50,7 +50,7 @@ extern void         TtaSaveAppRegistry ();
 #endif /* __STDC__ */
 
 /* ---------------------------------------------------------------------- */
-/* |    ReadEnv lit la variable THOTSCH dans DirectorySchemas.          | */
+/* |    ReadEnv lit la variable THOTSCH dans SchemaPath.          | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -67,10 +67,10 @@ static void         ReadEnv ()
    pT = (char *) TtaGetEnvString ("THOTSCH");
    if (pT == NULL)
       /* la variable d'environnement THOTSCH n'existe pas */
-      DirectorySchemas[0] = '\0';
+      SchemaPath[0] = '\0';
    else
       /* on copie la valeur de la variable THOTSCH */
-      strncpy (DirectorySchemas, pT, MAX_TXT_LEN);
+      strncpy (SchemaPath, pT, MAX_TXT_LEN);
 }
 
 

@@ -670,12 +670,12 @@ FILE               *fileDescriptor;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
      {
-	pDoc = TabDocuments[document - 1];
+	pDoc = LoadedDocument[document - 1];
 	if (view < 100)
 	   /* vue de l'arbre principal */
 	   if (view < 1 || view > MAX_VIEW_DOC)

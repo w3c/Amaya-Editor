@@ -49,7 +49,7 @@ typedef struct _RefList
 RefList;
 
 int                 LineNum;	/* compteur de lignes */
-static RefList      identRef[nbident];	/* table des references des identificateurs */
+static RefList      identRef[MAX_IDENTIFIERS];	/* table des references des identificateurs */
 static RefList      kwRef[MAX_STRING_GRM];	/* table des references des mots-cles */
 static int          Nstrings;	/* longueur effective de la table */
 static SrcIdentDesc    strng[MAX_STRING_GRM];		/* table des chaines */
@@ -93,7 +93,7 @@ static void         InitRefTables ()
 {
    int                 j;
 
-   for (j = 0; j < nbident; j++)
+   for (j = 0; j < MAX_IDENTIFIERS; j++)
       identRef[j].NRuleRefs = 0;
    for (j = 0; j < MAX_STRING_GRM; j++)
       kwRef[j].NRuleRefs = 0;
@@ -141,7 +141,7 @@ indLine               wi;
 #endif /* __STDC__ */
 
 {
-   if (curIndx >= maxlgrule)
+   if (curIndx >= RULE_LENGTH)
       CompilerError (wi, GRM, FATAL, INVALID_RULE_SIZE, inputLine, LineNum);
    else
       SyntRule[curRule - 1][curIndx++] = code;
@@ -232,7 +232,7 @@ int                 rank;
 		 NSyntRules = curRule;
 	      else
 		 CompilerError (wi, GRM, FATAL, NO_SPACE_LEFT_IN_RULES_TABLE, inputLine, LineNum);
-	   identtable[rank - 1].SrcIdentDefRule = rank;
+	   Identifier[rank - 1].SrcIdentDefRule = rank;
 	}
       else
 	{
@@ -241,7 +241,7 @@ int                 rank;
 	      CompilerError (wi, GRM, FATAL, NO_SPACE_LEFT_IN_RULES_TABLE, inputLine, LineNum);
 	   else
 	      PutToken (rank, wi);
-	   identtable[rank - 1].SrcIdentRefRule = rank;
+	   Identifier[rank - 1].SrcIdentRefRule = rank;
 	   AddRefToTable (&identRef[rank - 1], wi);
 	}
    else if (code == 3003)
@@ -249,7 +249,7 @@ int                 rank;
      {
 	i = 0;
 	known = False;
-	if (wl - 1 > identlen)
+	if (wl - 1 > IDENTIFIER_LENGTH)
 	   CompilerError (wi, GRM, FATAL, INVALID_STRING_SIZE, inputLine, LineNum);
 	/* est-elle deja dans la table ? */
 	else
@@ -317,98 +317,98 @@ static void         InitGrammar ()
 #endif				/* __STDC__ */
 
 {
-   kwtable[0].SrcKeywordLen = 1;
-   kwtable[0].SrcKeyword[0] = '=';
-   kwtable[0].SrcKeywordCode = 1001;
-   kwtable[1].SrcKeywordLen = 1;
-   kwtable[1].SrcKeyword[0] = '.';
-   kwtable[1].SrcKeywordCode = 1002;
-   kwtable[2].SrcKeywordLen = 1;
-   kwtable[2].SrcKeyword[0] = '/';
-   kwtable[2].SrcKeywordCode = 1003;
-   kwtable[3].SrcKeywordLen = 1;
-   kwtable[3].SrcKeyword[0] = '[';
-   kwtable[3].SrcKeywordCode = 1004;
-   kwtable[4].SrcKeywordLen = 1;
-   kwtable[4].SrcKeyword[0] = ']';
-   kwtable[4].SrcKeywordCode = 1005;
-   kwtable[5].SrcKeywordLen = 1;
-   kwtable[5].SrcKeyword[0] = '<';
-   kwtable[5].SrcKeywordCode = 1006;
-   kwtable[6].SrcKeywordLen = 1;
-   kwtable[6].SrcKeyword[0] = '>';
-   kwtable[6].SrcKeywordCode = 1007;
-   lastshortkw = 7;
-   strncpy (kwtable[7].SrcKeyword, "END", kwlen);
-   kwtable[7].SrcKeywordLen = strlen(kwtable[7].SrcKeyword);
-   kwtable[7].SrcKeywordCode = 1101;
-   strncpy (kwtable[8].SrcKeyword, "NAME", kwlen);
-   kwtable[8].SrcKeywordLen = strlen(kwtable[8].SrcKeyword);
-   kwtable[8].SrcKeywordCode = 1102;
-   strncpy (kwtable[9].SrcKeyword, "STRING", kwlen);
-   kwtable[9].SrcKeywordLen = strlen(kwtable[9].SrcKeyword);
-   kwtable[9].SrcKeywordCode = 1103;
-   strncpy (kwtable[10].SrcKeyword, "NUMBER", kwlen);
-   kwtable[10].SrcKeywordLen = strlen(kwtable[10].SrcKeyword);
-   kwtable[10].SrcKeywordCode = 1104;
-   lgkwtable = 11;
-   ruletable[0][1] = 2;
-   ruletable[0][2] = 2004;
-   ruletable[0][3] = 2;
-   ruletable[0][4] = 2005;
-   ruletable[0][5] = 1101;
-   ruletable[0][6] = 2000;
-   ruletable[1][1] = 3;
-   ruletable[1][2] = 1001;
-   ruletable[1][3] = 4;
-   ruletable[1][4] = 1002;
-   ruletable[1][5] = 2000;
-   ruletable[2][1] = 3001;
-   ruletable[2][2] = 2000;
-   ruletable[3][1] = 5;
-   ruletable[3][2] = 2003;
-   ruletable[3][3] = 6;
-   ruletable[3][4] = 2000;
-   ruletable[4][1] = 1102;
-   ruletable[4][2] = 2003;
-   ruletable[4][3] = 1103;
-   ruletable[4][4] = 2003;
-   ruletable[4][5] = 1104;
-   ruletable[4][6] = 2000;
-   ruletable[5][1] = 7;
-   ruletable[5][2] = 2004;
-   ruletable[5][3] = 1003;
-   ruletable[5][4] = 7;
-   ruletable[5][5] = 2005;
-   ruletable[5][6] = 2000;
-   ruletable[6][1] = 8;
-   ruletable[6][2] = 2004;
-   ruletable[6][3] = 8;
-   ruletable[6][4] = 2005;
-   ruletable[6][5] = 2000;
-   ruletable[7][1] = 9;
-   ruletable[7][2] = 2003;
-   ruletable[7][3] = 1004;
-   ruletable[7][4] = 9;
-   ruletable[7][5] = 2004;
-   ruletable[7][6] = 9;
-   ruletable[7][7] = 2005;
-   ruletable[7][8] = 1005;
-   ruletable[7][9] = 2003;
-   ruletable[7][10] = 1006;
-   ruletable[7][11] = 9;
-   ruletable[7][12] = 2004;
-   ruletable[7][13] = 9;
-   ruletable[7][14] = 2005;
-   ruletable[7][15] = 1007;
-   ruletable[7][16] = 2000;
-   ruletable[8][1] = 3;
-   ruletable[8][2] = 2003;
-   ruletable[8][3] = 10;
-   ruletable[8][4] = 2000;
-   ruletable[9][1] = 3003;
-   ruletable[9][2] = 2000;
-   lgruletable = 10;
+   Keywords[0].SrcKeywordLen = 1;
+   Keywords[0].SrcKeyword[0] = '=';
+   Keywords[0].SrcKeywordCode = 1001;
+   Keywords[1].SrcKeywordLen = 1;
+   Keywords[1].SrcKeyword[0] = '.';
+   Keywords[1].SrcKeywordCode = 1002;
+   Keywords[2].SrcKeywordLen = 1;
+   Keywords[2].SrcKeyword[0] = '/';
+   Keywords[2].SrcKeywordCode = 1003;
+   Keywords[3].SrcKeywordLen = 1;
+   Keywords[3].SrcKeyword[0] = '[';
+   Keywords[3].SrcKeywordCode = 1004;
+   Keywords[4].SrcKeywordLen = 1;
+   Keywords[4].SrcKeyword[0] = ']';
+   Keywords[4].SrcKeywordCode = 1005;
+   Keywords[5].SrcKeywordLen = 1;
+   Keywords[5].SrcKeyword[0] = '<';
+   Keywords[5].SrcKeywordCode = 1006;
+   Keywords[6].SrcKeywordLen = 1;
+   Keywords[6].SrcKeyword[0] = '>';
+   Keywords[6].SrcKeywordCode = 1007;
+   LastShortKeyword = 7;
+   strncpy (Keywords[7].SrcKeyword, "END", KEWWORD_LENGTH);
+   Keywords[7].SrcKeywordLen = strlen(Keywords[7].SrcKeyword);
+   Keywords[7].SrcKeywordCode = 1101;
+   strncpy (Keywords[8].SrcKeyword, "NAME", KEWWORD_LENGTH);
+   Keywords[8].SrcKeywordLen = strlen(Keywords[8].SrcKeyword);
+   Keywords[8].SrcKeywordCode = 1102;
+   strncpy (Keywords[9].SrcKeyword, "STRING", KEWWORD_LENGTH);
+   Keywords[9].SrcKeywordLen = strlen(Keywords[9].SrcKeyword);
+   Keywords[9].SrcKeywordCode = 1103;
+   strncpy (Keywords[10].SrcKeyword, "NUMBER", KEWWORD_LENGTH);
+   Keywords[10].SrcKeywordLen = strlen(Keywords[10].SrcKeyword);
+   Keywords[10].SrcKeywordCode = 1104;
+   NKeywords = 11;
+   GramRule[0][1] = 2;
+   GramRule[0][2] = 2004;
+   GramRule[0][3] = 2;
+   GramRule[0][4] = 2005;
+   GramRule[0][5] = 1101;
+   GramRule[0][6] = 2000;
+   GramRule[1][1] = 3;
+   GramRule[1][2] = 1001;
+   GramRule[1][3] = 4;
+   GramRule[1][4] = 1002;
+   GramRule[1][5] = 2000;
+   GramRule[2][1] = 3001;
+   GramRule[2][2] = 2000;
+   GramRule[3][1] = 5;
+   GramRule[3][2] = 2003;
+   GramRule[3][3] = 6;
+   GramRule[3][4] = 2000;
+   GramRule[4][1] = 1102;
+   GramRule[4][2] = 2003;
+   GramRule[4][3] = 1103;
+   GramRule[4][4] = 2003;
+   GramRule[4][5] = 1104;
+   GramRule[4][6] = 2000;
+   GramRule[5][1] = 7;
+   GramRule[5][2] = 2004;
+   GramRule[5][3] = 1003;
+   GramRule[5][4] = 7;
+   GramRule[5][5] = 2005;
+   GramRule[5][6] = 2000;
+   GramRule[6][1] = 8;
+   GramRule[6][2] = 2004;
+   GramRule[6][3] = 8;
+   GramRule[6][4] = 2005;
+   GramRule[6][5] = 2000;
+   GramRule[7][1] = 9;
+   GramRule[7][2] = 2003;
+   GramRule[7][3] = 1004;
+   GramRule[7][4] = 9;
+   GramRule[7][5] = 2004;
+   GramRule[7][6] = 9;
+   GramRule[7][7] = 2005;
+   GramRule[7][8] = 1005;
+   GramRule[7][9] = 2003;
+   GramRule[7][10] = 1006;
+   GramRule[7][11] = 9;
+   GramRule[7][12] = 2004;
+   GramRule[7][13] = 9;
+   GramRule[7][14] = 2005;
+   GramRule[7][15] = 1007;
+   GramRule[7][16] = 2000;
+   GramRule[8][1] = 3;
+   GramRule[8][2] = 2003;
+   GramRule[8][3] = 10;
+   GramRule[8][4] = 2000;
+   GramRule[9][1] = 3003;
+   GramRule[9][2] = 2000;
+   NGramRules = 10;
 }
 
 
@@ -540,20 +540,20 @@ static void         WriteFiles ()
 
 	/* cherche la longueur du plus long des symboles */
 	maxIdent = 0;
-	for (ic = 0; ic < lgidenttable; ic++)
-	   if (identtable[ic].SrcIdentLen > maxIdent)
-	      maxIdent = identtable[ic].SrcIdentLen;
+	for (ic = 0; ic < NIdentifiers; ic++)
+	   if (Identifier[ic].SrcIdentLen > maxIdent)
+	      maxIdent = Identifier[ic].SrcIdentLen;
 	/* ecrit les symboles et leurs references */
-	for (ic = 0; ic < lgidenttable; ic++)
+	for (ic = 0; ic < NIdentifiers; ic++)
 	  {
-	     fprintf (Hfile, "#define RULE_%s \t%4d\n", identtable[ic].SrcIdentifier, ic + 1);
+	     fprintf (Hfile, "#define RULE_%s \t%4d\n", Identifier[ic].SrcIdentifier, ic + 1);
 	     fprintf (listFile, " %4d  ", ic + 1);
-	     for (l = 0; l < identtable[ic].SrcIdentLen; l++)
-		if (identtable[ic].SrcIdentifier[l] < ' ')
+	     for (l = 0; l < Identifier[ic].SrcIdentLen; l++)
+		if (Identifier[ic].SrcIdentifier[l] < ' ')
 		   fprintf (listFile, "*");
 		else
-		   putc (identtable[ic].SrcIdentifier[l], listFile);
-	     for (j = identtable[ic].SrcIdentLen; j < maxIdent; j++)
+		   putc (Identifier[ic].SrcIdentifier[l], listFile);
+	     for (j = Identifier[ic].SrcIdentLen; j < maxIdent; j++)
 		fprintf (listFile, " ");
 	     lineLength = maxIdent + 7;
 	     for (j = 0; j < identRef[ic].NRuleRefs; j++)
@@ -729,17 +729,17 @@ static boolean      CheckDefAndRef ()
    boolean             ok;
 
    ok = True;
-   for (ic = 0; ic < lgidenttable; ic++)
+   for (ic = 0; ic < NIdentifiers; ic++)
      {
-	if (identtable[ic].SrcIdentDefRule == 0)
+	if (Identifier[ic].SrcIdentDefRule == 0)
 	  {
-	     TtaDisplayMessage (FATAL, TtaGetMessage(GRM, UNDEFINED_SYMBOL), identtable[ic].SrcIdentifier);
+	     TtaDisplayMessage (FATAL, TtaGetMessage(GRM, UNDEFINED_SYMBOL), Identifier[ic].SrcIdentifier);
 	     ok = False;
 	  }
-	if (identtable[ic].SrcIdentRefRule == 0)
+	if (Identifier[ic].SrcIdentRefRule == 0)
 	   if (ic > 0)
 	     {
-		TtaDisplayMessage (FATAL, TtaGetMessage(GRM, UNREFERENCED_SYMBOL), identtable[ic].SrcIdentifier);
+		TtaDisplayMessage (FATAL, TtaGetMessage(GRM, UNREFERENCED_SYMBOL), Identifier[ic].SrcIdentifier);
 		ok = False;
 	     }
      }
@@ -772,7 +772,7 @@ char              **argv;
    SyntRuleNum                 r;	/* numero de regle */
    SyntRuleNum                 pr;	/* numero de la regle precedente */
    SyntacticCode             code;	/* code grammatical du mot trouve */
-   int                 rank;	/* indice dans identtable du mot trouve, si
+   int                 rank;	/* indice dans Identifier du mot trouve, si
 				   identificateur */
 
    TtaInitializeAppRegistry (argv[0]);
@@ -796,7 +796,7 @@ char              **argv;
 	     infile = fopen (fileName, "r");
 	     error = False;
 	     InitGrammar ();
-	     lgidenttable = 0;	/* table des identificateurs vide */
+	     NIdentifiers = 0;	/* table des identificateurs vide */
 	     Nstrings = 0;	/* table des chaines vide */
 	     NSyntRules = 0;	/* table des  regles vide */
 	     curIndx = 0;
@@ -826,11 +826,11 @@ char              **argv;
 		  i = 0;
 		  do
 		     fileOK = BIOreadByte (infile, &inputLine[i++]);
-		  while (i < linelen && inputLine[i - 1] != '\n' && fileOK);
+		  while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
 		  /* marque la fin reelle de la ligne */
 		  inputLine[i - 1] = '\0';
 		  /* garde une copie de la ligne avant traduction */
-		  strncpy (sourceLine, inputLine, linelen);
+		  strncpy (sourceLine, inputLine, LINE_LENGTH);
 		  LineNum++;
 		  /* traduit les caracteres de la ligne */
 		  OctalToChar ();

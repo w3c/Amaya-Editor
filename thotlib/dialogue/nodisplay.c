@@ -213,17 +213,17 @@ PtrDocument        *pDoc;
       /* cherche dans la table le descripteur de document a liberer */
      {
 	d = 1;
-	while (TabDocuments[d - 1] != *pDoc && d < MAX_DOCUMENTS)
+	while (LoadedDocument[d - 1] != *pDoc && d < MAX_DOCUMENTS)
 	   d++;
-	if (TabDocuments[d - 1] == *pDoc)
+	if (LoadedDocument[d - 1] == *pDoc)
 	   /* supprime la selection dans ce document */
 	  {
 	     /* liberer tout l'arbre interne */
 	     DeleteAllTrees (*pDoc);
 	     /* liberer les schemas : document, natures, presentations */
 	     LibSchemas (*pDoc);
-	     FreeDocument (TabDocuments[d - 1]);
-	     TabDocuments[d - 1] = NULL;
+	     FreeDocument (LoadedDocument[d - 1]);
+	     LoadedDocument[d - 1] = NULL;
 	     *pDoc = NULL;
 	  }
      }

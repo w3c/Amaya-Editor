@@ -197,11 +197,11 @@ char               *vuesaimprimer;
    initImpression (user_orientation, thotdir, tempdir, dir, nom, realname, imprimante, pid, FrRef[0], thotsch, thotdoc, "PRINT");
    if (imprimante[0] != '\0')
       sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s \"%s\" %s %d %d %d %s %d %d %d %d %d %ld Imprimer &\n",
-	       DirectoryBinaries, nom, tempdir, repaginer, pagedeb, pagefin, vuesaimprimer, realname, imprimante, page_size, nbex,
+	       BinariesDirectory, nom, tempdir, repaginer, pagedeb, pagefin, vuesaimprimer, realname, imprimante, page_size, nbex,
 	       decalage_h, decalage_v, orientation, reduction, nb_ppf, suptrame, alimmanuelle, noiretblanc, FrRef[0]);
    else
       sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %s %d %d %d %s %d %d %d %d %d %ld Imprimer &\n",
-	       DirectoryBinaries, nom, tempdir, repaginer, pagedeb, pagefin, vuesaimprimer, realname, "lp", page_size, nbex,
+	       BinariesDirectory, nom, tempdir, repaginer, pagedeb, pagefin, vuesaimprimer, realname, "lp", page_size, nbex,
 	       decalage_h, decalage_v, orientation, reduction, nb_ppf, suptrame, alimmanuelle, noiretblanc, FrRef[0]);
 
    res = system (cmd);
@@ -263,11 +263,11 @@ char               *vuesaimprimer;
 
    if (nomps[0] != '\0')
       sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %s %d %d %d %s %d %d %d %d %d %ld Sauver &\n",
-	       DirectoryBinaries, nom, tempdir, repaginer, pagedeb, pagefin, vuesaimprimer, realname, nomps, page_size, nbex,
+	       BinariesDirectory, nom, tempdir, repaginer, pagedeb, pagefin, vuesaimprimer, realname, nomps, page_size, nbex,
 	       decalage_h, decalage_v, orientation, reduction, nb_ppf, suptrame, alimmanuelle, noiretblanc, FrRef[0]);
    else
       sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %s %d %d %d %s %d %d %d %d %d %ld Sauver &\n",
-	       DirectoryBinaries, nom, tempdir, repaginer, pagedeb, pagefin, vuesaimprimer, realname, "out.ps", page_size, nbex,
+	       BinariesDirectory, nom, tempdir, repaginer, pagedeb, pagefin, vuesaimprimer, realname, "out.ps", page_size, nbex,
 	       decalage_h, decalage_v, orientation, reduction, nb_ppf, suptrame, alimmanuelle, noiretblanc, FrRef[0]);
 
    res = system (cmd);
@@ -319,7 +319,7 @@ View                view;
    boolean             ok;
    Name                 savePres, newPres;
 
-   pDocPrint = TabDocuments[document - 1];
+   pDocPrint = LoadedDocument[document - 1];
    ConnectPrint ();
    /* prepare le lancement de l'impression */
    strcpy (savePres, pDocPrint->DocSSchema->SsDefaultPSchema);
@@ -352,7 +352,7 @@ View                view;
 	   Imprimer (pDocPrint->DocDName,
 		     pDocPrint->DocDirectory,
 		     pDocPrint->DocSchemasPath,
-		     DirectoryDoc,
+		     DocumentPath,
 		     pDocPrint->DocSSchema->SsDefaultPSchema,
 		     docname, dirname, ptImprimante,
 		     1, 999, 1, 0, 0, 0,
@@ -364,7 +364,7 @@ View                view;
 	   SauverPS (pDocPrint->DocDName,
 		     pDocPrint->DocDirectory,
 		     pDocPrint->DocSchemasPath,
-		     DirectoryDoc,
+		     DocumentPath,
 		     pDocPrint->DocSSchema->SsDefaultPSchema,
 		     docname, dirname, psdir,
 		     1, 999, 1, 0, 0, 0,
@@ -403,19 +403,19 @@ char               *txt;
 				 if (!NewImprimerPapier)
 				   {
 				      NewImprimerPapier = TRUE;
-				      TtaSetTextForm (NumZoneNomImprimante, ptImprimante);
+				      TtaSetTextForm (NumZonePrinterName, ptImprimante);
 				   }
 				 break;
 			      case 1:
 				 if (NewImprimerPapier)
 				   {
 				      NewImprimerPapier = FALSE;
-				      TtaSetTextForm (NumZoneNomImprimante, psdir);
+				      TtaSetTextForm (NumZonePrinterName, psdir);
 				   }
 				 break;
 			   }
 		     break;
-		  case NumMenuFormatPapier:
+		  case NumMenuPaperFormat:
 		     /* sous-menu format papier */
 		     switch (val)
 			   {
@@ -431,7 +431,7 @@ char               *txt;
 		     /* choix multiple Options */
 		     AlimentationManuelle = !AlimentationManuelle;
 		     break;
-		  case NumZoneNomImprimante:
+		  case NumZonePrinterName:
 		     if (txt[0] != '\0')
 			if (NewImprimerPapier)
 			   /* zone de saisie du nom de l'imprimante */
@@ -440,9 +440,9 @@ char               *txt;
 			   /* zone de saisie du nom du fichier PostScript */
 			   strncpy (psdir, txt, MAX_PATH);
 		     break;
-		  case NumFormImprimer:
+		  case NumFormPrint:
 		     /* formulaire Imprimer */
-		     TtaDestroyDialogue (NumFormImprimer);
+		     TtaDestroyDialogue (NumFormPrint);
 		     switch (val)
 			   {
 			      case 1:
@@ -475,16 +475,16 @@ View                view;
    int                 i;
    char                BufMenu[MAX_TXT_LEN];
 
-   pDocPrint = TabDocuments[document - 1];
+   pDocPrint = LoadedDocument[document - 1];
 
    /* formulaire Imprimer */
    ConnectPrint ();
-   TtaNewSheet (NumFormImprimer, TtaGetViewFrame (document, view), 0, 0,
+   TtaNewSheet (NumFormPrint, TtaGetViewFrame (document, view), 0, 0,
 		TtaGetMessage (LIB, LIB_PRINT),
 		1, TtaGetMessage (LIB, LIB_CONFIRM), FALSE, 2, 'L', D_DONE);
    i = 0;
    sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, MANUAL_FEED));
-   TtaNewToggleMenu (NumMenuOptions, NumFormImprimer,
+   TtaNewToggleMenu (NumMenuOptions, NumFormPrint,
 		 TtaGetMessage (LIB, OPTIONS), 1, BufMenu, NULL, FALSE);
    if (AlimentationManuelle)
       TtaSetToggleMenu (NumMenuOptions, 0, TRUE);
@@ -494,37 +494,37 @@ View                view;
    sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, A4));
    i += strlen (&BufMenu[i]) + 1;
    sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, US));
-   TtaNewSubmenu (NumMenuFormatPapier, NumFormImprimer, 0,
+   TtaNewSubmenu (NumMenuPaperFormat, NumFormPrint, 0,
 	    TtaGetMessage (LIB, PAPER_SIZE), 2, BufMenu, NULL, FALSE);
    if (!strcmp (page_size, "US"))
-      TtaSetMenuForm (NumMenuFormatPapier, 1);
+      TtaSetMenuForm (NumMenuPaperFormat, 1);
    else
-      TtaSetMenuForm (NumMenuFormatPapier, 0);
+      TtaSetMenuForm (NumMenuPaperFormat, 0);
 
    /* sous-menu imprimer papier / sauver PostScript */
    i = 0;
    sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, PRINTER));
    i += strlen (&BufMenu[i]) + 1;
    sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, PS_FILE));
-   TtaNewSubmenu (NumMenuSupport, NumFormImprimer, 0,
+   TtaNewSubmenu (NumMenuSupport, NumFormPrint, 0,
 		  TtaGetMessage (LIB, OUTPUT), 2, BufMenu, NULL, TRUE);
    /* zone de saisie du nom de l'imprimante */
-   TtaNewTextForm (NumZoneNomImprimante, NumFormImprimer, NULL, 30, 1, FALSE);
+   TtaNewTextForm (NumZonePrinterName, NumFormPrint, NULL, 30, 1, FALSE);
 
    /* initialisation du selecteur ImprimerPapier */
    NewImprimerPapier = ImprimerPapier;
    if (ImprimerPapier)
      {
 	TtaSetMenuForm (NumMenuSupport, 0);
-	TtaSetTextForm (NumZoneNomImprimante, ptImprimante);
+	TtaSetTextForm (NumZonePrinterName, ptImprimante);
      }
    else
      {
 	TtaSetMenuForm (NumMenuSupport, 1);
-	TtaSetTextForm (NumZoneNomImprimante, psdir);
+	TtaSetTextForm (NumZonePrinterName, psdir);
      }
 
    /* active le formulaire "Imprimer" */
-   TtaShowDialogue (NumFormImprimer, FALSE);
+   TtaShowDialogue (NumFormPrint, FALSE);
 
 }

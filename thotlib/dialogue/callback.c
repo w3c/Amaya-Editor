@@ -278,9 +278,9 @@ boolean             pre;
 	    case TteViewScroll:
 	       element = 0;
 	       if (((NotifyDialog *) notifyEvent)->document != 0)
-		  if (TabDocuments[((NotifyDialog *) notifyEvent)->document - 1] != NULL)
+		  if (LoadedDocument[((NotifyDialog *) notifyEvent)->document - 1] != NULL)
 		    {
-		       schStruct = TabDocuments[((NotifyDialog *) notifyEvent)->document - 1]->DocSSchema;
+		       schStruct = LoadedDocument[((NotifyDialog *) notifyEvent)->document - 1]->DocSSchema;
 		       if (schStruct != NULL)
 			  elType = schStruct->SsRootElem;
 		    }

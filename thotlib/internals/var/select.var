@@ -3,54 +3,54 @@
  * variables used for selecting logical elements and contents
  */
 
-EXPORT int Kbmode;	/* current keyboard */
+EXPORT int KeyboardMode;	/* current keyboard */
 
 /* the document containing the current selection, */
 /* NULL if there is no selection at all */
-EXPORT PtrDocument SelDocument;
+EXPORT PtrDocument SelectedDocument;
 
 /* number of the view from which the user has selected */
-EXPORT int     SelVue;
+EXPORT int     SelectedView;
 
 /* first selected element */
-EXPORT PtrElement SelPremier;
+EXPORT PtrElement FirstSelectedElement;
 
 /* last selected element */
-EXPORT PtrElement SelDernier;
+EXPORT PtrElement LastSelectedElement;
 
 /* index of first selected character in the the first selected element */
 /* Zero if the selection starts at the beginning of the element */
-EXPORT int SelPremCar;
+EXPORT int FirstSelectedChar;
 
 /* index of last selected character in the last selected element */
 /* Zero if the selection ends at the end of the element */
-EXPORT int SelDerCar;
+EXPORT int LastSelectedChar;
 
 /* The current selection is simply a caret */
 EXPORT boolean SelPosition;
 
 /* Views belonging to the same document are synchronized */
-EXPORT boolean SynchroVues;
+EXPORT boolean SynchronizeViews;
 
 /* Context sensitive menus must be computed when selection changes */
-EXPORT boolean SelAvecMajMenus;
+EXPORT boolean SelectionUpdatesMenus;
 
 /* selection mode */
-/* If TRUE the selection is represented by variables SelPremier,
-SelDernier, SelPremCar, SelDerCar */
+/* If TRUE the selection is represented by variables FirstSelectedElement,
+LastSelectedElement, FirstSelectedChar, LastSelectedChar */
 /* If FALSE the selection is represented by table SelElement */
 EXPORT boolean SelContinue;
 
 /* elements corresponding to the items of Selection menu */
-EXPORT PtrElement MenuSelElPere;
-EXPORT PtrElement MenuSelElPredecent;
-EXPORT PtrElement MenuSelElSuivant;
-EXPORT PtrElement MenuSelElFils;
+EXPORT PtrElement SelMenuParentEl;
+EXPORT PtrElement SelMenuPreviousEl;
+EXPORT PtrElement SelMenuNextEl;
+EXPORT PtrElement SelMenuChildEl;
 
 #ifdef __COLPAGE__
-EXPORT PtrElement  MenuSelPageColPere;
-EXPORT PtrElement  MenuSelPageColPrec;
-EXPORT PtrElement  MenuSelPageColSuiv;
-EXPORT PtrElement  MenuSelPageColFils;
+EXPORT PtrElement  SelMenuPageColParent;
+EXPORT PtrElement  SelMenuPageColPrev;
+EXPORT PtrElement  SelMenuPageColNext;
+EXPORT PtrElement  SelMenuPageColChild;
 #endif /* __COLPAGE__ */
 

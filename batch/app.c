@@ -1512,7 +1512,7 @@ char              **argv;
    SyntRuleNum                 r;	/* numero de regle */
    SyntRuleNum                 pr;	/* numero de la regle precedente */
    SyntacticCode             c;	/* code grammatical du mot trouve */
-   int                 idNum;	/* indice dans identtable du mot trouve, si */
+   int                 idNum;	/* indice dans Identifier du mot trouve, si */
 
    /* identificateur */
 
@@ -1548,7 +1548,7 @@ char              **argv;
 	       {
 		  /* le fichier a compiler est ouvert */
 		  strcpy (pFileName, fileName);
-		  lgidenttable = 0;
+		  NIdentifiers = 0;
 		  /* table des identificateurs vide */
 		  LineNum = 0;
 		  /* encore aucune ligne lue */
@@ -1562,12 +1562,12 @@ char              **argv;
 		       i = 0;
 		       do
 			  fileOK = BIOreadByte (filedesc, &inputLine[i++]);
-		       while (i < linelen && inputLine[i - 1] != '\n' && fileOK);
+		       while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
 		       /* marque la fin reelle de la ligne */
 		       inputLine[i - 1] = '\0';
 		       /* incremente le compteur de lignes lues */
 		       LineNum++;
-		       if (i >= linelen)
+		       if (i >= LINE_LENGTH)
 			  /* ligne trop longue */
 			  CompilerError (1, APP, FATAL, MAX_LINE_SIZE_EXCEEDED, inputLine, LineNum);
 		       else if (inputLine[0] == '#')
@@ -1611,7 +1611,7 @@ char              **argv;
 		       MakeMenusAndActionList ();
 		       /* ecrit le schema compile' dans le fichier de sortie     */
 		       /* le directory des schemas est le directory courant      */
-		       DirectorySchemas[0] = '\0';
+		       SchemaPath[0] = '\0';
 		       GenerateApplication (pFileName, pAppli);
 		       strcpy (pFileName, fileName);
 		       if (strcmp (pFileName, "EDITOR") != 0)

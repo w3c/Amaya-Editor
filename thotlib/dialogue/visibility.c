@@ -61,25 +61,25 @@ char               *data;
      {
 	valvisib--;
 	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, CHANGE_FILTER), 10 - valvisib);
-	TtaNewLabel (NumTextVisibilite, NumMenuVisibilite, chaine);
+	TtaNewLabel (NumTextVisibility, NumMenuVisibility, chaine);
 	ModVisu (Fenvisibilityview, valvisib, valzoom);
      }
    else if (bouton == 2 && valvisib < 10)
      {
 	valvisib++;
 	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, CHANGE_FILTER), 10 - valvisib);
-	TtaNewLabel (NumTextVisibilite, NumMenuVisibilite, chaine);
+	TtaNewLabel (NumTextVisibility, NumMenuVisibility, chaine);
 	ModVisu (Fenvisibilityview, valvisib, valzoom);
      }
    else if (bouton == 4)
      {
 	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, CHANGE_FILTER), 10 - valvisib);
-	TtaNewLabel (NumTextVisibilite, NumMenuVisibilite, chaine);
+	TtaNewLabel (NumTextVisibility, NumMenuVisibility, chaine);
      }
    else
      {
 	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, VALUE_NOT_CHANGED), 10 - valvisib);
-	TtaNewLabel (NumTextVisibilite, NumMenuVisibilite, chaine);
+	TtaNewLabel (NumTextVisibility, NumMenuVisibility, chaine);
      }
 
 }
@@ -100,7 +100,7 @@ int                 frame;
    if (Fenvisibilityview != 0 && Fenvisibilityview == frame)
      {
 	/* Annule le formulaire de changement de visibilite */
-	TtaDestroyDialogue (NumMenuVisibilite);
+	TtaDestroyDialogue (NumMenuVisibility);
 	Fenvisibilityview = 0;
      }
 }
@@ -135,7 +135,7 @@ View                view;
    strcpy (chaine, TtaGetMessage (LIB, INCREASE));
    i = strlen (chaine) + 1;
    strcpy (&chaine[i], TtaGetMessage (LIB, DECREASE));
-   TtaNewSheet (NumMenuVisibilite, 0, 0, 0, TtaGetMessage (LIB, VISIB),
+   TtaNewSheet (NumMenuVisibility, 0, 0, 0, TtaGetMessage (LIB, VISIB),
 		2, chaine, FALSE, 4, 'L', D_DONE);
 
 
@@ -143,8 +143,8 @@ View                view;
    sprintf (chaine, "%s %s", TtaGetDocumentName (document),
 	    TtaGetViewName (document, view));
    Fenvisibilityview = GetWindowNumber (document, view);
-   TtaNewLabel (NumDocVisibilite, NumMenuVisibilite, chaine);
+   TtaNewLabel (NumDocVisibility, NumMenuVisibility, chaine);
    /* Initialisation du reste du formulaire */
-   changevisibilityview (NumMenuVisibilite, INTEGER_DATA, (char *) 4);
-   TtaShowDialogue (NumMenuVisibilite, TRUE);
+   changevisibilityview (NumMenuVisibility, INTEGER_DATA, (char *) 4);
+   TtaShowDialogue (NumMenuVisibility, TRUE);
 }

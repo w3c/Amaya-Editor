@@ -79,7 +79,7 @@ View                vue;
 	TteConnectAction (T_openview, (Proc) returnopenview);
      }
 
-   pDoc = TabDocuments[document - 1];
+   pDoc = LoadedDocument[document - 1];
    DocVueAOuvrir = pDoc;
    VueDeReference = vue;
 
@@ -104,9 +104,9 @@ View                vue;
 		  dest += l + 1;
 		  src += l + 1;
 	       }
-	     TtaNewPopup (NumMenuVuesAOuvrir, 0, TtaGetMessage (LIB, VIEWS), nbitem,
+	     TtaNewPopup (NumMenuViewsToOpen, 0, TtaGetMessage (LIB, VIEWS), nbitem,
 			  BufMenu, NULL, 'L');
-	     TtaShowDialogue (NumMenuVuesAOuvrir, FALSE);
+	     TtaShowDialogue (NumMenuViewsToOpen, FALSE);
 	  }
      }
 }
@@ -128,7 +128,7 @@ View                view;
    int                 vue;
    boolean             assoc;
 
-   pDoc = TabDocuments[document - 1];
+   pDoc = LoadedDocument[document - 1];
    if (pDoc != NULL)
      {
 	GetViewInfo (document, view, &vue, &assoc);
@@ -158,7 +158,7 @@ View                view;
    else if (view < 100)
      {
 	/* change le mode de synchronisation de la vue */
-	pDoc = TabDocuments[document - 1];
+	pDoc = LoadedDocument[document - 1];
 	pDoc->DocView[view - 1].DvSync = !pDoc->DocView[view - 1].DvSync;
      }
 }

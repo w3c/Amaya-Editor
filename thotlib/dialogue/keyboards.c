@@ -455,7 +455,7 @@ caddr_t             call_d;
    car = (unsigned char) param % 256;
    /* Insere le caractere selectionne */
    if (ThotLocalActions[T_insertchar] != NULL)
-      (*ThotLocalActions[T_insertchar]) (ActifFen, car, Kbmode);
+      (*ThotLocalActions[T_insertchar]) (ActifFen, car, KeyboardMode);
 }
 
 

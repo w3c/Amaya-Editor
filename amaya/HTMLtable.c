@@ -1504,7 +1504,7 @@ Document            doc;
 			   span = TtaGetAttributeValue (attr);
 			   if (span > 1) {
 			      /* Assume that a spanning cell does not cross the */
-			      /* limit of its row group */
+			      /* CHKR_LIMIT of its row group */
 			      /* search the Column_head that corresponds to that cell */
 			      attrType.AttrTypeNum = HTML_ATTR_Ref_column;
 			      attr = TtaGetAttribute (cell, attrType);

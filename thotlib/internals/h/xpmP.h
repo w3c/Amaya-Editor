@@ -275,7 +275,7 @@ typedef struct _xpmHashAtom {
 
 typedef struct {
     int size;
-    int limit;
+    int CHKR_LIMIT;
     int used;
     xpmHashAtom *atomTable;
 }      xpmHashTable;

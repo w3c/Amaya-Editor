@@ -106,7 +106,7 @@ int                *vue;
       return;
    else
      {
-	pDoc = TabDocuments[*doc - 1];
+	pDoc = LoadedDocument[*doc - 1];
 	*vue = 0;
 	if (pDoc != NULL)
 	  {
@@ -832,7 +832,7 @@ char               *texte;
 	doc = FrameTable[ActifFen].FrDoc;	/* recupere le document concerne */
 	for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 	  {
-	  /****frame = TabDocuments[doc-1]->DocView[vue - 1].DvPSchemaView;
+	  /****frame = LoadedDocument[doc-1]->DocView[vue - 1].DvPSchemaView;
 	  if (frame != 0)****/
 	     TtaSetStatus ((Document) doc, vue, texte, NULL);
 	  }

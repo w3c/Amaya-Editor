@@ -116,11 +116,11 @@ Document            document;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
-      WritePivotHeader (pivotFile, TabDocuments[document - 1]);
+      WritePivotHeader (pivotFile, LoadedDocument[document - 1]);
 }
 
 
@@ -154,11 +154,11 @@ char               *nextChar;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
-      rdPivotHeader (pivotFile, TabDocuments[document - 1], nextChar);
+      rdPivotHeader (pivotFile, LoadedDocument[document - 1], nextChar);
 }
 
 
@@ -189,11 +189,11 @@ Document            document;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
-      WriteTableLangues (pivotFile, TabDocuments[document - 1]);
+      WriteTableLangues (pivotFile, LoadedDocument[document - 1]);
 }
 
 
@@ -229,11 +229,11 @@ char               *nextChar;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
-      rdTableLangues (pivotFile, TabDocuments[document - 1], nextChar);
+      rdTableLangues (pivotFile, LoadedDocument[document - 1], nextChar);
 }
 
 /* ----------------------------------------------------------------------
@@ -264,11 +264,11 @@ Document            document;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
-      WriteNomsSchemasDoc (pivotFile, TabDocuments[document - 1]);
+      WriteNomsSchemasDoc (pivotFile, LoadedDocument[document - 1]);
 }
 
 
@@ -305,11 +305,11 @@ char               *nextChar;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
-      rdNomsSchemas (pivotFile, TabDocuments[document - 1], nextChar, NULL);
+      rdNomsSchemas (pivotFile, LoadedDocument[document - 1], nextChar, NULL);
 }
 
 /* ----------------------------------------------------------------------
@@ -355,12 +355,12 @@ Attribute          *attribute;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
       ReadAttribut (pivotFile, (PtrElement) element,
-		    TabDocuments[document - 1], create,
+		    LoadedDocument[document - 1], create,
 		    (PtrAttribute *) attribute, &pAttr);
 }
 
@@ -402,11 +402,11 @@ PRule              *pRule;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
-      rdReglePres (TabDocuments[document - 1], pivotFile,
+      rdReglePres (LoadedDocument[document - 1], pivotFile,
 		(PtrElement) element, create, (PtrPRule *) pRule, TRUE);
 }
 
@@ -455,7 +455,7 @@ Element            *elementRead;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
@@ -465,7 +465,7 @@ Element            *elementRead;
 	if (element == NULL)
 	  {
 	     NumAssoc = 0;
-	     pSS = TabDocuments[document - 1]->DocSSchema;
+	     pSS = LoadedDocument[document - 1]->DocSSchema;
 	  }
 	else
 	  {
@@ -473,7 +473,7 @@ Element            *elementRead;
 	     pSS = ((PtrElement) element)->ElSructSchema;
 	  }
 	*elementRead = (Element) Internalise (pivotFile, pSS,
-				 TabDocuments[document - 1], byte, NumAssoc,
+				 LoadedDocument[document - 1], byte, NumAssoc,
 			      FALSE, TRUE, &TypeCont, &pSchStrCont, &TypeLu,
 			       &SchStrLu, TRUE, (PtrElement) element, TRUE);
      }
@@ -516,7 +516,7 @@ Document            document;
       /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
@@ -537,8 +537,8 @@ Document            document;
 	     /* a changement de schema de structure par rapport au pere */
 	     if (pEl->ElParent != NULL)
 		if (pEl->ElParent->ElSructSchema != pEl->ElSructSchema)
-		   EcritNat (pEl->ElSructSchema, pivotFile, TabDocuments[document - 1]);
-	     Externalise (pivotFile, &pEl, TabDocuments[document - 1], TRUE);
+		   EcritNat (pEl->ElSructSchema, pivotFile, LoadedDocument[document - 1]);
+	     Externalise (pivotFile, &pEl, LoadedDocument[document - 1], TRUE);
 	     /* envoie le message ElemSave.Post a l'application, si */
 	     /* elle le demande */
 	     notifyEl.event = TteElemSave;
@@ -589,7 +589,7 @@ Document            document;
       /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
@@ -610,8 +610,8 @@ Document            document;
 	     /* a changement de schema de structure par rapport au pere */
 	     if (pEl->ElParent != NULL)
 		if (pEl->ElParent->ElSructSchema != pEl->ElSructSchema)
-		   EcritNat (pEl->ElSructSchema, pivotFile, TabDocuments[document - 1]);
-	     Externalise (pivotFile, &pEl, TabDocuments[document - 1], FALSE);
+		   EcritNat (pEl->ElSructSchema, pivotFile, LoadedDocument[document - 1]);
+	     Externalise (pivotFile, &pEl, LoadedDocument[document - 1], FALSE);
 	     /* envoie le message ElemSave.Post a l'application, si */
 	     /* elle le demande */
 	     notifyEl.event = TteElemSave;
@@ -656,11 +656,11 @@ Document            document;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
-      UserErrorCode = rdVersionNumber (pivotFile, TabDocuments[document - 1]);
+      UserErrorCode = rdVersionNumber (pivotFile, LoadedDocument[document - 1]);
 }
 
 
@@ -691,7 +691,7 @@ Document            document;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
@@ -801,7 +801,7 @@ char               *label;
       /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
@@ -811,7 +811,7 @@ char               *label;
    else
      {
 	element = (Element) NewSubtree (elemType.ElTypeNum, (PtrSSchema) (elemType.ElSSchema),
-		    TabDocuments[document - 1], 0, FALSE, TRUE, TRUE, (*label) == '\0');
+		    LoadedDocument[document - 1], 0, FALSE, TRUE, TRUE, (*label) == '\0');
 	if (*label != '\0')
 	   strncpy (((PtrElement) element)->ElLabel, label, MAX_LABEL_LEN);
      }
@@ -849,12 +849,12 @@ Document            document;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
      {
-	label = GetCurrentLabel (TabDocuments[document - 1]);
+	label = GetCurrentLabel (LoadedDocument[document - 1]);
      }
    return label;
 }
@@ -885,11 +885,11 @@ int                 label;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
-      SetCurrentLabel (TabDocuments[document - 1], label);
+      SetCurrentLabel (LoadedDocument[document - 1], label);
 }
 
 /* fin du module */

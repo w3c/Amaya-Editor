@@ -252,7 +252,7 @@ boolean             lineBreak;
    int                 i;
    char               *ptr;
 
-   if (n < NbColors && n >= 0)
+   if (n < NColors && n >= 0)
      {
 	ptr = Color_Table[n];
 	i = 0;
@@ -2679,7 +2679,7 @@ PtrDocument         pDoc;
 					else
 					   /* le document reference' n'est pas charge' */
 					  {
-					     strncpy (NomDirectory, DirectoryDoc, MAX_PATH);
+					     strncpy (NomDirectory, DocumentPath, MAX_PATH);
 					     BuildFileName (IDocExt, "PIV", NomDirectory, full_name, &i);
 					     if (full_name[0] != '\0')
 						/* on a trouve' le fichier */
@@ -3053,7 +3053,7 @@ PtrDocument         pDoc;
 	       else
 		 {
 		    /* construit le nom de fichier */
-		    strncpy (NomDirectory, DirectorySchemas, MAX_PATH);
+		    strncpy (NomDirectory, SchemaPath, MAX_PATH);
 		    BuildFileName (fname, "", NomDirectory, full_name, &i);
 		 }
 	       /* ouvre le fichier a inclure */

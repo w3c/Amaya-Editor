@@ -873,8 +873,8 @@ static void         InitEnviron ()
    /* default values for various global variables */
    FirstCreation = FALSE;
    CurSaveInterval = DEF_SAVE_INTVL;
-   HardMsgAff = FALSE;
-   NiveauxInsertion = 4;
+   HighlightBoxErrors = FALSE;
+   InsertionLevels = 4;
 
    /* The base of the Thot directory */
    Thot_Dir = (char *) TtaGetEnvString ("THOTDIR");
@@ -884,16 +884,16 @@ static void         InitEnviron ()
    /* The predefined path to documents */
    pT = (char *) TtaGetEnvString ("THOTDOC");
    if (pT == NULL)
-      DirectoryDoc[0] = '\0';
+      DocumentPath[0] = '\0';
    else
-      strncpy (DirectoryDoc, pT, MAX_PATH);
+      strncpy (DocumentPath, pT, MAX_PATH);
 
    /* The predefined path to schemas */
    Thot_Sch = (char *) TtaGetEnvString ("THOTSCH");
    if (Thot_Sch == NULL)
-      DirectorySchemas[0] = '\0';
+      SchemaPath[0] = '\0';
    else
-      strncpy (DirectorySchemas, Thot_Sch, MAX_PATH);
+      strncpy (SchemaPath, Thot_Sch, MAX_PATH);
 }
 
 /*
@@ -1071,8 +1071,8 @@ char               *appArgv0;
 
    *dir_end = '\0';
 
-   /* save the binary directory in DirectoryBinaries */
-   strncpy (DirectoryBinaries, &execname[0], sizeof (DirectoryBinaries));
+   /* save the binary directory in BinariesDirectory */
+   strncpy (BinariesDirectory, &execname[0], sizeof (BinariesDirectory));
 
    if (IsThotDir(&execname[0]))
      {
@@ -1218,7 +1218,7 @@ char               *fullName;
 	       /* Recherche le fichier dans les directories de schemas */
 	       i = 0;
 	       j = 0;
-	       imagepath = DirectorySchemas;
+	       imagepath = SchemaPath;
 	       while (ret == 0 && imagepath[i] != '\0')
 		 {
 		    while (imagepath[i] != '\0' && imagepath[i] != PATH_SEP && i < 200)
@@ -1234,7 +1234,7 @@ char               *fullName;
 	       /* continue la recheche dans les repertoires de documents */
 	       i = 0;
 	       j = 0;
-	       imagepath = DirectorySchemas;
+	       imagepath = SchemaPath;
 	       while (ret == 0 && imagepath[i] != '\0')
 		 {
 		    while (imagepath[i] != '\0' && imagepath[i] != PATH_SEP && i < 200)

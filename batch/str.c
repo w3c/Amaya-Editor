@@ -340,7 +340,7 @@ int                 n;
    SrcIdentDesc          *pIdent;
    SRule              *pRule;
 
-   pIdent = &identtable[n - 1];
+   pIdent = &Identifier[n - 1];
    TtaDisplayMessage (INFO, TtaGetMessage(STR, STR_EXTERNAL_STRUCT), pIdent->SrcIdentifier);
    if (pSSchema->SsNRules >= MAX_RULES_SSCHEMA)
       TtaDisplaySimpleMessage (FATAL, STR, STR_TOO_MAN_RULES);
@@ -403,10 +403,10 @@ SRule              *pRule;
      {
 	if (pRule->SrInclusion[j] > MAX_BASIC_TYPE)
 	  {
-	     if (identtable[pRule->SrInclusion[j] - MAX_BASIC_TYPE - 1].SrcIdentDefRule == 0)
+	     if (Identifier[pRule->SrInclusion[j] - MAX_BASIC_TYPE - 1].SrcIdentDefRule == 0)
 		Undefined (pRule->SrInclusion[j] - MAX_BASIC_TYPE);
 	     pRule->SrInclusion[j] =
-		identtable[pRule->SrInclusion[j] - MAX_BASIC_TYPE - 1].SrcIdentDefRule;
+		Identifier[pRule->SrInclusion[j] - MAX_BASIC_TYPE - 1].SrcIdentDefRule;
 	  }
 	else if (pRule->SrInclusion[j] < 0)
 	   pRule->SrInclusion[j] = -pRule->SrInclusion[j];
@@ -417,10 +417,10 @@ SRule              *pRule;
      {
 	if (pRule->SrExclusion[j] > MAX_BASIC_TYPE)
 	  {
-	     if (identtable[pRule->SrExclusion[j] - MAX_BASIC_TYPE - 1].SrcIdentDefRule == 0)
+	     if (Identifier[pRule->SrExclusion[j] - MAX_BASIC_TYPE - 1].SrcIdentDefRule == 0)
 		Undefined (pRule->SrExclusion[j] - MAX_BASIC_TYPE);
 	     pRule->SrExclusion[j] =
-		identtable[pRule->SrExclusion[j] - MAX_BASIC_TYPE - 1].SrcIdentDefRule;
+		Identifier[pRule->SrExclusion[j] - MAX_BASIC_TYPE - 1].SrcIdentDefRule;
 	  }
 	else if (pRule->SrExclusion[j] < 0)
 	   pRule->SrExclusion[j] = -pRule->SrExclusion[j];
@@ -433,9 +433,9 @@ SRule              *pRule;
 	       if (pRule->SrRefTypeNat[0] == '\0')
 		  if (pRule->SrReferredType > MAX_BASIC_TYPE)
 		    {
-		       if (identtable[pRule->SrReferredType - MAX_BASIC_TYPE - 1].SrcIdentDefRule == 0)
+		       if (Identifier[pRule->SrReferredType - MAX_BASIC_TYPE - 1].SrcIdentDefRule == 0)
 			  Undefined (pRule->SrReferredType - MAX_BASIC_TYPE);
-		       pRule->SrReferredType = identtable[pRule->SrReferredType - MAX_BASIC_TYPE - 1].
+		       pRule->SrReferredType = Identifier[pRule->SrReferredType - MAX_BASIC_TYPE - 1].
 			  SrcIdentDefRule;
 		    }
 		  else if (pRule->SrReferredType < 0)
@@ -444,9 +444,9 @@ SRule              *pRule;
 	    case CsIdentity:
 	       if (pRule->SrIdentRule > MAX_BASIC_TYPE)
 		 {
-		    if (identtable[pRule->SrIdentRule - MAX_BASIC_TYPE - 1].SrcIdentDefRule == 0)
+		    if (Identifier[pRule->SrIdentRule - MAX_BASIC_TYPE - 1].SrcIdentDefRule == 0)
 		       Undefined (pRule->SrIdentRule - MAX_BASIC_TYPE);
-		    pRule->SrIdentRule = identtable[pRule->SrIdentRule - MAX_BASIC_TYPE - 1].
+		    pRule->SrIdentRule = Identifier[pRule->SrIdentRule - MAX_BASIC_TYPE - 1].
 		       SrcIdentDefRule;
 		 }
 	       else if (pRule->SrIdentRule < 0)
@@ -456,9 +456,9 @@ SRule              *pRule;
 	    case CsList:
 	       if (pRule->SrListItem > MAX_BASIC_TYPE)
 		 {
-		    if (identtable[pRule->SrListItem - MAX_BASIC_TYPE - 1].SrcIdentDefRule == 0)
+		    if (Identifier[pRule->SrListItem - MAX_BASIC_TYPE - 1].SrcIdentDefRule == 0)
 		       Undefined (pRule->SrListItem - MAX_BASIC_TYPE);
-		    pRule->SrListItem = identtable[pRule->SrListItem - MAX_BASIC_TYPE - 1].
+		    pRule->SrListItem = Identifier[pRule->SrListItem - MAX_BASIC_TYPE - 1].
 		       SrcIdentDefRule;
 		 }
 	       else if (pRule->SrListItem < 0)
@@ -471,10 +471,10 @@ SRule              *pRule;
 		    {
 		       if (pRule->SrChoice[j] > MAX_BASIC_TYPE)
 			 {
-			    if (identtable[pRule->SrChoice[j] - MAX_BASIC_TYPE - 1].SrcIdentDefRule == 0)
+			    if (Identifier[pRule->SrChoice[j] - MAX_BASIC_TYPE - 1].SrcIdentDefRule == 0)
 			       Undefined (pRule->SrChoice[j] - MAX_BASIC_TYPE);
 			    pRule->SrChoice[j] =
-			       identtable[pRule->SrChoice[j] - MAX_BASIC_TYPE - 1].SrcIdentDefRule;
+			       Identifier[pRule->SrChoice[j] - MAX_BASIC_TYPE - 1].SrcIdentDefRule;
 			 }
 		       else if (pRule->SrChoice[j] < 0)
 			  pRule->SrChoice[j] = -pRule->SrChoice[j];
@@ -487,10 +487,10 @@ SRule              *pRule;
 		 {
 		    if (pRule->SrComponent[j] > MAX_BASIC_TYPE)
 		      {
-			 if (identtable[pRule->SrComponent[j] - MAX_BASIC_TYPE - 1].SrcIdentDefRule == 0)
+			 if (Identifier[pRule->SrComponent[j] - MAX_BASIC_TYPE - 1].SrcIdentDefRule == 0)
 			    Undefined (pRule->SrComponent[j] - MAX_BASIC_TYPE);
 			 pRule->SrComponent[j] =
-			    identtable[pRule->SrComponent[j] - MAX_BASIC_TYPE - 1].SrcIdentDefRule;
+			    Identifier[pRule->SrComponent[j] - MAX_BASIC_TYPE - 1].SrcIdentDefRule;
 		      }
 		    else if (pRule->SrComponent[j] < 0)
 		       pRule->SrComponent[j] = -pRule->SrComponent[j];
@@ -548,10 +548,10 @@ static void         ChangeRules ()
 	   if (pAttr->AttrTypeRefNature[0] == '\0')
 	      if (pAttr->AttrTypeRef > MAX_BASIC_TYPE)
 		{
-		   if (identtable[pAttr->AttrTypeRef - MAX_BASIC_TYPE - 1].SrcIdentDefRule == 0)
+		   if (Identifier[pAttr->AttrTypeRef - MAX_BASIC_TYPE - 1].SrcIdentDefRule == 0)
 		      Undefined (pAttr->AttrTypeRef - MAX_BASIC_TYPE);
 		   pAttr->AttrTypeRef =
-		      identtable[pAttr->AttrTypeRef - MAX_BASIC_TYPE - 1].SrcIdentDefRule;
+		      Identifier[pAttr->AttrTypeRef - MAX_BASIC_TYPE - 1].SrcIdentDefRule;
 		}
 	      else if (pAttr->AttrTypeRef < 0)
 		 pAttr->AttrTypeRef = -pAttr->AttrTypeRef;
@@ -692,7 +692,7 @@ indLine               wi;
    else
       pSSchema->SsNRules++;
    if (CurNum > 0)		/* il y a un symbole gauche a cette regle */
-      if (identtable[CurNum - 1].SrcIdentDefRule > 0)
+      if (Identifier[CurNum - 1].SrcIdentDefRule > 0)
 	 /* double definition */
 	 CompilerError (wi, STR, FATAL, STR_NAME_ALREADY_DECLARED, inputLine, LineNum);
    if (!error)
@@ -709,7 +709,7 @@ indLine               wi;
 	     RecursLevel++;
 	  }
 	if (CurNum > 0)
-	   identtable[CurNum - 1].SrcIdentDefRule = pSSchema->SsNRules;
+	   Identifier[CurNum - 1].SrcIdentDefRule = pSSchema->SsNRules;
 	if (Rules)
 	   RRight[RecursLevel - 1] = True;
 	pRule = &pSSchema->SsRule[pSSchema->SsNRules - 1];
@@ -2194,7 +2194,7 @@ SyntRuleNum                 pr;
 			      break;
 			      case RULE_AttrName
 			   /* AttrName */ :
-			      attrNum = identtable[nb - 1].SrcIdentDefRule;
+			      attrNum = Identifier[nb - 1].SrcIdentDefRule;
 			      if (attrNum == 0)
 				 /* ce nom n'a pas encore ete rencontre' dans le schema */
 				 if (strncmp (&inputLine[wi - 1], pSSchema->SsAttribute[0].AttrName, wl) == 0)
@@ -2223,7 +2223,7 @@ SyntRuleNum                 pr;
 				      else
 					{
 					   pSSchema->SsNAttributes++;
-					   identtable[nb - 1].SrcIdentDefRule = pSSchema->SsNAttributes;
+					   Identifier[nb - 1].SrcIdentDefRule = pSSchema->SsNAttributes;
 					   pAttr = &pSSchema->SsAttribute[pSSchema->SsNAttributes - 1];
 					   if (CompilLocAttr)
 					      /* attribut local */
@@ -2247,7 +2247,7 @@ SyntRuleNum                 pr;
 					 else
 					    /* dans une regle de structure */
 					   {
-					      CurLocAttr[CurNLocAttr] = identtable[nb - 1].
+					      CurLocAttr[CurNLocAttr] = Identifier[nb - 1].
 						 SrcIdentDefRule;
 					      CurReqAttr[CurNLocAttr] = MandatoryAttr;
 					      CurNLocAttr++;
@@ -2323,14 +2323,14 @@ SyntRuleNum                 pr;
 					if (!error)
 					   /* c'est bien une nouvelle valeur, on l'accepte */
 					  {
-					     identtable[nb - 1].SrcIdentDefRule = pAttr->AttrNEnumValues;
-					     identtable[nb - 1].SrcIdentRefRule = pSSchema->SsNAttributes;
+					     Identifier[nb - 1].SrcIdentDefRule = pAttr->AttrNEnumValues;
+					     Identifier[nb - 1].SrcIdentRefRule = pSSchema->SsNAttributes;
 					  }
 				     }
 				}
 			      else
 				 /* utilisation dans une regle avec With */
-			      if (identtable[nb - 1].SrcIdentDefRule == 0)
+			      if (Identifier[nb - 1].SrcIdentDefRule == 0)
 				 CompilerError (wi, STR, FATAL, STR_ATTR_VALUE_NOT_DECLARED,
 						inputLine, LineNum);
 			      else
@@ -2382,7 +2382,7 @@ SyntRuleNum                 pr;
 				}
 			      else
 				 /* utilisation d'une constante dans une regle */
-			      if (identtable[nb - 1].SrcIdentDefRule == 0)
+			      if (Identifier[nb - 1].SrcIdentDefRule == 0)
 				 /* non defini, c'est une erreur */
 				 CompilerError (wi, STR, FATAL, STR_CONSTANT_NOT_DECLARED, inputLine, LineNum);
 			      else if (pr == RULE_Constr)
@@ -2888,7 +2888,7 @@ char              **argv;
    SyntRuleNum                 r;	/* numero de regle */
    SyntRuleNum                 pr;	/* numero de la regle precedente */
    SyntacticCode             c;	/* code grammatical du mot trouve */
-   int                 nb;	/* indice dans identtable du mot trouve, si
+   int                 nb;	/* indice dans Identifier du mot trouve, si
 
 				   c'est un identificateur */
 
@@ -2927,7 +2927,7 @@ char              **argv;
 		  if ((pExternSSchema = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
 		     TtaDisplaySimpleMessage (FATAL, STR, STR_NOT_ENOUGH_MEM);
 
-		  lgidenttable = 0;	/* table des identificateurs vide */
+		  NIdentifiers = 0;	/* table des identificateurs vide */
 		  LineNum = 0;
 		  Initialize ();	/* prepare la generation */
 		  /* lit tout le fichier et fait l'analyse */
@@ -2941,12 +2941,12 @@ char              **argv;
 			    fileOK = BIOreadByte (inputFile, &inputLine[i]);
 			    i++;
 			 }
-		       while (i < linelen && inputLine[i - 1] != '\n' && fileOK);
+		       while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
 		       /* marque la fin reelle de la ligne */
 		       inputLine[i - 1] = '\0';
 		       /* incremente le compteur de lignes */
 		       LineNum++;
-		       if (i >= linelen)
+		       if (i >= LINE_LENGTH)
 			  CompilerError (1, STR, FATAL, STR_LINE_TOO_LONG,
 					 inputLine, LineNum);
 		       else if (inputLine[0] == '#')
@@ -3003,7 +3003,7 @@ char              **argv;
 		       ListNotCreated ();
 
 		       /* ecrit le schema compile' dans le fichier de sortie */
-		       DirectorySchemas[0] = '\0';	/* utilise le directory courant */
+		       SchemaPath[0] = '\0';	/* utilise le directory courant */
 		       if (!error)
 			 {
 			    strcat (srceFileName, ".STR");

@@ -905,7 +905,7 @@ int                 frame;
 	if (Erreur)
 	  {
 	     MajPavSelect (frame, pFrame->FrAbstractBox, TRUE);
-	     if (HardMsgAff)
+	     if (HighlightBoxErrors)
 		/* Attend un moment avant d'annuler les mises en evidences */
 	       {
 		  TtaDisplaySimpleMessage (INFO, LIB, LIB_CONFIRM);

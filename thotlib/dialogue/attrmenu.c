@@ -29,9 +29,9 @@ static boolean      AttrFormExists = FALSE;
 static boolean      MandatoryAttrFormExists = FALSE;
 
 /* les attributs figurant dans le menu */
-static PtrSSchema AttrStruct[LgMaxMenuAttribut];
-static int          AttrNumero[LgMaxMenuAttribut];
-static boolean      AttrOblig[LgMaxMenuAttribut];
+static PtrSSchema AttrStruct[LgMaxAttributeMenu];
+static int          AttrNumero[LgMaxAttributeMenu];
+static boolean      AttrOblig[LgMaxAttributeMenu];
 
 /* l'attribut concerne' par le formulaire de saisie affiche' */
 static PtrSSchema SchAttributCourant = NULL;
@@ -99,7 +99,7 @@ PtrAttribute         AttCour;
    strcpy (BufMenu, TtaGetMessage (LIB, APPLY));
    i = strlen (BufMenu) + 1;
    strcpy (&BufMenu[i], TtaGetMessage (LIB, DEL));
-   TtaNewSheet (NumFormLangue, 0, 0, 0,
+   TtaNewSheet (NumFormLanguage, 0, 0, 0,
       TtaGetMessage (LIB, LANGUAGE), 2, BufMenu, FALSE, 2, 'L', D_DONE);
    /* construit le selecteur des Langues */
    nbitem = 0;
@@ -121,9 +121,9 @@ PtrAttribute         AttCour;
    if (nbitem == 0)
      {
 	/* pas de langue definie, on cree une simple zone de saisie de texte */
-	TtaNewTextForm (NumSelectLangue, NumFormLangue,
+	TtaNewTextForm (NumSelectLanguage, NumFormLanguage,
 			TtaGetMessage (LIB, LANGUAGE), 30, 1, FALSE);
-	TtaSetTextForm (NumFormLangue, valLangue);
+	TtaSetTextForm (NumFormLanguage, valLangue);
      }
    else
       /* on cree un selecteur */
@@ -132,16 +132,16 @@ PtrAttribute         AttCour;
 	   longueur = 6;
 	else
 	   longueur = nbitem;
-	TtaNewSelector (NumSelectLangue, NumFormLangue,
+	TtaNewSelector (NumSelectLanguage, NumFormLanguage,
 	      TtaGetMessage (LIB, LANG_OF_EL), nbitem, BufMenu,
 			longueur, NULL, TRUE, FALSE);
 	/* initialise le selecteur sur sa premiere entree */
 	if (valLangue[0] == '\0')
-	   TtaSetSelector (NumSelectLangue, -1, NULL);
+	   TtaSetSelector (NumSelectLanguage, -1, NULL);
 	else
 	  {
 	     i = (int) TtaGetLanguageIdFromName (valLangue);
-	     TtaSetSelector (NumSelectLangue, i, valLangue);
+	     TtaSetSelector (NumSelectLanguage, i, valLangue);
 	  }
      }
 
@@ -152,9 +152,9 @@ PtrAttribute         AttCour;
       if (pAttrHerit->AeAttrText != NULL)
 	 strcat (Lab, pAttrHerit->AeAttrText->BuContent);
 
-   TtaNewLabel (NumLabelLangueHeritee, NumFormLangue, Lab);
+   TtaNewLabel (NumLabelHeritedLanguage, NumFormLanguage, Lab);
    /* affiche le formulaire */
-   TtaShowDialogue (NumFormLangue, TRUE);
+   TtaShowDialogue (NumFormLanguage, TRUE);
 }
 
 
@@ -191,13 +191,13 @@ int                 view;
    strcpy (&BufMenu[i], TtaGetMessage (LIB, DEL));
    if (Requis)
      {
-	form = NumMenuAttrRequis;
+	form = NumMenuAttrRequired;
 	if (MandatoryAttrFormExists)
 	  {
-	     TtaUnmapDialogue (NumMenuAttrRequis);
-	     TtaDestroyDialogue (NumMenuAttrRequis);
+	     TtaUnmapDialogue (NumMenuAttrRequired);
+	     TtaDestroyDialogue (NumMenuAttrRequired);
 	  }
-	TtaNewForm (NumMenuAttrRequis, TtaGetViewFrame (doc, view), 0, 0,
+	TtaNewForm (NumMenuAttrRequired, TtaGetViewFrame (doc, view), 0, 0,
 		 TtaGetMessage (LIB, ATTR), FALSE, 2, 'L', D_DONE);
 	MandatoryAttrFormExists = TRUE;
      }
@@ -298,24 +298,24 @@ char               *txt;
 
    switch (ref)
 	 {
-	    case NumMenuAttrRequis:
+	    case NumMenuAttrRequired:
 	       /* retour de la feuille de dialogue elle-meme */
 	       /* on detruit cette feuille de dialogue sauf si c'est */
 	       /* un abandon */
 	       if (val != 0)
 		 {
-		    TtaDestroyDialogue (NumMenuAttrRequis);
+		    TtaDestroyDialogue (NumMenuAttrRequired);
 		    MandatoryAttrFormExists = FALSE;
 		 }
 	       /* on ne fait rien d'autre : tout a ete fait par les cas */
 	       /* suivants */
 	       break;
-	    case NumMenuAttrNumRequis:
+	    case NumMenuAttrNumNeeded:
 	       /* zone de saisie de la valeur numerique de l'attribut */
 	       if (val >= -MAX_INT_ATTR_VAL || val <= MAX_INT_ATTR_VAL)
 		  PtrAttrRequis->AeAttrValue = val;
 	       break;
-	    case NumMenuAttrTexteRequis:
+	    case NumMenuAttrTextNeeded:
 	       /* zonee de saisie du texte de l'attribut */
 	       if (PtrAttrRequis->AeAttrText == NULL)
 		  GetBufTexte (&PtrAttrRequis->AeAttrText);
@@ -323,7 +323,7 @@ char               *txt;
 		  ClearText (PtrAttrRequis->AeAttrText);
 	       CopyStringToText (txt, PtrAttrRequis->AeAttrText, &lg);
 	       break;
-	    case NumMenuAttrEnumRequis:
+	    case NumMenuAttrEnumNeeded:
 	       /* menu des valeurs d'un attribut a valeurs enumerees */
 	       val++;
 	       PtrAttrRequis->AeAttrValue = val;
@@ -352,7 +352,7 @@ PtrDocument         pDoc;
    pRegleAttr = &pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1];
    /* toujours lie a la vue 1 du document */
    MenuValeurs (pRegleAttr, TRUE, NULL, pDoc, 1);
-   TtaShowDialogue (NumMenuAttrRequis, FALSE);
+   TtaShowDialogue (NumMenuAttrRequired, FALSE);
    TtaWaitShowDialogue ();
 }
 
@@ -446,7 +446,7 @@ int                 ActiveAttr[];
 		     /* met tous les attributs globaux de ce schema dans la table */
 		    {
 		       att = 0;
-		       while (att < pSS->SsNAttributes && nbentrees < LgMaxMenuAttribut
+		       while (att < pSS->SsNAttributes && nbentrees < LgMaxAttributeMenu
 			      && nbentrees < MAX_ENTRY - 1)
 			 {
 			    att++;
@@ -484,7 +484,7 @@ int                 ActiveAttr[];
 	     if (pRe1 != NULL)
 		/* prend les attributs locaux definis dans cette regle */
 		for (att = 1; att <= pRe1->SrNLocalAttrs; att++)
-		   if (nbentrees < LgMaxMenuAttribut && nbentrees < MAX_ENTRY - 1)
+		   if (nbentrees < LgMaxAttributeMenu && nbentrees < MAX_ENTRY - 1)
 		      if (!AttrHasException (ExcInvisible, pRe1->SrLocalAttr[att - 1], pSS))
 			 if (TteItemMenuAttr (pSS, pRe1->SrLocalAttr[att - 1], PremSel,
 					      SelDoc))
@@ -567,7 +567,7 @@ PtrDocument         pDoc;
    Menu_Ctl           *ptrmenu;
 
    /* Compose le menu des attributs */
-   if (pDoc == SelDocument)
+   if (pDoc == SelectedDocument)
       NbItemAttr = ComposeMenuAttributs (BufMenuAttr, pDoc, ActiveAttr);
    else
       NbItemAttr = 0;
@@ -582,7 +582,7 @@ PtrDocument         pDoc;
 	     menuID = FrameTable[frame].MenuAttr;
 	     menu = FindMenu (frame, menuID, &ptrmenu) - 1;
 	     ref = (menu * MAX_FRAME) + frame + MAX_LocalMenu;
-	     if (pDoc != SelDocument || NbItemAttr == 0)
+	     if (pDoc != SelectedDocument || NbItemAttr == 0)
 	       {
 		  /* le menu Attributs contient au moins un attribut */
 		  TtaSetMenuOff (document, vue, menuID);
@@ -610,7 +610,7 @@ PtrDocument         pDoc;
 	     menuID = FrameTable[frame].MenuAttr;
 	     menu = FindMenu (frame, menuID, &ptrmenu) - 1;
 	     ref = (menu * MAX_FRAME) + frame + MAX_LocalMenu;
-	     if (pDoc != SelDocument || NbItemAttr == 0)
+	     if (pDoc != SelectedDocument || NbItemAttr == 0)
 	       {
 		  /* le menu Attributs contient au moins un attribut */
 		  TtaSetMenuOff (document, vue, menu);
@@ -656,7 +656,7 @@ char               *valtexte;
 
    switch (ref)
 	 {
-	    case NumMenuAttrNum:
+	    case NumMenuAttrNumber:
 	       /* valeur d'un attribut numerique */
 	       ValeurNumAttribut = valmenu;
 	       break;
@@ -874,14 +874,14 @@ char               *txt;
 {
    switch (ref)
 	 {
-	    case NumSelectLangue:
+	    case NumSelectLanguage:
 	       /* retour de la langue choise par l'utilisateur */
 	       if (txt == NULL)
 		  ValeurTexteAttribut[0] = '\0';
 	       else
 		  strncpy (ValeurTexteAttribut, txt, LgMaxAttrTexte);
 	       break;
-	    case NumFormLangue:
+	    case NumFormLanguage:
 	       /* retour du formulaire lui-meme */
 
 	       switch (val)

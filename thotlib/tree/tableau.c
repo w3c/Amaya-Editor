@@ -119,15 +119,15 @@ PtrDocument         SelDoc;
    int                 attr;
    PtrAttribute         pAttr;
 
-   if (SelPremier == SelDernier)
+   if (FirstSelectedElement == LastSelectedElement)
      {
-	if (TypeHasException (EXC_ID_Cellule, SelPremier->ElTypeNumber, SelPremier->ElSructSchema))
+	if (TypeHasException (EXC_ID_Cellule, FirstSelectedElement->ElTypeNumber, FirstSelectedElement->ElSructSchema))
 	  {
 	     /* cherche l'attribut La_colonne de la cellule */
-	     attr = GetAttrWithException (EXC_ID_Ref_Colonne, SelPremier->ElSructSchema);
-	     pAttr = SelPremier->ElFirstAttr;
+	     attr = GetAttrWithException (EXC_ID_Ref_Colonne, FirstSelectedElement->ElSructSchema);
+	     pAttr = FirstSelectedElement->ElFirstAttr;
 	     while (pAttr != NULL)
-		if (pAttr->AeAttrSSchema == SelPremier->ElSructSchema && pAttr->AeAttrNum == attr)
+		if (pAttr->AeAttrSSchema == FirstSelectedElement->ElSructSchema && pAttr->AeAttrNum == attr)
 		   /* C'est l'attribut La_colonne */
 		  {
 		     if (pAttr->AeAttrReference != NULL
@@ -1204,10 +1204,10 @@ boolean             *ret;
    if (Ext)
      {
 	/* c'est une extension de la selection */
-	if (SelPremier != NULL)
+	if (FirstSelectedElement != NULL)
 	  {
 	     /* il y a deja une selection */
-	     pEl = SelPremier;
+	     pEl = FirstSelectedElement;
 	     if (TypeHasException (EXC_TR_Tableau_SELECT, pEl->ElTypeNumber, pEl->ElSructSchema))
 		/* Deja une colonne selectionnee, on refuse l'extension */
 		*ret = FALSE;
@@ -1227,7 +1227,7 @@ boolean             *ret;
 	     {
 		/* selection d'un element Colonne_simple */
 		Tableau_SelectColSimple (pEl);
-		SelDernier = pEl;
+		LastSelectedElement = pEl;
 	     }
 
 	   else
@@ -1258,7 +1258,7 @@ boolean             *ret;
 			Tableau_Selection (pE, pDoc, Ext, ret);
 		     pE = pE->ElNext;
 		  }
-		SelDernier = pEl;
+		LastSelectedElement = pEl;
 	     }
      }
 }
@@ -1340,7 +1340,7 @@ PtrDocument         pDoc;
 		if (NbCellCollees < NbCell)
 		  {
 		     /* on cree une copie de la cellule a coller */
-		     pNCell = CopyTree (*pSvCell, DocDeSauve, pCol->ElAssocNum,
+		     pNCell = CopyTree (*pSvCell, DocOfSavedElements, pCol->ElAssocNum,
 				pCol->ElSructSchema, pDoc, pPere, TRUE, TRUE);
 		     NbCellCollees++;
 		     *pSvCell = (*pSvCell)->ElNext;
@@ -1370,8 +1370,8 @@ PtrDocument         pDoc;
 		  }
 		/* traite les attributs requis */
 		AttachMandatoryAttributes (pNCell, pDoc);
-		NbNouveaux++;
-		Nouveaux[NbNouveaux - 1] = pNCell;
+		NCreatedElements++;
+		CreatedElement[NCreatedElements - 1] = pNCell;
 	     }
      }
 

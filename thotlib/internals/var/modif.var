@@ -3,7 +3,7 @@
  */
 
 /* descriptor of first element saved */
-EXPORT PtrPasteElem ElemSauve;
+EXPORT PtrPasteElem FirstSavedElement;
 
 /* the document from which saved elements have been copied or cut */
-EXPORT PtrDocument DocDeSauve;
+EXPORT PtrDocument DocOfSavedElements;

@@ -61,7 +61,7 @@ char               *data;
 	       AbandonFermer = FALSE;
 	       break;
 	 }
-   TtaDestroyDialogue (NumFormFermer);
+   TtaDestroyDialogue (NumFormClose);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -104,12 +104,12 @@ boolean            *sauver;
    strcpy (bufbutton, TtaGetMessage (LIB, SAVE_DOC));
    i = strlen (TtaGetMessage (LIB, SAVE_DOC)) + 1;
    strcpy (bufbutton + i, TtaGetMessage (LIB, CLOSE_DON_T_SAVE));
-   TtaNewSheet (NumFormFermer, TtaGetViewFrame (document, view), 0, 0,
+   TtaNewSheet (NumFormClose, TtaGetViewFrame (document, view), 0, 0,
 		TtaGetMessage (LIB, CLOSE_DOC), 2, bufbutton, TRUE, 1, 'L', D_CANCEL);
    /* label indiquant le nom du document a sauver avant de fermer */
-   TtaNewLabel (NumLabelSauverAvantFermer, NumFormFermer, buftext);
+   TtaNewLabel (NumLabelSaveBeforeClosing, NumFormClose, buftext);
    /* active le formulaire "Fermer" */
-   TtaShowDialogue (NumFormFermer, FALSE);
+   TtaShowDialogue (NumFormClose, FALSE);
    /* attend le retour de ce formulaire (traite' par RetMenuFermer) */
    TtaWaitShowDialogue ();
    *sauver = SauverAvantFermer;
@@ -135,7 +135,7 @@ View                view;
    ok = TRUE;
    if (document != 0)
      {
-	pDoc = TabDocuments[document - 1];
+	pDoc = LoadedDocument[document - 1];
 	if (pDoc != NULL)
 	   /* il y a un document pour cette entree de la table */
 	  {

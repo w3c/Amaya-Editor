@@ -16,7 +16,7 @@ typedef enum
 } SyntacticType;
 
 /* an input line to be parsed */
-typedef unsigned char lineBuffer[linelen];
+typedef unsigned char lineBuffer[LINE_LENGTH];
 
 /* current position in the input line */
 typedef int	indLine;
@@ -24,7 +24,7 @@ typedef int	indLine;
 /* a key-word in the source language */
 typedef struct _SrcKeywordDesc
 {
-	char 	SrcKeyword[kwlen];	/* the key word */
+	char 	SrcKeyword[KEWWORD_LENGTH];	/* the key word */
 	int 	SrcKeywordLen;		/* its length */
 	SyntacticCode	SrcKeywordCode;	/* its syntactic type */
 } SrcKeywordDesc;
@@ -32,7 +32,7 @@ typedef struct _SrcKeywordDesc
 /* an identifier in the source language */
 typedef struct _SrcIdentDesc
 {
-	char            SrcIdentifier[identlen]; /* the identifier */
+	char            SrcIdentifier[IDENTIFIER_LENGTH]; /* the identifier */
 	int 		SrcIdentLen;		/* length of the identifier */
 	SyntacticCode         SrcIdentCode;	/* syntactic type of the identifier */
 	int	        SrcIdentDefRule;	/* number of the rule which
@@ -42,7 +42,7 @@ typedef struct _SrcIdentDesc
 } SrcIdentDesc;
 
 /* a coded syntactical rule */
-typedef SyntacticCode 	SyntacticRule[maxlgrule + 1];
+typedef SyntacticCode 	SyntacticRule[RULE_LENGTH + 1];
 
 /* the number of a syntactical rule */
 typedef int 		SyntRuleNum;

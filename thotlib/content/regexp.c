@@ -1884,14 +1884,14 @@ boolean             forw;
 
 
 /* ---------------------------------------------------------------------- */
-/* |  ChRegExp	search a regular expression				| */
+/* |  SearchRegularExpression	search a regular expression				| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             ChRegExp (PtrElement * firstEl, int *firstChar, PtrElement * lastEl, int *lastChar, boolean forward, boolean caseEquiv, char *expression)
+boolean             SearchRegularExpression (PtrElement * firstEl, int *firstChar, PtrElement * lastEl, int *lastChar, boolean forward, boolean caseEquiv, char *expression)
 
 #else  /* __STDC__ */
-boolean             ChRegExp (firstEl, firstChar, lastEl, lastChar, forward, caseEquiv, expression)
+boolean             SearchRegularExpression (firstEl, firstChar, lastEl, lastChar, forward, caseEquiv, expression)
 PtrElement         *firstEl;
 int                *firstChar;
 PtrElement         *lastEl;

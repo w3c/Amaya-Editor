@@ -2,7 +2,7 @@
    Ce module effectue l'analyse syntaxique d'un texte source dont il
    recoit les mots un par un.
    Il est parametre' par une grammaire qui lui est fournie dans la table
-   ruletable ou dans un fichier de type .GRM
+   GramRule ou dans un fichier de type .GRM
  */
 
 #include "thot_sys.h"
@@ -87,11 +87,11 @@ SyntacticCode            *ret;
    i = 0;
    do
      {
-	if (inputLine[index - 1] == kwtable[i].SrcKeyword[0])
-	   *ret = kwtable[i].SrcKeywordCode;
+	if (inputLine[index - 1] == Keywords[i].SrcKeyword[0])
+	   *ret = Keywords[i].SrcKeywordCode;
 	i++;
      }
-   while (*ret == 0 && i < lastshortkw);
+   while (*ret == 0 && i < LastShortKeyword);
 }
 
 
@@ -117,15 +117,15 @@ SyntacticCode            *ret;
    int                 i;
 
    *ret = 0;
-   i = lastshortkw;
+   i = LastShortKeyword;
    do
      {
-	if (kwtable[i].SrcKeywordLen == len)
-	   if (strncasecmp (&inputLine[index - 1], kwtable[i].SrcKeyword, len) == 0)
-	      *ret = kwtable[i].SrcKeywordCode;
+	if (Keywords[i].SrcKeywordLen == len)
+	   if (strncasecmp (&inputLine[index - 1], Keywords[i].SrcKeyword, len) == 0)
+	      *ret = Keywords[i].SrcKeywordCode;
 	i++;
      }
-   while (*ret == 0 && i < lgkwtable);
+   while (*ret == 0 && i < NKeywords);
 }
 
 
@@ -135,7 +135,7 @@ SyntacticCode            *ret;
 /* |            des identificateurs. Rend dans ret le code du type      | */
 /* |            grammatical de cet identificateur ou 0 s'il n'est       | */
 /* |            pas dans la table. Rend dans rank le rang de              | */
-/* |            l'identificateur dans la table identtable.              | */
+/* |            l'identificateur dans la table Identifier.              | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -158,15 +158,15 @@ int                *rank;
    i = 0;
    do
      {
-	if (identtable[i].SrcIdentLen == len)
-	   if (strncmp (&inputLine[index - 1], identtable[i].SrcIdentifier, len) == 0)
+	if (Identifier[i].SrcIdentLen == len)
+	   if (strncmp (&inputLine[index - 1], Identifier[i].SrcIdentifier, len) == 0)
 	     {
 		*rank = i + 1;
-		*ret = identtable[i].SrcIdentCode;
+		*ret = Identifier[i].SrcIdentCode;
 	     }
 	i++;
      }
-   while (*ret == 0 && i < lgidenttable);
+   while (*ret == 0 && i < NIdentifiers);
 }
 
 
@@ -175,7 +175,7 @@ int                *rank;
 /* |            longueur len qui commence a` la position index dans la  | */
 /* |            ligne courante et qui est de type syntaxique code.      | */
 /* |            Rend dans rank le rang de cet identificateur dans la    | */
-/* |            table identtable.                                       | */
+/* |            table Identifier.                                       | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -194,22 +194,22 @@ int                *rank;
    indLine               i;
 
    *rank = 0;
-   if (lgidenttable >= nbident)
+   if (NIdentifiers >= MAX_IDENTIFIERS)
       CompilerError (index, COMPIL, FATAL, NO_SPACE_LEFT_IN_INDENT_TABLE,
 		     inputLine, LineNum);
-   else if (len > identlen)
+   else if (len > IDENTIFIER_LENGTH)
       CompilerError (index, COMPIL, FATAL, INVALID_WORD_SIZE,
 		     inputLine, LineNum);
    else
      {
-	identtable[lgidenttable].SrcIdentLen = len;
-	identtable[lgidenttable].SrcIdentDefRule = 0;
-	identtable[lgidenttable].SrcIdentRefRule = 0;
-	identtable[lgidenttable].SrcIdentCode = code;
+	Identifier[NIdentifiers].SrcIdentLen = len;
+	Identifier[NIdentifiers].SrcIdentDefRule = 0;
+	Identifier[NIdentifiers].SrcIdentRefRule = 0;
+	Identifier[NIdentifiers].SrcIdentCode = code;
 	for (i = 0; i < len; i++)
-	   identtable[lgidenttable].SrcIdentifier[i] = inputLine[index + i - 1];
-	lgidenttable++;
-	*rank = lgidenttable;
+	   Identifier[NIdentifiers].SrcIdentifier[i] = inputLine[index + i - 1];
+	NIdentifiers++;
+	*rank = NIdentifiers;
      }
 }
 
@@ -490,7 +490,7 @@ SyntacticType             *wn;
 /* |            commencant a` l'index wi de longueur wl et de SyntacticType wn | */
 /* |            correspond a` l'element de code c qui apparait dans la  | */
 /* |            regle r de la grammaire. Rend dans rank le rang du mot  | */
-/* |            dans la table identtable si c'est un identificateur.    | */
+/* |            dans la table Identifier si c'est un identificateur.    | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -589,7 +589,7 @@ int                *rank;
 /* |            wi de la ligne courante (inputLine), de longueur wl et de| */
 /* |            SyntacticType wn. Rend dans c le code grammatical du mot, dans | */
 /* |            r le numero de la derniere regle ou` il a ete trouve et | */
-/* |            dans rank son rang dans identtable, si c'est un         | */
+/* |            dans rank son rang dans Identifier, si c'est un         | */
 /* |            identificateur. Dans pr se trouve le numero de l'avant  | */
 /* |            derniere regle appliquee.                               | */
 /* ---------------------------------------------------------------------- */
@@ -634,9 +634,9 @@ SyntRuleNum                *pr;
 	     /* traite les meta symboles de la regle courante */
 	     do
 	       {
-		  if (ruletable[Stack[level].StRule][Stack[level].StRuleInd] >= 2000
-		      && ruletable[Stack[level].StRule][Stack[level].StRuleInd] <= 2005)
-		     switch (ruletable[Stack[level].StRule][Stack[level].StRuleInd])
+		  if (GramRule[Stack[level].StRule][Stack[level].StRuleInd] >= 2000
+		      && GramRule[Stack[level].StRule][Stack[level].StRuleInd] <= 2005)
+		     switch (GramRule[Stack[level].StRule][Stack[level].StRuleInd])
 			   {
 			      case 2001:
 				 /* debut d'option */
@@ -662,9 +662,9 @@ SyntRuleNum                *pr;
 					{
 					   do
 					      Stack[level].StRuleInd++;
-					   while (ruletable[Stack[level].StRule][Stack[level].StRuleInd] != 2003
-						  && ruletable[Stack[level].StRule][Stack[level].StRuleInd] != 2000);
-					   if (ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2003)
+					   while (GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2003
+						  && GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2000);
+					   if (GramRule[Stack[level].StRule][Stack[level].StRuleInd] == 2003)
 					      Stack[level].StRuleInd++;
 					}
 				      else
@@ -689,7 +689,7 @@ SyntRuleNum                *pr;
 				   {
 				      do
 					 Stack[level].StRuleInd--;
-				      while (ruletable[Stack[level].StRule][Stack[level].StRuleInd] != 2004);
+				      while (GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2004);
 				      Stack[level].StRuleInd++;
 				      Stack[level].Option = True;
 				      Stack[level].Tested = True;
@@ -703,7 +703,7 @@ SyntRuleNum                *pr;
 	     while (meta && level >= 0);
 	     if (level >= 0)
 	       {
-		  *c = ruletable[Stack[level].StRule][Stack[level].StRuleInd];
+		  *c = GramRule[Stack[level].StRule][Stack[level].StRuleInd];
 		  if (TokenMatch (wi, wl, wn, *c, Stack[level].StRule + 1, rank))
 		     /* ca correspond */
 		     if (*c < 1000)
@@ -741,9 +741,9 @@ SyntRuleNum                *pr;
 			     /* traite les meta symboles suivant le mot ok */
 			    {
 			       Stack[level].StRuleInd++;
-			       if (ruletable[Stack[level].StRule][Stack[level].StRuleInd] >= 2000
-				   && ruletable[Stack[level].StRule][Stack[level].StRuleInd] <= 2005)
-				  switch (ruletable[Stack[level].StRule][Stack[level].StRuleInd])
+			       if (GramRule[Stack[level].StRule][Stack[level].StRuleInd] >= 2000
+				   && GramRule[Stack[level].StRule][Stack[level].StRuleInd] <= 2005)
+				  switch (GramRule[Stack[level].StRule][Stack[level].StRuleInd])
 					{
 					   case 2001:
 					      stop = True;	/* debut d'option */
@@ -766,7 +766,7 @@ SyntRuleNum                *pr;
 					      /* fin de repetition */
 					      do
 						 Stack[level].StRuleInd--;
-					      while (ruletable[Stack[level].StRule][Stack[level].StRuleInd] != 2004);
+					      while (GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2004);
 					      Stack[level].StRuleInd++;
 					      Stack[level].Option = True;
 					      stop = True;
@@ -786,12 +786,12 @@ SyntRuleNum                *pr;
 			 {
 			    do
 			       Stack[level].StRuleInd++;
-			    while (ruletable[Stack[level].StRule][Stack[level].StRuleInd] != 2002
-				   && ruletable[Stack[level].StRule][Stack[level].StRuleInd] != 2005);
+			    while (GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2002
+				   && GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2005);
 			    Stack[level].StRuleInd++;
 			    Stack[level].Option = False;
-			    if (ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2000
-				|| ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2003)
+			    if (GramRule[Stack[level].StRule][Stack[level].StRuleInd] == 2000
+				|| GramRule[Stack[level].StRule][Stack[level].StRuleInd] == 2003)
 			       /* fin regle */
 			      {
 				 level--;	/* depile une regle */
@@ -810,9 +810,9 @@ SyntRuleNum                *pr;
 			      {
 				 do
 				    Stack[level].StRuleInd++;
-				 while (ruletable[Stack[level].StRule][Stack[level].StRuleInd] != 2003
-					&& ruletable[Stack[level].StRule][Stack[level].StRuleInd] != 2000);
-				 if (ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2003)
+				 while (GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2003
+					&& GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2000);
+				 if (GramRule[Stack[level].StRule][Stack[level].StRuleInd] == 2003)
 				    /* une alternative dans la regle */
 				   {
 				      if (Stack[level].Alt)
@@ -838,8 +838,8 @@ SyntRuleNum                *pr;
 						  {
 						     do
 							Stack[level].StRuleInd++;
-						     while (ruletable[Stack[level].StRule][Stack[level].StRuleInd] != 2002
-							    && ruletable[Stack[level].StRule][Stack[level].StRuleInd] != 2005);
+						     while (GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2002
+							    && GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2005);
 						     Stack[level].StRuleInd++;
 						     Stack[level].Option = False;
 						     st1 = True;
@@ -849,9 +849,9 @@ SyntRuleNum                *pr;
 						  {
 						     do
 							Stack[level].StRuleInd++;
-						     while (ruletable[Stack[level].StRule][Stack[level].StRuleInd] != 2003
-							    && ruletable[Stack[level].StRule][Stack[level].StRuleInd] != 2000);
-						     if (ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2003)
+						     while (GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2003
+							    && GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2000);
+						     if (GramRule[Stack[level].StRule][Stack[level].StRuleInd] == 2003)
 						       {
 							  Stack[level].StRuleInd++;
 							  st1 = True;
@@ -893,7 +893,7 @@ void                ParserEnd ()
    else
      {
 	/* la pile est vide */
-	if (ruletable[Stack[0].StRule][Stack[0].StRuleInd] != 2000)
+	if (GramRule[Stack[0].StRule][Stack[0].StRuleInd] != 2000)
 	   /* la regle initiale n'est pas terminee */
 	   CompilerError (1, COMPIL, FATAL, ABNORMAL_END, inputLine, LineNum);
      }
@@ -937,11 +937,11 @@ void                InitSyntax (fileName)
      {
 	/* ouvre le fichier grammaire */
 	grmFile = BIOreadOpen (pgrname);
-	lgkwtable = 0;
-	lastshortkw = 0;
+	NKeywords = 0;
+	LastShortKeyword = 0;
 	/* on commence par la lecture de la table des mots-cles */
 	readingKeywordTable = True;
-	lgruletable = 0;
+	NGramRules = 0;
 	ruleptr = 0;
 	fileOK = True;
 	while (fileOK)
@@ -953,7 +953,7 @@ void                InitSyntax (fileName)
 		  fileOK = BIOreadByte (grmFile, &inputLine[j]);
 		  j++;
 	       }
-	     while (j < linelen && inputLine[j - 1] != '\n' && fileOK);
+	     while (j < LINE_LENGTH && inputLine[j - 1] != '\n' && fileOK);
 	     /* marque la fin reelle de la ligne */
 	     inputLine[j - 1] = '\0';
 	     /* traite la ligne */
@@ -965,23 +965,23 @@ void                InitSyntax (fileName)
 		  if (readingKeywordTable)
 		     /* lecture de la table des mots-cles */
 		    {
-		       if (wnat == SynIdentifier && lastshortkw == 0)
-			  lastshortkw = lgkwtable;
+		       if (wnat == SynIdentifier && LastShortKeyword == 0)
+			  LastShortKeyword = NKeywords;
 		       /* on passe des courts aux longs */
 		       if (wnat == SynIdentifier || wnat == SynShortKeyword)
 			 {
-			    if (lgkwtable >= nbkw)
+			    if (NKeywords >= MAX_KEYWORDS)
 			       /* table saturee */
 			       CompilerError (wind, COMPIL, FATAL, NO_SPACE_LEFT_IN_KEYWORD_TABLE,
 					      inputLine, LineNum);
 			    else
-			       lgkwtable++;
+			       NKeywords++;
 			    /* entree suivante de la table */
-			    pkw1 = &kwtable[lgkwtable - 1];
+			    pkw1 = &Keywords[NKeywords - 1];
 			    /* remplit cette nouvelle entree */
-			    if (wlen > kwlen)
+			    if (wlen > KEWWORD_LENGTH)
 			      {
-				 wlen = kwlen;
+				 wlen = KEWWORD_LENGTH;
 				 CompilerError (wind, COMPIL, FATAL, INVALID_KEYWORD_SIZE,
 						inputLine, LineNum);
 			      }
@@ -1015,24 +1015,24 @@ void                InitSyntax (fileName)
 			   /* nouvelle regle */
 			  {
 			     currule = AsciiToInt (wind, wlen);	/* numero de regle */
-			     if (currule > maxrule)
+			     if (currule > MAX_RULES)
 			       {
 				  /* table des regles saturee */
 				  CompilerError (wind, COMPIL, FATAL, NO_SPACE_LEFT_IN_GRAMMAR_TABLE, inputLine, LineNum);
-				  currule = maxrule;
+				  currule = MAX_RULES;
 			       }
-			     ruletable[currule - 1][0] = 0;
+			     GramRule[currule - 1][0] = 0;
 			     ruleptr = 1;
-			     if (currule > lgruletable)
-				lgruletable = currule;
+			     if (currule > NGramRules)
+				NGramRules = currule;
 			  }
 			else
 			  {
 			     /* on est dans une regle */
-			     ruletable[currule - 1][ruleptr] = AsciiToInt (wind, wlen);
-			     if (ruletable[currule - 1][ruleptr] == 2000)
+			     GramRule[currule - 1][ruleptr] = AsciiToInt (wind, wlen);
+			     if (GramRule[currule - 1][ruleptr] == 2000)
 				ruleptr = 0;	/* fin regle */
-			     else if (ruleptr >= maxlgrule)
+			     else if (ruleptr >= RULE_LENGTH)
 				/* regle trop longue */
 				CompilerError (wind, COMPIL, FATAL, GRAMMAR_RULE_SIZE_EXCEEDED, inputLine, LineNum);
 			     else

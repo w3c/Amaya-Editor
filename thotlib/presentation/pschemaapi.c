@@ -38,12 +38,12 @@ Document            doc;
    /* check parameter doc */
    if (doc < 1 || doc > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[doc - 1] == NULL)
+   else if (LoadedDocument[doc - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parameter doc is OK */
      {
-	pSS = TabDocuments[doc - 1]->DocSSchema;
+	pSS = LoadedDocument[doc - 1]->DocSSchema;
 	if (pSS != NULL)
 	  {
 	     pHd = pSS->SsFirstPSchemaExtens;
@@ -118,7 +118,7 @@ Document            document;
    if (pHd != NULL)
      {
 	if (pHd->HdPrevPSchema == NULL)
-	   TabDocuments[document - 1]->DocSSchema->SsFirstPSchemaExtens = pHd->HdNextPSchema;
+	   LoadedDocument[document - 1]->DocSSchema->SsFirstPSchemaExtens = pHd->HdNextPSchema;
 	else
 	   pHd->HdPrevPSchema->HdNextPSchema = pHd->HdNextPSchema;
 	if (pHd->HdNextPSchema != NULL)
@@ -127,7 +127,7 @@ Document            document;
 	pSchP->PsStructCode--;	/* number of documents using this schema */
 	if (pSchP->PsStructCode == 0)
 	   /* this presentation schema is no longer used */
-	   SupprSchPrs (pSchP, TabDocuments[document - 1]->DocSSchema);
+	   SupprSchPrs (pSchP, LoadedDocument[document - 1]->DocSSchema);
 	FreeHandleSchPres (pHd);
      }
 }
@@ -179,11 +179,11 @@ Document            document;
      }
    else if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parameter doc is OK */
-   if (TabDocuments[document - 1]->DocSSchema->SsFirstPSchemaExtens != NULL)
+   if (LoadedDocument[document - 1]->DocSSchema->SsFirstPSchemaExtens != NULL)
       TtaError (ERR_invalid_parameter);
    else
      {
@@ -195,7 +195,7 @@ Document            document;
 	GetHandleSchPres (&newHd);
 	newHd->HdPSchema = (PtrPSchema) schema;
 	if (oldHd == NULL)
-	   TabDocuments[document - 1]->DocSSchema->SsFirstPSchemaExtens = newHd;
+	   LoadedDocument[document - 1]->DocSSchema->SsFirstPSchemaExtens = newHd;
 	else if (before)
 	  {
 	     newHd->HdNextPSchema = oldHd;
@@ -204,7 +204,7 @@ Document            document;
 	     if (newHd->HdPrevPSchema)
 		newHd->HdPrevPSchema->HdNextPSchema = newHd;
 	     else
-		TabDocuments[document - 1]->DocSSchema->SsFirstPSchemaExtens = newHd;
+		LoadedDocument[document - 1]->DocSSchema->SsFirstPSchemaExtens = newHd;
 	  }
 	else
 	  {
@@ -247,12 +247,12 @@ Document            document;
    pSchPres = NULL;
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parameter doc is OK */
-   if (TabDocuments[document - 1]->DocSSchema->SsFirstPSchemaExtens != NULL)
-      pSchPres = TabDocuments[document - 1]->DocSSchema->SsFirstPSchemaExtens->HdPSchema;
+   if (LoadedDocument[document - 1]->DocSSchema->SsFirstPSchemaExtens != NULL)
+      pSchPres = LoadedDocument[document - 1]->DocSSchema->SsFirstPSchemaExtens->HdPSchema;
    return ((PSchema) pSchPres);
 }
 

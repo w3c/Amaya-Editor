@@ -402,7 +402,7 @@ PtrSSchema        scheme;
 
    /* compose le nom du fichier a ouvrir avec le nom du directory */
    /* des schemas... */
-   strncpy (DirBuffer, DirectorySchemas, MAX_PATH);
+   strncpy (DirBuffer, SchemaPath, MAX_PATH);
    BuildFileName (fname, "STR", DirBuffer, filename, &i);
 
    /* ouvre le fichier */

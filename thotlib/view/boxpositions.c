@@ -213,7 +213,7 @@ boolean             EnY;
 		     if (pBo1->BxType == BoBlock && pBo1->BxHorizFlex)
 			reengloby = TRUE;
 		     /* Regarde si la boite est positionnee en X dans l'englobante */
-		     box1 = BoiteHInclus (pBo1, NULL);
+		     box1 = GetHPosRelativePos (pBo1, NULL);
 		     placeenX = pBo1->BxXToCompute;
 		     if (box1 == NULL)
 			newX = TRUE;
@@ -243,7 +243,7 @@ boolean             EnY;
 			placeenX = FALSE;
 
 		     /* On regarde si la boite est positionnee en Y dans l'englobante */
-		     box1 = BoiteVInclus (pBo1, NULL);
+		     box1 = GetVPosRelativeBox (pBo1, NULL);
 		     placeenY = pBo1->BxYToCompute;
 		     if (box1 == NULL)
 			newY = TRUE;
@@ -291,7 +291,7 @@ boolean             EnY;
 			    && (pBo1->BxXOrg < 0 || pBo1->BxXOrg > larg))
 			  {
 			     Erreur = TRUE;
-			     if (HardMsgAff)
+			     if (HighlightBoxErrors)
 			       {
 				  pChildAb->AbSelected = TRUE;	/* Mise en evidence de l'erreur, pas une 
 								   selection ! */
@@ -304,7 +304,7 @@ boolean             EnY;
 			       && (pBo1->BxYOrg < 0 || pBo1->BxYOrg > haut))
 			  {
 			     Erreur = TRUE;
-			     if (HardMsgAff)
+			     if (HighlightBoxErrors)
 			       {
 				  pChildAb->AbSelected = TRUE;	/* Mise en evidence de l'erreur, pas une 
 								   selection ! */
@@ -317,7 +317,7 @@ boolean             EnY;
 			  {
 			     pBo1->BxWidth = 1;
 			     Erreur = TRUE;
-			     if (HardMsgAff)
+			     if (HighlightBoxErrors)
 			       {
 				  pChildAb->AbSelected = TRUE;
 				  /* Mise en evidence de l'erreur, pas une selection ! */
@@ -330,7 +330,7 @@ boolean             EnY;
 			  {
 			     pBo1->BxHeight = 1;
 			     Erreur = TRUE;
-			     if (HardMsgAff)
+			     if (HighlightBoxErrors)
 			       {
 				  pChildAb->AbSelected = TRUE;
 				  /* Mise en evidence de l'erreur, pas une selection ! */
@@ -370,7 +370,7 @@ boolean             EnY;
 			      && !pBox->BxHorizFlex)
 			    {
 			       Erreur = TRUE;
-			       if (HardMsgAff)
+			       if (HighlightBoxErrors)
 				 {
 				    pChildAb->AbSelected = TRUE;
 				    /* Mise en evidence de l'erreur, pas une selection ! */
@@ -467,7 +467,7 @@ boolean             EnY;
 			      && !pBox->BxVertFlex)
 			    {
 			       Erreur = TRUE;
-			       if (HardMsgAff)
+			       if (HighlightBoxErrors)
 				 {
 				    pChildAb->AbSelected = TRUE;
 				    /* Mise en evidence de l'erreur, pas une selection ! */

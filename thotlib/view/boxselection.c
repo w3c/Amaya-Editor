@@ -326,7 +326,7 @@ ViewSelection            *marque;
 	while (!fin && (adbuff != ibuff || max - deb <= i - saut))
 	   if (max - deb <= i - saut)
 	     {
-		/* Box de coupure Suivante */
+		/* Box de coupure GetNextBox */
 		/* Cas particulier des blancs supprimes en fin de boite */
 		/* Est-ce qu'il y a une boite apres ? */
 		if (pBox->BxNexChild == NULL)

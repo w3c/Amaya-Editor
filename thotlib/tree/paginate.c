@@ -193,20 +193,20 @@ static void ChangeRHPage(PavRacine, pDoc, VueNb)
 /* | AnnuleSelectionPage  Annule et deplace si besoin la selection	| */
 /* | 			  courante du document.				| */
 /* |			  Retourne les valeurs de cette selection 	| */
-/* | 			  dans SelPrem, SelDer, SelPremCar et SelDerCar	| */
+/* | 			  dans SelPrem, SelDer, FirstSelectedChar et LastSelectedChar	| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static boolean AnnuleSelectionPage(PtrDocument pDoc, int VueSch, PtrElement *SelPrem, PtrElement *SelDer, int *SelPremCar, int *SelDerCar)
+static boolean AnnuleSelectionPage(PtrDocument pDoc, int VueSch, PtrElement *SelPrem, PtrElement *SelDer, int *FirstSelectedChar, int *LastSelectedChar)
 
 #else /* __STDC__ */
-static boolean AnnuleSelectionPage(pDoc, VueSch, SelPrem, SelDer, SelPremCar, SelDerCar)
+static boolean AnnuleSelectionPage(pDoc, VueSch, SelPrem, SelDer, FirstSelectedChar, LastSelectedChar)
 	PtrDocument pDoc;
 	int VueSch;
 	PtrElement *SelPrem;
 	PtrElement *SelDer;
-  	int  *SelPremCar;
-	int *SelDerCar;
+  	int  *FirstSelectedChar;
+	int *LastSelectedChar;
 
 #endif /* __STDC__ */
 
@@ -216,7 +216,7 @@ static boolean AnnuleSelectionPage(pDoc, VueSch, SelPrem, SelDer, SelPremCar, Se
   boolean	sel;
 
   /* demande quelle est la selection courante */
-  sel = SelEditeur(&SelDoc, &Prem, &Der, SelPremCar, SelDerCar);
+  sel = SelEditeur(&SelDoc, &Prem, &Der, FirstSelectedChar, LastSelectedChar);
   if (sel && SelDoc != pDoc)
     sel = FALSE;
   /* annule la selection si elle est dans le document a paginer */
@@ -322,10 +322,10 @@ static boolean AnnuleSelectionPage(pDoc, VueSch, SelPrem, SelDer, SelPremCar, Se
 				if (Der == Prem)
 				  {
 				    Der = pEl2;
-				    *SelDerCar = 0;
+				    *LastSelectedChar = 0;
 				  }
 				Prem = pEl2;
-				*SelDerCar = 0;
+				*LastSelectedChar = 0;
 			      }
 		  }
       /* la fin de la selection est-il dans une feuille de texte qui
@@ -366,7 +366,7 @@ static boolean AnnuleSelectionPage(pDoc, VueSch, SelPrem, SelDer, SelPremCar, Se
 			      /* les elements vont fusionner, on selectionne le 1er */
 			      {
 				Der = pEl2;
-				*SelDerCar = 0;
+				*LastSelectedChar = 0;
 			      }
 	
 	  }
@@ -561,9 +561,9 @@ static	void AffMsgPage (pDoc, pElRacine, pEl, VueSch, Assoc, prempage)
 /* |			la commande d'impression)			| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static	void Aff_Select_Pages (PtrDocument pDoc, PtrElement PremPage, int Vue, boolean Assoc, boolean sel, PtrElement SelPrem, PtrElement SelDer, int  SelPremCar, int SelDerCar)
+static	void Aff_Select_Pages (PtrDocument pDoc, PtrElement PremPage, int Vue, boolean Assoc, boolean sel, PtrElement SelPrem, PtrElement SelDer, int  FirstSelectedChar, int LastSelectedChar)
 #else /* __STDC__ */
-static	void Aff_Select_Pages (pDoc, PremPage, Vue, Assoc, sel, SelPrem, SelDer, SelPremCar, SelDerCar)
+static	void Aff_Select_Pages (pDoc, PremPage, Vue, Assoc, sel, SelPrem, SelDer, FirstSelectedChar, LastSelectedChar)
 	PtrDocument pDoc;
   	PtrElement    PremPage;
 	int Vue;
@@ -571,8 +571,8 @@ static	void Aff_Select_Pages (pDoc, PremPage, Vue, Assoc, sel, SelPrem, SelDer, 
 	boolean sel;
 	PtrElement SelPrem;
 	PtrElement SelDer;
-  	int  SelPremCar;
-	int SelDerCar;
+  	int  FirstSelectedChar;
+	int LastSelectedChar;
 
 #endif /* __STDC__ */
 
@@ -636,7 +636,7 @@ static	void Aff_Select_Pages (pDoc, PremPage, Vue, Assoc, sel, SelPrem, SelDer, 
 
   /* retablit la selection si elle ete supprimee avant le formatage */
   if (sel)
-    FusEtSel(pDoc, SelPrem, SelDer, SelPremCar, SelDerCar);
+    FusEtSel(pDoc, SelPrem, SelDer, FirstSelectedChar, LastSelectedChar);
 
   /* met a jour les numeros qui changent dans les autres vues a cause */
   /* de la creation des nouvelles marques de page */
@@ -2589,7 +2589,7 @@ void Pages(pDoc, Vue, Assoc)
   PtrElement    pElRacine, PremPage, pPage;
 #ifndef PAGINEETIMPRIME
   PtrElement	SelPrem, SelDer;
-  int		SelPremCar, SelDerCar;
+  int		FirstSelectedChar, LastSelectedChar;
   boolean       sel;
 #endif 
   int		VueSch;
@@ -2659,7 +2659,7 @@ PtrPSchema	pSchPage;
 #endif /* __COLPAGE__ */
 
 #ifndef PAGINEETIMPRIME
-  sel = AnnuleSelectionPage (pDoc, VueSch, &SelPrem, &SelDer, &SelPremCar, &SelDerCar);
+  sel = AnnuleSelectionPage (pDoc, VueSch, &SelPrem, &SelDer, &FirstSelectedChar, &LastSelectedChar);
 #endif /* PAGINEETIMPRIME */
   /* detruit l'image abstraite de la vue concernee, en conservant la racine */
   if (Assoc)
@@ -3022,7 +3022,7 @@ HauteurTotalePage = 0;
   DetrImAbs_Pages(Vue, Assoc, pDoc, VueSch);
   /* reconstruit l'image de la vue et l'affiche */
   Aff_Select_Pages (pDoc, PremPage, Vue, Assoc, sel, SelPrem, 
-		    SelDer, SelPremCar, SelDerCar);
+		    SelDer, FirstSelectedChar, LastSelectedChar);
   /* paginer un document le modifie ... */
   pDoc->DocModified = TRUE;
  } /* fin du cas ou le document est mis en pages */
@@ -3309,7 +3309,7 @@ HauteurTotalePage = 0;
   /* reconstruit l'image de la vue et l'affiche */
 #ifndef PAGINEETIMPRIME
   Aff_Select_Pages (pDoc, PremPage, Vue, Assoc, sel, SelPrem, 
-		    SelDer, SelPremCar, SelDerCar);
+		    SelDer, FirstSelectedChar, LastSelectedChar);
 #endif /* PAGINEETIMPRIME */
   /* paginer un document le modifie ... */
   pDoc->DocModified = TRUE;

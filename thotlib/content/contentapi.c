@@ -100,7 +100,7 @@ Document            document;
 	  {
 	     TtaError (ERR_invalid_document_parameter);
 	  }
-	else if (TabDocuments[document - 1] == NULL)
+	else if (LoadedDocument[document - 1] == NULL)
 	  {
 	     TtaError (ERR_invalid_document_parameter);
 	  }
@@ -112,7 +112,7 @@ Document            document;
 	     selOk = SelEditeur (&selDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
 	     changeSelection = FALSE;
 	     if (selOk)
-		if (selDoc == TabDocuments[document - 1])
+		if (selDoc == LoadedDocument[document - 1])
 		   if ((PtrElement) element == firstSelection ||
 		       (PtrElement) element == lastSelection)
 		      /* The selection starts and/or stops in the element */
@@ -263,7 +263,7 @@ Document            document;
 	     selOk = SelEditeur (&selDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
 	     changeSelection = FALSE;
 	     if (selOk)
-		if (selDoc == TabDocuments[document - 1])
+		if (selDoc == LoadedDocument[document - 1])
 		   if (pEl == firstSelection || pEl == lastSelection)
 		      /* The selection starts and/or stops in the element */
 		      /* First, we abort the selection */
@@ -417,7 +417,7 @@ Document            document;
       /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parameter document is correct */
@@ -466,7 +466,7 @@ Document            document;
       /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parameter document is correct */
@@ -525,7 +525,7 @@ Document            document;
       /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parameter document is correct */
@@ -542,7 +542,7 @@ Document            document;
 	selOk = SelEditeur (&selDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
 	changeSelection = FALSE;
 	if (selOk)
-	   if (selDoc == TabDocuments[document - 1])
+	   if (selDoc == LoadedDocument[document - 1])
 	      if ((PtrElement) element == firstSelection || (PtrElement) element == lastSelection)
 		 /* The selection starts and/or stops in the element */
 		 /* First, we abort the selection */
@@ -750,7 +750,7 @@ Document            document;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
@@ -764,7 +764,7 @@ Document            document;
    else
      {
 	SplitTextElement ((PtrElement) element, position + 1,
-		    TabDocuments[document - 1], FALSE);
+		    LoadedDocument[document - 1], FALSE);
 #ifndef NODISPLAY
 	RedispSplittedText ((PtrElement) element, position, document);
 #endif
@@ -822,7 +822,7 @@ Document            document;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
@@ -841,10 +841,10 @@ Document            document;
 			       {
 #ifndef NODISPLAY
 				  /* destroy the second element of the text */
-				  DetrPaves (pEl2, TabDocuments[document - 1], FALSE);
+				  DetrPaves (pEl2, LoadedDocument[document - 1], FALSE);
 #endif
 				  MergeTextElements ((PtrElement) element, &FreeElement,
-					 TabDocuments[document - 1], FALSE);
+					 LoadedDocument[document - 1], FALSE);
 #ifndef NODISPLAY
 				  RedispMergedText ((PtrElement) element, document);
 #endif
@@ -909,7 +909,7 @@ Document            document;
 	  {
 	     TtaError (ERR_invalid_document_parameter);
 	  }
-	else if (TabDocuments[document - 1] == NULL)
+	else if (LoadedDocument[document - 1] == NULL)
 	  {
 	     TtaError (ERR_invalid_document_parameter);
 	  }
@@ -1007,7 +1007,7 @@ Document            document;
       /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parameter document is correct */

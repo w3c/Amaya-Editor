@@ -92,7 +92,7 @@ unsigned short     *blue;
 
 #endif /* __STDC__ */
 {
-   if (num < NbColors && num >= 0)
+   if (num < NColors && num >= 0)
      {
 	*red = RGB_Table[num].red;
 	*green = RGB_Table[num].green;

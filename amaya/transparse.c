@@ -34,7 +34,7 @@
 
 #include "transparse.h"
 
-extern  PathBuffer  DirectorySchemas;
+extern  PathBuffer  SchemaPath;
 
 
 /* structures de donees du parser */
@@ -1988,7 +1988,7 @@ char* name;
    int i, status;
    /* compose le nom du fichier a ouvrir avec le nom du directory */
    /* des schemas et le suffixe */
-   strncpy (DirBuffer, DirectorySchemas, MAX_PATH);
+   strncpy (DirBuffer, SchemaPath, MAX_PATH);
    BuildFileName (name,"trans", DirBuffer, filename, &i);
  
    /* verifie la date du fichier */

@@ -124,7 +124,7 @@ Document            document;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
@@ -430,7 +430,7 @@ Document            document;
 	     GetBufTexte (&pAttrNouv->AeAttrText);
 	     CopyStringToText (buffer, pAttrNouv->AeAttrText, &lg);
 	     AttachAttrToRange (pAttrNouv, 0, 0, (PtrElement) element, (PtrElement) element,
-			    TabDocuments[document - 1]);
+			    LoadedDocument[document - 1]);
 	  }
 #ifndef NODISPLAY
 	if (element != NULL)

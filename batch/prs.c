@@ -1821,23 +1821,23 @@ indLine               wi;
 	   stop = False;
 	   do
 	     {
-		if (i + 1 > nbident)
+		if (i + 1 > MAX_IDENTIFIERS)
 		   stop = True;
-		else if (identtable[i].SrcIdentCode == RULE_ViewName)
+		else if (Identifier[i].SrcIdentCode == RULE_ViewName)
 		   /* identificateur de boite */
-		   if (identtable[i].SrcIdentDefRule == box + 1)
+		   if (Identifier[i].SrcIdentDefRule == box + 1)
 		     {
 			stop = True;
 			/* affiche le nom de l'identificateur */
 			printf ("\n");
-			for (j = 0; j < identtable[i].SrcIdentLen; j++)
-			   putchar (identtable[i].SrcIdentifier[j]);
+			for (j = 0; j < Identifier[i].SrcIdentLen; j++)
+			   putchar (Identifier[i].SrcIdentifier[j]);
 			printf ("\n");
 		     }
 		i++;
 	     }
 	   while (!stop);
-	   if (i > nbident)
+	   if (i > MAX_IDENTIFIERS)
 	      /*erreur dans la declaration FORWARD */
 	      CompilerError (wi, PRS, FATAL, BAD_USE_OF_KEYWORD_FORWARD, inputLine, LineNum);
 	}
@@ -3545,7 +3545,7 @@ int                 identnum;
 
    pPresBox = &pPSchema->PsPresentBox[pPSchema->PsNPresentBoxes];
    pPSchema->PsNPresentBoxes++;
-   identtable[identnum].SrcIdentDefRule = pPSchema->PsNPresentBoxes;
+   Identifier[identnum].SrcIdentDefRule = pPSchema->PsNPresentBoxes;
    if (Forward)
      {
 	pPresBox->PbName[0] = ' ';
@@ -3828,7 +3828,7 @@ indLine               wi;
 				 /* c'est un nom d'attribut dans une condition */
 				{
 				   /* change le type de ce nom qui devient un nom d'attribut */
-				   identtable[identnum].SrcIdentCode = RULE_AttrName;
+				   Identifier[identnum].SrcIdentCode = RULE_AttrName;
 				   /* traite ce nom d'attribut */
 				   Conditions->CoCondition = PcAttribute;
 				   Conditions->CoTypeElAttr = i;
@@ -3865,7 +3865,7 @@ indLine               wi;
 		    if (pPSchema->PsNViews >= MAX_VIEW)
 		       CompilerError (wi, PRS, FATAL, MAX_VIEWS_OVERFLOW, inputLine, LineNum);
 		    /* Trop de vues */
-		    else if (identtable[identnum].SrcIdentDefRule != 0)
+		    else if (Identifier[identnum].SrcIdentDefRule != 0)
 		       CompilerError (wi, PRS, FATAL, CANT_REDECLARE_NAME, inputLine, LineNum);
 		    /* Vue deja declaree */
 		    else
@@ -3873,17 +3873,17 @@ indLine               wi;
 		      {
 			 CopyName (pPSchema->PsView[pPSchema->PsNViews], wi, wl);
 			 pPSchema->PsNViews++;
-			 identtable[identnum].SrcIdentDefRule = pPSchema->PsNViews;
+			 Identifier[identnum].SrcIdentDefRule = pPSchema->PsNViews;
 		      }
 		 }
 	       else if (prevRule == RULE_PrintView)
 		  /* dans la liste des vues a imprimer */
-		  if (identtable[identnum].SrcIdentDefRule == 0)
+		  if (Identifier[identnum].SrcIdentDefRule == 0)
 		     /* ce nom n'a pas ete declare comme nom de vue, voyons si */
 		     /* ce n'est pas un identificateur de type */
 		    {
 		       ProcessTypeName (prevRule, n, wi, wl);
-		       identtable[identnum].SrcIdentCode = RULE_TypeName;
+		       Identifier[identnum].SrcIdentCode = RULE_TypeName;
 		       /* changement de type, c'est */
 		       /* maintenant un identificateur de type structure */
 		    }
@@ -3897,7 +3897,7 @@ indLine               wi;
 			 {
 			    pPSchema->PsPrintedView[pPSchema->PsNPrintedViews].VpAssoc = False;
 			    pPSchema->PsPrintedView[pPSchema->PsNPrintedViews].VpNumber =
-			       identtable[identnum].SrcIdentDefRule;
+			       Identifier[identnum].SrcIdentDefRule;
 			    pPSchema->PsNPrintedViews++;
 			 }
 		    }
@@ -3905,28 +3905,28 @@ indLine               wi;
 		 {
 		    pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
 		    pCntr->CnItem[pCntr->CnNItems - 1].CiViewNum =
-		       identtable[identnum].SrcIdentDefRule;
+		       Identifier[identnum].SrcIdentDefRule;
 		 }
 	       else if (prevRule == RULE_CounterAttrPage)
-		  if (identtable[identnum].SrcIdentDefRule == 0)
+		  if (Identifier[identnum].SrcIdentDefRule == 0)
 		     CompilerError (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);	/* Vue non declaree */
 		  else
 		    {
 		       pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
 		       pPresVar->PvItem[pPresVar->PvNItems - 1].ViView =
-			  identtable[identnum].SrcIdentDefRule;
+			  Identifier[identnum].SrcIdentDefRule;
 		    }
 	       else if (prevRule == RULE_ViewRules)
 		  /* dans une instruction 'in ViewName ...' */
-		  if (identtable[identnum].SrcIdentDefRule == 0)
+		  if (Identifier[identnum].SrcIdentDefRule == 0)
 		     /* Vue non declaree */
 		     CompilerError (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
-		  else if (identtable[identnum].SrcIdentDefRule == 1)
+		  else if (Identifier[identnum].SrcIdentDefRule == 1)
 		     /* C'est la vue* principale, erreur */
 		     CompilerError (wi, PRS, FATAL, FORBIDDEN_IN_THE_MAIN_VIEW, inputLine, LineNum);
 		  else
 		    {
-		       CurView = identtable[identnum].SrcIdentDefRule;
+		       CurView = Identifier[identnum].SrcIdentDefRule;
 		       RulesForView = True;
 		    }
 	       break;
@@ -3937,7 +3937,7 @@ indLine               wi;
 		 {
 		    if (pPSchema->PsNCounters >= MAX_PRES_COUNTER)
 		       CompilerError (wi, PRS, FATAL, MAX_COUNTERS_OVERFLOW, inputLine, LineNum);
-		    else if (identtable[identnum].SrcIdentDefRule != 0)
+		    else if (Identifier[identnum].SrcIdentDefRule != 0)
 		       CompilerError (wi, PRS, FATAL, CANT_REDECLARE_NAME, inputLine, LineNum);
 		    else
 		      {
@@ -3948,10 +3948,10 @@ indLine               wi;
 			 pCntr->CnNPresBoxes = 0;
 			 pCntr->CnNCreators = 0;
 			 pCntr->CnNCreatedBoxes = 0;
-			 identtable[identnum].SrcIdentDefRule = pPSchema->PsNCounters;
+			 Identifier[identnum].SrcIdentDefRule = pPSchema->PsNCounters;
 		      }
 		 }
-	       else if (identtable[identnum].SrcIdentDefRule == 0)
+	       else if (Identifier[identnum].SrcIdentDefRule == 0)
 		  /* on n'a pas encore rencontre' ce nom */
 		  if (prevRule != RULE_CounterAttrPage)
 		     CompilerError (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);	/* compteur non declare' */
@@ -3971,7 +3971,7 @@ indLine               wi;
 			  /* c'est un nom d'attribut apres VALUE */
 			 {
 			    /* change le type de ce nom qui devient un nom d'attribut */
-			    identtable[identnum].SrcIdentCode = RULE_AttrName;
+			    Identifier[identnum].SrcIdentCode = RULE_AttrName;
 			    /* traite ce nom d'attribut */
 			    pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
 			    NewVarListItem (pPresVar, wi);
@@ -3987,13 +3987,13 @@ indLine               wi;
 		    pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
 		    pPresVar->PvItem[pPresVar->PvNItems].ViType = VarCounter;
 		    pPresVar->PvItem[pPresVar->PvNItems].ViCounter =
-		       identtable[identnum].SrcIdentDefRule;
+		       Identifier[identnum].SrcIdentDefRule;
 		    pPresVar->PvItem[pPresVar->PvNItems].ViCounterVal = CurMinMax;
 		    pPresVar->PvNItems++;
 		    if (NewVariableDef)
 		       /* definition de var. dans une regle Content */
 		      {
-			 pCntr = &pPSchema->PsCounter[identtable[identnum].SrcIdentDefRule - 1];
+			 pCntr = &pPSchema->PsCounter[Identifier[identnum].SrcIdentDefRule - 1];
 			 /* ce compteur est utilise' dans la boite de presentation */
 			 if (pCntr->CnNPresBoxes < MAX_PRES_COUNT_USER)
 			   {
@@ -4010,8 +4010,8 @@ indLine               wi;
 	       else if (prevRule == RULE_ElemCondition)
 		  /* dans une condition */
 		 {
-		    Conditions->CoCounter = identtable[identnum].SrcIdentDefRule;
-		    pCntr = &pPSchema->PsCounter[identtable[identnum].SrcIdentDefRule - 1];
+		    Conditions->CoCounter = Identifier[identnum].SrcIdentDefRule;
+		    pCntr = &pPSchema->PsCounter[Identifier[identnum].SrcIdentDefRule - 1];
 		    /* ce compteur est-il deja utilise' par la boite courante */
 		    /* comme condition de creation ? */
 		    if (PresBoxDef)
@@ -4040,7 +4040,7 @@ indLine               wi;
 	       else if (prevRule == RULE_TypeOrCounter)
 		  /* un compteur au debut d'une regle Transmit */
 		 {
-		    TransmittedCounter = identtable[identnum].SrcIdentDefRule;
+		    TransmittedCounter = Identifier[identnum].SrcIdentDefRule;
 		    pCntr = &pPSchema->PsCounter[TransmittedCounter - 1];
 		    if (pCntr->CnNTransmAttrs >= MAX_TRANSM_ATTR)
 		      {
@@ -4168,14 +4168,14 @@ indLine               wi;
 	       /* ConstName */
 	       if (ConstantDef)
 		  /* definition de constante */
-		  if (identtable[identnum].SrcIdentDefRule != 0)
+		  if (Identifier[identnum].SrcIdentDefRule != 0)
 		     CompilerError (wi, PRS, FATAL, CANT_REDECLARE_NAME, inputLine, LineNum);
 		  else
 		    {
 		       NewConst (wi);
-		       identtable[identnum].SrcIdentDefRule = pPSchema->PsNConstants;
+		       Identifier[identnum].SrcIdentDefRule = pPSchema->PsNConstants;
 		    }
-	       else if (identtable[identnum].SrcIdentDefRule == 0)
+	       else if (Identifier[identnum].SrcIdentDefRule == 0)
 		  /* utilisation d'une constante */
 		  /* on n'a pas encore rencontre' ce nom */
 		  if (prevRule == RULE_Function)
@@ -4194,7 +4194,7 @@ indLine               wi;
 			  /* c'est un nom d'attribut dans une variable */
 			  /* change le type de ce nom qui devient un nom d'attribut */
 			 {
-			    identtable[identnum].SrcIdentCode = RULE_AttrName;
+			    Identifier[identnum].SrcIdentCode = RULE_AttrName;
 			    /* r=19 */
 			    /* traite ce nom d'attribut */
 			    pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
@@ -4213,7 +4213,7 @@ indLine               wi;
 		      {
 			 pPresBox = &pPSchema->PsPresentBox[CurPresBox - 1];
 			 pPresBox->PbContent = ContConst;
-			 pPresBox->PbContConstant = identtable[identnum].SrcIdentDefRule;
+			 pPresBox->PbContConstant = Identifier[identnum].SrcIdentDefRule;
 		      }
 		    if (VariableDef || NewVariableDef)
 		       /* dans une definition de variable */
@@ -4222,14 +4222,14 @@ indLine               wi;
 			 NewVarListItem (pPresVar, wi);
 			 pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarText;
 			 pPresVar->PvItem[pPresVar->PvNItems - 1].ViConstant =
-			    identtable[identnum].SrcIdentDefRule;
+			    Identifier[identnum].SrcIdentDefRule;
 		      }
 		    if (RuleDef)
 		       if (CurRule->PrPresMode == PresFunction && CurRule->PrPresFunction == FnContentRef)
 			  /* un nom de constante dans une regle Content d'un element reference ou paire */
 			 {
 			    CurRule->PrNPresBoxes = 1;
-			    CurRule->PrPresBox[0] = identtable[identnum].SrcIdentDefRule;
+			    CurRule->PrPresBox[0] = Identifier[identnum].SrcIdentDefRule;
 			 }
 		 }
 	       break;
@@ -4243,14 +4243,14 @@ indLine               wi;
 	    case RULE_VarName /* VarName */ :
 	       if (VariableDef)
 		  /* definition de variable */
-		  if (identtable[identnum].SrcIdentDefRule != 0)
+		  if (Identifier[identnum].SrcIdentDefRule != 0)
 		     CompilerError (wi, PRS, FATAL, CANT_REDECLARE_NAME, inputLine, LineNum);
 		  else
 		    {
 		       NewVar (wi);
-		       identtable[identnum].SrcIdentDefRule = pPSchema->PsNVariables;
+		       Identifier[identnum].SrcIdentDefRule = pPSchema->PsNVariables;
 		    }
-	       else if (identtable[identnum].SrcIdentDefRule == 0)
+	       else if (Identifier[identnum].SrcIdentDefRule == 0)
 		  /* utilisation d'une variable */
 		  /* ce nom n'a pas ete declare comme identificateur de variable */
 		  if (prevRule == RULE_VarConst)
@@ -4258,7 +4258,7 @@ indLine               wi;
 		     /* si ce n'est pas un identificateur de type */
 		    {
 		       ProcessTypeName (prevRule, n, wi, wl);
-		       identtable[identnum].SrcIdentCode = RULE_TypeName;
+		       Identifier[identnum].SrcIdentCode = RULE_TypeName;
 		       /* changement de type, c'est */
 		       /* maintenant un identificateur de type structure' */
 		    }
@@ -4270,10 +4270,10 @@ indLine               wi;
 		      {
 			 pPresBox = &pPSchema->PsPresentBox[CurPresBox - 1];
 			 pPresBox->PbContent = ContVariable;
-			 pPresBox->PbContVariable = identtable[identnum].SrcIdentDefRule;
+			 pPresBox->PbContVariable = Identifier[identnum].SrcIdentDefRule;
 			 /* cherche tous les compteurs reference's par cette variable */
 			 /* et marque que la boite de presentation courante les utilise */
-			 pPresVar = &pPSchema->PsVariable[identtable[identnum].SrcIdentDefRule - 1];
+			 pPresVar = &pPSchema->PsVariable[Identifier[identnum].SrcIdentDefRule - 1];
 			 for (i = 0; i < pPresVar->PvNItems; i++)
 			   {
 			      pVarElem = &pPresVar->PvItem[i];
@@ -4311,25 +4311,25 @@ indLine               wi;
 		       /* d'element, erreur */
 		       CompilerError (wi, PRS, FATAL, CANT_USE_TYPE_NAME_FOR_A_BOX,
 				      inputLine, LineNum);
-		    else if (identtable[identnum].SrcIdentDefRule == 0)
+		    else if (Identifier[identnum].SrcIdentDefRule == 0)
 		       NewBoxName (wl, wi, identnum);
-		    else if (pPSchema->PsPresentBox[identtable[identnum].SrcIdentDefRule - 1].PbName[0] != ' ')
+		    else if (pPSchema->PsPresentBox[Identifier[identnum].SrcIdentDefRule - 1].PbName[0] != ' ')
 		       CompilerError (wi, PRS, FATAL, CANT_REDECLARE_NAME, inputLine, LineNum);
 		    /* nom deja rencontre' dans une declaration de vue, de */
 		    /* compteur ou dans une instruction Forward */
 		    else
 		      {
-			 pPresBox = &pPSchema->PsPresentBox[identtable[identnum].SrcIdentDefRule - 1];
+			 pPresBox = &pPSchema->PsPresentBox[Identifier[identnum].SrcIdentDefRule - 1];
 			 CopyName (pPresBox->PbName, wi, wl);
 			 pPresBox->PbFirstPRule = NextRule;
 			 FirstRule = NextRule;
-			 CurPresBox = identtable[identnum].SrcIdentDefRule;
+			 CurPresBox = Identifier[identnum].SrcIdentDefRule;
 		      }
 		 }
 	       else
 		  /* utilisation d'une boite */
 		 {
-		    if (identtable[identnum].SrcIdentDefRule == 0)
+		    if (Identifier[identnum].SrcIdentDefRule == 0)
 		       /* ce nom n'a pas ete declare comme identificateur de boite */
 		      {
 			 i = 1;
@@ -4353,7 +4353,7 @@ indLine               wi;
 			    /* voyons si ce n'est pas un identificateur de type */
 			   {
 			      ProcessTypeName (prevRule, n, wi, wl);
-			      identtable[identnum].SrcIdentCode = RULE_TypeName;
+			      Identifier[identnum].SrcIdentCode = RULE_TypeName;
 			      /* changement de type, c'est */
 			      /* maintenant un identificateur de type structure */
 			   }
@@ -4374,7 +4374,7 @@ indLine               wi;
 				case PtVertPos:
 				case PtHorizPos:
 				   CurRule->PrPosRule.PoRefElem = False;
-				   CurRule->PrPosRule.PoRefPresBox = identtable[identnum].SrcIdentDefRule;
+				   CurRule->PrPosRule.PoRefPresBox = Identifier[identnum].SrcIdentDefRule;
 				   break;
 				case PtWidth:
 				case PtHeight:
@@ -4382,13 +4382,13 @@ indLine               wi;
 				     {
 					CurRule->PrDimRule.DrPosRule.PoRefElem = False;
 					CurRule->PrDimRule.DrPosRule.PoRefPresBox =
-					   identtable[identnum].SrcIdentDefRule;
+					   Identifier[identnum].SrcIdentDefRule;
 				     }
 				   else
 				     {
 					CurRule->PrDimRule.DrRefElement = False;
 					CurRule->PrDimRule.DrRefPresBox =
-					   identtable[identnum].SrcIdentDefRule;
+					   Identifier[identnum].SrcIdentDefRule;
 				     }
 				   break;
 				case PtFunction:
@@ -4404,12 +4404,12 @@ indLine               wi;
 				      else
 					{
 					   CurRule->PrNPresBoxes = 1;
-					   CurRule->PrPresBox[0] = identtable[identnum].SrcIdentDefRule;
+					   CurRule->PrPresBox[0] = Identifier[identnum].SrcIdentDefRule;
 					}
 				   else
 				     {
 					CurRule->PrPresBox[CurRule->PrNPresBoxes] =
-					   identtable[identnum].SrcIdentDefRule;
+					   Identifier[identnum].SrcIdentDefRule;
 					CurRule->PrNPresBoxes++;
 					if (CurRule->PrPresFunction == FnCreateFirst
 					  || CurRule->PrPresFunction == FnCreateLast
@@ -4454,7 +4454,7 @@ indLine               wi;
 						       new = True;
 						       for (j = 0; j < pCntr->CnNCreatedBoxes; j++)
 							  if (pCntr->CnCreatedBox[j] ==
-							      identtable[identnum].SrcIdentDefRule)
+							      Identifier[identnum].SrcIdentDefRule)
 							     new = False;
 						       if (new)
 							 {
@@ -4466,7 +4466,7 @@ indLine               wi;
 							    else
 							       pCntr->CnMinMaxCreatedBox[pCntr->CnNCreatedBoxes] = False;
 							    pCntr->CnCreatedBox[pCntr->CnNCreatedBoxes] =
-							       identtable[identnum].SrcIdentDefRule;
+							       Identifier[identnum].SrcIdentDefRule;
 							    pCntr->CnNCreatedBoxes++;
 							 }
 						    }
@@ -6127,7 +6127,7 @@ char              **argv;
    SyntRuleNum                 r;	/* numero de regle de grammaire */
    SyntRuleNum                 pr;	/* numero de la regle de grammaire precedente*/
    SyntacticCode             c;	/* code grammatical du mot trouve */
-   int                 nb;	/* indice dans identtable du mot trouve', si
+   int                 nb;	/* indice dans Identifier du mot trouve', si
 				   identificateur */
    int                 i;
 
@@ -6160,7 +6160,7 @@ char              **argv;
 	  {
 	     infile = BIOreadOpen (fname);
 	     /* le fichier a compiler est ouvert */
-	     lgidenttable = 0;	/* table des identificateurs vide */
+	     NIdentifiers = 0;	/* table des identificateurs vide */
 	     LineNum = 0;	/* encore aucune ligne lue */
 	     pSSchema = NULL;	/* pas (encore) de schema de structure */
 	     /* lit tout le fichier et fait l'analyse */
@@ -6175,10 +6175,10 @@ char              **argv;
 		       fileOK = BIOreadByte (infile, &inputLine[i]);
 		       i++;
 		    }
-		  while (i < linelen && inputLine[i - 1] != '\n' && fileOK);
+		  while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
 		  /* marque la fin reelle de la ligne */
 		  inputLine[i - 1] = '\0';
-		  if (i >= linelen)
+		  if (i >= LINE_LENGTH)
 		     /* ligne trop longue */
 		     CompilerError (1, PRS, FATAL, MAX_LINE_SIZE_OVERFLOW, inputLine,
 				    LineNum);

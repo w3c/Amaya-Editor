@@ -13,8 +13,8 @@
 #include "appdialogue.h"
 
 #ifdef NODISPLAY
-/*** pour la bibliotheque ThotKernel, on definit les variables SelPremier
-     et SelDernier, qui sont utilisees a la fin de la procedure MergeTextElements  ***/
+/*** pour la bibliotheque ThotKernel, on definit les variables FirstSelectedElement
+     et LastSelectedElement, qui sont utilisees a la fin de la procedure MergeTextElements  ***/
 #undef EXPORT
 #define EXPORT
 #include "select.var"
@@ -179,9 +179,9 @@ char               *documentName;
 		       GetDocIdent (&pDoc->DocIdent, documentName);
 		       /* conserve le path actuel des schemas dans le contexte */
 		       /* du document */
-		       strncpy (pDoc->DocSchemasPath, DirectorySchemas, MAX_PATH);
+		       strncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
 		       /* initialise le directory du document */
-		       strncpy (pDoc->DocDirectory, DirectoryDoc, MAX_PATH);
+		       strncpy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
 		       /* si c'est un path, retient seulement le 1er directory */
 		       i = 1;
 		       while (pDoc->DocDirectory[i - 1] != '\0' &&
@@ -254,7 +254,7 @@ int                 accessMode;
 		if (strcmp (&(pDoc->DocDName[lg - 4]), ".PIV") == 0)
 		   pDoc->DocDName[lg - 4] = '\0';
 	     GetDocIdent (&pDoc->DocIdent, pDoc->DocDName);
-	     strncpy (pDoc->DocDirectory, DirectoryDoc, MAX_PATH);
+	     strncpy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
 	     ok = OpenDocument (pDoc->DocDName, pDoc, TRUE, FALSE, NULL, FALSE);
 	     if (!ok)
 		/* echec d'acces a l'objet pivot */
@@ -265,7 +265,7 @@ int                 accessMode;
 	     else
 	       {
 		  /* conserve le path actuel des schemas dans le contexte du doc. */
-		  strncpy (pDoc->DocSchemasPath, DirectorySchemas, MAX_PATH);
+		  strncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
 		  document = IdentDocument (pDoc);
 		  pDoc->DocReadOnly = (accessMode == 0);
 	       }
@@ -316,14 +316,14 @@ char               *documentName;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
    else
       /* parametre document correct */
      {
-	pDoc = TabDocuments[document - 1];
+	pDoc = LoadedDocument[document - 1];
 	if (pDoc->DocReadOnly)
 	  {
 	     TtaError (ERR_read_only_document);
@@ -406,14 +406,14 @@ char               *TSchemaName;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
    else
       /* parametre document correct */
      {
-	ExportDocument (TabDocuments[document - 1], fileName, TSchemaName);
+	ExportDocument (LoadedDocument[document - 1], fileName, TSchemaName);
      }
 }
 
@@ -450,7 +450,7 @@ Document            document;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
@@ -459,7 +459,7 @@ Document            document;
      {
 #ifndef NODISPLAY
 	/* on ferme toutes les vues ouvertes du document */
-	pDoc = TabDocuments[document - 1];
+	pDoc = LoadedDocument[document - 1];
 	/* on ferme d'abord les vues de l'arbre principal */
 	for (nv = 1; nv <= MAX_VIEW_DOC; nv++)
 	   if (pDoc->DocView[nv - 1].DvPSchemaView != 0)
@@ -475,7 +475,7 @@ Document            document;
 		detruit (pDoc, numassoc, TRUE, FALSE);
 	     }
 #endif
-	LibDocument (&TabDocuments[document - 1]);
+	LibDocument (&LoadedDocument[document - 1]);
      }
 }
 
@@ -517,14 +517,14 @@ Document            document;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
    else
       /* parametre document correct */
      {
-	pDoc = TabDocuments[document - 1];
+	pDoc = LoadedDocument[document - 1];
 	/* Note d'abord dans le contexte du document tous les liens de */
 	/* reference externe */
 	/* traite l'arbre principal du document */
@@ -579,7 +579,7 @@ Document            document;
 		detruit (pDoc, numassoc, TRUE, FALSE);
 	     }
 #endif
-	LibDocument (&TabDocuments[document - 1]);
+	LibDocument (&LoadedDocument[document - 1]);
      }
 }
 
@@ -611,7 +611,7 @@ char               *path;
       TtaError (ERR_string_too_long);
    else
      {
-	strcpy (DirectoryDoc, path);
+	strcpy (DocumentPath, path);
      }
 }
 
@@ -738,7 +738,7 @@ char               *directory;
    char               *ptr;
 
    /* Regarde si ce directory est deja dans la liste */
-   ptr = strstr (DirectoryDoc, directory);
+   ptr = strstr (DocumentPath, directory);
    i = strlen (directory);
    while (ptr != NULL && ptr[i] != PATH_SEP && ptr[i] != '\0')
      {
@@ -785,14 +785,14 @@ char               *directory;
    else if (!TtaIsInDocumentPath (directory))
      {
 	/* add the directory in the path */
-	i = strlen (DirectoryDoc);
+	i = strlen (DocumentPath);
 	if (i + lg + 2 >= MAX_PATH)
 	   TtaError (ERR_string_too_long);
 	else
 	  {
 	     if (i > 0)
-		strcat (DirectoryDoc, PATH_STR);
-	     strcat (DirectoryDoc, directory);
+		strcat (DocumentPath, PATH_STR);
+	     strcat (DocumentPath, directory);
 	  }
      }
 }
@@ -823,7 +823,7 @@ char               *path;
    if (strlen (path) >= MAX_PATH)
       TtaError (ERR_string_too_long);
    else
-      strcpy (DirectorySchemas, path);
+      strcpy (SchemaPath, path);
 }
 
 /* ----------------------------------------------------------------------
@@ -922,7 +922,7 @@ char               *presentationName;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
@@ -930,7 +930,7 @@ char               *presentationName;
       /* parametre document correct */
      {
 	extension = LoadExtension (extensionName, presentationName,
-				   TabDocuments[document - 1]);
+				   LoadedDocument[document - 1]);
 	if (extension == NULL)
 	  {
 	     TtaError (ERR_cannot_read_struct_schema);
@@ -959,7 +959,7 @@ int                *removedAttributes;
 
    if (*pEl != NULL)
      {
-	pDoc = TabDocuments[document - 1];
+	pDoc = LoadedDocument[document - 1];
 	if ((*pEl)->ElSructSchema == pSSExt)
 	   /* this element belongs to the extension schema to be removed */
 	  {
@@ -1051,14 +1051,14 @@ int                *removedAttributes;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
    else
       /* parametre document correct */
      {
-	pDoc = TabDocuments[document - 1];
+	pDoc = LoadedDocument[document - 1];
 	/* cherche l'extension a retirer */
 	previousSSchema = pDoc->DocSSchema;
 	curExtension = previousSSchema->SsNextExtens;
@@ -1140,14 +1140,14 @@ char               *presentationName;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
    else
       /* parametre document correct */
      {
-	pDoc = TabDocuments[document - 1];
+	pDoc = LoadedDocument[document - 1];
 #ifdef NODISPLAY
 	if (pDoc->DocSSchema != NULL)
 	   strncpy (pDoc->DocSSchema->SsDefaultPSchema, presentationName,
@@ -1221,7 +1221,7 @@ char               *directory;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
@@ -1230,7 +1230,7 @@ char               *directory;
      {
 	if (strlen (directory) >= MAX_PATH)
 	   TtaError (ERR_buffer_too_small);
-	strcpy (TabDocuments[document - 1]->DocDirectory, directory);
+	strcpy (LoadedDocument[document - 1]->DocDirectory, directory);
      }
 }
 
@@ -1266,7 +1266,7 @@ char               *documentName;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
@@ -1278,10 +1278,10 @@ char               *documentName;
 	else
 	  {
 #ifndef NODISPLAY
-	     changenomdoc (TabDocuments[document - 1], documentName);
+	     changenomdoc (LoadedDocument[document - 1], documentName);
 #else
-	     strncpy (TabDocuments[document - 1]->DocDName, documentName, MAX_NAME_LENGTH);
-	     strncpy (TabDocuments[document - 1]->DocIdent, documentName, MAX_DOC_IDENT_LEN);
+	     strncpy (LoadedDocument[document - 1]->DocDName, documentName, MAX_NAME_LENGTH);
+	     strncpy (LoadedDocument[document - 1]->DocIdent, documentName, MAX_DOC_IDENT_LEN);
 #endif
 	  }
      }
@@ -1316,16 +1316,16 @@ int                 accessMode;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
    else
       /* parametre document correct */
      {
-	TabDocuments[document - 1]->DocReadOnly = (accessMode == 0);
+	LoadedDocument[document - 1]->DocReadOnly = (accessMode == 0);
 #ifndef NODISPLAY
-	MajAccessMode (TabDocuments[document - 1], accessMode);
+	MajAccessMode (LoadedDocument[document - 1], accessMode);
 #endif
      }
 }
@@ -1362,7 +1362,7 @@ int                 interval;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
@@ -1373,7 +1373,7 @@ int                 interval;
 	TtaError (ERR_invalid_parameter);
      }
    else
-      TabDocuments[document - 1]->DocBackUpInterval = interval;
+      LoadedDocument[document - 1]->DocBackUpInterval = interval;
 }
 
 /* ----------------------------------------------------------------------
@@ -1405,13 +1405,13 @@ int                 notificationMode;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
    else
       /* parametre document correct */
-      TabDocuments[document - 1]->DocNotifyAll = (notificationMode != 0);
+      LoadedDocument[document - 1]->DocNotifyAll = (notificationMode != 0);
 }
 
 
@@ -1442,13 +1442,13 @@ Document            document;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
    else
       /* parametre document correct */
-      TabDocuments[document - 1]->DocModified = TRUE;
+      LoadedDocument[document - 1]->DocModified = TRUE;
 }
 
 /* ----------------------------------------------------------------------
@@ -1480,13 +1480,13 @@ Document            document;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
    else
       /* parametre document correct */
-      TabDocuments[document - 1]->DocModified = FALSE;
+      LoadedDocument[document - 1]->DocModified = FALSE;
 }
 
 /* ----------------------------------------------------------------------
@@ -1519,14 +1519,14 @@ Document            document;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
    else
       /* parametre document correct */
      {
-	strcpy (nameBuffer, TabDocuments[document - 1]->DocDName);
+	strcpy (nameBuffer, LoadedDocument[document - 1]->DocDName);
      }
    return nameBuffer;
 }
@@ -1563,8 +1563,8 @@ char               *documentName;
    found = FALSE;
    while (!found && document < MAX_DOCUMENTS)
      {
-	if (TabDocuments[document - 1] != NULL)
-	   if (strcmp (documentName, TabDocuments[document - 1]->DocDName) == 0)
+	if (LoadedDocument[document - 1] != NULL)
+	   if (strcmp (documentName, LoadedDocument[document - 1]->DocDName) == 0)
 	      found = TRUE;
 	if (!found)
 	   document++;
@@ -1609,16 +1609,16 @@ int                 bufferLength;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
    else
       /* parametre document correct */
      {
-	if (strlen (TabDocuments[document - 1]->DocDirectory) >= bufferLength)
+	if (strlen (LoadedDocument[document - 1]->DocDirectory) >= bufferLength)
 	   TtaError (ERR_buffer_too_small);
-	strncpy (buffer, TabDocuments[document - 1]->DocDirectory, bufferLength - 1);
+	strncpy (buffer, LoadedDocument[document - 1]->DocDirectory, bufferLength - 1);
      }
 }
 
@@ -1654,14 +1654,14 @@ Document            document;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
    else
       /* parametre document correct */
      {
-	schema = (SSchema) TabDocuments[document - 1]->DocSSchema;
+	schema = (SSchema) LoadedDocument[document - 1]->DocSSchema;
      }
    return schema;
 }
@@ -1818,14 +1818,14 @@ Document            document;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
    else
       /* parametre document correct */
       /* on cherche a partir du schema principal du document */
-      schema = ChSchStruct (TabDocuments[document - 1]->DocSSchema, name);
+      schema = ChSchStruct (LoadedDocument[document - 1]->DocSSchema, name);
    return schema;
 }
 
@@ -1914,7 +1914,7 @@ char               *presentationName;
    presentationName[0] = '\0';
    /* compose le nom du fichier a ouvrir avec le nom du directory */
    /* des documents... */
-   strncpy (DirBuffer, DirectoryDoc, MAX_PATH);
+   strncpy (DirBuffer, DocumentPath, MAX_PATH);
    BuildFileName (documentName, "PIV", DirBuffer, texte, &i);
    /* teste si le fichier existe */
    file = BIOreadOpen (texte);
@@ -2045,7 +2045,7 @@ SSchema            *extension;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
@@ -2053,7 +2053,7 @@ SSchema            *extension;
       /* parametre document correct */
      {
 	if (*extension == NULL)
-	   nextExtension = TabDocuments[document - 1]->DocSSchema->SsNextExtens;
+	   nextExtension = LoadedDocument[document - 1]->DocSSchema->SsNextExtens;
 	else if (!(((PtrSSchema) (*extension))->SsExtension))
 	   /* ce n'est pas un schema d'extension */
 	  {
@@ -2105,14 +2105,14 @@ SSchema            *nature;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
    else
       /* parametre document correct */
      {
-	pDoc = TabDocuments[document - 1];
+	pDoc = LoadedDocument[document - 1];
 	if (*nature == NULL)
 	   /* premiere demande, construit la table des natures du document */
 	  {
@@ -2190,13 +2190,13 @@ Document            document;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
    else
       /* parametre document correct */
-   if (TabDocuments[document - 1]->DocModified)
+   if (LoadedDocument[document - 1]->DocModified)
       modified = 1;
    return modified;
 }
@@ -2232,13 +2232,13 @@ Document            document;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
    else
       /* parametre document correct */
-   if (TabDocuments[document - 1]->DocReadOnly)
+   if (LoadedDocument[document - 1]->DocReadOnly)
       result = 0;
    else
       result = 1;
@@ -2279,13 +2279,13 @@ Document            document;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
    else
       /* parametre document correct */
-      result = TabDocuments[document - 1]->DocBackUpInterval;
+      result = LoadedDocument[document - 1]->DocBackUpInterval;
    return result;
 }
 
@@ -2322,13 +2322,13 @@ Document            document;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
    else
       /* parametre document correct */
-   if (TabDocuments[document - 1]->DocNotifyAll)
+   if (LoadedDocument[document - 1]->DocNotifyAll)
       result = 1;
    else
       result = 0;
@@ -2365,9 +2365,9 @@ int                 bufferLength;
 {
 
    UserErrorCode = 0;
-   if (strlen (DirectoryDoc) >= bufferLength)
+   if (strlen (DocumentPath) >= bufferLength)
       TtaError (ERR_buffer_too_small);
-   strncpy (buffer, DirectoryDoc, bufferLength - 1);
+   strncpy (buffer, DocumentPath, bufferLength - 1);
 }
 
 /* ----------------------------------------------------------------------
@@ -2398,9 +2398,9 @@ int                 bufferLength;
 {
 
    UserErrorCode = 0;
-   if (strlen (DirectorySchemas) >= bufferLength)
+   if (strlen (SchemaPath) >= bufferLength)
       TtaError (ERR_buffer_too_small);
-   strncpy (buffer, DirectorySchemas, bufferLength - 1);
+   strncpy (buffer, SchemaPath, bufferLength - 1);
 }
 
 #ifndef NODISPLAY
@@ -2429,10 +2429,10 @@ Document            TtaGetDocumentOfSavedElements ()
 
 {
    UserErrorCode = 0;
-   if (DocDeSauve == NULL)
+   if (DocOfSavedElements == NULL)
       return 0;
    else
-      return IdentDocument (DocDeSauve);
+      return IdentDocument (DocOfSavedElements);
 }
 #endif
 
@@ -2450,7 +2450,7 @@ Document            document;
 #endif /* __STDC__ */
 
 {
-   return TabDocuments[document - 1];
+   return LoadedDocument[document - 1];
 }
 
 /* end of module */

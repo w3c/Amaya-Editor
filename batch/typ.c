@@ -56,7 +56,7 @@ static SyntacticType       wn;		/* SyntacticType du mot courant */
 static SyntRuleNum          r;		/* numero de regle */
 static SyntRuleNum          pr;		/* numero de la regle precedente */
 static SyntacticCode      c;		/* code grammatical du mot trouve */
-static int          nb;		/* indice dans identtable du mot trouve, si identific */
+static int          nb;		/* indice dans Identifier du mot trouve, si identific */
 static PtrSSchema pSchStr;	/* pointeur sur le schema de structure */
 static PtrSchTypo   pSchTypo;	/* pointeur sur le schema de typographie */
 static PtrTypoFunction PremFonction;	/* pointeur sur la premiere fonction de la
@@ -1529,7 +1529,7 @@ char              **argv;
 		  /* supprime le suffixe ".SCH" */
 		  pfilename[i] = '\0';
 		  /* acquiert la memoire pour le schema de typographie */
-		  lgidenttable = 0;	/* table des identificateurs vide */
+		  NIdentifiers = 0;	/* table des identificateurs vide */
 		  LineNum = 0;
 		  initgener ();	/* prepare la generation */
 
@@ -1544,12 +1544,12 @@ char              **argv;
 			    fileOK = BIOreadByte (infile, &inputLine[i]);
 			    i++;
 			 }
-		       while (i < linelen && inputLine[i - 1] != '\n' && fileOK);
+		       while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
 		       /* marque la fin reelle de la ligne */
 		       inputLine[i - 1] = '\0'
 		       /* incremente le compteur de lignes */ ;
 		       LineNum++;
-		       if (i >= linelen)
+		       if (i >= LINE_LENGTH)
 			  CompilerError (1, TYP, FATAL, TYP_LINE_TOO_LONG, inputLine,
 					 LineNum);
 		       else if (inputLine[0] == '#')
@@ -1591,7 +1591,7 @@ char              **argv;
 		    {
 		       /* ecrit le schema compile' dans le fichier de sortie */
 		       /* le directory des schemas est le directory courant */
-		       DirectorySchemas[0] = '\0';
+		       SchemaPath[0] = '\0';
 		       WrSchTyp (pfilename, pSchTypo, pSchStr);
 		    }
 		  free (pSchTypo);

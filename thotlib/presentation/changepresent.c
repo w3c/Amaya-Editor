@@ -2029,7 +2029,7 @@ void ChangeCouleur(numCouleur, Fond)
 		  if (Fond)
 		    /* on change la couleur de fond avec la souris */
 		    {
-		      pAb = PaveDeElem(pEl, SelVue);
+		      pAb = PaveDeElem(pEl, SelectedView);
 		      if (pAb != NULL)
 			if (pAb->AbFillPattern < 2)
 			  /* on force la trame backgroundcolor si la trame du pave */
@@ -2050,10 +2050,10 @@ void ChangeCouleur(numCouleur, Fond)
 			}
 		      else
 			RuleSetPut(LesRegles, PtForeground);
-		      SupprPres(pEl, SelDoc, LesRegles, SelVue);
+		      SupprPres(pEl, SelDoc, LesRegles, SelectedView);
 		    }
 		  else
-		    ModifGraphiques(pEl, SelDoc, SelVue, FALSE, ' ', FALSE, 0, FALSE,
+		    ModifGraphiques(pEl, SelDoc, SelectedView, FALSE, ' ', FALSE, 0, FALSE,
 				  ChangeTrame, numTrame, Fond, numCouleur, !Fond, numCouleur);
 		  /* si on est dans un element copie' par inclusion,   */
 		  /* on met a jour les copies de cet element. */

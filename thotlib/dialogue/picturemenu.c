@@ -29,8 +29,8 @@
 #define MyNumSelImage		        5
 #define MyNumMenuTypeImage		6
 #define IMAGE_MENU_MAX			7
-extern PathBuffer   DirectoryDoc;
-extern PathBuffer   DirectorySchemas;
+extern PathBuffer   DocumentPath;
+extern PathBuffer   SchemaPath;
 extern char        *SuffixImage[];
 
 #undef EXPORT
@@ -109,8 +109,8 @@ static void         InitPathImage ()
    max = MAX_PATH * 2;
    j = 0;
    /* paths des schemas */
-   for (i = 0; i < MAX_PATH && DirectorySchemas[i] != '\0'; i++)
-      if (DirectorySchemas[i] == PATH_SEP)
+   for (i = 0; i < MAX_PATH && SchemaPath[i] != '\0'; i++)
+      if (SchemaPath[i] == PATH_SEP)
 	{
 	   if (BufDir[j - 1] != '\0')
 	     {
@@ -119,7 +119,7 @@ static void         InitPathImage ()
 	     }
 	}
       else
-	 BufDir[j++] = DirectorySchemas[i];
+	 BufDir[j++] = SchemaPath[i];
 
    if (j < max)
       BufDir[j++] = '\0';
@@ -128,8 +128,8 @@ static void         InitPathImage ()
 
    /* paths des documents */
    nb++;
-   for (i = 0; i < MAX_PATH && DirectoryDoc[i] != '\0'; i++)
-      if (DirectoryDoc[i] == PATH_SEP)
+   for (i = 0; i < MAX_PATH && DocumentPath[i] != '\0'; i++)
+      if (DocumentPath[i] == PATH_SEP)
 	{
 	   if (BufDir[j - 1] != '\0')
 	     {
@@ -138,7 +138,7 @@ static void         InitPathImage ()
 	     }
 	}
       else
-	 BufDir[j++] = DirectoryDoc[i];
+	 BufDir[j++] = DocumentPath[i];
 
    if (j < max)
       BufDir[j] = '\0';
@@ -195,11 +195,11 @@ char               *txt;
 		       if (TtaIsSuffixFileIn (DirectoryImage, SuffixImage[IndexTypeImage]))
 			 {
 			    /* il faut ajouter le directory au path */
-			    i = strlen (DirectoryDoc);
+			    i = strlen (DocumentPath);
 			    if (i + strlen (DirectoryImage) + 2 < MAX_PATH)
 			      {
-				 strcat (DirectoryDoc, PATH_STR);
-				 strcat (DirectoryDoc, DirectoryImage);
+				 strcat (DocumentPath, PATH_STR);
+				 strcat (DocumentPath, DirectoryImage);
 				 InitPathImage ();
 				 TtaListDirectory (DirectoryImage, BaseDlgImage + MyNumFormImage, NULL, -1,
 						   SuffixImage[IndexTypeImage], "Fichiers", BaseDlgImage + MyNumSelImage);
@@ -211,7 +211,7 @@ char               *txt;
 	       if (DirectoryImage[0] == '\0')
 		 {
 		    /* compose le path complet du fichier pivot */
-		    strncpy (DirectoryImage, DirectoryDoc, MAX_PATH);
+		    strncpy (DirectoryImage, DocumentPath, MAX_PATH);
 		    /* recheche indirectement le directory */
 		    BuildFileName (txt, "", DirectoryImage, nomcomplet, &i);
 		    /* separe directory et nom */
@@ -237,11 +237,11 @@ char               *txt;
 			    if (TtaIsSuffixFileIn (DirectoryImage, SuffixImage[IndexTypeImage]))
 			      {
 				 /* il faut ajouter le directory au path */
-				 i = strlen (DirectoryDoc);
+				 i = strlen (DocumentPath);
 				 if (i + strlen (DirectoryImage) + 2 < MAX_PATH)
 				   {
-				      strcat (DirectoryDoc, ":");
-				      strcat (DirectoryDoc, DirectoryImage);
+				      strcat (DocumentPath, ":");
+				      strcat (DocumentPath, DirectoryImage);
 				      InitPathImage ();
 				   }
 			      }

@@ -94,7 +94,7 @@ PtrDocument         pDoc;
    char                BufItemSplit[MAX_TXT_LEN];
 
    BufItemSplit[0] = '\0';
-   if (pDoc == NULL || pDoc != SelDocument)
+   if (pDoc == NULL || pDoc != SelectedDocument)
       return;
    else if (!pDoc->DocReadOnly)
      {

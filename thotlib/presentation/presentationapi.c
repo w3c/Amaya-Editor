@@ -69,7 +69,7 @@ Document            document;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
@@ -81,16 +81,16 @@ Document            document;
 	   /* vue de l'arbre principal */
 	   if (view < 1 || view > MAX_VIEW_DOC)
 	      TtaError (ERR_invalid_parameter);
-	   else if (TabDocuments[document - 1]->DocView[view - 1].DvPSchemaView == 0)
+	   else if (LoadedDocument[document - 1]->DocView[view - 1].DvPSchemaView == 0)
 	      /* this view is not open */
 	      TtaError (ERR_invalid_parameter);
 	   else
-	      v = TabDocuments[document - 1]->DocView[view - 1].DvPSchemaView;
+	      v = LoadedDocument[document - 1]->DocView[view - 1].DvPSchemaView;
 	else
 	   /* vue d'elements associes */
 	if (view - 100 < 1 || view - 100 > MAX_ASSOC_DOC)
 	   TtaError (ERR_invalid_parameter);
-	else if (TabDocuments[document - 1]->DocAssocFrame[view - 101] == 0)
+	else if (LoadedDocument[document - 1]->DocAssocFrame[view - 101] == 0)
 	   /* this view is not open */
 	   TtaError (ERR_invalid_parameter);
 	else
@@ -151,7 +151,7 @@ Document            document;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
@@ -219,14 +219,14 @@ Document            document;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
    else
       /* parametre document correct */
      {
-	pDoc = TabDocuments[document - 1];
+	pDoc = LoadedDocument[document - 1];
 	vue = 0;
 	/* on cherche parmi les vues de l'arbre principal */
 	if (pDoc->DocSSchema->SsPSchema != NULL)
@@ -340,7 +340,7 @@ Document            document;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
@@ -421,7 +421,7 @@ Document            document;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
@@ -513,7 +513,7 @@ Document            document;
    else if (document < 1 || document > MAX_DOCUMENTS)
       /* verifie le parametre document */
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
@@ -802,7 +802,7 @@ Document            document;
    /* verifie le parametre document */
    else if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
@@ -884,7 +884,7 @@ TypeUnit            unit;
    /* verifie le parametre document */
    else if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
@@ -970,7 +970,7 @@ int                *height;
    /* verifie le parametre document */
    else if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
@@ -1060,7 +1060,7 @@ int                *yCoord;
    /* verifie le parametre document */
    else if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */

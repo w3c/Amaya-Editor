@@ -64,14 +64,14 @@ char                BufMenu[MAX_TXT_LEN];
    /* element englobant non cache' */
    i = 0;
    strcpy (&BufMenu[i], "B^ ");
-   pEl = MenuSelElPere;
+   pEl = SelMenuParentEl;
    if (pEl != NULL)
       strcat (&BufMenu[i], pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
    i += strlen (&BufMenu[i]) + 1;
 
    /* element selectionable precedent */
    strcpy (&BufMenu[i], "B< ");
-   pEl = MenuSelElPredecent;
+   pEl = SelMenuPreviousEl;
    if (pEl != NULL)
      {
 #ifdef __COLPAGE__
@@ -87,7 +87,7 @@ char                BufMenu[MAX_TXT_LEN];
 
    /* element selectionable suivant */
    strcpy (&BufMenu[i], "B> ");
-   pEl = MenuSelElSuivant;
+   pEl = SelMenuNextEl;
    if (pEl != NULL)
      {
 #ifdef __COLPAGE__
@@ -103,7 +103,7 @@ char                BufMenu[MAX_TXT_LEN];
 
    /* cherche le type du 1er element englobe' selectionable */
    strcpy (&BufMenu[i], "B_ ");
-   pEl = MenuSelElFils;
+   pEl = SelMenuChildEl;
    if (pEl != NULL)
      {
 #ifdef __COLPAGE__
@@ -128,11 +128,11 @@ char                BufMenu[MAX_TXT_LEN];
 
    /* on recherche d'abord la structure englobante */
    /* l'element de structure physique englobant est parmi les freres */
-   /* precedents de SelPremier, et c'est une feuille */
+   /* precedents de FirstSelectedElement, et c'est une feuille */
    strcpy (&BufMenu[i], "B^ ");
-   MenuSelPageColPere = NULL;
+   SelMenuPageColParent = NULL;
    stop = FALSE;
-   pEl = SelPremier;
+   pEl = FirstSelectedElement;
    while (!stop && pEl != NULL)
       if (pEl->ElPrevious != NULL)
 	{
@@ -148,16 +148,16 @@ char                BufMenu[MAX_TXT_LEN];
 		   /* principale de recherche */
 		   if (pEl2->ElTypeNumber == PageBreak + 1)
 		      /* TODO plus tard ?    && pEl2->ElViewPSchema == VueSch) */
-		      if (SelPremier->ElTypeNumber != PageBreak + 1)
+		      if (FirstSelectedElement->ElTypeNumber != PageBreak + 1)
 			 /* le pave de structure physique est le premier trouve */
 			 /* il faudrait tester la vue ! */
 			 stop = TRUE;
-		      else if (SelPremier->ElViewPSchema == pEl2->ElViewPSchema)
+		      else if (FirstSelectedElement->ElViewPSchema == pEl2->ElViewPSchema)
 			 /* on est sur une marque de la meme vue */
 			 /* on analyse les englobements possibles */
 			 /* si cela ne correspond pas, on continuera */
 			 /* la recherche */
-			 switch (SelPremier->ElPageType)
+			 switch (FirstSelectedElement->ElPageType)
 			       {
 				  case ColBegin:
 				  case ColComputed:
@@ -207,17 +207,17 @@ char                BufMenu[MAX_TXT_LEN];
 	else
 	   NomElem = pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
 	strcat (&BufMenu[i], NomElem);
-	MenuSelPageColPere = pEl;
+	SelMenuPageColParent = pEl;
      }
    i += strlen (&BufMenu[i]) + 1;
 
    /* on recherche ensuite la structure precedente */
    /* l'element de structure physique precedente est parmi les freres */
-   /* precedents de SelPremier, et c'est une feuille */
+   /* precedents de FirstSelectedElement, et c'est une feuille */
    strcpy (&BufMenu[i], "< ");
-   MenuSelPageColPrec = NULL;
+   SelMenuPageColPrev = NULL;
    stop = FALSE;
-   pEl = SelPremier;
+   pEl = FirstSelectedElement;
    while (!stop && pEl != NULL)
       if (pEl->ElPrevious != NULL)
 	{
@@ -233,19 +233,19 @@ char                BufMenu[MAX_TXT_LEN];
 		   /* principale de recherche */
 		   if (pEl2->ElTypeNumber == PageBreak + 1)
 		      /* TODO plus tard ?    && pEl2->ElViewPSchema == VueSch) */
-		      if (SelPremier->ElTypeNumber != PageBreak + 1)
+		      if (FirstSelectedElement->ElTypeNumber != PageBreak + 1)
 			 /* pas de precedent si l'element n'est pas une */
 			 /* marque page ou colonne */
 			{
 			   pEl = NULL;
 			   stop = TRUE;
 			}
-		      else if (SelPremier->ElViewPSchema == pEl2->ElViewPSchema)
+		      else if (FirstSelectedElement->ElViewPSchema == pEl2->ElViewPSchema)
 			 /* on est sur une marque de la meme vue */
 			 /* on analyse les englobements possibles */
 			 /* si cela ne correspond pas, on continuera */
 			 /* la recherche */
-			 switch (SelPremier->ElPageType)
+			 switch (FirstSelectedElement->ElPageType)
 			       {
 				  case ColBegin:
 				  case ColComputed:
@@ -297,17 +297,17 @@ char                BufMenu[MAX_TXT_LEN];
 	else
 	   NomElem = pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
 	strcat (&BufMenu[i], NomElem);
-	MenuSelPageColPrec = pEl;
+	SelMenuPageColPrev = pEl;
      }
    i += strlen (&BufMenu[i]) + 1;
 
    /* on recherche ensuite la structure suivante */
    /* l'element de structure physique precedente est parmi les freres */
-   /* suivants de SelPremier, et c'est une feuille */
+   /* suivants de FirstSelectedElement, et c'est une feuille */
    strcpy (&BufMenu[i], "> ");
    stop = FALSE;
-   MenuSelPageColSuiv = NULL;
-   pEl = SelDernier;
+   SelMenuPageColNext = NULL;
+   pEl = LastSelectedElement;
    while (!stop && pEl != NULL)
       if (pEl->ElNext != NULL)
 	{
@@ -323,14 +323,14 @@ char                BufMenu[MAX_TXT_LEN];
 		   /* principale de recherche */
 		   if (pEl2->ElTypeNumber == PageBreak + 1)
 		      /* TODO plus tard ?    && pEl2->ElViewPSchema == VueSch) */
-		      if (SelDernier->ElTypeNumber != PageBreak + 1)
+		      if (LastSelectedElement->ElTypeNumber != PageBreak + 1)
 			 stop = TRUE;	/* on a trouve la structure suivante */
-		      else if (SelDernier->ElViewPSchema == pEl2->ElViewPSchema)
+		      else if (LastSelectedElement->ElViewPSchema == pEl2->ElViewPSchema)
 			 /* on est sur une marque de la meme vue */
 			 /* on analyse les englobements possibles */
 			 /* si cela ne correspond pas, on continuera */
 			 /* la recherche */
-			 switch (SelDernier->ElPageType)
+			 switch (LastSelectedElement->ElPageType)
 			       {
 				  case ColBegin:
 				  case ColComputed:
@@ -381,17 +381,17 @@ char                BufMenu[MAX_TXT_LEN];
 	else
 	   NomElem = pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
 	strcat (&BufMenu[i], NomElem);
-	MenuSelPageColSuiv = pEl;
+	SelMenuPageColNext = pEl;
      }
    i += strlen (&BufMenu[i]) + 1;
 
    /* on recherche en dernier la structure physique englobee  */
    /* l'element de structure physique englobee est parmi les freres */
-   /* suivant de SelDernier, et c'est une feuille */
+   /* suivant de LastSelectedElement, et c'est une feuille */
    strcpy (&BufMenu[i], "_ ");
    stop = FALSE;
-   pEl = SelDernier;
-   MenuSelPageColFils = NULL;
+   pEl = LastSelectedElement;
+   SelMenuPageColChild = NULL;
    while (!stop && pEl != NULL)
       if (pEl->ElNext != NULL)
 	{
@@ -407,12 +407,12 @@ char                BufMenu[MAX_TXT_LEN];
 		   /* principale de recherche */
 		   if (pEl2->ElTypeNumber == PageBreak + 1)
 		      /* TODO plus tard ?    && pEl2->ElViewPSchema == VueSch) */
-		      if (SelDernier->ElTypeNumber != PageBreak + 1)
+		      if (LastSelectedElement->ElTypeNumber != PageBreak + 1)
 			{
 			   stop = TRUE;		/* pas de structure englobee */
 			   pEl = NULL;
 			}
-		      else if (SelDernier->ElViewPSchema == pEl2->ElViewPSchema)
+		      else if (LastSelectedElement->ElViewPSchema == pEl2->ElViewPSchema)
 			 /* dans tous les cas, on s'arretera */
 			{
 			   stop = TRUE;
@@ -420,7 +420,7 @@ char                BufMenu[MAX_TXT_LEN];
 			   /* on analyse les englobements possibles */
 			   /* si cela ne correspond pas, on arretera */
 			   /* la recherche (continuer n'aurait aucun sens) */
-			   switch (SelDernier->ElPageType)
+			   switch (LastSelectedElement->ElPageType)
 				 {
 				    case ColBegin:
 				    case ColComputed:
@@ -471,7 +471,7 @@ char                BufMenu[MAX_TXT_LEN];
 	else
 	   NomElem = pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
 	strcat (&BufMenu[i], NomElem);
-	MenuSelPageColFils = pEl;
+	SelMenuPageColChild = pEl;
      }
    i += strlen (&BufMenu[i]) + 1;
    return (9);
@@ -500,7 +500,7 @@ PtrDocument         pDoc;
    Document            document;
    Menu_Ctl           *ptrmenu;
 
-   if (pDoc == SelDocument)
+   if (pDoc == SelectedDocument)
       NbItemSel = ComposeMenuSelection (BufMenuSel);
    else
       NbItemSel = 0;

@@ -76,7 +76,7 @@ Document            targetDocument;
 	  {
 	     TtaError (ERR_invalid_document_parameter);
 	  }
-	else if (TabDocuments[document - 1] == NULL)
+	else if (LoadedDocument[document - 1] == NULL)
 	  {
 	     TtaError (ERR_invalid_document_parameter);
 	  }
@@ -97,14 +97,14 @@ Document            targetDocument;
 	       {
 		  TtaError (ERR_invalid_document_parameter);
 	       }
-	     else if (TabDocuments[targetDocument - 1] == NULL)
+	     else if (LoadedDocument[targetDocument - 1] == NULL)
 	       {
 		  TtaError (ERR_invalid_document_parameter);
 	       }
 	     else
 		/* parametre targetDocument correct */
 	       {
-		  pRefDoc = TabDocuments[targetDocument - 1];
+		  pRefDoc = LoadedDocument[targetDocument - 1];
 		  /* l'element pointe' par target va etre reference' */
 		  if (((PtrElement) target)->ElReferredDescr == NULL)
 		     /* cet element n'a pas encore de descripteur */
@@ -119,14 +119,14 @@ Document            targetDocument;
 		  ((PtrElement) element)->ElReference->RdElement =
 		     (PtrElement) element;
 		  ((PtrElement) element)->ElReference->RdTypeRef = RefFollow;
-		  saveNbCar = TabDocuments[document - 1]->DocNTypedChars;
+		  saveNbCar = LoadedDocument[document - 1]->DocNTypedChars;
 		  ok = SetReference ((PtrElement) element, NULL,
 				     (PtrElement) target,
-				     TabDocuments[document - 1], pRefDoc,
+				     LoadedDocument[document - 1], pRefDoc,
 				     TRUE, FALSE);
 		  /* an API function is not supposed to change */
 		  /* the number of characters typed by the user */
-		  TabDocuments[document - 1]->DocNTypedChars = saveNbCar;
+		  LoadedDocument[document - 1]->DocNTypedChars = saveNbCar;
 		  if (!ok)
 		    {
 		       TtaError (ERR_cannot_set_link);
@@ -179,7 +179,7 @@ Document            targetDocument;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[document - 1] == NULL)
+   else if (LoadedDocument[document - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
@@ -195,7 +195,7 @@ Document            targetDocument;
      {
 	TtaError (ERR_invalid_document_parameter);
      }
-   else if (TabDocuments[targetDocument - 1] == NULL)
+   else if (LoadedDocument[targetDocument - 1] == NULL)
      {
 	TtaError (ERR_invalid_document_parameter);
      }
@@ -204,12 +204,12 @@ Document            targetDocument;
      {
 	inclusion = NewSubtree (((PtrElement) target)->ElTypeNumber,
 				((PtrElement) target)->ElSructSchema,
-				TabDocuments[document - 1], 0, FALSE,
+				LoadedDocument[document - 1], 0, FALSE,
 				TRUE, TRUE, TRUE);
 	GetReference (&inclusion->ElSource);
 	inclusion->ElSource->RdElement = inclusion;
 	inclusion->ElSource->RdTypeRef = RefInclusion;
-	pRefDoc = TabDocuments[targetDocument - 1];
+	pRefDoc = LoadedDocument[targetDocument - 1];
 	/* l'element pointe' par target va etre reference' */
 	if (((PtrElement) target)->ElReferredDescr == NULL)
 	   /* cet element n'a pas encore de descripteur */
@@ -218,17 +218,17 @@ Document            targetDocument;
 	     ((PtrElement) target)->ElReferredDescr = NewReferredElDescr (pRefDoc);
 	     ((PtrElement) target)->ElReferredDescr->ReReferredElem = (PtrElement) target;
 	  }
-	saveNbCar = TabDocuments[document - 1]->DocNTypedChars;
+	saveNbCar = LoadedDocument[document - 1]->DocNTypedChars;
 	if (SetReference (inclusion, NULL, (PtrElement) target,
-			  TabDocuments[document - 1], pRefDoc, TRUE, FALSE))
-	   CopyIncludedElem (inclusion, TabDocuments[document - 1]);
+			  LoadedDocument[document - 1], pRefDoc, TRUE, FALSE))
+	   CopyIncludedElem (inclusion, LoadedDocument[document - 1]);
 	else
 	  {
 	     TtaError (ERR_cannot_set_link);
 	  }
 	/* an API function is not supposed to change */
 	/* the number of characters typed by the user */
-	TabDocuments[document - 1]->DocNTypedChars = saveNbCar;
+	LoadedDocument[document - 1]->DocNTypedChars = saveNbCar;
      }
    return ((Element) inclusion);
 }
@@ -337,14 +337,14 @@ Document            targetDocument;
 	  {
 	     TtaError (ERR_invalid_document_parameter);
 	  }
-	else if (TabDocuments[document - 1] == NULL)
+	else if (LoadedDocument[document - 1] == NULL)
 	  {
 	     TtaError (ERR_invalid_document_parameter);
 	  }
 	else
 	   /* parametre document correct */
 	  {
-	     pDoc = TabDocuments[document - 1];
+	     pDoc = LoadedDocument[document - 1];
 	     /* verifie que l'attribut appartient bien a l'element */
 	     pAttr = ((PtrElement) element)->ElFirstAttr;
 	     ok = FALSE;
@@ -373,7 +373,7 @@ Document            targetDocument;
 		    {
 		       TtaError (ERR_invalid_document_parameter);
 		    }
-		  else if (TabDocuments[targetDocument - 1] == NULL)
+		  else if (LoadedDocument[targetDocument - 1] == NULL)
 		    {
 		       TtaError (ERR_invalid_document_parameter);
 		    }
@@ -385,7 +385,7 @@ Document            targetDocument;
 					   (PtrAttribute) attribute,
 					   document, FALSE);
 #endif
-		       pRefDoc = TabDocuments[targetDocument - 1];
+		       pRefDoc = LoadedDocument[targetDocument - 1];
 		       /* l'element pointe' par target va etre reference' */
 		       if (((PtrElement) target)->ElReferredDescr == NULL)
 			  /* cet element n'a pas encore de descripteur */
@@ -405,13 +405,13 @@ Document            targetDocument;
 		       ref->RdElement = (PtrElement) element;
 		       ref->RdAttribute = (PtrAttribute) attribute;
 		       ref->RdTypeRef = RefFollow;
-		       saveNbCar = TabDocuments[document - 1]->DocNTypedChars;
+		       saveNbCar = LoadedDocument[document - 1]->DocNTypedChars;
 		       ok = SetReference (NULL, (PtrAttribute) attribute,
 					  (PtrElement) target,
 					  pDoc, pRefDoc, TRUE, FALSE);
 		       /* an API function is not supposed to change */
 		       /* the number of characters typed by the user */
-		       TabDocuments[document - 1]->DocNTypedChars = saveNbCar;
+		       LoadedDocument[document - 1]->DocNTypedChars = saveNbCar;
 		       if (!ok)
 			  TtaError (ERR_cannot_set_link);
 		    }
@@ -879,7 +879,7 @@ Document           *referenceDocument;
       /* verifie le parametre targetDocument */
    if (targetDocument < 1 || targetDocument > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[targetDocument - 1] == NULL)
+   else if (LoadedDocument[targetDocument - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre targetDocument correct */
@@ -901,7 +901,7 @@ Document           *referenceDocument;
 		  {
 		     pDE = NULL;
 		     pRef = SearchExternalReferenceToElem ((PtrElement) target,
-				    TabDocuments[targetDocument - 1], FALSE,
+				    LoadedDocument[targetDocument - 1], FALSE,
 					 &pDocRef, &pDE, TRUE);
 		     if (pRef != NULL)
 			/*il y a une reference externe dans un document charge' */
@@ -913,7 +913,7 @@ Document           *referenceDocument;
 	   /* verifie le parametre referenceDocument */
 	if (*referenceDocument < 1 || *referenceDocument > MAX_DOCUMENTS)
 	   TtaError (ERR_invalid_document_parameter);
-	else if (TabDocuments[*referenceDocument - 1] == NULL)
+	else if (LoadedDocument[*referenceDocument - 1] == NULL)
 	   TtaError (ERR_invalid_document_parameter);
 	else
 	   /* parametre referenceDocument correct */
@@ -961,7 +961,7 @@ Document           *referenceDocument;
 				 while (pDE != NULL && !trouve)
 				   {
 				      if (MemeIdentDoc (pDE->EdDocIdent,
-							TabDocuments[*referenceDocument - 1]->DocIdent))
+							LoadedDocument[*referenceDocument - 1]->DocIdent))
 					 trouve = TRUE;
 				      pDE = pDE->EdNext;
 				   }
@@ -972,7 +972,7 @@ Document           *referenceDocument;
 			    /* on cherche la 1ere reference dans le document */
 			    /* referencant retenu */
 			    pRef = SearchExternalReferenceToElem ((PtrElement) target,
-					   TabDocuments[targetDocument - 1],
+					   LoadedDocument[targetDocument - 1],
 					      FALSE, &pDocRef, &pDE, FALSE);
 			    if (pRef != NULL)
 			       /* on a trouve' une reference externe dans un */
@@ -1045,7 +1045,7 @@ char               *referringDocumentName;
       /* verifie le parametre targetDocument */
    if (targetDocument < 1 || targetDocument > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (TabDocuments[targetDocument - 1] == NULL)
+   else if (LoadedDocument[targetDocument - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre targetDocument correct */

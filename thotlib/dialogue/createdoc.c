@@ -66,7 +66,7 @@ char               *data;
    else
      {
 	if (ref != 0)
-	   if (CurrentDialog == NumFormCreerDoc)
+	   if (CurrentDialog == NumFormCreateDoc)
 	     {
 		/* confirme la creation */
 		CreateDocument (&pDoc);	/* acquiert un contexte de document */
@@ -75,7 +75,7 @@ char               *data;
 		   NewDocument (&pDoc, (PtrBuffer) ClasseDocACreer,
 				NomDocACreer, DirectoryDocACreer);
 	     }
-	   else if (CurrentDialog == NumFormSauverComme)
+	   else if (CurrentDialog == NumFormSaveAs)
 	      if (CurrentDialog != 0)
 		{		/* confirme la sauvegarde */
 		   if (ThotLocalActions[T_savedoc] != NULL)
@@ -108,12 +108,12 @@ char               *data;
 
    switch (ref)
 	 {
-	    case NumFormCreerDoc:
+	    case NumFormCreateDoc:
 	       /* le formulaire "Creer un document" lui-meme */
 	       if (NomDocACreer[0] == '\0')
 		  /* le nom par defaut */
 		  strcpy (NomDocACreer, TtaGetMessage (LIB, NO_NAME));
-	       CurrentDialog = NumFormCreerDoc;
+	       CurrentDialog = NumFormCreateDoc;
 	       if (ClasseDocACreer[0] != '\0' && ((int) data) == 1)
 		 {
 		    /* on a tous les parametres */
@@ -150,7 +150,7 @@ char               *data;
 		 }
 	       /*ClasseDocACreer[0] = '\0'; */
 	       break;
-	    case NumZoneNomDocACreer:
+	    case NumZoneDocNameToCreate:
 	       /* zone de saisie du nom du document a creer */
 	       if (TtaCheckDirectory (data) && data[strlen (data) - 1] != DIR_SEP)
 		 {
@@ -172,26 +172,26 @@ char               *data;
 		       if (TtaIsSuffixFileIn (DirectoryDocACreer, ".PIV"))
 			 {
 			    /* il faut ajouter le directory au path */
-			    i = strlen (DirectoryDoc);
+			    i = strlen (DocumentPath);
 			    if (i + strlen (DirectoryDocACreer) + 2 < MAX_PATH)
 			      {
-				 strcat (DirectoryDoc, PATH_STR);
-				 strcat (DirectoryDoc, DirectoryDocACreer);
+				 strcat (DocumentPath, PATH_STR);
+				 strcat (DocumentPath, DirectoryDocACreer);
 				 BuildPathDocBuffer (BufDir, '\0', &i);
-				 TtaNewSelector (NumZoneDirDocACreer, NumFormCreerDoc, TtaGetMessage (LIB, DOC_DIR), i, BufDir, 9, NULL, FALSE, TRUE);
+				 TtaNewSelector (NumZoneDocDirToCreate, NumFormCreateDoc, TtaGetMessage (LIB, DOC_DIR), i, BufDir, 9, NULL, FALSE, TRUE);
 			      }
 			 }
 		 }
 	       break;
-	    case NumZoneDirDocACreer:
+	    case NumZoneDocDirToCreate:
 	       /* zone de saisie du directory ou le document doit etre cree */
 	       strcpy (DirectoryDocACreer, data);
 	       strcpy (nomdoc, DirectoryDocACreer);
 	       strcat (nomdoc, DIR_STR);
 	       strcat (nomdoc, NomDocACreer);
-	       TtaSetTextForm (NumZoneNomDocACreer, nomdoc);
+	       TtaSetTextForm (NumZoneDocNameToCreate, nomdoc);
 	       break;
-	    case NumSelClasseDocACreer:
+	    case NumSelDocClassToCreate:
 	       /* selecteur classe du document a creer */
 	       strncpy (ClasseDocACreer, data, MAX_NAME_LENGTH);
 	       break;
@@ -227,26 +227,26 @@ View                view;
      }
    /* Creation du formulaire Creer document */
    /* +++++++++++++++++++++++++++++++++++++ */
-   TtaNewForm (NumFormCreerDoc, 0, 0, 0,
+   TtaNewForm (NumFormCreateDoc, 0, 0, 0,
 	  TtaGetMessage (LIB, CREATE_DOC), TRUE, 2, 'L', D_DONE);
    /* zone de saisie des dossiers documents */
    BuildPathDocBuffer (BufDir, '\0', &nbitem);
-   TtaNewSelector (NumZoneDirDocACreer, NumFormCreerDoc,
+   TtaNewSelector (NumZoneDocDirToCreate, NumFormCreateDoc,
 		   TtaGetMessage (LIB, DOC_DIR), nbitem, BufDir, 9, NULL, FALSE, TRUE);
    if (nbitem >= 1)
-      TtaSetSelector (NumZoneDirDocACreer, 0, NULL);
+      TtaSetSelector (NumZoneDocDirToCreate, 0, NULL);
    /* nom du document a creer */
-   if (DirectoryDoc == NULL)
+   if (DocumentPath == NULL)
       DirectoryDocACreer[i] = '\0';
    else
      {
-	ptr = strstr (DirectoryDoc, PATH_STR);
+	ptr = strstr (DocumentPath, PATH_STR);
 	if (ptr == NULL)
-	   strcpy (DirectoryDocACreer, DirectoryDoc);
+	   strcpy (DirectoryDocACreer, DocumentPath);
 	else
 	  {
-	     i = (int) ptr - (int) DirectoryDoc;
-	     strncpy (DirectoryDocACreer, DirectoryDoc, i);
+	     i = (int) ptr - (int) DocumentPath;
+	     strncpy (DirectoryDocACreer, DocumentPath, i);
 	     DirectoryDocACreer[i] = '\0';
 	  }
      }
@@ -266,20 +266,20 @@ View                view;
 	else
 	   longueur = 5;
 	/* cree le selecteur */
-	TtaNewSelector (NumSelClasseDocACreer, NumFormCreerDoc,
+	TtaNewSelector (NumSelDocClassToCreate, NumFormCreateDoc,
 			TtaGetMessage (LIB, DOC_TYPE), nbitem, BufMenu, longueur, NULL, TRUE, FALSE);
 	/* initialise le selecteur sur sa premiere entree */
-	TtaSetSelector (NumSelClasseDocACreer, 0, "");
+	TtaSetSelector (NumSelDocClassToCreate, 0, "");
      }
    else
       /* on n'a pas cree' de selecteur, on cree une zone de saisie */
-      TtaNewTextForm (NumSelClasseDocACreer, NumFormCreerDoc,
+      TtaNewTextForm (NumSelDocClassToCreate, NumFormCreateDoc,
 		      TtaGetMessage (LIB, DOC_TYPE), 30, 1, FALSE);
 
    /* zone de saisie du nom du document a creer */
-   TtaNewTextForm (NumZoneNomDocACreer, NumFormCreerDoc,
+   TtaNewTextForm (NumZoneDocNameToCreate, NumFormCreateDoc,
 		   TtaGetMessage (LIB, DOCUMENT_NAME), 50, 1, TRUE);
-   TtaSetTextForm (NumZoneNomDocACreer, nomdoc);
+   TtaSetTextForm (NumZoneDocNameToCreate, nomdoc);
 
    /* Formulaire Confirmation creation */
    /* ++++++++++++++++++++++++++++++++ */
@@ -290,5 +290,5 @@ View                view;
 
 /* affichage du formulaire Creer document */
    TtaSetDialoguePosition ();
-   TtaShowDialogue (NumFormCreerDoc, FALSE);
+   TtaShowDialogue (NumFormCreateDoc, FALSE);
 }
