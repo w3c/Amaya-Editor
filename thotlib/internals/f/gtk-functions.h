@@ -86,7 +86,7 @@ extern void FreeTranslations ( void );
 extern ThotTranslations InitTranslations ( char *appliname );
 
 extern void APP_TextCallbackGTK (GtkWidget *w, int frame);
-extern void CallTextChangeGTK (ThotWidget w, struct Cat_Context *catalogue);
+extern gboolean CallTextChangeGTK (ThotWidget w, struct Cat_Context *catalogue);
 
 /*extern gboolean ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data);*/
 /*extern gint InsertEvent (GtkWidget *widget, GdkEventKey *event, gpointer data);*/
