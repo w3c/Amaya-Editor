@@ -241,7 +241,9 @@ STRUCT
 	      transform;
 	      { graphicsElementEvents }
 	      target_ = text)
-	= GraphicsElement;
+	= LIST OF (CASE OF
+		      GraphicsElement; TextComponent;
+	              END);
 
    { view }
    { animate }

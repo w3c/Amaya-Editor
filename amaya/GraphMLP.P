@@ -1273,8 +1273,11 @@ RULES
 	BEGIN
 	Size: 12 pt;
 	Font: helvetica;
-	IN Structure_view
+	IN Structure_view BEGIN
 		Width: Enclosing . Width;
+		PaddingLeft: 0.4;
+		Font: Helvetica;
+		END;
 	END;
 
    GraphML:

@@ -476,43 +476,47 @@ void FollowTheLink_callback (int targetDocument, int status, char *urlName,
     /* attribute HREF contains the NAME of a target anchor */
     elFound = SearchNAMEattribute (targetDocument, &url[1], NULL);
 
-  if ((doc != targetDocument || url[0] == '#') && anchor != NULL) 
-    {
-      /* search PseudoAttr attribute */
-      attrType.AttrSSchema = docSchema;
-      attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
-      PseudoAttr = TtaGetAttribute (anchor, attrType);
-      /* if the target document has replaced the clicked
-	 document, pseudo attribute "visited" should not be set */
-      if (targetDocument == doc)
-	/* the target document is in the same window as the
-	   source document */
-	if (strcmp (sourceDocUrl, DocumentURLs[targetDocument]))
-	  /* both document have different URLs */
-	  PseudoAttr = NULL;
-     
-      /* only turn off the link if it points that exists or that we can
-	 follow */
-      if (PseudoAttr && status != -1)
-	{
-	  if (url[0] == '#')
-	    {
-	      if (targetDocument != 0 && elFound)
-		TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
-	    }
-	  else
-	    TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
-	}
-    }
-
+  elType = TtaGetElementType (anchor);
+  if (elType.ElTypeNum == HTML_EL_Anchor &&
+      !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+    /* it's an HTML A element. Change it's color */
+    if ((doc != targetDocument || url[0] == '#') && anchor != NULL) 
+      {
+	/* search PseudoAttr attribute */
+	attrType.AttrSSchema = docSchema;
+	attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
+	PseudoAttr = TtaGetAttribute (anchor, attrType);
+	/* if the target document has replaced the clicked
+	   document, pseudo attribute "visited" should not be set */
+	if (targetDocument == doc)
+	  /* the target document is in the same window as the
+	     source document */
+	  if (strcmp (sourceDocUrl, DocumentURLs[targetDocument]))
+	    /* both document have different URLs */
+	    PseudoAttr = NULL;
+	/* only turn off the link if it points that exists or that we can
+	   follow */
+	if (PseudoAttr && status != -1)
+	  {
+	    if (url[0] == '#')
+	      {
+		if (targetDocument != 0 && elFound)
+		  TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
+	      }
+	    else
+	      TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
+	  }
+      }
+  
   if (url[0] == '#' && targetDocument != 0)
     {
       if (elFound)
 	{
 	  elType = TtaGetElementType (elFound);
-	  if (elType.ElSSchema == docSchema && elType.ElTypeNum == HTML_EL_LINK)
+	  if (elType.ElTypeNum == HTML_EL_LINK &&
+	      !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
 	    {
-	      /* the target is a link element, follow this link */
+	      /* the target is a HTML link element, follow this link */
 	      FollowTheLink (elFound, elSource, doc);
 	      return;
 	    }
@@ -586,9 +590,10 @@ static ThotBool FollowTheLink (Element anchor, Element elSource, Document doc)
      attrType.AttrTypeNum = HTML_ATTR_FrameSrc;
    else if (isHTML)
      attrType.AttrTypeNum = HTML_ATTR_HREF_;
-   else if (elType.ElTypeNum == GraphML_EL_a &&
+   else if ((elType.ElTypeNum == GraphML_EL_a ||
+	     elType.ElTypeNum == GraphML_EL_use_) &&
 	    !strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
-     /* it's an SVG anchor element, look for an xlink:href attr. */
+     /* it's an SVG anchor or use element, look for an xlink:href attr. */
      {
        attrType.AttrSSchema = elType.ElSSchema;
        attrType.AttrTypeNum = GraphML_ATTR_xlink_href;
@@ -939,7 +944,12 @@ static ThotBool ActivateElement (Element element, Document document)
 		 {
 		   elType1.ElTypeNum = GraphML_EL_a;
 	           elType1.ElSSchema = SvgSchema;
-	           anchor = TtaGetTypedAncestor (element, elType1);	   
+	           anchor = TtaGetTypedAncestor (element, elType1);
+		   if (!anchor)
+		     {
+		       elType1.ElTypeNum = GraphML_EL_use_;
+		       anchor = TtaGetTypedAncestor (element, elType1);
+		     }
 		 }
 	     }
 	 }
