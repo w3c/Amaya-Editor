@@ -375,6 +375,7 @@ int                 shadow;
       /* if (!GetClipRgn(TtDisplay, clipRgn))
          WinErrorBox (NULL); */
 
+      WinLoadGC (TtDisplay, fg, RO);
       if (!ShowSpace || shadow)
 	{
          /* draw the spaces */
@@ -401,27 +402,23 @@ int                 shadow;
 	 if (fontLangInfo & GCP_DIACRITIC)
             infoFlag |= GCP_DIACRITIC;
          
-#        if 0
-		 if (fontLangInfo & FLI_GLYPHS) /* The font contains extra glyphs not normally accessible using the codepage. */ 
-					                    /* Use GetCharacterPlacement to access the glyphs. This value is for information */
-								        /* only and is not intended to be passed to GetCharacterPlacement. */
-            MessageBox (FrMainRef[frame], TEXT("Font Language is: FLI_GLYPHS"), TEXT("Font Language"), MB_OK);
-#        endif /* 0 */
+	 if (fontLangInfo & GCP_GLYPHSHAPE) {
+	   /* The font/language contains multiple glyphs per code point or per code point */
+	   /* combination (supports shaping and/or ligation), and the font contains advanced */
+	   /* glyph tables to provide extra glyphs for the extra shapes. If this value is given, */
+	   /* the lpGlyphs array must be used with the GetCharacterPlacement function and the */
+	   /* ETO_GLYPHINDEX value must be passed to the ExtTextOut function when the string is drawn. */
+	   infoFlag |= GCP_GLYPHSHAPE;
+	 }
          
-		 if (fontLangInfo & GCP_GLYPHSHAPE) {/* The font/language contains multiple glyphs per code point or per code point */
-                                             /* combination (supports shaping and/or ligation), and the font contains advanced */
-                                             /* glyph tables to provide extra glyphs for the extra shapes. If this value is given, */
-                                             /* the lpGlyphs array must be used with the GetCharacterPlacement function and the */
-                                             /* ETO_GLYPHINDEX value must be passed to the ExtTextOut function when the string is drawn. */
-            infoFlag |= GCP_GLYPHSHAPE;
-		 }
+	 if (fontLangInfo & GCP_USEKERNING)
+	   /* The font contains a kerning table which can be used to provide better spacing */
+	   /* between the characters and glyphs. */
+	   infoFlag |= GCP_USEKERNING;
          
-		 if (fontLangInfo & GCP_USEKERNING) /* The font contains a kerning table which can be used to provide better spacing */
-                                            /* between the characters and glyphs. */
-            infoFlag |= GCP_USEKERNING;
-         
-		 if (fontLangInfo & GCP_REORDER) /* The language requires reordering for display--for example, Hebrew or Arabic. */
-            infoFlag |= GCP_CLASSIN;
+	 if (fontLangInfo & GCP_REORDER)
+	   /* The language requires reordering for display--for example, Hebrew or Arabic. */
+	   infoFlag |= GCP_CLASSIN;
 
          infoFlag |= GCP_DISPLAYZWG;
 
@@ -456,20 +453,23 @@ int                 shadow;
               if (fontLangInfo & GCP_DIACRITIC)
                  infoFlag |= GCP_DIACRITIC;
          
-              if (fontLangInfo & GCP_GLYPHSHAPE) {/* The font/language contains multiple glyphs per code point or per code point */
-                                             /* combination (supports shaping and/or ligation), and the font contains advanced */
-                                             /* glyph tables to provide extra glyphs for the extra shapes. If this value is given, */
-                                             /* the lpGlyphs array must be used with the GetCharacterPlacement function and the */
-                                             /* ETO_GLYPHINDEX value must be passed to the ExtTextOut function when the string is drawn. */
-                 infoFlag |= GCP_GLYPHSHAPE;
-			  } 
+              if (fontLangInfo & GCP_GLYPHSHAPE) {
+		/* The font/language contains multiple glyphs per code point or per code point */
+		/* combination (supports shaping and/or ligation), and the font contains advanced */
+		/* glyph tables to provide extra glyphs for the extra shapes. If this value is given, */
+		/* the lpGlyphs array must be used with the GetCharacterPlacement function and the */
+		/* ETO_GLYPHINDEX value must be passed to the ExtTextOut function when the string is drawn. */
+		infoFlag |= GCP_GLYPHSHAPE;
+	      } 
          
-              if (fontLangInfo & GCP_USEKERNING) /* The font contains a kerning table which can be used to provide better spacing */
-                                            /* between the characters and glyphs. */
-                 infoFlag |= GCP_USEKERNING;
+              if (fontLangInfo & GCP_USEKERNING)
+		/* The font contains a kerning table which can be used to provide better spacing */
+		/* between the characters and glyphs. */
+		infoFlag |= GCP_USEKERNING;
          
-              if (fontLangInfo & GCP_REORDER) /* The language requires reordering for display--for example, Hebrew or Arabic. */
-                 infoFlag |= GCP_CLASSIN;
+              if (fontLangInfo & GCP_REORDER)
+		/* The language requires reordering for display--for example, Hebrew or Arabic. */
+		infoFlag |= GCP_CLASSIN;
 
               infoFlag |= GCP_DISPLAYZWG;
 
@@ -482,7 +482,7 @@ int                 shadow;
               results.lpGlyphs    = &auGlyphs[0];
               results.nGlyphs     = 2000;
               results.nMaxFit     = 0;
-			  fontLangInfo = GetCharacterPlacement (TtDisplay, ptcar, ustrlen (ptcar), GCP_MAXEXTENT, &results, infoFlag);
+	      fontLangInfo = GetCharacterPlacement (TtDisplay, ptcar, ustrlen (ptcar), GCP_MAXEXTENT, &results, infoFlag);
 
               /* ExtTextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, outOpt, &rect, (USTRING) szNewText, lg, anDX); */
               TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (USTRING) ptcar, lg);

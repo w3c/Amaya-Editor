@@ -1047,7 +1047,6 @@ Document       doc;
 
 #endif /* __STDC__ */
 {
-  int                i;
   STRING             tempdocument;
   CHAR_T               htmlErrFile [80];
 

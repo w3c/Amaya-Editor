@@ -60,13 +60,12 @@ static STRING       QuotedText;
 
 #include "AHTURLTools_f.h"
 #include "EDITimage_f.h"
+#include "EDITstyle_f.h"
 #include "HTMLbook_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLsave_f.h"
 #include "init_f.h"
-#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
 #include "query_f.h"
-#endif
 #include "styleparser_f.h"
 
 

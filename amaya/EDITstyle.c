@@ -25,11 +25,13 @@
 #endif
 
 #include "AHTURLTools_f.h"
-#include "css_f.h"
-#include "html2thot_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLpresentation_f.h"
 #include "UIcss_f.h"
+#include "css_f.h"
+#include "fetchHTMLname_f.h"
+#include "init_f.h"
+#include "html2thot_f.h"
 #include "styleparser_f.h"
 
 #ifdef _WINDOWS

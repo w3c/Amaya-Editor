@@ -20,6 +20,9 @@
 #include "fetchHTMLname.h"
 #include "parser.h"
 
+#include "fetchHTMLname_f.h"
+#include "fetchXMLname_f.h"
+
 /* mapping table of HTML elements */
 static GIMapping    HTMLGIMappingTable[] =
 {

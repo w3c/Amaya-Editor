@@ -290,7 +290,6 @@ ThotBool    showBoxAllowed;
 {
    int         presRuleType;
    PRule       newPRule, oldPRule;
-   ElementType elType;
    ThotBool    addShow;
 
    presRuleType = TtaGetPRuleType (presRule);

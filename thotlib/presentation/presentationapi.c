@@ -43,6 +43,7 @@
 #include "font_f.h"
 #include "memory_f.h"
 #include "presrules_f.h"
+#include "structmodif_f.h"
 #include "tree_f.h"
 #include "undo_f.h"
 #include "viewapi_f.h"
