@@ -2854,15 +2854,7 @@ int GetObjectWWW (int docid, char *urlName, char *formdata,
    object_counter++;
    
    /* normalize the URL */
-   tmp = URLToUTF8 (urlName, docid);
-   if (tmp)
-     {
-       esc_url = EscapeURL (tmp);
-       TtaFreeMemory (tmp);
-     }
-   else
-     esc_url = EscapeURL (urlName);
-
+   esc_url = EscapeURL (urlName);
    if (esc_url) 
      {
        ref = AmayaParseUrl (esc_url, "", AMAYA_PARSE_ALL);
@@ -3300,16 +3292,10 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
    me->context_tcbf = context_tcbf;
 
    /* normalize the URL */
-   tmp = URLToUTF8 (urlName, docid);
-   if (tmp)
-     {
-       esc_url = EscapeURL (tmp);
-       TtaFreeMemory (tmp);
-     }
-   else
-     esc_url = EscapeURL (urlName);
+   esc_url = EscapeURL (urlName);
    me->urlName = TtaStrdup (esc_url);
    TtaFreeMemory (esc_url);
+
    me->block_size =  file_size;
    /* select the parameters that distinguish a PUT from a GET/POST */
    me->method = METHOD_PUT;
