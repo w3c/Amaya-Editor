@@ -65,6 +65,7 @@ char docToOpen [256];
 #endif /* _WINDOWS */
 
 #define AMAYA_PAGE "http://www.w3.org/Amaya/"
+#define AMAYA_PAGE_DOC "http://www.w3.org/Amaya/member/User/"
 
 static int          AmayaInitialized = 0;
 
@@ -2333,7 +2334,7 @@ void HelpBrowsing (document, view)
 {
    char    localname[MAX_LENGTH];
 
-   strcpy (localname, AMAYA_PAGE);
+   strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "Browsing.html");
    document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
 }
@@ -2351,7 +2352,7 @@ void HelpSelecting (document, view)
 {
    char    localname[MAX_LENGTH];
 
-   strcpy (localname, AMAYA_PAGE);
+   strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "Selecting.html");
    document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
 }
@@ -2369,7 +2370,7 @@ void HelpSearching (document, view)
 {
    char    localname[MAX_LENGTH];
 
-   strcpy (localname, AMAYA_PAGE);
+   strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "Searching.html");
    document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
 }
@@ -2387,7 +2388,7 @@ void HelpViews (document, view)
 {
    char    localname[MAX_LENGTH];
 
-   strcpy (localname, AMAYA_PAGE);
+   strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "Views.html");
    document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
 }
@@ -2405,7 +2406,7 @@ void HelpCreating (document, view)
 {
    char    localname[MAX_LENGTH];
 
-   strcpy (localname, AMAYA_PAGE);
+   strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "Creating.html");
    document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
 }
@@ -2423,7 +2424,7 @@ void HelpLinks (document, view)
 {
    char    localname[MAX_LENGTH];
 
-   strcpy (localname, AMAYA_PAGE);
+   strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "Links.html");
    document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
 }
@@ -2441,7 +2442,7 @@ void HelpChanging (document, view)
 {
    char    localname[MAX_LENGTH];
 
-   strcpy (localname, AMAYA_PAGE);
+   strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "Changing.html");
    document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
 }
@@ -2459,7 +2460,7 @@ void HelpTables (document, view)
 {
    char    localname[MAX_LENGTH];
 
-   strcpy (localname, AMAYA_PAGE);
+   strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "Tables.html");
    document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
 }
@@ -2477,7 +2478,7 @@ void HelpImageMaps (document, view)
 {
    char    localname[MAX_LENGTH];
 
-   strcpy (localname, AMAYA_PAGE);
+   strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "ImageMaps.html");
    document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
 }
@@ -2495,7 +2496,7 @@ void HelpStyleSheets (document, view)
 {
    char    localname[MAX_LENGTH];
 
-   strcpy (localname, AMAYA_PAGE);
+   strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "StyleSheets.html");
    document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
 }
@@ -2513,7 +2514,7 @@ void HelpAttributes (document, view)
 {
    char    localname[MAX_LENGTH];
 
-   strcpy (localname, AMAYA_PAGE);
+   strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "Attributes.html");
    document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
 }
@@ -2531,7 +2532,7 @@ void HelpPublishing (document, view)
 {
    char    localname[MAX_LENGTH];
 
-   strcpy (localname, AMAYA_PAGE);
+   strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "Publishing.html");
    document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
 }
@@ -2549,7 +2550,7 @@ void HelpPrinting (document, view)
 {
    char    localname[MAX_LENGTH];
 
-   strcpy (localname, AMAYA_PAGE);
+   strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "Printing.html");
    document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
 }
@@ -2567,7 +2568,7 @@ void HelpMakeBook (document, view)
 {
    char    localname[MAX_LENGTH];
 
-   strcpy (localname, AMAYA_PAGE);
+   strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "MakeBook.html");
    document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
 }
