@@ -30,8 +30,7 @@
 #include "memory_f.h"
 /*for ttafileexists*/
 #include "fileaccess.h"
-#include "glglyph.h"
-#include "openglfonts.h"
+#include "openglfont.h"
 #include "font_f.h"
 #include "glwindowdisplay.h"
 
@@ -166,7 +165,7 @@ static void deCasteljau (const float t, const int n, GlyphPath *path,
   ----------------------------------------------------------------------*/
 static void evaluateCurve (const int n, GlyphPath *path, float ctrlPtArray[4][2])
 {
-  int   i,k;
+  int   i, k;
   float t; /* parameter for curve point calc. [0.0, 1.0] */
   float bValues[4][4][2];  /* 3D array storing values of de Casteljau algorithm. */
 
@@ -176,7 +175,7 @@ static void evaluateCurve (const int n, GlyphPath *path, float ctrlPtArray[4][2]
       bValues[0][i][0] = ctrlPtArray[i][0];
       bValues[0][i][1] = ctrlPtArray[i][1];
     }
-  k = (1.0f / kBSTEPSIZE);
+  k = (int)(1.0f / kBSTEPSIZE);
   for (i = 0; i <= k; i++)
     {
       t = i * kBSTEPSIZE;
@@ -463,14 +462,15 @@ int UnicodeFontRenderPoly (void *gl_font, wchar_t *text, float x, float y, int s
   FT_Vector          delta;   
   FT_Bool            use_kerning;
   FT_UInt            previous, glyph_index;
-  GL_font            *font;
-  GL_glyph           *glyph;
+  GL_font           *font;
+  GL_glyph          *glyph;
+  Char_Cache_index  *cache;
   register int       n;
   register float     pen_x, pen_y;
   
   if (text == NULL) 
     return 0;  
-  font = (GL_font *) gl_font;    
+  font = (GL_font *) gl_font;
   use_kerning = font->kerning;
   previous = 0;
   pen_x = 0;
@@ -481,9 +481,11 @@ int UnicodeFontRenderPoly (void *gl_font, wchar_t *text, float x, float y, int s
   while (n < size && text[n])
     {
       /* convert character code to glyph index */
-      glyph = Char_index_lookup_cache (font, text[n], &glyph_index, TRUE);
-      if (glyph)
+      cache = Char_index_lookup_cache (font, text[n], TRUE);
+      if (cache)
 	{
+	  glyph = &(cache->glyph);
+	  glyph_index = cache->character;
 #ifdef _TRACE_GL_BUGS_GLISLIST
   if (glyph->data) printf ( "GLBUG - UnicodeFontRenderPoly : glIsList=%s (should be yes)\n", glIsList (*((GLuint *)glyph->data)) ? "yes" : "no" );
 #endif /* _TRACE_GL_BUGS_GLISLIST */

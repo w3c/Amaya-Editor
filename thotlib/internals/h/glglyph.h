@@ -65,23 +65,22 @@ typedef struct _GL_glyph
 } GL_glyph;
 
 typedef struct _Cache_index {
-  unsigned int  index;
-  unsigned int  character;
-  GL_glyph      glyph;  
+  unsigned int         index;
+  unsigned int         character;
+  GL_glyph             glyph;  
   struct _Cache_index *next;
 } Char_Cache_index;
 
 typedef struct _GL_font
 {
   FT_Face   face;
-  int       kerning;
-  int       Cache_index;
-  unsigned int size;
-  int       height;
-  int       ascent;
+  int               kerning;
+  int               Cache_index;
+  unsigned int      size;
+  int               height;
+  int               ascent;
   Char_Cache_index *Cache;  
 } GL_font;
-
 
 
 typedef struct F_VECTOR {
@@ -92,8 +91,8 @@ typedef struct F_VECTOR {
 typedef struct F_Slot {
   char     *name;
   GL_font  *font;
-  int      size;
-  int      ref;
+  int       size;
+  int       ref;
 } Font_Slot;
 
 #ifndef PADDING
