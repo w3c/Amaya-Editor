@@ -3388,6 +3388,14 @@ void DestroyFrame (int frame)
 #endif /* _GL */
   
   CloseTextInsertion ();
+#ifdef _GL
+  /* free animate blocks */
+  if (FrameTable[frame].Animated_Boxes)
+    {
+      FreeAnimatedBoxes ((Animated_Cell *)FrameTable[frame].Animated_Boxes);
+      FrameTable[frame].Animated_Boxes = NULL;
+    }
+#endif /* _GL */
 
   w = FrameTable[frame].WdFrame;
   if (w != 0)
@@ -3457,14 +3465,6 @@ void DestroyFrame (int frame)
 #endif /* _WX */
     }
   FrameTable[frame].FrDoc = 0;
-#ifdef _GL
-  /* free animate blocks */
-  if (FrameTable[frame].Animated_Boxes)
-    {
-      FreeAnimatedBoxes ((Animated_Cell *)FrameTable[frame].Animated_Boxes);
-      FrameTable[frame].Animated_Boxes = NULL;
-    }
-#endif /* _GL */
 #ifdef _WINGUI
   /* clean the whole CatList of the frame */
   CleanFrameCatList (frame, 0);
