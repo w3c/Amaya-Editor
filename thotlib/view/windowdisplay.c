@@ -284,8 +284,7 @@ int                 fg;
    WIN_GetDeviceContext (frame);
    WinLoadGC (TtDisplay, &TtLineGC);
    WinLoadFont (TtDisplay, font);
-   TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, str, 1);
-   WIN_ReleaseDeviceContext ();
+   TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (unsigned char*) str, 1);   WIN_ReleaseDeviceContext ();
 #  else  /* _WINDOWS */
    XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
    XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), &car, 1);
@@ -348,7 +347,11 @@ int                 fg;
    if (lg > 0 && w != None)
      {
 	ptcar = &buff[i - 1];
+	/* Dealing with BR tag for windows */
 #       ifdef _WINDOWS
+	/*
+	    if ((int) (*ptcar) == -118)
+		   ptcar [0] = ' ';*/
         WIN_GetDeviceContext (frame);
 	WinLoadFont (TtDisplay, font);
 	/* GetTextExtentPoint32(TtDisplay, ptcar, lg, &size); */
@@ -375,7 +378,7 @@ int                 fg;
 #            ifdef _WINDOWS
 	     WinLoadGC (TtDisplay, &TtLineGC);
              GetClientRect (TtDisplay, &rect);
-	     TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, ptcar, lg);
+	     TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (unsigned char*) ptcar, lg);
 #            else  /* _WINDOWS */
 	     XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
 #            endif /* _WINDOWS */
@@ -383,15 +386,21 @@ int                 fg;
 	  }
 	else
 	  {
-	     if (ptcar[0] == '\212')
-	       /* skip the Control return char */
-	       ptcar++;
+	     if (ptcar[0] == '\212') 
+		   {
+	         /* skip the Control return char */
+	         ptcar++;
+		     lg--;
+		   }
+		 if (lg != 0) 
+		 {
 #            ifdef _WINDOWS
-	     WinLoadGC (TtDisplay, &TtLineGC);
-	     TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, ptcar, lg);
+	         WinLoadGC (TtDisplay, &TtLineGC);
+	         TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (unsigned char*) ptcar, lg);
 #            else  /* _WINDOWS */
-	     XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
+	         XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
 #            endif /* _WINDOWS */
+		 }
 	  }
 	if (hyphen)
 	  {
