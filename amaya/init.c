@@ -1564,6 +1564,9 @@ Document     sourceOfDoc;
 	   TtaCloseDocument (doc);
 	   return (0);
 	 }
+
+       /* By default no log file */
+       TtaSetItemOff (doc, 1, Special, BShowLogFile);
        if (docType == docLog)
 	 {
 	   TtaSetItemOff (doc, 1, File, BHtml);
@@ -1714,7 +1717,6 @@ Document     sourceOfDoc;
 	   TtaSetToggleItem (doc, 1, Views, TShowTextZone, TRUE);
 	   TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);
 	   TtaSetToggleItem (doc, 1, Views, TShowTargets, FALSE);
-	   TtaSetItemOff (doc, 1, Special, BShowLogFile);
 	   TtaSetMenuOff (doc, 1, Attributes_);
 
 	   /* if we open the new document in a new view, control */
@@ -2493,8 +2495,14 @@ ThotBool            history;
 	DocumentMeta[newdoc]->method = CE_ABSOLUTE;
 
       profile = TtaGetEnvString ("Profile");
+      if (!ustrncmp (profile, TEXT("basic"), 5))
+	ParsingLevel[newdoc] = L_Basic;
+      else if (!ustrncmp (profile, TEXT("strict"), 6))
+	ParsingLevel[newdoc] = L_Strict;
+      else
+	ParsingLevel[newdoc] = L_Transitional;
 #ifdef EXPAT_PARSER
-      if (XHTMLdoc || (!plainText && !ustrcmp (profile, TEXT("basic-editor"))))
+      if (XHTMLdoc || (!plainText && ParsingLevel[newdoc] != L_Transitional))
 	StartXmlParser (newdoc,
 			tempdocument,
 			documentname,
@@ -4465,9 +4473,10 @@ void                FreeAmayaStructures ()
       TtaFreeMemory (AttrHREFvalue);
       TtaFreeMemory (UserCSS);
       FreeHTMLParser ();
-      FreeXMLParser ();
 #ifdef EXPAT_PARSER
       FreeXmlParserContexts ();
+#else /* EXPAT_PARSER */
+      FreeXMLParser ();
 #endif /* EXPAT_PARSER */
       FreeDocHistory ();
       FreeTransform ();

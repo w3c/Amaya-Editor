@@ -2782,6 +2782,7 @@ CHAR_T                c;
 	}
       if (math)
 	{
+#ifndef EXPAT_PARSER
 	  /* Parse the MathML structure */
 	  if (XMLparse (stream, &CurrentBufChar, TEXT("MathML"), HTMLcontext.doc, HTMLcontext.lastElement, FALSE,
 		    HTMLcontext.language, pHTMLGIMapping[lastElemEntry].XMLname))
@@ -2789,12 +2790,14 @@ CHAR_T                c;
 	       been read */
 	    (void) CloseElement (lastElemEntry, -1, FALSE);
 	  else
+#endif /* EXPAT_PARSER */
 	    StopParsing ();
 	}
       else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("xmlgraphics")) ||
                !ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("svg")))
 	/* a tag <xmlgraphics> or <svg> has been read */
         {
+#ifndef EXPAT_PARSER
 	  /* Parse the GraphML structure */
 	  if (XMLparse (stream, &CurrentBufChar, TEXT("GraphML"), HTMLcontext.doc, HTMLcontext.lastElement, FALSE,
 		    HTMLcontext.language, pHTMLGIMapping[lastElemEntry].XMLname))
@@ -2802,6 +2805,7 @@ CHAR_T                c;
 	       been read */
 	    (void) CloseElement (lastElemEntry, -1, FALSE);
 	  else
+#endif /* EXPAT_PARSER */
 	    StopParsing ();
 	}
       else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("pre"))   ||
@@ -6881,8 +6885,10 @@ Document   doc;
        InputText = html_buff; 
        /* InputText = HTMLbuf; */
        CurrentBufChar = 0;
+#ifndef EXPAT_PARSER
        if (!XMLparse (NULL, &CurrentBufChar, schemaName, doc, lastelem,
 		      isclosed, TtaGetDefaultLanguage(), NULL))
+#endif /* EXPAT_PARSER */
 	  StopParsing ();
       }
 }

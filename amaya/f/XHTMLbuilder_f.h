@@ -13,13 +13,9 @@ extern void XhtmlElementComplete ( Element el,
                                    int *error );
 extern void XhtmlGetDTDName ( STRING DTDname,
                               STRING elementName );
-extern AttributeMapping* XhtmlMapAttribute ( CHAR_T* attrName,
-                                             AttributeType* attrType,
-                                             CHAR_T* elementName,
-                                             Document doc );
-extern void XhtmlMapAttributeValue ( CHAR_T* AttrVal,
-                                     AttributeType attrType,
-                                     int* value );
+extern void MapHTMLAttributeValue ( CHAR_T* AttrVal,
+                                    AttributeType attrType,
+                                    int* value );
 extern void XhtmlMapEntity ( STRING entityName,
                              int *entityValue,
                              STRING alphabet );
@@ -37,13 +33,9 @@ extern void XhtmlElementComplete (/* Element el,
                                      int *error */);
 extern void XhtmlGetDTDName (/* STRING DTDname,
                                 STRING elementName */);
-extern AttributeMapping* XhtmlMapAttribute (/* CHAR_T* attrName,
-                                               AttributeType* attrType,
-                                               CHAR_T* elementName,
-                                               Document doc */);
-extern void XhtmlMapAttributeValue (/* CHAR_T* AttrVal,
-                                       AttributeType attrType,
-                                       int* value */);
+extern void MapHTMLAttributeValue (/* CHAR_T* AttrVal,
+                                      AttributeType attrType,
+                                      int* value */);
 extern void XhtmlMapEntity (/* STRING entityName,
                                int *entityValue,
                                STRING alphabet */);

@@ -27,7 +27,6 @@
 AttributeMapping XhtmlAttributeMappingTable[] =
 {
    /* The first entry MUST be unknown_attr */
-   {TEXT("unknown_attr"), TEXT(""), 'A', HTML_ATTR_Invalid_attribute, L_Basic},
    {TEXT("abbr"), TEXT(""), 'A', HTML_ATTR_abbr, L_Basic},
    {TEXT("accept"), TEXT(""), 'A', HTML_ATTR_accept, L_Basic},
    {TEXT("accept-charset"), TEXT("form"), 'A', HTML_ATTR_accept_charset, L_Basic},
@@ -73,8 +72,8 @@ AttributeMapping XhtmlAttributeMappingTable[] =
 
    {TEXT("cellspacing"), TEXT(""), 'A', HTML_ATTR_cellspacing, L_Transitional},
    {TEXT("cellpadding"), TEXT(""), 'A', HTML_ATTR_cellpadding, L_Transitional},
-   {TEXT("char"), TEXT(""), 'A', HTML_ATTR_char, L_Basic},
-   {TEXT("charoff"), TEXT(""), 'A', HTML_ATTR_charoff, L_Basic},
+   {TEXT("char"), TEXT(""), 'A', HTML_ATTR_char, L_Transitional},
+   {TEXT("charoff"), TEXT(""), 'A', HTML_ATTR_charoff, L_Transitional},
    {TEXT("charset"), TEXT(""), 'A', HTML_ATTR_charset, L_Basic},
    {TEXT("checked"), TEXT(""), 'A', HTML_ATTR_Checked, L_Basic},
    {TEXT("cite"), TEXT(""), 'A', HTML_ATTR_cite, L_Basic},
@@ -115,7 +114,9 @@ AttributeMapping XhtmlAttributeMappingTable[] =
 #ifdef GRAPHML
    {TEXT("height"), TEXT("svg"), 'A', HTML_ATTR_SvgHeight, L_Transitional},
 #endif /* GRAPHML */
-   {TEXT("height"), TEXT(""), 'A', HTML_ATTR_Height_, L_Basic},
+   {TEXT("height"), TEXT("img"), 'A', HTML_ATTR_Height_, L_Basic},
+   {TEXT("height"), TEXT("object"), 'A', HTML_ATTR_Height_, L_Basic},
+   {TEXT("height"), TEXT(""), 'A', HTML_ATTR_Height_, L_Transitional},
    {TEXT("href"), TEXT(""), 'A', HTML_ATTR_HREF_, L_Basic},
    {TEXT("hreflang"), TEXT(""), 'A', HTML_ATTR_hreflang, L_Basic},
    {TEXT("hspace"), TEXT(""), 'A', HTML_ATTR_hspace, L_Transitional},
@@ -139,16 +140,16 @@ AttributeMapping XhtmlAttributeMappingTable[] =
    {TEXT("multiple"), TEXT(""), 'A', HTML_ATTR_Multiple, L_Basic},
 
    {TEXT("N"), TEXT(""), 'C', 0, L_Basic},
-   {TEXT("name"), TEXT("applet"), 'A', HTML_ATTR_applet_name, L_Basic},
-   {TEXT("name"), TEXT("frame"), 'A', HTML_ATTR_FrameName, L_Basic},
-   {TEXT("name"), TEXT("iframe"), 'A', HTML_ATTR_FrameName, L_Basic},
+   {TEXT("name"), TEXT("applet"), 'A', HTML_ATTR_applet_name, L_Transitional},
+   {TEXT("name"), TEXT("frame"), 'A', HTML_ATTR_FrameName, L_Transitional},
+   {TEXT("name"), TEXT("iframe"), 'A', HTML_ATTR_FrameName, L_Transitional},
    {TEXT("name"), TEXT("meta"), 'A', HTML_ATTR_meta_name, L_Basic},
    {TEXT("name"), TEXT("param"), 'A', HTML_ATTR_Param_name, L_Basic},
    {TEXT("name"), TEXT(""), 'A', HTML_ATTR_NAME, L_Basic},
    {TEXT("nohref"), TEXT(""), 'A', HTML_ATTR_nohref, L_Basic},
    {TEXT("noresize"), TEXT(""), 'A', HTML_ATTR_no_resize, L_Basic},
    {TEXT("noshade"), TEXT(""), 'A', HTML_ATTR_NoShade, L_Basic},
-   {TEXT("nowrap"), TEXT(""), 'A', HTML_ATTR_No_wrap, L_Basic},
+   {TEXT("nowrap"), TEXT(""), 'A', HTML_ATTR_No_wrap, L_Transitional},
 
    {TEXT("object"), TEXT("applet"), 'A', HTML_ATTR_object, L_Transitional},
    {TEXT("onblur"), TEXT(""), 'A', HTML_ATTR_onblur, L_Transitional},
@@ -179,7 +180,7 @@ AttributeMapping XhtmlAttributeMappingTable[] =
    {TEXT("rows"), TEXT("frameset"), 'A', HTML_ATTR_RowHeight, L_Transitional},
    {TEXT("rows"), TEXT("textarea"), 'A', HTML_ATTR_Rows, L_Basic},
    {TEXT("rowspan"), TEXT(""), 'A', HTML_ATTR_rowspan_, L_Basic},
-   {TEXT("rules"), TEXT("table"), 'A', HTML_ATTR_rules_, L_Basic},
+   {TEXT("rules"), TEXT("table"), 'A', HTML_ATTR_rules_, L_Transitional},
 
    {TEXT("scheme"), TEXT("meta"), 'A', HTML_ATTR_scheme, L_Basic},
    {TEXT("scope"), TEXT(""), 'A', HTML_ATTR_scope, L_Basic},
@@ -218,14 +219,15 @@ AttributeMapping XhtmlAttributeMappingTable[] =
    {TEXT("type"), TEXT("ul"), 'A', HTML_ATTR_BulletStyle, L_Basic},
    {TEXT("type"), TEXT(""), SPACE, DummyAttribute, L_Basic},
 
+   {TEXT("unknown_attr"), TEXT(""), 'A', HTML_ATTR_Invalid_attribute, L_Transitional},
    {TEXT("usemap"), TEXT(""), 'A', HTML_ATTR_USEMAP, L_Basic},
 
-   {TEXT("valign"), TEXT("tbody"), 'A', HTML_ATTR_Row_valign, L_Basic},
-   {TEXT("valign"), TEXT("td"), 'A', HTML_ATTR_Cell_valign, L_Basic},
-   {TEXT("valign"), TEXT("tfoot"), 'A', HTML_ATTR_Row_valign, L_Basic},
-   {TEXT("valign"), TEXT("th"), 'A', HTML_ATTR_Cell_valign, L_Basic},
-   {TEXT("valign"), TEXT("thead"), 'A', HTML_ATTR_Row_valign, L_Basic},
-   {TEXT("valign"), TEXT("tr"), 'A', HTML_ATTR_Row_valign, L_Basic},
+   {TEXT("valign"), TEXT("tbody"), 'A', HTML_ATTR_Row_valign, L_Transitional},
+   {TEXT("valign"), TEXT("td"), 'A', HTML_ATTR_Cell_valign, L_Transitional},
+   {TEXT("valign"), TEXT("tfoot"), 'A', HTML_ATTR_Row_valign, L_Transitional},
+   {TEXT("valign"), TEXT("th"), 'A', HTML_ATTR_Cell_valign, L_Transitional},
+   {TEXT("valign"), TEXT("thead"), 'A', HTML_ATTR_Row_valign, L_Transitional},
+   {TEXT("valign"), TEXT("tr"), 'A', HTML_ATTR_Row_valign, L_Transitional},
    {TEXT("value"), TEXT("li"), 'A', HTML_ATTR_ItemValue, L_Basic},
    {TEXT("value"), TEXT("param"), 'A', HTML_ATTR_Param_value, L_Basic},
    {TEXT("value"), TEXT(""), 'A', HTML_ATTR_Value_, L_Basic},
@@ -235,8 +237,8 @@ AttributeMapping XhtmlAttributeMappingTable[] =
    {TEXT("vspace"), TEXT(""), 'A', HTML_ATTR_vspace, L_Transitional},
 
    {TEXT("width"), TEXT("applet"), 'A', HTML_ATTR_Width__, L_Transitional},
-   {TEXT("width"), TEXT("col"), 'A', HTML_ATTR_Width__, L_Transitional},
-   {TEXT("width"), TEXT("colgroup"), 'A', HTML_ATTR_Width__, L_Transitional},
+   {TEXT("width"), TEXT("col"), 'A', HTML_ATTR_Width__, L_Strict},
+   {TEXT("width"), TEXT("colgroup"), 'A', HTML_ATTR_Width__, L_Strict},
    {TEXT("width"), TEXT("hr"), 'A', HTML_ATTR_Width__, L_Transitional},
    {TEXT("width"), TEXT("iframe"), 'A', HTML_ATTR_Width__, L_Transitional},
    {TEXT("width"), TEXT("image"), 'A', HTML_ATTR_Width__, L_Transitional},
@@ -244,7 +246,7 @@ AttributeMapping XhtmlAttributeMappingTable[] =
    {TEXT("width"), TEXT("object"), 'A', HTML_ATTR_Width__, L_Basic},
    {TEXT("width"), TEXT("pre"), 'A', HTML_ATTR_Width__, L_Transitional},
 #ifdef GRAPHML
-   {TEXT("width"), TEXT("svg"), 'A', HTML_ATTR_SvgWidth, L_Transitional},
+   {TEXT("width"), TEXT("svg"), 'A', HTML_ATTR_SvgWidth, L_Strict},
 #endif /* GRAPHML */
    {TEXT("width"), TEXT("table"), 'A', HTML_ATTR_Width__, L_Transitional},
    {TEXT("width"), TEXT("td"), 'A', HTML_ATTR_Width__, L_Transitional},
@@ -254,7 +256,7 @@ AttributeMapping XhtmlAttributeMappingTable[] =
 #endif /* GRAPHML */
 
    {TEXT("zzghost"), TEXT(""), 'A', HTML_ATTR_Ghost_restruct, L_Basic},
-   {TEXT(""), TEXT(""), EOS, 0, L_Basic}		/* Last entry. Mandatory */
+   {TEXT(""), TEXT(""), EOS, 0, L_Undefined}		/* Last entry. Mandatory */
 };
 
 /* define a pointer to let other parser functions access the local table */
@@ -417,86 +419,61 @@ Document            doc;
    as well as the corresponding Thot SSchema
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-AttributeMapping   *MapAttr (CHAR_T* Attr, SSchema *schema, int elemEntry, Document doc)
+AttributeMapping   *MapAttr (CHAR_T *attrName, SSchema *schema, int elemEntry, Document doc)
 #else
-AttributeMapping   *MapAttr (Attr, schema, elemEntry, doc)
-CHAR_T*               Attr;
-SSchema*            schema;
+AttributeMapping   *MapAttr (attrName, schema, elemEntry, doc)
+CHAR_T             *attrName;
+SSchema            *schema;
 int                 elemEntry;
 Document            doc;
 #endif
 {
-  int                 i;
-  int                 entry;
-
-  entry = -1;
-  *schema = NULL;
-  i = 0;
-  do
-    if (!ustrcasecmp (XhtmlAttributeMappingTable[i].XMLattribute, Attr))
-      if (XhtmlAttributeMappingTable[i].XMLelement[0] == EOS)
-        {
-	  entry = i;
-	  *schema = TtaGetDocumentSSchema (doc);
-	}
-     else if (elemEntry >= 0 &&
-	      !ustrcasecmp (XhtmlAttributeMappingTable[i].XMLelement, pHTMLGIMapping[elemEntry].XMLname))
-       {
-	 entry = i;
-	 *schema = TtaGetDocumentSSchema (doc);
-       }
-      else
-	i++;
-    else
-      i++;
-  while (entry < 0 && XhtmlAttributeMappingTable[i].AttrOrContent != EOS);
-
-  if (entry >= 0)
-    return (&XhtmlAttributeMappingTable[entry]);
-  else
+  int               i;
+  *schema = TtaGetDocumentSSchema (doc);
+  i = XmlMapAttribute (attrName, pHTMLGIMapping[elemEntry].XMLname, doc, XhtmlAttributeMappingTable);
+  if (XhtmlAttributeMappingTable[i].XMLattribute[0] != attrName[0])
+    /* not found */
     return (NULL);
+  else
+    return (&XhtmlAttributeMappingTable[i]);
 }
+
 
 /*----------------------------------------------------------------------
-   MapHTMLAttribute search in the HTML Attribute Mapping Tables the entry
-   for the attribute of name Attr and returns the corresponding Thot
-   attribute type.
+   MapHTMLAttribute
+   Search in the Attribute Mapping Table the entry for the attribute
+   of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           MapHTMLAttribute (CHAR_T* Attr, AttributeType *attrType, CHAR_T* elementName, Document doc)
+AttributeMapping *MapHTMLAttribute (CHAR_T *attrName,
+				    AttributeType *attrType,
+				    CHAR_T *elementName,
+				    Document doc)
 #else
-void           MapHTMLAttribute (Attr, attrType, elementName, doc)
-CHAR_T*        Attr;
-AttributeType* attrType;
-CHAR_T*        elementName;
-Document       doc;
+AttributeMapping *MapHTMLAttribute (attrName,
+				    attrType,
+				    elementName,
+				     doc)
+CHAR_T*           attrName;
+AttributeType*    attrType;
+CHAR_T*           elementName;
+Document          doc;
 #endif
 {
-  SSchema	       schema = NULL;
-  AttributeMapping*   tableEntry;
-  int                 elemEntry;
+  int                 i;
 
-  elemEntry = MapGI (elementName, &schema, doc);
-  if (elemEntry >= 0)
+  attrType->AttrSSchema = GetXHTMLSSchema (doc);
+  i = XmlMapAttribute (attrName, elementName, doc, XhtmlAttributeMappingTable);
+  if (XhtmlAttributeMappingTable[i].XMLattribute[0] != attrName[0])
     {
-      tableEntry = MapAttr (Attr, &schema, elemEntry, doc);
-      if (tableEntry != NULL)
-	{
-	  attrType->AttrTypeNum = tableEntry->ThotAttribute;
-	  if (schema == NULL && doc != 0)
-	    attrType->AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
-	  else	    
-	    attrType->AttrSSchema = schema;
-	}
-      else
-	{
-	  attrType->AttrTypeNum = 0;
-	  attrType->AttrSSchema = NULL;
-	}
+      /* not found */
+      attrType->AttrTypeNum = 0;
+      return (NULL);
     }
   else
     {
-      attrType->AttrTypeNum = 0;
-      attrType->AttrSSchema = NULL;
+      attrType->AttrTypeNum = XhtmlAttributeMappingTable[i].ThotAttribute;
+      return (&XhtmlAttributeMappingTable[i]);
     }
 }
+

@@ -6,8 +6,7 @@
  */
 
 /*
-	Entry:
-		XMLparse
+	Entry:XMLparse
 */
 
 #define THOT_EXPORT extern

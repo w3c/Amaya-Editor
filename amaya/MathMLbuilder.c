@@ -448,30 +448,15 @@ STRING		    elementName;
 Document            doc;
 #endif
 {
-   int                 i;
+  int                 i;
 
-   attrType->AttrTypeNum = 0;
-   attrType->AttrSSchema = NULL;
-   i = 0;
-   do
-     if (ustrcasecmp (MathMLAttributeMappingTable[i].XMLattribute, Attr))
-       i++;
-     else
-       if (MathMLAttributeMappingTable[i].XMLelement[0] == EOS)
-	  {
-	  attrType->AttrTypeNum = MathMLAttributeMappingTable[i].ThotAttribute;
-	  attrType->AttrSSchema = GetMathMLSSchema (doc);
-	  }
-       else if (!ustrcasecmp (MathMLAttributeMappingTable[i].XMLelement,
-			       elementName))
-	  {
-	  attrType->AttrTypeNum = MathMLAttributeMappingTable[i].ThotAttribute;
-	  attrType->AttrSSchema = GetMathMLSSchema (doc);
-	  }
-       else
-	  i++;
-   while (attrType->AttrTypeNum <= 0 &&
-	  MathMLAttributeMappingTable[i].AttrOrContent != EOS);
+  attrType->AttrSSchema = GetMathMLSSchema (doc);
+  i = XmlMapAttribute (Attr, elementName, doc, MathMLAttributeMappingTable);
+  if (MathMLAttributeMappingTable[i].XMLattribute[0] !=  Attr[0])
+    /* not found */
+    attrType->AttrTypeNum = 0;
+  else
+    attrType->AttrTypeNum = MathMLAttributeMappingTable[i].ThotAttribute;
 }
 
 /*----------------------------------------------------------------------

@@ -32,15 +32,17 @@
 #include "UIcss_f.h"
 
 #include "fetchHTMLname.h"
-#include "XHTMLbuilder_f.h"
-#include "MathMLbuilder_f.h"
-#ifdef GRAPHML
-#include "GraphMLbuilder_f.h"
-#endif
-#include "XLinkbuilder_f.h"
+
+#include "fetchHTMLname_f.h"
 #include "fetchXMLname_f.h"
 #include "html2thot_f.h"
+#ifdef GRAPHML
+#include "GraphMLbuilder_f.h"
+#endif /* GRAPHML */
+#include "MathMLbuilder_f.h"
 #include "styleparser_f.h"
+#include "XHTMLbuilder_f.h"
+#include "XLinkbuilder_f.h"
 
 #include "xmlparse.h"
 #define NS_SEP '|'
@@ -742,8 +744,8 @@ static void            InitXmlParserContexts ()
    ustrcpy (ctxt->UriName, XHTML_URI);
    ctxt->XMLSSchema = NULL;
    ctxt->XMLtype = XHTML_TYPE;
-   ctxt->MapAttribute = (Proc) XhtmlMapAttribute;
-   ctxt->MapAttributeValue = (Proc) XhtmlMapAttributeValue;
+   ctxt->MapAttribute = (Proc) MapHTMLAttribute;
+   ctxt->MapAttributeValue = (Proc) MapHTMLAttributeValue;
    ctxt->MapEntity = (Proc) XhtmlMapEntity;
    /* ctxt->EntityCreated = (Proc) XhtmlEntityCreated; */
    ctxt->EntityCreated = NULL;
@@ -1252,7 +1254,7 @@ CHAR_T*             GIname;
   ElementType         elType;
   Element             newElement;
   CHAR_T              msgBuffer[MaxMsgLength];
-  STRING              mappedName= NULL, profile;
+  STRING              mappedName= NULL;
   int                 i;
   ThotBool            elInStack = FALSE;
 
@@ -1275,8 +1277,7 @@ CHAR_T*             GIname;
       previousElementContent = currentElementContent;
       GetXmlElType (GIname, &elType, &mappedName,
 		    &currentElementContent, XMLcontext.doc);
-      profile = TtaGetEnvString ("Profile");
-      if (!ustrcmp (profile, TEXT("basic-editor")) && mappedName == NULL)
+      if (ParsingLevel[XMLcontext.doc] != L_Transitional && mappedName == NULL)
 	{
 	  usprintf (msgBuffer, TEXT("Invalid tag \"%s\""), GIname);
 	  XmlParseError (XMLcontext.doc, msgBuffer, 0);
@@ -1383,7 +1384,7 @@ CHAR_T     *GIname;
    ElementType    elType;
    PtrParserCtxt  elementParserCtxt;
    CHAR_T         msgBuffer[MaxMsgLength];
-   STRING         mappedName, profile;
+   STRING         mappedName;
    int            i, error;
 
 
@@ -1409,8 +1410,7 @@ CHAR_T     *GIname;
 		 &currentElementContent, XMLcontext.doc);
    /* restore Context */
    currentParserCtxt = elementParserCtxt;
-   profile = TtaGetEnvString ("Profile");
-   if (!ustrcmp (profile, TEXT("basic-editor")) && mappedName == NULL)
+   if (ParsingLevel[XMLcontext.doc] != L_Transitional && mappedName == NULL)
       /* doesn't process that element */
       return;
    
@@ -1680,7 +1680,7 @@ CHAR_T         *attrName;
       mapAttr = NULL;
    else   
        {
-	 mapAttr = XhtmlMapAttribute (attrName, &attrType,
+	 mapAttr = MapHTMLAttribute (attrName, &attrType,
 				      /*nameElementStack[stackLevel-1],*/
 				      currentMappedName,
 				      XMLcontext.doc);
@@ -1702,7 +1702,7 @@ CHAR_T         *attrName;
 		     attrName);
 	   XmlParseError (XMLcontext.doc, msgBuffer, 0);
 	   /* attach an Invalid_attribute to the current element */
-	   mapAttr = XhtmlMapAttribute (TEXT("unknown_attr"),
+	   mapAttr = MapHTMLAttribute (TEXT("unknown_attr"),
 					&attrType,
 					nameElementStack[stackLevel-1],
 					XMLcontext.doc);
@@ -1965,7 +1965,7 @@ CHAR_T*             val;
 
   attrType.AttrSSchema = currentParserCtxt->XMLSSchema;
   attrType.AttrTypeNum = DummyAttribute;
-  XhtmlMapAttributeValue (val, attrType, &value);
+  MapHTMLAttributeValue (val, attrType, &value);
 
   if (value < 0)
     {
@@ -1974,7 +1974,7 @@ CHAR_T*             val;
       usprintf (msgBuffer, TEXT("Unknown attribute value \"type=%s\""), val);
       XmlParseError (XMLcontext.doc, msgBuffer, 0);
       usprintf (msgBuffer, TEXT("type=%s"), val);
-      XhtmlMapAttribute (TEXT("unknown_attr"), &attrType,
+      MapHTMLAttribute (TEXT("unknown_attr"), &attrType,
 			 NULL, XMLcontext.doc);
       XhtmlCreateAttr (XMLcontext.lastElement, attrType, msgBuffer, TRUE);
     }
@@ -2138,7 +2138,7 @@ CHAR_T     *attrValue;
 	       switch (attrKind)
 		 {
 		 case 0:	/* enumerate */
-		   XhtmlMapAttributeValue (attrValue, attrType, &val);
+		   MapHTMLAttributeValue (attrValue, attrType, &val);
 		   if (val < 0)
 		     {
 		       TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);
@@ -2155,7 +2155,7 @@ CHAR_T     *attrValue;
 		       TtaRemoveAttribute (lastAttrElement,
 					   lastAttribute, XMLcontext.doc);
 		       usprintf (msgBuffer, TEXT("%s=%s"), attrName, attrValue);
-		       XhtmlMapAttribute (TEXT("unknown_attr"),
+		       MapHTMLAttribute (TEXT("unknown_attr"),
 					  &attrType,
 					  NULL,
 					  XMLcontext.doc);

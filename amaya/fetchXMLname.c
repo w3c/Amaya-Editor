@@ -319,11 +319,12 @@ int                XMLtype;
 
 
 /*----------------------------------------------------------------------
-   MapXMLElementType
-   search in the mapping tables the entry for the element type of name
-   XMLname and returns the corresponding Thot element type.
+  MapXMLElementType
+  Generic function which searchs in the Element Mapping table, selected
+  by the parameter XMLtype, the entry XMLname and returns the corresponding
+  Thot element type.
    Returns:
-    - ElTypeNum and ElSSchema inelType  ElTypeNum = 0 if not found.
+    - ElTypeNum and ElSSchema into elType  ElTypeNum = 0 if not found.
     - content 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -367,11 +368,13 @@ Document           doc;
        /* search in the ElemMappingTable */
        i = 0;
        /* look for the first concerned entry in the table */
-       while (ptr[i].XMLname[0] < XMLname[0] && ptr[i].XMLname[0] != EOS)
+       while (ptr[i].XMLname[0] < XMLname[0] && ptr[i].XMLname[0] != WC_EOS)
 	 i++;
+
        /* look at all entries starting with the right character */
        do
-	 if (ustrcmp (ptr[i].XMLname, XMLname))
+	 if (ustrcmp (ptr[i].XMLname, XMLname) || ptr[i].Level > ParsingLevel[doc])
+	   /* it's not the tag or this tag is not valid for the current parsing level */
 	   i++;
 	 else
 	   {
@@ -388,7 +391,8 @@ Document           doc;
 
 /*----------------------------------------------------------------------
    GetXMLElementName
-   search in the mapping tables the XML name for a given Thot type
+   Generic function which searchs in the mapping table the XML name for
+   a given Thot type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void              GetXMLElementName (ElementType elType, CHAR_T** buffer)
@@ -424,8 +428,47 @@ CHAR_T**          buffer;
 	      }
 	    i++;
 	    }
-	  while (ptr[i].XMLname[0] != EOS);	  
+	  while (ptr[i].XMLname[0] != WC_EOS);	  
      }
    *buffer = TEXT("???");
    return;
+}
+/*----------------------------------------------------------------------
+   XmlMapAttribute
+   Generic function which searchs in the Attribute Mapping Table (table)
+   the entry attrName associated to the element elementName.
+   Returns the corresponding entry.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int               XmlMapAttribute (CHAR_T *attrName,
+				   CHAR_T *elementName,
+				   Document doc,
+				   AttributeMapping table[])
+#else
+int               XmlMapAttribute (attrName,
+				   elementName,
+				   doc,
+				   table)
+CHAR_T           *attrName;
+CHAR_T           *elementName;
+Document          doc;
+AttributeMapping  table[];
+#endif
+{
+  int             i;
+
+  i = 0;
+  /* look for the first concerned entry in the table */
+  while (table[i].XMLattribute[0] < attrName[0] && table[i].XMLattribute[0] != WC_EOS)
+    i++;
+  while (table[i].XMLattribute[0] == attrName[0])
+    {
+      if (table[i].Level > ParsingLevel[doc] ||
+	  ustrcasecmp (table[i].XMLattribute, attrName) ||
+	  (table[i].XMLelement[0] != WC_EOS && ustrcasecmp (table[i].XMLelement, elementName)))
+	i++;
+      else
+	return (i);
+    }
+  return (i);
 }

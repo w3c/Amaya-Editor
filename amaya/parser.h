@@ -13,6 +13,7 @@
 #define XLINK_TYPE 3
 #define XHTML_TYPE 4
 
+/* current HTML parsing level */
 #define L_Undefined    0
 #define L_Basic        1
 #define L_Strict       2

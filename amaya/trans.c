@@ -2478,7 +2478,11 @@ CHAR_T*             data;
 	      if (elParent != NULL)
 		{
 		  TtaSetStructureChecking (0, TransDoc);
+#ifdef EXPAT_PARSER
+		  /* todo: EndOfXmlElement (GIname) */
+#else /* EXPAT_PARSER */
 		  XMLElementComplete (elParent, TransDoc);
+#endif /* EXPAT_PARSER */
 		  TtaSetStructureChecking (1, TransDoc);
 		} 
 	    }

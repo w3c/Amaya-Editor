@@ -944,71 +944,16 @@ STRING     elementName;
 }
 
 /*----------------------------------------------------------------------
-   XhtmlMapAttribute
-   Search in the Attribute Mapping Table the entry for the attribute
-   of name Attr and returns the corresponding Thot attribute type.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-AttributeMapping*     XhtmlMapAttribute (CHAR_T* attrName,
-					 AttributeType* attrType,
-					 CHAR_T* elementName,
-					 Document doc)
-#else
-AttributeMapping*     XhtmlMapAttribute (attrName,
-					 attrType,
-					 elementName,
-					 doc)
-CHAR_T*         attrName;
-AttributeType*  attrType;
-CHAR_T*         elementName;
-Document        doc;
-#endif
-{
-#ifdef EXPAT_PARSER
-   int                 i;
-
-   attrType->AttrTypeNum = 0;
-   attrType->AttrSSchema = NULL;
-   i = 0;
-
-   do
-     if (ustrcasecmp (XhtmlAttributeMappingTable[i].XMLattribute, attrName))
-	 i++;
-     else
-	 if (XhtmlAttributeMappingTable[i].XMLelement[0] == EOS)
-	   {
-	     attrType->AttrTypeNum = XhtmlAttributeMappingTable[i].ThotAttribute;
-	     attrType->AttrSSchema = GetXHTMLSSchema (doc);
-	   }
-	 else
-	   if (!ustrcasecmp (XhtmlAttributeMappingTable[i].XMLelement, elementName))
-	     {
-	       attrType->AttrTypeNum = XhtmlAttributeMappingTable[i].ThotAttribute;
-	       attrType->AttrSSchema = GetXHTMLSSchema (doc);
-	     }
-	   else
-	     i++;
-   while (attrType->AttrTypeNum <= 0 &&
-	  XhtmlAttributeMappingTable[i].AttrOrContent != EOS);
-
-   if (XhtmlAttributeMappingTable[i].AttrOrContent == EOS)
-       return (NULL);
-   else
-       return (&XhtmlAttributeMappingTable[i]);
-#endif /* EXPAT_PARSER */
-}
-
-/*----------------------------------------------------------------------
-   XhtmlMapAttributeValue
+   MapHTMLAttributeValue
    Search in the Attribute Value Mapping Table the entry for the attribute
    ThotAtt and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void            XhtmlMapAttributeValue (CHAR_T* AttrVal,
+void            MapHTMLAttributeValue (CHAR_T* AttrVal,
 					AttributeType attrType,
 					int* value)
 #else
-void            XhtmlMapAttributeValue (AttrVal,
+void            MapHTMLAttributeValue (AttrVal,
 					attrType,
 					value)
 CHAR_T*         AttrVal;

@@ -33,6 +33,7 @@
 #include "HTML.h"
 #include "TextFile.h"
 #include "amayamsg.h"
+#include "parser.h"
 
 #define NAME_LENGTH     32
 
@@ -358,6 +359,8 @@ THOT_EXPORT Document DocumentSource[DocumentTableLength];
 THOT_EXPORT int          FilesLoading[DocumentTableLength];
 /* Status (error, success) of the download of the objects of a document */
 THOT_EXPORT int          DocNetworkStatus[DocumentTableLength];
+/* Status of the XHTML document (basic, strict, transitional) */
+THOT_EXPORT int          ParsingLevel[DocumentTableLength];
 
 THOT_EXPORT Document     W3Loading;	/* the document being loaded */
 THOT_EXPORT Document     BackupDocument;	/* the current backup */
