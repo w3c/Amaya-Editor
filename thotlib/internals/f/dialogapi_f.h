@@ -70,7 +70,7 @@ extern void TtaSetToggleMenu ( int ref,
                                boolean on );
 extern void TtaChangeMenuEntry ( int ref,
                                  int entry,
-                                 char *texte );
+                                 char *text );
 extern void TtaRedrawMenuEntry ( int ref,
                                  int entry,
                                  char *fontname,
@@ -219,7 +219,7 @@ extern void TtaSetToggleMenu (/* int ref,
                                  boolean on */);
 extern void TtaChangeMenuEntry (/* int ref,
                                    int entry,
-                                   char *texte */);
+                                   char *text */);
 extern void TtaRedrawMenuEntry (/* int ref,
                                    int entry,
                                    char *fontname,

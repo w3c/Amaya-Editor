@@ -7,40 +7,40 @@
 #if __STDC__
 
 extern PtrReference NextReferenceToEl ( PtrElement pEl,
-                                    PtrDocument pDocEl,
-                                    boolean TraiteNonCharge,
-                                    PtrReference pRefPrec,
-                                    PtrDocument * pDocRef,
-                                    PtrExternalDoc * pDE,
-                                    boolean DocExtSuivant );
-extern void FindReference ( PtrReference * ReferCour,
-                       PtrDocument * DocDeReferCour,
-                       PtrElement * ElemRefCour,
-                       PtrDocument * DocDeElemRefCour,
-                       PtrExternalDoc * pDocExtCour,
-                       boolean DocExtSuivant );
+                                        PtrDocument pDoc,
+                                        boolean processNotLoaded,
+                                        PtrReference pPrevRef,
+                                        PtrDocument * pDocRef,
+                                        PtrExternalDoc * pExtDoc,
+                                        boolean nextExtDoc );
+extern void FindReference ( PtrReference * pPrevRef,
+                            PtrDocument * pDocPrevRef,
+                            PtrElement * pReferredEl,
+                            PtrDocument * pDocReferredEl,
+                            PtrExternalDoc * pExtDoc,
+                            boolean nextExtDoc );
 extern void FindReferredEl ( void );
-extern void CheckReferences ( PtrElement pRac,
-                       PtrDocument pDoc );
+extern void CheckReferences ( PtrElement pRoot,
+                              PtrDocument pDoc );
 
 #else /* __STDC__ */
 
 extern PtrReference NextReferenceToEl (/* PtrElement pEl,
-                                      PtrDocument pDocEl,
-                                      boolean TraiteNonCharge,
-                                      PtrReference pRefPrec,
-                                      PtrDocument * pDocRef,
-                                      PtrExternalDoc * pDE,
-                                      boolean DocExtSuivant */);
-extern void FindReference (/* PtrReference * ReferCour,
-                         PtrDocument * DocDeReferCour,
-                         PtrElement * ElemRefCour,
-                         PtrDocument * DocDeElemRefCour,
-                         PtrExternalDoc * pDocExtCour,
-                         boolean DocExtSuivant */);
+                                          PtrDocument pDoc,
+                                          boolean processNotLoaded,
+                                          PtrReference pPrevRef,
+                                          PtrDocument * pDocRef,
+                                          PtrExternalDoc * pExtDoc,
+                                          boolean nextExtDoc */);
+extern void FindReference (/* PtrReference * pPrevRef,
+                              PtrDocument * pDocPrevRef,
+                              PtrElement * pReferredEl,
+                              PtrDocument * pDocReferredEl,
+                              PtrExternalDoc * pExtDoc,
+                              boolean nextExtDoc */);
 extern void FindReferredEl (/* void */);
-extern void CheckReferences (/* PtrElement pRac,
-                         PtrDocument pDoc */);
+extern void CheckReferences (/* PtrElement pRoot,
+                                PtrDocument pDoc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

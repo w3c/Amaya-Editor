@@ -25,27 +25,27 @@ extern int LogicalValue ( int val,
                           TypeUnit unit,
                           PtrAbstractBox pAb );
 extern int FontBase ( ptrfont font );
-extern int FontRelSize ( int taille );
-extern int FontPointSize ( int taille );
+extern int FontRelSize ( int size );
+extern int FontPointSize ( int size );
 extern ptrfont LoadFont ( char name[100] );
 extern void NomFonte ( char alphabet,
-                       char police,
-                       int evidence,
-                       int taille,
+                       char family,
+                       int highlight,
+                       int size,
                        TypeUnit unit,
                        char r_nom[10],
                        char r_nomX[100] );
 extern ptrfont LireFonte ( char alphabet,
-                           char police,
-                           int evidence,
-                           int taille,
+                           char family,
+                           int highlight,
+                           int size,
                            TypeUnit unit );
 extern ptrfont ThotLoadFont ( char alphabet,
-                             char police,
-                             int evidence,
-                             int taille,
-                             TypeUnit unit,
-                             int frame );
+                              char family,
+                              int highlight,
+                              int size,
+                              TypeUnit unit,
+                              int frame );
 extern void InitFont ( char *name );
 extern void ThotFreeFont ( int frame );
 
@@ -70,27 +70,27 @@ extern int LogicalValue (/* int val,
                             TypeUnit unit,
                             PtrAbstractBox pAb */);
 extern int FontBase (/* ptrfont font */);
-extern int FontRelSize (/* int taille */);
-extern int FontPointSize (/* int taille */);
+extern int FontRelSize (/* int size */);
+extern int FontPointSize (/* int size */);
 extern ptrfont LoadFont (/* char name[100] */);
 extern void NomFonte (/* char alphabet,
-                         char police,
-                         int evidence,
-                         int taille,
+                         char family,
+                         int highlight,
+                         int size,
                          TypeUnit unit,
                          char r_nom[10],
                          char r_nomX[100] */);
 extern ptrfont LireFonte (/* char alphabet,
-                             char police,
-                             int evidence,
-                             int taille,
+                             char family,
+                             int highlight,
+                             int size,
                              TypeUnit unit */);
 extern ptrfont ThotLoadFont (/* char alphabet,
-                               char police,
-                               int evidence,
-                               int taille,
-                               TypeUnit unit,
-                               int frame */);
+                                char family,
+                                int highlight,
+                                int size,
+                                TypeUnit unit,
+                                int frame */);
 extern void InitFont (/* char *name */);
 extern void ThotFreeFont (/* int frame */);
 

@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void InitSchAppli ( PtrSSchema scheme );
+extern void InitSchAppli ( PtrSSchema pSchema );
 extern void InitNatures ( void );
 extern PtrPSchema LdSchPres ( Name fname,
                               PtrSSchema SS );
@@ -32,7 +32,7 @@ extern void LibSchemas ( PtrDocument pDoc );
 
 #else /* __STDC__ */
 
-extern void InitSchAppli (/* PtrSSchema scheme */);
+extern void InitSchAppli (/* PtrSSchema pSchema */);
 extern void InitNatures (/* void */);
 extern PtrPSchema LdSchPres (/* Name fname,
                                 PtrSSchema SS */);

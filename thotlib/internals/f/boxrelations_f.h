@@ -6,56 +6,56 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void Positionner ( AbPosition regle,
+extern void Positionner ( AbPosition rule,
                           PtrBox pBox,
                           int frame,
-                          boolean EnX );
+                          boolean horizRef );
+extern PtrBox BoiteHInclus ( PtrBox pBox,
+                             PtrBox pPreviousBox );
+extern PtrBox BoiteVInclus ( PtrBox pBox,
+                             PtrBox pPreviousBox );
 extern boolean Dimensionner ( PtrAbstractBox pAb,
                               int frame,
-                              boolean EnX );
-extern void PlacerAxe ( AbPosition regle,
+                              boolean horizRef );
+extern void PlacerAxe ( AbPosition rule,
                         PtrBox pBox,
                         int frame,
-                        boolean EnX );
-extern PtrBox BoiteHInclus ( PtrBox pBox,
-                             PtrBox prec );
-extern PtrBox BoiteVInclus ( PtrBox pBox,
-                             PtrBox prec );
-extern void RazHorsEnglobe ( PtrBox abox );
-extern void RazPosition ( PtrBox debox,
-                          boolean EnX );
-extern void RazAxe ( PtrBox debox,
-                     boolean EnX );
-extern void RazLiens ( PtrBox abox );
-extern void RazDim ( PtrBox debox,
-                     boolean EnX,
+                        boolean horizRef );
+extern void RazHorsEnglobe ( PtrBox pTargetBox );
+extern void RazPosition ( PtrBox pOrginBox,
+                          boolean horizRef );
+extern void RazAxe ( PtrBox pOrginBox,
+                     boolean horizRef );
+extern void RazLiens ( PtrBox pTargetBox );
+extern void RazDim ( PtrBox pOrginBox,
+                     boolean horizRef,
                      int frame );
 
 #else /* __STDC__ */
 
-extern void Positionner (/* AbPosition regle,
+extern void Positionner (/* AbPosition rule,
                             PtrBox pBox,
                             int frame,
-                            boolean EnX */);
+                            boolean horizRef */);
+extern PtrBox BoiteHInclus (/* PtrBox pBox,
+                               PtrBox pPreviousBox */);
+extern PtrBox BoiteVInclus (/* PtrBox pBox,
+                               PtrBox pPreviousBox */);
 extern boolean Dimensionner (/* PtrAbstractBox pAb,
                                 int frame,
-                                boolean EnX */);
-extern void PlacerAxe (/* AbPosition regle,
+                                boolean horizRef */);
+extern void PlacerAxe (/* AbPosition rule,
                           PtrBox pBox,
                           int frame,
-                          boolean EnX */);
-extern PtrBox BoiteHInclus (/* PtrBox pBox,
-                               PtrBox prec */);
-extern PtrBox BoiteVInclus (/* PtrBox pBox,
-                               PtrBox prec */);
-extern void RazHorsEnglobe (/* PtrBox abox */);
-extern void RazPosition (/* PtrBox debox,
-                            boolean EnX */);
-extern void RazAxe (/* PtrBox debox,
-                       boolean EnX */);
-extern void RazLiens (/* PtrBox abox */);
-extern void RazDim (/* PtrBox debox,
-                       boolean EnX,
+                          boolean horizRef */);
+extern void RazHorsEnglobe (/* PtrBox pTargetBox */);
+extern void RazPosition (/* PtrBox pOrginBox,
+                            boolean horizRef */);
+extern void RazAxe (/* PtrBox pOrginBox,
+                       boolean horizRef */);
+extern void RazLiens (/* PtrBox pTargetBox */);
+extern void RazDim (/* PtrBox pOrginBox,
+                       boolean horizRef,
                        int frame */);
 
 #endif /* __STDC__ */

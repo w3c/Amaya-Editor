@@ -8,22 +8,22 @@
 
 extern PtrDocument GetPtrDocument ( DocumentIdentifier docIdent );
 extern boolean OpenDocument ( Name docName,
-                          PtrDocument pDoc,
-                          boolean loadIncludedDoc,
-                          boolean skeleton,
-                          PtrSSchema pSS,
-                          boolean withAppEvent );
+                              PtrDocument pDoc,
+                              boolean loadIncludedDoc,
+                              boolean skeleton,
+                              PtrSSchema pSS,
+                              boolean withAppEvent );
 extern void DeleteAllTrees ( PtrDocument pDoc );
 
 #else /* __STDC__ */
 
 extern PtrDocument GetPtrDocument (/* DocumentIdentifier docIdent */);
 extern boolean OpenDocument (/* Name docName,
-                            PtrDocument pDoc,
-                            boolean loadIncludedDoc,
-                            boolean skeleton,
-                            PtrSSchema pSS,
-                            boolean withAppEvent */);
+                                PtrDocument pDoc,
+                                boolean loadIncludedDoc,
+                                boolean skeleton,
+                                PtrSSchema pSS,
+                                boolean withAppEvent */);
 extern void DeleteAllTrees (/* PtrDocument pDoc */);
 
 #endif /* __STDC__ */

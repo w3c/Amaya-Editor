@@ -8,17 +8,17 @@
 
 extern void NoOp ( PtrElement pEl );
 extern boolean CallEventAttribute ( NotifyAttribute * notifyAttr,
-                                      boolean pre );
+                                    boolean pre );
 extern boolean CallEventType ( NotifyEvent * notifyEvent,
-                                 boolean pre );
+                               boolean pre );
 
 #else /* __STDC__ */
 
 extern void NoOp (/* PtrElement pEl */);
 extern boolean CallEventAttribute (/* NotifyAttribute * notifyAttr,
-                                        boolean pre */);
+                                      boolean pre */);
 extern boolean CallEventType (/* NotifyEvent * notifyEvent,
-                                   boolean pre */);
+                                 boolean pre */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

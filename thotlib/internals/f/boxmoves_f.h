@@ -6,43 +6,43 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern boolean Parent ( PtrBox pBox,
-                        PtrBox cebox );
+extern void XYEnAbsolu ( PtrBox pBox,
+                         boolean *horizRef,
+                         boolean *vertRef );
 extern boolean XEnAbsolu ( PtrBox pBox );
 extern boolean YEnAbsolu ( PtrBox pBox );
-extern void XYEnAbsolu ( PtrBox pBox,
-                         boolean * EnHorizontal,
-                         boolean * EnVertical );
+extern boolean IsParentBox ( PtrBox pBox,
+                             PtrBox pRefBox );
 extern void AjusteTrace ( PtrAbstractBox pAb,
-                          boolean InversionHoriz,
-                          boolean InversionVert,
-                          boolean Saisie );
+                          boolean horizRef,
+                          boolean vertRef,
+                          boolean inAbtractBox );
 extern void HorizInverse ( PtrBox pBox,
                            OpRelation op );
 extern void VertInverse ( PtrBox pBox,
                           OpRelation op );
-extern void ChangeLgContenu ( PtrBox pBox,
-                              PtrBox org,
-                              int large,
-                              int dbl,
-                              int frame );
 extern void ChangeHtContenu ( PtrBox pBox,
-                              PtrBox org,
-                              int haut,
+                              PtrBox pSourceBox,
+                              int height,
+                              int frame );
+extern void ChangeLgContenu ( PtrBox pBox,
+                              PtrBox pSourceBox,
+                              int width,
+                              int spaceDelta,
                               int frame );
 extern void ChangeLargeur ( PtrBox pBox,
-                            PtrBox org,
-                            PtrBox prec,
+                            PtrBox pSourceBox,
+                            PtrBox pFromBox,
                             int delta,
-                            int dbl,
+                            int spaceDelta,
                             int frame );
 extern void ChangeHauteur ( PtrBox pBox,
-                            PtrBox org,
-                            PtrBox prec,
+                            PtrBox pSourceBox,
+                            PtrBox pFromBox,
                             int delta,
                             int frame );
 extern void ChngBElast ( PtrBox pBox,
-                         PtrBox org,
+                         PtrBox pSourceBox,
                          OpRelation op,
                          int delta,
                          int frame,
@@ -54,78 +54,78 @@ extern void DepYContenu ( PtrBox pBox,
                           int delta,
                           int frame );
 extern void DepAxe ( PtrBox pBox,
-                     PtrBox prec,
+                     PtrBox pFromBox,
                      int delta,
                      int frame );
 extern void DepBase ( PtrBox pBox,
-                      PtrBox prec,
+                      PtrBox pFromBox,
                       int delta,
                       int frame );
 extern void ModLarg ( PtrBox pBox,
-                      PtrBox org,
-                      PtrBox prec,
+                      PtrBox pSourceBox,
+                      PtrBox pFromBox,
                       int delta,
-                      int dbl,
+                      int spaceDelta,
                       int frame );
 extern void ModHaut ( PtrBox pBox,
-                      PtrBox org,
-                      PtrBox prec,
+                      PtrBox pSourceBox,
+                      PtrBox pFromBox,
                       int delta,
                       int frame );
 extern void DepOrgX ( PtrBox pBox,
-                      PtrBox prec,
+                      PtrBox pFromBox,
                       int delta,
                       int frame );
 extern void DepOrgY ( PtrBox pBox,
-                      PtrBox prec,
+                      PtrBox pFromBox,
                       int delta,
                       int frame );
 extern void Englobx ( PtrAbstractBox pAb,
-                      PtrBox org,
+                      PtrBox pSourceBox,
                       int frame );
 extern void Engloby ( PtrAbstractBox pAb,
-                      PtrBox org,
+                      PtrBox pSourceBox,
                       int frame );
 
 #else /* __STDC__ */
 
-extern boolean Parent (/* PtrBox pBox,
-                          PtrBox cebox */);
+extern void XYEnAbsolu (/* PtrBox pBox,
+                           boolean *horizRef,
+                           boolean *vertRef */);
 extern boolean XEnAbsolu (/* PtrBox pBox */);
 extern boolean YEnAbsolu (/* PtrBox pBox */);
-extern void XYEnAbsolu (/* PtrBox pBox,
-                           boolean * EnHorizontal,
-                           boolean * EnVertical */);
+extern boolean IsParentBox (/* PtrBox pBox,
+                               PtrBox pRefBox */);
 extern void AjusteTrace (/* PtrAbstractBox pAb,
-                            boolean InversionHoriz,
-                            boolean InversionVert,
-                            boolean Saisie */);
+                            boolean horizRef,
+                            boolean vertRef,
+                            boolean inAbtractBox */);
 extern void HorizInverse (/* PtrBox pBox,
                              OpRelation op */);
 extern void VertInverse (/* PtrBox pBox,
                             OpRelation op */);
-extern void ChangeLgContenu (/* PtrBox pBox,
-                                PtrBox org,
-                                int large,
-                                int dbl,
-                                int frame */);
 extern void ChangeHtContenu (/* PtrBox pBox,
-                                PtrBox org,
-                                int haut,
+                                PtrBox pSourceBox,
+                                int height,
+                                int frame */);
+extern void ChangeLgContenu (/* PtrBox pBox,
+                                PtrBox pSourceBox,
+                                int width,
+                                int spaceDelta,
                                 int frame */);
 extern void ChangeLargeur (/* PtrBox pBox,
-                              PtrBox org,
-                              PtrBox prec,
+                              PtrBox pSourceBox,
+                              PtrBox pFromBox,
                               int delta,
-                              int dbl,
+                              int spaceDelta,
                               int frame */);
 extern void ChangeHauteur (/* PtrBox pBox,
-                              PtrBox org,
-                              PtrBox prec,
+                              PtrBox pSourceBox,
+                              PtrBox pFromBox,
                               int delta,
                               int frame */);
 extern void ChngBElast (/* PtrBox pBox,
-                           PtrBox org,
+                           PtrBox pSourceBox,
                            OpRelation op,
                            int delta,
                            int frame,
@@ -137,37 +137,37 @@ extern void DepYContenu (/* PtrBox pBox,
                             int delta,
                             int frame */);
 extern void DepAxe (/* PtrBox pBox,
-                       PtrBox prec,
+                       PtrBox pFromBox,
                        int delta,
                        int frame */);
 extern void DepBase (/* PtrBox pBox,
-                        PtrBox prec,
+                        PtrBox pFromBox,
                         int delta,
                         int frame */);
 extern void ModLarg (/* PtrBox pBox,
-                        PtrBox org,
-                        PtrBox prec,
+                        PtrBox pSourceBox,
+                        PtrBox pFromBox,
                         int delta,
-                        int dbl,
+                        int spaceDelta,
                         int frame */);
 extern void ModHaut (/* PtrBox pBox,
-                        PtrBox org,
-                        PtrBox prec,
+                        PtrBox pSourceBox,
+                        PtrBox pFromBox,
                         int delta,
                         int frame */);
 extern void DepOrgX (/* PtrBox pBox,
-                        PtrBox prec,
+                        PtrBox pFromBox,
                         int delta,
                         int frame */);
 extern void DepOrgY (/* PtrBox pBox,
-                        PtrBox prec,
+                        PtrBox pFromBox,
                         int delta,
                         int frame */);
 extern void Englobx (/* PtrAbstractBox pAb,
-                        PtrBox org,
+                        PtrBox pSourceBox,
                         int frame */);
 extern void Engloby (/* PtrAbstractBox pAb,
-                        PtrBox org,
+                        PtrBox pSourceBox,
                         int frame */);
 
 #endif /* __STDC__ */

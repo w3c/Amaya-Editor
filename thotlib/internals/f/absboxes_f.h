@@ -9,7 +9,7 @@
 extern char *AbsBoxType ( PtrAbstractBox pAb );
 extern void LibAbbView ( PtrAbstractBox pAb );
 extern void LibAbbEl ( PtrElement pEl );
-extern void LibAbbDead ( PtrAbstractBox pAb );
+extern void FreeDeadAbstractBoxes ( PtrAbstractBox pAb );
 extern void AddAbsBoxes ( PtrAbstractBox pAbbRoot,
                           PtrDocument pDoc,
                           boolean Tete );
@@ -17,31 +17,31 @@ extern boolean NonSecable ( PtrAbstractBox pAb );
 extern void AdjustVolume ( PtrElement pEl,
                            PtrDocument pDoc );
 extern void IncreaseVolume ( boolean EnTete,
-                          int dVol,
-                          int frame );
+                             int dVol,
+                             int frame );
 extern void DecreaseVolume ( boolean EnTete,
-                        int dVol,
-                        int frame );
+                             int dVol,
+                             int frame );
 extern void VerifAbsBoxe ( PtrElement pEl,
-                        int Vue,
-                        PtrDocument pDoc,
-                        boolean debut,
-                        boolean affiche );
+                           int Vue,
+                           PtrDocument pDoc,
+                           boolean debut,
+                           boolean affiche );
 extern void VolumeTree ( PtrAbstractBox pAbbRoot,
-                           PtrAbstractBox pAbbFirst,
-                           PtrAbstractBox pAbbLast,
-                           int *VolAvant,
-                           int *VolApres,
-                           int *VolArbre );
+                         PtrAbstractBox pAbbFirst,
+                         PtrAbstractBox pAbbLast,
+                         int *VolAvant,
+                         int *VolApres,
+                         int *VolArbre );
 extern void JumpIntoView ( int frame,
-                            int distance );
+                           int distance );
 
 #else /* __STDC__ */
 
 extern char *AbsBoxType (/* PtrAbstractBox pAb */);
 extern void LibAbbView (/* PtrAbstractBox pAb */);
 extern void LibAbbEl (/* PtrElement pEl */);
-extern void LibAbbDead (/* PtrAbstractBox pAb */);
+extern void FreeDeadAbstractBoxes (/* PtrAbstractBox pAb */);
 extern void AddAbsBoxes (/* PtrAbstractBox pAbbRoot,
                             PtrDocument pDoc,
                             boolean Tete */);
@@ -49,24 +49,24 @@ extern boolean NonSecable (/* PtrAbstractBox pAb */);
 extern void AdjustVolume (/* PtrElement pEl,
                              PtrDocument pDoc */);
 extern void IncreaseVolume (/* boolean EnTete,
-                            int dVol,
-                            int frame */);
+                               int dVol,
+                               int frame */);
 extern void DecreaseVolume (/* boolean EnTete,
-                          int dVol,
-                          int frame */);
+                               int dVol,
+                               int frame */);
 extern void VerifAbsBoxe (/* PtrElement pEl,
-                          int Vue,
-                          PtrDocument pDoc,
-                          boolean debut,
-                          boolean affiche */);
+                             int Vue,
+                             PtrDocument pDoc,
+                             boolean debut,
+                             boolean affiche */);
 extern void VolumeTree (/* PtrAbstractBox pAbbRoot,
-                             PtrAbstractBox pAbbFirst,
-                             PtrAbstractBox pAbbLast,
-                             int *VolAvant,
-                             int *VolApres,
-                             int *VolArbre */);
+                           PtrAbstractBox pAbbFirst,
+                           PtrAbstractBox pAbbLast,
+                           int *VolAvant,
+                           int *VolApres,
+                           int *VolArbre */);
 extern void JumpIntoView (/* int frame,
-                              int distance */);
+                             int distance */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

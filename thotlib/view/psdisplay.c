@@ -1994,16 +1994,16 @@ int                 motif;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    DrawLine trace une horizontale sur le bord superieur, au milieu  | */
+/* |    DrawHorizontalLine trace une horizontale sur le bord superieur, au milieu  | */
 /* |            ou sur le bord inferieur.                               | */
 /* ---------------------------------------------------------------------- */
 /**CO*/
 
 #ifdef __STDC__
-void                DrawLine (int frame, int epais, int style, int x, int y, int l, int h, int cadrage, int RO, int func, int fg)
+void                DrawHorizontalLine (int frame, int epais, int style, int x, int y, int l, int h, int cadrage, int RO, int func, int fg)
 
 #else  /* __STDC__ */
-void                DrawLine (frame, epais, style, x, y, l, h, cadrage, RO, func, fg)
+void                DrawHorizontalLine (frame, epais, style, x, y, l, h, cadrage, RO, func, fg)
 int                 frame;
 int                 epais;
 int                 style;
@@ -2046,19 +2046,19 @@ int                 fg;
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, ym, x, ym, style, epais, 2);
    else
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, yf, x, yf, style, epais, 2);
-}				/*DrawLine */
+}				/*DrawHorizontalLine */
 
 /* ---------------------------------------------------------------------- */
-/* |    DrawTrait trace une verticale sur le bord gauche, au milieu ou sur| */
+/* |    DrawVerticalLine trace une verticale sur le bord gauche, au milieu ou sur| */
 /* |            le bords droit.                                         | */
 /* ---------------------------------------------------------------------- */
 /**CO*/
 
 #ifdef __STDC__
-void                DrawTrait (int frame, int epais, int style, int x, int y, int l, int h, int cadrage, int RO, int func, int fg)
+void                DrawVerticalLine (int frame, int epais, int style, int x, int y, int l, int h, int cadrage, int RO, int func, int fg)
 
 #else  /* __STDC__ */
-void                DrawTrait (frame, epais, style, x, y, l, h, cadrage, RO, func, fg)
+void                DrawVerticalLine (frame, epais, style, x, y, l, h, cadrage, RO, func, fg)
 int                 frame;
 int                 epais;
 int                 style;
@@ -2101,7 +2101,7 @@ int                 fg;
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xm, yf, xm, y, style, epais, 2);
    else
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, yf, xf, y, style, epais, 2);
-}				/*DrawTrait */
+}				/*DrawVerticalLine */
 
 /* ---------------------------------------------------------------------- */
 /* |    DrawPoints trace un ligne de pointilles sur la longueur donnee.   | */
@@ -2234,12 +2234,12 @@ int                 height;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FinDeChaine teste si la chaine chaine se termine par suffix.    | */
+/* |    EndOfString teste si la chaine chaine se termine par suffix.    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int                 FinDeChaine (char *chaine, char *suffix)
+int                 EndOfString (char *chaine, char *suffix)
 #else  /* __STDC__ */
-int                 FinDeChaine (chaine, suffix)
+int                 EndOfString (chaine, suffix)
 char               *chaine;
 char               *suffix;
 

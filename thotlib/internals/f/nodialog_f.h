@@ -15,13 +15,13 @@ extern void ConfigTranslateSSchema ( PtrSSchema pSS );
 extern void ReaffPaveCopie ( void );
 extern void DrawAjAttr ( void );
 extern void DrawChar ( char car,
-                    int frame,
-                    int x,
-                    int y,
-                    ptrfont font,
-                    int RO,
-                    int active,
-                    int fg );
+                       int frame,
+                       int x,
+                       int y,
+                       ptrfont font,
+                       int RO,
+                       int active,
+                       int fg );
 extern void DrawSupprAttr ( PtrAttribute pAttr,
                             PtrElement pEl );
 extern void AttachAttrWithValue ( PtrElement pEl,
@@ -30,7 +30,7 @@ extern void AttachAttrWithValue ( PtrElement pEl,
 extern boolean DansTampon ( PtrElement pEl );
 extern void SaisitNomSchPres ( PtrSSchema pSchStr,
                                Name name );
-extern boolean RemplRefer ( void );
+extern boolean LinkReference ( void );
 extern void NouvPosition ( PtrAbstractBox pAb,
                            int DeltaX,
                            int DeltaY,
@@ -54,9 +54,9 @@ extern void MontrerBoite ( int frame,
                            int pourcent );
 extern int IdentDocument ( PtrDocument pDoc );
 extern boolean CallEventType ( int *notifyEvent,
-                                 boolean pre );
+                               boolean pre );
 extern boolean CallEventAttribute ( NotifyAttribute * notifyAttr,
-                                      boolean pre );
+                                    boolean pre );
 extern void EndInsert ( void );
 extern void FinInsertParagraph ( PtrAbstractBox pAb,
                                  int frame );
@@ -81,9 +81,9 @@ extern void SetClip ( int frame,
 extern void ResetClip ( int frame );
 extern void SetCursorWatch ( int thotWindowid );
 extern void ResetCursorWatch ( int thotWindowid );
-extern void ChaineChoix ( PtrElement pEl,
-                          PtrElement * p,
-                          PtrDocument pDoc );
+extern void InsertOption ( PtrElement pEl,
+                           PtrElement * p,
+                           PtrDocument pDoc );
 extern void VisuSelect ( PtrAbstractBox PavRac,
                          boolean Visible );
 extern void SetSelect ( int frame,
@@ -124,46 +124,46 @@ extern boolean ConfigGetPSchemaNature ( PtrSSchema pSS,
 extern boolean ConfigDefaultPSchema ( char *schema,
                                       char *schpres );
 extern void UserGeometryMove ( int frame,
-                         int *x,
-                         int *y,
-                         int large,
-                         int haut,
-                         int xr,
-                         int yr,
-                         int xmin,
-                         int xmax,
-                         int ymin,
-                         int ymax,
-                         int xm,
-                         int ym );
+                               int *x,
+                               int *y,
+                               int large,
+                               int haut,
+                               int xr,
+                               int yr,
+                               int xmin,
+                               int xmax,
+                               int ymin,
+                               int ymax,
+                               int xm,
+                               int ym );
 extern void UserGeometryResize ( int frame,
-                          int x,
-                          int y,
-                          int *large,
-                          int *haut,
-                          int xr,
-                          int yr,
-                          int xmin,
-                          int xmax,
-                          int ymin,
-                          int ymax,
-                          int xm,
-                          int ym );
+                                 int x,
+                                 int y,
+                                 int *large,
+                                 int *haut,
+                                 int xr,
+                                 int yr,
+                                 int xmin,
+                                 int xmax,
+                                 int ymin,
+                                 int ymax,
+                                 int xm,
+                                 int ym );
 extern void UserGeometryCreate ( int frame,
-                           int *x,
-                           int *y,
-                           int xr,
-                           int yr,
-                           int *large,
-                           int *haut,
-                           int xmin,
-                           int xmax,
-                           int ymin,
-                           int ymax,
-                           int PosX,
-                           int PosY,
-                           int DimX,
-                           int DimY );
+                                 int *x,
+                                 int *y,
+                                 int xr,
+                                 int yr,
+                                 int *large,
+                                 int *haut,
+                                 int xmin,
+                                 int xmax,
+                                 int ymin,
+                                 int ymax,
+                                 int PosX,
+                                 int PosY,
+                                 int DimX,
+                                 int DimY );
 extern void PolyLineModification ( int frame,
                                    int x,
                                    int y,
@@ -184,13 +184,13 @@ extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
 extern void ReaffPaveCopie (/* void */);
 extern void DrawAjAttr (/* void */);
 extern void DrawChar (/* char car,
-                      int frame,
-                      int x,
-                      int y,
-                      ptrfont font,
-                      int RO,
-                      int active,
-                      int fg */);
+                         int frame,
+                         int x,
+                         int y,
+                         ptrfont font,
+                         int RO,
+                         int active,
+                         int fg */);
 extern void DrawSupprAttr (/* PtrAttribute pAttr,
                               PtrElement pEl */);
 extern void AttachAttrWithValue (/* PtrElement pEl,
@@ -199,7 +199,7 @@ extern void AttachAttrWithValue (/* PtrElement pEl,
 extern boolean DansTampon (/* PtrElement pEl */);
 extern void SaisitNomSchPres (/* PtrSSchema pSchStr,
                                  Name name */);
-extern boolean RemplRefer (/* void */);
+extern boolean LinkReference (/* void */);
 extern void NouvPosition (/* PtrAbstractBox pAb,
                              int DeltaX,
                              int DeltaY,
@@ -223,9 +223,9 @@ extern void MontrerBoite (/* int frame,
                              int pourcent */);
 extern int IdentDocument (/* PtrDocument pDoc */);
 extern boolean CallEventType (/* int *notifyEvent,
-                                   boolean pre */);
+                                 boolean pre */);
 extern boolean CallEventAttribute (/* NotifyAttribute * notifyAttr,
-                                        boolean pre */);
+                                      boolean pre */);
 extern void EndInsert (/* void */);
 extern void FinInsertParagraph (/* PtrAbstractBox pAb,
                                    int frame */);
@@ -250,9 +250,9 @@ extern void SetClip (/* int frame,
 extern void ResetClip (/* int frame */);
 extern void SetCursorWatch (/* int thotWindowid */);
 extern void ResetCursorWatch (/* int thotWindowid */);
-extern void ChaineChoix (/* PtrElement pEl,
-                            PtrElement * p,
-                            PtrDocument pDoc */);
+extern void InsertOption (/* PtrElement pEl,
+                             PtrElement * p,
+                             PtrDocument pDoc */);
 extern void VisuSelect (/* PtrAbstractBox PavRac,
                            boolean Visible */);
 extern void SetSelect (/* int frame,
@@ -293,46 +293,46 @@ extern boolean ConfigGetPSchemaNature (/* PtrSSchema pSS,
 extern boolean ConfigDefaultPSchema (/* char *schema,
                                         char *schpres */);
 extern void UserGeometryMove (/* int frame,
-                           int *x,
-                           int *y,
-                           int large,
-                           int haut,
-                           int xr,
-                           int yr,
-                           int xmin,
-                           int xmax,
-                           int ymin,
-                           int ymax,
-                           int xm,
-                           int ym */);
+                                 int *x,
+                                 int *y,
+                                 int large,
+                                 int haut,
+                                 int xr,
+                                 int yr,
+                                 int xmin,
+                                 int xmax,
+                                 int ymin,
+                                 int ymax,
+                                 int xm,
+                                 int ym */);
 extern void UserGeometryResize (/* int frame,
-                            int x,
-                            int y,
-                            int *large,
-                            int *haut,
-                            int xr,
-                            int yr,
-                            int xmin,
-                            int xmax,
-                            int ymin,
-                            int ymax,
-                            int xm,
-                            int ym */);
+                                   int x,
+                                   int y,
+                                   int *large,
+                                   int *haut,
+                                   int xr,
+                                   int yr,
+                                   int xmin,
+                                   int xmax,
+                                   int ymin,
+                                   int ymax,
+                                   int xm,
+                                   int ym */);
 extern void UserGeometryCreate (/* int frame,
-                             int *x,
-                             int *y,
-                             int xr,
-                             int yr,
-                             int *large,
-                             int *haut,
-                             int xmin,
-                             int xmax,
-                             int ymin,
-                             int ymax,
-                             int PosX,
-                             int PosY,
-                             int DimX,
-                             int DimY */);
+                                   int *x,
+                                   int *y,
+                                   int xr,
+                                   int yr,
+                                   int *large,
+                                   int *haut,
+                                   int xmin,
+                                   int xmax,
+                                   int ymin,
+                                   int ymax,
+                                   int PosX,
+                                   int PosY,
+                                   int DimX,
+                                   int DimY */);
 extern void PolyLineModification (/* int frame,
                                      int x,
                                      int y,

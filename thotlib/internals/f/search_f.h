@@ -6,78 +6,76 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void ReplaceString ( PtrDocument docsel,
+extern void ReplaceString ( PtrDocument pDoc,
                             PtrElement pEl,
-                            int icar,
-                            int LgChaineCh,
-                            char pChaineRemplace[MAX_CHAR],
-                            int LgChaineRempl,
-                            boolean Affiche );
-extern boolean ContentAndStringEqual ( PtrElement premsel,
-                        int premcar,
-                        PtrElement dersel,
-                        int dercar,
-                        boolean MajEgalMin,
-                        char pChaineCherchee[MAX_CHAR],
-                        int LgChaineCh );
+                            int firstChar,
+                            int stringLen,
+                            char replaceStr[MAX_CHAR],
+                            int replaceLen,
+                            boolean select );
+extern boolean ContentAndStringEqual ( PtrElement firstEl,
+                                       int firstChar,
+                                       PtrElement lastEl,
+                                       int lastChar,
+                                       boolean caseEquiv,
+                                       char strng[MAX_CHAR],
+                                       int strngLen );
 extern boolean SearchText ( PtrDocument pDoc,
-                         PtrElement * pElDebut,
-                         int *NumCarDebut,
-                         PtrElement * pElFin,
-                         int *NumCarFin,
-                         boolean EnAvant,
-                         boolean MajEgalMin,
-                         char pChaineCherchee[MAX_CHAR],
-                         int LgChaineCh );
-extern void SearchNatures ( PtrSSchema pSchStr,
-                        PtrSSchema TablePtrNature[10 ],
-                        int *LgTableNat,
-                        boolean SansDouble );
-extern PtrElement ElemSuiv ( PtrElement pEl );
-extern PtrElement SearchPageBreak ( PtrElement from,
-                                int vue,
-                                int depl,
-                                boolean relatif );
-extern void ScrollPageToTop ( PtrElement PP,
-                              int VueDoc,
+                            PtrElement * firstEl,
+                            int *firstChar,
+                            PtrElement * lastEl,
+                            int *lastChar,
+                            boolean forward,
+                            boolean caseEquiv,
+                            char strng[MAX_CHAR],
+                            int strngLen );
+extern void SearchNatures ( PtrSSchema pSS,
+                            PtrSSchema natureTable[10 ],
+                            int *natureTableLen,
+                            boolean onlyOne );
+extern PtrElement SearchPageBreak ( PtrElement pEl,
+                                    int view,
+                                    int pageNum,
+                                    boolean relative );
+extern void ScrollPageToTop ( PtrElement pPage,
+                              int view,
                               PtrDocument pDoc );
 
 #else /* __STDC__ */
 
-extern void ReplaceString (/* PtrDocument docsel,
+extern void ReplaceString (/* PtrDocument pDoc,
                               PtrElement pEl,
-                              int icar,
-                              int LgChaineCh,
-                              char pChaineRemplace[MAX_CHAR],
-                              int LgChaineRempl,
-                              boolean Affiche */);
-extern boolean ContentAndStringEqual (/* PtrElement premsel,
-                          int premcar,
-                          PtrElement dersel,
-                          int dercar,
-                          boolean MajEgalMin,
-                          char pChaineCherchee[MAX_CHAR],
-                          int LgChaineCh */);
+                              int firstChar,
+                              int stringLen,
+                              char replaceStr[MAX_CHAR],
+                              int replaceLen,
+                              boolean select */);
+extern boolean ContentAndStringEqual (/* PtrElement firstEl,
+                                         int firstChar,
+                                         PtrElement lastEl,
+                                         int lastChar,
+                                         boolean caseEquiv,
+                                         char strng[MAX_CHAR],
+                                         int strngLen */);
 extern boolean SearchText (/* PtrDocument pDoc,
-                           PtrElement * pElDebut,
-                           int *NumCarDebut,
-                           PtrElement * pElFin,
-                           int *NumCarFin,
-                           boolean EnAvant,
-                           boolean MajEgalMin,
-                           char pChaineCherchee[MAX_CHAR],
-                           int LgChaineCh */);
-extern void SearchNatures (/* PtrSSchema pSchStr,
-                          PtrSSchema TablePtrNature[10 ],
-                          int *LgTableNat,
-                          boolean SansDouble */);
-extern PtrElement ElemSuiv (/* PtrElement pEl */);
-extern PtrElement SearchPageBreak (/* PtrElement from,
-                                  int vue,
-                                  int depl,
-                                  boolean relatif */);
-extern void ScrollPageToTop (/* PtrElement PP,
-                                int VueDoc,
+                              PtrElement * firstEl,
+                              int *firstChar,
+                              PtrElement * lastEl,
+                              int *lastChar,
+                              boolean forward,
+                              boolean caseEquiv,
+                              char strng[MAX_CHAR],
+                              int strngLen */);
+extern void SearchNatures (/* PtrSSchema pSS,
+                              PtrSSchema natureTable[10 ],
+                              int *natureTableLen,
+                              boolean onlyOne */);
+extern PtrElement SearchPageBreak (/* PtrElement pEl,
+                                      int view,
+                                      int pageNum,
+                                      boolean relative */);
+extern void ScrollPageToTop (/* PtrElement pPage,
+                                int view,
                                 PtrDocument pDoc */);
 
 #endif /* __STDC__ */

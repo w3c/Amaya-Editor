@@ -7,45 +7,41 @@
 #if __STDC__
 
 extern PtrBox Suivante ( PtrAbstractBox pAb );
-extern void Aligner ( PtrBox boxmere,
-                      PtrLine adligne,
+extern int FloatToInt ( float e );
+extern void Aligner ( PtrBox pParentBox,
+                      PtrLine pLine,
                       int delta,
                       int frame,
-                      boolean absoluEnX,
-                      boolean absoluEnY );
-extern int round ( float e );
-extern boolean testcsl ( PtrBox pBox,
-                         int *large,
-                         int *lgcarspec,
-                         int *nbcarsl,
-                         int *nbblanc,
-                         int *newicar,
-                         PtrTextBuffer * newbuff );
-extern void AjoutBoite ( PtrBox pBox,
-                         int *sousbase,
-                         int *surbase,
-                         PtrLine adligne );
-extern void RemplirLigne ( PtrLine adligne,
-                           PtrAbstractBox Pv,
-                           boolean * plein,
-                           boolean * ajust );
+                      boolean orgXComplete,
+                      boolean orgYComplete );
+extern boolean FindBreakLine ( PtrBox pBox,
+                               int *boxWidth,
+                               int *breakWidth,
+                               int *boxLength,
+                               int *nSpaces,
+                               int *newIndex,
+                               PtrTextBuffer * pNewBuff );
+extern void RemplirLigne ( PtrLine pLine,
+                           PtrAbstractBox pRootAb,
+                           boolean * full,
+                           boolean * adjust );
 extern void BlocDeLigne ( PtrBox pBox,
                           int frame,
-                          int *haut );
+                          int *height );
 extern void DispBloc ( PtrBox pBox,
                        int frame,
-                       PtrLine premligne,
-                       boolean * chgDS,
-                       boolean * chgFS );
+                       PtrLine pFirstLine,
+                       boolean * changeSelectBegin,
+                       boolean * changeSelectEnd );
 extern void ReevalBloc ( PtrAbstractBox pAb,
-                         PtrLine lig,
-                         PtrBox org,
+                         PtrLine pFirstLine,
+                         PtrBox pFirstBox,
                          int frame );
-extern void MajBloc ( PtrAbstractBox pave,
-                      PtrLine adligne,
+extern void MajBloc ( PtrAbstractBox pAb,
+                      PtrLine pLine,
                       PtrBox pBox,
-                      int dx,
-                      int dbl,
+                      int xDelta,
+                      int spaceDelta,
                       int frame );
 extern void EnglLigne ( PtrBox pBox,
                         int frame,
@@ -54,45 +50,41 @@ extern void EnglLigne ( PtrBox pBox,
 #else /* __STDC__ */
 
 extern PtrBox Suivante (/* PtrAbstractBox pAb */);
-extern void Aligner (/* PtrBox boxmere,
-                        PtrLine adligne,
+extern int FloatToInt (/* float e */);
+extern void Aligner (/* PtrBox pParentBox,
+                        PtrLine pLine,
                         int delta,
                         int frame,
-                        boolean absoluEnX,
-                        boolean absoluEnY */);
-extern int round (/* float e */);
-extern boolean testcsl (/* PtrBox pBox,
-                           int *large,
-                           int *lgcarspec,
-                           int *nbcarsl,
-                           int *nbblanc,
-                           int *newicar,
-                           PtrTextBuffer * newbuff */);
-extern void AjoutBoite (/* PtrBox pBox,
-                           int *sousbase,
-                           int *surbase,
-                           PtrLine adligne */);
-extern void RemplirLigne (/* PtrLine adligne,
-                             PtrAbstractBox Pv,
-                             boolean * plein,
-                             boolean * ajust */);
+                        boolean orgXComplete,
+                        boolean orgYComplete */);
+extern boolean FindBreakLine (/* PtrBox pBox,
+                                 int *boxWidth,
+                                 int *breakWidth,
+                                 int *boxLength,
+                                 int *nSpaces,
+                                 int *newIndex,
+                                 PtrTextBuffer * pNewBuff */);
+extern void RemplirLigne (/* PtrLine pLine,
+                             PtrAbstractBox pRootAb,
+                             boolean * full,
+                             boolean * adjust */);
 extern void BlocDeLigne (/* PtrBox pBox,
                             int frame,
-                            int *haut */);
+                            int *height */);
 extern void DispBloc (/* PtrBox pBox,
                          int frame,
-                         PtrLine premligne,
-                         boolean * chgDS,
-                         boolean * chgFS */);
+                         PtrLine pFirstLine,
+                         boolean * changeSelectBegin,
+                         boolean * changeSelectEnd */);
 extern void ReevalBloc (/* PtrAbstractBox pAb,
-                           PtrLine lig,
-                           PtrBox org,
+                           PtrLine pFirstLine,
+                           PtrBox pFirstBox,
                            int frame */);
-extern void MajBloc (/* PtrAbstractBox pave,
-                        PtrLine adligne,
+extern void MajBloc (/* PtrAbstractBox pAb,
+                        PtrLine pLine,
                         PtrBox pBox,
-                        int dx,
-                        int dbl,
+                        int xDelta,
+                        int spaceDelta,
                         int frame */);
 extern void EnglLigne (/* PtrBox pBox,
                           int frame,

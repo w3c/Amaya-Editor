@@ -10,25 +10,25 @@ extern unsigned char CarSuivant ( PtrTextBuffer * buffer,
                                   int *rank );
 extern unsigned char CarPrecedent ( PtrTextBuffer * buffer,
                                     int *rank );
-extern boolean MotOk ( PtrElement premsel,
-                       int premcar,
-                       PtrElement dersel,
-                       int dercar );
+extern boolean MotOk ( PtrElement firstEl,
+                       int firstChar,
+                       PtrElement lastEl,
+                       int lastChar );
 extern boolean InitSearchDomain ( int domain,
                                   PtrSearchContext context );
-extern void UpdateDuringSearch ( PtrElement ElCourant,
-                                 int lg );
+extern void UpdateDuringSearch ( PtrElement pEl,
+                                 int len );
 extern void RestoreAfterSearch ( void );
-extern boolean ArbreSuivant ( PtrElement * elCourant,
-                              int *carCourant,
+extern boolean ArbreSuivant ( PtrElement * pEl,
+                              int *charIndx,
                               PtrSearchContext context );
-extern boolean SearchNextWord ( PtrElement * ElCourant,
-                                int *CarCourant,
-                                char mot[MAX_WORD_LEN],
+extern boolean SearchNextWord ( PtrElement * curEl,
+                                int *curChar,
+                                char word[MAX_WORD_LEN],
                                 PtrSearchContext context );
-extern boolean SearchPreviousWord ( PtrElement * ElCourant,
-                                    int *CarCourant,
-                                    char mot[MAX_WORD_LEN],
+extern boolean SearchPreviousWord ( PtrElement * curEl,
+                                    int *curChar,
+                                    char word[MAX_WORD_LEN],
                                     PtrSearchContext context );
 
 #else /* __STDC__ */
@@ -37,25 +37,25 @@ extern unsigned char CarSuivant (/* PtrTextBuffer * buffer,
                                     int *rank */);
 extern unsigned char CarPrecedent (/* PtrTextBuffer * buffer,
                                       int *rank */);
-extern boolean MotOk (/* PtrElement premsel,
-                         int premcar,
-                         PtrElement dersel,
-                         int dercar */);
+extern boolean MotOk (/* PtrElement firstEl,
+                         int firstChar,
+                         PtrElement lastEl,
+                         int lastChar */);
 extern boolean InitSearchDomain (/* int domain,
                                     PtrSearchContext context */);
-extern void UpdateDuringSearch (/* PtrElement ElCourant,
-                                   int lg */);
+extern void UpdateDuringSearch (/* PtrElement pEl,
+                                   int len */);
 extern void RestoreAfterSearch (/* void */);
-extern boolean ArbreSuivant (/* PtrElement * elCourant,
-                                int *carCourant,
+extern boolean ArbreSuivant (/* PtrElement * pEl,
+                                int *charIndx,
                                 PtrSearchContext context */);
-extern boolean SearchNextWord (/* PtrElement * ElCourant,
-                                  int *CarCourant,
-                                  char mot[MAX_WORD_LEN],
+extern boolean SearchNextWord (/* PtrElement * curEl,
+                                  int *curChar,
+                                  char word[MAX_WORD_LEN],
                                   PtrSearchContext context */);
-extern boolean SearchPreviousWord (/* PtrElement * ElCourant,
-                                      int *CarCourant,
-                                      char mot[MAX_WORD_LEN],
+extern boolean SearchPreviousWord (/* PtrElement * curEl,
+                                      int *curChar,
+                                      char word[MAX_WORD_LEN],
                                       PtrSearchContext context */);
 
 #endif /* __STDC__ */

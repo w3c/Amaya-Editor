@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void InsertAction ( char *actionName,
+extern void TteAddAction ( char *actionName,
                            Proc doIt );
 extern PtrEventsSet TteNewEventsSet ( int structureId,
                                       char *name );
@@ -18,7 +18,7 @@ extern void TteAddActionEvent ( PtrEventsSet eventsList,
 
 #else /* __STDC__ */
 
-extern void InsertAction (/* char *actionName,
+extern void TteAddAction (/* char *actionName,
                              Proc doIt */);
 extern PtrEventsSet TteNewEventsSet (/* int structureId,
                                         char *name */);

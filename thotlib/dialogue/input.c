@@ -869,7 +869,7 @@ char               *appliname;
 	     strcpy (ligne, "!");	/* initialisation de la ligne */
 
 	     /* Est-ce la fin de fichier ? */
-	     if (strlen (ch) == 0 || FinDeChaine (ch, "^"))
+	     if (strlen (ch) == 0 || EndOfString (ch, "^"))
 		e = 0;
 	     else if (ch[0] != '#')
 		/* it is not a comment */

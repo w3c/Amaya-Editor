@@ -15,10 +15,9 @@ extern void TtaGiveRGB ( char *colname,
                          unsigned short *blue );
 extern boolean ShowReference ( void );
 extern boolean ShowReadOnly ( void );
-extern void InitGC ( void );
 extern void ThotInitDisplay ( char *name,
-                         int dx,
-                         int dy );
+                              int dx,
+                              int dy );
 extern void InitDocContexts ( void );
 extern void SelectionEvents ( XSelectionEvent * event );
 
@@ -33,10 +32,9 @@ extern void TtaGiveRGB (/* char *colname,
                            unsigned short *blue */);
 extern boolean ShowReference (/* void */);
 extern boolean ShowReadOnly (/* void */);
-extern void InitGC (/* void */);
 extern void ThotInitDisplay (/* char *name,
-                           int dx,
-                           int dy */);
+                                int dx,
+                                int dy */);
 extern void InitDocContexts (/* void */);
 extern void SelectionEvents (/* XSelectionEvent * event */);
 

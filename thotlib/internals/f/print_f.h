@@ -8,12 +8,12 @@
 
 extern int Error ( char *s );
 extern PtrReference NextReferenceToEl ( PtrElement pEl,
-                                    PtrDocument pDocEl,
-                                    boolean StopNonCharge,
-                                    PtrReference pRefPrec,
-                                    PtrDocument * pDocRef,
-                                    PtrExternalDoc * pDE,
-                                    boolean DocExtSuivant );
+                                        PtrDocument pDocEl,
+                                        boolean StopNonCharge,
+                                        PtrReference pRefPrec,
+                                        PtrDocument * pDocRef,
+                                        PtrExternalDoc * pDE,
+                                        boolean DocExtSuivant );
 extern boolean SelEditeur ( PtrDocument * SDoc,
                             PtrElement * PrEl,
                             PtrElement * DerEl,
@@ -42,12 +42,12 @@ extern void main ( int argc,
 
 extern int Error (/* char *s */);
 extern PtrReference NextReferenceToEl (/* PtrElement pEl,
-                                      PtrDocument pDocEl,
-                                      boolean StopNonCharge,
-                                      PtrReference pRefPrec,
-                                      PtrDocument * pDocRef,
-                                      PtrExternalDoc * pDE,
-                                      boolean DocExtSuivant */);
+                                          PtrDocument pDocEl,
+                                          boolean StopNonCharge,
+                                          PtrReference pRefPrec,
+                                          PtrDocument * pDocRef,
+                                          PtrExternalDoc * pDE,
+                                          boolean DocExtSuivant */);
 extern boolean SelEditeur (/* PtrDocument * SDoc,
                               PtrElement * PrEl,
                               PtrElement * DerEl,

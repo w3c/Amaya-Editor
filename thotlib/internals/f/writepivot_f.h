@@ -8,85 +8,85 @@
 
 extern boolean MemesAttributs ( PtrElement pEl1,
                                 PtrElement pEl2 );
-extern void WriteVersionNumber ( BinFile fich );
+extern void WriteVersionNumber ( BinFile pivFile );
 extern void EcritNat ( PtrSSchema pSS,
-                       BinFile fich,
+                       BinFile pivFile,
                        PtrDocument pDoc );
-extern void PutLabel ( BinFile fich,
-                       LabelString Lab );
-extern void PutAttribut ( BinFile fichpiv,
+extern void PutLabel ( BinFile pivFile,
+                       LabelString label );
+extern void PutAttribut ( BinFile pivFile,
                           PtrAttribute pAttr,
                           PtrDocument pDoc );
-extern void PutReglePres ( BinFile fichpiv,
-                           PtrPRule pRegle );
-extern void Externalise ( BinFile fichpiv,
-                          PtrElement * El,
+extern void PutReglePres ( BinFile pivFile,
+                           PtrPRule pPRule );
+extern void Externalise ( BinFile pivFile,
+                          PtrElement * pEl,
                           PtrDocument pDoc,
-                          boolean AvecDescendants );
+                          boolean subTree );
 extern void BuildDocNatureTable ( PtrDocument pDoc );
-extern void WriteNomsSchemasDoc ( BinFile fich,
+extern void WriteNomsSchemasDoc ( BinFile pivFile,
                                   PtrDocument pDoc );
-extern void WriteTableLangues ( BinFile fich,
+extern void WriteTableLangues ( BinFile pivFile,
                                 PtrDocument pDoc );
-extern void WritePivotHeader ( BinFile fich,
+extern void WritePivotHeader ( BinFile pivFile,
                                PtrDocument pDoc );
-extern void SauveDoc ( BinFile fich,
+extern void SauveDoc ( BinFile pivFile,
                        PtrDocument pDoc );
-extern void SauveRefSortantes ( char *NomFich,
+extern void SauveRefSortantes ( char *fileName,
                                 PtrDocument pDoc );
-extern void SauveRef ( PtrChangedReferredEl PremChng,
-                       PathBuffer NomFich );
-extern void SauveExt ( PtrReferredDescr PremElemRef,
-                       PathBuffer NomFich );
+extern void SauveRef ( PtrChangedReferredEl firstChng,
+                       PathBuffer fileName );
+extern void SauveExt ( PtrReferredDescr pFirstRefD,
+                       PathBuffer fileName );
 extern void UpdateExt ( PtrDocument pDoc );
 extern void UpdateRef ( PtrDocument pDoc );
 extern void ChangeNomExt ( PtrDocument pDoc,
-                           Name NouveauNom,
-                           boolean CopieDoc );
+                           Name newName,
+                           boolean copyDoc );
 extern void ChangeNomRef ( PtrDocument pDoc,
-                           Name NouveauNom );
+                           Name newName );
 
 #else /* __STDC__ */
 
 extern boolean MemesAttributs (/* PtrElement pEl1,
                                   PtrElement pEl2 */);
-extern void WriteVersionNumber (/* BinFile fich */);
+extern void WriteVersionNumber (/* BinFile pivFile */);
 extern void EcritNat (/* PtrSSchema pSS,
-                         BinFile fich,
+                         BinFile pivFile,
                          PtrDocument pDoc */);
-extern void PutLabel (/* BinFile fich,
-                         LabelString Lab */);
-extern void PutAttribut (/* BinFile fichpiv,
+extern void PutLabel (/* BinFile pivFile,
+                         LabelString label */);
+extern void PutAttribut (/* BinFile pivFile,
                             PtrAttribute pAttr,
                             PtrDocument pDoc */);
-extern void PutReglePres (/* BinFile fichpiv,
-                             PtrPRule pRegle */);
-extern void Externalise (/* BinFile fichpiv,
-                            PtrElement * El,
+extern void PutReglePres (/* BinFile pivFile,
+                             PtrPRule pPRule */);
+extern void Externalise (/* BinFile pivFile,
+                            PtrElement * pEl,
                             PtrDocument pDoc,
-                            boolean AvecDescendants */);
+                            boolean subTree */);
 extern void BuildDocNatureTable (/* PtrDocument pDoc */);
-extern void WriteNomsSchemasDoc (/* BinFile fich,
+extern void WriteNomsSchemasDoc (/* BinFile pivFile,
                                     PtrDocument pDoc */);
-extern void WriteTableLangues (/* BinFile fich,
+extern void WriteTableLangues (/* BinFile pivFile,
                                   PtrDocument pDoc */);
-extern void WritePivotHeader (/* BinFile fich,
+extern void WritePivotHeader (/* BinFile pivFile,
                                  PtrDocument pDoc */);
-extern void SauveDoc (/* BinFile fich,
+extern void SauveDoc (/* BinFile pivFile,
                          PtrDocument pDoc */);
-extern void SauveRefSortantes (/* char *NomFich,
+extern void SauveRefSortantes (/* char *fileName,
                                   PtrDocument pDoc */);
-extern void SauveRef (/* PtrChangedReferredEl PremChng,
-                         PathBuffer NomFich */);
-extern void SauveExt (/* PtrReferredDescr PremElemRef,
-                         PathBuffer NomFich */);
+extern void SauveRef (/* PtrChangedReferredEl firstChng,
+                         PathBuffer fileName */);
+extern void SauveExt (/* PtrReferredDescr pFirstRefD,
+                         PathBuffer fileName */);
 extern void UpdateExt (/* PtrDocument pDoc */);
 extern void UpdateRef (/* PtrDocument pDoc */);
 extern void ChangeNomExt (/* PtrDocument pDoc,
-                             Name NouveauNom,
-                             boolean CopieDoc */);
+                             Name newName,
+                             boolean copyDoc */);
 extern void ChangeNomRef (/* PtrDocument pDoc,
-                             Name NouveauNom */);
+                             Name newName */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

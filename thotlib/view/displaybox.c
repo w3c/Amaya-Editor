@@ -212,10 +212,10 @@ int                 frame;
 			    DrawUnion (frame, xd, yd, pBox->BxWidth, pBox->BxHeight, font, RO, op, fg);
 			    break;
 			 case 'h':
-			    DrawLine (frame, i, 0, xd, yd, pBox->BxWidth, pBox->BxHeight, 1, RO, op, fg);
+			    DrawHorizontalLine (frame, i, 0, xd, yd, pBox->BxWidth, pBox->BxHeight, 1, RO, op, fg);
 			    break;
 			 case 'v':
-			    DrawTrait (frame, i, 0, xd, yd, pBox->BxWidth, pBox->BxHeight, 1, RO, op, fg);
+			    DrawVerticalLine (frame, i, 0, xd, yd, pBox->BxWidth, pBox->BxHeight, 1, RO, op, fg);
 			    break;
 			 case '>':
 			    DrawArrow (frame, i, 0, xd, yd, pBox->BxWidth, pBox->BxHeight, 0, RO, op, fg);
@@ -450,22 +450,22 @@ int                 frame;
 			      pBox->BxHeight, RO, op, fg, bg, pv->AbFillPattern);
 		       break;
 		    case 'h':
-		       DrawLine (frame, i, style, xd, yd, pBox->BxWidth, pBox->BxHeight, 1, RO, op, fg);
+		       DrawHorizontalLine (frame, i, style, xd, yd, pBox->BxWidth, pBox->BxHeight, 1, RO, op, fg);
 		       break;
 		    case 't':
-		       DrawLine (frame, i, style, xd, yd, pBox->BxWidth, pBox->BxHeight, 0, RO, op, fg);
+		       DrawVerticalLine (frame, i, style, xd, yd, pBox->BxWidth, pBox->BxHeight, 0, RO, op, fg);
 		       break;
 		    case 'b':
-		       DrawLine (frame, i, style, xd, yd, pBox->BxWidth, pBox->BxHeight, 2, RO, op, fg);
+		       DrawHorizontalLine (frame, i, style, xd, yd, pBox->BxWidth, pBox->BxHeight, 2, RO, op, fg);
 		       break;
 		    case 'v':
-		       DrawTrait (frame, i, style, xd, yd, pBox->BxWidth, pBox->BxHeight, 1, RO, op, fg);
+		       DrawVerticalLine (frame, i, style, xd, yd, pBox->BxWidth, pBox->BxHeight, 1, RO, op, fg);
 		       break;
 		    case 'l':
-		       DrawTrait (frame, i, style, xd, yd, pBox->BxWidth, pBox->BxHeight, 0, RO, op, fg);
+		       DrawHorizontalLine (frame, i, style, xd, yd, pBox->BxWidth, pBox->BxHeight, 0, RO, op, fg);
 		       break;
 		    case 'r':
-		       DrawTrait (frame, i, style, xd, yd, pBox->BxWidth, pBox->BxHeight, 2, RO, op, fg);
+		       DrawVerticalLine (frame, i, style, xd, yd, pBox->BxWidth, pBox->BxHeight, 2, RO, op, fg);
 		       break;
 		    case '/':
 		       DrawSlash (frame, i, style, xd, yd, pBox->BxWidth,

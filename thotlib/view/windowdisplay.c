@@ -1,12 +1,6 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
-   es.c : Gestion des affichages X
-   I. Vatton - Juillet 87
-   IV : Fevrier 92 introduction de la couleur
-   IV : Aout 92 coupure des mots
-   IV : Juin 93 polylines
+ * windowdisplay.c : handling of low level drawing routines, both for
+ *	X-Window and MS-Windows (incomplete).
  */
 
 #include "thot_sys.h"
@@ -26,24 +20,21 @@
 
 extern ThotColorStruct cblack;
 
-/*debut */
-#define	MAX_pile	50
-#define	le_milieu(v1, v2)	((v1+v2)/2.0)
+#define	MAX_STACK	50
+#define	MIDDLE_OF(v1, v2)	(((v1)+(v2))/2.0)
 #define SEG_SPLINE      5
 #define ALLOC_POINTS    300
-static ThotPoint   *points;	/* Gestion des points de controle de courbes */
+static ThotPoint   *points;	/* control points for curbs */
 static int          npoints;
 static int          MAX_points;
 
-typedef struct pile_
+typedef struct stack_point
   {
      float               x1, y1, x2, y2, x3, y3, x4, y4;
   }
-Pile;
-static Pile         pile[MAX_pile];
-static int          pile_profond;
-
-/*fin */
+StackPoint;
+static StackPoint   stack[MAX_STACK];
+static int          stack_deep;
 
 #include "font_f.h"
 #include "context_f.h"
@@ -61,11 +52,10 @@ FILE               *fout;
 {
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    FontOrig de'cale une position de chaine pour DrawString.        | */
-/* |            (x,y) haut gauche est deplace sur le point de ref du    | */
-/* |            1er char.                                               | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      FontOrig update and (x, y) location before DrawString
+ *		accordingly to the ascent of the font used.
+ **/
 #ifdef __STDC__
 void                FontOrig (ptrfont font, char firstchar, int *pX, int *pY)
 #else  /* __STDC__ */
@@ -85,20 +75,16 @@ int                *pY;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ChargeCouleur charge la bonne colueur de trace'.                | */
-/* |            Le parame`tre readonly indique s'il s'agit d'une boi^te | */
-/* |            en lecture seule (1) ou non (0).                        | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Le parame`tre fg indique la couleur du trace'.          | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      LoadColor load the given color in the drawing Graphic Context.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              parameter fg indicate the drawing color
+ **/
 #ifdef __STDC__
-static void         ChargeCouleur (int disp, int RO, int active, int fg)
+static void         LoadColor (int disp, int RO, int active, int fg)
 #else  /* __STDC__ */
-static void         ChargeCouleur (disp, RO, active, fg)
+static void         LoadColor (disp, RO, active, fg)
 int                 disp;
 int                 RO;
 int                 active;
@@ -129,21 +115,19 @@ int                 fg;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    preparerTrace positionne les attributs du ThotGC de trace'.             | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Le parame`tre fg indique la couleur du trace'.          | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      InitDrawing update the Graphic Context accordingly to parameters.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              parameter fg indicate the drawing color
+ **/
 #ifdef __STDC__
-static void         preparerTrace (int disp, int style, int epais, int RO, int active, int fg)
+static void         InitDrawing (int disp, int style, int thick, int RO, int active, int fg)
 #else  /* __STDC__ */
-static void         preparerTrace (disp, style, epais, RO, active, fg)
+static void         InitDrawing (disp, style, thick, RO, active, fg)
 int                 disp;
 int                 style;
-int                 epais;
+int                 thick;
 int                 RO;
 int                 active;
 int                 fg;
@@ -154,27 +138,27 @@ int                 fg;
 
 #ifndef NEW_WILLOWS
    if (style == 0)
-      XSetLineAttributes (TtDisplay, TtLineGC, epais, LineSolid, CapButt, JoinMiter);
+      XSetLineAttributes (TtDisplay, TtLineGC, thick, LineSolid, CapButt, JoinMiter);
    else
      {
 	dash[0] = (char) (style * 4);
 	dash[1] = (char) 4;
 	XSetDashes (TtDisplay, TtLineGC, 0, dash, 2);
-	XSetLineAttributes (TtDisplay, TtLineGC, epais, LineOnOffDash, CapButt, JoinMiter);
+	XSetLineAttributes (TtDisplay, TtLineGC, thick, LineOnOffDash, CapButt, JoinMiter);
      }
 #endif /* NEW_WILLOWS */
    /* Charge la bonne couleur */
-   ChargeCouleur (disp, RO, active, fg);
+   LoadColor (disp, RO, active, fg);
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    finirTrace positionne les attributs du ThotGC de trace'.                | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      FinishDrawing update the Graphic Context accordingly to parameters.
+ **/
 #ifdef __STDC__
-static void         finirTrace (int disp, int RO, int active)
+static void         FinishDrawing (int disp, int RO, int active)
 #else  /* __STDC__ */
-static void         finirTrace (disp, RO, active)
+static void         FinishDrawing (disp, RO, active)
 int                 disp;
 int                 RO;
 int                 active;
@@ -188,16 +172,13 @@ int                 active;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Tracer trace un trait de x1,y1 a x2,y2 d'une e'paisseur epais   | */
-/* |            dans la fenetree^tre frame.                                     | */
-/* |            Le parame`tre style indique si le trait est continu (0) | */
-/* |            ou pointille' simple (1) ou double (>1).                | */
-/* ---------------------------------------------------------------------- */
+/**
+ *   DoDrawOneLine draw one line starting from (x1, y1) to (x2, y2) in frame.
+ **/
 #ifdef __STDC__
-static void         Tracer (int frame, int x1, int y1, int x2, int y2)
+static void         DoDrawOneLine (int frame, int x1, int y1, int x2, int y2)
 #else  /* __STDC__ */
-static void         Tracer (frame, x1, y1, x2, y2)
+static void         DoDrawOneLine (frame, x1, y1, x2, y2)
 int                 frame;
 int                 x1;
 int                 y1;
@@ -221,11 +202,10 @@ int                 y2;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |     SpaceToCar remplace dans la chaine de caracteres passee en     | */
-/* |            parametre les caracteres espaces par les caracteres     | */
-/* |            de visualisation des espaces correspondants.            | */
-/* ---------------------------------------------------------------------- */
+/**
+ *       SpaceToCar substitute in text the space chars to their visual
+ *		equivalents.
+ **/
 #ifdef __STDC__
 static void         SpaceToCar (unsigned char *text)
 #else  /* __STDC__ */
@@ -265,15 +245,12 @@ unsigned char      *text;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawChar affiche le caracte`re car a` la position x,y de la        | */
-/* |            framee^tre frame en utilisant la police de caracteres font.     | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Le parame`tre fg indique la couleur du trace'.          | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawChar draw a char at location (x, y) in frame and with font.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              parameter fg indicate the drawing color
+ **/
 #ifdef __STDC__
 void                DrawChar (char car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
 #else  /* __STDC__ */
@@ -292,16 +269,14 @@ int                 fg;
    ThotWindow          w;
 
 #ifdef NEW_WILLOWS
-   char                str[2] =
-   {car, 0};
-
+   char                str[2] = {car, 0};
 #endif /* NEW_WILLOWS */
 
    w = FrRef[frame];
    if (w == None)
       return;
 
-   ChargeCouleur (0, RO, active, fg);
+   LoadColor (0, RO, active, fg);
 
 #ifdef NEW_WILLOWS
    WIN_GetDeviceContext (frame);
@@ -313,30 +288,24 @@ int                 fg;
    XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), &car, 1);
 #endif /* NEW_WILLOWS */
 
-   finirTrace (0, RO, active);
+   FinishDrawing (0, RO, active);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawString affiche la chai^ne de caracte`res de longueur lg qui   | */
-/* |            de'bute par buff[i] a` la position x,y dans la fenetree^tre     | */
-/* |            frame en utilisant la police de caracte`res font.               | */
-/* |            Le parame`tre lgboite donne la largeur de la boi^te     | */
-/* |            en fin de traitement sinon 0. Ce parame`tre est         | */
-/* |            utilise' uniquement par le formateur.                   | */
-/* |            Le parame`tre bl indique qu'un blanc pre'ce`de la       | */
-/* |            chai^ne transmise.                                      | */
-/* |            Le parame`tre hyphen indique qu'un caracte`re           | */
-/* |            d'hyphenation doit e^tre ajoute' en fin de chai^ne.     | */
-/* |            Le parame`tre debutbloc vaut 1 quand le texte se trouve | */
-/* |            en de'but de paragraphe pour interdire la justification | */
-/* |            des premiers blancs au moment de l'impression.          | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Le parame`tre fg indique la couleur du trace'.          | */
-/* |            Retourne la largeur de la chaine affichee.              | */
-/* ---------------------------------------------------------------------- */
+/**
+ *	DrawString draw a char string of lg chars beginning at buff[i].
+ *		Drawing starts at (x, y) in frame and using font.
+ *		lgboite gives the width of the final box or zero,
+ *		this is used only by the thot formmating engine.
+ *		bl indicate taht there is a space before the string
+ *		hyphen indicate whether an hyphen char has to be added.
+ *		debutbloc is 1 if the text is at a paragraph beginning
+ *		(no justification of first spaces).
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              parameter fg indicate the drawing color
+ *
+ *              Returns the lenght of the string drawn.
+ **/
 #ifdef __STDC__
 int                 DrawString (char *buff, int i, int lg, int frame, int x, int y, ptrfont font, int lgboite, int bl, int hyphen, int debutbloc, int RO, int active, int fg)
 #else  /* __STDC__ */
@@ -360,12 +329,11 @@ int                 fg;
 {
    ThotWindow          w;
    char               *ptcar;
-   int                 large;
+   int                 width;
    register int        j;
 
 #ifdef NEW_WILLOWS
    SIZE                size;
-
 #endif
 
    w = FrRef[frame];
@@ -377,26 +345,26 @@ int                 fg;
 	WinLoadFont (WIN_curHdc, font);
 	/* GetTextExtentPoint32(WIN_curHdc, ptcar, lg, &size); */
 	GetTextExtentPoint (WIN_curHdc, ptcar, lg, &size);
-	large = size.cx;
+	width = size.cx;
 #else  /* NEW_WILLOWS */
 	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
 
-	/* On calcule la largeur de la chaine de caractere ecrite */
-	large = 0;
+	/* compute the width of the string */
+	width = 0;
 	j = 0;
 	while (j < lg)
-	   large += CarWidth (ptcar[j++], font);
+	   width += CarWidth (ptcar[j++], font);
 #endif /* !NEW_WILLOWS */
 
-	ChargeCouleur (0, RO, active, fg);
+	LoadColor (0, RO, active, fg);
 
 	if (!ShowSpace)
 	  {
-	     /* Il faut visualiser les caracteres espaces */
+	     /* draw the spaces */
 	     ptcar = TtaGetMemory (lg + 1);
 	     strncpy (ptcar, &buff[i - 1], lg);
 	     ptcar[lg] = '\0';
-	     SpaceToCar (ptcar);	/* remplace les carateres espaces */
+	     SpaceToCar (ptcar);	/* substitute spaces */
 #ifdef NEW_WILLOWS
 	     WinLoadGC (WIN_curHdc, TtLineGC);
 	     TextOut (WIN_curHdc, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, ptcar, lg);
@@ -416,62 +384,60 @@ int                 fg;
 	  }
 	if (hyphen)
 	  {
-	     /* trace le caractere hyphen */
+	     /* draw the hyphen */
 #ifdef NEW_WILLOWS
-	     TextOut (WIN_curHdc, x + large + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, "\255", 1);
+	     TextOut (WIN_curHdc, x + width + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, "\255", 1);
 #else  /* NEW_WILLOWS */
-	     XDrawString (TtDisplay, w, TtLineGC, x + large + FrameTable[frame].FrLeftMargin,
+	     XDrawString (TtDisplay, w, TtLineGC, x + width + FrameTable[frame].FrLeftMargin,
 	     y + FrameTable[frame].FrTopMargin + FontBase (font), "\255", 1);
 #endif /* NEW_WILLOWS */
 	  }
-	finirTrace (0, RO, active);
+	FinishDrawing (0, RO, active);
 
-	return (large);
+	return (width);
      }
    else
       return (0);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DisplayUnderline affiche un souligne' sous la chaine de caracteres de     | */
-/* |            longueur lg utilisant la police de caracteres font a`   | */
-/* |            la position x, y dans la fenetre frame.                 | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Le parame`tre fg indique la couleur du trace'.          | */
-/* |            epais donne l'e'paisseur du trait: mince (0), epais (1) | */
-/* |            Le parame`tre type est le type de souligne':            | */
-/* |            - 0 = sans                                              | */
-/* |            - 1 = souligne'                                         | */
-/* |            - 2 = surligne'                                         | */
-/* |            - 3 = biffe'                                            | */
-/* ---------------------------------------------------------------------- */
-/* -                             (x,y)                                    */
-/* -          __________________+______________________________\_/__      */
-/* -         /|\    I    I          /|\       /|\   /|\         |         */
-/* -          |     I\  /I           |         |     |       ___|haut     */
-/* -          |  ___I_\/_I_______    |ascent   |     |milieu   / \        */
-/* -   height |     I    I  I  \     |         |bas  |                    */
-/* -          |     I    I  I  |     |         |  __\|/                   */
-/* -          |  ___I____I__I__/____\|/        |                          */
-/* -          |             I             ____\|/                         */
-/* -          |             I                                             */
-/* -         \|/____________I_                                            */
-/* -                                                                      */
-/* - le + indique l'origine des distances (x,y)                           */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DisplayUnderline draw the underline, overline or cross line
+ *		added to some text of lenght lg, using font and located
+ *		at (x, y) in frame. 
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              parameter fg indicate the drawing color
+ *              thick indicate thickness : thin (0) thick (1)
+ *              Type indicate the kind of drawing :
+ *              - 0 = none
+ *              - 1 = underlined
+ *              - 2 = overlined
+ *              - 3 = cross-over
+ *
+ *                               (x,y)
+ *            __________________+______________________________\_/__
+ *           /|\    I    I          /|\       /|\   /|\         |
+ *            |     I\  /I           |         |     |       ___|height
+ *            |  ___I_\/_I_______    |ascent   |     |middle   / \
+ *    fheight |     I    I  I  \     |         |     |
+ *            |     I    I  I  |     |         |  __\|/
+ *            |  ___I____I__I__/____\|/        | bottom
+ *            |             I             ____\|/
+ *            |             I
+ *           \|/____________I_
+ *
+ **/
+
 #ifdef __STDC__
-void                DisplayUnderline (int frame, int x, int y, ptrfont font, int type, int epais, int lg, int RO, int active, int fg)
+void                DisplayUnderline (int frame, int x, int y, ptrfont font, int type, int thick, int lg, int RO, int active, int fg)
 #else  /* __STDC__ */
-void                DisplayUnderline (frame, x, y, font, type, epais, lg, RO, active, fg)
+void                DisplayUnderline (frame, x, y, font, type, thick, lg, RO, active, fg)
 int                 frame;
 int                 x;
 int                 y;
 ptrfont             font;
 int                 type;
-int                 epais;
+int                 thick;
 int                 lg;
 int                 RO;
 int                 active;
@@ -480,70 +446,68 @@ int                 fg;
 #endif /* __STDC__ */
 {
    ThotWindow          w;
-   int                 height;	/* hauteur de la fonte   */
-   int                 ascent;	/* ascent  de la fonte   */
-   int                 bas;	/* position du souligne' */
-   int                 milieu;	/* position du biffe'    */
-   int                 haut;	/* position du surligne' */
-   int                 epaisseur;	/* epaisseur du trait    */
-   int                 decal;	/* decalage du trait     */
+   int                 fheight;	/* font height           */
+   int                 ascent;	/* font ascent           */
+   int                 bottom;	/* underline position    */
+   int                 middle;	/* cross-over position   */
+   int                 height;	/* overline position     */
+   int                 thickness;/* thickness of drawing */
+   int                 decal;	/* shifting of drawing   */
 
    if (lg > 0)
      {
 	w = FrRef[frame];
 	if (w == None)
 	   return;
-	height = FontHeight (font);
+	fheight = FontHeight (font);
 	ascent = FontAscent (font);
-	epaisseur = ((height / 20) + 1) * (epais + 1);	/* epaisseur proportionnelle a hauteur */
-	decal = (2 - epais) * epaisseur;
-	haut = y + decal;
-	bas = y + ascent + decal;
-	milieu = y + height / 2 + decal;
+	thickness = ((fheight / 20) + 1) * (thick + 1);
+	decal = (2 - thick) * thickness;
+	height = y + decal;
+	bottom = y + ascent + decal;
+	middle = y + height / 2 + decal;
 
-	/* pour avoir un souligne' independant de la fonte, */
-	/* il faut mettre ici les lignes suivantes :        */
-	/* (Valeur en dur pour Thot Marine) */
-	/*         epaisseur = 1; */
-	/*         haut = y + 2 * epaisseur; */
-	/*         bas = y + ascent + 3;  */
-	/* a mettre en commentaire ou pas suivant ce que l'on veut */
+	/*
+	 * for an underline independant of the font add
+	 * the following lines here :
+	 *         thickness = 1;
+	 *         height = y + 2 * thickness;
+	 *         bottom = y + ascent + 3;
+	 */
 
-	preparerTrace (0, 0, epaisseur, RO, active, fg);
+	InitDrawing (0, 0, thickness, RO, active, fg);
 	switch (type)
 	      {
 		 case 1:
-		    /* souligne */
-		    Tracer (frame, x - lg, bas, x, bas);
+		    /* underlined */
+		    DoDrawOneLine (frame, x - lg, bottom, x, bottom);
 		    break;
 
 		 case 2:
-		    /* surligne */
-		    Tracer (frame, x - lg, haut, x, haut);
+		    /* overlined */
+		    DoDrawOneLine (frame, x - lg, height, x, height);
 		    break;
 
 		 case 3:
-		    /* biffer */
-		    Tracer (frame, x - lg, milieu, x, milieu);
+		    /* cross-over */
+		    DoDrawOneLine (frame, x - lg, middle, x, middle);
 		    break;
 
 		 default:
-		    /* sans souligne */
+		    /* not underlined */
 		    break;
 	      }
-	finirTrace (0, RO, active);
+	FinishDrawing (0, RO, active);
      }
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawPoints trace un ligne de pointille's sur la longueur donne'e. | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Le parame`tre fg indique la couleur du trace'.          | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawPoints draw a line of dot.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              parameter fg indicate the drawing color
+ **/
 #ifdef __STDC__
 void                DrawPoints (int frame, int x, int y, int lgboite, int RO, int active, int fg)
 #else  /* __STDC__ */
@@ -560,7 +524,7 @@ int                 fg;
 {
    ThotWindow          w;
    ptrfont             font;
-   int                 xcour, large, nb;
+   int                 xcour, width, nb;
    char               *ptcar;
 
    font = ThotLoadFont ('L', 't', 0, 6, UnPoint, frame);
@@ -569,49 +533,47 @@ int                 fg;
 	w = FrRef[frame];
 	ptcar = " .";
 
-	/* On calcule la largeur de la chaine de caracteres ecrite */
-	large = CarWidth (' ', font) + CarWidth ('.', font);
+	/* compute lenght of the string " ." */
+	width = CarWidth (' ', font) + CarWidth ('.', font);
 
-	/* On calcule un nombre de fois que l'on peut ecrire la chaine */
-	nb = lgboite / large;
-	xcour = x + FrameTable[frame].FrLeftMargin + (lgboite % large);
+	/* compute the number of string to write */
+	nb = lgboite / width;
+	xcour = x + FrameTable[frame].FrLeftMargin + (lgboite % width);
 	y += FrameTable[frame].FrTopMargin - FontBase (font);
 #ifndef NEW_WILLOWS
 	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
 #endif /* NEW_WILLOWS */
-	ChargeCouleur (0, RO, active, fg);
+	LoadColor (0, RO, active, fg);
 
-	/* Trace des points */
+	/* draw the points */
 	FontOrig (font, *ptcar, &x, &y);
 	while (nb > 0)
 	  {
 #ifndef NEW_WILLOWS
 	     XDrawString (TtDisplay, w, TtLineGC, xcour, y, ptcar, 2);
 #endif /* NEW_WILLOWS */
-	     xcour += large;
+	     xcour += width;
 	     nb--;
 	  }
-	finirTrace (0, RO, active);
+	FinishDrawing (0, RO, active);
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawRadical affiche un signe Radical.                             | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Le parame`tre fg indique la couleur du trace'.          | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawRadical Draw a radical symbol.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              parameter fg indicate the drawing color
+ **/
 
 
 #ifdef __STDC__
-void                DrawRadical (int frame, int epais, int x, int y, int l, int h, ptrfont font, int RO, int active, int fg)
+void                DrawRadical (int frame, int thick, int x, int y, int l, int h, ptrfont font, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                DrawRadical (frame, epais, x, y, l, h, font, RO, active, fg)
+void                DrawRadical (frame, thick, x, y, l, h, font, RO, active, fg)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 x;
 int                 y;
 int                 l;
@@ -628,39 +590,37 @@ int                 fg;
 
    fh = FontHeight (font);
    xm = x + (fh / 2);
-   preparerTrace (0, 0, 0, RO, active, fg);
-   /* Partie descendante */
-   Tracer (frame, x, y + (2 * (h / 3)), xm - (epais / 2), y + h);
+   InitDrawing (0, 0, 0, RO, active, fg);
+   /* vertical part */
+   DoDrawOneLine (frame, x, y + (2 * (h / 3)), xm - (thick / 2), y + h);
 
-   preparerTrace (0, 0, epais, RO, active, fg);
-   /* Partie montante */
-   Tracer (frame, x + (fh / 2), y + h, xm, y);
-   /* Partie superieure */
-   Tracer (frame, xm, y, x + l, y);
-   finirTrace (0, RO, active);
+   InitDrawing (0, 0, thick, RO, active, fg);
+   /* Acending part */
+   DoDrawOneLine (frame, x + (fh / 2), y + h, xm, y);
+   /* Upper part */
+   DoDrawOneLine (frame, xm, y, x + l, y);
+   FinishDrawing (0, RO, active);
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawIntegral trace une integrale :                               | */
-/* |            - simple si type = 0                                    | */
-/* |            - curviligne si type = 1                                | */
-/* |            - double si type = 2.                                   | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Le parame`tre fg indique la couleur du trace'.          | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawIntegral draw an integral. depending on type :
+ *              - simple if type = 0
+ *              - contour if type = 1
+ *              - double if type = 2.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              parameter fg indicate the drawing color
+ **/
 
 
 #ifdef __STDC__
-void                DrawIntegral (int frame, int epais, int x, int y, int l, int h, int type, ptrfont font, int RO, int active, int fg)
+void                DrawIntegral (int frame, int thick, int x, int y, int l, int h, int type, ptrfont font, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                DrawIntegral (frame, epais, x, y, l, h, type, font, RO, active, fg)
+void                DrawIntegral (frame, thick, x, y, l, h, type, font, RO, active, fg)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 x;
 int                 y;
 int                 l;
@@ -695,29 +655,26 @@ int                 fg;
 	   DrawChar ('\364', frame, xm, yf, font, RO, active, fg);
 	if (exnum)
 	   DrawChar ('\364', frame, xm, yend, font, RO, active, fg);
-	else			/* on centre l'extension */
+	else			
 	   DrawChar ('\364', frame, xm, yf + ((delta - CarHeight ('\364', font)) / 2), font, RO, active, fg);
      }
 
-   if (type == 2)		/* integrale double */
-      DrawIntegral (frame, epais, x + (CarWidth ('\364', font) / 2),
+   if (type == 2)		/* double integral */
+      DrawIntegral (frame, thick, x + (CarWidth ('\364', font) / 2),
 		   y, l, h, -1, font, RO, active, fg);
-   /*    ^^  hack !! */
 
-   else if (type == 1)		/* curviligne */
+   else if (type == 1)		/* contour integral */
       DrawChar ('o', frame, x + ((l - CarWidth ('o', font)) / 2),
 	     y + (h - CarHeight ('o', font)) / 2 - FontAscent (font) + CarAscent ('o', font),
 	     font, RO, active, fg);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    AfMonoSymb trace un symbole constitue' d'un caractere.          | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Le parame`tre fg indique la couleur du trace'.          | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      AfMonoSymb draw a one glyph symbol.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              parameter fg indicate the drawing color
+ **/
 
 
 #ifdef __STDC__
@@ -743,17 +700,15 @@ int                 fg;
 
    xm = x + ((l - CarWidth (symb, font)) / 2);
    yf = y + ((h - CarHeight (symb, font)) / 2) - FontAscent (font) + CarAscent (symb, font);
-   /*   ^^^^^^^^^ pour compenser le FontOrig dans Afcar */
 
    DrawChar (symb, frame, xm, yf, font, RO, active, fg);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawSigma trace un symbole Sigma.                                 | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Le parame`tre fg indique la couleur du trace'.          | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawSigma draw a Sigma symbol.
+ *              active indicate if the box is active
+ *              parameter fg indicate the drawing color
+ **/
 
 
 #ifdef __STDC__
@@ -779,34 +734,32 @@ int                 fg;
    fh = FontHeight (font);
    if (h < fh * 2 && l <= CarWidth ('\345', font))
      {
-	/* Un seul caractere */
+	/* Only one glyph needed */
 	AfMonoSymb ('\345', frame, x, y, l, h, RO, active, font, fg);
      }
    else
      {
 	xm = x + (l / 3);
 	ym = y + (h / 2) - 1;
-	preparerTrace (0, 0, 0, RO, active, fg);
-	/* Partie centrale */
-	Tracer (frame, x, y + 1, xm, ym);
-	Tracer (frame, x, y + h - 2, xm, ym);
+	InitDrawing (0, 0, 0, RO, active, fg);
+	/* Center */
+	DoDrawOneLine (frame, x, y + 1, xm, ym);
+	DoDrawOneLine (frame, x, y + h - 2, xm, ym);
 
-	preparerTrace (0, 0, 2, RO, active, fg);
-	/* Parties extremes */
-	Tracer (frame, x, y, x + l, y);
-	Tracer (frame, x, y + h - 2, x + l, y + h - 2);
-	finirTrace (0, RO, active);
+	InitDrawing (0, 0, 2, RO, active, fg);
+	/* Borders */
+	DoDrawOneLine (frame, x, y, x + l, y);
+	DoDrawOneLine (frame, x, y + h - 2, x + l, y + h - 2);
+	FinishDrawing (0, RO, active);
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawPi trace un symbole PI.                                       | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Le parame`tre fg indique la couleur du trace'.          | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawPi draw a PI symbol.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              parameter fg indicate the drawing color
+ **/
 
 
 
@@ -833,31 +786,29 @@ int                 fg;
    fh = FontHeight (font);
    if (h < fh * 2 && l <= CarWidth ('\325', font))
      {
-	/* Un seul caractere */
+	/* Only one glyph needed */
 	AfMonoSymb ('\325', frame, x, y, l, h, RO, active, font, fg);
      }
    else
      {
-	preparerTrace (0, 0, 0, RO, active, fg);
-	/* Partie descendnte */
-	Tracer (frame, x + 2, y + 1, x + 2, y + h);
-	Tracer (frame, x + l - 3, y + 1, x + l - 3, y + h);
+	InitDrawing (0, 0, 0, RO, active, fg);
+	/* Vertical part */
+	DoDrawOneLine (frame, x + 2, y + 1, x + 2, y + h);
+	DoDrawOneLine (frame, x + l - 3, y + 1, x + l - 3, y + h);
 
-	preparerTrace (0, 0, 2, RO, active, fg);
-	/* Partie haute */
-	Tracer (frame, x + 1, y + 1, x + l, y);
-	finirTrace (0, RO, active);
+	InitDrawing (0, 0, 2, RO, active, fg);
+	/* Upper part */
+	DoDrawOneLine (frame, x + 1, y + 1, x + l, y);
+	FinishDrawing (0, RO, active);
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawIntersection trace un symbole Intersection.                   | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Le parame`tre fg indique la couleur du trace'.          | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawIntersection draw an intersection symbol.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              parameter fg indicate the drawing color
+ **/
 
 
 #ifdef __STDC__
@@ -883,34 +834,32 @@ int                 fg;
    fh = FontHeight (font);
    if (h < fh * 2 && l <= CarWidth ('\307', font))
      {
-	/* Un seul caractere */
+	/* Only one glyph needed */
 	AfMonoSymb ('\307', frame, x, y, l, h, RO, active, font, fg);
      }
    else
      {
-	/* rayon des arcs a 6mm */
+	/* radius of arcs is 6mm */
 	arc = h / 4;
-	preparerTrace (0, 0, 2, RO, active, fg);
-	/* Partie descendante */
-	Tracer (frame, x + 1, y + arc, x + 1, y + h);
-	Tracer (frame, x + l - 2, y + arc, x + l - 2, y + h);
+	InitDrawing (0, 0, 2, RO, active, fg);
+	/* vertical part */
+	DoDrawOneLine (frame, x + 1, y + arc, x + 1, y + h);
+	DoDrawOneLine (frame, x + l - 2, y + arc, x + l - 2, y + h);
 
-	/* Partie haute */
+	/* Upper part */
 #ifndef NEW_WILLOWS
 	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1, y + 1, l - 3, arc * 2, 0 * 64, 180 * 64);
 #endif /* NEW_WILLOWS */
-	finirTrace (0, RO, active);
+	FinishDrawing (0, RO, active);
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawUnion trace un symbole Union.                                 | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Le parame`tre fg indique la couleur du trace'.          | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawUnion draw an Union symbol.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              parameter fg indicate the drawing color
+ **/
 
 
 #ifdef __STDC__
@@ -936,36 +885,36 @@ int                 fg;
    fh = FontHeight (font);
    if (h < fh * 2 && l <= CarWidth ('\310', font))
      {
-	/* Un seul caractere */
+	/* Only one glyph needed */
 	AfMonoSymb ('\310', frame, x, y, l, h, RO, active, font, fg);
      }
    else
      {
-	/* rayon des arcs a 3mm */
+	/* radius of arcs is 3mm */
 	arc = h / 4;
-	preparerTrace (0, 0, 2, RO, active, fg);
-	/* Partie descendante */
-	Tracer (frame, x + 1, y, x + 1, y + h - arc);
-	Tracer (frame, x + l - 2, y, x + l - 2, y + h - arc);
+	InitDrawing (0, 0, 2, RO, active, fg);
+	/* two vertical lines */
+	DoDrawOneLine (frame, x + 1, y, x + 1, y + h - arc);
+	DoDrawOneLine (frame, x + l - 2, y, x + l - 2, y + h - arc);
 
-	/* Partie basse */
+	/* Lower part */
 #ifndef NEW_WILLOWS
 	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1, y + h - arc * 2 - 2, l - 3, arc * 2, -0 * 64, -180 * 64);
 #endif /* NEW_WILLOWS */
-	finirTrace (0, RO, active);
+	FinishDrawing (0, RO, active);
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    TraceFleche trace l'extremite de la fleche.                     | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      TraceFleche draw the end of an arrow.
+ **/
 #ifdef __STDC__
-static void         TraceFleche (int frame, int x1, int y1, int x2, int y2, int epais, int RO, int active, int fg)
+static void         TraceFleche (int frame, int x1, int y1, int x2, int y2, int thick, int RO, int active, int fg)
 #else  /* __STDC__ */
-static void         TraceFleche (frame, x1, y1, x2, y2, epais, RO, active, fg)
+static void         TraceFleche (frame, x1, y1, x2, y2, thick, RO, active, fg)
 int                 frame;
 int                 x1, y1, x2, y2;
-int                 epais;
+int                 thick;
 int                 RO;
 int                 active;
 int                 fg;
@@ -975,12 +924,12 @@ int                 fg;
 #ifndef NEW_WILLOWS
    float               x, y, xb, yb, dx, dy, l, sina, cosa;
    int                 xc, yc, xd, yd;
-   float               large, haut;
+   float               width, height;
    ThotPoint           point[3];
    Pixmap              modele;
 
-   large = 5 + epais;
-   haut = 10;
+   width = 5 + thick;
+   height = 10;
    dx = (float) (x2 - x1);
    dy = (float) (y1 - y2);
    l = sqrt ((double) (dx * dx + dy * dy));
@@ -990,15 +939,15 @@ int                 fg;
    cosa = dx / l;
    xb = x2 * cosa - y2 * sina;
    yb = x2 * sina + y2 * cosa;
-   x = xb - haut;
-   y = yb - large / 2;
+   x = xb - height;
+   y = yb - width / 2;
    xc = FloatToInt (x * cosa + y * sina + .5);
    yc = FloatToInt (-x * sina + y * cosa + .5);
-   y = yb + large / 2;
+   y = yb + width / 2;
    xd = FloatToInt (x * cosa + y * sina + .5);
    yd = FloatToInt (-x * sina + y * cosa + .5);
 
-   /* trace */
+   /* draw */
    point[0].x = x2;
    point[0].y = y2;
    point[1].x = xc;
@@ -1015,25 +964,23 @@ int                 fg;
 #endif /* NEW_WILLOWS */
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawArrow trace une fle^che oriente'e en fonction de l'angle     | */
-/* |            donne' :0 (fle^che vers la droite), 45, 90, 135, 180,   | */
-/* |            225, 270 ou 315.                                        | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Le parame`tre fg indique la couleur du trace'.          | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawArrow draw an arrow following the indicated direction in degrees :
+ *              0 (right arrow), 45, 90, 135, 180,
+ *              225, 270 ou 315.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              parameter fg indicate the drawing color
+ **/
 
 
 #ifdef __STDC__
-void                DrawArrow (int frame, int epais, int style, int x, int y, int l, int h, int orientation, int RO, int active, int fg)
+void                DrawArrow (int frame, int thick, int style, int x, int y, int l, int h, int orientation, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                DrawArrow (frame, epais, style, x, y, l, h, orientation, RO, active, fg)
+void                DrawArrow (frame, thick, style, x, y, l, h, orientation, RO, active, fg)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
@@ -1049,83 +996,81 @@ int                 fg;
 {
    int                 xm, ym, xf, yf;
 
-   if (epais <= 0)
+   if (thick <= 0)
       return;
-   xm = x + ((l - epais) / 2);
+   xm = x + ((l - thick) / 2);
    xf = x + l - 1;
-   ym = y + ((h - epais) / 2);
+   ym = y + ((h - thick) / 2);
    yf = y + h - 1;
 
-   preparerTrace (0, style, epais, RO, active, fg);
+   InitDrawing (0, style, thick, RO, active, fg);
    if (orientation == 0)
      {
-	/* fleche vers la droite */
-	Tracer (frame, x, ym, xf, ym);
-	TraceFleche (frame, x, ym, xf, ym, epais, RO, active, fg);
+	/* draw a right arrow */
+	DoDrawOneLine (frame, x, ym, xf, ym);
+	TraceFleche (frame, x, ym, xf, ym, thick, RO, active, fg);
      }
    else if (orientation == 45)
      {
-	Tracer (frame, x, yf, xf - epais + 1, y);
-	TraceFleche (frame, x, yf, xf - epais + 1, y, epais, RO, active, fg);
+	DoDrawOneLine (frame, x, yf, xf - thick + 1, y);
+	TraceFleche (frame, x, yf, xf - thick + 1, y, thick, RO, active, fg);
      }
    else if (orientation == 90)
      {
-	/* fleche vers le haut */
-	Tracer (frame, xm, y, xm, yf);	/* Trait central */
-	TraceFleche (frame, xm, yf, xm, y, epais, RO, active, fg);
+	/* draw a bottom-up arrow */
+	DoDrawOneLine (frame, xm, y, xm, yf);	
+	TraceFleche (frame, xm, yf, xm, y, thick, RO, active, fg);
      }
    else if (orientation == 135)
      {
-	Tracer (frame, x, y, xf - epais + 1, yf);
-	TraceFleche (frame, xf - epais + 1, yf, x, y, epais, RO, active, fg);
+	DoDrawOneLine (frame, x, y, xf - thick + 1, yf);
+	TraceFleche (frame, xf - thick + 1, yf, x, y, thick, RO, active, fg);
      }
    else if (orientation == 180)
      {
-	/* Trace une fleche vers la gauche */
-	Tracer (frame, x, ym, xf, ym);
-	TraceFleche (frame, xf, ym, x, ym, epais, RO, active, fg);
+	/* draw a left arrow */
+	DoDrawOneLine (frame, x, ym, xf, ym);
+	TraceFleche (frame, xf, ym, x, ym, thick, RO, active, fg);
      }
    else if (orientation == 225)
      {
-	Tracer (frame, x, yf, xf - epais + 1, y);
-	TraceFleche (frame, xf - epais + 1, y, x, yf, epais, RO, active, fg);
+	DoDrawOneLine (frame, x, yf, xf - thick + 1, y);
+	TraceFleche (frame, xf - thick + 1, y, x, yf, thick, RO, active, fg);
      }
    else if (orientation == 270)
      {
-	/* Trace une fleche vers le bas */
-	Tracer (frame, xm, y, xm, yf);	/* Trait central */
-	TraceFleche (frame, xm, y, xm, yf, epais, RO, active, fg);
+	/* draw a top-down arrow */
+	DoDrawOneLine (frame, xm, y, xm, yf);	
+	TraceFleche (frame, xm, y, xm, yf, thick, RO, active, fg);
      }
    else if (orientation == 315)
      {
-	Tracer (frame, x, y, xf - epais + 1, yf);
-	TraceFleche (frame, x, y, xf - epais + 1, yf, epais, RO, active, fg);
+	DoDrawOneLine (frame, x, y, xf - thick + 1, yf);
+	TraceFleche (frame, x, y, xf - thick + 1, yf, thick, RO, active, fg);
      }
-   finirTrace (0, RO, active);
+   FinishDrawing (0, RO, active);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawBracket trace un symbole crochet ouvrant ou fermant.          | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Le parame`tre fg indique la couleur du trace'.          | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawBracket draw an opening or closing bracket (depending on direction)
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              parameter fg indicate the drawing color
+ **/
 
 
 #ifdef __STDC__
-void                DrawBracket (int frame, int epais, int x, int y, int l, int h, int sens, ptrfont font, int RO, int active, int fg)
+void                DrawBracket (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                DrawBracket (frame, epais, x, y, l, h, sens, font, RO, active, fg)
+void                DrawBracket (frame, thick, x, y, l, h, direction, font, RO, active, fg)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 x;
 int                 y;
 int                 l;
 int                 h;
-int                 sens;
+int                 direction;
 ptrfont             font;
 int                 RO;
 int                 active;
@@ -1138,10 +1083,10 @@ int                 fg;
 
    if (FontHeight (font) >= h)
      {
-	/* Avec un seul caractere */
-	if (sens == 0)
+	/* With only one glyph */
+	if (direction == 0)
 	  {
-	     /* Trace un crochet ouvrant */
+	     /* Draw a opening bracket */
 	     xm = x + ((l - CarWidth ('[', font)) / 2);
 	     yf = y + ((h - CarHeight ('[', font)) / 2) -
 		FontAscent (font) + CarAscent ('[', font);
@@ -1149,7 +1094,7 @@ int                 fg;
 	  }
 	else
 	  {
-	     /* Trace un crochet fermant */
+	     /* Draw a closing bracket */
 	     xm = x + ((l - CarWidth (']', font)) / 2);
 	     yf = y + ((h - CarHeight (']', font)) / 2) -
 		FontAscent (font) + CarAscent (']', font);
@@ -1158,10 +1103,10 @@ int                 fg;
      }
    else
      {
-	/* Avec plusieurs caracteres */
-	if (sens == 0)
+	/* Need more than one glyph */
+	if (direction == 0)
 	  {
-	     /* Trace un crochet ouvrant */
+	     /* Draw a opening bracket */
 	     xm = x + ((l - CarWidth ('\351', font)) / 2);
 	     yf = y - FontAscent (font) + CarAscent ('\351', font);
 	     DrawChar ('\351', frame, xm, yf, font, RO, active, fg);
@@ -1176,7 +1121,7 @@ int                 fg;
 	  }
 	else
 	  {
-	     /* Trace un crochet fermant */
+	     /* Draw a closing bracket */
 	     xm = x + ((l - CarWidth ('\371', font)) / 2);
 	     yf = y - FontAscent (font) + CarAscent ('\371', font);
 	     DrawChar ('\371', frame, xm, yf, font, RO, active, fg);
@@ -1192,28 +1137,26 @@ int                 fg;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawParenthesis trace un symbole parenthese ouvrant ou fermant.    | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Le parame`tre fg indique la couleur du trace'.          | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawParenthesis draw a closing or opening parenthesis (direction).
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              parameter fg indicate the drawing color
+ **/
 
 
 #ifdef __STDC__
-void                DrawParenthesis (int frame, int epais, int x, int y, int l, int h, int sens, ptrfont font, int RO, int active, int fg)
+void                DrawParenthesis (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                DrawParenthesis (frame, epais, x, y, l, h, sens, font, RO, active, fg)
+void                DrawParenthesis (frame, thick, x, y, l, h, direction, font, RO, active, fg)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 x;
 int                 y;
 int                 l;
 int                 h;
-int                 sens;
+int                 direction;
 ptrfont             font;
 int                 RO;
 int                 active;
@@ -1228,17 +1171,17 @@ int                 fg;
 
    if (FontHeight (font) >= h)
      {
-	/* Avec un seul caractere */
-	if (sens == 0)
+	/* With only one glyph */
+	if (direction == 0)
 	  {
-	     /* Trace un parenthese ouvrant */
+	     /* draw a opening parenthesis */
 	     xm = x + ((l - CarWidth ('(', font)) / 2);
 	     yf = y + ((h - CarHeight ('(', font)) / 2) - FontAscent (font) + CarAscent ('(', font);
 	     DrawChar ('(', frame, xm, yf, font, RO, active, fg);
 	  }
 	else
 	  {
-	     /* Trace un parenthese fermant */
+	     /* draw a closing parenthesis */
 	     xm = x + ((l - CarWidth (')', font)) / 2);
 	     yf = y + ((h - CarHeight (')', font)) / 2) - FontAscent (font) + CarAscent (')', font);
 	     DrawChar (')', frame, xm, yf, font, RO, active, fg);
@@ -1247,10 +1190,10 @@ int                 fg;
 
    else
      {
-	/* Avec plusieurs caracteres */
-	if (sens == 0)
+	/* Need more than one glyph */
+	if (direction == 0)
 	  {
-	     /* Trace un parenthese ouvrant */
+	     /* draw a opening parenthesis */
 	     xm = x + ((l - CarWidth ('\346', font)) / 2);
 	     yf = y - FontAscent (font) + CarAscent ('\346', font);
 	     DrawChar ('\346', frame, xm, yf, font, RO, active, fg);
@@ -1268,14 +1211,14 @@ int                 fg;
 		     DrawChar ('\347', frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
 		     DrawChar ('\347', frame, xm, yend, font, RO, active, fg);
-		  else		/* on centre l'extension */
+		  else		
 		     DrawChar ('\347', frame, xm, yf + ((delta - CarHeight ('\347', font)) / 2), font, RO, active, fg);
 	       }
 	  }
 
 	else
 	  {
-	     /* Trace un parenthese fermant */
+	     /* draw a closing parenthesis */
 	     xm = x + ((l - CarWidth ('\366', font)) / 2);
 	     yf = y - FontAscent (font) + CarAscent ('\366', font);
 	     DrawChar ('\366', frame, xm, yf, font, RO, active, fg);
@@ -1293,7 +1236,7 @@ int                 fg;
 		     DrawChar ('\367', frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
 		     DrawChar ('\367', frame, xm, yend, font, RO, active, fg);
-		  else		/* on centre l'extension */
+		  else		
 		     DrawChar ('\367', frame, xm, yf + ((delta - CarHeight ('\367', font)) / 2), font, RO, active, fg);
 	       }
 	  }
@@ -1301,28 +1244,26 @@ int                 fg;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawBrace trace un symbole accolade ouvrant ou fermant.        | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Le parame`tre fg indique la couleur du trace'.          | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawBrace draw an opening of closing brace (depending on direction).
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              parameter fg indicate the drawing color
+ **/
 
 
 #ifdef __STDC__
-void                DrawBrace (int frame, int epais, int x, int y, int l, int h, int sens, ptrfont font, int RO, int active, int fg)
+void                DrawBrace (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                DrawBrace (frame, epais, x, y, l, h, sens, font, RO, active, fg)
+void                DrawBrace (frame, thick, x, y, l, h, direction, font, RO, active, fg)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 x;
 int                 y;
 int                 l;
 int                 h;
-int                 sens;
+int                 direction;
 ptrfont             font;
 int                 RO;
 int                 active;
@@ -1337,17 +1278,17 @@ int                 fg;
 
    if (FontHeight (font) >= h)
      {
-	/* Avec un seul caractere */
-	if (sens == 0)
+	/* need only one char */
+	if (direction == 0)
 	  {
-	     /* Trace un accolade ouvrant */
+	     /* just use the opening brace glyph */
 	     xm = x + ((l - CarWidth ('{', font)) / 2);
 	     yf = y + ((h - CarHeight ('{', font)) / 2) - FontAscent (font) + CarAscent ('{', font);
 	     DrawChar ('{', frame, xm, yf, font, RO, active, fg);
 	  }
 	else
 	  {
-	     /* Trace un accolade fermant */
+	     /* just use the closing brace glyph */
 	     xm = x + ((l - CarWidth ('}', font)) / 2);
 	     yf = y + ((h - CarHeight ('}', font)) / 2) - FontAscent (font) + CarAscent ('}', font);
 	     DrawChar ('}', frame, xm, yf, font, RO, active, fg);
@@ -1356,23 +1297,22 @@ int                 fg;
 
    else
      {
-	/* Avec plusieurs caracteres */
-	if (sens == 0)
+	/* Brace drawn with more than one glyph */
+	if (direction == 0)
 	  {
-	     /* Trace un accolade ouvrant */
-	     /* le haut */
+	     /* top */
 	     xm = x + ((l - CarWidth ('\354', font)) / 2);
 	     yf = y - FontAscent (font) + CarAscent ('\354', font);
 	     DrawChar ('\354', frame, xm, yf, font, RO, active, fg);
-	     /* le milieu */
+	     /* vertical line */
 	     ym = y + ((h - CarHeight ('\355', font)) / 2) - FontAscent (font)
 		+ CarAscent ('\355', font);
 	     DrawChar ('\355', frame, xm, ym, font, RO, active, fg);
-	     /* le bas */
+	     /* bottom */
 	     yend = y + h - CarHeight ('\356', font) - FontAscent (font) + CarAscent ('\356', font);
 	     DrawChar ('\356', frame, xm, yend, font, RO, active, fg);
 
-	     /* complement superieur */
+	     /* finish top */
 	     yf += CarHeight ('\354', font);
 	     delta = ym - yf;
 	     if (delta >= 0)
@@ -1384,10 +1324,10 @@ int                 fg;
 		     DrawChar ('\357', frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
 		     DrawChar ('\357', frame, xm, ym, font, RO, active, fg);
-		  else		/* on centre l'extension */
+		  else
 		     DrawChar ('\357', frame, xm, yf + ((delta - CarHeight ('\357', font)) / 2), font, RO, active, fg);
 	       }
-	     /* complement inferieur */
+	     /* finish bottom */
 	     yf = ym + CarHeight ('\355', font) + CarHeight ('\357', font);
 	     delta = yend - yf;
 	     if (delta >= 0)
@@ -1399,27 +1339,26 @@ int                 fg;
 		     DrawChar ('\357', frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
 		     DrawChar ('\357', frame, xm, yend, font, RO, active, fg);
-		  else		/* on centre l'extension */
+		  else
 		     DrawChar ('\357', frame, xm, yf + ((delta - CarHeight ('\357', font)) / 2), font, RO, active, fg);
 	       }
 	  }
 
 	else
 	  {
-	     /* Trace un accolade fermant */
-	     /* le haut */
+	     /* top */
 	     xm = x + ((l - CarWidth ('\374', font)) / 2);
 	     yf = y - FontAscent (font) + CarAscent ('\374', font);
 	     DrawChar ('\374', frame, xm, yf, font, RO, active, fg);
-	     /* le milieu */
+	     /* center */
 	     ym = y + ((h - CarHeight ('\375', font)) / 2)
 		- FontAscent (font) + CarAscent ('\375', font);
 	     DrawChar ('\375', frame, xm, ym, font, RO, active, fg);
-	     /* le bas */
+	     /* bottom */
 	     yend = y + h - CarHeight ('\376', font)
 		- FontAscent (font) + CarAscent ('\376', font);
 	     DrawChar ('\376', frame, xm, yend, font, RO, active, fg);
-	     /* complement superieur */
+	     /* finish top */
 	     yf += CarHeight ('\374', font);
 	     delta = ym - yf;
 	     if (delta >= 0)
@@ -1431,10 +1370,10 @@ int                 fg;
 		     DrawChar ('\357', frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
 		     DrawChar ('\357', frame, xm, ym, font, RO, active, fg);
-		  else		/* on centre l'extension */
+		  else
 		     DrawChar ('\357', frame, xm, yf + ((delta - CarHeight ('\357', font)) / 2), font, RO, active, fg);
 	       }
-	     /* complement inferieur */
+	     /* finish bottom */
 	     yf = ym + CarHeight ('\375', font) + CarHeight ('\357', font);
 	     delta = yend - yf;
 	     if (delta >= 0)
@@ -1446,43 +1385,41 @@ int                 fg;
 		     DrawChar ('\357', frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
 		     DrawChar ('\357', frame, xm, yend, font, RO, active, fg);
-		  else		/* on centre l'extension */
+		  else	
 		     DrawChar ('\357', frame, xm, yf + ((delta - CarHeight ('\357', font)) / 2), font, RO, active, fg);
 	       }
 	  }
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawRectangle trace un rectangle d'origine x, y et de dimensions  | */
-/* |            larg, haut avec une e'paisseur epais dans la fenetree^tre       | */
-/* |            d'indice frame.                                         | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
-/* |            trace', la couleur du fond et le motif de remplissage.  | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawRectangle draw a rectangle located at (x, y) in frame,
+ *		of geometry width x height.
+ *		thick indicate the thickness of the lines.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              Parameters fg, bg, and pattern are for drawing
+ *              color, background color and fill pattern.
+ **/
 
 
 #ifdef __STDC__
-void                DrawRectangle (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
+void                DrawRectangle (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
 
 #else  /* __STDC__ */
-void                DrawRectangle (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
+void                DrawRectangle (frame, thick, style, x, y, width, height, RO, active, fg, bg, pattern)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
-int                 larg;
-int                 haut;
+int                 width;
+int                 height;
 int                 RO;
 int                 active;
 int                 fg;
 int                 bg;
-int                 motif;
+int                 pattern;
 
 #endif /* __STDC__ */
 
@@ -1495,20 +1432,20 @@ int                 motif;
 
 #endif
 
-   larg = larg - epais - 1;
-   haut = haut - epais - 1;
-   x += epais / 2;
-   y += epais / 2;
-   /*eps2 = epais > 1; */
+   width = width - thick - 1;
+   height = height - thick - 1;
+   x += thick / 2;
+   y += thick / 2;
+   /*eps2 = thick > 1; */
 
-   /* On remplit le rectangle */
-   modele = CreatePattern (0, RO, active, fg, bg, motif);
+   /* Fill in the rectangle */
+   modele = CreatePattern (0, RO, active, fg, bg, pattern);
    if (modele != 0)
      {
 #ifndef NEW_WILLOWS
 	XSetTile (TtDisplay, TtGreyGC, modele);
 	XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC,
-			x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, larg, haut);
+			x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
 	XFreePixmap (TtDisplay, modele);
 #endif /* NEW_WILLOWS */
 #ifdef NEW_WILLOWS
@@ -1516,52 +1453,50 @@ int                 motif;
 	WinLoadGC (WIN_curHdc, TtLineGC);
 	hBrush = CreateSolidBrush (Pix_Color[bg]);
 	hBrush = SelectObject (WIN_curHdc, hBrush);
-	PatBlt (WIN_curHdc, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, larg, haut, PATCOPY);
+	PatBlt (WIN_curHdc, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);
 	hBrush = SelectObject (WIN_curHdc, hBrush);
 	DeleteObject (hBrush);
 #endif /* NEW_WILLOWS */
      }
 
-   /* On trace le contour */
-   if (epais > 0)
+   /* Draw the border */
+   if (thick > 0)
      {
-	preparerTrace (0, style, epais, RO, active, fg);
+	InitDrawing (0, style, thick, RO, active, fg);
 #ifndef NEW_WILLOWS
 	XDrawRectangle (TtDisplay, FrRef[frame], TtLineGC,
-			x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, larg, haut);
+			x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
 #endif /* NEW_WILLOWS */
-	finirTrace (0, RO, active);
+	FinishDrawing (0, RO, active);
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawDiamond trace un losange.                                     | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
-/* |            trace', la couleur du fond et le motif de remplissage.  | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawDiamond draw a diamond.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              Parameters fg, bg, and pattern are for drawing
+ *              color, background color and fill pattern.
+ **/
 
 
 #ifdef __STDC__
-void                DrawDiamond (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
+void                DrawDiamond (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
 
 #else  /* __STDC__ */
-void                DrawDiamond (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
+void                DrawDiamond (frame, thick, style, x, y, width, height, RO, active, fg, bg, pattern)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
-int                 larg;
-int                 haut;
+int                 width;
+int                 height;
 int                 RO;
 int                 active;
 int                 fg;
 int                 bg;
-int                 motif;
+int                 pattern;
 
 #endif /* __STDC__ */
 
@@ -1570,24 +1505,24 @@ int                 motif;
    ThotPoint           point[5];
    Pixmap              modele;
 
-   larg = larg - epais - 1;
-   haut = haut - epais - 1;
-   x += epais / 2;
-   y += epais / 2;
+   width = width - thick - 1;
+   height = height - thick - 1;
+   x += thick / 2;
+   y += thick / 2;
 
-   point[0].x = x + (larg / 2) + FrameTable[frame].FrLeftMargin;
+   point[0].x = x + (width / 2) + FrameTable[frame].FrLeftMargin;
    point[0].y = y + FrameTable[frame].FrTopMargin;
    point[4].x = point[0].x;
    point[4].y = point[0].y;
-   point[1].x = x + larg + FrameTable[frame].FrLeftMargin;
-   point[1].y = y + (haut / 2) + FrameTable[frame].FrTopMargin;
+   point[1].x = x + width + FrameTable[frame].FrLeftMargin;
+   point[1].y = y + (height / 2) + FrameTable[frame].FrTopMargin;
    point[2].x = point[0].x;
-   point[2].y = y + haut + FrameTable[frame].FrTopMargin;
+   point[2].y = y + height + FrameTable[frame].FrTopMargin;
    point[3].x = x + FrameTable[frame].FrLeftMargin;
    point[3].y = point[1].y;
 
-   /* On remplit le losange */
-   modele = CreatePattern (0, RO, active, fg, bg, motif);
+   /* Fill in the diamond */
+   modele = CreatePattern (0, RO, active, fg, bg, pattern);
    if (modele != 0)
      {
 	XSetTile (TtDisplay, TtGreyGC, modele);
@@ -1596,43 +1531,39 @@ int                 motif;
 	XFreePixmap (TtDisplay, modele);
      }
 
-   /* On trace le contour */
-   if (epais > 0)
+   /* Draw the border */
+   if (thick > 0)
      {
-	preparerTrace (0, style, epais, RO, active, fg);
+	InitDrawing (0, style, thick, RO, active, fg);
 	XDrawLines (TtDisplay, FrRef[frame], TtLineGC,
 		    point, 5, CoordModeOrigin);
-	finirTrace (0, RO, active);
+	FinishDrawing (0, RO, active);
      }
 #endif /* NEW_WILLOWS */
 }
 
-/*debut */
-/* ---------------------------------------------------------------------- */
-/* |    DrawSegments trace des lignes brise'es.                            | */
-/* |            Le parame`tre buffer pointe sur le 1er buffer qui       | */
-/* |            contient la liste des points de contro^le et le         | */
-/* |            parame`tre nb donne le nombre de points.                | */
-/* |            Le premier point doone la limite de la polyline.        | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Les parame`tres fg indique la couleur du trace'.        | */
-/* |            Le parametre fleche indique :                           | */
-/* |            - s'il ne faut pas tracer de fleche (0)                 | */
-/* |            - s'il faut tracer une fleche vers l'avant (1)          | */
-/* |            - s'il faut tracer une fleche vers l'arriere (2)        | */
-/* |            - s'il faut tracer une fleche dans les deux sens (3)    | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawSegments draw a set of segments.
+ *		Parameter buffer is a pointer to the list of control points.
+ *		nb indicate the number of points.
+ *		The first point is a fake one containing the geometry.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              fg parameter gives the drawing color.
+ *              arrow parameter indicate whether :
+ *              - no arrow have to be drawn (0)
+ *              - a forward arrow has to be drawn (1)
+ *              - a backward arrow has to be drawn (2)
+ *              - both backward and forward arrows have to be drawn (3)
+ **/
 
 #ifdef __STDC__
-void                DrawSegments (int frame, int epais, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int fleche)
+void                DrawSegments (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int fleche)
 
 #else  /* __STDC__ */
-void                DrawSegments (frame, epais, style, x, y, buffer, nb, RO, active, fg, fleche)
+void                DrawSegments (frame, thick, style, x, y, buffer, nb, RO, active, fg, fleche)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
@@ -1651,13 +1582,11 @@ int                 fleche;
    int                 i, j;
    PtrTextBuffer      adbuff;
 
-   if (epais == 0)
+   if (thick == 0)
       return;
 
-   /* Alloue une table de points */
+   /* Allocate a table of points */
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * (nb - 1));
-  /***x += epais/2;
-  y += epais/2;***/
    adbuff = buffer;
    j = 1;
    for (i = 1; i < nb; i++)
@@ -1666,7 +1595,7 @@ int                 fleche;
 	  {
 	     if (adbuff->BuNext != NULL)
 	       {
-		  /* Changement de buffer */
+		  /* Next buffer */
 		  adbuff = adbuff->BuNext;
 		  j = 0;
 	       }
@@ -1677,45 +1606,42 @@ int                 fleche;
      }
 
 
-   /* fleche vers l'arriere  */
+   /* backward arrow  */
    if (fleche == 2 || fleche == 3)
-      TraceFleche (frame, points[1].x, points[1].y, points[0].x, points[0].y, epais, RO, active, fg);
+      TraceFleche (frame, points[1].x, points[1].y, points[0].x, points[0].y, thick, RO, active, fg);
 
-   /* On trace le contour */
-   preparerTrace (0, style, epais, RO, active, fg);
+   /* Draw the border */
+   InitDrawing (0, style, thick, RO, active, fg);
    XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, nb - 1, CoordModeOrigin);
-   finirTrace (0, RO, active);
+   FinishDrawing (0, RO, active);
 
-   /* fleche vers l'avant */
+   /* Forward arrow */
    if (fleche == 1 || fleche == 3)
-      TraceFleche (frame, points[nb - 3].x, points[nb - 3].y, points[nb - 2].x, points[nb - 2].y, epais, RO, active, fg);
+      TraceFleche (frame, points[nb - 3].x, points[nb - 3].y, points[nb - 2].x, points[nb - 2].y, thick, RO, active, fg);
 
-   /* Libere la table de points */
+   /* free the table of points */
    free ((char *) points);
 #endif /* NEW_WILLOWS */
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawPolygon trace un polygone.                                   | */
-/* |            Le parame`tre buffer pointe sur le 1er buffer qui       | */
-/* |            contient la liste des points de contro^le et le         | */
-/* |            parame`tre nb donne le nombre de points.                | */
-/* |            Le premier point doone la limite de la polyline.        | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
-/* |            trace', la couleur du fond et le motif de remplissage.  | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawPolygon draw a polygone.
+ *		Parameter buffer is a pointer to the list of control points.
+ *		nb indicate the number of points.
+ *		The first point is a fake one containing the geometry.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              Parameters fg, bg, and pattern are for drawing
+ *              color, background color and fill pattern.
+ **/
 
 #ifdef __STDC__
-void                DrawPolygon (int frame, int epais, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int bg, int motif)
+void                DrawPolygon (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int bg, int pattern)
 
 #else  /* __STDC__ */
-void                DrawPolygon (frame, epais, style, x, y, buffer, nb, RO, active, fg, bg, motif)
+void                DrawPolygon (frame, thick, style, x, y, buffer, nb, RO, active, fg, bg, pattern)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
@@ -1725,7 +1651,7 @@ int                 RO;
 int                 active;
 int                 fg;
 int                 bg;
-int                 motif;
+int                 pattern;
 
 #endif /* __STDC__ */
 
@@ -1736,10 +1662,8 @@ int                 motif;
    PtrTextBuffer      adbuff;
    Pixmap              modele;
 
-   /* Alloue une table de points */
+   /* Allocate a table of points */
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * nb);
-  /***x += epais/2;
-  y += epais/2;***/
    adbuff = buffer;
    j = 1;
    for (i = 1; i < nb; i++)
@@ -1748,7 +1672,7 @@ int                 motif;
 	  {
 	     if (adbuff->BuNext != NULL)
 	       {
-		  /* Changement de buffer */
+		  /* Next buffer */
 		  adbuff = adbuff->BuNext;
 		  j = 0;
 	       }
@@ -1757,12 +1681,12 @@ int                 motif;
 	points[i - 1].y = y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
 	j++;
      }
-   /* Ferme le polygone */
+   /* Close the polygone */
    points[nb - 1].x = points[0].x;
    points[nb - 1].y = points[0].y;
 
-   /* On remplit le polygone */
-   modele = CreatePattern (0, RO, active, fg, bg, motif);
+   /* Fill in the polygone */
+   modele = CreatePattern (0, RO, active, fg, bg, pattern);
    if (modele != 0)
      {
 	XSetTile (TtDisplay, TtGreyGC, modele);
@@ -1770,25 +1694,26 @@ int                 motif;
 	XFreePixmap (TtDisplay, modele);
      }
 
-   /* On trace le contour */
-   if (epais > 0)
+   /* Draw the border */
+   if (thick > 0)
      {
-	preparerTrace (0, style, epais, RO, active, fg);
+	InitDrawing (0, style, thick, RO, active, fg);
 	XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, nb, CoordModeOrigin);
-	finirTrace (0, RO, active);
+	FinishDrawing (0, RO, active);
      }
-   /* Libere la table de points */
+   /* free the table of points */
    free ((char *) points);
 #endif /* NEW_WILLOWS */
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/**
+ *	PolyNewPoint : add a new point to the current polyline.
+ **/
 #ifdef __STDC__
-static boolean      NouveauPoint (int x, int y)
+static boolean      PolyNewPoint (int x, int y)
 #else  /* __STDC__ */
-static boolean      NouveauPoint (x, y)
+static boolean      PolyNewPoint (x, y)
 int                 x, y;
 
 #endif /* __STDC__ */
@@ -1821,68 +1746,71 @@ int                 x, y;
    return (TRUE);
 }
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/**
+ *   push_stack : push a spline on the stack.
+ **/
 #ifdef __STDC__
-static void         empile (float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
+static void         push_stack (float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
 #else  /* __STDC__ */
-static void         empile (x1, y1, x2, y2, x3, y3, x4, y4)
+static void         push_stack (x1, y1, x2, y2, x3, y3, x4, y4)
 float               x1, y1, x2, y2, x3, y3, x4, y4;
 
 #endif /* __STDC__ */
 {
-   Pile               *pile_haut;
+   StackPoint               *stack_ptr;
 
-   if (pile_profond == MAX_pile)
+   if (stack_deep == MAX_STACK)
       return;
 
-   pile_haut = &pile[pile_profond];
-   pile_haut->x1 = x1;
-   pile_haut->y1 = y1;
-   pile_haut->x2 = x2;
-   pile_haut->y2 = y2;
-   pile_haut->x3 = x3;
-   pile_haut->y3 = y3;
-   pile_haut->x4 = x4;
-   pile_haut->y4 = y4;
-   pile_profond++;
+   stack_ptr = &stack[stack_deep];
+   stack_ptr->x1 = x1;
+   stack_ptr->y1 = y1;
+   stack_ptr->x2 = x2;
+   stack_ptr->y2 = y2;
+   stack_ptr->x3 = x3;
+   stack_ptr->y3 = y3;
+   stack_ptr->x4 = x4;
+   stack_ptr->y4 = y4;
+   stack_deep++;
 }
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/**
+ *   pop_stack : pop a spline from the stack.
+ **/
 #ifdef __STDC__
-static boolean      depile (float *x1, float *y1, float *x2, float *y2, float *x3, float *y3, float *x4, float *y4)
+static boolean      pop_stack (float *x1, float *y1, float *x2, float *y2, float *x3, float *y3, float *x4, float *y4)
 #else  /* __STDC__ */
-static boolean      depile (x1, y1, x2, y2, x3, y3, x4, y4)
+static boolean      pop_stack (x1, y1, x2, y2, x3, y3, x4, y4)
 float              *x1, *y1, *x2, *y2, *x3, *y3, *x4, *y4;
 
 #endif /* __STDC__ */
 {
-   Pile               *pile_haut;
+   StackPoint               *stack_ptr;
 
-   if (pile_profond == 0)
+   if (stack_deep == 0)
       return (FALSE);
 
-   pile_profond--;
-   pile_haut = &pile[pile_profond];
-   *x1 = pile_haut->x1;
-   *y1 = pile_haut->y1;
-   *x2 = pile_haut->x2;
-   *y2 = pile_haut->y2;
-   *x3 = pile_haut->x3;
-   *y3 = pile_haut->y3;
-   *x4 = pile_haut->x4;
-   *y4 = pile_haut->y4;
+   stack_deep--;
+   stack_ptr = &stack[stack_deep];
+   *x1 = stack_ptr->x1;
+   *y1 = stack_ptr->y1;
+   *x2 = stack_ptr->x2;
+   *y2 = stack_ptr->y2;
+   *x3 = stack_ptr->x3;
+   *y3 = stack_ptr->y3;
+   *x4 = stack_ptr->x4;
+   *y4 = stack_ptr->y4;
    return (TRUE);
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/**
+ *   PolySplit : split a poly line and push the results on the stack.
+ **/
 #ifdef __STDC__
-static void         Segmente (float a1, float b1, float a2, float b2, float a3, float b3, float a4, float b4)
+static void         PolySplit (float a1, float b1, float a2, float b2, float a3, float b3, float a4, float b4)
 #else  /* __STDC__ */
-static void         Segmente (a1, b1, a2, b2, a3, b3, a4, b4)
+static void         PolySplit (a1, b1, a2, b2, a3, b3, a4, b4)
 float               a1, b1, a2, b2, a3, b3, a4, b4;
 
 #endif /* __STDC__ */
@@ -1892,61 +1820,58 @@ float               a1, b1, a2, b2, a3, b3, a4, b4;
    float               sx1, sy1, sx2, sy2;
    float               tx1, ty1, tx2, ty2, xmid, ymid;
 
-   pile_profond = 0;
-   empile (a1, b1, a2, b2, a3, b3, a4, b4);
+   stack_deep = 0;
+   push_stack (a1, b1, a2, b2, a3, b3, a4, b4);
 
-   while (depile (&x1, &y1, &x2, &y2, &x3, &y3, &x4, &y4))
+   while (pop_stack (&x1, &y1, &x2, &y2, &x3, &y3, &x4, &y4))
      {
 	if (fabs (x1 - x4) < SEG_SPLINE && fabs (y1 - y4) < SEG_SPLINE)
-	   NouveauPoint (FloatToInt (x1), FloatToInt (y1));
+	   PolyNewPoint (FloatToInt (x1), FloatToInt (y1));
 	else
 	  {
-	     tx = le_milieu (x2, x3);
-	     ty = le_milieu (y2, y3);
-	     sx1 = le_milieu (x1, x2);
-	     sy1 = le_milieu (y1, y2);
-	     sx2 = le_milieu (sx1, tx);
-	     sy2 = le_milieu (sy1, ty);
-	     tx2 = le_milieu (x3, x4);
-	     ty2 = le_milieu (y3, y4);
-	     tx1 = le_milieu (tx2, tx);
-	     ty1 = le_milieu (ty2, ty);
-	     xmid = le_milieu (sx2, tx1);
-	     ymid = le_milieu (sy2, ty1);
+	     tx = MIDDLE_OF (x2, x3);
+	     ty = MIDDLE_OF (y2, y3);
+	     sx1 = MIDDLE_OF (x1, x2);
+	     sy1 = MIDDLE_OF (y1, y2);
+	     sx2 = MIDDLE_OF (sx1, tx);
+	     sy2 = MIDDLE_OF (sy1, ty);
+	     tx2 = MIDDLE_OF (x3, x4);
+	     ty2 = MIDDLE_OF (y3, y4);
+	     tx1 = MIDDLE_OF (tx2, tx);
+	     ty1 = MIDDLE_OF (ty2, ty);
+	     xmid = MIDDLE_OF (sx2, tx1);
+	     ymid = MIDDLE_OF (sy2, ty1);
 
-	     empile (xmid, ymid, tx1, ty1, tx2, ty2, x4, y4);
-	     empile (x1, y1, sx1, sy1, sx2, sy2, xmid, ymid);
+	     push_stack (xmid, ymid, tx1, ty1, tx2, ty2, x4, y4);
+	     push_stack (x1, y1, sx1, sy1, sx2, sy2, xmid, ymid);
 	  }
      }
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawCurb trace une courbe ouverte.                              | */
-/* |            Le parame`tre buffer pointe sur le 1er buffer qui       | */
-/* |            contient la liste des points de contro^le et le         | */
-/* |            parame`tre nb donne le nombre de points.                | */
-/* |            Le premier point donne la limite de la polyline.        | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Le parame`tre fg donne la couleur du trace'             | */
-/* |            Le parametre fleche indique :                           | */
-/* |            - s'il ne faut pas tracer de fleche (0)                 | */
-/* |            - s'il faut tracer une fleche vers l'avant (1)          | */
-/* |            - s'il faut tracer une fleche vers l'arriere (2)        | */
-/* |            - s'il faut tracer une fleche dans les deux sens (3)    | */
-/* |            Le parametre controls contient les points de controle.  | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawCurb draw an open curb.
+ *		Parameter buffer is a pointer to the list of control points.
+ *		nb indicate the number of points.
+ *		The first point is a fake one containing the geometry.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              fg indicate the drawing color
+ *              arrow parameter indicate whether :
+ *              - no arrow have to be drawn (0)
+ *              - a forward arrow has to be drawn (1)
+ *              - a backward arrow has to be drawn (2)
+ *              - both backward and forward arrows have to be drawn (3)
+ *              Parameter control indicate the control points.
+ **/
 
 #ifdef __STDC__
-void                DrawCurb (int frame, int epais, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int fleche, C_points * controls)
+void                DrawCurb (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int fleche, C_points * controls)
 
 #else  /* __STDC__ */
-void                DrawCurb (frame, epais, style, x, y, buffer, nb, RO, active, fg, fleche, controls)
+void                DrawCurb (frame, thick, style, x, y, buffer, nb, RO, active, fg, fleche, controls)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
@@ -1965,7 +1890,7 @@ C_points           *controls;
    float               x1, y1, x2, y2;
    float               cx1, cy1, cx2, cy2;
 
-   if (epais == 0)
+   if (thick == 0)
       return;
 
    /* alloue la liste des points */
@@ -1975,8 +1900,6 @@ C_points           *controls;
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
 #endif /* NEW_WILLOWS */
 
-  /*** x += epais/2;
-  y += epais/2 ; ***/
    adbuff = buffer;
    j = 1;
    x1 = (float) (x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
@@ -1989,28 +1912,28 @@ C_points           *controls;
    cx2 = (controls[j].lx * 3 + x2 - x - FrameTable[frame].FrLeftMargin) / 4 + x + FrameTable[frame].FrLeftMargin;
    cy2 = (controls[j].ly * 3 + y2 - y - FrameTable[frame].FrTopMargin) / 4 + y + FrameTable[frame].FrTopMargin;
 
-   /* fleche vers l'arriere  */
+   /* backward arrow  */
    if (fleche == 2 || fleche == 3)
-      TraceFleche (frame, FloatToInt (cx1), FloatToInt (cy1), (int) x1, (int) y1, epais, RO, active, fg);
+      TraceFleche (frame, FloatToInt (cx1), FloatToInt (cy1), (int) x1, (int) y1, thick, RO, active, fg);
 
    for (i = 2; i < nb; i++)
      {
-	Segmente (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
+	PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
 
-	/* passe aux points suivants */
+	/* skip to next points */
 	x1 = x2;
 	y1 = y2;
 	cx1 = controls[i].rx + x + FrameTable[frame].FrLeftMargin;
 	cy1 = controls[i].ry + y + FrameTable[frame].FrTopMargin;
 	if (i < nb - 1)
 	  {
-	     /* ce n'est pas le dernier tour */
+	     /* not finished */
 	     j++;
 	     if (j >= adbuff->BuLength)
 	       {
 		  if (adbuff->BuNext != NULL)
 		    {
-		       /* Changement de buffer */
+		       /* Next buffer */
 		       adbuff = adbuff->BuNext;
 		       j = 0;
 		    }
@@ -2031,45 +1954,42 @@ C_points           *controls;
 	       }
 	  }
      }
-   NouveauPoint ((int) x2, (int) y2);
+   PolyNewPoint ((int) x2, (int) y2);
 
-   /* On trace le contour */
-   preparerTrace (0, style, epais, RO, active, fg);
+   /* Draw the border */
+   InitDrawing (0, style, thick, RO, active, fg);
 #ifndef NEW_WILLOWS
    XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints, CoordModeOrigin);
 #endif /* NEW_WILLOWS */
 
-   /* fleche vers l'avant */
+   /* Forward arrow */
    if (fleche == 1 || fleche == 3)
-      TraceFleche (frame, FloatToInt (cx2), FloatToInt (cy2), (int) x2, (int) y2, epais, RO, active, fg);
+      TraceFleche (frame, FloatToInt (cx2), FloatToInt (cy2), (int) x2, (int) y2, thick, RO, active, fg);
 
-   finirTrace (0, RO, active);
-   /* Libere la table de points */
+   FinishDrawing (0, RO, active);
+   /* free the table of points */
    free ((char *) points);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawSpline trace une courbe fermee.                               | */
-/* |            Le parame`tre buffer pointe sur le 1er buffer qui       | */
-/* |            contient la liste des points de contro^le et le         | */
-/* |            parame`tre nb donne le nombre de points.                | */
-/* |            Le premier point donne la limite de la polyline.        | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
-/* |            trace', la couleur du fond et le motif de remplissage.  | */
-/* |            Le parametre controls contient les points de controle.  | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawSpline draw a closed curb.
+ *		Parameter buffer is a pointer to the list of control points.
+ *		nb indicate the number of points.
+ *		The first point is a fake one containing the geometry.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              Parameters fg, bg, and pattern are for drawing
+ *              color, background color and fill pattern.
+ *              Parameter controls contains the list of control points.
+ **/
 
 #ifdef __STDC__
-void                DrawSpline (int frame, int epais, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int bg, int motif, C_points * controls)
+void                DrawSpline (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int bg, int pattern, C_points * controls)
 
 #else  /* __STDC__ */
-void                DrawSpline (frame, epais, style, x, y, buffer, nb, RO, active, fg, bg, motif, controls)
+void                DrawSpline (frame, thick, style, x, y, buffer, nb, RO, active, fg, bg, pattern, controls)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
@@ -2079,7 +1999,7 @@ int                 RO;
 int                 active;
 int                 fg;
 int                 bg;
-int                 motif;
+int                 pattern;
 C_points           *controls;
 
 #endif /* __STDC__ */
@@ -2090,15 +2010,13 @@ C_points           *controls;
    float               cx1, cy1, cx2, cy2;
    Pixmap              modele;
 
-   /* alloue la liste des points */
+   /* allocate the list of points */
    npoints = 0;
    MAX_points = ALLOC_POINTS;
 #ifndef NEW_WILLOWS
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
 #endif /* NEW_WILLOWS */
 
-  /***x += epais/2;
-  y += epais/2;***/
    adbuff = buffer;
    j = 1;
    x1 = (float) (x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
@@ -2113,22 +2031,22 @@ C_points           *controls;
 
    for (i = 2; i < nb; i++)
      {
-	Segmente (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
+	PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
 
-	/* passe aux points suivants */
+	/* next points */
 	x1 = x2;
 	y1 = y2;
 	cx1 = controls[i].rx + x + FrameTable[frame].FrLeftMargin;
 	cy1 = controls[i].ry + y + FrameTable[frame].FrTopMargin;
 	if (i < nb - 1)
 	  {
-	     /* ce n'est pas le dernier tour */
+	     /* not the last loop */
 	     j++;
 	     if (j >= adbuff->BuLength)
 	       {
 		  if (adbuff->BuNext != NULL)
 		    {
-		       /* Changement de buffer */
+		       /* Next buffer */
 		       adbuff = adbuff->BuNext;
 		       j = 0;
 		    }
@@ -2140,7 +2058,7 @@ C_points           *controls;
 	  }
 	else
 	  {
-	     /* boucle sur le point d'origine */
+	     /* loop around the origin point */
 	     x2 = (float) (x + FrameTable[frame].FrLeftMargin + PointToPixel (buffer->BuPoints[1].XCoord / 1000));
 	     y2 = (float) (y + FrameTable[frame].FrTopMargin + PointToPixel (buffer->BuPoints[1].YCoord / 1000));
 	     cx2 = controls[1].lx + x + FrameTable[frame].FrLeftMargin;
@@ -2148,12 +2066,12 @@ C_points           *controls;
 	  }
      }
 
-   /* Ferme le contour */
-   Segmente (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
-   NouveauPoint ((int) x2, (int) y2);
+   /* close the polyline */
+   PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
+   PolyNewPoint ((int) x2, (int) y2);
 
-   /* On remplit le polygone */
-   modele = CreatePattern (0, RO, active, fg, bg, motif);
+   /* Fill in the polygone */
+   modele = CreatePattern (0, RO, active, fg, bg, pattern);
 #ifndef NEW_WILLOWS
    if (modele != 0)
      {
@@ -2163,49 +2081,47 @@ C_points           *controls;
      }
 #endif /* NEW_WILLOWS */
 
-   /* On trace le contour */
-   if (epais > 0)
+   /* Draw the border */
+   if (thick > 0)
      {
-	preparerTrace (0, style, epais, RO, active, fg);
+	InitDrawing (0, style, thick, RO, active, fg);
 #ifndef NEW_WILLOWS
 	XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints, CoordModeOrigin);
 #endif /* NEW_WILLOWS */
-	finirTrace (0, RO, active);
+	FinishDrawing (0, RO, active);
      }
 
-   /* Libere la table de points */
+   /* free the table of points */
    free ((char *) points);
 }
 /*fin */
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawOval trace un rectangle aux angles arrondis.                 | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
-/* |            trace', la couleur du fond et le motif de remplissage.  | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawOval draw a rectangle with smoothed corners.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              Parameters fg, bg, and pattern are for drawing
+ *              color, background color and fill pattern.
+ **/
 
 
 #ifdef __STDC__
-void                DrawOval (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
+void                DrawOval (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
 
 #else  /* __STDC__ */
-void                DrawOval (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
+void                DrawOval (frame, thick, style, x, y, width, height, RO, active, fg, bg, pattern)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
-int                 larg;
-int                 haut;
+int                 width;
+int                 height;
 int                 RO;
 int                 active;
 int                 fg;
 int                 bg;
-int                 motif;
+int                 pattern;
 
 #endif /* __STDC__ */
 
@@ -2217,15 +2133,14 @@ int                 motif;
    Pixmap              modele;
    ThotPoint           point[13];
 
-   larg -= epais;
-   haut -= epais;
-   x += epais / 2;
-   y += epais / 2;
-   /* On definit la longueur des arcs */
-   /* rayon des arcs a 3mm */
+   width -= thick;
+   height -= thick;
+   x += thick / 2;
+   y += thick / 2;
+   /* radius of arcs is 3mm */
    arc = (3 * DOT_PER_INCHE) / 25.4 + 0.5;
-   xf = x + larg - 1;
-   yf = y + haut - 1;
+   xf = x + width - 1;
+   yf = y + height - 1;
 
    xarc[0].x = x + FrameTable[frame].FrLeftMargin;
    xarc[0].y = y + FrameTable[frame].FrTopMargin;
@@ -2275,8 +2190,8 @@ int                 motif;
    seg[3].y1 = seg[1].y1;
    seg[3].y2 = seg[1].y2;
 
-   /* On remplit la figure */
-   modele = CreatePattern (0, RO, active, fg, bg, motif);
+   /* Fill in the figure */
+   modele = CreatePattern (0, RO, active, fg, bg, pattern);
    if (modele != 0)
      {
 	/* Polygone inscrit: (seg0)       */
@@ -2327,103 +2242,99 @@ int                 motif;
 	XFreePixmap (TtDisplay, modele);
      }
 
-   /* On trace le contour */
-   if (epais > 0)
+   /* Draw the border */
+   if (thick > 0)
      {
-	preparerTrace (0, style, epais, RO, active, fg);
+	InitDrawing (0, style, thick, RO, active, fg);
 	XDrawArcs (TtDisplay, FrRef[frame], TtLineGC, xarc, 4);
 	XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 4);
-	finirTrace (0, RO, active);
+	FinishDrawing (0, RO, active);
      }
 #endif /* NEW_WILLOWS */
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawEllips trace une ellipse (cas particulier un cercle).        | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
-/* |            trace', la couleur du fond et le motif de remplissage.  | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawEllips draw an ellips (or a circle).
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              Parameters fg, bg, and pattern are for drawing
+ *              color, background color and fill pattern.
+ **/
 
 
 #ifdef __STDC__
-void                DrawEllips (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
+void                DrawEllips (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
 
 #else  /* __STDC__ */
-void                DrawEllips (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
+void                DrawEllips (frame, thick, style, x, y, width, height, RO, active, fg, bg, pattern)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
-int                 larg;
-int                 haut;
+int                 width;
+int                 height;
 int                 RO;
 int                 active;
 int                 fg;
 int                 bg;
-int                 motif;
+int                 pattern;
 
 #endif /* __STDC__ */
 
 {
    Pixmap              modele;
 
-   larg -= epais + 1;
-   haut -= epais + 1;
-   x += epais / 2 + FrameTable[frame].FrLeftMargin;
-   y += epais / 2 + FrameTable[frame].FrTopMargin;
+   width -= thick + 1;
+   height -= thick + 1;
+   x += thick / 2 + FrameTable[frame].FrLeftMargin;
+   y += thick / 2 + FrameTable[frame].FrTopMargin;
 
-   /* On remplit le rectangle */
-   modele = CreatePattern (0, RO, active, fg, bg, motif);
+   /* Fill in the rectangle */
+   modele = CreatePattern (0, RO, active, fg, bg, pattern);
 #ifndef NEW_WILLOWS
    if (modele != 0)
      {
 	XSetTile (TtDisplay, TtGreyGC, modele);
 	XFillArc (TtDisplay, FrRef[frame], TtGreyGC,
-		  x, y, larg, haut, 0, 360 * 64);
+		  x, y, width, height, 0, 360 * 64);
 	XFreePixmap (TtDisplay, modele);
      }
 #endif /* NEW_WILLOWS */
 
-   /* On trace le contour */
-   if (epais > 0)
+   /* Draw the border */
+   if (thick > 0)
      {
-	preparerTrace (0, style, epais, RO, active, fg);
+	InitDrawing (0, style, thick, RO, active, fg);
 #ifndef NEW_WILLOWS
-	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x, y, larg, haut, 0, 360 * 64);
+	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x, y, width, height, 0, 360 * 64);
 #endif /* NEW_WILLOWS */
-	finirTrace (0, RO, active);
+	FinishDrawing (0, RO, active);
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawLine trace une horizontale sur le bord superieur, au milieu  | */
-/* |            ou sur le bord inferieur.                               | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Le parame`tre fg indique la couleur du trace'.          | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawVerticalLine draw a vertical line aligned top center or bottom
+ *		depending on align value.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              parameter fg indicate the drawing color
+ **/
 
 
 #ifdef __STDC__
-void                DrawLine (int frame, int epais, int style, int x, int y, int l, int h, int cadrage, int RO, int active, int fg)
+void                DrawHorizontalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                DrawLine (frame, epais, style, x, y, l, h, cadrage, RO, active, fg)
+void                DrawHorizontalLine (frame, thick, style, x, y, l, h, align, RO, active, fg)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
 int                 l;
 int                 h;
-int                 cadrage;
+int                 align;
 int                 RO;
 int                 active;
 int                 fg;
@@ -2433,43 +2344,42 @@ int                 fg;
 {
    register int        Y;
 
-   if (cadrage == 1)
-      Y = y + (h - epais) / 2;
-   else if (cadrage == 2)
-      Y = y + h - epais - 1;	/* + ou - beau le moins un ... */
+   if (align == 1)
+      Y = y + (h - thick) / 2;
+   else if (align == 2)
+      Y = y + h - thick - 1;
    else
       Y = y;
-   if (epais > 0)
+   if (thick > 0)
      {
-	preparerTrace (0, style, epais, RO, active, fg);
-	Tracer (frame, x, Y, x + l - 1, Y);
-	finirTrace (0, RO, active);
+	InitDrawing (0, style, thick, RO, active, fg);
+	DoDrawOneLine (frame, x, Y, x + l - 1, Y);
+	FinishDrawing (0, RO, active);
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawTrait trace une verticale a` gauche, au milieu ou a` droite.  | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Le parame`tre fg indique la couleur du trace'.          | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawVerticalLine draw a vertical line aligned left center or right
+ *		depending on align value.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              parameter fg indicate the drawing color
+ **/
 
 
 #ifdef __STDC__
-void                DrawTrait (int frame, int epais, int style, int x, int y, int l, int h, int cadrage, int RO, int active, int fg)
+void                DrawVerticalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                DrawTrait (frame, epais, style, x, y, l, h, cadrage, RO, active, fg)
+void                DrawVerticalLine (frame, thick, style, x, y, l, h, align, RO, active, fg)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
 int                 l;
 int                 h;
-int                 cadrage;
+int                 align;
 int                 RO;
 int                 active;
 int                 fg;
@@ -2479,45 +2389,43 @@ int                 fg;
 {
    register int        X;
 
-   if (cadrage == 1)
-      X = x + (l - epais) / 2;
-   else if (cadrage == 2)
-      X = x + l - epais;
+   if (align == 1)
+      X = x + (l - thick) / 2;
+   else if (align == 2)
+      X = x + l - thick;
    else
       X = x;
 
-   if (epais > 0)
+   if (thick > 0)
      {
-	preparerTrace (0, style, epais, RO, active, fg);
-	Tracer (frame, X, y, X, y + h);
-	finirTrace (0, RO, active);
+	InitDrawing (0, style, thick, RO, active, fg);
+	DoDrawOneLine (frame, X, y, X, y + h);
+	FinishDrawing (0, RO, active);
      }
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawSlash trace une diagonale dans le sens precise'.            | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Le parame`tre indique la couleur du trace'.             | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawSlash draw a slash of backslash depending on direction.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              Le parame`tre indique la couleur du trace'.
+ **/
 
 
 #ifdef __STDC__
-void                DrawSlash (int frame, int epais, int style, int x, int y, int l, int h, int sens, int RO, int active, int fg)
+void                DrawSlash (int frame, int thick, int style, int x, int y, int l, int h, int direction, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                DrawSlash (frame, epais, style, x, y, l, h, sens, RO, active, fg)
+void                DrawSlash (frame, thick, style, x, y, l, h, direction, RO, active, fg)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
 int                 l;
 int                 h;
-int                 sens;
+int                 direction;
 int                 RO;
 int                 active;
 int                 fg;
@@ -2527,43 +2435,41 @@ int                 fg;
 {
    int                 xf, yf;
 
-   xf = x + l - 1 - epais;
-   yf = y + h - 1 - epais;
-   if (epais > 0)
+   xf = x + l - 1 - thick;
+   yf = y + h - 1 - thick;
+   if (thick > 0)
      {
-	preparerTrace (0, style, epais, RO, active, fg);
-	if (sens == 0)
-	   Tracer (frame, x, yf, xf, y);
+	InitDrawing (0, style, thick, RO, active, fg);
+	if (direction == 0)
+	   DoDrawOneLine (frame, x, yf, xf, y);
 	else
-	   Tracer (frame, x, y, xf, yf);
-	finirTrace (0, RO, active);
+	   DoDrawOneLine (frame, x, y, xf, yf);
+	FinishDrawing (0, RO, active);
      }
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawCorner trace deux bords de rectangle.                           | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Le parame`tre fg indique la couleur du trace'.          | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawCorner draw a corner.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              parameter fg indicate the drawing color
+ **/
 
 
 #ifdef __STDC__
-void                DrawCorner (int frame, int epais, int style, int x, int y, int l, int h, int coin, int RO, int active, int fg)
+void                DrawCorner (int frame, int thick, int style, int x, int y, int l, int h, int corner, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                DrawCorner (frame, epais, style, x, y, l, h, coin, RO, active, fg)
+void                DrawCorner (frame, thick, style, x, y, l, h, corner, RO, active, fg)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
 int                 l;
 int                 h;
-int                 coin;
+int                 corner;
 int                 RO;
 int                 active;
 int                 fg;
@@ -2575,16 +2481,16 @@ int                 fg;
    ThotPoint           point[3];
    int                 xf, yf;
 
-   if (epais <= 0)
+   if (thick <= 0)
       return;
 
    x += FrameTable[frame].FrLeftMargin;
    y += FrameTable[frame].FrTopMargin;
-   xf = x + l - 1 - epais;
-   yf = y + h - 1 - epais;
+   xf = x + l - 1 - thick;
+   yf = y + h - 1 - thick;
 
-   preparerTrace (0, style, epais, RO, active, fg);
-   switch (coin)
+   InitDrawing (0, style, thick, RO, active, fg);
+   switch (corner)
 	 {
 	    case 0:
 	       point[0].x = x;
@@ -2621,39 +2527,37 @@ int                 fg;
 	 }
    XDrawLines (TtDisplay, FrRef[frame], TtLineGC,
 	       point, 3, CoordModeOrigin);
-   finirTrace (0, RO, active);
+   FinishDrawing (0, RO, active);
 #endif /* NEW_WILLOWS */
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawRectangleFrame trace un rectangle a bords arrondis (diametre 3mm)  | */
-/* |            avec un trait horizontal a 6mm du bord superieur.       | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
-/* |            trace', la couleur du fond et le motif de remplissage.  | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawRectangleFrame draw a rectangle with smoothed corners (3mm radius)
+ *              and with an horizontal line at 6mm from top.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              Parameters fg, bg, and pattern are for drawing
+ *              color, background color and fill pattern.
+ **/
 
 
 #ifdef __STDC__
-void                DrawRectangleFrame (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
+void                DrawRectangleFrame (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
 
 #else  /* __STDC__ */
-void                DrawRectangleFrame (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
+void                DrawRectangleFrame (frame, thick, style, x, y, width, height, RO, active, fg, bg, pattern)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
-int                 larg;
-int                 haut;
+int                 width;
+int                 height;
 int                 RO;
 int                 active;
 int                 fg;
 int                 bg;
-int                 motif;
+int                 pattern;
 
 #endif /* __STDC__ */
 
@@ -2665,16 +2569,16 @@ int                 motif;
    Pixmap              modele;
    ThotPoint           point[13];
 
-   larg -= epais;
-   haut -= epais;
-   x += FrameTable[frame].FrLeftMargin + epais / 2;
-   y += FrameTable[frame].FrTopMargin + epais / 2;
-   /* rayon des arcs a 3mm */
+   width -= thick;
+   height -= thick;
+   x += FrameTable[frame].FrLeftMargin + thick / 2;
+   y += FrameTable[frame].FrTopMargin + thick / 2;
+   /* radius of arcs is 3mm */
    arc = (3 * DOT_PER_INCHE) / 25.4 + 0.5;
    arc2 = 2 * arc;
 
-   xf = x + larg;
-   yf = y + haut;
+   xf = x + width;
+   yf = y + height;
 
    xarc[0].x = x;
    xarc[0].y = y;
@@ -2724,22 +2628,22 @@ int                 motif;
    seg[3].x2 = x;
    seg[3].y2 = seg[1].y2;
 
-   /* trait horizontal a 6mm du haut */
-   if (arc2 < haut / 2)
+   /* horizontal line at 6mm from top */
+   if (arc2 < height / 2)
      {
-	/* pas en dessous de la mi-hauteur */
+	/* not under half-height */
 	seg[4].x1 = x;
 	seg[4].y1 = y + arc2;
 	seg[4].x2 = xf;
 	seg[4].y2 = y + arc2;
      }
 
-   /* On remplit la figure */
-   modele = CreatePattern (0, RO, active, fg, bg, motif);
+   /* Fill in the figure */
+   modele = CreatePattern (0, RO, active, fg, bg, pattern);
 
    if (modele != 0)
      {
-	/* Polygone inscrit: (seg0)       */
+	/* Polygone:         (seg0)       */
 	/*                   0--1         */
 	/*                10-|  |-3       */
 	/*         (seg3) |       |(seg1) */
@@ -2787,50 +2691,48 @@ int                 motif;
 	XFreePixmap (TtDisplay, modele);
      }
 
-   /* On trace le contour */
+   /* Draw the border */
 
-   if (epais > 0)
+   if (thick > 0)
      {
-	preparerTrace (0, style, epais, RO, active, fg);
+	InitDrawing (0, style, thick, RO, active, fg);
 	XDrawArcs (TtDisplay, FrRef[frame], TtLineGC, xarc, 4);
-	if (arc2 < haut / 2)
+	if (arc2 < height / 2)
 	   XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 5);
 	else
 	   XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 4);
-	finirTrace (0, RO, active);
+	FinishDrawing (0, RO, active);
      }
 #endif /* NEW_WILLOWS */
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawEllipsFrame trace une ellipse avec trait horizontal a 7mm    | */
-/* |            sous le sommet (pour SFGL).                             | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
-/* |            trace', la couleur du fond et le motif de remplissage.  | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      DrawEllipsFrame draw an ellipse at 7mm under the top of the
+ *		enclosing box.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              Parameters fg, bg, and pattern are for drawing
+ *              color, background color and fill pattern.
+ **/
 
 
 #ifdef __STDC__
-void                DrawEllipsFrame (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
+void                DrawEllipsFrame (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
 
 #else  /* __STDC__ */
-void                DrawEllipsFrame (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
+void                DrawEllipsFrame (frame, thick, style, x, y, width, height, RO, active, fg, bg, pattern)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
-int                 larg;
-int                 haut;
+int                 width;
+int                 height;
 int                 RO;
 int                 active;
 int                 fg;
 int                 bg;
-int                 motif;
+int                 pattern;
 
 #endif /* __STDC__ */
 
@@ -2840,45 +2742,46 @@ int                 motif;
    double              A;
    Pixmap              modele;
 
-   larg -= epais + 1;
-   haut -= epais + 1;
-   x += FrameTable[frame].FrLeftMargin + epais / 2;
-   y += FrameTable[frame].FrTopMargin + epais / 2;
+   width -= thick + 1;
+   height -= thick + 1;
+   x += FrameTable[frame].FrLeftMargin + thick / 2;
+   y += FrameTable[frame].FrTopMargin + thick / 2;
 
-   /* On remplit le rectangle */
-   modele = CreatePattern (0, RO, active, fg, bg, motif);
+   /* Fill in the rectangle */
+   modele = CreatePattern (0, RO, active, fg, bg, pattern);
    if (modele != 0)
      {
 	XSetTile (TtDisplay, TtGreyGC, modele);
 	XFillArc (TtDisplay, FrRef[frame], TtGreyGC,
-		  x, y, larg, haut, 0, 360 * 64);
+		  x, y, width, height, 0, 360 * 64);
 	XFreePixmap (TtDisplay, modele);
      }
 
-   /* On trace le contour */
-   if (epais > 0)
+   /* Draw the border */
+   if (thick > 0)
      {
-	preparerTrace (0, style, epais, RO, active, fg);
+	InitDrawing (0, style, thick, RO, active, fg);
 	XDrawArc (TtDisplay, FrRef[frame], TtLineGC,
-		  x, y, larg, haut, 0, 360 * 64);
+		  x, y, width, height, 0, 360 * 64);
 
 	px7mm = (7 * DOT_PER_INCHE) / 25.4 + 0.5;
-	if (haut > 2 * px7mm)
+	if (height > 2 * px7mm)
 	  {
-	     A = ((double) haut - 2 * px7mm) / haut;
+	     A = ((double) height - 2 * px7mm) / height;
 	     A = 1.0 - sqrt (1 - A * A);
-	     shiftX = larg * A * 0.5 + 0.5;
+	     shiftX = width * A * 0.5 + 0.5;
 	     XDrawLine (TtDisplay, FrRef[frame], TtLineGC,
-			x + shiftX, y + px7mm, x + larg - shiftX, y + px7mm);
+			x + shiftX, y + px7mm, x + width - shiftX, y + px7mm);
 	  }
-	finirTrace (0, RO, active);
+	FinishDrawing (0, RO, active);
      }
 #endif /* NEW_WILLOWS */
 }
-/* les procedures PSPageInfo et  psBoundingBox sont vides */
-/* leur contenu est non vide dans pses.c */
-/* on les garde ici pour maintenir l'identite des interfaces */
-/* entre es.c et pses.c */
+
+/**
+ * PSPageInfo and psBoundingBox are empty, they have no meaning in
+ * 		this context and are kept for interface compatibility.
+ **/
 
 #ifdef __STDC__
 void                PSPageInfo (int pagenum, int width, int height)
@@ -2909,18 +2812,18 @@ int                 height;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Clear nettoie la surface designee de la fenetre frame.          | */
-/* ---------------------------------------------------------------------- */
+/**
+ *  Clear clear the area of frame located at (x, y) and of size width x height.
+ **/
 
 #ifdef __STDC__
-void                Clear (int frame, int larg, int haut, int x, int y)
+void                Clear (int frame, int width, int height, int x, int y)
 
 #else  /* __STDC__ */
-void                Clear (frame, larg, haut, x, y)
+void                Clear (frame, width, height, x, y)
 int                 frame;
-int                 larg;
-int                 haut;
+int                 width;
+int                 height;
 int                 x;
 int                 y;
 
@@ -2938,13 +2841,13 @@ int                 y;
    if (w != None)
      {
 #ifndef NEW_WILLOWS
-	XClearArea (TtDisplay, w, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, larg, haut, FALSE);
+	XClearArea (TtDisplay, w, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, FALSE);
 #endif /* NEW_WILLOWS */
 #ifdef NEW_WILLOWS
 	WIN_GetDeviceContext (frame);
 	hBrush = CreateSolidBrush (BackgroundColor[frame]);
 	hBrush = SelectObject (WIN_curHdc, hBrush);
-	PatBlt (WIN_curHdc, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, larg, haut, PATCOPY);
+	PatBlt (WIN_curHdc, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);
 	hBrush = SelectObject (WIN_curHdc, hBrush);
 	DeleteObject (hBrush);
 #endif /* NEW_WILLOWS */
@@ -2952,16 +2855,15 @@ int                 y;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    WChaine affiche la chaine a` la position x,y de la fenetre w    | */
-/* |            en utilisant la police de caracteres font.              | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      WChaine draw a string in frame, at location (x, y) and using font.
+ **/
 #ifdef __STDC__
-void                WChaine (ThotWindow w, char *chaine, int x, int y, ptrfont font, ThotGC GClocal)
+void                WChaine (ThotWindow w, char *string, int x, int y, ptrfont font, ThotGC GClocal)
 #else  /* __STDC__ */
-void                WChaine (w, chaine, x, y, font, GClocal)
+void                WChaine (w, string, x, y, font, GClocal)
 ThotWindow          w;
-char               *chaine;
+char               *string;
 int                 x;
 int                 y;
 ptrfont             font;
@@ -2971,29 +2873,29 @@ ThotGC              GClocal;
 {
 #ifndef NEW_WILLOWS
    XSetFont (TtDisplay, GClocal, ((XFontStruct *) font)->fid);
-   FontOrig (font, chaine[0], &x, &y);
-   XDrawString (TtDisplay, w, GClocal, x, y, chaine, strlen (chaine));
+   FontOrig (font, string[0], &x, &y);
+   XDrawString (TtDisplay, w, GClocal, x, y, string, strlen (string));
 #endif /* NEW_WILLOWS */
 #ifdef NEW_WILLOWS
    /* GetWinDeviceContext(w);
       WinLoadGC(WIN_curHdc, GClocal);
       WinLoadFont(WIN_curHdc, font);
-      TextOut(WIN_curHdc, x, y, chaine, strlen(chaine)); */
+      TextOut(WIN_curHdc, x, y, string, strlen(string)); */
 #endif /* NEW_WILLOWS */
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Invideo met en inversion video la surface designee de la        | */
-/* |            frame frame.                                            | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      Invideo switch to inverse video the area of frame located at
+ *		(x,y) and of size width x height.
+ **/
 #ifdef __STDC__
-void                Invideo (int frame, int larg, int haut, int x, int y)
+void                Invideo (int frame, int width, int height, int x, int y)
 #else  /* __STDC__ */
-void                Invideo (frame, larg, haut, x, y)
+void                Invideo (frame, width, height, x, y)
 int                 frame;
-int                 larg;
-int                 haut;
+int                 width;
+int                 height;
 int                 x;
 int                 y;
 
@@ -3003,29 +2905,29 @@ int                 y;
 
    w = FrRef[frame];
    if (w != None)
-     {				/* blindage necessaire */
+     {
 #ifndef NEW_WILLOWS
-	XFillRectangle (TtDisplay, w, TtInvertGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, larg, haut);
+	XFillRectangle (TtDisplay, w, TtInvertGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
 #endif /* NEW_WILLOWS */
 #ifdef NEW_WILLOWS
 	WIN_GetDeviceContext (frame);
-	PatBlt (WIN_curHdc, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, larg, haut, PATINVERT);
+	PatBlt (WIN_curHdc, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATINVERT);
 #endif /* NEW_WILLOWS */
      }
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Scroll deplace le contenu du rectangle de la fenetre d'indice   | */
-/* |            frame des coordonnees xd,yd aux coordonnees xf,yf.      | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      Scroll do a scrolling/Bitblt of frame of a width x height area
+ *		from (xd,yd) to (xf,yf).
+ **/
 #ifdef __STDC__
-void                Scroll (int frame, int larg, int haut, int xd, int yd, int xf, int yf)
+void                Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
 #else  /* __STDC__ */
-void                Scroll (frame, larg, haut, xd, yd, xf, yf)
+void                Scroll (frame, width, height, xd, yd, xf, yf)
 int                 frame;
-int                 larg;
-int                 haut;
+int                 width;
+int                 height;
 int                 xd;
 int                 yd;
 int                 xf;
@@ -3038,43 +2940,42 @@ int                 yf;
    w = FrRef[frame];
    if (w != None)
 #ifndef NEW_WILLOWS
-      XCopyArea (TtDisplay, w, w, TtWhiteGC, xd + FrameTable[frame].FrLeftMargin, yd + FrameTable[frame].FrTopMargin, larg, haut, xf + FrameTable[frame].FrLeftMargin, yf + FrameTable[frame].FrTopMargin);
+      XCopyArea (TtDisplay, w, w, TtWhiteGC, xd + FrameTable[frame].FrLeftMargin, yd + FrameTable[frame].FrTopMargin, width, height, xf + FrameTable[frame].FrLeftMargin, yf + FrameTable[frame].FrTopMargin);
 #endif /* NEW_WILLOWS */
 #ifdef NEW_WILLOWS
    WIN_GetDeviceContext (frame);
-   BitBlt (WIN_curHdc, xf + FrameTable[frame].FrLeftMargin, yf + FrameTable[frame].FrTopMargin, larg, haut,
+   BitBlt (WIN_curHdc, xf + FrameTable[frame].FrLeftMargin, yf + FrameTable[frame].FrTopMargin, width, height,
 	   WIN_curHdc, xd + FrameTable[frame].FrLeftMargin, yd + FrameTable[frame].FrTopMargin, SRCCOPY);
 #endif /* NEW_WILLOWS */
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    FinDeChaine teste si la chaine chaine se termine par suffix.    | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      EndOfString teste si la string string se termine par suffix.
+ **/
 #ifdef __STDC__
-int                 FinDeChaine (char *chaine, char *suffix)
+int                 EndOfString (char *string, char *suffix)
 #else  /* __STDC__ */
-int                 FinDeChaine (chaine, suffix)
-char               *chaine;
+int                 EndOfString (string, suffix)
+char               *string;
 char               *suffix;
 
 #endif /* __STDC__ */
 {
-   int                 long_chaine, long_suf;
+   int                 string_lenght, suffix_lenght;
 
-   long_chaine = strlen (chaine);
-   long_suf = strlen (suffix);
-   if (long_chaine < long_suf)
+   string_lenght = strlen (string);
+   suffix_lenght = strlen (suffix);
+   if (string_lenght < suffix_lenght)
       return 0;
    else
-      return (strcmp (chaine + long_chaine - long_suf, suffix) == 0);
+      return (strcmp (string + string_lenght - suffix_lenght, suffix) == 0);
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    XFlushOutput force la mise a jour de l'ecran correspondant a`   | */
-/* |            la fenetree^tre frame.                                  | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      XFlushOutput enforce updating of the calculated image for frame.
+ **/
 #ifdef __STDC__
 void                XFlushOutput (int frame)
 #else  /* __STDC__ */
@@ -3089,47 +2990,45 @@ int                 frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Trame remplit le rectangle de la fenetree^tre w ou d'indice frame       | */
-/* |            (si w=0) de'fini par x, y, large, haut avec le motif    | */
-/* |            donne'.                                                 | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
-/* |            trace', la couleur du fond et le motif de remplissage.  | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      Trame fill the rectangle associated to a window w (or frame if w= 0)
+ *		located on (x , y) and geometry width x height, using the
+ *		given pattern.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              Parameters fg, bg, and pattern are for drawing
+ *              color, background color and fill pattern.
+ **/
 #ifdef __STDC__
-void                Trame (int frame, int x, int y, int large, int haut, ThotWindow w, int RO, int active, int fg, int bg, int motif)
+void                Trame (int frame, int x, int y, int width, int height, ThotWindow w, int RO, int active, int fg, int bg, int pattern)
 #else  /* __STDC__ */
-void                Trame (frame, x, y, large, haut, w, RO, active, fg, bg, motif)
+void                Trame (frame, x, y, width, height, w, RO, active, fg, bg, pattern)
 int                 frame;
 int                 x;
 int                 y;
-int                 large;
-int                 haut;
+int                 width;
+int                 height;
 ThotWindow          w;
 int                 RO;
 int                 active;
 int                 fg;
 int                 bg;
-int                 motif;
+int                 pattern;
 
 #endif /* __STDC__ */
 {
    Pixmap              modele;
 
-   /* On remplit le rectangle de la fenetre designee */
-   modele = CreatePattern (0, RO, active, fg, 0, motif);
+   /* Fill the rectangle associated to the given frame */
+   modele = CreatePattern (0, RO, active, fg, 0, pattern);
 #ifndef NEW_WILLOWS
    if (modele != 0)
      {
 	XSetTile (TtDisplay, TtGreyGC, modele);
 	if (w != 0)
-	   XFillRectangle (TtDisplay, w, TtGreyGC, x, y, large, haut);
+	   XFillRectangle (TtDisplay, w, TtGreyGC, x, y, width, height);
 	else
-	   XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, large, haut);
+	   XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
 	XFreePixmap (TtDisplay, modele);
      }
 #endif /* NEW_WILLOWS */

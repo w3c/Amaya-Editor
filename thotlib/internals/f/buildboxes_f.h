@@ -7,92 +7,92 @@
 #if __STDC__
 
 extern C_points *ComputeControlPoints ( PtrTextBuffer buffer,
-                                  int nb );
-extern void GiveTextParams ( PtrTextBuffer adbuff,
-                       int nChars,
-                       ptrfont font,
-                       int *width,
-                       int *nSpaces );
+                                        int nb );
+extern void GiveTextParams ( PtrTextBuffer pBuffer,
+                             int nChars,
+                             ptrfont font,
+                             int *width,
+                             int *nSpaces );
 extern void GiveSymbolSize ( PtrAbstractBox pAb,
-                       int *width,
-                       int *height );
+                             int *width,
+                             int *height );
 extern void GiveGraphicSize ( PtrAbstractBox pAb,
-                        int *width,
-                        int *height );
+                              int *width,
+                              int *height );
 extern void GiveTextSize ( PtrAbstractBox pAb,
-                       int *width,
-                       int *height,
-                       int *nSpaces );
+                           int *width,
+                           int *height,
+                           int *nSpaces );
 extern void GiveEnclosureSize ( PtrAbstractBox pAb,
-                       int frame,
-                       int *width,
-                       int *height );
+                                int frame,
+                                int *width,
+                                int *height );
 extern PtrLine SearchLine ( PtrBox pBox );
 extern void BoxUpdate ( PtrBox pBox,
-                     PtrLine adligne,
-                     int dcar,
-                     int dbl,
-                     int dx,
-                     int just,
-                     int dy,
-                     int frame,
-                     boolean BCOUP );
+                        PtrLine pLine,
+                        int charDelta,
+                        int spaceDelta,
+                        int wDelta,
+                        int adjustDelta,
+                        int hDelta,
+                        int frame,
+                        boolean splitBox );
 extern void RemoveBoxes ( PtrAbstractBox pAb,
-                        boolean Recree,
-                        int frame );
+                          boolean toRemake,
+                          int frame );
 extern void RecordEnclosing ( PtrBox pBox,
-                                 boolean EnX );
+                              boolean horizRef );
 extern void ComputeEnclosing ( int frame );
 extern void RebuildConcreteImage ( int frame );
 extern void ClearConcreteImage ( int frame );
 extern boolean ChangeConcreteImage ( int frame,
-                          int *page,
-                          PtrAbstractBox Pv );
+                                     int *pageHeight,
+                                     PtrAbstractBox pAb );
 
 #else /* __STDC__ */
 
 extern C_points *ComputeControlPoints (/* PtrTextBuffer buffer,
-                                    int nb */);
-extern void GiveTextParams (/* PtrTextBuffer adbuff,
-                         int nChars,
-                         ptrfont font,
-                         int *width,
-                         int *nSpaces */);
+                                          int nb */);
+extern void GiveTextParams (/* PtrTextBuffer pBuffer,
+                               int nChars,
+                               ptrfont font,
+                               int *width,
+                               int *nSpaces */);
 extern void GiveSymbolSize (/* PtrAbstractBox pAb,
-                         int *width,
-                         int *height */);
+                               int *width,
+                               int *height */);
 extern void GiveGraphicSize (/* PtrAbstractBox pAb,
-                          int *width,
-                          int *height */);
+                                int *width,
+                                int *height */);
 extern void GiveTextSize (/* PtrAbstractBox pAb,
-                         int *width,
-                         int *height,
-                         int *nSpaces */);
+                             int *width,
+                             int *height,
+                             int *nSpaces */);
 extern void GiveEnclosureSize (/* PtrAbstractBox pAb,
-                         int frame,
-                         int *width,
-                         int *height */);
+                                  int frame,
+                                  int *width,
+                                  int *height */);
 extern PtrLine SearchLine (/* PtrBox pBox */);
 extern void BoxUpdate (/* PtrBox pBox,
-                       PtrLine adligne,
-                       int dcar,
-                       int dbl,
-                       int dx,
-                       int just,
-                       int dy,
-                       int frame,
-                       boolean BCOUP */);
+                          PtrLine pLine,
+                          int charDelta,
+                          int spaceDelta,
+                          int wDelta,
+                          int adjustDelta,
+                          int hDelta,
+                          int frame,
+                          boolean splitBox */);
 extern void RemoveBoxes (/* PtrAbstractBox pAb,
-                          boolean Recree,
-                          int frame */);
+                            boolean toRemake,
+                            int frame */);
 extern void RecordEnclosing (/* PtrBox pBox,
-                                   boolean EnX */);
+                                boolean horizRef */);
 extern void ComputeEnclosing (/* int frame */);
 extern void RebuildConcreteImage (/* int frame */);
 extern void ClearConcreteImage (/* int frame */);
 extern boolean ChangeConcreteImage (/* int frame,
-                            int *page,
-                            PtrAbstractBox Pv */);
+                                       int *pageHeight,
+                                       PtrAbstractBox pAb */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

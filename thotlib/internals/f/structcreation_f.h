@@ -6,157 +6,157 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void NotifySubTree ( APPevent AppEvent,
+extern void NotifySubTree ( APPevent appEvent,
                             PtrDocument pDoc,
                             PtrElement pEl,
-                            int docOrig );
+                            int origDoc );
 extern void RedisplayDocViews ( PtrDocument pDoc );
 extern void AbstractImageUpdated ( PtrDocument pDoc );
 extern void InsertOption ( PtrElement pEl,
-                          PtrElement * p,
-                          PtrDocument pDoc );
-extern void CreationExceptions ( PtrElement pEl,
-                                         PtrDocument pDoc );
-extern void GetExternalTypeName ( PtrSSchema pSS,
-                                 int NumType,
-                                 Name Retour );
-extern void BuildAbsBoxSpliText ( PtrElement pEl,
-                              PtrElement pSuite,
-                              PtrElement pSuivant,
-                              PtrDocument pDoc );
-extern void SplitBeforeSelection ( PtrElement * premsel,
-                                  int *premcar,
-                                  PtrElement * dersel,
-                                  int *dercar,
-                                  PtrDocument pDoc );
-extern void SplitAfterSelection ( PtrElement dersel,
-                                  int dercar,
-                                  PtrDocument pDoc );
-extern PtrAbstractBox CreateALeaf ( PtrAbstractBox DansPav,
-                                    int *frame,
-                                    LeafType Nat,
-                                    boolean Before );
-extern void RedisplayNewContent ( PtrElement pEl1,
-                               PtrDocument pDoc,
-                               int dvol,
-                               int VueAJour,
-                               PtrAbstractBox pAb );
-extern void NewContent ( PtrAbstractBox pAb );
-extern PtrElement CreateFirstAssocElement ( PtrDocument doc,
-                                  int RefType,
-                                  PtrSSchema pSSref );
-extern boolean LinkReference ( PtrElement pElRef,
-                            PtrAttribute pAttrRef,
-                            PtrDocument pDoc,
-                            PtrElement * pSelEl );
-extern int MenuChoixElem ( PtrSSchema pS,
-                           int regle,
-                           PtrElement pEl,
-                           char *BufMenu,
-                           Name TitreMenu,
+                           PtrElement * pOption,
                            PtrDocument pDoc );
-extern void ChoiceMenuCallback ( int Entree,
-                               char *pNom );
+extern void CreationExceptions ( PtrElement pEl,
+                                 PtrDocument pDoc );
+extern void GetExternalTypeName ( PtrSSchema pSS,
+                                  int typeNum,
+                                  Name typeName );
+extern void BuildAbsBoxSpliText ( PtrElement pEl,
+                                  PtrElement pNewEl,
+                                  PtrElement pNextEl,
+                                  PtrDocument pDoc );
+extern void SplitBeforeSelection ( PtrElement * firstSel,
+                                   int *firstChar,
+                                   PtrElement * lastSel,
+                                   int *lastChar,
+                                   PtrDocument pDoc );
+extern void SplitAfterSelection ( PtrElement lastSel,
+                                  int lastChar,
+                                  PtrDocument pDoc );
+extern PtrAbstractBox CreateALeaf ( PtrAbstractBox pAB,
+                                    int *frame,
+                                    LeafType leafType,
+                                    boolean before );
+extern void RedisplayNewContent ( PtrElement pEl,
+                                  PtrDocument pDoc,
+                                  int dVol,
+                                  int skipView,
+                                  PtrAbstractBox pAbEl );
+extern void NewContent ( PtrAbstractBox pAb );
+extern PtrElement CreateFirstAssocElement ( PtrDocument pDoc,
+                                            int typeNum,
+                                            PtrSSchema pSS );
+extern boolean LinkReference ( PtrElement pEl,
+                               PtrAttribute pAttr,
+                               PtrDocument pDoc,
+                               PtrElement * pSelEl );
+extern int MenuChoixElem ( PtrSSchema pSS,
+                           int rule,
+                           PtrElement pEl,
+                           char *menuBuf,
+                           Name menuTitle,
+                           PtrDocument pDoc );
+extern void ChoiceMenuCallback ( int item,
+                                 char *natureName );
 extern PtrElement CreateSibling ( PtrDocument pDoc,
-                               PtrElement pEl,
-                               boolean Dev,
-                               boolean CreePaves,
-                               int TypeEl,
-                               PtrSSchema pSS,
-                               boolean Inclusion );
+                                  PtrElement pEl,
+                                  boolean before,
+                                  boolean createAbsBox,
+                                  int typeNum,
+                                  PtrSSchema pSS,
+                                  boolean inclusion );
 extern PtrElement CreateWithinElement ( PtrDocument pDoc,
-                               PtrElement pEl,
-                               boolean CreePaves,
-                               boolean Inclusion );
-extern PtrElement CreateOrPasteInText ( boolean cree,
-                                       boolean colle,
-                                       boolean Page,
-                                       PtrElement * pLib );
+                                        PtrElement pEl,
+                                        boolean createAbsBox,
+                                        boolean inclusion );
+extern PtrElement CreateOrPasteInText ( boolean create,
+                                        boolean paste,
+                                        boolean page,
+                                        PtrElement * pFree );
 extern void CreateInsertPageMenu ( void );
-extern void CreatePasteIncludeCmd ( boolean cree,
-                        boolean colle,
-                        char bouton,
-                        boolean * okCreeColle );
-extern void CreatePasteIncludeMenuCallback ( boolean cree,
-                               boolean colle,
-                               int Val );
+extern void CreatePasteIncludeCmd ( boolean create,
+                                    boolean paste,
+                                    char button,
+                                    boolean * ret );
+extern void CreatePasteIncludeMenuCallback ( boolean create,
+                                             boolean paste,
+                                             int item );
 
 #else /* __STDC__ */
 
-extern void NotifySubTree (/* APPevent AppEvent,
+extern void NotifySubTree (/* APPevent appEvent,
                               PtrDocument pDoc,
                               PtrElement pEl,
-                              int docOrig */);
+                              int origDoc */);
 extern void RedisplayDocViews (/* PtrDocument pDoc */);
 extern void AbstractImageUpdated (/* PtrDocument pDoc */);
 extern void InsertOption (/* PtrElement pEl,
-                            PtrElement * p,
-                            PtrDocument pDoc */);
-extern void CreationExceptions (/* PtrElement pEl,
-                                           PtrDocument pDoc */);
-extern void GetExternalTypeName (/* PtrSSchema pSS,
-                                   int NumType,
-                                   Name Retour */);
-extern void BuildAbsBoxSpliText (/* PtrElement pEl,
-                                PtrElement pSuite,
-                                PtrElement pSuivant,
-                                PtrDocument pDoc */);
-extern void SplitBeforeSelection (/* PtrElement * premsel,
-                                    int *premcar,
-                                    PtrElement * dersel,
-                                    int *dercar,
-                                    PtrDocument pDoc */);
-extern void SplitAfterSelection (/* PtrElement dersel,
-                                    int dercar,
-                                    PtrDocument pDoc */);
-extern PtrAbstractBox CreateALeaf (/* PtrAbstractBox DansPav,
-                                      int *frame,
-                                      LeafType Nat,
-                                      boolean Before */);
-extern void RedisplayNewContent (/* PtrElement pEl1,
-                                 PtrDocument pDoc,
-                                 int dvol,
-                                 int VueAJour,
-                                 PtrAbstractBox pAb */);
-extern void NewContent (/* PtrAbstractBox pAb */);
-extern PtrElement CreateFirstAssocElement (/* PtrDocument doc,
-                                    int RefType,
-                                    PtrSSchema pSSref */);
-extern boolean LinkReference (/* PtrElement pElRef,
-                              PtrAttribute pAttrRef,
-                              PtrDocument pDoc,
-                              PtrElement * pSelEl */);
-extern int MenuChoixElem (/* PtrSSchema pS,
-                             int regle,
-                             PtrElement pEl,
-                             char *BufMenu,
-                             Name TitreMenu,
+                             PtrElement * pOption,
                              PtrDocument pDoc */);
-extern void ChoiceMenuCallback (/* int Entree,
-                                 char *pNom */);
+extern void CreationExceptions (/* PtrElement pEl,
+                                   PtrDocument pDoc */);
+extern void GetExternalTypeName (/* PtrSSchema pSS,
+                                    int typeNum,
+                                    Name typeName */);
+extern void BuildAbsBoxSpliText (/* PtrElement pEl,
+                                    PtrElement pNewEl,
+                                    PtrElement pNextEl,
+                                    PtrDocument pDoc */);
+extern void SplitBeforeSelection (/* PtrElement * firstSel,
+                                     int *firstChar,
+                                     PtrElement * lastSel,
+                                     int *lastChar,
+                                     PtrDocument pDoc */);
+extern void SplitAfterSelection (/* PtrElement lastSel,
+                                    int lastChar,
+                                    PtrDocument pDoc */);
+extern PtrAbstractBox CreateALeaf (/* PtrAbstractBox pAB,
+                                      int *frame,
+                                      LeafType leafType,
+                                      boolean before */);
+extern void RedisplayNewContent (/* PtrElement pEl,
+                                    PtrDocument pDoc,
+                                    int dVol,
+                                    int skipView,
+                                    PtrAbstractBox pAbEl */);
+extern void NewContent (/* PtrAbstractBox pAb */);
+extern PtrElement CreateFirstAssocElement (/* PtrDocument pDoc,
+                                              int typeNum,
+                                              PtrSSchema pSS */);
+extern boolean LinkReference (/* PtrElement pEl,
+                                 PtrAttribute pAttr,
+                                 PtrDocument pDoc,
+                                 PtrElement * pSelEl */);
+extern int MenuChoixElem (/* PtrSSchema pSS,
+                             int rule,
+                             PtrElement pEl,
+                             char *menuBuf,
+                             Name menuTitle,
+                             PtrDocument pDoc */);
+extern void ChoiceMenuCallback (/* int item,
+                                   char *natureName */);
 extern PtrElement CreateSibling (/* PtrDocument pDoc,
-                                 PtrElement pEl,
-                                 boolean Dev,
-                                 boolean CreePaves,
-                                 int TypeEl,
-                                 PtrSSchema pSS,
-                                 boolean Inclusion */);
+                                    PtrElement pEl,
+                                    boolean before,
+                                    boolean createAbsBox,
+                                    int typeNum,
+                                    PtrSSchema pSS,
+                                    boolean inclusion */);
 extern PtrElement CreateWithinElement (/* PtrDocument pDoc,
-                                 PtrElement pEl,
-                                 boolean CreePaves,
-                                 boolean Inclusion */);
-extern PtrElement CreateOrPasteInText (/* boolean cree,
-                                         boolean colle,
-                                         boolean Page,
-                                         PtrElement * pLib */);
+                                          PtrElement pEl,
+                                          boolean createAbsBox,
+                                          boolean inclusion */);
+extern PtrElement CreateOrPasteInText (/* boolean create,
+                                          boolean paste,
+                                          boolean page,
+                                          PtrElement * pFree */);
 extern void CreateInsertPageMenu (/* void */);
-extern void CreatePasteIncludeCmd (/* boolean cree,
-                          boolean colle,
-                          char bouton,
-                          boolean * okCreeColle */);
-extern void CreatePasteIncludeMenuCallback (/* boolean cree,
-                                 boolean colle,
-                                 int Val */);
+extern void CreatePasteIncludeCmd (/* boolean create,
+                                      boolean paste,
+                                      char button,
+                                      boolean * ret */);
+extern void CreatePasteIncludeMenuCallback (/* boolean create,
+                                               boolean paste,
+                                               int item */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -7,20 +7,20 @@
 #if __STDC__
 
 extern void DisplayEmptyBox ( PtrBox pBox,
-                      int frame,
-                      char modele );
+                              int frame,
+                              char modele );
 extern void PolyTransform ( PtrBox pBox );
 extern void DisplayBox ( PtrBox pBox,
-                      int frame );
+                         int frame );
 
 #else /* __STDC__ */
 
 extern void DisplayEmptyBox (/* PtrBox pBox,
-                        int frame,
-                        char modele */);
+                                int frame,
+                                char modele */);
 extern void PolyTransform (/* PtrBox pBox */);
 extern void DisplayBox (/* PtrBox pBox,
-                        int frame */);
+                           int frame */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

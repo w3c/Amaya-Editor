@@ -6,22 +6,22 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern boolean ChRegExp ( PtrElement * pElDebut,
-                          int *NumCarDebut,
-                          PtrElement * pElFin,
-                          int *NumCarFin,
-                          boolean EnAvant,
-                          boolean MajEgalMin,
+extern boolean ChRegExp ( PtrElement * firstEl,
+                          int *firstChar,
+                          PtrElement * lastEl,
+                          int *lastChar,
+                          boolean forward,
+                          boolean caseEquiv,
                           char *expression );
 
 #else /* __STDC__ */
 
-extern boolean ChRegExp (/* PtrElement * pElDebut,
-                            int *NumCarDebut,
-                            PtrElement * pElFin,
-                            int *NumCarFin,
-                            boolean EnAvant,
-                            boolean MajEgalMin,
+extern boolean ChRegExp (/* PtrElement * firstEl,
+                            int *firstChar,
+                            PtrElement * lastEl,
+                            int *lastChar,
+                            boolean forward,
+                            boolean caseEquiv,
                             char *expression */);
 
 #endif /* __STDC__ */

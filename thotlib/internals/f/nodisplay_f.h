@@ -7,9 +7,9 @@
 #if __STDC__
 
 extern boolean CallEventType ( NotifyEvent * notifyEvent,
-                                 boolean pre );
+                               boolean pre );
 extern boolean CallEventAttribute ( NotifyAttribute * notifyAttr,
-                                      boolean pre );
+                                    boolean pre );
 extern void FreeImageDescriptor ( int *desc );
 extern void FreeImage ( int *desc );
 extern int Corr_Charger ( Language langue );
@@ -38,9 +38,9 @@ extern void LibDocument ( PtrDocument * pDoc );
 #else /* __STDC__ */
 
 extern boolean CallEventType (/* NotifyEvent * notifyEvent,
-                                   boolean pre */);
+                                 boolean pre */);
 extern boolean CallEventAttribute (/* NotifyAttribute * notifyAttr,
-                                        boolean pre */);
+                                      boolean pre */);
 extern void FreeImageDescriptor (/* int *desc */);
 extern void FreeImage (/* int *desc */);
 extern int Corr_Charger (/* Language langue */);
