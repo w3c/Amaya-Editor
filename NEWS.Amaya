@@ -146,4 +146,10 @@ Fixed bugs 2.0:
   The problem is fixed now.
 
 * The authentication handlers were  desactivated while doing a HEAD pre check
-  during the lost update PUT procedure
+  during the lost update PUT procedure.
+
+* While browsing an image, pressing the reload button didn't show the image
+  again.
+
+* It wasn't possible to browse images when the request was redirected to
+  a URL having a different end name.

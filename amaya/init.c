@@ -2007,24 +2007,20 @@ boolean		    history;
 	  while (content_type[i])
 	    i++;
 	  i++;
-	  /* if Amaya can display the image, then create an HTML
-	     container */
+	  /* change the doctype flag so that we can create an HTML container 
+	     later on */
 	  if (IsImageType (&content_type[i]))
 	    {
-	      CreateHTMLContainer (pathname, documentname, tempfile, FALSE);
 	      docType = docImage;
 	      otherFile = FALSE;
 	    }
 	}
       else if (IsImageName (pathname) && tempfile[0] == EOS)
 	{
-	  /* It's a local image file, so we create a temporary container */
-	  sprintf (tempfile, "%s%c%d%c%s", 
-		   TempFileDirectory, DIR_SEP, 0, DIR_SEP, "contain.html");
-	  CreateHTMLContainer (pathname, documentname, tempfile, TRUE);
-	  /* make amaya think that the container is the image */
-	      docType = docImage;
-	      otherFile = FALSE;
+	  /* It's a local image file that we can display. We change the 
+	     doctype flag so that we can create an HTML container later on */
+	  docType = docImage;
+	  otherFile = FALSE;
 	}
     }
 
@@ -2081,6 +2077,21 @@ boolean		    history;
       else
 	newdoc = doc;
 	
+      if (docType == docImage)
+      /* create an HTML container */
+	{
+	  if (content_type)
+	    /* it's an image downloaded from the web */
+	    CreateHTMLContainer (pathname, documentname, tempfile, FALSE);
+	  else 
+	    {
+	      /* It's a local image file */
+	      sprintf (tempfile, "%s%c%d%c%s", 
+		       TempFileDirectory, DIR_SEP, 0, DIR_SEP, "contain.html");
+	      CreateHTMLContainer (pathname, documentname, tempfile, TRUE);
+	    }
+	}
+
       /* what we have to do if doc and targetDocument are different */
       if (tempfile[0] != EOS)
 	{
@@ -2941,8 +2952,7 @@ void *context;
        /* will open a new document if newdoc is a modified document */
        if (status == 0)
 	 {
-	   if (IsW3Path (pathname) && !ustrcmp (documentname, "noname.html"))
-	     /* keep the real name */
+	   if (IsW3Path (pathname))
 	     NormalizeURL (pathname, 0, tempdocument, documentname, NULL);
 
 	   /* do we need to control the last slash here? */
