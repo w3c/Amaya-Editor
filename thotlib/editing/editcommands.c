@@ -3181,7 +3181,11 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 		      /* avoid to redisplay the whole block of lines */
 		      status = ReadyToDisplay;
 		      /*ReadyToDisplay = FALSE;*/
-		      DefBoxRegion (frame, pSelBox, xx, xx+2, -1, -1);
+		      if (pSelBox->BxNChars == 1)
+			/* remove the last character */
+			DefBoxRegion (frame, pSelBox, -1, -1, -1, -1);
+		      else
+			DefBoxRegion (frame, pSelBox, xx, xx+2, -1, -1);
 		      BoxUpdate (pSelBox, pViewSel->VsLine, charsDelta,
 				 spacesDelta, xDelta, adjust, 0, frame, toSplit);
 		      ReadyToDisplay = status;
