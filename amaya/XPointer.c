@@ -15,6 +15,9 @@
  *   Experimental, only used with annotations for the moment.
  *   Not all of XPath expressions are supported yet.
  *
+ * To do:
+ *
+ * XML Escaping... (4.1.2 in the spec)
  */
 
 #undef DEBUG_XPOINTER
