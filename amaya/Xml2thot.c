@@ -4586,6 +4586,7 @@ void        ParseExternalDocument (char     *fileName,
   char         *ptr = NULL;
   ElementType   elType;
   Element       parent, oldel;
+  Element       body, child, first, last, next;
   CHARSET       charset;
   DisplayMode   dispMode;
   gzFile        infile;
@@ -4803,7 +4804,6 @@ void        ParseExternalDocument (char     *fileName,
 	  if (strcmp (typeName, "HTML") == 0)
 	    {
 	      /* XHTML documents */
-	      Element  body, child, first, last, next;
 	      /* Handle character-level elements which contain block-level elements */
 	      CheckBlocksInCharElem (externalDoc);
 	      /* For XHTML documents, we paste only the children of the BODY element */
@@ -4866,8 +4866,13 @@ void        ParseExternalDocument (char     *fileName,
       /* modify the net status */
       /* DocNetworkStatus[doc] = AMAYA_NET_ACTIVE; */
       FetchAndDisplayImages (doc, AMAYA_LOAD_IMAGE, extEl);
-      /* Make not editable the external SVG image */
-      TtaSetAccessRight (extEl, ReadOnly, doc);
+      /* Make the external element not editable */
+      child = TtaGetFirstChild (extEl);
+      while (child)
+	{
+	  TtaSetAccessRight (child, ReadOnly, doc);
+	  TtaNextSibling (&child);
+	}
     }
 
   if (docURL != NULL)
