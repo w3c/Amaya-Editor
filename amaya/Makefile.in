@@ -84,13 +84,13 @@ force :
 ../tablelib/libThotTable.a : force
 	@(cd ../tablelib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" libThotTable)
 
-../libjpeg.a : force
+../libjpeg.a : @MAKEJPEG@ force
 	@(cd ../libjpeg ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
 
-../libpng.a : force
+../libpng.a : @MAKEPNG@ force
 	@(cd ../libpng ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
 
-../libz.a : force
+../libz.a : @MAKEPNG@ force
 	@(cd ../libpng/zlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
 
 ../tools/mkdep/mkdep : 
@@ -161,7 +161,7 @@ AMAYA_INCLUDES= -I. -I.. -I@top_srcdir@/thotlib/include -I@srcdir@ \
 
 AMAYA_LIBS= ../thotlib/libThotEditor.a ../tablelib/libThotTable.a \
             libCSS.a $(AMAYA_OPTION_LIBS) \
-            ../libpng.a ../libz.a ../libjpeg.a
+             @LIBPNG@ @LIBZ@ @LIBJPEG@
 
 HTML2THOT_LIBS= -L../thotlib/ -lThotKernel -L.. -lz
 

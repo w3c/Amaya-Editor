@@ -52,6 +52,49 @@ AC_PATH_PROG(SED, sed, /bin/sed, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 AC_PATH_PROG(AR, ar, /usr/bin/ar, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 AC_PATH_PROG(DIFF, diff, /usr/bin/diff, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 
+AC_ARG_WITH(more-shared, [  --with-included-jpeg  Use provided libjpeg, libpng.])
+if test "$with_included_jpeg" != "yes" ; then
+dnl
+    AC_MSG_CHECKING([for libjpeg version = 6b])
+    AC_EGREP_CPP([x 62  x],
+        [#include <jpeglib.h>
+         x JPEG_LIB_VERSION x],
+dnl
+        AC_MSG_RESULT([yes])
+        LIBJPEG='-ljpeg'
+        MAKEJPEG=['#'],
+dnl
+        AC_MSG_RESULT([no])
+        LIBJPEG='../libjpeg.a'      dnl LIBJPEG goes into amaya/Makefile.in
+        )
+dnl    
+dnl
+    AC_MSG_CHECKING([for libpng version = 1.0.1])
+    AC_EGREP_CPP([x \"1.0.1\"  x],
+        [#include <png.h>
+	x PNG_LIBPNG_VER_STRING x],
+dnl
+        AC_MSG_RESULT([yes])
+        LIBPNG='-lpng'
+        LIBZ=''
+	MAKEPNG=['#'],
+dnl
+        AC_MSG_RESULT([no])
+        LIBPNG='../libpng.a'
+        LIBZ='../libz.a'
+        )
+else
+    LIBJPEG='../libjpeg.a'
+    LIBPNG='../libpng.a'
+    LIBZ='../libz.a'
+fi
+dnl
+AC_SUBST(LIBJPEG)
+AC_SUBST(LIBPNG)
+AC_SUBST(LIBZ)
+AC_SUBST(MAKEJPEG)
+AC_SUBST(MAKEPNG)
+
 dnl
 dnl Checks for libraries.
 dnl
@@ -367,8 +410,8 @@ dnl    SPECIFIC STUFF : CONFIGURATION OPTIONS FOR THOT AND AMAYA
 dnl
 dnl  ***************************************************************
 
-THOT_VER="2.2"
-AMAYA_VER="2.5"
+THOT_VER="2.3"
+AMAYA_VER="3.1"
 
 dnl
 dnl We use a special versoin of cextract patched for alignment
@@ -571,7 +614,9 @@ INCL="\$(THOTDIR)/thotlib/internals/h"
 FUNC="\$(THOTDIR)/thotlib/internals/f"
 SCHEMAS="\$(THOTDIR)/schemas"
 SCHEMASOPERA="\$(THOTDIR)/schemasOPERA"
-JPEGINCL="-I\$(THOTDIR)/libjpeg"
+test "$LIBJPEG" = '../libjpeg.a'  && JPEGINCL="-I\$(THOTDIR)/libjpeg"
+#test "$LIBPNG" = '../libpng.a'  && PNGINCL="-I\$(THOTDIR)/libpng -I\$(THOTDIR)/libpng/zlib"
+#there is a modified header file we need
 PNGINCL="-I\$(THOTDIR)/libpng -I\$(THOTDIR)/libpng/zlib"
 
 dnl
