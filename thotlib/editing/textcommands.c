@@ -156,110 +156,23 @@ int                 x;
 int                 y;
 int                 xDelta;
 int                 yDelta;
-
 #endif /* __STDC__ */
 {
-   int                 index, i;
-   PtrBox              pBox, pLastBox, pLimitBox;
+   int                 index;
+   PtrBox              pBox, pLastBox;
    PtrTextBuffer       pBuffer;
    PtrAbstractBox      pAb;
-   PtrLine             pLine;
-   int                 nbbl, max;
-   int                 nChars, h;
+   int                 nbbl;
+   int                 nChars;
 
-   /* pLastBox = boite d'element precedemment selectionnee */
+   /* pLastBox = current selected box */
    pLastBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
    while (pLastBox->BxNext != NULL
 	  && pLastBox->BxAbstractBox->AbPresentationBox
 	  && !pLastBox->BxAbstractBox->AbCanBeModified)
       pLastBox = pLastBox->BxNext;
 
-   pBox = pLastBox;
-   max = ViewFrameTable[frame - 1].FrAbstractBox->AbBox->BxWidth;
-   /* recherche la boite limite dans la ligne */
-   if (xDelta > 0)
-     {
-	pLimitBox = GetClickedLeafBox (frame, max, y);
-	if (pLimitBox == NULL)
-	   pLimitBox = pLastBox;
-     }
-   else if (xDelta < 0)
-     {
-	pLimitBox = GetClickedLeafBox (frame, 0, y);
-	if (pLimitBox == NULL)
-	   pLimitBox = pLastBox;
-     }
-   else
-     {
-       pLimitBox = NULL;
-     }
-
-   i = 0;
-   while (pBox == pLastBox && i < 200)
-     {
-	i++;
-	x += xDelta;
-	y += yDelta;
-	/* On recupere la boite terminale selectionnee */
-	pBox = GetClickedLeafBox (frame, x, y);
-	if (pBox == NULL)
-	   pBox = pLastBox;
-	if (pBox == pLastBox || pBox->BxAbstractBox->AbBox == pLastBox)
-	  {
-	    /* compute the move height */
-	    pLine = SearchLine (pBox);
-	    if (pLine != NULL)
-	      h = pLine->LiHeight / 2;
-	    else
-	      h = 10;
-	     if (xDelta > 0 && pLimitBox == pBox)
-	       {
-		  /* move one line down */
-		  y = pBox->BxYOrg + pBox->BxHeight;
-		  LocateLeafBox (frame, 0, y, 0, h);
-		  return;
-	       }
-	     else if (xDelta < 0 && pLimitBox == pBox)
-	       {
-		  /* move one line up */
-		  y = pBox->BxYOrg;
-		  LocateLeafBox (frame, max, y, 0, -h);
-		  return;
-	       }
-	  }
-	else if (IsParentBox (pLastBox, pBox))
-	  {
-	     if (xDelta > 0)
-	       {
-		  /* move to the end of the box */
-		  y = pLastBox->BxYOrg + pLastBox->BxHeight;
-		  LocateLeafBox (frame, x, y, 0, 0);
-		  return;
-	       }
-	     else if (xDelta < 0)
-	       {
-		  /* move to the beginning of the box */
-		  y = pLastBox->BxYOrg;
-		  LocateLeafBox (frame, x, y, 0, 0);
-		  return;
-	       }
-	  }
-	else if (pBox->BxAbstractBox->AbLeafType != LtText && pBox->BxNChars != 0)
-	  {
-	     /* la boite ne correspond pas -> saute cette boite */
-	     if (xDelta > 0)
-		x = pBox->BxXOrg + pBox->BxWidth;
-	     else if (xDelta < 0)
-		x = pBox->BxXOrg;
-
-	     if (yDelta > 0)
-		y = pBox->BxYOrg + pBox->BxHeight;
-	     else if (yDelta < 0)
-		y = pBox->BxYOrg;
-	     pBox = pLastBox;
-	  }
-     }
-
+   pBox = GetLeafBox (pLastBox, frame, x, y, xDelta, yDelta);
    nChars = 0;
    if (pBox != NULL)
      {
@@ -272,7 +185,7 @@ int                 yDelta;
 		  LocateClickedChar (pBox, &pBuffer, &x, &index, &nChars, &nbbl);
 		  nChars = pBox->BxIndChar + nChars + 1;
 	       }
-	     /* Reinitialise la selection */
+	     /* Change the selection */
 	     ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
 	  }
      }

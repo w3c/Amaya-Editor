@@ -53,13 +53,12 @@
 
 
 /*----------------------------------------------------------------------
-   GetClickedStructBox recherche recursivement le pave qui englobe le 
-   point designe' par x,y.                                 
-   La fonction regarde toute l'arborescence des paves      
-   pour trouver le premier pave de plus petite profondeur  
-   couvrant le point designe.                              
-   Si un pave et son fils repondent a la condition, c'est  
-   le pave fils qui l'emporte.                             
+  GetClickedStructBox recherche recursivement le pave qui englobe le 
+  point designe' par x,y.                                 
+  La fonction regarde toute l'arborescence des paves pour trouver le premier
+  pave de plus petite profondeur couvrant le point designe.
+  Si un pave et son fils repondent a la condition, c'est le pave fils qui
+  l'emporte.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                GetClickedStructBox (PtrBox * result, PtrAbstractBox pRootAb, int frame, int x, int y, int *pointselect)
@@ -71,7 +70,6 @@ int                 frame;
 int                 x;
 int                 y;
 int                *pointselect;
-
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pAb;
@@ -88,42 +86,42 @@ int                *pointselect;
    pAb = pRootAb;
    while (pAb != NULL)
      {
-	/* Est-ce le pave selectionne ? */
-	if (pAb->AbVisibility >= pFrame->FrVisibility)
-	  {
-	     pBox = GetEnclosingClickedBox (pAb, dist, x, y, &pointIndex);
-	     if (pBox != NULL)
-		/* Si c'est le premier pave trouve */
-		if (pSelBox == NULL)
-		  {
+       /* Est-ce le pave selectionne ? */
+       if (pAb->AbVisibility >= pFrame->FrVisibility)
+	 {
+	   pBox = GetEnclosingClickedBox (pAb, dist, x, y, &pointIndex);
+	   if (pBox != NULL)
+	     /* Si c'est le premier pave trouve */
+	     if (pSelBox == NULL)
+	       {
+		 pSelBox = pBox;
+		 /* le point selectionne */
+		 *pointselect = pointIndex;
+	       }
+	   /* Si le pave est sur un plan au dessus du precedent */
+	   /* ou si le pave est un fils du precedent */
+	     else if (pSelBox->BxAbstractBox->AbDepth > pAb->AbDepth
+		      || (pSelBox->BxAbstractBox->AbLeafType == LtCompound && pBox->BxAbstractBox->AbLeafType != LtCompound)
+		      || IsParentBox (pSelBox, pBox))
+	       {
+		 pSelBox = pBox;
+		 *pointselect = pointIndex;
+	       }
+	     else
+	       {
+		 /* Verifie que le point designe est strictement dans la boite */
+		 pBox = GetEnclosingClickedBox (pAb, x, x, y, &pointIndex);
+		 pCurrentBox = GetEnclosingClickedBox (pSelBox->BxAbstractBox, x, x, y, &pointIndex);
+		 if (pCurrentBox == NULL && pBox != NULL)
+		   {
 		     pSelBox = pBox;
 		     /* le point selectionne */
 		     *pointselect = pointIndex;
-		  }
-	     /* Si le pave est sur un plan au dessus du precedent */
-	     /* ou si le pave est un fils du precedent */
-		else if (pSelBox->BxAbstractBox->AbDepth > pAb->AbDepth
-			 || (pSelBox->BxAbstractBox->AbLeafType == LtCompound && pBox->BxAbstractBox->AbLeafType != LtCompound)
-			 || IsParentBox (pSelBox, pBox))
-		  {
-		     pSelBox = pBox;
-		     *pointselect = pointIndex;
-		  }
-		else
-		  {
-		     /* Verifie que le point designe est strictement dans la boite */
-		     pBox = GetEnclosingClickedBox (pAb, x, x, y, &pointIndex);
-		     pCurrentBox = GetEnclosingClickedBox (pSelBox->BxAbstractBox, x, x, y, &pointIndex);
-		     if (pCurrentBox == NULL && pBox != NULL)
-		       {
-			  pSelBox = pBox;
-			  /* le point selectionne */
-			  *pointselect = pointIndex;
-		       }
-		  }
-	  }
-	/* On teste un autre pave de l'arbre */
-	pAb = SearchNextAbsBox (pAb);
+		   }
+	       }
+	 }
+       /* On teste un autre pave de l'arbre */
+       pAb = SearchNextAbsBox (pAb);
      }
    *result = pSelBox;
 }

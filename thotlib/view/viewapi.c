@@ -58,6 +58,7 @@
 #include "absboxes_f.h"
 #include "appdialogue_f.h"
 #include "applicationapi_f.h"
+#include "boxlocate_f.h"
 #include "boxparams_f.h"
 #include "boxselection_f.h"
 #include "buildboxes_f.h"
@@ -741,8 +742,76 @@ int                 value;
 
 
 /*----------------------------------------------------------------------
-   TtaShowElement
+   TtaGetFirstElementShown
+   Returns the first element in a given view of a given document.
 
+   Parameters:
+   document: the document to which the element to be shown belongs.
+   Cannot be 0.
+   view: the view where the element must be shown.
+
+   Returns:
+   element: the first shown element.
+   position: position of the top of the element in the window.
+   Supposing that the y axis is oriented from the top
+   of the window (coordinate 0) to the bottom (coordinate 100,
+   whatever the actual height of the window), position is the
+   desired y coordinate of the top of the element.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+Element             TtaGetFirstElementShown (Document document, View view, int *position)
+#else  /* __STDC__ */
+Element             TtaGetFirstElementShown (document, view, position)
+Document            document;
+View                view;
+int                *position;
+#endif /* __STDC__ */
+{
+  ViewFrame          *pFrame;
+  PtrElement          pEl;
+  PtrAbstractBox      pRootAb;
+  PtrBox              pBox;
+  int                 frame;
+  int                 x, y, charsNumber;
+  int                 width, height;
+
+  UserErrorCode = 0;
+  *position = 0;
+  pEl = NULL;
+  frame = GetWindowNumber (document, view);
+  if (frame != 0)
+    {
+      pFrame = &ViewFrameTable[frame - 1];
+      x = pFrame->FrXOrg;
+      y = pFrame->FrYOrg;
+      pRootAb = pFrame->FrAbstractBox;
+      if (pRootAb != NULL && pRootAb->AbBox != NULL)
+	{
+	  charsNumber = 0;
+	  /* recupere la boite selectionnee */
+	  if (ThotLocalActions[T_selecbox] != NULL)
+	    {
+	      (*ThotLocalActions[T_selecbox]) (&pBox, pRootAb, frame, x, y, &charsNumber);
+	      if (pBox != NULL && pBox->BxAbstractBox != NULL)
+		{
+		  if (pBox->BxType == BoPiece || pBox->BxType == BoSplit)
+		    pBox = pBox->BxAbstractBox->AbBox->BxNexChild;
+		  pEl = pBox->BxAbstractBox->AbElement;
+		  /* width and height of the frame */
+		  GetSizesFrame (frame, &width, &height);
+		  /* position of the box top in the frame in % */
+		  *position = (pBox->BxYOrg - pFrame->FrYOrg) * 100 / height;
+		}
+	    }
+	}
+
+    }
+  return ((Element) pEl);
+}
+
+
+/*----------------------------------------------------------------------
+   TtaShowElement
    Shows a given element in a given view of a given document.
 
    Parameters:
@@ -750,12 +819,11 @@ int                 value;
    Cannot be 0.
    view: the view where the element must be shown.
    element: the element to be shown.
-   position: position of the top of the element in the window.
+   position: position of the top of the element in the window in %.
    Supposing that the y axis is oriented from the top
    of the window (coordinate 0) to the bottom (coordinate 100,
    whatever the actual height of the window), position is the
    desired y coordinate of the top of the element.
-
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaShowElement (Document document, View view, Element element, int position)
@@ -767,39 +835,38 @@ Element             element;
 int                 position;
 #endif /* __STDC__ */
 {
-   int                 frame;
-   int                 aView;
-   PtrElement          pEl;
+  int                 frame;
+  int                 aView;
+  PtrElement          pEl;
 
-   UserErrorCode = 0;
-   frame = GetWindowNumber (document, view);
-   if (frame != 0)
-      if (position < 0 || position > 100 || element == NULL)
-	 TtaError (ERR_invalid_parameter);
-      else
-	{
-	   if (view < 100)
-	      aView = view;
-	   else
-	      aView = 1;
-	   pEl = (PtrElement) element;
-	   /* If the first abstract box of the element is incomplete, it is suppressed */
-	   /* et CheckAbsBox will rebuild it at the begenning of the element */
-	   if (pEl->ElAbstractBox[aView - 1] != NULL)
-	      if (pEl->ElAbstractBox[aView - 1]->AbLeafType == LtCompound)
-		 if (pEl->ElAbstractBox[aView - 1]->AbTruncatedHead)
-		    /* Destroying the abstract box of the element in this view */
-		    DestroyAbsBoxesView (pEl, LoadedDocument[document - 1], FALSE, aView);
-	   CheckAbsBox (pEl, aView, LoadedDocument[document - 1], FALSE, FALSE);
-	   if (pEl->ElAbstractBox[aView - 1] != NULL)
-	      ShowBox (frame, pEl->ElAbstractBox[aView - 1]->AbBox, 0, position);
-	}
-}				/*TtaShowElement */
+  UserErrorCode = 0;
+  frame = GetWindowNumber (document, view);
+  if (frame != 0)
+    if (position < -100 || position > 200 || element == NULL)
+      TtaError (ERR_invalid_parameter);
+    else
+      {
+	if (view < 100)
+	  aView = view;
+	else
+	  aView = 1;
+	pEl = (PtrElement) element;
+	/* If the first abstract box of the element is incomplete, it is suppressed */
+	if (pEl->ElAbstractBox[aView - 1] != NULL)
+	  if (pEl->ElAbstractBox[aView - 1]->AbLeafType == LtCompound)
+	    if (pEl->ElAbstractBox[aView - 1]->AbTruncatedHead)
+	      /* Destroying the abstract box of the element in this view */
+	      DestroyAbsBoxesView (pEl, LoadedDocument[document - 1], FALSE, aView);
+	/* and CheckAbsBox will rebuild it at the beginning of the element */
+	CheckAbsBox (pEl, aView, LoadedDocument[document - 1], FALSE, FALSE);
+	if (pEl->ElAbstractBox[aView - 1] != NULL)
+	  ShowBox (frame, pEl->ElAbstractBox[aView - 1]->AbBox, 0, position);
+      }
+}
 
 
 /*----------------------------------------------------------------------
    TtaGetSensibility
-
    Reads the current sensibility used to display
    a given view of a given document.
 
@@ -809,9 +876,7 @@ int                 position;
 
    Return value:
    current value of the sensibility.
-
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 int                 TtaGetSensibility (Document document, View view)
 #else  /* __STDC__ */

@@ -709,11 +709,12 @@ int                 percent;
    pFrame = &ViewFrameTable[frame - 1];
    y = pBox->BxYOrg;
    h = pBox->BxHeight;
-   GetSizesFrame (frame, &width, &height);	/* largeur et hauteur de la fenetre */
+   /* largeur et hauteur de la fenetre */
+   GetSizesFrame (frame, &width, &height);
    ymin = pFrame->FrYOrg;
    ymax = ymin + height;
 
-   /* S'il s'agit de la boite racine de l'Picture Concrete,  */
+   /* S'il s'agit de la boite racine de Concrete Image,  */
    /* il faut prendre en compte le debordement vertical au */
    /* debut du document et a la fin du document            */
    if (pBox->BxAbstractBox == pFrame->FrAbstractBox)
@@ -728,18 +729,14 @@ int                 percent;
    pFrame->FrReady = TRUE;
 
    if (position == 0)
-     {
-	/* Affiche le haut de la boite a pourcent du haut de la fenetre */
-	dy = y - ymin - ((height * percent) / 100);
-     }
+     /* Affiche le haut de la boite a pourcent du haut de la fenetre */
+     dy = y - ymin - ((height * percent) / 100);
    else if (position == 1)
-     {
-	/* Centre le milieu de la boite sur le milieu de la fenetre */
-	dy = y + (h / 2) - ymin - (height / 2);
-     }
+     /* Centre le milieu de la boite sur le milieu de la fenetre */
+     dy = y + (h / 2) - ymin - (height / 2);
    else
-      /* Affiche en bas de la fenetre */
-      dy = y + h - ymax;
+     /* Affiche en bas de la fenetre */
+     dy = y + h - ymax;
 
    /* Il faut realiser l'affichage par scroll ou par appel explicite */
    if (dy != 0)

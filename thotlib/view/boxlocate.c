@@ -66,13 +66,14 @@
 
 
 /*----------------------------------------------------------------------
-   LocateSelectionInView repe`re le pave' et e'ventuellement le      
-   caracte`re se'lectionne'. La valeur de button, indique s'il     
-   s'agit d'une marque initiale ou d'une extension de se'lection : 
-   - 0 s'il s'agit d'une extension de se'lection.                  
-   - 1 s'il s'agit d'un drag.                                      
-   - 2 s'il s'agit d'une marque initiale.                          
-   - 3 s'il s'agit d'un double clic.                               
+  LocateSelectionInView finds out the selected Abstract Box and if it's
+  a TEXT element the selected character(s).
+  The parameter button says what the editor wants to do with this
+  new selection:
+    0 -> extend the current selection
+    1 -> extend the current selection by draging
+    2 -> replace the old selection
+    3 -> activate a link
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                LocateSelectionInView (int frame, int x, int y, int button)
@@ -927,6 +928,127 @@ int                *pointselect;
 	else
 	   return (NULL);
      }
+}
+
+
+/*----------------------------------------------------------------------
+   GetLeafBox returns the leaf box located at the position x+xDelta
+   y+yDelta from pSourceBox box.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+PtrBox         GetLeafBox (PtrBox pSourceBox, int frame, int x, int y, int xDelta, int yDelta)
+#else  /* __STDC__ */
+PtrBox         GetLeafBox (pSourceBox, frame, x, y, xDelta, yDelta)
+PtrBox              pSourceBox;
+int                 frame;
+int                 x;
+int                 y;
+int                 xDelta;
+int                 yDelta;
+#endif /* __STDC__ */
+{
+  int                 i;
+  PtrBox              pBox, pLimitBox;
+  PtrLine             pLine;
+  int                 max;
+  int                 h;
+  boolean             found;
+
+  found = FALSE;
+  while (!found)
+    {
+      pBox = pSourceBox;
+      max = ViewFrameTable[frame - 1].FrAbstractBox->AbBox->BxWidth;
+      /* locate the last box in the line */
+      if (xDelta > 0)
+	{
+	  pLimitBox = GetClickedLeafBox (frame, max, y);
+	  if (pLimitBox == NULL)
+	    pLimitBox = pSourceBox;
+	}
+      else if (xDelta < 0)
+	{
+	  pLimitBox = GetClickedLeafBox (frame, 0, y);
+	  if (pLimitBox == NULL)
+	    pLimitBox = pSourceBox;
+	}
+      else
+	pLimitBox = NULL;
+
+      i = 0;
+      found = TRUE;
+      while (pBox == pSourceBox && i < 200 && found)
+	{
+	  i++;
+	  x += xDelta;
+	  y += yDelta;
+	  /* Take the leaf box here */
+	  pBox = GetClickedLeafBox (frame, x, y);
+	  if (pBox == NULL)
+	    pBox = pSourceBox;
+	  if (pBox == pSourceBox || pBox->BxAbstractBox->AbBox == pSourceBox)
+	    {
+	      /* compute the height to be moved*/
+	      pLine = SearchLine (pBox);
+	      if (pLine != NULL)
+		h = pLine->LiHeight / 2;
+	      else
+		h = 10;
+	      if (xDelta > 0 && pLimitBox == pBox)
+		{
+		  /* move one line down */
+		  x = 0;
+		  y = pBox->BxYOrg + pBox->BxHeight;
+		  xDelta = 0;
+		  yDelta = h;
+		  found = FALSE;
+		}
+	      else if (xDelta < 0 && pLimitBox == pBox)
+		{
+		  /* move one line up */
+		  x = max;
+		  y = pBox->BxYOrg;
+		  xDelta = 0;
+		  yDelta = -h;
+		  found = FALSE;
+		}
+	    }
+	  else if (IsParentBox (pSourceBox, pBox))
+	    {
+	      if (xDelta > 0)
+		{
+		  /* move to the end of the box */
+		  y = pSourceBox->BxYOrg + pSourceBox->BxHeight;
+		  xDelta = 0;
+		  yDelta = 0;
+		  found = FALSE;
+		}
+	      else if (xDelta < 0)
+		{
+		  /* move to the beginning of the box */
+		  y = pSourceBox->BxYOrg;
+		  xDelta = 0;
+		  yDelta = 0;
+		  found = FALSE;
+		}
+	    }
+	  else if (pBox->BxAbstractBox->AbLeafType != LtText && pBox->BxNChars != 0)
+	    {
+	      /* the box doesn't match, skip over */
+	      if (xDelta > 0)
+		x = pBox->BxXOrg + pBox->BxWidth;
+	      else if (xDelta < 0)
+		x = pBox->BxXOrg;
+	      
+	      if (yDelta > 0)
+		y = pBox->BxYOrg + pBox->BxHeight;
+	      else if (yDelta < 0)
+		y = pBox->BxYOrg;
+	      pBox = pSourceBox;
+	    }
+	}
+    }
+  return (pBox);
 }
 
 

@@ -170,6 +170,26 @@ extern void         TtaSetSensibility (Document document, View view, int value);
 extern void         TtaSetZoom (Document document, View view, int value);
 
 /*----------------------------------------------------------------------
+   TtaGetFirstElementShown
+   Returns the first element in a given view of a given document.
+
+   Parameters:
+   document: the document to which the element to be shown belongs.
+   Cannot be 0.
+   view: the view where the element must be shown.
+
+   Returns:
+   element: the first shown element.
+   position: position of the top of the element in the window.
+   Supposing that the y axis is oriented from the top
+   of the window (coordinate 0) to the bottom (coordinate 100,
+   whatever the actual height of the window), position is the
+   desired y coordinate of the top of the element.
+  ----------------------------------------------------------------------*/
+extern Element        TtaGetFirstElementShown (Document document, View view, int *position);
+
+
+/*----------------------------------------------------------------------
    TtaShowElement
 
    Shows a given element in a given view of a given document.
@@ -427,6 +447,7 @@ extern void         TtaCloseView ( /* Document document, View view */ );
 extern void         TtaFreeView ( /*Document document, View view */ );
 extern void         TtaSetSensibility ( /* Document document, View view, int value */ );
 extern void         TtaSetZoom ( /* Document document, View view, int value */ );
+extern Element      TtaGetFirstElementShown (/* Document document, View view, int *position */);
 extern void         TtaShowElement ( /* Document document, View view, Element element, int position */ );
 extern int          TtaGetSensibility ( /* Document document, View view */ );
 extern int          TtaGetZoom ( /* Document document, View view */ );

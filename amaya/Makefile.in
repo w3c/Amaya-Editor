@@ -159,6 +159,15 @@ amaya_src : $(AMAYA_SRC)
 .c.o :
 	$(CC) $(CFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c $< -o $@
 
+HTML2THOT_OBJ = \
+	html2thot_standalone.o
+
+# html2thot is the standalone HTML parser
+../bin/html2thot : $(HTML2THOT_OBJ) $(AMAYA_OPTION_OBJ)  $(AMAYA_LIBS)
+	@(if test ! -d ../bin ; then $(MKDIR) ../bin ; fi)
+	$(CC) $(LDFLAGS) -DSTANDALONE -o ../bin/html2thot $(HTML2THOT_OBJ) $(AMAYA_OPTION_OBJ) $(LIBS)
+	@$(ECHO) "====>" html2thot is done
+
 #########################################################################
 #									#
 #		Rules to build the binary				#

@@ -107,7 +107,8 @@ static Element	ElementAtPosition (doc, pos)
            while (el != NULL && !stop);
 	  }
         }
-      }
+      }   
+   printf ("Element: %s\n", TtaGetElementLabel (result));
    return result;
 }
 
@@ -128,9 +129,8 @@ static int      RelativePosition (doc, distance)
    Element	el, sibling, ancestor;
 
    sum = 0;
-   *distance = 0;
-   /*****/ el = NULL; /*****/
-   /******* el = TtaGetFirstElementShown (doc, 1, distance);  ****/
+   el = TtaGetFirstElementShown (doc, 1, distance);
+   printf ("Element: %s", TtaGetElementLabel (el));
    ancestor = el;
    while (ancestor != NULL)
       {
@@ -342,7 +342,7 @@ char               *url;
    position = RelativePosition (doc, &distance);
    DocHistory[doc][DocHistoryIndex[doc]].HistDistance = distance;
    DocHistory[doc][DocHistoryIndex[doc]].HistPosition = position;
-   /*******/ printf ("Position: %d, distance: %d\n", position, distance);
+   /*******/ printf ("   Position: %d, distance: %d\n", position, distance);
 
    DocHistoryIndex[doc]++;
    DocHistoryIndex[doc] %= DOC_HISTORY_SIZE;
