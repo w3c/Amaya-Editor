@@ -21,14 +21,15 @@
 #define ImageLabel	2
 #define ImageDir	3
 #define ImageSel	4
-#define FormImage	5
-#define IMAGE_MAX_REF	6
+#define ImageFilter     5
+#define FormImage	6
+#define IMAGE_MAX_REF	7
 
 static int          BaseImage;
 static char         DirectoryImage[MAX_LENGTH];
 static char         LastURLImage[MAX_LENGTH];
 static char         ImageName[MAX_LENGTH];
-
+static char         ImgFilter[NAME_LENGTH];
 #include "init_f.h"
 #include "AHTURLTools_f.h"
 #include "EDITimage_f.h"
@@ -49,96 +50,103 @@ char               *data;
 
 #endif /* __STDC__ */
 {
-   int                 val;
-   char                tempfile[MAX_LENGTH];
-   char                tempname[MAX_LENGTH];
-   boolean             change;
+  int               val;
+  char              tempfile[MAX_LENGTH];
+  char              tempname[MAX_LENGTH];
+  boolean           change;
 
-   val = (int) data;
-   switch (ref - BaseImage)
-	 {
-	       /* *********Load URL or local image********* */
-	    case FormImage:
-	       if (val == 2)
-		 {
-		    /* Clear */
-		    LastURLImage[0] = EOS;
-		    TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
-		 }
-	       else if (val == 3)
-		  /* Parse */
-		 {
-		   /* reinitialize directories and document lists */
-		   TtaListDirectory (DirectoryImage, BaseImage + FormImage,
-				     TtaGetMessage (LIB, TMSG_DOC_DIR), BaseImage + ImageDir,
-				     "", TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
-		 }
-	       else
-		 {
-		    TtaDestroyDialogue (BaseImage + FormImage);
-		    if (val == 0)
-		       LastURLImage[0] = EOS;
-		 }
-	       break;
-	    case ImageURL:
-	       if (data == NULL)
-		  break;
-	       if (IsW3Path (data))
-		 {
-		    /* save the URL name */
-		    strcpy (LastURLImage, data);
-		    ImageName[0] = EOS;
-		 }
-	       else
-		 {
-		    change = NormalizeFile (data, LastURLImage);
-		    if (change)
-		       TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
-		    if (TtaCheckDirectory (LastURLImage))
-		      {
-			 strcpy (DirectoryImage, LastURLImage);
-			 ImageName[0] = EOS;
-			 LastURLImage[0] = EOS;
-		      }
-		    else
-		       TtaExtractName (LastURLImage, DirectoryImage, ImageName);
-		 }
-	       break;
-	    case ImageDir:
-	       if (!strcmp (data, ".."))
-		 {
-		    /* suppress last directory */
-		    strcpy (tempname, DirectoryImage);
-		    TtaExtractName (tempname, DirectoryImage, tempfile);
-		 }
-	       else
-		 {
-		    strcat (DirectoryImage, DIR_STR);
-		    strcat (DirectoryImage, data);
-		 }
-	       TtaSetTextForm (BaseImage + ImageURL, DirectoryImage);
-	       TtaListDirectory (DirectoryImage, BaseImage + FormImage,
-		    TtaGetMessage (LIB, TMSG_DOC_DIR), BaseImage + ImageDir,
-		 "", TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
-	       ImageName[0] = EOS;
-	       break;
-	    case ImageSel:
-	       if (DirectoryImage[0] == EOS)
-		 {
-		    /* set path on current directory */
-		    getcwd (DirectoryImage, MAX_LENGTH);
-		 }
-	       /* construct the image full name */
-	       strcpy (LastURLImage, DirectoryImage);
-	       val = strlen (LastURLImage) - 1;
-	       if (LastURLImage[val] != DIR_SEP)
-		 strcat (LastURLImage, DIR_STR);
-	       strcat (LastURLImage, data);
-	       TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
-	       break;
-	    default:
-	       break;
-	 }
+  val = (int) data;
+  switch (ref - BaseImage)
+    {
+    case FormImage:
+      /* *********Load URL or local image********* */
+      if (val == 2)
+	{
+	  /* Clear */
+	  LastURLImage[0] = EOS;
+	  TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
+	}
+      else if (val == 3)
+	/* Parse */
+	{
+	  /* reinitialize directories and document lists */
+	  TtaListDirectory (DirectoryImage, BaseImage + FormImage,
+			    TtaGetMessage (LIB, TMSG_DOC_DIR), BaseImage + ImageDir,
+			    ImgFilter, TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
+	}
+      else
+	{
+	  TtaDestroyDialogue (BaseImage + FormImage);
+	  if (val == 0)
+	    LastURLImage[0] = EOS;
+	}
+      break;
+    case ImageFilter:
+      /* Filter value */
+      if (strlen(data) <= NAME_LENGTH)
+	strcpy (ImgFilter, data);
+      else
+	TtaSetTextForm (BaseImage + ImageFilter, ImgFilter);
+      break;
+    case ImageURL:
+      if (data == NULL)
+	break;
+      if (IsW3Path (data))
+	{
+	  /* save the URL name */
+	  strcpy (LastURLImage, data);
+	  ImageName[0] = EOS;
+	}
+      else
+	{
+	  change = NormalizeFile (data, LastURLImage);
+	  if (change)
+	    TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
+	  if (TtaCheckDirectory (LastURLImage))
+	    {
+	      strcpy (DirectoryImage, LastURLImage);
+	      ImageName[0] = EOS;
+	      LastURLImage[0] = EOS;
+	    }
+	  else
+	    TtaExtractName (LastURLImage, DirectoryImage, ImageName);
+	}
+      break;
+    case ImageDir:
+      if (!strcmp (data, ".."))
+	{
+	  /* suppress last directory */
+	  strcpy (tempname, DirectoryImage);
+	  TtaExtractName (tempname, DirectoryImage, tempfile);
+	}
+      else
+	{
+	  strcat (DirectoryImage, DIR_STR);
+	  strcat (DirectoryImage, data);
+	}
+      TtaSetTextForm (BaseImage + ImageURL, DirectoryImage);
+      TtaListDirectory (DirectoryImage, BaseImage + FormImage,
+			TtaGetMessage (LIB, TMSG_DOC_DIR), BaseImage + ImageDir,
+			ImgFilter, TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
+      ImageName[0] = EOS;
+      break;
+    case ImageSel:
+      if (DirectoryImage[0] == EOS)
+	{
+	  /* set path on current directory */
+	  getcwd (DirectoryImage, MAX_LENGTH);
+	}
+      /* construct the image full name */
+      strcpy (LastURLImage, DirectoryImage);
+      val = strlen (LastURLImage) - 1;
+      if (LastURLImage[val] != DIR_SEP)
+	strcat (LastURLImage, DIR_STR);
+      strcat (LastURLImage, data);
+      TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
+      break;
+    default:
+      break;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -151,6 +159,7 @@ void                InitImage ()
 {
    BaseImage = TtaSetCallback (CallbackImage, IMAGE_MAX_REF);
    LastURLImage[0] = EOS;
+   strcpy(ImgFilter, ".png");
    /* set path on current directory */
    getcwd (DirectoryImage, MAX_LENGTH);
 
@@ -187,8 +196,8 @@ View                view;
 		   TtaGetMessage (AMAYA, AM_OPEN_URL), 50, 1, TRUE);
    TtaNewLabel (BaseImage + ImageLabel, BaseImage + FormImage, " ");
    TtaListDirectory (DirectoryImage, BaseImage + FormImage,
-		     TtaGetMessage (LIB, TMSG_DOC_DIR),		/* std thot msg */
-		     BaseImage + ImageDir, "",
+		     TtaGetMessage (LIB, TMSG_DOC_DIR),
+		     BaseImage + ImageDir, ImgFilter,
 		     TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
    if (LastURLImage[0] != EOS)
       TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
@@ -199,6 +208,10 @@ View                view;
 	strcat (s, ImageName);
 	TtaSetTextForm (BaseImage + ImageURL, s);
      }
+
+   TtaNewTextForm (BaseImage + ImageFilter, BaseImage + FormImage,
+		   TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
+   TtaSetTextForm (BaseImage + ImageFilter, ImgFilter);
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseImage + FormImage, FALSE);
    TtaWaitShowDialogue ();

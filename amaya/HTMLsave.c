@@ -252,12 +252,19 @@ char               *pathname;
 
 #endif
 {
-   char                buffer[3000];
+   char             buffer[3000];
+   char             s[MAX_LENGTH];
+   int              i;
 
    /* Dialogue form for saving in local */
-   TtaNewForm (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 
-	       TtaGetMessage (AMAYA, AM_SAVE_AS), TRUE, 3, 'L', D_CANCEL);
-   /* TtaGetMessage(LIB, DOCUMENT_NAME) */
+   i = 0;
+   strcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+   i += strlen (&s[i]) + 1;
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
+   i += strlen (&s[i]) + 1;
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
+   TtaNewSheet (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 
+	       TtaGetMessage (AMAYA, AM_SAVE_AS), 3, s, TRUE, 3, 'L', D_CANCEL);
    sprintf (buffer, "%s%c%s%c%s%c%s%c%s", "BHTML", EOS, "BText", EOS, "S", EOS,
 	    TtaGetMessage (AMAYA, AM_BCOPY_IMAGES), EOS,
 	    TtaGetMessage (AMAYA, AM_BTRANSFORM_URL));
@@ -270,19 +277,22 @@ char               *pathname;
    TtaSetToggleMenu (BaseDialog + ToggleSave, 3, CopyImages);
    TtaSetToggleMenu (BaseDialog + ToggleSave, 4, UpdateURLs);
    TtaListDirectory (DirectoryName, BaseDialog + SaveForm,
-		     TtaGetMessage (LIB, TMSG_DOC_DIR),	    /* std thot msg */
-		     BaseDialog + DirSave, "",
+		     TtaGetMessage (LIB, TMSG_DOC_DIR),
+		     BaseDialog + DirSave, ScanFilter,
 		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
    TtaNewTextForm (BaseDialog + NameSave, BaseDialog + SaveForm,
 		   TtaGetMessage (AMAYA, AM_DOC_LOCATION), 50, 1, TRUE);
    TtaSetTextForm (BaseDialog + NameSave, pathname);
-   TtaNewLabel (BaseDialog + Lbl1Save, BaseDialog + SaveForm, "");
-   TtaNewLabel (BaseDialog + Lbl2Save, BaseDialog + SaveForm, "");
+   TtaNewLabel (BaseDialog + Label1, BaseDialog + SaveForm, "");
+   TtaNewLabel (BaseDialog + Label2, BaseDialog + SaveForm, "");
    TtaNewTextForm (BaseDialog + ImgDirSave, BaseDialog + SaveForm,
 		   TtaGetMessage (AMAYA, AM_IMAGES_LOCATION), 50, 1, TRUE);
    TtaSetTextForm (BaseDialog + ImgDirSave, SaveImgsURL);
-   TtaNewLabel (BaseDialog + Lbl3Save, BaseDialog + SaveForm, "");
-   TtaNewLabel (BaseDialog + Lbl4Save, BaseDialog + SaveForm, "");
+   TtaNewLabel (BaseDialog + Label3, BaseDialog + SaveForm, "");
+   TtaNewLabel (BaseDialog + Label4, BaseDialog + SaveForm, "");
+   TtaNewTextForm (BaseDialog + FilterText, BaseDialog + SaveForm,
+		   TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
+   TtaSetTextForm (BaseDialog + FilterText, ScanFilter);
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 }
@@ -550,15 +560,15 @@ boolean             with_images;
 
 #endif
 {
-   char                url[MAX_LENGTH];
-   char                tempname[MAX_LENGTH];
-   char                documentname[MAX_LENGTH];
-   char                msg[5000];
-   int                 free = 10000;
-   int                 index = 0, len, nb = 0;
-   LoadedImageDesc    *pImage;
-   int                 res;
-   int                 imageType;
+   char             url[MAX_LENGTH];
+   char             tempname[MAX_LENGTH];
+   char             documentname[MAX_LENGTH];
+   char             msg[5000];
+   int              free = 10000;
+   int              index = 0, len, nb = 0;
+   LoadedImageDesc *pImage;
+   int              res;
+   int              imageType;
 
    if (!IsW3Path (DocumentURLs[document]))
       return (-1);
@@ -577,55 +587,54 @@ DBG(fprintf(stderr, "SaveFileThroughNet :  export to %s \n", tempname);)
 
    if (confirm && with_images)
      {
-	TtaNewForm (BaseDialog + ConfirmSave, TtaGetViewFrame (document, view), 
-	            TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_CANCEL);
-	/*strcpy(msg,"Saving will overwrite the following URLs :"); */
-	TtaNewLabel (BaseDialog + ConfirmSaveLbl, BaseDialog + ConfirmSave, TtaGetMessage (AMAYA, AM_WARNING_SAVE_OVERWRITE));
+       TtaNewForm (BaseDialog + ConfirmSave, TtaGetViewFrame (document, view), 
+		   TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_CANCEL);
+       TtaNewLabel (BaseDialog + Label1, BaseDialog + ConfirmSave, TtaGetMessage (AMAYA, AM_WARNING_SAVE_OVERWRITE));
+       
+       strcpy (&msg[index], DocumentURLs[document]);
+       len = strlen (DocumentURLs[document]);
+       len++;
+       free -= len;
+       index += len;
+       nb++;
 
-	strcpy (&msg[index], DocumentURLs[document]);
-	len = strlen (DocumentURLs[document]);
-	len++;
-	free -= len;
-	index += len;
-	nb++;
-
-	pImage = ImageURLs;
-	while (pImage != NULL)
-	  {
-	     if (pImage->document == document)
-	       {
-		  if (pImage->status == IMAGE_MODIFIED)
-		    {
-		       if (nb > 30)
-			 {
-			    strcpy (&msg[index], "...");
-			    len = strlen ("...");
-			    len++;
-			    free -= len;
-			    index += len;
-			    nb++;
-			    break;
-			 }
-		       strcpy (&msg[index], pImage->originalName);
-		       len = strlen (pImage->originalName);
+       pImage = ImageURLs;
+       while (pImage != NULL)
+	 {
+	   if (pImage->document == document)
+	     {
+	       if (pImage->status == IMAGE_MODIFIED)
+		 {
+		   if (nb > 30)
+		     {
+		       strcpy (&msg[index], "...");
+		       len = strlen ("...");
 		       len++;
 		       free -= len;
 		       index += len;
 		       nb++;
-		    }
-	       }
-	     pImage = pImage->nextImage;
-	  }
+		       break;
+		     }
+		   strcpy (&msg[index], pImage->originalName);
+		   len = strlen (pImage->originalName);
+		   len++;
+		   free -= len;
+		   index += len;
+		   nb++;
+		 }
+	     }
+	   pImage = pImage->nextImage;
+	 }
 
-	TtaNewSelector (BaseDialog + ConfirmSaveList, BaseDialog + ConfirmSave,
-			NULL, nb, &msg[0], 6, NULL, FALSE, TRUE);
-
-	TtaSetDialoguePosition ();
-	TtaShowDialogue (BaseDialog + ConfirmSave, FALSE);
-	/* wait for an answer */
-	TtaWaitShowDialogue ();
-	if (!UserAnswer)
-	   return (-1);
+       TtaNewSelector (BaseDialog + ConfirmSaveList, BaseDialog + ConfirmSave,
+		       NULL, nb, &msg[0], 6, NULL, FALSE, TRUE);
+       
+       TtaSetDialoguePosition ();
+       TtaShowDialogue (BaseDialog + ConfirmSave, FALSE);
+       /* wait for an answer */
+       TtaWaitShowDialogue ();
+       if (!UserAnswer)
+	 return (-1);
      }
    /*
     * Second step : saving the HTML content and the images modified locally.
@@ -1395,7 +1404,7 @@ char               *pathname;
    TtaNewForm (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 
 	       TtaGetMessage (AMAYA, AM_SAVE_AS), TRUE, 2, 'L', D_CANCEL);
    TtaListDirectory (DirectoryName, BaseDialog + SaveForm,
-		     TtaGetMessage (LIB, TMSG_DOC_DIR),		/* std thot msg */
+		     TtaGetMessage (LIB, TMSG_DOC_DIR),
 		     BaseDialog + DirSave, "",
 		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
    TtaNewTextForm (BaseDialog + NameSave, BaseDialog + SaveForm,
@@ -1438,8 +1447,8 @@ void                DoSaveObjectAs ()
 	     return;
 	  }
 	TtaDestroyDialogue (BaseDialog + SaveForm);
-	SavingObject = (Document) None;
-	SavingDocument = (Document) None;
+	SavingObject = 0;
+	SavingDocument = 0;
 	return;
      }
    if (TtaFileExist (tempfile))
@@ -1456,7 +1465,7 @@ void                DoSaveObjectAs ()
 	  }
      }
    TtaFileCopy (tempSavedObject, tempfile);
-   SavingObject = (Document) None;
+   SavingObject = 0;
    TtaDestroyDialogue (BaseDialog + SaveForm);
 }
 

@@ -201,13 +201,13 @@ HTAlertPar         *reply;
 {
    char               *result = NULL;
 
-   TtaNewLabel (BaseDialog + TextLabel, BaseDialog + FormAnswer, TtaGetMessage (AMAYA, AM_GET_USER_NAME + msgnum));
+   TtaNewLabel (BaseDialog + Label1, BaseDialog + FormAnswer, TtaGetMessage (AMAYA, AM_GET_USER_NAME + msgnum));
 
    if (input)
-      TtaNewLabel (BaseDialog + TextLabel, BaseDialog + FormAnswer, (char *) input);
+      TtaNewLabel (BaseDialog + Label1, BaseDialog + FormAnswer, (char *) input);
 
    if (dfault)
-      TtaNewLabel (BaseDialog + TextLabel, BaseDialog + FormAnswer, (char *) dfault);
+      TtaNewLabel (BaseDialog + Label1, BaseDialog + FormAnswer, (char *) dfault);
 
    if (reply && msgnum >= 0)
      {
@@ -258,7 +258,7 @@ HTAlertPar         *reply;
 	Lg_password = 0;
 	Answer_password[0] = EOS;
 	Display_password[0] = EOS;
-	TtaNewLabel (BaseDialog + TextLabel, BaseDialog + FormAnswer, TtaGetMessage (AMAYA, AM_GET_USER_NAME + msgnum));
+	TtaNewLabel (BaseDialog + Label1, BaseDialog + FormAnswer, TtaGetMessage (AMAYA, AM_GET_USER_NAME + msgnum));
 	TtaDetachForm (BaseDialog + AnswerText);
 	TtaDetachForm (BaseDialog + NameText);
 	TtaSetTextForm (BaseDialog + PasswordText, "");

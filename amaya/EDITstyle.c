@@ -463,52 +463,37 @@ char               *data;
 
 #endif /* __STDC__ */
 {
-   int                 val;
+  int               val;
 
-   val = (int) data;
-
+  val = (int) data;
 #ifdef DEBUG_CLASS_INTERF
-   if (typedata == INTEGER_DATA)
-      fprintf (stderr, "StyleCallbackDialogue(%d,%d) \n",
-	       ref, (int) data);
-   else if (typedata == STRING_DATA)
-      fprintf (stderr, "StyleCallbackDialogue(%d,\"%s\") \n",
-	       ref, (char *) data);
+  if (typedata == INTEGER_DATA)
+    fprintf (stderr, "StyleCallbackDialogue(%d,%d) \n", ref, (int) data);
+  else if (typedata == STRING_DATA)
+    fprintf (stderr, "StyleCallbackDialogue(%d,\"%s\") \n", ref, (char *) data);
 #endif
 
-   switch (ref - BaseDialog)
-	 {
-	    case ClassForm:
-	       if (typedata == INTEGER_DATA)
-		 {
-		    if (val == 1)
-		       UpdateClass (DocReference);
-		 }
-	       TtaDestroyDialogue (BaseDialog + ClassForm);
-	       break;
-	    case ClassLabel:
-	       break;
-	    case ClassSelect:
-	       if (typedata == STRING_DATA)
-		 {
-		    strcpy (CurrentClass, data);
-		 }
-	       break;
-	    case AClassForm:
-	       if (typedata == INTEGER_DATA)
-		 {
-		    if (val == 1)
-		       ApplyClassChange (ADocReference);
-		 }
-	       TtaDestroyDialogue (BaseDialog + AClassForm);
-	       break;
-	    case AClassLabel:
-	       break;
-	    case AClassSelect:
-	       if (typedata == STRING_DATA)
-		 {
-		    strcpy (CurrentAClass, data);
-		 }
-	       break;
-	 }
+  switch (ref - BaseDialog)
+    {
+    case ClassForm:
+      if (typedata == INTEGER_DATA && val == 1)
+	UpdateClass (DocReference);
+      TtaDestroyDialogue (BaseDialog + ClassForm);
+      break;
+    case ClassSelect:
+      if (typedata == STRING_DATA)
+	strcpy (CurrentClass, data);
+      break;
+    case AClassForm:
+      if (typedata == INTEGER_DATA && val == 1)
+	ApplyClassChange (ADocReference);
+      TtaDestroyDialogue (BaseDialog + AClassForm);
+      break;
+    case AClassSelect:
+      if (typedata == STRING_DATA)
+	strcpy (CurrentAClass, data);
+      break;
+    default:
+      break;
+    }
 }

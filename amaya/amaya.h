@@ -76,31 +76,27 @@ typedef char        AmayaReadChar ();
 #define DocSave         10
 #define ToggleSave      11
 #define NameSave        12
-#define Lbl1Save        13
-#define Lbl2Save        14
-#define ImgDirSave      14
-#define Lbl3Save        15
-#define Lbl4Save        16
-#define Lbl5Save        17
+#define ImgDirSave      13
+#define Label1          14
+#define Label2          15
+#define Label3          16
+#define Label4          17
 #define ConfirmForm     18
 #define ConfirmText     19
 #define AttrHREFForm    20
 #define AttrHREFText    21
 #define FormAnswer      22
-#define TextLabel       23
 #define AnswerText      24
 #define NameText        25
 #define PasswordText    26
-#define ClassForm       27
-#define ClassLabel      28
+#define FilterText      27
+#define ClassForm       28
 #define ClassSelect     29
 #define AClassForm      30
-#define AClassLabel     31
-#define AClassSelect    32
-#define ConfirmSave     33
-#define ConfirmSaveLbl  34
-#define ConfirmSaveList 35
-#define OptionMenu	36
+#define AClassSelect    31
+#define ConfirmSave     32
+#define ConfirmSaveList 33
+#define OptionMenu	34
 #define MAX_REF         40
 
 /* The possible GET/POST/PUT request modes */
@@ -150,25 +146,26 @@ THOT_EXPORT char         Answer_text[MAX_LENGTH];
 THOT_EXPORT char         Answer_name[NAME_LENGTH];
 THOT_EXPORT char         Answer_password[NAME_LENGTH];
 THOT_EXPORT char         Display_password[NAME_LENGTH];
+THOT_EXPORT char         ScanFilter[NAME_LENGTH]; /* to scan directories    */
 THOT_EXPORT int          Lg_password;
 THOT_EXPORT int          BaseDialog;
 THOT_EXPORT char        *LastURLName;	/* last URL requested               */
 THOT_EXPORT char        *DirectoryName;	/* local path of the document       */
 THOT_EXPORT char        *DocumentName;	/* document name                    */
-THOT_EXPORT char        *ObjectName;		/* document name                    */
+THOT_EXPORT char        *ObjectName;	/* document name                    */
 THOT_EXPORT char        *SaveImgsURL;	/* where to save remote Images      */
 THOT_EXPORT char        *TargetName;
 THOT_EXPORT boolean	 SaveAsHTML;
 THOT_EXPORT boolean	 SaveAsText;
-THOT_EXPORT int          CopyImages;		/* should we copy images in Save As */
-THOT_EXPORT int          UpdateURLs;		/* should we update URLs in Save As */
+THOT_EXPORT int          CopyImages;	/* should we copy images in Save As */
+THOT_EXPORT int          UpdateURLs;	/* should we update URLs in Save As */
 THOT_EXPORT boolean      UserAnswer;
 THOT_EXPORT int          ReturnOption;
 THOT_EXPORT boolean      InNewWindow;
 THOT_EXPORT Document     CurrentDocument;
 THOT_EXPORT Document     SavingDocument;
 THOT_EXPORT Document     SavingObject;
-THOT_EXPORT char        *SavingFile;		/* complete path or URL of the document */
+THOT_EXPORT char        *SavingFile;	/* complete path or URL of the document */
 THOT_EXPORT Document     AttrHREFdocument;
 THOT_EXPORT Element      AttrHREFelement;
 THOT_EXPORT char        *AttrHREFvalue;
