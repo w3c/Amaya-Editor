@@ -19,26 +19,7 @@
 #include "XLink.h"
 #include "parser.h"
 
-static AttributeMapping XLinkAttributeMappingTable[] =
-{
-   /* The first entry MUST be unknown_attr */
-   /* The rest of this table MUST be in alphabetical order */
-   {TEXT("unknown_attr"), TEXT(""), 'A', XLink_ATTR_Invalid_attribute, L_Undefined},
-   {TEXT("actuate"), TEXT(""), 'A', XLink_ATTR_actuate, L_Undefined},
-   {TEXT("from"), TEXT(""), 'A', XLink_ATTR_from, L_Undefined},
-   {TEXT("href"), TEXT(""), 'A', XLink_ATTR_href_, L_Undefined},
-   {TEXT("role"), TEXT(""), 'A', XLink_ATTR_role, L_Undefined},
-   {TEXT("show"), TEXT(""), 'A', XLink_ATTR_show, L_Undefined},
-   {TEXT("title"), TEXT(""), 'A', XLink_ATTR_title, L_Undefined},
-   {TEXT("to"), TEXT(""), 'A', XLink_ATTR_to, L_Undefined},
-   {TEXT("type"), TEXT(""), 'A', XLink_ATTR_type, L_Undefined},
-   {TEXT("zzghost"), TEXT(""), 'A', XLink_ATTR_Ghost_restruct, L_Undefined},
-
-   {TEXT(""), TEXT(""), EOS, 0, L_Undefined}		/* Last entry. Mandatory */
-};
-
 /* mapping table of attribute values */
-
 static AttrValueMapping XLinkAttrValueMappingTable[] =
 { 
    {XLink_ATTR_actuate, TEXT("onLoad"), XLink_ATTR_actuate_VAL_onLoad},
@@ -69,39 +50,17 @@ static AttrValueMapping XLinkAttrValueMappingTable[] =
    attribute of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           MapXLinkAttribute (CHAR_T* Attr, AttributeType *attrType, CHAR_T* elementName, Document doc)
+void           MapXLinkAttribute (CHAR_T *attrName, AttributeType *attrType, CHAR_T *elementName, Document doc)
 #else
 void           MapXLinkAttribute (Attr, attrType, elementName, doc)
-CHAR_T*        Attr;
-AttributeType* attrType;
+CHAR_T        *attrName;
+AttributeType *attrType;
 CHAR_T*        elementName;
 Document       doc;
 #endif
 {
-   int                 i;
-
-   attrType->AttrTypeNum = 0;
-   attrType->AttrSSchema = NULL;
-   i = 0;
-   do
-      if (ustrcasecmp (XLinkAttributeMappingTable[i].XMLattribute, Attr))
-	 i++;
-      else
-	 if (XLinkAttributeMappingTable[i].XMLelement[0] == EOS)
-	   {
-	   attrType->AttrTypeNum = XLinkAttributeMappingTable[i].ThotAttribute;
-	   attrType->AttrSSchema = GetXLinkSSchema (doc);
-	   }
-	 else if (!ustrcasecmp (XLinkAttributeMappingTable[i].XMLelement,
-				elementName))
-	   {
-	   attrType->AttrTypeNum = XLinkAttributeMappingTable[i].ThotAttribute;
-	   attrType->AttrSSchema = GetXLinkSSchema (doc);
-	   }
-	 else
-	   i++;
-   while (attrType->AttrTypeNum <= 0 &&
-	  XLinkAttributeMappingTable[i].AttrOrContent != EOS);
+  attrType->AttrSSchema = GetMathMLSSchema (doc);
+  MapXMLAttribute (XLINK_TYPE, attrName, elementName, doc, &(attrType->AttrTypeNum));
 }
 
 /*----------------------------------------------------------------------

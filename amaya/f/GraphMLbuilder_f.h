@@ -8,7 +8,7 @@
 
 extern void GraphMLGetDTDName ( STRING DTDname,
                                 STRING elementName );
-extern void MapGraphMLAttribute ( CHAR_T* Attr,
+extern void MapGraphMLAttribute ( CHAR_T *attrName,
                                   AttributeType *attrType,
                                   CHAR_T* elementName,
                                   Document doc );
@@ -62,7 +62,7 @@ extern void GraphMLAttributeComplete ( Attribute attr,
 
 extern void GraphMLGetDTDName (/* STRING DTDname,
                                   STRING elementName */);
-extern void MapGraphMLAttribute (/* CHAR_T* Attr,
+extern void MapGraphMLAttribute (/* CHAR_T *attrName,
                                     AttributeType *attrType,
                                     CHAR_T* elementName,
                                     Document doc */);

@@ -14,12 +14,13 @@
 #define XHTML_TYPE 4
 
 /* current HTML parsing level */
-#define L_Undefined    0
+#define L_Other        0
 #define L_Basic        1
 #define L_Strict       2
 #define L_Transitional 3
 
 #define MaxTypeNameLength 16
+#define DummyAttribute    500
 typedef CHAR_T typeName[MaxTypeNameLength];
 
 typedef struct _ElemMapping

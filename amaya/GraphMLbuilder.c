@@ -23,37 +23,6 @@
 #include "styleparser_f.h"
 #include "style.h"
 
-static AttributeMapping GraphMLAttributeMappingTable[] =
-{
-   /* The first entry MUST be unknown_attr */
-   /* The rest of this table MUST be in alphabetical order */
-   {TEXT("unknown_attr"), TEXT(""), 'A', GraphML_ATTR_Invalid_attribute, L_Undefined},
-
-   {TEXT("align"), TEXT(""), 'A', GraphML_ATTR_align, L_Undefined},
-   {TEXT("arrowhead"), TEXT(""), 'A', GraphML_ATTR_arrowhead, L_Undefined},
-   {TEXT("class"), TEXT(""), 'A', GraphML_ATTR_class, L_Undefined},
-   {TEXT("depth"), TEXT(""), 'A', GraphML_ATTR_depth_, L_Undefined},
-   {TEXT("direction"), TEXT(""), 'A', GraphML_ATTR_direction, L_Undefined},
-   {TEXT("fill"), TEXT(""), 'A', GraphML_ATTR_fill, L_Undefined},
-   {TEXT("height"), TEXT(""), 'A', GraphML_ATTR_height_, L_Undefined},
-   {TEXT("hspace"), TEXT(""), 'A', GraphML_ATTR_hspace, L_Undefined},
-   {TEXT("id"), TEXT(""), 'A', GraphML_ATTR_id, L_Undefined},
-   {TEXT("linestyle"), TEXT(""), 'A', GraphML_ATTR_linestyle_, L_Undefined},
-   {TEXT("linewidth"), TEXT(""), 'A', GraphML_ATTR_linewidth, L_Undefined},
-   {TEXT("position"), TEXT(""), 'A', GraphML_ATTR_position, L_Undefined},
-   {TEXT("points"), TEXT(""), 'A', GraphML_ATTR_points, L_Undefined},
-   {TEXT("stroke"), TEXT(""), 'A', GraphML_ATTR_stroke, L_Undefined},
-   {TEXT("stroke-width"), TEXT(""), 'A', GraphML_ATTR_stroke_width, L_Undefined},
-   {TEXT("style"), TEXT(""), 'A', GraphML_ATTR_style_, L_Undefined},
-   {TEXT("valign"), TEXT(""), 'A', GraphML_ATTR_valign, L_Undefined},
-   {TEXT("vspace"), TEXT(""), 'A', GraphML_ATTR_vspace, L_Undefined},
-   {TEXT("width"), TEXT(""), 'A', GraphML_ATTR_width_, L_Undefined},
-   {TEXT("x"), TEXT(""), 'A', GraphML_ATTR_x, L_Undefined},
-   {TEXT("y"), TEXT(""), 'A', GraphML_ATTR_y, L_Undefined},
-   {TEXT("zzghost"), TEXT(""), 'A', GraphML_ATTR_Ghost_restruct, L_Undefined},
-   {TEXT(""), TEXT(""), EOS, 0, L_Undefined}		/* Last entry. Mandatory */
-};
-
 /* mapping table of attribute values */
 
 static AttrValueMapping GraphMLAttrValueMappingTable[] =
@@ -116,38 +85,17 @@ STRING elementName;
    attribute of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           MapGraphMLAttribute (CHAR_T* Attr, AttributeType *attrType, CHAR_T* elementName, Document doc)
+void           MapGraphMLAttribute (CHAR_T *attrName, AttributeType *attrType, CHAR_T* elementName, Document doc)
 #else
 void           MapGraphMLAttribute (Attr, attrType, elementName, doc)
-CHAR_T*        Attr;
-AttributeType* attrType;
-CHAR_T*        elementName;
+CHAR_T        *attrName;
+AttributeType *attrType;
+CHAR_T        *elementName;
 Document       doc;
 #endif
 {
-   int                 i;
-
-   attrType->AttrTypeNum = 0;
-   attrType->AttrSSchema = NULL;
-   i = 0;
-   do
-      if (ustrcasecmp (GraphMLAttributeMappingTable[i].XMLattribute, Attr))
-	 i++;
-      else
-	 if (GraphMLAttributeMappingTable[i].XMLelement[0] == EOS)
-	    {
-	    attrType->AttrTypeNum = GraphMLAttributeMappingTable[i].ThotAttribute;
-	    attrType->AttrSSchema = GetGraphMLSSchema (doc);
-	    }
-	 else if (!ustrcasecmp (GraphMLAttributeMappingTable[i].XMLelement, elementName))
-	    {
-	    attrType->AttrTypeNum = GraphMLAttributeMappingTable[i].ThotAttribute;
-	    attrType->AttrSSchema = GetGraphMLSSchema (doc);
-	    }
-	 else
-	    i++;
-   while (attrType->AttrTypeNum <= 0 &&
-	  GraphMLAttributeMappingTable[i].AttrOrContent != EOS);
+  attrType->AttrSSchema = GetGraphMLSSchema (doc);
+  MapXMLAttribute (GRAPH_TYPE, attrName, elementName, doc, &(attrType->AttrTypeNum));
 }
 
 /*----------------------------------------------------------------------

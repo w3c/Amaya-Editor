@@ -20,10 +20,11 @@ extern void MapXMLElementType ( int XMLtype,
                                 Document doc );
 extern void GetXMLElementName ( ElementType elType,
                                 CHAR_T** buffer );
-extern int XmlMapAttribute ( CHAR_T *attrName,
+extern int MapXMLAttribute ( int XMLtype,
+                             CHAR_T *attrName,
                              CHAR_T *elementName,
                              Document doc,
-                             AttributeMapping table[] );
+                             int *thotType );
 
 #else /* __STDC__ */
 
@@ -41,10 +42,11 @@ extern void MapXMLElementType (/* int XMLtype,
                                   Document doc */);
 extern void GetXMLElementName (/* ElementType elType,
                                   CHAR_T** buffer */);
-extern int XmlMapAttribute (/* CHAR_T *attrName,
+extern int MapXMLAttribute (/* int XMLtype,
+                               CHAR_T *attrName,
                                CHAR_T *elementName,
                                Document doc,
-                               AttributeMapping table[] */);
+                               int *thotType */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -9,7 +9,6 @@
 #define FETCHHTMLNAME_H
 
 #include "parser.h"
-#define DummyAttribute 500
 
 typedef struct _ClosedElement *PtrClosedElement;
 typedef struct _ClosedElement
