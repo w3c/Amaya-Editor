@@ -1336,10 +1336,15 @@ ThotBool         use_preconditions;
 	{
 	  DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
 	  ResetStop (doc);
-	  usprintf (msg, TEXT("%s %s --> %s"),
-		    TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-		    url,
-		    AmayaLastHTTPErrorMsg);
+	  if (AmayaLastHTTPErrorMsg[0] != WC_EOS)
+	    usprintf (msg, TEXT("%s %s --> %s"),
+		      TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+		      url,
+		      AmayaLastHTTPErrorMsg);
+	  else
+	    usprintf (msg, TEXT("%s %s"),
+		      TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+		      url);
 	  if (confirm)
 	    {
 	      InitConfirm (doc, view, msg);

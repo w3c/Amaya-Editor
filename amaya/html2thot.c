@@ -7477,16 +7477,16 @@ ThotBool            plainText;
 	  }
 	else
 #endif /* ANNOTATIONS */
-	
-	/* delete all element except the root element */
-	el = TtaGetFirstChild (rootElement);
-	while (el != NULL)
 	  {
-	    oldel = el;
-	    TtaNextSibling (&el);
-	    TtaDeleteTree (oldel, doc);
+	    /* delete all element except the root element */
+	    el = TtaGetFirstChild (rootElement);
+	    while (el != NULL)
+	      {
+		oldel = el;
+		TtaNextSibling (&el);
+		TtaDeleteTree (oldel, doc);
+	      }
 	  }
-	
 	/* save the path or URL of the document */
 	TtaExtractName (pathURL, temppath, tempname);
 	TtaSetDocumentDirectory (doc, temppath);

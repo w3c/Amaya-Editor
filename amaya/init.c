@@ -2377,22 +2377,32 @@ ThotBool            history;
       /* If it's an HTML document, save the charset into the Charset attribute */
       charset = HTTP_headers (http_headers, AM_HTTP_CHARSET);
       if (charset)
-         if (DocumentTypes[newdoc] == docHTMLRO ||
-	     DocumentTypes[newdoc] == docHTML)
+	{
+	  /* copy the charset to the document's metadata info */
+	  /* DocumentMeta[newdoc]->charset = TtaWCSdup (charset); */
+
+	  if (DocumentTypes[newdoc] == docHTMLRO ||
+	      DocumentTypes[newdoc] == docHTML)
 	    {
-	    root = TtaGetMainRoot (newdoc);
-	    attrType.AttrSSchema = TtaGetDocumentSSchema (newdoc);
-	    attrType.AttrTypeNum = HTML_ATTR_Charset;
-	    attr = TtaGetAttribute (root, attrType);
-	    if (!attr)
-	       /* the root element does not have a Charset attribute.
-		  Create one */
-	       {
-	       attr = TtaNewAttribute (attrType);
-	       TtaAttachAttribute (root, attr, newdoc);
-	       }
-	    TtaSetAttributeText (attr, charset, root, newdoc);
+	      root = TtaGetMainRoot (newdoc);
+	      attrType.AttrSSchema = TtaGetDocumentSSchema (newdoc);
+	      attrType.AttrTypeNum = HTML_ATTR_Charset;
+	      attr = TtaGetAttribute (root, attrType);
+	      if (!attr)
+		/* the root element does not have a Charset attribute.
+		   Create one */
+		{
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (root, attr, newdoc);
+		}
+	      TtaSetAttributeText (attr, charset, root, newdoc);
 	    }
+	}
+      /*
+      else
+	charset = DEFAULT_CHARSET;
+      */
+
       /* Set the document read-only when needed */
       if (DocumentTypes[newdoc] == docHTMLRO
 	  || DocumentTypes[newdoc] == docImageRO
@@ -3212,7 +3222,7 @@ void*     context;
 	       TtaSetTextZone (newdoc, 1, 1, s);
 	       /* save the document's formdata into the document table */
 	       if (DocumentMeta[newdoc])
-		 TtaFreeMemory (DocumentMeta[(int) newdoc]->form_data);
+		   TtaFreeMemory (DocumentMeta[(int) newdoc]->form_data);
 	       else
 		 DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
 	       DocumentMeta[newdoc]->form_data = TtaWCSdup (form_data);
@@ -4158,10 +4168,11 @@ DocumentType     docType;
 #endif
 
 {
+  AHTHeaders          http_headers;
+  CHAR_T              content_type[MAX_LENGTH];
   CHAR_T              tempfile[MAX_LENGTH];
   int                 newdoc, len;
   ThotBool            stopped_flag;
-
 
   W3Loading = doc;
   BackupDocument = doc;
@@ -4175,11 +4186,16 @@ DocumentType     docType;
 	{
 	  /* it's a remote file */
 	  if (docType == docHTML)
-	    ustrcpy (tempfile, TEXT("text/html"));
+	    {
+	      ustrcpy (content_type, TEXT("text/html"));
+	      http_headers.content_type = content_type;
+	    }
 	  else
-	    tempfile[0] = EOS;
+	      http_headers.content_type = NULL;
+	  /* we don't know yet how to recover the charset */
+	  http_headers.charset = NULL;
 	  LoadHTMLDocument (newdoc, docname, NULL, CE_ABSOLUTE, 
-			    tempdoc, DocumentName, tempfile, FALSE);
+			    tempdoc, DocumentName, &http_headers, FALSE);
 	}
       else
 	{
