@@ -149,6 +149,7 @@ Amaya/batch/comp_toolbar.bmp \
 Amaya/batch/*.c \
 Amaya/batch/f/*.h \
 Amaya/doc/amaya/Access.html \
+Amaya/doc/amaya/Annotations.html \
 Amaya/doc/amaya/Attributes.html \
 Amaya/doc/amaya/Browsing.html \
 Amaya/doc/amaya/Changing.html \
