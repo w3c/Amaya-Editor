@@ -2316,14 +2316,9 @@ PtrElement          NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 	/* it's a rule for a nature change, the function will create an element
 	   having the type of the root of the new nature */
 	{
-	  if (pSRule->SrSSchemaNat == NULL)
-	    /* nature scheme is not loaded */
-	    /* so, load it! */
-	    {
-	      PSchName[0] = EOS;
-	      LoadNatureSchema (pSS, PSchName, typeNum, pDoc);
-	      AddSchemaGuestViews (pDoc, pSRule->SrSSchemaNat);
-	    }
+	  PSchName[0] = EOS;
+	  LoadNatureSchema (pSS, PSchName, typeNum, pDoc);
+	  AddSchemaGuestViews (pDoc, pSRule->SrSSchemaNat);
 	  if (pSRule->SrSSchemaNat == NULL)
 	    /* could not load the scheme */
 	    error = TRUE;

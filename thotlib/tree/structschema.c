@@ -1947,14 +1947,9 @@ PtrElement          CreateDescendant (int typeNum, PtrSSchema pSS,
 		       /* regles terminales */
 		       break;
 		    case CsNatureSchema:
-		       if (pRule1->SrSSchemaNat == NULL)
-			  /* si le schema de nature n'est pas charge' on le charge */
-			 {
-			    N[0] = EOS;
-			    /* pas de schema de presentation prefere' */
-			    LoadNatureSchema (pSS, N, typeNum, pDoc);
-			    AddSchemaGuestViews (pDoc, pRule1->SrSSchemaNat);
-			 }
+		       N[0] = EOS; /* pas de schema de presentation prefere'*/
+		       LoadNatureSchema (pSS, N, typeNum, pDoc);
+		       AddSchemaGuestViews (pDoc, pRule1->SrSSchemaNat);
 		       if (pRule1->SrSSchemaNat != NULL)
 			 {
 			    pEl = CreateDescendant (pRule1->SrSSchemaNat->SsRootElem,
