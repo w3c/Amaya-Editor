@@ -120,7 +120,7 @@
 119 Pixmap : Farbe nicht darstellbar
 120 Kann Datei nicht einfügen: %s
 121 Kann Datei nicht erzeugen: %s
-122 Kein Übersetzungsschma bekannt für %s
+122 Kein Übersetzungsschema bekannt für %s
 123 Fehlerhafte .TRA - Datei: %s
 124 Zu viele Ausgabedateien
 125 Keine Fenstergröße bekannt für die %s - Ansicht
@@ -271,7 +271,7 @@
 271 Einfügemodus
 272 Abbrechen
 273 Fehler in der PostScript-Erkennung
-274 Auftrag vom Druckspooler "%s" zurückgewisen
+274 Auftrag vom Druckspooler "%s" zurückgeweisen
 275 Kann "%s" nicht erzeugen
 276 Seitenformat
 277 Kann des erzeugte Element nicht verweisen

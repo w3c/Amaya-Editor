@@ -36,22 +36,22 @@
 35 %s chargé
 36 Sauvegarde de %s
 37 Impossible de sauvegarder dans : %s
-38 french system error messages
+38 French system error messages
 39 Une ancre ne peut pas contenir ces éléments
 40 Impossible de créer une ancre dans une ancre
 41 Pas de support GET pour cette URL : %s
 42 Pas de support PUT pour cette URL : %s
 43 Cette version d'Amaya ne supporte pas cette option
 44 Fin d'écriture de %s
-45 Imposible de normaliser %s
-46 Imposible de créer le répertoire temporaire %s
+45 Impossible de normaliser %s
+46 Impossible de créer le répertoire temporaire %s
 47 Aucune transformation possible
 48 La transformation a echoué
 49 HTML.trans erreur de syntaxe ligne %s
 50 Maths
 51 Graphique
 52 Sauvegarder sous
-53 Authentication requise pour le domaine \'%s\' du serveur \'%s\'
+53 Authentification requise pour le domaine \'%s\' du serveur \'%s\'
 54 Éditeur/Navigateur
 55 Délai expiré - le serveur n'a pas répondu
 56 %s existe déjà. Forcer l'écriture ?
@@ -130,7 +130,7 @@
 129 repeat
 130 repeat-x
 131 Votre précédente session Amaya a planté. Voulez-vous recharger les documents modifiés ?
-132 Echec de l'authentification. Voulez-vous réessayer ?
+132 Échec de l'authentification. Voulez-vous réessayer ?
 133 L'opération sera redirigée. Voulez-vous continuer ?
 134 Nombre de lignes
 135 Nombre de colonnes

@@ -36,7 +36,7 @@
 35 %s loaded
 36 Saving %s
 37 Cannot save in: %s
-38 english system errors messages
+38 English system errors messages
 39 An anchor cannot contain these elements
 40 Cannot create an anchor within an anchor
 41 Sorry, no GET support yet for URLs of this type: %s
@@ -104,7 +104,7 @@
 103 Unknown error while saving URL %s
 104 Cannot make a connection to the server
 105 Access to %s is forbidden by the server
-106 Operation succeded for %s
+106 Operation succeeded for %s
 107 %s has been created
 108 %s has been updated
 109 Operation completed with a %s status code
