@@ -6299,6 +6299,7 @@ void FreeAmayaStructures ()
       XPointer_bufferFree ();
       ANNOT_Quit ();
 #endif /* ANNOTATIONS */
+      FreeAmayaCache (); 
     }
 }
 
@@ -6519,10 +6520,12 @@ void InitAmaya (NotifyEvent * event)
        SAddress[i] = add;
        /* initialize history */
        InitDocHistory (i);
+#if 0  /* moved to CreateAmayaCache */
        /* Create a temporary sub-directory for storing the HTML and
 	  image files */
        sprintf (ptr, "%s%c%d", TempFileDirectory, DIR_SEP, i);
        TtaMakeDirectory (ptr);
+#endif
        /* adding the CSS directory */
        if (i == 0)
 	 TtaAppendDocumentPath (ptr);
@@ -6587,6 +6590,8 @@ void InitAmaya (NotifyEvent * event)
 #endif /* ANNOTATIONS */
    /* initialize the libwww */
    QueryInit ();
+   /* initialize the Amaya cache */
+   InitAmayaCache ();
 #ifdef _WINDOWS
    sprintf (LostPicturePath, "%s\\amaya\\lost.gif",
 	     TtaGetEnvString ("THOTDIR"));

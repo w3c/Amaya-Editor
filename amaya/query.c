@@ -28,6 +28,7 @@
 #include "amaya.h"
 #include "init_f.h"
 #include <sys/types.h>
+#include <unistd.h>
 #include <fcntl.h>
 #include "HTEvtLst.h"
 #include "HTAABrow.h"
@@ -3702,4 +3703,189 @@ ThotBool AHTFTPURL_flag (void)
 {
   return (FTPURL_flag);
 }
+
+
+/*----------------------------------------------------------------------
+  CheckSingleInstance
+  Returns TRUE if this is the single instance of Amaya in the system,
+  FALSE otherwise. 
+  N.B. : This implementation is naif.
+  ----------------------------------------------------------------------*/
+ThotBool CheckSingleInstance (char *pid_dir)
+{
+#ifdef _WINDOWS
+  HWND hwnd;
+
+  return FALSE;
+
+#if 0
+  hwnd = FindWindow ("Amaya", NULL);
+  if (!hwnd)
+    return TRUE;
+  else
+    return FALSE;
+#endif
+
+#else /* _WINDOWS */
+
+  int instances;
+  char *ptr;
+  pid_t pid;
+
+  DIR *dp;
+  struct stat st;
+#ifdef HAVE_DIRENT_H
+  struct dirent *d;
+#else
+  struct direct *d;
+#endif /* HAVE_DIRENT_H */
+  char filename[BUFSIZ+1];
+
+  if ((dp = opendir (pid_dir)) == NULL) 
+    {
+      /* @@@ we couldn't open the directory ... we need some msg */
+      perror (pid_dir);
+      return FALSE;
+    }
+
+  instances = 0;
+
+  while ((d = readdir (dp)) != NULL)
+    {
+      /* skip the UNIX . and .. links */
+      if (!strcmp (d->d_name, "..")
+	  || !strcmp (d->d_name, "."))
+	continue;
+
+      sprintf (filename, "%s%c%s", pid_dir, DIR_SEP, d->d_name);
+      if  (lstat (filename, &st) < 0 ) 
+	{
+	  /* @@2 need some error message */
+	  perror (filename);
+	  continue;
+	}
+      
+      switch (st.st_mode & S_IFMT)
+	{
+	case S_IFDIR:
+	case S_IFLNK:
+	  /* skip any links and directories that we find */
+	  continue;
+	  break;
+	default:
+	  /* check if this pid exists. If not, erase it */
+	  ptr = strrchr (filename, DIR_SEP);
+	  if (!ptr) 
+	    continue;
+	  sscanf (ptr, DIR_STR"%d", &pid);
+	  if (kill (pid, 0) == -1)
+	    {
+	      printf ("removing stale instance process id %s\n", filename);
+	      /* erase the stale pid file */
+	      TtaFileUnlink (filename);
+	    }
+	  else /* we found one live instance */
+	    {
+	      printf ("found live instance %s\n", filename);
+	      instances++;
+	    }
+	  break;
+	}
+    }
+  closedir (dp);
+  return (instances == 0);
+#endif /* !_WINDOWS */
+}
+
+/*----------------------------------------------------------------------
+  FreeAmayaCache 
+  ----------------------------------------------------------------------*/
+void FreeAmayaCache (void)
+{
+#ifndef _WINDOWS
+  char str[MAX_LENGTH];
+  pid_t pid;
+
+  /* unregister this instance of Amaya */
+  pid = getpid ();
+  printf ("unregistrering instance %d\n", pid);
+  sprintf (str, "%s/pid/%d", TempFileDirectory, pid);
+  if (TtaFileExist (str))
+    TtaFileUnlink (str);
+#endif /* _WINDOWS */
+}
+
+/*----------------------------------------------------------------------
+  InitAmayaCache 
+  Create the temporary sub-directories for storing the HTML and
+  other downloaded files.
+  ----------------------------------------------------------------------*/
+void InitAmayaCache (void)
+{
+  ThotBool can_erase;
+  int i;
+  char str[MAX_LENGTH];
+  char *ptr;
+  pid_t pid;
+  int fd_pid;
+
+#ifndef _WINDOWS
+  /* create the temp dir for the Amaya pid */
+  sprintf (str, "%s%cpid", TempFileDirectory, DIR_SEP);
+  TtaMakeDirectory (str);
+#endif
+
+  /* protection against dir names that have . in them to avoid
+     erasing everything  by accident */
+  ptr = TempFileDirectory;
+  can_erase = TRUE;
+  while (*ptr && can_erase)
+    {
+      if (*ptr == '.')
+	{
+	  if (*(ptr + 1) == '.')
+	    can_erase = FALSE;
+	  else
+	    ptr++;
+	  continue;
+	}
+      else if (*ptr == '~')
+	can_erase = FALSE;
+      else if (!isalnum (*ptr) && *ptr != DIR_SEP && *ptr != ':')
+	can_erase = FALSE;
+      ptr++;
+    }
+
+  if (can_erase && CheckSingleInstance (str))
+    {
+      /* Erase the previous directories */
+      for (i = 0; i < DocumentTableLength; i++)
+	{      
+	  sprintf (str, "%s%c%d%c", TempFileDirectory, DIR_SEP, i, DIR_SEP);
+	  printf ("Cleaning %s\n", str);
+	  RecCleanCache (str);
+	}
+    }
+
+  /* create the temporary cache directories if they don't exit*/
+  for (i = 0; i < DocumentTableLength; i++)
+    {      
+      sprintf (str, "%s%c%d", TempFileDirectory, DIR_SEP, i);
+      TtaMakeDirectory (str);
+    }
+
+#ifndef _WINDOWS
+  /* register this instance of Amaya */
+  pid = getpid ();
+  printf ("Registering instance %d\n", pid);
+  sprintf (str, "%s/pid/%d", TempFileDirectory, pid);
+  fd_pid = open (str, O_CREAT, S_IRUSR | S_IWUSR );
+  if (fd_pid != -1)
+    close (fd_pid);
+  else
+    printf ("Couldn't create fd_pid %s\n", str);
+#endif /* _WINDOWS */
+}
+
+
 
