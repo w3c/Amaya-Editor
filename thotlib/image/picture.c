@@ -37,6 +37,10 @@
 #include "png.h"
 #include "fileaccess.h"
 
+#ifdef _WINDOWS
+#include "winsys.h"
+#endif /* _WINDOWS */
+
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
 #include "frame_tv.h"
@@ -121,33 +125,26 @@ static unsigned char MirrorBytes[0x100] = {
    0x1f, 0x9f, 0x5f, 0xdf, 0x3f, 0xbf, 0x7f, 0xff
 };
 
-#ifdef _WINDOWS
-#if defined (WIN32)
-#   define IS_WIN32 TRUE
-#else
-#   define IS_WIN32 FALSE
-#endif
+#ifdef _WINDOWS 
 
-#define IS_NT      IS_WIN32 && (BOOL)(GetVersion () < 0x80000000)
-#define IS_WIN32S  IS_WIN32 && (BOOL)(!(IS_NT) && (LOBYTE (LOWORD (GetVersion ())) < 4))
-#define IS_WIN95   (BOOL)(!(IS_NT) && !(IS_WIN32S)) && IS_WIN32
-
-int bgRed ;
+int bgRed;
 int bgGreen;
-int bgBlue ;
+int bgBlue;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void WIN_LayoutTransparentPicture (HBITMAP pixmap, int x, int y, int width, int height, COLORREF crColor)
+void WIN_LayoutTransparentPicture (HBITMAP pixmap, int x, int y, int width, int height, int red, int green, int blue)
 #else  /* !__STDC__ */
-void WIN_LayoutTransparentPicture (pixmap, x, y, width, height, crColor)
+void WIN_LayoutTransparentPicture (pixmap, x, y, width, height, red, green, blue)
 HBITMAP  pixmap; 
 int      x;
 int      y;
 int      width; 
 int      height; 
-COLORREF crColor;
+int      red;
+int      green;
+int      blue;
 #endif /* __STDC__ */
 {
    HDC      hImageDC;
@@ -164,6 +161,7 @@ COLORREF crColor;
    HBITMAP  pOldBitmapInvAnd;
    HBITMAP  bitmapDest;
    HBITMAP  pOldBitmapDest;
+   COLORREF crColor = RGB (red, green, blue);
    COLORREF crOldBkColor ;
 
    hImageDC = CreateCompatibleDC (TtDisplay);
@@ -181,7 +179,7 @@ COLORREF crColor;
    bitmapAnd = CreateBitmap (width, height, 1, 1, NULL);
    pOldBitmapAnd = SelectObject (hAndDC, bitmapAnd);
 
-   crOldBkColor = SetBkColor (hImageDC, GetNearestColor (hImageDC, crColor));
+   crOldBkColor = SetBkColor (hImageDC, crColor);
    BitBlt (hAndDC, 0, 0, width, height, hImageDC, 0, 0, SRCCOPY);
 
    SetBkColor (hImageDC, crOldBkColor);
@@ -199,8 +197,11 @@ COLORREF crColor;
    bitmapDest = CreateCompatibleBitmap (hImageDC, width, height);
    pOldBitmapDest = SelectObject (hDestDC, bitmapDest);
    BitBlt (hDestDC, 0, 0, width, height, TtDisplay, x, y, SRCCOPY);
+
    BitBlt (hDestDC, 0, 0, width, height, hAndDC, 0, 0, SRCAND);
+
    BitBlt (hDestDC, 0, 0, width, height, hOrDC, 0, 0, SRCINVERT);
+
    BitBlt (TtDisplay, x, y, width, height, hDestDC, 0, 0, SRCCOPY);
 
    SelectObject (hDestDC, pOldBitmapDest);
@@ -259,6 +260,7 @@ Pixmap              pixmap;
    UpdatePictInfo updates the picture information structure by      
    setting the picture and the mask                          
   ----------------------------------------------------------------------*/
+#ifndef _WINDOWS
 #ifdef __STDC__
 static void         UpdatePictInfo (PictInfo * imdesc, Pixmap pixmap, Pixmap picMask)
 #else  /* __STDC__ */
@@ -266,13 +268,23 @@ static void         UpdatePictInfo (imdesc, pixmap, picMask)
 PictInfo           *imdesc;
 Pixmap              pixmap;
 Pixmap              picMask;
-
 #endif /* __STDC__ */
+#else /* _WINDOWS */
+#ifdef __STDC__
+static void         UpdatePictInfo (PictInfo * imdesc, Pixmap pixmap)
+#else  /* __STDC__ */
+static void         UpdatePictInfo (imdesc, pixmap)
+PictInfo           *imdesc;
+Pixmap              pixmap;
+#endif /* __STDC__ */
+#endif /* _WINDOWS */
 {
    FreePixmap (imdesc->PicPixmap);
-   FreePixmap (imdesc->PicMask);
    imdesc->PicPixmap = pixmap;
+#  ifndef _WINDOWS
+   FreePixmap (imdesc->PicMask);
    imdesc->PicMask = picMask;
+#  endif /* _WINDOWS */
 }
 
 
@@ -438,7 +450,7 @@ PictInfo           *imageDesc;
 	        BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
 	        DeleteDC (hMemDC);
          } else {
-               WIN_LayoutTransparentPicture (pixmap, xFrame, yFrame, w, h, PALETTERGB (imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue));
+               WIN_LayoutTransparentPicture (pixmap, xFrame, yFrame, w, h, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
          }
 #            endif /* _WINDOWS */
 	     break;
@@ -506,6 +518,7 @@ PictInfo           *imageDesc;
           rect.height = MAX_SIZE;
           XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
 #         else  /* _WINDOWS */
+		  /*
           if (IS_WIN95) {
              HBITMAP hBkgBmp = CreateCompatibleBitmap (TtDisplay, w, h);
 			 int     x, y;
@@ -523,11 +536,13 @@ PictInfo           *imageDesc;
                 hBrush = SelectObject (TtDisplay, hBrush);
                 DeleteObject (hBrush);
           }
+		  */
 #         endif /* _WINDOWS */
 	  break;
 	}
     }
 }
+
 
 
 /*----------------------------------------------------------------------
@@ -1118,13 +1133,13 @@ int                 frame;
 	   if (imageDesc->PicPresent == RealSize)
 	     Picture_Center (picWArea, picHArea, wFrame, hFrame, pres, &xTranslate, &yTranslate, &picXOrg, &picYOrg);
 	   
+#              ifndef _WINDOWS
 	   if (imageDesc->PicMask)
 	     {
-#              ifndef _WINDOWS
 	       XSetClipOrigin (TtDisplay, TtGraphicGC, xFrame - picXOrg + xTranslate, yFrame - picYOrg + yTranslate);
 	       XSetClipMask (TtDisplay, TtGraphicGC, imageDesc->PicMask);
-#              endif /* _WINDOWS */
 	     }
+#              endif /* _WINDOWS */
 
 	   if (typeImage >= InlineHandlers)
 	     {
@@ -1136,13 +1151,13 @@ int                 frame;
 			    wFrame, hFrame, xFrame + xTranslate, yFrame + yTranslate, frame, imageDesc);
 	   }
 	   
+#              ifndef _WINDOWS
 	   if (imageDesc->PicMask)
 	     {
-#              ifndef _WINDOWS
 	       XSetClipMask (TtDisplay, TtGraphicGC, None);
 	       XSetClipOrigin (TtDisplay, TtGraphicGC, 0, 0);
-#              endif /* _WINDOWS */
 	     }
+#              endif /* _WINDOWS */
 	 }
 #      ifndef _WINDOWS
        ResetCursorWatch (frame);
@@ -1452,7 +1467,11 @@ PictInfo           *imageDesc;
        picMask = None;
      }
    if (!Printing || imageDesc->PicPixmap != EpsfPictureLogo)
+#     ifndef _WINDOWS
       UpdatePictInfo (imageDesc, myDrawable, picMask);
+#     else  /* _WINDOWS */
+      UpdatePictInfo (imageDesc, myDrawable);
+#     endif /* _WINDOWS */
 
 }
 
@@ -1471,11 +1490,12 @@ PictInfo           *imageDesc;
 
    if (imageDesc->PicPixmap != None)
      {
-
-       FreePixmap (imageDesc->PicPixmap);
+#      ifndef _WINDOWS
        FreePixmap (imageDesc->PicMask);
-       imageDesc->PicPixmap = None;
        imageDesc->PicMask = None;
+#      endif /* _WINDOWS */
+       FreePixmap (imageDesc->PicPixmap);
+       imageDesc->PicPixmap = None;
        imageDesc->PicXArea = 0;
        imageDesc->PicYArea = 0;
        imageDesc->PicWArea = 0;

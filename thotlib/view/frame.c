@@ -204,11 +204,13 @@ int                 ymax;
       return;
    if (pAb->AbPictBackground)
      DrawPicture (pBox, (PictInfo *) pAb->AbPictBackground, frame);
+#  ifndef _WINDOWS
    else if (pAb->AbFillBox)
      DrawRectangle (frame, pBox->BxThickness, pAb->AbLineStyle,
 		    pBox->BxXOrg - x, pBox->BxYOrg - y,
 		    pBox->BxWidth, pBox->BxHeight, 0, 0, pAb->AbForeground,
 		    pAb->AbBackground, pAb->AbFillPattern);
+#  endif /* _WINDOWS */
 
    while (pBox->BxNextBackground != NULL)
      {

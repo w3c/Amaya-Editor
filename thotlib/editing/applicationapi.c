@@ -447,8 +447,8 @@ char               *aName;
      }
 #    ifdef _WINDOWS
      lg = strlen (aName);
-     if (aName[lg - 4] == '.')
-	aName[lg - 4] = '\0';
+     if (!strcasecmp (&aName[lg - 4], ".exe"))
+        aName[lg - 4] = '\0';
 #    endif /* _WINDOWS */
 }
 

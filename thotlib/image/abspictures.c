@@ -126,7 +126,9 @@ int                 imagetype;
       /* use the buffer allocated by the picture content */
       image->PicFileName = ptr;
       image->PicPixmap = 0;
+#     ifndef _WINDOWS 
       image->PicMask = 0;
+#     endif /* _WINDOWS */
       image->PicType = imagetype;
       image->PicPresent = (PictureScaling) picPresent;
       image->PicXArea = 0;

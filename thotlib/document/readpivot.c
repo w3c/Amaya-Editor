@@ -113,7 +113,9 @@ int                 typeimage;
 	}
       image->PicFileName = NULL;
       image->PicPixmap = 0;
+#     ifndef _WINDOWS
       image->PicMask = 0;
+#     endif /* _WINDOWS */
       image->PicType = typeimage;
       image->PicPresent = presimage;
       image->PicXArea = x;

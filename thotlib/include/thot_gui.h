@@ -39,6 +39,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "typebase.h"
 /*
  * The current HDC : the current Device context in use.
  */
@@ -47,21 +48,35 @@ extern HDC          TtDisplay;
 /*
  * Emulation of a X-Windows Graphic Context in MS-Windows
  */
-#define THOT_GC_FOREGROUND	0x01
-#define THOT_GC_BACKGROUND	0x02
-#define THOT_GC_BRUSH		0x04
-#define THOT_GC_FUNCTION	0x08
-#define THOT_GC_FONT		0x10
-#define THOT_GC_PEN		0x20
+#define THOT_GC_FOREGROUND  0x01
+#define THOT_GC_BACKGROUND  0x02
+#define THOT_GC_BRUSH       0x04
+#define THOT_GC_FUNCTION    0x08
+#define THOT_GC_FONT        0x10
+#define THOT_GC_PEN         0x20
+
+typedef struct winFont {
+        char     alphabet; 
+		char     family; 
+		int      highlight; 
+		int      size; 
+		TypeUnit unit;
+} winFont,  *ptrfont;
 
 typedef struct struct_ThotGC {
      int                 capabilities;
+	 /*
      COLORREF            foreground;
      COLORREF            background;
-     HBRUSH              brush;
-     DWORD               mode;
-     HFONT               font;
+	 */
+     int                 foreground;
+     int                 background;
+     /* 
+	 HBRUSH              brush; 
+     DWORD               mode; 
+	 HFONT               font; 
      HPEN                pen;
+	 */
 } WIN_GC_BLK, *WIN_GC, *ThotGC;
 
 typedef HWND        ThotWidget;
@@ -69,7 +84,7 @@ typedef HWND        ThotWindow;
 typedef HBITMAP     ThotBitmap;
 typedef COLORREF    ThotColor;
 typedef COLORREF    Pixel;
-typedef HFONT       ptrfont;
+/* typedef HFONT       ptrfont; */
 typedef char       *Pixmap;
 typedef HCURSOR     ThotCursor;
 typedef HBITMAP     Drawable;

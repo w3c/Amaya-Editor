@@ -34,6 +34,7 @@
 #define THOT_EXPORT extern
 #include "picture_tv.h"
 #include "frame_tv.h"
+#include "thotcolor_tv.h"
 
 #include "font_f.h"
 #include "units_f.h"
@@ -86,6 +87,9 @@ static int          stack[(1 << (MAX_LWZ_BITS)) * 2], *sp = stack;
 
 #ifdef _WINDOWS
 #define MAXNUMBER 256
+
+#define ALIGNLONG(i) ((i+3)/4*4)
+
 extern int bgRed ;
 extern int bgGreen;
 extern int bgBlue ;
@@ -105,6 +109,8 @@ int WIN_InitSystemColors (void)
 int WIN_InitSystemColors () 
 #endif /* __STDC __ */
 {
+    int i, nbPalEntries;
+
     if (peInitialized)
        return 1;
     
@@ -112,12 +118,44 @@ int WIN_InitSystemColors ()
        return 1;
     }
     
-    SelectPalette (TtDisplay, TtCmap, FALSE);
+    ptrLogPal = (PLOGPALETTE) LocalAlloc (LMEM_FIXED, sizeof(LOGPALETTE) + MAX_COLOR * sizeof(PALETTEENTRY));
+    ptrLogPal->palVersion    = 0x300;
+    ptrLogPal->palNumEntries = MAX_COLOR;
+       
+    for (i = 0; i < MAX_COLOR; i++) {
+        ptrLogPal->palPalEntry[i].peRed   = RGB_Table[i].red;
+        ptrLogPal->palPalEntry[i].peGreen = RGB_Table[i].green;
+        ptrLogPal->palPalEntry[i].peBlue  = RGB_Table[i].blue;
+        ptrLogPal->palPalEntry[i].peFlags = PC_RESERVED;
+    }
+
+    TtCmap = CreatePalette (ptrLogPal);
+    LocalFree (ptrLogPal);
+      
+    if (TtCmap == NULL) {
+#      ifdef _WIN_DEBUG
+       fprintf (stderr, "couldn't CreatePalette\n");												  
+#      endif 
+       WinErrorBox (WIN_Main_Wd);
+    } else {
+         if (UnrealizeObject (TtCmap) && NULL != (SelectPalette (TtDisplay, TtCmap, FALSE)))
+            nbPalEntries = RealizePalette (TtDisplay);
+/*       
+         SelectPalette (TtDisplay, TtCmap, FALSE);
+         nbPalEntries = RealizePalette (TtDisplay); */
+         if (nbPalEntries == 0)
+            WinErrorBox ();
+    }
+
+    /******************************************
+	SelectPalette (TtDisplay, TtCmap, FALSE);
     nbSysColors = RealizePalette (TtDisplay);
     if (nbSysColors == 0)
        WinErrorBox ();
+	*******************************************/
 
     nbSysColors = GetSystemPaletteEntries (TtDisplay, 0, GetDeviceCaps (TtDisplay, SIZEPALETTE), sysPalEntries);
+    /* nbSysColors = GetPaletteEntries (TtCmap, 0, MAX_COLOR, sysPalEntries); */
 
     peInitialized = TRUE;
     return 0;
@@ -145,7 +183,6 @@ int b;
         delred   = sysPalEntries[i].peRed;
         delgreen = sysPalEntries[i].peGreen;
 		delblue  = sysPalEntries[i].peBlue;
-        /* delred <<= 8; delgreen <<= 8; delblue <<= 8; */
         delred   -= r;
         delgreen -= g;
         delblue  -= b;
@@ -787,6 +824,7 @@ unsigned long       ul;
    }
 }
 
+#  ifndef _WINDOWS
 /*
  * Make a shape  of depth 1 for display from image data.
  */
@@ -801,7 +839,6 @@ int                 bg;
 
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS
    Pixmap              PicMask;
    unsigned char      *iptr;
    char                value;
@@ -899,10 +936,69 @@ int                 bg;
    }
 
    return (PicMask);
-#  else  /* _WINDOWS */
-   return NULL;
-#  endif /* _WINDOWS */
 }
+#  else  /* _WINDOWS */
+Pixmap WIN_MakeMask (char* pixelindex, int w, int h, int bg)
+{
+
+   unsigned char      *iptr;
+   char                value;
+   char               *data;
+   int                 bpl, y;
+   unsigned char      *data_ptr, *max_data;
+   int                 diff, count, width, height;
+
+   HBITMAP             newmask;
+   HBITMAP             oldMask; 
+   HDC                 memDC;
+
+   width  = w;
+   height = h;
+
+   memDC = CreateCompatibleDC (TtDisplay);
+   SetMapMode (memDC, GetMapMode (TtDisplay));
+   newmask = CreateBitmap (width, height, 1, 1, NULL);
+   oldMask = SelectObject (memDC, newmask);
+
+   bpl = width / 8;
+   if (bpl % 2)
+	   bpl ++;
+   data = (char *) TtaGetMemory (bpl * height);
+
+   iptr = pixelindex; 
+   diff = width & 7;
+   width >>= 3;
+
+      for (y = 0; y < height; y++) {
+	  data_ptr = data;
+	  max_data = data_ptr + width;
+	  while (data_ptr < max_data) {
+		value = 0;
+		value = (value << 1) | (*(iptr++) != bg);
+		value = (value << 1) | (*(iptr++) != bg);
+		value = (value << 1) | (*(iptr++) != bg);
+		value = (value << 1) | (*(iptr++) != bg);
+		value = (value << 1) | (*(iptr++) != bg);
+		value = (value << 1) | (*(iptr++) != bg);
+		value = (value << 1) | (*(iptr++) != bg);
+		value = (value << 1) | (*(iptr++) != bg);
+		*(data_ptr++) = value;
+	  }
+	  if (diff) {
+	     value = 0;
+	     for (count = 0; count < diff; count++)
+		 if (*(iptr++) != bg)
+		    value |= (0x80 >> count);
+	     *(data_ptr++) = value;
+	  }
+	  data += bpl; 
+   }
+
+   SetBitmapBits (newmask, h * w, data);
+   BitBlt (TtDisplay, 0, 0, w, h, memDC, 0, 0, SRCCOPY);
+   return (newmask);
+}
+#  endif /* _WINDOWS */
 
 #ifdef _WINDOWS
 #ifdef __STDC__
@@ -938,9 +1034,9 @@ ThotColorStruct* colrs;
                gshift = 5;
                bshift = 11;
                for (w = (width * height); w > 0; w--) {
-                   temp = (((colrs[(int) *datap].red * 255) & 63488) |
-                           (((colrs[(int) *datap].green * 255) >> gshift) & 2016) |
-                           ((((colrs[(int) *datap].blue * 255)>> bshift) & 31)));
+                   temp = (((colrs[(int) *datap].red << 8) & 63488) |
+                           (((colrs[(int) *datap].green << 8) >> gshift) & 2016) |
+                           ((((colrs[(int) *datap].blue << 8) >> bshift) & 31)));
                    *bitp++ = temp & 0xff;
                    *bitp++ = (temp >> 8) & 0xff;
        
@@ -959,21 +1055,9 @@ ThotColorStruct* colrs;
                       *bitp++ = colrs[(int) *datap].red;
                       datap++;
 				  }
-				  if (width % 2 != 0) {
-					 /* int res ;
-					 for (res = 0; res < (sizeof (int) - (width % sizeof (int))); res ++)*/
+				  if (width % 2 != 0) 
 					     *bitp++=0;
-				  }
 			  }
-#             if 0
-              for (w = (width * height); w > 0; w--) {
-                   *bitp++ = colrs[(int) *datap].blue;
-                   *bitp++ = colrs[(int) *datap].green;
-                   *bitp++ = colrs[(int) *datap].red;
-       
-                   datap++;
-			  }
-#             endif /* 0 */
 			  break;
 	  case 32:
                bit_data = (unsigned char *) TtaGetMemory (width * height * 4);
@@ -1328,14 +1412,16 @@ ThotColorStruct     colrs[256];
    return (Img);
 
 #  else /* _WINDOWS */
-   /* static int     cbPlanes, cbBits; */
-   int             mapIndex ;
-   int             i, j, ret = 0, colorIndex;
-   int             Mapping [MAXNUMBER];
-   char*           bmBits;
-   HDC             origMemDC, destMemDC;  
-   HBITMAP         bmpLine, bmp = 0;
-   boolean         need_to_dither;
+   static int        cbBits; 
+   int               mapIndex ;
+   int               padding, i, j, ret = 0, colorIndex;
+   int               Mapping [MAXNUMBER];
+   char*             bmBits;
+   HDC               origMemDC, destMemDC;  
+   HBITMAP           bmp = 0;
+   boolean           need_to_dither;
+   BITMAPINFOHEADER  bi;
+   BITMAPINFOHEADER* lpbi;
 
    if (THOT_vInfo.depth == 1)
       need_to_dither = TRUE;
@@ -1347,7 +1433,12 @@ ThotColorStruct     colrs[256];
    else {
          WIN_InitSystemColors ();
 
-         bmBits = (BYTE*) TtaGetMemory (width * sizeof (BYTE));
+         if (width % 2)
+			padding = 1;
+		 else 
+			 padding = 0;
+
+         bmBits = (BYTE*) TtaGetMemory ((width + padding) * height * sizeof (BYTE));
          if (bmBits == NULL)
             return NULL;
     
@@ -1355,9 +1446,8 @@ ThotColorStruct     colrs[256];
              Mapping [i] = -1;
 
          bmp     = CreateCompatibleBitmap (TtDisplay, width, height);
-         bmpLine = CreateCompatibleBitmap (TtDisplay, width, 1);
 	 
-         if ((bmp == NULL) || (bmpLine == NULL)) {
+         if ((bmp == NULL)) {
             TtaFreeMemory (bmBits);
             return (Pixmap) bmp;
          }
@@ -1367,7 +1457,6 @@ ThotColorStruct     colrs[256];
 
 
          SelectObject (destMemDC, bmp);
-         SelectObject (origMemDC, bmpLine);
 
          for (j = 0; j < height; j++) {
              for (i = 0; i < width; i++) {
@@ -1379,21 +1468,60 @@ ThotColorStruct     colrs[256];
                       mapIndex = WIN_GetColorIndex (colrs [colorIndex].red, colrs [colorIndex].green, colrs [colorIndex].blue);
                       Mapping [colorIndex] = mapIndex;  
                  }    
-                 bmBits[i] = mapIndex;
-             }    
-             ret = SetBitmapBits (bmpLine, width, bmBits);
-             BitBlt (destMemDC, 0, j, width, 1, origMemDC, 0, 0, SRCCOPY);
+                 bmBits[i + j * (padding + width)] = mapIndex;
+             }
          }
+         ret = SetBitmapBits (bmp, width * height, bmBits);
 
          /* Cleanup */
          
-         DeleteObject (bmpLine);
          DeleteDC(origMemDC); 
          DeleteDC(destMemDC);
+		 DeleteObject (TtCmap);
          TtaFreeMemory (bmBits);
-	 
+         peInitialized = 0;	 
          return (Pixmap) bmp;
    }
+#  if 0 /***** TRYING DIB BITMAPS *****/
+   /* Create memory device context and select bitmap.  */
+   /* ................................................ */
+   destMemDC = CreateCompatibleDC (TtDisplay);
+   cbBits   = GetDeviceCaps (destMemDC, BITSPIXEL);
+
+   bi.biSize          = sizeof (BITMAPINFOHEADER);
+   bi.biWidth         = width;
+   bi.biHeight        = height;
+   bi.biPlanes        = 1;
+   bi.biBitCount      = cbBits;
+   bi.biCompression   = BI_RGB;
+   bi.biSizeImage     = (ALIGNLONG ((width * cbBits) / 8) * height);
+   bi.biXPelsPerMeter = 0;
+   bi.biYPelsPerMeter = 0;
+   bi.biClrUsed       = 0;
+   bi.biClrImportant  = 0;
+
+   bmp = CreateDIBitmap (TtDisplay, &bi, 0L, NULL, NULL, 0);
+
+   /* Allocate memory for BITMAPINFO structure.  */
+   /* .......................................... */
+   lpbi = (BITMAPINFOHEADER*) HeapAlloc (GetProcessHeap(), HEAP_ZERO_MEMORY,
+                                         sizeof(BITMAPINFOHEADER) +
+                                         16 * sizeof (RGBQUAD) + 
+                                         (ALIGNLONG ((width * cbBits) / 8) * height));
+                 
+   /* Copy BITMAPINFOHEADER information.  */
+   /* ................................... */
+   *lpbi = bi;
+             
+   /* Initialize structure data with GetDIBits().  */
+   /* ............................................ */
+   GetDIBits (TtDisplay, bmp, 0, 50, NULL, (LPBITMAPINFO) lpbi, DIB_RGB_COLORS);              
+   SelectObject (destMemDC, bmp);
+   SetDIBits (destMemDC, bmp, 0, height, image_data, (LPBITMAPINFO) lpbi, DIB_RGB_COLORS);
+
+   DeleteDC (destMemDC);
+   return bmp;
+#  endif /* 0 */
 #  endif /* _WINDOWS */
 }
 
@@ -1508,6 +1636,7 @@ ThotBitmap         *mask1;
 #      ifndef _WINDOWS
        *mask1 = MakeMask (TtDisplay, buffer, w, h, i);
 #      else  /* _WINDOWS */
+	   /* WIN_MakeMask (buffer, w, h, i); */
        bgRed   = colrs[i].red;
 	   bgGreen = colrs[i].green;
 	   bgBlue  = colrs[i].blue;

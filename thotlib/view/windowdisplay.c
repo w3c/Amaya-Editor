@@ -56,7 +56,7 @@ static int          stack_deep;
 #include "buildlines_f.h"
 
 #ifdef _WINDOWS
-int fgColor;
+/* int fgColor; */
 #endif /* _WINDOWS */
 
 
@@ -100,10 +100,11 @@ int                 fg;
 #endif /* __STDC__ */
 {
 #  ifdef _WINDOWS
-   DeleteObject (TtLineGC.pen);
+   /* DeleteObject (TtLineGC.pen); */
    TtLineGC.capabilities |= THOT_GC_FOREGROUND;
-   TtLineGC.foreground = Pix_Color[fg];
-   TtLineGC.pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+   /* TtLineGC.foreground = Pix_Color[fg]; */
+   TtLineGC.foreground = fg;
+   /* TtLineGC.pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); */
 #  else  /* _WINDOWS */
    if (active && ShowReference ())
      {
@@ -176,7 +177,7 @@ int                 active;
    if (TtWDepth == 1 && (active || RO))
       XSetFillStyle (TtDisplay, TtLineGC, FillSolid);
 #  else /* _WINDOWS */
-   DeleteObject (TtLineGC.pen);
+   /* DeleteObject (TtLineGC.pen); */
 #  endif /* _WINDOWS */
 }
 
@@ -196,16 +197,23 @@ int                 y2;
 
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS 
+   HPEN pen ;
+#  endif /* _WINDOWS  */
    x1 += FrameTable[frame].FrLeftMargin;
    y1 += FrameTable[frame].FrTopMargin;
    x2 += FrameTable[frame].FrLeftMargin;
    y2 += FrameTable[frame].FrTopMargin;
 #  ifdef _WINDOWS
    WIN_GetDeviceContext (frame);
-   WinLoadGC (fgColor);
+   pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));
+   SelectObject (TtDisplay, pen);
+
+   /* WinLoadGC (fgColor); */
    MoveToEx (TtDisplay, x1, y1, NULL);
    LineTo (TtDisplay, x2, y2);
-   WinUnloadGC ();
+   /* WinUnloadGC (); */
+   DeleteObject (pen);
    WIN_ReleaseDeviceContext ();
 #  else  /* _WINDOWS */
    XDrawLine (TtDisplay, FrRef[frame], TtLineGC, x1, y1, x2, y2);
@@ -479,7 +487,7 @@ int                 fg;
    int                 shift;	/* shifting of drawing   */
 
 #  ifdef _WINDOWS
-   fgColor = fg;
+   /* fgColor = fg; */
 #  endif /* _WINDOWS */
 
    if (lg > 0)
@@ -621,10 +629,6 @@ int                 fg;
    /* vertical part */
    DoDrawOneLine (frame, x, y + (2 * (h / 3)), xp - (thick / 2), y + h);
 
-#ifdef _WINDOWS
-    FinishDrawing (0, RO, active);
-#endif /* _WINDOWS */
-
    InitDrawing (0, 0, thick, RO, active, fg);
    /* Acending part */
    DoDrawOneLine (frame, xp, y + h, xm, y);
@@ -764,10 +768,6 @@ int                 fg;
 	DoDrawOneLine (frame, x, y + 1, xm, ym);
 	DoDrawOneLine (frame, x, y + h - 2, xm, ym);
 
-#ifdef _WINDOWS
-    FinishDrawing (0, RO, active);
-#endif /* _WINDOWS */
-
 	InitDrawing (0, 0, 2, RO, active, fg);
 	/* Borders */
 	DoDrawOneLine (frame, x, y, x + l, y);
@@ -811,9 +811,6 @@ int                 fg;
 	/* Vertical part */
 	DoDrawOneLine (frame, x + 2, y + 1, x + 2, y + h);
 	DoDrawOneLine (frame, x + l - 3, y + 1, x + l - 3, y + h);
-#ifdef _WINDOWS
-    FinishDrawing (0, RO, active);
-#endif /* _WINDOWS */
 
 	InitDrawing (0, 0, 2, RO, active, fg);
 	/* Upper part */
@@ -1462,11 +1459,11 @@ int                 pattern;
 	XDrawRectangle (TtDisplay, FrRef[frame], TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
 #       else  /* _WINDOWS */
         Rectangle (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, x + FrameTable[frame].FrLeftMargin + width, y + FrameTable[frame].FrTopMargin + height);
+	    WinUnloadGC ();
 #       endif /* _WINDOWS */
 	FinishDrawing (0, RO, active);
    }
 #       ifdef _WINDOWS 
-    WinUnloadGC ();
 	WIN_ReleaseDeviceContext ();
 #       endif /* _WINDOWS */
 }
@@ -2460,6 +2457,10 @@ int                 fg;
    ThotPoint           point[3];
    int                 xf, yf;
 
+#  ifdef _WINDOWS
+   HPEN pen;
+#  endif /* _WINDOWS */
+
    if (thick <= 0)
       return;
 
@@ -2511,7 +2512,10 @@ int                 fg;
 #  else /* _WINDOWS */
    WIN_GetDeviceContext (frame);
    WinLoadGC (fg);
+   pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));
+   SelectObject (TtDisplay, pen);
    Polyline (TtDisplay, point, 3);
+   DeleteObject (pen);
    WinUnloadGC ();
    WIN_ReleaseDeviceContext ();
 #  endif /* _WINDOWS */
