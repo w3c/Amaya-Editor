@@ -72,6 +72,7 @@ compilers) from the distributed <a href="Sources.html">source tree</a>.</p>
     because that version is too embryonic. Nevertheless people who want to
     contribute can generate it by processing this way:</p>
     <ol>
+      <li>You first need GTK+ version 1.2 or newer.</li>
       <li>Launching <code>../configure</code></li>
       <li>Editing the file Option.orig to replace MOTIF options by GTK options
         like in the following example:
@@ -91,6 +92,7 @@ GTK_INCLUDES=-I/usr/local/lib/glib/include
 GTK_LIBRARIES=-lgtk -lgdk -rdynamic -lgmodule -lglib
         </pre>
       </li>
+      <li>Launching "make amaya"</li>
     </ol>
     <p></p>
   </li>

@@ -12,7 +12,8 @@ THOTDIR = @top_srcdir@
 include ../Options
 
 INCLUDES= -DHAVE_CONFIG_H -I.. -I@top_srcdir@/amaya/xpm -I@top_srcdir@/tablelib/f @THOTINCLUDES@ $(X_FLAGS)
-LIBS	= -L../tablelib -L. -L.. $(IMGLIBS) $(X_LIBS) -lXext $(X_PRE_LIBS) \
+LIBS	= -L../tablelib -L. -L.. $(IMGLIBS) $(GTK_LIBRARIES) \
+	  $(X_LIBS) -lXext $(X_PRE_LIBS) \
           -lX11 $(X_EXTRA_LIBS) @LIBS@ $(EXTRA_LIBS) -lm 
 
 prefix = @prefix@
