@@ -527,6 +527,12 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 					      TRUE);
 #ifdef RAPTOR_RDF_PARSER
           /* @@ Do anything different for Raptor RDF Parser ?? */
+#ifdef AM_REDLAND
+	  if (triple->object_type ==  RAPTOR_IDENTIFIER_TYPE_LITERAL)
+	    object = (char *) triple->object;
+	  else
+#endif /* AM_REDLAND */
+	    object = AM_RAPTOR_URI_AS_STRING(triple->object);
 	  objectP = ANNOT_FindRDFResource (rdf_model, object, TRUE);
 #else
 	  /* ugly, ugly; libwww discards info -- is the object a Literal? */
