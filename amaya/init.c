@@ -1082,8 +1082,8 @@ void                InitFormAnswer (Document document, View view, const CHAR_T* 
 void                InitFormAnswer (document, view, auth_realm, server)
 Document            document;
 View                view;
-const CHAR_T*       auth_realm;
-CHAR_T*              server;
+const CHAR_T       *auth_realm;
+CHAR_T             *server;
 
 #endif
 {
@@ -1126,7 +1126,7 @@ CHAR_T*              server;
        TtaWaitShowDialogue ();
      }
 #else /* _WINDOWS */
-   CreateAuthenticationDlgWindow (TtaGetViewFrame (document, view), auth_realm,
+   CreateAuthenticationDlgWindow (TtaGetViewFrame (document, view), (STRING)auth_realm,
 				  server);
 #endif /* _WINDOWS */
 }
