@@ -31,6 +31,7 @@
 #include "MathML.h"
 #include "SVG.h"
 #include "XLink.h"
+#include "init_f.h"
 #ifdef ANNOTATIONS
 #include "Annot.h"
 #endif /* ANNOTATIONS */
@@ -190,11 +191,13 @@ static ThotBool ElIsHidden (Element el)
 
   result = TtaHasHiddenException (elType);
 
+#if 0
   /* ignore all elements that were added by Amaya (they don't have
      a linue number */
   if (!result)
     result = (TtaGetElementLineNumber (el) == 0);
-  
+#endif
+
   return result;
 }
 
