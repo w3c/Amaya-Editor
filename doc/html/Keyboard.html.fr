@@ -10,7 +10,7 @@
 </head>
 
 <body xml:lang="fr" lang="fr">
-<p><a href="../../"><img border="0" alt="W3C" src="../../images/w3c_home"
+<p><a href="../../"><img border="0" alt="W3C" src="../images/w3c_home"
 /></a> <a href="../"><img border="0" src="../images/amaya.gif" alt="Amaya"
 /></a> <a href="Manual.html.fr"></a></p>
 

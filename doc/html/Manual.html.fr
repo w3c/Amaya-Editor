@@ -11,7 +11,7 @@ body {background-color: #FFFFFF}</style>
 </head>
 
 <body xml:lang="fr" lang="fr">
-<p><a href="../../"><img src="../../images/w3c_home" alt="W3C" /></a> <a
+<p><a href="../../"><img src="../images/w3c_home" alt="W3C" /></a> <a
 href="../"><img src="../images/amaya.gif" alt="Amaya" /></a> <a
 href="Manual.html.fr"><img src="../images/doc48x.gif" alt="Doc" /></a></p>
 

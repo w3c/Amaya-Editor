@@ -13,7 +13,7 @@
 <table border="0" summary="toc">
   <tbody>
     <tr>
-      <td><p><img alt="W3C" src="../../images/w3c_home" /> <img
+      <td><p><img alt="W3C" src="../images/w3c_home" /> <img
         alt="Amaya" src="../images/amaya.gif" /></p>
       </td>
       <td><p><a href="Publishing.html.fr" accesskey="p"><img
