@@ -305,20 +305,40 @@ int GetFontFilename (char script, int family, int highlight, int size,
   XftPatternDestroy (pat); 
   return ok;
 #else /* _GTK */
-
-  char *s;
-  
-
-  if (script == 'G' || family == 0)
-  {
-	  GetWindowsDirectory (filename , 1024);  
-	  strcat (filename, "\\fonts\\"); 
-	  strcat (filename, "Symbol");
-  }
-  else
-	{
+ 
   GetWindowsDirectory (filename , 1024);  
   strcat (filename, "\\fonts\\"); 
+  if (script == 'G' || family == 0)
+  {
+	  strcat (filename, "Symbol");
+  }
+  else if (script == 'E')
+    {
+      switch (family)
+	{
+	case 6:
+	  strcat (filename,  "esstix6_"); 
+	  break;
+	case 7:
+	  strcat (filename,  "esstix7_"); 
+	  break;	  
+	case 10: 
+	  strcat (filename,  "esstix10"); 
+	  break;
+	default:
+   	  break;
+  }
+  }
+  else if (script == 'Z')
+	{
+     /*strcat (filename, "msmincho");
+	 strcat (filename, ".ttc\0");*/
+	 strcat (filename, "arialu");
+	 strcat (filename, ".ttf\0");
+	 return 1;
+	}
+  else
+	{
   /*charset ???*/
   switch (family)
      {

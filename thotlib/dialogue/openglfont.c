@@ -457,7 +457,7 @@ int gl_font_char_width (void *gl_void_font, wchar_t c)
       glyph = MakeBitmapGlyph (font, glyph_index);
       if (glyph)
 	{
-	  advance = glyph->advance;
+	  advance = (int) glyph->advance;
 	  if (glyph->data != NULL)
 	    free (glyph->data);
 	  free (glyph);
@@ -1015,7 +1015,7 @@ int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int siz
 	    (float) left,
 	    NULL);
   if (data)
-    free (data);
+    TtaFreeMemory (data);
 
   return (((int) Xpos) + (bitmaps[0]->pos.x < 0 ? bitmaps[0]->pos.x : 0));  
 }

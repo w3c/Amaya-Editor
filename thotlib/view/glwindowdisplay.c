@@ -1023,6 +1023,7 @@ void GL_DrawUnicodeCharSized (CHAR_T const c, float x, float y,
 	  size, FrameTable[ActiveFrame].FrHeight);
   ResetPixelTransferBias();
 }
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   WDrawString draw a char string of lg chars beginning in buff.
   Drawing starts at (x, y) in frame and using font.
@@ -1053,7 +1054,6 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 	    {
 	      buff[j++] = '*';
 	    }
-	  buff[lg] = EOS;
 	}
   return (GL_UnicodeDrawString (fg, 
 				buff, 
@@ -1061,9 +1061,10 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 				(float) y, 
 				hyphen,
 				(void *)font, 
+
 				lg));
 }
-
+#endif /*_WIN_PRINT*/
 /*----------------------------------------------------------------------
  GL_DrawString : Draw a string in a texture or a bitmap 
   ----------------------------------------------------------------------*/
@@ -1081,7 +1082,8 @@ int GL_UnicodeDrawString (int fg,
   str[end] = EOS;
   TranslateChars (str);
   SetPixelTransferBias (fg);
-  width = UnicodeFontRender (GL_font, str, x, y, end, 
+  width = UnicodeFontRender (GL_font, str, 
+							x, y, end, 
 			     FrameTable[ActiveFrame].FrHeight);
    if (hyphen)
 	    /* draw the hyphen */
@@ -1125,7 +1127,7 @@ int CharacterWidth (int c, PtrFont font)
       else if (c == HALF_EM)
 		l = gl_font_char_width ((void *) font, 32) / 2;
       else
-		l = gl_font_char_width ((void *) font, c);
+		l = gl_font_char_width ((void *) font, (CHAR_T) c);
 
 		/* the Max*/
 	  if (l == 0)
