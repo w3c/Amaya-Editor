@@ -491,7 +491,9 @@ CHAR_T                word[MAX_WORD_LEN];
    if (place == -1)		/* dictionnaire vide */
       place = 0;		/* indice pour inserer dans ce dictionaire */
    size = ustrlen (word) + 1;
-   if ((dict->DictNbWords >= dict->DictMaxWords - 1) || (dict->DictNbChars >= dict->DictMaxChars + size))
+   /* JK: Changed the limit to - 2 instead of -1 because we had a
+      memory overwrite problem otherwise */
+   if ((dict->DictNbWords >= dict->DictMaxWords - 2) || (dict->DictNbChars >= dict->DictMaxChars + size))
       return (-1);
    else
      {
@@ -1312,16 +1314,16 @@ CHAR_T                word[MAX_WORD_LEN];
    /* description des chiffres romains (majuscule) */
    static CHAR_T         NRomain[] = {
 #         if defined(_I18N_) || defined(__JIS__)
-          L'M', L'C', L'D', L'L', L'X', L'V', L'I'
+          L'M', L'C', L'D', L'L', L'X', L'V', L'I', WC_EOS
 #         else /* defined(_I18N_) || defined(__JIS__) */
-          'M', 'C', 'D', 'L', 'X', 'V', 'I'
+          'M', 'C', 'D', 'L', 'X', 'V', 'I', EOS
 #         endif /* defined(_I18N_) || defined(__JIS__) */    
    };
    static CHAR_T         NRomainIsole[] = {
 #         if defined(_I18N_) || defined(__JIS__)
-          L'C', L'L', L'V'
+          L'C', L'L', L'V', WC_EOS
 #         else /* defined(_I18N_) || defined(__JIS__) */
-          'C', 'L', 'V'
+          'C', 'L', 'V', EOS
 #         endif /* defined(_I18N_) || defined(__JIS__) */    
    };
 
