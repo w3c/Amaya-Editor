@@ -31,8 +31,8 @@ int GetFontFilename (char script, int family,
   if (!pat)
     return ok;   
   /* XftPatternAddBool (pat, XFT_RENDER, True); */
-/*   XftPatternAddBool (pat, XFT_CORE, True); */
-/*   XftPatternAddBool (pat, XFT_ANTIALIAS, True);  */
+  /* XftPatternAddBool (pat, XFT_CORE, True); */
+  /* XftPatternAddBool (pat, XFT_ANTIALIAS, True);  */
   if (script != 'L' && script != 'G')
     {      
       switch (script)
@@ -80,6 +80,8 @@ int GetFontFilename (char script, int family,
       XftPatternAddString (pat, XFT_FAMILY, "symbol");
       XftPatternAddString (pat, XFT_FAMILY, "Symbol");
       XftPatternAddString (pat, XFT_FAMILY, "Standard Symbols L");
+      XftPatternAddString (pat, XFT_FOUNDRY, "adobe");
+	  XftPatternAddString (pat, XFT_ENCODING, "fontspecific");
       XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_MEDIUM);
       XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ROMAN);
     }

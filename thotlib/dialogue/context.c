@@ -282,6 +282,7 @@ static void InitGraphicContexts (void)
   gdk_rgb_gc_set_background (TtWhiteGC, Black_Color);
   gdk_rgb_gc_set_foreground (TtWhiteGC, White_Color);
   gdk_gc_set_function (TtWhiteGC, GDK_COPY); 
+  gdk_gc_set_exposures (TtWhiteGC, TRUE);
 
  
   /* Create a Graphic Context to write black on white. */
