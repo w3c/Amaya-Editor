@@ -194,6 +194,7 @@ BOXES
 RULES
 
  XLink:	BEGIN
+	CreateEnclosing(ATTR_href_enclosing);
 	IN Structure_view BEGIN
 		Visibility: 0;
 		END;
@@ -234,10 +235,10 @@ ATTRIBUTES
   href_ :
 	BEGIN
 	CreateEnclosing(ATTR_href_enclosing);
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-        CreateAfter(ATTR_href_links_view);
-  	CreateAfter(VALUE_href_links_view);
+	CreateFirst(AttrName);
+	CreateFirst(AttrValue);
+        CreateLast(ATTR_href_links_view);
+  	CreateLast(VALUE_href_links_view);
 	Foreground: Blue;
         {if AnnotIcon1
                 CreateFirst(Annot_gif1);}
