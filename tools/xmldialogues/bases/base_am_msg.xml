@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Mon Aug 16 13:17:10 CEST 2004" version="75">
+<base last_update="Mon Sep 20 09:55:31 CEST 2004" version="76">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -4004,8 +4004,8 @@
 	<message xml:lang="en">No insert position defined. Please select first</message>
 	<message xml:lang="fr">Pas de position d'insertion définie. Sélectionnez d'abord</message>
 	<message xml:lang="es">>No insert position defined.</message>
-	<message xml:lang="ru">Не определена
-	позиция вставки. Сначала выберите её.</message>
+	<message xml:lang="ru">Не определена</message>
+	<message xml:lang="de">Keine Einfügeposition definiert. Bitte zuerst auswählen</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>
