@@ -3688,6 +3688,21 @@ void UpdateScrollbars (int frame)
   h = FrameTable[frame].FrHeight;
 
 #ifdef _WX
+  /*
+    virtual void SetScrollbar(int position, int thumbSize, int range, int pageSize, const bool refresh = true)
+    Sets the scrollbar properties.
+    Parameters
+    position : The position of the scrollbar in scroll units.
+    thumbSize : The size of the thumb, or visible portion of the scrollbar, in scroll units.
+    range : The maximum position of the scrollbar.
+    pageSize : The size of the page size in scroll units. This is the number of units the scrollbar will scroll when it is paged up or down. Often it is the same as the thumb size.
+    refresh : true to redraw the scrollbar, false otherwise.
+  */
+  /*
+   * SG : there is a missing feature in wxWidgets, it's not possible to parameter step increment.
+   * It's why when clicking up/down on the scrollbar, the increment is 1pixel.
+   * I've patched wxWidgets to fix the step increment to 8, better than 1 ...
+   */
   if (width < l)
   {
     FrameTable[frame].WdFrame->ShowScrollbar(2);
