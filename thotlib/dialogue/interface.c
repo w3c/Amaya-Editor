@@ -527,10 +527,11 @@ ThotComposeStatus  *status;	/* not implemented */
   KeySym              sym = NoSymbol;
   int                 keycode;
   int                 state;
-  struct _XDisplay   *dpy = (struct _XDisplay *) event->display;
+  struct _XDisplay   *dpy;
 
   if (event == NULL)
     return (0);
+  dpy = (struct _XDisplay *) event->display;
   if ((int)(event->keycode) < TtaMinKeyCode || (int)(event->keycode) > TtaMaxKeyCode)
     {
       if (keysym != NULL)
