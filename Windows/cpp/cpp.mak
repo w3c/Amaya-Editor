@@ -25,10 +25,6 @@ NULL=
 NULL=nul
 !ENDIF 
 
-CPP=cl.exe
-MTL=midl.exe
-RSC=rc.exe
-
 !IF  "$(CFG)" == "cpp - Win32 Release"
 
 OUTDIR=.\..\bin
@@ -37,15 +33,8 @@ INTDIR=.\cpp___Wi
 OutDir=.\..\bin
 # End Custom Macros
 
-!IF "$(RECURSE)" == "0" 
-
 ALL : "$(OUTDIR)\cpp.dll"
 
-!ELSE 
-
-ALL : "$(OUTDIR)\cpp.dll"
-
-!ENDIF 
 
 CLEAN :
 	-@erase "$(INTDIR)\cppalloc.obj"
@@ -55,7 +44,7 @@ CLEAN :
 	-@erase "$(INTDIR)\cpplib.obj"
 	-@erase "$(INTDIR)\cppmain.obj"
 	-@erase "$(INTDIR)\obstack.obj"
-	-@erase "$(INTDIR)\vc50.idb"
+	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\version.obj"
 	-@erase "$(OUTDIR)\cpp.dll"
 	-@erase "$(OUTDIR)\cpp.exp"
@@ -67,22 +56,48 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /MT /W3 /GX /O2 /I "..\..\thotlib\internals\f" /D "NDEBUG" /D\
- "WIN32" /D "_WINDOWS" /D "WINDOWS_COMPILERS" /Fp"$(INTDIR)\cpp.pch" /YX\
- /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-CPP_OBJS=.\cpp___Wi/
-CPP_SBRS=.
-MTL_PROJ=/nologo /D "NDEBUG" /mktyplib203 /o NUL /win32 
+CPP=cl.exe
+CPP_PROJ=/nologo /MT /W3 /GX /O2 /I "..\..\thotlib\internals\f" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "WINDOWS_COMPILERS" /Fp"$(INTDIR)\cpp.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+MTL=midl.exe
+MTL_PROJ=/nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32 
+RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\cpp.bsc" 
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
- advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib\
- odbccp32.lib /nologo /subsystem:windows /dll /incremental:no\
- /pdb:"$(OUTDIR)\cpp.pdb" /machine:I386 /out:"$(OUTDIR)\cpp.dll"\
- /implib:"$(OUTDIR)\cpp.lib" 
+LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /incremental:no /pdb:"$(OUTDIR)\cpp.pdb" /machine:I386 /out:"$(OUTDIR)\cpp.dll" /implib:"$(OUTDIR)\cpp.lib" 
 LINK32_OBJS= \
 	"$(INTDIR)\cppalloc.obj" \
 	"$(INTDIR)\cpperror.obj" \
@@ -106,15 +121,8 @@ INTDIR=.\cpp___W0
 OutDir=.\..\bin
 # End Custom Macros
 
-!IF "$(RECURSE)" == "0" 
-
 ALL : "$(OUTDIR)\cpp.dll"
 
-!ELSE 
-
-ALL : "$(OUTDIR)\cpp.dll"
-
-!ENDIF 
 
 CLEAN :
 	-@erase "$(INTDIR)\cppalloc.obj"
@@ -124,8 +132,8 @@ CLEAN :
 	-@erase "$(INTDIR)\cpplib.obj"
 	-@erase "$(INTDIR)\cppmain.obj"
 	-@erase "$(INTDIR)\obstack.obj"
-	-@erase "$(INTDIR)\vc50.idb"
-	-@erase "$(INTDIR)\vc50.pdb"
+	-@erase "$(INTDIR)\vc60.idb"
+	-@erase "$(INTDIR)\vc60.pdb"
 	-@erase "$(INTDIR)\version.obj"
 	-@erase "$(OUTDIR)\cpp.dll"
 	-@erase "$(OUTDIR)\cpp.exp"
@@ -139,22 +147,48 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /MTd /W3 /Gm /GX /Zi /Od /I "..\..\thotlib\internals\f" /D\
- "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "WINDOWS_COMPILERS" /Fp"$(INTDIR)\cpp.pch"\
- /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-CPP_OBJS=.\cpp___W0/
-CPP_SBRS=.
-MTL_PROJ=/nologo /D "_DEBUG" /mktyplib203 /o NUL /win32 
+CPP=cl.exe
+CPP_PROJ=/nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\..\thotlib\internals\f" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "WINDOWS_COMPILERS" /Fp"$(INTDIR)\cpp.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+MTL=midl.exe
+MTL_PROJ=/nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32 
+RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\cpp.bsc" 
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
- advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib\
- odbccp32.lib /nologo /subsystem:windows /dll /incremental:yes\
- /pdb:"$(OUTDIR)\cpp.pdb" /debug /machine:I386 /out:"$(OUTDIR)\cpp.dll"\
- /implib:"$(OUTDIR)\cpp.lib" /pdbtype:sept 
+LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\cpp.pdb" /debug /machine:I386 /out:"$(OUTDIR)\cpp.dll" /implib:"$(OUTDIR)\cpp.lib" /pdbtype:sept 
 LINK32_OBJS= \
 	"$(INTDIR)\cppalloc.obj" \
 	"$(INTDIR)\cpperror.obj" \
@@ -172,315 +206,56 @@ LINK32_OBJS= \
 
 !ENDIF 
 
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
 
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
+!IF "$(NO_EXTERNAL_DEPS)" != "1"
+!IF EXISTS("cpp.dep")
+!INCLUDE "cpp.dep"
+!ELSE 
+!MESSAGE Warning: cannot find "cpp.dep"
+!ENDIF 
+!ENDIF 
 
 
 !IF "$(CFG)" == "cpp - Win32 Release" || "$(CFG)" == "cpp - Win32 Debug"
 SOURCE=..\..\cpp\cppalloc.c
 
-!IF  "$(CFG)" == "cpp - Win32 Release"
-
-DEP_CPP_CPPAL=\
-	"..\..\cpp\config.h"\
-	"..\..\cpp\i386\bsd.h"\
-	"..\..\cpp\i386\gas.h"\
-	"..\..\cpp\i386\i386.h"\
-	"..\..\cpp\i386\unix.h"\
-	"..\..\cpp\i386\win-nt.h"\
-	"..\..\cpp\i386\xm-i386.h"\
-	"..\..\cpp\i386\xm-winnt.h"\
-	"..\..\cpp\tm.h"\
-	"..\..\cpp\winnt\win-nt.h"\
-	"..\..\cpp\winnt\xm-winnt.h"\
-	
-
-"$(INTDIR)\cppalloc.obj" : $(SOURCE) $(DEP_CPP_CPPAL) "$(INTDIR)"
+"$(INTDIR)\cppalloc.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "cpp - Win32 Debug"
-
-DEP_CPP_CPPAL=\
-	"..\..\cpp\config.h"\
-	"..\..\cpp\i386\bsd.h"\
-	"..\..\cpp\i386\gas.h"\
-	"..\..\cpp\i386\i386.h"\
-	"..\..\cpp\i386\unix.h"\
-	"..\..\cpp\i386\win-nt.h"\
-	"..\..\cpp\i386\xm-i386.h"\
-	"..\..\cpp\i386\xm-winnt.h"\
-	"..\..\cpp\tm.h"\
-	"..\..\cpp\winnt\win-nt.h"\
-	"..\..\cpp\winnt\xm-winnt.h"\
-	
-
-"$(INTDIR)\cppalloc.obj" : $(SOURCE) $(DEP_CPP_CPPAL) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\cpp\cpperror.c
 
-!IF  "$(CFG)" == "cpp - Win32 Release"
-
-DEP_CPP_CPPER=\
-	"..\..\cpp\config.h"\
-	"..\..\cpp\cpplib.h"\
-	"..\..\cpp\i386\bsd.h"\
-	"..\..\cpp\i386\gas.h"\
-	"..\..\cpp\i386\i386.h"\
-	"..\..\cpp\i386\unix.h"\
-	"..\..\cpp\i386\win-nt.h"\
-	"..\..\cpp\i386\xm-i386.h"\
-	"..\..\cpp\i386\xm-winnt.h"\
-	"..\..\cpp\tm.h"\
-	"..\..\cpp\winnt\win-nt.h"\
-	"..\..\cpp\winnt\xm-winnt.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-
-"$(INTDIR)\cpperror.obj" : $(SOURCE) $(DEP_CPP_CPPER) "$(INTDIR)"
+"$(INTDIR)\cpperror.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "cpp - Win32 Debug"
-
-DEP_CPP_CPPER=\
-	"..\..\cpp\config.h"\
-	"..\..\cpp\cpplib.h"\
-	"..\..\cpp\i386\bsd.h"\
-	"..\..\cpp\i386\gas.h"\
-	"..\..\cpp\i386\i386.h"\
-	"..\..\cpp\i386\unix.h"\
-	"..\..\cpp\i386\win-nt.h"\
-	"..\..\cpp\i386\xm-i386.h"\
-	"..\..\cpp\i386\xm-winnt.h"\
-	"..\..\cpp\tm.h"\
-	"..\..\cpp\winnt\win-nt.h"\
-	"..\..\cpp\winnt\xm-winnt.h"\
-	
-
-"$(INTDIR)\cpperror.obj" : $(SOURCE) $(DEP_CPP_CPPER) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\cpp\cppexp.c
 
-!IF  "$(CFG)" == "cpp - Win32 Release"
-
-DEP_CPP_CPPEX=\
-	"..\..\cpp\config.h"\
-	"..\..\cpp\cpplib.h"\
-	"..\..\cpp\i386\bsd.h"\
-	"..\..\cpp\i386\gas.h"\
-	"..\..\cpp\i386\i386.h"\
-	"..\..\cpp\i386\unix.h"\
-	"..\..\cpp\i386\win-nt.h"\
-	"..\..\cpp\i386\xm-i386.h"\
-	"..\..\cpp\i386\xm-winnt.h"\
-	"..\..\cpp\tm.h"\
-	"..\..\cpp\winnt\win-nt.h"\
-	"..\..\cpp\winnt\xm-winnt.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-
-"$(INTDIR)\cppexp.obj" : $(SOURCE) $(DEP_CPP_CPPEX) "$(INTDIR)"
+"$(INTDIR)\cppexp.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "cpp - Win32 Debug"
-
-DEP_CPP_CPPEX=\
-	"..\..\cpp\config.h"\
-	"..\..\cpp\cpplib.h"\
-	"..\..\cpp\i386\bsd.h"\
-	"..\..\cpp\i386\gas.h"\
-	"..\..\cpp\i386\i386.h"\
-	"..\..\cpp\i386\unix.h"\
-	"..\..\cpp\i386\win-nt.h"\
-	"..\..\cpp\i386\xm-i386.h"\
-	"..\..\cpp\i386\xm-winnt.h"\
-	"..\..\cpp\tm.h"\
-	"..\..\cpp\winnt\win-nt.h"\
-	"..\..\cpp\winnt\xm-winnt.h"\
-	
-
-"$(INTDIR)\cppexp.obj" : $(SOURCE) $(DEP_CPP_CPPEX) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\cpp\cpphash.c
 
-!IF  "$(CFG)" == "cpp - Win32 Release"
-
-DEP_CPP_CPPHA=\
-	"..\..\cpp\cpphash.h"\
-	"..\..\cpp\cpplib.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-
-"$(INTDIR)\cpphash.obj" : $(SOURCE) $(DEP_CPP_CPPHA) "$(INTDIR)"
+"$(INTDIR)\cpphash.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "cpp - Win32 Debug"
-
-DEP_CPP_CPPHA=\
-	"..\..\cpp\cpphash.h"\
-	"..\..\cpp\cpplib.h"\
-	
-
-"$(INTDIR)\cpphash.obj" : $(SOURCE) $(DEP_CPP_CPPHA) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\cpp\cpplib.c
 
-!IF  "$(CFG)" == "cpp - Win32 Release"
-
-DEP_CPP_CPPLI=\
-	"..\..\cpp\config.h"\
-	"..\..\cpp\cpphash.h"\
-	"..\..\cpp\cpplib.h"\
-	"..\..\cpp\i386\bsd.h"\
-	"..\..\cpp\i386\gas.h"\
-	"..\..\cpp\i386\i386.h"\
-	"..\..\cpp\i386\unix.h"\
-	"..\..\cpp\i386\win-nt.h"\
-	"..\..\cpp\i386\xm-i386.h"\
-	"..\..\cpp\i386\xm-winnt.h"\
-	"..\..\cpp\tm.h"\
-	"..\..\cpp\winnt\win-nt.h"\
-	"..\..\cpp\winnt\xm-winnt.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_CPPLI=\
-	"..\..\src\config.h"\
-	
-
-"$(INTDIR)\cpplib.obj" : $(SOURCE) $(DEP_CPP_CPPLI) "$(INTDIR)"
+"$(INTDIR)\cpplib.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "cpp - Win32 Debug"
-
-DEP_CPP_CPPLI=\
-	"..\..\cpp\config.h"\
-	"..\..\cpp\cpphash.h"\
-	"..\..\cpp\cpplib.h"\
-	"..\..\cpp\i386\bsd.h"\
-	"..\..\cpp\i386\gas.h"\
-	"..\..\cpp\i386\i386.h"\
-	"..\..\cpp\i386\unix.h"\
-	"..\..\cpp\i386\win-nt.h"\
-	"..\..\cpp\i386\xm-i386.h"\
-	"..\..\cpp\i386\xm-winnt.h"\
-	"..\..\cpp\tm.h"\
-	"..\..\cpp\winnt\win-nt.h"\
-	"..\..\cpp\winnt\xm-winnt.h"\
-	
-
-"$(INTDIR)\cpplib.obj" : $(SOURCE) $(DEP_CPP_CPPLI) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\cpp\cppmain.c
 
-!IF  "$(CFG)" == "cpp - Win32 Release"
-
-DEP_CPP_CPPMA=\
-	"..\..\cpp\config.h"\
-	"..\..\cpp\cpplib.h"\
-	"..\..\cpp\i386\bsd.h"\
-	"..\..\cpp\i386\gas.h"\
-	"..\..\cpp\i386\i386.h"\
-	"..\..\cpp\i386\unix.h"\
-	"..\..\cpp\i386\win-nt.h"\
-	"..\..\cpp\i386\xm-i386.h"\
-	"..\..\cpp\i386\xm-winnt.h"\
-	"..\..\cpp\tm.h"\
-	"..\..\cpp\winnt\win-nt.h"\
-	"..\..\cpp\winnt\xm-winnt.h"\
-	"..\..\thotlib\internals\f\compilers_f.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-
-"$(INTDIR)\cppmain.obj" : $(SOURCE) $(DEP_CPP_CPPMA) "$(INTDIR)"
+"$(INTDIR)\cppmain.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "cpp - Win32 Debug"
-
-DEP_CPP_CPPMA=\
-	"..\..\cpp\config.h"\
-	"..\..\cpp\cpplib.h"\
-	"..\..\cpp\i386\bsd.h"\
-	"..\..\cpp\i386\gas.h"\
-	"..\..\cpp\i386\i386.h"\
-	"..\..\cpp\i386\unix.h"\
-	"..\..\cpp\i386\win-nt.h"\
-	"..\..\cpp\i386\xm-i386.h"\
-	"..\..\cpp\i386\xm-winnt.h"\
-	"..\..\cpp\tm.h"\
-	"..\..\cpp\winnt\win-nt.h"\
-	"..\..\cpp\winnt\xm-winnt.h"\
-	"..\..\thotlib\internals\f\compilers_f.h"\
-	
-
-"$(INTDIR)\cppmain.obj" : $(SOURCE) $(DEP_CPP_CPPMA) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\cpp\obstack.c
-DEP_CPP_OBSTA=\
-	"..\..\cpp\obstack.h"\
-	
 
-"$(INTDIR)\obstack.obj" : $(SOURCE) $(DEP_CPP_OBSTA) "$(INTDIR)"
+"$(INTDIR)\obstack.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

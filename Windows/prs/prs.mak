@@ -25,10 +25,6 @@ NULL=
 NULL=nul
 !ENDIF 
 
-CPP=cl.exe
-MTL=midl.exe
-RSC=rc.exe
-
 !IF  "$(CFG)" == "prs - Win32 Release"
 
 OUTDIR=.\..\bin
@@ -55,7 +51,7 @@ CLEAN :
 	-@erase "$(INTDIR)\compilmsg.obj"
 	-@erase "$(INTDIR)\parser.obj"
 	-@erase "$(INTDIR)\prs.obj"
-	-@erase "$(INTDIR)\vc50.idb"
+	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\writeprs.obj"
 	-@erase "$(OUTDIR)\prs.dll"
 	-@erase "$(OUTDIR)\prs.exp"
@@ -67,31 +63,55 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /MT /W3 /GX /O2 /I "..\..\thotlib\include" /I\
- "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
- "..\..\thotlib\internals\var" /I "..\..\batch\f" /D "NDEBUG" /D "WIN32" /D\
- "_WINDOWS" /D "__STDC__" /D "_WINDOWS_COMPILERS" /Fp"$(INTDIR)\prs.pch" /YX\
- /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-CPP_OBJS=.\Release/
-CPP_SBRS=.
-MTL_PROJ=/nologo /D "NDEBUG" /mktyplib203 /o NUL /win32 
+CPP=cl.exe
+CPP_PROJ=/nologo /MT /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\batch\f" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "_WINDOWS_COMPILERS" /Fp"$(INTDIR)\prs.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+MTL=midl.exe
+MTL_PROJ=/nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32 
+RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\prs.bsc" 
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
- advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib\
- odbccp32.lib /nologo /subsystem:windows /dll /incremental:no\
- /pdb:"$(OUTDIR)\prs.pdb" /machine:I386 /nodefaultlib:"libcd.lib"\
- /out:"$(OUTDIR)\prs.dll" /implib:"$(OUTDIR)\prs.lib" 
+LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /incremental:no /pdb:"$(OUTDIR)\prs.pdb" /machine:I386 /nodefaultlib:"libcd.lib" /out:"$(OUTDIR)\prs.dll" /implib:"$(OUTDIR)\prs.lib" 
 LINK32_OBJS= \
 	"$(INTDIR)\compilmsg.obj" \
 	"$(INTDIR)\parser.obj" \
 	"$(INTDIR)\prs.obj" \
 	"$(INTDIR)\writeprs.obj" \
-	"$(OUTDIR)\cpp.lib" \
-	"..\LibThotKernel.lib"
+	"..\LibThotKernel.lib" \
+	"$(OUTDIR)\cpp.lib"
 
 "$(OUTDIR)\prs.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -124,8 +144,8 @@ CLEAN :
 	-@erase "$(INTDIR)\compilmsg.obj"
 	-@erase "$(INTDIR)\parser.obj"
 	-@erase "$(INTDIR)\prs.obj"
-	-@erase "$(INTDIR)\vc50.idb"
-	-@erase "$(INTDIR)\vc50.pdb"
+	-@erase "$(INTDIR)\vc60.idb"
+	-@erase "$(INTDIR)\vc60.pdb"
 	-@erase "$(INTDIR)\writeprs.obj"
 	-@erase "$(OUTDIR)\prs.dll"
 	-@erase "$(OUTDIR)\prs.exp"
@@ -139,31 +159,55 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /MTd /W3 /Gm /GX /Zi /Od /I "..\..\thotlib\include" /I\
- "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
- "..\..\thotlib\internals\var" /I "..\..\batch\f" /D "_DEBUG" /D "WIN32" /D\
- "_WINDOWS" /D "__STDC__" /D "_WINDOWS_COMPILERS" /Fp"$(INTDIR)\prs.pch" /YX\
- /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-CPP_OBJS=.\Debug/
-CPP_SBRS=.
-MTL_PROJ=/nologo /D "_DEBUG" /mktyplib203 /o NUL /win32 
+CPP=cl.exe
+CPP_PROJ=/nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\batch\f" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "_WINDOWS_COMPILERS" /Fp"$(INTDIR)\prs.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+MTL=midl.exe
+MTL_PROJ=/nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32 
+RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\prs.bsc" 
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
- advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib\
- odbccp32.lib /nologo /subsystem:windows /dll /incremental:yes\
- /pdb:"$(OUTDIR)\prs.pdb" /debug /machine:I386 /nodefaultlib:"libcd.lib"\
- /out:"$(OUTDIR)\prs.dll" /implib:"$(OUTDIR)\prs.lib" /pdbtype:sept 
+LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\prs.pdb" /debug /machine:I386 /nodefaultlib:"libcd.lib" /out:"$(OUTDIR)\prs.dll" /implib:"$(OUTDIR)\prs.lib" /pdbtype:sept 
 LINK32_OBJS= \
 	"$(INTDIR)\compilmsg.obj" \
 	"$(INTDIR)\parser.obj" \
 	"$(INTDIR)\prs.obj" \
 	"$(INTDIR)\writeprs.obj" \
-	"$(OUTDIR)\cpp.lib" \
-	"..\LibThotKernel.lib"
+	"..\LibThotKernel.lib" \
+	"$(OUTDIR)\cpp.lib"
 
 "$(OUTDIR)\prs.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -172,35 +216,14 @@ LINK32_OBJS= \
 
 !ENDIF 
 
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
 
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
+!IF "$(NO_EXTERNAL_DEPS)" != "1"
+!IF EXISTS("prs.dep")
+!INCLUDE "prs.dep"
+!ELSE 
+!MESSAGE Warning: cannot find "prs.dep"
+!ENDIF 
+!ENDIF 
 
 
 !IF "$(CFG)" == "prs - Win32 Release" || "$(CFG)" == "prs - Win32 Debug"
@@ -208,26 +231,25 @@ LINK32_OBJS= \
 !IF  "$(CFG)" == "prs - Win32 Release"
 
 "cpp - Win32 Release" : 
-   cd "..\cpp"
+   cd "\users\guetari\Amaya\Windows\cpp"
    $(MAKE) /$(MAKEFLAGS) /F .\cpp.mak CFG="cpp - Win32 Release" 
    cd "..\prs"
 
 "cpp - Win32 ReleaseCLEAN" : 
-   cd "..\cpp"
-   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\cpp.mak CFG="cpp - Win32 Release" RECURSE=1\
- 
+   cd "\users\guetari\Amaya\Windows\cpp"
+   $(MAKE) /$(MAKEFLAGS) /F .\cpp.mak CFG="cpp - Win32 Release" RECURSE=1 CLEAN 
    cd "..\prs"
 
 !ELSEIF  "$(CFG)" == "prs - Win32 Debug"
 
 "cpp - Win32 Debug" : 
-   cd "..\cpp"
+   cd "\users\guetari\Amaya\Windows\cpp"
    $(MAKE) /$(MAKEFLAGS) /F .\cpp.mak CFG="cpp - Win32 Debug" 
    cd "..\prs"
 
 "cpp - Win32 DebugCLEAN" : 
-   cd "..\cpp"
-   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\cpp.mak CFG="cpp - Win32 Debug" RECURSE=1 
+   cd "\users\guetari\Amaya\Windows\cpp"
+   $(MAKE) /$(MAKEFLAGS) /F .\cpp.mak CFG="cpp - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\prs"
 
 !ENDIF 
@@ -235,480 +257,52 @@ LINK32_OBJS= \
 !IF  "$(CFG)" == "prs - Win32 Release"
 
 "LibThotKernel - Win32 Release" : 
-   cd "..\LibThotKernel"
-   $(MAKE) /$(MAKEFLAGS) /F .\LibThotKernel.mak\
- CFG="LibThotKernel - Win32 Release" 
+   cd "\users\guetari\Amaya\Windows\LibThotKernel"
+   $(MAKE) /$(MAKEFLAGS) /F .\LibThotKernel.mak CFG="LibThotKernel - Win32 Release" 
    cd "..\prs"
 
 "LibThotKernel - Win32 ReleaseCLEAN" : 
-   cd "..\LibThotKernel"
-   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\LibThotKernel.mak\
- CFG="LibThotKernel - Win32 Release" RECURSE=1 
+   cd "\users\guetari\Amaya\Windows\LibThotKernel"
+   $(MAKE) /$(MAKEFLAGS) /F .\LibThotKernel.mak CFG="LibThotKernel - Win32 Release" RECURSE=1 CLEAN 
    cd "..\prs"
 
 !ELSEIF  "$(CFG)" == "prs - Win32 Debug"
 
 "LibThotKernel - Win32 Debug" : 
-   cd "..\LibThotKernel"
-   $(MAKE) /$(MAKEFLAGS) /F .\LibThotKernel.mak\
- CFG="LibThotKernel - Win32 Debug" 
+   cd "\users\guetari\Amaya\Windows\LibThotKernel"
+   $(MAKE) /$(MAKEFLAGS) /F .\LibThotKernel.mak CFG="LibThotKernel - Win32 Debug" 
    cd "..\prs"
 
 "LibThotKernel - Win32 DebugCLEAN" : 
-   cd "..\LibThotKernel"
-   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\LibThotKernel.mak\
- CFG="LibThotKernel - Win32 Debug" RECURSE=1 
+   cd "\users\guetari\Amaya\Windows\LibThotKernel"
+   $(MAKE) /$(MAKEFLAGS) /F .\LibThotKernel.mak CFG="LibThotKernel - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\prs"
 
 !ENDIF 
 
 SOURCE=..\..\thotlib\base\compilmsg.c
 
-!IF  "$(CFG)" == "prs - Win32 Release"
-
-DEP_CPP_COMPI=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\h\compilmsg.h"\
-	"..\..\thotlib\internals\h\constgrm.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typegrm.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\compil_tv.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_COMPI=\
-	"..\..\thotlib\include\HTVMSUtils.h"\
-	
-
-"$(INTDIR)\compilmsg.obj" : $(SOURCE) $(DEP_CPP_COMPI) "$(INTDIR)"
+"$(INTDIR)\compilmsg.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "prs - Win32 Debug"
-
-DEP_CPP_COMPI=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\h\compilmsg.h"\
-	"..\..\thotlib\internals\h\constgrm.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typegrm.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\compil_tv.h"\
-	
-
-"$(INTDIR)\compilmsg.obj" : $(SOURCE) $(DEP_CPP_COMPI) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\batch\parser.c
 
-!IF  "$(CFG)" == "prs - Win32 Release"
-
-DEP_CPP_PARSE=\
-	"..\..\batch\f\parser_f.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\compilmsg_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\h\compilmsg.h"\
-	"..\..\thotlib\internals\h\constgrm.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typegrm.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\analsynt_tv.h"\
-	"..\..\thotlib\internals\var\compil_tv.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_PARSE=\
-	"..\..\thotlib\include\HTVMSUtils.h"\
-	
-
-"$(INTDIR)\parser.obj" : $(SOURCE) $(DEP_CPP_PARSE) "$(INTDIR)"
+"$(INTDIR)\parser.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "prs - Win32 Debug"
-
-DEP_CPP_PARSE=\
-	"..\..\batch\f\parser_f.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\compilmsg_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\h\compilmsg.h"\
-	"..\..\thotlib\internals\h\constgrm.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typegrm.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\analsynt_tv.h"\
-	"..\..\thotlib\internals\var\compil_tv.h"\
-	
-
-"$(INTDIR)\parser.obj" : $(SOURCE) $(DEP_CPP_PARSE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\batch\prs.c
 
-!IF  "$(CFG)" == "prs - Win32 Release"
-
-DEP_CPP_PRS_C=\
-	"..\..\batch\f\parser_f.h"\
-	"..\..\batch\f\prs_f.h"\
-	"..\..\batch\f\writeprs_f.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\compilers_f.h"\
-	"..\..\thotlib\internals\f\compilmsg_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\message_f.h"\
-	"..\..\thotlib\internals\f\platform_f.h"\
-	"..\..\thotlib\internals\f\readstr_f.h"\
-	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\h\compilmsg.h"\
-	"..\..\thotlib\internals\h\constgrm.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\prsdef.h"\
-	"..\..\thotlib\internals\h\prsmsg.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\thotpattern.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typegrm.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\analsynt_tv.h"\
-	"..\..\thotlib\internals\var\compil_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	"..\..\thotlib\internals\var\thotpalette_tv.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_PRS_C=\
-	"..\..\thotlib\include\HTVMSUtils.h"\
-	
-
-"$(INTDIR)\prs.obj" : $(SOURCE) $(DEP_CPP_PRS_C) "$(INTDIR)"
+"$(INTDIR)\prs.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "prs - Win32 Debug"
-
-DEP_CPP_PRS_C=\
-	"..\..\batch\f\parser_f.h"\
-	"..\..\batch\f\prs_f.h"\
-	"..\..\batch\f\writeprs_f.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\compilers_f.h"\
-	"..\..\thotlib\internals\f\compilmsg_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\message_f.h"\
-	"..\..\thotlib\internals\f\platform_f.h"\
-	"..\..\thotlib\internals\f\readstr_f.h"\
-	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\h\compilmsg.h"\
-	"..\..\thotlib\internals\h\constgrm.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\prsdef.h"\
-	"..\..\thotlib\internals\h\prsmsg.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotdir.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\thotpattern.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typegrm.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\analsynt_tv.h"\
-	"..\..\thotlib\internals\var\compil_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	"..\..\thotlib\internals\var\thotpalette_tv.h"\
-	
-
-"$(INTDIR)\prs.obj" : $(SOURCE) $(DEP_CPP_PRS_C) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\batch\writeprs.c
 
-!IF  "$(CFG)" == "prs - Win32 Release"
-
-DEP_CPP_WRITE=\
-	"..\..\batch\f\writeprs_f.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constpiv.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_WRITE=\
-	"..\..\thotlib\include\HTVMSUtils.h"\
-	
-
-"$(INTDIR)\writeprs.obj" : $(SOURCE) $(DEP_CPP_WRITE) "$(INTDIR)"
+"$(INTDIR)\writeprs.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "prs - Win32 Debug"
-
-DEP_CPP_WRITE=\
-	"..\..\batch\f\writeprs_f.h"\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\uio.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constpiv.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	
-
-"$(INTDIR)\writeprs.obj" : $(SOURCE) $(DEP_CPP_WRITE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 
 !ENDIF 
