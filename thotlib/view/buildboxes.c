@@ -1475,13 +1475,15 @@ static PtrBox       CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines, 
 	      /* register the box */
 	      pCurrentBox->BxDisplay = TRUE;
 	      pCurrentBox->BxFill = pAb->AbFillBox;
-	      if (pCurrentBox == pMainBox)
-		{
-		  if (pAb->AbFillBox)
-		    SetMainWindowBackgroundColor (frame, pAb->AbBackground);
-		  else
-		    SetMainWindowBackgroundColor (frame, DefaultBColor);
-		}
+	    }
+
+	  if (pCurrentBox == pMainBox)
+	    {
+	      /* Set the right document background */
+	      if (pAb->AbFillBox)
+		SetMainWindowBackgroundColor (frame, pAb->AbBackground);
+	      else
+		SetMainWindowBackgroundColor (frame, DefaultBColor);
 	    }
 	  
 	  /* create enclosing boxes */
