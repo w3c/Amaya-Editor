@@ -30,6 +30,7 @@
 ## which functions are edition functions). 
 ## DO NOT INCLUDE THIS SYMBOL IN YOUR PROFILE CONFIGURATION FILE
 
+#-------------------- User Profiles ------------------------------------------
 ################# AMAYA EDITOR
 <Editor>
 +amayabase
@@ -72,6 +73,7 @@
 HelpAmaya
 HelpAtW3C
 
+#-------------------- Document Profiles -------------------------------------
 ################# XHTML-TRANSITIONAL
 {XHTML Transitional}
 +base-module
@@ -167,6 +169,7 @@ HelpAtW3C
 {Ruby}
 &CreateRuby
 
+#-------------------- Modules ---------------------------------------------
 ################# AMAYA FUNCTIONS
 [amayabase]
 AmayaClose

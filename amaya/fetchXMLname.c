@@ -194,7 +194,13 @@ void MapXMLElementType (int XMLtype, char *XMLname, ElementType *elType,
 
   /* Select the right table */
   if (XMLtype == XHTML_TYPE)
-    ptr = XHTMLElemMappingTable;
+    {
+      ptr = XHTMLElemMappingTable;
+      /* no case sensitive whent there is an explicit "text/html" content_type */
+      if (xmlformat && DocumentMeta[doc] && DocumentMeta[doc]->content_type &&
+	  !strcmp (DocumentMeta[doc]->content_type, "text/html"))
+	xmlformat = FALSE;
+    }
   else if (XMLtype == MATH_TYPE)
     {
       if (profile == L_Basic && DocumentTypes[doc] == docHTML)
@@ -409,7 +415,13 @@ int MapXMLAttribute (int XMLtype, char *attrName, char *elementName,
   
   /* Select the right table */
   if (XMLtype == XHTML_TYPE)
-    ptr = XHTMLAttributeMappingTable;
+    {
+      ptr = XHTMLAttributeMappingTable;
+      /* no case sensitive whent there is an explicit "text/html" content_type */
+      if (xmlformat && DocumentMeta[doc] && DocumentMeta[doc]->content_type &&
+	  !strcmp (DocumentMeta[doc]->content_type, "text/html"))
+	xmlformat = FALSE;
+    }
   else if (XMLtype == MATH_TYPE)
     ptr = MathMLAttributeMappingTable;
   else if (XMLtype == SVG_TYPE)

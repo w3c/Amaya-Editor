@@ -1036,7 +1036,6 @@ void SetTableMenuOn (Document doc, View view)
   ----------------------------------------------------------------------*/
 void UpdateEditorMenus (Document doc)
 {
-  View       view;
   int        profile;
   ThotBool   isXhtml11;
 
@@ -1048,6 +1047,8 @@ void UpdateEditorMenus (Document doc)
   TtaUpdateMenus (doc, 1, FALSE);
   /* Update the doctype menu */
   UpdateDoctypeMenu (doc);
+#ifdef IV
+  View       view;
   /* structure information is active only in the structure view */
   TtaSetItemOff (doc, 1, Types, BStyle);
   TtaSetItemOff (doc, 1, Types, BComment);
@@ -1212,6 +1213,7 @@ void UpdateEditorMenus (Document doc)
 	  SetTableMenuOff (doc, view); /* no table commands */
 	}
     }
+#endif /* IV */
 }
 
 
@@ -2367,9 +2369,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
   /* previous document */
   old_doc = oldDoc;
   doc     = oldDoc;
-  /* do we have to redraw buttons and menus? */
-  reinitialized = (docType != DocumentTypes[doc]);
-
   /* if there is no old doc then force the document to
      be created in a new window */
   if (oldDoc == 0)
@@ -2384,11 +2383,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
        /* get the old document page id */
        TtaGetDocumentPageId( doc, -1, &page_id, &page_position );
 #endif /* _WX */
-      /* keep in memory if the closed document is in read-only mode */
-      if (!TtaGetDocumentAccessMode (doc))
-	/* if there is a parsing error/warning for the old document */
-	reinitialized = TRUE;
-
       if (DocumentTypes[doc] == docHTML ||
 	  DocumentTypes[doc] == docSVG ||
 	  DocumentTypes[doc] == docXml ||
@@ -2617,6 +2611,8 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   return (0);
 	 }
 
+       /* do we have to redraw buttons and menus? */
+       reinitialized = FALSE;
        /* store the profile of the new document */
        /* and update the menus according to it */
        TtaSetDocumentProfile (doc, profile);
@@ -2628,7 +2624,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 #endif /* BOOKMARKS */
 
 #ifndef DAV    /* don't active the WebDAV menu if flag is off */
-	   TtaSetMenuOff (doc, 1, Cooperation_);
+       TtaSetMenuOff (doc, 1, Cooperation_);
 #endif  /* DAV */
 
        if (docType == docSource || docType == docLog ||
@@ -2682,7 +2678,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	     TtaSetMenuOff (doc, 1, Bookmarks_);
 #endif /* BOOKMARKS */
 	   TtaSetMenuOff (doc, 1, Help_);
-	   TtcSwitchButtonBar (doc, 1); /* no button bar */
+	   /*TtcSwitchButtonBar (doc, 1);*/ /* no button bar */
 	   if (docType == docLog || docType == docLibrary)
 	     {
 	       TtaSetItemOff (doc, 1, File, BExit);
@@ -2698,11 +2694,9 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 #endif /* _SVG */
 		 }
 	       else
-		 {
-		   TtaSetDocumentAccessMode (doc, 0);
-		 }
+		 TtaSetDocumentAccessMode (doc, 0);
 	     }
-	   if (docType != docLibrary)
+	   else
 	     TtcSwitchCommands (doc, 1); /* no command open */
 	   isOpen = TRUE;
 	 }
@@ -2919,6 +2913,9 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	     TtaSetMenuOff (doc, 1, Bookmarks_);
 #endif /* BOOKMARKS */
 	 }
+       else
+	 /* do we have to redraw buttons and menus? */
+	 reinitialized = (docType != DocumentTypes[doc]);
      }
 
 #if _WX
@@ -3009,9 +3006,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	       TtaSetItemOn (doc, 1, Views, BShowAlternate);
 	       TtaSetItemOn (doc, 1, Views, BShowToC);
 	       TtaSetItemOn (doc, 1, Types, BTitle);
-	       if (DocumentMeta[doc] == NULL ||
-		   !DocumentMeta[doc]->xmlformat ||
-		   profile == L_Strict || profile == L_Basic)
+	       if (profile == L_Strict || profile == L_Basic)
 		 TtaSetMenuOff (doc, 1, XMLTypes);
 	     }
 	   else
@@ -3922,7 +3917,8 @@ static Document LoadDocument (Document doc, char *pathname,
       TtaFreeMemory (tempdir);
    
       /* Update the Doctype menu */
-      UpdateDoctypeMenu (newdoc);
+      UpdateEditorMenus (newdoc);
+
       if (*inNewWindow || newdoc != doc)
 	/* the document is displayed in a different window */
 	/* reset the history of the new window */
