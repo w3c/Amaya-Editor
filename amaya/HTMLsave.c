@@ -813,7 +813,7 @@ void SaveDocumentAs (Document doc, View view)
   ----------------------------------------------------------------------*/
 void SetNamespacesAndDTD (Document doc)
 {
-   Element		root, el, head, meta, docEl, doctype;
+   Element		root, el, head, meta, docEl, doctype, elFound;
    ElementType		elType;
    AttributeType	attrType;
    Attribute		attr, charsetAttr;
@@ -843,21 +843,26 @@ void SetNamespacesAndDTD (Document doc)
    useSVG = FALSE;
    useXML = FALSE;
    nature = NULL;
-   /* look for all natures used in the document */
+   /* Look for all natures used in the document */
    do
      {
        TtaNextNature (doc, &nature);
        if (nature)
 	 {
-	   ptr = TtaGetSSchemaName (nature);
-	   if (!strcmp (ptr, "MathML"))
-	     useMathML = TRUE;
-	   if (!strcmp (ptr, "SVG"))
-	     useSVG = TRUE;
-	   if (!strcmp (ptr, "XML"))
-	     useXML = TRUE;
-	   if (!strcmp (ptr, "HTML"))
-	     useHTML = TRUE;
+	   /* A nature is found, is it used ? */
+	   elFound = TtaSearchElementBySchema (nature, root);
+	   if (elFound != NULL)
+	     {
+	       ptr = TtaGetSSchemaName (nature);
+	       if (!strcmp (ptr, "MathML"))
+		 useMathML = TRUE;
+	       if (!strcmp (ptr, "SVG"))
+		 useSVG = TRUE;
+	       if (!strcmp (ptr, "XML"))
+		 useXML = TRUE;
+	       if (!strcmp (ptr, "HTML"))
+		 useHTML = TRUE;
+	     }
 	 }
      }
    while (nature);

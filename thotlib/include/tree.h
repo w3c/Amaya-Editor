@@ -1125,6 +1125,19 @@ extern ThotBool TtaHasReturnCreateNLException (ElementType elType);
    ---------------------------------------------------------------------- */
 /* extern ThotBool TtaHasInvisibleException (AttributeType attrType); */
 
+/* ----------------------------------------------------------------------
+   TtaSearchElementBySchema
+
+   Searches the first element that has a given schema.
+   The search is done in a given tree.
+   Parameters:
+   searchedSschema: schema of element to be searched.
+   element: the element that is the root of the tree in which the search
+   is done.
+   Return value:
+   the element found, or NULL if no element has been found.
+   ---------------------------------------------------------------------- */
+extern Element TtaSearchElementBySchema (SSchema searchedSschema, Element element);
 
 /*----------------------------------------------------------------------
   TtaAppendXmlAttribute

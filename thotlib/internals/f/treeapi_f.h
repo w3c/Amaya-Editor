@@ -119,6 +119,8 @@ extern void TtaNextCopiedElement ( Element * element );
 extern Document TtaGetCopiedDocument ( void );
 extern Element TtaSearchElementByLabel ( char *searchedLabel,
                                          Element element );
+extern Element TtaSearchElementBySchema ( SSchema sschema,
+                                          Element element );
 extern Element TtaSearchEmptyElement ( SearchDomain scope,
                                        Element element );
 extern Element TtaSearchOtherPairedElement ( Element element );
@@ -243,6 +245,8 @@ extern void TtaNextCopiedElement (/* Element * element */);
 extern Document TtaGetCopiedDocument (/* void */);
 extern Element TtaSearchElementByLabel (/* char *searchedLabel,
                                            Element element */);
+extern Element TtaSearchElementBySchema (/* SSchema sschema,
+                                            Element element */);
 extern Element TtaSearchEmptyElement (/* SearchDomain scope,
                                          Element element */);
 extern Element TtaSearchOtherPairedElement (/* Element element */);

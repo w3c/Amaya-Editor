@@ -2840,6 +2840,58 @@ Element TtaSearchElementByLabel (char *searchedLabel, Element element)
 }
 
 /* ----------------------------------------------------------------------
+   ---------------------------------------------------------------------- */
+static PtrElement   SearchSSchema (SSchema sschema, PtrElement pEl)
+{
+   PtrElement          pE, pFound;
+
+   pFound = NULL;
+   if (sschema == pEl->ElStructSchema)
+      pFound = pEl;
+   else if (!pEl->ElTerminal && pEl->ElFirstChild != NULL)
+     {
+	pE = pEl->ElFirstChild;
+	do
+	  {
+	     pFound = SearchSSchema (sschema, pE);
+	     if (pFound != NULL)
+		pE = NULL;
+	     else
+		pE = pE->ElNext;
+	  }
+	while (pE != NULL);
+     }
+   return pFound;
+}
+
+/* ----------------------------------------------------------------------
+   TtaSearchElementBySchema
+
+   Searches the first element that has a given schema.
+   The search is done in a given tree.
+   Parameters:
+   searchedSschema: schema of element to be searched.
+   element: the element that is the root of the tree in which the search
+   is done.
+   Return value:
+   the element found, or NULL if no element has been found.
+   ---------------------------------------------------------------------- */
+Element TtaSearchElementBySchema (SSchema sschema, Element element)
+{
+   PtrElement          elementFound;
+
+   UserErrorCode = 0;
+   elementFound = NULL;
+   if (element == NULL)
+	TtaError (ERR_invalid_parameter);
+   else if (sschema == NULL)
+	TtaError (ERR_invalid_parameter);
+   else
+      elementFound = SearchSSchema (sschema, (PtrElement) element);
+   return ((Element) elementFound);
+}
+
+/* ----------------------------------------------------------------------
    TtaSearchEmptyElement
 
    Searches the next empty element. An empty element is either a compound
