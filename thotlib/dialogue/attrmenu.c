@@ -583,7 +583,7 @@ PtrDocument         pDoc;
    Menu_Ctl           *pMenu;
 
    /* Compose le menu des attributs */
-   if (pDoc == SelectedDocument)
+   if (pDoc == SelectedDocument && !pDoc->DocReadOnly)
       nbItemAttr = BuildAttrMenu (bufMenuAttr, pDoc, ActiveAttr);
    else
       nbItemAttr = 0;

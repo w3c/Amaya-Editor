@@ -1537,7 +1537,7 @@ int                 lastChar;
 	   prevLen = 0;
 	SelectString (pDoc, firstSel, firstChar, prevLen);
      }
-   else if (lastChar == 0 || lastSel != firstSel)
+   else if ((lastChar == 0 && firstChar!=1) || lastSel != firstSel)
       SelectElement (pDoc, firstSel, TRUE, TRUE);
    else
       SelectString (pDoc, firstSel, 1, lastChar);

@@ -461,9 +461,21 @@ caddr_t             call_d;
 #endif /* __STDC__ */
 {
    unsigned char       car;
+   ThotWidget          wp;
+   int                 i;
 
    /* Recupere la table des items */
    car = (unsigned char) param % 256;
+   /* Recupere le widget de la palette */
+   wp=XtParent(XtParent(XtParent(XtParent(w))));
+   /* met a jour l'indicateur de palette */
+   if(Keyboards[KeyboardMode] != wp)
+     {
+     CloseTextInsertion();
+     for(i = 0; i < (MAX_KEYBOARD + 1); i++)
+       if(Keyboards[i] == wp)
+         KeyboardMode = i;
+     }
    /* Insere le caractere selectionne */
    if (ThotLocalActions[T_insertchar] != NULL)
       (*ThotLocalActions[T_insertchar]) (ActiveFrame, car, KeyboardMode);
