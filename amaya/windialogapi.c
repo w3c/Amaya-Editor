@@ -89,7 +89,7 @@ static CHAR         currentPathName [100];
 static CHAR         winCurLang [100];
 static CHAR         currentFileToPrint [MAX_PATH];
 static CHAR         attDlgTitle [100];
-static STRING        lpPrintTemplateName = (STRING) 0;
+static STRING       lpPrintTemplateName = (STRING) 0;
 static int          currentDoc ;
 static int          currentView ;
 static int          currentRef;
@@ -331,7 +331,17 @@ STRING buffer;
 	cssList   = buffer;
 	sprintf (message, "%s", msg);
 
-    DialogBox (hInstance, MAKEINTRESOURCE (CSSDIALOG), NULL, (DLGPROC) CSSDlgProc);
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_CSSDIALOG), NULL, (DLGPROC) CSSDlgProc);
+				break;
+		   case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_CSSDIALOG), NULL, (DLGPROC) CSSDlgProc);
+				break;
+		   case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_CSSDIALOG), NULL, (DLGPROC) CSSDlgProc);
+				break;
+	}
 }
 
 /*-----------------------------------------------------------------------
@@ -353,7 +363,17 @@ int       attr_HREFText;
     attrHRefTxt  = attr_HREFText;
 	ustrcpy (urlToOpen, attrHref);
 
-	DialogBox (hInstance, MAKEINTRESOURCE (LINKDIALOG), NULL, (DLGPROC) LinkDlgProc);
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_LINKDIALOG), NULL, (DLGPROC) LinkDlgProc);
+				break;
+		   case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_LINKDIALOG), NULL, (DLGPROC) LinkDlgProc);
+				break;
+		   case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_LINKDIALOG), NULL, (DLGPROC) LinkDlgProc);
+				break;
+	}
 }
 
 /*-----------------------------------------------------------------------
@@ -372,7 +392,18 @@ STRING     msg2;
     sprintf (currentPathName, localname);
     sprintf (message, msg1);
 	sprintf (message2, msg2);
-	DialogBox (hInstance, MAKEINTRESOURCE (HELPDIALOG), parent, (DLGPROC) HelpDlgProc);
+
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_HELPDIALOG), parent, (DLGPROC) HelpDlgProc);
+				break;
+           case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_HELPDIALOG), parent, (DLGPROC) HelpDlgProc);
+				break;
+           case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_HELPDIALOG), parent, (DLGPROC) HelpDlgProc);
+				break;
+	}
 }
 
 /*-----------------------------------------------------------------------
@@ -390,7 +421,19 @@ HWND      frame;
 	baseDlg = mathRef;
 	currentWnd = frame;
 	parentWnd  = parent;
-	DialogBox (hInstance, MAKEINTRESOURCE (MATHDIALOG), NULL, (DLGPROC) MathDlgProc);
+
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_MATHDIALOG), NULL, (DLGPROC) MathDlgProc);
+				break;
+           case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_MATHDIALOG), NULL, (DLGPROC) MathDlgProc);
+				break;
+           case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_MATHDIALOG), NULL, (DLGPROC) MathDlgProc);
+				break;
+	}
+
     SetFocus (parent);
 }
 
@@ -421,7 +464,17 @@ int       num_form_print;
     numFormPrint       = num_form_print;
 	sprintf (currentFileToPrint, "%s", ps_dir);
 
-	DialogBox (hInstance, MAKEINTRESOURCE (PRINTDIALOG), NULL, (DLGPROC) PrintDlgProc);
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_PRINTDIALOG), NULL, (DLGPROC) PrintDlgProc);
+				break;
+           case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_PRINTDIALOG), NULL, (DLGPROC) PrintDlgProc);
+				break;
+           case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_PRINTDIALOG), NULL, (DLGPROC) PrintDlgProc);
+				break;
+	}
 
     if (!gbAbort) {
        EnableWindow  (parent, TRUE);
@@ -456,7 +509,17 @@ int t_border;
 	numRows   = num_rows;
 	tBorder   = t_border;
 
-	DialogBox (hInstance, MAKEINTRESOURCE (TABLEDIALOG), NULL, (DLGPROC) TableDlgProc);
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_TABLEDIALOG), NULL, (DLGPROC) TableDlgProc);
+				break;
+           case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_TABLEDIALOG), NULL, (DLGPROC) TableDlgProc);
+				break;
+           case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_TABLEDIALOG), NULL, (DLGPROC) TableDlgProc);
+				break;
+	}
 }
 
 /*-----------------------------------------------------------------------
@@ -482,7 +545,17 @@ int num_rows;
 	numCols   = num_cols;
 	numRows   = num_rows;
 
-	DialogBox (hInstance, MAKEINTRESOURCE (MATRIXDIALOG), NULL, (DLGPROC) MatrixDlgProc);
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_MATRIXDIALOG), NULL, (DLGPROC) MatrixDlgProc);
+				break;
+           case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_MATRIXDIALOG), NULL, (DLGPROC) MatrixDlgProc);
+				break;
+           case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_MATRIXDIALOG), NULL, (DLGPROC) MatrixDlgProc);
+				break;
+	}
 }
 
 /*-----------------------------------------------------------------------
@@ -495,7 +568,17 @@ void CreateSearchDlgWindow (parent)
 HWND      parent;
 #endif /* __STDC__ */
 {  
-	DialogBox (hInstance, MAKEINTRESOURCE (SEARCHDIALOG), NULL, (DLGPROC) SearchDlgProc);
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_SEARCHDIALOG), NULL, (DLGPROC) SearchDlgProc);
+				break;
+           case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_SEARCHDIALOG), NULL, (DLGPROC) SearchDlgProc);
+				break;
+           case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_SEARCHDIALOG), NULL, (DLGPROC) SearchDlgProc);
+				break;
+	}
 }
 
 /*-----------------------------------------------------------------------
@@ -524,7 +607,17 @@ int   toggle_save;
 	currentParentRef = baseDlg + saveForm;
 	sprintf (currentPathName, path_name);
 
-	DialogBox (hInstance, MAKEINTRESOURCE (SAVEASDIALOG), parent, (DLGPROC) SaveAsDlgProc);
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_SAVEASDIALOG), parent, (DLGPROC) SaveAsDlgProc);
+				break;
+           case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_SAVEASDIALOG), parent, (DLGPROC) SaveAsDlgProc);
+				break;
+           case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_SAVEASDIALOG), parent, (DLGPROC) SaveAsDlgProc);
+				break;
+	}
 }
 
 /*-----------------------------------------------------------------------
@@ -557,7 +650,18 @@ int   doc_type;
     else 
         szFilter = APPALLFILESFILTER;
 
-	DialogBox (hInstance, MAKEINTRESOURCE (OPENDOCDIALOG), parent, (DLGPROC) OpenDocDlgProc);
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_OPENDOCDIALOG), parent, (DLGPROC) OpenDocDlgProc);
+				break;
+           case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_OPENDOCDIALOG), parent, (DLGPROC) OpenDocDlgProc);
+				break;
+           case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_OPENDOCDIALOG), parent, (DLGPROC) OpenDocDlgProc);
+				break;
+	}
+
 	ustrcpy (doc_to_open, urlToOpen);
 }
 
@@ -591,7 +695,18 @@ int   doc_type;
     else 
         szFilter = APPALLFILESFILTER;
 
-	DialogBox (hInstance, MAKEINTRESOURCE (OPENIMAGEDIALOG), parent, (DLGPROC) OpenImgDlgProc);
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_OPENIMAGEDIALOG), parent, (DLGPROC) OpenImgDlgProc);
+				break;
+           case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_OPENIMAGEDIALOG), parent, (DLGPROC) OpenImgDlgProc);
+				break;
+           case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_OPENIMAGEDIALOG), parent, (DLGPROC) OpenImgDlgProc);
+				break;
+	}
+
 	ustrcpy (doc_to_open, urlToOpen);
 }
 
@@ -613,7 +728,17 @@ HWND frame;
     formGraph    = form_graph;
     menuGraph    = menu_graph;
 
-	DialogBox (hInstance, MAKEINTRESOURCE (GRAPHICSDIALOG), NULL, (DLGPROC) GraphicsDlgProc);
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_GRAPHICSDIALOG), NULL, (DLGPROC) GraphicsDlgProc);
+				break;
+           case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_GRAPHICSDIALOG), NULL, (DLGPROC) GraphicsDlgProc);
+				break;
+           case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_GRAPHICSDIALOG), NULL, (DLGPROC) GraphicsDlgProc);
+				break;
+	}
 }
 
 /*-----------------------------------------------------------------------
@@ -634,7 +759,18 @@ int   confirm_save;
     saveList    = save_list;
 	baseDlg     = base_dialog;
 	confirmSave = confirm_save;
-	DialogBox (hInstance, MAKEINTRESOURCE (SAVELISTDIALOG), parent, (DLGPROC) SaveListDlgProc);
+
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_SAVELISTDIALOG), parent, (DLGPROC) SaveListDlgProc);
+				break;
+           case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_SAVELISTDIALOG), parent, (DLGPROC) SaveListDlgProc);
+				break;
+           case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_SAVELISTDIALOG), parent, (DLGPROC) SaveListDlgProc);
+				break;
+	}
 }
 
 /*-----------------------------------------------------------------------
@@ -654,7 +790,18 @@ BOOL* close_dont_save;
 	sprintf (message, msg);
 	sprintf (wndTitle, title);
 
-	DialogBox (hInstance, MAKEINTRESOURCE (CLOSEDOCDIALOG), parent, (DLGPROC) CloseDocDlgProc);
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_CLOSEDOCDIALOG), parent, (DLGPROC) CloseDocDlgProc);
+				break;
+           case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_CLOSEDOCDIALOG), parent, (DLGPROC) CloseDocDlgProc);
+				break;
+           case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_CLOSEDOCDIALOG), parent, (DLGPROC) CloseDocDlgProc);
+				break;
+	}
+
 	*save_befor = saveBeforeClose;
 	*close_dont_save = closeDontSave;
 }
@@ -688,7 +835,17 @@ STRING curLang;
     menuAlphaLanguage       = menu_alpha_language; 
     LangValue               = lang_value;
 
-	DialogBox (hInstance, MAKEINTRESOURCE (LANGUAGEDIALOG), parent, (DLGPROC) LanguageDlgProc);
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_LANGUAGEDIALOG), parent, (DLGPROC) LanguageDlgProc);
+				break;
+           case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_LANGUAGEDIALOG), parent, (DLGPROC) LanguageDlgProc);
+				break;
+           case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_LANGUAGEDIALOG), parent, (DLGPROC) LanguageDlgProc);
+				break;
+	}
 }
 
 /*-----------------------------------------------------------------------
@@ -710,7 +867,17 @@ int   font_size;
     fontUnderline = font_underline;
     fontSize      = font_size;
 
-	DialogBox (hInstance, MAKEINTRESOURCE (CHARACTERSDIALOG), NULL, (DLGPROC) CharacterDlgProc);
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_CHARACTERSDIALOG), NULL, (DLGPROC) CharacterDlgProc);
+				break;
+           case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_CHARACTERSDIALOG), NULL, (DLGPROC) CharacterDlgProc);
+				break;
+           case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_CHARACTERSDIALOG), NULL, (DLGPROC) CharacterDlgProc);
+				break;
+	}
 }
 
 /*-----------------------------------------------------------------------
@@ -730,21 +897,61 @@ STRING buffer;
     currAttrVal = curr_val;
 	attDlgNbItems = nb_items;
 
-    switch (attDlgNbItems) {
-           case 2: 	DialogBox (hInstance, MAKEINTRESOURCE (ATTR2ITEMSDIALOG), NULL, (DLGPROC) Attr2ItemsDlgProc);
-                    break; 
+	switch (app_lang) {
+           case FR_LANG:
+                switch (attDlgNbItems) {
+                       case 2: DialogBox (hInstance, MAKEINTRESOURCE (FR_ATTR2ITEMSDIALOG), NULL, (DLGPROC) Attr2ItemsDlgProc);
+                               break; 
 
-           case 3: 	DialogBox (hInstance, MAKEINTRESOURCE (ATTR3ITEMSDIALOG), NULL, (DLGPROC) Attr3ItemsDlgProc);
-                    break; 
+                       case 3: DialogBox (hInstance, MAKEINTRESOURCE (FR_ATTR3ITEMSDIALOG), NULL, (DLGPROC) Attr3ItemsDlgProc);
+                               break; 
 
-           case 4:  DialogBox (hInstance, MAKEINTRESOURCE (ATTR4ITEMSDIALOG), NULL, (DLGPROC) Attr4ItemsDlgProc);
-                    break;
+                       case 4: DialogBox (hInstance, MAKEINTRESOURCE (FR_ATTR4ITEMSDIALOG), NULL, (DLGPROC) Attr4ItemsDlgProc);
+                               break;
 
-           case 5:  DialogBox (hInstance, MAKEINTRESOURCE (ATTR5ITEMSDIALOG), NULL, (DLGPROC) Attr5ItemsDlgProc);
-                    break;
+                       case 5: DialogBox (hInstance, MAKEINTRESOURCE (FR_ATTR5ITEMSDIALOG), NULL, (DLGPROC) Attr5ItemsDlgProc);
+                               break;
 
-           default: /* MessageBox (); */
-                    break;
+                       default: /* MessageBox (); */
+                                break;
+				} 
+				break;
+           case EN_LANG:
+                switch (attDlgNbItems) {
+                       case 2: DialogBox (hInstance, MAKEINTRESOURCE (EN_ATTR2ITEMSDIALOG), NULL, (DLGPROC) Attr2ItemsDlgProc);
+                               break; 
+
+                       case 3: DialogBox (hInstance, MAKEINTRESOURCE (EN_ATTR3ITEMSDIALOG), NULL, (DLGPROC) Attr3ItemsDlgProc);
+                               break; 
+
+                       case 4: DialogBox (hInstance, MAKEINTRESOURCE (EN_ATTR4ITEMSDIALOG), NULL, (DLGPROC) Attr4ItemsDlgProc);
+                               break;
+
+                       case 5: DialogBox (hInstance, MAKEINTRESOURCE (EN_ATTR5ITEMSDIALOG), NULL, (DLGPROC) Attr5ItemsDlgProc);
+                               break;
+
+                       default: /* MessageBox (); */
+                                break;
+				} 
+				break;
+           case DE_LANG:
+                switch (attDlgNbItems) {
+                       case 2: DialogBox (hInstance, MAKEINTRESOURCE (DE_ATTR2ITEMSDIALOG), NULL, (DLGPROC) Attr2ItemsDlgProc);
+                               break; 
+
+                       case 3: DialogBox (hInstance, MAKEINTRESOURCE (DE_ATTR3ITEMSDIALOG), NULL, (DLGPROC) Attr3ItemsDlgProc);
+                               break; 
+
+                       case 4: DialogBox (hInstance, MAKEINTRESOURCE (DE_ATTR4ITEMSDIALOG), NULL, (DLGPROC) Attr4ItemsDlgProc);
+                               break;
+
+                       case 5: DialogBox (hInstance, MAKEINTRESOURCE (DE_ATTR5ITEMSDIALOG), NULL, (DLGPROC) Attr5ItemsDlgProc);
+                               break;
+
+                       default: /* MessageBox (); */
+                                break;
+				} 
+				break;
 	}
 }
 
@@ -766,7 +973,17 @@ STRING class_list;
 	classForm   = class_form;
 	classSelect = class_select;
 
-	DialogBox (hInstance, MAKEINTRESOURCE (CREATERULEDIALOG), parent, (DLGPROC) CreateRuleDlgProc);
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_CREATERULEDIALOG), parent, (DLGPROC) CreateRuleDlgProc);
+				break;
+           case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_CREATERULEDIALOG), parent, (DLGPROC) CreateRuleDlgProc);
+				break;
+           case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_CREATERULEDIALOG), parent, (DLGPROC) CreateRuleDlgProc);
+				break;
+	}
 }
 
 /*-----------------------------------------------------------------------
@@ -787,7 +1004,17 @@ STRING class_list;
 	classForm   = class_form;
 	classSelect = class_select;
 
-	DialogBox (hInstance, MAKEINTRESOURCE (APPLYCLASSDIALOG), parent, (DLGPROC) ApplyClassDlgProc);
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_APPLYCLASSDIALOG), parent, (DLGPROC) ApplyClassDlgProc);
+				break;
+           case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_APPLYCLASSDIALOG), parent, (DLGPROC) ApplyClassDlgProc);
+				break;
+           case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_APPLYCLASSDIALOG), parent, (DLGPROC) ApplyClassDlgProc);
+				break;
+	}
 }
 
 /*-----------------------------------------------------------------------
@@ -822,7 +1049,17 @@ int   chkrSpecial;
 	sprintf (currentLabel, label);
 	sprintf (currentRejectedchars, rejectedChars);
 
-	DialogBox (hInstance, MAKEINTRESOURCE (SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
+				break;
+           case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
+				break;
+           case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
+				break;
+	}
 }
 
 /*-----------------------------------------------------------------------
@@ -842,7 +1079,17 @@ STRING msg;
 	sprintf (wndTitle, title);
 	currentRef = ref;
 
-	DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG), parent, (DLGPROC) InitConfirmDlgProc);
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_INITCONFIRMDIALOG), parent, (DLGPROC) InitConfirmDlgProc);
+				break;
+           case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_INITCONFIRMDIALOG), parent, (DLGPROC) InitConfirmDlgProc);
+				break;
+           case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_INITCONFIRMDIALOG), parent, (DLGPROC) InitConfirmDlgProc);
+				break;
+	}
 }
 
 /*-----------------------------------------------------------------------
@@ -872,7 +1119,17 @@ HWND  parent;
     Old_lineSp          = old_lineSp; 
     Line_spacingNum     = line_spacingNum;
 
-	DialogBox (hInstance, MAKEINTRESOURCE (FORMATDIALOG), NULL, (DLGPROC) ChangeFormatDlgProc);
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_FORMATDIALOG), NULL, (DLGPROC) ChangeFormatDlgProc);
+				break;
+           case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_FORMATDIALOG), NULL, (DLGPROC) ChangeFormatDlgProc);
+				break;
+           case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_FORMATDIALOG), NULL, (DLGPROC) ChangeFormatDlgProc);
+				break;
+	}
 }
 
 /*-----------------------------------------------------------------------
@@ -885,7 +1142,17 @@ void CreateGreekKeyboardDlgWindow (parent)
 HWND  parent;
 #endif /* __STDC__ */
 {  
-	DialogBox (hInstance, MAKEINTRESOURCE (GALPHABETDIALOG), NULL, (DLGPROC) GreekKeyboardDlgProc);
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_GALPHABETDIALOG), NULL, (DLGPROC) GreekKeyboardDlgProc);
+				break;
+           case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_GALPHABETDIALOG), NULL, (DLGPROC) GreekKeyboardDlgProc);
+				break;
+           case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_GALPHABETDIALOG), NULL, (DLGPROC) GreekKeyboardDlgProc);
+				break;
+	}
 }
 
 /*-----------------------------------------------------------------------
@@ -898,7 +1165,18 @@ void CreateAuthenticationDlgWindow (parent)
 HWND  parent;
 #endif /* __STDC__ */
 {  
-	DialogBox (hInstance, MAKEINTRESOURCE (AUTHENTIFICATIONDIALOG), parent, (DLGPROC) AuthentificationDlgProc);
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_AUTHENTIFICATIONDIALOG), parent, (DLGPROC) AuthentificationDlgProc);
+				break;
+           case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_AUTHENTIFICATIONDIALOG), parent, (DLGPROC) AuthentificationDlgProc);
+				break;
+           case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_AUTHENTIFICATIONDIALOG), parent, (DLGPROC) AuthentificationDlgProc);
+				break;
+	}
+
     nameGot = FALSE;
 }
 
@@ -929,7 +1207,17 @@ STRING image_location;
 	currentParentRef = baseDlg + bgImageForm;
     sprintf (currentPathName, "%s", image_location);
 
-	DialogBox (hInstance, MAKEINTRESOURCE (BGIMAGEDIALOG), parent, (DLGPROC) BackgroundImageDlgProc);
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_BGIMAGEDIALOG), parent, (DLGPROC) BackgroundImageDlgProc);
+				break;
+           case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_BGIMAGEDIALOG), parent, (DLGPROC) BackgroundImageDlgProc);
+				break;
+           case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_BGIMAGEDIALOG), parent, (DLGPROC) BackgroundImageDlgProc);
+				break;
+	} 
 }
 
 
