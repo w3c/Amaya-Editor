@@ -86,18 +86,42 @@ extern int SpecificSetLineSpacing ( PresentationTarget t,
 extern int SpecificGetLineSpacing ( PresentationTarget t,
                                     PresentationContext c,
                                     PresentationValue *v );
-extern int SpecificSetVPos ( PresentationTarget t,
-                             PresentationContext c,
-                             PresentationValue v );
-extern int SpecificGetVPos ( PresentationTarget t,
-                             PresentationContext c,
-                             PresentationValue *v );
-extern int SpecificSetHPos ( PresentationTarget t,
-                             PresentationContext c,
-                             PresentationValue v );
-extern int SpecificGetHPos ( PresentationTarget t,
-                             PresentationContext c,
-                             PresentationValue *v );
+extern int SpecificSetTMargin ( PresentationTarget t,
+                                PresentationContext c,
+                                PresentationValue v );
+extern int SpecificGetTMargin ( PresentationTarget t,
+                                PresentationContext c,
+                                PresentationValue *v );
+extern int SpecificSetLMargin ( PresentationTarget t,
+                                PresentationContext c,
+                                PresentationValue v );
+extern int SpecificGetLMargin ( PresentationTarget t,
+                                PresentationContext c,
+                                PresentationValue *v );
+extern int SpecificSetRMargin ( PresentationTarget t,
+                                PresentationContext c,
+                                PresentationValue v );
+extern int SpecificGetRMargin ( PresentationTarget t,
+                                PresentationContext c,
+                                PresentationValue *v );
+extern int SpecificSetBMargin ( PresentationTarget t,
+                                PresentationContext c,
+                                PresentationValue v );
+extern int SpecificGetBMargin ( PresentationTarget t,
+                                PresentationContext c,
+                                PresentationValue *v );
+extern int SpecificSetHOverflow ( PresentationTarget t,
+                                  PresentationContext c,
+                                  PresentationValue v );
+extern int SpecificGetHOverflow ( PresentationTarget t,
+                                  PresentationContext c,
+                                  PresentationValue *v );
+extern int SpecificSetVOverflow ( PresentationTarget t,
+                                  PresentationContext c,
+                                  PresentationValue v );
+extern int SpecificGetVOverflow ( PresentationTarget t,
+                                  PresentationContext c,
+                                  PresentationValue *v );
 extern int SpecificSetInLine ( PresentationTarget t,
                                PresentationContext c,
                                PresentationValue v );
@@ -116,24 +140,12 @@ extern int SpecificSetPictureMode ( PresentationTarget t,
 extern int SpecificGetPictureMode ( PresentationTarget t,
                                     PresentationContext c,
                                     PresentationValue *v );
-extern int SpecificSetRMargin ( PresentationTarget t,
-                                PresentationContext c,
-                                PresentationValue v );
-extern int SpecificGetRMargin ( PresentationTarget t,
-                                PresentationContext c,
-                                PresentationValue * v );
 extern int SpecificSetWidth ( PresentationTarget t,
                               PresentationContext c,
                               PresentationValue v );
 extern int SpecificGetWidth ( PresentationTarget t,
                               PresentationContext c,
                               PresentationValue * v );
-extern int SpecificSetBMargin ( PresentationTarget t,
-                                PresentationContext c,
-                                PresentationValue v );
-extern int SpecificGetBMargin ( PresentationTarget t,
-                                PresentationContext c,
-                                PresentationValue * v );
 extern int SpecificSetHeight ( PresentationTarget t,
                                PresentationContext c,
                                PresentationValue v );
@@ -146,6 +158,12 @@ extern int SpecificSetBgImage ( PresentationTarget t,
 extern int SpecificGetBgImage ( PresentationTarget t,
                                 PresentationContext c,
                                 PresentationValue * v );
+extern int SpecificSetHidden ( PresentationTarget t,
+                               PresentationContext c,
+                               PresentationValue v );
+extern int SpecificGetHidden ( PresentationTarget t,
+                               PresentationContext c,
+                               PresentationValue * v );
 extern void ApplyAllSpecificContext ( Document doc,
                                       SpecificTarget target,
                                       SpecificContextApplyHandler handler,
@@ -237,18 +255,42 @@ extern int SpecificSetLineSpacing (/* PresentationTarget t,
 extern int SpecificGetLineSpacing (/* PresentationTarget t,
                                       PresentationContext c,
                                       PresentationValue *v */);
-extern int SpecificSetVPos (/* PresentationTarget t,
-                               PresentationContext c,
-                               PresentationValue v */);
-extern int SpecificGetVPos (/* PresentationTarget t,
-                               PresentationContext c,
-                               PresentationValue *v */);
-extern int SpecificSetHPos (/* PresentationTarget t,
-                               PresentationContext c,
-                               PresentationValue v */);
-extern int SpecificGetHPos (/* PresentationTarget t,
-                               PresentationContext c,
-                               PresentationValue *v */);
+extern int SpecificSetTMargin (/* PresentationTarget t,
+                                  PresentationContext c,
+                                  PresentationValue v */);
+extern int SpecificGetTMargin (/* PresentationTarget t,
+                                  PresentationContext c,
+                                  PresentationValue *v */);
+extern int SpecificSetLMargin (/* PresentationTarget t,
+                                  PresentationContext c,
+                                  PresentationValue v */);
+extern int SpecificGetLMargin (/* PresentationTarget t,
+                                  PresentationContext c,
+                                  PresentationValue *v */);
+extern int SpecificSetRMargin (/* PresentationTarget t,
+                                  PresentationContext c,
+                                  PresentationValue v */);
+extern int SpecificGetRMargin (/* PresentationTarget t,
+                                  PresentationContext c,
+                                  PresentationValue *v */);
+extern int SpecificSetBMargin (/* PresentationTarget t,
+                                  PresentationContext c,
+                                  PresentationValue v */);
+extern int SpecificGetBMargin (/* PresentationTarget t,
+                                  PresentationContext c,
+                                  PresentationValue *v */);
+extern int SpecificSetHOverflow (/* PresentationTarget t,
+                                    PresentationContext c,
+                                    PresentationValue v */);
+extern int SpecificGetHOverflow (/* PresentationTarget t,
+                                    PresentationContext c,
+                                    PresentationValue *v */);
+extern int SpecificSetVOverflow (/* PresentationTarget t,
+                                    PresentationContext c,
+                                    PresentationValue v */);
+extern int SpecificGetVOverflow (/* PresentationTarget t,
+                                    PresentationContext c,
+                                    PresentationValue *v */);
 extern int SpecificSetInLine (/* PresentationTarget t,
                                  PresentationContext c,
                                  PresentationValue v */);
@@ -267,24 +309,12 @@ extern int SpecificSetPictureMode (/* PresentationTarget t,
 extern int SpecificGetPictureMode (/* PresentationTarget t,
                                       PresentationContext c,
                                       PresentationValue *v */);
-extern int SpecificSetRMargin (/* PresentationTarget t,
-                                  PresentationContext c,
-                                  PresentationValue v */);
-extern int SpecificGetRMargin (/* PresentationTarget t,
-                                  PresentationContext c,
-                                  PresentationValue * v */);
 extern int SpecificSetWidth (/* PresentationTarget t,
                                 PresentationContext c,
                                 PresentationValue v */);
 extern int SpecificGetWidth (/* PresentationTarget t,
                                 PresentationContext c,
                                 PresentationValue * v */);
-extern int SpecificSetBMargin (/* PresentationTarget t,
-                                  PresentationContext c,
-                                  PresentationValue v */);
-extern int SpecificGetBMargin (/* PresentationTarget t,
-                                  PresentationContext c,
-                                  PresentationValue * v */);
 extern int SpecificSetHeight (/* PresentationTarget t,
                                  PresentationContext c,
                                  PresentationValue v */);
@@ -297,6 +327,12 @@ extern int SpecificSetBgImage (/* PresentationTarget t,
 extern int SpecificGetBgImage (/* PresentationTarget t,
                                   PresentationContext c,
                                   PresentationValue * v */);
+extern int SpecificSetHidden (/* PresentationTarget t,
+                                 PresentationContext c,
+                                 PresentationValue v */);
+extern int SpecificGetHidden (/* PresentationTarget t,
+                                 PresentationContext c,
+                                 PresentationValue * v */);
 extern void ApplyAllSpecificContext (/* Document doc,
                                         SpecificTarget target,
                                         SpecificContextApplyHandler handler,

@@ -1051,31 +1051,40 @@ int                 height;
       /* la fenetre a ete creee correctement, on affiche l'image qui est */
       /* deja prete */
      {
-	/* on ne s'occupe pas de la hauteur de page */
-	h = 0;
-	if (assoc)
-	   /* vue d'elements associes */
-	  {
-	     pDoc->DocAssocFrame[view - 1] = frame;
-	     pDoc->DocAssocVolume[view - 1] = volume;
-	     ChangeConcreteImage (frame, &h, pDoc->DocAssocRoot[view - 1]->ElAbstractBox[0]);
-	     DisplayFrame (frame);
-	     ShowSelection (pDoc->DocAssocRoot[view - 1]->ElAbstractBox[0], TRUE);
-	  }
-	else
-	   /* vue de l'arbre principal */
-	  {
-	     pDoc->DocViewFrame[view - 1] = frame;
-	     pDoc->DocViewVolume[view - 1] = volume;
-	     ChangeConcreteImage (frame, &h, pDoc->DocViewRootAb[view - 1]);
-	     DisplayFrame (frame);
-	     ShowSelection (pDoc->DocViewRootAb[view - 1], TRUE);
-	  }
-	/* met a jour les menus de la fenetre */
-	if (ThotLocalActions[T_chselect] != NULL)
-	   (*ThotLocalActions[T_chselect]) (pDoc);
-	if (ThotLocalActions[T_chattr] != NULL)
-	   (*ThotLocalActions[T_chattr]) (pDoc);
+       /* on ne s'occupe pas de la hauteur de page */
+       h = 0;
+       if (assoc)
+	 /* vue d'elements associes */
+	 {
+	   pDoc->DocAssocFrame[view - 1] = frame;
+	   pDoc->DocAssocVolume[view - 1] = volume;
+	   ChangeConcreteImage (frame, &h, pDoc->DocAssocRoot[view - 1]->ElAbstractBox[0]);
+	   DisplayFrame (frame);
+	   ShowSelection (pDoc->DocAssocRoot[view - 1]->ElAbstractBox[0], TRUE);
+	 }
+       else
+	 /* vue de l'arbre principal */
+	 {
+	   pDoc->DocViewFrame[view - 1] = frame;
+	   pDoc->DocViewVolume[view - 1] = volume;
+	   ChangeConcreteImage (frame, &h, pDoc->DocViewRootAb[view - 1]);
+	   DisplayFrame (frame);
+	   ShowSelection (pDoc->DocViewRootAb[view - 1], TRUE);
+	 }
+       /* Update Paste and Undo entries */
+       if ((FirstSavedElement == NULL && ClipboardThot.BuLength == 0) ||
+	   pDoc->DocReadOnly)
+	 SwitchPaste(pDoc, FALSE);
+       else
+	 SwitchPaste(pDoc, TRUE);
+       /* TODO check the Undo state of the document */
+       SwitchUndo (pDoc, FALSE);
+
+       /* met a jour les menus de la fenetre */
+       if (ThotLocalActions[T_chselect] != NULL)
+	 (*ThotLocalActions[T_chselect]) (pDoc);
+       if (ThotLocalActions[T_chattr] != NULL)
+	 (*ThotLocalActions[T_chattr]) (pDoc);
      }
 }
 

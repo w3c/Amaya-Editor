@@ -94,18 +94,42 @@ extern int GenericSetLineSpacing ( PresentationTarget t,
 extern int GenericGetLineSpacing ( PresentationTarget t,
                                    PresentationContext c,
                                    PresentationValue *v );
-extern int GenericSetVPos ( PresentationTarget t,
-                            PresentationContext c,
-                            PresentationValue v );
-extern int GenericGetVPos ( PresentationTarget t,
-                            PresentationContext c,
-                            PresentationValue *v );
-extern int GenericSetHPos ( PresentationTarget t,
-                            PresentationContext c,
-                            PresentationValue v );
-extern int GenericGetHPos ( PresentationTarget t,
-                            PresentationContext c,
-                            PresentationValue *v );
+extern int GenericSetTMargin ( PresentationTarget t,
+                               PresentationContext c,
+                               PresentationValue v );
+extern int GenericGetTMargin ( PresentationTarget t,
+                               PresentationContext c,
+                               PresentationValue *v );
+extern int GenericSetLMargin ( PresentationTarget t,
+                               PresentationContext c,
+                               PresentationValue v );
+extern int GenericGetLMargin ( PresentationTarget t,
+                               PresentationContext c,
+                               PresentationValue *v );
+extern int GenericSetRMargin ( PresentationTarget t,
+                               PresentationContext c,
+                               PresentationValue v );
+extern int GenericGetRMargin ( PresentationTarget t,
+                               PresentationContext c,
+                               PresentationValue *v );
+extern int GenericSetBMargin ( PresentationTarget t,
+                               PresentationContext c,
+                               PresentationValue v );
+extern int GenericGetBMargin ( PresentationTarget t,
+                               PresentationContext c,
+                               PresentationValue *v );
+extern int GenericSetHOverflow ( PresentationTarget t,
+                                 PresentationContext c,
+                                 PresentationValue v );
+extern int GenericGetHOverflow ( PresentationTarget t,
+                                 PresentationContext c,
+                                 PresentationValue *v );
+extern int GenericSetVOverflow ( PresentationTarget t,
+                                 PresentationContext c,
+                                 PresentationValue v );
+extern int GenericGetVOverflow ( PresentationTarget t,
+                                 PresentationContext c,
+                                 PresentationValue *v );
 extern int GenericSetInLine ( PresentationTarget t,
                               PresentationContext c,
                               PresentationValue v );
@@ -124,24 +148,12 @@ extern int GenericSetPictureMode ( PresentationTarget t,
 extern int GenericGetPictureMode ( PresentationTarget t,
                                    PresentationContext c,
                                    PresentationValue *v );
-extern int GenericSetRMargin ( PresentationTarget t,
-                               PresentationContext c,
-                               PresentationValue v );
-extern int GenericGetRMargin ( PresentationTarget t,
-                               PresentationContext c,
-                               PresentationValue *v );
 extern int GenericSetWidth ( PresentationTarget t,
                              PresentationContext c,
                              PresentationValue v );
 extern int GenericGetWidth ( PresentationTarget t,
                              PresentationContext c,
                              PresentationValue *v );
-extern int GenericSetBMargin ( PresentationTarget t,
-                               PresentationContext c,
-                               PresentationValue v );
-extern int GenericGetBMargin ( PresentationTarget t,
-                               PresentationContext c,
-                               PresentationValue *v );
 extern int GenericSetHeight ( PresentationTarget t,
                               PresentationContext c,
                               PresentationValue v );
@@ -160,6 +172,12 @@ extern int GenericSetBgImage ( PresentationTarget t,
 extern int GenericGetBgImage ( PresentationTarget t,
                                PresentationContext c,
                                PresentationValue * v );
+extern int GenericSetHidden ( PresentationTarget t,
+                              PresentationContext c,
+                              PresentationValue v );
+extern int GenericGetHidden ( PresentationTarget t,
+                              PresentationContext c,
+                              PresentationValue *v );
 
 #else /* __STDC__ */
 
@@ -251,18 +269,42 @@ extern int GenericSetLineSpacing (/* PresentationTarget t,
 extern int GenericGetLineSpacing (/* PresentationTarget t,
                                      PresentationContext c,
                                      PresentationValue *v */);
-extern int GenericSetVPos (/* PresentationTarget t,
-                              PresentationContext c,
-                              PresentationValue v */);
-extern int GenericGetVPos (/* PresentationTarget t,
-                              PresentationContext c,
-                              PresentationValue *v */);
-extern int GenericSetHPos (/* PresentationTarget t,
-                              PresentationContext c,
-                              PresentationValue v */);
-extern int GenericGetHPos (/* PresentationTarget t,
-                              PresentationContext c,
-                              PresentationValue *v */);
+extern int GenericSetTMargin (/* PresentationTarget t,
+                                 PresentationContext c,
+                                 PresentationValue v */);
+extern int GenericGetTMargin (/* PresentationTarget t,
+                                 PresentationContext c,
+                                 PresentationValue *v */);
+extern int GenericSetLMargin (/* PresentationTarget t,
+                                 PresentationContext c,
+                                 PresentationValue v */);
+extern int GenericGetLMargin (/* PresentationTarget t,
+                                 PresentationContext c,
+                                 PresentationValue *v */);
+extern int GenericSetRMargin (/* PresentationTarget t,
+                                 PresentationContext c,
+                                 PresentationValue v */);
+extern int GenericGetRMargin (/* PresentationTarget t,
+                                 PresentationContext c,
+                                 PresentationValue *v */);
+extern int GenericSetBMargin (/* PresentationTarget t,
+                                 PresentationContext c,
+                                 PresentationValue v */);
+extern int GenericGetBMargin (/* PresentationTarget t,
+                                 PresentationContext c,
+                                 PresentationValue *v */);
+extern int GenericSetHOverflow (/* PresentationTarget t,
+                                   PresentationContext c,
+                                   PresentationValue v */);
+extern int GenericGetHOverflow (/* PresentationTarget t,
+                                   PresentationContext c,
+                                   PresentationValue *v */);
+extern int GenericSetVOverflow (/* PresentationTarget t,
+                                   PresentationContext c,
+                                   PresentationValue v */);
+extern int GenericGetVOverflow (/* PresentationTarget t,
+                                   PresentationContext c,
+                                   PresentationValue *v */);
 extern int GenericSetInLine (/* PresentationTarget t,
                                 PresentationContext c,
                                 PresentationValue v */);
@@ -281,24 +323,12 @@ extern int GenericSetPictureMode (/* PresentationTarget t,
 extern int GenericGetPictureMode (/* PresentationTarget t,
                                      PresentationContext c,
                                      PresentationValue *v */);
-extern int GenericSetRMargin (/* PresentationTarget t,
-                                 PresentationContext c,
-                                 PresentationValue v */);
-extern int GenericGetRMargin (/* PresentationTarget t,
-                                 PresentationContext c,
-                                 PresentationValue *v */);
 extern int GenericSetWidth (/* PresentationTarget t,
                                PresentationContext c,
                                PresentationValue v */);
 extern int GenericGetWidth (/* PresentationTarget t,
                                PresentationContext c,
                                PresentationValue *v */);
-extern int GenericSetBMargin (/* PresentationTarget t,
-                                 PresentationContext c,
-                                 PresentationValue v */);
-extern int GenericGetBMargin (/* PresentationTarget t,
-                                 PresentationContext c,
-                                 PresentationValue *v */);
 extern int GenericSetHeight (/* PresentationTarget t,
                                 PresentationContext c,
                                 PresentationValue v */);
@@ -317,6 +347,12 @@ extern int GenericSetBgImage (/* PresentationTarget t,
 extern int GenericGetBgImage (/* PresentationTarget t,
                                  PresentationContext c,
                                  PresentationValue * v */);
+extern int GenericSetHidden (/* PresentationTarget t,
+                                PresentationContext c,
+                                PresentationValue v */);
+extern int GenericGetHidden (/* PresentationTarget t,
+                                PresentationContext c,
+                                PresentationValue *v */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

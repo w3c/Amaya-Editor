@@ -130,12 +130,10 @@ PtrDocument         pDoc;
 
 
 /*----------------------------------------------------------------------
-   CreateWindowWithTitle						
-   	       demande a` l'utilisateur, par l'intermediaire du		
-   mediateur, la creation d'une fenetre pour la vue viewName
-   du document pointe' par pDoc. Retourne le numero de la   
-   frame creee ou 0 si echec, et rend dans vol le volume    
-   de la fenetre creee.                                     
+   CreateWindowWithTitle creates the frame for the current view view of
+   the current document pDoc.
+   Returns the frame number of ) if the creation failed and the available
+   volume in *vol.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 CreateWindowWithTitle (PtrDocument pDoc, int view, Name viewName, int *vol, int X, int Y, int width, int height)

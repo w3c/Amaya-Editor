@@ -35,6 +35,7 @@ MENUS
 	view:1 File button:BSaveAs -> SaveDocumentAs;
 	view:1 File Separator;
 	view:1 File button:BSetUpandPrint -> SetupAndPrint;
+	view:1 File button:BPrint -> TtcPrint;
 	view:1 File Separator;
 	view:1 File button:BClose -> TtcCloseDocument;
 	view:1 File button:BExit -> AmayaClose;
@@ -51,6 +52,7 @@ MENUS
 	Edit_ button:BPaste -> TtcPaste;
 	Edit_ button:BClear -> TtcDeleteSelection;
 	Edit_ Separator;
+	Edit_ toggle:TEditMode -> SetBrowserEditor;
 	Edit_ button:BFind -> TtcSearchText;
 	Edit_ button:BSpellCheck -> SpellCheck;
 	Edit_ button:BTransform -> TransformType;
@@ -206,6 +208,7 @@ MENUS
 	Attributes_;
 
 	view:1 Help_ button:BInformation -> HelpAmaya;
+	view:1 Help_ button:BAtW3C -> HelpAtW3C;
 	view:1 Help_ button:BHelpBrowsing -> HelpBrowsing;
 	view:1 Help_ button:BHelpSelecting -> HelpSelecting;
 	view:1 Help_ button:B -> HelpSearching;

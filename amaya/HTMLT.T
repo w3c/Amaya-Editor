@@ -1142,7 +1142,7 @@ ATTRIBUTES
 
  BaseFontFace:
 	BEGIN
-	Create ' facee="';
+	Create ' face="';
 	Create BaseFontFace;
 	Create DoubleQuote;
 	END;

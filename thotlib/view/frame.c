@@ -20,11 +20,13 @@
 #include "picture.h"
 #include "libmsg.h"
 #include "message.h"
+#include "appdialogue.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
 #include "platform_tv.h"
+#include "frame_tv.h"
 #include "picture_tv.h"
 
 #include "absboxes_f.h"
@@ -193,37 +195,37 @@ int                 ymin;
 int                 ymax;
 #endif /* __STDC__ */
 {
-   PtrAbstractBox      pAb, pAbChild;
-   PtrBox              pBox, pBoxChild;
-   ViewFrame          *pFrame;
-   PictInfo           *imageDesc;
-   int                 x, y;
-   int                 xd, yd;
-   int                 width, height;
+  PtrAbstractBox      pAb, pAbChild;
+  PtrBox              pBox, pBoxChild;
+  ViewFrame          *pFrame;
+  PictInfo           *imageDesc;
+  int               color;
+  int                 x, y;
+  int                 xd, yd;
+  int                 width, height;
+  
+  pFrame = &ViewFrameTable[frame - 1];
+  pAb = pFrame->FrAbstractBox;
+  x = pFrame->FrXOrg;
+  y = pFrame->FrYOrg;
+  pBox = pAb->AbBox;
+  if (pBox == NULL)
+    return;
 
-   pFrame = &ViewFrameTable[frame - 1];
-   pAb = pFrame->FrAbstractBox;
-   x = pFrame->FrXOrg;
-   y = pFrame->FrYOrg;
-   pBox = pAb->AbBox;
-   if (pBox == NULL)
-      return;
 
-
+  color = pBox->BxAbstractBox->AbBackground;
+  if (pAb->AbFillBox && BackgroundColor[frame] != color)
+    {
+      /* change the window background color */
+      BackgroundColor[frame] = color;
+      SetMainWindowBackgroundColor (frame, color);
+    }
    imageDesc = (PictInfo *) pAb->AbPictBackground;
    if (imageDesc &&
        (!pAb->AbTruncatedHead ||
 	(imageDesc->PicPresent != XRepeat &&
 	 imageDesc->PicPresent != RealSize)))
      DrawPicture (pBox, imageDesc, frame);
-/*#ifndef _WINDOWS*/
-   else if (pAb->AbFillBox)
-     /* todo: clip when backgroud will be printed */
-     DrawRectangle (frame, pBox->BxThickness, pAb->AbLineStyle,
-		    pBox->BxXOrg - x, pBox->BxYOrg - y,
-		    pBox->BxWidth, pBox->BxHeight, 0, 0, pAb->AbForeground,
-		    pAb->AbBackground, pAb->AbFillPattern);
-/*#endif /* _WINDOWS */
 
    while (pBox->BxNextBackground != NULL)
      {

@@ -1814,7 +1814,8 @@ PtrTextBuffer       clipboard;
 		       /* enable the Paste command */
 		       if (FirstSavedElement == NULL &&
 			   ClipboardThot.BuLength == 0)
-			 SwitchPaste (TRUE);
+			 /* switch the Paste entry in all documents */
+			 SwitchPaste (NULL, TRUE);
 
 		       ClipboardLanguage = pAb->AbLanguage;
 		       /* sauve le texte selectionne dans la feuille */

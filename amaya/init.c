@@ -724,6 +724,7 @@ Document            doc;
        WIN_TtaChangeButton (document, 1, 23, iconTable, FALSE);
        SwitchIconMath (document, 1, FALSE);
 #else  /* _WINDOWS */
+       TtaSetToggleItem (document, 1, Edit_, TEditMode, FALSE);
        TtaChangeButton (document, 1, 5, iconBrowser);
 #endif /* _WINDOWS */
        /* change the document status */
@@ -833,6 +834,7 @@ Document            doc;
        WIN_TtaChangeButton (document, 1, 23, iconTable, TRUE);
        SwitchIconMath (document, 1, TRUE);
 #else  /* _WINDOWS */
+       TtaSetToggleItem (document, 1, Edit_, TEditMode, TRUE);
        TtaChangeButton (document, 1, 5, iconEditor);
 #endif /* _WINDOWS */
        /* change the document status */
@@ -1607,8 +1609,7 @@ boolean local;
 	 find it easily next time around. 
 	 The convention is to change the image's extension to 'html',
 	 and give the HTML's container the image's extension */
-      tempfile_new = TtaGetMemory (ustrlen (tempfile) + ustrlen (docname) 
-				   + 10);
+      tempfile_new = TtaGetMemory (ustrlen (tempfile) + ustrlen (docname) + 10);
       ustrcpy (tempfile_new, tempfile);
       ptr = ustrrchr (tempfile_new, DIR_SEP);
       ptr++;
@@ -2810,7 +2811,6 @@ void               *ctx_cbf;
 		   DocumentTypes[newdoc] = docReadOnly;
 		   /* help document has to be in read-only mode */
 		   TtcSwitchCommands (newdoc, 1); /* no command filed */
-		   TtcSwitchButtonBar (newdoc, 1); /* no button bar */
 
 		   TtaSetItemOff (newdoc, 1, File, BNew);
 		   TtaSetItemOff (newdoc, 1, File, BOpenDoc);
@@ -2824,7 +2824,8 @@ void               *ctx_cbf;
 		   if (CE_event == CE_HELP)
 		     {
 		       TtaSetToggleItem (newdoc, 1, Views, TShowTextZone, FALSE);
-		       TtaSetToggleItem (newdoc, 1, Views, TShowButtonbar, FALSE);
+		       TtaSetToggleItem (newdoc, 1, Edit_, TEditMode, FALSE);
+		       TtaChangeButton (newdoc, 1, 5, iconBrowser);
 		     }
 		   else
 		     {
@@ -2840,8 +2841,11 @@ void               *ctx_cbf;
 		   TtaSetMenuOff (newdoc, 1, Help_);
 		 }
 	       else
-		 /* it's a simple HTML document */
-		 DocumentTypes[newdoc] = docHTML;
+		 {
+		   /* it's a simple HTML document */
+		   DocumentTypes[newdoc] = docHTML;
+		   TtaSetToggleItem (newdoc, 1, Edit_, TEditMode, TRUE);
+		 }
 	     }
 	   else
 	     {
@@ -4058,6 +4062,28 @@ View                view;
   CreateHelpDlgWindow (TtaGetViewFrame (document, view), localname, TtaGetMessage(AMAYA, AM_ABOUT1), TtaGetMessage(AMAYA, AM_ABOUT2));
 # endif /* _WINDOWS */
 }
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                HelpAtW3C (Document document, View view)
+#else
+void                HelpAtW3C (document, view)
+Document            document;
+View                view;
+
+#endif
+{
+  Document    document;
+  CHAR    localname[MAX_LENGTH];
+  
+  ustrcpy (localname, AMAYA_PAGE_DOC);
+  ustrcat (localname, "BinDist.html");
+  document = GetHTMLDocument (localname, NULL, 0, 0, CE_HELP, FALSE, NULL, NULL);
+  InitDocHistory (document);
+}
+
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/

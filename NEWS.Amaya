@@ -21,6 +21,11 @@ Extensions 1.5:
 * Publication thru the net now uses the HTTP/1.1 etags and conditional
   headers to avoid the lost updates problem.
 
+* Adding new menu entries:
+  - Back and Forward: navigation commands
+  - Editor/Browser mode: setting Amaya mode
+  - Amaya at W3C: link to the http://www.w3.org/Amaya/User/BinDist.html page
+
 Fixed bugs 1.5:
 ---------------
 
@@ -55,6 +60,8 @@ Fixed bugs 1.5:
 * CSS selectors like "PRE SPAN.test" didn't work.
 
 * SMALL elements could be displayed too small.
+
+* <basefont face="...."> was exported as <basefont facee="....">
 
 * When putting an attribute on a text string, the attribute was generated
   as text in the HTML output.  Now a SPAN element is generated to carry

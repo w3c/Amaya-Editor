@@ -672,7 +672,8 @@ void                FreeSavedElements ()
    DocOfSavedElements = NULL;
    /* disable Paste command */
    if (ClipboardThot.BuLength != 0)
-     SwitchPaste (FALSE);
+     /* switch the Paste entry in all documents */
+     SwitchPaste (NULL, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -701,7 +702,8 @@ PtrElement          pParent;
 	  {
 	    /* enable the Paste command */
 	    if (ClipboardThot.BuLength == 0)
-	      SwitchPaste (TRUE);
+	      /* switch the Paste entry in all documents */
+	      SwitchPaste (NULL, TRUE);
 
 	     FirstSavedElement = pNewPasteEl;
 	     pPasteEl = NULL;

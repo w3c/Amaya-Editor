@@ -790,16 +790,18 @@ PrintMethod method;
 #endif  /* __STDC__ */
 {
   ElementType elType, childType;
-  boolean result, found, alone;
-  Element elemChild = NULL;
-  TypeTree treeChild, treeChild2;
+  boolean     result, found, alone;
+  Element     elemChild = NULL;
+  TypeTree    treeChild, treeChild2;
 
   if (tree == NULL || elem == NULL)
     return FALSE;
   elType = TtaGetElementType (elem);
   if (!RestCompatible(elType, tree))
     return FALSE;
+
   result = FALSE;
+  alone = FALSE;
   if (TtaGetConstructOfType (elType) == ConstructIdentity 
       && tree->TChild == NULL 
       && tree->TPrintSymb != '@')
@@ -867,6 +869,7 @@ PrintMethod method;
 	  TtaNextSibling (&elemChild);
 	}
     }
+
   if (result && 
       !((method & PM_WTHTLIST) && tree->TPrintSymb == '(' && alone) &&
       !((method & PM_WTHTCHOICE) && tree->TPrintSymb == '[')) 
@@ -1240,12 +1243,13 @@ int dstTypeNum;
 SSchema dstSch;
 #endif  /* __STDC__ */
 {
-  boolean found = FALSE;
-  Restruct RestCour;
+  boolean     found = FALSE;
+  Restruct    cur;
   ElementType destType; 
 
   destType.ElTypeNum = dstTypeNum;
   destType.ElSSchema = dstSch;
+  cur = NULL;
   if (RContext->CNbOldElems != 1 || elem != RContext->COldElems[0])
     {
       /* l'instance source a change : regenere et recompare les empreintes */
@@ -1255,18 +1259,18 @@ SSchema dstSch;
   else
     {
       /* recherche dans les couplages existants */
-      RestCour = RContext->CListRestruct;
-      while (!found && RestCour != NULL)
+      cur = RContext->CListRestruct;
+      while (!found && cur != NULL)
 	{
-	  found = TtaSameTypes (RestCour->RDestType, destType);
+	  found = TtaSameTypes (cur->RDestType, destType);
 	  if (!found)
-	    RestCour = RestCour->RNext;
+	    cur = cur->RNext;
 	} 
     }
 
   if (found)
     /* applique la transformation */
-    return RestChangeOnPlace (doc, RestCour);
+    return RestChangeOnPlace (doc, cur);
   else
     return FALSE;
 }

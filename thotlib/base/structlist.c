@@ -1450,7 +1450,7 @@ FILE               *fileDescriptor;
    PtrDimRelations     pDimRel;
    PtrBox              pBox;
    PtrBox              box1;
-   boolean             boucle;
+   boolean             loop;
    PtrPosRelations     pTa1;
    BoxRelation        *pRe1;
    PtrDimRelations     pTabD1;
@@ -1707,13 +1707,13 @@ FILE               *fileDescriptor;
 	     while (pPosRel != NULL)
 	       {
 		  pTa1 = pPosRel;
-		  boucle = TRUE;
+		  loop = TRUE;
 		  i = 1;
-		  while (boucle)
+		  while (loop)
 		    {
 		       pRe1 = &pTa1->PosRTable[i - 1];
 		       if (pRe1->ReBox == NULL)
-			  boucle = FALSE;
+			  loop = FALSE;
 		       else
 			 {
 			    fprintf (fileDescriptor, "\n");
@@ -1749,7 +1749,7 @@ FILE               *fileDescriptor;
 			    else
 			       fprintf (fileDescriptor, "?");
 			    if (i == MAX_RELAT_POS)
-			       boucle = FALSE;
+			       loop = FALSE;
 			    else
 			       i++;
 			 }
@@ -1763,11 +1763,11 @@ FILE               *fileDescriptor;
 	     while (pDimRel != NULL)
 	       {
 		  pTabD1 = pDimRel;
-		  boucle = TRUE;
+		  loop = TRUE;
 		  i = 1;
-		  while (boucle)
+		  while (loop)
 		     if (pTabD1->DimRTable[i - 1] == NULL)
-			boucle = FALSE;
+			loop = FALSE;
 		     else
 		       {
 			  fprintf (fileDescriptor, "\n");
@@ -1783,7 +1783,7 @@ FILE               *fileDescriptor;
 			  else
 			     fprintf (fileDescriptor, "?");
 			  if (i == MAX_RELAT_DIM)
-			     boucle = FALSE;
+			     loop = FALSE;
 			  else
 			     i++;
 		       }
@@ -1794,11 +1794,11 @@ FILE               *fileDescriptor;
 	     while (pDimRel != NULL)
 	       {
 		  pTabD1 = pDimRel;
-		  boucle = TRUE;
+		  loop = TRUE;
 		  i = 1;
-		  while (boucle)
+		  while (loop)
 		     if (pTabD1->DimRTable[i - 1] == NULL)
-			boucle = FALSE;
+			loop = FALSE;
 		     else
 		       {
 			  fprintf (fileDescriptor, "\n");
@@ -1812,7 +1812,7 @@ FILE               *fileDescriptor;
 			  if (pTabD1->DimRTable[i - 1]->BxAbstractBox != NULL)
 			     wrnumber (pTabD1->DimRTable[i - 1]->BxAbstractBox->AbNum, fileDescriptor);
 			  if (i == MAX_RELAT_DIM)
-			     boucle = FALSE;
+			     loop = FALSE;
 			  else
 			     i++;
 		       }
