@@ -2181,6 +2181,8 @@ static unsigned char *HandleXMLstring (unsigned char *data, int *length,
 			  *length = max;
 			}
 		      /* generate a fallback character */
+		      entityName[l++] = ';';
+		      entityName[l] = EOS;
 		      XmlGetFallbackCharacter ((wchar_t)entityValue,
 					       entityName, element);
 		      if (stdText)
