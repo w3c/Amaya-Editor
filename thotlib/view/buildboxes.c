@@ -2022,19 +2022,6 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 		  pCurrentBox->BxType = BoFloatBlock;
 		  pCurrentBox->BxFirstLine = NULL;
 		  pCurrentBox->BxLastLine = NULL;
-#ifdef IV
-		  pChildAb = pAb->AbFirstEnclosed;
-		  while (pChildAb &&
-			 pChildAb->AbFloat == 'N' &&
-			 pChildAb->AbBox &&
-			 pChildAb->AbBox->BxType != BoFloatGhost)
-		    {
-		      /* remove the old position relations */
-		      ClearPosRelation (pChildAb->AbBox, TRUE);
-		      ClearPosRelation (pChildAb->AbBox, FALSE);
-		      pChildAb = pChildAb->AbNext;
-		    }
-#endif
 		}
 	      else
 		{
@@ -2150,16 +2137,14 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	  pCurrentBox->BxType = BoPicture;
 	  picture = (PictInfo *) pAb->AbPictInfo;
 	  pCurrentBox->BxPictInfo = pAb->AbPictInfo;
-	  if (!pAb->AbPresentationBox && pAb->AbVolume != 0 &&
-	      pCurrentBox->BxPictInfo != NULL)
+	  if (!pAb->AbPresentationBox && pAb->AbVolume &&
+	      pCurrentBox->BxPictInfo)
 	    {
 	      /* box size has to be positive */
 	      if (pCurrentBox->BxW < 0)
-		ChangeWidth (pCurrentBox, pCurrentBox, NULL,
-			     10 - pCurrentBox->BxW, 0, frame);
+		pCurrentBox->BxW = 0;
 	      if (pCurrentBox->BxH < 0)
-		ChangeHeight (pCurrentBox, pCurrentBox, NULL,
-			      10 - pCurrentBox->BxH, frame);
+		pCurrentBox->BxH = 0;
 	    }
 	  
 	  if (picture->PicPixmap == None)
