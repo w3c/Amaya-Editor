@@ -737,6 +737,10 @@ DBG(fprintf(stderr, "SafeSaveFileThroughNet :  refetch %s \n", remotefile);)
 	/* Ignore the read failure */
 	res = 0;
     }
+
+#if 0
+  /* Removed this test as libwww already asks the user to confirm the
+     redirection */
   else if (strcmp (remotefile, tempURL))
     {
       /* Warning : redirect... */
@@ -746,6 +750,7 @@ DBG(fprintf(stderr, "SafeSaveFileThroughNet :  refetch %s \n", remotefile);)
 	/* Trigger the error */
 	res = -1;
     }
+#endif
 
   if (res == 0)
     {
@@ -803,7 +808,10 @@ boolean             use_preconditions;
   tempname = GetLocalPath (document, DocumentURLs[document]);
   msg = TtaGetMemory(remainder);
   if (msg == NULL)
-    return (FALSE);
+    {
+      TtaFreeMemory (tempname);
+      return (FALSE);
+    }
 
   /* First step : build the output and ask for confirmation */
   SetNamespacesAndDTD (document);
