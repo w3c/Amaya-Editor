@@ -1414,9 +1414,9 @@ char *GetPostscriptNameFromFont (void * font, char *fontname)
   Parameters increase decrease are true when a new test is allowed.
   The parameter requestedsize gives the initial requested size.
   ----------------------------------------------------------------------*/
-static ThotFont LoadNearestFont (char script, int family, int highlight,
-				int size, int requestedsize, int frame,
-				ThotBool increase, ThotBool decrease)
+ThotFont LoadNearestFont (char script, int family, int highlight,
+			  int size, int requestedsize, int frame,
+			  ThotBool increase, ThotBool decrease)
 {
   int                 i, j, deb;
   int                 val;

@@ -50,6 +50,14 @@ extern ThotFont ReadFont ( char script,
                            TypeUnit unit );
 extern char *GetPostscriptNameFromFont ( void * font,
                                          char *fontname );
+extern ThotFont LoadNearestFont ( char script,
+                                  int family,
+                                  int highlight,
+                                  int size,
+                                  int requestedsize,
+                                  int frame,
+                                  ThotBool increase,
+                                  ThotBool decrease );
 extern void *LoadStixFont ( int family,
                             int size );
 extern void ChangeFontsetSize ( int size,
@@ -124,6 +132,14 @@ extern ThotFont ReadFont ( char script,
                              TypeUnit unit );
 extern char *GetPostscriptNameFromFont ( void * font,
                                            char *fontname );
+extern ThotFont LoadNearestFont ( char script,
+                                    int family,
+                                    int highlight,
+                                    int size,
+                                    int requestedsize,
+                                    int frame,
+                                    ThotBool increase,
+                                    ThotBool decrease );
 extern void *LoadStixFont ( int family,
                               int size );
 extern void ChangeFontsetSize ( int size,

@@ -58,7 +58,7 @@ typedef struct _MapEntry {
 } MapEntry;
 
 /* Mapping of Unicode arrows (0x2190-0x21ff) to esstix fonts */
-unsigned int Stix_Arrows_Start = 0x2190;
+int Stix_Arrows_Start = 0x2190;
 MapEntry     Stix_Arrows [] = {
 /* 219x */ {1, 0x29}, {1, 0x5b}, {1, 0x2f}, {1, 0x59},
             {1, 0x34}, {1, 0x68}, {1, 0x5f}, {1, 0x62},
@@ -89,7 +89,7 @@ MapEntry     Stix_Arrows [] = {
 #define Stix_Arrows_length sizeof(Stix_Arrows) / sizeof(MapEntry)
 
 /* Mapping of Unicode Mathematical Operators (0x2200-0x227f) to esstix fonts */
-unsigned int Stix_MathOp1_Start = 0x2200;
+int Stix_MathOp1_Start = 0x2200;
 MapEntry     Stix_MathOp1 [] = {
 /* 220x */ {2, 0x63}, {2, 0x66}, {9, 0x76}, {2, 0x64},
             {2, 0x65}, {5, 0x3a}, {10, 0x44}, {10, 0x56},
@@ -127,7 +127,7 @@ MapEntry     Stix_MathOp1 [] = {
 #define Stix_MathOp1_length sizeof(Stix_MathOp1) / sizeof(MapEntry)
 
 /* Mapping of Unicode Mathematical Operators (0x2280-0x22ff) to esstix fonts */
-unsigned int Stix_MathOp2_Start = 0x2280;
+int Stix_MathOp2_Start = 0x2280;
 MapEntry     Stix_MathOp2 [] = {
 /* 228x */ {3, 0x49}, {3, 0x74}, {4, 0x33}, {4, 0x49},
             {4, 0x3c}, {4, 0x50}, {4, 0x34}, {4, 0x4a},
@@ -162,7 +162,7 @@ MapEntry     Stix_MathOp2 [] = {
 #define Stix_MathOp2_length sizeof(Stix_MathOp2) / sizeof(MapEntry)
 
 /* Mapping of Unicode Geometric Shapes (0x25a0-0x25ff) to esstix fonts */
-unsigned int Stix_GeomShapes_Start = 0x25a0;
+int Stix_GeomShapes_Start = 0x25a0;
 MapEntry     Stix_GeomShapes [] = {
 /* 25ax */ {2, 0x2d}, {2, 0x2c}, {0, 0x00}, {0, 0x00},
             {2, 0x44}, {2, 0x45}, {0, 0x00}, {2, 0x46},
@@ -657,28 +657,31 @@ void GetMathFontFromChar (char typesymb, SpecFont fontset, void **font,
   ----------------------------------------------------------------------*/
 int GetStixFontAndIndex (int c, SpecFont fontset, ThotFont **font)
 {
-  MapEntry      entry;
-  int           index = 0, face = 0;
+  MapEntry           entry;
+  ThotFont           lfont;
+  int                index = 0, face = 0;
+  int                frame;
+  unsigned int       mask;
 
-  if (c >= Stix_Arrows_Start && c < Stix_Arrows_Start + Stix_Arrows_length)
+  if (c >= Stix_Arrows_Start && c < (int) (Stix_Arrows_Start + Stix_Arrows_length))
     {
       entry = Stix_Arrows[c - Stix_Arrows_Start];
       index = (int) (entry.MapIndex);
       face = (int) (entry.MapFont);
     }
-  else if (c >= Stix_MathOp1_Start && c < Stix_MathOp1_Start + Stix_MathOp1_length)
+  else if (c >= Stix_MathOp1_Start && c < (int) (Stix_MathOp1_Start + Stix_MathOp1_length))
     {
       entry = Stix_MathOp1[c - Stix_MathOp1_Start];
       index = (int) (entry.MapIndex);
       face = (int) (entry.MapFont);
     }
-  else if (c >= Stix_MathOp2_Start && c < Stix_MathOp2_Start + Stix_MathOp2_length)
+  else if (c >= Stix_MathOp2_Start && c < (int) (Stix_MathOp2_Start + Stix_MathOp2_length))
     {
       entry = Stix_MathOp2[c - Stix_MathOp2_Start];
       index = (int) (entry.MapIndex);
       face = (int) (entry.MapFont);
     }
-  else if (c >= Stix_GeomShapes_Start && c < Stix_GeomShapes_Start + Stix_GeomShapes_length)
+  else if (c >= Stix_GeomShapes_Start && c < (int) (Stix_GeomShapes_Start + Stix_GeomShapes_length))
     {
       entry = Stix_GeomShapes[c - Stix_GeomShapes_Start];
       index = (int) (entry.MapIndex);
@@ -726,8 +729,18 @@ int GetStixFontAndIndex (int c, SpecFont fontset, ThotFont **font)
   /* load the stix font if needed */
   if (face > 0)
     {
+      lfont = **font;
+      for (frame = 1; frame <= MAX_FRAME; frame++)
+	{
+	  mask = 1 << (frame - 1);
+	  if (fontset->FontMask & mask)
+	    {
+	      LoadNearestFont ('E', face, 0, fontset->FontSize, fontset->FontSize, frame,
+			       FALSE, FALSE);
+	    }
+	}
       if (**font == NULL)
-	**font = (ThotFont)LoadStixFont (face, fontset->FontSize);
+	**font = lfont;
     }
 #endif /* _GL */
   return index;
