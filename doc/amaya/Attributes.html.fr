@@ -32,41 +32,43 @@
 <p>Il y a deux manières d'éditer des attributs:</p>
 <ul>
   <li>Le menu <strong>Attributs</strong></li>
-  <li>La Structure vue</li>
+  <li>La Vue structure </li>
 </ul>
 
 <h3><a name="L1073">Editer des attributs par le biais du menu
-Attributs.</a></h3>
+Attributs</a></h3>
 
 <p>Le menu  <strong>Attributs </strong> donne une liste de tous les attributs
 qui peuvent être associés à l'élément sélectionné. Il peut être utilisé pour
 créer un attribut, pour changer la valeur d'un attribut existant ou pour
-effacer un attribut. </p>
+effacer un attribut.</p>
 
 <p>Pour éditer un attribut, sélectionnez d'abord l'élément approprié. Vous
 devez sélectionner l'élément entier et pas seulement un caractère à
 l'intérieur de l'élément. Pour cela, utilisez <a
-href="Selecting.html#Selecting1"> la touche ESC (sur les  plateformes Unix) ou
-la touche F2  (sur  les platesformes Windows)</a> . Quand l'élément a été
+href="Selecting.html#Selecting1"> la touche ESC (sur les stations Unix) ou la
+touche F2  (sur  les stations Windows)</a> . Quand l'élément a été
 sélectionné, choisissez dans le menu  <strong>Attributs </strong>l'attribut à
-éditer.  <strong>Amaya</strong> agit alors selon l'attribut choisi:</p>
+éditer.  <strong>Amaya</strong> agit alors en fonction de  l'attribut
+choisi:</p>
 <ul>
-  <li>Si c'est un attribut bouléen ( comme une carte pour une  image) la
-    commande est achevée. Choisir cet attribut dans le menu enlève l'attribut
-    de l'élément, s'il est présent, et l'ajoutera s'il n'y est pas.</li>
-  <li>Si c'est un attribut avec une série limitée de valeurs ( comme un
+  <li>Si c'est un attribut bouléen ( comme <code>ismap </code> pour une 
+    image) la commande est achevée. Choisir cet attribut dans le menu supprime
+     l'attribut de l'élément sélectionné, s'il est présent, et l'ajoute s'il
+    n'y est pas.</li>
+  <li>Si c'est un attribut avec une série limitée de valeurs ( comme
     <code>align</code> pour un paragraphe ou une en-tête), une boîte de
     dialogue apparaît. Elle contient trois boutons et un menu des valeurs
-    disponibles. 
+    disponibles.
     <ul>
       <li>Si vous voulez créer cet attribut ou changer sa valeur, choisissez
-        dans le menu la valeur désirée et cliquer sur le bouton 
+        dans le menu la valeur désirée et cliquer sur le bouton
         <strong>Application</strong>.</li>
-      <li>Si vous voulez supprimer l'attribut, cliquer sur le bouton 
+      <li>Si vous voulez supprimer l'attribut, cliquez sur le bouton
         <strong>Delete</strong>.</li>
     </ul>
   </li>
-  <li>Si c'est un attribut avec une valeur libre (comme un  <code>href</code>
+  <li>Si c'est un attribut avec une valeur libre (comme  <code>href</code>
     pour une ancre), une boîte de dialogue apparaît. Dans cette boîte de
     dialogue, vous pouvez éditer la valeur de l'attribut. Achevez la commande
     avec le bouton  <strong>Application.</strong> Pour supprimer l'attribut,
@@ -80,17 +82,17 @@ commandes Copier/Coller. Pour copier un attribut, vous devez utiliser le menu
 Attribut.Vous devez d'abord sélectionner l'élément qui contient l'attribut que
 vous voulez copier.  Sélectionnez l'entrée de l'attribut approprié dans le
 menu Attributs. Puis sélectionnez le nouvel élément auquel vous voulez
-associer l'attribut en cours et cliquez sur le bouton 
+associer l'attribut en cours et cliquez sur le bouton
 <strong>Application.</strong></p>
 
-<h3><a name="Editing">Editer des attributs dans la  Structure vue</a></h3>
+<h3><a name="Editing">Editer des attributs dans la  Vue structure </a></h3>
 
-<p>Tous les attributs sont affichés dans la  Structure vue. Les attributs dont
+<p>Tous les attributs sont affichés dans la Vuw structure. Les attributs dont
 la valeur peut être choisie librement sont affichés en noir et vous pouvez
 éditer leur valeur comme n'importe quelle autre chaîne de caractères. Quand la
 valeur de l'attribut est affichée en bleu, vous pouvez seulement la changer à
-l'aide du menu  <strong>Attributs</strong>. Ceci assure  que une seule des
-valeurs correctes est choisie. </p>
+l'aide du menu  <strong>Attributs</strong>. Ceci assure  qu'une seule des
+valeurs correctes soit choisie.</p>
 </div>
 
 <p align="right"><a href="StyleSheets.html"><img alt="previous" border="0"
