@@ -1,0 +1,188 @@
+PRESENTATION Topics;
+
+VIEWS
+   Formatted_view,
+   Structure_view merge with Structure_view,
+   Links_view merge with Links_view;
+
+#ifdef PAGE
+PRINT
+   Formatted_view;
+#endif
+
+#define DOC_FONTSIZE 12 pt
+#define RDF_FONTSIZE 12 pt
+#define STRUCT_INDENT 0.5 cm
+#define MARGIN 1.2
+#define RDF_FgColor Black
+#define RDF_BgColor Yellow
+#define THREADSEL_FgColor Yellow
+#define THREADSEL_BgColor Red
+#define THREAD_INDENT 0.5
+#define THREAD_ITEM_INDENT 1
+#define POINT_INDENT 1
+#define Thread_visibility 5
+
+DEFAULT
+	BEGIN
+	HorizRef: Enclosed . HRef;
+	VertRef: * . Left;
+	Width: Enclosed . Width;
+	Height: Enclosed . Height;
+	VertPos: Top = Previous . Bottom;
+	HorizPos: Left = Enclosing . Left;
+	Hyphenate: Enclosing =;
+	LineSpacing: Enclosing =;
+	LineWeight: Enclosing =;
+	LineBreak: Yes;
+	PageBreak: Yes;
+	Visibility: Enclosing =;
+	Font: Enclosing =;
+	Style: Enclosing =;
+	Weight: Enclosing =;
+	Underline: Enclosing =;
+	Thickness: Enclosing =;
+	Size: Enclosing =;
+	Adjust: Enclosing =;
+	Indent: Enclosing =;
+	Depth: Enclosing =;
+	FillPattern: nopattern;
+	END;
+
+BOXES
+
+ Topic_box: BEGIN
+	Font: Creator =;
+	Style: Creator =;
+	Weight: Creator =;
+	Width: Enclosing . Width;
+	VertPos: Top = Previous . Bottom + 0.2;
+	HorizPos: Left = Enclosing . Left;
+	Size: RDF_FONTSIZE;
+        Foreground: RDF_FgColor;
+        Background: RDF_BgColor;
+	PaddingTop: 0.3;
+	PaddingBottom: 0.3;
+        END;
+
+Topic_icon_box: BEGIN
+	Height: 0.4;
+	Width: 0.4;
+	Size: Creator =;
+	LineWeight: 1 px;
+	Foreground: Creator =;
+        VertPos: Bottom = Creator . HRef;
+        HorizPos: Right = Creator . Left - 0.3;
+	Visibility: Creator =;
+	END;
+
+Bookmark_point_box: BEGIN
+	Content: Graphics 'c';
+	Height: 0.4;
+	Width: 0.4;
+	Size: Creator =;
+	LineWeight: 1 px;
+	Foreground: Creator =;
+        VertPos: Bottom = Creator . HRef;
+        HorizPos: Right = Creator . Left - 0.3;
+	Visibility: Creator =;
+	END;
+
+ Topic_open_icon_box: BEGIN
+	Visibility: 5;
+	Content: Picture 'open.png';
+        VertPos: Bottom = Creator . HRef + 0.2;
+	HorizPos: Left = Enclosing . Left;
+	END;
+
+ Topic_closed_icon_box: BEGIN
+	Visibility: 5;
+	Content: Picture 'closed.png';
+        VertPos: Bottom = Creator . HRef;
+        HorizPos: Left = Enclosing . Left;
+	END;
+
+RULES
+
+  Document:
+	BEGIN
+	Adjust: Left;
+	Indent: 0;
+	Font: Helvetica;
+	Style: Roman;
+	Weight: Normal;
+	LineWeight: 0;
+	Width: Enclosing . Width;
+	Height: Enclosing . Height min;
+	VertPos: Top = Enclosing . Top;
+	HorizPos: Left = Enclosing . Left;
+	END;
+
+  Topics:
+	BEGIN
+	Width: Enclosing . Width;
+	Size: DOC_FONTSIZE;
+	MarginLeft: MARGIN;
+	MarginRight: MARGIN;
+	VertPos: Top = Enclosing . Top;
+	END;
+
+ { Topics }
+
+ Topic_item:
+        BEGIN
+	VertPos: Top = Previous AnyElem . Bottom + 0.2;
+	HorizPos: Left = Enclosing . Left + 0.8;
+	Width: Enclosing . width - 0.3;
+        END;
+
+ Topic_title:
+        BEGIN
+	Style: Bold;
+	VertPos: Top = Enclosing . Top;
+	HorizPos: Left = Enclosing . Left;
+	Width: Enclosing . width;
+        END;
+
+ Topic_content:
+	BEGIN
+	VertPos: Top = Previous . Bottom + 0.2;
+	HorizPos: Left = Enclosing . left + THREAD_INDENT;
+	Width: Enclosing . width - THREAD_INDENT;
+	END;
+
+
+ { Bookmarks }
+
+ Bookmark_item:
+        BEGIN
+	CreateBefore (Bookmark_point_box);
+	VertPos: Top = Previous AnyElem . Bottom + 0.2;
+	HorizPos: Left = Previous . Right + 0.4;
+	Width: Enclosing . Width;
+        END;
+
+ Bookmark_title:
+        BEGIN
+	Style: Bold;
+	VertPos: Top = Previous . Top;
+	HorizPos: Left = Previous . left;
+	Width: Enclosing . width;
+        END;
+
+ATTRIBUTES
+
+ Open_:
+	 BEGIN
+	 CreateBefore (Topic_open_icon_box);
+ 	 Foreground: Red;
+	 END;
+
+ Closed_:
+	 BEGIN
+	 CreateBefore (Topic_closed_icon_box);
+	 END;
+
+END
+
+
