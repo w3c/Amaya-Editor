@@ -11,8 +11,8 @@ include ../Options
 
 INCLUDES= -DHAVE_CONFIG_H $(AMAYA_INCLUDES) $(EXPAT_INCLUDES) $(X_FLAGS)
 XMLIB   = -lXm
-LIBS	=  $(AMAYA_LIBWWW_LIBS) $(AMAYA_PLUGIN_LIBS) \
-	  $(AMAYA_MATH_LIBS) $(AMAYA_GRAPH_LIBS) $(AMAYA_ANNOT_LIBS) \
+LIBS	=  $(AMAYA_PLUGIN_LIBS) $(AMAYA_ANNOT_LIBS) \
+	   $(AMAYA_LIBWWW_LIBS) $(AMAYA_MATH_LIBS) $(AMAYA_GRAPH_LIBS) \
           -L../tablelib -L../thotlib -L.. -lThotTable -lThotEditor \
           $(AMAYA_OPTION_EXTRA_LIBS) $(IMGLIBS) $(EXPAT_LIBRARIES) \
 	  $(MOTIF_LIBRARIES) $(GTK_LIBRARIES) \
@@ -225,7 +225,8 @@ AMAYA_OBJ = \
 	UIcss.o \
 	gtkdialogue_box.o \
 	Xml2thot.o \
-	XHTMLbuilder.o
+	XHTMLbuilder.o \
+	XPointer.o
 
 # Specific schema dependencies
 HTMLtable.o : $(AMAYA_MATH_SCHEMAS)

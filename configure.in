@@ -477,7 +477,7 @@ dnl
 
 if test "$with_plugin" = "" ; then
   if test "$enable_plugin" = "yes" ; then
-    with_plugin="no"
+    with_plugin="yes"
   else
     with_plugin="no"
   fi
@@ -538,6 +538,13 @@ if test "$build_amaya" = "yes" ; then
 	    with_annot="no"
 	fi
     fi
+
+    if test "$with_plugin" = "yes" ; then
+        AC_MSG_WARN(The plugin library isn't supported anymore in Amaya !!)
+	AC_MSG_WARN(Disabling plugin build !)
+	with_plugin="no"
+    fi
+
 fi
 
 dnl

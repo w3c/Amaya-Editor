@@ -33,14 +33,21 @@ AMAYA_LIBWWW_LIBS= \
 			-lwwwutils \
 			-lwwwzip \
 			-lwwwftp \
+			-lwwwxml \
 		-L../$(LIBWWW)/modules/md5/.libs \
-			-lmd5
+			-lmd5 \
+		-L../$(LIBWWW)/modules/expat/xmlparse/.libs \
+			-lxmlparse \
+		-L../$(LIBWWW)/modules/expat/xmltok/.libs \
+			-lxmltok
 
 AMAYA_LIBWWW_EXTRA_LIBS=
 
 AMAYA_LIBWWW_INCLUDES= -I../libwww \
 		-I$(THOTDIR)/../libwww/Library/src \
-		-I$(THOTDIR)../libwww/modules/md5
+		-I$(THOTDIR)../libwww/modules/md5 \
+		-I$(THOTDIR)../libwww/modules/expat/xmlparse \
+		-I$(THOTDIR)../libwww/modules/expat/xmltok
 
 # this dependency calls the ../Makefile rule that compiles libwww
 AMAYA_LIBWWW_SRC= ../libz.a amaya_comp_libwww
