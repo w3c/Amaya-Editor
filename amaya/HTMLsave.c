@@ -506,7 +506,7 @@ boolean             with_images;
   LoadedImageDesc *pImage;
   char            *tempname;
   char            *msg;
-  int              free = 10000;
+  int              remainder = 10000;
   int              index = 0, len, nb = 0;
   int              res;
   int              imageType;
@@ -520,7 +520,7 @@ boolean             with_images;
    */
   /* save into the temporary document file */
   tempname = GetLocalPath (document, DocumentURLs[document]);
-  msg = TtaGetMemory(free);
+  msg = TtaGetMemory(remainder);
   if (msg == NULL)
     return (-1);
 
@@ -538,7 +538,7 @@ boolean             with_images;
       strcpy (&msg[index], DocumentURLs[document]);
       len = strlen (DocumentURLs[document]);
       len++;
-      free -= len;
+      remainder -= len;
       index += len;
       nb++;
 
@@ -552,7 +552,7 @@ boolean             with_images;
 		  strcpy (&msg[index], "...");
 		  len = strlen ("...");
 		  len++;
-		  free -= len;
+		  remainder -= len;
 		  index += len;
 		  nb++;
 		  break;
@@ -560,7 +560,7 @@ boolean             with_images;
 	      strcpy (&msg[index], pImage->originalName);
 	      len = strlen (pImage->originalName);
 	      len++;
-	      free -= len;
+	      remainder -= len;
 	      index += len;
 	      nb++;
 	    }

@@ -1630,7 +1630,7 @@ int                 size;
 char               *first;
 #endif
 {
-   int                 free = size;
+   int                 remainder = size;
    int                 len;
    int                 nb = 0;
    int                 index = 0;
@@ -1648,7 +1648,7 @@ char               *first;
 	strcpy (&buf[index], first);
 	len = strlen (first);
 	len++;
-	free -= len;
+	remainder -= len;
 	index += len;
 	nb++;
      }
@@ -1682,13 +1682,13 @@ char               *first;
 	 {
 	   len = strlen (val);
 	   len++;
-	   if (len >= free)
+	   if (len >= remainder)
 	     {
 	       MSG ("BuildCSSList : Too many styles\n");
 	       break;
 	     }
 	   strcpy (&buf[index], val);
-	   free -= len;
+	   remainder -= len;
 	   index += len;
 	   nb++;
 	 }
@@ -1799,7 +1799,7 @@ char               *name;
    /* rebuild the list and redraw the RPI selector */
    if (LCSS)
      {
-       nb_rpi = BuildRPIList (doc, LCSS, buffer, 3000, NULL);
+       nb_rpi = BuildRPIList (doc, LCSS, buffer, 3000);
        CleanListRPI (&LListRPI);
        LListRPI = PSchema2RPI (doc, LCSS);
      }
@@ -1904,7 +1904,7 @@ char               *name;
    /* rebuild the list and redraw the RPI selector */
    if (RCSS)
      {
-       nb_rpi = BuildRPIList (doc, RCSS, buffer, 3000, NULL);
+       nb_rpi = BuildRPIList (doc, RCSS, buffer, 3000);
        CleanListRPI (&RListRPI);
        RListRPI = PSchema2RPI (doc, RCSS);
      }

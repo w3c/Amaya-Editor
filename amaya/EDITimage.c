@@ -62,11 +62,11 @@ char               *data;
 #endif /* __STDC__ */
 {
   Document           document;
-  ElementType	     elType;
-  Element            el, elStyle;
+  Element            el, elStyle, parent;
   Element            first, last;
-  char*              tempfile = (char*) TtaGetMemory (MAX_LENGTH); /* tempfile[MAX_LENGTH]; */
-  char*              tempname = (char*) TtaGetMemory (MAX_LENGTH); /* tempname[MAX_LENGTH]; */
+  ElementType	     elType, parentType;
+  char               tempfile[MAX_LENGTH];
+  char               tempname[MAX_LENGTH];
   int                i, c1;
   int                val;
   boolean            change;
@@ -125,21 +125,51 @@ char               *data;
 		      el =  TtaGetMainRoot (document);
 		      last = el;
 		    }
-		  else if (elType.ElTypeNum == HTML_EL_HEAD)
-		    {
-		      /* set the style on body element */
-		      elStyle = TtaSearchTypedElement (elType, SearchInTree, el);
-		      last = el;
-		    }
 		  else
 		    {
+		      /* style is not allowed in Head section */
+		      if (elType.ElTypeNum == HTML_EL_HEAD)
+			parent = el;
+		      else
+			{
+			  parentType.ElSSchema = elType.ElSSchema;
+			  parentType.ElTypeNum = HTML_EL_HEAD;
+			  parent = TtaGetTypedAncestor (el, parentType);
+			}
+
+		      if (parent != NULL)
+			{
+			  TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_INVALID_TARGET), NULL);
+			  return;
+			}
+		      else
+			{
+			  /* style is not allowed in MAP */
+			  if (elType.ElTypeNum == HTML_EL_MAP)
+			    parent = el;
+			  else
+			    {
+			      parentType.ElTypeNum = HTML_EL_MAP;
+			      parent = TtaGetTypedAncestor (el, parentType);
+			    }
+			  if (parent != NULL)
+			    {
+			      TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_INVALID_TARGET), NULL);
+			      return;
+			    }
+			  else
+			    last = el;
+			}
+
 		      /* TODO:  TtaGiveLastSelectedElement (document, &last, &i, &cN); */
 		      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
 			  elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-			el = TtaGetParent (el);
-		      /* if the PRule is on a Pseudo-Paragraph, move it to the enclosing
-			 element */
-		      elType = TtaGetElementType (el);
+			{
+			  el = TtaGetParent (el);
+			  /* if the PRule is on a Pseudo-Paragraph,
+			     move it to the enclosing element */
+			  elType = TtaGetElementType (el);
+			}
 		      if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
 			el = TtaGetParent (el);
 		      elStyle = el;
@@ -240,8 +270,6 @@ char               *data;
     default:
       break;
     }
-	TtaFreeMemory (tempfile);
-	TtaFreeMemory (tempname);
 }
 
 /*----------------------------------------------------------------------

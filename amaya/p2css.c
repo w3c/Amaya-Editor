@@ -576,64 +576,46 @@ CSSInfoPtr          css;
    BuildRPIList : Build the whole list of CSS in use by a document   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 BuildRPIList (Document doc, CSSInfoPtr css,
-				  char *buf, int size, char *first)
+int                 BuildRPIList (Document doc, CSSInfoPtr css, char *buf, int size)
 #else
-int                 BuildRPIList (doc, css, buf, size, first)
+int                 BuildRPIList (doc, css, buf, size)
 Document            doc;
 CSSInfoPtr          css;
 char               *buf;
 int                 size;
 char               *first;
-
 #endif
 {
-   int                 free = size;
+   int                 remainder = size;
    int                 len;
    int                 nb = 0;
    int                 index = 0;
    PRuleInfoPtr        rpi, list;
 
-   /*
-    * ad the first element if specified.
-    */
+   /* ad the first element if specified */
    buf[0] = 0;
-   if (first)
-     {
-	strcpy (&buf[index], first);
-	len = strlen (first);
-	len++;
-	free -= len;
-	index += len;
-	nb++;
-     }
    list = rpi = PSchema2RPI (doc, css);
    while (rpi != NULL)
      {
 	len = strlen (rpi->selector);
 	len++;
-	if (len >= free)
+	if (len >= remainder)
 	  {
 	     MSG ("BuildRPIList : Too many styleruless\n");
 	     break;
 	  }
-	if (!strcmp (rpi->selector, buf))
-	  {			/* ensure unicity / first */
-	     rpi = rpi->NextRPI;
-	     continue;
+	else if (!strcmp (rpi->selector, buf))
+	  {
+	    /* ensure unicity / first */
+	    rpi = rpi->NextRPI;
+	    continue;
 	  }
 	strcpy (&buf[index], rpi->selector);
-	free -= len;
+	remainder -= len;
 	index += len;
 	nb++;
 	rpi = rpi->NextRPI;
      }
-
-#ifdef DEBUG_RPI
-   fprintf (stderr, "BuildRPIList : heap @0x%X : found %d RPI\n", (int) list, nb);
-#endif
-
    CleanListRPI (&list);
-
    return (nb);
 }

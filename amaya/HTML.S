@@ -407,6 +407,7 @@ EXCEPT
 	DefaultChecked:	Invisible;
 	SectionNumbering:Invisible;
 	ShowAreas:	Invisible;
+	shape:		Invisible;
 	Data_cell:	IsCell, NoMove, NoResize;
 	Heading_cell:	IsCell, NoMove, NoResize;
 	Table:		IsTable, PageBreak;

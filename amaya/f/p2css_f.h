@@ -24,8 +24,7 @@ extern PRuleInfoPtr PSchema2RPI ( Document doc,
 extern int BuildRPIList ( Document doc,
                           CSSInfoPtr css,
                           char *buf,
-                          int size,
-                          char *first );
+                          int size );
 
 #else /* __STDC__ */
 
@@ -47,8 +46,7 @@ extern PRuleInfoPtr PSchema2RPI (/* Document doc,
 extern int BuildRPIList (/* Document doc,
                             CSSInfoPtr css,
                             char *buf,
-                            int size,
-                            char *first */);
+                            int size */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
