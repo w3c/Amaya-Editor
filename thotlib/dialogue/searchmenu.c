@@ -442,7 +442,7 @@ void TtcSearchText (Document document, View view)
   
   /* zone de saisie du texte de remplacement */
   TtaNewTextForm (NumZoneTextReplace, NumFormSearchText,
-		  TtaGetMessage (LIB, TMSG_REPLACE_BY), 30, 1, TRUE);
+		  TtaGetMessage (LIB, TMSG_REPLACE_BY), 30, 1, FALSE);
   TtaSetTextForm (NumZoneTextReplace, pReplaceString);
   
   /* sous-menu mode de remplacement */
