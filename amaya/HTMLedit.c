@@ -1684,6 +1684,8 @@ void ChangeURI (Element el, Attribute attr, Document originDocument,
     }
 }
 
+static void CheckDescendants (/* Element el, Document doc */);
+
 /*----------------------------------------------------------------------
    ElementOKforProfile
    This function is called for each element pasted by the user, and for
@@ -1700,7 +1702,8 @@ ThotBool ElementOKforProfile (Element el, Document doc)
   AttributeType  attrType;
   int            kind;
   Attribute      attr, nextAttr;
-  ThotBool       ok;
+  Element        child;
+  ThotBool       ok, record;
 
   ok = TRUE;
   /* handle only HTML elements */
@@ -1734,8 +1737,47 @@ ThotBool ElementOKforProfile (Element el, Document doc)
 	  }
       }
   if (!ok)
-    TtaDeleteTree (el, doc);
+    {
+      record = FALSE;
+      if (TtaGetLastCreatedElemInHistory (doc) == el)
+	/* the last element created that is registerd in the undo history
+	   is the element that will be removed. Register its children
+	   instead of itself */
+	{
+	  TtaCancelLastRegisteredOperation (doc);
+	  record = TRUE;
+	}
+      /* remove element el but keep its descendants */
+      child = TtaGetFirstChild (el);
+      while (child)
+	{
+	  if (ElementOKforProfile (child, doc))
+	    {
+	      TtaRemoveTree (child, doc);
+	      CheckDescendants (child, doc);
+	      TtaInsertSibling (child, el, TRUE, doc);
+	      if (record)
+		TtaRegisterElementCreate (child, doc);
+	    }
+	  child = TtaGetFirstChild (el);
+	}
+      TtaDeleteTree (el, doc);
+    }
   return ok;
+}
+
+static void CheckDescendants (Element el, Document doc)
+{
+  Element child, nextChild;
+
+  child = TtaGetFirstChild (el);
+  while (child)
+    {
+      nextChild = child;  TtaNextSibling (&nextChild);
+      if (ElementOKforProfile (child, doc))
+	CheckDescendants (child, doc);
+      child = nextChild;
+    }
 }
 
 /*----------------------------------------------------------------------

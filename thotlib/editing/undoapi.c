@@ -350,6 +350,26 @@ void         TtaCancelLastRegisteredOperation (Document document)
 }
 
 /* ----------------------------------------------------------------------
+   TtaGetLastCreatedElemInHistory
+
+   If the last operation recorded in the history is the creation of an
+   element, return that element, otherwise return NULL.
+  ----------------------------------------------------------------------*/
+Element  TtaGetLastCreatedElemInHistory (Document document)
+{
+  Element   el;
+
+  el = NULL;
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument [document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else 
+    el = (Element) GetLastCreatedElemInHistory (LoadedDocument [document - 1]);
+  return el;
+}
+
+/* ----------------------------------------------------------------------
    TtaUndoNoRedo
 
    Undo the latest sequence of editing operations recorded in the history

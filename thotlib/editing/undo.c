@@ -573,6 +573,25 @@ void CancelLastEditFromHistory (PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
+   GetLastCreatedElemInHistory
+   If the last operation recorded in the history is the creation of an
+   element, return that element, otherwise return NULL.
+  ----------------------------------------------------------------------*/
+PtrElement GetLastCreatedElemInHistory (PtrDocument pDoc)
+{
+   PtrElement    pEl;
+
+   pEl = NULL;
+   if (pDoc->DocLastEdit)
+     /* history is not empty */
+     if (pDoc->DocLastEdit->EoType == EtElement)
+       /* the last item record an element */
+       if (!pDoc->DocLastEdit->EoSavedElement)
+	 pEl = pDoc->DocLastEdit->EoCreatedElement;
+   return pEl;
+}
+
+/*----------------------------------------------------------------------
    CancelOldestSequence
 
    Cancel the oldest sequence in the Undo (if undo==TRUE) or Redo queue.
