@@ -29,12 +29,20 @@
 #define SELECTOR_NB_ITEMS 5
 
 typedef struct _PluginInfo {
-        char*            pluginDL ;   /* Location of the dynamic library of the plugin */
-        char*            pluginType ; /* Mime type of the plugin                       */
-        char*            pluginID;    /* Plugin identifier                             */
-        char*            pluginURL;   /* URL of the plugin                             */
-        char*            fileExt;     /* Suffix of files supported by the plugin       */
+        char*            pluginDL ;       /* Location of the dynamic library of the plugin */
+        char*            pluginMimeType ;
+        char*            pluginType ;     /* Mime type of the plugin                       */
+        char*            pluginID ;       /* Plugin identifier                             */
+        char*            pluginURL ;      /* URL of the plugin                             */
+        char*            fileExt ;        /* Suffix of files supported by the plugin       */
+        void*            pluginHandle ;
+        NPP              pluginInstance;
         NPPluginFuncs*   pluginFunctionsTable;
 } PluginInfo ;
 
 #endif /* PLUGIN_BROWSE_H */
+
+
+
+
+

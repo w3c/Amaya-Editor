@@ -40,7 +40,7 @@
 #include "Table.xpm"
 #ifdef AMAYA_PLUGIN
 #include "Plugin.xpm"
-#endif
+#endif /* AMAYA_PLUGIN */
 
 #ifdef _WINDOWS
 #ifndef __GNUC__
@@ -78,7 +78,7 @@ static Pixmap       iconTable;
 #ifdef AMAYA_PLUGIN
 #include "plugin.h"
 static Pixmap       iconPlugin;
-#endif
+#endif /* AMAYA_PLUGIN */
 
 #include "css_f.h"
 #include "HTMLhistory_f.h"
@@ -96,6 +96,9 @@ static Pixmap       iconPlugin;
 #include "HTMLstyle_f.h"
 #include "UIcss_f.h"
 
+#ifdef AMAYA_PLUGIN
+extern void CreateFormPlugin (Document, View);
+#endif /* AMAYA_PLUGIN */
 
 /*----------------------------------------------------------------------
    IsDocumentLoaded returns the document identification if the        
@@ -650,7 +653,7 @@ char               *pathname;
 	     TtaAddButton (doc, 1, iconTable, CreateTable, TtaGetMessage (AMAYA, AM_BUTTON_TABLE));
 #ifdef AMAYA_PLUGIN
 	     TtaAddButton (doc, 1, iconPlugin, TtaCreateFormPlugin, TtaGetMessage (AMAYA, AM_BUTTON_PLUGIN));
-#endif
+#endif /* AMAYA_PLUGIN */
 	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_LOCATION), TRUE, TextURL);
 	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_TITLE), TRUE, TextTitle);
 

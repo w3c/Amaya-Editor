@@ -393,7 +393,6 @@ char               *fileName;
   int                 i;
   int                 l = 0;
 
-  /* i = MAX_PICT_FORMATS - 1; */
   i = HandlersCounter - 1 ;
 #ifdef AMAYA_PLUGIN
   currentPlugin = HandlersCounter - InlineHandlers - 1;
@@ -891,7 +890,8 @@ int                 frame;
 	  }
 	ResetCursorWatch (frame);
      }
-   else if (typeImage < InlineHandlers && typeImage > -1)
+   /*   else if (typeImage < HandlersCounter && typeImage > -1) */
+   else if (typeImage < HandlersCounter && typeImage > -1)
       (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea,
 					(FILE *) drawable, BackGroundPixel);
 #endif /* _WINDOWS */
@@ -910,8 +910,9 @@ PictInfo* imageDesc;
 #endif /* __STDC__ */
 {
 #ifndef NEW_WILLOWS
+    int typeImage = imageDesc->PicType;
     if (imageDesc == NULL) return;
-    if ((imageDesc->mapped) && (imageDesc->created)) {	
+    if ((typeImage >= InlineHandlers) && (imageDesc->mapped) && (imageDesc->created)) {	
 	XtUnmapWidget ((Widget) (imageDesc->wid));
  	imageDesc->mapped = FALSE ;
     }

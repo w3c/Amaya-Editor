@@ -27,6 +27,7 @@ char* amayaPluginDir ;
 int   pluginCounter = 0;
 
 extern int currentPlugin;
+extern NPNetscapeFuncs* amayaFunctionsTable;
 
 #ifdef __STDC__
 void TtaBrowsePluginDirectory (void)
@@ -57,6 +58,7 @@ void TtaBrowsePluginDirectory ()
          do {
             pluginTable [pluginCounter] = (PluginInfo*) malloc (sizeof (PluginInfo)) ;
             pluginTable [pluginCounter]->pluginDL = (char*) malloc (strlen (thotDir.buf) + 1);
+            pluginTable [pluginCounter]->pluginHandle = (void*) NULL;
             strcpy (pluginTable [pluginCounter]->pluginDL, thotDir.buf);
             InitPluginHandlers (FALSE, pluginCounter);
             pluginCounter++;

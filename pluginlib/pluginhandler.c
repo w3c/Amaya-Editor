@@ -185,17 +185,16 @@ char*     fileName;
   
   if (bitmap == None) 
      return (Drawable) None;
-  else {
-       imageDesc->PicPixmap   = bitmap;
-       imageDesc->PicMask     = None;
-       imageDesc->PicXArea    = 0;
-       imageDesc->PicYArea    = 0;
-       imageDesc->PicWArea    = 400;
-       imageDesc->PicHArea    = 400;
-       /* imageDesc->created     = FALSE;*/ /* A VERIFIER */
-       imageDesc->mapped      = FALSE;
-       return (Drawable) bitmap;
-  }
+
+  imageDesc->PicPixmap   = bitmap;
+  imageDesc->PicMask     = None;
+  imageDesc->PicXArea    = 0;
+  imageDesc->PicYArea    = 0;
+  imageDesc->PicWArea    = 400;
+  imageDesc->PicHArea    = 400;
+  /* imageDesc->created     = FALSE;*/ /* A VERIFIER */
+  imageDesc->mapped      = FALSE;
+  return (Drawable) bitmap;
 #endif /* !NEW_WILLOWS */
 }/*FigCreateImage*/
 
@@ -247,10 +246,6 @@ char* fileName;
   int     index1 = 0;
   int     index2;
   boolean matched = FALSE;
-  /* TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO */
-  /* TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO */
-  /* TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO */
-  /* TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO */
 
   l = strlen (fileName);
   if (l > 4 && pluginTable [currentPlugin]->fileExt) {

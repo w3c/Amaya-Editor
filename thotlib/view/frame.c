@@ -268,9 +268,8 @@ int                 delta;
 			     vol += pBo1->BxAbstractBox->AbVolume;
 		       if (pBo1->BxPrevious == NULL)
 			  isbelow = FALSE;
-#ifdef AMAYA_PLUGIN
-                       else
-			 {
+#ifdef AMAYA_PLUGIN 
+                       else {
 			   if ((pBox->BxType == BoPicture) &&
                                !((y >= pFrame->FrYOrg)     &&
                                  (pBox->BxYOrg <= (pFrame->FrYOrg + h)) &&
