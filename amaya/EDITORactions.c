@@ -568,6 +568,7 @@ static void CreateOrChangeDoctype (Document doc, View view, int new_doctype)
   ElementType     elType;
   Element         docEl, old_doctype;
   char           *tempdocument = NULL, *temp2 = NULL; 
+   char          *charsetname;
   char            documentname[MAX_LENGTH];
   char            tempdir[MAX_LENGTH];
   
@@ -577,7 +578,8 @@ static void CreateOrChangeDoctype (Document doc, View view, int new_doctype)
   temp2 = (char *) TtaGetMemory (strlen (tempdocument) + 3);
   strcpy (temp2, tempdocument);
   strcat (temp2, "_2");
-  UpdateDocumentCharset (doc);
+  charsetname = UpdateDocumentCharset (doc);
+  TtaFreeMemory (charsetname);
   if (DocumentTypes[doc] == docHTML)
     {
       if (TtaGetDocumentProfile(doc) == L_Xhtml11)
@@ -618,7 +620,6 @@ static void CreateOrChangeDoctype (Document doc, View view, int new_doctype)
 
   /* Update the Doctype menu */
   UpdateDoctypeMenu (doc, TRUE);
-
   TtaFreeMemory (tempdocument);
 }
 

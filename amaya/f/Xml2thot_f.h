@@ -58,8 +58,8 @@ extern void StartXmlParser ( Document doc,
                              char *documentName,
                              char *documentDirectory,
                              char *pathURL,
-                             ThotBool xmlDec,
-                             ThotBool xmlDoctype,
+                             ThotBool withDec,
+                             ThotBool withDoctype,
                              ThotBool externalDoc );
 
 #else /* __STDC__ */
@@ -116,8 +116,8 @@ extern void StartXmlParser ( Document doc,
                                char *documentName,
                                char *documentDirectory,
                                char *pathURL,
-                               ThotBool xmlDec,
-                               ThotBool xmlDoctype,
+                               ThotBool withDec,
+                               ThotBool withDoctype,
                                ThotBool externalDoc );
 
 #endif /* __STDC__ */

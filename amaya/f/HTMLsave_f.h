@@ -18,7 +18,7 @@ extern void DeleteTempObjectFile ( void );
 extern void DoSaveObjectAs ( void );
 extern void SaveDocumentAs ( Document doc,
                              View view );
-extern void UpdateDocumentCharset ( Document doc );
+extern char *UpdateDocumentCharset ( Document doc );
 extern void SetNamespacesAndDTD ( Document doc );
 extern void ParseWithNewDoctype ( Document doc,
                                   char *localFile,
@@ -58,7 +58,7 @@ extern void DeleteTempObjectFile ( void );
 extern void DoSaveObjectAs ( void );
 extern void SaveDocumentAs ( Document doc,
                                View view );
-extern void UpdateDocumentCharset ( Document doc );
+extern char *UpdateDocumentCharset ( Document doc );
 extern void SetNamespacesAndDTD ( Document doc );
 extern void ParseWithNewDoctype ( Document doc,
                                     char *localFile,
