@@ -229,12 +229,6 @@ gboolean ColorsExposeFgBgGTK (GtkWidget *widget, GdkEventExpose *ev, gpointer da
   if (color==-1) color=0;
   gdk_rgb_gc_set_foreground (TtLineGC, ColorPixel (color));
   gdk_draw_rectangle (window, TtLineGC, TRUE, 0, 0, 40, 40);
-
-  /*  fground = LastFg;
-  bground = LastBg;
-  LastFg = -1;
-  LastBg = -1;*/
-  /*  ThotSelectPalette (bground, fground);*/
   return TRUE;
 }
 
@@ -243,36 +237,32 @@ gboolean ColorsExposeFgBgGTK (GtkWidget *widget, GdkEventExpose *ev, gpointer da
   foreground color
   background color
   ----------------------------------------------------------------------*/
-void ButtonFgToggledGTK (GtkToggleButton *button, gpointer data)
+void ButtonFgToggledGTK (GtkWidget *w, GdkEventButton *event, gpointer data)
 {
-  GtkToggleButton *bgbutton = (GtkToggleButton *)data;
-  if (gtk_toggle_button_get_active (button))
-    {
-      /* button est enfonce */
-      gtk_toggle_button_set_active (bgbutton, FALSE);
-      ApplyFg = TRUE;
-    }
-  else
-    {
-      /* button n'est pas enfonce */
-      gtk_toggle_button_set_active (bgbutton, TRUE);
-      ApplyFg = FALSE;
-    }
+  GtkToggleButton * fgbutton;
+  GtkToggleButton * bgbutton;
+  fgbutton = (GtkToggleButton *)gtk_object_get_data (GTK_OBJECT(w), "FgToggle");
+  bgbutton = (GtkToggleButton *)gtk_object_get_data (GTK_OBJECT(w), "BgToggle");
+  
+  ApplyFg = TRUE;
+  ApplyBg = FALSE;
+  gtk_toggle_button_set_active (bgbutton, FALSE);
+  gtk_toggle_button_set_active (fgbutton, TRUE);
 }
 
-void ButtonBgToggledGTK (GtkToggleButton *button, gpointer data)
+void ButtonBgToggledGTK (GtkWidget *w, GdkEventButton *event, gpointer data)
 {
- GtkToggleButton *fgbutton = (GtkToggleButton *)data;
- if (gtk_toggle_button_get_active (button))
-   {
-     gtk_toggle_button_set_active (fgbutton, FALSE);
-     ApplyBg = TRUE;
-   }
-  else
-   {
-     gtk_toggle_button_set_active (fgbutton, TRUE);
-     ApplyBg = FALSE;
-   }
+
+
+  GtkToggleButton * fgbutton;
+  GtkToggleButton * bgbutton;
+  fgbutton = (GtkToggleButton *)gtk_object_get_data (GTK_OBJECT(w), "FgToggle");
+  bgbutton = (GtkToggleButton *)gtk_object_get_data (GTK_OBJECT(w), "BgToggle");
+
+  ApplyBg = TRUE;
+  ApplyFg = FALSE;
+  gtk_toggle_button_set_active (fgbutton, FALSE); 
+  gtk_toggle_button_set_active (bgbutton, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -282,11 +272,6 @@ void ButtonBgToggledGTK (GtkToggleButton *button, gpointer data)
 gboolean ColorsPressGTK (GtkWidget *widget, gpointer data)
 {
   int color = (int)data;
-  /*  GtkToggleButton * fgbutton;
-  GtkToggleButton * bgbutton;
-
-  fgbutton = (GtkToggleButton *)gtk_object_get_data (GTK_OBJECT(widget), "FgColor");
-  bgbutton = (GtkToggleButton *)gtk_object_get_data (GTK_OBJECT(widget), "BgColor");*/
   
   if (ApplyFg)
     {
@@ -1206,9 +1191,6 @@ ThotBool ThotCreatePalette (int x, int y)
   GtkWidget *vbox1;
   GtkWidget *vbox2;
   GtkWidget *frame3;
-  GtkWidget *togglebutton1;
-  GtkWidget *label2;
-  GtkWidget *togglebutton2;
   GtkWidget *frame2;
   GtkWidget *vbox4;
   GtkWidget *hbox4;
@@ -1241,62 +1223,71 @@ ThotBool ThotCreatePalette (int x, int y)
   gtk_widget_show (vbox2);
   gtk_container_add (GTK_CONTAINER (vbox1), vbox2);
 
+
+  /******** The foreground and background zone *********/
   frame3 = gtk_frame_new ("Stat");
   gtk_widget_show (frame3);
   gtk_box_pack_start (GTK_BOX (vbox2), frame3, TRUE, TRUE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (frame3), 4);
- 
   fixed1 = gtk_fixed_new ();
   gtk_widget_show (fixed1);
   gtk_container_add (GTK_CONTAINER (frame3), fixed1);
 
   /* background */
-  togglebutton2 = gtk_toggle_button_new();
-  gtk_widget_show (togglebutton2);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(togglebutton2), FALSE);
+  bg_color_draw = gtk_toggle_button_new();
+  gtk_widget_show (bg_color_draw);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (bg_color_draw), FALSE);
   ApplyBg = FALSE;
-  gtk_container_set_border_width (GTK_CONTAINER (togglebutton2), 5);
-  gtk_fixed_put (GTK_FIXED (fixed1), togglebutton2, 40, 40);
+  gtk_container_set_border_width (GTK_CONTAINER (bg_color_draw), 5);
+  gtk_fixed_put (GTK_FIXED (fixed1), bg_color_draw, 40, 40);
+
+  /* foreground */
+  fg_color_draw = gtk_toggle_button_new();
+  gtk_widget_show (fg_color_draw);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (fg_color_draw), TRUE);
+  ApplyFg = TRUE;
+  gtk_container_set_border_width (GTK_CONTAINER (fg_color_draw), 5);
+  gtk_fixed_put (GTK_FIXED (fixed1), fg_color_draw, 10, 10);
+
+  /* drawing area background */
   color_draw = gtk_drawing_area_new ();
   gtk_drawing_area_size (GTK_DRAWING_AREA (color_draw), 40, 40);
-  gtk_container_add (GTK_CONTAINER (togglebutton2), color_draw);
-  gtk_widget_set_events (GTK_WIDGET (color_draw), GDK_EXPOSURE_MASK);
+  gtk_container_add (GTK_CONTAINER (bg_color_draw), color_draw);
+  /* connecte the data to the drawing area */
+  gtk_object_set_data (GTK_OBJECT(color_draw), "FgToggle", (gpointer)fg_color_draw);
+  gtk_object_set_data (GTK_OBJECT(color_draw), "BgToggle", (gpointer)bg_color_draw);
+  gtk_widget_set_events (GTK_WIDGET (color_draw), GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK);
   /* connecte the expose event to redraw the good color */
   ConnectSignalGTK (GTK_OBJECT (color_draw),
 		    "expose_event",
 		    GTK_SIGNAL_FUNC (ColorsExposeFgBgGTK),
 		    (gpointer)&BgColor);
-  bg_color_draw = togglebutton2;
+  ConnectSignalGTK (GTK_OBJECT (color_draw),
+		    "button_press_event",
+		    GTK_SIGNAL_FUNC (ButtonBgToggledGTK),
+		    (gpointer)NULL);
 
-  /* foreground */
-  togglebutton1 = gtk_toggle_button_new();
-  gtk_widget_show (togglebutton1);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(togglebutton1), TRUE);
-  ApplyFg = TRUE;
-  gtk_container_set_border_width (GTK_CONTAINER (togglebutton1), 5);
-  gtk_fixed_put (GTK_FIXED (fixed1), togglebutton1, 10, 10);
+  /* drawing area foreground */
   color_draw = gtk_drawing_area_new ();
   gtk_drawing_area_size (GTK_DRAWING_AREA (color_draw), 40, 40);
-  gtk_container_add (GTK_CONTAINER (togglebutton1), color_draw);
-  gtk_widget_set_events (GTK_WIDGET (color_draw), GDK_EXPOSURE_MASK);
+  gtk_container_add (GTK_CONTAINER (fg_color_draw), color_draw);
+  /* connecte the data to the drawing area */
+  gtk_object_set_data (GTK_OBJECT(color_draw), "FgToggle", (gpointer)fg_color_draw);
+  gtk_object_set_data (GTK_OBJECT(color_draw), "BgToggle", (gpointer)bg_color_draw);
+  gtk_widget_set_events (GTK_WIDGET (color_draw), GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK);
   /* connecte the expose event to redraw the good color */
   ConnectSignalGTK (GTK_OBJECT (color_draw),
 		    "expose_event",
 		    GTK_SIGNAL_FUNC (ColorsExposeFgBgGTK),
 		    (gpointer)&FgColor);
-  fg_color_draw = togglebutton1;
-
   /* connect synchronize callback */
-  ConnectSignalGTK (GTK_OBJECT (togglebutton2),
-		    "toggled",
-		    GTK_SIGNAL_FUNC (ButtonBgToggledGTK),
-		    (gpointer)togglebutton1);
-  ConnectSignalGTK (GTK_OBJECT (togglebutton1),
-		    "toggled",
+  ConnectSignalGTK (GTK_OBJECT (color_draw),
+		    "button_press_event",
 		    GTK_SIGNAL_FUNC (ButtonFgToggledGTK),
-		    (gpointer)togglebutton2);
+		    (gpointer)NULL);
 
-  /* the color palette */
+
+  /******** the color palette *******/
   frame2 = gtk_frame_new ("Color");
   gtk_widget_show (frame2);
   gtk_box_pack_start (GTK_BOX (vbox2), frame2, TRUE, TRUE, 0);
@@ -1308,42 +1299,26 @@ ThotBool ThotCreatePalette (int x, int y)
   gtk_container_add (GTK_CONTAINER (frame2), vbox4);
   gtk_container_set_border_width (GTK_CONTAINER (vbox4), 4);
 
-  /***** Default color *****/
+  /* Default color */
   /* hbox witch contain the default color */
   hbox4 = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox4);
   gtk_box_pack_start (GTK_BOX (vbox4), hbox4, TRUE, TRUE, 0);
   /* create a color button (default) */
-  color_button = gtk_button_new ();
+  color_button = gtk_button_new_with_label (TtaGetMessage (LIB, TMSG_STD_COLORS));
   gtk_widget_show (color_button);
-  /* connecte the data to the buttons */
-  gtk_object_set_data (GTK_OBJECT(color_button), "FgColor", (gpointer)fg_color_draw);
-  gtk_object_set_data (GTK_OBJECT(color_button), "BgColor", (gpointer)bg_color_draw);
-  color_draw = gtk_drawing_area_new ();
-  gtk_drawing_area_size (GTK_DRAWING_AREA (color_draw), 20, 20);
-  gtk_container_add (GTK_CONTAINER (color_button), color_draw);
-  gtk_widget_set_events (GTK_WIDGET (color_draw), GDK_EXPOSURE_MASK);
-  /* connecte the expose event to redraw the good color */
-  ConnectSignalGTK (GTK_OBJECT (color_draw),
-		    "expose_event",
-		    GTK_SIGNAL_FUNC (ColorsExposeGTK),
-		    (gpointer)0);
+  /* on connecte le callback pour l'activation de la couleur par default */
+  /* on passe la couleur -1 */
   ConnectSignalGTK (GTK_OBJECT (color_button),
 		    "clicked",
 		    GTK_SIGNAL_FUNC(ColorsPressGTK),
-		    (gpointer)0);
+		    (gpointer)-1);
   gtk_box_pack_start (GTK_BOX (hbox4), color_button, FALSE, FALSE, 0);
-  /* label */
-  label2 = gtk_label_new (TtaGetMessage (LIB, TMSG_STD_COLORS));
-  gtk_widget_show (label2);
-  gtk_box_pack_start (GTK_BOX (hbox4), label2, FALSE, FALSE, 5);
 
-
-  /****** hbox witch contain all the colors columns ******/
+  /* hbox witch contain all the colors columns */
   hbox4 = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox4);
   gtk_box_pack_start (GTK_BOX (vbox4), hbox4, TRUE, TRUE, 0);
-  
   j = 0;
   for (i = 1; i<=NumberOfColors (); i++)
     {
@@ -1362,10 +1337,6 @@ ThotBool ThotCreatePalette (int x, int y)
       gtk_drawing_area_size (GTK_DRAWING_AREA (color_draw), 20, 20);
       gtk_container_add (GTK_CONTAINER (color_button), color_draw);
       gtk_widget_set_events (GTK_WIDGET (color_draw), GDK_EXPOSURE_MASK);
-      /* connecte the data to the buttons */
-      gtk_object_set_data (GTK_OBJECT(color_button), "FgColor", (gpointer)fg_color_draw);
-      gtk_object_set_data (GTK_OBJECT(color_button), "BgColor", (gpointer)bg_color_draw);
-
       /* connecte the expose event to redraw the good color */
       ConnectSignalGTK (GTK_OBJECT (color_draw),
 			"expose_event",
@@ -1379,6 +1350,8 @@ ThotBool ThotCreatePalette (int x, int y)
       gtk_box_pack_start (GTK_BOX (vbox5), GTK_WIDGET(color_button), FALSE, FALSE, 0);
     }
 
+
+  /******** All the action buttons *********/
   button4 = gtk_button_new_with_label ("More ...");
   gtk_widget_show (button4);
   gtk_box_pack_start (GTK_BOX (vbox4), button4, FALSE, FALSE, 0);
@@ -1417,15 +1390,17 @@ ThotBool ThotCreatePalette (int x, int y)
 		    GTK_SIGNAL_FUNC (EndPalette),
 		    (gpointer)NULL);
 
- gtk_widget_set_uposition (Color_Palette, x, y);
- gtk_widget_show_all(GTK_WIDGET(Color_Palette));
- Color_Window = GTK_WIDGET (Color_Palette)->window;
- /* pas de selection precedente */
- LastBg = -1;
- LastFg = -1;
+  /* show all the dialogues */
+  gtk_widget_set_uposition (Color_Palette, x, y);
+  gtk_widget_show_all(GTK_WIDGET(Color_Palette));
+  Color_Window = GTK_WIDGET (Color_Palette)->window;
+  
+  /* pas de selection precedente */
+  LastBg = -1;
+  LastFg = -1;
 #endif /* _GTK */
 #endif /* _WINDOWS */
-   return TRUE;
+  return TRUE;
 }
 
 
