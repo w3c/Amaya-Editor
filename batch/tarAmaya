@@ -21,23 +21,38 @@ echo "Platform ------->" $MACH
  $TAR $DEST/amaya-$MACH-$AMAYAVERSION.tgz \
    Amaya/README.amaya \
    Amaya/README.gl \
+   Amaya/amaya/COPYRIGHT* \
+   Amaya/amaya/AmayaPage.html* \
+   Amaya/amaya/*.PRS \
+   Amaya/amaya/*.STR \
+   Amaya/amaya/*.TRA \
+   Amaya/amaya/*.conf \
+   Amaya/amaya/*.en \
+   Amaya/amaya/*.gif \
+   Amaya/amaya/*.png \
+   Amaya/amaya/*.trans \
+   Amaya/annotlib/Annot.STR \
+   Amaya/annotlib/AnnotP.PRS \
+   Amaya/annotlib/AnnotT.TRA \
+   Amaya/annotlib/selected.gif \
+   Amaya/batch/MachineType \
    Amaya/config/XKeysymDB \
-   Amaya/config/amaya.kb \
-   Amaya/config/amaya.keyboard \
-   Amaya/config/amaya.emacs \
-   Amaya/config/amaya.profiles \
-   Amaya/config/*thot.rc \
    Amaya/config/*-amayadialogue \
    Amaya/config/*-amayamsg \
    Amaya/config/*-libdialogue \
    Amaya/config/*-corrdialogue \
-   Amaya/config/*rdf \
+   Amaya/config/*.rdf \
+   Amaya/config/*thot.rc \
+   Amaya/config/amaya.emacs \
+   Amaya/config/amaya.kb \
+   Amaya/config/amaya.keyboard \
+   Amaya/config/amaya.profiles \
    Amaya/config/annot.schemas \
    Amaya/config/lib_files.dat \
-   Amaya/config/config/libconfig/*.svg \
-   Amaya/config/config/libconfig/*.css \
-   Amaya/config/config/libconfig/*.png \
-   Amaya/config/config/libconfig/*.lhtml \
+   Amaya/config/libconfig/*.css \
+   Amaya/config/libconfig/*.png \
+   Amaya/config/libconfig/*.lhtml \
+   Amaya/config/libconfig/*.svg \
    Amaya/dicopar/*.dic \
    Amaya/dicopar/*.ptn \
    Amaya/dicopar/alphabet \
@@ -51,21 +66,6 @@ echo "Platform ------->" $MACH
    Amaya/doc/images/w3c_home \
    Amaya/$MACH/bin/amaya \
    Amaya/$MACH/bin/print \
-   Amaya/batch/MachineType \
-   Amaya/annotlib/Annot.STR \
-   Amaya/annotlib/AnnotP.PRS \
-   Amaya/annotlib/AnnotT.TRA \
-   Amaya/annotlib/selected.gif \
-   Amaya/amaya/COPYRIGHT* \
-   Amaya/amaya/AmayaPage.html* \
-   Amaya/amaya/*.conf \
-   Amaya/amaya/*.STR \
-   Amaya/amaya/*.trans \
-   Amaya/amaya/*.PRS \
-   Amaya/amaya/*.TRA \
-   Amaya/amaya/*.en \
-   Amaya/amaya/*.gif \
-   Amaya/amaya/*.png \
    Amaya/fonts/Families.list \
    Amaya/fonts/fonts.dir \
    Amaya/fonts/icones*
