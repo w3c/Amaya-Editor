@@ -2145,7 +2145,10 @@ LPARAM lParam;
     {
     case WM_INITDIALOG:
       SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_APPLY_CLASS));
-      SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+      if (withEdit)
+	SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+      else
+	SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_APPLY));
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
       
       wndListRule = CreateWindow (TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
@@ -2197,7 +2200,8 @@ LPARAM lParam;
 	{
 	case ID_CONFIRM:
 	  ThotCallback (BaseDialog + AClassForm, INTEGER_DATA, (CHAR_T*) 1);
-	  EndDialog (hwnDlg, ID_CONFIRM);
+	  if (withEdit)
+	    EndDialog (hwnDlg, ID_CONFIRM);
 	  break;
 	  
 	case ID_DONE:

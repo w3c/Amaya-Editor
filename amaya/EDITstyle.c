@@ -1309,6 +1309,10 @@ View                view;
   CHAR_T              a_class[50];
   int                 len;
   int                 firstSelectedChar, lastSelectedChar;
+#ifndef _WINDOWS
+   CHAR_T              bufMenu[MAX_TXT_LEN];
+   int                 i;
+#endif /* _WINDOWS */
 
   TtaGiveFirstSelectedElement (doc, &firstSelectedEl,
 			       &firstSelectedChar, &lastSelectedChar);
@@ -1319,8 +1323,10 @@ View                view;
 
   /* updating the class name selector. */
 #  ifndef _WINDOWS
-  TtaNewForm (BaseDialog + AClassForm, TtaGetViewFrame (doc, 1), 
-	      TtaGetMessage (AMAYA, AM_APPLY_CLASS), TRUE, 2, 'L', D_DONE);
+   ustrcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
+   TtaNewSheet (BaseDialog + AClassForm, TtaGetViewFrame (doc, 1), 
+		TtaGetMessage (AMAYA, AM_APPLY_CLASS), 1,
+		bufMenu, FALSE, 2, 'L', D_DONE);
 #  endif /* !_WINDOWS */
   NbClass = BuildClassList (doc, ListBuffer, MAX_CSS_LENGTH, TEXT("default"));
 #  ifndef _WINDOWS
