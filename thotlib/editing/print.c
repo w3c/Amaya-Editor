@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -149,13 +149,7 @@ static HINSTANCE hCurrentInstance;
    WinErrorBox :  Pops-up a message box when an MS-Window error      
    occured.                                                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void WinErrorBox (HWND hWnd, STRING source)
-#else  /* !__STDC__ */
-void WinErrorBox (hWnd, source)
-HWND hWnd;
-STRING source;
-#endif /* __STDC__ */
 {
    CHAR_T                str[200];
 
@@ -166,14 +160,7 @@ STRING source;
 
 /* ----------------------------------------------------------------------
    ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool WINAPI DllMain (HINSTANCE hInstance, DWORD fdwReason, LPVOID pvReserved) 
-#else  /* __STDC__ */
-ThotBool WINAPI DllMain (hInstance, fdwReason, pvReserved) 
-HINSTANCE hInstance; 
-DWORD     fdwReason; 
-LPVOID    pvReserved;
-#endif /* __STDC__ */
 {
   return TRUE;
 }
@@ -185,15 +172,7 @@ LPVOID    pvReserved;
  *  COMMENTS:    Handles "Abort" dialog messages                          *
  *                                                                        *
  * ---------------------------------------------------------------------- */
-#ifdef __STDC__
 LRESULT CALLBACK AbortDlgProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* __STDC__ */
-LRESULT CALLBACK AbortDlgProc (hwnd, msg, wParam, lParam)
-HWND   hwnd; 
-UINT   msg; 
-WPARAM wParam; 
-LPARAM lParam;
-#endif /* __STDC __ */
 {
    switch (msg)
      {
@@ -224,13 +203,7 @@ LPARAM lParam;
  *  COMMENTS:    Standard printing abort proc                             *
  *                                                                        *
  * ---------------------------------------------------------------------- */
-#ifdef __STDC__
 BOOL CALLBACK AbortProc (HDC hdc, int error)
-#else  /* __STDC__ */
-BOOL CALLBACK AbortProc (hdc, error)
-HDC hdc; 
-int error;
-#endif /* __STDC__ */
 {
    MSG msg;
 
@@ -253,15 +226,7 @@ int error;
  *            FALSE - otherwise.                                          *
  *                                                                        *
  * ---------------------------------------------------------------------- */
-#ifdef __STDC__
 BOOL PASCAL InitPrinting(HDC hDC, HWND hWnd, HANDLE hInst, LPSTR msg)
-#else /* !__STDC__ */
-BOOL PASCAL InitPrinting(hDC, hWnd, hInst, msg)
-HDC    hDC; 
-HWND   hWnd; 
-HANDLE hInst; 
-LPSTR  msg;
-#endif /* __STDC__ */
 {
   DOCINFO         DocInfo;
 
@@ -288,12 +253,7 @@ LPSTR  msg;
    WIN_GetDeviceContext :  select a Device Context for a given       
    thot window.                                                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void WIN_GetDeviceContext (int frame)
-#else  /* !__STDC__ */
-void WIN_GetDeviceContext (frame)
-int frame;
-#endif /* __STDC__ */
 {
   TtDisplay = GetDC (NULL);
 }
@@ -301,11 +261,7 @@ int frame;
 /*----------------------------------------------------------------------
    WIN_ReleaseDeviceContext :  unselect the Device Context           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void WIN_ReleaseDeviceContext (void)
-#else  /* !__STDC__ */
-void WIN_ReleaseDeviceContext ()
-#endif /* __STDC__ */
 {
   /* release the previous Device Context. */
   if (TtDisplay != NULL)
@@ -318,14 +274,7 @@ void WIN_ReleaseDeviceContext ()
 /*----------------------------------------------------------------------
    PrintPageFooter
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PrintPageFooter (FILE * fout, int frame, PtrAbstractBox pPage)
-#else  /* __STDC__ */
-static void         PrintPageFooter (fout, frame, pPage)
-FILE               *fout;
-int                 frame;
-PtrAbstractBox      pPage;
-#endif /* __STDC__ */
 {
   PtrAbstractBox    pAb;
   PtrBox            pBox;
@@ -374,15 +323,7 @@ PtrAbstractBox      pPage;
    PrintPageHeader displays the content of the page header and cleans
    the page element contents except the break line.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         PrintPageHeader (FILE * fout, int frame, PtrAbstractBox pPage, int org)
-#else  /* __STDC__ */
-static void         PrintPageHeader (fout, frame, pPage, org)
-FILE               *fout;
-int                 frame;
-PtrAbstractBox      pPage;
-int                 org;
-#endif /* __STDC__ */
+static void PrintPageHeader (FILE * fout, int frame, PtrAbstractBox pPage, int org)
 {
   PtrAbstractBox    pAb;
   PtrBox            pBox;
@@ -443,12 +384,7 @@ int                 org;
 /*----------------------------------------------------------------------
    DrawPage check whether a showpage is needed.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         DrawPage (FILE * fout)
-#else  /* __STDC__ */
-static void         DrawPage (fout)
-FILE               *fout;
-#endif /* __STDC__ */
 {
   NumberOfPages++;
 #ifdef _WINDOWS 
@@ -477,14 +413,7 @@ FILE               *fout;
 /*----------------------------------------------------------------------
  * XWindowError is the X-Windows non-fatal errors handler.
  ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          XWindowError (Display * dpy, XErrorEvent * err)
-#else  /* __STDC__ */
-static int          XWindowError (dpy, err)
-Display            *dpy;
-XErrorEvent        *err;
-
-#endif /* __STDC__ */
 {
    CHAR_T                msg[200];
 
@@ -493,14 +422,9 @@ XErrorEvent        *err;
 }
 
 /*----------------------------------------------------------------------
- * XWindowFatalError is the X-Windows fatal errors handler.
+  XWindowFatalError is the X-Windows fatal errors handler.
  ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          XWindowFatalError (Display * dpy)
-#else  /* __STDC__ */
-static int          XWindowFatalError (dpy)
-Display            *dpy;
-#endif /* __STDC__ */
 {
    extern int          errno;
 
@@ -513,12 +437,9 @@ Display            *dpy;
 #endif /* _WINDOWS */
 
 
-#ifdef __STDC__
+/*----------------------------------------------------------------------
+ ----------------------------------------------------------------------*/
 static void usage (STRING processName) 
-#else  /* __STDC__ */
-static void usage (processName)
-STRING processName;
-#endif /* __STDC__ */ 
 {
        fprintf (stderr, "\n\nusage: %s [-lang value] <file name>\n", processName);
        fprintf (stderr, "       -v <view name> [-v <view name> [...]]\n");
@@ -547,21 +468,7 @@ STRING processName;
 /*----------------------------------------------------------------------
    NextReferenceToEl                                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrReference        NextReferenceToEl (PtrElement pEl, PtrDocument pDoc, ThotBool processNotLoaded, PtrReference pPrevRef, PtrDocument * pDocRef, PtrExternalDoc * pExtDoc, ThotBool nextExtDoc)
-
-#else  /* __STDC__ */
-PtrReference        NextReferenceToEl (pEl, pDoc, processNotLoaded, pPrevRef, pDocRef, pExtDoc, nextExtDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-ThotBool            processNotLoaded;
-PtrReference        pPrevRef;
-PtrDocument        *pDocRef;
-PtrExternalDoc     *pExtDoc;
-ThotBool            nextExtDoc;
-
-#endif /* __STDC__ */
-
 {
    PtrReference        pRef;
 
@@ -586,16 +493,7 @@ ThotBool            nextExtDoc;
 /*----------------------------------------------------------------------
    GetCurrentSelection                                             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            GetCurrentSelection (PtrDocument * pDoc, PtrElement * firstEl, PtrElement * lastEl, int *firstChar, int *lastChar)
-#else  /* __STDC__ */
-ThotBool            GetCurrentSelection (pDoc, firstEl, lastEl, firstChar, lastChar)
-PtrDocument        *pDoc;
-PtrElement         *firstEl;
-PtrElement         *lastEl;
-int                *firstChar;
-int                *lastChar;
-#endif /* __STDC__ */
+ThotBool GetCurrentSelection (PtrDocument * pDoc, PtrElement * firstEl, PtrElement * lastEl, int *firstChar, int *lastChar)
 {
    *pDoc = NULL;
    return FALSE;
@@ -607,13 +505,7 @@ int                *lastChar;
    Ferme la fenetre, detruit le fichier et libere l'entree.      
    Libere toutes les boites allouees a la fenetre.                   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DestroyFrame (int frame)
-#else  /* __STDC__ */
-void                DestroyFrame (frame)
-int                 frame;
-
-#endif /* __STDC__ */
 {
   ClearConcreteImage (frame);
   ThotFreeFont (frame);	/* On libere les polices de caracteres utilisees */
@@ -622,12 +514,7 @@ int                 frame;
 /*----------------------------------------------------------------------
    FirstFrame cree et initialise la premiere frame.          	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         FirstFrame (STRING server)
-#else  /* __STDC__ */
-static void         FirstFrame (server)
-STRING server;
-#endif /* __STDC__ */
 {
    int                 i;
 
@@ -665,20 +552,7 @@ STRING server;
 /*                 recalcule ses limites sur l'image concrete.                */
 /*                 Dans le cas du print, c'est exactement la hauteur de page. */
 /*  --------------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, int *yf, int raz)
-
-#else  /* __STDC__ */
-void                DefineClipping (frame, orgx, orgy, xd, yd, xf, yf, raz)
-int                 frame;
-int                 orgx;
-int                 orgy;
-int                *xd;
-int                *yd;
-int                *xf;
-int                *yf;
-int                 raz;
-#endif /* __STDC__ */
+void DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, int *yf, int raz)
 {
    FrameTable[frame].FrHeight = *yf;
 }
@@ -686,14 +560,7 @@ int                 raz;
 /*----------------------------------------------------------------------
    RemoveClipping annule le rectangle de clipping de la fenetre frame.  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                RemoveClipping (int frame)
-#else  /* __STDC__ */
-void                RemoveClipping (frame)
-int                 frame;
-
-#endif /* __STDC__ */
-
 {   
    FrameTable[frame].FrWidth = 32000;
    FrameTable[frame].FrHeight = PixelValue (1000, UnPixel, NULL, 0);
@@ -704,15 +571,7 @@ int                 frame;
 /*----------------------------------------------------------------------
    GetSizesFrame retourne les dimensions de la fenetre d'indice frame.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                GetSizesFrame (int frame, int *width, int *height)
-#else  /* __STDC__ */
-void                GetSizesFrame (frame, width, height)
-int                 frame;
-int                *width;
-int                *height;
-
-#endif /* __STDC__ */
 {
    *width = FrameTable[frame].FrWidth;
    *height = FrameTable[frame].FrHeight;
@@ -722,13 +581,7 @@ int                *height;
 /*----------------------------------------------------------------------
    TtaGetThotWindow recupere le numero de la fenetre.              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotWindow          TtaGetThotWindow (int frame)
-
-#else  /* __STDC__ */
-ThotWindow          TtaGetThotWindow (frame)
-int                 frame;
-#endif /* __STDC__ */
 {
    return FrRef[frame];
 }
@@ -741,15 +594,7 @@ int                 frame;
    sinon rend assoc faux.                                  
    Procedure differente de GetDocAndView de docvues.c          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GetDocAndView (int frame, PtrDocument * pDoc, int *view, ThotBool * assoc)
-#else  /* __STDC__ */
-void                GetDocAndView (frame, pDoc, view, assoc)
-int                 frame;
-PtrDocument        *pDoc;
-int                *view;
-ThotBool           *assoc;
-#endif /* __STDC__ */
+void  GetDocAndView (int frame, PtrDocument * pDoc, int *view, ThotBool * assoc)
 {
    *pDoc = TheDoc;
    if (CurAssocNum > 0)
@@ -768,13 +613,7 @@ ThotBool           *assoc;
 /*----------------------------------------------------------------------
    OpenPSFile opens the printing file and write the PS prologue.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          OpenPSFile (PtrDocument pDoc, int *volume)
-#else  /* __STDC__ */
-static int          OpenPSFile (pDoc, volume)
-PtrDocument         pDoc;
-int                *volume;
-#endif /* __STDC__ */
 {
   FILE               *PSfile;
   CHAR_T              tmp[MAX_PATH];
@@ -1550,29 +1389,24 @@ int                *volume;
 /*----------------------------------------------------------------------
    ClosePSFile ferme le fichier PostScript.                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ClosePSFile (int frame)
-#else  /* __STDC__ */
-static void         ClosePSFile (frame)
-int                 frame;
-#endif /* __STDC__ */
 {
-   FILE               *PSfile;
+  FILE               *PSfile;
 
-   PSfile = (FILE *) FrRef[frame];
-   /* Est-ce la fenetre principale ? */
-   if (frame == 1)
-     {
-	/* Oui -> on ferme le fichier */
-	fprintf (PSfile, "%%%%%%%%Trailer\nEndThot\n%%%%%%%%PaginateView: %d\n", NumberOfPages);
-
-	fclose (PSfile);
-     }
-   FrRef[frame] = 0;
-   /* Libere toutes les boites allouees */
-   ClearConcreteImage (frame);
-   /* On libere les polices de caracteres utilisees */
-   ThotFreeFont (frame);
+  PSfile = (FILE *) FrRef[frame];
+  /* Est-ce la fenetre principale ? */
+  if (frame == 1)
+    {
+      /* Oui -> on ferme le fichier */
+      fprintf (PSfile, "%%%%%%%%Trailer\nEndThot\n%%%%%%%%PaginateView: %d\n", NumberOfPages);
+      
+      fclose (PSfile);
+    }
+  FrRef[frame] = 0;
+  /* Libere toutes les boites allouees */
+  ClearConcreteImage (frame);
+  /* On libere les polices de caracteres utilisees */
+  ThotFreeFont (frame);
 }
 
 
@@ -1580,15 +1414,7 @@ int                 frame;
    GivePageHeight force la limite d'affichage dans la fenetre frame a`   
    la hauteur d'une page de texte.                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         GivePageHeight (int frame, int org, int height)
-#else  /* __STDC__ */
-static void         GivePageHeight (frame, org, height)
-int                 frame;
-int                 org;
-int                 height;
-
-#endif /* __STDC__ */
 {
    int                 y, h, framexmin, framexmax;
    ViewFrame          *pFrame;
@@ -1617,13 +1443,7 @@ int                 height;
    auquel appartient l'element Marque Page pointe par pPageEl.        
    Cette procedure utilise PageHeaderFooter (commune a print et page)         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         SetMargins (PtrElement pPageEl, PtrAbstractBox rootAbsBox)
-#else  /* __STDC__ */
-static void         SetMargins (pPageEl, rootAbsBox)
-PtrElement          pPageEl;
-PtrAbstractBox      rootAbsBox;
-#endif /* __STDC__ */
 {
    PtrPRule            pPRule;
    PtrPSchema          pPSchema;
@@ -1746,13 +1566,7 @@ PtrAbstractBox      rootAbsBox;
    rappel de page. pAb pointe sur le pave d'une marque de page.   	
    Retourne un pointeur sur le pave trouve ou NULL si pas trouve    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrAbstractBox NextPage (PtrAbstractBox pAb)
-#else  /* __STDC__ */
-static PtrAbstractBox NextPage (pAb)
-PtrAbstractBox      pAb;
-
-#endif /* __STDC__ */
 {
    /* cherche la derniere feuille dans la marque de page du debut */
    while (pAb->AbFirstEnclosed != NULL)
@@ -1769,12 +1583,7 @@ PtrAbstractBox      pAb;
 /*----------------------------------------------------------------------
    PrintView calcule l'image imprimable de la vue traitee.   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PrintView (PtrDocument pDoc)
-#else  /* __STDC__ */
-static void         PrintView (pDoc)
-PtrDocument         pDoc;
-#endif /* __STDC__ */
 {
    PtrElement          pEl;
    PtrAbstractBox      rootAbsBox;
@@ -1943,13 +1752,7 @@ PtrDocument         pDoc;
 /*----------------------------------------------------------------------
    PrintDocument							
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int         PrintDocument (PtrDocument pDoc, int viewsCounter)
-#else  /* __STDC__ */
-static int         PrintDocument (pDoc, viewsCounter)
-PtrDocument        pDoc;
-int                viewsCounter;
-#endif /* __STDC__ */
 {
   PtrSSchema          pSS;
   PtrPSchema          pPSchema;
@@ -2208,16 +2011,7 @@ int                viewsCounter;
   l'image avant pPageAb sauf dans si pPageAb se trouve dans un element
   BoTable.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb, PtrAbstractBox pNextPageAb, PtrAbstractBox rootAbsBox, int clipOrg)
-#else  /* __STDC__ */
-void                PrintOnePage (pDoc, pPageAb, pNextPageAb, rootAbsBox, clipOrg)
-PtrDocument         pDoc;
-PtrAbstractBox      pPageAb;
-PtrAbstractBox      pNextPageAb;
-PtrAbstractBox      rootAbsBox;
-int                 clipOrg;
-#endif /* __STDC__ */
+void  PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb, PtrAbstractBox pNextPageAb, PtrAbstractBox rootAbsBox, int clipOrg)
 {
   ThotBool            stop, emptyImage;
   PtrAbstractBox      pAb, pSpaceAb;
@@ -2385,15 +2179,7 @@ static int       n = 1;
    ClientSend
    Send a message to the editor.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ClientSend (ThotWindow clientWindow, STRING name, int messageID)
-#else  /* __STDC__ */
-static void         ClientSend (clientWindow, name, messageID)
-ThotWindow          clientWindow;
-STRING              name;
-int                 messageID;
-
-#endif /* __STDC__ */
+static void  ClientSend (ThotWindow clientWindow, STRING name, int messageID)
 {
 #ifndef _WINDOWS
    Atom                atom;
@@ -2423,13 +2209,7 @@ int                 messageID;
    DisplayConfirmMessage
    displays the given message (text).
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DisplayConfirmMessage (STRING text)
-#else  /* __STDC__ */
-void                DisplayConfirmMessage (text)
-STRING              text;
-
-#endif /* __STDC__ */
 {
   ClientSend (thotWindow, text, TMSG_LIB_STRING);
 }
@@ -2438,14 +2218,7 @@ STRING              text;
    DisplayMessage
    displays the given message (text).
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DisplayMessage (STRING text, int msgType)
-#else  /* __STDC__ */
-void                DisplayMessage (text, msgType)
-STRING              text;
-int                 msgType;
-
-#endif /* __STDC__ */
 {
 #ifndef _WINDOWS
   CHAR_T              cmd[800];
@@ -2471,12 +2244,7 @@ int                 msgType;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaError (int errorCode)
-#else  /* __STDC__ */
-void                TtaError (errorCode)
-int                 errorCode;
-#endif /* __STDC__ */
 {
    UserErrorCode = errorCode;
 }
@@ -2486,12 +2254,7 @@ int                 errorCode;
    LoadReferedDocuments    charge tous les documents reference's   
    par le document pointe' par pDoc.			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         LoadReferedDocuments (PtrDocument pDoc)
-#else  /* __STDC__ */
-static void         LoadReferedDocuments (pDoc)
-PtrDocument         pDoc;
-#endif /* __STDC__ */
 {
   PtrReferredDescr    pRefD;
   PtrDocument         pDocRef;
@@ -2534,30 +2297,11 @@ PtrDocument         pDoc;
    Main program                                                           
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
-#ifdef __STDC__
-DLLEXPORT void PrintDoc (HWND hWnd, int argc, STRING *argv, HDC PrinterDC, ThotBool isTrueColors, int depth, STRING tmpDocName, STRING tmpDir, HINSTANCE hInst, ThotBool buttonCmd)
-#else  /* !__STDC__ */
-DLLEXPORT void PrintDoc (hWnd, argc, argc, PrinterDC, isTrueColors, depth, tmpDocName, tmpDir, hInstance, buttonCmd)
-HWND           hWnd;
-int            argc;
-STRING        *argv;
-HDC            PrinterDC;
-ThotBool       isTrueColors;
-int            depth;
-STRING         tmpDocName; 
-STRING         tmpDir;
-HINSTANCE      hInst;
-ThotBool       buttonCmd;
-#endif /* __STDC__ */
-#else  /* !_WINDOWS */
-#ifdef __STDC__
+DLLEXPORT void PrintDoc (HWND hWnd, int argc, STRING *argv, HDC PrinterDC,
+			 ThotBool isTrueColors, int depth, STRING tmpDocName,
+			 STRING tmpDir, HINSTANCE hInst, ThotBool buttonCmd)
+#else  /* _WINDOWS */
 int                 main (int argc, char **argv)
-#else  /* __STDC__ */
-int                 main (argc, argv)
-int                 argc;
-char              **argv;
-
-#endif /* __STDC__ */
 #endif /* _WINDOWS */
 {
   STRING              realName = (STRING) NULL;

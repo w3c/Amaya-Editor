@@ -1269,12 +1269,7 @@ ThotEvent             *ev;
 
    Processes one given event in the application.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaHandleOneEvent (ThotEvent *ev)
-#else  /* __STDC__ */
-void                TtaHandleOneEvent (ev)
-ThotEvent             *ev;
-#endif /* __STDC__ */
 {
 #ifdef _WINDOWS
   if (ev->message != WM_QUIT)
@@ -1286,7 +1281,7 @@ ThotEvent             *ev;
 #ifndef _GTK
   PtrDocument         pDoc;
   ThotWindow          w;
-  STRING              s;
+  char               *s;
   int                 frame;
   int                 view, i;
   ThotBool            assoc;
@@ -1297,20 +1292,23 @@ ThotEvent             *ev;
       s = XGetAtomName (ev->xany.display, ((XClientMessageEvent *) ev)->message_type);
       if (s == NULL)
 	return;
-      if (!ustrcmp (s, "WM_PROTOCOLS"))
+      if (!strcmp (s, "WM_PROTOCOLS"))
 	{
 	  /* The client message comes from the Window Manager */
 	  w = ev->xany.window;
+	  XFree (s);
 	  s = XGetAtomName (ev->xany.display, ((XClientMessageEvent *) ev)->data.l[0]);
-	  if (!ustrcmp (s, "WM_DELETE_WINDOW"))
+	  if (!strcmp (s, "WM_DELETE_WINDOW"))
 	    {
-	      if (FrRef[0] != 0 && XtWindowOfObject (XtParent (FrameTable[0].WdFrame)) == w)
+	      if (FrRef[0] != 0 &&
+		  XtWindowOfObject (XtParent (FrameTable[0].WdFrame)) == w)
 		TtcQuit (0, 0);
 	      else
 		{
 		  for (frame = 1; frame <= MAX_FRAME; frame++)
 		    {
-		      if (FrRef[frame] != 0 && XtWindowOfObject (XtParent (XtParent (XtParent (FrameTable[frame].WdFrame)))) == w)
+		      if (FrRef[frame] != 0 &&
+			  XtWindowOfObject (XtParent (XtParent (XtParent (FrameTable[frame].WdFrame)))) == w)
 			break;
 		    }
 		  if (frame <= MAX_FRAME)
@@ -1324,14 +1322,17 @@ ThotEvent             *ev;
 		      return;
 		  TtaQuit();
 		}
+	      XFree (s);
 	    }
 	}
-      else if (!ustrcmp (s, "THOT_MESSAGES"))
+      else if (!strcmp (s, "THOT_MESSAGES"))
 	{
+	  XFree (s);
 	  /* The client message comes from print */
 	  s = XGetAtomName (ev->xany.display, ((XClientMessageEvent *) ev)->data.l[0]);
 	  i = ((XClientMessageEvent *) ev)->data.l[1];
 	  TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, i), s);
+	  XFree (s);
 	}
     }
   else if (ev->type == KeyPress)
