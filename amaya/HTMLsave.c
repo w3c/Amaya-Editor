@@ -85,6 +85,8 @@ static AttSearch    SRC_attr_tab[] = {
 static char        *QuotedText;
 
 
+/* old generated doctype definitions */
+/*
 static char *HTMLDocTypes_1[] =
 {
   "\"-//W3C//DTD XHTML Basic 1.0//EN\"",
@@ -108,6 +110,7 @@ static char *HTMLDocTypes_2[] =
   "\"http://www.w3.org/TR/html4/loose.dtd\">\n",
   "\"http://www.w3.org/TR/html4/frameset.dtd\">\n",
 };
+*/
 
 #include "AHTURLTools_f.h"
 #include "EDITimage_f.h"
@@ -842,8 +845,7 @@ void SaveDocumentAs (Document doc, View view)
   ----------------------------------------------------------------------*/
 void SetNamespacesAndDTD (Document doc)
 {
-   Element		root, el, head, meta, docEl;
-   Element		doctype, comment, pi, next, child, text;
+   Element		root, el, head, meta, docEl, doctype;
    ElementType		elType;
    AttributeType	attrType;
    Attribute		attr, charsetAttr;
@@ -853,7 +855,10 @@ void SetNamespacesAndDTD (Document doc)
 #define MAX_CHARSET_LEN 50
    char                 Charset[MAX_CHARSET_LEN];
    char		        buffer[300];
-   ThotBool		useMathML, useSVG, useHTML, useXML, useFrames;
+   ThotBool		useMathML, useSVG, useHTML, useXML;
+#ifdef OLD_EXPORT
+   ThotBool		useFrames;
+#endif /* OLD_EXPORT */
    int                  oldStructureChecking;
 
 #ifdef ANNOTATIONS
