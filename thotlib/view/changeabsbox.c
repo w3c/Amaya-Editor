@@ -2334,7 +2334,7 @@ void DestroyAbsBoxesView (PtrElement pEl, PtrDocument pDoc, ThotBool verify,
 	    {
 	      SetDeadAbsBox (pAb);
 	      if (pAb == AbsBoxSelectedAttr)
-		CancelSelection;
+		CancelSelection ();
 	      if (PcFirst == NULL)
 		PcFirst = pAb;
 	      PcLast = pAb;
