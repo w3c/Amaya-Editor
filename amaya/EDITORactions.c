@@ -140,31 +140,34 @@ View                view;
 
    root = TtaGetMainRoot (document);
    elType = TtaGetElementType (root);
-   elType.ElTypeNum = HTML_EL_BODY;
-   body = TtaSearchTypedElement (elType, SearchInTree, root);
-   if (body == NULL)
-      return;
-   /* if there is no Language attribute on the BODY, create one */
-   attrType.AttrSSchema = TtaGetDocumentSSchema (document);
-   attrType.AttrTypeNum = HTML_ATTR_Langue;
-   attr = TtaGetAttribute (body, attrType);
-   if (attr == NULL)
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
      {
-	/* create the Language attribute */
-	attr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (body, attr, document);
-        TtaSetAttributeText (attr, "en", body, document);
-     }
-   /* get the current selection */
-   TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
-   if (el == NULL)
-     {
-	/* no current selection in the document */
-	/* select the first character in the body */
-	elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-	el = TtaSearchTypedElement (elType, SearchInTree, body);
-	if (el != NULL)
-	   TtaSelectString (document, el, 1, 0);
+       elType.ElTypeNum = HTML_EL_BODY;
+       body = TtaSearchTypedElement (elType, SearchInTree, root);
+       if (body == NULL)
+	 return;
+       /* if there is no Language attribute on the BODY, create one */
+       attrType.AttrSSchema = elType.ElSSchema;
+       attrType.AttrTypeNum = HTML_ATTR_Langue;
+       attr = TtaGetAttribute (body, attrType);
+       if (attr == NULL)
+	 {
+	   /* create the Language attribute */
+	   attr = TtaNewAttribute (attrType);
+	   TtaAttachAttribute (body, attr, document);
+	   TtaSetAttributeText (attr, "en", body, document);
+	 }
+       /* get the current selection */
+       TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
+       if (el == NULL)
+	 {
+	   /* no current selection in the document */
+	   /* select the first character in the body */
+	   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	   el = TtaSearchTypedElement (elType, SearchInTree, body);
+	   if (el != NULL)
+	     TtaSelectString (document, el, 1, 0);
+	 }
      }
    TtcSpellCheck (document, view);
 }
@@ -184,7 +187,14 @@ View                view;
    Element             el, br, parent;
    int                 firstChar, lastChar;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
+   TtaGiveLastSelectedElement (document, &el, &firstChar, &lastChar);
+   if (el == NULL)
+     return;
+   elType = TtaGetElementType (el);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
+     /* not within HTML element */
+     return;
+
    elType.ElTypeNum = HTML_EL_BR;
    TtaCreateElement (elType, document);
    TtaGiveLastSelectedElement (document, &el, &firstChar, &lastChar);
@@ -223,6 +233,84 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
+  MoveWithinHead moves the insert point according with the element type
+  to be inserted.
+  Return TRUE if it succeeds.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static boolean      MoveWithinHead (Document document, View view, int elementT)
+#else  /* __STDC__ */
+static boolean      MoveWithinHead (document, view, elementT)
+Document            document;
+View                view;
+int                 elementT;
+#endif /* __STDC__ */
+{
+   ElementType         elType;
+   Element             el, child, root;
+   SSchema             docSchema;
+   int                 i, j;
+
+   docSchema = TtaGetDocumentSSchema (document);
+   if (strcmp(TtaGetSSchemaName (docSchema), "HTML") != 0)
+     /* not within HTML document */
+     return (FALSE);
+   else
+     {
+       elType.ElSSchema = docSchema;
+       elType.ElTypeNum = elementT;
+       root = TtaGetMainRoot (document);
+       child = TtaSearchTypedElement (elType, SearchForward, root);
+       
+       /* give current position */
+       TtaGiveFirstSelectedElement (document, &el, &i, &j);
+       if (el != NULL)
+	 {
+	   elType = TtaGetElementType (el);
+	   if (elType.ElSSchema == docSchema && elType.ElTypeNum == elementT)
+	     /* it's OK */
+	     return (TRUE);
+	   else if (elType.ElSSchema == docSchema
+		    && elType.ElTypeNum == HTML_EL_HEAD && child == NULL)
+	     return (TRUE);
+	   else
+	     {
+	       /* it's not the same element or the HEAD element */
+	       el = TtaGetParent (el);
+	       if (el != NULL)
+		 {
+		   elType = TtaGetElementType (el);
+		   if (elType.ElSSchema == docSchema && elType.ElTypeNum == HTML_EL_HEAD && child == NULL)
+		     /* A child of the HEAD element is selected */
+		     return (TRUE);
+		   else
+		     el = NULL;
+		 }
+	     }
+	 }
+       
+       if (el == NULL && child == NULL)
+	 {
+	   /* locate the HEAD element */
+	   elType.ElSSchema = docSchema;
+	   elType.ElTypeNum = HTML_EL_HEAD;
+	   el = TtaSearchTypedElement (elType, SearchForward, root);
+	 }
+
+       if (el != NULL && child == NULL)
+	 /* select the last child of the HEAD */
+	 child = TtaGetLastChild (el);
+
+       if (child != NULL)
+	 TtaSelectElement (document, child);
+       else
+	 TtaSelectElement (document, el);
+       return (TRUE);
+     }
+}
+
+
+/*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateIsIndex (Document document, View view)
@@ -235,9 +323,12 @@ View                view;
 {
    ElementType         elType;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_ISINDEX;
-   TtaCreateElement (elType, document);
+   if (MoveWithinHead (document, view, HTML_EL_ISINDEX))
+     {
+       elType.ElSSchema = TtaGetDocumentSSchema (document);
+       elType.ElTypeNum = HTML_EL_ISINDEX;
+       TtaCreateElement (elType, document);
+     }
 }
 
 
@@ -253,10 +344,25 @@ View                view;
 #endif /* __STDC__ */
 {
    ElementType         elType;
+   Element             el;
+   int                 firstSelectedChar, i;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_LINK;
-   TtaCreateElement (elType, document);
+
+   if (MoveWithinHead (document, view, HTML_EL_LINK))
+     {
+       elType.ElSSchema = TtaGetDocumentSSchema (document);
+       elType.ElTypeNum = HTML_EL_LINK;
+       TtaCreateElement (elType, document);
+       /* Select a new destination */
+       TtaGiveFirstSelectedElement (document, &el, &firstSelectedChar, &i);
+       elType = TtaGetElementType (el);
+       while (elType.ElTypeNum != HTML_EL_LINK)
+	 {
+	   el = TtaGetParent (el);
+	   elType = TtaGetElementType (el);
+	 }
+       SelectDestination (document, el);
+     }
 }
 
 
@@ -273,9 +379,12 @@ View                view;
 {
    ElementType         elType;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_BASE;
-   TtaCreateElement (elType, document);
+   if (MoveWithinHead (document, view, HTML_EL_BASE))
+     {
+       elType.ElSSchema = TtaGetDocumentSSchema (document);
+       elType.ElTypeNum = HTML_EL_BASE;
+       TtaCreateElement (elType, document);
+     }
 }
 
 
@@ -292,9 +401,12 @@ View                view;
 {
    ElementType         elType;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_META;
-   TtaCreateElement (elType, document);
+   if (MoveWithinHead (document, view, HTML_EL_META))
+     {
+       elType.ElSSchema = TtaGetDocumentSSchema (document);
+       elType.ElTypeNum = HTML_EL_META;
+       TtaCreateElement (elType, document);
+     }
 }
 
 
@@ -312,8 +424,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Comment_;
-   TtaInsertElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Comment_;
+       TtaInsertElement (elType, document);
+     }
 }
 
 
@@ -331,8 +446,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Paragraph;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Paragraph;
+       TtaCreateElement (elType, document);
+     }
 }
 
 
@@ -350,8 +468,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_H1;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_H1;
+       TtaCreateElement (elType, document);
+     }
 }
 
 
@@ -369,8 +490,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_H2;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_H2;
+       TtaCreateElement (elType, document);
+     }
 }
 
 
@@ -407,8 +531,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_H4;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_H4;
+       TtaCreateElement (elType, document);
+     }
 }
 
 
@@ -426,8 +553,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_H5;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_H5;
+       TtaCreateElement (elType, document);
+     }
 }
 
 
@@ -445,8 +575,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_H6;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_H6;
+       TtaCreateElement (elType, document);
+     }
 }
 
 
@@ -464,8 +597,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Unnumbered_List;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Unnumbered_List;
+       TtaCreateElement (elType, document);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -482,8 +618,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Numbered_List;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Numbered_List;
+       TtaCreateElement (elType, document);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -500,8 +639,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Menu;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Menu;
+       TtaCreateElement (elType, document);
+     }
 }
 
 
@@ -519,8 +661,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Directory;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Directory;
+       TtaCreateElement (elType, document);
+     }
 }
 
 
@@ -538,8 +683,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Definition_List;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Definition_List;
+       TtaCreateElement (elType, document);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -556,8 +704,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Term;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Term;
+       TtaCreateElement (elType, document);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -574,8 +725,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Definition;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Definition;
+       TtaCreateElement (elType, document);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -592,8 +746,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Horizontal_Rule;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Horizontal_Rule;
+       TtaCreateElement (elType, document);
+     }
 }
 
 
@@ -611,8 +768,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Block_Quote;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Block_Quote;
+       TtaCreateElement (elType, document);
+     }
 }
 
 
@@ -630,8 +790,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Preformatted;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Preformatted;
+       TtaCreateElement (elType, document);
+     }
 }
 
 
@@ -649,8 +812,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Address;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Address;
+       TtaCreateElement (elType, document);
+     }
 }
 
 
@@ -668,8 +834,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Table;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Table;
+       TtaCreateElement (elType, document);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -686,8 +855,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_CAPTION;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_CAPTION;
+       TtaCreateElement (elType, document);
+     }
 }
 
 
@@ -705,8 +877,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_thead;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_thead;
+       TtaCreateElement (elType, document);
+     }
 }
 
 
@@ -724,8 +899,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_tbody;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_tbody;
+       TtaCreateElement (elType, document);
+     }
 }
 
 
@@ -743,8 +921,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_tfoot;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_tfoot;
+       TtaCreateElement (elType, document);
+     }
 }
 
 
@@ -762,8 +943,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Table_row;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Table_row;
+       TtaCreateElement (elType, document);
+     }
 }
 
 
@@ -781,8 +965,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Data_cell;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Data_cell;
+       TtaCreateElement (elType, document);
+     }
 }
 
 
@@ -800,8 +987,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Heading_cell;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Heading_cell;
+       TtaCreateElement (elType, document);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -827,9 +1017,13 @@ View                view;
      {
 	/* there is a selection */
 	elType = TtaGetElementType (el);
-	while (elType.ElTypeNum != HTML_EL_BODY && elType.ElTypeNum != HTML_EL_Form)
+	while (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0
+	       && elType.ElTypeNum != HTML_EL_BODY
+	       && elType.ElTypeNum != HTML_EL_Form)
 	  {
 	     el = TtaGetParent (el);
+	     if (el == NULL)
+	       return (el);
 	     elType = TtaGetElementType (el);
 	  }
 
@@ -841,7 +1035,7 @@ View                view;
 	     TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
 	  }
      }
-   return el;
+   return (el);
 }
 
 
@@ -859,8 +1053,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Form;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Form;
+       TtaCreateElement (elType, document);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -877,8 +1074,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Toggle_Item;
-   TtaInsertElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Toggle_Item;
+       TtaInsertElement (elType, document);
+     }
 }
 
 
@@ -896,8 +1096,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Radio_Item;
-   TtaInsertElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Radio_Item;
+       TtaInsertElement (elType, document);
+     }
 }
 
 
@@ -963,10 +1166,13 @@ View                view;
 
    el = GetEnclosingForm (document, view);
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Option;
-   TtaInsertElement (elType, document);
-   TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
-   OnlyOneOptionSelected (el, document, FALSE);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Option;
+       TtaInsertElement (elType, document);
+       TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
+       OnlyOneOptionSelected (el, document, FALSE);
+     }
 }
 
 
@@ -985,7 +1191,8 @@ View                view;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Text_Input_Line;
-   TtaInsertElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     TtaInsertElement (elType, document);
 }
 
 
@@ -1003,8 +1210,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Text_Area;
-   TtaInsertElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Text_Area;
+       TtaInsertElement (elType, document);
+     }
 }
 
 
@@ -1022,8 +1232,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Command_Line;
-   TtaInsertElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Command_Line;
+       TtaInsertElement (elType, document);
+     }
 }
 
 
@@ -1206,7 +1419,10 @@ char               *shape;
       return;
 
    elType = TtaGetElementType (el);
-   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
+     /* not within HTML element */
+     return;
+   else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
      {
 	/* The selection is on a IMG */
 	image = el;
@@ -1398,8 +1614,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Division;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Division;
+       TtaCreateElement (elType, document);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -1423,29 +1642,32 @@ View                view;
    int                 firstchar, lastchar;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Object;
-   TtaCreateElement (elType, document);
-
-   /* get the first selected element */
-   TtaGiveFirstSelectedElement (document, &child, &firstchar, &lastchar);
-
-   /* copy SRC attribute of Object_Image into data attribute of Object */
-   el = TtaGetParent(child);
-   attrType.AttrSSchema = elType.ElSSchema;
-   attrType.AttrTypeNum = HTML_ATTR_SRC;
-   attr = TtaGetAttribute (child, attrType);
-   if (attr != NULL)
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
      {
-       length = TtaGetTextAttributeLength (attr);
-       if (length > 0)
+       elType.ElTypeNum = HTML_EL_Object;
+       TtaCreateElement (elType, document);
+
+       /* get the first selected element */
+       TtaGiveFirstSelectedElement (document, &child, &firstchar, &lastchar);
+
+       /* copy SRC attribute of Object_Image into data attribute of Object */
+       el = TtaGetParent(child);
+       attrType.AttrSSchema = elType.ElSSchema;
+       attrType.AttrTypeNum = HTML_ATTR_SRC;
+       attr = TtaGetAttribute (child, attrType);
+       if (attr != NULL)
 	 {
-	   name1 = TtaGetMemory (length + 1);
-	   TtaGiveTextAttributeValue (attr, name1, &length);
-	   attrType.AttrTypeNum = HTML_ATTR_data;
-	   attr = TtaNewAttribute (attrType);
-	   TtaAttachAttribute (el, attr, document);
-	   TtaSetAttributeText (attr, name1, el, document);
-	   TtaFreeMemory (name1);
+	   length = TtaGetTextAttributeLength (attr);
+	   if (length > 0)
+	     {
+	       name1 = TtaGetMemory (length + 1);
+	       TtaGiveTextAttributeValue (attr, name1, &length);
+	       attrType.AttrTypeNum = HTML_ATTR_data;
+	       attr = TtaNewAttribute (attrType);
+	       TtaAttachAttribute (el, attr, document);
+	       TtaSetAttributeText (attr, name1, el, document);
+	       TtaFreeMemory (name1);
+	     }
 	 }
      }
 #endif /* COUGAR */
@@ -1465,8 +1687,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Applet;
-   TtaCreateElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Applet;
+       TtaCreateElement (elType, document);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -1483,8 +1708,11 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Parameter;
-   TtaInsertElement (elType, document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_Parameter;
+       TtaInsertElement (elType, document);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -1568,7 +1796,9 @@ View                view;
    if (firstSelectedElement != NULL)
      {
 	elType = TtaGetElementType (firstSelectedElement);
-	if (elType.ElTypeNum == HTML_EL_Anchor)
+	if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
+	  return;
+    	if (elType.ElTypeNum == HTML_EL_Anchor)
 	   /* the first selected element is an anchor */
 	  {
 	     anchor = firstSelectedElement;

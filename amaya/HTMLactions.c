@@ -169,135 +169,33 @@ Attribute           ignore;
    else
       return (NULL);
 }
-
-
 /*----------------------------------------------------------------------
-   DoubleClick     The user has double-clicked an element.         
+  FollowTheLink follows the link given by the anchor element for a
+  double click on the elSource element.
+  The parameter doc is the document that includes the anchor element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             DoubleClick (NotifyElement * event)
+static boolean      FollowTheLink (Element anchor, Element elSource, Document doc)
 #else  /* __STDC__ */
-boolean             DoubleClick (event)
-NotifyElement      *event;
+static boolean      FollowTheLink (anchor, elSource, doc)
+Element             anchor;
+Element             elSource;
+Document            doc;
 
 #endif /* __STDC__ */
 {
    AttributeType       attrType;
    Attribute           HrefAttr, PseudoAttr, attr;
-   Element             anchor, elFound;
+   Element             elFound;
    ElementType         elType;
-   int                 length;
-   char               *url, *info;
-   char                documentURL[MAX_LENGTH];
    Document            targetDocument;
-   View                view;
    SSchema             docSchema;
-   boolean	       ok;
+   View                view;
+   char                documentURL[MAX_LENGTH];
+   char               *url, *info;
+   int                 length;
 
-   docSchema = TtaGetDocumentSSchema (event->document);
-
-   /* Check if the current element is interested in double click */
-   ok = FALSE;
-   elType = TtaGetElementType (event->element);
-   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
-       elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
-       elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT ||
-       elType.ElTypeNum == HTML_EL_SYMBOL_UNIT)
-     ok = TRUE;
-   else
-     if (elType.ElSSchema == docSchema)
-	if (elType.ElTypeNum == HTML_EL_LINK ||
-	    elType.ElTypeNum == HTML_EL_C_Empty ||
-	    elType.ElTypeNum == HTML_EL_Radio_Input ||
-	    elType.ElTypeNum == HTML_EL_Checkbox_Input ||
-	    elType.ElTypeNum == HTML_EL_Frame ||
-	    elType.ElTypeNum == HTML_EL_Option_Menu ||
-	    elType.ElTypeNum == HTML_EL_Submit_Input ||
-	    elType.ElTypeNum == HTML_EL_Reset_Input)
-	   ok = TRUE;
-   if (!ok)
-      /* DoubleClick is disabled */
-      return FALSE;
-
-   if (W3Loading)
-      /* suspend current loading */
-      StopTransfer (W3Loading, 1);
-
-   if (elType.ElTypeNum == HTML_EL_Frame
-       || elType.ElTypeNum == HTML_EL_Submit_Input
-       || elType.ElTypeNum == HTML_EL_Reset_Input)
-     {
-	if (elType.ElTypeNum == HTML_EL_Frame)
-	   elType = TtaGetElementType (TtaGetParent (event->element));
-	if (elType.ElTypeNum == HTML_EL_Submit_Input
-	    || elType.ElTypeNum == HTML_EL_Reset_Input)
-	   /* it is a double click on submit element */
-	   SubmitForm (event->document, event->element);
-	return TRUE;
-     }
-   else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-     {
-       /* it is a double click on graphic submit element? */
-       attrType.AttrSSchema = docSchema;
-       attrType.AttrTypeNum = HTML_ATTR_NAME;
-       attr = TtaGetAttribute (event->element, attrType);
-       if (attr)
-	 {
-	   /* it's a graphic submit element */
-	   SubmitForm (event->document, event->element);
-	   return TRUE;
-	 }
-     }
-   else if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-     {
-	/* is it an option menu ? */
-	elFound = TtaGetParent (event->element);
-	elType = TtaGetElementType (elFound);
-	if (elType.ElTypeNum == HTML_EL_Option &&
-	    elType.ElSSchema == docSchema)
-	  {
-	     SelectOneOption (event->document, elFound);
-	     return TRUE;
-	  }
-     }
-   else if (elType.ElTypeNum == HTML_EL_Option_Menu &&
-	    elType.ElSSchema == docSchema)
-     {
-	/* it is an option menu */
-	elFound = TtaGetFirstChild (event->element);
-	elType = TtaGetElementType (elFound);
-	if (elType.ElTypeNum == HTML_EL_Option)
-	  {
-	     SelectOneOption (event->document, elFound);
-	     return TRUE;
-	  }
-     }
-   else if (elType.ElTypeNum == HTML_EL_Checkbox_Input &&
-	    elType.ElSSchema == docSchema)
-     {
-	SelectCheckbox (event->document, event->element);
-	return TRUE;
-     }
-   else if (elType.ElTypeNum == HTML_EL_Radio_Input &&
-	    elType.ElSSchema == docSchema)
-     {
-	SelectOneRadio (event->document, event->element);
-	return TRUE;
-     }
-
-   /* Search the anchor or LINK element */
-   anchor = SearchAnchor (event->document, event->element, TRUE);
-   if (anchor == NULL)
-      if (elType.ElTypeNum == HTML_EL_LINK &&
-	  elType.ElSSchema == docSchema)
-	 anchor = event->element;
-      else
-	{
-	   elType.ElTypeNum = HTML_EL_LINK;
-	   elType.ElSSchema = docSchema;
-	   anchor = TtaGetTypedAncestor (event->element, elType);
-	}
-
+   docSchema = TtaGetDocumentSSchema (doc);
    if (anchor != NULL)
      {
 	/* search HREF attribute */
@@ -329,9 +227,9 @@ NotifyElement      *event;
 		  if (PseudoAttr == NULL)
 		    {
 		       PseudoAttr = TtaNewAttribute (attrType);
-		       TtaAttachAttribute (anchor, PseudoAttr, event->document);
+		       TtaAttachAttribute (anchor, PseudoAttr, doc);
 		    }
-		  TtaSetAttributeText (PseudoAttr, "active", anchor, event->document);
+		  TtaSetAttributeText (PseudoAttr, "active", anchor, doc);
 	       }
 	     /* get the URL itself */
 	     TtaGiveTextAttributeValue (HrefAttr, url, &length);
@@ -343,7 +241,7 @@ NotifyElement      *event;
 	     if (url[0] == '#')
 	       {
 		  /* the target element is part of the same document */
-		  targetDocument = event->document;
+		  targetDocument = doc;
 	       }
 	     else
 	       {
@@ -353,34 +251,42 @@ NotifyElement      *event;
 		  /* is the source element an image map */
 		  attrType.AttrSSchema = docSchema;
 		  attrType.AttrTypeNum = HTML_ATTR_ISMAP;
-		  attr = TtaGetAttribute (event->element, attrType);
-		  if (attr != NULL) {
-		    info = GetActiveImageInfo (event->document, event->element);
-		    if (info != NULL)
-		      {
-			strcat (documentURL, info);
-			TtaFreeMemory (info);
-		      }
-		  }
+		  attr = TtaGetAttribute (elSource, attrType);
+		  if (attr != NULL)
+		    {
+		      info = GetActiveImageInfo (doc, elSource);
+		      if (info != NULL)
+			{
+			  strcat (documentURL, info);
+			  TtaFreeMemory (info);
+			}
+		    }
 
 		  /* get the referred document */
 		  targetDocument = GetHTMLDocument (documentURL, NULL,
-				   event->document, event->document, DC_TRUE);
+				   doc, doc, DC_TRUE);
 		  /* if the referred document has replaced the clicked
 		     document, pseudo attribute "visited" should not be set */
-		  if (targetDocument == event->document)
+		  if (targetDocument == doc)
 		     PseudoAttr = NULL;
 	       }
 
 	     TtaSetSelectionMode (TRUE);
 	     if (PseudoAttr != NULL)
-	       TtaSetAttributeText (PseudoAttr, "visited", anchor, event->document);
+	       TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
 	     if (url[0] == '#' && targetDocument != 0)
 	       {
 		  /* attribute HREF contains the NAME of a target anchor */
 		  elFound = SearchNAMEattribute (targetDocument, &url[1], NULL);
 		  if (elFound != NULL)
 		    {
+		      elType = TtaGetElementType (elFound);
+		      if (elType.ElSSchema == docSchema && elType.ElTypeNum == HTML_EL_LINK)
+			{
+			  /* the target is a link element, follow this link */
+			  return (FollowTheLink (elFound, elSource, doc));
+			}
+		      else
 		       /* show the target element in all views */
 		       for (view = 1; view < 4; view++)
 			  if (TtaIsViewOpened (targetDocument, view))
@@ -390,10 +296,136 @@ NotifyElement      *event;
 	     if (targetDocument > 0)
 	       TtaRaiseView (targetDocument, 1);
 	     TtaFreeMemory (url);
-	     return TRUE;
+	     return (TRUE);
 	  }
      }
-   return FALSE;		/* let Thot perform normal operation */
+   return (FALSE);
+}
+
+
+/*----------------------------------------------------------------------
+   DoubleClick     The user has double-clicked an element.         
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean             DoubleClick (NotifyElement * event)
+#else  /* __STDC__ */
+boolean             DoubleClick (event)
+NotifyElement      *event;
+
+#endif /* __STDC__ */
+{
+   AttributeType       attrType;
+   Attribute           attr;
+   Element             anchor, elFound;
+   ElementType         elType;
+   SSchema             docSchema;
+   boolean	       ok;
+
+   docSchema = TtaGetDocumentSSchema (event->document);
+
+   /* Check if the current element is interested in double click */
+   ok = FALSE;
+   elType = TtaGetElementType (event->element);
+   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
+       elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
+       elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT ||
+       elType.ElTypeNum == HTML_EL_SYMBOL_UNIT)
+     ok = TRUE;
+   else
+     if (elType.ElSSchema == docSchema)
+	if (elType.ElTypeNum == HTML_EL_LINK ||
+	    elType.ElTypeNum == HTML_EL_C_Empty ||
+	    elType.ElTypeNum == HTML_EL_Radio_Input ||
+	    elType.ElTypeNum == HTML_EL_Checkbox_Input ||
+	    elType.ElTypeNum == HTML_EL_Frame ||
+	    elType.ElTypeNum == HTML_EL_Option_Menu ||
+	    elType.ElTypeNum == HTML_EL_Submit_Input ||
+	    elType.ElTypeNum == HTML_EL_Reset_Input)
+	   ok = TRUE;
+   if (!ok)
+      /* DoubleClick is disabled */
+      return (FALSE);
+
+   if (W3Loading)
+      /* suspend current loading */
+      StopTransfer (W3Loading, 1);
+
+   if (elType.ElTypeNum == HTML_EL_Frame
+       || elType.ElTypeNum == HTML_EL_Submit_Input
+       || elType.ElTypeNum == HTML_EL_Reset_Input)
+     {
+	if (elType.ElTypeNum == HTML_EL_Frame)
+	   elType = TtaGetElementType (TtaGetParent (event->element));
+	if (elType.ElTypeNum == HTML_EL_Submit_Input
+	    || elType.ElTypeNum == HTML_EL_Reset_Input)
+	   /* it is a double click on submit element */
+	   SubmitForm (event->document, event->element);
+	return (TRUE);
+     }
+   else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+     {
+       /* it is a double click on graphic submit element? */
+       attrType.AttrSSchema = docSchema;
+       attrType.AttrTypeNum = HTML_ATTR_NAME;
+       attr = TtaGetAttribute (event->element, attrType);
+       if (attr)
+	 {
+	   /* it's a graphic submit element */
+	   SubmitForm (event->document, event->element);
+	   return (TRUE);
+	 }
+     }
+   else if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+     {
+	/* is it an option menu ? */
+	elFound = TtaGetParent (event->element);
+	elType = TtaGetElementType (elFound);
+	if (elType.ElTypeNum == HTML_EL_Option &&
+	    elType.ElSSchema == docSchema)
+	  {
+	     SelectOneOption (event->document, elFound);
+	     return (TRUE);
+	  }
+     }
+   else if (elType.ElTypeNum == HTML_EL_Option_Menu &&
+	    elType.ElSSchema == docSchema)
+     {
+	/* it is an option menu */
+	elFound = TtaGetFirstChild (event->element);
+	elType = TtaGetElementType (elFound);
+	if (elType.ElTypeNum == HTML_EL_Option)
+	  {
+	     SelectOneOption (event->document, elFound);
+	     return (TRUE);
+	  }
+     }
+   else if (elType.ElTypeNum == HTML_EL_Checkbox_Input &&
+	    elType.ElSSchema == docSchema)
+     {
+	SelectCheckbox (event->document, event->element);
+	return (TRUE);
+     }
+   else if (elType.ElTypeNum == HTML_EL_Radio_Input &&
+	    elType.ElSSchema == docSchema)
+     {
+	SelectOneRadio (event->document, event->element);
+	return (TRUE);
+     }
+
+   /* Search the anchor or LINK element */
+   anchor = SearchAnchor (event->document, event->element, TRUE);
+   if (anchor == NULL)
+      if (elType.ElTypeNum == HTML_EL_LINK &&
+	  elType.ElSSchema == docSchema)
+	 anchor = event->element;
+      else
+	{
+	   elType.ElTypeNum = HTML_EL_LINK;
+	   elType.ElSSchema = docSchema;
+	   anchor = TtaGetTypedAncestor (event->element, elType);
+	}
+
+   return (FollowTheLink (anchor, event->element, event->document));
 }
 
 /*----------------------------------------------------------------------

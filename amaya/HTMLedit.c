@@ -202,26 +202,20 @@ Element             el;
    ElementType         elType;
    Element             elText;
    Language            lang;
-   SSchema             docSchema;
    char               *text, url[MAX_LENGTH];
    int                 length, i, space;
    boolean             found;
+   boolean             withinHTML;
 
-   docSchema = TtaGetDocumentSSchema (doc);
    elType = TtaGetElementType (el);
+   withinHTML = (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0);
    /* get the NAME or ID attribute */
    attrType.AttrSSchema = elType.ElSSchema;
-   if (docSchema == elType.ElSSchema &&
-       (elType.ElTypeNum == HTML_EL_Anchor || elType.ElTypeNum == HTML_EL_MAP))
-     {
-       attrType.AttrTypeNum = HTML_ATTR_NAME;
-       attr = TtaGetAttribute (el, attrType);
-     }
+   if (withinHTML && (elType.ElTypeNum == HTML_EL_Anchor || elType.ElTypeNum == HTML_EL_MAP))
+     attrType.AttrTypeNum = HTML_ATTR_NAME;
    else
-     {
-       attrType.AttrTypeNum = HTML_ATTR_ID;
-       attr = TtaGetAttribute (el, attrType);
-     }
+     attrType.AttrTypeNum = HTML_ATTR_ID;
+   attr = TtaGetAttribute (el, attrType);
 
    if (attr == 0)
      {
@@ -230,10 +224,15 @@ Element             el;
      }
 
    /* get the Label text to build the name value */
-   if (docSchema == elType.ElSSchema && elType.ElTypeNum == HTML_EL_MAP)
+   if (withinHTML && elType.ElTypeNum == HTML_EL_MAP)
      {
        /* mapxxx for a map element */
        strcpy (url, "map");
+     }
+   else if (withinHTML && elType.ElTypeNum == HTML_EL_LINK)
+     {
+       /* mapxxx for a map element */
+       strcpy (url, "link");
      }
    else
      {
@@ -538,15 +537,10 @@ Document     doc;
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
    if (elType.ElTypeNum == HTML_EL_Anchor || elType.ElTypeNum == HTML_EL_MAP)
-     {
-       attrType.AttrTypeNum = HTML_ATTR_NAME;
-       attr = TtaGetAttribute (el, attrType);
-     }
+     attrType.AttrTypeNum = HTML_ATTR_NAME;
    else
-     {
-       attrType.AttrTypeNum = HTML_ATTR_ID;
-       attr = TtaGetAttribute (el, attrType);
-     }
+     attrType.AttrTypeNum = HTML_ATTR_ID;
+   attr = TtaGetAttribute (el, attrType);
 
    if (attr != 0)
      {

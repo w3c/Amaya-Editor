@@ -1927,20 +1927,20 @@ char               *data;
        
      case AttrHREFForm:
        /* *********HREF Attribute*********** */
-       if (val == 1)
+       /* create an attribute HREF for the Link_Anchor */
+       attrType.AttrSSchema = TtaGetDocumentSSchema (AttrHREFdocument);
+       attrType.AttrTypeNum = HTML_ATTR_HREF_;
+       attrHREF = TtaGetAttribute (AttrHREFelement, attrType);
+       if (attrHREF == 0)
 	 {
-	   /* create an attribute HREF for the Link_Anchor */
-	   attrType.AttrSSchema = TtaGetDocumentSSchema (AttrHREFdocument);
-	   attrType.AttrTypeNum = HTML_ATTR_HREF_;
-	   attrHREF = TtaGetAttribute (AttrHREFelement, attrType);
-	   if (attrHREF == 0)
-	     {
-	       /* create an attribute HREF for the element */
-	       attrHREF = TtaNewAttribute (attrType);
-	       TtaAttachAttribute (AttrHREFelement, attrHREF, AttrHREFdocument);
-	     }
-	   TtaSetAttributeText (attrHREF, AttrHREFvalue, AttrHREFelement, AttrHREFdocument);
+	   /* create an attribute HREF for the element */
+	   attrHREF = TtaNewAttribute (attrType);
+	   TtaAttachAttribute (AttrHREFelement, attrHREF, AttrHREFdocument);
 	 }
+       if (AttrHREFvalue[0] != EOS)
+	 TtaSetAttributeText (attrHREF, AttrHREFvalue, AttrHREFelement, AttrHREFdocument);
+       else
+	 TtaSetAttributeText (attrHREF, "XXX", AttrHREFelement, AttrHREFdocument);
        break;
      case AttrHREFText:
        /* save the HREF name */

@@ -47,7 +47,7 @@ STRUCT
 	END;
   META (ATTR http_equiv = Text; !meta_name = Text; !meta_content = Text)
 	 = CONSTANT C_Empty;
-  LINK (ATTR !HREF_ = Text; REL = Text; REV = Text; Title = Text)
+  LINK (ATTR HREF_ = Text; REL = Text; REV = Text; Title = Text)
 	 = CONSTANT C_Empty;
 
   StyleRule (ATTR Selector = TEXT) = TEXT;
