@@ -300,6 +300,7 @@
 #define TMSG_UNABLE_LINK_NEW_ELEM                    277
 #define TMSG_CHAR_ENCODING			     278
 #define TMSG_NO_LANGUAGE			     279
-#define TMSG_LIB_MSG_MAX			     280
+#define TMSG_OVERLINE				     280
+#define TMSG_LIB_MSG_MAX			     281
 
 #endif

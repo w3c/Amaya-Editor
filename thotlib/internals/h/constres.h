@@ -26,8 +26,18 @@
 #define MAXNODECOUPLE 8
 
 /* domaines de valeurs */
-typedef enum {IDENTITE, EQUIVALENCE, FACTOR, SUB_TYPE, CLUSTER, SUB_SCHEMA, PRE_COUPLED, NONE} TyRelation;
+typedef enum {NONE, 
+	      IDENTITE , 
+	      EQUIVALENCE, 
+	      FACTOR , 
+	      SUB_TYPE , 
+	      CLUSTER, 
+	      SUB_SCHEMA, 
+	      PRE_COUPLED , 
+	      REC_MASK
+} TyRelation;
 
+#ifndef STANDALONE
 /* pre couplages de noeuds */
 typedef struct _TypeAtom
 {
@@ -41,6 +51,7 @@ typedef struct _PreCouple
   TypeAtom *SourceContext;
   TypeAtom *DestContext;
 } StrPreCouple;
+#endif /* STANDALONE */
 
 /* arbre de types */
 typedef struct _StrTypeTree *TypeTree;
@@ -53,7 +64,9 @@ typedef struct _StrTypeTree
   TypeTree TNext;
   TypeTree TPrevious;
   TypeTree TRecursive;
+#ifndef STANDALONE
   PreCouple TPreCouple[MAXNODECOUPLE];
+#endif /* STANDALONE */
   boolean TEffective;
   boolean TRecursApplied;
   char TPrintSymb;
@@ -73,7 +86,9 @@ typedef struct _StrSourcePrint
 typedef struct _StrRestruct *Restruct;
 typedef struct _StrRestruct
 {
+#ifndef STANDALONE
   ElementType RDestType;
+#endif /* STANDALONE */
   TypeTree RDestTree;
   char RDestPrint[SIZEPRINT];
   TypeTree RDestNodes[SIZEPRINT];
@@ -88,12 +103,16 @@ typedef struct _StrRestruct
 typedef struct _StrRestContext *RestContext;
 typedef struct _StrRestContext
 { 
+#ifndef STANDALONE
   SSchema CSrcSchema;
+#endif /* STANDALONE */
   Restruct CListRestruct;
   SourcePrint CListSourcePrints;
   int CNbPrintMethod;
   PrintMethod CPrintMethod[MAXPRINTMETHOD];
+#ifndef STANDALONE
   Element COldElems[50];
+#endif /* STANDALONE */
   int CNbOldElems;
   int CIdCount;
 }StrRestContext;

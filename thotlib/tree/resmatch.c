@@ -101,18 +101,28 @@ int IDst;
    char CSrc, CDst;
    char *PSrc;
    char *PDst;
+   int indrec;
 
    PSrc = resctx->RSrcPrint->SPrint;
    PDst = resctx->RDestPrint;
    result = NONE;
    /* si l'un des deux symboles (source ou dest) est @, recherche s'ils */
    /* correspondent au meme type d'element */
-   if ((PSrc[ISrc] == '@' || PDst[IDst] == '@') &&
-       TtaSameSSchemas (RContext->CSrcSchema, (resctx->RDestType).ElSSchema) &&
-       resctx->RSrcPrint->SNodes[ISrc] != NULL &&
-       resctx->RDestNodes[IDst] != NULL &&
-       resctx->RSrcPrint->SNodes[ISrc]->TypeNum == resctx->RDestNodes[IDst]->TypeNum )
-     result = IDENTITE;
+   if (PSrc[ISrc] == '@' || PDst[IDst] == '@')
+     if(TtaSameSSchemas (RContext->CSrcSchema, (resctx->RDestType).ElSSchema) &&
+	resctx->RSrcPrint->SNodes[ISrc] != NULL &&
+	resctx->RDestNodes[IDst] != NULL &&
+	resctx->RSrcPrint->SNodes[ISrc]->TypeNum == resctx->RDestNodes[IDst]->TypeNum )
+       result = IDENTITE;
+     else
+       if (PDst[IDst] == '@')
+	 {
+	   indrec = 0;
+	   while (indrec < ISrc && resctx->RCoupledNodes[indrec] != resctx->RDestNodes[IDst]->TRecursive)
+	     indrec ++;
+	   if (indrec < ISrc)
+	     result = IDENTITE;
+	 }
 
    if (result == NONE)
      {

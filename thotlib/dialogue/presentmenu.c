@@ -910,17 +910,25 @@ char               *txt;
       break;
     case NumMenuUnderlineType:		/* style du souligne */
       /* l'entree 2 est supprimee dans cette version */
-      if (val == 3)	/* entree 3: Standard */
+      if (val == 4)	/* entree 4: Standard */
 	{
 	  ChngUnderline = FALSE;
 	  StdUnderline = TRUE;
 	}
-      else if (val == 2)	/* entree 2->3 */
+      /*******
+	else if (val == 3)
 	{
 	  ChngUnderline = TRUE;
 	  StdUnderline = FALSE;
 	  UnderlineStyle = val + 1;
 	}
+      else if (val == 2)
+	{
+	  ChngUnderline = TRUE;
+	  StdUnderline = FALSE;
+	  UnderlineStyle = val + 1;
+	}
+	*******/
       else
 	{
 	  ChngUnderline = TRUE;
@@ -1268,11 +1276,13 @@ View                view;
 	     i += strlen (&string[i]) + 1;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNDERLINE));
 	     i += strlen (&string[i]) + 1;
+	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_OVERLINE));
+	     i += strlen (&string[i]) + 1;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_CROSS_OUT));
 	     i += strlen (&string[i]) + 1;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewSubmenu (NumMenuUnderlineType, NumFormPresChar, 0,
-		    TtaGetMessage (LIB, TMSG_LINE), 4, string, NULL, TRUE);
+		    TtaGetMessage (LIB, TMSG_LINE), 5, string, NULL, TRUE);
 	     TtaNewLabel (NumMenuUnderlineWeight, NumFormPresChar, " ");
 	     /* sous-menus des corps disponibles, en points typographiques */
 	     nbItems = 0;

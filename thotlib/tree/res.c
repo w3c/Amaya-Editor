@@ -134,7 +134,10 @@ TypeTree parent;
       found = FALSE;
       while (!found && sibling != NULL)
 	{
-	  found = (RestIsBefore (child, sibling) == 1);
+	  if (parent->TPrintSymb != '{')
+	    found = (RestIsBefore (child, sibling) == 1);
+	  else
+	    found = FALSE;
 	  if (!found)
 	    {
 	      last = sibling;
@@ -169,7 +172,9 @@ TypeTree child;
 {
   TypeTree parent;
   
-  if (child != NULL && child->TParent != NULL)
+  if (child != NULL && 
+      child->TParent != NULL && 
+      child->TParent->TPrintSymb != '{')
     {
       parent = child->TParent;
       if (child->TPrevious == NULL)
