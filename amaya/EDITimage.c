@@ -376,84 +376,87 @@ void ChangeBackgroundImage (document, view)
 
 
 /*----------------------------------------------------------------------
-   ComputeSRCattribute  computes the SRC attribute value.		
-   		Get text as the proposed value for SRCattribute.	
+   ComputeSRCattribute computes the SRC attribute of the image.
+   text is the image name (relative or not) and sourceDocument is the
+   source document where the image comes from.
+   el is the target picture element and doc the target document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ComputeSRCattribute (Element el, Document doc, Document originDocument, Attribute attr, char *text)
+void                ComputeSRCattribute (Element el, Document doc, Document sourceDocument, Attribute attr, char *text)
 #else  /* __STDC__ */
-void                ComputeSRCattribute (el, doc, originDocument, attr, text)
+void                ComputeSRCattribute (el, doc, sourceDocument, attr, text)
 Element             el;
 Document            doc;
-Document            originDocument;
+Document            sourceDocument;
 Attribute           attr;
 char               *text;
 
 #endif /* __STDC__ */
 {
-   char                name[MAX_LENGTH];
-   char                pathdoc[MAX_LENGTH];
-   char                pathimage[MAX_LENGTH];
-   char                localname[MAX_LENGTH];
-   char                imagename[MAX_LENGTH];
-   LoadedImageDesc    *desc;
+  char              *value;
+  char               pathdoc[MAX_LENGTH];
+  char               pathimage[MAX_LENGTH];
+  char               localname[MAX_LENGTH];
+  char               imagename[MAX_LENGTH];
+  LoadedImageDesc   *desc;
 
-   NormalizeURL (text, originDocument, pathimage, name);
-   /* copy the text into the SRC attribute */
-   if (IsHTTPPath (DocumentURLs[doc]))
-     {
-	if (!IsHTTPPath (pathimage))
-	  {
-	     /* try to load a local image within a remote document */
-	     /* copy image file into the temporary directory of the document */
-	     TtaExtractName (pathimage, localname, imagename);
-	     NormalizeURL (imagename, doc, localname, imagename);
-	     AddLoadedImage (imagename, localname, doc, &desc);
-	     desc->status = IMAGE_MODIFIED;
-	     /* JK: was name, seems it should be pathimage */
-	     TtaFileCopy (pathimage, desc->localName);
+  /* get the absolute URL of the image */
+  NormalizeURL (text, sourceDocument, pathimage, imagename);
+  if (IsHTTPPath (DocumentURLs[doc]))
+    {
+      /* remote target document */
+      if (!IsHTTPPath (pathimage))
+	{
+	  /* load a local image into a remote document */
+	  /* copy image file into the temporary directory of the document */
+	  TtaExtractName (pathimage, localname, imagename);
+	  NormalizeURL (imagename, doc, localname, imagename);
+	  AddLoadedImage (imagename, localname, doc, &desc);
+	  desc->status = IMAGE_MODIFIED;
+	  TtaFileCopy (pathimage, desc->localName);
+	  
+	  /* suppose that the image will be stored in the same directory */
+	  TtaSetAttributeText (attr, imagename, el, doc);
 
-	     TtaExtractName (DocumentURLs[doc], pathdoc, name);
-	     TtaExtractName (imagename, pathimage, name);
-	     if (!strcmp (pathimage, pathdoc))
-		/* convert absolute SRC into local */
-		TtaSetAttributeText (attr, name, el, doc);
-	     else
-		TtaSetAttributeText (attr, imagename, el, doc);
-
-	     /* set contents of the picture element */
-	     TtaSetTextContent (el, desc->localName, SPACE, doc);
-	     DisplayImage (doc, el, desc->localName);
-	  }
-	else
-	  {
-	     /* load from the Web */
-	     /* set stop button */
-	     ActiveTransfer (doc);
-	     TtaSetAttributeText (attr, pathimage, el, doc);
-	     FetchImage (doc, el, NULL, 0, NULL, NULL);
-	     ResetStop (doc);
-	  }
-     }
-   else
-     {
-	TtaSetAttributeText (attr, pathimage, el, doc);
-	if (!IsHTTPPath (pathimage))
-	  {
-	     /* set the element content */
-	     TtaSetTextContent (el, pathimage, SPACE, doc);
-	     DisplayImage (doc, el, pathimage);
-	  }
-	else
-	  {
-	     /* set stop button */
-	     ActiveTransfer (doc);
-	     TtaSetAttributeText (attr, pathimage, el, doc);
-	     FetchImage (doc, el, NULL, 0, NULL, NULL);
-	     ResetStop (doc);
-	  }
-     }
-
+	  /* set contents of the picture element */
+	  TtaSetTextContent (el, desc->localName, SPACE, doc);
+	  DisplayImage (doc, el, desc->localName);
+	}
+      else
+	{
+	  /* load a remote image into a remote document */
+	  value = MakeRelativeUrl (pathimage, DocumentURLs[doc]);
+	  TtaSetAttributeText (attr, value, el, doc);
+	  TtaFreeMemory (value);
+	  /* set stop button */
+	  ActiveTransfer (doc);
+	  FetchImage (doc, el, NULL, 0, NULL, NULL);
+	  ResetStop (doc);
+	}
+    }
+  else
+    {
+      /* local target document */
+      if (!IsHTTPPath (pathimage))
+	{
+	  /* load a local image into a local document */
+	  value = MakeRelativeUrl (pathimage, DocumentURLs[doc]);
+	  TtaSetAttributeText (attr, value, el, doc);
+	  TtaFreeMemory (value);
+	  /* set the element content */
+	  TtaSetTextContent (el, pathimage, SPACE, doc);
+	  /*DisplayImage (doc, el, pathimage);*/
+	}
+      else
+	{
+	  /* load a remote image into a local document */
+	  /* set stop button */
+	  ActiveTransfer (doc);
+	  TtaSetAttributeText (attr, pathimage, el, doc);
+	  FetchImage (doc, el, NULL, 0, NULL, NULL);
+	  ResetStop (doc);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
