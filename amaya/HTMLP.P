@@ -4750,7 +4750,7 @@ RULES
 	IN Alternate_view
 		Visibility: 0;
         END;
-#endif /* MATHML */
+#endif
 #ifdef GRAPHML
 
  XMLGraphics: BEGIN
@@ -5895,7 +5895,7 @@ ATTRIBUTES
 #ifdef GRAPHML
  ShowAreas (XMLGraphics):
 	LineWeight: 2 pt;
-#endif /* GRAPHML */
+#endif
 
  SectionNumbering (H2):
 	CreateFirst(H2_section_number);
