@@ -664,7 +664,7 @@ int                 percent;
 
 /*----------------------------------------------------------------------
    IsScrolled regarde si la marque d'insertion (de'but de se'lection) 
-   est visible dans la fenetree^tre affiche'e sur l'e'cran.        
+   est visible dans la fenetre^tre affiche'e sur l'e'cran.        
    Si c'est le cas, la fonction rend la valeur vrai.       
    Si cela n'est pas le cas, la fonction demande le        
    de'placement horizontal ou vertical de la portion       
@@ -690,6 +690,8 @@ int                 selection;
 
    pFrame = &ViewFrameTable[frame - 1];
    pBo1 = pFrame->FrSelectionBegin.VsBox;
+   if (pBo1 == NULL)
+     return TRUE;
    x = pBo1->BxXOrg + pFrame->FrSelectionBegin.VsXPos;
    y = pBo1->BxYOrg;
    h = pBo1->BxHeight;

@@ -2374,22 +2374,33 @@ int                *height;
 	{
 	  /* compute minimum and maximum width of the paragraph */
 	  GetLine (&pLine);
-	  /* no limit as an extensible line */
-	  pLine->LiXMax = 3000;
-	  pLine->LiFirstBox = pNextBox;
-	  pLine->LiFirstPiece = NULL;
-	  pLine->LiLastPiece = NULL;
-	  pBox->BxMinWidth = FillLine (pLine, pRootAb, pAb->AbTruncatedTail, &full, &toAdjust, &breakLine, frame);
-	  if (full)
-	    {
-	      /* the last box has been broken */
-	      full = FALSE;
-	      still = FALSE;
-	    RemoveBreaks (pLine->LiLastBox, frame, &full, &still);
+	  do
+	    {	      
+	      /* no limit as an extensible line */
+	      pLine->LiXMax = 3000;
+	      pLine->LiFirstBox = pNextBox;
+	      pLine->LiFirstPiece = NULL;
+	      pLine->LiLastBox = NULL;
+	      pLine->LiLastPiece = NULL;
+	      minWidth = FillLine (pLine, pRootAb, pAb->AbTruncatedTail, &full, &toAdjust, &breakLine, frame);
+	      if (pBox->BxMinWidth < minWidth)
+		pBox->BxMinWidth = minWidth;
+	      if (breakLine)
+		pNextBox = GetNextBox (pLine->LiLastBox->BxAbstractBox);
+	      if (full)
+		{
+		  /* the last box has been broken */
+		  full = FALSE;
+		  still = FALSE;
+		  RemoveBreaks (pLine->LiLastBox, frame, &full, &still);
+		}
+	      if (pBox->BxMaxWidth < pLine->LiRealLength)
+		pBox->BxMaxWidth = pLine->LiRealLength;
+	      if (pLine->LiHeight > *height)
+		*height = pLine->LiHeight;
 	    }
-	  pBox->BxMaxWidth = pLine->LiRealLength;
-	  if (pLine->LiHeight > *height)
-	    *height = pLine->LiHeight;
+	  while (breakLine && pNextBox);
+
 	  FreeLine (pLine);
 	}
     }

@@ -205,6 +205,7 @@ int                 ymax;
   PtrBox              pBox, pBoxChild;
   ViewFrame          *pFrame;
   PictInfo           *imageDesc;
+  PictureScaling      picPresent;
   int                 x, y;
   int                 xd, yd;
   int                 xorg, yorg;
@@ -241,8 +242,13 @@ int                 ymax;
     {
       xorg = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
       yorg = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
+      /* the default presentation is repeat */
+      picPresent = imageDesc->PicPresent;
+      if (picPresent == DefaultPres)
+	picPresent = FillFrame;
+
       /* check the visibility of the background image */
-      if (imageDesc->PicPresent == FillFrame)
+      if (picPresent == FillFrame)
 	{
 	  while (xorg + imageDesc->PicWidth < xmin)
 	    xorg += imageDesc->PicWidth;
@@ -253,7 +259,7 @@ int                 ymax;
 	  yd = yorg + FrameTable[frame].FrTopMargin;
 	  height = height + ymin - yorg;
 	}
-      if (imageDesc->PicPresent == YRepeat || imageDesc->PicPresent == RealSize)
+      if (picPresent == YRepeat || picPresent == RealSize)
 	{
 	  xd = xorg;
 	  if (xmin >= xorg + imageDesc->PicWidth)
@@ -261,7 +267,7 @@ int                 ymax;
 	  else
 	    width = width + xmin - xorg;
 	}
-      if (imageDesc->PicPresent == XRepeat || imageDesc->PicPresent == RealSize)
+      if (picPresent == XRepeat || picPresent == RealSize)
 	{
 	  yd = yorg + FrameTable[frame].FrTopMargin;
 	  if (ymin >= yorg + imageDesc->PicHeight || pAb->AbTruncatedHead)
@@ -347,9 +353,13 @@ int                 ymax;
 			imageDesc = (PictInfo *) pAb->AbPictBackground;
 			if (imageDesc)
 			  {
-			    if (imageDesc->PicPresent == YRepeat ||
-				imageDesc->PicPresent == FillFrame ||
-				(imageDesc->PicPresent == XRepeat && !pAb->AbTruncatedHead))
+			    /* the default presentation is repeat */
+			    picPresent = imageDesc->PicPresent;
+			    if (picPresent == DefaultPres)
+			      picPresent = FillFrame;
+			    if (picPresent == YRepeat ||
+				picPresent == FillFrame ||
+				(picPresent == XRepeat && !pAb->AbTruncatedHead))
 			      DrawPicture (pBoxChild, imageDesc, frame, xd - x, yd - y, width, height);
 			  }
 			else
@@ -418,9 +428,13 @@ int                 ymax;
 		imageDesc = (PictInfo *) pAb->AbPictBackground;
 		if (imageDesc)
 		  {
-		    if (imageDesc->PicPresent == YRepeat ||
-			imageDesc->PicPresent == FillFrame ||
-			(imageDesc->PicPresent == XRepeat && !pAb->AbTruncatedHead))
+		    /* the default presentation is repeat */
+		    picPresent = imageDesc->PicPresent;
+		    if (picPresent == DefaultPres)
+		      picPresent = FillFrame;
+		    if (picPresent == YRepeat ||
+			picPresent == FillFrame ||
+			(picPresent == XRepeat && !pAb->AbTruncatedHead))
 		      DrawPicture (pBox, imageDesc, frame,  xd - x, yd - y, width, height);
 		    else if (!pAb->AbTruncatedHead)
 		      /* the clipping will work automatically */

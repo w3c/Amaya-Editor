@@ -812,7 +812,7 @@ PtrBox       box;
   pFrame = &ViewFrameTable[frame - 1];
   if (pixmap != None)
     {
-      /* the default presenation depends on the box type */
+      /* the default presentation depends on the box type */
       picPresent = imageDesc->PicPresent;
       if (picPresent == DefaultPres)
 	{
@@ -938,7 +938,8 @@ PtrBox       box;
 	      XChangeGC (TtDisplay, tiledGC, valuemask, &values);
 	      if (imageDesc->PicMask)
 		{
-		  XSetClipOrigin (TtDisplay, tiledGC, xFrame - picXOrg, yFrame - picYOrg);
+		  XSetClipOrigin (TtDisplay, tiledGC, xFrame - picXOrg,
+				  yFrame - picYOrg);
 		  XSetClipMask (TtDisplay, tiledGC, imageDesc->PicMask);
 		}
 	      XFillRectangle (TtDisplay, drawable, tiledGC, xFrame, yFrame,
