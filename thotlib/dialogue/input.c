@@ -1615,13 +1615,13 @@ void InitTranslations (char *appliname)
 
   appHome = TtaGetEnvString ("APP_HOME");
   strcpy (name, appliname);
-#ifdef _WINGUI
+
+#ifdef _WINDOWS
   strcat (name, ".kb");
-#endif  /* _WINGUI */
-  
-#if defined(_GTK) || defined(_WX)
+#endif  /* _WINDOWS */
+#if defined(_UNIX)
   strcat (name, ".keyboard");
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* defined(_UNIX) */
 
   strcpy (home, appHome);
   strcat (home, DIR_STR);
