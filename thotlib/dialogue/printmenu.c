@@ -106,7 +106,9 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    int                     printArgc = 0;
 #else /* _WINDOWS_DLL */
    char                    cmd[1024];
+#ifndef _WINDOWS
    int                     res;
+#endif /*_WINDOWS*/
 #endif /* _WINDOWS_DLL */
    int                     i, j = 0;
    int                     frame;
@@ -568,7 +570,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 
    cmd[j] = EOS;
    i = strlen (cmd);
-   sprintf (&cmd[i], " -removedir %s\%s.PIV", dir, name);
+   sprintf (&cmd[i], " -removedir %s\\%s.PIV", dir, name);
 
     ZeroMemory( &si, sizeof(si) );
     si.cb = sizeof(si);

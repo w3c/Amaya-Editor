@@ -99,6 +99,9 @@ static ThotBool     FromKeyboard;
 #include "wininclude.h"
 #endif /* _WINDOWS */
 
+#ifdef _GL
+#include "glwindowdisplay.h"
+#endif /*_GL*/
 /*----------------------------------------------------------------------
    CopyString computes the width of the source text and copies it into the
    target buffer if target parameter is not NULL.

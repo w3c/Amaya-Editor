@@ -33,6 +33,10 @@
 #include "xwindowdisplay_f.h"
 
 
+#ifdef _GL
+#include "glwindowdisplay.h"
+#endif /*_GL*/
+
 /*----------------------------------------------------------------------
   DisplayPointSelection draw control points of the box.
   ----------------------------------------------------------------------*/
