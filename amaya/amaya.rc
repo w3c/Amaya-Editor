@@ -1145,8 +1145,7 @@ BEGIN
     DEFPUSHBUTTON   "Apply",ID_APPLY,8,156,50,14
     PUSHBUTTON      "Done",ID_DONE,184,156,50,14
     PUSHBUTTON      "Defaults",ID_DEFAULTS,67,156,50,14
-    LTEXT           "Parent directory for the cache directory",IDC_STATIC,8,
-                    68,123,8
+    LTEXT           "Cache directory",IDC_STATIC,8,68,50,8
     EDITTEXT        IDC_CACHEDIRECTORY,8,79,202,12,ES_AUTOHSCROLL
     CONTROL         "Enable cache",IDC_ENABLECACHE,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,8,13,66,8
@@ -2594,8 +2593,7 @@ BEGIN
     DEFPUSHBUTTON   "Apply",ID_APPLY,8,156,50,14
     PUSHBUTTON      "Done",ID_DONE,184,156,50,14
     PUSHBUTTON      "Defaults",ID_DEFAULTS,67,156,50,14
-    LTEXT           "Parent directory for the cache directory",IDC_STATIC,8,
-                    68,123,8
+    LTEXT           "Cache directory",IDC_STATIC,8,68,50,8
     EDITTEXT        IDC_CACHEDIRECTORY,8,79,202,12,ES_AUTOHSCROLL
     CONTROL         "Enable cache",IDC_ENABLECACHE,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,8,13,66,8

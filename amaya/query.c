@@ -25,7 +25,11 @@
 #define AMAYA_WWW_CACHE
 #define AMAYA_LOST_UPDATE
 
-#define CACHE_DIR_NAME DIR_STR"libwww-cache"DIR_STR
+#ifdef _WINDOWS
+#define CACHE_DIR_NAME "\\libwww-cache\\"
+#else
+#define CACHE_DIR_NAME "/libwww-cache/"
+#endif /* _WINDOWS */
 #define DEFAULT_CACHE_SIZE 10
 #define DEFAULT_MAX_CACHE_ENTRY_SIZE 3
 #define DEFAULT_MAX_SOCKET 32
@@ -131,10 +135,12 @@ static int set_cachelock (filename)
 char *filename;
 #endif /* __STDC__ */
 {
-#ifdef _WINDOWS
-  return ((TtaFileExist (filename)) ? 0 : -1);
-#else
   int status;
+#ifdef _WINDOWS
+
+  status = TtaFileExist (filename);
+  return ((status) ? 0 : -1);
+#else
   struct flock lock;
  
   lock.l_type = F_WRLCK;
@@ -200,10 +206,10 @@ char *filename;
 {
 #ifdef _WINDOWS
   /* if the lock is set, we can't unlink the file under Windows */
-  if (unlink (filename))
-    return -1;
-  else
+  if (!TtaFileUnlink (filename))
     return 0;
+  else
+    return -1;
 #else
   struct flock lock;
   int fd, status;
@@ -1495,7 +1501,7 @@ View view;
   /* convert libwww's internal's cache dir name to one
      corresponding to the filesystem */
   i = 0;
-  while (cache_dir[i])
+  while (cache_dir[i] != EOS)
     {
       if (cache_dir[i] == '/')
 	real_dir[i] = DIR_SEP;
@@ -1503,11 +1509,12 @@ View view;
 	real_dir[i] = cache_dir[i];
       i++;
     }
+  real_dir[i] = EOS;
 
   /* safeguard... abort the operation if cache_dir doesn't end with
      CACHE_DIR_NAME */
   error = TRUE;
-  ptr = strrchr (real_dir, DIR_SEP);  
+  ptr = strstr (real_dir, CACHE_DIR_NAME);  
 #ifdef _WINDOWS
   if (ptr && *ptr && !_stricmp (ptr, CACHE_DIR_NAME))
 #else
@@ -1643,7 +1650,7 @@ View view;
 	  || !strcmp (d->d_name, "."))
 	continue;
 
-      sprintf (filename, "%s"DIR_STR"%s", dirname, d->d_name);
+      sprintf (filename, "%s%c%s", dirname, DIR_SEP, d->d_name);
       if  (lstat (filename, &st) < 0 ) 
 	{
 	  /* @@2 need some error message */
@@ -1797,21 +1804,30 @@ int i;
 	    HTCacheMode_setDisconnected (HT_DISCONNECT_NORMAL);
 	  else
 	    HTCacheMode_setDisconnected (HT_DISCONNECT_NONE);
-	  HTCacheInit (cache_dir, cache_size);
-	  if (set_cachelock (cache_lockfile) == -1)
-	    /* couldn't open the .lock file, so, we close the cache to
-	       be in the safe side */
+	  if (HTCacheInit (cache_dir, cache_size))
 	    {
-	      HTCacheTerminate ();
-	      HTCacheMode_setEnabled (FALSE);
+	      if (set_cachelock (cache_lockfile) == -1)
+		/* couldn't open the .lock file, so, we close the cache to
+		   be in the safe side */
+		{
+		  HTCacheTerminate ();
+		  HTCacheMode_setEnabled (FALSE);
 #ifdef DEBUG_LIBWWW
-	      fprintf (stderr, "couldnt set the cache lock\n");
+		  fprintf (stderr, "couldnt set the cache lock\n");
+#endif /* DEBUG_LIBWWW */
+		}
+#ifdef DEBUG_LIBWWW
+	      else
+		fprintf (stderr, "created the cache lock\n");
 #endif /* DEBUG_LIBWWW */
 	    }
-#ifdef DEBUG_LIBWWW
 	  else
-	    fprintf (stderr, "created the cache lock\n");
-#endif /* DEBUG_LIBWWW */
+	    {
+#ifdef DEBUG_LIBWWW
+	      fprintf (stderr, "couldn't create the cache\n");
+#endif /* DEBUG_LIBWWW */	      
+	      HTCacheTerminate ();
+	    }
 	}
       else 
 	{

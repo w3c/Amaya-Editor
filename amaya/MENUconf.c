@@ -44,13 +44,15 @@
 #include "query_f.h"
 #endif
 #include "fileaccess.h"
-#include "../thotlib/internals/f/inites_f.h"
 
 #ifdef _WINDOWS
 #include "resource.h"
 #include "wininclude.h"
 extern HINSTANCE hInstance;
 #endif /* _WINDOWS */
+
+/* this one should be exported from the thotlib */
+extern STRING ColorName (int num);
 
 static int CacheStatus;
 static int ProxyStatus;
@@ -160,7 +162,7 @@ static boolean      CreateDir (const STRING dirname);
 static void         GetEnvString (const STRING name, STRING value);
 static void         GetDefEnvToggle (const STRING name, boolean *value, int ref, int entry);
 static void         GetDefEnvString (const STRING name, STRING value);
-static boolean      NormalizeDirName (STRING dirname, const STRING end_path);
+static int          NormalizeDirName (STRING dirname, const STRING end_path);
 #ifndef _WINDOWS
 static void         CacheCallbackDialog (int ref, int typedata, STRING data);
 static void         RefreshCacheMenu (void);
@@ -208,7 +210,7 @@ static void         SetGeometryConf (void);
 static void         GetEnvString (/* const STRING name, STRING value */);
 static void         GetDefEnvToggle (/* const STRING name, boolean *value, int ref, int entry */);
 static void         GetDefEnvString (/* const STRING name, STRING value */);
-static boolean      NormalizeDirName (/* STRING dirname, const STRING end_path */);
+static int          NormalizeDirName (/* STRING dirname, const STRING end_path */);
 #ifndef _WINDOWS
 static void         CacheCallbackDialog (/* int ref, int typedata, STRING data */);
 static void         RefreshCacheMenu (/* void */);
@@ -427,14 +429,14 @@ STRING value;
   end_path should begin with a DIR_SEP char 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean NormalizeDirName (STRING dirname, const STRING end_path)
+static int NormalizeDirName (STRING dirname, const STRING end_path)
 #else
-static boolean NormalizeDirName (dirname, end_path)
+static int NormalizeDirName (dirname, end_path)
 STRING dirname;
 const STRING end_path;
 #endif /* __STDC__ */
 {
-  boolean result = FALSE;
+  int result = 0;
   STRING ptr;
   STRING dir_sep = NULL;
 
@@ -445,7 +447,7 @@ const STRING end_path;
 	  {
 		  dir_sep = ustrrchr (dirname, DIR_SEP);
 		  *dir_sep = EOS;
-		  result = TRUE;
+		  result = 1;
 	  }
       ptr = ustrstr (dirname, end_path);
       if (ptr)
@@ -454,19 +456,19 @@ const STRING end_path;
 	    /* end_path missing, add it to the parent dir */
 	    {
 	   	  ustrcat (dirname, end_path);
-	      result = TRUE;
+	      result = 1;
 	    }
 	}
       else
 	/* no DIR_SEP, so we add the end_path */
 	{
 	  ustrcat (dirname, end_path);
-	  result = TRUE;
+	  result = 1;
 	}
     }
       else 
 	/* empty dirname! */
-	result = TRUE;
+	result = 1;
   
   return result;
 }
@@ -522,6 +524,105 @@ const STRING filename;
  }
 }
 #endif /* _WINDOWS */
+
+/*----------------------------------------------------------------------
+  CleanDirSep
+  Removes double DIR_SEP strings in a name. Returns TRUE if such
+  operation was done.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int CleanDirSep (STRING name)
+#else
+int CleanDirSep (name)
+STRING name
+#endif /* __STDC__ */
+{
+ int result = 0;
+ int s, d;
+
+  /* remove all double DIR_SEP */
+  s = 0;
+  d = 0;
+  while (name[d] != EOS)
+  {
+    if (name[d] == DIR_SEP && name[d + 1] == DIR_SEP)
+	{
+	  result = 1;
+	  d++;
+	  continue;
+	}
+	name[s] = name[d];
+	s++;
+	d++;
+  }
+  name[s] = EOS;
+
+  return (result);
+}
+
+/*----------------------------------------------------------------------
+  CleanSpace
+  Removes all the spaces in a name. Returns TRUE if such
+  operation was done.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int CleanSpace (STRING name)
+#else
+int CleanSpace (name)
+STRING name
+#endif /* __STDC__ */
+{
+ int result = 0;
+ int s, d;
+
+  /* remove all double DIR_SEP */
+  s = 0;
+  d = 0;
+  while (name[d] != EOS)
+  {
+    if (name[d] == ' ')
+	{
+	  result = 1;
+	  d++;
+	  continue;
+	}
+	name[s] = name[d];
+	s++;
+	d++;
+  }
+  name[s] = EOS;
+
+  return (result);
+}
+
+/*----------------------------------------------------------------------
+  RemoveLastDirSep
+  Removes the last char of name if it is a DIR_SEP. Return TRUE if it
+  does this operation.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static int RemoveLastDirSep (STRING name)
+#else
+static int RemoveLastDirSep (name)
+STRING name;
+#endif
+{
+  int result;
+  int last_char;
+
+  result = 0;
+  if (name) 
+    { 
+        last_char = ustrlen (name) - 1;
+        if (name[last_char] == DIR_SEP)
+          {
+                name[last_char] = EOS;
+                result = 1;
+          }
+    }
+
+  return result;
+}
 
 /*********************
 ** Cache configuration menu
@@ -771,38 +872,54 @@ static void ValidateCacheConf (void)
 static void ValidateCacheConf ()
 #endif /* __STDC__ */
 {
- boolean change;
+ int change;
 
 #ifdef _WINDOWS
  /* validate the cache size */
- change = TRUE;
+ change = 1;
  if (CacheSize < 1)
    CacheSize =1;
  else if (CacheSize > 100)
    CacheSize = 100;
  else
-   change = FALSE;
+   change = 0;
  if (change)
    SetDlgItemInt (CacheHwnd, IDC_CACHESIZE, CacheSize, FALSE);
  
  /* validate the cache entry size */
- change = TRUE;
+ change = 1;
  if (MaxCacheFile < 1)
    MaxCacheFile = 1;
  else if (MaxCacheFile > 5)
    MaxCacheFile = 5;
  else
-   change = FALSE;
+   change = 0;
  if (change)
    SetDlgItemInt (CacheHwnd, IDC_MAXCACHEFILE, MaxCacheFile, FALSE);
 #endif /* _WINDOWS */
 
  /* validate the cache dir */
- /* what we do is add a DIR_STRlibwww-cache */
- if (CacheDirectory[0] != EOS)
-   /* n.b., this variable may be empty */
-   change = NormalizeDirName (CacheDirectory, DIR_STR"libwww-cache");
+ change = 0;
+ change += CleanSpace (CacheDirectory);
+ change += CleanDirSep (CacheDirectory);
+ /* remove the last DIR_SEP, if we have it */
+ change += RemoveLastDirSep (CacheDirectory);
+ if (CacheDirectory[0] == EOS)
+ {
+   GetDefEnvString ("CACHE_DIR", CacheDirectory);
+   change = 1;
+ }
 
+ /* what we do is add a DIR_STRlibwww-cache */
+ /* remove the last DIR_SEP, if we have it (twice, to 
+    protect against a bad "user" default value */
+ change += RemoveLastDirSep (CacheDirectory);
+ /* n.b., this variable may be empty */
+#ifdef _WINDOWS
+  change += NormalizeDirName (CacheDirectory, "\\libwww-cache");
+#else
+  change += NormalizeDirName (CacheDirectory, "/libwww-cache");
+#endif /* _WINDOWS */
   if (change)
 #ifdef _WINDOWS
     SetDlgItemText (CacheHwnd, IDC_CACHEDIRECTORY, CacheDirectory);
@@ -1536,7 +1653,7 @@ static void ValidateGeneralConf (void)
 static void ValidateGeneralConf ()
 #endif /* __STDC__ */
 {
-  boolean change;
+  int change;
   CHAR_T lang[3];
   STRING ptr;
 #ifdef _WINDOWS
@@ -1544,26 +1661,34 @@ static void ValidateGeneralConf ()
   int i;
 
   /* normalize and validate the zoom factor */
-  change = TRUE;
+  change = 1;
   if (Zoom > 10)
     Zoom = 10;
   else if (Zoom < -10)
     Zoom = -10;
   else 
-    change = FALSE;
+    change = 0;
   SetDlgItemInt (GeneralHwnd, IDC_ZOOM, Zoom, TRUE);
 
   /* 
   **validate the tmp dir
   */
+  change = 0;
+  change += CleanSpace (TmpDir);
+  change += CleanDirSep (TmpDir);
   /* remove the last DIR_SEP, if we have it */
-  if (TmpDir && TmpDir [ustrlen (TmpDir) -1] == DIR_SEP)
-	  {
-		  ptr = ustrrchr (TmpDir, DIR_SEP);
-		  *ptr = EOS;
-	  }
-   /* try to create the directory. If it doesn't work, then
- 	  restore the default value */
+  change += RemoveLastDirSep (TmpDir);
+  if (TmpDir[0] == EOS)
+  {
+    GetDefEnvString ("TMPDIR", TmpDir);
+    change = 1;
+  }
+  /* remove the last DIR_SEP, if we have it, twice to
+     protect against user "default values" */
+  change += RemoveLastDirSep (TmpDir);
+
+  /* try to create the directory. If it doesn't work, then
+ 	 restore the default value */
   if (!TtaCheckDirectory (TmpDir) && !CreateDir (TmpDir)) 
     { 
       GetDefEnvString ("TMPDIR", TmpDir);
@@ -1572,28 +1697,39 @@ static void ValidateGeneralConf ()
 	  usprintf (s, "Error creating directory %s", TmpDir);
 	  MessageBox (GeneralHwnd, s, "MenuConf:VerifyGeneralConf", MB_OK);
 	  exit (1);
-	}
-      SetDlgItemText (GeneralHwnd, IDC_TMPDIR, TmpDir);
+	} 
+	  else
+		  change++;
     }
+  if (change)
+	  SetDlgItemText (GeneralHwnd, IDC_TMPDIR, TmpDir);
 
   /* normalize and validate the user's preferences dir */
   /* what we do is add a \\amaya if it's missing */
+  change = 0;
+  change += CleanSpace (AppHome);	  ;
+  change += CleanDirSep (AppHome);
+  /* remove the last DIR_SEP, if we have it */
+  change += RemoveLastDirSep (AppHome);
+
   GetEnvString ("APP_HOME", old_AppHome);
   if (AppHome[0] == EOS)
     /* empty variable, we restore the last known value */
     {
       GetEnvString ("APP_HOME", AppHome);
-      change = TRUE;
+      change++;
     }
   else
-    change = NormalizeDirName (AppHome, DIR_STR"amaya");
-  
+#ifdef _WINDOWS
+    change += NormalizeDirName (AppHome, "\\amaya");
+#else
+    change += NormalizeDirName (AppHome, "/amaya");
+#endif /* _WINDOWS */
   /* try to create the APP_HOME dir */
   if (!TtaCheckDirectory (AppHome) && !CreateDir (AppHome))
     {
       GetDefEnvString ("APP_HOME", AppHome);
-      change = TRUE;
-      
+      change++;      
       if (!CreateDir (AppHome))
 	{
 	  usprintf (s, "Error creating directory %s", AppHome);
@@ -1629,11 +1765,11 @@ static void ValidateGeneralConf ()
 #endif /* _WINDOWS */
   
   /* validate the dialogue language */
-  change = FALSE;
+  change = 0;
   ptr = TtaGetEnvString ("THOTDIR");
   if (ustrcmp (DialogueLang, "en-us"))
     {
-      change = TRUE;
+      change++;
       DialogueLang[2] = EOS;
     }
   ustrncpy (lang, DialogueLang, 2);
@@ -1642,7 +1778,7 @@ static void ValidateGeneralConf ()
   if (!TtaFileExist (s))
   {
     GetDefEnvString ("LANG", DialogueLang);
-    change = TRUE;
+    change++;
   }
   if (change)
 #ifdef _WINDOWS

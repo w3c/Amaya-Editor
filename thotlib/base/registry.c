@@ -437,14 +437,16 @@ FILE               *output;
       /* print out the section */
       fprintf (output, "[%s]\n", cour->appli);
       /* add all the entries under the same appli name */
-      if (cour->level == REGISTRY_USER)
+      if (cour->level == REGISTRY_USER 
+		  && ustrcasecmp (cour->name, "APP_HOME")
+		  && ustrcasecmp (cour->name, "TMPDIR"))
 	fprintf (output, "%s=%s\n", cour->name, cour->orig);
       next = cour->next;
       while (next != NULL && !ustrcasecmp (next->appli, cour->appli))
 	{
 	  if (next->level == REGISTRY_USER
 	      && ustrcasecmp (next->name, "APP_HOME")
-	      && ustrcasecmp (next->name, "TMP_DIR"))
+	      && ustrcasecmp (next->name, "TMPDIR"))
 	    fprintf (output, "%s=%s\n", next->name, next->orig);
 	  next = next->next;
 	}
@@ -1124,9 +1126,11 @@ void                TtaSaveAppRegistry ()
    else
      WINReg_set ("TmpDir", "");
    
-   usprintf (filename, "%s%c%s", WIN_DEF_TMPDIR, DIR_SEP, AppRegistryEntryAppli);
-   if (app_home && ustrcasecmp (filename, app_home))
-     WINReg_set ("AppHome", app_home);
+   usprintf (filename, "%s%c%s", WIN_DEF_TMPDIR, DIR_SEP, 
+	     AppRegistryEntryAppli);
+   ptr = TtaGetEnvString ("APP_HOME");
+   if (ptr && ustrcasecmp (filename, ptr))
+     WINReg_set ("AppHome", ptr);
    else
      WINReg_set ("AppHome", "");
 #endif /* _WINDOWS */

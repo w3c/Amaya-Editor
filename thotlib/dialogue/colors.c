@@ -1130,8 +1130,9 @@ int *fg;
 int *bg;
 #endif /* __STDC__ */
 { 
-	applyToSelection = FALSE;
 #ifdef _WINDOWS
+	fgcolor = bgcolor = -1;
+	applyToSelection = FALSE;
 	ThotCreatePalette (200, 200);
 	*fg = fgcolor;
 	*bg = bgcolor;
