@@ -57,8 +57,8 @@
 #define ColorMenu           1
 #define mFgColor            2
 #define mBgColor            3
-#define mSeColor            4
-#define mInColor            5
+#define mFgSelColor         4
+#define mBgSelColor         5
 #define mMenuFgColor        6
 #define mMenuBgColor        7
 #define mColorEmpty1        8

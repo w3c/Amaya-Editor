@@ -898,12 +898,8 @@ int GL_DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 /*----------------------------------------------------------------------
   GL_DrawString : Draw a string in a texture or a bitmap 
   ----------------------------------------------------------------------*/
-int GL_UnicodeDrawString (int fg, 
-			  CHAR_T *str, 
-			  float x, float y, 
-			  int hyphen,
-			  void *GL_font, 
-			  int end)
+int GL_UnicodeDrawString (int fg,  CHAR_T *str, float x, float y,  int hyphen,
+			  void *GL_font, int end)
 {
   int width;
 

@@ -3030,8 +3030,8 @@ void WIN_RefreshColorMenu (HWND hwnDlg)
 {
   SetDlgItemText (hwnDlg, IDC_FGCOLOR, FgColor);
   SetDlgItemText (hwnDlg, IDC_BGCOLOR, BgColor);
-  SetDlgItemText (hwnDlg, IDC_SECOLOR, BgSelColor);
-  SetDlgItemText (hwnDlg, IDC_INCOLOR, FgSelColor);
+  SetDlgItemText (hwnDlg, IDC_FGSELCOLOR, FgSelColor);
+  SetDlgItemText (hwnDlg, IDC_BGSELCOLOR, BgSelColor);
 }
 #else /* WINDOWS */
 /*----------------------------------------------------------------------
@@ -3042,8 +3042,8 @@ static void RefreshColorMenu ()
 {
   TtaSetTextForm (ColorBase + mFgColor, FgColor);
   TtaSetTextForm (ColorBase + mBgColor, BgColor);
-  TtaSetTextForm (ColorBase + mSeColor, BgSelColor);
-  TtaSetTextForm (ColorBase + mInColor, FgSelColor);
+  TtaSetTextForm (ColorBase + mBgSelColor, BgSelColor);
+  TtaSetTextForm (ColorBase + mFgSelColor, FgSelColor);
   TtaSetTextForm (ColorBase + mMenuFgColor, MenuFgColor);
   TtaSetTextForm (ColorBase + mMenuBgColor, MenuBgColor);
 }
@@ -3088,12 +3088,12 @@ LRESULT CALLBACK WIN_ColorDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	      GetDlgItemText (hwnDlg, IDC_BGCOLOR, BgColor,
 			      sizeof (BgColor) - 1);
 	      break;
-	    case IDC_SECOLOR:
-	      GetDlgItemText (hwnDlg, IDC_SECOLOR, BgSelColor,
+	    case IDC_BGSELCOLOR:
+	      GetDlgItemText (hwnDlg, IDC_BGSELCOLOR, BgSelColor,
 			      sizeof (BgSelColor) - 1);
 	      break;
-	    case IDC_INCOLOR:
-	      GetDlgItemText (hwnDlg, IDC_INCOLOR, FgSelColor,
+	    case IDC_FGSELCOLOR:
+	      GetDlgItemText (hwnDlg, IDC_FGSELCOLOR, FgSelColor,
 			      sizeof (FgSelColor) - 1);
 	      break;
 	    }
@@ -3191,13 +3191,13 @@ static void ColorCallbackDialog (int ref, int typedata, char *data)
 	  else
 	    BgColor[0] = EOS;
 	  break;
-	case mSeColor:
+	case mBgSelColor:
 	  if (data)
 	    strcpy (BgSelColor, data);
 	  else
 	    BgSelColor[0] = EOS;
 	  break;
-	case mInColor:
+	case mFgSelColor:
 	  if (data)
 	    strcpy (FgSelColor, data);
 	  else
@@ -3256,13 +3256,13 @@ void         ColorConfMenu (Document document, View view)
 		   1,
 		   FALSE);   
    /* second col */
-   TtaNewTextForm (ColorBase + mInColor,
+   TtaNewTextForm (ColorBase + mFgSelColor,
 		   ColorBase + ColorMenu,
 		   TtaGetMessage (AMAYA, AM_FG_SEL_COLOR),
 		   25,
 		   1,
 		   FALSE);   
-   TtaNewTextForm (ColorBase + mSeColor,
+   TtaNewTextForm (ColorBase + mBgSelColor,
 		   ColorBase + ColorMenu,
 		   TtaGetMessage (AMAYA, AM_BG_SEL_COLOR),
 		   25,

@@ -355,7 +355,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
       hbg = h + 1;
       xbg = xmin;
       ybg = ymin;
-      if (pFrom->AbFillBox)
+      if (pFrom->AbFillBox && !selected)
 	/* draw the window background */
 	DrawRectangle (frame, 0, 0, xbg - x, ybg - y, wbg, hbg,
 		       pFrom->AbForeground, pFrom->AbBackground,
@@ -412,10 +412,8 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
 
       imageDesc = (PictInfo *) pFrom->AbPictBackground;
       if (pFrom->AbSelected)
-	{
-	  /* draw the box selection */
-	  DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height, 0, BgSelColor, 2);
-	}
+	/* draw the box selection */
+	DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height, 0, BgSelColor, 2);
       else if (!selected)
 	{
 	  /* don't fill the background when an enclosing box is selected */
