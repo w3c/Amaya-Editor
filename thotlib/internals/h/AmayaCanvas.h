@@ -78,10 +78,13 @@ public:
 
   void OnSize( wxSizeEvent& event );
   void OnPaint( wxPaintEvent& event );
-  
+  void OnSetFocus( wxFocusEvent & event );
+
   void OnMouse( wxMouseEvent& event );
+#if 0
   void OnChar( wxKeyEvent& event );
   void OnKeyDown( wxKeyEvent& event );
+#endif /* 0 */
     
   void OnIdle( wxIdleEvent& event );
   

@@ -62,7 +62,7 @@ AmayaCanvas::AmayaCanvas( AmayaFrame *  p_parent_window,
   : wxGLCanvas( p_parent_window,
 		p_shared_context,
 		-1,
-		wxDefaultPosition, wxDefaultSize, 0, _T("AmayaCanvas"),
+		wxDefaultPosition, wxDefaultSize, 0 , _T("AmayaCanvas"),
 		GetGL_AttrList() ),
 #else // #ifdef _GL  
 AmayaCanvas::AmayaCanvas( AmayaFrame *  p_parent_window )
@@ -360,7 +360,7 @@ void AmayaCanvas::OnMouse( wxMouseEvent& event )
   event.Skip();
 } 
 
-
+#if 0
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaCanvas
@@ -407,14 +407,14 @@ void AmayaCanvas::OnChar( wxKeyEvent& event )
 
   // check if the keycode is a valid char
   wxString s((wxChar)thot_keysym);
-  if (s.IsAscii())
+  //  if (s.IsAscii())
     {
-      wxLogDebug( _T("IsAscii yes: s=")+s );
+      wxLogDebug( _T("AmayaCanvas::OnChar s=")+s );
       // Call the generic function for key events management
       ThotInput (frame, thot_keysym, 0, thot_mask, thot_keysym);
     }
 
-  event.Skip();
+  //  event.Skip();
 }
 
 /*
@@ -430,18 +430,20 @@ void AmayaCanvas::OnKeyDown( wxKeyEvent& event )
 {
   // Do not treat this event if the canvas is not active (hiden)
   if (!IsParentPageActive())
-  {
-    wxLogDebug( _T("AmayaCanvas::OnKeyDown : frame=%d key=%x (skip)"),
-		m_pAmayaFrame->GetFrameId(),
-		event.GetKeyCode() );
-
-    event.Skip();
-    return;
-  }
-
-  wxLogDebug( _T("AmayaCanvas::OnKeyDown : frame=%d key=%x"),
-      m_pAmayaFrame->GetFrameId(),
-      event.GetKeyCode() );
+    {
+      wxLogDebug( _T("AmayaCanvas::OnKeyDown : frame=%d key=%x (skip)"),
+		  m_pAmayaFrame->GetFrameId(),
+		  event.GetKeyCode() );
+      
+      event.Skip();
+      return;
+    }
+  else
+    {
+      wxLogDebug( _T("AmayaCanvas::OnKeyDown : frame=%d key=%x"),
+		  m_pAmayaFrame->GetFrameId(),
+		  event.GetKeyCode() );  
+    }
 
   bool skip = TRUE; // by default forward this event (should generate OnChar event)
   int keycode =  event.GetKeyCode();
@@ -500,19 +502,23 @@ void AmayaCanvas::OnKeyDown( wxKeyEvent& event )
       if (event.ShiftDown())
 	thot_mask |= THOT_MOD_SHIFT;
 
+      // le code suivant permet de convertire les majuscules
+      // en minuscules pour les racourcis clavier specifiques a amaya.
+      // OnKeyDown recoit tout le temps des majuscule que Shift soit enfonce ou pas.
       if (!event.ShiftDown())
 	{
 	  // shift key was not pressed
 	  // force the lowercase
-	  wxString s((wxChar)thot_keysym);
+	  wxString s((char *)&thot_keysym, *wxConvCurrent);
 	  if (s.IsAscii())
 	    {
-	      wxLogDebug( _T("IsAscii yes: s=")+s );
+	      wxLogDebug( _T("AmayaCanvas::OnKeyDown : s=")+s );
 	      s.MakeLower();
 	      wxChar c = s.GetChar(0);
 	      thot_keysym = (int)c;
 	    }
 	}
+      
 
       // Call the generic function for key events management
       ThotInput (frame, thot_keysym, 0, thot_mask, thot_keysym);
@@ -520,6 +526,7 @@ void AmayaCanvas::OnKeyDown( wxKeyEvent& event )
     else
       event.Skip();
 }
+#endif /* 0 */
 
 /*
  *--------------------------------------------------------------------------------------
@@ -620,6 +627,18 @@ bool AmayaCanvas::IsInit()
   return m_Init;
 }
 
+void AmayaCanvas::OnSetFocus( wxFocusEvent & event )
+{
+  wxLogDebug( _T("AmayaCanvas::OnSetFocus : frame=%d"),
+	      m_pAmayaFrame->GetFrameId() );
+
+  // the focus should never be on canvas because of unicode characteres and shortcuts managment.
+  // the frame will give focuse to the right widget
+  m_pAmayaFrame->DistributeFocus();
+
+  event.Skip();
+}
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
@@ -631,6 +650,7 @@ BEGIN_EVENT_TABLE(AmayaCanvas, wxPanel)
 #endif // #ifdef _GL
   EVT_SIZE( 		AmayaCanvas::OnSize )
   EVT_PAINT( 		AmayaCanvas::OnPaint )
+  EVT_SET_FOCUS(        AmayaCanvas::OnSetFocus )
 
   // what mouse event type is managed ? comment what is not managed
   EVT_LEFT_DOWN(	AmayaCanvas::OnMouse) // Process a wxEVT_LEFT_DOWN event. 
@@ -649,9 +669,9 @@ BEGIN_EVENT_TABLE(AmayaCanvas, wxPanel)
 //  EVT_MOUSE_EVENTS(	AmayaCanvas::OnMouse) // Process all mouse events. 
    
 
-  EVT_KEY_DOWN(		AmayaCanvas::OnKeyDown) // Process a wxEVT_KEY_DOWN event (any key has been pressed). 
+//  EVT_KEY_DOWN(		AmayaCanvas::OnKeyDown) // Process a wxEVT_KEY_DOWN event (any key has been pressed). 
 //  EVT_KEY_UP(		AmayaCanvas::OnChar) // Process a wxEVT_KEY_UP event (any key has been released). 
-  EVT_CHAR(		AmayaCanvas::OnChar) // Process a wxEVT_CHAR event. 
+//  EVT_CHAR(		AmayaCanvas::OnChar) // Process a wxEVT_CHAR event. 
 
   EVT_IDLE(             AmayaCanvas::OnIdle) // Process a wxEVT_IDLE event
   

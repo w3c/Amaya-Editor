@@ -29,13 +29,15 @@ public:
   virtual ~AmayaURLBar();
 
   void OnURLSelected( wxCommandEvent& event );
-  void OnURLText( wxCommandEvent& event );
+  //  void OnURLText( wxCommandEvent& event );
   void OnURLTextEnter( wxCommandEvent& event );
 
   void Clear();
   void Append( const wxString & newurl );
   void SetValue( const wxString & newurl );
   wxString GetValue();
+
+  //  void OnChar( wxKeyEvent& event );
 
  protected:
   DECLARE_EVENT_TABLE()

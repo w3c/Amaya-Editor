@@ -220,6 +220,7 @@ EDITOR_OBJ = \
 	dialogue/AmayaNotebook.o \
 	dialogue/AmayaURLBar.o \
 	dialogue/AmayaToolBar.o \
+	dialogue/AmayaTextGraber.o \
 	dialogue/appdialogue_wx.o \
 	document/pivot.o \
 	document/docs.o \

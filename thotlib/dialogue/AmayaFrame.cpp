@@ -19,6 +19,7 @@
 #include "message.h"
 #include "libmsg.h"
 #include "frame.h"
+#include "thot_key.h"
 
 #ifdef _GL
   #include "glwindowdisplay.h"
@@ -33,13 +34,14 @@
 #include "structselect_f.h"
 #include "appdialogue_f.h"
 #include "appdialogue_wx_f.h"
+#include "input_f.h"
 
 #include "AmayaWindow.h"
 #include "AmayaFrame.h"
-//#include "AmayaCanvas.h"
 #include "AmayaNotebook.h"
 #include "AmayaPage.h"
 #include "AmayaCallback.h"
+#include "AmayaTextGraber.h"
 #include "wx/log.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaFrame, wxPanel)
@@ -73,10 +75,24 @@ AmayaFrame::AmayaFrame(
   m_pScrollBarV = NULL; 
   m_pScrollBarH = NULL;
 
+  // create a textctrl widget.
+  // it will receive every keybord events in order to handle unicode.
+  // do not hide this widget because it can't get events when hidden
+  m_pTextGraber = new AmayaTextGraber( GetFrameId(),
+				       this,
+				       -1,
+				       _T(""),
+				       wxPoint(-10,-10),
+				       wxSize(0,0), /* 0,0 because we dont want to see this widget */
+				       wxNO_BORDER | wxTRANSPARENT_WINDOW | wxNO_FULL_REPAINT_ON_RESIZE |
+				       wxWANTS_CHARS | wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB );
+
+  // create horizontal siser and vertical sizer
   m_pHSizer = new wxBoxSizer ( wxHORIZONTAL );
   m_pVSizer = new wxBoxSizer ( wxVERTICAL );
   if (m_pCanvas)
     m_pHSizer->Add( m_pCanvas, 1, wxEXPAND );
+  // now add widgets to vertical sizer
   m_pVSizer->Add( m_pHSizer, 1, wxEXPAND );
   
   // The scrollbars are added when ShowScrollbar is called
@@ -722,6 +738,17 @@ void AmayaFrame::SetActive( bool active )
       // setup the enable/disable state of the toolbar buttons
       p_page->SetWindowEnableToolBarButtons( p_page->GetActiveFrame()->GetFrameId() );
     }
+
+  // give focuse to this frame
+  DistributeFocus();
+}
+
+void AmayaFrame::DistributeFocus()
+{
+  wxLogDebug( _T("AmayaFrame::DistributeFocus - frame=%d"), GetFrameId() );
+  
+  if (m_pTextGraber)
+    m_pTextGraber->SetFocus();
 }
 
 bool AmayaFrame::IsActive()
@@ -796,6 +823,105 @@ void AmayaFrame::OnIdle( wxIdleEvent& event )
     event.Skip();
 }
 
+#if 0
+static int thot_mask = 0;
+
+void AmayaFrame::OnText( wxCommandEvent& event )
+{
+  wxString s = m_pTextGraber->GetValue();
+  //  wxLogDebug( s );
+  m_pTextGraber->SetValue( _T("") );
+
+  if ( !IsActive() )
+    {
+      event.Skip();
+      return;
+    }
+  
+  int frame = GetFrameId();
+
+  // wxkeycodes are directly mapped to thot keysyms :
+  // no need to convert the wxwindows keycodes
+  wxChar c;
+  c = s.GetChar(0);
+  int thot_keysym = c;
+
+  // Call the generic function for key events management
+  ThotInput (frame, thot_keysym, 0, thot_mask, thot_keysym);
+
+  event.Skip();
+}
+
+void AmayaFrame::OnKeyDown( wxKeyEvent& event )
+{
+  int thot_keysym = event.GetKeyCode();
+
+  // convert wx key stats to thot key stats 
+  if (thot_keysym == WXK_CONTROL)
+    thot_mask |= THOT_MOD_CTRL;
+  if (thot_keysym == WXK_ALT)
+    thot_mask |= THOT_MOD_ALT;
+  if (thot_keysym == WXK_SHIFT)
+    thot_mask |= THOT_MOD_SHIFT;
+  
+  wxLogDebug( _T("AmayaFrame::OnKeyDown thotmask=%x, thot_keysym=%x"), thot_mask, thot_keysym );
+
+  if ( thot_keysym == WXK_INSERT ||
+       thot_keysym == WXK_DELETE ||
+       thot_keysym == WXK_HOME 	 ||
+       thot_keysym == WXK_END 	 ||
+       thot_keysym == WXK_PRIOR  ||
+       thot_keysym == WXK_NEXT 	 ||
+       thot_keysym == WXK_LEFT 	 ||
+       thot_keysym == WXK_RIGHT  ||
+       thot_keysym == WXK_UP 	 ||
+       thot_keysym == WXK_DOWN )
+  {
+    // Call the generic function for key events management
+    ThotInput (GetFrameId(), thot_keysym, 0, thot_mask, thot_keysym);
+  }
+  else if ( event.ControlDown() || event.AltDown() )
+    {      
+      // le code suivant permet de convertire les majuscules
+      // en minuscules pour les racourcis clavier specifiques a amaya.
+      // OnKeyDown recoit tout le temps des majuscule que Shift soit enfonce ou pas.
+      if (!event.ShiftDown())
+	{
+	  // shift key was not pressed
+	  // force the lowercase
+	  wxString s((wxChar)thot_keysym);
+	  if (s.IsAscii())
+	    {
+	      wxLogDebug( _T("AmayaFrame::OnKeyDown : thot_keysym=%x s=")+s, thot_keysym );
+	      s.MakeLower();
+	      wxChar c = s.GetChar(0);
+	      thot_keysym = (int)c;
+	    }
+	}
+      // Call the generic function for key events management
+      ThotInput (GetFrameId(), thot_keysym, 0, thot_mask, thot_keysym);
+    }
+
+  event.Skip();
+}
+
+void AmayaFrame::OnKeyUp( wxKeyEvent& event )
+{
+  int keycode = event.GetKeyCode();
+
+  // convert wx key stats to thot key stats 
+  if (keycode == WXK_CONTROL)
+    thot_mask &= ~THOT_MOD_CTRL;
+  if (keycode == WXK_ALT)
+    thot_mask &= ~THOT_MOD_ALT;
+  if (keycode == WXK_SHIFT)
+    thot_mask &= ~THOT_MOD_SHIFT;
+
+  wxLogDebug( _T("AmayaFrame::OnKeyUp thotmask = %x"), thot_mask );
+  event.Skip();
+}
+#endif /* 0 */
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
@@ -811,6 +937,11 @@ BEGIN_EVENT_TABLE(AmayaFrame, wxPanel)
   EVT_SIZE( 		AmayaFrame::OnSize )
 
   EVT_IDLE(             AmayaFrame::OnIdle) // Process a wxEVT_IDLE event
+  
+  //  EVT_TEXT( -1,         AmayaFrame::OnText )
+
+  //  EVT_KEY_DOWN(         AmayaFrame::OnKeyDown )
+  //  EVT_KEY_UP(           AmayaFrame::OnKeyUp )
 
 END_EVENT_TABLE()
 

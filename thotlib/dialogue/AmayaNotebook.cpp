@@ -165,6 +165,7 @@ int AmayaNotebook::GetPageId( const AmayaPage * p_page )
     return -1;
 }
 
+#if 0
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaNotebook
@@ -254,13 +255,41 @@ void AmayaNotebook::OnKeyDown( wxKeyEvent& event )
   // forward the key event to current active canvas
   p_canvas->OnKeyDown( event );
 }
+#endif /* 0 */
+
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaNotebook
+ *      Method:  OnSetFocus
+ * Description:  this callback is called when a the notebook get focus.
+ *               notebook sould never get focus so when this callback is called,
+ *               amaya ask active frame to distribute focus to corresponding active canvas
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaNotebook::OnSetFocus( wxFocusEvent & event )
+{
+  wxLogDebug( _T("AmayaNotebook::OnSetFocus") );
+
+  // when notebook receive focus, the page is warned and can redistribute focus to the right widgets
+  // in order to handle characteres.
+  AmayaPage * p_selected_page = (AmayaPage *)GetPage(GetSelection());
+  if (p_selected_page)
+    p_selected_page->SetSelected( TRUE );
+
+  event.Skip();
+}
+
+
 
 BEGIN_EVENT_TABLE(AmayaNotebook, wxNotebook)
   EVT_CLOSE(	                 AmayaNotebook::OnClose )
   EVT_NOTEBOOK_PAGE_CHANGED( -1, AmayaNotebook::OnPageChanged )
 
-  EVT_KEY_DOWN(		AmayaNotebook::OnKeyDown) // Process a wxEVT_KEY_DOWN event (any key has been pressed). 
-  EVT_CHAR(		AmayaNotebook::OnChar) // Process a wxEVT_CHAR event. 
+  EVT_SET_FOCUS(        AmayaNotebook::OnSetFocus )
+
+  //  EVT_KEY_DOWN(		AmayaNotebook::OnKeyDown) // Process a wxEVT_KEY_DOWN event (any key has been pressed). 
+  //  EVT_CHAR(		AmayaNotebook::OnChar) // Process a wxEVT_CHAR event. 
 
 END_EVENT_TABLE()
   

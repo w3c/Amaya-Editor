@@ -137,6 +137,24 @@ wxString AmayaURLBar::GetValue()
   return m_pComboBox->GetValue( );
 }
 
+#if 0
+void AmayaURLBar::OnChar( wxKeyEvent& event )
+{
+  wxLogDebug( _T("AmayaURLBar::OnChar : char=%x"),
+	      event.GetKeyCode() );
+  event.Skip();
+}
+
+void AmayaURLBar::OnURLText( wxCommandEvent& event )
+{
+  // event.GetString()
+  wxString s = m_pComboBox->GetValue( );
+  wxLogDebug( s );
+  //  event.SetString(_T(""));
+  m_pComboBox->SetValue( _T("") );
+  event.Skip();
+}
+#endif /* 0 */
 
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
@@ -145,6 +163,8 @@ wxString AmayaURLBar::GetValue()
 BEGIN_EVENT_TABLE(AmayaURLBar, wxPanel)
   EVT_TEXT_ENTER( -1,       AmayaURLBar::OnURLTextEnter )
   EVT_BUTTON( -1,           AmayaURLBar::OnURLTextEnter )
+  //  EVT_TEXT(-1,              AmayaURLBar::OnURLText )
+  //  EVT_CHAR(		    AmayaURLBar::OnChar) // Process a wxEVT_CHAR event. 
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

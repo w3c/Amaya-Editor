@@ -108,6 +108,8 @@ public:
   void OnClose( wxCloseEvent& event );
   void OnPaint( wxPaintEvent& event );
 
+  void OnSetFocus( wxFocusEvent & event );
+
  protected:
   void AdjustSplitterPos( int height = -1, int width = -1 );
 

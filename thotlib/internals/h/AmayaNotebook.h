@@ -71,8 +71,12 @@ public:
   void OnClose(wxCloseEvent& event);
   void OnPageChanged(wxNotebookEvent& event);
 
+#if 0
   void OnChar( wxKeyEvent& event );
   void OnKeyDown( wxKeyEvent& event );
+#endif /* 0 */
+
+  void OnSetFocus( wxFocusEvent & event );
 
  protected:
   DECLARE_EVENT_TABLE()
