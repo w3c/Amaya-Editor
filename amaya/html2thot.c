@@ -461,7 +461,8 @@ static ThotBool     UnknownAttr = FALSE;  /* the last attribute encountered is
 					     invalid */
 static ThotBool     ReadingAnAttrValue = FALSE;
 static ThotBool     TruncatedAttrValue = FALSE;
-static STRING       bufferAttrValue = NULL;
+static STRING       BufferAttrValue = NULL;
+static int          LgBufferAttrValue = 0;
 static Element      CommentText = NULL;	  /* TEXT element of the current
 					     Comment element */
 static ThotBool     UnknownTag = FALSE;	  /* the last start tag encountered is
@@ -3593,26 +3594,27 @@ static void         EndOfAttrValue (CHAR_T c)
 
   static ThotBool   isAttrValueTruncated;
   void             *status;
+  STRING            newBufferAttrValue;
   int               lg;
 
   if (TruncatedAttrValue)
     {
       isAttrValueTruncated = TRUE;
-      if (bufferAttrValue == NULL)
+      if (BufferAttrValue == NULL)
 	{
-	  bufferAttrValue = TtaAllocString (MaxBufferLength + 1);
-	  ustrcpy (bufferAttrValue, inputBuffer);
+	  lg = 2 * MaxBufferLength;
+	  BufferAttrValue = TtaGetMemory (lg + 1);
+	  ustrcpy (BufferAttrValue, inputBuffer);
+          LgBufferAttrValue = lg;
 	}
       else
 	{
-	  lg = ustrlen (bufferAttrValue);
-	  status = TtaRealloc (bufferAttrValue,
-			       sizeof (CHAR_T) * (MaxBufferLength + lg));
-	  if (status != NULL)
-	    {
-	      bufferAttrValue = status;
-	      ustrcat (bufferAttrValue, inputBuffer);
-	    }
+	  LgBufferAttrValue += MaxBufferLength;
+	  newBufferAttrValue = TtaGetMemory (LgBufferAttrValue + 1);
+	  ustrcpy (newBufferAttrValue, BufferAttrValue);
+	  ustrcat (newBufferAttrValue, inputBuffer);
+	  TtaFreeMemory (BufferAttrValue);
+	  BufferAttrValue = newBufferAttrValue;
 	}
     }
   else
@@ -3642,21 +3644,15 @@ static void         EndOfAttrValue (CHAR_T c)
 	{
 	  if (isAttrValueTruncated)
 	    {
-	      lg = ustrlen (bufferAttrValue);
-	      status = TtaRealloc (bufferAttrValue,
-				   sizeof (CHAR_T) * ((strlen(inputBuffer)) + lg));
-	      if (status != NULL)
-		{
-		  bufferAttrValue = status;
-		  ustrcat (bufferAttrValue, inputBuffer);
-		  EndOfHTMLAttributeValue (bufferAttrValue, lastAttrEntry,
-					   lastAttribute, lastAttrElement,
-					   UnknownAttr, &HTMLcontext,
-					   FALSE/*HTML parser*/);
-		  TtaFreeMemory (bufferAttrValue);
-		  bufferAttrValue = NULL;
-		  isAttrValueTruncated = FALSE;
-		}
+	      ustrcat (BufferAttrValue, inputBuffer);
+	      EndOfHTMLAttributeValue (BufferAttrValue, lastAttrEntry,
+				       lastAttribute, lastAttrElement,
+				       UnknownAttr, &HTMLcontext,
+				       FALSE/*HTML parser*/);
+	      TtaFreeMemory (BufferAttrValue);
+	      BufferAttrValue = NULL;
+	      LgBufferAttrValue = 0;
+	      isAttrValueTruncated = FALSE;
 	    }
 	  else
 	    {
