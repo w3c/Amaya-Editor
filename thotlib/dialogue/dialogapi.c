@@ -4935,34 +4935,10 @@ void TtaSetMenuForm (int ref, int val)
 	     adbloc = adbloc->E_Next;
 	     i = 0;
 	  }			/*while */
-#ifndef _GTK
 	if (!visible)
+#ifndef _GTK
 	   XtUnmanageChild (catalogue->Cat_Widget);
 #else /* _GTK */
-	adbloc = catalogue->Cat_Entries;
-	ent = 0;
-	i = 2;			/* decalage de 2 pour le widget titre */
-	while (adbloc != NULL)
-	  {
-	    while (i < C_NUMBER)
-	      {
-		if (adbloc->E_ThotWidget[i] == 0)
-		  i = C_NUMBER;
-		else
-		  {
-		    id_toggled  = (guint) gtk_object_get_data (GTK_OBJECT (adbloc->E_ThotWidget[i]),
-							       "toggled");
-		    gtk_signal_handler_unblock (GTK_OBJECT(adbloc->E_ThotWidget[i]), 
-						id_toggled); 
-		  }
-		  i++;
-		  ent++;
-	       }
-	     /* Passe au bloc suivant */
-	     adbloc = adbloc->E_Next;
-	     i = 0;
-	  }		
-	if (!visible)
 	  gtk_widget_hide (catalogue->Cat_Widget);
 #endif /* _GTK */
 #endif /* _WINDOWS */
