@@ -981,7 +981,8 @@ CHAR_T*              text;
 
 #endif
 {
-  CHAR_T*            s = NULL;
+  CHAR_T           *s = NULL;
+  CHAR_T           *url;
   ThotBool          change;
 
   change = FALSE;
@@ -1003,7 +1004,10 @@ CHAR_T*              text;
 	      TtaFreeMemory (s);
 	      return;
 	    }
+	  url = s;
 	}
+      else
+	url = text;
  
       if (!CanReplaceCurrentDocument (document, view))
 	{
@@ -1017,11 +1021,15 @@ CHAR_T*              text;
       if (change)
 	{
 	  /* change the text value */
-	  TtaSetTextZone (document, view, 1, text);
-	  CallbackDialogue (BaseDialog + URLName, STRING_DATA, text);
+	  TtaSetTextZone (document, view, 1, url);
+	  CallbackDialogue (BaseDialog + URLName, STRING_DATA, url);
 	}
       else
-	CallbackDialogue (BaseDialog + URLName, STRING_DATA, text);
+	CallbackDialogue (BaseDialog + URLName, STRING_DATA, url);
+
+      if (s)
+	TtaFreeMemory (s);
+
       InNewWindow = FALSE;
       CurrentDocument = document;
       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 1);
