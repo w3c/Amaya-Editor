@@ -771,12 +771,15 @@ void CreateTargetAnchor (Document doc, Element el, ThotBool forceID,
 		  }
 		else if (url[i] == '_' ||
 			 url[i] == ':' ||
-			 ((unsigned int) url[i] >= 65 &&
-			  (unsigned int) url[i] <= 90) ||
-			 ((unsigned int) url[i] >= 81 &&
-			  (unsigned int) url[i] <= 127) ||
-			 (i > 0 && (unsigned int) url[i] >= 48 &&
-			  (unsigned int) url[i] <= 57))
+			 (i-space > 0 && url[i] == '.') ||
+			 (i-space > 0 && url[i] == '-') ||
+			 ((unsigned int) url[i] >= 65 &&          /*  'A'  */
+			  (unsigned int) url[i] <= 90) ||         /*  'Z'  */
+			 ((unsigned int) url[i] >= 97 &&          /*  'a'  */
+			  (unsigned int) url[i] <= 127) ||        /*  'z'  */
+			 (i-space > 0 &&
+			  (unsigned int) url[i] >= 48 &&          /*  '0'  */
+			  (unsigned int) url[i] <= 57))           /*  '9'  */
 		  /* valid character for an ID */
 		  i++;
 		else
