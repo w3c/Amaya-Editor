@@ -81,12 +81,6 @@ static char        *AppRegistryEntryAppli = NULL;
 static char         CurrentDir[MAX_PATH];
 static char        *Thot_Dir;
 
-#ifdef _WINDOWS
-void CleanRegistry () {
-     AppRegistryInitialized = 0;
-}
-#endif /* _WINDOWS */
-
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
