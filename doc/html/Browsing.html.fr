@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Naviguer avec Amaya</title>
-  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 6.0, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -244,6 +244,47 @@ des raccourcis clavier à la Emacs.</p>
     élément de formulaire du formulaire courant.</li>
 </ul>
 </div>
+
+<h3><a name="form" id="form">Formulaires</a></h3>
+
+<p>Comme Amaya est à la fois un navigateur et un éditeur, certains widgets
+utilisés pour les éléments HTML <strong>form</strong> sont différents de ceux
+utilisés dans les navigateurs seuls. Cette section répertorie les différences
+les plus significatives.</p>
+
+<h2>Formulaire sélecteur input, sélection simple (GTK et WIN32)</h2>
+
+<p>Pour activer ce sélecteur, l'utilisateur doit cliquer deux fois sur
+l'entrée. Cela fait apparaître un popup listant toutes les entrées. Ce popup
+est ensuite utilisable soit avec le clavier, soit avec la souris.</p>
+
+<p>Avec le clavier, vous devez au préalable selectionner une entrée grâce aux
+touches flèches puis valider avec la touche <strong>Entrée</strong>. Les
+touches <strong>PageUp</strong> et <strong>PageDown</strong> permettent de
+faire défiler plus rapidement la liste des entrées. Vous pouvez annuler
+l'action de ce popup en appuyant sur la touche <strong>Escape</strong> à
+n'importe quel moment.</p>
+
+<p>Avec la souris, il y a deux types de comportement. Un simple clic permet à
+l'utilisateur de selectionner une entrée tandis qu'un double clic sur une
+entrée signifie que l'utilisateur veut activer la selection. Vous pouvez
+utiliser l'ascenseur pour naviguer plus rapidement dans la liste des entrées.
+Pour annuler l'action du popup, vous devez cliquer n'inporte où en dehors du
+popup (NB, cette option n'est pas encore opérationnelle sous GTK).</p>
+
+<h2>Formulaire sélecteur input, sélection multiple</h2>
+
+<p>Le comportement de ce widget est similaire au précédent en ce qu'il
+supporte seulement un basculement d'état de sélection à la fois. Vous devez
+l'appeler autant de fois que vous devez changer l'état d'une sélection.
+Lorsque ce widget est activé, il montre l'état courant des sélections, en
+concaténant un caractère '&gt;' aux entrées sélectionnées (Win32) ou par
+l'utilisation d'une barre de couleur bleue (GTK). Comme pécédemment, vous
+pouvez annuler l'action de ce widget soit en utilisant la touche
+<strong>Escape</strong> soit en cliquant à l'extérieur du widget (Win32
+uniquement).</p>
+
+<p></p>
 
 <p><a href="Manual.html.fr"><img alt="" /></a></p>
 </body>
