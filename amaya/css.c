@@ -1025,7 +1025,7 @@ Document            doc;
    int                 local = FALSE;
    int                 toparse;
 
-   PSchema             gPres;
+   PSchema             gPres, prev;
 
    CSSInfoPtr          css;
 
@@ -1106,6 +1106,8 @@ Document            doc;
     * and free the buffer.
     */
    gPres = TtaNewPSchema ();
+   prev = TtaGetFirstPSchema (doc);
+   TtaAddPSchema (gPres, prev, TRUE, doc);
    css = NewCSS ();
    css->tempfile = TtaStrdup (&tempfile[0]);
    css->name = "External Style";
