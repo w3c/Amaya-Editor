@@ -14,6 +14,8 @@
 #include "dialog.h"
 #include "application.h"
 #include "document.h"
+#include "fileaccess.h"
+#include "thotdir.h"
 #undef EXPORT
 #define EXPORT extern
 #include "edit_tv.h"
@@ -23,6 +25,16 @@
 #include "frame_tv.h"
 #include "opendoc_f.h"
 #include "createdoc_f.h"
+#include "font_f.h"
+#include "docs_f.h"
+#include "applicationapi_f.h"
+#include "callback_f.h"
+#include "fileaccess_f.h"
+#include "translation_f.h"
+#include "browser_f.h"
+#include "config_f.h"
+#include "platform_f.h"
+#include "viewapi_f.h"
 
 extern int          CurrentDialog;
 static PathBuffer   SaveDirectoryName;

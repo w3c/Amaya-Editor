@@ -155,7 +155,7 @@ char               *viewsToPrint;
 	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, realName, printer, PageSize, nCopies, hShift,
 	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
    else
-      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %d %d %d %s %d %d %d %d %d %ld PRINTER %S &\n",
+      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s \"%s\" %s %d %d %d %s %d %d %d %d %d %ld PRINTER %s &\n",
 	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, realName, "lp", PageSize, nCopies, hShift,
 	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
 

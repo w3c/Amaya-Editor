@@ -10,10 +10,7 @@ extern void DetruirePolygone ( Element Fleche,
                                Document Doc );
 extern void TracerLienComposite ( Element Lien,
                                   Document Doc );
-extern void TracerOrigineLien ( Element Lien,
-                                Document Doc );
-extern void TracerDestinationLien ( Element Lien,
-                                    Document Doc );
+extern void TracerBrancheLien ( NotifyElement * fleche );
 extern void AjusterBoitePos ( Element Objet,
                               Document Doc );
 extern void AjusterBoiteDim ( Element Objet,
@@ -34,10 +31,7 @@ extern void DetruirePolygone (/* Element Fleche,
                                  Document Doc */);
 extern void TracerLienComposite (/* Element Lien,
                                     Document Doc */);
-extern void TracerOrigineLien (/* Element Lien,
-                                  Document Doc */);
-extern void TracerDestinationLien (/* Element Lien,
-                                      Document Doc */);
+extern void TracerBrancheLien (/* NotifyElement * fleche */);
 extern void AjusterBoitePos (/* Element Objet,
                                 Document Doc */);
 extern void AjusterBoiteDim (/* Element Objet,

@@ -8,6 +8,8 @@
 
 extern void TtcPrint ( Document document,
                        View view );
+extern void TtaPrint ( Document document,
+                       char* viewNames );
 extern void CallbackPrintmenu ( int ref,
                                 int val,
                                 char *txt );
@@ -18,6 +20,8 @@ extern void TtcPrintSetup ( Document document,
 
 extern void TtcPrint (/* Document document,
                          View view */);
+extern void TtaPrint (/* Document document,
+                         char* viewNames */);
 extern void CallbackPrintmenu (/* int ref,
                                   int val,
                                   char *txt */);

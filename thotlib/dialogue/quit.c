@@ -18,7 +18,7 @@ static boolean      InProcedureQuitThot = FALSE;
 #include "appdialogue_f.h"
 #include "callback_f.h"
 #include "viewcommands_f.h"
-
+#include "closedoc_f.h"
 /*----------------------------------------------------------------------
    TtcQuit initialise le changement de TtcQuit.                       
   ----------------------------------------------------------------------*/

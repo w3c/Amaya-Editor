@@ -21,6 +21,7 @@
 #include "fileaccess.h"
 #include "typecorr.h"
 #include "appdialogue.h"
+#include "labelAllocator.h"
 
 #undef EXPORT
 #define EXPORT extern
@@ -67,6 +68,7 @@ static int          newColor[] =
 #include "structschema_f.h"
 #include "content_f.h"
 #include "applicationapi_f.h"
+#include "labelalloc_f.h"
 
 /*----------------------------------------------------------------------
    	PivotError							
@@ -1219,6 +1221,7 @@ PtrDocument         pDoc;
 	pPR1->RdInternalRef = !RExt;
      }
 }
+
 
 #ifdef __STDC__
 static void         NewCreateReference (PtrReference pRef1, ReferenceType refType, LabelString label, boolean refExt, DocumentIdentifier docIdent, PtrDocument pDoc)

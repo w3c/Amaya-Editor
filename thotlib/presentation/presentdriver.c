@@ -420,10 +420,12 @@ PRule               pRule;
 	       value = rule->PrDimRule.DrValue;
 	       break;
 	    case PtJustify:
-	       break;
 	    case PtAdjust:
-	       break;
 	    case PtPictInfo:
+	    case PtFunction:
+	    case PtHyphenate:
+            case PtVertOverflow:
+            case PtHorizOverflow:
 	       break;
 	 }
 

@@ -2,6 +2,7 @@
  * Copyright (c) 1996 INRIA, All rights reserved
  */
 
+#include <Xm/Form.h>
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
