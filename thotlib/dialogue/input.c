@@ -700,7 +700,7 @@ int                 key;
 	   UPPERlower = FALSE;
 #          ifdef _WINDOWS
 	   endOfSearch = FALSE;
-	   while (!endOfSearch && ptr != NULL || !UPPERlower)
+	   while (!endOfSearch && (ptr != NULL || !UPPERlower))
 #          else  /* !_WINDOWS */
            while (!found && (ptr != NULL || !UPPERlower))
 #            endif /* _WINDOWS */
@@ -1232,6 +1232,8 @@ char               *appliname;
 		  /* Isole l'intitule de la commande */
 		  strncpy (ch, name, 80);
 		  adr = strchr (ch, '(');
+		  if (adr == NULL)
+		    adr = strchr (ch, ' ');
 		  if (adr == NULL)
 		     i = max;
 		  else

@@ -16,6 +16,8 @@ extern void FollowTheLink_callback ( int targetDocument,
                                      char *content_type,
                                      void * context );
 extern boolean DoubleClick ( NotifyElement * event );
+extern void UpdateTitle ( Element el,
+                          Document doc );
 extern void FreeDocumentResource ( Document doc );
 extern void DocumentClosed ( NotifyDialog * event );
 extern void UpdateContextSensitiveMenus ( Document doc );
@@ -38,6 +40,8 @@ extern void FollowTheLink_callback (/* int targetDocument,
                                        char *content_type,
                                        void * context */);
 extern boolean DoubleClick (/* NotifyElement * event */);
+extern void UpdateTitle (/* Element el,
+                            Document doc */);
 extern void FreeDocumentResource (/* Document doc */);
 extern void DocumentClosed (/* NotifyDialog * event */);
 extern void UpdateContextSensitiveMenus (/* Document doc */);

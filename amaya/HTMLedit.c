@@ -2117,39 +2117,6 @@ char               *title;
 }
 
 /*----------------------------------------------------------------------
-   UpdateTitle update the content of the Title field on top of the 
-   main window, according to the contents of element el.   
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                UpdateTitle (Element el, Document doc)
-#else  /* __STDC__ */
-void                UpdateTitle (el, doc)
-Element             el;
-Document            doc;
-
-#endif /* __STDC__ */
-{
-   Element             textElem;
-   int                 length;
-   Language            lang;
-   char               *text;
-
-   if (TtaGetViewFrame (doc, 1) == 0)
-      /* this document is not displayed */
-      return;
-   textElem = TtaGetFirstChild (el);
-   if (textElem != NULL)
-     {
-	length = TtaGetTextLength (textElem) + 1;
-	text = TtaGetMemory (length);
-	TtaGiveTextContent (textElem, text, &length, &lang);
-	TtaSetTextZone (doc, 1, 2, text);
-	UpdateAtom (doc, DocumentURLs[doc], text);
-	TtaFreeMemory (text);
-     }
-}
-
-/*----------------------------------------------------------------------
    The user has modified the contents of element TITLE. Update the    
    the Title field on top of the window.                           
   ----------------------------------------------------------------------*/

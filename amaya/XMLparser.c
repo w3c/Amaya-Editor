@@ -451,7 +451,7 @@ char                c;
   else
     {
       if (stackLevel >= 0)
-	currentLanguage = languageStack[stackLevel - 1];
+	currentLanguage = languageStack[stackLevel];
       if (elementStack[stackLevel] != NULL)
         {
 	  /* restore the parser context */

@@ -338,8 +338,6 @@ static Multi_Key    mk_tab[] =
    {XK_y, XK_acute, XK_yacute},	/* yacute */
    {XK_y, XK_apostrophe, XK_yacute},	/* yacute */
    {XK_y, XK_quotedbl, XK_ydiaeresis},	/* ydiaeresis */
-   {0, 0, 0},
-};
 #else /* IV */
    {XK_A, XK_grave, XK_Agrave},	/* Agrave */
    {XK_A, XK_acute, XK_Agrave},	/* Aacute */
@@ -409,9 +407,9 @@ static Multi_Key    mk_tab[] =
    {XK_y, XK_acute, XK_yacute},	/* yacute */
    {XK_y, XK_apostrophe, XK_yacute},	/* yacute */
    {XK_y, XK_quotedbl, XK_ydiaeresis},	/* ydiaeresis */
+#endif /* IV */
    {0, 0, 0},
 };
-#endif /* IV */
 
 
 #define NB_MK (sizeof(mk_tab) / sizeof(Multi_Key))
@@ -478,13 +476,13 @@ ThotComposeStatus  *status;	/* not implemented */
     }
   else if (state == LockMask)
     sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode];
-  else if (state == Mod3Mask)
+  else if (state == Mod3Mask || state == Mod1Mask)
     sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 2];
-  else if (state == (ShiftMask | Mod3Mask))
+  else if (state == (ShiftMask | Mod3Mask) || state == (ShiftMask | Mod1Mask))
     sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 3];
   else if ((state & (dpy->mode_switch | ShiftMask)) == (dpy->mode_switch | ShiftMask))
     sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 3];
-  else if ((state & dpy->mode_switch) == (state & dpy->mode_switch))
+  else if ((state & dpy->mode_switch) == dpy->mode_switch)
     sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 2];
   if (keysym != NULL)
     *keysym = sym;

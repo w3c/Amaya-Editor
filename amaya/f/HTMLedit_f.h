@@ -94,8 +94,6 @@ extern Element SearchAnchor ( Document doc,
 extern void UpdateAtom ( Document doc,
                          char *url,
                          char *title );
-extern void UpdateTitle ( Element el,
-                          Document doc );
 extern void TitleModified ( NotifyOnTarget * event );
 
 #else /* __STDC__ */
@@ -188,8 +186,6 @@ extern Element SearchAnchor (/* Document doc,
 extern void UpdateAtom (/* Document doc,
                            char *url,
                            char *title */);
-extern void UpdateTitle (/* Element el,
-                            Document doc */);
 extern void TitleModified (/* NotifyOnTarget * event */);
 
 #endif /* __STDC__ */
