@@ -540,6 +540,7 @@ boolean             extension;
 	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_SCHEMA_NOT_FIND),
 				schName);
 	     FreeSchStruc (*pSS);
+	     *pSS = NULL;	     
 	  }
 	else if ((*pSS)->SsExtension != extension)
 	   /* on voulait un schema d'extension et ce n'en est pas un,
