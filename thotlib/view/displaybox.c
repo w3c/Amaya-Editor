@@ -1748,7 +1748,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      if (Printing && !GL_TransText ())
 			{
 #endif /*_GL*/
-			  if ((script == 'Z')||(script == 'A'))
+			  if (script == 'Z' || script == 'A')
 			    x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,
 					      org, bl, x, blockbegin, fg, shadow);
 			  else
@@ -1789,7 +1789,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      if (Printing && !GL_TransText ())
 			{
 #endif /*_GL*/
-			  if ((script == 'Z')||(script == 'A' ))
+			  if (script == 'Z' || script == 'A')
 			    x += WDrawString (wbuffer, nbcar, frame, x, y1,
 					      prevfont, org, bl, 0, blockbegin,
 					      fg, shadow);
@@ -1832,7 +1832,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      if (Printing && !GL_TransText ())
 			{
 #endif /*_GL*/
-			  if ((script == 'Z')||(script == 'A'))
+			  if (script == 'Z' || script == 'A')
 			    x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,  
 					      0, bl, 0, blockbegin, fg, shadow);
 			  else
@@ -1893,16 +1893,18 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		    }
 #ifdef _GL
 		  else if (Printing && !GL_TransText ())
-			{
+		    {
+		      if (script == 'Z' || script == 'A')
+#else /*_GL*/
+		  else if (script == 'Z' || script == 'A')
 #endif /*_GL*/
-		  if ((script == 'Z')||(script == 'A'))
 		    /* add the new char */
 		    wbuffer[nbcar++] = val;
 		  else
 		    /* add the new char */
 		    buffer[nbcar++] = val;
 #ifdef _GL
-			}
+		    }
 		  else 
 		    /* add the new char */
 		    wbuffer[nbcar++] = val;
@@ -1969,7 +1971,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	      if (Printing && !GL_TransText ())
 		{
 #endif /*_GL*/
-		  if ((script == 'Z')||(script == 'A'))
+		  if (script == 'Z' || script == 'A')
 		    x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont, width,
 				      bl, hyphen, blockbegin, fg, shadow);
 		  else
