@@ -284,6 +284,9 @@ sub end_hndl { #	do the modification if necessary
 	}	
 	elsif ( $end_tag eq "control" ) { 	#one time only
 # must create as many files as  present languages (and erase the olds) 
+## JK: list_of lang_occur is not initalized for some obscure reason. I force 
+## it here
+                @list_of_lang_occur = split(' ', "en fr de it tr es");
 		foreach $prefix (@list_of_lang_occur) {
 			$file_name = $where . $prefix . $sufix ;
 			push (@list_of_dialogues_files ,$file_name);
