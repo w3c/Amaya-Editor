@@ -3411,7 +3411,8 @@ int                 val;
 	    case 2:
 	       /* Previous */
 	       pEl = SelMenuPreviousEl;
-	       lg = pEl->ElVolume;
+	       if (pEl)
+	          lg = pEl->ElVolume;
 	       break;
 	    case 3:
 	       /* Next */
