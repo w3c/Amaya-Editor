@@ -1791,7 +1791,6 @@ RULES
 	Hyphenate: Yes;
 #else
 	HorizPos: Left = Enclosing . Left;
-	Height: Enclosing . Height min;
 	Hyphenate: No;
 	Adjust: Left;
 	MarginLeft: 0.5 cm;
@@ -1807,7 +1806,6 @@ RULES
 		Adjust: Left;
 #else
                 Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
 #endif
 		END;
 	IN Links_view BEGIN
@@ -1818,11 +1816,9 @@ RULES
 		MarginLeft: 0.5;
 		MarginRight: 0;
 		Visibility: Enclosing =;
-		Height: Enclosed . Height;
 		END;
 	IN Table_of_contents BEGIN
 		Visibility: 0;
-		Height: Enclosed . Height;
 		END;
 	END;
 
