@@ -245,6 +245,7 @@
 #define ATTR9ITEMSDIALOG                541
 #define ANNOTMENU                       542
 #define INITCONFIRM3LDIALOG1            543
+#define ANNOTFILTERMENU                 544
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -648,6 +649,10 @@
 #define IDC_ANNOTPOSTSERVER             1516
 #define IDC_TANNOTAUTOLOAD              1518
 #define IDC_ANNOTAUTOLOAD               1519
+#define ID_ANNOTSHOW                    1521
+#define ID_ANNOTHIDE                    1522
+#define ID_ANNOTSHOWALL                 1523
+#define ID_ANNOTHIDEALL                 1524
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -692,9 +697,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        543
+#define _APS_NEXT_RESOURCE_VALUE        545
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1521
+#define _APS_NEXT_CONTROL_VALUE         1523
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
