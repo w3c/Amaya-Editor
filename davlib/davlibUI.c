@@ -15,7 +15,10 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.3  2002-06-04 08:15:43  cvs
+ ** Revision 1.4  2002-06-04 10:05:14  cvs
+ ** JK: Removed a windows warning
+ **
+ ** Revision 1.3  2002/06/04 08:15:43  cvs
  ** JK: removing Windows compiler warnings
  **
  ** Revision 1.2  2002/05/31 17:59:19  kirschpi
@@ -211,8 +214,10 @@ void DAVHorizontalDialog (Document docid, char *title, char *rheader, \
                           char *lheader, AwList *list) {
         
     int i=MAX_REF+1, form=MAX_REF;
+#ifndef _WINDOWS
     char *name, *value;
-    
+#endif /* _WINDOWS */
+
     if (docid>0 && list) {
              
 #ifndef _WINDOWS           
