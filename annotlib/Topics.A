@@ -5,6 +5,7 @@ DEFAULT
      ElemRClick.Pre -> BM_SimpleRClick;
      ElemActivate.Pre -> BM_ShowProperties;
      ElemDelete.Pre -> BM_ItemDelete;
+     DocClose.Post -> DocumentClosed;
    END;
 
 
