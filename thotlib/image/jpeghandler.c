@@ -20,6 +20,7 @@
  *         R. Guetari (W3C/INRIA) Windows 95/NT routines
  */
 
+#define HAVE_BOOLEAN
 #ifdef _WINDOWS
 #include "jconfig.h"
 #endif /* _WINDOWS */
@@ -32,7 +33,6 @@
 #include "jinclude.h"
 #include "jpeglib.h"
 
-#define HAVE_BOOLEAN
 #include "typemedia.h"
 #include "picture.h"
 #include "frame.h"
