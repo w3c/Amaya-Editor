@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -19,11 +19,12 @@
 
 #ifdef ANNOTATIONS
 
-#include "XPointer_f.h"
 #define THOT_EXPORT extern
 #include "amaya.h"
-#include "css.h"
-#include "parser.h"
+#undef THOT_EXPORT
+#include "XPointer_f.h"
+
+/*#include "parser.h" */
 
 typedef struct _XPathItem XPathItem;
 
@@ -256,7 +257,7 @@ static void PreviousSibling (Element *el)
   returns the first element that doesn't have an exception and that
   has an ID attribute with value val
   ----------------------------------------------------------------------*/
-static Element SearchAttrId (Element root, char *val)
+Element SearchAttrId (Element root, char *val)
 {
   Element sibling, result;
 
@@ -265,7 +266,7 @@ static Element SearchAttrId (Element root, char *val)
   else if (!root)
     return NULL;
   
-  sibling = TtaGetFirstChild (root);
+  sibling = root;
   result = 0;
   while (!result && sibling)
     {
@@ -279,21 +280,21 @@ static Element SearchAttrId (Element root, char *val)
 }
 
 /*----------------------------------------------------------------------
-  SearchChildIndex
+  SearchSiblingIndex
   ----------------------------------------------------------------------*/
-static Element SearchChildIndex (Element root, char *el_name, int index)
+Element SearchSiblingIndex (Element root, char *el_name, int *index)
 {
   Element sibling, result;
 
   if (!root)
     return NULL;
-  
-  if (index == 0)
-    index++;
 
-  sibling = TtaGetFirstChild (root);
-  if (!sibling)
-    return NULL;
+  /* we consider an index of 0 equivalent to an index of 1 as we don't
+     handle node sets for the moment */
+  if (*index == 0)
+    (*index)++;
+
+  sibling = root;
 
   /* get the next sibling in the Thot tree */
   while (sibling)
@@ -301,7 +302,7 @@ static Element SearchChildIndex (Element root, char *el_name, int index)
       /* if the element call the algorithm recursively from this point */
       if (ElIsHidden (sibling))
 	  {
-	    result = SearchChildIndex (sibling, el_name, index);
+	    result = SearchSiblingIndex (sibling, el_name, index);
 	    if (result)
 	      return result;
 	    else
@@ -314,9 +315,9 @@ static Element SearchChildIndex (Element root, char *el_name, int index)
       if (TestElName (sibling, el_name))
 	{
 	  /* we found the element */
-	  if (index == 1)
+	  if (*index == 1)
 	    return sibling;
-	  index--;
+	  (*index)--;
 	}
       /* go to the next sibling */
 	TtaNextSibling (&sibling);
@@ -333,65 +334,47 @@ static Element SearchChildIndex (Element root, char *el_name, int index)
   the caller to free the returned string.
   Returns NULL in case of error.
   ----------------------------------------------------------------------*/
-static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len)
+static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len, ThotBool firstF)
 {
   XPathItem *xpath_item, *xpath_tmp;
   char buffer[500];
   char *xpath_expr = NULL;
-  char *typeName;
 
   xpath_item = *xpath_list;
+  if  (firstCh > 0)
+    {
+      if (firstF)
+	StrACat (&xpath_expr, "start-point(string-range(");
+      else
+	StrACat (&xpath_expr, "end-point(string-range(");
+    }
+
   while (xpath_item)
     {
-      if (!xpath_item->id_value)
-	typeName = TtaGetElementTypeName (xpath_item->elType);
-
-      if (xpath_item->next 
-	  && xpath_item->next->elType.ElTypeNum == THOT_TEXT_UNIT)
-	{
-	  if (firstCh > 0)
-	    {
-	      if (xpath_item->id_value)
-		snprintf (buffer, sizeof (buffer),
-			 "/string-range(id(\"%s\"),\"\",%d,%d)",
-			 xpath_item->id_value, firstCh, len);
-	      else
-		snprintf (buffer, sizeof (buffer),
-			 "/string-range(%s[%d],\"\",%d,%d)",
-			 typeName, xpath_item->index, firstCh, len);
-	    }
-	  else
-	    {
-	      if (xpath_item->id_value)
-		snprintf (buffer, sizeof (buffer), 
-			  "/string-range(id(\"%s\"),\"\"",
-			 xpath_item->id_value);
-	      else
-		snprintf (buffer, sizeof (buffer),
-			  "/string-range(%s[%d],\"\"",
-			  typeName, xpath_item->index);
-	    }
-	  /* we remove the extra element, as we have already used it */
-	  xpath_tmp = xpath_item->next->next;
-	  TtaFreeMemory (xpath_item->next);
-	}
-      else
+      /* @@ how can we detect this in a more generic way? */
+      if (xpath_item->elType.ElTypeNum != THOT_TEXT_UNIT)
 	{
 	  if (xpath_item->id_value)
 	    snprintf (buffer, sizeof (buffer),
 		      "id(\"%s\")", xpath_item->id_value);
 	  else
 	    snprintf (buffer, sizeof (buffer),
-		      "/%s[%d]", typeName, 
-		     xpath_item->index);
-	  xpath_tmp = xpath_item->next;
+		      "/%s[%d]",  
+		      TtaGetElementTypeName (xpath_item->elType),
+		      xpath_item->index);
+	  StrACat (&xpath_expr, buffer);
 	}
-
       if (xpath_item->id_value)
 	TtaFreeMemory (xpath_item->id_value);
+      xpath_tmp = xpath_item->next;
       TtaFreeMemory (xpath_item);
       xpath_item = xpath_tmp;
+    }
 
+  if  (firstCh > 0)
+    {
+      snprintf (buffer, sizeof (buffer),
+		",\"\",%d,%d))", firstCh, len);
       StrACat (&xpath_expr, buffer);
     }
 
@@ -410,10 +393,13 @@ static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len)
   Returns NULL in case of failure.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char *XPointer_ThotEl2XPath (Element start, int firstCh, int len)
+char *XPointer_ThotEl2XPath (Element start, int firstCh, int len, ThotBool firstF)
 #else
-char *XPointer_ThotEl2XPath (start)
+char *XPointer_ThotEl2XPath (start, firstCh, len, firstF)
 Element start;
+int firstCh;
+int len;
+ThotBool firstF;
 #endif /* __STDC__ */
 {
   Element el, prev;
@@ -471,7 +457,7 @@ Element start;
   
   /* find the xpath expression (this function frees the list while building
      the string) */
-  xpath_expr = XPathList2Str (&xpath_list, firstCh, len);
+  xpath_expr = XPathList2Str (&xpath_list, firstCh, len, firstF);
   return (xpath_expr);
 }
 
@@ -482,7 +468,7 @@ Element start;
   API yet to be defined.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void XPointer_Xptr2tTot (Document doc, View view, CHAR_T *expr)
+void XPointer_Xptr2tThot (Document doc, View view, CHAR_T *expr)
 #else
 void XPointer_Xptr2Thot (doc, view, expr)
 Document doc;
@@ -510,6 +496,8 @@ View view;
 #endif
 {
   Element     firstEl, lastEl;
+  Element     firstV, lastV;
+
   int         firstCh, lastCh, i;
   int         firstLen;
 
@@ -535,7 +523,7 @@ View view;
   /* get the first selected element */
   TtaGiveFirstSelectedElement (doc, &firstEl, &firstCh, &i);
   firstCh = AdjustChIndex (firstEl, firstCh);
-
+  
   if (firstEl == NULL)
     return NULL; /* ERROR, there is no selection */
 
@@ -558,12 +546,12 @@ View view;
   else
     firstLen = 1;
 
-  firstXpath = XPointer_ThotEl2XPath (firstEl, firstCh, firstLen);
+  firstXpath = XPointer_ThotEl2XPath (firstEl, firstCh, firstLen, TRUE);
   fprintf (stderr, "\nfirst xpointer is %s", firstXpath);
   
   if (lastEl)
     {
-      lastXpath = XPointer_ThotEl2XPath (lastEl, lastCh, 1);
+      lastXpath = XPointer_ThotEl2XPath (lastEl, lastCh, 1, FALSE);
       fprintf (stderr, "\nlast xpointer is %s\n", lastXpath);
     }
   else 
@@ -586,6 +574,13 @@ View view;
   fprintf (stderr, "final expression is: %s\n", xptr_expr);
 
   /* @@@ test */
+  printf ("first el is %d\n", firstEl);
+  printf ("last el is %d\n", lastEl);
+
+  /* now, let's try to parse what we generated */
+  XPointer_Parse (doc, xptr_expr);
+
+#if 0
   firstEl = TtaGetMainRoot (doc);
   firstEl = SearchAttrId (firstEl, "jose");
   if (firstEl)
@@ -599,13 +594,16 @@ View view;
   TtaNextSibling (&firstEl);
   /* point to the first child */
   firstEl = TtaGetFirstChild (firstEl);
-
-  firstEl = SearchChildIndex (firstEl, "dt", 3);
-  if (firstEl)
-    printf ("found element %d\n", firstEl);
-  else
-    printf ("no element found\n");
-
+  {
+    int *ptr;
+    i = 3;
+    firstEl = SearchSiblingIndex (firstEl, "dt", &i);
+    if (firstEl)
+      printf ("found element %d\n", firstEl);
+    else
+      printf ("no element found\n");
+  }
+#endif
   /* @@@ test */
 
   /* @@ should return xptr_expr */
@@ -613,3 +611,6 @@ View view;
   return NULL;
 }
 #endif ANNOTATIONS
+
+
+

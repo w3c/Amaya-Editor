@@ -1,12 +1,37 @@
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 2000
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
+/*
+ * XPointerparser.c : contains all the functions for parsing an XPointer
+ * expression and returning the equivalent set of nodes in a Thot tree.
+ *
+ * Author: J. Kahan
+ *
+ * Status:
+ *
+ *   Experimental, only used with annotations for the moment.
+ *   Not all of XPath expressions are supported yet.
+ *
+ */
+
+#ifdef ANNOTATIONS
+#define THOT_EXPORT extern
+#include "amaya.h"
+#undef THOT_EXPORT
+#include "XPointerparse_f.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "XPointer_f.h"
 
 /* #define XPTR_PARSE_DEBUG */
 #define XPTR_ACTION_DEBUG
 
 #define BSIZE 128       /* size of the lexical analyzer temporary buffer */
-#define EOS '\0'
 
 #define INC_CUR ctx->cur++
 #define VAL_CUR *(ctx->cur)
@@ -68,7 +93,7 @@ static symTableCtx symtable;
 
 /* the node info that the parsing will return */
 typedef struct _nodeInfo {
-  int  el;
+  Element  el;
   char node[10];
   int  type; /* 0, just point at the node, 1, point at its content */
   int  startC;
@@ -78,6 +103,9 @@ typedef struct _nodeInfo {
 } nodeInfo;
 
 typedef struct _parserContext {
+  Document doc; /* document where we are resolving the XPointer */
+  Element root; /* root element of the document */
+
   char *cur;    /* the current char being parsed */
   char *buffer; /* the input string */
 
@@ -141,18 +169,18 @@ static int InsertSymbol (parserContextPtr ctx, char *s, int tok)
   symTableCtx *me = ctx->symtable;
 
   if (ctx->error)
-    return;
+    return DONE;
 
   len = strlen (s); /* strlen computes length of s */
   if (me->lastentry + 1 >= SYMMAX)
     {
       CtxAddError (ctx, "Parser: symbol table full");
-      return;
+      return DONE;
     }
   if (me->lastchar + len + 1 >= STRMAX)
     {
       CtxAddError (ctx, "Parser: lexemes table full");
-      return;
+      return DONE;
     }
   me->lastentry = me->lastentry + 1;
   me->symtable[me->lastentry].token = tok;
@@ -203,22 +231,22 @@ static void GotoChild (parserContextPtr ctx)
   if (curNode->node[0])
     printf ("Going to child: %s, index %d\n", curNode->node, curNode->index);
   else
-    printf ("Going to root\n");
-#endif	  
+    {
+      printf ("First node, nothing in stack yet, ignoring it\n");
+      return;
+    }
+#endif
+
   /* thot search for element with this nameid */
-  /*
-    if (curNode->el == NULL)
-       goto root;
-    if (!node found)
+  if (!curNode->el)
+    curNode->el = ctx->root;
+  else
+    curNode->el = TtaGetFirstChild (curNode->el);
+
+    curNode->el = SearchSiblingIndex (curNode->el, curNode->node, 
+				      &(curNode->index));
+  if (!curNode->el)
     CtxAddError (ctx, "GotoChild: no such node");
-    else
-       find the node with el and index.
-    if (not found)
-      CtxAddError (ctx, "GotoChild: no such id");
-      ekse
-        curNode->el = el;
-  */
-  curNode->el++;
 }
 
 static void GotoId (parserContextPtr ctx, char *id)
@@ -227,16 +255,16 @@ static void GotoId (parserContextPtr ctx, char *id)
   
 #ifdef XPTR_ACTION_DEBUG
   printf ("Going to id: %s\n", id);
-#endif	  
-  /* thot search for id */
-  /*
-    if (id found)
-    curNode->el = el;
-    else
-    CtxAddError (ctx, "GotoId: no such id");
-  */
+#endif
+
+  /* syntax analysis */
   if (curNode->el)
     CtxAddError (ctx, "GotoId: id function is not at the beginning of the expression");
+
+  /* thot tree search for id */
+  curNode->el = SearchAttrId (ctx->root, id);
+  if (!curNode->el)
+    CtxAddError (ctx, "GotoId: no such id\n");
   curNode->el++;
 }
 
@@ -253,7 +281,7 @@ static void RangeTo (parserContextPtr ctx)
     CtxAddError (ctx, "RangeTo: no existing content");
   else
     {
-      GotoChild (ctx);
+      /* GotoChild (ctx); */
       curNode->processed = 1;
       ctx->curNode = &(ctx->nodeB);
     }
@@ -365,7 +393,7 @@ static int LexAn (parserContextPtr ctx)
 	      if (b >= BSIZE)
 		{
 		CtxAddError (ctx, "LexAn: temp buffer out of space");
-		return;
+		return DONE;
 		}
 	    }
 	  lexbuf[b] = EOS;
@@ -622,6 +650,7 @@ void Expr (parserContextPtr ctx)
 	  printf ("end of range-to\n");
 #endif
 	  GotoChild (ctx);
+	  ctx->curNode->processed = 1;
 	  break;
 
 	case DONE:
@@ -649,18 +678,23 @@ void InitSymtable (parserContextPtr ctx)
 }
 
 /*----------------------------------------------------------------------
-  Parse
+  XPointer_Parse
   ----------------------------------------------------------------------*/
-int Parse (char *buffer) 
+ThotBool XPointer_Parse (Document doc, char *buffer) 
 {
   parserContext context;
   
+  /* verify the schema */
+  if (strncmp (buffer, "xpointer(", 9))
+    return FALSE;
+
   /* init the context */
   memset (&context, 0, sizeof (parserContext));
 
-  /* point to the buffer */
-  context.buffer = buffer;
-  context.cur = buffer;
+  /* point to the buffer (while removing the schema) */
+  context.buffer = buffer+9;
+  buffer[strlen (buffer) -1] = EOS;
+  context.cur = context.buffer;
 
   /* symtable (in case one day we want to use dynamically 
      allocated symtables) */
@@ -671,18 +705,38 @@ int Parse (char *buffer)
 
   /* point to the first node */
   context.curNode = &(context.nodeA);
+  /* and initialize the document root */
+  context.doc = doc;
+  context.root = TtaGetMainRoot (doc);
 
   /* start parsing */
   context.lookahead = LexAn (&context);
   while (context.lookahead != DONE && !context.error)
     Expr (&context);
+
+  /* restore the buffer */
+  buffer[strlen (buffer)] = ')';
+  /* print parse results */
   if (context.error)
     {
-      printf (context.error);
+      printf ("Error: %s\n",context.error);
       free (context.error);
+
+      return FALSE;
+    }
+  else
+    {
+      if (context.nodeA.el)
+	printf ("el 1 is %d\n", context.nodeA.el);
+      if (context.nodeB.el)
+	printf ("el 2 is %d\n", context.nodeB.el);
+
+      return TRUE;
     }
 }
 
+
+#ifdef XPTR_PARSE_DEBUG
 int main(void) 
 {
   char str[500];
@@ -694,7 +748,10 @@ int main(void)
       gets(str);
       if (!str || *str == 'q')
 	exit(0);
-      Parse (str);
+      XPointer_Parse (str);
     }
   return 0;
 }
+#endif /* XPTR_PARSE_DEBUG */
+
+#endif /* ANNOTATIONS */
