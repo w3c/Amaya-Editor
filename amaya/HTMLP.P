@@ -3581,7 +3581,9 @@ RULES
 	NoBreak1 : 2;
 	NoBreak2 : 2;
 #endif
-	Width: Enclosing . Width;
+	Width: Enclosed . Width;
+	VertPos: Top = Previous . Bottom - 0.5;
+	{MarginTop: -2;}
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
