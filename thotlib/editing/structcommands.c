@@ -3268,7 +3268,7 @@ int                *NItems;
 	/* la table est maintenant complete */
 	/* construit le menu a partir de la table */
 	*NItems = 0;
-	menuBuffer[0] = '\0';
+	menuBuffer[0] = EOS;
 	menuInd = 0;
 	for (i = 0; i < NElSurround; i++)
 	  {
@@ -3411,7 +3411,7 @@ PtrElement   pEl;
    BuildChangeTypeTable (pEl);
    /* on construit le menu a partir de la table */
    *NItems = 0;
-   menuBuffer[0] = '\0';
+   menuBuffer[0] = EOS;
    menuInd = 0;
    for (i = 0; i < NChangeTypeItems; i++)
      {

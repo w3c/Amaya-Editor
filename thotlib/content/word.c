@@ -426,7 +426,7 @@ PtrSearchContext    context;
 
    pEl = *curEl;
    iChar = *curChar;
-   word[0] = '\0';
+   word[0] = EOS;
 
    if (pEl == NULL && context != NULL)
      {
@@ -540,7 +540,7 @@ PtrSearchContext    context;
 	  }
 
 	/* positionne les valeurs de retour */
-	word[len] = '\0';
+	word[len] = EOS;
 	*curEl = pEl;
 	*curChar = iChar;
 	/* Si on a trouve effectivement un mot */
@@ -587,7 +587,7 @@ PtrSearchContext    context;
 
    pEl = *curEl;
    iChar = *curChar;
-   word[0] = '\0';
+   word[0] = EOS;
 
    if (pEl == NULL)
      {
@@ -716,7 +716,7 @@ PtrSearchContext    context;
 	  }
 
 	/* positionne les valeurs de retour */
-	word[len] = '\0';
+	word[len] = EOS;
 	*curEl = pEl;
 	*curChar = iChar;
 	/* Si on a trouve effectivement un mot */

@@ -3751,11 +3751,11 @@ PtrDocument         pDocRef;
 			     BufOriginal = pAb->AbText;
 			     j = 1;
 			     while (BufOriginal->BuContent[j - 1] == bufCopy->BuContent[j - 1]
-				    && BufOriginal->BuContent[j - 1] != '\0'
-				    && bufCopy->BuContent[j - 1] != '\0')
+				    && BufOriginal->BuContent[j - 1] != EOS
+				    && bufCopy->BuContent[j - 1] != EOS)
 				j++;
-			     same = BufOriginal->BuContent[j - 1] == '\0'
-				&& bufCopy->BuContent[j - 1] == '\0';
+			     same = BufOriginal->BuContent[j - 1] == EOS
+				&& bufCopy->BuContent[j - 1] == EOS;
 			  }
 			if (!same)
 			   /* contenus differents, applique la regle de copie */

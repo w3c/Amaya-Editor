@@ -94,7 +94,7 @@ static void         ReadEnv ()
    pT = (char *) TtaGetEnvString ("THOTSCH");
    if (pT == NULL)
       /* la variable d'environnement THOTSCH n'existe pas */
-      SchemaPath[0] = '\0';
+      SchemaPath[0] = EOS;
    else
       /* on copie la valeur de la variable THOTSCH */
       strncpy (SchemaPath, pT, MAX_TXT_LEN);
@@ -249,7 +249,7 @@ Name                n;
    int                 i;
 
    i = 1;
-   while (n[i - 1] != '\0')
+   while (n[i - 1] != EOS)
      {
 	if (n[i - 1] < ' ' || n[i - 1] > '~')
 	   /* caractere non imprimable, ecrit son code */
@@ -1339,7 +1339,7 @@ char              **argv;
    PRS = TtaGetMessageTable ("libdialogue", MSG_MAX);
    PRS = TtaGetMessageTable ("prsdialogue", PRS_MSG_MAX);
    /* recupere d'abord le nom du schema a lister */
-   filename[0] = '\0';
+   filename[0] = EOS;
    if (argc != 2)
       goto Usage;
    argv++;
@@ -1560,7 +1560,7 @@ char               *output_file;
 
 		  fprintf (output, " \'");
 		  j = 1;
-		  while (pPr1->PdString[j - 1] != '\0')
+		  while (pPr1->PdString[j - 1] != EOS)
 		    {
 		       if (pPr1->PdString[j - 1] < ' ')
 			  fprintf (output, "\\%3d", pPr1->PdString[j - 1]);
@@ -1837,7 +1837,7 @@ char               *output_file;
 						  wrnomregle (pRP1->ApElemType);
 						  fprintf (output, ")");
 					       }
-					     if (pRP1->ApString[0] != '\0')
+					     if (pRP1->ApString[0] != EOS)
 					       {
 						  fprintf (output, "=\'");
 						  wrnom (pRP1->ApString);

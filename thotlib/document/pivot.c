@@ -839,8 +839,8 @@ char               *label;
    else
      {
 	element = (Element) NewSubtree (elemType.ElTypeNum, (PtrSSchema) (elemType.ElSSchema),
-					LoadedDocument[document - 1], 0, FALSE, TRUE, TRUE, (*label) == '\0');
-	if (*label != '\0')
+					LoadedDocument[document - 1], 0, FALSE, TRUE, TRUE, (*label) == EOS);
+	if (*label != EOS)
 	   strncpy (((PtrElement) element)->ElLabel, label, MAX_LABEL_LEN);
      }
    return element;

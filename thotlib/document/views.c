@@ -574,9 +574,9 @@ char               *newName;
    len = strlen (newName);
    if (strcmp (newName + len - 4, ".PIV") == 0)
      {
-	buffer[len - 4] = '\0';
-	pDoc->DocDName[len - 4] = '\0';
-	pDoc->DocIdent[len - 4] = '\0';
+	buffer[len - 4] = EOS;
+	pDoc->DocDName[len - 4] = EOS;
+	pDoc->DocIdent[len - 4] = EOS;
      }
    strcat (buffer, "  ");
    len = strlen (buffer);
@@ -1406,7 +1406,7 @@ int                *nItems;
 		    {
 		       /* Marque par une etoile a la fin du nom que la vue est deja ouverte */
 		       buffer[i - 1] = '*';
-		       buffer[i] = '\0';
+		       buffer[i] = EOS;
 		       i++;
 		    }
 	       }

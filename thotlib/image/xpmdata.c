@@ -82,9 +82,9 @@ xpmData            *mdata;
 	     n++;
 	     s2++;
 	  }
-	while (c == *s2 && *s2 != '\0' && c && c != mdata->Bos);
+	while (c == *s2 && *s2 != EOS && c && c != mdata->Bos);
 
-	if (*s2 != '\0')
+	if (*s2 != EOS)
 	  {
 	     /* this wasn't the beginning of a comment */
 	     mdata->cptr -= n;
@@ -112,8 +112,8 @@ xpmData            *mdata;
 		  *++s = c;
 		  s2++;
 	       }
-	     while (c == *s2 && *s2 != '\0' && c && c != mdata->Bos);
-	     if (*s2 == '\0')
+	     while (c == *s2 && *s2 != EOS && c && c != mdata->Bos);
+	     if (*s2 == EOS)
 	       {
 		  /* this is the end of the comment */
 		  notend = 0;
@@ -142,10 +142,10 @@ xpmData            *mdata;
 	     n++;
 	     s2++;
 	  }
-	while (c == *s2 && *s2 != '\0'
+	while (c == *s2 && *s2 != EOS
 	       && c != EOF && c != mdata->Bos);
 
-	if (*s2 != '\0')
+	if (*s2 != EOS)
 	  {
 	     /* this wasn't the beginning of a comment */
 	     /* put characters back in the order that we got them */
@@ -175,9 +175,9 @@ xpmData            *mdata;
 		  *++s = c;
 		  s2++;
 	       }
-	     while (c == *s2 && *s2 != '\0'
+	     while (c == *s2 && *s2 != EOS
 		    && c != EOF && c != mdata->Bos);
-	     if (*s2 == '\0')
+	     if (*s2 == EOS)
 	       {
 		  /* this is the end of the comment */
 		  notend = 0;
@@ -360,7 +360,7 @@ unsigned int       *l;
    int                 c;
    char               *p, *q, buf[BUFSIZ];
 
-   p = '\0';
+   p = EOS;
    if (!mdata->type || mdata->type == XPMBUFFER)
      {
 	if (mdata->cptr)
@@ -378,7 +378,7 @@ unsigned int       *l;
 		return (XpmNoMemory);
 	     strncpy (p, start, n);
 	     if (mdata->type)	/* XPMBUFFER */
-		p[n - 1] = '\0';
+		p[n - 1] = EOS;
 	  }
      }
    else
@@ -435,11 +435,11 @@ unsigned int       *l;
 	     /* and copy the buffer */
 	     strncpy (q, buf, i);
 	     n += i;
-	     p[n++] = '\0';
+	     p[n++] = EOS;
 	  }
 	else
 	  {
-	     *p = '\0';
+	     *p = EOS;
 	     n = 1;
 	  }
 	ungetc (c, file);
@@ -472,7 +472,7 @@ char              **cmt;
      {
 	*cmt = (char *) XpmMalloc (mdata->CommentLength + 1);
 	strncpy (*cmt, mdata->Comment, mdata->CommentLength);
-	(*cmt)[mdata->CommentLength] = '\0';
+	(*cmt)[mdata->CommentLength] = EOS;
 	mdata->CommentLength = 0;
      }
    else
@@ -667,7 +667,7 @@ xpmData            *mdata;
    mdata->line = 0;
    mdata->CommentLength = 0;
    mdata->Bcmt = mdata->Ecmt = NULL;
-   mdata->Bos = mdata->Eos = '\0';
+   mdata->Bos = mdata->Eos = EOS;
    mdata->format = 0;		/* this can only be Xpm 2 or 3 */
 }
 
@@ -729,7 +729,7 @@ xpmData            *mdata;
 
 xpmDataType         xpmDataTypes[] =
 {
-   "", "!", "\n", '\0', '\n', "", "", "", "",
+   "", "!", "\n", EOS, '\n', "", "", "", "",
    "C", "/*", "*/", '"', '"', ",\n", "static char *", "[] = {\n", "};\n",
    "Lisp", ";", "\n", '"', '"', "\n", "(setq ", " '(\n", "))\n",
 #ifdef VMS
@@ -762,7 +762,7 @@ xpmData            *mdata;
 
    if (mdata->type)
      {
-	mdata->Bos = '\0';
+	mdata->Bos = EOS;
 	mdata->Eos = '\n';
 	mdata->Bcmt = mdata->Ecmt = NULL;
 	l = xpmNextWord (mdata, buf, BUFSIZ);
@@ -829,7 +829,7 @@ xpmData            *mdata;
 		  if (!mdata->format)
 		    {		/* XPM 2 or 3 */
 		       mdata->Bos = xpmDataTypes[n].Bos;
-		       mdata->Eos = '\0';
+		       mdata->Eos = EOS;
 		       /* get to the beginning of the first string */
 		       xpmNextString (mdata);
 		       mdata->Eos = xpmDataTypes[n].Eos;

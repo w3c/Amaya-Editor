@@ -1093,12 +1093,12 @@ int                 frame;
    else if (pBox->BxType == BoPicture) /* Picture */
         DisplayImage (pBox, frame);
    else if (pBox->BxAbstractBox->AbLeafType == LtSymbol) /* Symbol */
-        if (pBox->BxAbstractBox->AbShape == '\0')
+        if (pBox->BxAbstractBox->AbShape == EOS)
            DisplayEmptyBox (pBox, frame, '2');
         else
            DisplaySymbol (pBox, frame);
    else if (pBox->BxAbstractBox->AbLeafType == LtGraphics) /* Graphics */
-        if (pBox->BxAbstractBox->AbShape == '\0')
+        if (pBox->BxAbstractBox->AbShape == EOS)
            DisplayEmptyBox (pBox, frame, '2');
         else
            DisplayGraph (pBox, frame);

@@ -75,7 +75,7 @@ CONST char         *name;
 {
     unsigned char idx = 0;
 
-    while (*name != '\0') idx += (unsigned char) *name++;
+    while (*name != EOS) idx += (unsigned char) *name++;
     return((int) idx);
 }
 
@@ -136,7 +136,7 @@ Pixmap              pix;
     if (name == NULL) return;
     if (pix == 0) return;
 
-    if (name[0] == '\0') return;
+    if (name[0] == EOS) return;
     if (!ImageBaseHashInitialized) InitImageBase();
 
     hash = GetHash(name);
@@ -218,9 +218,9 @@ char               *path;
     if (path == NULL)
       return(0);
 
-    if (name[0] == '\0')
+    if (name[0] == EOS)
       return(0);
-    if (path[0] == '\0')
+    if (path[0] == EOS)
       return(0);
 
     GetPictureFileName (path, fileName);
@@ -268,7 +268,7 @@ char               *name;
     int res;
 
     if (name == NULL) return(0);
-    if (name[0] == '\0') return(0);
+    if (name[0] == EOS) return(0);
 
     if (!ImageBaseHashInitialized) InitImageBase();
 

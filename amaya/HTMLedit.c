@@ -20,7 +20,8 @@
 #include "presentdriver.h"
 
 static char        *TargetDocumentURL = NULL;
-
+static int          OldWidth;
+static int          OldHeight;
 #define buflen 50
 
 #include "css_f.h"
@@ -939,10 +940,63 @@ NotifyAttribute    *event;
 
    el = event->element;
    elType = TtaGetElementType (el);
-   if (elType.ElTypeNum != HTML_EL_AREA)
-      el = TtaGetParent (el);
-   if (elType.ElTypeNum == HTML_EL_AREA)
-     SetAreaCoords (event->document, el, event->attributeType.AttrTypeNum);
+   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+     {
+       /* update the associated map */
+       UpdateImageMap (el, event->document, OldWidth, OldHeight);
+       OldWidth = -1;
+       OldHeight = -1;
+     }
+   else
+     {
+       if (elType.ElTypeNum != HTML_EL_AREA)
+	 el = TtaGetParent (el);
+       if (elType.ElTypeNum == HTML_EL_AREA)
+	 SetAreaCoords (event->document, el, event->attributeType.AttrTypeNum);
+     }
+}
+
+/*----------------------------------------------------------------------
+   StoreWidth IntWidthPxl will be changed, store the old value.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean             StoreWidth (NotifyAttribute * event)
+#else  /* __STDC__ */
+boolean             StoreWidth (event)
+NotifyAttribute    *event;
+
+#endif /* __STDC__ */
+{
+  ElementType	     elType;
+  int                h;
+
+  elType = TtaGetElementType (event->element);
+  if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+    {
+      TtaGiveBoxSize (event->element, event->document, 1, UnPixel, &OldWidth, &h);
+    }
+  else
+    OldWidth = -1;
+  return FALSE;		/* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
+   StoreHeight height_ will be changed, store the old value.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean             StoreHeight (NotifyAttribute * event)
+#else  /* __STDC__ */
+boolean             StoreHeight (event)
+NotifyAttribute    *event;
+
+#endif /* __STDC__ */
+{
+   Attribute           attr;
+
+   attr = event->attribute;
+   if (attr != NULL)
+     OldHeight = TtaGetAttributeValue (attr);
+   return FALSE;		/* let Thot perform normal operation */
 }
 
 /*----------------------------------------------------------------------
@@ -987,14 +1041,14 @@ NotifyAttribute    *event;
 
 #endif /* __STDC__ */
 {
-   char               *buffer;
-   int                 length;
-
+  char               *buffer;
+  int                 length;
    length = buflen - 1;
    buffer = (char*) TtaGetMemory (buflen);
    TtaGiveTextAttributeValue (event->attribute, buffer, &length);
-   CreateAttrWidthPercentPxl (buffer, event->element, event->document);
+   CreateAttrWidthPercentPxl (buffer, event->element, event->document, OldWidth);
    TtaFreeMemory (buffer);
+   OldWidth = -1;
 }
 
 /*----------------------------------------------------------------------
@@ -1227,7 +1281,46 @@ NotifyAttribute    *event;
 }
 
 /*----------------------------------------------------------------------
-   AttrNAMEinMenu                                                  
+   AttrSTYLEinMenu doen't display STYLE in HEAD and MAP
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean             AttrSTYLEinMenu (NotifyAttribute * event)
+#else  /* __STDC__ */
+boolean             AttrSTYLEinMenu (event)
+NotifyAttribute    *event;
+
+#endif /* __STDC__ */
+{
+   ElementType         elType;
+   Element             el;
+
+   elType = TtaGetElementType (event->element);
+   if (elType.ElTypeNum == HTML_EL_HEAD)
+     return TRUE;
+   else if (elType.ElTypeNum == HTML_EL_MAP)
+     return TRUE;
+   else
+     {
+       elType.ElTypeNum = HTML_EL_HEAD;
+       el = TtaGetTypedAncestor (event->element, elType);
+       if (el != NULL)
+	 /* whitin the head */
+	 return TRUE;
+       else
+	 {
+	   elType.ElTypeNum = HTML_EL_MAP;
+	   el = TtaGetTypedAncestor (event->element, elType);
+	   if (el != NULL)
+	     /* whitin the head */
+	     return TRUE;
+	   else
+	     return FALSE;		/* let Thot perform normal operation */
+	 }
+     }
+}
+
+/*----------------------------------------------------------------------
+   AttrNAMEinMenu doen't display NAME in Reset_Input and Submit_Input
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             AttrNAMEinMenu (NotifyAttribute * event)
@@ -1264,7 +1357,7 @@ int                 notType;
 #endif /* __STDC__ */
 {
    ElementType         elType, parentType;
-   Element             elFont, parent, prev, next, new, child, last;
+   Element             elFont, parent, prev, next, added, child, last;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = notType;
@@ -1282,12 +1375,12 @@ int                 notType;
 	     TtaNextSibling (&next);
 	     if (prev != NULL)
 	       {
-		  new = TtaNewElement (document, parentType);
-		  TtaInsertSibling (new, parent, TRUE, document);
+		  added = TtaNewElement (document, parentType);
+		  TtaInsertSibling (added, parent, TRUE, document);
 		  child = prev;
 		  TtaPreviousSibling (&prev);
 		  TtaRemoveTree (child, document);
-		  TtaInsertFirstChild (&child, new, document);
+		  TtaInsertFirstChild (&child, added, document);
 		  while (prev != NULL)
 		    {
 		       last = child;
@@ -1299,12 +1392,12 @@ int                 notType;
 	       }
 	     if (next != NULL)
 	       {
-		  new = TtaNewElement (document, parentType);
-		  TtaInsertSibling (new, parent, FALSE, document);
+		  added = TtaNewElement (document, parentType);
+		  TtaInsertSibling (added, parent, FALSE, document);
 		  child = next;
 		  TtaNextSibling (&next);
 		  TtaRemoveTree (child, document);
-		  TtaInsertFirstChild (&child, new, document);
+		  TtaInsertFirstChild (&child, added, document);
 		  while (next != NULL)
 		    {
 		       last = child;
@@ -1341,7 +1434,7 @@ int                 newtype;
 #endif /* __STDC__ */
 {
    ElementType         elType, siblingType;
-   Element             prev, next, child, new, parent;
+   Element             prev, next, child, added, parent;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = newtype;
@@ -1387,10 +1480,10 @@ int                 newtype;
 	       {
 		  if (TtaCanInsertSibling (elType, prev, FALSE, document))
 		    {
-		       new = TtaNewElement (document, elType);
+		       added = TtaNewElement (document, elType);
 		       TtaRemoveTree (*elem, document);
-		       TtaInsertSibling (new, prev, FALSE, document);
-		       TtaInsertFirstChild (elem, new, document);
+		       TtaInsertSibling (added, prev, FALSE, document);
+		       TtaInsertFirstChild (elem, added, document);
 		       TtaSetDocumentModified (document);
 		    }
 	       }
@@ -1429,9 +1522,9 @@ int                 newtype;
 		       if (TtaCanInsertSibling (elType, next, TRUE, document))
 			 {
 			    TtaRemoveTree (*elem, document);
-			    new = TtaNewElement (document, elType);
-			    TtaInsertSibling (new, next, TRUE, document);
-			    TtaInsertFirstChild (elem, new, document);
+			    added = TtaNewElement (document, elType);
+			    TtaInsertSibling (added, next, TRUE, document);
+			    TtaInsertFirstChild (elem, added, document);
 			    TtaSetDocumentModified (document);
 			 }
 		    }
@@ -1442,9 +1535,9 @@ int                 newtype;
 		  if (TtaCanInsertFirstChild (elType, parent, document))
 		    {
 		       TtaRemoveTree (*elem, document);
-		       new = TtaNewElement (document, elType);
-		       TtaInsertFirstChild (&new, parent, document);
-		       TtaInsertFirstChild (elem, new, document);
+		       added = TtaNewElement (document, elType);
+		       TtaInsertFirstChild (&added, parent, document);
+		       TtaInsertFirstChild (elem, added, document);
 		       TtaSetDocumentModified (document);
 		    }
 	       }

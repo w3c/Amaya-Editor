@@ -73,10 +73,10 @@ int  strncasecmp (char *s1, char *s2, size_t n)
 #define CSS_CHECK_BUFFER					\
 {								\
     if (index >= (buffer_size - 2)) {				\
-        char *new =(char *)TtaRealloc(buffer, buffer_size * 2); \
-	if (new == NULL) return(EOS);				\
+        char *next =(char *)TtaRealloc(buffer, buffer_size * 2); \
+	if (next == NULL) return(EOS);				\
 	buffer_size *= 2;					\
-	buffer = new;						\
+	buffer = next;						\
     }}
 
 /*----------------------------------------------------------------------
@@ -1153,14 +1153,14 @@ char               *cssRule;
 {
    PresentationValue   unused;
    int                 styleno;
-   char               *new;
+   char               *p;
 
    while (*cssRule != 0)
      {
 	cssRule = SkipBlanks (cssRule);
 	/* look for the type of attribute */
-	new = GetHTMLStyleAttrIndex (cssRule, &styleno);
-	if (!new)
+	p = GetHTMLStyleAttrIndex (cssRule, &styleno);
+	if (!p)
 	  {
 	     cssRule++;
 	     cssRule = SkipWord (cssRule);
@@ -1168,7 +1168,7 @@ char               *cssRule;
 	     continue;
 	  }
 	/* update index and skip the ":" indicator if present */
-	cssRule = new;
+	cssRule = p;
 	cssRule = SkipBlanks (cssRule);
 	if (*cssRule == ':')
 	  {
@@ -1177,7 +1177,7 @@ char               *cssRule;
 	  }
 	/* try to parse the attribute associated to this attribute */
 	if (HTMLStyleAttributes[styleno].parsing_function != NULL)
-	   new = HTMLStyleAttributes[styleno].
+	   p = HTMLStyleAttributes[styleno].
 	      parsing_function (target, context, cssRule);
 
 	/* Update the rendering */
@@ -1185,7 +1185,7 @@ char               *cssRule;
 	   context->drv->UpdatePresentation (target, context, unused);
 
 	/* update index and skip the ";" separator if present */
-	cssRule = new;
+	cssRule = p;
 	cssRule = SkipBlanks (cssRule);
 	if (*cssRule == ',' || *cssRule == ';')
 	  {
@@ -3669,7 +3669,7 @@ Document            doc;
    Element             el;
    Attribute           attr;
    AttributeType       attrType;
-   PRule               rule, new;
+   PRule               rule, added;
    char                selector[101];
    int                 len;
    Element             best = NULL;
@@ -3721,8 +3721,8 @@ Document            doc;
 	 TtaNextPRule (best, &rule);
 	 if (rule)
 	   {
-	     new = TtaCopyPRule (rule);
-	     TtaAttachPRule (elem, new, doc);
+	     added = TtaCopyPRule (rule);
+	     TtaAttachPRule (elem, added, doc);
 	   }
        }
      while (rule != NULL);

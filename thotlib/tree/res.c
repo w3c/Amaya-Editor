@@ -6,6 +6,7 @@
 #include "view.h"
 #include "selection.h"
 #include "conststr.h"
+#include "constint.h"
 #include "typestr.h"
 #define THOT_EXPORT 
 #include "constres.h"
@@ -31,7 +32,7 @@ char IndexSymols[] = {'%', /* pre couplage */
 		      'E', /* extension */
 		      '@', /* recursive */
 		      '*', /* source root (fictive) */
-		      '\0'};
+		      EOS};
 
 static StrUnitDesc *ListUnitDesc = NULL;
 static TypeTree BuildStack[MAXDEPTH];
@@ -694,7 +695,7 @@ boolean isSource;
 			  srcInfo->SNodes, 
 			  &indice, 
 			  srcInfo->SPrintMethod);
-      srcInfo->SPrint[indice] = '\0';
+      srcInfo->SPrint[indice] = EOS;
     }
   else
     {
@@ -704,7 +705,7 @@ boolean isSource;
 			dstInfo->RDestNodes,
 			&indice,
 			PM_GENERIC);
-      dstInfo->RDestPrint[indice] = '\0';
+      dstInfo->RDestPrint[indice] = EOS;
     }
 }     
   
@@ -960,7 +961,7 @@ PrintMethod method;
 	  for (i = 0; i< SIZEPRINT; i++)
 	    {
 	      sPrint->SNodes[i] = NULL;
-	      sPrint->SPrint[i] = '\0';
+	      sPrint->SPrint[i] = EOS;
 	    }
 	  sPrint->SPrintMethod = method;
 	  sPrint->STree = GetElemSourceTree ();
@@ -994,7 +995,7 @@ ElementType typeDest;
   restruct->RNext = NULL;
   for (i = 0; i<SIZEPRINT; i++)
     {
-      restruct->RDestPrint[i] = '\0';
+      restruct->RDestPrint[i] = EOS;
       restruct->RDestNodes[i] = 
       restruct->RCoupledNodes[i] = NULL;
     }

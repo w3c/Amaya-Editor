@@ -167,7 +167,7 @@ int                *width;
    PtrTextBuffer       adbuff;
 
    /* Initialisations */
-   word[0] = '\0';
+   word[0] = EOS;
    lg = 0;
    nbChars = 0;
    j = 0;
@@ -215,7 +215,7 @@ int                *width;
 		  /* On ne traite pas les separateurs en debut de mot */
 		  if (j != 0)
 		    {
-		       word[j] = '\0';
+		       word[j] = EOS;
 		       still = FALSE;
 		    }
 		  else
@@ -244,7 +244,7 @@ int                *width;
      }
 
    /* Termine le mot */
-   word[j] = '\0';
+   word[j] = EOS;
    if (nbChars == 0)
       *width = 0;
    else

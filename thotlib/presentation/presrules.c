@@ -1473,7 +1473,7 @@ PtrDocument         pDoc;
 		 case LtGraphics:
 		    pAb->AbShape = pEl->ElGraph;
 		    pAb->AbGraphAlphabet = 'G';
-		    if (pAb->AbShape == '\0')
+		    if (pAb->AbShape == EOS)
 		       pAb->AbVolume = 0;
 		    else
 		       pAb->AbVolume = 1;
@@ -1508,7 +1508,7 @@ PtrDocument         pDoc;
 				   {
 				      i = 1;
 				      pDe1 = pPR1->RdReferred;
-				      while (pDe1->ReExtDocument[i - 1] != '\0')
+				      while (pDe1->ReExtDocument[i - 1] != EOS)
 					{
 					   pBu1->BuContent[lg - 1] = pDe1->ReExtDocument[i - 1];
 					   lg++;
@@ -1526,7 +1526,7 @@ PtrDocument         pDoc;
 				 pBu1->BuContent[lg - 1] = ']';
 			   }
 		      }
-		    pBu1->BuContent[lg] = '\0';
+		    pBu1->BuContent[lg] = EOS;
 		    /* fin de la chaine de car. */
 		    pBu1->BuLength = lg;
 		    pAb->AbVolume = lg;
@@ -1546,7 +1546,7 @@ PtrDocument         pDoc;
 			 pBu1->BuContent[0] = '>';
 			 pBu1->BuContent[1] = '>';
 		      }
-		    pBu1->BuContent[2] = '\0';
+		    pBu1->BuContent[2] = EOS;
 		    /* fin de la chaine de car. */
 		    pBu1->BuLength = 2;
 		    pAb->AbVolume = 2;
@@ -3125,7 +3125,7 @@ Name                typeName;
    PtrElement          pEC, pElChild;
 
    pEC = NULL;			/* a priori on n'a pas found' */
-   if (typeName[0] != '\0')
+   if (typeName[0] != EOS)
       /* on compare les noms de type */
      {
 	if (strcmp (typeName, pElRoot->ElStructSchema->SsRule[pElRoot->ElTypeNumber - 1].SrName) == 0)
@@ -3965,7 +3965,7 @@ PtrAttribute        pAttr;
 		    if (pSchP == NULL)
 		      pSchP = pDoc->DocSSchema->SsPSchema;
 		    pConst = &pSchP->PsConstant[pPRule->PrPresBox[0] - 1];
-		    if (pConst->PdString[0] != '\0')
+		    if (pConst->PdString[0] != EOS)
 		      {
 # ifndef _WINDOWS
 			if (pConst->PdString[0] == DIR_SEP)
@@ -4167,7 +4167,7 @@ PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 {
-   boolean             new, ok;
+   boolean             IsNew, ok;
    PtrPRule            pPRuleDimH, pPRuleDimV, pR, pRStd;
    PtrPSchema          pSPR;
    PtrSSchema          pSSR;
@@ -4217,8 +4217,8 @@ PtrAbstractBox      pAb;
    if (ok)
      {
 	/* cherche si l'element a deja une regle de largeur specifique */
-	pPRuleDimH = SearchPresRule (pEl, PtWidth, 0, &new, pDoc, view);
-	if (new)
+	pPRuleDimH = SearchPresRule (pEl, PtWidth, 0, &IsNew, pDoc, view);
+	if (IsNew)
 	   /* on a cree' une regle de largeur pour l'element */
 	  {
 	     pR = pPRuleDimH->PrNextPRule;	/* on recopie la regle standard */
@@ -4252,8 +4252,8 @@ PtrAbstractBox      pAb;
    if (ok)
      {
 	/* cherche si l'element a deja une regle de hauteur specifique */
-	pPRuleDimV = SearchPresRule (pEl, PtHeight, 0, &new, pDoc, view);
-	if (new)
+	pPRuleDimV = SearchPresRule (pEl, PtHeight, 0, &IsNew, pDoc, view);
+	if (IsNew)
 	   /* on a cree' une regle de hauteur pour l'element */
 	  {
 	     pR = pPRuleDimV->PrNextPRule;	/* on recopie la regle standard */

@@ -106,7 +106,7 @@ int                 lineNum;
      {
 	for (i = 0; i < index - 1; buffer[i++] = ' ') ;
 	buffer[index - 1] = '*';
-	buffer[index] = '\0';
+	buffer[index] = EOS;
 	TtaDisplayMessage (INFO, TtaGetMessage (COMPIL, COMPIL_STRING), inputline, buffer);
      }
    TtaDisplaySimpleMessage (level, origin, msgCode);
@@ -149,7 +149,7 @@ char               *string;
      {
 	for (i = 0; i < index - 1; buffer[i++] = ' ') ;
 	buffer[index - 1] = '*';
-	buffer[index] = '\0';
+	buffer[index] = EOS;
 	TtaDisplayMessage (INFO, TtaGetMessage (COMPIL, COMPIL_STRING), inputline, buffer);
      }
    TtaDisplayMessage (level, TtaGetMessage (origin, msgCode), string);

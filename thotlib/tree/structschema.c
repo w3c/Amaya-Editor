@@ -390,7 +390,7 @@ PtrElement          pEl;
 		       if (pSRule->SrSSchemaNat == NULL)
 			  /* structure schema of nature is not loaded. Load it */
 			 {
-			    name[0] = '\0';
+			    name[0] = EOS;
 			    LoadNatureSchema (pSS1, name, typeNum1);
 			 }
 		       if (pSRule->SrSSchemaNat == NULL)
@@ -1276,13 +1276,13 @@ int                *typeNum;
 	      *pSS = NULL;
 	   else
 	      *pSS = pRefEl->ElStructSchema;
-	   if (pRule->SrRefTypeNat[0] != '\0')
+	   if (pRule->SrRefTypeNat[0] != EOS)
 	      /* le type reference' est defini dans un autre schema de */
 	      /* structure */
 	      /* cherche, ou charge si ce n'est pas deja fait, le schema de */
 	      /* structure qui definit le type reference' */
 	     {
-		presName[0] = '\0';
+		presName[0] = EOS;
 		/* pas de schema de presentation prefere' */
 		referredNature = CreateNature (pRule->SrRefTypeNat, presName, *pSS);
 		if (referredNature == 0)
@@ -1307,13 +1307,13 @@ int                *typeNum;
 	   /* schema de structure qui definit l'attribut */
 	   *pSS = pRefAttr->AeAttrSSchema;
 
-	if (pAtt->AttrTypeRefNature[0] != '\0')
+	if (pAtt->AttrTypeRefNature[0] != EOS)
 	   /* le type reference' est defini dans un autre schema de */
 	   /* structure */
 	   /* cherche, ou charge si ce n'est pas deja fait, le schema de */
 	   /* structure qui definit le type reference' */
 	  {
-	     presName[0] = '\0';
+	     presName[0] = EOS;
 	     /* pas de schema de presentation prefere' */
 	     referredNature = CreateNature (pAtt->AttrTypeRefNature, presName, *pSS);
 	     if (referredNature == 0)
@@ -2146,7 +2146,7 @@ PtrSSchema          pDescSS;
 		       if (pRule1->SrSSchemaNat == NULL)
 			  /* si le schema de nature n'est pas charge' on le charge */
 			 {
-			    N[0] = '\0';
+			    N[0] = EOS;
 			    /* pas de schema de presentation prefere' */
 			    LoadNatureSchema (pSS, N, typeNum);
 			 }
@@ -2450,7 +2450,7 @@ PtrSSchema          pExtSS;
 		  {
 		     r = 0;
 		     while (RegleExt == NULL && r < pExtSS->SsNExtensRules)
-			if (pExtSS->SsExtensBlock->EbExtensRule[r].SrName[0] == '\0')
+			if (pExtSS->SsExtensBlock->EbExtensRule[r].SrName[0] == EOS)
 			   RegleExt = &(pExtSS->SsExtensBlock->EbExtensRule[r]);
 			else
 			   r++;

@@ -12,6 +12,10 @@ extern boolean AddLoadedImage ( char *name,
                                 LoadedImageDesc ** desc );
 extern LoadedImageDesc *SearchLoadedImage ( char *localpath,
                                             Document doc );
+extern void UpdateImageMap ( Element image,
+                             Document document,
+			     int oldWidth,
+			     int oldHeight);
 extern void DisplayImage ( Document doc,
                            Element el,
                            char *imageName );
@@ -45,6 +49,10 @@ extern boolean AddLoadedImage (/* char *name,
                                   LoadedImageDesc ** desc */);
 extern LoadedImageDesc *SearchLoadedImage (/* char *localpath,
                                               Document doc */);
+extern void UpdateImageMap (/* Element image,
+                               Document document,
+			       int oldWidth,
+			       int oldHeight */);
 extern void DisplayImage (/* Document doc,
                              Element el,
                              char *imageName */);

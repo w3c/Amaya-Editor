@@ -71,7 +71,7 @@ PtrSSchema          pSS;
 
    strcpy (schemaName, pSS->SsName);
    pSS->SsActionList = NULL;
-   if (pSS->SsName[0] != '\0')
+   if (pSS->SsName[0] != EOS)
      {
 	schemaActions = SchemasEvents;
 	while (schemaActions != NULL &&
@@ -99,7 +99,7 @@ void                InitNatures ()
      {
 	LoadedPSchema[i].pPresSchema = NULL;
 	LoadedPSchema[i].UsageCount = 0;
-	LoadedPSchema[i].PresSchemaName[0] = '\0';
+	LoadedPSchema[i].PresSchemaName[0] = EOS;
      }
 }
 
@@ -246,7 +246,7 @@ PtrSSchema          pSS;
 	  {
 	     pPres->pPresSchema = NULL;
 	     pPres->UsageCount = 0;
-	     pPres->PresSchemaName[0] = '\0';
+	     pPres->PresSchemaName[0] = EOS;
 	  }
      }
    if (delete)
@@ -333,14 +333,14 @@ int                 rule;
 	/* traduit le schema de structure dans la langue de l'utilisateur */
 	ConfigTranslateSSchema (pNatureSS);
 	pSS->SsRule[rule - 1].SrSSchemaNat = pNatureSS;
-	if (PSchName[0] != '\0')
+	if (PSchName[0] != EOS)
 	   /* l'appelant indique un schema de presentation, on essaie de le
 	      charger */
 	  {
 	     strncpy (schName, PSchName, MAX_NAME_LENGTH);
 	     pNatureSS->SsPSchema = LoadPresentationSchema (schName, pNatureSS);
 	  }
-	if (PSchName[0] == '\0' || pNatureSS->SsPSchema == NULL)
+	if (PSchName[0] == EOS || pNatureSS->SsPSchema == NULL)
 	   /* pas de schema de presentation particulier demande' par l'appelant */
 	   /* ou schema demande' inaccessible */
 	  {
@@ -562,14 +562,14 @@ boolean             extension;
 	   /* pour eviter que ReadPresentationSchema recharge le schema de
 	      structure */
 	   (*pSS)->SsRootElem = 1;
-	if (PSchName[0] != '\0')
+	if (PSchName[0] != EOS)
 	   /* l'appelant specifie le schema de presentation a prendre, on
 	      essaie de le charger */
 	  {
 	     strncpy (schName, PSchName, MAX_NAME_LENGTH);
 	     (*pSS)->SsPSchema = LoadPresentationSchema (schName, *pSS);
 	  }
-	if (PSchName[0] == '\0' || (*pSS)->SsPSchema == NULL)
+	if (PSchName[0] == EOS || (*pSS)->SsPSchema == NULL)
 	   /* pas de presentation specifiee par l'appelant, ou schema specifie'
 	      inaccessible */
 	  {
@@ -634,7 +634,7 @@ PtrDocument         pDoc;
 	if (!extensionExist)
 	   /* le schema d'extension n'existe pas, on le charge */
 	  {
-	     if (PSchName[0] == '\0')
+	     if (PSchName[0] == EOS)
 		/* pas de schema de presentation precise' */
 		/* cherche le schema de presentation de l'extension prevu */
 		/* dans le fichier .conf pour ce type de document */

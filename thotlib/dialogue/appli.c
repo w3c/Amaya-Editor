@@ -40,18 +40,21 @@
 
 #define MAX_ARGS 20
 
-/* Declarations des variables */
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+
+#ifndef _WINDOWS
+static XmString  null_string;
+#endif
+static char         OldMsgSelect[MAX_TXT_LEN];
+static PtrDocument  OldDocMsgSelect;
+
+
 #include "boxes_tv.h"
 #include "font_tv.h"
 #include "edit_tv.h"
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
-
-#ifndef _WINDOWS
-static XmString     null_string;
-#endif
 
 #ifdef _WINDOWS
 #define URL_TXTZONE     0
@@ -90,18 +93,18 @@ static XmString     null_string;
 #define ToolBar_AddString(hwnd, hinst, idString) \
     (int)SendMessage((hwnd), TB_ADDSTRING, (WPARAM)(HINSTANCE)hinst, (LPARAM)idString)
 
-extern HWND      hwndClient ;
-extern HWND      ToolBar    ;
-extern HWND      StatusBar  ;
+extern HWND      hwndClient;
+extern HWND      ToolBar;
+extern HWND      StatusBar;
 extern HWND      currentWindow;
 extern HWND      WIN_curWin;
-extern HINSTANCE hInstance  ;
+extern HINSTANCE hInstance;
 /* extern BOOL      WIN_UserGeometry;  */
 #ifndef _WIN_PRINT
 extern int       Window_Curs;
 #endif /* !_WIN_PRINT */
 
-static HWND      hwndHead   ;
+static HWND      hwndHead;
 static char*     txtZoneLabel;
 static BOOL      paletteRealized = FALSE;
 
@@ -114,7 +117,7 @@ static int       oldSPos = 0;
 
 int         X_Pos;
 int         Y_Pos;
-int         cyToolBar ;
+int         cyToolBar;
 int         CommandToString [MAX_BUTTON];
 char        szTbStrings [4096];
 /* HRGN        hrgn; */
@@ -174,7 +177,7 @@ LPTOOLTIPTEXT lpttt;
    /* To be safe, count number of strings in text */
    pString = &szTbStrings [0] ;
    cMax = 0 ;
-   while (*pString != '\0') {
+   while (*pString != EOS) {
          cMax++ ;
          cb = lstrlen (pString) ;
          pString += (cb + 1) ;
@@ -930,7 +933,9 @@ void                InitializeOtherThings ()
 #ifndef _WINDOWS
    null_string = XmStringCreateSimple ("");
 #endif /* _WINDOWS */
-}				/*InitializeOtherThings */
+   OldMsgSelect[0] = EOS;
+   OldDocMsgSelect = NULL;
+}
 
 
 /*----------------------------------------------------------------------
@@ -1009,26 +1014,29 @@ View                view;
    la fenetre active.                                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DisplaySelMessage (char *text)
+void                DisplaySelMessage (char *text, PtrDocument pDoc)
 #else  /* __STDC__ */
-void                DisplaySelMessage (text)
+void                DisplaySelMessage (text, pDoc)
 char               *text;
+PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
    int                 doc;
    int                 view;
 
-   if (ActiveFrame != 0)
+   if (ActiveFrame != 0 && (strcmp (OldMsgSelect, text) ||pDoc != OldDocMsgSelect))
      {
-	doc = FrameTable[ActiveFrame].FrDoc;	/* recupere le document concerne */
+	/* recupere le document concerne */
+	doc = FrameTable[ActiveFrame].FrDoc;
 	for (view = 1; view <= MAX_VIEW_DOC; view++)
 	  {
-	  /****frame = LoadedDocument[doc-1]->DocView[view - 1].DvPSchemaView;
-	  if (frame != 0)****/
 	     TtaSetStatus ((Document) doc, view, text, NULL);
 	     if (view < MAX_ASSOC_DOC)
                TtaSetStatus ((Document) doc, view + 100, text, NULL);
 	  }
+	/* sel old message */
+	strncpy (OldMsgSelect, text, MAX_TXT_LEN);
+	OldDocMsgSelect = pDoc;
      }
 }
 
@@ -1057,6 +1065,9 @@ CONST char         *name;
       return;
    else
      {
+       /* clean up old message */
+       OldMsgSelect[0] = EOS;
+
 	frame = GetWindowNumber (document, view);
 	if (frame == 0)
 	  /* try to display in document 1 */

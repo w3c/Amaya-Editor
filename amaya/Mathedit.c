@@ -69,7 +69,7 @@ Element             el;
 int                 index;
 #endif
 {
-  Element            new, parent, row;
+  Element            added, parent, row;
   ElementType        elType;
 
   /* do not check the Thot abstract tree against the structure */
@@ -97,13 +97,13 @@ int                 index;
 
   /* duplicate the parent element (MO, MN, MI or MTEXT) */
   elType = TtaGetElementType (parent);
-  new = TtaNewElement (doc, elType);
-  TtaInsertSibling (new, parent, FALSE, doc);
+  added = TtaNewElement (doc, elType);
+  TtaInsertSibling (added, parent, FALSE, doc);
   /* take the second part of the split text */
   TtaNextSibling (&el);
   TtaRemoveTree (el, doc);
   /* move the old element into the new MROW */
-  TtaInsertFirstChild (&el, new, doc);
+  TtaInsertFirstChild (&el, added, doc);
   /* check the Thot abstract tree against the structure schema. */
   TtaSetStructureChecking (1, doc);
   return (el);

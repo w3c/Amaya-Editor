@@ -150,7 +150,7 @@ PtrAttribute        currAttr;
    PtrElement          pElAttr;
 
    /* c'est l'attribut Langue, on initialise le formulaire Langue */
-   languageValue[0] = '\0';
+   languageValue[0] = EOS;
    if (currAttr != NULL)
       if (currAttr->AeAttrText != NULL)
 	 strncpy (languageValue, currAttr->AeAttrText->BuContent, MAX_NAME_LENGTH);
@@ -210,7 +210,7 @@ PtrAttribute        currAttr;
 		      TtaGetMessage (LIB, TMSG_LANG_OF_EL), nbItem, bufMenu,
 			length, NULL, TRUE, TRUE);
 #   endif /* !_WINDOWS */
-	if (languageValue[0] == '\0' || defItem < 0)
+	if (languageValue[0] == EOS || defItem < 0)
 	  {
 	    TtaSetSelector (NumSelectLanguage, -1, NULL);
 	    MenuAlphaLangValue = -1;
@@ -345,7 +345,7 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
 	if (WIN_currAttr)
 	   sprintf (attr_text, WIN_currAttr->AeAttrText->BuContent);
 	else
-		attr_text [0] = '\0' ;
+		attr_text [0] = EOS ;
 
     switch (iMsg) {
 	       case WM_CREATE:
@@ -392,7 +392,7 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
 									  pBuffer [index++] = pWinBuffer[i];
 								   }
 
-							   pBuffer [index] = '\0';
+							   pBuffer [index] = EOS;
 							} else {
 								  pWinBuffer = "";	  
 							      pBuffer = "";
@@ -488,7 +488,7 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
        if (WIN_currAttr) 
           sprintf (attr_text, WIN_currAttr->AeAttrText->BuContent);
        else
-          attr_text [0] = '\0' ;
+          attr_text [0] = EOS ;
        dlgInitialized = TRUE;
     }
 
@@ -542,7 +542,7 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 									  pBuffer [index++] = pWinBuffer[i];
 								   }
 
-							   pBuffer [index] = '\0';
+							   pBuffer [index] = EOS;
 							} else {
 								  pWinBuffer = "";	  
 							      pBuffer = "";
@@ -563,7 +563,7 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 									  pBuffer [index++] = pWinBuffer[i];
 								   }
 
-							   pBuffer [index] = '\0';
+							   pBuffer [index] = EOS;
 							} else {
 								  pWinBuffer = "";	  
 							      pBuffer = "";
@@ -848,7 +848,7 @@ int                 view;
 	         val = 0;
 	         /* boucle sur les valeurs possibles de l'attribut */
 	         while (val < pAttr1->AttrNEnumValues) {
-		           i = strlen (pAttr1->AttrEnumValue[val]) + 2;	/* for 'B' and '\0' */
+		           i = strlen (pAttr1->AttrEnumValue[val]) + 2;	/* for 'B' and EOS */
 		           if (lgmenu + i < MAX_TXT_LEN) {
 			          bufMenu[lgmenu] = 'B';
 			          strcpy (&bufMenu[lgmenu + 1], pAttr1->AttrEnumValue[val]);
@@ -1008,14 +1008,13 @@ int                 BuildAttrMenu (bufMenu, pDoc, ActiveAttr)
 char               *bufMenu;
 PtrDocument         pDoc;
 int                 ActiveAttr[];
-
 #endif /* __STDC__ */
 {
    int                 i;
    PtrDocument         SelDoc;
    PtrElement          firstSel, lastSel, pEl;
    int                 firstChar, lastChar;
-   boolean             selectionOK, new;
+   boolean             selectionOK, isNew;
    int                 lgmenu;
    PtrSSchema          pSS;
    PtrAttribute        pAttrNew;
@@ -1048,11 +1047,11 @@ int                 ActiveAttr[];
 	        do
 	          {
 		  /* on a deja traite' ce schema de structure ? */
-		  new = TRUE;
+		  isNew = TRUE;
 		  for (i = 1; i <= nbOfEntries; i++)	/* parcourt la table */
 		     if (pSS == AttrStruct[i - 1])	/* deja dans la table */
-			new = FALSE;
-		  if (new)
+			isNew = FALSE;
+		  if (isNew)
 		     /* l'element utilise un schema de structure pas encore */
 		     /* rencontre' */
 		     /* met tous les attributs globaux de ce schema dans la table */
@@ -1521,7 +1520,7 @@ char               *txt;
     case NumSelectLanguage:
       /* retour de la langue choisie par l'utilisateur */
       if (txt == NULL)
-	TextAttrValue[0] = '\0';
+	TextAttrValue[0] = EOS;
       else
 	{
 	  i = TtaGetLanguageIdFromName (txt);

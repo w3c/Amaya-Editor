@@ -278,7 +278,7 @@ boolean		    removeExclusions
 	  {
 	     /* compose le nom du fichier a ouvrir avec le nom du directory */
 	     /* des documents... */
-	     if (pDoc->DocDirectory[0] == '\0')
+	     if (pDoc->DocDirectory[0] == EOS)
 		strncpy (directoryName, DocumentPath, MAX_PATH);
 	     else
 		strncpy (directoryName, pDoc->DocDirectory, MAX_PATH);
@@ -466,7 +466,7 @@ BinFile             file;
 
    if (!TtaReadByte (file, &c))
      {
-	c = '\0';
+	c = EOS;
 	PivotError (file);
      }
    if (c == C_PIV_ABSOLUTE)
@@ -491,7 +491,7 @@ BinFile             file;
 
    if (!TtaReadByte (file, &c))
      {
-	c = '\0';
+	c = EOS;
 	PivotError (file);
      }
    switch (c)
@@ -526,7 +526,7 @@ BinFile             file;
 
    if (!TtaReadByte (file, &c))
      {
-	c = '\0';
+	c = EOS;
 	PivotError (file);
      }
    if (c == C_PIV_PLUS)
@@ -553,7 +553,7 @@ BinFile             file;
 
    if (!TtaReadByte (file, &c))
      {
-	c = '\0';
+	c = EOS;
 	PivotError (file);
      }
    if (c == C_PIV_TRUE)
@@ -581,7 +581,7 @@ BinFile             file;
 
    if (!TtaReadByte (file, &c))
      {
-	c = '\0';
+	c = EOS;
 	PivotError (file);
      }
    switch (c)
@@ -627,7 +627,7 @@ BinFile             file;
 
    if (!TtaReadByte (file, &c))
      {
-	c = '\0';
+	c = EOS;
 	PivotError (file);
      }
    switch (c)
@@ -722,7 +722,7 @@ boolean             oldformat;
    /* lit l'octet qui suit le tag commentaire */
    if (!TtaReadByte (file, &c))
      {
-	c = '\0';
+	c = EOS;
 	PivotError (file);
      }
    if (oldformat && c != (char) C_PIV_BEGIN)
@@ -741,7 +741,7 @@ boolean             oldformat;
 	     /* lit le 2eme octet de la longueur */
 	     if (!TtaReadByte (file, &c))
 	       {
-		  c = '\0';
+		  c = EOS;
 		  PivotError (file);
 	       }
 	     len += (int) c;
@@ -755,10 +755,10 @@ boolean             oldformat;
 		do
 		   if (!TtaReadByte (file, &c))
 		     {
-			c = '\0';
+			c = EOS;
 			PivotError (file);
 		     }
-		while (c != '\0') ;
+		while (c != EOS) ;
 	     else
 		while (len > 0)
 		  {
@@ -785,14 +785,14 @@ boolean             oldformat;
 			/* le buffer courant est plein, on change de buffer */
 		       {
 			  pBuf->BuLength = n;
-			  pBuf->BuContent[n] = '\0';
+			  pBuf->BuContent[n] = EOS;
 			  pBuf = NewTextBuffer (pBuf);
 			  n = 0;
 
 		       }
 		     if (!TtaReadByte (file, &c))
 		       {
-			  c = '\0';
+			  c = EOS;
 			  PivotError (file);
 		       }
 		     n++;
@@ -800,7 +800,7 @@ boolean             oldformat;
 		     if (!oldformat)
 			/* decremente le nombre d'octets  restant a lire */
 			len--;
-		     else if (c == '\0')
+		     else if (c == EOS)
 		       {
 			  n--;
 			  len = 0;
@@ -809,13 +809,13 @@ boolean             oldformat;
 		while (len != 0);
 	     /* termine le buffer en cours */
 	     pBuf->BuLength = n;
-	     pBuf->BuContent[n] = '\0';
+	     pBuf->BuContent[n] = EOS;
 	  }
 	if (oldformat)
 	  {
 	     /* lit le tag de fin */
 	     if (!TtaReadByte (file, &c))
-		c = '\0';
+		c = EOS;
 	     if (c != (char) C_PIV_END)
 	       {
 		  PivotError (file);
@@ -841,7 +841,7 @@ BinFile             pivFile;
 
    if (!TtaReadByte (pivFile, &c))
      {
-	c = '\0';
+	c = EOS;
 	PivotError (pivFile);
      }
    switch (c)
@@ -904,10 +904,10 @@ int                *number;
 		  val = (val * 10) + (c - '0');
 		  ok = TRUE;
 	       }
-	     else if (c != '\0')
+	     else if (c != EOS)
 		ok = FALSE;
 	  }
-	while (ok && c != '\0');
+	while (ok && c != EOS);
 	if (ok)
 	   *number = val;
      }
@@ -940,7 +940,7 @@ BinFile             file;
    /* lit un octet */
    if (!TtaReadByte (file, &c))
      {
-	c = '\0';
+	c = EOS;
 	PivotError (file);
      }
    /* cet octet represente-t-il un type de reference correct ? */
@@ -977,12 +977,12 @@ BinFile             file;
 	     /* lit le type de label */
 	     if (!TtaReadByte (file, &c))
 	       {
-		  c = '\0';
+		  c = EOS;
 		  PivotError (file);
 	       }
 	     /* lit la valeur du label */
 	     ReadLabel (c, label, file);
-	     if (*refExt && label[0] != '\0')
+	     if (*refExt && label[0] != EOS)
 		/* lit le nom du document contenant l'element reference' */
 		TtaReadDocIdent (file, docIdent);
 	  }
@@ -996,7 +996,7 @@ BinFile             file;
 	     j = 256 * ((int) c);	/* lit le 2eme octet du label */
 	     if (!TtaReadByte (file, &c))
 	       {
-		  c = '\0';
+		  c = EOS;
 		  PivotError (file);
 	       }
 	     j += (int) c;
@@ -1026,12 +1026,12 @@ BinFile             file;
 	/* lit le type de label */
 	if (!TtaReadByte (file, &c))
 	  {
-	     c = '\0';
+	     c = EOS;
 	     PivotError (file);
 	  }
 	/* lit la valeur du label */
 	ReadLabel (c, label, file);
-	if (*refExt && label[0] != '\0')
+	if (*refExt && label[0] != EOS)
 	   /* lit l'identificateur du document contenant l'element reference' */
 	   TtaReadDocIdent (file, docIdent);
 
@@ -1129,7 +1129,7 @@ PtrDocument         pDoc;
    PtrReference        pRf;
    PtrReference        pPR1;
 
-   if (lab[0] != '\0')
+   if (lab[0] != EOS)
       /* cherche le descripteur d'element reference' correspondant */
      {
 	r = GetElRefer (lab, I, pDoc);
@@ -1210,7 +1210,7 @@ char               *tag;
 		if (!Extension)
 		  {
 		     /* pas de presentation preferentielle */
-		     PSchemaName[0] = '\0';
+		     PSchemaName[0] = EOS;
 		     rule = CreateNature (pDoc->DocNatureName[nat], pDoc->DocNaturePresName[nat], *pSS);
 		     /* recupere le numero de la regle de nature */
 		     if (rule == 0)
@@ -1513,7 +1513,7 @@ PtrAttribute       *pAttr;
 			     PivotError (pivFile);
 			     DisplayPivotMessage ("A");
 			  }
-		     while (!error && c != '\0') ;
+		     while (!error && c != EOS) ;
 		  else
 		    {
 		       /* acquiert un premier buffer de texte */
@@ -1530,7 +1530,7 @@ PtrAttribute       *pAttr;
 			    }
 			  else
 			     /* on a lu correctement un caractere */
-			  if (pBT->BuContent[pBT->BuLength - 1] == '\0')
+			  if (pBT->BuContent[pBT->BuLength - 1] == EOS)
 			     /* c'est la fin du texte de l'attribut */
 			     stop = TRUE;
 			  else
@@ -1538,7 +1538,7 @@ PtrAttribute       *pAttr;
 			  if (pBT->BuLength >= THOT_MAX_CHAR - 1)
 			     /* le buffer courant est plein */
 			    {
-			       pBT->BuContent[pBT->BuLength] = '\0';	/* fin du buffer */
+			       pBT->BuContent[pBT->BuLength] = EOS;	/* fin du buffer */
 			       /* acquiert un nouveau buffer */
 			       pBT = NewTextBuffer (pBT);
 			    }
@@ -2213,7 +2213,7 @@ boolean             createDesc;
 		    /* il faudra creer son contenu */
 		    /* cherche le schema de structure ou est */
 		    /* defini son contenu */
-		    if (pSRule->SrNatExpContent[0] == '\0')
+		    if (pSRule->SrNatExpContent[0] == EOS)
 		      /* meme schema de structure */
 		      *pContSS = pSSchema;
 		    else
@@ -2288,7 +2288,7 @@ boolean             createDesc;
 	      /* il ne faut pas que le label max. du document augmente */
 	      pEl = NewSubtree (elType, pSSchema, pDoc, assocNum, FALSE, TRUE, FALSE, FALSE);
 	      if (pEl != NULL)
-		pEl->ElLabel[0] = '\0';
+		pEl->ElLabel[0] = EOS;
 	      if (parameter)
 		pSSchema->SsRule[elType - 1].SrParamElem = TRUE;
 	    }
@@ -2325,7 +2325,7 @@ boolean             createDesc;
 	  withReferences = FALSE;
 
       /* traite le label s'il est present */
-      label[0] = '\0';
+      label[0] = EOS;
       if (!error)
 	if (*tag == (char) C_PIV_SHORT_LABEL || *tag == (char) C_PIV_LONG_LABEL ||
 	    *tag == (char) C_PIV_LABEL)
@@ -2335,7 +2335,7 @@ boolean             createDesc;
 	    if (!TtaReadByte (pivFile, tag))
 	      PivotError (pivFile);
 	  }
-      if (!error && label[0] != '\0' && create)
+      if (!error && label[0] != EOS && create)
 	/* l'element porte un label */
 	{
 	  strncpy (pEl->ElLabel, label, MAX_LABEL_LEN);
@@ -2551,7 +2551,7 @@ boolean             createDesc;
 			    /* saute le texte de l'element */
 			    {
 			      ch = *tag;
-			      while (ch != '\0' && !error)
+			      while (ch != EOS && !error)
 				if (!TtaReadByte (pivFile, &ch))
 				  PivotError (pivFile);
 			    }
@@ -2563,13 +2563,13 @@ boolean             createDesc;
 			      pEl->ElTextLength = 0;
 			      ch = *tag;
 			      do
-				if (ch != '\0')
+				if (ch != EOS)
 				  {
 				    if (n == THOT_MAX_CHAR - 1)
 				      {
 					pEl->ElTextLength += n;
 					pBuf->BuLength = n;
-					pBuf->BuContent[n] = '\0';
+					pBuf->BuContent[n] = EOS;
 					pBuf = NewTextBuffer (pBuf);
 					n = 0;
 				      }
@@ -2609,10 +2609,10 @@ boolean             createDesc;
 				    if (!TtaReadByte (pivFile, &ch))
 				      PivotError (pivFile);
 				  }
-			      while (ch != '\0') ;
+			      while (ch != EOS) ;
 			      pEl->ElTextLength += n;
 			      pBuf->BuLength = n;
-			      pBuf->BuContent[n] = '\0';
+			      pBuf->BuContent[n] = EOS;
 			      pEl->ElVolume = pEl->ElTextLength;
 			    }
 			  if (!TtaReadByte (pivFile, tag))
@@ -2623,7 +2623,7 @@ boolean             createDesc;
 			    /* saute le texte de l'element */
 			    {
 			      ch = *tag;
-			      while (ch != '\0')
+			      while (ch != EOS)
 				if (!TtaReadByte (pivFile, &ch))
 				  PivotError (pivFile);
 			    }
@@ -2635,7 +2635,7 @@ boolean             createDesc;
 			      pEl->ElNameLength = 0;
 			      ch = *tag;
 			      do
-				if (ch != '\0')
+				if (ch != EOS)
 				  {
 				    /* TODO : nom d'image > THOT_MAX_CHAR */
 				    if (n == THOT_MAX_CHAR - 1)
@@ -2649,7 +2649,7 @@ boolean             createDesc;
 				    if (!TtaReadByte (pivFile, &ch))
 				      PivotError (pivFile);
 				  }
-			      while (ch != '\0');
+			      while (ch != EOS);
 
 			      /* on suppose que le nom tient en entier dans un buffer */
 			      /* on normalise le nom */
@@ -2667,7 +2667,7 @@ boolean             createDesc;
 				image->PicFileName = pBuf->BuContent;
 			      pEl->ElNameLength += n;
 			      pBuf->BuLength = n;
-			      pBuf->BuContent[n] = '\0';
+			      pBuf->BuContent[n] = EOS;
 			      pEl->ElVolume = pEl->ElNameLength;
 			    }
 			  if (!TtaReadByte (pivFile, tag))
@@ -2692,7 +2692,7 @@ boolean             createDesc;
 				    pEl->ElGraph = 'R';
 				  else if (pEl->ElGraph >= '\260' && pEl->ElGraph <= '\270')
 				    pEl->ElGraph = 'R';
-				  if (ch == '\0')
+				  if (ch == EOS)
 				    pEl->ElVolume = 0;
 				  else
 				    pEl->ElVolume = 1;
@@ -2828,7 +2828,7 @@ boolean             createDesc;
 								   pEl2->ElStructSchema,
 								   pDoc, assocNum, FALSE, TRUE, FALSE, FALSE);
 					      
-					      pElInt->ElLabel[0] = '\0';
+					      pElInt->ElLabel[0] = EOS;
 					      InsertFirstChild (pElInt, p);
 					      p = pElInt;
 					    }
@@ -3005,7 +3005,7 @@ PtrDocument         pDoc;
 
    if (pEl != NULL)
      {
-	if (pEl->ElLabel[0] == '\0')
+	if (pEl->ElLabel[0] == EOS)
 	   /* l'element n'a pas de label, on lui en met un */
 	   ConvertIntToLabel (NewLabel (pDoc), pEl->ElLabel);
 	if (!pEl->ElTerminal)
@@ -3124,8 +3124,8 @@ void (*withThisPSchema) ();
    do
       if (!TtaReadByte (file, &SSName[i++]))
 	 PivotError (file);
-   while (!error && SSName[i - 1] != '\0' && i != MAX_NAME_LENGTH) ;
-   if (SSName[i - 1] != '\0')
+   while (!error && SSName[i - 1] != EOS && i != MAX_NAME_LENGTH) ;
+   if (SSName[i - 1] != EOS)
      {
 	PivotError (file);
 	DisplayPivotMessage ("Z");
@@ -3142,7 +3142,7 @@ void (*withThisPSchema) ();
 	do
 	   if (!TtaReadByte (file, &PSchemaName[i++]))
 	      PivotError (file);
-	while (!error && PSchemaName[i - 1] != '\0' && i != MAX_NAME_LENGTH) ;
+	while (!error && PSchemaName[i - 1] != EOS && i != MAX_NAME_LENGTH) ;
 
 	if (!TtaReadByte (file, tag))
 	   PivotError (file);
@@ -3189,7 +3189,7 @@ void (*withThisPSchema) ();
 	do
 	   if (!TtaReadByte (file, &SSName[i++]))
 	      PivotError (file);
-	while (SSName[i - 1] != '\0' && !error) ;
+	while (SSName[i - 1] != EOS && !error) ;
 	if (pDoc->DocPivotVersion >= 4)
 	   /* Lit le code du schema de structure */
 	   if (!error)
@@ -3207,14 +3207,14 @@ void (*withThisPSchema) ();
 	     do
 		if (!TtaReadByte (file, &PSchemaName[i++]))
 		   PivotError (file);
-	     while (!error && PSchemaName[i - 1] != '\0' && i != MAX_NAME_LENGTH) ;
+	     while (!error && PSchemaName[i - 1] != EOS && i != MAX_NAME_LENGTH) ;
 
 	     if (!TtaReadByte (file, tag))
 		PivotError (file);
 	  }
 	else
 	   /* il n'y a pas de nom */
-	   PSchemaName[0] = '\0';
+	   PSchemaName[0] = EOS;
 	pSS = NULL;
 	if (!error)
 	  {
@@ -3284,15 +3284,15 @@ char               *tag;
 	   do
 	      if (!TtaReadByte (file, &languageName[i++]))
 		 PivotError (file);
-	   while (!error && languageName[i - 1] != '\0' && i != MAX_NAME_LENGTH) ;
-	   if (languageName[i - 1] != '\0')
+	   while (!error && languageName[i - 1] != EOS && i != MAX_NAME_LENGTH) ;
+	   if (languageName[i - 1] != EOS)
 	     {
 		PivotError (file);
 		DisplayPivotMessage ("Z");
 	     }
 	   else
 	     {
-		if (languageName[0] != '\0')
+		if (languageName[0] != EOS)
 		   if (pDoc->DocNLanguages < MAX_LANGUAGES_DOC)
 		      pDoc->DocLanguages[pDoc->DocNLanguages++] =
 			 TtaGetLanguageIdFromName (languageName);

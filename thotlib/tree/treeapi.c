@@ -244,11 +244,11 @@ char               *label;
      {
 	element = NewSubtree (elementType.ElTypeNum, (PtrSSchema) (elementType.ElSSchema),
 			  LoadedDocument[document - 1], 0, TRUE, TRUE, TRUE,
-			      (*label) == '\0');
+			      (*label) == EOS);
 	if (element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrConstruct == CsPairedElement)
 	   if (!element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrFirstOfPair)
 	      element->ElPairIdent = 0;
-	if (*label != '\0')
+	if (*label != EOS)
 	   strncpy (element->ElLabel, label, MAX_LABEL_LEN);
      }
    return ((Element) element);
@@ -2231,7 +2231,7 @@ ElementType         elementType;
 {
 
    UserErrorCode = 0;
-   nameBuffer[0] = '\0';
+   nameBuffer[0] = EOS;
    if (elementType.ElSSchema == NULL)
 	TtaError (ERR_invalid_parameter);
    else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
@@ -2267,7 +2267,7 @@ ElementType         elementType;
 {
 
    UserErrorCode = 0;
-   nameBuffer[0] = '\0';
+   nameBuffer[0] = EOS;
    if (elementType.ElSSchema == NULL)
 	TtaError (ERR_invalid_parameter);
    else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
@@ -2310,7 +2310,7 @@ char               *name;
 {
    UserErrorCode = 0;
    (*elementType).ElTypeNum = 0;
-   if (name == NULL || name[0] == '\0' || (*elementType).ElSSchema == NULL)
+   if (name == NULL || name[0] == EOS || (*elementType).ElSSchema == NULL)
      {
 	(*elementType).ElSSchema = NULL;
 	TtaError (ERR_invalid_parameter);
@@ -2353,7 +2353,7 @@ char               *name;
 {
    UserErrorCode = 0;
    (*elementType).ElTypeNum = 0;
-   if (name == NULL || name[0] == '\0' || (*elementType).ElSSchema == NULL)
+   if (name == NULL || name[0] == EOS || (*elementType).ElSSchema == NULL)
      {
 	(*elementType).ElSSchema = NULL;
 	TtaError (ERR_invalid_parameter);
@@ -2436,7 +2436,7 @@ Element             element;
 {
 
    UserErrorCode = 0;
-   nameBuffer[0] = '\0';
+   nameBuffer[0] = EOS;
    if (element == NULL)
 	TtaError (ERR_invalid_parameter);
    else
@@ -3660,7 +3660,7 @@ Element             element;
    elementFound = NULL;
    if (element == NULL)
 	TtaError (ERR_invalid_parameter);
-   else if (searchedLabel[0] == '\0')
+   else if (searchedLabel[0] == EOS)
 	TtaError (ERR_invalid_element_type);
    else
       elementFound = SearchLabel (searchedLabel, (PtrElement) element);

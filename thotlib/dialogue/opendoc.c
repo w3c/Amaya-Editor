@@ -116,7 +116,7 @@ int                *nbItems;
 
    /* remplace PATH_SEP par separator pour le formulaire de saisie des documents */
    nb = 1;
-   for (i = 0; i < MAX_PATH && bufDir[i] != '\0'; i++)
+   for (i = 0; i < MAX_PATH && bufDir[i] != EOS; i++)
       if (bufDir[i] == PATH_SEP)
 	{
 	   bufDir[i] = separator;
@@ -128,7 +128,7 @@ int                *nbItems;
 /*----------------------------------------------------------------------
    SearchStringInBuffer
    searches the string s in the menu buffer. 
-   The buffer contains nbStr string separated by an '\0' character.
+   The buffer contains nbStr string separated by an EOS character.
    Returns the rank of s in buffer or -1 if s doesn't occur.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -297,11 +297,11 @@ char               *data;
 	    case NumSelectImportClass:
 	       /* conserve le nom interne du schema de structure d'importation */
 	       ConfigSSchemaInternalName (data, SchStrImport, TRUE);
-	       if (SchStrImport[0] == '\0')
+	       if (SchStrImport[0] == EOS)
 		  /* pas de fichier .langue, on prend le nom tel quel */
 		 {
 		    strncpy (SchStrImport, data, MAX_NAME_LENGTH - 1);
-		    SchStrImport[MAX_NAME_LENGTH - 1] = '\0';
+		    SchStrImport[MAX_NAME_LENGTH - 1] = EOS;
 		 }
 	       break;
 	    case NumFormImportClass:
@@ -349,7 +349,7 @@ char               *data;
 	       if (TtaCheckDirectory (data) && data[strlen (data) - 1] != URL_DIR_SEP)
 		 {
 		    strcpy (DirectoryName, data);
-		    DefaultDocumentName[0] = '\0';
+		    DefaultDocumentName[0] = EOS;
 		 }
 	       else
 		 {
@@ -359,7 +359,7 @@ char               *data;
 		    if (i >= MAX_NAME_LENGTH)
 		      {
 			 i = MAX_NAME_LENGTH;	/*Longueur du nom limitee */
-			 docName[i] = '\0';
+			 docName[i] = EOS;
 		      }
 		    strcpy (DefaultDocumentName, docName);
 		 }
@@ -376,7 +376,7 @@ char               *data;
 			      {
 				 strcat (DocumentPath, PATH_STR);
 				 strcat (DocumentPath, DirectoryName);
-				 BuildPathDocBuffer (bufDir, '\0', &i);
+				 BuildPathDocBuffer (bufDir, EOS, &i);
 				 TtaNewSelector (NumZoneDirOpenDoc, NumFormOpenDoc,
 						 TtaGetMessage (LIB, TMSG_DOC_DIR), i, bufDir, 9, NULL, FALSE, TRUE);
 
@@ -393,7 +393,7 @@ char               *data;
 			".PIV", TtaGetMessage (LIB, TMSG_FILES), NumSelDoc);
 	       break;
 	    case NumSelDoc:
-	       if (DirectoryName[0] == '\0')
+	       if (DirectoryName[0] == EOS)
 		 {
 		    /* compose le path complet du fichier pivot */
 		    strncpy (DirectoryName, DocumentPath, MAX_PATH);
@@ -409,10 +409,10 @@ char               *data;
 		      {
 			 /* RemoveElement le suffixe .PIV du nom de fichier */
 			 if (!strcmp (&data[i - 4], ".PIV"))
-			    data[i - 4] = '\0';
+			    data[i - 4] = EOS;
 		      }
 		    strncpy (DefaultDocumentName, data, MAX_NAME_LENGTH);
-		    DefaultDocumentName[MAX_NAME_LENGTH - 1] = '\0';
+		    DefaultDocumentName[MAX_NAME_LENGTH - 1] = EOS;
 		    strcat (docName, DefaultDocumentName);
 		 }
 	       TtaSetTextForm (NumZoneDocNameToOpen, docName);
@@ -424,7 +424,7 @@ char               *data;
 		    return;
 		 }
 	       /* le formulaire Ouvrir Document */
-	       if (DirectoryName[0] == '\0')
+	       if (DirectoryName[0] == EOS)
 		  /* compose le path complet du fichier pivot */
 		  strncpy (DirectoryName, DocumentPath, MAX_PATH);
 	       else if (TtaCheckDirectory (DirectoryName))
@@ -510,17 +510,17 @@ View                view;
    TtaNewForm (NumFormOpenDoc,  parentWidget,
 	       TtaGetMessage (LIB, TMSG_OPEN_DOC), TRUE, 2, 'L', D_CANCEL);
    /* zone de saisie des dossiers documents */
-   BuildPathDocBuffer (bufDir, '\0', &nbItems);
+   BuildPathDocBuffer (bufDir, EOS, &nbItems);
    TtaNewSelector (NumZoneDirOpenDoc, NumFormOpenDoc,
    TtaGetMessage (LIB, TMSG_DOC_DIR), nbItems, bufDir, 6, NULL, FALSE, TRUE);
-   if (DirectoryName[0] == '\0' && nbItems >= 1)
+   if (DirectoryName[0] == EOS && nbItems >= 1)
       /* si pas de dossier courant, on initialise avec le premier de bufDir */
      {
 	strcpy (DirectoryName, bufDir);
 	strcpy (DefaultDocumentName, bufDir);
 	TtaSetSelector (NumZoneDirOpenDoc, 0, NULL);
      }
-   else if (DirectoryName[0] != '\0')
+   else if (DirectoryName[0] != EOS)
      {
        if (strchr (DirectoryName, '/'))
 	 URL_DIR_SEP = '/';
@@ -533,7 +533,7 @@ View                view;
        strcpy (docName, DirectoryName);
        length = strlen (docName);
        docName[length] = URL_DIR_SEP;
-       docName[length + 1] = '\0';
+       docName[length + 1] = EOS;
        strcpy (DefaultDocumentName, docName);
      }
    /* liste des fichiers existants */

@@ -40,6 +40,10 @@
 #ifndef XPM_h
 #define XPM_h
 
+#ifndef EOS
+#define EOS '\0'
+#endif
+
 /*
  * first some identification numbers:
  * the following revision numbers is determined with the following rule:

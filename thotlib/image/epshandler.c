@@ -84,7 +84,7 @@ int                *hif;
 		*pt++ = c;
 	     if (c == '\n')
 	       {
-		  *(--pt) = '\0';
+		  *(--pt) = EOS;
 		  pt = buff;
 		  if ((buff[0] == '%')
 		      && (sscanf (buff, "%%%%BoundingBox: %d %d %d %d", xif, yif, &X2, &Y2) == 4))

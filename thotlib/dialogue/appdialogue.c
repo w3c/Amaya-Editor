@@ -957,7 +957,7 @@ int                 frame;
    i = 0;
    j = 0;
    withEquiv = FALSE;
-   equiv[0] = '\0';
+   equiv[0] = EOS;
    ptritem = ptrmenu->ItemsList;
    while (item < ptrmenu->ItemsNb)
      {
@@ -999,7 +999,7 @@ int                 frame;
 	       }
 	     MenuActionList[action].ActionActive[frame] = TRUE;
 	  }
-	equiv[j++] = '\0';
+	equiv[j++] = EOS;
 	item++;
      }
    sref = ((entry + 1) * MAX_MENU * MAX_ITEM) + ref;
@@ -1044,7 +1044,7 @@ int                 frame;
    i = 0;
    j = 0;
    withEquiv = FALSE;
-   equiv[0] = '\0';
+   equiv[0] = EOS;
    ptritem = ptrmenu->ItemsList;
    while (item < ptrmenu->ItemsNb)
      {
@@ -1089,7 +1089,7 @@ int                 frame;
 		  MenuActionList[action].ActionActive[frame] = TRUE;
 	       }
 	  }
-	equiv[j++] = '\0';
+	equiv[j++] = EOS;
 	item++;
      }
 

@@ -105,14 +105,14 @@ boolean             ToCreate;
     {
 #     ifdef _WINDOWS
 	  if ((TtaGetEnvString ("HOME")) == NULL)
-		 path [0] = '\0';
+		 path [0] = EOS;
 #     else /* !_WINDOWS */
       strcpy (path, TtaGetEnvString ("HOME"));
 #     endif /* !_WINDOWS */
       LoadTreatedDict ((PtrDict *) pDictionary, 0, document, ".thot",
 		       path, FALSE, ToCreate);
     }
-  return (*pDictionary != '\0');
+  return (*pDictionary != EOS);
 }
 
 
@@ -128,7 +128,7 @@ char               *string;
    int                 i;
 
    i = 0;
-   while (string[i] != '\0')
+   while (string[i] != EOS)
      {
 	string[i] = Code[(unsigned char) string[i]];
 	i++;
@@ -147,7 +147,7 @@ char               *string;
 {
    int                 i = 0;
 
-   while (string[i] != '\0')
+   while (string[i] != EOS)
      {
 	string[i] = ReverseCode[(unsigned char) string[i]];
 	i++;
@@ -169,7 +169,7 @@ char               *string;
    int                 i = 0;
    char                c;
 
-   while ((c = string[i]) != '\0' && (maj == 0))
+   while ((c = string[i]) != EOS && (maj == 0))
      {
 	maj = isimaj (string[i]);
 	i++;
@@ -208,7 +208,7 @@ char               *string;
 {
    int                 i = 0;
 
-   while ((string[i]) != '\0')
+   while ((string[i]) != EOS)
      {
 	if (isimin (string[i]) != 0)
 	   string[i] = toupper (string[i]);
@@ -245,7 +245,7 @@ char               *string;
    int                 i = 0;
    char                c;
 
-   while ((c = string[i]) != '\0' && (maj != 0))
+   while ((c = string[i]) != EOS && (maj != 0))
      {
 	maj = isimaj (string[i]);
 	i++;
@@ -267,11 +267,11 @@ char               *string;
    int                 i = 0;
    char                c;
 
-   if (string[0] != '\0' && isimaj (string[0]) != 0)
+   if (string[0] != EOS && isimaj (string[0]) != 0)
      {
 	cap = 1;
 	i++;
-	while ((c = string[i]) != '\0' && (cap != 0))
+	while ((c = string[i]) != EOS && (cap != 0))
 	  {
 	     cap = !(isimaj (string[i]));
 	     i++;
@@ -292,7 +292,7 @@ char               *string;
    int                 iso = 1;
    int                 i = 0;
 
-   while (string[i] != '\0' && (iso != 0))
+   while (string[i] != EOS && (iso != 0))
      {
 	iso = isalphiso (string[i]) || string[i] == '-' || string[i] == '\'';
 	i++;
@@ -382,7 +382,7 @@ PtrDict             dict;
    if (language == 0)
       return (-1);
 
-   if (word[0] == '\0')
+   if (word[0] == EOS)
       return (0);		/* mot vide */
 
    if (strlen (word) >= 2)

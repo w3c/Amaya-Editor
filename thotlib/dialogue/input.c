@@ -993,7 +993,7 @@ char               *appliname;
 		  else
 		    {
 		       mod1 = THOT_NO_MOD;
-		       equiv[0] = '\0';
+		       equiv[0] = EOS;
 		    }
 
 		  if (!strcmp (ch, "Ctrl"))
@@ -1015,9 +1015,9 @@ char               *appliname;
 		    }
 
 		  /* Extrait la valeur de la cle */
-		  name[0] = '\0';
+		  name[0] = EOS;
 		  sscanf (ch, "<Key>%80s", name);
-		  if (name[0] != '\0')
+		  if (name[0] != EOS)
 		    {
 		       strcat (line, "<Key>");	/* copie de la cle */
 		       i = strlen (name);
@@ -1025,7 +1025,7 @@ char               *appliname;
 		       if ((name[i - 1] == ':') && i != 1)
 			 {
 			    /* Il faut engendrer un : apres le nom */
-			    name[i - 1] = '\0';
+			    name[i - 1] = EOS;
 			    i = 1;
 			 }
 		       else
@@ -1097,7 +1097,7 @@ char               *appliname;
 			    if (name[i - 1] == ':' && i != 1)
 			      {
 				 /* Il faut engendrer un : apres le nom */
-				 name[i - 1] = '\0';
+				 name[i - 1] = EOS;
 				 i = 1;
 			      }
 			    else
@@ -1123,7 +1123,7 @@ char               *appliname;
 		     i = max;
 		  else
 		    {
-		       adr[0] = '\0';
+		       adr[0] = EOS;
 		       /* Selection de la bonne commande */
 		       for (i = 0; i < max; i++)
 			  if (!strcmp (ch, MenuActionList[i].ActionName))

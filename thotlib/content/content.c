@@ -232,12 +232,12 @@ PtrElement	    *pSecondPart;
 		  pBuf1->BuContent[i] = pBuf->BuContent[len + i - 1];
 		  i++;
 	       }
-	     while (pBuf1->BuContent[i - 1] != '\0');
+	     while (pBuf1->BuContent[i - 1] != EOS);
 	     pBuf1->BuLength = i - 1;
 	     pBuf1 = pBuf;
 	     /* met a jour le dernier buffer de la premiere partie */
 	     pBuf1->BuNext = NULL;
-	     pBuf1->BuContent[len - 1] = '\0';
+	     pBuf1->BuContent[len - 1] = EOS;
 	     pBuf1->BuLength = len - 1;
 	     /* essaie de vider ce dernier buffer dans le precedent */
 	     if (pBuf1->BuPrevious != NULL)
@@ -413,7 +413,7 @@ boolean             removeAbsBox;
 					   pBuf1->BuContent[pBuf1->BuLength + i - 1] = pBuf2->BuContent
 					      [i - 1];
 					}
-				      while (pBuf2->BuContent[i - 1] != '\0');
+				      while (pBuf2->BuContent[i - 1] != EOS);
 				      pBuf1->BuLength += pBuf2->BuLength;
 				      /* libere le buffer vide */
 				      pBuf1->BuNext = pBuf2->BuNext;
@@ -598,7 +598,7 @@ PtrTextBuffer       pBuf;
       /* les deux sont vides, egalite' */
       equal = TRUE;
    else if (pBuf != NULL && String != NULL)
-      if (String[0] == '\0' && pBuf->BuLength == 0)
+      if (String[0] == EOS && pBuf->BuLength == 0)
 	 equal = TRUE;
       else
 	{
@@ -818,7 +818,7 @@ int                *LgCopiee;
 		  strncpy (pTBDest->BuContent + pTBDest->BuLength, pSrce, len);
 		  pSrce += len;
 		  pTBDest->BuLength += len;
-		  pTBDest->BuContent[pTBDest->BuLength] = '\0';
+		  pTBDest->BuContent[pTBDest->BuLength] = EOS;
 		  lenRest -= len;
 	       }
 	  }
@@ -867,7 +867,7 @@ int                *len;
 		     l = LgMax;
 		  strncpy (pDest, pTBSrce->BuContent, l);
 		  pDest += l;
-		  *pDest = '\0';
+		  *pDest = EOS;
 		  LgMax -= l;
 		  *len += l;
 	       }
@@ -898,7 +898,7 @@ PtrTextBuffer       pBuf;
      {
 	pBuf = pBuf;
 	pBuf->BuLength = 0;
-	pBuf->BuContent[0] = '\0';
+	pBuf->BuContent[0] = EOS;
 	pNextBuf = pBuf->BuNext;
 	pBuf->BuNext = NULL;
 	pBuf = pNextBuf;

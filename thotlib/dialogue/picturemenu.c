@@ -120,17 +120,17 @@ static void         InitPathImage ()
    int                 nb;
    int                 max;
 
-   /* remplace ':' par '\0' pour le formulaire de saisie des images */
+   /* remplace ':' par EOS pour le formulaire de saisie des images */
    nb = 1;
    max = MAX_PATH * 2;
    j = 0;
    /* paths des schemas */
-   for (i = 0; i < MAX_PATH && SchemaPath[i] != '\0'; i++)
+   for (i = 0; i < MAX_PATH && SchemaPath[i] != EOS; i++)
       if (SchemaPath[i] == PATH_SEP)
 	{
-	   if (bufDir[j - 1] != '\0')
+	   if (bufDir[j - 1] != EOS)
 	     {
-		bufDir[j++] = '\0';
+		bufDir[j++] = EOS;
 		nb++;
 	     }
 	}
@@ -138,18 +138,18 @@ static void         InitPathImage ()
 	 bufDir[j++] = SchemaPath[i];
 
    if (j < max)
-      bufDir[j++] = '\0';
+      bufDir[j++] = EOS;
    else
-      bufDir[j - 1] = '\0';
+      bufDir[j - 1] = EOS;
 
    /* paths des documents */
    nb++;
-   for (i = 0; i < MAX_PATH && DocumentPath[i] != '\0'; i++)
+   for (i = 0; i < MAX_PATH && DocumentPath[i] != EOS; i++)
       if (DocumentPath[i] == PATH_SEP)
 	{
-	   if (bufDir[j - 1] != '\0')
+	   if (bufDir[j - 1] != EOS)
 	     {
-		bufDir[j++] = '\0';
+		bufDir[j++] = EOS;
 		nb++;
 	     }
 	}
@@ -157,9 +157,9 @@ static void         InitPathImage ()
 	 bufDir[j++] = DocumentPath[i];
 
    if (j < max)
-      bufDir[j] = '\0';
+      bufDir[j] = EOS;
    else
-      bufDir[j - 1] = '\0';
+      bufDir[j - 1] = EOS;
    TtaNewSelector (BaseDlgImage + _ZONE_DIR_IMAGE, BaseDlgImage + _IMAGE_FORM, "Dossiers documents",
 		   nb, bufDir, 9, NULL, FALSE, TRUE);
 }
@@ -196,17 +196,17 @@ char               *txt;
        if (TtaCheckDirectory (txt) && txt[strlen (txt) - 1] != URL_DIR_SEP)
 	 {
 	   strcpy (DirectoryImage, txt);
-	   ImageName[0] = '\0';
+	   ImageName[0] = EOS;
 	 }
        else
 	 {
 	   /* conserve le nom du document a ouvrir */
 	   TtaExtractName (txt, DirectoryImage, ImageName);
-	   if (ImageName[0] == '\0' && !TtaCheckDirectory (DirectoryImage))
+	   if (ImageName[0] == EOS && !TtaCheckDirectory (DirectoryImage))
 	     {
 	       /* Le texte correspond au nom de l'image sans directory */
 	       strncpy (ImageName, DirectoryImage, 100);
-	       DirectoryImage[0] = '\0';
+	       DirectoryImage[0] = EOS;
 	     }
 	 }
        
@@ -230,7 +230,7 @@ char               *txt;
 	 }
        break;
      case _IMAGE_SEL:
-       if (DirectoryImage[0] == '\0')
+       if (DirectoryImage[0] == EOS)
 	 {
 	   /* compose le path complet du fichier pivot */
 	   strncpy (DirectoryImage, DocumentPath, MAX_PATH);
@@ -278,7 +278,7 @@ char               *txt;
 	 {
 	   IndexPresImage = val;
 	   /* Faut-il mettre a jour la liste des fichiers */
-	   if (DirectoryImage[0] != '\0')
+	   if (DirectoryImage[0] != EOS)
 	     TtaListDirectory (DirectoryImage, BaseDlgImage + _IMAGE_FORM, NULL, -1,
 			       FileExtension[IndexTypeImage], TtaGetMessage (LIB, TMSG_FILES), BaseDlgImage + _IMAGE_SEL);
 	 }
@@ -327,7 +327,7 @@ PtrBox              pBox;
    IndexTypeImage = GetPictTypeIndex (*typim);
    IndexPresImage = GetPictPresIndex (*pres);
    strcpy (ImageName, name);
-   DirectoryImage[0] = '\0';
+   DirectoryImage[0] = EOS;
    RedisplayPicture = FALSE;
 
    TtaNewForm (BaseDlgImage + _IMAGE_FORM,  0, TtaGetMessage (LIB, TMSG_PICTURE), TRUE, 2, 'L', D_CANCEL);
@@ -383,7 +383,7 @@ PtrBox              pBox;
    TtaShowDialogue (BaseDlgImage + _IMAGE_FORM, FALSE);
    /* attend le retour du formulaire */
    TtaWaitShowDialogue ();
-   if (ImageName[0] == '\0')
+   if (ImageName[0] == EOS)
       RedisplayPicture = FALSE;
 
    if (RedisplayPicture)

@@ -606,7 +606,7 @@ boolean             before;
 					       case LtSymbol:
 					       case LtGraphics:
 					       case LtCompound:
-						  if (pChild->ElGraph == '\0')
+						  if (pChild->ElGraph == EOS)
 						     /* la descendance se reduit a une feuille vide */
 						     stop = TRUE;
 						  else
@@ -1121,11 +1121,11 @@ PtrAbstractBox      pAb;
 		       /* un graphique simple a transformer en Polyline */
 		      {
 			 pEl->ElLeafType = LtPolyLine;
-			 if (pEl->ElGraph == '\0')
+			 if (pEl->ElGraph == EOS)
 			    pEl->ElNPoints = 0;
 			 else
 			    pEl->ElNPoints = 1;
-			 pEl->ElPolyLineType = '\0';
+			 pEl->ElPolyLineType = EOS;
 		      }
 		    dVol = pAb->AbVolume - pEl->ElNPoints;
 		    pEl->ElNPoints = pAb->AbVolume;
@@ -1140,7 +1140,7 @@ PtrAbstractBox      pAb;
 		       /* une Polyline a transformer en graphique simple */
 		      {
 			 dVol = -pEl->ElNPoints;
-			 if (pAb->AbShape != '\0')
+			 if (pAb->AbShape != EOS)
 			    dVol++;
 			 ClearText (pEl->ElPolyLineBuffer);
 			 FreeTextBuffer (pEl->ElPolyLineBuffer);
@@ -1148,9 +1148,9 @@ PtrAbstractBox      pAb;
 		      }
 		    else
 		      {
-			 if (pEl->ElGraph == '\0' && pAb->AbShape != '\0')
+			 if (pEl->ElGraph == EOS && pAb->AbShape != EOS)
 			    dVol = 1;
-			 if (pEl->ElGraph != '\0' && pAb->AbShape == '\0')
+			 if (pEl->ElGraph != EOS && pAb->AbShape == EOS)
 			    dVol = -1;
 		      }
 		    pEl->ElVolume += dVol;
@@ -1583,7 +1583,7 @@ PtrElement         *pSelEl;
    else
       ReferredType (NULL, pAttr, &pSS, &referredTypeNum);
    if (pSS == NULL || referredTypeNum == 0)
-      typeName[0] = '\0';
+      typeName[0] = EOS;
    else
      {
 	strncpy (typeName, pSS->SsRule[referredTypeNum - 1].SrName, MAX_NAME_LENGTH);
@@ -2056,17 +2056,17 @@ char               *natureName;
    if (natureName != NULL)
       /* le CsChoice etait une regle NATURE */
      {
-	if (natureName[0] != '\0')
+	if (natureName[0] != EOS)
 	   /* l'utilisateur a saisi le nom d'une nature */
 	  {
 	     /* on suppose que ce mon est dans la langue de */
 	     /* l'utilisateur: on le traduit en nom interne */
 	     ConfigSSchemaInternalName (natureName, SSchemaName, FALSE);
-	     if (SSchemaName[0] == '\0')
+	     if (SSchemaName[0] == EOS)
 		/* ce nom n'est pas dans le fichier langue, on le */
 		/* prend tel quel */
 		strncpy (SSchemaName, natureName, MAX_NAME_LENGTH);
-	     PSchemaName[0] = '\0';
+	     PSchemaName[0] = EOS;
 	     /* cree une nouvelle nature */
 	     ChosenTypeNum = CreateNature (SSchemaName, PSchemaName, ChoiceMenuSSchema[0]);
 	     ChosenTypeSSchema = ChoiceMenuSSchema[0];
@@ -3262,10 +3262,10 @@ char               *menuBuf;
 	   j = MAX_TXT_LEN - *menuInd;
 	strncpy (&menuBuf[*menuInd], word1, j);
 	*menuInd += j;
-	menuBuf[*menuInd - 1] = '\0';
+	menuBuf[*menuInd - 1] = EOS;
 
 	/* copie le deuxieme mot */
-	if (*menuInd < MAX_TXT_LEN - 1 && word2[0] != '\0')
+	if (*menuInd < MAX_TXT_LEN - 1 && word2[0] != EOS)
 	  {
 	     strcat (&menuBuf[*menuInd - 1], " ");
 	     j = strlen (word2) + 1;
@@ -3273,11 +3273,11 @@ char               *menuBuf;
 		j = MAX_TXT_LEN - *menuInd;
 	     strncpy (&menuBuf[*menuInd], word2, j);
 	     *menuInd += j;
-	     menuBuf[*menuInd - 1] = '\0';
+	     menuBuf[*menuInd - 1] = EOS;
 	  }
 
 	/* copie le troisieme mot */
-	if (*menuInd < MAX_TXT_LEN - 1 && word3[0] != '\0')
+	if (*menuInd < MAX_TXT_LEN - 1 && word3[0] != EOS)
 	  {
 	     strcat (&menuBuf[*menuInd - 1], " ");
 	     j = strlen (word3) + 1;
@@ -3285,7 +3285,7 @@ char               *menuBuf;
 		j = MAX_TXT_LEN - *menuInd;
 	     strncpy (&menuBuf[*menuInd], word3, j);
 	     *menuInd += j;
-	     menuBuf[*menuInd - 1] = '\0';
+	     menuBuf[*menuInd - 1] = EOS;
 	  }
 	(*nItems)++;
      }
@@ -3877,7 +3877,7 @@ boolean            *ret;
 					     /* une paire de marques autour de la selection */
 					    {
 					       strncpy (N, TtaGetMessage (LIB, TMSG_AROUND), MAX_NAME_LENGTH);
-					       typeName2[0] = '\0';
+					       typeName2[0] = EOS;
 					       ok = TteItemMenuInsert (pAncestSS, pSRule->SrInclusion[i] + 1, lastSel, pDoc, InsertAfter);
 					    }
 					  else
@@ -3972,7 +3972,7 @@ boolean            *ret;
 				     /* une paire de marques autour de la selection */
 				    {
 				       strncpy (N, TtaGetMessage (LIB, TMSG_AROUND), MAX_NAME_LENGTH);
-				       typeName2[0] = '\0';
+				       typeName2[0] = EOS;
 				       ok = TteItemMenuInsert (pSS, typeNum + 1, lastSel, pDoc, InsertAfter);
 				    }
 				  else

@@ -185,18 +185,18 @@ unsigned            size;
 
    /* Allocate combined header + user data storage. */
    {
-      register pointer    new = (pointer) malloc (sizeof (header) + size);
+      register pointer    pNew = (pointer) malloc (sizeof (header) + size);
 
       /* address of header */
 
-      ((header *) new)->h.next = last_alloca_header;
-      ((header *) new)->h.deep = depth;
+      ((header *) pNew)->h.next = last_alloca_header;
+      ((header *) pNew)->h.deep = depth;
 
-      last_alloca_header = (header *) new;
+      last_alloca_header = (header *) pNew;
 
       /* User storage begins just after header. */
 
-      return (pointer) ((char *) new + sizeof (header));
+      return (pointer) ((char *) pNew + sizeof (header));
    }
 }
 #else

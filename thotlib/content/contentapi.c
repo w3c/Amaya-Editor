@@ -174,7 +174,7 @@ Document            document;
 		       length -= l;
 		    }
 		  pBuf->BuLength = l;
-		  pBuf->BuContent[l] = '\0';
+		  pBuf->BuContent[l] = EOS;
 		  pBuf->BuPrevious = pPreviousBuff;
 		  if (pPreviousBuff == NULL)
 		     ((PtrElement) element)->ElText = pBuf;
@@ -329,14 +329,14 @@ Document            document;
 	     strcpy (newBuf->BuContent, pBuf->BuContent + lengthBefore);
 	     newBuf->BuLength = pBuf->BuLength - lengthBefore;
 	  }
-	pBuf->BuContent[lengthBefore] = '\0';
+	pBuf->BuContent[lengthBefore] = EOS;
 	pBuf->BuLength = lengthBefore;
 	/* If there is enough space in the buffer, one add a string at its end */
 	if (stringLength < THOT_MAX_CHAR - lengthBefore)
 	  {
 	     strncpy (pBuf->BuContent + lengthBefore, content, stringLength);
 	     pBuf->BuLength += stringLength;
-	     pBuf->BuContent[pBuf->BuLength] = '\0';
+	     pBuf->BuContent[pBuf->BuLength] = EOS;
 	  }
 	else
 	   /* not enough space, another buffer is created */
@@ -356,7 +356,7 @@ Document            document;
 		  ptr += l;
 		  stringLength -= l;
 		  pBuf->BuLength = l;
-		  pBuf->BuContent[l] = '\0';
+		  pBuf->BuContent[l] = EOS;
 		  pPreviousBuff = pBuf;
 		  pBuf = NULL;
 	       }
@@ -638,7 +638,7 @@ Document            document;
 	      and the text remaining in the other buffer is moved at the
 	      begenning of the buffer */
 	  {
-	     pBufFirst->BuContent[firstDeleted - 1] = '\0';
+	     pBufFirst->BuContent[firstDeleted - 1] = EOS;
 	     pBufFirst->BuLength = firstDeleted - 1;
 	     dest = pBufLast->BuContent;
 	     l = lastDeleted;
@@ -651,7 +651,7 @@ Document            document;
 	     *dest = *source;
 	     dest++;
 	  }
-	while (*source != '\0');
+	while (*source != EOS);
 	pBufLast->BuLength -= l;
 	/* If the buffers of the begening and the end of the suppresses string
 	   are empty, they are released. A buffer is kept for the element */
@@ -932,11 +932,11 @@ Document            document;
 	     delta = 0;
 	     if (((PtrElement) element)->ElLeafType == LtSymbol)
 	       {
-		  if (((PtrElement) element)->ElGraph == '\0' &&
-		      shape != '\0')
+		  if (((PtrElement) element)->ElGraph == EOS &&
+		      shape != EOS)
 		     delta = 1;
-		  else if (((PtrElement) element)->ElGraph != '\0' &&
-			   shape == '\0')
+		  else if (((PtrElement) element)->ElGraph != EOS &&
+			   shape == EOS)
 		     delta = -1;
 	       }
 	     else
@@ -959,18 +959,18 @@ Document            document;
 		     /* changing polyline --> simple graphic */
 		    {
 		       delta = -((PtrElement) element)->ElNPoints;
-		       if (shape != '\0')
+		       if (shape != EOS)
 			  delta++;
 		       ClearText (((PtrElement) element)->ElPolyLineBuffer);
 		       FreeTextBuffer (((PtrElement) element)->ElPolyLineBuffer);
 		       ((PtrElement) element)->ElLeafType = LtGraphics;
 		    }
 		  else if (((PtrElement) element)->ElLeafType == LtGraphics)
-		     if (((PtrElement) element)->ElGraph == '\0' &&
-			 shape != '\0')
+		     if (((PtrElement) element)->ElGraph == EOS &&
+			 shape != EOS)
 			delta = 1;
-		     else if (((PtrElement) element)->ElGraph != '\0' &&
-			      shape == '\0')
+		     else if (((PtrElement) element)->ElGraph != EOS &&
+			      shape == EOS)
 			delta = -1;
 	       }
 	     if (((PtrElement) element)->ElLeafType == LtPolyLine)
@@ -1496,7 +1496,7 @@ Language           *language;
 	     pBuf = pBuf->BuNext;
 	  }
 	*length = len;
-	*ptr = '\0';
+	*ptr = EOS;
 	*language = ((PtrElement) element)->ElLanguage;
      }
 }
@@ -1583,7 +1583,7 @@ int                 length;
 	     pBuf = pBuf->BuNext;
 	     position = 0;
 	  }
-	*ptr = '\0';
+	*ptr = EOS;
      }
 }
 
@@ -1613,7 +1613,7 @@ Element             element;
    char                content;
 
    UserErrorCode = 0;
-   content = '\0';
+   content = EOS;
    if (element == NULL)
      {
 	TtaError (ERR_invalid_parameter);

@@ -847,6 +847,8 @@ PtrAbstractBox      pRootAb;
    int                 baseline;
    int                 height;
 
+   if (nCharssl < 0)
+     printf ("Error in ManageBreakLine\n");
    /* Initialisation */
    ibox1 = NULL;
    pAb = pBox->BxAbstractBox;
@@ -1287,6 +1289,8 @@ PtrAbstractBox      pRootAb;
    ptrfont             font;
    int                 oldWidth, oldnSpaces;
 
+   if (pBox->BxNChars <= 1)
+     return;
    pAb = pBox->BxAbstractBox;
    height = pBox->BxHeight;
    baseline = pBox->BxHorizRef;
@@ -1383,7 +1387,7 @@ PtrAbstractBox      pRootAb;
   FillLine remplit la ligne dont l'adresse est passee en parametre pour
   l'image abstraite pRootAb.                 
   Le parametre notComplete determine si la paragraphe a ou n'a pas de suite
-  dans une page suivante.
+  dans une ligne suivante.
   On suppose LiFirstBox et LiFirstPiece pre'alablement remplis et
   calcule l'indice de la derniere boite qui peut entrer dans la ligne et
   on met a` jour le descripteur de ligne : LiLastBox et LiLastPiece

@@ -5512,6 +5512,7 @@ RULES
 	HorizRef: * . Top;
 	HorizPos: Left = Previous . Right;
 	VertPos: Top = Enclosing . Top;
+	Width: 100 px;
 	Height: 1 px;
 	END;
 

@@ -153,7 +153,7 @@ ThotDirBrowse      *me;
 		  ls_car = fgetc (me->ls_stream);
 	       }
 	  }
-	me->buf[i] = '\0';
+	me->buf[i] = EOS;
 	if (notEof == FALSE && !i)
 	   return 0;
 	if (stat (me->buf, &fileStat) == -1)

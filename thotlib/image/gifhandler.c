@@ -332,7 +332,7 @@ ThotColorStruct colrs[256];
      }
 
    strncpy (version, (char *) buf + 3, 3);
-   version[3] = '\0';
+   version[3] = EOS;
 
    if ((strcmp (version, "87a") != 0) && (strcmp (version, "89a") != 0))
      {
@@ -1741,7 +1741,7 @@ char               *datafile;
      }
 
    strncpy (version, (char *) buf + 3, 3);
-   version[3] = '\0';
+   version[3] = EOS;
 
    if ((strcmp (version, "87a") != 0) && (strcmp (version, "89a") != 0))
      {

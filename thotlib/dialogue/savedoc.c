@@ -105,7 +105,7 @@ void                BuildSaveDocMenu ()
    strcpy (outputFileName, SaveDirectoryName);
    strcat (outputFileName, DIR_STR);
    strcat (outputFileName, SaveFileName);
-   if (TraductionSchemaName[0] == '\0')
+   if (TraductionSchemaName[0] == EOS)
       /* sauver en format Thot */
      {
 	strcat (outputFileName, ".PIV");
@@ -171,7 +171,7 @@ char               *txt;
 	       if (TtaCheckDirectory (txt) && txt[strlen (txt) - 1] != URL_DIR_SEP)
 		 {
 		    strcpy (SaveDirectoryName, txt);
-		    SaveFileName[0] = '\0';
+		    SaveFileName[0] = EOS;
 		 }
 	       else
 		 {
@@ -180,17 +180,17 @@ char               *txt;
 		    /* RemoveElement le suffixe .PIV du nom de fichier */
 		    i = strlen (BufDir) - 4;
 		    if (!strcmp (&BufDir[i], ".PIV"))
-		       BufDir[i] = '\0';
+		       BufDir[i] = EOS;
 		    else
 		       i += 4;
 		    if (i >= MAX_NAME_LENGTH - 1)
 		      {
 			 i = MAX_NAME_LENGTH - 1;	/*Longueur du nom limitee */
-			 BufDir[i] = '\0';
+			 BufDir[i] = EOS;
 			 strcpy (ptTranslatedName, SaveDirectoryName);
 			 strcat (ptTranslatedName, DIR_STR);
 			 strcat (ptTranslatedName, BufDir);
-			 if (TraductionSchemaName[0] == '\0')
+			 if (TraductionSchemaName[0] == EOS)
 			    strcat (ptTranslatedName, ".PIV");
 			 /* reinitialise la zone du nom de document */
 			 TtaSetTextForm (NumZoneDocNameTooSave, ptTranslatedName);
@@ -210,7 +210,7 @@ char               *txt;
 			      {
 				 strcat (DocumentPath, PATH_STR);
 				 strcat (DocumentPath, SaveDirectoryName);
-				 BuildPathDocBuffer (BufDir, '\0', &nbitem);
+				 BuildPathDocBuffer (BufDir, EOS, &nbitem);
 				 TtaNewSelector (NumZoneDirDocToSave, NumFormSaveAs,
 					  TtaGetMessage (LIB, TMSG_DOC_DIR),
 				      nbitem, BufDir, 6, NULL, FALSE, TRUE);
@@ -225,7 +225,7 @@ char               *txt;
 	       strcpy (ptTranslatedName, SaveDirectoryName);
 	       strcat (ptTranslatedName, DIR_STR);
 	       strcat (ptTranslatedName, SaveFileName);
-	       if (TraductionSchemaName[0] == '\0')
+	       if (TraductionSchemaName[0] == EOS)
 		  strcat (ptTranslatedName, ".PIV");
 	       /* reinitialise la zone du nom de document */
 	       TtaSetTextForm (NumZoneDocNameTooSave, ptTranslatedName);
@@ -238,7 +238,7 @@ char               *txt;
 	       if (val == 0)
 		 {
 		    /* premiere entree du menu format: format Thot */
-		    TraductionSchemaName[0] = '\0';
+		    TraductionSchemaName[0] = EOS;
 		    strcat (ptTranslatedName, ".PIV");
 		    TtaRedrawMenuEntry (NumMenuCopyOrRename, 0, NULL, -1, 1);
 		    TtaRedrawMenuEntry (NumMenuCopyOrRename, 1, NULL, -1, 1);
@@ -287,7 +287,7 @@ char               *txt;
 			    }
 			  else if (!strcmp (SaveDirectoryName, DocumentToSave->DocDirectory)
 				   && !strcmp (SaveFileName, DocumentToSave->DocDName)
-				   && TraductionSchemaName[0] == '\0')
+				   && TraductionSchemaName[0] == EOS)
 			    {	/* traite la confirmation */
 			       if (ThotLocalActions[T_confirmcreate] != NULL)
 				  (*ThotLocalActions[T_confirmcreate]) (NumFormConfirm, 1, (char *) 1);
@@ -297,7 +297,7 @@ char               *txt;
 			       strcpy (ptTranslatedName, SaveDirectoryName);
 			       strcat (ptTranslatedName, DIR_STR);
 			       strcat (ptTranslatedName, SaveFileName);
-			       if (TraductionSchemaName[0] == '\0')
+			       if (TraductionSchemaName[0] == EOS)
 				  strcat (ptTranslatedName, ".PIV");
 			       if (TtaFileExist (ptTranslatedName))
 				 {
@@ -352,7 +352,7 @@ PtrDocument         pDoc;
 
 	      /* cree et */
 	      /* initialise le selecteur sur aucune entree */
-	      BuildPathDocBuffer (BufDir, '\0', &nbitem);
+	      BuildPathDocBuffer (BufDir, EOS, &nbitem);
 	      TtaNewSelector (NumZoneDirDocToSave, NumFormSaveAs,
 			      TtaGetMessage (LIB, TMSG_DOC_DIR),
 			      nbitem, BufDir, 6, NULL, FALSE, TRUE);
@@ -410,7 +410,7 @@ PtrDocument         pDoc;
 /*        ActiveEntree(NumMenuCopyOrRename, 1); */
 /*        TtaSetMenuForm(NumMenuCopyOrRename, 0); */
 	      /* premiere entree du menu format: format Thot */
-	      TraductionSchemaName[0] = '\0';
+	      TraductionSchemaName[0] = EOS;
 	      SaveDocWithCopy = TRUE;
 	      SaveDocWithMove = FALSE;
 	      /* Formulaire Confirmation creation */

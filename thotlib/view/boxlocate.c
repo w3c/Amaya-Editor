@@ -2199,7 +2199,7 @@ int                *spacesNumber;
    /* Nombre de caracteres qui precedent */
    *charsNumber = 0;
    *spacesNumber = 0;
-   c = '\0';
+   c = EOS;
    charWidth = 0;
    if (pBox->BxNChars == 0 || *x <= 0)
      {

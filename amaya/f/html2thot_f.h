@@ -30,7 +30,8 @@ extern void SetAttrIntItemStyle ( Element el,
                                   Document doc );
 extern void CreateAttrWidthPercentPxl ( char *buffer,
                                         Element el,
-                                        Document doc );
+                                        Document doc,
+					int oldWidth );
 extern void CreateAttrIntSize ( char *buffer,
                                 Element el,
                                 Document doc );
@@ -77,7 +78,8 @@ extern void SetAttrIntItemStyle (/* Element el,
                                     Document doc */);
 extern void CreateAttrWidthPercentPxl (/* char *buffer,
                                           Element el,
-                                          Document doc */);
+                                          Document doc,
+					  int oldWidth */);
 extern void CreateAttrIntSize (/* char *buffer,
                                   Element el,
                                   Document doc */);

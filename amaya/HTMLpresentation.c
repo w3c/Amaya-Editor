@@ -340,6 +340,7 @@ NotifyPresentation *event;
 #define STYLELEN 1000
   char               buffer[15];
   int                presType, val;
+  int                w, h;
   boolean            ret;
 
   el = event->element;
@@ -434,6 +435,13 @@ NotifyPresentation *event;
 		 elType.ElTypeNum == HTML_EL_Applet))
 	      {
 		/* store information in Width of Height attributes */
+		if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+		  TtaGiveBoxSize (el, doc, 1, UnPixel, &w, &h);
+		else
+		  {
+		    w = -1;
+		    h = -1;
+		  }
 		attrType.AttrSSchema = HTMLschema;
 		if (presType == PRWidth)
 		  {
@@ -446,7 +454,7 @@ NotifyPresentation *event;
 		      }
 		    sprintf (buffer, "%d", TtaGetPRuleValue (presRule));
 		    TtaSetAttributeText (attr, buffer, el, doc);
-		    CreateAttrWidthPercentPxl (buffer, el, doc);
+		    CreateAttrWidthPercentPxl (buffer, el, doc, w);
 		  }
 		else
 		  {
@@ -458,6 +466,9 @@ NotifyPresentation *event;
 			TtaAttachAttribute (el, attr, doc);
 		      }
 		  TtaSetAttributeValue (attr, TtaGetPRuleValue (presRule), el, doc);
+		  /* update the associated map */
+		  if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+		    UpdateImageMap (el, doc, -1, h);
 		  }
 		return (TRUE);
 	      }

@@ -613,7 +613,7 @@ char              **buffer_return;
 	XpmFree (ptr);
 	return XpmOpenFailed;
      }
-   ptr[len] = '\0';
+   ptr[len] = EOS;
    *buffer_return = ptr;
    return XpmSuccess;
 }

@@ -130,7 +130,7 @@ int                *nChars;
 	if (target != NULL)
 	   /* copy needed */
 	   target[*targetInd - 1] = car;
-	if (car == '\0')
+	if (car == EOS)
 	   /* end of string: return the real length */
 	   nb = count + 1;
 	else
@@ -397,7 +397,7 @@ static boolean CloseTextInsertionWithControl ()
 		       pBuffer = DeleteBuffer (pBuffer, frame);
 		       pbuff->BuLength += nChars;
 		       /* fin de chaine */
-		       pbuff->BuContent[pbuff->BuLength] = '\0';
+		       pbuff->BuContent[pbuff->BuLength] = EOS;
 		    }
 	       }
 
@@ -813,7 +813,7 @@ int                *nChars;
 	     /* end of target buffer */
 	     CopyString (pBuffer->BuContent, target, targetlength, font, &sourceInd, &targetInd, width, nSpaces, nChars);
 	     (*pTargetBuffer)->BuLength = FULL_BUFFER;
-	     (*pTargetBuffer)->BuContent[THOT_MAX_CHAR - 1] = '\0';
+	     (*pTargetBuffer)->BuContent[THOT_MAX_CHAR - 1] = EOS;
 	     *pTargetBuffer = GetNewBuffer (*pTargetBuffer, frame);
 	     targetInd = 1;
 	  }
@@ -823,7 +823,7 @@ int                *nChars;
      {
 	/* text was copied: update target buffer information */
 	(*pTargetBuffer)->BuLength = targetInd - 1;
-	(*pTargetBuffer)->BuContent[targetInd - 1] = '\0';
+	(*pTargetBuffer)->BuContent[targetInd - 1] = EOS;
      }
 }
 
@@ -885,7 +885,7 @@ static void         StartTextInsertion ()
 		  GetTextBuffer (&pNewBuffer);
 		  pNewBuffer->BuNext = pBuffer;
 		  pNewBuffer->BuLength = 0;
-		  pNewBuffer->BuContent[0] = '\0';
+		  pNewBuffer->BuContent[0] = EOS;
 		  if (pPreviousBuffer == NULL)
 		     pNewBuffer->BuPrevious = NULL;
 		  else
@@ -920,9 +920,9 @@ static void         StartTextInsertion ()
 		k = strlen (&pNewBuffer->BuContent[i - 1]);
 		/* longueur a copier */
 		strncpy (&pBuffer->BuContent[0], &pNewBuffer->BuContent[i - 1], k);
-		pBuffer->BuContent[k] = '\0';
+		pBuffer->BuContent[k] = EOS;
 		pBuffer->BuLength = k;
-		pNewBuffer->BuContent[i - 1] = '\0';
+		pNewBuffer->BuContent[i - 1] = EOS;
 		i--;
 		pNewBuffer->BuLength = i;
 
@@ -1622,7 +1622,7 @@ PtrTextBuffer       clipboard;
    if (pBuffer->BuLength != 0)
      {
 	pBuffer->BuLength = 0;
-	pBuffer->BuContent[0] = '\0';
+	pBuffer->BuContent[0] = EOS;
 	pBuffer = pBuffer->BuNext;
 	while (pBuffer != NULL)
 	  {
@@ -1679,7 +1679,7 @@ PtrTextBuffer       clipboard;
 		  clipboard->BuLength = 1;
 		  clipboard->BuContent[0] = pAb->AbShape;
 		  /* caractere trace ou symbole */
-		  clipboard->BuContent[1] = '\0';
+		  clipboard->BuContent[1] = EOS;
 	       }
 	     else if (pAb->AbLeafType == LtPicture)
 	       {
@@ -1688,7 +1688,7 @@ PtrTextBuffer       clipboard;
 		  /* nom du fichier image */
 		  strcpy (&(clipboard->BuContent[0]), pictInfo->PicFileName);
 		  clipboard->BuLength = i;
-		  clipboard->BuContent[i] = '\0';	/* Termine la chaine */
+		  clipboard->BuContent[i] = EOS;	/* Termine la chaine */
 		  CopyPictInfo ((int *) &PictClipboard, (int *) pictInfo);
 	       }
 	     else
@@ -1792,7 +1792,7 @@ int                 frame;
 			 {
 			    strncpy (&pTargetBuffer->BuContent[targetInd - 1], &pSourceBuffer->BuContent[sourceInd], length);
 			    pTargetBuffer->BuLength = FULL_BUFFER;
-			    pTargetBuffer->BuContent[THOT_MAX_CHAR - 1] = '\0';
+			    pTargetBuffer->BuContent[THOT_MAX_CHAR - 1] = EOS;
 			    targetInd = 1;
 			    sourceInd += length;
 			    i -= length;
@@ -1803,7 +1803,7 @@ int                 frame;
 		    }
 
 		  pTargetBuffer->BuLength = i;
-		  pTargetBuffer->BuContent[i] = '\0';
+		  pTargetBuffer->BuContent[i] = EOS;
 
 		  /* Faut-il liberer le buffer 'pTargetBuffer' ? */
 		  if (pTargetBuffer->BuLength == 0 && charsDelta != pAb->AbVolume)
@@ -1928,7 +1928,7 @@ int                 frame;
 		     yDelta = 0;
 		  BoxUpdate (pBox, pLine, -1, 0, -xDelta, 0, -yDelta, frame, FALSE);
 		  pAb->AbVolume = 0;
-		  pAb->AbShape = '\0';
+		  pAb->AbShape = EOS;
 		  break;
 	       default:
 		  break;
@@ -2114,7 +2114,7 @@ PtrTextBuffer       clipboard;
 	       i = clipboard->BuLength;
 	       strncpy (&pCurrentBuffer->BuContent[0], &clipboard->BuContent[0], i);
 	       /* Termine la chaine de caracteres */
-	       pCurrentBuffer->BuContent[i] = '\0';
+	       pCurrentBuffer->BuContent[i] = EOS;
 	       pCurrentBuffer->BuLength = i;
 	       pictInfo = (PictInfo *) pBox->BxPictInfo;
 	       CopyPictInfo ((int *) pictInfo, (int *) &PictClipboard);
@@ -2787,7 +2787,7 @@ int                 keyboard;
 			    
 			    /* enleve le caractere dans la chaine des buffers */
 			    c = pBuffer->BuContent[pBuffer->BuLength - 1];
-			    pBuffer->BuContent[pBuffer->BuLength - 1] = '\0';
+			    pBuffer->BuContent[pBuffer->BuLength - 1] = EOS;
 			    pBuffer->BuLength--;
 			    
 			    /* met a jour la selection en fin de buffer */
@@ -2958,7 +2958,7 @@ int                 keyboard;
 					  pix = -1;
 				      }
 				  }
-				else if (c == '\0')
+				else if (c == EOS)
 				  /* Caractere Nul */
 				  xDelta = 0;
 				else
@@ -3006,7 +3006,7 @@ int                 keyboard;
 			  
 			  pBuffer->BuLength++;
 			  pBuffer->BuContent[pBuffer->BuLength - 1] = c;
-			  pBuffer->BuContent[pBuffer->BuLength] = '\0';
+			  pBuffer->BuContent[pBuffer->BuLength] = EOS;
 			  if (pBuffer == pViewSel->VsBuffer)
 			    {
 			      /* Selection en fin de boite */
@@ -3090,7 +3090,7 @@ int                 keyboard;
 				  toSplit = TRUE;
 				  xDelta = CharacterWidth (c, font);
 				}
-			      else if (c == '\0')
+			      else if (c == EOS)
 				/* Caractere Nul */
 				xDelta = 0;
 			      else

@@ -212,7 +212,7 @@ int                 depth;
    Attribute           attr;
    ElementType         elemType;
    char               *tag;
-   strNode            *new, *child;
+   strNode            *added, *child;
 #ifdef AMAYA_DEBUG
    int i;
 #endif
@@ -226,32 +226,32 @@ int                 depth;
    TtaNextAttribute (elem, &attr);
    if (strcmp (tag, "???") && strcmp (tag, "NONE") && (TtaGetFirstChild (elem) != NULL || attr != NULL || TtaIsLeaf (elemType)))
      {
-	new = NewNode (tag);
-	new->Elem = elem;
-	new->Parent = father;
-	new->NodeDepth = depth;
+	added = NewNode (tag);
+	added->Elem = elem;
+	added->Parent = father;
+	added->NodeDepth = depth;
 	if (father->Child == NULL)
 	  {
-	     father->Child = new;
-	     new->Previous = NULL;
+	     father->Child = added;
+	     added->Previous = NULL;
 	  }
 	else
 	  {
 	     child = father->Child;
 	     while (child->Next != NULL)
 		child = child->Next;
-	     child->Next = new;
-	     new->Previous = child;
+	     child->Next = added;
+	     added->Previous = child;
 	  }
 	depth++;
 #ifdef AMAYA_DEBUG
 	for (i=0;i<depth;i++)
 	  printf("  ");
-	printf("%s\n",new->Tag);
+	printf("%s\n",added->Tag);
 #endif
      }
    else
-      new = father;
+      added = father;
    TtaFreeMemory (tag);
    if ((strcmp ( TtaGetSSchemaName (elemType.ElSSchema), "HTML") != 0) ||
        (elemType.ElTypeNum != HTML_EL_Comment_ && 
@@ -260,7 +260,7 @@ int                 depth;
 	elemCour = TtaGetFirstChild (elem);
 	while (elemCour != NULL)
 	  {
-	     BuildStructureTree (elemCour, doc, new, maxdepth, depth);
+	     BuildStructureTree (elemCour, doc, added, maxdepth, depth);
 	     TtaNextSibling (&elemCour);
 	  }
      }

@@ -1526,21 +1526,21 @@ PtrClosedElement    first;
 
 #endif
 {
-   PtrClosedElement    ret, cur, new, prev;
+   PtrClosedElement    ret, cur, next, prev;
 
    ret = NULL;
    cur = first;
    prev = NULL;
    while (cur != NULL)
      {
-	new = (PtrClosedElement) TtaGetMemory (sizeof (ClosedElement));
-	new->nextClosedElem = NULL;
-	new->tagNum = cur->tagNum;
+	next = (PtrClosedElement) TtaGetMemory (sizeof (ClosedElement));
+	next->nextClosedElem = NULL;
+	next->tagNum = cur->tagNum;
 	if (ret == NULL)
-	   ret = new;
+	   ret = next;
 	else
-	   prev->nextClosedElem = new;
-	prev = new;
+	   prev->nextClosedElem = next;
+	prev = next;
 	cur = cur->nextClosedElem;
      }
    return ret;
@@ -2764,7 +2764,7 @@ Element             el;
    ElementType         elType, newElType, childType;
    Element             constElem, child, desc, leaf;
 #ifdef MATHML
-   Element	       new, prev, next, firstChild;
+   Element	       added, prev, next, firstChild;
 #endif
    Attribute           attr;
    AttributeType       attrType;
@@ -2865,12 +2865,12 @@ Element             el;
 		     {
 		     elType.ElSSchema = MathMLSSchema;
 		     elType.ElTypeNum = MathML_EL_MathML;
-		     new = TtaNewElement (theDocument, elType);
-		     TtaInsertSibling (new, firstChild, TRUE, theDocument);
+		     added = TtaNewElement (theDocument, elType);
+		     TtaInsertSibling (added, firstChild, TRUE, theDocument);
 		     next = firstChild;
 		     TtaNextSibling (&next);
 		     TtaRemoveTree (firstChild, theDocument);
-		     TtaInsertFirstChild (&firstChild, new, theDocument);
+		     TtaInsertFirstChild (&firstChild, added, theDocument);
 		     prev = firstChild;
 		     while (next != NULL)
 		        {
@@ -3205,7 +3205,7 @@ static void	CheckMathSubExpressions (el, type1, type2, type3)
    int		type3;
 #endif
 {
-  Element	child, new, prev;
+  Element	child, added, prev;
   ElementType	elType, childType;
 
   elType.ElSSchema = MathMLSSchema;
@@ -3219,14 +3219,14 @@ static void	CheckMathSubExpressions (el, type1, type2, type3)
       if (TtaSameTypes (childType, elType) == 0)
 	{
 	  TtaRemoveTree (child, theDocument);	
-	  new = TtaNewElement (theDocument, elType);
+	  added = TtaNewElement (theDocument, elType);
 	  if (prev == NULL)
-	    TtaInsertFirstChild (&new, el, theDocument);
+	    TtaInsertFirstChild (&added, el, theDocument);
 	  else
-	    TtaInsertSibling (new, prev, FALSE, theDocument);
-	  TtaInsertFirstChild (&child, new, theDocument);
+	    TtaInsertSibling (added, prev, FALSE, theDocument);
+	  TtaInsertFirstChild (&child, added, theDocument);
 	  CreatePlaceholders (child, theDocument);
-	  child = new;
+	  child = added;
 	}
       if (type2 != 0)
 	{
@@ -3240,11 +3240,11 @@ static void	CheckMathSubExpressions (el, type1, type2, type3)
 	      if (TtaSameTypes (childType, elType) == 0)
 		{
 		  TtaRemoveTree (child, theDocument);
-		  new = TtaNewElement (theDocument, elType);
-		  TtaInsertSibling (new, prev, FALSE, theDocument);
-		  TtaInsertFirstChild (&child, new, theDocument);
+		  added = TtaNewElement (theDocument, elType);
+		  TtaInsertSibling (added, prev, FALSE, theDocument);
+		  TtaInsertFirstChild (&child, added, theDocument);
 		  CreatePlaceholders (child, theDocument);
-		  child = new;
+		  child = added;
 		}
 	      if (type3 != 0)
 		{
@@ -3258,9 +3258,9 @@ static void	CheckMathSubExpressions (el, type1, type2, type3)
 		      if (TtaSameTypes (childType, elType) == 0)
 			{
 			  TtaRemoveTree (child, theDocument);
-			  new = TtaNewElement (theDocument, elType);
-			  TtaInsertSibling (new, prev, FALSE, theDocument);
-			  TtaInsertFirstChild (&child, new, theDocument);
+			  added = TtaNewElement (theDocument, elType);
+			  TtaInsertSibling (added, prev, FALSE, theDocument);
+			  TtaInsertFirstChild (&child, added, theDocument);
 			  CreatePlaceholders (child, theDocument);
 			}
 		    }
@@ -5571,58 +5571,82 @@ char                c;
    an HTML attribute "width" has been created for a Table of a HR.
    Create the corresponding attribute IntWidthPercent or
    IntWidthPxl.
+   oldWidth is -1 or the old image width.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateAttrWidthPercentPxl (char *buffer, Element el, Document doc)
+void                CreateAttrWidthPercentPxl (char *buffer, Element el, Document doc, int oldWidth)
 #else
-void                CreateAttrWidthPercentPxl (buffer, el, doc)
+void                CreateAttrWidthPercentPxl (buffer, el, doc, oldWidth)
 char               *buffer;
 Element             el;
 Document            doc;
-
+int                 oldWidth;
 #endif
 {
-   AttributeType       attrTypePxl, attrTypePercent;
-   int                 length, val;
-   Attribute           attrOld, attrNew;
+  AttributeType      attrTypePxl, attrTypePercent;
+  Attribute          attrOld, attrNew;
+  int                length, val;
+#ifndef STANDALONE
+  ElementType	     elType;
+  int                w, h;
+  boolean            isImage;
 
-   /* is the last character a '%' ? */
-   length = strlen (buffer) - 1;
-   while (length > 0 && buffer[length] <= SPACE)
-      length--;
-   attrTypePxl.AttrSSchema = TtaGetDocumentSSchema (doc);
-   attrTypePercent.AttrSSchema = TtaGetDocumentSSchema (doc);
-   attrTypePxl.AttrTypeNum = HTML_ATTR_IntWidthPxl;
-   attrTypePercent.AttrTypeNum = HTML_ATTR_IntWidthPercent;
-   if (buffer[length] == '%')
-     {
-       /* remove IntWidthPxl */
-       attrOld = TtaGetAttribute (el, attrTypePxl);
-       /* update IntWidthPercent */
-       attrNew = TtaGetAttribute (el, attrTypePercent);
-       if (attrNew == NULL)
-	 {
-	   attrNew = TtaNewAttribute (attrTypePercent);
-	   TtaAttachAttribute (el, attrNew, doc);
-	 }
+  elType = TtaGetElementType (el);
+  isImage = (elType.ElTypeNum == HTML_EL_PICTURE_UNIT);
+#endif
+
+  /* is the last character a '%' ? */
+  length = strlen (buffer) - 1;
+  while (length > 0 && buffer[length] <= SPACE)
+    length--;
+  attrTypePxl.AttrSSchema = TtaGetDocumentSSchema (doc);
+  attrTypePercent.AttrSSchema = TtaGetDocumentSSchema (doc);
+  attrTypePxl.AttrTypeNum = HTML_ATTR_IntWidthPxl;
+  attrTypePercent.AttrTypeNum = HTML_ATTR_IntWidthPercent;
+  if (buffer[length] == '%')
+    {
+      /* remove IntWidthPxl */
+      attrOld = TtaGetAttribute (el, attrTypePxl);
+      /* update IntWidthPercent */
+      attrNew = TtaGetAttribute (el, attrTypePercent);
+      if (attrNew == NULL)
+	{
+	  attrNew = TtaNewAttribute (attrTypePercent);
+	  TtaAttachAttribute (el, attrNew, doc);
+	}
+#ifndef STANDALONE
+      else if (isImage)
+	oldWidth = TtaGetAttributeValue (attrOld);
+#endif
     }
-   else
-     {
-       /* remove IntWidthPercent */
-       attrOld = TtaGetAttribute (el, attrTypePercent);
-       /* update IntWidthPxl */
-       attrNew = TtaGetAttribute (el, attrTypePxl);
-       if (attrNew == NULL)
-	 {
-	   attrNew = TtaNewAttribute (attrTypePxl);
-	   TtaAttachAttribute (el, attrNew, doc);
-	 }
-     }
+  else
+    {
+      /* remove IntWidthPercent */
+      attrOld = TtaGetAttribute (el, attrTypePercent);
+      /* update IntWidthPxl */
+      attrNew = TtaGetAttribute (el, attrTypePxl);
+      if (attrNew == NULL)
+	{
+	  attrNew = TtaNewAttribute (attrTypePxl);
+	  TtaAttachAttribute (el, attrNew, doc);
+	}
+#ifndef STANDALONE
+      else if (isImage)
+	{
+	  TtaGiveBoxSize (el, doc, 1, UnPixel, &w, &h);
+	  oldWidth = w * TtaGetAttributeValue (attrOld) / 100;	  
+	}
+#endif
+    }
 
-   if (attrOld != NULL)
-     TtaRemoveAttribute (el, attrOld, doc);
-   sscanf (buffer, "%d", &val);
-   TtaSetAttributeValue (attrNew, val, el, doc);
+  if (attrOld != NULL)
+    TtaRemoveAttribute (el, attrOld, doc);
+  sscanf (buffer, "%d", &val);
+  TtaSetAttributeValue (attrNew, val, el, doc);
+#ifndef STANDALONE
+  if (isImage)
+    UpdateImageMap (el, doc, oldWidth, -1);
+#endif
 }
 
 /*----------------------------------------------------------------------
@@ -5845,7 +5869,7 @@ char                c;
 	   /* HTML attribute "width" for a Table or a HR */
 	   /* create the corresponding attribute IntWidthPercent or */
 	   /* IntWidthPxl */
-	   CreateAttrWidthPercentPxl (inputBuffer, lastAttrElement, theDocument);
+	   CreateAttrWidthPercentPxl (inputBuffer, lastAttrElement, theDocument, -1);
 
 	else if (!strcmp (lastAttrEntry->htmlAttribute, "SIZE"))
 	  {
@@ -8181,7 +8205,7 @@ char              *filename;
 #endif
 {
   gzFile           stream = NULL;
-  char            *buffer, *new;
+  char            *buffer, *p;
   int              bufsize = 2000;
   int              index = 0;
   int              res, c, diff, nbNul;
@@ -8233,13 +8257,13 @@ char              *filename;
       if (index >= bufsize)
 	{
 	  bufsize *= 2;
-	  new = TtaRealloc (buffer, bufsize + 1);
-	  if (new == NULL)
+	  p = TtaRealloc (buffer, bufsize + 1);
+	  if (p == NULL)
 	    {
 	      TtaFreeMemory (buffer);
 	      ok = FALSE;
 	    }
-	  buffer = new;
+	  buffer = p;
 	}
     }
   gzclose (stream);

@@ -167,10 +167,10 @@ int                 height;
 	strcat (buf, TtaGetMessage (LIB, TMSG_READ_ONLY));
      }
    /* creation d'une frame pour la vue */
-#  ifndef _WIN_PRINT */
+#  ifndef _WIN_PRINT
    createdFrame = MakeFrame (pDoc->DocSSchema->SsName, view, buf, X, Y, width,
 			     height, vol, IdentDocument (pDoc));
-#  endif /* !_WIN_PRINT */
+#  endif /* _WIN_PRINT */
    return createdFrame;
 }
 
@@ -380,7 +380,7 @@ PtrDocument         pDoc;
 			       /* en mode paragraphe, on garde le '\n' qui sera remplace' */
 			       /* par un blanc */
 			       len++;
-			    line[len - 1] = '\0';
+			    line[len - 1] = EOS;
 			    len--;
 			 }
 		       /* remplace les caracteres non imprimables par des blancs */
@@ -477,10 +477,10 @@ Name                fileName;
    int                 i;
    boolean             ok;
 
-   if (fileName[0] != '\0' && SSchemaName[0] != '\0')
+   if (fileName[0] != EOS && SSchemaName[0] != EOS)
       /* les parametres d'entree sont valides */
      {
-	if (directory[0] == '\0')
+	if (directory[0] == EOS)
 	   /* pas de directory precise'. On prend le path des documents */
 	   strncpy (directory, DocumentPath, MAX_PATH);
 	/* construit le nom complet du fichier a importer */
@@ -496,7 +496,7 @@ Name                fileName;
 	     if (pDoc != NULL)
 	       {
 		  /* pas de preference pour un schema de presentation particulier */
-		  PSchemaName[0] = '\0';
+		  PSchemaName[0] = EOS;
 		  /* charge le schema de structure et le schema de presentation */
 		  LoadSchemas (SSchemaName, PSchemaName, &pDoc->DocSSchema, NULL, FALSE);
 		  if (pDoc->DocSSchema != NULL)
@@ -1056,7 +1056,7 @@ char               *newPresentation;
     TtaError (ERR_invalid_document_parameter);
   else if (LoadedDocument[document - 1] == NULL)
     TtaError (ERR_invalid_document_parameter);
-  else if (natureSSchema == NULL || newPresentation[0] == '\0')
+  else if (natureSSchema == NULL || newPresentation[0] == EOS)
     TtaError (ERR_invalid_parameter);
   else
     /* parameter document is correct */
@@ -1229,7 +1229,7 @@ View                view;
                   TtaConfigSSchemaExternalName (NomUtilisateur,
                                            TableNatures[nat]->SsName,
                                                 i);
-                  if (NomUtilisateur[0] == '\0')
+                  if (NomUtilisateur[0] == EOS)
                      strcpy (ptrBufNat, TableNatures[nat]->SsName);
                   else
                      strcpy (ptrBufNat, NomUtilisateur);
@@ -1288,7 +1288,7 @@ View                view;
                      TtaConfigSSchemaExternalName (NomUtilisateur,
                                            TableNatures[nat]->SsName,
                                                    i);
-                     if (NomUtilisateur[0] == '\0')
+                     if (NomUtilisateur[0] == EOS)
                         strcpy (NomUtilisateur, TableNatures[nat]->SsName);
                      if (nbNatures == 1)
                        {

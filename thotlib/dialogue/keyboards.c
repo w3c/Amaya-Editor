@@ -707,7 +707,7 @@ int                 nbitem;
 	for (i = 0; i < nbitem; i++, it++)
 	  {
 	     string[0] = it->name;
-	     string[1] = '\0';
+	     string[1] = EOS;
 	     w = XmCreatePushButton (row, string, args, n);
 	     XtManageChild (w);
 	     XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) KbdCallbackHandler, (XtPointer) (param + (int) (it->value)));

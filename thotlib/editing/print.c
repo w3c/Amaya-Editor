@@ -244,8 +244,8 @@ char               *aName;
    if (text == NULL || aDirectory == NULL || aName == NULL)
       return;			/* No input text or error in input parameters */
 
-   aDirectory[0] = '\0';
-   aName[0] = '\0';
+   aDirectory[0] = EOS;
+   aName[0] = EOS;
 
    lg = strlen (text);
    if (lg)
@@ -267,7 +267,7 @@ char               *aName;
 	     j = i - 1;
 	     /* Suppresses the / characters at the end of the path */
 	     while (aDirectory[j] == DIR_SEP)
-		aDirectory[j--] = '\0';
+		aDirectory[j--] = EOS;
 	  }
 	if (i != lg)
 	   strcpy (aName, oldptr);
@@ -2847,7 +2847,7 @@ char              **argv;
                 index = 0;
                 pChar = &argv [argCounter][2];
                 while ((option[index++] = *pChar++));
-                option [index] = '\0';
+                option [index] = EOS;
                 switch (argv [argCounter] [1]) {
                        case 'F': firstPage = atoi (option);
                                  argCounter++;
@@ -2908,7 +2908,7 @@ char              **argv;
      {
        if (name [index] == '.')
 	 {
-	   name [index] = '\0';
+	   name [index] = EOS;
 	   done = TRUE;
 	 }
        else

@@ -467,7 +467,7 @@ PtrAbstractBox      pAb;
 	       pAb->AbLeafType = LtSymbol;
 	       pAb->AbShape = pConst->PdString[0];
 	       pAb->AbGraphAlphabet = 'G';
-	       if (pAb->AbShape == '\0')
+	       if (pAb->AbShape == EOS)
 		  pAb->AbVolume = 0;
 	       else
 		  pAb->AbVolume = 1;
@@ -477,7 +477,7 @@ PtrAbstractBox      pAb;
 	       if (pAb->AbText == NULL)
 		  GetConstantBuffer (pAb);
 	       strncpy (pAb->AbText->BuContent, pConst->PdString, THOT_MAX_CHAR - 1);
-	       pAb->AbText->BuContent[THOT_MAX_CHAR - 1] = '\0';
+	       pAb->AbText->BuContent[THOT_MAX_CHAR - 1] = EOS;
 	       pAb->AbText->BuLength = strlen (pAb->AbText->BuContent);
 	       pAb->AbLanguage = TtaGetLanguageIdFromAlphabet (pConst->PdAlphabet);
 	       pAb->AbVolume = pAb->AbText->BuLength;
@@ -3029,7 +3029,7 @@ PtrPSchema          pSchP;
 	    case AtTextAttr:
 	       if (pPRclass)
 		  pRule = pPRclass->ApTextFirstPRule;
-	       else if (pAPRule->ApString[0] == '\0')
+	       else if (pAPRule->ApString[0] == EOS)
 		  pRule = pAPRule->ApTextFirstPRule;
 	       break;
 	    case AtReferenceAttr:

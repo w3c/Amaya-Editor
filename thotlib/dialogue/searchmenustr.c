@@ -118,7 +118,7 @@ PtrDocument         pDoc;
 
    /* construit la table des attributs definis dans tous ces schemas */
    nbentrees = 0;
-   ListeAttr[0] = '\0';
+   ListeAttr[0] = EOS;
    /* on met l'attribut Langue en tete de la table des attributs a */
    /* chercher */
    AttrStructCh[nbentrees] = NULL;
@@ -200,7 +200,7 @@ static void         ConstruitSelecteurTypes ()
 
 
    nbitem = 0;
-   ListeTypes[0] = '\0';
+   ListeTypes[0] = EOS;
    lgmenu = 0;
    premregle = 1;
    /* parcourt la table des natures utilisees dans le document traite' */
@@ -482,7 +482,7 @@ PtrDocument         pDoc;
      {
 	/* construit le menu des natures */
 	nbitem = 0;
-	ListeTypes[0] = '\0';
+	ListeTypes[0] = EOS;
 	lgmenu = 0;
 	for (nat = 0; nat < LgTableNaturesDoc && lgmenu < LgMaxListeTypes - MAX_NAME_LENGTH; nat++)
 	  {
@@ -524,7 +524,7 @@ void                BuildStructSearchMenu (pDoc)
    /* menu des natures utilisees dans le document */
    /* NumMenuSearchNature, cree' dynamiquement par cherche.c */
    BufMenu[0] = 'B';
-   BufMenu[1] = '\0';
+   BufMenu[1] = EOS;
    strcat (BufMenu,TtaGetMessage (LIB, TMSG_ANY));
    TtaNewToggleMenu (NumMenuSearchNature, NumFormSearchText,
 	TtaGetMessage (LIB, TMSG_NATURES), 1, BufMenu,
@@ -546,14 +546,14 @@ void                BuildStructSearchMenu (pDoc)
    TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, " ");
    /* annule le label donnant la valeur de l'attribut trouve' */
    TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, " ");
-   NomTypeAChercher[0] = '\0';
+   NomTypeAChercher[0] = EOS;
    /* construit le menu des natures utilisees dans le document */
    InitMenuNatures ((PtrDocument) pDoc);
    /* construit le selecteur donnant la liste des types definis dans le */
    /* schema de structure du document */
    ConstruitSelecteurTypes ();
    ValAttrCherche = 0;
-   ValAttrTxtCherche[0] = '\0';
+   ValAttrTxtCherche[0] = EOS;
    /* initialise le selecteur des attributs a chercher */
    ConstruitSelecteurAttributs ((PtrDocument) pDoc);
    if (NbEntreesTableAttr < 1)
@@ -602,7 +602,7 @@ PtrSSchema          pSchAttr;
 	    else
 	       pA = pA->AeNext;
 	 while (pA != NULL && !trouve);
-   if (trouve && (ValAttrCherche != 0 || ValAttrTxtCherche[0] != '\0'))
+   if (trouve && (ValAttrCherche != 0 || ValAttrTxtCherche[0] != EOS))
       /* on a trouve l'attribut cherche', on verifie sa valeur */
      {
 	trouve = FALSE;
@@ -769,7 +769,7 @@ PtrSearchContext    DomaineCherche;
       TableNaturesCherchees[i - 1] = FALSE;
    /* cherche le nom de type dans le schema de structure */
    NumTypeCherche = 0;
-   if (NomTypeAChercher[0] != '\0')
+   if (NomTypeAChercher[0] != EOS)
      {
 	pStrTypeCherche = DomaineCherche->SDocument->DocSSchema;
 	GetSRuleFromName (&NumTypeCherche, &pStrTypeCherche, NomTypeAChercher, USER_NAME);
@@ -779,7 +779,7 @@ PtrSearchContext    DomaineCherche;
 	     TtaNewLabel (NumLabelAttributeValue,
 			  NumFormSearchText,
 			  TtaGetMessage (LIB, TMSG_LIB_UNKNOWN_TYPE));
-	     NomTypeAChercher[0] = '\0';
+	     NomTypeAChercher[0] = EOS;
 	     *erreur = TRUE;
 	  }
      }
@@ -787,7 +787,7 @@ PtrSearchContext    DomaineCherche;
    /* cherche le nom d'attribut */
    NumAttrCherche = 0;
    SchAttrCherche = NULL;
-   if (NomAttrAChercher[0] != '\0')
+   if (NomAttrAChercher[0] != EOS)
       /* il y a bien un attribut a chercher */
       if (strcmp (NomAttrAChercher, TtaGetMessage (LIB, TMSG_ANY)) != 0)
 	{
@@ -815,11 +815,11 @@ PtrSearchContext    DomaineCherche;
 		TtaNewLabel (NumLabelAttributeValue,
 			     NumFormSearchText,
 			     TtaGetMessage (LIB, TMSG_UNKNOWN_ATTR));
-		NomAttrAChercher[0] = '\0';
+		NomAttrAChercher[0] = EOS;
 		*erreur = TRUE;
 	     }
 	}
-   *erreur = *erreur || (NomTypeAChercher[0] == '\0' && NomAttrAChercher[0] == '\0');
+   *erreur = *erreur || (NomTypeAChercher[0] == EOS && NomAttrAChercher[0] == EOS);
 }
 
 
@@ -838,8 +838,8 @@ PtrSearchContext    DomaineCherche;
    int                 i;
 
    pAttrTrouve = NULL;
-   if (NomAttrAChercher[0] != '\0' &&
-       NomTypeAChercher[0] == '\0')
+   if (NomAttrAChercher[0] != EOS &&
+       NomTypeAChercher[0] == EOS)
       /* on cherche uniquement un attribut */
       do
 	{
@@ -858,14 +858,14 @@ PtrSearchContext    DomaineCherche;
 		    stop = FALSE;
 	}
       while (!stop);
-   else if (NomTypeAChercher[0] != '\0')
+   else if (NomTypeAChercher[0] != EOS)
       /* on cherche un type d'element  */
       /* lance la recherche du type d'element demande' */
       do
 	{
 	   pEl = ChTypeAttr (elCour, DomaineCherche,
 			     NomTypeAChercher,
-			     NomAttrAChercher[0] != '\0',
+			     NomAttrAChercher[0] != EOS,
 			     NumAttrCherche, SchAttrCherche,
 			     &pAttrTrouve);
 	   *trouve = (pEl != NULL);
@@ -896,7 +896,7 @@ boolean            *ok;
    boolean             trouve;
 
    trouve = TRUE;
-   if (NomTypeAChercher[0] != '\0')
+   if (NomTypeAChercher[0] != EOS)
       /* on cherche aussi un type d'element */
      {
 	pAsc = premsel;
@@ -908,7 +908,7 @@ boolean            *ok;
 	  }
 	while (pAsc != NULL && !trouve);
      }
-   if (trouve && NomAttrAChercher[0] != '\0')
+   if (trouve && NomAttrAChercher[0] != EOS)
       /* on cherche aussi un attribut */
      {
 	pAsc = premsel;
@@ -935,7 +935,7 @@ void                ValAttrSearch ()
    int                 lg, lg1;
    char                LabelBuffer[LgLabelBuffer];
 
-   if (NomAttrAChercher[0] != '\0' && pAttrTrouve != NULL)
+   if (NomAttrAChercher[0] != EOS && pAttrTrouve != NULL)
       /* on cherche un attribut et on l'a trouve' */
       /* on ecrit dans la feuille de dialogue la valeur */
       /* de l'attribut trouve */

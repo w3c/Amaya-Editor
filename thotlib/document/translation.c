@@ -190,7 +190,7 @@ boolean             lineBreak;
       /* caractere a sortir en fin de ce buffer */
      {
 	tmp[0] = c;
-	tmp[1] = '\0';
+	tmp[1] = EOS;
 	strcat (outBuffer, tmp);
      }
    else if (fileNum == 0)
@@ -317,7 +317,7 @@ boolean             lineBreak;
      {
 	ptr = Color_Table[n];
 	i = 0;
-	while (ptr[i] != '\0')
+	while (ptr[i] != EOS)
 	   PutChar (ptr[i++], fileNum, NULL, pDoc, lineBreak);
      }
 }
@@ -345,7 +345,7 @@ boolean             lineBreak;
      {
 	ptr = Patterns[n];
 	i = 0;
-	while (ptr[i] != '\0')
+	while (ptr[i] != EOS)
 	   PutChar (ptr[i++], fileNum, NULL, pDoc, lineBreak);
      }
 }
@@ -375,7 +375,7 @@ boolean             lineBreak;
 
    sprintf (buffer, "%d", n);
    i = 0;
-   while (buffer[i] != '\0')
+   while (buffer[i] != EOS)
       PutChar (buffer[i++], fileNum, outBuffer, pDoc, lineBreak);
 }
 
@@ -488,7 +488,7 @@ PtrDocument         pDoc;
 		       while (pBufT != NULL)
 			 {
 			    i = 0;
-			    while (pBufT->BuContent[i] != '\0')
+			    while (pBufT->BuContent[i] != EOS)
 			       PutChar (pBufT->BuContent[i++], fileNum, NULL, pDoc, lineBreak);
 			    pBufT = pBufT->BuNext;
 			 }
@@ -519,7 +519,7 @@ PtrDocument         pDoc;
 			      if (c == pTrans->StSource[b])
 				 /* le caractere correspond au caractere courant de la */
 				 /* chaine source de la regle ft */
-				 if (pTrans->StSource[b + 1] == '\0')
+				 if (pTrans->StSource[b + 1] == EOS)
 				    /* chaine complete */
 				    /* cette regle de traduction s'applique */
 				    /* on traduit */
@@ -555,9 +555,9 @@ PtrDocument         pDoc;
 						stop = FALSE;
 						do
 						  {
-						     if (cs != '\0')
+						     if (cs != EOS)
 							cs = pNextBufT->BuContent[k++];
-						     if (cs == '\0')
+						     if (cs == EOS)
 							/* passe au buffer suivant du meme texte */
 							if (pNextBufT->BuNext != NULL)
 							  {
@@ -565,7 +565,7 @@ PtrDocument         pDoc;
 							     k = 1;
 							     cs = pNextBufT->BuContent[0];
 							  }
-						     if (cs == '\0')
+						     if (cs == EOS)
 							continu = FALSE;	/* fin du texte */
 						     else
 						       {
@@ -577,7 +577,7 @@ PtrDocument         pDoc;
 							       continu = TRUE;
 							       j++;
 							    }
-							  if (pTSch->TsCharTransl[ft].StSource[j] == '\0')
+							  if (pTSch->TsCharTransl[ft].StSource[j] == EOS)
 							    {
 							       ft++;
 							       b = j - 1;
@@ -595,7 +595,7 @@ PtrDocument         pDoc;
 					}
 				      /* on applique la regle de traduction ft */
 				      j = 0;
-				      while (pTSch->TsCharTransl[ft - 1].StTarget[j] != '\0')
+				      while (pTSch->TsCharTransl[ft - 1].StTarget[j] != EOS)
 					{
 					   PutChar (pTSch->TsCharTransl[ft - 1].StTarget[j],
 					    fileNum, NULL, pDoc, lineBreak);
@@ -660,9 +660,9 @@ PtrDocument         pDoc;
 				   lt = TextTransEnd;
 				}
 			      /* cherche le caractere suivant a traiter */
-			      if (c != '\0')
+			      if (c != EOS)
 				 c = pBufT->BuContent[i++];
-			      if (c == '\0')
+			      if (c == EOS)
 				 /* passe au buffer suivant du meme element de texte */
 				 if (pBufT->BuNext != NULL)
 				   {
@@ -672,7 +672,7 @@ PtrDocument         pDoc;
 				      c = pBufT->BuContent[0];
 				   }
 			   }
-			 while (c != '\0');
+			 while (c != EOS);
 			 /* fin de la feuille de texte */
 			 /* Si on a commence' a analyser une sequence de caracteres, */
 			 /* on sort le debut de la sequence. */
@@ -710,7 +710,7 @@ PtrDocument         pDoc;
 		    if (ft == 0)
 		       /* pas de traduction */
 		       {
-		       if (c != '\0')
+		       if (c != EOS)
 		          PutChar (c, fileNum, NULL, pDoc, lineBreak);
 		       }
 		    else
@@ -725,7 +725,7 @@ PtrDocument         pDoc;
 			   {
 			      b = 0;
 			      pTrans = &pTSch->TsCharTransl[ft - 1];
-			      while (pTrans->StTarget[b] != '\0')
+			      while (pTrans->StTarget[b] != EOS)
 				{
 				   PutChar (pTrans->StTarget[b], fileNum, NULL, pDoc, lineBreak);
 				   b++;
@@ -733,7 +733,7 @@ PtrDocument         pDoc;
 			   }
 			 else
 			    /* ce symbole ne se traduit pas */
-		            if (c != '\0')
+		            if (c != EOS)
 			       PutChar (c, fileNum, NULL, pDoc, lineBreak);
 		      }
 		    if (pEl->ElLeafType == LtPolyLine)
@@ -767,7 +767,7 @@ PtrDocument         pDoc;
 		  if (pTSch->TsPictureBuffer > 0)
 		    {
 		       b = pTSch->TsPictureBuffer;
-		       pTSch->TsBuffer[b - 1][0] = '\0';	/* raz du buffer */
+		       pTSch->TsBuffer[b - 1][0] = EOS;	/* raz du buffer */
 		       if (pEl->ElTextLength > 0)
 			  /* la feuille n'est pas vide */
 			 {
@@ -779,12 +779,12 @@ PtrDocument         pDoc;
 				 i = 0;
 				 do
 				    pTSch->TsBuffer[b - 1][j++] = pBufT->BuContent[i++];
-				 while (pBufT->BuContent[i - 1] != '\0' &&
+				 while (pBufT->BuContent[i - 1] != EOS &&
 					b < MAX_TRANSL_BUFFER_LEN);
 				 pBufT = pBufT->BuNext;
 			      }
 			    if (j > 0)
-			       pTSch->TsBuffer[b - 1][j - 1] = '\0';
+			       pTSch->TsBuffer[b - 1][j - 1] = EOS;
 			 }
 		    }
 	       break;
@@ -887,7 +887,7 @@ PtrElement          pEl;
 		  break;
 	       case LtGraphics:
 	       case LtSymbol:
-		  empty = (pEl->ElGraph == '\0');
+		  empty = (pEl->ElGraph == EOS);
 		  break;
 	       case LtPageColBreak:
 		  /* un saut de page est consideree comme vide */
@@ -1007,7 +1007,7 @@ PtrDocument         pDoc;
 		       pElem = pElem->ElParent;
 		       while (!typeOK && pElem != NULL)
 			 {
-			    if (Cond->TcAscendNature[0] == '\0')
+			    if (Cond->TcAscendNature[0] == EOS)
 			       /* le type de l'ascendant est defini dans le meme schema de
 			          structure que l'element traite' */
 			       typeOK = EquivalentSRules (Cond->TcAscendType, pEl->ElStructSchema,
@@ -1120,7 +1120,7 @@ PtrDocument         pDoc;
 						     if (pRefSS->SsAttribute[i++].AttrType == AtReferenceAttr)
 							/* c'est une reference */
 							if (pRefSS->SsAttribute[i - 1].AttrTypeRef != 0)
-							   possibleRef = (pRefSS->SsAttribute[i - 1].AttrTypeRefNature[0] == '\0'	/* meme schema de structure */
+							   possibleRef = (pRefSS->SsAttribute[i - 1].AttrTypeRefNature[0] == EOS	/* meme schema de structure */
 									  && EquivalentSRules (pRefSS->SsAttribute[i - 1].AttrTypeRef, pRefSS, pEl1->ElTypeNumber, pRefSS, pEl1->ElParent));
 						  }
 						while (!possibleRef &&
@@ -1196,7 +1196,7 @@ PtrDocument         pDoc;
 					}
 				      if (ret)
 					{
-					   if (Cond->TcElemNature[0] == '\0')
+					   if (Cond->TcElemNature[0] == EOS)
 					      /* le type de l'ascendant est defini dans le meme schema de
 					         structure que l'element traite' */
 					      pSS = pEl->ElStructSchema;
@@ -1272,7 +1272,7 @@ PtrDocument         pDoc;
 							     pAttrEl->AeAttrValue >= Cond->TcLowerBound;
 							  break;
 						       case AtTextAttr:
-							  if (Cond->TcTextValue[0] == '\0')
+							  if (Cond->TcTextValue[0] == EOS)
 							     ret = TRUE;
 							  else
 							     ret = StringAndTextEqual (Cond->TcTextValue,
@@ -1323,7 +1323,7 @@ PtrDocument         pDoc;
 					       pPRule->PrIntValue >= Cond->TcLowerBound;
 					 else
 					    ret = Cond->TcPresValue == PresRuleValue (pPRule) ||
-					       Cond->TcPresValue == '\0';
+					       Cond->TcPresValue == EOS;
 				      if (!ret)
 					 pPRule = pPRule->PrNextPRule;
 				   }
@@ -1782,7 +1782,7 @@ PtrDocument         pDoc;
 		      }
 		    break;
 		 case AtTextAttr:
-		    if (pAttrTrans->AtrTextValue[0] == '\0')
+		    if (pAttrTrans->AtrTextValue[0] == EOS)
 		       pBlock = pAttrTrans->AtrTxtTRuleBlock;
 		    else if (StringAndTextEqual (pAttrTrans->AtrTextValue, pAttr->AeAttrText))
 		       pBlock = pAttrTrans->AtrTxtTRuleBlock;
@@ -2049,7 +2049,7 @@ PtrDocument         pDoc;
 		     val = PresRuleValue (pPRule);
 		     pBlock = NULL;
 		     i = 1;
-		     while (pBlock == NULL && pPRuleTr->RtPRuleValue[i] != '\0' &&
+		     while (pBlock == NULL && pPRuleTr->RtPRuleValue[i] != EOS &&
 			    i <= MAX_TRANSL_PRES_VAL + 1)
 		       {
 			  if (pPRuleTr->RtPRuleValue[i] == val)
@@ -2151,7 +2151,7 @@ boolean             lineBreak;
    pA = NULL;
    if (outBuffer != NULL)
       /* on vide le buffer avant de commencer a le remplir */
-      outBuffer[0] = '\0';
+      outBuffer[0] = EOS;
    varTrans = &pTSch->TsVariable[varNum - 1];
    /* parcourt les items qui constituent la variable */
    for (item = 0; item < varTrans->TrvNItems; item++)
@@ -2163,7 +2163,7 @@ boolean             lineBreak;
 		 case VtText:
 		    /* une constante de texte */
 		    i = pTSch->TsConstBegin[varItem->TvItem - 1];
-		    while (pTSch->TsConstant[i - 1] != '\0')
+		    while (pTSch->TsConstant[i - 1] != EOS)
 		      {
 			 PutChar (pTSch->TsConstant[i - 1], fileNum, outBuffer,
 				  pDoc, lineBreak);
@@ -2223,7 +2223,7 @@ boolean             lineBreak;
 		 case VtBuffer:
 		    /* le contenu d'un buffer */
 		    i = 0;
-		    while (pTSch->TsBuffer[varItem->TvItem - 1][i] != '\0')
+		    while (pTSch->TsBuffer[varItem->TvItem - 1][i] != EOS)
 		      {
 			 PutChar (pTSch->TsBuffer[varItem->TvItem - 1][i],
 				  fileNum, outBuffer, pDoc, lineBreak);
@@ -2275,7 +2275,7 @@ boolean             lineBreak;
 				  case AtEnumAttr:
 				     i = 0;
 				     attrTrans = &pA->AeAttrSSchema->SsAttribute[varItem->TvItem - 1];
-				     while (attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i] != '\0')
+				     while (attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i] != EOS)
 					PutChar (attrTrans->AttrEnumValue[pA->AeAttrValue - 1]
 					    [i++], fileNum, outBuffer, pDoc,
 						 lineBreak);
@@ -2286,29 +2286,29 @@ boolean             lineBreak;
 
 		 case VtFileDir:	/* le nom du directory de sortie */
 		    i = 0;
-		    while (fileDirectory[i] != '\0')
+		    while (fileDirectory[i] != EOS)
 		       PutChar (fileDirectory[i++], fileNum, outBuffer, pDoc, lineBreak);
 		    break;
 
 		 case VtFileName:	/* le nom du fichier de sortie */
 		    i = 0;
-		    while (fileName[i] != '\0')
+		    while (fileName[i] != EOS)
 		       PutChar (fileName[i++], fileNum, outBuffer, pDoc, lineBreak);
 		    break;
 
 		 case VtExtension:	/* le nom de l'extension de fichier */
 		    i = 0;
-		    while (fileExtension[i] != '\0')
+		    while (fileExtension[i] != EOS)
 		       PutChar (fileExtension[i++], fileNum, outBuffer, pDoc, lineBreak);
 		    break;
 		 case VtDocumentName:	/* le nom du document */
 		    i = 0;
-		    while (pDoc->DocDName[i] != '\0')
+		    while (pDoc->DocDName[i] != EOS)
 		       PutChar (pDoc->DocDName[i++], fileNum, outBuffer, pDoc, lineBreak);
 		    break;
 		 case VtDocumentDir:	/* le repertoire du document */
 		    i = 0;
-		    while (pDoc->DocDirectory[i] != '\0')
+		    while (pDoc->DocDirectory[i] != EOS)
 		       PutChar (pDoc->DocDirectory[i++], fileNum, outBuffer, pDoc, lineBreak);
 		    break;
 
@@ -2385,7 +2385,7 @@ boolean            *removeEl;
    boolean             found, possibleRef;
    char                c;
 
-   n[0] = '\0';
+   n[0] = EOS;
    /* on applique la regle selon son type */
    switch (pTRule->TrType)
 	 {
@@ -2412,7 +2412,7 @@ boolean            *removeEl;
 			case ToConst:
 			   /* ecriture d'une constante */
 			   i = pTSch->TsConstBegin[pTRule->TrObjectNum - 1];
-			   while (pTSch->TsConstant[i - 1] != '\0')
+			   while (pTSch->TsConstant[i - 1] != EOS)
 			     {
 				PutChar (pTSch->TsConstant[i - 1], fileNum, NULL, pDoc, lineBreak);
 				i++;
@@ -2421,7 +2421,7 @@ boolean            *removeEl;
 			case ToBuffer:
 			   /* ecriture du contenu d'un buffer */
 			   i = 0;
-			   while (pTSch->TsBuffer[pTRule->TrObjectNum - 1][i] != '\0')
+			   while (pTSch->TsBuffer[pTRule->TrObjectNum - 1][i] != EOS)
 			      PutChar (pTSch->TsBuffer[pTRule->TrObjectNum - 1][i++], fileNum, NULL,
 				       pDoc, lineBreak);
 			   break;
@@ -2472,7 +2472,7 @@ boolean            *removeEl;
 					  /* ecrit le nom de la valeur de l'attribut */
 					  attrTrans = &pA->AeAttrSSchema->SsAttribute[pA->AeAttrNum - 1];
 					  i = 0;
-					  while (attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i] != '\0')
+					  while (attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i] != EOS)
 					     PutChar (attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i++],
 					     fileNum, NULL, pDoc, lineBreak);
 					  break;
@@ -2576,31 +2576,31 @@ boolean            *removeEl;
 
 			case ToFileDir:
 			   i = 0;
-			   while (fileDirectory[i] != '\0')
+			   while (fileDirectory[i] != EOS)
 			      PutChar (fileDirectory[i++], fileNum, NULL, pDoc, lineBreak);
 			   break;
 
 			case ToFileName:
 			   i = 0;
-			   while (fileName[i] != '\0')
+			   while (fileName[i] != EOS)
 			      PutChar (fileName[i++], fileNum, NULL, pDoc, lineBreak);
 			   break;
 
 			case ToExtension:
 			   i = 0;
-			   while (fileExtension[i] != '\0')
+			   while (fileExtension[i] != EOS)
 			      PutChar (fileExtension[i++], fileNum, NULL, pDoc, lineBreak);
 			   break;
 
 			case ToDocumentName:
 			   i = 0;
-			   while (pDoc->DocDName[i] != '\0')
+			   while (pDoc->DocDName[i] != EOS)
 			      PutChar (pDoc->DocDName[i++], fileNum, NULL, pDoc, lineBreak);
 			   break;
 
 			case ToDocumentDir:
 			   i = 0;
-			   while (pDoc->DocDirectory[i] != '\0')
+			   while (pDoc->DocDirectory[i] != EOS)
 			      PutChar (pDoc->DocDirectory[i++], fileNum, NULL, pDoc, lineBreak);
 			   break;
 
@@ -2624,18 +2624,18 @@ boolean            *removeEl;
 				nameBuffer = NULL;
 				if (pTRule->TrObject == ToReferredDocumentName)
 				  {
-				     if (pRefEl != NULL && docIdent[0] == '\0')
+				     if (pRefEl != NULL && docIdent[0] == EOS)
 					/* reference interne. On sort le nom du document lui-meme */
 					nameBuffer = pDoc->DocDName;
-				     else if (docIdent[0] != '\0')
+				     else if (docIdent[0] != EOS)
 					/* on sort le nom du document reference' */
 					nameBuffer = docIdent;
 				  }
 				else if (pTRule->TrObject == ToReferredDocumentDir)
-				   if (pRefEl != NULL && docIdent[0] == '\0')
+				   if (pRefEl != NULL && docIdent[0] == EOS)
 				      /* reference interne. On sort le directory du document lui-meme */
 				      nameBuffer = pDoc->DocDirectory;
-				   else if (docIdent[0] != '\0')
+				   else if (docIdent[0] != EOS)
 				     {
 					/* on sort le directory du document reference' */
 					if (pExtDoc != NULL)
@@ -2646,13 +2646,13 @@ boolean            *removeEl;
 					  {
 					     strncpy (directoryName, DocumentPath, MAX_PATH);
 					     MakeCompleteName (docIdent, "PIV", directoryName, fullName, &i);
-					     if (fullName[0] != '\0')
+					     if (fullName[0] != EOS)
 						/* on a trouve' le fichier */
 						nameBuffer = directoryName;
 					  }
 				     }
 				if (nameBuffer != NULL)
-				   while (*nameBuffer != '\0')
+				   while (*nameBuffer != EOS)
 				     {
 					PutChar (*nameBuffer, fileNum, NULL, pDoc, lineBreak);
 					nameBuffer++;
@@ -2681,7 +2681,7 @@ boolean            *removeEl;
 				   /* la reference designe l'element pRefEl */
 				   /* On le prend s'il a le type voulu */
 				  {
-				     if (pTRule->TrObjectNature[0] == '\0')
+				     if (pTRule->TrObjectNature[0] == EOS)
 					pSS = pEl->ElStructSchema;
 				     else
 					pSS = NULL;
@@ -2701,7 +2701,7 @@ boolean            *removeEl;
 				  }
 				if (pRefEl != NULL)
 				   /* traduit l'element reference', meme s'il a deja ete traduit */
-				   if (docIdent[0] == '\0')
+				   if (docIdent[0] == EOS)
 				      /* reference interne */
 				      TranslateTree (pRefEl, pDoc, transChar, lineBreak, TRUE);
 				   else if (pExtDoc != NULL)
@@ -2744,7 +2744,7 @@ boolean            *removeEl;
 				if (pRef != NULL)
 				  {
 				     pElGet = ReferredElement (pRef, &docIdent, &pExtDoc);
-				     if (pElGet == NULL && docIdent[0] != '\0')
+				     if (pElGet == NULL && docIdent[0] != EOS)
 					/* reference a un document externe non charge' */
 					if (pRef != NULL)
 					   if (pRef->RdReferred != NULL)
@@ -2752,7 +2752,7 @@ boolean            *removeEl;
 						{
 
 						   i = 0;
-						   while (pRef->RdReferred->ReReferredLabel[i] != '\0')
+						   while (pRef->RdReferred->ReReferredLabel[i] != EOS)
 						      PutChar (pRef->RdReferred->ReReferredLabel[i++], fileNum, NULL,
 							   pDoc, lineBreak);
 						}
@@ -2801,7 +2801,7 @@ boolean            *removeEl;
 					       if (pSS->SsAttribute[i].AttrType == AtReferenceAttr)
 						  /* c'est une reference */
 						  if (pSS->SsAttribute[i].AttrTypeRef != 0)
-						     possibleRef = (pSS->SsAttribute[i].AttrTypeRefNature[0] == '\0'
+						     possibleRef = (pSS->SsAttribute[i].AttrTypeRefNature[0] == EOS
 								    && EquivalentSRules (pSS->SsAttribute[i].AttrTypeRef, pSS, pElGet->ElTypeNumber, pSS, pElGet->ElParent));
 					       i++;
 					    }
@@ -2820,7 +2820,7 @@ boolean            *removeEl;
 /** if (pElGet->ElReferredDescr != NULL) **/
 			     {
 				i = 0;
-				while (pElGet->ElLabel[i] != '\0')
+				while (pElGet->ElLabel[i] != EOS)
 				   PutChar (pElGet->ElLabel[i++], fileNum, NULL, pDoc, lineBreak);
 			     }
 			   break;
@@ -2832,7 +2832,7 @@ boolean            *removeEl;
 
 	    case TChangeMainFile:
 	       PutVariable (pEl, pAttr, pTSch, pSSch, pTRule->TrNewFileVar, FALSE, currentFileName, 0, pDoc, lineBreak);
-	       if (currentFileName[0] != '\0')
+	       if (currentFileName[0] != EOS)
 		 {
 		    newFile = fopen (currentFileName, "w");
 		    if (newFile == NULL)
@@ -2858,7 +2858,7 @@ boolean            *removeEl;
 	    case TRemoveFile:
 	       PutVariable (pEl, pAttr, pTSch, pSSch, pTRule->TrNewFileVar,
 			    FALSE, currentFileName, 0, pDoc, lineBreak);
-	       if (currentFileName[0] != '\0')
+	       if (currentFileName[0] != EOS)
 		 {
 #           ifdef _WINDOWS
             _unlink (currentFileName);
@@ -2923,7 +2923,7 @@ boolean            *removeEl;
 			   break;
 			case RpDescend:
 			   /* Cherche dans le sous-arbre un element ayant le type voulu. */
-			   if (pTRule->TrElemNature[0] == '\0')
+			   if (pTRule->TrElemNature[0] == EOS)
 			      pSS = pEl->ElStructSchema;
 			   else
 			      pSS = NULL;
@@ -2953,7 +2953,7 @@ boolean            *removeEl;
 			      /* il y a bien un element designe'. On le prend s'il */
 			      /* a le type voulu */
 			     {
-				if (pTRule->TrElemNature[0] == '\0')
+				if (pTRule->TrElemNature[0] == EOS)
 				   pSS = pEl->ElStructSchema;
 				else
 				   pSS = NULL;
@@ -2970,7 +2970,7 @@ boolean            *removeEl;
 				   /* Il n'a pas le type voulu, on cherche dans */
 				   /* le sous arbre de l'element designe' */
 				   SearchDescent (&pElGet, pTRule->TrElemType, pSS, pTRule->TrElemNature);
-				if (docIdent[0] != '\0' && pExtDoc != NULL)
+				if (docIdent[0] != EOS && pExtDoc != NULL)
 				   /* reference externe a un document charge' */
 				   pDocGet = pExtDoc;
 			     }
@@ -3024,9 +3024,9 @@ boolean            *removeEl;
 		  /* le nom du fichier est dans un buffer */
 		  strncpy (fname, pTSch->TsBuffer[pTRule->TrInclFile - 1],
 			   MAX_PATH - 1);
-	       if (fname[0] == '\0')
+	       if (fname[0] == EOS)
 		  /* pas de nom de fichier */
-		  fullName[0] = '\0';
+		  fullName[0] = EOS;
 	       else if (fname[0] == '/')
 		  /* nom de fichier absolu */
 	          strcpy (fullName, fname);
@@ -3347,7 +3347,7 @@ PtrDocument         pDoc;
 #endif /* _STDC__ */
 {
    /* Entree 0 : standard output */
-   OutputFile[0].OfFileName[0] = '\0';
+   OutputFile[0].OfFileName[0] = EOS;
    OutputFile[0].OfFileDesc = NULL;
    OutputFile[0].OfBufferLen = 0;
    OutputFile[0].OfIndent = 0;
@@ -3355,7 +3355,7 @@ PtrDocument         pDoc;
    OutputFile[0].OfCannotOpen = FALSE;
 
    /* Entree 1 : fichier de sortie principal */
-   OutputFile[1].OfFileName[0] = '\0';
+   OutputFile[1].OfFileName[0] = EOS;
    OutputFile[1].OfFileDesc = mainFile;
    OutputFile[1].OfBufferLen = 0;
    OutputFile[1].OfIndent = 0;
@@ -3422,19 +3422,19 @@ char               *TSchemaName;
      {
 	/* separe nom de directory et nom de fichier */
 	strncpy (fileDirectory, fName, MAX_PATH);
-	fileDirectory[MAX_PATH - 1] = '\0';
+	fileDirectory[MAX_PATH - 1] = EOS;
 	i = strlen (fileDirectory);
 	while (i > 0 && fileDirectory[i] != DIR_SEP)
 	   i--;
 	if (fileDirectory[i] == DIR_SEP)
 	  {
 	     strcpy (fileName, &fileDirectory[i + 1]);
-	     fileDirectory[i + 1] = '\0';
+	     fileDirectory[i + 1] = EOS;
 	  }
 	else
 	  {
 	     strcpy (fileName, &fileDirectory[i]);
-	     fileDirectory[i] = '\0';
+	     fileDirectory[i] = EOS;
 	  }
 	/* charge le schema de traduction du document */
 	if (!LoadTranslationSchema (TSchemaName, pDoc->DocSSchema) != 0)
@@ -3443,7 +3443,7 @@ char               *TSchemaName;
 	else
 	  {
 	     /* separe nom de fichier et extension */
-	     fileExtension[0] = '\0';
+	     fileExtension[0] = EOS;
 	     i = strlen (fileName);
 	     i--;
 	     while (i > 0 && fileName[i] != '.')
@@ -3451,7 +3451,7 @@ char               *TSchemaName;
 	     if (fileName[i] == '.')
 	       {
 		  strncpy (fileExtension, &fileName[i], MAX_PATH);
-		  fileName[i] = '\0';
+		  fileName[i] = EOS;
 	       }
 	     InitOutputFiles (outputFile, pDoc);
 	     /* remet a zero les indicateurs "deja traduit" de tous les elements */
@@ -3510,19 +3510,19 @@ char               *TSchemaName;
     {
       /* separe nom de directory et nom de fichier */
       strncpy (fileDirectory, fName, MAX_PATH);
-      fileDirectory[MAX_PATH - 1] = '\0';
+      fileDirectory[MAX_PATH - 1] = EOS;
       i = strlen (fileDirectory);
       while (i > 0 && fileDirectory[i] != DIR_SEP)
 	i--;
       if (fileDirectory[i] == DIR_SEP)
 	{
 	  strcpy (fileName, &fileDirectory[i + 1]);
-	  fileDirectory[i + 1] = '\0';
+	  fileDirectory[i + 1] = EOS;
 	}
       else
 	{
 	  strcpy (fileName, &fileDirectory[i]);
-	  fileDirectory[i] = '\0';
+	  fileDirectory[i] = EOS;
 	}
       /* charge le schema de traduction du document */
       if (!LoadTranslationSchema (TSchemaName, pDoc->DocSSchema) != 0 ||
@@ -3532,7 +3532,7 @@ char               *TSchemaName;
       else
 	{
 	  /* separe nom de fichier et extension */
-	  fileExtension[0] = '\0';
+	  fileExtension[0] = EOS;
 	  i = strlen (fileName);
 	  i--;
 	  while (i > 0 && fileName[i] != '.')
@@ -3540,7 +3540,7 @@ char               *TSchemaName;
 	  if (fileName[i] == '.')
 	    {
 	      strncpy (fileExtension, &fileName[i], MAX_PATH);
-	      fileName[i] = '\0';
+	      fileName[i] = EOS;
 	    }
 	  InitOutputFiles (outputFile, pDoc);
 	  /* remet a zero les indicateurs "deja traduit" de tous les elements */

@@ -163,7 +163,6 @@ static ThotWidget       MainShell;
 #include "thotmsg_f.h"
 
 #ifdef _WINDOWS
-
 typedef struct struct_winerror {
         WORD  errNo;
         char* errstr;
@@ -254,7 +253,6 @@ static WIN_Form formulary ;
 static BYTE     fVirt;
 static char     key;
 
-#define EOS     '\0'
 #define TAB     '\t'
 #define SPACE   ' '
 #endif /* _WINDOWS */
@@ -478,7 +476,7 @@ CONST char* text;
     char *pText = text;
     while (pText && *pText == ' ')
 	  pText++;
-    if (*pText == '\0')
+    if (*pText == EOS)
        return TRUE;
     return FALSE;
 }
@@ -1465,8 +1463,8 @@ caddr_t             call_d;
 			      {
 				 strncpy (text, XmTextGetString (catalogue->Cat_Entries->E_ThotWidget[1]), 10);
 
-				 text[10] = '\0';
-				 if (text[0] != '\0')
+				 text[10] = EOS;
+				 if (text[0] != EOS)
 				    sscanf (text, "%d", &i);
 				 else
 				    i = 0;
@@ -1483,7 +1481,7 @@ caddr_t             call_d;
 			      {
 				 if (catalogue->Cat_SelectList)
 				   {
-				      text[0] = '\0';
+				      text[0] = EOS;
 				      n = 0;
 				      XtSetArg (args[n], XmNselectedItems, &strings);
 				      n++;
@@ -1561,10 +1559,10 @@ caddr_t             call_d;
 	   wtext = catalogue->Cat_Entries->E_ThotWidget[1];
 
 	   strncpy (text, XmTextGetString (wtext), 10);
-	   text[10] = '\0';
-	   if (text[0] != '\0')
+	   text[10] = EOS;
+	   if (text[0] != EOS)
 	     {
-		if ((text[0] == '-') && (text[1] == '\0'))
+		if ((text[0] == '-') && (text[1] == EOS))
 		   /* cas ou le caractere - a ete tape, on met val a 0 */
 		   val = 0;
 		else
@@ -1625,7 +1623,7 @@ XmListCallbackStruct *infos;
 	   ok = XmStringGetLtoR (infos->item, XmSTRING_DEFAULT_CHARSET, &text);
 	   /* retourne l'entree choisie */
 	   if (ok && text != NULL)
-	      if (text[0] != '\0' && text[0] != ' ')
+	      if (text[0] != EOS && text[0] != ' ')
 		 (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, text);
 	}
 }
@@ -2604,7 +2602,7 @@ char* fileName;
 	TCHAR               szFileName[256];
 	TCHAR               szFileTitle[256];
 
-	szFileName[0] = '\0';
+	szFileName[0] = EOS;
 
     OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
     OpenFileName.hwndOwner         = parentCatalogue->Cat_Widget; 
@@ -2966,7 +2964,7 @@ char               *equiv;
 		     if (equiv != NULL)
 		       {
 #                         ifdef _WINDOWS
-                          if (&equiv[eindex] != '\0') {
+                          if (&equiv[eindex] != EOS) {
                              if (parseAccelerator (&equiv[eindex]))
                                 addAccelerator (currentFrame, fVirt, key, ref + i);
                              sprintf (equiv_item, "%s", &equiv[eindex]); 
@@ -3492,7 +3490,7 @@ char                button;
 		     if (equiv != NULL)
 		       {
 #                         ifdef _WINDOWS
-                          if (&equiv[eindex] != '\0') {
+                          if (&equiv[eindex] != EOS) {
                              if (parseAccelerator (&equiv[eindex]))
                                 addAccelerator (1, fVirt, key, ref + i);
                           }
@@ -4172,7 +4170,7 @@ boolean             react;
 		       if (equiv != NULL)
 			 {
 #                           ifdef _WINDOWS
-                            if (&equiv[eindex] != '\0') {
+                            if (&equiv[eindex] != EOS) {
                                if (parseAccelerator (&equiv[eindex]))
                                   addAccelerator (1, fVirt, key, ref);
                             }
@@ -4403,7 +4401,7 @@ boolean             react;
 		       if (equiv != NULL)
 			 {
 #                           ifdef _WINDOWS
-                            if (&equiv[eindex] != '\0') {
+                            if (&equiv[eindex] != EOS) {
                                if (parseAccelerator (&equiv[eindex]))
                                   addAccelerator (currentFrame, fVirt, key, ref + i);
                                sprintf (equiv_item, "%s", &equiv[eindex]);
@@ -6374,7 +6372,7 @@ boolean             react;
 	item = (XmString *) TtaGetMemory (sizeof (XmString) * (number + 1));
 	i = 0;
 	index = 0;
-	while (i < number && text[index] != '\0')
+	while (i < number && text[index] != EOS)
 	  {
 	     item[i++] = XmStringCreateLtoR (&text[index], XmSTRING_DEFAULT_CHARSET);
 	     index += strlen (&text[index]) + 1;	/* Longueur de l'intitule */

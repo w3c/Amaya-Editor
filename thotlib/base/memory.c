@@ -389,7 +389,7 @@ PtrTextBuffer      *pBT;
        pBuf->BuNext = NULL;
        pBuf->BuPrevious = NULL;
        pBuf->BuLength = 0;
-       pBuf->BuContent[0] = '\0';
+       pBuf->BuContent[0] = EOS;
        NbUsed_TextBuff++;
      }
 }
@@ -577,7 +577,7 @@ PtrReferredDescr   *pDR;
        pNewDR->ReExtDocRef = NULL;
        pNewDR->RePrevious = NULL;
        pNewDR->ReNext = NULL;
-       pNewDR->ReReferredLabel[0] = '\0';
+       pNewDR->ReReferredLabel[0] = EOS;
        pNewDR->ReExternalRef = FALSE;
        pNewDR->ReReferredElem = NULL;
        NbUsed_DescRef++;
@@ -790,7 +790,7 @@ PtrOutReference    *pRS;
      {
        memset (pNewRS, 0, sizeof (OutReference));
        pNewRS->OrNext = NULL;
-       pNewRS->OrLabel[0] = '\0';
+       pNewRS->OrLabel[0] = EOS;
        ClearDocIdent (&(pNewRS->OrDocIdent));
        NbUsed_OutputRef++;
      }
@@ -839,8 +839,8 @@ PtrChangedReferredEl *pER;
      {
        memset (pNewER, 0, sizeof (ChangedReferredEl));
        pNewER->CrNext = NULL;
-       pNewER->CrOldLabel[0] = '\0';
-       pNewER->CrNewLabel[0] = '\0';
+       pNewER->CrOldLabel[0] = EOS;
+       pNewER->CrNewLabel[0] = EOS;
        ClearDocIdent (&(pNewER->CrOldDocument));
        ClearDocIdent (&(pNewER->CrNewDocument));
        pNewER->CrReferringDoc = NULL;
@@ -893,7 +893,7 @@ PtrEnteringReferences *pRE;
        pNewRE->ErNext = NULL;
        pNewRE->ErFirstReferredEl = NULL;
        ClearDocIdent (&(pNewRE->ErDocIdent));
-       pNewRE->ErFileName[0] = '\0';
+       pNewRE->ErFileName[0] = EOS;
        NbUsed_InputRef++;
      }
 }
@@ -2121,8 +2121,8 @@ PtrDict            *pDict;
 
 	/* initialise le contexte de dictionnaire */
 	pdict = *pDict;
-	pdict->DictName[0] = '\0';
-	pdict->DictDirectory[0] = '\0';
+	pdict->DictName[0] = EOS;
+	pdict->DictDirectory[0] = EOS;
 	/* readonly */
 	pdict->DictReadOnly = TRUE;
 	/* contenu non charge' */

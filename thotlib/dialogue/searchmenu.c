@@ -1541,11 +1541,11 @@ void                SearchLoadResources ()
 	pExtCurrDoc = NULL;
 	GetSearchContext (&searchDomain);
      }
-   pSearchedString[0] = '\0';
+   pSearchedString[0] = EOS;
    SearchedStringLen = 0;
    CaseEquivalent = FALSE;
    WithReplace = FALSE;
-   pReplaceString[0] = '\0';
+   pReplaceString[0] = EOS;
    ReplaceStringLen = 0;
 }
 /* End Of searchmenu.c module */

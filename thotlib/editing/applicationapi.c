@@ -510,8 +510,8 @@ char               *aName;
    else 
 	   URL_DIR_SEP = DIR_SEP;
    
-   aDirectory[0] = '\0';
-   aName[0] = '\0';
+   aDirectory[0] = EOS;
+   aName[0] = EOS;
 
    lg = strlen (text);
    if (lg)
@@ -537,7 +537,7 @@ char               *aName;
 	     j = i - 1;
 	     /* Suppresses the / characters at the end of the path */
 	     while (aDirectory[j] == URL_DIR_SEP)
-		aDirectory[j--] = '\0';
+		aDirectory[j--] = EOS;
 	  }
 	if (i != lg)
 	   strcpy (aName, oldptr);
@@ -545,7 +545,7 @@ char               *aName;
 #    ifdef _WINDOWS
      lg = strlen (aName);
      if (!strcasecmp (&aName[lg - 4], ".exe"))
-        aName[lg - 4] = '\0';
+        aName[lg - 4] = EOS;
 #    endif /* _WINDOWS */
 }
 

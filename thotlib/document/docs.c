@@ -174,14 +174,14 @@ char               *fileName;
    CreateDocument (pDoc);
    if (pDoc != NULL)
      {
-       directoryBuffer[0] = '\0';
+       directoryBuffer[0] = EOS;
        if (fileName != NULL)
 	 /* nom de document fourni a l'appel, on le recopie dans DefaultDocumentName */
 	 {
 	   len = strlen (fileName);
 	   if (len > 4)
 	     if (strcmp (fileName + len - 4, ".PIV") == 0)
-	       fileName[len - 4] = '\0';
+	       fileName[len - 4] = EOS;
 	   if (fileName[0] != URL_DIR_SEP)
 	     {
 	       if (fileName != DefaultDocumentName)
@@ -189,7 +189,7 @@ char               *fileName;
 	       /* nom de document relatif */
 	       strncpy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
 	       strncpy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
-	       if ((*pDoc)->DocDirectory[0] == '\0')
+	       if ((*pDoc)->DocDirectory[0] == EOS)
 		 strncpy ((*pDoc)->DocDirectory, DocumentPath, MAX_PATH);
 	     }
 	   else
@@ -197,22 +197,22 @@ char               *fileName;
 	       /* nom absolu */
 	       i = 0;
 	       j = 0;
-	       while (fileName[i] != '\0' && i < MAX_PATH - 1)
+	       while (fileName[i] != EOS && i < MAX_PATH - 1)
 		 {
 		   (*pDoc)->DocDirectory[i] = fileName[i];
 		   if ((*pDoc)->DocDirectory[i] == URL_DIR_SEP)
 		     j = i;
 		   i++;
 		 }
-	       (*pDoc)->DocDirectory[j + 1] = '\0';
+	       (*pDoc)->DocDirectory[j + 1] = EOS;
 	       i = 0;
-	       while (fileName[i] != '\0' && i < MAX_NAME_LENGTH - 1)
+	       while (fileName[i] != EOS && i < MAX_NAME_LENGTH - 1)
 		 {
 		   DefaultDocumentName[i] = fileName[j + 1];
 		   i++;
 		   j++;
 		 }
-	       DefaultDocumentName[i] = '\0';
+	       DefaultDocumentName[i] = EOS;
 	       strncpy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
 	       strncpy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
 	       /* sauve le path des documents avant de l'ecraser */
@@ -226,7 +226,7 @@ char               *fileName;
        TtaDisplaySimpleMessage (INFO, LIB, TMSG_READING_DOC);
        ok = OpenDocument (DefaultDocumentName, *pDoc, TRUE, FALSE, NULL, TRUE, TRUE);
        /* restaure le path des documents s'il a ete ecrase */
-       if (directoryBuffer[0] != '\0')
+       if (directoryBuffer[0] != EOS)
 	 strncpy (DocumentPath, directoryBuffer, MAX_PATH);
        if (!ok)
 	 {
@@ -287,7 +287,7 @@ PathBuffer          directory;
    int                 i;
 
    if (*pDoc != NULL)
-      if (SSchemaName == NULL || SSchemaName[0] == '\0')
+      if (SSchemaName == NULL || SSchemaName[0] == EOS)
 	 /* L'utilisateur n'a pas fourni de nom de schema */
 	 UnloadDocument (pDoc);
       else
@@ -295,14 +295,14 @@ PathBuffer          directory;
 	   strncpy ((*pDoc)->DocDirectory, DocumentPath, MAX_PATH);
 	   /* si c'est un path, retient seulement le 1er directory */
 	   i = 0;
-	   while ((*pDoc)->DocDirectory[i] != '\0' &&
+	   while ((*pDoc)->DocDirectory[i] != EOS &&
 		  (*pDoc)->DocDirectory[i] != PATH_SEP && i < MAX_PATH - 1)
 	      i++;
-	   (*pDoc)->DocDirectory[i] = '\0';
+	   (*pDoc)->DocDirectory[i] = EOS;
 	   /* on suppose que le mon de schema est dans la langue de */
 	   /* l'utilisateur: on le traduit en nom interne */
 	   ConfigSSchemaInternalName ((char *) SSchemaName, docType, TRUE);
-	   if (docType[0] == '\0')
+	   if (docType[0] == EOS)
 	      /* ce nom n'est pas dans le fichier langue, on le prend */
 	      /* tel quel */
 	      strncpy (docType, (char *) SSchemaName, MAX_NAME_LENGTH);
@@ -321,11 +321,11 @@ PathBuffer          directory;
 	   else
 	     {
 		/* charge le schema de structure et le schema de presentation */
-		PSchemaName[0] = '\0';
+		PSchemaName[0] = EOS;
 		/* pas de preference pour un schema de */
 		/* presentation particulier */
 		LoadSchemas (docType, PSchemaName, &((*pDoc)->DocSSchema), NULL, FALSE);
-		if (docName[0] != '\0')
+		if (docName[0] != EOS)
 		   strncpy (docNameBuffer, docName, MAX_NAME_LENGTH);
 		else
 		  {
@@ -372,17 +372,17 @@ PathBuffer          directory;
 		      AddLastPageBreak ((*pDoc)->DocRootElement, view + 1, *pDoc, TRUE);
 #endif /* __COLPAGE__ */
 		/* le document appartient au directory courant */
-		if (directory[0] != '\0')
+		if (directory[0] != EOS)
 		   strncpy (directoryBuffer, directory, MAX_PATH);
 		else
 		  {
 		     strncpy (directoryBuffer, DocumentPath, MAX_PATH);
 		     /* si c'est un path, retient seulement le 1er directory */
 		     i = 0;
-		     while (directoryBuffer[i] != '\0' &&
+		     while (directoryBuffer[i] != EOS &&
 			 directoryBuffer[i] != PATH_SEP && i < MAX_PATH - 1)
 			i++;
-		     directoryBuffer[i] = '\0';
+		     directoryBuffer[i] = EOS;
 		  }
 		FindCompleteName (docNameBuffer, "PIV", directoryBuffer, fileNameBuffer, &i);
 		strncpy ((*pDoc)->DocDName, docNameBuffer, MAX_NAME_LENGTH);
@@ -670,11 +670,11 @@ PtrDocument         pDoc;
 		  pEl->ElPolyLineBuffer = NULL;
 		  pEl->ElNPoints = 0;
 		  pEl->ElVolume = 0;
-		  pEl->ElPolyLineType = '\0';
+		  pEl->ElPolyLineType = EOS;
 		  break;
 	       case LtSymbol:
 	       case LtGraphics:
-		  pEl->ElGraph = '\0';
+		  pEl->ElGraph = EOS;
 		  break;
 	       default:
 		  break;

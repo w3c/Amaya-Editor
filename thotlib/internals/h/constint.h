@@ -15,6 +15,7 @@
 #define __CONST_INT_H__
 
 #include "thot_sys.h"
+#define EOS     '\0'
 
 #ifdef _WINDOWS
 #define MAX_ASSOC_DOC 1  	/* max. number of associated element types for

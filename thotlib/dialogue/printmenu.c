@@ -61,8 +61,6 @@
 #include "docs_f.h"
 #include "print_tv.h"
 
-#define EOS '\0'
-
 static char         Orientation[MAX_NAME_LENGTH];
 static Func         pFuncExportPrintDoc = NULL;
 static int          defPaperPrint;
@@ -119,14 +117,14 @@ Document            document;
 #  endif /* !_WINDOWS */
 
    if ((thotSch != NULL) &&
-       (thotSch[0] != '\0'))
+       (thotSch[0] != EOS))
      {
        strcat (cmd, " -sch ");
        strcat (cmd, thotSch);
      };
 
    if ((thotDoc != NULL) &&
-       (thotDoc[0] != '\0'))
+       (thotDoc[0] != EOS))
      {
        strcat (cmd, " -doc ");
        strcat (cmd, thotDoc);
@@ -286,7 +284,7 @@ Document document;
 	 strcpy (pPrinter, "");
        else
 	 strcpy (pPrinter, ptr);
-       PSdir[0] = '\0';
+       PSdir[0] = EOS;
        PrintingDoc = 0;
        defPaperPrint = TRUE;
        defManualFeed = FALSE;
@@ -329,7 +327,7 @@ Document document;
 		   strcpy(PSdir,ptr);
 		   lg = strlen(PSdir);
 		   if (PSdir[lg - 1] == DIR_SEP)
-		     PSdir[--lg] = '\0';
+		     PSdir[--lg] = EOS;
 		 }
 	       else
 		 {
@@ -393,12 +391,12 @@ char               *viewNames;
    pDoc = LoadedDocument[document - 1];
    /* prepares the execution of the print command */
    strcpy (savePres, pDoc->DocSSchema->SsDefaultPSchema);
-   if (PresSchema[0] != '\0')
+   if (PresSchema[0] != EOS)
      strcpy (newPres, PresSchema);
    else
      ConfigGetPSchemaForPageSize (pDoc->DocSSchema, PageSize, newPres);
      
-   if (newPres[0] != '\0')
+   if (newPres[0] != EOS)
       strcpy (pDoc->DocSSchema->SsDefaultPSchema, newPres);
    if (ThotLocalActions[T_rextprint]!=NULL && 
        strcmp(pDoc->DocSSchema->SsDefaultPSchema, savePres))
@@ -418,7 +416,7 @@ char               *viewNames;
        strcpy (tmpDirName, dirString);
        lg = strlen(tmpDirName);
        if (tmpDirName[lg - 1] == DIR_SEP)
-         tmpDirName[--lg] = '\0';
+         tmpDirName[--lg] = EOS;
      }
    else
      {
@@ -494,7 +492,7 @@ char               *viewNames;
 		  Paginate,
 		  viewNames,
 		  document);
-	else if (PSdir[0] != '\0')
+	else if (PSdir[0] != EOS)
 	     Print (tmpDocName,
 		  tmpDirName,
 		  pDoc->DocSchemasPath,
@@ -818,7 +816,7 @@ char               *txt;
 	    }
 	  break;
 	case NumZonePrinterName:
-	  if (txt[0] != '\0')
+	  if (txt[0] != EOS)
 	    if (NewPaperPrint)
 	      /* text capture zone for the printer name */
 	      strncpy (pPrinter, txt, MAX_PATH);

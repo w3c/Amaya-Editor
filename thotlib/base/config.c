@@ -102,9 +102,9 @@ unsigned char      *word;
    int                 indword, indline;
 
    indline = 0;
-   word[0] = '\0';
+   word[0] = EOS;
    /* saute les espaces de debut de ligne */
-   while (line[indline] <= ' ' && line[indline] != '\0')
+   while (line[indline] <= ' ' && line[indline] != EOS)
       indline++;
    if (line[indline] == '#')
       /* cette ligne ne comporte qu'un commentaire */
@@ -113,10 +113,10 @@ unsigned char      *word;
    /* ou la fin de ligne */
    indword = 0;
    while (line[indline] > ' ' && line[indline] != ':' &&
-	  line[indline] != '\0')
+	  line[indline] != EOS)
       word[indword++] = line[indline++];
    /* marque la fin du mot trouve' */
-   word[indword] = '\0';
+   word[indword] = EOS;
 }
 
 
@@ -135,19 +135,19 @@ unsigned char      *word;
    int                 indword, indline;
 
    indline = 0;
-   word[0] = '\0';
+   word[0] = EOS;
    /* saute les espaces de debut de ligne */
-   while (line[indline] <= ' ' && line[indline] != '\0')
+   while (line[indline] <= ' ' && line[indline] != EOS)
       indline++;
    if (line[indline] == '#')
       /* cette ligne ne comporte qu'un commentaire */
       return;
    /* saute le 1er mot, jusqu'a rencontrer le 1er espace */
    /* ou la fin de ligne */
-   while (line[indline] > ' ' && line[indline] != '\0')
+   while (line[indline] > ' ' && line[indline] != EOS)
       indline++;
    /* saute les espaces qui suivent le 1er mot */
-   while (line[indline] <= ' ' && line[indline] != '\0')
+   while (line[indline] <= ' ' && line[indline] != EOS)
       indline++;
    if (line[indline] == '#')
       /* le premier mot est suivi d'un commentaire */
@@ -155,10 +155,10 @@ unsigned char      *word;
    /* copie tous les caracteres du 2eme mot jusqu'a rencontrer le 1er */
    /* espace ou la fin de ligne */
    indword = 0;
-   while (line[indline] > ' ' && line[indline] != '\0')
+   while (line[indline] > ' ' && line[indline] != EOS)
       word[indword++] = line[indline++];
    /* marque la fin du mot trouve' */
-   word[indword] = '\0';
+   word[indword] = EOS;
 }
 
 /*----------------------------------------------------------------------
@@ -176,18 +176,18 @@ unsigned char      *line;
 
    ind = 0;
    /* saute les espaces de debut de ligne */
-   while (line[ind] <= ' ' && line[ind] != '\0')
+   while (line[ind] <= ' ' && line[ind] != EOS)
       ind++;
    if (line[ind] == '#')
       /* la ligne commence par un commentaire */
       return FALSE;
    /* saute le premier mot */
-   while (line[ind] > ' ' && line[ind] != '#' && line[ind] != ':' && line[ind] != '\0')
+   while (line[ind] > ' ' && line[ind] != '#' && line[ind] != ':' && line[ind] != EOS)
       ind++;
    /* saute les espaces qui suivent le 1er mot */
-   while (line[ind] <= ' ' && line[ind] != '\0')
+   while (line[ind] <= ' ' && line[ind] != EOS)
       ind++;
-   if (line[ind] == '#' || line[ind] == '\0')
+   if (line[ind] == '#' || line[ind] == EOS)
       /* il ne reste rien dans la ligne ou seulement un commentaire */
       return TRUE;
    else
@@ -211,18 +211,18 @@ unsigned char      *text;
    int                 indline, indtext;
 
    indline = 0;
-   text[0] = '\0';
-   while (line[indline] != ':' && line[indline] != '\0')
+   text[0] = EOS;
+   while (line[indline] != ':' && line[indline] != EOS)
       indline++;
    if (line[indline] == ':')
      {
 	indline++;
-	while (line[indline] <= ' ' && line[indline] != '\0')
+	while (line[indline] <= ' ' && line[indline] != EOS)
 	   indline++;
-	if (line[indline] == '#' || line[indline] == '\0')
+	if (line[indline] == '#' || line[indline] == EOS)
 	   return;
 	indtext = 0;
-	while (line[indline] != '#' && line[indline] != '\0')
+	while (line[indline] != '#' && line[indline] != EOS)
 	   text[indtext++] = line[indline++];
 	/* elimine les blancs de fin de ligne */
 	indtext--;
@@ -230,7 +230,7 @@ unsigned char      *text;
 	   indtext--;
 	indtext++;
 	/* termine la chaine */
-	text[indtext] = '\0';
+	text[indtext] = EOS;
      }
 }
 
@@ -270,10 +270,10 @@ char               *word2;
 	   getFirstWord (line, word);
 	   if (singleWord (line))
 	     {
-		if (*word1 != '\0')
+		if (*word1 != EOS)
 		   if (strcmp (word, word1) == 0)
 		      ret = 1;
-		if (*word2 != '\0')
+		if (*word2 != EOS)
 		   if (strcmp (word, word2) == 0)
 		      ret = 2;
 	     }
@@ -330,7 +330,7 @@ boolean            *import;
       else
 	{
 	   getFirstWord (line, word);
-	   if (word[0] != '\0')
+	   if (word[0] != EOS)
 	      stop = TRUE;
 	}
    while (!stop);
@@ -372,7 +372,7 @@ boolean            *import;
    l = strlen (&fname[i]) + 1;
    *doctypeOrig = TtaGetMemory (l);
    if (point != 0)
-      fname[point] = '\0';
+      fname[point] = EOS;
    strcpy (*doctypeOrig, &fname[i]);
    /* retablit le '.' du suffixe dans le nom de fichier */
    if (point != 0)
@@ -402,7 +402,7 @@ boolean            *import;
 	   if (fgets (line, MAX_TXT_LEN - 1, file) == NULL)
 	     {
 		stop = TRUE;
-		word[0] = '\0';
+		word[0] = EOS;
 	     }
 	   else
 	     {
@@ -416,7 +416,7 @@ boolean            *import;
 	   /* on a trouve' la ligne voulue */
 	  {
 	     getStringAfterColon (line, text);
-	     if (text[0] == '\0')
+	     if (text[0] == EOS)
 		fprintf (stderr, "invalid line in file %s\n   %s\n", fname, line);
 	     else
 	       {
@@ -514,16 +514,16 @@ char               *aSchemaPath;
    /* traite successivement tous les directories du path des schemas */
    strncpy (DirBuffer, aSchemaPath, MAX_PATH);
    stop = FALSE;
-   while (DirBuffer[i] != '\0' && i < MAX_PATH && !stop)
+   while (DirBuffer[i] != EOS && i < MAX_PATH && !stop)
      {
-	while (DirBuffer[i] != PATH_SEP && DirBuffer[i] != '\0' && i < MAX_PATH)
+	while (DirBuffer[i] != PATH_SEP && DirBuffer[i] != EOS && i < MAX_PATH)
 	   i++;
-	if (DirBuffer[i] == '\0')
+	if (DirBuffer[i] == EOS)
 	   /* dernier directory du path. Il faut s'arreter apres ce directory */
 	   stop = TRUE;
 	if (DirBuffer[i] == PATH_SEP)
-	   DirBuffer[i] = '\0';
-	if (DirBuffer[i] == '\0')
+	   DirBuffer[i] = EOS;
+	if (DirBuffer[i] == EOS)
 	   /* un directory de schema a ete isole' */
 	  {
 	     Dir = &DirBuffer[beginning];
@@ -604,7 +604,7 @@ boolean             doc;
 
    nbitem = 0;
    *lgmenu = 0;
-   BufMenu[0] = '\0';
+   BufMenu[0] = EOS;
    i = 0;
 
    if (doc)
@@ -675,7 +675,7 @@ int                 Typ;
 
    i = 0;
    found = FALSE;
-   nameUser[0] = '\0';
+   nameUser[0] = EOS;
    switch (Typ)
 	 {
 	    case CONFIG_DOCUMENT_STRUCT:
@@ -747,7 +747,7 @@ boolean             Doc;
 
    i = 0;
    found = FALSE;
-   nameSchema[0] = '\0';
+   nameSchema[0] = EOS;
    if (Doc)
       while (i < MAX_ITEM_CONF && !found && doc_items_menu[i] != NULL)
 	{
@@ -848,7 +848,7 @@ char               *BufMenu;
    nbitem = 0;
    indmenu = 0;
    if (BufMenu != NULL)
-      BufMenu[0] = '\0';
+      BufMenu[0] = EOS;
    file = openConfigFile (schema, TRUE);
    if (file == NULL)
       return 0;
@@ -861,7 +861,7 @@ char               *BufMenu;
 	   else
 	     {
 		getFirstWord (line, word);
-		if (word[0] != '\0')
+		if (word[0] != EOS)
 		   /* la ligne n'est pas vide */
 		  {
 		     /* si la ligne contient un mot cle marquant le debut d'une autre */
@@ -876,7 +876,7 @@ char               *BufMenu;
 		     if (!stop)
 		       {
 			  getStringAfterColon (line, text);
-			  if (text[0] == '\0')
+			  if (text[0] == EOS)
 			     fprintf (stderr, "invalid line in file %s\n   %s\n", schema, line);
 			  else
 			    {
@@ -944,7 +944,7 @@ char               *BufMenu;
 
    lgmenu = 0;
    nbitem = 0;
-   BufMenu[0] = '\0';
+   BufMenu[0] = EOS;
    i = 0;
 
    /* parcourt la table des types de documents */
@@ -1001,7 +1001,7 @@ char               *BufMenu;
    nbitem = 0;
    indmenu = 0;
    if (BufMenu != NULL)
-      BufMenu[0] = '\0';
+      BufMenu[0] = EOS;
    file = openConfigFile (schema, TRUE);
    if (file == NULL)
       return 0;
@@ -1014,7 +1014,7 @@ char               *BufMenu;
 	   else
 	     {
 		getFirstWord (line, word);
-		if (word[0] != '\0')
+		if (word[0] != EOS)
 		   /* la ligne n'est pas vide */
 		  {
 		     /* si la ligne contient un mot cle marquant le debut d'une autre */
@@ -1029,7 +1029,7 @@ char               *BufMenu;
 		     if (!stop)
 		       {
 			  getStringAfterColon (line, text);
-			  if (text[0] == '\0')
+			  if (text[0] == EOS)
 			     fprintf (stderr, "invalid line in file %s\n   %s\n", schema, line);
 			  else
 			    {
@@ -1188,7 +1188,7 @@ PtrSSchema          pSS;
 	     {
 		/* prend le premier mot de la ligne */
 		getFirstWord (line, word);
-		if (word[0] != '\0')
+		if (word[0] != EOS)
 		   /* la ligne n'est pas vide */
 		  {
 		     /* si la ligne contient un mot cle marquant le debut d'une autre */
@@ -1209,7 +1209,7 @@ PtrSSchema          pSS;
 		       {
 			  /* cherche la chaine de caracteres qui suit ':' */
 			  getStringAfterColon (line, text);
-			  if (text[0] == '\0')
+			  if (text[0] == EOS)
 			     fprintf (stderr, "invalid line in file %s\n   %s\n", pSS->SsName, line);
 			  else if (!Translate (pSS, word, text))
 			     fprintf (stderr, "invalid line in file %s\n   %s\n", pSS->SsName, line);
@@ -1268,7 +1268,7 @@ char               *schpres;
 		     /* le 1er mot est "style". Cherche le mot qui suit : c'est le */
 		     /* nom du schema de presentation cherche' */
 		     getSecondWord (line, word);
-		     if (word[0] != '\0')
+		     if (word[0] != EOS)
 			/* il y a bien un 2eme mot : succes */
 		       {
 			  strcpy (schpres, word);
@@ -1400,7 +1400,7 @@ char               *line;
 	{
 	   /* prend le permier mot de la ligne lue */
 	   getFirstWord (line, word1);
-	   if (word1[0] != '\0')
+	   if (word1[0] != EOS)
 	      /* la ligne n'est pas vide */
 	     {
 		/* si la ligne contient un mot cle marquant le debut d'une autre */
@@ -1466,7 +1466,7 @@ int             *y;
 
    /* extrait la partie de la ligne qui suit les deux-points */
    getStringAfterColon (line, seqLine);
-   if (seqLine[0] != '\0')
+   if (seqLine[0] != EOS)
      {
        /* extrait les 4 entiers */
        nbIntegers = sscanf (seqLine, "%d %d", x, y);
@@ -1508,7 +1508,7 @@ int                *height;
    result = FALSE;
    /* extrait la partie de la ligne qui suit les deux-points */
    getStringAfterColon (line, seqLine);
-   if (seqLine[0] == '\0')
+   if (seqLine[0] == EOS)
       fprintf (stderr, "invalid line in file %s.conf\n   %s\n",
 	       pDoc->DocSSchema->SsName, line);
    else
@@ -1688,7 +1688,7 @@ char               *presNature;
    boolean             found;
    boolean             ok;
 
-   presNature[0] = '\0';
+   presNature[0] = EOS;
    ok = FALSE;
    /* ouvre le fichier .conf du document et avance jusqu'a la section "presentation" */
    file = openConfFileAndReadUntil (pSS, "presentation");
@@ -1711,7 +1711,7 @@ char               *presNature;
 	     /* le nom de nature est suivi, apres ":", du nom du schema de */
 	     /* presentation a appliquer */
 	     getStringAfterColon (line, seqLine);
-	     if (seqLine[0] == '\0')
+	     if (seqLine[0] == EOS)
 		fprintf (stderr, "invalid line in file %s.conf\n   %s\n", pSS->SsName, line);
 	     else
 	       {
@@ -1751,7 +1751,7 @@ char               *optionValue;
    char                name[MAX_TXT_LEN];
    boolean             found;
 
-   optionValue[0] = '\0';
+   optionValue[0] = EOS;
    /* ouvre le fichier .conf du document et avance jusqu'a la section "options" */
    file = openConfFileAndReadUntil (pSS, "options");
    if (file != NULL)
@@ -1773,7 +1773,7 @@ char               *optionValue;
 	  {
 	     /* le nom de l'option est suivi, apres ":", de la valeur de l'option */
 	     getStringAfterColon (line, seqLine);
-	     if (seqLine[0] == '\0')
+	     if (seqLine[0] == EOS)
 		fprintf (stderr, "invalid line in file %s.conf\n   %s\n", pSS->SsName, line);
 	     else
 		strncpy (optionValue, seqLine, MAX_NAME_LENGTH - 1);
@@ -1814,7 +1814,7 @@ char               *schemaName;
    int		       score, i;
    boolean             stop;
 
-   schemaName[0] = '\0';
+   schemaName[0] = EOS;
    score = 0;
    /* ouvre le fichier .conf correspondant au type du document */
    file = NULL;
@@ -1823,8 +1823,8 @@ char               *schemaName;
    if (file != NULL)
       /* on a ouvert le fichier, on va le lire ligne par ligne */
      {
-	lastStyle[0] = '\0';
-	bestStyle[0] = '\0';
+	lastStyle[0] = EOS;
+	bestStyle[0] = EOS;
 	bestPrefixLen = 0;
 	stop = FALSE;
 	do
@@ -1842,15 +1842,15 @@ char               *schemaName;
 		  {
 		    getSecondWord (line, lastStyle);
 		    lastPrefixLen=0;
-		    while(lastStyle[lastPrefixLen]!='\0' &&
-			  (pSS->SsDefaultPSchema)[lastPrefixLen]!='\0' &&
+		    while(lastStyle[lastPrefixLen]!=EOS &&
+			  (pSS->SsDefaultPSchema)[lastPrefixLen]!=EOS &&
 			  lastStyle[lastPrefixLen]==(pSS->SsDefaultPSchema)[lastPrefixLen])
 		      lastPrefixLen ++;
 		    score = lastPrefixLen;
 		    i = 0;
-		    while(lastStyle[lastPrefixLen]!='\0')
+		    while(lastStyle[lastPrefixLen]!=EOS)
 		      {
-			if(pageSize[i] =='\0' ||
+			if(pageSize[i] ==EOS ||
 			   pageSize[i]!= lastStyle[lastPrefixLen])
 			  score --;
 			lastPrefixLen++;
@@ -1862,7 +1862,7 @@ char               *schemaName;
 		   /* c'est une ligne "pagesize", on la traite */
 		  {
 		     getStringAfterColon (line, seqLine);
-		     if (seqLine[0] == '\0')
+		     if (seqLine[0] == EOS)
 			fprintf (stderr, "invalid line in file %s.conf\n   %s\n",
 				 pSS->SsName, line);
 		     else if (strcmp (seqLine, pageSize) == 0)
@@ -2048,7 +2048,7 @@ char               *schtypo;
 	     /* le nom de nature est suivi, apres ":", du nom du schema de */
 	     /* typographie a appliquer */
 	     getStringAfterColon (line, seqLine);
-	     if (seqLine[0] == '\0')
+	     if (seqLine[0] == EOS)
 		fprintf (stderr, "invalid line in file %s.conf\n   %s\n", pSS->SsName, line);
 	     else
 	       {

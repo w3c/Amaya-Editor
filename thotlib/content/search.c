@@ -151,9 +151,9 @@ boolean             select;
 	     for (i = 0; i <= pBuf2->BuLength + diff - THOT_MAX_CHAR; i++)
 		pBufn->BuContent[i] = pBuf2->BuContent[THOT_MAX_CHAR - 1 - diff + i];
 	     pBufn->BuLength = pBuf2->BuLength + diff - THOT_MAX_CHAR + 1;
-	     pBufn->BuContent[pBufn->BuLength] = '\0';
+	     pBufn->BuContent[pBufn->BuLength] = EOS;
 	     pBuf2->BuLength -= pBufn->BuLength;
-	     pBuf2->BuContent[pBuf2->BuLength] = '\0';
+	     pBuf2->BuContent[pBuf2->BuLength] = EOS;
 	  }
 	/* decale a droite les caracteres qui suivent la chaine */
 	/* a remplacer dans le buffer pBuf2 */
@@ -189,7 +189,7 @@ boolean             select;
 	i++;
 	if (i > pBufn->BuLength)
 	  {
-	     pBufn->BuContent[i - 1] = '\0';
+	     pBufn->BuContent[i - 1] = EOS;
 	     pBufn->BuLength = i - 1;
 	     pBufn = pBufn->BuNext;
 	     i = 1;
@@ -197,7 +197,7 @@ boolean             select;
      }
    if (diff > 0)
      {
-	pBufn->BuContent[i - 1] = '\0';
+	pBufn->BuContent[i - 1] = EOS;
 	pBufn->BuLength = i - 1;
      }
    /* met a jour le volume de l'element */
@@ -425,7 +425,7 @@ char                strng[THOT_MAX_CHAR];
    /* index dans ChaineCherchee du caractere a comparer */
    do
      {
-	if (pBuf->BuContent[ind - 1] == '\0')
+	if (pBuf->BuContent[ind - 1] == EOS)
 	  {
 	     pBuf = pBuf->BuNext;
 	     if (pBuf != NULL)
@@ -458,7 +458,7 @@ char                strng[THOT_MAX_CHAR];
 		     pBufx = pBuf;
 		     icx = *firstChar;
 		  }
-		if (strng[ir] == '\0')
+		if (strng[ir] == EOS)
 		  {
 		     *found = TRUE;
 		     stop = TRUE;

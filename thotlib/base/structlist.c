@@ -235,7 +235,7 @@ FILE               *fileDescriptor;
       /* ecrit le contenu du buffer de texte */
      {
 	i = 0;
-	while (i < b->BuLength && b->BuContent[i] != '\0' && l < length)
+	while (i < b->BuLength && b->BuContent[i] != EOS && l < length)
 	  {
 	     putc (b->BuContent[i], fileDescriptor);
 	     i++;
@@ -1556,7 +1556,7 @@ FILE               *fileDescriptor;
 				   while (i > 0)
 				      /* On est en fin de buffer ? */
 				     {
-					while (adbuff->BuContent[j - 1] == '\0')
+					while (adbuff->BuContent[j - 1] == EOS)
 					  {
 					     adbuff = adbuff->BuNext;
 					     j = 1;
@@ -1585,7 +1585,7 @@ FILE               *fileDescriptor;
 			 /* On est en fin de buffer ? */
 			 while (i > 0)
 			   {
-			      while (adbuff->BuNext != NULL && adbuff->BuContent[j - 1] == '\0')
+			      while (adbuff->BuNext != NULL && adbuff->BuContent[j - 1] == EOS)
 				{
 				   adbuff = adbuff->BuNext;
 				   j = 1;

@@ -874,13 +874,13 @@ char               *txt;
 	  c = 'C';	/* Courier */
 	  break;
 	case 3:
-	  c = '\0';	/* standard */
+	  c = EOS;	/* standard */
 	  break;
 	default:
 	  c = 'T';
 	  break;
 	}
-      if (c == '\0')	/* standard */
+      if (c == EOS)	/* standard */
 	{
 	  ChngFontFamily = FALSE;
 	  StdFontFamily = TRUE;
@@ -1093,12 +1093,12 @@ char               *txt;
 	  c = '.';	/* tirets courts */
 	  break;
 	case 3:
-	  c = '\0';	/* standard */
+	  c = EOS;	/* standard */
 	default:
 	  c = 'S';	/* trait continu */
 	  break;
 	}
-      if (c == '\0')	/* standard */
+      if (c == EOS)	/* standard */
 	{
 	  ChngLineStyle = FALSE;
 	  StdLineStyle = TRUE;

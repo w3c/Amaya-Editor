@@ -279,7 +279,7 @@ PtrDocument         pDoc;
 	LoadSchemas (SSchName, PSchName, &pExtens, NULL, TRUE);
 	if (pExtens != NULL)
 	  {
-	     if (PSchName[0] != '\0')
+	     if (PSchName[0] != EOS)
 		strncpy (pExtens->SsDefaultPSchema, PSchName,
 			 MAX_NAME_LENGTH - 1);
 	     /* cherche le dernier schema d'extension du document */

@@ -1197,7 +1197,7 @@ int                *carIndex;
    if (pAb->AbLeafType == LtText || pAb->AbLeafType == LtSymbol || pAb->AbLeafType == LtCompound)
      {
 	if (pAb->AbLeafType == LtText)
-	   if (pAb->AbLanguage == '\0')
+	   if (pAb->AbLanguage == EOS)
 	      alphabet = 'L';
 	   else
 	      alphabet = TtaGetAlphabet (pAb->AbLanguage);

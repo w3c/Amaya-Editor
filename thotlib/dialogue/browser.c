@@ -26,6 +26,7 @@
 #include "thotdir.h"
 #include "dialog.h"
 #include "message.h"
+#include "constint.h"
 #include "application.h"
 
 #define NAME_LENGTH	100
@@ -69,7 +70,7 @@ char               *word;
 	  }
      }
 
-   word[i] = '\0';
+   word[i] = EOS;
    i++;
 }
 
@@ -182,7 +183,7 @@ int                 fileRef;
 	  {
 	     ThotDirBrowse       thotDir;
 
-	     ls_unixFiles[0] = '\0';
+	     ls_unixFiles[0] = EOS;
 	     ls_fileNbr = 0;
 	     ls_currentfile = 0;
 	     stop = FALSE;
@@ -229,7 +230,7 @@ int                 fileRef;
 	     thotDir.bufLen = sizeof (word);
 	     thotDir.PicMask = ThotDirBrowse_FILES;
 
-	     ls_unixFiles[0] = '\0';
+	     ls_unixFiles[0] = EOS;
 	     ls_fileNbr = 0;
 	     ls_currentfile = 0;
 	     stop = FALSE;

@@ -2192,8 +2192,8 @@ int                 frame;
 		      }
 		    /* Si l'englobement n'est pas prevu en fin de traitement */
 		    else if (pAb->AbBox != PackBoxRoot &&
-			     !IsParentBox (pAb->AbBox, PackBoxRoot) &&
-			     pAb->AbBox != pFromBox)
+			     !IsParentBox (pAb->AbBox, PackBoxRoot) /*&&
+			     pAb->AbBox != pFromBox*/)
 		      /* differe le traitement de l'englobement   */
 		      /* quand la mise a jour a une origine externe  */
 		      if (Propagate != ToAll)
@@ -2660,8 +2660,8 @@ int                 frame;
 		       EncloseInLine (pBox, frame, pAb);
 		     /* Si l'englobement n'est pas prevu en fin de traitement */
 		     else if (pAb->AbBox != PackBoxRoot &&
-			      !IsParentBox (pAb->AbBox, PackBoxRoot) &&
-			      pAb->AbBox != pFromBox)
+			      !IsParentBox (pAb->AbBox, PackBoxRoot) /*&&
+			      pAb->AbBox != pFromBox*/)
 		       /* differe le traitement de l'englobement   */
 		       /* quand la mise a jour a une origine externe  */
 		       if (Propagate != ToAll)

@@ -29,8 +29,6 @@ extern boolean AddLocalImage ( char *fullname,
                                Document doc,
                                LoadedImageDesc ** desc );
 extern void RemoveDocumentImages ( Document doc );
-extern void UpdateImageMap ( Element image,
-                             Document document );
 
 #else /* __STDC__ */
 
@@ -57,8 +55,6 @@ extern boolean AddLocalImage (/* char *fullname,
                                  Document doc,
                                  LoadedImageDesc ** desc */);
 extern void RemoveDocumentImages (/* Document doc */);
-extern void UpdateImageMap (/* Element image,
-                               Document document */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

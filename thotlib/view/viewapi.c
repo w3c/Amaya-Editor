@@ -1006,7 +1006,7 @@ char               *presentationName;
 
    Return parameters:
    buffer: list of view names. Each name is a character string with
-   a final '\0'. Names of views that are already open have a '*'
+   a final EOS. Names of views that are already open have a '*'
    at the       end.
    nbViews: number of names in the list, 0 if not any view can be open.
 
@@ -1060,7 +1060,7 @@ View                view;
    int                 numAssoc;
 
    UserErrorCode = 0;
-   nameBuffer[0] = '\0';
+   nameBuffer[0] = EOS;
    /* Checks the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);

@@ -356,7 +356,7 @@ void               *param;
 {
   ElementType	       elType;
   PRuleInfo           local;
-  PRuleInfoPtr        new;
+  PRuleInfoPtr        added;
   PRuleInfoPtr       *list = (PRuleInfoPtr *) param;
   char               *css_rule;
   char                string[5000];
@@ -378,128 +378,128 @@ void               *param;
   exist = TRUE;
   local.pschema = target;
   local.ctxt = ctxt;
-  new = SearchRPI (&local, *list);
-  if (new == NULL)
+  added = SearchRPI (&local, *list);
+  if (added == NULL)
     {
       exist = FALSE;
       withinHTML = (strcmp(TtaGetSSchemaName (ctxt->schema), "HTML") == 0);
-      new = NewRPI (ctxt->doc);
-      new->pschema = target;
-      new->state = NormalRPI;
+      added = NewRPI (ctxt->doc);
+      added->pschema = target;
+      added->state = NormalRPI;
       if (withinHTML && ctxt->type == HTML_EL_HTML)
-	new->ctxt->type = HTML_EL_BODY;
+	added->ctxt->type = HTML_EL_BODY;
       else
-	new->ctxt->type = ctxt->type;
-      new->ctxt->attr = ctxt->attr;
-      new->ctxt->attrval = ctxt->attrval;
+	added->ctxt->type = ctxt->type;
+      added->ctxt->attr = ctxt->attr;
+      added->ctxt->attrval = ctxt->attrval;
       if (withinHTML && ctxt->attrelem == HTML_EL_HTML)
-	new->ctxt->attrelem = HTML_EL_BODY;
+	added->ctxt->attrelem = HTML_EL_BODY;
       else
-	new->ctxt->attrelem = ctxt->attrelem;
-      new->ctxt->class = ctxt->class;
-      new->ctxt->classattr = ctxt->classattr;
+	added->ctxt->attrelem = ctxt->attrelem;
+      added->ctxt->class = ctxt->class;
+      added->ctxt->classattr = ctxt->classattr;
       for (i = 0; i < MAX_ANCESTORS; i++)
 	{
-	new->ctxt->ancestors[i] = ctxt->ancestors[i];
-	if (withinHTML && new->ctxt->ancestors[i] == HTML_EL_HTML)
-	  new->ctxt->ancestors[i] = HTML_EL_BODY;
+	added->ctxt->ancestors[i] = ctxt->ancestors[i];
+	if (withinHTML && added->ctxt->ancestors[i] == HTML_EL_HTML)
+	  added->ctxt->ancestors[i] = HTML_EL_BODY;
 	}
 
       for (i = 0; i < MAX_ANCESTORS; i++)
-	new->ctxt->ancestors_nb[i] = ctxt->ancestors_nb[i];
+	added->ctxt->ancestors_nb[i] = ctxt->ancestors_nb[i];
     }
 
   /* append this CSS rule to the RPI description */
-  if (new->css_rule == NULL)
+  if (added->css_rule == NULL)
     {
       css_rule = TtaGetMemory (strlen (string) + 4);
       strcpy (css_rule, string);
     }
   else
     {
-      css_rule = TtaGetMemory (strlen (string) + strlen (new->css_rule) + 8);
-      strcpy (css_rule, new->css_rule);
+      css_rule = TtaGetMemory (strlen (string) + strlen (added->css_rule) + 8);
+      strcpy (css_rule, added->css_rule);
       strcat (css_rule, "; ");
       strcat (css_rule, string);
-      TtaFreeMemory (new->css_rule);
+      TtaFreeMemory (added->css_rule);
     }
-  new->css_rule = css_rule;
+  added->css_rule = css_rule;
 
   /* create the selector for the element if it doesn t exist yet */
-  if (new->selector == NULL)
+  if (added->selector == NULL)
     {
       elType.ElSSchema = ctxt->schema;
       string[0] = 0;
       i = 0;
       for (; i < MAX_ANCESTORS; i++)
-	if (new->ctxt->ancestors[i])
+	if (added->ctxt->ancestors[i])
 	  {
-	    for (j = 0; j <= new->ctxt->ancestors_nb[i]; j++)
+	    for (j = 0; j <= added->ctxt->ancestors_nb[i]; j++)
 	      {
 		if (string[0] != 0)
 		  strcat (string, " ");
-		elType.ElTypeNum = new->ctxt->ancestors[i];
+		elType.ElTypeNum = added->ctxt->ancestors[i];
 		strcat (string, GITagNameByType (elType));
 	      }
 	  }
-      if (new->ctxt->attr)
+      if (added->ctxt->attr)
 	{
 	  if (string[0] != 0)
 	    strcat (string, " ");
 	  strcat (string, "???");
 	}
-      if (new->ctxt->type)
+      if (added->ctxt->type)
 	{
 	  if (string[0] != 0)
 	    strcat (string, " ");
-	  elType.ElTypeNum = new->ctxt->type;
+	  elType.ElTypeNum = added->ctxt->type;
 	  strcat (string, GITagNameByType (elType));
 	}
-      if ((new->ctxt->class) && (new->ctxt->classattr == HTML_ATTR_Class))
+      if ((added->ctxt->class) && (added->ctxt->classattr == HTML_ATTR_Class))
 	{
 	  if (string[0] != 0)
 	    strcat (string, " ");
-	  if (new->ctxt->attrelem)
+	  if (added->ctxt->attrelem)
 	    {
-	      elType.ElTypeNum = new->ctxt->attrelem;
+	      elType.ElTypeNum = added->ctxt->attrelem;
 	      strcat (string, GITagNameByType (elType));
 	    }
 	  strcat (string, ".");
-	  strcat (string, new->ctxt->class);
+	  strcat (string, added->ctxt->class);
 	}
-      if ((new->ctxt->class) && (new->ctxt->classattr == HTML_ATTR_PseudoClass))
+      if ((added->ctxt->class) && (added->ctxt->classattr == HTML_ATTR_PseudoClass))
 	{
 	  if (string[0] != 0)
 	    strcat (string, " ");
-	  if (new->ctxt->attrelem)
+	  if (added->ctxt->attrelem)
 	    {
-	      elType.ElTypeNum = new->ctxt->attrelem;
+	      elType.ElTypeNum = added->ctxt->attrelem;
 	      strcat (string, GITagNameByType (elType));
 	    }
 	  strcat (string, ":");
-	  strcat (string, new->ctxt->class);
+	  strcat (string, added->ctxt->class);
 	}
-      if ((new->ctxt->class) && (new->ctxt->classattr == HTML_ATTR_ID))
+      if ((added->ctxt->class) && (added->ctxt->classattr == HTML_ATTR_ID))
 	{
 	  if (string[0] != 0)
 	    strcat (string, " ");
-	  if (new->ctxt->attrelem)
+	  if (added->ctxt->attrelem)
 	    {
-	      elType.ElTypeNum = new->ctxt->attrelem;
+	      elType.ElTypeNum = added->ctxt->attrelem;
 	      strcat (string, GITagNameByType (elType));
 	    }
 	  strcat (string, "#");
-	  strcat (string, new->ctxt->class);
+	  strcat (string, added->ctxt->class);
 	}
-      new->selector = TtaGetMemory (strlen (string) + 4);
-      strcpy (new->selector, string);
+      added->selector = TtaGetMemory (strlen (string) + 4);
+      strcpy (added->selector, string);
     }
   if (!exist)
-    AddRPI (new, list);
+    AddRPI (added, list);
 
 #ifdef DEBUG_RPI
   fprintf (output, "GenericContextToRPI result : \n");
-  PrintRPI (new);
+  PrintRPI (added);
 #endif
 }
 

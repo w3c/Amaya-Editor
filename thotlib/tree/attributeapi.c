@@ -642,7 +642,7 @@ int                *attrKind;
    (*attributeType).AttrSSchema = NULL;
    (*attributeType).AttrTypeNum = 0;
    *attrKind = 0;
-   if (name[0] == '\0' || strlen (name) >= MAX_NAME_LENGTH || element == NULL)
+   if (name[0] == EOS || strlen (name) >= MAX_NAME_LENGTH || element == NULL)
       TtaError (ERR_invalid_parameter);
    else
      {
@@ -710,7 +710,7 @@ int                *attrKind;
    (*attributeType).AttrSSchema = NULL;
    (*attributeType).AttrTypeNum = 0;
    *attrKind = 0;
-   if (name[0] == '\0' || strlen (name) >= MAX_NAME_LENGTH || element == NULL)
+   if (name[0] == EOS || strlen (name) >= MAX_NAME_LENGTH || element == NULL)
       TtaError (ERR_invalid_parameter);
    else
      {
@@ -769,7 +769,7 @@ AttributeType       attributeType;
 {
 
    UserErrorCode = 0;
-   bufferName[0] = '\0';
+   bufferName[0] = EOS;
    if (attributeType.AttrSSchema == NULL)
      {
 	TtaError (ERR_invalid_attribute_type);
@@ -811,7 +811,7 @@ AttributeType       attributeType;
 {
 
    UserErrorCode = 0;
-   bufferName[0] = '\0';
+   bufferName[0] = EOS;
    if (attributeType.AttrSSchema == NULL)
      {
 	TtaError (ERR_invalid_attribute_type);
@@ -990,7 +990,7 @@ int                *length;
 
   UserErrorCode = 0;
   /**** supprimer ca :	*length = 0;	****/
-  *buffer = '\0';
+  *buffer = EOS;
   if (((PtrAttribute) attribute)->AeAttrType != AtTextAttr)
     TtaError (ERR_invalid_attribute_type);
   else

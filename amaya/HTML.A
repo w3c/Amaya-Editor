@@ -131,11 +131,13 @@ ATTRIBUTES
      
    IntWidthPxl:
    	BEGIN
+	AttrModify.Pre -> StoreWidth;
     	AttrModify.Post -> GraphicsModified;
     	END;
     
    height\240:
    	BEGIN
+	AttrModify.Pre -> StoreHeight;
    	AttrModify.Post -> GraphicsModified;
    	END;
 
@@ -160,6 +162,7 @@ ATTRIBUTES
 
    Width__:
 	BEGIN
+	AttrModify.Pre -> StoreWidth;
 	AttrCreate.Post -> AttrWidthModified;
 	AttrModify.Post -> AttrWidthModified;
 	AttrDelete.Pre ->  AttrWidthDelete;	
@@ -239,6 +242,7 @@ ATTRIBUTES
 
    Style\240:
 	BEGIN
+	AttrMenu.Pre ->    AttrSTYLEinMenu;
 	AttrCreate.Post -> UpdateStylePost;
 	AttrModify.Post -> UpdateStylePost;
 	AttrDelete.Pre ->  UpdateStyleDelete;

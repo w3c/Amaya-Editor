@@ -387,7 +387,7 @@ xpmHashTable       *hashtable;
 	       }
 	     for (b = 0, s = color->string; b < cpp; b++, s++)
 		*s = xpmGetC (data);
-	     *s = '\0';
+	     *s = EOS;
 
 	     /*
 	      * store the string in the hashtable with its color index number
@@ -409,7 +409,7 @@ xpmHashTable       *hashtable;
 	     defaults = (char **) color;
 	     curkey = 0;
 	     lastwaskey = 0;
-	     *curbuf = '\0';	/* init curbuf */
+	     *curbuf = EOS;	/* init curbuf */
 	     while ((l = xpmNextWord (data, buf, BUFSIZ)))
 	       {
 		  if (!lastwaskey)
@@ -433,7 +433,7 @@ xpmHashTable       *hashtable;
 			    strcpy (s, curbuf);
 			 }
 		       curkey = key + 1;	/* set new key  */
-		       *curbuf = '\0';	/* reset curbuf */
+		       *curbuf = EOS;	/* reset curbuf */
 		       lastwaskey = 1;
 		    }
 		  else
@@ -445,7 +445,7 @@ xpmHashTable       *hashtable;
 			 }
 		       if (!lastwaskey)
 			  strcat (curbuf, " ");		/* append space */
-		       buf[l] = '\0';
+		       buf[l] = EOS;
 		       strcat (curbuf, buf);	/* append buf */
 		       lastwaskey = 0;
 		    }
@@ -468,7 +468,7 @@ xpmHashTable       *hashtable;
      {				/* XPM 1 */
 	/* get to the beginning of the first string */
 	data->Bos = '"';
-	data->Eos = '\0';
+	data->Eos = EOS;
 	xpmNextString (data);
 	data->Eos = '"';
 	for (a = 0, color = colorTable; a < ncolors; a++, color++)
@@ -485,7 +485,7 @@ xpmHashTable       *hashtable;
 	       }
 	     for (b = 0, s = color->string; b < cpp; b++, s++)
 		*s = xpmGetC (data);
-	     *s = '\0';
+	     *s = EOS;
 
 	     /*
 	      * store the string in the hashtable with its color index number
@@ -505,12 +505,12 @@ xpmHashTable       *hashtable;
 	      * read color values
 	      */
 	     xpmNextString (data);	/* get to the next string */
-	     *curbuf = '\0';	/* init curbuf */
+	     *curbuf = EOS;	/* init curbuf */
 	     while ((l = xpmNextWord (data, buf, BUFSIZ)))
 	       {
-		  if (*curbuf != '\0')
+		  if (*curbuf != EOS)
 		     strcat (curbuf, " ");	/* append space */
-		  buf[l] = '\0';
+		  buf[l] = EOS;
 		  strcat (curbuf, buf);		/* append buf */
 	       }
 	     s = (char *) XpmMalloc (strlen (curbuf) + 1);
@@ -521,7 +521,7 @@ xpmHashTable       *hashtable;
 	       }
 	     strcpy (s, curbuf);
 	     color->c_color = s;
-	     *curbuf = '\0';	/* reset curbuf */
+	     *curbuf = EOS;	/* reset curbuf */
 	     if (a < ncolors - 1)
 		xpmNextString (data);	/* get to the next string */
 	  }
@@ -662,7 +662,7 @@ if (cidx[f]) XpmFree(cidx[f]);}
 		  char               *s;
 		  char                buf[BUFSIZ];
 
-		  buf[cpp] = '\0';
+		  buf[cpp] = EOS;
 		  if (USE_HASHTABLE)
 		    {
 		       xpmHashAtom        *slot;

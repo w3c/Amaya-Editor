@@ -188,7 +188,6 @@ PresentationValue   v;
    Function used to to add a specific presentation rule
    for a given type of rule associated to an element.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static PtrPRule  InsertElementPRule (SpecificTarget el, PRuleType type, int extra)
 #else
@@ -199,7 +198,7 @@ int                 extra;
 
 #endif
 {
-    PtrPRule cur, prev, new;
+    PtrPRule cur, prev, pRule;
     
     prev = NULL;
     cur = ((PtrElement) el)->ElFirstPRule;
@@ -234,31 +233,31 @@ int                 extra;
 	return (cur);
 
     /* not found, allocate it, fill it and insert it */
-    GetPresentRule (&new);
-    if (new == NULL)
+    GetPresentRule (&pRule);
+    if (pRule == NULL)
      {
 	TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
 	return (NULL);
      }
-    new->PrType = type;
-    new->PrCond = NULL;
-    new->PrViewNum = 1;
-    new->PrSpecifAttr = 0;
-    new->PrSpecifAttrSSchema = NULL;
+    pRule->PrType = type;
+    pRule->PrCond = NULL;
+    pRule->PrViewNum = 1;
+    pRule->PrSpecifAttr = 0;
+    pRule->PrSpecifAttrSSchema = NULL;
 
     /* Add the order / conditions .... */
     /* chain in the rule */
     if (prev == NULL)
      {
-	new->PrNextPRule = ((PtrElement) el)->ElFirstPRule;
-	((PtrElement) el)->ElFirstPRule = new;
+	pRule->PrNextPRule = ((PtrElement) el)->ElFirstPRule;
+	((PtrElement) el)->ElFirstPRule = pRule;
      }
     else
      {
-	new->PrNextPRule = prev->PrNextPRule;
-	prev->PrNextPRule = new;
+	pRule->PrNextPRule = prev->PrNextPRule;
+	prev->PrNextPRule = pRule;
      }
-    return (new);
+    return (pRule);
 }
 
 /*----------------------------------------------------------------------

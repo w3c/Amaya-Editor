@@ -94,7 +94,6 @@ static int          InitSelectedCharInAttr;
 
    Parameter:
        keyboard: the keyboard to be displayed.
-
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -3290,9 +3289,6 @@ void                PrepareSelectionMenu ()
       SelMenuChildEl = pEl1;
 }
 
-static char         OldMsgSelect[MAX_TXT_LEN];
-static PtrDocument  OldDocMsgSelect = NULL;
-
 /*----------------------------------------------------------------------
    BuildSelectionMessage
 
@@ -3349,12 +3345,7 @@ void                BuildSelectionMessage ()
      }
    /* if the Selection message or the selected document have changed, */
    /* display this new message */
-   if (pDoc != OldDocMsgSelect || strcmp (OldMsgSelect, msgBuf) != 0)
-     {
-	DisplaySelMessage (msgBuf);
-	OldDocMsgSelect = pDoc;
-	strncpy (OldMsgSelect, msgBuf, MAX_TXT_LEN);
-     }
+   DisplaySelMessage (msgBuf, pDoc);
 }
 
 

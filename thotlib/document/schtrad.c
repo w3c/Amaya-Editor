@@ -66,7 +66,7 @@ void                InitTranslationSchemasTable ()
      {
 	LoadedTSchema[i].pStructSchema = NULL;
 	LoadedTSchema[i].pTransSchema = NULL;
-	LoadedTSchema[i].TransSchemaName[0] = '\0';
+	LoadedTSchema[i].TransSchemaName[0] = EOS;
      }
 }
 
@@ -94,7 +94,7 @@ void                ClearTranslationSchemasTable ()
 	     LoadedTSchema[i].pTransSchema = NULL;
 	  }
 	LoadedTSchema[i].pStructSchema = NULL;
-	LoadedTSchema[i].TransSchemaName[0] = '\0';
+	LoadedTSchema[i].TransSchemaName[0] = EOS;
      }
 }
 
@@ -261,7 +261,7 @@ Name                schName;
 	/* on n'a pas trouve' de regle USE pour cette nature */
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_EL_NOT_TRANSLATED),
 			   schName);
-	schName[0] = '\0';
+	schName[0] = EOS;
      }
 }
 
@@ -302,7 +302,7 @@ PtrSSchema          pSS;
      {
 	strcpy (schemaName, pSS->SsName);
 	GetTransSchName (schemaName);
-	if (schemaName[0] != '\0')
+	if (schemaName[0] != EOS)
 	   /* cree un nouveau schema de traduction et le charge */
 	   pTSchema = LoadTranslationSchema (schemaName, pSS);
 	else
@@ -318,7 +318,7 @@ PtrSSchema          pSS;
 	       {
 		  LoadedTSchema[i].pStructSchema = pSS;
 		  LoadedTSchema[i].pTransSchema = NULL;
-		  LoadedTSchema[i].TransSchemaName[0] = '\0';
+		  LoadedTSchema[i].TransSchemaName[0] = EOS;
 	       }
 	  }
      }

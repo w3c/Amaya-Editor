@@ -54,7 +54,7 @@ char         *bval;
 {
    if (fread (bval, sizeof (char), 1, file) == 0)
      {
-	*bval = '\0';
+	*bval = EOS;
 	return (FALSE);
      }
    else
@@ -228,15 +228,15 @@ char               *name;
      {
 	if (!TtaReadByte (file, &name[i]))
 	  {
-	     name[i] = '\0';
+	     name[i] = EOS;
 	     return FALSE;
 	  }
-	if (name[i] == '\0')
+	if (name[i] == EOS)
 	   break;
      }
    if (i >= MAX_NAME_LENGTH)
      {
-	name[0] = '\0';
+	name[0] = EOS;
 	return FALSE;
      }
    return TRUE;
@@ -255,7 +255,7 @@ CONST char         *filename;
 
 #endif /* __STDC__ */
 {
-   if (filename && filename [0] != '\0')
+   if (filename && filename [0] != EOS)
 #     ifdef _WINDOWS
       return fopen (filename, "rb");
 #     else
@@ -404,13 +404,13 @@ DocumentIdentifier  Ident;
    int                 j;
 
    j = 1;
-   while (j < MAX_DOC_IDENT_LEN && Ident[j - 1] != '\0')
+   while (j < MAX_DOC_IDENT_LEN && Ident[j - 1] != EOS)
      {
 	TtaWriteByte (file, Ident[j - 1]);
 	j++;
      }
    /* termine le nom par un octet nul */
-   TtaWriteByte (file, '\0');
+   TtaWriteByte (file, EOS);
 }
 
 /*----------------------------------------------------------------------
@@ -430,8 +430,8 @@ DocumentIdentifier *Ident;
    j = 0;
    do
       if (!TtaReadByte (file, &((*Ident)[j++])))
-	 (*Ident)[j - 1] = '\0';
-   while (!(j >= MAX_DOC_IDENT_LEN || (*Ident)[j - 1] == '\0')) ;
+	 (*Ident)[j - 1] = EOS;
+   while (!(j >= MAX_DOC_IDENT_LEN || (*Ident)[j - 1] == EOS)) ;
 }
 
 /*----------------------------------------------------------------------
@@ -478,7 +478,7 @@ DocumentIdentifier *Ident;
 
 #endif /* __STDC__ */
 {
-   (*Ident)[0] = '\0';
+   (*Ident)[0] = EOS;
 }
 
 /*----------------------------------------------------------------------
@@ -494,7 +494,7 @@ DocumentIdentifier  Ident;
 {
    boolean             ret;
 
-   ret = (Ident[0] == '\0');
+   ret = (Ident[0] == EOS);
    return ret;
 }
 
@@ -532,12 +532,12 @@ int                *length;
 
    found = FALSE;
    i = 1;
-   first_directory[0] = '\0';
-   while (directory_list[i - 1] != '\0' && (!found))
+   first_directory[0] = EOS;
+   while (directory_list[i - 1] != EOS && (!found))
      {
 	j = 1;
 	while (directory_list[i - 1] != PATH_SEP
-	       && directory_list[i - 1] != '\0'
+	       && directory_list[i - 1] != EOS
 	       && j < MAX_PATH
 	       && i < MAX_PATH)
 	  {
@@ -547,9 +547,9 @@ int                *length;
 	     j++;
 	  }
 	/* on ajoute une fin de chaine */
-	single_directory[j - 1] = '\0';
+	single_directory[j - 1] = EOS;
 	/* on sauve ce nom de directory si c'est le 1er */
-	if (first_directory[0] == '\0')
+	if (first_directory[0] == EOS)
 	   strncpy (first_directory, single_directory, MAX_PATH);
 	/* on construit le nom */
 	FindCompleteName (fname, fext, single_directory, completeName, length);
@@ -565,8 +565,8 @@ int                *length;
      }
    if (!found)
      {
-	completeName[0] = '\0';
-	if (first_directory[0] != '\0')
+	completeName[0] = EOS;
+	if (first_directory[0] != EOS)
 	   strncpy (directory_list, first_directory, MAX_PATH);
      }
 }
@@ -712,14 +712,14 @@ int                *length;
 			 fileName[j - 1] = 'V';
 		      }
      }
-   if (!IsExtended (fileName, extension) && extension[0] != '\0')
+   if (!IsExtended (fileName, extension) && extension[0] != EOS)
       k = strlen (extension) + 1;	/* dont forget the '.' */
    else
       k = 0;
    if (i + j + k + h >= MAX_PATH)
       return;
 
-   completeName[0] = '\0';
+   completeName[0] = EOS;
    if (home_dir)
      {
        strcat (completeName, home_dir);
@@ -759,7 +759,7 @@ Name                docName;
 
 {
    strncpy (*Ident, docName, MAX_DOC_IDENT_LEN);
-   *Ident[MAX_DOC_IDENT_LEN - 1] = '\0';
+   *Ident[MAX_DOC_IDENT_LEN - 1] = EOS;
 }
 
 /*----------------------------------------------------------------------
@@ -775,7 +775,7 @@ Name                docName;
 #endif /* __STDC__ */
 {
    strncpy (docName, Ident, MAX_NAME_LENGTH);
-   docName[MAX_NAME_LENGTH - 1] = '\0';
+   docName[MAX_NAME_LENGTH - 1] = EOS;
 }
 
 
@@ -818,7 +818,7 @@ char               *fileName;
 	  {
 	     /* isolate the directory name */
 	     c = fileName[i];
-	     fileName[i] = '\0';
+	     fileName[i] = EOS;
 	     /* get access right for the directory */
 	     ret = access (fileName, R_OK | W_OK | X_OK);
 	     fileName[i] = c;
@@ -980,5 +980,5 @@ int                *len;
 	    default:
 	       break;
 	 }
-   string[*len] = '\0';
+   string[*len] = EOS;
 }

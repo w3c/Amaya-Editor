@@ -84,7 +84,7 @@ BinFile             file;
 		  ConvertIntToLabel (j, label);
 	       else
 		  /* error */
-		  label[0] = '\0';
+		  label[0] = EOS;
 	       break;
 	    case C_PIV_LONG_LABEL:
 	       j = 0;
@@ -102,7 +102,7 @@ BinFile             file;
 		    if (j < MAX_LABEL_LEN)
 		       j++;
 		 }
-	       while (label[j - 1] != '\0');
+	       while (label[j - 1] != EOS);
 	       break;
 	    default:
 	       DisplayPivotMessage ("S");
@@ -355,7 +355,7 @@ PtrDocument         pDoc;
 	pRefD = pDoc->DocReferredEl;
 	if (pRefD != NULL)
 	   pRefD = pRefD->ReNext;
-	if (pChnRef->CrOldLabel[0] == '\0')
+	if (pChnRef->CrOldLabel[0] == EOS)
 	   /* c'est un changement de nom d'un document reference' */
 	  {
 	     /* cherche tous les descripteurs qui representent des elements */
@@ -391,7 +391,7 @@ PtrDocument         pDoc;
 	     if (found)
 		/* modifie le descripteur d'element reference' externe */
 	       {
-		  if (pChnRef->CrNewLabel[0] != '\0')
+		  if (pChnRef->CrNewLabel[0] != EOS)
 		     /* l'element reference' a change' de document */
 		    {
 		       strncpy (pRefD->ReReferredLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);

@@ -976,7 +976,7 @@ PtrPRule           *pNextPRule;
 
    if (!TtaReadByte (file, &c))
       return NULL;
-   else if (c == '\0')
+   else if (c == EOS)
       return NULL;
    else
       return *pNextPRule;
@@ -1143,8 +1143,8 @@ PtrPRule           *pNextPRule;
 				}
 			      else
 				{
-				   pCond->CoAncestorName[0] = '\0';
-				   pCond->CoSSchemaName[0] = '\0';
+				   pCond->CoAncestorName[0] = EOS;
+				   pCond->CoSSchemaName[0] = EOS;
 				}
 			      break;
 			   case PcElemType:
@@ -1187,7 +1187,7 @@ PtrPRule           *pNextPRule;
 				      {
 					 for (i = 0; i < pPR->PrNPresBoxes; i++)
 					    TtaReadShort (file, &pPR->PrPresBox[i]);
-					 pPR->PrPresBoxName[0] = '\0';
+					 pPR->PrPresBoxName[0] = EOS;
 				      }
 			      }
 			    break;
@@ -1325,7 +1325,7 @@ PtrSSchema          pSS;
    else
      {
 	/* supprime le suffixe .PRS a la fin du nom de fichier */
-	buf[i - 4] = '\0';
+	buf[i - 4] = EOS;
 	GetSchPres (&pPSch);
 	/* acquiert un bloc pour la prochaine regle lue */
 	GetPresentRule (&pNextPRule);
@@ -1443,7 +1443,7 @@ PtrSSchema          pSS;
 			do
 			   if (!TtaReadByte (file, &pConst->PdString[j++]))
 			      error = True;
-			while (pConst->PdString[j - 1] != '\0' && !error) ;
+			while (pConst->PdString[j - 1] != EOS && !error) ;
 		  }
 
 	     /* lit les variables de presentation */

@@ -58,7 +58,7 @@ PtrRegleTypo       *nextr;
    PtrRegleTypo        bloc;
 
    TtaReadByte (fich, &c);
-   if (c == '\0')
+   if (c == EOS)
       bloc = NULL;
    else
       bloc = *nextr;
@@ -86,7 +86,7 @@ PtrRTypoAttribut   *nexta;
    PtrRTypoAttribut    attrtyp;
 
    TtaReadByte (fich, &c);
-   if (c == '\0')
+   if (c == EOS)
       attrtyp = NULL;
    else
      {
@@ -119,7 +119,7 @@ PtrRegleTypo       *nextr;
    PtrRegleTypo        regtyp;
 
    TtaReadByte (fich, &c);
-   if (c == '\0')
+   if (c == EOS)
       regtyp = NULL;
    else
       regtyp = *nextr;
@@ -146,7 +146,7 @@ PtrTypoFunction    *nextf;
    PtrTypoFunction     fcttyp;
 
    TtaReadByte (fich, &c);
-   if (c == '\0')
+   if (c == EOS)
       fcttyp = NULL;
    else
       fcttyp = *nextf;

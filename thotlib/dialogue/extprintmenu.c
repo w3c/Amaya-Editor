@@ -72,7 +72,7 @@ int                *nbEntry;
       LesVuesImprimables[i].VdOpen = False;
    /* initialise le menu (vide) */
    nbentrees = 0;
-   buffer[0] = '\0';
+   buffer[0] = EOS;
    lgmenu = 0;
    /* met en tete du menu les vues indiquees dans l'instruction */
    /* PRINT du schema de presentation du document */
@@ -108,7 +108,7 @@ int                *nbEntry;
 		     /* vue sans pages, on met une etoile a la fin du nom */
 		    {
 		       buffer[lgmenu - 1] = '*';
-		       buffer[lgmenu] = '\0';
+		       buffer[lgmenu] = EOS;
 		       lgmenu++;
 		    }
 		  EntreesMenuVuesAImprimer[nbentrees] = i;
@@ -138,7 +138,7 @@ int                *nbEntry;
 			/* vue sans pages, on met une etoile a la fin du nom */
 		       {
 			  buffer[lgmenu - 1] = '*';
-			  buffer[lgmenu] = '\0';
+			  buffer[lgmenu] = EOS;
 			  lgmenu++;
 		       }
 		     EntreesMenuVuesAImprimer[nbentrees] = i;
@@ -207,7 +207,7 @@ char               *txt;
       Reduction = NewReduction;
       PagesPerSheet = NewPagesPerSheet;
       okprint = FALSE;
-      BufMenu[0]='\0';
+      BufMenu[0]=EOS;
       for (i=0;i<NbPrintViews;i++)
 	{ 
 	  if( LesVuesImprimables[EntreesMenuVuesAImprimer[i]-1].VdOpen )
@@ -220,7 +220,7 @@ char               *txt;
       if(okprint)
 	{
 	  i=strlen(BufMenu);
-	  BufMenu[i-1]='\0';
+	  BufMenu[i-1]=EOS;
 	  TtaPrint(docPrint,BufMenu);
 	}
       break;

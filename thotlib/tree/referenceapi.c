@@ -643,7 +643,7 @@ Document           *targetDocument;
 
    UserErrorCode = 0;
    *target = NULL;
-   targetDocumentName[0] = '\0';
+   targetDocumentName[0] = EOS;
    *targetDocument = 0;
    if (element == NULL)
       TtaError (ERR_invalid_parameter);
@@ -663,7 +663,7 @@ Document           *targetDocument;
 	if (!DocIdentIsNull (iDocExt))
 	  {
 	     strncpy (targetDocumentName, iDocExt, MAX_DOC_IDENT_LEN);
-	     targetDocumentName[MAX_DOC_IDENT_LEN - 1] = '\0';
+	     targetDocumentName[MAX_DOC_IDENT_LEN - 1] = EOS;
 	  }
 	if (pDocExt != NULL)
 	   *targetDocument = IdentDocument (pDocExt);
@@ -826,7 +826,7 @@ Document           *targetDocument;
 
    UserErrorCode = 0;
    *target = NULL;
-   targetDocumentName[0] = '\0';
+   targetDocumentName[0] = EOS;
    *targetDocument = 0;
    if (attribute == NULL)
       TtaError (ERR_invalid_parameter);
@@ -840,7 +840,7 @@ Document           *targetDocument;
 	if (!DocIdentIsNull (iDocExt))
 	  {
 	     strncpy (targetDocumentName, iDocExt, MAX_DOC_IDENT_LEN);
-	     targetDocumentName[MAX_DOC_IDENT_LEN - 1] = '\0';
+	     targetDocumentName[MAX_DOC_IDENT_LEN - 1] = EOS;
 	  }
 	if (pDocExt != NULL)
 	   *targetDocument = IdentDocument (pDocExt);
@@ -1184,11 +1184,11 @@ char               *referringDocumentName;
       /* parameter targetDocument is ok */
    if (((PtrElement) target)->ElReferredDescr == NULL)
       /* element not referenced */
-      referringDocumentName[0] = '\0';
+      referringDocumentName[0] = EOS;
    else
      {
 	pDE = ((PtrElement) target)->ElReferredDescr->ReExtDocRef;
-	if (referringDocumentName[0] == '\0')
+	if (referringDocumentName[0] == EOS)
 	   /* First call, the first referring document is treated */
 	   found = TRUE;
 	else
@@ -1218,7 +1218,7 @@ char               *referringDocumentName;
 	       }
 	  }
 	if (pDE == NULL)
-	   referringDocumentName[0] = '\0';
+	   referringDocumentName[0] = EOS;
 	else
 	   strcpy (referringDocumentName, pDE->EdDocIdent);
      }

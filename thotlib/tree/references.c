@@ -541,7 +541,7 @@ PtrElement          pEl;
 				   }
 				 pEl->ElVolume = 0;
 				 pTxtBuf->BuLength = 0;
-				 pTxtBuf->BuContent[0] = '\0';
+				 pTxtBuf->BuContent[0] = EOS;
 				 pTxtBuf = pTxtBuf->BuNext;
 				 /* libere les autres buffers */
 				 while (pTxtBuf != NULL)
@@ -577,11 +577,11 @@ PtrElement          pEl;
 				   }
 			      }
 			    pEl->ElNPoints = 0;
-			    pEl->ElPolyLineType = '\0';
+			    pEl->ElPolyLineType = EOS;
 			    break;
 			 case LtSymbol:
 			 case LtGraphics:
-			    pEl->ElGraph = '\0';
+			    pEl->ElGraph = EOS;
 			    break;
 			 default:
 			    break;
@@ -605,18 +605,14 @@ PtrElement          pEl;
 /*----------------------------------------------------------------------
    CopyReference                                                        
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                CopyReference (PtrReference pCopyRef, PtrReference pSourceRef, PtrElement * pEl)
-
 #else  /* __STDC__ */
 void                CopyReference (pCopyRef, pSourceRef, pEl)
 PtrReference        pCopyRef;
 PtrReference        pSourceRef;
 PtrElement         *pEl;
-
 #endif /* __STDC__ */
-
 {
    PtrReferredDescr    pRefD;
 
@@ -648,19 +644,15 @@ PtrElement         *pEl;
    Toutes les references externes contenues dans le        
    sous-arbre sont e'galement annule'es.                   
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TransferReferences (PtrElement pTarget, PtrDocument pDoc, PtrElement pEl, PtrDocument pSourceDoc)
-
 #else  /* __STDC__ */
 void                TransferReferences (pTarget, pDoc, pEl, pSourceDoc)
 PtrElement          pTarget;
 PtrDocument         pDoc;
 PtrElement          pEl;
 PtrDocument         pSourceDoc;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          pChild;
    PtrReferredDescr    pDescRef;
@@ -741,21 +733,17 @@ PtrDocument         pSourceDoc;
 /*----------------------------------------------------------------------
    RegisterAnExternalRef   note la reference externe pRef dans le  
    contexte du document pDoc. Cette reference sortante est         
-   enregistree dans la liste des references nouvelles si new est   
+   enregistree dans la liste des references nouvelles si IsNew est   
    vrai, dans la liste des references detruites sinon.             
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-static void         RegisterAnExternalRef (PtrReference pRef, PtrDocument pDoc, boolean new)
-
+static void         RegisterAnExternalRef (PtrReference pRef, PtrDocument pDoc, boolean IsNew)
 #else  /* __STDC__ */
-static void         RegisterAnExternalRef (pRef, pDoc, new)
+static void         RegisterAnExternalRef (pRef, pDoc, IsNew)
 PtrReference        pRef;
 PtrDocument         pDoc;
-boolean             new;
-
+boolean             IsNew;
 #endif /* __STDC__ */
-
 {
    PtrOutReference     pRefSort, pRefSortPrec;
    PtrReferredDescr    pDElemRef;
@@ -771,7 +759,7 @@ boolean             new;
 	   {
 	      /* descripteur de l'element reference' */
 	      pDElemRef = pRef->RdReferred;
-	      if (!new)
+	      if (!IsNew)
 		 /* il s'agit d'une reference detruite, on verifie d'abord que */
 		 /* cette reference est connue du document reference', si le */
 		 /* document reference' est charge' */
@@ -805,7 +793,7 @@ boolean             new;
 	      /* verifie d'abord que cette reference sortante n'est pas */
 	      /* dans la liste des references detruites si c'est une */
 	      /* creation, ou l'inverse */
-	      if (new)
+	      if (IsNew)
 		 /* creation, on examine la liste des references detruites */
 		 pRefSort = pDoc->DocDeadOutRef;
 	      else
@@ -831,7 +819,7 @@ boolean             new;
 		   if (pRefSortPrec == NULL)
 		      /* c'etait la premiere de la liste */
 		     {
-			if (new)
+			if (IsNew)
 			   pDoc->DocDeadOutRef = pRefSort->OrNext;
 			else
 			   pDoc->DocNewOutRef = pRefSort->OrNext;
@@ -851,7 +839,7 @@ boolean             new;
 		   strncpy (pRefSort->OrLabel, pDElemRef->ReReferredLabel, MAX_LABEL_LEN);
 		   CopyDocIdent (&(pRefSort->OrDocIdent), pDElemRef->ReExtDocument);
 		   /* on l'insere en tete de sa liste */
-		   if (new)
+		   if (IsNew)
 		     {
 			pRefSort->OrNext = pDoc->DocNewOutRef;
 			pDoc->DocNewOutRef = pRefSort;
@@ -870,22 +858,18 @@ boolean             new;
    RegisterExternalRef        note dans le contexte du document pDoc  
    toutes les references sortantes qui sont dans le sous-arbre de  
    racine pEl, cet element compris. Ces references sortantes sont  
-   enregistrees dans la liste des references nouvelles si new est  
+   enregistrees dans la liste des references nouvelles si IsNew est  
    vrai, dans la liste des references detruites sinon.             
    On prend egalement en compte les attributs reference sortant.   
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-void                RegisterExternalRef (PtrElement pEl, PtrDocument pDoc, boolean new)
-
+void                RegisterExternalRef (PtrElement pEl, PtrDocument pDoc, boolean IsNew)
 #else  /* __STDC__ */
-void                RegisterExternalRef (pEl, pDoc, new)
+void                RegisterExternalRef (pEl, pDoc, IsNew)
 PtrElement          pEl;
 PtrDocument         pDoc;
-boolean             new;
-
+boolean             IsNew;
 #endif /* __STDC__ */
-
 {
    PtrReference        pRef;
    PtrElement          pChild;
@@ -902,7 +886,7 @@ boolean             new;
       /* c'est bien une reference ou une inclusion */
       if (!pRef->RdInternalRef)
 	 /* c'est une reference sortante */
-	 RegisterAnExternalRef (pRef, pDoc, new);
+	 RegisterAnExternalRef (pRef, pDoc, IsNew);
    /* cherche tous les attributs reference de l'element */
    pAttr = pEl->ElFirstAttr;
    while (pAttr != NULL)
@@ -911,7 +895,7 @@ boolean             new;
 	   if (pAttr->AeAttrReference != NULL)
 	      if (!pAttr->AeAttrReference->RdInternalRef)
 		 /* c'est un attribut reference externe, on le note */
-		 RegisterAnExternalRef (pAttr->AeAttrReference, pDoc, new);
+		 RegisterAnExternalRef (pAttr->AeAttrReference, pDoc, IsNew);
 	/* passe a l'attribut suivant */
 	pAttr = pAttr->AeNext;
      }
@@ -921,7 +905,7 @@ boolean             new;
 	pChild = pEl->ElFirstChild;
 	while (pChild != NULL)
 	  {
-	     RegisterExternalRef (pChild, pDoc, new);
+	     RegisterExternalRef (pChild, pDoc, IsNew);
 	     pChild = pChild->ElNext;
 	  }
      }
@@ -933,16 +917,13 @@ boolean             new;
    	docIdent a la liste des documents contenant des references	
    	externes a l'element pEl qui appartient au document pDoc2.	
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                AddDocOfExternalRef (PtrElement pEl, DocumentIdentifier docIdent, PtrDocument pDoc2)
-
 #else  /* __STDC__ */
 void                AddDocOfExternalRef (pEl, docIdent, pDoc2)
 PtrElement          pEl;
 DocumentIdentifier  docIdent;
 PtrDocument         pDoc2;
-
 #endif /* __STDC__ */
 
 {
@@ -1278,7 +1259,7 @@ PtrDocument         pDoc;
 	   /* acquiert un descripteur et le remplit */
 	   GetChangedReferredEl (&pChngRef);
 	   strncpy (pChngRef->CrOldLabel, pEl->ElLabel, MAX_LABEL_LEN);
-	   pChngRef->CrNewLabel[0] = '\0';
+	   pChngRef->CrNewLabel[0] = EOS;
 	   CopyDocIdent (&(pChngRef->CrOldDocument), pDoc->DocIdent);
 	   ClearDocIdent (&(pChngRef->CrNewDocument));
 	   pChngRef->CrReferringDoc = NULL;
@@ -1362,7 +1343,7 @@ boolean		removeExclusions;
                       
                      notifyEl.event = TteElemFetchInclude;
                      notifyEl.target = (Element) pSource;
-                     if (docIdent[0] == '\0')
+                     if (docIdent[0] == EOS)
                           notifyEl.targetdocument = (Document) IdentDocument (pDoc);
                      else if (pSourceDoc != NULL)
                           notifyEl.targetdocument = (Document) IdentDocument (pSourceDoc);
@@ -1445,7 +1426,7 @@ boolean		removeExclusions;
 
                           notifyEl.event = TteElemFetchInclude;
                           notifyEl.target = (Element) pSource;
-                          if (docIdent[0] == '\0')
+                          if (docIdent[0] == EOS)
                                notifyEl.targetdocument = (Document) IdentDocument (pDoc);
                           else if (pSourceDoc != NULL)
                                notifyEl.targetdocument = (Document) IdentDocument (pSourceDoc);

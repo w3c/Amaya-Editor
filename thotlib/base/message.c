@@ -72,15 +72,15 @@ char               *pBuffer;
    int                 uniteid, dixid, centid;
    int                 i = 0, j = 0, k;
 
-   while (pBuffer[i] != '\0')
+   while (pBuffer[i] != EOS)
      {
 	/* On lit jusqu'au premier backslash rencontre */
-	while ((pBuffer[i] != '\\') && (pBuffer[i] != '\0'))
+	while ((pBuffer[i] != '\\') && (pBuffer[i] != EOS))
 	   result[j++] = pBuffer[i++];
 
 	/* Teste si on est en presence de deux backslashs ou */
 	/* si on se trouve devant un caractere special */
-	if (pBuffer[i] != '\0')
+	if (pBuffer[i] != EOS)
 	   if (pBuffer[i + 1] == '\\')
 	     {
 		/* On est dans le cas de deux backslashs consecutifs; on les prend */
@@ -101,10 +101,10 @@ char               *pBuffer;
 		k = 0;
 		while ((pBuffer[i] >= '0')
 		       && (pBuffer[i] <= '9')
-		       && (pBuffer[i] != '\0')
+		       && (pBuffer[i] != EOS)
 		       && (k <= 2))
 		   nombre[k++] = pBuffer[i++];
-		nombre[k] = '\0';
+		nombre[k] = EOS;
 
 		switch (strlen (nombre))
 		      {
@@ -129,7 +129,7 @@ char               *pBuffer;
 		      }
 	     }
      }
-   result[j] = '\0';
+   result[j] = EOS;
    return (result);
 }
 
@@ -322,7 +322,7 @@ char               *fmt;
 	       }
 	  }
 	/* Display the final message */
-	pBuffer[i] = '\0';
+	pBuffer[i] = EOS;
 	if (msgType == CONFIRM)
 	   DisplayConfirmMessage (pBuffer);
 	else

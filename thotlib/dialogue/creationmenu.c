@@ -194,7 +194,7 @@ char               *bufMenu;
    /* indicates if it's a separator */
    bufMenu[*menuInd] = 'S';
    (*menuInd)++;
-   bufMenu[*menuInd] = '\0';
+   bufMenu[*menuInd] = EOS;
    (*menuInd)++;
    (*nbEntries)++;
 }

@@ -381,7 +381,7 @@ int                 fg;
          /* draw the spaces */
          ptcar = TtaGetMemory (lg + 1);
          strncpy (ptcar, &buff[i - 1], lg);
-         ptcar[lg] = '\0';
+         ptcar[lg] = EOS;
 	     SpaceToChar (ptcar);	/* substitute spaces */
 #        ifdef _WINDOWS
          GetClientRect (TtDisplay, &rect);

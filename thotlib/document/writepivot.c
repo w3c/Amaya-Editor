@@ -494,7 +494,7 @@ LabelString         label;
    i = 0;
    do
       TtaWriteByte (pivFile, label[i++]);
-   while (label[i - 1] != '\0');
+   while (label[i - 1] != EOS);
 }
 
 /*----------------------------------------------------------------------
@@ -541,12 +541,12 @@ PtrReference        pRef;
 	  {
 	     if (pRefD->ReReferredElem == NULL)
 		/* pas d'element reference' */
-		label[0] = '\0';
+		label[0] = EOS;
 	     else
 		/* cherche si l'element reference' */
 		/* est dans le buffer (a la suite d'un Couper). */
 	     if (IsASavedElement (pRefD->ReReferredElem))
-		label[0] = '\0';
+		label[0] = EOS;
 	     else
 		/* label: label de l'element designe' */
 		strncpy (label, pRefD->ReReferredElem->ElLabel, MAX_LABEL_LEN);
@@ -637,11 +637,11 @@ PtrDocument         pDoc;
 		    while (pBuf != NULL)
 		      {
 			 i = 0;
-			 while (pBuf->BuContent[i] != '\0')
+			 while (pBuf->BuContent[i] != EOS)
 			    TtaWriteByte (pivFile, pBuf->BuContent[i++]);
 			 pBuf = pBuf->BuNext;
 		      }
-		    TtaWriteByte (pivFile, '\0');
+		    TtaWriteByte (pivFile, EOS);
 		    break;
 		 default:
 		    break;
@@ -979,7 +979,7 @@ boolean             subTree;
 		      while (c < pEl1->ElTextLength && pBuf != NULL)
 			{
 			  i = 0;
-			  while (pBuf->BuContent[i] != '\0' && i < pBuf->BuLength)
+			  while (pBuf->BuContent[i] != EOS && i < pBuf->BuLength)
 			    TtaWriteByte (pivFile, pBuf->BuContent[i++]);
 			  c = c + i;
 			  /* buffer suivant du meme element */
@@ -1016,7 +1016,7 @@ boolean             subTree;
 		  while (!stop);
 		  /* update pEl value */
 		  *pEl = pEl1;
-		  TtaWriteByte (pivFile, '\0');
+		  TtaWriteByte (pivFile, EOS);
 		  break;
 		case LtReference:
 		  /* ecrit une marque de reference et le label de */
@@ -1131,9 +1131,9 @@ Name                N;
 {
    int                 j;
 
-   for (j = 0; j < MAX_NAME_LENGTH - 1 && N[j] != '\0'; j++)
+   for (j = 0; j < MAX_NAME_LENGTH - 1 && N[j] != EOS; j++)
       TtaWriteByte (pivFile, N[j]);
-   TtaWriteByte (pivFile, '\0');
+   TtaWriteByte (pivFile, EOS);
 }
 
 /*----------------------------------------------------------------------
@@ -1821,7 +1821,7 @@ PtrDocument         pDoc;
 	MakeCompleteName (extDocIdent, "PIV", directoryName, fileName, &i);
 	/* cherche le fichier .EXT dans le meme directory */
 	FindCompleteName (extDocIdent, "EXT", directoryName, fileName, &i);
-	if (fileName[0] != '\0')
+	if (fileName[0] != EOS)
 	  {
 	     extFile = TtaReadOpen (fileName);
 	     if (extFile != 0)
@@ -2037,7 +2037,7 @@ PtrDocument         pDoc;
 	pExtFileD->ErFirstReferredEl = NULL;
 	CopyDocIdent (&pExtFileD->ErDocIdent, pDoc->DocIdent);
 	strncpy (pExtFileD->ErFileName, fileName, MAX_PATH);
-	if (fileName[0] != '\0')
+	if (fileName[0] != EOS)
 	  {
 	     extFile = TtaReadOpen (fileName);
 	     if (extFile != 0)
@@ -2054,7 +2054,7 @@ PtrDocument         pDoc;
 	  {
 	     /* enregistre la modification dans la forme en memoire du */
 	     /* fichier .EXT */
-	     if (pChnRef->CrNewLabel[0] == '\0')
+	     if (pChnRef->CrNewLabel[0] == EOS)
 		/* cet element reference' a ete detruit, on supprime son */
 		/* descripteur d'element reference' */
 	       {
@@ -2145,7 +2145,7 @@ PtrDocument         pDoc;
 		       /* cherche le fichier .REF dans le meme directory */
 		       FindCompleteName (pFile->RcDocIdent, "REF", directoryName, fileName, &i);
 		       strncpy (pFile->RcFileName, fileName, MAX_PATH);
-		       if (fileName[0] != '\0')
+		       if (fileName[0] != EOS)
 			 {
 			    refFile = TtaReadOpen (fileName);
 			    if (refFile != 0)
@@ -2168,11 +2168,11 @@ PtrDocument         pDoc;
 			    if (strcmp (pChnRefRead->CrOldLabel, pChnRef->CrOldLabel) == 0)
 			       if (SameDocIdent (pChnRefRead->CrOldDocument, pChnRef->CrOldDocument))
 				  /* il s'agit du meme ancien element */
-				  if (pChnRefRead->CrNewLabel[0] == '\0')
+				  if (pChnRefRead->CrNewLabel[0] == EOS)
 				     /* on a lu une destruction */
 				    {
 				       found = TRUE;
-				       if (pChnRef->CrNewLabel[0] != '\0')
+				       if (pChnRef->CrNewLabel[0] != EOS)
 					  /* c'est un deplacement, on transforme la */
 					  /* destruction en deplacement */
 					 {
@@ -2185,15 +2185,15 @@ PtrDocument         pDoc;
 				  else
 				     /* on a lu un changement de document */
 				    {
-				       if (pChnRef->CrNewLabel[0] == '\0')
+				       if (pChnRef->CrNewLabel[0] == EOS)
 					  /* c'est la destruction de l'element, on */
 					  /* l'ignore : le deplacement a priorite' */
 					  /* meme s'il est enregistre' apres */
 					  found = TRUE;
 				    }
 			    if (!found)
-			       if (pChnRefRead->CrNewLabel[0] != '\0' &&
-				   pChnRef->CrNewLabel[0] != '\0')
+			       if (pChnRefRead->CrNewLabel[0] != EOS &&
+				   pChnRef->CrNewLabel[0] != EOS)
 				  /* ce sont deux deplacements d'element */
 				  if (strcmp (pChnRefRead->CrNewLabel, pChnRef->CrOldLabel) == 0)
 				     if (SameDocIdent (pChnRefRead->CrNewDocument, pChnRef->CrOldDocument))
@@ -2368,7 +2368,7 @@ boolean             copyDoc;
 				    fileName, &i);
 		  /* cherche le fichier .EXT dans le meme directory */
 		  FindCompleteName (pRefD->ReExtDocument, "EXT", directoryName, fileName, &i);
-		  if (fileName[0] != '\0')
+		  if (fileName[0] != EOS)
 		    {
 		       extFile = TtaReadOpen (fileName);
 		       if (extFile != 0)
@@ -2544,7 +2544,7 @@ Name                newName;
 		  pElemRefD = pElemRefD->ReNext;
 	       }
 	  }
-	if (pFile->RcFileName[0] != '\0')
+	if (pFile->RcFileName[0] != EOS)
 	  {
 	     refFile = TtaReadOpen (pFile->RcFileName);
 	     if (refFile != 0)
@@ -2572,8 +2572,8 @@ Name                newName;
 	   pPrevChnRef->CrNext = pChnRef;
 	/* remplit cet enregistrement en indiquant que c'est un */
 	/* changement de nom de document referencant. */
-	pChnRef->CrOldLabel[0] = '\0';
-	pChnRef->CrNewLabel[0] = '\0';
+	pChnRef->CrOldLabel[0] = EOS;
+	pChnRef->CrNewLabel[0] = EOS;
 	CopyDocIdent (&pChnRef->CrOldDocument, pDoc->DocIdent);
 	CopyDocIdent (&pChnRef->CrNewDocument, newName);
 	/* ecrit le fichier .REF */

@@ -374,7 +374,7 @@ PtrDict             dict;
 	     for (k = 0; k < length; k++)
 		dict->DictString[nbChar++] = (char) Code[(unsigned char) wordGotten[k]];
 	     /* End of a word */
-	     dict->DictString[nbChar++] = '\0';
+	     dict->DictString[nbChar++] = EOS;
 
 	     /* going to the next word: reading the next line */
 	     plineGotten = &lineGotten[0]; /* pointer on the first character read */
@@ -397,7 +397,7 @@ PtrDict             dict;
    /* Updating the pointers */
    for (i = currentLength + 1; i < MAX_WORD_LEN; i++)
       dict->DictLengths[i] = last_word;
-   dict->DictString[nbChar] = '\0';
+   dict->DictString[nbChar] = EOS;
    dict->DictNbChars = nbChar;
    dict->DictLoaded = TRUE;
    return (1);
@@ -513,9 +513,9 @@ boolean             toTreat;
       else
 	{
 	  /* Get the length of strings required at the begenning of the file. */
-	  tempbuffer[0] = '\0';
+	  tempbuffer[0] = EOS;
 	  fgets (tempbuffer, 100, dictFile);
-	  if (tempbuffer[0] != '\0')
+	  if (tempbuffer[0] != EOS)
 	    {
 	      if (sscanf (tempbuffer, "%d%d", &im, &ic) == 2)
 		{
@@ -698,7 +698,7 @@ PtrDict            *pDictionary;
 	  }
      }
 
-   d = LoadTreatedDict (pDictionary, '\0', document, dictName,
+   d = LoadTreatedDict (pDictionary, EOS, document, dictName,
 		 document->DocDirectory, FALSE, TRUE);
    if (d == -1)
       return (FALSE);
@@ -762,7 +762,7 @@ Language            languageId;
    if (LangTable[lang].LangDict[0] == NULL)
      {
 	/* Loading the main dictionary */
-	if (LangTable[lang].LangPrincipal[0] != '\0')
+	if (LangTable[lang].LangPrincipal[0] != EOS)
 	  {
 	     LoadTreatedDict (&dictPtr, lang, NULL, LangTable[lang].LangPrincipal, dictPath, TRUE, FALSE);
 	     if (dictPtr != NULL)
@@ -774,7 +774,7 @@ Language            languageId;
    if (LangTable[lang].LangDict[1] == NULL)
      {
 	/* Loading the secondary dictionary */
-	if (LangTable[lang].LangSecondary[0] != '\0')
+	if (LangTable[lang].LangSecondary[0] != EOS)
 	  {
 	     LoadTreatedDict (&dictPtr, lang, NULL, LangTable[lang].LangSecondary, dictPath, TRUE, FALSE);
 	     if (dictPtr != NULL)
@@ -820,7 +820,7 @@ Language            languageId;
    if (TypoLangTable[lang].LangDict[0] == NULL)
      {
 	/* Loading the main dictionary */
-	if (TypoLangTable[lang].LangPrincipal[0] != '\0')
+	if (TypoLangTable[lang].LangPrincipal[0] != EOS)
 	  {
 	     ret = LoadTreatedDict (&dictPtr, lang, NULL,
 		  TypoLangTable[lang].LangPrincipal, dictPath, TRUE, FALSE);
@@ -833,7 +833,7 @@ Language            languageId;
    if (TypoLangTable[lang].LangDict[1] == NULL)
      {
 	/* Loading the secondary dictionary */
-	if (TypoLangTable[lang].LangSecondary[0] != '\0')
+	if (TypoLangTable[lang].LangSecondary[0] != EOS)
 	  {
 	     ret = LoadTreatedDict (&dictPtr, lang, NULL,
 		  TypoLangTable[lang].LangSecondary, dictPath, TRUE, FALSE);

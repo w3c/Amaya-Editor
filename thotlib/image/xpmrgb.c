@@ -120,7 +120,7 @@ xpmRgbName          rgbn[];
 	/* Copy string to ascii name and lowercase it. */
 	for (n = name, m = rgbname; *n; n++)
 	   *m++ = tolower (*n);
-	*m = '\0';
+	*m = EOS;
 
 	/* Save the rgb values and ascii name in the array. */
 	rgb->r = red * 257;	/* 65535/255 = 257 */

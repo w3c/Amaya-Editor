@@ -372,11 +372,11 @@ PtrSSchema          pSS;
 	     TtaReadByte (file, &c);
 	     pSS->SsConstBuffer[i++] = c;
 	  }
-	while (c != '\0' && i < MAX_LEN_ALL_CONST);
+	while (c != EOS && i < MAX_LEN_ALL_CONST);
 	TtaReadByte (file, &c);
 	pSS->SsConstBuffer[i++] = c;
      }
-   while (c != '\0' && i < MAX_LEN_ALL_CONST);
+   while (c != EOS && i < MAX_LEN_ALL_CONST);
    if (i >= MAX_LEN_ALL_CONST)
       return FALSE;
    else

@@ -509,7 +509,7 @@ boolean             redisplay;
 				  pAb->AbText->BuContent[0] = '[';
 				  pAb->AbText->BuContent[1] = '?';
 				  pAb->AbText->BuContent[2] = ']';
-				  pAb->AbText->BuContent[3] = '\0';
+				  pAb->AbText->BuContent[3] = EOS;
 				  pAb->AbText->BuLength = 3;
 				  pAb->AbVolume = 3;
 				  /* reaffiche le pave */

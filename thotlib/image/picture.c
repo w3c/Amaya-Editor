@@ -978,7 +978,7 @@ char               *simplename;
 	   URL_DIR_SEP = DIR_SEP;
  
    to = simplename;
-   *to = '\0';
+   *to = EOS;
    for (from = filename; *from++;) ;
    for (--from; --from > filename;)
      {
@@ -993,7 +993,7 @@ char               *simplename;
  
    for (; *from;)
       *to++ = *from++;
-   *to = '\0';
+   *to = EOS;
 }
 
 
@@ -1209,7 +1209,7 @@ int                 frame;
 
    if (imageDesc->PicFileName == NULL)
      return;
-   else if (imageDesc->PicFileName[0] == '\0')
+   else if (imageDesc->PicFileName[0] == EOS)
      return;
    else if (box->BxAbstractBox->AbLeafType == LtCompound
 	    && imageDesc->PicPixmap == PictureLogo)
@@ -1411,7 +1411,7 @@ PictInfo           *imageDesc;
 
    if (imageDesc->PicFileName == NULL)
      return;
-   else if (imageDesc->PicFileName[0] == '\0')
+   else if (imageDesc->PicFileName[0] == EOS)
      return;
 
    GetPictureFileName (imageDesc->PicFileName, fileName);

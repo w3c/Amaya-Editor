@@ -112,7 +112,7 @@ char               *documentName;
   UserErrorCode = 0;
   document = 0;
   pDoc = NULL;
-  if (documentName[0] == '\0')
+  if (documentName[0] == EOS)
     /* No name provided by the user */
     TtaError (ERR_document_name);
   else
@@ -179,10 +179,10 @@ char               *documentName;
 		  strncpy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
 		  /* if path, keep only the first directory */
 		  i = 1;
-		  while (pDoc->DocDirectory[i - 1] != '\0' &&
+		  while (pDoc->DocDirectory[i - 1] != EOS &&
 			 pDoc->DocDirectory[i - 1] != PATH_SEP && i < MAX_PATH)
 		    i++;
-		  pDoc->DocDirectory[i - 1] = '\0';
+		  pDoc->DocDirectory[i - 1] = EOS;
 		  /* Read-Write document */
 		  pDoc->DocReadOnly = FALSE;
 		  document = IdentDocument (pDoc);
@@ -239,7 +239,7 @@ int                 accessMode;
 	     /* suppresses the .PIV suffix if found */
 	     if (lg > 4)
 		if (strcmp (&(pDoc->DocDName[lg - 4]), ".PIV") == 0)
-		   pDoc->DocDName[lg - 4] = '\0';
+		   pDoc->DocDName[lg - 4] = EOS;
 	     GetDocIdent (&pDoc->DocIdent, pDoc->DocDName);
 	     strncpy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
 	     ok = OpenDocument (pDoc->DocDName, pDoc, TRUE, FALSE, NULL,
@@ -618,17 +618,17 @@ PathBuffer          path;
 
    i = 0;
    OK = TRUE;
-   while (OK && path[i] != '\0')
+   while (OK && path[i] != EOS)
      {
 	j = 0;
-	while (path[i] != PATH_SEP && path[i] != '\0' && i <= MAX_PATH)
+	while (path[i] != PATH_SEP && path[i] != EOS && i <= MAX_PATH)
 	  {
 	     /* The list is cutted up into single directories */
 	     single_directory[j] = path[i];
 	     i++;
 	     j++;
 	  }
-	single_directory[j] = '\0';
+	single_directory[j] = EOS;
 
 	OK = TtaCheckDirectory (single_directory);
 	/* We try with another directory by ignoring PATH_SEP */
@@ -664,7 +664,7 @@ char               *directory;
    /* Verify if this directory is already in the list  */
    ptr = strstr (DocumentPath, directory);
    i = strlen (directory);
-   while (ptr != NULL && ptr[i] != PATH_SEP && ptr[i] != '\0')
+   while (ptr != NULL && ptr[i] != PATH_SEP && ptr[i] != EOS)
      {
 	ptr = strstr (ptr, PATH_STR);
 	if (ptr != NULL)
@@ -787,7 +787,7 @@ char               *presentationName;
 
    UserErrorCode = 0;
    natureSchema = NULL;
-   if (schema == NULL || natureName[0] == '\0')
+   if (schema == NULL || natureName[0] == EOS)
      {
 	TtaError (ERR_invalid_parameter);
      }
@@ -1402,7 +1402,7 @@ Document            document;
 
 {
    UserErrorCode = 0;
-   nameBuffer[0] = '\0';
+   nameBuffer[0] = EOS;
    /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
@@ -1492,7 +1492,7 @@ int                 bufferLength;
 
 {
    UserErrorCode = 0;
-   nameBuffer[0] = '\0';
+   nameBuffer[0] = EOS;
    /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
@@ -1581,7 +1581,7 @@ SSchema             schema;
    UserErrorCode = 0;
    if (schema == NULL)
      {
-	nameBuffer[0] = '\0';
+	nameBuffer[0] = EOS;
 	TtaError (ERR_invalid_parameter);
      }
    else
@@ -1618,7 +1618,7 @@ SSchema             schema;
    UserErrorCode = 0;
    if (schema == NULL)
      {
-	nameBuffer[0] = '\0';
+	nameBuffer[0] = EOS;
 	TtaError (ERR_invalid_parameter);
      }
    else
@@ -1691,7 +1691,7 @@ Document            document;
 
    UserErrorCode = 0;
    schema = NULL;
-   if (name == NULL || name[0] == '\0')
+   if (name == NULL || name[0] == EOS)
      TtaError (ERR_invalid_parameter);
    /* verifies the parameter document */
    else if (document < 1 || document > MAX_DOCUMENTS)
@@ -1777,8 +1777,8 @@ char               *presentationName;
    int                 currentVersion = 0;
 
    UserErrorCode = 0;
-   structureName[0] = '\0';
-   presentationName[0] = '\0';
+   structureName[0] = EOS;
+   presentationName[0] = EOS;
    /* Arrange the name of the file to be opened with the documents directory name */
    strncpy (DirBuffer, DocumentPath, MAX_PATH);
    MakeCompleteName (documentName, "PIV", DirBuffer, text, &i);
@@ -1822,8 +1822,8 @@ char               *presentationName;
 		  do
 		     if (!TtaReadByte (file, &charGotten))
 			error = TRUE;
-		  while (!(error || charGotten == '\0')) ;
-		  if (charGotten != '\0')
+		  while (!(error || charGotten == EOS)) ;
+		  if (charGotten != EOS)
 		     error = TRUE;
 		  else
 		     /* Gets the byte following the language name */
@@ -1848,8 +1848,8 @@ char               *presentationName;
 	     do
 		if (!TtaReadByte (file, &structureName[i++]))
 		   error = TRUE;
-	     while (!(error || structureName[i - 1] == '\0' || i == MAX_NAME_LENGTH)) ;
-	     if (structureName[i - 1] != '\0')
+	     while (!(error || structureName[i - 1] == EOS || i == MAX_NAME_LENGTH)) ;
+	     if (structureName[i - 1] != EOS)
 		error = TRUE;
 	     else
 	       {
@@ -1864,7 +1864,7 @@ char               *presentationName;
 		       do
 			  if (!TtaReadByte (file, &presentationName[i++]))
 			     error = TRUE;
-		       while (!(error || presentationName[i - 1] == '\0' || i == MAX_NAME_LENGTH)) ;
+		       while (!(error || presentationName[i - 1] == EOS || i == MAX_NAME_LENGTH)) ;
 		    }
 	       }
 	  }

@@ -303,7 +303,7 @@ XpmColor           *colors;
 	     strncpy (s, colors[*pixels].string, cpp);
 	     s += cpp;
 	  }
-	*s = '\0';
+	*s = EOS;
 	*(dataptr + 1) = *dataptr + offset;
      }
    /* duplicate some code to avoid a test in the loop */
@@ -313,7 +313,7 @@ XpmColor           *colors;
 	strncpy (s, colors[*pixels].string, cpp);
 	s += cpp;
      }
-   *s = '\0';
+   *s = EOS;
 }
 
 #ifdef __STDC__

@@ -132,11 +132,11 @@ char               *data;
 	 {
 	    case NumFormCreateDoc:
 	       /* le formulaire "Creer un document" lui-meme */
-	       if (NameDocToCreate[0] == '\0')
+	       if (NameDocToCreate[0] == EOS)
 		  /* le nom par defaut */
 		  strcpy (NameDocToCreate, TtaGetMessage (LIB, TMSG_NO_NAME));
 	       CurrentDialog = NumFormCreateDoc;
-	       if (ClassDocToCreate[0] != '\0' && ((int) data) == 1)
+	       if (ClassDocToCreate[0] != EOS && ((int) data) == 1)
 		 {
 		    /* on a tous les parametres */
 		    /* ******** verifier que le document n'esixte pas deja **** */
@@ -154,7 +154,7 @@ char               *data;
 			      /* demande confirmation */
 			      sprintf (BufDir, TtaGetMessage (LIB, TMSG_FILE_EXIST), docName);
 			      TtaNewLabel (NumLabelConfirm, NumFormConfirm, BufDir);
-/*           ClassDocToCreate[0] = '\0'; */
+/*           ClassDocToCreate[0] = EOS; */
 			      TtaSetDialoguePosition ();
 			      TtaShowDialogue (NumFormConfirm, FALSE);
 			   }
@@ -170,21 +170,21 @@ char               *data;
 		    if (ThotLocalActions[T_confirmcreate] != NULL)
 		       (*ThotLocalActions[T_confirmcreate]) (0, 1, (char *) 1);
 		 }
-	       /*ClassDocToCreate[0] = '\0'; */
+	       /*ClassDocToCreate[0] = EOS; */
 	       break;
 	    case NumZoneDocNameToCreate:
 	       /* zone de saisie du nom du document a creer */
 	       if (TtaCheckDirectory (data) && data[strlen (data) - 1] != URL_DIR_SEP)
 		 {
 		    strcpy (DirectoryDocToCreate, data);
-		    NameDocToCreate[0] = '\0';
+		    NameDocToCreate[0] = EOS;
 		 }
 	       else
 		 {
 		    /* conserve le nom du document a ouvrir */
 		    TtaExtractName (data, DirectoryDocToCreate, docName);
 		    if (strlen (docName) >= MAX_NAME_LENGTH)
-		       docName[MAX_NAME_LENGTH - 1] = '\0';	/* limite la longueur des noms */
+		       docName[MAX_NAME_LENGTH - 1] = EOS;	/* limite la longueur des noms */
 		    strcpy (NameDocToCreate, docName);
 		 }
 	       if (TtaCheckDirectory (DirectoryDocToCreate))
@@ -199,7 +199,7 @@ char               *data;
 			      {
 				 strcat (DocumentPath, PATH_STR);
 				 strcat (DocumentPath, DirectoryDocToCreate);
-				 BuildPathDocBuffer (BufDir, '\0', &i);
+				 BuildPathDocBuffer (BufDir, EOS, &i);
 				 TtaNewSelector (NumZoneDocDirToCreate, NumFormCreateDoc, TtaGetMessage (LIB, TMSG_DOC_DIR), i, BufDir, 9, NULL, FALSE, TRUE);
 			      }
 			 }
@@ -256,15 +256,15 @@ View                view;
    TtaNewForm (NumFormCreateDoc,  parentWidget,
 	       TtaGetMessage (LIB, TMSG_CREATE_DOC), TRUE, 2, 'L', D_CANCEL);
    /* zone de saisie des dossiers documents */
-   BuildPathDocBuffer (BufDir, '\0', &nbitem);
-   if (DirectoryDocToCreate[0]!='\0')
+   BuildPathDocBuffer (BufDir, EOS, &nbitem);
+   if (DirectoryDocToCreate[0]!=EOS)
      entry=SearchStringInBuffer(BufDir,DirectoryDocToCreate,nbitem);
    TtaNewSelector (NumZoneDocDirToCreate, NumFormCreateDoc,
    TtaGetMessage (LIB, TMSG_DOC_DIR), nbitem, BufDir, 9, NULL, FALSE, TRUE);
    if (nbitem >= 1 && entry!= -1)
       TtaSetSelector (NumZoneDocDirToCreate, entry, NULL);
    /* nom du document a creer */
-   if (DocumentPath!=NULL && (DirectoryDocToCreate[i] == '\0' || entry == -1))
+   if (DocumentPath!=NULL && (DirectoryDocToCreate[i] == EOS || entry == -1))
      {
 	ptr = strstr (DocumentPath, PATH_STR);
 	if (ptr == NULL)
@@ -273,7 +273,7 @@ View                view;
 	  {
 	     i = (int) ptr - (int) DocumentPath;
 	     strncpy (DirectoryDocToCreate, DocumentPath, i);
-	     DirectoryDocToCreate[i] = '\0';
+	     DirectoryDocToCreate[i] = EOS;
 	  }
      }
    strcpy (NameDocToCreate, TtaGetMessage (LIB, TMSG_NO_NAME));
@@ -295,7 +295,7 @@ View                view;
 	TtaNewSelector (NumSelDocClassToCreate, NumFormCreateDoc,
 			TtaGetMessage (LIB, TMSG_DOC_TYPE), nbitem, BufMenu, length, NULL, TRUE, FALSE);
 	entry = 0;
-	if(ClassDocToCreate[0]!='\0')
+	if(ClassDocToCreate[0]!=EOS)
 	  entry=SearchStringInBuffer(BufMenu,ClassDocToCreate,nbitem);
 	/* initialise le selecteur sur sa premiere entree */
 	
@@ -306,7 +306,7 @@ View                view;
      {
        TtaNewTextForm (NumSelDocClassToCreate, NumFormCreateDoc,
 		       TtaGetMessage (LIB, TMSG_DOC_TYPE), 30, 1, FALSE);
-       if(ClassDocToCreate[0]!='\0')
+       if(ClassDocToCreate[0]!=EOS)
 	 TtaSetTextForm (NumSelDocClassToCreate,ClassDocToCreate);
      }
    /* zone de saisie du nom du document a creer */

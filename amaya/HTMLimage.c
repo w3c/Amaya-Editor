@@ -155,6 +155,109 @@ Document            doc;
   return (NULL);
 }
 
+/*----------------------------------------------------------------------
+  UpdateImageMap sets or updates Ref_IMG MAP attributes for the current
+  image.
+  If there is a map, updates all mapareas.
+  oldWidth is -1 or the old image width.
+  oldHeight is -1 or the old image height.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                UpdateImageMap (Element image, Document document, int oldWidth, int oldHeight)
+#else  /* __STDC__ */
+void                UpdateImageMap (image, document, oldWidth, oldHeight)
+Element             image;
+Document            document;
+int                 oldWidth;
+int                 oldHeight;
+#endif /* __STDC__ */
+{
+   AttributeType       attrType;
+   Attribute           attr;
+   Element             el, child;
+   char               *text;
+   int                 shape, w, h, length, delta;
+   DisplayMode         dispMode;
+
+   dispMode = TtaGetDisplayMode (document);
+   /* Search the USEMAP attribute */
+   attrType.AttrSSchema = TtaGetDocumentSSchema (document);
+   attrType.AttrTypeNum = HTML_ATTR_USEMAP;
+   attr = TtaGetAttribute (image, attrType);
+   if (attr != NULL)
+     {
+	/* Search the MAP element associated with IMAGE element */
+	length = TtaGetTextAttributeLength (attr);
+	length++;
+	text = TtaGetMemory (length);
+	TtaGiveTextAttributeValue (attr, text, &length);
+	if (text[0] == '#')
+	   el = SearchNAMEattribute (document, &text[1], NULL);
+	else
+	   el = NULL;
+	TtaFreeMemory (text);
+	if (el == NULL)
+	   return;
+
+	/* ask Thot to stop displaying changes made in the document */
+        if (dispMode == DisplayImmediately)
+	  TtaSetDisplayMode (document, DeferredDisplay);
+
+	/* Update MAP attribute */
+	attrType.AttrTypeNum = HTML_ATTR_Ref_IMG;
+	attr = TtaGetAttribute (el, attrType);
+	if (attr == NULL)
+	  {
+	     /* create it */
+	     attr = TtaNewAttribute (attrType);
+	     TtaAttachAttribute (el, attr, document);
+	  }
+	TtaSetAttributeReference (attr, el, document, image, document);
+
+	/* Update AREAs attribute */
+	el = TtaGetFirstChild (el);
+	TtaGiveBoxSize (image, document, 1, UnPixel, &w, &h);
+	while (el != NULL)
+	  {
+	     /* Search the shape attribute */
+	     attrType.AttrTypeNum = HTML_ATTR_shape;
+	     attr = TtaGetAttribute (el, attrType);
+	     if (attr != NULL)
+	       {
+		  shape = TtaGetAttributeValue (attr);
+		  if (shape == HTML_ATTR_shape_VAL_polygon)
+		    {
+		       attrType.AttrTypeNum = HTML_ATTR_AreaRef_IMG;
+		       attr = TtaGetAttribute (el, attrType);
+		       if (attr == NULL)
+			 {
+			    /* create it */
+			    attr = TtaNewAttribute (attrType);
+			    TtaAttachAttribute (el, attr, document);
+			 }
+		       TtaSetAttributeReference (attr, el, document, image, document);
+		    }
+		  else if (oldWidth != -1 || oldHeight != -1)
+		    {
+		      /* move and resize the map area */
+		      if (oldWidth != -1 && w != 0)
+			{
+			  delta = (w - oldWidth) / w;
+			}
+		      if (oldHeight != -1 && h != 0)
+			{
+			  delta = (h - oldHeight) / h;
+			}
+		    }
+	       }
+	     TtaNextSibling (&el);
+	  }
+     }
+
+   /* ask Thot to display changes made in the document */
+   TtaSetDisplayMode (document, dispMode);
+}
+
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -176,7 +279,7 @@ char               *imageName;
     {
       /* display the content of a picture element */
       TtaSetTextContent (el, imageName, SPACE, doc);
-      UpdateImageMap (el, doc);
+      UpdateImageMap (el, doc, -1, -1);
     }
   else
     {

@@ -1004,11 +1004,10 @@ PSchema             tsch;
 GenericContext      ctxt;
 PRuleType           pres;
 int                 extra;
-
 #endif /* !__STDC__ */
 {
   PtrPRule           *chain;
-  PtrPRule            cur, new = NULL;
+  PtrPRule            cur, pRule = NULL;
   int                 i, j, tmp, nb_ancestors;
 
   /* first sort the ancestors list */
@@ -1036,26 +1035,26 @@ int                 extra;
   else
     {
       /* not found, allocate it, fill it and insert it */
-      GetPresentRule (&new);
-      if (new == NULL)
+      GetPresentRule (&pRule);
+      if (pRule == NULL)
 	{
 	  TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
 	  return (NULL);
 	}
-      new->PrType = pres;
-      new->PrCond = NULL;
-      new->PrViewNum = 1;
-      new->PrSpecifAttr = 0;
-      new->PrSpecifAttrSSchema = NULL;
+      pRule->PrType = pres;
+      pRule->PrCond = NULL;
+      pRule->PrViewNum = 1;
+      pRule->PrSpecifAttr = 0;
+      pRule->PrSpecifAttrSSchema = NULL;
       
       /* In case of an attribute rule, add the SurElem condition */
       if ((ctxt->attr || ctxt->class) && ctxt->attrelem != 0)
-	PresRuleAddSurElemCond (new, ctxt->attrelem);
+	PresRuleAddSurElemCond (pRule, ctxt->attrelem);
       /* add the ancesters conditions ... */
       for (i = 0; i < MAX_ANCESTORS; i++)
 	{
 	  if (ctxt->ancestors[i] != 0)
-	    PresRuleAddAncestorCond (new, ctxt->ancestors[i], ctxt->ancestors_nb[i]);
+	    PresRuleAddAncestorCond (pRule, ctxt->ancestors[i], ctxt->ancestors_nb[i]);
 	  else
 	    break;
 	}
@@ -1064,10 +1063,10 @@ int                 extra;
       /* chain in the rule */
       if (chain != NULL)
 	{
-	  new->PrNextPRule = *chain;
-	  *chain = new;
+	  pRule->PrNextPRule = *chain;
+	  *chain = pRule;
 	}
-      return (new);
+      return (pRule);
     }
 }
 
