@@ -4619,7 +4619,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
        newdoc != 0)
      {
        /* attribute HREF contains the NAME of a target anchor */
-       elFound = SearchNAMEattribute (newdoc, target, NULL);
+       elFound = SearchNAMEattribute (newdoc, target, NULL, NULL);
        if (elFound != NULL)
 	 {
 	   /* show the target element in all views */

@@ -376,11 +376,13 @@ static void SetFontOrPhraseOnElement (Document document, Element elem,
    Search in document doc an element having an attribute of type attrType
    whose value is nameVal.
    Return that element or NULL if not found.
-   If ignore is not NULL, it is an attribute that should be ignored when
+   If ignoreAtt is not NULL, it is an attribute that should be ignored when
+   comparing attributes.
+   If ignoreEl is not NULL, it is an element that should be ignored when
    comparing attributes.
   ----------------------------------------------------------------------*/
-Element GetElemWithAttr (Document doc, AttributeType attrType,
-				char *nameVal, Attribute ignore)
+Element GetElemWithAttr (Document doc, AttributeType attrType, char *nameVal,
+			 Attribute ignoreAtt, Element ignoreEl)
 {
    Element             el, elFound;
    Attribute           nameAttr;
@@ -397,24 +399,26 @@ Element GetElemWithAttr (Document doc, AttributeType attrType,
    do
      {
 	TtaSearchAttribute (attrType, SearchForward, el, &elFound, &nameAttr);
-	if (nameAttr != NULL && elFound != NULL)
-	   if (nameAttr != ignore)
-	     {
+	if (nameAttr && elFound)
+	  {
+	    if (nameAttr != ignoreAtt && elFound != ignoreEl)
+	      {
 		length = TtaGetTextAttributeLength (nameAttr);
 		length++;
 		name = TtaGetMemory (length);
 		if (name != NULL)
 		  {
-		     TtaGiveTextAttributeValue (nameAttr, name, &length);
-		     /* compare the NAME attribute */
-		     found = (strcmp (name, nameVal) == 0);
-		     TtaFreeMemory (name);
+		    TtaGiveTextAttributeValue (nameAttr, name, &length);
+		    /* compare the NAME attribute */
+		    found = (strcmp (name, nameVal) == 0);
+		    TtaFreeMemory (name);
 		  }
-	     }
+	      }
+	  }
 	if (!found)
 	   el = elFound;
      }
-   while (!found && elFound != NULL);
+   while (!found && elFound);
    if (!found)
       elFound = NULL;
    return elFound;
@@ -425,10 +429,13 @@ Element GetElemWithAttr (Document doc, AttributeType attrType,
    search in document doc an element having an attribut NAME or ID (defined
    in DTD HTML, MathML or SVG) whose value is nameVal.         
    Return that element or NULL if not found.               
-   If ignore is not NULL, it is an attribute that should be ignored when
+   If ignoreAtt is not NULL, it is an attribute that should be ignored when
+   comparing NAME attributes.              
+   If ignoreEl is not NULL, it is an element that should be ignored when
    comparing NAME attributes.              
   ----------------------------------------------------------------------*/
-Element SearchNAMEattribute (Document doc, char *nameVal, Attribute ignore)
+Element SearchNAMEattribute (Document doc, char *nameVal, Attribute ignoreAtt,
+			     Element ignoreEl)
 {
    Element             elFound;
    AttributeType       attrType;
@@ -436,13 +443,13 @@ Element SearchNAMEattribute (Document doc, char *nameVal, Attribute ignore)
    /* search all elements having an attribute NAME */
    attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
    attrType.AttrTypeNum = HTML_ATTR_NAME;
-   elFound = GetElemWithAttr (doc, attrType, nameVal, ignore);
+   elFound = GetElemWithAttr (doc, attrType, nameVal, ignoreAtt, ignoreEl);
 
    if (!elFound)
      {
        /* search all elements having an attribute ID */
        attrType.AttrTypeNum = HTML_ATTR_ID;
-       elFound = GetElemWithAttr (doc, attrType, nameVal, ignore);
+       elFound = GetElemWithAttr (doc, attrType, nameVal, ignoreAtt, ignoreEl);
      }
    if (!elFound)
      {
@@ -453,7 +460,7 @@ Element SearchNAMEattribute (Document doc, char *nameVal, Attribute ignore)
 	  /* this document uses the MathML DTD */
 	  {
           attrType.AttrTypeNum = MathML_ATTR_id;
-          elFound = GetElemWithAttr (doc, attrType, nameVal, ignore);
+          elFound = GetElemWithAttr (doc, attrType, nameVal, ignoreAtt, ignoreEl);
 	  }
      }
 #ifdef _SVG
@@ -466,7 +473,7 @@ Element SearchNAMEattribute (Document doc, char *nameVal, Attribute ignore)
 	  /* this document uses the SVG DTD */
 	  {
           attrType.AttrTypeNum = SVG_ATTR_id;
-          elFound = GetElemWithAttr (doc, attrType, nameVal, ignore);
+          elFound = GetElemWithAttr (doc, attrType, nameVal, ignoreAtt, ignoreEl);
 	  }
      }
 #endif
@@ -480,7 +487,7 @@ Element SearchNAMEattribute (Document doc, char *nameVal, Attribute ignore)
 	  /* this document uses the XLink DTD */
 	  {
           attrType.AttrTypeNum = XLink_ATTR_id;
-          elFound = GetElemWithAttr (doc, attrType, nameVal, ignore);
+          elFound = GetElemWithAttr (doc, attrType, nameVal, ignoreAtt, ignoreEl);
 	  }
      }
 #endif /* ANNOTATIONS */
@@ -520,7 +527,7 @@ void FollowTheLink_callback (int targetDocument, int status, char *urlName,
   elSource = ctx->elSource;
   if (url[0] == '#' && targetDocument != 0)
     /* attribute HREF contains the NAME of a target anchor */
-    elFound = SearchNAMEattribute (targetDocument, &url[1], NULL);
+    elFound = SearchNAMEattribute (targetDocument, &url[1], NULL, NULL);
   if (DocumentURLs[doc] && !strcmp (DocumentURLs[doc], sourceDocUrl))
   {
   elType = TtaGetElementType (anchor);

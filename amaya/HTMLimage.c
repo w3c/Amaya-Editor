@@ -377,7 +377,7 @@ void UpdateImageMap (Element image, Document doc, int oldWidth, int oldHeight)
 	text = TtaGetMemory (length);
 	TtaGiveTextAttributeValue (attr, text, &length);
 	if (text[0] == '#')
-	   el = SearchNAMEattribute (doc, &text[1], NULL);
+	   el = SearchNAMEattribute (doc, &text[1], NULL, NULL);
 	else
 	   el = NULL;
 	TtaFreeMemory (text);

@@ -9,10 +9,12 @@
 extern Element GetElemWithAttr ( Document doc,
                                  AttributeType attrType,
                                  char *nameVal,
-                                 Attribute ignore );
+                                 Attribute ignoreAtt,
+                                 Element ignoreEl );
 extern Element SearchNAMEattribute ( Document doc,
                                      char *nameVal,
-                                     Attribute ignore );
+                                     Attribute ignoreAtt,
+                                     Element ignoreEl );
 extern void FollowTheLink_callback ( int targetDocument,
                                      int status,
                                      char *urlName,
@@ -53,10 +55,12 @@ extern void SetCharFontOrPhrase ( int document,
 extern Element GetElemWithAttr (/* Document doc,
                                    AttributeType attrType,
                                    char *nameVal,
-                                   Attribute ignore */);
+                                   Attribute ignoreAtt,
+                                   Element ignoreEl */);
 extern Element SearchNAMEattribute (/* Document doc,
                                        char *nameVal,
-                                       Attribute ignore */);
+                                       Attribute ignoreAtt,
+                                       Element ignoreEl */);
 extern void FollowTheLink_callback (/* int targetDocument,
                                        int status,
                                        char *urlName,

@@ -11,11 +11,11 @@ tr.fixed   {  background-color: #aaffaa
            }
 tr.done    {  background-color: #aaffaa
            }
-th         { width: 80;
+th         { width: 80px;
            }
-th.summary { width: 450;
+th.summary { width: 450px;
            }
-td.categ   { width: 200;
+td.categ   { width: 200px;
            }
 h1         { size: 14;
              text-align: center

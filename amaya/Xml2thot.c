@@ -4841,7 +4841,7 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
 	/* This document uses the SVG DTD */
 	{
           extAttrType.AttrTypeNum = SVG_ATTR_id;
-	  idEl = GetElemWithAttr (externalDoc, extAttrType, extUseId, NULL);
+	  idEl = GetElemWithAttr (externalDoc, extAttrType, extUseId, NULL, NULL);
 	}
       /* do the actual copy */
       if (idEl != NULL)

@@ -1461,7 +1461,7 @@ void MakeUniqueName (Element el, Document doc)
 	    {
 	      TtaGiveTextAttributeValue (attr, value, &length);
 	      i = 0;
-	      while (SearchNAMEattribute (doc, value, attr) != NULL)
+	      while (SearchNAMEattribute (doc, value, attr, el))
 		{
 		  /* Yes. Avoid duplicate NAMEs */
 		  change = TRUE;
@@ -2707,15 +2707,25 @@ ThotBool AttrColorDelete (NotifyAttribute * event)
 
 /*----------------------------------------------------------------------
    ListItemCreated
-   An element List_Item has been created or pasted. Set its        
+   An element List_Item has been created. Set its        
    IntItemStyle attribute according to its surrounding elements.   
   ----------------------------------------------------------------------*/
 void ListItemCreated (NotifyElement * event)
 {
-  if (event->event == TteElemPaste)
-    if (!ElementOKforProfile (event->element, event->document))
-      return;
    SetAttrIntItemStyle (event->element, event->document);
+}
+/*----------------------------------------------------------------------
+   ListItemPasted
+   An element List_Item has been pasted. Set its        
+   IntItemStyle attribute according to its surrounding elements and
+   check   
+  ----------------------------------------------------------------------*/
+void ListItemPasted (NotifyElement * event)
+{
+  if (!ElementOKforProfile (event->element, event->document))
+    return;
+   SetAttrIntItemStyle (event->element, event->document);
+   ElementPasted (event);
 }
 
 /*----------------------------------------------------------------------

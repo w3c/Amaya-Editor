@@ -451,7 +451,7 @@ static void CreateAreaMap (Document doc, View view, char *shape)
 	     length = TtaGetTextAttributeLength (attr) + 1;
 	     TtaGiveTextAttributeValue (attr, url, &length);
 	     if (url[0] == '#')
-		map = SearchNAMEattribute (doc, &url[1], NULL);
+		map = SearchNAMEattribute (doc, &url[1], NULL, NULL);
 	  }
 	if (map == NULL)
 	  {

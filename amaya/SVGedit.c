@@ -67,6 +67,7 @@ static ThotBool InCreation = FALSE;
 #include "SVGbuilder_f.h"
 #include "html2thot_f.h"
 #include "HTMLactions_f.h"
+#include "HTMLedit_f.h"
 #include "HTMLpresentation_f.h"
 #include "init_f.h"
 #include "XLinkedit_f.h"
@@ -1114,6 +1115,9 @@ void GraphElemPasted (NotifyElement *event)
       TtaSetUriSSchema (elType.ElSSchema, SVG_URI);
       TtaSetANamespaceDeclaration (event->document, event->element, NULL, SVG_URI);
     }
+  /* Check attribute NAME or ID in order to make sure that its value */
+  /* is unique in the document */
+  MakeUniqueName (event->element, event->document);
 }
 
 /*----------------------------------------------------------------------
@@ -2303,6 +2307,9 @@ void UsePasted (NotifyElement * event)
       CopyUseContent (event->element, event->document, href);
       TtaFreeMemory (href);
     }
+  /* Check attribute NAME or ID in order to make sure that its value */
+  /* is unique in the document */
+  MakeUniqueName (event->element, event->document);
 }
 
 /*----------------------------------------------------------------------

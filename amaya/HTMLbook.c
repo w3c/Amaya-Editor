@@ -287,7 +287,7 @@ void SetInternalLinks (Document document)
 			  length = strlen (value);
 			  /* check whether the name changed */
 			  i = 0;
-			  target = SearchNAMEattribute (document, &value[1], NULL);
+			  target = SearchNAMEattribute (document, &value[1], NULL, NULL);
 			  while (target != NULL)
 			    {
 			      /* is it the right NAME */
@@ -299,7 +299,7 @@ void SetInternalLinks (Document document)
 				  i++;
 				  sprintf (&value[length], "%d", i);
 				  target = SearchNAMEattribute (document,
-							&value[1], NULL);
+							&value[1], NULL, NULL);
 				}
 			    }
 			}
@@ -332,7 +332,7 @@ void SetInternalLinks (Document document)
 		      TtaAttachAttribute (link, IntLinkAttr, document);
 		    }
 		  /* looks for the target element */
-		  target = SearchNAMEattribute (document, ptr, NULL);
+		  target = SearchNAMEattribute (document, ptr, NULL, NULL);
 		  if (target != NULL)
 		    /* set the Thot link */
 		    TtaSetAttributeReference (IntLinkAttr, link, document,
@@ -887,7 +887,7 @@ static Element MoveDocumentBody (Element el, Document destDoc,
   if (target != NULL)
     {
       /* locate the target element within the source document */
-      root = SearchNAMEattribute (sourceDoc, target, NULL);
+      root = SearchNAMEattribute (sourceDoc, target, NULL, NULL);
       elType = TtaGetElementType (root);
       isID = (elType.ElTypeNum != HTML_EL_Anchor &&
 	      elType.ElTypeNum != HTML_EL_MAP);

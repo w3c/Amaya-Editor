@@ -265,7 +265,7 @@ ThotBool CheckValidID (NotifyAttribute *event)
 	/* check that this value is not already used by another ID attribute
            in the document and add a number at the end if it's the case */
         i = 0;
-	while (SearchNAMEattribute (event->document, value, NULL))
+	while (SearchNAMEattribute (event->document, value, NULL, NULL))
 	   /* this value is already used in the document */
 	   {
 	   i++;

@@ -1225,7 +1225,7 @@ void NewCell (Element cell, Document doc, ThotBool genrateColumn)
 
    a new cell has been created in a table
   ----------------------------------------------------------------------*/
-void                CellCreated (NotifyElement * event)
+void CellCreated (NotifyElement * event)
 {
    Element             cell, row;
    Document            doc;
@@ -1254,7 +1254,7 @@ void                CellCreated (NotifyElement * event)
 /*----------------------------------------------------------------------
    CellPasted                                              
   ----------------------------------------------------------------------*/
-void                CellPasted (NotifyElement * event)
+void CellPasted (NotifyElement * event)
 {
    Element             cell, nextcell, row;
    Document            doc;
@@ -1287,6 +1287,9 @@ void                CellPasted (NotifyElement * event)
        HandleColAndRowAlignAttributes (row, doc);
        CurrentPastedRow = NULL;
      }
+   /* Check attribute NAME or ID in order to make sure that its value */
+   /* is unique in the document */
+   MakeUniqueName (cell, doc);
 }
 
 
@@ -1335,7 +1338,7 @@ static void         PreDeleteRow (Element row, Document doc)
 /*----------------------------------------------------------------------
    DeleteRow                                               
   ----------------------------------------------------------------------*/
-ThotBool            DeleteRow (NotifyElement * event)
+ThotBool DeleteRow (NotifyElement * event)
 {
   if (CurrentDeletedRow == NULL)
     {
@@ -1350,7 +1353,7 @@ ThotBool            DeleteRow (NotifyElement * event)
 /*----------------------------------------------------------------------
    RowDeleted                                              
   ----------------------------------------------------------------------*/
-void                RowDeleted (NotifyElement * event)
+void RowDeleted (NotifyElement * event)
 {
   Element             rowgroup, table;
   ElementType         elType;
@@ -1379,7 +1382,7 @@ void                RowDeleted (NotifyElement * event)
 /*----------------------------------------------------------------------
    DeleteCell                                              
   ----------------------------------------------------------------------*/
-ThotBool            DeleteCell (NotifyElement * event)
+ThotBool DeleteCell (NotifyElement * event)
 {
   Element             cell;
   ElementType         elType;
@@ -1436,7 +1439,7 @@ ThotBool            DeleteCell (NotifyElement * event)
 /*----------------------------------------------------------------------
    CellDeleted                                             
   ----------------------------------------------------------------------*/
-void                CellDeleted (NotifyElement * event)
+void CellDeleted (NotifyElement * event)
 {
   Element             cell, col, child;
   ElementType         elType;
@@ -1483,7 +1486,7 @@ void                CellDeleted (NotifyElement * event)
 /*----------------------------------------------------------------------
    TableCreated                                            
   ----------------------------------------------------------------------*/
-void                TableCreated (NotifyElement * event)
+void TableCreated (NotifyElement * event)
 {
    Element             table;
    Document            doc;
@@ -1512,7 +1515,7 @@ void                TableCreated (NotifyElement * event)
 /*----------------------------------------------------------------------
    TablebodyDeleted                                             
   ----------------------------------------------------------------------*/
-void                TablebodyDeleted (NotifyElement * event)
+void TablebodyDeleted (NotifyElement * event)
 {
   Element             sibling, table;
   ElementType	      elType;
@@ -1547,7 +1550,7 @@ void                TablebodyDeleted (NotifyElement * event)
 /*----------------------------------------------------------------------
    RowCreated                                              
   ----------------------------------------------------------------------*/
-void                RowCreated (NotifyElement * event)
+void RowCreated (NotifyElement * event)
 {
   Element             row, table;
   ElementType         elType;
@@ -1588,7 +1591,7 @@ void                RowCreated (NotifyElement * event)
 /*----------------------------------------------------------------------
    RowPasted                                               
   ----------------------------------------------------------------------*/
-void                RowPasted (NotifyElement * event)
+void RowPasted (NotifyElement * event)
 {
   Element             row, table;
   ElementType         elType;
@@ -1627,6 +1630,9 @@ void                RowPasted (NotifyElement * event)
   /* avoid processing the cells of the created row */
   CurrentPastedRow = row;
   CurrentCell = TtaGetLastChild (row);
+  /* Check attribute NAME or ID in order to make sure that its value */
+  /* is unique in the document */
+  MakeUniqueName (row, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -1673,7 +1679,7 @@ void                ColspanCreated (NotifyAttribute * event)
 /*----------------------------------------------------------------------
    RegisterColspan                                         
   ----------------------------------------------------------------------*/
-ThotBool            RegisterColspan (NotifyAttribute * event)
+ThotBool RegisterColspan (NotifyAttribute * event)
 {
    PreviousColSpan = TtaGetAttributeValue (event->attribute);
    return FALSE;		/* let Thot perform normal operation */
@@ -1682,7 +1688,7 @@ ThotBool            RegisterColspan (NotifyAttribute * event)
 /*----------------------------------------------------------------------
    ColspanModified                                         
   ----------------------------------------------------------------------*/
-void                ColspanModified (NotifyAttribute * event)
+void ColspanModified (NotifyAttribute * event)
 {
   Element             cell;
   Attribute           attr;
@@ -1742,7 +1748,7 @@ static void ChangeRowSpan (Element cell, int oldspan, int newspan, Document doc)
 /*----------------------------------------------------------------------
    RowspanCreated                                          
   ----------------------------------------------------------------------*/
-void                RowspanCreated (NotifyAttribute * event)
+void RowspanCreated (NotifyAttribute * event)
 {
    int                 span;
 
@@ -1758,7 +1764,7 @@ void                RowspanCreated (NotifyAttribute * event)
 /*----------------------------------------------------------------------
    RegisterRowspan                                         
   ----------------------------------------------------------------------*/
-ThotBool            RegisterRowspan (NotifyAttribute * event)
+ThotBool RegisterRowspan (NotifyAttribute * event)
 {
    PreviousRowSpan = TtaGetAttributeValue (event->attribute);
    return FALSE;		/* let Thot perform normal operation */

@@ -62,6 +62,7 @@ static Element	LastDeletedElement = NULL;
 #include "html2thot_f.h"
 #include "HTMLtable_f.h"
 #include "HTMLactions_f.h"
+#include "HTMLedit_f.h"
 #include "HTMLpresentation_f.h"
 #include "MathMLbuilder_f.h"
 #include "styleparser_f.h"
@@ -3944,96 +3945,99 @@ void NewMathString (NotifyElement *event)
  -----------------------------------------------------------------------*/
 void MathElementPasted (NotifyElement *event)
 {
-   Element	 placeholderEl, parent, prev;
-   ElementType	 elType, elTypeParent;
-   Attribute     attr;
-   AttributeType attrType;
-   int           oldStructureChecking;
+  Element	 placeholderEl, parent, prev;
+  ElementType	 elType, elTypeParent;
+  Attribute     attr;
+  AttributeType attrType;
+  int           oldStructureChecking;
 
-   /* if the pasted element is an XLink, update the link */
-   XLinkPasted (event);
+  /* if the pasted element is an XLink, update the link */
+  XLinkPasted (event);
 
-   elType = TtaGetElementType (event->element);
-   if (elType.ElTypeNum == MathML_EL_MathML)
-     {
-       /* It is the <math> element */
-       /* Set the IntDisplaystyle attribute according to the context */     
-       SetDisplaystyleMathElement (event->element, event->document);
-       /* Set the MathML namespace declaration */
-       TtaSetUriSSchema (elType.ElSSchema, MathML_URI);
-       TtaSetANamespaceDeclaration (event->document, event->element, NULL, MathML_URI);
-     }
+  elType = TtaGetElementType (event->element);
+  if (elType.ElTypeNum == MathML_EL_MathML)
+    {
+      /* It is the <math> element */
+      /* Set the IntDisplaystyle attribute according to the context */     
+      SetDisplaystyleMathElement (event->element, event->document);
+      /* Set the MathML namespace declaration */
+      TtaSetUriSSchema (elType.ElSSchema, MathML_URI);
+      TtaSetANamespaceDeclaration (event->document, event->element, NULL, MathML_URI);
+    }
 
-   if (elType.ElTypeNum == MathML_EL_MUNDER ||
-       elType.ElTypeNum == MathML_EL_MOVER ||
-       elType.ElTypeNum == MathML_EL_MUNDEROVER)
-     /* move the limits if it's appropriate */
-     SetIntMovelimitsAttr (event->element, event->document);
+  if (elType.ElTypeNum == MathML_EL_MUNDER ||
+      elType.ElTypeNum == MathML_EL_MOVER ||
+      elType.ElTypeNum == MathML_EL_MUNDEROVER)
+    /* move the limits if it's appropriate */
+    SetIntMovelimitsAttr (event->element, event->document);
 
-   if (elType.ElTypeNum == MathML_EL_MO)
-     /* it's a mo element. It may be a fence separator or a largeop */
-     {
-       CheckFence (event->element, event->document);
-       CheckLargeOp (event->element, event->document);
-     }
+  if (elType.ElTypeNum == MathML_EL_MO)
+    /* it's a mo element. It may be a fence separator or a largeop */
+    {
+      CheckFence (event->element, event->document);
+      CheckLargeOp (event->element, event->document);
+    }
 
-   oldStructureChecking = TtaGetStructureChecking (event->document);
-   TtaSetStructureChecking (0, event->document);
+  oldStructureChecking = TtaGetStructureChecking (event->document);
+  TtaSetStructureChecking (0, event->document);
 
-   /* if an enclosing MROW element is needed create it, except if it's a
-      call from Undo command */
-   if (event->info != 1)
-     CreateParentMROW (event->element, event->document);
+  /* if an enclosing MROW element is needed create it, except if it's a
+     call from Undo command */
+  if (event->info != 1)
+    CreateParentMROW (event->element, event->document);
 
-   /* if the pasted element is a child of a FencedExpression element,
-      create the associated FencedSeparator elements */
-   parent = TtaGetParent (event->element);
-   elTypeParent = TtaGetElementType (parent);
-   if (elTypeParent.ElTypeNum == MathML_EL_FencedExpression &&
-       strcmp (TtaGetSSchemaName (elTypeParent.ElSSchema), "MathML") == 0)
-     RegenerateFencedSeparators (parent, event->document, FALSE/******/);
+  /* if the pasted element is a child of a FencedExpression element,
+     create the associated FencedSeparator elements */
+  parent = TtaGetParent (event->element);
+  elTypeParent = TtaGetElementType (parent);
+  if (elTypeParent.ElTypeNum == MathML_EL_FencedExpression &&
+      strcmp (TtaGetSSchemaName (elTypeParent.ElSSchema), "MathML") == 0)
+    RegenerateFencedSeparators (parent, event->document, FALSE/******/);
 
-   /* if the pasted element is a character string within a MI, MN, or MO
-      element, parse the new content to isolate identifiers, numbers and
-      operators */
-   if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
-     {
-     if ((elTypeParent.ElTypeNum == MathML_EL_MI ||
-	  elTypeParent.ElTypeNum == MathML_EL_MO ||
-	  elTypeParent.ElTypeNum == MathML_EL_MN) &&
-	 strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
-       /* if it's a call from Undo command, don't do anything */
-       if (event->info != 1)
-	 ParseMathString (event->element, parent, event->document);
-     }
-   else
-     {
-     /* create placeholders before and/or after the new element */
-     placeholderEl = InsertPlaceholder (event->element, TRUE, event->document,
-					FALSE/****/);
-     placeholderEl = InsertPlaceholder (event->element, FALSE, event->document,
-					FALSE/****/);
-     /* if the previous sibling is a Construct1, turn it into and
-	ordinary placeholder */
-     prev = event->element;  TtaPreviousSibling (&prev);
-     if (prev)
-       {
-	 elType = TtaGetElementType (prev);
-	 if (elType.ElTypeNum == MathML_EL_Construct1)
-	   {
-	     attrType.AttrSSchema = elType.ElSSchema;
-	     attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
-	     attr = TtaNewAttribute (attrType);
-	     TtaAttachAttribute (prev, attr, event->document);
-	     TtaSetAttributeValue (attr, MathML_ATTR_IntPlaceholder_VAL_yes_,
-				   prev, event->document);
-	     TtaRegisterElementReplace (prev, event->document);
-	     ChangeTypeOfElement (prev, event->document, MathML_EL_Construct);
-	   }
-       }
-     }
+  /* if the pasted element is a character string within a MI, MN, or MO
+     element, parse the new content to isolate identifiers, numbers and
+     operators */
+  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+    {
+      if ((elTypeParent.ElTypeNum == MathML_EL_MI ||
+	   elTypeParent.ElTypeNum == MathML_EL_MO ||
+	   elTypeParent.ElTypeNum == MathML_EL_MN) &&
+	  strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+	/* if it's a call from Undo command, don't do anything */
+	if (event->info != 1)
+	  ParseMathString (event->element, parent, event->document);
+    }
+  else
+    {
+      /* create placeholders before and/or after the new element */
+      placeholderEl = InsertPlaceholder (event->element, TRUE, event->document,
+					 FALSE/****/);
+      placeholderEl = InsertPlaceholder (event->element, FALSE, event->document,
+					 FALSE/****/);
+      /* if the previous sibling is a Construct1, turn it into and
+	 ordinary placeholder */
+      prev = event->element;  TtaPreviousSibling (&prev);
+      if (prev)
+	{
+	  elType = TtaGetElementType (prev);
+	  if (elType.ElTypeNum == MathML_EL_Construct1)
+	    {
+	      attrType.AttrSSchema = elType.ElSSchema;
+	      attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (prev, attr, event->document);
+	      TtaSetAttributeValue (attr, MathML_ATTR_IntPlaceholder_VAL_yes_,
+				    prev, event->document);
+	      TtaRegisterElementReplace (prev, event->document);
+	      ChangeTypeOfElement (prev, event->document, MathML_EL_Construct);
+	    }
+	}
+    }
 
-   TtaSetStructureChecking ((ThotBool)oldStructureChecking, event->document);
+  TtaSetStructureChecking ((ThotBool) oldStructureChecking, event->document);
+  /* Check attribute NAME or ID in order to make sure that its value */
+  /* is unique in the document */
+  MakeUniqueName (event->element, event->document);
 }
 
 
