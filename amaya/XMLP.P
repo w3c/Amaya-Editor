@@ -319,6 +319,7 @@ RULES
 		Size: DOC_FONTSIZE;
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left;
+		Width: Enclosing . Width;
 		PaddingLeft: 0.4;
 		Font: Helvetica;
 		END;
