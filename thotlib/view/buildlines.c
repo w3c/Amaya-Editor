@@ -438,6 +438,7 @@ PtrAbstractBox      pRootAb;
     {
       ibox2->BxContentWidth = TRUE;
       ibox2->BxContentHeight = TRUE;
+      ibox2->BxH = pBox->BxH;
       ibox2->BxHeight = height;
       ibox2->BxFont = font;
       ibox2->BxUnderline = pBox->BxUnderline;
@@ -473,6 +474,7 @@ PtrAbstractBox      pRootAb;
 	  ibox1->BxUnderline = pBox->BxUnderline;
 	  ibox1->BxThickness = pBox->BxThickness;
 	  ibox1->BxFont = font;
+	  ibox1->BxH = pBox->BxH;
 	  ibox1->BxHeight = height;
 	  ibox1->BxHorizRef = baseline;
 	  ibox1->BxType = BoPiece;
@@ -1181,6 +1183,7 @@ ThotBool            force;
       ibox1->BxFont = font;
       ibox1->BxUnderline = pBox->BxUnderline;
       ibox1->BxThickness = pBox->BxThickness;
+      ibox1->BxH = pBox->BxH;
       ibox1->BxHeight = height;
       ibox1->BxHorizRef = baseline;
 
@@ -1215,6 +1218,7 @@ ThotBool            force;
       /* Initialize the second piece */
       ibox2->BxContentWidth = TRUE;
       ibox2->BxContentHeight = TRUE;
+      ibox2->BxH = pBox->BxH;
       ibox2->BxHeight = height;
       ibox2->BxFont = font;
       ibox2->BxUnderline = pBox->BxUnderline;
@@ -1364,6 +1368,7 @@ PtrAbstractBox      pRootAb;
       /* Initialize the new piece */
       ibox2->BxContentWidth = TRUE;
       ibox2->BxContentHeight = TRUE;
+      ibox2->BxH = pBox->BxH;
       ibox2->BxHeight = height;
       ibox2->BxFont = font;
       ibox2->BxUnderline = pBox->BxUnderline;
