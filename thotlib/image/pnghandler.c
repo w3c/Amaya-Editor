@@ -102,24 +102,15 @@ int Magic64[256] =    /* for 4 levels of red and blue */
 };
 
 static png_color        Std_color_cube[128];
-
 #ifdef _WINGUI     
-  extern ThotBool         pic2print;
-  extern int              PngTransparentColor;
+extern int              PngTransparentColor;
 #endif /* _WINGUI */
-
-char  *typecouleur[] = {"grayscale", "undefined type", "RGB",
-			"colormap", "grayscale+alpha",
-			"undefined type", "RGB+alpha"};
-
-#if defined(_MOTIF) || defined(_GTK) 
+#ifdef _GTK
 extern ThotPixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
 		 unsigned int bg, int bperpix);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _GTK */
 
 #ifdef _GL
-
-
 /*----------------------------------------------------------------------
   ReadPng : reads from a file pointer a png file into a RGBA buffer
   All png specifications is supported : http://www.w3.org/Graphics/PNG/
@@ -398,16 +389,12 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
 	  colors[i].green = info_ptr->palette[i].green;
 	  colors[i].blue  = info_ptr->palette[i].blue;
 #endif /* _WINGUI */
-
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
 	  colors[i].red   = info_ptr->palette[i].red << 8;
 	  colors[i].green = info_ptr->palette[i].green << 8;
 	  colors[i].blue  = info_ptr->palette[i].blue << 8;
 	  colors[i].pixel = i;
-#ifdef _MOTIF
-	  colors[i].flags = DoRed|DoGreen|DoBlue;
-#endif /* _MOTIF */
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 	}
     }
   else if (color_type == PNG_COLOR_TYPE_RGB)
@@ -431,14 +418,11 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
 	      colors[i].blue = Std_color_cube[i].blue;
 #endif /* _WINGUI */
         
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)    
+#if defined(_GTK) || defined(_WX)    
 	      colors[i].red = Std_color_cube[i].red << 8;
 	      colors[i].green = Std_color_cube[i].green << 8;
 	      colors[i].blue = Std_color_cube[i].blue << 8;
-#ifdef _MOTIF
-	      colors[i].flags = DoRed|DoGreen|DoBlue;
-#endif /* _MOTIF */
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 	    }
 	}
     }
@@ -463,14 +447,10 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
 #if defined(_WINGUI)
 	      colors[i].red = colors[i].green = colors[i].blue = i;
 #endif /* _WINGUI */
-        
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
 	      colors[i].red = colors[i].green = colors[i].blue = i << 4; 
               /* this is 4 and not 8 because the palette should be between 0 and 255 */
-#ifdef _MOTIF
-	      colors[i].flags = DoRed|DoGreen|DoBlue;
-#endif /* _MOTIF */
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 	    }
 	}
     }
@@ -652,18 +632,17 @@ static unsigned char *ReadPngToData (char *datafile, int *w, int *h,
   unsigned char *bit_data;
   FILE           *fp;
       
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
-  fp = fopen (datafile, "r");
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
-  
-#ifdef _WINGUI
+#ifdef _WINDOWS
   fp = fopen (datafile, "rb");
-#endif /* _WINGUI */
+#else /* _WINDOWS */
+  fp = fopen (datafile, "r");
+#endif /* _WINDOWS */
 
   if (fp != NULL)
     {
 #ifdef _GL
-      bit_data = ReadPng (fp, (unsigned int *)w, (unsigned int *)h, ncolors, cpp, colrs, bg, withAlpha,
+      bit_data = ReadPng (fp, (unsigned int *)w, (unsigned int *)h, ncolors,
+			  cpp, colrs, bg, withAlpha,
 			  grayScale);
 #else /* #ifdef _GL */
       bit_data = ReadPng (fp, w, h, ncolors, cpp, colrs, bg, withAlpha,

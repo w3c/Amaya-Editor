@@ -558,7 +558,8 @@ PFD_GENERIC_ACCELERATED))
   GL_SetupPixelFormat : Sets up opengl buffers pixel format.
   Double Buffer, RGBA (32 bits), 
   no depth (z-buffer), no stencil (boolean buffer), no alpha (transparency), 
-  no accum (special effect like multisampling, antialiasing), no aux (all purpose buffers),
+  no accum (special effect like multisampling, antialiasing),
+  no aux (all purpose buffers),
   no pbuffers (?) buffers...
   ----------------------------------------------------------------------*/
 void GL_SetupPixelFormat (HDC hDC)
@@ -567,11 +568,11 @@ void GL_SetupPixelFormat (HDC hDC)
     {
       sizeof(PIXELFORMATDESCRIPTOR),  /* size */
       1,                              /* version */
-      PFD_DRAW_TO_WINDOW |			  /* Format Must Support Window*/
-      PFD_SUPPORT_OPENGL |			  /* Format Must Support OpenGL*/
-      PFD_DOUBLEBUFFER  /* |    */        /* support double-buffering */
-      /*PFD_DEPTH_DONTCARE |  */          /* If Depth is obligated by hardware*/
-      /*PFD_GENERIC_ACCELERATED*/ ,       /* We try to get hardware here => PFD_GENERIC_ACCELERATED*/       
+      PFD_DRAW_TO_WINDOW |	      /* Format Must Support Window*/
+      PFD_SUPPORT_OPENGL |	      /* Format Must Support OpenGL*/
+      PFD_DOUBLEBUFFER  /* |    */    /* support double-buffering */
+      /*PFD_DEPTH_DONTCARE |  */      /* If Depth is obligated by hardware*/
+      /*PFD_GENERIC_ACCELERATED*/ ,   /* We try to get hardware here */       
       PFD_TYPE_RGBA,                  /* color type */
       32,                             /* prefered color depth */
       0, 0, 0, 0, 0, 0,               /* color bits (ignored) */
@@ -634,7 +635,7 @@ void GL_BackBufferRegionSwapping (int x, int y, int width, int height,
   static PFNGLADDSWAPHINTRECTWINPROC p = 0;
 	  
   if (p == 0)
-    p = (PFNGLADDSWAPHINTRECTWINPROC) wglGetProcAddress("glAddSwapHintRectWIN");
+    p = (PFNGLADDSWAPHINTRECTWINPROC) wglGetProcAddress ("glAddSwapHintRectWIN");
 
   (*p) (x, y, x+width, y+height);
   SwapBuffers (GL_Windows[ActiveFrame]);
@@ -671,14 +672,11 @@ ThotBool GL_prepare (int frame)
         return TRUE;
       }
 #endif /*_WINGUI*/
-
 #ifdef _GTK      
-      if (FrRef[frame])
-        if (FrameTable[frame].WdFrame)
-	        if (gtk_gl_area_make_current (GTK_GL_AREA(FrameTable[frame].WdFrame)))
-	          return TRUE;
+      if (FrRef[frame] && FrameTable[frame].WdFrame)
+	if (gtk_gl_area_make_current (GTK_GL_AREA(FrameTable[frame].WdFrame)))
+	  return TRUE;
 #endif /* #ifdef _GTK */
-
 #ifdef _WX
       /*   wxLogDebug(_T("GL_prepare: frame=%d"), frame);*/
     if (FrameTable[frame].WdFrame && FrameTable[frame].WdFrame->DisplayIsReady() )

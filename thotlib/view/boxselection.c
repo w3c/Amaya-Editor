@@ -492,11 +492,7 @@ void ComputeViewSelMarks (ViewSelection *selMark, int frame)
 	/* select the first child */
 	pBox = pBox->BxNexChild;
       /* look for the right box */
-      while (pBox->BxNexChild &&
-	     (pBox->BxNexChild->BxFirstChar < pos ||
-	      ((pBox->BxNexChild->BxFirstChar == pos &&
-		pBox->BxNexChild->BxScript != 'A' &&
-		pBox->BxNexChild->BxScript != 'H'))))
+      while (pBox->BxNexChild && pBox->BxNexChild->BxFirstChar <= pos)
 	pBox = pBox->BxNexChild;
 
       pos -= pBox->BxFirstChar;

@@ -6051,17 +6051,14 @@ void TtaWaitShowDialogue ()
   TranslateMessage (&event);
   DispatchMessage (&event);
 #endif  /* _WINGUI */
-#if defined(_GTK)  
+#ifdef _GTK) 
   /* a TtaWaitShowDialogue pending */
   CurrentWait = 1;
   while (ShowReturn == 1)
-    {
-      TtaFetchOneEvent (&event);
-      TtaHandleOneEvent (&event);
-    }
+    TtaHandleOneEvent (&event);
   /* Fin de l'attente */
   CurrentWait = 0;
-#endif /* #if defined(_GTK) */
+#endif /* _GTK */
   
 }
 

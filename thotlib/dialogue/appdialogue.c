@@ -4236,22 +4236,6 @@ void ThotCallback (int ref, int typedata, char *data)
 		(void *)data);
 	break;
 	
-      case NumFormPrint:
-      case NumMenuOptions:
-      case NumMenuSupport:
-      case NumMenuPaperFormat:
-	(*(Proc3)ThotLocalActions[T_rprint]) (
-		(void *)ref,
-		(void *)((int) data),
-		(void *)NULL);
-	break;
-      case NumZonePrinterName:
-	(*(Proc3)ThotLocalActions[T_rprint]) (
-		(void *)ref,
-		(void *)0,
-		(void *)data);
-	break;
-	
       case NumFormPresChar:
       case NumFormPresFormat:
       case NumFormPresGraphics:

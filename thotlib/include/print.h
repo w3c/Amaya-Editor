@@ -38,9 +38,7 @@ extern void TtaSetPrintExportFunc (Func exportFunc);
 extern void TtaSetPrintParameter (PrintParameter parameter, int value);
 extern int TtaGetPrintParameter (PrintParameter parameter);
 extern void TtaSetPrintCommand (char *command);
-extern void TtaGetPrintCommand (char *command);
 extern void TtaSetPsFile (char *path);
-extern void TtaGetPsFile (char *path);
 extern void TtaSetPrintSchema (char *name);
 
 #endif /* __CEXTRACT__ */

@@ -158,8 +158,6 @@ extern void         TtcPreviousLine (Document document, View view);
 extern void         TtcPreviousSelLine (Document document, View view);
 extern void         TtcPreviousWord (Document document, View view);
 extern void         TtcPreviousSelWord (Document document, View view);
-extern void         TtcPrint (Document document, View view);
-extern void         TtcPrintSetup (Document document, View view);
 extern void         TtcQuit (Document document, View view);
 extern void         TtcScrollLeft (Document document, View view);
 extern void         TtcScrollRight (Document document, View view);

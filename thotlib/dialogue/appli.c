@@ -3280,7 +3280,6 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
   while (ClickIsDone == 1)
     {
 #ifdef _GTK
-      TtaFetchOneEvent (&event);
       TtaHandleOneEvent (&event);
 #endif /* _GTK */
 #ifdef _WINGUI

@@ -61,12 +61,11 @@
 #include "writedoc_f.h"
 
 #ifdef _WINGUI
-  #include "thotprinter_f.h"
-  #include "wininclude.h"
-  static PRINTDLG     Pdlg;
-  static ThotBool     LpInitialized = FALSE;
+#include "thotprinter_f.h"
+#include "wininclude.h"
+static PRINTDLG     Pdlg;
+static ThotBool     LpInitialized = FALSE;
 #endif /* _WINGUI */
-
 
 static PathBuffer   PrintDirName;
 static Name         PrintDocName;
@@ -94,29 +93,24 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 		   char *viewsToPrint, char *cssToPrint, Document document)
 {
    char                   *ptr;
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
    HINSTANCE               hLib;
-   /* FARPROC                 ptrMainProc; */
    typedef void (*MYPROC)(HWND, int, char **, HDC, ThotBool,
 			      int, char *, char *, HINSTANCE, ThotBool);
    MYPROC                  ptrMainProc;
    char                    tmp[MAX_TXT_LEN];
    char                   *printArgv [100];
    int                     printArgc = 0;
-#else /* _WINDOWS_DLL */
+#else /* _WINDOWS */
    char                    cmd[1024];
-   
-#if defined(_GTK) || defined(_MOTIF)
    int                     res;
-#endif /*#if defined(_GTK) || defined(_MOTIF)*/
-
-#endif /* _WINDOWS_DLL */
+#endif /* _WINDOWS */
    int                     i, j = 0;
    int                     frame;
 
    /* initialize the print command */
    ptr = TtaGetEnvString ("LANG");
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
    for (i = 0; i < 100; i++)
      printArgv[i] = NULL;
    printArgv[printArgc] = TtaGetMemory (strlen (BinariesDirectory) + 7);
@@ -130,23 +124,15 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    printArgv[printArgc] = TtaGetMemory (strlen (ptr) + 1);
    strcpy (printArgv[printArgc], ptr);
    printArgc++;
-#else /* !_WINDOWS_DLL */
-
-#ifdef _WINGUI
-   strcpy (cmd, "thotprinter.exe"); 
-#endif /* _WINGUI */
-   
-#if defined(_GTK) || defined(_MOTIF)   
+#else /* _WINDOWS */
    sprintf (cmd, "%s/print", BinariesDirectory); 
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-   
    strcat (cmd, " -lang ");
    strcat (cmd, ptr);
-#endif /* !_WINDOWS_DLL */
+#endif /* _WINDOWS */
 
    if (thotSch != NULL && thotSch[0] != EOS)
      {
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
        printArgv[printArgc] = TtaGetMemory (5) ;
        strcpy (printArgv[printArgc], "-sch");
        printArgc++;
@@ -159,28 +145,28 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
        printArgv[printArgc] = TtaGetMemory (strlen (thotDoc) + 1);
        strcpy (printArgv[printArgc], thotDoc);
        printArgc++;
-#else /* !_WINGUI */
+#else /* _WINDOWS */
        strcat (cmd, " -sch ");
        strcat (cmd, thotSch);
        strcat (cmd, " -doc ");
        strcat (cmd, thotDoc);
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
      }
 
    /* transmit the server name */
    if (servername && servername[0] != EOS)
      {
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
        printArgv[printArgc] = TtaGetMemory (9);
        strcpy (printArgv[printArgc], "-display");
        printArgc++;
        printArgv[printArgc] = TtaGetMemory (strlen (servername) + 1);
        strcpy (printArgv[printArgc], servername);
        printArgc++;
-#else /* _WINDOWS_DLL */
+#else /* _WINDOWS */
        strcat (cmd, " -display ");
        strcat (cmd, servername);
-#endif /* _WINDOWS_DLL */
+#endif /* _WINDOWS */
      }
 
    /* transmit the document name */
@@ -190,17 +176,17 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
        ptr = strstr (realName, "&");
        if (ptr)
 	 *ptr = EOS;
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
        printArgv[printArgc] = TtaGetMemory (6);
        strcpy (printArgv[printArgc], "-name");
        printArgc++;
        printArgv[printArgc] = TtaGetMemory (strlen (realName) + 10);
        strcpy (printArgv[printArgc], realName);
        printArgc++;
-#else /* _WINDOWS_DLL */
+#else /* _WINDOWS */
        strcat (cmd, " -name ");
        strcat (cmd, realName);
-#endif /* _WINDOWS_DLL */
+#endif /* _WINDOWS */
        /* restore the name */
        if (ptr)
 	 *ptr = '&';
@@ -209,258 +195,222 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    /* transmit the orientation (default value is portrait) */
    if (userOrientation != 0)
      {
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
        printArgv[printArgc] = TtaGetMemory (11);
        strcpy (printArgv[printArgc], "-landscape");
        printArgc++;
-#else /* _WINDOWS_DLL */
+#else /* _WINDOWS */
        strcat (cmd, " -landscape");
-#endif /* _WINDOWS_DLL */
+#endif /* _WINDOWS */
      }
 
    /* transmit the output command */
    if (PaperPrint)
      {
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
        printArgv[printArgc] = TtaGetMemory (5);
        strcpy (printArgv[printArgc], "-out");
        printArgc++;
-#else /* _WINDOWS_DLL */
+#else /* _WINDOWS */
        strcat (cmd, " -out \"");
-#endif /* _WINDOWS_DLL */
+#endif /* _WINDOWS */
      }
    else
      {
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
        printArgv[printArgc] = TtaGetMemory (4);
        strcpy (printArgv[printArgc], "-ps");
        printArgc++;
-#else /* _WINDOWS_DLL */
+#else /* _WINDOWS */
        strcat (cmd, " -ps \"");
-#endif /* _WINDOWS_DLL */
+#endif /* _WINDOWS */
      }
 
    if (output[0] != EOS)
      {
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
        printArgv[printArgc] = TtaGetMemory (strlen (output) + 1);
        strcpy (printArgv[printArgc], output);
        printArgc++;
-#else /* _WINDOWS_DLL */
+#else /* _WINDOWS */
        strcat (cmd, output);
        strcat (cmd, "\" ");
-#endif /* _WINDOWS_DLL */
+#endif /* _WINDOWS */
      }
    else
      {
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
        printArgv[printArgc] = TtaGetMemory (3);
        strcpy (printArgv[printArgc], "lp");
        printArgc++;
-#else /* _WINDOWS_DLL */
+#else /* _WINDOWS */
        strcat (cmd, "lp");
        strcat (cmd, "\" ");
-#endif /* _WINDOWS_DLL */
+#endif /* _WINDOWS */
      }
 
    /* transmit visualization of empty boxes (default no) */
    if (suppFrame == 0)
      {
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
        printArgv[printArgc] = TtaGetMemory (10);
        strcpy (printArgv[printArgc], "-emptybox");
        printArgc++;
-#else /* _WINDOWS_DLL */
+#else /* _WINDOWS */
        strcat (cmd, " -emptybox");
-#endif /* _WINDOWS_DLL */
+#endif /* _WINDOWS */
      }
 
    /* transmit black/white output (default no) */
    if (blackAndWhite != 0)
      {
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
        printArgv[printArgc] = TtaGetMemory (4);
        strcpy (printArgv[printArgc], "-bw");
        printArgc++;
-#else /* _WINDOWS_DLL */
+#else /* _WINDOWS */
        strcat (cmd, " -bw");
-#endif /* _WINDOWS_DLL */
+#endif /* _WINDOWS */
      }
 
    /* transmit manualfeed (default no) */
    if (manualFeed != 0)
      {
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
        printArgv[printArgc] = TtaGetMemory (12);
        strcpy (printArgv[printArgc], "-manualfeed");
        printArgc++;
-#else /* _WINDOWS_DLL */
+#else /* _WINDOWS */
        strcat (cmd, " -manualfeed");
-#endif /* _WINDOWS_DLL  */
+#endif /* _WINDOWS */
      }
 
    /* transmit repaginate (default no) */
    if (repaginate != 0)
      {
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
        printArgv[printArgc] = TtaGetMemory (10);
        strcpy (printArgv[printArgc], "-paginate");
        printArgc++;
-#else /* _WINDOWS_DLL */
+#else /* _WINDOWS */
        strcat (cmd, " -paginate");
-#endif /* _WINDOWS_DLL */
+#endif /* _WINDOWS */
      }
 
    /* transmit page format */
    if (strcmp (PageSize, "A4"))
      {
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
        sprintf (tmp, "-P%s", PageSize);
        printArgv[printArgc] = TtaGetMemory (strlen (PageSize) + 3);
        strcpy (printArgv[printArgc], tmp);
        printArgc++;
-#else /* _WINDOWS_DLL */
+#else /* _WINDOWS */
        strcat (cmd, " -P");
        strcat (cmd, PageSize);
-#endif /* _WINDOWS_DLL */
+#endif /* _WINDOWS */
      }
 
    /* transmit window id */
-
-#ifndef _WINDOWS_DLL
+#ifndef _WINDOWS
    i = strlen (cmd);
-#endif /*_WINDOWS_DLL*/
+#endif /*_WINDOWS */
 
-#ifndef _WX
-     if (FrRef[0] != 0)
-#else /* _WX */
-     if (FrameTable[0].WdFrame != 0)
-#endif /* _WX */
+   frame = 1;
+   while (frame <= MAX_FRAME && FrameTable[frame].FrDoc != document)
+     frame++;
+   if (frame <= MAX_FRAME)
      {
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
        printArgv[printArgc] = TtaGetMemory (20);
-       sprintf (printArgv[printArgc], "-w%ld", FrRef[0]);
+       sprintf (printArgv[printArgc], "-w%ld", FrRef[frame]);
        printArgc++;
-#else /* _WINDOWS_DLL */
+#else /* _WINDOWS */
 #ifndef _WX
        sprintf (&cmd[i], " -w%u", (unsigned int) FrRef[0]);
 #else /* _WX */
        sprintf (&cmd[i], " -w%u", (unsigned int) FrameTable[0].WdFrame);
 #endif /* _WX */
-#endif /* _WINDOWS_DLL */
-     }
-   else
-     {
-       frame = 1;
-       while (frame <= MAX_FRAME && FrameTable[frame].FrDoc != document)
-	 frame++;
-       if (frame <= MAX_FRAME)
-	 {
-#ifdef _WINDOWS_DLL
-	   printArgv[printArgc] = TtaGetMemory (20);
-	   sprintf (printArgv[printArgc], "-w%ld", FrRef[frame]);
-	   printArgc++;
-#else /* _WINDOWS_DLL */
-#ifndef _WX
-           sprintf (&cmd[i], " -w%u", (unsigned int) FrRef[0]);
-#else /* _WX */
-           sprintf (&cmd[i], " -w%u", (unsigned int) FrameTable[0].WdFrame);
-#endif /* _WX */
-#endif /* _WINDOWS_DLL */
-	 }
-       else
-	 {
-#ifdef _WINDOWS_DLL
-	   printArgv[printArgc] = TtaGetMemory (20);
-	   sprintf (printArgv[printArgc], "-w%ld", FrRef[0]);
-	   printArgc++;
-#else /* _WINDOWS_DLL */
-#ifndef _WX
-           sprintf (&cmd[i], " -w%u", (unsigned int) FrRef[0]);
-#else /* _WX */
-           sprintf (&cmd[i], " -w%u", (unsigned int) FrameTable[0].WdFrame);
-#endif /* _WX */
-#endif /* _WINDOWS_DLL */
-	 }
+#endif /* _WINDOWS */
      }
 
    /* transmit values */
    if (nbPagesPerSheet != 1)
      {
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
        printArgv[printArgc] = TtaGetMemory (6);
        strcpy (printArgv[printArgc], "-npps");
        printArgc++;
        printArgv[printArgc] = TtaGetMemory (5);
        sprintf (printArgv[printArgc], "%d", nbPagesPerSheet);
        printArgc++;
-#else /* _WINDOWS_DLL */
+#else /* _WINDOWS */
        i = strlen (cmd);
        sprintf (&cmd[i], " -npps %d ", nbPagesPerSheet);
-#endif /* _WINDOWS_DLL */
+#endif /* _WINDOWS */
      }
 
    if (firstPage > 1 || lastPage < 999)
      {
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
        printArgv[printArgc] = TtaGetMemory (7);
        sprintf (printArgv[printArgc], "-F%d", firstPage);
        printArgc++;
        printArgv[printArgc] = TtaGetMemory (7);
        sprintf (printArgv[printArgc], "-L%d", lastPage);
        printArgc++;
-#else /* _WINDOWS_DLL */
+#else /* _WINDOWS */
    i = strlen (cmd);
    sprintf (&cmd[i], " -F%d -L%d ", firstPage, lastPage);
-#endif /* _WINDOWS_DLL */
+#endif /* _WINDOWS */
      }
 
    if (nCopies > 1)
      {
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
        printArgv[printArgc] = TtaGetMemory (8);
        sprintf (printArgv[printArgc], "-#%d", nCopies);
        printArgc++;
-#else /* _WINDOWS_DLL */
+#else /* _WINDOWS */
        i = strlen (cmd);
        sprintf (&cmd[i], " -#%d ", nCopies);
-#endif /* _WINDOWS_DLL */
+#endif /* _WINDOWS */
      }
 
    if (hShift != 0)
      {
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
        printArgv[printArgc] = TtaGetMemory (7);
        sprintf (printArgv[printArgc], "-H%d", hShift);
        printArgc++;
-#else /* _WINDOWS_DLL */
+#else /* _WINDOWS */
        i = strlen (cmd);
        sprintf (&cmd[i], " -H%d ", hShift);
-#endif /* _WINDOWS_DLL */
+#endif /* _WINDOWS */
      }
 
    if (vShift != 0)
      {
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
        printArgv[printArgc] = TtaGetMemory (7);
        sprintf (printArgv[printArgc], "-V%d", vShift);
        printArgc++;
-#else /* _WINDOWS_DLL */
+#else /* _WINDOWS */
        i = strlen (cmd);
        sprintf (&cmd[i], " -V%d ", vShift);
-#endif /* _WINDOWS_DLL */
+#endif /* _WINDOWS */
      }
 
    if (reduction != 100)
      {
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
        printArgv[printArgc] = TtaGetMemory (7);
        sprintf (printArgv[printArgc], "-%%%d", reduction);
        printArgc++;
-#else /* _WINDOWS_DLL */
+#else /* _WINDOWS */
        i = strlen (cmd);
        sprintf (&cmd[i], " -%%%d ", reduction);
-#endif /* _WINDOWS_DLL */
+#endif /* _WINDOWS */
      }
 
    /* transmit all view names */
@@ -472,16 +422,16 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    if (viewsToPrint[i] != EOS)
      {
        /* insert the flag -v before each view name */
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
        printArgv[printArgc] = TtaStrdup ("-v");
        printArgc++;
        printArgv[printArgc] = TtaGetMemory (50);
        j = 0;
-#else /* _WINDOWS_DLL */
+#else /* _WINDOWS */
        j = strlen (cmd);
        sprintf (&cmd[j], " -v ");
        j = strlen (cmd);
-#endif /* _WINDOWS_DLL */
+#endif /* _WINDOWS */
 
        while (viewsToPrint[i] != EOS)
 	 {
@@ -495,37 +445,37 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 	       if (viewsToPrint[i] != EOS)
 		 {
 		   /* insert the flag -v before each view name */
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
 		   printArgv[printArgc][j++] = EOS;
 		   printArgc++;
 		   printArgv[printArgc] = TtaStrdup ("-v");
 		   printArgc++;
 		   printArgv[printArgc] = TtaGetMemory (50);
 		   j = 0;
-#else /* _WINDOWS_DLL */
+#else /* _WINDOWS */
 		   j = strlen (cmd);
 		   sprintf (&cmd[j], " -v ");
 		   j = strlen (cmd);
-#endif /* _WINDOWS_DLL */
+#endif /* _WINDOWS */
 		 }
 	     }
 	   else
 	     {
 	       /* copy the character */
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
 	       printArgv[printArgc][j++] = viewsToPrint[i];
-#else /* _WINDOWS_DLL */
+#else /* _WINDOWS */
 	       cmd[j++] = viewsToPrint[i];
 	       cmd[j] = EOS;
-#endif /* _WINDOWS_DLL */
+#endif /* _WINDOWS */
 	       /* process next char */
 	       i++;
 	     }
 	 }
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
        printArgv[printArgc][j] = EOS;
        printArgc++;
-#endif /* _WINDOWS_DLL */
+#endif /* _WINDOWS */
      }
 
    /* transmit css files */
@@ -543,7 +493,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 	   else
 	     {
 	       /* insert the flag -cssa or -cssu before each stylesheet name */
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
 	       if (cssToPrint[i] == 'a')
 		 /* it's an author stylesheet */
 		 printArgv[printArgc] = TtaStrdup ("-cssa");
@@ -551,14 +501,14 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 		 /* it's an user stylesheet */
 		 printArgv[printArgc] = TtaStrdup ("-cssu");
 	       printArgc++;
-#else /* _WINDOWS_DLL */
+#else /* _WINDOWS */
 	       j = strlen (cmd);
 	       if (cssToPrint[i] == 'a')
 		 sprintf (&cmd[j], " -cssa ");
 	       else
 		 sprintf (&cmd[j], " -cssu ");
 	       j = strlen (cmd);
-#endif /* _WINDOWS_DLL */
+#endif /* _WINDOWS */
 	       /* skip the flag "a" or "u" */
 	       i++;
 	     }
@@ -568,58 +518,33 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
            if (cssToPrint[i] != EOS)
 	     /* there is a file name after the flag */
 	     {
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
 	       printArgv[printArgc] = TtaGetMemory (99);
 		   j = 0;
-#endif /* _WINDOWS_DLL */
 	       while (cssToPrint[i] != SPACE && cssToPrint[i] != EOS)
 		 {
 		   /* copy the character */
-#ifdef _WINDOWS_DLL
 		   printArgv[printArgc][j++] = cssToPrint[i];
 		   printArgv[printArgc][j] = EOS;
-#else /* _WINDOWS_DLL */
-		   cmd[j++] = cssToPrint[i];
-		   cmd[j] = EOS;
-#endif /* _WINDOWS_DLL */
 		   /* process next char */
 		   i++;
 		 }
-#ifdef _WINDOWS_DLL
 	       printArgc++;
-#endif /* _WINDOWS_DLL */
+#else /* _WINDOWS */
+	       while (cssToPrint[i] != SPACE && cssToPrint[i] != EOS)
+		 {
+		   /* copy the character */
+		   cmd[j++] = cssToPrint[i];
+		   cmd[j] = EOS;
+		   /* process next char */
+		   i++;
+		 }
+#endif /* _WINDOWS */
 	     }
 	 }
      }
    /* transmit the path or source file */
-#ifdef _WINGUI
-#ifndef _WINDOWS_DLL
-   {
-     STARTUPINFO si;
-     PROCESS_INFORMATION pi;
-
-     cmd[j] = EOS;
-     i = strlen (cmd);
-     sprintf (&cmd[i], " -removedir %s\\%s.PIV", dir, name);
-
-     ZeroMemory(&si, sizeof(si));
-     si.cb = sizeof (si);
-     ZeroMemory(&pi, sizeof(pi));
-
-     CreateProcess ( NULL,   /* No module name (use command line). */
-		     cmd,               /* Command line. */
-		     NULL,             /* Process handle not inheritable. */
-		     NULL,             /* Thread handle not inheritable. */
-		     FALSE,            /* Set handle inheritance to FALSE. */
-		     0,                /* No creation flags. */
-		     NULL,             /* Use parent's environment block. */
-		     NULL,             /** Use parent's starting directory. */
-		     &si,              /* Pointer to STARTUPINFO structure.*/
-		     &pi );            /* Pointer to PROCESS_INFORMATION structure.*/
-     /*do we have to wait until process die ?*/
-     /* WaitForInputIdle()*/ 
-   }
-#else /*_WINDOWS_DLL*/
+#ifdef _WINDOWS
    printArgv[printArgc] = TtaStrdup ("-removedir");
    printArgc++;
    printArgv[printArgc] = TtaGetMemory (strlen (dir) + strlen (name) + 6);
@@ -654,23 +579,18 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
        DeleteDC (TtPrinterDC);
        TtPrinterDC = (HDC) 0;
      }
-#endif /*_WINDOWS_DLL*/
-#endif /*_WINGUI */
-
-#if defined(_GTK) || defined(_MOTIF)
+#else /*_WINDOWS*/
    cmd[j] = EOS;
    i = strlen (cmd);
    sprintf (&cmd[i], " -removedir %s/%s.PIV &", dir, name);
 #ifdef _PCLDEBUG
-    printf ("\n/usr/bin/ddd bin/%s\n", cmd); 
-   /* res = system (cmd);  */
+   printf ("\n/usr/bin/ddd bin/%s\n", cmd); 
 #else /* _PCLDEBUG */
    res = system (cmd); 
 #endif /* _PCLDEBUG */
-    if (res == -1) 
-       TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-
+   if (res == -1) 
+     TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION);
+#endif /*_WINDOWS*/
 }
 
 /*----------------------------------------------------------------------
@@ -688,33 +608,29 @@ void InitPrintParameters (Document document)
    else
      pDoc = LoadedDocument[document - 1];
 
-   if (ThotLocalActions[T_rprint] == NULL)
-     {
-       /* Connect printing actions */
-       TteConnectAction (T_rprint, (Proc) CallbackPrintmenu);
-       /* read DEFAULTPRINTER variable */
-       ptr = TtaGetEnvString ("THOTPRINT");
-       if (ptr == NULL)
-          strcpy (pPrinter, "");
-       else
-           strcpy (pPrinter, ptr);
-       PSdir[0] = EOS;
-       PrintingDoc = 0;
-       defPaperPrint = TRUE;
-       defManualFeed = FALSE;
-       defFirstPage = 0;
-       defLastPage = 999;
-       defNbCopies = 1;
-       defReduction = 100;
-       defPagesPerSheet = 1;
-       ptr = TtaGetEnvString ("PAPER");
-       if (ptr == NULL)
-          strcpy(PageSize, "A4");
-       else
-           strcpy(PageSize, ptr);
-       defPaginate = TRUE;
-       PresSchema[0] = EOS;
-     }
+   /* Connect printing actions */
+   /* read DEFAULTPRINTER variable */
+   ptr = TtaGetEnvString ("THOTPRINT");
+   if (ptr == NULL)
+     strcpy (pPrinter, "");
+   else
+     strcpy (pPrinter, ptr);
+   PSdir[0] = EOS;
+   PrintingDoc = 0;
+   defPaperPrint = TRUE;
+   defManualFeed = FALSE;
+   defFirstPage = 0;
+   defLastPage = 999;
+   defNbCopies = 1;
+   defReduction = 100;
+   defPagesPerSheet = 1;
+   ptr = TtaGetEnvString ("PAPER");
+   if (ptr == NULL)
+     strcpy(PageSize, "A4");
+   else
+     strcpy(PageSize, ptr);
+   defPaginate = TRUE;
+   PresSchema[0] = EOS;
 
    if (document != PrintingDoc || document == 0)
      {
@@ -750,15 +666,11 @@ void InitPrintParameters (Document document)
 		 }
 	       else
 		 {
-       
-#ifdef _WINGUI
+#ifdef _WINDOWS
 		   strcpy (PSdir, "C:\\TEMP");
-#endif  /* _WINGUI */
-       
-#if defined(_GTK) || defined(_MOTIF)
-       strcpy (PSdir,"/tmp");
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-       
+#else  /* _WINDOWS */
+		   strcpy (PSdir,"/tmp");
+#endif  /* _WINDOWS */
 		   lg = strlen (PSdir);
 		 }
 	       sprintf (&PSdir[lg], "/%s.ps", pDoc->DocDName);
@@ -767,18 +679,6 @@ void InitPrintParameters (Document document)
      }
 }
 
-/*----------------------------------------------------------------------
-   TtcPrint standard handler for the Print action.  
-   Calls TtaPrint to print the current view.
-   ---------------------------------------------------------------------*/
-void TtcPrint (Document document, View view)
-{
-   PathBuffer          viewsToPrint;
-
-   strcpy (viewsToPrint, TtaGetViewName (document, view));
-   strcat (viewsToPrint, " ");
-   TtaPrint (document, viewsToPrint, NULL);
-}
 
 /*----------------------------------------------------------------------
    TtaGetPrintNames generates and returns a directory name to store
@@ -1188,28 +1088,16 @@ int TtaGetPrintParameter (PrintParameter parameter)
 /*----------------------------------------------------------------------
   TtaSetPrintCommand sets the print command.
   ----------------------------------------------------------------------*/
-void                TtaSetPrintCommand (char *command)
+void TtaSetPrintCommand (char *command)
 {
   strcpy (pPrinter, command);
 }
 
 
 /*----------------------------------------------------------------------
-  TtaGetPrintCommand returns the print command.
-  ----------------------------------------------------------------------*/
-void                TtaGetPrintCommand (char *command)
-{
-  if (command == NULL)
-    TtaError(ERR_invalid_parameter);
-  else
-    strcpy (command, pPrinter);
-}
-
-
-/*----------------------------------------------------------------------
   TtaSetPrintSchema fixes the printing schema.
   ----------------------------------------------------------------------*/
-void                TtaSetPrintSchema (char *name)
+void TtaSetPrintSchema (char *name)
 {
   if (strlen(name) >= MAX_NAME_LENGTH)
     TtaError(ERR_invalid_parameter);
@@ -1221,192 +1109,8 @@ void                TtaSetPrintSchema (char *name)
 /*----------------------------------------------------------------------
   TtaSetPrintCommand sets the path of ps file.
   ----------------------------------------------------------------------*/
-void                TtaSetPsFile (char *path)
+void TtaSetPsFile (char *path)
 {
   strcpy (PSdir, path);
-}
-
-
-/*----------------------------------------------------------------------
-  TtaGetPsFile returns the path of ps file.
-  ----------------------------------------------------------------------*/
-void                TtaGetPsFile (char *path)
-{
-  if (path == NULL)
-    TtaError(ERR_invalid_parameter);
-  else
-    strcpy (path, PSdir);
-}
-
-
-/*----------------------------------------------------------------------
-  CallbackPrintmenu
-  callback associated to the PrintSetup form 
-  ----------------------------------------------------------------------*/
-void                CallbackPrintmenu (int ref, int val, char *txt)
-{
-  PtrDocument         pDoc;
-
-  if (PrintingDoc != 0)
-    {
-      pDoc = LoadedDocument[PrintingDoc - 1];
-
-    if (pDoc->DocSSchema != NULL)
-      /* the document to be printed still exists */
-      switch (ref)
-	{
-	case NumMenuSupport:
-	  /* paper print/save PostScript submenu */
-	  switch (val)
-	    {
-	    case 0:
-	      if (!NewPaperPrint)
-		{
-		  NewPaperPrint = TRUE;
-      
-#if defined(_GTK) || defined(_MOTIF)
-		  TtaSetTextForm (NumZonePrinterName, pPrinter);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-      
-		}
-	      break;
-	    case 1:
-	      if (NewPaperPrint)
-		{
-		  NewPaperPrint = FALSE;
-      
-#if defined(_GTK) || defined(_MOTIF)
-		  TtaSetTextForm (NumZonePrinterName, PSdir);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-      
-		}
-	      break;
-	    }
-	  break;
-	case NumMenuPaperFormat:
-	  /* page size submenu */
-	  switch (val)
-	    {
-	    case 0:
-	      strcpy (PageSize, "A4");
-	      break;
-	    case 1:
-	      strcpy (PageSize, "US");
-	      break;
-	    }
-	  break;
-	case NumMenuOptions:
-	  switch (val)
-	    {
-	    case 0:
-	      /* Manual feed option */
-	      ManualFeed = !ManualFeed;
-	      break;
-	    case 1:
-	      /* Repagination option */
-	      Paginate = !Paginate;
-	      break;
-	    }
-	  break;
-	case NumZonePrinterName:
-	  if (txt[0] != EOS)
-	    {
-	    if (NewPaperPrint)
-	      /* text capture zone for the printer name */
-	      strncpy (pPrinter, txt, MAX_PATH);
-	    else
-	      /* text capture zone for the name of the PostScript file */
-	      strncpy (PSdir, txt, MAX_PATH);
-	    }
-	  break;
-	case NumFormPrint:
-	  /* Print form option */
-	  TtaDestroyDialogue (NumFormPrint);
-	  switch (val)
-	    {
-	    case 1:
-	      /* confirms the paper print option */
-	      /* the other options are not taken into account without this
-		 confirmation */
-	      PaperPrint = NewPaperPrint;
-	      break;
-	    default:
-	      break;
-	    }
-	  break;
-	default:
-	  break;
-	}
-    }
-}
-
-/*----------------------------------------------------------------------
-   TtcPrintSetup
-   standard handler for a PrintSetup action.
-   Prepares and displays a form.
-  ----------------------------------------------------------------------*/
-void                TtcPrintSetup (Document document, View view)
-{
-   int              i;
-   char             bufMenu[MAX_TXT_LEN];
-
-   if (document == 0)
-     return;
-
-   /* Print form */
-   InitPrintParameters (document);
-   
-#if defined(_GTK) || defined(_MOTIF)
-   TtaNewSheet (NumFormPrint, TtaGetViewFrame (document, view), TtaGetMessage (LIB, TMSG_LIB_PRINT), 1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 2, 'L', D_CANCEL);
-
-   i = 0;
-   sprintf (&bufMenu[i], "B%s", TtaGetMessage (LIB, TMSG_MANUAL_FEED));
-   TtaNewToggleMenu (NumMenuOptions, NumFormPrint, TtaGetMessage (LIB, TMSG_OPTIONS), 1, bufMenu, NULL, FALSE);
-   if (ManualFeed)
-      TtaSetToggleMenu (NumMenuOptions, 0, TRUE);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-
-   /* Paper format submenu */
-   i = 0;
-   sprintf (&bufMenu[i], "B%s", TtaGetMessage (LIB, TMSG_A4));
-   i += strlen (&bufMenu[i]) + 1;
-   sprintf (&bufMenu[i], "B%s", TtaGetMessage (LIB, TMSG_US));
-   TtaNewSubmenu (NumMenuPaperFormat, NumFormPrint, 0, TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, bufMenu, NULL, FALSE);
-
-#if defined(_GTK) || defined(_MOTIF)
-   if (!strcmp (PageSize, "US"))
-      TtaSetMenuForm (NumMenuPaperFormat, 1);
-   else
-      TtaSetMenuForm (NumMenuPaperFormat, 0);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-
-   /* Print to paper/ Print to file submenu */
-   i = 0;
-   sprintf (&bufMenu[i], "B%s", TtaGetMessage (LIB, TMSG_PRINTER));
-   i += strlen (&bufMenu[i]) + 1;
-   sprintf (&bufMenu[i], "B%s", TtaGetMessage (LIB, TMSG_PS_FILE));
-   TtaNewSubmenu (NumMenuSupport, NumFormPrint, 0,
-                  TtaGetMessage (LIB, TMSG_OUTPUT), 2, bufMenu, NULL, TRUE);
-   /* initialization of the PaperPrint selector */
-   NewPaperPrint = PaperPrint;
-
-#if defined(_GTK) || defined(_MOTIF)
-   if (PaperPrint)
-     {
-       TtaSetMenuForm (NumMenuSupport, 0);
-       TtaSetTextForm (NumZonePrinterName, pPrinter);
-     }
-   else
-     {
-       TtaSetMenuForm (NumMenuSupport, 1);
-       TtaSetTextForm (NumZonePrinterName, PSdir);
-     }
-   /* text capture zone for the printer name */
-   TtaNewTextForm (NumZonePrinterName, NumFormPrint, NULL, 30, 1, FALSE);
-
-   /* activates the Print form */
-   TtaShowDialogue (NumFormPrint, FALSE);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-   
 }
 

@@ -55,26 +55,11 @@
 #define NumMenuSearchNature	43
 #define NumSelTypeToSearch	44
 #define NumSelAttributeToSearch	45
-#define NumToggleUpperEqualLower       47
-#define NumZoneScrollUp      	48
-#define NumZoneScrollLeft  	49
-#define NumMenuOrientation  	49
-#define NumMenuOptions	  	50
-#define NumMenuNbPagesPerSheet 	52
-#define NumMenuSupport	 	53
-#define NumZoneReduction 	54
-#define NumZoneFirstPage 	55
-#define NumZoneLastPage 	56
-#define NumZoneNbOfCopies 	57
-#define NumZonePrinterName 	58
-#define NumEmptyLabel1	 	59
-#define NumEmptyLabel2          60
-#define NumMenuPaperFormat 	61
-#define NumPrintingFormat	62
-#define NumMenuSchPresent 	63
-#define NumFormClose		64
-#define NumLabelSaveBeforeClosing 65
-#define NumMenuPresNature	66
+#define NumToggleUpperEqualLower       46
+
+#define NumFormClose		47
+#define NumLabelSaveBeforeClosing 48
+#define NumMenuPresNature	49
 #define NbMaxMenuPresNature	20 /* schema de presentation des natures */
 #define NumMenuAttr    88	/* numero de la feuille de dialogue pour la */
                              	/* saisie des attributs */
@@ -94,7 +79,7 @@
                          	/* valeur d'un attribut textuel obligatoire */
 #define NumMenuAttrEnumNeeded 95 /* numero du menu des valeurs d'un */
 #define NumMenuCharacters	96
-#define NumFormPrint		97
+
 #define NumZoneRecess		100
 #define NumMenuRecessSense	101
 #define NumZoneLineSpacing	102

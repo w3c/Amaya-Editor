@@ -306,14 +306,7 @@ extern void TtaUpdateEditorColors (void);
 extern int TtaGetScreenDepth (void);
 
 /*----------------------------------------------------------------------
-   TtaFetchOneEvent
-   retrieve one X-Windows Event from the queue, this is a blocking call.
-  ----------------------------------------------------------------------*/
-extern void TtaFetchOneEvent (ThotEvent *ev);
-
-/*----------------------------------------------------------------------
    TtaFetchOneAvailableEvent
-
    retrieve one X-Windows Event from the queue if one is immediately
    available.
   ----------------------------------------------------------------------*/
@@ -334,7 +327,8 @@ extern ThotDisplay *TtaGetCurrentDisplay (void);
    TtaGiveSelectPosition: returns the mouse position for the last click 
    with respect to the element (position in pixel)            
   ----------------------------------------------------------------------*/
-extern void TtaGiveSelectPosition (Document document, Element element, View view, /*OUT*/ int *X, /*OUT*/ int *Y);
+extern void TtaGiveSelectPosition (Document document, Element element,
+				   View view, /*OUT*/ int *X, /*OUT*/ int *Y);
 
 /*----------------------------------------------------------------------
   BuildMenus builds or rebuilds frame menus.
