@@ -82,9 +82,8 @@ RULES
    DOCTYPE:
         begin
         NoLineBreak;
-        Create '<!DOCTYPE ';
 	NoTranslation;
-	Create '>\12' After;
+	Create '\12' After;
         end;
 
    DOCTYPE_line:

@@ -396,9 +396,8 @@ RULES
 
    DOCTYPE: BEGIN
 	NoLineBreak;
-	Create '<!DOCTYPE ';
 	NoTranslation;
-	Create '>\12' After;
+	Create '\12' After;
 	END;
 
    DOCTYPE_line:

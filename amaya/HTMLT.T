@@ -29,11 +29,7 @@ RULES
 	Use MathMLT for MathML;
 	Use SVGT for SVG;
 	Use XLinkT for XLink;
-{ LC 05/12/01
-  DOCTYPE declaration is no longer generated
-	Create HtmlDTD;
-}
-	Create PI;
+	Create PI Before;
 #ifdef XML
 	Create '<html xmlns="http://www.w3.org/1999/xhtml"';
 	{*** Create Namespaces; ***}
@@ -1052,9 +1048,8 @@ RULES
 
  DOCTYPE: BEGIN
 	NoLineBreak;
-	Create '<!DOCTYPE ';
 	NoTranslation;
-	Create '>\12' After;
+	Create '\12' after;
 	END;
 
  DOCTYPE_line:

@@ -380,8 +380,8 @@ static void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
 		  else if (!pAb->AbTruncatedHead)
 		    /* the clipping will work automatically */
 		    DrawPicture (pBox, imageDesc, frame,
-				 pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - x,
-				 pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding + FrameTable[frame].FrTopMargin - y,
+				 pBox->BxXOrg - x,
+				 pBox->BxYOrg + FrameTable[frame].FrTopMargin - y,
 				 pBox->BxW, pBox->BxH);
 		}
 	    }

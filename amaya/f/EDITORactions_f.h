@@ -21,7 +21,9 @@ extern void NewSVG ( Document document,
 extern void NewCss ( Document document,
                      View view );
 extern void CreateDoctype ( Document doc,
-                            int profile );
+                            int profile,
+                            ThotBool useMathML,
+                            ThotBool useSVG );
 extern void InitializeNewDoc ( char *url,
                                int docType,
                                Document doc,
@@ -235,7 +237,9 @@ extern void NewSVG (/* Document document,
 extern void NewCss (/* Document document,
                        View view */);
 extern void CreateDoctype (/* Document doc,
-                              int profile */);
+                              int profile,
+                              ThotBool useMathML,
+                              ThotBool useSVG */);
 extern void InitializeNewDoc (/* char *url,
                                  int docType,
                                  Document doc,

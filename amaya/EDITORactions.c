@@ -106,17 +106,15 @@ void NewCss (Document document, View view)
 }
 
 /*--------------------------------------------------------------------------
-  CreateDoctype
-  Create a doctype declaration
+  CreateDoctype creates a doctype declaration
+  Parameters useMathML and useSVG determine the XHTML 1.1 profile.
   --------------------------------------------------------------------------*/
-void CreateDoctype (Document doc, int profile)
+void CreateDoctype (Document doc, int profile, ThotBool useMathML, ThotBool useSVG)
 {
   ElementType     elType, lineType;
   Element         docEl, doctype, doctypeLine, text, child;
   Language        language;
-  char           *ptr;
-  SSchema         nature;
-  ThotBool	  useMathML;
+  char		  buffer[400];
   
   /* Check the Thot abstract tree against the structure schema. */
   TtaSetStructureChecking (0, doc);
@@ -124,13 +122,12 @@ void CreateDoctype (Document doc, int profile)
   /* We use the Latin_Script language to avoid */
   /* the spell_chekcer to check the doctype */
   language = Latin_Script;
-  
   docEl = TtaGetMainRoot (doc);
   elType = TtaGetElementType (docEl);
   
   /* Add the new doctype */
-  if ((profile == L_Basic) || (profile == L_Strict) ||
-      (profile == L_Xhtml11) || (profile == L_Transitional))
+  if (profile == L_Basic || profile == L_Strict ||
+      profile == L_Xhtml11 || profile == L_Transitional)
     {
       elType.ElTypeNum = HTML_EL_DOCTYPE;
       lineType.ElTypeNum = HTML_EL_DOCTYPE_line;
@@ -144,24 +141,6 @@ void CreateDoctype (Document doc, int profile)
     {
       elType.ElTypeNum = MathML_EL_DOCTYPE;
       lineType.ElTypeNum = MathML_EL_DOCTYPE_line;
-    }
-  
-  if (profile == L_Xhtml11)
-    {
-      /* look for the MathML nature used in the document */
-      nature = NULL;
-      useMathML = FALSE;
-      do
-	{
-	  TtaNextNature (doc, &nature);
-	  if (nature && !useMathML)
-	    {
-	      ptr = TtaGetSSchemaName (nature);
-	      if (!strcmp (ptr, "MathML"))
-		useMathML = TRUE;
-	    }
-	}
-      while (nature);
     }
   
   doctype = TtaNewElement (doc, elType);
@@ -183,10 +162,20 @@ void CreateDoctype (Document doc, int profile)
 	TtaSetTextContent (text, DOCTYPE1_XHTML10_STRICT, language, doc);
       else if (profile == L_Strict && !DocumentMeta[doc]->xmlformat)
 	TtaSetTextContent (text, DOCTYPE1_HTML_STRICT, language, doc);
-      else if (profile == L_Xhtml11 && !useMathML)
-	TtaSetTextContent (text, DOCTYPE1_XHTML11, language, doc);
       else if (profile == L_Xhtml11 && useMathML)
-	TtaSetTextContent (text, DOCTYPE1_XHTML11_PLUS_MATHML, language, doc);
+	{
+	   /* generate the David Carliste's xsl stylesheet for MathML */
+	   strcpy (buffer, MATHML_XSLT_URI);
+	   strcat (buffer, MATHML_XSLT_NAME);
+	   strcat (buffer, "\"?>\n");
+	   if (useSVG)
+	     strcat (buffer, DOCTYPE1_XHTML11_PLUS_MATHML_PLUS_SVG);
+	   else
+	     strcat (buffer, DOCTYPE1_XHTML11_PLUS_MATHML);
+	   TtaSetTextContent (text, buffer, language, doc);
+	}
+      else if (profile == L_Xhtml11)
+	TtaSetTextContent (text, DOCTYPE1_XHTML11, language, doc);
       else if (profile == L_Transitional && DocumentMeta[doc]->xmlformat)
 	TtaSetTextContent (text, DOCTYPE1_XHTML10_TRANSITIONAL, language, doc);
       else if (profile == L_Transitional && !DocumentMeta[doc]->xmlformat)
@@ -215,6 +204,8 @@ void CreateDoctype (Document doc, int profile)
 	TtaSetTextContent (text, DOCTYPE2_HTML_STRICT, language, doc);
       else if (profile == L_Xhtml11 && !useMathML)
 	TtaSetTextContent (text, DOCTYPE2_XHTML11, language, doc);
+      else if (profile == L_Xhtml11 && useMathML && useSVG)
+	TtaSetTextContent (text, DOCTYPE2_XHTML11_PLUS_MATHML_PLUS_SVG, language, doc);
       else if (profile == L_Xhtml11 && useMathML)
 	TtaSetTextContent (text, DOCTYPE2_XHTML11_PLUS_MATHML, language, doc);
       else if (profile == L_Transitional && DocumentMeta[doc]->xmlformat)
@@ -308,7 +299,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
       if (doctype != NULL)
 	TtaDeleteTree (doctype, doc);
       if (profile != L_Other)
-	CreateDoctype (doc, profile);
+	CreateDoctype (doc, profile, FALSE, FALSE);
       
       /* Load user's style sheet */
       LoadUserStyleSheet (doc);
@@ -405,7 +396,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
       doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
       if (doctype != NULL)
 	TtaDeleteTree (doctype, doc);
-      CreateDoctype (doc, L_MathML);
+      CreateDoctype (doc, L_MathML, FALSE, FALSE);
 
       /* force the XML parsing */
       DocumentMeta[doc]->xmlformat = TRUE;
@@ -427,7 +418,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
       doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
       if (doctype != NULL)
 	TtaDeleteTree (doctype, doc);
-      CreateDoctype (doc, L_SVG);
+      CreateDoctype (doc, L_SVG, FALSE, FALSE);
 
       /* force the XML parsing */
       DocumentMeta[doc]->xmlformat = TRUE;
@@ -557,7 +548,7 @@ static void CreateOrChangeDoctype (Document doc, View view, int profile)
     TtaDeleteTree (doctype, doc);
 
   /* Add the new doctype */
-  CreateDoctype (doc, profile);
+  CreateDoctype (doc, profile, FALSE, FALSE);
 
   /* Store the document's profile */
   TtaSetDocumentProfile (doc, profile);

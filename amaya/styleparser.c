@@ -2489,8 +2489,8 @@ static char *ParseCSSBackgroundColor (Element element, PSchema tsch,
   unsigned int          savedtype = 0;
   ThotBool              moved;
 
-  /* move the BODY rule to the HTML element */
-  moved = (context->type == HTML_EL_BODY && isHTML);
+  /* move the HTML rule to the root element */
+  moved = (context->type == HTML_EL_HTML && isHTML);
   if (moved)
     {
       if (element)
@@ -2740,8 +2740,8 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 
   /* default element for FetchImage */
   el = TtaGetMainRoot (context->doc);
-  /* move the BODY rule to the HTML element */
-  moved = (context->type == HTML_EL_BODY && isHTML);
+  /* move the HTML rule to the root element */
+  moved = (context->type == HTML_EL_HTML && isHTML);
   if (moved)
     {
       if (element)
@@ -2862,8 +2862,8 @@ static char *ParseCSSBackgroundRepeat (Element element, PSchema tsch,
   unsigned int        savedtype = 0;
   ThotBool            moved;
 
-  /* move the BODY rule to the HTML element */
-  moved = (context->type == HTML_EL_BODY && isHTML);
+  /* move the HTML rule to the root element */
+  moved = (context->type == HTML_EL_HTML && isHTML);
   if (moved)
     {
       if (element)
@@ -2918,8 +2918,8 @@ static char *ParseCSSBackgroundAttachment (Element element, PSchema tsch,
   unsigned int          savedtype = 0;
   ThotBool              moved;
 
-  /* move the BODY rule to the HTML element */
-  moved = (context->type == HTML_EL_BODY && isHTML);
+  /* move the HTML rule to the root element */
+  moved = (context->type == HTML_EL_HTML && isHTML);
   if (moved)
     {
       if (element)
@@ -2957,8 +2957,8 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
   ThotBool              moved;
   ThotBool              ok;
 
-  /* move the BODY rule to the HTML element */
-  moved = (context->type == HTML_EL_BODY && isHTML);
+  /* move the HTML rule to the root element */
+  moved = (context->type == HTML_EL_HTML && isHTML);
   if (moved)
     {
       if (element)
