@@ -34,7 +34,15 @@ extern Document BM_NewDocument ( void );
 extern void BM_InitTreeWidget ( ThotWidget tree,
                                 Document TopicTree,
                                 void *cbf );
+extern void BM_dumpTopicTreeSelections ( Document TopicTree,
+                                         List **list );
 extern Document BM_GetTopicTree ( void );
+extern void BM_topicSelectToggle ( Document doc,
+                                   char *topic_url,
+                                   ThotBool select );
+extern ThotBool BM_topicIsSelected ( Element el );
+extern void BM_topicsPreSelect ( Document TopicTree,
+                                 BookmarkP bookmark );
 
 #else /* __STDC__ */
 
@@ -66,7 +74,15 @@ extern Document BM_NewDocument (/* void */);
 extern void BM_InitTreeWidget (/* ThotWidget tree,
                                   Document TopicTree,
                                   void *cbf */);
+extern void BM_dumpTopicTreeSelections (/* Document TopicTree,
+                                           List **list */);
 extern Document BM_GetTopicTree (/* void */);
+extern void BM_topicSelectToggle (/* Document doc,
+                                     char *topic_url,
+                                     ThotBool select */);
+extern ThotBool BM_topicIsSelected (/* Element el */);
+extern void BM_topicsPreSelect (/* Document TopicTree,
+                                   BookmarkP bookmark */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

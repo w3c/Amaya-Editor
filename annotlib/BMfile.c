@@ -27,6 +27,7 @@
 
 /* amaya includes */
 #include "AHTURLTools_f.h"
+#include "f/BMfile_f.h"
 
 /* global variables */
 static librdf_world *world;
@@ -429,6 +430,32 @@ void BM_parse (char *filename, char *base)
 }
 
 /*----------------------------------------------------------------------
+  AddBookmarkTopicList
+  ----------------------------------------------------------------------*/
+static void AddBookmarkTopicList (char *url, List *list)
+{
+  List  *cur = list;
+  char *parent_url;
+  librdf_statement *statement;
+  librdf_node *subject, *object, *predicate;
+
+  while (cur) 
+    {
+      subject = librdf_new_node_from_uri_string (world, url);
+      statement = librdf_new_statement (world);
+      librdf_statement_set_subject (statement, subject);
+      predicate = librdf_new_node_from_uri_string (world, BMNS_HASTOPIC);
+      librdf_statement_set_predicate (statement, predicate);
+      parent_url = (char *) cur->object;
+      object = librdf_new_node_from_uri_string (world, parent_url);
+      librdf_statement_set_object (statement, object);
+      librdf_model_add_statement (model, statement);
+      cur = cur->next;
+    }  
+}
+
+
+/*----------------------------------------------------------------------
   BM_addBookmark
   Adds a bookmark to a storage model.
   ----------------------------------------------------------------------*/
@@ -441,6 +468,8 @@ ThotBool BM_addBookmark (BookmarkP me)
   char bookmarkid[MAX_LENGTH];
   char *template = "#ambookmark%d";
   char *base_uri = GetLocalBookmarksBaseURI ();
+  char *tmp;
+
   static int genid_counter = 1;
 
   /* get new blank node id */
@@ -474,7 +503,11 @@ ThotBool BM_addBookmark (BookmarkP me)
 					     BMNS_BOOKMARK);
   add_statement (world, model, subject, predicate, object);
 
-  /* topic folder */
+  /* topic folders */
+  if (me->parent_url_list)
+      AddBookmarkTopicList (bookmarkid, me->parent_url_list);
+
+#if 0 /* deprecated when moving to multiple topics */
   if (me->parent_url && me->parent_url[0] != EOS)
     {
       subject = librdf_new_node_from_uri_string (world, bookmarkid);
@@ -482,15 +515,18 @@ ThotBool BM_addBookmark (BookmarkP me)
       object =  librdf_new_node_from_uri_string (world, me->parent_url);
       add_statement (world, model, subject, predicate, object);
     }
+#endif
 
   /* creator */
+  tmp = TtaConvertByteToMbs (me->author, ISO_8859_1);
   subject = librdf_new_node_from_uri_string (world, bookmarkid);
   predicate = librdf_new_node_from_uri_string (world, DCNS_CREATOR);
   object =  librdf_new_node_from_literal (world, 
-					  me->author,  /* literal string value */
+					  tmp,  /* literal string value */
 					  NULL,  /* literal XML language */
  					  0);    /* non 0 if literal is XML */
   add_statement (world, model, subject, predicate, object);
+  TtaFreeMemory (tmp);
 
   /* created */
   subject = librdf_new_node_from_uri_string (world, bookmarkid);
@@ -566,7 +602,8 @@ ThotBool BM_addTopic (BookmarkP me, ThotBool generateID)
   char *base_uri = GetLocalBookmarksBaseURI ();
   char *template = "#amTopic%d";
   static int genid_counter = 1;
-  
+  char *tmp;
+
   if (generateID)
     {
       /* get new blank node id */
@@ -588,15 +625,19 @@ ThotBool BM_addTopic (BookmarkP me, ThotBool generateID)
       sprintf (topicid + strlen (base_uri), template, genid_counter++);
     }
 
+#if 0 /* the following block let's the user type his own URL. USeful for
+	 debugging. */
   /* @@ JK: For the moment, I'll use the URL I input as the topic id. this
      line should be removed later on */
   if (!me->self_url)
     return FALSE;
   strcpy (topicid, me->self_url);
+
   /* control that it doesn't exist yet */
   if (Model_queryTopic (world, model, topicid))
     return FALSE;
   /* @@ JK: End of test routines */
+#endif
 
   /* if the user gave a parent topic, check if it exists. */
   if (me->parent_url && me->parent_url[0] != EOS)
@@ -623,14 +664,15 @@ ThotBool BM_addTopic (BookmarkP me, ThotBool generateID)
     }
 
   /* creator */
+  tmp = TtaConvertByteToMbs (me->author, ISO_8859_1); 
   subject = librdf_new_node_from_uri_string (world, topicid);
   predicate = librdf_new_node_from_uri_string (world, DCNS_CREATOR);
   object =  librdf_new_node_from_literal (world, 
-					  me->author,  /* literal string value */
+					  tmp,  /* literal string value */
 					  NULL,  /* literal XML language */
  					  0);    /* non 0 if literal is XML */
   add_statement (world, model, subject, predicate, object);
-
+  TtaFreeMemory (tmp);
 
   /* created */
   subject = librdf_new_node_from_uri_string (world, topicid);
@@ -765,8 +807,14 @@ static void Model_getItemInfo (librdf_world *world, librdf_model *model,
     }
   else
     {
+      List *dump = NULL;
+
       item->isTopic = FALSE;
-      item->parent_url = Model_getObjectAsString (world, model, subject, BMNS_HASTOPIC);
+      /* JK: Get a list of all the topics to which this bookmark belongs */
+      Model_dumpBookmarkTopics (item, &dump);
+      item->parent_url_list = dump;       
+      item->parent_url = NULL;
+      /* item->parent_url = Model_getObjectAsString (world, model, subject, BMNS_HASTOPIC); */
       item->bookmarks = Model_getObjectAsString (world, model, subject, BMNS_BOOKMARKS);
     }
   
@@ -1004,11 +1052,15 @@ ThotBool Model_dumpTopicBookmarks (List *topic_list, List **dump)
 	  /* verify if it's a bookmark */
 	  if (uri_str && Model_queryExists (world, model, uri_str, RDF_TYPE, BMNS_BOOKMARK))
 	    {
-	      /* yes, store it */
-	      item = Bookmark_new ();
-	      List_add (dump, (void *) item);
-	      Model_getItemInfo (world, model, subject, item, FALSE);
-	      item->self_url = TtaStrdup (uri_str);
+	      /* if not already stored (multiple topics), do it */
+	      if (!BMList_containsURL (*dump, uri_str))
+		{
+		  /* yes, store it */
+		  item = Bookmark_new ();
+		  List_add (dump, (void *) item);
+		  item->self_url = TtaStrdup (uri_str);
+		  Model_getItemInfo (world, model, subject, item, FALSE);
+		}
 	    }
 	  if (uri_str)
 	    free (uri_str);
@@ -1018,6 +1070,65 @@ ThotBool Model_dumpTopicBookmarks (List *topic_list, List **dump)
       librdf_statement_clear (partial_statement);
       cur = cur->next;  
     }
+  librdf_free_statement (partial_statement);
+
+  return (TRUE);
+}
+
+/*----------------------------------------------------------------------
+  Model_dumpBookmarkTopics  creates a list with all the topics to which bookmark belongs to.
+  ----------------------------------------------------------------------*/
+ThotBool Model_dumpBookmarkTopics (BookmarkP me, List **dump)
+{
+  librdf_stream* stream;
+  librdf_statement *partial_statement;
+
+  librdf_node *subject = NULL;
+  librdf_node *predicate = NULL;
+  librdf_node *object = NULL;
+
+  char *uri_str;
+
+  if (!me)
+    return FALSE;
+
+  /* we'll reuse the same statement */
+  partial_statement = librdf_new_statement (world);
+
+  /* get all the bookmarks that are a stored in the topic */
+  subject = librdf_new_node_from_uri_string (world, me->self_url);
+  predicate = librdf_new_node_from_uri_string (world, BMNS_HASTOPIC);
+  object =  NULL;
+  librdf_statement_set_subject (partial_statement, subject);
+  librdf_statement_set_predicate (partial_statement, predicate);
+  librdf_statement_set_object (partial_statement, object);
+  
+  stream = librdf_model_find_statements (model, partial_statement);
+  
+  while (!librdf_stream_end (stream))
+    {
+      librdf_statement *statement = librdf_stream_get_object (stream);
+      if (!statement) 
+	{
+	  fprintf(stderr, "librdf_stream_next returned NULL\n");
+	  continue;
+	}
+      object = librdf_statement_get_object (statement);
+      uri_str = Model_getNodeAsString (object, FALSE);
+      
+      if (uri_str) 	  /* store it */
+	{
+	  char *tmp;
+	  /* we copy it to avoid problems between diff. malloc functions */
+	  tmp = TtaStrdup (uri_str);
+	  List_add (dump, (void *) tmp);
+	  free (uri_str);
+	}
+      librdf_stream_next (stream);
+    }
+  librdf_free_stream (stream);
+  librdf_statement_clear (partial_statement);
+  
   librdf_free_statement (partial_statement);
 
   return (TRUE);
@@ -1036,11 +1147,30 @@ ThotBool Model_dumpTopicAsList (List **dump, char *parent_topic_url, ThotBool so
 {
   List *topic_list = NULL;
   List *bookmark_list = NULL;
+  List *cur;
+  BookmarkP bookmark;
 
   /* first we get all the topics */
   Model_dumpTopicChild  (parent_topic_url, &topic_list);
   /* then all the bookmarks contained in each topic */
   Model_dumpTopicBookmarks (topic_list, &bookmark_list);
+  if (bookmark_list)
+    {
+      bookmark_list = BM_expandBookmarks (&bookmark_list);
+      cur = bookmark_list;
+      while (cur)
+	{
+	  bookmark = (BookmarkP) cur->object;
+	  /* erases all the bookmarks that don't belong to this topic */
+	  if (!BMList_containsURL (topic_list, bookmark->parent_url))
+	    {
+	      List_delObject (&bookmark_list, cur->object);
+	      cur = bookmark_list;
+	      continue;
+	    }
+	  cur = cur->next;
+	}
+    }
   /*  both lists */
   *dump = List_merge (topic_list, bookmark_list);
   /* sort the result */
@@ -1203,6 +1333,7 @@ ThotBool BM_updateItem (BookmarkP me, ThotBool isTopic)
   librdf_node *object = NULL;
   librdf_uri *rdf_uri;
   char *uri_str;
+  char *tmp;
 
   /* make a query for all statements related to a given url */
 
@@ -1231,7 +1362,11 @@ ThotBool BM_updateItem (BookmarkP me, ThotBool isTopic)
       /* topic folder */
       /* @@ JK shouldn't be added by user? creator */
       if (!strcmp (uri_str, DCNS_CREATOR))
-	Model_replace_object (world, model, statement, me->author, TRUE);
+	{
+	  tmp = TtaConvertByteToMbs (me->author, ISO_8859_1);
+	  Model_replace_object (world, model, statement, tmp, TRUE);
+	  TtaFreeMemory (tmp);
+	}
       /* @@ JK created */
       else if (!strcmp (uri_str, ANNOTNS_CREATED))
 	Model_replace_object (world, model, statement, me->created, TRUE);
@@ -1240,10 +1375,10 @@ ThotBool BM_updateItem (BookmarkP me, ThotBool isTopic)
 	Model_replace_object (world, model, statement, me->modified, TRUE);
       /* title */
       else if (!strcmp (uri_str, DCNS_TITLE))
-	Model_replace_object (world, model, statement, me->title, TRUE);
+	  Model_replace_object (world, model, statement, me->title, TRUE);
       /* description */
       else if (!strcmp (uri_str, DCNS_DESCRIPTION))
-	Model_replace_object (world, model, statement, me->description, TRUE);
+	  Model_replace_object (world, model, statement, me->description, TRUE);
       else
 	{
 	  /* bookmark / topic items differences */
@@ -1257,7 +1392,7 @@ ThotBool BM_updateItem (BookmarkP me, ThotBool isTopic)
 	    {
 	      /* parent topic */
 	      if (!strcmp (uri_str, BMNS_HASTOPIC))
-		Model_replace_object (world, model, statement, me->parent_url, FALSE);
+		librdf_model_remove_statement (model, statement);
 	      /* bookmarks */
 	      else if (!strcmp (uri_str, BMNS_BOOKMARKS))
 		Model_replace_object (world, model, statement, me->bookmarks, FALSE);
@@ -1269,6 +1404,9 @@ ThotBool BM_updateItem (BookmarkP me, ThotBool isTopic)
     }
 
   librdf_free_stream (stream);
+  
+  if (!isTopic)
+      AddBookmarkTopicList (me->self_url, me->parent_url_list);
 
   return TRUE;
 }
@@ -1319,7 +1457,7 @@ ThotBool BM_deleteItem (char *item_url)
   BM_deleteItemList
   Erases all the statements related to a given topic
   ----------------------------------------------------------------------*/
-ThotBool BM_deleteItemList (List *items)
+ThotBool BM_deleteItemList (char *parent_topic, List *items)
 {
   List       *cur;
   BookmarkP   item;
@@ -1332,8 +1470,72 @@ ThotBool BM_deleteItemList (List *items)
   while (cur)
     {
       item = (BookmarkP) cur->object;
-      BM_deleteItem (item->self_url);
+      if (item->isTopic)
+	BM_deleteItem (item->self_url);
+      else 
+	BM_deleteBookmarkItem (parent_topic, item->self_url);
       cur = cur->next;
     }
   return TRUE;
 }
+
+
+/*----------------------------------------------------------------------
+  BM_deleteItemList
+  Erases all the statements related to a given topic
+  ----------------------------------------------------------------------*/
+ThotBool BM_deleteBookmarkItem (char *parent_url, char *self_url)
+{
+  librdf_stream* stream;
+  librdf_statement *partial_statement;
+
+  librdf_node *subject = NULL;
+  librdf_node *predicate = NULL;
+  librdf_node *object = NULL;
+  ThotBool can_erase;
+
+  if (!parent_url || !self_url)
+    return FALSE;
+
+  /* delete the relevant HAS_TOPIC property for this bookmark */
+  subject = librdf_new_node_from_uri_string (world, self_url);
+  predicate = librdf_new_node_from_uri_string (world, BMNS_HASTOPIC);
+  object = librdf_new_node_from_uri_string (world, parent_url);
+
+  partial_statement = librdf_new_statement (world);
+  librdf_statement_set_subject (partial_statement, subject);
+  librdf_statement_set_predicate (partial_statement, predicate);
+  librdf_statement_set_object (partial_statement, object);
+
+  if (librdf_model_contains_statement (model, partial_statement))
+    librdf_model_remove_statement (model, partial_statement);
+
+  librdf_statement_clear (partial_statement);
+
+  /* check to see if the bookmark item as other HAS_TOPIC 
+     properties or if we can delete it now */
+  subject = librdf_new_node_from_uri_string (world, self_url);
+  predicate = librdf_new_node_from_uri_string (world, BMNS_HASTOPIC);
+  object = NULL;
+
+  librdf_statement_set_subject (partial_statement, subject);
+  librdf_statement_set_predicate (partial_statement, predicate);
+  librdf_statement_set_object (partial_statement, object);
+
+  stream = librdf_model_find_statements (model, partial_statement);
+  
+  if (librdf_stream_end (stream))
+    can_erase = TRUE;
+  else
+    can_erase = FALSE;
+
+  librdf_free_stream (stream);
+  librdf_free_statement (partial_statement);
+
+  if (can_erase)
+    BM_deleteItem (self_url);
+
+  return TRUE;
+}
+
+

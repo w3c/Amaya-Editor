@@ -79,7 +79,12 @@ BookmarkP Bookmark_new_init (BookmarkP initial)
     me->title[0] = EOS;
   me->author = TtaGetMemory (MAX_LENGTH + 1);
   if (initial && initial->author)
-    strcpy (me->author, initial->author);
+    {
+      char *tmp;
+      tmp = TtaConvertMbsToByte (initial->author, ISO_8859_1);
+      strcpy (me->author, tmp);
+      TtaFreeMemory (tmp);
+    }
   else
     me->author[0] = EOS;
   me->description = TtaGetMemory (MAX_LENGTH + 1);
@@ -147,6 +152,7 @@ static void ControlURIs (BookmarkP me)
 static void InitBookmarkMenu (Document doc, BookmarkP bookmark)
 {
   char *ptr;
+  char *annotUser;
 
   aBookmark = Bookmark_new_init (bookmark);
 
@@ -177,7 +183,10 @@ static void InitBookmarkMenu (Document doc, BookmarkP bookmark)
 	TtaFreeMemory (ptr);
       
       strcpy (aBookmark->title, ANNOT_GetHTMLTitle (doc));
-      strcpy (aBookmark->author, GetAnnotUser ());
+      annotUser = GetAnnotUser ();
+      ptr = TtaConvertMbsToByte (annotUser, ISO_8859_1);
+      strcpy (aBookmark->author, ptr);
+      TtaFreeMemory (ptr);
       aBookmark->created = StrdupDate ();
       aBookmark->modified = StrdupDate ();
     }
@@ -190,7 +199,6 @@ static void InitBookmarkMenu (Document doc, BookmarkP bookmark)
 static void RefreshBookmarkMenu ()
 {
   /* set the menu entries to the current values */
-  TtaSetTextForm (BookmarkBase + mBMTopic, aBookmark->parent_url);
   TtaSetTextForm (BookmarkBase + mBMTitle, aBookmark->title);
   TtaSetTextForm (BookmarkBase + mBMBookmarks, aBookmark->bookmarks);
   TtaSetTextForm (BookmarkBase + mBMAuthor, aBookmark->author);
@@ -208,16 +216,15 @@ static void BookmarkMenuSelect_cbf (ThotWidget w, ThotBool state, void *cdata)
   Element el = (Element) cdata;
 
   url = BM_topicGetModelHref (el);
-  
   if (url)
     {
+      BM_topicSelectToggle (BTopicTree, url, state);
+      
+      /* @@ JK: just for debugging */
       if (state)
 	printf ("Selected URL %s\n", url);
       else
 	printf ("Deselected URL %s\n", url);
-      strcpy (aBookmark->parent_url, url);
-      /* @@ JK: just for debugging */
-      TtaSetTextForm (BookmarkBase + mBMTopic, aBookmark->parent_url);
       TtaFreeMemory (url);
     }
 }
@@ -231,6 +238,7 @@ static void BookmarkMenuCallbackDialog (int ref, int typedata, char *data)
 {
   int                 val;
   ThotBool            result;
+  List                *parent_url_list;
 
   if (ref == -1)
     {
@@ -254,17 +262,28 @@ static void BookmarkMenuCallbackDialog (int ref, int typedata, char *data)
 	      break;
 	    case 1: /* create bookmark */
 	      ControlURIs (aBookmark);
-	      if (aBookmark->isUpdate)
-		result = BM_updateItem (aBookmark, FALSE);
-	      else
-		result = BM_addBookmark (aBookmark);
-	      if (result)
+	      BM_dumpTopicTreeSelections (BTopicTree, &parent_url_list);
+	      if (parent_url_list)
 		{
-		  /* if successful, close the dialog */
-		  Bookmark_free (aBookmark);
-		  TtaCloseDocument (BTopicTree);
-		  BTopicTree = 0;
-		  TtaDestroyDialogue (ref);
+		  if (aBookmark->parent_url_list)
+		    {
+		      List *tmp;
+		      tmp = aBookmark->parent_url_list;
+		      List_delAll (&tmp, (void *) TtaFreeMemory);
+		    }
+		  aBookmark->parent_url_list = parent_url_list;
+		  if (aBookmark->isUpdate)
+		    result = BM_updateItem (aBookmark, FALSE);
+		  else
+		    result = BM_addBookmark (aBookmark);
+		  if (result)
+		    {
+		      /* if successful, close the dialog */
+		      Bookmark_free (aBookmark);
+		      TtaCloseDocument (BTopicTree);
+		      BTopicTree = 0;
+		      TtaDestroyDialogue (ref);
+		    }
 		}
 	      break;
 	    case 2: /* browse */
@@ -279,13 +298,6 @@ static void BookmarkMenuCallbackDialog (int ref, int typedata, char *data)
 	    default:
 	      break;
 	    }
-	  break;
-
-	case mBMTopic:
-	  if (data)
-	    strcpy (aBookmark->parent_url, data);
-	  else
-	    aBookmark->parent_url[0] = EOS;
 	  break;
 
 	case mBMTitle:
@@ -339,6 +351,9 @@ void BM_BookmarkMenu (Document doc, View view, BookmarkP bookmark)
      TtaCloseDocument (BTopicTree);
    BTopicTree = BM_GetTopicTree ();
 
+   /* select the topics in the tree that correspond to those in the bookmark */
+   BM_topicsPreSelect (BTopicTree, bookmark);
+
    /* Create the dialogue form */
    i = 0;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
@@ -352,17 +367,10 @@ void BM_BookmarkMenu (Document doc, View view, BookmarkP bookmark)
    tree = TtaNewTreeForm (BookmarkBase + mBMTopicTree,
 			  BookmarkBase + BookmarkMenu,
 			  "Topic hierarchy:",
-			  FALSE);
+			  TRUE);
    
    if (tree)
      BM_InitTreeWidget (tree, BTopicTree, (void *) BookmarkMenuSelect_cbf);
-
-   TtaNewTextForm (BookmarkBase + mBMTopic,
-		   BookmarkBase + BookmarkMenu,
-		   "Topic:",
-		   30,
-		   1,
-		   TRUE);
 
    TtaNewTextForm (BookmarkBase + mBMTitle,
 		   BookmarkBase + BookmarkMenu,
@@ -428,12 +436,18 @@ void BM_BookmarkMenu (Document doc, View view, BookmarkP bookmark)
   ----------------------------------------------------------------------*/
 static void InitTopicMenu (Document doc, BookmarkP bookmark)
 {
+  char *annotUser;
+  char *tmp;
+
   aBookmark = Bookmark_new_init (bookmark);
   aBookmark->isTopic = TRUE;
 
   if (!bookmark)
     {
-      strcpy (aBookmark->author, GetAnnotUser ());
+      annotUser = GetAnnotUser ();
+      tmp = TtaConvertMbsToByte (annotUser, ISO_8859_1);
+      strcpy (aBookmark->author, tmp);
+      TtaFreeMemory (tmp);
       aBookmark->created = StrdupDate ();
       aBookmark->modified = StrdupDate ();
     }
@@ -447,7 +461,6 @@ static void RefreshTopicMenu ()
 {
   /* set the menu entries to the current values */
   TtaSetTextForm (TopicBase + mTMParentTopic, aBookmark->parent_url);
-  TtaSetTextForm (TopicBase + mTMTopicURL, aBookmark->self_url);
   TtaSetTextForm (TopicBase + mTMTitle, aBookmark->title);
   TtaSetTextForm (TopicBase + mTMAuthor, aBookmark->author);
   TtaSetTextForm (TopicBase + mTMCreated, aBookmark->created);
@@ -535,13 +548,6 @@ static void TopicMenuCallbackDialog (int ref, int typedata, char *data)
 	    aBookmark->parent_url[0] = EOS;
 	  break;
 
-	case mTMTopicURL:
-	  if (data)
-	    strcpy (aBookmark->self_url, data);
-	  else
-	    aBookmark->self_url[0] = EOS;
-	  break;
-
 	case mTMTitle:
 	  if (data)
 	    strcpy (aBookmark->title, data);
@@ -607,13 +613,6 @@ void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
    TtaNewTextForm (TopicBase + mTMParentTopic,
 		   TopicBase + TopicMenu,
 		   "Parent Topic:",
-		   30,
-		   1,
-		   TRUE);
-
-   TtaNewTextForm (TopicBase + mTMTopicURL,
-		   TopicBase + TopicMenu,
-		   "Topic URL:",
 		   30,
 		   1,
 		   TRUE);

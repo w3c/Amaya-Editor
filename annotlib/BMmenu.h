@@ -20,13 +20,11 @@
 #define mBMModified             5
 #define mBMDescription          6
 #define mBMTitle                7
-#define mBMTopic                8
 #define mBMTopicTree            9
 #define MAX_BOOKMARKMENU_DLG    10
 
 #define TopicMenu               1
 #define mTMParentTopic          2
-#define mTMTopicURL             3
 #define mTMAuthor               4
 #define mTMCreated              5
 #define mTMModified             6

@@ -15,7 +15,7 @@ extern ThotBool List_delCharObj ( void *obj );
 extern void List_delAll ( List **me,
                           ThotBool (*del_function)(void *) );
 extern void List_delObject ( List **list,
-                             char *object );
+                             void *object );
 extern List *List_merge ( List *list1,
                           List *list2 );
 extern List *List_getLast ( List *list );
@@ -140,7 +140,7 @@ extern ThotBool List_delCharObj (/* void *obj */);
 extern void List_delAll (/* List **me,
                             ThotBool (*del_function)(void *) */);
 extern void List_delObject (/* List **list,
-                               char *object */);
+                               void *object */);
 extern List *List_merge (/* List *list1,
                             List *list2 */);
 extern List *List_getLast (/* List *list */);

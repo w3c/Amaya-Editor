@@ -21,7 +21,7 @@ STRUCT
   { a topic item is made of a title, a reference to the model, and an optional list
     of Items }
   
-  Topic_item (ATTR Model_HREF_ = Text; Closed_ = Yes; Open_ = Yes_;) = 
+  Topic_item (ATTR Model_HREF_ = Text; Closed_ = Yes; Open_ = Yes_;  Selected_ = Yes_;) = 
                 BEGIN
 	        Topic_title = Text;
 		? Topic_content = LIST OF (Item);
@@ -51,12 +51,5 @@ EXCEPT
         { Bookmarks }
 	Bookmark_item:  Nocut;
 	Bookmark_title: NoCut, NoSelect, Hidden;
+	Selected_:	Invisible;
 END
-
-
-
-
-
-
-
-

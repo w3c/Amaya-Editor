@@ -18,7 +18,8 @@
 #define BOOKMARK_NS "http://www.w3.org/2002/01/bookmark"
 #define BM_BOOKMARK "Bookmark"
 #define BMNS_BOOKMARK BOOKMARK_NS"#"BM_BOOKMARK
-#define BM_BOOKMARKS "bookmarks"
+/* @@ JK: Change BOOKMARKS fo recalls everyhwere */
+#define BM_BOOKMARKS "recalls"
 #define BMNS_BOOKMARKS BOOKMARK_NS"#"BM_BOOKMARKS
 #define BM_TOPIC "Topic"
 #define BMNS_TOPIC BOOKMARK_NS"#"BM_TOPIC
@@ -42,6 +43,7 @@ typedef struct _Bookmark
   ThotBool  isUpdate;   /* says if we're creating or updating an item */
   ThotBool  isTopic;    /* says if this item is a bookmark or a topic */
   char *parent_url;     /* the parent topic */
+  List *parent_url_list;
   char *self_url;       /* the id that talks about this item */
   char *bookmarks;      /* for bookmarks, what we're bookmarking */
   char *title;      

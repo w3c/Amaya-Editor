@@ -20,6 +20,8 @@ extern ThotBool Model_dumpTopicChild ( char *parent_topic_url,
                                        List **dump );
 extern ThotBool Model_dumpTopicBookmarks ( List *topic_list,
                                            List **dump );
+extern ThotBool Model_dumpBookmarkTopics ( BookmarkP me,
+                                           List **dump );
 extern ThotBool Model_dumpTopicAsList ( List **dump,
                                         char *parent_topic_url,
                                         ThotBool sort );
@@ -28,7 +30,10 @@ extern BookmarkP BM_getItem ( char *url,
 extern ThotBool BM_updateItem ( BookmarkP me,
                                 ThotBool isTopic );
 extern ThotBool BM_deleteItem ( char *item_url );
-extern ThotBool BM_deleteItemList ( List *items );
+extern ThotBool BM_deleteItemList ( char *parent_topic,
+                                    List *items );
+extern ThotBool BM_deleteBookmarkItem ( char *parent_url,
+                                        char *self_url );
 
 #else /* __STDC__ */
 
@@ -46,6 +51,8 @@ extern ThotBool Model_dumpTopicChild (/* char *parent_topic_url,
                                          List **dump */);
 extern ThotBool Model_dumpTopicBookmarks (/* List *topic_list,
                                              List **dump */);
+extern ThotBool Model_dumpBookmarkTopics (/* BookmarkP me,
+                                             List **dump */);
 extern ThotBool Model_dumpTopicAsList (/* List **dump,
                                           char *parent_topic_url,
                                           ThotBool sort */);
@@ -54,7 +61,10 @@ extern BookmarkP BM_getItem (/* char *url,
 extern ThotBool BM_updateItem (/* BookmarkP me,
                                   ThotBool isTopic */);
 extern ThotBool BM_deleteItem (/* char *item_url */);
-extern ThotBool BM_deleteItemList (/* List *items */);
+extern ThotBool BM_deleteItemList (/* char *parent_topic,
+                                      List *items */);
+extern ThotBool BM_deleteBookmarkItem (/* char *parent_url,
+                                          char *self_url */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

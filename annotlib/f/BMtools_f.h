@@ -8,15 +8,23 @@
 
 extern BookmarkP Bookmark_new ( void );
 extern void Bookmark_free ( BookmarkP me );
+extern BookmarkP Bookmark_copy ( BookmarkP src );
 extern ThotBool BMList_delItem ( void *me );
+extern ThotBool BMList_containsURL ( List *list,
+                                     char *url );
 extern char * BM_GetMDate ( void *object );
+extern List *BM_expandBookmarks ( List **list );
 
 #else /* __STDC__ */
 
 extern BookmarkP Bookmark_new (/* void */);
 extern void Bookmark_free (/* BookmarkP me */);
+extern BookmarkP Bookmark_copy (/* BookmarkP src */);
 extern ThotBool BMList_delItem (/* void *me */);
+extern ThotBool BMList_containsURL (/* List *list,
+                                       char *url */);
 extern char * BM_GetMDate (/* void *object */);
+extern List *BM_expandBookmarks (/* List **list */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -155,7 +155,7 @@ void List_delAll (List **me, ThotBool (*del_function)(void *))
    List_delObject
    Removes an element of a linked list.
    ------------------------------------------------------------*/
-void List_delObject (List **list, char *object)
+void List_delObject (List **list, void *object)
 {
   List *item = *list;
 
@@ -1480,16 +1480,25 @@ void BM_bookmarksSort (List **bookmark_list)
       bookmark_cur = (BookmarkP) list_cur->object;
 
       /* create the message container */
-      url = bookmark_cur->self_url;
+      if (bookmark_cur->isTopic)
+	url = bookmark_cur->self_url;
+      else
+	{
+	  url = TtaGetMemory (strlen (bookmark_cur->self_url) 
+			      + strlen (bookmark_cur->parent_url)
+			      + 2);
+	  sprintf (url, "%s:%s", bookmark_cur->self_url, bookmark_cur->parent_url);
+	}
       cur_entry = (Container *) HTHashtable_object (id_table, url);
       if (!cur_entry)
 	{
 	  cur_entry = ThreadItem_new ();
 	  HTHashtable_addObject (id_table, url, cur_entry);
 	}
-
       cur_entry->object = (void *) bookmark_cur;
-	
+      if (!bookmark_cur->isTopic)
+	TtaFreeMemory (url);
+
       /* insert the message container to its parent */
       /* @@ JK: and if there's no parent? We put it in a blank space? */
       if (bookmark_cur->parent_url)

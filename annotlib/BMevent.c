@@ -147,11 +147,19 @@ void BM_CreateTopic (Document doc, View view)
 void BM_ViewBookmarks (Document doc, View view)
 {
   List *list = NULL;
+  List *items = NULL;
   int count;
+  int item_count;
   Document bookmark_doc;
 
   count = Model_dumpAsList (&list, TRUE);
-  count += Model_dumpAsList (&list, FALSE);
+  item_count = Model_dumpAsList (&items, FALSE);
+  if (item_count)
+    {
+      count += item_count;
+      items = BM_expandBookmarks (&items);
+      list = List_merge (list, items);
+    }
 
   if (count > 0)
     BM_bookmarksSort (&list);
@@ -393,6 +401,7 @@ ThotBool BM_ShowProperties (NotifyElement *event)
 }
 
 /*-----------------------------------------------------------------------
+  BM_ItemDelete
   -----------------------------------------------------------------------*/
 ThotBool BM_ItemDelete (NotifyElement *event)
 {
@@ -403,6 +412,7 @@ ThotBool BM_ItemDelete (NotifyElement *event)
   Attribute	   attr;
   int              i;
   char            *url;
+  char            *topic_url;
   List            *dump;
   DisplayMode      dispMode;
   ThotBool         isTopic;
@@ -455,13 +465,40 @@ ThotBool BM_ItemDelete (NotifyElement *event)
       /* get a list of all items in the topic and remove them */
       Model_dumpTopicAsList (&dump, url, FALSE);
       if (isHomeTopic)
-	BM_deleteItemList (dump->next);
+	BM_deleteItemList (url, dump->next);
       else
-	BM_deleteItemList (dump);
+	BM_deleteItemList (url, dump);
       List_delAll (&dump, BMList_delItem);
     }
   else
-    BM_deleteItem (url);
+    {
+      /* get the model href of the parent topic for this bookmark */
+      el2 = TtaGetParent (el);
+      if (el2)
+	elType = TtaGetElementType (el2);
+      while (el2 && elType.ElTypeNum != Topics_EL_Topic_item)
+	{
+	  el2 = TtaGetParent (el2);
+	  if (el2)
+	  elType = TtaGetElementType (el2);
+	}
+      if (!el2)
+	return TRUE; /* didn't find anything! We just return */
+      attr = TtaGetAttribute (el2, attrType);
+      if (!attr)
+	return TRUE;
+      i = TtaGetTextAttributeLength (attr);
+      if (i < 1)
+	{
+	  /* item seems empty. We just return */
+	  return TRUE;
+	}
+      i++;
+      topic_url = TtaGetMemory (i);
+      TtaGiveTextAttributeValue (attr, topic_url, &i);
+      BM_deleteBookmarkItem (topic_url, url);
+      TtaFreeMemory (topic_url);
+    }
   TtaFreeMemory (url);
 
   /* save the modified model */

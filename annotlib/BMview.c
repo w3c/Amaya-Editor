@@ -17,16 +17,18 @@
 #include "amaya.h"
 #include "init_f.h"
 
+/* annotlib inckudes */
+#include "annotlib.h"
+#include "f/ANNOTtools_f.h"
+
 /* bookmarks includes */
 #include "bookmarks.h"
 #include "Topics.h"
 #include "f/BMevent_f.h"
 
-/* annotlib inckudes */
-#include "annotlib.h"
-#include "f/ANNOTtools_f.h"
 #include "f/BMfile_f.h"
 #include "f/BMtools_f.h"
+#include "f/BMview_f.h"
 
 /*-----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
@@ -523,7 +525,7 @@ static void RecursiveInitTreeWidget (ThotWidget root_tree, Element root_el, void
   ThotWidget tree_item, child_tree;
   char *label;
   Element el, child_el;
-
+  ThotBool select;
   el = root_el;
 
   while (el) 
@@ -531,8 +533,11 @@ static void RecursiveInitTreeWidget (ThotWidget root_tree, Element root_el, void
       /* insert the element */
       /* get its label */
       label = BM_topicGetTitle (el);
-      tree_item = TtaAddTreeItem (root_tree, label, cbf,
-				  (void *) el);
+      /* is it selected? */
+      select = BM_topicIsSelected (el);
+
+      tree_item = TtaAddTreeItem (root_tree, label, select, 
+				  FALSE, cbf, (void *) el);
 
       if (label)
 	TtaFreeMemory (label);
@@ -561,12 +566,51 @@ void BM_InitTreeWidget (ThotWidget tree, Document TopicTree, void *cbf)
   el = TtaGetRootElement (TopicTree);
   el = TtaGetFirstChild (el);
 
-  /* @@ just to make sure */
   elType = TtaGetElementType (el);
 
   RecursiveInitTreeWidget (tree, el, cbf);
 }
 
+
+/*-----------------------------------------------------------------------
+  RecursiveDumpTree
+  -----------------------------------------------------------------------*/
+static void RecursiveDumpTree (Element root_el, List **list)
+{
+  Element el, child_el;
+  char *url;
+
+  el = root_el;
+  while (el) 
+    {
+      if (BM_topicIsSelected (el))
+	{
+	  /* copy the URL */
+	  url =  BM_topicGetModelHref (el);
+	  List_add (list, (void *) url);
+	}
+
+      /* examine its children and sibling */
+      child_el = BM_GetFirstChild (el);
+      if (child_el)
+	RecursiveDumpTree (child_el, list);
+      TtaNextSibling (&el);
+    }
+}
+
+/*----------------------------------------------------------------------
+  BM_dumpTopicTreeSelections
+  ----------------------------------------------------------------------*/
+void BM_dumpTopicTreeSelections (Document TopicTree, List **list)
+{
+  Element el;
+  
+  el = TtaGetRootElement (TopicTree);
+  el = TtaGetFirstChild (el);
+  *list = NULL;
+
+  RecursiveDumpTree (el, list);
+}
 
 /*-----------------------------------------------------------
   BM_GetTopicTree
@@ -580,16 +624,14 @@ Document BM_GetTopicTree (void)
   int count;
   Element el;
   ElementType elType;
-  DisplayMode      dispMode;
 
   doc = TtaInitDocument ("Topics", "sorted topics", 0);
   if (doc == 0)
     return 0;
   TtaSetDisplayMode (doc, NoComputedDisplay);
-  dispMode = TtaGetDisplayMode (doc);
 
   count = Model_dumpAsList (&topics, True);
-  if (count > 1)
+  if (count > 0)
     BM_bookmarksSort (&topics);
 
   el = TtaGetRootElement (doc);
@@ -597,10 +639,7 @@ Document BM_GetTopicTree (void)
       
   /* create the item itself */
   elType.ElTypeNum = Topics_EL_Topic_item;
-  dispMode = TtaGetDisplayMode (doc);
   TtaNewTree (doc, elType, "");
-  TtaSetDisplayMode (doc, NoComputedDisplay);
-  dispMode = TtaGetDisplayMode (doc);
   /* set the charset to be UTF-8 by default */
   TtaSetDocumentCharset (doc, TtaGetCharset ("UTF-8"), FALSE);
 
@@ -611,3 +650,130 @@ Document BM_GetTopicTree (void)
   return (doc);
 }
 
+/*-----------------------------------------------------------------------
+  BM_topicSelectToggle
+  -----------------------------------------------------------------------*/
+void BM_topicSelectToggle (Document doc, char *topic_url, ThotBool select)
+{
+  DisplayMode      dispMode;
+
+  ElementType    elType;
+  Element        root, el;
+  Attribute      attr;
+  AttributeType  attrType;
+  char          *url;
+  int            i;
+
+  if (!topic_url || !*topic_url)
+    return;
+
+  /* avoid refreshing the document while we're constructing it */
+  dispMode = TtaGetDisplayMode (doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, NoComputedDisplay);
+
+  /* point to the home topic */
+  el = TtaGetRootElement (doc);
+  if (!el)
+    return;
+  root = el;
+
+  /* locate the reference */
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = Topics_ATTR_Model_HREF_;
+      
+  TtaSearchAttribute (attrType, SearchForward, root, &el, &attr);
+  while (el)
+    {
+      i = TtaGetTextAttributeLength (attr) + 1;
+      url = TtaGetMemory (i);
+      TtaGiveTextAttributeValue (attr, url, &i);
+      if (!strcasecmp (url, topic_url))
+	{
+	  TtaFreeMemory (url);
+	  attrType.AttrTypeNum = Topics_ATTR_Selected_;
+	  if (select)
+	    {
+	      /* mark this topic as selected if it's not yet the case */
+	      attr = TtaGetAttribute (el, attrType);
+	      if (!attr)
+		{
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (el, attr, doc);
+		  TtaSetAttributeValue (attr, Topics_ATTR_Selected__VAL_Yes_, el, doc);
+		}
+	    }
+	  else
+	    {
+	      /* remove the select attribute if it exists*/
+	      attr = TtaGetAttribute (el, attrType);
+	      if (attr)
+		TtaRemoveAttribute (el, attr, doc);
+	    }
+	  break;
+	}
+      TtaFreeMemory (url);
+      root = el;
+      TtaSearchAttribute (attrType, SearchForward, root, &el, &attr);
+    }
+  
+  /* show the document */
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, dispMode);
+}
+
+/*-----------------------------------------------------------------------
+  BM_topicIsSelected
+  -----------------------------------------------------------------------*/
+ThotBool BM_topicIsSelected (Element el)
+{
+  ElementType    elType;
+  Attribute      attr;
+  AttributeType  attrType;
+
+  if (!el)
+    return FALSE;
+
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum != Topics_EL_Topic_item)
+    return FALSE;
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = Topics_ATTR_Selected_;
+  attr = TtaGetAttribute (el, attrType);
+  
+  return (attr) ? TRUE : FALSE;
+}
+
+
+/*-----------------------------------------------------------
+  BM_topicsPreSelect
+  Selects the topics in a topic tree to which bookmark belongs.
+  ------------------------------------------------------------*/
+void BM_topicsPreSelect (Document TopicTree, BookmarkP bookmark)
+{
+  List *topics =  NULL, *list_item;
+  int count;
+  Element el;
+  ElementType elType;
+
+  if (!bookmark)
+    return;
+
+  count = Model_dumpBookmarkTopics (bookmark, &topics);
+
+  if (count > 0)
+    {
+      el = TtaGetRootElement (TopicTree);
+      elType = TtaGetElementType (el);
+      
+      list_item = topics;
+      
+      while (list_item) 
+	{
+	  BM_topicSelectToggle (TopicTree, (char *) list_item->object, TRUE);
+	  list_item = list_item->next;
+	}
+    }
+  List_delAll (&topics, (void *) TtaFreeMemory);
+}
