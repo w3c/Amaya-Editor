@@ -2147,6 +2147,8 @@ Element            *elSelect;
    IsValidHtmlChild(element, tag)                                       
    returns TRUE if the tag is valid as a direct descendant of an element 
    of type elType 
+   WARNING This function works until there are no cycles in S schema
+           whithout any HTML element inside....
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      IsValidHtmlChild (ElementType elemType, STRING tag, STRING prevtag)
@@ -2196,6 +2198,7 @@ STRING              prevtag;
       if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
 	result = TRUE;
       else if (!ustrcmp (GITagNameByType (subTypes[0]), "???") ||
+	       !ustrcmp (GITagNameByType (subTypes[0]), "P*") ||
 	       !ustrcmp (GITagNameByType (subTypes[0]), "none"))
 	result = IsValidHtmlChild (subTypes[0], tag, "");
       break;
@@ -2206,6 +2209,7 @@ STRING              prevtag;
 	  if (subTypes[i].ElTypeNum == tagElType.ElTypeNum)
 	    result = TRUE;
 	  else if (!ustrcmp (GITagNameByType (subTypes[i]),"???") ||
+		   !ustrcmp (GITagNameByType (subTypes[i]), "P*") ||
 		   !ustrcmp (GITagNameByType (subTypes[i]), "none"))
 	    result = IsValidHtmlChild (subTypes[i], tag, "");
 	}
@@ -2221,6 +2225,7 @@ STRING              prevtag;
 	  if (prevElType.ElTypeNum == subTypes[i].ElTypeNum)
 	    found = TRUE;
 	  else if (ustrcmp (GITagNameByType (subTypes[i]),"???") ||
+		   ustrcmp (GITagNameByType (subTypes[i]), "P*") ||
 		   ustrcmp (GITagNameByType (subTypes[i]), "none"))
 	    i = cardinal;
 	}
@@ -2231,10 +2236,12 @@ STRING              prevtag;
 	      if (tagElType.ElTypeNum == subTypes[i].ElTypeNum)
 		result = TRUE;
 	      else if (!ustrcmp (GITagNameByType (subTypes[i]), "???") ||
+		       !ustrcmp (GITagNameByType (subTypes[i]), "P*") ||
 		       !ustrcmp (GITagNameByType (subTypes[i]), "none"))
 		result = IsValidHtmlChild (subTypes[i], tag, "");
 	      if (!result)
 		if (!ustrcmp (GITagNameByType (subTypes[i]), "???") ||
+		    !ustrcmp (GITagNameByType (subTypes[i]), "P*") ||
 		    !ustrcmp (GITagNameByType (subTypes[i]), "none") ||
 		    TtaIsOptionalInAggregate(i,elemType)) 
 		  i++;
@@ -2249,6 +2256,7 @@ STRING              prevtag;
 	  if (tagElType.ElTypeNum == subTypes[i].ElTypeNum)
 	    result = TRUE;
 	  else if (!ustrcmp (GITagNameByType (subTypes[i]), "???") ||
+		   !ustrcmp (GITagNameByType (subTypes[i]), "P*") ||
 		   !ustrcmp (GITagNameByType (subTypes[i]), "none"))
 	    result = IsValidHtmlChild (subTypes[i], tag, "");
 	  if (!result)
@@ -2266,6 +2274,7 @@ STRING              prevtag;
 	    if (tagElType.ElTypeNum == subTypes[0].ElTypeNum)
 	      result = TRUE;
 	    else if (!ustrcmp (GITagNameByType (subTypes[0]), "???") ||
+		     !ustrcmp (GITagNameByType (subTypes[0]), "P*") ||
 		     !ustrcmp (GITagNameByType (subTypes[0]), "none"))
 	    result = IsValidHtmlChild (subTypes[0], tag, "");
 	  }
