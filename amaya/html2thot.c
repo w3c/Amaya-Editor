@@ -3380,6 +3380,7 @@ CHAR_T                c;
    SSchema             schema;
    CHAR_T              translation;
    CHAR_T              msgBuffer[MaxMsgLength];
+   ThotBool            level;
 
    CloseBuffer ();
    /* if a single '/' or '?' has been read instead of an attribute name, ignore
@@ -3399,7 +3400,8 @@ CHAR_T                c;
       /* ignore attributes of unknown tags */
       tableEntry = NULL;
    else
-      tableEntry = MapAttr (inputBuffer, &schema, lastElemEntry, HTMLcontext.doc);
+      tableEntry = MapAttr (inputBuffer, &schema,
+			    lastElemEntry, &level, HTMLcontext.doc);
 
    if (tableEntry)
      /* this is a known attribute. Can it be associated with the current
@@ -7128,7 +7130,6 @@ ThotBool            plainText;
   int                 length;
   ThotBool            isHTML;
   char                www_file_name[MAX_LENGTH];
-  STRING              profile;
 
   HTMLcontext.doc = doc;
   FirstElemToBeChecked = NULL;

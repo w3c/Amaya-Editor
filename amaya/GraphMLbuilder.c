@@ -74,19 +74,19 @@ STRING elementName;
    attribute of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void      MapGraphMLAttribute (CHAR_T *attrName, AttributeType *attrType,
-			       CHAR_T* elementName, Document doc)
+void   MapGraphMLAttribute (CHAR_T *attrName, AttributeType *attrType,
+			    CHAR_T* elementName, ThotBool *level, Document doc)
 #else
-void      MapGraphMLAttribute (Attr, attrType, elementName, doc)
+void   MapGraphMLAttribute (Attr, attrType, elementName, level, doc)
 CHAR_T        *attrName;
 AttributeType *attrType;
 CHAR_T        *elementName;
+ThotBool      *level;
 Document       doc;
 #endif
 {
   attrType->AttrSSchema = GetGraphMLSSchema (doc);
-  MapXMLAttribute (GRAPH_TYPE, attrName, elementName, doc,
-		   &(attrType->AttrTypeNum));
+  MapXMLAttribute (GRAPH_TYPE, attrName, elementName, level, doc, &(attrType->AttrTypeNum));
 }
 
 /*----------------------------------------------------------------------

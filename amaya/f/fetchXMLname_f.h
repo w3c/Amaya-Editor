@@ -25,6 +25,7 @@ extern ThotBool IsXMLElementInline ( Element el );
 extern int MapXMLAttribute ( int XMLtype,
                              CHAR_T *attrName,
                              CHAR_T *elementName,
+                             ThotBool *highEnoughLevel,
                              Document doc,
                              int *thotType );
 extern CHAR_T* GetXMLAttributeName ( AttributeType attrType,
@@ -52,6 +53,7 @@ extern ThotBool IsXMLElementInline (/* Element el */);
 extern int MapXMLAttribute (/* int XMLtype,
                                CHAR_T *attrName,
                                CHAR_T *elementName,
+                               ThotBool *highEnoughLevel,
                                Document doc,
                                int *thotType */);
 extern CHAR_T* GetXMLAttributeName (/* AttributeType attrType,

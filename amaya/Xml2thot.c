@@ -1977,31 +1977,31 @@ Document       doc;
    End of a XML attribute that belongs to the HTML DTD
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         XhtmlEndOfAttrName (CHAR_T  *attrName,
-					Element  el,
-					Document doc)
+static void   XhtmlEndOfAttrName (CHAR_T *attrName, Element el, Document doc)
 #else
-static void         XhtmlEndOfAttrName (attrName, el, doc)
-CHAR_T   *attrName;
-Element   el;
-Document  doc;
+static void   XhtmlEndOfAttrName (attrName, el, doc)
+CHAR_T       *attrName;
+Element       el;
+Document      doc;
 
 #endif
 {
-   AttributeMapping*   mapAttr;
-   AttributeType       attrType;
-   ElementType         elType;
-   Element             child;
-   Attribute           attr;
-   CHAR_T              translation;
-   ThotBool            invalidAttr;
-   CHAR_T              msgBuffer[MaxMsgLength];
+ AttributeMapping*   mapAttr;
+ AttributeType       attrType;
+ ElementType         elType;
+ Element             child;
+ Attribute           attr;
+ CHAR_T              translation;
+ ThotBool            invalidAttr;
+ ThotBool            highEnoughLevel = TRUE;
+ CHAR_T              msgBuffer[MaxMsgLength];
 
 
    invalidAttr = FALSE;
    attrType.AttrTypeNum = 0;
 
-   mapAttr = MapHTMLAttribute (attrName, &attrType, currentElementName, doc);
+   mapAttr = MapHTMLAttribute (attrName, &attrType,
+			       currentElementName, &highEnoughLevel, doc);
 
    if (attrType.AttrTypeNum <= 0)
      {
@@ -2012,22 +2012,33 @@ Document  doc;
 	 lastMappedAttr = NULL;
        else
 	 {
-	   usprintf (msgBuffer, TEXT("Unknown XML attribute %s"), attrName);
-	   XmlParseError (errorParsing, msgBuffer, 0);
+	   if (highEnoughLevel)
+	     {
+	       usprintf (msgBuffer, TEXT("Unknown XML attribute %s"), attrName);
+	       XmlParseError (errorParsing, msgBuffer, 0);
+	     }
+	   else
+	     {
+	       usprintf (msgBuffer,
+			 TEXT("Unknown XML attribute %s for the current profile"),
+			 attrName);
+	       XmlParseError (errorParsingProfile, msgBuffer, 0);
+	     }
 	   /* attach an Invalid_attribute to the current element */
 	   mapAttr = MapHTMLAttribute (TEXT("unknown_attr"), &attrType,
-				       currentElementName, doc);
+				       currentElementName,
+				       &highEnoughLevel, doc);
 	   invalidAttr = TRUE;
 	 }
      }
-
+   
    if (attrType.AttrTypeNum > 0 && el != NULL &&
        (!XMLcontext.lastElementClosed ||
 	(XMLcontext.lastElement != rootElement)))
      {
        lastMappedAttr = mapAttr;
-
        translation = lastMappedAttr->AttrOrContent;       
+
        switch (translation)
 	 {
 	 case 'C':	/* Content */
@@ -2102,19 +2113,22 @@ Document    doc;
 
 #endif
 {
-   AttributeType       attrType;
-   Attribute           attr;
-   CHAR_T              msgBuffer[MaxMsgLength];
+ AttributeType    attrType;
+ Attribute        attr;
+ CHAR_T           msgBuffer[MaxMsgLength];
+ ThotBool         level = TRUE;
 
    attrType.AttrTypeNum = 0;
 
    if (currentParserCtxt->MapAttribute)
        (*(currentParserCtxt->MapAttribute)) (attrName, &attrType,
-					     currentElementName, doc);
+					     currentElementName,
+					     &level, doc);
        
    if (attrType.AttrTypeNum <= 0)
      /* Not found. Is it a HTML attribute (style, class, id for instance) */
-     MapHTMLAttribute (attrName, &attrType, currentElementName, doc);
+     MapHTMLAttribute (attrName, &attrType,
+		       currentElementName, &level, doc);
 
    if (attrType.AttrTypeNum <= 0)
       /* this attribute is not in a mapping table */
@@ -2280,6 +2294,7 @@ CHAR_T*             val;
   Attribute           attr;
   CHAR_T              msgBuffer[MaxMsgLength];
   int                 value;
+  ThotBool            level;
 
   attrType.AttrSSchema = currentParserCtxt->XMLSSchema;
   attrType.AttrTypeNum = DummyAttribute;
@@ -2290,7 +2305,7 @@ CHAR_T*             val;
       XmlParseError (errorParsing, msgBuffer, 0);
       usprintf (msgBuffer, TEXT("type=%s"), val);
       MapHTMLAttribute (TEXT("unknown_attr"), &attrType,
-			 NULL, XMLcontext.doc);
+			 NULL, &level, XMLcontext.doc);
       XhtmlCreateAttr (XMLcontext.lastElement, attrType,
 		       msgBuffer, TRUE, XMLcontext.doc);
     }
@@ -2400,6 +2415,7 @@ CHAR_T     *attrValue;
    int                 length;
    int                 attrKind;
    ThotBool            done = FALSE;
+   ThotBool            level;
    CHAR_T              msgBuffer[MaxMsgLength];
 
    /* treatments of some particular HTML attributes */
@@ -2459,10 +2475,8 @@ CHAR_T     *attrValue;
 		       TtaRemoveAttribute (lastAttrElement,
 					   currentAttribute, XMLcontext.doc);
 		       usprintf (msgBuffer, TEXT("%s=%s"), attrName, attrValue);
-		       MapHTMLAttribute (TEXT("unknown_attr"),
-					  &attrType,
-					  NULL,
-					  XMLcontext.doc);
+		       MapHTMLAttribute (TEXT("unknown_attr"), &attrType,
+					 NULL, &level, XMLcontext.doc);
 		       XhtmlCreateAttr (lastAttrElement, attrType,
 					msgBuffer, TRUE, XMLcontext.doc);
 		     }
@@ -4405,7 +4419,7 @@ ThotBool    xmlDoctype;
 	   if (XMLUnknownEncoding || XMLUndefinedEncoding)
 	     ChangeToBrowserMode (doc);	     
 	 }
-       else
+       else if (XMLErrorsFoundInProfile)
 	 {
 	   /* Some elements or attributes are not supported */
 	   /* for the current profile */
@@ -4415,7 +4429,9 @@ ThotBool    xmlDoctype;
 	   InitConfirm3L (XMLcontext.doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE),
 			  profile, TtaGetMessage (AMAYA, AM_XML_ERROR), FALSE);
 	   if (XMLUnknownEncoding || XMLUndefinedEncoding)
-	     ChangeToBrowserMode (doc);	     
+	     ChangeToBrowserMode (doc);
+	   XMLErrorsFound = TRUE;
+	   XMLErrorsFoundInProfile = FALSE;    
 	 }
      }
 }

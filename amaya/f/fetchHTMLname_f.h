@@ -15,10 +15,12 @@ extern void GIType ( CHAR_T* gi,
 extern AttributeMapping *MapAttr ( CHAR_T *attrName,
                                    SSchema *schema,
                                    int elemEntry,
+                                   ThotBool *level,
                                    Document doc );
 extern AttributeMapping *MapHTMLAttribute ( CHAR_T *attrName,
                                             AttributeType *attrType,
                                             CHAR_T *elementName,
+                                            ThotBool *level,
                                             Document doc );
 
 #else /* __STDC__ */
@@ -32,10 +34,12 @@ extern void GIType (/* CHAR_T* gi,
 extern AttributeMapping *MapAttr (/* CHAR_T *attrName,
                                      SSchema *schema,
                                      int elemEntry,
+                                     ThotBool *level,
                                      Document doc */);
 extern AttributeMapping *MapHTMLAttribute (/* CHAR_T *attrName,
                                               AttributeType *attrType,
                                               CHAR_T *elementName,
+                                              ThotBool *level,
                                               Document doc */);
 
 #endif /* __STDC__ */

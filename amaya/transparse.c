@@ -1155,9 +1155,9 @@ UCHAR_T       c;
 
 
 /*----------------------------------------------------------------------
-   MapThotAttr     search in AttributeMappingTable the entry for
-   the attribute of name Attr and returns the Thot Attribute
-   corresponding to the rank of that entry.
+   MapThotAttr
+   search in AttributeMappingTable the entry for the attribute of name Attr
+   and returns the Thot Attribute corresponding to the rank of that entry.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 MapThotAttr (CHAR_T* attrName, CHAR_T *elementName)
@@ -1168,13 +1168,14 @@ CHAR_T             *elementName;
 
 #endif
 {
-  int                 i, thotAttr;
+  int        i, thotAttr;
+  ThotBool   level;
 
-  i = MapXMLAttribute (XHTML_TYPE, attrName, elementName, TransDoc, &thotAttr);
+  i = MapXMLAttribute (XHTML_TYPE, attrName, elementName, &level, TransDoc, &thotAttr);
   if (i < 0)
-    i = MapXMLAttribute (MATH_TYPE, attrName, elementName, TransDoc, &thotAttr);
+    i = MapXMLAttribute (MATH_TYPE, attrName, elementName, &level, TransDoc, &thotAttr);
   if (i < 0)
-    i = MapXMLAttribute (GRAPH_TYPE, attrName, elementName, TransDoc, &thotAttr);
+    i = MapXMLAttribute (GRAPH_TYPE, attrName, elementName, &level, TransDoc, &thotAttr);
   return thotAttr;
 }
 

@@ -9,6 +9,7 @@
 extern void MapXLinkAttribute ( CHAR_T *attrName,
                                 AttributeType *attrType,
                                 CHAR_T *elementName,
+                                ThotBool *level,
                                 Document doc );
 extern void MapXLinkAttributeValue ( CHAR_T* AttrVal,
                                      AttributeType attrType,
@@ -22,6 +23,7 @@ extern void XLinkAttributeComplete ( Attribute attr,
 extern void MapXLinkAttribute (/* CHAR_T *attrName,
                                   AttributeType *attrType,
                                   CHAR_T *elementName,
+                                  ThotBool *level,
                                   Document doc */);
 extern void MapXLinkAttributeValue (/* CHAR_T* AttrVal,
                                        AttributeType attrType,

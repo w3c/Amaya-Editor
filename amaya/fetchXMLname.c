@@ -334,26 +334,27 @@ Element           el;
    Returns the corresponding entry or -1.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int               MapXMLAttribute (int XMLtype,
-				   CHAR_T *attrName,
-				   CHAR_T *elementName,
-				   Document doc,
-				   int *thotType)
+int       MapXMLAttribute (int XMLtype, CHAR_T *attrName,
+			   CHAR_T *elementName, ThotBool *highEnoughLevel,
+			   Document doc, int *thotType)
 #else
-int               MapXMLAttribute (XMLtype,
-				   attrName,
-				   elementName,
-				   doc,
-				   thotType)
-int               XMLtype;
-CHAR_T           *attrName;
-CHAR_T           *elementName;
-Document          doc;
-int              *thotType;
+int       MapXMLAttribute (XMLtype, attrName, elementName,
+			   highEnoughLevel, doc, thotType)
+int          XMLtype;
+CHAR_T      *attrName;
+CHAR_T      *elementName;
+ThotBool    *highEnoughLevel;
+Document     doc;
+int         *thotType;
 #endif
 {
   int               i;
   AttributeMapping *ptr;
+
+  /* Initialization */
+  *highEnoughLevel = TRUE;
+  i = 1;
+  *thotType = 0;
 
    /* Select the right table */
    if (XMLtype == XHTML_TYPE)
@@ -367,20 +368,25 @@ int              *thotType;
    else
      ptr = NULL;
 
-  i = 1;
-  *thotType = 0;
   if (ptr == NULL)
     return -1;
 
   /* look for the first concerned entry in the table */
-  while (ptr[i].XMLattribute[0] < attrName[0] && ptr[i].XMLattribute[0] != WC_EOS)
+  while (ptr[i].XMLattribute[0] < attrName[0] && 
+	 ptr[i].XMLattribute[0] != WC_EOS)
     i++;
+
   while (ptr[i].XMLattribute[0] == attrName[0])
     {
-      if (ptr[i].Level > ParsingLevel[doc] ||
-	  ustrcmp (ptr[i].XMLattribute, attrName) ||
-	  (ptr[i].XMLelement[0] != WC_EOS && ustrcmp (ptr[i].XMLelement, elementName)))
+      if (ustrcmp (ptr[i].XMLattribute, attrName) ||
+	  (ptr[i].XMLelement[0] != WC_EOS &&
+	   ustrcmp (ptr[i].XMLelement, elementName)))
 	i++;
+      else if (ptr[i].Level > ParsingLevel[doc])
+	{
+	  *highEnoughLevel = FALSE;
+	  i++;
+	}
       else
 	{
 	  *thotType = ptr[i].ThotAttribute;

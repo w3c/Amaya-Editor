@@ -206,12 +206,14 @@ Document            doc;
    as well as the corresponding Thot SSchema
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-AttributeMapping   *MapAttr (CHAR_T *attrName, SSchema *schema, int elemEntry, Document doc)
+AttributeMapping   *MapAttr (CHAR_T *attrName, SSchema *schema,
+			     int elemEntry, ThotBool *level, Document doc)
 #else
-AttributeMapping   *MapAttr (attrName, schema, elemEntry, doc)
+AttributeMapping   *MapAttr (attrName, schema, elemEntry, level, doc)
 CHAR_T             *attrName;
 SSchema            *schema;
 int                 elemEntry;
+ThotBool           *level
 Document            doc;
 #endif
 {
@@ -222,7 +224,7 @@ Document            doc;
   *schema = TtaGetDocumentSSchema (doc);
   LowercaseGI (attrName, attr);
   LowercaseGI (pHTMLGIMapping[elemEntry].XMLname, elem);
-  i = MapXMLAttribute (XHTML_TYPE, attr, elem, doc, &thotType);
+  i = MapXMLAttribute (XHTML_TYPE, attr, elem, level, doc, &thotType);
   if (i < 0)
     /* not found */
     return (NULL);
@@ -240,22 +242,23 @@ Document            doc;
 AttributeMapping *MapHTMLAttribute (CHAR_T *attrName,
 				    AttributeType *attrType,
 				    CHAR_T *elementName,
+				    ThotBool *level,
 				    Document doc)
 #else
-AttributeMapping *MapHTMLAttribute (attrName,
-				    attrType,
-				    elementName,
-				     doc)
-CHAR_T*           attrName;
-AttributeType*    attrType;
-CHAR_T*           elementName;
-Document          doc;
+AttributeMapping *MapHTMLAttribute (attrName, attrType,
+				    elementName, level, doc)
+CHAR_T        *attrName;
+AttributeType *attrType;
+CHAR_T        *elementName;
+ThotBool      *level
+Document       doc;
 #endif
 {
-  int                 i;
+  int             i;
 
   attrType->AttrSSchema = GetXHTMLSSchema (doc);
-  i = MapXMLAttribute (XHTML_TYPE, attrName, elementName, doc, &(attrType->AttrTypeNum));
+  i = MapXMLAttribute (XHTML_TYPE, attrName, elementName,
+		       level, doc, &(attrType->AttrTypeNum));
   if (i < 0)
     return (NULL);
   else

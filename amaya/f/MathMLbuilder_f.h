@@ -9,6 +9,7 @@
 extern void MapMathMLAttribute ( CHAR_T *attrName,
                                  AttributeType *attrType,
                                  STRING elementName,
+                                 ThotBool *level,
                                  Document doc );
 extern void MapMathMLAttributeValue ( STRING AttrVal,
                                       AttributeType attrType,
@@ -86,6 +87,7 @@ extern void MathMLGetDTDName ( STRING DTDname,
 extern void MapMathMLAttribute (/* CHAR_T *attrName,
                                    AttributeType *attrType,
                                    STRING elementName,
+                                   ThotBool *level,
                                    Document doc */);
 extern void MapMathMLAttributeValue (/* STRING AttrVal,
                                         AttributeType attrType,

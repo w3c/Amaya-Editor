@@ -3933,6 +3933,7 @@ CSSInfoPtr      css;
   CHAR_T*             attrvals[MAX_ANCESTORS];
   int                 i, j, k, max, maxAttr;
   ThotBool            isHTML;
+  ThotBool            level;
 
   sel[0] = WC_EOS;
   for (i = 0; i < MAX_ANCESTORS; i++)
@@ -4155,7 +4156,7 @@ CSSInfoPtr      css;
 	}
       else if (attrs[i])
 	{
-	  MapHTMLAttribute (attrs[i], &attrType, names[i], doc);
+	  MapHTMLAttribute (attrs[i], &attrType, names[i], &level, doc);
 	  ctxt->attrText[j] = attrvals[i];
 	  ctxt->attrType[j] = attrType.AttrTypeNum;
 	}

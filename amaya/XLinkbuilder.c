@@ -50,17 +50,19 @@ static AttrValueMapping XLinkAttrValueMappingTable[] =
    attribute of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           MapXLinkAttribute (CHAR_T *attrName, AttributeType *attrType, CHAR_T *elementName, Document doc)
+void     MapXLinkAttribute (CHAR_T *attrName, AttributeType *attrType,
+			    CHAR_T *elementName, ThotBool *level, Document doc)
 #else
-void           MapXLinkAttribute (Attr, attrType, elementName, doc)
+void     MapXLinkAttribute (Attr, attrType, elementName, level, doc)
 CHAR_T        *attrName;
 AttributeType *attrType;
 CHAR_T*        elementName;
+ThotBool      *level;
 Document       doc;
 #endif
 {
   attrType->AttrSSchema = GetXLinkSSchema (doc);
-  MapXMLAttribute (XLINK_TYPE, attrName, elementName, doc, &(attrType->AttrTypeNum));
+  MapXMLAttribute (XLINK_TYPE, attrName, elementName, level, doc, &(attrType->AttrTypeNum));
 }
 
 /*----------------------------------------------------------------------

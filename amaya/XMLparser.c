@@ -759,7 +759,8 @@ CHAR_T                c;
   Attribute	attr;
   AttributeType	attrType;
   int		i;
-  UCHAR_T         msgBuffer[MAX_BUFFER_LENGTH];
+  UCHAR_T       msgBuffer[MAX_BUFFER_LENGTH];
+  ThotBool      level;
 
   /* close the input buffer */
   inputBuffer[bufferLength] = EOS;
@@ -776,7 +777,7 @@ CHAR_T                c;
         if (currentParserCtxt->MapAttribute)
            (*(currentParserCtxt->MapAttribute)) (&inputBuffer[4], &attrType,
 						 XMLelementType[stackLevel-1],
-						 currentDocument);
+						 &level, currentDocument);
 	}
      else
 	{
@@ -797,7 +798,7 @@ CHAR_T                c;
 	      XlinkAttribute = TRUE;
               (*(XLinkParserCtxt->MapAttribute)) (&inputBuffer[i], &attrType,
 						  XMLelementType[stackLevel-1],
-						  currentDocument);
+						  &level, currentDocument);
 	      }
 	   else
 	      /* this attribute is supposed to be in the current namespace */
@@ -805,7 +806,7 @@ CHAR_T                c;
                  (*(currentParserCtxt->MapAttribute)) (&inputBuffer[i],
 						  &attrType,
 						  XMLelementType[stackLevel-1],
-						  currentDocument);
+						  &level, currentDocument);
 	   }
         else
 	   {
@@ -813,13 +814,14 @@ CHAR_T                c;
 	   if (currentParserCtxt->MapAttribute)
               (*(currentParserCtxt->MapAttribute)) (&inputBuffer[i], &attrType,
 					          XMLelementType[stackLevel-1],
-					          currentDocument);
+					          &level, currentDocument);
 	   }
 	}
      if (attrType.AttrTypeNum <= 0)
         /* not found. Is it a HTML attribute (style, class, id for instance) */
 	MapHTMLAttribute (&inputBuffer[i], &attrType,
-			  XMLelementType[stackLevel-1], currentDocument);
+			  XMLelementType[stackLevel-1],
+			  &level, currentDocument);
      if (attrType.AttrTypeNum <= 0)
         {
         usprintf (msgBuffer, TEXT("Unknown XML attribute %s"), inputBuffer);
