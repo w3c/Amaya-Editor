@@ -2044,9 +2044,7 @@ static ThotBool  IsLeadingSpaceUseless ()
 	 {
 	   if (IsXMLElementInline (lastElType, XMLcontext.doc))
 	     {
-	       if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
-		 removeLeadingSpaces = FALSE;
-	       else
+	       if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
 		 {
 		   if (elType.ElTypeNum != HTML_EL_Option_Menu &&
 		       elType.ElTypeNum != HTML_EL_OptGroup)
