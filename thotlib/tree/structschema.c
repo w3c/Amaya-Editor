@@ -1206,7 +1206,12 @@ ThotBool            CanCutElement (PtrElement pEl, PtrDocument pDoc,
    InCutBuffer = FALSE;
    if (pEl != NULL)
      {
-      if (pEl->ElTypeNumber == pEl->ElStructSchema->SsRootElem)
+      if (pEl->ElTypeNumber == pEl->ElStructSchema->SsDocument)
+	/* do not delete the root element */
+	ret = FALSE;
+      else  if (pEl->ElTypeNumber == pEl->ElStructSchema->SsRootElem &&
+		pEl->ElParent &&
+		pEl->ElParent->ElTypeNumber == pEl->ElParent->ElStructSchema->SsDocument)
 	/* do not delete the root element */
 	ret = FALSE;
       else if (TypeHasException (ExcNoCut, pEl->ElTypeNumber,
