@@ -1449,10 +1449,14 @@ static int terminate_handler (HTRequest *request, HTResponse *response,
      {
        /* we are writing to a local file */
        if (me->reqStatus != HT_ABORT)
-	 {			/* if the request was not aborted and */
-	   if (error_flag &&
-	       me->error_html == TRUE)
-	       /* there were some errors and we want to print them */
+	 {			
+	   /* if the request was not aborted and
+	      there were some errors and we want to print them */
+
+	   /* JK: 30/04/2004. The 201 reponse from the annotation server
+	      is being stored inside the error flag! */
+	   if ((status == 201 && me->mode & AMAYA_FILE_POST && me->error_stream)
+	       || (error_flag && me->error_html == TRUE))
 	     {		
 	       /* if the transfer was interrupted, the file may not be
 		  empty. So, we erase it */
