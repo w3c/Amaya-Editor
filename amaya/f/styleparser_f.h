@@ -9,10 +9,10 @@
 extern char *SkipBlanksAndComments ( char *ptr );
 extern char *ParseNumber ( char *cssRule,
                            PresentationValue *pval );
-extern char *ParseClampedUnit ( char *text,
-                                PresentationValue *pval );
 extern char *ParseCSSUnit ( char *cssRule,
                             PresentationValue *pval );
+extern char *ParseClampedUnit ( char *cssRule,
+                                PresentationValue *pval );
 extern void ParseCSSBackgroundImageCallback ( Document doc,
                                               Element element,
                                               char *file,
@@ -70,10 +70,10 @@ extern char ReadCSSRules ( Document docRef,
 extern char *SkipBlanksAndComments (/* char *ptr */);
 extern char *ParseNumber (/* char *cssRule,
                              PresentationValue *pval */);
-extern char *ParseClampedUnit (/* char *text,
-                                  PresentationValue *pval */);
 extern char *ParseCSSUnit (/* char *cssRule,
                               PresentationValue *pval */);
+extern char *ParseClampedUnit (/* char *cssRule,
+                                  PresentationValue *pval */);
 extern void ParseCSSBackgroundImageCallback (/* Document doc,
                                                 Element element,
                                                 char *file,
