@@ -172,6 +172,11 @@ ThotBool            selected;
 	  
 	  if (withbackground)
 	    DrawRectangle (frame, 0, 0, xd, yd, width, height, 0, 0, 0, bg, 2);
+	  /* display the background selection */
+	  if (selected &&
+	      !pFrame->FrSelectOnePosition &&
+	      pFrame->FrSelectionBegin.VsXPos != pBox->BxW)
+	    DisplayStringSelection (frame, 0, pBox->BxW, pBox);
 	  
 	  /* Line thickness */
 	  i = GetLineWeight (pBox->BxAbstractBox);
@@ -250,22 +255,15 @@ ThotBool            selected;
 	    }
 
 	  /* show the selection on the beginning or the end of the image */
-	  if (selected)
-	    {
-	      if (pFrame->FrSelectOnePosition ||
-		  pFrame->FrSelectionBegin.VsXPos == pBox->BxW)
-		/* display a carret 
-		   or the selection starts at the end of the box */
-		DisplayStringSelection (frame,
-					pFrame->FrSelectionBegin.VsXPos,
-					pFrame->FrSelectionBegin.VsXPos + 2,
-					pBox);
-	      else
-		DisplayStringSelection (frame,
-					pFrame->FrSelectionBegin.VsXPos,
-					pFrame->FrSelectionEnd.VsXPos,
-					pBox);
-	    }
+	  if (selected &&
+	      (pFrame->FrSelectOnePosition ||
+	       pFrame->FrSelectionBegin.VsXPos == pBox->BxW))
+	    /* display a carret 
+	       or the selection starts at the end of the box */
+	    DisplayStringSelection (frame,
+				    pFrame->FrSelectionBegin.VsXPos,
+				    pFrame->FrSelectionBegin.VsXPos + 2,
+				    pBox);
 	}
     }
 }

@@ -692,6 +692,8 @@ ThotBool            alone;
 		  pViewSel->VsLine = adline;
 		  if (pAb->AbLeafType == LtPicture && firstChar > 0)
 		    pViewSel->VsXPos = pBox->BxWidth;
+		  else if (pAb->AbLeafType == LtSymbol && firstChar == 0)
+		    pViewSel->VsXPos = pBox->BxWidth;
 		  else
 		    pViewSel->VsXPos = 0;
 		  pViewSel->VsNSpaces = 0;
