@@ -124,7 +124,7 @@ void                ClearViewSelection (int frame)
 	      {
 		/* only one box is selected */
 		if (pBox1->BxType == BoGhost ||
-		    (pAb1 != NULL &&
+		    (pAb1 != NULL && pAb1->AbElement != NULL &&
 		     FrameTable[frame].FrView == 1 &&
 		     TypeHasException (ExcHighlightChildren,
 				       pAb1->AbElement->ElTypeNumber,

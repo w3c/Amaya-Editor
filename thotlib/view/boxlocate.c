@@ -1502,18 +1502,21 @@ PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y, int xDelta, int
 	  pBox = GetClickedLeafBox (frame, *x, *y);
 	  if (pBox == NULL)
 	    pBox = pSourceBox;
-	  else if (TypeHasException (ExcNoSelect,
+	  else if (pBox->BxAbstractBox->AbElement)
+	    {
+	      if (TypeHasException (ExcNoSelect,
 			     pBox->BxAbstractBox->AbElement->ElTypeNumber,
 			     pBox->BxAbstractBox->AbElement->ElStructSchema))
-	    pBox = pSourceBox;
-	  else if (TypeHasException (ExcSelectParent,
+		pBox = pSourceBox;
+	      else if (TypeHasException (ExcSelectParent,
 			     pBox->BxAbstractBox->AbElement->ElTypeNumber,
 			     pBox->BxAbstractBox->AbElement->ElStructSchema) &&
-		   pBox->BxAbstractBox->AbEnclosing)
-	    {
-	      /* let the algorithm work if we obtain the same box */
-	      if (pBox != pSourceBox)
-		pBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
+		             pBox->BxAbstractBox->AbEnclosing)
+		{
+		  /* let the algorithm work if we obtain the same box */
+		  if (pBox != pSourceBox)
+		    pBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
+		}
 	    }
 	  if (pBox == pSourceBox || pBox->BxAbstractBox->AbBox == pSourceBox ||
 	      IsParentBox (pSourceBox, pBox))
