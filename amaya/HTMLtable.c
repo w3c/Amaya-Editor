@@ -1560,6 +1560,9 @@ void TablebodyDeleted (NotifyElement * event)
   Document            doc;
   ThotBool	      empty;
 
+  if (event->info == 2)
+     /* call from the Return key. Don't do anything */
+     return;
   doc = event->document;
   table = event->element;
   sibling = TtaGetFirstChild (table);

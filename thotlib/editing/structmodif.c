@@ -1079,7 +1079,7 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
 		    {
 		      notifyEl.element = (Element) pPrev->ElParent;
 		      notifyEl.position = NSiblings;
-		      notifyEl.info = 0; /* not sent by undo */
+		      notifyEl.info = 2; /* element removed by BreakElement */
 		      CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
 		    }
 		  if (pPrevEl != NULL)
