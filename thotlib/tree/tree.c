@@ -32,7 +32,8 @@
 #include "res.f"		/* PCS resdyn */
 
 /* ----------------------------------------------------------------------
-   DocumentOfElement returns the document to which a pEl element belongs.
+   DocumentOfElement
+   returns the document to which a pEl element belongs.
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -82,8 +83,8 @@ PtrElement          pEl;
 }
 
 /* ---------------------------------------------------------------------- 
-   ProtectElement sets the ElIsCopy flag in the elements of the subtree 
-   of pE
+   ProtectElement
+   sets the ElIsCopy flag in the elements of the subtree of pE.
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -111,8 +112,7 @@ PtrElement          pEl;
 
 /* ----------------------------------------------------------------------
    GetOtherPairedElement
-   returns a pointer on the mark which is pair to the one pointed to by
-   pEl
+   returns a pointer on the mark which is pair to the one pointed to by pEl.
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -179,12 +179,11 @@ PtrElement          pEl;
    return pOther;
 }
 
-
-/* ---------------------------------------------------------------------- */
-/* |    ElementIsReadOnly    indique si l'element pointe' par pEl est        | */
-/* |            protege' contre les modifications de l'utilisateur, ou  | */
-/* |            s'il fait partie d'un arbre protege'.                   | */
-/* ---------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------- 
+   ElementIsReadOnly
+   returns True if the element pointed by pEl is protected against user
+   modifications, or if it belongs to a protected tree.
+   ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
 boolean             ElementIsReadOnly (PtrElement pEl)
@@ -219,11 +218,11 @@ PtrElement          pEl;
    return ret;
 }
 
-
-/* ---------------------------------------------------------------------- */
-/* |    ElementIsHidden      indique si l'element pointe' par pEl est cache' | */
-/* |            a` l'utilisateur, ou s'il fait partie d'un arbre cache' | */
-/* ---------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------
+   ElementIsHidden
+   returns True if the element pointed by pEl is hidden to the user, or 
+   if it belongs to a hidden tree.
+   ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
 boolean             ElementIsHidden (PtrElement pEl)
@@ -248,9 +247,9 @@ PtrElement          pEl;
    return ret;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    FwdSearchTypeNameInSubtree					| */
-/* ---------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------
+   FwdSearchTypeNameInSubtree					
+   ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
 static PtrElement   FwdSearchTypeNameInSubtree (PtrElement pEl, boolean test, char *typeName)
@@ -269,9 +268,10 @@ char               *typeName;
    pRet = NULL;
    if (test)
       if (strcmp (typeName, pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
-	 pRet = pEl;		/* found ! C'est l'element lui-meme */
+	/* got a hit on the element */
+	 pRet = pEl;		
    if (pRet == NULL && !pEl->ElTerminal)
-      /* on cherche recursivement parmi les fils de l'element */
+      /* a recursive search among the sons of the element */
      {
 	pChild = pEl->ElFirstChild;
 	while (pChild != NULL && pRet == NULL)
@@ -283,13 +283,12 @@ char               *typeName;
    return pRet;
 }
 
-
-/* ---------------------------------------------------------------------- */
-/* |    FwdSearchElemByTypeName cherche en avant dans l'arbre, a partir de l'element| */
-/* |    pointe par pEl, un element dont le type a pour nom typeName.    | */
-/* |    La fonction rend un pointeur sur l'element trouve'              | */
-/* |    ou NULL si echec.                                               | */
-/* ---------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------- 
+   FwdSearchElemByTypeName
+   makes forward search on a tree, starting from the element pointed by
+   Pel,  of an element having the name typeName. The function returns a
+   pointer to the element if there's a hit, NULL otherwise.
+   ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
 PtrElement          FwdSearchElemByTypeName (PtrElement pEl, char *typeName)
@@ -308,11 +307,11 @@ char               *typeName;
    pRet = NULL;
    if (pEl != NULL && typeName != NULL)
      {
-	/* cherche dans le sous-arbre de l'element */
+	/* searches the subtree of the element */
 	pRet = FwdSearchTypeNameInSubtree (pEl, False, typeName);
 	if (pRet == NULL)
-	   /* si echec, cherche dans les sous-arbres des freres suivants */
-	   /* de l'element */
+	   /* if not found, searches on the subtrees of the next siblings
+	      of the element */
 	  {
 	     pCur = pEl->ElNext;
 	     while (pCur != NULL && pRet == NULL)
@@ -320,7 +319,8 @@ char               *typeName;
 		  pRet = FwdSearchTypeNameInSubtree (pCur, True, typeName);
 		  pCur = pCur->ElNext;
 	       }
-	     /* si echec, cherche le premier ascendant avec un frere suivant */
+	     /* if not found, climbs up a level, then continues the search
+		with the next brother */
 	     if (pRet == NULL)
 	       {
 		  stop = False;
@@ -335,12 +335,14 @@ char               *typeName;
 		    }
 		  while (!(stop));
 		  if (pAsc != NULL)
-		     /* cherche si cet element est celui cherche */
+		     /* verifies if this element is the one we're looking
+			for */
 		    {
 		       pAsc = pAsc->ElNext;
 		       if (pAsc != NULL)
 			  if (strcmp (typeName, pAsc->ElSructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0)
-			     pRet = pAsc;	/* found */
+			    /* found */
+			     pRet = pAsc; 
 			  else
 			     pRet = FwdSearchElemByTypeName (pAsc, typeName);
 		    }
@@ -350,9 +352,9 @@ char               *typeName;
    return pRet;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |     BackSearchTypeNameInSubtree					| */
-/* ---------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------- 
+   BackSearchTypeNameInSubtree				       
+   ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
 static PtrElement   BackSearchTypeNameInSubtree (PtrElement pEl, char *typeName)
@@ -389,12 +391,13 @@ char               *typeName;
      }
    return pRet;
 }
-/* ---------------------------------------------------------------------- */
-/* |    BackSearchElemByTypeName cherche en arriere dans l'arbre, a partir de l'elt  | */
-/* |    pointe par pEl, un element dont le nom de type est typeName.    | */
-/* |    La fonction rend un pointeur sur l'element trouve ou NULL       | */
-/* |    si echec.                                                       | */
-/* ---------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------- 
+   BackSearchElemByTypeName
+   cherche en arriere dans l'arbre, a partir de l'elt  
+   pointe par pEl, un element dont le nom de type est typeName.    
+   La fonction rend un pointeur sur l'element trouve ou NULL       
+   si echec.                                                       
+   ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
 PtrElement          BackSearchElemByTypeName (PtrElement pEl, char *typeName)
@@ -473,9 +476,10 @@ int                *view;
    return pRet;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    retourne 'vrai' si l'element pointe' par pEl est l'elt cherche'.| */
-/* ---------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------- 
+   AttrFound
+   retourne 'vrai' si l'element pointe' par pEl est l'elt cherche'.|
+   ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
 static boolean      AttrFound (PtrElement pEl, char *textVal, int val, int attrNum, PtrSSchema pSS)
