@@ -2178,7 +2178,8 @@ static void         TextToDocument ()
 		}
 	  }
 	elType = TtaGetElementType (parent);
-	if (elType.ElTypeNum == HTML_EL_STYLE_ && elType.ElSSchema == HTMLSSchema)
+	if (elType.ElTypeNum == HTML_EL_STYLE_ &&
+	    elType.ElSSchema == HTMLSSchema && ParsingCSS)
 	  {
 #ifndef STANDALONE
 	     ApplyCSSRules (parent, inputBuffer, theDocument, FALSE);
@@ -2902,8 +2903,10 @@ Element             el;
 	   }
        break;
 
-    case HTML_EL_Preformatted:	/* it's a PRE */
     case HTML_EL_STYLE_:	/* it's a STYLE element */
+	ParsingCSS = FALSE;
+	/* and continue as if it were a Preformatted or a Script */
+    case HTML_EL_Preformatted:	/* it's a PRE */
     case HTML_EL_SCRIPT:	/* it's a SCRIPT element */
        /* if the last line of the Preformatted is empty, remove it */
        leaf = LastLeafInElement (el);
@@ -5702,7 +5705,8 @@ char               *HTMLbuf;
 			/* new line in ordinary text */
 		        {
 			  /* suppress all spaces preceding the end of line */
-			  while (LgBuffer > 0 && inputBuffer[LgBuffer - 1] == SPACE)
+			  while (LgBuffer > 0 &&
+				 inputBuffer[LgBuffer - 1] == SPACE)
 			     LgBuffer--;
 			  /* new line is equivalent to space */
 			  charRead = SPACE;

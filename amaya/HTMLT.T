@@ -86,6 +86,7 @@ RULES
 	   END;
 	Create Attributes;
 	Create '>';
+	NoLineBreak;
 	NoTranslation;
 	Create '\12</style>\12' After;
 	END;
@@ -94,6 +95,7 @@ RULES
 	Create '<script';
 	Create Attributes;
 	Create '>\12';
+	NoLineBreak;
 	NoTranslation;
 	Create '\12</script>\12' After;
 	END;
