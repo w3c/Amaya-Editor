@@ -3371,7 +3371,6 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
   ----------------------------------------------------------------------*/
 void ChangeSelFrame (int frame)
 {
-#ifndef _WX // TODO
   ThotWidget          w;
   Document            doc;
 
@@ -3389,8 +3388,6 @@ void ChangeSelFrame (int frame)
 	  w = FrameTable[frame].WdFrame;
 	}
     }
-#endif /* #ifndef _WX */ // TODO
-  
 }
 
 
@@ -3593,7 +3590,7 @@ void UpdateScrollbars (int frame)
     return;
 
 #ifdef _GL
-  if (FrameTable[frame].Scroll_enabled == FALSE)
+  if (FrameTable[frame].Scroll_enabled == FALSE || FrameTable[frame].WdFrame == NULL)
     return;
 #endif /* _GL */
   
