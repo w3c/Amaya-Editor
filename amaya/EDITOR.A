@@ -30,7 +30,9 @@ MENUS
 	view:1 File button:BExit -> AmayaClose;
 
 	view:2 File2 button:BCloseView -> ShowStructure;
-	view:4 File3 button:BCloseView -> ShowAlternate;
+	view:4 File4 button:BCloseView -> ShowAlternate;
+	view:3 File3 button:BCloseView -> ShowLinks;
+	view:5 File5 button:BCloseView -> ShowToC;
 
 	Edit_ button:BCut -> TtcCutSelection;
 	Edit_ button:BCopy -> TtcCopySelection;
@@ -38,7 +40,7 @@ MENUS
 	Edit_ button:BClear -> TtcDeleteSelection;
 	Edit_ Separator;
 	Edit_ button:BFind -> TtcSearchText;
-	Edit_.SpellCheck button:BEnglis -> EnSpellCheck;
+	Edit_.SpellCheck button:BEnglish -> EnSpellCheck;
 	Edit_.SpellCheck button:BFrench -> FrSpellCheck;
 
 	view:2 StructTypes button:BIsIndex -> CreateIsIndex;
@@ -109,6 +111,8 @@ MENUS
 	view:1 Views toggle:TShowTextZone -> TtcSwitchCommands;
 	view:1 Views toggle:TShowStructure -> ShowStructure;
 	view:1 Views toggle:TShowAlternate -> ShowAlternate;
+	view:1 Views toggle:TShowLinks -> ShowLinks;
+	view:1 Views toggle:TShowToC -> ShowToC;
 	view:1 Views toggle:TShowMapAreas -> ShowMapAreas;
 
         view:1 Style button:BCharacterStyle -> TtcChangeCharacters;
@@ -143,6 +147,7 @@ MENUS
 
 	view:1 Special button:BTransform -> TransformType;
 	view:1 Special Separator;
+	view:1 Special toggle:TSectionNumber -> SectionNumbering;
 	view:1 Special button:BMakeBook -> MakeBook;
 	view:1 Special button:BRtimeHTML -> RealTimeHTML;
 

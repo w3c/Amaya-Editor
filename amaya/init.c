@@ -563,15 +563,15 @@ char               *pathname;
 {
    char                tempname[MAX_LENGTH];
    char                temppath[MAX_LENGTH];
-   View                mainView, structView, altView;
+   View                mainView, structView, altView, linksView, tocView;
    Document            old_doc;
    boolean             opened;
    int                 x, y, w, h;
 
    old_doc = doc;		/* previous document */
    if (doc != 0 && !TtaIsDocumentModified (doc))
-      /* close the Structure view and the Alternate view if they are open */
      {
+        /* close the Alternate view if it is open */
 	altView = TtaGetViewFromName (doc, "Alternate_view");
 	if (altView != 0)
 	   if (TtaIsViewOpened (doc, altView))
@@ -580,6 +580,7 @@ char               *pathname;
 		/* reset the corresponding Toggle item in the Views menu */
 		TtaSetToggleItem (doc, 1, Views, TShowAlternate, FALSE);
 	     }
+        /* close the Structure view if it is open */
 	structView = TtaGetViewFromName (doc, "Structure_view");
 	if (structView != 0)
 	   if (TtaIsViewOpened (doc, structView))
@@ -588,13 +589,32 @@ char               *pathname;
 		/* reset the corresponding Toggle item in the Views menu */
 		TtaSetToggleItem (doc, 1, Views, TShowStructure, FALSE);
 	     }
+        /* close the Links view if it is open */
+	linksView = TtaGetViewFromName (doc, "Links_view");
+	if (linksView != 0)
+	   if (TtaIsViewOpened (doc, linksView))
+	     {
+		TtaCloseView (doc, linksView);
+		/* reset the corresponding Toggle item in the Views menu */
+		TtaSetToggleItem (doc, 1, Views, TShowLinks, FALSE);
+	     }
+        /* close the Table_of_contents view if it is open */
+	tocView = TtaGetViewFromName (doc, "Table_of_contents");
+	if (tocView != 0)
+	   if (TtaIsViewOpened (doc, tocView))
+	     {
+		TtaCloseView (doc, tocView);
+		/* reset the corresponding Toggle item in the Views menu */
+		TtaSetToggleItem (doc, 1, Views, TShowToC, FALSE);
+	     }
 	TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);
+	TtaSetToggleItem (doc, 1, Special, TSectionNumber, FALSE);
 	/* remove the current selection */
 	TtaUnselect (doc);
 	UpdateContextSensitiveMenus (doc);
 	TtaFreeView (doc, 1);
 	opened = TRUE;
-	old_doc = 0;		/* the previous document doesn't still exist */
+	old_doc = 0;	/* the previous document doesn't exist any more */
      }
    else
       opened = FALSE;
@@ -630,37 +650,60 @@ char               *pathname;
 	if (!opened)
 	  {
 	     /* Add a button */
-	     TtaAddButton (doc, 1, stopR, StopTransfer, TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT));
-	     TtaAddButton (doc, 1, iconBack, GotoPreviousHTML, TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS));
-	     TtaAddButton (doc, 1, iconForward, GotoNextHTML, TtaGetMessage (AMAYA, AM_BUTTON_NEXT));
-	     TtaAddButton (doc, 1, iconReload, Reload, TtaGetMessage (AMAYA, AM_BUTTON_RELOAD));
+	     TtaAddButton (doc, 1, stopR, StopTransfer,
+			   TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT));
+	     TtaAddButton (doc, 1, iconBack, GotoPreviousHTML,
+			   TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS));
+	     TtaAddButton (doc, 1, iconForward, GotoNextHTML,
+			   TtaGetMessage (AMAYA, AM_BUTTON_NEXT));
+	     TtaAddButton (doc, 1, iconReload, Reload,
+			   TtaGetMessage (AMAYA, AM_BUTTON_RELOAD));
 	     TtaAddButton (doc, 1, None, NULL, NULL);
 
-	     TtaAddButton (doc, 1, iconSave, SaveDocument, TtaGetMessage (AMAYA, AM_BUTTON_SAVE));
-	     TtaAddButton (doc, 1, iconPrint, TtcPrint, TtaGetMessage (AMAYA, AM_BUTTON_PRINT));
-	     TtaAddButton (doc, 1, iconFind, TtcSearchText, TtaGetMessage (AMAYA, AM_BUTTON_SEARCH));
+	     TtaAddButton (doc, 1, iconSave, SaveDocument,
+			   TtaGetMessage (AMAYA, AM_BUTTON_SAVE));
+	     TtaAddButton (doc, 1, iconPrint, TtcPrint,
+			   TtaGetMessage (AMAYA, AM_BUTTON_PRINT));
+	     TtaAddButton (doc, 1, iconFind, TtcSearchText,
+			   TtaGetMessage (AMAYA, AM_BUTTON_SEARCH));
 	     TtaAddButton (doc, 1, None, NULL, NULL);
 
-	     IButton = TtaAddButton (doc, 1, iconI, SetCharEmphasis, TtaGetMessage (AMAYA, AM_BUTTON_ITALICS));
-	     BButton = TtaAddButton (doc, 1, iconB, SetCharStrong, TtaGetMessage (AMAYA, AM_BUTTON_BOLD));
-	     TTButton = TtaAddButton (doc, 1, iconT, SetCharCode, TtaGetMessage (AMAYA, AM_BUTTON_CODE));
-	     TtaAddButton (doc, 1, iconCSS, InitCSSDialog, TtaGetMessage (AMAYA, AM_BUTTON_CSS));
+	     IButton =  TtaAddButton (doc, 1, iconI, SetCharEmphasis,
+				     TtaGetMessage (AMAYA, AM_BUTTON_ITALICS));
+	     BButton =  TtaAddButton (doc, 1, iconB, SetCharStrong,
+				      TtaGetMessage (AMAYA, AM_BUTTON_BOLD));
+	     TTButton = TtaAddButton (doc, 1, iconT, SetCharCode,
+				      TtaGetMessage (AMAYA, AM_BUTTON_CODE));
+	     TtaAddButton (doc, 1, iconCSS, InitCSSDialog,
+			   TtaGetMessage (AMAYA, AM_BUTTON_CSS));
 	     TtaAddButton (doc, 1, None, NULL, NULL);
 
-	     TtaAddButton (doc, 1, iconImage, CreateImage, TtaGetMessage (AMAYA, AM_BUTTON_IMG));
-	     TtaAddButton (doc, 1, iconH1, CreateHeading1, TtaGetMessage (AMAYA, AM_BUTTON_H1));
-	     TtaAddButton (doc, 1, iconH2, CreateHeading2, TtaGetMessage (AMAYA, AM_BUTTON_H2));
-	     TtaAddButton (doc, 1, iconH3, CreateHeading3, TtaGetMessage (AMAYA, AM_BUTTON_H3));
-	     TtaAddButton (doc, 1, iconBullet, CreateList, TtaGetMessage (AMAYA, AM_BUTTON_UL));
-	     TtaAddButton (doc, 1, iconNum, CreateNumberedList, TtaGetMessage (AMAYA, AM_BUTTON_OL));
-	     TtaAddButton (doc, 1, iconDL, CreateDefinitionList, TtaGetMessage (AMAYA, AM_BUTTON_DL));
-	     TtaAddButton (doc, 1, iconLink, CreateOrChangeLink, TtaGetMessage (AMAYA, AM_BUTTON_LINK));
-	     TtaAddButton (doc, 1, iconTable, CreateTable, TtaGetMessage (AMAYA, AM_BUTTON_TABLE));
+	     TtaAddButton (doc, 1, iconImage, CreateImage,
+			   TtaGetMessage (AMAYA, AM_BUTTON_IMG));
+	     TtaAddButton (doc, 1, iconH1, CreateHeading1,
+			   TtaGetMessage (AMAYA, AM_BUTTON_H1));
+	     TtaAddButton (doc, 1, iconH2, CreateHeading2,
+			   TtaGetMessage (AMAYA, AM_BUTTON_H2));
+	     TtaAddButton (doc, 1, iconH3, CreateHeading3,
+			   TtaGetMessage (AMAYA, AM_BUTTON_H3));
+	     TtaAddButton (doc, 1, iconBullet, CreateList,
+			   TtaGetMessage (AMAYA, AM_BUTTON_UL));
+	     TtaAddButton (doc, 1, iconNum, CreateNumberedList,
+			   TtaGetMessage (AMAYA, AM_BUTTON_OL));
+	     TtaAddButton (doc, 1, iconDL, CreateDefinitionList,
+			   TtaGetMessage (AMAYA, AM_BUTTON_DL));
+	     TtaAddButton (doc, 1, iconLink, CreateOrChangeLink,
+			   TtaGetMessage (AMAYA, AM_BUTTON_LINK));
+	     TtaAddButton (doc, 1, iconTable, CreateTable,
+			   TtaGetMessage (AMAYA, AM_BUTTON_TABLE));
 #ifdef AMAYA_PLUGIN
-	     TtaAddButton (doc, 1, iconPlugin, TtaCreateFormPlugin, TtaGetMessage (AMAYA, AM_BUTTON_PLUGIN));
+	     TtaAddButton (doc, 1, iconPlugin, TtaCreateFormPlugin,
+			   TtaGetMessage (AMAYA, AM_BUTTON_PLUGIN));
 #endif /* AMAYA_PLUGIN */
-	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_LOCATION), TRUE, TextURL);
-	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_TITLE), TRUE, TextTitle);
+	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_LOCATION), TRUE,
+			     TextURL);
+	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_TITLE), TRUE,
+			     TextTitle);
 
 	     /* save the path or URL of the document */
 	     TtaSetDocumentDirectory (doc, temppath);
@@ -671,12 +714,12 @@ char               *pathname;
 	     TtaSetToggleItem (doc, 1, Views, TShowTextZone, TRUE);
 	     TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);
 
-	     /* if we open the new document in a new view control */
+	     /* if we open the new document in a new view, control */
 	     /* is transferred from previous document to new document */
 	     if (old_doc != doc && old_doc != 0)
 	       {
 		  ResetStop (old_doc);
-		  /* clear the status line of the previous document */
+		  /* clear the status line of previous document */
 		  TtaSetStatus (old_doc, 1, " ", NULL);
 		  ActiveTransfer (doc);
 	       }
@@ -910,6 +953,72 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                ShowLinks (Document document, View view)
+#else
+void                ShowLinks (document, view)
+Document            document;
+View                view;
+
+#endif
+{
+   View                linksView;
+   int                 x, y, w, h;
+
+   linksView = TtaGetViewFromName (document, "Links_view");
+   if (view == linksView)
+     {
+	TtaCloseView (document, view);
+	TtaSetToggleItem (document, 1, Views, TShowLinks, FALSE);
+     }
+   else if (linksView != 0 && TtaIsViewOpened (document, linksView))
+      TtaCloseView (document, linksView);
+   else
+     {
+
+	TtaGetViewGeometry (document, "Links_view", &x, &y, &w, &h);
+	linksView = TtaOpenView (document, "Links_view", x, y, w, h);
+	TtcSwitchButtonBar (document, linksView);
+	TtcSwitchCommands (document, linksView);
+     }
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                ShowToC (Document document, View view)
+#else
+void                ShowToC (document, view)
+Document            document;
+View                view;
+
+#endif
+{
+   View                tocView;
+   int                 x, y, w, h;
+
+   tocView = TtaGetViewFromName (document, "Table_of_contents");
+   if (view == tocView)
+     {
+	TtaCloseView (document, view);
+	TtaSetToggleItem (document, 1, Views, TShowToC, FALSE);
+     }
+   else if (tocView != 0 && TtaIsViewOpened (document, tocView))
+      TtaCloseView (document, tocView);
+   else
+     {
+
+	TtaGetViewGeometry (document, "Table_of_contents", &x, &y, &w, &h);
+	tocView = TtaOpenView (document, "Table_of_contents", x, y, w, h);
+	TtcSwitchButtonBar (document, tocView);
+	TtcSwitchCommands (document, tocView);
+     }
+}
+
+
+/*----------------------------------------------------------------------
    ViewToOpen                                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -925,27 +1034,57 @@ NotifyDialog       *event;
 
    view = event->view;
    if (view == 1)
-      return FALSE;		/* let Thot perform normal operation */
+     return FALSE;		/* let Thot perform normal operation */
    else
      {
-	sview = TtaGetViewFromName (event->document, "Structure_view");
-	if (view == sview)
-	  {
-	     TtaGetViewGeometry (event->document, "Structure_view", &x, &y, &w, &h);
-	     view = TtaOpenView (event->document, "Structure_view", x, y, w, h);
+     sview = TtaGetViewFromName (event->document, "Structure_view");
+     if (view == sview)
+       {
+       TtaGetViewGeometry (event->document, "Structure_view", &x, &y, &w, &h);
+       view = TtaOpenView (event->document, "Structure_view", x, y, w, h);
+       TtcSwitchButtonBar (event->document, view);
+       TtcSwitchCommands (event->document, view);
+       TtaSetToggleItem (event->document, 1, Views, TShowStructure, TRUE);
+       }
+     else
+       {
+       sview = TtaGetViewFromName (event->document, "Alternate_view");
+       if (view == sview)
+         {
+	 TtaGetViewGeometry (event->document, "Alternate_view", &x, &y, &w, &h);
+	 view = TtaOpenView (event->document, "Alternate_view", x, y, w, h);
+	 TtcSwitchButtonBar (event->document, view);
+	 TtcSwitchCommands (event->document, view);
+	 TtaSetToggleItem (event->document, 1, Views, TShowAlternate, TRUE);
+	 }
+       else
+	 {
+	 sview = TtaGetViewFromName (event->document, "Links_view");
+	 if (view == sview)
+	   {
+	   TtaGetViewGeometry (event->document, "Links_view", &x, &y, &w, &h);
+	   view = TtaOpenView (event->document, "Links_view", x, y, w, h);
+	   TtcSwitchButtonBar (event->document, view);
+	   TtcSwitchCommands (event->document, view);
+	   TtaSetToggleItem (event->document, 1, Views, TShowLinks, TRUE);
+	   }
+	 else
+	   {
+	   sview = TtaGetViewFromName (event->document, "Table_of_contents");
+	   if (view == sview)
+	     {
+	     TtaGetViewGeometry (event->document, "Table_of_contents", &x, &y,
+				 &w, &h);
+	     view = TtaOpenView (event->document, "Table_of_contents", x, y, w,
+				 h);
 	     TtcSwitchButtonBar (event->document, view);
 	     TtcSwitchCommands (event->document, view);
-	     TtaSetToggleItem (event->document, 1, Views, TShowStructure, TRUE);
-	  }
-	else
-	  {
-	     TtaGetViewGeometry (event->document, "Alternate_view", &x, &y, &w, &h);
-	     view = TtaOpenView (event->document, "Alternate_view", x, y, w, h);
-	     TtcSwitchButtonBar (event->document, view);
-	     TtcSwitchCommands (event->document, view);
-	     TtaSetToggleItem (event->document, 1, Views, TShowAlternate, TRUE);
-	  }
-	return TRUE;		/* don't let Thot perform normal operation */
+	     TtaSetToggleItem (event->document, 1, Views, TShowToC, TRUE);
+	     }
+	   }
+	 }
+       }
+       return TRUE;		/* don't let Thot perform normal operation */
      }
 }
 
@@ -962,21 +1101,29 @@ NotifyDialog       *event;
 #endif
 {
    Document            document;
-   View                view, structView, altView;
+   View                view, structView, altView, linksView, tocView;
 
    view = event->view;
    document = event->document;
    structView = TtaGetViewFromName (document, "Structure_view");
    altView = TtaGetViewFromName (document, "Alternate_view");
+   linksView = TtaGetViewFromName (document, "Links_view");
+   tocView = TtaGetViewFromName (document, "Table_of_contents");
    if (view != 1)
      {
 	if (view == structView)
 	  TtaSetToggleItem (document, 1, Views, TShowStructure, FALSE);
 	else if (view == altView)
 	  TtaSetToggleItem (document, 1, Views, TShowAlternate, FALSE);
+	else if (view == linksView)
+	  TtaSetToggleItem (document, 1, Views, TShowLinks, FALSE);
+	else if (view == tocView)
+	  TtaSetToggleItem (document, 1, Views, TShowToC, FALSE);
 	return FALSE;		/* let Thot perform normal operation */
      }
-   else if (TtaIsDocumentModified (document))
+   else
+     /* closing main view */
+     if (TtaIsDocumentModified (document))
      {
 	InitConfirm (document, view, TtaGetMessage (AMAYA, AM_DOC_MODIFIED));
 	if (UserAnswer)
@@ -990,6 +1137,10 @@ NotifyDialog       *event;
      TtaCloseView (document, structView);
    if (altView != 0 && TtaIsViewOpened (document, altView))
      TtaCloseView (document, altView);
+   if (linksView != 0 && TtaIsViewOpened (document, linksView))
+     TtaCloseView (document, linksView);
+   if (tocView != 0 && TtaIsViewOpened (document, tocView))
+     TtaCloseView (document, tocView);
    return FALSE;		/* let Thot perform normal operation */
 }
 
@@ -1714,8 +1865,52 @@ NotifyEvent        *event;
 }
 
 
-#ifdef PRINTBOOK
 /*----------------------------------------------------------------------
+  SectionNumbering
+  The user wants to number sections if they are not currently numbered,
+  or to stop numbering if section are numbered.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                SectionNumbering (Document document, View view)
+#else
+void                SectionNumbering (document, view)
+Document            document;
+View                view;
+#endif
+{
+   Element	    root;
+   AttributeType    attrType;
+   Attribute	    attr;
+   boolean	    docModified;
+
+   docModified = TtaIsDocumentModified (document);
+   root = TtaGetMainRoot (document);
+   attrType.AttrSSchema = TtaGetDocumentSSchema (document);
+   attrType.AttrTypeNum = HTML_ATTR_SectionNumbering;
+   attr = TtaGetAttribute (root, attrType);
+   if (attr != NULL)
+      /* the root element has a SectionNumbering attribute. Remove it */
+      TtaRemoveAttribute (root, attr, document);
+   else
+      /* the root element has no SectionNumbering attribute. Create one */
+      {
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (root, attr, document);
+        TtaSetAttributeValue (attr, 1, root, document);
+      }
+   if (!docModified)
+	TtaSetDocumentUnmodified (document);
+}
+
+
+/*----------------------------------------------------------------------
+  UpdateURLsInSubtree
+  Update NAMEs and URLs in subtree of el element, to take into account
+  the move from one document to another.
+  If a NAME attribute already exists in the new document, it is changed
+  to avoid duplicate names.
+  Transform the HREF and SRC attribute to make them independent from their
+  former base.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         UpdateURLsInSubtree (NotifyElement *event, Element el)
@@ -1739,9 +1934,16 @@ Element             nextEl;
 
 
 /*----------------------------------------------------------------------
+  MoveDocumentBody
+  Copy the elements contained in the BODY of document sourceDoc to the
+  position of element *el in document destDoc.
+  Delete the element containing *el and all its empty ancestors.
+  If deleteTree is TRUE, copied elements are deleted from the source
+  document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         MoveDocumentBody (Element *el, Document destDoc, Document sourceDoc, boolean deleteTree)
+static void         MoveDocumentBody (Element *el, Document destDoc,
+				      Document sourceDoc, boolean deleteTree)
 #else
 static void         MoveDocumentBody (el, destDoc, sourceDoc, deleteTree)
 Element            *el;
@@ -1755,12 +1957,17 @@ boolean            deleteTree;
    ElementType	   elType;
    NotifyElement   event;
 
+   firstInserted = NULL;
+   /* get the BODY element of source document */
    root = TtaGetMainRoot (sourceDoc);
    elType = TtaGetElementType (root);
    elType.ElTypeNum = HTML_EL_BODY;
    body = TtaSearchTypedElement (elType, SearchForward, root);
    if (body != NULL)
      {
+     /* get elem, the ancestor of *el which is a child of a DIV or BODY
+	element in the destination document. The copied elements will be
+	inserted just before this element. */
      elem = *el;
      do
 	{
@@ -1768,7 +1975,8 @@ boolean            deleteTree;
 	if (ancestor != NULL);
 	   {
 	   elType = TtaGetElementType (ancestor);
-	   if (elType.ElTypeNum == HTML_EL_BODY)
+	   if (elType.ElTypeNum == HTML_EL_BODY ||
+	       elType.ElTypeNum == HTML_EL_Division)
 	      ancestor = NULL;
 	   else
 	      elem = ancestor;
@@ -1777,6 +1985,7 @@ boolean            deleteTree;
      while (ancestor != NULL);
      parent = TtaGetParent (elem);
      
+     /* do copy */
      lastInserted = NULL;
      srce = TtaGetFirstChild (body);
      while (srce != NULL)
@@ -1785,24 +1994,30 @@ boolean            deleteTree;
 	if (copy != NULL)
 	   {
 	   if (lastInserted == NULL)
+	      /* this is the first copied element. Insert it before elem */
 	      {
 	      TtaInsertSibling (copy, elem, TRUE, destDoc);
 	      firstInserted = copy;
 	      }
 	   else
+	      /* insert the new copied element after the element previously
+		 copied */
 	      TtaInsertSibling (copy, lastInserted, FALSE, destDoc);
 	   lastInserted = copy;
-	   /* prepare the notify element */
+	   /* update the NAMEs and URLs in the copied element */
 	   event.document = destDoc;
 	   event.position = sourceDoc;
 	   UpdateURLsInSubtree(&event, copy);
 	   }
+	/* get the next element in the source document */
 	old = srce;
 	TtaNextSibling (&srce);
 	if (deleteTree)
 	  TtaDeleteTree (old, sourceDoc);
 	}
 
+     /* delete the element(s) containing the link to the copied document */
+     /* delete the parent element of *el and all empty ancestors */
      elem = TtaGetParent (*el);
      do
 	{
@@ -1817,12 +2032,16 @@ boolean            deleteTree;
 	   }
 	}
      while (sibling == NULL);
-       TtaDeleteTree (elem, destDoc);
+     TtaDeleteTree (elem, destDoc);
+     /* return the address of the first copied element */
      *el = firstInserted;
      }
 }
 
 /*----------------------------------------------------------------------
+  GetIncludedDocuments
+  Look forward, starting from element el, for a link (A) with attribute
+  REL="chapter" and replace that link by the contents of the target document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static Element      GetIncludedDocuments (Element el, Document document)
@@ -1843,6 +2062,7 @@ Document            document;
    attrType.AttrTypeNum = HTML_ATTR_REL;
    link = el;
    RelAttr = NULL;
+   /* looks for an anchor having an attribute REL="chapter" */
    while (link != NULL && RelAttr == NULL)
      {
        TtaSearchAttribute (attrType, SearchForward, link, &link, &RelAttr);
@@ -1858,25 +2078,31 @@ Document            document;
      }
 
    if (RelAttr != NULL && link != NULL)
+     /* a link with attribute REL="Chapter" has been found */
      {
        next = link;
        attrType.AttrTypeNum = HTML_ATTR_HREF_;
        HrefAttr = TtaGetAttribute (link, attrType);
        if (HrefAttr != NULL)
+	 /* this link has an attribute HREF */
 	 {
 	   length = TtaGetTextAttributeLength (HrefAttr);
 	   text = TtaGetMemory (length + 1);
 	   TtaGiveTextAttributeValue (HrefAttr, text, &length);
-	   /*don't  take in account reference with name */
+	   /* ignore links to a particular position within a document */
 	   ptr = strrchr (text, '#');
 	   if (ptr == NULL)
+	     /* this link designate the whole document */
 	     {
-	       /* its a complete remote document */
+	       /* create a new document and loads the target document */
 	       includedDocument = TtaNewDocument ("HTML", "tmp");
-	       newdoc = GetHTMLDocument (text, NULL, includedDocument, document, DC_TRUE);
+	       newdoc = GetHTMLDocument (text, NULL, includedDocument,
+					 document, DC_TRUE);
 	       if (newdoc != 0 && newdoc != document)
 		   /* it's not the document itself */
-		   MoveDocumentBody (&next, document, newdoc, newdoc == includedDocument);
+		   /* copy the target document at the position of the link */
+		   MoveDocumentBody (&next, document, newdoc,
+				     newdoc == includedDocument);
 	       FreeDocumentResource (includedDocument);
 	       TtaCloseDocument (includedDocument);
 	     }
@@ -1888,11 +2114,16 @@ Document            document;
 }
 
 /*----------------------------------------------------------------------
+  SetInternalLinks
+  Associate a InternalLink attribute with all anchor (A) elements of the
+  document which designate another anchor in the same document.
+  InternalLink is a Thot reference attribute that links a source and a
+  target anchor and that allows P schemas to display and print cross-references
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void                SetInternaLinks (Element el, Document document)
+static void                SetInternalLinks (Element el, Document document)
 #else
-static void                SetInternaLinks (el, document)
+static void                SetInternalLinks (el, document)
 Element		    el;
 Document            document;
 #endif
@@ -1907,22 +2138,25 @@ Document            document;
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Anchor;
    attrType.AttrSSchema = elType.ElSSchema;
+   /* looks for all anchors in the document */
    link = el;
    while (link != NULL)
      {
        link = TtaSearchTypedElement (elType, SearchForward, link);
        if (link != NULL)
+	 /* an anchor has been found */
 	 {
 	 attrType.AttrTypeNum = HTML_ATTR_HREF_;
          HrefAttr = TtaGetAttribute (link, attrType);
          if (HrefAttr != NULL)
+	   /* this anchor has an HREF attribute */
 	   {
 	   length = TtaGetTextAttributeLength (HrefAttr);
 	   text = TtaGetMemory (length + 1);
 	   TtaGiveTextAttributeValue (HrefAttr, text, &length);
 	   if (text[0] == '#')
 	      /* it'a an internal link. Attach an attribute InternalLink to */
-	      /* the link */
+	      /* the link, if this attribute does not exist yet */
 	      {
 	        attrType.AttrTypeNum = HTML_ATTR_InternalLink;
 		IntLinkAttr = TtaGetAttribute (link, attrType);
@@ -1934,6 +2168,7 @@ Document            document;
 		/* looks for the target element */
 		target = SearchNAMEattribute (document, &text[1], NULL);
 		if (target != NULL)
+		   /* set the Thot link */
 		   TtaSetAttributeReference (IntLinkAttr, link, document,
 					     target, document);
 	      }
@@ -1942,9 +2177,12 @@ Document            document;
 	 }
      }
 }
-#endif /* PRINTBOOK */
+
 
 /*----------------------------------------------------------------------
+  MakeBook
+  Replace all links in a document which have an attribute REL="chapter"
+  by the corresponding target document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                MakeBook (Document document, View view)
@@ -1954,7 +2192,6 @@ Document            document;
 View                view;
 #endif
 {
-#ifdef PRINTBOOK
    Element	    root, body, el;
    ElementType	    elType;
 
@@ -1966,11 +2203,10 @@ View                view;
    el = body;
    while (el != NULL)
       el = GetIncludedDocuments (el, document);
-   SetInternaLinks (body, document);		
+   SetInternalLinks (body, document);		
    /********
    TtaPrint (document, "Formatted_view Table_of_contents Links_view");
    *********/
-#endif /* PRINTBOOK */
 }
 
 

@@ -1,7 +1,6 @@
 	{ I. Vatton 	 Novembre 1994-1995  }
 
-{ Variables used in ifdefs: PAGE, BLACK_WHITE, US_PAPER, SECTION_NUMBER,
-			    LINK_NUMBER }
+{ Variables used in ifdefs: PAGE, BLACK_WHITE, US_PAPER, LINK_NUMBER }
 PRESENTATION HTML;
 
 VIEWS
@@ -66,13 +65,11 @@ COUNTERS
 #ifdef LINK_NUMBER
    AnchorCounter : Set 0 on BODY add 1 on Anchor;
 #endif
-#ifdef SECTION_NUMBER
    H2Counter : Set 0 on H1 add 1 on H2;
    H3Counter : Set 0 on H2 add 1 on H3;
    H4Counter : Set 0 on H3 add 1 on H4;
    H5Counter : Set 0 on H4 add 1 on H5;
    H6Counter : Set 0 on H5 add 1 on H6;
-#endif
 
 DEFAULT
 	BEGIN
@@ -161,7 +158,6 @@ BOXES
 *********}
 #endif
 
-#ifdef SECTION_NUMBER
  H2_section_number:
 	BEGIN
 	Content: (Value(H2Counter, Arabic) Text '  ');
@@ -169,7 +165,11 @@ BOXES
 	Font: Creator =;
 	Style: Creator =;
 	Size: Creator =;
+#ifdef PAGE
 	Foreground: Creator =;
+#else
+	Foreground: ATTR_Color;
+#endif
 	Background: Creator =;
 	IN Structure_view
 		Visibility: 0;
@@ -187,7 +187,11 @@ BOXES
 	Font: Creator =;
 	Style: Creator =;
 	Size: Creator =;
+#ifdef PAGE
 	Foreground: Creator =;
+#else
+	Foreground: ATTR_Color;
+#endif
 	Background: Creator =;
 	IN Structure_view
 		Visibility: 0;
@@ -206,7 +210,11 @@ BOXES
 	Font: Creator =;
 	Style: Creator =;
 	Size: Creator =;
+#ifdef PAGE
 	Foreground: Creator =;
+#else
+	Foreground: ATTR_Color;
+#endif
 	Background: Creator =;
 	IN Structure_view
 		Visibility: 0;
@@ -226,7 +234,11 @@ BOXES
 	Font: Creator =;
 	Style: Creator =;
 	Size: Creator =;
+#ifdef PAGE
 	Foreground: Creator =;
+#else
+	Foreground: ATTR_Color;
+#endif
 	Background: Creator =;
 	IN Structure_view
 		Visibility: 0;
@@ -247,7 +259,11 @@ BOXES
 	Font: Creator =;
 	Style: Creator =;
 	Size: Creator =;
+#ifdef PAGE
 	Foreground: Creator =;
+#else
+	Foreground: ATTR_Color;
+#endif
 	Background: Creator =;
 	IN Structure_view
 		Visibility: 0;
@@ -256,7 +272,6 @@ BOXES
 	IN Links_view
 		Visibility: 0;
 	END;
-#endif
 
  HTML_S: BEGIN
 	Content: Text 'HTML';
@@ -3582,15 +3597,14 @@ RULES
 	Font: Times;
 	Style: Roman;
 	LineWeight: 0;
+	Width: Enclosing . Width;
 #ifdef PAGE
 	Size: 11 pt;
-	Width: Enclosing . Width;
 	HorizPos: VMiddle = Enclosing.VMiddle;
 	Page(ThePage);
 #else
 	Size: DOC_FONTSIZE;
-	Width: Enclosing . Width - 1;
-	HorizPos: Left = Enclosing . Left + 0.5;
+	HorizPos: Left = Enclosing . Left;
 #endif
 	VertPos: Top = Enclosing . Top;
 	CreateFirst(HTML_S);
@@ -3604,16 +3618,12 @@ RULES
 #ifdef PAGE
 		Page(LinksPage);
 #endif
-		Width: Enclosing . Width - 2;
-		HorizPos: Left = Enclosing . Left + 1;
 		Visibility: 10;
 		END;
 	IN Table_of_contents BEGIN
 #ifdef PAGE
 		Page(ToCPage);
 #endif
-		Width: Enclosing . Width - 2;
-		HorizPos: Left = Enclosing . Left + 1;
 		Visibility: 10;
 		END;
 	IN Alternate_view
@@ -3908,9 +3918,6 @@ RULES
 	Style: Bold;
 	CreateBefore(H2_S);
 	CreateWith(VerticalLine);
-#ifdef SECTION_NUMBER
-	CreateFirst(H2_section_number);
-#endif
 	VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH2;
 	IN Structure_view BEGIN
 		if within Pre_Line
@@ -3931,12 +3938,14 @@ RULES
 #ifdef PAGE
 		Adjust: LeftWithDots;
 		Width: Right = Enclosing . Right - 28 pt;
+#else
+		Width: Enclosing . Width - 1.2;
 #endif
+		HorizPos: Left = Enclosing . Left + 1;
 		Size: Enclosing =;
 		Style: Enclosing =;
 		Visibility: 9;
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
-		HorizPos: Left = Enclosing . Left + 1;
 		END;
 	IN Links_view
 		Visibility: 0;
@@ -3956,9 +3965,6 @@ RULES
 	Style: Bold;
 	CreateBefore(H3_S);
 	CreateWith(VerticalLine);
-#ifdef SECTION_NUMBER
-	CreateFirst(H3_section_number);
-#endif
 	IN Structure_view BEGIN
 		if within Pre_Line
 		   Width: Enclosed . Width;
@@ -3978,12 +3984,14 @@ RULES
 #ifdef PAGE
 		Adjust: LeftWithDots;
 		Width: Right = Enclosing . Right - 28 pt;
+#else
+		Width: Enclosing . Width - 2.2;
 #endif
+		HorizPos: Left = Enclosing . Left + 2;
 		Size: Enclosing =;
 		Style: Enclosing =;
 		Visibility: 8;
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
-		HorizPos: Left = Enclosing . Left + 2;
 		END;
 	IN Links_view
 		Visibility: 0;
@@ -4003,9 +4011,6 @@ RULES
 	Style: Bold;
 	CreateBefore(H4_S);
 	CreateWith(VerticalLine);
-#ifdef SECTION_NUMBER
-	CreateFirst(H4_section_number);
-#endif
 	IN Structure_view BEGIN
 		if within Pre_Line
 		   Width: Enclosed . Width;
@@ -4025,12 +4030,14 @@ RULES
 #ifdef PAGE
 		Adjust: LeftWithDots;
 		Width: Right = Enclosing . Right - 28 pt;
+#else
+		Width: Enclosing . Width - 3.2;
 #endif
+		HorizPos: Left = Enclosing . Left + 3;
 		Size: Enclosing =;
 		Style: Enclosing =;
 		Visibility: 7;
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
-		HorizPos: Left = Enclosing . Left + 3;
 		END;
 	IN Links_view
 		Visibility: 0;
@@ -4049,9 +4056,6 @@ RULES
 	Size: Enclosing - 2;
 	CreateBefore(H5_S);
 	CreateWith(VerticalLine);
-#ifdef SECTION_NUMBER
-	CreateFirst(H5_section_number);
-#endif
 	IN Structure_view BEGIN
 		if within Pre_Line
 		   Width: Enclosed . Width;
@@ -4068,11 +4072,13 @@ RULES
 #ifdef PAGE
 		Adjust: LeftWithDots;
 		Width: Right = Enclosing . Right - 28 pt;
+#else
+		Width: Enclosing . Width - 4.2;
 #endif
+		HorizPos: Left = Enclosing . Left + 4;
 		Size: Enclosing =;
 		Visibility: 6;
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
-		HorizPos: Left = Enclosing . Left + 4;
 		END;
 	IN Links_view
 		Visibility: 0;
@@ -4091,9 +4097,6 @@ RULES
 	Size: Enclosing - 4;
 	CreateBefore(H6_S);
 	CreateWith(VerticalLine);
-#ifdef SECTION_NUMBER
-	CreateFirst(H6_section_number);
-#endif
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -4107,11 +4110,13 @@ RULES
 #ifdef PAGE
 		Adjust: LeftWithDots;
 		Width: Right = Enclosing . Right - 28 pt;
+#else
+		Width: Enclosing . Width - 5.2;
 #endif
+		HorizPos: Left = Enclosing . Left + 5;
 		Size: Enclosing =;
 		Visibility: 5;
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
-		HorizPos: Left = Enclosing . Left + 5;
 		END;
 	IN Links_view
 		Visibility: 0;
@@ -5486,6 +5491,17 @@ ATTRIBUTES
 		Underline: Underlined;
 		END;
 	END;
+
+ SectionNumbering (H2):
+	CreateFirst(H2_section_number);
+ SectionNumbering (H3):
+	CreateFirst(H3_section_number);
+ SectionNumbering (H4):
+	CreateFirst(H4_section_number);
+ SectionNumbering (H5):
+	CreateFirst(H5_section_number);
+ SectionNumbering (H6):
+	CreateFirst(H6_section_number);
 
  InternalLink:
 	BEGIN

@@ -17,7 +17,8 @@ CONST
    C_BR   = '\212';
 
 STRUCT
-  HTML = BEGIN
+  HTML (ATTR SectionNumbering = Yes_) =
+	BEGIN
 	HEAD;
 	BODY;
 #ifdef R_HTML
@@ -384,6 +385,7 @@ EXCEPT
 	Default_Value:	Invisible;
 	DefaultSelected: Invisible;
 	DefaultChecked:	Invisible;
+	SectionNumbering:Invisible;
 
 	Table:		PageBreak;
 	Column_head:	NoHMove, NoVMove, NoCut, Hidden;

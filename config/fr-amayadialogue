@@ -1,123 +1,128 @@
 0 Fichier
 1 Fichier
 2 Fichier
-3 Edition
-4 Structure
-5 El\351ments
-6 Liens
-7 Vues
-8 Style
-9 Special
-10 Attributs
-11 Aide
-12 Nouveau
-13 Ouvrir
-14 Ouvrir et Vue
-15 Recharger le document
-16 Sauver
-17 Sauver comme
-18 Imprimer
-19 Option impression
-20 Fermer le document
-21 Quitter
-22 Fermer la vue
-23 Couper
-24 Copier
-25 Coller
-26 Detruire
-27 Rechercher
-28 Corriger
-29 English
-30 Fran\347ais
-31 IsIndex
-32 Base
-33 Meta
-34 Link
-35 Commentaire
-36 Paragraph
-37 Image
-38 Break
-39 Heading
-40 H1
-41 H2
-42 H3
-43 H4
-44 H5
-45 H6
-46 Liste
-47 Simple liste
-48 Liste numerotee
-49 Menu
-50 Directory
-51 Liste de definitions
-52 Terme
-53 Definition
-54 Horizontal Rule
-55 BlockQuote
-56 Preformatted
-57 Address
-58 Table
-59 Table
-60 Caption
-61 THead
-62 TBody
-63 TFoot
-64 Row
-65 DataCell
-66 HeadingCell
-67 Form
-68 Form
-69 Toggle
-70 Radio
-71 Option
-72 TextInput
-73 TextArea
-74 CommandLine
-75 Zone active
-76 Rectangle
-77 Cercle
-78 Polygone
-79 Division
-80 Object
-81 Applet
-82 Applet
-83 Param\350tre
-84 Cr\351er lien
-85 Cr\351er cible
-86 Changer lien
-87 D\351truire ancre
-88 Montrer boutons
-89 Montrer adresse et titre
-90 Montrer la structure
-91 Montrer la vue altern\351e
-92 Montrer les zones actives
-93 Style de caract\350res
-94 Couleurs
-95 Format
-96 Cr\351er une Classe
-97 Appliquer une Classe
-98 Feuilles de style
-99 Types information
-100 Emphase
-101 Strong
-102 Cite
-103 D\351finition
-104 Code
-105 Variable
-106 Sample
-107 Keyboard
-108 Elements caract\350res
-109 Italique
-110 Gras
-111 Teletype
-112 Soulign\351
-113 Biff\351
-114 Gros
-115 Petit
-116 Indice
-117 Exposant
-118 Fonte
-119 Transformer
-120 Construire Livre
-121 HTML temps r\351el
-122 Amaya version 1 Beta
+3 Fichier
+4 Fichier
+5 Edition
+6 Structure
+7 El\351ments
+8 Liens
+9 Vues
+10 Style
+11 Special
+12 Attributs
+13 Aide
+14 Nouveau
+15 Ouvrir
+16 Ouvrir et Vue
+17 Recharger le document
+18 Sauver
+19 Sauver comme
+20 Imprimer
+21 Option impression
+22 Fermer le document
+23 Quitter
+24 Fermer la vue
+25 Couper
+26 Copier
+27 Coller
+28 Detruire
+29 Rechercher
+30 Corriger
+31 English
+32 Fran\347ais
+33 IsIndex
+34 Base
+35 Meta
+36 Link
+37 Commentaire
+38 Paragraph
+39 Image
+40 Break
+41 Heading
+42 H1
+43 H2
+44 H3
+45 H4
+46 H5
+47 H6
+48 Liste
+49 Simple liste
+50 Liste numerotee
+51 Menu
+52 Directory
+53 Liste de definitions
+54 Terme
+55 Definition
+56 Horizontal Rule
+57 BlockQuote
+58 Preformatted
+59 Address
+60 Table
+61 Table
+62 Caption
+63 THead
+64 TBody
+65 TFoot
+66 Row
+67 DataCell
+68 HeadingCell
+69 Form
+70 Form
+71 Toggle
+72 Radio
+73 Option
+74 TextInput
+75 TextArea
+76 CommandLine
+77 Zone active
+78 Rectangle
+79 Cercle
+80 Polygone
+81 Division
+82 Object
+83 Applet
+84 Applet
+85 Param\350tre
+86 Cr\351er lien
+87 Cr\351er cible
+88 Changer lien
+89 D\351truire ancre
+90 Montrer boutons
+91 Montrer adresse et titre
+92 Montrer la structure
+93 Montrer la vue altern\351e
+94 Montrer les liens
+95 Montrer la table des mati\350res
+96 Montrer les zones actives
+97 Style de caract\350res
+98 Couleurs
+99 Format
+100 Cr\351er une Classe
+101 Appliquer une Classe
+102 Feuilles de style
+103 Types information
+104 Emphase
+105 Strong
+106 Cite
+107 D\351finition
+108 Code
+109 Variable
+110 Sample
+111 Keyboard
+112 Elements caract\350res
+113 Italique
+114 Gras
+115 Teletype
+116 Soulign\351
+117 Biff\351
+118 Gros
+119 Petit
+120 Indice
+121 Exposant
+122 Fonte
+123 Transformer
+124 Num351ros de sections
+125 Construire Livre
+126 HTML temps r\351el
+127 Amaya version 1 Beta

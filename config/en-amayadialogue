@@ -1,123 +1,128 @@
 0 File
 1 File
 2 File
-3 Edit
-4 Structure
-5 Types
-6 Links
-7 Views
-8 Style
-9 Special
-10 Attributes
-11 Help
-12 New
-13 Open Document
-14 Open in New Window
-15 Reload Document
-16 Save
-17 Save as
-18 Print
-19 Print SetUp
-20 Close Document
-21 Exit
-22 Close View
-23 Cut
-24 Copy
-25 Paste
-26 Clear
-27 Find
-28 Spell Check
-29 English
-30 Fran\347ais
-31 IsIndex
-32 Base
-33 Meta
-34 Link
-35 Comment
-36 Paragraph
-37 Image
-38 Break
-39 Heading
-40 H1
-41 H2
-42 H3
-43 H4
-44 H5
-45 H6
-46 List
-47 Bulleted list
-48 Numbered list
-49 Menu
-50 Directory
-51 Definition list
-52 Term
-53 Definition
-54 Horizontal Rule
-55 BlockQuote
-56 Preformatted
-57 Address
-58 Table
-59 Table
-60 Caption
-61 THead
-62 TBody
-63 TFoot
-64 Row
-65 DataCell
-66 HeadingCell
-67 Form
-68 Form
-69 Toggle
-70 Radio
-71 Option
-72 TextInput
-73 TextArea
-74 CommandLine
-75 AreaMap
-76 Rectangle
-77 Circle
-78 Polygon
-79 Division
-80 Object
-81 Applet
-82 Applet
-83 Parameter
-84 Create Link
-85 Create Target
-86 Change Link
-87 Delete Anchor
-88 Show Buttonbar
-89 Show Address & Title
-90 Show Structure
-91 Show Alternate
-92 Show Map Areas
-93 Character Style
-94 Colors
-95 Format
-96 Create Class
-97 Apply Class
-98 Style sheets
-99 Information Type
-100 Emphasis
-101 Strong
-102 Cite
-103 Definition
-104 Code
-105 Variable
-106 Sample
-107 Keyboard
-108 Character Element
-109 Italic
-110 Bold
-111 Teletype
-112 Underline
-113 StrikeOut
-114 Big
-115 Small
-116 Sub
-117 Sup
-118 Font
-119 Transform
-120  Make Book
-121  Real-time HTML
-122 Amaya version 1 Beta
+3 File
+4 File
+5 Edit
+6 Structure
+7 Types
+8 Links
+9 Views
+10 Style
+11 Special
+12 Attributes
+13 Help
+14 New
+15 Open Document
+16 Open in New Window
+17 Reload Document
+18 Save
+19 Save as
+20 Print
+21 Print SetUp
+22 Close Document
+23 Exit
+24 Close View
+25 Cut
+26 Copy
+27 Paste
+28 Clear
+29 Find
+30 Spell Check
+31 English
+32 Fran\347ais
+33 IsIndex
+34 Base
+35 Meta
+36 Link
+37 Comment
+38 Paragraph
+39 Image
+40 Break
+41 Heading
+42 H1
+43 H2
+44 H3
+45 H4
+46 H5
+47 H6
+48 List
+49 Bulleted list
+50 Numbered list
+51 Menu
+52 Directory
+53 Definition list
+54 Term
+55 Definition
+56 Horizontal Rule
+57 BlockQuote
+58 Preformatted
+59 Address
+60 Table
+61 Table
+62 Caption
+63 THead
+64 TBody
+65 TFoot
+66 Row
+67 DataCell
+68 HeadingCell
+69 Form
+70 Form
+71 Toggle
+72 Radio
+73 Option
+74 TextInput
+75 TextArea
+76 CommandLine
+77 AreaMap
+78 Rectangle
+79 Circle
+80 Polygon
+81 Division
+82 Object
+83 Applet
+84 Applet
+85 Parameter
+86 Create Link
+87 Create Target
+88 Change Link
+89 Delete Anchor
+90 Show Buttonbar
+91 Show Address & Title
+92 Show Structure
+93 Show Alternate
+94 Show Links
+95 Show Table of Contents
+96 Show Map Areas
+97 Character Style
+98 Colors
+99 Format
+100 Create Class
+101 Apply Class
+102 Style sheets
+103 Information Type
+104 Emphasis
+105 Strong
+106 Cite
+107 Definition
+108 Code
+109 Variable
+110 Sample
+111 Keyboard
+112 Character Element
+113 Italic
+114 Bold
+115 Teletype
+116 Underline
+117 StrikeOut
+118 Big
+119 Small
+120 Sub
+121 Sup
+122 Font
+123 Transform
+124 Section Numbering
+125 Make Book
+126 Real-time HTML
+127 Amaya version 1 Beta
