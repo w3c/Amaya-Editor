@@ -759,7 +759,7 @@ RULES
 
  PICTURE_UNIT: BEGIN
 	if IsInput BEGIN
-		Create '<input type=image';
+		Create '<input type="image"';
 		Create Attributes;
 #ifdef XML
 		Create ' />';
