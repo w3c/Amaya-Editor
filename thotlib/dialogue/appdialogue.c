@@ -1991,11 +1991,16 @@ int TtaAddTextZone (Document document, View view, char *label,
 	      FrameTable[frame].Call_Text[i] = (Proc) procedure;
 
 	      if (lpfnTextZoneWndProc == (WNDPROC) 0)
-		lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (FrameTable[frame].Text_Zone[i], GWL_WNDPROC, (DWORD) TextZoneProc);
+		lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (FrameTable[frame].Text_Zone[i],
+                              GWL_WNDPROC, (DWORD) TextZoneProc);
 	      else
-		SetWindowLong (FrameTable[frame].Text_Zone[i], GWL_WNDPROC, (DWORD) TextZoneProc);
+		SetWindowLong (FrameTable[frame].Text_Zone[i], GWL_WNDPROC, 
+                      (DWORD) TextZoneProc);
 	      wLabel = CreateWindow ("STATIC", label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
-				     0, 0, 0, 0, FrMainRef[frame], (HMENU) (i + MAX_TEXTZONE), hInstance, NULL);
+				     5, 8, 0, 0, FrMainRef[frame], (HMENU) (i + MAX_TEXTZONE),
+					 hInstance, NULL);
+	      if(newFont)
+		SendMessage (wLabel, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
 	      FrameTable[frame].Label[i] = wLabel;
 	      /* FrameTable[frame].showLogo = TRUE; */
 	      PostMessage (FrMainRef[frame], WM_SIZE, 0, MAKELPARAM (rect.right, rect.bottom));

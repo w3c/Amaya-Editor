@@ -501,7 +501,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
 				 (applyToSelection || PalMessageSet1)
 				 ? TtaGetMessage (LIB, TMSG_BUTTON_1)
 				 : TtaGetMessage (LIB, TMSG_CPBUTTON_1), 
-				 WS_CHILD | WS_VISIBLE | SS_LEFT, 0, 0, 320, 20,
+				 WS_CHILD | WS_VISIBLE | SS_LEFT, 5, 5, 315, 15,
 				 hwnd, (HMENU) 99, hInstance, NULL);
       /* set the font of the window */
       if(newFont)
@@ -513,7 +513,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
 				 (applyToSelection ||  PalMessageSet1)
 				 ? TtaGetMessage (LIB, TMSG_BUTTON_2)
 				 : TtaGetMessage (LIB, TMSG_CPBUTTON_2), 
-				 WS_CHILD | WS_VISIBLE | SS_LEFT, 0, 20, 320, 20,
+				 WS_CHILD | WS_VISIBLE | SS_LEFT, 5, 20, 315, 20,
 				 hwnd, (HMENU) 101, hInstance, NULL);
       /* set the font of the window */
       if(newFont)
@@ -522,7 +522,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
       UpdateWindow (hwnRButton);
       
       hwnDefaultColors = CreateWindow ("STATIC", TtaGetMessage (LIB, TMSG_STD_COLORS), 
-				       WS_CHILD | WS_VISIBLE | SS_CENTER | WS_BORDER, 0, 40, 320, 20,
+				       WS_CHILD | WS_VISIBLE | SS_CENTER | WS_BORDER, 0, 45, 320, 15,
 				       hwnd, (HMENU) DEFAULTCOLOR, hInstance, NULL);
       /* set the font of the window */
       if(newFont)
@@ -531,8 +531,8 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
       UpdateWindow (hwnDefaultColors);
       
       doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
-				 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-				 95, 350, 80, 20, hwnd, 
+				 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE | SS_CENTER,
+				 110, 350, 80, 20, hwnd, 
 				 (HMENU) _IDDONE_, hInstance, NULL);
       /* set the font of the window */
       if(newFont)
