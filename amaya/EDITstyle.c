@@ -314,8 +314,9 @@ NotifyElement      *event;
   Document            doc;
   Language            lang;
   int                 len, base;
-  char*               stylestring = (char*) TtaGetMemory (1000 * sizeof (char));
+  char               *stylestring;
 
+  stylestring = (char*) TtaGetMemory (1000 * sizeof (char));
   elClass = event->element;
   doc = event->document;
   /* get the selector */
@@ -328,7 +329,7 @@ NotifyElement      *event;
       TtaGiveTextAttributeValue (attr, stylestring, &len);
       strcat (stylestring, " { ");
       base = len + 1;
-      len = sizeof (stylestring) - base - 4;
+      len = (1000 * sizeof (char)) - base - 4;
       /* remove a generic rule */
       TtaGiveTextContent (elClass, &stylestring[base], &len, &lang);
       strcat (stylestring, "}");
@@ -500,11 +501,15 @@ Document            doc;
   Attribute           attr;
   AttributeType       attrType;
   ElementType         elType, selType;
-  char*               stylestring = (char*) TtaGetMemory (1000 * sizeof (char));
+  char               *stylestring;
   char               *a_class;
   int                 len, base;
 
   /* check whether it's the element type or a godd class name */
+  stylestring = (char *) TtaGetMemory (1000 * sizeof (char));
+  if (stylestring == NULL)
+    return;
+
   stylestring[0] = EOS;
   elType = TtaGetElementType (ClassReference);
   GIType (CurrentClass, &selType, doc);
@@ -521,11 +526,10 @@ Document            doc;
       CSSWarning (TtaGetMessage (AMAYA, AM_INVALID_TYPE));
       return;
     }
-
   strcat (stylestring, CurrentClass);
   strcat (stylestring, " { ");
   base = strlen (stylestring);
-  len = sizeof (stylestring) - base - 4;
+  len = (1000 * sizeof (char)) - base - 4;
   GetHTMLStyleString (ClassReference, doc, &stylestring[base], &len);
   strcat (stylestring, "}");
   
