@@ -1883,12 +1883,12 @@ BOXES
 #ifdef LANDSCAPE
 	Width: 23.8 cm;
 	Height: 18.2 cm;
-	VertPos: Top = Enclosing . Top + 1.7 cm;
+	VertPos: Top = Enclosing . Top + 0.8 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
 #else { LANDSCAPE }
 	Width: 16.2 cm;
 	Height: 23.8 cm;
-	VertPos: Top = Enclosing . Top + 1.7 cm;
+	VertPos: Top = Enclosing . Top + 0.8 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
 #endif { LANDSCAPE }
 #else { US_PAPER }
