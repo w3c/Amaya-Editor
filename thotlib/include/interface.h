@@ -36,32 +36,8 @@ extern int          TtaUseOwnXLookupString;
 #define Symbol_keyboard			2
 #define Graphic_keyboard		3
 
-#ifdef __STDC__
-typedef void (* ExternalInitMainLoop)(ThotAppContext app_ctxt);
-typedef void (* ExternalMainLoop)(void);
-typedef int (* ExternalFetchEvent)(ThotEvent *ev);
-typedef ThotBool (* ExternalFetchAvailableEvent)(ThotEvent *ev);
-typedef void (* ExternalLockMainLoop) (void);
-typedef void (* ExternalUnlockMainLoop) (void);
-#else
-typedef void (* ExternalInitMainLoop)();
-typedef void (* ExternalMainLoop)();
-typedef int (* ExternalFetchEvent)();
-typedef ThotBool (* ExternalFetchAvailableEvent)();
-typedef void (* ExternalLockMainLoop) ();
-typedef void (* ExternalUnlockMainLoop) ();
-#endif
-
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
-extern void         TtaSetMainLoop (ExternalInitMainLoop init,
-                                    ExternalMainLoop loop,
-                                    ExternalFetchEvent fetch,
-				    ExternalFetchAvailableEvent fetchavail,
-				    ExternalLockMainLoop lock,
-				    ExternalUnlockMainLoop unlock);
-
 
 /*----------------------------------------------------------------------
    TtaAddButton
@@ -237,22 +213,6 @@ extern int          TtaXLookupString (ThotKeyEvent * event, STRING buffer, int n
 				  KeySym * keysym, ThotComposeStatus * status);
 
 #endif /* !_WINDOWS */
-/*----------------------------------------------------------------------
-   TtaLockMainLoop
-
-   Lock the access to the event loop (for multithreaded apps where event
-   processing is done outside of the main loop).
-  ----------------------------------------------------------------------*/
-extern void         TtaLockMainLoop (void);
-
-/*----------------------------------------------------------------------
-   TtaUnlockMainLoop
-
-   Unlock the access to the event loop (for multithreaded apps where event
-   processing is done outside of the main loop), hence normal processing
-   is resumed.
-  ----------------------------------------------------------------------*/
-extern void         TtaUnlockMainLoop (void);
 
 /*----------------------------------------------------------------------
    TtaMainLoop
@@ -342,13 +302,6 @@ extern void         TtaSetMultikey ( ThotBool value );
 
 #else  /* __STDC__ */
 
-extern void         TtaSetMainLoop ( /* ExternalInitMainLoop init,
-                                    ExternalMainLoop loop,
-                                    ExternalFetchEvent fetch,
-				    ExternalFetchAvailableEvent fetchavail,
-				    ExternalLockMainLoop lock,
-				    ExternalUnlockMainLoop unlock */ );
-
 extern int          TtaAddButton (/*Document document, View view, ThotIcon picture, void (*procedure) (), STRING functionName, STRING info, BYTE type, ThotBool state*/);
 extern void        *TtaGetButtonCallback ( /*Document document, View view, int index */);
 extern void         TtaSwitchButton ( /*Document document, View view, int index */ );
@@ -369,8 +322,6 @@ extern int          TtaXLookupString (	/* ThotKeyEvent *event, STRING buffer, in
 					   KeySym *keysym, ThotComposeStatus *status */ );
 
 #endif /* !_WINDOWS */
-extern void         TtaLockMainLoop ( /* void */ );
-extern void         TtaUnlockMainLoop ( /* void */ );
 extern void         TtaMainLoop ( /* void */ );
 extern void         TtaHandlePendingEvents ();
 extern void         TtaClickElement ( /*Document *document, Element *element */ );

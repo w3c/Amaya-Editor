@@ -31,6 +31,8 @@ extern void ParseFillStrokeAttributes ( int attrType,
                                         Element el,
                                         Document doc,
                                         ThotBool delete );
+extern void SetGraphicDepths ( Document doc,
+                               Element el );
 extern void GraphMLElementComplete ( Element el,
                                      Document doc,
                                      int *error );
@@ -86,6 +88,8 @@ extern void ParseFillStrokeAttributes (/* int attrType,
                                           Element el,
                                           Document doc,
                                           ThotBool delete */);
+extern void SetGraphicDepths (/* Document doc,
+                                 Element el */);
 extern void GraphMLElementComplete (/* Element el,
                                        Document doc,
                                        int *error */);

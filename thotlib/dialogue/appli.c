@@ -1963,14 +1963,12 @@ void               *event;
 	   else if (t1 + (Time) DoubleClickDelay > ev->xbutton.time)
 	     {
 	       TtaAbortShowDialogue ();
-	       TtaLockMainLoop();
 	       TtaFetchOneEvent (&event);
 	       while (event.type != ButtonRelease)
 		 {
 		   TtaHandleOneEvent (&event);
 		   TtaFetchOneEvent (&event);
 		 }
-	       TtaUnlockMainLoop();
 
 	       /* memorise la position de la souris */
 	       if (ClickFrame == frame
@@ -1996,7 +1994,6 @@ void               *event;
 	       
 	       /* Regarde s'il s'agit d'un drag ou d'une simple marque d'insertion */
 	       comm = 0;	/* il n'y a pas de drag */
-	       TtaLockMainLoop();
 	       TtaFetchOneEvent (&event);
 	       FrameToView (frame, &document, &view);
 	       h = FrameTable[frame].FrHeight;
@@ -2027,7 +2024,6 @@ void               *event;
 		   TtaFetchOrWaitEvent (&event);
 		 }
 	       TtaHandleOneEvent (&event);
-	       TtaUnlockMainLoop();
 	       
 	       /* S'il y a un drag on termine la selection */
 	       FrameToView (frame, &document, &view);
@@ -2347,20 +2343,18 @@ PtrAbstractBox     *pave;
    ClickFrame = 0;
    ClickX = 0;
    ClickY = 0;
-   TtaLockMainLoop();
    while (ClickIsDone == 1)
      {
 #ifndef _WINDOWS 
-         TtaFetchOneEvent (&event);
-         TtaHandleOneEvent (&event);
+       TtaFetchOneEvent (&event);
+       TtaHandleOneEvent (&event);
 #else /* _WINDOWS */
-         GetMessage (&event, NULL, 0, 0);
-         curFrame = GetFrameNumber (event.hwnd);
-         TtaHandleOneWindowEvent (&event);
-         SetCursor (cursor);
+       GetMessage (&event, NULL, 0, 0);
+       curFrame = GetFrameNumber (event.hwnd);
+       TtaHandleOneWindowEvent (&event);
+       SetCursor (cursor);
 #endif /* !_WINDOWS */
      }
-   TtaUnlockMainLoop();
 
    /* Restauration du curseur */
    for (i = 1; i <= MAX_FRAME; i++)

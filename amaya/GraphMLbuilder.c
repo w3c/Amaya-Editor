@@ -400,6 +400,49 @@ ThotBoool       delete;
 }
 
 /*----------------------------------------------------------------------
+  SetGraphicDepths forces a depth to each SVG child.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void             SetGraphicDepths (Document doc, Element el)
+#else /* __STDC__*/
+void             SetGraphicDepths (doc, el)
+Document         doc;
+Element          el;
+#endif /* __STDC__*/
+{
+  Element              child;
+  ElementType          elType;
+  SSchema	       graphSchema;
+  PresentationValue    pval;
+  PresentationContext  ctxt;
+
+  /* look for the SVG root */
+  graphSchema = GetGraphMLSSchema (doc);
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum != GraphML_EL_GraphML || elType.ElSSchema != graphSchema)
+    {
+      elType.ElTypeNum = GraphML_EL_GraphML;
+      elType.ElSSchema = graphSchema;
+      el = TtaGetTypedAncestor (el, elType);
+    }
+  /* set depth to all SVG elements */
+  ctxt = TtaGetSpecificStyleContext (doc);
+  /* the specific presentation is not a CSS rule */
+  ctxt->cssLevel = 0;
+  ctxt->destroy = FALSE;
+  pval.typed_data.value = TtaGetDepth (el, doc, 1);
+  pval.typed_data.real = FALSE;
+  child = TtaGetLastChild (el);
+  while (child)
+    {
+      TtaSetStylePresentation (PRDepth, child, NULL, ctxt, pval);
+      TtaPreviousSibling (&child);
+      pval.typed_data.value += 1;
+    }
+  TtaFreeMemory (ctxt);
+}
+
+/*----------------------------------------------------------------------
    GraphMLElementComplete
    Check the Thot structure of the GraphML element el.
   ----------------------------------------------------------------------*/
@@ -453,6 +496,9 @@ int             *error
 	  newType.ElTypeNum = GraphML_EL_GraphML;
 	  CreateEnclosingElement (el, newType, doc);
 	  }
+	else
+	  /* apply a deph rule to each child */
+	  ;
        }
 
      /* if it's an image element, create a PICTURE_UNIT child */

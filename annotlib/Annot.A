@@ -1,13 +1,5 @@
 APPLICATION Annot;
 
-DEFAULT
-   BEGIN
-	{ ElemActivate.Pre -> AnnotDoubleClick; }
-	{ ElemClick.Pre -> SimpleClick; }
-	DocClose.Post -> DocumentClosed;
-	DocSave.Pre -> DocumentToSave;
-   END;
-
 ELEMENTS
 
    SourceDoc: BEGIN

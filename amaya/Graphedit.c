@@ -974,6 +974,7 @@ NotifyElement *event;
   XLinkPasted (event);
   /* check that the svg element includes that element */
   CheckGraphMLRoot (event->document, event->element);
+  SetGraphicDepths (event->document, event->element);
 }
 
 /*----------------------------------------------------------------------
@@ -1283,7 +1284,7 @@ int                 construct;
   STRING            name;
   int		    c1, i, w, h;
   int	            oldStructureChecking;
-  int              docModified;
+  int               docModified;
   ThotBool	    found, newGraph = FALSE;
 
   doc = TtaGetSelectedDocument ();
@@ -1545,6 +1546,7 @@ int                 construct;
   /* adapt the size of the SVG root element if necessary */
   InCreation = FALSE;
   CheckGraphMLRoot (doc, newEl);
+  SetGraphicDepths (doc, graphRoot);
   TtaCloseUndoSequence (doc);
   TtaSetDocumentModified (doc);
 }

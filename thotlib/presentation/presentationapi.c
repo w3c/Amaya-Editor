@@ -2068,8 +2068,61 @@ TypeUnit            unit;
 
 
 /*----------------------------------------------------------------------
-   TtaGiveBoxSize
+   TtaGetDepth
+   Returns the depth of the box corresponding to an element in a given view.
 
+   Parameters:
+   element: the element of interest.
+   document: the document of interest.
+   view: the view.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int              TtaGetDepth (Element element, Document document, View view)
+#else  /* __STDC__ */
+int              TtaGetDepth (element, document, view)
+Element             element;
+Document            document;
+View                view;
+#endif /* __STDC__ */
+{
+   PtrAbstractBox      pAb;
+   int                 v, frame;
+   int                 val;
+
+   UserErrorCode = 0;
+   val = 0;
+   if (element == NULL)
+      TtaError (ERR_invalid_parameter);
+   /* verifies the parameter document */
+   else if (document < 1 || document > MAX_DOCUMENTS)
+      TtaError (ERR_invalid_document_parameter);
+   else if (LoadedDocument[document - 1] == NULL)
+      TtaError (ERR_invalid_document_parameter);
+   else
+      /* parameter document is correct */
+     {
+       pAb = AbsBoxOfEl ((PtrElement) element, v);
+       frame = GetWindowNumber (document, view);
+       if (frame != 0)
+	 {
+	   if (view < 100)
+	     /* View of the main tree */
+	     v = view;
+	   else
+	     /* View of associated elements */
+	     v = 1;
+	   if (pAb == NULL)
+	     TtaError (ERR_element_has_no_box);
+	   else
+	     val = pAb->AbDepth;
+	 }
+     }
+   return val;
+}
+
+
+/*----------------------------------------------------------------------
+   TtaGiveBoxSize
    Returns the height and width of the box corresponding to an element in
    a given view.
 
@@ -2082,19 +2135,17 @@ TypeUnit            unit;
    Return parameters:
    width: box width in units.
    height: box height in units.
-
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaGiveBoxSize (Element element, Document document, View view, TypeUnit unit, int *width, int *height)
+void          TtaGiveBoxSize (Element element, Document document, View view, TypeUnit unit, int *width, int *height)
 #else  /* __STDC__ */
-void                TtaGiveBoxSize (element, document, view, unit, width, height)
-Element             element;
-Document            document;
-View                view;
-TypeUnit            unit;
-int                *width;
-int                *height;
-
+void          TtaGiveBoxSize (element, document, view, unit, width, height)
+Element       element;
+Document      document;
+View          view;
+TypeUnit      unit;
+int          *width;
+int          *height;
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pAb;
@@ -2811,7 +2862,6 @@ PRule               pRule;
       case PtYRadius:
 	value = ((PtrPRule) pRule)->PrMinUnit;
 	break;
-      case PtWidth:
       case PtHeight:
 	if (((PtrPRule) pRule)->PrDimRule.DrPosition)
 	  value = ((PtrPRule) pRule)->PrDimRule.DrPosRule.PoDistUnit;

@@ -62,6 +62,9 @@ extern void TtaChangeBoxPosition ( Element element,
                                    int deltaX,
                                    int deltaY,
                                    TypeUnit unit );
+extern int TtaGetDepth ( Element element,
+                         Document document,
+                         View view );
 extern void TtaGiveBoxSize ( Element element,
                              Document document,
                              View view,
@@ -152,6 +155,9 @@ extern void TtaChangeBoxPosition (/* Element element,
                                      int deltaX,
                                      int deltaY,
                                      TypeUnit unit */);
+extern int TtaGetDepth (/* Element element,
+                           Document document,
+                           View view */);
 extern void TtaGiveBoxSize (/* Element element,
                                Document document,
                                View view,

@@ -2101,6 +2101,9 @@ ThotBool           *absolute;
     case PRVisibility:
       *intRule = PtVisibility;
       break;
+    case PRDepth:
+      *intRule = PtDepth;
+      break;
     case PRFillPattern:
       *intRule = PtFillPattern;
       break;
@@ -2394,6 +2397,9 @@ int                 extra;
     {
     case PtVisibility:
       setting->type = PRVisibility;
+      break;
+    case PtDepth:
+      setting->type = PRDepth;
       break;
     case PtFillPattern:
       setting->type = PRFillPattern;

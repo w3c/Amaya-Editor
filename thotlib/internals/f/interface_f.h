@@ -12,18 +12,10 @@ extern int TtaXLookupString ( ThotKeyEvent *event,
                               KeySym *keysym,
                               ThotComposeStatus *status );
 extern void TtaInstallMultiKey ( void );
-extern void TtaSetMainLoop ( ExternalInitMainLoop init,
-                             ExternalMainLoop loop,
-                             ExternalFetchEvent fetch,
-                             ExternalFetchAvailableEvent fetchavail,
-                             ExternalLockMainLoop lock,
-                             ExternalUnlockMainLoop unlock );
-extern void TtaLockMainLoop ( void );
-extern void TtaUnlockMainLoop ( void );
 extern void TtaFetchOneEvent ( ThotEvent *ev );
 extern void TtaFetchOrWaitEvent ( ThotEvent *ev );
 extern ThotBool TtaFetchOneAvailableEvent ( ThotEvent *ev );
-extern void TtaHandleOneEvent ( ThotEvent * ev );
+extern void TtaHandleOneEvent ( ThotEvent *ev );
 extern void TtaHandlePendingEvents ( void );
 extern void TtaMainLoop ( void );
 extern Pixel TtaGetMenuColor ( void );
@@ -47,18 +39,10 @@ extern int TtaXLookupString (/* ThotKeyEvent *event,
                                 KeySym *keysym,
                                 ThotComposeStatus *status */);
 extern void TtaInstallMultiKey (/* void */);
-extern void TtaSetMainLoop (/* ExternalInitMainLoop init,
-                               ExternalMainLoop loop,
-                               ExternalFetchEvent fetch,
-                               ExternalFetchAvailableEvent fetchavail,
-                               ExternalLockMainLoop lock,
-                               ExternalUnlockMainLoop unlock */);
-extern void TtaLockMainLoop (/* void */);
-extern void TtaUnlockMainLoop (/* void */);
 extern void TtaFetchOneEvent (/* ThotEvent *ev */);
 extern void TtaFetchOrWaitEvent (/* ThotEvent *ev */);
 extern ThotBool TtaFetchOneAvailableEvent (/* ThotEvent *ev */);
-extern void TtaHandleOneEvent (/* ThotEvent * ev */);
+extern void TtaHandleOneEvent (/* ThotEvent *ev */);
 extern void TtaHandlePendingEvents (/* void */);
 extern void TtaMainLoop (/* void */);
 extern Pixel TtaGetMenuColor (/* void */);

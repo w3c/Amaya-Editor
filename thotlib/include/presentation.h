@@ -370,6 +370,17 @@ extern void         TtaChangeBoxSize (Element element, Document document, View v
 extern void         TtaChangeBoxPosition (Element element, Document document, View view, int X, int Y, TypeUnit unit);
 
 /*----------------------------------------------------------------------
+   TtaGetDepth
+   Returns the depth of the box corresponding to an element in a given view.
+
+   Parameters:
+   element: the element of interest.
+   document: the document of interest.
+   view: the view.
+  ----------------------------------------------------------------------*/
+extern int          TtaGetDepth (Element element, Document document, View view);
+
+/*----------------------------------------------------------------------
    TtaGiveBoxSize
 
    Returns the height and width of the box corresponding to an element in
@@ -620,6 +631,7 @@ extern void         TtaSetPRuleValueWithUnit ( /* Element element, PRule pRule, 
 extern void         TtaSetPRuleView ( /* PRule pRule, int view */ );
 extern void         TtaChangeBoxSize ( /* Element element, View view, Document document, int deltaX, int deltaY, TypeUnit unit */ );
 extern void         TtaChangeBoxPosition ( /* Element element, Document document, View view, int X, int Y, TypeUnit unit */ );
+extern int          TtaGetDepth (/*Element element, Document document, View view*/);
 extern void         TtaGiveBoxSize ( /* Element element, Document document, View view, TypeUnit unit, int *width, int *height */ );
 extern void         TtaGiveBoxPosition ( /* Element element, Document document, View view, TypeUnit unit, int *xCoord, int *yCoord */ );
 extern void         TtaGiveBoxAbsPosition ( /* Element element, Document document, View view, TypeUnit unit, int *xCoord, int *yCoord */ );

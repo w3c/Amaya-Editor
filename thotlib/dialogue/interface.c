@@ -1177,79 +1177,6 @@ fprintf (stderr, "      Multikey : <Alt>%c %c\n", previous_keysym, KS);
 }
 #endif /* !_WINDOWS */
 
-
-/*
- * Global variables : external functions used when the application
- * overrides the built-in event-handling mechanisms.
- */
-
-static ExternalInitMainLoop NewInitMainLoop = NULL;
-static ExternalMainLoop NewMainLoop = NULL;
-static ExternalFetchEvent NewFetchEvent = NULL;
-static ExternalFetchAvailableEvent NewFetchAvailableEvent = NULL;
-static ExternalLockMainLoop NewLockMainLoop = NULL;
-static ExternalUnlockMainLoop NewUnlockMainLoop = NULL;
-
-/*----------------------------------------------------------------------
-   TtaSetMainLoop
-   Provide a new main loop for processing all events in an application.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC
-void                TtaSetMainLoop (ExternalInitMainLoop init,
-      ExternalMainLoop loop, ExternalFetchEvent fetch,
-      ExternalFetchAvailableEvent fetchavail,
-      ExternalLockMainLoop lock,
-      ExternalUnlockMainLoop unlock)
-#else  /* __STDC__ */
-void                TtaSetMainLoop (init, loop, fetch, fetchavail, lock, unlock)
-ExternalInitMainLoop init;
-ExternalMainLoop    loop;
-ExternalFetchEvent fetch;
-ExternalFetchAvailableEvent fetchavail;
-ExternalLockMainLoop lock;
-ExternalUnlockMainLoop unlock;
-#endif /* __STDC__ */
-{
-   NewInitMainLoop = init;
-   NewMainLoop = loop;
-   NewFetchEvent = fetch;
-   NewFetchAvailableEvent = fetchavail;
-   NewLockMainLoop = lock;
-   NewUnlockMainLoop = unlock;
-}
-
-/*----------------------------------------------------------------------
-   TtaLockMainLoop
-
-   Used when events are to be handled outside of the application mainloop
-   e.g. dialogs callback. This is useful only in case of multithreaded
-   applications, so the default handling is empty.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaLockMainLoop (void)
-#else  /* __STDC__ */
-void                TtaLockMainLoop ()
-#endif /* __STDC__ */
-{
-    if (NewLockMainLoop) NewLockMainLoop();
-}
-
-/*----------------------------------------------------------------------
-   TtaUnlockMainLoop
-
-   Used when events are to be handled outside of the application mainloop
-   e.g. dialogs callback. This is useful only in case of multithreaded
-   applications, so the default handling is empty.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaUnlockMainLoop (void)
-#else  /* __STDC__ */
-void                TtaUnlockMainLoop ()
-#endif /* __STDC__ */
-{
-    if (NewUnlockMainLoop) NewUnlockMainLoop();
-}
-
 /*----------------------------------------------------------------------
    TtaFetchOneEvent
 
@@ -1262,11 +1189,6 @@ void                TtaFetchOneEvent (ev)
 ThotEvent             *ev;
 #endif /* __STDC__ */
 {
-  if (NewFetchEvent)
-    {
-      NewFetchEvent (ev);
-      return;
-    }
 #ifndef _WINDOWS
   XtAppNextEvent (app_cont, ev);
 #endif /* ! _WINDOWS */
@@ -1297,12 +1219,7 @@ ThotEvent          *ev;
 #ifndef _GTK
 #ifndef _WINDOWS
    XtInputMask         status;
-#endif /* ! _WINDOWS */
 
-   if (NewFetchAvailableEvent)
-      NewFetchAvailableEvent(ev);
-
-#ifndef _WINDOWS
    status = XtAppPending (app_cont);
    if (status & XtIMXEvent)
        XtAppNextEvent (app_cont, ev);
@@ -1332,12 +1249,7 @@ ThotEvent             *ev;
 #ifndef _GTK
 #ifndef _WINDOWS
    XtInputMask         status;
-#endif /* ! _WINDOWS */
 
-   if (NewFetchAvailableEvent)
-      return (NewFetchAvailableEvent(ev));
-
-#ifndef _WINDOWS
    status = XtAppPending (app_cont);
    if (status & XtIMXEvent)
      {
@@ -1352,19 +1264,25 @@ ThotEvent             *ev;
 }
 
 
-#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    TtaHandleOneEvent
 
    Processes one given event in the application.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaHandleOneEvent (ThotEvent * ev)
+void                TtaHandleOneEvent (ThotEvent *ev)
 #else  /* __STDC__ */
 void                TtaHandleOneEvent (ev)
 ThotEvent             *ev;
 #endif /* __STDC__ */
 {
+#ifdef _WINDOWS
+  if (msg->message != WM_QUIT)
+    {
+      TranslateMessage (msg);
+      DispatchMessage (msg);
+    }
+#else /* _WINDOWS */
 #ifndef _GTK
   PtrDocument         pDoc;
   ThotWindow          w;
@@ -1445,30 +1363,8 @@ ThotEvent             *ev;
 	}
     }
 #endif /* _GTK */
-}
 #endif /* !_WINDOWS */
-
-#ifdef _WINDOWS
-/*----------------------------------------------------------------------
-   TtaHandleOneWindowEvent
-
-   Processes one given event in the Window application.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaHandleOneWindowEvent (MSG* msg)
-#else  /* __STDC__ */
-void                TtaHandleOneWindowEvent (msg)
-MSG                *msg;
-#endif /* __STDC__ */
-{
-   if (msg->message != WM_QUIT)
-     {
-       TranslateMessage (msg);
-       DispatchMessage (msg);
-     }
 }
-#endif
-
 
 /*----------------------------------------------------------------------
   TtaHandlePendingEvents
@@ -1491,16 +1387,10 @@ void                TtaHandlePendingEvents ()
    function must be called after all initializations have been made.
 
   ----------------------------------------------------------------------*/
-void TtaMainLoop () {
-     NotifyEvent         notifyEvt;
-#    ifdef _WINDOWS
-     MSG                 msg;
-#    else /* ! _WINDOWS */
-     ThotEvent           ev;
-#    endif /* _WINDOWS */
-
-     if (NewInitMainLoop)
-        NewInitMainLoop(app_cont);
+void TtaMainLoop ()
+{
+  NotifyEvent         notifyEvt;
+  ThotEvent           ev;
 
 #ifndef _GTK
   TtaInstallMultiKey ();
@@ -1516,28 +1406,16 @@ void TtaMainLoop () {
   notifyEvt.event = TteInit;
   CallEventType (&notifyEvt, FALSE);
   
-#    ifdef _WINDOWS
-#    endif /* _WINDOWS */
-
   /* Loop wainting for the events */
 #ifndef _GTK
   while (1)
     {
-      if (NewMainLoop != NULL)
-	{
-	  NewMainLoop ();
-	  continue;
-	}
-#ifndef _WINDOWS
-      TtaFetchOneEvent (&ev);
-      TtaHandleOneEvent (&ev);
+#ifdef _WINDOWS
+      if (GetMessage (&ev, NULL, 0, 0))
 #else  /* !_WINDOWS */
-      if (GetMessage (&msg, NULL, 0, 0)) {
-         /* if (currentFrame >= 1)
-            SetFocus (FrRef[currentFrame]); */
-         TtaHandleOneWindowEvent (&msg);
-	  }
+      TtaFetchOneEvent (&ev);
 #endif /* _WINDOWS */
+      TtaHandleOneEvent (&ev);
     }
 #else /* _GTK */
   gtk_main ();

@@ -2438,32 +2438,6 @@ gint ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data)
                FrameToView (frame, &document, &view);
                TtcCopyToClipboard (document, view);
              }
-           /* Est-ce un double clic */
-           /* else if (t1 + (Time) DoubleClickDelay > event->time)
-             {
-               TtaAbortShowDialogue ();
-               TtaLockMainLoop();
-               TtaFetchOneEvent (&event);
-               while (event.type != ButtonRelease)
-                 {
-                   TtaHandleOneEvent (&event);
-                   TtaFetchOneEvent (&event);
-                 }
-                 TtaUnlockMainLoop(); */
-
-               /* memorise la position de la souris */
-           /* if (ClickFrame == frame
-                   && (ClickX - event->x < 3 || ClickX - event->x > 3)
-                   && (ClickY - event->y < 3 || ClickY - event->y > 3))*/
-                 /* it's really a double click */
-           /*sel = 3;
-               else
-                 sel = 2;
-               ClickFrame = frame;
-               ClickX = event->x;
-               ClickY = event->y;
-               LocateSelectionInView (frame, ClickX, ClickY, sel);
-               } */
            /* Sinon c'est une selection normale */
            else
              {
@@ -2475,38 +2449,9 @@ gint ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data)
 
                /* Regarde s'il s'agit d'un drag ou d'une simple marque d'insertion */
                comm = 0;        /* il n'y a pas de drag */
-               TtaLockMainLoop();
                /*TtaFetchOneEvent (&event);*/
                FrameToView (frame, &document, &view);
                h = FrameTable[frame].FrHeight;
-               /*while (event.type != GDK_BUTTON_RELEASE && event.type != GDK_BUTTON_PRESS)
-                 {
-                   if (event.type == MotionNotify ||
-                       (event.type != ConfigureNotify &&
-                        event.type != MapNotify &&
-                        event.type != UnmapNotify &&
-                        event.type != DestroyNotify &&*/
-                        /*event.type != NoExpose && */
-               /*(event.xmotion.y > h || event.xmotion.y < 0)))
-                     {
-                       dx = event.xmotion.x - ClickX;
-                       dy = event.xmotion.y - ClickY;
-                       if (dx > 2 || dx < -2 || dy > 2 || dy < -2 ||
-                           event.xmotion.y > h || event.xmotion.y < 0)
-                         {
-                           LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 1);
-                           comm = 1;
-                           if (event.xmotion.y > h)
-                             TtcLineDown (document, view);
-                           else if (event.xmotion.y < 0)
-                             TtcLineUp (document, view);
-                         }
-                     }
-                   TtaHandleOneEvent (&event);
-                   TtaFetchOrWaitEvent (&event);
-                 }
-               TtaHandleOneEvent (&event);
-               TtaUnlockMainLoop();*/
 
                /* S'il y a un drag on termine la selection */
                FrameToView (frame, &document, &view);
