@@ -1041,6 +1041,318 @@ void               UnknownSVGNameSpace (ParserData *context,
 }
 
 /*----------------------------------------------------------------------
+   GetNumber
+   Parse an integer or floating point number and skip to next token.
+   Return the value of that number in param number and moves ptr
+   to the next token to be parsed.
+  ----------------------------------------------------------------------*/
+char *     GetNumber (char *ptr, int* number)
+{
+  int      integer, nbdecimal, exponent, i;
+  char     *decimal;
+  ThotBool negative, negativeExp;
+
+  *number = 0;
+  integer = 0;
+  nbdecimal = 0;
+  decimal = NULL;
+  negative = FALSE;
+  /* read the sign */
+  if (*ptr == '+')
+    ptr++;
+  else if (*ptr == '-')
+    {
+      ptr++;
+      negative = TRUE;
+    }
+  /* read the integer part */
+  while (*ptr != EOS && *ptr >= '0' && *ptr <= '9')
+    {
+      integer *= 10;
+      integer += *ptr - '0';
+      ptr++;
+    }
+  if (*ptr == '.')
+    /* there is a decimal part */
+    {
+      ptr++;
+      decimal = ptr;
+      while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
+	{
+	  nbdecimal++;
+	  ptr++;
+	}
+    }
+  if (*ptr != 'e' && *ptr != 'E')
+    /* no exponent */
+    {
+      if (nbdecimal > 0)
+	/* there are some digits after the decimal point */
+	{
+	  if (*decimal >= '5' && *decimal <= '9')
+	    /* the first digit after the point is 5 of greater
+	       round up the value to the next integer */
+	    integer++;
+	}
+    }
+  else
+    /* there is an exponent part, parse it */
+    {
+      ptr++;
+      negativeExp = FALSE;
+      /* read the sign of the exponent */
+      if (*ptr == '+')
+	ptr++;
+      else if (*ptr == '-')
+	{
+	  ptr++;
+	  negativeExp = TRUE;
+	}
+      exponent = 0;
+      while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
+	{
+	  exponent *= 10;
+	  exponent += *ptr - '0';
+	  ptr++;
+	}
+      if (exponent > 0)
+	{
+	  if (negativeExp)
+	    {
+	      for (i = 0; i < exponent; i++)
+		integer /= 10;
+	    }
+	  else
+	    {
+	      for (i = 0; i < exponent; i++)
+		{
+		  integer *= 10;
+		  if (i < nbdecimal)
+		    {
+		      integer += *decimal - '0';
+		      decimal++;
+		    }
+		}
+	    }
+	}
+    }
+  if (negative)
+    *number = - integer;
+  else
+    *number = integer;
+
+  /* skip the following spaces */
+  while (*ptr != EOS &&
+         (*ptr == ',' || *ptr == SPACE || *ptr == BSPACE ||
+	  *ptr == EOL    || *ptr == TAB   || *ptr == CR))
+    ptr++;
+  return (ptr);
+}
+
+/*----------------------------------------------------------------------
+ TranslateElement
+ update the "transform" attribute of element el to shift it by
+ delta unit(s) horizontally (if horiz) or vertically.
+ increment indicates wheter delta is an increment or the total value of
+ the translation.
+ -----------------------------------------------------------------------*/
+void TranslateElement (Element el, Document doc, int delta, TypeUnit unit,
+		       ThotBool horiz, ThotBool increment)
+{
+  ElementType           elType;
+  AttributeType	        attrType;
+  Attribute		attr;
+  ThotBool              error;
+  char		        buffer[512];
+  char                  *text, *ptr, *newText, *newPtr;
+  int			length, origShift;
+
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == SVG_EL_line_)
+    {
+#ifdef IV
+      if (horiz)
+	{
+	  /* update the first point */
+	  attrType.AttrTypeNum = SVG_ATTR_x1;
+	  attr = TtaGetAttribute (el, attrType);
+	  length = 50;
+	  if (attr == NULL)
+	    /* element el has no position attribute */
+	    {
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (el, attr, doc);
+	      x = 0;
+	      unit = UnPixel;
+	    }
+	  else
+	    GetAttributeValueAndUnit (attr, &x, &unit);
+	  sprintf (buffer, "%dpx", x);
+	  TtaSetAttributeText (attr, buffer, el, doc);
+	  /* update the last point */
+	  attrType.AttrTypeNum = SVG_ATTR_x2;
+	  attr = TtaGetAttribute (el, attrType);
+	  if (attr == NULL)
+	    /* element el has no position attribute */
+	    {
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (el, attr, doc);
+	      x = 0;
+	      unit = UnPixel;
+	    }
+	  else
+	    {
+	      x = 0;
+	    }
+	  sprintf (buffer, "%dpx", x);
+	  TtaSetAttributeText (attr, buffer, el, doc);
+	}
+      else
+	{
+	  /* update the first point */
+	  attrType.AttrTypeNum = SVG_ATTR_y1;
+	  attr = TtaGetAttribute (el, attrType);
+	  length = 50;
+	  if (attr == NULL)
+	    /* element el has no position attribute */
+	    {
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (el, attr, doc);
+	      y = 0;
+	      unit = UnPixel;
+	    }
+	  else
+	    {
+	      y = 0;
+	    }
+	  sprintf (buffer, "%dpx", y);
+	  TtaSetAttributeText (attr, buffer, el, doc);
+	  /* update the last point */
+	  attrType.AttrTypeNum = SVG_ATTR_y2;
+	  attr = TtaGetAttribute (el, attrType);
+	  if (attr == NULL)
+	    /* element el has no position attribute */
+	    {
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (el, attr, doc);
+	      y = 0;
+	      unit = UnPixel;
+	    }
+	  else
+	    {
+	      y = 0;
+	    }
+	  sprintf (buffer, "%dpx", y);
+	  TtaSetAttributeText (attr, buffer, el, doc);
+	}
+#endif /* IV */
+    }
+  else
+    /* update (or create) the transform attribute for the element */
+    {
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = SVG_ATTR_transform;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr == NULL)
+	{
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (el, attr, doc);
+	  if (horiz)
+	    sprintf (buffer, "translate(%d,0)", delta);
+	  else
+	    sprintf (buffer, "translate(0,%d)", delta);
+	  TtaSetAttributeText (attr, buffer, el, doc);
+	  TtaRegisterAttributeCreate (attr, el, doc);
+	}
+      else
+	{
+	  origShift = 0;
+	  length = TtaGetTextAttributeLength (attr);
+	  text = TtaGetMemory (length + 1);
+	  if (text)
+	    {
+	      TtaGiveTextAttributeValue (attr, text, &length);
+	      ptr = text;
+	      newText = TtaGetMemory (length + 50);
+	      if (newText)
+		{
+		  newPtr = newText;
+		  error = False;
+		  while (*ptr != EOS && !error)
+		    {
+		      if (!strncmp (ptr, "translate", 9))
+			{
+			  strncpy (newPtr, ptr, 9);
+			  ptr += 9; newPtr += 9;
+			  ptr = TtaSkipBlanks (ptr);
+			  if (*ptr != '(')
+			    error = TRUE;
+			  else
+			    {
+			      *newPtr = '('; newPtr++;
+			      ptr++;
+			      ptr = TtaSkipBlanks (ptr);
+			      if (horiz)
+				{
+				  if (increment)
+				    GetNumber (ptr, &origShift);
+				  else
+				    origShift = 0;
+				  sprintf (newPtr, "%d", origShift+delta);
+				  while (*newPtr != EOS)
+				    newPtr++;
+				  while (*ptr != ',' && *ptr != ')' &&
+					 *ptr != EOS)
+				    ptr++;
+				}
+			      else
+				{
+				  while (*ptr != ',' && *ptr != ')' &&
+					 *ptr != EOS)
+				    {
+				      *newPtr = *ptr;
+				      ptr++; newPtr++;
+				    }
+				  if (*ptr != EOS)
+				    {
+				      *newPtr = ','; newPtr++;
+				      if (*ptr == ',')
+					{
+					  ptr++;
+					  ptr = TtaSkipBlanks (ptr);
+					}
+				      if (*ptr != ')' && *ptr != EOS &&
+					  increment)
+					GetNumber (ptr, &origShift);
+				      else
+					origShift = 0;
+				      sprintf (newPtr, "%d", origShift+delta);
+				      while (*newPtr != EOS)
+					newPtr++;
+				      while (*ptr != ')' && *ptr != EOS)
+				        ptr++;
+				    }
+				}
+			    }
+			}
+		      else
+			{
+			  *newPtr = *ptr;
+			  ptr++; newPtr++;
+			}
+		    }
+		  *newPtr = EOS;
+		  TtaRegisterAttributeReplace (attr, el, doc);
+		  TtaSetAttributeText (attr, newText, el, doc);
+		  TtaFreeMemory (newText);
+		}
+	      TtaFreeMemory (text);
+	    }
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
  UpdatePositionOfPoly
  Set position, width and height for an element polyline or polygon.
  Change coords of control points accordingly.
@@ -1049,28 +1361,52 @@ void   UpdatePositionOfPoly (Element el, Document doc, int minX, int minY, int m
 {
    PRule                pRule;
    Element              leaf;
+   Attribute            attr;
+   AttributeType        attrType;
    int			height, width, i, nbPoints, x, y;
    TypeUnit		unit;
    PresentationValue    pval;
    PresentationContext  ctxt;
+   char                 *buffer, *text;
 
-   leaf = TtaGetFirstChild (el);
+   leaf = TtaGetFirstChild (el);  /* Thot Graphic element */
    ctxt = TtaGetSpecificStyleContext (doc);
    /* the specific presentation is not a CSS rule */
    ctxt->cssSpecificity = 0;
    ctxt->destroy = FALSE;
    pval.typed_data.unit = STYLE_UNIT_PX;
 
+   /* translate all coordinates by (-minX, -minY), both in the Thot
+      Graphic leaf element and in the "points" attribute */
    unit = UnPixel;
-   width = maxX - minX;
-   height = maxY - minY;
    nbPoints = TtaGetPolylineLength (leaf);
+   buffer = TtaGetMemory (20);
+   text = TtaGetMemory (nbPoints * 20);
+   text[0] = EOS;
    for (i = 1; i <= nbPoints; i++)
       {
       TtaGivePolylinePoint (leaf, i, unit, &x, &y);
-      TtaModifyPointInPolyline (leaf, i, unit, x-minX, y-minY, doc);
+      x -= minX;  y -= minY;
+      TtaModifyPointInPolyline (leaf, i, unit, x, y, doc);
+      sprintf (buffer, "%d,%d", x, y);
+      strcat (text, buffer);
+      if (i < nbPoints)
+	strcat (text, " ");
       }
+   width = maxX - minX;
+   height = maxY - minY;
    TtaChangeLimitOfPolyline (leaf, unit, width, height, doc);
+   attrType.AttrSSchema = TtaGetElementType(el).ElSSchema;
+   attrType.AttrTypeNum = SVG_ATTR_points;
+   attr = TtaGetAttribute (el, attrType);
+   if (!attr)
+     {
+       attr = TtaNewAttribute (attrType);
+       TtaAttachAttribute (el, attr, doc);
+     }
+   TtaSetAttributeText (attr, text, el, doc);
+   TtaFreeMemory (buffer);
+   TtaFreeMemory (text);
 
    pRule = TtaGetPRule (el, PRHorizPos);
    if (pRule)
@@ -1095,16 +1431,18 @@ void   UpdatePositionOfPoly (Element el, Document doc, int minX, int minY, int m
    pval.typed_data.value = y+minY;
    pval.typed_data.real = FALSE;
    TtaSetStylePresentation (PRVertPos, el, NULL, ctxt, pval);
-
    pval.typed_data.value = width;
    pval.typed_data.real = FALSE;
-   TtaSetStylePresentation (PRWidth, el, NULL, ctxt, pval);
-          
+   TtaSetStylePresentation (PRWidth, el, NULL, ctxt, pval);     
    pval.typed_data.value = height;
    pval.typed_data.real = FALSE;
    TtaSetStylePresentation (PRHeight, el, NULL, ctxt, pval);
-
    TtaFreeMemory (ctxt);
+
+   /* create or update the transform attribute to represent an additional
+      translation by (minX, minY) */
+   TranslateElement (el, doc, minX, unit, TRUE, TRUE);
+   TranslateElement (el, doc, minY, unit, FALSE, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -1294,115 +1632,6 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
 }
 
 /*----------------------------------------------------------------------
-   GetNumber
-   Parse an integer or floating point number and skip to next token.
-   Return the value of that number in param number and moves ptr
-   to the next token to be parsed.
-  ----------------------------------------------------------------------*/
-char *     GetNumber (char *ptr, int* number)
-{
-  int      integer, nbdecimal, exponent, i;
-  char     *decimal;
-  ThotBool negative, negativeExp;
-
-  *number = 0;
-  integer = 0;
-  nbdecimal = 0;
-  decimal = NULL;
-  negative = FALSE;
-  /* read the sign */
-  if (*ptr == '+')
-    ptr++;
-  else if (*ptr == '-')
-    {
-      ptr++;
-      negative = TRUE;
-    }
-  /* read the integer part */
-  while (*ptr != EOS && *ptr >= '0' && *ptr <= '9')
-    {
-      integer *= 10;
-      integer += *ptr - '0';
-      ptr++;
-    }
-  if (*ptr == '.')
-    /* there is a decimal part */
-    {
-      ptr++;
-      decimal = ptr;
-      while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
-	{
-	  nbdecimal++;
-	  ptr++;
-	}
-    }
-  if (*ptr != 'e' && *ptr != 'E')
-    /* no exponent */
-    {
-      if (nbdecimal > 0)
-	/* there are some digits after the decimal point */
-	{
-	  if (*decimal >= '5' && *decimal <= '9')
-	    /* the first digit after the point is 5 of greater
-	       round up the value to the next integer */
-	    integer++;
-	}
-    }
-  else
-    /* there is an exponent part, parse it */
-    {
-      ptr++;
-      negativeExp = FALSE;
-      /* read the sign of the exponent */
-      if (*ptr == '+')
-	ptr++;
-      else if (*ptr == '-')
-	{
-	  ptr++;
-	  negativeExp = TRUE;
-	}
-      exponent = 0;
-      while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
-	{
-	  exponent *= 10;
-	  exponent += *ptr - '0';
-	  ptr++;
-	}
-      if (exponent > 0)
-	{
-	  if (negativeExp)
-	    {
-	      for (i = 0; i < exponent; i++)
-		integer /= 10;
-	    }
-	  else
-	    {
-	      for (i = 0; i < exponent; i++)
-		{
-		  integer *= 10;
-		  if (i < nbdecimal)
-		    {
-		      integer += *decimal - '0';
-		      decimal++;
-		    }
-		}
-	    }
-	}
-    }
-  if (negative)
-    *number = - integer;
-  else
-    *number = integer;
-
-  /* skip the following spaces */
-  while (*ptr != EOS &&
-         (*ptr == ',' || *ptr == SPACE || *ptr == BSPACE ||
-	  *ptr == EOL    || *ptr == TAB   || *ptr == CR))
-    ptr++;
-  return (ptr);
-}
-
-/*----------------------------------------------------------------------
    ParsePointsAttribute
    Process the points attribute
   ----------------------------------------------------------------------*/
@@ -1465,7 +1694,7 @@ void ParsePointsAttribute (Attribute attr, Element el, Document doc)
 	     ptr = TtaSkipBlanks (ptr);
 	   }	 
          }
-      UpdatePositionOfPoly (el, doc, 0, 0, maxX, maxY);
+      UpdatePositionOfPoly (el, doc, minX, minY, maxX, maxY);
       TtaFreeMemory (text);
       }
 }

@@ -422,196 +422,6 @@ ThotBool AttrPathDataDelete (NotifyAttribute * event)
 }
 
 /*----------------------------------------------------------------------
- TranslatePolyline
- update the transform attribute of element el to shift it of diatance
- delta horizontally (if horiz) or vertically.
- -----------------------------------------------------------------------*/
-static void TranslatePolyline (Element el, Document doc, int delta,
-				      TypeUnit unit, ThotBool horiz)
-{
-  ElementType           elType;
-  AttributeType	        attrType;
-  Attribute		attr;
-  ThotBool              error;
-  char		        buffer[512];
-  char                  *text, *ptr, *newText, *newPtr;
-  int			length;
-
-  elType = TtaGetElementType (el);
-  if (elType.ElTypeNum == SVG_EL_line_)
-    {
-#ifdef IV
-      if (horiz)
-	{
-	  /* update the first point */
-	  attrType.AttrTypeNum = SVG_ATTR_x1;
-	  attr = TtaGetAttribute (el, attrType);
-	  length = 50;
-	  if (attr == NULL)
-	    /* element el has no position attribute */
-	    {
-	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (el, attr, doc);
-	      x = 0;
-	      unit = UnPixel;
-	    }
-	  else
-	    GetAttributeValueAndUnit (attr, &x, &unit);
-	  sprintf (buffer, "%dpx", x);
-	  TtaSetAttributeText (attr, buffer, el, doc);
-	  /* update the last point */
-	  attrType.AttrTypeNum = SVG_ATTR_x2;
-	  attr = TtaGetAttribute (el, attrType);
-	  if (attr == NULL)
-	    /* element el has no position attribute */
-	    {
-	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (el, attr, doc);
-	      x = 0;
-	      unit = UnPixel;
-	    }
-	  else
-	    {
-	      x = 0;
-	    }
-	  sprintf (buffer, "%dpx", x);
-	  TtaSetAttributeText (attr, buffer, el, doc);
-	}
-      else
-	{
-	  /* update the first point */
-	  attrType.AttrTypeNum = SVG_ATTR_y1;
-	  attr = TtaGetAttribute (el, attrType);
-	  length = 50;
-	  if (attr == NULL)
-	    /* element el has no position attribute */
-	    {
-	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (el, attr, doc);
-	      y = 0;
-	      unit = UnPixel;
-	    }
-	  else
-	    {
-	      y = 0;
-	    }
-	  sprintf (buffer, "%dpx", y);
-	  TtaSetAttributeText (attr, buffer, el, doc);
-	  /* update the last point */
-	  attrType.AttrTypeNum = SVG_ATTR_y2;
-	  attr = TtaGetAttribute (el, attrType);
-	  if (attr == NULL)
-	    /* element el has no position attribute */
-	    {
-	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (el, attr, doc);
-	      y = 0;
-	      unit = UnPixel;
-	    }
-	  else
-	    {
-	      y = 0;
-	    }
-	  sprintf (buffer, "%dpx", y);
-	  TtaSetAttributeText (attr, buffer, el, doc);
-	}
-#endif /* IV */
-    }
-  else
-    /* update (or create) the transform attribute for the element */
-    {
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = SVG_ATTR_transform;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr == NULL)
-	{
-	  attr = TtaNewAttribute (attrType);
-	  TtaAttachAttribute (el, attr, doc);
-	  if (horiz)
-	    sprintf (buffer, "translate(%d,0)", delta);
-	  else
-	    sprintf (buffer, "translate(0,%d)", delta);
-	  TtaSetAttributeText (attr, buffer, el, doc);
-	  TtaRegisterAttributeCreate (attr, el, doc);
-	}
-      else
-	{
-	  length = TtaGetTextAttributeLength (attr);
-	  text = TtaGetMemory (length + 1);
-	  if (text)
-	    {
-	      TtaGiveTextAttributeValue (attr, text, &length);
-	      ptr = text;
-	      newText = TtaGetMemory (length + 50);
-	      if (newText)
-		{
-		  newPtr = newText;
-		  error = False;
-		  while (*ptr != EOS && !error)
-		    {
-		      if (!strncmp (ptr, "translate", 9))
-			{
-			  strncpy (newPtr, ptr, 9);
-			  ptr += 9; newPtr += 9;
-			  ptr = TtaSkipBlanks (ptr);
-			  if (*ptr != '(')
-			    error = TRUE;
-			  else
-			    {
-			      *newPtr = '('; newPtr++;
-			      ptr++;
-			      if (horiz)
-				{
-				  sprintf (newPtr, "%d", delta);
-				  while (*newPtr != EOS)
-				    newPtr++;
-				  while (*ptr != ',' && *ptr != ')' &&
-					 *ptr != EOS)
-				    ptr++;
-				}
-			      else
-				{
-				  while (*ptr != ',' && *ptr != ')' &&
-					 *ptr != EOS)
-				    {
-				      *newPtr = *ptr;
-				      ptr++; newPtr++;
-				    }
-				  if (*ptr != EOS)
-				    {
-				      *newPtr = ','; newPtr++;
-				      if (*ptr == ',')
-					{
-					  ptr++;
-					  ptr = TtaSkipBlanks (ptr);
-					}
-				      sprintf (newPtr, "%d", delta);
-				      while (*newPtr != EOS)
-					newPtr++;
-				      while (*ptr != ')' && *ptr != EOS)
-				        ptr++;
-				    }
-				}
-			    }
-			}
-		      else
-			{
-			  *newPtr = *ptr;
-			  ptr++; newPtr++;
-			}
-		    }
-		  *newPtr = EOS;
-		  TtaRegisterAttributeReplace (attr, el, doc);
-		  TtaSetAttributeText (attr, newText, el, doc);
-		  TtaFreeMemory (newText);
-		}
-	      TtaFreeMemory (text);
-	    }
-	}
-    }
-}
-
-/*----------------------------------------------------------------------
   UpdateAttrText creates or updates the text attribute attr of the
   element el.
   The parameter delta is TRUE when the value is 
@@ -951,7 +761,7 @@ void CheckSVGRoot (Document doc, Element el)
 	      elType = TtaGetElementType (child);
 	      if (elType.ElTypeNum == SVG_EL_polyline ||
 		  elType.ElTypeNum == SVG_EL_polygon)
-		TranslatePolyline (el, doc, val, UnPixel, TRUE);
+		TranslateElement (el, doc, val, UnPixel, TRUE, FALSE);
 	      else
 		{
 		  if (elType.ElTypeNum == SVG_EL_circle ||
@@ -1025,7 +835,7 @@ void CheckSVGRoot (Document doc, Element el)
 	      elType = TtaGetElementType (child);
 	      if (elType.ElTypeNum == SVG_EL_polyline ||
 		  elType.ElTypeNum == SVG_EL_polygon)
-		TranslatePolyline (el, doc, val, UnPixel, FALSE);
+		TranslateElement (el, doc, val, UnPixel, FALSE, FALSE);
 	      else
 		{
 		  if (elType.ElTypeNum == SVG_EL_circle ||
@@ -1331,7 +1141,7 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
 	  y = TtaGetPRuleValue (presRule);
 	  if (elType.ElTypeNum == SVG_EL_polyline ||
 	      elType.ElTypeNum == SVG_EL_polygon)
-	    TranslatePolyline (el, doc, y, unit, FALSE);
+	    TranslateElement (el, doc, y, unit, FALSE, FALSE);
 	  else
 	    UpdatePositionAttribute (el, doc, y, FALSE);
 	}
@@ -1341,7 +1151,7 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
 	  x = TtaGetPRuleValue (presRule);
 	  if (elType.ElTypeNum == SVG_EL_polyline ||
 	      elType.ElTypeNum == SVG_EL_polygon)
-	    TranslatePolyline (el, doc, x, unit, TRUE);
+	    TranslateElement (el, doc, x, unit, TRUE, FALSE);
 	  else
 	    UpdatePositionAttribute (el, doc, x, TRUE);
 	}
@@ -1417,7 +1227,7 @@ void ControlPointChanged (NotifyOnValue *event)
   Attribute       attr;
   char           *text, *buffer;
   int             i, length;
-  int             x, y;
+  int             x, y, minX, minY, maxX, maxY;
 
   el = event->element;
   elType = TtaGetElementType (el);
@@ -1431,13 +1241,23 @@ void ControlPointChanged (NotifyOnValue *event)
 	child = TtaGetFirstChild (el);
 	length = TtaGetPolylineLength (child);
 	/* get all points */
-	i = 1;
 	buffer = TtaGetMemory (20);
 	text = TtaGetMemory (length * 20);
 	text[0] = EOS;
+	minX = minY = 32000;
+	maxX = maxY = 0;
+	i = 1;
 	while (i <= length)
 	  {
 	     TtaGivePolylinePoint (child, i, UnPixel, &x, &y);
+	     if (x > maxX)
+	       maxX = x;
+	     if (x < minX)
+	       minX = x;
+	     if (y > maxY)
+	       maxY = y;
+	     if (y < minY)
+	       minY = y;
 	     sprintf (buffer, "%d,%d", x, y);
 	     strcat (text, buffer);
 	     if (i < length)
@@ -1455,6 +1275,7 @@ void ControlPointChanged (NotifyOnValue *event)
 	  }
 	TtaSetAttributeText (attr, text, el, doc);
 	TtaFreeMemory (text);
+	UpdatePositionOfPoly (el, doc, minX, minY, maxX, maxY);
      }
   if (!InCreation)
     /* don't check anything during the creation */
