@@ -308,7 +308,7 @@ static void RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer,
     }
   else 
 #ifdef _GL
-    /* GL_DrawPolygon (points, nb - 1); */
+    /*GL_DrawPolygon (points, nb - 1); */
 #else /*_GL*/
     
 #ifdef _WINDOWS 
@@ -358,9 +358,10 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
    GdkWindowPrivate    *xwindow;
 #endif /*_GTK*/
 
-   float               ratioX, ratioY;
+  float               ratioX, ratioY;
   int                 ret;
   int                 newx, newy;
+  int                 newx1, newy1;
   ThotBool            input;
   ThotBool            wrap;
 
@@ -567,9 +568,9 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 				       ViewFrameTable[frame - 1].FrMagnification);
 		  AddPointInPolyline (Bbuffer, point, newx, newy);
 		  /* update the abstract box buffer */
-		  newx = (int) ((float) newx * ratioX);
-		  newy = (int) ((float) newy * ratioY);
-		  AddPointInPolyline (Pbuffer, point, newx, newy);
+		  newx1 = (int) ((float) newx * ratioX);
+		  newy1 = (int) ((float) newy * ratioY);
+		  AddPointInPolyline (Pbuffer, point, newx1, newy1);
 		  if (*nbpoints > maxPoints && maxPoints != 0)
 		    /* we have the right number of points */
 		    ret = 1;
@@ -708,9 +709,9 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 				       ViewFrameTable[frame - 1].FrMagnification);
 		  AddPointInPolyline (Bbuffer, point, newx, newy);
 		  /* update the abstract box buffer */
-		  newx = (int) ((float) newx * ratioX);
-		  newy = (int) ((float) newy * ratioY);
-		  AddPointInPolyline (Pbuffer, point, newx, newy);
+		  newx1 = (int) ((float) newx * ratioX);
+		  newy1 = (int) ((float) newy * ratioY);
+		  AddPointInPolyline (Pbuffer, point, newx1, newy1);
 
 		  if (*nbpoints > maxPoints && maxPoints != 0)
 		    /* we have the right number of points */
@@ -823,9 +824,9 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 					   ViewFrameTable[frame - 1].FrMagnification);
 		      AddPointInPolyline (Bbuffer, point, newx, newy);
 		      /* update the abstract box buffer */
-		      newx = (int) ((float) newx * ratioX);
-		      newy = (int) ((float) newy * ratioY);
-		      AddPointInPolyline (Pbuffer, point, newx, newy);
+		      newx1 = (int) ((float) newx * ratioX);
+		      newy1 = (int) ((float) newy * ratioY);
+		      AddPointInPolyline (Pbuffer, point, newx1, newy1);
 		      
 		      if (*nbpoints > maxPoints && maxPoints != 0)
 			/* we have the right number of points */
@@ -968,6 +969,7 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
   float               ratioX, ratioY;
   int                 ret;
   int                 newx, newy;
+  int                 newx1, newy1;
   ThotBool            input;
   ThotBool            wrap;
 
@@ -1014,7 +1016,8 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
   
 #ifdef _GTK
   gdk_window_set_cursor (GTK_WIDGET(FrameTable[frame].WdFrame)->window, HVCurs);
-  e = GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;  ThotGrab (w, HVCurs, e, 0);
+  e = GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;
+  ThotGrab (w, HVCurs, e, 0);
   xwindow = (GdkWindowPrivate*) w;
   XWarpPointer (GDK_DISPLAY(), 
 		None, 
@@ -1071,9 +1074,9 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
 			       ViewFrameTable[frame - 1].FrMagnification);
 	  ModifyPointInPolyline (Bbuffer, point, newx, newy);
 	  /* update the abstract box buffer */
-	  newx = (int) ((float) newx * ratioX);
-	  newy = (int) ((float) newy * ratioY);
-	  ModifyPointInPolyline (Pbuffer, point, newx, newy);
+	  newx1 = (int) ((float) newx * ratioX);
+	  newy1 = (int) ((float) newy * ratioY);
+	  ModifyPointInPolyline (Pbuffer, point, newx1, newy1);
 	  ret = 1;
 	  break;
 
@@ -1157,9 +1160,9 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
 			       ViewFrameTable[frame - 1].FrMagnification);
 	  ModifyPointInPolyline (Bbuffer, point, newx, newy);
 	  /* update the abstract box buffer */
-	  newx = (int) ((float) newx * ratioX);
-	  newy = (int) ((float) newy * ratioY);
-	  ModifyPointInPolyline (Pbuffer, point, newx, newy);
+	  newx1 = (int) ((float) newx * ratioX);
+	  newy1 = (int) ((float) newy * ratioY);
+	  ModifyPointInPolyline (Pbuffer, point, newx1, newy1);
 	  ret = 1;
 	  break;
 	  
@@ -1217,6 +1220,11 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
 		      /* check the coordinates */
 		      newx = x + DO_ALIGN ((int) ((GdkEventMotion *)event)->x - x);
 		      newy = y + DO_ALIGN ((int)((GdkEventMotion *)event)->y - y);
+
+#ifdef _TRACE_GL_MOVEAPOINT
+	printf("Before boxwraping : \tnewx=%d\tnewy=%d\tlastx=%d\tlasty=%d\n",newx,newy,lastx,lasty);
+#endif /* #ifdef _TRACE_GL_MOVEAPOINT */
+
 		      /* are limited to the box size */
 		      /* Update the X position */
 		      if (newx < x)
@@ -1242,6 +1250,11 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
 			  wrap = TRUE;
 			} 
 		    }
+
+#ifdef _TRACE_GL_MOVEAPOINT
+	printf("After boxwraping : \tnewx=%d\tnewy=%d\tlastx=%d\tlasty=%d\n",newx,newy,lastx,lasty);
+#endif /* #ifdef _TRACE_GL_MOVEAPOINT */
+		  
 		  /* shows the new adjacent segment position */
 		  if (newx != lastx || newy != lasty)
 		    {
@@ -1257,6 +1270,10 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
 			  gdk_draw_line (w, TtInvertGC, newx, newy, x3, y3);
 			}
 #else /* _GL */
+		      
+#ifdef _TRACE_GL_MOVEAPOINT
+	printf("Before LogicalValue : \tnewx=%d\tnewy=%d\tlastx=%d\tlasty=%d\n",newx,newy,lastx,lasty);
+#endif /* #ifdef _TRACE_GL_MOVEAPOINT */
 		      lastx = newx;
 		      lasty = newy;
 		      /* update the box buffer */
@@ -1264,6 +1281,10 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
 					   ViewFrameTable[frame - 1].FrMagnification);
 		      newy = LogicalValue (lasty - firsty, UnPixel, NULL,
 					   ViewFrameTable[frame - 1].FrMagnification);
+#ifdef _TRACE_GL_MOVEAPOINT
+	printf("After LogicalValue : \tnewx=%d\tnewy=%d\tlastx=%d\tlasty=%d\n",newx,newy,lastx,lasty);
+#endif /* #ifdef _TRACE_GL_MOVEAPOINT */
+		      
 		      if (pointselect == 0)
 			/* it's really a polyline, not a line */
 			{
@@ -1286,10 +1307,13 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
 		      ModifyPointInPolyline (Bbuffer, point, newx, newy);
 
 		      /* update the abstract box buffer */
-		      newx = (int) ((float) newx * ratioX);
-		      newy = (int) ((float) newy * ratioY);
+		      newx1 = (int) ((float) newx * ratioX);
+		      newy1 = (int) ((float) newy * ratioY);
 		      
-		      ModifyPointInPolyline (Pbuffer, point, newx, newy);
+		      ModifyPointInPolyline (Pbuffer, point, newx1, newy1);
+#ifdef _TRACE_GL_MOVEAPOINT
+	printf("After Ratio : \tnewx1=%d\tnewy1=%d\tratiox=%f\tratioy=%f\n",newx1,newy1,ratioX,ratioY);
+#endif /* #ifdef _TRACE_GL_MOVEAPOINT */
 
 		      if (pointselect == 0)
 			{
@@ -1307,7 +1331,11 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
 				 box->BxClipY + height + EXTRA_GRAPH);
 		      RedrawFrameBottom (frame, 0, NULL);
 		      FrameTable[frame].DblBuffNeedSwap = TRUE;
-		      GL_Swap (frame);
+		      GL_Swap (frame);		      
+#ifdef _TRACE_GL_MOVEAPOINT
+	printf("After GLSwap : \tnewx=%d\tnewy=%d\tlastx=%d\tlasty=%d\n",newx,newy,lastx,lasty);
+#endif /* #ifdef _TRACE_GL_MOVEAPOINT */
+		      
 #endif /* _GL */
 		      lastx = newx;
 		      lasty = newy;
@@ -1346,9 +1374,9 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
 				   ViewFrameTable[frame - 1].FrMagnification);
 	      ModifyPointInPolyline (Bbuffer, point, newx, newy);
 	      /* update the abstract box buffer */
-	      newx = (int) ((float) newx * ratioX);
-	      newy = (int) ((float) newy * ratioY);
-	      ModifyPointInPolyline (Pbuffer, point, newx, newy);
+	      newx1 = (int) ((float) newx * ratioX);
+	      newy1 = (int) ((float) newy * ratioY);
+	      ModifyPointInPolyline (Pbuffer, point, newx1, newy1);
 #endif
 	      ret = 1;
 	    }
@@ -1493,10 +1521,30 @@ void PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   Gdc = GetDC (FrRef[frame]);
 #endif /* _WINDOWS */
 
+#ifdef _TRACE_GL_POLYMODIF
+	printf("Bbuffer (before MoveApoint):\tp0=(%d,%d)\tp1=(%d,%d)\tp2=(%d,%d)\n",
+	    Pbuffer->BuPoints[0].XCoord,
+	    Pbuffer->BuPoints[0].YCoord,
+	    Pbuffer->BuPoints[1].XCoord,
+	    Pbuffer->BuPoints[1].YCoord,
+	    Pbuffer->BuPoints[2].XCoord,
+	    Pbuffer->BuPoints[2].YCoord );
+#endif /* #ifdef _TRACE_GL_LINEMODIF */
+
   /* get the current point */
   RedrawPolyLine (frame, *xOrg, *yOrg, Bbuffer, nbpoints, point, close,
   &x1, &y1, &lastx, &lasty, &x3, &y3);
   MoveApoint (pBox, frame, *xOrg, *yOrg, x1, y1, x3, y3, lastx, lasty, point, x, y, width, height, Pbuffer, Bbuffer, 0);
+
+#ifdef _TRACE_GL_POLYMODIF
+	printf("Bbuffer (after MoveApoint):\tp0=(%d,%d)\tp1=(%d,%d)\tp2=(%d,%d)\n",
+	    Pbuffer->BuPoints[0].XCoord,
+	    Pbuffer->BuPoints[0].YCoord,
+	    Pbuffer->BuPoints[1].XCoord,
+	    Pbuffer->BuPoints[1].YCoord,
+	    Pbuffer->BuPoints[2].XCoord,
+	    Pbuffer->BuPoints[2].YCoord );
+#endif /* #ifdef _TRACE_GL_LINEMODIF */
 
 #if defined(_WINDOWS) && !defined(_GL)
   ReleaseDC (FrRef[frame], Gdc);
@@ -1655,13 +1703,100 @@ void LineModification (int frame, PtrBox pBox, int point, int *xi, int *yi)
   int                 x, y, xorg, yorg;
   int                 lastx, lasty;
   int                 boxType;
-
-  *xi = *yi = 0;
+  int 		      boxNChars;
+  char 		      boxAbPolyLineShape;
+  
   if (pBox == NULL || pBox->BxAbstractBox == NULL || pBox->BxAbstractBox->AbEnclosing == NULL)
     return;
 
   /* Allocate a polyline buffer to simulate a polyline */ 
   GetTextBuffer (&pBuffer);
+
+  /* store current points in the buffer:
+     positions are relative to the parent box origin */
+  pFrame = &ViewFrameTable[frame - 1];
+  x = 0;
+  y = 0;
+  switch (point)
+    {
+    case 1:
+      /* '1' is selected (x,y) so '7' is the next point (x1,y1)
+       *	<1>    3
+       *	   +
+       *	     +
+       *	 5     7
+       */
+      x1 = x + pBox->BxWidth;
+      y1 = y + pBox->BxHeight;
+      break;
+    case 3:
+      /* '3' is selected (x,y) so '5' is the next point (x1,y1)
+       *	 1    <3>
+       *	     +
+       *	   +  
+       *	 5     7
+       */
+      x1 = x;
+      x += pBox->BxWidth;
+      y1 = y + pBox->BxHeight;
+      break;
+      
+      /*
+       * TODO 
+       * I dont understand case 5 and case 7
+       * this stuff works but I dont understand why ...
+       * I think the calculated points coordinates are wrong
+       * 
+       * */
+
+    case 5:
+      /* '5' is selected (x,y) so '3' is the next point (x1,y1)
+       *	 1     3
+       *	     +
+       *	   +  
+       *	<5>    7
+       */
+      x1 = x;
+      x += pBox->BxWidth;
+      y1 = y;
+      y += pBox->BxHeight;
+      break;
+    case 7:
+      /* '7' is selected (x,y) so '1' is the next point (x1,y1)
+       *	 1     3
+       *	   +
+       *	     +
+       *	 5    <7>
+       */
+      x1 = x + pBox->BxWidth;
+      y1 = y;
+      y += pBox->BxHeight;
+      break;
+    default: break;
+    }
+
+/* The first point is the box bottom right point */
+pBuffer->BuPoints[0].XCoord = LogicalValue (pBox->BxWidth, UnPixel, NULL,
+				ViewFrameTable[frame - 1].FrMagnification);
+pBuffer->BuPoints[0].YCoord = LogicalValue (pBox->BxHeight, UnPixel, NULL,
+				ViewFrameTable[frame - 1].FrMagnification);
+/* The second point is the selected one (x,y) */
+pBuffer->BuPoints[1].XCoord = LogicalValue (x, UnPixel, NULL,
+				ViewFrameTable[frame - 1].FrMagnification);
+pBuffer->BuPoints[1].YCoord = LogicalValue (y, UnPixel, NULL,
+				ViewFrameTable[frame - 1].FrMagnification);
+/* The last point is the line end point (x1,y1) */
+pBuffer->BuPoints[2].XCoord = LogicalValue (x1, UnPixel, NULL,
+				ViewFrameTable[frame - 1].FrMagnification);
+pBuffer->BuPoints[2].YCoord = LogicalValue (y1, UnPixel, NULL,
+				ViewFrameTable[frame - 1].FrMagnification);
+/* 3 points in the buffer */
+pBuffer->BuLength = 3;
+  
+#if defined(_WINDOWS) && !defined(_GL)
+  Gdc = GetDC (FrRef[frame]);
+#endif /* _WINDOWS */
+
   /* get draw limits */
   draw = GetParentDraw (pBox);
   if (draw)
@@ -1678,65 +1813,58 @@ void LineModification (int frame, PtrBox pBox, int point, int *xi, int *yi)
       width = pBox->BxAbstractBox->AbEnclosing->AbBox->BxW;
       height = pBox->BxAbstractBox->AbEnclosing->AbBox->BxH;
     }
-  pBuffer->BuPoints[0].XCoord = LogicalValue (width, UnPixel, NULL,
-					      ViewFrameTable[frame - 1].FrMagnification);
-  pBuffer->BuPoints[0].YCoord = LogicalValue (height, UnPixel, NULL,
-					      ViewFrameTable[frame - 1].FrMagnification);
-
-  /* store current points in the buffer:
-     positions are relative to the parent box origin */
-  pFrame = &ViewFrameTable[frame - 1];
-  x = pBox->BxXOrg - xorg;
-  y =  pBox->BxYOrg - yorg;
-  switch (point)
-    {
-    case 1:
-      x1 = x + pBox->BxWidth;
-      y1 = y + pBox->BxHeight;
-      break;
-    case 3:
-      x1 = x;
-      x += pBox->BxWidth;
-      y1 = y + pBox->BxHeight;
-      break;
-    case 5:
-      x1 = x;
-      x += pBox->BxWidth;
-      y1 = y;
-      y += pBox->BxHeight;
-      break;
-    case 7:
-      x1 = x + pBox->BxWidth;
-      y1 = y;
-      y += pBox->BxHeight;
-      break;
-    default: break;
-    }
-  pBuffer->BuPoints[1].XCoord = LogicalValue (x, UnPixel, NULL,
-					      ViewFrameTable[frame - 1].FrMagnification);
-  pBuffer->BuPoints[1].YCoord = LogicalValue (y, UnPixel, NULL,
-					      ViewFrameTable[frame - 1].FrMagnification);
-  pBuffer->BuPoints[2].XCoord = LogicalValue (x1, UnPixel, NULL,
-					      ViewFrameTable[frame - 1].FrMagnification);
-  pBuffer->BuPoints[2].YCoord = LogicalValue (y1, UnPixel, NULL,
-					      ViewFrameTable[frame - 1].FrMagnification);
-
-#if defined(_WINDOWS) && !defined(_GL)
-  Gdc = GetDC (FrRef[frame]);
-#endif /* _WINDOWS */
-
-  /* get the current point */
-  xorg -= pFrame->FrXOrg;
-  yorg -= pFrame->FrYOrg;
+  width = PixelValue (width, UnPixel, NULL,
+		      	ViewFrameTable[frame - 1].FrMagnification);
+  height = PixelValue (height, UnPixel, NULL,
+		      	ViewFrameTable[frame - 1].FrMagnification);
+  
+  /* remember some values */
   boxType = pBox->BxAbstractBox->AbLeafType;
+  boxNChars = pBox->BxNChars;
+  boxAbPolyLineShape = pBox->BxAbstractBox->AbPolyLineShape;
+  
+  /* override some value to simulate a polyline */
   pBox->BxAbstractBox->AbLeafType = LtPolyLine;
-  RedrawPolyLine (frame, xorg, yorg, pBuffer, 3, 1, FALSE,
+  pBox->BxAbstractBox->AbPolyLineShape = 'p';
+  pBox->BxNChars = 3;
+  pBox->BxBuffer = pBuffer;
+
+#ifdef _TRACE_GL_LINEMODIF
+	printf("Bbuffer (before MoveApoint):\tp0=(%d,%d)\tp1=(%d,%d)\tp2=(%d,%d)\n",
+	    pBuffer->BuPoints[0].XCoord,
+	    pBuffer->BuPoints[0].YCoord,
+	    pBuffer->BuPoints[1].XCoord,
+	    pBuffer->BuPoints[1].YCoord,
+	    pBuffer->BuPoints[2].XCoord,
+	    pBuffer->BuPoints[2].YCoord );
+#endif /* #ifdef _TRACE_GL_LINEMODIF */
+  
+  RedrawPolyLine (frame, *xi, *yi, pBuffer, 3, 1, FALSE,
 		  &x1, &y1, &lastx, &lasty, &x3, &y3);
-  MoveApoint (pBox, frame, xorg, yorg, x1, y1, x3, y3, lastx, lasty, 1,
-	      xorg, yorg, width, height, pBuffer, pBuffer, point);
-  *xi = PixelValue (pBuffer->BuPoints[1].XCoord, UnPixel, NULL,
+  MoveApoint (	pBox,
+     		frame,
+		*xi, *yi,			/* the bounding box position */
+		x1, y1, x3, y3, lastx, lasty,	/* the pos of selected point, prev point and next points */
+	       	1,				/* the selected point, 1 for a line */
+	      	xorg, yorg, width, height, 	/* the parent box pos & size */
+		pBuffer, pBuffer,
+		0/* point*/			/* 0 because we simulate a polyline */
+     		);
+  
+#ifdef _TRACE_GL_LINEMODIF
+	printf("Bbuffer (after MoveApoint):\tp0=(%d,%d)\tp1=(%d,%d)\tp2=(%d,%d)\n",
+	    pBuffer->BuPoints[0].XCoord,
+	    pBuffer->BuPoints[0].YCoord,
+	    pBuffer->BuPoints[1].XCoord,
+	    pBuffer->BuPoints[1].YCoord,
+	    pBuffer->BuPoints[2].XCoord,
+	    pBuffer->BuPoints[2].YCoord );
+#endif /* #ifdef _TRACE_GL_LINEMODIF */
+
+/* now get the new selected point position */
+*xi = PixelValue (pBox->BxXOrg+pBuffer->BuPoints[1].XCoord, UnPixel, NULL,
 		    ViewFrameTable[frame - 1].FrMagnification);
-  *yi = PixelValue (pBuffer->BuPoints[1].YCoord, UnPixel, NULL,
+*yi = PixelValue (pBox->BxYOrg+pBuffer->BuPoints[1].YCoord, UnPixel, NULL,
 		    ViewFrameTable[frame - 1].FrMagnification);
 
 #if defined(_WINDOWS) && !defined(_GL)
@@ -1745,7 +1873,12 @@ void LineModification (int frame, PtrBox pBox, int point, int *xi, int *yi)
 
   /* Free the buffer */
   FreeTextBuffer (pBuffer);
-  pBox->BxAbstractBox->AbLeafType = boxType;
+
+  /* restore changed values */
+  pBox->BxAbstractBox->AbLeafType = boxType; 
+  pBox->BxNChars = boxNChars;
+  pBox->BxBuffer = NULL;
+  pBox->BxAbstractBox->AbPolyLineShape = boxAbPolyLineShape;
 }
 
 
