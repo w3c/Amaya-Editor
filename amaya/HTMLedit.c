@@ -2455,15 +2455,15 @@ ThotBool   name;
       attrType.AttrTypeNum = HTML_ATTR_HREF_;
    else
       attrType.AttrTypeNum = HTML_ATTR_NAME;
-
-   while (elAnchor != NULL && attr == NULL)
-     {
-	/* get the attribute of element Anchor */
-	attr = TtaGetAttribute (elAnchor, attrType);
-	if (attr == NULL && (!link || !name))
-	  /* we are not looking for any anchor */
-	  elAnchor = TtaGetTypedAncestor (elAnchor, elType);
-     }
+   if (!link || !name)
+     while (elAnchor != NULL && attr == NULL)
+       {
+	 /* get the attribute of element Anchor */
+	 attr = TtaGetAttribute (elAnchor, attrType);
+	 if (attr == NULL)
+	   /* we are not looking for any anchor */
+	   elAnchor = TtaGetTypedAncestor (elAnchor, elType);
+       }
    return elAnchor;
 }
 
