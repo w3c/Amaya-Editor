@@ -330,7 +330,7 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {"type", "script", 'A', HTML_ATTR_content_type, L_StrictValue},
    {"type", "style", 'A', HTML_ATTR_Notation, L_StrictValue},
    {"type", "ul", 'A', HTML_ATTR_BulletStyle, L_BasicValue},
-   {"type", "", SPACE, DummyAttribute, L_BasicValue},
+   {"type", "", SPACE, 0, L_BasicValue},
 
    {"usemap", "", 'A', HTML_ATTR_USEMAP, L_BasicValue},
 
