@@ -5465,11 +5465,7 @@ void                FreeAmayaStructures ()
       TtaFreeMemory (AttrHREFvalue);
       TtaFreeMemory (UserCSS);
       FreeHTMLParser ();
-#ifdef OLD_XML_PARSER
-      FreeXMLParser ();
-#else /* OLD_XML_PARSER */
       FreeXmlParserContexts ();
-#endif /* OLD_XML_PARSER */
       FreeDocHistory ();
       FreeTransform ();
       QueryClose ();

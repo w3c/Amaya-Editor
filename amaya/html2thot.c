@@ -2842,13 +2842,6 @@ static void     EndOfStartGI (char c)
 	  else
 	     strcpy (schemaName, "SVG");
 	  /* Parse the corresponding element with the XML parser */
-#ifdef OLD_XML_PARSER
-	  if (!XMLparse (stream, &CurrentBufChar, schemaName,
-			 HTMLcontext.doc, &HTMLcontext.lastElement,
-			 &HTMLcontext.lastElementClosed,
-			 HTMLcontext.language))
-	    StopParsing (HTMLcontext.doc);   /* the XML parser raised an error */
-#else /* OLD_XML_PARSER */
 	  if (!ParseIncludedXml (stream, FileBuffer, INPUT_FILE_BUFFER_SIZE,
 				 &EndOfHtmlFile, &NotToReadFile,
 				 PreviousFileBuffer, &LastCharInFileBuffer,
@@ -2859,7 +2852,6 @@ static void     EndOfStartGI (char c)
 				 &HTMLcontext.lastElementClosed,
 				 HTMLcontext.language))
 	    StopParsing (HTMLcontext.doc);   /* the XML parser raised an error */
-#endif /* OLD_XML_PARSER */
 	  /* the whole element has been read by the XML parser */
 	  /* reset the automaton state */
 	  NormalTransition = FALSE;
@@ -6597,15 +6589,9 @@ void ParseSubTree (char* HTMLbuf, Element lastelem, ThotBool isclosed,
        InputText = HTMLbuf; 
        /* InputText = HTMLbuf; */
        CurrentBufChar = 0;
-#ifdef OLD_XML_PARSER
-       if (!XMLparse (NULL, &CurrentBufChar, schemaName, doc, &lastelem,
-		      &isclosed, TtaGetDefaultLanguage()))
-	 StopParsing (doc);
-#else /* OLD_XML_PARSER */
        if (!ParseXmlSubTree (InputText, NULL, lastelem, isclosed,
 			     doc, TtaGetDefaultLanguage(), NULL))
 	 StopParsing (doc);
-#endif /* OLD_XML_PARSER */
       }
 }
 

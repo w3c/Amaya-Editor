@@ -2194,12 +2194,12 @@ static ThotBool CheckValidTransRoot (strMatch * sm, ElementType elemTypeRoot,
   ----------------------------------------------------------------------*/
 void                TransCallbackDialog (int ref, int typedata, char* data)
 {
-  int                 val, length;
-  DisplayMode         oldDisplayMode;
+  int                  val, length;
+  DisplayMode          oldDisplayMode;
   SSchema	       sch;
   Element	       elParent, elFound;
   Attribute	       attr;
-  AttributeType       attrType;
+  AttributeType        attrType;
   ThotBool	       found;
   char		       buf [MAX_LENGTH];
   SearchDomain	       domain;
@@ -2250,11 +2250,7 @@ void                TransCallbackDialog (int ref, int typedata, char* data)
 		{
 		  int error;
 		  TtaSetStructureChecking (0, TransDoc);
-#ifdef OLD_XML_PARSER
-		  XMLElementComplete (elParent, TransDoc);
-#else /* OLD_XML_PARSER */
 		  MathMLElementComplete (elParent, TransDoc, &error);
-#endif /* OLD_XML_PARSER */
 		  TtaSetStructureChecking (1, TransDoc);
 		} 
 	    }
