@@ -184,16 +184,12 @@ static unsigned char *ReadJPEG (FILE* infile, int* width, int* height,
 	{
 	  for (i = 0; i < cinfo.actual_number_of_colors; i++)
 	    {
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
 	      colrs[i].red = cinfo.colormap[0][i] << 8;
 	      colrs[i].green = cinfo.colormap[1][i] << 8;
 	      colrs[i].blue = cinfo.colormap[2][i] << 8;
 	      colrs[i].pixel = i;
-#ifdef _MOTIF
-	      colrs[i].flags = DoRed | DoGreen | DoBlue;
-#endif /* _MOTIF */
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
-        
+#endif /* #if defined(_GTK) || defined(_WX) */
 #ifdef _WINGUI
 	      colrs[i].red = cinfo.colormap[0][i];
 	      colrs[i].green = cinfo.colormap[1][i];
@@ -205,14 +201,10 @@ static unsigned char *ReadJPEG (FILE* infile, int* width, int* height,
 	{
 	  for (i = 0; i < cinfo.actual_number_of_colors; i++)
 	    {
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
 	      colrs[i].red = colrs[i].green = colrs[i].blue = cinfo.colormap[0][i] << 8;
 	      colrs[i].pixel = i;
-#ifdef _MOTIF
-	      colrs[i].flags = DoRed | DoGreen | DoBlue;
-#endif /* _MOTIF */
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */        
-        
+#endif /* #if defined(_GTK) || defined(_WX) */        
 #ifdef _WINGUI
 	      colrs[i].red = colrs[i].green = colrs[i].blue = cinfo.colormap[0][i];
 #endif /* _WINGUI */
@@ -345,7 +337,7 @@ ThotDrawable JpegCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 void JpegPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
 		int hif, FILE *fd, int bgColor)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
   ThotColorStruct     colrs[256];
   unsigned char      *data;
   int                 picW, picH;
@@ -355,7 +347,7 @@ void JpegPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
     DataToPrint (data, pres, xif, yif, wif, hif, picW, picH, fd, 100, -1,
 		 bgColor, colrs, FALSE, FALSE);
   TtaFreeMemory (data);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _GTK */
 }
 
 

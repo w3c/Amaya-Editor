@@ -753,11 +753,10 @@ ThotDrawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 	bg = TtaGetThotColor (colrs[bg].red, colrs[bg].green, colrs[bg].blue);
       imageDesc->PicBgMask = bg;
 #endif /* _WINGUI */
-      
-#if defined(_MOTIF) || defined(_GTK)      
+#ifdef _GTK
       /* register the transparent mask */
       imageDesc->PicMask = MakeMask (TtDisplay, buffer, w, h, bg, bperpix);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _GTK */
       
     }
   pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, withAlpha, grayScale);
@@ -789,7 +788,7 @@ ThotDrawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 void PngPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
 	       int hif, FILE *fd, int bgColor)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
   ThotColorStruct *colrs;
   unsigned char   *data;
   int              picW, picH;
@@ -805,7 +804,7 @@ void PngPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
   TtaFreeMemory (data);
   /* free the table of colors */
   TtaFreeMemory (colrs);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------

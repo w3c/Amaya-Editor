@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern void DisplayOpaqueGroup ( PtrAbstractBox pAb,
                                  int frame,
                                  int xmin,
@@ -42,8 +43,6 @@ extern Picture_Report PictureFileOk ( char *fileName,
                                       int *typeImage );
 extern void CreateGifLogo ( void );
 extern void InitPictureHandlers ( ThotBool printing );
-extern void GetPictHandlersList ( int *count,
-                                  char* buffer );
 extern void DrawPicture ( PtrBox box,
                           PictInfo *imageDesc,
                           int frame,
@@ -77,14 +76,13 @@ extern void LoadPicture ( int frame,
 extern int GetPictureType ( int index );
 extern int GetPictTypeIndex ( int picType );
 extern int GetPictPresIndex ( PictureScaling picPresent );
-extern void GetPictureHandlersList ( int *count,
-                                     char* buffer );
 extern void LittleXBigEndian ( unsigned char *b,
                                long n );
 extern unsigned char *GetScreenshot ( int frame,
                                       char *pngurl );
 
 #else /* __STDC__ */
+
 extern void DisplayOpaqueGroup ( PtrAbstractBox pAb,
                                    int frame,
                                    int xmin,
@@ -122,8 +120,6 @@ extern Picture_Report PictureFileOk ( char *fileName,
                                         int *typeImage );
 extern void CreateGifLogo ( void );
 extern void InitPictureHandlers ( ThotBool printing );
-extern void GetPictHandlersList ( int *count,
-                                    char* buffer );
 extern void DrawPicture ( PtrBox box,
                             PictInfo *imageDesc,
                             int frame,
@@ -157,8 +153,6 @@ extern void LoadPicture ( int frame,
 extern int GetPictureType ( int index );
 extern int GetPictTypeIndex ( int picType );
 extern int GetPictPresIndex ( PictureScaling picPresent );
-extern void GetPictureHandlersList ( int *count,
-                                       char* buffer );
 extern void LittleXBigEndian ( unsigned char *b,
                                  long n );
 extern unsigned char *GetScreenshot ( int frame,

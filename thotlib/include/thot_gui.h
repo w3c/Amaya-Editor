@@ -34,11 +34,8 @@
  *
  * */
 #include "thot_gui_windows.h"
-#include "thot_gui_motif.h"
 #include "thot_gui_gtk.h"
 #include "thot_gui_wx.h"
-#include "thot_gui_nogui.h"
-
 #endif /* THOT_GUI_H */
 
 

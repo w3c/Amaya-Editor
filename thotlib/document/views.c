@@ -563,11 +563,11 @@ void OpenCreatedView (PtrDocument pDoc, int view,
 		      page_position );
 #endif /* _WX */
       
-#if defined(_MOTIF) || defined(_GTK) || defined(_WINGUI)
+#if defined(_GTK) || defined(_WINGUI)
       frame = MakeFrame (pSS->SsName, schView,  pDoc->DocDName, X, Y,
 			 width, height, &volume, IdentDocument (pDoc),
 			 withMenu, withButton);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WINGUI) */
+#endif /* #if defined(_GTK) || defined(_WINGUI) */
       
     } 
   if (frame == 0)

@@ -39,28 +39,20 @@
 #include "picture_f.h"
 
 #ifdef _WINGUI
-  #include "wininclude.h"
+#include "wininclude.h"
 #endif /* _WINGUI */
-
 #include "application.h"
 
 #define	MAXCOLORMAPSIZE		256
-
 #ifdef _WX
-  #define COLORMAPSCALE 65536 / MAXCOLORMAPSIZE;
+#define COLORMAPSCALE 65536 / MAXCOLORMAPSIZE;
 #endif /* _WX */
-
-#ifdef _NOGUI
-  #define COLORMAPSCALE 65536 / MAXCOLORMAPSIZE;
-#endif /* _NOGUI */
-
-#if defined(_MOTIF) || defined(_GTK)
-  #define COLORMAPSCALE 65536 / MAXCOLORMAPSIZE;
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
-
+#ifdef _GTK
+#define COLORMAPSCALE 65536 / MAXCOLORMAPSIZE;
+#endif /* _GTK */
 #ifdef _WINGUI
-  #define COLORMAPSCALE 1;
-  int     PngTransparentColor;
+#define COLORMAPSCALE 1;
+int     PngTransparentColor;
 #endif /* _WINGUI */
 
   
@@ -356,14 +348,9 @@ unsigned char *ReadGIF (FILE *fd, int *w, int *h, int *ncolors, int *cpp,
 	   colrs[i].red   = GifScreen.ColorMap[0][i] * COLORMAPSCALE;
 	   colrs[i].green = GifScreen.ColorMap[1][i] * COLORMAPSCALE;
 	   colrs[i].blue  = GifScreen.ColorMap[2][i] * COLORMAPSCALE;
-
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
 	   colrs[i].pixel = i;
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
-
-#ifdef _MOTIF
-	   colrs[i].flags = DoRed | DoGreen | DoBlue;     
-#endif /* #ifdef _MOTIF */
+#endif /* #if defined(_GTK) || defined(_WX) */
 	 }
 
        for (i = GifScreen.BitPixel; i < MAXCOLORMAPSIZE; i++)
@@ -371,14 +358,9 @@ unsigned char *ReadGIF (FILE *fd, int *w, int *h, int *ncolors, int *cpp,
 	   colrs[i].red = 0;
 	   colrs[i].green = 0;
 	   colrs[i].blue = 0;
-
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
 	   colrs[i].pixel = i;
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
-
-#ifdef _MOTIF
-	   colrs[i].flags = DoRed | DoGreen | DoBlue;     
-#endif /* #ifdef _MOTIF */
+#endif /* #if defined(_GTK) || defined(_WX) */
 	 }
      }
 
@@ -421,13 +403,9 @@ unsigned char *ReadGIF (FILE *fd, int *w, int *h, int *ncolors, int *cpp,
 	       colrs[i].red   = localColorMap[0][i] * COLORMAPSCALE;
 	       colrs[i].green = localColorMap[1][i] * COLORMAPSCALE;
 	       colrs[i].blue  = localColorMap[2][i] * COLORMAPSCALE;
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
-	   colrs[i].pixel = i;
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
-
-#ifdef _MOTIF
-	   colrs[i].flags = DoRed | DoGreen | DoBlue;     
-#endif /* #ifdef _MOTIF */
+#if defined(_GTK) || defined(_WX)
+	       colrs[i].pixel = i;
+#endif /* #if defined(_GTK) || defined(_WX) */
 	     }
 
 	   for (i = bitPixel; i < MAXCOLORMAPSIZE; i++)
@@ -435,14 +413,9 @@ unsigned char *ReadGIF (FILE *fd, int *w, int *h, int *ncolors, int *cpp,
 	       colrs[i].red   = 0;
 	       colrs[i].green = 0;
 	       colrs[i].blue  = 0;
-
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
-	   colrs[i].pixel = i;
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
-
-#ifdef _MOTIF
-	   colrs[i].flags = DoRed | DoGreen | DoBlue;     
-#endif /* #ifdef _MOTIF */
+#if defined(_GTK) || defined(_WX)
+	       colrs[i].pixel = i;
+#endif /* #if defined(_GTK) || defined(_WX) */
 	     }
 	   data = ReadGifImage (fd, w, h, localColorMap,
 				BitSet (buf[8], INTERLACE), imageCount != imageNumber);
@@ -674,7 +647,7 @@ int LWZReadByte (FILE *fd, int flag, int input_code_size)
 }
 
 
-#if defined(_MOTIF) || defined(_WINGUI)
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   highbit returns position of highest set bit in 'ul' as an integer (0-31),
   or -1 if none.     
@@ -686,7 +659,7 @@ static int highbit (unsigned long ul)
   for (i = 31; ((ul & 0x80000000) == 0) && i >= 0; i--, ul <<= 1) ;
   return i;
 }
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
   highbit16 returns position of highest set bit in 'ul' as an integer (0-31),
@@ -700,7 +673,7 @@ int highbit16 (unsigned long ul)
   return i;
 }
 
-#if defined(_MOTIF) || defined(_WINGUI)
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   nbbits returns the width of a bit PicMask.
   ----------------------------------------------------------------------*/
@@ -749,10 +722,9 @@ static int nbbits (unsigned long ul)
       return (8);
    }
 }
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
+#endif /* _WINGUI */
 
-#if defined(_MOTIF) || defined(_GTK)
-#ifndef _GL
+#if defined(_GTK) && !defined(_GL)
 /*----------------------------------------------------------------------
   Make a shape  of depth 1 for display from image data.
   The parameter bperpix gives the number of bytes per pixel.
@@ -761,9 +733,6 @@ ThotPixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
 		 unsigned int bg, int bperpix)
 {
   XImage             *newmask;
-#ifdef _MOTIF
-  ThotGC              tmp_gc;
-#endif /* _MOTIF */
   ThotPixmap          pmask;
   unsigned short     *spixels;
   unsigned char      *data_ptr, *max_data;
@@ -934,261 +903,9 @@ ThotPixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
 	  data += bpl;
 	}
     }
-
-#ifdef _MOTIF
-  pmask = XCreatePixmap (TtDisplay, TtRootWindow, w, h, 1);
-  if ((pmask == (ThotPixmap) None) || (newmask == NULL))
-    {
-      if (newmask != NULL)
-	XDestroyImage (newmask);
-      if (pmask != (ThotPixmap) None)
-	XFreePixmap (TtDisplay, pmask);
-      pmask = None;
-    }
-  else
-    {
-      tmp_gc = XCreateGC (TtDisplay, pmask, 0, NULL);
-      XPutImage (TtDisplay, pmask, tmp_gc, newmask, 0, 0, 0, 0, w, h);
-      XDestroyImage (newmask);
-      XFreeGC (TtDisplay, tmp_gc);
-    }
-#endif /* _MOTIF */
   return (pmask);
 }
-#endif /* _GL */
-
-/*----------------------------------------------------------------------
-  Make an image of appropriate depth for display from image data.
-  The parameter ncolors gives the number of colors in the image.
-  ----------------------------------------------------------------------*/
-#ifdef _MOTIF
-static XImage *MakeImage (Display *dsp, unsigned char *data, int width,
-			  int height, int depth, ThotColorStruct *colrs,
-			  int ncolors, ThotBool withAlpha,
-			  ThotBool grayScale)
-{
-  XImage             *newimage = NULL;
-  unsigned char      *bit_data, *bitp;
-  unsigned long       c;
-  unsigned int        col;
-  int                 linepad, shiftnum;
-  int                 shiftstart, shiftstop, shiftinc;
-  int                 bytesperline;
-  int                 temp, ind;
-  int                 w, h;
-  unsigned char       r, g, b;
-  int                 bmap_order;
-  int                 rshift, gshift, bshift;
-  int                 useMSB;
-
-  switch (depth)
-    {
-    case 6:
-    case 8:
-      /* translate palette colors into X colors */
-      for (ind = 0; ind < ncolors; ind++)
-	{
-	  temp = TtaGetThotColor (colrs[ind].red /256,
-    				 colrs[ind].green / 256,
-   				 colrs[ind].blue / 256);
-	  colrs[ind].pixel = ColorPixel (temp);
-	}
-      bit_data = (unsigned char *) TtaGetMemory (width * height);
-      ind = 0; /* pixel index */
-      for (h = 0; h < height; h++)
-	  for (w = 0; w < width; w++)
-	    {
-	      bit_data[ind] = (unsigned char)colrs[data[ind]].pixel;
-	      ind ++;
-	    }
-      bytesperline = width;
-      newimage = XCreateImage (dsp,
-			       theVisual,
-			       depth, ZPixmap, 0, (char *) bit_data,
-			       width, height, 8, bytesperline);
-      break;
-    case 1:
-    case 2:
-    case 4:
-      /* translate palette colors into X colors */
-      for (ind = 0; ind < ncolors; ind++)
-	{
-	  temp = TtaGetThotColor (colrs[ind].red /256,
-    				 colrs[ind].green / 256,
-   				 colrs[ind].blue / 256);
-	  colrs[ind].pixel = ColorPixel (temp);
-	}
-      if (BitmapBitOrder (dsp) == LSBFirst)
-	{
-	  shiftstart = 0;
-	  shiftstop = 8;
-	  shiftinc = depth;
-	}
-      else
-	{
-	  shiftstart = 8 - depth;
-	  shiftstop = -depth;
-	  shiftinc = -depth;
-	}
-      linepad = 8 - (width % 8);
-      bit_data = (unsigned char *) TtaGetMemory (((width + linepad) * height) + 1);
-      bitp = bit_data;
-      ind = 0; /* pixel index */
-      *bitp = 0;
-      shiftnum = shiftstart;
-      for (h = 0; h < height; h++)
-	{
-	  for (w = 0; w < width; w++)
-	    {
-	      temp = ((unsigned char)colrs[data[ind++]].pixel) << shiftnum;
-	      *bitp = *bitp | temp;
-	      shiftnum = shiftnum + shiftinc;
-	      if (shiftnum == shiftstop)
-		{
-		  shiftnum = shiftstart;
-		  bitp++;
-		  *bitp = 0;
-		}
-	    }
-	  for (w = 0; w < linepad; w++)
-	    {
-	      shiftnum = shiftnum + shiftinc;
-	      if (shiftnum == shiftstop)
-		{
-		  shiftnum = shiftstart;
-		  bitp++;
-		  *bitp = 0;
-		}
-	    }
-	}
-      bytesperline = (width + linepad) * depth / 8;
-      newimage = XCreateImage (dsp,
-			       theVisual,
-			       depth, ZPixmap, 0, (char *) bit_data,
-			       (width + linepad), height, 8, bytesperline);
-      break;
-      
-    case 15:
-    case 16:
-      bit_data = (unsigned char *) TtaGetMemory (width * height * 2);
-      bitp = bit_data;
-      ind = 0; /* pixel index */
-      rshift = 0;
-      gshift = nbbits (theVisual->red_mask);
-      bshift = gshift + nbbits (theVisual->green_mask);
-      for (w = (width * height); w > 0; w--)
-	{
-	  if (ncolors == 0)
-	    {
-	      /* read the RGB from the data descriptor */
-	      r = data[ind++];
-	      if (grayScale)
-		g = b = r;
-	      else
-		{
-		  g = data[ind++];
-		  b = data[ind++];
-		}
-	      if (withAlpha)
-		/* skip the alpha channel */
-		ind++;
-	      temp = (((r << 8) & theVisual->red_mask) | 
-		      (((g << 8) >> gshift) & theVisual->green_mask) |
-		      (((b << 8) >> bshift) & theVisual->blue_mask));
-	    }
-	  else
-	    {
-	      /* use one byte per pixel */
-	      col = data[ind++];
-	      temp = ((colrs[col].red & theVisual->red_mask) | 
-		      ((colrs[col].green >> gshift) & theVisual->green_mask) |
-		      ((colrs[col].blue >> bshift) & theVisual->blue_mask));
-	    }
-	  if (BitmapBitOrder (dsp) == MSBFirst)
-	    {
-	      *bitp++ = (temp >> 8) & 0xff;
-	      *bitp++ = temp & 0xff;
-	    }
-	  else
-	    {
-	      *bitp++ = temp & 0xff;
-	      *bitp++ = (temp >> 8) & 0xff;
-	    }
-	}
-      newimage = XCreateImage (dsp,
-			       theVisual,
-			       depth, ZPixmap, 0, (char *) bit_data,
-			       width, height, 16, 0);
-      break;
-
-    case 24:
-    case 32:
-      bit_data = (unsigned char *) TtaGetMemory (width * height * 4);
-      newimage = XCreateImage (dsp,
-			       theVisual,
-			       depth, ZPixmap, 0, (char *) bit_data,
-			       width, height, 8, 0);
-
-      rshift = highbit (theVisual->red_mask) - 7;
-      gshift = highbit (theVisual->green_mask) - 7;
-      bshift = highbit (theVisual->blue_mask) - 7;
-      bmap_order = BitmapBitOrder (dsp);
-
-      bitp = bit_data;
-      ind = 0; /* pixel index */
-      useMSB = (newimage->bits_per_pixel > 24);
-      for (w = (width * height); w > 0; w--)
-	{
-	  if (ncolors == 0)
-	    {
-	      /* read the RGB from the data descriptor */
-	      r = data[ind++];
-	      if (grayScale)
-		g = b = r;
-	      else
-		{
-		  g = data[ind++];
-		  b = data[ind++];
-		}
-	      if (withAlpha)
-		/* skip the alpha channel */
-		ind++;
-	      c = ((r << rshift) | (g << gshift) | (b << bshift));
-	    }
-	  else
-	    {
-	      /* use one byte per pixel */
-	      col = data[ind++];
-	      c = (((colrs[col].red >> 8) & 0xff) << rshift) |
-		(((colrs[col].green >> 8) & 0xff) << gshift) |
-		(((colrs[col].blue >> 8) & 0xff) << bshift);
-	    }
-	  if (bmap_order == MSBFirst)
-	    {
-	      if (useMSB)
-		*bitp++ = (unsigned char) ((c >> 24) & 0xff);
-	      *bitp++ = (unsigned char) ((c >> 16) & 0xff);
-	      *bitp++ = (unsigned char) ((c >> 8) & 0xff);
-	      *bitp++ = (unsigned char) (c & 0xff);
-	    }
-	  else
-	    {
-	      *bitp++ = (unsigned char) (c & 0xff);
-	      *bitp++ = (unsigned char) ((c >> 8) & 0xff);
-	      *bitp++ = (unsigned char) ((c >> 16) & 0xff);
-	      if (useMSB)
-		*bitp++ = (unsigned char) ((c >> 24) & 0xff);
-	    }
-	}
-      break;
-    default:
-      fprintf (stderr, "gifhandler: Don't know how to format image for display of depth %d\n", depth);
-      return (None);
-    }
-   return (newimage);
-}
-#endif /* _MOTIF */
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _GTK && !_GL*/
 
 #ifdef _WINGUI
 /*----------------------------------------------------------------------
@@ -1460,23 +1177,6 @@ ThotPixmap DataToPixmap (unsigned char *image_data, int width, int height,
 		     int ncolors, ThotColorStruct *colrs,
 		     ThotBool withAlpha, ThotBool grayScale)
 { 
-#ifdef _MOTIF
-  ThotPixmap              img;
-  XImage             *image;
-  int                 size;
-
-  /* find the visual class. */
-  size = width * height;
-  if (size == 0)
-    return ((ThotPixmap)NULL); 
-  image = MakeImage (TtDisplay, image_data, width, height, TtWDepth, colrs,
-		     ncolors, withAlpha, grayScale); 
-  img = XCreatePixmap (TtDisplay, TtRootWindow, width, height, TtWDepth);
-  XPutImage (TtDisplay, img, GCimage, image, 0, 0, 0, 0, width, height);
-  XDestroyImage (image);
-  return (img);  
-#endif /* _MOTIF */
-  
 #ifdef _GTK
   ThotPixmap          img;
   unsigned long       FgPixel;
@@ -1488,25 +1188,20 @@ ThotPixmap DataToPixmap (unsigned char *image_data, int width, int height,
   gdkFgPixel.pixel = gdk_rgb_xpixel_from_rgb (FgPixel);
   gdkBgPixel.pixel = gdk_rgb_xpixel_from_rgb (BgPixel);
   /* TODO */
-
-  img = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (const gchar*)image_data, width, height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
+  img = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable,
+						 (const gchar*)image_data,
+						 width, height, TtWDepth,
+						 (GdkColor *)&gdkFgPixel,
+						 (GdkColor *)&gdkBgPixel);
   return (img);
-#endif /* !_GTK */
-  
-
+#endif /* _GTK */
 #ifdef _WINGUI
   return WIN_MakeImage (TtDisplay, image_data, width, height, TtWDepth,
 	  colrs, ncolors, withAlpha, grayScale);
 #endif /* _WINGUI */
-
-#ifdef _NOGUI
-  return 0;
-#endif /* #ifdef _NOGUI */  
-
 #ifdef _WX
   return 0;
-#endif /* #ifdef _WX */  
-
+#endif /* _WX */
 }
 
 
@@ -1519,14 +1214,11 @@ unsigned char *ReadGifToData (char *datafile, int *w, int *h, int *ncolors,
    unsigned char      *bit_data;
    FILE               *fp;
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
-   fp = fopen (datafile, "r");
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
-
-#ifdef _WINGUI
+#ifdef _WINDOWS
    fp = fopen (datafile, "rb");
-#endif /* _WINGUI */
-
+#else /* _WINDOWS */
+   fp = fopen (datafile, "r");
+#endif /* _WINDOWS */
    if (fp != NULL)
      {
 	bit_data = ReadGIF (fp, w, h, ncolors, cpp, colrs);
@@ -1551,20 +1243,19 @@ ThotDrawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 {
   ThotPixmap              pixmap = (ThotPixmap) NULL;
   ThotColorStruct     colrs[256];
+#ifdef _GL
+  unsigned char      *ptr, *cols;
+  int                 x, y;
+#else /* _GL */
 #ifdef _WINGUI
-#ifndef _GL
   unsigned short      red, green, blue;
-#endif /*_GL*/
 #endif /* _WINGUI */
+#endif /*_GL*/
   unsigned char      *buffer = NULL;
   unsigned char      *buffer2 = NULL;
   int                 w, h;
   int                 i;
   int                 ncolors, cpp;
-#ifdef _GL
-  unsigned char      *ptr, *cols;
-  int   x,y;
-#endif /*_GL*/
 
   GifTransparent = -1;
   buffer = ReadGifToData (fn, &w, &h, &ncolors, &cpp, colrs);
@@ -1572,12 +1263,7 @@ ThotDrawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   *width = w;
   *height = h;
   if (buffer == NULL)
-    {
-#ifdef _WINGUI
-      WinErrorBox (NULL, "GifCreate(1)");
-#endif /* _WINGUI */
-      return ((ThotDrawable) NULL);
-    }
+    return ((ThotDrawable) NULL);
 
   if (zoom && *xif == 0 && *yif == 0)
     {
@@ -1664,12 +1350,10 @@ ThotDrawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 			     colrs[GifTransparent].blue);
       imageDesc->PicBgMask = i;
 #endif /* _WINGUI */
-
-#if defined(_MOTIF) || defined(_GTK)      
+#ifdef _GTK
       /* register the transparent mask */
       imageDesc->PicMask = MakeMask (TtDisplay, buffer, w, h, GifTransparent, 1);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-      
+#endif /* _GTK */
     }
   TtaFreeMemory (buffer);
 #endif /*_GL*/
@@ -1835,7 +1519,7 @@ void DataToPrint (unsigned char *data, PictureScaling pres, int xif, int yif,
 void GifPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
 	       int hif, FILE *fd, int bgColor)
 {
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
   ThotColorStruct     colrs[256];
   unsigned char      *data;
   int                 picW, picH;
@@ -1847,7 +1531,7 @@ void GifPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
     DataToPrint (data, pres, xif, yif, wif, hif, picW, picH, fd, ncolors,
 		 GifTransparent, bgColor, colrs, FALSE, FALSE);
   TtaFreeMemory (data);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* defined(_GTK) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------

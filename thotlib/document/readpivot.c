@@ -98,9 +98,9 @@ static void SetImageRule (PtrElement pEl, int w, int h,
 	}
       image->PicFileName = NULL;
       image->PicPixmap = (ThotPixmap)None;
-#if ( defined(_GTK) || defined(_MOTIF) ) && !defined(_GL)
+#if defined(_GTK) && !defined(_GL)
       image->PicMask = 0;
-#endif /* #if ( defined(_GTK) || defined(_MOTIF) ) && !defined(_GL) */
+#endif /* #if defined(_GTK) && !defined(_GL) */
       image->PicType = typeimage;
       image->PicPresent = presimage;
       image->PicWArea = w;

@@ -308,9 +308,6 @@ static ThotBool CloseTextInsertionWithControl (ThotBool toNotify)
   ViewFrame          *pFrame;
   ViewSelection      *pViewSel;
   ViewSelection      *pViewSelEnd;
-#ifdef _MOTIF
-  ThotEvent              event;
-#endif /* _MOTIF */
   int                 nChars;
   int                 i, j;
   int                 ind;
@@ -485,20 +482,6 @@ static ThotBool CloseTextInsertionWithControl (ThotBool toNotify)
 	    }
 	}
     }
-
-#ifdef _MOTIF
-  /* remove waiting expose events */
-  while (XCheckMaskEvent (TtDisplay, (long) ExposureMask, (ThotEvent *) &event))
-    {
-      if (event.type == GraphicsExpose || event.type == Expose)
-	{
-	  frame = GetWindowFrame (event.xexpose.window);
-	  FrameToRedisplay (event.xexpose.window, frame, (XExposeEvent *) & event);
-	  XtDispatchEvent (&event);
-	}
-    }
-#endif /* _MOTIF */
-
   return (notified);
 }
 
@@ -1305,10 +1288,10 @@ static void LoadShape (char c, PtrLine pLine, ThotBool defaultHeight,
 	      pAb->AbElement->ElNPoints = pAb->AbVolume;
 	      pBox->BxNChars = pAb->AbVolume;
 	      DisplayPointSelection (frame, pBox, 0);
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
 	      pBox->BxXRatio = 1;
 	      pBox->BxYRatio = 1;
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _GTK */
 	    }
 
 	  /* on force le reaffichage de la boite (+ les points de selection) */
@@ -3893,13 +3876,9 @@ void TtcInclude (Document doc, View view)
   ----------------------------------------------------------------------*/
 void TtcPasteFromClipboard (Document doc, View view)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
    DisplayMode         dispMode;
    int                 frame;
-#ifdef _MOTIF
-   int                 i;
-   ThotWindow          w, wind;
-#endif /* _MOTIF */
 
    if (doc == 0)
       return;
@@ -3924,32 +3903,13 @@ void TtcPasteFromClipboard (Document doc, View view)
    dispMode = TtaGetDisplayMode (doc);
    if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (doc, DeferredDisplay);
-
-#ifdef _GTK
    ClipboardToPaste = TRUE;
-#endif /* _GTK */
-   
-#ifdef _MOTIF
-   w = XGetSelectionOwner (TtDisplay, XA_PRIMARY);
-   wind = FrRef[frame];
-   if (w == None)
-     {
-	/* it concerns a thot window -> paste the cutbuffer */
-	Xbuffer = (unsigned char *)XFetchBytes (TtDisplay, &i);
-	if (Xbuffer)
-	   PasteXClipboard (Xbuffer, i, TtaGetDefaultCharset ());
-     }
-   else
-      XConvertSelection (TtDisplay, XA_PRIMARY, XA_STRING, XA_CUT_BUFFER0,
-			 wind, CurrentTime);
-#endif /* _MOTIF */
    
    /* just manage differed enclosing rules */
    ComputeEnclosing (frame);
    if (dispMode == DisplayImmediately)
-     TtaSetDisplayMode (doc, dispMode);
-   
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+     TtaSetDisplayMode (doc, dispMode);   
+#endif /* _GTK */
 }
 
 

@@ -51,7 +51,6 @@
 
 static ThotWindow   Color_Window = 0;
 static ThotWidget   Color_Palette;
-
 #ifdef _GTK
 static ThotWidget   Color_Animation_Popup = NULL;
 static ThotWindow   Color_Window2 = 0;
@@ -59,11 +58,9 @@ static ThotWidget   Color_Palette_Extended = NULL;
 static ThotBool     ApplyFg = FALSE;
 static ThotBool     ApplyBg = FALSE;
 #endif /* _GTK */
-
-#if defined(_MOTIF) || defined(_WINGUI)
+#ifdef _WINGUI
 static ThotGC       GCkey;
-#endif /* !_GTK */
-
+#endif /* _WINGUI */
 static int          LastBg;
 static int          LastFg;
 static int          FgColor, BgColor;
@@ -77,9 +74,8 @@ static ThotBool     IsRegistered = FALSE;
 #endif
 
 #ifdef _GTK
-  #include "gtk-functions.h"
+#include "gtk-functions.h"
 #endif /* _GTK */
-
 #include "appdialogue_f.h"
 #include "actions_f.h"
 #include "changepresent_f.h"
@@ -104,95 +100,14 @@ static void ThotSelectPalette (int bground, int fground)
    /* redraw the palette */
    gtk_widget_queue_draw (GTK_WIDGET(Color_Palette));
    return;
-#endif /* !_GTK */
-
+#endif /* _GTK */
 #ifdef _WINGUI
    BgColor = bground;
    FgColor = fground;
 #endif /* _WINGUI */
-
-#ifdef _MOTIF
-   int                 x, y;
-   int                 wcase, hcase;
-   int                 w, h;
-
-   if (TtWDepth == 1)
-      /* Affiche le nom des couleurs sur un ecran N&B */
-      wcase = CharacterWidth (109, DialogFont) * 12;
-   else
-      /* Affiche les couleurs sur un ecran couleur */
-      wcase = CharacterWidth (109, DialogFont) * 4;
-
-   hcase = FontHeight (DialogFont);
-
-   if (LastBg != -1 && LastBg != bground)
-     {
-	/* eteint le background precedent */
-	x = (LastBg % COLORS_COL) * wcase;
-	y = ((LastBg / COLORS_COL) + 1) * hcase;
-	x -= 2;
-	y -= 2;
-	w = wcase + 2;
-	h = hcase + 2;
-	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + 2, y, w, 2);
-	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y, 2, h);
-	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y + h, w, 2);
-	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + w, y + 2, 2, h);
-     }
-
-   if (LastFg != -1 && LastFg != fground)
-     {
-	/* eteint le foreground precedent */
-	x = (LastFg % COLORS_COL) * wcase;
-	y = ((LastFg / COLORS_COL) + 1) * hcase;
-	w = wcase - 2;
-	h = hcase - 2;
-	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + 2, y, w, 2);
-	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y, 2, h);
-	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y + h, w, 2);
-	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + w, y + 2, 2, h);
-     }
-
-   /* nouveau background */
-   if (LastBg != bground)
-     {
-	LastBg = bground;
-	if (LastBg != -1)
-	  {
-	     x = (LastBg % COLORS_COL) * wcase;
-	     y = ((LastBg / COLORS_COL) + 1) * hcase;
-	     x -= 2;
-	     y -= 2;
-	     w = wcase + 2;
-	     h = hcase + 2;
-	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + 2, y, w, 2);
-	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y, 2, h);
-	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y + h, w, 2);
-	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + w, y + 2, 2, h);
-	  }
-     }
-
-   /* nouveau foreground */
-   if (LastFg != fground)
-     {
-	LastFg = fground;
-	if (LastFg != -1)
-	  {
-	     x = (LastFg % COLORS_COL) * wcase;
-	     y = ((LastFg / COLORS_COL) + 1) * hcase;
-	     w = wcase - 2;
-	     h = hcase - 2;
-	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + 2, y, w, 2);
-	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y, 2, h);
-	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y + h, w, 2);
-	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + w, y + 2, 2, h);
-	  }
-     }
-#endif /* _MOTIF */
 }
 
-
-#if defined(_MOTIF) || defined(_WINGUI)
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
    KillPalette
    kills the palette.
@@ -202,7 +117,7 @@ static void KillPalette (ThotWidget w, int index, caddr_t call_d)
    Color_Palette = 0;
    Color_Window = 0;
 }
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
+#endif /* _WINGUI */
 
 #ifdef _GTK
 /*----------------------------------------------------------------------
@@ -375,7 +290,7 @@ gboolean GetSelectedElementColorGTK (GtkWidget *widget, gpointer data)
 }
 #endif /* _GTK */
 
-#if defined(_MOTIF) || defined(_WINGUI)
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
    ColorsExpose
    redisplays a color keyboard.
@@ -383,12 +298,6 @@ gboolean GetSelectedElementColorGTK (GtkWidget *widget, gpointer data)
 static void ColorsExpose ()
 {
    int                 max, y, w, h;
-#ifdef _MOTIF 
-   char               *ptr;
-   register int        i;
-   int                 x;
-   int                 fground, bground;
-#endif /* _MOTIF */
    int                 wcase, hcase;
 
    if (TtWDepth == 1)
@@ -403,54 +312,9 @@ static void ColorsExpose ()
    max = NumberOfColors ();
    y = hcase;
    h = (max + COLORS_COL - 1) / COLORS_COL * hcase + y;
-#ifdef _MOTIF
-   XClearWindow (TtDisplay, Color_Window);
-
-   /* entree couleur standard */
-   if (SmallDialogFont == NULL)
-      KeyboardsLoadResources ();
-   XSetForeground (TtDisplay, TtLineGC, ColorPixel (0));
-   XFillRectangle (TtDisplay, Color_Window, TtLineGC, 0, 0, w, hcase - 2);
-   XSetForeground (TtDisplay, TtLineGC, ColorPixel (1));
-   ptr = TtaGetMessage (LIB, TMSG_STD_COLORS);
-   WChaine (Color_Window, ptr,
-	    (w / 2) - (XTextWidth ((XFontStruct *) SmallDialogFont, ptr, strlen (ptr)) / 2),
-	    0, DialogFont, TtLineGC);
-   /* grille */
-   XSetLineAttributes (TtDisplay, TtLineGC, 1, LineSolid, CapButt, JoinMiter);
-   for (x = wcase; x < w; x += wcase)
-      XDrawLine (TtDisplay, Color_Window, TtLineGC, x, y, x, h);
-   for (y = hcase; y < h; y += hcase)
-      XDrawLine (TtDisplay, Color_Window, TtLineGC, 0, y, w, y);
-   /* items */
-   if (TtWDepth == 1)
-      for (i = 0; i < max; i++)
-	{
-	   x = (i % COLORS_COL) * wcase;
-	   y = ((i / COLORS_COL) + 1) * hcase;
-	   WChaine (Color_Window, ColorName (i),
-		    x + (wcase / 2) - (XTextWidth ((XFontStruct *) SmallDialogFont, ColorName (i), strlen (ColorName (i))) / 2),
-		    y, SmallDialogFont, TtLineGC);
-	}
-   else
-      for (i = 0; i < max; i++)
-	{
-	   x = (i % COLORS_COL) * wcase;
-	   y = ((i / COLORS_COL) + 1) * hcase;
-	   XSetForeground (TtDisplay, TtLineGC, ColorPixel (i));
-	   XFillRectangle (TtDisplay, Color_Window, TtLineGC, x + 1, y + 1, wcase - 2, hcase - 2);
-	}
-   /* show the current selection */
-   fground = LastFg;
-   bground = LastBg;
-   LastFg = -1;
-   LastBg = -1;
-   ThotSelectPalette (bground, fground);
-#endif /* _MOTIF */
 }
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
 
-#if defined(_MOTIF) || defined(_WINGUI)
+
 /*----------------------------------------------------------------------
    ColorsPress
    handles a click on the color palette
@@ -458,39 +322,7 @@ static void ColorsExpose ()
 static void ColorsPress (int button, int x, int y)
 {
   int                 color, li, co;
-#ifdef _MOTIF
-  int                 wcase, hcase;
 
-  if (TtWDepth == 1)
-    /* Affiche le nom des couleurs sur un ecran N&B */
-    wcase = CharacterWidth (109, DialogFont) * 12;
-  else
-    /* Affiche les couleurs sur un ecran couleur */
-    wcase = CharacterWidth (109, DialogFont) * 4;
-  hcase = FontHeight (DialogFont);
-  /* Regarde si on n'a pas clique dans le titre */
-  if (y < hcase)
-    {
-      if (button == Button1)
-	{
-	  /* couleur de trace' standard */
-	  ModifyColor (-1, FALSE);
-	  ThotSelectPalette (LastBg, -1);
-	}
-      else
-	{
-	  /* couleur de fond standard */
-	  ModifyColor (-1, TRUE);
-	  ThotSelectPalette (-1, LastFg);
-	}
-      return;
-    }
-  li = x / wcase;
-  co = (y - hcase) / hcase;
-  color = co * COLORS_COL + li;
-#endif /* _MOTIF */
-  
-#ifdef _WINGUI
   if (y < 60 || y > 345)
     {
       if (button == Button1)
@@ -518,7 +350,6 @@ static void ColorsPress (int button, int x, int y)
   li = (y - 60) / 15;
   co = x / 39;
   color = co + li * COLORS_COL;
-#endif /* _WINGUI */
   
   if (button == Button1)
     {
@@ -542,9 +373,6 @@ static void ColorsPress (int button, int x, int y)
     }
 }
 
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
-
-#ifdef _WINGUI
 /*----------------------------------------------------------------------
  SelectANewFgColor
   ----------------------------------------------------------------------*/
@@ -805,18 +633,13 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
 }
 #endif /* _WINGUI */
 
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
 /*----------------------------------------------------------------------
    EndPalette
    Ends the display of the palette.
   ----------------------------------------------------------------------*/
 static void EndPalette (ThotWidget w, int index, caddr_t call_d)
 {
-#ifdef _MOTIF
-  XtPopdown (Color_Palette);
-#endif /* _MOTIF */
-
-#ifdef _GTK
   if (Color_Animation_Popup)
     {
       gtk_widget_hide (Color_Animation_Popup);      
@@ -824,29 +647,9 @@ static void EndPalette (ThotWidget w, int index, caddr_t call_d)
     }  
    else
      gtk_widget_hide (Color_Palette);
-#endif /* _GTK */
 }
 
-/*----------------------------------------------------------------------
-   ColorsEvent
-   handles the X events of the palette.
-  ----------------------------------------------------------------------*/
-void ColorsEvent (ThotEvent * event)
-{
-#ifdef _MOTIF
-  if (event->xbutton.window == Color_Window && Color_Window != 0)
-    {
-      if (event->type == Expose)
-	ColorsExpose ();
-      else if (event->type == ButtonPress)
-	ColorsPress (event->xbutton.button, event->xbutton.x, event->xbutton.y);
-    }
-#endif /* _MOTIF */
-  
-}
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
 
-#ifdef _GTK
 /*----------------------------------------------------------------------
    CreateColorSelectionGTK
    creates the color selection palette (used to select a specifique color)
@@ -923,6 +726,7 @@ gboolean CreateExtendedColorSelectionGTK (GtkWidget *widget, gpointer data)
   gtk_widget_show_all(GTK_WIDGET(Color_Palette_Extended));
   return TRUE;
 }
+
 /*----------------------------------------------------------------------
   Close Extended Color Selector
   ----------------------------------------------------------------------*/
@@ -931,6 +735,7 @@ gboolean CloseExtendedColorSelectionGTK (GtkWidget *widget, gpointer data)
   gtk_widget_hide (Color_Palette_Extended);
   return TRUE;
 }
+
 /*----------------------------------------------------------------------
   Close Extended Color Selector
   ----------------------------------------------------------------------*/
@@ -954,12 +759,11 @@ ThotBool ThotCreatePalette (int x, int y)
 
    LastBg = -1;
    LastFg = -1;
-
    if (HwndColorPal == NULL)
      {
-	   if (!IsRegistered)
-	   {
-		 IsRegistered = TRUE;
+       if (!IsRegistered)
+	 {
+	 IsRegistered = TRUE;
          wndThotPaletteClass.style         = CS_HREDRAW | CS_VREDRAW;
          wndThotPaletteClass.lpfnWndProc   = ThotColorPaletteWndProc;
          wndThotPaletteClass.cbClsExtra    = 0;
@@ -974,7 +778,7 @@ ThotBool ThotCreatePalette (int x, int y)
          wndThotPaletteClass.hIconSm       = LoadIcon (hInstance, iconID);
          if (!RegisterClassEx (&wndThotPaletteClass))
          return FALSE;
-	   }
+	 }
        HwndColorPal = CreateWindow ("ThotColorPalette", TtaGetMessage (LIB, TMSG_COLORS),
 				    DS_MODALFRAME | WS_POPUP | 
 				    WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
@@ -992,227 +796,6 @@ ThotBool ThotCreatePalette (int x, int y)
        DispatchMessage (&msg);
      }
 #endif /* _WINGUI */
-
-#ifdef _MOTIF
-   int                 n;
-   int                 width, height;
-   Arg                 args[MAX_ARGS];
-   XmString            title_string;
-   XmFontList          xfont;
-   XGCValues           GCmodel;
-   char                string[10];
-   ThotWidget          w;
-   ThotWidget          row;
-   ThotWidget          frame;
-
-   xfont = XmFontListCreate ((XFontStruct *) DialogFont, XmSTRING_DEFAULT_CHARSET);
-   if (SmallDialogFont == NULL)
-      SmallDialogFont = ReadFont ('L', 2, 0, 9, UnPoint);
-
-   n = 0;
-   sprintf (string, "+%d+%d", x, y);
-   XtSetArg (args[n], XmNx, (Position) x);
-   n++;
-   XtSetArg (args[n], XmNy, (Position) y);
-   n++;
-   XtSetArg (args[n], XmNallowShellResize, TRUE);
-   n++;
-   XtSetArg (args[n], XmNuseAsyncGeometry, TRUE);
-   n++;
-   Color_Palette = XtCreatePopupShell (TtaGetMessage (LIB, TMSG_COLORS),
-			   applicationShellWidgetClass, RootShell, args, n);
-/*** Cree la palette dans sa frame ***/
-   n = 0;
-   XtSetArg (args[n], XmNbackground, BgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNfontList, xfont);
-   n++;
-   title_string = XmStringCreateSimple (TtaGetMessage (LIB, TMSG_COLORS));
-   XtSetArg (args[n], XmNdialogTitle, title_string);
-   n++;
-   XtSetArg (args[n], XmNautoUnmanage, FALSE);
-   n++;
-   XtSetArg (args[n], XmNmarginWidth, 0);
-   n++;
-   XtSetArg (args[n], XmNmarginHeight, 0);
-   n++;
-   XtSetArg (args[n], XmNspacing, 0);
-   n++;
-   XtSetArg (args[n], XmNresizePolicy, XmRESIZE_GROW);
-   n++;
-   w = XmCreateBulletinBoard (Color_Palette, "Dialogue", args, n);
-   XtManageChild (w);
-   XtAddCallback (w, XmNdestroyCallback, (XtCallbackProc) KillPalette, NULL);
-   XmStringFree (title_string);
-
-/*** Cree un Row-Column pour ajouter les labels et le bouton Quit ***/
-/*** au dessus et en dessous des touches du clavier.    ***/
-   n = 0;
-   XtSetArg (args[n], XmNbackground, BgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNadjustLast, FALSE);
-   n++;
-   XtSetArg (args[n], XmNmarginWidth, 0);
-   n++;
-   XtSetArg (args[n], XmNmarginHeight, 0);
-   n++;
-   XtSetArg (args[n], XmNspacing, 0);
-   n++;
-   XtSetArg (args[n], XmNpacking, XmPACK_TIGHT);
-   n++;
-   XtSetArg (args[n], XmNorientation, XmVERTICAL);
-   n++;
-   XtSetArg (args[n], XmNresizeHeight, TRUE);
-   n++;
-   row = XmCreateRowColumn (w, "Dialogue", args, n);
-   XtManageChild (row);
-
-   /* Les labels */
-   n = 0;
-   XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNforeground, FgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNfontList, xfont);
-   n++;
-   XtSetArg (args[n], XmNbackground, BgMenu_Color);
-   n++;
-   title_string = XmStringCreateSimple (TtaGetMessage (LIB, TMSG_BUTTON_1));
-   XtSetArg (args[n], XmNlabelString, title_string);
-   n++;
-   w = XmCreateLabel (row, "Thot_MSG", args, n);
-   XtManageChild (w);
-   XmStringFree (title_string);
-   n = 0;
-   XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNforeground, FgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNfontList, xfont);
-   n++;
-   XtSetArg (args[n], XmNbackground, BgMenu_Color);
-   n++;
-   title_string = XmStringCreateSimple (TtaGetMessage (LIB, TMSG_BUTTON_2));
-   XtSetArg (args[n], XmNlabelString, title_string);
-   n++;
-   w = XmCreateLabel (row, "Thot_MSG", args, n);
-   XtManageChild (w);
-   XmStringFree (title_string);
-
-   /* Evalue la largeur et la hauteur de la palette */
-   n = 0;
-   if (TtWDepth == 1)
-      /* Affiche le nom des couleurs sur un ecran N&B */
-      width = CharacterWidth (109, DialogFont) * 12 * COLORS_COL;
-   else
-      /* Affiche les couleurs sur un ecran couleur */
-      width = CharacterWidth (109, DialogFont) * 4 * COLORS_COL;
-   height = ((NumberOfColors () + COLORS_COL - 1) / COLORS_COL + 1) * FontHeight (DialogFont);
-
-/*** Cree un DrawingArea pour contenir les touches de la palette ***/
-   n = 0;
-   XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNfontList, xfont);
-   n++;
-   XtSetArg (args[n], XmNbackground, BgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNmarginWidth, 0);
-   n++;
-   XtSetArg (args[n], XmNmarginHeight, 0);
-   n++;
-   XtSetArg (args[n], XmNwidth, (Dimension) width);
-   n++;
-   XtSetArg (args[n], XmNheight, (Dimension) height);
-   n++;
-   XtSetArg (args[n], XmNkeyboardFocusPolicy, XmPOINTER);
-   n++;
-   frame = XmCreateFrame (row, "Frame", args, n);
-   XtManageChild (frame);
-   n = 0;
-   XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNfontList, xfont);
-   n++;
-   XtSetArg (args[n], XmNbackground, BgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNmarginWidth, 0);
-   n++;
-   XtSetArg (args[n], XmNmarginHeight, 0);
-   n++;
-   XtSetArg (args[n], XmNwidth, (Dimension) width);
-   n++;
-   XtSetArg (args[n], XmNheight, (Dimension) height);
-   n++;
-   XtSetArg (args[n], XmNkeyboardFocusPolicy, XmPOINTER);
-   n++;
-   frame = XmCreateDrawingArea (frame, "", args, n);
-   XtManageChild (frame);
-
-/*** Cree un Row-Column pour contenir le bouton Quit ***/
-   n = 0;
-   XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNfontList, xfont);
-   n++;
-   XtSetArg (args[n], XmNbackground, BgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
-   n++;
-   XtSetArg (args[n], XmNmarginWidth, 100);
-   n++;
-   XtSetArg (args[n], XmNmarginHeight, 0);
-   n++;
-   row = XmCreateRowColumn (row, "Dialogue", args, n);
-   XtManageChild (row);
-
-   /* Cree si necessaire le contexte graphique des cles */
-   GCmodel.function = GXcopy;
-   GCmodel.foreground = FgMenu_Color;
-   GCmodel.background = BgMenu_Color;
-   GCkey = XCreateGC (TtDisplay, TtRootWindow, GCForeground | GCBackground | GCFunction, &GCmodel);
-
-/*** Cree le bouton Quit ***/
-   n = 0;
-   XtSetArg (args[n], XmNbackground, BgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNbottomShadowColor, BgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNforeground, FgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNfontList, xfont);
-   n++;
-   w = XmCreatePushButton (row, TtaGetMessage (LIB, TMSG_DONE), args, n);
-   XtManageChild (w);
-   XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) EndPalette, NULL);
-
-   /* Definit le bouton d'annulation comme bouton par defaut */
-   n = 0;
-   XtSetArg (args[n], XmNdefaultButton, w);
-   n++;
-   XtSetValues (Color_Palette, args, n);
-
-
-   /* Force la largeur et la hauteur de la palette */
-   XtSetArg (args[n], XmNwidth, (Dimension) width);
-   n++;
-   XtSetArg (args[n], XmNheight, (Dimension) height);
-   n++;
-   XtSetValues (frame, args, n);
-
-   XmFontListFree (xfont);
-   /* affiche la palette */
-   XtPopup (Color_Palette, XtGrabNonexclusive);
-   Color_Window = XtWindowOfObject (frame);
-   /* pas de selection precedente */
-   LastBg = -1;
-   LastFg = -1;
-#endif /* _MOTIF */
-   
 #ifdef _GTK
    /* create the color selection in GTK, it's possible to add some elements by adding it into the tmpw_vbox container */
   GtkWidget *vbox1;
@@ -1428,10 +1011,8 @@ ThotBool ThotCreatePalette (int x, int y)
   
   /* pas de selection precedente */
   LastBg = -1;
-  LastFg = -1;
-  
+  LastFg = -1;  
 #endif /* _GTK */
-  
   return TRUE;
 }
 
@@ -1662,7 +1243,6 @@ ThotBool ThotCreateModalPalette (int x, int y)
 
   return TRUE;
 }
-
 #endif /* _GTK */
 
 
@@ -1683,14 +1263,6 @@ void TtcChangeColors (Document document, View view)
    int                 KbX, KbY;
    ThotBool            selectionOK;
 
-#if defined(_MOTIF) || defined(_GTK)
-   if (ThotLocalActions[T_colors] == NULL)
-     {
-	/* Connecte le traitement des evenements */
-	TteConnectAction (T_colors, (Proc) ColorsEvent);
-     }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-
    pDoc = LoadedDocument[document - 1];
    /* demande quelle est la selection courante */
    selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
@@ -1709,16 +1281,10 @@ void TtcChangeColors (Document document, View view)
 	if (Color_Window == 0)
 	  {
 	    ConfigKeyboard (&KbX, &KbY);
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
 	    ThotCreatePalette (KbX, KbY);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _GTK */
 	  }
-
-#ifdef _MOTIF
-	else
-	  XtPopup (Color_Palette, XtGrabNonexclusive);
-#endif /* _MOTIF */
-
 #ifdef _GTK
 	else
 	  {
@@ -1726,7 +1292,6 @@ void TtcChangeColors (Document document, View view)
 	    gdk_window_raise (GTK_WIDGET(Color_Palette)->window);
 	  }
 #endif /* _GTK */
-
 	
 	/* recherche le pave concerne */
 	if (view > 100)

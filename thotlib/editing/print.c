@@ -31,10 +31,9 @@
 #include "dictionary.h"
 #include "thotcolor.h"
 #include "nodialog.h"
-
 #ifdef _WINGUI
-  #include "thotprinter_f.h"
-  #include "resource.h"
+#include "resource.h"
+#include "wininclude.h"
 #endif /* _WINGUI */
 
 #define MAX_VOLUME        10000	/* volume maximum d'une page, en octets */
@@ -55,6 +54,9 @@
 #undef THOT_EXPORT
 #define THOT_EXPORT extern	/* to avoid redefinitions */
 
+#ifdef _WINDOWS
+#include "thotprinter_f.h"
+#endif /* _WINDOWS */
 #include "select_tv.h"
 #include "page_tv.h"
 #include "modif_tv.h"
@@ -72,7 +74,7 @@ int          ColorPs;
 static PtrDocument  TheDoc;	/* le document en cours de traitement */
 static PathBuffer   DocumentDir;   /* le directory d'origine du document */
 static int          NumberOfPages;
-static char       tempDir [MAX_PATH];
+static char         tempDir [MAX_PATH];
 static ThotBool     removeDirectory;
 
 /* table des vues a imprimer */
@@ -123,11 +125,6 @@ static ThotWindow    thotWindow;
 #include "structlist_f.h"
 #include "structschema_f.h"
 #include "tree_f.h"
-
-#ifdef _WINGUI 
-  #include "wininclude.h"
-#endif /* _WINGUI */
-
 #include "glwindowdisplay.h"
 
 static int          manualFeed;
@@ -148,24 +145,21 @@ static int          LastPrinted;
 #ifdef _WX
 /* TODO : rendre le code plus propre car FrRef n'a rien a voir avec un file descriptor !!!
  * pourtant on l'utilise comme tel dans le print :( */
-ThotWindow  FrRef[MAX_FRAME + 2];
+ThotWindow      FrRef[MAX_FRAME + 2];
 #endif /* _WX */
 
 #ifdef _GTK
-  GtkWidget *window;
-  GtkWidget *pbar;
-  /* Printed page counter  */
-  static int pg_counter = 0;
-  /* permits to cancel current printing */
-  static int gabort = FALSE;
+GtkWidget       *window;
+GtkWidget       *pbar;
+/* Printed page counter  */
+static int       pg_counter = 0;
 #endif /* _GTK */
-
-static int button_quit = FALSE;
+/* permits to cancel current printing */
+static ThotBool  button_quit = FALSE;
+static ThotBool  DoAbort = FALSE;
 
 #ifdef _WINGUI
 HBITMAP          WIN_LastBitmap = 0;
-
-static BOOL      gbAbort;
 static HWND      GHwnAbort;
 static HINSTANCE hCurrentInstance;
 static int       pg_counter;
@@ -180,7 +174,6 @@ void WinErrorBox (HWND hWnd, char *source)
 
    sprintf (str, "Error - Source: %s", source);
    MessageBox (hWnd, str, "Amaya", MB_OK);
-
 }
 
 /* ----------------------------------------------------------------------
@@ -200,22 +193,22 @@ LRESULT CALLBACK AbortDlgProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
      {
      case WM_INITDIALOG:
        GHwnAbort = hwnd;
-	   /* show the little icon on the top left corner of the window */
+       /* show the little icon on the top left corner of the window */
        EnableMenuItem (GetSystemMenu (hwnd, FALSE), SC_CLOSE, MF_GRAYED);
-	   ShowWindow (hwnd, SW_NORMAL);
-	   SetFocus (hwnd);
-	   UpdateWindow (hwnd);
-	   return TRUE;
+       ShowWindow (hwnd, SW_NORMAL);
+       SetFocus (hwnd);
+       UpdateWindow (hwnd);
+       return TRUE;
        break;
 
      case WM_COMMAND:
        switch (LOWORD (wParam))
-	   {
-	   case IDCANCEL:
-       gbAbort = TRUE;
+	 {
+	 case IDCANCEL:
+	   DoAbort = TRUE;
 	   DestroyWindow (hwnd);
 	   return TRUE;
-	   }
+	 }
        break;
      }
    return FALSE;
@@ -229,16 +222,16 @@ BOOL CALLBACK AbortProc (HDC hdc, int error)
 {
    MSG msg;
 
-   while (!gbAbort && PeekMessage (&msg, NULL, 0, 0, PM_REMOVE))
-       if ( !IsDialogMessage (GHwnAbort, &msg) )
-	  {
-          TranslateMessage (&msg);
-          DispatchMessage (&msg);
-	  }
+   while (!DoAbort && PeekMessage (&msg, NULL, 0, 0, PM_REMOVE))
+     if ( !IsDialogMessage (GHwnAbort, &msg) )
+       {
+	 TranslateMessage (&msg);
+	 DispatchMessage (&msg);
+       }
 
-	/* the gbAbort function is TRUE (return is FALSE)
-	   if the user has canceled the print operation */
-   return !gbAbort;
+   /* the DoAbort function is TRUE (return is FALSE)
+      if the user has canceled the print operation */
+   return !DoAbort;
 }
 
 /* ---------------------------------------------------------------------- *
@@ -250,12 +243,11 @@ BOOL CALLBACK AbortProc (HDC hdc, int error)
 BOOL PASCAL InitPrinting(HDC hDC, HWND hWnd, HANDLE hInst, LPSTR msg)
 {
   DOCINFO         DocInfo;
-  int    xRes, yRes, xSize, ySize;
-  RECT   rect;
+  int             xRes, yRes, xSize, ySize;
+  RECT            rect;
 
-  gbAbort    = FALSE;     /* user hasn't aborted */
+  DoAbort    = FALSE;     /* user hasn't aborted */
   pg_counter = 0;         /* number of pages we have printed */
-
   if (!(GHwnAbort = CreateDialog (hInst, "Printinprogress", WIN_Main_Wd,
 				  (DLGPROC) AbortDlgProc)))
     WinErrorBox (WIN_Main_Wd, "InitPrinting: DE_LANG");
@@ -281,12 +273,9 @@ BOOL PASCAL InitPrinting(HDC hDC, HWND hWnd, HANDLE hInst, LPSTR msg)
   if (StartDoc (hDC, &DocInfo) <= 0)
       return FALSE;
   
-#ifdef _WINGUI
 #ifdef _GLPRINT
    SetupPixelFormatPrintGL (TtPrinterDC, 1);
-#endif /*_GLPRINT*/
-#endif /*_WINGUI*/
-
+#endif /* _GLPRINT */
  /* might want to call the abort proc here to allow the user to
    * abort just before printing begins */
   return TRUE;
@@ -446,10 +435,10 @@ static void PrintPageHeader (FILE *fout, int frame, PtrAbstractBox pPage, int or
 static void NotePageNumber (FILE *fout)
 {
   NumberOfPages++;
-#if defined(_MOTIF) || defined(_GTK)
+#ifndef _WINDOWS
   fprintf (fout, "%%%%Page: %d %d\n", NumberOfPages, NumberOfPages);
   fflush (fout);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -459,79 +448,51 @@ static void NotePageNumber (FILE *fout)
   ----------------------------------------------------------------------*/
 static void DrawPage (FILE *fout, int pagenum, int width, int height)
 {
-
-#ifdef _WINGUI 
+#ifdef _WINDOWS
   if (TtPrinterDC)
     EndPage (TtPrinterDC);
-#endif /* _WINGUI */
-  
-#if defined(_MOTIF) || defined(_GTK)  
+#else /* _WINDOWS */
   fprintf (fout, "%d %d %d nwpage\n", pagenum - 1, width, height);
   fflush (fout);
   /* Enforce loading the font when starting a new page */
   PostscriptFont = NULL;
   ColorPs = -1;
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-  
+#endif /* _WINDOWS */  
 }
-
-#ifdef _MOTIF
-/*----------------------------------------------------------------------
- * XWindowError is the X-Windows non-fatal errors handler.
- ----------------------------------------------------------------------*/
-static int XWindowError (Display *dpy, XErrorEvent *err)
-{
-   char                msg[200];
-
-   XGetErrorText (dpy, err->error_code, msg, 200);
-   return (0);
-}
-
-/*----------------------------------------------------------------------
-  XWindowFatalError is the X-Windows fatal errors handler.
- ----------------------------------------------------------------------*/
-static int XWindowFatalError (Display *dpy)
-{
-  if (errno != EPIPE)
-    TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
-  else
-  
-    TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
-  return (0);
-}
-#endif /* _MOTIF */
 
 
 /*----------------------------------------------------------------------
  ----------------------------------------------------------------------*/
 static void usage (char *processName) 
 {
-       fprintf (stderr, "\n\nusage: %s [-lang value] <file name>\n", processName);
-       fprintf (stderr, "       -sch <schema directories> -doc <doc directories>\n");
-       fprintf (stderr, "       -ps <psfile> | -out <printer>\n");
-       fprintf (stderr, "       [-v <view name> [...]]\n");
-       fprintf (stderr, "       [-portrait | -landscape]\n");
-       fprintf (stderr, "       [-display <display>]\n");
-       fprintf (stderr, "       [-cssa <author CSS file name> [...]]\n");
-       fprintf (stderr, "       [-cssu <user CSS file name>]\n");
-       fprintf (stderr, "       [-name <document name>]\n");
-       fprintf (stderr, "       [-npps <number of pages per sheet>]\n");
-       fprintf (stderr, "       [-bw]\t\t /* for black & white output */\n");
-       fprintf (stderr, "       [-paginate]\t /* to repaginate */\n");
-       fprintf (stderr, "       [-manualfeed]\t /* for manualfeed */\n");
-       fprintf (stderr, "       [-Fn1]\t\t /* n1: number of first page to print */\n");
-       fprintf (stderr, "       [-Ln2]\t\t /* n2: number of last page to print */\n");
-       fprintf (stderr, "       [-#n]\t\t /* n: number of copies to print */\n");
-       fprintf (stderr, "       [-Hn]\t\t /* n: left margin */\n");
-       fprintf (stderr, "       [-Vn]\t\t /* n: top margin */\n");
-       fprintf (stderr, "       [-%%n]\t\t /* n: zoom in percent */\n");
-       fprintf (stderr, "       [-emptybox]\t /* to print empty boxes */\n");
-       fprintf (stderr, "       [-wn]\t\t /* n: window number */\n");
-       fprintf (stderr, "       [-removedir]\t /* remove directory after printing */\n\n\n");
+#ifndef _WINDOWS
+  fprintf (stderr, "\n\nusage: %s [-lang value] <file name>\n", processName);
+  fprintf (stderr, "       -sch <schema directories> -doc <doc directories>\n");
+  fprintf (stderr, "       -ps <psfile> | -out <printer>\n");
+  fprintf (stderr, "       [-v <view name> [...]]\n");
+  fprintf (stderr, "       [-portrait | -landscape]\n");
+  fprintf (stderr, "       [-display <display>]\n");
+  fprintf (stderr, "       [-cssa <author CSS file name> [...]]\n");
+  fprintf (stderr, "       [-cssu <user CSS file name>]\n");
+  fprintf (stderr, "       [-name <document name>]\n");
+  fprintf (stderr, "       [-npps <number of pages per sheet>]\n");
+  fprintf (stderr, "       [-bw]\t\t /* for black & white output */\n");
+  fprintf (stderr, "       [-paginate]\t /* to repaginate */\n");
+  fprintf (stderr, "       [-manualfeed]\t /* for manualfeed */\n");
+  fprintf (stderr, "       [-Fn1]\t\t /* n1: number of first page to print */\n");
+  fprintf (stderr, "       [-Ln2]\t\t /* n2: number of last page to print */\n");
+  fprintf (stderr, "       [-#n]\t\t /* n: number of copies to print */\n");
+  fprintf (stderr, "       [-Hn]\t\t /* n: left margin */\n");
+  fprintf (stderr, "       [-Vn]\t\t /* n: top margin */\n");
+  fprintf (stderr, "       [-%%n]\t\t /* n: zoom in percent */\n");
+  fprintf (stderr, "       [-emptybox]\t /* to print empty boxes */\n");
+  fprintf (stderr, "       [-wn]\t\t /* n: window number */\n");
+  fprintf (stderr, "       [-removedir]\t /* remove directory after printing */\n\n\n");
 #ifdef _GTK
-       gtk_exit (1);
+  gtk_exit (1);
 #endif /* _GTK */	
-       exit (1);
+#endif /* _WINDOWS */  
+  exit (1);
 }
 
 /*----------------------------------------------------------------------
@@ -594,38 +555,15 @@ static void FirstFrame (char *server)
    /* Initialisation de la table des frames */
    for (i = 0; i <= MAX_FRAME; i++)
 	FrRef[i] = 0;
-   /* Ouverture du serveur X-ThotWindow */
-      /*Connexion au serveur X impossible */
-
-#ifdef _MOTIF
-   TtDisplay = XOpenDisplay (server);
-   if (!TtDisplay)
-      TtaDisplaySimpleMessage (FATAL, LIB, TMSG_UNABLE_TO_CONNECT_TO_X);
-   XSetErrorHandler (XWindowError);
-   XSetIOErrorHandler (XWindowFatalError);
-   TtScreen = DefaultScreen (TtDisplay);
-   TtRootWindow = RootWindow (TtDisplay, TtScreen);
-   TtWDepth = DefaultDepth (TtDisplay, TtScreen);
-   TtCmap = XDefaultColormap (TtDisplay, TtScreen);
-   Black_Color = BlackPixel (TtDisplay, TtScreen);
-   White_Color = WhitePixel (TtDisplay, TtScreen);
-#endif /* _MOTIF */
    
    DefaultBColor = 0;
    DefaultFColor = 1;
    InitDocColors ("thot");
-
 #ifdef _GTK
    TtDisplay = XOpenDisplay (server);
 #ifndef _GL
-#ifndef _GTK2
    /* initilize the imlib */
    gdk_imlib_init();
-#else /* _GTK2 */
-   /* initilisation for gdk rendering */
-   /* gtkv2.0 dont use imlib , it uses gdkpixbuf */
-   gdk_rgb_init();
-#endif /* _GTK2 */
    gtk_widget_push_visual(gdk_imlib_get_visual());
    gtk_widget_push_colormap(gdk_imlib_get_colormap());
 #endif /* _GL */
@@ -707,12 +645,12 @@ static void InitTable (int i, PtrDocument pDoc)
   ----------------------------------------------------------------------*/
 static int OpenPSFile (PtrDocument pDoc, int *volume)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#ifndef _WINDOWS
   FILE               *PSfile;
-  char              tmp[MAX_PATH];
-  char              fileName[256];
+  char                tmp[MAX_PATH];
+  char                fileName[256];
   int                 len;
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _WINDOWS */
   int                 i;
 
   /* Est-ce la premiere creation de frame ? */
@@ -720,15 +658,15 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
   while (FrRef[i] != 0)
     i++;
 
-#if defined(_MOTIF) || defined(_GTK)
+#ifndef _WINDOWS
   if (i == 1)
     {
       /* On construit le nom du fichier PostScript */
       strcpy (tmp, DocumentPath);
       /* On cherche le directory ou existe le .PIV */
       MakeCompleteName (pDoc->DocDName, "PIV", tmp, fileName, &len);
-      /* On construit le nom complet avec ce directory */
-      FindCompleteName (pDoc->DocDName, "ps", tmp, fileName, &len);	/* ps au lieu de PIV */
+      /* generate the full name directory/name.ps */
+      FindCompleteName (pDoc->DocDName, "ps", tmp, fileName, &len);
       if ((PSfile = fopen (fileName, "w")) == NULL)
 	TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_CANNOT_CREATE_PS), fileName);
       else
@@ -743,7 +681,6 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
 	  
 	  fprintf (PSfile, "%%%%BeginProlog\n");
 	  fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Fonctions generales%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n");
-
 
 	  fprintf (PSfile, "/setpatterndict 18 dict def\n");
 	  fprintf (PSfile, "setpatterndict begin\n");
@@ -1283,7 +1220,6 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
 	  fprintf (PSfile, "/ggr (Symbol) def\n\n");
 	  
 	  fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%% Loading font commands %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n");
-	  
 
 	  fprintf (PSfile, "/pagecounter 0 def\n\n");
 	  
@@ -1474,7 +1410,7 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
       PSfile = (FILE *) FrRef[1];
       FrRef[i] = (ThotWindow) PSfile;
     }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _WINDOWS */
 
   InitTable (i, pDoc);
   *volume = 16000;
@@ -1750,14 +1686,10 @@ static void PrintView (PtrDocument pDoc)
        SetMargins (NULL, NULL, NULL);
        /* Document sans marques de pages */
        /* probablement un graphique: il ne faut pas clipper */
-#ifdef _GTK 
-       if (gabort)
-	   return;
-#endif /* _GTK  */
+       /* control the Abort printing button */
+       if (DoAbort)
+	 return;
 #ifdef _WINGUI
-	   /* control the Abort printing button */
-       if (gbAbort)
-  	      return;
        if (TtPrinterDC)
 	 {
 	   if ((StartPage (TtPrinterDC)) <= 0)
@@ -1777,15 +1709,12 @@ static void PrintView (PtrDocument pDoc)
        do
 	 {
 #ifdef _WINGUI
-		 /* control the Abort printing button */
-		 AbortProc (TtPrinterDC, 0);
-		 if (gbAbort)
-			 return;
+	   /* control the Abort printing button */
+	   AbortProc (TtPrinterDC, 0);
 #endif /* _WINGUI */
-#ifdef _GTK 
-		 if (gabort)
-		     return;
-#endif /* _GTK  */
+	   if (DoAbort)
+	     return;
+
 	   /* cherche la premiere marque de la page suivante, en ignorant */
 	   /* les rappels de page. */
 	   pNextPageAb = NextPage (pPageAb);
@@ -1860,7 +1789,7 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
 
 #ifdef _WINGUI
   if (TtPrinterDC)
-   InitPrinting (TtPrinterDC, WIN_Main_Wd, hCurrentInstance, "Doc");
+    InitPrinting (TtPrinterDC, WIN_Main_Wd, hCurrentInstance, "Doc");
 #endif /* _WINGUI */
 
   /* imprime l'une apres l'autre les vues a imprimer indiquees dans */
@@ -1868,7 +1797,7 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
   for (v = 0; v < viewsCounter; v++)
    {
 #ifdef _GTK
-      if (gabort)
+      if (DoAbort)
 	  return 1;
 #endif /* _GTK */
       CurrentView = 0;
@@ -1957,33 +1886,21 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
 #ifdef _WINGUI
   if (TtPrinterDC)
     {
-    if (gbAbort)
-      AbortDoc (TtPrinterDC);
-    else 
-      {
-	/* remove the Abort window */
-	DestroyWindow (GHwnAbort);
-	
-	/* end the document */
-	if ((EndDoc (TtPrinterDC)) <= 0)
-	  WinErrorBox (NULL, "PrintDocument (2)");    
-      }
-    GHwnAbort = NULL;
-    return 0;
+      if (DoAbort)
+	AbortDoc (TtPrinterDC);
+      else 
+	{
+	  /* remove the Abort window */
+	  DestroyWindow (GHwnAbort);
+	  /* end the document */
+	  if ((EndDoc (TtPrinterDC)) <= 0)
+	    WinErrorBox (NULL, "PrintDocument (2)");    
+	}
+      GHwnAbort = NULL;
+      return 0;
     }
-  else
-    {
-    if (firstFrame != 0)
-      {
-      ClosePSFile (firstFrame);
-      return (0); /** The .ps file was generated **/
-      }
-    else
-      return (-1); /** The .ps file was not generated for any raison **/
-    }
-#endif /* _WINGUI */
-  
-#if defined(_MOTIF) || defined(_GTK)  
+#endif /* _WINGUI */ 
+#ifndef _WINDOWS
   if (firstFrame != 0)
     {
       ClosePSFile (firstFrame);
@@ -1991,12 +1908,7 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
     }
   else
       return (-1); /** The .ps file was not generated for any raison **/
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-
-#ifdef _WX
-  // TODO
-  return (-1);
-#endif /* _WX */
+#endif /* _WINDOWS */
 }
 
 
@@ -2019,45 +1931,29 @@ ThotBool PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb,
   int                 h;
   ThotBool            stop, emptyImage;
 #ifdef _GTK
-  char title_label[50];
+  char                title_label[50];
 #endif /* _GTK */
 
-#ifdef PRINT_DEBUG
-  FILE              *list;
-  char               localname[50];
-  static int           n = 1;
-
-  sprintf (localname, "/tmp/printpave%d.debug", n);
-  n++;
-  list = fopen (localname, "w");
-  NumberAbsBoxes (rootAbsBox);
-  ListAbsBoxes(rootAbsBox, 1, list);
-  fclose (list);
-#endif
+  /* control the Abort printing button */
+  if (DoAbort)
+    return (FALSE);
 
 #ifdef _GTK
-  if (gabort)
-    return (FALSE);
   pg_counter++;
   sprintf(title_label, "%s [ %i ]", TtaGetMessage(LIB, TMSG_LIB_PRINT), pg_counter);
   gtk_window_set_title (GTK_WINDOW (window),title_label);			 
   while (gtk_events_pending())
     gtk_main_iteration();
 #endif /* _GTK */
-
 #ifdef _WINGUI
-  /* control the Abort printing button */
-  if (gbAbort)
-    return (FALSE);
   if (TtPrinterDC)
     {
       if ((StartPage (TtPrinterDC)) <= 0)
         WinErrorBox (NULL, "PrintOnePage (1)");
       /* control the Abort printing button */
 	  AbortProc (TtPrinterDC, 0);
-      if (gbAbort)
+      if (DoAbort)
         return (FALSE);
-      /***/
       /* update and display the number of pages we have printed */
       {
 	char print_msg [20];
@@ -2065,7 +1961,6 @@ ThotBool PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb,
 	sprintf (print_msg, "Page: %d", pg_counter);
 	SetWindowText (GetDlgItem (GHwnAbort, IDC_PAGENO), print_msg);
       }
-      /***/
     }
   else
 #endif /* _WINGUI */
@@ -2206,37 +2101,6 @@ ThotBool PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb,
   return (TRUE);
 }
 
-/*----------------------------------------------------------------------
-   ClientSend
-   Send a message to the editor.
-  ----------------------------------------------------------------------*/
-static void  ClientSend (ThotWindow clientWindow, char *name, int messageID)
-{
-  
-#ifdef _MOTIF
-   Atom                atom;
-   XClientMessageEvent event;
-
-   if (clientWindow == 0)
-     fprintf (stderr, TtaGetMessage (LIB, messageID), name);
-   else
-     {
-       event.type = ClientMessage;
-       event.display = TtDisplay;
-       atom = XInternAtom (TtDisplay, "THOT_MESSAGES", FALSE);
-       event.message_type = atom;
-       event.send_event = TRUE;
-       event.window = clientWindow;
-       event.format = 32;
-       atom = XInternAtom (TtDisplay, name, FALSE);
-       event.data.l[0] = atom;
-       event.data.l[1] = messageID;
-       XSendEvent (TtDisplay, clientWindow, TRUE, NoEventMask, (ThotEvent *) & event);
-       XSync (TtDisplay, FALSE);
-     }
-#endif /* _MOTIF */
-
-}
 
 /*----------------------------------------------------------------------
    DisplayConfirmMessage
@@ -2244,16 +2108,10 @@ static void  ClientSend (ThotWindow clientWindow, char *name, int messageID)
   ----------------------------------------------------------------------*/
 void DisplayConfirmMessage (char *text)
 {
-
 #ifdef _GTK
     gtk_window_set_title (GTK_WINDOW (window),text); 
     button_quit = TRUE;
 #endif /* _GTK */
-    
-#if defined(_MOTIF) || defined(_WINGUI)
-  ClientSend (thotWindow, text, TMSG_LIB_STRING);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-  
 }
 
 /*----------------------------------------------------------------------
@@ -2264,31 +2122,22 @@ void DisplayMessage (char *text, int msgType)
 {
   if (msgType == FATAL)
     {
-
 #ifdef _GTK
       gtk_window_set_title (GTK_WINDOW (window),text);
       button_quit = TRUE;
 #endif /* _GTK */
-
-#if defined(_MOTIF) || defined(_WINGUI)      
-      ClientSend (thotWindow, text, TMSG_LIB_STRING);
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
-      
       /* if the request comes from the Thotlib we have to remove the directory */
       if (removeDirectory)
 	{
 	  if ((unlink (tempDir)) == -1)
 	    fprintf (stderr, "Cannot remove directory %s\n", tempDir);
 	}
-      
 #ifdef _GTK 
-      gtk_main_iteration_do(TRUE);
+      gtk_main_iteration_do (TRUE);
 #endif /* _GTK */
-      
-#if defined(_MOTIF) || defined(_WINGUI)      
+#if _WINGUI
       exit (1);
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
-      
+#endif /* _WINGUI */
     }
 }
 
@@ -2343,19 +2192,25 @@ static void LoadReferedDocuments (PtrDocument pDoc)
 }
 
 #ifdef _GTK
-/* Callback that cancel printing */
-void set_cancel( GtkWidget    *widget, void *nothing )
+/*----------------------------------------------------------------------
+  Callback that cancel printing
+  ----------------------------------------------------------------------*/
+void set_cancel (GtkWidget *widget, void *nothing)
 {
-    if (button_quit){
-	gtk_main_quit();
-	gtk_exit (1);
+  if (button_quit)
+    {
+      gtk_main_quit();
+      gtk_exit (1);
     }
-    else
-	gabort = TRUE;
+  else
+    DoAbort = TRUE;
 }
-/* Create and display dialog box 
-   that permits cancel and viewing page number */
-void gtk_print_dialog(){
+
+/*----------------------------------------------------------------------
+  Create and display dialog box that permits cancel and viewing page number
+  ----------------------------------------------------------------------*/
+void gtk_print_dialog ()
+{
   GtkWidget *button;
   GtkWidget *vbox;
   char title_label[50];
@@ -2364,7 +2219,6 @@ void gtk_print_dialog(){
    window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
    gtk_window_set_policy (GTK_WINDOW (window), TRUE, TRUE, TRUE);
    gtk_window_set_default_size(GTK_WINDOW (window), 200, 60);
-
 
    gtk_container_set_border_width (GTK_CONTAINER (window), 0);
    sprintf(title_label, "%s [    ]", TtaGetMessage(LIB, TMSG_LIB_PRINT)); 
@@ -2393,18 +2247,12 @@ void gtk_print_dialog(){
     gtk_widget_show (window);
     /* Force display */
     while (gtk_events_pending ())
-	gtk_main_iteration ();
+      gtk_main_iteration ();
 }
-
 #endif /* _GTK */	    
 
 #ifdef _GLPRINT
-
-#include <windows.h>
-#include "resource.h"
 #include "commdlg.h"
-#include "wininclude.h"
-
 static PRINTDLG     Pdlg;
 static ThotWindow   PrintForm = NULL;
 static ThotBool     LpInitialized = FALSE;
@@ -2567,22 +2415,14 @@ int makeArgcArgv (HINSTANCE hInst, char*** pArgv, char* cmdLine)
 /*----------------------------------------------------------------------
    Main program                                                           
   ----------------------------------------------------------------------*/
-#ifdef _WINGUI
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
 DLLEXPORT void PrintDoc (HWND hWnd, int argc, char **argv, HDC PrinterDC,
 			 ThotBool isTrueColors, int depth, char *tmpDocName,
 			 char *tmpDir, HINSTANCE hInst, ThotBool buttonCmd)
-{
-#else /*_GLPRINT*/
-BOOL PASCAL WinMain (HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCommand, int nShow)
-{ 
-  int        argc;
-  char**   argv;
-#endif /*_WINDOWS_DLL*/
-#else  /* _WINGUI */
+#else  /* _WINDOWS */
 int main (int argc, char **argv)
+#endif /* _WINDOWS */
 {
-#endif /* _WINGUI */
   char             *realName = NULL;
   char             *server = NULL;
   char             *pChar = NULL;
@@ -2590,30 +2430,16 @@ int main (int argc, char **argv)
   char              option [100];
   char              name [MAX_PATH];             
   char              cmd[800];
-  char              tempFile [MAX_PATH];
   int               i, l;
   int               argCounter;
   int               viewsCounter = 0;
   int               cssCounter = 0;
   int               index;
   int               length;
-  int               NCopies = 1;
+  int               NCopies;
   ThotBool          realNameFound = FALSE;
   ThotBool          viewFound = FALSE;
   ThotBool          done;
-#ifndef _WINDOWS_DLL
-#ifdef _WINGUI  
-	char *tmpDocName = NULL;
-	char *tmpDir = NULL;
-	ThotBool buttonCmd = FALSE;
-#ifdef _GLPRINT
-  HWND hWnd = NULL;
-  HDC PrinterDC = 0;
-
-  argc = makeArgcArgv (hInst, &argv, lpCommand);
-#endif /*_GLPRINT*/
-#endif /*_WINGUI*/
-#endif /*_WINDOWS_DLL*/
 
   thotWindow       = 0;
   removeDirectory = FALSE;
@@ -2655,23 +2481,25 @@ int main (int argc, char **argv)
     }
   /* Initialise la table des messages d'erreurs */
   TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);
+#ifndef _WINDOWS
+  if (!strcmp (argv[argCounter], "--help"))
+    usage (argv[0]);
+#endif /* _WINDOWS */
+
 
 #ifdef _GTK
   /* Initialization of gtk libraries */
   gtk_init_check (&argc, &argv);
+#endif /* _GTK */
 #ifdef _GL
-   /* init an offscreen rendering context 
-    in order to use OpenGL drawing results 
-   as a base for printing. */
-   GetGLContext ();
+  /* init an offscreen rendering context 
+     in order to use OpenGL drawing results 
+     as a base for printing. */
+  GetGLContext ();
 #endif /* _GL */
+#ifdef _GTK
   gtk_print_dialog ();
 #endif /* _GTK */
-
-#if defined(_MOTIF) || defined(_GTK)
-  if (!strcmp (argv[argCounter], "--help"))
-    usage (argv[0]);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
 
   while (argCounter < argc)
     {
@@ -2885,31 +2713,11 @@ int main (int argc, char **argv)
      }
 
   FirstFrame (server);
-
-#ifdef _WINGUI 
-
-#ifndef _WINDOWS_DLL
-  {	  
-	int k, l;
-	ThotBool reuse = FALSE;
-
-	if (!TtaGetPrinterDC (reuse, &k, &l))
-  {
-	  TtaFreeMemory (realName);
-	  return 0;
-  }
-
-  }
-#else
-	if(PrinterDC)
-		TtPrinterDC = PrinterDC;
-#endif /*_WINDOWS_DLL*/
-
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
+  if (PrinterDC)
+    TtPrinterDC = PrinterDC;
   TtIsTrueColor = isTrueColors;
   TtWDepth = depth;
-#endif /*_WINDOWS_DLL*/
-
   TtWPrinterDepth = GetDeviceCaps (TtPrinterDC, PLANES);
   hCurrentInstance = hInst;
   TtDisplay = GetDC (NULL);
@@ -2922,173 +2730,131 @@ int main (int argc, char **argv)
      DOT_PER_INCH = 72;
   else 
      DOT_PER_INCH = PrinterDPI;
-#ifdef _WINDOWS_DLL
-	WIN_Main_Wd = hWnd;
-#else/*_WINDOWS_DLL*/
-	WIN_Main_Wd = NULL;
-#endif /*_WINDOWS_DLL*/
-
-  buttonCommand = buttonCmd;
-#endif /* _WINGUI */
-
-#if defined(_MOTIF) || defined(_GTK)  
+  WIN_Main_Wd = hWnd;
+#else /* _WINDOWS */
   DOT_PER_INCH = 90;
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _WINDOWS */
   
-   /* Initialisation des polices de caracteres */
-   InitDialogueFonts ("thot");
-   /* Initialise the color table */
-   NColors = MAX_COLOR;
-   RGB_Table = RGB_colors;
-   Color_Table = Name_colors;
+  /* Initialisation des polices de caracteres */
+  InitDialogueFonts ("thot");
+  /* Initialise the color table */
+  NColors = MAX_COLOR;
+  RGB_Table = RGB_colors;
+  Color_Table = Name_colors;
 
-   /* initialise the list of loaded document */
-   for (i = 0; i < MAX_DOCUMENTS; i++)
-     LoadedDocument[i] = NULL;
+  /* initialise the list of loaded document */
+  for (i = 0; i < MAX_DOCUMENTS; i++)
+    LoadedDocument[i] = NULL;
 
-   /* Initialise the table of default actions */
-   for (i = 0; i < MAX_LOCAL_ACTIONS; i++)
-     ThotLocalActions[i] = NULL;
+  /* Initialise the table of default actions */
+  for (i = 0; i < MAX_LOCAL_ACTIONS; i++)
+    ThotLocalActions[i] = NULL;
 
-   /* Initialise Picture Drivers for printing */
-   InitPictureHandlers (TRUE);
+  /* Initialise Picture Drivers for printing */
+  InitPictureHandlers (TRUE);
 
-   /* initialise un contexte de document */
-   i = 0;
-   CreateDocument (&TheDoc, &i);
+  /* initialise un contexte de document */
+  i = 0;
+  CreateDocument (&TheDoc, &i);
 
-   /* load the document */
-   if (TheDoc != NULL)
-     {
-       /* add its directory into the DocumentPath */
-       l = strlen (DocumentDir);
-       if (l == 0)
-         strcpy (DocumentPath, tempDir);
-       else
-         sprintf (DocumentPath, "%s%c%s", tempDir, PATH_SEP, DocumentDir);
-
-       if (!OpenDocument (name, TheDoc, TRUE, FALSE, NULL, FALSE, FALSE))
-         TheDoc = NULL;
-     }
-   if (TheDoc != NULL)
-     {
-       /* the document is loaded */
-       /* load CSS files and apply CSS rules */
-       for (i = 0; i < cssCounter; i++)
-	 LoadStyleSheet (CSSName[i], 1, NULL, NULL, CSS_ALL,
-			 CSSOrigin[i] == 'u');
-       
-       /* load all referred document before printing */
-       LoadReferedDocuments (TheDoc);
-       
-       if (TypeHasException (ExcNoPaginate, TheDoc->DocSSchema->SsRootElem,
-			     TheDoc->DocSSchema))
-	 /* Don't paginate a document with the exception NoPaginate */
-	 Repaginate = 0;
-
-       /* Start the printing process */
-       if (PrintDocument (TheDoc, viewsCounter) == 0)
-	 {
-	   if (!strcmp (destination, "PSFILE"))
-	     {
-         
-#ifdef _WINGUI 
-	       sprintf (cmd, "%s%c%s.ps", tempDir, DIR_SEP, name);
-	       CopyFile (cmd, printer, FALSE);
-#endif  /* !_WINGUI */
-
-#if defined(_MOTIF) || defined(_GTK)         
-	       sprintf (cmd, "/bin/mv %s%c%s.ps %s", tempDir, DIR_SEP, name, printer);
-	       if (system (cmd) != 0)
-	         ClientSend (thotWindow, printer, TMSG_CANNOT_CREATE_PS);
-	       else
-	         ClientSend (thotWindow, realName, TMSG_DOC_PRINTED);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-         
-	     }
-	   else
-	     {
-#if defined(_MOTIF) || defined(_GTK)
-	       if (NCopies > 1)
-		 sprintf (cmd, "%s -#%d -T%s %s/%s.ps", printer, NCopies, realName, tempDir, name);
-	       else
-		 sprintf (cmd, "%s %s/%s.ps", printer, tempDir, name);
-	       
-	       if (system (cmd) != 0)
-		 ClientSend (thotWindow, cmd, TMSG_UNKNOWN_PRINTER);
-	       else
-		 ClientSend (thotWindow, realName, TMSG_DOC_PRINTED);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-	     }
-	 }
-       else
-	 {
-           sprintf(tempFile, "%s/%s.ps", tempDir, name);
-	   ClientSend (thotWindow, tempFile, TMSG_CANNOT_CREATE_PS);
-	 }
-     }
-   
-   /* if the request comes from the Thotlib we have to remove the directory */
-   if (removeDirectory)
+  /* load the document */
+  if (TheDoc != NULL)
     {
-#ifdef _WINGUI
+      /* add its directory into the DocumentPath */
+      l = strlen (DocumentDir);
+      if (l == 0)
+	strcpy (DocumentPath, tempDir);
+      else
+	sprintf (DocumentPath, "%s%c%s", tempDir, PATH_SEP, DocumentDir);
+      
+      if (!OpenDocument (name, TheDoc, TRUE, FALSE, NULL, FALSE, FALSE))
+	TheDoc = NULL;
+    }
+  if (TheDoc != NULL)
+    {
+      /* the document is loaded */
+      /* load CSS files and apply CSS rules */
+      for (i = 0; i < cssCounter; i++)
+	LoadStyleSheet (CSSName[i], 1, NULL, NULL, CSS_ALL,
+			CSSOrigin[i] == 'u');
+      
+      /* load all referred document before printing */
+      LoadReferedDocuments (TheDoc);
+      
+      if (TypeHasException (ExcNoPaginate, TheDoc->DocSSchema->SsRootElem,
+			    TheDoc->DocSSchema))
+	/* Don't paginate a document with the exception NoPaginate */
+	Repaginate = 0;
+      
+      /* Start the printing process */
+      if (PrintDocument (TheDoc, viewsCounter) == 0)
+	{
+	  if (!strcmp (destination, "PSFILE"))
+	    {
+#ifdef _WINDOWS
+	      sprintf (cmd, "%s%c%s.ps", tempDir, DIR_SEP, name);
+	      CopyFile (cmd, printer, FALSE);
+#else  /* _WINDOWS */
+	      sprintf (cmd, "/bin/mv %s%c%s.ps %s", tempDir, DIR_SEP, name, printer);
+	      system (cmd);
+#endif  /* _WINDOWS */         
+	    }
+#ifndef _WINDOWS
+	  else
+	    {
+	      sprintf (cmd, "%s %s/%s.ps", printer, tempDir, name);
+	      system (cmd);
+	    }
+#endif  /* _WINDOWS */    
+	}
+    }
+   
+  /* if the request comes from the Thotlib we have to remove the directory */
+  if (removeDirectory)
+    {
+#ifdef _WINDOWS
       if (!strcmp (destination, "PSFILE"))
 	DeleteFile (cmd);
       else
 	{
-#ifdef _WINDOWS_DLL
 	  sprintf (name, "%s\\%s.PIV", tmpDir, tmpDocName); 
-#endif /*_WINDOWS_DLL*/ 
 	  DeleteFile (name);
 	  if (tmpDir)
-	  {
-		length = strlen (tmpDir);
-	  /* remove CSS files in the temporary directory */
-	  for (i = 0; i < cssCounter; i++)
 	    {
-	      if (CSSName[i] && TtaFileExist (CSSName[i]) &&
-		  strncmp(CSSName[i], tmpDir, length) == 0)
-		DeleteFile (CSSName[i]);
-	      TtaFreeMemory (CSSName[i]);
-	      CSSName[i] = NULL;
+	      length = strlen (tmpDir);
+	      /* remove CSS files in the temporary directory */
+	      for (i = 0; i < cssCounter; i++)
+		{
+		  if (CSSName[i] && TtaFileExist (CSSName[i]) &&
+		      strncmp(CSSName[i], tmpDir, length) == 0)
+		    DeleteFile (CSSName[i]);
+		  TtaFreeMemory (CSSName[i]);
+		  CSSName[i] = NULL;
+		}
+	      if (rmdir (tempDir))
+		WinErrorBox (NULL, "PrintDoc (4)");
 	    }
-	  if (rmdir (tempDir))
-	    WinErrorBox (NULL, "PrintDoc (4)");
-	  }
-      }
-#endif  /* _WINGUI */
-      
-#if defined(_MOTIF) || defined(_GTK)      
+	}
+#else  /* _WINDOWS */
       sprintf (cmd, "/bin/rm -rf %s\n", tempDir);
-	  system (cmd);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-    
+      system (cmd);
+#endif  /* _WINDOWS */
     }
-   TtaFreeMemory (realName);
-
+  TtaFreeMemory (realName);
+  
 #ifdef _GTK
-   if (!button_quit)
-       gtk_exit (0);
-   else{      
-       gtk_main ();
-       return (0);
-       }
+  if (!button_quit)
+    gtk_exit (0);
+  else
+    {      
+      gtk_main ();
+      return (0);
+    }
+  exit (0);
 #endif /* _GTK */	
-#if defined(_MOTIF) || defined(_GTK)
-   exit (0);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-   
-#ifdef _WINGUI
-#ifdef _WINDOWS_DLL
+#ifdef _WINDOWS
    return;
-#else /*_WINDOWS_DLL*/
-	ReleaseDC (NULL, TtPrinterDC);
-	closewgl (TtPrinterDC, 1);
-	DeleteDC (TtPrinterDC);
-
-   exit (0);
-#endif /*_WINDOWS_DLL*/
-#else /* _WINGUI */
+#else /* _WINDOWS */
    return 0;
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 }

@@ -182,7 +182,7 @@ typedef BOOL        ThotBool;
 
 #endif /* _WINDOWS *//***********************************WINDOWS**/
 
-#if defined(_UNIX) || defined(MOTIF) || defined(_GTK) || defined(_NOGUI)
+#if defined(_UNIX) || defined(_GTK)
 
 /* Unix definitions */
 #define None	    0L	/* X11/X.h */
@@ -202,7 +202,7 @@ typedef ThotBool BOOL;
 #define WC_DIR_STR  "/"
 #define WC_PATH_STR ":"
 
-#endif /* #if defined(_UNIX) || defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_UNIX) || defined(_GTK) */
 
 #define ___TEXT___(str) L##str
 #ifndef TEXT

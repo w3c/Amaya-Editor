@@ -45,11 +45,11 @@ void BuildChoiceMenu (char *bufMenu, char *menuTitle, int nbEntries,
    if (natureChoice)
      {
 	menu = NumFormNature;
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
 	/* selector stating the nature of the element to create (or of the capture zone
 	   if the configuration files don't define any natures */
 	TtaNewForm (NumFormNature, 0, TtaGetMessage (LIB, TMSG_OBJECT_TYPE), TRUE, 1, 'L', D_CANCEL);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _GTK */
 	nbitem = ConfigMakeDocTypeMenu (bufMenuB, &length, FALSE);
 	if (nbitem > 0)
 	   /* the Start Up file defines the natures */
@@ -60,19 +60,19 @@ void BuildChoiceMenu (char *bufMenu, char *menuTitle, int nbEntries,
 	     else
 		length = 5;
 	     /* creates the selector */
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
 	     TtaNewSelector (NumSelectNatureName, NumFormNature,
 			     TtaGetMessage (LIB, TMSG_OBJECT_TYPE), nbitem, bufMenuB, length, NULL, TRUE, FALSE);
 	     /* sets the selector on its first entry */
 	     TtaSetSelector (NumSelectNatureName, 0, "");
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _GTK */
 	  }
 	else
 	   /* we did not create a selector, we create a capture zone having
 	      the nature of the element to create */
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
 	   TtaNewTextForm (NumSelectNatureName, NumFormNature, TtaGetMessage (LIB, TMSG_OBJECT_TYPE), 30, 1, FALSE)
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _GTK */
 	   ;
      }
    else
@@ -92,12 +92,12 @@ void BuildChoiceMenu (char *bufMenu, char *menuTitle, int nbEntries,
 	  }
 	TtaNewPopup (NumMenuElChoice, 0, menuTitle, nbEntries, bufMenuB, NULL, 'L');
      }
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
    TtaShowDialogue (menu, FALSE);
    /* waits until the user has answered to the menu and that the 
       mediator has called ChoiceMenuCallback */
    TtaWaitShowDialogue ();
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #ifdef _GTK */
 
 #endif /* IV */
 }
@@ -146,11 +146,11 @@ void BuildPasteMenu (int RefMenu, char *bufMenu, Name title,
 	src += l + 1;
      }
    TtaNewPopup (RefMenu, 0, title, nbEntries, bufMenuB, NULL, button);
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
    TtaShowDialogue (RefMenu, FALSE);
    /* waits for the user's answer */
    TtaWaitShowDialogue ();
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #ifdef _GTK */
 }
 
 

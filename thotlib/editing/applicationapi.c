@@ -167,14 +167,9 @@ ThotWidget TtaGetViewFrame (Document document, View view)
 #ifdef _WINGUI
     return (FrMainRef[frame]);
 #endif /* _WINGUI */
-  
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
     return ((ThotWidget)FrameTable[frame].WdFrame);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
-
-#if defined(_NOGUI)
-    return 0;
-#endif /* #ifdef _NOGUI */
+#endif /* #if defined(_GTK) || defined(_WX) */
 }
 #endif
 
@@ -215,9 +210,9 @@ static void ErrorHandler ()
 static void QuitHandler ()
 {
    signal (SIGINT, (void (*)(int))ErrorHandler);
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) && !defined(_WINDOWS)
+#if defined(_GTK) || defined(_WX) && !defined(_WINDOWS)
    signal (SIGQUIT, SIG_DFL);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) && !defined(_WINDOWS) */
+#endif /* #if defined(_GTK) || defined(_WX) && !defined(_WINDOWS) */
    signal (SIGTERM, (void (*)(int))ErrorHandler);
    if (ThotLocalActions [T_backuponfatal] != NULL)
      (*ThotLocalActions [T_backuponfatal]) ();
@@ -231,11 +226,11 @@ static void QuitHandler ()
      exit (1);
 #endif /* _WX && !defined(NODISPLAY) */     
    }
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) && !defined(_WINDOWS)
+#if defined(_GTK) || defined(_WX) && !defined(_WINDOWS)
    signal (SIGINT, (void (*)(int))QuitHandler);
    signal (SIGQUIT, (void (*)(int))QuitHandler);
    signal (SIGTERM, (void (*)(int))QuitHandler);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) && !defined(_WINDOWS) */
+#endif /* #if defined(_GTK) || defined(_WX) && !defined(_WINDOWS) */
 }
 
 /*----------------------------------------------------------------------
@@ -243,11 +238,11 @@ static void QuitHandler ()
   ----------------------------------------------------------------------*/
 void InitErrorHandler ()
 {
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) && !defined(_WINDOWS)
+#if defined(_GTK) || defined(_WX) && !defined(_WINDOWS)
    signal (SIGBUS, (void (*)(int))ErrorHandler);
    signal (SIGHUP, (void (*)(int))ErrorHandler);
    signal (SIGQUIT, (void (*)(int))QuitHandler);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) && !defined(_WINDOWS) */
+#endif /* #if defined(_GTK) || defined(_WX) && !defined(_WINDOWS) */
 
    signal (SIGSEGV, (void (*)(int))ErrorHandler);
 #  ifdef SIGABRT

@@ -84,18 +84,12 @@ static ThotBool IsXLFDName (char *font)
 	k++;
     }
   
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
   return (k == 14) ? TRUE : FALSE;
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-  
+#endif /* #ifdef _GTK */
 #ifdef _WINGUI
   return (k == 2) ? TRUE : FALSE;
 #endif /*_WINGUI*/
-
-#ifdef _NOGUI
-  return FALSE;
-#endif /* _NOGUI */
-
 #ifdef _WX
   return FALSE;
 #endif /* _WX */
@@ -107,7 +101,7 @@ static ThotBool IsXLFDName (char *font)
   ----------------------------------------------------------------------*/
 static int IsXLFDPatterneAFont (char *pattern)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
   char    **fontlist;
   int       count = 0;  
 
@@ -121,20 +115,13 @@ static int IsXLFDPatterneAFont (char *pattern)
 	}
     }
   return 0;
-#endif /*#if defined(_MOTIF) || defined(_GTK)*/
-  
+#endif /*#ifdef _GTK*/
 #ifdef _WINGUI
   return IsXLFDName (pattern);  
 #endif /*_WINGUI*/
-
-#ifdef _NOGUI
-  return 0;
-#endif /* _NOGUI */  
-
 #ifdef _WX
   return 0;
 #endif /* _WX */
-
 }
 #endif /*_GL*/
 

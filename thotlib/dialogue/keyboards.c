@@ -54,9 +54,9 @@ static ThotWidget   Keyboards[MAX_KEYBOARD];
 static ThotFont     KbFonts[MAX_KEYBOARD];
 static int          KbX = 800;
 static int          KbY = 100;
-#if defined(_MOTIF) || defined(_WINGUI)
-  static ThotGC       GCkey;
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
+#ifdef _WINGUI
+static ThotGC       GCkey;
+#endif /* _WINGUI */
 
 /* data for the keyboards */
 /*iso */

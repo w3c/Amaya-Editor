@@ -562,15 +562,10 @@ int TtaGetThotColor (unsigned short red, unsigned short green,
   int                 i, prev;
   unsigned int        dsquare;
   unsigned int        best_dsquare = (unsigned int) -1;
-
 #ifdef _GTK
   ThotColorStruct     col;
 #endif /* _GTK */
   ThotBool            found;
-
-#if defined(_NOGUI)
-  return 0;
-#endif /* #ifdef _NOGUI */  
    
   /*
    * lookup for the color number among the color set allocated

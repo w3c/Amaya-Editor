@@ -1263,11 +1263,9 @@ static void         ApplyPresentMod (int applyDomain)
 		      {
 			if (IndentSign != 0 && IndentValue == 0)
 			  IndentValue = 15;
-
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
 			TtaSetNumberForm (NumZoneRecess, IndentValue);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-      
+#endif /* _GTK */
 		      }
 		  }
 	      }
@@ -1530,17 +1528,16 @@ void TtcStandardGeometry (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcStandardPresentation (Document document, View view)
 {
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
    int                 i;
-   char              string[200];
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-   
+   char                string[200];
+#endif /* _GTK */
    PtrDocument         pDoc;
 
    pDoc = LoadedDocument[document - 1];
    ResetMenus ();
 
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
    /* formulaire presentation standard */
    TtaNewSheet (NumFormPresentStandard, TtaGetViewFrame (document, view), 
 		TtaGetMessage (LIB, TMSG_STD_PRES),
@@ -1562,12 +1559,12 @@ void TtcStandardPresentation (Document document, View view)
 		TtaGetMessage (LIB, TMSG_STD_PRES), 5, string, NULL, TRUE);
    /* annule toutes les options du choix multiple Presentation standard */
    TtaSetToggleMenu (NumMenuPresentStandard, -1, FALSE);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
    /* active le formulaire "Presentation standard" */
    DocModPresent = pDoc;
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
    TtaShowDialogue (NumFormPresentStandard, TRUE);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -1679,7 +1676,6 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	  FontFamily = 1;
 	  break;
 	}
-      /*ApplyPresentMod (Apply_FontFamily);*/
       break;
 
     case NumMenuCharFontStyle:	/* style des caracteres */
@@ -1694,7 +1690,6 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	  StdFontStyle = FALSE;
 	  FontStyle = val;
 	}
-      /*ApplyPresentMod (Apply_FontStyle);*/
       break;
 
     case NumMenuCharFontWeight:	/* graisse des caracteres */
@@ -1709,7 +1704,6 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	  StdFontWeight = FALSE;
 	  FontWeight = val;
 	}
-      /*ApplyPresentMod (Apply_FontWeight);*/
       break;
     case NumMenuUnderlineType:		/* style du souligne */
       /* l'entree 2 est supprimee dans cette version */
@@ -1738,7 +1732,6 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	  StdUnderline = FALSE;
 	  UnderlineStyle = val;
 	}
-      /*ApplyPresentMod (Apply_Underline);*/
       break;
     case NumMenuUnderlineWeight:	/* epaisseur du souligne */
       if (val == 2)	/* entree 2: Standard */
@@ -1752,7 +1745,6 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	  StdLineWeight = FALSE;
 	  UnderlineWeight = val;
 	}
-      /*ApplyPresentMod (Apply_UlWeight);*/
       break;
     case NumMenuCharFontSize:	/* menu des corps en points typo */
       if (val >= 0 && val < NumberOfFonts ())
@@ -1766,7 +1758,6 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	  ChngFontSize = FALSE;
 	  StdFontSize = TRUE;
 	}
-      /*ApplyPresentMod (Apply_FontSize);*/
       break;
     case NumMenuAlignment:	/* alignement des lignes */
       if (val == 4)	/* entree 4: Standard */
@@ -1780,7 +1771,6 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	  StdAlign = FALSE;
 	  Align = val + 1;
 	}
-      /*ApplyPresentMod (Apply_Align);*/
       break;
     case NumZoneRecess:	/* renfoncement de la premiere ligne */
       ChngIndent = TRUE;
@@ -1791,18 +1781,17 @@ void CallbackPresMenu (int ref, int val, char *txt)
       if (IndentSign != 0 && IndentValue == 0)
 	{
 	  IndentSign = 0;
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
 	  TtaSetMenuForm (NumMenuRecessSense, 1);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
 	}
       else if (IndentSign == 0 && IndentValue != 0)
 	{
 	  IndentSign = 1;
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
 	  TtaSetMenuForm (NumMenuRecessSense, 0);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
 	}
-      /*ApplyPresentMod (Apply_Indent);*/
       break;
     case NumMenuRecessSense:	/* sens du renfoncement de la premiere ligne */
       if (val == 2)	/* entree 2: Standard */
@@ -1824,9 +1813,9 @@ void CallbackPresMenu (int ref, int val, char *txt)
 #ifdef _WINGUI
 	      WIN_IndentValue = 15;
 #endif /* _WINGUI */
-#if defined(_GTK) || defined(_MOTIF)          
+#ifdef _GTK
 	      TtaSetNumberForm (NumZoneRecess, 15);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
 	    }
 	  else if (IndentSign == 0 && IndentValue != 0)
 	    {
@@ -1834,12 +1823,11 @@ void CallbackPresMenu (int ref, int val, char *txt)
 #ifdef _WINGUI 
 	      WIN_IndentValue = 0;
 #endif  /* _WINGUI */
-#if defined(_GTK) || defined(_MOTIF)          
+#ifdef _GTK
 	      TtaSetNumberForm (NumZoneRecess, 0);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
 	    }
 	}
-      /*ApplyPresentMod (Apply_Indent);*/
       break;
     case NumZoneLineSpacing:	/* interligne */
       ChngLineSp = TRUE;
@@ -1855,11 +1843,10 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	    i = 2;
 	  else
 	    i = 1;
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
 	  TtaSetMenuForm (NumMenuLineSpacing, i);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
 	}
-      /*ApplyPresentMod (Apply_LineSp);*/
       break;
     case NumMenuLineSpacing:	/* saisie de l'interligne par un menu */
       if (val == 3)	/* entree 3: Standard */
@@ -1876,12 +1863,10 @@ void CallbackPresMenu (int ref, int val, char *txt)
 #ifdef _WINGUI
 	  WIN_OldLineSp = OldLineSp;
 #endif  /* _WINGUI */
-#if defined(_GTK) || defined(_MOTIF)      
+#ifdef _GTK
 	  TtaSetNumberForm (NumZoneLineSpacing, OldLineSp);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-    
+#endif /* _GTK */
 	}
-      /*ApplyPresentMod (Apply_LineSp);*/
       break;
     case NumMenuStrokeStyle:
       switch (val)
@@ -1913,13 +1898,11 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	  StdLineStyle = FALSE;
 	  LineStyle = c;
 	}
-      /*ApplyPresentMod (Apply_LineStyle);*/
       break;
     case NumZoneStrokeWeight:
       ChngLineWeight = TRUE;
       StdLineWeight = FALSE;
       LineWeight = val;
-      /*ApplyPresentMod (Apply_LineWeight);*/
       break;
     case NumToggleWidthUnchanged:
       ChngLineWeight = FALSE;
@@ -1933,7 +1916,6 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	  StdTrame = FALSE;
 	  PaintWithPattern = i;
 	}
-      /*ApplyPresentMod (Apply_Trame);*/
       break;
     case NumTogglePatternUnchanged:
       ChngTrame = FALSE;
@@ -1983,25 +1965,22 @@ void TtcChangeCharacters (Document document, View view)
    PtrElement          pFirstSel, pLastSel;
    PtrElement          pEl;
    PtrAbstractBox      pAb;
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
    int                 nbItems;
    int                 max, bodyRelatSize, bodyPointSize;
    char               *s;
    char                string[MAX_TXT_LEN];
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-   
+#endif /* _GTK */
 #ifdef _WINGUI
    int                 fontNum;
-   static CHOOSEFONT   cf ; 
-   static LOGFONT      lf ;
+   static CHOOSEFONT   cf; 
+   static LOGFONT      lf;
 #endif /* _WINGUI */
-   
    int                 i;
    int                 firstChar, lastChar;
    ThotBool            selectionOK;
 
    pDoc = LoadedDocument[document - 1];
-
    /* demande quelle est la selection courante */
    selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
    if (!selectionOK)
@@ -2038,8 +2017,7 @@ void TtcChangeCharacters (Document document, View view)
 	  {
 	     /* annule les etats memorises */
 	     ResetMenus ();
-
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
 	     /* formulaire Presentation Caracteres */
 	     TtaNewSheet (NumFormPresChar, TtaGetViewFrame (document, view), 
 			  TtaGetMessage (LIB, TMSG_CHAR),
@@ -2111,7 +2089,7 @@ void TtcChangeCharacters (Document document, View view)
 	     nbItems++;
 	     TtaNewSubmenu (NumMenuCharFontSize, NumFormPresChar, 0,
 			    TtaGetMessage (LIB, TMSG_BODY_SIZE_PTS), nbItems, string, NULL, TRUE);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
        
 	     /* initialise la zone 'Famille de caracteres' */
 	     ChngFontFamily = TRUE;
@@ -2120,38 +2098,30 @@ void TtcChangeCharacters (Document document, View view)
 #ifdef _WINGUI 
 	     fontNum = FontFamily;
 #endif /* _WINGUI */
-       
-#if defined(_GTK) || defined(_MOTIF)       
+#ifdef _GTK
 	     TtaSetMenuForm (NumMenuCharFamily, FontFamily - 1);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-       
+#endif /* _GTK */
 	     /* initialise le catalogue 'Style des caracteres' */
 	     ChngFontStyle = TRUE;
 	     StdFontStyle = FALSE;
 	     FontStyle = pAb->AbFontStyle;
-       
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
 	     TtaSetMenuForm (NumMenuCharFontStyle, FontStyle);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-       
+#endif /* _GTK */
 	     /* initialise le catalogue 'Graisse des caracteres' */
 	     ChngFontWeight = TRUE;
 	     StdFontWeight = FALSE;
 	     FontWeight = pAb->AbFontWeight;
-
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
 	     TtaSetMenuForm (NumMenuCharFontWeight, FontWeight);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-
+#endif /* _GTK */
 	     /* initialise le catalogue 'Epaisseur du souligne' */
 	     ChngUnderline = TRUE;
 	     StdUnderline = FALSE;
 	     UnderlineStyle = pAb->AbUnderline;
-       
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
 	     TtaSetMenuForm (NumMenuUnderlineType, UnderlineStyle);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-       
+#endif /* _GTK */
 	     ChngLineWeight = TRUE;
 	     StdLineWeight = FALSE;
 	     UnderlineWeight = pAb->AbThickness;
@@ -2166,24 +2136,20 @@ void TtcChangeCharacters (Document document, View view)
 		i = FontRelSize (FontSize);
 	     else
 		i = pAb->AbSize;
-       
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
 	     TtaSetMenuForm (NumMenuCharFontSize, i);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-
+#endif /* _GTK */
 #ifdef _WINGUI
 	     CreateCharacterDlgWindow (TtaGetViewFrame (document, view),
 				       fontNum, FontStyle, FontWeight,
 				       UnderlineStyle, FontSize);
 #endif /* _WINGUI */
-
-    }
+	  }
 	DocModPresent = pDoc;
 
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
 	TtaShowDialogue (NumFormPresChar, TRUE);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-  
+#endif /* _GTK */
      }
 }
 
@@ -2194,7 +2160,7 @@ void TtcChangeCharacters (Document document, View view)
   associated to view number "view" (if Assoc = True).  Initializes
   and activates the corresponding form.
   ----------------------------------------------------------------------*/
-void                TtcChangeGraphics (Document document, View view)
+void TtcChangeGraphics (Document document, View view)
 {
    PtrDocument         pSelDoc;
    PtrDocument         pDoc;
@@ -2231,13 +2197,12 @@ void                TtcChangeGraphics (Document document, View view)
 	  {
 	     /* annule les etats memorises */
 	     ResetMenus ();
-
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
 	     /* feuille de dialogue Presentation Graphiques */
 	     TtaNewSheet (NumFormPresGraphics, TtaGetViewFrame (document, view), 
 			  TtaGetMessage (LIB, TMSG_GRAPHICS_PRES),
 		 1, TtaGetMessage (LIB, TMSG_APPLY), FALSE, 3, 'L', D_DONE);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
 
 	     /* sous-menu style des traits */
 	     i = 0;
@@ -2250,11 +2215,10 @@ void                TtcChangeGraphics (Document document, View view)
 	     sprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewSubmenu (NumMenuStrokeStyle, NumFormPresGraphics, 0, TtaGetMessage (LIB, TMSG_LINE_STYLE), 4, string, NULL, TRUE);
 	     /* change la police des 3 premieres entrees du style des traits */
-
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
 	     for (i = 0; i < 3; i++)
              TtaRedrawMenuEntry (NumMenuStrokeStyle, i, "icones", ThotColorNone, -1);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
        
 	     /* initialise le sous-menu style des traits */
 	     ChngLineStyle = TRUE;
@@ -2276,39 +2240,38 @@ void                TtcChangeGraphics (Document document, View view)
 		 break;
 	       }
        
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
 	     TtaSetMenuForm (NumMenuStrokeStyle, i - 1);
-
 	     /* zone de saisie epaisseur des traits */
-	     TtaNewNumberForm (NumZoneStrokeWeight, NumFormPresGraphics, TtaGetMessage (LIB, TMSG_LINE_WEIGHT), 0, 72, TRUE);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-       
+	     TtaNewNumberForm (NumZoneStrokeWeight, NumFormPresGraphics,
+			       TtaGetMessage (LIB, TMSG_LINE_WEIGHT), 0, 72, TRUE);
+#endif /* _GTK */
+
 	     ChngLineWeight = TRUE;
 	     StdLineWeight = FALSE;
 	     LineWeight = pAb->AbLineWeight;
 	     /* Toggle button Epaisseur des traits standard */
 	     sprintf (string, "B%s", TtaGetMessage (LIB, TMSG_UNCHANGED));
-
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
 	     TtaNewToggleMenu (NumToggleWidthUnchanged, NumFormPresGraphics,
 			       NULL, 1, string, NULL, TRUE);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
 
-       /* initialise la zone de saisie epaisseur des traits */
+	     /* initialise la zone de saisie epaisseur des traits */
 	     if (pAb->AbLineWeightUnit == UnPoint)
 		i = LineWeight;
 	     else
 	       {
-	          currentFontSize = PixelToPoint(PixelValue (pAb->AbSize,pAb->AbSizeUnit,
-							     pAb, ViewFrameTable[ActiveFrame - 1].FrMagnification));
-		  i = (currentFontSize * LineWeight) / 10;
-		  if ((currentFontSize * i) % 10 >= 5)
-		     i++;
+		 currentFontSize = PixelToPoint(PixelValue (pAb->AbSize,pAb->AbSizeUnit,
+							    pAb, ViewFrameTable[ActiveFrame - 1].FrMagnification));
+		 i = (currentFontSize * LineWeight) / 10;
+		 if ((currentFontSize * i) % 10 >= 5)
+		   i++;
 	       }
        
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
 	     TtaSetNumberForm (NumZoneStrokeWeight, i);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
 
 	     /* selecteur motif de remplissage */
 	     nbItems = MakeMenuPattern (string, MAX_TXT_LEN);
@@ -2321,28 +2284,26 @@ void                TtcChangeGraphics (Document document, View view)
 		  else
 		     i = nbItems;
 
-#if defined(_GTK) || defined(_MOTIF)
-		  TtaNewSelector (NumSelectPattern, NumFormPresGraphics, TtaGetMessage (LIB, TMSG_FILL_PATTERN), nbItems, string, i, NULL, TRUE, TRUE);
+#ifdef _GTK
+		  TtaNewSelector (NumSelectPattern, NumFormPresGraphics,
+				  TtaGetMessage (LIB, TMSG_FILL_PATTERN),
+				  nbItems, string, i, NULL, TRUE, TRUE);
 		  /* initialise le selecteur sur sa premiere entree */
 		  TtaSetSelector (NumSelectPattern, pAb->AbFillPattern, "");
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-      
+#endif /* _GTK */
 	       }
-	     /* Toggle button Motif de remplissage standard */
 
-#if defined(_GTK) || defined(_MOTIF)
+	     /* Toggle buttons */
+#ifdef _GTK
 	     i = 0;
 	     sprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewToggleMenu (NumTogglePatternUnchanged, NumFormPresGraphics,
 			       NULL, 1, string, NULL, TRUE);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-       
+#endif /* _GTK */
 	     DocModPresent = pDoc;
-       
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
 	     TtaShowDialogue (NumFormPresGraphics, TRUE);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-       
+#endif /* _GTK */
 	  }
      }
 }
@@ -2368,17 +2329,17 @@ void TtcChangeFormat (Document document, View view)
    int                 lineSpacingNum;
    int                 indentNum;
 #endif /* _WINGUI */
-
-#if defined(_GTK) || defined(_MOTIF)   
+#ifdef _GTK
    char                string[MAX_TXT_LEN];
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
    
    ThotBool            selectionOK;
 
    pDoc = LoadedDocument[document - 1];
 
    /* demande quelle est la selection courante */
-   selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
+   selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel, &pLastSel, &firstChar,
+				      &lastChar);
    if (!selectionOK)
      {
 	/* par defaut la racine du document */
@@ -2388,7 +2349,8 @@ void TtcChangeFormat (Document document, View view)
 	selectionOK = TRUE;
      }
 
-   if (selectionOK) {
+   if (selectionOK)
+     {
       /* il y a une selection */
       /* recherche le pave concerne */
       if (view > 100)
@@ -2396,11 +2358,10 @@ void TtcChangeFormat (Document document, View view)
       else
           pAb = AbsBoxOfEl (pFirstSel, view);
 
-      if (pAb != NULL) {
-
+      if (pAb != NULL)
+	{
          ResetMenus ();
-         
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
          /* formulaire Presentation Format */
          TtaNewSheet (NumFormPresFormat, TtaGetViewFrame (document, view), 
                       TtaGetMessage (LIB, TMSG_FORMAT),
@@ -2424,7 +2385,7 @@ void TtcChangeFormat (Document document, View view)
          for (i = 0; i < 4; i++)
             TtaRedrawMenuEntry (NumMenuAlignment, i, "icones", ThotColorNone, -1);
          /* initialise le menu de cadrage des lignes */
-#endif /*  #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
          
          switch (pAb->AbAdjust)
 	   {
@@ -2449,19 +2410,18 @@ void TtcChangeFormat (Document document, View view)
          alignNum = i - 1;
 #endif /* _WINGUI */
          
-#if defined(_GTK) || defined(_MOTIF)         
+#ifdef _GTK
          TtaSetMenuForm (NumMenuAlignment, i - 1);
          /* zone de saisie du renfoncement en points typo */
          TtaNewNumberForm (NumZoneRecess, NumFormPresFormat,
          TtaGetMessage (LIB, TMSG_INDENT_PTS), 0, 300, TRUE);
          /* initialise la valeur du renfoncement */
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
          
          IndentValue = PixelToPoint (PixelValue (abs (pAb->AbIndent),
 						 pAb->AbIndentUnit, pAb,
 						 ViewFrameTable[ActiveFrame - 1].FrMagnification));
-
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
          TtaSetNumberForm (NumZoneRecess, IndentValue);
 
          /* sous-menu sens de renfoncement */
@@ -2477,7 +2437,7 @@ void TtcChangeFormat (Document document, View view)
          for (i = 0; i < 2; i++)
 	   TtaRedrawMenuEntry (NumMenuRecessSense, i, "icones", ThotColorNone, -1);
          /* initialise le sens de renfoncement */
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
          
          if (pAb->AbIndent > 0)
 	   i = 0;
@@ -2486,8 +2446,7 @@ void TtcChangeFormat (Document document, View view)
 #ifdef _WINGUI
          indentNum = i;
 #endif  /* _WINGUI */
-         
-#if defined(_GTK) || defined(_MOTIF)         
+#ifdef _GTK
          TtaSetMenuForm (NumMenuRecessSense, i);
 
          /* zone de saisie de l'interligne en points typo */
@@ -2508,17 +2467,19 @@ void TtcChangeFormat (Document document, View view)
          /* change la police des 3 premieres entrees */
          for (i = 0; i < 3; i++)
              TtaRedrawMenuEntry (NumMenuLineSpacing, i, "icones", ThotColorNone, -1);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
          
          /* initialise l'interligne en points typographiques */
          OldLineSp = PixelToPoint (PixelValue (pAb->AbLineSpacing,
-                                     pAb->AbLineSpacingUnit, pAb, ViewFrameTable[ActiveFrame - 1].FrMagnification));
+                                     pAb->AbLineSpacingUnit, pAb,
+					       ViewFrameTable[ActiveFrame - 1].FrMagnification));
          
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
          TtaSetNumberForm (NumZoneLineSpacing, OldLineSp);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
          
-         NormalLineSpacing = PixelToPoint(PixelValue (10, UnRelative, pAb, ViewFrameTable[ActiveFrame - 1].FrMagnification));
+         NormalLineSpacing = PixelToPoint(PixelValue (10, UnRelative, pAb,
+						      ViewFrameTable[ActiveFrame - 1].FrMagnification));
 
 #ifdef _WINGUI
          WIN_NormalLineSpacing = NormalLineSpacing;
@@ -2534,15 +2495,14 @@ void TtcChangeFormat (Document document, View view)
 
 #ifdef _WINGUI
          lineSpacingNum = i;
-         CreateChangeFormatDlgWindow (NumZoneRecess, NumZoneLineSpacing, alignNum, IndentValue, indentNum, OldLineSp, lineSpacingNum);
-#endif /* _WINGUI */
-         
-#if defined(_GTK) || defined(_MOTIF)         
+         CreateChangeFormatDlgWindow (NumZoneRecess, NumZoneLineSpacing, alignNum,
+				      IndentValue, indentNum, OldLineSp, lineSpacingNum);
+#endif /* _WINGUI */  
+#ifdef _GTK
          TtaSetMenuForm (NumMenuLineSpacing, i);
          DocModPresent = pDoc;
          TtaShowDialogue (NumFormPresFormat, TRUE);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-         
+#endif /* _GTK */     
       }
    }	
 }

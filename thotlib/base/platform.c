@@ -37,10 +37,10 @@ int TtaDirExists (CONST char *dirpath)
     status = 0;
 #else /* _WINGUI */
   struct stat buf;
-#ifdef _WINDOWS /* SG TODO : a valider */
-  status = stat(dirpath, &buf) == 0 && (((buf.st_mode)&S_IFMT) == S_IFDIR);
+#ifdef _WINDOWS
+  status = stat (dirpath, &buf) == 0 && ((buf.st_mode)&S_IFMT) == S_IFDIR;
 #else /* #ifdef _WINDOWS */
-  status = stat(dirpath, &buf) == 0 && S_ISDIR (buf.st_mode);
+  status = stat (dirpath, &buf) == 0 && S_ISDIR (buf.st_mode);
 #endif /* #ifdef _WINDOWS */
 #endif /* _WINGUI */
   return status;

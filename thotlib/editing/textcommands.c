@@ -1400,41 +1400,10 @@ void TtcCopyToClipboard (Document doc, View view)
       Xbuffer = NULL;
     }
 #endif /* _GTK */
-#ifdef _MOTIF
-  int                  frame;
-  ThotWindow           w, wind;
-  XSelectionClearEvent clear;
-
-  if (doc == 0)
-    frame = FrRef[0];
-  else
-    frame = GetWindowNumber (doc, view);
-  /* Get the X-Selection */
-  w = XGetSelectionOwner (TtDisplay, XA_PRIMARY);
-  wind = FrRef[frame];
-  if (w != None && w != wind)
-    {
-      clear.display = TtDisplay;
-      clear.window = w;
-      clear.selection = XA_PRIMARY;
-      clear.time = CurrentTime;
-      XSendEvent (TtDisplay, w, TRUE, NoEventMask, (ThotEvent *) & clear);
-    }
-  
-  if (w != wind)
-    {
-      XSetSelectionOwner (TtDisplay, XA_PRIMARY, wind, CurrentTime);
-      w = XGetSelectionOwner (TtDisplay, XA_PRIMARY);
-    }
-  /* Store the current selection */
-  ClipboardLength = CopyXClipboard (&Xbuffer, view);
-  /* Annule le cutbuffer courant */
-  XStoreBuffer (TtDisplay, (char *)Xbuffer, ClipboardLength, 0);
-#endif /* _MOTIF */
 #ifdef _WINGUI
   /* Store the current selection */
   ClipboardLength = CopyXClipboard (&Xbuffer, view);
-#endif /* #ifdef _WINGUI */
+#endif /* _WINGUI */
 }
 
 

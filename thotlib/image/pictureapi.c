@@ -32,10 +32,9 @@
 #include "platform_tv.h"
 
 #include "memory_f.h"
-
 #ifdef _WX
-  #include "AmayaWindow.h"
-  #include "appdialogue_wx.h"
+#include "AmayaWindow.h"
+#include "appdialogue_wx.h"
 #endif /* _WX */
 
 /*----------------------------------------------------------------------
@@ -45,7 +44,7 @@
    int type   : the picture type (content.h)
    xbm_type, eps_type, xpm_type, gif_type, png_type, jpeg_type
   ----------------------------------------------------------------------*/
-ThotPixmap TtaCreateBitmap( const char * filename, int type )
+ThotPixmap TtaCreateBitmap (const char * filename, int type)
 {
 #ifdef _WX
   ThotPixmap pixmap = NULL;
@@ -94,14 +93,6 @@ ThotPixmap TtaCreateBitmapLogo (int width, int height, char *bits)
    pixmap = new wxBitmap( bits, wxBITMAP_TYPE_XPM, width, height );
    return pixmap;
 #endif /* _WX */
-  
-#ifdef _MOTIF
-   if (bits != NULL)
-      return (XCreateBitmapFromData (TtDisplay, TtRootWindow, bits, width, height));
-   else
-      return (0);
-#endif /* _MOTIF */
-
 #ifdef _GTK
    GdkColor           black;
    GdkColor           white;
@@ -118,14 +109,9 @@ ThotPixmap TtaCreateBitmapLogo (int width, int height, char *bits)
    else
      return 0;
 #endif /* _GTK */
-
 #ifdef _WINGUI
    return CreateBitmap (width, height, 16, 4, bits);
 #endif /* _WINGUI */   
-
-#ifdef _NOGUI
-  return 0;
-#endif /* #ifdef _NOGUI */   
 }
 
 /*----------------------------------------------------------------------
@@ -138,11 +124,9 @@ ThotIcon TtaCreatePixmapLogo(char **d)
    pixmap = new wxBitmap( d );
    return pixmap;
 #endif /* _WX */
-  
 #ifdef _WINGUI
    return (ThotIcon) NULL;
 #endif /* _WINGUI */
-   
 #ifdef _GTK
   ThotIcon	icon;
 
@@ -154,44 +138,5 @@ ThotIcon TtaCreatePixmapLogo(char **d)
 						 (gchar **) d); 
   return icon;
 #endif /* _GTK */
-
-#ifdef _MOTIF  
-   ThotIcon              pixmap;
-   ThotIcon              pmask;
-   XpmAttributes       att;
-   XpmColorSymbol      cs;
-
-   pixmap = 0;
-   memset (&att, 0, sizeof (XpmAttributes));
-   memset (&cs, 0, sizeof (XpmColorSymbol));
-   if (d != NULL)
-     {
-	att.valuemask = 0;
-	att.valuemask |= XpmReturnPixels;
-	att.valuemask |= XpmRGBCloseness;
-	att.valuemask |= XpmColorSymbols;
-	att.pixels = NULL;
-	att.red_closeness = 40000;
-	att.green_closeness = 40000;
-	att.blue_closeness = 40000;
-	/* None  for the background color */
-	att.numsymbols = 1;
-	att.colorsymbols = &cs;
-	cs.name = "None";
-	cs.value = NULL;
-	cs.pixel = (Pixel) BgMenu_Color;
-	XpmCreatePixmapFromData (TtDisplay, TtRootWindow, d, &pixmap, &pmask, &att);
-	if (att.pixels != NULL)
-	  XpmFree (att.pixels);
-
-	if (pmask)
-	   XFreePixmap (TtDisplay, pmask);
-     }
-   return (pixmap);
-#endif /* _MOTIF */
-
-#if defined(_NOGUI)
-  return 0;
-#endif /* #if defined(_NOGUI) */   
 }
 

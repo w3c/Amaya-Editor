@@ -763,69 +763,69 @@ void DisplayConfirmMessage (char *text)
 void DisplayMessage (char *text, int msgType)
 {
 #ifdef _GTK
-   int                 lg;
-   int                 n;
-   char                buff[500 + 1];
-   char               *pointer;
+  int                 lg;
+  int                 n;
+  char                buff[500 + 1];
+  char               *pointer;
 
-   /* Is the initialisation done ? */
-   lg = strlen (text);
-   if (MainShell && WithMessages && lg > 0)
-     {
-	/* take current messages */
-	strncpy (buff, gtk_entry_get_text (GTK_ENTRY(FrameTable[0].WdStatus)), 500);
-	n = strlen (buff);
-	if (msgType == INFO)
-	  {
-	     /* is it necessary to suppress one or more messages ? */
-	     if (n + lg + 1 >= 500)
-	       {
-		  /* suppress messages */
-		  /* kill until we have 50 free characters */
-		  while (n + lg + 1 >= 450)
+  /* Is the initialisation done ? */
+  lg = strlen (text);
+  if (MainShell && WithMessages && lg > 0)
+    {
+      /* take current messages */
+      strncpy (buff, gtk_entry_get_text (GTK_ENTRY(FrameTable[0].WdStatus)), 500);
+      n = strlen (buff);
+      if (msgType == INFO)
+	{
+	  /* is it necessary to suppress one or more messages ? */
+	  if (n + lg + 1 >= 500)
+	    {
+	      /* suppress messages */
+	      /* kill until we have 50 free characters */
+	      while (n + lg + 1 >= 450)
+		{
+		  /* search next New Line */
+		  pointer = strchr (buff, '\n');
+		  if (pointer == NULL)
+		    n = 0;
+		  else
 		    {
-		       /* search next New Line */
-		       pointer = strchr (buff, '\n');
-		       if (pointer == NULL)
-			  n = 0;
-		       else
-			 {
-			    strcpy (buff, &pointer[1]);
-			    n = strlen (buff);
-			 }
+		      strcpy (buff, &pointer[1]);
+		      n = strlen (buff);
 		    }
-		  /* add message */
-		  if (n > 0)
-		     strcpy (&buff[n++], "\n");
-		  strncpy (&buff[n], text, 500 - n);
-		  lg += n;
-		  /* copy text */
-		  if (gtk_text_get_length (GTK_TEXT (FrameTable[0].WdStatus))>0)
-		    gtk_editable_delete_text( GTK_EDITABLE (FrameTable[0].WdStatus), 0, -1);
-		  gtk_text_insert (GTK_TEXT (FrameTable[0].WdStatus), NULL, NULL, NULL, buff, -1);
-	       }
-	     else
-	       {
-		  /* enough space, just add new message at the end */
-		  strcpy (buff, "\n");
-		  strcat (buff, text);
-		  gtk_text_insert (GTK_TEXT (FrameTable[0].WdStatus), NULL, NULL, NULL, buff, -1);
-		  lg += n;
-	       }
-	     /* select the message end to force scroll down */
-	     gtk_editable_select_region(GTK_EDITABLE(FrameTable[0].WdStatus), 0, -1);
-	  }
-	else if (msgType == OVERHEAD)
-	  {
-	     /* search last New Line */
-	     while (buff[n] != EOL && n >= 0)
-		n--;
-	     /* replace last message by the new one */
-	     if (gtk_text_get_length (GTK_TEXT (FrameTable[0].WdStatus))>0)
-	       gtk_editable_delete_text( GTK_EDITABLE (FrameTable[0].WdStatus), 0, -1);
-	     gtk_text_insert (GTK_TEXT (FrameTable[0].WdStatus), NULL, NULL, NULL, text, -1);
-	  }
-     }
+		}
+	      /* add message */
+	      if (n > 0)
+		strcpy (&buff[n++], "\n");
+	      strncpy (&buff[n], text, 500 - n);
+	      lg += n;
+	      /* copy text */
+	      if (gtk_text_get_length (GTK_TEXT (FrameTable[0].WdStatus))>0)
+		gtk_editable_delete_text( GTK_EDITABLE (FrameTable[0].WdStatus), 0, -1);
+	      gtk_text_insert (GTK_TEXT (FrameTable[0].WdStatus), NULL, NULL, NULL, buff, -1);
+	    }
+	  else
+	    {
+	      /* enough space, just add new message at the end */
+	      strcpy (buff, "\n");
+	      strcat (buff, text);
+	      gtk_text_insert (GTK_TEXT (FrameTable[0].WdStatus), NULL, NULL, NULL, buff, -1);
+	      lg += n;
+	    }
+	  /* select the message end to force scroll down */
+	  gtk_editable_select_region(GTK_EDITABLE(FrameTable[0].WdStatus), 0, -1);
+	}
+      else if (msgType == OVERHEAD)
+	{
+	  /* search last New Line */
+	  while (buff[n] != EOL && n >= 0)
+	    n--;
+	  /* replace last message by the new one */
+	  if (gtk_text_get_length (GTK_TEXT (FrameTable[0].WdStatus))>0)
+	    gtk_editable_delete_text( GTK_EDITABLE (FrameTable[0].WdStatus), 0, -1);
+	  gtk_text_insert (GTK_TEXT (FrameTable[0].WdStatus), NULL, NULL, NULL, text, -1);
+	}
+    }
 #endif /* _GTK */
 }
 
@@ -3216,9 +3216,9 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
 #ifdef _WINGUI 
 void WIN_TtaSetToggleMenu (int ref, int val, ThotBool on, HWND owner)
 #endif  /* _WINGUI */
-#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX)
 void TtaSetToggleMenu (int ref, int val, ThotBool on)
-#endif /* #if defined(_GTK) || defined(_WX) || _NOGUI */
+#endif /* #if defined(_GTK) || defined(_WX) */
 {
 #ifdef _WINGUI 
   struct Cat_Context *catalogue;

@@ -65,9 +65,9 @@ void CallbackCloseDocMenu (int ref, int typedata, char *data)
       CloseDontSave = FALSE;
       break;
     }
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
    TtaDestroyDialogue (NumFormClose);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -79,10 +79,10 @@ void AskToConfirm (PtrDocument pDoc, Document document, View view,
 		   ThotBool *confirmation, ThotBool *save)
 {
   char              buftext[300];
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
   char              bufbutton[300];
   int                 i;
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
 
   CloseDontSave = TRUE;
   SaveBeforeClosing = FALSE;
@@ -95,7 +95,7 @@ void AskToConfirm (PtrDocument pDoc, Document document, View view,
   strcat (buftext, " ");
   strcat (buftext, TtaGetMessage (LIB, TMSG_BEFORE_CLOSING));
 
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
   /* Feuille de dialogue Fermer */
   strcpy (bufbutton, TtaGetMessage (LIB, TMSG_SAVE_DOC));
   i = strlen (TtaGetMessage (LIB, TMSG_SAVE_DOC)) + 1;
@@ -110,8 +110,7 @@ void AskToConfirm (PtrDocument pDoc, Document document, View view,
   TtaShowDialogue (NumFormClose, FALSE);
   /* attend le retour de ce formulaire (traite' par CallbackCloseDocMenu) */
   TtaWaitShowDialogue ();
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-
+#endif /* _GTK */
 #ifdef _WINGUI
   CreateCloseDocDlgWindow (TtaGetViewFrame(document,view), buftext);
 #endif /* _WINGUI */
@@ -124,8 +123,7 @@ void AskToConfirm (PtrDocument pDoc, Document document, View view,
    CloseADocument
    closes a document.
   ----------------------------------------------------------------------*/
-ThotBool            CloseADocument (Document document, Document docform,
-				    View viewform)
+ThotBool CloseADocument (Document document, Document docform, View viewform)
 {
   PtrDocument         pDoc;
   ThotBool            save, ok;
@@ -176,7 +174,7 @@ ThotBool            CloseADocument (Document document, Document docform,
    TtcCloseDocument
    begins closing of a document.
   ----------------------------------------------------------------------*/
-void                TtcCloseDocument (Document document, View view)
+void TtcCloseDocument (Document document, View view)
 {
   CloseADocument (document, document, view);
 }

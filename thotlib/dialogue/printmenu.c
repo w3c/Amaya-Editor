@@ -67,9 +67,10 @@ static PRINTDLG     Pdlg;
 static ThotBool     LpInitialized = FALSE;
 #endif /* _WINGUI */
 
+static ThotBool     PInitialized = FALSE;
 static PathBuffer   PrintDirName;
 static Name         PrintDocName;
-static char       Orientation[MAX_NAME_LENGTH];
+static char         Orientation[MAX_NAME_LENGTH];
 static Func         pFuncExportPrintDoc = NULL;
 static int          defPaperPrint;
 static int          defManualFeed;
@@ -923,9 +924,12 @@ void TtaSetPrintExportFunc (Func exportFunc)
   ----------------------------------------------------------------------*/
 void TtaSetPrintParameter (PrintParameter parameter, int value)
 {
-  if (ThotLocalActions[T_rprint] == NULL)
-    /* force the initialization of printing parameters */
-    InitPrintParameters (0);
+  if (!PInitialized)
+    {
+      /* force the initialization of printing parameters */
+      InitPrintParameters (0);
+      PInitialized = TRUE;
+    }
 
   switch (parameter)
     {

@@ -42,46 +42,6 @@ ThotDrawable XpmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 		    int *wif, int *hif, int bgColor, int *width,
 		    int *height, int zoom)
 {
-#ifdef _MOTIF
-  int                 status;
-  Pixmap              pixmap;
-  XpmAttributes       att;
-  unsigned long       valuemask = 0;
-
-  /* pixmap loading parameters passed to the library */
-  att.valuemask = valuemask;
-  att.valuemask |= XpmRGBCloseness;
-  att.valuemask |= XpmReturnPixels;
-  att.red_closeness = 40000;
-  att.green_closeness = 40000;
-  att.blue_closeness = 40000;
-  att.numsymbols = 1;
-  att.mask_pixel = ColorPixel (bgColor);
-
-  status = XpmReadFileToPixmap (TtDisplay, TtRootWindow, fn, &pixmap,
-				(Pixmap *) &(imageDesc->PicMask), &att);
-  /* return image dimensions */
-  *width = att.width;
-  *height = att.height;
-  
-  if (status != XpmSuccess)
-    return ((ThotDrawable) None);
-  else
-    {
-      *wif = att.width;
-      *hif = att.height;
-      *xif = 0;
-      *yif = 0;
-      
-      /* frees the library's internal structures */
-      XpmFreeAttributes (&att);
-      att.valuemask = valuemask;/* reinitialises the value mask */
-      return (ThotDrawable) pixmap;
-    }
-#endif /* _MOTIF */
-
-
-#if defined(_GTK) || defined(_WINGUI) || defined(_WX)
   *width = 0;
   *height = 0;
   *wif = 0;
@@ -89,11 +49,6 @@ ThotDrawable XpmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   *xif = 0;
   *yif = 0;
   return (ThotDrawable) (NULL);
-#endif /* defined(_GTK) OR defined(_WINGUI) || defined(_WX) */
-
-#ifdef _NOGUI
-  return NULL;
-#endif /* #ifdef _NOGUI */  
 }
 
 
@@ -103,60 +58,6 @@ ThotDrawable XpmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 void XpmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
 	       int hif, FILE *fd, int bgColor)
 {
-#ifdef _MOTIF
-   register int        i;
-   XpmAttributes       att;
-   XpmInfo             info;
-   ThotColorStruct     color;
-   int                 status;
-   int                 picW, picH;
-   unsigned long       valuemask = 0;
-   ThotColorStruct     colorTab[256];
-   XpmImage            image;
-   unsigned short      red, green, blue;
-
-   /* pixmap loading parameters passed to the library */
-
-   valuemask |= XpmExactColors;
-   valuemask |= XpmColorTable;
-   valuemask |= XpmReturnColorTable;
-   valuemask |= XpmReturnPixels;
-   valuemask |= XpmHotspot;
-   valuemask |= XpmCharsPerPixel;
-
-   status = XpmReadFileToXpmImage (fn, &image, &info);
-   if (status < XpmSuccess)
-     return;
-
-   picW = image.width;
-   picH = image.height;
-   /* reads the colorspace palette to produce the ps */
-   for (i = 0; i < image.ncolors; i++)
-     {
-	if (strncmp (image.colorTable[i].c_color, "None", 4) == 0)
-	  {
-	     TtaGiveThotRGB (bgColor, &red, &green, &blue);
-	     colorTab[i].red = red;
-	     colorTab[i].green = green;
-	     colorTab[i].blue = blue;
-	     colorTab[i].pixel = i;
-	  }
-	else
-	  {
-	     XParseColor (TtDisplay, TtCmap, image.colorTable[i].c_color, &color);
-	     colorTab[i].pixel = i;
-	     colorTab[i].red = color.red;
-	     colorTab[i].green = color.green;
-	     colorTab[i].blue = color.blue;
-	  }
-     }
-   DataToPrint ((unsigned char *)image.data, pres, xif, yif, wif, hif, picW,
-		picH, fd, image.ncolors, -1, bgColor,
-		(ThotColorStruct *)image.colorTable, FALSE, FALSE);
-   XpmFreeXpmInfo (&info);
-   XpmFreeXpmImage (&image);
-   att.valuemask = valuemask;
-#endif /* _MOTIF */
 }			
 
 /*----------------------------------------------------------------------
@@ -173,13 +74,13 @@ ThotBool IsXpmFormat (char *fn)
   if (f != NULL)
     {
       c = getc (f);
-      if ((c != EOF) && (c == '/'))
+      if (c != EOF && c == '/')
 	{
 	  c = getc (f);
-	  if ((c != EOF) && (c == '*'))
+	  if (c != EOF && c == '*')
 	    {
 	      c = getc (f);
-	      if ((c != EOF) && (c == ' '))
+	      if (c != EOF && c == ' ')
 		res = TRUE;
 	    }
 	}

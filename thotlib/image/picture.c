@@ -73,16 +73,8 @@
 #include "glprint.h"
 #endif /* _GL */
 
-static char*    PictureMenu;
-
-#ifdef _GL
 static ThotPixmap PictureLogo;
-#else /*_GL*/
-#if defined(_WINGUI) || defined(_WX) || defined(_GTK) || defined(_NOGUI)
-static ThotPixmap   PictureLogo;
-#endif /* #if defined(_WINGUI) || defined(_WX) || defined(_GTK) || defined(_NOGUI) */
-#endif /*_GL*/
-static ThotGC   tiledGC;
+static ThotGC     tiledGC;
 
 static unsigned char MirrorBytes[0x100] = {
    0x00, 0x80, 0x40, 0xc0, 0x20, 0xa0, 0x60, 0xe0,
@@ -1759,28 +1751,6 @@ void InitPictureHandlers (ThotBool printing)
 }
 
 
-/*----------------------------------------------------------------------
-   GetPictHandlersList creates in buffer the list of defined handlers 
-   This function is used to create the GUI Menu            
-   We return in count the number of handlers               
-  ----------------------------------------------------------------------*/
-void GetPictHandlersList (int *count, char* buffer)
-{
-  int                 i = 0;
-  int                 index = 0;
-  char*               item;
-
-  *count = HandlersCounter;
-  while (i < HandlersCounter)
-    {
-      item = PictureHandlerTable[i].GUI_Name;
-      strcpy (buffer + index, item);
-      index += strlen (item) + 1;
-      i++;
-    }
-  buffer = PictureMenu;
-}
-
 #ifdef _WINGUI
 /*----------------------------------------------------------------------
   SimpleName
@@ -3117,31 +3087,6 @@ int GetPictPresIndex (PictureScaling picPresent)
   /* based on the function GetPictureHandlersList */
   return i;
 }
-
-
-/*----------------------------------------------------------------------
-   GetPictureHandlersList creates the list of installed handlers.  
-   This function is used to create the menu picture.       
-   It returns the number of handlers in count.             
-  ----------------------------------------------------------------------*/
-void GetPictureHandlersList (int *count, char* buffer)
-{
-   int                 i = 0;
-   int                 index = 0;
-   char*               item;
-
-   *count = HandlersCounter;
-   while (i < HandlersCounter)
-     {
-	item = PictureHandlerTable[i].GUI_Name;
-	strcpy (buffer + index, item);
-	index += strlen (item) + 1;
-	i++;
-     }
-   buffer = PictureMenu;
-
-}
-
 
 /*----------------------------------------------------------------------
    LittleXBigEndian allows conversion between big and little endian  

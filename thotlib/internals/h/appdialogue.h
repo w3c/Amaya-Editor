@@ -72,7 +72,7 @@ extern Menu_Ctl    *	DocumentMenuList;
   the availability of the current action (code loaded by the application)
   before calling it.
   */
-#define T_colors	0
+#define T_backuponfatal	0
 #define T_keyboard      1
 #define T_chsplit	2
 #define T_chselect	3
@@ -97,7 +97,7 @@ extern Menu_Ctl    *	DocumentMenuList;
 #define T_checkReadOnlyElement		22
 #define T_checkInsertNearElement	23
 #define T_initevents			24
-#define T_rprint	                25
+#define T_autosave                      25
 #define T_writedocument                 26
 #define T_clearhistory                  27
 #define T_openhistory                   28
@@ -105,9 +105,7 @@ extern Menu_Ctl    *	DocumentMenuList;
 #define T_attraddhistory                30
 #define T_cancelhistory                 31
 #define T_closehistory                  32
-#define T_backuponfatal			33
-#define T_autosave              34
-#define MAX_LOCAL_ACTIONS       35
+#define MAX_LOCAL_ACTIONS       33
 
 /*
  Predefined idexes of Thot actions which could be linked to shortcuts even

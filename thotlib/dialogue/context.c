@@ -52,36 +52,6 @@ static ThotColorStruct  cwhite;
 #include "registry_f.h"
 #include "textcommands_f.h"
 
-#ifdef _MOTIF
-/*----------------------------------------------------------------------
- * XWindowError is the X-Windows non-fatal errors handler.
- ----------------------------------------------------------------------*/
-static int XWindowError (Display *dpy, XErrorEvent *err)
-{
-   char                msg[200];
-
-   XGetErrorText (dpy, err->error_code, msg, 200);
-   return (0);
-}
-
-/*----------------------------------------------------------------------
- * XWindowFatalError is the X-Windows fatal errors handler.
- ----------------------------------------------------------------------*/
-static int XWindowFatalError (Display * dpy)
-{
-  if (errno != EPIPE)
-    TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR),
-		       DisplayString (dpy));
-  else
-    TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR),
-		       DisplayString (dpy));
-  CloseTextInsertion ();
-  if (ThotLocalActions[T_backuponfatal] != NULL)
-    (*ThotLocalActions[T_backuponfatal]) ();
-  return (0);
-}
-#endif /* _MOTIF */
-
 
 /*----------------------------------------------------------------------
  * FindColor looks for the named color ressource.
@@ -120,11 +90,9 @@ static ThotBool FindColor (int disp, char *name, char *colorplace,
 #ifdef _WINGUI 
    *colorpixel = col;
 #endif /* _WINGUI */
-   
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
    *colorpixel = ColorPixel (col);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
-   
+#endif /* defined(_GTK) || defined(_WX) */
    return (TRUE);
 
 }
@@ -132,16 +100,8 @@ static ThotBool FindColor (int disp, char *name, char *colorplace,
 /*----------------------------------------------------------------------
  *      InitCurs load the cursors used by the graphic interface.
  ----------------------------------------------------------------------*/
-static void         InitCurs ()
+static void InitCurs ()
 {
-#ifdef _MOTIF
-   WindowCurs = XCreateFontCursor (TtDisplay, XC_hand2);
-   VCurs = XCreateFontCursor (TtDisplay, XC_sb_v_double_arrow);
-   HCurs = XCreateFontCursor (TtDisplay, XC_sb_h_double_arrow);
-   HVCurs = XCreateFontCursor (TtDisplay, /*XC_fleur*/XC_plus);
-   WaitCurs = XCreateFontCursor (TtDisplay, XC_watch);
-#endif /* _MOTIF*/
-
 #ifdef _GTK
    ArrowCurs = gdk_cursor_new (GDK_LEFT_PTR);
    WindowCurs = gdk_cursor_new (GDK_HAND2);
@@ -192,15 +152,6 @@ static void InitColors (char* name)
 #ifdef _GTK
    GdkVisual          *vptr;
    GdkVisualType       vinfo;
-#endif /* _GTK */
-#ifdef _MOTIF
-   XVisualInfo        *vptr;
-   XVisualInfo         vinfo;
-   ThotColorStruct     col;
-   int                 i;
-#endif /* _MOTIF */
-
-#ifdef _GTK
    vptr = gdk_visual_get_best ();
    vinfo = gdk_visual_get_best_type ();
    if (vptr)
@@ -218,43 +169,6 @@ static void InitColors (char* name)
     Scroll_Color =  0xffffff;
 #endif /* _GTK */
 
-#ifdef _MOTIF
-   vinfo.visualid = XVisualIDFromVisual (XDefaultVisual (TtDisplay, TtScreen));
-   vptr = XGetVisualInfo (TtDisplay, VisualIDMask, &vinfo, &i);
-   if (vptr)
-     {
-#if defined(__cplusplus) || defined(c_plusplus)
-       TtIsTrueColor = (vptr->c_class == TrueColor || vptr->c_class == DirectColor);
-#else
-       TtIsTrueColor = (vptr->class == TrueColor || vptr->class == DirectColor);
-#endif
-       XFree (vptr);
-     }
-   else
-     TtIsTrueColor = FALSE;
-
-   /* Depending on the display Black and White order may be inverted */
-   if (XWhitePixel (TtDisplay, TtScreen) == 0)
-     {
-	if (!XAllocNamedColor (TtDisplay, TtCmap, "White", &cwhite, &col))
-	   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
-	if (!XAllocNamedColor (TtDisplay, TtCmap, "Black", &cblack, &col))
-	   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
-     }
-   else
-     {
-	if (!XAllocNamedColor (TtDisplay, TtCmap, "Black", &cblack, &col))
-	   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
-	if (!XAllocNamedColor (TtDisplay, TtCmap, "White", &cwhite, &col))
-	   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
-     }
-   /* Initialize colors for the application */
-   Black_Color = Box_Color = RO_Color = cblack.pixel;
-   FgMenu_Color = cblack.pixel;
-   White_Color  = cwhite.pixel;
-   Scroll_Color = BgMenu_Color = cwhite.pixel;
-#endif /* _MOTIF */
-
    if (TtWDepth > 1)
      TtaUpdateEditorColors ();
    else
@@ -265,17 +179,13 @@ static void InitColors (char* name)
      }
 }
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
 /*----------------------------------------------------------------------
   InitGraphicContexts initialize the X-Windows graphic contexts and their
   Windows counterpart in Microsoft environment.
  ----------------------------------------------------------------------*/
 static void InitGraphicContexts (void)
 {
-#ifdef _MOTIF
-  unsigned long       valuemask;
-  XGCValues           GCmodel;
-#endif /* _MOTIF */
   int                 white;
   int                 black;
   ThotPixmap          pix;
@@ -341,58 +251,8 @@ static void InitGraphicContexts (void)
 
   gdk_pixmap_unref ((GdkPixmap *)pix);
 #endif /* _GTK */
-  
-#ifdef _MOTIF
-   valuemask = GCForeground | GCBackground | GCFunction;
-   white = ColorNumber ("White");
-   black = ColorNumber ("Black");
-   pix = CreatePattern (0, black, white, 6);
-
-   GCmodel.function = GXcopy;
-   GCmodel.foreground = White_Color;
-   GCmodel.background = Black_Color;
-   TtWhiteGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
-
-   /* Create a Graphic Context to write black on white. */
-   GCmodel.foreground = Black_Color;
-   GCmodel.background = White_Color;
-   TtBlackGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
-
-   /*
-    * Create a Graphic Context to write black on white,
-    * but with a specific 10101010 pattern.
-    */
-   GCmodel.foreground = Black_Color;
-   GCmodel.background = White_Color;
-   TtLineGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
-   XSetTile (TtDisplay, TtLineGC, pix);
-
-   /* Another Graphic Context to write black on white, for dialogs. */
-   TtDialogueGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
-
-   /*
-    * A Graphic Context to show selected objects. On X-Windows,
-    * the colormap indexes are XORed to show the object without
-    * destroying the colors : XOR.XOR = I ...
-    */
-   GCmodel.function = GXinvert;
-   GCmodel.plane_mask = Black_Color;
-   GCmodel.foreground = Black_Color;
-   GCmodel.background = White_Color;
-   TtInvertGC = XCreateGC (TtDisplay, TtRootWindow, valuemask | GCPlaneMask, &GCmodel);
-
-   /*
-    * A Graphic Context for trame objects.
-    */
-   GCmodel.function = GXcopy;
-   GCmodel.foreground = Black_Color;
-   TtGreyGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
-   XSetFillStyle (TtDisplay, TtGreyGC, FillTiled);
-   XFreePixmap (TtDisplay, pix);
-#endif /* _MOTIF */
 }
-
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* defined(_GTK) || defined(_WX) */
 
 
 /*----------------------------------------------------------------------
@@ -491,9 +351,7 @@ void ThotInitDisplay (char* name, int dx, int dy)
    /* Initialization of Picture Drivers */
    InitPictureHandlers (FALSE);
 #endif /* _GTK */
-
 #ifdef _WX  
-
 #ifdef _GL
    TtWDepth = wxDisplayDepth(); 
    /* not used : TtCmap = gdk_colormap_new (gdk_rgb_get_visual (), TRUE);*/
@@ -508,24 +366,6 @@ void ThotInitDisplay (char* name, int dx, int dy)
    /* Initialization of Picture Drivers */
    InitPictureHandlers (FALSE);
 #endif /* _WX */
-
-#ifdef _MOTIF
-   XSetErrorHandler (XWindowError);
-   XSetIOErrorHandler (XWindowFatalError);
-   TtScreen = DefaultScreen (TtDisplay);
-   TtWDepth = DefaultDepth (TtDisplay, TtScreen);
-   TtRootWindow = RootWindow (TtDisplay, TtScreen);
-   TtCmap = XDefaultColormap (TtDisplay, TtScreen);
-
-   InitDocColors (name);
-   InitColors (name);
-   InitGraphicContexts ();
-   InitCurs ();
-   InitDialogueFonts (name);
-
-   /* Initialization of Picture Drivers */
-   InitPictureHandlers (FALSE);
-#endif /* _MOTIF */
 }
 
 /*----------------------------------------------------------------------
@@ -556,163 +396,5 @@ void InitDocContexts ()
   InitializeOtherThings ();
 }
 
-/*----------------------------------------------------------------------
- *      SelectionEvents handle the X-Windows selection events.
- ----------------------------------------------------------------------*/
-void SelectionEvents (void *ev)
-{
-#ifdef _MOTIF
-   XSelectionRequestEvent *request;
-   XSelectionEvent     notify;
-   ThotWindow          w, wind;
-   Atom                type;
-   XSelectionEvent    *event = (XSelectionEvent *) ev;
-   unsigned long       nbitems, bytes_after;
-   unsigned char      *buffer;
-   unsigned char      *partbuffer;
-   int                 format, r, frame;
-
-   switch (event->type)
-     {
-     case SelectionClear:
-       /* lost selection, need to free the buffer */
-       w = ((XSelectionClearEvent *) event)->window;
-       wind = 0;
-       frame = 0;
-       while (wind == 0 && frame <= MAX_FRAME)
-	 {
-	   if (w == FrRef[frame])
-	     wind = w;
-	   frame++;
-	 }
-       if (w == wind && event->display == TtDisplay)
-	 {
-	   if (Xbuffer != NULL)
-	     {
-	       /* free the buffer */
-	       free (Xbuffer);
-	       Xbuffer = NULL;
-	       ClipboardLength = 0;
-	     }
-	 }
-       break;
-
-     case SelectionNotify:
-       /* receive the XBuffer, paste it in the document */
-       /* verify that one frame is concerned by the action */
-       w = event->requestor;
-       wind = 0;
-       frame = 0;
-       while (wind == 0 && frame <= MAX_FRAME)
-	 {
-	   if (w == FrRef[frame])
-	     wind = w;
-	   frame++;
-	 }
-       if (w == wind && event->display == TtDisplay)
-	 {
-	   if (event->property == None)
-	     {
-	       /* No current selection, look for the cut buffer */
-	       buffer = (unsigned char *) XFetchBytes (TtDisplay, &r);
-	       if (buffer != NULL)
-		 /* returns the cut buffer */
-		 PasteXClipboard (buffer, r, TtaGetDefaultCharset ());
-	     }
-	   else
-	     {
-	       /* receive the data */
-	       r = XGetWindowProperty (event->display, 
-				       event->requestor,
-				       event->property, 
-				       (long) 0, 
-				       (long) 256, 
-				       FALSE,
-				       AnyPropertyType, 
-				       &type, 
-				       &format, 
-				       &nbitems,
-				       &bytes_after, 
-				       &partbuffer);
-	       if (r == Success && type != None && format == 8)
-		 {
-		   if (bytes_after > 0)
-		     {
-		       buffer = (unsigned char *)TtaGetMemory (nbitems + bytes_after);
-		       strcpy ((char *)buffer,(char *)partbuffer);
-		       r = XGetWindowProperty (event->display, 
-					       event->requestor,
-					       event->property, 
-					       (long) 256, 
-					       (long) bytes_after, 
-					       FALSE,
-					       AnyPropertyType, 
-					       &type, 
-					       &format, 
-					       &nbitems,
-					       &bytes_after, 
-					       &partbuffer);
-		       strcpy ((char *)&buffer[256 * 4], (char *)partbuffer);
-		       nbitems = (256 * 4) + nbitems;
-		     }
-		   else
-		     buffer = partbuffer;
-		   /* paste the content of the selection */
-		   PasteXClipboard (buffer, (int) nbitems, TtaGetDefaultCharset ());
-		   if (buffer != partbuffer)
-		     TtaFreeMemory (buffer);
-		 }
-	     }
-	 }
-       break;
-
-     case SelectionRequest:
-       /* Asking for selection : copy the cut buffer content in the Xbuffer */
-       w = ((XSelectionRequestEvent *) event)->owner;
-       wind = 0;
-       frame = 0;
-       while (wind == 0 && frame <= MAX_FRAME)
-	 {
-	   if (w == FrRef[frame])
-	     wind = w;
-	   frame++;
-	 }
-       if (w == wind && event->display == TtDisplay)
-	 {
-	   request = (XSelectionRequestEvent *) event;
-	   /* Build the Notify event */
-	   notify.type = SelectionNotify;
-	   notify.display = request->display;
-	   notify.requestor = request->requestor;
-	   notify.selection = request->selection;
-	   notify.target = request->target;
-	   notify.time = request->time;
-	   
-	   if (Xbuffer == NULL)
-	     {
-	       /* selection is empty, so empty the cut buffer */
-	       XStoreBuffer (request->display, NULL, 0, 0);
-	       notify.property = None;
-	       XSendEvent (request->display, request->requestor, TRUE, NoEventMask, (ThotEvent *) & notify);
-	     }
-	   else if (request->property == None)
-	     {
-	       /* there is no such property */
-	       XStoreBuffer (request->display, (char *)Xbuffer, ClipboardLength, 0);
-	     }
-	   else
-	     {
-	       /* store the value in the given property */
-	       XChangeProperty (request->display, request->requestor, request->property,
-				XA_STRING, 8, PropModeReplace, Xbuffer, ClipboardLength);
-	       /* signal the completion of the action */
-	       notify.property = request->property;
-	       XSendEvent (request->display, request->requestor, TRUE, NoEventMask, (ThotEvent *) & notify);
-	     }
-	 }
-       break;
-     }
-#endif /* _MOTIF */
-}
 
 
