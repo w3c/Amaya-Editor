@@ -150,6 +150,8 @@ extern void         TtcQuit (Document document, View view);
 extern void         TtcScrollLeft (Document document, View view);
 extern void         TtcScrollRight (Document document, View view);
 extern void         TtcSearchText (Document document, View view);
+extern void         TtcSelStartOfLine (Document document, View view);
+extern void         TtcSelEndOfLine (Document document, View view);
 extern void         TtcSetBackupInterval (Document document, View view);
 extern void         TtcSetDocumentPath (Document document, View view);
 extern void         TtcSetSchemaPath (Document document, View view);

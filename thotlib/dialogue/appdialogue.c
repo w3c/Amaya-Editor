@@ -318,6 +318,13 @@ void TteInitMenus (char *name, int number)
    MenuActionList[CMD_BeginningOfLine].ActionName = "TtcStartOfLine";
    MenuActionList[CMD_BeginningOfLine].Call_Action = (Proc) TtcStartOfLine;
 
+   MenuActionList[CMD_SelBeginningOfLine].ActionName = "TtcSelStartOfLine";
+   MenuActionList[CMD_SelBeginningOfLine].Call_Action = (Proc) TtcSelStartOfLine;
+
+   MenuActionList[CMD_SelEndOfLine].ActionName = "TtcSelEndOfLine";
+   MenuActionList[CMD_SelEndOfLine].Call_Action = (Proc) TtcSelEndOfLine;
+
+
    MenuActionList[CMD_EndOfLine].ActionName = "TtcEndOfLine";
    MenuActionList[CMD_EndOfLine].Call_Action = (Proc) TtcEndOfLine;
 

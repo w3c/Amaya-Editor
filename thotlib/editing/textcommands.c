@@ -95,8 +95,9 @@ static ThotBool IsTextLeaf (PtrAbstractBox pave)
   MoveInLine moves the text selection.
   The parameter frame gives the concerned frame.
   The parameter toend is TRUE when moving to the end of the line.
+  The parameter extendSel is TRUE when the selection is extended.
   ----------------------------------------------------------------------*/
-static void MoveInLine (int frame, ThotBool toend)
+static void MoveInLine (int frame, ThotBool toend, ThotBool extendSel)
 {
    PtrLine             pLine;
    PtrAbstractBox      pAb;
@@ -120,7 +121,7 @@ static void MoveInLine (int frame, ThotBool toend)
 
 	pAb = pBox->BxAbstractBox;
 	if (IsTextLeaf (pAb))
-	   nChars = pBox->BxFirstChar + pBox->BxNChars + 1;
+	   nChars = pBox->BxFirstChar + pBox->BxNChars;
      }
    else
      {
@@ -134,7 +135,7 @@ static void MoveInLine (int frame, ThotBool toend)
 	   nChars = pBox->BxFirstChar;
      }
    /* update the selection */
-   ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
+   ChangeSelection (frame, pAb, nChars, extendSel, TRUE, FALSE, FALSE);
 }
 
 
@@ -231,9 +232,8 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
 		  x -= pBox->BxXOrg;
 		  LocateClickedChar (pBox, extendSel, &pBuffer, &x, &index,
 				     &nChars, &nbbl);
-		  if (extendSel && LeftExtended && nChars == pBox->BxNChars)
-		    /* add the last char in the left selection */
-		    nChars = pBox->BxFirstChar + nChars;
+		  if (extendSel && LeftExtended && nChars <= pBox->BxNChars)
+		    nChars = pBox->BxFirstChar + nChars - 1;
 		  else
 		    nChars = pBox->BxFirstChar + nChars;
 	       }
@@ -267,7 +267,8 @@ void  TtaSetMoveBackwardCallback (Func callbackFunc)
 /*----------------------------------------------------------------------
    Commandes de deplacement                                           
   ----------------------------------------------------------------------*/
-static void MovingCommands (int code, Document doc, View view, ThotBool extendSel)
+static void MovingCommands (int code, Document doc, View view,
+			    ThotBool extendSel)
 {
   PtrBox              pBox, pBoxBegin, pBoxEnd;
   PtrElement          pEl = NULL, firstEl, lastEl;
@@ -449,7 +450,7 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 		  else
 		    /* move the left extremity */
 		    x = firstC;
-		  if (x > 0)
+		  if (x > 1)
 		    {
 		      if (extendSel)
 			{
@@ -551,7 +552,7 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 		  else
 		    /* move the left extremity */
 		    x = firstC;
-		  if (x < pBox->BxAbstractBox->AbBox->BxNChars)
+		  if (x <= pBox->BxAbstractBox->AbBox->BxNChars)
 		    {
 		      if (extendSel)
 			{
@@ -615,7 +616,7 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 
 	case 3:	/* End of line (^E) */
 	  if (pBox)
-	    MoveInLine (frame, TRUE);
+	    MoveInLine (frame, TRUE, extendSel);
 	  if (pViewSel->VsBox)
 	    /* Get the last X position */
 	    ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
@@ -623,7 +624,7 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	   
 	case 4:	/* Beginning of line (^A) */
 	  if (pBox)
-	    MoveInLine (frame, FALSE);
+	    MoveInLine (frame, FALSE, extendSel);
 	  if (pViewSel->VsBox)
 	    /* Get the last X position */
 	    ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
@@ -640,9 +641,10 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	  else if (pBox)
 	    {
 	      pBox = pBoxEnd;
-	      x = pViewSelEnd->VsXPos + pBox->BxXOrg;
-	      if (pViewSelEnd->VsBuffer && pViewSelEnd->VsIndBuf < pViewSelEnd->VsBuffer->BuLength)
-		x -= BoxCharacterWidth (pViewSelEnd->VsBuffer->BuContent[pViewSelEnd->VsIndBuf], pBox->BxFont);
+	      if (SelPosition || RightExtended)
+		x = pViewSel->VsXPos + pBoxBegin->BxXOrg;
+	      else
+		x = pViewSelEnd->VsXPos + pBox->BxXOrg;
 	      y = pBox->BxYOrg + pBox->BxHeight;
 	      yDelta = 10;
 	      /* store the end position of the selection as the new reference */
@@ -692,7 +694,11 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	  else if (pBox)
 	    {
 	      y = pBoxBegin->BxYOrg;
-	      x = ClickX + pFrame->FrXOrg;
+	      if (SelPosition || RightExtended)
+		x = pViewSel->VsXPos + pBoxBegin->BxXOrg;
+	      else
+		x = pViewSelEnd->VsXPos + pBoxEnd->BxXOrg;
+	      /*x = ClickX + pFrame->FrXOrg;*/
 	      yDelta = -10;
 	      if (extendSel && RightExtended)
 		{
@@ -707,7 +713,7 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 		    {
 		      /* just decrease the curent extension */
 		      y = pBoxEnd->BxYOrg;
-		      x = pViewSelEnd->VsXPos + pBoxEnd->BxXOrg;
+		      /*x = pViewSelEnd->VsXPos + pBoxEnd->BxXOrg;*/
 		      pBox = pBoxEnd;
 		    }
 		}
@@ -849,9 +855,23 @@ void TtcStartOfLine (Document document, View view)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
+void TtcSelStartOfLine (Document document, View view)
+{
+   MovingCommands (4, document, view, TRUE);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void TtcEndOfLine (Document document, View view)
 {
    MovingCommands (3, document, view, FALSE);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void TtcSelEndOfLine (Document document, View view)
+{
+   MovingCommands (3, document, view, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -954,11 +974,14 @@ static int CopyXClipboard (unsigned char **buffer, View view)
       firstChar = FirstSelectedChar;
       lastChar = LastSelectedChar;
       if (!SelPosition && lastChar == 0)
-	/* Il faut prendre tout le contenu de tout l'element */
+	{
+	/* get the content of the whole element */
 	lastChar = pLastEl->ElVolume + 1;
+	firstChar = 1;
+	}
       if (pFirstEl->ElTypeNumber != CharString + 1)
 	/* if it's an image firstChar is not significant here. Set it to 0 */
-	firstChar = 0;
+	firstChar = 1;
 
       /* Calcule la longueur du buffer a produire */
       if (pFirstEl == pLastEl)
@@ -1041,7 +1064,6 @@ static int CopyXClipboard (unsigned char **buffer, View view)
 	      if (i != 0 && pBlock != pOldBlock && pOldBlock)
 		{
 		  /* Add new lines */
-		  text[i++] = NEW_LINE;
 		  text[i++] = NEW_LINE;
 		  text[i] = EOS;
 		}

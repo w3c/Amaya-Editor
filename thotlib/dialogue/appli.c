@@ -1378,30 +1378,9 @@ void TtaRaiseView (Document document, View view)
      }
 }
 
-/*----------------------------------------------------------------------
-   DisplaySelMessage affiche la se'lection donne'e en parame`tre (texte) dans 
-   la fenetre active.                                            
-  ----------------------------------------------------------------------*/
-void DisplaySelMessage (char *text, PtrDocument pDoc)
-{
-   int                 doc;
-   int                 view;
-
-   if (ActiveFrame != 0 &&
-       (strcmp (OldMsgSelect, text) || pDoc != OldDocMsgSelect))
-     {
-	/* recupere le document concerne */
-	doc = FrameTable[ActiveFrame].FrDoc;
-	for (view = 1; view <= MAX_VIEW_DOC; view++)
-	  TtaSetStatus ((Document) doc, view, text, NULL);
-	/* sel old message */
-	strncpy (OldMsgSelect, text, MAX_TXT_LEN);
-	OldDocMsgSelect = pDoc;
-     }
-}
 
 /*----------------------------------------------------------------------
-   TtaSetStatus affiche le status de la vue du document.                      
+   TtaSetStatus displays a status message into a document window.
   ----------------------------------------------------------------------*/
 void TtaSetStatus (Document document, View view, char *text, char *name)
 {
@@ -1479,6 +1458,26 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
      }
 }
 
+/*----------------------------------------------------------------------
+   DisplaySelMessage displays message into the status bar
+  ----------------------------------------------------------------------*/
+void DisplaySelMessage (char *text, PtrDocument pDoc)
+{
+   int                 doc;
+   int                 view;
+
+   if (ActiveFrame != 0 &&
+       (strcmp (OldMsgSelect, text) || pDoc != OldDocMsgSelect))
+     {
+	/* it's a new selection message */
+	doc = FrameTable[ActiveFrame].FrDoc;
+	for (view = 1; view <= MAX_VIEW_DOC; view++)
+	  TtaSetStatus ((Document) doc, view, text, NULL);
+	/* register the current displayed message */
+	strncpy (OldMsgSelect, text, MAX_TXT_LEN);
+	OldDocMsgSelect = pDoc;
+     }
+}
 
 #ifdef _WINDOWS
 
