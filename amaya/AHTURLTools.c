@@ -1816,17 +1816,26 @@ void         SimplifyUrl (char **url)
       /* Doesn't need to do any more */
       return;
     }
-  else if (**url != '/' && !IsW3Path(*url))
-  {
-      newptr = malloc (strlen(path)+7);
-      *newptr = '\0';
+  else if (**url != DIR_SEP 
+	   && **url != '~'
+	   && !IsW3Path(*url) 
+           /* && TtaFileExist (*url) == 0) */
+	   && (strlen (*url) + 7) < MAX_LENGTH)
+   {
+      /*  In case of a user typed url without protocol specification
+       and filepath like url (the ~ or / url beginning), 
+       we add the http:// (more conveniant when you often type urls)
+       so that you can now enter w3.org directly  */	
+      newptr = TtaGetMemory (strlen (path) + 7);
+      *newptr = EOS;
       strcat (newptr, "http://");
       strcat (newptr, *url);
-      **url = '\0';
-      strcpy(*url, newptr);
-      free (newptr);
+      **url = EOS;
+      strcpy (*url, newptr);
+      TtaFreeMemory (newptr);
       return;
-  }
+    }
+
   if ((p = path))
     {
       if (!((end = strchr (path, ';')) || (end = strchr (path, '?')) ||
