@@ -1733,163 +1733,169 @@ static void         RemoveAdjustement (PtrBox pBox, int spaceWidth)
 static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
 			  ThotBool *changeSelectEnd)
 {
-   PtrBox              ibox1;
-   PtrBox              ibox2;
-   PtrBox              pNextBox;
-   int                 x, width;
-   int                 number;
-   int                 lostPixels;
-   int                 diff;
-   PtrAbstractBox      pAb;
-   ViewFrame          *pFrame;
-   ViewSelection      *pViewSel;
+  PtrBox              ibox1;
+  PtrBox              ibox2;
+  PtrBox              pNextBox;
+  PtrAbstractBox      pAb;
+  ViewFrame          *pFrame;
+  ViewSelection      *pViewSel;
+  int                 x, width;
+  int                 number;
+  int                 lostPixels;
+  int                 diff;
+  ThotBool            update;
 
-   pFrame = &ViewFrameTable[frame - 1];
-   if (pBox != NULL && pBox->BxAbstractBox != NULL)
-     {
-	pAb = pBox->BxAbstractBox;
-	if (pAb != NULL && pAb->AbLeafType == LtText)
-	  {
-	     x = CharacterWidth (SPACE, pBox->BxFont);
-	     if (pFrame->FrSelectionBegin.VsBox == pBox)
-	       {
-		  /* need to update the current selection */
-		  pFrame->FrSelectionBegin.VsBox = pAb->AbBox;
-		  *changeSelectBegin = TRUE;
-	       }
-	     if (pFrame->FrSelectionEnd.VsBox == pBox)
-	       {
-		  /* need to update the current selection */
-		  pFrame->FrSelectionEnd.VsBox = pAb->AbBox;
-		  *changeSelectEnd = TRUE;
-	       }
-
-	     if (pBox->BxType == BoComplete)
-	        /* not split */
-		RemoveAdjustement (pBox, x);
-	     else
-	       {
-		  /* take the first piece */
-		  ibox2 = pBox->BxNexChild;
-		  pBox->BxNexChild = NULL;
-		  if (pBox->BxType == BoSplit)
+  pFrame = &ViewFrameTable[frame - 1];
+  if (pBox != NULL && pBox->BxAbstractBox != NULL)
+    {
+      pAb = pBox->BxAbstractBox;
+      if (pAb != NULL && pAb->AbLeafType == LtText)
+	{
+	  x = CharacterWidth (SPACE, pBox->BxFont);
+	  if (pFrame->FrSelectionBegin.VsBox == pBox)
+	    {
+	      /* need to update the current selection */
+	      pFrame->FrSelectionBegin.VsBox = pAb->AbBox;
+	      *changeSelectBegin = TRUE;
+	    }
+	  if (pFrame->FrSelectionEnd.VsBox == pBox)
+	    {
+	      /* need to update the current selection */
+	      pFrame->FrSelectionEnd.VsBox = pAb->AbBox;
+	      *changeSelectEnd = TRUE;
+	    }
+	  
+	  if (pBox->BxType == BoComplete)
+	    /* not split */
+	    RemoveAdjustement (pBox, x);
+	  else
+	    {
+	      /* take the first piece */
+	      ibox2 = pBox->BxNexChild;
+	      pBox->BxNexChild = NULL;
+	      if (pBox->BxType == BoSplit)
+		{
+		  /* update the main box */
+		  pBox->BxType = BoComplete;
+		  pBox->BxPrevious = ibox2->BxPrevious;
+		  /* transmit the current position */
+		  pBox->BxXOrg = ibox2->BxXOrg;
+		  pBox->BxYOrg = ibox2->BxYOrg;
+		  if (pBox->BxPrevious != NULL)
+		    pBox->BxPrevious->BxNext = pBox;
+		  /*else
+		    pFrame->FrAbstractBox->AbBox->BxNext = pBox;*/
+		  /* don't update BxPrevious and BxNext of pieces */
+		  update = FALSE;
+		  width = 0;
+		  number = 0;
+		  lostPixels = 0;
+		}
+	      else
+		{
+		  /* merge one or more pieces */
+		  RemoveAdjustement (pBox, x);
+		  /* update BxPrevious and BxNext of pieces */
+		  update = TRUE;
+		  width = pBox->BxW;
+		  if (pBox->BxType == BoDotted)
 		    {
-		       /* update the main box */
-		       pBox->BxType = BoComplete;
-		       pBox->BxPrevious = ibox2->BxPrevious;
-		       /* transmit the current position */
-		       pBox->BxXOrg = ibox2->BxXOrg;
-		       pBox->BxYOrg = ibox2->BxYOrg;
-		       if (pBox->BxPrevious != NULL)
-			  pBox->BxPrevious->BxNext = pBox;
-		       else
-			  pFrame->FrAbstractBox->AbBox->BxNext = pBox;
-
-		       width = 0;
-		       number = 0;
-		       lostPixels = 0;
+		      /* remove the hyphen width */
+		      width -= CharacterWidth (173, pBox->BxFont);
+		      pBox->BxType = BoPiece;
 		    }
-		  else
+		  number = pBox->BxNSpaces;
+		  lostPixels = pBox->BxIndChar + pBox->BxNChars;
+		}
+	      
+	      /* Now free all following pieces */
+	      if (ibox2 != NULL)
+		{
+		  do
 		    {
-		       /* merege one or more pieces */
-		       RemoveAdjustement (pBox, x);
-		       width = pBox->BxW;
-		       if (pBox->BxType == BoDotted)
-			 {
-			    /* remove the hyphen width */
-			    width -= CharacterWidth (173, pBox->BxFont);
-			    pBox->BxType = BoPiece;
-			 }
-		       number = pBox->BxNSpaces;
-		       lostPixels = pBox->BxIndChar + pBox->BxNChars;
-		    }
+		      ibox1 = ibox2;
+		      RemoveAdjustement (ibox1, x);
+		      /* lost pixels */
+		      diff = ibox1->BxIndChar - lostPixels;
+		      if (diff > 0)
+			{
+			  /* add skipped spaces */
+			  width += diff * x;
+			  number += diff;
+			}
+		      else if (ibox1->BxType == BoDotted)
+			/* remove the hyphen width */
+			width -= CharacterWidth (173, ibox1->BxFont);
 
-		  /* Now free all following pieces */
-		  if (ibox2 != NULL)
+		      /* if the next box is not empty */
+		      if (ibox1->BxNChars > 0)
+			{
+			  number += ibox1->BxNSpaces;
+			  width += ibox1->BxW;
+			}
+		      lostPixels = ibox1->BxIndChar + ibox1->BxNChars;
+		      pNextBox = ibox1->BxNext;
+		      /* transmit the rigth margin, border, and padding of the last box */
+		      if (ibox1->BxNexChild == NULL)
+			{
+			  ibox2->BxRMargin = pBox->BxRMargin;
+			  ibox2->BxRBorder = pBox->BxRBorder;
+			  ibox2->BxRPadding = pBox->BxRPadding;
+			}
+		      ibox2 = FreeBox (ibox1);
+		      
+		      /* Prepare the selection update */
+		      pViewSel = &pFrame->FrSelectionBegin;
+		      if (pViewSel->VsBox == ibox1)
+			{
+			  pViewSel->VsBox = pAb->AbBox;
+			  *changeSelectBegin = TRUE;
+			}
+		      pViewSel = &pFrame->FrSelectionEnd;
+		      if (pViewSel->VsBox == ibox1)
+			{
+			  pViewSel->VsBox = pAb->AbBox;
+			  *changeSelectEnd = TRUE;
+			}
+		    }
+		  while (ibox2 != NULL);
+		  
+		  /* Update the first piece of box */
+		  if (pBox->BxType == BoPiece)
 		    {
-		       do
-			 {
-			    ibox1 = ibox2;
-			    RemoveAdjustement (ibox1, x);
-			    /* lost pixels */
-			    diff = ibox1->BxIndChar - lostPixels;
-			    if (diff > 0)
-			      {
-				 /* add skipped spaces */
-				 width += diff * x;
-				 number += diff;
-			      }
-			    else if (ibox1->BxType == BoDotted)
-			       /* remove the hyphen width */
-			       width -= CharacterWidth (173, ibox1->BxFont);
-
-			    /* if the next box is not empty */
-			    if (ibox1->BxNChars > 0)
-			      {
-				 number += ibox1->BxNSpaces;
-				 width += ibox1->BxW;
-			      }
-			    lostPixels = ibox1->BxIndChar + ibox1->BxNChars;
-			    pNextBox = ibox1->BxNext;
-			    /* transmit the rigth margin, border, and padding of the last box */
-			    if (ibox1->BxNexChild == NULL)
-			      {
-				ibox2->BxRMargin = pBox->BxRMargin;
-				ibox2->BxRBorder = pBox->BxRBorder;
-				ibox2->BxRPadding = pBox->BxRPadding;
-			      }
-			    ibox2 = FreeBox (ibox1);
-
-			    /* Prepare the selection update */
-			    pViewSel = &pFrame->FrSelectionBegin;
-			    if (pViewSel->VsBox == ibox1)
-			      {
-				 pViewSel->VsBox = pAb->AbBox;
-				 *changeSelectBegin = TRUE;
-			      }
-			    pViewSel = &pFrame->FrSelectionEnd;
-			    if (pViewSel->VsBox == ibox1)
-			      {
-				 pViewSel->VsBox = pAb->AbBox;
-				 *changeSelectEnd = TRUE;
-			      }
-			 }
-		       while (ibox2 != NULL);
-
-		       /* Update the first piece of box */
-		       if (pBox->BxType == BoPiece)
-			 {
-			    pBox->BxNChars = pBox->BxAbstractBox->AbBox->BxNChars - pBox->BxIndChar;
-			    /* add skipped spaces at the end */
-			    lostPixels = lostPixels - pBox->BxIndChar - pBox->BxNChars;
-			    if (lostPixels > 0)
-			      {
-				 width += lostPixels * x;
-				 number += lostPixels;
-			      }
-			    pBox->BxW = width;
-			    pBox->BxWidth = width + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
-			    pBox->BxNSpaces = number;
-			 }
-
-		       /* Update the chain of leaf boxes */
-		       pBox->BxNext = pNextBox;
-		       if (pNextBox != NULL)
-			  pNextBox->BxPrevious = pBox;
-		       else
-			  pFrame->FrAbstractBox->AbBox->BxPrevious = pBox;
+		      pBox->BxNChars = pBox->BxAbstractBox->AbBox->BxNChars - pBox->BxIndChar;
+		      /* add skipped spaces at the end */
+		      lostPixels = lostPixels - pBox->BxIndChar - pBox->BxNChars;
+		      if (lostPixels > 0)
+			{
+			  width += lostPixels * x;
+			  number += lostPixels;
+			}
+		      pBox->BxW = width;
+		      pBox->BxWidth = width + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
+		      pBox->BxNSpaces = number;
 		    }
-	       }
-	  }
-	/* Pour les autres natures */
-	else
-	  {
-	     if (pFrame->FrSelectionBegin.VsBox == pBox)
-		*changeSelectBegin = TRUE;
-	     if (pFrame->FrSelectionEnd.VsBox == pBox)
-		*changeSelectEnd = TRUE;
-	  }
-     }
+		  if (update)
+		    {
+		      /* Update the chain of leaf boxes */
+		      pBox->BxNext = pNextBox;
+		      if (pNextBox != NULL)
+			pNextBox->BxPrevious = pBox;
+		      else
+			pFrame->FrAbstractBox->AbBox->BxPrevious = pBox;
+		    }
+		}
+	    }
+	}
+      /* Pour les autres natures */
+      else
+	{
+	  if (pFrame->FrSelectionBegin.VsBox == pBox)
+	    *changeSelectBegin = TRUE;
+	  if (pFrame->FrSelectionEnd.VsBox == pBox)
+	    *changeSelectEnd = TRUE;
+	}
+    }
 }
 
 
