@@ -76,6 +76,7 @@ static PtrDocument  OldDocMsgSelect;
 #ifdef _WX
   #include "AmayaWindow.h"
   #include "AmayaFrame.h"
+  #include "AmayaCanvas.h"
   #include "appdialogue_wx.h"
 #endif /* _WX */
 #ifdef _GTK
@@ -2464,6 +2465,16 @@ ThotBool FrameButtonDownCallback(
   Document   document;
   View       view;
  
+  /* Amaya is waiting for a click selection ? */
+  if (ClickIsDone == 1)
+    {
+      ClickIsDone = 0;
+      ClickFrame = frame;
+      ClickX = x;
+      ClickY = y;
+      return TRUE;
+    }
+
   switch( thot_button_id )
   {
     case THOT_LEFT_BUTTON:
@@ -3251,10 +3262,13 @@ void TtaResetCursor (Document document, View view)
   ----------------------------------------------------------------------*/
 void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
 {
-#ifdef _GTK   
+#if defined(_WX) | defined(_GTK)
   ThotEvent           event;
-  Drawable            drawable;
   int                 i;
+  AmayaFrame *        w;
+#endif /* _WX | _GTK */
+#ifdef _GTK   
+  Drawable            drawable;
   ThotWidget          w;
 #endif /* _GTK */
 #ifdef _WINGUI
@@ -3286,6 +3300,16 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
     }
 #endif /* _GTK */
 
+#ifdef _WX
+  /* change the cursor */
+  for (i = 1; i <= MAX_FRAME; i++)
+    {
+      w = FrameTable[i].WdFrame;
+      if (w)
+	w->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
+    }
+#endif /* _WX */
+
   /* wait the click on the target */
   ClickIsDone = 1;
   ClickFrame = 0;
@@ -3293,9 +3317,9 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
   ClickY = 0;
   while (ClickIsDone == 1)
     {
-#ifdef _GTK
+#if defined(_GTK) | defined(_WX)
       TtaHandleOneEvent (&event);
-#endif /* _GTK */
+#endif /* _GTK | _WX */
 #ifdef _WINGUI
       GetMessage (&event, NULL, 0, 0);
       curFrame = GetFrameNumber (event.hwnd);
@@ -3318,6 +3342,16 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
 	}
     }
 #endif /* _GTK */
+
+#ifdef _WX
+  /* restore the cursor */
+  for (i = 1; i <= MAX_FRAME; i++)
+    {
+      w = FrameTable[i].WdFrame;
+      if (w)
+	w->GetCanvas()->SetCursor( wxNullCursor );
+    }
+#endif /* _WX */
 
   *frame = ClickFrame;
   if (ClickFrame > 0 && ClickFrame <= MAX_FRAME)

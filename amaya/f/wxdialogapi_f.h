@@ -42,6 +42,13 @@ extern ThotBool CreateCSSDlgWX ( int ref,
 extern ThotBool CreateDocInfoDlgWX ( int ref,
                                      ThotWindow parent,
                                      int doc );
+extern ThotBool CreateHRefDlgWX ( int ref,
+                                  ThotWindow parent,
+                                  const char *url_list,
+                                  const char *HRefValue,
+                                  int doc_select,
+                                  int dir_select,
+                                  int doc_type );
 
 #else /* __STDC__ */
 
@@ -81,6 +88,13 @@ extern ThotBool CreateCSSDlgWX ( int ref,
 extern ThotBool CreateDocInfoDlgWX ( int ref,
                                        ThotWindow parent,
                                        int doc );
+extern ThotBool CreateHRefDlgWX ( int ref,
+                                    ThotWindow parent,
+                                    const char *url_list,
+                                    const char *HRefValue,
+                                    int doc_select,
+                                    int dir_select,
+                                    int doc_type );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

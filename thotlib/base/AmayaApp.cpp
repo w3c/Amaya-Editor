@@ -144,6 +144,7 @@ bool AmayaApp::OnInit()
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "SaveAsDlgWX.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "CSSDlgWX.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "DocInfoDlgWX.xrc") );
+  wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "HRefDlgWX.xrc") );
   // TODO: rajouter ici toutes les autres ressources a charger  
 
   //#endif /* #ifndef _GLPRINT */

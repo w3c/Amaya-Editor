@@ -8,9 +8,9 @@
 
 extern int AttrValue ( PtrAttribute pAttr );
 extern char CharRule ( PtrPRule pPRule,
-		       PtrElement pEl,
-		       DocViewNumber view,
-		       ThotBool *ok );
+                       PtrElement pEl,
+                       DocViewNumber view,
+                       ThotBool *ok );
 extern ThotBool BoolRule ( PtrPRule pPRule,
                            PtrElement pEl,
                            DocViewNumber view,
@@ -58,9 +58,9 @@ extern void RedispAbsBox ( PtrAbstractBox pAb,
 
 extern int AttrValue ( PtrAttribute pAttr );
 extern char CharRule ( PtrPRule pPRule,
-		       PtrElement pEl,
-		       DocViewNumber view,
-		       ThotBool *ok );
+                         PtrElement pEl,
+                         DocViewNumber view,
+                         ThotBool *ok );
 extern ThotBool BoolRule ( PtrPRule pPRule,
                              PtrElement pEl,
                              DocViewNumber view,

@@ -854,6 +854,25 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
 	  CreateHRefDlgWindow (TtaGetViewFrame (doc, 1), AttrHREFvalue,
 			       DocSelect, DirSelect, docText);
 #endif  /* _WINGUI */
+#ifdef _WX
+	ThotBool created = FALSE;
+	
+	if (LinkAsXmlCSS || LinkAsCSS)
+	  /* select a CSS file */
+	  created = CreateHRefDlgWX ( BaseDialog + AttrHREFForm,
+				      TtaGetViewFrame (doc, 1), URL_list, AttrHREFvalue,
+				      DocSelect, DirSelect, docCSS );
+	else
+	  /* select any file */
+	  created = CreateHRefDlgWX ( BaseDialog + AttrHREFForm,
+				      TtaGetViewFrame (doc, 1), URL_list, AttrHREFvalue,
+				      DocSelect, DirSelect, docText );
+	if (created)
+	  {
+	    TtaSetDialoguePosition ();
+	    TtaShowDialogue (BaseDialog + AttrHREFForm, TRUE);
+	  }
+#endif /* _WX */
      }
 }
 

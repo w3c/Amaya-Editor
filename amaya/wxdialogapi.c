@@ -12,7 +12,7 @@
   #include "wxdialog/SaveAsDlgWX.h"
   #include "wxdialog/CSSDlgWX.h"
   #include "wxdialog/DocInfoDlgWX.h"
-//  #include "AmayaApp.h"
+  #include "wxdialog/HRefDlgWX.h"
 #endif /* _WX */
 
 #define THOT_EXPORT extern
@@ -396,6 +396,66 @@ ThotBool CreateDocInfoDlgWX ( int ref, ThotWindow parent, int doc)
   DocInfoDlgWX * p_dlg = new DocInfoDlgWX( ref,
 					   parent,
 					   doc );
+
+  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+    {
+      /* the dialog has been sucesfully registred */
+      return TRUE;
+    }
+  else
+    {
+      /* an error occured durring registration */
+      p_dlg->Destroy();
+      return FALSE;
+    }
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */
+}
+
+/*-----------------------------------------------------------------------
+ CreateHRefDlgWX
+ Used to :
+  - Add CSS file
+  - Create/Modify a link
+ ------------------------------------------------------------------------*/
+ThotBool CreateHRefDlgWX ( int ref, ThotWindow parent,
+			   const char *url_list,
+			   const char *HRefValue,
+			   int doc_select, int dir_select, int doc_type)
+{
+#ifdef _WX
+  wxString wx_title      = TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ATTRIBUTE) );
+  wxString wx_filter;
+  wxString wx_init_value = TtaConvMessageToWX( HRefValue );
+
+  if (doc_type == docCSS)
+    wx_filter = APPCSSNAMEFILTER;
+  else 
+    wx_filter = APPFILENAMEFILTER;
+
+
+  /* ------------------------- */
+  /* Create the url list array */
+  /* function will stop on double EOS */
+  wxArrayString wx_items;
+  int index = 0;
+  while (url_list[index] != EOS)
+    {
+      wx_items.Add( TtaConvMessageToWX( &url_list[index] ) );
+      index += strlen (&url_list[index]) + 1; /* one entry length */
+    }
+  /* ------------------------- */
+
+  wxLogDebug( _T("CreateHRefDlgWX - title=")+wx_title+
+	      _T("\tfilter=")+wx_filter );
+
+  HRefDlgWX * p_dlg = new HRefDlgWX( ref,
+				     parent,
+				     wx_items,
+				     wx_init_value,
+				     wx_title,
+				     wx_filter );
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
     {

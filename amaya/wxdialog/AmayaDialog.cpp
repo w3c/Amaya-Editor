@@ -40,11 +40,14 @@ void AmayaDialog::OnClose( wxCloseEvent& event )
   wxLogDebug(_T("AmayaDialog - OnClose") );
 
 
-  TtaDestroyDialogue( m_Ref );
-
   // maybe it's better to use :
-  // ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
+  // this callback is usefull for :
+  // - Add CSS / Create link
+  // because it cancel the link creation process.
+  // TODO : verifier que l'appel generique de cette callback ne gene pas pour certains dialogues.
+  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
 
+  TtaDestroyDialogue( m_Ref );
 
   //  forward the event to parents
   event.Skip();
