@@ -2000,7 +2000,7 @@ RULES
 	MarginTop: VSpaceBeforeH1;
 	MarginBottom: 0.2;
 	Width: Enclosing . Width;
-	Size: Enclosing + 6;
+	Size: Enclosing + 6 pt;
 	Weight: Bold;
 	Hyphenate: No;
 	IN Structure_view BEGIN
@@ -2031,7 +2031,7 @@ RULES
 		Width: Enclosing . Width - 1.2;
 #endif
 		MarginTop: VSpaceInToC;
-		Size: Enclosing +2;
+		Size: Enclosing + 2 pt;
 		Visibility: 10;
 		END;
 	IN Links_view
@@ -2051,7 +2051,7 @@ RULES
 	VertPos: Top = Previous NOT MAP . Bottom;
 	MarginTop: VSpaceBeforeH2;
 	Width: Enclosing . Width;
-	Size: Enclosing + 4;
+	Size: Enclosing + 4 pt;
 	Weight: Bold;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -2097,7 +2097,7 @@ RULES
 	VertPos: Top = Previous NOT MAP . Bottom;
 	MarginTop: VSpaceBeforeH3;
 	Width: Enclosing . Width;
-	Size: Enclosing + 2;
+	Size: Enclosing + 2 pt;
 	Weight: Bold;
 	IN Structure_view BEGIN
 		MarginTop: 0;
@@ -2191,7 +2191,7 @@ RULES
 	VertPos: Top = Previous NOT MAP . Bottom;
 	MarginTop: VSpaceBeforeH5;
 	Width: Enclosing . Width;
-	Size: Enclosing - 2;
+	Size: Enclosing - 2 pt;
 	IN Structure_view BEGIN
 		MarginTop: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -2233,7 +2233,7 @@ RULES
 	Width: Enclosing . Width;
 	VertPos: Top = Previous NOT MAP . Bottom;
 	MarginTop: VSpaceBeforeH6;
-	Size: Enclosing - 4;
+	Size: Enclosing - 4 pt;
 	IN Structure_view BEGIN
 		MarginTop: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
