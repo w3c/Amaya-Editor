@@ -838,7 +838,7 @@ static void tesse(ThotPoint *contours, int contour_cnt, ThotBool only_countour)
 #define SLICES_SIZE 361
 
 
-void GL_DrawArc2 (int x, int y, 
+void GL_DrawArc (int x, int y, 
 		 int w, int h, 
 		 int startAngle, int sweepAngle, 
 		 ThotBool filled)
@@ -861,12 +861,15 @@ void GL_DrawArc2 (int x, int y,
 
 
   if (w < 10 && h < 10)
-    slices = 36;
+    {
+      glPointSize (0.1);
+      slices = 36;
+    }
   else
     slices = SLICES;
 
-  startAngle = startAngle / 64;
-  sweepAngle = sweepAngle / 64;
+  startAngle = startAngle;
+  sweepAngle = sweepAngle;
  
   /* Cache is the vertex locations cache */
   angleOffset = startAngle / 180.0 * M_PI;
@@ -905,9 +908,11 @@ void GL_DrawArc2 (int x, int y,
 
   if (!filled)
     {
-      
-      glPolygonMode(GL_FRONT, GL_LINE);
-      glBegin (GL_POLYGON); 
+      if (w < 20 && h < 20)
+	glBegin(GL_POINTS);
+      else
+	glBegin(GL_LINE_STRIP);
+
       slices--;
       for (i = 0; i <= slices; i++)
 	{
@@ -915,7 +920,6 @@ void GL_DrawArc2 (int x, int y,
 		      y_cache[i]);
 	}
       glEnd();
-      glPolygonMode(GL_FRONT, GL_FILL);
     }
   
 }
@@ -1000,64 +1004,6 @@ void GL_DrawArc3 (int x, int y,
     glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
 }
 
-void GL_DrawArc (int originX, int originY, 
-		 int w, int h, 
-		 int angle1, int angle2, 
-		 ThotBool filled)
-{
-  double vectorX, vectorY;
-  double vectorY1, vectorX1;
-  double radiusw, radiush, angle;
-  double anglefinal;
-  
-  radiusw = (double)w/2;
-  radiush = (double)h/2;
-
-  angle = DEG_TO_RAD(angle1/64);
-  anglefinal = angle + DEG_TO_RAD(angle2/64);
-
-  if (filled)
-    {
-      /* The center */
-      vectorX1 = originX + radiusw;
-      vectorY1 = originY + radiush;
-  
-      glBegin (GL_TRIANGLE_FAN);
-      for (;angle <= anglefinal; angle += 0.01f)
-	{	
-	  vectorX = originX + radiusw + (radiusw*(float)cos((double)angle));
-	  vectorY = originY + radiush - (radiush*(float)sin((double)angle));		
-	  glVertex2d (vectorX1,vectorY1);
-	  vectorY1 = vectorY;
-	  vectorX1 = vectorX;			
-	}
-      glVertex2d (vectorX1, vectorY1);
-    }
-  else
-    {
-      vectorX1 = originX + radiusw*2;
-      vectorY1 = originY + radiush;
-
-      if (radiusw < 20.0f && radiush < 20.0f)
-	glBegin(GL_POINTS);
-      else
-	glBegin(GL_LINE_STRIP);
-
-      /* for(angle=0.0f;angle<=(2.0f*3.14159);angle+=0.01f) */
-      for (; angle <= anglefinal; angle+=0.01f)
-	{	
-	  vectorX = originX + radiusw + (radiusw*(float)cos((double)angle));
-	  vectorY = originY + radiush - (radiush*(float)sin((double)angle));		
-	  glVertex2d (vectorX1,vectorY1);
-	  vectorY1 = vectorY;
-	  vectorX1 = vectorX;			
-	}
-      glVertex2d (vectorX1, vectorY1);
-    }
-  
-  glEnd();
-}
-
 
 /*----------------------------------------------------------------------
  GL_DrawArc : receive angle at 64* their values...
@@ -1080,8 +1026,8 @@ void GL_DrawArc4 (int x, int y, int w, int h, int angle1, int angle2, ThotBool f
 
 
   angle2 = angle1 + angle2;
-  angle1 = angle1 / 64;
-  angle2 = angle2 / 64;
+  angle1 = angle1;
+  angle2 = angle2;
   w =  w / 2;
   h =  h / 2;
   fastx = x + w;
@@ -1151,6 +1097,63 @@ void GL_DrawArc4 (int x, int y, int w, int h, int angle1, int angle2, ThotBool f
   
 }
 
+
+void GL_DrawArc5 (int originX, int originY, 
+		 int w, int h, 
+		 int angle1, int angle2, 
+		 ThotBool filled)
+{
+  double vectorX, vectorY;
+  double vectorY1, vectorX1;
+  double radiusw, radiush, angle;
+  double anglefinal;
+  
+  radiusw = (double)w/2;
+  radiush = (double)h/2;
+
+  angle = DEG_TO_RAD(angle1);
+  anglefinal = angle + DEG_TO_RAD(angle2);
+
+  if (filled)
+    {
+      /* The center */
+      vectorX1 = originX + radiusw;
+      vectorY1 = originY + radiush;
+  
+      glBegin (GL_TRIANGLE_FAN);
+      for (;anglefinal <= angle; angle -= 0.01f)
+	{	
+	  vectorX = originX + radiusw + (radiusw*(float)cos((double)angle));
+	  vectorY = originY + radiush - (radiush*(float)sin((double)angle));		
+	  glVertex2d (vectorX1,vectorY1);
+	  vectorY1 = vectorY;
+	  vectorX1 = vectorX;			
+	}
+      glVertex2d (vectorX1, vectorY1);
+    }
+  else
+    {
+      vectorX1 = originX + radiusw*2;
+      vectorY1 = originY + radiush;
+
+      if (radiusw < 20.0f && radiush < 20.0f)
+	glBegin(GL_POINTS);
+      else
+	glBegin(GL_LINE_STRIP);
+
+      for (; anglefinal <= angle; angle-=0.01f)
+	{	
+	  vectorX = originX + radiusw + (radiusw*(float)cos((double)angle));
+	  vectorY = originY + radiush - (radiush*(float)sin((double)angle));		
+	  glVertex2d (vectorX1,vectorY1);
+	  vectorY1 = vectorY;
+	  vectorX1 = vectorX;			
+	}
+      glVertex2d (vectorX1, vectorY1);
+    }
+  
+  glEnd();
+}
 
 /*----------------------------------------------------------------------
    GL_DrawLines
@@ -1939,9 +1942,11 @@ ThotBool GL_DrawAll ()
 	{	
 	  frame_animating = TRUE;      
 #ifdef _GTK
-	  gtk_main_iteration_do (FALSE);
-	  while (gtk_events_pending ()) 
+	  /*
+	    gtk_main_iteration_do (FALSE);
+	    while (gtk_events_pending ()) 
 	    gtk_main_iteration ();
+	  */
 #endif /* _GTK */
 	  
   
@@ -2253,6 +2258,7 @@ void GL_window_copy_area (int frame,
 	  glEnable (GL_BLEND);
 	  /*copy from back to front */
 	  GL_realize (frame);	  
+	  FrameTable[frame].DblBuffNeedSwap = TRUE;
 	}
 }
 /*-----------------------------------
@@ -2263,8 +2269,8 @@ void GL_window_copy_area (int frame,
 void GLResize (int width, int height, int x, int y)
 {
 #ifdef _GTK
-  gdk_gl_wait_gdk ();
-  gdk_gl_wait_gl ();
+  /* gdk_gl_wait_gdk (); */
+/*   gdk_gl_wait_gl (); */
 #endif /*_GTK*/ 
   glViewport (0, 0, width, height);
   glMatrixMode (GL_PROJECTION);      
@@ -2295,16 +2301,16 @@ void gl_window_resize (int frame, int width, int height)
   if (GL_prepare (frame))
       {
 #ifdef _GTK
-  gdk_gl_wait_gdk ();
-  gdk_gl_wait_gl ();
+  /* gdk_gl_wait_gdk (); */
+/*   gdk_gl_wait_gl (); */
   widget = FrameTable[frame].WdFrame;
 
   gtk_widget_queue_resize  (widget->parent->parent);
   while (gtk_events_pending ()) 
     gtk_main_iteration ();
 
-  gdk_gl_wait_gdk ();
-  gdk_gl_wait_gl ();
+  /* gdk_gl_wait_gdk (); */
+/*   gdk_gl_wait_gl (); */
   return;
   GLResize (widget->allocation.width+width, 
 	    widget->allocation.height+height, 

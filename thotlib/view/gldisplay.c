@@ -451,7 +451,7 @@ void DrawIntersection (int frame, int x, int y, int l, int h, PtrFont font,
 
 	/* Upper part */
 	GL_DrawArc(x + 1, y + 1, l - 3, 
-		   arc * 2, 0 * 64, 180 * 64, FALSE);
+		   arc * 2, 0, 180, FALSE);
      }
 }
 
@@ -488,7 +488,7 @@ void DrawUnion (int frame, int x, int y, int l, int h, PtrFont font, int fg)
 	/* Lower part */
 	GL_DrawArc (x + 1, y + h - arc * 2 - 2,
 		    l - 3, arc * 2,
-		    -0 * 64, -180 * 64,
+		    -0, -180,
 		    FALSE);
      }
 }
@@ -1615,8 +1615,8 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
    xarc[0].y = y;
    xarc[0].width = rx;
    xarc[0].height = ry;
-   xarc[0].angle1 = 90 * 64;
-   xarc[0].angle2 = 90 * 64;
+   xarc[0].angle1 = 90;
+   xarc[0].angle2 = 90;
 
    xarc[1].x = xf - rx;
    xarc[1].y = xarc[0].y;
@@ -1629,14 +1629,14 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
    xarc[2].y = yf - ry;
    xarc[2].width = rx;
    xarc[2].height = ry;
-   xarc[2].angle1 = 180 * 64;
+   xarc[2].angle1 = 180;
    xarc[2].angle2 = xarc[0].angle2;
 
    xarc[3].x = xarc[1].x;
    xarc[3].y = xarc[2].y;
    xarc[3].width = rx;
    xarc[3].height = ry;
-   xarc[3].angle1 = 270 * 64;
+   xarc[3].angle1 = 270;
    xarc[3].angle2 = xarc[0].angle2;
 
    seg[0].x1 = x + dx;
@@ -1737,38 +1737,31 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
 {
    Pixmap              pat;
 
-   /*
-     width -= thick + 1;
-     height -= thick + 1;
-     x += thick / 2;
-     y = y + thick / 2 + FrameTable[frame].FrTopMargin;
-   */
+   
+   width -= thick + 1;
+   height -= thick + 1;
+   x += thick / 2;
+   y = y + thick / 2 + FrameTable[frame].FrTopMargin;
+   
    /* Fill in the rectangle */
    pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
    if (pat == 0 && thick <= 0)
      return;
-
-   /*if (width == height && width < 10)
-     {
-     if (thick > 0 && fg >= 0)
-     GL_Point (fg, width, x, y+height/2);
-     else
-     if (pat != 0)
-     GL_Point (fg, width, x, y);
-     return;
-     }*/
+   if (pattern == fg)
+     bg = fg;
+   
    if (pat != 0)
      {
        /* InitDrawing (style, thick, bg); */
        GL_SetForeground (bg);
-       GL_DrawArc (x, y, width, height, 0, 360 * 64, TRUE);
+       GL_DrawArc (x, y, width, height, 0, 360, TRUE);
      }
 
    /* Draw the border */
    if (thick > 0 && fg >= 0)
      {
        InitDrawing (style, thick/4, fg);
-       GL_DrawArc (x, y, width, height, 0, 360 * 64, FALSE);
+       GL_DrawArc (x, y, width, height, 0, 360, FALSE);
      }
 }
 
@@ -2144,7 +2137,7 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
    if (pat != 0)
      {
 	GL_SetForeground (bg);
-	GL_DrawArc (x, y, width, height, 0, 360 * 64, TRUE);
+	GL_DrawArc (x, y, width, height, 0, 360, TRUE);
 
      }
 
@@ -2152,7 +2145,7 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
    if (thick > 0 && fg >= 0)
      {
 	InitDrawing (style, thick, fg);
-	GL_DrawArc(x, y, width, height, 0, 360 * 64, FALSE); 
+	GL_DrawArc(x, y, width, height, 0, 360, FALSE); 
 	px7mm = (7 * DOT_PER_INCH) / 25.4 + 0.5;
 	if (height > 2 * px7mm)
 	  {
