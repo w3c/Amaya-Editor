@@ -21,7 +21,7 @@ ELEMENTS
 	ElemNew.Post ->         SVGCreated;
 	ElemExport.Pre ->       SetEmptyShapeAttribute;
 	END;
-{*** Only for SVG "animation" demo. See end of file Graphedit.c ***
+{*** Only for SVG "animation" demo. See end of file SVGedit.c ***
    g:
 	BEGIN
 	ElemTextModify.Pre ->   TextWillChangeInGroup;

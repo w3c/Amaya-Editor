@@ -1673,8 +1673,11 @@ void CheckCSSLink (Element el, Document doc, SSchema schema)
 	  /* get the CSS URI in UTF-8 */
 	  buff = ReallocUTF8String (buff, doc);
 	  /* load the stylesheet file found here ! */
-	  LoadStyleSheet (buff, doc, el, NULL, media, FALSE);
-	  TtaFreeMemory (buff);
+	  if (buff)
+	    {
+	      LoadStyleSheet (buff, doc, el, NULL, media, FALSE);
+	      TtaFreeMemory (buff);
+	    }
 	}
     }
 }
