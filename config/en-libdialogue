@@ -273,5 +273,6 @@
 273 Error in PostScript translation
 274 Command refused by the spooler "%s"
 275 Cannot create "%s"
-276  Global Layout
+276 Global Layout
+277 Unable to link the new element
 

@@ -1657,7 +1657,9 @@ PtrElement         *pSelEl;
 	   pEl = NULL;
 	*pSelEl = CreateFirstAssocElement (pDoc, referredTypeNum, pSS);
 	if (*pSelEl != NULL)
-	   pCreatedElem = *pSelEl;
+	  if (!SetReference (pEl, pAttr, *pSelEl, pDoc, pDoc, TRUE, TRUE))
+	    TtaDisplaySimpleMessage (INFO, LIB, TMSG_UNABLE_LINK_NEW_ELEM);
+	pCreatedElem = *pSelEl;
 	ret = TRUE;
      }
    else

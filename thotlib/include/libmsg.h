@@ -297,6 +297,7 @@
 #define TMSG_UNKNOWN_PRINTER                         274
 #define TMSG_CANNOT_CREATE_PS			     275
 #define TMSG_GLOBAL_LAYOUT			     276
-#define TMSG_LIB_MSG_MAX			     277
+#define TMSG_UNABLE_LINK_NEW_ELEM                    277
+#define TMSG_LIB_MSG_MAX			     278
 
 #endif
