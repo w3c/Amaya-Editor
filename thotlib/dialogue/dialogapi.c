@@ -651,6 +651,15 @@ ThotWidget CatWidget(int ref)
   catalogue  = CatEntry (ref);
   return (catalogue->Cat_Widget);
 }
+
+/*----------------------------------------------------------------------
+   TtaCatwidget returns the widget that owns the catalog given in ref
+  ----------------------------------------------------------------------*/
+ThotWidget TtaCatWidget(int ref)
+{
+  return (CatWidget (ref));
+}
+
 #if !defined(_WINDOWS) && !defined(_GTK)
 /*----------------------------------------------------------------------
   Callback for closing a menu
@@ -8218,6 +8227,45 @@ static void TreeItemSelect (ThotWidget w, ThotBool state, caddr_t call_d)
       (*cbf) (w, state, user_data);
 
 #endif /* GTK */
+}
+
+/*----------------------------------------------------------------------
+   TtaClearTree
+   Clears (destroys) the contents of a tree created with TtaNewTreeForm.
+   Returns the identifier of the tree widget.
+  ----------------------------------------------------------------------*/
+ThotWidget TtaClearTree (ThotWidget tree)
+     /* add some tree stuff here */
+{
+#ifndef _WINDOWS
+  GList *children;
+  ThotWidget tmp, tree_widget = NULL;
+
+  if (!tree || !GTK_IS_SCROLLED_WINDOW (tree))
+    return NULL;
+
+  /* get the viewport */
+  children = gtk_container_children (GTK_CONTAINER (tree));
+  if (!children)
+    return NULL;
+
+  /* get the tree */
+  tmp = children->data;
+  g_list_free (children);
+  children = gtk_container_children (GTK_CONTAINER (tmp));
+  if (children)
+    {
+      tree_widget = children->data;
+      g_list_free (children);
+      children = gtk_container_children (GTK_CONTAINER (tree_widget));
+      if (children)
+	{
+	  gtk_tree_remove_items (GTK_TREE (tree_widget), children);
+	  g_list_free (children);
+	}
+    }
+  return (tree_widget);
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------

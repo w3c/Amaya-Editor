@@ -352,6 +352,12 @@ extern void TtaNewNumberForm (int ref, int ref_parent, char *title, int min,
 extern void TtaSetNumberForm (int ref, int val);
 
 /*----------------------------------------------------------------------
+   TtaClearTree
+   Clears (destroys) the contents of a tree
+  ----------------------------------------------------------------------*/
+extern ThotWidget TtaClearTree (ThotWidget tree);
+
+/*----------------------------------------------------------------------
    TtaAddSubTree
    Creates a new subtree and returns its reference.
    Parent gives the widget to which the new subtree should be attached.
@@ -418,6 +424,11 @@ extern void TtaAbortShowDialogue (void);
    TtaUnmapDialogue desactive le dialogue s'il est actif.             
   ----------------------------------------------------------------------*/
 extern void TtaUnmapDialogue (int ref);
+
+/*----------------------------------------------------------------------
+   TtaCatwidget returns the widget that owns the catalog given in ref
+  ----------------------------------------------------------------------*/
+extern ThotWidget TtaCatWidget(int ref);
 
 #endif /* __CEXTRACT__ */
 
