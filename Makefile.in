@@ -203,7 +203,7 @@ libmd5 : force
 		@(localdir=`pwd`; \
 		 zlibsrcdir="$$localdir/../libpng/zlib"; \
 		 cd $(LIBWWW)/modules/md5 ; \
-		 $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" \
+		 $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS) $(AMAYA_EXPAT_OPTIONS)" \
 		 CPPFLAGS="$(CPPFLAGS) -I$$zlibsrcdir" \
 	        	    libmd5.la)
 

@@ -42,6 +42,7 @@ MOTIF_LIBRARIES=@MOTIF_LIBRARIES@
 
 EXPAT_INCLUDES=
 EXPAT_LIBRARIES=
+EXPAT_OPTIONS=-DXML_DTD -DXML_NS
 
 #GTK_INCLUDES=-I/usr/local/lib/glib/include
 #GTK_LIBRARIES=-lgtk -lgdk -rdynamic -lgmodule -lglib
