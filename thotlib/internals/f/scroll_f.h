@@ -31,7 +31,7 @@ extern void ShowBox ( int frame,
 extern ThotBool IsScrolled ( int frame,
                              int selection );
 extern void ShowSelectedBox ( int frame,
-                              ThotBool actif );
+                              ThotBool active );
 extern ThotBool IsAbsBoxVisible ( int frame,
                                   PtrAbstractBox pAb );
 
@@ -62,7 +62,7 @@ extern void ShowBox (/* int frame,
 extern ThotBool IsScrolled (/* int frame,
                                int selection */);
 extern void ShowSelectedBox (/* int frame,
-                                ThotBool actif */);
+                                ThotBool active */);
 extern ThotBool IsAbsBoxVisible (/* int frame,
                                     PtrAbstractBox pAb */);
 

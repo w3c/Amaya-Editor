@@ -356,164 +356,178 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
   if (!GetCurrentSelection (&pDoc, &pEl, &lastSel, &firstChar, &lastChar))
     /* il n'y en a pas, message d'erreur et fin */
     return pCreatedAB;
-  else
+  else if (!pDoc->DocReadOnly && !ElementIsReadOnly (pEl->ElParent))
     /* il y a bien une selection, on travaille sur le premier element */
     /* de la selection */
     /* on ne peut inserer ou coller dans un document en lecture seule */
-    if (!pDoc->DocReadOnly && !ElementIsReadOnly (pEl->ElParent))
-      {
-	doc = IdentDocument (pDoc);
-	pE = NULL;
-	pLeaf = NULL;
-	empty = TRUE;
-	/* determine le type de l'element feuille a creer */
-	switch (leafType)
-	  {
-	  case LtText:
-	    lType = CharString + 1;
-	    break;
-	  case LtGraphics:
-	    lType = GraphicElem + 1;
-	    break;
-	  case LtSymbol:
-	    lType = Symbol + 1;
-	    break;
-	  case LtPicture:
-	    lType = Picture + 1;
-	    break;
-	  case LtPolyLine:
-	    lType = GraphicElem + 1;
-	    break;
-	  case LtPath:
-	    lType = GraphicElem + 1;
-	    break;
-	  default:
-	    break;
-	  }
-	/* verifie qu'on peut bien creer ce type de feuille ici */
-	if (!ExcludedType (pEl, lType, NULL))
-	  {
-	    if (pEl->ElTerminal)
-	      /* on n'insere pas dans une feuille protegee en ecriture ni */
-	      /* dans une constante */
-	      if (SameLeafType (pEl->ElLeafType, leafType) &&
-		  !pEl->ElIsCopy &&
-		  !pEl->ElHolophrast &&
-		  pEl->ElAccess != AccessReadOnly &&
-		  pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct != CsConstant)
-		/* element de la nature cherchee */
-		empty = TRUE;
-	      else
-		/* on creera une feuille devant */
-		empty = FALSE;
+    {
+      doc = IdentDocument (pDoc);
+      pE = NULL;
+      pLeaf = NULL;
+      empty = TRUE;
+      /* determine le type de l'element feuille a creer */
+      switch (leafType)
+	{
+	case LtText:
+	  lType = CharString + 1;
+	  break;
+	case LtGraphics:
+	  lType = GraphicElem + 1;
+	  break;
+	case LtSymbol:
+	  lType = Symbol + 1;
+	  break;
+	case LtPicture:
+	  lType = Picture + 1;
+	  break;
+	case LtPolyLine:
+	  lType = GraphicElem + 1;
+	  break;
+	case LtPath:
+	  lType = GraphicElem + 1;
+	  break;
+	default:
+	  break;
+	}
+      /* verifie qu'on peut bien creer ce type de feuille ici */
+      if (!ExcludedType (pEl, lType, NULL))
+	{
+	  if (pEl->ElTerminal)
+	    /* on n'insere pas dans une feuille protegee en ecriture ni */
+	    /* dans une constante */
+	    if (SameLeafType (pEl->ElLeafType, leafType) &&
+		!pEl->ElIsCopy &&
+		!pEl->ElHolophrast &&
+		pEl->ElAccess != AccessReadOnly &&
+		pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct != CsConstant)
+	      /* element de la nature cherchee */
+	      empty = TRUE;
 	    else
-	      /* element non terminal */
-	      /* cherche si la descendance de l'element se reduit a un */
-	      /* element vide ou a une feuille vide */
-	      {
-		pChild = pEl->ElFirstChild;
-		stop = FALSE;
-		empty = TRUE;
-		while (pChild != NULL && !stop)
-		  /* saute les marques de page */
-		  {
-		    pNextEl = pChild;
-		    FwdSkipPageBreak (&pNextEl);
-		    if (pNextEl == NULL)
-		      /* il n'y a que des marques de pages, l'element est vide */
-		      {
-			pChild = pChild->ElParent;
-			stop = TRUE;
-		      }
-		    else
-		      /* il y a un fils qui n'est pas une marque de page */
-		      {
-			pChild = pNextEl;
-			/* saute les marques de page qui le suivent */
-			FwdSkipPageBreak (&pNextEl);
-			if (pNextEl != NULL)
-			  pNextEl = pNextEl->ElNext;
-			if (pNextEl != NULL)
-			  /* le fils a un frere */
-			  {
-			    pChild = NULL;
-			    empty = FALSE;
-			  }
-			else
-			  {
-			    if (pChild->ElTerminal)
-			      {
-				switch (pChild->ElLeafType)
-				  {
-				  case LtPicture:
-				  case LtText:
-				    if (pChild->ElTextLength == 0)
-				      /* la descendance se reduit a une feuille vide */
-				      stop = TRUE;
-				    else
-				      /* la feuille n'est pas vide */
-				      {
-					pChild = NULL;
-					empty = FALSE;
-				      }
-				    break;
-				  case LtPolyLine:
-				    if (pChild->ElNPoints == 0)
-				      stop = TRUE;
-				    else
-				      {
-					pChild = NULL;
-					empty = FALSE;
-				      }
-				    break;
-				  case LtPath:
-				    if (pChild->ElVolume == 0)
-				      stop = TRUE;
-				    else
-				      {
-					pChild = NULL;
-					empty = FALSE;
-				      }
-				    break;
-				  case LtSymbol:
-				  case LtGraphics:
-				  case LtCompound:
-				    if (pChild->ElGraph == EOS)
-				      /* la descendance se reduit a une feuille vide */
-				      stop = TRUE;
-				    else
-				      /* la feuille n'est pas vide */
-				      {
-					pChild = NULL;
-					empty = FALSE;
-				      }
-				    break;
-				  default:
-				    pChild = NULL;
-				    empty = FALSE;
-				    break;
+	      /* on creera une feuille devant */
+	      empty = FALSE;
+	  else
+	    /* element non terminal */
+	    /* cherche si la descendance de l'element se reduit a un */
+	    /* element vide ou a une feuille vide */
+	    {
+	      pChild = pEl->ElFirstChild;
+	      stop = FALSE;
+	      empty = TRUE;
+	      while (pChild != NULL && !stop)
+		/* saute les marques de page */
+		{
+		  pNextEl = pChild;
+		  FwdSkipPageBreak (&pNextEl);
+		  if (pNextEl == NULL)
+		    /* il n'y a que des marques de pages, l'element est vide */
+		    {
+		      pChild = pChild->ElParent;
+		      stop = TRUE;
+		    }
+		  else
+		    /* il y a un fils qui n'est pas une marque de page */
+		    {
+		      pChild = pNextEl;
+		      /* saute les marques de page qui le suivent */
+		      FwdSkipPageBreak (&pNextEl);
+		      if (pNextEl != NULL)
+			pNextEl = pNextEl->ElNext;
+		      if (pNextEl != NULL)
+			/* le fils a un frere */
+			{
+			  pChild = NULL;
+			  empty = FALSE;
+			}
+		      else
+			{
+			  if (pChild->ElTerminal)
+			    {
+			      switch (pChild->ElLeafType)
+				{
+				case LtPicture:
+				case LtText:
+				  if (pChild->ElTextLength == 0)
+				    /* la descendance se reduit a une feuille vide */
+				    stop = TRUE;
+				  else
+				    /* la feuille n'est pas vide */
+				    {
+				      pChild = NULL;
+				      empty = FALSE;
+				    }
+				  break;
+				case LtPolyLine:
+				  if (pChild->ElNPoints == 0)
+				    stop = TRUE;
+				  else
+				    {
+				      pChild = NULL;
+				      empty = FALSE;
+				    }
+				  break;
+				case LtPath:
+				  if (pChild->ElVolume == 0)
+				    stop = TRUE;
+				  else
+				    {
+				      pChild = NULL;
+				      empty = FALSE;
+				    }
+				  break;
+				case LtSymbol:
+				case LtGraphics:
+				case LtCompound:
+				  if (pChild->ElGraph == EOS)
+				    /* la descendance se reduit a une feuille vide */
+				    stop = TRUE;
+				  else
+				    /* la feuille n'est pas vide */
+				    {
+				      pChild = NULL;
+				      empty = FALSE;
+				    }
+				  break;
+				default:
+				  pChild = NULL;
+				  empty = FALSE;
+				  break;
 				  }
-				if (stop &&
-				    (pChild->ElIsCopy || pChild->ElHolophrast ||
-				     pChild->ElStructSchema->SsRule->SrElem[pChild->ElTypeNumber - 1]->SrConstruct == CsConstant ||
-				     ElementIsReadOnly (pChild)))
-				  {
-				    stop = FALSE;
-				    pChild = NULL;
-				    empty = FALSE;
-				  }
-			      }
-			    else if (pChild->ElFirstChild == NULL)
-			      /* la descendance se reduit a un element vide */
-			      stop = TRUE;
-			    else
-			      pChild = pChild->ElFirstChild;
-			  }
-		      }
-		  }
-		if (pChild != NULL)
-		  pEl = pChild;
-	      }
+			      if (stop &&
+				  (pChild->ElIsCopy || pChild->ElHolophrast ||
+				   pChild->ElStructSchema->SsRule->SrElem[pChild->ElTypeNumber - 1]->SrConstruct == CsConstant ||
+				   ElementIsReadOnly (pChild)))
+				{
+				  stop = FALSE;
+				  pChild = NULL;
+				  empty = FALSE;
+				}
+			    }
+			  else if (pChild->ElFirstChild == NULL)
+			    /* la descendance se reduit a un element vide */
+			    stop = TRUE;
+			  else
+			    pChild = pChild->ElFirstChild;
+			}
+		    }
+		}
+	      if (pChild != NULL)
+		pEl = pChild;
+	    }
+
+	  /* Determine la vue dans laquelle l'utilisateur travaille */
+	  if (pAB != NULL)
+	    /* on prend la vue choisie par l'utilisateur */
+	    view = pAB->AbDocView;
+	  else
+	    /* pas de selection */
+	    /* cherche la premiere vue ou l'element a un pave */
+	    {
+	      view = 0;
+	      do
+		view++;
+	      while (pEl->ElAbstractBox[view - 1] == NULL && view != MAX_VIEW_DOC);
+	    }
+
 	    /* on cree une descendance pour cet element */
 	    if (!empty)
 	      /* l'element a deja une descendance */
@@ -706,19 +720,6 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
 			  }
 		      }
 		  }
-	      }
-	    /* Determine la vue dans laquelle l'utilisateur travaille */
-	    if (pAB != NULL)
-	      /* on prend la vue choisie par l'utilisateur */
-	      view = pAB->AbDocView;
-	    else
-	      /* pas de selection */
-	      /* cherche la premiere vue ou l'element a un pave */
-	      {
-		view = 0;
-		do
-		  view++;
-		while (pEl->ElAbstractBox[view - 1] == NULL && view != MAX_VIEW_DOC);
 	      }
 	    *frame = pDoc->DocViewFrame[view - 1];
 	    if (pE != NULL)

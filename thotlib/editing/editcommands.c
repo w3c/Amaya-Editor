@@ -4066,7 +4066,7 @@ void TtcPaste (Document doc, View view)
 	{
 	  if (pDoc->DocEditSequence)
 	    /* close the previous history sequence */
-	    
+	    CloseTextInsertionWithControl (FALSE);
 	  /* avoid to redisplay step by step */
 	  dispMode = TtaGetDisplayMode (doc);
 	  if (dispMode == DisplayImmediately)
