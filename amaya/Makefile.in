@@ -98,7 +98,7 @@ force :
 #include the fragment "amaya/Makefile.libwww" for libwww if configured in
 @www_frag@
 
-#include the fragment "amaya/Makefile.xml" for math if configured in
+#include the fragment "amaya/Makefile.math" for math if configured in
 @math_frag@
 
 #########################################################################
