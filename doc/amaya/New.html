@@ -16,44 +16,44 @@ July 10, 1997</p>
 <h2>Extensions</h2>
 <ul>
 <li>
-Anchors and ID attributes:
+Anchors and ID attributes: 
 <ul>
 <li>
-When Amaya parses a document it verifies that all MAPs have a different NAME
-value and changes them if not. The USEMAP attribute of the related IMG element
-is also updated.
+When Amaya parses a document it checks that all MAPs have a different NAME,
+and it changes duplicate NAMEs. The USEMAP attribute of the related IMG
+element is updated accordingly. 
 <li>
-The function "Create Target" generates automatically a NAME or a ID attribute
-according with the current selection. - If the DTD allows the insertion of an
-anchor as the parent of the current selection, Amaya inserts the anchor and
-takes the first included word of more than 3 characters as value of the NAME
-attribute. - If only one structured element is selected (DIV, H1, etc.), Amaya
-generates an ID attribute for this structured element. The ID value as the
-NAME value depends on the included text. Amaya checks that the new NAME or ID
-value is unique. If it's not the case it changes the value by adding a counter
-at the end of the word still it's not unique (example "value1" if "value"
-already exists).
+The function "Create Target" generates an attribute NAME or ID depending on
+the current selection. - If the DTD allows the insertion of an anchor as the
+parent of the current selection, Amaya creats an anchor and takes the first
+included word of more than 3 characters as the value of the NAME attribute. -
+If a single structured element is selected (DIV, H1, etc.), Amaya generates an
+ID attribute for this structured element. The ID value is generated, like the
+NAME value, after the included text. Amaya checks that the new NAME or ID
+value is unique. If it's not the case it changes the value by adding a number
+at the end of the word. For example, it generates "value1" if "value" already
+exists in the document. 
 <li>
 When an anchor with a NAME attribute or an element with an ID attribute is
-pasted, Amaya checks that the new NAME or ID value is unique and changes its
-value if not.
+pasted, Amaya checks that the new NAME or ID value is unique and changes it if
+it's not unique.
 <li>
-Functions which create a MAP element generates automatically a NAME with the
-NAME value "map". Amaya checks that the new NAME value is unique.
+Functions which create a MAP element generates automatically a NAME with value
+"map". Amaya checks that the new NAME value is unique. 
 <li>
-When an IMG with a USEMAP attribute is pasted, Amaya remove this attribute.
-and when an IMG with a USEMAP attribute is deleted, Amaya does take care of
-the related MAP element. The document author has in charge to delete this MAP
-or relink it to another IMG element.
+When an IMG with a USEMAP attribute is pasted, Amaya remove this attribute,
+and when an IMG with a USEMAP attribute is deleted, it does take care of the
+related MAP element. The document author is supposed to delete this MAP or  to
+link it to another IMG element. 
 </ul>
 <li>
-Links:
+Links: 
 <p>
-The functions "Create Link" or "Change Link" create an anchor if the DTD
+The functions "Create Link" and "Change Link" create an anchor if the DTD
 allows the insertion of an anchor as the parent of the current selection. Then
-the user can click on a target anchor or a target document or a structured
+the user can click a target anchor or a target document or a structured
 element with an ID attribute. - If it's not a valid target, Amaya displays a
-form to insert the HREF value. - If the user click on a valid target, Amaya
+form to insert the HREF value. - If the user clicks on a valid target, Amaya
 generates automatically the HREF value. In both cases, Amaya transforms the
 HREF value to make it relative to the document base (the BASE element value or
 the current document URL).</p>
@@ -61,59 +61,59 @@ the current document URL).</p>
 When an anchor with a HREF attribute is pasted, Amaya transforms the HREF
 value to make it relative to the document base.</p>
 <li>
-Images:
+Images: 
 <p>
 The function "Create Image" creates the SRC value relatively to the document
 base (the BASE element value or the current document URL). Amaya also creates
 the ALT attribute and initializes its value with the image name.</p>
 <p>
-When IMG is pasted, Amaya transforms the SRC value to make it relative to the
-document base.</p>
+When an IMG is pasted, Amaya transforms the SRC value to make it relative to
+the document base.</p>
 <li>
-Publishing:
+Publishing: 
 <ul>
 <li><p>
 Button "Copy Images" indicates that images have to be copied into: - the new
 document directory (on the remote server or locally), - the new image
 directory, if there is a specified image directory.</p>
 <li><p>
-Button "Transform URLs" indicates that all URLs, SRCs are recomputed when
+Button "Transform URLs" indicates that all URLs and SRCs are recomputed when
 saving the document. In both cases, Amaya generates relative URLs when it's
 possible.</p>
 </ul>
 <li>
-Customization: Each user can define his personal file HTML.conf in his HOME
-directory. So each individual user can now customize size and position of
-Amaya windows.
+Customization: Each user can define his/her personal file HTML.conf in his/her
+HOME directory. So each individual user can now customize size and position of
+Amaya windows. 
 <li>
 Java: Upgraded to Kaffe-0.9.1 using the JDK 1.1.2 classes. The mechanism to
 access Java objects content has been cleaned up and should be ready for 64 bit
 targets. Java stubs are not distributed anymore, the Makefiles produced by
 autoconf build them on the fly to avoid conflict in case of changes in the
 HTML schemas. General improvements for the Java classes embedding access to
-the document C objects.
+the document C objects. 
 <li>
 Math: This version of Amaya contains an embryonic MathML editor, that allows
 mathematical expressions to be embedded in HTML pages.  It implements a subset
 of the MathML specification. This feature should be considered as a
-demonstration, as it is very imcomplete. More in next releases.
+demonstration, as it is very incomplete. More in next releases. 
 <li>
-MS/Windows This is the first version of amaya that runs on Microsoft Windows
-(both Windows 95 and Windows/NT).
+MS/Windows This is the first version of Amaya that runs on Microsoft Windows
+(both Windows 95 and Windows/NT). 
 </ul>
 
 <h2>Fixed bugs</h2>
 <ul>
 <li><p>
-Spaces were not accepted in end tags. For instance, was considered invalid. It
-is accepted now.</p>
+Spaces were not accepted in end tags. For instance, <code>&lt;/STRONG ></code>
+was considered invalid. It is accepted now.</p>
 <li><p>
 Amaya refused to create an Image before an Image. Now it works.</p>
 <li><p>
 Sometimes, active zones were not created.</p>
 <li><p>
 Using Style forms, the text was displayed correctly, but the style attribute
-registered the previous style value instead of the new one. </p>
+registered the previous style value instead of the new one.</p>
 </ul>
 <p>
 </p>
@@ -507,7 +507,7 @@ It now stays at its current position.
 </ul>
 <hr>
 <address>
-<a href="mailto:vatton@w3.org">Irène Vatton</a><br>
+<a href="mailto:vatton@w3.org">Ir&egrave;ne Vatton</a><br>
 $Date: 1997/07/10</address>
 </body>
 </html>
