@@ -488,10 +488,10 @@ int PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
        if (zoom != 0)
 	 dist += (dist * zoom / 10);
 #ifdef _WIN_PRINT
-     if (TtPrinterDC && ScreenDPI)
-	   dist = (dist * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
+       if (TtPrinterDC && ScreenDPI)
+	 dist = (dist * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
 #endif /* _WIN_PRINT */
-        break;
+       break;
      case UnPercent:
        i = val * (int) pAb;
        dist = i / 100;
@@ -888,6 +888,12 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
 	      *pFontSize = 0;
 	      size = uatoi (fontSize);
 	    }
+#ifdef _WIN_PRINT
+	  else if (unit == UnPixel)
+	    if (TtPrinterDC && ScreenDPI)
+	      size = (size * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
+#endif /* _WIN_PRINT */
+
 	  /* Allocate the font structure */
 	  ptfont = TtaGetMemory (sizeof (FontInfo));
 	  ptfont->alphabet  = alphabet;
