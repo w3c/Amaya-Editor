@@ -292,10 +292,15 @@ AnnotMeta *annot;
 	{
 	  if (c1 == 0)
 	    {
-	      /* add it to the beginning */
+	      /* add it as the first child of the element */
+	      TtaInsertFirstChild (&anchor, el, source_doc);
+	    }
+	  else if (c1 == 1)
+	    {
+	      /* add it to the beginning of the element */
 	      TtaInsertSibling (anchor, first, TRUE, source_doc);
 	    }
-	  else if (c1 > 0)
+	  else if (c1 > 1)
 	    {
 	      /* split the text */
 	      int len;
