@@ -25,10 +25,6 @@ NULL=
 NULL=nul
 !ENDIF 
 
-CPP=cl.exe
-MTL=midl.exe
-RSC=rc.exe
-
 !IF  "$(CFG)" == "amaya - Win32 Release"
 
 OUTDIR=.\bin
@@ -101,6 +97,7 @@ CLEAN :
 	-@erase "$(INTDIR)\vc50.idb"
 	-@erase "$(INTDIR)\windialogapi.obj"
 	-@erase "$(INTDIR)\XHTMLbuilder.obj"
+	-@erase "$(INTDIR)\XLinkAPP.obj"
 	-@erase "$(INTDIR)\XLinkbuilder.obj"
 	-@erase "$(INTDIR)\XLinkedit.obj"
 	-@erase "$(INTDIR)\Xml2thot.obj"
@@ -115,6 +112,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
+CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\thotlib\internals\h" /I\
  "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I\
  "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I\
@@ -124,7 +122,40 @@ CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\thotlib\internals\h" /I\
  /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+MTL=midl.exe
 MTL_PROJ=/nologo /D "NDEBUG" /mktyplib203 /o /win32 "NUL" 
+RSC=rc.exe
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\amaya.res" /d "NDEBUG" 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\amaya.bsc" 
@@ -179,6 +210,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\UIcss.obj" \
 	"$(INTDIR)\windialogapi.obj" \
 	"$(INTDIR)\XHTMLbuilder.obj" \
+	"$(INTDIR)\XLinkAPP.obj" \
 	"$(INTDIR)\XLinkbuilder.obj" \
 	"$(INTDIR)\XLinkedit.obj" \
 	"$(INTDIR)\Xml2thot.obj" \
@@ -269,6 +301,7 @@ CLEAN :
 	-@erase "$(INTDIR)\vc50.idb"
 	-@erase "$(INTDIR)\windialogapi.obj"
 	-@erase "$(INTDIR)\XHTMLbuilder.obj"
+	-@erase "$(INTDIR)\XLinkAPP.obj"
 	-@erase "$(INTDIR)\XLinkbuilder.obj"
 	-@erase "$(INTDIR)\XLinkedit.obj"
 	-@erase "$(INTDIR)\Xml2thot.obj"
@@ -285,6 +318,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
+CPP=cl.exe
 CPP_PROJ=/nologo /MLd /W3 /GX /Od /I "..\..\..\libwww\modules\expat\xmlparse"\
  /I "..\..\..\libwww\modules\expat\xmltok" /I "..\thotlib\internals\h" /I\
  "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I\
@@ -296,7 +330,40 @@ CPP_PROJ=/nologo /MLd /W3 /GX /Od /I "..\..\..\libwww\modules\expat\xmlparse"\
  /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /ZI /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+MTL=midl.exe
 MTL_PROJ=/nologo /D "_DEBUG" /mktyplib203 /o /win32 "NUL" 
+RSC=rc.exe
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\amaya.res" /d "_DEBUG" 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\amaya.bsc" 
@@ -350,6 +417,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\UIcss.obj" \
 	"$(INTDIR)\windialogapi.obj" \
 	"$(INTDIR)\XHTMLbuilder.obj" \
+	"$(INTDIR)\XLinkAPP.obj" \
 	"$(INTDIR)\XLinkbuilder.obj" \
 	"$(INTDIR)\XLinkedit.obj" \
 	"$(INTDIR)\Xml2thot.obj" \
@@ -370,36 +438,6 @@ LINK32_OBJS= \
 <<
 
 !ENDIF 
-
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
 
 
 !IF "$(CFG)" == "amaya - Win32 Release" || "$(CFG)" == "amaya - Win32 Debug"
@@ -3130,6 +3168,7 @@ DEP_CPP_EDITI=\
 	"..\thotlib\include\view.h"\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
 	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
@@ -3314,6 +3353,7 @@ DEP_CPP_EDITI=\
 	"..\thotlib\include\view.h"\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
 	".\amaya\textfile.h"\
 	
@@ -3475,13 +3515,13 @@ DEP_CPP_EDITO=\
 	"..\amaya\parser.h"\
 	"..\amaya\xmlparse.h"\
 	"..\annotlib\annotlib.h"\
+	"..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\annotlib\f\annotevent_f.h"\
 	"..\annotlib\f\annotfiles_f.h"\
 	"..\annotlib\f\annotlink_f.h"\
 	"..\annotlib\f\annotmenu_f.h"\
 	"..\annotlib\f\annotschemas_f.h"\
 	"..\annotlib\f\annottools_f.h"\
-	"..\annotlib\f\rdf2annot_f.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
 	"..\thotlib\include\appstruct.h"\
@@ -3675,13 +3715,13 @@ DEP_CPP_EDITO=\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
 	"..\annotlib\annotlib.h"\
+	"..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\annotlib\f\annotevent_f.h"\
 	"..\annotlib\f\annotfiles_f.h"\
 	"..\annotlib\f\annotlink_f.h"\
 	"..\annotlib\f\annotmenu_f.h"\
 	"..\annotlib\f\annotschemas_f.h"\
 	"..\annotlib\f\annottools_f.h"\
-	"..\annotlib\f\rdf2annot_f.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
 	"..\thotlib\include\appstruct.h"\
@@ -5874,13 +5914,13 @@ DEP_CPP_HTML2=\
 	"..\amaya\parser.h"\
 	"..\amaya\xmlparse.h"\
 	"..\annotlib\annotlib.h"\
+	"..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\annotlib\f\annotevent_f.h"\
 	"..\annotlib\f\annotfiles_f.h"\
 	"..\annotlib\f\annotlink_f.h"\
 	"..\annotlib\f\annotmenu_f.h"\
 	"..\annotlib\f\annotschemas_f.h"\
 	"..\annotlib\f\annottools_f.h"\
-	"..\annotlib\f\rdf2annot_f.h"\
 	"..\libpng\zlib\zconf.h"\
 	"..\libpng\zlib\zlib.h"\
 	"..\thotlib\include\appaction.h"\
@@ -6081,13 +6121,13 @@ DEP_CPP_HTML2=\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
 	"..\annotlib\annotlib.h"\
+	"..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\annotlib\f\annotevent_f.h"\
 	"..\annotlib\f\annotfiles_f.h"\
 	"..\annotlib\f\annotlink_f.h"\
 	"..\annotlib\f\annotmenu_f.h"\
 	"..\annotlib\f\annotschemas_f.h"\
 	"..\annotlib\f\annottools_f.h"\
-	"..\annotlib\f\rdf2annot_f.h"\
 	"..\libpng\zlib\zconf.h"\
 	"..\libpng\zlib\zlib.h"\
 	"..\thotlib\include\appaction.h"\
@@ -6292,13 +6332,13 @@ DEP_CPP_HTMLA=\
 	"..\amaya\trans.h"\
 	"..\amaya\xmlparse.h"\
 	"..\annotlib\annotlib.h"\
+	"..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\annotlib\f\annotevent_f.h"\
 	"..\annotlib\f\annotfiles_f.h"\
 	"..\annotlib\f\annotlink_f.h"\
 	"..\annotlib\f\annotmenu_f.h"\
 	"..\annotlib\f\annotschemas_f.h"\
 	"..\annotlib\f\annottools_f.h"\
-	"..\annotlib\f\rdf2annot_f.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
 	"..\thotlib\include\appstruct.h"\
@@ -6497,13 +6537,13 @@ DEP_CPP_HTMLA=\
 	"..\amaya\parser.h"\
 	"..\amaya\trans.h"\
 	"..\annotlib\annotlib.h"\
+	"..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\annotlib\f\annotevent_f.h"\
 	"..\annotlib\f\annotfiles_f.h"\
 	"..\annotlib\f\annotlink_f.h"\
 	"..\annotlib\f\annotmenu_f.h"\
 	"..\annotlib\f\annotschemas_f.h"\
 	"..\annotlib\f\annottools_f.h"\
-	"..\annotlib\f\rdf2annot_f.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
 	"..\thotlib\include\appstruct.h"\
@@ -7127,6 +7167,7 @@ DEP_CPP_HTMLE=\
 	"..\amaya\f\css_f.h"\
 	"..\amaya\f\editimage_f.h"\
 	"..\amaya\f\editoractions_f.h"\
+	"..\amaya\f\fetchhtmlname_f.h"\
 	"..\amaya\f\fetchxmlname_f.h"\
 	"..\amaya\f\graphmlbuilder_f.h"\
 	"..\amaya\f\html2thot_f.h"\
@@ -7322,6 +7363,7 @@ DEP_CPP_HTMLE=\
 	"..\amaya\f\css_f.h"\
 	"..\amaya\f\editimage_f.h"\
 	"..\amaya\f\editoractions_f.h"\
+	"..\amaya\f\fetchhtmlname_f.h"\
 	"..\amaya\f\fetchxmlname_f.h"\
 	"..\amaya\f\graphmlbuilder_f.h"\
 	"..\amaya\f\html2thot_f.h"\
@@ -8977,13 +9019,13 @@ DEP_CPP_HTMLS=\
 	"..\amaya\parser.h"\
 	"..\amaya\xmlparse.h"\
 	"..\annotlib\annotlib.h"\
+	"..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\annotlib\f\annotevent_f.h"\
 	"..\annotlib\f\annotfiles_f.h"\
 	"..\annotlib\f\annotlink_f.h"\
 	"..\annotlib\f\annotmenu_f.h"\
 	"..\annotlib\f\annotschemas_f.h"\
 	"..\annotlib\f\annottools_f.h"\
-	"..\annotlib\f\rdf2annot_f.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
 	"..\thotlib\include\appstruct.h"\
@@ -9180,13 +9222,13 @@ DEP_CPP_HTMLS=\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
 	"..\annotlib\annotlib.h"\
+	"..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\annotlib\f\annotevent_f.h"\
 	"..\annotlib\f\annotfiles_f.h"\
 	"..\annotlib\f\annotlink_f.h"\
 	"..\annotlib\f\annotmenu_f.h"\
 	"..\annotlib\f\annotschemas_f.h"\
 	"..\annotlib\f\annottools_f.h"\
-	"..\annotlib\f\rdf2annot_f.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
 	"..\thotlib\include\appstruct.h"\
@@ -9751,13 +9793,13 @@ DEP_CPP_INIT_=\
 	"..\amaya\trans.h"\
 	"..\amaya\xmlparse.h"\
 	"..\annotlib\annotlib.h"\
+	"..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\annotlib\f\annotevent_f.h"\
 	"..\annotlib\f\annotfiles_f.h"\
 	"..\annotlib\f\annotlink_f.h"\
 	"..\annotlib\f\annotmenu_f.h"\
 	"..\annotlib\f\annotschemas_f.h"\
 	"..\annotlib\f\annottools_f.h"\
-	"..\annotlib\f\rdf2annot_f.h"\
 	"..\libpng\zlib\zconf.h"\
 	"..\libpng\zlib\zlib.h"\
 	"..\thotlib\include\appaction.h"\
@@ -10026,13 +10068,13 @@ DEP_CPP_INIT_=\
 	"..\amaya\parser.h"\
 	"..\amaya\trans.h"\
 	"..\annotlib\annotlib.h"\
+	"..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\annotlib\f\annotevent_f.h"\
 	"..\annotlib\f\annotfiles_f.h"\
 	"..\annotlib\f\annotlink_f.h"\
 	"..\annotlib\f\annotmenu_f.h"\
 	"..\annotlib\f\annotschemas_f.h"\
 	"..\annotlib\f\annottools_f.h"\
-	"..\annotlib\f\rdf2annot_f.h"\
 	"..\libpng\zlib\zconf.h"\
 	"..\libpng\zlib\zlib.h"\
 	"..\thotlib\include\appaction.h"\
@@ -10217,6 +10259,7 @@ DEP_CPP_MATHE=\
 	"..\amaya\amayamsg.h"\
 	"..\amaya\css.h"\
 	"..\amaya\f\fetchxmlname_f.h"\
+	"..\amaya\f\graphmlbuilder_f.h"\
 	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlpresentation_f.h"\
 	"..\amaya\f\htmltable_f.h"\
@@ -10420,6 +10463,7 @@ DEP_CPP_MATHE=\
 	"..\amaya\amayamsg.h"\
 	"..\amaya\css.h"\
 	"..\amaya\f\fetchxmlname_f.h"\
+	"..\amaya\f\graphmlbuilder_f.h"\
 	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlpresentation_f.h"\
 	"..\amaya\f\htmltable_f.h"\
@@ -10682,6 +10726,7 @@ DEP_CPP_MATHML=\
 	"..\amaya\f\htmltable_f.h"\
 	"..\amaya\f\mathedit_f.h"\
 	"..\amaya\f\styleparser_f.h"\
+	"..\amaya\f\xml2thot_f.h"\
 	"..\amaya\f\xmlparser_f.h"\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
@@ -10864,6 +10909,7 @@ DEP_CPP_MATHML=\
 	"..\amaya\f\htmltable_f.h"\
 	"..\amaya\f\mathedit_f.h"\
 	"..\amaya\f\styleparser_f.h"\
+	"..\amaya\f\xml2thot_f.h"\
 	"..\amaya\f\xmlparser_f.h"\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
@@ -11048,6 +11094,7 @@ DEP_CPP_MENUC=\
 	"..\amaya\menuconf.h"\
 	"..\amaya\parser.h"\
 	"..\amaya\xmlparse.h"\
+	"..\annotlib\f\annotevent_f.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
 	"..\thotlib\include\appstruct.h"\
@@ -12702,7 +12749,9 @@ DEP_CPP_TRANS=\
 	"..\amaya\f\fetchxmlname_f.h"\
 	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
+	"..\amaya\f\mathmlbuilder_f.h"\
 	"..\amaya\f\transparse_f.h"\
+	"..\amaya\f\xml2thot_f.h"\
 	"..\amaya\f\xmlparser_f.h"\
 	"..\amaya\fetchhtmlname.h"\
 	"..\amaya\libwww.h"\
@@ -12885,7 +12934,9 @@ DEP_CPP_TRANS=\
 	"..\amaya\f\fetchxmlname_f.h"\
 	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
+	"..\amaya\f\mathmlbuilder_f.h"\
 	"..\amaya\f\transparse_f.h"\
+	"..\amaya\f\xml2thot_f.h"\
 	"..\amaya\f\xmlparser_f.h"\
 	"..\amaya\fetchhtmlname.h"\
 	"..\amaya\libwww.h"\
@@ -14405,11 +14456,80 @@ DEP_CPP_XHTML=\
 
 !ENDIF 
 
-SOURCE=..\amaya\XLinkbuilder.c
+SOURCE=.\amaya\XLinkAPP.c
 
 !IF  "$(CFG)" == "amaya - Win32 Release"
 
 DEP_CPP_XLINK=\
+	"..\thotlib\include\appaction.h"\
+	"..\thotlib\include\application.h"\
+	"..\thotlib\include\appstruct.h"\
+	"..\thotlib\include\attribute.h"\
+	"..\thotlib\include\document.h"\
+	"..\thotlib\include\fileaccess.h"\
+	"..\thotlib\include\interface.h"\
+	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\pschema.h"\
+	"..\thotlib\include\registry.h"\
+	"..\thotlib\include\simx.h"\
+	"..\thotlib\include\sysdep.h"\
+	"..\thotlib\include\thot_gui.h"\
+	"..\thotlib\include\thot_sys.h"\
+	"..\thotlib\include\thot_uio.h"\
+	"..\thotlib\include\tree.h"\
+	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\ustring.h"\
+	"..\thotlib\include\view.h"\
+	".\amaya\xlink.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_XLINK=\
+	"..\thotlib\include\HTVMSUtils.h"\
+	
+
+"$(INTDIR)\XLinkAPP.obj" : $(SOURCE) $(DEP_CPP_XLINK) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
+
+DEP_CPP_XLINK=\
+	"..\thotlib\include\appaction.h"\
+	"..\thotlib\include\application.h"\
+	"..\thotlib\include\appstruct.h"\
+	"..\thotlib\include\attribute.h"\
+	"..\thotlib\include\document.h"\
+	"..\thotlib\include\fileaccess.h"\
+	"..\thotlib\include\interface.h"\
+	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\pschema.h"\
+	"..\thotlib\include\registry.h"\
+	"..\thotlib\include\simx.h"\
+	"..\thotlib\include\sysdep.h"\
+	"..\thotlib\include\thot_gui.h"\
+	"..\thotlib\include\thot_sys.h"\
+	"..\thotlib\include\thot_uio.h"\
+	"..\thotlib\include\tree.h"\
+	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\ustring.h"\
+	"..\thotlib\include\view.h"\
+	".\amaya\xlink.h"\
+	
+
+"$(INTDIR)\XLinkAPP.obj" : $(SOURCE) $(DEP_CPP_XLINK) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
+SOURCE=..\amaya\XLinkbuilder.c
+
+!IF  "$(CFG)" == "amaya - Win32 Release"
+
+DEP_CPP_XLINKB=\
 	"..\..\libwww\library\src\htaabrow.h"\
 	"..\..\libwww\library\src\htaautil.h"\
 	"..\..\libwww\library\src\htaccess.h"\
@@ -14578,18 +14698,18 @@ DEP_CPP_XLINK=\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_XLINK=\
+NODEP_CPP_XLINKB=\
 	"..\..\libwww\library\src\HTVMSUtils.h"\
 	"..\thotlib\include\HTVMSUtils.h"\
 	
 
-"$(INTDIR)\XLinkbuilder.obj" : $(SOURCE) $(DEP_CPP_XLINK) "$(INTDIR)"
+"$(INTDIR)\XLinkbuilder.obj" : $(SOURCE) $(DEP_CPP_XLINKB) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
 
-DEP_CPP_XLINK=\
+DEP_CPP_XLINKB=\
 	"..\..\libwww\library\src\htaabrow.h"\
 	"..\..\libwww\library\src\htaautil.h"\
 	"..\..\libwww\library\src\htaccess.h"\
@@ -14751,7 +14871,7 @@ DEP_CPP_XLINK=\
 	".\amaya\xlink.h"\
 	
 
-"$(INTDIR)\XLinkbuilder.obj" : $(SOURCE) $(DEP_CPP_XLINK) "$(INTDIR)"
+"$(INTDIR)\XLinkbuilder.obj" : $(SOURCE) $(DEP_CPP_XLINKB) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
