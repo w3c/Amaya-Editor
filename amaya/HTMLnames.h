@@ -99,6 +99,7 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {TEXT("style"), SPACE, HTML_EL_STYLE_, L_Strict, FALSE},
    {TEXT("sub"), SPACE, HTML_EL_Subscript, L_Strict, TRUE},
    {TEXT("sup"), SPACE, HTML_EL_Superscript, L_Strict, TRUE},
+   {TEXT("symb"), SPACE, HTML_EL_SYMBOL_UNIT, L_Other, TRUE},
    {TEXT("table"), SPACE, HTML_EL_Table, L_Basic, FALSE},
    {TEXT("tbody"), SPACE, HTML_EL_tbody, L_Basic, FALSE},
    {TEXT("td"), SPACE, HTML_EL_Data_cell, L_Basic, FALSE},

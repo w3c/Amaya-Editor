@@ -268,7 +268,7 @@ static int          EmptyElement[] =
 /* character level elements */
 static int          CharLevelElement[] =
 {
-   HTML_EL_TEXT_UNIT, HTML_EL_PICTURE_UNIT,
+   HTML_EL_TEXT_UNIT, HTML_EL_PICTURE_UNIT, HTML_EL_SYMBOL_UNIT,
    HTML_EL_Anchor,
    HTML_EL_Teletype_text, HTML_EL_Italic_text, HTML_EL_Bold_text,
    HTML_EL_Underlined_text, HTML_EL_Struck_text, HTML_EL_Big_text,

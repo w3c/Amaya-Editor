@@ -753,6 +753,58 @@ static ThotBool     InsertSibling ()
 }
 
 /*----------------------------------------------------------------------
+  XmlGetFallbackCharacter
+  Try to find a fallback character
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void  XmlGetFallbackCharacter (wchar_t wcharRead)
+#else
+static void  XmlGetFallbackCharacter (wcharRead)
+wchar_t  wcharRead;
+
+#endif
+{
+   Language       lang;
+   char           fallback[5];
+   ElementType    elType;
+   Element        elLeaf;
+
+   GetFallbackCharacter ((int) wcharRead, fallback, &lang);
+   if (fallback[0] == '?')
+     {
+       /* The character is not found in the fallback table */
+       /* Create a symbol leaf */
+       elType = TtaGetElementType (XMLcontext.lastElement);
+       elType.ElTypeNum = 3;
+       elLeaf = TtaNewElement (XMLcontext.doc, elType);
+       XmlSetElemLineNumber (elLeaf);
+       InsertXmlElement (&elLeaf);
+       XMLcontext.lastElementClosed = TRUE;
+       /* Put the symbol '?' into the new symbol leaf */
+       TtaSetGraphicsShape (elLeaf, fallback[0], XMLcontext.doc);
+       /* Changes the wide char code associated with that symbol */
+       TtaSetSymbolCode (elLeaf, wcharRead, XMLcontext.doc);
+       /* Make that leaf read-only */
+       TtaSetAccessRight (elLeaf, ReadOnly, XMLcontext.doc);
+       XMLcontext.mergeText = FALSE;
+     }
+   else
+     {
+       /* The character is not found in the fallback table */
+       /* Create a new text leaf */
+       elType = TtaGetElementType (XMLcontext.lastElement);
+       elType.ElTypeNum = 1;
+       elLeaf = TtaNewElement (XMLcontext.doc, elType);
+       XmlSetElemLineNumber (elLeaf);
+       InsertXmlElement (&elLeaf);
+       XMLcontext.lastElementClosed = TRUE;
+       /* Put the fallback character into the new text leaf */
+       TtaSetTextContent (elLeaf, fallback, lang, XMLcontext.doc);
+       XMLcontext.mergeText = FALSE;
+     }
+}
+
+/*----------------------------------------------------------------------
    XhtmlCannotContainText 
    Return TRUE if element el is a block element.
   ----------------------------------------------------------------------*/
@@ -2894,7 +2946,8 @@ CHAR_T     *commentValue;
        while (commentValue[i] != EOS);
        /* Process last line */
        if (i > start + 1)
-	 TtaAppendTextContent (commentText, &commentValue[start], XMLcontext.doc);
+	 TtaAppendTextContent (commentText, &commentValue[start],
+			       XMLcontext.doc);
        (*(currentParserCtxt->ElementComplete)) (commentEl, XMLcontext.doc, &error);
        XMLcontext.lastElementClosed = TRUE;
      }
@@ -3058,10 +3111,6 @@ int              length;
    char           charRead;
    int            nbBytesRead = 0;
    int            i, j;
-   Language       lang;
-   char           fallback[5];
-   ElementType    elType;
-   Element        elLeaf;
 
 #ifdef EXPAT_PARSER_DEBUG
    printf ("\n Hndl_CharacterData - length = %d - ", length);
@@ -3093,43 +3142,11 @@ int              length;
 	       /* Put the current content of the buffer into the document */
 	       buffer[j] = WC_EOS;
 	       PutInXmlElement (buffer);
-	       buffer[0] = WC_EOS;
+	       j = 0;
+	       buffer[j] = WC_EOS;
 	     }
 	   /* Try to find a fallback character */
-	   GetFallbackCharacter ((int) wcharRead, fallback, &lang);
-	   if (fallback[0] == '?')
-	     {
-	       /* The character is not found in the fallback table */
-	       /* Create a symbol leaf */
-	       elType = TtaGetElementType (XMLcontext.lastElement);
-	       elType.ElTypeNum = 3;
-	       elLeaf = TtaNewElement (XMLcontext.doc, elType);
-	       XmlSetElemLineNumber (elLeaf);
-	       InsertXmlElement (&elLeaf);
-	       XMLcontext.lastElement = elLeaf;
-	       XMLcontext.lastElementClosed = TRUE;
-	       /* Put the symbol '?' into the new symbol leaf */
-	       TtaSetGraphicsShape (elLeaf, fallback[0], XMLcontext.doc);
-	       /* Changes the wide char code associated with that symbol */
-	       TtaSetSymbolCode (elLeaf, wcharRead, XMLcontext.doc);
-	       /* Make that leaf read-only */
-	       TtaSetAccessRight (elLeaf, ReadOnly, XMLcontext.doc);
-	     }
-	   else
-	     {
-	       /* The character is not found in the fallback table */
-	       /* Create a new text leaf */
-	       elType = TtaGetElementType (XMLcontext.lastElement);
-	       elType.ElTypeNum = 1;
-	       elLeaf = TtaNewElement (XMLcontext.doc, elType);
-	       XmlSetElemLineNumber (elLeaf);
-	       InsertXmlElement (&elLeaf);
-	       XMLcontext.lastElement = elLeaf;
-	       XMLcontext.lastElementClosed = TRUE;
-	       /* Put the fallback character into the new text leaf */
-	       TtaSetTextContent (elLeaf, fallback, lang, XMLcontext.doc);
-	       XMLcontext.mergeText = FALSE;
-	     }
+	   XmlGetFallbackCharacter (wcharRead);
 	 }
      }
 
@@ -3148,11 +3165,9 @@ int              length;
    The data is all text inside the comment delimiters
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void     Hndl_Comment (void *userData,
-			      const XML_Char *data)
+static void     Hndl_Comment (void *userData, const XML_Char *data)
 #else  /* __STDC__ */
-static void     Hndl_Comment (userData,
-			      data)
+static void     Hndl_Comment (userData, data)
 void            *userData; 
 const XML_Char  *data;
 #endif  /* __STDC__ */
