@@ -147,13 +147,33 @@ int AnnotList_localCount (List *annot_list)
    Adds a new element to the beginning of a linked
    list if it doesn't exist in the list.
    ------------------------------------------------------------*/
-void AnnotFilter_add (List **me, CHAR_T *object, AnnotMeta *annot)
+void AnnotFilter_add (AnnotMetaDataList *annotMeta, SelType type, void *object, AnnotMeta *annot)
 {
+  List **me;
   List *new;
+  ThotBool dup;
   AnnotFilterData *filter;
 
   if (!object || !annot)
     return;
+
+  switch (type)
+    {
+    case BY_AUTHOR:
+      me = &annotMeta->authors;
+      dup = TRUE;
+      break;
+
+    case BY_TYPE:
+      me = &annotMeta->types;
+      dup = FALSE;
+      break;
+
+    case BY_SERVER:
+      me = &annotMeta->servers;
+      dup = TRUE;
+      break;
+    }
 
   /* object already in the filter */
   if (*me && AnnotFilter_search (*me, object))
@@ -161,7 +181,7 @@ void AnnotFilter_add (List **me, CHAR_T *object, AnnotMeta *annot)
 
   /* initialize the filter */
   filter = TtaGetMemory (sizeof (AnnotFilterData));
-  filter->object = TtaStrdup (object);
+  filter->object = dup ? TtaStrdup ((CHAR_T*)object) : object;
   filter->show = TRUE;
   filter->annot = annot;
 

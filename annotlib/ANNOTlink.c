@@ -268,7 +268,7 @@ AnnotMeta *annot;
   TtaUnselect (source_doc);
 
   /* add the annotation to the filter list */
-  AnnotFilter_add (&(AnnotMetaData[source_doc].types), annot->type, annot);
+  AnnotFilter_add (&AnnotMetaData[source_doc], BY_TYPE, annot->type, annot);
   if (annot->annot_url)
     tmp = annot->annot_url;
   else
@@ -278,14 +278,14 @@ AnnotMeta *annot;
     { /* @@ when creating a new annot, we don't yet know the URL;
          perhaps we should use the POST server name here? */
       GetServerName (tmp, server);
-      AnnotFilter_add (&(AnnotMetaData[source_doc].servers), server, annot);
+      AnnotFilter_add (&AnnotMetaData[source_doc], BY_SERVER, server, annot);
     }
   else
     server[0] = WC_EOS;
 
   tmp = TtaGetMemory (ustrlen (annot->author) + ustrlen (server) + 4);
   usprintf (tmp, "%s@%s", annot->author, server);
-  AnnotFilter_add (&(AnnotMetaData[source_doc].authors), tmp, annot);
+  AnnotFilter_add (&AnnotMetaData[source_doc], BY_AUTHOR, tmp, annot);
   TtaFreeMemory (tmp);
 }
 

@@ -113,20 +113,13 @@ typedef enum _AnnotFileType
 }
 AnnotFileType;
 
-/* Annotation modules */
-#include "ANNOTtools_f.h"
-#include "ANNOTlink_f.h"
-#include "ANNOTevent_f.h"
-#include "ANNOTfiles_f.h"
-#include "ANNOTmenu_f.h"
-#include "rdf2annot_f.h"
-
-typedef struct _AnnotFilter {
-  CHAR_T *object;
-  ThotBool show;
-  AnnotMeta *annot;
-} AnnotFilterData;
-
+/* the selector type used to show/hide annotations */
+typedef enum _SelType {
+  BY_AUTHOR = 0,
+  BY_TYPE,
+  BY_SERVER
+} SelType;
+  
 /* linked list of all annotations related to a document */
 typedef struct _AnnotMetaDataList {
   /* the list of all the annotations related to a document */
@@ -139,6 +132,23 @@ typedef struct _AnnotMetaDataList {
 				  load the local annotations related to this
 				  document */
 } AnnotMetaDataList;
+
+/* Annotation modules */
+#include "ANNOTtools_f.h"
+#include "ANNOTlink_f.h"
+#include "ANNOTevent_f.h"
+#include "ANNOTfiles_f.h"
+#include "ANNOTmenu_f.h"
+#include "rdf2annot_f.h"
+
+/*************
+ ** Annot Filter menu
+ *************/
+typedef struct _AnnotFilter {
+  CHAR_T *object;
+  ThotBool show;
+  AnnotMeta *annot;
+} AnnotFilterData;
 
 AnnotMetaDataList AnnotMetaData[DocumentTableLength];
 

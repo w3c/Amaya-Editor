@@ -24,16 +24,6 @@ w3c_algaeQuery=(ask '((?p ?s ?o)) :collect '(?p ?s ?o))
 #include "annotlib.h"
 #include "ANNOTmenu.h"
 
-/*************
- ** Annot Filter menu
- *************/
-/* the selector type used to show/hide annotations */
-typedef enum _SelType {
-  BY_AUTHOR = 0,
-  BY_TYPE,
-  BY_SERVER
-} SelType;
-  
 /* common local variables */
 static CHAR_T  s[MAX_LENGTH]; /* general purpose buffer */
 
@@ -318,9 +308,15 @@ Document doc;
        filter = (AnnotFilterData *) list_item->object;
        if (filter)
 	 {
+	   CHAR_T *name;
+	   if (selector == BY_TYPE)
+	     name = ANNOT_GetLabel (&annot_schema_list,
+				    (RDFResourceP)filter->object);
+	   else
+	     name = (CHAR_T*)filter->object;
 	   usprintf (&s[i], TEXT("%c%s"), 
 		     (filter->show) ? TEXT(' ') : TEXT('*'),
-		     filter->object);
+		     name);
 	   i += ustrlen (&s[i]) + 1;
 	   nb_entries++;
 	 }
@@ -790,7 +786,7 @@ static void BuildAnnotTypesSelector ()
 				      ANNOTATION_PROP,
 				      FALSE);
 
-  if (annotClass)
+  if (annotClass && annotClass->class)
     {
       List *item;
 
