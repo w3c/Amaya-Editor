@@ -124,6 +124,13 @@ HWND   GeometryHwnd = NULL;
 /* common local variables */
 CHAR_T s[MAX_LENGTH+1]; /* general purpose buffer */
 
+/* Language negotiation menu options */
+#ifdef _WINDOWS
+static HWND LanNegHwnd = NULL;
+#endif _WINDOWS
+static int LanNegBase;
+static CHAR_T LanNeg [MAX_LENGTH+1];
+
 /* 
 ** function prototypes
 */
@@ -141,6 +148,8 @@ static void WIN_RefreshPublishMenu (HWND hwnDlg);
 LRESULT CALLBACK WIN_GeometryDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK WIN_ColorDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshColorMenu (HWND hwnDlg);
+LRESULT CALLBACK WIN_LanNegDlgProc (HWND, UINT, WPARAM, LPARAM);
+static void WIN_RefreshLanNegMenu (HWND hwnDlg);
 static ThotBool CreateDir (const STRING dirname);
 #else
 LRESULT CALLBACK WIN_GeneralDlgProc (HWND, UINT, WPARAM, LPARAM);
@@ -154,6 +163,8 @@ static void WIN_RefreshPublishMenu (/* HWND hwnDlg */);
 LRESULT CALLBACK WIN_GeometryDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK WIN_ColorDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshColorMenu (/* HWND hwnDlg */);
+LRESULT CALLBACK WIN_LanNegDlgProc (HWND, UINT, WPARAM, LPARAM);
+static void WIN_RefreshLanNegMenu (/* HWND hwnDlg */);
 static ThotBool     CreateDir (const STRING dirname);
 #endif /* __STDC__ */
 #endif /* _WINDOWS */
@@ -205,6 +216,13 @@ static void         GeometryCallbackDialog(int ref, int typedata, STRING data);
 #endif /* !_WINDOWS */
 static void         RestoreDefaultGeometryConf (void);
 static void         SetGeometryConf (void);
+#ifndef _WINDOWS
+static void         LanNegCallbackDialog(int ref, int typedata, STRING data);
+static void         RefreshLanNegMenu (void);
+#endif /* !_WINDOWS */
+static void         GetLanNegConf (void);
+static void         GetDefaultLanNegConf (void);
+static void         SetLanNegConf (void);
 
 #else /* __STDC__ */
 static void         GetEnvString (/* const STRING name, STRING value */);
@@ -253,6 +271,13 @@ static void         GeometryCallbackDialog(/* int ref, int typedata, STRING data
 #endif /* !_WINDOWS */
 static void         RestoreDefaultGeometryConf (/* void */);
 static void         SetGeometryConf (/* void */);
+#ifndef _WINDOWS
+static void         LanNegCallbackDialog(/* int ref, int typedata, STRING data */);
+#endif /* !_WINDOWS */
+static void         RefreshLanNegMenu (/* void */);
+static void         GetLanNegConf (/* void */);
+static void         GetDefaultLanNegConf (/* void */);
+static void         SetLanNegConf (/* void */);
 #endif
 
 /*
@@ -347,6 +372,8 @@ void                InitConfMenu ()
 			      MAX_COLORMENU_DLG);
   GeometryBase = TtaSetCallback (GeometryCallbackDialog,
 				 MAX_GEOMETRYMENU_DLG);
+  LanNegBase = TtaSetCallback (LanNegCallbackDialog,
+			       MAX_LANNEGMENU_DLG);
 #endif /* !_WINDOWS */
 }
 
@@ -2964,3 +2991,272 @@ static void SetGeometryConf ()
   /* save the options */
   TtaSaveAppRegistry ();
 }
+
+
+/**********************
+** LanNeg Menu
+**********************/
+
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WIN_LanNegDlgProc
+  Windows callback for the LanNeg menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK WIN_LanNegDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
+				     LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK WIN_LanNegDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+  switch (msg)
+    {
+    case WM_INITDIALOG:
+      LanNegHwnd = hwnDlg;
+      WIN_RefreshLanNegMenu (hwnDlg);
+      break;
+
+    case WM_CLOSE:
+    case WM_DESTROY:
+      /* reset the status flag */
+      LanNegHwnd = NULL;
+      EndDialog (hwnDlg, ID_DONE);
+      break;
+
+    case WM_COMMAND:
+      switch (LOWORD (wParam))
+	{
+	case IDC_LANNEG:
+	  GetDlgItemText (hwnDlg, IDC_LANNEG, LanNeg,
+			  sizeof (LanNeg) - 1);
+	  break;
+	  /* action buttons */
+	case ID_APPLY:
+	  SetLanNegConf ();	  
+	  /* reset the status flag */
+	  break;
+	case ID_DONE:
+	  /* reset the status flag */
+	  LanNegHwnd = NULL;
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	case ID_DEFAULTS:
+	  /* always signal this as modified */
+	  GetDefaultLanNegConf ();
+	  WIN_RefreshLanNegMenu (hwnDlg);
+	  break;
+	}
+      break;	     
+    default: return FALSE;
+    }
+  return TRUE;
+}
+#endif /* _WINDOWS */
+
+#ifndef _WINDOWS
+/*----------------------------------------------------------------------
+   callback of the LanNeg configuration menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         LanNegCallbackDialog (int ref, int typedata, STRING data)
+#else
+static void         LanNegCallbackDialog (ref, typedata, data)
+int                 ref;
+int                 typedata;
+STRING              data;
+
+#endif
+{
+  int val;
+
+  if (ref == -1)
+    {
+      /* removes the LanNeg conf menu */
+      TtaDestroyDialogue (LanNegBase + LanNegMenu);
+    }
+  else
+    {
+      /* has the user changed the options? */
+      val = (int) data;
+      switch (ref - LanNegBase)
+	{
+	case LanNegMenu:
+	  switch (val) 
+	    {
+	    case 0:
+	      TtaDestroyDialogue (ref);
+	      break;
+	    case 1:
+	      SetLanNegConf ();
+	      break;
+	    case 2:
+	      GetDefaultLanNegConf ();
+	      RefreshLanNegMenu ();
+	      break;
+	    default:
+	      break;
+	    }
+	  break;
+
+	case mLanNeg:
+	  if (data)
+	    ustrcpy (LanNeg, data);
+	  else
+	    LanNeg [0] = EOS;
+	  break;
+	  
+	default:
+	  break;
+	}
+    }
+}
+#endif /* !_WINDOWS */
+
+/*----------------------------------------------------------------------
+  LanNegConfMenu
+  Build and display the Conf Menu dialog box and prepare for input.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         LanNegConfMenu (Document document, View view)
+#else
+void         LanNegConfMenu (document, view)
+Document            document;
+View                view;
+STRING              pathname;
+
+#endif
+{
+#ifndef _WINDOWS
+   int              i;
+
+   /* Create the dialogue form */
+   i = 0;
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
+   i += ustrlen (&s[i]) + 1;
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
+
+   TtaNewSheet (LanNegBase + LanNegMenu, 
+		TtaGetViewFrame (document, view),
+		"Language Negotiation Menu",
+		2, s, TRUE, 1, 'L', D_DONE);
+   /* first line */
+   TtaNewTextForm (LanNegBase + mLanNeg,
+		   LanNegBase + LanNegMenu,
+		   "Language Negotiation",
+		   10,
+		   1,
+		   FALSE);
+#endif /* !_WINDOWS */
+ 
+   /* load and display the current values */
+   GetLanNegConf ();
+#ifndef _WINDOWS
+   RefreshLanNegMenu ();
+   /* display the menu */
+   TtaSetDialoguePosition ();
+   TtaShowDialogue (LanNegBase + LanNegMenu, TRUE);
+#else 
+   if (!LanNegHwnd)
+    /* only activate the menu if it isn't active already */
+    {
+      switch (app_lang)
+	{
+	case FR_LANG:
+	  DialogBox (hInstance, MAKEINTRESOURCE (FR_LANNEGMENU), NULL, 
+		     (DLGPROC) WIN_LanNegDlgProc);
+	  break;
+	case DE_LANG:
+	  DialogBox (hInstance, MAKEINTRESOURCE (DE_LANNEGMENU), NULL, 
+		     (DLGPROC) WIN_LanNegDlgProc);
+	  break;
+	default:
+	  DialogBox (hInstance, MAKEINTRESOURCE (EN_LANNEGMENU), NULL, 
+		     (DLGPROC) WIN_LanNegDlgProc);
+	}
+    }
+   else
+     SetFocus (LanNegHwnd);
+#endif /* !_WINDOWS */
+}
+
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WIN_RefreshLanNegMenu
+  Displays the current registry values in the menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void WIN_RefreshLanNegMenu (HWND hwnDlg)
+#else
+void WIN_RefreshLanNegMenu (hwnDlg)
+HWND hwnDlg;
+#endif /* __STDC__ */
+{
+  SetDlgItemText (hwnDlg, IDC_LANNEG, LanNeg);
+}
+#endif /* WINDOWS */
+
+#ifndef _WINDOWS
+/*----------------------------------------------------------------------
+  RefreshLanNegMenu
+  Displays the current registry values in the menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void RefreshLanNegMenu ()
+#else
+static void RefreshLanNegMenu ()
+#endif /* __STDC__ */
+{
+  TtaSetTextForm (LanNegBase + mLanNeg, LanNeg);
+}
+#endif /* !_WINDOWS */
+
+/*----------------------------------------------------------------------
+  GetLanNegConf
+  Makes a copy of the current registry LanNeg values
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void GetLanNegConf (void)
+#else
+static void GetLanNegConf ()
+#endif /* __STDC__ */
+{
+  GetEnvString ("ACCEPT_LANGUAGES", LanNeg);
+}
+
+/*----------------------------------------------------------------------
+  GetDefaultLanNegConf
+  Makes a copy of the default registry LanNeg values
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void GetDefaultLanNegConf (void)
+#else
+static void GetDefaultLanNegConf ()
+#endif /* __STDC__ */
+{
+  GetDefEnvString ("ACCEPT_LANGUAGES", LanNeg);
+}
+
+
+/*----------------------------------------------------------------------
+  SetLanNegConf
+  Updates the registry LanNeg values
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void SetLanNegConf (void)
+#else
+static void SetLanNegConf ()
+#endif /* __STDC__ */
+{
+  TtaSetEnvString ("ACCEPT_LANGUAGES", LanNeg, TRUE);
+  TtaSaveAppRegistry ();
+
+  /* change the current settings */
+  libwww_updateNetworkConf (AMAYA_LANNEG_RESTART);
+}
+
+
+

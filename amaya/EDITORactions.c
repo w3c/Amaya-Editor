@@ -2341,6 +2341,24 @@ View view;
 }
 
 /*----------------------------------------------------------------------
+  ConfigLanNeg
+  A frontend to the LanNeg configuration menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void ConfigLanNeg (Document doc, View view)
+#else 
+void ConfigLanNeg (doc, view);
+Document doc;
+View view;
+#endif /* __STDC__ */
+{
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
+#else 
+   LanNegConfMenu (doc, view);
+#endif /* AMAYA_JAVA */
+}
+
+/*----------------------------------------------------------------------
   SaveOptions
   Saves the user modified configuration options
   ----------------------------------------------------------------------*/
@@ -2357,3 +2375,6 @@ View view;
   TtaSaveAppRegistry ();
 #endif /* AMAYA_JAVA */
 }
+
+
+

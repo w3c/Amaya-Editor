@@ -22,6 +22,8 @@ extern void ColorConfMenu ( Document document,
                             View view );
 extern void GeometryConfMenu ( Document document,
                                View view );
+extern void LanNegConfMenu ( Document document,
+                             View view );
 
 #else /* __STDC__ */
 
@@ -41,6 +43,8 @@ extern void ColorConfMenu (/* Document document,
                               View view */);
 extern void GeometryConfMenu (/* Document document,
                                  View view */);
+extern void LanNegConfMenu (/* Document document,
+                               View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

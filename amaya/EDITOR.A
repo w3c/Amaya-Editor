@@ -213,6 +213,7 @@ MENUS
 	view:1 Special.Coptions button:BConfigProxy -> ConfigProxy;
 	view:1 Special.Coptions button:BConfigColor -> ConfigColor;
 	view:1 Special.Coptions button:BConfigGeometry -> ConfigGeometry;
+	view:1 Special.Coptions button:BConfigLanNeg -> ConfigLanNeg;
 	
 
 	Attributes_;

@@ -59,6 +59,10 @@
 #define mGeometryLabel2      3
 #define MAX_GEOMETRYMENU_DLG 4
 
+#define LanNegMenu           1
+#define mLanNeg              2
+#define MAX_LANNEGMENU_DLG   3
+
 #endif /* _MENUCONF.h */
 
 

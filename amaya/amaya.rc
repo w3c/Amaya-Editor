@@ -1204,6 +1204,18 @@ BEGIN
     EDITTEXT        IDC_BGCOLOR,7,49,96,12,ES_AUTOHSCROLL | ES_READONLY
 END
 
+DE_LANNEGMENU DIALOG DISCARDABLE  100, 100, 198, 68
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Language Negotiation"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,47,50,14
+    PUSHBUTTON      "Done",ID_DONE,141,47,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,76,47,50,14
+    LTEXT           "Accept Language",-1,7,7,75,11
+    EDITTEXT        IDC_LANNEG,7,22,184,13,ES_AUTOHSCROLL | NOT WS_TABSTOP
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1464,6 +1476,14 @@ BEGIN
         RIGHTMARGIN, 241
         TOPMARGIN, 7
         BOTTOMMARGIN, 83
+    END
+
+    DE_LANNEGMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 191
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 61
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -2664,6 +2684,18 @@ BEGIN
     LTEXT           "Alternate Text",IDC_ALTTEXT,7,7,161,12
 END
 
+EN_LANNEGMENU DIALOG DISCARDABLE  100, 100, 198, 68
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Language Negotiation"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,47,50,14
+    PUSHBUTTON      "Done",ID_DONE,141,47,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,76,47,50,14
+    LTEXT           "Accept Language",-1,7,7,75,11
+    EDITTEXT        IDC_LANNEG,7,22,184,13,ES_AUTOHSCROLL | NOT WS_TABSTOP
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -2920,6 +2952,14 @@ BEGIN
     BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 260
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 61
+    END
+
+    EN_LANNEGMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 191
         TOPMARGIN, 7
         BOTTOMMARGIN, 61
     END
@@ -4231,6 +4271,18 @@ BEGIN
     LTEXT           "Alternate Text",IDC_ALTTEXT,7,7,161,12
 END
 
+FR_LANNEGMENU DIALOG DISCARDABLE  100, 100, 198, 68
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Language Negotiation"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,47,50,14
+    PUSHBUTTON      "Done",ID_DONE,141,47,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,76,47,50,14
+    LTEXT           "Accept Language",-1,7,7,75,11
+    EDITTEXT        IDC_LANNEG,7,22,184,13,ES_AUTOHSCROLL | NOT WS_TABSTOP
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -4497,6 +4549,14 @@ BEGIN
     BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 260
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 61
+    END
+
+    FR_LANNEGMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 191
         TOPMARGIN, 7
         BOTTOMMARGIN, 61
     END
