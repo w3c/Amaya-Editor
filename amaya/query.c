@@ -386,7 +386,7 @@ static void         Thread_deleteAll ()
 
 	     HTNet_killAll ();
 	     /* erase the requests */
-	     while ((me = (AHTReqContext *) HTList_nextObject (cur)))
+	     while ((me = (AHTReqContext *) HTList_removeLastObject (cur)))
 	       {
 		  if (me->request)
 		    {
