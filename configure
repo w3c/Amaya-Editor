@@ -24,7 +24,7 @@ ac_help="$ac_help
 ac_help="$ac_help
   --enable-java           Add Kaffe Java virtual machine"
 ac_help="$ac_help
-  --enable-java-awt       Add Kaffe Java Biss AWT"
+  --enable-javaawt        Add Kaffe Java Biss AWT"
 ac_help="$ac_help
   --enable-intr           Use Kaffe Java Interpreter"
 ac_help="$ac_help
