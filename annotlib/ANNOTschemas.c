@@ -14,8 +14,13 @@
  * the application and must be freed as an entire unit.  This
  * permits the use of simple (memory address) handles rather
  * than strings (URIs) for Resources.
+
+ * NOTE: the code will use the libwww RDF parser by default; if
+ *    RAPTOR_RDF_PARSER is defined the Raptor RDF parser:
  *
- * NOTE: the code assumes libwww's RDF parser.
+ *     http://www.redland.opensource.ac.uk/raptor/
+ *
+ *    will be used.
  *
  * Author: Ralph R. Swick (W3C/MIT)
  * $Revision$
@@ -33,9 +38,14 @@
 #include "ANNOTtools_f.h"
 #include "ANNOTevent_f.h"
 
+/* RDF parser */
+#ifdef RAPTOR_RDF_PARSER
+#include "raptor.h"
+#else
 /* libwww includes */
 #include "xmlparse.h"
 #include "HTRDF.h"
+#endif
 
 /* amaya includes */
 #include "AHTURLTools_f.h"
@@ -75,6 +85,14 @@ typedef struct _ReadCallbackContext
   char filename[MAX_LENGTH];
 } ReadCallbackContext;
 
+typedef struct _ParseContext
+{
+  List **annot_schema_list;
+#ifdef RAPTOR_RDF_PARSER
+  char *base_uri;   /* base URI for anonymous RDF names */
+#endif
+} ParseContext, *ParseContextP;
+
 /*------------------------------------------------------------
    _ListSearchResource
   ------------------------------------------------------------*/
@@ -102,14 +120,7 @@ static RDFResourceP _ListSearchResource( List* list, char* name)
 /*------------------------------------------------------------
    SCHEMA_AddStatement
   ------------------------------------------------------------*/
-#ifdef  __STDC__
 void SCHEMA_AddStatement (RDFResourceP s, RDFPropertyP p, RDFResourceP o)
-#else  /* __STDC__ */
-void SCHEMA_AddStatement (s, p, o)
-RDFResourceP s;
-RDFPropertyP p;
-RDFResourceP o;
-#endif
 {
   RDFStatement *statement;
 
@@ -165,20 +176,59 @@ static void _AddSubClass( RDFClassP class, RDFClassP sub )
      triple - an RDF triple
      context - pointer to an RDFResource list
  ------------------------------------------------------------*/
+#ifdef RAPTOR_RDF_PARSER
+static void triple_handler (void * context, const raptor_statement *triple)
+#else
 static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
+#endif
 {
-  List **listP = (List**)context;
 
+#ifdef RAPTOR_RDF_PARSER
+  ParseContextP parse_ctx = (ParseContextP) context;
+  List **listP = parse_ctx->annot_schema_list;
+#else
+  List **listP = (List**) context;
+#endif
+
+#ifdef RAPTOR_RDF_PARSER
+  if (triple) 
+    {
+      char * predicate = (char *) triple->predicate;
+      char * subject;
+      char * object = (char *) triple->object;
+#else
   if (rdfp && triple) 
     {
       char * predicate = HTTriple_predicate(triple);
       char * subject = HTTriple_subject(triple);
       char * object = HTTriple_object(triple);
+#endif
 
-      RDFResourceP subjectP = ANNOT_FindRDFResource (listP, subject, TRUE);
+      RDFResourceP subjectP;
       RDFPropertyP predicateP = ANNOT_FindRDFResource (listP, predicate, TRUE);
-      /* ugly, ugly; libwww discards info -- is the object a Literal? */
-      RDFResourceP objectP = ANNOT_FindRDFResource (listP, object, TRUE);
+
+      RDFResourceP objectP;
+
+#ifdef RAPTOR_RDF_PARSER
+      /* if it's an anoynmous subject, add the base_uri */
+      if (triple->subject_type == RAPTOR_IDENTIFIER_TYPE_ANONYMOUS)
+	{
+	  char *base_uri = parse_ctx->base_uri;
+	  subject = TtaGetMemory (strlen (base_uri) + strlen ((char *) triple->subject) + 2);
+	  sprintf (subject, "%s#%s", base_uri, (char *) triple->subject);
+	}
+      else
+	subject = (char *) triple->subject;
+#endif
+      subjectP = ANNOT_FindRDFResource (listP, subject, TRUE);
+
+#ifdef RAPTOR_RDF_PARSER
+          /* @@ Do anything different for Raptor RDF Parser ?? */
+	  objectP = ANNOT_FindRDFResource (listP, object, TRUE);
+#else
+	  /* ugly, ugly; libwww discards info -- is the object a Literal? */
+	  objectP = ANNOT_FindRDFResource (listP, object, TRUE);
+#endif
 
       SCHEMA_AddStatement (subjectP, predicateP, objectP);
 
@@ -197,6 +247,10 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 	  subjectP->class->instances = NULL;
 	  subjectP->class->subClasses = NULL;
 	}
+#ifdef RAPTOR_RDF_PARSER
+      if (subject != (char *) triple->subject)
+	TtaFreeMemory (subject);
+#endif
     }
 }
 
@@ -204,59 +258,76 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 /*-----------------------------------------------------------------------
   ReadSchema_callback
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void ReadSchema_callback (Document doc, int status, 
 				 char *urlName,
 				 char *outputfile, 
 				 AHTHeaders *http_headers,
 				 void * context)
-#else  /* __STDC__ */
-static void ReadSchema_callback (doc, status, urlName,
-				 outputfile, http_headers,
-				 context)
-Document doc;
-int status;
-char *urlName;
-char *outputfile;
-AHTHeaders *http_headers;
-void *context;
-
-#endif
 {
-   ReadCallbackContext *ctx = (ReadCallbackContext*) context;
-   BOOL parse = NO;
+#ifdef RAPTOR_RDF_PARSER
+  raptor_parser* rdfxml_parser=NULL;
+  char *full_file_name;
+  ParseContextP parse_ctx;
+#endif
 
+  ReadCallbackContext *ctx = (ReadCallbackContext*) context;
+  BOOL parse = NO;
+  
    if (!ctx)
      return;
 
    ResetStop (doc);
 
-   if (status == HT_OK)
-     parse = HTRDF_parseFile (ctx->filename,
-			      triple_handler,
-			      &annot_schema_list);
+  if (status == HT_OK)
+    {
+#ifdef RAPTOR_RDF_PARSER
+      rdfxml_parser=raptor_new ();
+      
+      if (!rdfxml_parser)
+	return;
 
-   if (parse)
-     TtaSetStatus (doc, 1, "Schema read", NULL); /* @@ */
-   else
-     TtaSetStatus (doc, 1, "Error during schema read", NULL); /* @@ */
+      parse_ctx = (ParseContextP)TtaGetMemory (sizeof (ParseContext));
 
-   TtaFreeMemory (ctx);
+      /* @@ this is what we should do eventually */
+      /* if (!IsW3Path (file_name))
+	 full_file_name = LocalToWWW (file_name);
+	 else
+      */
+      /* raptor doesn't grok file URIs under windows. The following is a patch so
+	 that we can use it */
+      full_file_name = TtaGetMemory (strlen (ctx->filename) + sizeof ("file:"));
+      sprintf (full_file_name, "file:%s", ctx->filename);
+      parse_ctx->base_uri = full_file_name;
+      parse_ctx->annot_schema_list = &annot_schema_list;
+      raptor_set_statement_handler(rdfxml_parser, (void *) parse_ctx, triple_handler);
+      
+      /* remember the base name for anoynmous subjects */
+      parse = raptor_parse_file(rdfxml_parser, full_file_name, full_file_name);
+#else
+      parse = HTRDF_parseFile (ctx->filename,
+			       triple_handler,
+			       &annot_schema_list);
+#endif
+      if (parse)
+	TtaSetStatus (doc, 1, "Schema read", NULL); /* @@ */
+      else
+	TtaSetStatus (doc, 1, "Error during schema read", NULL); /* @@ */
+    }  
+
+#ifdef RAPTOR_RDF_PARSER
+  raptor_free(rdfxml_parser);
+  TtaFreeMemory(full_file_name);
+  TtaFreeMemory (parse_ctx);
+#endif    
+  TtaFreeMemory (ctx);
 }
-
+ 
 /********************** Public API entry point ********************/
 
 /*------------------------------------------------------------
    ANNOT_FindRDFResource
   ------------------------------------------------------------*/
-#ifdef __STDC__
 RDFResourceP ANNOT_FindRDFResource( List** listP, char* name, ThotBool create )
-#else /* __STDC__ */
-RDFResourceP ANNOT_FindRDFResource( listP, name, create )
-     List** listP;
-     char* name;
-     ThotBool create;
-#endif /* __STDC__ */
 {
   RDFResourceP resource;
 
@@ -283,13 +354,7 @@ RDFResourceP ANNOT_FindRDFResource( listP, name, create )
 /*------------------------------------------------------------
    ANNOT_FindRDFStatement
   ------------------------------------------------------------*/
-#ifdef __STDC__
 RDFStatementP ANNOT_FindRDFStatement( List* list, RDFPropertyP p )
-#else /* __STDC__ */
-RDFStatementP ANNOT_FindRDFStatement( listP, p )
-     List** listP;
-     RDFPredicateP p;
-#endif /* __STDC__ */
 {
   if (!p)
     return NULL;
@@ -314,13 +379,7 @@ RDFStatementP ANNOT_FindRDFStatement( listP, p )
    the resource is a class, then) for any of its superclasses,
    then return the name of the resource.
   ------------------------------------------------------------*/
-#ifdef __STDC__
 char *ANNOT_GetLabel (List **listP, RDFResourceP r)
-#else /*  __STDC__ */
-char *ANNOT_GetLabel (listP, r)
-     ListP **listP;
-     RDFResourceP r;
-#endif /*  __STDC__ */
 {
   RDFStatementP labelS = NULL;
 
@@ -372,13 +431,7 @@ char *ANNOT_GetLabel (listP, r)
    Parameters:
      namespace_URI - the name of the Schema to parse
   ------------------------------------------------------------*/
-#ifdef __STDC__
 void SCHEMA_ReadSchema (Document doc, char *namespace_URI)
-#else /* __STDC__ */
-void SCHEMA_ReadSchema (doc, namespace_URI)
-     Document doc;
-     char *namespace_URI;
-#endif /* __STDC__ */
 {
   ReadCallbackContext *ctx;
   int res;
@@ -422,11 +475,7 @@ void SCHEMA_ReadSchema (doc, namespace_URI)
   ------------------------------------------------------------
    Frees resources associated with the base annotation namespace name
   ------------------------------------------------------------*/
-#ifdef __STDC__
 static void FreeAnnotNS (void)
-#else /* __STDC__ */
-static void FreeAnnotNS ( /* void */ )
-#endif /* __STDC__ */
 {
   if (ANNOT_NS)
     {
@@ -443,12 +492,7 @@ static void FreeAnnotNS ( /* void */ )
   ------------------------------------------------------------
    Sets the base annotation namespace name
   ------------------------------------------------------------*/
-#ifdef __STDC__
 static void SetAnnotNS (char *ns_name)
-#else /* __STDC__ */
-static void SetAnnotNS ()
-     char *ns_name;
-#endif /* __STDC__ */
 {
   ANNOT_NS = TtaStrdup (ns_name);
   ANNOTATION_CLASSNAME = TtaGetMemory (strlen(ns_name)
@@ -476,12 +520,7 @@ static void SetAnnotNS ()
   ------------------------------------------------------------
    Initializes the annotation schemas (annot_schema_list) from a config file.
   ------------------------------------------------------------*/
-#ifdef __STDC__
 void SCHEMA_InitSchemas (Document doc)
-#else /* __STDC__ */
-void SCHEMA_InitSchemas (doc)
-     Document doc;
-#endif /* __STDC__ */
 {
   char* thotdir;
   char *app_home;
@@ -621,7 +660,18 @@ void SCHEMA_InitSchemas (doc)
 
       if (TtaFileExist (fname))
 	{
+#ifdef RAPTOR_RDF_PARSER
+	  char *ptr;
+	  if (!IsW3Path (fname) && !IsFilePath (fname))
+	    ptr = ANNOT_MakeFileURL (fname);
+	  else
+	    ptr = fname;
+	  SCHEMA_ReadSchema (doc, ptr);
+	  if (ptr != fname)
+	    TtaFreeMemory (ptr);
+#else
 	  HTRDF_parseFile (fname, triple_handler, &annot_schema_list);
+#endif /* RAPTOR_RDF_PARSER */
 	  if (!ANNOT_NS)	/* is this the first schema listed? */
 	    SetAnnotNS (nsname);
 	}
@@ -764,11 +814,7 @@ static ThotBool SCHEMA_FreeRDFResource( void *item )
    Frees the dynamic heap for all resources in the RDF Model
    for the loaded schema(s)
   ------------------------------------------------------------*/
-#ifdef __STDC__
 void SCHEMA_FreeAnnotSchema( void )
-#else /* __STDC__ */
-void SCHEMA_FreeAnnotSchema()
-#endif /* __STDC__ */
 {
   SCHEMA_FreeRDFModel (&annot_schema_list);
   subclassOfP = NULL;
@@ -793,12 +839,7 @@ void SCHEMA_FreeAnnotSchema()
   ------------------------------------------------------------
    Frees the dynamic heap for all resources in an RDF Model
   ------------------------------------------------------------*/
-#ifdef __STDC__
 void SCHEMA_FreeRDFModel( List **model )
-#else /* __STDC__ */
-void SCHEMA_FreeRDFModel()
-     List **model;
-#endif /* __STDC__ */
 {
   List_delAll (model, SCHEMA_FreeRDFResource);
 }

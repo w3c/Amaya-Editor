@@ -31,13 +31,12 @@
 #include "ANNOTschemas_f.h"
 #include "ANNOTtools_f.h"
 
-/* libwww  includes */
-#include "xmlparse.h"
-
 /* RDF parser */
 #ifdef RAPTOR_RDF_PARSER
 #include "raptor.h"
 #else
+/* libwww  includes */
+#include "xmlparse.h"
 #include "HTRDF.h"
 #endif
 
