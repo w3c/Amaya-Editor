@@ -3779,45 +3779,24 @@ static void ExportNsDeclaration (PtrDocument pDoc, PtrElement pNode,
 }
 
 /*----------------------------------------------------------------------
-   ExportXmlText
-   Export in the fileDescriptor file the content of the text 
-   list buffer, pBT is the first one.
-   length: max length to export.                         
+  ExportXmlText exports in the fileDescriptor file the content the text 
+  of a list of buffers pointed by pBT.
+  length gives the max length of exported lines or 0.                         
   ----------------------------------------------------------------------*/
-static void ExportXmlText (PtrDocument pDoc,  PtrElement pNode,
-			   PtrTextBuffer pBT, int length,
-			   FILE *fileDescriptor)
+static void ExportXmlText (PtrDocument pDoc, PtrTextBuffer pBT, int length,
+			   FILE *fileDescriptor, ThotBool translate,
+			   ThotBool entityName)
 {
   PtrTextBuffer       b;
-  int                 i, line;
   unsigned char       mbc [50], *ptr;
-  int                 nb_bytes2write, index;
   char               *entity;
   wchar_t             c;
-  ThotBool            translate;
-  PtrElement          parent;
-  PtrSRule            pRe1;
-  ThotBool            entityName;
+  int                 nb_bytes2write, index;
+  int                 i, line;
 
   line = 0;
   b = pBT;
-
-  /* Don't translate predefined-entities for some elements */
-  translate = TRUE;
-  parent = pNode->ElParent;
-
-  pRe1 = parent->ElStructSchema->SsRule->SrElem[parent->ElTypeNumber - 1];
-  if (pRe1->SrOrigName != NULL &&
-      ((strcmp (pRe1->SrOrigName, "xmlcomment_line") == 0) ||
-       (strcmp (pRe1->SrOrigName, "xmlpi_line") == 0) ||
-       (strcmp (pRe1->SrOrigName, "cdata_line") == 0) ||
-       (strcmp (pRe1->SrOrigName, "doctype_line") == 0)))
-    translate = FALSE;
-
-  /* in MathML, try to generate the name of the char. */
-  entityName = !strcmp (pNode->ElStructSchema->SsName, "MathML");
-  /* Export the text buffer content */
-  while (b != NULL)
+  while (b)
     {
       i = 0;
       while (i < b->BuLength && b->BuContent[i] != EOS)
@@ -3936,7 +3915,7 @@ static void ExportXmlText (PtrDocument pDoc,  PtrElement pNode,
 	     }
 	   
 	   /* Write into the file according to the line length */
-	   if (line + nb_bytes2write > length)
+	   if (length > 0 && line + nb_bytes2write > length)
 	     {
 	       /* generate a CR */
 	       putc (__CR__, fileDescriptor);
@@ -3948,33 +3927,61 @@ static void ExportXmlText (PtrDocument pDoc,  PtrElement pNode,
 	   /* Next charcater */
 	   i++;
 	 }
-       
        /* Export the following text buffer for the same element */
        b = b->BuNext;
      }
-
-   return;
 }
 
 /*----------------------------------------------------------------------
-   ExportXmlDocument
-   Produces in a file a human-readable form of an XML abstract tree.
-   Parameters:
-   pDoc: the root element of the tree to be exported.
-   fileDescriptor: file descriptor of the file that will contain the document.
-   This file must be open when calling the function.
+  ExportXmlElText exports in the fileDescriptor file the content of the
+  element pNode.
+  pBT points the first text buffer.
+  length gives the max length of exported lines or 0.                         
   ----------------------------------------------------------------------*/
-void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode,
-			int indent, FILE *fileDescriptor)
+static void ExportXmlElText (PtrDocument pDoc,  PtrElement pNode,
+			     PtrTextBuffer pBT, int length,
+			     FILE *fileDescriptor)
+{
+  PtrElement          parent;
+  PtrSRule            pRe1;
+  ThotBool            translate;
+  ThotBool            entityName;
+
+
+  /* Don't translate predefined-entities for some elements */
+  translate = TRUE;
+  parent = pNode->ElParent;
+  pRe1 = parent->ElStructSchema->SsRule->SrElem[parent->ElTypeNumber - 1];
+  if (pRe1->SrOrigName != NULL &&
+      ((strcmp (pRe1->SrOrigName, "xmlcomment_line") == 0) ||
+       (strcmp (pRe1->SrOrigName, "xmlpi_line") == 0) ||
+       (strcmp (pRe1->SrOrigName, "cdata_line") == 0) ||
+       (strcmp (pRe1->SrOrigName, "doctype_line") == 0)))
+    translate = FALSE;
+  /* in MathML, try to generate the name of the char. */
+  entityName = !strcmp (pNode->ElStructSchema->SsName, "MathML");
+  /* Export the text buffer content */
+  ExportXmlText (pDoc, pBT, length, fileDescriptor, translate,
+		 entityName);
+}
+
+/*----------------------------------------------------------------------
+  ExportXmlDocument
+  Produces in a file a human-readable form of an XML abstract tree.
+  Parameters:
+  pDoc: the root element of the tree to be exported.
+  fileDescriptor: file descriptor of the file that will contain the document.
+  This file must be open when calling the function.
+  ----------------------------------------------------------------------*/
+void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, int indent,
+			FILE *fileDescriptor)
 {
   PtrElement          f;
   PtrSRule            pRe1;
   PtrAttribute        pAttr;
   PtrTtAttribute      pAttr1;
-  PtrTextBuffer       b;
   CHARSET             charset;
   char                *charset_name;
-  char                text[100];
   char                startName[MAX_NAME_LENGTH+1];
   char                endName[MAX_NAME_LENGTH+3];
   char               *ns_prefix;
@@ -4101,14 +4108,10 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode,
 		    case AtTextAttr:
 		      if (pAttr->AeAttrText)
 			{
-			  b = pAttr->AeAttrText;
 			  fprintf (fileDescriptor, "\"");
-			  while (b)
-			    {
-			      CopyBuffer2MBs (b, 0, text, 99);
-			      fprintf (fileDescriptor, "%s", text);
-			      b = b->BuNext;
-			    }
+			  /* Export the text buffer content */
+			  ExportXmlText (pDoc, pAttr->AeAttrText, 0,
+					 fileDescriptor, TRUE, FALSE);
 			  fprintf (fileDescriptor, "\"");
 			}
 		      break;
@@ -4119,7 +4122,7 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode,
 		    default:
 		      break;
 		    }
-                  if (pAttr->AeNext != NULL)
+                  if (pAttr->AeNext)
                     fprintf (fileDescriptor, " ");
 		  pAttr = pAttr->AeNext;
 		}
@@ -4146,10 +4149,10 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode,
 	  switch (pNode->ElLeafType)
 	    {
 	    case LtPicture:
-	      ExportXmlText (pDoc, pNode, pNode->ElText, 72 - indent, fileDescriptor);
+	      ExportXmlElText (pDoc, pNode, pNode->ElText, 72 - indent, fileDescriptor);
 	      break;
 	    case LtText:
-	      ExportXmlText (pDoc, pNode, pNode->ElText, 72 - indent, fileDescriptor);
+	      ExportXmlElText (pDoc, pNode, pNode->ElText, 72 - indent, fileDescriptor);
 	      break;
 	    default:
 	      break;	
