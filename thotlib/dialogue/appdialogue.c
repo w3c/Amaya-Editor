@@ -1739,10 +1739,8 @@ ThotBool            state;
 	    {
 	      /* Insere le nouvel icone */
 #ifdef _WINDOWS
-	      if (FrameTable[frame].Button[i]->iBitmap != picture)
-		{
-		  w->iBitmap = picture;
-		}
+	      if (FrameTable[frame].Button[index]->iBitmap != picture)
+		  FrameTable[frame].Button[index]->iBitmap = picture;
 	      SendMessage (WinToolBar[frame], TB_ENABLEBUTTON, (WPARAM) FrameTable[frame].ButtonId[index], (LPARAM) MAKELONG (state, 0));
 #else  /* !_WINDOWS */
 	      n = 0;
