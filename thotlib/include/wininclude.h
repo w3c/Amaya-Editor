@@ -70,7 +70,7 @@ extern void       CreateChangeFormatDlgWindow (int, int, int, int, int, int, int
 extern void       CreateGreekKeyboardDlgWindow (ThotWindow);
 extern void       CreateAuthenticationDlgWindow (ThotWindow, const STRING, STRING);
 extern void       CreateBackgroundImageDlgWindow (ThotWindow parent, STRING image_location);
-extern void       CreateMakeIDDlgWindow (ThotWindow parent, STRING image_location);
+extern void       CreateMakeIDDlgWindow (ThotWindow parent);
 extern void       TtaHandleOneEvent (ThotEvent*);
 extern ThotWindow TtaGetThotWindow (int);
 extern BinFile    TtaReadOpen (CONST CHAR_T*);

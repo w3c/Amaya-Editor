@@ -197,8 +197,10 @@ ThotWindow          hwndCurrentWord;
 ThotWindow          hwndLanguage;
 ThotWindow          ghwndAbort;
 ThotWindow          ghwndMain;
+ThotWindow          MakeIDHwnd;
 CHAR_T              currentWord [MAX_WORD_LEN];
 ThotBool            gbAbort;
+
 
 /* ------------------------------------------------------------------------ *
    GetPrinterDC()
@@ -3419,7 +3421,6 @@ LPARAM lParam;
       {
       case WM_INITDIALOG:
 	MakeIDHwnd = hwnDlg;
-	IdElemName[0] = EOS;
 	SetWindowText (hwnDlg, TEXT("ID Handler menu"));
 	SetDlgItemText (hwnDlg, IDC_IDELEMNAME, TEXT(""));
 	SetWindowText (GetDlgItem (hwnDlg, ID_DONE), 
@@ -3440,8 +3441,8 @@ LPARAM lParam;
 	    switch (LOWORD (wParam))
 	      {
 	      case IDC_IDELEMNAME:
-		GetDlgItemText (hwnDlg, IDC_IDELEMNAME, IdElemeName, 
-				sizeof (ElemName) - 1);
+		GetDlgItemText (hwnDlg, IDC_IDELEMNAME, IdElemName, 
+				sizeof (IdElemName) - 1);
 		IdElemName[MAX_LENGTH -1] = EOS;
 		break;
 	      }
@@ -3450,17 +3451,17 @@ LPARAM lParam;
 	switch (LOWORD (wParam))
 	  {
 	    /* toggle buttons */
-	  case IDC_IDAPPLYTOSELECTION:
+	  case IDC_IDAPPLYTOSEL:
 	    IdApplyToSel = !IdApplyToSel;
 	    break;
 
 	    /* action buttons */
-	  case ID_ADDID:
-	    ChangeIDAttribute (IdElemName, 1, TRUE);
+	  case ID_CREATEID:
+		ThotCallback (BaseDialog + MakeIdMenu, INTEGER_DATA, (CHAR_T *) 1);
 	    break;
 	    
 	  case ID_REMOVEID:
-	    ChangeIDAttribute (IdElemName, 1, TRUE);
+		ThotCallback (BaseDialog + MakeIdMenu, INTEGER_DATA, (CHAR_T *) 2);
 	    break;
 	    
 	  case ID_DONE:
@@ -4115,6 +4116,6 @@ void CreateMakeIDDlgWindow (parent)
 ThotWindow  parent;
 #endif /* __STDC__ */
 {
-  DialogBox (hInstance, MAKEINTRESOURCE (MAKEIDMENUDIALOG), parent, (DLGPROC) MakeIDDlgProc);
+  DialogBox (hInstance, MAKEINTRESOURCE (MAKEIDMENU), parent, (DLGPROC) MakeIDDlgProc);
 }
 #endif /* _WINDOWS */

@@ -4953,11 +4953,13 @@ View                view;
 #ifndef _WINDOWS
   int i;
   CHAR_T  s[MAX_LENGTH];
+#endif /* _WINDOWS */
 
   /* initialize the global variables */
   IdElemName[0] = EOS;
 
   /* Create the dialogue form */
+#ifndef _WINDOWS
   i = 0;
   strcpy (&s[i], TEXT("Add id"));
   i += ustrlen (&s[i]) + 1;
@@ -4974,6 +4976,8 @@ View                view;
 		  TRUE);
   TtaSetDialoguePosition ();
   TtaShowDialogue (BaseDialog + MakeIdMenu, TRUE);
+#else
+  CreateMakeIDDlgWindow (TtaGetViewFrame (document, view));
 #endif /* _WINDOWS */
 }
 
