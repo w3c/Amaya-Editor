@@ -125,9 +125,6 @@ static int          docSelect;
 static int          dirSelect;
 static int          currAttrVal;
 static int          LangValue;
-static int          graphDialog;
-static int          formGraph;
-static int          menuGraph;
 static int          Num_zoneRecess;
 static int          Num_zoneLineSpacing;
 static int          Align_num;
@@ -175,6 +172,8 @@ static ThotWindow         EditURLWnd;
 static ThotWindow         transURLWnd;
 static ThotWindow         copyImgWnd;
 static ThotWindow         WndSearchEdit;
+static ThotWindow         GraphPal = NULL;
+static ThotWindow         MathPal = NULL;
 
 static UINT         itemIndex;
 static UINT         nbClass;
@@ -576,17 +575,21 @@ LPARAM lParam;
   switch (msg)
     {
     case WM_INITDIALOG:
+      MathPal = hwnDlg;
       SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_BUTTON_MATH));
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
+      break;
+
     case WM_COMMAND:
-      /* SetFocus (FrRef[currentFrame]); */
       switch (LOWORD (wParam))
 	{
 	case ID_DONE:
+	  MathPal = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case WM_CLOSE:
 	case WM_DESTROY:
+	  MathPal = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case IDC_MATH:
@@ -1282,13 +1285,13 @@ LPARAM lParam;
 	case IDCANCEL:
 	  EndDialog (hwnDlg, IDCANCEL);
 	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (CHAR_T*) 0);
-	  currentDlg = (ThotWindow) 0;
+	  currentDlg = NULL;
 	  break;
 	  
 	case ID_CONFIRM:
 	  EndDialog (hwnDlg, ID_CONFIRM);
 	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (CHAR_T*) 1);
-	  currentDlg = (ThotWindow) 0;
+	  currentDlg = NULL;
 	  break;
 	}
       break;
@@ -1494,75 +1497,82 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-    switch (msg) {
-           case WM_INITDIALOG:
-                SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_BUTTON_GRAPHICS));
-                SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
-           case WM_COMMAND:
-                SetFocus (FrRef[currentFrame]);
-	            switch (LOWORD (wParam)) {
-				       case ID_DONE:
-							EndDialog (hwnDlg, ID_DONE);
-					        break;
+  switch (msg)
+    {
+    case WM_INITDIALOG:
+      GraphPal = hwnDlg;
+      SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_BUTTON_GRAPHICS));
+      SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
+      break;
 
-				       case WM_CLOSE:
-				       case WM_DESTROY:
-							EndDialog (hwnDlg, ID_DONE);
-					        break;
+    case WM_COMMAND:
+      switch (LOWORD (wParam))
+	{
+	case ID_DONE:
+	  GraphPal = NULL;
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	  
+	case WM_CLOSE:
+	case WM_DESTROY:
+	  GraphPal = NULL;
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	  
+	case IDC_GLINE:
+	  ThotCallback (GraphDialogue + MenuGraph, INTEGER_DATA, (CHAR_T*)0);
+	  break;
+	  
+	case IDC_GRECT:
+	  ThotCallback (GraphDialogue + MenuGraph, INTEGER_DATA, (CHAR_T*)1);
+	  break;
+	  
+	case IDC_GRRECT:
+	  ThotCallback (GraphDialogue + MenuGraph, INTEGER_DATA, (CHAR_T*)2);
+	  break;
 
-                       case IDC_GLINE:
-						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (CHAR_T*)0);
-                            break;
+	case IDC_GCIRCLE:
+	  ThotCallback (GraphDialogue + MenuGraph, INTEGER_DATA, (CHAR_T*)3);
+	  break;
+	  
+	case IDC_GELLIPSE:
+	  ThotCallback (GraphDialogue + MenuGraph, INTEGER_DATA, (CHAR_T*)4);
+	  break;
+	  
+	case IDC_GPOLYLINE:
+	  ThotCallback (GraphDialogue + MenuGraph, INTEGER_DATA, (CHAR_T*)5);
+	  break;
+	  
+	case IDC_GCPOLYLINE:
+	  ThotCallback (GraphDialogue + MenuGraph, INTEGER_DATA, (CHAR_T*)6);
+	  break;
+	  
+	case IDC_GCURVE:
+	  ThotCallback (GraphDialogue + MenuGraph, INTEGER_DATA, (CHAR_T*)7);
+	  break;
+	  
+	case IDC_GCCURVE:
+	  ThotCallback (GraphDialogue + MenuGraph, INTEGER_DATA, (CHAR_T*)8);
+	  break;
+	  
+	case IDC_GALPHA1:
+	  ThotCallback (GraphDialogue + MenuGraph, INTEGER_DATA, (CHAR_T*)9);
+	  break;
+	  
+	case IDC_GALPHA2:
+	  ThotCallback (GraphDialogue + MenuGraph, INTEGER_DATA, (CHAR_T*)10);
+	  break;
+	  
+	case IDC_GGROUP:
+	  ThotCallback (GraphDialogue + MenuGraph, INTEGER_DATA, (CHAR_T*)11);
+	  break;
+	}
+      SetFocus (FrRef[currentFrame]);
+      break;
 
-                       case IDC_GRECT:
-						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (CHAR_T*)1);
-                            break;
-
-                       case IDC_GRRECT:
-						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (CHAR_T*)2);
-                            break;
-
-                       case IDC_GCIRCLE:
-						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (CHAR_T*)3);
-                            break;
-
-                       case IDC_GELLIPSE:
-						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (CHAR_T*)4);
-                            break;
-
-                       case IDC_GPOLYLINE:
-						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (CHAR_T*)5);
-                            break;
-
-                       case IDC_GCPOLYLINE:
-						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (CHAR_T*)6);
-                            break;
-
-                       case IDC_GCURVE:
-						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (CHAR_T*)7);
-                            break;
-
-                       case IDC_GCCURVE:
-						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (CHAR_T*)8);
-                            break;
-
-                       case IDC_GALPHA1:
-						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (CHAR_T*)9);
-                            break;
-
-                       case IDC_GALPHA2:
-						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (CHAR_T*)10);
-                            break;
-
-                       case IDC_GGROUP:
-						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (CHAR_T*)11);
-                            break;
-				}
-				break;
-
-           default: return (FALSE);
+    default: return (FALSE);
     }
-	return TRUE;
+  return TRUE;
 }
 
 /*-----------------------------------------------------------------------
@@ -3636,8 +3646,10 @@ void        CreateMathDlgWindow (parent)
 ThotWindow  parent;
 #endif /* __STDC__ */
 {  
-  DialogBox (hInstance, MAKEINTRESOURCE (MATHDIALOG), NULL, (DLGPROC) MathDlgProc);
-  SetFocus (parent);
+  if (GraphPal)
+    SetFocus (MathPal);
+  else
+    DialogBox (hInstance, MAKEINTRESOURCE (MATHDIALOG), NULL, (DLGPROC) MathDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -3794,20 +3806,16 @@ int   doc_type;
  CreateGraphicsDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void  CreateGraphicsDlgWindow (int graph_dlg, int form_graph, int menu_graph, ThotWindow frame)
+void  CreateGraphicsDlgWindow (ThotWindow frame)
 #else  /* !__STDC__ */
-void  CreateGraphicsDlgWindow (graph_dlg, form_graph, menu_graph, frame)
-int  graph_dlg;
-int  form_graph;
-int  menu_graph;
+void  CreateGraphicsDlgWindow (frame)
 ThotWindow frame;
 #endif /* __STDC__ */
 {
-    graphDialog  = graph_dlg;
-    formGraph    = form_graph;
-    menuGraph    = menu_graph;
-
-	DialogBox (hInstance, MAKEINTRESOURCE (GRAPHICSDIALOG), NULL, (DLGPROC) GraphicsDlgProc);
+  if (GraphPal)
+    SetFocus (GraphPal);
+  else
+   DialogBox (hInstance, MAKEINTRESOURCE (GRAPHICSDIALOG), NULL, (DLGPROC) GraphicsDlgProc);
 }
 
 /*-----------------------------------------------------------------------

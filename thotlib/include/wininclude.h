@@ -53,7 +53,7 @@ extern void       CreateAlign3DlgWindow (ThotWindow, int);
 extern void       CreateSearchDlgWindow (ThotWindow, BOOL, CHAR_T*);
 extern void       CreateSaveAsDlgWindow (ThotWindow parent, STRING path_name);
 extern void       CreateOpenDocDlgWindow (ThotWindow parent, STRING title, STRING docName, int doc_select, int dir_select, int doc_type);
-extern void       CreateGraphicsDlgWindow (int, int, int, ThotWindow);
+extern void       CreateGraphicsDlgWindow (ThotWindow frame);
 extern void       CreateSaveListDlgWindow (ThotWindow parent, int nb_item, STRING save_list);
 extern void       CreateCloseDocDlgWindow (ThotWindow parent, STRING msg, ThotBool* save_befor, ThotBool* close_dont_save);
 extern void       CreateLanguageDlgWindow (ThotWindow, STRING, STRING, int, STRING, STRING, int, STRING);

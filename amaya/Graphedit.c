@@ -38,15 +38,11 @@
 #include "text.xpm"
 #include "group.xpm"
 #endif /* _WINDOWS */
-#define FormGraph 0
-#define MenuGraph 1
-#define MAX_GRAPH 2
 
 static Pixmap   iconGraph;
 static Pixmap   iconGraphNo;
 static int      GraphButton;
 static Pixmap   mIcons[12];
-static int      GraphDialogue;
 static ThotBool PaletteDisplayed = FALSE;
 #define BUFFER_LENGTH 100
 
@@ -1737,7 +1733,7 @@ View                view;
     }
   TtaShowDialogue (GraphDialogue + FormGraph, TRUE);
 # else /* _WINDOWS */
-  CreateGraphicsDlgWindow (GraphDialogue, FormGraph, MenuGraph, TtaGetThotWindow (GetWindowNumber (doc, view)));
+  CreateGraphicsDlgWindow (TtaGetThotWindow (GetWindowNumber (doc, view)));
 # endif /* _WINDOWS */
 }
 #endif /* GRAPHML */

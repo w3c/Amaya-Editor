@@ -100,7 +100,7 @@ typedef enum _ClickEvent {
 #define NO               0
 #define YES              1
 
-/* dialogue */
+/* dialogues */
 #define URLForm          1
 #define OpenForm         2
 #define URLName          3
@@ -185,6 +185,12 @@ typedef enum _ClickEvent {
 #define MenuMaths 1
 #define MAX_MATHS  2
 
+#ifdef GRAPHML
+#define FormGraph 0
+#define MenuGraph 1
+#define MAX_GRAPH 2
+#endif /* GRAPHML */
+
 /* The possible GET/POST/PUT request modes */
 /*synchronous request*/
 #define AMAYA_SYNC	1	/*0x000001 */  
@@ -264,6 +270,9 @@ THOT_EXPORT int          BaseDialog;
 THOT_EXPORT int          BasePrint;
 THOT_EXPORT int          BaseImage;
 THOT_EXPORT int	         MathsDialogue;
+#ifdef GRAPHML
+THOT_EXPORT int	         GraphDialogue;
+#endif /* GRAPHML */
 THOT_EXPORT int	         BaseCSS;
 THOT_EXPORT int          ReturnOption;
 THOT_EXPORT int          NumberRows;
