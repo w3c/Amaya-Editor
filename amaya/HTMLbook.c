@@ -1040,6 +1040,7 @@ void  *context;
       link = ctx->link;
       prev = ctx->ctxt;
       TtaFreeMemory (url);
+	  url = NULL;
       TtaFreeMemory (ctx);
       ctx = prev;
       found = GetIncludedDocuments (div, link, DocBook, ctx);

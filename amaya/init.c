@@ -203,6 +203,7 @@ static ThotBool  itemChecked = FALSE;
 #include "HTMLhistory_f.h"
 #include "html2thot_f.h"
 #include "init_f.h"
+#include "query_f.h"
 #include "trans_f.h"
 #include "AHTURLTools_f.h"
 #include "EDITORactions_f.h"
