@@ -1547,3 +1547,33 @@ Document doc;
 
  return result;
 }
+
+/*-----------------------------------------------------------------------
+  ANNOT_GetHTMLRoot
+  Returns the root element of the HTML body of an annotation document, NULL
+  if it's not an annotation document.
+  -----------------------------------------------------------------------*/
+#ifdef __STDC__
+Element ANNOT_GetHTMLRoot (Document doc)
+#else
+Element ANNOT_GetHTMLRoot (doc)
+Document doc;
+#endif /* __STDC__ */
+{
+  ElementType elType;
+  Element el;
+
+  /* we search the start of HTML document in the annotation struct */
+  if (DocumentTypes[doc] == docAnnot)
+    {
+      el = TtaGetMainRoot (doc);
+      elType = TtaGetElementType (el);
+      elType.ElTypeNum = Annot_EL_Body;
+      el = TtaSearchTypedElement (elType, SearchInTree, el);
+      el = TtaGetFirstChild (el);
+    }
+  else 
+    el = NULL;
+
+  return (el);
+}
