@@ -3,7 +3,7 @@
 <html>
 <head>
 <title>Compiling Amaya on Windows NT</title>
-<meta name="GENERATOR" content="amaya V1.1 Beta">
+<meta name="GENERATOR" content="amaya V1.4a">
 </head>
 <body lang="en">
 <p>
@@ -20,23 +20,135 @@ alt="Doc"></a></p>
 <h1>Compiling Amaya On Windows NT</h1>
 <p style="text-align: justify">
 This release of Amaya running on Windows NT  and  95 is developed with MSVC++.
-The project workspace is completely different than the Makefile delivered for
-Unix platforms. For example, we cannot run the compilers app, str, prs from
-the project workspace.</p>
-<p>
-First you have to download additional files needed to build amaya on Windows
-from <a href="../Distribution/amaya-compil-1.4.ZIP">here</a>. Put both the
-source tar file and the additional files in the same directory and unzip them
-(use a Win32 tool to unzip files).</p>
+Makefiles are delivered with the source tar file. </p>
+
+<h2 style="text-align: justify">Makefiles needed to build Amaya:</h2>
 <p style="text-align: justify">
-if you use the MSVC++ 4.x,, different components of Amaya project workspace
-have to be compiled independently. These components are: libwww, the Thot
-library, libjpeg, libpng (with libz) and the Amaya application. If yopu are
-using MSVC++ 5.0 you have to dowload amaya project and build it. It includes
-all other sub-worspaces. This version of Amaya does not include the compilers
-(this will be done in the next release).</p>
-<address>
+Check that in your directory Thot/WINNT you have the following directories and
+files:</p>
+<ul>
+<li>
+LibThotKernel/
+</li>
+<li>
+ style="text-align: justify"LibThotKernel/LibThotKernel.mak
+</li>
+<li>
+libThotTable/
+</li>
+<li>
+ style="text-align: justify"libThotTable/libThotTable.mak 
+</li>
+<li>
+libjpeg/
+</li>
+<li>
+ style="text-align: justify"libjpeg/libjpeg.mak 
+</li>
+<li>
+printlib/
+</li>
+<li>
+ style="text-align: justify"printlib/printlib.mak 
+</li>
+<li>
+thotprinter/
+</li>
+<li>
+thotprinter/thotprinter.mak 
+</li>
+<li>
+zlib/
+</li>
+<li>
+ style="text-align: justify"zlib/zlib.mak 
+</li>
+<li>
+libpng/
+</li>
+<li>
+ style="text-align: justify"libpng/libpng.mak
+</li>
+<li>
+Compilers/
+</li>
+<li>
+ style="text-align: justify"Compilers/Compilers.mak 
+</li>
+<li>
+app/
+</li>
+<li>
+ style="text-align: justify"app/app.mak 
+</li>
+<li>
+cpp/
+</li>
+<li>
+ style="text-align: justify"cpp/cpp.mak 
+</li>
+<li>
+prs/
+</li>
+<li>
+ style="text-align: justify"prs/prs.mak 
+</li>
+<li>
+tra/
+</li>
+<li>
+ style="text-align: justify"tra/tra.mak 
+</li>
+<li>
+str/
+</li>
+<li>
+ style="text-align: justify"<math>
+</math>
+str/str.mak
+</li>
+<li>
+libwww.mak
+</li>
+<li>
+LibThotEditor.mak
+</li>
+<li>
+amaya.mak
+</li>
+<li>
+amaya.mkf
+</li>
+</ul>
+
+<h2>Building Amaya:</h2>
+<ol>
+<li>
+Create the directory "amaya" under "Thot\WINNT".
+</li>
+<li>
+Move amaya.mkf into Thot\WINNT\amaya.
+</li>
+<li>
+Load the Compilers makefile (Thot\WINNT\Compilers\Compilers.mak) and build it.
+</li>
+<li>
+Execute Compilers program, you will a have a Window with a menu "File". Choose
+"File/Open" and load the file Thot\WINNT\amaya\amaya.mkf.
+</li>
+<li>
+Choose "File/Build", this will execute amaya compilers and generate files
+needed to build Amaya.
+</li>
+<li>
+Close you Compilers workspace and load "Thot\WINNT\amaya.mak".
+</li>
+<li>
+Build Amaya.
+</li>
+</ol>
+<p>
 <a href="mailto:Ramzi.Guetari@w3.org">Ramzi Guetari</a><br>
-$Date$</address>
+$Date$</p>
 </body>
 </html>
