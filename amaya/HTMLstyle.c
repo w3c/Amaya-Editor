@@ -172,6 +172,7 @@ Document            doc;
 	 buffer[index++] = EOS;
       ParseHTMLStyleHeader (NULL, buffer, doc, TRUE);
    }
+   TtaFreeMemory(buffer);
    return (cour);
 }
 

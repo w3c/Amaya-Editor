@@ -21,7 +21,6 @@ EXPORT boolean 	EvalAffich;	/* S'il faut mettre a jour la zone a afficher */
 EXPORT boolean 	Complete;	/* Une completion d'image est en cours */
 EXPORT boolean 	Erreur;		/* Il y a erreur sur des calculs de boites */
 EXPORT boolean 	Insert;		/* Une insertion est en cours */
-EXPORT PtrBox 	Placement;	/* Box racine du placement absolu en cours */
 EXPORT PtrBox 	Englobement;	/* Box racine du traitement de l'englobement */
 
 EXPORT PtrDimRelations RetardeEngl;	/* Les boites dont on differe l'englobement */

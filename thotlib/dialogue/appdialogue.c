@@ -89,14 +89,14 @@ static SchemaMenu_Ctl *SchemasMenuList;
 #ifdef __STDC__
 extern void         EndInsert (void);
 extern void         InitDocContexts (void);
-extern void         InitEcrans (char *, int, int);
+extern void         ThotInitDisplay (char *, int, int);
 extern void         TteLoadApplications (void);
 extern ThotWidget   XmCreateForem (ThotWidget, char *, Arg[], int);
 
 #else
 extern void         EndInsert ();
 extern void         InitDocContexts ();
-extern void         InitEcrans ();
+extern void         ThotInitDisplay ();
 extern void         TteLoadApplications ();
 extern ThotWidget   XmCreateForem ();
 
@@ -182,7 +182,7 @@ int                 number;
    TtaDefineDialogueCallback (ThotCallback);
 
    Dico_Init ();
-   InitEcrans (name, 0, 0);
+   ThotInitDisplay (name, 0, 0);
    NomFonte ('L', 'H', 0, MenuSize, UnPoint, texte, nomf1);
    NomFonte ('L', 'H', 1, MenuSize, UnPoint, texte, nomf2);
    TtaChangeDialogueFonts (nomf1, nomf2);

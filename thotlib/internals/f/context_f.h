@@ -16,7 +16,7 @@ extern void TtaGiveRGB ( char *colname,
 extern boolean ShowReference ( void );
 extern boolean ShowReadOnly ( void );
 extern void InitGC ( void );
-extern void InitEcrans ( char *name,
+extern void ThotInitDisplay ( char *name,
                          int dx,
                          int dy );
 extern void InitDocContexts ( void );
@@ -34,7 +34,7 @@ extern void TtaGiveRGB (/* char *colname,
 extern boolean ShowReference (/* void */);
 extern boolean ShowReadOnly (/* void */);
 extern void InitGC (/* void */);
-extern void InitEcrans (/* char *name,
+extern void ThotInitDisplay (/* char *name,
                            int dx,
                            int dy */);
 extern void InitDocContexts (/* void */);

@@ -1,18 +1,7 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
-/*=======================================================================*/
-/*|                                                                     | */
-/*|                            Projet THOT                              | */
-/*|                                                                     | */
-/*|     Module de gestion des contextes de documents.                   | */
-/*|                                                                     | */
-/*|                                                                     | */
-/*|                     I. Vatton       Mai     91                      | */
-/*|                                                                     | */
-/*|     France Logiciel numero de depot 88-39-001-00                    | */
-/*|                                                                     | */
-/*=======================================================================*/
+/*
+ * context.c : 
+ *     Module de gestion des contextes de documents.
+ */
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -56,10 +45,10 @@ extern char        *TtaGetEnvString ();
 #endif /* __STDC__ */
 
 #ifdef NEW_WILLOWS
-/* ---------------------------------------------------------------------- */
-/* |    WinCreateGC is an emulation of the XWindows XCreateGC under     | */
-/* |       MS-Windows.                                                  | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      WinCreateGC is an emulation of the XWindows XCreateGC under
+ *         MS-Windows.
+ **/
 #ifdef __STDC__
 ThotGC              WinCreateGC (void)
 #else  /* __STDC__ */
@@ -71,11 +60,11 @@ ThotGC              WinCreateGC (void)
    return (gc);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    WinLoadGC has to be called before using an GC X-Windows         | */
-/* |       emulation under MS-Windows.                                  | */
-/* | Full description of Device Context Attributes : Petzolt p 102      | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      WinLoadGC has to be called before using an GC X-Windows
+ *         emulation under MS-Windows.
+ *   Full description of Device Context Attributes : Petzolt p 102
+ **/
 #ifdef __STDC__
 void                WinLoadGC (HDC hdc, ThotGC gc)
 #else  /* __STDC__ */
@@ -118,10 +107,10 @@ ThotGC              gc;
      *******************/
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    WinUnloadGC has to be called after using an GC X-Windows        | */
-/* |       emulation under MS-Windows.                                  | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      WinUnloadGC has to be called after using an GC X-Windows
+ *         emulation under MS-Windows.
+ **/
 #ifdef __STDC__
 void                WinUnloadGC (HDC hdc, ThotGC gc)
 #else  /* __STDC__ */
@@ -133,10 +122,10 @@ ThotGC              gc;
 {
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    WinInitColors initialize the color table depending on the       | */
-/* |       device capabilities under MS-Windows.                        | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      WinInitColors initialize the color table depending on the
+ *         device capabilities under MS-Windows.
+ **/
 void                WinInitColors (void)
 {
    int                 i;
@@ -227,13 +216,14 @@ void                WinInitColors (void)
 #endif /* NEW_WILLOWS */
 
 #ifdef WWW_XWINDOWS
-/* ---------------------------------------------------------------------- */
-/* |    X_Erreur est le handler d'erreur X11 (non-fatale).              | */
-/* ---------------------------------------------------------------------- */
+/*
+ * XWindowError is the X-Windows non-fatal errors handler.
+ */
+
 #ifdef __STDC__
-void                X_Erreur (Display * dpy, XErrorEvent * err)
+static int XWindowError (Display * dpy, XErrorEvent * err)
 #else  /* __STDC__ */
-void                X_Erreur (dpy, err)
+static int XWindowError (dpy, err)
 Display            *dpy;
 XErrorEvent        *err;
 
@@ -242,15 +232,17 @@ XErrorEvent        *err;
    char                msg[200];
 
    XGetErrorText (dpy, err->error_code, msg, 200);
+   return(0);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    X_ErreurFatale est le handler d'erreur X11.                     | */
-/* ---------------------------------------------------------------------- */
+/*
+ * XWindowFatalError is the X-Windows fatal errors handler.
+ */
+
 #ifdef __STDC__
-void                X_ErreurFatale (Display * dpy)
+static int XWindowFatalError (Display * dpy)
 #else  /* __STDC__ */
-void                X_ErreurFatale (dpy)
+static int XWindowFatalError (dpy)
 Display            *dpy;
 
 #endif /* __STDC__ */
@@ -262,13 +254,14 @@ Display            *dpy;
       TtaDisplayMessage (FATAL, TtaGetMessage(LIB, LIB_X11_ERR), DisplayString (dpy));
    else
       TtaDisplayMessage (FATAL, TtaGetMessage(LIB, LIB_X11_ERR), DisplayString (dpy));
+   return(0);
 }
 #endif /* WWW_XWINDOWS */
 
-/* ---------------------------------------------------------------------- */
-/* | TtaGetThotColor returns the Thot Color.                            | */
-/* |            red, green, blue express the color RGB in 8 bits values | */
-/* ---------------------------------------------------------------------- */
+/*
+ * TtaGetThotColor returns the Thot Color.
+ *            red, green, blue express the color RGB in 8 bits values
+ */
 #ifdef __STDC__
 int                 TtaGetThotColor (unsigned short red, unsigned short green, unsigned short blue)
 #else  /* __STDC__ */
@@ -312,9 +305,9 @@ unsigned short      blue;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaGiveRGB returns the RGB of the color.                           | */
-/* ---------------------------------------------------------------------- */
+/**
+ *   TtaGiveRGB returns the RGB of the color.
+ **/
 #ifdef __STDC__
 void                TtaGiveRGB (char *colname, unsigned short *red, unsigned short *green, unsigned short *blue)
 #else  /* __STDC__ */
@@ -355,10 +348,10 @@ unsigned short     *blue;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    FindColor looks for the named color ressource.                  | */
-/* |       The result is the closest color found the Thot color table.  | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      FindColor looks for the named color ressource.
+ *         The result is the closest color found the Thot color table.
+ **/
 #ifdef __STDC__
 static boolean      FindColor (int disp, char *name, char *colorplace, char *defaultcolor, unsigned long *colorpixel)
 #else  /* __STDC__ */
@@ -397,9 +390,9 @@ unsigned long      *colorpixel;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    InitColors initialise les couleurs (X11)                        | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      InitColors initialize the Thot predefined X-Window colors.
+ **/
 #ifdef __STDC__
 static void         InitColors (char *name)
 #else  /* __STDC__ */
@@ -412,7 +405,7 @@ char               *name;
    ThotColorStruct     col;
    boolean             found;
 
-   /* L'ordre d'allocation du blanc et du  noir depend de l'ecran */
+   /* Depending on the display Black and White order may be inverted */
    if (XWhitePixel (TtDisplay, TtScreen) == 0)
      {
 	if (!XAllocNamedColor (TtDisplay, TtCmap, "White", &cwhite, &col))
@@ -428,7 +421,7 @@ char               *name;
 	   TtaDisplaySimpleMessage (FATAL, LIB, NOT_ENOUGH_MEMORY);
      }
 
-   /* Initialise les couleurs de l'application */
+   /* Initialize colors for the application */
    Black_Color = cblack.pixel;
    Button_Color = Select_Color = cblack.pixel;
    White_Color = cwhite.pixel;
@@ -437,37 +430,35 @@ char               *name;
 
    if (TtWDepth > 1)
      {
-	/* La couleur de fond */
+	/* background color */
 	found = FindColor (0, name, "BackgroundColor", "gainsboro", &White_Color);
-	/* La couleur de trace */
+	/* drawing color */
 	found = FindColor (0, name, "ForegroundColor", "black", &Black_Color);
-	/* La couleur bandeaux */
+	/* scrolls color */
 	found = FindColor (0, name, "ScrollColor", "grey", &Scroll_Color);
-	/* Lecture de la couleur select-menu */
+	/* color for the selection menu */
 	found = FindColor (0, name, "MenuBgColor", "grey", &BgMenu_Color);
-	/* La couleur Selection */
+	/* olor for the selection */
 	found = FindColor (0, name, "DocSelectColor", "SteelBlue", &Select_Color);
-	/* La couleur des bords */
+	/* color for borders and buttons */
 	found = FindColor (0, name, "ButtonColor", "grey", &Button_Color);
-	/* La couleur des boutons inactifs */
+	/* color for incative options and buttons */
 	found = FindColor (0, name, "InactiveItemColor", "LightGrey", &InactiveB_Color);
      }
    else
-      /* La couleur Selection */
+      /* at least allocate the selection color */
       found = FindColor (0, name, "DocSelectColor", "Black", &Select_Color);
 
-   /* La couleur des references */
+   /* The reference color */
    found = FindColor (0, name, "ActiveBoxColor", "Red", &(Box_Color));
    if (!found)
-      /* La couleur n'est pas definie -> Non utilisee */
       Box_Color = cwhite.pixel;
    else if (TtWDepth == 1)
       Box_Color = cblack.pixel;
 
-   /* La couleur du Read Only */
+   /* color for read-only sections */
    found = FindColor (0, name, "ReadOnlyColor", "MediumBlue", &(RO_Color));
    if (!found)
-      /* La couleur n'est pas definie -> Non utilisee */
       RO_Color = cwhite.pixel;
    else if (TtWDepth == 1)
       RO_Color = cblack.pixel;
@@ -475,10 +466,9 @@ char               *name;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |     ShowReference rend la valeur Vrai s'il existe une couleur de   | */
-/* |            boi^te active.                                          | */
-/* ---------------------------------------------------------------------- */
+/**
+ *  ShowReference returns True if there exists a color for active boxes.
+ **/
 boolean             ShowReference ()
 {
 #ifndef NEW_WILLOWS
@@ -490,9 +480,9 @@ boolean             ShowReference ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |     ShowReadOnly rend la valeur Vrai s'il existe une couleur RO.   | */
-/* ---------------------------------------------------------------------- */
+/**
+ *  ShowReference returns True if there exists a color for read-only parts.
+ **/
 boolean             ShowReadOnly ()
 {
 #ifndef NEW_WILLOWS
@@ -504,10 +494,11 @@ boolean             ShowReadOnly ()
 }
 /*fin */
 
-/* ---------------------------------------------------------------------- */
-/* |    InitGC initialise les contextes graphiques (X11).               | */
-/* ---------------------------------------------------------------------- */
-void                InitGC ()
+/**
+ *      InitGraphicContexts initialize the X-Windows graphic contexts and their Windows
+ *	counterpart in Microsoft environment.
+ **/
+static void                InitGraphicContexts ()
 {
 #ifndef NEW_WILLOWS
    unsigned long       valuemask;
@@ -572,8 +563,8 @@ void                InitGC ()
 #endif /* NEW_WILLOWS */
 #ifdef NEW_WILLOWS
    gcModel = TtLineGC;
-   gcModel->capabilities = THOT_GC_FOREGROUND |		/* THOT_GC_BACKGROUND | */
-   /* THOT_GC_BRUSH | */ THOT_GC_PEN;
+   gcModel->capabilities = THOT_GC_FOREGROUND |
+   /* THOT_GC_BACKGROUND | THOT_GC_BRUSH | */ THOT_GC_PEN;
    gcModel->pen = GetStockObject (BLACK_PEN);
    /* gcModel->background = White_Color; */
    gcModel->foreground = Black_Color;
@@ -623,7 +614,7 @@ void                InitGC ()
 #endif /* NEW_WILLOWS */
 
    /*
-    * A Graphic Context to for trame objects.
+    * A Graphic Context for trame objects.
     */
 #ifndef NEW_WILLOWS
    GCmodel.function = GXcopy;
@@ -649,13 +640,13 @@ void                InitGC ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    InitEcrans fait les initialisations des ecrans.                 | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      ThotInitDisplay initialize all the output settings.
+ **/
 #ifdef __STDC__
-void                InitEcrans (char *name, int dx, int dy)
+void                ThotInitDisplay (char *name, int dx, int dy)
 #else  /* __STDC__ */
-void                InitEcrans (name, dx, dy)
+void                ThotInitDisplay (name, dx, dy)
 char               *name;
 int                 dx;
 int                 dy;
@@ -673,58 +664,52 @@ int                 dy;
    ReleaseDC (WIN_Main_Wd, hdc);
 #endif /* NEW_WILLOWS */
 
-   /* En pixel */
 #ifndef NEW_WILLOWS
-   XSetErrorHandler (X_Erreur);
-   XSetIOErrorHandler (X_ErreurFatale);
+   XSetErrorHandler (XWindowError);
+   XSetIOErrorHandler (XWindowFatalError);
    TtScreen = DefaultScreen (TtDisplay);
    TtWDepth = DefaultDepth (TtDisplay, TtScreen);
    TtRootWindow = RootWindow (TtDisplay, TtScreen);
    TtCmap = XDefaultColormap (TtDisplay, TtScreen);
 #endif
 
-   /* Largeur des bandes de scroll */
    InitDocColors (name);
    InitColors (name);
-   InitGC ();
-   InitCurs ();			/* curseurs                           */
-   InitFont (name);		/* polices de caracteres              */
+   InitGraphicContexts ();
+   InitCurs ();
+   InitFont (name);
 
-   /* Initialisation des Picture Drivers */
+   /* Initialization of Picture Drivers */
    InitPictureHandlers (FALSE);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    InitContexts initialise les contextes de frames.                | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      InitDocContexts initialize the frames' contexts
+ **/
 void                InitDocContexts ()
 {
    int                 i;
 
-   MemInit ();			/* Initialisation de la gestion memoire */
+   MemInit ();			/* Initialize the memory allocator */
 
    /* Initialisation de la table des frames */
    for (i = 0; i <= MAX_FRAME; i++)
       FrRef[i] = 0;
 
-   MIN_BLANC = 3;		/* Largeur minmale d'un espace */
-   MAX_BLANC = 6;		/* Largeur maximale d'un espace */
-   DELTA = 4;			/* Erreur de position autorisee */
-   Placement = NULL;
-   /* Pas de placement absolu de boites en cours */
-   Englobement = NULL;
-   /* Aucun traitement de l'englobement n'est enregistre */
-   RetardeEngl = NULL;
-   /* Aucune boite dont l'englobement est differe */
-   EnCreation = FALSE;		/* Pas de creation interactive en cours */
+   MIN_BLANC = 3;	/* minimum size of a space */
+   MAX_BLANC = 6;	/* maximum size of a space */
+   DELTA = 4;		/* maximum palcement error allowed */
+   Englobement = NULL;	/* Don't do englobing placement for current boxes */
+   RetardeEngl = NULL;	/* Don't differ englobing placement for current boxes */
+   EnCreation = FALSE;	/* no interractive creation yet */
    InitAutreContexts ();
 
-}				/*InitContexts */
+}
 
 #ifndef NEW_WILLOWS
-/* ---------------------------------------------------------------------- */
-/* |    SelectionEvents traite les evenements de selection.             | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      SelectionEvents handle the X-Windows selection events.
+ **/
 #ifdef __STDC__
 void                SelectionEvents (XSelectionEvent * event)
 #else  /* __STDC__ */
@@ -744,7 +729,7 @@ XSelectionEvent    *event;
    switch (event->type)
 	 {
 	    case SelectionClear:
-	       /* Perte de la selection courante -> il faut liberer le Xbuffer */
+	       /* lost selection, need to free the buffer */
 	       w = ((XSelectionClearEvent *) event)->window;
 	       wind = 0;
 	       frame = 0;
@@ -758,7 +743,7 @@ XSelectionEvent    *event;
 		 {
 		    if (Xbuffer != NULL)
 		      {
-			 /* libere le buffer des donnees */
+			 /* free the buffer */
 			 free (Xbuffer);
 			 Xbuffer = NULL;
 			 LgXbuffer = 0;
@@ -767,8 +752,8 @@ XSelectionEvent    *event;
 	       break;
 
 	    case SelectionNotify:
-	       /* Reception du Xbuffer -> copier dans le document concerne */
-	       /* recherche si une frame thot est concernee */
+	       /* receive the XBuffer, paste it in the document */
+	       /* verify that one frame is concerned by the action */
 	       w = event->requestor;
 	       wind = 0;
 	       frame = 0;
@@ -782,26 +767,25 @@ XSelectionEvent    *event;
 		 {
 		    if (event->property == None)
 		      {
-			 /* Pas de selection courante -> on regarde s'il y a un cutbuffer */
+			 /* No current selection, look for the cut buffer */
 			 buffer = (unsigned char *) XFetchBytes (TtDisplay, &r);
 			 if (buffer != NULL)
 			   {
-			      /* Retourne le cutbuffer */
+			      /* returns the cut buffer */
 			      if (ThotLocalActions[T_pasteClipboard] != NULL)
 				 (*ThotLocalActions[T_pasteClipboard]) (buffer, r);
 			   }
 		      }
 		    else
 		      {
-			 /* Recupere les donnees */
+			 /* receive the data */
 			 r = XGetWindowProperty (event->display, event->requestor,
 			       event->property, (long) 0, (long) 256, FALSE,
 				  AnyPropertyType, &type, &format, &nbitems,
 						 &bytes_after, &buffer);
 			 if (r == Success && type != None && format == 8)
 			   {
-			      /* format traite */
-			      /* Colle le contenu de la selection rendue dans le document */
+			      /* paste the content of the selection */
 			      if (ThotLocalActions[T_pasteClipboard] != NULL)
 				 (*ThotLocalActions[T_pasteClipboard]) (buffer, (int) nbitems);
 			   }
@@ -810,7 +794,7 @@ XSelectionEvent    *event;
 	       break;
 
 	    case SelectionRequest:
-	       /* Demande du Xbuffer -> copier le Xbuffer dans le buffer X */
+	       /* Asking for selection : copy the cut buffer content in the Xbuffer */
 	       w = ((XSelectionRequestEvent *) event)->owner;
 	       wind = 0;
 	       frame = 0;
@@ -823,7 +807,7 @@ XSelectionEvent    *event;
 	       if (w == wind && event->display == TtDisplay)
 		 {
 		    request = (XSelectionRequestEvent *) event;
-		    /* Construit l'evenement notify */
+		    /* Build the Notify event */
 		    notify.type = SelectionNotify;
 		    notify.display = request->display;
 		    notify.requestor = request->requestor;
@@ -833,22 +817,22 @@ XSelectionEvent    *event;
 
 		    if (Xbuffer == NULL)
 		      {
-			 /* La selection est vide -> vide le cutbuffer */
+			 /* selection is empty, so empty the cut buffer */
 			 XStoreBuffer (request->display, NULL, 0, 0);
 			 notify.property = None;
 			 XSendEvent (request->display, request->requestor, TRUE, NoEventMask, (XEvent *) & notify);
 		      }
 		    else if (request->property == None)
 		      {
-			 /* Il n'y a pas de propriete specifiee */
+			 /* there is no such property */
 			 XStoreBuffer (request->display, Xbuffer, LgXbuffer, 0);
 		      }
 		    else
 		      {
-			 /* On range la valeur dans la propriete specifiee */
+			 /* store the value in the given property */
 			 XChangeProperty (request->display, request->requestor, request->property,
 			 XA_STRING, 8, PropModeReplace, Xbuffer, LgXbuffer);
-			 /* Signale que la selection est transmise */
+			 /* signal the completion of the action */
 			 notify.property = request->property;
 			 XSendEvent (request->display, request->requestor, TRUE, NoEventMask, (XEvent *) & notify);
 		      }
