@@ -3344,9 +3344,9 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
-   EndOfAttrValue  An attribute value has been read in the HTML
-   file. Put that value in the current Thot
-   attribute.
+   EndOfAttrValue
+   An attribute value has been read from the HTML file.
+   Put that value in the current Thot attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         EndOfAttrValue (char c)
@@ -4219,30 +4219,41 @@ char               *HTMLbuf;
 	     /* Consider LF and FF as the end of an input line. */
 	     /* Replace end of line by space, except in preformatted text. */
 	     /* Replace HT by space, except in preformatted text. */
-	     /* Ignore spaces at the beginning and at the end of input lines. */
+	     /* Ignore spaces at the beginning and at the end of input lines */
 	     /* Ignore non printable characters except HT, LF, FF. */
 	     if ((int) charRead == 10 || (int) charRead == 13)
 		/* LF or CR = end of input line */
 	       {
-		  if (currentState != 12)
-		     /* don't change characters in comments */
-		     if (currentState != 0)
-			/* not within a text element. Replace by a space */
-			charRead = SPACE;
-		     else
-			/* new line in a text element */
-		     if (Within (HTML_EL_Preformatted) && !Within (HTML_EL_Option_Menu))
+		if (currentState != 12)
+		   /* don't change characters in comments */
+		   if (currentState != 0)
+		      /* not within a text element */
+		      {
+		      if (currentState == 6 || currentState == 9)
+			/* within an attribute value between quotes */
+			if (!strcmp (AttributeMappingTable[lastAttrEntry].
+							htmlAttribute, "SRC"))
+			   /* value of an SRC attribute */
+			   /* consider new line as an empty char*/
+			   charRead = EOS;
+		      if (charRead != EOS)
+		         /* Replace new line by a space */
+		         charRead = SPACE;
+		      }
+		   else
+		      /* new line in a text element */
+		      if (Within (HTML_EL_Preformatted) && !Within (HTML_EL_Option_Menu))
 			/* within preformatted text */
-			/* consider "new line" as a <BR> tag */
-		       {
+			/* create a PreLine element */
+		        {
 			  StartOfTag (SPACE);
 			  CreatePreLine ();
 			  /* ignore character */
 			  charRead = EOS;
-		       }
-		     else
+		        }
+		      else
 			/* new line in ordinary text */
-		       {
+		        {
 			  /* suppress all spaces preceding the end of line */
 			  while (LgBuffer > 0 && inputBuffer[LgBuffer - 1] == SPACE)
 			     LgBuffer--;
@@ -4264,9 +4275,9 @@ char               *HTMLbuf;
 				  charRead = SPACE;
 			       TextToDocument ();
 			    }
-		       }
-		  /* beginning of a new input line */
-		  EmptyLine = TRUE;
+		        }
+		/* beginning of a new input line */
+		EmptyLine = TRUE;
 	       }
 	     else
 		/* it's not an end of line */
@@ -4683,9 +4694,6 @@ char               *pathURL;
 	     elHead = TtaNewTree (theDocument, newElType, "");
 	     TtaInsertSibling (elHead, elBody, TRUE, theDocument);
 	  }
-/*** create an element
-<meta name="GENERATOR" content="Amayaxxxx">
-in the Head ****/
 
 	/* create an element Term_List for each sequence of elements Term */
 	el = TtaGetFirstChild (rootElement);
@@ -5275,8 +5283,8 @@ char               *pathURL;
 #endif /* STANDALONE */
 	/* the Thot document has been successfully created */
 	{
-	   /* do not allow the user to edit the document during parsing */
-/**** TtaSetDocumentAccessMode(theDocument, 0);  ****/
+	   /* do not allow the user to edit the document while parsing */
+	   /**** TtaSetDocumentAccessMode(theDocument, 0);  ****/
 	   /* do not check the Thot abstract tree against the structure schema */
 	   /* while building the Thot document. */
 	   TtaSetStructureChecking (0, theDocument);
@@ -5344,7 +5352,7 @@ char               *pathURL;
 	   /* check the Thot abstract tree against the structure schema. */
 	   TtaSetStructureChecking (1, theDocument);
 	   /* allow the user to edit the document */
-/***** TtaSetDocumentAccessMode(theDocument, 1); ****/
+	   /***** TtaSetDocumentAccessMode(theDocument, 1); ****/
 	}
 	/* close the HTML file */
 	fclose (infile);

@@ -42,7 +42,9 @@ View                view;
    Document            doc;
    boolean             exist;
    ElementType         elType;
-   Element             el;
+   Element             root, title, text, el, head, child, metas, meta;
+   AttributeType       attrType;
+   Attribute	       attr;
 
    strcpy (tempfile, DirectoryName);
    strcat (tempfile, DIR_STR);
@@ -50,7 +52,7 @@ View                view;
    i = 0;
    strcat (tempfile, "New");
 
-   /* control if a previous new file is opened in Amaya */
+   /* check if a previous new file is open in Amaya */
    exist = TRUE;
    while (exist)
      {
@@ -76,12 +78,41 @@ View                view;
    doc = GetHTMLDocument (tempfile, NULL, 0, DC_FALSE);
    ResetStop (doc);
    ApplyFinalStyle (doc);
-   /* Search the first element */
-   el = TtaGetMainRoot (doc);
-   elType = TtaGetElementType (el);
+   root = TtaGetMainRoot (doc);
+   elType = TtaGetElementType (root);
+   /* create a default title if there is no content in the TITLE element */
+   elType.ElTypeNum = HTML_EL_TITLE;
+   title = TtaSearchTypedElement (elType, SearchInTree, root);
+   text = TtaGetFirstChild (title);
+   if (TtaGetTextLength (text) == 0)
+      TtaSetTextContent (text, "No title", TtaGetDefaultLanguage (), doc);
+   /* create a META element in the HEAD with attributes name="GENERATOR" */
+   /* and content="Amaya" */
+   elType.ElTypeNum = HTML_EL_HEAD;
+   head = TtaSearchTypedElement (elType, SearchInTree, root);
+   child = TtaGetLastChild (head);
+   elType.ElTypeNum = HTML_EL_Metas;
+   metas = TtaNewElement (doc, elType);
+   TtaInsertSibling (metas, child, FALSE, doc);
+   elType.ElTypeNum = HTML_EL_META;
+   meta = TtaNewElement (doc, elType);
+   attrType.AttrSSchema = elType.ElSSchema;
+   attrType.AttrTypeNum = HTML_ATTR_meta_name;
+   attr = TtaNewAttribute (attrType);
+   TtaAttachAttribute (meta, attr, doc);
+   TtaSetAttributeText (attr, "GENERATOR", meta, doc);
+   attrType.AttrTypeNum = HTML_ATTR_meta_content;
+   attr = TtaNewAttribute (attrType);
+   TtaAttachAttribute (meta, attr, doc);
+   strcpy (tempfile, HTAppName);
+   strcat (tempfile, " ");
+   strcat (tempfile, HTAppVersion);
+   TtaSetAttributeText (attr, tempfile, meta, doc);
+   TtaInsertFirstChild (&meta, metas, doc);
+   /* Search the first element in the BODY to set initial selection */
    elType.ElTypeNum = HTML_EL_Element;
-   el = TtaSearchTypedElement (elType, SearchInTree, el);
-   /* and set the initial selection */
+   el = TtaSearchTypedElement (elType, SearchInTree, root);
+   /* set the initial selection */
    TtaSelectElement (doc, el);
    if (SelectionDoc != 0)
        UpdateContextSensitiveMenus (SelectionDoc);
