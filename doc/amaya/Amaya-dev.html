@@ -175,7 +175,7 @@ Element             el;
   </li>
 </ul>
 
-<h2>Adding a new dialogue</h2>
+<h2><a name="Adding">Adding a new dialogue</a></h2>
 
 <p>Adding a new dialogue entry in any Amaya menu is by by several steps:</p>
 <ol>
@@ -250,7 +250,7 @@ cites any related file.</p>
     <tr>
       <td>*-amayadialogue</td>
       <td>MD</td>
-      <td>EDITOR.A, </td>
+      <td>EDITOR.A,</td>
     </tr>
     <tr>
       <td>*-amayamsg</td>
@@ -355,11 +355,12 @@ useful is look at the related files and have Amaya running.</p>
 
 <p>Help menu entries are handled as dialogue entries. Therefore, you'll have
 to add a new dialogue entry, a callback procedure, connect this procedure to
-the dialogue entry, and make this procedure open the related manual page </p>
+the dialogue entry, and make this procedure open the related manual page</p>
 
-<p>Follow the instructions for adding a new dialogue entry, inspiring yourself
-from the existing help menu entries. For example, the Help/Configure entry is
-defined as follows in the EDITOR.A file:</p>
+<p>Follow the instructions for <a href="#Adding">adding a new dialogue
+entry</a>, inspiring yourself from the existing help menu entries. For
+example, the Help/Configure entry is defined as follows in the EDITOR.A
+file:</p>
 <pre>      view:1 Help_ button:BHelpConfigure -> HelpConfigure;</pre>
 
 <p>The callback procedure and the definition of the manual pages are done in
