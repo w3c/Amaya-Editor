@@ -481,7 +481,7 @@ static char        *SkipWord (ptr)
 char               *ptr;
 #endif
 {
-  while (isalnum(*ptr) || *ptr == '-')
+  while (isalnum(*ptr) || *ptr == '-' || *ptr == '%')
     ptr++;
   return (ptr);
 }
