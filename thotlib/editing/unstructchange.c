@@ -88,13 +88,15 @@
    document pDoc.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         InsertPastedElement (PtrElement pEl, boolean before,
-					 PtrElement pNew, PtrDocument pDoc)
+static void         InsertPastedElement (PtrElement pEl, boolean within,
+					 boolean before,
+					 PtrElement* pNew, PtrDocument pDoc)
 #else
-static void         InsertPastedElement (pEl, before, pNew, pDoc)
+static void         InsertPastedElement (pEl, within, before, pNew, pDoc)
 PtrElement          pEl;
+boolean		    within;
 boolean             before;
-PtrElement          pNew;
+PtrElement*         pNew;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -102,14 +104,21 @@ PtrDocument         pDoc;
 {
    PtrElement          pSibling;
 
-   if (before)
+   if (within)
+     {
+	if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice)
+           InsertOption (pEl, pNew, pDoc);
+	else
+           InsertFirstChild (pEl, *pNew);
+     }
+   else if (before)
      {
 	/* teste d'abord si pEl est le premier fils de son pere, abstraction
 	   faite des marques de page */
 	pSibling = pEl->ElPrevious;
 	BackSkipPageBreak (&pSibling);
 	/* insere l'element dans l'arbre */
-	InsertElementBefore (pEl, pNew);
+	InsertElementBefore (pEl, *pNew);
 	if (pSibling == NULL)
 	   /* l'element devant lequel on colle n'est plus premier */
 	   ChangeFirstLast (pEl, pDoc, TRUE, TRUE);
@@ -121,7 +130,7 @@ PtrDocument         pDoc;
 	pSibling = pEl->ElNext;
 	FwdSkipPageBreak (&pSibling);
 	/* insere l'element dans l'arbre */
-	InsertElementAfter (pEl, pNew);
+	InsertElementAfter (pEl, *pNew);
 	if (pSibling == NULL)
 	   /* l'element devant lequel on colle n'est plus premier */
 	   ChangeFirstLast (pEl, pDoc, FALSE, TRUE);
@@ -130,18 +139,19 @@ PtrDocument         pDoc;
 
 
 /*----------------------------------------------------------------------
-   PasteAnElement  Paste element decribed by pSavedEl before       
-   (if before is TRUE) or after (if before is FALSE)       
+   PasteAnElement  Paste element decribed by pSavedEl within (if
+   within is TRUE), before (if before is TRUE) or after (if before is FALSE)
    element pEl in document pDoc.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 
 static PtrElement   PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
-				    boolean before, PtrDocument pDoc)
+			     boolean within, boolean before, PtrDocument pDoc)
 #else  /* __STDC__ */
-static PtrElement   PasteAnElement (pEl, pSavedEl, before, pDoc)
+static PtrElement   PasteAnElement (pEl, pSavedEl, within, before, pDoc)
 PtrElement          pEl;
 PtrPasteElem        pSavedEl;
+boolean		    within;
 boolean             before;
 PtrDocument         pDoc;
 
@@ -149,7 +159,7 @@ PtrDocument         pDoc;
 
 {
    PtrElement          pElem, pChild, pPasted, pOrig, pParent, pSibling,
-                       pAncest, pE, pElAttr;
+                       pAncest, pE, pElAttr, newElement;
    PtrAttribute        pInheritLang, pLangAttr;
    PtrPasteElem        pPasteD;
    NotifyOnValue       notifyVal;
@@ -160,29 +170,30 @@ PtrDocument         pDoc;
    pPasted = NULL;
    pAncest = NULL;
    pOrig = pSavedEl->PeElement;
-   /* futur pere de l'element colle' */
-   pParent = pEl->ElParent;
-   /* on calcule le nombre de freres qui precederont l'element */
-   /* lorsqu'il sera mis dans l'arbre abstrait */
-   NSiblings = 0;
-   pSibling = pEl;
-   while (pSibling->ElPrevious != NULL)
-     {
-	NSiblings++;
-	pSibling = pSibling->ElPrevious;
-     }
-   if (!before)
-      NSiblings++;
+   ok = FALSE;
+   if (within)
+      {
+      /* verifie si l'element peut etre un fils de pEl */
+      ok = AllowedFirstChild (pEl, pDoc, pOrig->ElTypeNumber,
+			      pOrig->ElStructSchema, TRUE, FALSE);
+      if (!ok)
+	 /* refus.  Essaie de le coller devant pEl */
+	 {
+	 within = FALSE;
+	 before = TRUE;
+	 }
+      }
+   if (!ok)
+      /* verifie si l'element peut etre colle' au meme niveau que pEl */
+      ok = AllowedSibling (pEl, pDoc, pOrig->ElTypeNumber,
+			   pOrig->ElStructSchema, before, TRUE, FALSE);
+
    pElem = pEl;
-   /* verifie si l'element peut etre colle' au meme niveau que pEl */
-   ok = AllowedSibling (pEl, pDoc, pOrig->ElTypeNumber,
-			pOrig->ElStructSchema, before, TRUE, FALSE);
    if (!ok)
       /* l'element ne peut pas etre colle' au meme niveau */
       /* s'il faut coller en debut ou fin d'element, on essaie de remonter */
       /* d'un ou plusieurs niveaux */
      {
-        pElem = pEl;
         while (!ok && pElem != NULL)
 	   if ((before && pElem->ElPrevious == NULL) ||
 	       (!before && pElem->ElNext == NULL))
@@ -195,6 +206,29 @@ PtrDocument         pDoc;
 	   else
 	     pElem = NULL;
      }
+
+   if (pElem == NULL)
+      pElem = pEl;
+
+   /* futur pere de l'element colle' */
+   if (within)
+      pParent = pElem;
+   else
+      pParent = pElem->ElParent;
+   /* on calcule le nombre de freres qui precederont l'element */
+   /* lorsqu'il sera mis dans l'arbre abstrait */
+   NSiblings = 0;
+   if (!within)
+      {
+      pSibling = pElem;
+      while (pSibling->ElPrevious != NULL)
+        {
+	NSiblings++;
+	pSibling = pSibling->ElPrevious;
+        }
+      if (!before)
+         NSiblings++;
+      }
 
    if (!ok)
      {
@@ -272,7 +306,7 @@ PtrDocument         pDoc;
 			    if (pAncest != NULL)
 			      {
 				 /* on insere ce nouvel element dans l'arbre abstrait */
-				 InsertPastedElement (pElem, before, pAncest, pDoc);
+				 InsertPastedElement (pElem, within, before, &pAncest, pDoc);
 				 /* on envoie un evenement ElemNew.Post a l'application */
 				 notifyEl.event = TteElemNew;
 				 notifyEl.document = (Document) IdentDocument (pDoc);
@@ -364,10 +398,16 @@ PtrDocument         pDoc;
 	       {
 		  /* insere la copie dans l'arbre */
 		  if (pAncest == NULL)
-		     InsertPastedElement (pElem, before, pPasted, pDoc);
+		     {
+		     InsertPastedElement (pElem, within, before, &pPasted, pDoc);
+		     newElement = pPasted;
+		     }
 		  else
+		     {
 		     InsertFirstChild (pParent, pPasted);
-		  /* RemoveElement l'attribut Langue de l'element colle', s'il
+		     newElement = pAncest;
+		     }
+		  /* Retire l'attribut Langue de l'element colle', s'il
 		     herite de la meme valeur */
 		  /* cherche d'abord la valeur heritee */
 		  pInheritLang = GetTypedAttrAncestor (pPasted, 1, NULL, &pElAttr);
@@ -383,20 +423,10 @@ PtrDocument         pDoc;
 			     DeleteAttribute (pPasted, pLangAttr);
 		    }
 		  /* garde le pointeur sur le sous-arbre colle' */
-		  if (pAncest == NULL)
-		    {
-		       CreatedElement[NCreatedElements] = pPasted;
-		       NCreatedElements++;
-		       if (ThotLocalActions[T_pastesiblingtable] != NULL)
-			  (*ThotLocalActions[T_pastesiblingtable]) (pPasted, &pOrig, pDoc);
-		    }
-		  else
-		    {
-		       CreatedElement[NCreatedElements] = pAncest;
-		       NCreatedElements++;
-		       if (ThotLocalActions[T_pastesiblingtable] != NULL)
-			  (*ThotLocalActions[T_pastesiblingtable]) (pAncest, &pOrig, pDoc);
-		    }
+		  CreatedElement[NCreatedElements] = newElement;
+		  NCreatedElements++;
+		  if (ThotLocalActions[T_pastesiblingtable] != NULL)
+		     (*ThotLocalActions[T_pastesiblingtable]) (newElement, &pOrig, pDoc);
 	       }
 	  }
      }
@@ -421,7 +451,12 @@ PtrDocument         pDoc;
 	     while (pChild != NULL)
 	       {
 		  pPasteD->PeElement = pChild;
-		  pPasted = PasteAnElement (pElem, pPasteD, before, pDoc);
+		  pPasted = PasteAnElement (pElem, pPasteD, within, before, pDoc);
+		  if (within)
+		     {
+		     within = FALSE;
+		     before = FALSE;
+		     }
 		  if (!before && pPasted != NULL)
 		     pElem = pPasted;
 		  pChild = pChild->ElNext;
@@ -444,7 +479,7 @@ void                PasteCommand ()
                        pNextEl, pFree;
    PtrPasteElem        pPasteD;
    int                 firstChar, lastChar, numAssoc, view, i;
-   boolean             ok, elemIsBefore;
+   boolean             ok, before, within;
 
    if (FirstSavedElement == NULL)
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_NOTHING_TO_PASTE);
@@ -454,7 +489,8 @@ void                PasteCommand ()
 	 TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
       else
 	{
-	   /*calcule le volume que pourront prendre les paves des elements colles */
+	   /* calcule le volume que pourront prendre les paves des elements
+	      colles */
 	   numAssoc = firstSel->ElAssocNum;
 	   if (!AssocView (firstSel))
 	      /* element de l'arbre principal */
@@ -465,16 +501,25 @@ void                PasteCommand ()
 		}
 	   else
 	      /* element associe */
-	   if (pDoc->DocAssocFrame[numAssoc - 1] > 0)
-	      pDoc->DocAssocFreeVolume[numAssoc - 1] = pDoc->DocAssocVolume[numAssoc - 1];
+	      if (pDoc->DocAssocFrame[numAssoc - 1] > 0)
+	         pDoc->DocAssocFreeVolume[numAssoc - 1] = pDoc->DocAssocVolume[numAssoc - 1];
 
 	   pFollowing = NULL;
 	   pNextEl = NULL;
-	   if (firstChar < 2)
+
+	   if (firstChar == 0 && lastChar == 0 && firstSel == lastSel &&
+	       firstSel->ElVolume == 0 && !firstSel->ElTerminal)
+	      /* un element non terminal vide. On colle a l'interieur */
+	     {
+	        pEl = firstSel;
+		within = TRUE;
+	     }
+	   else if (firstChar < 2)
 	      /* on veut coller avant l'element firstSel */
 	     {
 		pEl = firstSel;
-		elemIsBefore = TRUE;
+		within = FALSE;
+		before = TRUE;
 		/* l'element qui suivra la partie collee est le 1er element de la */
 		/* selection courante */
 		pNextEl = firstSel;
@@ -484,7 +529,8 @@ void                PasteCommand ()
 	      /* on veut coller apres l'element firstSel */
 	     {
 		pEl = firstSel;
-		elemIsBefore = FALSE;
+		within = FALSE;
+		before = FALSE;
 		pNextEl = NextElement (pEl);
 	     }
 	   else
@@ -493,8 +539,8 @@ void                PasteCommand ()
 	     {
 		/* Si l'element a couper est le dernier, il ne le sera plus */
 		/* apres la coupure. Teste si le dernier selectionne' est le */
-		/* dernier fils de son pere, abstraction faite des marques de */
-		/* page */
+		/* dernier fils de son pere, abstraction faite des marques */
+		/* de page */
 		pClose = firstSel->ElNext;
 		FwdSkipPageBreak (&pClose);
 		/* coupe la feuille de texte */
@@ -506,9 +552,10 @@ void                PasteCommand ()
 		     lastChar = lastChar - firstChar + 1;
 		  }
 		pEl = firstSel;
-		elemIsBefore = FALSE;
-		/* l'element qui suivra la partie collee est la deuxieme partie */
-		/* de l'element qu'on vient de couper en deux */
+		within = FALSE;
+		before = FALSE;
+		/* l'element qui suivra la partie collee est la deuxieme */
+		/* partie de l'element qu'on vient de couper en deux */
 		pNextEl = pFollowing;
 	     }
 
@@ -516,29 +563,35 @@ void                PasteCommand ()
 
 	   /* boucle sur les elements a coller et les colle un a un */
 	   pPasteD = FirstSavedElement;
-	   if (elemIsBefore && pPasteD != NULL)
-	      /* on colle devant un element. On commencera par coller le dernier */
-	      /* element a coller et on continuera en arriere */
+	   if (!within && before && pPasteD != NULL)
+	      /* on colle devant un element. On commencera par coller le */
+	      /* dernier element a coller et on continuera en arriere */
 	      while (pPasteD->PeNext != NULL)
 		 pPasteD = pPasteD->PeNext;
 	   ok = FALSE;
 	   do
 	     {
-		pPasted = PasteAnElement (pEl, pPasteD, elemIsBefore, pDoc);
+		pPasted = PasteAnElement (pEl, pPasteD, within, before, pDoc);
 		if (pPasted == NULL)
 		   /* echec */
-		   if (!elemIsBefore && pNextEl != NULL)
+		   if (!within && !before && pNextEl != NULL)
 		      /* on essayait de coller apres le dernier colle' */
 		      /* on va essayer de coller le meme element avant l'element */
 		      /* qui doit suivre la partie collee */
-		      pPasted = PasteAnElement (pNextEl, pPasteD, TRUE, pDoc);
+		      pPasted = PasteAnElement (pNextEl, pPasteD, within, TRUE, pDoc);
 		if (pPasted != NULL)
 		   /* a copy of element pPasteD has been sucessfully pasted */
 		  {
 		     ok = TRUE;
 		     pEl = pPasted;
+		     if (within)
+			/* next element will be pasted after the previous one*/
+			{
+			within = FALSE;
+			before = FALSE;
+			}
 		  }
-		if (elemIsBefore)
+		if (!within && before)
 		   pPasteD = pPasteD->PePrevious;
 		else
 		   pPasteD = pPasteD->PeNext;
@@ -587,42 +640,48 @@ void                PasteCommand ()
 		for (i = 0; i < NCreatedElements; i++)
 		   NotifySubTree (TteElemPaste, pDoc, CreatedElement[i],
 				  IdentDocument (DocOfSavedElements));
-		/* cree dans toutes les vues les paves de tous les elements colle's */
-		for (i = 0; i < NCreatedElements; i++)
-		   if (CreatedElement[i] != NULL)
-		     {
-			/* cree dans toutes les vues les paves du nouvel element */
-			CreateNewAbsBoxes (CreatedElement[i], pDoc, 0);
-			/* calcule le volume que pourront prendre les paves des autres */
-			/* elements a coller */
-			if (!AssocView (pPasted))
-			   for (view = 0; view < MAX_VIEW_DOC; view++)
-			     {
-				if (CreatedElement[i]->ElAbstractBox[view] != NULL)
-				   pDoc->DocViewFreeVolume[view] -=
-				      CreatedElement[i]->ElAbstractBox[view]->AbVolume;
-			     }
-			else
-			   /* element affiche dans une vue associee */
-			if (CreatedElement[i]->ElAbstractBox[0] != NULL)
-			   pDoc->DocAssocFreeVolume[numAssoc - 1] -=
-			      CreatedElement[i]->ElAbstractBox[0]->AbVolume;
-		     }
-		/* applique les regle de presentation retardees qui restent encore */
-		for (i = 0; i < NCreatedElements; i++)
-		   if (CreatedElement[i] != NULL)
-		      ApplDelayedRule (CreatedElement[i], pDoc);
-		/* refait la presentation des attributs-reference qui pointent */
-		/* les elements colle's */
-		for (i = 0; i < NCreatedElements; i++)
-		   if (CreatedElement[i] != NULL)
-		      UpdateRefAttributes (CreatedElement[i], pDoc);
 
+		TtaClearViewSelections ();
+                for (i = 0; i < NCreatedElements; i++)
+                   if (CreatedElement[i] != NULL)
+                     {
+                        /* cree dans toutes les vues les paves du nouvel element */
+                        CreateNewAbsBoxes (CreatedElement[i], pDoc, 0);
+                        /* calcule le volume que pourront prendre les paves des autres */
+                        /* elements a coller */
+                        if (!AssocView (pPasted))
+                           for (view = 0; view < MAX_VIEW_DOC; view++)
+                             {
+                                if (CreatedElement[i]->ElAbstractBox[view] != NULL)
+                                   pDoc->DocViewFreeVolume[view] -=
+                                      CreatedElement[i]->ElAbstractBox[view]->AbVolume;
+                             }
+                        else
+                           /* element affiche dans une vue associee */
+                        if (CreatedElement[i]->ElAbstractBox[0] != NULL)
+                           pDoc->DocAssocFreeVolume[numAssoc - 1] -=
+                              CreatedElement[i]->ElAbstractBox[0]->AbVolume;
+                     }
+                /* applique les regle de presentation retardees qui restent encore */
+                for (i = 0; i < NCreatedElements; i++)
+                   if (CreatedElement[i] != NULL)
+                      ApplDelayedRule (CreatedElement[i], pDoc);
+		
+		AbstractImageUpdated (pDoc);
+		/* indique au Mediateur les modifications */
+		RedisplayDocViews (pDoc);
+
+		for (i = 0; i < NCreatedElements; i++)
+		   if (CreatedElement[i] != NULL)
+		      {
+		      /* refait la presentation des attributs-reference qui */
+		      /*  pointent les elements colle's */
+		      UpdateRefAttributes (CreatedElement[i], pDoc);
+		      }
 		/* cherche a fusionner avec leurs voisins les elements de texte */
 		/* qui viennent d'etre colle's et reaffiche le document */
-		TtaClearViewSelections ();
 		if (NCreatedElements > 0)
-		    if (elemIsBefore)
+		    if (before)
 		      MergeAndSelect (pDoc, CreatedElement[NCreatedElements - 1], CreatedElement[0], 0, 0);
 		    else
 		      MergeAndSelect (pDoc, CreatedElement[0], CreatedElement[NCreatedElements - 1], 0, 0);

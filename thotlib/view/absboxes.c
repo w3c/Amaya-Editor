@@ -234,7 +234,8 @@ PtrAbstractBox      pAb;
 	  }
 
       /* dechaine pAb de son element */
-      if (pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1] == pAb)
+      if (pAb->AbElement != NULL)
+        if (pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1] == pAb)
 #ifdef __COLPAGE__
 	if (!pAb->AbPresentationBox)
 	  /* si le pave pAb est le pave principal (non presentation) */
@@ -254,7 +255,7 @@ PtrAbstractBox      pAb;
 	    pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1] = pAb->AbNextRepeated;
       /* fin du cas ou l'element pointait sur le pave */
 #else  /* __COLPAGE__ */
-      pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1] = NULL;
+            pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1] = NULL;
 #endif /* __COLPAGE__ */
 #ifndef __COLPAGE__
       /* Ce code ne marche pas avec CP */
