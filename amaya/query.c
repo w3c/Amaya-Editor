@@ -2075,7 +2075,13 @@ int i;
     TtaFreeMemory (real_dir);
   /* warn the user if the cache isn't active */
   if (cache_enabled && !HTCacheMode_enabled ())
-      InitInfo ("Cache", TtaGetMessage (AMAYA, AM_CANT_CREATE_CACHE));
+    {
+      ThotBool warn_user;
+
+      TtaGetEnvBoolean ("WARN_NO_CACHE", &warn_user);
+      if (warn_user)
+	InitInfo ("Cache", TtaGetMessage (AMAYA, AM_CANT_CREATE_CACHE));
+    }
 #endif /* AMAYA_WWW_CACHE */
 }
 
@@ -2140,6 +2146,7 @@ static void ProxyInit (void)
     }
   
   /* how should we interpret the proxy domain list? */
+
   TtaGetEnvBoolean ("PROXYDOMAIN_IS_ONLYPROXY", &proxy_is_onlyproxy);
   HTProxy_setNoProxyIsOnlyProxy (proxy_is_onlyproxy);
 
