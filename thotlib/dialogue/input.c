@@ -909,7 +909,11 @@ char               *appliname;
 
    text = TtaGetEnvString ("HOME");
    strcpy (name, appliname);
+#  ifdef _WINDOWS
+   strcat (name, ".kb");
+#  else  /* _WINDOWS */
    strcat (name, ".keyboard");
+#  endif /* _WINDOWS */
 
    if (text != NULL)
      {
@@ -933,6 +937,7 @@ char               *appliname;
      {
 	/* Lecture du fichier des translations */
 	fseek (file, 0L, 2);	/* fin du fichier */
+
 	len = ftell (file) * 2 + 10;	/* pour assurer de la marge */
 	text = TtaGetMemory (len);
 	fseek (file, 0L, 0);	/* debut du fichier */

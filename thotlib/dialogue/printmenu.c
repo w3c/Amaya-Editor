@@ -81,8 +81,6 @@ static int          defPageSize;
 static Name         PresSchema;
 
 #ifdef _WINDOWS
-extern HWND ghwndAbort ;
-extern BOOL gbAbort;
 extern int  currentFrame;
 #endif /* _WINDOWS */
 
@@ -473,7 +471,7 @@ Document            document;
            TtPrinterDC = CreateDC (NULL, pInfo5->pPrinterName,  NULL, NULL);
    }
 
-   PrintDoc (ghwndAbort, printArgc, printArgv, TtPrinterDC, TtIsTrueColor, TtWDepth, name, dir, hInstance, gbAbort);
+   PrintDoc (FrRef [currentFrame], printArgc, printArgv, TtPrinterDC, TtIsTrueColor, TtWDepth, name, dir, hInstance);
    if (!IsWindowEnabled (FrRef[currentFrame]))
       EnableWindow (FrRef[currentFrame], TRUE);
    SetFocus (FrRef[currentFrame]);

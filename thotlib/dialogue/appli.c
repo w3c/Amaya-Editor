@@ -808,7 +808,7 @@ View                view;
    infos.reason = XmCR_DECREMENT;
    FrameVScrolled (0, frame, (int *) &infos);
 #  else  /* _WINDOWS */
-   delta = -FrameTable[frame].FrHeight;
+   delta = -13;
    VerticalScroll (frame, delta, TRUE);
 #  endif /* _WINDOWS */
 }
@@ -841,7 +841,7 @@ View                view;
    infos.reason = XmCR_INCREMENT;
    FrameVScrolled (0, frame, (int *) &infos);
 #  else  /* _WINDOWS */
-   delta = FrameTable[frame].FrHeight;
+   delta = 13;
    VerticalScroll (frame, delta, TRUE);
 #  endif /* _WINDOWS */
 }
