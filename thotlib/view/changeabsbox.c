@@ -3502,7 +3502,7 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
   PtrPRule            pR, pRuleView1, pRNA, firstOfType;
   PRuleType           typeRule;
   FunctionType        func;
-  PtrAbstractBox      pAb, pReaff, pPR;
+  PtrAbstractBox      pAb, pRedisp, pPR;
   PtrAbstractBox      pAbNext, pAbChild, pAbSibling;
   PtrPSchema          pSchP, pSPR, elPSch;
   PtrSSchema          elSSch;
@@ -3611,7 +3611,7 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 	      if (pR != NULL)
 		{
 		  /* by default nothing to redisplay */
-		  pReaff = NULL;
+		  pRedisp = NULL;
 		  pAb = NULL;
 		  createBox = ElemWithinImage (pEl, view,
 					       pDoc->DocViewRootAb[view - 1],
@@ -3674,7 +3674,7 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 		  if (pAb != NULL)
 		    /* les nouveaux paves doivent etre pris en compte par */
 		    /* leurs voisins */
-		    ApplyRefAbsBoxNew (pAb, pAbNext, &pReaff, pDoc);
+		    ApplyRefAbsBoxNew (pAb, pAbNext, &pRedisp, pDoc);
 		  
 		  /* traite les paves qui existaient deja */
 		  /* il faut faire une boucle de parcours des paves dupliques
@@ -3716,7 +3716,7 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 			    {
 			      pAb = pEl->ElAbstractBox[view - 1];
 			      /* 1er pave a tuer */
-			      pReaff = pAb;
+			      pRedisp = pAb;
 			      /* on reaffichera au moins ce pave */
 			      do
 				/* on tue tous les paves de l'element */
@@ -3726,7 +3726,7 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 				  /* change les regles des autres paves qui */
 				  /* se referent au pave detruit */
 				  ApplyRefAbsBoxSupp (pAb, &pPR, pDoc);
-				  pReaff = Enclosing (pReaff, pPR);
+				  pRedisp = Enclosing (pRedisp, pPR);
 				  pAb = pAb->AbNext;
 				  if (pAb == NULL)
 				    stop = TRUE;
@@ -3740,7 +3740,7 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 			  else
 			    /* le pave est toujours visible, mais a change' */
 			    {
-			      pReaff = pAb;
+			      pRedisp = pAb;
 			      SetChange (pAb, typeRule, func);
 			      /* le parametre de presentation qui vient
 				 d'etre change' peut se transmettre par
@@ -3854,20 +3854,20 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 			/* le pave a detruire est pointe' par pAb */
 			if (!pAb->AbDead)
 			  {
-			    pReaff = pAb;
+			    pRedisp = pAb;
 			    /* on reaffichera au moins ce pave */
 			    SetDeadAbsBox (pAb);
 			    /* tue le pave */
 			    /* change les regles des autres paves qui se */
 			    /* referent au pave detruit */
 			    ApplyRefAbsBoxSupp (pAb, &pPR, pDoc);
-			    pReaff = Enclosing (pReaff, pPR);
+			    pRedisp = Enclosing (pRedisp, pPR);
 			  }
 		    }
 		  /* conserve le pointeur sur le pave a reafficher */
-		  if (pReaff != NULL)
+		  if (pRedisp != NULL)
 		    pDoc->DocViewModifiedAb[view - 1] =
-			 Enclosing (pReaff, pDoc->DocViewModifiedAb[view - 1]);
+			Enclosing (pRedisp, pDoc->DocViewModifiedAb[view - 1]);
 		}
 	    } /* fin de la boucle sur les vues */
 	  
@@ -3887,80 +3887,96 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
       }
     while (valNum > 0);  /* fin de la boucle sur les valeurs de l'attribut */
 
-    /* if we are removing an attribute, check whether there are some rules
-       attached to the element type of the form "if not attr" */
-    if (remove && pAttr->AeAttrSSchema == pEl->ElStructSchema)
+    /* check if there are some rules associated with the element type that use
+       the attribute in a condition, something like "if attr" or "if not attr".
+       Only rules that create presentation boxes may have such conditions. */
+    if (pAttr->AeAttrSSchema == pEl->ElStructSchema)
       {
-	SearchPresSchema (pEl, &elPSch, &index, &elSSch, pDoc);
-	if (elSSch == pAttr->AeAttrSSchema)
+      SearchPresSchema (pEl, &elPSch, &index, &elSSch, pDoc);
+      if (elSSch == pAttr->AeAttrSSchema)
+	/* the element and the attribute belong to the same structure schema */
+	{
+	/* check all presentation rules associated with the element type */
+	pR = elPSch->PsElemPRule->ElemPres[index - 1];
+	while (pR)
 	  {
-	    pR = elPSch->PsElemPRule->ElemPres[index - 1];
-	    while (pR)
+	  /* consider only functions that create presentation boxes */
+	  if (pR->PrType == PtFunction)
+	    {
+	    /* check all conditions of the rule */
+	    cond = pR->PrCond;
+	    while (cond)
 	      {
-		if (pR->PrType == PtFunction)
+	      if (cond && cond->CoCondition == PcAttribute &&
+		  cond->CoTypeAttr == pAttr->AeAttrNum &&
+		  !cond->CoTestAttrValue)
+		/* this condition is about the presence of this attribute */
+		{
+		/* apply or disapply the rule in all open views */
+		for (view = 1; view <= MAX_VIEW_DOC; view++)
 		  {
-		    cond = pR->PrCond;
-		    while (cond)
+		  existingView = pDoc->DocView[view - 1].DvPSchemaView > 0;
+		  if (existingView)
+		    {
+		    viewSch = AppliedView (pEl, pAttr, pDoc, view);
+		    /* take additional presentation schemas into account only
+		       for the main view */
+		    existingView = (pHd == NULL || viewSch == 1);
+		    }
+		  func = pR->PrPresFunction;
+		  if (existingView &&
+		      pEl->ElAbstractBox[view - 1] &&
+		      (func == FnCreateBefore || func == FnCreateAfter ||
+		       func == FnCreateWith || func == FnCreateFirst ||
+		       func == FnCreateLast))
+		    /* the view is open, the element has at least 1 box in
+		       this view, and it is a rule that creates a presentation
+		       box */
+		    {
+		    /* check if the box created by the rule already exists */
+		    pAb = AbsBoxPresType (pEl->ElAbstractBox[view - 1], pR,
+					  elPSch);
+		    pRedisp = NULL;
+		    if ((remove && !cond->CoNotNegative) ||
+			(!remove && cond->CoNotNegative))
 		      {
-			if (cond && !cond->CoNotNegative &&
-			    cond->CoCondition == PcAttribute &&
-			    cond->CoTypeAttr == pAttr->AeAttrNum &&
-			    !cond->CoTestAttrValue)
-			  {
-			    for (view = 1; view <= MAX_VIEW_DOC; view++)
-			      {
-				existingView = pDoc->DocView[view - 1].DvPSchemaView > 0;
-				if (existingView)
-				  {
-				    viewSch = AppliedView (pEl, pAttr, pDoc, view);
-				    /* look at additional presentation schemas only for view 1 */
-				    existingView = (pHd == NULL || viewSch == 1);
-				  }
-				if (existingView &&
-				    CondPresentation (pR->PrCond, pEl, pAttr,
+		      /* create the presentation box if it does not exist
+		         and if other conditions are ok */
+		      if (!pAb && CondPresentation (pR->PrCond, pEl, pAttr,
 						   pEl, viewSch, elSSch, pDoc))
-				  {
-				    func = pR->PrPresFunction;
-				    if (pEl->ElAbstractBox[view - 1] &&
-					(func == FnCreateBefore ||
-					 func == FnCreateAfter ||
-					 func == FnCreateWith ||
-					 func == FnCreateFirst ||
-					 func == FnCreateLast))
-				      {
-				        pAb = AbsBoxPresType (pEl->ElAbstractBox[view - 1], pR, elPSch);
-				        if (!pAb)
-					  {
-					    pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
-					    pAb = CrAbsBoxesPres (pEl, pDoc,
-					        pR, pEl->ElStructSchema, pAttr,
-					        view, elPSch, TRUE);
-					    if (pAb)
-					      {
-						ApplyRefAbsBoxNew (pAb, pAb,
-							        &pReaff, pDoc);
-						if (pReaff)
-						  {
-						  pReaff = Enclosing (pAb, pReaff);
-						  pDoc->DocViewModifiedAb[view-1] =
-						        Enclosing (pReaff, pDoc->DocViewModifiedAb[view-1]);
-						  }
-					      }
-					  }
-				      }
-				  }
-			      }
-			  }
-			cond = cond->CoNextCondition;
+			{
+			pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
+			pAb = CrAbsBoxesPres (pEl, pDoc, pR,
+			       pEl->ElStructSchema, pAttr, view, elPSch, TRUE);
+			if (pAb)
+			  ApplyRefAbsBoxNew (pAb, pAb, &pRedisp, pDoc);
+			}
 		      }
+		    else if (pAb && !pAb->AbDead)
+		      /* delete the presentation box */
+		      {
+		      SetDeadAbsBox (pAb);
+		      ApplyRefAbsBoxSupp (pAb, &pRedisp, pDoc);
+		      }
+		    if (pRedisp)
+		      {
+		      pRedisp = Enclosing (pAb, pRedisp);
+		      pDoc->DocViewModifiedAb[view-1] =
+			  Enclosing (pRedisp, pDoc->DocViewModifiedAb[view-1]);
+		      }
+		    }
 		  }
-		if (pR->PrType <= PtFunction)
-                  pR = pR->PrNextPRule;
-		else
-		  pR = NULL;
+		}
+	      cond = cond->CoNextCondition;
 	      }
-	  } 
-      } 
+	    }
+	  if (pR->PrType <= PtFunction)
+	    pR = pR->PrNextPRule;
+	  else
+	    pR = NULL;
+	  }
+	} 
+      }
 
     /* on traite les schemas de presentation de plus forte priorite' */
     if (pHd)

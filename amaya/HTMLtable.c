@@ -1736,7 +1736,11 @@ ThotBool DeleteRow (NotifyElement *event)
 	    /* this cell has an attribute rowspan */
 	    rowspan = TtaGetAttributeValue (attr);
 	  if (rowspan > 1)
-	    ChangeRowspan (cell, rowspan, 1, doc);
+	    {
+	      ChangeRowspan (cell, rowspan, 1, doc);
+	      TtaRegisterAttributeDelete (attr, cell, doc);
+	      TtaRemoveAttribute (cell, attr, doc);
+	    }
 	}
       TtaNextSibling (&cell);
     }
@@ -1805,17 +1809,18 @@ ThotBool DeleteColumn (NotifyElement * event)
 	    {
 	      attr = TtaGetAttribute (cell, attrTypeC);
 	      if (attr)
+		/* there is a colspan attribute */
+		colspan = TtaGetAttributeValue (attr);
+	      if (colspan > 1)
 		{
-		  /* there is a colspan */
-		  colspan = TtaGetAttributeValue (attr);
 		  ChangeColspan (cell, colspan, 1, doc);
 		  TtaRegisterAttributeDelete (attr, cell, doc);
 		  TtaRemoveAttribute (cell, attr, doc);
 		}
 	      attr = TtaGetAttribute (cell, attrTypeR);
 	      if (attr)
+		/* there is a rowspan */
 		{
-		  /* there is a rowspan */
 		  rowspan = TtaGetAttributeValue (attr);
 		  if (rowspan < 1)
 		    rowspan = 1;
@@ -2350,7 +2355,7 @@ void ChangeRowspan (Element cell, int oldspan, int newspan, Document doc)
   tableType = TtaGetElementType (cell);
   attrType.AttrSSchema = tableType.ElSSchema;
   colspanType.AttrSSchema = tableType.ElSSchema;
-  inMath = TtaSameSSchemas (tableType.ElSSchema, TtaGetSSchema ("MathML", doc));
+  inMath = TtaSameSSchemas (tableType.ElSSchema, TtaGetSSchema ("MathML",doc));
   if (inMath)
     {
       tableType.ElTypeNum = MathML_EL_MTABLE;
