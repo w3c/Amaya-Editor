@@ -421,8 +421,8 @@ LRESULT CALLBACK HRefDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 		  TtaGetMessage (AMAYA, AM_LOCATION));
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
 		  TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), "Browse");
-      SetWindowText (GetDlgItem (hwnDlg, IDC_CLEAR), "Clear");
+      SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TtaGetMessage (AMAYA, AM_BROWSE));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_CLEAR), TtaGetMessage (AMAYA, AM_CLEAR));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
       
 	  if (tmpDocName[0] != EOS)
@@ -1392,8 +1392,8 @@ LRESULT CALLBACK OpenDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 		  "Type the URI or push the button Browse");
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
 		  TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), "Browse");
-      SetWindowText (GetDlgItem (hwnDlg, IDC_CLEAR), "Clear");
+      SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TtaGetMessage (AMAYA, AM_BROWSE));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_CLEAR), TtaGetMessage (AMAYA, AM_CLEAR));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
 
       SetWindowText (hwnDlg, wndTitle);
@@ -1486,7 +1486,7 @@ LRESULT CALLBACK OpenImgDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	SetWindowText (GetDlgItem (hwnDlg, IDC_ALTMESSAGE), TtaGetMessage (AMAYA, AM_ALT));
 	SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
 		TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-	SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), "Browse");
+	SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TtaGetMessage (AMAYA, AM_BROWSE));
 	SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
 	
 	SetDlgItemText (hwnDlg, IDC_GETURL, "");
@@ -3217,7 +3217,7 @@ LRESULT CALLBACK BackgroundImageDlgProc (ThotWindow hwnDlg, UINT msg,
 		TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
 	SetWindowText (GetDlgItem (hwnDlg, ID_CLEAR),
 		TtaGetMessage (AMAYA, AM_CLEAR));
-	SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), "Browse");
+	SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TtaGetMessage (AMAYA, AM_BROWSE));
 	SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
 	repeatMode = REPEAT;
 	break;

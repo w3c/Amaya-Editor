@@ -4447,11 +4447,13 @@ void CallbackDialogue (int ref, int typedata, char *data)
        else if (val == 2)
 	 /* "Browse" button */
 	 {
+#ifndef _WINDOWS
 	   WidgetParent = DocSaveBrowser;
 	   strcpy (LastURLName, SavePath);
 	   strcat (LastURLName, DIR_STR);
 	   strcat (LastURLName, SaveName);
 	   BrowserForm (SavingDocument, 1, LastURLName);
+#endif /* _WINDOWS */
 	 }
        else if (val == 3)
 	 /* "Clear" button */
@@ -4464,7 +4466,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #ifndef _WINDOWS
 	       TtaSetTextForm (BaseDialog + NameSave, SaveImgsURL);
 	       TtaSetTextForm (BaseDialog + ImgDirSave, SaveImgsURL);
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
 	     }
 	 }
        else if (val == 4)
