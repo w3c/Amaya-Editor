@@ -3008,15 +3008,18 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 			  RedisplayCopies (pNew, pSelDoc, TRUE);
 			  UpdateNumbers (NextElement (pNew), pNew, pSelDoc,
 					 TRUE);
-			  /* Indiquer que le document est modifie' */
-			  SetDocumentModified (pSelDoc, TRUE, 30);
 			  /* envoie un evenement ElemNew.Post a l'application*/
 			  NotifySubTree (TteElemNew, pSelDoc, pNew, 0);
-			  /* Replace la selection */
-			  pEl = SearchTypedElementInSubtree (pNew, typeNum,
-							     pSS);
-			  SelectElementWithEvent (pSelDoc, FirstLeaf (pEl),
-						  TRUE, TRUE);
+			  if (pNew && pNew->ElParent)
+			    {
+			      /* Indiquer que le document est modifie' */
+			      SetDocumentModified (pSelDoc, TRUE, 30);
+			      /* Replace la selection */
+			      pEl = SearchTypedElementInSubtree (pNew, typeNum,
+								 pSS);
+			      SelectElementWithEvent (pSelDoc, FirstLeaf (pEl),
+						      TRUE, TRUE);
+			    }
 			}
 		    }
 		}
