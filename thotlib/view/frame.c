@@ -262,9 +262,13 @@ static void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
   GetSizesFrame (frame, &w, &h);
   if (pBox == NULL)
     return;
-  setWindow = (pAb == pFrame->FrAbstractBox ||
-	       TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
-				 pAb->AbElement->ElStructSchema));
+  setWindow = (pAb == pFrame->FrAbstractBox);
+  if (!setWindow &&
+      TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
+			pAb->AbElement->ElStructSchema))
+    /* repaint the whole window when the fill applies to the document */
+      setWindow = (!pAb->AbSelected &&
+		   (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbEnclosing == NULL));
   if (setWindow)
     {
       /* get the maximum of the window size and the root box size */
