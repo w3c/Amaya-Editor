@@ -45,7 +45,6 @@ extern void FreeDocumentResource ( Document doc );
 extern void DocumentClosed ( NotifyDialog * event );
 extern void UpdateContextSensitiveMenus ( Document doc );
 extern void ResetHighlightedElement ( void );
-extern void CheckSynchronize ( NotifyElement *event );
 extern void SynchronizeSourceView ( NotifyElement *event );
 extern void GetCurrentLine ( Document doc,
                              int *line,
@@ -57,6 +56,7 @@ extern void GotoLine ( Document doc,
 extern ThotBool SimpleClickInText ( NotifyElement *event );
 extern ThotBool DoubleClickInText ( NotifyElement *event );
 extern ThotBool RightClickInText ( NotifyElement *event );
+extern void CheckSynchronize ( NotifyElement *event );
 extern void SelectionChanged ( NotifyElement *event );
 extern ThotBool HTMLElementTypeInMenu ( NotifyElement *event );
 extern void SetCharFontOrPhrase ( int document,
@@ -103,7 +103,6 @@ extern void FreeDocumentResource ( Document doc );
 extern void DocumentClosed ( NotifyDialog * event );
 extern void UpdateContextSensitiveMenus ( Document doc );
 extern void ResetHighlightedElement ( void );
-extern void CheckSynchronize ( NotifyElement *event );
 extern void SynchronizeSourceView ( NotifyElement *event );
 extern void GetCurrentLine ( Document doc,
                                int *line,
@@ -115,6 +114,7 @@ extern void GotoLine ( Document doc,
 extern ThotBool SimpleClickInText ( NotifyElement *event );
 extern ThotBool DoubleClickInText ( NotifyElement *event );
 extern ThotBool RightClickInText ( NotifyElement *event );
+extern void CheckSynchronize ( NotifyElement *event );
 extern void SelectionChanged ( NotifyElement *event );
 extern ThotBool HTMLElementTypeInMenu ( NotifyElement *event );
 extern void SetCharFontOrPhrase ( int document,

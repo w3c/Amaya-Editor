@@ -603,9 +603,12 @@ void ChangeTitle (Document doc, View view)
 	 }
        length = MAX_LENGTH;
        TtaGiveTextContent (child, (unsigned char *)Answer_text, &length, &lang);
+#ifndef _WX
+       // with wxWidgets, we want directly UTF8 for input
        title = TtaConvertMbsToByte ((unsigned char *)Answer_text, TtaGetDefaultCharset ());
        strcpy (Answer_text, (char *)title);
        TtaFreeMemory (title);
+#endif /* _WX */
        CurrentDocument = doc;
 
 #if defined(_GTK)
@@ -662,7 +665,12 @@ void SetNewTitle (Document doc)
 	{
 	  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
 	  TtaRegisterElementReplace (el, doc);
+#ifdef _WX
+	  /* with _WX returned text is UTF8 everytime ! */
+	  title = TtaConvertByteToMbs ((unsigned char *)Answer_text, UTF_8);
+#else /* _WX */	  
 	  title = TtaConvertByteToMbs ((unsigned char *)Answer_text, ISO_8859_1);
+#endif /* _WX */
 	  TtaSetTextContent (child, (unsigned char *)title,
 			     TtaGetDefaultLanguage (), doc);
 	  TtaFreeMemory (title);

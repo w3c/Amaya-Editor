@@ -11,7 +11,8 @@ extern void TtaShowWindow ( int window_id,
 extern int TtaMakeWindow ( int x,
                            int y,
                            int w,
-                           int h );
+                           int h,
+                           int kind );
 extern int TtaMakeFrame ( const char * schema_name,
                           int schView,
                           Document doc_id,
@@ -34,6 +35,7 @@ extern void TtaGetDocumentPageId ( Document doc_id,
                                    int * page_id,
                                    int * page_position );
 extern int TtaGetFrameDocumentId ( int frame_id );
+extern int TtaGetFrameWindowParentId ( int frame_id );
 extern int TtaGetFrameId ( int window_id,
                            int page_id,
                            int position );
@@ -71,7 +73,8 @@ extern void TtaShowWindow ( int window_id,
 extern int TtaMakeWindow ( int x,
                              int y,
                              int w,
-                             int h );
+                             int h,
+                             int kind );
 extern int TtaMakeFrame ( const char * schema_name,
                             int schView,
                             Document doc_id,
@@ -94,6 +97,7 @@ extern void TtaGetDocumentPageId ( Document doc_id,
                                      int * page_id,
                                      int * page_position );
 extern int TtaGetFrameDocumentId ( int frame_id );
+extern int TtaGetFrameWindowParentId ( int frame_id );
 extern int TtaGetFrameId ( int window_id,
                              int page_id,
                              int position );

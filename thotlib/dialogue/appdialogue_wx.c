@@ -15,6 +15,7 @@
 #include "dialogapi.h"
 #include "application.h"
 #include "appdialogue_wx.h"
+#include "windowtypes_wx.h"
 
 #include "appdialogue_f.h"
 #include "appdialogue_wx_f.h"
@@ -32,7 +33,8 @@
 
 #include "AmayaCanvas.h"
 #include "AmayaFrame.h"
-#include "AmayaWindow.h"
+#include "AmayaNormalWindow.h"
+#include "AmayaSimpleWindow.h"
 #include "AmayaPage.h"
 #include "AmayaToolBar.h"
 
@@ -87,31 +89,48 @@ void TtaShowWindow( int window_id, ThotBool show )
  	+ the window id
         + 0 if too much created windows
   ----------------------------------------------------------------------*/
-int TtaMakeWindow( int x, int y, int w, int h )
+int TtaMakeWindow( int x, int y, int w, int h, int kind )
 {
 #ifdef _WX
-  AmayaWindow * p_AmayaWindow = NULL;
+  AmayaWindow * p_window = NULL;
   int window_id = TtaGetFreeWindowId();
  
   if (window_id >= MAX_WINDOW)
     return 0; /* there is no more free windows */
 
   /* Create the window */
-  p_AmayaWindow = 
-    new AmayaWindow( window_id, NULL, wxDefaultPosition, wxDefaultSize );
-  if (!p_AmayaWindow)
+  switch ( kind )
+    {
+    case WXAMAYAWINDOW_NORMAL:
+      p_window = new AmayaNormalWindow( window_id,
+					NULL,
+					wxDefaultPosition,
+					wxDefaultSize );
+      break;
+    case WXAMAYAWINDOW_SIMPLE:
+      p_window = new AmayaSimpleWindow( window_id,
+					NULL,
+					wxDefaultPosition,
+					wxDefaultSize );
+      break;
+    }
+
+  if (!p_window)
     return -1; /* no enough memory */
   
   if (w != 0 && h != 0)
-    p_AmayaWindow->SetSize(-1, -1, w, h);
+    p_window->SetSize(-1, -1, w, h);
   else
-    p_AmayaWindow->SetSize(-1, -1, 800, 600);
+    p_window->SetSize(-1, -1, 800, 600);
     
   /* save the window reference into the global array */ 
-  WindowTable[window_id].WdWindow = p_AmayaWindow;
-  WindowTable[window_id].FrWidth  = p_AmayaWindow->GetSize().GetWidth();
-  WindowTable[window_id].FrHeight = p_AmayaWindow->GetSize().GetHeight();
-  WindowTable[window_id].WdStatus = p_AmayaWindow->GetStatusBar();
+  WindowTable[window_id].WdWindow = p_window;
+  WindowTable[window_id].FrWidth  = p_window->GetSize().GetWidth();
+  WindowTable[window_id].FrHeight = p_window->GetSize().GetHeight();
+  WindowTable[window_id].WdStatus = p_window->GetStatusBar();
+
+  // show the window if not already shown
+  TtaShowWindow( window_id, TRUE );
 
   return window_id;
 #else
@@ -337,36 +356,40 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
   if (p_window == NULL)
     return FALSE;
   
-  AmayaPage * p_page = p_window->GetPage(page_id);
-  if (!p_page)
-  {
-    /* the page does not exist yet, just create it */
-    p_page = p_window->CreatePage();
-    /* and link it to the window */
-    p_window->AttachPage(page_id, p_page);
-  }
-  
-  /* now detach the old frame -> unsplit the page */
-  //  p_page->DetachFrame( position );
-
-  /* now attach the frame to this page */
-  AmayaFrame * p_oldframe = NULL;
-  p_oldframe = p_page->AttachFrame( FrameTable[frame_id].WdFrame, position );
-
-  /* hide the previous frame */
-  if (p_oldframe)
-    p_oldframe->Hide();
+  if (p_window->GetKind() == WXAMAYAWINDOW_NORMAL)
+    {
+      AmayaPage * p_page = p_window->GetPage(page_id);
+      if (!p_page)
+	{
+	  /* the page does not exist yet, just create it */
+	  p_page = p_window->CreatePage();
+	  /* and link it to the window */
+	  p_window->AttachPage(page_id, p_page);
+	}
+      
+      /* now detach the old frame -> unsplit the page */
+      //  p_page->DetachFrame( position );
+      
+      /* now attach the frame to this page */
+      AmayaFrame * p_oldframe = NULL;
+      p_oldframe = p_page->AttachFrame( FrameTable[frame_id].WdFrame, position );
+      
+      /* hide the previous frame */
+      if (p_oldframe)
+	p_oldframe->Hide();
+    }
+  else if ( p_window->GetKind() == WXAMAYAWINDOW_SIMPLE )
+    {
+      p_window->AttachFrame( FrameTable[frame_id].WdFrame );
+    }
 
   /* update frame infos */
   FrameTable[frame_id].FrWindowId   	= window_id;
   FrameTable[frame_id].FrPageId         = page_id;
-
-  // show the parent window if not already shown
-  TtaShowWindow( window_id, TRUE );
- 
+    
   // Popup the frame : bring it to top
   FrameTable[frame_id].WdFrame->RaiseFrame();
-
+  
   /* wait for frame initialisation (needed by opengl) 
    * this function waits for complete widgets initialisation */
   wxTheApp->Yield( TRUE );
@@ -400,15 +423,25 @@ ThotBool TtaDetachFrame( int frame_id )
   if (p_window == NULL)
     return FALSE;
   
-  AmayaPage * p_page = p_window->GetPage(page_id);
-  if (!p_page)
-    return FALSE;
-
-
-  /* now detach the frame from this page */
-  int position = p_page->GetFramePosition( p_frame );
   AmayaFrame * p_detached_frame = NULL;
-  p_detached_frame = p_page->DetachFrame( position );
+  if ( p_window->GetKind() == WXAMAYAWINDOW_SIMPLE )
+    {
+      /* this is a simple window, so detach directly the frame from it */
+      p_detached_frame = p_window->DetachFrame();
+      wxASSERT( p_detached_frame == p_frame || p_detached_frame == NULL );
+    }
+  else
+  if ( p_window->GetKind() == WXAMAYAWINDOW_NORMAL )
+    {
+      AmayaPage * p_page = p_window->GetPage(page_id);
+      if (!p_page)
+	return FALSE;
+      
+      /* now detach the frame from this page */
+      int position = p_page->GetFramePosition( p_frame );
+      
+      p_detached_frame = p_page->DetachFrame( position );
+    }
 
   if (p_frame == p_detached_frame)
     {
@@ -416,7 +449,6 @@ ThotBool TtaDetachFrame( int frame_id )
       /* update frame infos */
       FrameTable[frame_id].FrWindowId   = -1;
       FrameTable[frame_id].FrPageId     = -1;
-
       return TRUE;
     }
 
@@ -597,6 +629,25 @@ int TtaGetFrameDocumentId( int frame_id )
 }
 
 /*----------------------------------------------------------------------
+  TtaGetFrameWindowParentId returns the correspondig parent window id for the given frame id
+  params:
+    + frame_id : the frameid to lookfor
+  returns:
+    + int : the parent window id correspondig to the frame
+    + -1 if nothing is found
+  ----------------------------------------------------------------------*/
+int TtaGetFrameWindowParentId( int frame_id )
+{
+#ifdef _WX
+  if (frame_id <= 0 || frame_id >= MAX_FRAME )
+    return -1;
+  return FrameTable[frame_id].FrWindowId;
+#else
+  return -1;
+#endif /* #ifdef _WX */
+}
+
+/*----------------------------------------------------------------------
   TtaGetWindowFromId returns a window from its id
   params:
   returns:
@@ -604,6 +655,8 @@ int TtaGetFrameDocumentId( int frame_id )
 #ifdef _WX
 AmayaWindow * TtaGetWindowFromId( int window_id )
 {
+  if (window_id <= 0 || window_id >= MAX_WINDOW )
+    return NULL;
   return WindowTable[window_id].WdWindow;
 }
 #endif /* #ifdef _WX */
@@ -909,11 +962,16 @@ int TtaAddToolBarButton( int window_id,
 			 ThotBool status )
 {
 #ifdef _WX
-  AmayaWindow * p_window = WindowTable[window_id].WdWindow;
+  AmayaWindow * p_window = TtaGetWindowFromId(window_id);
   wxASSERT( p_window );
-  if ( !p_window )
+  if ( !p_window || p_window->GetKind() == WXAMAYAWINDOW_SIMPLE )
     return 0;
-  
+
+  /* get the window's toolbar */
+  AmayaToolBar * p_toolbar = p_window->GetAmayaToolBar();
+  if ( !p_toolbar )
+    return 0;
+
   // Setup callback into the window callback list
   int button_id = 1;
   while ( button_id < MAX_BUTTON && WindowTable[window_id].Call_Button[button_id])
@@ -935,10 +993,8 @@ int TtaAddToolBarButton( int window_id,
 	}
       frame_id++;
     }
-
+  
   // Add a new tool to the toolbar
-  AmayaToolBar * p_toolbar = p_window->GetAmayaToolBar();
-  wxASSERT( p_toolbar );
   if ( picture )
     {
       wxBitmapButton * p_button = new wxBitmapButton( p_toolbar
@@ -983,7 +1039,8 @@ wxString TtaConvMessageToWX( const char * p_message )
   /* For the moment p_message is supposed to be UTF-8.
    * If needed it's possible to add a conditionnal variable to choose the p_message encoding.
    * See TtaGetMessageTable to understand how MessageTable are filled (in which encoding) */
-  return wxString( wxConvUTF8.cMB2WC(p_message), *wxConvCurrent );
+  //  return wxString( wxConvUTF8.cMB2WC(p_message), *wxConvCurrent );
+  return wxString( p_message, wxConvUTF8 );
 }
 #endif /* _WX */
 

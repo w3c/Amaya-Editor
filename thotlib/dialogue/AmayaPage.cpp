@@ -266,6 +266,7 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
     {
       oldframe->SetActive( FALSE );
       // no more parents
+      //      oldframe->Reparent( NULL );
       //      oldframe->SetPageParent( NULL ); 
     }
 

@@ -213,6 +213,8 @@ EDITOR_OBJ = \
 	dialogue/searchmenu.o \
 	dialogue/selectmenu.o \
 	dialogue/AmayaWindow.o \
+	dialogue/AmayaSimpleWindow.o \
+	dialogue/AmayaNormalWindow.o \
 	dialogue/AmayaPanel.o \
 	dialogue/AmayaPage.o \
 	dialogue/AmayaFrame.o \

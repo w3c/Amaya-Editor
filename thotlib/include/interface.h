@@ -342,65 +342,12 @@ extern void TtaGiveSelectPosition (Document document, Element element,
   ----------------------------------------------------------------------*/
 extern void TtaUpdateMenus (Document doc, View view, ThotBool RO);
 
-/*----------------------------------------------------------------------
-  TtaMakeWindow create an AmayaWindow object and place it
-  into WindowTable array
-  returns:
- 	+ the window id
-        + -1 if too much created windows
-  ----------------------------------------------------------------------*/
-extern int TtaMakeWindow(int x, int y, int w, int h );
-
-/*----------------------------------------------------------------------
-  TtaMakeFrame create a frame (view container)
-  notice : a frame need to be attached to a window
-  params:
-    + Document doc : the document id
-    + int schView : the view to attach (schema view)
-    + const char * doc_name : 
-    + int width, height :
-  returns:
-    + int * volume : Window volume in characters
-    + the frame id
-    + 0 if too much created views 
- ----------------------------------------------------------------------*/
-extern int TtaMakeFrame( const char * schema_name,
-                  int schView,
-		  Document doc_id,
-		  const char * doc_name,
-		  int width,
-		  int height,
-		  int * volume );
-
-/*----------------------------------------------------------------------
-  TtaGetFreePageId returns a free page id for the given window
-  params:
-    + int window_id : the window which contains the pages
-  returns:
-    + int : the free page id
-  ----------------------------------------------------------------------*/
-extern int TtaGetFreePageId( int window_id );
 
 /*----------------------------------------------------------------------
    TtaListShortcuts
    Produces in a file a human-readable the list of current shortcuts.  
   ----------------------------------------------------------------------*/
 extern void TtaListShortcuts (Document doc, FILE *fileDescriptor);
-
-/*----------------------------------------------------------------------
-  TtaAddToolBarButton - 
-  add a toolbar button to a window
-  params:
-    + window_id : window identifier
-  returns:
-    + int button_id : the button identifier used to change its state or bitmap
-  ----------------------------------------------------------------------*/
-extern int TtaAddToolBarButton( int window_id,
-				ThotIcon picture,
-				char * tooltip,
-				char * functionName,
-				void (*procedure) (),
-				ThotBool status );
 
 /*----------------------------------------------------------------------
   TtaShowElementMenu

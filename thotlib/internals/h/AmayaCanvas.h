@@ -73,7 +73,7 @@ public:
 #endif /* _GL */
   virtual ~AmayaCanvas( );
 
-  bool IsParentPageActive();
+  bool IsParentFrameActive();
   bool IsInit();
 
   void OnSize( wxSizeEvent& event );

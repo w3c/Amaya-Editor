@@ -11,6 +11,7 @@
 #include "AmayaCanvas.h"
 #include "AmayaFrame.h"
 #include "AmayaPage.h"
+#include "AmayaWindow.h"
 
 #include "typemedia.h"
 #include "appdialogue.h"
@@ -128,7 +129,7 @@ void AmayaCanvas::OnSize( wxSizeEvent& event )
 #endif /* _GL */
 
   // Do not treat this event if the canvas is not active (hiden)
-  if (!IsParentPageActive())
+  if (!IsParentFrameActive())
   {
     wxLogDebug(_T("AmayaCanvas::OnSize: frame=%d w=%d h=%d (skip)"),
 	       m_pAmayaFrame->GetFrameId(),
@@ -187,7 +188,7 @@ void AmayaCanvas::OnSize( wxSizeEvent& event )
 void AmayaCanvas::OnPaint( wxPaintEvent& event )
 {
   // Do not treat this event if the canvas is not active (hiden)
-  if (!IsParentPageActive())
+  if (!IsParentFrameActive())
   {
     wxLogDebug( _T("AmayaCanvas::OnPaint : frame=%d (skip)"),
 		m_pAmayaFrame->GetFrameId() );
@@ -242,7 +243,7 @@ void AmayaCanvas::OnPaint( wxPaintEvent& event )
 void AmayaCanvas::OnMouse( wxMouseEvent& event )
 {
   // Do not treat this event if the canvas is not active (hiden)
-  if (!IsParentPageActive())
+  if (!IsParentFrameActive())
   {
     wxLogDebug( _T("AmayaCanvas::OnMouse : frame=%d (skip)"),
 		m_pAmayaFrame->GetFrameId() );
@@ -376,7 +377,7 @@ void AmayaCanvas::OnChar( wxKeyEvent& event )
       event.GetKeyCode() );
 
   // Do not treat this event if the canvas is not active (hiden)
-  if (!IsParentPageActive())
+  if (!IsParentFrameActive())
   {
     wxLogDebug( _T("AmayaCanvas::OnChar : frame=%d char=%x (skip)"),
 		m_pAmayaFrame->GetFrameId(),
@@ -429,7 +430,7 @@ void AmayaCanvas::OnChar( wxKeyEvent& event )
 void AmayaCanvas::OnKeyDown( wxKeyEvent& event )
 {
   // Do not treat this event if the canvas is not active (hiden)
-  if (!IsParentPageActive())
+  if (!IsParentFrameActive())
     {
       wxLogDebug( _T("AmayaCanvas::OnKeyDown : frame=%d key=%x (skip)"),
 		  m_pAmayaFrame->GetFrameId(),
@@ -540,7 +541,7 @@ void AmayaCanvas::OnKeyDown( wxKeyEvent& event )
 void AmayaCanvas::OnIdle( wxIdleEvent& event )
 {
   // Do not treat this event if the canvas is not active (hiden)
-  if (!IsParentPageActive())
+  if (!IsParentFrameActive())
   {
     event.Skip();
     return;
@@ -596,22 +597,41 @@ void AmayaCanvas::Init()
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaCanvas
- *      Method:  IsParentPageActive
- * Description:  test if the page which contains this canvas is selected or not
- *               selected = visible 
+ *      Method:  IsParentFrameActive
+ * Description:  test if the parent frame which contains this canvas is active or not
+ *               this depends on window type
  *--------------------------------------------------------------------------------------
  */
-bool AmayaCanvas::IsParentPageActive()
+bool AmayaCanvas::IsParentFrameActive()
 {
   if (!m_pAmayaFrame)
     return FALSE;
+  
+  AmayaWindow * p_window = m_pAmayaFrame->GetWindowParent();
+  if (!p_window)
+    return false;
 
-  AmayaPage * p_page = m_pAmayaFrame->GetPageParent();
-  if (!p_page)
-    return FALSE;
-  // if we are closing the page, continue to draw into because maybe the page has been modified so a dialog is poped up
-  // we need to draw the page else a gray page will be shown when the document was modified.
-  return (p_page->IsSelected() /*&& !p_page->IsClosed()*/);
+  switch( p_window->GetKind() )
+    {
+    case WXAMAYAWINDOW_SIMPLE:
+      {
+	// we draw something only when the window is shown (everytime maybe ...)
+	return p_window->IsShown();
+      }
+      break;
+    case WXAMAYAWINDOW_NORMAL:
+      {
+	AmayaPage * p_page = m_pAmayaFrame->GetPageParent();
+	if (!p_page)
+	  return FALSE;
+	// if we are closing the page, continue to draw into because maybe the page has been modified so a dialog is poped up
+	// we need to draw the page else a gray page will be shown when the document was modified.
+	return (p_page->IsSelected() /*&& !p_page->IsClosed()*/);
+      }      
+      break;
+    }
+
+  return false;
 }
 
 /*

@@ -49,6 +49,7 @@
 #endif /* _WINGUI */
 #ifdef _WX
   #include "wxdialogapi_f.h"
+  #include "windowtypes_wx.h"
   #include "appdialogue_wx.h"
 #endif /* _WX */
 
@@ -2611,12 +2612,15 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
        /* gets registered window parameters */
        GiveWindowGeometry (doc, docType, method, &x, &y, &w, &h);
 #ifdef _WX
-       /* get the geometry of the main window */
+       /* create a new window if needed */
        if (window_id == -1)
 	 {
-	   window_id = TtaMakeWindow(x, y, w, h);
+	   if (docType == docLog)
+	       window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_SIMPLE);
+	   else
+	       window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_NORMAL);
 	   page_id   = TtaGetFreePageId( window_id );
-	   page_position = 1;
+	   page_position = 1;    
 	 }
 #endif /* _WX */
 

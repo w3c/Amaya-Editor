@@ -148,8 +148,11 @@ void AmayaToolBar::OnButtonActivated( wxCommandEvent &event )
   // Activate the correspondig callback
   AmayaFrame * p_frame = m_pAmayaWindowParent->GetActiveFrame();
   wxASSERT( p_frame != NULL );
-  int frame_id         = p_frame->GetFrameId();
-  APP_Callback_ToolBarButtonActivate ( frame_id, event.GetId() );
+  if ( p_frame )
+    {
+      int frame_id         = p_frame->GetFrameId();
+      APP_Callback_ToolBarButtonActivate ( frame_id, event.GetId() );
+    }
 }
 
 /*----------------------------------------------------------------------

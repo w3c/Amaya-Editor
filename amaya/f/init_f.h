@@ -5,7 +5,6 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
 extern char * DocumentTypeString ( Document document );
@@ -108,7 +107,7 @@ extern void ZoomIn ( Document document,
                      View view );
 extern void ZoomOut ( Document document,
                       View view );
-extern void ShowSource ( Document document,
+extern void ShowSource ( Document doc,
                          View view );
 extern void ShowStructure ( Document doc,
                             View view );
@@ -173,7 +172,6 @@ extern void SaveGeometryOnExit ( int document,
                                  const char * view_name );
 
 #else /* __STDC__ */
-
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
 extern char * DocumentTypeString ( Document document );
@@ -276,7 +274,7 @@ extern void ZoomIn ( Document document,
                        View view );
 extern void ZoomOut ( Document document,
                         View view );
-extern void ShowSource ( Document document,
+extern void ShowSource ( Document doc,
                            View view );
 extern void ShowStructure ( Document doc,
                               View view );

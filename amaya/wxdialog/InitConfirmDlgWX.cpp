@@ -43,7 +43,7 @@ InitConfirmDlgWX::InitConfirmDlgWX( int ref,
   m_ExtraButton   = extrabutton;
   m_ConfirmButton = confirmbutton;
   // TODO : aller chercher le label 'Cancel' dans une ressources thot
-  m_CancelButton  = _T("Cancel");
+  m_CancelButton  = TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL));
 
   wxLogDebug( _T("InitConfirmDlgWX::InitConfirmDlgWX - title=")+m_Title+
 	      _T("\textrabutton=")+m_ExtraButton+

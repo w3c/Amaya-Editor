@@ -62,7 +62,7 @@ public:
   DECLARE_DYNAMIC_CLASS(AmayaFrame)
 
   AmayaFrame(  int            frame_id = -1
-      	      ,wxWindow *     p_parent_window = NULL
+      	      ,AmayaWindow *     p_parent_window = NULL
 	    );
   virtual ~AmayaFrame( );
 
@@ -121,8 +121,6 @@ public:
   void SetCurrent();
   void SwapBuffers();
 #endif // #ifdef _GL
-
-  void SetNewParent( wxWindow * p_new_parent );
 
   void OnScrollLineUp( wxScrollEvent& event );
   void OnScrollLineDown( wxScrollEvent& event );

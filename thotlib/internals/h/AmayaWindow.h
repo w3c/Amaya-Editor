@@ -19,6 +19,7 @@ class AmayaNotebook;
 class AmayaCParam;
 class AmayaURLBar;
 class AmayaToolBar;
+#include "windowtypes_wx.h"
 
 #define MAX_DOC 50
 
@@ -69,7 +70,7 @@ class AmayaToolBar;
  */
 class AmayaWindow : public wxFrame
 {
-public:
+ public:
 //  friend class AmayaApp;
   DECLARE_DYNAMIC_CLASS(AmayaWindow)
 
@@ -77,98 +78,64 @@ public:
       		,wxWindow *     frame = NULL
 	        ,const wxPoint& pos  = wxDefaultPosition
 	        ,const wxSize&  size = wxDefaultSize
+		,int kind = WXAMAYAWINDOW_UNKNOWN
 	      );
   virtual ~AmayaWindow();
 
-  AmayaPage * CreatePage( bool attach = false, int position = 0 );
-  bool AttachPage( int position, AmayaPage * p_page );
-  bool DetachPage( int position );
-  AmayaPage * GetPage( int position ) const;
-  int GetPageCount() const;
-  bool IsClosing();
+  bool          IsClosing();
+  int		GetWindowId() { return m_WindowId; }
+  void          SetWindowId( int window_id ) { m_WindowId = window_id; }
+  int           GetKind() const { return m_Kind; }
 
-  AmayaToolBar * GetAmayaToolBar();
+  virtual AmayaPage *  GetActivePage() const;
+  virtual AmayaFrame * GetActiveFrame() const;
 
-  void DesactivateMenuBar();
-  void ActivateMenuBar();
+  // --------------------------------------------- //
+  // WXAMAYAWINDOW_NORMAL interface
+  virtual AmayaPage *    CreatePage( bool attach = false, int position = 0 );
+  virtual bool           AttachPage( int position, AmayaPage * p_page );
+  virtual bool           DetachPage( int position );
+  virtual AmayaPage *    GetPage( int position ) const;
+  virtual int            GetPageCount() const;
 
-  void AppendMenu ( wxMenu * p_menu, const wxString & label );
-  void AppendMenuItem ( 
+  virtual AmayaToolBar * GetAmayaToolBar();
+
+  virtual void           SetMenuBar( wxMenuBar * p_menu_bar );
+  virtual void           DesactivateMenuBar();
+  virtual void           ActivateMenuBar();
+  virtual void AppendMenu ( wxMenu * p_menu, const wxString & label );
+  virtual void AppendMenuItem ( 
 	wxMenu * 		p_menu_parent,
 	long                    id,
 	const wxString & 	label,
 	const wxString & 	help,
 	wxItemKind 		kind,
 	const AmayaCParam &     callback );
- 
-  void OnClose( wxCloseEvent& event );
-  void OnToolBarTool( wxCommandEvent& event );
-  void OnMenuItem( wxCommandEvent& event );
 
-//  void OnSplitterPosChanged( wxSplitterEvent& event );
-//  void OnSplitterDClick( wxSplitterEvent& event );
-  void OnSplitterUnsplit( wxSplitterEvent& event );
-  
-  void OnSize( wxSizeEvent& event );
-  
   // url bar control
-  wxString GetURL();
-  void     SetURL ( const wxString & new_url );
-  void     AppendURL ( const wxString & new_url );
-  void     EmptyURLBar();
-  void     SetEnableURL( bool urlenabled );
+  virtual wxString GetURL();
+  virtual void     SetURL ( const wxString & new_url );
+  virtual void     AppendURL ( const wxString & new_url );
+  virtual void     EmptyURLBar();
+  virtual void     SetEnableURL( bool urlenabled );
+  virtual void     SetupURLBar();
 
-  int		GetWindowId() { return m_WindowId; }
-  void          SetWindowId( int window_id ) { m_WindowId = window_id; }
+  // --------------------------------------------- //
+  // WXAMAYAWINDOW_SIMPLE interface
+  virtual bool         AttachFrame( AmayaFrame * p_frame );
+  virtual AmayaFrame * DetachFrame();
 
-  AmayaPage * GetActivePage() const;
-  AmayaFrame * GetActiveFrame() const;
-
-  void SetupURLBar();
-
-  void SetMenuBar( wxMenuBar * p_menu_bar );
-
- public:
 
  protected:
-//    AmayaCallback menuCallback;
-//    AmayaCallback toolbarCallback;
+  void OnSize( wxSizeEvent& event );
 
  protected:
   DECLARE_EVENT_TABLE()
- 
-  int               m_WindowId;          // amaya window id
+
+  int               m_Kind;               // window kind
+  int               m_WindowId;           // amaya window id
   int               m_DocsId[MAX_DOC];    // documents contained by this window
-  
-//  AmayaPanel *      m_aPanels[4];        // avalaible panels
-  AmayaPanel *      m_pCurrentPanel;     // current selected panel
-  AmayaNotebook *   m_pNotebook;         // tabs container
-  float             m_SlashRatio; // 0.5 => page is half splitted  
   bool              m_IsClosing;
-
-  bool         m_IsFullScreenEnable;
-  bool         m_IsToolTipEnable;
-  wxMenuItem * m_pMenuItemToggleFullScreen;
-  wxMenuItem * m_pMenuItemToggleToolTip;
-
-  wxMenuBar * m_pDummyMenuBar;
-  
-  wxSplitterWindow * m_pSplitterWindow;
-  
-  AmayaURLBar *	     m_pURLBar;
-  AmayaToolBar *     m_pToolBar;
-
-
- public:
-  enum
-   {
-     TOOLBAR_TOOL_START,
-     TOOLBAR_TOOL_END = TOOLBAR_TOOL_START+100,
-
-     MENU_ITEM_START,
-     MENU_ITEM_END = MENU_ITEM_START+100,
-
-   };
 };
 
 #endif // __AMAYAWINDOW_H__

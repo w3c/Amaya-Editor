@@ -3326,7 +3326,7 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
   ----------------------------------------------------------------------*/
 void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
 {
-  unsigned char      *title;
+  unsigned char      *title = NULL;
   CHAR_T             *ptr;
 #ifdef _WX
   AmayaFrame         *p_frame;
@@ -3337,6 +3337,7 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
 #endif /* #if defined(_GTK) */
 #endif /* _WX */
 
+#ifndef _WX
   if (encoding == TtaGetDefaultCharset ())
     title = text;
   else if (encoding == UTF_8)
@@ -3347,6 +3348,10 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
       title = TtaConvertWCToByte (ptr, TtaGetDefaultCharset ());
       TtaFreeMemory (ptr);
     }
+#else /* _WX */
+  wxASSERT_MSG( encoding == UTF_8, _T("Encoding should be UTF8 !") );
+  title = text;
+#endif /* _WX */
 
 #ifdef _WX
   p_frame = FrameTable[frame].WdFrame;

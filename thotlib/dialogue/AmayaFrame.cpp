@@ -20,6 +20,7 @@
 #include "libmsg.h"
 #include "frame.h"
 #include "thot_key.h"
+#include "appdialogue_wx.h"
 
 #ifdef _GL
   #include "glwindowdisplay.h"
@@ -55,7 +56,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaFrame, wxPanel)
  */
 AmayaFrame::AmayaFrame(
                 int             frame_id
-      	       ,wxWindow *      p_parent_window
+      	       ,AmayaWindow *   p_parent_window
 	      )
   :  wxPanel( p_parent_window )
      ,m_FrameId( frame_id )
@@ -69,6 +70,8 @@ AmayaFrame::AmayaFrame(
      ,m_ToDestroy( FALSE )
      ,m_FrameUrlEnable( FALSE )
 {
+  wxLogDebug( _T("AmayaFrame::AmayaFrame() - frame_id=%d"), m_FrameId );
+
   // Create the drawing area
   m_pCanvas = CreateDrawingArea();
 
@@ -117,6 +120,8 @@ AmayaFrame::AmayaFrame(
  */
 AmayaFrame::~AmayaFrame()
 {
+  wxLogDebug( _T("AmayaFrame::~AmayaFrame() - frame_id=%d"), m_FrameId );
+
   // notifie the page that this frame has die
   //  if ( GetPageParent() )
   //    GetPageParent()->DeletedFrame( this );
@@ -129,14 +134,15 @@ AmayaFrame::~AmayaFrame()
   /* destroy the canvas (it should be automaticaly destroyed by 
      wxwidgets but due to a strange behaviour, I must explicitly delete it)*/
   if (m_pCanvas)
-	m_pCanvas->Destroy();
+    m_pCanvas->Destroy();
   m_pCanvas = NULL;
 
   // it's possible to fall here if a frame is a child of a page but is not deleted
   // then if the page is closed, the frame is deleted by wxWidgets because the frame is a child of the page.
   // it's important to free the corresponding frame context
   //DestroyFrame( m_FrameId );
-  FrameTable[GetFrameId()].WdFrame = NULL;
+  memset(&FrameTable[GetFrameId()], 0, sizeof(Frame_Ctl));
+  //  FrameTable[GetFrameId()].WdFrame = NULL;
 }
 
 AmayaCanvas * AmayaFrame::CreateDrawingArea()
@@ -456,11 +462,12 @@ void AmayaFrame::SetPageTitle(const wxString & page_name)
   {
     AmayaNotebook * p_notebook = p_page->GetNotebookParent();
     if (p_notebook)
-    {
-      int page_id = p_notebook->GetPageId(p_page);
-      if (page_id >= 0)
-	p_notebook->SetPageText(page_id, wxString(m_PageTitle).Truncate(10) + _T("...") );
-    }
+      {
+	int page_id = p_notebook->GetPageId(p_page);
+	if (page_id >= 0)
+	  p_notebook->SetPageText( page_id,
+				   wxString(m_PageTitle).Truncate(10) + (m_PageTitle.Len() > 10 ? _T("...") : _T("")) );
+      }
   }
 
   // update also the window title
@@ -489,21 +496,22 @@ wxString AmayaFrame::GetPageTitle()
 void AmayaFrame::SetWindowTitle(const wxString & window_name)
 {
   m_WindowTitle = window_name;
+  
+  AmayaWindow * p_window = GetWindowParent();
+  if (!p_window)
+    return;
 
-  // check if this frame's page is active or not
-  AmayaPage * p_page = GetPageParent();
-  if (p_page)
-  {
-    if ( p_page->IsSelected() )
+  if (p_window->GetKind() == WXAMAYAWINDOW_NORMAL)
     {
-      // if the frame's page is active then update the window name
-      AmayaWindow * p_window = p_page->GetWindowParent();
-      if (p_window)
-	p_window->SetTitle( m_WindowTitle +
-			    _T(" - Amaya ") +
-			    wxString::FromAscii( HTAppVersion ) );
+      // check if this frame's page is active or not
+      AmayaPage * p_page = GetPageParent();
+      if ( !p_page || !p_page->IsSelected() )
+	return;
     }
-  }
+
+  p_window->SetTitle( m_WindowTitle +
+		      _T(" - Amaya ") +
+		      wxString::FromAscii( HTAppVersion ) );
 }
 
 /*
@@ -604,13 +612,7 @@ AmayaPage * AmayaFrame::GetPageParent()
  */
 AmayaWindow * AmayaFrame::GetWindowParent()
 {
-  AmayaPage * p_page = GetPageParent();
-  if (p_page)
-  {
-    return p_page->GetWindowParent();
-  }
-  else
-    return NULL;
+  return TtaGetWindowFromId( TtaGetFrameWindowParentId(GetFrameId()) );
 }
 
 void AmayaFrame::OnClose(wxCloseEvent& event)
@@ -802,7 +804,8 @@ void AmayaFrame::FreeFrame()
 
   
   // Create a new drawing area
-  // there is a strange bug : the drawind area could not be reused, it must be recreated.
+  // there is a strange bug :
+  // the drawind area could not be reused (sometimes black background), it must be recreated.
   //  ReplaceDrawingArea( CreateDrawingArea() );
 
   // do not delete realy the frame because there is a strange bug

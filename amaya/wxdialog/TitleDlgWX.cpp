@@ -70,7 +70,7 @@ void TitleDlgWX::OnConfirmButton( wxCommandEvent& event )
   // allocate a temporary buffer to copy the 'const char *' new_title buffer 
   char buffer[512];
   wxASSERT( new_title.Len() < 512 );
-  strcpy( buffer, new_title.ToAscii() );
+  strcpy( buffer, (const char*)new_title.mb_str(wxConvUTF8) );
 
   // give the new title to Amaya
   ThotCallback (BaseDialog + TitleText,  STRING_DATA, (char *)buffer );
