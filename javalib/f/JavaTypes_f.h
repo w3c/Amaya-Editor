@@ -41,6 +41,8 @@ extern void JavaAttributeType2CAttributeTypePtr ( struct Horg_w3c_thotlib_Attrib
                                                   AttributeType **out );
 extern void CAttributeTypePtr2JavaAttributeType ( AttributeType *in,
                                                   struct Horg_w3c_thotlib_AttributeType** out );
+extern void CAttributeType2JavaAttributeType ( AttributeType in,
+					       struct Horg_w3c_thotlib_AttributeType* out );
 extern void JavaIntPtr2CintPtr ( struct Horg_w3c_thotlib_IntPtr* in,
                                  int **out );
 extern void CintPtr2JavaIntPtr ( int *in,
@@ -115,6 +117,8 @@ extern void JavaAttributeType2CAttributeTypePtr (/* struct Horg_w3c_thotlib_Attr
                                                     AttributeType **out */);
 extern void CAttributeTypePtr2JavaAttributeType (/* AttributeType *in,
                                                     struct Horg_w3c_thotlib_AttributeType** out */);
+extern void CAttributeType2JavaAttributeType (/* AttributeType in,
+						 struct Horg_w3c_thotlib_AttributeType* out */);
 extern void JavaIntPtr2CintPtr (/* struct Horg_w3c_thotlib_IntPtr* in,
                                    int **out */);
 extern void CintPtr2JavaIntPtr (/* int *in,

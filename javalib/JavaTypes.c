@@ -439,6 +439,11 @@ void CAttributeTypePtr2JavaAttributeType(AttributeType *in, struct Horg_w3c_thot
     Set_AttributeType_Int_type(in->AttrTypeNum, *out);
     free(in);
 }
+void CAttributeType2JavaAttributeType(AttributeType in, struct Horg_w3c_thotlib_AttributeType* out)
+{
+    Set_AttributeType_Ptr_sschema(in.AttrSSchema, out);
+    Set_AttributeType_Int_type(in.AttrTypeNum, out);
+}
 
 void JavaIntPtr2CintPtr(struct Horg_w3c_thotlib_IntPtr* in, int **out)
 {
