@@ -547,7 +547,33 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
-   ActiveTransfer initialize the current transfer                     
+   SetStopButton Activates the stop button if it's turned off
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                SetStopButton (Document document)
+#else
+void                SetStopButton (document)
+Document            doc;
+#endif
+{
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
+  if (DocNetworkStatus[document] != AMAYA_NET_ACTIVE)
+    DocNetworkStatus[document] = AMAYA_NET_ACTIVE;
+#endif
+  if (FilesLoading[document] == 0)
+    FilesLoading[document] = 1;
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
+  if (TtaGetViewFrame (document, 1) != 0)
+    /* this document is displayed */
+#ifdef _WINDOWS 
+    WIN_TtaChangeButton (document, 1, 1 , stopR, TRUE);
+#else  /* _WINDOWS */
+    TtaChangeButton (document, 1, 1, stopR);
+#endif /* _WINDOWS */
+#endif
+}
+/*----------------------------------------------------------------------
+   ActiveMakeBook initialize the current transfer                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ActiveMakeBook (Document document)
@@ -2012,12 +2038,12 @@ void               *ctx_cbf;
 	       if (CE_event == CE_FORM_POST)
 		 mode = AMAYA_SYNC | AMAYA_FORM_POST;
 	       else if (CE_event == CE_MAKEBOOK)
-		 mode = AMAYA_SYNC;
+		 mode = AMAYA_ASYNC;
 	       else
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 		 mode = AMAYA_ASYNC;
 #else
-	       mode = AMAYA_ASYNC | AMAYA_ASYNC_SAFE_STOP;
+	         mode = AMAYA_ASYNC | AMAYA_ASYNC_SAFE_STOP;
 #endif /* AMAYA_JAVA */
 	       if (IsW3Path (pathname))
 		 {

@@ -82,7 +82,8 @@ static HTList      *converters = NULL;	/* List of global converters */
 static HTList      *acceptTypes = NULL; /* List of types for the Accept header */
 static HTList      *encodings = NULL;
 static int          object_counter = 0;	/* loaded objects counter */
-static  boolean    AmayaIsAlive;
+static  boolean    AmayaAlive;          /* set to 1 if the application is
+					   active; 0 if we have killed it */
 
 #include "answer_f.h"
 #include "query_f.h"
@@ -302,9 +303,10 @@ AHTReqContext      *me;
 		  TtaFreeMemory ((void *) docid_status);
 	       }
 	  }
-	/* is this necessary??? */
+
 	if (HTRequest_outputStream (me->request))
 	  AHTFWriter_FREE (me->request->output_stream);
+
 	HTRequest_delete (me->request);
 
 	if (me->output && me->output != stdout)
@@ -652,7 +654,11 @@ int                 status;
 	  }
 	}
 
-	me->reqStatus = HT_NEW; /* reset the status */
+	/* reset the status */
+	me->reqStatus = HT_NEW;
+	/* clear the errors */
+	HTError_deleteAll( HTRequest_error (request));
+	HTRequest_setError (request, NULL);
 	if (me->method == METHOD_PUT || me->method == METHOD_POST)	/* PUT, POST etc. */
 	  status = HTLoadAbsolute (me->urlName, request);
 	else
@@ -699,7 +705,7 @@ int                 status;
    
    /* if Amaya was killed, treat with this request as if it were
       issued by a Stop button event */
-   if (!AmayaIsAlive)           
+   if (!AmayaAlive)           
       me->reqStatus = HT_ABORT; 
    
    if (status == HT_LOADED || 
@@ -802,7 +808,7 @@ int                 status;
    }
  
   /* don't remove or Xt will hang up during the PUT */
-   if (AmayaIsAlive  && ((me->method == METHOD_POST) ||
+   if (AmayaAlive  && ((me->method == METHOD_POST) ||
 			 (me->method == METHOD_PUT)))
      {
        PrintTerminateStatus (me, status);
@@ -1245,7 +1251,7 @@ void                QueryInit ()
 #endif
 {
 
-   AmayaIsAlive = TRUE;
+   AmayaAlive = TRUE;
    AHTProfile_newAmaya (HTAppName, HTAppVersion);
 
    /* New AHTBridge stuff */
@@ -1313,10 +1319,6 @@ void                QueryInit ()
    signal (SIGPIPE, SIG_IGN);
 #endif
 
-#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)	&& defined (_WINDOWS)
-  /* forces libwww to do sync request if true and if in MakeBook mode */
-  WinMakeBookFlag = FALSE;
-#endif /* _WINDOWS */
 }
 
 #ifndef _WINDOWS
@@ -1342,7 +1344,7 @@ static int          LoopForStop (AHTReqContext * me)
    while (me->reqStatus != HT_ABORT &&
 	  me->reqStatus != HT_END &&
 	  me->reqStatus != HT_ERR) {
-	 if (!AmayaIsAlive)
+	 if (!AmayaAlive)
 	    /* Amaya was killed by one of the callback handlers */
 	    exit (0);
 
@@ -1383,7 +1385,7 @@ static int          LoopForStop (AHTReqContext * me)
 void                QueryClose ()
 {
 
-   AmayaIsAlive = FALSE;
+   AmayaAlive = FALSE;
 
    /* remove all the handlers and callbacks that may output a message to
       a non-existent Amaya window */
@@ -1594,12 +1596,6 @@ char 	     *content_type;
      if (!HasKnownFileSuffix (ref))
        HTRequest_setConversion(me->request, acceptTypes, TRUE);
    }
-
-#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)	&& defined (_WINDOWS)
-   /* forces libwww to do sync request if in MakeBook mode */
-   if (WinMakeBookFlag)
-	   mode = AMAYA_SYNC;
-#endif /* _WINDOWS */
 
    /* Common initialization */
    me->mode = mode;
@@ -2210,6 +2206,18 @@ int                 docid;
   end of Module query.c
 */
 
+/*----------------------------------------------------------------------
+  AmayaIsAlive
+  returns the status of the AmayaAlive flag
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean AmayaIsAlive (void)
+#else
+boolean AmayaIsAlive ()
+#endif /* _STDC_ */
+{
+  return AmayaAlive;
+}
 #endif /* AMAYA_JAVA */
 
 

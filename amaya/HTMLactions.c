@@ -56,7 +56,6 @@ typedef struct _FollowTheLink_context {
   Element              elSource;
   char                *sourceDocUrl;
   char                *url;
-  
 } FollowTheLink_context;
 
 /*----------------------------------------------------------------------
@@ -237,6 +236,8 @@ void *context;
   anchor = ctx->anchor;
   url = ctx->url;
   elSource = ctx->elSource;
+
+  docSchema = TtaGetDocumentSSchema (doc);
 
   if (anchor != NULL) 
     {

@@ -18,6 +18,7 @@ extern void SetArrowButton ( Document document,
                              boolean on );
 extern void ResetStop ( Document document );
 extern void ActiveTransfer ( Document document );
+extern void SetStopButton (Document document);
 extern void ActiveMakeBook ( Document document );
 extern void UpdateTransfer ( Document document );
 extern void StopTransfer ( Document document,
@@ -128,6 +129,7 @@ extern void SetArrowButton (/* Document document,
                                boolean on */);
 extern void ResetStop (/* Document document */);
 extern void ActiveTransfer (/* Document document */);
+extern void SetStopButton (/* Document document */);
 extern void ActiveMakeBook (/* Document document */);
 extern void UpdateTransfer (/* Document document */);
 extern void StopTransfer (/* Document document,

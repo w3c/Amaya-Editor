@@ -46,7 +46,7 @@ extern int UploadMemWWW ( int docid,
                           void *context_tcbf,
                           char *outputfile );
 extern void StopRequest ( int docid );
-
+extern boolean AmayaIsAlive ( void );
 #else /* __STDC__ */
 
 extern AHTDocId_Status *GetDocIdStatus (/* int docid,
@@ -89,6 +89,6 @@ extern int UploadMemWWW (/* int docid,
                             void *context_tcbf,
                             char *outputfile */);
 extern void StopRequest (/* int docid */);
-
+extern boolean AmayaIsAlive (/* void */);
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

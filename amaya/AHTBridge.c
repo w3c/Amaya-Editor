@@ -163,8 +163,9 @@ XtInputId          *id;
 
    me->reqStatus = HT_BUSY;
 
-   if ((status = (*cbf) (socket, rqp, ops)) != HT_OK)
+   status = (*cbf) (socket, rqp, ops);
 #ifdef DEBUG_LIBWWW
+   if (status != HT_OK)
       HTTrace ("Callback.... returned a value != HT_OK");
 #endif
    /* Several states can happen after this callback. They
@@ -260,7 +261,7 @@ AHTReqContext *me;
    
   if (me->reqStatus == HT_END)
     {
-      if (me->terminate_cbf)
+      if (AmayaIsAlive () && me->terminate_cbf)
 	(*me->terminate_cbf) (me->docid, 0, me->urlName, me->outputfile,
 			      me->content_type, me->context_tcbf);
     }
@@ -268,6 +269,9 @@ AHTReqContext *me;
     /* either the application ended or the user pressed the stop 
        button. We erase the incoming file, if it exists */
     {
+      if (AmayaIsAlive () && me->terminate_cbf)
+	(*me->terminate_cbf) (me->docid, -1, me->urlName, me->outputfile,
+			      me->content_type, me->context_tcbf);
       if (me->outputfile && me->outputfile[0] != EOS)
 	{
 	  TtaFileUnlink (me->outputfile);
@@ -277,7 +281,7 @@ AHTReqContext *me;
   else if (me->reqStatus == HT_ERR)
     {
       /* there was an error */
-      if (me->terminate_cbf)
+      if (AmayaIsAlive () && me->terminate_cbf)
 	(*me->terminate_cbf) (me->docid, -1, me->urlName, me->outputfile,
 			      me->content_type, me->context_tcbf);
       
@@ -287,14 +291,6 @@ AHTReqContext *me;
 	  me->outputfile[0] = EOS;
 	}
     }
-    else if (me->reqStatus == HT_ABORT)
-      {
-      if (me->outputfile && me->outputfile[0] != EOS)
-	{
-	  TtaFileUnlink (me->outputfile);
-	  me->outputfile[0] = EOS;
-	}
-      }
 
 #ifdef _WINDOWS
    /* we erase the context if we're dealing with an asynchronous request */
@@ -598,7 +594,7 @@ SockOps             ops;
 
 #ifndef _WINDOWS   
 #ifdef DEBUG_LIBWWW
-   fprintf (stderr, "AHTEventUnregister: cbf = %d, sock = %d, rqp = %d, ops= %x", cbf, sock, rqp, ops);
+   fprintf (stderr, "AHTEventUnregister: cbf = %d, sock = %d, rqp = %d, ops= %x\n", cbf, sock, rqp, ops);
 #endif /* DEBUG_LIBWWW */
 
    v = HASH (sock);

@@ -33,6 +33,14 @@ typedef struct _SubDoc
      char            *SDname;
   }SubDoc;
 
+/* the structure used for the GetIncludedDocuments_callback function */
+typedef struct _GetIncludedDocuments_context {
+  Element		link, next;
+  Attribute		RelAttr, HrefAttr;
+  char			*url, *ptr, *text;
+  Document		document;
+} GetIncludedDocuments_context;
+
 static struct _SubDoc  *SubDocs;
 static int              PaperPrint;
 static int              ManualFeed;
@@ -50,6 +58,16 @@ static int              basePrint;
 #include "HTMLedit_f.h"
 #include "HTMLhistory_f.h"
 
+/*-----------------------------------------------------------------------
+  Function prototypes
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         GetIncludedDocuments (Element el, Document document);
+void                MakeBook_callback (Document document);
+#else
+static void         GetIncludedDocuments (/* el, document */);
+void                MakeBook_callback (/* Document document */);
+#endif
 
 /*----------------------------------------------------------------------
   RegisterSubDoc adds a new entry in SubDoc table.
@@ -825,6 +843,79 @@ boolean        deleteTree;
     }
 }
 
+
+#ifdef __STDC__
+void               GetIncludedDocuments_callback (int newdoc, int status, 
+					     char *urlName,
+					     char *outputfile, 
+					     char *content_type,
+					     void * context)
+#else  /* __STDC__ */
+void               GetIncludedDocuments_callback (newdoc, status, urlName,
+                                             outputfile, content_type, 
+                                             context)
+int newdoc;
+int status;
+char *urlName;
+char *outputfile;
+char *content_type;
+void *context;
+#endif /* __STDC__ */
+{
+  Element		link, next;
+  Attribute		RelAttr, HrefAttr;
+  char			*url, *ptr, *text;
+  Document		document;
+  GetIncludedDocuments_context  *ctx;
+
+  /* restore GetIncludedDocuments's context */
+  ctx = (GetIncludedDocuments_context *) context;
+  
+  if (!ctx)
+    return;
+
+  RelAttr = ctx->RelAttr;
+  link = ctx->link;
+  HrefAttr = ctx->HrefAttr;
+  url = ctx->url;
+  ptr = ctx->ptr;
+  document = ctx->document;
+  next = ctx->next;
+  text = ctx->text;
+
+  TtaFreeMemory (ctx);
+
+  if (RelAttr != NULL && link != NULL)
+    {
+      if (HrefAttr != NULL)
+	{
+	  if (url != NULL)
+	    {
+	      if (newdoc != 0 && newdoc != document)
+		{
+		  /* it's not the document itself */
+		  /* copy the target document at the position of the link */
+		  MoveDocumentBody (&next, document, newdoc, ptr, url,
+				    newdoc == IncludedDocument);
+		}
+	      /* global variables */
+	      FreeDocumentResource (IncludedDocument);
+	      TtaCloseDocument (IncludedDocument);
+	      IncludedDocument = 0;
+	    }
+	  TtaFreeMemory (text);
+	}
+    }
+  
+  if (next != NULL && DocBook == document)
+    {
+      SetStopButton (document);
+      GetIncludedDocuments (next, document);
+    }
+  else
+    MakeBook_callback (document);
+}
+
 /*----------------------------------------------------------------------
   GetIncludedDocuments
   Look forward, starting from element el, for a link (A) with attribute
@@ -832,47 +923,62 @@ boolean        deleteTree;
   of the target document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Element      GetIncludedDocuments (Element el, Document document)
+static void         GetIncludedDocuments (Element el, Document document)
 #else
-static Element      GetIncludedDocuments (el, document)
+static void         GetIncludedDocuments (el, document)
 Element		    el;
 Document            document;
 #endif
 {
-   Element		link, next;
-   Attribute		RelAttr, HrefAttr;
-   AttributeType	attrType;
-   int			length;
-   char			*text, *ptr, *url;
-   Document		newdoc;
+  Element		link, next;
+  Attribute		RelAttr, HrefAttr = NULL;
+  AttributeType	attrType;
+  int			length;
+  char			*text, *ptr, *url;
+  Document		newdoc;
+  boolean              call_callback = FALSE;
+  GetIncludedDocuments_context  *ctx = NULL;
 
-   attrType.AttrSSchema = TtaGetDocumentSSchema (document);
-   attrType.AttrTypeNum = HTML_ATTR_REL;
-   link = el;
-   RelAttr = NULL;
-   /* looks for an anchor having an attribute REL="chapter" or
-      REL="subdocument" */
-   while (link != NULL && RelAttr == NULL)
-     {
-       TtaSearchAttribute (attrType, SearchForward, link, &link, &RelAttr);
-       if (link != NULL && RelAttr != NULL)
-	 {
-	   length = TtaGetTextAttributeLength (RelAttr);
-	   text = TtaGetMemory (length + 1);
-	   TtaGiveTextAttributeValue (RelAttr, text, &length);
-	   if (strcasecmp (text, "chapter") && strcasecmp (text, "subdocument"))
-	     RelAttr = NULL;
-	   TtaFreeMemory (text);
-	 }
-     }
+  link = el;
+  RelAttr = NULL;
+  next = NULL;
 
-   if (RelAttr != NULL && link != NULL)
-     /* a link with attribute REL="Chapter" has been found */
-     {
-       next = link;
-       attrType.AttrTypeNum = HTML_ATTR_HREF_;
-       HrefAttr = TtaGetAttribute (link, attrType);
-       if (HrefAttr != NULL)
+  ctx = TtaGetMemory (sizeof (GetIncludedDocuments_context));
+  memset (ctx, 0, sizeof (GetIncludedDocuments_context));
+
+  attrType.AttrSSchema = TtaGetDocumentSSchema (document);
+  attrType.AttrTypeNum = HTML_ATTR_REL;
+
+
+  /* looks for an anchor having an attribute REL="chapter" or
+     REL="subdocument" */
+  while (link != NULL && RelAttr == NULL)
+    {
+      TtaSearchAttribute (attrType, SearchForward, link, &link, &RelAttr);
+      if (link != NULL && RelAttr != NULL)
+	{
+	  length = TtaGetTextAttributeLength (RelAttr);
+	  text = TtaGetMemory (length + 1);
+	  TtaGiveTextAttributeValue (RelAttr, text, &length);
+	  if (strcasecmp (text, "chapter") && strcasecmp (text, "subdocument"))
+	    RelAttr = NULL;
+	  TtaFreeMemory (text);
+	}
+    }
+  
+  ctx->RelAttr = RelAttr;
+  ctx->link =  link;
+  ctx->document = document;
+  ctx->HrefAttr = HrefAttr;
+
+  if (RelAttr != NULL && link != NULL)
+    /* a link with attribute REL="Chapter" has been found */
+    {
+      next = link;
+      ctx->next =next;
+      attrType.AttrTypeNum = HTML_ATTR_HREF_;
+      HrefAttr = TtaGetAttribute (link, attrType);
+      if (HrefAttr != NULL)
 	 /* this link has an attribute HREF */
 	 {
 	   length = TtaGetTextAttributeLength (HrefAttr);
@@ -888,34 +994,56 @@ Document            document;
 	       ptr[0] = EOS;
 	       ptr = &ptr[1];
 	     }
+	   
+	   ctx->url = url;
+	   ctx->ptr = ptr;
+	   ctx->text = text;
+	   ctx->HrefAttr = HrefAttr;
 
 	   if (url != NULL)
-	     /* this link designate an external document */
+	     /* this link designates an external document */
 	     {
 	       /* create a new document and loads the target document */
 	       IncludedDocument = TtaNewDocument ("HTML", "tmp");
 	       TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_FETCHING), url);
 	       newdoc = GetHTMLDocument (url, NULL, IncludedDocument,
-					 document, CE_MAKEBOOK, FALSE, NULL, NULL);
-	       if (newdoc != 0 && newdoc != document)
-		 {
-		   /* it's not the document itself */
-		   /* copy the target document at the position of the link */
-		   MoveDocumentBody (&next, document, newdoc, ptr, url,
-				     newdoc == IncludedDocument);
-		 }
-	       FreeDocumentResource (IncludedDocument);
-	       TtaCloseDocument (IncludedDocument);
-	       IncludedDocument = 0;
+					 document, CE_MAKEBOOK, FALSE, 
+					 (void *) GetIncludedDocuments_callback,
+					 (void *) ctx);
 	     }
-	     
-	   TtaFreeMemory (text);
-	 }
-       return (next);
-     }
-   return (NULL);
+	   else 
+	     call_callback = TRUE;
+         }
+       else
+	 call_callback = TRUE;
+     } 
+   else
+     call_callback = TRUE;
+    
+    if (call_callback)
+      GetIncludedDocuments_callback (document, -1, url, NULL, NULL, 
+				     (void *) ctx);
 }
 
+
+/*----------------------------------------------------------------------
+  MakeBook_callback
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void MakeBook_callback (Document document)
+#else
+void MakeBook_callback (Document document)
+#endif /* __STDC__ */
+
+{
+  ResetStop (document);
+  /* update internal links */
+  SetInternalLinks (document);
+  /* remove registered  sub-documents */
+  FreeSubDocTable ();
+  DocBook = 0;
+  TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
+}
 
 /*----------------------------------------------------------------------
   MakeBook
@@ -942,22 +1070,20 @@ View                view;
    elType.ElTypeNum = HTML_EL_BODY;
    body = TtaSearchTypedElement (elType, SearchForward, root);
    TtaSetDocumentModified (document);
-#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)	&& defined (_WINDOWS)
-   /* force libwww to use the SYNC mode while doing a Makebook */
-   WinMakeBookFlag = TRUE;
-#endif /* _WINDOWS */
    el = body;
-   while (el != NULL && DocBook == document)
-      el = GetIncludedDocuments (el, document);
-   ResetStop (document);
-   /* update internal links */
-   SetInternalLinks (document);
-#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)	&& defined (_WINDOWS)
-   /* force libwww to use the SYNC mode while doing a Makebook */
-   WinMakeBookFlag = FALSE;
-#endif /* _WINDOWS */
-   /* remove registered  sub-documents */
-   FreeSubDocTable ();
-   DocBook = 0;
-   TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
+
+   if (el != NULL && DocBook == document)
+     GetIncludedDocuments (el, document);
+   else
+     MakeBook_callback (document);
 }
+
+
+
+
+
+
+
+
+
+
