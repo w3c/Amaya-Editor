@@ -27,7 +27,8 @@ AmayaFloatingPanel::AmayaFloatingPanel( wxWindow * p_parent
 					,const wxSize&  size
 					,long style
 					)
-  : wxFrame( p_parent, id, _T("AmayaFloatingPanel"), pos, size, style )
+  : wxDialog( p_parent, id, _T("AmayaFloatingPanel"), pos, size, style )
+  //  : wxFrame( p_parent, id, _T("AmayaFloatingPanel"), pos, size, style )
     ,m_pParentSubPanel(p_subpanel)
 {
   
@@ -82,6 +83,7 @@ AmayaFloatingPanel::AmayaFloatingPanel( wxWindow * p_parent
   m_pTopSizer->Fit(this);
   
   Layout();
+  SetPosition(wxGetMousePosition());
 }
 
 /*
@@ -143,7 +145,7 @@ wxPanel * AmayaFloatingPanel::GetPanelContentDetach()
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
-BEGIN_EVENT_TABLE(AmayaFloatingPanel, wxFrame)
+BEGIN_EVENT_TABLE(AmayaFloatingPanel, wxDialog)
   EVT_CLOSE( AmayaFloatingPanel::OnClose )
 END_EVENT_TABLE()
 

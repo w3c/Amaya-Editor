@@ -43,11 +43,15 @@ class AmayaPopupList : public wxPanel
 
  protected:
   DECLARE_EVENT_TABLE()
+  void OnSetFocus( wxFocusEvent & event );
   void OnKillFocus( wxFocusEvent & event );
+  void OnSelect( wxCommandEvent& event );
+  void OnIdle( wxIdleEvent& event );
 
  protected:
   AmayaPopupL * m_pList;
-
+  bool m_ShouldBeDestroyed;
+  bool m_HasBeenSelected;
 };
 
 #endif // __AMAYAPOPUPLIST_H__

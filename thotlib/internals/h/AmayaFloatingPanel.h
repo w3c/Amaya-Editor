@@ -4,7 +4,9 @@
 #define __AMAYAFLOATINGPANEL_H__
 
 #include "wx/wx.h"
-#include "wx/frame.h"
+//#include "wx/frame.h"
+#include "wx/dialog.h"
+
 
 class AmayaSubPanel;
 
@@ -15,7 +17,7 @@ class AmayaSubPanel;
  *     Revision:  none
 */
 
-class AmayaFloatingPanel : public wxFrame
+class AmayaFloatingPanel : public wxDialog
 {
 public:
   AmayaFloatingPanel( wxWindow * p_parent = NULL
@@ -24,6 +26,11 @@ public:
 		      ,const wxPoint& pos            = wxDefaultPosition
 		      ,const wxSize&  size           = wxDefaultSize
 		      ,long style                    = 
+		      wxDEFAULT_DIALOG_STYLE |
+		      wxSTAY_ON_TOP | 
+		      wxTHICK_FRAME |
+		      wxRESIZE_BORDER
+#if 0
 		      wxMINIMIZE_BOX |
 		      wxSYSTEM_MENU |
 		      wxCAPTION |
@@ -37,6 +44,7 @@ public:
 #endif /* _WINDOWS */
 		      wxRESIZE_BORDER |
 		      wxRESIZE_BOX
+#endif /* 0 */
 		      );
   virtual ~AmayaFloatingPanel();
 

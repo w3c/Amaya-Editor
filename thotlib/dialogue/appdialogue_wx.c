@@ -1102,6 +1102,9 @@ void APP_Callback_ToolBarButtonActivate (int frame_id, int button_id)
       if (WindowTable[window_id].Call_Button[button_id])
 	(*(Proc2)WindowTable[window_id].Call_Button[button_id]) ((void *)document, (void *)view);
       TtaSetButtonActivatedStatus (FALSE);
+
+      /* then give focus to canvas */
+      TtaRedirectFocus();
     }
 #endif /* _WX */
 }
@@ -1360,6 +1363,9 @@ void APP_Callback_PanelButtonActivate (int type, int frame_id, int button_id)
       if (p_callback)
 	(*(Proc2)p_callback) ((void *)document, (void *)view);
       TtaSetButtonActivatedStatus (FALSE);
+
+      /* give focus to canvas */
+      TtaRedirectFocus();
     }
 #endif /* _WX */
 }
@@ -1650,3 +1656,23 @@ void TtaSendDataToPanel( int panel_type, AmayaParams& params )
   AmayaSubPanelManager::GetInstance()->SendDataToPanel( panel_type, params );
 }
 #endif /* _WX */
+
+/*----------------------------------------------------------------------
+  TtaRedirectFocus
+  give focus to active canvas in order to be able to enter text
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void TtaRedirectFocus()
+{
+#ifdef _WX
+  wxLogDebug( _T("TtaRedirectFocus") );
+  AmayaWindow * p_window = TtaGetWindowFromId(TtaGetActiveWindowId());
+  if (p_window)
+    {
+      AmayaPage *   p_page   = p_window->GetActivePage();
+      if (p_page)
+	p_page->SetFocus();
+    }
+#endif /* _WX */
+}

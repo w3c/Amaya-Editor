@@ -5,7 +5,6 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 extern ThotBool TtaReadByte ( BinFile file,
                               unsigned char *bval );
 extern ThotBool TtaRead4Byte ( BinFile file,
@@ -62,7 +61,6 @@ extern ThotBool TtaMakeDirectory ( char *directory );
 extern ThotBool TtaCheckDirectory ( char *directory );
 
 #else /* __STDC__ */
-
 extern ThotBool TtaReadByte ( BinFile file,
                                 unsigned char *bval );
 extern ThotBool TtaRead4Byte ( BinFile file,

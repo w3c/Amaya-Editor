@@ -178,10 +178,15 @@ void AmayaAttributePanel::OnListSelectItem( wxCommandEvent& event )
   if ( !m_pAttrList->IsChecked(event.GetSelection()) )
     {
       ShowAttributValue( wxATTR_TYPE_NONE );
+  /* try to redirect focus to canvas */
+  TtaRedirectFocus();  
       return;
     }
   
   SelectAttribute( event.GetSelection() );
+
+  /* try to redirect focus to canvas */
+  TtaRedirectFocus();  
 }
 
 /*----------------------------------------------------------------------
@@ -261,6 +266,9 @@ void AmayaAttributePanel::RemoveCurrentAttribut()
     CallbackLanguageMenu(NumFormLanguage, 2, NULL);
   else
     CallbackValAttrMenu (NumMenuAttr, 2, NULL);
+  
+  /* try to redirect focus to canvas */
+  TtaRedirectFocus();  
 }
 
 
@@ -522,6 +530,9 @@ void AmayaAttributePanel::OnApply( wxCommandEvent& event )
 	CallbackValAttrMenu (NumMenuAttrText, -1, buffer);
 	/* create/modify attribute */
 	CallbackValAttrMenu (NumMenuAttr, 1, NULL);
+
+	/* try to redirect focus to canvas */
+	TtaRedirectFocus();  
       }
       break;
     case wxATTR_TYPE_ENUM:
@@ -530,6 +541,9 @@ void AmayaAttributePanel::OnApply( wxCommandEvent& event )
 	CallbackValAttrMenu (NumMenuAttrEnum, m_pRBEnum->GetSelection(), NULL);
 	/* create/modify attribute */
 	CallbackValAttrMenu (NumMenuAttr, 1, NULL);
+
+	/* try to redirect focus to canvas */
+	TtaRedirectFocus();  
       }
       break;
     case wxATTR_TYPE_NUM:
@@ -540,6 +554,9 @@ void AmayaAttributePanel::OnApply( wxCommandEvent& event )
 	CallbackValAttrMenu (NumMenuAttrNumber, value, NULL);
 	/* create/modify attribute */
 	CallbackValAttrMenu (NumMenuAttr, 1, NULL);
+
+	/* try to redirect focus to canvas */
+	TtaRedirectFocus();  
       }
       break;
     case wxATTR_TYPE_LANG:
@@ -552,6 +569,9 @@ void AmayaAttributePanel::OnApply( wxCommandEvent& event )
 	CallbackLanguageMenu(NumSelectLanguage, -1, buffer);
 	/* create/modify attribute */
 	CallbackLanguageMenu(NumFormLanguage, 1, NULL);
+
+	/* try to redirect focus to canvas */
+	TtaRedirectFocus();  
       }
       break;
     }

@@ -61,6 +61,7 @@
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_PANEL_XHTML_STRONG">
                                         <bitmap>../icons/XHTML_B.png</bitmap>
+                                        <focused>1</focused>
                                       </object>
                                       <flag>wxALL</flag>
                                       <border>2</border>

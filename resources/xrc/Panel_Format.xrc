@@ -189,6 +189,7 @@
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_APPLY">
                                             <bitmap>../icons/ok.png</bitmap>
+                                            <focused>1</focused>
                                             <tooltip>*Apply*</tooltip>
                                           </object>
                                           <option>1</option>

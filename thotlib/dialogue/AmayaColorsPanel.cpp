@@ -128,6 +128,9 @@ void AmayaColorsPanel::OnModifyColor( wxCommandEvent& event )
   wxLogDebug( _T("AmayaColorsPanel::OnModifyColor") );
   ModifyColor (m_ThotFGColor, FALSE);
   ModifyColor (m_ThotBGColor, TRUE);
+
+  /* give focus to canvas */
+  TtaRedirectFocus();
 }
 
 /*

@@ -252,6 +252,7 @@
                                     <orient>wxHORIZONTAL</orient>
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_APPLY">
+                                        <focused>1</focused>
                                         <tooltip>*Apply*</tooltip>
                                         <bitmap>../icons/ok.png</bitmap>
                                       </object>

@@ -519,6 +519,7 @@ void AmayaFrame::SetFrameURL( const wxString & new_url )
  */
 wxString AmayaFrame::GetFrameURL()
 {
+  wxLogDebug(_T("AmayaFrame::GetFrameURL - frameid=%d url=")+m_FrameUrl, GetFrameId());
   return m_FrameUrl;
 }
 

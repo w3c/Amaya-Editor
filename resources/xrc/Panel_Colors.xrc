@@ -93,6 +93,7 @@
                                     <object class="wxBitmapButton" name="wxID_BUTTON_FGCOLOR">
                                       <pos>0,0</pos>
                                       <size>40,30</size>
+                                      <focused>1</focused>
                                       <tooltip>*Foreground*</tooltip>
                                       <bitmap>..\icons\empty.png</bitmap>
                                     </object>

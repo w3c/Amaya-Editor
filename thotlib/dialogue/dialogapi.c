@@ -54,6 +54,7 @@
   #include "AmayaFrame.h"
   #include "AmayaWindow.h"
   #include "AmayaCallback.h"
+  #include "appdialogue_wx_f.h"
   #include "appdialogue_wx.h"
   #include "message_wx.h"
   #include "AmayaPopupList.h"
@@ -2068,6 +2069,9 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
       /* remember the catalogue */
       SetProp (menu, "ref", (HANDLE) ref);      
 #endif /* _WINGUI */
+#ifdef _WX
+      menu->Destroy();
+#endif /* _WX */
 #ifdef _GTK     
       if (menu && glist)
 	{
@@ -3921,7 +3925,12 @@ void TtaDestroyDialogue (int ref)
 #ifdef _WX
 	if (catalogue->Cat_Type == CAT_DIALOG || catalogue->Cat_Type == CAT_SCRPOPUP)
 	  if (catalogue->Cat_Widget)
-	    catalogue->Cat_Widget->Destroy();
+	    {
+	      catalogue->Cat_Widget->Destroy();
+
+	      /* then give focus to canvas */
+	      TtaRedirectFocus();
+	    }
 #endif /* #ifdef _WX */
 
 	/* Libere le catalogue */
