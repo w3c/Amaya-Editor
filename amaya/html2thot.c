@@ -4360,6 +4360,8 @@ int                 start;
    if (StackLevel > 0)
      {
        el = lastElement;
+       if (lastElementClosed)
+	  el = TtaGetParent (el);
        i = StackLevel - 1;
        if (start < 0)
 	 /* Explicit close */
