@@ -22,12 +22,11 @@
 #define CATCH_SIG
 #endif
 
-#define XBM_FORMAT 0
-#define EPS_FORMAT 1
-#define XPM_FORMAT 2
-#define GIF_FORMAT 3
-#define JPEG_FORMAT 4
-#define PNG_FORMAT 5
+/*----------------------------------------------------------------------*/
+/* Experimental */
+
+#define AMAYA_LAST_HTTP_ERROR_MSG_SIZE 4096
+char AmayaLastHTTPErrorMsg [AMAYA_LAST_HTTP_ERROR_MSG_SIZE];
 
 /*----------------------------------------------------------------------*/
 
@@ -535,6 +534,8 @@ int                 status;
    if (!me)
       return HT_OK;		/* not an Amaya request */
 
+   AmayaLastHTTPErrorMsg [0] = EOS;
+
    if (!AmayaIsAlive)
      me->reqStatus = HT_ABORT;
 
@@ -660,6 +661,11 @@ int                 status;
    if (AmayaIsAlive  && ((me->method == METHOD_POST) ||
 			 (me->method == METHOD_PUT)))
      {
+       /* experimental */
+       if (me->error_stream && me->error_stream[0] && me->error_stream_size)
+	 strncpy (AmayaLastHTTPErrorMsg, me->error_stream, AMAYA_LAST_HTTP_ERROR_MSG_SIZE -1);
+       AmayaLastHTTPErrorMsg [AMAYA_LAST_HTTP_ERROR_MSG_SIZE-1] = EOS;
+
        /* output the status of the request */
        if (status == 200)
 	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REQUEST_SUCCEEDED), me->urlName);
