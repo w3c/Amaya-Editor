@@ -1256,7 +1256,6 @@ int                *carIndex;
 	pCurrentBox = GetBox (pAb);
 	pAb->AbBox = pCurrentBox;
      }
-   pAb->AbNew = FALSE;	/* la regle de creation est interpretee */
 
    if (pCurrentBox != NULL)
      {
@@ -1500,6 +1499,7 @@ int                *carIndex;
 	       SetPositionConstraint (HorizRef, pCurrentBox, &i);
 	  }
 
+	pAb->AbNew = FALSE;	/* la regle de creation est interpretee */
 	/* manage table exceptions */
 	if (tableType == BoTable && ThotLocalActions[T_checktable])
 	  (*ThotLocalActions[T_checktable]) (pAb, NULL, NULL, frame);
