@@ -2489,8 +2489,11 @@ ThotBool FrameButtonDownCallback(
 	ClickFrame = frame;
 	ClickX = x;
 	ClickY = y;
-	LocateSelectionInView (frame, ClickX, ClickY, 2);
+	/* it's important to setup Selecting before the call of LocateSelectionInView 
+	 * because LocateSelectionInView will handle gui events (keyup) and Selecting variable
+	 * will not be unset => cause a infinit selection ! */
 	Selecting = TRUE;
+	LocateSelectionInView (frame, ClickX, ClickY, 2);
       }
     }
     break;
