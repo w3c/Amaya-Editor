@@ -188,7 +188,7 @@ extern void         TtaSetDocumentPath (STRING path);
    accessed.
 
   ----------------------------------------------------------------------*/
-extern ThotBool     TtaCheckPath (STRING path );
+extern ThotBool     TtaCheckPath (char* path );
 
 /*----------------------------------------------------------------------
    TtaIsInDocumentPath
@@ -699,7 +699,7 @@ extern Document     TtaGetDocumentOfSavedElements ();
    structure (documents, natures et extensions) qui ont    
    des fichiers de langue dans les directories de schemas. 
   ----------------------------------------------------------------------*/
-extern void TtaConfigReadConfigFiles ( STRING aSchemaPath );
+extern void TtaConfigReadConfigFiles ( char* aSchemaPath );
 
 /*----------------------------------------------------------------------
    TtaConfigSSchemaExternalName retourne dans nameUser le nom     
@@ -708,7 +708,7 @@ extern void TtaConfigReadConfigFiles ( STRING aSchemaPath );
    Typ indique s'il s'agit d'un schema de document (1), de         
    nature (2) ou d'extension (3).                                  
   ----------------------------------------------------------------------*/
-extern void TtaConfigSSchemaExternalName (/*OUT*/ STRING nameUser, STRING nameSchema, int Typ );
+extern void TtaConfigSSchemaExternalName (/*OUT*/ char* nameUser, char* nameSchema, int Typ );
 
 #else  /* __STDC__ */
 

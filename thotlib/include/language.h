@@ -89,7 +89,7 @@ extern Language     TtaGetLanguageIdFromName (STRING languageName);
    Return value:
    a string of 2 chars.
   ----------------------------------------------------------------------*/
-extern STRING       TtaGetVarLANG (void);
+extern char*       TtaGetVarLANG (void);
 
 /*----------------------------------------------------------------------
    TtaGetDefaultLanguage
@@ -249,7 +249,7 @@ extern Dictionary   TtaGetSecondaryTypoDictionary (Language languageId);
 extern Language     TtaNewLanguage ( /* char *languageName, char languageAlphabet, char *principalDictionary, char *secondDictionary */ );
 extern void         TtaRemoveLanguage ( /* Language language */ );
 extern Language     TtaGetLanguageIdFromName ( /* char *languageName */ );
-extern STRING       TtaGetVarLANG ( /* void */ );
+extern char*        TtaGetVarLANG ( /* void */ );
 extern Language     TtaGetDefaultLanguage ( /* void */ );
 extern Language     TtaGetLanguageIdFromAlphabet ( /* char languageAlphabet */ );
 extern CHAR_T       TtaGetAlphabet ( /* Language languageId */ );

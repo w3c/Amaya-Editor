@@ -342,7 +342,7 @@ extern void         TtaGiveBoxPosition (Element element, Document document, View
 /*----------------------------------------------------------------------
  *   TtaGiveRGB returns the RGB of the color.
  ----------------------------------------------------------------------*/
-extern void         TtaGiveRGB ( STRING colname, /*OUT*/ unsigned short *red, /*OUT*/ unsigned short *green, /*OUT*/ unsigned short *blue );
+extern void         TtaGiveRGB ( char* colname, /*OUT*/ unsigned short *red, /*OUT*/ unsigned short *green, /*OUT*/ unsigned short *blue );
 
 /*----------------------------------------------------------------------
    TtaGiveThotRGB returns the Red Green and Blue values corresponding

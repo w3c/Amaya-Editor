@@ -7,12 +7,12 @@
 #ifdef __STDC__
 
 extern void ConfigInit ( void );
-extern void TtaConfigReadConfigFiles ( STRING aSchemaPath );
+extern void TtaConfigReadConfigFiles ( char* aSchemaPath );
 extern int ConfigMakeDocTypeMenu ( STRING BufMenu,
                                    int *lgmenu,
                                    ThotBool doc );
-extern void TtaConfigSSchemaExternalName ( STRING nameUser,
-                                           STRING nameSchema,
+extern void TtaConfigSSchemaExternalName ( char* nameUser,
+                                           char* nameSchema,
                                            int Typ );
 extern void ConfigSSchemaInternalName ( STRING nameUser,
                                         STRING nameSchema,
@@ -43,19 +43,19 @@ extern void TtaGetViewWH ( Document doc,
                            int *width,
                            int *height );
 extern void TtaGetViewGeometryRegistry ( Document document,
-                                         STRING name,
+                                         char* name,
                                          int *x,
                                          int *y,
                                          int *width,
                                          int *height );
 extern void TtaGetViewGeometry ( Document document,
-                                 STRING name,
+                                 char* name,
                                  int *x,
                                  int *y,
                                  int *width,
                                  int *height );
 extern void TtaGetViewGeometryMM ( Document document,
-                                   STRING name,
+                                   char* name,
                                    int *x,
                                    int *y,
                                    int *width,

@@ -18,7 +18,7 @@ extern ThotBool TtaReadInteger ( BinFile file,
                                  int *sval );
 extern ThotBool TtaReadName ( BinFile file,
                               STRING name );
-extern BinFile TtaReadOpen ( CONST STRING filename );
+extern BinFile TtaReadOpen ( CONST char* filename );
 extern void TtaReadClose ( BinFile file );
 extern BinFile TtaWriteOpen ( CONST STRING filename );
 extern void TtaWriteClose ( BinFile file );
@@ -38,11 +38,11 @@ extern ThotBool SameDocIdent ( DocumentIdentifier Ident1,
                                DocumentIdentifier Ident2 );
 extern void ClearDocIdent ( DocumentIdentifier * Ident );
 extern ThotBool DocIdentIsNull ( DocumentIdentifier Ident );
-extern void TtaExtractName ( STRING text,
-                             STRING aDirectory,
-                             STRING aName );
-extern void MakeCompleteName ( STRING fname,
-                               STRING fext,
+extern void TtaExtractName ( char* text,
+                             char* aDirectory,
+                             char* aName );
+extern void MakeCompleteName ( char* fname,
+                               char* fext,
                                PathBuffer directory_list,
                                PathBuffer completeName,
                                int *length );
@@ -63,7 +63,7 @@ extern void GetCounterValue ( int number,
                               STRING string,
                               int *len );
 extern ThotBool TtaMakeDirectory ( STRING directory );
-extern ThotBool TtaCheckDirectory ( STRING directory );
+extern ThotBool TtaCheckDirectory ( char* directory );
 
 #else /* __STDC__ */
 

@@ -721,7 +721,7 @@ void                Dict_Init ()
       dictTable[i] = NULL;
 
    /* Inititializing of environments needed by dictionarires */
-   dictPath = TtaGetEnvString (_DICOPAR_EVAR_);
+   dictPath = TtaGetEnvString ("DICOPAR");
    if (dictPath == NULL)
      {
 	/* The environment variable DICOPAR does not exist */

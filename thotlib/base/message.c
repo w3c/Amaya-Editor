@@ -62,10 +62,10 @@ static CHAR_T       result[MAX_TXT_LEN];
    en accents.                                             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-STRING              AsciiTranslate (STRING pBuffer)
+char*               AsciiTranslate (char* pBuffer)
 #else  /* __STDC__ */
-STRING              AsciiTranslate (pBuffer)
-STRING              pBuffer;
+char*               AsciiTranslate (pBuffer)
+char*               pBuffer;
 
 #endif /* __STDC__ */
 {

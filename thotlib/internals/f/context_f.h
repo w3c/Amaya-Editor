@@ -6,12 +6,12 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void TtaGiveRGB ( STRING colname,
+extern void TtaGiveRGB ( char* colname,
                          unsigned short *red,
                          unsigned short *green,
                          unsigned short *blue );
 extern void TtaUpdateEditorColors ( void );
-extern void ThotInitDisplay ( STRING name,
+extern void ThotInitDisplay ( char* name,
                               int dx,
                               int dy );
 extern void InitDocContexts ( void );

@@ -471,7 +471,7 @@ ThotBool       withMove;
 #endif /* __STDC__ */
 {
   ustrcpy (SaveFileName, fileName);
-  ustrcat (SaveFileName, PIV_EXT);
+  ustrcat (SaveFileName, ".PIV");
   ustrcpy (SaveDirectoryName, directoryName);
   SaveDocWithCopy = withCopy;
   SaveDocWithMove = withMove;
@@ -544,6 +544,6 @@ void PivotLoadResources()
       TteConnectAction (T_writedocument, (Proc) WriteDocument);  
       TteConnectAction (T_setwritedirectory, (Proc) SetWriteDirectory);
     }
-  ustrcpy (DefaultFileSuffix, PIV_EXT);
+  ustrcpy (DefaultFileSuffix, ".PIV");
 }
 

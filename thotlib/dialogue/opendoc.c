@@ -77,7 +77,7 @@ STRING              s1, s2;
 static PathBuffer   DirectoryName;
 static Name         SchStrImport;
 static int          NbDocSuffix = 1;
-static CHAR_T       tabDocSuffix [10][10] = {PIV_EXT, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_};
+static CHAR_T       tabDocSuffix [10][10] = {".PIV", _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_};
 static CHAR_T       docSuffix [5];
 /* static PathBuffer DirectoryDocImport; */
 static Name         NewSchemaName;

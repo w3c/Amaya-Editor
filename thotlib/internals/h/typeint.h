@@ -206,7 +206,7 @@ typedef struct _PolyLinePoint
 #define MAX_POINT_POLY	THOT_MAX_CHAR / sizeof(PolyLinePoint)
 
 #ifndef AMAYA_H__	
-typedef CHAR_T    PathBuffer[MAX_PATH];
+typedef char     PathBuffer[MAX_PATH];
 #endif 
 
 /* Description of a text buffer */

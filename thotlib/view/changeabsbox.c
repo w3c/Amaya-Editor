@@ -2776,7 +2776,7 @@ PtrDocument         pDocRef;
 				{
 				   pAbbox1 = pAb;
 				   if (pRe1->PrNPresBoxes == 0)
-				      found = (ustrcmp (pRe1->PrPresBoxName,
+				      found = (strcmp (pRe1->PrPresBoxName,
 						       pAbbox1->AbPSchema->PsPresentBox[pAbbox1->AbTypeNum - 1].PbName) == 0);
 				   else
 				      found = pRe1->PrPresBox[0] == pAbbox1->AbTypeNum;

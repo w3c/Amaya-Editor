@@ -96,13 +96,13 @@ void Prof_InitTable(void)
 
 
   /* Retrive thot.rc variables and open usefull files */
-  ptr = TtaGetEnvString(TEXT("Profiles_File"));
+  ptr = TtaGetEnvString("Profiles_File");
   if (ptr && *ptr)
     Prof_FILE = fopen(ptr,"r");
   else
     Prof_FILE = NULL;
   
-  ptr = TtaGetEnvString (TEXT("Profile"));
+  ptr = TtaGetEnvString ("Profile");
   if (ptr && *ptr)
   {
     strcpy (UserProfile, AddHooks (ptr));	
@@ -111,7 +111,7 @@ void Prof_InitTable(void)
      UserProfile[0] = EOS;
     
   
-  ptr = TtaGetEnvString(TEXT("THOTDIR"));
+  ptr = TtaGetEnvString("THOTDIR");
   ptr2 = TtaGetMemory (strlen (ptr) + strlen (DEF_FILE) + 10);
   if (ptr2) 
     {

@@ -307,7 +307,7 @@ STRING              fileName;
 	 {
 	   len = ustrlen (fileName);
 	   if (len > 4)
-	     if (ustrcmp (fileName + len - 4, PIV_EXT) == 0)
+	     if (ustrcmp (fileName + len - 4, ".PIV") == 0)
 	       fileName[len - 4] = EOS;
 	   if (fileName[0] != URL_DIR_SEP)
 	     {

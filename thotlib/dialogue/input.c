@@ -1042,7 +1042,7 @@ STRING              appliname;
 
 #endif /* __STDC__ */
 {
-   STRING              text;	   /* fichier de translation transmis a motif */
+   char*               text;	   /* fichier de translation transmis a motif */
    CHAR_T              line[200];  /* ligne en construction pour motif */
    CHAR_T              home[200], name[80]; 
    char                ch[80], iname [80]; 
@@ -1056,7 +1056,7 @@ STRING              appliname;
    FILE               *file;
    ThotTranslations    table;
 
-   text = TtaGetEnvString (_APPHOME_EVAR_);
+   text = TtaGetEnvString ("APP_HOME");
    ustrcpy (name, appliname);
 #  ifdef _WINDOWS
    ustrcat (name, KB_EXT);

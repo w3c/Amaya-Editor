@@ -43,9 +43,9 @@
 #include "platform_tv.h"
 int                 CurrentDialog;
 
-static CHAR_T         NameDocToCreate[100];
-static CHAR_T         ClassDocToCreate[100];
-static CHAR_T         DirectoryDocToCreate[MAX_PATH];
+static char           NameDocToCreate[100];
+static char           ClassDocToCreate[100];
+static char           DirectoryDocToCreate[MAX_PATH];
 
 #include "actions_f.h"
 #include "appdialogue_f.h"
@@ -89,8 +89,7 @@ STRING              data;
 		CreateDocument (&pDoc);		/* acquiert un contexte de document */
 		if (pDoc != NULL)
 		   /* cree un document dans ce contexte */
-		   NewDocument (&pDoc, (PtrBuffer) ClassDocToCreate,
-				NameDocToCreate, DirectoryDocToCreate);
+		   NewDocument (&pDoc, (PtrBuffer) ClassDocToCreate, NameDocToCreate, DirectoryDocToCreate);
 	     }
 	   else if (CurrentDialog == NumFormSaveAs)
 	      if (CurrentDialog != 0)
@@ -110,23 +109,23 @@ STRING              data;
    updates the createdoc menu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CallbackNewDocMenu (int ref, int typeData, STRING data)
+void                CallbackNewDocMenu (int ref, int typeData, char* data)
 #else  /* __STDC__ */
 void                CallbackNewDocMenu (ref, typeData, data)
 int                 ref;
 int                 typeData;
-STRING              data;
+char*               data;
 
 #endif /* __STDC__ */
 
 {
    PathBuffer          docName;
    int                 i;
-   CHAR_T                BufDir[MAX_PATH];
-   CHAR_T                URL_DIR_SEP;
+   CHAR_T              BufDir[MAX_PATH];
+   char                URL_DIR_SEP;
 
-   if (typeData == STRING_DATA && data && ustrchr (data, TEXT('/')))
-     URL_DIR_SEP = TEXT('/');
+   if (typeData == STRING_DATA && data && strchr (data, '/'))
+     URL_DIR_SEP = '/';
    else 
      URL_DIR_SEP = DIR_SEP;
 
@@ -142,10 +141,10 @@ STRING              data;
 		 {
 		    /* on a tous les parametres */
 		    /* ******** verifier que le document n'esixte pas deja **** */
-		    ustrcpy (docName, DirectoryDocToCreate);
-		    ustrcat (docName, DIR_STR);
-		    ustrcat (docName, NameDocToCreate);
-		    ustrcat (docName, PIV_EXT);
+		    strcpy (docName, DirectoryDocToCreate);
+		    strcat (docName, DIR_STR); 
+		    strcat (docName, NameDocToCreate);
+		    strcat (docName, ".PIV");
 
 		    if (!TtaCheckDirectory (DirectoryDocToCreate))
 		       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MISSING_DIR), DirectoryDocToCreate);
@@ -176,9 +175,9 @@ STRING              data;
 	       break;
 	    case NumZoneDocNameToCreate:
 	       /* zone de saisie du nom du document a creer */
-	       if (TtaCheckDirectory (data) && data[ustrlen (data) - 1] != URL_DIR_SEP)
+	       if (TtaCheckDirectory (data) && data[strlen (data) - 1] != URL_DIR_SEP)
 		 {
-		    ustrcpy (DirectoryDocToCreate, data);
+		    strcpy (DirectoryDocToCreate, data);
 		    NameDocToCreate[0] = EOS;
 		 }
 	       else
@@ -193,7 +192,7 @@ STRING              data;
 		 {
 		    /* Est-ce un nouveau directory qui contient des documents */
 		    if (!TtaIsInDocumentPath (DirectoryDocToCreate))
-		       if (TtaIsSuffixFileIn (DirectoryDocToCreate, PIV_EXT))
+		       if (TtaIsSuffixFileIn (DirectoryDocToCreate, ".PIV"))
 			 {
 			    /* il faut ajouter le directory au path */
 			    i = ustrlen (DocumentPath);

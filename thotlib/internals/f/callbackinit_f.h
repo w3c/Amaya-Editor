@@ -13,9 +13,9 @@ extern void TteAddAction ( STRING actionName,
 extern int TteAddUserAction ( STRING actionName,
                               UserProc procedure,
                               void *arg );
-extern PtrEventsSet TteGetEventsSet ( STRING name );
+extern PtrEventsSet TteGetEventsSet ( char* name );
 extern PtrEventsSet TteNewEventsSet ( int structureId,
-                                      STRING name );
+                                      char* name );
 extern void TteAddActionEvent ( PtrEventsSet eventsList,
                                 int typeId,
                                 APPevent event,

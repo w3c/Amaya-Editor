@@ -277,11 +277,11 @@ LPSTR  msg;
 #  ifdef _WINDOWS
    suffix = TtaGetVarLANG ();
 
-   if (!ustrncasecmp (suffix, _FrLANG_, 2))
+   if (!ustrncasecmp (suffix, "fr", 2))
       app_lang = FR_LANG;
-   else if (!ustrncasecmp (suffix, _EnLANG_, 2))
+   else if (!ustrncasecmp (suffix, "en", 2))
       app_lang = EN_LANG;
-   else if (!ustrncasecmp (suffix, _DeLANG_, 2))
+   else if (!ustrncasecmp (suffix, "de", 2))
       app_lang = DE_LANG;
 #  endif /* _WINDOWS */
 
@@ -2645,7 +2645,7 @@ char              **argv;
   if (!ustrcmp (argv[argCounter], TEXT("-lang")))
     {
       argCounter++;
-      TtaSetEnvString (_LANG_EVAR_, argv[argCounter++], TRUE);
+      TtaSetEnvString ("LANG", argv[argCounter++], TRUE);
     }
   /* Initialise la table des messages d'erreurs */
   TtaGetMessageTable (TEXT("libdialogue"), TMSG_LIB_MSG_MAX);

@@ -32,6 +32,7 @@
 #include "appstruct.h"
  
 typedef CHAR_T    Name[MAX_NAME_LENGTH]; /* a name is terminated by a null byte*/
+typedef char      NameA[MAX_NAME_LENGTH];
 
 /* values for using schema or user attribute and element type names */ 
 #define USER_NAME 1
@@ -133,9 +134,8 @@ typedef struct _StructSchema *PtrSSchema;
 /* A rule defining a type in a structure schema */
 typedef struct _SRule
 {
-	Name             SrName;	/* left-hand symbol of the rule =
-					   type defined by the rule */
-        Name            SrOrigName;      /* real name of the rule */
+	NameA             SrName;	/* left-hand symbol of the rule = type defined by the rule */
+    NameA            SrOrigName;      /* real name of the rule */
 	int 		SrNDefAttrs; 	/* 0..MAX_DEFAULT_ATTR, number of
 					   attributes with a default value */
         /* numbers of default value attributes */
@@ -299,49 +299,32 @@ typedef struct _ExtensBlock
 
 typedef struct _StructSchema
 {
-	PtrSSchema    SsNextExtens;	/* Pointer on the next schema
-					   extension */
-	PtrSSchema    SsPrevExtens;	/* Pointer on the previous schema
-					   extension or nil if none */
-	Name             SsName;	/* generic structure name*/
-        int             SsCode;	        /* code to identify the version */
-	Name             SsDefaultPSchema;	/* name of the default
-					   presentation schema associated with
-					   this structure */
-	PtrPSchema      SsPSchema;	/* pointer on the actual associated
-					   presentation schema */
-	PtrHandlePSchema SsFirstPSchemaExtens;	/* first addtional presentation
-						   schema */
-	PtrEventsSet    SsActionList;	/* Pointer to the list of actions */
-					/* that can be applied in documents */
-					/* with this schema. */
-	ThotBool		SsExtension;	/* False if document or nature schema,
-					   True if schema extension */
-	int		SsNExtensRules; /* number of extension rules if it is
-					   a schema extension */
-	PtrExtensBlock	SsExtensBlock;  /* Extension rules block if it is
-					   a schema extension */
-        int     SsRootElem;	        /* number of the root rule */
-	int             SsNObjects;	/* number of existing elements with the
-					   root rule type */
-	int  SsNAttributes;	        /* number of attributes in the schema */
-	int     SsNRules;	        /* current number of rules defining the
-					   elements, including the nature rules
-					   added dynamically */
-	ThotBool        SsExport;	/* this schema exports elements */
-	int             SsNExceptions;	/* number of entries in SsException */
-        /* All the exception numbers associated with the element types and
-	   the attributes */
-	int             SsException[MAX_EXCEPT_SSCHEMA];
-        /* buffer for the text of the constants */
-	CHAR_T           SsConstBuffer[MAX_LEN_ALL_CONST];
-        /* number of the rule defining the first dynamically loaded nature */
-	int     SsFirstDynNature;
-        /* attributes for this schema */
-	TtAttribute        SsAttribute[MAX_ATTR_SSCHEMA];
-        /* structure rules defining the elements */
-	SRule           SsRule[MAX_RULES_SSCHEMA + 2]; /* +2 to be sure to have
-			      two free rules at the end of the arrays */
+   PtrSSchema       SsNextExtens;                     /* Pointer on the next schema extension */
+   PtrSSchema       SsPrevExtens;                     /* Pointer on the previous schema extension or nil if none */
+   NameA            SsName;                           /* generic structure name*/
+   int              SsCode;                           /* code to identify the version */
+   NameA            SsDefaultPSchema;                 /* name of the default presentation schema associated with this structure */
+   PtrPSchema       SsPSchema;                        /* pointer on the actual associated presentation schema */
+   PtrHandlePSchema SsFirstPSchemaExtens;             /* first addtional presentation schema */
+   PtrEventsSet     SsActionList;                     /* Pointer to the list of actions */
+                                                      /* that can be applied in documents */
+                                                      /* with this schema. */
+   ThotBool         SsExtension;                      /* False if document or nature schema, True if schema extension */
+   int              SsNExtensRules;                   /* number of extension rules if it is a schema extension */
+   PtrExtensBlock   SsExtensBlock;                    /* Extension rules block if it is a schema extension */
+   int              SsRootElem;                       /* number of the root rule */
+   int              SsNObjects;                       /* number of existing elements with the root rule type */
+   int              SsNAttributes;                    /* number of attributes in the schema */
+   int              SsNRules;                         /* current number of rules defining the elements, including the nature rules */
+                                                      /* added dynamically */
+   ThotBool         SsExport;                         /* this schema exports elements */
+   int              SsNExceptions;                    /* number of entries in SsException */
+                                                      /* All the exception numbers associated with the element types and the attributes */
+   int              SsException[MAX_EXCEPT_SSCHEMA];  /* buffer for the text of the constants */
+   char             SsConstBuffer[MAX_LEN_ALL_CONST]; /* number of the rule defining the first dynamically loaded nature */
+   int              SsFirstDynNature;                 /* attributes for this schema */
+   TtAttribute      SsAttribute[MAX_ATTR_SSCHEMA];    /* structure rules defining the elements */
+   SRule            SsRule[MAX_RULES_SSCHEMA + 2];    /* +2 to be sure to have two free rules at the end of the arrays */
 } StructSchema;
 
 

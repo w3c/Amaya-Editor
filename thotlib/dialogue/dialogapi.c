@@ -2023,7 +2023,7 @@ STRING              textmenu;
 #endif /* !_WINDOWS */
 
    int                 n;
-   STRING              value;
+   char*               value;
 
 #  ifndef _WINDOWS
    Pixmap              lthot;
@@ -2038,7 +2038,7 @@ STRING              textmenu;
    PopShell = 0;
    FrameTable[0].WdFrame = 0;	/* widget frame */
    n = 0;
-   value = TtaGetEnvString (TEXT("geometry"));
+   value = TtaGetEnvString ("geometry");
 
 #  ifndef _WINDOWS
    if (value != NULL)

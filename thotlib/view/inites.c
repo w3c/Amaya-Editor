@@ -286,7 +286,7 @@ void         FreeDocColors ()
    are allocated.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InitDocColors (STRING name)
+void                InitDocColors (char* name)
 #else  /* __STDC__ */
 void                InitDocColors (name)
 STRING              name;
@@ -295,7 +295,7 @@ STRING              name;
 {
 #ifndef _WIN_PRINT
    int                 i, j, k;
-   STRING              value;
+   char*               value;
    ThotBool            reducecolor;
    ThotBool            colormap_full;
 
@@ -305,7 +305,7 @@ STRING              name;
 
    reducecolor = FALSE;
    colormap_full = FALSE;
-   value = TtaGetEnvString (_ReduceColor_EVAR_);
+   value = TtaGetEnvString ("ReduceColor");
    if (value == NULL)
       reducecolor = FALSE;
    else if (!ustrcasecmp (value, TEXT("yes")))
@@ -399,9 +399,9 @@ int                 NumberOfColors ()
    ColorName       returns the name of a color in Thot color table.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-STRING              ColorName (int num)
+char*              ColorName (int num)
 #else  /* __STDC__ */
-STRING              ColorName (num)
+char*              ColorName (num)
 int                 num;
 
 #endif /* __STDC__ */

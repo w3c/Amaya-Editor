@@ -57,13 +57,13 @@ extern ThotBool     TtaGetEnvInt (STRING name, int *value);
  * environment string.
  * Returns TRUE if the env variables exists or FALSE if it isn't the case.
  */
-extern ThotBool     TtaGetEnvBoolean (STRING name, ThotBool *value);
+extern ThotBool     TtaGetEnvBoolean (char* name, ThotBool *value);
 
 /*
  * TtaGetEnvString : read the value associated to an environment string
  *                  if not present return NULL.
  */
-extern STRING       TtaGetEnvString (STRING name);
+extern char*       TtaGetEnvString (char* name);
 
 /*
  * TtaClearEnvString : clears the value associated with an environment
@@ -127,7 +127,7 @@ extern ThotBool     TtaIsBlank (/* STRING ptr */);
 extern void         TtaInitializeAppRegistry ( /* STRING appArgv0 */ );
 extern ThotBool     TtaGetEnvBoolean ( /* STRING name, ThotBool *value */ );
 extern ThotBool     TtaGetEnvInt ( /* STRING name, int *value */ );
-extern STRING       TtaGetEnvString ( /* STRING name */ );
+extern char*       TtaGetEnvString ( /* STRING name */ );
 extern void         TtaClearEnvString ( /* STRING name */ );
 extern void         TtaSetEnvInt ( /* STRING name, int value, int overwrite */ );
 extern void         TtaSetEnvBoolean ( /* STRING name, ThotBool value, int overwrite */ );

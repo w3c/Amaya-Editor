@@ -112,9 +112,9 @@ STRING              cssToPrint;
 Document            document;
 #endif /* __STDC__ */
 { 
-   STRING                  ptr;
+   char*                   ptr;
 #ifdef _WINDOWS
-static LPPRINTER_INFO_5 pInfo5;
+   static LPPRINTER_INFO_5 pInfo5;
    STRING                  printArgv [100];
    DWORD                   dwNeeded, dwReturned;
    HANDLE                  hLib;
@@ -128,7 +128,7 @@ static LPPRINTER_INFO_5 pInfo5;
    int                     frame;
 
    /* initialize the print command */
-   ptr = TtaGetEnvString (_LANG_EVAR_);
+   ptr = TtaGetEnvString ("LANG");
 #ifdef _WINDOWS
    printArgv[printArgc] = TtaAllocString (ustrlen (BinariesDirectory) + 7);
    ustrcpy (printArgv[printArgc], BinariesDirectory);
@@ -633,7 +633,7 @@ Document document;
 #endif /* __STDC__ */
 {
    PtrDocument pDoc;
-   STRING              ptr;
+   char*               ptr;
    int                 lg;
 
    if (document == 0)
@@ -646,7 +646,7 @@ Document document;
        /* Connect printing actions */
        TteConnectAction (T_rprint, (Proc) CallbackPrintmenu);
        /* read DEFAULTPRINTER variable */
-       ptr = TtaGetEnvString (_THOTPRINT_EVAR_);
+       ptr = TtaGetEnvString ("THOTPRINT");
        if (ptr == NULL)
 	 ustrcpy (pPrinter,_EMPTYSTR_);
        else
@@ -688,11 +688,11 @@ Document document;
 	   else
 	     {
 	       ptr = NULL;
-	       ptr = TtaGetEnvString (TEXT("APP_TMPDIR"));
+	       ptr = TtaGetEnvString ("APP_TMPDIR");
 	       if (ptr == NULL || *ptr == EOS || !TtaCheckDirectory (ptr))
 		 {
 		   ptr = NULL;
-		   ptr = TtaGetEnvString (TEXT("TMPDIR"));
+		   ptr = TtaGetEnvString ("TMPDIR");
 		 }
 	       if (ptr != NULL && TtaCheckDirectory (ptr))
 		 {
@@ -750,7 +750,7 @@ STRING          *printDirName;
 #endif /* __STDC__ */
 {
    ThotPid             pid = ThotPid_get ();
-   STRING              dirString;
+   char*               dirString;
    int                 lg;
 
    *printDocName = PrintDocName;
@@ -759,7 +759,7 @@ STRING          *printDirName;
    PrintDirName[0] = EOS;
 
    /* get the tmp directory from the registry */
-   dirString = TtaGetEnvString(_TMPDIR_EVAR_);
+   dirString = TtaGetEnvString("TMPDIR");
    if (dirString != NULL) 
      { 
        if (!TtaCheckDirectory (dirString))
@@ -771,7 +771,7 @@ STRING          *printDirName;
      }
    else
      {
-       ustrcpy (PrintDirName, TtaGetEnvString (TEXT("TMPDIR")));
+       ustrcpy (PrintDirName, TtaGetEnvString ("TMPDIR"));
        lg = ustrlen (PrintDirName);
      }
 

@@ -222,10 +222,10 @@ HWND GetCurrentWindow () {
    TteInitMenuActions alloue la table des actions.                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteInitMenus (STRING name, int number)
+void                TteInitMenus (char* name, int number)
 #else  /* __STDC__ */
 void                TteInitMenus (name, number)
-STRING              name;
+char*               name;
 int                 number;
 
 #endif /* __STDC__ */
@@ -832,7 +832,7 @@ int                 itemsNumber;
    TteAddMenuItem ajoute une nouvel item dans un menu.                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteAddMenuItem (WindowType windowtype, STRING schemaName, int menuID, int subMenu, int itemID, STRING actionName, CHAR_T itemType)
+void                TteAddMenuItem (WindowType windowtype, STRING schemaName, int menuID, int subMenu, int itemID, STRING actionName, char itemType)
 
 #else  /* __STDC__ */
 void                TteAddMenuItem (windowtype, schemaName, menuID, subMenu, itemID, actionName, itemType)
@@ -842,7 +842,7 @@ int                 menuID;
 int                 subMenu;
 int                 itemID;
 STRING              actionName;
-CHAR_T                itemType;
+char                itemType;
 
 #endif /* __STDC__ */
 {
@@ -907,7 +907,7 @@ CHAR_T                itemType;
       if (i < ptrmenu->ItemsNb)
 	{
 	  /* Remove the separaror if the previous element was one */
-	  if (! (itemType == TEXT('S') && (i == 0 || ptr[i-1].ItemType == TEXT('S'))))
+	  if (! (itemType == 'S' && (i == 0 || ptr[i-1].ItemType == 'S')))
 	    {
 	      ptr[i].ItemID = itemID;
 	      ptr[i].ItemType = itemType;
@@ -2466,7 +2466,7 @@ int                 doc;
    ThotWidget          vscrl;
    SchemaMenu_Ctl     *SCHmenu;
    Menu_Ctl           *ptrmenu;
-   STRING	       visiStr, zoomStr;
+   char	              *visiStr, *zoomStr;
    int                 i;
    int                 ref;
    int		       visiVal, zoomVal;
@@ -3026,21 +3026,21 @@ int                 doc;
 	   FrameTable[frame].WdFrame = (ThotMenu) w;
 
 	   /* get registry default values for zoom and visibility */
-	   zoomStr = TtaGetEnvString (_ZOOMCST_);
+	   zoomStr = TtaGetEnvString ("ZOOM");
 	   if (zoomStr == NULL)
 	     zoomVal = 0;
 	   else
 	     {
-	       zoomVal = uctoi (zoomStr);
+	       zoomVal = atoi (zoomStr);
 	       if (zoomVal > 10 || zoomVal < -10)
 		 zoomVal = 0;
 	     }
-	   visiStr = TtaGetEnvString (_VISIBILITYCST_);
+	   visiStr = TtaGetEnvString ("VISIBILITY");
 	   if (visiStr == NULL)
 	     visiVal = 5;
 	   else
 	     {
-	       visiVal = uctoi (visiStr);
+	       visiVal = atoi (visiStr);
 	       if (visiVal < 0 || visiVal > 10)
 		 visiVal = 5;
 	     }

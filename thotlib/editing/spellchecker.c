@@ -91,7 +91,7 @@ ThotBool            ToCreate;
   /* dictionary name = document name */
   *pDictionary = (int) NULL;
   
-  extenddic = TtaGetEnvString (_EXTENDDICT_EVAR_);
+  extenddic = TtaGetEnvString ("EXTENDDICT");
   if (extenddic != NULL)
     {
       TtaExtractName (extenddic, path, dictname);
@@ -105,7 +105,7 @@ ThotBool            ToCreate;
     }
 
   if (path[0] == EOS ||  !TtaCheckDirectory (path))
-    ustrcpy (path, TtaGetEnvString (_APPHOME_EVAR_));
+    ustrcpy (path, TtaGetEnvString ("APP_HOME"));
   LoadTreatedDict ((PtrDict *) pDictionary, 0, document, dictname,
 		   path, FALSE, ToCreate);
   return (*pDictionary != EOS);
@@ -1037,7 +1037,7 @@ int                 ParametrizeChecker ()
    if (Clavier_charge == FALSE)
      {
 	/* remplir corrpath pour acces aux fichiers param et clavier */
-	corrpath = TtaGetEnvString (_DICOPAR_EVAR_);
+	corrpath = TtaGetEnvString ("DICOPAR");
 	if (corrpath == NULL)
 	  {
 	     /* pas de variable d'environnement DICOPAR */

@@ -127,7 +127,7 @@ void                BuildSaveDocMenu ()
 	     }
 	   else
 	     {
-	       ustrcat (outputFileName, PIV_EXT); 
+	       ustrcat (outputFileName, ".PIV"); 
 	       (void) StoreDocument (DocumentToSave,
 				     SaveFileName, SaveDirectoryName,
 				     SaveDocWithCopy, SaveDocWithMove);
@@ -138,7 +138,7 @@ void                BuildSaveDocMenu ()
      {
        if (DocumentToSave->DocPivotVersion == -1)
          {
-	   ustrcat (outputFileName, PIV_EXT); 
+	   ustrcat (outputFileName, ".PIV"); 
 	   (void) StoreDocument (DocumentToSave,
 				 SaveFileName, SaveDirectoryName,
 				 SaveDocWithCopy, SaveDocWithMove);
@@ -466,7 +466,7 @@ PtrDocument         pDoc;
 	      if (pDoc->DocPivotVersion == -1)
 		ustrcat (BufMenu, XML_EXT);
 	      else
-		ustrcat (BufMenu, PIV_EXT);
+		ustrcat (BufMenu, ".PIV");
 	      /* nom de document propose' */
 	      TtaNewTextForm (NumZoneDocNameTooSave, NumFormSaveAs,
 		      TtaGetMessage (LIB, TMSG_DOCUMENT_NAME), 50, 1, TRUE);

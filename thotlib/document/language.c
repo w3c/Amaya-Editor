@@ -381,7 +381,7 @@ void                InitLanguage ()
    FirstUserLang = 4;
    i = 4;
    ustrcpy (LangTable[i].LangNom, _FrID_ );
-   ustrcpy (LangTable[i].LangCode, _FrLANG_);
+   ustrcpy (LangTable[i].LangCode, "fr");
    LangTable[i].LangAlphabet = TEXT('L');
    ustrcpy (LangTable[i].LangPrincipal, _FrPrincDictID_);
    ustrcpy (LangTable[i].LangSecondary, _FrPersoDictID_);
@@ -389,7 +389,7 @@ void                InitLanguage ()
 
    i = 5;
    ustrcpy (LangTable[i].LangNom, _EnID_);
-   ustrcpy (LangTable[i].LangCode, _EnLANG_);
+   ustrcpy (LangTable[i].LangCode, "en");
    LangTable[i].LangAlphabet = TEXT('L');
    ustrcpy (LangTable[i].LangPrincipal, _EnPrincDictID_);
    ustrcpy (LangTable[i].LangSecondary, _EnPersoDictID_);
@@ -405,7 +405,7 @@ void                InitLanguage ()
 
    i = 7;
    ustrcpy (LangTable[i].LangNom, _DeID_);
-   ustrcpy (LangTable[i].LangCode, _DeLANG_);
+   ustrcpy (LangTable[i].LangCode, "de");
    LangTable[i].LangAlphabet = TEXT('L');
    ustrcpy (LangTable[i].LangPrincipal, _DePrincDictID_);
    LangTable[i].LangSecondary[0] = EOS;
@@ -716,15 +716,15 @@ STRING              languageName;
    Return value:
    a string of 2 chars.
   ----------------------------------------------------------------------*/
-STRING              TtaGetVarLANG ()
+char*               TtaGetVarLANG ()
 {
-   STRING           name;
+   char*            name;
 
-   name = TtaGetEnvString (_LANG_EVAR_);
+   name = TtaGetEnvString ("LANG");
    if (name == NULL)
-      ustrcpy (StandardLANG, _EnLANG_);
+      ustrcpy (StandardLANG, "en");
    else if (!ustrcmp (name, TEXT("C")) || !ustrcasecmp (name, _ISO_ID1_))
-      ustrcpy (StandardLANG, _FrLANG_);
+      ustrcpy (StandardLANG, "fr");
    else
      {
 	ustrncpy (StandardLANG, name, 2);
@@ -952,11 +952,11 @@ Language            langageId;
    UCHAR_T             patternGot[MAX_LET_PATTERN];
    CHAR_T              weightGot[MAX_LET_PATTERN + 1];
    CHAR_T              patternFileName[THOT_MAX_CHAR];
-   static STRING       dictPath;	/* Environment variable DICOPAR */
+   static char*        dictPath;	/* Environment variable DICOPAR */
    STRING              ptPattern;
    FILE               *in;
 
-   dictPath = TtaGetEnvString (_DICOPAR_EVAR_);
+   dictPath = TtaGetEnvString ("DICOPAR");
    if (dictPath == NULL)
      {
 	/* The environment variable DICOPAR does not exist */

@@ -53,7 +53,7 @@ typedef struct _EventsSet *PtrEventsSet;
 typedef struct _EventsSet
 {
   int                 EvSStructId;/* Identifier of SSchema */
-  STRING              EvSName;	/* Name of the events set */
+  char*               EvSName;	/* Name of the events set */
   PtrActionEvent      EvSList[NUMBER_OF_APP_EVENTS];
   PtrEventsSet        EvSNext;	/* Next EventsSet in the list */
 } EventsSet;
@@ -80,18 +80,18 @@ extern void         TtaSetBackup (Proc procedure);
 extern void         TtaSetDocStatusUpdate (Proc procedure);
 extern void         TteZeroMenu (WindowType windowtype, STRING schemaName);
 extern void         TteOpenMainWindow (STRING name, Pixmap logo, Pixmap icon);
-extern void         TteInitMenus (STRING name, int number);
+extern void         TteInitMenus (char* name, int number);
 extern void         TteAddMenuAction (STRING actionName, Proc procedure);
 extern int          TteAddUserMenuAction (STRING actionName, UserProc procedure, void *arg);
 extern void         TteAddMenu (WindowType windowtype, STRING schemaName, int view, int menuID, int itemsNumber, STRING menuName);
 extern void         TteAddSubMenu (WindowType windowtype, STRING schemaName, int menuID, int itemID, int itemsNumber);
-extern void         TteAddMenuItem (WindowType windowtype, STRING schemaName, int menuID, int subMenuID, int itemID, STRING actionName, CHAR_T itemType);
+extern void         TteAddMenuItem (WindowType windowtype, STRING schemaName, int menuID, int subMenuID, int itemID, STRING actionName, char itemType);
 
 extern void         TteAddAction (STRING actionName, Proc doIt);
 extern int          TteAddUserAction (STRING actionName, UserProc procedure, void *arg);
 extern void         TteAddActionEvent (PtrEventsSet eventsList, int typeId, APPevent event, ThotBool pre, STRING actionName);
-extern PtrEventsSet TteGetEventsSet (STRING name);
-extern PtrEventsSet TteNewEventsSet (int structureId, STRING name);
+extern PtrEventsSet TteGetEventsSet (char* name);
+extern PtrEventsSet TteNewEventsSet (int structureId, char* name);
 extern void         TtcStandardPresentation (Document document, View view);
 extern void         TtcStandardGeometry (Document document, View view);
 extern void         TtcChangeType (Document document, View view);

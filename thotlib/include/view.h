@@ -79,7 +79,7 @@ extern void         TtaGetViewWH (Document doc, int view, /*OUT*/ int *w,
    x, y, width, height: the frame's geometry
 
   ----------------------------------------------------------------------*/
-extern void         TtaGetViewGeometryRegistry (Document document, STRING name, /*OUT*/ int *x, /*OUT*/ int *y, /*OUT*/ int *width, /*OUT*/ int *height);
+extern void         TtaGetViewGeometryRegistry (Document document, char* name, /*OUT*/ int *x, /*OUT*/ int *y, /*OUT*/ int *width, /*OUT*/ int *height);
 
 
 /*----------------------------------------------------------------------
@@ -89,7 +89,7 @@ extern void         TtaGetViewGeometryRegistry (Document document, STRING name, 
    Parameters:    document: the document.                  
    name: the name of the view in P schema.  
   ----------------------------------------------------------------------*/
-extern void         TtaGetViewGeometry (Document document, STRING name, /*OUT*/ int *x, /*OUT*/ int *y, /*OUT*/ int *width, /*OUT*/ int *height);
+extern void         TtaGetViewGeometry (Document document, char* name, /*OUT*/ int *x, /*OUT*/ int *y, /*OUT*/ int *width, /*OUT*/ int *height);
 
 /*----------------------------------------------------------------------
    TtaGetViewGeometryMM returns the position (x, y) and sizes        
@@ -98,7 +98,7 @@ extern void         TtaGetViewGeometry (Document document, STRING name, /*OUT*/ 
    Parameters:    document: the document.                  
    name: the name of the view in P schema.  
   ----------------------------------------------------------------------*/
-extern void         TtaGetViewGeometryMM (Document document, STRING name, int *x, int *y, int *width, int *height);
+extern void         TtaGetViewGeometryMM (Document document, char* name, int *x, int *y, int *width, int *height);
 
 /*----------------------------------------------------------------------
    TtaOpenView

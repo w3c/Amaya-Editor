@@ -249,10 +249,10 @@ STRING              name;
    TtaReadOpen opens a file for reading.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-BinFile             TtaReadOpen (CONST STRING filename)
+BinFile             TtaReadOpen (CONST char* filename)
 #else  /* __STDC__ */
 BinFile             TtaReadOpen (filename)
-CONST STRING        filename;
+CONST char*         filename;
 
 #endif /* __STDC__ */
 {
@@ -507,13 +507,13 @@ DocumentIdentifier  Ident;
    the file name.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaExtractName (STRING text, STRING aDirectory, STRING aName)
+void                TtaExtractName (char* text, char* aDirectory, char* aName)
 
 #else  /* __STDC__ */
 void                TtaExtractName (text, aDirectory, aName)
-STRING              text;
-STRING              aDirectory;
-STRING              aName;
+char*               text;
+char*               aDirectory;
+char*               aName;
 
 #endif /* __STDC__ */
 {
@@ -579,11 +579,11 @@ STRING              aName;
    (MakeCompleteName est utilise pour la lecture)          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                MakeCompleteName (STRING fname, STRING fext, PathBuffer directory_list, PathBuffer completeName, int *length)
+void                MakeCompleteName (char* fname, char* fext, PathBuffer directory_list, PathBuffer completeName, int *length)
 #else  /* __STDC__ */
 void                MakeCompleteName (fname, fext, directory_list, completeName, length)
-STRING              fname;
-STRING              fext;
+char*               fname;
+char*               fext;
 PathBuffer          directory_list;
 PathBuffer          completeName;
 int                *length;
@@ -1125,11 +1125,11 @@ STRING              directory;
 	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            TtaCheckDirectory (STRING directory)
+ThotBool            TtaCheckDirectory (char* directory)
 
 #else  /* __STDC__ */
 ThotBool            TtaCheckDirectory (directory)
-STRING              directory;
+char*               directory;
 
 #endif /* __STDC__ */
 

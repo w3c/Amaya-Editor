@@ -82,7 +82,7 @@ RegistryEntryBlk   , *RegistryEntry;
 static int           AppRegistryInitialized = 0;
 static int           AppRegistryModified = 0;
 static RegistryEntry AppRegistryEntry = NULL;
-static STRING        AppRegistryEntryAppli = NULL;
+static char*         AppRegistryEntryAppli = NULL;
 static CHAR_T          CurrentDir[MAX_PATH];
 static STRING        Thot_Dir;
 
@@ -149,20 +149,20 @@ STRING ptr;
    and return a modified output string.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         DoVariableSubstitution (STRING input, int i_len,
+static void         DoVariableSubstitution (char* input, int i_len,
 					    STRING output, int o_len)
 #else  /* __STDC__ */
 static void         DoVariableSubstitution (input, i_len, output, o_len)
-STRING input;
+char*  input;
 int                 i_len;
 STRING output;
 int                 o_len;
 #endif
 {
   STRING cour = input;
-  STRING base = input;
+  char*  base = input;
   STRING res = output;
-  STRING value;
+  char*  value;
   CHAR_T   save;
 #define CHECK_OVERFLOW (((cour - input) > i_len) || ((res - output) >= (o_len - 1)))
 
@@ -525,14 +525,14 @@ static void         SortEnv ()
   Returns TRUE if the env variables exists or FALSE if it isn't the case.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool TtaGetEnvInt (STRING name, int *value)
+ThotBool TtaGetEnvInt (char* name, int *value)
 #else
 ThotBool TtaGetEnvInt (name, value)
-STRING name;
+char*  name;
 int *value;
 #endif /* __STDC__ */
 {
- STRING strptr;
+ char* strptr;
 
  if (!name || *name == EOS)
    {
@@ -561,14 +561,14 @@ int *value;
   Returns TRUE if the env variables exists or FALSE if it isn't the case.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool TtaGetEnvBoolean (STRING name, ThotBool *value)
+ThotBool TtaGetEnvBoolean (char* name, ThotBool *value)
 #else
 ThotBool TtaGetEnvBoolean (name, value)
-STRING name;
+char* name;
 ThotBool *value;
 #endif /* __STDC__ */
 {
- STRING strptr;
+ char* strptr;
 
  if (!name || *name == EOS)
    {
@@ -600,20 +600,20 @@ ThotBool *value;
   if not present return NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-STRING TtaGetEnvString (STRING name)
+char* TtaGetEnvString (char* name)
 #else  /* __STDC__ */
-STRING TtaGetEnvString (name)
-STRING name;
+char* TtaGetEnvString (name)
+char* name;
 #endif
 {
   RegistryEntry       cour;
   STRING value;
 
   if (AppRegistryInitialized == 0)
-    return (ugetenv (name));
+    return (getenv (name));
 
   /* appname allows to get the application name */
-  if (!ustrcasecmp(TEXT("appname"), name))
+  if (!strcasecmp ("appname", name))
     return(AppRegistryEntryAppli);
 
   if ((!ustrcasecmp (name, TEXT("cwd"))) || (!ustrcasecmp (name, TEXT("pwd"))))
@@ -1106,7 +1106,7 @@ void                TtaSaveAppRegistry ()
    if (!AppRegistryModified)
       return;
 
-   app_home = TtaGetEnvString (_APPHOME_EVAR_);
+   app_home = TtaGetEnvString ("APP_HOME");
    if (app_home != NULL)
      usprintf (filename, TEXT("%s%c%s"), app_home, DIR_SEP, THOT_RC_FILENAME);
    else
@@ -1224,7 +1224,7 @@ static void         InitEnviron ()
    /* default values for various global variables */
    FirstCreation = FALSE;
    CurSaveInterval = 0;
-   pT = TtaGetEnvString (_AUTOSAVE_EVAR_);
+   pT = TtaGetEnvString ("AUTOSAVE");
    if (pT != NULL)
      CurSaveInterval = uctoi(pT);
    if (CurSaveInterval <= 0)
@@ -1241,20 +1241,20 @@ static void         InitEnviron ()
 #endif /* _WINDOWS */
 
    /* The base of the Thot directory */
-   Thot_Dir = TtaGetEnvString (_THOTDIR_EVAR_);
+   Thot_Dir = TtaGetEnvString ("THOTDIR");
    if (Thot_Dir == NULL)
       fprintf (stderr, "missing environment variable THOTDIR\n");
 
    /* The predefined path to documents */
-   pT = TtaGetEnvString (_THOTDOC_EVAR_);
+   pT = TtaGetEnvString ("THOTDOC");
    if (pT == NULL)
       DocumentPath[0] = EOS; 
    else
       ustrncpy (DocumentPath, pT, MAX_PATH);
 
    /* Read the schemas Paths */
-   Thot_Sch = TtaGetEnvString (_THOTSCH_EVAR_);
-   Thot_Sys_Sch = TtaGetEnvString (_THOTSYSSCH_EVAR_);
+   Thot_Sch = TtaGetEnvString ("THOTSCH");
+   Thot_Sys_Sch = TtaGetEnvString ("THOTSYSSCH");
 
    /* set up SchemaPath accordingly */
    if ((Thot_Sch != NULL) && (Thot_Sys_Sch != NULL))
@@ -1271,10 +1271,10 @@ static void         InitEnviron ()
        SchemaPath[0] = EOS;
 
    /* set up the default values common to all the thotlib applications */
-   TtaSetDefEnvString (_LANG_EVAR_, TEXT("en-us"), FALSE);
-   TtaSetDefEnvString (_ZOOM_EVAR_, TEXT("0"), FALSE);
+   TtaSetDefEnvString ("LANG", TEXT("en-us"), FALSE);
+   TtaSetDefEnvString ("ZOOM", TEXT("0"), FALSE);
    TtaSetDefEnvString (_TOOLTIPDELAY_EVAR_, TEXT("500"), FALSE);
-   TtaSetDefEnvString (_FontMenuSize_EVAR_, TEXT("12"), FALSE);
+   TtaSetDefEnvString ("FontMenuSize", TEXT("12"), FALSE);
    TtaSetDefEnvString (_ForegroundColor_EVAR_, TEXT("Black"), FALSE);
 
 #ifndef _WINDOWS
@@ -1291,7 +1291,7 @@ static void         InitEnviron ()
    TtaSetDefEnvString (TEXT("TMPDIR"), DEF_TMPDIR, TRUE);
    /* get the tmpdir from the registry or use the default name if it
       doesn't exist */
-   pT = TtaGetEnvString (TEXT("TMPDIR"));
+   pT = TtaGetEnvString ("TMPDIR");
    if (!pT)
      pT = DEF_TMPDIR;
    /* create the TMPDIR dir if it doesn't exist */
@@ -1523,7 +1523,7 @@ STRING  appArgv0;
       if (ok) {
          *dir_end = EOS;
          if (IsThotDir (execname))
-            AddRegisterEntry (TEXT("System"), _THOTDIR_EVAR_, execname, REGISTRY_INSTALL, TRUE);
+            AddRegisterEntry (TEXT("System"), "THOTDIR", execname, REGISTRY_INSTALL, TRUE);
 	  }
 #     ifdef COMPILED_IN_THOTDIR
       /* Check a compiled-in value */
@@ -1595,7 +1595,7 @@ STRING  appArgv0;
    usprintf (app_home, "%s%c.%s", ptr, DIR_SEP, AppRegistryEntryAppli); 
 #endif _WINDOWS
    /* store the value of APP_HOME in the registry */
-   AddRegisterEntry (AppRegistryEntryAppli, _APPHOME_EVAR_, app_home, REGISTRY_SYSTEM, TRUE);
+   AddRegisterEntry (AppRegistryEntryAppli, "APP_HOME", app_home, REGISTRY_SYSTEM, TRUE);
 
    /* set the default APP_TMPDIR */
 #ifdef _WINDOWS

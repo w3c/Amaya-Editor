@@ -105,13 +105,8 @@ int                 _getpid (void);
 /* Constants for PATHs */
 #define DIR_SEP '\\'
 #define PATH_SEP ';'
-#ifdef _I18N_
-#      define DIR_STR  L"\\"
-#      define PATH_STR L";"
-#else  /* !_I18N_ */
-#      define DIR_STR "\\"
-#      define PATH_STR ";"
-#endif /* _I18N_ */
+#define DIR_STR "\\"
+#define PATH_STR ";"
 #endif /* ! __GNUC__ */
 /*------------------------------------------------------GNUC--*/
 

@@ -150,7 +150,7 @@ typedef enum
 /* a presentation box */
 typedef struct _PresentationBox
 {
-  Name		PbName;		/* box name */	
+  NameA		PbName;		/* box name */	
   PtrPRule	PbFirstPRule;	/* first presentation rule defining the box */
   ThotBool	PbAcceptPageBreak;	/* indicates whether the box may be
 					   broken at the bottom of a page */
@@ -343,9 +343,9 @@ typedef struct _Condition
       int	  _CoTypeAncestor_;	/* type of the ancestor */	
       ThotBool	  _CoImmediate_;	/* Immediately */
       ArithRel  _CoAncestorRel_;
-      Name	  _CoAncestorName_;	/* Ancestor type name, if defined
+      NameA	  _CoAncestorName_;	/* Ancestor type name, if defined
 					   in another schema */
-      Name	  _CoSSchemaName_;	/* name of the schema where the
+      NameA	  _CoSSchemaName_;	/* name of the schema where the
 					   ancestor is defined if
 					   CoTypeAncestor = 0 */
     } s1;
@@ -428,7 +428,7 @@ typedef struct _PresRule
 					   for the column rule only) */
       int          _PrPresBox_[MAX_COLUMN_PAGE]; /* number of the
 					            presentation boxes */
-      Name         _PrPresBoxName_;	/* Name of the first (or only) presentation
+      NameA         _PrPresBoxName_;	/* Name of the first (or only) presentation
 					   box to which the function applies */
     } s1;
     struct			 /* PrPresMode = PresImmediate */

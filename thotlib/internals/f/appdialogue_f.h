@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void TteInitMenus ( STRING name,
+extern void TteInitMenus ( char* name,
                            int number );
 extern void TteAddMenuAction ( STRING actionName,
                                Proc procedure );
@@ -32,7 +32,7 @@ extern void TteAddMenuItem ( WindowType windowtype,
                              int subMenu,
                              int itemID,
                              STRING actionName,
-                             CHAR_T itemType );
+                             char itemType );
 extern void TteOpenMainWindow ( STRING name,
                                 Pixmap logo,
                                 Pixmap icon );

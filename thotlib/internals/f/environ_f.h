@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern ThotBool TtaCheckDirectory ( STRING aDirectory );
+extern ThotBool TtaCheckDirectory ( char* aDirectory );
 extern ThotBool TtaCheckPath ( PathBuffer path );
 #else /* __STDC__ */
 

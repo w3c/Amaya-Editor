@@ -1061,11 +1061,11 @@ int                 frame;
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-void                WIN_InitDialogueFonts (HDC hDC, STRING name)
+void                WIN_InitDialogueFonts (HDC hDC, char* name)
 #else  /* __STDC__ */
 void                WIN_InitDialogueFonts (hDC, name)
 HDC                 hDC;
-STRING              name;
+char*               name;
 #endif /* __STDC__ */
 #else  /* !_WINDOWS */
 #ifdef __STDC__
@@ -1083,7 +1083,7 @@ STRING              name;
 #  endif /* _WINDOWS */
    STRING*             dirlist = NULL;
    STRING*             currentlist = NULL;
-   STRING              value;
+   char*               value;
    CHAR_T                alphabet;
    int                 f3;
    int                 i;
@@ -1092,7 +1092,7 @@ STRING              name;
    MenuSize = 12;
    alphabet = TtaGetAlphabet (TtaGetDefaultLanguage ());
    
-   value = TtaGetEnvString (_FontFamily_EVAR_);
+   value = TtaGetEnvString ("FontFamily");
    MaxNumberOfSizes = 10;
    if (value == NULL)
      {
@@ -1130,7 +1130,7 @@ STRING              name;
 
 
    /* Is there any predefined size for menu fonts ? */
-   value = TtaGetEnvString (_FontMenuSize_EVAR_);
+   value = TtaGetEnvString ("FontMenuSize");
    if (value != NULL)
       usscanf (value, TEXT("%d"), &MenuSize);
    f3 = MenuSize + 2;

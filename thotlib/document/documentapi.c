@@ -125,7 +125,7 @@ int                 accessMode;
 	     pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 	     /* suppresses the .PIV suffix if found */
 	     if (lg > 4)
-		if (ustrcmp (&(pDoc->DocDName[lg - 4]), PIV_EXT) == 0)
+		if (ustrcmp (&(pDoc->DocDName[lg - 4]), ".PIV") == 0)
 		   pDoc->DocDName[lg - 4] = EOS;
 	     GetDocIdent (&pDoc->DocIdent, pDoc->DocDName);
 	     ustrncpy (pDoc->DocDirectory, DocumentPath, MAX_PATH);

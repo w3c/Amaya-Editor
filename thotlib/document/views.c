@@ -484,7 +484,7 @@ STRING              newName;
    ustrncpy (pDoc->DocIdent, newName, MAX_DOC_IDENT_LEN);
    pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
    len = ustrlen (newName);
-   if (ustrcmp (newName + len - 4, PIV_EXT) == 0)
+   if (ustrcmp (newName + len - 4, ".PIV") == 0)
      {
 	buffer[len - 4] = EOS;
 	pDoc->DocDName[len - 4] = EOS;

@@ -35,7 +35,7 @@ typedef struct _Action_Ctl
 typedef struct _Item_Ctl
 {
   int		ItemID;		/* ID of the menu item			*/
-  CHAR_T	ItemType;	/* 'B'=Button, 'T'=Toggle, 'D'=Dynamic	*/
+  char      ItemType;	/* 'B'=Button, 'T'=Toggle, 'D'=Dynamic	*/
   				/* 'S'=Separator, 'M'=Menu		*/
   union
   {

@@ -65,7 +65,7 @@ typedef long ThotFileOffset;
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int TtaFileExist ( CONST STRING filename );
+extern int TtaFileExist ( CONST char* filename );
 extern int TtaFileUnlink ( CONST STRING filename );
 extern int TtaFileClose ( ThotFileHandle handle );
 extern int TtaFileClose ( ThotFileHandle handle );
@@ -95,7 +95,7 @@ extern ThotBool TtaReadInteger ( BinFile file,
                                 int *sval );
 extern ThotBool TtaReadName ( BinFile file,
                              STRING name );
-extern BinFile TtaReadOpen (CONST STRING filename);
+extern BinFile TtaReadOpen (CONST char* filename);
 extern void TtaReadClose ( BinFile file );
 extern void TtaWriteClose ( BinFile file );
 extern ThotBool TtaWriteByte ( BinFile file,
@@ -107,7 +107,7 @@ extern ThotBool TtaWriteInteger ( BinFile file,
 extern ThotBool TtaCompareFiles ( CONST STRING file1,
                                  CONST STRING file2 );
 extern ThotBool TtaMakeDirectory ( STRING directory );
-extern ThotBool TtaCheckDirectory ( STRING directory );
+extern ThotBool TtaCheckDirectory ( char* directory );
 
 #else /* __STDC__ */
 

@@ -40,7 +40,7 @@ extern void OpenCreatedView ( PtrDocument pDoc,
                               int width,
                               int height );
 extern int OpenViewByName ( PtrDocument pDoc,
-                            Name viewName,
+                            char* viewName,
                             int X,
                             int Y,
                             int width,
