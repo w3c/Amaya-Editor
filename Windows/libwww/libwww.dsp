@@ -1,5 +1,5 @@
 # Microsoft Developer Studio Project File - Name="libwww" - Package Owner=<4>
-# Microsoft Developer Studio Generated Build File, Format Version 6.00
+# Microsoft Developer Studio Generated Build File, Format Version 5.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Static Library" 0x0104
@@ -22,11 +22,9 @@ CFG=libwww - Win32 Debug
 !MESSAGE 
 
 # Begin Project
-# PROP AllowPerConfigDependencies 0
 # PROP Scc_ProjName ""
 # PROP Scc_LocalPath ""
 CPP=cl.exe
-RSC=rc.exe
 
 !IF  "$(CFG)" == "libwww - Win32 Release"
 
@@ -40,10 +38,11 @@ RSC=rc.exe
 # PROP Output_Dir ".."
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /O2 /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\..\..\libwww\Library\src" /I "..\..\libpng\zlib" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /D "HT_ZLIB" /YX /FD /c
+RSC=rc.exe
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
+# ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
+# ADD CPP /nologo /W3 /GX /O2 /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\..\..\libwww\Library\src" /I "..\..\libpng\zlib" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /D "HT_ZLIB" /YX /FD /c
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -63,10 +62,11 @@ LIB32=link.exe -lib
 # PROP Output_Dir ".."
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /Z7 /Od /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /D "_DEBUG" /D "HT_ZLIB" /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /YX /FD /c
+RSC=rc.exe
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
+# ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
+# ADD CPP /nologo /W3 /GX /Z7 /Od /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /D "_DEBUG" /D "HT_ZLIB" /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /YX /FD /c
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -80,6 +80,10 @@ LIB32=link.exe -lib
 
 # Name "libwww - Win32 Release"
 # Name "libwww - Win32 Debug"
+# Begin Source File
+
+SOURCE=..\..\..\Libwww\Modules\Expat\Xmlparse\hashtable.c
+# End Source File
 # Begin Source File
 
 SOURCE=..\..\..\libwww\Library\src\HTAABrow.c
@@ -404,6 +408,10 @@ SOURCE=..\..\..\libwww\Library\src\HTProxy.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\Libwww\Library\Src\HTRDF.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\libwww\Library\src\HTReader.c
 # End Source File
 # Begin Source File
@@ -516,6 +524,10 @@ SOURCE=..\..\..\libwww\Library\src\HTWWWStr.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\Libwww\Library\Src\HTXML.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\libwww\Library\src\HTXParse.c
 # End Source File
 # Begin Source File
@@ -529,6 +541,18 @@ SOURCE=..\..\..\libwww\modules\md5\md5.c
 # Begin Source File
 
 SOURCE=..\..\..\libwww\Library\src\SGML.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Libwww\Modules\Expat\Xmlparse\xmlparse.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Libwww\Modules\Expat\Xmltok\xmlrole.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\Libwww\Modules\Expat\Xmltok\xmltok.c
 # End Source File
 # Begin Source File
 
