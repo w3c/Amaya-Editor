@@ -2644,7 +2644,13 @@ RULES
 
    SYMBOL_UNIT:
 	BEGIN
-	Height: Enclosing . Height;
+	if within UnderOverBase
+	   BEGIN
+	   Height: Enclosed . Height;
+	   HorizRef: * . HMiddle + 0.1;
+	   END;
+	if not within UnderOverBase
+	   Height: Enclosing . Height;
 	Width: Enclosed . Width;
 	VertPos: Nil;
 	HorizPos: Nil;

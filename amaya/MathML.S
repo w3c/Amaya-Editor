@@ -122,7 +122,7 @@ STRUCT
 		scriptminsize = TEXT;
 		background\240 = TEXT;
 {****	In the current version, Thot only allows 25 attributes to be declared
-	for an element type. So, the following attributes can't be declared.
+	for an element type. So, the following attributes cannot be declared.
 		open = TEXT;
 		close = TEXT;
 		separators = TEXT;
