@@ -1526,18 +1526,50 @@ void TtaInitializeAppRegistry (char *appArgv0)
        if (IS_NT)
 	 /* winnt: apphome is windowsdir\profiles\username\appname */
 	 {
-	   dwSize = MAX_PATH;
-#if 0
-	   /* JK: commented as it needs installing a SP */
-	   /* this function will fail if dwSize is inferior to the buffer size.
-	      As we gave it the maximum possible value, we don't control
-	      the return code */
-	   GetUserProfileDirectory (AccessTokenHandle, app_home, &dwSize);
-#endif
+   typedef BOOL (STDMETHODCALLTYPE FAR * LPFNGETPROFILESDIRECTORY) (
+      LPTSTR lpProfileDir,
+      LPDWORD lpcchSize
+   );
+
+   typedef BOOL (STDMETHODCALLTYPE FAR * LPFNGETUSERPROFILEDIR) (
+      HANDLE hToken,
+      LPTSTR lpProfileDir,
+      LPDWORD lpcchSize
+   );
+
+   HMODULE                 g_hUserEnvLib           = NULL;
+   /*HANDLE                  hToken;*/
+   LPFNGETPROFILESDIRECTORY GetProfilesDirectory   = NULL;
+   LPFNGETUSERPROFILEDIR   GetUserProfileDirectory = NULL;
+
+     g_hUserEnvLib = LoadLibrary("userenv.dll");
+      if ( !g_hUserEnvLib ) {
+         printf("LoadLibrary(userenv.dll) failed.  Error %d\n",
+              GetLastError() );
+      }
+     GetProfilesDirectory =
+            (LPFNGETPROFILESDIRECTORY) GetProcAddress( g_hUserEnvLib,
+            "GetProfilesDirectoryA" );
+		dwSize = MAX_PATH;
+		windir[0] = EOS;
+	   	GetProfilesDirectory (windir, &dwSize);
+     /*GetUserProfileDirectory =
+            (LPFNGETUSERPROFILEDIR) GetProcAddress( g_hUserEnvLib,
+            "GetUserProfileDirectoryA" );*/
+
+     /*LogonUser(
+            AppNameW,                        // user name
+            ".",                        // domain or server
+            "",  // password
+            LOGON32_LOGON_NETWORK,          // type of logon operation
+            LOGON32_PROVIDER_DEFAULT,       // logon provider
+            &hToken);*/
+	   /*GetUserProfileDirectory (hToken, app_home, &dwSize);*/
 
 	   /* check if a previous app_home directory existed. If yes, use it. If
 	      it didn't exist, then we try to create it using the new conventions. */
-	   GetWindowsDirectory (windir, dwSize);
+		if (windir[0] == EOS)
+	      GetWindowsDirectory (windir, dwSize);
 	   /* the Windows NT convention */
 	   sprintf (app_home, "%s\\profiles\\%s\\%s", windir, ptr, AppNameW);
 	   if (!TtaDirExists (app_home))
