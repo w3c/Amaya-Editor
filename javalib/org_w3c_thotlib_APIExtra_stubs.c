@@ -22,6 +22,11 @@
 #include "JavaTypes_f.h"
 #include "JavaVMaccesses.h"
 
+/* Thot internal headers for Tti functions */
+#include "constint.h"
+#include "typeint.h"
+#include "exceptions_f.h"
+
 /*
  * Callback for amaya/HTTPRequest
  */
@@ -744,6 +749,59 @@ org_w3c_thotlib_Extra_Ttaxxx(struct Horg_w3c_thotlib_Extra* none, xxx)
 }
  */
 
+
+/*
+ * The following allows to get some of the thot internal information for DOM
+ */
+
+/*
+ * Returns the value of an attribute, that is an enumeration, as a string
+ */
+struct Hjava_lang_String*
+org_w3c_thotlib_Extra_TtaGetAttributeValueString(jlong attribute)
+{
+    Attribute at = JavaLong2CPtr(attribute);
+    AttributeType atType;
+    int atKind;
+    String value;
+
+    JavaThotlibLock();
+    TtaGiveAttributeType(at, &atType, &atKind);
+    if (atKind != 0) {
+	value = NULL;
+    } else {
+	value = ((PtrSSchema) (atType.AttrSSchema))->SsAttribute[atType.AttrTypeNum - 1].AttrEnumValue[((PtrAttribute)at)->AeAttrValue - 1];
+    }
+    JavaThotlibRelease();
+
+    if (value) {
+	return(makeJavaString(value, strlen(value)));
+    } else {
+	return NULL;
+    }
+}
+
+jbool
+org_w3c_thotlib_Extra_TtaElementTypeHasException(jint except, jint type, jlong sschema) {
+    boolean res;
+    SSchema ss = JavaLong2CPtr(sschema);
+    JavaThotlibLock();
+    res = TypeHasException((int) except, (int) type, (PtrSSchema) ss) == 1;
+    JavaThotlibRelease();
+    return((jbool) res);
+}
+
+jbool
+org_w3c_thotlib_Extra_TtaAttributeHasException(jint except, jlong attribute) {
+    boolean res;
+    Attribute at = JavaLong2CPtr(attribute);
+    JavaThotlibLock();
+    res = AttrHasException((int) except, ((PtrAttribute) at)->AeAttrNum, ((PtrAttribute) at)->AeAttrSSchema) == 1;
+    JavaThotlibRelease();
+    return((jbool) res);
+}
+
+
 /*
  * Function to register all org_w3c_thotlib_Selection stubs.
  */
@@ -803,8 +861,13 @@ void register_org_w3c_thotlib_Extra_stubs(void)
         addNativeMethod("org_w3c_amaya_HTTPRequest_Callback",
 	                org_w3c_amaya_HTTPRequest_Callback);
 
+        addNativeMethod("org_w3c_thotlib_Extra_TtaGetAttributeValueString",
+	                org_w3c_thotlib_Extra_TtaGetAttributeValueString);
+        addNativeMethod("org_w3c_thotlib_Extra_TtaElementTypeHasException",
+	                org_w3c_thotlib_Extra_TtaElementTypeHasException);
+        addNativeMethod("org_w3c_thotlib_Extra_TtaAttributeHasException",
+	                org_w3c_thotlib_Extra_TtaAttributeHasException);
 /*
 	addNativeMethod("org_w3c_thotlib_Extra_Ttaxxx", org_w3c_thotlib_Extra_Ttaxxx);
  */
 }
-
