@@ -28,41 +28,42 @@
 <div>
 <h1>Style d'éléments caractères dans  HTML</h1>
 
-<h2>Ce qu'il faut faire et ce qu'il ne faut pas faire pas faire  ...</h2>
+<h2>Ce qu'il ne faut pas faire et ce qui doit être fait...</h2>
 
 <p>HTML 4.0 (Strict) inclue des éléments qui fournissent des styles de
-caractère.  Ces éléments devraient être remplacés par l'utilisation d'éléments
-structuraux  ou par des feuilles de style dès que cela est possible. </p>
+caractères. Ces éléments devraient être remplacés par l'utilisation d'éléments
+structuraux ou par des feuilles de style dès que cela est possible.</p>
 
-<p>Tous les éléments en question , à l'exeption de PRE, se trouvent dans le
-sous menu  Eléments caractères du  menu <strong>Eléments</strong>:</p>
+<p>Tous les éléments en question, à l'exeption de PRE, se trouvent dans le
+sous menu Eléments caractères du menu <strong>Eléments</strong>:</p>
 <dl>
   <dt><code>B</code> et <code>I</code></dt>
-    <dd>Ceux-ci devraient être remplacés par le <code></code><a
-      href="inline.html#Emphasis">STRONG and EM elements</a> , où ils sont
-      utilisés pour fournir des accentuations à un mot ou à une phrase. Il y a
-      des  <a href="infoTypes.html">éléments spéciaux</a> pour noter des
-      en-têtes, des termes à définir, ainsi que certains usages spéciaux,
+    <dd>Ceux-ci devraient être remplacés par le <a
+      href="inline.html#Emphasis">STRONG and  EM elements</a>, où ils sont
+      utilisés pour fournir des mises en évidences à un mot ou à une phrase.
+      Il y a des  <a href="infoTypes.html">éléments spéciaux</a> pour noter
+      des en-têtes, des termes à définir, ainsi que certains usages spéciaux,
       comme par exemple une citation, un fragment de computer code, etc. Si
-      les éléments sont simplement utilisés pour un réservoir plus lourd, <a
-      href="../StyleSheets.html">Feuilles de style</a> devrait être utilisé à
-      la place. </dd>
+      les éléments sont simplement utilisés pour obtenir une police de
+      caractère plus lourde, les  <a href="../StyleSheets.html">Feuilles de
+      style</a> devraient être utilisées à la place.</dd>
   <dt><code>BIG </code>et <code>SMALL</code></dt>
-    <dd>En général, ces résultats devraient être obtenus avec <a
+    <dd>En général, ces résultats devraient être obtenus avec les  <a
       href="../StyleSheets.html">Feuilles de style</a>. Quand ils sont
       utilisés pour dénoter des types spécifiques d'information, comme la
-      source d'une citation, un échantillon  computer input ou  output, etc,
-      les  <a href="inline.html">éléments HTML appropriés</a> devraient être
-      utilisés. </dd>
+      source d'une citation, un sample computer input ou  output, etc, les  <a
+      href="inline.html">éléments HTML appropriés</a> devraient être
+    utilisés.</dd>
   <dt><code>SUB</code> et  <code>SUP</code></dt>
-    <dd><a href="../StyleSheets.html">Feuilles de style </a>devrait être
-      utilisé pour obtenir  la  présentation de ces éléments.  Dans des cas
-      comme les expressions mathématiques, un balisage de  langage spécifique 
-      comme le  <a href="../Math.html">MathML</a> devrait être utilisé dès que
-      possible. </dd>
+    <dd><a href="../StyleSheets.html">Les Feuilles de style</a> doivent  être
+      utilisées pour obtenir  la  présentation de ces éléments. Dans des cas
+      comme les expressions mathématiques, un balisage de langage spécifique
+      comme le  <a href="../Math.html">MathML</a> doit être utilisé dès que
+      possible.</dd>
   <dt><code>TT</code> et <code>PRE</code></dt>
-    <dd>Les auteurs devraient utiliser  <a href="../StyleSheets.html">Feuilles
-      de style</a> pour obtenir ces résultats. </dd>
+    <dd>Les auteurs doivent utiliser  les <a
+      href="../StyleSheets.html">Feuilles de style</a> pour obtenir ces
+      résultats.</dd>
 </dl>
 </div>
 
