@@ -1733,11 +1733,15 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	     wrnumber (pBox->BxWidth, fileDescriptor);
 	     fprintf (fileDescriptor, "  Inside_Width:");
 	     wrnumber (pBox->BxW, fileDescriptor);
-	     if (pBox->BxContentWidth)
-		fprintf (fileDescriptor, " Minimum-Width:");
-	     else
-		fprintf (fileDescriptor, " Content-Width:");
-	     wrnumber (pBox->BxRuleWidth, fileDescriptor);
+	     if (!pAb->AbWidth.DimIsPosition &&
+		 (pAb->AbWidth.DimUnit == UnAuto ||
+		  pAb->AbWidth.DimMinimum))
+	       {
+		 fprintf (fileDescriptor, " Rule-Width:");
+		 wrnumber (pBox->BxRuleWidth, fileDescriptor);
+		 fprintf (fileDescriptor, " Content-Width:");
+		 wrnumber (pBox->BxMaxWidth, fileDescriptor);
+	       }
 
 	     fprintf (fileDescriptor, "\n");
 	     for (j = 1; j <= Indent + 4; j++)
@@ -1746,11 +1750,15 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	     wrnumber (pBox->BxHeight, fileDescriptor);
 	     fprintf (fileDescriptor, " Inside_Height:");
 	     wrnumber (pBox->BxH, fileDescriptor);
-	     if (pBox->BxContentHeight)
-		fprintf (fileDescriptor, " Minimum-Height:");
-	     else
-		fprintf (fileDescriptor, " Content-Height:");
-	     wrnumber (pBox->BxRuleHeigth, fileDescriptor);
+	     if (!pAb->AbHeight.DimIsPosition &&
+		      pAb->AbHeight.DimMinimum)
+	       {
+		 if (pBox->BxContentHeight)
+		   fprintf (fileDescriptor, " Minimum-Height:");
+		 else
+		   fprintf (fileDescriptor, " Content-Height:");
+		 wrnumber (pBox->BxRuleHeight, fileDescriptor);
+	       }
 	     /* display extra margins */
 	     GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
 	     if (t || b || l || r)

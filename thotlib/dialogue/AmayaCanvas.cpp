@@ -151,10 +151,7 @@ void AmayaCanvas::OnSize( wxSizeEvent& event )
   new_height = GetClientSize().GetHeight();
  
   // call the generic callback
-  FrameResizedCallback(
-    	frame,
-    	new_width,
-	new_height );
+  FrameResizedCallback( frame, new_width, new_height );
 }
 
 /*

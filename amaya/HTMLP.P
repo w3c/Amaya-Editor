@@ -2814,7 +2814,7 @@ RULES
 	END;
 
  Term_List: BEGIN
-	Width: Enclosing . Width;
+	Width: auto {Enclosing . Width};
 	END;
 
  Term:	BEGIN
@@ -2825,7 +2825,7 @@ RULES
 	NoBreak1 : 2;
 	NoBreak2 : 2;
 #endif
-	Width: Enclosing . Width;
+	Width: auto {Enclosing . Width};
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;

@@ -1816,11 +1816,7 @@ void GetPosBlock (PtrPosRelations * pBlock)
    if (pNewBlock)
      {
        memset (pNewBlock, 0, sizeof (PosRelations));
-       pNewBlock->PosRNext = NULL;
-       
-       for (i = 0; i < MAX_RELAT_POS; i++)
-	 pNewBlock->PosRTable[i].ReBox = NULL;
-       NbUsed_PosB++;
+        NbUsed_PosB++;
      }
 }
 
@@ -1867,13 +1863,8 @@ void GetDimBlock (PtrDimRelations * pBlock)
    if (pNewBlock)
      {
        memset (pNewBlock, 0, sizeof (DimRelations));
-       pNewBlock->DimRNext = NULL;
-       
        for (i = 0; i < MAX_RELAT_DIM; i++)
-	 {
-	   pNewBlock->DimRTable[i] = NULL;
-	   pNewBlock->DimRSame[i] = TRUE;
-	 }
+	 pNewBlock->DimRSame[i] = TRUE;
        NbUsed_BDim++;
      }
 }
@@ -1918,25 +1909,13 @@ PtrBox GetBox (PtrAbstractBox pAb)
      }
 
    /* Initialisation de la box */
-   if (pBox != NULL)
+   if (pBox)
      {
 	memset (pBox, 0, sizeof (Box));
 	pBox->BxAbstractBox = pAb;
 	pBox->BxType = BoComplete;
 	pBox->BxHorizEdge = Left;
 	pBox->BxVertEdge = Top;
-	    
-#ifdef _GL
-      pBox->BxEditable = FALSE;
-      pBox->BxBoundinBoxComputed = FALSE;
-      pBox->BxTransformationComputed = FALSE;
-      pBox->BxClipX = 0; 
-      pBox->BxClipY = 0; 
-      pBox->BxClipW = 0;
-      pBox->BxClipH = 0;
-      pBox->DisplayList = 0;      
-#endif /*_GL*/
-
 	NbUsed_Box++;
      }
    return pBox;
@@ -2206,24 +2185,9 @@ void GetDictionary (PtrDict * pDict)
 	NbUsed_Dict++;
 	/* initialise le contexte de dictionnaire */
 	pdict = *pDict;
-	pdict->DictName[0] = EOS;
-	pdict->DictDirectory = NULL;
+	memset (pdict, 0, sizeof (WordDict));
 	/* readonly */
 	pdict->DictReadOnly = TRUE;
-	/* contenu non charge' */
-	pdict->DictLoaded = FALSE;
-	/* contenu non modifie' */
-	pdict->DictModified = FALSE;
-	pdict->DictString = NULL;
-	pdict->DictWords = NULL;
-	pdict->DictCommon = NULL;
-
-	for (i = 0; i <= MAX_WORD_LEN; i++)
-	   pdict->DictLengths[i] = 0;
-	pdict->DictMaxWords = 0;
-	pdict->DictMaxChars = 0;
-	pdict->DictNbWords = 0;
-	pdict->DictNbChars = 0;
      }
 }
 

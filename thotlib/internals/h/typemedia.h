@@ -274,14 +274,12 @@ typedef struct _Box
   ThotBool        BxDisplay;	        /* The box has borders or
 					   background */
 #ifdef _GL
-    ThotBool        BxEditable;           /* If Box is Rotated or Scaled,
-					     prevents edition */
-    ThotBool        BxBoundinBoxComputed;
-    ThotBool        BxTransformationComputed;
-    ThotBool        VisibleModification;    
+  ThotBool        BxBoundinBoxComputed;
+  ThotBool        VisibleModification;    
 #endif /* _GL */
-  int		  BxRuleHeigth;         /* Content height or minimum */
-  int		  BxRuleWidth;	        /* Content width or minimum */
+  int		  BxRuleHeight;         /* Content height or minimum */
+  int		  BxRuleWidth;	        /* Rule width */
+  int        	  BxMaxWidth;           /* Inside width */
   PtrTextBuffer   BxBuffer;	        /* Pointer on the buffer list */
   BoxType         BxType;
   union
@@ -314,7 +312,6 @@ typedef struct _Box
     {
       PtrLine 	 _BxFirstLine_;	/* First line if applicable */
       PtrLine 	 _BxLastLine_;	/* Last line */
-      int        _BxMaxWidth_;  /* Width without line wrapping */
       int        _BxMinWidth_;  /* Mininmum width */
       int        _BxCycles_;    /* count reformatting cycles */
       int        _BxPacking_;   /* Packing */
@@ -325,7 +322,6 @@ typedef struct _Box
     {
       PtrTabRelations 	_BxColumns_;	/* list of columns or table box */
       PtrTabRelations	_BxRows_;	/* list of rows within a table */
-      int        	_BxMaxWidth_;   /* Width without line wrapping */
       int        	_BxMinWidth_;   /* Mininmum width */
       int               _BxCycles_;     /* count reformatting cycles */
       int               _BxPacking_;     /* Packing */
@@ -355,7 +351,6 @@ typedef struct _Box
 #define BxYRatio u.s1._BxYRation_
 #define BxFirstLine u.s2._BxFirstLine_
 #define BxLastLine u.s2._BxLastLine_
-#define BxMaxWidth u.s2._BxMaxWidth_
 #define BxMinWidth u.s2._BxMinWidth_
 #define BxCycles u.s2._BxCycles_
 #define BxPacking u.s2._BxPacking_

@@ -645,11 +645,11 @@ void ChangeDefaultHeight (PtrBox pBox, PtrBox pSourceBox, int height,
       if (pBox->BxContentHeight)
 	{
 	  /* La hauteur reelle est egale a la hauteur du contenu */
-	  if (minimumRule && height < pBox->BxRuleHeigth)
+	  if (minimumRule && height < pBox->BxRuleHeight)
 	    {
 	      /* Il faut echanger la hauteur reelle avec l'autre hauteur */
-	      delta = pBox->BxRuleHeigth - pBox->BxH;
-	      pBox->BxRuleHeigth = height;
+	      delta = pBox->BxRuleHeight - pBox->BxH;
+	      pBox->BxRuleHeight = height;
 	      pBox->BxContentHeight = !pBox->BxContentHeight;
 	      ResizeHeight (pBox, pSourceBox, NULL, delta, 0, 0, frame);
 	    }
@@ -663,13 +663,13 @@ void ChangeDefaultHeight (PtrBox pBox, PtrBox pSourceBox, int height,
 	  if (height > pBox->BxH)
 	    {
 	      /* Il faut echanger la hauteur reelle avec l'autre hauteur */
-	      pBox->BxRuleHeigth = pBox->BxH;
+	      pBox->BxRuleHeight = pBox->BxH;
 	      pBox->BxContentHeight = !pBox->BxContentHeight;
 	      ResizeHeight (pBox, pSourceBox, NULL, height - pBox->BxH, 0, 0, frame);
 	    }
 	  else
 		/* Mise a jour de la hauteur du contenu */
-	    pBox->BxRuleHeigth = height;
+	    pBox->BxRuleHeight = height;
 	}
     }
 }
@@ -822,28 +822,28 @@ void ChangeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
       if (pBox->BxContentHeight)
 	{
 	  /* the current height equals the contents height */
-	  height = pBox->BxRuleHeigth + delta;
+	  height = pBox->BxRuleHeight + delta;
 	  if (minimumRule && height > pBox->BxH)
 	    {
 	      /* apply the minimum rule */
-	      pBox->BxRuleHeigth = pBox->BxH;
+	      pBox->BxRuleHeight = pBox->BxH;
 	      pBox->BxContentHeight = !pBox->BxContentHeight;
 	      ResizeHeight (pBox, pSourceBox, pFromBox, height - pBox->BxH,
 			    0, 0, frame);
 	    }
 	  else
 	    /* update the minimum */
-	    pBox->BxRuleHeigth = height;
+	    pBox->BxRuleHeight = height;
 	}
       else if (minimumRule)
 	{
 	  /* the current height equals the minimum */
 	  height = pBox->BxH + delta;
-	  if (height < pBox->BxRuleHeigth)
+	  if (height < pBox->BxRuleHeight)
 	    {
 	      /* apply the contents rule */
-	      height = pBox->BxRuleHeigth;
-	      pBox->BxRuleHeigth = pBox->BxH + delta;
+	      height = pBox->BxRuleHeight;
+	      pBox->BxRuleHeight = pBox->BxH + delta;
 	      pBox->BxContentHeight = !pBox->BxContentHeight;
 	      ResizeHeight (pBox, pSourceBox, pFromBox, height - pBox->BxH,
 			    0, 0, frame);
@@ -883,12 +883,10 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
 	  /* save the previous fixed edge */
 	  oldHorizEdge = pBox->BxHorizEdge;
 	  /* Look for the horizontal fixed edge and the horizontal free edge */
-#ifdef IV
 	  if ((op == OpWidth/* && !pBox->BxHorizInverted) ||
 			       (op != OpWidth && pBox->BxHorizInverted*/))
 	    oldPosEdge = pAb->AbWidth.DimPosition.PosEdge;
 	  else
-#endif
 	    {
 	      oldPosEdge = pAb->AbHorizPos.PosEdge;
 	      /* Update the box history to avoid two moving of pSourceBox */
@@ -942,12 +940,10 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
 	  /* save the previous fixed edge */
 	  oldVertEdge = pBox->BxVertEdge;
 	  /* Look for the vertical fixed edge and the vertical free edge */
-#ifdef IV
 	  if ((op == OpHeight/* && !pBox->BxVertInverted) ||
 				(op != OpHeight && pBox->BxVertInverted*/))
 	    oldPosEdge = pAb->AbHeight.DimPosition.PosEdge;
 	  else
-#endif
 	    {
 	      oldPosEdge = pAb->AbVertPos.PosEdge;
 	      /* Update the box history to avoid two moving of pSourceBox */

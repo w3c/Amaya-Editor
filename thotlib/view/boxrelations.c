@@ -2651,7 +2651,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
     {
       pAb->AbHeightChange = FALSE;
       /* Marque dans la boite si la dimension depend du contenu ou non */
-      pBox->BxRuleHeigth = 0;
+      pBox->BxRuleHeight = 0;
       defaultDim = pBox->BxContentHeight;
     }
 
