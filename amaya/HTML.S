@@ -404,7 +404,7 @@ EXCEPT
 	C_Head:		Hidden, NoSelect;
 	Table_foot:	NoCut, Hidden, PageBreakRepBefore;
 	C_Foot:		Hidden, NoSelect;
-	Table_body:	PageBreakAllowed, Hidden;
+	tbody{Table_body}:	PageBreakAllowed, Hidden;
 	Table_row:	PageBreakPlace;
 	Col_width_percent:	Invisible;
 	Col_width_pxl:	Invisible;

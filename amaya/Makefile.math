@@ -20,13 +20,15 @@ AMAYA_MATH_EXTRA_LIBS=
 
 AMAYA_MATH_INCLUDES= 
 
-AMAYA_MATH_SCHEMAS=$(AMAYA)/MathML.STR $(AMAYA)/MathMLP.PRS \
-                  $(AMAYA)/MathMLT.TRA $(AMAYA)/MathML.h
+AMAYA_MATH_SCHEMAS= $(AMAYA)/MathML.S $(AMAYA)/MathMLP.P $(AMAYA)/MathMLT.T
+
+amaya_math_schema : compMATH compMATHP compMATHT
 
 #
 # Structure schema compilation.
 #
-$(AMAYA)/MathML.STR : $(AMAYA)/MathML.S ../bin/str
+compMATH : $(AMAYA)/MathML.STR
+$(AMAYA)/MathML.STR : $(AMAYA)/MathML.S
 	STR=`pwd`/../bin/str;PRS=`pwd`/../bin/prs;TRA=`pwd`/../bin/tra;\
 	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
 	$$STR $(ALL_AMAYA_OPTIONS) MathML ; \
@@ -36,7 +38,8 @@ $(AMAYA)/MathML.STR : $(AMAYA)/MathML.S ../bin/str
 #
 # Presentation schemas compilation
 #
-$(AMAYA)/MathMLP.PRS : $(AMAYA)/MathMLP.P ../bin/prs
+compMATHP : $(AMAYA)/MathMLP.PRS
+$(AMAYA)/MathMLP.PRS : $(AMAYA)/MathMLP.P
 	PRS=`pwd`/../bin/prs;\
 	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
 	$$PRS $(ALL_AMAYA_OPTIONS) MathMLP
@@ -44,7 +47,8 @@ $(AMAYA)/MathMLP.PRS : $(AMAYA)/MathMLP.P ../bin/prs
 #
 # Traduction schemas compilation
 #
-$(AMAYA)/MathMLT.TRA : $(AMAYA)/MathMLT.T ../bin/tra
+compMATHT : $(AMAYA)/MathMLT.TRA
+$(AMAYA)/MathMLT.TRA : $(AMAYA)/MathMLT.T
 	TRA=`pwd`/../bin/tra;\
 	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
 	$$TRA $(ALL_AMAYA_OPTIONS) MathMLT

@@ -1322,107 +1322,103 @@ void                LoadUserStyleSheet (doc)
 Document            doc;
 #endif
 {
-   char                tempfile[MAX_LENGTH];
-   struct stat         buf;
-   char               *buffer = NULL;
-   char               *home;
-   char               *thotdir;
-   FILE               *res;
-   int                 len;
-   CSSInfoPtr          css;
+  char                tempfile[MAX_LENGTH];
+  struct stat         buf;
+  char               *buffer = NULL;
+  char               *home;
+  char               *thotdir;
+  FILE               *res;
+  int                 len;
+  CSSInfoPtr          css;
 
-   if (User_CSS != NULL)
-      ApplyExtraPresentation (doc);
+  if (User_CSS != NULL)
+    ApplyExtraPresentation (doc);
 
-   thotdir = TtaGetEnvString ("THOTDIR");
-   home = TtaGetEnvString ("HOME");
-   /*
-    * try to load the user preferences.
-    */
-   if (home)
-     {
-	strcpy (tempfile, home);
-	strcat (tempfile, "/.");
-	strcat (tempfile, HTAppName);
-	strcat (tempfile, ".css");
+  thotdir = TtaGetEnvString ("THOTDIR");
+  home = TtaGetEnvString ("HOME");
+  /* try to load the user preferences */
+  if (home)
+    {
+      sprintf (tempfile, "%s%s.%s.css", home, DIR_STR, HTAppName);
+      res = fopen (tempfile, "r");
+      if (res != NULL)
+	{
+	  if (fstat (fileno (res), &buf))
+	    fclose (res);
+	  else
+	    {
+	      buffer = (char *) TtaGetMemory (buf.st_size + 1000);
+	      if (buffer == NULL)
+		fclose (res);
+	      else
+		{
+		  len = fread (buffer, buf.st_size, 1, res);
+		  if (len != 1)
+		    {
+		      TtaFreeMemory (buffer);
+		      buffer = NULL;
+		      fclose (res);
+		    }
+		  else
+		    {
+		      buffer[buf.st_size] = 0;
+		      fclose (res);
+		    }
+		}
+	    }
+	}
+    }
 
-	res = fopen (tempfile, "r");
-	if (res == NULL)
-	  {
-	     goto load_thot_defines;
-	  }
-	if (fstat (fileno (res), &buf))
-	  {
-	     fclose (res);
-	     goto load_thot_defines;
-	  }
-	buffer = (char *) TtaGetMemory (buf.st_size + 1000);
-	if (buffer == NULL)
-	  {
-	     fclose (res);
-	     goto load_thot_defines;
-	  }
-	len = fread (buffer, buf.st_size, 1, res);
-	if (len != 1)
-	  {
-	     TtaFreeMemory (buffer);
-	     buffer = NULL;
-	     fclose (res);
-	     goto load_thot_defines;
-	  }
-	buffer[buf.st_size] = 0;
-	fclose (res);
-     }
- load_thot_defines:
+  if ((buffer == NULL) && (thotdir))
+    {
+      /* file not found */
+      sprintf (tempfile, "%s%sbin%s.css", thotdir, DIR_STR, DIR_STR, HTAppName);
+      res = fopen (tempfile, "r");
+      if (res != NULL)
+	{
+	  if (fstat (fileno (res), &buf))
+	    fclose (res);
+	  else
+	    {
+	      buffer = (char *) TtaGetMemory (buf.st_size + 1000);
+	      if (buffer == NULL)
+		fclose (res);
+	      else
+		{
+		  len = fread (buffer, buf.st_size, 1, res);
+		  if (len != 1)
+		    {
+		      TtaFreeMemory (buffer);
+		      buffer = NULL;
+		      fclose (res);
+		    }
+		  else
+		    {
+		      buffer[buf.st_size] = 0;
+		      fclose (res);
+		    }
+		}
+	    }
+	}
+    }
 
-   if ((buffer == NULL) && (thotdir))
-     {
-	strcpy (tempfile, thotdir);
-	strcat (tempfile, "/bin/");
-	strcat (tempfile, HTAppName);
-	strcat (tempfile, ".css");
-
-	res = fopen (tempfile, "r");
-	if (res == NULL)
-	  {
-	     return;
-	  }
-	if (fstat (fileno (res), &buf))
-	  {
-	     fclose (res);
-	     return;
-	  }
-	buffer = (char *) TtaGetMemory (buf.st_size + 1000);
-	if (buffer == NULL)
-	  {
-	     fclose (res);
-	     return;
-	  }
-	len = fread (buffer, buf.st_size, 1, res);
-	if (len != 1)
-	  {
-	     TtaFreeMemory (buffer);
-	     fclose (res);
-	     return;
-	  }
-	buffer[buf.st_size] = 0;
-	fclose (res);
-     }
-   /*
-    * allocate a new Presentation structure, parse the whole thing
-    * and free the buffer.
-    */
-   css = NewCSS ();
-   css->name = TtaGetMessage (AMAYA, AM_USER_PREFERENCES);
-   css->category = CSS_USER_STYLE;
-   css->pschema = TtaNewPSchema ();
-   css->state = CSS_STATE_Unmodified;
-   css->url = TtaStrdup (tempfile);
-   css->css_rule = buffer;
-   AddCSS (css);
-   User_CSS = css;
-   ParseHTMLStyleSheet (buffer, doc, css);
-
+  /*
+   * allocate a new Presentation structure, parse the whole thing
+   * and free the buffer.
+   */
+  if (buffer != NULL)
+    {
+      css = NewCSS ();
+      css->name = TtaGetMessage (AMAYA, AM_USER_PREFERENCES);
+      css->category = CSS_USER_STYLE;
+      css->pschema = TtaNewPSchema ();
+      css->state = CSS_STATE_Unmodified;
+      css->url = TtaStrdup (tempfile);
+      css->css_rule = buffer;
+      AddCSS (css);
+      User_CSS = css;
+      ParseHTMLStyleSheet (buffer, doc, css);
+    }
 }
 
 /*----------------------------------------------------------------------

@@ -3015,7 +3015,7 @@ PtrAbstractBox      pAb;
 				 YMove (pFirstBox, NULL, descent, frame);
 				 pPieceBox = GetNextBox (pFirstBox->BxAbstractBox);
 			      }
-			    while (pFirstBox != pNextLine->LiLastBox && pFirstBox != pNextLine->LiLastPiece);
+			    while (pPieceBox != NULL && pFirstBox != pNextLine->LiLastBox && pFirstBox != pNextLine->LiLastPiece);
 
 			    pNextLine = pNextLine->LiNext;
 			 }

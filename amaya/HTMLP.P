@@ -3616,7 +3616,7 @@ BOXES
 	BEGIN
 	Background : White;
 	Foreground : Black;
-	Fillpattern : nopattern;
+	FillPattern : nopattern;
 	Underline: NoUnderline;
 	Content: (Value (CptToCPage, Uroman));
 	VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
@@ -3629,6 +3629,9 @@ BOXES
 
   BottomSpace:
 	BEGIN
+	Background : White;
+	Foreground : Black;
+	FillPattern: backgroundcolor;
 	Height: 1.4 cm;
 	Width: 1 pt;
 	Underline: NoUnderline;
@@ -3639,6 +3642,10 @@ BOXES
 
   ThePage:
 	BEGIN
+	Background : White;
+	Foreground : Black;
+	FillPattern: backgroundcolor;
+	ShowBox;
 #ifdef US_PAPER
 	Width: 16.2 cm;
 	Height: 23.8 cm;
@@ -3680,6 +3687,9 @@ BOXES
 
   ToCPage:
 	BEGIN
+	Background : White;
+	Foreground : Black;
+	ShowBox;
 #ifdef US_PAPER
 	Width: 16.2 cm;
 	Height: 23.8 cm;
@@ -3726,6 +3736,9 @@ BOXES
 #else
 
  BodyBottomSpace: BEGIN
+	Background : White;
+	Foreground : Black;
+	FillPattern: backgroundcolor;
 	Content: Graphics ' ';
 	Height: 1 cm;
 	Width: 1;
@@ -5439,6 +5452,9 @@ RULES
 	HorizPos: Left = Enclosing . Left;
 	Width: Enclosing . Width;
 	VertPos: nil;
+#ifdef PAGE
+	PageBreak: No;
+#endif
 	IN Structure_view BEGIN
 		Visibility: 0;
 		END;
