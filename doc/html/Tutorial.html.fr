@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+       "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Amaya - Guide utilisateur</title>
+  <meta name="generator" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+</head>
+
+<body xml:lang="fr">
+<h1>Amaya - Guide utilisateur</h1>
+
+<div>
+<h2>Plan</h2>
+<ol>
+  <li>Introduction
+    <ul>
+      <li>Pourquoi un éditeur structuré pour HTML ?</li>
+      <li>Pourquoi des familles HTML ?</li>
+      <li>Les familles HTML</li>
+      <li>Quelques règles à suivre</li>
+    </ul>
+  </li>
+  <li>Présentation générale d'Amaya</li>
+  <li>Paramétrage de l'application</li>
+  <li>Création/Edition d'une page Web</li>
+  <li>Création du contenu (paragraphes, en-têtes de sections, divisions)</li>
+  <li>Le listes</li>
+  <li>Les liens</li>
+  <li>Les tables</li>
+  <li>Recherche/Remplacement - Correction orthographique</li>
+  <li>Création de feuilles de style CSS</li>
+  <li>Traiter des documents erronés</li>
+</ol>
+</div>
+
+<div>
+<h1>1. Introduction</h1>
+
+<p>L'objectif du Web est de permettre l'échange d'informations quelque soit
+le support.</p>
+<ul>
+  <li>Eviter l'approche de Word :
+    <p>Quand on transmet un document Word à quelqu'un on n'est pas sûr que la
+    personne va disposer des mêmes fontes.</p>
+    <p>Si tout repose sur la présentation le document peut devenir non
+    modifiable voire illisible.</p>
+  </li>
+  <li>La solution :
+    <p>Utiliser un modèle de représentation clairement défini et ouvert.</p>
+    <p>C'est ce que permet de faire HTML en définissant un modèle de document
+    Web standard.</p>
+    <p>Séparer contenu et présentation.</p>
+    <p></p>
+  </li>
+</ul>
+
+<p>L'auteur d'un document Web doit bien réfléchir à ce qui est du ressort de
+la structure et ce qui n'est que de la présentation</p>
+
+<p>Un bon exercice : la description d'un document HTML en lisant les balises
+HTML.</p>
+
+<h3>Pourquoi un éditeur structuré pour HTML ?</h3>
+
+<p>HTML définit une structure (organisation) de document.</p>
+<ul>
+  <li><strong>Elements</strong> : Définition de sémantique même si cette
+    sémantique est du niveau de la présentation
+    <p>Par exemple un H2 a un effet de présentation mais donne aussi une
+    information sémantique</p>
+    <p>De même un lien (ancre + href) définit plus qu'un simple texte
+    coloré/souligné</p>
+  </li>
+  <li><strong>Attributs</strong> : Caractérisation sémantique
+    <p>Division avec un attribut class="section", la cible d'un lien
+    href="http://www.w3.org/"</p>
+  </li>
+</ul>
+
+<p>La décoration des documents est confiée à un langage de style CSS
+(Cascading Style Sheets).</p>
+
+<h3>Pourquoi des familles HTML ?</h3>
+
+<p>Avant que le langage CSS ne soit finalisé, HTML avait introduit des
+éléments et des attributs qui fixaient la présentation des documents. Par
+exemple &lt;font&gt;...&lt;/font&gt; pour choisir une police de caractères
+pour l'affichage d'une portion de texte. Avec le langage CSS, ces éléments et
+attributs n'ont plus de raison d'être. La sous-famille de HTML 4.0 Strict a
+pour but d'identifier les éléments et attributs qui doivent être remplacé par
+des propriétés CSS (center, font, color, background).</p>
+
+<p>La sous-famille de HTML 4.0 Frameset isole les éléments et attributs qui
+décrivent le découpage en fenêtres (frames). Le W3C décommande l'utilisation
+des "frames" pour faire que les sites Web soient accessibles aux handicapés
+(non-voyants).</p>
+
+<p>D'autres familles XHTML ont été introduites par&nbsp;:</p>
+<ul>
+  <li>Besoin de <strong>modularisation</strong> pour s'adapter à de nouveaux
+    supports (PDA, téléphones, télévision)</li>
+  <li>Nécessité d'avoir des <strong>structures propres</strong> pour filtrer
+    et transformer de façon automatique les documents
+    <p>Exemple&nbsp;: extraire les titres et ne présenter le texte qui suit
+    qu'à la demande</p>
+  </li>
+  <li>Autoriser la <strong>composition</strong> avec d'autres langages XML
+    (RDF, MathML, SVG, SMIL, autres).</li>
+</ul>
+
+<h3>Les familles HTML</h3>
+
+<table border="1">
+  <caption></caption>
+  <tbody>
+    <tr>
+      <td>HTML 4.0 Transitional</td>
+      <td>Tout sauf les frames</td>
+      <td>Structure non explicite</td>
+    </tr>
+    <tr>
+      <td>HTML 4.0 Strict</td>
+      <td>Sans éléments de présentation</td>
+      <td>Structure non explicite</td>
+    </tr>
+    <tr>
+      <td>HTML 4.0 Frameset</td>
+      <td>Les frames</td>
+      <td>Structure non explicite</td>
+    </tr>
+    <tr>
+      <td>XHTML 1.0 Transitional</td>
+      <td>Tout sauf les frames</td>
+      <td>Structure explicite</td>
+    </tr>
+    <tr>
+      <td>XHTML 1.0 Strict</td>
+      <td>Sans éléments de présentation</td>
+      <td>Structure explicite</td>
+    </tr>
+    <tr>
+      <td>XHTML 1.0 Basic</td>
+      <td>Adapté aux téléphones</td>
+      <td>Structure explicite</td>
+    </tr>
+    <tr>
+      <td>XHTML 1.1</td>
+      <td>+ annotations Ruby</td>
+      <td>Structure explicite</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Quelques règles d'accessibilité à suivre</h3>
+
+<p>Enoncé de quelques règles</p>
+<ul>
+  <li>Produire des documents valides</li>
+  <li>Séparer structure et présentation
+    <p>Ne pas considérer que tout le monde dispose du même écran que vous</p>
+  </li>
+  <li>Ne pas utiliser du JavaScript pour naviguer</li>
+  <li>Ne pas utiliser les frames</li>
+  <li>Fournir des textes alternés pour les images, les vidéos, etc.</li>
+</ul>
+</div>
+
+<div>
+<h1>2. Présentation générale d'Amaya</h1>
+
+<p>Amaya est à la fois navigateur et un éditeur&nbsp;:</p>
+
+<p><strong>Amaya</strong> est un éditeur doté de capacités de navigation.
+C'est à dire que pendant que l'utilisateur travaille sur les documents de son
+site Web, il peut accéder n'importe quel autre document Web de sites
+extérieurs.</p>
+
+<p>Lorsqu'il est utilisé comme navigateur, Amaya se comporte comme beaucoup
+d'autres navigateurs Web, excepté pour ce qui est d'activer les liens. Par
+défaut le simple clic est utilisé pour poser la sélection (définir le point
+d'insertion de texte) et il faut effectuer un double-clic sur un lien pour
+l'activer.</p>
+
+<p></p>
+
+<p>Fenêtre initiale&nbsp;:</p>
+
+<p>Par défaut, l'utilisateur voit la vue formatée du document. C'est l'aspect
+final du document tel qu'il est vu par un navigateur Web</p>
+
+<p><img alt="Vue formattée" src="../images/View.png" /></p>
+
+<p>La barre de menu :</p>
+<ul>
+  <li>Fichier&nbsp;: création de documents, navigation, impression,
+  fermeture.</li>
+  <li>Edition&nbsp;: édition de base, recherche/remplacement, correction
+    orthographique.</li>
+  <li>XHTML : création/remplacement d'éléments (X)HTML.</li>
+  <li>XML : création d'éléments XML.</li>
+  <li>Liens : création et destruction des liens.</li>
+  <li>Vues : gestion des différentes vues du document.</li>
+  <li>Style : gestion du style CSS.</li>
+  <li>Spécial : fonctions avancées et de paramétrage.</li>
+  <li>Attributs : gestion des attributs de l'élément sélectionné.</li>
+  <li>Annotations : création, destruction d'annotations.</li>
+  <li>Aide : donne accès au manuel en ligne.</li>
+</ul>
+
+<p>Les barres d'outils</p>
+
+<p>Contient quelques boutons d'accès aux fonctions les plus utilisées</p>
+<ul>
+  <li>Stop <img alt="(Stop)" src="../images/stop.gif" />&nbsp;: arrête le
+    transfert d'information depuis un serveur Web</li>
+  <li>Document précédent <img alt="(Précédent)" src="../images/Back.gif"
+    />&nbsp;: retour au document précédent (s'il y en a un)</li>
+  <li>Document suivant <img alt="(Suivant)" src="../images/Forward.gif"
+    />&nbsp;: retour au document suivant (s'il y en a un)</li>
+  <li>Recharger<img alt="(Recharger)" src="../images/Reload.gif" /> :
+    recharge le document (accès serveur)</li>
+  <li>Page personnelle <img alt="(Home)" src="../images/home.gif" />&nbsp;:
+    affiche la page de démarrage</li>
+  <li>Editeur/Navigateur <img alt="(Edition)" src="../images/Editor.gif"
+    />&nbsp;: autorise ou interdit l'édition</li>
+  <li>Sauver <img alt="(Sauver)" src="../images/floppy.gif" />&nbsp;: sauver
+    les modifications</li>
+  <li>Imprimer <img alt="(Imprimer)" src="../images/Print.gif" />&nbsp;:
+    imprime le document</li>
+  <li>Rechercher/Remplacer <img alt="(Rechercher)" src="../images/find.gif"
+    />&nbsp;: affiche un formulaire de recherche/remplacement de texte</li>
+  <li>Mise en évidence <img alt="(Evidence)" src="../images/Em.gif" />&nbsp;:
+    permet de créer/supprimer un élément "mise en évidence"
+    (&lt;em&gt;...&lt;/em&gt;)</li>
+  <li>Important <img alt="(Important)" src="../images/Strong.gif" />&nbsp;:
+    permet de créer un élément "important"
+  (&lt;strong&gt;...&lt;/strong&gt;)</li>
+  <li>Fonte fixe <img alt="(Code)" src="../images/code.gif" />&nbsp;: permet
+    de créer un élément "fonte fixe" (&lt;code&gt;...&lt;/code&gt;)</li>
+  <li>Ajout d'une image <img alt="(Image)" src="../images/Image.gif"
+    />&nbsp;: permet de créer un élément "image" (&lt;img/&gt;)</li>
+  <li>Titre niveau 1&nbsp;<img alt="(H1)" src="../images/H1.gif" />&nbsp;:
+    permet de créer un élément "titre niveau 1"
+  (&lt;h1&gt;...&lt;/h1&gt;)</li>
+  <li>Titre niveau 2 <img alt="(H2)" src="../images/H2.gif" />&nbsp;: permet
+    de créer un élément "titre niveau 2" (&lt;h2&gt;...&lt;/h2&gt;)</li>
+  <li>Titre niveau 3 <img alt="(H3)" src="../images/H3.gif" />&nbsp;: permet
+    de créer un élément "titre niveau 3" (&lt;h3&gt;...&lt;/h3&gt;)</li>
+  <li>Liste <img alt="(Liste)" src="../images/OList.gif" />&nbsp;: permet de
+    créer un élément "liste à puces" (&lt;ul&gt;...&lt;/ul&gt;)</li>
+  <li>Liste numérotée <img alt="(Liste num)" src="../images/NumList.gif"
+    />&nbsp;: permet de créer un élément "liste numérotée"
+    (&lt;ol&gt;...&lt;/ol&gt;)</li>
+  <li>Liste de définitions <img alt="(Définitions)" src="../images/DL.gif"
+    />&nbsp;: permet de créer un élément "liste de définition"
+    (&lt;dl&gt;...&lt;/dl&gt;)</li>
+  <li>Lien <img alt="(Lien)" src="../images/Link.gif" />&nbsp;: permet de
+    créer un élément "titre niveau 1" (&lt;a href="..."&gt;...&lt;/a&gt;)</li>
+  <li>Table <img alt="(Table)" src="../images/table.gif" />&nbsp;: permet de
+    créer un élément "titre niveau 1" (&lt;table&gt;...&lt;/table&gt;)</li>
+  <li>Maths <img alt="(Math)" src="../images/Math.gif" />&nbsp;: palette pour
+    créer des formules</li>
+  <li>Graphique <img alt="(SVG)" src="../images/Graph.gif" />&nbsp;: palette
+    pour créer des graphiques vectoriels</li>
+  <li>Bibliothèque SVG <img alt="(Librairie)" src="../images/libsvg.gif"
+    />&nbsp;: affiche la palette de graphiques prédéfinis</li>
+  <li>Ligne de temps <img alt="(Animation)" src="../images/anim.gif"
+    />&nbsp;:&nbsp;affiche la ligne de temps pour l'animation des
+  graphiques</li>
+</ul>
+
+<p>et une zone d'affichage de l'adresse du document.</p>
+</div>
+
+<div>
+<h1>3. Paramétrage de l'application</h1>
+
+<p>Avant d'éditer des documents Web avec Amaya, il est important de fixer un
+certain nombre de paramètres. Pour cela il faut ouvrir au moins deux des dix
+menus de préférences disponibles dans <strong>Spécial/Préférences</strong>.
+Chaque menu présente trois boutons d'action :</p>
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="action button chart">
+  <tbody>
+    <tr>
+      <th>Appliquer</th>
+      <td>Ce bouton valide et stocke les options affichées dans le menu.</td>
+    </tr>
+    <tr>
+      <th>Défauts</th>
+      <td>Ce bouton rétablit, mais ne sauve pas, les valeurs par défaut. Il
+        faut utiliser le bouton Appliquer pour valider les options.</td>
+    </tr>
+    <tr>
+      <th>Terminer</th>
+      <td>Ce bouton ferme le menu.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Voici les paramètres importants à régler&nbsp;:</p>
+
+<h4>Dans les préférences générales</h4>
+<ul>
+  <li><strong>Page de démarrage</strong>&nbsp;: Spécifie l'URI qu'Amaya
+    chargera au démarrage ou quand l'utilisateur pressera le bouton <img
+    alt="(Page personelle)" src="../images/home.gif" /> (par exemple l'URI
+    <code>http://www.w3.org</code>).</li>
+  <li><strong><a id="Enable">Activer le coller ligne à
+    ligne</a></strong>&nbsp;: Cette option concerne le coller depuis une
+    autre application. Quand cette option est activée, les lignes de
+    l'application source sont conservées. Sinon les caractères «&nbsp;fin de
+    ligne&nbsp;» sont remplacés par des espaces.</li>
+  <li><strong>Produire des fichiers de sauvegarde</strong>&nbsp;: Si cette
+    option est active Amaya va produire périodiquement un fichier de
+    sauvegarde pour chaque document édité.</li>
+  <li><strong>Montrer boutons</strong>&nbsp;: Contrôle l'affichage de la
+    barre de boutons pour tous les documents.</li>
+  <li><strong>Montrer l'adresse</strong>&nbsp;: Contrôle si Amaya affiche
+    l'adresse des documents.</li>
+  <li><strong>Montrer les cibles</strong>&nbsp;: Contrôle si les cibles de
+    liens sont visualisées ou non. Montrer les cibles peut aider quand on
+    veut créer de nouveaux liens. Cette option agit immédiatement sur tous
+    les documents édités.<br />
+  </li>
+  <li><strong>Zoom caractères</strong>&nbsp;: Cette option vous permet de
+    réduire ou d'augmenter les tailles des polices de caractères utilisées.
+    Cette option a un effet immédiat sur tous les documents édités. <br />
+  </li>
+  <li><strong>Langue du dialogue</strong>&nbsp;: Spécifie la langue utilisée
+    dans les menus et les messages. La langue par défaut est l'anglais
+    américain (valeur en). D'autres langues sont possibles comme le français
+    (fr), l'italien (it), l'espagnol (es), et l'allemand (de).</li>
+</ul>
+
+<h4>Dans les préférences de navigation</h4>
+<ul>
+  <li><strong>Charger les images</strong> : Contrôle si les images doivent
+    être chargées et affichées. Sinon, l'attribut ALT est visualisé à la
+    place de l'image. Cette option prend effet dès que le formulaire est
+    validé. <br />
+  </li>
+  <li><strong>Charger les objets</strong> : Contrôle si les objets doivent
+    être chargés et affichés. Sinon, le contenu de l'objet est visualisé à la
+    place de l'objet. Cette option prend effet dès que le formulaire est
+    validé.</li>
+  <li><strong>Montrer les images de fond</strong> : Contrôle si les images en
+    arrière plan doivent être montrées ou non. Cette option prend effet dès
+    que le formulaire est validé.</li>
+  <li><strong>Le double clic active les liens</strong> : Depuis la première
+    version d'Amaya, les utilisateurs ont besoin de double cliquer sur un
+    lien pour l'activer. Cela permet de différencier l'édition d'un lien de
+    son activation. Vous pouvez changer ce comportement en désactivant cette
+    option.<br />
+  </li>
+</ul>
+</div>
+
+<div>
+<h1>4. Création/Edition d'une page Web</h1>
+
+<p>L'entrée <strong>Fichier/Nouveau</strong> permet de créer un nouveau
+document d'un type donné. Amaya demande de spécifier l'URI ou le nom local du
+document à créer (un nom par défaut est généré). Après confirmation, Amaya
+ouvre un nouveau document vide.</p>
+
+<p>L'entrée <strong>Fichier/Ouvrir</strong> remplace le document affichér la
+nouvelle page sélectionnée. Amaya utilise la même entrée de menu  par le
+nouveau document sélectionné. Amaya utilise la même entrée de menu pour
+ouvrir un document local ou un document d'un serveur Web.</p>
+
+<p>L'entrée <strong>Fichier/Ouvrir dans nouvelle fenêtre</strong> affiche le
+nouveau document sélectionné dans une nouvelle fenêtre.</p>
+
+<p>Les entrées du menu XHTML présente les éléments que l'on peut insérer dans
+le document affiché, en fonction de la famille XHTML choisie. La manière la
+plus simple de créer de nouveaux éléments dans un document est de placer le
+point d'insertion dans la position voulue et d'utiliser le menu</p>
+
+<p><strong>Xhtml</strong>, ou les boutons correspondant aux éléments les plus
+communs (images, en-têtes, listes...). Ces boutons ou entrées de menu créent
+l'élément correspondant à la position courante. Si l'élément désiré ne peut
+pas être créé exactement à la position choisie. Amaya tente alors de créer
+l'élément à l'endroit le plus proche possible.</p>
+
+<h3>Définir le titre du document</h3>
+
+<p>Par défaut Amaya donne le titre "No title" au document nouvellement créé
+parce que cet élément est obligatoire. Il ne faut pas oublier de mettre à
+jour ce titre en activant l'entrée <strong>XHTML/Changer le
+titre</strong>.</p>
+
+<h3>Définir la langue utilisée</h3>
+
+<p>Il est important de définir la langue dans laquelle est écrit le document.
+Sans indication explicite, le document est supposérite en anglais. Cette
+langue est utilisée par le correcteur orthographique. écrit en anglais. Cette
+langue est utilisée par le correcteur orthographique.</p>
+
+<p>Pour définir qu'un document est écrit français, il faut sélectionner
+l'élément &lt;body&gt; est lui appl en français, il faut sélectionner
+l'élément &lt;body&gt; est lui appliquer l'attribut lang=fr.</p>
+
+<h4>Première méthode</h4>
+
+<p>On pose la sélection n'importe où dans le document et on utilise la touche
+F2 sous Windows (Esc sous Linux) pour remonter la sélection sur l'élément
+&lt;body&gt;. La barre de statut affiche l'élément sélectionné. A ce moment
+là on sélectionne l'entrée du menu <strong>Attributs/Langue</strong> pour
+afficher le formulaire de choix de la langue.</p>
+
+<h4>Deuxième méthode</h4>
+
+<p>On ouvre la vue Structure (entrée <strong>Vue/Montrer la
+structure</strong>), on sélectionne l'élément &lt;body&gt;.A ce moment là on
+sélectionne l'entrée du menu <strong>Attributs/Langue</strong> pour afficher
+le formulaire de choix de la langue.</p>
+</div>
+
+<div>
+<h1>5. Création du contenu (paragraphes, en-têtes de sections, divisions)</h1>
+
+<p>Par défaut, Amaya crée un nouveau paragraphe chaque fois que l'on active
+la touche <code>Enter</code>. Une fois le paragraphe et son contenu créé, on
+peut insèrer un en-tête de section, avant, après, ou au milieu du
+paragraphe,</p>
+<ul>
+  <li>en activant un des boutons Hn,</li>
+  <li>ou en tapant <code>Ctrl n</code> (n allant de 1 à 6),</li>
+  <li>ou en sélectionnant, l'entrée correspondante du menu
+    <strong>XHTML</strong>.</li>
+</ul>
+
+<p>Quand l'insertion se fait au milieu du paragraphe, Amaya coupe le
+paragraphe existant en deux et insère l'en-tête au milieu.</p>
+
+<h3>Transformations</h3>
+
+<p>Si une partie du paragraphe est sélectionnée au moment où on insére
+l'en-tête, ce texte sera supprimé dans le paragraphe est inséré dans
+l'en-tête créé.</p>
+
+<p>On peut aussi sélectionner le paragraphe (touche <code>F2</code> ou
+<code>Esc</code>) et transformer ainsi le paragraphe en en-tête. Un ou
+plusieurs paragraphes peuvent en fait se transformer en liste, table,
+performatés en fonction de l'élément cible choisi. L'entée de menu
+<strong>Edition/Transformer</strong> propose les cibles possibles pour la
+sélection courante.</p>
+
+<h3>Préformaté</h3>
+
+<p></p>
+
+<p>Numérotation</p>
+
+<p>Les en-têtes de section H1, ..., H6</p>
+
+<p>Division englobant titre + contenu</p>
+
+<p><em>Exercice1&nbsp;:</em> Créer un document contenant des paragraphes et
+des en-têtes.</p>
+
+<h1>6. Les listes</h1>
+
+<h3>Editer les listes à puces ou les listes numérotées</h3>
+
+<h4>Première méthode</h4>
+
+<p>En cliquant sur <img alt="(Liste)" src="../images/OList.gif" /> (ou
+<code>Ctrl l Ctrl u</code>) on crée une liste à puces et un premier item de
+liste à l'intérieur.</p>
+<ul>
+  <li>Il ne reste plus qu'à taper le texte de l'item.
+    <p>La touche <code>Enter</code> en fin d'item va créer un paragraphe vide
+    dans l'item et on peut immédiatement saisir le contenu de ce nouveau
+    paragraphe.</p>
+  </li>
+  <li>Si on ne veut pas insérer de paragraphe mais passer à l'item suivant,
+    on double la touche <code>Enter</code>.
+    <p>Attention en cliquant sur <img alt="(Liste)" src="../images/OList.gif"
+    /> (ou <code>Ctrl l Ctrl u</code>) on crée une nouvelle liste à puces à
+    l'intérieur de l'item courant.</p>
+  </li>
+  <li>Si on veut terminer la liste, on triple la touche
+  <code>Enter</code>.</li>
+</ul>
+
+<p>En cliquant sur <img alt="(Liste numérotée)" src="../images/NumList.gif"
+/> (ou <code>Ctrl l Ctrl o</code>) on crée une liste numérotée et un item de
+liste à l'intérieur.</p>
+
+<h4>Deuxième méthode</h4>
+
+<p>On peut saisir du texte sans définir au préalable de type d'élément. Par
+défaut, Amaya crée un nouveau paragraphe chaque fois que l'on active la
+touche <code>Enter</code>. On peut ensuite sélectionner plusieurs paragraphes
+et cliquer sur <img alt="(Liste)" src="../images/OList.gif" /> (ou <code>Ctrl
+l Ctrl u</code>) pour créer une liste à puces.</p>
+
+<p>Pour sélectionner tout le contenu d'une suite de paragraphes, on utilise
+la touche <code>F2</code> sous Windows (<code>Esc</code> sous Linux).</p>
+
+<h4>Transformation d'une liste à puces et en liste numérotée</h4>
+
+<p>On pose la sélection dans un item de liste, puis en doublant la touche
+<code>F2</code> sous Windows (<code>Esc</code> sous Linux) on sélectionne la
+liste complète. En cliquant sur <img alt="(Liste numérotée)"
+src="../images/NumList.gif" /> (ou <code>Ctrl l Ctrl o</code>) on crée une
+liste numérotée à la place. On peut bien sûr passer de la même façon d'une
+liste numérotée à une liste à puces.</p>
+
+<h3 id="edit-dl">Editer les listes de définitions (dl/dt/dd)</h3>
+
+<p>En cliquant sur <img alt="(Liste de définitions)" src="../images/DL.gif"
+/> (ou <code>Ctrl l Ctrl u</code>) on crée une liste de définitions.</p>
+
+<p>La touche <code>Enter</code> est également utile pour éditer des listes de
+définitions. Considérez l'exemple suivant :</p>
+
+<blockquote>
+  <dl>
+    <dt>Terme 1</dt>
+    <dt>Terme 2</dt>
+      <dd>Définition des deux termes.</dd>
+  </dl>
+</blockquote>
+
+<p>C'est une liste de définitions (<code>dl</code>) contenant deux termes
+(<code>dt</code>) suivis par une définition (<code>dd</code>). Pour ajouter
+un nouveau paragraphe à l'intérieur de la définition (<code>dd</code>),
+placez le point d'insertion à la fin (après le mot "termes") et appuyez sur
+la touche <code>Enter</code>. Si vous pressez <code>Enter</code> deux fois,
+vous sortez de la définition en cours (<code>dd</code>) et vous créez un
+nouveau terme (<code>dt</code>). A la fin de ce nouveau terme, presser une
+fois la touche <code>Enter</code> vous permet de créer encore un nouveau
+terme (<code>dt</code>). La presser deux fois crée une nouvelle définition
+(<code>dd</code>).</p>
+
+<p>Si vous voulez créer un nouveau terme avec sa définition <em>avant</em> le
+Terme 1, mettez le point d'insertion au début du terme 1 et appuyez sur
+<code>Enter</code>. Tapez le nouveau terme (<code>dt</code>), puis pressez
+<code>Enter</code> deux fois : une nouvelle définition (<code>dd</code>) est
+créée directement après le nouveau terme.</p>
+
+<p><em>Exercice2&nbsp;:</em> Créer et ransformer des listes.</p>
+</div>
+
+<h1>7. Les liens</h1>
+
+<p>Création de cibles</p>
+
+<p>Création de liens</p>
+
+<p>Génération automatique d'IDs</p>
+
+<p>Construire un livre</p>
+
+<h1>8. Les tables</h1>
+
+<p>Création d'une table</p>
+
+<p>Ajout de cellules</p>
+
+<p>Création d'un paragraphe après une table</p>
+
+<h1>9. Recherche/Remplacement - Correction orthographique</h1>
+
+<h1>10. Création de feuilles de style CSS</h1>
+
+<p>Elément style</p>
+
+<p>Lier une feuille de style</p>
+
+<p>Activer/désactiver le style</p>
+
+<p>Tester - Voir le style appliqué</p>
+
+<h1>11. Traiter des documents erronés</h1>
+
+<p>Au chargement d'un document existantéditée manuellement ou avec un éditeur
+qui ne traite pas correc (édité manuellement ou avec un éditeur qui ne traite
+pas correctement les familles XHTML), Amaya peut détecter certaines
+incompatibilités avec la famille XHTML choisie. S'il n'a pas pu charger
+correctement la totalité du fichier, un dialogue d'avertissement va être
+affiché. On peut voir le détail des erreurs détectées dans l'entrée
+<strong>Vue/Montrer les erreurs</strong>. Le seul moyen de corriger ces
+erreurs est de suivre le lien vers la vue source du document</p>
+
+<p>Erreur d'encodage</p>
+</body>
+</html>
