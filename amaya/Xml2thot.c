@@ -291,7 +291,7 @@ static void    InitXmlParserContexts (void)
    prevCtxt = NULL;
    ctxt = NULL;
 
-   /* create and initialize a context for the XHTML parser */
+   /* create and initialize a context for XHTML */
    ctxt = TtaGetMemory (sizeof (XMLparserContext));
    if (prevCtxt == NULL)
       firstParserCtxt = ctxt;
@@ -323,7 +323,7 @@ static void    InitXmlParserContexts (void)
    prevCtxt = ctxt;
    xhtmlParserCtxt = ctxt;
 
-   /* create and initialize a context for the MathML parser */
+   /* create and initialize a context for MathML */
    ctxt = TtaGetMemory (sizeof (XMLparserContext));
    if (prevCtxt == NULL)
       firstParserCtxt = ctxt;
@@ -355,7 +355,7 @@ static void    InitXmlParserContexts (void)
    prevCtxt = ctxt;
 
 #ifdef GRAPHML
-   /* create and initialize a context for the GraphML parser */
+   /* create and initialize a context for SVG */
    ctxt = TtaGetMemory (sizeof (XMLparserContext));
    if (prevCtxt == NULL)
       firstParserCtxt = ctxt;
@@ -387,7 +387,7 @@ static void    InitXmlParserContexts (void)
    prevCtxt = ctxt;
 #endif /* GRAPHML */
 
-   /* create and initialize a context for the XLink parser */
+   /* create and initialize a context for XLink */
    ctxt = TtaGetMemory (sizeof (XMLparserContext));
    if (prevCtxt == NULL)
       firstParserCtxt = ctxt;
@@ -418,6 +418,40 @@ static void    InitXmlParserContexts (void)
    ctxt->PreserveTrailingSpace = FALSE;  
    ctxt->PreserveContiguousSpace = FALSE;
    prevCtxt = ctxt;
+
+#ifdef XML_GEN
+   /* create and initialize a context for generic XML */
+   ctxt = TtaGetMemory (sizeof (XMLparserContext));
+   if (prevCtxt == NULL)
+      firstParserCtxt = ctxt;
+   else
+      prevCtxt->NextParserCtxt = ctxt;
+   ctxt->NextParserCtxt = NULL;	/* last context */
+   ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
+   ustrcpy (ctxt->SSchemaName, TEXT("XML"));
+   ctxt->UriName = TtaAllocString (MAX_URI_NAME_LENGTH);
+   ctxt->UriName[0] = WC_EOS;
+   ctxt->XMLSSchema = NULL;
+   ctxt->XMLtype = XML_TYPE;
+   ctxt->MapAttribute = NULL;
+   ctxt->MapAttributeValue = NULL;
+   ctxt->EntityCreated = NULL;
+   ctxt->CheckContext = NULL;
+   ctxt->CheckInsert = NULL;
+   ctxt->ElementComplete = NULL;
+   ctxt->AttributeComplete = NULL;
+   ctxt->GetDTDName = NULL;
+   XLinkParserCtxt = ctxt;
+   ctxt->DefaultLineBreak = TRUE;
+   ctxt->DefaultLeadingSpace = TRUE;   
+   ctxt->DefaultTrailingSpace = TRUE;  
+   ctxt->DefaultContiguousSpace = TRUE;
+   ctxt->PreserveLineBreak = FALSE;    
+   ctxt->PreserveLeadingSpace = FALSE;   
+   ctxt->PreserveTrailingSpace = FALSE;  
+   ctxt->PreserveContiguousSpace = FALSE;
+   prevCtxt = ctxt;
+#endif /* XML_GEN */
 
    currentParserCtxt = NULL;
 
@@ -1574,7 +1608,7 @@ static void       StartOfXmlStartElement (CHAR_T* GIname)
    EndOfXmlStartElement
    Function called at the end of a start tag.
   ----------------------------------------------------------------------*/
-static void     EndOfXmlStartElement (CHAR_T *name)
+static void       EndOfXmlStartElement (CHAR_T *name)
 
 {
 
@@ -3328,6 +3362,9 @@ static void  InitializeExpatParser (CHARSET charset)
 	   charset == ISO_8859_10  || charset == ISO_8859_15  ||
 	   charset == ISO_8859_supp)
     parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
+  else if (charset == WINDOWS_1252)
+    /* Consider WINDOWS_1252 (Windows Latin 1) as ISO_8859_1 */
+    parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
   else
     {
       XMLUnknownEncoding = TRUE;
@@ -3945,13 +3982,19 @@ void       StartXmlParser (Document doc,
 	InitXmlParserContexts ();
 
       /* Select root context */
-      if (ustrcmp (TtaGetSSchemaName (DocumentSSchema), TEXT("GraphML")) == 0)
+      if (ustrcmp (TtaGetSSchemaName (DocumentSSchema), TEXT("HTML")) == 0)
+	ChangeXmlParserContextDTD (TEXT("HTML"));
+      else if (ustrcmp (TtaGetSSchemaName (DocumentSSchema), TEXT("GraphML")) == 0)
 	ChangeXmlParserContextDTD (TEXT("GraphML"));
       else if (ustrcmp (TtaGetSSchemaName (DocumentSSchema), TEXT("MathML")) == 0)
 	ChangeXmlParserContextDTD (TEXT("MathML"));
       else
-	ChangeXmlParserContextDTD (TEXT("HTML"));
-      
+#ifdef XML_GEN
+	ChangeXmlParserContextDTD (TEXT("XML"));
+#else /* XML_GEN */
+      	ChangeXmlParserContextDTD (TEXT("HTML"));
+#endif /* XML_GEN */
+
       /* Initialize the error file */
       ErrFile = (FILE*) 0;
       ErrFileName[0] = WC_EOS;
