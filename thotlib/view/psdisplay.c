@@ -38,6 +38,7 @@
 #include "frame_tv.h"
 #ifdef _WINDOWS
 #include "thotcolor_tv.h"
+#include "units_tv.h"
 #endif /* _WINDOWS */
 
 #define VoidPixmap (Pixmap)(-1)
@@ -92,24 +93,51 @@ extern int PrinterDPI;
 #include "win_f.h"
 
 /*----------------------------------------------------------------------
-  DoDrawOneLine draw one line starting from (x1, y1) to (x2, y2) in frame.
+  DoPrintOneLine draw one line starting from (x1, y1) to (x2, y2) in frame.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         DoPrintOneLine (int color, int x1, int y1, int x2, int y2)
+static void         DoPrintOneLine (int color, int x1, int y1, int x2, int y2, int thick, int style)
 #else  /* __STDC__ */
-static void         DoDrawOneLine (color, x1, y1, x2, y2)
+static void         DoPrintOneLine (color, x1, y1, x2, y2, thick, style)
 int                 color;
 int                 x1;
 int                 y1;
 int                 x2;
 int                 y2;
-
+int                 thick; 
+int                 style;
 #endif /* __STDC__ */
 {
-   HPEN pen ;
-   HPEN hOldPen;
+   HPEN     pen ;
+   HPEN     hOldPen;
+   LOGBRUSH logBrush;
+   int      t;
 
-   pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[color].red, RGB_colors[color].green, RGB_colors[color].blue));
+   t = PixelToPoint (thick);
+
+   if (t <= 1) {
+	  switch (style) {
+             case 0:  pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[color].red, RGB_colors[color].green, RGB_colors[color].blue));   
+                      break;
+             case 1:  pen = CreatePen (PS_DASH, 1, RGB (RGB_colors[color].red, RGB_colors[color].green, RGB_colors[color].blue)); 
+                      break;
+             default: pen = CreatePen (PS_DOT, 1, RGB (RGB_colors[color].red, RGB_colors[color].green, RGB_colors[color].blue));
+                      break;
+	   }
+   } else {
+          logBrush.lbStyle = BS_SOLID;
+          logBrush.lbColor = RGB (RGB_colors[color].red, RGB_colors[color].green, RGB_colors[color].blue);
+
+          switch (style) {
+                 case 0:  pen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
+                          break;
+                 case 1:  pen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
+                          break;
+                 default: pen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
+                          break;
+		  }
+   } 
+
    hOldPen = SelectObject (TtPrinterDC, pen);
 
    MoveToEx (TtPrinterDC, x1, y1, NULL);
@@ -117,6 +145,71 @@ int                 y2;
    SelectObject (TtPrinterDC, hOldPen);
    if (!DeleteObject (pen))
       WinErrorBox (WIN_Main_Wd);
+}
+
+/*----------------------------------------------------------------------
+  DrawArrowHead draw the end of an arrow.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         DrawArrowHead (int x1, int y1, int x2, int y2, int thick, int RO, int active, int fg)
+#else  /* __STDC__ */
+static void         DrawArrowHead (x1, y1, x2, y2, thick, RO, active, fg)
+int                 x1, y1, x2, y2;
+int                 thick;
+int                 RO;
+int                 active;
+int                 fg;
+
+#endif /* __STDC__ */
+{
+   float               x, y, xb, yb, dx, dy, l, sina, cosa;
+   int                 xc, yc, xd, yd;
+   float               width, height;
+   Pixmap              pattern;
+   HPEN                hPen;
+   HPEN                hOldPen;
+   ThotPoint           point[4];
+   int                 result;
+
+   width = 5 + thick;
+   height = 10;
+   dx = (float) (x2 - x1);
+   dy = (float) (y1 - y2);
+   l = sqrt ((double) (dx * dx + dy * dy));
+   if (l == 0)
+      return;
+   sina = dy / l;
+   cosa = dx / l;
+   xb = x2 * cosa - y2 * sina;
+   yb = x2 * sina + y2 * cosa;
+   x = xb - height;
+   y = yb - width / 2;
+   xc = FloatToInt (x * cosa + y * sina + .5);
+   yc = FloatToInt (-x * sina + y * cosa + .5);
+   y = yb + width / 2;
+   xd = FloatToInt (x * cosa + y * sina + .5);
+   yd = FloatToInt (-x * sina + y * cosa + .5);
+
+   /* draw */
+   point[0].x = x2;
+   point[0].y = y2;
+   point[1].x = xc;
+   point[1].y = yc;
+   point[2].x = xd;
+   point[2].y = yd;
+   point[3].x = x2;
+   point[3].y = y2;
+
+   pattern = CreatePattern (0, RO, active, fg, fg, 1);
+   if (pattern != 0) {
+      hPen = CreatePen (PS_SOLID, thick, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
+
+      hOldPen = SelectObject (TtPrinterDC, hPen) ;
+      Polyline (TtPrinterDC, point, 4);
+      SelectObject (TtPrinterDC, hOldPen);
+	  if (!DeleteObject (hPen))
+         WinErrorBox (WIN_Main_Wd);
+   }
 }
 #endif /* _WINDOWS */
 
@@ -519,7 +612,7 @@ int                 shadow;
          lg--;
 	  }
 
-      if (lg != 0)
+      if (lg > 0)
          if (!TextOut (TtPrinterDC, x, y, (unsigned char*) ptcar, lg))
             WinErrorBox (NULL);
 
@@ -647,15 +740,15 @@ int                 fg;
 
          switch (type) {
                 case 1: /* underlined */
-                        DoPrintOneLine (fg, x - lg, bottom, x, bottom);
+                        DoPrintOneLine (fg, x - lg, bottom, x, bottom, thick, 0);
                         break;
 
                 case 2: /* overlined */
-                        DoPrintOneLine (fg, x - lg, height, x, height);
+                        DoPrintOneLine (fg, x - lg, height, x, height, thick, 0);
                         break;
 
                 case 3: /* cross-over */
-                        DoPrintOneLine (fg, x - lg, middle, x, middle);
+                        DoPrintOneLine (fg, x - lg, middle, x, middle, thick, 0);
                         break;
 
                 default: /* not underlined */
@@ -748,12 +841,12 @@ int                 fg;
       xm = x + (fh / 2);
       xp = x + (fh / 4);
       /* vertical part */
-      DoPrintOneLine (fg, x, y + (2 * (h / 3)), xp - (thick / 2), y + h);
+      DoPrintOneLine (fg, x, y + (2 * (h / 3)), xp - (thick / 2), y + h, thick, 0);
 
       /* Acending part */
-      DoPrintOneLine (fg, xp, y + h, xm, y);
+      DoPrintOneLine (fg, xp, y + h, xm, y, thick, 0);
       /* Upper part */
-      DoPrintOneLine (fg, xm, y, x + l, y);
+      DoPrintOneLine (fg, xm, y, x + l, y, thick, 0);
    }
 #  else /* _WINDOWS */
        fout = (FILE *) FrRef[frame];
@@ -816,7 +909,7 @@ int                 fg;
 
    if (y < 0)
      return;
-   y += FrameTable[frame].FrTopMargin;
+   /* y += FrameTable[frame].FrTopMargin; */
 #  ifdef _WINDOWS
    if (TtPrinterDC) {
       exnum = 0;
@@ -948,12 +1041,12 @@ int                 fg;
          xm = x + (l / 3);
          ym = y + (h / 2) - 1;
          /* Center */
-         DoPrintOneLine (fg, x, y + 1, xm, ym);
-         DoPrintOneLine (fg, x, y + h - 2, xm, ym);
+         DoPrintOneLine (fg, x, y + 1, xm, ym, 1, 0);
+         DoPrintOneLine (fg, x, y + h - 2, xm, ym, 1, 0);
 	 
          /* Borders */
-         DoPrintOneLine (frame, x, y, x + l, y);
-         DoPrintOneLine (frame, x, y + h - 2, x + l, y + h - 2);
+         DoPrintOneLine (frame, x, y, x + l, y, 1, 0);
+         DoPrintOneLine (frame, x, y + h - 2, x + l, y + h - 2, 1, 0);
        }
      }
 #  else  /* !_WINDOWS */
@@ -1007,11 +1100,11 @@ int                 fg;
          WIN_DrawMonoSymb ('\325', frame, x, y, l, h, RO, func, font, fg);
       else {
            /* Vertical part */
-           DoPrintOneLine (fg, x + 2, y + 1, x + 2, y + h);
-           DoPrintOneLine (fg, x + l - 3, y + 1, x + l - 3, y + h);
+           DoPrintOneLine (fg, x + 2, y + 1, x + 2, y + h, 1, 0);
+           DoPrintOneLine (fg, x + l - 3, y + 1, x + l - 3, y + h, 1, 0);
 	 
            /* Upper part */
-           DoPrintOneLine (frame, x + 1, y + 1, x + l, y);
+           DoPrintOneLine (frame, x + 1, y + 1, x + l, y, 1, 0);
 	  }
    } 
 #  else  /* !_WINDOWS */
@@ -1049,7 +1142,11 @@ int                 fg;
 
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS
+#  ifdef _WINDOWS
+   int                 arc, fh;
+   HPEN                pen ;
+   HPEN                hOldPen;
+#  else  /* _WINDOWS */
    FILE               *fout;
 #  endif /* _WINDOWS */
 
@@ -1058,7 +1155,24 @@ int                 fg;
    y += FrameTable[frame].FrTopMargin;
 #  ifdef _WINDOWS 
    if (TtPrinterDC) {
-      /* ***** A FAIRE **** */
+      fh = FontHeight (font);
+      if (h < fh * 2 && l <= CharacterWidth ('\310', font)) {
+         /* Only one glyph needed */
+         WIN_DrawMonoSymb ('\310', frame, x, y, l, h, RO, func, font, fg);
+      } else {
+             /* radius of arcs is 3mm */
+             arc = h / 4;
+             /* two vertical lines */
+             DoPrintOneLine (fg, x + 1, y, x + 1, y + h - arc, 1, 0);
+             DoPrintOneLine (fg, x + l - 2, y, x + l - 2, y + h - arc, 1, 0);
+             /* Lower part */
+             pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+             hOldPen = SelectObject (TtPrinterDC, pen);
+             Arc (TtPrinterDC, x + 1, y + h - arc , x + l - 2, y + h, x + 1, y + h - arc, x + l - 2, y + h - arc);
+             SelectObject (TtPrinterDC, hOldPen);
+             if (!DeleteObject (pen))
+                WinErrorBox (WIN_Main_Wd);
+	  }
    }
 #  else /* _WINDOWS */
    fout = (FILE *) FrRef[frame];
@@ -1145,6 +1259,47 @@ int                 fg;
 #endif /* __STDC__ */
 {
 #  ifdef _WINDOWS
+   int                 xm, ym, xf, yf;
+
+   if (thick <= 0)
+      return;
+
+   y += FrameTable[frame].FrTopMargin;
+
+   xm = x + ((l - thick) / 2);
+   xf = x + l - 1;
+   ym = y + ((h - thick) / 2);
+   yf = y + h - 1;
+
+   if (direction == 0) {
+      /* draw a right arrow */
+      DoPrintOneLine (fg, x, ym, xf, ym, thick, style);
+      DrawArrowHead (x, ym, xf, ym, thick, RO, func, fg);
+   } else if (direction == 45) {
+          DoPrintOneLine (fg, x, yf, xf - thick + 1, y, thick, style);
+          DrawArrowHead (x, yf, xf - thick + 1, y, thick, RO, func, fg);
+   } else if (direction == 90) {
+          /* draw a bottom-up arrow */
+          DoPrintOneLine (fg, xm, y, xm, yf, thick, style);
+          DrawArrowHead (xm, yf, xm, y, thick, RO, func, fg);
+   } else if (direction == 135) {
+          DoPrintOneLine (fg, x, y, xf - thick + 1, yf, thick, style);
+          DrawArrowHead (xf - thick + 1, yf, x, y, thick, RO, func, fg);
+   } else if (direction == 180) {
+          /* draw a left arrow */
+          DoPrintOneLine (fg, x, ym, xf, ym, thick, style);
+          DrawArrowHead (xf, ym, x, ym, thick, RO, func, fg);
+   } else if (direction == 225) {
+          DoPrintOneLine (frame, x, yf, xf - thick + 1, y, thick, style);
+          DrawArrowHead (xf - thick + 1, y, x, yf, thick, RO, func, fg);
+   } else if (direction == 270) {
+          /* draw a top-down arrow */
+          DoPrintOneLine (fg, xm, y, xm, yf, thick, style);
+          DrawArrowHead (xm, y, xm, yf, thick, RO, func, fg);
+   } else if (direction == 315) {
+          DoPrintOneLine (frame, x, y, xf - thick + 1, yf, thick, style);
+          DrawArrowHead (x, y, xf - thick + 1, yf, thick, RO, func, fg);
+   } 
 #  else  /* !_WINDOWS */
    int                 xm, ym, xf, yf, lg;
    FILE               *fout;
@@ -1313,7 +1468,7 @@ int                 fg;
 
    if (y < 0)
       return;
-   y += FrameTable[frame].FrTopMargin;
+   /* y += FrameTable[frame].FrTopMargin; */
    if (thick < 0)
       return;
 
@@ -1605,6 +1760,44 @@ int                 arrow;
 #endif /* __STDC__ */
 {
 #  ifdef _WINDOWS
+   ThotPoint          *points;
+   int                 i, j;
+   PtrTextBuffer       adbuff;
+
+   if (thick == 0)
+      return;
+
+   /* Allocate a table of points */
+   points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * (nb - 1));
+   adbuff = buffer;
+   j = 1;
+   for (i = 1; i < nb; i++) {
+       if (j >= adbuff->BuLength) {
+	     if (adbuff->BuNext != NULL) {
+            /* Next buffer */
+            adbuff = adbuff->BuNext;
+            j = 0;
+		 }
+	   }
+       points[i - 1].x = x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
+       points[i - 1].y = y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
+       j++;
+   }
+
+   /* backward arrow  */
+   if (arrow == 2 || arrow == 3)
+      DrawArrowHead (points[1].x, points[1].y, points[0].x, points[0].y, thick, RO, active, fg);
+
+   /* Draw the border */
+   for (i = 1; i < nb - 1; i++) 
+       DoPrintOneLine (fg, points [i-1].x, points[i-1].y, points[i].x, points[i].y, thick, style);
+
+   /* Forward arrow */
+   if (arrow == 1 || arrow == 3)
+      DrawArrowHead (points[nb - 3].x, points[nb - 3].y, points[nb - 2].x, points[nb - 2].y, thick, RO, active, fg);
+
+   /* free the table of points */
+   free ((char *) points);
 #  else  /* !_WINDOWS */
    int                 i, j;
    float               xp, yp;
@@ -1704,6 +1897,71 @@ int                 pattern;
 #endif /* __STDC__ */
 {
 #  ifdef _WINDOWS
+   ThotPoint          *points;
+   int                 i, j;
+   PtrTextBuffer       adbuff;
+
+   LOGBRUSH logBrush;
+   HPEN     hPen;
+   HPEN     hOldPen;
+   int      result, t;
+
+   /* Allocate a table of points */
+   points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * nb);
+   adbuff = buffer;
+   j = 1;
+   for (i = 1; i < nb; i++) {
+       if (j >= adbuff->BuLength) {
+          if (adbuff->BuNext != NULL) {
+             /* Next buffer */
+             adbuff = adbuff->BuNext;
+             j = 0;
+		  }
+	   }
+       points[i - 1].x = x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
+       points[i - 1].y = y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
+       j++;
+   }
+   /* Close the polygone */
+   points[nb - 1].x = points[0].x;
+   points[nb - 1].y = points[0].y;
+
+   /* Fill in the polygone */
+
+   /* Draw the border */
+   if (thick > 0) {
+      t = PixelToPoint (thick);
+
+      if (t <= 1) {
+         switch (style) {
+                case 0:  hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
+                         break;
+                case 1:  hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
+                         break;
+                default: hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+                         break;
+		 }
+	  } else {
+             logBrush.lbStyle = BS_SOLID;
+             logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
+
+             switch (style) {
+                    case 0:  hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
+                             break;
+                    case 1:  hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
+                             break;
+                    default: hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
+                             break;
+			 }
+	  } 
+      hOldPen = SelectObject (TtPrinterDC, hPen) ;
+      Polyline (TtPrinterDC, points, nb);
+	  SelectObject (TtPrinterDC, hOldPen);
+	  if (!DeleteObject (hPen))
+         WinErrorBox (WIN_Main_Wd);
+   }
+   /* free the table of points */
+   free ((char *) points);
 #  else  /* !_WINDOWS */
    int                 i, j;
    float               xp, yp;
@@ -2021,6 +2279,86 @@ int                 pattern;
 #endif /* __STDC__ */
 {
 #  ifdef _WINDOWS 
+   Pixmap              pat;
+   int                 arc;
+   HBRUSH              hBrush = (HBRUSH)0;
+   HBRUSH              hOldBrush;
+   LOGBRUSH            logBrush;
+   HPEN                hPen = 0;
+   HPEN                hOldPen;
+   int                 result, t;
+
+   if (larg <= 0 || height <= 0) 
+      return;
+
+   pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+
+   if (thick == 0 && pat == 0)
+      return;
+
+   y += FrameTable[frame].FrTopMargin;
+
+   arc = (3 * DOT_PER_INCHE) / 25.4 + 0.5;
+
+   if (larg > thick + 1)
+      larg = larg - thick - 1;
+   if (height > thick + 1)
+      height = height - thick - 1;
+   x += thick / 2;
+   y += thick / 2;
+
+   /* Fill in the rectangle */
+   if (pat != 0) {
+      hBrush = CreateSolidBrush (Pix_Color[bg]);
+      hOldBrush = SelectObject (TtPrinterDC, hBrush);
+   } else {
+         SelectObject (TtPrinterDC, GetStockObject (NULL_BRUSH));
+		 hBrush = (HBRUSH) 0;
+   }
+
+   if (thick > 0) {
+      t = PixelToPoint (thick);
+
+      if (t <= 1) {
+         switch (style) {
+                case 0:  hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
+                         break;
+                case 1:  hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
+                         break;
+                default: hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+                         break;
+		 } 
+	  } else {
+             logBrush.lbStyle = BS_SOLID;
+             logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
+
+             switch (style) {
+                    case 0:  hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
+                             break;
+                    case 1:  hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
+                             break;
+                    default: hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
+                             break;
+			 } 
+	  }  
+   } else {
+          if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [bg])))
+             WinErrorBox (WIN_Main_Wd);
+   }
+
+   hOldPen = SelectObject (TtPrinterDC, hPen) ;
+
+   if (!RoundRect (TtPrinterDC, x, y, x + larg, y + height, arc * 2, arc * 2))
+      WinErrorBox (FrRef  [frame]);
+   SelectObject (TtPrinterDC, hOldPen);
+   if (!DeleteObject (hPen))
+      WinErrorBox (FrRef [frame]);
+   if (hBrush) {
+      SelectObject (TtPrinterDC, hOldBrush);
+      if (!DeleteObject (hBrush))
+         WinErrorBox (WIN_Main_Wd);
+      hBrush = (HBRUSH)0;
+   }
 #  else  /* !_WINDOWS */
    int                 arc, xf, yf;
    FILE               *fout;
@@ -2074,9 +2412,11 @@ int                 pattern;
 {
    int                 xm, ym;
 #  ifdef _WINDOWS 
-   Pixmap pat;  
-   HPEN   hPen = 0, hOldPen;
-   HBRUSH hBrush, hOldBrush;
+   Pixmap   pat;  
+   HPEN     hPen = 0, hOldPen;
+   HBRUSH   hBrush, hOldBrush;
+   LOGBRUSH logBrush;
+   int      t;
 #  else  /* !_WINDOWS */
    FILE               *fout;
 #  endif /* _WINDOWS */
@@ -2086,22 +2426,83 @@ int                 pattern;
    y += FrameTable[frame].FrTopMargin;
 
 #  ifdef _WINDOWS 
-   larg = larg / 2;
-   height = height / 2;
-
    if (TtPrinterDC) {
-        xm = x + larg;
-        ym = y + height;
+      if (pattern > 2)
+         pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+
+      if (pattern > 2 && pat == 0 && thick <= 0)
+         return;
+
+      if (pattern <= 2) {
+         switch (pattern) {
+                case 0:  SelectObject (TtPrinterDC, GetStockObject (NULL_BRUSH));
+                         hBrush = (HBRUSH) 0;
+                         break;
+
+                case 1:  hBrush = CreateSolidBrush (Pix_Color[fg]);
+                         hOldBrush = SelectObject (TtPrinterDC, hBrush);
+                         break;
+
+                case 2:  hBrush = CreateSolidBrush (Pix_Color[bg]);
+                         hOldBrush = SelectObject (TtPrinterDC, hBrush);
+                         break;
+
+                default: SelectObject (TtPrinterDC, GetStockObject (NULL_BRUSH));
+                         hBrush = (HBRUSH) 0;
+                         break;
+		 }
+	  } else if (pat != 0) {
+             hBrush = CreatePatternBrush (pat); 
+             hOldBrush = SelectObject (TtPrinterDC, hBrush);
+	  } else {
+             SelectObject (TtPrinterDC, GetStockObject (NULL_BRUSH));
+		     hBrush = (HBRUSH) 0;
+	  }
+
+      xm = x + larg;
+      ym = y + height;
 
       if (thick > 0) {
-         if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [fg])))
+         t = PixelToPoint (thick);
+
+         if (t <= 1) {
+            switch (style) {
+                   case 0:  hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
+                            break;
+                   case 1:  hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
+                            break;
+                   default: hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+                            break;
+			}  
+		 } else {
+                logBrush.lbStyle = BS_SOLID;
+                logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
+
+                switch (style) {
+                       case 0:  hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
+                                break;
+                       case 1:  hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
+                                break;
+                       default: hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
+                                break;
+				} 
+		 }  
+	  } else {
+             if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [bg])))
+                WinErrorBox (WIN_Main_Wd);
+	  }
+      hOldPen = SelectObject (TtPrinterDC, hPen) ;
+
+      if (!Ellipse (TtPrinterDC, x, y, x + larg, y + height))
+         WinErrorBox (FrRef  [frame]);
+      SelectObject (TtPrinterDC, hOldPen);
+      if (!DeleteObject (hPen))
+         WinErrorBox (FrRef [frame]);
+      if (hBrush) {
+         SelectObject (TtPrinterDC, hOldBrush);
+         if (!DeleteObject (hBrush))
             WinErrorBox (WIN_Main_Wd);
-         hOldPen = SelectObject (TtPrinterDC, hPen) ;
-         SelectObject (TtPrinterDC, GetStockObject (NULL_BRUSH)) ;
-	     Ellipse (TtPrinterDC, x, y, x + larg, y + height);
-         SelectObject (TtPrinterDC, hOldPen);
-         if (!DeleteObject (hPen))
-            WinErrorBox (WIN_Main_Wd);
+         hBrush = (HBRUSH)0;
 	  }
    }
 #  else /* !_WINDOWS */
@@ -2155,21 +2556,24 @@ int                 fg;
 #endif /* __STDC__ */
 {
    int                 xf, yf;
+#  ifdef _WINDOWS
+   HPEN      hPen;
+   HPEN      hOldPen;
+   LOGBRUSH  logBrush;
+   ThotPoint point[3];
+   int       t;
+#  else  /* _WINDOWS */
    FILE               *fout;
+#  endif /* _WINDOWS */
 
-   fout = (FILE *) FrRef[frame];
-  if (y < 0)
-    return;
+   if (y < 0)
+      return;
    y += FrameTable[frame].FrTopMargin;
    if (thick <= 0)
       return;
 
 #  ifdef _WINDOWS
    if (TtPrinterDC) {
-      HPEN      pen;
-      HPEN      hOldPen;
-      ThotPoint point[3];
-
       xf = PixelToPoint (x + l);
       yf = PixelToPoint (y + h);
       x  = PixelToPoint (x);
@@ -2208,13 +2612,40 @@ int                 fg;
                      point[2].y = y;
                     break;
 	  }
-      WinLoadGC (TtPrinterDC, fg, RO);
-      pen = CreatePen (PS_SOLID, 1, Pix_Color [fg]);
-      hOldPen = SelectObject (TtPrinterDC, pen);
+
+      t = PixelToPoint (thick);
+
+      if (t > 0) {
+         if (thick <= 1) {
+            switch (style) {
+                   case 0:  hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
+                            break;
+                   case 1:  hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
+                            break;
+                   default: hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+                            break;
+			} 
+		 } else {
+                logBrush.lbStyle = BS_SOLID;
+                logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
+
+                switch (style) {
+                       case 0:  hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
+                                break;
+                       case 1:  hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
+                                break;
+                       default: hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
+                                break;
+				} 
+		 }  
+	  }
+
+      hOldPen = SelectObject (TtPrinterDC, hPen);
       Polyline (TtPrinterDC, point, 3);
       SelectObject (TtPrinterDC, hOldPen);
    }
 #  else  /* !_WINDOWS */
+   fout = (FILE *) FrRef[frame];
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -2408,7 +2839,7 @@ int                 fg;
           Y = y;
        
       if (thick > 0)
-         DoPrintOneLine (fg, x, Y, x + l - 1, Y);
+         DoPrintOneLine (fg, x, Y, x + l - 1, Y, thick, style);
    }
 #  else /* _WINDOWS */
        fout = (FILE *) FrRef[frame];
@@ -2480,7 +2911,7 @@ int                 fg;
           X = x;
 
       if (thick > 0)
-         DoPrintOneLine (fg, X, y, X, y + h);
+         DoPrintOneLine (fg, X, y, X, y + h, thick, style);
    }
 #  else  /* _WINDOWS */
 
@@ -2584,9 +3015,18 @@ int                 func;
 int                 fg;
 #endif /* __STDC__ */
 {
-#  ifdef _WINDOWS 
-#  else  /* !_WINDOWS */
    int                 xf, yf;
+
+#  ifdef _WINDOWS 
+   xf = x + l - 1 - thick;
+   yf = y + h - 1 - thick;
+   if (thick > 0) {
+      if (direction == 0)
+         DoPrintOneLine (fg, x, yf, xf, y, thick, style);
+      else
+           DoPrintOneLine (fg, x, y, xf, yf, thick, style);
+   }
+#  else  /* !_WINDOWS */
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];

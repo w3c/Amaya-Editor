@@ -57,6 +57,8 @@ static int          stack_deep;
 
 #ifdef _WINDOWS 
 #include "win_f.h"
+
+extern BOOL autoScroll;
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -952,6 +954,10 @@ int                 fg;
 #endif /* __STDC__ */
 {
    int                 arc, fh;
+#  ifdef _WINDOWS 
+   HPEN                pen ;
+   HPEN                hOldPen;
+#  endif /* _WINDOWS */
 
    fh = FontHeight (font);
    if (h < fh * 2 && l <= CharacterWidth ('\310', font))
@@ -969,7 +975,14 @@ int                 fg;
 	DoDrawOneLine (frame, x + l - 2, y, x + l - 2, y + h - arc);
 
 	/* Lower part */
-#       ifndef _WINDOWS
+#   ifdef _WINDOWS
+    pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+    hOldPen = SelectObject (TtPrinterDC, pen);
+    Arc (TtPrinterDC, x + 1, y + h - arc , x + l - 2, y + h, x + 1, y + h - arc, x + l - 2, y + h - arc);
+    SelectObject (TtPrinterDC, hOldPen);
+    if (!DeleteObject (pen))
+       WinErrorBox (WIN_Main_Wd);
+#   else  /* _WINDOWS */
 	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1, y + h - arc * 2 - 2, l - 3, arc * 2, -0 * 64, -180 * 64);
 	FinishDrawing (0, RO, active);
 #       endif /* _WINDOWS */
@@ -2537,16 +2550,38 @@ int                 pattern;
    y += thick / 2 + FrameTable[frame].FrTopMargin;
 
    /* Fill in the rectangle */
-   pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
 
 #  ifdef _WINDOWS
+   if (pattern > 2)
+      pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+
+   if (pattern > 2 && pat == 0 && thick <= 0)
+      return;
    WIN_GetDeviceContext (frame);
 
-   if (thick == 0 && pat == 0)
-      return;
+   WinLoadGC (TtDisplay, fg, RO);
 
-   if (pat != 0) {
-      hBrush = CreateSolidBrush (Pix_Color[bg]);
+   if (pattern <= 2) {
+      switch (pattern) {
+             case 0:  SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
+                      hBrush = (HBRUSH) 0;
+                      break;
+
+             case 1:  hBrush = CreateSolidBrush (Pix_Color[fg]);
+                      hOldBrush = SelectObject (TtDisplay, hBrush);
+                      break;
+
+             case 2:  hBrush = CreateSolidBrush (Pix_Color[bg]);
+                      hOldBrush = SelectObject (TtDisplay, hBrush);
+                      break;
+
+             default: SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
+                      hBrush = (HBRUSH) 0;
+                      break;
+	  }
+   } else if (pat != 0) {
+      hBrush = CreatePatternBrush (pat); 
+      /* hBrush = CreateSolidBrush (Pix_Color[pattern]); */
       hOldBrush = SelectObject (TtDisplay, hBrush);
    } else {
          SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
@@ -2598,6 +2633,11 @@ int                 pattern;
    }
    WIN_ReleaseDeviceContext ();
 #  else /* _WINDOWS */
+   pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+
+   if (pat == 0 && thick <= 0)
+      return;
+
    if (pat != 0) {
       XSetTile (TtDisplay, TtGreyGC, pat);
       XFillArc (TtDisplay, FrRef[frame], TtGreyGC, x, y, width, height, 0, 360 * 64);
@@ -3264,8 +3304,9 @@ int yf;
       WIN_GetDeviceContext (frame);
 
 	  GetClientRect (FrRef [frame], &cltRect);
-
-	  /* ScrollDC (TtDisplay, xf - xd, yf - yd, NULL, &cltRect, NULL, NULL); */
+      if (autoScroll)
+	     ScrollDC (TtDisplay, xf - xd, yf - yd, NULL, &cltRect, NULL, NULL);
+      else 
 	  /* UpdateWindow (FrRef [frame]); */
 	  /* ScrollWindowEx (FrRef [frame], xf - xd, yf - yd, NULL, &cltRect, NULL, NULL, SW_ERASE | SW_INVALIDATE); */
 	  ScrollWindow (FrRef [frame], xf - xd, yf - yd, &cltRect, &cltRect);

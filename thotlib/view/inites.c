@@ -873,7 +873,7 @@ int                 motif;
 	       hBitmap = 0;
 	       break;
 	 }
-   WIN_LastBitmap = hBitmap;
+   /* WIN_LastBitmap = hBitmap; */
    pixmap = hBitmap ;
 #endif
    return ((unsigned long) pixmap);

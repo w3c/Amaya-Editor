@@ -1596,7 +1596,7 @@ boolean             pre;
    return result;
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    ApplyDirectTranslate recherche la boite selectionnee pour un changement 
    de position. Si la plus petite boite englobant le point 
@@ -1701,12 +1701,7 @@ int                 ym;
 		       /* Reaffiche la selection */
 		       SwitchSelection (frame, FALSE);
 		       draw = GetParentDraw (pBox);
-#              ifndef _WINDOWS
-		       PolyLineModification (frame, &x, &y,
-					     pBox, draw,
-					     pBox->BxNChars,
-					     pointselect, still);
-#              endif /* _WINDOWS */
+		       PolyLineModification (frame, &x, &y, pBox, draw, pBox->BxNChars, pointselect, still);
 		       /* on force le reaffichage de la boite */
 		       DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + width + EXTRA_GRAPH, pBox->BxYOrg + height + EXTRA_GRAPH);
 #ifdef IV
@@ -1775,9 +1770,7 @@ int                 ym;
 		  ymin -= pFrame->FrYOrg;
 		  ymax -= pFrame->FrYOrg;
 		  /* On initialise la boite fantome */
-#         ifndef _WIN_PRINT
 		  UserGeometryMove (frame, &x, &y, width, height, xr, yr, xmin, xmax, ymin, ymax, xm, ym);
-#         endif /* _WIN_PRINT */
 
 		  /* On transmet la modification a l'editeur */
 		  x = x + pFrame->FrXOrg - pBox->BxXOrg;
@@ -1790,6 +1783,7 @@ int                 ym;
 	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_MODIFYING_BOX_IMP);
      }
 }
+#endif /* _WIN_PRINT */
 
 
 /*----------------------------------------------------------------------
