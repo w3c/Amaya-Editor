@@ -1196,8 +1196,12 @@ static char *GetFloat (char *ptr, float* number)
 {
   int      i;
   char     *start, c;
-  ThotBool negative, decimal, exponent;
+  float     val;
+  ThotBool negative, decimal, exponent, useDotForFloat;
 
+   /* test if the system uses dot or comma in the float syntax */
+   sscanf (".5", "%f", &val);
+   useDotForFloat = (val == 0.5);
   negative = FALSE;
   decimal = FALSE;
   exponent = FALSE;
@@ -1217,7 +1221,7 @@ static char *GetFloat (char *ptr, float* number)
   if (*ptr == '.')
     /* there is a decimal part */
     {
-      if (!TtaUseDotForFloat ())
+      if (!useDotForFloat)
 	*ptr = ',';
       ptr++;
       decimal = TRUE;
@@ -1244,7 +1248,7 @@ static char *GetFloat (char *ptr, float* number)
   if (exponent)
     sscanf (start, "%e", number);
   else if (decimal)
-    sscanf (start, "%f", number);
+	sscanf (start, "%f", number);
   else
     {
       sscanf (start, "%d", &i);
