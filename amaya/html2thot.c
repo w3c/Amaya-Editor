@@ -3374,7 +3374,6 @@ CHAR_T                c;
    AttributeMapping*   tableEntry;
    AttributeType       attrType;
    ElementType         elType;
-   Element             child;
    Attribute           attr;
    SSchema             schema;
    CHAR_T              translation;
@@ -3443,65 +3442,67 @@ CHAR_T                c;
    else
       UnknownAttr = FALSE;
    if (tableEntry != NULL && HTMLcontext.lastElement != NULL &&
-       (!HTMLcontext.lastElementClosed || (HTMLcontext.lastElement != rootElement)))
+       (!HTMLcontext.lastElementClosed ||
+	(HTMLcontext.lastElement != rootElement)))
      {
-	lastAttrEntry = tableEntry;
-	translation = lastAttrEntry->AttrOrContent;
-	switch (translation)
-	      {
-		 case 'C':	/* Content */
-		    /* Nothing to do yet: wait for attribute value */
-		    break;
-		 case 'A':
-		    /* create an attribute for current element */
-		    attrType.AttrSSchema = schema;
-		    attrType.AttrTypeNum = tableEntry->ThotAttribute;
-		    CreateAttr (HTMLcontext.lastElement, attrType, inputBuffer, 
-				(ThotBool)(tableEntry == &pHTMLAttributeMapping[0]));
-		    if (attrType.AttrTypeNum == HTML_ATTR_HREF_)
-		      {
-			 elType = TtaGetElementType (HTMLcontext.lastElement);
-			 if (elType.ElTypeNum == HTML_EL_Anchor)
-			    /* attribute HREF for element Anchor */
-			    /* create attribute PseudoClass = link */
-			   {
-			      attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
-			      attr = TtaNewAttribute (attrType);
-			      TtaAttachAttribute (HTMLcontext.lastElement, attr,
-						  HTMLcontext.doc);
-			      TtaSetAttributeText (attr, TEXT("link"),
-						   HTMLcontext.lastElement, HTMLcontext.doc);
-			   }
-		      }
-		    else if (attrType.AttrTypeNum == HTML_ATTR_Checked)
-		      {
-			 /* create Default-Checked attribute */
-			 child = TtaGetFirstChild (HTMLcontext.lastElement);
-			 if (child != NULL)
-			   {
-			      attrType.AttrSSchema = DocumentSSchema;
-			      attrType.AttrTypeNum = HTML_ATTR_DefaultChecked;
-			      attr = TtaNewAttribute (attrType);
-			      TtaAttachAttribute (child, attr, HTMLcontext.doc);
-			      TtaSetAttributeValue (attr, HTML_ATTR_DefaultChecked_VAL_Yes_, child, HTMLcontext.doc);
-			   }
-		      }
-		    else if (attrType.AttrTypeNum == HTML_ATTR_Selected)
-		      {
-			 /* create Default-Selected attribute */
-			 attrType.AttrSSchema = DocumentSSchema;
-			 attrType.AttrTypeNum = HTML_ATTR_DefaultSelected;
-			 attr = TtaNewAttribute (attrType);
-			 TtaAttachAttribute (HTMLcontext.lastElement, attr, HTMLcontext.doc);
-			 TtaSetAttributeValue (attr, HTML_ATTR_DefaultSelected_VAL_Yes_, HTMLcontext.lastElement, HTMLcontext.doc);
-		      }
-		    break;
-		 case SPACE:
-		    /* nothing to do */
-		    break;
-		 default:
-		    break;
-	      }
+       lastAttrEntry = tableEntry;
+       translation = lastAttrEntry->AttrOrContent;
+       switch (translation)
+	 {
+	 case 'C':	/* Content */
+	   /* Nothing to do yet: wait for attribute value */
+	   break;
+	 case 'A':
+	   /* create an attribute for current element */
+	   attrType.AttrSSchema = schema;
+	   attrType.AttrTypeNum = tableEntry->ThotAttribute;
+	   CreateAttr (HTMLcontext.lastElement, attrType, inputBuffer, 
+		       (ThotBool)(tableEntry == &pHTMLAttributeMapping[0]));
+	   if (attrType.AttrTypeNum == HTML_ATTR_HREF_)
+	     {
+	       elType = TtaGetElementType (HTMLcontext.lastElement);
+	       if (elType.ElTypeNum == HTML_EL_Anchor)
+		 /* attribute HREF for element Anchor */
+		 /* create attribute PseudoClass = link */
+		 {
+		   attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
+		   attr = TtaNewAttribute (attrType);
+		   TtaAttachAttribute (HTMLcontext.lastElement, attr,
+				       HTMLcontext.doc);
+		   TtaSetAttributeText (attr, TEXT("link"),
+					HTMLcontext.lastElement,
+					HTMLcontext.doc);
+		 }
+	     }
+	   else if (attrType.AttrTypeNum == HTML_ATTR_Checked)
+	     {
+	       /* create Default-Checked attribute */
+	       attrType.AttrSSchema = DocumentSSchema;
+	       attrType.AttrTypeNum = HTML_ATTR_DefaultChecked;
+	       attr = TtaNewAttribute (attrType);
+	       TtaAttachAttribute (HTMLcontext.lastElement, attr,
+				   HTMLcontext.doc);
+	       TtaSetAttributeValue (attr, HTML_ATTR_DefaultChecked_VAL_Yes_,
+				     HTMLcontext.lastElement, HTMLcontext.doc);
+	     }
+	   else if (attrType.AttrTypeNum == HTML_ATTR_Selected)
+	     {
+	       /* create Default-Selected attribute */
+	       attrType.AttrSSchema = DocumentSSchema;
+	       attrType.AttrTypeNum = HTML_ATTR_DefaultSelected;
+	       attr = TtaNewAttribute (attrType);
+	       TtaAttachAttribute (HTMLcontext.lastElement, attr,
+				   HTMLcontext.doc);
+	       TtaSetAttributeValue (attr, HTML_ATTR_DefaultSelected_VAL_Yes_,
+				     HTMLcontext.lastElement, HTMLcontext.doc);
+	     }
+	   break;
+	 case SPACE:
+	   /* nothing to do */
+	   break;
+	 default:
+	   break;
+	 }
      }
    InitBuffer ();
 }

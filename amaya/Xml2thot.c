@@ -1989,7 +1989,6 @@ Document      doc;
  AttributeMapping*   mapAttr;
  AttributeType       attrType;
  ElementType         elType;
- Element             child;
  Attribute           attr;
  CHAR_T              translation;
  ThotBool            invalidAttr;
@@ -2065,15 +2064,11 @@ Document      doc;
 	     if (attrType.AttrTypeNum == HTML_ATTR_Checked)
 	       {
 		 /* create Default-Checked attribute */
-		 child = TtaGetFirstChild (el);
-		 if (child != NULL)
-		   {
-		     attrType.AttrTypeNum = HTML_ATTR_DefaultChecked;
-		     attr = TtaNewAttribute (attrType);
-		     TtaAttachAttribute (child, attr, doc);
-		     TtaSetAttributeValue (attr, HTML_ATTR_DefaultChecked_VAL_Yes_,
-					   child, doc);
-		   }
+		 attrType.AttrTypeNum = HTML_ATTR_DefaultChecked;
+		 attr = TtaNewAttribute (attrType);
+		 TtaAttachAttribute (el, attr, doc);
+		 TtaSetAttributeValue (attr, HTML_ATTR_DefaultChecked_VAL_Yes_,
+				       el, doc);
 	       }
 	     else 
 	       if (attrType.AttrTypeNum == HTML_ATTR_Selected)
