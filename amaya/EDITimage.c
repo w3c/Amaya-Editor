@@ -262,8 +262,11 @@ STRING              data;
 		    NormalizeURL (tempname, document, tempfile, tempname,
 				  NULL);
 		    AddLoadedImage (tempname, tempfile, document, &desc);
-		    desc->status = IMAGE_MODIFIED;
-		    TtaFileCopy (LastURLImage, desc->localName);
+		    if (desc)
+		      {
+			desc->status = IMAGE_MODIFIED;
+			TtaFileCopy (LastURLImage, desc->localName);
+		      }
 		  }
 		do
 		  {
