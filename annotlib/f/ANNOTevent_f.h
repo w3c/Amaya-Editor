@@ -32,7 +32,8 @@ extern void RemoteLoad_callback ( int doc,
 extern void ANNOT_Load ( Document doc,
                          View view );
 extern void ANNOT_Create ( Document doc,
-                           View view );
+                           View view,
+                           ThotBool useDocRoot );
 extern void ANNOT_Post_callback ( int doc,
                                   int status,
                                   CHAR_T *urlName,
@@ -90,7 +91,8 @@ extern void RemoteLoad_callback (/* int doc,
 extern void ANNOT_Load (/* Document doc,
                            View view */);
 extern void ANNOT_Create (/* Document doc,
-                             View view */);
+                             View view,
+                             ThotBool useDocRoot */);
 extern void ANNOT_Post_callback (/* int doc,
                                     int status,
                                     CHAR_T *urlName,

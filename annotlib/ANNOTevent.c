@@ -704,15 +704,13 @@ View view;
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void ANNOT_Create (Document doc, View view)
+void ANNOT_Create (Document doc, View view, ThotBool useDocRoot)
 #else /* __STDC__*/
 void ANNOT_Create (doc, view)
      Document doc;
      View view;
 #endif /* __STDC__*/
 {
-  Element     first, last;
-  int         c1, cl, i;
   Document    doc_annot;
   AnnotMeta  *annot;
   XPointerContextPtr ctx;
@@ -720,12 +718,9 @@ void ANNOT_Create (doc, view)
   if (!ANNOT_CanAnnotate (doc))
     return;
 
-  TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
-  TtaGiveLastSelectedElement (doc, &last, &i, &cl);
-
-  if (first == NULL)
-    return;  /* Error: there's no selected zone */
-
+  if (!useDocRoot && TtaGetSelectedDocument () != doc)
+    return; /* Error: nothing selected in this document */
+  
   /* create the document that will store the annotation */
   if ((doc_annot = ANNOT_NewDocument (doc)) == 0)
     return;
@@ -741,7 +736,7 @@ void ANNOT_Create (doc, view)
       schema_init = TRUE;
     }
 
-  annot = LINK_CreateMeta (doc, doc_annot);
+  annot = LINK_CreateMeta (doc, doc_annot, useDocRoot);
 
   ANNOT_InitDocumentStructure (doc, doc_annot, annot);
 
@@ -751,10 +746,14 @@ void ANNOT_Create (doc, view)
   UpdateContextSensitiveMenus (doc);
   /* add the annotation icon */
   LINK_AddLinkToSource (doc, annot);
+
   /* reselect the annotated text starting from the xpointer */
-  ctx = XPointer_parse (doc, annot->xptr);
-  XPointer_select (ctx);
-  XPointer_free (ctx);
+  if (!useDocRoot)
+    {
+      ctx = XPointer_parse (doc, annot->xptr);
+      XPointer_select (ctx);
+      XPointer_free (ctx);
+    }
 }
 
 /*-----------------------------------------------------------------------

@@ -16,4 +16,3 @@ extern List *RDF_parseFile (/* char *file_name,
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
-

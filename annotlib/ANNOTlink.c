@@ -214,6 +214,7 @@ AnnotMeta *annot;
   firstElType = TtaGetElementType (first);
   docSchemaName = TtaGetSSchemaName (firstElType.ElSSchema);
 
+  /* @@ JK: this doesn't seem useful anymore */
   /* is the user trying to annotate an annotation? */
   el = TtaGetTypedAncestor (first, elType);
   if (el)
@@ -252,32 +253,59 @@ AnnotMeta *annot;
 	}
       TtaInsertFirstChild (&anchor, el, source_doc);
     }
-    else
+  else 
     {
-      if (c1 == 0)
+      /* it's an HTML document */
+      el = first;
+      elType = TtaGetElementType (el);
+      if (elType.ElTypeNum == HTML_EL_HTML
+	    || elType.ElTypeNum == HTML_EL_HEAD
+	    || elType.ElTypeNum == HTML_EL_TITLE
+	    || elType.ElTypeNum == HTML_EL_BASE
+	    || elType.ElTypeNum == HTML_EL_META
+	    || elType.ElTypeNum == HTML_EL_SCRIPT
+	    || elType.ElTypeNum == HTML_EL_STYLE_
+	    || elType.ElTypeNum == HTML_EL_BODY)
 	{
-	  /* add it to the beginning */
-	  TtaInsertSibling (anchor, first, TRUE, source_doc);
-	}
-      else if (c1 > 0)
-	{
-	  /* split the text */
-	  int len;
-
-	  len = TtaGetTextLength (first);
-	  if (cN > len)
-	    /* add it to the end */
-	    TtaInsertSibling (anchor, first, FALSE, source_doc);
+	  /* we can't put the annotation icon here, so let's find
+	     the first child of body and add it to it */
+	  el = TtaGetMainRoot (source_doc);
+	  elType.ElTypeNum = HTML_EL_BODY;
+	  el = TtaSearchTypedElement (elType, SearchForward, el);
+	  if (el)
+	    /* add it to the beginning */
+	    TtaInsertFirstChild (&anchor, el, source_doc);
 	  else
+	    /* we add it where it was declared, although we may
+	       not see it at all */
+	    TtaInsertSibling (anchor, first, TRUE, source_doc);
+	}
+      else 
+	{
+	  if (c1 == 0)
 	    {
-	      /* add it in the midle */
-	      TtaSplitText (first, c1 - 1, source_doc);
-	      TtaNextSibling (&first);
+	      /* add it to the beginning */
 	      TtaInsertSibling (anchor, first, TRUE, source_doc);
+	    }
+	  else if (c1 > 0)
+	    {
+	      /* split the text */
+	      int len;
+	      
+	      len = TtaGetTextLength (first);
+	      if (cN > len)
+		/* add it to the end */
+		TtaInsertSibling (anchor, first, FALSE, source_doc);
+	      else
+		{
+		  /* add it in the midle */
+		  TtaSplitText (first, c1 - 1, source_doc);
+		  TtaNextSibling (&first);
+		  TtaInsertSibling (anchor, first, TRUE, source_doc);
+		}
 	    }
 	}
     }
-
   /* add the Xlink attribute */
   SetXLinkTypeSimple (anchor, source_doc, FALSE);
 
@@ -472,11 +500,12 @@ void LINK_DeleteLink (source_doc)
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-AnnotMeta* LINK_CreateMeta (Document source_doc, Document annot_doc)
+AnnotMeta* LINK_CreateMeta (Document source_doc, Document annot_doc, ThotBool useDocRoot)
 #else /* __STDC__*/
-AnnotMeta* LINK_CreateMeta (source_doc, annot_doc)
+AnnotMeta* LINK_CreateMeta (source_doc, annot_doc, useDocRoot)
 Document source_doc;
 Document annot_doc;
+ThotBool useDocRoot;
 #endif /* __STDC__*/
 {
   AnnotMeta   *annot;
@@ -520,7 +549,7 @@ Document annot_doc;
 				       FALSE);
 
   /* Annotation XPointer */
-  annot->xptr = XPointer_build (source_doc, 1);
+  annot->xptr = XPointer_build (source_doc, 1, useDocRoot);
 
   annot_user = GetAnnotUser ();
   annot->author = TtaStrdup (annot_user);
