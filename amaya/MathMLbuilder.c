@@ -2218,6 +2218,7 @@ void MathMLScriptShift (doc, el, value, attr)
        /* remove the presentation rule */
        {
        ctxt->destroy = TRUE;
+       pval.typed_data.value = 0;
        TtaSetStylePresentation (PRVertPos, script, NULL, ctxt, pval);
        }
     else
@@ -2562,6 +2563,7 @@ void MathMLSetScriptLevel (doc, el, value)
      /* remove the presentation rule */
      {
      ctxt->destroy = TRUE;
+     pval.typed_data.value = 0;
      TtaSetStylePresentation (PRSize, el, NULL, ctxt, pval);
      }
   else
@@ -2661,6 +2663,7 @@ void MathMLSpacingAttr (doc, el, value, attr)
     /* remove the presentation rule */
     {
       ctxt->destroy = TRUE;
+      pval.typed_data.value = 0;
       TtaSetStylePresentation (ruleType, el, NULL, ctxt, pval);
     }
   else
