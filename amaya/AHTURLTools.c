@@ -931,6 +931,7 @@ char  *GetBaseURL (Document doc)
   Attribute           attr;
   char               *ptr, *basename;
   int                 length;
+  ThotBool            hasDocBase;
 
   if (doc == 0 || !DocumentURLs[doc])
      return NULL;
@@ -938,48 +939,51 @@ char  *GetBaseURL (Document doc)
   basename = TtaGetMemory (MAX_LENGTH);
   basename[0] = EOS;
   length = MAX_LENGTH -1;
-  
-  /* do we have a location header? */
-  if (DocumentMeta[doc] && DocumentMeta[doc]->full_content_location
+  hasDocBase = FALSE;
+
+  /* If the document has a base URL, it has a priority over the headers. */
+  /*  @@ We need to do this too when we support XML:base */
+
+  /* is it a HTML document ? */
+  elType.ElSSchema = TtaGetDocumentSSchema (doc);
+  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+    /* it's a HTML document */
+    {
+      /* get the document element */
+      el = TtaGetMainRoot (doc);
+      /* search the BASE element */
+      elType.ElTypeNum = HTML_EL_HEAD;
+      el = TtaSearchTypedElement (elType, SearchForward, el);
+      if (el)
+	/* there is a HEAD element */
+	{
+	  /* look for a BASE element within the HEAD */
+	  elType.ElTypeNum = HTML_EL_BASE;
+	  el = TtaSearchTypedElement (elType, SearchInTree, el);
+	}
+      if (el)
+	{
+	  /*  The document has a BASE element. Get the HREF attribute of the
+	      BASE element */
+	  hasDocBase = TRUE;
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	  attr = TtaGetAttribute (el, attrType);
+	  if (attr)
+	    {
+	      /* Use the base path of the document */
+	      TtaGiveTextAttributeValue (attr, basename, &length);
+	    }
+	}
+    }
+
+  /* there was no BASE. Do we have a location header? */
+  if (!hasDocBase && DocumentMeta[doc] && DocumentMeta[doc]->full_content_location
       && DocumentMeta[doc]->full_content_location[0] != EOS)
     {
       strncpy (basename, DocumentMeta[doc]->full_content_location, MAX_LENGTH-1);
       basename[MAX_LENGTH-1] = EOS;
       length = strlen (basename);
-    }
-  else
-    {
-      /* is it a HTML document ? */
-      elType.ElSSchema = TtaGetDocumentSSchema (doc);
-      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-	/* it's a HTML document */
-	{
-	  /* get the document element */
-	  el = TtaGetMainRoot (doc);
-	  /* search the BASE element */
-	  elType.ElTypeNum = HTML_EL_HEAD;
-	  el = TtaSearchTypedElement (elType, SearchForward, el);
-	  if (el)
-	    /* there is a HEAD element */
-	    {
-	      /* look for a BASE element within the HEAD */
-	      elType.ElTypeNum = HTML_EL_BASE;
-	      el = TtaSearchTypedElement (elType, SearchInTree, el);
-	    }
-	  if (el)
-	    {
-	      /*  The document has a BASE element. Get the HREF attribute of the
-		  BASE element */
-	      attrType.AttrSSchema = elType.ElSSchema;
-	      attrType.AttrTypeNum = HTML_ATTR_HREF_;
-	      attr = TtaGetAttribute (el, attrType);
-	      if (attr)
-		{
-		  /* Use the base path of the document */
-		  TtaGiveTextAttributeValue (attr, basename, &length);
-		}
-	    }
-	}
     }
 
   if (basename[0] != EOS)
