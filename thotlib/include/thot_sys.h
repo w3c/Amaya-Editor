@@ -106,7 +106,7 @@ int                 _getpid (void);
 
 /* type mappings */
 typedef BOOL        Boolean;	/* X11/Intrinsic.h */
-typedef BOOL        boolean;
+/*typedef BOOL        boolean;*/
 #define Bool	    int	/* X11/Xlib.h */
 #define None	    0L	/* X11/X.h */
 #define Bool	    int	/* X11/Xlib.h */

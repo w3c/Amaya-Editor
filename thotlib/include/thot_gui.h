@@ -83,7 +83,6 @@ typedef void       *XtPointer;
 typedef void       *XtIntervalId;
 typedef void       *XtInputId;
 typedef int         ThotIcon;
-#define None            0
 #define TBBUTTONS_BASE 50000
 #define ThotColorNone ((COLORREF)~1) /* anything in high byte is bad COLORREF */
 #define ThotBitmapNone ((ThotBitmap)NULL)
