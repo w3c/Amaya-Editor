@@ -121,7 +121,7 @@ for ac_dir in               \
   ; \
 do
   if test -r "$ac_dir/libXp.a" -o -r "$ac_dir/libXp.so"; then
-     echo "\nfound libXp.a\n"
+     echo "found libXp.a"
      X_PRE_LIBS="-lXp ${X_PRE_LIBS}"
      break
   fi
@@ -147,8 +147,11 @@ AC_CHECK_HEADERS(sys/systeminfo.h)
 AC_CHECK_HEADERS(sys/string.h strings.h)
 AC_CHECK_HEADERS(sys/syslog.h syslog.h)
 AC_CHECK_HEADERS(sys/socket.h socket.h)
-AC_CHECK_HEADERS(appkit/appkit.h appkit.h)
-AC_CHECK_HEADERS(apppkit/apppkit.h apppkit.h)
+
+# SG: not used ? => do not compile on macosx
+# AC_CHECK_HEADERS(appkit/appkit.h appkit.h)
+# AC_CHECK_HEADERS(apppkit/apppkit.h apppkit.h)
+
 AC_CHECK_HEADERS(netinet/in.h in.h)
 AC_CHECK_HEADERS(dn.h)
 AC_CHECK_HEADERS(sys/ipc.h)
@@ -313,35 +316,24 @@ if test "$with_motif" = "yes" ; then
 fi
   
 if test "$with_gtk" = "yes" ; then
+  # SG : lookingfor gtkimlib includes
+  #      because not found with gtk-config on macosx 
   for ac_dir in               \
-    /usr/lib/glib/include     \
-    /usr/X11R6/include        \
-                              \
-    /usr/include/X11R6        \
-    /usr/local/X11R6/include  \
-    /usr/local/include/X11R6  \
-                              \
-    /usr/X11/include          \
-    /usr/include/X11          \
-    /usr/local/X11/include    \
-    /usr/local/include/X11    \
-                              \
-    /usr/X386/include         \
-    /usr/x386/include         \
-    /usr/XFree86/include/X11  \
-    /usr/dt/include           \
+    /sw/include/              \
+    /sw/local/include         \
+    /usr/include              \
     /usr/include              \
     /usr/local/include        \
-    /usr/local/lib/glib/include  \
     ; \
   do
-    if test -r "$ac_dir/gdk/gdk.h"; then
-      no_gtk= ac_gtk_includes=$ac_dir
+    if test -r "$ac_dir/gdk_imlib.h"; then
+      echo "found gdk_imlib.h"
+      GTK_INCLUDES="${GTK_INCLUDES} -I$ac_dir"
       break
     fi
   done
 
-  GTK_INCLUDES="`gtk-config --cflags`"
+  GTK_INCLUDES="${GTK_INCLUDES} `gtk-config --cflags`"
   AC_SUBST(GTK_INCLUDES)
   GTK_LIBRARIES="`gtk-config --libs`"
   dnl GL doesn't need the imlib
@@ -1190,6 +1182,21 @@ AMAYA_ANNOT_OPTIONS="$OS_OPTIONS $AMAYA_ANNOT_OPTIONS"
 
 IMGLIBS="-ljpeg -lpng -lz"
 EXTRA_LIBS=
+EXTRA_INCLUDES=
+
+# check for malloc.h
+# on macosx, this file is not at the right place
+for ac_dir in               \
+  /usr/include/malloc/      \
+  /sw/include/malloc/       \
+  ; \
+do
+  if test -r "$ac_dir/malloc.h"; then
+    echo "found malloc.h"
+    EXTRA_INCLUDES="${EXTRA_INCLUDES} -I$ac_dir"
+    break
+  fi
+done
 
 dnl
 dnl Set up the PATHs needed
@@ -1232,6 +1239,7 @@ AC_SUBST(AMAYA_ANNOT_INCLUDES)
 AC_SUBST(AMAYA_ANNOT_EXTRA_LIBS)
 AC_SUBST(IMGLIBS)
 AC_SUBST(EXTRA_LIBS)
+AC_SUBST(EXTRA_INCLUDES)
 
 AC_SUBST(DAVDIR)
 AC_SUBST(LIBDAV)

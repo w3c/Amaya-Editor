@@ -205,7 +205,7 @@ libmd5 : force
 		@(localdir=`pwd`; \
 		 cd $(LIBWWW)/modules/md5 ; \
 		 $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS) $(EXPAT_OPTIONS)" \
-		 CPPFLAGS="$(CPPFLAGS) $(THOTINCLUDES)" \
+		 CPPFLAGS="$(CPPFLAGS) $(THOTINCLUDES) $(EXTRA_INCLUDES)" \
 	        	    libmd5.la)
 
 libwww_install_module_md5 : force
@@ -242,7 +242,7 @@ $(AMAYA_LIBWWW_STANDARD_LIBS) : force
 		   done ; \
 		  cd $(LIBWWW)/Library/src ; \
 		  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS) $(EXPAT_OPTIONS)" \
-		  CPPFLAGS="$(CPPFLAGS) $(THOTINCLUDES)" \
+		  CPPFLAGS="$(CPPFLAGS) $(THOTINCLUDES) $(EXTRA_INCLUDES)" \
 			     $$all_libs)
 
 libwww_install_standard : force
