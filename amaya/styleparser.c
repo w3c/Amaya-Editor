@@ -4351,6 +4351,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	    selector++;
 	    while (*selector != EOS && *selector != ',' &&
 		   *selector != '.' && *selector != ':' &&
+		   *selector != '#' &&
 		   !TtaIsBlank (selector))
 	      *cur++ = *selector++;
 	    /* close the word */
@@ -4363,10 +4364,18 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	      }
 	    else
 	      {
-		ids[0] = deb;
-		specificity += 100;
-		if (names[0] && !strcmp (names[0], "*"))
-		  names[0] = NULL;
+		if (ids[0] && strcmp(ids[0], deb))
+		  {
+		    CSSPrintError ("Too many ids", deb);
+		    DoApply = FALSE;
+		  }		  
+		else
+		  {
+		    ids[0] = deb;
+		    specificity += 100;
+		    if (names[0] && !strcmp (names[0], "*"))
+		      names[0] = NULL;
+		  }
 	      }
 	  }
 	else if (*selector == '[')
