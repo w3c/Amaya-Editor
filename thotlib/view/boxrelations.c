@@ -1674,7 +1674,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			 pParentAb->AbBox->BxType == BoFloatGhost));
 	      if (horizRef)
 		{
-		  if (!inLine && pAb->AbWidth.DimUnit == UnAuto)
+		  if (!inLine && pDimAb->DimUnit == UnAuto)
 		    {
 		      pDimAb->DimAbRef = pParentAb;
 		      pDimAb->DimValue = 0;
@@ -1707,9 +1707,10 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			    }
 			  /* the rule gives the outside value */
 			  val = val - dx;
-			  InsertDimRelation (pParentAb->AbBox, pBox,
-					     pDimAb->DimSameDimension, horizRef,
-					     inLine);
+			  if (pParentAb)
+			    InsertDimRelation (pParentAb->AbBox, pBox,
+					       pDimAb->DimSameDimension, horizRef,
+					       inLine);
 			}
 		      else
 			/* explicit value */
@@ -1722,11 +1723,14 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		      pPosAb = &pAb->AbHorizPos;
 		      if (pDimAb->DimAbRef == pParentAb &&
 			  pParentAb->AbWidth.DimAbRef == NULL &&
-			  pParentAb->AbWidth.DimValue < 0)
+			  pParentAb->AbWidth.DimValue <= 0 &&
+			  (inLine || pPosAb->PosAbRef != pParentAb ||
+			   pPosAb->PosRefEdge != Left ||
+			   pPosAb->PosEdge != Left))
 			{
 			  while (pParentAb &&
 				 ((pParentAb->AbWidth.DimAbRef == NULL &&
-				   pParentAb->AbWidth.DimValue < 0) ||
+				   pParentAb->AbWidth.DimValue <= 0) ||
 				  pParentAb->AbInLine ||
 				  pParentAb->AbBox->BxType == BoGhost ||
 				  pParentAb->AbBox->BxType == BoFloatGhost))
