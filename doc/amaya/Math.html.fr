@@ -25,54 +25,59 @@
 </table>
 
 <div id="Math">
-<h2>Editing mathematics</h2>
+<h2>Editer des mathématiques</h2>
 
-<p>Amaya allows you to include mathematical expressions in web pages,
-following the <a href="http://www.w3.org/TR/REC-MathML/"> Mathematical Markup
-Language</a> (MathML) specification. Mathematical expressions are handled as
-structured components, in the same way as HTML elements. Therefore, you can
-manipulate math expressions in the same way you manipulate other parts of HTML
-documents. All editing commands provided by Amaya for handling text are also
-available for math, and there are some additional controls for entering
-mathematical constructs.</p>
+<p>Amaya vous permet d'inclure des expressions mathématiques dans des pages
+web,  suivant la spécification du  <a
+href="http://www.w3.org/TR/REC-MathML/">Balisage du langage mathématique</a>
+(MathML). Les expressions mathématiques y sont traitées comme des composants
+structurés, de la même manière que les éléments HTML. Vous pouvez donc
+manipuler les expressions mathématiques de la même manière que vous manipulez
+les autres parties des éléments HTML. Toutes les commandes d'édition fournies
+par Amaya pour traiter le texte sont également utilisables pour les
+mathématiques. Il y a quelques manipulations supplémentaires pour entrer des
+constructions mathématiques.  .</p>
 
-<h3><a name="Creating">Creating a mathematical expression </a></h3>
+<h3><a name="Creating">Créer une expression mathématique</a></h3>
 
-<h4>The Math palette and the Types/Math menu</h4>
+<h4>La palette Math et le menu Eléments/Math</h4>
 
-<p>To create a mathematical expression in a document, just <a
-href="Selecting.html#Selecting">move the insertion point</a> (the caret) to
-the position where you want to insert an expression, and then click the
-<strong>Math</strong> button (the rightmost button on the button bar), or
-select the <strong>Math</strong> entry from the <strong>Types</strong> menu.
-The <strong>Math</strong> button displays a palette that stays on the screen
-until you click the Done button. The item <strong>Math</strong> from the
-<strong>Types</strong> menu displays a popup menu. Just choose the most
-convenient tool for you. Both allow you to select the mathematical construct
-to be inserted.</p>
+<p>Pour créer une expression mathématique dans un document, il suffit de <a
+href="Selecting.html#Selecting">déplacer le point d'insertion</a>  à l'endroit
+où vous voulez insérer l'expression, puis de cliquer sur le bouton
+<strong>Math</strong>  (le bouton le plus à droite de la barret) ou de
+sélectionner l'entrée  <strong>Math</strong> du menu <strong>Elémen</strong>. 
+Le bouton <strong>Math</strong> affichr une palette qui reste à l'écran
+jusqu´à ce que vous cliquiez sur le bouton "terminer". L'article  The
+<strong>Math</strong> du menu <strong>Eléments</strong> affiche un menu qui
+surgit. Choisissez l'outil qui vous est le plus commode. Les deux vous
+permettent de sélectionner la construction mathématique à insérer. </p>
 
-<p>In the Math palette (or menu) the first item allows you to create a new
-formula when the caret is in some HTML element (but the caret should not be
-within a MathML element).</p>
+<p>Dans la palette  Math (ou le menu), le premier article vous permet de créer
+une nouvelle formule lorsque le point d'insertion est dans un élément HTML   (
+mais le point d'insertion ne devrait pas être à l'intérieur d'un élément
+MathML). </p>
 
-<p>In the <strong>Math</strong> menu, the next items allow you to create new
-basic elements (not available in the palette): Plain text
-(<code>mtext</code>), Identifier (<code>mi</code>), Number (<code>mn</code>),
-Operator (<code>mo</code>). You can also use these commands to change the type
-of a single element or a sequence of elements.</p>
+<p>Dans le menu  <strong>Math</strong>, les éléments suivants vous donnent la
+possibilité de créer de nouveaux éléments de base (non disponibles dans la
+palette): Texte (<code>mtext</code>), Identificateur  (<code>mi</code>),
+Nombre  (<code>mn</code>), Operateur (<code>mo</code>). Vous pouvez également
+utiliser ces commandes pour changer le type d'un élément  seul ou d'une
+séquence d'éléments. </p>
 
-<p>These items in the <strong>Math</strong> menu are followed by the Character
-(<code>mchar</code>) item. This command allows you to enter a character that
-is not available on the keyboard. It displays a dialogue box where you have to
-enter the character name (for instance <em>alpha </em>for the greek character
-&alpha;).</p>
+<p>Ces articles du menu  <strong>Math</strong> sont suivis par l'article 
+Caractère (<code>mchar</code>). Cette commande vous permet d'entrer un
+caractère qui n'est pas disponible sur le clavier. Elle affiche une boîte de
+dialogue dans laquelle vous devez entrer le nom du caractère (par exemple 
+<em>alpha </em> pour le caractère grec &alpha;).</p>
 
-<p>The next items of the <strong>Math</strong> menu (or palette) allow you to
-create new constructs within a formula. If the caret is not in a formula, a
-<code>Math</code> element is created first to accept the new construct. The
-available constructs are:</p>
+<p>Les élements suivants du menu  <strong>Math</strong> (ou de la palette)
+vous permettent de créer de nouvelles constructions à l'intérieur d'une
+formule. Si le point d'insertion n'est pas dans une formule, un élément Math
+est d'abord créé pour accepter la nouvelle construction. Les constructions
+disponibles sont: </p>
 <ul>
-  <li>Root with index, <code>mroot</code> in MathML:  <math
+  <li>Racine ( <code>mroot dans</code> MathML):  <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <mroot>
         <mrow>
@@ -84,7 +89,7 @@ available constructs are:</p>
       </mroot>
     </math>
   </li>
-  <li>Square root, <code>msqrt</code>: <math
+  <li>Racine carrée ( <code>msqrt)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <msqrt>
         <mrow>
@@ -95,14 +100,14 @@ available constructs are:</p>
       </msqrt>
     </math>
   </li>
-  <li>Enclose, <code>menclose</code>: <math
+  <li>Englobe ( <code>menclose)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <menclose>
         <mn>1234</mn>
       </menclose>
     </math>
   </li>
-  <li>Fraction, <code>mfrac</code>: <math
+  <li>Fraction ( <code>mfrac)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <mfrac>
         <mn>1</mn>
@@ -114,7 +119,7 @@ available constructs are:</p>
       </mfrac>
     </math>
   </li>
-  <li>Expression with subscript and superscript, <code>msubsup</code>: <math
+  <li>Indice et exposant Expression ( <code>msubsup)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <msubsup>
         <mi>x</mi>
@@ -137,7 +142,7 @@ available constructs are:</p>
       </mrow>
     </math>
   </li>
-  <li>Expression with a subscript, <code>msub</code>: <math
+  <li>Indice ( <code>msub)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <msub>
         <mi>x</mi>
@@ -145,7 +150,7 @@ available constructs are:</p>
       </msub>
     </math>
   </li>
-  <li>Expression with a superscript, <code>msup</code>: <math
+  <li>Exposant ( <code>msup)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <msup>
         <mi>x</mi>
@@ -153,7 +158,7 @@ available constructs are:</p>
       </msup>
     </math>
   </li>
-  <li>Expression with under- and overscript, <code>munderover</code>: <math
+  <li>Dessous et dessus ( <code>munderover)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <munderover>
         <mo>&Sum;</mo>
@@ -166,7 +171,7 @@ available constructs are:</p>
       </munderover>
     </math>
   </li>
-  <li>Expression with underscript, <code>munder</code>: <math
+  <li>Dessous ( <code>munder)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <munder>
         <mi>x</mi>
@@ -174,7 +179,7 @@ available constructs are:</p>
       </munder>
     </math>
   </li>
-  <li>Expression with overscript, <code>mover</code>: <math
+  <li>Dessus ( <code>mover)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
         <mi>x</mi>
@@ -186,7 +191,7 @@ available constructs are:</p>
       </mrow>
     </math>
   </li>
-  <li>Expression within parentheses, <code>mrow</code>: <math
+  <li>Parenthèses ( <code>mrow)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
         <mo fence="true">(</mo>
@@ -199,8 +204,7 @@ available constructs are:</p>
       </mrow>
     </math>
   </li>
-  <li>Expression with prescripts and tensor indices,
-    <code>mmultiscripts</code>: <math
+  <li>Multiscripts ( <code>mmultiscripts)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <mmultiscripts>
         <mi>X</mi>
@@ -212,7 +216,7 @@ available constructs are:</p>
       </mmultiscripts>
     </math>
   </li>
-  <li>Matrix or table, <code>mtable</code>: <math
+  <li>Matrice ou  table ( <code>mtable)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <mtable>
         <mtr>
@@ -236,28 +240,30 @@ available constructs are:</p>
   </li>
 </ul>
 
-<p>The last item of the <strong>Math</strong> palette (<math
+<p>Le dernier article de la palette  <strong>Math</strong> (<math
 xmlns="http://www.w3.org/1998/Math/MathML">
   <mi>&alpha;&beta;&gamma;</mi>
 </math>
- ) displays another palette from which you can insert mathematical symbols and
-greek characters.</p>
+ ) affiche une autre palette à partir de laquelle vous pouvez insérer des
+symboles mathématiques et des caractères grecs. </p>
 
-<h4><a name="Entering">Entering constructs from the keyboard</a></h4>
+<h4><a name="Entering">Entrer des constructions à partir du clavier. </a></h4>
 
-<p>You are not obliged to use a menu or a palette to create and edit
-mathematical expressions. You can enter mathematical constructs directly from
-the keyboard, as each item in the <strong>Math</strong> menu has a keyboard
-equivalent (all shortcuts are listed in the menu). This allows you to type
-faster. To type even faster, you may also use the keyboard to move the caret
-from a construct to another, with the arrow keys.</p>
+<p>Vous n' êtes pas obligé d'utiliser le menu ou la palette  pour créer et
+éditer des expressions mathématiques. Vous pouvez entrer des constructions
+mathématiques directement à partir du clavier étant donné que chaque article
+du menu <strong>Math</strong> a un équivalent sur le clavier ( tous les
+raccourcis sont énumérés dans le menu). Ceci vous permet de taper plus vite. 
+Si vous voulez taper encore plus vite, vous pouvez aussi utiliser les touches
+de direction du  clavier pour  faire passer  le point d'insertion d'une
+construction à une autre. </p>
 
-<h3><a name="Entering1">Entering characters</a></h3>
+<h3><a name="Entering1">Entrer des caractères</a></h3>
 
-<p>When you type a character string in a MathML element, Amaya parses that
-string and generates elements <code>mo</code> (operator), <code>mn</code>
-(number), <code>mi</code> (identifier), and <code>mtext</code> automatically.
-For instance, to enter</p>
+<p>Quand vous tapez une chaîne de caractères dans un élement MathML, Amaya
+analyse cette chaîne et engendre automatiquement des éléments <code>mo</code>
+(opérateur), <code>mn</code> (nombre), <code>mi</code> (identificateur), et 
+<code>mtext. Par exemple, pour entrer</code></p>
 
 <p><math xmlns="http://www.w3.org/1998/Math/MathML">
   <mrow>
@@ -271,50 +277,55 @@ For instance, to enter</p>
 </math>
 </p>
 
-<p>just type this sequence of 6 characters: <code>x=2a+b</code> (don't forget
-to first click on the Math item of the <strong>Math</strong> menu, if you are
-not in a mathematical expression), and you will get the following structure
-(you can check in the <a href="#Math_Struc">Math_Structure view</a>):</p>
+<p>il suffit de taper cette séquence de 6 caractères: <code>x=2a+b</code>
+(n'oubliez pas de cliquer d'abord sur l'article Math du menu 
+<strong>Math</strong>  si vous n'êtes pas dans une expression mathématique),
+et vous obtiendrez la structure suivante (vous pouvez vérifier dans le  <a
+href="#Math_Struc">Math_Structure vue</a>):</p>
 <pre>&lt;mi&gt;x&lt;/mi&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mi&gt;a&lt;/mi&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;mi&gt;b&lt;/mi&gt;</pre>
 
-<p>If the result is not exactly what you want, just select the characters that
-have been misinterpreted and change their type with one of the commands Plain
-text (mtext), Identifier (mi), Number (mn), Operator (mo) from the Types/Math
-menu.</p>
+<p>Si le résultat ne correspond pas exactement à ce que vous vouliez, il
+suffit de sélectionner les caractères mal interprétés et de changer leur type
+avec l'une des commandes Texte (mtext), Identificateur(mi), Nombre(mn),
+Opérateur (mo) du menu Eléments/Math. </p>
 
-<h3><a name="Structure">Structure editing</a></h3>
+<h3><a name="Structure">Editer la structure </a></h3>
 
-<p>Amaya provides the same method to create and edit matrices as to <a
-href="Tables.html#Editing">edit HTML tables</a>. Like for tables there is a
-specific command (Delete matrix column) to delete a column in a matrix, even
-if it's not empty. This command is located at the end of submenu
-<strong>Math</strong> of menu <strong>Types</strong>.</p>
+<p>Amaya prévoit la même méthode pour créer et éditer des matrices que pour <a
+href="Tables.html#Editing">éditer des tables  HTML</a>. Comme pour les tables,
+il y a une commande spécifique (Détruire une colonne de matrice) pour détruire
+une colonne dans une matrice, même si elle n'est pas vide. Cette commande est
+située à la fin du sous-menu  <strong>Math</strong> du menu 
+<strong>Eléments.</strong>.</p>
 
-<p>You may want to change the structure of an existing expression, e.g.
-appending a superscript or puting parentheses around an expression. To do
-that, just select the expression and enter the new construct with the palette,
-the <strong>Math</strong> menu or the <a href="#Entering">keyboard</a>. You
-can also use the <strong>Transform</strong> command from the
-<strong>Edit</strong> menu. Select the expression you want to transform and
-the <strong>Transform</strong> command will display a menu with all possible
-changes.</p>
+<p>Si vous voulez changer la structure d'une expression existante, pour
+ajouter par exemple un exposant ou mettre des parenthèses autour d'une
+expression, il suffit de sélectionner l'expression et d'entrer la nouvelle
+expression avec la palette, le menu <strong>Math</strong> ou le <a
+href="#Entering">clavier</a>. Vous pouvez également utiliser la commande
+<strong>Transformer </strong>du menu  <strong>Edition</strong>. Sélectionner
+l'expression que vous voulez transformer et la
+commande<strong>Transformer</strong> affichera un menu avec tous les
+changements possibles. </p>
 
-<h3><a name="Math_Struc">Math_Structure view</a></h3>
+<h3><a name="Math_Struc">Math_Structure vue</a></h3>
 
-<p>Whenever a document contains some MathML elements, choosing the <a
-href="Views.html#Structure">Show Structure</a> item from the
-<strong>Views</strong> menu actually opens <em>two</em> views:</p>
+<p>Toutes les fois qu'un document contient des éléments MathML, choisir
+l'article  <a href="Views.html#Structure">Montrer la structure </a>du menu 
+<strong>Vues </strong> ouvre <em>deux vues</em>:</p>
 <ul>
-  <li>the Structure view shows the main structure of the HTML document. In
-    this view, MathML elements are only represented by a <code>math</code> tag
-    and their actual contents is not shown.</li>
-  <li>the Math_Structure view shows only MathML elements, but here, all their
-    components are visible.</li>
+  <li>La  Structure vue montre la structure principale du document  HTML. Dans
+    cette vue, les éléments  MathML sont seulement représentés par une
+    étiquette mathématique mais leurs contenus effectifs ne sont pas
+  indiqués.</li>
+  <li>La  Math_Structure vue montre seulement les éléments MathML, mais là,
+    tous leurs composants sont visibles.  </li>
 </ul>
 
-<p>You can edit math expressions either in the main view or in the
-Math_Structure view. The Math_Structure view is especially helpful to avoid
-ambiguity. Consider the following example:</p>
+<p>Vous pouvez éditer des expressions mathématiques aussi bien dans la vue
+pricipale que dans la  Math_Structure vue. La  Math_Structure vue est
+particulièrement utile pour éviter l'ambiguïté. Observez l'exemple suivant:
+</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" mode="display">
   <mrow>
     <mi>x</mi>
@@ -331,19 +342,21 @@ ambiguity. Consider the following example:</p>
   </mrow>
 </math>
 
-<p>When moving the caret after character <em>b</em>, it is not clear whether
-you want to add something <em>within</em> the square root or <em>after</em>
-it. Selecting (or checking) in the Math_Structure view avoids any ambiguity.
-You can also check the status line, at the bottom of the main window.</p>
+<p>Lorsque vous déplacez le point d'insertion aprés le caractère<em> b</em>,
+il n'est pas évident de distinguer  si vous voulez ajouter quelquechose <em>à
+l'intérieur </em>de la racine carrée ou  <em>aprés</em> elle.  Sélectionner
+(ou vérifier ) dans la  Math_Structure vue évite toute ambiguïté. Vous pouvez
+également vérifier la position de la ligne , en bas de la fenêtre pricipale.
+</p>
 
-<h3><a name="Links">Links in MathML</a></h3>
+<h3><a name="Links">Les liens dans MathML</a></h3>
 
-<p>You can create and use links in mathematical expressions.  These links are
-represented using a draft version of the <a
-href="http://www.w3.org/TR/WD-xlink">XML Linking Language (XLink)</a>. Only
-the simple unidirectional hyperlinks are available, but you can associate a
-link with any part of a formula. For example, the fraction in the formula
-below is a link to the W3C home page:</p>
+<p>Vous pouvez créer et utiliser des liens dans des expressions
+mathématiques.Ces liens sont représentés These links are represented using a
+draft version of the <a href="http://www.w3.org/TR/WD-xlink">XML Linking
+Language (XLink)</a>. Only the simple unidirectional hyperlinks are available,
+but you can associate a link with any part of a formula. For example, the
+fraction in the formula below is a link to the W3C home page:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mrow>
     <mi>y</mi>
