@@ -1275,7 +1275,9 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
       /* Traitement des caracteres au cas par cas */
       else
 	{
-	  if (value == 8 || value == 127)
+	  if (value == THOT_KEY_Escape)
+	    TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_USE_F2));
+	  else if (value == 8 || value == 127)
 	    {
 	      /* Par defaut BackSpace detruit le caractere precedent */
 	      /* sans se soucier de la langue courante */

@@ -1882,6 +1882,10 @@
 	<message xml:lang="fi">Valitse luokka tai valeluokka</message>
 	<message xml:lang="ru">Выбрать класс или псевдо-класс</message>
 </label>
+<label define="TMSG_USE_F2">
+	<message xml:lang="en">Use F2 key to select the parent element</message>
+	<message xml:lang="fr">Utiliser la touche F2 pour sélectionner l'élément englobant</message>
+</label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>

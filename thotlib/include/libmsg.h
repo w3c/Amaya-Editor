@@ -180,6 +180,7 @@
 #define TMSG_FORMATJUSTIFY		175
 #define TMSG_APPLY_CLASS		176
 #define TMSG_SEL_CLASS		177
-#define TMSG_LIB_MSG_MAX		178
+#define TMSG_USE_F2		178
+#define TMSG_LIB_MSG_MAX		179
 
 #endif
