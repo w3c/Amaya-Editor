@@ -5593,7 +5593,7 @@ boolean            *complet;
 	   PereAssoc->AbPresentationBox = TRUE;
 #ifdef __COLPAGE__
 	if (pNewAbbox != NULL && !pNewAbbox->AbDead)
-	   if (!PaveCorrect (pNewAbbox))
+	   if (!AbsBoxOk (pNewAbbox))
 	      printf ("erreur fin CreePaves \n");
 	/* si on a cree une marque de page precedente, il faut */
 	/* repositionner pEl a l'ancienne valeur. Utile ? */

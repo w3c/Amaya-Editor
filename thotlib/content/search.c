@@ -41,17 +41,17 @@
 #include "structschema_f.h"
 
 /* ---------------------------------------------------------------------- */
-/* |    RemplaceTexte	remplace dans l'element texte pEl la chaine	| */
+/* |    ReplaceString	remplace dans l'element texte pEl la chaine	| */
 /* |    commencant au caractere firstChar et de longueur stringLen par  | */
 /* |    la chaine replaceStr de longueur replaceLen.                    | */
 /* |	Selectionne la chaine remplace'e si select est True.		| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                RemplaceTexte (PtrDocument pDoc, PtrElement pEl, int firstChar, int stringLen, char replaceStr[MAX_CHAR], int replaceLen, boolean select)
+void                ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar, int stringLen, char replaceStr[MAX_CHAR], int replaceLen, boolean select)
 
 #else  /* __STDC__ */
-void                RemplaceTexte (pDoc, pEl, firstChar, stringLen, replaceStr, replaceLen, select)
+void                ReplaceString (pDoc, pEl, firstChar, stringLen, replaceStr, replaceLen, select)
 PtrDocument         pDoc;
 PtrElement          pEl;
 int                 firstChar;
@@ -83,7 +83,7 @@ boolean             select;
 	notifyEl.element = (Element) pAsc;
 	notifyEl.target = (Element) pEl;
 	notifyEl.targetdocument = (Document) IdentDocument (pDoc);
-	DontReplace = DontReplace || ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE);
+	DontReplace = DontReplace || CallEventType ((NotifyEvent *) & notifyEl, TRUE);
 	pAsc = pAsc->ElParent;
      }
    if (DontReplace)
@@ -250,7 +250,7 @@ boolean             select;
 	notifyEl.element = (Element) pAsc;
 	notifyEl.target = (Element) pEl;
 	notifyEl.targetdocument = (Document) IdentDocument (pDoc);
-	ThotSendMessage ((NotifyEvent *) & notifyEl, FALSE);
+	CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	pAsc = pAsc->ElParent;
      }
 }
@@ -333,13 +333,13 @@ int                 strngLen;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    TextOk teste qu'on est bien positionne' sur une chaine de texte | */
+/* |    ContentAndStringEqual teste qu'on est bien positionne' sur une chaine de texte | */
 /* |            egale a` la chaine cherchee.                            | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean             TextOk (PtrElement firstEl, int firstChar, PtrElement lastEl, int lastChar, boolean caseEquiv, char strng[MAX_CHAR], int strngLen)
+boolean             ContentAndStringEqual (PtrElement firstEl, int firstChar, PtrElement lastEl, int lastChar, boolean caseEquiv, char strng[MAX_CHAR], int strngLen)
 #else  /* __STDC__ */
-boolean             TextOk (firstEl, firstChar, lastEl, lastChar, caseEquiv, strng, strngLen)
+boolean             ContentAndStringEqual (firstEl, firstChar, lastEl, lastChar, caseEquiv, strng, strngLen)
 PtrElement          firstEl;
 int                 firstChar;
 PtrElement          lastEl;
@@ -550,7 +550,7 @@ int                 strngLen;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ChTexte recherche dans le document pDoc la chaine de		| */
+/* |    SearchText recherche dans le document pDoc la chaine de		| */
 /* |    caracteres decrite par les variables strng et strngLen.		| */
 /* |    A l'appel, les variables firstEl, firstChar, lastEl,            | */
 /* |    lastChar indiquent la region ou on cherche.                     | */
@@ -559,10 +559,10 @@ int                 strngLen;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             ChTexte (PtrDocument pDoc, PtrElement * firstEl, int *firstChar, PtrElement * lastEl, int *lastChar, boolean forward, boolean caseEquiv, char strng[MAX_CHAR], int strngLen)
+boolean             SearchText (PtrDocument pDoc, PtrElement * firstEl, int *firstChar, PtrElement * lastEl, int *lastChar, boolean forward, boolean caseEquiv, char strng[MAX_CHAR], int strngLen)
 
 #else  /* __STDC__ */
-boolean             ChTexte (pDoc, firstEl, firstChar, lastEl, lastChar, forward, caseEquiv, strng, strngLen)
+boolean             SearchText (pDoc, firstEl, firstChar, lastEl, lastChar, forward, caseEquiv, strng, strngLen)
 PtrDocument         pDoc;
 PtrElement         *firstEl;
 int                *firstChar;
@@ -777,13 +777,13 @@ boolean             onlyOne;
 	if (*natureTableLen < MAX_NAT_TABLE)
 	     natureTable[(*natureTableLen)++] = pSS;
 	/* cherche les natures utilisees par ce schema */
-	ChNatures (pSS, natureTable, natureTableLen, onlyOne);
+	SearchNatures (pSS, natureTable, natureTableLen, onlyOne);
      }
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ChNatures cherche toutes les natures explicitement              | */
+/* |    SearchNatures cherche toutes les natures explicitement              | */
 /* |            mentionnees dans le schema de structure pSS et		| */
 /* |            effectivement utilises, ainsi que les schemas de nature | */
 /* |            charge's dynamiquement et les extensions de ces schemas.| */
@@ -794,10 +794,10 @@ boolean             onlyOne;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                ChNatures (PtrSSchema pSS, PtrSSchema natureTable[MAX_NAT_TABLE], int *natureTableLen, boolean onlyOne)
+void                SearchNatures (PtrSSchema pSS, PtrSSchema natureTable[MAX_NAT_TABLE], int *natureTableLen, boolean onlyOne)
 
 #else  /* __STDC__ */
-void                ChNatures (pSS, natureTable, natureTableLen, onlyOne)
+void                SearchNatures (pSS, natureTable, natureTableLen, onlyOne)
 PtrSSchema        pSS;
 PtrSSchema        natureTable[MAX_NAT_TABLE];
 int                *natureTableLen;
@@ -830,16 +830,16 @@ boolean             onlyOne;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    CherchePage recherche a partir de l'element pEl un element	| */
+/* |    SearchPageBreak recherche a partir de l'element pEl un element	| */
 /* |	BreakPage concernant la vue view. Si relative est faux, pageNum	| */
 /* |	represent le numero de la page cherchee, sinon, c'est le nombre	| */
 /* |	de pages a sauter (ce nombre peut etre negatif, pour un saut	| */
 /* |	en arriere).							| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-PtrElement          CherchePage (PtrElement pEl, int view, int pageNum, boolean relative)
+PtrElement          SearchPageBreak (PtrElement pEl, int view, int pageNum, boolean relative)
 #else  /* __STDC__ */
-PtrElement          CherchePage (pEl, view, pageNum, relative)
+PtrElement          SearchPageBreak (pEl, view, pageNum, relative)
 PtrElement          pEl;
 int                 view;
 int                 pageNum;
@@ -902,15 +902,15 @@ boolean             relative;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    PageHautFenetre positionne le document pDoc dans sa frame       | */
+/* |    ScrollPageToTop positionne le document pDoc dans sa frame       | */
 /* |            de facon que le filet du saut de page pPage soit en	| */
 /* |            haut de la fenetre.                                     | */
 /* |            view indique la vue concernee (vue du document).      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                PageHautFenetre (PtrElement pPage, int view, PtrDocument pDoc)
+void                ScrollPageToTop (PtrElement pPage, int view, PtrDocument pDoc)
 #else  /* __STDC__ */
-void                PageHautFenetre (pPage, view, pDoc)
+void                ScrollPageToTop (pPage, view, pDoc)
 PtrElement          pPage;
 int                 view;
 PtrDocument         pDoc;
@@ -924,7 +924,7 @@ PtrDocument         pDoc;
    /* le code qui suit etait precedemment dans MoveToPage */
    if (pPage != NULL)
      {
-	VerifPave (pPage, view, pDoc, TRUE, FALSE);
+	VerifAbsBoxe (pPage, view, pDoc, TRUE, FALSE);
 	if (pPage->ElAbstractBox[view - 1] != NULL)
 	  {
 	     pAb = pPage->ElAbstractBox[view - 1]->AbFirstEnclosed;

@@ -1856,7 +1856,7 @@ PtrDocument         pDoc;
 	notifyAttr.attribute = NULL;
 	notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
 	notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
-	if (SendAttributeMessage (&notifyAttr, TRUE))
+	if (CallEventAttribute (&notifyAttr, TRUE))
 	   /* l'application ne veut pas lire l'attribut */
 	   /* on l'avait deja lu, on le retire */
 	   DeleteAttribute (pEl, pAttr);
@@ -1869,7 +1869,7 @@ PtrDocument         pDoc;
 	     notifyAttr.attribute = (Attribute) pAttr;
 	     notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
 	     notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
-	     SendAttributeMessage (&notifyAttr, FALSE);
+	     CallEventAttribute (&notifyAttr, FALSE);
 	  }
 	/* passe a l'attribut suivant de l'element */
 	pAttr = pAttr->AeNext;
@@ -2075,7 +2075,7 @@ boolean             creedesc;
 		  notifyEl.elementType.ElTypeNum = *TypeLu;
 		  notifyEl.elementType.ElSSchema = (SSchema) (*SchStrLu);
 		  notifyEl.position = 0;
-		  if (ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE))
+		  if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 		     /* l'application ne veut pas lire le sous-arbre */
 		    {
 		       cree = FALSE;
@@ -2684,7 +2684,7 @@ boolean             creedesc;
 	     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElSructSchema);
 	     notifyEl.position = 0;
-	     ThotSendMessage ((NotifyEvent *) & notifyEl, FALSE);
+	     CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	  }
 	if (pEl != NULL)
 	   pEl->ElParent = NULL;
@@ -3282,7 +3282,7 @@ boolean             WithAPPEvent;
 	notifyDoc.event = TteDocOpen;
 	notifyDoc.document = (Document) IdentDocument (pDoc);
 	notifyDoc.view = 0;
-	if (ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE))
+	if (CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 	   error = TRUE;
      }
    if (pDoc->DocSSchema != NULL && !error)
@@ -3742,7 +3742,7 @@ boolean             WithAPPEvent;
 		  notifyDoc.event = TteDocOpen;
 		  notifyDoc.document = (Document) IdentDocument (pDoc);
 		  notifyDoc.view = 0;
-		  ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
+		  CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
 	       }
 	  }
      }

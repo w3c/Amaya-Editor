@@ -279,7 +279,7 @@ int                *infos;
 	dy = haut - FrameTable[frame].FrHeight;
 	notifyDoc.verticalValue = dy;
 	notifyDoc.horizontalValue = dx;
-	if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE))
+	if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 	  {
 	     FrameTable[frame].FrWidth = (int) larg;
 	     FrameTable[frame].FrHeight = (int) haut;
@@ -294,7 +294,7 @@ int                *infos;
 	     notifyDoc.view = vue;
 	     notifyDoc.verticalValue = dy;
 	     notifyDoc.horizontalValue = dx;
-	     ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
+	     CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
 #ifdef IV
 	     /* Met a jour les widgets de texte */
 	     i = 1;
@@ -356,10 +356,10 @@ int                 value;
    switch (reason)
 	 {
 	    case SB_TOP:
-	       SauterDansVue (frame, 0);
+	       JumpIntoView (frame, 0);
 	       break;
 	    case SB_BOTTOM:
-	       SauterDansVue (frame, 100);
+	       JumpIntoView (frame, 100);
 	       break;
 	    case SB_LINEUP:
 	       delta = -13;
@@ -380,11 +380,11 @@ int                 value;
 	/*************************
 	case SB_THUMBPOSITION:
 	    fprintf(stderr,"SB_THUMBPOSITION\n");
-	    SauterDansVue(frame, value);
+	    JumpIntoView(frame, value);
 	    break;
 	 *************************/
 	    case SB_THUMBTRACK:
-	       SauterDansVue (frame, value);
+	       JumpIntoView (frame, value);
 	       break;
 	 }
 
@@ -465,7 +465,7 @@ int                *param;
    notifyDoc.view = vue;
    notifyDoc.verticalValue = 0;
    notifyDoc.horizontalValue = delta;
-   if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE))
+   if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
      {
 	if (infos->reason == XmCR_VALUE_CHANGED || infos->reason == XmCR_DRAG)
 	  {
@@ -495,7 +495,7 @@ int                *param;
 	notifyDoc.view = vue;
 	notifyDoc.verticalValue = 0;
 	notifyDoc.horizontalValue = delta;
-	ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
+	CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
      }
 }				/*XChangeHScroll */
 
@@ -550,7 +550,7 @@ int                *param;
    notifyDoc.view = vue;
    notifyDoc.verticalValue = delta;
    notifyDoc.horizontalValue = 0;
-   if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE))
+   if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
      {
 	if (infos->reason == XmCR_VALUE_CHANGED || infos->reason == XmCR_DRAG)
 	  {
@@ -596,7 +596,7 @@ int                *param;
 		     delta = 0;
 
 		  delta = (delta * 100) / FrameTable[frame].FrHeight;
-		  SauterDansVue (frame, delta);
+		  JumpIntoView (frame, delta);
 		  /* Mise a jour des bandes de scroll pour ajustement */
 		  MajScrolls (frame);
 	       }
@@ -604,14 +604,14 @@ int                *param;
 	else if (infos->reason == XmCR_TO_TOP)
 	  {
 	     /* Sauter au debut du document */
-	     SauterDansVue (frame, 0);
+	     JumpIntoView (frame, 0);
 	     /* Mise a jour des bandes de scroll pour ajustement */
 	     MajScrolls (frame);
 	  }
 	else if (infos->reason == XmCR_TO_BOTTOM)
 	  {
 	     /* Sauter a la fin du document */
-	     SauterDansVue (frame, 100);
+	     JumpIntoView (frame, 100);
 	     /* Mise a jour des bandes de scroll pour ajustement */
 	     MajScrolls (frame);
 	  }
@@ -622,7 +622,7 @@ int                *param;
 	notifyDoc.view = vue;
 	notifyDoc.verticalValue = delta;
 	notifyDoc.horizontalValue = 0;
-	ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
+	CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
      }
 }				/*XChangeVScroll */
 

@@ -149,7 +149,7 @@ boolean             withAppEvent;
 		  pSibling = pSibling->ElPrevious;
 	       }
 	     notifyEl.position = nSiblings;
-	     if (ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE))
+	     if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 		/* l'application refuse */
 		dontCut = TRUE;
 	     else if (rank <= pEl->ElTextLength)
@@ -164,7 +164,7 @@ boolean             withAppEvent;
 		       notifyTxt.element = (Element) pAsc;
 		       notifyTxt.target = (Element) pEl;
 		       notifyTxt.targetdocument = (Document) IdentDocument (pDoc);
-		       dontCut = dontCut || ThotSendMessage ((NotifyEvent *) & notifyTxt, TRUE);
+		       dontCut = dontCut || CallEventType ((NotifyEvent *) & notifyTxt, TRUE);
 		       pAsc = pAsc->ElParent;
 		    }
 	       }
@@ -248,7 +248,7 @@ boolean             withAppEvent;
 		       notifyTxt.element = (Element) pAsc;
 		       notifyTxt.target = (Element) pEl;
 		       notifyTxt.targetdocument = (Document) IdentDocument (pDoc);
-		       ThotSendMessage ((NotifyEvent *) & notifyTxt, FALSE);
+		       CallEventType ((NotifyEvent *) & notifyTxt, FALSE);
 		       pAsc = pAsc->ElParent;
 		    }
 	       }
@@ -262,7 +262,7 @@ boolean             withAppEvent;
 	     notifyEl.elementType.ElTypeNum = pEl2->ElTypeNumber;
 	     notifyEl.elementType.ElSSchema = (SSchema) (pEl2->ElSructSchema);
 	     notifyEl.position = 0;
-	     ThotSendMessage ((NotifyEvent *) & notifyEl, FALSE);
+	     CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	  }
      }
 }
@@ -324,7 +324,7 @@ boolean             withAppEvent;
 				 notifyEl.elementType.ElTypeNum = pEl2->ElTypeNumber;
 				 notifyEl.elementType.ElSSchema = (SSchema) (pEl2->ElSructSchema);
 				 notifyEl.position = 1;
-				 if (ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE))
+				 if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 				    /* l'application refuse la destruction, on ne fait rien */
 				    merge = FALSE;
 				 else
@@ -339,7 +339,7 @@ boolean             withAppEvent;
 					   notifyTxt.element = (Element) pAsc;
 					   notifyTxt.target = (Element) pEl1;
 					   notifyTxt.targetdocument = (Document) IdentDocument (pDoc);
-					   merge = !ThotSendMessage ((NotifyEvent *) & notifyTxt, TRUE);
+					   merge = !CallEventType ((NotifyEvent *) & notifyTxt, TRUE);
 					   pAsc = pAsc->ElParent;
 					}
 				   }
@@ -396,7 +396,7 @@ boolean             withAppEvent;
 					   notifyTxt.element = (Element) pAsc;
 					   notifyTxt.target = (Element) pEl1;
 					   notifyTxt.targetdocument = (Document) IdentDocument (pDoc);
-					   ThotSendMessage ((NotifyEvent *) & notifyTxt, FALSE);
+					   CallEventType ((NotifyEvent *) & notifyTxt, FALSE);
 					   pAsc = pAsc->ElParent;
 					}
 				   }
@@ -463,7 +463,7 @@ boolean             withAppEvent;
 				 RemoveElement (pEl2);
 				 if (withAppEvent)
 				    /* envoie l'evenement ElemDelete.Post pour le 2eme elem. */
-				    ThotSendMessage ((NotifyEvent *) & notifyEl, FALSE);
+				    CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 				 /* modifie la selection si l'element retire' constitue l'une */
 				 /* des extremites de cette selection */
 				 if (pEl2 == SelPremier)

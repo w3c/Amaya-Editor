@@ -145,7 +145,7 @@ FILE               *outfile;
 	pBox = pAb->AbBox;
 	wrnumber (pBox->BxAbstractBox->AbNum, outfile);
 	fprintf (outfile, " ");
-	wrtext (TypePave (pAb), outfile);
+	wrtext (AbsBoxType (pAb), outfile);
 	fprintf (outfile, "\n");
 	if (pBox != NULL)
 	  {

@@ -369,7 +369,7 @@ int                 delta;
 		       /* On libere des paves en bas */
 		       if (vol > 0 && vol < pFrame->FrAbstractBox->AbVolume)
 			 {
-			    VolReduit (FALSE, vol, frame);
+			    DecreaseVolume (FALSE, vol, frame);
 			    DefClip (frame, 0, 0, 0, 0);
 			    /* On complete en haut -> On decale toute l'image concrete */
 			 }
@@ -399,7 +399,7 @@ int                 delta;
 			    /* Ancienne limite de la fenetre */
 			    x = y + pBo2->BxHeight;
 			 }
-		       VolAugmente (TRUE, vol, frame);
+		       IncreaseVolume (TRUE, vol, frame);
 		       /* On a ajoute des paves */
 		       ajoute = TRUE;
 		       /* Il faut repositionner la fenetre dans l'image concrete */
@@ -439,7 +439,7 @@ int                 delta;
 		       Clear (frame, l, pFrame->FrYOrg + h - y, 0, y);
 		       /* Il faut eviter de boucler quand le volume n'est pas modifie */
 		       y = pFrame->FrAbstractBox->AbVolume;
-		       VolAugmente (FALSE, vol, frame);
+		       IncreaseVolume (FALSE, vol, frame);
 		       y -= pFrame->FrAbstractBox->AbVolume;
 		       /* On a fini de completer l'image */
 		       Complete = FALSE;
@@ -750,7 +750,7 @@ int                 delta;
 		       y = pBo2->BxYOrg;	/* ancienne position */
 		       x = y + pBo2->BxHeight;
 		    }
-		  VolAugmente (TRUE, VolumCar (haut), frame);
+		  IncreaseVolume (TRUE, VolumCar (haut), frame);
 		  ajoute = TRUE;
 		  /* On ajoute des paves en tete */
 		  /* Il faut repositionner la fenetre dans l'image concrete */
@@ -804,7 +804,7 @@ int                 delta;
 		    {
 		       if (min != NULL)
 			  y = min->BxYOrg;
-		       VolReduit (TRUE, vol, frame);
+		       DecreaseVolume (TRUE, vol, frame);
 		       DefClip (frame, 0, 0, 0, 0);
 		       /* Il faut repositionner la fenetre dans l'image concrete */
 		       if (min != NULL)
@@ -833,7 +833,7 @@ int                 delta;
 		  Clear (frame, l, pFrame->FrYOrg + h - y, 0, y);
 		  /* Il faut eviter de boucler quand le volume n'est pas modifie */
 		  y = pFrame->FrAbstractBox->AbVolume;
-		  VolAugmente (FALSE, vol, frame);
+		  IncreaseVolume (FALSE, vol, frame);
 		  y -= pFrame->FrAbstractBox->AbVolume;
 		  /* On a fini de completer l'image */
 		  Complete = FALSE;
@@ -875,17 +875,17 @@ int                 delta;
 }				/* function AfFinFenetre */
 
 /* ---------------------------------------------------------------------- */
-/* |    AfficherVue affiche une vue de document dans la fenetre frame.  | */
+/* |    DisplayFrame affiche une vue de document dans la fenetre frame.  | */
 /* |            Si une portion de l'image abstraite est selectionnee,   | */
 /* |            l'image concrete qui lui correspond est positionnee     | */
 /* |            au centre de la fenetre.                                | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                AfficherVue (int frame)
+void                DisplayFrame (int frame)
 
 #else  /* __STDC__ */
-void                AfficherVue (frame)
+void                DisplayFrame (frame)
 int                 frame;
 
 #endif /* __STDC__ */
@@ -924,6 +924,6 @@ int                 frame;
 	DimFenetre (frame, &l, &h);
 	Clear (frame, l, h, 0, 0);
      }
-}				/* procedure AfficherVue */
+}				/* procedure DisplayFrame */
 
 /* End Of Module frame */

@@ -955,7 +955,7 @@ boolean             AvecDescendants;
 	     notifyAttr.attribute = (Attribute) pAttr;
 	     notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
 	     notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
-	     if (!SendAttributeMessage (&notifyAttr, TRUE))
+	     if (!CallEventAttribute (&notifyAttr, TRUE))
 		/* l'application laisse l'editeur ecrire l'attribut */
 	       {
 		  /* ecrit l'attribut */
@@ -967,7 +967,7 @@ boolean             AvecDescendants;
 		  notifyAttr.attribute = (Attribute) pAttr;
 		  notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
 		  notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
-		  SendAttributeMessage (&notifyAttr, FALSE);
+		  CallEventAttribute (&notifyAttr, FALSE);
 	       }
 	     /* passe a l'attribut suivant de l'element */
 	     pAttr = pAttr->AeNext;
@@ -1143,7 +1143,7 @@ boolean             AvecDescendants;
 		     notifyEl.elementType.ElTypeNum = p->ElTypeNumber;
 		     notifyEl.elementType.ElSSchema = (SSchema) (p->ElSructSchema);
 		     notifyEl.position = 0;
-		     if (!ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE))
+		     if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 			/* l'application accepte que Thot sauve l'element */
 		       {
 			  /* Ecrit d'abord le numero de la structure generique s'il y */
@@ -1160,7 +1160,7 @@ boolean             AvecDescendants;
 			  notifyEl.elementType.ElTypeNum = p->ElTypeNumber;
 			  notifyEl.elementType.ElSSchema = (SSchema) (p->ElSructSchema);
 			  notifyEl.position = 0;
-			  ThotSendMessage ((NotifyEvent *) & notifyEl, FALSE);
+			  CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 		       }
 		     /* passe au fils suivant */
 		     p = p->ElNext;
@@ -1487,7 +1487,7 @@ PtrDocument         pDoc;
 	   notifyEl.elementType.ElTypeNum = p->ElTypeNumber;
 	   notifyEl.elementType.ElSSchema = (SSchema) (p->ElSructSchema);
 	   notifyEl.position = 0;
-	   if (!ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE))
+	   if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 	      /* l'application accepte que Thot sauve l'element */
 	     {
 		BIOwriteByte (fich, (char) C_PIV_PARAM);
@@ -1501,7 +1501,7 @@ PtrDocument         pDoc;
 		notifyEl.elementType.ElTypeNum = p->ElTypeNumber;
 		notifyEl.elementType.ElSSchema = (SSchema) (p->ElSructSchema);
 		notifyEl.position = 0;
-		ThotSendMessage ((NotifyEvent *) & notifyEl, FALSE);
+		CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	     }
 	   p->ElSructSchema->SsRule[p->ElTypeNumber - 1].SrParamElem = TRUE;
 	}
@@ -1536,7 +1536,7 @@ PtrDocument         pDoc;
 		     notifyEl.elementType.ElTypeNum = p->ElTypeNumber;
 		     notifyEl.elementType.ElSSchema = (SSchema) (p->ElSructSchema);
 		     notifyEl.position = 0;
-		     if (!ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE))
+		     if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 			/* l'application accepte que Thot sauve l'element */
 		       {
 			  /* ecrit une marque d'element associe' */
@@ -1556,7 +1556,7 @@ PtrDocument         pDoc;
 			  notifyEl.elementType.ElTypeNum = p->ElTypeNumber;
 			  notifyEl.elementType.ElSSchema = (SSchema) (p->ElSructSchema);
 			  notifyEl.position = 0;
-			  ThotSendMessage ((NotifyEvent *) & notifyEl, FALSE);
+			  CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 		       }
 		  }
 	     }
@@ -1573,7 +1573,7 @@ PtrDocument         pDoc;
 	notifyEl.elementType.ElTypeNum = p->ElTypeNumber;
 	notifyEl.elementType.ElSSchema = (SSchema) (p->ElSructSchema);
 	notifyEl.position = 0;
-	if (!ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE))
+	if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 	   /* l'application accepte que Thot sauve l'element */
 	  {
 	     BIOwriteByte (fich, (char) C_PIV_STRUCTURE);
@@ -1587,7 +1587,7 @@ PtrDocument         pDoc;
 	     notifyEl.elementType.ElTypeNum = p->ElTypeNumber;
 	     notifyEl.elementType.ElSSchema = (SSchema) (p->ElSructSchema);
 	     notifyEl.position = 0;
-	     ThotSendMessage ((NotifyEvent *) & notifyEl, FALSE);
+	     CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	  }
      }
    BIOwriteByte (fich, (char) C_PIV_DOC_END);

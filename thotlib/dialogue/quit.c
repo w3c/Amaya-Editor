@@ -53,7 +53,7 @@ View                view;
    InProcedureQuitThot = TRUE;
    /* envoie le message Exit.Pre */
    notifyEvt.event = TteExit;
-   if (!ThotSendMessage (&notifyEvt, TRUE))
+   if (!CallEventType (&notifyEvt, TRUE))
       /* l'application accepte de quitter l'editeur */
      {
 	ok = TRUE;
@@ -70,7 +70,7 @@ View                view;
 	  {
 	     /* envoie le message Exit.Post */
 	     notifyEvt.event = TteExit;
-	     ThotSendMessage (&notifyEvt, FALSE);
+	     CallEventType (&notifyEvt, FALSE);
 	     /* quitte definitivement Thot */
 	     QuitEditor ();
 	  }

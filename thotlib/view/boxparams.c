@@ -23,12 +23,12 @@
 #ifdef __STDC__
 extern void         DefClip (int, int, int, int, int);
 extern void         EndInsert (void);
-extern void         AfficherVue (int);
+extern void         DisplayFrame (int);
 
 #else
 extern void         DefClip ();
 extern void         EndInsert ();
-extern void         AfficherVue ();
+extern void         DisplayFrame ();
 
 #endif
 
@@ -171,7 +171,7 @@ int                 Zoom;
 	pFrame->FrXOrg = x;
 	pFrame->FrYOrg = y;
 	DefClip (frame, -1, -1, -1, -1);
-	AfficherVue (frame);
+	DisplayFrame (frame);
 	/* On restaure la selection courante dans la fenetre */
 	if (unique)
 	   PoseSelect (frame, pv1, c1, cN, TRUE, TRUE, unique);

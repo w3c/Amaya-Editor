@@ -46,10 +46,10 @@
 #include "presvariables_f.h"
 
 #ifdef __STDC__
-extern void         AfficherVue (int);
+extern void         DisplayFrame (int);
 
 #else  /* __STDC__ */
-extern void         AfficherVue ();
+extern void         DisplayFrame ();
 
 #endif /* __STDC__ */
 
@@ -270,7 +270,7 @@ PtrAttribute         pAttr;
 #else  /* __COLPAGE__ */
 		if (HauteurPage == 0)
 #endif /* __COLPAGE__ */
-		   AfficherVue (frame);
+		   DisplayFrame (frame);
 	     }
      }
    else
@@ -1080,7 +1080,7 @@ PtrAttribute         pNewAttr;
    notifyAttr.attribute = (Attribute) pAttr;
    notifyAttr.attributeType.AttrSSchema = (SSchema) (pNewAttr->AeAttrSSchema);
    notifyAttr.attributeType.AttrTypeNum = pNewAttr->AeAttrNum;
-   if (!SendAttributeMessage (&notifyAttr, TRUE))
+   if (!CallEventAttribute (&notifyAttr, TRUE))
      {
 	/* l'application accepte l'operation */
 	/* on supprime sur pEl et son sous arbre les regles de presentation
@@ -1214,7 +1214,7 @@ PtrAttribute         pNewAttr;
 	  }
 	else
 	   notifyAttr.event = TteAttrModify;
-	SendAttributeMessage (&notifyAttr, FALSE);
+	CallEventAttribute (&notifyAttr, FALSE);
      }
 }
 
@@ -1361,7 +1361,7 @@ PtrSSchema        pSS;
 		   notifyAttr.attribute = NULL;
 		   notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
 		   notifyAttr.attributeType.AttrTypeNum = att;
-		   SendAttributeMessage (&notifyAttr, TRUE);
+		   CallEventAttribute (&notifyAttr, TRUE);
 		   /* cree un nouvel attribut pour l'element */
 		   GetAttr (&pAttr);
 		   pAttr->AeAttrSSchema = pSS;
@@ -1409,7 +1409,7 @@ PtrSSchema        pSS;
 		   notifyAttr.attribute = (Attribute) pAttr;
 		   notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
 		   notifyAttr.attributeType.AttrTypeNum = att;
-		   if (!SendAttributeMessage (&notifyAttr, TRUE))
+		   if (!CallEventAttribute (&notifyAttr, TRUE))
 		      /* l'application laisse l'editeur saisir la valeur de */
 		      /* l'attribut requis */
 		     {
@@ -1460,7 +1460,7 @@ PtrSSchema        pSS;
 			     notifyAttr.attribute = (Attribute) pAttr;
 			     notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
 			     notifyAttr.attributeType.AttrTypeNum = att;
-			     SendAttributeMessage (&notifyAttr, FALSE);
+			     CallEventAttribute (&notifyAttr, FALSE);
 			  }
 		     }
 		   /* envoie l'evenement AttrCreate.Post */
@@ -1470,7 +1470,7 @@ PtrSSchema        pSS;
 		   notifyAttr.attribute = (Attribute) pAttr;
 		   notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
 		   notifyAttr.attributeType.AttrTypeNum = att;
-		   SendAttributeMessage (&notifyAttr, FALSE);
+		   CallEventAttribute (&notifyAttr, FALSE);
 		}
 	   }
 }

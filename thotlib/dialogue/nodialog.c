@@ -238,9 +238,9 @@ PtrDocument         pDoc;
 }
 
 #ifdef __STDC__
-boolean             ThotSendMessage (int *notifyEvent, boolean pre)
+boolean             CallEventType (int *notifyEvent, boolean pre)
 #else  /* __STDC__ */
-boolean             ThotSendMessage (notifyEvent, pre)
+boolean             CallEventType (notifyEvent, pre)
 int                *notifyEvent;
 boolean             pre;
 
@@ -250,9 +250,9 @@ boolean             pre;
 }
 
 #ifdef __STDC__
-boolean             SendAttributeMessage (NotifyAttribute * notifyAttr, boolean pre)
+boolean             CallEventAttribute (NotifyAttribute * notifyAttr, boolean pre)
 #else  /* __STDC__ */
-boolean             SendAttributeMessage (notifyAttr, pre)
+boolean             CallEventAttribute (notifyAttr, pre)
 NotifyAttribute    *notifyAttr;
 boolean             pre;
 

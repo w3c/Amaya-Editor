@@ -1060,7 +1060,7 @@ boolean             withAppEvent;
 		notifyEl.element = (Element) pRefEl;
 		notifyEl.target = (Element) pEl;
 		notifyEl.targetdocument = (Document) IdentDocument (pTargetDoc);
-		if (ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE))
+		if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 		   pEl = NULL;
 	     }
 	if (pEl != NULL)
@@ -1178,7 +1178,7 @@ boolean             withAppEvent;
 			  notifyEl.element = (Element) pRefEl;
 			  notifyEl.target = (Element) pEl;
 			  notifyEl.targetdocument = (Document) IdentDocument (pTargetDoc);
-			  ThotSendMessage ((NotifyEvent *) & notifyEl, FALSE);
+			  CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 		       }
 	       }
 	  }

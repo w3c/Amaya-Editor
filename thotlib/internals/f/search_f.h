@@ -6,21 +6,21 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void RemplaceTexte ( PtrDocument docsel,
+extern void ReplaceString ( PtrDocument docsel,
                             PtrElement pEl,
                             int icar,
                             int LgChaineCh,
                             char pChaineRemplace[MAX_CHAR],
                             int LgChaineRempl,
                             boolean Affiche );
-extern boolean TextOk ( PtrElement premsel,
+extern boolean ContentAndStringEqual ( PtrElement premsel,
                         int premcar,
                         PtrElement dersel,
                         int dercar,
                         boolean MajEgalMin,
                         char pChaineCherchee[MAX_CHAR],
                         int LgChaineCh );
-extern boolean ChTexte ( PtrDocument pDoc,
+extern boolean SearchText ( PtrDocument pDoc,
                          PtrElement * pElDebut,
                          int *NumCarDebut,
                          PtrElement * pElFin,
@@ -29,36 +29,36 @@ extern boolean ChTexte ( PtrDocument pDoc,
                          boolean MajEgalMin,
                          char pChaineCherchee[MAX_CHAR],
                          int LgChaineCh );
-extern void ChNatures ( PtrSSchema pSchStr,
+extern void SearchNatures ( PtrSSchema pSchStr,
                         PtrSSchema TablePtrNature[10 ],
                         int *LgTableNat,
                         boolean SansDouble );
 extern PtrElement ElemSuiv ( PtrElement pEl );
-extern PtrElement CherchePage ( PtrElement from,
+extern PtrElement SearchPageBreak ( PtrElement from,
                                 int vue,
                                 int depl,
                                 boolean relatif );
-extern void PageHautFenetre ( PtrElement PP,
+extern void ScrollPageToTop ( PtrElement PP,
                               int VueDoc,
                               PtrDocument pDoc );
 
 #else /* __STDC__ */
 
-extern void RemplaceTexte (/* PtrDocument docsel,
+extern void ReplaceString (/* PtrDocument docsel,
                               PtrElement pEl,
                               int icar,
                               int LgChaineCh,
                               char pChaineRemplace[MAX_CHAR],
                               int LgChaineRempl,
                               boolean Affiche */);
-extern boolean TextOk (/* PtrElement premsel,
+extern boolean ContentAndStringEqual (/* PtrElement premsel,
                           int premcar,
                           PtrElement dersel,
                           int dercar,
                           boolean MajEgalMin,
                           char pChaineCherchee[MAX_CHAR],
                           int LgChaineCh */);
-extern boolean ChTexte (/* PtrDocument pDoc,
+extern boolean SearchText (/* PtrDocument pDoc,
                            PtrElement * pElDebut,
                            int *NumCarDebut,
                            PtrElement * pElFin,
@@ -67,16 +67,16 @@ extern boolean ChTexte (/* PtrDocument pDoc,
                            boolean MajEgalMin,
                            char pChaineCherchee[MAX_CHAR],
                            int LgChaineCh */);
-extern void ChNatures (/* PtrSSchema pSchStr,
+extern void SearchNatures (/* PtrSSchema pSchStr,
                           PtrSSchema TablePtrNature[10 ],
                           int *LgTableNat,
                           boolean SansDouble */);
 extern PtrElement ElemSuiv (/* PtrElement pEl */);
-extern PtrElement CherchePage (/* PtrElement from,
+extern PtrElement SearchPageBreak (/* PtrElement from,
                                   int vue,
                                   int depl,
                                   boolean relatif */);
-extern void PageHautFenetre (/* PtrElement PP,
+extern void ScrollPageToTop (/* PtrElement PP,
                                 int VueDoc,
                                 PtrDocument pDoc */);
 

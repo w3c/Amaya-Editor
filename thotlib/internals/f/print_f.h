@@ -7,7 +7,7 @@
 #if __STDC__
 
 extern int Error ( char *s );
-extern PtrReference ReferSuivante ( PtrElement pEl,
+extern PtrReference NextReferenceToEl ( PtrElement pEl,
                                     PtrDocument pDocEl,
                                     boolean StopNonCharge,
                                     PtrReference pRefPrec,
@@ -41,7 +41,7 @@ extern void main ( int argc,
 #else /* __STDC__ */
 
 extern int Error (/* char *s */);
-extern PtrReference ReferSuivante (/* PtrElement pEl,
+extern PtrReference NextReferenceToEl (/* PtrElement pEl,
                                       PtrDocument pDocEl,
                                       boolean StopNonCharge,
                                       PtrReference pRefPrec,

@@ -530,7 +530,7 @@ Document            document;
 	notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElSructSchema);
 	notifyEl.position = 0;
-	if (!ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE))
+	if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 	   /* l'application accepte que Thot sauve l'element */
 	  {
 	     /* Ecrit d'abord le numero de la structure generique s'il y */
@@ -547,7 +547,7 @@ Document            document;
 	     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElSructSchema);
 	     notifyEl.position = 0;
-	     ThotSendMessage ((NotifyEvent *) & notifyEl, FALSE);
+	     CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	  }
      }
 }
@@ -603,7 +603,7 @@ Document            document;
 	notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElSructSchema);
 	notifyEl.position = 0;
-	if (!ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE))
+	if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 	   /* l'application accepte que Thot sauve l'element */
 	  {
 	     /* Ecrit d'abord le numero de la structure generique s'il y */
@@ -620,7 +620,7 @@ Document            document;
 	     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElSructSchema);
 	     notifyEl.position = 0;
-	     ThotSendMessage ((NotifyEvent *) & notifyEl, FALSE);
+	     CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	  }
      }
 }

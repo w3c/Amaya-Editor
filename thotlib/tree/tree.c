@@ -3520,7 +3520,7 @@ PtrElement         *pEl;
 	/* retire l'element de l'arbre */
 	RemoveElement (*pEl);
 	/* libere tous les paves */
-	LibPavElem (*pEl);
+	LibAbbEl (*pEl);
 	/* rend la memoire */
 	FreeElement (*pEl);
 	*pEl = NULL;

@@ -18,9 +18,9 @@
 
 /* procedure bidon declarees localement et exportees */
 #ifdef __STDC__
-boolean             ThotSendMessage (NotifyEvent * notifyEvent, boolean pre)
+boolean             CallEventType (NotifyEvent * notifyEvent, boolean pre)
 #else  /* __STDC__ */
-boolean             ThotSendMessage (notifyEvent, pre)
+boolean             CallEventType (notifyEvent, pre)
 NotifyEvent        *notifyEvent;
 boolean             pre;
 
@@ -30,9 +30,9 @@ boolean             pre;
 }
 
 #ifdef __STDC__
-boolean             SendAttributeMessage (NotifyAttribute * notifyAttr, boolean pre)
+boolean             CallEventAttribute (NotifyAttribute * notifyAttr, boolean pre)
 #else  /* __STDC__ */
-boolean             SendAttributeMessage (notifyAttr, pre)
+boolean             CallEventAttribute (notifyAttr, pre)
 NotifyAttribute    *notifyAttr;
 boolean             pre;
 
@@ -86,11 +86,11 @@ boolean             dernier;
 }
 
 
-/* LibPavElem est appele' par le module arbabs */
+/* LibAbbEl est appele' par le module arbabs */
 #ifdef __STDC__
-void                LibPavElem (PtrElement pEl)
+void                LibAbbEl (PtrElement pEl)
 #else  /* __STDC__ */
-void                LibPavElem (pEl)
+void                LibAbbEl (pEl)
 PtrElement          pEl;
 
 #endif /* __STDC__ */

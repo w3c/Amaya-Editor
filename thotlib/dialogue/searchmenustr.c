@@ -455,7 +455,7 @@ PtrDocument         pDoc;
    TableNaturesDoc[0] = pDoc->DocSSchema;
    LgTableNaturesDoc = 1;
    /* cherche tous les schemas de structure utilise's dans le document */
-   ChNatures (pDoc->DocSSchema, TableNaturesDoc, &LgTableNaturesDoc, TRUE);
+   SearchNatures (pDoc->DocSSchema, TableNaturesDoc, &LgTableNaturesDoc, TRUE);
    if (LgTableNaturesDoc == 1)
       /* une seule nature dans le document, on ne met pas le menu des */
       /* natures */

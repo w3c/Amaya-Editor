@@ -69,9 +69,9 @@ static int      CompteurPages;
 /* Hauteurffective est declaree dans page.var (car modifiee par traitepage.c) */
 
 #ifdef __STDC__
-extern void AfficherVue (int) ;
+extern void DisplayFrame (int) ;
 #else  /* __STDC__ */
-extern void AfficherVue () ;
+extern void DisplayFrame () ;
 #endif /* __STDC__ */
 
 #ifdef __COLPAGE__
@@ -409,7 +409,7 @@ static void SupprMarquePage(pPage, pDoc, pLib)
   notifyEl.elementType.ElTypeNum = pPage->ElTypeNumber;
   notifyEl.elementType.ElSSchema = (SSchema)(pPage->ElSructSchema);
   notifyEl.position = 1;
-  if (!ThotSendMessage((NotifyEvent *)&notifyEl, TRUE))
+  if (!CallEventType((NotifyEvent *)&notifyEl, TRUE))
     {
     /* traitement de la suppression des pages dans les structures avec */
     /* coupures speciales */
@@ -438,7 +438,7 @@ static void SupprMarquePage(pPage, pDoc, pLib)
 	}
       }
     notifyEl.position = nbFreres;
-    ThotSendMessage((NotifyEvent *)&notifyEl, FALSE);
+    CallEventType((NotifyEvent *)&notifyEl, FALSE);
     }
 }
 /* ---------------------------------------------------------------------- */
@@ -609,7 +609,7 @@ static	void Aff_Select_Pages (pDoc, PremPage, Vue, Assoc, sel, SelPrem, SelDer, 
           h = 0;
           (void) ModifVue(frame, &h, PavRacine);
           if (!sel)
-	    AfficherVue(frame);
+	    DisplayFrame(frame);
         }
       else
         {
@@ -630,7 +630,7 @@ static	void Aff_Select_Pages (pDoc, PremPage, Vue, Assoc, sel, SelPrem, SelDer, 
                 h = 0;
                 (void) ModifVue(frame, &h, PavRacine);
                 if (!sel)
-		  AfficherVue(frame);
+		  DisplayFrame(frame);
 	      }
         }    
 
@@ -1043,7 +1043,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
   if (!ElemIsBefore)
     nbFreres++;
   notifyEl.position = nbFreres;
-  ThotSendMessage((NotifyEvent *)&notifyEl, TRUE);
+  CallEventType((NotifyEvent *)&notifyEl, TRUE);
   /* cree l'element Marque de Page */
   pElPage = NewSubtree(PageBreak+1, ElRacine->ElSructSchema,
 		       pDoc, pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
@@ -1178,7 +1178,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
  /* on tue tous les paves de presentation a droite */
  /* sauf ceux des pages et des colonnes */
  /* en mettant a jour le booleen AbTruncatedTail */
- TuePresDroite(pP1, pDoc);
+ KillPresRight(pP1, pDoc);
  /* on tue tous les paves a droite en remontant l'arbre */
  /* on cherche d'abord le premier pave a detruire */
  trouve = FALSE;
@@ -1204,7 +1204,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
      pP1 = pP1->AbNext;
  if (pP1 != NULL && pP1->AbEnclosing != NULL)
    /* on ne detruit pas la racine */
-   DetrPaveSuivants (pP1, pDoc);
+   DestrAbbNext (pP1, pDoc);
   /* cree les paves de l'element Marque de Page qu'on vient */
   /* d'inserer */
 
@@ -1224,7 +1224,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
  /* on nettoie d'abord l'image abstraite des paves morts */
  h = -1; /* changement de signification de la valeur de h */
  bool = ModifVue(frame, &h, pRacine);
- LibPavMort(pRacine);
+ LibAbbDead(pRacine);
  /* appel de CreePaves */
  /* TODO : a mettre en coherence ->CrPaveNouv pour appel ApplRegleRet */
  pPa1 = CreePaves(pElPage, pDoc, VueNb, TRUE, TRUE, &complet);
@@ -2029,7 +2029,7 @@ static PtrElement PoseMarque(ElRacine, VueNb, pDoc, frame)
 		Hauteurffective = HauteurPage;
 		(void) ModifVue(frame, &Hauteurffective, PavReaff);
 		/* libere tous les paves morts de la vue */ 
-		LibPavMort(pAb);
+		LibAbbDead(pAb);
 		/* detruit la marque de page a liberer dans l'arbre abstrait */
 		SupprMarquePage(pPage, pDoc, &pElLib);
 		/* signale au Mediateur les paves morts par suite de */
@@ -2332,7 +2332,7 @@ static void DetrImAbs_Pages(Vue, Assoc, pDoc, VueSch)
 #endif /* __COLPAGE__ */
   (void) ModifVue(frame, &h, PavRacine);
   /* libere tous les paves morts de la vue */
-  LibPavMort(PavRacine);
+  LibAbbDead(PavRacine);
   /* indique qu'il faudra reappliquer les regles de presentation du */
   /* pave racine, par exemple pour recreer les boites de presentation */
   /* creees par lui et qui viennent d'etre detruites. */
@@ -2443,7 +2443,7 @@ void AjoutePageEnFin(pElRacine, VueSch, pDoc, withAPP)
         notifyEl.elementType.ElTypeNum = PageBreak+1;
         notifyEl.elementType.ElSSchema = (SSchema)(pElRacine->ElSructSchema);
         notifyEl.position = nbFreres;
-        ok = !ThotSendMessage((NotifyEvent *)&notifyEl, TRUE);
+        ok = !CallEventType((NotifyEvent *)&notifyEl, TRUE);
 	}
       else
 	ok = TRUE;
@@ -2842,7 +2842,7 @@ HauteurTotalePage = 0;
                  AffPaves(PavRacine, 2, list);
                  fclose(list);
               }		
-                    AjoutePaves(PavRacine, pDoc, FALSE);
+                    AddAbsBoxes(PavRacine, pDoc, FALSE);
 		    if (A_Equilibrer && ArretColGroupee)
 		      {
 		        /* mise a jour de ArretColGroupee et du vollibre */
@@ -2935,7 +2935,7 @@ HauteurTotalePage = 0;
                 tropcourt = ModifVue(frame, &h, PavRacine);
                 /* on libere les paves */
 		       pP = PavAssocADetruire->AbEnclosing;
-                LibPavMort (PavAssocADetruire->AbEnclosing);
+                LibAbbDead (PavAssocADetruire->AbEnclosing);
                 /* on recherche le pave englobant haut ou bas de page */
 		       while (pP->AbElement != pCorps->AbElement)
 			 pP = pP->AbEnclosing;
@@ -3212,7 +3212,7 @@ HauteurTotalePage = 0;
 	      volprec = PavRacine->AbVolume;
 	      /* volume de la vue avant */
 	      /* demande la creation de paves supplementaires */
-	      AjoutePaves(PavRacine, pDoc, FALSE);
+	      AddAbsBoxes(PavRacine, pDoc, FALSE);
 	      if (PavRacine->AbVolume <= volprec)
 		/* rien n'a ete cree, augmente le
 		   volume de ce qui peut etre cree' */
@@ -3264,7 +3264,7 @@ HauteurTotalePage = 0;
 	  pDoc->DocViewFreeVolume[Vue-1] = 100;
 	PavRacine->AbTruncatedTail = TRUE; /* il reste des paves a creer : */
 	/* ce sont ceux de la nouvelle marque de page */
-	AjoutePaves(PavRacine, pDoc, FALSE);
+	AddAbsBoxes(PavRacine, pDoc, FALSE);
 
 	/* cherche la marque de page qui vient d'etre inseree */
 

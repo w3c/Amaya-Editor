@@ -47,7 +47,7 @@
 #define MAX_ITEM_MENU_REF 10
 
 /* ---------------------------------------------------------------------- */
-/* |    ReferSuivante retourne la prochaine reference qui designe	| */
+/* |    NextReferenceToEl retourne la prochaine reference qui designe	| */
 /* |         l'element pEl.                                             | */
 /* |         - pDoc est le document auquel appartient pEl.              | */
 /* |         - processNotLoaded indique si on prend en compte les 	| */
@@ -84,9 +84,9 @@
 /* |                 produit que si processNotLoaded est TRUE).       	| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-PtrReference        ReferSuivante (PtrElement pEl, PtrDocument pDoc, boolean processNotLoaded, PtrReference pPrevRef, PtrDocument * pDocRef, PtrExternalDoc * pExtDoc, boolean nextExtDoc)
+PtrReference        NextReferenceToEl (PtrElement pEl, PtrDocument pDoc, boolean processNotLoaded, PtrReference pPrevRef, PtrDocument * pDocRef, PtrExternalDoc * pExtDoc, boolean nextExtDoc)
 #else  /* __STDC__ */
-PtrReference        ReferSuivante (pEl, pDoc, processNotLoaded, pPrevRef, pDocRef, pExtDoc, nextExtDoc)
+PtrReference        NextReferenceToEl (pEl, pDoc, processNotLoaded, pPrevRef, pDocRef, pExtDoc, nextExtDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
 boolean             processNotLoaded;
@@ -123,7 +123,7 @@ boolean             nextExtDoc;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ChUneRef cherche une reference a` l'element selectionne'.       | */
+/* |    FindReference cherche une reference a` l'element selectionne'.       | */
 /* |       A l'appel:                                                   | */
 /* |            - pPrevRef: pointeur sur la derniere reference trouvee  | */
 /* |              ou NULL si on cherche la premiere reference (dans ce  | */
@@ -158,9 +158,9 @@ boolean             nextExtDoc;
 /* |                    pExtDoc, mais ce document n'est pas charge'     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ChUneRef (PtrReference * pPrevRef, PtrDocument * pDocPrevRef, PtrElement * pReferredEl, PtrDocument * pDocReferredEl, PtrExternalDoc * pExtDoc, boolean nextExtDoc)
+void                FindReference (PtrReference * pPrevRef, PtrDocument * pDocPrevRef, PtrElement * pReferredEl, PtrDocument * pDocReferredEl, PtrExternalDoc * pExtDoc, boolean nextExtDoc)
 #else  /* __STDC__ */
-void                ChUneRef (pPrevRef, pDocPrevRef, pReferredEl, pDocReferredEl, pExtDoc, nextExtDoc)
+void                FindReference (pPrevRef, pDocPrevRef, pReferredEl, pDocReferredEl, pExtDoc, nextExtDoc)
 PtrReference       *pPrevRef;
 PtrDocument        *pDocPrevRef;
 PtrElement         *pReferredEl;
@@ -183,7 +183,7 @@ boolean             nextExtDoc;
    ok = TRUE;
    if (*pPrevRef != NULL || *pExtDoc != NULL)
       /* on a deja une reference courante */
-      *pPrevRef = ReferSuivante (*pReferredEl, *pDocReferredEl, TRUE,
+      *pPrevRef = NextReferenceToEl (*pReferredEl, *pDocReferredEl, TRUE,
 		    *pPrevRef, pDocPrevRef, pExtDoc, nextExtDoc);
    else
       /* pas de reference courante */
@@ -220,7 +220,7 @@ boolean             nextExtDoc;
 		  *pReferredEl = pEl;
 		  *pDocReferredEl = pSelDoc;
 		  /* cherche la premiere reference a cet element */
-		  *pPrevRef = ReferSuivante (*pReferredEl, *pDocReferredEl,
+		  *pPrevRef = NextReferenceToEl (*pReferredEl, *pDocReferredEl,
 			TRUE, *pPrevRef, pDocPrevRef, pExtDoc, nextExtDoc);
 	       }
 	  }
@@ -250,7 +250,7 @@ boolean             nextExtDoc;
 	      ok = FALSE;
 	if (!ok)
 	   /* cherche la reference suivante au meme element */
-	   ChUneRef (pPrevRef, pDocPrevRef, pReferredEl, pDocReferredEl,
+	   FindReference (pPrevRef, pDocPrevRef, pReferredEl, pDocReferredEl,
 		     pExtDoc, TRUE);
 	else
 	   /* selectionne la reference trouvee */
@@ -260,11 +260,11 @@ boolean             nextExtDoc;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ChElemRefer cherche l'element qui est reference' par la         | */
+/* |    FindReferredEl cherche l'element qui est reference' par la         | */
 /* |            reference selectionnee ou par un attribut reference du  | */
 /* |            premier element selectionne'.                           | */
 /* ---------------------------------------------------------------------- */
-void                ChElemRefer ()
+void                FindReferredEl ()
 {
    PtrElement          firstSel;
    PtrElement          lastSel;
@@ -436,14 +436,14 @@ LabelString         oldLabel;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    PurgeRef        On vient de coller le sous-arbre de racine	| */
+/* |    CheckReferences        On vient de coller le sous-arbre de racine	| */
 /* |    pRoot dans le document pDoc. Verifie la coherence des elements	| */
 /* |    reference's et des references presents dans ce sous-arbre.      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                PurgeRef (PtrElement pRoot, PtrDocument pDoc)
+void                CheckReferences (PtrElement pRoot, PtrDocument pDoc)
 #else  /* __STDC__ */
-void                PurgeRef (pRoot, pDoc)
+void                CheckReferences (pRoot, pDoc)
 PtrElement          pRoot;
 PtrDocument         pDoc;
 
@@ -510,14 +510,14 @@ PtrDocument         pDoc;
 	/* on cherche toutes les references a l'element original et on les */
 	/* fait pointer sur l'element colle'. */
 	/* cherche d'abord la premiere reference */
-	pRef = ReferSuivante (pSource, DocDeSauve, FALSE, NULL, &pDocRef, &pExtDoc, TRUE);
+	pRef = NextReferenceToEl (pSource, DocDeSauve, FALSE, NULL, &pDocRef, &pExtDoc, TRUE);
 	pNextDocRef = pDocRef;	/* a priori la reference suivante sera dans le */
 	/* meme document */
 	while (pRef != NULL)
 	  {
 	     /* cherche la reference suivante a l'original avant de modifier */
 	     /* la reference courante */
-	     pNextRef = ReferSuivante (pSource, DocDeSauve, FALSE, pRef, &pNextDocRef, &pExtDoc, TRUE);
+	     pNextRef = NextReferenceToEl (pSource, DocDeSauve, FALSE, pRef, &pNextDocRef, &pExtDoc, TRUE);
 	     /* traite la reference courante */
 	     /* si elle est dans le tampon, on n'y touche pas : sa copie dans */
 	     /* le document ou on colle a deja ete traitee ou sera traitee dans */
@@ -686,7 +686,7 @@ PtrDocument         pDoc;
 	pEl = pRoot->ElFirstChild;
 	while (pEl != NULL)
 	  {
-	     PurgeRef (pEl, pDoc);
+	     CheckReferences (pEl, pDoc);
 	     pEl = pEl->ElNext;
 	  }
      }

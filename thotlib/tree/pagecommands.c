@@ -384,7 +384,7 @@ int                 VueNb;
 	ret = ModifVue (frame, &Hauteurffective, PavRac);
 	if (det)
 	   /* libere tous les paves morts de la vue */
-	   LibPavMort (PavRac);
+	   LibAbbDead (PavRac);
 	/* cherche le rappel suivant de ce saut de page */
 	/* supprime */
      }				/* fin cas ou pPage est bien une marque de page */
@@ -505,7 +505,7 @@ int                 VueNb;
    Hauteurffective = HauteurPage;
    ret = ModifVue (frame, &Hauteurffective, PavRac);
    /* libere tous les paves morts de la vue */
-   LibPavMort (PavRac);
+   LibAbbDead (PavRac);
    return ret;
 }
 #endif /* __COLPAGE__ */

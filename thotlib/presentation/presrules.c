@@ -3055,7 +3055,7 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
 	     ModifVue(frame, &h, pP);
 	     }
 	    /* on nettoie l'image abstraite des paves morts */
-	    LibPavMort(pP); /* liberation a partir de la racine car */
+	    LibAbbDead(pP); /* liberation a partir de la racine car */
 	                    /* un pave colonne a pu etre detruit */
 	      
             /* cree les paves de la marque de colonne et groupe de colonnes */
@@ -3314,7 +3314,7 @@ static void applPage(pDoc, pAb, VueSch, pRegle, TypeMiseEnPage)
 	              bool = ModifVue(frame, &h, pP);
 	            }
 	          /* on nettoie l'image abstraite des paves morts */
-	          LibPavMort(pAb->AbEnclosing);
+	          LibAbbDead(pAb->AbEnclosing);
 	        }
 	
 	/* TODO quand on traitera les regles recto verso */

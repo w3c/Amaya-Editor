@@ -528,7 +528,7 @@ boolean             complete;
 #endif /* __COLPAGE__ */
 	ModifVue (frame, &h, pAbbRoot);
 	/* libere tous les paves morts de la vue */
-	LibPavMort (pAbbRoot);
+	LibAbbDead (pAbbRoot);
 
 	/* indique qu'il faudra reappliquer les regles de presentation du */
 	/* pave racine, par exemple pour recreer les boites de presentation */
@@ -785,13 +785,13 @@ int                 position;
 	      vue = 1;
 	   pEl = (PtrElement) element;
 	   /* si l'element a un pave' incomplet en tete, on supprime ce pave' */
-	   /* et VerifPave le recreera depuis la tete de l'element */
+	   /* et VerifAbsBoxe le recreera depuis la tete de l'element */
 	   if (pEl->ElAbstractBox[vue - 1] != NULL)
 	      if (pEl->ElAbstractBox[vue - 1]->AbLeafType == LtCompound)
 		 if (pEl->ElAbstractBox[vue - 1]->AbTruncatedHead)
 		    /* on detruit les paves de l'element dans cette vue */
 		    DetPavVue (pEl, TabDocuments[document - 1], FALSE, vue);
-	   VerifPave (pEl, vue, TabDocuments[document - 1], FALSE, FALSE);
+	   VerifAbsBoxe (pEl, vue, TabDocuments[document - 1], FALSE, FALSE);
 	   if (pEl->ElAbstractBox[vue - 1] != NULL)
 	      MontrerBoite (frame, pEl->ElAbstractBox[vue - 1]->AbBox, 0, position);
 	}

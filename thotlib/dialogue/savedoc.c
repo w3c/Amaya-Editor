@@ -33,7 +33,7 @@ static boolean      SauveDocAvecMove;
 extern void         NomFonte (char, char, int, int, TypeUnit, char[], char[]);
 extern boolean      SauverDoc (PtrDocument, Name, PathBuffer, boolean, boolean);
 extern int          IdentDocument (PtrDocument);
-extern boolean      ThotSendMessage (NotifyEvent *, boolean);
+extern boolean      CallEventType (NotifyEvent *, boolean);
 extern void         DoFileName (Name, char *, PathBuffer, PathBuffer, int *);
 extern void         ExportDocument (PtrDocument, char *, char *);
 extern boolean      TtaIsSuffixFileIn (char *, char *);
@@ -48,7 +48,7 @@ extern boolean      SauveDocument (PtrDocument, int);
 extern void         NomFonte ();
 extern boolean      SauverDoc ();
 extern int          IdentDocument ();
-extern boolean      ThotSendMessage ();
+extern boolean      CallEventType ();
 extern void         DoFileName ();
 extern void         ExportDocument ();
 extern boolean      TtaIsSuffixFileIn ();
@@ -115,7 +115,7 @@ void                TraiteSauverDoc ()
 	notifyDoc.event = TteDocExport;
 	notifyDoc.document = (Document) IdentDocument (DocumentASauver);
 	notifyDoc.view = 0;
-	if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE))
+	if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 	   /* l'application accepte que Thot exporte le document */
 	  {
 	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_EXPORTING), DocumentASauver->DocDName);
@@ -126,7 +126,7 @@ void                TraiteSauverDoc ()
 	     notifyDoc.event = TteDocExport;
 	     notifyDoc.document = (Document) IdentDocument (DocumentASauver);
 	     notifyDoc.view = 0;
-	     ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
+	     CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
 	  }
      }
 }

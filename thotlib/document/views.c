@@ -72,10 +72,10 @@ static AvailableView    ToutesLesVuesAOuvrir;
 static int          EntreesMenuVues[MAX_VIEW_OPEN];
 
 #ifdef __STDC__
-extern void         AfficherVue (int);
+extern void         DisplayFrame (int);
 
 #else
-extern void         AfficherVue ();
+extern void         DisplayFrame ();
 
 #endif /* __STDC__ */
 
@@ -625,7 +625,7 @@ DocViewNumber           v;
 #endif /* __STDC__ */
 {
    if (pDoc->DocViewRootAb[v - 1] != NULL)
-      LibPavVue (pDoc->DocViewRootAb[v - 1]);
+      LibAbbView (pDoc->DocViewRootAb[v - 1]);
    pDoc->DocViewRootAb[v - 1] = NULL;
    pDoc->DocView[v - 1].DvSSchema = NULL;
    pDoc->DocView[v - 1].DvPSchemaView = 0;
@@ -691,7 +691,7 @@ boolean             AvecFermeDoc;
 	   dest1vue (pDoc, vue);
 	else
 	  {
-	     LibPavVue (pDoc->DocAssocRoot[vue - 1]->ElAbstractBox[0]);
+	     LibAbbView (pDoc->DocAssocRoot[vue - 1]->ElAbstractBox[0]);
 	     pDoc->DocAssocFrame[vue - 1] = 0;
 	  }
 	if (AvecFermeDoc)
@@ -702,14 +702,14 @@ boolean             AvecFermeDoc;
 		notifyDoc.event = TteDocClose;
 		notifyDoc.document = (Document) IdentDocument (pDoc);
 		notifyDoc.view = 0;
-		if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE))
+		if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 		  {
 		     if (ThotLocalActions[T_corrector] != NULL)
 			(*ThotLocalActions[T_rscorrector]) (-1, 0, (char *) pDoc);
 		     notifyDoc.event = TteDocClose;
 		     notifyDoc.document = (Document) IdentDocument (pDoc);
 		     notifyDoc.view = 0;
-		     ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
+		     CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
 		     LibDocument (&pDoc);
 		  }
 	     }
@@ -938,7 +938,7 @@ PtrDocument         pDoc;
 	     do
 	       {
 
-		  pRef = ReferSuivante (pDR->ReReferredElem, pDoc, FALSE, pRef, &pDocRef, &pDE, TRUE);
+		  pRef = NextReferenceToEl (pDR->ReReferredElem, pDoc, FALSE, pRef, &pDocRef, &pDE, TRUE);
 		  if (pRef != NULL)
 		     if (pRef->RdTypeRef == RefInclusion)
 			/* c'est une inclusion */
@@ -1056,7 +1056,7 @@ boolean             withAPP;
 		  notifyDoc.event = TteDocSave;
 		  notifyDoc.document = (Document) IdentDocument (pDoc);
 		  notifyDoc.view = 0;
-		  ok = !ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE);
+		  ok = !CallEventType ((NotifyEvent *) & notifyDoc, TRUE);
 	       }
 	     else
 		ok = TRUE;
@@ -1072,7 +1072,7 @@ boolean             withAPP;
 		       notifyDoc.event = TteDocSave;
 		       notifyDoc.document = (Document) IdentDocument (pDoc);
 		       notifyDoc.view = 0;
-		       ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
+		       CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
 		    }
 	       }
 	     return TRUE;
@@ -1144,7 +1144,7 @@ boolean             SauveDocAvecMove;
    notifyDoc.event = TteDocSave;
    notifyDoc.document = (Document) IdentDocument (pDoc);
    notifyDoc.view = 0;
-   if (ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE))
+   if (CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
       /* l'application a pris la sauvegarde en charge */
       status = TRUE;
    else
@@ -1280,7 +1280,7 @@ boolean             SauveDocAvecMove;
 	     notifyDoc.event = TteDocSave;
 	     notifyDoc.document = (Document) IdentDocument (pDoc);
 	     notifyDoc.view = 0;
-	     ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
+	     CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
 	  }
      }
    return status;
@@ -1412,12 +1412,12 @@ int                 nframe;
 	   notifyDoc.view = nv + 100;
 	else
 	   notifyDoc.view = nv;
-	ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE);
+	CallEventType ((NotifyEvent *) & notifyDoc, TRUE);
 	/* desactive la vue si elle est active */
 	DesactVue (pD, nv, assoc);
 	/* detruit la fenetre */
 	DetruitFenetre (nframe);
-	ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
+	CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
 	/* detruit le contexte de la vue */
 	detruit (pD, nv, assoc, TRUE);
      }
@@ -1467,7 +1467,7 @@ PtrDocument         pDoc;
 		   /* cherche la reference suivant a l'element */
 		  {
 
-		     pRef = ReferSuivante (pEl, pDoc, FALSE, pRef, &pDocRef, &pDE, TRUE);
+		     pRef = NextReferenceToEl (pEl, pDoc, FALSE, pRef, &pDocRef, &pDE, TRUE);
 		     if (pRef != NULL)
 			/* on a trouve' une reference a cet element */
 			if (pDocRef != pDoc)
@@ -1537,7 +1537,7 @@ PtrDocument         pDoc;
    notifyDoc.event = TteViewOpen;
    notifyDoc.document = (Document) IdentDocument (pDoc);
    notifyDoc.view = 0;
-   if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE))
+   if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
      {
 	VueSch = pDoc->DocView[vue - 1].DvPSchemaView;
 	pDoc->DocViewFrame[0] = CrFenTitre (pDoc, VueSch,
@@ -1587,11 +1587,11 @@ PtrDocument         pDoc;
 	     i = 0;
 	     /* on ne s'occupe pas de la hauteur de page */
 	     ModifVue (pDoc->DocViewFrame[0], &i, pDoc->DocViewRootAb[0]);
-	     AfficherVue (pDoc->DocViewFrame[0]);
+	     DisplayFrame (pDoc->DocViewFrame[0]);
 	     notifyDoc.event = TteViewOpen;
 	     notifyDoc.document = (Document) IdentDocument (pDoc);
 	     notifyDoc.view = 1;
-	     ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
+	     CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
 	     /* Ouvre les vues specifiees dans la section open */
 	     /* du fichier .config, sauf s'il s'agit d'un document */
 	     /* charge' sous forme de squelette. */
@@ -1801,7 +1801,7 @@ PathBuffer          nomdir;
 			notifyDoc.event = TteDocCreate;
 			notifyDoc.document = (Document) IdentDocument (pDo1);
 			notifyDoc.view = 0;
-			if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE))
+			if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 			  {
 			     /* cree la representation interne d'un document vide */
 			     pDo1->DocRootElement = NewSubtree (pDo1->DocSSchema->SsRootElem,
@@ -1857,7 +1857,7 @@ PathBuffer          nomdir;
 		notifyDoc.event = TteDocCreate;
 		notifyDoc.document = (Document) IdentDocument (pDo1);
 		notifyDoc.view = 0;
-		ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
+		CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
 		/* traitement des attributs requis */
 		AttachMandatoryAttributes (pDo1->DocRootElement, pDo1);
 		if (pDo1->DocSSchema != NULL)
@@ -2008,7 +2008,7 @@ PtrElement          RacineVue;
 		  notifyEl.elementType.ElTypeNum = r;
 		  notifyEl.elementType.ElSSchema = (SSchema) pSS;
 		  notifyEl.position = 0;
-		  if (!ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE))
+		  if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 		    {
 		       pDoc->DocAssocRoot[elass - 1] =
 			  NewSubtree (r, pSS, pDoc, elass, TRUE, TRUE, TRUE, TRUE);
@@ -2075,7 +2075,7 @@ PtrElement          RacineVue;
 	     else
 		/* on cree l'image abstraite autour du premier */
 		/* element selectionne' */
-		VerifPave (PremSel, 1, pDoc, FALSE, FALSE);
+		VerifAbsBoxe (PremSel, 1, pDoc, FALSE, FALSE);
 	  }
 #ifdef __COLPAGE__
 	/* sauvegarde de l'image abstraite pour tests */
@@ -2133,7 +2133,7 @@ PtrElement          RacineVue;
 		/* de l'arbre principal du document concerne', */
 		/* on cree l'image abstraite de la vue avec */
 		/* l'element selectionne' au milieu */
-		VerifPave (PremSel, vuelibre, pDoc, FALSE, FALSE);
+		VerifAbsBoxe (PremSel, vuelibre, pDoc, FALSE, FALSE);
 	     else
 	       {
 		  pAb = pDoc->DocRootElement->ElAbstractBox[vuedesignee - 1];
@@ -2178,9 +2178,9 @@ PtrElement          RacineVue;
 
 		       /* cree la nouvelle vue a partir de cet element */
 		       if (pAb == NULL)
-			  VerifPave (pDoc->DocRootElement, vuelibre, pDoc, TRUE, FALSE);
+			  VerifAbsBoxe (pDoc->DocRootElement, vuelibre, pDoc, TRUE, FALSE);
 		       else
-			  VerifPave (pAb->AbElement, vuelibre, pDoc, TRUE, FALSE);
+			  VerifAbsBoxe (pAb->AbElement, vuelibre, pDoc, TRUE, FALSE);
 
 		    }
 	       }
@@ -2257,7 +2257,7 @@ int                 H;
 	     pDoc->DocAssocFrame[vue - 1] = frame;
 	     pDoc->DocAssocVolume[vue - 1] = vol;
 	     ModifVue (frame, &h, pDoc->DocAssocRoot[vue - 1]->ElAbstractBox[0]);
-	     AfficherVue (frame);
+	     DisplayFrame (frame);
 	     VisuSelect (pDoc->DocAssocRoot[vue - 1]->ElAbstractBox[0], TRUE);
 	  }
 	else
@@ -2266,7 +2266,7 @@ int                 H;
 	     pDoc->DocViewFrame[vue - 1] = frame;
 	     pDoc->DocViewVolume[vue - 1] = vol;
 	     ModifVue (frame, &h, pDoc->DocViewRootAb[vue - 1]);
-	     AfficherVue (frame);
+	     DisplayFrame (frame);
 	     VisuSelect (pDoc->DocViewRootAb[vue - 1], TRUE);
 	  }
 	/* met a jour les menus de la fenetre */
@@ -2441,7 +2441,7 @@ int                 H;
 	     notifyDoc.event = TteViewOpen;
 	     notifyDoc.document = (Document) IdentDocument (pDoc);
 	     notifyDoc.view = 0;
-	     if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE))
+	     if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 	       {
 		  ret = CreeImageAbstraite (pDoc, numvue, 0, pSS, 1, assoc, NULL);
 		  OuvreVueCreee (pDoc, ret, assoc, X, Y, L, H);
@@ -2451,7 +2451,7 @@ int                 H;
 		     notifyDoc.view = ret + 100;
 		  else
 		     notifyDoc.view = ret;
-		  ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
+		  CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
 	       }
 	  }
      }
@@ -2492,7 +2492,7 @@ DocViewNumber           VueDeReference;
 	notifyDoc.event = TteViewOpen;
 	notifyDoc.document = (Document) IdentDocument (pDoc);
 	notifyDoc.view = 0;
-	if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE))
+	if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 	  {
 	     NumeroVueAOuvrir = EntreesMenuVues[VdView];
 
@@ -2519,7 +2519,7 @@ DocViewNumber           VueDeReference;
 	     notifyDoc.event = TteViewOpen;
 	     notifyDoc.document = (Document) IdentDocument (pDoc);
 	     notifyDoc.view = vue;
-	     ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
+	     CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
 	  }
      }
 }
@@ -2631,7 +2631,7 @@ boolean             assoc;
 	   notifyDoc.view = nv + 100;
 	else
 	   notifyDoc.view = nv;
-	if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE))
+	if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 	  {
 	     if (NbVueExiste (pDoc) <= 1)
 	       {
@@ -2671,7 +2671,7 @@ boolean             assoc;
 		     notifyDoc.view = nv + 100;
 		  else
 		     notifyDoc.view = nv;
-		  ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
+		  CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
 		  /* detruit le contexte de la vue */
 		  detruit (pDoc, nv, assoc, TRUE);
 	       }

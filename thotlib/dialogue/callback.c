@@ -135,16 +135,16 @@ PtrSSchema        schStruct;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    SendAttributeMessage notifies the possible application that     | */
+/* |    CallEventAttribute notifies the possible application that     | */
 /* |            an attribute has been created, deleted, modified, read  | */
 /* |            or saved.                                               | */
 /* |            It returns TRUE if it executed an action,               | */
 /* |            else it returns FALSE.                                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean             SendAttributeMessage (NotifyAttribute * notifyAttr, boolean pre)
+boolean             CallEventAttribute (NotifyAttribute * notifyAttr, boolean pre)
 #else  /* __STDC__ */
-boolean             SendAttributeMessage (notifyAttr, pre)
+boolean             CallEventAttribute (notifyAttr, pre)
 NotifyAttribute    *notifyAttr;
 boolean             pre;
 #endif /* __STDC__ */
@@ -165,17 +165,17 @@ boolean             pre;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ThotSendMessage sends a pointer to a actionstruct               | */
+/* |    CallEventType sends a pointer to a actionstruct               | */
 /* |            and a structure-element and executes the                | */
 /* |            corresponding action (if any). If an action was         | */
 /* |            executed the function returns 'TRUE' else it returns    | */
 /* |            'FALSE'.                                                | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean             ThotSendMessage (NotifyEvent * notifyEvent, boolean pre)
+boolean             CallEventType (NotifyEvent * notifyEvent, boolean pre)
 
 #else  /* __STDC__ */
-boolean             ThotSendMessage (notifyEvent, pre)
+boolean             CallEventType (notifyEvent, pre)
 NotifyEvent        *notifyEvent;
 boolean             pre;
 

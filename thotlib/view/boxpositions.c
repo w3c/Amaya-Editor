@@ -303,7 +303,7 @@ boolean             EnY;
 				  pavefils->AbSelected = TRUE;	/* Mise en evidence de l'erreur, pas une 
 								   selection ! */
 				  /* Erreur sur l'inclusion des boites */
-				  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_HORIZ_POS_MISTAKE), TypePave (pavefils));
+				  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_HORIZ_POS_MISTAKE), AbsBoxType (pavefils));
 
 			       }
 			  }
@@ -316,7 +316,7 @@ boolean             EnY;
 				  pavefils->AbSelected = TRUE;	/* Mise en evidence de l'erreur, pas une 
 								   selection ! */
 				  /* Erreur sur l'inclusion des boites */
-				  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_VERTIC_POS_MISTAKE), TypePave (pavefils));
+				  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_VERTIC_POS_MISTAKE), AbsBoxType (pavefils));
 
 			       }
 			  }
@@ -329,7 +329,7 @@ boolean             EnY;
 				  pavefils->AbSelected = TRUE;
 				  /* Mise en evidence de l'erreur, pas une selection ! */
 				  /* ** Erreur sur les dimensions des boites */
-				  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_HORIZ_SIZING_MISTAKE), TypePave (pavefils));
+				  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_HORIZ_SIZING_MISTAKE), AbsBoxType (pavefils));
 
 			       }
 			  }
@@ -342,7 +342,7 @@ boolean             EnY;
 				  pavefils->AbSelected = TRUE;
 				  /* Mise en evidence de l'erreur, pas une selection ! */
 				  /* ** Erreur sur les dimensions des boites */
-				  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_VERTIC_SIZING_MISTAKE), TypePave (pavefils));
+				  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_VERTIC_SIZING_MISTAKE), AbsBoxType (pavefils));
 
 			       }
 			  }
@@ -382,7 +382,7 @@ boolean             EnY;
 				    pavefils->AbSelected = TRUE;
 				    /* Mise en evidence de l'erreur, pas une selection ! */
 				    /* Erreur sur l'inclusion des boites */
-				    TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_HORIZ_BOX_OVERFLOW), TypePave (pavefils));
+				    TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_HORIZ_BOX_OVERFLOW), AbsBoxType (pavefils));
 
 				 }
 			    }
@@ -479,7 +479,7 @@ boolean             EnY;
 				    pavefils->AbSelected = TRUE;
 				    /* Mise en evidence de l'erreur, pas une selection ! */
 				    /* Erreur sur l'inclusion des boites */
-				    TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_VERTIC_BOX_OVERFLOW), TypePave (pavefils));
+				    TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_VERTIC_BOX_OVERFLOW), AbsBoxType (pavefils));
 
 				 }
 			    }

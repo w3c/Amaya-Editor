@@ -384,7 +384,7 @@ PtrDocument         pDoc;
    notifyAttr.attribute = NULL;
    notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
    notifyAttr.attributeType.AttrTypeNum = att;
-   OK = !SendAttributeMessage (&notifyAttr, TRUE);
+   OK = !CallEventAttribute (&notifyAttr, TRUE);
    return OK;
 }
 

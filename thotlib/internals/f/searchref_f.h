@@ -6,40 +6,40 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern PtrReference ReferSuivante ( PtrElement pEl,
+extern PtrReference NextReferenceToEl ( PtrElement pEl,
                                     PtrDocument pDocEl,
                                     boolean TraiteNonCharge,
                                     PtrReference pRefPrec,
                                     PtrDocument * pDocRef,
                                     PtrExternalDoc * pDE,
                                     boolean DocExtSuivant );
-extern void ChUneRef ( PtrReference * ReferCour,
+extern void FindReference ( PtrReference * ReferCour,
                        PtrDocument * DocDeReferCour,
                        PtrElement * ElemRefCour,
                        PtrDocument * DocDeElemRefCour,
                        PtrExternalDoc * pDocExtCour,
                        boolean DocExtSuivant );
-extern void ChElemRefer ( void );
-extern void PurgeRef ( PtrElement pRac,
+extern void FindReferredEl ( void );
+extern void CheckReferences ( PtrElement pRac,
                        PtrDocument pDoc );
 
 #else /* __STDC__ */
 
-extern PtrReference ReferSuivante (/* PtrElement pEl,
+extern PtrReference NextReferenceToEl (/* PtrElement pEl,
                                       PtrDocument pDocEl,
                                       boolean TraiteNonCharge,
                                       PtrReference pRefPrec,
                                       PtrDocument * pDocRef,
                                       PtrExternalDoc * pDE,
                                       boolean DocExtSuivant */);
-extern void ChUneRef (/* PtrReference * ReferCour,
+extern void FindReference (/* PtrReference * ReferCour,
                          PtrDocument * DocDeReferCour,
                          PtrElement * ElemRefCour,
                          PtrDocument * DocDeElemRefCour,
                          PtrExternalDoc * pDocExtCour,
                          boolean DocExtSuivant */);
-extern void ChElemRefer (/* void */);
-extern void PurgeRef (/* PtrElement pRac,
+extern void FindReferredEl (/* void */);
+extern void CheckReferences (/* PtrElement pRac,
                          PtrDocument pDoc */);
 
 #endif /* __STDC__ */

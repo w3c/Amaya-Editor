@@ -1206,12 +1206,12 @@ void                TtaMainLoop ()
    UserErrorCode = 0;
    /* envoie le message Init.Pre */
    notifyEvt.event = TteInit;
-   if (ThotSendMessage (&notifyEvt, TRUE))
+   if (CallEventType (&notifyEvt, TRUE))
       /* l'application refuse le lancement de l'editeur, on quitte */
       exit (0);
    /* envoie le message Init.Post */
    notifyEvt.event = TteInit;
-   ThotSendMessage (&notifyEvt, FALSE);
+   CallEventType (&notifyEvt, FALSE);
 
    /* Boucle d'attente des evenements */
    while (1)

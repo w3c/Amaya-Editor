@@ -1756,7 +1756,7 @@ PtrDocument         pDoc;
    notifyAttr.attribute = (Attribute) pAttr;
    notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
    notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
-   if (SendAttributeMessage (&notifyAttr, TRUE))
+   if (CallEventAttribute (&notifyAttr, TRUE))
       /* l'application ne laisse pas l'editeur ecrire l'attribut */
       return;
    /* cherche le premier bloc de regles correspondant a l'attribut */
@@ -1835,7 +1835,7 @@ PtrDocument         pDoc;
    notifyAttr.attribute = (Attribute) pAttr;
    notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
    notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
-   SendAttributeMessage (&notifyAttr, FALSE);
+   CallEventAttribute (&notifyAttr, FALSE);
 }
 
 
@@ -3194,7 +3194,7 @@ boolean             MemeSiDejaTraduit;
 	notifyEl.elementType.ElTypeNum = TypeEl;
 	notifyEl.elementType.ElSSchema = (SSchema) pSchS;
 	notifyEl.position = 0;
-	if (ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE))
+	if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 	   /* l'application refuse que Thot sauve l'element */
 	   return;
 	pEl->ElTransAttr = FALSE;	/* les attributs n'ont pas ete traduits */
@@ -3313,7 +3313,7 @@ boolean             MemeSiDejaTraduit;
 	     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElSructSchema);
 	     notifyEl.position = 0;
-	     ThotSendMessage ((NotifyEvent *) & notifyEl, FALSE);
+	     CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	  }
      }
 }

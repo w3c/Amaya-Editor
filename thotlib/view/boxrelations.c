@@ -859,7 +859,7 @@ boolean             EnX;
 	       {
 		  /* Il y a une erreur de dimension */
 		  /* Erreur sur le schema de presentation */
-		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_HORIZ_SIZING_MISTAKE_SEE_PRES_SCHEM), TypePave (pAb));
+		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_HORIZ_SIZING_MISTAKE_SEE_PRES_SCHEM), AbsBoxType (pAb));
 		  pAb->AbWidth.DimIsPosition = FALSE;
 		  pAb->AbWidth.DimAbRef = NULL;
 		  pAb->AbWidth.DimValue = 20;	/* largeur fixe */
@@ -897,7 +897,7 @@ boolean             EnX;
 	       {
 		  /* Il y a une erreur de dimension */
 		  /* Erreur sur le schema de presentation */
-		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_VERTIC_SIZING_MISTAKE_SEE_PRES_SCHEM), TypePave (pAb));
+		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_VERTIC_SIZING_MISTAKE_SEE_PRES_SCHEM), AbsBoxType (pAb));
 		  pAb->AbHeight.DimIsPosition = FALSE;
 		  pAb->AbHeight.DimAbRef = NULL;
 		  pAb->AbHeight.DimValue = 20;	/* hauteur fixe */
@@ -1191,9 +1191,9 @@ boolean             EnX;
 					   /* Il y a une erreur de dimension */
 					   /* Erreur sur le schema de presentation */
 					   if (EnX)
-					      TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_HORIZ_SIZING_MISTAKE_SEE_PRES_SCHEM), TypePave (pAb));
+					      TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_HORIZ_SIZING_MISTAKE_SEE_PRES_SCHEM), AbsBoxType (pAb));
 					   else
-					      TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_VERTIC_SIZING_MISTAKE_SEE_PRES_SCHEM), TypePave (pAb));
+					      TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_VERTIC_SIZING_MISTAKE_SEE_PRES_SCHEM), AbsBoxType (pAb));
 
 					}
 				      RelDim (pPavD1->DimAbRef->AbBox, pBo1, pPavD1->DimSameDimension, EnX);

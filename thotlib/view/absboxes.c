@@ -39,23 +39,23 @@
 static char         texte[MAX_TXT_LEN];
 
 #ifdef __STDC__
-extern void         AfficherVue (int);
+extern void         DisplayFrame (int);
 
 #else  /* __STDC__ */
-extern void         AfficherVue ();
+extern void         DisplayFrame ();
 
 #endif /* __STDC__ */
 
 /* ---------------------------------------------------------------------- */
-/* |    TypePave  rend un pointeur sur un buffer qui contient           | */
+/* |    AbsBoxType  rend un pointeur sur un buffer qui contient           | */
 /* |            le type de l'element de structure auquel correspond le  | */
 /* |            pave pointe' par pAb.                                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-char               *TypePave (PtrAbstractBox pAb)
+char               *AbsBoxType (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
-char               *TypePave (pAb)
+char               *AbsBoxType (pAb)
 PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */
@@ -92,15 +92,15 @@ PtrAbstractBox             pAb;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    LibPavVue libere, pour une seule vue, tous les paves            | */
+/* |    LibAbbView libere, pour une seule vue, tous les paves            | */
 /* |            englobes par le pave pointe par pAb, lui-meme compris. | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                LibPavVue (PtrAbstractBox pAb)
+void                LibAbbView (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
-void                LibPavVue (pAb)
+void                LibAbbView (pAb)
 PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */
@@ -130,7 +130,7 @@ PtrAbstractBox             pAb;
 	while (pAbb != NULL)
 	  {
 	     pAbbNext = pAbb->AbNext;
-	     LibPavVue (pAbb);
+	     LibAbbView (pAbb);
 	     pAbb = pAbbNext;
 	  }
 	pAbbox1 = pAb;
@@ -145,7 +145,7 @@ PtrAbstractBox             pAb;
 	  }
 #ifdef __COLPAGE__
 	/* debug */
-	ok = PaveCorrect (pAb);
+	ok = AbsBoxOk (pAb);
 	if (!ok)
 #endif /* __COLPAGE__ */
 	   /* dechaine pAb des autres paves */
@@ -164,9 +164,9 @@ PtrAbstractBox             pAb;
 	   pAbbox1->AbPreviousRepeated->AbNextRepeated =
 	      pAbbox1->AbNextRepeated;
 	/* debug */
-	ok = PaveCorrect (pAb);
+	ok = AbsBoxOk (pAb);
 	if (!ok)
-	   printf ("erreur apres dechainage LibPavVue \n");
+	   printf ("erreur apres dechainage LibAbbView \n");
 #endif /* __COLPAGE__ */
 	/* Si c'est un pave obtenu par la regle de presentation Copy,
 	   libere le descripteur d'element copie' */
@@ -288,9 +288,9 @@ PtrAbstractBox             pAb;
 #endif /* __COLPAGE__ */
 #ifdef __COLPAGE__
 	/* debug */
-	ok = PaveCorrect (pAb);
+	ok = AbsBoxOk (pAb);
 	if (!ok)
-	   printf ("erreur avant dechainage elem LibPavVue \n");
+	   printf ("erreur avant dechainage elem LibAbbView \n");
 #endif /* __COLPAGE__ */
 	/* libere les regles retardees qui n'ont pas ete appliquees */
 	if (pAb->AbDelayedPRule != NULL)
@@ -309,15 +309,15 @@ PtrAbstractBox             pAb;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    LibPavElem libere, dans toutes les vues, tous les paves de      | */
+/* |    LibAbbEl libere, dans toutes les vues, tous les paves de      | */
 /* |            l'element pointe par pEl.                               | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                LibPavElem (PtrElement pEl)
+void                LibAbbEl (PtrElement pEl)
 
 #else  /* __STDC__ */
-void                LibPavElem (pEl)
+void                LibAbbEl (pEl)
 PtrElement          pEl;
 
 #endif /* __STDC__ */
@@ -358,7 +358,7 @@ PtrElement          pEl;
 		     {
 			pAbbNext = pAbb->AbNext;
 			pDupSuiv = pAbb->AbNextRepeated;
-			LibPavVue (pAbb);
+			LibAbbView (pAbb);
 			pAbb = pAbbNext;
 		     }
 		while (!(stop));
@@ -398,7 +398,7 @@ PtrElement          pEl;
 	      else
 		{
 		   pAbbNext = pAbb->AbNext;
-		   LibPavVue (pAbb);
+		   LibAbbView (pAbb);
 		   pAbb = pAbbNext;
 		}
 	   while (!(stop));
@@ -409,15 +409,15 @@ PtrElement          pEl;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    LibPavMort libere tous les paves marques Mort dans le           | */
+/* |    LibAbbDead libere tous les paves marques Mort dans le           | */
 /* |            sous-arbre de racine pAb.                              | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                LibPavMort (PtrAbstractBox pAb)
+void                LibAbbDead (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
-void                LibPavMort (pAb)
+void                LibAbbDead (pAb)
 PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */
@@ -428,7 +428,7 @@ PtrAbstractBox             pAb;
 
    if (pAb != NULL)
       if (pAb->AbDead)
-	 LibPavVue (pAb);
+	 LibAbbView (pAb);
       else
 	{
 	   pAbb = pAb->AbFirstEnclosed;
@@ -436,7 +436,7 @@ PtrAbstractBox             pAb;
 	   while (pAbb != NULL)
 	     {
 		pAbbNext = pAbb->AbNext;
-		LibPavMort (pAbb);
+		LibAbbDead (pAbb);
 		pAbb = pAbbNext;
 	     }
 	}
@@ -480,17 +480,17 @@ PtrDocument         pDoc;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    AjoutePaves complete la vue dont pAbbRoot est le pave racine   | */
+/* |    AddAbsBoxes complete la vue dont pAbbRoot est le pave racine   | */
 /* |            en ajoutant des paves, en tete si Tete est vrai,        | */
 /* |            en queue sinon.                                         | */
  /*        pAbbRoot est une vraie racine de paves               | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                AjoutePaves (PtrAbstractBox pAbbRoot, PtrDocument pDoc, boolean Tete)
+void                AddAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, boolean Tete)
 
 #else  /* __STDC__ */
-void                AjoutePaves (pAbbRoot, pDoc, Tete)
+void                AddAbsBoxes (pAbbRoot, pDoc, Tete)
 PtrAbstractBox             pAbbRoot;
 PtrDocument         pDoc;
 boolean             Tete;
@@ -732,7 +732,7 @@ PtrAbstractBox             pAb;
 #ifdef __COLPAGE__
 
 /*------------------------------------------------------------------------------*/
- /*TuePresDroite tue tous les paves de presentation a droite de pAb     */
+ /*KillPresRight tue tous les paves de presentation a droite de pAb     */
  /*              on ne considere que les paves a l'interieur d'une page */
  /*             sauf les REPEATED                                      */
 /*------------------------------------------------------------------------------*/
@@ -740,10 +740,10 @@ PtrAbstractBox             pAb;
 
 
 #ifdef __STDC__
-void                TuePresDroite (PtrAbstractBox pAb, PtrDocument pDoc)
+void                KillPresRight (PtrAbstractBox pAb, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-void                TuePresDroite (pAb, pDoc)
+void                KillPresRight (pAb, pDoc)
 PtrAbstractBox             pAb;
 PtrDocument         pDoc;
 
@@ -839,22 +839,22 @@ PtrDocument         pDoc;
 	     PavEnglob = PavEnglob->AbEnclosing;
 	  }
      }
-}				/* fin TuePresDroite */
+}				/* fin KillPresRight */
 #endif /* __COLPAGE__ */
 
 #ifdef __COLPAGE__
 
  /* -------------------------------------------------------- */
- /* |  DetrPaveSuivants detruit les paves a partir         | */
+ /* |  DestrAbbNext detruit les paves a partir         | */
  /* |               de pAb                               | */
  /* -------------------------------------------------------- */
 
 
 #ifdef __STDC__
-void                DetrPaveSuivants (PtrAbstractBox pAb, PtrDocument pDoc)
+void                DestrAbbNext (PtrAbstractBox pAb, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-void                DetrPaveSuivants (pAb, pDoc)
+void                DestrAbbNext (pAb, pDoc)
 PtrAbstractBox             pAb;
 PtrDocument         pDoc;
 
@@ -877,7 +877,7 @@ PtrDocument         pDoc;
 	/* pAbb1 est le premier pave a detruire de la page courante */
 	/* on tue tous les paves de presentation a droite */
 	/* en mettant a jour le booleen AbTruncatedTail */
-	TuePresDroite (pAbb1, pDoc);
+	KillPresRight (pAbb1, pDoc);
 	/* on tue pAbb1 */
 	TuePave (pAbb1);
 	SuppRfPave (pAbb1, &PavR, pDoc);
@@ -931,7 +931,7 @@ PtrDocument         pDoc;
    if (PavRac != NULL)
       /* on marque la racine coupee en queue */
       PavRac->AbTruncatedTail = TRUE;
-}				/* fin DetrPaveSuivants */
+}				/* fin DestrAbbNext */
 #endif /* __COLPAGE__ */
 
 
@@ -940,16 +940,16 @@ PtrDocument         pDoc;
 /* |    Procedure differente dans V4 : booleen SaufRep a la place de    | */
 /* |    SaufCreeAvec                                                    | */
 /* ---------------------------------------------------------------------- */
-/* |    TuePresVoisin detruit les paves de presentation crees par les   | */
+/* |    KillPresSibling detruit les paves de presentation crees par les   | */
 /* |    regles CreateBefore et CreateAfter de pAb.                     | */
 /* ---------------------------------------------------------------------- */
 
 
 #ifdef __STDC__
-void                TuePresVoisin (PtrAbstractBox pVoisin, boolean ElemIsBefore, PtrDocument pDoc, PtrAbstractBox * PavR, PtrAbstractBox * PavReaff, int *volsupp, PtrAbstractBox pAb, boolean SaufRep)
+void                KillPresSibling (PtrAbstractBox pVoisin, boolean ElemIsBefore, PtrDocument pDoc, PtrAbstractBox * PavR, PtrAbstractBox * PavReaff, int *volsupp, PtrAbstractBox pAb, boolean SaufRep)
 
 #else  /* __STDC__ */
-void                TuePresVoisin (pVoisin, ElemIsBefore, pDoc, PavR, PavReaff, volsupp, pAb, SaufRep)
+void                KillPresSibling (pVoisin, ElemIsBefore, pDoc, PavR, PavReaff, volsupp, pAb, SaufRep)
 PtrAbstractBox             pVoisin;
 boolean             ElemIsBefore;
 PtrDocument         pDoc;
@@ -993,16 +993,16 @@ boolean             SaufRep;
 #else  /* __COLPAGE__ */
 
 /* ---------------------------------------------------------------------- */
-/* |    TuePresVoisin detruit les paves de presentation crees par les   | */
+/* |    KillPresSibling detruit les paves de presentation crees par les   | */
 /* |    regles CreateBefore et CreateAfter de pAb.                     | */
 /* ---------------------------------------------------------------------- */
 
 
 #ifdef __STDC__
-static void         TuePresVoisin (PtrAbstractBox pVoisin, boolean ElemIsBefore, PtrDocument pDoc, PtrAbstractBox * PavR, PtrAbstractBox * PavReaff, int *volsupp, PtrAbstractBox pAb, boolean SaufCreeAvec)
+static void         KillPresSibling (PtrAbstractBox pVoisin, boolean ElemIsBefore, PtrDocument pDoc, PtrAbstractBox * PavR, PtrAbstractBox * PavReaff, int *volsupp, PtrAbstractBox pAb, boolean SaufCreeAvec)
 
 #else  /* __STDC__ */
-static void         TuePresVoisin (pVoisin, ElemIsBefore, pDoc, PavR, PavReaff, volsupp, pAb, SaufCreeAvec)
+static void         KillPresSibling (pVoisin, ElemIsBefore, pDoc, PavR, PavReaff, volsupp, pAb, SaufCreeAvec)
 PtrAbstractBox             pVoisin;
 boolean             ElemIsBefore;
 PtrDocument         pDoc;
@@ -1049,7 +1049,7 @@ boolean             SaufCreeAvec;
 /* |    Procedure differente dans V4 : booleen SaufRep a la place de    | */
 /* |    SaufCreeAvec                                                    | */
 /* ---------------------------------------------------------------------- */
-/* |    TuePresEnglob supprime tous les paves de presentation           | */
+/* |    KillPresEnclosing supprime tous les paves de presentation           | */
 /* |            crees par pAb et les paves de presentation crees par   | */
 /* |            les paves englobants a l'aide de regles CreateFirst et  | */
 /* |            CreateBefore (si Tete est vrai) ou CreateAfter et       | */
@@ -1060,10 +1060,10 @@ boolean             SaufCreeAvec;
 
 
 #ifdef __STDC__
-static void         TuePresEnglob (PtrAbstractBox pAb, boolean Tete, PtrDocument pDoc, PtrAbstractBox * PavReaff, int *volsupp, boolean SaufRep)
+static void         KillPresEnclosing (PtrAbstractBox pAb, boolean Tete, PtrDocument pDoc, PtrAbstractBox * PavReaff, int *volsupp, boolean SaufRep)
 
 #else  /* __STDC__ */
-static void         TuePresEnglob (pAb, Tete, pDoc, PavReaff, volsupp, SaufRep)
+static void         KillPresEnclosing (pAb, Tete, pDoc, PavReaff, volsupp, SaufRep)
 PtrAbstractBox             pAb;
 boolean             Tete;
 PtrDocument         pDoc;
@@ -1080,9 +1080,9 @@ boolean             SaufRep;
    *volsupp = 0;
    /* Detruit les paves de presentation crees par les regles */
    /* CreateBefore et CreateAfter de pAb. */
-   TuePresVoisin (pAb->AbPrevious, TRUE,
+   KillPresSibling (pAb->AbPrevious, TRUE,
 		  pDoc, &PavR, PavReaff, volsupp, pAb, SaufRep);
-   TuePresVoisin (pAb->AbNext, FALSE,
+   KillPresSibling (pAb->AbNext, FALSE,
 		  pDoc, &PavR, PavReaff, volsupp, pAb, SaufRep);
    /* traite les paves englobants */
    PavEnglob = pAb->AbEnclosing;
@@ -1262,7 +1262,7 @@ boolean             SaufRep;
 #else  /* __COLPAGE__ */
 
 /* ---------------------------------------------------------------------- */
-/* |    TuePresEnglob supprime tous les paves de presentation           | */
+/* |    KillPresEnclosing supprime tous les paves de presentation           | */
 /* |            crees par pAb et les paves de presentation crees par   | */
 /* |            les paves englobants a l'aide de regles Create et       | */
 /* |            CreateBefore (si Tete est vrai) ou CreateAfter et       | */
@@ -1273,10 +1273,10 @@ boolean             SaufRep;
 
 
 #ifdef __STDC__
-static void         TuePresEnglob (PtrAbstractBox pAb, boolean Tete, PtrDocument pDoc, PtrAbstractBox * PavReaff, int *volsupp, boolean SaufCreeAvec)
+static void         KillPresEnclosing (PtrAbstractBox pAb, boolean Tete, PtrDocument pDoc, PtrAbstractBox * PavReaff, int *volsupp, boolean SaufCreeAvec)
 
 #else  /* __STDC__ */
-static void         TuePresEnglob (pAb, Tete, pDoc, PavReaff, volsupp, SaufCreeAvec)
+static void         KillPresEnclosing (pAb, Tete, pDoc, PavReaff, volsupp, SaufCreeAvec)
 PtrAbstractBox             pAb;
 boolean             Tete;
 PtrDocument         pDoc;
@@ -1294,9 +1294,9 @@ boolean             SaufCreeAvec;
    *volsupp = 0;
    /* Detruit les paves de presentation crees par les regles */
    /* CreateBefore et CreateAfter de pAb. */
-   TuePresVoisin (pAb->AbPrevious, TRUE,
+   KillPresSibling (pAb->AbPrevious, TRUE,
 		  pDoc, &PavR, PavReaff, volsupp, pAb, SaufCreeAvec);
-   TuePresVoisin (pAb->AbNext, FALSE,
+   KillPresSibling (pAb->AbNext, FALSE,
 		  pDoc, &PavR, PavReaff, volsupp, pAb, SaufCreeAvec);
    /* traite les paves englobants */
    PavEnglob = pAb->AbEnclosing;
@@ -1553,7 +1553,7 @@ int                *dvol;
 			     if (*dvol - pAbb->AbVolume >= 0)
 			       {
 				  *dvol -= pAbb->AbVolume;
-				  TuePresEnglob (pAbb, Tete, pDoc, &PavReaff, &volsupp, FALSE);
+				  KillPresEnclosing (pAbb, Tete, pDoc, &PavReaff, &volsupp, FALSE);
 				  *dvol -= volsupp;
 				  TuePave (pAbb);
 				  SuppRfPave (pAbb, &PavR, pDoc);
@@ -1588,7 +1588,7 @@ int                *dvol;
 		  /* tous les paves englobant pAb sont coupe's. On supprime leurs */
 		  /* paves de presentation. On supprime aussi ceux crees par le pave */
 		  /* tue'. */
-		  TuePresEnglob (pAb, Tete, pDoc, &PavReaff, &volsupp, FALSE);
+		  KillPresEnclosing (pAb, Tete, pDoc, &PavReaff, &volsupp, FALSE);
 		  *dvol -= volsupp;
 		  /* detruit le pave trouve' et toute sa descendance */
 		  TuePave (pAb);
@@ -1712,25 +1712,25 @@ PtrDocument         pDoc;
 	      /* l'element qui devrait etre au milieu est dans la 1ere moitie' */
 	      if (pAbbRoot->AbTruncatedHead)
 		 /* le debut de l'image n'est pas complet, on ajoute en tete */
-		 AjoutePaves (pAbbRoot, pDoc, TRUE);
+		 AddAbsBoxes (pAbbRoot, pDoc, TRUE);
 	      else
 		{
 		   /* le debut de l'image est complet */
 		   /* on ajoute en queue, si la queue n'est pas complete */
 		   if (pAbbRoot->AbTruncatedTail)
-		      AjoutePaves (pAbbRoot, pDoc, FALSE);
+		      AddAbsBoxes (pAbbRoot, pDoc, FALSE);
 		}
 	   else
 	      /* l'element qui devrait etre au milieu est dans la 2eme moitie' */
 	   if (pAbbRoot->AbTruncatedTail)
 	      /* la fin de l'image n'est pas complete, on ajoute en queue */
-	      AjoutePaves (pAbbRoot, pDoc, FALSE);
+	      AddAbsBoxes (pAbbRoot, pDoc, FALSE);
 	   else
 	     {
 		/* la fin de l'image est complete, on ajoute en tete si le */
 		/* idebut n'est pas complet */
 		if (pAbbRoot->AbTruncatedHead)
-		   AjoutePaves (pAbbRoot, pDoc, TRUE);
+		   AddAbsBoxes (pAbbRoot, pDoc, TRUE);
 	     }
 	else if (supprime)
 	   /* supprime des paves en queue si l'element qui devrait etre au */
@@ -1745,17 +1745,17 @@ PtrDocument         pDoc;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    AjusteVolume pour toutes les vues du document pointe' par pDoc  | */
+/* |    AdjustVolume pour toutes les vues du document pointe' par pDoc  | */
 /* |            ajuste (reduit ou augmente) le volume des images        | */
 /* |            abstraites en conservant l'element pointe par pEl au    | */
 /* |            milieu (ou a peu pres) de l'image abstraite.            | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                AjusteVolume (PtrElement pEl, PtrDocument pDoc)
+void                AdjustVolume (PtrElement pEl, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-void                AjusteVolume (pEl, pDoc)
+void                AdjustVolume (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
 
@@ -1840,7 +1840,7 @@ PtrDocument         pDoc;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    VolAugmente Le Mediateur augmente de dVol le volume affichable  | */
+/* |    IncreaseVolume Le Mediateur augmente de dVol le volume affichable  | */
 /* |            dans la fenetre ViewFrame. Met a jour la capacite de la   | */
 /* |            vue affichee dans cette frame et cree de nouveaux       | */
 /* |            paves en tete ou en queue, selon le booleen EnTete,     | */
@@ -1850,10 +1850,10 @@ PtrDocument         pDoc;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                VolAugmente (boolean EnTete, int dVol, int frame)
+void                IncreaseVolume (boolean EnTete, int dVol, int frame)
 
 #else  /* __STDC__ */
-void                VolAugmente (EnTete, dVol, frame)
+void                IncreaseVolume (EnTete, dVol, frame)
 boolean             EnTete;
 int                 dVol;
 int                 frame;
@@ -1880,7 +1880,7 @@ int                 frame;
    /* du document le volume des paves a creer et cherche le pave racine de */
    /* la vue */
    if (pDoc == NULL)
-      printf ("\nErreur VolAugmente: frame incorrecte\n");
+      printf ("\nErreur IncreaseVolume: frame incorrecte\n");
    else
      {
 	if (assoc)
@@ -1935,7 +1935,7 @@ int                 frame;
 	if (!NonSecable (pAb))
 	  {
 	     /* cree les paves de la partie qui va apparaitre */
-	     AjoutePaves (pAb, pDoc, EnTete);
+	     AddAbsBoxes (pAb, pDoc, EnTete);
 
 	     /* signale au Mediateur les paves crees et detruits */
 #ifdef __COLPAGE__
@@ -1948,7 +1948,7 @@ int                 frame;
 		  if (pDoc->DocAssocModifiedAb[vue - 1] != NULL)
 		    {
 		       (void) ModifVue (frame, &h, pDoc->DocAssocModifiedAb[vue - 1]);
-		       LibPavMort (pDoc->DocAssocModifiedAb[vue - 1]);
+		       LibAbbDead (pDoc->DocAssocModifiedAb[vue - 1]);
 		       pDoc->DocAssocModifiedAb[vue - 1] = NULL;
 		    }
 	       }
@@ -1966,7 +1966,7 @@ int                 frame;
 		  /* pages ont pu etre creees TODO incoherent ??? */
 #endif /* __COLPAGE__ */
 		  (void) ModifVue (frame, &h, pDoc->DocViewModifiedAb[vue - 1]);
-		  LibPavMort (pDoc->DocViewModifiedAb[vue - 1]);
+		  LibAbbDead (pDoc->DocViewModifiedAb[vue - 1]);
 		  pDoc->DocViewModifiedAb[vue - 1] = NULL;
 	       }
 	  }
@@ -1976,7 +1976,7 @@ int                 frame;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    VolReduit Le Mediateur reduit de dVol le volume affichable      | */
+/* |    DecreaseVolume Le Mediateur reduit de dVol le volume affichable      | */
 /* |            dans la fenetre frame. Met a jour la capacite de la     | */
 /* |            vue affichee dans cette frame et supprime des paves     | */
 /* |            en tete ou en queue, selon le booleen EnTete, de        | */
@@ -1986,10 +1986,10 @@ int                 frame;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                VolReduit (boolean EnTete, int dVol, int frame)
+void                DecreaseVolume (boolean EnTete, int dVol, int frame)
 
 #else  /* __STDC__ */
-void                VolReduit (EnTete, dVol, frame)
+void                DecreaseVolume (EnTete, dVol, frame)
 boolean             EnTete;
 int                 dVol;
 int                 frame;
@@ -2011,7 +2011,7 @@ int                 frame;
    /* met a jour la nouvelle capacite de la vue et cherche le pave racine */
    /* de la vue */
    if (pDoc == NULL)
-      printf ("\nErreur VolReduit: frame incorrecte\n");
+      printf ("\nErreur DecreaseVolume: frame incorrecte\n");
    else
      {
 	if (assoc)
@@ -2032,7 +2032,7 @@ int                 frame;
 	  {
 #endif /* __COLPAGE__ */
 	     if (dVol >= pAb->AbVolume)
-		printf ("Erreur VolReduit: dVol=%3d volume vue=%3d\n", dVol, pAb->AbVolume);
+		printf ("Erreur DecreaseVolume: dVol=%3d volume vue=%3d\n", dVol, pAb->AbVolume);
 	     /* supprime les paves */
 	     SupprPaves (pAb, pDoc, EnTete, &dVol);
 #ifdef __COLPAGE__
@@ -2049,8 +2049,8 @@ int                 frame;
 	     /* appel de modifVue depuis la racine car de nouvelles */
 	     /* pages ont pu etre detruites */
 	     (void) ModifVue (frame, &h, pAb);
-	     /* meme chose pour LibPavMort */
-	     LibPavMort (pAb);
+	     /* meme chose pour LibAbbDead */
+	     LibAbbDead (pAb);
 	     /* DocAssocModifiedAb et DocViewModifiedAb non utilises */
 	     if (assoc)
 		pDoc->DocAssocModifiedAb[vue - 1] = NULL;
@@ -2065,14 +2065,14 @@ int                 frame;
 		  if (pDoc->DocAssocModifiedAb[vue - 1] != NULL)
 		    {
 		       (void) ModifVue (frame, &h, pDoc->DocAssocModifiedAb[vue - 1]);
-		       LibPavMort (pDoc->DocAssocModifiedAb[vue - 1]);
+		       LibAbbDead (pDoc->DocAssocModifiedAb[vue - 1]);
 		       pDoc->DocAssocModifiedAb[vue - 1] = NULL;
 		    }
 	       }
 	     else if (pDoc->DocViewModifiedAb[vue - 1] != NULL)
 	       {
 		  (void) ModifVue (frame, &h, pDoc->DocViewModifiedAb[vue - 1]);
-		  LibPavMort (pDoc->DocViewModifiedAb[vue - 1]);
+		  LibAbbDead (pDoc->DocViewModifiedAb[vue - 1]);
 		  pDoc->DocViewModifiedAb[vue - 1] = NULL;
 	       }
 #endif /* __COLPAGE__ */
@@ -2082,7 +2082,7 @@ int                 frame;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    VerifPave verifie que l'element pointe' par pEl a au moins      | */
+/* |    VerifAbsBoxe verifie que l'element pointe' par pEl a au moins      | */
 /* |            un pave dans la vue Vue. S'il n'en a pas, essaie d'en   | */
 /* |            creer un en modifiant l'image abstraite de cette vue.   | */
 /* |            Si debut est vrai, on cree l'image de la vue en         | */
@@ -2091,9 +2091,9 @@ int                 frame;
 /* |            Si affiche est Vrai, l'image est reaffichee.            | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-   void                VerifPave (PtrElement pEl, int Vue, PtrDocument pDoc, boolean debut, boolean affiche)
+   void                VerifAbsBoxe (PtrElement pEl, int Vue, PtrDocument pDoc, boolean debut, boolean affiche)
 #else  /* __STDC__ */
-   void                VerifPave (pEl, Vue, pDoc, debut, affiche)
+   void                VerifAbsBoxe (pEl, Vue, pDoc, debut, affiche)
    PtrElement          pEl;
    int                 Vue;
    PtrDocument         pDoc;
@@ -2282,7 +2282,7 @@ int                 frame;
 			      || (pEl->ElTypeNumber == PageBreak + 1
 				  && pEl->ElViewPSchema != VueSch)))
 			  {
-			     printf ("peut etre erreur VerifPave : pas trouve de marque page %s",
+			     printf ("peut etre erreur VerifAbsBoxe : pas trouve de marque page %s",
 				     pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 			     printf ("\n");
 			     acreer = FALSE;
@@ -2309,7 +2309,7 @@ int                 frame;
 			  pAbbRoot->AbNew = TRUE;
 			  pAbbRoot->AbTruncatedHead = TRUE;
 			  pAbbRoot->AbTruncatedTail = TRUE;
-			  LibPavMort (pAbbRoot);
+			  LibAbbDead (pAbbRoot);
 		       }
 		     else
 		       {
@@ -2406,11 +2406,11 @@ int                 frame;
 		  }		/* fin cas creation paves de page et des ascendants */
 		/* trouve est vrai */
 		if (trouve || acreer)
-		   /* on appelle VolAugmente pour creer l'i.a. page a page, */
+		   /* on appelle IncreaseVolume pour creer l'i.a. page a page, */
 		   /* appliquer les regles de presentation des paves deja crees et */
 		   /* et creer l'image concrete */
 		  {
-		     VolAugmente (FALSE, THOT_MAXINT, frame);
+		     IncreaseVolume (FALSE, THOT_MAXINT, frame);
 		     /* on appelle MontrerBoite pour positionner correctement l'i.a. */
 		     /* dans la fenetre */
 		     if (affiche && !debut && pEl->ElAbstractBox[Vue - 1] != NULL)
@@ -2426,7 +2426,7 @@ int                 frame;
 		       }
 
 		     if (affiche)
-			AfficherVue (frame);
+			DisplayFrame (frame);
 		  }
 	     }
 	   else
@@ -2598,9 +2598,9 @@ int                 frame;
 			     PavRestant = PremCreVide;
 			     /* tue les paves de presentation des elements englobants */
 			     PavReaff = NULL;
-			     TuePresEnglob (PavRestant, TRUE, pDoc, &PavReaff, &volsupp, TRUE);
+			     KillPresEnclosing (PavRestant, TRUE, pDoc, &PavReaff, &volsupp, TRUE);
 			     PavReaff = NULL;
-			     TuePresEnglob (PavRestant, FALSE, pDoc, &PavReaff, &volsupp, TRUE);
+			     KillPresEnclosing (PavRestant, FALSE, pDoc, &PavReaff, &volsupp, TRUE);
 			     /* detruit les paves qui precedent et qui suivent le pave */
 			     /* cree de plus haut niveau et ses paves englobants */
 			     while (PavRestant != NULL)
@@ -2651,7 +2651,7 @@ int                 frame;
 				       ModifVue (frame, &h, pAbbRoot);
 				       pAbbRoot->AbDead = FALSE;
 				       /* resucite le pave racine */
-				       LibPavMort (pAbbRoot);
+				       LibAbbDead (pAbbRoot);
 				       /* libere tous les pave detruits */
 				       pDo1->DocAssocModifiedAb[nAssoc - 1] = NULL;
 				    }
@@ -2666,7 +2666,7 @@ int                 frame;
 				       pAbbRoot->AbDead = TRUE;
 				       ModifVue (frame, &h, pAbbRoot);
 				       pAbbRoot->AbDead = FALSE;
-				       LibPavMort (pAbbRoot);
+				       LibAbbDead (pAbbRoot);
 				       pDo1->DocViewModifiedAb[Vue - 1] = NULL;
 				    }
 			       }
@@ -2711,7 +2711,7 @@ int                 frame;
 			  }
 			/* applique les regles des paves nouvellement crees et cree */
 			/* d'autres paves derriere */
-			AjoutePaves (pAbbRoot, pDoc, FALSE);
+			AddAbsBoxes (pAbbRoot, pDoc, FALSE);
 			/* complete les boites qui doivent etre completes */
 			i = NumAsc;
 			do
@@ -2742,9 +2742,9 @@ int                 frame;
 				pDo1->DocViewFreeVolume[Vue - 1] =
 				   pDo1->DocViewVolume[Vue - 1] / 2;
 			     /* marque comme anciens tous les paves de presentation qui */
-			     /* viennent d'etre crees par AjoutePaves devant les paves */
+			     /* viennent d'etre crees par AddAbsBoxes devant les paves */
 			     /* conserves. Ces paves de presentation seront ainsi traites */
-			     /* correctement lors du prochain appel de AjoutePaves. */
+			     /* correctement lors du prochain appel de AddAbsBoxes. */
 			     PavRestant = DerCreVide;
 			     while (PavRestant != NULL)
 			       {
@@ -2765,7 +2765,7 @@ int                 frame;
 				  /* passe a l'englobant */
 			       }
 			     /* cree de nouveaux paves */
-			     AjoutePaves (pAbbRoot, pDoc, TRUE);
+			     AddAbsBoxes (pAbbRoot, pDoc, TRUE);
 			     /* marque comme nouveaux tous les paves de presentation qui */
 			     /* viennent d'etre marques anciens. Ces paves de presentation */
 			     /* seront ainsi traites correctement par le Mediateur. */
@@ -2806,7 +2806,7 @@ int                 frame;
 			     h = 0;
 			     ModifVue (frame, &h, pAbbRoot);
 			     if (affiche)
-				AfficherVue (frame);
+				DisplayFrame (frame);
 			     /* il n'y a plus rien a reafficher dans cette vue */
 			     if (nAssoc > 0)
 				pDoc->DocAssocModifiedAb[nAssoc - 1] = NULL;
@@ -2820,7 +2820,7 @@ int                 frame;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    VolumeArbAbs    retourne                                        | */
+/* |    VolumeTree    retourne                                        | */
 /* |       VolAvant: le volume total des elements de l'arbre abstrait   | */
 /* |                 qui precedent l'element auquel appartient le pave  | */
 /* |                 pAbbFirst.                                           | */
@@ -2830,9 +2830,9 @@ int                 frame;
 /* |       VolArbre: le volume total de l'arbre abstrait.               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-   void                VolumeArbAbs (PtrAbstractBox pAbbRoot, PtrAbstractBox pAbbFirst, PtrAbstractBox pAbbLast, int *VolAvant, int *VolApres, int *VolArbre)
+   void                VolumeTree (PtrAbstractBox pAbbRoot, PtrAbstractBox pAbbFirst, PtrAbstractBox pAbbLast, int *VolAvant, int *VolApres, int *VolArbre)
 #else  /* __STDC__ */
-   void                VolumeArbAbs (pAbbRoot, pAbbFirst, pAbbLast, VolAvant, VolApres, VolArbre)
+   void                VolumeTree (pAbbRoot, pAbbFirst, pAbbLast, VolAvant, VolApres, VolArbre)
    PtrAbstractBox             pAbbRoot;
    PtrAbstractBox             pAbbFirst;
    PtrAbstractBox             pAbbLast;
@@ -2905,7 +2905,7 @@ int                 frame;
    }
 
 /* ---------------------------------------------------------------------- */
-/* |    SauterDansVue fait afficher dans la fenetre la partie de        | */
+/* |    JumpIntoView fait afficher dans la fenetre la partie de        | */
 /* |            document qui se trouve a la distance indiquee du debut  | */
 /* |            de l'arbre abstrait.                                    | */
 /* |            distance est un pourcentage : 0 <= distance <= 100      | */
@@ -2914,10 +2914,10 @@ int                 frame;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-   void                SauterDansVue (int frame, int distance)
+   void                JumpIntoView (int frame, int distance)
 
 #else  /* __STDC__ */
-   void                SauterDansVue (frame, distance)
+   void                JumpIntoView (frame, distance)
    int                 frame;
    int                 distance;
 
@@ -2974,7 +2974,7 @@ int                 frame;
 			  pAb = pEl->ElAbstractBox[Vue - 1];
 			  if (pAb == NULL)
 			    {
-			       VerifPave (pEl, Vue, pDoc, FALSE, FALSE);
+			       VerifAbsBoxe (pEl, Vue, pDoc, FALSE, FALSE);
 			       pAb = pEl->ElAbstractBox[Vue - 1];
 			    }
 		       }
@@ -3013,7 +3013,7 @@ int                 frame;
 			  /* rend l'element visible dans sa frame, sans l'afficher */
 			  if (pEl != NULL)
 			    {
-			       VerifPave (pEl, Vue, pDoc, FALSE, FALSE);
+			       VerifAbsBoxe (pEl, Vue, pDoc, FALSE, FALSE);
 			       pAb = pEl->ElAbstractBox[Vue - 1];
 			    }
 		       }
@@ -3102,7 +3102,7 @@ int                 frame;
    }
 
    /* ------------------------------------------------------------------ */
-   /*  PaveCorrect verifie les conditions d'invariance sur le pave pAb| */
+   /*  AbsBoxOk verifie les conditions d'invariance sur le pave pAb| */
    /*            et affiche un message d'erreur si une condition       | */
    /*            pas respectee. On verifie que :                       | */
    /*            1. la suite des paves de l'element pAb               | */
@@ -3114,10 +3114,10 @@ int                 frame;
    /* ------------------------------------------------------------------ */
 
 #ifdef __STDC__
-   boolean             PaveCorrect (PtrAbstractBox pAb)
+   boolean             AbsBoxOk (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
-   boolean             PaveCorrect (pAb)
+   boolean             AbsBoxOk (pAb)
    PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */

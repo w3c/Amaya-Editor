@@ -760,7 +760,7 @@ boolean             DocExtSuiv;
    char                msg[100];
 
    /* chercher une reference */
-   ChUneRef (&ReferCour, &DocDeReferCour, &ElemRefCour,
+   FindReference (&ReferCour, &DocDeReferCour, &ElemRefCour,
 	     &DocDeElemRefCour, &pDocExtCour, DocExtSuiv);
    if (ReferCour != NULL)
       /* on a trouve', on efface le message qui traine */
@@ -1238,7 +1238,7 @@ char               *txt;
 					    if (trouve)
 					      {
 						 /* effectue le remplacement du texte */
-						 RemplaceTexte (DomaineCherche->SDocument,
+						 ReplaceString (DomaineCherche->SDocument,
 								premsel, premcar, LgChaineCh,
 								pChaineRemplace, LgChaineRempl,
 						  !RemplacementAutomatique);
@@ -1308,7 +1308,7 @@ char               *txt;
 					   }
 					 else
 					   {
-					      trouve = ChTexte (DomaineCherche->SDocument, &premsel,
+					      trouve = SearchText (DomaineCherche->SDocument, &premsel,
 						 &premcar, &dersel, &dercar,
 						DomaineCherche->SStartToEnd,
 								MajEgalMin, pChaineCherchee, LgChaineCh);
@@ -1495,20 +1495,20 @@ int                 func;
 		   {
 		      case 1:
 			 /* Premiere page ou debut du document */
-			 PP = CherchePage (premv, VueSch, -999999, TRUE);
+			 PP = SearchPageBreak (premv, VueSch, -999999, TRUE);
 			 break;
 		      case 2:
 			 /* Derniere page ou fin du document */
-			 PP = CherchePage (premv, VueSch, 999999, TRUE);
-			 PP = CherchePage (PP, VueSch, -1, TRUE);
+			 PP = SearchPageBreak (premv, VueSch, 999999, TRUE);
+			 PP = SearchPageBreak (PP, VueSch, -1, TRUE);
 			 break;
 		      case 3:
 			 /* Page Suivante */
-			 PP = CherchePage (premv, VueSch, 1, TRUE);
+			 PP = SearchPageBreak (premv, VueSch, 1, TRUE);
 			 break;
 		      case 4:
 			 /* Page Precedente */
-			 PP = CherchePage (premv, VueSch, -1, TRUE);
+			 PP = SearchPageBreak (premv, VueSch, -1, TRUE);
 			 break;
 		      case 5 /* Page Numero N */ :
 			 MenuAllerPage (docsel, VueDoc, VueSch, assoc);
@@ -1521,7 +1521,7 @@ int                 func;
 		  /* document, meme pour les elements associes */
 		  if (assoc)
 		     VueDoc = 1;
-		  PageHautFenetre (PP, VueDoc, docsel);
+		  ScrollPageToTop (PP, VueDoc, docsel);
 	       }
 	  }
      }
@@ -1555,10 +1555,10 @@ int                 val;
 		  case NumFormCherchePage:
 		     /* formulaire de saisie du numero de la page cherchee */
 		     /* cherche la page */
-		     pPage = CherchePage (RacinePageCherchee, VueSchPageCherchee,
+		     pPage = SearchPageBreak (RacinePageCherchee, VueSchPageCherchee,
 					  NumPageCherchee, FALSE);
 		     /* fait afficher la page trouvee en haut de sa frame */
-		     PageHautFenetre (pPage, VueDocPageCherchee, DocPageCherchee);
+		     ScrollPageToTop (pPage, VueDocPageCherchee, DocPageCherchee);
 		     TtaDestroyDialogue (NumFormCherchePage);
 		     break;
 	       }

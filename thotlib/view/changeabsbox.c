@@ -2080,7 +2080,7 @@ PtrAbstractBox            *PavReaff;
 	ChSchemaPres (pEl, &pSchP, &Entree, &pSchS);
 	if (pElPage->ElAbstractBox[VueNb - 1] == NULL)
 	   /* cette marque de page n'a pas de pave, il faut les creer */
-	   VerifPave (pElPage, VueNb, pDoc, TRUE, TRUE);
+	   VerifAbsBoxe (pElPage, VueNb, pDoc, TRUE, TRUE);
 	if (pElPage->ElAbstractBox[VueNb - 1] != NULL)
 	   /* cherche dans les boites de la marque de page celle qui */
 	   /* doit contenir notre element associe' */
@@ -2190,7 +2190,7 @@ PtrAbstractBox            *pAbbLast;
 	       }
 	  }
 	/* dechaine et libere le pave et ses paves englobes */
-	LibPavVue (pAb);
+	LibAbbView (pAb);
 
 	/* passe au pave suivant a supprimer */
 	if (pAb == *pAbbLast)
@@ -2535,10 +2535,10 @@ int                 VueNb;
 			    /*            pAbb1 = pElCont->ElAbstractBox[vue - 1]; */
 			    if (pAbb1 != NULL && pAbb1 != pAbbRoot)
 			      {
-				 DetrPaveSuivants (pAbb1, pDoc);
+				 DestrAbbNext (pAbb1, pDoc);
 				 h = 0;
 				 bool = ModifVue (frame, &h, pAbbRoot);
-				 LibPavMort (pAbbRoot);
+				 LibAbbDead (pAbbRoot);
 			      }
 			    if (assoc)
 			      {
@@ -3742,7 +3742,7 @@ PtrDocument         pDocRef;
 #else  /* __COLPAGE__ */
 		      if (HauteurPage == 0)
 #endif /* __COLPAGE__ */
-			 AfficherVue (frame);
+			 DisplayFrame (frame);
 		   }
 	   }
 }
@@ -3781,7 +3781,7 @@ PtrDocument         pDoc;
    pRef = NULL;
    while (pEl != NULL && niv < 3)
      {
-	pRef = ReferSuivante (pEl, pDoc, FALSE, pRef, &pDocRef, &pDocExt, TRUE);
+	pRef = NextReferenceToEl (pEl, pDoc, FALSE, pRef, &pDocRef, &pDocExt, TRUE);
 	if (pRef != NULL)
 	   /* cet element est reference' par au moins un autre element */
 	   /* parcourt la chaine des elements qui le referencent */
@@ -3790,7 +3790,7 @@ PtrDocument         pDoc;
 	     {
 		ReafReference (pRef, pAb, pDocRef);
 		/* passe a la reference suivante */
-		pRef = ReferSuivante (pEl, pDoc, FALSE, pRef, &pDocRef, &pDocExt, TRUE);
+		pRef = NextReferenceToEl (pEl, pDoc, FALSE, pRef, &pDocRef, &pDocExt, TRUE);
 		/* passe au niveau superieur */
 	     }
 	pEl = pEl->ElParent;
@@ -4098,7 +4098,7 @@ boolean             reaff;
 #else  /* __COLPAGE__ */
 		   if (HauteurPage == 0 && reaff)
 #endif /* __COLPAGE__ */
-		      AfficherVue (frame);
+		      DisplayFrame (frame);
 		   /* cherche le pave de presentation suivant de ce type */
 		}
 	pAb = PavCherche (pAb, TRUE, typeBoite, pSchP, NULL);
@@ -4211,9 +4211,9 @@ boolean             reaff;
 #else  /* __COLPAGE__ */
 		     if (HauteurPage == 0 && reaff)
 #endif /* __COLPAGE__ */
-			AfficherVue (frame);
+			DisplayFrame (frame);
 		     /* libere le pave tue' */
-		     LibPavMort (pAb);
+		     LibAbbDead (pAb);
 		     pAb = NULL;
 		     /* cherche le pave de presentation suivant de ce type */
 		  }
@@ -4543,7 +4543,7 @@ boolean             reaff;
 #else  /* __COLPAGE__ */
 						 if (HauteurPage == 0 && reaff)
 #endif /* __COLPAGE__ */
-						    AfficherVue (frame);
+						    DisplayFrame (frame);
 						 /* on passe a la regle suivante */
 					      }
 					 }

@@ -985,11 +985,11 @@ boolean             EnAvant;
 						   /* destruction des paves */
 						   pAb = pPavDetruire;
 						   PavR = NULL;
-						   TuePresVoisin (pAb->AbPrevious, TRUE,
+						   KillPresSibling (pAb->AbPrevious, TRUE,
 								  pDoc, &PavR, &PavReaff, &volsupp, pAb, FALSE);
-						   TuePresVoisin (pAb->AbNext, FALSE,
+						   KillPresSibling (pAb->AbNext, FALSE,
 								  pDoc, &PavR, &PavReaff, &volsupp, pAb, FALSE);
-						   LibPavMort (pAb->AbEnclosing);
+						   LibAbbDead (pAb->AbEnclosing);
 						}
 					   }
 				      }
@@ -2501,7 +2501,7 @@ boolean            *arret;
 			  else
 			     frame = pDoc->DocViewFrame[VueNb - 1];
 			  bool = ModifVue (frame, &h, pAbbRoot);
-			  LibPavMort (pAbbRoot);
+			  LibAbbDead (pAbbRoot);
 			  /* on met les regles de creation en attente */
 			  /* pour provoquer la recreation des paves de pres */
 			  /* on cherche les regles a retarder */

@@ -421,7 +421,7 @@ static boolean PRuleMessagePre(pEl, pRegle, pDoc, nouveau)
 	notifyPres.document = (Document)IdentDocument(pDoc);
 	notifyPres.element = (Element)pEl;
 	notifyPres.pRuleType = NumTypePRuleAPI(pRegle->PrType);
-	dontdoit = ThotSendMessage((NotifyEvent *)&notifyPres, TRUE);
+	dontdoit = CallEventType((NotifyEvent *)&notifyPres, TRUE);
 	if (dontdoit)
 	  /* l'application demande a l'editeur de ne rien faire */
 	  if (nouveau)
@@ -481,7 +481,7 @@ static void PRuleMessagePost(pEl, pRegle, pDoc, nouveau)
 	notifyPres.document = (Document)IdentDocument(pDoc);
 	notifyPres.element = (Element)pEl;
 	notifyPres.pRuleType = NumTypePRuleAPI(pRegle->PrType);
-	ThotSendMessage((NotifyEvent *)&notifyPres, FALSE);
+	CallEventType((NotifyEvent *)&notifyPres, FALSE);
 }
 
 #define SETSIZE 32
@@ -794,7 +794,7 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 	      notifyAttr.attribute = (Attribute)pAttr;
 	      notifyAttr.attributeType.AttrSSchema = (SSchema)(pAttr->AeAttrSSchema);
 	      notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
-	      if (SendAttributeMessage(&notifyAttr, TRUE))
+	      if (CallEventAttribute(&notifyAttr, TRUE))
 		doit = FALSE;
 	      else
 		{
@@ -893,7 +893,7 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 		      }
 		  }
 	    if (attr)
-	       SendAttributeMessage(&notifyAttr, FALSE);
+	       CallEventAttribute(&notifyAttr, FALSE);
 	    else
 	       PRuleMessagePost(pEl, pRegle, pDoc, nouveau);
 	    }
@@ -940,7 +940,7 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 		notifyAttr.attribute = (Attribute)pAttr;
 		notifyAttr.attributeType.AttrSSchema = (SSchema)(pAttr->AeAttrSSchema);
 		notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
-		if (SendAttributeMessage(&notifyAttr, TRUE))
+		if (CallEventAttribute(&notifyAttr, TRUE))
 		  doit = FALSE;
 		else
 		  {
@@ -1034,7 +1034,7 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 		      }
 		  }
 	    if (attr)
-	       SendAttributeMessage(&notifyAttr, FALSE);
+	       CallEventAttribute(&notifyAttr, FALSE);
 	    else
 	       PRuleMessagePost(pEl, pRegle, pDoc, nouveau);
 	    }
@@ -1178,7 +1178,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
                 notifyAttr.attribute = (Attribute)pAttr;
                 notifyAttr.attributeType.AttrSSchema = (SSchema)(pAttr->AeAttrSSchema);
                 notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
-                if (SendAttributeMessage(&notifyAttr, TRUE))
+                if (CallEventAttribute(&notifyAttr, TRUE))
                   doit = FALSE;
                 else
                   {
@@ -1267,7 +1267,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 			  }
 		    }
 	      if (attr)
-		SendAttributeMessage(&notifyAttr, FALSE);
+		CallEventAttribute(&notifyAttr, FALSE);
 	      else
 		PRuleMessagePost(pEl, pRegle, pDoc, nouveau);
 	    }
@@ -1340,7 +1340,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
                 notifyAttr.attribute = (Attribute)pAttr;
                 notifyAttr.attributeType.AttrSSchema = (SSchema)(pAttr->AeAttrSSchema);
                 notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
-                if (SendAttributeMessage(&notifyAttr, TRUE))
+                if (CallEventAttribute(&notifyAttr, TRUE))
                   doit = FALSE;
                 else
                   {
@@ -1429,7 +1429,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 			  }
 		    }
 	      if (attr)
-		SendAttributeMessage(&notifyAttr, FALSE);
+		CallEventAttribute(&notifyAttr, FALSE);
 	      else
 		PRuleMessagePost(pEl, pRegle, pDoc, nouveau);
 	    }
@@ -1949,7 +1949,7 @@ static void SupprPres(pEl, pDoc, ERegles, VueTraitee)
 	notifyPres.element = (Element)pEl;
 	notifyPres.pRule = (PRule)pRegle;
 	notifyPres.pRuleType = NumTypePRuleAPI(pRegle->PrType);
-	if (!ThotSendMessage((NotifyEvent *)&notifyPres, TRUE))
+	if (!CallEventType((NotifyEvent *)&notifyPres, TRUE))
 	  {
 	  if (pR == NULL)
 	    pEl->ElFirstPRule = pRS;
@@ -1968,7 +1968,7 @@ static void SupprPres(pEl, pDoc, ERegles, VueTraitee)
 	  notifyPres.element = (Element)pEl;
 	  notifyPres.pRule = NULL;
 	  notifyPres.pRuleType = NumTypePRuleAPI(TypeRegleP);
-	  ThotSendMessage((NotifyEvent *)&notifyPres, FALSE);
+	  CallEventType((NotifyEvent *)&notifyPres, FALSE);
 	  }
 	/* passe a la regle suivante */
 	pRegle = pRS;
