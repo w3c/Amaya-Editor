@@ -55,6 +55,7 @@ static ThotBool annotRAutoLoad; /* should remote annotations be downloaded
 				   automatically? */
 static ThotBool annotCustomQuery; /* use an algae custom query if TRUE */
 static char *annotAlgaeText;    /* the custom algae query text */
+static ThotBool annotPOSTUpdate; /* use the POST method for updating annotations */
 
 /* last selected annotation */
 static Element last_selected_annotation[DocumentTableLength];
@@ -298,6 +299,7 @@ void ANNOT_Init ()
   annotMainIndex = TtaStrdup (TtaGetEnvString ("ANNOT_MAIN_INDEX"));
   TtaGetEnvBoolean ("ANNOT_LAUTOLOAD", &annotLAutoLoad);
   TtaGetEnvBoolean ("ANNOT_RAUTOLOAD", &annotRAutoLoad);
+  TtaGetEnvBoolean ("ANNOT_POSTUPDATE", &annotPOSTUpdate);
 
   tmp = TtaGetEnvString ("ANNOT_USER");
   if (tmp)
@@ -1293,40 +1295,44 @@ void ANNOT_Post (Document doc, View view)
     } 
   else
     {
-#ifdef ANNOT_USE_POST
-      /* we're saving a modification to an existing annotation */
-      url = TtaGetMemory (strlen (annotPostServer)
-			  + sizeof ("?replace_source=")
-			  + strlen (annot->annot_url)
-			  + sizeof ("&rdftype=")
-			  + strlen (ANNOTATION_CLASSNAME)
-			  + 1);
-      sprintf (url,"%s?replace_source=%s&rdftype=%s",
-		annotPostServer,
-		annot->annot_url,
-		ANNOTATION_CLASSNAME);
-      free_url = TRUE;
-
-      res = GetObjectWWW (doc,
-			  url,
-			  rdf_file,
-			  ctx->remoteAnnotIndex,
-			  AMAYA_FILE_POST | AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
-			  NULL,
-			  NULL, 
-			  (void *)  ANNOT_Post_callback,
-			  (void *) ctx,
-			  NO,
-			  NULL);
-#else /* USE PUT */
-      /* we're saving a modification to an existing annotation */
-      url = annot->annot_url;
-      free_url = FALSE;
-
-      res = PutObjectWWW (doc, rdf_file, url, "application/xml", ctx->remoteAnnotIndex,
-			  AMAYA_SIMPLE_PUT | AMAYA_SYNC | AMAYA_NOCACHE |  AMAYA_FLUSH_REQUEST,
-			  (void *)  ANNOT_Post_callback, (void *) ctx);
-#endif /* AMAYA_USE_POST */
+      if (annotPOSTUpdate) /* left here to keep a backward compatiblity in case
+			      that servers don't support the PUT yet. */
+	{
+	  /* we're saving a modification to an existing annotation */
+	  url = TtaGetMemory (strlen (annotPostServer)
+			      + sizeof ("?replace_source=")
+			      + strlen (annot->annot_url)
+			      + sizeof ("&rdftype=")
+			      + strlen (ANNOTATION_CLASSNAME)
+			      + 1);
+	  sprintf (url,"%s?replace_source=%s&rdftype=%s",
+		   annotPostServer,
+		   annot->annot_url,
+		   ANNOTATION_CLASSNAME);
+	  free_url = TRUE;
+	  
+	  res = GetObjectWWW (doc,
+			      url,
+			      rdf_file,
+			      ctx->remoteAnnotIndex,
+			      AMAYA_FILE_POST | AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
+			      NULL,
+			      NULL, 
+			      (void *)  ANNOT_Post_callback,
+			      (void *) ctx,
+			      NO,
+			      NULL);
+	}
+      else /* USE PUT */
+	{
+	  /* we're saving a modification to an existing annotation */
+	  url = annot->annot_url;
+	  free_url = FALSE;
+	  
+	  res = PutObjectWWW (doc, rdf_file, url, "application/xml", ctx->remoteAnnotIndex,
+			      AMAYA_SIMPLE_PUT | AMAYA_SYNC | AMAYA_NOCACHE |  AMAYA_FLUSH_REQUEST,
+			      (void *)  ANNOT_Post_callback, (void *) ctx);
+	}
     }
 
   if (free_url)
