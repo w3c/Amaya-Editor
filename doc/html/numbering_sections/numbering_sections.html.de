@@ -19,10 +19,10 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><p><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya-de.gif" /></p>
+        src="../../images/amaya.gif" /></p>
       </td>
       <td><a href="../Numbering.html.de" accesskey="t"><img alt="erste Seite"
-        src="../../images/up-de.gif" /></a></td>
+        src="../../images/up.gif" /></a></td>
     </tr>
   </tbody>
 </table>
@@ -41,13 +41,13 @@ sobald eine Überschrift hinzugefügt oder entfernt wird. Sie erscheinen nicht
 nur im Browserfenster, sondern auch in der Ansicht des
 Inhaltsverzeichnisses.</p>
 
-<p>Wird das Dokument <a href="../Printing.html#L1062">gedruckt</a>, dann
+<p>Wird das Dokument <a href="../Printing.html.de#L1062">gedruckt</a>, dann
 erscheint die Abschnittsnumerierung nur, wenn sie momentan aktiviert ist.</p>
 
 <p>Die Abschnittsnumerierung wird beim Speichern im <a
-href="../Publishing.html#L1104">HTML-Format</a> nicht mit abgespeichert. Dies
+href="../Publishing.html.de#L1104">HTML-Format</a> nicht mit abgespeichert. Dies
 geschieht jedoch beim Speichern im <a
-href="../Publishing.html#L1105">Textformat</a>.</p>
+href="../Publishing.html.de#L1105">Textformat</a>.</p>
 
 <p><strong>Abschnitte numerieren</strong> im Menü <strong>Extras</strong> ist
 ein Umschalter, mit dem diese Funktion ein- oder ausgeschaltet werden

@@ -19,13 +19,13 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya-de.gif" /></td>
+        src="../../images/amaya.gif" /></td>
       <td><a href="accessibility_in_amaya.html.de" accesskey="p"><img
-        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        alt="vorherige Seite" src="../../images/left.gif" /></a> <a
         href="../Access.html.de" accesskey="t"><img alt="erste Seite"
-        src="../../images/up-de.gif" /></a> <a
+        src="../../images/up.gif" /></a> <a
         href="about_producing_accessible_content.html.de" accesskey="n"><img
-        alt="nächste Seite" src="../../images/right-de.gif" /></a></td>
+        alt="nächste Seite" src="../../images/right.gif" /></a></td>
     </tr>
   </tbody>
 </table>
@@ -44,26 +44,26 @@ beinhalten:</p>
   <li>Navigation und Textbearbeitung in den Ansichten Textbrowser, Verweise,
     Struktur und Inhaltsverzeichnis, welche alle mit der normalen
     Browseransicht synchronisiert werden. Siehe <span class="Link0"><a
-    href="../viewing/working_with_document_views.html">Mit Ansichten
+    href="../viewing/working_with_document_views.html.de">Mit Ansichten
     arbeiten</a></span>.</li>
   <li>Textbearbeitung in der Ansicht Quellcode und manuelles Synchronisieren
     mit jeder anderen Ansicht. Weitere Informationen findet man unter <span
-    class="Link0"><a href="../viewing/working_with_document_views.html">Mit
+    class="Link0"><a href="../viewing/working_with_document_views.html.de">Mit
     Ansichten arbeiten</a></span>.</li>
   <li>Dynamisches Hinzufügen, Entfernen und Editieren mehrerer
     Formatvorlagen, inklusive einer benutzerdefinierten Formatvorlage. Siehe
     <span class="Link0"><a
-    href="../style_sheets/working_with_styles.html">Mit Ansichten
+    href="../style_sheets/working_with_styles.html.de">Mit Ansichten
     arbeiten</a></span>.</li>
   <li>Zuordnung von Zugriffstasten an Formularfelder, aktive Bildbereiche
     oder Verweise. Siehe <span class="Link0"><a
-    href="../browsing/about_access_keys.html">Über
+    href="../browsing/about_access_keys.html.de">Über
   Zugriffstasten</a></span>.</li>
   <li>Die Benutzung von Tastenkürzel für Menüoptionen, Verweise und
     Formularfelder. Siehe <a
-    href="../selecting/selecting_with_keyboard_and_mouse.html">Mit Maus und
+    href="../selecting/selecting_with_keyboard_and_mouse.html.de">Mit Maus und
     Tastatur markieren</a> und <span class="Link0"><a
-    href="../configuring_amaya/configuring_amaya.html">Über
+    href="../configuring_amaya/configuring_amaya.html.de">Über
     Zugriffstasten</a></span>.</li>
 </ul>
 </div>

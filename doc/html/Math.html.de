@@ -16,12 +16,12 @@
   <tbody>
     <tr>
       <td><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
-        src="../images/amaya-de.gif" /></td>
+        src="../images/amaya.gif" /></td>
       <td><a href="ImageMaps.html.de" accesskey="p"><img
-        alt="vorherige Seite" src="../images/left-de.gif" /></a> <a
+        alt="vorherige Seite" src="../images/left.gif" /></a> <a
         href="Manual.html.de" accesskey="t"><img alt="erste Seite"
-        src="../images/up-de.gif" /></a> <a href="SVG.html.de" accesskey="n"><img
-        alt="nächste Seite" src="../images/right-de.gif" /></a>
+        src="../images/up.gif" /></a> <a href="SVG.html.de" accesskey="n"><img
+        alt="nächste Seite" src="../images/right.gif" /></a>
       </td>
     </tr>
   </tbody>
@@ -32,23 +32,23 @@
 
 <p>Folgende Themen werden in diesem Abschnitt behandelt:</p>
 <ul>
-  <li><a href="editing_mathematics/working_with_math_expressions.html#page_body"
+  <li><a href="editing_mathematics/working_with_math_expressions.html.de#page_body"
     rel="subdocument">Mit mathematischen Ausdrücken arbeiten</a></li>
   <li><a
-    href="editing_mathematics/about_entering_math_constructs_using_the_keyboard.html#page_body"
+    href="editing_mathematics/about_entering_math_constructs_using_the_keyboard.html.de#page_body"
     rel="subdocument">Über die Eingabe mathematischer Konstrukte mit der
     Tastatur</a></li>
-  <li><a href="editing_mathematics/the_math_palette_and_the_types.html#page_body"
+  <li><a href="editing_mathematics/the_math_palette_and_the_types.html.de#page_body"
     rel="subdocument">Die Palette Mathematik und das Menü Elemente</a></li>
-  <li><a href="editing_mathematics/about_entering_math_characters.html#page_body"
+  <li><a href="editing_mathematics/about_entering_math_characters.html.de#page_body"
     rel="subdocument">Über die Eingabe mathematischer Zeichen</a></li>
-  <li><a href="editing_mathematics/editing_math_expressions.html#page_body"
+  <li><a href="editing_mathematics/editing_math_expressions.html.de#page_body"
     rel="subdocument">Mathematische Ausdrücke editieren</a></li>
-  <li><a href="editing_mathematics/viewing_structure_in_mathml.html#page_body"
+  <li><a href="editing_mathematics/viewing_structure_in_mathml.html.de#page_body"
     rel="subdocument">Die Strukturansicht in MathML</a></li>
-  <li><a href="editing_mathematics/about_linking_in_mathml.html#page_body"
+  <li><a href="editing_mathematics/about_linking_in_mathml.html.de#page_body"
     rel="subdocument">Über Verweise in MathML</a></li>
-  <li><a href="editing_mathematics/math_issues.html#page_body"
+  <li><a href="editing_mathematics/math_issues.html.de#page_body"
     rel="subdocument">Bekannte Probleme</a></li>
 </ul>
 </div>

@@ -16,12 +16,12 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya-de.gif" /></td>
+        src="../../images/amaya.gif" /></td>
       <td><a href="working_with_graphics.html.de" accesskey="p"><img
-        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        alt="vorherige Seite" src="../../images/left.gif" /></a> <a
         href="../SVG.html.de" accesskey="t"><img alt="erste Seite"
-        src="../../images/up-de.gif" /></a> <a href="moving_graphics.html"
-        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        src="../../images/up.gif" /></a> <a href="moving_graphics.html.de"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right.gif"
         /></a></td>
     </tr>
   </tbody>
@@ -32,7 +32,7 @@ summary="Inhaltsverzeichnis">
 
 <p>Um ein neues SVG-Element zu erzeugen, den Cursor an die Stelle plazieren,
 wo die Grafik eingefügt werden soll und den Knopf <strong>Grafik</strong>
-<img src="../../images/Graph-de.gif" alt="Knopf Grafik" /> anklicken. Es wird
+<img src="../../images/Graph.gif" alt="Knopf Grafik" /> anklicken. Es wird
 eine Palette von grafischen Elementen angezeigt, welche solange geöffnet
 bleibt, bis man den Knopf <strong>Beenden</strong> anklickt.</p>
 
@@ -165,14 +165,14 @@ Benutzer:</p>
 <p>Man kann in eine SVG-Grafik ein Bild einfügen: aus dem Menü
 <strong>Element</strong> den Befehl <strong>Bild</strong> wählen oder den
 Knopf <strong>Bild einfügen</strong><img alt="Knopf Bild"
-src="../../images/Image-de.gif" /> in der Knopfleiste anklicken und in der
+src="../../images/Image.gif" /> in der Knopfleiste anklicken und in der
 gleichen Weise verfahren, wie man das in HTML auch macht.</p>
 
 <p>Um einen mathematischen Ausdruck in eine SVG-Zeichnung einzufügen, muss
 man die Zeichnung markieren und das entsprechende Objekt aus der Palette
 Mathematik (<strong>Formel</strong> im Menü <strong>Elemente</strong> oder
 Knopf <strong>Formel</strong> <img alt="Knopf Formel"
-src="../../images/Math-de.gif" /> in der Knopfleiste) wählen. Amaya generiert
+src="../../images/Math.gif" /> in der Knopfleiste) wählen. Amaya generiert
 dann ein <code>foreignObject</code> um das Element einzufügen.</p>
 </div>
 </body>

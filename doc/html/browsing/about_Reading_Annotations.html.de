@@ -19,13 +19,13 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya-de.gif" /></td>
-      <td><a accesskey="p" href="./what_is_an_annotation.html"><img
-        alt="previous" src="../../images/left-de.gif" /></a> <a accesskey="t"
-        href="../Annotations.html"><img alt="erste Seite"
-        src="../../images/up-de.gif" /></a> <a accesskey="n"
-        href="./about_storing_local_annotations.html"><img
-        alt="nächste Seite" src="../../images/right-de.gif" /></a></td>
+        src="../../images/amaya.gif" /></td>
+      <td><a accesskey="p" href="./what_is_an_annotation.html.de"><img
+        alt="previous" src="../../images/left.gif" /></a> <a accesskey="t"
+        href="../Annotations.html.de"><img alt="erste Seite"
+        src="../../images/up.gif" /></a> <a accesskey="n"
+        href="./about_storing_local_annotations.html.de"><img
+        alt="nächste Seite" src="../../images/right.gif" /></a></td>
     </tr>
   </tbody>
 </table>
@@ -34,7 +34,7 @@ summary="Inhaltsverzeichnis">
 <h1>Über Anmerkungen lesen</h1>
 
 <p>Amaya kennzeichnet Anmerkungen mit dem Icon <img alt="Anmerkungs-Icon"
-src="../../images/annot-de.png" />, welches in den Text eingefügt wird. Klickt
+src="../../images/annot.png" />, welches in den Text eingefügt wird. Klickt
 man auf das Icon, dann wird die Stelle markiert, zu der es eine Anmerkung
 gibt. Führt man einen Doppelklick darauf aus, so wird ein neues Fenster
 geöffnet, in dem der Anmerkungstext und dessen Metadaten angezeigt werden.</p>

@@ -19,14 +19,14 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya-de.gif" /></td>
+        src="../../images/amaya.gif" /></td>
       <td><a accesskey="p"
-        href="./loading_and_presenting_annotations.html"><img
-        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
-        accesskey="t" href="../Annotations.html"><img alt="erste Seite"
-        src="../../images/up-de.gif" /></a> <a accesskey="n"
-        href="./moving_annotations.html"><img alt="next"
-        src="../../images/right-de.gif" /></a></td>
+        href="./loading_and_presenting_annotations.html.de"><img
+        alt="vorherige Seite" src="../../images/left.gif" /></a> <a
+        accesskey="t" href="../Annotations.html.de"><img alt="erste Seite"
+        src="../../images/up.gif" /></a> <a accesskey="n"
+        href="./moving_annotations.html.de"><img alt="next"
+        src="../../images/right.gif" /></a></td>
     </tr>
   </tbody>
 </table>
@@ -38,7 +38,7 @@ summary="Inhaltsverzeichnis">
 class="Link"><strong>Ansicht</strong> navigiert werden</span>. Das Fenster
 <strong>Verweise</strong> wird angezeigt und stellt alle der Anmerkungen dar.
 Im Dokument- und Verweisfenster werden Anmerkungen mit dem Icon <img
-alt="Anmerkungs-Icon" src="../../images/annot-de.png" /> gekennzeichnet.</p>
+alt="Anmerkungs-Icon" src="../../images/annot.png" /> gekennzeichnet.</p>
 
 <h2>Anmerkungen im Fenster Verweise</h2>
 

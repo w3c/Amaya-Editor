@@ -19,11 +19,11 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya-de.gif" /></td>
-      <td><a href="about_amayas_accessibility_features.html"
-        accesskey="p"><img alt="vorherige Seite" src="../../images/left-de.gif"
+        src="../../images/amaya.gif" /></td>
+      <td><a href="about_amayas_accessibility_features.html.de"
+        accesskey="p"><img alt="vorherige Seite" src="../../images/left.gif"
         /></a> <a href="../Access.html.de" accesskey="t"><img alt="erste Seite"
-        src="../../images/up-de.gif" /></a></td>
+        src="../../images/up.gif" /></a></td>
     </tr>
   </tbody>
 </table>
@@ -33,7 +33,7 @@ summary="Inhaltsverzeichnis">
 
 <p>Mit Amaya kann man benutzerfreundlichen Inhalt produzieren, welcher den
 Richtlinien des W3C entspricht. Einige <span class="Link0"><a
-href="about_amayas_accessibility_features.html">benutzerfreundliche
+href="about_amayas_accessibility_features.html.de">benutzerfreundliche
 Besonderheiten</a></span> sind bereits eingebaut. So kann man beispielsweise
 kein Bild ohne die Spezifikation eines alternativen Textes hinzufügen, weil
 das Attribut <code>alt</code> für Bilder und aktive Bildbereiche verlangt
@@ -56,12 +56,12 @@ Ratschläge um benutzerfreundliche Web-Seiten zu erstellen:</p>
   <li><strong>Bilder und Animationen</strong>. Man sollte das Attribut
     <code>alt</code> benutzen, um die Funktion des Visuals zu beschreiben.
     Weitere Informationen findet man unter: <span class="Link0"><a
-    href="../using_graphics/working_with_graphics.html">Mit Grafiken
+    href="../using_graphics/working_with_graphics.html.de">Mit Grafiken
     arbeiten</a></span>.</li>
   <li><strong>Aktive Bildbereiche</strong>. Man sollte diese auf der
     Clientseite definieren und mit Text versehen. Weitere Informationen
     findet man unter: <span class="Link0"><a
-    href="../using_graphics/working_with_graphics.html">Mit Grafiken
+    href="../using_graphics/working_with_graphics.html.de">Mit Grafiken
     arbeiten</a></span>.</li>
   <li><strong>Multimedia</strong>. Audio sollte man mit Überschrift und
     Inhaltsangabe und Video mit einer Beschreibung versehen.</li>
@@ -71,13 +71,13 @@ Ratschläge um benutzerfreundliche Web-Seiten zu erstellen:</p>
   <li><strong>Seitenorganisation</strong>. Man sollte Überschriften, Listen
     und eine konsistente Struktur verwenden. Man sollte, wenn möglich,
     Formatvorlagen für Layout und Stil heranziehen. Siehe <span
-    class="Link0"><a href="../style_sheets/working_with_styles.html">Mit
+    class="Link0"><a href="../style_sheets/working_with_styles.html.de">Mit
     Formaten und Formatvorlagen arbeiten</a></span>.</li>
   <li><strong>Grafen und Schaubilder</strong>. Man sollte die Daten
     zusammenfassen oder <span class="Link0"><span
     style="font-family: courier">longdesc</span></span> benutzen. Weitere
     Informationen findet man bei: <span class="Link0"><a
-    href="../using_graphics/working_with_graphics.html">Mit Grafiken
+    href="../using_graphics/working_with_graphics.html.de">Mit Grafiken
     arbeiten</a></span>.</li>
   <li><strong>Skripte, Applets und Plug-ins</strong>. Man sollte alternativen
     Inhalt zur Verfügung stellen, falls diese Dinge von einem Browser nicht
@@ -85,14 +85,14 @@ Ratschläge um benutzerfreundliche Web-Seiten zu erstellen:</p>
   <li><strong>Tabellen</strong>. Man sollte Tabellen verwenden um
     zeilenweises Lesen sinnvoll zu gestalten und eine Zusammenfassung
     beifügen. Weitere Informationen findet man bei: <span class="Link0"><a
-    href="../editing_tables/working_with_tables.html">Mit Tabellen
+    href="../editing_tables/working_with_tables.html.de">Mit Tabellen
     arbeiten</a></span>.</li>
   <li><strong>Frames</strong>. Man sollte solche Seiten mit Hilfe von
     <code>NOFRAMES</code> auch für Browser, die keine Frames unterstützen
     auslegen. Hierbei sollte man bedeutungsvolle Titel benutzen.</li>
   <li><strong>Seine Arbeit überprüfen</strong>. Man sollte seine Dokumente
     validieren bevor man sie <span class="Link0"><a
-    href="../saving_and_publishing_documents/saving_and_publishing_documents.html">veröffentlicht</a></span>.
+    href="../saving_and_publishing_documents/saving_and_publishing_documents.html.de">veröffentlicht</a></span>.
     Man kann die Werkzeuge, Prüflisten und Richtlinien des W3C unter <span
     class="Link0"><a
     href="http://www.w3.org/TR/WAI-WEBCONTENT">http://www.w3.org/TR/WAI-WEBCONTENT</a></span>

@@ -16,10 +16,10 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
-        src="../images/amaya-de.gif" /></p>
+        src="../images/amaya.gif" /></p>
       </td>
       <td><a href="Manual.html.de" accesskey="t"><img alt="erste Seite"
-        src="../images/up-de.gif" /></a></td>
+        src="../images/up.gif" /></a></td>
     </tr>
   </tbody>
 </table>
@@ -40,25 +40,25 @@ summary="Inhaltsverzeichnis">
 <a name="A">A</a></div>
 
 <div class="level1">
-<a href="Browsing.html#Access">Zugriffstasten</a></div>
+<a href="Browsing.html.de#Access">Zugriffstasten</a></div>
 
 <div class="level2">
-<a href="Configure.html#preferences">spezifizieren</a></div>
+<a href="Configure.html.de#preferences">spezifizieren</a></div>
 
 <div class="level1">
-<a href="Access.html">Benutzerfreundlichkeit</a></div>
+<a href="Access.html.de">Benutzerfreundlichkeit</a></div>
 
 <div class="level2">
-<a href="Access.html">in Amaya</a></div>
+<a href="Access.html.de">in Amaya</a></div>
 
 <div class="level2">
-<a href="Access.html">Inhalt</a></div>
+<a href="Access.html.de">Inhalt</a></div>
 
 <div class="level1">
-<a href="Views.html">Textbrowser</a></div>
+<a href="Views.html.de">Textbrowser</a></div>
 
 <div class="level1">
-<a href="ImageMaps.html#Alternative">alternativer Text</a></div>
+<a href="ImageMaps.html.de#Alternative">alternativer Text</a></div>
 
 <div class="level1">
 <a href="#targetanchors">Anker, siehe Zielanker</a></div>
@@ -67,49 +67,49 @@ summary="Inhaltsverzeichnis">
 <a name="annotations">Anmerkungen</a></div>
 
 <div class="level2">
-<a href="Annotations.html#What">über</a></div>
+<a href="Annotations.html.de#What">über</a></div>
 
 <div class="level2">
-<a href="Annotations.html#Configurat">Einstellungen</a></div>
+<a href="Annotations.html.de#Configurat">Einstellungen</a></div>
 
 <div class="level2">
-<a href="Annotations.html#Creating">erzeugen</a></div>
+<a href="Annotations.html.de#Creating">erzeugen</a></div>
 
 <div class="level2">
-<a href="Annotations.html">löschen</a></div>
+<a href="Annotations.html.de">löschen</a></div>
 
 <div class="level2">
-<a href="Annotations.html">laden</a></div>
+<a href="Annotations.html.de">laden</a></div>
 
 <div class="level2">
-<a href="Annotations.html">lokale</a></div>
+<a href="Annotations.html.de">lokale</a></div>
 
 <div class="level2">
-<a href="Annotations.html">verschieben</a></div>
+<a href="Annotations.html.de">verschieben</a></div>
 
 <div class="level2">
-<a href="Annotations.html">navigieren</a></div>
+<a href="Annotations.html.de">navigieren</a></div>
 
 <div class="level2">
-<a href="Annotations.html">darstellen</a></div>
+<a href="Annotations.html.de">darstellen</a></div>
 
 <div class="level2">
-<a href="Annotations.html">entfernte</a></div>
+<a href="Annotations.html.de">entfernte</a></div>
 
 <div class="level2">
-<a href="Annotations.html">Server für</a></div>
+<a href="Annotations.html.de">Server für</a></div>
 
 <div class="level1">
 Attribute</div>
 
 <div class="level2">
-<a href="Attributes.html#Copying">kopieren</a></div>
+<a href="Attributes.html.de#Copying">kopieren</a></div>
 
 <div class="level2">
-<a href="Attributes.html">editieren</a></div>
+<a href="Attributes.html.de">editieren</a></div>
 
 <div class="level2">
-<a href="Attributes.html#Editing">in der Strukturansicht</a></div>
+<a href="Attributes.html.de#Editing">in der Strukturansicht</a></div>
 
 <div class="backtotop">
 <a href="#HTMLIndexerTop">zurück</a></div>
@@ -119,31 +119,31 @@ Attribute</div>
 <a name="B">B</a></div>
 
 <div class="level1">
-<a href="Configure.html#preferences">Hintergrundfarbe</a></div>
+<a href="Configure.html.de#preferences">Hintergrundfarbe</a></div>
 
 <div class="level1">
-<a href="Configure.html#preferences">Hintergrundbilder</a></div>
+<a href="Configure.html.de#preferences">Hintergrundbilder</a></div>
 
 <div class="level2">
-<a href="Configure.html#preferences">anzeigen</a></div>
+<a href="Configure.html.de#preferences">anzeigen</a></div>
 
 <div class="level1">
-<a href="Changing.html#Back">Backspace-Taste</a></div>
+<a href="Changing.html.de#Back">Backspace-Taste</a></div>
 
 <div class="level1">
-<a href="Browsing.html#Moving">rückwärts blättern</a></div>
+<a href="Browsing.html.de#Moving">rückwärts blättern</a></div>
 
 <div class="level1">
-<a href="Creating.html#Structure">BODY-Element</a></div>
+<a href="Creating.html.de#Structure">BODY-Element</a></div>
 
 <div class="level1">
 browsen</div>
 
 <div class="level2">
-<a href="Browsing.html#Moving">Verlauf</a></div>
+<a href="Browsing.html.de#Moving">Verlauf</a></div>
 
 <div class="level2">
-<a href="Manual.html#Browsing">Webseiten</a></div>
+<a href="Manual.html.de#Browsing">Webseiten</a></div>
 
 <div class="backtotop">
 <a href="#HTMLIndexerTop">zurück</a></div>
@@ -153,83 +153,83 @@ browsen</div>
 <a name="C">C</a></div>
 
 <div class="level1">
-<a href="Configure.html#preferences">Cache-Einstellunegn</a></div>
+<a href="Configure.html.de#preferences">Cache-Einstellunegn</a></div>
 
 <div class="level1">
 <a href="#editing">ändern, siehe editieren</a></div>
 
 <div class="level1">
-<a href="Browsing.html">Zeichensätze</a></div>
+<a href="Browsing.html.de">Zeichensätze</a></div>
 
 <div class="level2">
-<a href="Keyboard.html">ISO-Latin (iso-8859-1)</a></div>
+<a href="Keyboard.html.de">ISO-Latin (iso-8859-1)</a></div>
 
 <div class="level2">
-<a href="Browsing.html">UTF 8</a></div>
+<a href="Browsing.html.de">UTF 8</a></div>
 
 <div class="level1">
 Zeichen</div>
 
 <div class="level2">
-<a href="Keyboard.html#Standard">einfügen</a></div>
+<a href="Keyboard.html.de#Standard">einfügen</a></div>
 
 <div class="level2">
-<a href="Math.html#Entering">mathematische</a></div>
+<a href="Math.html.de#Entering">mathematische</a></div>
 
 <div class="level1">
 <a href="#imagemaps">clientseitige aktive Bildbereiche, siehe aktive
 Bildbereiche</a></div>
 
 <div class="level1">
-<a href="Views.html#Closing">Ansichten schließen</a></div>
+<a href="Views.html.de#Closing">Ansichten schließen</a></div>
 
 <div class="level1">
-<a href="MakeBook.html">Dokumentensammlungen</a></div>
+<a href="MakeBook.html.de">Dokumentensammlungen</a></div>
 
 <div class="level1">
 Farben</div>
 
 <div class="level2">
-<a href="SVG.html#Painting">Füllung</a></div>
+<a href="SVG.html.de#Painting">Füllung</a></div>
 
 <div class="level2">
-<a href="Configure.html#preferences">Einstellungen</a></div>
+<a href="Configure.html.de#preferences">Einstellungen</a></div>
 
 <div class="level2">
-<a href="SVG.html#Painting">Rand</a></div>
+<a href="SVG.html.de#Painting">Rand</a></div>
 
 <div class="level1">
 <a href="#tables">Spalten, siehe Tabellen</a></div>
 
 <div class="level1">
-<a href="Creating.html#Structure">Kommentare</a></div>
+<a href="Creating.html.de#Structure">Kommentare</a></div>
 
 <div class="level1">
-<a href="Configure.html">Amaya konfigurieren</a></div>
+<a href="Configure.html.de">Amaya konfigurieren</a></div>
 
 <div class="level1">
 erzeugen</div>
 
 <div class="level2">
-<a href="Annotations.html">Anmerkungen</a></div>
+<a href="Annotations.html.de">Anmerkungen</a></div>
 
 <div class="level2">
-<a href="Creating.html#New">Dokumente</a></div>
+<a href="Creating.html.de#New">Dokumente</a></div>
 
 <div class="level2">
-<a href="Creating.html#Types">Elemente</a></div>
+<a href="Creating.html.de#Types">Elemente</a></div>
 
 <div class="level2">
-<a href="SVG.html#Creating">Grafiken</a></div>
+<a href="SVG.html.de#Creating">Grafiken</a></div>
 
 <div class="level2">
-<a href="ImageMaps.html#Creating">aktive Bildbereiche</a></div>
+<a href="ImageMaps.html.de#Creating">aktive Bildbereiche</a></div>
 
 <div class="level2">
-<a href="StyleSheets.html#Creating,">Formatvorlagen (CSS)</a></div>
+<a href="StyleSheets.html.de#Creating,">Formatvorlagen (CSS)</a></div>
 
 <div class="level2">
-<a href="Tables.html#Creating">Tabellen</a></div>
+<a href="Tables.html.de#Creating">Tabellen</a></div>
 
 <div class="backtotop">
 <a href="#HTMLIndexerTop">zurück</a></div>
@@ -239,46 +239,46 @@ erzeugen</div>
 <a name="D">D</a></div>
 
 <div class="level1">
-<a href="Creating.html#edit-dl">definition lists</a></div>
+<a href="Creating.html.de#edit-dl">definition lists</a></div>
 
 <div class="level1">
-<a href="Changing.html#Back">Delete key</a></div>
+<a href="Changing.html.de#Back">Delete key</a></div>
 
 <div class="level1">
-<a href="Annotations.html">deleting annotations</a></div>
+<a href="Annotations.html.de">deleting annotations</a></div>
 
 <div class="level1">
-<a href="Configure.html">dialogues, configuring</a></div>
+<a href="Configure.html.de">dialogues, configuring</a></div>
 
 <div class="level1">
-<a href="Changing.html#Inserting">DIV element</a></div>
+<a href="Changing.html.de#Inserting">DIV element</a></div>
 
 <div class="level1">
-<a href="MakeBook.html">document collections</a></div>
+<a href="MakeBook.html.de">document collections</a></div>
 
 <div class="level1">
-<a href="Changing.html#L631">document structure, changing the</a></div>
+<a href="Changing.html.de#L631">document structure, changing the</a></div>
 
 <div class="level1">
-<a href="Creating.html#Types">Document Type Definition, HTML</a></div>
+<a href="Creating.html.de#Types">Document Type Definition, HTML</a></div>
 
 <div class="level1">
 documents</div>
 
 <div class="level2">
-<a href="Creating.html#New">creating</a></div>
+<a href="Creating.html.de#New">creating</a></div>
 
 <div class="level2">
-<a href="Printing.html">printing</a></div>
+<a href="Printing.html.de">printing</a></div>
 
 <div class="level2">
-<a href="Manual.html#L932">recovering</a></div>
+<a href="Manual.html.de#L932">recovering</a></div>
 
 <div class="level1">
-<a href="Configure.html#preferences">double-click delay</a></div>
+<a href="Configure.html.de#preferences">double-click delay</a></div>
 
 <div class="level1">
-<a href="Creating.html#Types">DTD, HTML</a></div>
+<a href="Creating.html.de#Types">DTD, HTML</a></div>
 
 <div class="backtotop">
 <a href="#HTMLIndexerTop">zurück</a></div>
@@ -291,88 +291,88 @@ documents</div>
 <a name="editing">editing</a></div>
 
 <div class="level2">
-<a href="Attributes.html">attributes</a></div>
+<a href="Attributes.html.de">attributes</a></div>
 
 <div class="level2">
-<a href="Changing.html#L631">document structures</a></div>
+<a href="Changing.html.de#L631">document structures</a></div>
 
 <div class="level2">
-<a href="Browsing.html">documents</a></div>
+<a href="Browsing.html.de">documents</a></div>
 
 <div class="level2">
-<a href="Views.html#Using">documents using views</a></div>
+<a href="Views.html.de#Using">documents using views</a></div>
 
 <div class="level2">
-<a href="Changing.html#L653">element types</a></div>
+<a href="Changing.html.de#L653">element types</a></div>
 
 <div class="level2">
-<a href="SVG.html">graphics</a></div>
+<a href="SVG.html.de">graphics</a></div>
 
 <div class="level2">
-<a href="Links.html#Changing">links</a></div>
+<a href="Links.html.de#Changing">links</a></div>
 
 <div class="level2">
-<a href="Math.html">mathematics</a></div>
+<a href="Math.html.de">mathematics</a></div>
 
 <div class="level2">
-<a href="Configure.html#preferences">preferences</a></div>
+<a href="Configure.html.de#preferences">preferences</a></div>
 
 <div class="level2">
-<a href="Tables.html">tables</a></div>
+<a href="Tables.html.de">tables</a></div>
 
 <div class="level2">
-<a href="Manual.html#L932">Web pages</a></div>
+<a href="Manual.html.de#L932">Web pages</a></div>
 
 <div class="level1">
-<a href="Browsing.html">Editor mode</a></div>
+<a href="Browsing.html.de">Editor mode</a></div>
 
 <div class="level1">
-<a href="Changing.html#L653">element types, changing</a></div>
+<a href="Changing.html.de#L653">element types, changing</a></div>
 
 <div class="level1">
 elements</div>
 
 <div class="level2">
-<a href="Creating.html#Structure">BODY</a></div>
+<a href="Creating.html.de#Structure">BODY</a></div>
 
 <div class="level2">
-<a href="Creating.html#Types">creating</a></div>
+<a href="Creating.html.de#Types">creating</a></div>
 
 <div class="level2">
-<a href="Creating.html#L906">creating sequential</a></div>
+<a href="Creating.html.de#L906">creating sequential</a></div>
 
 <div class="level2">
-<a href="Creating.html#Structure">HEAD</a></div>
+<a href="Creating.html.de#Structure">HEAD</a></div>
 
 <div class="level2">
-<a href="Links.html#L245">links</a></div>
+<a href="Links.html.de#L245">links</a></div>
 
 <div class="level2">
-<a href="Math.html">MathML</a></div>
+<a href="Math.html.de">MathML</a></div>
 
 <div class="level2">
-<a href="Changing.html#Back">merging</a></div>
+<a href="Changing.html.de#Back">merging</a></div>
 
 <div class="level2">
-<a href="SVG.html">SVG</a></div>
+<a href="SVG.html.de">SVG</a></div>
 
 <div class="level2">
-<a href="Links.html#target1">target</a></div>
+<a href="Links.html.de#target1">target</a></div>
 
 <div class="level2">
-<a href="Links.html#L557">target anchors</a></div>
+<a href="Links.html.de#L557">target anchors</a></div>
 
 <div class="level2">
-<a href="Creating.html#Changing">TITLE</a></div>
+<a href="Creating.html.de#Changing">TITLE</a></div>
 
 <div class="level1">
-<a href="Creating.html#L906">Enter key</a></div>
+<a href="Creating.html.de#L906">Enter key</a></div>
 
 <div class="level1">
 <a href="#mathematics">expressions, see mathematics</a></div>
 
 <div class="level1">
-<a href="StyleSheets.html#External">external style sheets</a></div>
+<a href="StyleSheets.html.de#External">external style sheets</a></div>
 
 <div class="backtotop">
 <a href="#HTMLIndexerTop">zurück</a></div>
@@ -382,28 +382,28 @@ elements</div>
 <a name="F">F</a></div>
 
 <div class="level1">
-<a href="SVG.html#Painting">fill color</a></div>
+<a href="SVG.html.de#Painting">fill color</a></div>
 
 <div class="level1">
-<a href="Searching.html">find and replace</a></div>
+<a href="Searching.html.de">find and replace</a></div>
 
 <div class="level1">
-<a href="Configure.html#preferences">DIV size, menu</a></div>
+<a href="Configure.html.de#preferences">DIV size, menu</a></div>
 
 <div class="level1">
-<a href="Configure.html#preferences">DIV zooming</a></div>
+<a href="Configure.html.de#preferences">DIV zooming</a></div>
 
 <div class="level1">
-<a href="Configure.html#preferences">foregound color</a></div>
+<a href="Configure.html.de#preferences">foregound color</a></div>
 
 <div class="level1">
-<a href="Views.html">Formatted view</a></div>
+<a href="Views.html.de">Formatted view</a></div>
 
 <div class="level1">
-<a href="Browsing.html#Moving">forward, moving</a></div>
+<a href="Browsing.html.de#Moving">forward, moving</a></div>
 
 <div class="level1">
-<a href="Configure.html#preferences">FTP, enabling</a></div>
+<a href="Configure.html.de#preferences">FTP, enabling</a></div>
 
 <div class="backtotop">
 <a href="#HTMLIndexerTop">zurück</a></div>
@@ -413,25 +413,25 @@ elements</div>
 <a name="G">G</a></div>
 
 <div class="level1">
-<a href="Configure.html#preferences">GET action</a></div>
+<a href="Configure.html.de#preferences">GET action</a></div>
 
 <div class="level1">
 <a name="graphics">graphics</a></div>
 
 <div class="level2">
-<a href="SVG.html#Creating">creating</a></div>
+<a href="SVG.html.de#Creating">creating</a></div>
 
 <div class="level2">
-<a href="SVG.html">editing</a></div>
+<a href="SVG.html.de">editing</a></div>
 
 <div class="level2">
-<a href="SVG.html#Moving">moving</a></div>
+<a href="SVG.html.de#Moving">moving</a></div>
 
 <div class="level2">
-<a href="SVG.html#Painting">painting</a></div>
+<a href="SVG.html.de#Painting">painting</a></div>
 
 <div class="level2">
-<a href="SVG.html#Resizing">resizing</a></div>
+<a href="SVG.html.de#Resizing">resizing</a></div>
 
 <div class="level2">
 <a href="#images">see also images</a></div>
@@ -444,34 +444,34 @@ elements</div>
 <a name="H">H</a></div>
 
 <div class="level1">
-<a href="Creating.html#Structure">HEAD element</a></div>
+<a href="Creating.html.de#Structure">HEAD element</a></div>
 
 <div class="level1">
-<a href="HTML-elements\headings.html">heading elements</a></div>
+<a href="HTML-elements\headings.html.de">heading elements</a></div>
 
 <div class="level1">
-<a href="StyleSheets.html">height</a></div>
+<a href="StyleSheets.html.de">height</a></div>
 
 <div class="level1">
-<a href="Browsing.html#Moving">history list, browsing a</a></div>
+<a href="Browsing.html.de#Moving">history list, browsing a</a></div>
 
 <div class="level1">
-<a href="Configure.html#preferences">home page, setting the</a></div>
+<a href="Configure.html.de#preferences">home page, setting the</a></div>
 
 <div class="level1">
 HTML</div>
 
 <div class="level2">
-<a href="Browsing.html">documents</a></div>
+<a href="Browsing.html.de">documents</a></div>
 
 <div class="level2">
-<a href="Creating.html#Types">DTD</a></div>
+<a href="Creating.html.de#Types">DTD</a></div>
 
 <div class="level2">
-<a href="HTML-elements\inline.html">elements</a></div>
+<a href="HTML-elements\inline.html.de">elements</a></div>
 
 <div class="level2">
-<a href="Publishing.html#L1104">saving documents in</a></div>
+<a href="Publishing.html.de#L1104">saving documents in</a></div>
 
 <div class="level1">
 <a href="#links">hyperlinks, see links</a></div>
@@ -484,37 +484,37 @@ HTML</div>
 <a name="I">I</a> - <a name="J">J</a></div>
 
 <div class="level1">
-<a href="ImageMaps.html#Using" name="imagemaps">image maps</a></div>
+<a href="ImageMaps.html.de#Using" name="imagemaps">image maps</a></div>
 
 <div class="level2">
-<a href="ImageMaps.html#Creating">creating</a></div>
+<a href="ImageMaps.html.de#Creating">creating</a></div>
 
 <div class="level2">
-<a href="ImageMaps.html#L11711">moving areas of</a></div>
+<a href="ImageMaps.html.de#L11711">moving areas of</a></div>
 
 <div class="level2">
-<a href="ImageMaps.html#L1171">resizing areas of</a></div>
+<a href="ImageMaps.html.de#L1171">resizing areas of</a></div>
 
 <div class="level1">
 <a name="images">images</a></div>
 
 <div class="level2">
-<a href="ImageMaps.html#Adding">creating</a></div>
+<a href="ImageMaps.html.de#Adding">creating</a></div>
 
 <div class="level2">
-<a href="Selecting.html#Selecting2">selecting</a></div>
+<a href="Selecting.html.de#Selecting2">selecting</a></div>
 
 <div class="level2">
-<a href="Configure.html#preferences">showing background</a></div>
+<a href="Configure.html.de#preferences">showing background</a></div>
 
 <div class="level2">
 <a href="#graphics">see also graphics</a></div>
 
 <div class="level1">
-<a href="Keyboard.html#Standard">inserting characters</a></div>
+<a href="Keyboard.html.de#Standard">inserting characters</a></div>
 
 <div class="level1">
-<a href="Browsing.html">ISO-Latin (iso-8859-1)-1 documents</a></div>
+<a href="Browsing.html.de">ISO-Latin (iso-8859-1)-1 documents</a></div>
 
 <div class="backtotop">
 <a href="#HTMLIndexerTop">zurück</a></div>
@@ -537,46 +537,46 @@ HTML</div>
 language</div>
 
 <div class="level2">
-<a href="Configure.html#preferences">negotiation preferences</a></div>
+<a href="Configure.html.de#preferences">negotiation preferences</a></div>
 
 <div class="level2">
-<a href="Configure.html#preferences">specifying</a></div>
+<a href="Configure.html.de#preferences">specifying</a></div>
 
 <div class="level1">
-<a href="Views.html">Links view</a></div>
+<a href="Views.html.de">Links view</a></div>
 
 <div class="level1">
 <a name="links">links</a></div>
 
 <div class="level2">
-<a href="Browsing.html#Activating">activating</a></div>
+<a href="Browsing.html.de#Activating">activating</a></div>
 
 <div class="level2">
-<a href="Links.html#Changing">changing</a></div>
+<a href="Links.html.de#Changing">changing</a></div>
 
 <div class="level2">
-<a href="Links.html#L245">creating</a></div>
+<a href="Links.html.de#L245">creating</a></div>
 
 <div class="level2">
-<a href="Math.html#Links">MathML</a></div>
+<a href="Math.html.de#Links">MathML</a></div>
 
 <div class="level2">
-<a href="Configure.html#preferences">overriding double-click for</a></div>
+<a href="Configure.html.de#preferences">overriding double-click for</a></div>
 
 <div class="level2">
-<a href="Links.html#Removing">removing</a></div>
+<a href="Links.html.de#Removing">removing</a></div>
 
 <div class="level2">
 <a href="#targetanchors">see also target anchors</a></div>
 
 <div class="level1">
-<a href="HTML-elements\lists.html">list elements</a></div>
+<a href="HTML-elements\lists.html.de">list elements</a></div>
 
 <div class="level1">
-<a href="Annotations.html">loading annotations</a></div>
+<a href="Annotations.html.de">loading annotations</a></div>
 
 <div class="level1">
-<a href="Annotations.html">local annotations</a></div>
+<a href="Annotations.html.de">local annotations</a></div>
 
 <div class="backtotop">
 <a href="#HTMLIndexerTop">zurück</a></div>
@@ -586,61 +586,61 @@ language</div>
 <a name="M">M</a></div>
 
 <div class="level1">
-<a href="MakeBook.html">make book function</a></div>
+<a href="MakeBook.html.de">make book function</a></div>
 
 <div class="level1">
 <a href="Math.html.de" name="mathematics">mathematics</a></div>
 
 <div class="level1">
-<a href="Math.html">MathML</a></div>
+<a href="Math.html.de">MathML</a></div>
 
 <div class="level2">
-<a href="Creating.html#New">creating documents for</a></div>
+<a href="Creating.html.de#New">creating documents for</a></div>
 
 <div class="level2">
-<a href="Math.html#Current">limitations</a></div>
+<a href="Math.html.de#Current">limitations</a></div>
 
 <div class="level1">
-<a href="Math.html#Structure">matrices</a></div>
+<a href="Math.html.de#Structure">matrices</a></div>
 
 <div class="level1">
-<a href="Changing.html#Back">merging elements</a></div>
+<a href="Changing.html.de#Back">merging elements</a></div>
 
 <div class="level1">
-<a href="Annotations.html#What">metadata</a></div>
+<a href="Annotations.html.de#What">metadata</a></div>
 
 <div class="level1">
 moving</div>
 
 <div class="level2">
-<a href="Annotations.html">annotations</a></div>
+<a href="Annotations.html.de">annotations</a></div>
 
 <div class="level2">
-<a href="Browsing.html#Moving">backward</a></div>
+<a href="Browsing.html.de#Moving">backward</a></div>
 
 <div class="level2">
-<a href="Browsing.html#Moving">forward</a></div>
+<a href="Browsing.html.de#Moving">forward</a></div>
 
 <div class="level2">
-<a href="SVG.html#Moving">graphics</a></div>
+<a href="SVG.html.de#Moving">graphics</a></div>
 
 <div class="level2">
-<a href="ImageMaps.html#L11711">image maps</a></div>
+<a href="ImageMaps.html.de#L11711">image maps</a></div>
 
 <div class="level1">
-<a href="Keyboard.html#Standard">support</a></div>
+<a href="Keyboard.html.de#Standard">support</a></div>
 
 <div class="level1">
 multi-key</div>
 
 <div class="level2">
-<a href="Configure.html#preferences">enabling</a></div>
+<a href="Configure.html.de#preferences">enabling</a></div>
 
 <div class="level2">
-<a href="Keyboard.html#Optional">optional support</a></div>
+<a href="Keyboard.html.de#Optional">optional support</a></div>
 
 <div class="level2">
-<a href="Keyboard.html#Standard">support</a></div>
+<a href="Keyboard.html.de#Standard">support</a></div>
 
 <div class="backtotop">
 <a href="#HTMLIndexerTop">zurück</a></div>
@@ -650,16 +650,16 @@ multi-key</div>
 <a name="N">N</a></div>
 
 <div class="level1">
-<a href="Annotations.html">navigating annotations</a></div>
+<a href="Annotations.html.de">navigating annotations</a></div>
 
 <div class="level1">
-<a href="Browsing.html#Opening">new window</a></div>
+<a href="Browsing.html.de#Opening">new window</a></div>
 
 <div class="level1">
 <a href="#annotations">notes, see annotations</a></div>
 
 <div class="level1">
-<a href="Numbering.html">numbering, section</a></div>
+<a href="Numbering.html.de">numbering, section</a></div>
 
 <div class="backtotop">
 <a href="#HTMLIndexerTop">zurück</a></div>
@@ -672,16 +672,16 @@ multi-key</div>
 opening</div>
 
 <div class="level2">
-<a href="Manual.html#L920">Amaya</a></div>
+<a href="Manual.html.de#L920">Amaya</a></div>
 
 <div class="level2">
-<a href="Browsing.html#Opening">documents</a></div>
+<a href="Browsing.html.de#Opening">documents</a></div>
 
 <div class="level2">
-<a href="Browsing.html">encoded documents</a></div>
+<a href="Browsing.html.de">encoded documents</a></div>
 
 <div class="level2">
-<a href="Views.html#Opening">views</a></div>
+<a href="Views.html.de#Opening">views</a></div>
 
 <div class="backtotop">
 <a href="#HTMLIndexerTop">zurück</a></div>
@@ -691,70 +691,70 @@ opening</div>
 <a name="P">P</a> - <a name="Q">Q</a></div>
 
 <div class="level1">
-<a href="Manual.html#L920">parameters</a></div>
+<a href="Manual.html.de#L920">parameters</a></div>
 
 <div class="level2">
-<a href="Configure.html">configuring global</a></div>
+<a href="Configure.html.de">configuring global</a></div>
 
 <div class="level1">
-<a href="Creating.html#end-anchor">plain text</a></div>
+<a href="Creating.html.de#end-anchor">plain text</a></div>
 
 <div class="level1">
-<a href="Configure.html#preferences">preferences</a></div>
+<a href="Configure.html.de#preferences">preferences</a></div>
 
 <div class="level2">
-<a href="Configure.html#preferences">cache</a></div>
+<a href="Configure.html.de#preferences">cache</a></div>
 
 <div class="level2">
-<a href="Configure.html#preferences">color</a></div>
+<a href="Configure.html.de#preferences">color</a></div>
 
 <div class="level2">
-<a href="Configure.html#preferences">editing</a></div>
+<a href="Configure.html.de#preferences">editing</a></div>
 
 <div class="level2">
-<a href="Configure.html#preferences">language negotiation</a></div>
+<a href="Configure.html.de#preferences">language negotiation</a></div>
 
 <div class="level2">
-<a href="Configure.html#preferences">profiles</a></div>
+<a href="Configure.html.de#preferences">profiles</a></div>
 
 <div class="level2">
-<a href="Configure.html#preferences">proxy</a></div>
+<a href="Configure.html.de#preferences">proxy</a></div>
 
 <div class="level2">
-<a href="Configure.html#preferences">templates</a></div>
+<a href="Configure.html.de#preferences">templates</a></div>
 
 <div class="level1">
-<a href="Printing.html#Print">Print command</a></div>
+<a href="Printing.html.de#Print">Print command</a></div>
 
 <div class="level1">
 printing</div>
 
 <div class="level2">
-<a href="MakeBook.html">document collections</a></div>
+<a href="MakeBook.html.de">document collections</a></div>
 
 <div class="level2">
-<a href="Printing.html">documents</a></div>
+<a href="Printing.html.de">documents</a></div>
 
 <div class="level2">
-<a href="Numbering.html">section numbering</a></div>
+<a href="Numbering.html.de">section numbering</a></div>
 
 <div class="level1">
-<a href="Configure.html#preferences">profiles preferences</a></div>
+<a href="Configure.html.de#preferences">profiles preferences</a></div>
 
 <div class="level1">
-<a href="Configure.html#preferences">proxy preferences</a></div>
+<a href="Configure.html.de#preferences">proxy preferences</a></div>
 
 <div class="level1">
 publishing</div>
 
 <div class="level2">
-<a href="Publishing.html">documents</a></div>
+<a href="Publishing.html.de">documents</a></div>
 
 <div class="level2">
-<a href="Configure.html#preferences">detecting conflicts when</a></div>
+<a href="Configure.html.de#preferences">detecting conflicts when</a></div>
 
 <div class="level1">
-<a href="Configure.html#preferences">PUT action</a></div>
+<a href="Configure.html.de#preferences">PUT action</a></div>
 
 <div class="backtotop">
 <a href="#HTMLIndexerTop">zurück</a></div>
@@ -764,22 +764,22 @@ publishing</div>
 <a name="R">R</a></div>
 
 <div class="level1">
-<a href="Manual.html#L932">recovering documents</a></div>
+<a href="Manual.html.de#L932">recovering documents</a></div>
 
 <div class="level1">
-<a href="Browsing.html#Reloading">reloading a page</a></div>
+<a href="Browsing.html.de#Reloading">reloading a page</a></div>
 
 <div class="level1">
-<a href="Annotations.html">remote annotations</a></div>
+<a href="Annotations.html.de">remote annotations</a></div>
 
 <div class="level1">
-<a href="Searching.html">replacing text</a></div>
+<a href="Searching.html.de">replacing text</a></div>
 
 <div class="level1">
-<a href="ImageMaps.html#L1171">resizing image map areas</a></div>
+<a href="ImageMaps.html.de#L1171">resizing image map areas</a></div>
 
 <div class="level1">
-<a href="Creating.html#L906">Return key</a></div>
+<a href="Creating.html.de#L906">Return key</a></div>
 
 <div class="level1">
 <a href="#tables">rows, see tables</a></div>
@@ -795,118 +795,118 @@ publishing</div>
 saving</div>
 
 <div class="level2">
-<a href="Publishing.html">and publishing documents</a></div>
+<a href="Publishing.html.de">and publishing documents</a></div>
 
 <div class="level2">
-<a href="Publishing.html#L1105">documents as text</a></div>
+<a href="Publishing.html.de#L1105">documents as text</a></div>
 
 <div class="level2">
-<a href="Publishing.html#L1104">documents in HTML</a></div>
+<a href="Publishing.html.de#L1104">documents in HTML</a></div>
 
 <div class="level2">
-<a href="Numbering.html">section numbering</a></div>
+<a href="Numbering.html.de">section numbering</a></div>
 
 <div class="level2">
-<a href="Views.html#Using">synchronization when</a></div>
+<a href="Views.html.de#Using">synchronization when</a></div>
 
 <div class="level1">
-<a href="Searching.html">searching and replacing text</a></div>
+<a href="Searching.html.de">searching and replacing text</a></div>
 
 <div class="level1">
-<a href="Numbering.html">section numbering</a></div>
+<a href="Numbering.html.de">section numbering</a></div>
 
 <div class="level1">
 selecting</div>
 
 <div class="level2">
-<a href="Selecting.html">elements</a></div>
+<a href="Selecting.html.de">elements</a></div>
 
 <div class="level2">
-<a href="Selecting.html#Selecting2">images</a></div>
+<a href="Selecting.html.de#Selecting2">images</a></div>
 
 <div class="level1">
-<a href="Printing.html#Setup">Setup and Print command</a></div>
+<a href="Printing.html.de#Setup">Setup and Print command</a></div>
 
 <div class="level1">
 <a href="ShortCuts.html.de" name="shortcuts">shortcuts</a></div>
 
 <div class="level2">
-<a href="ShortCuts.html">commands</a></div>
+<a href="ShortCuts.html.de">commands</a></div>
 
 <div class="level2">
-<a href="Configure.html">configuring</a></div>
+<a href="Configure.html.de">configuring</a></div>
 
 <div class="level2">
-<a href="Selecting.html">for keyboard</a></div>
+<a href="Selecting.html.de">for keyboard</a></div>
 
 <div class="level2">
-<a href="Selecting.html">for mouse</a></div>
+<a href="Selecting.html.de">for mouse</a></div>
 
 <div class="level2">
-<a href="Browsing.html#Access">overwriting</a></div>
+<a href="Browsing.html.de#Access">overwriting</a></div>
 
 <div class="level1">
-<a href="Views.html">Source view</a></div>
+<a href="Views.html.de">Source view</a></div>
 
 <div class="level1">
-<a href="SpellChecking.html">spell checking</a></div>
+<a href="SpellChecking.html.de">spell checking</a></div>
 
 <div class="level1">
-<a href="Manual.html#L920">starting Amaya</a></div>
+<a href="Manual.html.de#L920">starting Amaya</a></div>
 
 <div class="level1">
-<a href="SVG.html#Painting">stroke color</a></div>
+<a href="SVG.html.de#Painting">stroke color</a></div>
 
 <div class="level1">
-<a href="Views.html">Structure view</a></div>
+<a href="Views.html.de">Structure view</a></div>
 
 <div class="level2">
-&gt;<a href="Math.html#Math_Struc">editing mathematics in the</a></div>
+&gt;<a href="Math.html.de#Math_Struc">editing mathematics in the</a></div>
 
 <div class="level2">
-<a href="Selecting.html#Selecting1">selecting in the</a></div>
+<a href="Selecting.html.de#Selecting1">selecting in the</a></div>
 
 <div class="level1">
 <a href="StyleSheets.html.de" name="stylesheets">style sheets</a></div>
 
 <div class="level2">
-<a href="StyleSheets.html#Creating">attributes for</a></div>
+<a href="StyleSheets.html.de#Creating">attributes for</a></div>
 
 <div class="level2">
-<a href="StyleSheets.html#Creating,">creating</a></div>
+<a href="StyleSheets.html.de#Creating,">creating</a></div>
 
 <div class="level2">
-<a href="StyleSheets.html#External">external</a></div>
+<a href="StyleSheets.html.de#External">external</a></div>
 
 <div class="level2">
-<a href="StyleSheets.html#Managing">handling external</a></div>
+<a href="StyleSheets.html.de#Managing">handling external</a></div>
 
 <div class="level2">
-<a href="Printing.html#Controllin">printing with</a></div>
+<a href="Printing.html.de#Controllin">printing with</a></div>
 
 <div class="level2">
-<a href="StyleSheets.html#External">user defined</a></div>
+<a href="StyleSheets.html.de#External">user defined</a></div>
 
 <div class="level1">
 styles</div>
 
 <div class="level2">
-<a href="StyleSheets.html#L1371">creating HTML element</a></div>
+<a href="StyleSheets.html.de#L1371">creating HTML element</a></div>
 
 <div class="level2">
-<a href="StyleSheets.html#L1371">removing</a></div>
+<a href="StyleSheets.html.de#L1371">removing</a></div>
 
 <div class="level2">
 <a href="#stylesheets">see also style sheets</a></div>
 
 <div class="level1">
-<a href="Creating.html#New">SVG documents, creating new</a></div>
+<a href="Creating.html.de#New">SVG documents, creating new</a></div>
 
 <div class="level1">
-<a href="SVG.html">SVG elements</a></div>
+<a href="SVG.html.de">SVG elements</a></div>
 
 <div class="level1">
-<a href="Views.html#Using">Synchronize command</a></div>
+<a href="Views.html.de#Using">Synchronize command</a></div>
 
 <div class="backtotop">
 <a href="#HTMLIndexerTop">zurück</a></div>
@@ -916,37 +916,37 @@ styles</div>
 <a name="T">T</a></div>
 
 <div class="level1">
-<a href="Views.html">Table of Contents view</a></div>
+<a href="Views.html.de">Table of Contents view</a></div>
 
 <div class="level1">
-<a href="Creating.html#Structure" name="tables">tables</a></div>
+<a href="Creating.html.de#Structure" name="tables">tables</a></div>
 
 <div class="level2">
-<a href="Tables.html#Creating">creating</a></div>
+<a href="Tables.html.de#Creating">creating</a></div>
 
 <div class="level2">
-<a href="Tables.html">editing</a></div>
+<a href="Tables.html.de">editing</a></div>
 
 <div class="level1">
-<a href="Browsing.html#target" name="targetanchors">Zielanker</a></div>
+<a href="Browsing.html.de#target" name="targetanchors">Zielanker</a></div>
 
 <div class="level2">
-<a href="Links.html#L557">creating</a></div>
+<a href="Links.html.de#L557">creating</a></div>
 
 <div class="level2">
-<a href="Links.html#Removing">removing</a></div>
+<a href="Links.html.de#Removing">removing</a></div>
 
 <div class="level1">
-<a href="Links.html#target1">target elements</a></div>
+<a href="Links.html.de#target1">target elements</a></div>
 
 <div class="level1">
-<a href="Configure.html#preferences">templates preferences</a></div>
+<a href="Configure.html.de#preferences">templates preferences</a></div>
 
 <div class="level1">
-<a href="Creating.html#Changing">TITLE element</a></div>
+<a href="Creating.html.de#Changing">TITLE element</a></div>
 
 <div class="level1">
-<a href="Changing.html#L141">Transform command</a></div>
+<a href="Changing.html.de#L141">Transform command</a></div>
 
 <div class="backtotop">
 <a href="#HTMLIndexerTop">zurück</a></div>
@@ -959,19 +959,19 @@ styles</div>
 Unix</div>
 
 <div class="level2">
-<a href="Configure.html">configuring Amaya for</a></div>
+<a href="Configure.html.de">configuring Amaya for</a></div>
 
 <div class="level2">
-<a href="Manual.html#L920">parameters</a></div>
+<a href="Manual.html.de#L920">parameters</a></div>
 
 <div class="level2">
-<a href="Printing.html#Setup">print setup</a></div>
+<a href="Printing.html.de#Setup">print setup</a></div>
 
 <div class="level2">
-<a href="Manual.html">user interface for</a></div>
+<a href="Manual.html.de">user interface for</a></div>
 
 <div class="level1">
-<a href="Browsing.html">UTF 8 documents</a></div>
+<a href="Browsing.html.de">UTF 8 documents</a></div>
 
 <div class="backtotop">
 <a href="#HTMLIndexerTop">zurück</a></div>
@@ -981,43 +981,43 @@ Unix</div>
 <a name="V">V</a></div>
 
 <div class="level1">
-<a href="Manual.html">version</a></div>
+<a href="Manual.html.de">version</a></div>
 
 <div class="level1">
 view window</div>
 
 <div class="level2">
-<a href="Views.html">Alternate</a></div>
+<a href="Views.html.de">Alternate</a></div>
 
 <div class="level2">
-<a href="Views.html">Formatted</a></div>
+<a href="Views.html.de">Formatted</a></div>
 
 <div class="level2">
-<a href="Views.html">Links</a></div>
+<a href="Views.html.de">Links</a></div>
 
 <div class="level2">
-<a href="Views.html">Source</a></div>
+<a href="Views.html.de">Source</a></div>
 
 <div class="level2">
-<a href="Views.html">Structure</a></div>
+<a href="Views.html.de">Structure</a></div>
 
 <div class="level2">
-<a href="Views.html">Table of Contents</a></div>
+<a href="Views.html.de">Table of Contents</a></div>
 
 <div class="level1">
-<a href="Views.html">views</a></div>
+<a href="Views.html.de">views</a></div>
 
 <div class="level2">
-<a href="Views.html#Closing">closing</a></div>
+<a href="Views.html.de#Closing">closing</a></div>
 
 <div class="level2">
-<a href="Views.html#Opening">opening</a></div>
+<a href="Views.html.de#Opening">opening</a></div>
 
 <div class="level2">
-<a href="Views.html#Using">synchronization of</a></div>
+<a href="Views.html.de#Using">synchronization of</a></div>
 
 <div class="level2">
-<a href="Views.html#Using">using</a></div>
+<a href="Views.html.de#Using">using</a></div>
 
 <div class="backtotop">
 <a href="#HTMLIndexerTop">zurück</a></div>
@@ -1027,19 +1027,19 @@ view window</div>
 <a name="W">W</a></div>
 
 <div class="level1">
-<a href="StyleSheets.html">width</a></div>
+<a href="StyleSheets.html.de">width</a></div>
 
 <div class="level1">
 Windows</div>
 
 <div class="level2">
-<a href="Configure.html">configuring Amaya for</a></div>
+<a href="Configure.html.de">configuring Amaya for</a></div>
 
 <div class="level2">
-<a href="Printing.html#Setup">print setup</a></div>
+<a href="Printing.html.de#Setup">print setup</a></div>
 
 <div class="level2">
-<a href="Manual.html">user interface for</a></div>
+<a href="Manual.html.de">user interface for</a></div>
 
 <div class="backtotop">
 <a href="#HTMLIndexerTop">zurück</a></div>
@@ -1049,10 +1049,10 @@ Windows</div>
 <a name="X">X</a> - <a name="Z">Z</a><a name="Y">&nbsp;</a></div>
 
 <div class="level1">
-<a href="Browsing.html">XHTML documents</a></div>
+<a href="Browsing.html.de">XHTML documents</a></div>
 
 <div class="level2">
-<a href="Creating.html#New">creating new</a></div>
+<a href="Creating.html.de#New">creating new</a></div>
 
 <div class="backtotop">
 <a href="#HTMLIndexerTop">zurück</a></div>

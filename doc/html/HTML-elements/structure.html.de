@@ -19,13 +19,13 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><p><img border="0" alt="W3C" src="../../images/w3c_home" /> <img
-        border="0" alt="Amaya" src="../../images/amaya-de.gif" /></p>
+        border="0" alt="Amaya" src="../../images/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="creating_new_documents.html"><img
-        alt="vorherige Seite" border="0" src="../../images/left-de.gif" /></a>
-        <a href="../Document.html"><img alt="erste Seite" border="0"
-        src="../../images/up-de.gif" /></a> <a href="infoTypes.html"><img
-        alt="nächste Seite" border="0" src="../../images/right-de.gif" /></a></p>
+      <td><p align="right"><a href="creating_new_documents.html.de"><img
+        alt="vorherige Seite" border="0" src="../../images/left.gif" /></a>
+        <a href="../Document.html.de"><img alt="erste Seite" border="0"
+        src="../../images/up.gif" /></a> <a href="infoTypes.html.de"><img
+        alt="nächste Seite" border="0" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -39,7 +39,7 @@ summary="Inhaltsverzeichnis">
 <p>HTML-Dokumente sind in ihrer Struktur relativ flach. Anders als Dokumente,
 die Abschnitte enthalten, welche wiederum Unterabschnitte enthalten, werden
 in HTML diese Textabschnitte durch unterschiedliche <a
-href="headings.html">Überschriftselemente</a> markiert, die sich auf der
+href="headings.html.de">Überschriftselemente</a> markiert, die sich auf der
 gleichen Ebene wie Absätze und andere Blockelemente befinden. Es gibt das
 Element <code>div</code>, mit dem man Abschnitte gruppieren kann. Um eine
 Gruppierung vorzunehmen muss man den zu gruppierenden Teil des Dokuments
@@ -48,12 +48,12 @@ markieren und aus dem Menü <strong>Elemente</strong> den Befehl
 Ctrl-v</kbd> verwenden).</p>
 
 <p>Es gibt eine spezielle Struktur, den Verweis, welche das Web erst zu dem
-macht was es ist. Mehr dazu unter <a href="../Links.html">Verweise</a>.</p>
+macht was es ist. Mehr dazu unter <a href="../Links.html.de">Verweise</a>.</p>
 
 <p>Eine normale HTML-Seite sollte mindestens folgendes beinhalten: <a
-href="../Creating.html#Changing">einen Titel</a>, <a
-href="headings.html">eine Überschrift der Ebene 1</a> und <a
-href="address.html">eine Adresse oder andere Informationen über den
+href="../Creating.html.de#Changing">einen Titel</a>, <a
+href="headings.html.de">eine Überschrift der Ebene 1</a> und <a
+href="address.html.de">eine Adresse oder andere Informationen über den
 Autor</a>. Darüber hinaus kann sie Absätze, Listen, Bilder, Tabellen und
 anderen Inhalt enthalten, welcher mit Überschriften der verschiedenen Ebenen
 in Unterabschnitte eingeteilt ist.</p>

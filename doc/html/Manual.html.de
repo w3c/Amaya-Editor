@@ -13,7 +13,7 @@
 </head>
 
 <body xml:lang="de" lang="de">
-<h1 style="text-align: center"><img alt="Amaya" src="../images/amaya-de.gif" />
+<h1 style="text-align: center"><img alt="Amaya" src="../images/amaya.gif" />
 </h1>
 
 <h1 style="text-align: center; line-height: 32pt">AMAYA</h1>
@@ -55,7 +55,7 @@ erforschen.</p>
 
 <p>Die Dokumente der Hilfe sind wie ein Buch organisiert. Man kann sie mit
 der Funktion <a
-href="using_the_makebook_function/assembling_large_document_collections.html">Buch
+href="using_the_makebook_function/assembling_large_document_collections.html.de">Buch
 erstellen</a> im Menü <strong>Extras</strong> zu einem Buch zusammengestellen
 und ausdrucken.</p>
 
@@ -84,405 +84,405 @@ oder der URI des ersten Dokuments, welches <strong>Amaya</strong> nach seinem
 Start anzeigt. Wird dieser Parameter weggelassen, so wird ein
 Standarddokument dargestellt. Dieses Standarddokument kann eine
 <em>persönliche Startseite</em> (siehe <a
-href="configuring_amaya/menu_preferences.html#Allgemein">Allgemeine
+href="configuring_amaya/menu_preferences.html.de#Allgemein">Allgemeine
 Einstellungen</a> zum Festlegen der Startseite) oder die <strong><a
-href="../../amaya/AmayaPage.html">Begrüßungsseite</a></strong> von
+href="../../amaya/AmayaPage.html.de">Begrüßungsseite</a></strong> von
 <strong>Amaya</strong> sein.</p>
 <hr />
 
 <h2>Inhaltsverzeichnis</h2>
 <ul>
-  <li><a href="Browsing.html#page_body">Browsen und editieren</a> 
+  <li><a href="Browsing.html.de#page_body">Browsen und editieren</a> 
     <ul>
       <li><a
-        href="browsing/working_with_the_amaya_browser_and_editor.html#page_body"
+        href="browsing/working_with_the_amaya_browser_and_editor.html.de#page_body"
         rel="subdocument">Mit Browser und Editor arbeiten</a></li>
-      <li><a href="browsing/opening_documents.html#page_body"
+      <li><a href="browsing/opening_documents.html.de#page_body"
         rel="subdocument">Ein Dokument öffnen</a></li>
-      <li><a href="browsing/activating_a_link.html#page_body"
+      <li><a href="browsing/activating_a_link.html.de#page_body"
         rel="subdocument">Einen Verweis aktivieren</a></li>
-      <li><a href="browsing/about_target_anchors.html#page_body"
+      <li><a href="browsing/about_target_anchors.html.de#page_body"
         rel="subdocument">Über Anker</a></li>
-      <li><a href="browsing/about_moving_backward_and_forward.html#page_body"
+      <li><a href="browsing/about_moving_backward_and_forward.html.de#page_body"
         rel="subdocument">Vorwärts und rückwärts blättern</a></li>
-      <li><a href="browsing/reloading_a_page.html#page_body">Ein Dokument
+      <li><a href="browsing/reloading_a_page.html.de#page_body">Ein Dokument
         aktualisieren</a></li>
-      <li><a href="browsing/about_access_keys.html#page_body"
+      <li><a href="browsing/about_access_keys.html.de#page_body"
         rel="subdocument">Über Zugriffstasten</a></li>
-      <li><a href="browsing/forms.html#page_body">Über Formulare</a></li>
+      <li><a href="browsing/forms.html.de#page_body">Über Formulare</a></li>
     </ul>
   </li>
-  <li><a href="Selecting.html#page_body">Markieren</a> 
+  <li><a href="Selecting.html.de#page_body">Markieren</a> 
     <ul>
       <li><a
-        href="selecting/selecting_with_keyboard_and_mouse.html#page_body"
+        href="selecting/selecting_with_keyboard_and_mouse.html.de#page_body"
         rel="subdocument">Mit Maus und Tastatur markieren</a></li>
-      <li><a href="selecting/selecting_images.html#page_body"
+      <li><a href="selecting/selecting_images.html.de#page_body"
         rel="subdocument">Bilder markieren</a></li>
-      <li><a href="selecting/selecting_by_structure.html#page_body"
+      <li><a href="selecting/selecting_by_structure.html.de#page_body"
         rel="subdocument">In der Strukturansicht markieren</a></li>
     </ul>
   </li>
-  <li><a href="Views.html#page_body">Ansichten</a> 
+  <li><a href="Views.html.de#page_body">Ansichten</a> 
     <ul>
-      <li><a href="viewing/working_with_document_views.html#page_body"
+      <li><a href="viewing/working_with_document_views.html.de#page_body"
         rel="subdocument">Mit Ansichten arbeiten</a></li>
-      <li><a href="viewing/opening_a_view.html#page_body"
+      <li><a href="viewing/opening_a_view.html.de#page_body"
         rel="subdocument">Eine Ansicht öffnen</a></li>
-      <li><a href="viewing/closing_a_view.html#page_body"
+      <li><a href="viewing/closing_a_view.html.de#page_body"
         rel="subdocument">Eine Ansicht schließen</a></li>
-      <li><a href="viewing/about_synchronized_views.html#page_body"
+      <li><a href="viewing/about_synchronized_views.html.de#page_body"
         rel="subdocument">Über synchronisierte Ansichten</a></li>
     </ul>
   </li>
-  <li><a href="Document.html#page_body">Dokumente editieren</a> 
+  <li><a href="Document.html.de#page_body">Dokumente editieren</a> 
     <ul>
-      <li><a href="HTML-elements/creating_new_documents.html#page_body">Ein
+      <li><a href="HTML-elements/creating_new_documents.html.de#page_body">Ein
         neues Dokument erzeugen</a></li>
-      <li><a href="HTML-elements/structure.html#page_body">Die
+      <li><a href="HTML-elements/structure.html.de#page_body">Die
         Dokumentstruktur</a></li>
       <li><a
-        href="HTML-elements/infoTypes.html#page_body">Informationstypen</a></li>
-      <li><a href="HTML-elements/HTML.html#page_body">HTML-Elemente</a></li>
+        href="HTML-elements/infoTypes.html.de#page_body">Informationstypen</a></li>
+      <li><a href="HTML-elements/HTML.html.de#page_body">HTML-Elemente</a></li>
       <li><a
-      href="HTML-elements/headings.html#page_body">Überschriften</a></li>
-      <li><a href="HTML-elements/lists.html#page_body">Listen</a></li>
-      <li><a href="HTML-elements/address.html#page_body">Informationen über
+      href="HTML-elements/headings.html.de#page_body">Überschriften</a></li>
+      <li><a href="HTML-elements/lists.html.de#page_body">Listen</a></li>
+      <li><a href="HTML-elements/address.html.de#page_body">Informationen über
         den Autor</a></li>
-      <li><a href="HTML-elements/inline.html#page_body">Über
+      <li><a href="HTML-elements/inline.html.de#page_body">Über
         inhaltsorientierte Formate</a></li>
-      <li><a href="HTML-elements/40styling.html#page_body">Über
+      <li><a href="HTML-elements/40styling.html.de#page_body">Über
         darstellungsorientierte Formate</a></li>
     </ul>
   </li>
-  <li><a href="Creating.html#page_body">Elemente editieren</a> 
+  <li><a href="Creating.html.de#page_body">Elemente editieren</a> 
     <ul>
-      <li><a href="elements/buttons_and_types_menu.html#page_body"
+      <li><a href="elements/buttons_and_types_menu.html.de#page_body"
         rel="subdocument">Das Menü Elemente und die Knopfleiste</a></li>
-      <li><a href="elements/the_structure_menu.html#page_body"
+      <li><a href="elements/the_structure_menu.html.de#page_body"
         rel="subdocument">Das Menü Struktur</a></li>
-      <li><a href="elements/the_enter_key.html#page_body"
+      <li><a href="elements/the_enter_key.html.de#page_body"
         rel="subdocument">Die Eingabetaste</a></li>
-      <li><a href="elements/exiting_anchors.html#page_body"
+      <li><a href="elements/exiting_anchors.html.de#page_body"
         rel="subdocument">Einen Anker oder eine formatierte Zeichenkette
         verlassen</a></li>
-      <li><a href="elements/creating_nested_structures.html#page_body"
+      <li><a href="elements/creating_nested_structures.html.de#page_body"
         rel="subdocument">Verschachtelte Strukturen erzeugen</a></li>
-      <li><a href="elements/changing_the_document_title.html#page_body"
+      <li><a href="elements/changing_the_document_title.html.de#page_body"
         rel="subdocument">Den Titel eines Dokuments ändern</a></li>
     </ul>
   </li>
-  <li><a href="Attributes.html#page_body">Attribute editieren</a> 
+  <li><a href="Attributes.html.de#page_body">Attribute editieren</a> 
     <ul>
       <li><a rel="subdocument"
-        href="editing_attributes/working_with_attributes.html#page_body">Mit
+        href="editing_attributes/working_with_attributes.html.de#page_body">Mit
         Attributen arbeiten</a></li>
       <li><a
-        href="editing_attributes/editing_attributes_through_the_attributes_menu.html#page_body"
+        href="editing_attributes/editing_attributes_through_the_attributes_menu.html.de#page_body"
         rel="subdocument">Attribute über das Menü editieren</a></li>
-      <li><a href="editing_attributes/copying_attributes.html#page_body"
+      <li><a href="editing_attributes/copying_attributes.html.de#page_body"
         rel="subdocument">Attribute kopieren</a></li>
       <li><a
-        href="editing_attributes/editing_attributes_in_the_structure_view.html#page_body"
+        href="editing_attributes/editing_attributes_in_the_structure_view.html.de#page_body"
         rel="subdocument">Attribute in der Strukturansicht editieren</a></li>
     </ul>
   </li>
-  <li><a href="EditChar.html#page_body">Sonderzeichen aus ISO-Latin und
+  <li><a href="EditChar.html.de#page_body">Sonderzeichen aus ISO-Latin und
     Unicode</a> 
     <ul>
       <li><a
-        href="editing_ISO-Latin-1_characters/entering_ISOLatin1_characters_in_amaya.html#page_body"
+        href="editing_ISO-Latin-1_characters/entering_ISOLatin1_characters_in_amaya.html.de#page_body"
         rel="subdocument">Sonderzeichen eingeben</a></li>
       <li><a
-        href="editing_ISO-Latin-1_characters/about_optional_multikey_support.html#page_body"
+        href="editing_ISO-Latin-1_characters/about_optional_multikey_support.html.de#page_body"
         rel="subdocument">Über optionale Mehrfachtasten</a></li>
       <li><a
-        href="editing_ISO-Latin-1_characters/about_standard_multikey_support.html"
+        href="editing_ISO-Latin-1_characters/about_standard_multikey_support.html.de"
         rel="subdocument">Über Standardmehrfachtasten</a></li>
       <li><a
-        href="editing_ISO-Latin-1_characters/about_white_space_handling.html#page_body"
+        href="editing_ISO-Latin-1_characters/about_white_space_handling.html.de#page_body"
         rel="subdocument">Über die Behandlung von Leerzeichen (white
         spaces)</a></li>
     </ul>
   </li>
-  <li><a href="Changing.html#page_body">Dokumente umstrukturieren</a> 
+  <li><a href="Changing.html.de#page_body">Dokumente umstrukturieren</a> 
     <ul>
       <li><a
-        href="editing_documents/changing_the_document_structure.html#page_body"
+        href="editing_documents/changing_the_document_structure.html.de#page_body"
         rel="subdocument">Die Struktur eines Dokuments ändern</a></li>
-      <li><a href="editing_documents/the_transform_command.html#page_body"
+      <li><a href="editing_documents/the_transform_command.html.de#page_body"
         rel="subdocument">Ein Dokument transformieren</a></li>
       <li><a
-        href="editing_documents/about_inserting_a_division.html#page_body"
+        href="editing_documents/about_inserting_a_division.html.de#page_body"
         rel="subdocument">Über das Einfügen eines Abschnitts</a></li>
-      <li><a href="editing_documents/about_merging_elements.html#page_body"
+      <li><a href="editing_documents/about_merging_elements.html.de#page_body"
         rel="subdocument">Über das Verschachteln von Elementen</a></li>
-      <li><a href="editing_documents/Transform.html#page_body"
+      <li><a href="editing_documents/Transform.html.de#page_body"
         rel="subdocument">Die Datei HTML.trans benutzen</a></li>
     </ul>
   </li>
-  <li><a href="Links.html#page_body">Verweise</a> 
+  <li><a href="Links.html.de#page_body">Verweise</a> 
     <ul>
-      <li><a href="linking/creating_an_external_link.html#page_body"
+      <li><a href="linking/creating_an_external_link.html.de#page_body"
         rel="subdocument">Einen externen Verweis erzeugen</a></li>
-      <li><a href="linking/creating_an_internal_link.html#page_body"
+      <li><a href="linking/creating_an_internal_link.html.de#page_body"
         rel="subdocument">Einen internen Verweis erzeugen</a></li>
-      <li><a href="linking/creating_a_target_anchor.html#page_body"
+      <li><a href="linking/creating_a_target_anchor.html.de#page_body"
         rel="subdocument">Einen Anker erzeugen</a></li>
-      <li><a href="linking/creating_a_target_element.html#page_body"
+      <li><a href="linking/creating_a_target_element.html.de#page_body"
         rel="subdocument">Ein Ankerelement erzeugen</a></li>
-      <li><a href="linking/removing_a_link_or_a_target_anchor.html#page_body"
+      <li><a href="linking/removing_a_link_or_a_target_anchor.html.de#page_body"
         rel="subdocument">Einen Verweis oder Anker entfernen</a></li>
-      <li><a href="linking/changing_a_link.html#page_body"
+      <li><a href="linking/changing_a_link.html.de#page_body"
         rel="subdocument">Einen Verweis ändern</a></li>
     </ul>
   </li>
-  <li><a href="Tables.html#page_body">Tabellen</a> 
+  <li><a href="Tables.html.de#page_body">Tabellen</a> 
     <ul>
-      <li><a href="editing_tables/working_with_tables.html#page_body"
+      <li><a href="editing_tables/working_with_tables.html.de#page_body"
         rel="subdocument">Mit Tabellen arbeiten</a></li>
-      <li><a href="editing_tables/create_table.html#page_body"
+      <li><a href="editing_tables/create_table.html.de#page_body"
         rel="subdocument">Eine Tabelle erzeugen</a></li>
-      <li><a href="editing_tables/add_column.html#page_body"
+      <li><a href="editing_tables/add_column.html.de#page_body"
         rel="subdocument">Eine Spalte hinzufügen</a></li>
-      <li><a href="editing_tables/add_row.html#page_body"
+      <li><a href="editing_tables/add_row.html.de#page_body"
         rel="subdocument">Eine Zeile hinzufügen</a></li>
-      <li><a href="editing_tables/add_tbody.html#page_body"
+      <li><a href="editing_tables/add_tbody.html.de#page_body"
         rel="subdocument">Einen Tabellenkörper hinzufügen</a></li>
-      <li><a href="editing_tables/remove_column.html#page_body"
+      <li><a href="editing_tables/remove_column.html.de#page_body"
         rel="subdocument">Eine Spalte entfernen</a></li>
     </ul>
   </li>
-  <li><a href="ImageMaps.html#page_body">Aktive Bildbereiche</a> 
+  <li><a href="ImageMaps.html.de#page_body">Aktive Bildbereiche</a> 
     <ul>
-      <li><a href="using_image_maps/working_with_image_maps.html#page_body"
+      <li><a href="using_image_maps/working_with_image_maps.html.de#page_body"
         rel="subducment">Mit aktiven Bildbereichen arbeiten</a></li>
-      <li><a href="using_image_maps/adding_an_image.html#page_body"
+      <li><a href="using_image_maps/adding_an_image.html.de#page_body"
         rel="subdocument">Ein Bild einfügen</a></li>
       <li><a
-        href="using_image_maps/creating_clientside_image_maps.html#page_body"
+        href="using_image_maps/creating_clientside_image_maps.html.de#page_body"
         rel="subdocument">Clientseitige aktive Bildbereiche erzeugen</a></li>
       <li><a
-        href="using_image_maps/using_clientside_image_maps.html#page_body"
+        href="using_image_maps/using_clientside_image_maps.html.de#page_body"
         rel="subdocument">Clientseitige aktive Bildbereiche benutzen</a></li>
-      <li><a href="using_image_maps/moving_image_map_areas.html#page_body"
+      <li><a href="using_image_maps/moving_image_map_areas.html.de#page_body"
         rel="subdocument">Einen aktiven Bildbereich verschieben</a></li>
-      <li><a href="using_image_maps/resizing_image_map_areas.html#page_body"
+      <li><a href="using_image_maps/resizing_image_map_areas.html.de#page_body"
         rel="subdocument">Die Größe eines aktiven Bildbereichs ändern</a></li>
       <li><a
-        href="using_image_maps/about_alternative_text_and_long_descriptions.html#page_body"
+        href="using_image_maps/about_alternative_text_and_long_descriptions.html.de#page_body"
         rel="subdocument">Über alternativen Text und lange
       Beschreibungen</a></li>
     </ul>
   </li>
-  <li><a href="Math.html#page_body">Mathematische Ausdücke</a> 
+  <li><a href="Math.html.de#page_body">Mathematische Ausdücke</a> 
     <ul>
       <li><a
-        href="editing_mathematics/working_with_math_expressions.html#page_body"
+        href="editing_mathematics/working_with_math_expressions.html.de#page_body"
         rel="subdocument">Mit mathematischen Ausdrücken arbeiten</a></li>
       <li><a
-        href="editing_mathematics/about_entering_math_constructs_using_the_keyboard.html#page_body"
+        href="editing_mathematics/about_entering_math_constructs_using_the_keyboard.html.de#page_body"
         rel="subdocument">Über die Eingabe mathematischer Konstrukte mit der
         Tastatur</a></li>
       <li><a
-        href="editing_mathematics/the_math_palette_and_the_types.html#page_body"
+        href="editing_mathematics/the_math_palette_and_the_types.html.de#page_body"
         rel="subdocument">Die Palette Mathematik und das Menü
       Elemente</a></li>
       <li><a
-        href="editing_mathematics/about_entering_math_characters.html#page_body"
+        href="editing_mathematics/about_entering_math_characters.html.de#page_body"
         rel="subdocument">Über die Eingabe mathematischer Zeichen</a></li>
       <li><a
-        href="editing_mathematics/editing_math_expressions.html#page_body"
+        href="editing_mathematics/editing_math_expressions.html.de#page_body"
         rel="subdocument">Mathematische Ausdrücke editieren</a></li>
       <li><a
-        href="editing_mathematics/viewing_structure_in_mathml.html#page_body"
+        href="editing_mathematics/viewing_structure_in_mathml.html.de#page_body"
         rel="subdocument">Strukturansicht in MathML</a></li>
       <li><a
-        href="editing_mathematics/about_linking_in_mathml.html#page_body"
+        href="editing_mathematics/about_linking_in_mathml.html.de#page_body"
         rel="subdocument">Über Verweise in MathML</a></li>
-      <li><a href="editing_mathematics/math_issues.html#page_body"
+      <li><a href="editing_mathematics/math_issues.html.de#page_body"
         rel="subdocument">Bekannte Probleme</a></li>
     </ul>
   </li>
-  <li><a href="SVG.html#page_body">Skalierbare Vektorgrafiken</a> 
+  <li><a href="SVG.html.de#page_body">Skalierbare Vektorgrafiken</a> 
     <ul>
-      <li><a href="using_graphics/working_with_graphics.html#page_body"
+      <li><a href="using_graphics/working_with_graphics.html.de#page_body"
         rel="subdocument">Mit Grafiken arbeiten</a></li>
       <li><a
-        href="using_graphics/creating_graphics_with_the_palette.html#page_body"
+        href="using_graphics/creating_graphics_with_the_palette.html.de#page_body"
         rel="subdocument">Grafiken mit der Palette erzeugen</a></li>
-      <li><a href="using_graphics/moving_graphics.html#page_body"
+      <li><a href="using_graphics/moving_graphics.html.de#page_body"
         rel="subdocument">Grafiken verschieben</a></li>
-      <li><a href="using_graphics/resizing_graphics.html#page_body"
+      <li><a href="using_graphics/resizing_graphics.html.de#page_body"
         rel="subdocument">Die Größe einer Grafik ändern</a></li>
-      <li><a href="using_graphics/painting_graphics.html#page_body"
+      <li><a href="using_graphics/painting_graphics.html.de#page_body"
         rel="subdocument">Grafiken einfärben</a></li>
     </ul>
   </li>
-  <li><a href="Xml.html#page_body">XML</a> 
+  <li><a href="Xml.html.de#page_body">XML</a> 
     <ul>
       <li><a
-        href="using_xml/loading_xml_document.html#page_body">XML-Dokumente
+        href="using_xml/loading_xml_document.html.de#page_body">XML-Dokumente
         laden</a></li>
-      <li><a href="using_xml/xml_using_style.html#page_body">Formate in XML
+      <li><a href="using_xml/xml_using_style.html.de#page_body">Formate in XML
         benutzen</a></li>
       <li><a
-        href="using_xml/editing_xml_document.html#page_body">XML-Dokumente
+        href="using_xml/editing_xml_document.html.de#page_body">XML-Dokumente
         editieren</a></li>
     </ul>
   </li>
-  <li><a href="StyleSheets.html#page_body">Formate und Formatvorlagen</a> 
+  <li><a href="StyleSheets.html.de#page_body">Formate und Formatvorlagen</a> 
     <ul>
-      <li><a href="style_sheets/working_with_styles.html#page_body"
+      <li><a href="style_sheets/working_with_styles.html.de#page_body"
         rel="subdocument">Mit Formaten und Formatvorlagen arbeiten</a></li>
       <li><a
-        href="style_sheets/creating_and_updating_a_style_attribute.html#page_body"
+        href="style_sheets/creating_and_updating_a_style_attribute.html.de#page_body"
         rel="subdocument">Ein Formatattribut erzeugen und aktualisieren</a>
         <a href="" rel="subdocument"></a></li>
       <li><a
-        href="style_sheets/creating_generic_style_for_an_element_or_a_class.html#page_body"
+        href="style_sheets/creating_generic_style_for_an_element_or_a_class.html.de#page_body"
         rel="subdocument">Ein generisches Format für ein Element oder eine
         Klasse erzeugen</a></li>
       <li><a
-        href="style_sheets/about_linking_external_and_user_style_sheets.html#page_body"
+        href="style_sheets/about_linking_external_and_user_style_sheets.html.de#page_body"
         rel="subdocument">Über die Verknüpfung externer und
         benutzerdefinierter Formatvorlagen</a></li>
-      <li><a href="style_sheets/handling_external_css.html#page_body"
+      <li><a href="style_sheets/handling_external_css.html.de#page_body"
         rel="subdocument">Externe Formatvorlagen handhaben</a></li>
       <li><a
-        href="style_sheets/about_applying_style_using_html_elements.html#page_body"
+        href="style_sheets/about_applying_style_using_html_elements.html.de#page_body"
         rel="subdocument">Ein Format erzeugen</a></li>
-      <li><a href="style_sheets/creating_html_style_elements.html#page_body"
+      <li><a href="style_sheets/creating_html_style_elements.html.de#page_body"
         rel="subdocument">Formatelemente erzeugen</a></li>
-      <li><a href="style_sheets/removing_style.html#page_body"
+      <li><a href="style_sheets/removing_style.html.de#page_body"
         rel="subdocument">Formate entfernen</a></li>
     </ul>
   </li>
   <li><a
-    href="searching_and_replacing_text/searching_and_replacing_text.html#page_body"
+    href="searching_and_replacing_text/searching_and_replacing_text.html.de#page_body"
     rel="subdocument">Text suchen und ersetzen</a> 
     <p></p>
   </li>
-  <li><a href="spell_checking/spell_checking.html#page_body"
+  <li><a href="spell_checking/spell_checking.html.de#page_body"
     rel="subdocument">Rechtschreibprüfung</a> 
     <p></p>
   </li>
-  <li><a href="Publishing.html#page_body">Speichern und veröffentlichen</a> 
+  <li><a href="Publishing.html.de#page_body">Speichern und veröffentlichen</a> 
     <ul>
       <li><a
-        href="saving_and_publishing_documents/saving_and_publishing_documents.html#page_body"
+        href="saving_and_publishing_documents/saving_and_publishing_documents.html.de#page_body"
         rel="subdocument">Dokumente speichern und veröffentlichen</a></li>
       <li><a
-        href="saving_and_publishing_documents/about_saving_in_html.html#page_body"
+        href="saving_and_publishing_documents/about_saving_in_html.html.de#page_body"
         rel="subdocument">Über das Speichern auf einem Server</a></li>
       <li><a
-        href="saving_and_publishing_documents/the_save_command.html#page_body"
+        href="saving_and_publishing_documents/the_save_command.html.de#page_body"
         rel="subdocument">Der Befehl Speichern</a></li>
       <li><a
-        href="saving_and_publishing_documents/the_saveas_command.html#page_body"
+        href="saving_and_publishing_documents/the_saveas_command.html.de#page_body"
         rel="subdocument">Der Befehl Speichern unter</a></li>
       <li><a
-        href="saving_and_publishing_documents/saving_documents_as_text.html#page_body"
+        href="saving_and_publishing_documents/saving_documents_as_text.html.de#page_body"
         rel="subdocument">Dokumente als Text speichern</a></li>
     </ul>
   </li>
-  <li><a href="Printing.html#page_body">Drucken</a> 
+  <li><a href="Printing.html.de#page_body">Drucken</a> 
     <ul>
-      <li><a href="printing/printing_documents.html#page_body"
+      <li><a href="printing/printing_documents.html.de#page_body"
         rel="subdocument">Dokumente drucken</a></li>
-      <li><a href="printing/using_the_setup_and_print_command.html#page_body"
+      <li><a href="printing/using_the_setup_and_print_command.html.de#page_body"
         rel="subdocument">Der Befehl Druckoptionen</a></li>
-      <li><a href="printing/unix_platforms.html#page_body"
+      <li><a href="printing/unix_platforms.html.de#page_body"
         rel="subdocument">Auf Unixplattformen drucken</a></li>
-      <li><a href="printing/windows_platforms.html#page_body"
+      <li><a href="printing/windows_platforms.html.de#page_body"
         rel="subdocument">Auf Windowsplattformen drucken</a></li>
-      <li><a href="printing/print_command.html#page_body"
+      <li><a href="printing/print_command.html.de#page_body"
         rel="subdocument">Der Befehl Drucken</a></li>
       <li><a
-        href="printing/about_controlling_printing_with_css.html#page_body"
+        href="printing/about_controlling_printing_with_css.html.de#page_body"
         rel="subdocument">Über die Druckkontrolle mit Formatvorlagen</a> 
         <p></p>
       </li>
     </ul>
   </li>
-  <li><a href="numbering_sections/numbering_sections.html#page_body"
+  <li><a href="numbering_sections/numbering_sections.html.de#page_body"
     rel="subdocument">Abschnitte numerieren</a> 
     <p></p>
   </li>
   <li><a
-    href="using_the_makebook_function/assembling_large_document_collections.html#page_body"
+    href="using_the_makebook_function/assembling_large_document_collections.html.de#page_body"
     rel="subdocument">Eine Dokumentensammlung erstellen</a> 
     <p></p>
   </li>
-  <li><a href="Annotations.html#page_body">Anmerkungen</a> 
+  <li><a href="Annotations.html.de#page_body">Anmerkungen</a> 
     <ul>
       <li><a
-        href="attaching_annotations/What_is_an_Annotation.html#page_body">Was
+        href="attaching_annotations/What_is_an_Annotation.html.de#page_body">Was
         ist eine Anmerkung?</a></li>
       <li><a
-        href="attaching_annotations/about_reading_annotations.html#page_body"
+        href="attaching_annotations/about_reading_annotations.html.de#page_body"
         rel="subdocument">Über Anmerkungen lesen</a></li>
       <li><a
-        href="attaching_annotations/about_storing_local_annotations.html#page_body"
+        href="attaching_annotations/about_storing_local_annotations.html.de#page_body"
         rel="subdocument">Über Anmerkungen lokal speichern</a></li>
       <li><a
-        href="attaching_annotations/about_storing_remote_annotations.html#page_body"
+        href="attaching_annotations/about_storing_remote_annotations.html.de#page_body"
         rel="subdocument">Über Anmerkungen veröffentlichen</a></li>
-      <li><a href="attaching_annotations/Annotation_Menu.html#page_body">Das
+      <li><a href="attaching_annotations/Annotation_Menu.html.de#page_body">Das
         Menü Anmerkungen</a></li>
       <li><a
-        href="attaching_annotations/configuring_annotation_settings.html#page_body"
+        href="attaching_annotations/configuring_annotation_settings.html.de#page_body"
         rel="subdocument">Einstellungen für Anmerkungen konfigurieren</a></li>
       <li><a
-        href="attaching_annotations/creating_an_annotation.html#page_body"
+        href="attaching_annotations/creating_an_annotation.html.de#page_body"
         rel="subdocument">Eine Anmerkung erzeugen</a></li>
       <li><a
-        href="attaching_annotations/deleting_an_annotation.html#page_body"
+        href="attaching_annotations/deleting_an_annotation.html.de#page_body"
         rel="subdocument">Eine Anmerkung löschen</a></li>
       <li><a
-        href="attaching_annotations/loading_and_presenting_annotations.html#page_body"
+        href="attaching_annotations/loading_and_presenting_annotations.html.de#page_body"
         rel="subdocument">Anmerkungen laden und darstellen</a></li>
       <li><a
-        href="attaching_annotations/navigating_annotations.html#page_body"
+        href="attaching_annotations/navigating_annotations.html.de#page_body"
         rel="subdocument">Anmerkungen navigieren</a></li>
-      <li><a href="attaching_annotations/moving_annotations.html#page_body"
+      <li><a href="attaching_annotations/moving_annotations.html.de#page_body"
         rel="subdocument">Anmerkungen verschieben</a></li>
       <li><a
-        href="attaching_annotations/replying_to_annotations.html#page_body"
+        href="attaching_annotations/replying_to_annotations.html.de#page_body"
         rel="subdocument">Eine Anmerkung beantworten</a></li>
-      <li><a href="attaching_annotations/annotation_issues.html#page_body"
+      <li><a href="attaching_annotations/annotation_issues.html.de#page_body"
         rel="subdocument">Bekannte Probleme</a></li>
     </ul>
   </li>
-  <li><a href="Configure.html#page_body">Konfiguration</a> 
+  <li><a href="Configure.html.de#page_body">Konfiguration</a> 
     <ul>
-      <li><a href="configuring_amaya/configuring_amaya.html#page_body"
+      <li><a href="configuring_amaya/configuring_amaya.html.de#page_body"
         rel="subdocument">Amaya konfigurieren</a></li>
       <li><a
-        href="configuring_amaya/about_configuration_directory_and_file_conventions.html#page_body"
+        href="configuring_amaya/about_configuration_directory_and_file_conventions.html.de#page_body"
         rel="subdocument">Über das Konfigurationsverzeichnis und
         Dateikonventionen</a></li>
-      <li><a href="configuring_amaya/menu_preferences.html#page_body"
+      <li><a href="configuring_amaya/menu_preferences.html.de#page_body"
         rel="subdocument">Das Untermenü Einstellungen</a></li>
-      <li><a href="configuring_amaya/about_keyboard_shortcuts.html#page_body"
+      <li><a href="configuring_amaya/about_keyboard_shortcuts.html.de#page_body"
         rel="subdocument">Über Tastenkürzel</a></li>
     </ul>
   </li>
-  <li><a href="Access.html#page_body">Benutzerfreundlichkeit</a> 
+  <li><a href="Access.html.de#page_body">Benutzerfreundlichkeit</a> 
     <ul>
       <li><a
-        href="accessibility_in_amaya/accessibility_in_amaya.html#page_body"
+        href="accessibility_in_amaya/accessibility_in_amaya.html.de#page_body"
         rel="subdocument">Benutzerfreundlichkeit in Amaya</a></li>
       <li><a
-        href="accessibility_in_amaya/about_amayas_accessibility_features.html#page_body"
+        href="accessibility_in_amaya/about_amayas_accessibility_features.html.de#page_body"
         rel="subdocument">Über die Besonderheiten zur
         Benutzerfreundlichkeit</a></li>
       <li><a
-        href="accessibility_in_amaya/about_producing_accessible_content.html#page_body"
+        href="accessibility_in_amaya/about_producing_accessible_content.html.de#page_body"
         rel="subdocument">Über benutzerfreundlichen Inhalt</a></li>
     </ul>
   </li>
-  <li><a href="tans_annot.html">Anmerkungen des Übersetzers</a></li>
+  <li><a href="tans_annot.html.de">Anmerkungen des Übersetzers</a></li>
 </ul>
 <hr />
 <address>
@@ -490,24 +490,24 @@ href="../../amaya/AmayaPage.html">Begrüßungsseite</a></strong> von
 </address>
 
 <p><small><a
-href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright">Copyright</a>&nbsp;2000-2002
+href="http://www.w3.org/Consortium/Legal/ipr-notice.html.de#Copyright">Copyright</a>&nbsp;2000-2002
 <a href="http://www.w3.org/">W3C</a> (<a
 href="http://www.lcs.mit.edu/">MIT</a>, <a
 href="http://www.inria.fr/">INRIA</a>, <a
 href="http://www.keio.ac.jp/">Keio</a>), alle Rechte vorbehalten. Die
 Reglementierungen des W3C über <a
-href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Legal Disclaimer">Haftung,</a>
+href="http://www.w3.org/Consortium/Legal/ipr-notice.html.de#Legal Disclaimer">Haftung,</a>
 <a
-href="http://www.w3.org/Consortium/Legal/ipr-notice.html#W3C Trademarks">Schutzmarken</a>,
+href="http://www.w3.org/Consortium/Legal/ipr-notice.html.de#W3C Trademarks">Schutzmarken</a>,
 <a
-href="http://www.w3.org/Consortium/Legal/copyright-documents.html">Verwendung
+href="http://www.w3.org/Consortium/Legal/copyright-documents.html.de">Verwendung
 von Dokumenten</a> und <a
-href="http://www.w3.org/Consortium/Legal/copyright-software.html">Softwarelizenzierung</a>
+href="http://www.w3.org/Consortium/Legal/copyright-software.html.de">Softwarelizenzierung</a>
 werden angewendet. Ihre Interaktion mit dieser Site erfolgt gemäß den
 Datenschutzbestimmungen über <a
-href="http://www.w3.org/Consortium/Legal/privacy-statement.html#Public">öffentlichen
+href="http://www.w3.org/Consortium/Legal/privacy-statement.html.de#Public">öffentlichen
 Zugriff</a> und <a
-href="http://www.w3.org/Consortium/Legal/privacy-statement.html#Members">Mitgliedschaft</a>.</small></p>
+href="http://www.w3.org/Consortium/Legal/privacy-statement.html.de#Members">Mitgliedschaft</a>.</small></p>
 
 <p style="font-size: x-small">Copyright der deutschen Übersetzung 2002, alle
 Rechte vorbehalten. Die Erlaubnis zur Benutzung, Vervielfältigung,

@@ -15,13 +15,13 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home"> <img alt="Amaya"
-        src="../../images/amaya-de.gif"></td>
+        src="../../images/amaya.gif"></td>
       <td><a href="the_math_palette_and_the_types.html.de" accesskey="p"><img
-        alt="vorherige Seite" src="../../images/left-de.gif"></a> <a
+        alt="vorherige Seite" src="../../images/left.gif"></a> <a
         href="../Math.html.de" accesskey="t"><img alt="erste Seite"
-        src="../../images/up-de.gif"></a> <a
+        src="../../images/up.gif"></a> <a
         href="editing_math_expressions.html.de" accesskey="n"><img
-        alt="nächste Seite" src="../../images/right-de.gif"></a></td>
+        alt="nächste Seite" src="../../images/right.gif"></a></td>
     </tr>
   </tbody>
 </table>
@@ -44,7 +44,7 @@ style='font-size:11.0pt;font-family:"Courier New";'><strong>mtext</strong></span
 <ol>
   <li>Befindet man sich nicht innerhalb eines mathematischen Ausdrucks, so
     muss man zunächst den Knopf Formel <img alt="Knopf Mathematik"
-    src="../../images/Math-de.gif"> in der Knopfleiste anklicken, und mit dem
+    src="../../images/Math.gif"> in der Knopfleiste anklicken, und mit dem
     Knopf Math ein neues MathML-Element erzeugen.</li>
   <li>Danach die Sequenz dieser 6 Zeichen eintippen:
   <strong>x=2a+b</strong></li>
@@ -72,7 +72,7 @@ Dies erzeugt ein fehlwertmäßiges horizontales Leerzeichen. Danach kann man
 dessen Attribut <strong>width</strong> änderen um die Größe des Leerzeichens
 anzupassen. Hier können auch andere Attribute (height, depth oder linebreak)
 geändert werden um den vertikalen Abstand anzupassen. Details findet man
-unter der<a href="http://www.w3.org/TR/MathML2/chapter3.html#N9197">
+unter der<a href="http://www.w3.org/TR/MathML2/chapter3.html.de#N9197">
 MathML-Spezifikation</a> beim W3C.</p>
 
 <h2>Größe von Klammern</h2>

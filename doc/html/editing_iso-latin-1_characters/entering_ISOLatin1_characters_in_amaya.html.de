@@ -19,11 +19,11 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya-de.gif" /></td>
+        src="../../images/amaya.gif" /></td>
       <td><a href="../EditChar.html.de" accesskey="t"><img alt="erste Seite"
-        src="../../images/up-de.gif" /></a> <a
+        src="../../images/up.gif" /></a> <a
         href="about_optional_multikey_support.html.de" accesskey="n"><img
-        alt="nächste Seite" src="../../images/right-de.gif" /></a></td>
+        alt="nächste Seite" src="../../images/right.gif" /></a></td>
     </tr>
   </tbody>
 </table>
@@ -39,7 +39,7 @@ Betriebssystems. Eine optionale Unterstützung von Mehfachtasten für Motiv und
 Windows wird zusätzlich bereitgestellt.</p>
 
 <p>Amaya stellt einen Mechanismus zu Verfügung, mit dem man <a
-href="../ShortCuts.html">Tastenkürzel</a> einem Zeichen zuordnen kann,
+href="../ShortCuts.html.de">Tastenkürzel</a> einem Zeichen zuordnen kann,
 welches nicht auf der Tastatur zu finden ist. Einige dieser Tastenkürzel sind
 bereits vordefiniert:</p>
 <ul>
@@ -59,8 +59,8 @@ bereits vordefiniert:</p>
 zur Mehrfachtasteneingabe:</p>
 <ul>
   <li><a
-    href="about_standard_multikey_support.html">Standardmehrfachtasten</a></li>
-  <li><a href="about_optional_multikey_support.html">optionale
+    href="about_standard_multikey_support.html.de">Standardmehrfachtasten</a></li>
+  <li><a href="about_optional_multikey_support.html.de">optionale
     Mehrfachtasten</a></li>
 </ul>
 

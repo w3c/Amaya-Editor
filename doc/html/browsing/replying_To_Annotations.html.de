@@ -19,13 +19,13 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya-de.gif" /></td>
-      <td><a accesskey="p" href="./moving_annotations.html"><img
-        alt="previous" src="../../images/left-de.gif" /></a> <a accesskey="t"
-        href="../Annotations.html"><img alt="erste Seite"
-        src="../../images/up-de.gif" /></a> <a accesskey="n"
-        href="./annotation_issues.html"><img alt="nächste Seite"
-        src="../../images/right-de.gif" /></a></td>
+        src="../../images/amaya.gif" /></td>
+      <td><a accesskey="p" href="./moving_annotations.html.de"><img
+        alt="previous" src="../../images/left.gif" /></a> <a accesskey="t"
+        href="../Annotations.html.de"><img alt="erste Seite"
+        src="../../images/up.gif" /></a> <a accesskey="n"
+        href="./annotation_issues.html.de"><img alt="nächste Seite"
+        src="../../images/right.gif" /></a></td>
     </tr>
   </tbody>
 </table>
@@ -43,7 +43,7 @@ Anmerkung oder eine Antwort auf eine Anmerkung zu antworten.</p>
 einer Anmerkung eine Antwort erzeugen. Dieser Befehl kann in einer geöffneten
 Anmerkung oder Antwort zu dieser Anmerkung angewendet werden. Es wird ein
 neues Antworfenster geöffnet. Die Felder in einem Antworfenster können genau
-so editiert werden, wie dies unter <a href="creating_an_annotation.html">Eine
+so editiert werden, wie dies unter <a href="creating_an_annotation.html.de">Eine
 Anmerkung erzeugen</a> erklärt ist.</p>
 
 <p>Ist die Antwort fertig, kann man diese mit dem Befehl
@@ -55,7 +55,7 @@ benutzt.</p>
 
 <p>Eine Antwort kann, wie jedes andere Dokument auch, ebenfalls mit einer
 Anmerkung versehen werden, wie dies unter <a
-href="./creating_an_annotation.html">Eine Anmerkung erzeugen</a> erklärt
+href="./creating_an_annotation.html.de">Eine Anmerkung erzeugen</a> erklärt
 ist.</p>
 
 <h2>Das Antwortfenster</h2>

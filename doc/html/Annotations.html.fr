@@ -125,7 +125,7 @@ d'annotations sur lequel les annotations distantes sont enregistrées.</p>
 <p>La plupart des commandes utilisées pour la gestion des annotations se
 trouvent dans le menu d'annotations représenté ci dessous.</p>
 
-<p style="text-align: center"><img src="../images/annotationsmenu_fr.png"
+<p style="text-align: center"><img src="../images/annotationsmenu--fr.png"
 alt="Annotations menu" /></p>
 
 <h3 id="Configurat">Menu de configuration pour les annotations</h3>

@@ -17,13 +17,13 @@
   <tbody>
     <tr>
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
-        src="../images/amaya-de.gif" /></p>
+        src="../images/amaya.gif" /></p>
       </td>
       <td><a href="SpellChecking.html.de" accesskey="p"><img
-        alt="vorherige Seite" src="../images/left-de.gif" /></a> <a
+        alt="vorherige Seite" src="../images/left.gif" /></a> <a
         href="Manual.html.de" accesskey="t"><img alt="erste Seite"
-        src="../images/up-de.gif" /></a> <a href="Printing.html"
-        accesskey="n"><img alt="nächste Seite" src="../images/right-de.gif"
+        src="../images/up.gif" /></a> <a href="Printing.html.de"
+        accesskey="n"><img alt="nächste Seite" src="../images/right.gif"
         /></a>
       </td>
     </tr>
@@ -36,15 +36,15 @@
 <p>Folgende Themen werden in diesem Abschnitt behandelt:</p>
 <ul>
   <li><a
-    href="saving_and_publishing_documents/saving_and_publishing_documents.html#page_body"
+    href="saving_and_publishing_documents/saving_and_publishing_documents.html.de#page_body"
     rel="subdocument">Dokumente speichern und veröffentlichen</a></li>
-  <li><a href="saving_and_publishing_documents/about_saving_in_html.html#page_body"
+  <li><a href="saving_and_publishing_documents/about_saving_in_html.html.de#page_body"
     rel="subdocument">Über das Speichern auf einem Server</a></li>
-  <li><a href="saving_and_publishing_documents/the_save_command.html#page_body"
+  <li><a href="saving_and_publishing_documents/the_save_command.html.de#page_body"
     rel="subdocument">Der Befehl Speichern</a></li>
-  <li><a href="saving_and_publishing_documents/the_saveas_command.html#page_body"
+  <li><a href="saving_and_publishing_documents/the_saveas_command.html.de#page_body"
     rel="subdocument">Der Befehl Speichern unter</a></li>
-  <li><a href="saving_and_publishing_documents/saving_documents_as_text.html#page_body"
+  <li><a href="saving_and_publishing_documents/saving_documents_as_text.html.de#page_body"
     rel="subdocument">Dokumente als Text speichern</a></li>
 </ul>
 </div>

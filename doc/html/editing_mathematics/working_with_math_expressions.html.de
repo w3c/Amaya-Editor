@@ -17,12 +17,12 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home"> <img alt="Amaya"
-        src="../../images/amaya-de.gif"></td>
+        src="../../images/amaya.gif"></td>
       <td><a href="../Math.html.de" accesskey="t"><img alt="erste Seite"
-        src="../../images/up-de.gif"></a> <a
-        href="about_entering_math_constructs_using_the_keyboard.html"
+        src="../../images/up.gif"></a> <a
+        href="about_entering_math_constructs_using_the_keyboard.html.de"
         accesskey="n"><img alt="nächste Seite"
-        src="../../images/right-de.gif"></a></td>
+        src="../../images/right.gif"></a></td>
     </tr>
   </tbody>
 </table>
@@ -47,13 +47,13 @@ Konstrukte.</p>
 <p>Folgende Informationen über die Bearbeitung mathematischer Ausdrücke
 stehen bereit:</p>
 <ul>
-  <li><a href="editing_math_expressions.html">Mathematische Ausdrücke
+  <li><a href="editing_math_expressions.html.de">Mathematische Ausdrücke
     editieren</a></li>
-  <li><a href="about_entering_math_characters.html">Über die Eingabe
+  <li><a href="about_entering_math_characters.html.de">Über die Eingabe
     mathematischer Zeichen</a></li>
-  <li><a href="about_entering_math_constructs_using_the_keyboard.html">Über
+  <li><a href="about_entering_math_constructs_using_the_keyboard.html.de">Über
     die Eingabe mathematischer Konstrukte mit der Tastsatur</a></li>
-  <li><a href="the_math_palette_and_the_types.html">Die Palette Mathematik
+  <li><a href="the_math_palette_and_the_types.html.de">Die Palette Mathematik
     und das Menü Elemente</a></li>
 </ul>
 </div>

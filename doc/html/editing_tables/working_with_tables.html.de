@@ -19,10 +19,10 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya-de.gif" /></td>
+        src="../../images/amaya.gif" /></td>
       <td><a href="../Tables.html.de" accesskey="t"><img alt="erste Seite"
-        src="../../images/up-de.gif" /></a> <a href="create_table.html"
-        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        src="../../images/up.gif" /></a> <a href="create_table.html.de"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right.gif"
         /></a></td>
     </tr>
   </tbody>
@@ -39,11 +39,11 @@ mehr, anwenden.</p>
 
 <p>Weitere Informationen findet man unter:</p>
 <ul>
-  <li><a href="create_table.html">Eine Tabelle erzeugen</a></li>
-  <li><a href="add_column.html">Eine Spalte hinzufügen</a></li>
-  <li><a href="add_row.html">Eine Zeile hinzufügen</a></li>
-  <li><a href="add_tbody.html">Einen Tabellenkörper hinzufügen</a></li>
-  <li><a href="remove_column.html">Eine Spalte entfernen</a></li>
+  <li><a href="create_table.html.de">Eine Tabelle erzeugen</a></li>
+  <li><a href="add_column.html.de">Eine Spalte hinzufügen</a></li>
+  <li><a href="add_row.html.de">Eine Zeile hinzufügen</a></li>
+  <li><a href="add_tbody.html.de">Einen Tabellenkörper hinzufügen</a></li>
+  <li><a href="remove_column.html.de">Eine Spalte entfernen</a></li>
 </ul>
 </div>
 </body>

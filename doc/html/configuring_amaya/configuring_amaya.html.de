@@ -19,11 +19,11 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya-de.gif" /></td>
+        src="../../images/amaya.gif" /></td>
       <td><a href="../Configure.html.de" accesskey="t"><img alt="erste Seite"
-        src="../../images/up-de.gif" /></a> <a
-        href="about_configuration_directory_and_file_conventions.html"
-        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        src="../../images/up.gif" /></a> <a
+        href="about_configuration_directory_and_file_conventions.html.de"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right.gif"
         /></a></td>
     </tr>
   </tbody>
@@ -39,12 +39,12 @@ meisten dieser Konfigurationsparameter in verschiedenen Dialogen ändern.</p>
 
 <p>Weitere Informationen findet man unter:</p>
 <ul>
-  <li><span class="Link0"><a href="menu_preferences.html">Das Untermenü
+  <li><span class="Link0"><a href="menu_preferences.html.de">Das Untermenü
     Einstellungen</a></span></li>
   <li><span class="Link0"><a
-    href="about_configuration_directory_and_file_conventions.html">Über das
+    href="about_configuration_directory_and_file_conventions.html.de">Über das
     Konfigurationsverzeichnis und Dateikonventinen</a></span></li>
-  <li><span class="Link0"><a href="about_keyboard_shortcuts.html">Über
+  <li><span class="Link0"><a href="about_keyboard_shortcuts.html.de">Über
     Tastenkürzel</a></span></li>
 </ul>
 </div>

@@ -19,13 +19,13 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya-de.gif" /></td>
-      <td><a href="about_applying_style_using_html_elements.html"
-        accesskey="p"><img alt="vorherige Seite" src="../../images/left-de.gif"
+        src="../../images/amaya.gif" /></td>
+      <td><a href="about_applying_style_using_html_elements.html.de"
+        accesskey="p"><img alt="vorherige Seite" src="../../images/left.gif"
         /></a> <a href="../StyleSheets.html.de" accesskey="t"><img
-        alt="erste Seite" src="../../images/up-de.gif" /></a> <a
+        alt="erste Seite" src="../../images/up.gif" /></a> <a
         href="removing_style.html.de" accesskey="n"><img alt="nächste Seite"
-        src="../../images/right-de.gif" /></a></td>
+        src="../../images/right.gif" /></a></td>
     </tr>
   </tbody>
 </table>
@@ -43,9 +43,9 @@ man einem Dokument Formatelemente hinzufügen.</p>
 
 <p>Das Untermenü <strong>Inhaltsorientiert</strong> listet Elemente, welche
 abstrakte Formate definieren. Drei dieser Formate sind auch über die Knöpfe
-<img src="../../images/Em-de.gif" alt="Knopf Betonung" /> für Betonung (em),
-<img src="../../images/strong-de.gif" alt="Kopf starke Betonung" /> für
-Hervorhebung (strong) und <img src="../../images/code-de.gif"
+<img src="../../images/Em.gif" alt="Knopf Betonung" /> für Betonung (em),
+<img src="../../images/strong.gif" alt="Kopf starke Betonung" /> für
+Hervorhebung (strong) und <img src="../../images/code.gif"
 alt="Knopf feste Schriftbreite" /> für Programmcode (code) erreichbar.</p>
 
 <p class="ProcedureCaption">Um diese anzuwenden:</p>

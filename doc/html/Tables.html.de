@@ -17,13 +17,13 @@
   <tbody>
     <tr>
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
-        src="../images/amaya-de.gif" /></p>
+        src="../images/amaya.gif" /></p>
       </td>
       <td><a href="Links.html.de" accesskey="p"><img alt="vorherige Seite"
-        src="../images/left-de.gif" /></a> <a href="Manual.html"
-        accesskey="t"><img alt="erste Seite" src="../images/up-de.gif" /></a> <a
+        src="../images/left.gif" /></a> <a href="Manual.html.de"
+        accesskey="t"><img alt="erste Seite" src="../images/up.gif" /></a> <a
         href="ImageMaps.html.de" accesskey="n"><img alt="nächste Seite"
-        src="../images/right-de.gif" /></a>
+        src="../images/right.gif" /></a>
       </td>
     </tr>
   </tbody>
@@ -34,17 +34,17 @@
 
 <p>Folgende Themen werden in diesem Abschnitt behandelt:</p>
 <ul>
-  <li><a href="editing_tables/working_with_tables.html#page_body" rel="subdocument">Mit
+  <li><a href="editing_tables/working_with_tables.html.de#page_body" rel="subdocument">Mit
     Tabellen arbeiten</a></li>
-  <li><a href="editing_tables/create_table.html#page_body" rel="subdocument">Eine
+  <li><a href="editing_tables/create_table.html.de#page_body" rel="subdocument">Eine
     Tabelle erzeugen</a></li>
-  <li><a href="editing_tables/add_column.html#page_body" rel="subdocument">Eine Spalte
+  <li><a href="editing_tables/add_column.html.de#page_body" rel="subdocument">Eine Spalte
     hinzufügen</a></li>
-  <li><a href="editing_tables/add_row.html#page_body" rel="subdocument">Eine Zeile
+  <li><a href="editing_tables/add_row.html.de#page_body" rel="subdocument">Eine Zeile
     hinzufügen</a></li>
-  <li><a href="editing_tables/add_tbody.html#page_body" rel="subdocument">Einen neuen
+  <li><a href="editing_tables/add_tbody.html.de#page_body" rel="subdocument">Einen neuen
     Tabellenkörper hinzufügen</a></li>
-  <li><a href="editing_tables/remove_column.html#page_body" rel="subdocument">Eine
+  <li><a href="editing_tables/remove_column.html.de#page_body" rel="subdocument">Eine
     Spalte entfernen</a></li>
 </ul>
 </div>

@@ -19,9 +19,9 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya-de.gif" /></td>
+        src="../../images/amaya.gif" /></td>
       <td><a href="../Searching.html.de" accesskey="t"><img alt="erste Seite"
-        src="../../images/up-de.gif" /></a></td>
+        src="../../images/up.gif" /></a></td>
     </tr>
   </tbody>
 </table>
@@ -30,7 +30,7 @@ summary="Inhaltsverzeichnis">
 <h1>Text suchen und ersetzen</h1>
 
 <p>Der Dialog <strong>Suchen und Ersetzen</strong> wird über das Menü
-<strong>Bearbeiten</strong>, den Knopf <img src="../../images/find-de.gif"
+<strong>Bearbeiten</strong>, den Knopf <img src="../../images/find.gif"
 alt="Knopf Suchen/Ersetzen" /> in der Knopfleiste oder das Tastenkürzel
 <code>Strg Umschalt %</code> in Unix oder <code>Strg f</code> in Windows
 aufgerufen.</p>

@@ -19,10 +19,10 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya-de.gif" /></td>
+        src="../../images/amaya.gif" /></td>
       <td><a href="../Changing.html.de" accesskey="t"><img alt="erste Seite"
-        src="../../images/up-de.gif" /></a> <a href="the_transform_command.html"
-        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        src="../../images/up.gif" /></a> <a href="the_transform_command.html.de"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right.gif"
         /></a></td>
     </tr>
   </tbody>
@@ -37,14 +37,14 @@ erreicht werden.</p>
 
 <p>Weitere Informationen findet man unter:</p>
 <ul>
-  <li><a href="../elements/the_structure_menu.html">Das Menü Struktur</a></li>
-  <li><a href="the_transform_command.html#page_body" rel="subdocument">Ein
+  <li><a href="../elements/the_structure_menu.html.de">Das Menü Struktur</a></li>
+  <li><a href="the_transform_command.html.de#page_body" rel="subdocument">Ein
     Dokument transformieren</a></li>
-  <li><a href="about_inserting_a_division.html#page_body"
+  <li><a href="about_inserting_a_division.html.de#page_body"
     rel="subdocument">Über das Einfügen eines Abschnitts</a></li>
-  <li><a href="about_merging_elements.html#page_body" rel="subdocument">Über
+  <li><a href="about_merging_elements.html.de#page_body" rel="subdocument">Über
     das Verschachteln von Elementen</a></li>
-  <li><a href="Transform.html#page_body" rel="subdocument">Die Datei
+  <li><a href="Transform.html.de#page_body" rel="subdocument">Die Datei
     HTML.trans benutzen</a></li>
 </ul>
 

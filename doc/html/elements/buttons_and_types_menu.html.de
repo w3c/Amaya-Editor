@@ -19,10 +19,10 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya-de.gif" /></td>
+        src="../../images/amaya.gif" /></td>
       <td><a href="../Creating.html.de" accesskey="t"><img alt="erste Seite"
-        src="../../images/up-de.gif" /></a> <a href="the_structure_menu.html"
-        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        src="../../images/up.gif" /></a> <a href="the_structure_menu.html.de"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right.gif"
         /></a></td>
     </tr>
   </tbody>
@@ -50,7 +50,7 @@ Markierung gehört in das gewählte Element zu <em>transformieren</em>.</p>
 weil die DTD von HTML das nicht zulässt. Amaya versucht dann das Element an
 der nächst möglichen Stelle zu plaziern. Beispiel: befindet sich der Cursor
 am Ende der letzten Zeile eines Absatzes und drückt man auf den Knopf <img
-src="../../images/H2-de.gif" alt="Knopf Überschrift Ebene 2" /> , dann erzeugt
+src="../../images/H2.gif" alt="Knopf Überschrift Ebene 2" /> , dann erzeugt
 Amaya die Überschrift unterhalb des Absatzes.</p>
 
 <p>In einigen anderen Fällen ändert Amaya die existierende Struktur um das

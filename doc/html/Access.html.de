@@ -18,11 +18,11 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
-        src="../images/amaya-de.gif" /></p>
+        src="../images/amaya.gif" /></p>
       </td>
       <td><a href="Configure.html.de" accesskey="p"><img alt="vorherige Seite"
-        src="../images/left-de.gif" /></a> <a href="Manual.html"
-        accesskey="t"><img alt="erste Seite" src="../images/up-de.gif"
+        src="../images/left.gif" /></a> <a href="Manual.html.de"
+        accesskey="t"><img alt="erste Seite" src="../images/up.gif"
       /></a></td>
     </tr>
   </tbody>
@@ -33,14 +33,14 @@ summary="Inhaltsverzeichnis">
 
 <p>Folgende Themen werden in diesem Abschnitt behandelt:</p>
 <ul>
-  <li><a href="accessibility_in_amaya/accessibility_in_amaya.html#page_body"
+  <li><a href="accessibility_in_amaya/accessibility_in_amaya.html.de#page_body"
     rel="subdocument">Benutzerfreundlichkeit in Amaya</a></li>
   <li><a
-    href="accessibility_in_amaya/about_amayas_accessibility_features.html#page_body"
+    href="accessibility_in_amaya/about_amayas_accessibility_features.html.de#page_body"
     rel="subdocument">Über die Besonderheiten der
   Benutzerfreundlichkeit</a></li>
   <li><a
-    href="accessibility_in_amaya/about_producing_accessible_content.html#page_body"
+    href="accessibility_in_amaya/about_producing_accessible_content.html.de#page_body"
     rel="subdocument">Über benutzerfreundlichen Inhalt</a></li>
 </ul>
 </div>

@@ -19,12 +19,12 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><p><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya-de.gif" /></p>
+        src="../../images/amaya.gif" /></p>
       </td>
       <td><a href="about_merging_elements.html.de" accesskey="p"><img
-        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        alt="vorherige Seite" src="../../images/left.gif" /></a> <a
         href="../Changing.html.de" accesskey="t"><img alt="erste Seite"
-        src="../../images/up-de.gif" /></a></td>
+        src="../../images/up.gif" /></a></td>
     </tr>
   </tbody>
 </table>
@@ -160,7 +160,7 @@ aber auch strukturierte Elemente) in die transformierten Elemente
 verschoben.</p>
 
 <p>Der Transformationsprozess für HTML-Elemente ist vollständig in <a
-href="http://opera.inrialpes.fr/opera/papers9696.html"><em>Interactively
+href="http://opera.inrialpes.fr/opera/papers9696.html.de"><em>Interactively
 Restructuring HTML Documents</em></a> beschrieben, ein Dokument, welches auf
 der <a href="http://www5conf.inria.fr/">fünften internationalen
 WWW-Konferenz</a> in Paris im Mai 96 von Cécile Roisin und Stéphane Bonhomme

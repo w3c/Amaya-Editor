@@ -18,13 +18,13 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
-        src="../images/amaya-de.gif" /></p>
+        src="../images/amaya.gif" /></p>
       </td>
-      <td><a href="Views.html"><img alt="vorherige Seite"
-        src="../images/left-de.gif" /></a> <a href="Manual.html"
-        accesskey="t"><img alt="erste Seite" src="../images/up-de.gif" /></a> <a
+      <td><a href="Views.html.de"><img alt="vorherige Seite"
+        src="../images/left.gif" /></a> <a href="Manual.html.de"
+        accesskey="t"><img alt="erste Seite" src="../images/up.gif" /></a> <a
         href="Creating.html.de" accesskey="n"><img alt="nächste Seite"
-        src="../images/right-de.gif" /></a></td>
+        src="../images/right.gif" /></a></td>
     </tr>
   </tbody>
 </table>
@@ -34,20 +34,20 @@ summary="Inhaltsverzeichnis">
 
 <p>Folgende Themen werden in diesem Abschnitt behandelt:</p>
 <ul>
-  <li><a href="HTML-elements/creating_new_documents.html#page_body"
+  <li><a href="HTML-elements/creating_new_documents.html.de#page_body"
     rel="subdocument">Ein neues Dokument erzeugen</a></li>
-  <li><a href="HTML-elements/structure.html#page_body">Die
+  <li><a href="HTML-elements/structure.html.de#page_body">Die
     Dokumentstruktur</a></li>
   <li><a
-  href="HTML-elements/infoTypes.html#page_body">Informationstypen</a></li>
-  <li><a href="HTML-elements/HTML.html#page_body">HTML-Elemente</a></li>
-  <li><a href="HTML-elements/headings.html#page_body">Überschriften</a></li>
-  <li><a href="HTML-elements/lists.html#page_body">Listen</a></li>
-  <li><a href="HTML-elements/address.html#page_body">Informationen über den
+  href="HTML-elements/infoTypes.html.de#page_body">Informationstypen</a></li>
+  <li><a href="HTML-elements/HTML.html.de#page_body">HTML-Elemente</a></li>
+  <li><a href="HTML-elements/headings.html.de#page_body">Überschriften</a></li>
+  <li><a href="HTML-elements/lists.html.de#page_body">Listen</a></li>
+  <li><a href="HTML-elements/address.html.de#page_body">Informationen über den
     Autor</a></li>
-  <li><a href="HTML-elements/inline.html#page_body">Über inhaltsorientierte
+  <li><a href="HTML-elements/inline.html.de#page_body">Über inhaltsorientierte
     Formate</a></li>
-  <li><a href="HTML-elements/40styling.html#page_body">Über
+  <li><a href="HTML-elements/40styling.html.de#page_body">Über
     darstellungsorientierte Formate</a></li>
 </ul>
 </div>

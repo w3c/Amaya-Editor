@@ -19,13 +19,13 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><p><img border="0" alt="W3C" src="../../images/w3c_home" /> <img
-        border="0" alt="Amaya" src="../../images/amaya-de.gif" /></p>
+        border="0" alt="Amaya" src="../../images/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="headings.html"><img alt="vorherige Seite"
-        border="0" src="../../images/left-de.gif" /></a> <a
-        href="../Document.html"><img alt="erste Seite" border="0"
-        src="../../images/up-de.gif" /></a> <a href="address.html"><img
-        alt="nächste Seite" border="0" src="../../images/right-de.gif" /></a></p>
+      <td><p align="right"><a href="headings.html.de"><img alt="vorherige Seite"
+        border="0" src="../../images/left.gif" /></a> <a
+        href="../Document.html.de"><img alt="erste Seite" border="0"
+        src="../../images/up.gif" /></a> <a href="address.html.de"><img
+        alt="nächste Seite" border="0" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -45,23 +45,23 @@ Listen enthalten sein.</p>
 <dl>
   <dt>Definitionsliste</dt>
     <dd>Dies ist eine Definitionsliste (<code><a
-      href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DL">dl</a></code>) - sie
+      href="http://www.w3.org/TR/REC-html40/struct/lists.html.de#edef-DL">dl</a></code>) - sie
       besitzt zu definierende Begriffe (<code><a
-      href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DT">dt</a></code>) und
+      href="http://www.w3.org/TR/REC-html40/struct/lists.html.de#edef-DT">dt</a></code>) und
       Definitionen (<code><a
-      href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DD">dd</a></code>) als
+      href="http://www.w3.org/TR/REC-html40/struct/lists.html.de#edef-DD">dd</a></code>) als
       Kinder.</dd>
     <dd>Ein Begriff kann meherer Definitionen beinhalten.</dd>
   <dt>Geordnete Liste</dt>
     <dd>Es gibt drei Arten von Listen
       <ol>
         <li>geordnete Listen (<code><a
-          href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-OL">ol</a></code>)</li>
+          href="http://www.w3.org/TR/REC-html40/struct/lists.html.de#edef-OL">ol</a></code>)</li>
         <li>ungeordnete Listen (<code><a
-          href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-UL" name="UL"
+          href="http://www.w3.org/TR/REC-html40/struct/lists.html.de#edef-UL" name="UL"
           id="UL">ul</a></code>)</li>
         <li>Definitionslisten (<code><a
-          href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DL">dl</a></code>)</li>
+          href="http://www.w3.org/TR/REC-html40/struct/lists.html.de#edef-DL">dl</a></code>)</li>
       </ol>
     </dd>
   <dt>geordnete und ungeordnete Listen</dt>
@@ -70,21 +70,21 @@ Listen enthalten sein.</p>
       <ul>
         <li>sie sind einfach</li>
         <li>beide haben Listenelemente als Kinder (<code><a
-          href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-LI">li</a></code>)</li>
+          href="http://www.w3.org/TR/REC-html40/struct/lists.html.de#edef-LI">li</a></code>)</li>
       </ul>
     </dd>
 </dl>
 
 <p>Die drei Typen von Listen können durch die Knöpfe <img
-src="../../images/OList-de.gif" alt="Knopf ungeordnete Liste" />, <img
-src="../../images/NumList-de.gif" alt="Knopf geordnete Liste" /> und <img
-src="../../images/DL-de.gif" alt="Knopf Definitionsliste" /> der Knopfleiste,
+src="../../images/OList.gif" alt="Knopf ungeordnete Liste" />, <img
+src="../../images/NumList.gif" alt="Knopf geordnete Liste" /> und <img
+src="../../images/DL.gif" alt="Knopf Definitionsliste" /> der Knopfleiste,
 über das Menü <strong>Elemente</strong> oder über Tastenkürzel <kbd>control-l
 control-o</kbd> (geordnete Liste), <kbd>control-l control-u</kbd>
 (ungeordnete Liste) und <kbd>control-l control-d</kbd> (Definitionsliste)
 erzeugt werden.</p>
 
-<p>Man kann <a href="../StyleSheets.html">Formatvorlagen</a> verwenden um die
+<p>Man kann <a href="../StyleSheets.html.de">Formatvorlagen</a> verwenden um die
 Darstellung der Listen zu ändern. Dies beinhaltet sowohl die Darstellung der
 grafischen Zeichen, welche sogar ein Bild sein können, als auch die
 Darstellung des Textes, beispielsweise verschiedene Schriftarten für Begriffe

@@ -19,13 +19,13 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya-de.gif" /></td>
+        src="../../images/amaya.gif" /></td>
       <td><a href="using_clientside_image_maps.html.de" accesskey="p"><img
-        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        alt="vorherige Seite" src="../../images/left.gif" /></a> <a
         href="../ImageMaps.html.de" accesskey="t"><img alt="erste Seite"
-        src="../../images/up-de.gif" /></a> <a
+        src="../../images/up.gif" /></a> <a
         href="resizing_image_map_areas.html.de" accesskey="n"><img
-        alt="nächste Seite" src="../../images/right-de.gif" /></a></td>
+        alt="nächste Seite" src="../../images/right.gif" /></a></td>
     </tr>
   </tbody>
 </table>
@@ -34,7 +34,7 @@ summary="Inhaltsverzeichnis">
 <h1>Einen aktiven Bildbereich verschieben</h1>
 
 <p class="ProcedureDescription">Nachdem man <a
-href="creating_clientside_image_maps.html">einen aktiven Bildbereich
+href="creating_clientside_image_maps.html.de">einen aktiven Bildbereich
 erzeugt</a> hat, kann man diesen innerhalb des Bildes verschieben.</p>
 
 <p class="ProcedureCaption">Um dies über die Tastatur zu tun:</p>

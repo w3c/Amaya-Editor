@@ -18,9 +18,9 @@
   <tbody>
     <tr>
       <td><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
-        src="../images/amaya-de.gif" /></td>
+        src="../images/amaya.gif" /></td>
       <td><p> <a href="Manual.html.de" accesskey="t"><img alt="erste Seite"
-        src="../images/up-de.gif" /></a> </p>
+        src="../images/up.gif" /></a> </p>
       </td>
     </tr>
   </tbody>
@@ -32,7 +32,7 @@
 <p>Es ist nützlich Menübefehle direkt über die Tastatur auszuführen. Dem
 Verweis folgen um mehr über Zugriffstasten in Amaya zu erfahren.</p>
 <ul>
-  <li><a href="configuring_amaya/about_keyboard_shortcuts.html#page_body"
+  <li><a href="configuring_amaya/about_keyboard_shortcuts.html.de#page_body"
     rel="subdocument">Über Zugriffstasten</a></li>
 </ul>
 </div>

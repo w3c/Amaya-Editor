@@ -98,7 +98,7 @@ ou un fichier local.</p>
   <li>transformer les URIs dans le document,</li>
 </ul>
 
-<p><img src="../images/SaveAsfr.gif" alt="SaveAs" /></p>
+<p><img src="../images/SaveAs-fr.gif" alt="SaveAs" /></p>
 
 <p>Les choix dans la boîte de dialogue, de haut en bas, de gauche à droite
 sont utilisés comme suit :</p>

@@ -19,11 +19,11 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya-de.gif" /></td>
+        src="../../images/amaya.gif" /></td>
       <td><a href="../Attributes.html.de" accesskey="t"><img alt="erste Seite"
-        src="../../images/up-de.gif" /></a> <a
-        href="editing_attributes_through_the_attributes_menu.html"
-        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        src="../../images/up.gif" /></a> <a
+        href="editing_attributes_through_the_attributes_menu.html.de"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right.gif"
         /></a></td>
     </tr>
   </tbody>
@@ -51,11 +51,11 @@ verfügbaren Attribute angezeigt.</p>
 
 <p>Weitere Informationen findet man unter:</p>
 <ul>
-  <li><a href="editing_attributes_through_the_attributes_menu.html"
+  <li><a href="editing_attributes_through_the_attributes_menu.html.de"
     rel="subdocument">Attribute über das Menü editieren</a></li>
   <li><a href="copying_attributes.html.de" rel="subdocument">Attribute
     kopieren</a></li>
-  <li><a href="editing_attributes_in_the_structure_view.html"
+  <li><a href="editing_attributes_in_the_structure_view.html.de"
     rel="subdocument">Attribute in der Strukturansicht editieren</a></li>
 </ul>
 </div>

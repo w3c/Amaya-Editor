@@ -18,13 +18,13 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya-de.gif" /></td>
+        src="../../images/amaya.gif" /></td>
       <td><a href="about_access_keys.html.de" accesskey="p"><img
-        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
+        alt="vorherige Seite" src="../../images/left.gif" /></a> <a
         href="../Creating.html.de" accesskey="t"><img alt="erste Seite"
-        src="../../images/up-de.gif" /></a> <a href="forms.html"
+        src="../../images/up.gif" /></a> <a href="forms.html.de"
         accesskey="t"><img alt="n&#14504;ste Seite"
-        src="../../images/right-de.gif" /></a></td>
+        src="../../images/right.gif" /></a></td>
     </tr>
   </tbody>
 </table>
@@ -50,7 +50,7 @@ Amaya das markierte Teil auf den gewählten Elementtyp zu transformieren.</p>
 <p>An manchen Positionen können keine neuen Elemente erzeugt werden, weil das
 durch Zwänge, welche durch die DTD von HTML auferlegt werden, nicht möglich
 ist. Befindet sich beispielsweise der Cursor am Ende der letzten Zeile in
-einem Absatz wenn man den Knopf <img src="../../images/H2-de.gif"
+einem Absatz wenn man den Knopf <img src="../../images/H2.gif"
 alt="Kopf Überschrift Ebene 2" /> drückt, dann erzeugt Amaya eine neue
 Überschrift der Ebene 2 hinter diesem Absatz.</p>
 

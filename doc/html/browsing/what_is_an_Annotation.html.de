@@ -18,11 +18,11 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><img alt="w3c" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya-de.gif" /></td>
-      <td><a accesskey="t" href="../Annotations.html"><img alt="erste Seite"
-        src="../../images/up-de.gif" /></a> <a accesskey="n"
-        href="./about_reading_annotations.html"><img alt="nächste Seite"
-        src="../../images/right-de.gif" /></a></td>
+        src="../../images/amaya.gif" /></td>
+      <td><a accesskey="t" href="../Annotations.html.de"><img alt="erste Seite"
+        src="../../images/up.gif" /></a> <a accesskey="n"
+        href="./about_reading_annotations.html.de"><img alt="nächste Seite"
+        src="../../images/right.gif" /></a></td>
     </tr>
   </tbody>
 </table>
@@ -46,7 +46,7 @@ verwendet um diese zu beschreiben.</p>
 werden. Wird ein Dokument gebrowst, dann holt Amaya von jedem konfiguriertem
 Server die zu dem Dokument gehörenden Anmerkungen. Zur Zeit werden
 Anmerkungen von Amaya mit dem Icon <img alt="Anmerkungs-Icon"
-src="../../images/annot-de.png" /> im Dokument kenntlich gemacht. Klickt der
+src="../../images/annot.png" /> im Dokument kenntlich gemacht. Klickt der
 Benutzer auf das Icon, dann wird der Text, welcher mit einer Anmerkung
 versehen ist, hervorgeheoben. Wird das Icon doppelt angeklickt, dann wird die
 Anmerkung und deren Metadaten in einem separaten Fenster angezeigt. Folgendes

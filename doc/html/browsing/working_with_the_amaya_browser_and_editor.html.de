@@ -19,10 +19,10 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya-de.gif" /></td>
+        src="../../images/amaya.gif" /></td>
       <td><a href="../Browsing.html.de" accesskey="t"><img alt="erste Seite"
-        src="../../images/up-de.gif" /></a> <a href="opening_documents.html"
-        accesskey="n"><img alt="nächste Seite" src="../../images/right-de.gif"
+        src="../../images/up.gif" /></a> <a href="opening_documents.html.de"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right.gif"
         /></a></td>
     </tr>
   </tbody>
@@ -32,7 +32,7 @@ summary="Inhaltsverzeichnis">
 <h1>Mit Browser und Editor arbeiten</h1>
 
 <p>Mit Amaya kann man lokale und entfernte Dokumente <a
-href="opening_documents.html">öffnen</a> und browsen. Man kann damit aber
+href="opening_documents.html.de">öffnen</a> und browsen. Man kann damit aber
 auch Dokumente erstellen und modifizieren.</p>
 
 <h2>Browsen und Editieren</h2>
@@ -43,19 +43,19 @@ beinhaltet beispielsweise die Knopfleiste von Amaya Knöpfe für
 <strong>Aktualisieren</strong>, <strong>Startseite</strong>,
 <strong>Speichern</strong> und <strong>Drucken</strong>. Beim Browsen gibt es
 aber einen wichtigen Unterschied: ein Verweis wird durch Doppelklick
-aktiviert. Siehe <a href="activating_a_link.html">Einen Verweis
+aktiviert. Siehe <a href="activating_a_link.html.de">Einen Verweis
 aktivieren</a>.</p>
 
 <p>Im Gegensatz zu anderen Browsern stellt Amaya Werkzeuge zum Editieren von
 Web-Seiten zur Verfügung. Folgende Themen stellen eine Auswahl weiterer
 Informationen bereit:</p>
 <ul>
-  <li><a href="../Changing.html">Dokumente editieren</a></li>
-  <li><a href="../Tables.html">Tabellen</a></li>
-  <li><a href="../Math.html">Mathematische Ausdrücke</a></li>
-  <li><a href="../SVG.html">Skalierbare Vektorgrafiken</a></li>
-  <li><a href="../ImageMaps.html">Aktive Bildbereiche</a></li>
-  <li><a href="../Attributes.html">Attribute editieren</a></li>
+  <li><a href="../Changing.html.de">Dokumente editieren</a></li>
+  <li><a href="../Tables.html.de">Tabellen</a></li>
+  <li><a href="../Math.html.de">Mathematische Ausdrücke</a></li>
+  <li><a href="../SVG.html.de">Skalierbare Vektorgrafiken</a></li>
+  <li><a href="../ImageMaps.html.de">Aktive Bildbereiche</a></li>
+  <li><a href="../Attributes.html.de">Attribute editieren</a></li>
 </ul>
 
 <h2>Editormodus und Browsermodus</h2>
@@ -63,15 +63,15 @@ Informationen bereit:</p>
 <p>Per Voreinstellung startet Amaya im Editormodus. In diesem Modus kann man
 das Dokument sowohl editieren als auch browsen.</p>
 
-<p>Die Knopfleiste zeigt den Knopf <img src="../../images/Editor-de.gif"
+<p>Die Knopfleiste zeigt den Knopf <img src="../../images/Editor.gif"
 alt="Knopf Editieren" /> , wenn sich das Fenster im Editiermodus befindet und
-den Knopf <img src="../../images/Browser-de.gif" alt="Browser Button" /> , wenn
+den Knopf <img src="../../images/Browser.gif" alt="Browser Button" /> , wenn
 sich das Fenster im Browsermodus befindet. Im Browsermodus können auch
 Formulare ausgefüllt werden.</p>
 
 <p>Um vom Editormodus in den Browsermodus zu schalten, klickt man auf den
-Knopf <img src="../../images/Editor-de.gif" alt="Knopf Editieren" />. Dieser
-wechselt dann sein Aussehen in <img src="../../images/Browser-de.gif"
+Knopf <img src="../../images/Editor.gif" alt="Knopf Editieren" />. Dieser
+wechselt dann sein Aussehen in <img src="../../images/Browser.gif"
 alt="Knopf Browsen" />. Um wieder in den Editormodus zu gelangen, den Knopf
 erneut anklicken. In diesen Modus gelangt man auch, wenn man im Menü
 <strong>Bearbeiten</strong> den Befehl <strong>Editormodus</strong> wählt
@@ -85,7 +85,7 @@ Man kann die Modi in jedem Fenster unabhängig voneinander setzen</p>
 <p>Amaya liest HTML- und XHTML-Dokumente unterschiedlich:</p>
 <ul>
   <li>Standardmäßig liest Amaya HTML-Dokumente im Zeichensatz <a
-    href="../editing_ISO-Latin-1_characters/entering_ISOLatin1_characters_in_amaya.html">ISO-Latin
+    href="../editing_ISO-Latin-1_characters/entering_ISOLatin1_characters_in_amaya.html.de">ISO-Latin
     (iso-8859-1)</a>. Stellt ein Autor im HTTP Header oder einem Metaelement
     keine Information über den Zeichensatz (charset) bereit, dann nimmt Amaya
     an, dass das Dokument in ISO-Latin (iso-8859-1) kodiert ist.</li>

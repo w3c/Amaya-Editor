@@ -20,11 +20,11 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya-de.gif" /></td>
-      <td><a accesskey="p" href="./replying_to_annotations.html"><img
-        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
-        accesskey="t" href="../Annotations.html"><img alt="erste Seite"
-        src="../../images/up-de.gif" /></a></td>
+        src="../../images/amaya.gif" /></td>
+      <td><a accesskey="p" href="./replying_to_annotations.html.de"><img
+        alt="vorherige Seite" src="../../images/left.gif" /></a> <a
+        accesskey="t" href="../Annotations.html.de"><img alt="erste Seite"
+        src="../../images/up.gif" /></a></td>
     </tr>
   </tbody>
 </table>
@@ -83,7 +83,7 @@ Anmerkung während des Herunterladens von Anmerkungen von einem Server
 erkennt. Alle Waisenkinder werden in der Verweisansicht angezeigt und dort
 mit einem Fragezeichen-Icon, welches dem Anmerkungs-Icon überlagert ist
 gekennzeichnet <img alt="Icon einer verwaisten Anmerkung"
-src="../../images/annotorp-de.png" />.</p>
+src="../../images/annotorp.png" />.</p>
 
 <h2>Irreführende Anmerkungen</h2>
 

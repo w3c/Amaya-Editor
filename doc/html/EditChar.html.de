@@ -17,13 +17,13 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
-        src="../images/amaya-de.gif" /></p>
+        src="../images/amaya.gif" /></p>
       </td>
       <td><a href="Attributes.html.de" accesskey="p"><img alt="vorherige Seite"
-        src="../images/left-de.gif" /></a> <a href="Manual.html"
-        accesskey="t"><img alt="erste Seite" src="../images/up-de.gif" /></a> <a
+        src="../images/left.gif" /></a> <a href="Manual.html.de"
+        accesskey="t"><img alt="erste Seite" src="../images/up.gif" /></a> <a
         href="Changing.html.de" accesskey="n"><img alt="nächste Seite"
-        src="../images/right-de.gif" /></a></td>
+        src="../images/right.gif" /></a></td>
     </tr>
   </tbody>
 </table>
@@ -34,16 +34,16 @@ summary="Inhaltsverzeichnis">
 <p>Folgende Themen werden in diesem Abschnitt behandelt:</p>
 <ul>
   <li><a
-    href="editing_ISO-Latin-1_characters/entering_ISOLatin1_characters_in_amaya.html#page_body"
+    href="editing_ISO-Latin-1_characters/entering_ISOLatin1_characters_in_amaya.html.de#page_body"
     rel="subdocument">Sonderzeichen eingeben</a></li>
   <li><a
-    href="editing_ISO-Latin-1_characters/about_optional_multikey_support.html#page_body"
+    href="editing_ISO-Latin-1_characters/about_optional_multikey_support.html.de#page_body"
     rel="subdocument">Über optionale Mehrfachtasten</a></li>
   <li><a
-    href="editing_ISO-Latin-1_characters/about_standard_multikey_support.html#page_body"
+    href="editing_ISO-Latin-1_characters/about_standard_multikey_support.html.de#page_body"
     rel="subdocument">Über Standardmehrfachtasten</a></li>
   <li><a
-    href="editing_ISO-Latin-1_characters/about_white_space_handling.html#page_body"
+    href="editing_ISO-Latin-1_characters/about_white_space_handling.html.de#page_body"
     rel="subdocument">Über die Behandlung von Leerzeichen (white
   spaces)</a></li>
 </ul>

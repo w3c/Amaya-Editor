@@ -19,13 +19,13 @@ summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya-de.gif" /></td>
-      <td><a accesskey="p" href="./navigating_annotations.html"><img
-        alt="vorherige Seite" src="../../images/left-de.gif" /></a> <a
-        accesskey="t" href="../Annotations.html"><img alt="erste Seite"
-        src="../../images/up-de.gif" /></a> <a accesskey="n"
-        href="./replying_to_annotations.html"><img alt="nächste Seite"
-        src="../../images/right-de.gif" /></a></td>
+        src="../../images/amaya.gif" /></td>
+      <td><a accesskey="p" href="./navigating_annotations.html.de"><img
+        alt="vorherige Seite" src="../../images/left.gif" /></a> <a
+        accesskey="t" href="../Annotations.html.de"><img alt="erste Seite"
+        src="../../images/up.gif" /></a> <a accesskey="n"
+        href="./replying_to_annotations.html.de"><img alt="nächste Seite"
+        src="../../images/right.gif" /></a></td>
     </tr>
   </tbody>
 </table>
@@ -35,9 +35,9 @@ summary="Inhaltsverzeichnis">
 
 <p>Man kann eine Anmerkung an jede beliebige Stelle im selben Dokument
 verschieben. Damit kann man beispielsweise <a
-href="annotation_issues.html">Waisenkinder und fehlgeleitete
+href="annotation_issues.html.de">Waisenkinder und fehlgeleitete
 Anmerkungen</a><a
-href="../saving_and_publishing_documents/annotation_issues.html">
+href="../saving_and_publishing_documents/annotation_issues.html.de">
 </a>behandeln. Man kann eine Anmerkung entweder an eine markierte Stelle im
 Dokument oder an die Stelle, die in einem <span class="Link">XPointer</span>
 gespeichert ist, verschieben. Es ist aber nur möglich Anmerkungen innerhalb
