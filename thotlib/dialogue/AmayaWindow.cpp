@@ -726,7 +726,8 @@ bool AmayaWindow::CheckShortcutKey( wxKeyEvent& event )
     thot_keysym = '=';
 #endif /* _WINDOWS */
 
-  if ( (event.ControlDown() || event.AltDown()) && !IsSpecialKey(thot_keysym))
+  // on windows, CTRL+ALT is equivalent to ALTGR key
+  if ( ((event.ControlDown() && !event.AltDown()) || (event.AltDown() && !event.ControlDown())) && !IsSpecialKey(thot_keysym))
     {     
       // le code suivant permet de convertire les majuscules
       // en minuscules pour les racourcis clavier specifiques a amaya.
@@ -743,8 +744,8 @@ bool AmayaWindow::CheckShortcutKey( wxKeyEvent& event )
 	      thot_keysym = s.GetChar(0);
 	    }
 	}
-      // Call the generic function for key events management
-      ThotInput (GetActiveFrame()->GetFrameId(), (int)thot_keysym, 0, thotMask, (int)thot_keysym);
+       // Call the generic function for key events management
+       ThotInput (GetActiveFrame()->GetFrameId(), (int)thot_keysym, 0, thotMask, (int)thot_keysym);
        return true;
     }
   /* it is now the turn of special key shortcuts : CTRL+RIGHT, CTRL+ENTER ...*/
