@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Wed Sep 11 16:39:05 CEST 2002" version="48">
+<base last_update="Fri Jan 24 10:39:47 CET 2003" version="50">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -654,6 +654,8 @@
 <label define="AM_WARNING_SAVE_OVERWRITE">
 	<message xml:lang="en">Saving will save following images too?</message>
 	<message xml:lang="fr">La sauvegarde sauvera aussi les images suivantes ?</message>
+	<message xml:lang="it">Il salvataggio salverà anche le immagini successive?</message>
+	<message xml:lang="es">¿Guardar también las siguientes imágenes al guardar?</message>
 </label>
 <label define="AM_URL_SAVE_FAILED">
 	<message xml:lang="en">Failed to save to URL</message>
@@ -1617,18 +1619,23 @@
 	<message xml:lang="es">Exportar CR/LF</message>
 	<message xml:lang="pt">Exportar CR/LF</message>
 	<message xml:lang="fi">Vienti CR/LF</message>
+	<message xml:lang="it">Esprotare CR/LF</message>
 </label>
 <label define="AM_BROWSE_MENU">
 	<message xml:lang="en">Browsing Preferences</message>
 	<message xml:lang="fr">Configuration de navigation</message>
 	<message xml:lang="de">Browser</message>
 	<message xml:lang="fi">Selaus asetukset</message>
+	<message xml:lang="it">Preferenze per la visualizzazione</message>
+	<message xml:lang="es">Preferencias de navegación</message>
 </label>
 <label define="AM_LOAD_IMAGES">
 	<message xml:lang="en">Load images</message>
 	<message xml:lang="fr">Charger les images</message>
 	<message xml:lang="de">Bilder laden</message>
 	<message xml:lang="fi">Lataa kuvat</message>
+	<message xml:lang="it">Caricare immagini</message>
+	<message xml:lang="es">Cargar imágenes</message>
 </label>
 <label define="AM_ENABLE_DOUBLECLICK">
 	<message xml:lang="en">Double click activates link</message>
@@ -2547,6 +2554,8 @@
 	<message xml:lang="pt">Documento foi travado com sucesso!</message>
 	<message xml:lang="de">Sperrung erfolgreich</message>
 	<message xml:lang="fi">Lukitus onnistui!</message>
+	<message xml:lang="it">Lock riuscito!</message>
+	<message xml:lang="es">¡Bloqueo conseguido!</message>
 </label>
 <label define="AM_LOCK_FAILED">
 	<message xml:lang="en">Lock failed!</message>
@@ -2554,6 +2563,8 @@
 	<message xml:lang="pt">Documento não pode ser travado com sucesso!</message>
 	<message xml:lang="de">Sperrung fehlgeschlagen</message>
 	<message xml:lang="fi">Lukitus epäonnistui!</message>
+	<message xml:lang="it">Lock fallito!</message>
+	<message xml:lang="es">¡Bloqueo fallido!</message>
 </label>
 <label define="AM_LOCKING">
 	<message xml:lang="en">Locking %s...</message>
@@ -2561,6 +2572,8 @@
 	<message xml:lang="pt">Travando %s...</message>
 	<message xml:lang="de">Sperre %s...</message>
 	<message xml:lang="fi">Lukitaan %s...</message>
+	<message xml:lang="it">Metto il lock su %s...</message>
+	<message xml:lang="es">Bloquear %s...</message>
 </label>
 <label define="AM_LOCKED">
 	<message xml:lang="en">Document %s is locked!</message>
@@ -2568,6 +2581,8 @@
 	<message xml:lang="pt">Documento %s está travado!</message>
 	<message xml:lang="de">Dokument %s ist gesperrt</message>
 	<message xml:lang="fi">Dokumentti %s on lukittu!</message>
+	<message xml:lang="it">Il documento %s ha un lock!</message>
+	<message xml:lang="es">El documento %s bloqueado!</message>
 </label>
 <label define="AM_LOCKED_BY_OTHER">
 	<message xml:lang="en">Document %s is locked by %s (timeout %s)</message>
@@ -2575,6 +2590,8 @@
 	<message xml:lang="pt">Documento %s foi travado por %s (tempo restante %s)</message>
 	<message xml:lang="de">Dokument %s wurde von %s gesperrt (timeout %s)</message>
 	<message xml:lang="fi">Dokumentin %s on lukinnut %s (aikakatkaisu %s)</message>
+	<message xml:lang="it">Il documento %s ha un lock da %s (timeout %s)</message>
+	<message xml:lang="es">El documento %s está bloqueado por % (timeout %s)</message>
 </label>
 <label define="AM_LOCK_OVERWRITE">
 	<message xml:lang="en">Overwrite lock information?</message>
@@ -2582,6 +2599,8 @@
 	<message xml:lang="pt">Sobrepor trava?</message>
 	<message xml:lang="de">Sperrinformation überschreiben?</message>
 	<message xml:lang="fi">Korvataanko lukitustiedot?</message>
+	<message xml:lang="it">Sovrascrivere l'informazione di lock?</message>
+	<message xml:lang="es">¿Sobreescribir información de bloqueo?</message>
 </label>
 <label define="AM_COPY_LOCK">
 	<message xml:lang="en">Copy the lock information? </message>
@@ -2589,6 +2608,8 @@
 	<message xml:lang="pt">Copiar informação da trava? </message>
 	<message xml:lang="de">Sperrinformation kopieren?</message>
 	<message xml:lang="fi">Kopioidaanko lukitustiedot?</message>
+	<message xml:lang="it">Copiare l'informazione di lock?</message>
+	<message xml:lang="es">¿Copiar la información de bloqueo?</message>
 </label>
 <label define="AM_UNLOCK_BEFORE">
 	<message xml:lang="en">Try to unlock the document before...</message>
@@ -2596,6 +2617,8 @@
 	<message xml:lang="pt">Tente destravar o documento...</message>
 	<message xml:lang="de">Versuche Dokument zu entsperren...</message>
 	<message xml:lang="fi">Yritä poistaa lukitus ensin...</message>
+	<message xml:lang="it">Prova a togliere prima il lock dal documento..."</message>
+	<message xml:lang="es">Intenta desbloquear el documento antes...</message>
 </label>
 <label define="AM_UNLOCK_SUCCEED">
 	<message xml:lang="en">Unlock succeed!</message>
@@ -2603,6 +2626,8 @@
 	<message xml:lang="pt">Documento foi destravado com sucesso!</message>
 	<message xml:lang="de">Entsperrung erfolgreich</message>
 	<message xml:lang="fi">Lukituksen poisto onnistui!</message>
+	<message xml:lang="it">Lock tolto!</message>
+	<message xml:lang="es">¡Desbloqueo conseguido!</message>
 </label>
 <label define="AM_UNLOCK_FAILED">
 	<message xml:lang="en">Unlock failed!</message>
@@ -2610,6 +2635,8 @@
 	<message xml:lang="pt">Documento não pode ser destravado com sucesso!</message>
 	<message xml:lang="de">Entsperrung fehlgeschlagen</message>
 	<message xml:lang="fi">Lukituksen poisto epäonnistui!</message>
+	<message xml:lang="it">Lock non tolto!</message>
+	<message xml:lang="es">¡Desbloqueo fallido!</message>
 </label>
 <label define="AM_UNLOCKING">
 	<message xml:lang="en">Unlocking %s...</message>
@@ -2617,6 +2644,8 @@
 	<message xml:lang="pt">Destravando %s...</message>
 	<message xml:lang="de">Entsperre %s...</message>
 	<message xml:lang="fi">Poistetaan lukitus %s...</message>
+	<message xml:lang="it">Tolgo il lock su %s...</message>
+	<message xml:lang="es">Desbloqueado %s...</message>
 </label>
 <label define="AM_UNLOCKED">
 	<message xml:lang="en">Document %s is unlocked!</message>
@@ -2624,6 +2653,8 @@
 	<message xml:lang="pt">Documento %s está destravado!</message>
 	<message xml:lang="de">Dokument ist entsperrt</message>
 	<message xml:lang="fi">Poistettu lukitus dokumentista: %s</message>
+	<message xml:lang="it">Tolto il lock al documento %s!</message>
+	<message xml:lang="es">El documento %s está desbloqueado!</message>
 </label>
 <label define="AM_UNLOCK_DOCUMENT">
 	<message xml:lang="en">Unlock the document? </message>
@@ -2631,6 +2662,8 @@
 	<message xml:lang="pt">Destravar o documento? </message>
 	<message xml:lang="de">Dokument entsperren?</message>
 	<message xml:lang="fi">Poista lukitus dokumentista?</message>
+	<message xml:lang="it">Tolgo il lock al documento?</message>
+	<message xml:lang="es">Desbloquear el documento?</message>
 </label>
 <label define="AM_DAV_PROPERTIES">
 	<message xml:lang="en">Document properties</message>
@@ -2638,6 +2671,8 @@
 	<message xml:lang="pt">Propriedades do documento</message>
 	<message xml:lang="de">Dokumenteigenschaften</message>
 	<message xml:lang="fi">Dokumentin ominaisuudet</message>
+	<message xml:lang="it">Proprietà del documento</message>
+	<message xml:lang="es">Propiedades de documento</message>
 </label>
 <label define="AM_PROPFIND_FAILED">
 	<message xml:lang="en">Document properties are not available</message>
@@ -2645,6 +2680,8 @@
 	<message xml:lang="pt">Propriedades do documento não estão disponíveis</message>
 	<message xml:lang="de">Dokumenteigenschaften nicht verfügbar</message>
 	<message xml:lang="fi">Dokumentin ominaisuuksia ei saatavilla</message>
+	<message xml:lang="it">Le proprietà del documento non sono disponibili</message>
+	<message xml:lang="es">Las propiedades de documento no están disponibles</message>
 </label>
 <label define="AM_PROPFIND_FAILED_TEMP">
 	<message xml:lang="en">Document properties are temporarily unavailable. Try again later...</message>
@@ -2652,6 +2689,8 @@
 	<message xml:lang="pt">Propriedades do documento estão temporariamente indisponíveis. Tente de novo mais tarde...</message>
 	<message xml:lang="de">Dokumenteigenschaften momentan nicht verfügbar. Versuchen Sie es später...</message>
 	<message xml:lang="fi">Dokumentin ominaisuuksia ei ole väliaikaisesti saatavilla. Yritä myöhemmin uudelleen...</message>
+	<message xml:lang="it">Le proprietà del documento non sono al momento disponibili. Riprova più tardi...</message>
+	<message xml:lang="es">Las propiedades de documento no están disponibles temporalmente. Inténtalo de nuevo más tarde...</message>
 </label>
 <label define="AM_FINDING_PROPERTIES">
 	<message xml:lang="en">Looking for document properties...</message>
@@ -2659,6 +2698,8 @@
 	<message xml:lang="pt">Buscando as propriedades do documento...</message>
 	<message xml:lang="de">Suche nach Dokumenteigenschaften...</message>
 	<message xml:lang="fi">Haetaan dokumentin ominaisuuksia...</message>
+	<message xml:lang="it">Cerco le proprietà del documento...</message>
+	<message xml:lang="es">Buscando las propiedades de documento...</message>
 </label>
 <label define="AM_DAV_UNSUPPORTED_PROTOCOL">
 	<message xml:lang="en">Sorry, no WebDAV support for URLs of this type %s</message>
@@ -2666,6 +2707,8 @@
 	<message xml:lang="pt">Lamento, WebDAV não supporta URLs como %s</message>
 	<message xml:lang="de">Keine WebDAV-Unterstützung für URLs vom Typ %s</message>
 	<message xml:lang="fi">Tälle URL:lle ei ole WebDav-tukea %s</message>
+	<message xml:lang="it">Mi spiace, non c'è supporto WebDAV per URL di questo tipo %s</message>
+	<message xml:lang="es">Lo siento, WebDAV no soporta URLs de este tipo %s</message>
 </label>
 <label define="AM_SAVE_LOCKBASE_FAILED">
 	<message xml:lang="en">Failed to save lock info in the local base</message>
@@ -2673,6 +2716,8 @@
 	<message xml:lang="pt">Impossível salvar informação de trava localmente</message>
 	<message xml:lang="de">Konnte Sperrinformation lokal nicht speichern</message>
 	<message xml:lang="fi">Lukitustietojen tallennus paikallisesti epäonnistui</message>
+	<message xml:lang="it">Impossibile salvare le informazioni di lock sulla base locale</message>
+	<message xml:lang="es">Fallo al guardar la información de bloqueo en la base local</message>
 </label>
 <label define="AM_REMOVE_LOCKBASE_FAILED">
 	<message xml:lang="en">Failed to remove lok info from local base</message>
@@ -2680,6 +2725,8 @@
 	<message xml:lang="pt">Impossível remover informação de trava local</message>
 	<message xml:lang="de">Konnte Sperrinformation lokal nicht entfernen</message>
 	<message xml:lang="fi">Lukitustietojen poisto paikallisesti epäonnistui</message>
+	<message xml:lang="it">Impossibile togliere le informazioni di lock dalla base locale</message>
+	<message xml:lang="es">Fallo al eliminar la información de bloqueo en la base local</message>
 </label>
 <label define="AM_DAV_NOT_ALLOWED">
 	<message xml:lang="en">Sorry, this operation is not allowed for %s</message>
@@ -2687,6 +2734,8 @@
 	<message xml:lang="pt">Lamento, esta operação não é permitida para %s</message>
 	<message xml:lang="de">Operation nicht erlaubt für %s</message>
 	<message xml:lang="fi">Tämä toiminto ei ole käytettävissä %s</message>
+	<message xml:lang="it">Mi spiace, questa operazione non è permessa per %s</message>
+	<message xml:lang="es">Lo siento, no está permitida esta operación parar %s</message>
 </label>
 <label define="AM_FAILED_DEPENDENCY">
 	<message xml:lang="en">Request failed! Reason: Failed Dependency</message>
@@ -2694,6 +2743,8 @@
 	<message xml:lang="pt">Operação falhou! Causa: Falha de dependência</message>
 	<message xml:lang="de">Anforderung fehlgeschlagen: keine Abhängigkeit</message>
 	<message xml:lang="fi">Pyyntö epäonnistui! Syy: Viallinen riippuvuus</message>
+	<message xml:lang="it">Richiesta fallita! Motivo: Dipendenza non riuscita</message>
+	<message xml:lang="es">¡Solicitud suspendida! Razón: Dependencia suspendida</message>
 </label>
 <label define="AM_MULTI_STATUS_FAIL">
 	<message xml:lang="en">Request failed! Reason: %s</message>
@@ -2701,6 +2752,8 @@
 	<message xml:lang="pt">Operaçã falhou! Causa: %s</message>
 	<message xml:lang="de">Anforderung fehlgeschlagen: %s</message>
 	<message xml:lang="fi">Pyyntö epäonnistui! Syy: %s</message>
+	<message xml:lang="it">Richiesta fallita! Motivo: %s</message>
+	<message xml:lang="es">¡Solicitud suspendida! Razón: %s</message>
 </label>
 <label define="AM_DAV_TRY_AGAIN">
 	<message xml:lang="en">Try again? </message>
@@ -2708,6 +2761,8 @@
 	<message xml:lang="pt">Tentar de novo? </message>
 	<message xml:lang="de">Erneut versuchen?</message>
 	<message xml:lang="fi">Yritä uudelleen?</message>
+	<message xml:lang="it">Riprovo?</message>
+	<message xml:lang="es">¿Otro intento?</message>
 </label>
 <label define="AM_DAV_PREFERENCES">
 	<message xml:lang="en">WebDAV Preferences</message>
@@ -2715,6 +2770,8 @@
 	<message xml:lang="pt">Preferências WebDAV</message>
 	<message xml:lang="de">WebDAV Einstellungen</message>
 	<message xml:lang="fi">WebDAV asetukset</message>
+	<message xml:lang="it">Preferenze WebDAV</message>
+	<message xml:lang="es">Preferencias WebDAV</message>
 </label>
 <label define="AM_DAV_USER_URL">
 	<message xml:lang="en">User's Personal Reference (URL)</message>
@@ -2722,6 +2779,8 @@
 	<message xml:lang="pt">Referência Pessoal do Usuário (URL)</message>
 	<message xml:lang="de">Persönliche Benutzerreferenzen (URL)</message>
 	<message xml:lang="fi">Käyttäjän henkilökohtainen linkki (URL)</message>
+	<message xml:lang="it">Riferimento personale utente (URL)</message>
+	<message xml:lang="es">Referencia Personal del Usuario (URL)</message>
 </label>
 <label define="AM_DAV_USER_RESOURCES">
 	<message xml:lang="en">User's WebDAV Resource List (URL URL)</message>
@@ -2729,6 +2788,8 @@
 	<message xml:lang="pt">Lista de Recursos WebDAV do Usuário (URL URL)</message>
 	<message xml:lang="de">WebDAV Resourcenliste des Benutzers (URL)</message>
 	<message xml:lang="fi">Käyttäjän WebDAV resurssi luettelo (URL URL)</message>
+	<message xml:lang="it">Resource List WebDAV per l'utente(URL URL)</message>
+	<message xml:lang="es">Lista de Recursos WebDAV del Usuario</message>
 </label>
 <label define="AM_DAV_DEPTH">
 	<message xml:lang="en">Lock Depth</message>
@@ -2736,6 +2797,8 @@
 	<message xml:lang="pt">Profundidade da Trava</message>
 	<message xml:lang="de">Sperrtiefe</message>
 	<message xml:lang="fi">Lukituksen syvyys</message>
+	<message xml:lang="it">Profondità lock</message>
+	<message xml:lang="es">Profundidad de bloqueo</message>
 </label>
 <label define="AM_DAV_DEPTH_INFINITY">
 	<message xml:lang="en">infinity</message>
@@ -2743,6 +2806,8 @@
 	<message xml:lang="pt">infinita</message>
 	<message xml:lang="de">Unendlich</message>
 	<message xml:lang="fi">rajattomuus</message>
+	<message xml:lang="it">infinito</message>
+	<message xml:lang="es">Infinito</message>
 </label>
 <label define="AM_DAV_TIMEOUT">
 	<message xml:lang="en">Lock Timeout</message>
@@ -2750,6 +2815,8 @@
 	<message xml:lang="pt">Duração da Trava</message>
 	<message xml:lang="de">Sperrzeitüberschreitung</message>
 	<message xml:lang="fi">Lukituksen aikakatkaisu</message>
+	<message xml:lang="it">Timeout per il lock</message>
+	<message xml:lang="es">Bloqueo terminado</message>
 </label>
 <label define="AM_DAV_TIMEOUT_INFINITE">
 	<message xml:lang="en">Infinite</message>
@@ -2757,6 +2824,8 @@
 	<message xml:lang="pt">Infinito</message>
 	<message xml:lang="de">Unendlich</message>
 	<message xml:lang="fi">Rajaton</message>
+	<message xml:lang="it">Infinito</message>
+	<message xml:lang="es">Infinito</message>
 </label>
 <label define="AM_DAV_TIMEOUT_OTHER">
 	<message xml:lang="en">Other</message>
@@ -2764,6 +2833,8 @@
 	<message xml:lang="pt">Outro</message>
 	<message xml:lang="de">Andere</message>
 	<message xml:lang="fi">Muu</message>
+	<message xml:lang="it">Altro</message>
+	<message xml:lang="es">Otro</message>
 </label>
 <label define="AM_DAV_TIMEOUT_SECONDS">
 	<message xml:lang="en">Seconds</message>
@@ -2771,6 +2842,8 @@
 	<message xml:lang="pt">Segundos</message>
 	<message xml:lang="de">Sekunden</message>
 	<message xml:lang="fi">Sekuntia</message>
+	<message xml:lang="it">Secondi</message>
+	<message xml:lang="es">Segundos</message>
 </label>
 <label define="AM_DAV_LOCKSCOPE">
 	<message xml:lang="en">Lock Scope</message>
@@ -2778,6 +2851,8 @@
 	<message xml:lang="pt">Escopo da Trava</message>
 	<message xml:lang="de">Sperrbereich</message>
 	<message xml:lang="fi">Lukitse ala</message>
+	<message xml:lang="it">Scopo per il lock</message>
+	<message xml:lang="es">Alcance del bloqueo</message>
 </label>
 <label define="AM_DAV_LOCKSCOPE_EXCLUSIVE">
 	<message xml:lang="en">exclusive</message>
@@ -2785,6 +2860,8 @@
 	<message xml:lang="pt">exclusivo</message>
 	<message xml:lang="de">Exklusiv</message>
 	<message xml:lang="fi">yksinomainen</message>
+	<message xml:lang="it">esclusivo</message>
+	<message xml:lang="es">exclusivo</message>
 </label>
 <label define="AM_DAV_LOCKSCOPE_SHARED">
 	<message xml:lang="en">shared</message>
@@ -2792,6 +2869,8 @@
 	<message xml:lang="pt">compartilhado</message>
 	<message xml:lang="de">Gemeinsam</message>
 	<message xml:lang="fi">jaettu</message>
+	<message xml:lang="it">condiviso</message>
+	<message xml:lang="es">compartido</message>
 </label>
 <label define="AM_DAV_AWARENESS">
 	<message xml:lang="en">Awarenees</message>
@@ -2799,6 +2878,8 @@
 	<message xml:lang="pt">Percepção</message>
 	<message xml:lang="de">Benachrichtigung</message>
 	<message xml:lang="fi">Valvetila</message>
+	<message xml:lang="it">Awarenees</message>
+	<message xml:lang="es">Conocimiento</message>
 </label>
 <label define="AM_DAV_AWARENESS_GENERAL">
 	<message xml:lang="en">General awareness</message>
@@ -2806,6 +2887,8 @@
 	<message xml:lang="pt">Percepção geral</message>
 	<message xml:lang="de">Immer benachrichtigen</message>
 	<message xml:lang="fi">Yleinen valvetila</message>
+	<message xml:lang="it">General awareness</message>
+	<message xml:lang="es">Conocimiento general</message>
 </label>
 <label define="AM_DAV_AWARENESS_ONEXIT">
 	<message xml:lang="en">Awareness on exit</message>
@@ -2813,138 +2896,184 @@
 	<message xml:lang="pt">Percepção ao sair</message>
 	<message xml:lang="de">Am Ende benachrichtigen</message>
 	<message xml:lang="fi">Valvetila poistuttaessa</message>
+	<message xml:lang="it">Awareness on exit</message>
+	<message xml:lang="es">Conocimiento al salir</message>
 </label>
 <label define="AM_BUTTON_ANIM">
 	<message xml:lang="en">Timeline</message>
 	<message xml:lang="fr">Ligne de temps</message>
 	<message xml:lang="de">Zeitliche Reihenfolge</message>
 	<message xml:lang="fi">Aikajana</message>
+	<message xml:lang="it">Timeline</message>
+	<message xml:lang="es">Planificación</message>
 </label>
 <label define="AM_BUTTON_SVG_LIBRARY">
 	<message xml:lang="en">SVG Library</message>
 	<message xml:lang="fr">Bibliotheque SVG</message>
 	<message xml:lang="de">SVG Bibliothek</message>
 	<message xml:lang="fi">SVG Kirjasto</message>
+	<message xml:lang="it">Libreria SVG</message>
+	<message xml:lang="es">Librería SVG</message>
 </label>
 <label define="AM_SVGLIB_DIALOG1">
 	<message xml:lang="en">Copy option</message>
 	<message xml:lang="fr">Option de copie</message>
 	<message xml:lang="de">Option kopieren</message>
 	<message xml:lang="fi">Kopioi vaihtoehto</message>
+	<message xml:lang="it">Opzione di copia</message>
+	<message xml:lang="es">Opción Copiar</message>
 </label>
 <label define="AM_SVGLIB_COPY_SELECTION">
 	<message xml:lang="en">Copy selection</message>
 	<message xml:lang="fr">Copier</message>
 	<message xml:lang="de">Markierung kopieren</message>
 	<message xml:lang="fi">Kopioi valinta</message>
+	<message xml:lang="it">Copia la selezione</message>
+	<message xml:lang="es">Selección Copiar</message>
 </label>
 <label define="AM_SVGLIB_REF_SELECTION">
 	<message xml:lang="en">Refer to selection</message>
 	<message xml:lang="fr">Réferencer</message>
 	<message xml:lang="de">Auf Markierung beziehen</message>
 	<message xml:lang="fi">Viittaa valintaan</message>
+	<message xml:lang="it">Riferisciti alla selezione</message>
+	<message xml:lang="es">Remitir a selección</message>
 </label>
 <label define="AM_SVGLIB_ADD_SVG_MODEL_DIALOG">
 	<message xml:lang="en">Add new model into library</message>
 	<message xml:lang="fr">Ajouter un modèle dans la librairie</message>
 	<message xml:lang="de">Neues Modell zu Bibliothek hinzufügen</message>
 	<message xml:lang="fi">Lisää uusi malli kirjastoon</message>
+	<message xml:lang="it">Aggiungi un nuovo modello alla libreria</message>
+	<message xml:lang="es">Añadir nuevo modelo a la librería</message>
 </label>
 <label define="AM_SVGLIB_CREATE_NEW_SVG_FILE">
 	<message xml:lang="en">URL of the new SVG file ...</message>
 	<message xml:lang="fr">URL du nouveau fichier SVG ...</message>
 	<message xml:lang="de">URL der neuen SVG-Datei ...</message>
 	<message xml:lang="fi">Uuden SVG-tiedoston URL...</message>
+	<message xml:lang="it">URL del nuovo file SVG ...</message>
+	<message xml:lang="es">URL del nuevo archivo SVG...</message>
 </label>
 <label define="AM_SVGLIB_CATALOGUE_TITLE">
 	<message xml:lang="en">Library title</message>
 	<message xml:lang="fr">Titre de la librairie</message>
 	<message xml:lang="de">Titel der Bibliothek</message>
 	<message xml:lang="fi">Kirjaston nimi</message>
+	<message xml:lang="it">Titolo della libreria</message>
+	<message xml:lang="es">Título de la librería</message>
 </label>
 <label define="AM_SVGLIB_CATALOGUE_URL">
 	<message xml:lang="en">Library URL</message>
 	<message xml:lang="fr">URL de la librairie</message>
 	<message xml:lang="de">URL der Bibliothek</message>
 	<message xml:lang="fi">Kirjaston URL</message>
+	<message xml:lang="it">URL per la libreria</message>
+	<message xml:lang="es">URL de la librería</message>
 </label>
 <label define="AM_SVGLIB_CREATE_NEW_CATALOGUE">
 	<message xml:lang="en">Create library</message>
 	<message xml:lang="fr">Créer une librairie</message>
 	<message xml:lang="de">Bibliothek erzeugen</message>
 	<message xml:lang="fi">Luo kirjasto</message>
+	<message xml:lang="it">Crea libreria</message>
+	<message xml:lang="es">Crear librería</message>
 </label>
 <label define="AM_SVGLIB_ADD_NEW_CATALOGUE">
 	<message xml:lang="en">Browse library</message>
 	<message xml:lang="fr">Butiner librairies</message>
 	<message xml:lang="de">Bibliothek durchsuchen</message>
 	<message xml:lang="fi">Selaa kirjastoa</message>
+	<message xml:lang="it">Scorri la libreria</message>
+	<message xml:lang="es">Ojear la librería</message>
 </label>
 <label define="AM_SVGLIB_CREATE_NEW_CATALOGUE_DIALOG">
 	<message xml:lang="en">Create or search library</message>
 	<message xml:lang="fr">Créer ou chercher une librairie</message>
 	<message xml:lang="de">Bibliothek erzeugen oder suchen</message>
 	<message xml:lang="fi">Luo tai etsi kirjasto</message>
+	<message xml:lang="it">Crea o cerca libreria</message>
+	<message xml:lang="es">Crear o buscar en la librería</message>
 </label>
 <label define="AM_SVGLIB_NO_SVG_SELECTION">
 	<message xml:lang="en">The current selection not contain only SVG elements. Please reselect</message>
 	<message xml:lang="fr">La sélection courante contient des éléments non SVG. Effectuer une autre sélection SVP</message>
 	<message xml:lang="de">Die Markierung enthält nicht nur SVG-Elemente. Bitte neu markieren</message>
 	<message xml:lang="fi">Nykyinen valinta ei sisällä pelkästään SVG elementtejä. Valitse uudelleen.</message>
+	<message xml:lang="it">La selezione corrente non contiene solo elementi SVG. Per favore riseleziona.</message>
+	<message xml:lang="es">La selección actual no contiene sólo elementos SVG. Por favor, vuelve a seleccionar</message>
 </label>
 <label define="AM_SVGLIB_MISSING_TITLE">
 	<message xml:lang="en">The library title is mandatory</message>
 	<message xml:lang="fr">Le titre de la librairie est obligatoire</message>
 	<message xml:lang="de">Der Titel der Bibliothek muss angegeben werden</message>
 	<message xml:lang="fi">Kirjaston otsikko on pakollinen</message>
+	<message xml:lang="it">Il titolo della libreria è obbligatorio</message>
+	<message xml:lang="es">El título de la librería es obligatorio</message>
 </label>
 <label define="AM_SVGANIM_MOTION_HINT1">
 	<message xml:lang="en">Move the position cursor in edited document to define a new key position...</message>
 	<message xml:lang="fr">Déplacer le curseur de position dans le document édité pour définir une nouvelle position clé...</message>
 	<message xml:lang="de">Den Cursor an die neue Schlüsselposition bewegen...</message>
 	<message xml:lang="fi">Siirrä kursoria dokumentissa määrittääksesi uuden avainkohdan...</message>
+	<message xml:lang="it">Muovi il cursore nel documento editato per definire la nuova posizione chiave...</message>
+	<message xml:lang="es">Mover la posición del cursor en el documento editado para definir una nueva posición clave...</message>
 </label>
 <label define="AM_SVGANIM_MOTION_HINT2">
 	<message xml:lang="en">Key position defined. Move the slider to define animation duration...</message>
 	<message xml:lang="fr">Position clé définie. Déplacer le curseur de temps pour définir la durée de l'animation...</message>
 	<message xml:lang="de">Schlüsselposition definiert. Schieber bewegen um die Dauer der Animation festzulegen...</message>
 	<message xml:lang="fi">Avainkohta määritelty. Siirrä liukukytkintä määrittääksesi animaation keston...</message>
+	<message xml:lang="it">Posizione chiave definta. Sposta il cursore per definire la durata dell'animazione...</message>
+	<message xml:lang="es">Posición clave definida. Mover el calculador para definir la duración de la animación...</message>
 </label>
 <label define="AM_SVGANIM_COLOR_HINT1">
 	<message xml:lang="en">Select starting color of element...</message>
 	<message xml:lang="fr">Sélectionner la couleur de départ de l'élément...</message>
 	<message xml:lang="de">Anfangsfarbe des Elements wählen...</message>
 	<message xml:lang="fi">Valitse elementin alkuväri...</message>
+	<message xml:lang="it">Scegli il colore iniziale dell'elemento...</message>
+	<message xml:lang="es">Seleccionar el color de comienzo del elemento...</message>
 </label>
 <label define="AM_SVGANIM_COLOR_HINT2">
 	<message xml:lang="en">Starting color defined. Move the slider to define animation duration...</message>
 	<message xml:lang="fr">Couleur de départ définie. Déplacer le curseur de temps pour définir la durée de l'animation...</message>
 	<message xml:lang="de">Anfangsfarbe definiert. Schieber bewegen um die Dauer der Animation festzulegen...</message>
 	<message xml:lang="fi">Alkuväri määritelty. Siirrä liukukytkintä määrittääksesi animaation keston...</message>
+	<message xml:lang="it">Colore iniziale definito. Sposta il cursore per definire la durata dell'animazione...</message>
+	<message xml:lang="es">Color de comienzo definido. Mover el calculador para definir la duración de la animación...</message>
 </label>
 <label define="AM_SVGANIM_COLOR_HINT3">
 	<message xml:lang="en">Select ending color...</message>
 	<message xml:lang="fr">Sélectionner la couleur de fin...</message>
 	<message xml:lang="de">Endfarbe wählen...</message>
 	<message xml:lang="fi">Valitse loppuväri...</message>
+	<message xml:lang="it">Scegli il colore finale...</message>
+	<message xml:lang="es">Selección color final...</message>
 </label>
 <label define="AM_SVGANIM_ANIM_DEFINED">
 	<message xml:lang="en">Animation defined.</message>
 	<message xml:lang="fr">Animation définie.</message>
 	<message xml:lang="de">Animation definiert.</message>
 	<message xml:lang="fi">Animaatio määritelty</message>
+	<message xml:lang="it">Animazione definita.</message>
+	<message xml:lang="es">Animación definida.</message>
 </label>
 <label define="AM_SVGANIM_ANIMATED_ATTR">
 	<message xml:lang="en">Animated attribute</message>
 	<message xml:lang="fr">Attribut animé</message>
 	<message xml:lang="de">Animiertes Attribut</message>
 	<message xml:lang="fi">Animoitu määrittely</message>
+	<message xml:lang="it">Attributo animato</message>
+	<message xml:lang="es">Atributo animado</message>
 </label>
 <label define="AM_SVGANIM_NO_ID">
 	<message xml:lang="en">Element without id</message>
 	<message xml:lang="fr">Elément sans identificateur</message>
 	<message xml:lang="de">Element ohne id</message>
 	<message xml:lang="fi">Elementti ilman tunnusta</message>
+	<message xml:lang="it">Elemento senza ID</message>
+	<message xml:lang="es">Elemento sin id</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

@@ -1006,7 +1006,7 @@ static void FoundHyphenPoints (Language langId, char wordToCut[THOT_MAX_CHAR])
   returns a pointer on the list of values representing the hyphen points
   or NULL 
   ----------------------------------------------------------------------*/
-int *TtaGetPatternHyphenList (char word[THOT_MAX_CHAR], Language languageId)
+int *TtaGetPatternHyphenList (char *word, Language languageId)
 {
    int                 language;
    int                 i;
@@ -1030,7 +1030,6 @@ int *TtaGetPatternHyphenList (char word[THOT_MAX_CHAR], Language languageId)
 
    FoundHyphenPoints (languageId, word);
    return (breakPoints);
-
 }
 
 /*----------------------------------------------------------------------

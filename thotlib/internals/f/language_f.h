@@ -30,7 +30,7 @@ extern char *TtaGetLanguageCode ( Language languageId );
 extern int TtaGetNumberOfLanguages ( void );
 extern int TtaGetFirstUserLanguage ( void );
 extern ThotBool GetPatternList ( Language langId );
-extern int *TtaGetPatternHyphenList ( char word[THOT_MAX_CHAR],
+extern int *TtaGetPatternHyphenList ( char *word,
                                       Language languageId );
 extern ThotBool TtaExistPatternList ( Language languageId );
 
@@ -60,7 +60,7 @@ extern char *TtaGetLanguageCode (/* Language languageId */);
 extern int TtaGetNumberOfLanguages (/* void */);
 extern int TtaGetFirstUserLanguage (/* void */);
 extern ThotBool GetPatternList (/* Language langId */);
-extern int *TtaGetPatternHyphenList (/* char word[THOT_MAX_CHAR],
+extern int *TtaGetPatternHyphenList (/* char *word,
                                         Language languageId */);
 extern ThotBool TtaExistPatternList (/* Language languageId */);
 

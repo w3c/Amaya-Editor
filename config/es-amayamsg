@@ -64,7 +64,7 @@
 62 Imagen de fondo
 63 Imagen de fondo no permitida aquí
 64 CSS
-65 **Saving will save following images too?
+65 ¿Guardar también las siguientes imágenes al guardar?
 66 Fallo al guardar en URL
 67 ¿Guardar en disco?
 68 Copiar Imágenes
@@ -165,8 +165,8 @@
 163 Activar combinación de teclas (`+a=à)
 164 Mostrar imágenes de fondo
 165 Exportar CR/LF
-166 **Browsing Preferences
-167 **Load images
+166 Preferencias de navegación
+167 Cargar imágenes
 168 Doble clic activa enlaces
 169 Preferencias de publicación
 170 Usar ETAGS y precondiciones
@@ -268,64 +268,64 @@
 266 Crear o cambiar el tipo de documento provoca que el documento sea reanalizado.
 267 No se desharán las modificaciones pendientes.
 268 Para documentos XHTML utilice el tipo MIME de la aplicación xhtml+xml
-269 **Lock succeed!
-270 **Lock failed!
-271 **Locking %s...
-272 **Document %s is locked!
-273 **Document %s is locked by %s (timeout %s)
-274 **Overwrite lock information?
-275 **Copy the lock information? 
-276 **Try to unlock the document before...
-277 **Unlock succeed!
-278 **Unlock failed!
-279 **Unlocking %s...
-280 **Document %s is unlocked!
-281 **Unlock the document? 
-282 **Document properties
-283 **Document properties are not available
-284 **Document properties are temporarily unavailable. Try again later...
-285 **Looking for document properties...
-286 **Sorry, no WebDAV support for URLs of this type %s
-287 **Failed to save lock info in the local base
-288 **Failed to remove lok info from local base
-289 **Sorry, this operation is not allowed for %s
-290 **Request failed! Reason: Failed Dependency
-291 **Request failed! Reason: %s
-292 **Try again? 
-293 **WebDAV Preferences
-294 **User's Personal Reference (URL)
-295 **User's WebDAV Resource List (URL URL)
-296 **Lock Depth
-297 **infinity
-298 **Lock Timeout
-299 **Infinite
-300 **Other
-301 **Seconds
-302 **Lock Scope
-303 **exclusive
-304 **shared
-305 **Awarenees
-306 **General awareness
-307 **Awareness on exit
-308 **Timeline
-309 **SVG Library
-310 **Copy option
-311 **Copy selection
-312 **Refer to selection
-313 **Add new model into library
-314 **URL of the new SVG file ...
-315 **Library title
-316 **Library URL
-317 **Create library
-318 **Browse library
-319 **Create or search library
-320 **The current selection not contain only SVG elements. Please reselect
-321 **The library title is mandatory
-322 **Move the position cursor in edited document to define a new key position...
-323 **Key position defined. Move the slider to define animation duration...
-324 **Select starting color of element...
-325 **Starting color defined. Move the slider to define animation duration...
-326 **Select ending color...
-327 **Animation defined.
-328 **Animated attribute
-329 **Element without id
+269 ¡Bloqueo conseguido!
+270 ¡Bloqueo fallido!
+271 Bloquear %s...
+272 El documento %s bloqueado!
+273 El documento %s está bloqueado por % (timeout %s)
+274 ¿Sobreescribir información de bloqueo?
+275 ¿Copiar la información de bloqueo?
+276 Intenta desbloquear el documento antes...
+277 ¡Desbloqueo conseguido!
+278 ¡Desbloqueo fallido!
+279 Desbloqueado %s...
+280 El documento %s está desbloqueado!
+281 Desbloquear el documento?
+282 Propiedades de documento
+283 Las propiedades de documento no están disponibles
+284 Las propiedades de documento no están disponibles temporalmente. Inténtalo de nuevo más tarde...
+285 Buscando las propiedades de documento...
+286 Lo siento, WebDAV no soporta URLs de este tipo %s
+287 Fallo al guardar la información de bloqueo en la base local
+288 Fallo al eliminar la información de bloqueo en la base local
+289 Lo siento, no está permitida esta operación parar %s
+290 ¡Solicitud suspendida! Razón: Dependencia suspendida
+291 ¡Solicitud suspendida! Razón: %s
+292 ¿Otro intento?
+293 Preferencias WebDAV
+294 Referencia Personal del Usuario (URL)
+295 Lista de Recursos WebDAV del Usuario
+296 Profundidad de bloqueo
+297 Infinito
+298 Bloqueo terminado
+299 Infinito
+300 Otro
+301 Segundos
+302 Alcance del bloqueo
+303 exclusivo
+304 compartido
+305 Conocimiento
+306 Conocimiento general
+307 Conocimiento al salir
+308 Planificación
+309 Librería SVG
+310 Opción Copiar
+311 Selección Copiar
+312 Remitir a selección
+313 Añadir nuevo modelo a la librería
+314 URL del nuevo archivo SVG...
+315 Título de la librería
+316 URL de la librería
+317 Crear librería
+318 Ojear la librería
+319 Crear o buscar en la librería
+320 La selección actual no contiene sólo elementos SVG. Por favor, vuelve a seleccionar
+321 El título de la librería es obligatorio
+322 Mover la posición del cursor en el documento editado para definir una nueva posición clave...
+323 Posición clave definida. Mover el calculador para definir la duración de la animación...
+324 Seleccionar el color de comienzo del elemento...
+325 Color de comienzo definido. Mover el calculador para definir la duración de la animación...
+326 Selección color final...
+327 Animación definida.
+328 Atributo animado
+329 Elemento sin id
