@@ -37,7 +37,6 @@
   ----------------------------------------------------------------------*/
 void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
 {
-  PtrTextBuffer       pBuffer;
   PictInfo           *imageDesc = NULL;
   char               *ptr = NULL;
   PictureScaling      picPresent;
