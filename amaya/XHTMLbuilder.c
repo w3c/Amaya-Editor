@@ -164,9 +164,10 @@ ThotBool      XhtmlCannotContainText (ElementType elType)
   Complete Xhtml elements.
   Check its attributes and its contents.
   ----------------------------------------------------------------------*/
-void       XhtmlElementComplete (Element el, Document doc, int *error)
+void       XhtmlElementComplete (ParserData *context, Element el, int *error)
 
 {
+   Document       doc;   
    ElementType    elType, newElType, childType;
    Element        constElem, child, desc, leaf, prev, next, last,
 	          elFrames, lastFrame, lastChild, parent, picture, content;
@@ -183,6 +184,7 @@ void       XhtmlElementComplete (Element el, Document doc, int *error)
    PresentationContext  ctxt;
 
    *error = 0;
+   doc = context->doc;
    docSSchema = TtaGetDocumentSSchema (doc);
 
    elType = TtaGetElementType (el);

@@ -9,8 +9,8 @@
 extern void ParseCharset ( Element el,
                            Document doc );
 extern ThotBool XhtmlCannotContainText ( ElementType elType );
-extern void XhtmlElementComplete ( Element el,
-                                   Document doc,
+extern void XhtmlElementComplete ( ParserData *context,
+                                   Element el,
                                    int *error );
 extern Element PutInContent ( char *ChrString,
                               ParserData *context );
@@ -59,8 +59,8 @@ extern void MapHTMLAttributeValue ( char *attVal,
 extern void ParseCharset (/* Element el,
                              Document doc */);
 extern ThotBool XhtmlCannotContainText (/* ElementType elType */);
-extern void XhtmlElementComplete (/* Element el,
-                                     Document doc,
+extern void XhtmlElementComplete (/* ParserData *context,
+                                     Element el,
                                      int *error */);
 extern Element PutInContent (/* char *ChrString,
                                 ParserData *context */);

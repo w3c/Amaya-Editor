@@ -2090,8 +2090,9 @@ static void SetScriptShift (Element el, Document doc, int att)
    MathMLElementComplete
    Check the Thot structure of the MathML element el.
   ----------------------------------------------------------------------*/
-void      MathMLElementComplete (Element el, Document doc, int *error)
+void      MathMLElementComplete (ParserData *context, Element el, int *error)
 {
+   Document             doc;   
    ElementType		elType, parentType;
    Element		child, parent, new, prev, next;
    AttributeType        attrType;
@@ -2101,6 +2102,7 @@ void      MathMLElementComplete (Element el, Document doc, int *error)
 
    ok = TRUE;
    *error = 0;
+   doc = context->doc;
    elType = TtaGetElementType (el);
    MathMLSSchema = GetMathMLSSchema (doc);
 

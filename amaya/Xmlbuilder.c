@@ -109,11 +109,13 @@ void MapGenericXmlAttribute (char *attrName, AttributeType *attrType,
   Complete XML elements.
   Check its attributes and its contents.
   ----------------------------------------------------------------------*/
-void XmlElementComplete (Element el, Document doc, int *error)
+void XmlElementComplete (ParserData *context, Element el, int *error)
 
 {
+  Document  doc;   
   Element   lastChild;
 
+  doc = context->doc;
   if (el && doc)
     {
       /* get the last child of the closed element */

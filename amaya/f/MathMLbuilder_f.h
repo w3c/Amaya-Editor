@@ -43,8 +43,8 @@ extern void MathMLScriptShift ( Document doc,
                                 Element el,
                                 char *value,
                                 int attr );
-extern void MathMLElementComplete ( Element el,
-                                    Document doc,
+extern void MathMLElementComplete ( ParserData *context,
+                                    Element el,
                                     int *error );
 extern void UnknownMathMLNameSpace ( ParserData *context,
                                      Element *unknownEl,
@@ -115,8 +115,8 @@ extern void MathMLScriptShift (/* Document doc,
                                   Element el,
                                   char *value,
                                   int attr */);
-extern void MathMLElementComplete (/* Element el,
-                                      Document doc,
+extern void MathMLElementComplete (/* ParserData *context,
+                                      Element el,
                                       int *error */);
 extern void UnknownMathMLNameSpace (/* ParserData *context,
                                        Element *unknownEl,

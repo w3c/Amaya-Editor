@@ -39,8 +39,8 @@ extern void SetTextAnchor ( Attribute attr,
                             Element el,
                             Document doc,
                             ThotBool delete );
-extern void SVGElementComplete ( Element el,
-                                 Document doc,
+extern void SVGElementComplete ( ParserData *context,
+                                 Element el,
                                  int *error );
 extern void UnknownSVGNameSpace ( ParserData *context,
                                   Element *unknownEl,
@@ -71,9 +71,9 @@ extern ThotBool ParseWidthHeightAttribute ( Attribute attr,
                                             Document doc,
                                             ThotBool delete );
 extern void ParseBaselineShiftAttribute ( Attribute attr,
-					  Element el,
-					  Document doc,
-					  ThotBool delete );
+                                          Element el,
+                                          Document doc,
+                                          ThotBool delete );
 extern void ParsePointsAttribute ( Attribute attr,
                                    Element el,
                                    Document doc );
@@ -123,8 +123,8 @@ extern void SetTextAnchor (/* Attribute attr,
                               Element el,
                               Document doc,
                               ThotBool delete */);
-extern void SVGElementComplete (/* Element el,
-                                   Document doc,
+extern void SVGElementComplete (/* ParserData *context,
+                                   Element el,
                                    int *error */);
 extern void UnknownSVGNameSpace (/* ParserData *context,
                                     Element *unknownEl,
@@ -155,9 +155,9 @@ extern ThotBool ParseWidthHeightAttribute (/* Attribute attr,
                                               Document doc,
                                               ThotBool delete */);
 extern void ParseBaselineShiftAttribute (/* Attribute attr,
-					    Element el,
-					    Document doc,
-					    ThotBool delete */);
+                                            Element el,
+                                            Document doc,
+                                            ThotBool delete */);
 extern void ParsePointsAttribute (/* Attribute attr,
                                      Element el,
                                      Document doc */);

@@ -59,7 +59,7 @@
 static XML_Parser  Parser = NULL;
 
 /* global data used by the HTML parser */
-static ParserData  XMLcontext = {0, UTF_8, 0, NULL, 0, FALSE, FALSE, FALSE, FALSE, FALSE};
+static ParserData  XMLcontext = {0, 0, UTF_8, 0, NULL, 0, FALSE, FALSE, FALSE, FALSE, FALSE};
 
 /* a parser context. It describes the specific actions to be executed
 when parsing an XML document fragment according to a given DTD */
@@ -1248,7 +1248,8 @@ static ThotBool     XmlCloseElement (char *mappedName)
 	       /* Remove the trailing spaces of that element */
 	       RemoveTrailingSpaces (el);
 
-	       (*(currentParserCtxt->ElementComplete)) (el, XMLcontext.doc, &error);
+	       (*(currentParserCtxt->ElementComplete))
+		 (&XMLcontext, el, &error);
 
 	       if (el == XMLcontext.lastElement)
 		 el = NULL;
@@ -3424,7 +3425,7 @@ static void      CreateXmlComment (char *commentValue)
 	      ptr = &commentValue[i];
 	    }
 	}
-      (*(currentParserCtxt->ElementComplete)) (commentEl,  XMLcontext.doc, &error);
+      (*(currentParserCtxt->ElementComplete)) (&XMLcontext, commentEl, &error);
       XMLcontext.lastElementClosed = TRUE;
     }
 }
@@ -3660,7 +3661,7 @@ static void       CreateXmlPi (char *piTarget, char *piData)
 	      ptr = &piValue[i];
 	    }
 	 }
-       (*(currentParserCtxt->ElementComplete)) (piEl, XMLcontext.doc, &error);
+       (*(currentParserCtxt->ElementComplete)) (&XMLcontext, piEl, &error);
        XMLcontext.lastElementClosed = TRUE;
        TtaFreeMemory (piValue);
      }
@@ -4337,6 +4338,7 @@ static void  InitializeXmlParsingContext (Document doc,
 
 {
   XMLcontext.doc = doc;
+  XMLcontext.docRef = doc;
   XMLcontext.lastElement = lastElem;
   XMLcontext.lastElementClosed = isClosed;
   ParsingSubTree = isSubTree;
@@ -4595,6 +4597,8 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
 	      TtaSetPSchema (externalDoc, "SVGP");
 	      RootElement = TtaGetMainRoot (externalDoc);
 	      InitializeXmlParsingContext (externalDoc, RootElement, FALSE, FALSE);
+	      /* Set the document reference */
+	      XMLcontext.docRef = doc;
 	      /* Disable structure checking for the external document*/
 	      TtaSetStructureChecking (0, externalDoc);
 	      /* Delete all element except the root element */
@@ -4782,6 +4786,9 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
 	  if (copyEl != NULL)
 	    TtaInsertFirstChild (&copyEl, extEl, doc);
 	}
+      /* Copy the style sheets related to the external document */
+      /* MoveExtDocCSSs (externalDoc, doc);*/
+
       /* Remove the ParsingErrors file */
       RemoveParsingErrors (externalDoc);
 
@@ -4814,6 +4821,7 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
   /* Restore the display mode */
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, dispMode);
+
 
   return (!XMLNotWellFormed);
 }
@@ -5374,7 +5382,7 @@ void StartXmlParser (Document doc, char *fileName,
 	  el = XMLcontext.lastElement;
 	  while (el != NULL)
 	    {
-		(*(currentParserCtxt->ElementComplete)) (el, XMLcontext.doc, &error);
+		(*(currentParserCtxt->ElementComplete)) (&XMLcontext, el, &error);
 		el = TtaGetParent (el);
 	    }
 	}

@@ -1921,7 +1921,7 @@ static ThotBool     CloseElement (int entry, int start, ThotBool onStartTag)
 	   spacesDeleted = FALSE;
 	   while (el != NULL)
 	     {
-	       XhtmlElementComplete (el, HTMLcontext.doc, &error);
+	       XhtmlElementComplete (&HTMLcontext, el, &error);
 	       if (!spacesDeleted)
 	          /* If the element closed is a block-element, remove */
 	          /* spaces contained at the end of that element */
@@ -2156,7 +2156,7 @@ static void           EndOfStartTag (char c)
 	/* this is an empty element. Do not expect an end tag */
 	{
 	  CloseElement (lastElemEntry, -1, TRUE);
-	  XhtmlElementComplete (HTMLcontext.lastElement, HTMLcontext.doc, &error);
+	  XhtmlElementComplete (&HTMLcontext, HTMLcontext.lastElement, &error);
 	}
       
       /* if it's a LI element, creates its IntItemStyle attribute
@@ -4744,6 +4744,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
   HTMLcontext.lastElement = NULL;
   HTMLcontext.lastElementClosed = False;
   HTMLcontext.doc = doc;
+  HTMLcontext.docRef = doc;
   HTMLcontext.mergeText = FALSE;
   HTMLcontext.language = TtaGetDefaultLanguage ();
   /* initialize input buffer */
@@ -6387,6 +6388,7 @@ static void InitializeHTMLParser (Element lastelem, ThotBool isclosed,
      {
 	/* initialize the stack with ancestors of lastelem */
 	HTMLcontext.doc = doc;
+	HTMLcontext.docRef = doc;
 	DocumentSSchema = TtaGetDocumentSSchema (HTMLcontext.doc);
 #ifdef ANNOTATIONS
 	  if (DocumentTypes[doc] == docAnnot)
@@ -6538,6 +6540,7 @@ void StartParser (Document doc, char *fileName,
   int             error;
 
   HTMLcontext.doc = doc;
+  HTMLcontext.docRef = doc;
   FirstElemToBeChecked = NULL;
   LastElemToBeChecked = NULL;
   HTMLcontext.lastElement = NULL;
@@ -6725,7 +6728,7 @@ void StartParser (Document doc, char *fileName,
 	  el = HTMLcontext.lastElement;
 	  while (el != NULL)
 	    {
-	      XhtmlElementComplete (el, HTMLcontext.doc, &error);
+	      XhtmlElementComplete (&HTMLcontext, el, &error);
 	      el = TtaGetParent (el);
 	    }
 	  /* check the Thot abstract tree */
@@ -6746,6 +6749,7 @@ void StartParser (Document doc, char *fileName,
 
   TtaSetDocumentUnmodified (doc);
   HTMLcontext.doc = 0;
+  HTMLcontext.docRef = 0;
 }
 
 /* end of module */

@@ -875,8 +875,9 @@ void SetTextAnchor (Attribute attr, Element el, Document doc, ThotBool delete)
    SVGElementComplete
    Check the Thot structure of the SVG element el.
   ----------------------------------------------------------------------*/
-void SVGElementComplete (Element el, Document doc, int *error)
+void SVGElementComplete (ParserData *context, Element el, int *error)
 {
+   Document             doc;   
    ElementType		elType, parentType, newType;
    Element		child, parent, new, leaf;
    AttributeType        attrType;
@@ -888,6 +889,7 @@ void SVGElementComplete (Element el, Document doc, int *error)
    ThotBool		closedShape, parseCSS;
 
    *error = 0;
+   doc = context->doc;
    elType = TtaGetElementType (el);
    SVGSSchema = GetSVGSSchema (doc);
    if (elType.ElSSchema != SVGSSchema)
@@ -1030,8 +1032,12 @@ void SVGElementComplete (Element el, Document doc, int *error)
 	     text = GetStyleContents (el);
 	     if (text)
 	       {
-		 ReadCSSRules (doc, NULL, text, NULL,
-			       TtaGetElementLineNumber (el), FALSE);
+		 if (doc != context->docRef)
+		   ReadCSSRules (context->docRef, NULL, text, NULL,
+				 TtaGetElementLineNumber (el), FALSE);
+		 else
+ 		   ReadCSSRules (doc, NULL, text, NULL,
+				 TtaGetElementLineNumber (el), FALSE); 
 		 TtaFreeMemory (text);
 	       }
 	   }

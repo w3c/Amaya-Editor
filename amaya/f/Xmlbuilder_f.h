@@ -22,8 +22,8 @@ extern void MapXmlAttributeValue ( char *AttrVal,
 extern void MapGenericXmlAttribute ( char *attrName,
                                      AttributeType *attrType,
                                      Document doc );
-extern void XmlElementComplete ( Element el,
-                                 Document doc,
+extern void XmlElementComplete ( ParserData *context,
+                                 Element el,
                                  int *error );
 extern void CreateXmlLinePRule ( Element elText,
                                  Document doc );
@@ -50,8 +50,8 @@ extern void MapXmlAttributeValue (/* char *AttrVal,
 extern void MapGenericXmlAttribute (/* char *attrName,
                                        AttributeType *attrType,
                                        Document doc */);
-extern void XmlElementComplete (/* Element el,
-                                   Document doc,
+extern void XmlElementComplete (/* ParserData *context,
+                                   Element el,
                                    int *error */);
 extern void CreateXmlLinePRule (/* Element elText,
                                    Document doc */);
