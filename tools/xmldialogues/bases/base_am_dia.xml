@@ -1825,11 +1825,11 @@
 	<message xml:lang="pt">Responder à anotação</message>
 </label>
 <label define="BPostAnnot">
-	<message xml:lang="en">Post</message>
-	<message xml:lang="fr">Enregister</message>
+	<message xml:lang="en">Post to server</message>
+	<message xml:lang="fr">Enregister sur le serveur</message>
 	<message xml:lang="de">Anmerkung</message>
 	<message xml:lang="it">Registra</message>
-	<message xml:lang="es">Post</message>
+	<message xml:lang="es">Salvar en el servidor</message>
 	<message xml:lang="pt">Registrar</message>
 </label>
 <label define="BDeleteAnnot">
