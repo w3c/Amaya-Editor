@@ -578,11 +578,11 @@ void  RemoveStyleSheet (char *url, Document doc, ThotBool disabled,
     {
       /* Change the Display Mode to take into account the new presentation */
       dispMode = TtaGetDisplayMode (doc);
-      if (dispMode == DisplayImmediately)
+      if (dispMode != NoComputedDisplay)
 	TtaSetDisplayMode (doc, NoComputedDisplay);
       UnlinkCSS (css, doc, disabled, removed);
       /* Restore the display mode */
-      if (dispMode == DisplayImmediately)
+      if (dispMode != NoComputedDisplay)
 	TtaSetDisplayMode (doc, dispMode);
     }
 }
