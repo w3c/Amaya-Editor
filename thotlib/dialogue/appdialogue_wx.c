@@ -522,6 +522,27 @@ void TtaCleanUpWindow( int window_id )
 #endif /* _WX */
 }
 
+/*----------------------------------------------------------------------
+  TtaClosePage close a page
+  params:
+    + int window_id : the window which contains the pages
+    + int page_id : the page index (0 is the first one)
+  returns:
+    + true : page closed
+    + false: not closed
+  ----------------------------------------------------------------------*/
+ThotBool TtaClosePage( int window_id, int page_id )
+{
+#ifdef _WX 
+ AmayaWindow * p_window = TtaGetWindowFromId( window_id );
+  if (p_window && page_id >= 0)
+    return p_window->ClosePage( page_id );
+  else
+    return false;
+#else
+  return false;
+#endif /* #ifdef _WX */
+}
 
 /*----------------------------------------------------------------------
   TtaGetFreePageId returns a free page id for the given window

@@ -100,6 +100,23 @@ void AmayaNotebook::UpdatePageId()
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaNotebook
+ *      Method:  OnPageChanging
+ * Description:  The page selection is about to be changed.
+ *               Processes a wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGING event.
+ *               This event can be vetoed.
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaNotebook::OnPageChanging(wxNotebookEvent& event)
+{
+  wxLogDebug( _T("AmayaNotebook::OnPageChanging : old=%d, new=%d"),
+              event.GetOldSelection(),
+              event.GetSelection() );
+  event.Skip();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaNotebook
  *      Method:  OnPageChanged
  * Description:  called when a new page has been selected
  *--------------------------------------------------------------------------------------
@@ -284,7 +301,8 @@ void AmayaNotebook::OnSetFocus( wxFocusEvent & event )
 
 BEGIN_EVENT_TABLE(AmayaNotebook, wxNotebook)
   EVT_CLOSE(	                 AmayaNotebook::OnClose )
-  EVT_NOTEBOOK_PAGE_CHANGED( -1, AmayaNotebook::OnPageChanged )
+  EVT_NOTEBOOK_PAGE_CHANGED(  -1, AmayaNotebook::OnPageChanged )
+  EVT_NOTEBOOK_PAGE_CHANGING( -1, AmayaNotebook::OnPageChanging )
 
   EVT_SET_FOCUS(        AmayaNotebook::OnSetFocus )
 

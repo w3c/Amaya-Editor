@@ -218,6 +218,52 @@ bool AmayaNormalWindow::DetachPage( int position )
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
+ *      Method:  ClosePage
+ * Description:  ferme une page
+ *--------------------------------------------------------------------------------------
+ */
+bool AmayaNormalWindow::ClosePage( int page_id )
+{
+  AmayaPage * p_page  = NULL;
+  p_page = GetPage( page_id );
+  // close it
+  p_page->Close();
+  if (p_page->IsClosed())
+    {
+      m_pNotebook->DeletePage(page_id);
+      m_pNotebook->UpdatePageId();
+      TtaHandlePendingEvents ();
+      
+      // we force page_id-1 because m_pNotebook->GetSelection() returns a bad value ...
+      // OnPageChanged event is not generated so the selected page id is not updated 
+      // internaly into wxWidgets. It's bug!
+      // page_id-1 is the precedent page : it supposes that the notebook behaviour
+      // is to switch to precedent page when a page is deleted ... maybe it's not the case 
+      // on every plateforme.
+      if (page_id - 1 >= 0)
+	m_pNotebook->SetSelection( page_id - 1 );
+
+      // here GetSelection should return the right value acording to SetSelection above.
+      if (m_pNotebook->GetSelection() >= 0)
+	{
+	  AmayaPage * p_selected_page = (AmayaPage *)m_pNotebook->GetPage(m_pNotebook->GetSelection());
+	  if (p_selected_page)
+	    {
+	      p_selected_page->SetSelected( TRUE );
+	      // the page need a refresh to repaint its canvas
+	      p_selected_page->Refresh();
+	    }
+	}
+
+      return true;
+    }
+  else
+    return false;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
  *      Method:  GetPage
  * Description:  search the page at given position
  *--------------------------------------------------------------------------------------

@@ -87,6 +87,7 @@ MENUS
 	view:1 File button:BSetUpandPrint -> SetupAndPrint;
 	view:1 File button:BPrint -> PrintAs;
 	view:1 File Separator;
+	view:1 File button:BClosePage -> ClosePage;
 	view:1 File button:BClose -> CloseDocument;
 	view:1 File button:BExit -> AmayaClose;
 

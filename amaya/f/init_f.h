@@ -5,7 +5,6 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
 extern char * DocumentTypeString ( Document document );
@@ -154,6 +153,8 @@ extern void SectionNumbering ( Document doc,
 extern void MakeIDMenu ( Document doc,
                          View view );
 extern void CheckAmayaClosed ( void );
+extern void ClosePage ( Document doc,
+                        View view );
 extern void CloseDocument ( Document doc,
                             View view );
 extern void AmayaClose ( Document document,
@@ -173,7 +174,6 @@ extern void SaveGeometryOnExit ( int document,
                                  const char * view_name );
 
 #else /* __STDC__ */
-
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
 extern char * DocumentTypeString ( Document document );
@@ -322,6 +322,8 @@ extern void SectionNumbering ( Document doc,
 extern void MakeIDMenu ( Document doc,
                            View view );
 extern void CheckAmayaClosed ( void );
+extern void ClosePage ( Document doc,
+                          View view );
 extern void CloseDocument ( Document doc,
                               View view );
 extern void AmayaClose ( Document document,

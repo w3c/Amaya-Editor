@@ -134,6 +134,18 @@ bool AmayaWindow::DetachPage( int position )
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaWindow
+ *      Method:  ClosePage
+ * Description:  ferme une page
+ *--------------------------------------------------------------------------------------
+ */
+bool AmayaWindow::ClosePage( int position )
+{
+  return false;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
  *      Method:  GetPage
  * Description:  search the page at given position
  *--------------------------------------------------------------------------------------

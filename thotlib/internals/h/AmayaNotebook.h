@@ -55,7 +55,7 @@ class AmayaPage;
 
 class AmayaNotebook : public wxNotebook
 {
-public:
+ public:
   DECLARE_DYNAMIC_CLASS(AmayaNotebook)
 
   AmayaNotebook( wxWindow * p_parent_window = NULL,
@@ -67,9 +67,13 @@ public:
     { return m_pAmayaWindow; } 
 
   void UpdatePageId();
-  
+
+  // OnClose must be public because AmayaNormalWindow call it
   void OnClose(wxCloseEvent& event);
+
+ protected:
   void OnPageChanged(wxNotebookEvent& event);
+  void OnPageChanging(wxNotebookEvent& event);
 
 #if 0
   void OnChar( wxKeyEvent& event );

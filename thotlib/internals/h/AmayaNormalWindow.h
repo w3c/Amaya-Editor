@@ -68,6 +68,7 @@ class AmayaNormalWindow : public AmayaWindow
   virtual AmayaPage *    CreatePage( bool attach = false, int position = 0 );
   virtual bool           AttachPage( int position, AmayaPage * p_page );
   virtual bool           DetachPage( int position );
+  virtual bool           ClosePage( int position );
   virtual AmayaPage *    GetPage( int position ) const;
   virtual int            GetPageCount() const;
 

@@ -42,7 +42,7 @@
 ################# WX AMAYA EDITOR
 <Editor_WX>
 +amayabase_WX
-+browsing
++browsing_WX
 +edit
 
 ################# AMAYA DISPLAY
@@ -283,6 +283,60 @@ ReadAsISO_2022_JP
 ReadAsEUC_JP
 ReadAsSHIFT_JIS
 TtcSearchText
+
+[browsing_WX]
++annot
++base-module
++bdi-text-module
++bookmarks
++views
++print
+AmayaClose
+DocumentInfo
+DoAction
+HelpAmaya
+HelpAtW3C
+HelpIndex
+HelpSearching
+HelpSelecting
+GoToHome
+GotoPreviousHTML
+GotoNextHTML
+HelpBrowsing
+NextLinkOrFormElement
+OpenDoc
+OpenDocInNewWindow
+PreviousLinkOrFormElement
+Reload
+SaveDocumentAs
+ShowLogFile
+StopTransfer
+ClosePage
+ReadAsUTF_8
+ReadAsISO_8859_1
+ReadAsISO_8859_15
+ReadAsWINDOWS_1252
+ReadAsISO_8859_2
+ReadAsWINDOWS_1250
+ReadAsISO_8859_3
+ReadAsISO_8859_4
+ReadAsWINDOWS_1257
+ReadAsISO_8859_5
+ReadAsWINDOWS_1251
+ReadAsKOI8_R
+ReadAsISO_8859_6
+ReadAsWINDOWS_1256
+ReadAsISO_8859_7
+ReadAsWINDOWS_1253
+ReadAsISO_8859_8
+ReadAsWINDOWS_1255
+ReadAsISO_8859_9
+ReadAsWINDOWS_1254
+ReadAsISO_2022_JP
+ReadAsEUC_JP
+ReadAsSHIFT_JIS
+TtcSearchText
+
 
 ########### EDITING
 [edit]

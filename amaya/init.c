@@ -7521,6 +7521,26 @@ void CheckAmayaClosed ()
     }
 }
 
+/*----------------------------------------------------------------------
+   ClosePage close the current active page
+   Shortcut : CTRL x + CTRL p
+  ----------------------------------------------------------------------*/
+void ClosePage (Document doc, View view)
+{
+#ifdef _WX
+  int page_id       = -1;
+  int page_position = 0;
+  int window_id     = 0;
+  
+  /* Get the window id and page id of current document and close the corresponding page */
+  TtaGetDocumentPageId( doc, view, &page_id, &page_position );
+  window_id = TtaGetDocumentWindowId( doc, view );
+  TtaClosePage( window_id, page_id );
+
+  /* Close the windows if it contains no more page */
+  TtaCleanUpWindow( window_id );
+#endif /* _WX */
+}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/

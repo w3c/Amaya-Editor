@@ -702,6 +702,10 @@
 	<message xml:lang="pt">Imprimir</message>
 	<message xml:lang="fi">Tulosta</message>
 </label>
+<label define="BClosePage">
+	<message xml:lang="en">&amp;Close page</message>
+	<message xml:lang="fr">&amp;Fermer l'onglet</message>
+</label>
 <label define="BClose">
 	<message xml:lang="en">&amp;Close window</message>
 	<message xml:lang="fr">&amp;Fermer la fenêtre</message>
