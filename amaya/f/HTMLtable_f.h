@@ -6,6 +6,13 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern Element NewColumnHead ( Element lastcolhead,
+                               ThotBool before,
+                               ThotBool last,
+                               Element row,
+                               Document doc,
+                               ThotBool inMath,
+                               ThotBool generateEmptyCells );
 extern ThotBool RemoveColumn ( Element colhead,
                                Document doc,
                                ThotBool ifEmpty,
@@ -49,6 +56,13 @@ extern void RowspanDeleted ( NotifyAttribute * event );
 
 #else /* __STDC__ */
 
+extern Element NewColumnHead (/* Element lastcolhead,
+                                 ThotBool before,
+                                 ThotBool last,
+                                 Element row,
+                                 Document doc,
+                                 ThotBool inMath,
+                                 ThotBool generateEmptyCells */);
 extern ThotBool RemoveColumn (/* Element colhead,
                                  Document doc,
                                  ThotBool ifEmpty,

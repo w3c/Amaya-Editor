@@ -226,6 +226,12 @@ extern void TtaSetMoveForwardCallback (Func callbackFunc);
 extern void TtaSetMoveBackwardCallback (Func callbackFunc);
 
 /*----------------------------------------------------------------------
+   TtaGetColumn
+   Returns the column element which includes the element el.
+  ----------------------------------------------------------------------*/
+extern Element TtaGetColumn (Element el);
+
+/*----------------------------------------------------------------------
    TtaSelectEnclosingColumn
    Select the enclosing column of the element.
   ----------------------------------------------------------------------*/

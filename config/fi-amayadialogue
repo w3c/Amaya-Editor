@@ -126,10 +126,10 @@
 124 Taulukon alaotsikko
 125 **Change to Data cell (td)
 126 **Change to Heading cell (th)
-127 **Extend cell to the right
-128 **Extend cell to the bottom
-129 **Shrink cell to the left
-130 **Shrink cell to the top
+127 **Join with the right cell
+128 **Join with the below cell
+129 **Horizontal shrink
+130 **Vertical shrink
 131 **Select the row
 132 **Insert a row before
 133 **Insert a row after

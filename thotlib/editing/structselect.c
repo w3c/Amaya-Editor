@@ -3452,16 +3452,16 @@ static void SelectColumn (PtrElement column)
 }
 
 /*----------------------------------------------------------------------
-   TtaSelectEnclosingColumn
-   Select the enclosing column of the element.
+   TtaGetColumn
+   Returns the column element which includes the element el.
   ----------------------------------------------------------------------*/
-void TtaSelectEnclosingColumn (Element el)
+Element TtaGetColumn (Element el)
 {
   PtrElement          pEl;
   
   /* get the cell ancestor first */
   if (el == NULL)
-    return;
+    return NULL;
   else
     pEl = (PtrElement) el;
   while (pEl &&
@@ -3471,8 +3471,18 @@ void TtaSelectEnclosingColumn (Element el)
     pEl = pEl->ElParent;
   if (pEl)
     pEl = GetColHeadOfCell (pEl);
-  if (pEl)
-      SelectColumn (pEl);
+  return ((Element) pEl);
+}
+
+/*----------------------------------------------------------------------
+   TtaSelectEnclosingColumn
+   Select the enclosing column of the element.
+  ----------------------------------------------------------------------*/
+void TtaSelectEnclosingColumn (Element el)
+{
+  el = TtaGetColumn (el);
+  if (el)
+    SelectColumn ((PtrElement) el);
 }
 
 /*----------------------------------------------------------------------

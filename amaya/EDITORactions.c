@@ -2262,10 +2262,7 @@ static void CreateRow (Document doc, View view, ThotBool before)
       elType = TtaGetElementType (el);
       TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
       elNew = TtaNewTree (doc, elType, "");
-      if (before)
-	TtaInsertSibling (elNew, el, TRUE, doc);
-      else
-	TtaInsertSibling (elNew, el, FALSE, doc);
+      TtaInsertSibling (elNew, el, before, doc);
       TtaRegisterElementCreate (elNew, doc);
       event.element = elNew;
       event.document = doc;
@@ -2310,8 +2307,31 @@ void SelectColumn (Document doc, View view)
   ----------------------------------------------------------------------*/
 static void CreateColumn (Document doc, View view, ThotBool before)
 {
-  /* try to create the data cell close to the current position */
-  CreateHTMLelement (HTML_EL_Data_cell, doc);
+  Element             el, elNew;
+  ElementType         elType;
+  DisplayMode         dispMode;
+  int                 firstchar, lastchar;
+  ThotBool            inMath;
+
+  /* get the first selected element */
+  TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
+  if (el)
+    el = TtaGetColumn (el);
+  if (el)
+    {
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (doc, DeferredDisplay);
+
+      elType = TtaGetElementType (el);
+      inMath = !strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML");
+      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+      /* Create the column */
+      elNew = NewColumnHead (el, before, FALSE, NULL, doc, inMath, TRUE);
+      TtaCloseUndoSequence (doc);
+      TtaSetDisplayMode (doc, dispMode);
+      TtaSetDocumentModified (doc);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -2335,7 +2355,7 @@ void CreateColumnAfter (Document doc, View view)
   ----------------------------------------------------------------------*/
 void PasteBefore (Document doc, View view)
 {
-  CreateRow (doc, view, TRUE);
+  ;
 }
 
 /*----------------------------------------------------------------------
@@ -2343,7 +2363,7 @@ void PasteBefore (Document doc, View view)
   ----------------------------------------------------------------------*/
 void PasteAfter (Document doc, View view)
 {
-  CreateRow (doc, view, FALSE);
+  ;
 }
 
 /*----------------------------------------------------------------------

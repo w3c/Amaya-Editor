@@ -1264,20 +1264,20 @@
 	<message xml:lang="fr">Changer en cellule titre (th)</message>
 </label>
 <label define="BCellHExtend">
-	<message xml:lang="en">Extend cell to the right</message>
-	<message xml:lang="fr">Etendre la cellule vers la droite</message>
+	<message xml:lang="en">Join with the right cell</message>
+	<message xml:lang="fr">Joindre avec la cellule de droite</message>
 </label>
 <label define="BCellVExtend">
-	<message xml:lang="en">Extend cell to the bottom</message>
-	<message xml:lang="fr">Etendre la cellule vers le bas</message>
+	<message xml:lang="en">Join with the below cell</message>
+	<message xml:lang="fr">Joindre la cellule au-dessous</message>
 </label>
 <label define="BCellHShrink">
-	<message xml:lang="en">Shrink cell to the left</message>
-	<message xml:lang="fr">Réduire la cellule vers la gauche</message>
+	<message xml:lang="en">Horizontal shrink</message>
+	<message xml:lang="fr">Réduire horizontalement</message>
 </label>
 <label define="BCellHShrink">
-	<message xml:lang="en">Shrink cell to the top</message>
-	<message xml:lang="fr">Réduire la cellule vers le haut</message>
+	<message xml:lang="en">Vertical shrink</message>
+	<message xml:lang="fr">Réduire verticalement</message>
 </label>
 <label define="BSelectRow">
 	<message xml:lang="en">Select the row</message>

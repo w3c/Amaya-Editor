@@ -105,6 +105,17 @@ static Element GetCloseCellFromColumnHead (Element row, Element colhead,
 	col = TtaSearchTypedElement (elType, SearchBackward, col);
       child = GetCellFromColumnHead (row, col, inMath);
     }
+  /* if not found search in the other direction */
+  col = colhead;
+  while (!child && col)
+    {
+      /* no cell related to this column in this row */
+      if (before)
+	col = TtaSearchTypedElement (elType, SearchBackward, col);
+      else
+	col = TtaSearchTypedElement (elType, SearchForward, col);
+      child = GetCellFromColumnHead (row, col, inMath);
+    }
   return (child);
 }
 
@@ -204,14 +215,15 @@ static Element AddEmptyCellInRow (Element row, Element colhead,
   The parameter before indicates if the lastcolhead precedes or follows
   the new created Column_head. It should be FALSE when last is TRUE.
   ----------------------------------------------------------------------*/
-static Element NewColumnHead (Element lastcolhead, ThotBool before,
-			      ThotBool last, Element row, Document doc,
-			      ThotBool inMath, ThotBool generateEmptyCells)
+Element NewColumnHead (Element lastcolhead, ThotBool before,
+		       ThotBool last, Element row, Document doc,
+		       ThotBool inMath, ThotBool generateEmptyCells)
 {
    Element             colhead, currentrow;
    Element             group, groupdone;
    Element             table, child;
    ElementType         elType;
+   ThotBool            select = (row == NULL);
 
    if (lastcolhead == NULL)
       return NULL;
@@ -224,11 +236,25 @@ static Element NewColumnHead (Element lastcolhead, ThotBool before,
 	if (generateEmptyCells)
 	  /* add empty cells to all other rows */
 	  {
-	    /* process the row group that contains the row which doesn't */
-	    /* need to be processed */
-	    currentrow = row;
-	    TtaPreviousSibling (&currentrow);
-	    while (currentrow != NULL)
+	    if (row)
+	      {
+		/* process the row group exept the given row */
+		currentrow = row;
+		TtaPreviousSibling (&currentrow);
+	      }
+	    else
+	      {
+		elType = TtaGetElementType (colhead);
+		/* get the first row */
+		if (inMath)
+		  elType.ElTypeNum = MathML_EL_TableRow;
+		else
+		  elType.ElTypeNum = HTML_EL_Table_row;
+		row = TtaSearchTypedElement (elType, SearchForward, colhead);
+		currentrow = row;
+	      }
+
+	    while (currentrow)
 	      {
 		/* get the sibling cell */
 		if (last)
@@ -236,8 +262,16 @@ static Element NewColumnHead (Element lastcolhead, ThotBool before,
 		else
 		  child = GetCloseCellFromColumnHead (currentrow, lastcolhead,
 						      before, inMath);
-		AddEmptyCellInRow (currentrow, colhead, child, before, doc,
-				   inMath, FALSE);
+		if (child)
+		  AddEmptyCellInRow (currentrow, colhead, child, before, doc,
+				     inMath, FALSE);
+		else
+		  {
+		    child = GetCloseCellFromColumnHead (currentrow, lastcolhead,
+							!before, inMath);
+		    AddEmptyCellInRow (currentrow, colhead, child, !before, doc,
+				       inMath, FALSE);
+		  }
 		TtaPreviousSibling (&currentrow);
 	      }
 
@@ -254,11 +288,20 @@ static Element NewColumnHead (Element lastcolhead, ThotBool before,
 		    else
 		      child = GetCloseCellFromColumnHead (currentrow,
 					        lastcolhead, before, inMath);
-		    AddEmptyCellInRow (currentrow, colhead, child, before, doc,
-				       inMath, FALSE);
+		    if (child)
+		      AddEmptyCellInRow (currentrow, colhead, child, before, doc,
+					 inMath, FALSE);
+		    else
+		      {
+			child = GetCloseCellFromColumnHead (currentrow, lastcolhead,
+							    !before, inMath);
+			AddEmptyCellInRow (currentrow, colhead, child, !before, doc,
+					   inMath, FALSE);
+		      }
 		    TtaNextSibling (&currentrow);
 		  }
 	      }
+
 	    if (!inMath)
 	      {
 		groupdone = TtaGetParent (row);	/* done with this group */
@@ -337,6 +380,13 @@ static Element NewColumnHead (Element lastcolhead, ThotBool before,
 		  }
 	      }
 	  }
+     }
+   if (select)
+     {
+       child = GetCellFromColumnHead (row, colhead, inMath);
+       child = TtaGetFirstChild (child);
+       if (child)
+	 TtaSelectElement (doc, child);
      }
    return colhead;
 }
@@ -981,7 +1031,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 /*----------------------------------------------------------------------
    CheckTable      Check a table and create the missing elements.  
   ----------------------------------------------------------------------*/
-void                CheckTable (Element table, Document doc)
+void CheckTable (Element table, Document doc)
 {
   ElementType         elType;
   Element             el, columnHeads, thead, tfoot, firstcolhead,
@@ -1188,12 +1238,11 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
   ElementType         elType;
   AttributeType       attrType;
   Attribute           attr;
+  DisplayMode         dispMode;
   char              ptr[100];
   int                 span, i;
   ThotBool            before, inMath;
 
-  DisplayMode         dispMode;
-  
   dispMode = TtaGetDisplayMode (doc);
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
