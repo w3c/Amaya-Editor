@@ -702,7 +702,7 @@ void CopyTextToText (PtrTextBuffer pSrceBuf, PtrTextBuffer pCopyBuf, int *len)
 	  if (pTBSrce->BuLength > 0)
 	    /* ce buffer source n'est pas vide, on le copie */
 	    {
-	      if (FULL_BUFFER - pTBDest->BuLength <= pTBSrce->BuLength)
+	      if (FULL_BUFFER - pTBDest->BuLength < pTBSrce->BuLength)
 		/* pas assez de place dans le buffer destination */
 		/* pour copier tout le texte du buffer source, on */
 		/* prend un nouveau buffer destination */
