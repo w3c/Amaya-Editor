@@ -1781,9 +1781,21 @@ int                 frame;
 	 /* no background found: clip the current box */
 	 pCurrentBox = pBox;
        else
-	 /* background found: clip the first box with background */
-	 pCurrentBox = pCurrentAb->AbBox;
-
+	 {
+	   /* background found: clip the first box with background */
+	   pCurrentBox = pCurrentAb->AbBox;
+	   if (pCurrentBox->BxType == BoGhost)
+	     {
+	       /* move to the enclosing block */
+	       while (pCurrentAb != NULL && pCurrentAb->AbBox != NULL
+		      && pCurrentAb->AbBox->BxType == BoGhost)
+		 pCurrentAb = pCurrentAb->AbEnclosing;
+	       if (pCurrentAb == NULL)
+		 pCurrentBox = pBox;
+	       else
+		 pCurrentBox = pCurrentAb->AbBox;
+	     }
+	 }
        /* Si la boite est coupee on prend la premiere boite de coupure */
        if (pCurrentBox != NULL)
 	 {

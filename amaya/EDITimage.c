@@ -242,12 +242,13 @@ void ChangeBackgroundImage (document, view)
 {
    ElementType	       elType;
    Element             el, elStyle;
+   Element             first, last;
    char                s[MAX_LENGTH];
-   int                 firstchar, lastchar;
-   int                 i;
+   int                 i, c1, cN;
 
-   TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
-   if (el == NULL)
+   /* get the first and last selected element */
+   TtaGiveFirstSelectedElement (document, &first, &c1, &i);
+   if (first == NULL)
      {
        /* set the pRule on the root element */
        el =  TtaGetMainRoot (document);
@@ -255,31 +256,37 @@ void ChangeBackgroundImage (document, view)
        elType.ElTypeNum = HTML_EL_BODY;
        /* set the style on body element */
        elStyle = TtaSearchTypedElement (elType, SearchInTree, el);
+       last = el;
      }
    else
      {
+       elStyle = el = first;
        elType = TtaGetElementType (el);
-       elStyle = el;
        if (elType.ElTypeNum == HTML_EL_BODY)
-	 /* move the pRule on the root element */
-	 el =  TtaGetMainRoot (document);
-       else if (elType.ElTypeNum == HTML_EL_HEAD)
-	 /* set the style on body element */
-	 elStyle = TtaSearchTypedElement (elType, SearchInTree, el);
-       else if (IsCharacterLevelElement (el))
 	 {
-	   /* move the pRule and the style on the parent element */
-	   do
+	   /* move the pRule on the root element */
+	   el =  TtaGetMainRoot (document);
+	   last = el;
+	 }
+       else if (elType.ElTypeNum == HTML_EL_HEAD)
+	 {
+	   /* set the style on body element */
+	   elStyle = TtaSearchTypedElement (elType, SearchInTree, el);
+	   last = el;
+	 }
+       else
+	 {
+	   /* TODO:  TtaGiveLastSelectedElement (document, &last, &i, &cN); */
+	   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
+	       elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
 	     el = TtaGetParent (el);
-	   while (el != NULL && IsCharacterLevelElement (el));
-	   if (el == NULL)
-	     return;
-	   elType = TtaGetElementType (el);
 	   /* if the PRule is on a Pseudo-Paragraph, move it to the enclosing
 	      element */
+	   elType = TtaGetElementType (el);
 	   if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
 	     el = TtaGetParent (el);
 	   elStyle = el;
+	   last = el;
 	 }
      }
 
@@ -330,6 +337,7 @@ void ChangeBackgroundImage (document, view)
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseImage + FormImage, FALSE);
    TtaWaitShowDialogue ();
+
    if (LastURLImage[0] == EOS)
      HTMLResetBackgroundImage (document, el);
    else

@@ -189,8 +189,8 @@ int                 ymin;
 int                 ymax;
 #endif /* __STDC__ */
 {
-   PtrAbstractBox      pAb;
-   PtrBox              pBox;
+   PtrAbstractBox      pAb, pAbChild;
+   PtrBox              pBox, pBoxChild;
    ViewFrame          *pFrame;
    int                 x, y;
 
@@ -211,7 +211,37 @@ int                 ymax;
      {
        pBox = pBox->BxNextBackground;
        pAb = pBox->BxAbstractBox;
-       if (pBox->BxYOrg + pBox->BxHeight >= ymin
+       if (pBox->BxType == BoGhost)
+	 {
+	   /* see child elements */
+	   pAbChild = pAb->AbFirstEnclosed;
+	   while (pAbChild != NULL && !pAbChild->AbDead && pAbChild->AbBox->BxType == BoGhost)
+	     pAbChild = pAbChild->AbFirstEnclosed;
+	   if (pAbChild != NULL && !pAbChild->AbDead)
+	     {
+	       pBoxChild = pAbChild->AbBox;
+	       /* if the box is splitted take child boxes */
+	       if (pBoxChild->BxType == BoSplit)
+		 pBoxChild = pBoxChild->BxNexChild;
+	       do
+		 {
+		   if (pBoxChild->BxYOrg + pBoxChild->BxHeight >= ymin
+		       && pBoxChild->BxYOrg <= ymax
+		       && pBoxChild->BxXOrg + pBoxChild->BxWidth >= xmin
+		       && pBoxChild->BxXOrg <= xmax)
+		     if (pAb->AbPictBackground)
+		       DrawPicture (pBoxChild, (PictInfo *) pAb->AbPictBackground, frame);
+		     else
+		       DrawRectangle (frame, pBox->BxThickness, pAb->AbLineStyle,
+				      pBoxChild->BxXOrg - x, pBoxChild->BxYOrg - y,
+				      pBoxChild->BxWidth, pBoxChild->BxHeight, 0, 0, pAb->AbForeground,
+				      pAb->AbBackground, pAb->AbFillPattern);
+		   pBoxChild = pBoxChild->BxNext;
+		 }
+	       while (IsParentBox (pBox, pBoxChild));
+	     }
+	 }
+       else if (pBox->BxYOrg + pBox->BxHeight >= ymin
 	   && pBox->BxYOrg <= ymax
 	   && pBox->BxXOrg + pBox->BxWidth >= xmin
 	   && pBox->BxXOrg <= xmax)
