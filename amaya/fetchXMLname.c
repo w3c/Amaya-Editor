@@ -27,37 +27,53 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {TEXT("abbr"), SPACE, HTML_EL_ABBR},
    {TEXT("acronym"), SPACE, HTML_EL_ACRONYM},
    {TEXT("address"), SPACE, HTML_EL_Address},
+#ifndef XHTML_BASIC
    {TEXT("applet"), SPACE, HTML_EL_Applet},
    {TEXT("area"), 'E', HTML_EL_AREA},
    {TEXT("b"), SPACE, HTML_EL_Bold_text},
+#endif /* XHTML_BASIC */
    {TEXT("base"), 'E', HTML_EL_BASE},
+#ifndef XHTML_BASIC
    {TEXT("basefont"), 'E', HTML_EL_BaseFont},
    {TEXT("bdo"), SPACE, HTML_EL_BDO},
    {TEXT("big"), SPACE, HTML_EL_Big_text},
+#endif /* XHTML_BASIC */
    {TEXT("blockquote"), SPACE, HTML_EL_Block_Quote},
    {TEXT("body"), SPACE, HTML_EL_BODY},
    {TEXT("br"), 'E', HTML_EL_BR},
+#ifndef XHTML_BASIC
    {TEXT("button"), SPACE, HTML_EL_BUTTON},
    {TEXT("c"), SPACE, HTML_EL_TEXT_UNIT},
    {TEXT("caption"), SPACE, HTML_EL_CAPTION},
    {TEXT("center"), SPACE, HTML_EL_Center},
+#endif /* XHTML_BASIC */
    {TEXT("cite"), SPACE, HTML_EL_Cite},
    {TEXT("code"), SPACE, HTML_EL_Code},
+#ifndef XHTML_BASIC
    {TEXT("colgroup"), SPACE, HTML_EL_COLGROUP},
    {TEXT("col"), SPACE, HTML_EL_COL},
+#endif /* XHTML_BASIC */
    {TEXT("dd"), SPACE, HTML_EL_Definition},
+#ifndef XHTML_BASIC
    {TEXT("del"), SPACE, HTML_EL_DEL},
+#endif /* XHTML_BASIC */
    {TEXT("dfn"), SPACE, HTML_EL_Def},
+#ifndef XHTML_BASIC
    {TEXT("dir"), SPACE, HTML_EL_Directory},
+#endif /* XHTML_BASIC */
    {TEXT("div"), SPACE, HTML_EL_Division},
    {TEXT("dl"), SPACE, HTML_EL_Definition_List},
    {TEXT("dt"), SPACE, HTML_EL_Term},
    {TEXT("em"), SPACE, HTML_EL_Emphasis},
+#ifndef XHTML_BASIC
    {TEXT("fieldset"), SPACE, HTML_EL_FIELDSET},
    {TEXT("font"), SPACE, HTML_EL_Font_},
+#endif /* XHTML_BASIC */
    {TEXT("form"), SPACE, HTML_EL_Form},
+#ifndef XHTML_BASIC
    {TEXT("frame"), 'E', HTML_EL_FRAME},
    {TEXT("frameset"), SPACE, HTML_EL_FRAMESET},
+#endif /* XHTML_BASIC */
    {TEXT("h1"), SPACE, HTML_EL_H1},
    {TEXT("h2"), SPACE, HTML_EL_H2},
    {TEXT("h3"), SPACE, HTML_EL_H3},
@@ -65,62 +81,96 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {TEXT("h5"), SPACE, HTML_EL_H5},
    {TEXT("h6"), SPACE, HTML_EL_H6},
    {TEXT("head"), SPACE, HTML_EL_HEAD},
+#ifndef XHTML_BASIC
    {TEXT("hr"), 'E', HTML_EL_Horizontal_Rule},
+#endif /* XHTML_BASIC */
    {TEXT("html"), SPACE, HTML_EL_HTML},
+#ifndef XHTML_BASIC
    {TEXT("i"), SPACE, HTML_EL_Italic_text},
    {TEXT("iframe"), SPACE, HTML_EL_IFRAME},
    {TEXT("image"), 'E', HTML_EL_PICTURE_UNIT},
+#endif /* XHTML_BASIC */
    {TEXT("img"), 'E', HTML_EL_PICTURE_UNIT},
    {TEXT("input"), 'E', HTML_EL_Input},
+#ifndef XHTML_BASIC
    {TEXT("ins"), SPACE, HTML_EL_INS},
    {TEXT("isindex"), 'E', HTML_EL_ISINDEX},
+#endif /* XHTML_BASIC */
    {TEXT("kbd"), SPACE, HTML_EL_Keyboard},
    {TEXT("label"), SPACE, HTML_EL_LABEL},
+#ifndef XHTML_BASIC
    {TEXT("legend"), SPACE, HTML_EL_LEGEND},
+#endif /* XHTML_BASIC */
    {TEXT("li"), SPACE, HTML_EL_List_Item},
    {TEXT("link"), 'E', HTML_EL_LINK},
+#ifndef XHTML_BASIC
    {TEXT("listing"), SPACE, HTML_EL_Preformatted}, /*converted to PRE */
    {TEXT("map"), SPACE, HTML_EL_MAP},
    {TEXT("math"), SPACE, HTML_EL_Math},
    {TEXT("menu"), SPACE, HTML_EL_Menu},
+#endif /* XHTML_BASIC */
    {TEXT("meta"), 'E', HTML_EL_META},
+#ifndef XHTML_BASIC
    {TEXT("noframes"), SPACE, HTML_EL_NOFRAMES},
    {TEXT("noscript"), SPACE, HTML_EL_NOSCRIPT},
+#endif /* XHTML_BASIC */
    {TEXT("object"), SPACE, HTML_EL_Object},
    {TEXT("ol"), SPACE, HTML_EL_Numbered_List},
+#ifndef XHTML_BASIC
    {TEXT("optgroup"), SPACE, HTML_EL_OptGroup},
+#endif /* XHTML_BASIC */
    {TEXT("option"), SPACE, HTML_EL_Option},
    {TEXT("p"), SPACE, HTML_EL_Paragraph},
    {TEXT("p*"), SPACE, HTML_EL_Pseudo_paragraph},
    {TEXT("param"), 'E', HTML_EL_Parameter},
+#ifndef XHTML_BASIC
    {TEXT("plaintext"), SPACE, HTML_EL_Preformatted},/* converted to PRE */
+#endif /* XHTML_BASIC */
    {TEXT("pre"), SPACE, HTML_EL_Preformatted},
    {TEXT("q"), SPACE, HTML_EL_Quotation},
+#ifndef XHTML_BASIC
    {TEXT("s"), SPACE, HTML_EL_Struck_text},
+#endif /* XHTML_BASIC */
    {TEXT("samp"), SPACE, HTML_EL_Sample},
+#ifndef XHTML_BASIC
    {TEXT("script"), SPACE, HTML_EL_SCRIPT},
+#endif /* XHTML_BASIC */
    {TEXT("select"), SPACE, HTML_EL_Option_Menu},
+#ifndef XHTML_BASIC
    {TEXT("small"), SPACE, HTML_EL_Small_text},
+#endif /* XHTML_BASIC */
    {TEXT("span"), SPACE, HTML_EL_Span},
+#ifndef XHTML_BASIC
    {TEXT("strike"), SPACE, HTML_EL_Struck_text},
+#endif /* XHTML_BASIC */
    {TEXT("strong"), SPACE, HTML_EL_Strong},
+#ifndef XHTML_BASIC
    {TEXT("style"), SPACE, HTML_EL_STYLE_},
    {TEXT("sub"), SPACE, HTML_EL_Subscript},
    {TEXT("sup"), SPACE, HTML_EL_Superscript},
+#endif /* XHTML_BASIC */
    {TEXT("table"), SPACE, HTML_EL_Table},
    {TEXT("tbody"), SPACE, HTML_EL_tbody},
    {TEXT("td"), SPACE, HTML_EL_Data_cell},
    {TEXT("textarea"), SPACE, HTML_EL_Text_Area},
+#ifndef XHTML_BASIC
    {TEXT("tfoot"), SPACE, HTML_EL_tfoot},
+#endif /* XHTML_BASIC */
    {TEXT("th"), SPACE, HTML_EL_Heading_cell},
+#ifndef XHTML_BASIC
    {TEXT("thead"), SPACE, HTML_EL_thead},
+#endif /* XHTML_BASIC */
    {TEXT("title"), SPACE, HTML_EL_TITLE},
    {TEXT("tr"), SPACE, HTML_EL_Table_row},
+#ifndef XHTML_BASIC
    {TEXT("tt"), SPACE, HTML_EL_Teletype_text},
    {TEXT("u"), SPACE, HTML_EL_Underlined_text},
+#endif /* XHTML_BASIC */
    {TEXT("ul"), SPACE, HTML_EL_Unnumbered_List},
    {TEXT("var"), SPACE, HTML_EL_Variable},
+#ifndef XHTML_BASIC
    {TEXT("xmp"), SPACE, HTML_EL_Preformatted},  /* converted to PRE */
+#endif /* XHTML_BASIC */
    {TEXT(""), SPACE, 0}	/* Last entry. Mandatory */
 };
  
@@ -347,7 +397,7 @@ Document           doc;
      ptr = GraphMLElemMappingTable;
    else
      ptr = NULL;
-
+   *mappedName = NULL;
    elType->ElTypeNum = 0;
    if (ptr != NULL)
      {

@@ -25,6 +25,10 @@ RULES
 	   Create '"';
 	   END;
 	Create '?>\12';
+#ifdef XHTML_BASIC
+	   Create '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.0//EN"\12';
+	   Create '    "xhtml-basic10.dtd">\12';
+#else { XHTML_BASIC }
 	if not Namespaces and HtmlDTD = Frameset
 	   BEGIN
 	   Create '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"\12';
@@ -35,6 +39,7 @@ RULES
 	   Create '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"\12';
 	   Create '    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\12';
 	   END;	   
+#endif { XHTML_BASIC }
 	Create '<html xmlns="http://www.w3.org/1999/xhtml"';
 	{*** Create Namespaces; ***}
 #else

@@ -31,7 +31,7 @@ extern void SetIntVertStretchAttr ( Element el,
                                     Element* selEl );
 extern void CheckMTable ( Element elMTABLE,
                           Document doc,
-			  ThotBool placeholder );
+                          ThotBool placeholder );
 extern void SetMcharContent ( Element el,
                               Document doc );
 extern void SetFontstyleAttr ( Element el,
@@ -99,7 +99,7 @@ extern void SetIntVertStretchAttr (/* Element el,
                                       Element* selEl */);
 extern void CheckMTable (/* Element elMTABLE,
                             Document doc,
-			    ThotBool placeholder */);
+                            ThotBool placeholder */);
 extern void SetMcharContent (/* Element el,
                                 Document doc */);
 extern void SetFontstyleAttr (/* Element el,

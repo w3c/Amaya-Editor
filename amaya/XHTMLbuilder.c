@@ -338,6 +338,7 @@ static AttributeMapping XhtmlAttributeMappingTable[] =
    {TEXT("accept-charset"), TEXT("form"), 'A', HTML_ATTR_accept_charset},
    {TEXT("accesskey"), TEXT(""), 'A', HTML_ATTR_accesskey},
    {TEXT("action"), TEXT(""), 'A', HTML_ATTR_Script_URL},
+#ifndef XHTML_BASIC
    {TEXT("align"), TEXT("applet"), 'A', HTML_ATTR_Alignment},
    {TEXT("align"), TEXT("caption"), 'A', HTML_ATTR_Position},
    {TEXT("align"), TEXT("col"), 'A', HTML_ATTR_Cell_align},
@@ -365,10 +366,12 @@ static AttributeMapping XhtmlAttributeMappingTable[] =
    {TEXT("align"), TEXT("thead"), 'A', HTML_ATTR_Cell_align},
    {TEXT("align"), TEXT("tr"), 'A', HTML_ATTR_Cell_align},
    {TEXT("alink"), TEXT("body"), 'A', HTML_ATTR_ActiveLinkColor},
+#endif /* XHTML_BASIC */
    {TEXT("alt"), TEXT(""), 'A', HTML_ATTR_ALT},
    {TEXT("archive"), TEXT(""), 'A', HTML_ATTR_archive},
    {TEXT("axis"), TEXT(""), 'A', HTML_ATTR_axis},
 
+#ifndef XHTML_BASIC
    {TEXT("background"), TEXT(""), 'A', HTML_ATTR_background_},
    {TEXT("bgcolor"), TEXT(""), 'A', HTML_ATTR_BackgroundColor},
    {TEXT("border"), TEXT("image"), 'A', HTML_ATTR_Img_border},
@@ -378,6 +381,7 @@ static AttributeMapping XhtmlAttributeMappingTable[] =
 
    {TEXT("cellspacing"), TEXT(""), 'A', HTML_ATTR_cellspacing},
    {TEXT("cellpadding"), TEXT(""), 'A', HTML_ATTR_cellpadding},
+#endif /* XHTML_BASIC */
    {TEXT("char"), TEXT(""), 'A', HTML_ATTR_char},
    {TEXT("charoff"), TEXT(""), 'A', HTML_ATTR_charoff},
    {TEXT("charset"), TEXT(""), 'A', HTML_ATTR_charset},
@@ -394,9 +398,13 @@ static AttributeMapping XhtmlAttributeMappingTable[] =
    {TEXT("cols"), TEXT("frameset"), 'A', HTML_ATTR_ColWidth},
    {TEXT("cols"), TEXT("textarea"), 'A', HTML_ATTR_Columns},
    {TEXT("colspan"), TEXT(""), 'A', HTML_ATTR_colspan_},
+#ifndef XHTML_BASIC
    {TEXT("compact"), TEXT(""), 'A', HTML_ATTR_COMPACT},
+#endif /* XHTML_BASIC */
    {TEXT("content"), TEXT(""), 'A', HTML_ATTR_meta_content},
+#ifndef XHTML_BASIC
    {TEXT("coords"), TEXT(""), 'A', HTML_ATTR_coords},
+#endif /* XHTML_BASIC */
 
    {TEXT("data"), TEXT(""), 'A', HTML_ATTR_data},
    {TEXT("datapagesize"), TEXT("table"), 'A', HTML_ATTR_datapagesize},
@@ -406,25 +414,33 @@ static AttributeMapping XhtmlAttributeMappingTable[] =
    {TEXT("dir"), TEXT(""), 'A', HTML_ATTR_dir},
    {TEXT("disabled"), TEXT(""), 'A', HTML_ATTR_disabled},
 
+#ifndef XHTML_BASIC
    {TEXT("enctype"), TEXT(""), 'A', HTML_ATTR_ENCTYPE},
    {TEXT("event"), TEXT("script"), 'A', HTML_ATTR_event},
 
    {TEXT("face"), TEXT("basefont"), 'A', HTML_ATTR_BaseFontFace},
    {TEXT("face"), TEXT("font"), 'A', HTML_ATTR_face},
+#endif /* XHTML_BASIC */
    {TEXT("for"), TEXT("label"), 'A', HTML_ATTR_Associated_control},
    {TEXT("for"), TEXT("script"), 'A', HTML_ATTR_for_},
+#ifndef XHTML_BASIC
    {TEXT("frame"), TEXT("table"), 'A', HTML_ATTR_frame},
    {TEXT("frameborder"), TEXT(""), 'A', HTML_ATTR_frameborder},
 
    {TEXT("headers"), TEXT(""), 'A', HTML_ATTR_headers},
+#endif /* XHTML_BASIC */
    {TEXT("height"), TEXT(""), 'A', HTML_ATTR_Height_},
    {TEXT("href"), TEXT(""), 'A', HTML_ATTR_HREF_},
    {TEXT("hreflang"), TEXT(""), 'A', HTML_ATTR_hreflang},
+#ifndef XHTML_BASIC
    {TEXT("hspace"), TEXT(""), 'A', HTML_ATTR_hspace},
+#endif /* XHTML_BASIC */
    {TEXT("http-equiv"), TEXT(""), 'A', HTML_ATTR_http_equiv},
 
    {TEXT("id"), TEXT(""), 'A', HTML_ATTR_ID},
+#ifndef XHTML_BASIC
    {TEXT("ismap"), TEXT(""), 'A', HTML_ATTR_ISMAP},
+#endif /* XHTML_BASIC */
 
    {TEXT("label"), TEXT(""), 'A', HTML_ATTR_label},
    {TEXT("lang"), TEXT(""), 'A', HTML_ATTR_Langue},
@@ -432,8 +448,10 @@ static AttributeMapping XhtmlAttributeMappingTable[] =
    {TEXT("link"), TEXT("body"), 'A', HTML_ATTR_LinkColor},
    {TEXT("longdesc"), TEXT(""), 'A', HTML_ATTR_longdesc},
 
+#ifndef XHTML_BASIC
    {TEXT("marginheight"), TEXT(""), 'A', HTML_ATTR_marginheight},
    {TEXT("marginwidth"), TEXT(""), 'A', HTML_ATTR_marginwidth},
+#endif /* XHTML_BASIC */
    {TEXT("maxlength"), TEXT(""), 'A', HTML_ATTR_MaxLength},
    {TEXT("media"), TEXT(""), 'A', HTML_ATTR_media},
    {TEXT("method"), TEXT(""), 'A', HTML_ATTR_METHOD},
@@ -452,6 +470,7 @@ static AttributeMapping XhtmlAttributeMappingTable[] =
    {TEXT("noshade"), TEXT(""), 'A', HTML_ATTR_NoShade},
    {TEXT("nowrap"), TEXT(""), 'A', HTML_ATTR_No_wrap},
 
+#ifndef XHTML_BASIC
    {TEXT("object"), TEXT("applet"), 'A', HTML_ATTR_object},
    {TEXT("onblur"), TEXT(""), 'A', HTML_ATTR_onblur},
    {TEXT("onchange"), TEXT(""), 'A', HTML_ATTR_onchange},
@@ -471,20 +490,26 @@ static AttributeMapping XhtmlAttributeMappingTable[] =
    {TEXT("onselect"), TEXT(""), 'A', HTML_ATTR_onselect},
    {TEXT("onsubmit"), TEXT("form"), 'A', HTML_ATTR_onsubmit},
    {TEXT("onunload"), TEXT(""), 'A', HTML_ATTR_onunload},
+#endif /* XHTML_BASIC */
 
    {TEXT("profile"), TEXT("head"), 'A', HTML_ATTR_profile},
+#ifndef XHTML_BASIC
    {TEXT("prompt"), TEXT(""), 'A', HTML_ATTR_Prompt},
+#endif /* XHTML_BASIC */
 
    {TEXT("readonly"), TEXT(""), 'A', HTML_ATTR_readonly},
    {TEXT("rel"), TEXT(""), 'A', HTML_ATTR_REL},
    {TEXT("rev"), TEXT(""), 'A', HTML_ATTR_REV},
+#ifndef XHTML_BASIC
    {TEXT("rows"), TEXT("frameset"), 'A', HTML_ATTR_RowHeight},
    {TEXT("rows"), TEXT("textarea"), 'A', HTML_ATTR_Rows},
+#endif /* XHTML_BASIC */
    {TEXT("rowspan"), TEXT(""), 'A', HTML_ATTR_rowspan_},
    {TEXT("rules"), TEXT("table"), 'A', HTML_ATTR_rules_},
 
    {TEXT("scheme"), TEXT("meta"), 'A', HTML_ATTR_scheme},
    {TEXT("scope"), TEXT(""), 'A', HTML_ATTR_scope},
+#ifndef XHTML_BASIC
    {TEXT("scrolling"), TEXT(""), 'A', HTML_ATTR_scrolling},
    {TEXT("selected"), TEXT(""), 'A', HTML_ATTR_Selected},
    {TEXT("shape"), TEXT(""), 'A', HTML_ATTR_shape},
@@ -498,6 +523,7 @@ static AttributeMapping XhtmlAttributeMappingTable[] =
    {TEXT("src"), TEXT("frame"), 'A', HTML_ATTR_FrameSrc},
    {TEXT("src"), TEXT("iframe"), 'A', HTML_ATTR_FrameSrc},
    {TEXT("src"), TEXT("script"), 'A', HTML_ATTR_script_src},
+#endif /* XHTML_BASIC */
    {TEXT("src"), TEXT(""), 'A', HTML_ATTR_SRC},
    {TEXT("standby"), TEXT(""), 'A', HTML_ATTR_standby},
    {TEXT("start"), TEXT(""), 'A', HTML_ATTR_Start},
@@ -508,15 +534,19 @@ static AttributeMapping XhtmlAttributeMappingTable[] =
    {TEXT("target"), TEXT(""), 'A', HTML_ATTR_target_},
    {TEXT("text"), TEXT(""), 'A', HTML_ATTR_TextColor},
    {TEXT("title"), TEXT(""), 'A', HTML_ATTR_Title},
+#ifndef XHTML_BASIC
    {TEXT("type"), TEXT("button"), 'A', HTML_ATTR_Button_type},
+#endif /* XHTML_BASIC */
    {TEXT("type"), TEXT("li"), 'A', HTML_ATTR_ItemStyle},
    {TEXT("type"), TEXT("link"), 'A', HTML_ATTR_Link_type},
    {TEXT("type"), TEXT("a"), 'A', HTML_ATTR_Link_type},
    {TEXT("type"), TEXT("object"), 'A', HTML_ATTR_Object_type},
    {TEXT("type"), TEXT("ol"), 'A', HTML_ATTR_NumberStyle},
    {TEXT("type"), TEXT("param"), 'A', HTML_ATTR_Param_type},
+#ifndef XHTML_BASIC
    {TEXT("type"), TEXT("script"), 'A', HTML_ATTR_content_type},
    {TEXT("type"), TEXT("style"), 'A', HTML_ATTR_Notation},
+#endif /* XHTML_BASIC */
    {TEXT("type"), TEXT("ul"), 'A', HTML_ATTR_BulletStyle},
    {TEXT("type"), TEXT(""), SPACE, DummyAttribute},
 
@@ -533,6 +563,7 @@ static AttributeMapping XhtmlAttributeMappingTable[] =
    {TEXT("value"), TEXT(""), 'A', HTML_ATTR_Value_},
    {TEXT("valuetype"), TEXT("param"), 'A', HTML_ATTR_valuetype},
    {TEXT("version"), TEXT(""), 'A', 0},
+#ifndef XHTML_BASIC
    {TEXT("vlink"), TEXT("body"), 'A', HTML_ATTR_VisitedLinkColor},
    {TEXT("vspace"), TEXT(""), 'A', HTML_ATTR_vspace},
 
@@ -542,12 +573,17 @@ static AttributeMapping XhtmlAttributeMappingTable[] =
    {TEXT("width"), TEXT("hr"), 'A', HTML_ATTR_Width__},
    {TEXT("width"), TEXT("iframe"), 'A', HTML_ATTR_Width__},
    {TEXT("width"), TEXT("image"), 'A', HTML_ATTR_Width__},
+#endif /* XHTML_BASIC */
    {TEXT("width"), TEXT("img"), 'A', HTML_ATTR_Width__},
    {TEXT("width"), TEXT("object"), 'A', HTML_ATTR_Width__},
+#ifndef XHTML_BASIC
    {TEXT("width"), TEXT("pre"), 'A', HTML_ATTR_Width__},
+#ifndef XHTML_BASIC
    {TEXT("width"), TEXT("table"), 'A', HTML_ATTR_Width__},
+#endif /* XHTML_BASIC */
    {TEXT("width"), TEXT("td"), 'A', HTML_ATTR_Width__},
    {TEXT("width"), TEXT("th"), 'A', HTML_ATTR_Width__},
+#endif /* XHTML_BASIC */
 
    {TEXT("zzghost"), TEXT(""), 'A', HTML_ATTR_Ghost_restruct},
    {TEXT(""), TEXT(""), EOS, 0}		/* Last entry. Mandatory */
@@ -800,6 +836,7 @@ Document doc;
 	 }
      }
 }
+#endif /* EXPAT_PARSER */
 
 /*----------------------------------------------------------------------
   XhtmlElementComplete
@@ -819,6 +856,7 @@ Document          doc;
 int              *error;
 #endif
 {
+#ifdef EXPAT_PARSER
    ElementType         elType, newElType, childType;
    Element             constElem, child, desc, leaf, prev, next, last,
 		       elFrames, lastFrame, lastChild;
@@ -1043,8 +1081,8 @@ int              *error;
        break;
 
      case HTML_EL_STYLE_:	/* it's a STYLE element */
-     case HTML_EL_Preformatted:	/* it's a PRE */
      case HTML_EL_SCRIPT:	/* it's a SCRIPT element */
+     case HTML_EL_Preformatted:	/* it's a PRE */
        /* if the last line of the Preformatted is empty, remove it */
        leaf = XmlLastLeafInElement (el);
        if (leaf != NULL)
@@ -1174,6 +1212,7 @@ int              *error;
      default:
        break;
      }
+#endif /* EXPAT_PARSER */
 }
 
 /*----------------------------------------------------------------------
@@ -1193,6 +1232,7 @@ STRING     elementName;
  
 #endif
 {
+#ifdef EXPAT_PARSER
    if (ustrcmp (elementName, TEXT("math")) == 0)
        ustrcpy (DTDname, TEXT("MathML"));
    else
@@ -1201,6 +1241,7 @@ STRING     elementName;
 	   ustrcpy (DTDname, TEXT("HTML"));
        else
 	 ustrcpy (DTDname, TEXT(""));
+#endif /* EXPAT_PARSER */
 }
 
 /*----------------------------------------------------------------------
@@ -1224,6 +1265,7 @@ CHAR_T*         elementName;
 Document        doc;
 #endif
 {
+#ifdef EXPAT_PARSER
    int                 i;
 
    attrType->AttrTypeNum = 0;
@@ -1254,6 +1296,7 @@ Document        doc;
        return (NULL);
    else
        return (&XhtmlAttributeMappingTable[i]);
+#endif /* EXPAT_PARSER */
 }
 
 /*----------------------------------------------------------------------
@@ -1274,6 +1317,7 @@ AttributeType       attrType;
 int*                value;
 #endif
 {
+#ifdef EXPAT_PARSER
    int       i;
 
    *value = 0;
@@ -1293,6 +1337,7 @@ int*                value;
        while (*value <= 0 &&
 	      XhtmlAttrValueMappingTable[i].ThotAttr != 0);
      }
+#endif /* EXPAT_PARSER */
 }
 
 /*---------------------------------------------------------------------------
@@ -1317,6 +1362,7 @@ STRING    alphabet;
 #endif
 
 {
+#ifdef EXPAT_PARSER
    int            i;
 
    for (i = 0; XhtmlEntityTable[i].charCode >= 0 &&
@@ -1333,7 +1379,7 @@ STRING    alphabet;
      {
        *alphabet = EOS;
      }
+#endif /* EXPAT_PARSER */
 }
 
 /*--------------------  Entities  (end)  ---------------------*/
-#endif /* EXPAT_PARSER */

@@ -577,8 +577,6 @@ void *context;
 	    }
 	}
     }
-  if (targetDocument > 0)
-    TtaRaiseView (targetDocument, 1); 
   TtaFreeMemory (url);
   if (sourceDocUrl)
     TtaFreeMemory (sourceDocUrl);

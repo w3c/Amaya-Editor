@@ -479,14 +479,15 @@ Element		el;
 /*----------------------------------------------------------------------
    XmlParseError
    print the error message msg on stderr.
+   When the line is 0 ask to expat the current line number
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void      XmlParseError (Document doc, CHAR_T* msg)
+void        XmlParseError (Document doc, CHAR_T* msg, int line)
 #else
-static void      XmlParseError (doc, msg)
+void        XmlParseError (doc, msg, line)
 Document    doc;
 CHAR_T*     msg;
-
+int         line;
 #endif
 {
 #ifdef _I18N_
@@ -507,7 +508,13 @@ CHAR_T*     msg;
          return;
      }
 
-   if (doc == currentDocument)
+   if (line != 0)
+     {
+       fprintf (ErrFile, "   line %d, char %d: %s\n", line, 0, mbcsMsg);
+       fclose (ErrFile);
+       ErrFile = NULL;
+     }
+   else if (doc == currentDocument)
      {
       /* the error message is related to the document being parsed */
       if (docURL != NULL)
@@ -1328,8 +1335,7 @@ CHAR_T*             GIname;
 
   if (stackLevel == MAX_STACK_HEIGHT)
     {
-      XmlParseError (currentDocument,
-		     TEXT("**FATAL** Too many XML levels"));
+      XmlParseError (currentDocument, TEXT("**FATAL** Too many XML levels"), 0);
       XMLabort = TRUE;
     }
   else
@@ -1341,6 +1347,15 @@ CHAR_T*             GIname;
       previousElementContent = currentElementContent;
       GetXmlElType (GIname, &elType, &mappedName,
 		    &currentElementContent, currentDocument);
+#ifdef XHTML_BASIC
+      if (mappedName == NULL)
+	{
+	  usprintf (msgBuffer, TEXT("Invalid tag \"%s\""), GIname);
+	  XmlParseError (currentDocument, msgBuffer, 0);
+	  /* doesn't process that element */
+	  return;
+	}
+#endif /* XHTML_BASIC */
       if (mappedName != NULL)
 	ustrcpy (currentMappedName, mappedName);
       
@@ -1350,7 +1365,7 @@ CHAR_T*             GIname;
 	  if (ustrlen (GIname) > MaxMsgLength - 20)
 	    GIname[MaxMsgLength - 20] = WC_EOS;
 	  usprintf (msgBuffer, TEXT("Unknown XML element %s"), GIname);
-	  XmlParseError (currentDocument, msgBuffer);
+	  XmlParseError (currentDocument, msgBuffer, 0);
 	  UnknownTag = TRUE;
 	  nameElementStack[stackLevel] = NULL;
 	  elementStack[stackLevel] = NULL;
@@ -1364,7 +1379,7 @@ CHAR_T*             GIname;
 	    {
 	      usprintf (msgBuffer,
 			TEXT("Tag <%s> is not allowed here"), GIname);
-	      XmlParseError (currentDocument, msgBuffer);
+	      XmlParseError (currentDocument, msgBuffer, 0);
 	      UnknownTag = TRUE;
 	      nameElementStack[stackLevel] = NULL;
 	      elementStack[stackLevel] = NULL;
@@ -1466,7 +1481,12 @@ CHAR_T     *GIname;
    elType.ElTypeNum = 0;
    GetXmlElType (GIname, &elType, &mappedName,
 		 &currentElementContent, currentDocument);
-   
+#ifdef XHTML_BASIC
+      if (mappedName == NULL)
+	  /* doesn't process that element */
+	  return;
+#endif /* XHTML_BASIC */
+
    /* restore Context */
    currentParserCtxt = elementParserCtxt;
    
@@ -1477,12 +1497,12 @@ CHAR_T     *GIname;
 	 GIname[MaxMsgLength - 20] = WC_EOS;
        usprintf (msgBuffer,
 		 TEXT("Unknown XML element </%s>"), GIname);
-       XmlParseError (currentDocument, msgBuffer);
+       XmlParseError (currentDocument, msgBuffer, 0);
      }
    else
      {
        if (currentElementContent == 'E')
-	 /* this is an empty element */
+	 /* this is anMapGI empty element */
 	 {
 	   CloseElement (mappedName, TRUE);
 	   (*(currentParserCtxt->ElementComplete)) (lastElement,
@@ -1495,7 +1515,7 @@ CHAR_T     *GIname;
 	   {
 	     usprintf (msgBuffer,
 		       TEXT("Unexpected end tag </%s>"), GIname);
-	     XmlParseError (currentDocument, msgBuffer);
+	     XmlParseError (currentDocument, msgBuffer, 0);
 	   }
      }
 
@@ -1743,13 +1763,14 @@ CHAR_T         *attrName;
    attrType.AttrTypeNum = 0;
 
    /* get the corresponding Thot attribute */
-   if (UnknownTag)
+   if (UnknownTag || currentMappedName[0] == WC_EOS)
       /* ignore attributes of unknown tags */
       mapAttr = NULL;
    else   
        {
 	 mapAttr = XhtmlMapAttribute (attrName, &attrType,
-				      nameElementStack[stackLevel-1],
+				      /*nameElementStack[stackLevel-1],*/
+				      currentMappedName,
 				      currentDocument);
        }
 
@@ -1767,7 +1788,7 @@ CHAR_T         *attrName;
 	   usprintf (msgBuffer,
 		     TEXT("Unknown attribute \"%s\""),
 		     attrName);
-	   XmlParseError (currentDocument, msgBuffer);
+	   XmlParseError (currentDocument, msgBuffer, 0);
 	   /* attach an Invalid_attribute to the current element */
 	   mapAttr = XhtmlMapAttribute (TEXT("unknown_attr"),
 					&attrType,
@@ -1886,7 +1907,7 @@ CHAR_T         *attrName;
        usprintf (msgBuffer,
 		 TEXT("Unknown attribute \"%s\""),
 		 attrName);
-       XmlParseError (currentDocument, msgBuffer);
+       XmlParseError (currentDocument, msgBuffer, 0);
        UnknownAttr = TRUE;
      }
    else
@@ -1900,7 +1921,7 @@ CHAR_T         *attrName;
            usprintf (msgBuffer,
 		     TEXT("Duplicate XML attribute %s"),
 		     attrName);
-           XmlParseError (currentDocument, msgBuffer);	
+           XmlParseError (currentDocument, msgBuffer, 0);	
 	 }
        else
 	 {
@@ -1933,7 +1954,7 @@ CHAR_T         *attrName;
    currentAttribute = NULL;
    HTMLStyleAttribute = FALSE;
 
-   if (nameElementStack[stackLevel-1] == NULL)
+   if (/*nameElementStack[stackLevel-1] == NULL*/currentMappedName[0] == WC_EOS)
        return;
 
    /* look for a NS_SEP in the tag name (namespaces) and ignore the
@@ -2039,7 +2060,7 @@ CHAR_T*             val;
       if (ustrlen (val) > MaxMsgLength - 40)
           val[MaxMsgLength - 40] = WC_EOS;
       usprintf (msgBuffer, TEXT("Unknown attribute value \"type = %s\""), val);
-      XmlParseError (currentDocument, msgBuffer);
+      XmlParseError (currentDocument, msgBuffer, 0);
       usprintf (msgBuffer, TEXT("type=%s"), val);
       XhtmlMapAttribute (TEXT("unknown_attr"), &attrType,
 			 NULL, currentDocument);
@@ -2101,7 +2122,7 @@ CHAR_T     *attrValue;
 	     {
 	       usprintf (msgBuffer,
 			 TEXT("Unknown XML attribute value: %s"), attrValue);
-	       XmlParseError (currentDocument, msgBuffer);	
+	       XmlParseError (currentDocument, msgBuffer, 0);	
 	     }
 	   else
 	       TtaSetAttributeValue (currentAttribute, val,
@@ -2215,7 +2236,7 @@ CHAR_T     *attrValue;
 		       usprintf (msgBuffer,
 				 TEXT("Unknown attribute value \"%s = %s\""),
 				 attrName, attrValue);
-		       XmlParseError (currentDocument, msgBuffer);
+		       XmlParseError (currentDocument, msgBuffer, 0);
 
 		       /* remove the attribute and replace it by an */
 		       /* Invalid_attribute */
@@ -2253,7 +2274,7 @@ CHAR_T     *attrValue;
 			   usprintf (msgBuffer,
 				     TEXT("Invalid attribute value \"%s\""),
 				     attrValue);
-			   XmlParseError (currentDocument, msgBuffer);
+			   XmlParseError (currentDocument, msgBuffer, 0);
 			 }
 		     }
 		   break;
@@ -2271,7 +2292,7 @@ CHAR_T     *attrValue;
 			       usprintf (msgBuffer,
 					 TEXT("Unknown language: %s"),
 					 attrValue);
-			       XmlParseError (currentDocument, msgBuffer);
+			       XmlParseError (currentDocument, msgBuffer, 0);
 			     }
 			   else
 			     {
@@ -2688,7 +2709,7 @@ STRING       entityName;
        usprintf (msgBuffer,
 		 TEXT("Unknown XML entity \"&%s;\""),
 		 entityName);
-       XmlParseError (currentDocument, msgBuffer);
+       XmlParseError (currentDocument, msgBuffer, 0);
      }
    else
      {
@@ -2740,7 +2761,7 @@ CHAR_T     *commentValue;
        usprintf (msgBuffer,
 		 TEXT("Unknown XML element %s"),
 		 commentValue);
-       XmlParseError (currentDocument, msgBuffer);
+       XmlParseError (currentDocument, msgBuffer, 0);
      }
    else
      {
@@ -3384,11 +3405,9 @@ const XML_Char  *notationName;
    One parameter should be NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void        XmlParse (FILE *infile,
-			     char *HTMLbuf)
+static void        XmlParse (FILE *infile, char *HTMLbuf)
 #else
-static void        XmlParse (infile,
-			     HTMLbuf)
+static void        XmlParse (infile, HTMLbuf)
 FILE        *infile;
 char        *HTMLbuf;
 
@@ -3397,7 +3416,6 @@ char        *HTMLbuf;
    UCHAR_T      charRead; 
    ThotBool     match;
    ThotBool     endOfFile = FALSE;
-
 #define	 COPY_BUFFER_SIZE	1024
   char          bufferRead[COPY_BUFFER_SIZE];
   int           res;
@@ -3408,22 +3426,17 @@ char        *HTMLbuf;
 
    /* read the XML file */
    
-   while (!endOfFile && !XMLrootClosed)
+   while (!endOfFile && !XMLrootClosed && !XMLabort)
      {
        res = gzread (infile, bufferRead, COPY_BUFFER_SIZE);
        
        if (res < COPY_BUFFER_SIZE)
 	 endOfFile = TRUE;
        
-       if (!XML_Parse (parser, bufferRead,
-		       res, endOfFile))
+       if (!XML_Parse (parser, bufferRead, res, endOfFile))
 	 {
-	   /*
-	   printf("\nError at line %d and column %d : %s\n",
-		  XML_GetCurrentLineNumber (parser),
-		  XML_GetCurrentColumnNumber (parser),
-		  XML_ErrorString (XML_GetErrorCode (parser)));
-	   */
+	   XmlParseError (currentDocument,
+			  XML_ErrorString (XML_GetErrorCode (parser)), 0);
 	   endOfFile = TRUE;
 	 }
      }
@@ -3431,7 +3444,9 @@ char        *HTMLbuf;
    if (ErrFile)
      {
        fclose (ErrFile);
-       ErrFile = (FILE*) 0;
+       ErrFile = NULL;
+       if (XMLabort)
+	 InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_ERROR));
      } 
 }
 
@@ -3456,6 +3471,7 @@ void                FreeXmlParserContexts ()
 	TtaFreeMemory (ctxt);
 	ctxt = nextCtxt;
       }
+   firstParserCtxt = NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -3879,7 +3895,9 @@ ThotBool    plainText;
 
 	/* do not check the Thot abstract tree against the structure */
 	/* schema while building the Thot document. */
+#ifndef XHTML_BASIC
 	TtaSetStructureChecking (0, doc);
+#endif /* XHTML_BASIC */
 	/* set the notification mode for the new document */
 	TtaSetNotificationMode (doc, 1);
 
@@ -3967,7 +3985,7 @@ ThotBool    plainText;
 	TtaSetDisplayMode (doc, DisplayImmediately);
 
 	FreeExpatParser ();
-
+	FreeXmlParserContexts ();
 	/* check the Thot abstract tree against the structure schema. */
 	TtaSetStructureChecking (1, doc);
 	DocumentSSchema = NULL;

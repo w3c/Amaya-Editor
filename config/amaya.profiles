@@ -32,17 +32,38 @@
 +config
 +css-style
 +edit
++basic-form-module
 +forms
++link-module
++base-module
++meta-module
 +head
 +html-style
 +makebook
 +maths
-+objects
++object-module
 +print
 +source-view
 +spell
 +tables
 +templates
++views
+
+################# AMAYA BASIC-EDITOR
+<basic-editor>
++amayabase
++struct-module
++text-module
++hypertext-module
++list-module
++browsing
++basic-css-style
++edit
++object-module
++print
++source-view
++spell
++basic-table-module
 +views
 
 ################# AMAYA BROWSER
@@ -79,12 +100,16 @@ ShowMapAreas
 +config
 +css-style
 +edit
++basic-form-module
 +forms
++link-module
++base-module
++meta-module
 +head
 +html-style
 +makebook
 +maths
-+objects
++object-module
 +print
 +source-view
 +spell
@@ -125,8 +150,11 @@ TtcSearchText
 
 ########### EDITING
 [edit]
-+html
-+links
++struct-module
++text-module
++list-module
++image-module
++hypertext-module
 HelpAttributes
 HelpChanging
 HelpPublishing
@@ -164,38 +192,41 @@ SetupAndPrint
 
 ########### HTML
 [head]
-&CreateBase
-&CreateMeta
-&CreateLinkInHead
 &CreateScript
 &CreateStyle
-&CreateComment
-&CreateAddress
 
-[html]
+########### XHTML modules
+[struct-module]
 &ChangeTitle
+&CreateComment
+
+[text-module]
+&SetOnOffAbbr
+&SetOnOffAcronym
+&CreateAddress
 &CreateBlockQuote
 &CreateBreak
-&CreateDefinitionList
-&CreateDefinitionTerm
-&CreateDefinitionDef
+&SetOnOffCite
+&SetOnOffCode
+&SetOnOffDefinition
 &CreateDivision
+&SetOnOffEmphasis
 &CreateHeading1
 &CreateHeading2
 &CreateHeading3
 &CreateHeading4
 &CreateHeading5
 &CreateHeading6
-&CreateHorizontalRule
-&CreateImage
+&SetOnOffKeyboard
 &CreateParagraph
 &CreatePreformatted
-&CreateList
-&CreateNumberedList
+&SetOnOffQuotation
+&SetOnOffSample
+&SetOnOffStrong
+&SetOnOffVariable
 HelpCreating
-HelpImageMaps
 
-[links]
+[hypertext-module]
 &CreateOrChangeLink
 &CreateTarget
 &DeleteAnchor
@@ -203,15 +234,15 @@ HelpLinks
 &LinkToPreviousTarget
 ShowTargets
 
-[areas]
-CreateAreaCircle
-CreateAreaPoly
-CreateAreaRect
-ShowMapAreas
+[list-module]
+&CreateDefinitionList
+&CreateDefinitionTerm
+&CreateDefinitionDef
+&CreateList
+&CreateNumberedList
 
-[forms]
+[basic-form-module]
 &CreateForm
-&CreatePushButton
 &CreateToggle
 &CreateFileInput
 &CreateHiddenInput
@@ -221,29 +252,54 @@ ShowMapAreas
 &CreateReset
 &CreateSubmit
 &CreateTextInput
-&CreateFieldset
 &CreateLabel
 &CreateOption
-&CreateOptGroup
 &CreateTextArea
 
-[objects]
+[image-module]
+&CreateImage
+
+[object-module]
 &CreateObject
 &CreateParameter
 
-[tables]
+[meta-module]
+&CreateMeta
+
+[link-module]
+&CreateLinkInHead
+
+[base-module]
+&CreateBase
+
+[areas]
+CreateAreaCircle
+CreateAreaPoly
+CreateAreaRect
+ShowMapAreas
+HelpImageMaps
+
+[forms]
+&CreatePushButton
+&CreateFieldset
+&CreateOptGroup
+
+[basic-table-module]
 &CreateTable
 &CreateCaption
-&CreateColgroup
-&CreateCol
-&CreateTHead
 &CreateTBody
-&CreateTFoot
 &CreateRow
 &CreateDataCell
 &CreateHeadingCell
 &DeleteColumn
 HelpTables
+
+[tables]
++basic-table-module
+&CreateTHead
+&CreateTFoot
+&CreateColgroup
+&CreateCol
 
 ################# MATHML
 [maths]
@@ -277,17 +333,7 @@ ShowGraphicsPalette
 
 ########### STYLE
 [html-style]
-&ChangeBackgroundImage
-&SetOnOffEmphasis
-&SetOnOffStrong
-&SetOnOffCite
-&SetOnOffDefinition
-&SetOnOffCode
-&SetOnOffVariable
-&SetOnOffSample
-&SetOnOffKeyboard
-&SetOnOffAbbr
-&SetOnOffAcronym
+&CreateHorizontalRule
 &SetOnOffINS
 &SetOnOffDEL
 &SetOnOffItalic
@@ -298,7 +344,6 @@ ShowGraphicsPalette
 &CreateIFrame
 &SetOnOffSub
 &SetOnOffSup
-&SetOnOffQuotation
 &SetOnOffBDO
 
 [css-browsing]
@@ -306,18 +351,22 @@ OpenCSS
 DisableCSS
 EnableCSS
 
-[css-style]
+[basic-css-style]
 +css-browsing
+&ChangeBackgroundImage
+&TtcChangeCharacters
+&TtcChangeColors
+&TtcChangeFormat
 &NewCss
-&CreateClass
-&ApplyClass
 &LinkCSS
 OpenCSS
 &RemoveCSS
 HelpStyleSheets
-&TtcChangeCharacters
-&TtcChangeColors
-&TtcChangeFormat
+
+[css-style]
++basic-css-style
+&CreateClass
+&ApplyClass
 
 ########### OPTIONAL MODULES
 [config]

@@ -2546,22 +2546,24 @@ ThotBool            history;
 
 #ifdef EXPAT_PARSER
       if (XHTMLdoc)
-	  StartXmlParser (newdoc,
-			  tempdocument,
-			  documentname,
-			  tempdir,
-			  pathname,
-			  plainText);
+	StartXmlParser (newdoc,
+			tempdocument,
+			documentname,
+			tempdir,
+			pathname,
+			plainText);
+#ifdef XHTML_BASIC
+      else if (!plainText)
+	{
+	  XmlParseError (newdoc, TEXT("**FATAL** Invalid XML document"), 1);
+	  ShowLogFile (newdoc, 1);
+	  InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_ERROR));
+	}
+#endif /* XHTML_BASIC */
       else
-	  StartParser (newdoc,
-		       tempdocument,
-		       documentname,
-		       tempdir,
-		       pathname,
-		       plainText);
+	StartParser (newdoc, tempdocument, documentname, tempdir, pathname, plainText);
 #else /* EXPAT_PARSER */
-      StartParser (newdoc, tempdocument, documentname, tempdir, pathname,
-		   plainText);
+      StartParser (newdoc, tempdocument, documentname, tempdir, pathname, plainText);
 #endif /* EXPAT_PARSER */
 
       TtaFreeMemory (tempdir);
