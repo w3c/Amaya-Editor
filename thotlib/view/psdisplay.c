@@ -80,7 +80,7 @@ static int          NbWhiteSp;
    and the one asked, and load it if needed.
    num is an index in the Thot internal color table.
   ----------------------------------------------------------------------*/
-static void         CurrentColor (FILE * fout, int num)
+static void CurrentColor (FILE * fout, int num)
 {
   unsigned short      red;
   unsigned short      green;
@@ -110,7 +110,7 @@ static void         CurrentColor (FILE * fout, int num)
    and emit the code to load it, if necessary.
    Returns 0 if it is a Latin font and 1 for a Greek one.
   ----------------------------------------------------------------------*/
-static int          CurrentFont (FILE * fout, ptrfont font)
+static int CurrentFont (FILE * fout, ptrfont font)
 {
   int                 i, result;
   CHAR_T              c1, c2;
@@ -157,7 +157,7 @@ static int          CurrentFont (FILE * fout, ptrfont font)
   DrawChar draw a char at location (x, y) in frame and with font.
   The parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void          DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int fg)
+void DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int fg)
 {
    FILE               *fout;
    int                 w;
@@ -180,33 +180,36 @@ void          DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int 
 }
 
 /*----------------------------------------------------------------------
-   Transcode emit the Poscript code for the given char.
+   Transcode emit the PostScript code for the given char.
   ----------------------------------------------------------------------*/
-static void         Transcode (FILE * fout, int encoding, CHAR_T car)
+static void Transcode (FILE * fout, int encoding, UCHAR_T car)
 {
-  if (car >= ' ' && car <= '~' && car != '(' && car != ')' && car != '\\')
-    fprintf (fout, "%c", car);
-  else
-    switch (car)
-      {
-      case '(':
-	fputs ("\\(", fout);
-	break;
-      case ')':
-	fputs ("\\)", fout);
-	break;
-      case '*':
-	if (encoding == 0)
-	  fputs ("*", fout);
-	else
-	  fputs ("\\267", fout);
-	break;
-      case '\\':
-	fputs ("\\\\", fout);
-	break;
-      default:
-	fprintf (fout, "\\%o", (UCHAR_T) car);
-      }
+  switch (car)
+    {
+    case '(':
+      fprintf (fout, "\\(");
+      break;
+    case ')':
+      fprintf (fout, "\\)");
+      break;
+    case '*':
+      if (encoding == 0)
+	fprintf (fout, "*");
+      else
+	fprintf (fout, "\\267");
+      break;
+    case '\\':
+      fprintf (fout, "\\\\");
+      break;
+    case START_ENTITY:
+      fprintf (fout, "&");
+      break;
+    default:
+      if (car >= ' ' && car <= '~')
+	fprintf (fout, "%c", car);
+      else
+	fprintf (fout, "\\%o", car);
+    }
 }
 
 
@@ -215,7 +218,7 @@ static void         Transcode (FILE * fout, int encoding, CHAR_T car)
    pattern, or the drawing color, or the background color,
    or keep it transparent, depending on pattern value.
   ----------------------------------------------------------------------*/
-static void         FillWithPattern (FILE * fout, int fg, int bg, int pattern)
+static void FillWithPattern (FILE * fout, int fg, int bg, int pattern)
 {
    unsigned short      red;
    unsigned short      green;
@@ -257,135 +260,134 @@ static void         FillWithPattern (FILE * fout, int fg, int bg, int pattern)
 /*----------------------------------------------------------------------
    DrawString draw a char string of lg chars beginning at buff[i].
    Drawing starts at (x, y) in frame and using font.
-   lgboite gives the width of the final box or zero,
+   boxWidth gives the width of the final box or zero,
    this is used only by the thot formmating engine.
    bl indicate taht there is a space before the string
    hyphen indicate whether an hyphen char has to be added.
-   debutbloc is 1 if the text is at a paragraph beginning
+   StartABlock is 1 if the text is at a paragraph beginning
    (no justification of first spaces).
    parameter fg indicate the drawing color
    Returns the lenght of the string drawn.
   ----------------------------------------------------------------------*/
-int   DrawString (STRING buff, int i, int lg, int frame, int x, int y, ptrfont font, int lgboite, int bl, int hyphen, int StartOfCurrentBlock, int fg, int shadow)
+int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
+		ptrfont font, int boxWidth, int bl, int hyphen,
+		int startABlock, int fg, int shadow)
 {
-   STRING              ptcar;
-   int                 j, encoding, width;
-   int                 NonJustifiedWhiteSp;
-   FILE               *fout;
+  FILE               *fout;
+  STRING              ptcar;
+  int                 j, encoding, width;
+  int                 noJustifiedWhiteSp;
 
-   fout = (FILE *) FrRef[frame];
-   encoding = 0;
-   if (y < 0)
-      return 0;
-   y += FrameTable[frame].FrTopMargin;
-   /* NonJustifiedWhiteSp is > 0 if writing a fixed lenght is needed */
-   /* and equal to 0 if a justified space is to be printed */
+  fout = (FILE *) FrRef[frame];
+  encoding = 0;
+  if (y < 0)
+    return 0;
 
-   NonJustifiedWhiteSp = StartOfCurrentBlock;
-   /* Is this a new box ? */
-   if (SameBox == 0)
-     {
+  y += FrameTable[frame].FrTopMargin;
+  /* noJustifiedWhiteSp is > 0 if writing a fixed lenght is needed */
+  /* and equal to 0 if a justified space is to be printed */  
+  noJustifiedWhiteSp = startABlock;
+  /* Is this a new box ? */
+  if (SameBox == 0)
+    {
       /* Beginning of a new box */
       SameBox = 1;
       X = PixelToPoint (x);
       Y = PixelToPoint (y + FontBase (font));
       NbWhiteSp = 0;
-
       if (fg >= 0)
 	{
-	 /* Do we need to change the current color ? */
-         CurrentColor (fout, fg);
-
-         /* Do we need to change the current font ? */
-         encoding = CurrentFont (fout, font);
-         fprintf (fout, "(");
+	  /* Do we need to change the current color ? */
+	  CurrentColor (fout, fg);
+	  /* Do we need to change the current font ? */
+	  encoding = CurrentFont (fout, font);
+	  fprintf (fout, "(");
 	}
-   }
+    }
 
-   if (shadow)
-     {
-       /* replace each character by a star */
-       j = 0;
-       ptcar = TtaAllocString ((size_t) (lg + 1));
-       while (j < lg)
-	 ptcar[j++] = '*';
-       ptcar[lg] = EOS;
-       bl = 0;
-     }
-   else
-     ptcar = &buff[i - 1];
+  if (shadow)
+    {
+      /* replace each character by a star */
+      j = 0;
+      ptcar = TtaAllocString ((size_t) (lg + 1));
+      while (j < lg)
+	ptcar[j++] = '*';
+      ptcar[lg] = EOS;
+      bl = 0;
+    }
+  else
+    ptcar = &buff[i - 1];
 
-   /* Add the justified white space */
-   if (bl > 0)
-     {
-       NbWhiteSp++;
-       if (fg >= 0)
-	 Transcode (fout, encoding, ' ');
-     }
-   
+  /* Add the justified white space */
+  if (bl > 0)
+    {
+      NbWhiteSp++;
+      if (fg >= 0)
+	Transcode (fout, encoding, ' ');
+    }
+  
    /* Emit the chars */
-   for (j = 0; j < lg; j++)
-     {
-       /* enumerate the white spaces */
-       if (ptcar[j] == ' ')
-	 if (NonJustifiedWhiteSp == 0)
-	   {
-	     /* write a justified white space */
-	     NbWhiteSp++;
-	     if (fg >= 0)
-	       Transcode (fout, encoding, ptcar[j]);
-	   }
-	 else /* write a fixed lenght white space */
-	   {
-	   if (fg >= 0)
-	     fputs ("\\240", fout);
-	   }
-       else
-	 {
-	   NonJustifiedWhiteSp = 0;
-	   if (fg >= 0)
-	     Transcode (fout, encoding, ptcar[j]);
-	 }
-     }
+  for (j = 0; j < lg; j++)
+    {
+      /* enumerate the white spaces */
+      if (ptcar[j] == ' ')
+	{
+	  if (noJustifiedWhiteSp == 0)
+	    {
+	      /* write a justified white space */
+	      NbWhiteSp++;
+	      if (fg >= 0)
+		Transcode (fout, encoding, ptcar[j]);
+	    }
+	  else if (fg >= 0)
+	    /* write a fixed lenght white space */
+	    fputs ("\\240", fout);
+	}
+      else
+	{
+	  noJustifiedWhiteSp = 0;
+	  if (fg >= 0)
+	    Transcode (fout, encoding, ptcar[j]);
+	}
+    }
    
-   /* Is an hyphen needed ? */
-   if (hyphen && fg >= 0)
-     Transcode (fout, encoding, '\255');
-   
-   /* is this the end of the box */
-   if (lgboite != 0)
-     {
-       lgboite = PixelToPoint (lgboite);
-       /* Is justification needed ? */
-       if (fg >= 0)
-	 {
-	 if (NbWhiteSp == 0)
-	   fprintf (fout, ") %d %d %d s\n", lgboite, X, -Y);
-	 else
-	   fprintf (fout, ") %d %d %d %d j\n", NbWhiteSp, lgboite, X, -Y);
-	 }
-       SameBox = 0;
-     }
-   if (lg > 0)
-     {
-       /* compute the width of the string */
-       width = 0;
-       j = 0;
-       while (j < lg)
-	 width += CharacterWidth (ptcar[j++], font);
-       return (width);
-     } 
-   
-   if (shadow)
-     TtaFreeMemory (ptcar);
-   return (0);
+  /* Is an hyphen needed ? */
+  if (hyphen && fg >= 0)
+    Transcode (fout, encoding, '\255');
+  /* is this the end of the box */
+  if (boxWidth != 0)
+    {
+      boxWidth = PixelToPoint (boxWidth);
+      /* Is justification needed ? */
+      if (fg >= 0)
+	{
+	  if (NbWhiteSp == 0)
+	    fprintf (fout, ") %d %d %d s\n", boxWidth, X, -Y);
+	  else
+	    fprintf (fout, ") %d %d %d %d j\n", NbWhiteSp, boxWidth, X, -Y);
+	}
+      SameBox = 0;
+    }
+  if (lg > 0)
+    {
+      /* compute the width of the string */
+      width = 0;
+      j = 0;
+      while (j < lg)
+	width += CharacterWidth (ptcar[j++], font);
+      return (width);
+    } 
+  if (shadow)
+    TtaFreeMemory (ptcar);
+  return (0);
 }
 
 
 /*----------------------------------------------------------------------
    DisplayUnderline draw the underline, overline or cross line
   ----------------------------------------------------------------------*/
-void   DisplayUnderline (int frame, int x, int y, ptrfont font, int type, int lg, int fg)
+void DisplayUnderline (int frame, int x, int y, ptrfont font, int type,
+		       int lg, int fg)
 {
   int                 fheight;	/* font height           */
   int                 bottom;	/* underline position    */
@@ -447,7 +449,8 @@ void   DisplayUnderline (int frame, int x, int y, ptrfont font, int type, int lg
 /*----------------------------------------------------------------------
    DrawRadical Draw a radical symbol.
   ----------------------------------------------------------------------*/
-void    DrawRadical (int frame, int thick, int x, int y, int l, int h, ptrfont font, int fg)
+void DrawRadical (int frame, int thick, int x, int y, int l, int h,
+		  ptrfont font, int fg)
 {
    int                 fh;
    int                 ex;
@@ -487,7 +490,8 @@ void    DrawRadical (int frame, int thick, int x, int y, int l, int h, ptrfont f
    - contour if type = 1
    - double if type = 2.
   ----------------------------------------------------------------------*/
-void    DrawIntegral (int frame, int thick, int x, int y, int l, int h, int type, ptrfont font, int fg)
+void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
+		   int type, ptrfont font, int fg)
 {
    int                 yf;
    int                 ey, ym;
@@ -558,7 +562,7 @@ void    DrawIntegral (int frame, int thick, int x, int y, int l, int h, int type
 /*----------------------------------------------------------------------
    DrawSigma draw a Sigma symbol.
   ----------------------------------------------------------------------*/
-void    DrawSigma (int frame, int x, int y, int l, int h, ptrfont font, int fg)
+void DrawSigma (int frame, int x, int y, int l, int h, ptrfont font, int fg)
 {
    FILE               *fout;
 
@@ -582,7 +586,7 @@ void    DrawSigma (int frame, int x, int y, int l, int h, ptrfont font, int fg)
 /*----------------------------------------------------------------------
    DrawPi draw a PI symbol.
   ----------------------------------------------------------------------*/
-void  DrawPi (int frame, int x, int y, int l, int h, ptrfont font, int fg)
+void DrawPi (int frame, int x, int y, int l, int h, ptrfont font, int fg)
 {
    FILE             *fout;
 
@@ -606,7 +610,7 @@ void  DrawPi (int frame, int x, int y, int l, int h, ptrfont font, int fg)
 /*----------------------------------------------------------------------
    DrawUnion draw an Union symbol.
   ----------------------------------------------------------------------*/
-void   DrawUnion (int frame, int x, int y, int l, int h, ptrfont font, int fg)
+void DrawUnion (int frame, int x, int y, int l, int h, ptrfont font, int fg)
 {
    FILE               *fout;
 
@@ -630,7 +634,8 @@ void   DrawUnion (int frame, int x, int y, int l, int h, ptrfont font, int fg)
 /*----------------------------------------------------------------------
    DrawIntersection draw an intersection symbol.
   ----------------------------------------------------------------------*/
-void   DrawIntersection (int frame, int x, int y, int l, int h, ptrfont font, int fg)
+void DrawIntersection (int frame, int x, int y, int l, int h, ptrfont font,
+		       int fg)
 {
    FILE               *fout;
 
@@ -655,7 +660,8 @@ void   DrawIntersection (int frame, int x, int y, int l, int h, ptrfont font, in
    0 (right arrow), 45, 90, 135, 180,
    225, 270 ou 315.
   ----------------------------------------------------------------------*/
-void    DrawArrow (int frame, int thick, int style, int x, int y, int l, int h, int direction, int fg)
+void DrawArrow (int frame, int thick, int style, int x, int y, int l,
+		int h, int direction, int fg)
 {
    int                 xm, ym, xf, yf, lg;
    FILE               *fout;
@@ -749,7 +755,8 @@ void    DrawArrow (int frame, int thick, int style, int x, int y, int l, int h, 
 /*----------------------------------------------------------------------
    DrawBracket draw an opening or closing bracket (depending on direction)
   ----------------------------------------------------------------------*/
-void   DrawBracket (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int fg)
+void DrawBracket (int frame, int thick, int x, int y, int l, int h,
+		  int direction, ptrfont font, int fg)
 {
    int                 ey, yf;
    FILE               *fout;
@@ -799,7 +806,8 @@ void   DrawBracket (int frame, int thick, int x, int y, int l, int h, int direct
    DrawPointyBracket draw an opening or closing pointy bracket (depending
    on direction)
   ----------------------------------------------------------------------*/
-void   DrawPointyBracket (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int fg)
+void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
+			int direction, ptrfont font, int fg)
 {
    int                 ey, yf;
    FILE               *fout;
@@ -855,7 +863,8 @@ void   DrawPointyBracket (int frame, int thick, int x, int y, int l, int h, int 
 /*----------------------------------------------------------------------
    DrawParenthesis draw a closing or opening parenthesis (direction).
   ----------------------------------------------------------------------*/
-void    DrawParenthesis (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int fg)
+void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
+		      int direction, ptrfont font, int fg)
 {
    int                 ey, yf;
    FILE               *fout;
@@ -908,7 +917,8 @@ void    DrawParenthesis (int frame, int thick, int x, int y, int l, int h, int d
 /*----------------------------------------------------------------------
    DrawBrace draw an opening of closing brace (depending on direction).
   ----------------------------------------------------------------------*/
-void                DrawBrace (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int fg)
+void DrawBrace (int frame, int thick, int x, int y, int l, int h,
+		int direction, ptrfont font, int fg)
 {
    int                 ey, yf;
    FILE               *fout;
@@ -961,7 +971,8 @@ void                DrawBrace (int frame, int thick, int x, int y, int l, int h,
    Parameters fg, bg, and pattern are for drawing
    color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-void   DrawRectangle (int frame, int thick, int style, int x, int y, int width, int height, int fg, int bg, int pattern)
+void DrawRectangle (int frame, int thick, int style, int x, int y,
+		    int width, int height, int fg, int bg, int pattern)
 {
    int                 xf, yf;
    FILE               *fout;
@@ -1078,7 +1089,8 @@ void   DrawSegments (int frame, int thick, int style, int x, int y, PtrTextBuffe
    Parameters fg, bg, and pattern are for drawing
    color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-void   DrawPolygon (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int fg, int bg, int pattern)
+void DrawPolygon (int frame, int thick, int style, int x, int y,
+		  PtrTextBuffer buffer, int nb, int fg, int bg, int pattern)
 {
    int                 i, j;
    float               xp, yp;
@@ -1131,7 +1143,9 @@ void   DrawPolygon (int frame, int thick, int style, int x, int y, PtrTextBuffer
    - both backward and forward arrows have to be drawn (3)
    Parameter control indicate the control points.
   ----------------------------------------------------------------------*/
-void    DrawCurve (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int fg, int arrow, C_points * controls)
+void DrawCurve (int frame, int thick, int style, int x, int y,
+		PtrTextBuffer buffer, int nb, int fg, int arrow,
+		C_points *controls)
 {
    PtrTextBuffer       adbuff;
    int                 i, j;
@@ -1228,7 +1242,9 @@ void    DrawCurve (int frame, int thick, int style, int x, int y, PtrTextBuffer 
    color, background color and fill pattern.
    Parameter controls contains the list of control points.
   ----------------------------------------------------------------------*/
-void   DrawSpline (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int fg, int bg, int pattern, C_points * controls)
+void DrawSpline (int frame, int thick, int style, int x, int y,
+		 PtrTextBuffer buffer, int nb, int fg, int bg, int pattern,
+		 C_points *controls)
 {
    PtrTextBuffer       adbuff;
    int                 i, j;
@@ -1284,8 +1300,8 @@ void   DrawSpline (int frame, int thick, int style, int x, int y, PtrTextBuffer 
   Parameter path is a pointer to the list of path segments
   fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void   DrawPath (int frame, int thick, int style, int x, int y,
-		 PtrPathSeg path, int fg, int bg, int pattern)
+void DrawPath (int frame, int thick, int style, int x, int y,
+	       PtrPathSeg path, int fg, int bg, int pattern)
 {
   PtrPathSeg          pPa;
   float               x1, y1, cx1, cy1, x2, y2, cx2, cy2;
@@ -1372,7 +1388,8 @@ void   DrawPath (int frame, int thick, int style, int x, int y,
    Parameters fg, bg, and pattern are for drawing
    color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-void    DrawDiamond (int frame, int thick, int style, int x, int y, int width, int height, int fg, int bg, int pattern)
+void DrawDiamond (int frame, int thick, int style, int x, int y,
+		  int width, int height, int fg, int bg, int pattern)
 {
    int                 xm, xf, ym, yf;
    FILE               *fout;
@@ -1402,7 +1419,8 @@ void    DrawDiamond (int frame, int thick, int style, int x, int y, int width, i
    Parameters fg, bg, and pattern are for drawing
    color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-void   DrawOval (int frame, int thick, int style, int x, int y, int width, int height, int rx, int ry, int fg, int bg, int pattern)
+void DrawOval (int frame, int thick, int style, int x, int y, int width,
+	       int height, int rx, int ry, int fg, int bg, int pattern)
 {
   int                 arc, xf, yf;
   FILE               *fout;
@@ -1445,7 +1463,8 @@ void   DrawOval (int frame, int thick, int style, int x, int y, int width, int h
    Parameters fg, bg, and pattern are for drawing
    color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-void                DrawEllips (int frame, int thick, int style, int x, int y, int width, int height, int fg, int bg, int pattern)
+void DrawEllips (int frame, int thick, int style, int x, int y, int width,
+		 int height, int fg, int bg, int pattern)
 {
    int                 xm, ym;
    FILE               *fout;
@@ -1485,7 +1504,8 @@ void                DrawEllips (int frame, int thick, int style, int x, int y, i
 /*----------------------------------------------------------------------
    DrawCorner draw two contiguous edges of a rectangle.
   ----------------------------------------------------------------------*/
-void   DrawCorner (int frame, int thick, int style, int x, int y, int l, int h, int corner, int fg)
+void DrawCorner (int frame, int thick, int style, int x, int y, int l,
+		 int h, int corner, int fg)
 {
    int                 xf, yf;
    FILE               *fout;
@@ -1532,7 +1552,8 @@ void   DrawCorner (int frame, int thick, int style, int x, int y, int l, int h, 
    Parameters fg, bg, and pattern are for drawing
    color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-void    DrawRectangleFrame (int frame, int thick, int style, int x, int y, int width, int height, int fg, int bg, int pattern)
+void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
+			 int width, int height, int fg, int bg, int pattern)
 {
    int                 arc, xf, yf;
    FILE               *fout;
@@ -1569,7 +1590,8 @@ void    DrawRectangleFrame (int frame, int thick, int style, int x, int y, int w
    Parameters fg, bg, and pattern are for drawing
    color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-void    DrawEllipsFrame (int frame, int thick, int style, int x, int y, int width, int height, int fg, int bg, int pattern)
+void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
+		      int width, int height, int fg, int bg, int pattern)
 {
    int                 px7mm, shiftX;
    int                 xm, ym;
@@ -1621,7 +1643,8 @@ void    DrawEllipsFrame (int frame, int thick, int style, int x, int y, int widt
    DrawHorizontalLine draw a horizontal line aligned top center or bottom
    depending on align value.
   ----------------------------------------------------------------------*/
-void   DrawHorizontalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int fg)
+void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
+			 int l, int h, int align, int fg)
 {
    int                 xf, Y;
    FILE               *fout;
@@ -1655,7 +1678,8 @@ void   DrawHorizontalLine (int frame, int thick, int style, int x, int y, int l,
    DrawHorizontalBrace draw a horizontal brace aligned top or bottom
    depending on align value.
   ----------------------------------------------------------------------*/
-void     DrawHorizontalBrace (int frame, int thick, int style, int x, int y, int l, int h, int align, int fg)
+void DrawHorizontalBrace (int frame, int thick, int style, int x, int y,
+			  int l, int h, int align, int fg)
 {
   int                 xf, xm, Y;
   FILE               *fout;
@@ -1702,7 +1726,8 @@ void     DrawHorizontalBrace (int frame, int thick, int style, int x, int y, int
    DrawVerticalLine draw a vertical line aligned left center or right
    depending on align value.
   ----------------------------------------------------------------------*/
-void    DrawVerticalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int fg)
+void DrawVerticalLine (int frame, int thick, int style, int x, int y,
+		       int l, int h, int align, int fg)
 {
    int                 X, yf;
    FILE               *fout;
@@ -1736,7 +1761,8 @@ void    DrawVerticalLine (int frame, int thick, int style, int x, int y, int l, 
    DrawDoubleVerticalLine draw a doubled vertical line aligned left center
    or right depending on align value.
   ----------------------------------------------------------------------*/
-void   DrawDoubleVerticalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int fg)
+void DrawDoubleVerticalLine (int frame, int thick, int style, int x, int y,
+			     int l, int h, int align, int fg)
 {
    int                 X, yf;
    FILE               *fout;
@@ -1769,7 +1795,7 @@ void   DrawDoubleVerticalLine (int frame, int thick, int style, int x, int y, in
 /*----------------------------------------------------------------------
    DrawPoints draw a line of dot.
   ----------------------------------------------------------------------*/
-void    DrawPoints (int frame, int x, int y, int lgboite, int fg)
+void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 {
   int                 xcour, ycour;
   FILE               *fout = NULL;
@@ -1780,12 +1806,12 @@ void    DrawPoints (int frame, int x, int y, int lgboite, int fg)
   /* Do we need to change the current color ? */
   CurrentColor (fout, fg);
 
-  if (lgboite > 0)
+  if (boxWidth > 0)
     {
       fout = (FILE *) FrRef[frame];
       xcour = PixelToPoint (x);
       ycour = PixelToPoint (y);
-      fprintf (fout, "%d %d %d Pes\n", xcour, -ycour, PixelToPoint (lgboite));
+      fprintf (fout, "%d %d %d Pes\n", xcour, -ycour, PixelToPoint (boxWidth));
     }
 }
 
@@ -1793,7 +1819,8 @@ void    DrawPoints (int frame, int x, int y, int lgboite, int fg)
 /*----------------------------------------------------------------------
    DrawSlash draw a slash or backslash depending on direction.
   ----------------------------------------------------------------------*/
-void    DrawSlash (int frame, int thick, int style, int x, int y, int l, int h, int direction, int fg)
+void DrawSlash (int frame, int thick, int style, int x, int y, int l,
+		int h, int direction, int fg)
 {
    int                 xf, yf;
    FILE               *fout;
@@ -1830,7 +1857,7 @@ void    DrawSlash (int frame, int thick, int style, int x, int y, int l, int h, 
    StorePageInfo store the page number, width and height of the page,
    used later by DrawPage.
   ----------------------------------------------------------------------*/
-void     StorePageInfo (int pagenum, int width, int height)
+void StorePageInfo (int pagenum, int width, int height)
 {
    LastPageNumber = pagenum;
    LastPageWidth = width;
@@ -1841,7 +1868,7 @@ void     StorePageInfo (int pagenum, int width, int height)
 /*----------------------------------------------------------------------
    psBoundingBox output the %%BoundingBox macro for Postscript.
   ----------------------------------------------------------------------*/
-void     psBoundingBox (int frame, int width, int height)
+void psBoundingBox (int frame, int width, int height)
 {
    FILE               *fout;
 
@@ -1864,7 +1891,8 @@ void     psBoundingBox (int frame, int width, int height)
    Parameters fg, bg, and pattern are for drawing
    color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-void  PaintWithPattern (int frame, int x, int y, int width, int height, ThotWindow w, int fg, int bg, int pattern)
+void PaintWithPattern (int frame, int x, int y, int width, int height,
+		       ThotWindow w, int fg, int bg, int pattern)
 {
    int                 xf, yf;
    FILE               *fout;
