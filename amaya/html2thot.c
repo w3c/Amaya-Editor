@@ -483,6 +483,10 @@ static int          EntityTableEntry = 0; /* entry of the entity table that
 					     matches the entity read so far */
 static int          CharRank = 0;	  /* rank of the last matching
 					     character in that entry */
+#ifdef _I18N_
+static unsigned char SecondByte = EOS;    /* second char of an UTF-8 string */
+#endif /* _I18N_ */
+
 static void         ProcessStartGI (char* GIname);
 static void         EndOfAttrValue (char c);
 
@@ -3478,163 +3482,189 @@ static void         PutAmpersandInDoc ()
    EndOfEntity     End of a HTML entity. Search that entity in the
    entity table and put the corresponding character in the input buffer.
   ----------------------------------------------------------------------*/
-static void      EndOfEntity (char c)
+static void EndOfEntity (unsigned char c)
 {
+#ifdef _I18N_
+  unsigned char fallback[7], *ptr;
+#endif /* _I18N_ */
+  int           i;
+  unsigned char msgBuffer[MaxMsgLength];
 
-   int           i;
-   char        msgBuffer[MaxMsgLength];
-
-   EntityName[LgEntityName] = EOS;
-   if (XhtmlEntityTable[EntityTableEntry].charName[CharRank] == EOS)
-     {
-       /* the entity read matches the current entry of entity table */
-       if (XhtmlEntityTable[EntityTableEntry].charCode > 255)
-	 {
-	   if (ReadingAnAttrValue)
-	     {
-	       PutInBuffer ((char) START_ENTITY);
-	       for (i = 0; i < LgEntityName; i++)
-		 PutInBuffer (EntityName[i]);
-	       PutInBuffer (';');
-	     }
-	   else
-	     PutNonISOlatin1Char (XhtmlEntityTable[EntityTableEntry].charCode, "");
-	 }
-       else
-	 PutInBuffer ((char)XhtmlEntityTable[EntityTableEntry].charCode);
-     }
-   else
-     {
-       /* entity not in the table. Print an error message */
-       PutInBuffer ('&');
-       for (i = 0; i < LgEntityName; i++)
-	 PutInBuffer (EntityName[i]);
-       PutInBuffer (';');
-       /* print an error message */
-       sprintf (msgBuffer, "Entity not supported");
-       HTMLParseError (HTMLcontext.doc, msgBuffer);
-     }
-   LgEntityName = 0;
+  EntityName[LgEntityName] = EOS;
+  if (XhtmlEntityTable[EntityTableEntry].charName[CharRank] == EOS)
+    {
+      /* the entity read matches the current entry of entity table */
+#ifdef _I18N_
+      if (XhtmlEntityTable[EntityTableEntry].charCode > 127)
+	{
+	  /* generate the UTF-8 string */
+	  ptr = fallback;
+	  TtaWCToMBstring (XhtmlEntityTable[EntityTableEntry].charCode, &ptr);
+	  for (i = 0; i < 7 && fallback[i] != EOS; i++)
+	    PutInBuffer (fallback[i]);
+	}
+#else /* _I18N_ */
+      if (XhtmlEntityTable[EntityTableEntry].charCode > 255)
+	{
+	  if (ReadingAnAttrValue)
+	    {
+	      PutInBuffer ((char) START_ENTITY);
+	      for (i = 0; i < LgEntityName; i++)
+		PutInBuffer (EntityName[i]);
+	      PutInBuffer (';');
+	    }
+	  else
+	    PutNonISOlatin1Char (XhtmlEntityTable[EntityTableEntry].charCode, "");
+	}
+#endif /* _I18N_ */
+      else
+	PutInBuffer ((char)XhtmlEntityTable[EntityTableEntry].charCode);
+    }
+  else
+    {
+      /* entity not in the table. Print an error message */
+      PutInBuffer ('&');
+      for (i = 0; i < LgEntityName; i++)
+	PutInBuffer (EntityName[i]);
+      PutInBuffer (';');
+      /* print an error message */
+      sprintf (msgBuffer, "Entity not supported");
+      HTMLParseError (HTMLcontext.doc, msgBuffer);
+    }
+  LgEntityName = 0;
 }
 
 /*----------------------------------------------------------------------
    EntityChar      A character belonging to a HTML entity has been
    read.
   ----------------------------------------------------------------------*/
-static void      EntityChar (unsigned char c)
+static void EntityChar (unsigned char c)
 {
-   int           i;
-   ThotBool      OK, done, stop;
-   char        msgBuffer[MaxMsgLength];
+#ifdef _I18N_
+  unsigned char fallback[7], *ptr;
+#endif /* _I18N_ */
+  unsigned char msgBuffer[MaxMsgLength];
+  int           i;
+  ThotBool      OK, done, stop;
 
-   done = FALSE;
-   if (XhtmlEntityTable[EntityTableEntry].charName[CharRank] == EOS)
-     /* the entity name read so far matches the current entry of */
-     /* entity table */
-      /* does it also match the next entry? */
-     {
-       OK = FALSE;
-       i = EntityTableEntry+1;
-       stop = FALSE;
-       do
-	 {
-	   if (strncmp (EntityName, XhtmlEntityTable[i].charName, LgEntityName) != 0)
-	     stop = TRUE;
-	   else
-	     if (XhtmlEntityTable[i].charName[CharRank] < c)
-	       i++;
-	     else
-	       {
-		 stop = TRUE;
-		 if (XhtmlEntityTable[i].charName[CharRank] == c)
-		   OK = TRUE;
-	       }
-	 }
-       while (!stop);     
-       if (!OK &&
-	   (c == SPACE || c == EOL || c == TAB || c == __CR__))
-	 {
-	   /* If we are not reading an attribute value, assume that semicolon is
-	      missing and put the corresponding char in the document content */
-	   EntityName[LgEntityName] = EOS;
-	   if (XhtmlEntityTable[EntityTableEntry].charCode > 255)
-	     {
-	       if (ReadingAnAttrValue)
-		 {
-		   PutInBuffer ((char) START_ENTITY);
-		   for (i = 0; i < LgEntityName; i++)
-		     PutInBuffer (EntityName[i]);
-		   PutInBuffer (';');
-		 }
-	       else
-		 PutNonISOlatin1Char (XhtmlEntityTable[EntityTableEntry].charCode, "");
-	     }
-	   else
-	     PutInBuffer ((char)(XhtmlEntityTable[EntityTableEntry].charCode));
-	   if (c != SPACE)
-	     /* print an error message */
-	     HTMLParseError (HTMLcontext.doc, "Missing semicolon");
-	   /* next state is the return state from the entity subautomaton, not
-	      the state computed by the automaton. In addition the character read
-	      has not been processed yet */
-	   NormalTransition = FALSE;
-	   currentState = returnState;
-	   /* end of entity */
-	   LgEntityName = 0;
-	   done = TRUE;
-	 }
-     }
-
-   if (!done)
-     {
-       while (XhtmlEntityTable[EntityTableEntry].charName[CharRank] < c
-	      && XhtmlEntityTable[EntityTableEntry].charCode != 0)
-	 EntityTableEntry++;
-       if (XhtmlEntityTable[EntityTableEntry].charName[CharRank] != c)
-	 OK = FALSE;
-       else
-	 {
-	   if (LgEntityName > 0 &&
-	       strncmp (EntityName,
-			 XhtmlEntityTable[EntityTableEntry].charName,
-			 LgEntityName) != 0)
-	     OK = FALSE;
-	   else
-	     {
-	       OK = TRUE;
-	       CharRank++;
-	       if (LgEntityName < MaxEntityLength - 1)
-		 EntityName[LgEntityName++] = c;
-	     }
-	 }
-       if (!OK)
-	 {
-	   /* the entity name read so far is not in the table */
-	   /* invalid entity */
-	   /* put the entity name in the buffer */
-	   PutInBuffer ('&');
-	   for (i = 0; i < LgEntityName; i++)
-	     PutInBuffer (EntityName[i]);
-	   /* print an error message only if it's not the first character
-	      after '&' or if it is a letter */
-	   if (LgEntityName > 0 ||
-	       ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')))
-	     {
-	       /* print an error message */
-	       EntityName[LgEntityName++] = c;
-	       EntityName[LgEntityName++] = EOS;
-	       sprintf (msgBuffer, "Entity not supported");
-	       HTMLParseError (HTMLcontext.doc, msgBuffer);
-	     }
-	   /* next state is the return state from the entity subautomaton,
-	      not the state computed by the automaton.
-	      In addition the character read has not been processed yet */
-	   NormalTransition = FALSE;
-	   currentState = returnState;
-	   /* end of entity */
-	   LgEntityName = 0;
-	 }
-     }
+  done = FALSE;
+  if (XhtmlEntityTable[EntityTableEntry].charName[CharRank] == EOS)
+    /* the entity name read so far matches the current entry of */
+    /* entity table */
+    /* does it also match the next entry? */
+    {
+      OK = FALSE;
+      i = EntityTableEntry+1;
+      stop = FALSE;
+      do
+	{
+	  if (strncmp (EntityName, XhtmlEntityTable[i].charName, LgEntityName) != 0)
+	    stop = TRUE;
+	  else if (XhtmlEntityTable[i].charName[CharRank] < c)
+	    i++;
+	  else
+	    {
+	      stop = TRUE;
+	      if (XhtmlEntityTable[i].charName[CharRank] == c)
+		OK = TRUE;
+	    }
+	}
+      while (!stop);     
+      if (!OK &&
+	  (c == SPACE || c == EOL || c == TAB || c == __CR__))
+	{
+	  /* If we are not reading an attribute value, assume that semicolon is
+	     missing and put the corresponding char in the document content */
+	  EntityName[LgEntityName] = EOS;
+#ifdef _I18N_
+	  if (XhtmlEntityTable[EntityTableEntry].charCode > 127)
+	    {
+	      /* generate the UTF-8 string */
+	      ptr = fallback;
+	      TtaWCToMBstring (c, &ptr);
+	      for (i = 0; i < 7 && fallback[i] != EOS; i++)
+		PutInBuffer (fallback[i]);
+	    }
+#else /* _I18N_ */
+	  if (XhtmlEntityTable[EntityTableEntry].charCode > 255)
+	    {
+	      if (ReadingAnAttrValue)
+		{
+		  PutInBuffer ((char) START_ENTITY);
+		  for (i = 0; i < LgEntityName; i++)
+		    PutInBuffer (EntityName[i]);
+		  PutInBuffer (';');
+		}
+	      else
+		PutNonISOlatin1Char (XhtmlEntityTable[EntityTableEntry].charCode, "");
+	    }
+#endif /* _I18N_ */
+	  else
+	    PutInBuffer ((char)(XhtmlEntityTable[EntityTableEntry].charCode));
+	  if (c != SPACE)
+	    /* print an error message */
+	    HTMLParseError (HTMLcontext.doc, "Missing semicolon");
+	  /* next state is the return state from the entity subautomaton, not
+	     the state computed by the automaton. In addition the character read
+	     has not been processed yet */
+	  NormalTransition = FALSE;
+	  currentState = returnState;
+	  /* end of entity */
+	  LgEntityName = 0;
+	  done = TRUE;
+	}
+    }
+  
+  if (!done)
+    {
+      while (XhtmlEntityTable[EntityTableEntry].charName[CharRank] < c
+	     && XhtmlEntityTable[EntityTableEntry].charCode != 0)
+	EntityTableEntry++;
+      if (XhtmlEntityTable[EntityTableEntry].charName[CharRank] != c)
+	OK = FALSE;
+      else
+	{
+	  if (LgEntityName > 0 &&
+	      strncmp (EntityName,
+		       XhtmlEntityTable[EntityTableEntry].charName,
+		       LgEntityName) != 0)
+	    OK = FALSE;
+	  else
+	    {
+	      OK = TRUE;
+	      CharRank++;
+	      if (LgEntityName < MaxEntityLength - 1)
+		EntityName[LgEntityName++] = c;
+	    }
+	}
+      if (!OK)
+	{
+	  /* the entity name read so far is not in the table */
+	  /* invalid entity */
+	  /* put the entity name in the buffer */
+	  PutInBuffer ('&');
+	  for (i = 0; i < LgEntityName; i++)
+	    PutInBuffer (EntityName[i]);
+	  /* print an error message only if it's not the first character
+	     after '&' or if it is a letter */
+	  if (LgEntityName > 0 ||
+	      ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')))
+	    {
+	      /* print an error message */
+	      EntityName[LgEntityName++] = c;
+	      EntityName[LgEntityName++] = EOS;
+	      sprintf (msgBuffer, "Entity not supported");
+	      HTMLParseError (HTMLcontext.doc, msgBuffer);
+	    }
+	  /* next state is the return state from the entity subautomaton,
+	     not the state computed by the automaton.
+	     In addition the character read has not been processed yet */
+	  NormalTransition = FALSE;
+	  currentState = returnState;
+	  /* end of entity */
+	  LgEntityName = 0;
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -3642,36 +3672,50 @@ static void      EntityChar (unsigned char c)
    string read into a number and put the character
    having that code in the input buffer.
   ----------------------------------------------------------------------*/
-static void      EndOfDecEntity (char c)
+static void EndOfDecEntity (unsigned char c)
 {
-   int           code;
-   int           i;
+#ifdef _I18N_
+  unsigned char fallback[7], *ptr;
+#endif /* _I18N_ */
+  int           code;
+  int           i;
 
-   EntityName[LgEntityName] = EOS;
-   sscanf (EntityName, "%d", &code);
-   if (code > 255)
-     {
-       if (ReadingAnAttrValue)
-	 {
-	   PutInBuffer ((char) START_ENTITY);
-	   PutInBuffer ('#');
-	   for (i = 0; i < LgEntityName; i++)
-	     PutInBuffer (EntityName[i]);
-	   PutInBuffer (';');
-	 }
-       else
-	 PutNonISOlatin1Char (code, "#");
-     }
-   else
-     PutInBuffer ((char)code);
-   LgEntityName = 0;
+  EntityName[LgEntityName] = EOS;
+  sscanf (EntityName, "%d", &code);
+#ifdef _I18N_
+  if (code > 127)
+    {
+      /* generate the UTF-8 string */
+      ptr = fallback;
+      TtaWCToMBstring (code, &ptr);
+      for (i = 0; i < 7 && fallback[i] != EOS; i++)
+	PutInBuffer (fallback[i]);
+    }
+#else /* _I18N_ */
+  if (code > 255)
+    {
+      if (ReadingAnAttrValue)
+	{
+	  PutInBuffer ((char) START_ENTITY);
+	  PutInBuffer ('#');
+	  for (i = 0; i < LgEntityName; i++)
+	    PutInBuffer (EntityName[i]);
+	  PutInBuffer (';');
+	}
+      else
+	PutNonISOlatin1Char (code, "#");
+    }
+#endif /* _I18N_ */
+  else
+    PutInBuffer ((char) code);
+  LgEntityName = 0;
 }
 
 /*----------------------------------------------------------------------
    DecEntityChar   A character belonging to a decimal entity has been read.
    Put that character in the entity buffer.
   ----------------------------------------------------------------------*/
-static void     DecEntityChar (char c)
+static void DecEntityChar (unsigned char c)
 {
   int		i;
 
@@ -3710,30 +3754,44 @@ static void     DecEntityChar (char c)
    string read into a number and put the character
    having that code in the input buffer.
   ----------------------------------------------------------------------*/
-static void         EndOfHexEntity (char c)
+static void EndOfHexEntity (unsigned char c)
 {
-   int              code;
-   int              i;
+#ifdef _I18N_
+  unsigned char fallback[7], *ptr;
+#endif /* _I18N_ */
+  int              code;
+  int              i;
 
-   EntityName[LgEntityName] = EOS;
-   sscanf (EntityName, "%x", &code);
-   if (code > 255)
-     {
-       if (ReadingAnAttrValue)
-	 {
-	   PutInBuffer ((char) START_ENTITY);
-	   PutInBuffer ('#');
-	   PutInBuffer ('x');
-	   for (i = 0; i < LgEntityName; i++)
-	     PutInBuffer (EntityName[i]);
-	   PutInBuffer (';');
-	 }
-       else
-	 PutNonISOlatin1Char (code, "#x");
-     }
-   else
-      PutInBuffer ((char) code);
-   LgEntityName = 0;
+  EntityName[LgEntityName] = EOS;
+  sscanf (EntityName, "%x", &code);
+#ifdef _I18N_
+  if (code > 127)
+    {
+      /* generate the UTF-8 string */
+      ptr = fallback;
+      TtaWCToMBstring (code, &ptr);
+      for (i = 0; i < 7 && fallback[i] != EOS; i++)
+	PutInBuffer (fallback[i]);
+    }
+#else /* _I18N_ */
+  if (code > 255)
+    {
+      if (ReadingAnAttrValue)
+	{
+	  PutInBuffer ((char) START_ENTITY);
+	  PutInBuffer ('#');
+	  PutInBuffer ('x');
+	  for (i = 0; i < LgEntityName; i++)
+	    PutInBuffer (EntityName[i]);
+	  PutInBuffer (';');
+	}
+      else
+	PutNonISOlatin1Char (code, "#x");
+    }
+#endif /* _I18N_ */
+  else
+    PutInBuffer ((char) code);
+  LgEntityName = 0;
 }
 
 /*----------------------------------------------------------------------
@@ -4240,15 +4298,16 @@ void                   FreeHTMLParser (void)
    GetNextChar returns the next character in the imput file or buffer,
    whatever it is.
   ----------------------------------------------------------------------*/
-static char    GetNextChar (FILE *infile, char* buffer, int *index,
-			      ThotBool *endOfFile)
+static char GetNextChar (FILE *infile, char* buffer, int *index,
+			 ThotBool *endOfFile)
 {
-  unsigned char *srcbuf;
-  wchar_t        wcharRead;
-  char         charRead;
-  char           fallback[5];
-  char           extrabuf[7];
-  unsigned char *ptrextrabuf;
+#ifndef _I18N_
+  wchar_t        wcharRead = EOS;
+#endif /* _I18N_ */
+  unsigned char  charRead;
+  unsigned char  fallback[5];
+  unsigned char  extrabuf[7];
+  unsigned char *ptr;
   int            res;
   int            nbBytes;
   long           nbBytesToRead;
@@ -4258,20 +4317,43 @@ static char    GetNextChar (FILE *infile, char* buffer, int *index,
   Element        elLeaf;
   ThotBool       isHTML;
 
-  wcharRead = 0;
   charRead = EOS;
   *endOfFile = FALSE;
-  if (buffer != NULL)
+  if (buffer)
     {
+#ifdef _I18N_
+      if (SecondByte != EOS)
+	{
+	  /* return the second UTF-8 byte */
+	  charRead = SecondByte;
+	  SecondByte = EOS;
+	}
+      else
+	{
+	  charRead = buffer[(*index)++];
+	  if (HTMLcontext.encoding != UTF_8)
+	    {
+	      /* translate the ISO-latin-1 character into a UTF-8 string */
+	      ptr = fallback;
+	      res = TtaWCToMBstring ((wchar_t) charRead, &ptr);
+	      /* handle the first character */
+	      charRead = fallback[0];
+	      if (res > 1)
+		/* store the second UTF-8 byte */
+		SecondByte = fallback[1];
+	    }
+	}
+#else /* _I18N_ */
       /* read from a buffer */
-      ptrextrabuf = &buffer[*index];
-      nbBytes = TtaGetNextWCFromString (&wcharRead, &ptrextrabuf,
+      ptr = &buffer[*index];
+      nbBytes = TtaGetNextWCFromString (&wcharRead, &ptr,
 					HTMLcontext.encoding);
       (*index) += nbBytes;
       if (wcharRead != 0)
 	charRead = (char) wcharRead;
       else
 	*endOfFile = TRUE;
+#endif /* _I18N_ */
     }
   else if (infile == NULL)
     *endOfFile = TRUE;
@@ -4307,15 +4389,38 @@ static char    GetNextChar (FILE *infile, char* buffer, int *index,
 	}
       else if (*endOfFile == FALSE)
 	{
+#ifdef _I18N_
+	  if (SecondByte != EOS)
+	    {
+	      /* return the second UTF-8 byte */
+	      charRead = SecondByte;
+	      SecondByte = EOS;
+	    }
+	  else
+	    {
+	      charRead = FileBuffer[(*index)++];
+	      if (HTMLcontext.encoding != UTF_8)
+		{
+		  /* translate the ISO-latin-1 character into a UTF-8 string */
+		  ptr = fallback;
+		  res = TtaWCToMBstring ((wchar_t) charRead, &ptr);
+		  /* handle the first character */
+		  charRead = fallback[0];
+		  if (res > 1)
+		    /* store the second UTF-8 byte */
+		    SecondByte = fallback[1];
+		}
+	    }
+#else /* _I18N_ */
 	  if (HTMLcontext.encoding == UTF_8)
 	    {
 	      /* We are reading a UTF8-coded character data */
-	      srcbuf = (unsigned char *) &FileBuffer[(*index)];
-	      nbBytes = TtaGetNumberOfBytesToRead (&srcbuf, UTF_8);
+	      ptr = (unsigned char *) &FileBuffer[(*index)];
+	      nbBytes = TtaGetNumberOfBytesToRead (&ptr, UTF_8);
 	      if (nbBytes > 1 && (*index + (nbBytes -1) > LastCharInFileBuffer))
 		{
 		  for (i = 0; *index + i <= LastCharInFileBuffer; i++)
-		    extrabuf[i] = srcbuf[i];
+		    extrabuf[i] = ptr[i];
 		  nbBytesToRead = nbBytes - i;
 		  res = gzread (infile, &extrabuf[i], nbBytesToRead);
 		  if (res <= 0)
@@ -4324,16 +4429,13 @@ static char    GetNextChar (FILE *infile, char* buffer, int *index,
 		      *endOfFile = TRUE;
 		      charRead = EOS;
 		    }
-		  ptrextrabuf = (unsigned char *) &extrabuf[0];
-		  nbBytes = TtaGetNextWCFromString (&wcharRead,
-						    &ptrextrabuf,
-						    UTF_8);
+		  ptr = (unsigned char *) &extrabuf[0];
+		  nbBytes = TtaGetNextWCFromString (&wcharRead, &ptr, UTF_8);
 		  *index = 0;
 		}
 	      else
 		{
-		  nbBytes = TtaGetNextWCFromString (&wcharRead,
-						    &srcbuf, UTF_8);
+		  nbBytes = TtaGetNextWCFromString (&wcharRead, &ptr, UTF_8);
 		  (*index) += nbBytes;
 		}
 	      if (wcharRead < 0x100)
@@ -4401,7 +4503,9 @@ static char    GetNextChar (FILE *infile, char* buffer, int *index,
 		}
 	    }
 	  else
+	    /* read ISO-latin-1 characters */
 	    charRead = FileBuffer[(*index)++];
+#endif /* _I18N_ */
 	  
 	  if (*index > LastCharInFileBuffer)
 	    *index = 0;
@@ -4421,8 +4525,8 @@ void            SetElemLineNumber (Element el)
 }
 
 /*----------------------------------------------------------------------
-   GetNextInputChar        returns the next non-null character in the
-   input file or buffer.
+   GetNextInputChar returns the next non-null character in the input
+   file or buffer.
   ----------------------------------------------------------------------*/
 char      GetNextInputChar (FILE *infile, int *index, ThotBool *endOfFile)
 {
@@ -4480,7 +4584,7 @@ char      GetNextInputChar (FILE *infile, int *index, ThotBool *endOfFile)
    abstract tree.
    One parameter should be NULL.
   ----------------------------------------------------------------------*/
-static void        HTMLparse (FILE * infile, char* HTMLbuf)
+static void HTMLparse (FILE * infile, char* HTMLbuf)
 {
    unsigned char         charRead; 
    ThotBool        match;

@@ -7,9 +7,6 @@
 #define MAX_TXT_LEN 1024
 #endif 
 
-extern int uatoi (const STRING string);
-extern long uatol (const STRING string);
-extern CHAR_T utolower (CHAR_T c);
 
 /*----------------------------------------------------------------------
   TtaGetCharFromWC returns the ISO or Windows character code

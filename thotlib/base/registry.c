@@ -491,7 +491,6 @@ ThotBool TtaGetEnvInt (char *name, int *value)
      *value = 0;
      return FALSE;
    }
-
   strptr = TtaGetEnvString (name);
   /* the name entry doesn't exist */
   if (!strptr || *strptr == EOS)
@@ -500,8 +499,7 @@ ThotBool TtaGetEnvInt (char *name, int *value)
      return FALSE;
    }
  /* make the convertion */
- *value = uatoi (strptr);
-
+ *value = atoi (strptr);
  return TRUE;
 }
 
@@ -717,19 +715,15 @@ ThotBool TtaGetDefEnvInt (char *name, int *value)
      *value = 0;
      return FALSE;
    }
-
  strptr = TtaGetDefEnvString (name);
-
  /* the name entry doesn't exist */
  if (!strptr || *strptr == EOS)
    {
      *value = 0;
      return FALSE;
    }
-
  /* make the convertion */
- *value = uatoi (strptr);
-
+ *value = atoi (strptr);
  return TRUE;
 }
 

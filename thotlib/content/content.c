@@ -742,8 +742,6 @@ int CopyMBs2Buffer (unsigned char *src, PtrTextBuffer pBuf, int pos, int max)
       while (pos < THOT_MAX_CHAR - 1 && max > l && src[0] != EOS)
 	{
 	  l += TtaMBstringToWC (&src, &pBuf->BuContent[pos]);
-	  if (pBuf->BuContent[pos] > 127)
-printf ("%c", (unsigned char)pBuf->BuContent[pos]);
 	  pos++;
 	  length++;
 	}

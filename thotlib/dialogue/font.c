@@ -881,7 +881,7 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
 		while (isdigit (*pText))
 		  *pFontSize++ = *pText++;
 	      *pFontSize = 0;
-	      size = uatoi (fontSize);
+	      size = atoi (fontSize);
 	    }
 
 	  /* Allocate the font structure */

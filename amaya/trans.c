@@ -1156,7 +1156,7 @@ static void         CopySubTreeChildren (Element father, Document doc)
 	     l = 10;
 	     TtaGiveTextAttributeValue (attrFound, label, &l);
 	     TtaRemoveAttribute (elCour, attrFound, doc);
-	     idf = uatoi (label);
+	     idf = atoi (label);
 	     elOriginal = NULL;
 	     rank = FindListSubTree (idf, &elOriginal);
 	     delta = 0;
@@ -1199,7 +1199,7 @@ static void         CopySubTrees (strNode * Root, Document doc)
 	  {
 	     l = 10;
 	     TtaGiveTextAttributeValue (attrFound, label, &l);
-	     idf = uatoi (label);
+	     idf = atoi (label);
 	     if (idf != 0)
 	       {
 		 TtaRemoveAttribute (elCour, attrFound, doc);

@@ -253,7 +253,7 @@ void             ParseCharset (Element el, Document doc)
 		       ptrText = text2;
 		       while (*ptrText)
 			 {
-			   *ptrText = utolower (*ptrText);
+			   *ptrText = tolower (*ptrText);
 			   ptrText++;
 			 }
 		       

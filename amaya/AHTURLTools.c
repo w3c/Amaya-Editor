@@ -45,7 +45,7 @@ void         ConvertToLowerCase (char *string)
    return;
 
  for (i = 0; string[i] != EOS; i++)
-   string[i] = utolower (string[i]);
+   string[i] = tolower (string[i]);
 }
 
 /*----------------------------------------------------------------------
@@ -479,7 +479,7 @@ ThotBool IsHTMLName (const char *path)
       i = 0;
       while (suffix[i] != EOS && i < MAX_LENGTH -1)
 	{
-	  nsuffix[i] = utolower (suffix[i]);
+	  nsuffix[i] = tolower (suffix[i]);
 	  i++;
 	}
       nsuffix[i] = EOS;
@@ -499,7 +499,7 @@ ThotBool IsHTMLName (const char *path)
 	  i = 0;
 	  while (suffix[i] != EOS && i < MAX_LENGTH -1)
 	    {
-	      nsuffix[i] = utolower (suffix[i]);
+	      nsuffix[i] = tolower (suffix[i]);
 	      i++;
 	    }
 	  nsuffix[i] = EOS;
@@ -668,7 +668,7 @@ ThotBool IsImageName (const char *path)
    i = 0;
    while (suffix[i] != EOS && i < MAX_LENGTH -1)
      {
-       nsuffix[i] = utolower (suffix[i]);
+       nsuffix[i] = tolower (suffix[i]);
        i++;
      }
    nsuffix[i] = EOS;
@@ -1689,7 +1689,7 @@ static char   *HTCanon (char **filename, char *host)
     strptr = host;				    /* Convert to lower-case */
     while (strptr < path)
       {
-         *strptr = utolower (*strptr);
+         *strptr = tolower (*strptr);
          strptr++;
       }
     
@@ -1815,7 +1815,7 @@ void         SimplifyUrl (char **url)
     {
       /* Find host name */
       access = *url;
-      while (access < path && (*access = utolower (*access)))
+      while (access < path && (*access = tolower (*access)))
             access++;
       path += 3;
       while ((newptr = strstr (path, "://")) != NULL)
@@ -1845,7 +1845,7 @@ void         SimplifyUrl (char **url)
       while (*newptr)
 	{
 	  /* Make group or host lower case */
-	  *newptr = utolower (*newptr);
+	  *newptr = tolower (*newptr);
 	  newptr++;
 	}
       /* Doesn't need to do any more */

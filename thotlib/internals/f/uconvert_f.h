@@ -6,9 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int uatoi ( const STRING string );
-extern long uatol ( const STRING string );
-extern CHAR_T utolower ( CHAR_T c );
 extern unsigned char TtaGetCharFromWC ( wchar_t wc,
                                         CHARSET encoding );
 extern wchar_t TtaGetWCFromChar ( unsigned char c,
@@ -38,9 +35,6 @@ extern CHAR_T *TtaConvertIsoToCHAR ( unsigned char *src,
 
 #else /* __STDC__ */
 
-extern int uatoi (/* const STRING string */);
-extern long uatol (/* const STRING string */);
-extern CHAR_T utolower (/* CHAR_T c */);
 extern unsigned char TtaGetCharFromWC (/* wchar_t wc,
                                           CHARSET encoding */);
 extern wchar_t TtaGetWCFromChar (/* unsigned char c,

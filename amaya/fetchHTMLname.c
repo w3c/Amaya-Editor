@@ -84,7 +84,7 @@ int MapGI (char *gi, SSchema *schema, Document doc)
       */
 
       /* TODO: define a function which works on unicode */
-      c = utolower (gi[0]);
+      c = tolower (gi[0]);
       /* look for the first concerned entry in the table */
       while (pHTMLGIMapping[i].XMLname[0] < c
 	     && pHTMLGIMapping[i].XMLname[0] != EOS)
@@ -135,7 +135,7 @@ int MapGI (char *gi, SSchema *schema, Document doc)
    GIType  search in mapping tables the Element type associated with
    a given GI Name. If not found returns zero.
   ----------------------------------------------------------------------*/
-void                GIType (char *gi, ElementType *elType, Document doc)
+void GIType (char *gi, ElementType *elType, Document doc)
 {
   char              c;
   char             *ptr;
@@ -153,7 +153,7 @@ void                GIType (char *gi, ElementType *elType, Document doc)
   */
 
   /* TODO: define a function which works on unicode */
-  c = utolower (gi[0]);
+  c = tolower (gi[0]);
 
   i = 0;
   /* look for the first concerned entry in the table */

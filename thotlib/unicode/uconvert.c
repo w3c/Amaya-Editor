@@ -357,66 +357,6 @@ unsigned short WIN1257CP [] = {
 
 #include "memory_f.h"
 
-/*----------------------------------------------------------------------
-  uctio
-  ----------------------------------------------------------------------*/
-int uatoi (const STRING string)
-{
-#ifdef _I18N_
-#ifdef _WINDOWS
-  /* 
-     Windows provides a routine that allows to convert
-     from a wide character string to an integer value 
-  */
-  return _wtoi (string);
-#else  /* _WINDOWS */
-  /* 
-     For the moment Unix platforms do not provide a routine 
-     allowing to convert from a wide character string to an 
-     interger.  We have to  convert string  into  multibyte 
-     character string and use atoi.
-  */
-  char str[MAX_LENGTH];
-
-  wcstombs (str, string, MAX_LENGTH);
-  return atoi (str);
-#endif /* _WINDOWS */
-#else  /* _I18N_ */
-  return atoi (string);
-#endif /* _I18N_ */
-}
-
-/*----------------------------------------------------------------------
-  uatol converts a strint to a long
-  ----------------------------------------------------------------------*/
-long uatol (const STRING string)
-{
-#ifdef _I18N_
-#ifdef _WINDOWS
-  return _wtol (string);
-#else  /* _WINDOWS */
-  char str[MAX_LENGTH];
-
-  wcstombs (str, string, MAX_LENGTH);
-  return atol (str);
-#endif /* _WINDOWS */
-#else  /* _I18N_ */
-  return atol (string);
-#endif /* _I18N_ */
-}
-
-/*----------------------------------------------------------------------
- utolower converts uppercases to lowercases
-  ----------------------------------------------------------------------*/
-CHAR_T utolower (CHAR_T c)
-{
-#ifdef _I18N_
-  return (CHAR_T) towlower((wint_t) c);
-#else  /* _I18N_ */
-  return ((CHAR_T) tolower ((int) c));
-#endif /* _I18N_ */
-}
-
 
 /*----------------------------------------------------------------------
   TtaGetCharFromWC returns the ISO or Windows character code

@@ -3255,6 +3255,7 @@ void ZoomOut (Document document, View view)
   ----------------------------------------------------------------------*/
 void ShowSource (Document document, View view)
 {
+   CHARSET          charset;
    char            *tempdocument;
    char            *s;
    char  	    documentname[MAX_LENGTH];
@@ -3329,7 +3330,16 @@ void ShowSource (Document document, View view)
 	 if (DocumentMeta[document]->content_location)
 	   DocumentMeta[sourceDoc]->content_location = TtaStrdup (DocumentMeta[document]->content_location);
 	 DocumentTypes[sourceDoc] = docSource;
-	 TtaSetDocumentCharset (sourceDoc, TtaGetDocumentCharset (document));
+	 charset = TtaGetDocumentCharset (document);
+	 if (charset == UNDEFINED_CHARSET)
+	   {
+	     if (DocumentMeta[document]->xmlformat)
+	       TtaSetDocumentCharset (SavingDocument, UTF_8);
+	     else
+	       TtaSetDocumentCharset (SavingDocument, ISO_8859_1);
+	   }
+	 else
+	   TtaSetDocumentCharset (sourceDoc, charset);
 	 DocNetworkStatus[sourceDoc] = AMAYA_NET_INACTIVE;
 	 StartParser (sourceDoc, tempdocument, documentname, tempdir,
 		      tempdocument, TRUE);
