@@ -941,32 +941,39 @@ int                 flags;
 
    /* register the current URL */
    currentURL = TtaWCSdup (DocumentURLs[doc]);
-   /* prepare the attribute to be searched */
-   attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
-   attrType.AttrTypeNum = HTML_ATTR_SRC;
    /* We are currently fetching images for this document */
    /* during this time LoadImage has not to stop transfer */
-   /* search all elements having an attribute SRC */
-   /* Start from the root element */
-   el = TtaGetMainRoot (doc);
-   do
+   /* prepare the attribute to be searched */
+   attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+   if (attrType.AttrSSchema)
+     /* there are some HTML elements in this documents. Get all HTML img
+	elements */
      {
-	TtaHandlePendingEvents ();
-	/* verify if StopTransfer was called */
-	if (DocumentURLs[doc] == NULL || ustrcmp (currentURL, DocumentURLs[doc]))
-	    /* the document has been removed */
-	    break;
-
-	if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
-	    break;
-	/* search the next element having an attribute SRC */
-	TtaSearchAttribute (attrType, SearchForward, el, &elFound, &attr);
-	el = elFound;
-	/* FetchImage increments FilesLoading[doc] for each new get request */
-	if (el != NULL)
-	    FetchImage (doc, el, NULL, flags, NULL, NULL);
+       /* search all elements having an attribute SRC */
+       attrType.AttrTypeNum = HTML_ATTR_SRC;
+       /* Start from the root element */
+       el = TtaGetMainRoot (doc);
+       do
+	 {
+	   TtaHandlePendingEvents ();
+	   /* verify if StopTransfer was called */
+	   if (DocumentURLs[doc] == NULL ||
+	       ustrcmp (currentURL, DocumentURLs[doc]))
+	     /* the document has been removed */
+	     break;
+	   
+	   if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
+	     break;
+	   /* search the next element having an attribute SRC */
+	   TtaSearchAttribute (attrType, SearchForward, el, &elFound, &attr);
+	   el = elFound;
+	   /* FetchImage increments FilesLoading[doc] for each new get
+	      request */
+	   if (el != NULL)
+	     FetchImage (doc, el, NULL, flags, NULL, NULL);
+	 }
+       while (el);
      }
-   while (el != NULL);
 
    /* Now, load all SVG images */
    /* prepare the attribute to be searched */
@@ -1012,7 +1019,7 @@ int                 flags;
 	     }
 	   }
        }
-     while (el != NULL);
+     while (el);
      }
 
    if (W3Loading != doc)
