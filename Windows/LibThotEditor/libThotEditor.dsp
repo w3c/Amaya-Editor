@@ -443,10 +443,6 @@ SOURCE=..\..\thotlib\dialogue\searchmenu.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\dialogue\searchmenustr.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\content\searchref.c
 # End Source File
 # Begin Source File
