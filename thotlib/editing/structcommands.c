@@ -1055,7 +1055,7 @@ PtrDocument         pDoc;
 
 /*----------------------------------------------------------------------
    CutCommand  traite la commande CUT				
-   DeleteElement du document la partie selectionnee.               
+   Supprime du document la partie selectionnee.               
    Si save est vrai, on sauvegarde la partie selectionnee pour     
    pouvoir la coller ensuite (voir PasteCommand).                  
   ----------------------------------------------------------------------*/
@@ -1637,7 +1637,7 @@ boolean             save;
 
 			/* did the selection change? */
 			GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar);
-			if (firstSel == pSave)
+			if (firstSel == pSave || ElemIsWithinSubtree(firstSel, pSave))
 			  {
 			    /* the selection points to deleted elements */
 			    if (pNext != NULL)
@@ -1829,8 +1829,7 @@ PtrSSchema          pSS;
    ok = FALSE;
    do
      {
-	ok = AllowedSibling (pEl1, pDoc, typeNum, pSS, TRUE,
-			     FALSE, FALSE);
+	ok = AllowedSibling (pEl1, pDoc, typeNum, pSS, TRUE, FALSE, FALSE);
 	if (!ok)
 	  {
 	     if ((firstEl->ElTerminal && firstEl->ElLeafType == LtText &&
@@ -1894,8 +1893,8 @@ PtrSSchema          pSS;
    else
      {
 	/* on cree un element du type choisi par l'utilisateur */
-	pElSurround = NewSubtree (typeNum, pSS, pDoc,
-			      firstEl->ElAssocNum, FALSE, TRUE, TRUE, TRUE);
+	pElSurround = NewSubtree (typeNum, pSS, pDoc, firstEl->ElAssocNum,
+				  FALSE, TRUE, TRUE, TRUE);
 	pRoot = pElSurround;
 	unit = FALSE;
 	if (pElSurround->ElStructSchema->SsCode !=

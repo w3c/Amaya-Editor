@@ -275,8 +275,9 @@ parenthesize:*;
 !        }
 
 !remove parenthesis
-remove parenthesis: mrow{mo,?*+,mo};
+remove parenthesis: mrow{mf,?*+,mf};
 	{
-	mo /;
+	mf /;
 	* > :*;
 	}
+
