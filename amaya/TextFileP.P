@@ -1,0 +1,187 @@
+	{ I. Vatton 	 February 1999  }
+
+{ Variables used in ifdefs: PAGE, US_PAPER }
+PRESENTATION TextFile;
+
+VIEWS
+   Formatted_view;
+
+#ifdef US_PAPER
+#define PAGE
+#endif { US_PAPER }
+
+#ifdef PAGE
+PRINT
+   Formatted_view;
+
+COUNTERS
+   CptPage : Rank of Page(Formatted_view);
+#endif
+
+DEFAULT
+
+   BEGIN
+   HorizRef : Enclosed . HRef;
+   VertRef : * . Left;
+#ifdef PAGE
+   Width : Enclosing . Width;
+#else
+   Width : Enclosed . Width;
+#endif
+   Height : Enclosed . Height;
+   VertPos : Top = Previous . Bottom;
+   HorizPos : Left = Enclosing . Left;
+   Justify : Enclosing =;
+   LineSpacing : Enclosing =;
+   Visibility: Enclosing =;
+   Font : Enclosing =;
+   Style : Enclosing =;
+   Size : Enclosing =;
+   Adjust : Left;
+   Indent : Enclosing =;
+   Depth : 0;
+   UnderLine: Enclosing =;
+   Thickness: Enclosing =;
+   LineStyle: Enclosing =;
+   LineWeight: Enclosing =;
+   Background: Enclosing =;
+   Foreground: Enclosing =;
+   END;
+
+{ ---- Pages ---- }
+#ifdef PAGE
+
+BOXES
+
+  URLhead:
+	BEGIN
+	Background : White;
+	Foreground : Black;
+	Fillpattern : nopattern;
+	Underline: NoUnderline;
+	Copy (Document_URL);
+	Justify: No;
+	HorizPos: Left = Previous PAGE_BREAK . Left;
+	VertPos: Top = Previous PAGE_BREAK . Bottom + 0.7 cm;
+	Height:   1.2 cm;
+	Size : 8 pt;
+	Font: times;
+	Style: Roman;	
+	END;
+
+  Spacehead:
+	BEGIN
+	Background : White;
+	Foreground : Black;
+	Fillpattern : nopattern;
+	Underline: NoUnderline;
+	Content: Text ' ';
+	Justify: No;
+	HorizPos: Left = Previous PAGE_BREAK . Left;
+	VertPos: Top = Previous PAGE_BREAK . Bottom + 0.7 cm;
+	Height:   1.2 cm;
+	Size : 8 pt;
+	Font: times;
+	Style: Roman;
+	END;
+
+  PageNum:
+	BEGIN
+	Background : White;
+	Foreground : Black;
+	Fillpattern : nopattern;
+	Underline: NoUnderline;
+	Content: (Value (CptPage, Arabic));
+	VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
+	HorizPos: VMiddle = Next PAGE_BREAK . VMiddle;
+	Height:   1.6 cm;
+	Size : 11 pt;
+	Font: times;
+	Style: Roman;
+	END;
+
+  BottomSpace:
+	BEGIN
+	Background : White;
+	Foreground : Black;
+	FillPattern: backgroundcolor;
+	Height: 1.4 cm;
+	Width: 1 pt;
+	Underline: NoUnderline;
+	VertPos: Bottom = Next PAGE_BREAK . Top;
+	HorizPos: Left = Next PAGE_BREAK . Left;
+	Content: (Graphics ' ');
+	END;
+
+  ThePage:
+	BEGIN
+	Background : White;
+	Foreground : Black;
+	FillPattern: backgroundcolor;
+	ShowBox;
+#ifdef US_PAPER
+	Width: 16.2 cm;
+	Height: 23.8 cm;
+	VertPos: Top = Enclosing . Top + 1.7 cm;
+	HorizPos: Left = Enclosing . Left + 2.7 cm;
+#else
+	Width: 15.6 cm;
+	Height: 25.9 cm;
+	VertPos: Top = Enclosing . Top + 1.7 cm;
+	HorizPos: Left = Enclosing . Left + 2.7 cm;
+#endif
+	CreateAfter (Spacehead);
+	if PrintURL
+	   CreateAfter (URLhead);
+	if NOT One(CptPage) CreateBefore (PageNum);
+	IF Not One(CptPage) CreateBefore (BottomSpace);
+	Underline: NoUnderline;
+	END;
+#endif
+
+RULES
+
+ Document_URL:	BEGIN
+#ifndef PAGE
+	Visibility: 0;
+#endif
+	END;
+
+ TextFile: BEGIN
+	Font: Courier;
+	Style: Roman;
+	Adjust: Left;
+#ifdef PAGE
+	Size: 11 pt;
+	HorizPos: VMiddle = Enclosing.VMiddle;
+	Page(ThePage);
+	Width: Enclosing . Width;
+#else
+	Size: 12 pt;
+	HorizPos: Left = Enclosing . Left;
+	Width: Enclosed . Width;
+#endif
+	Vertpos: Top = Previous . Bottom + 0.4;
+	Indent: 0;
+	Justify: No;
+	LineSpacing: 1;
+	END;
+
+ BODY: BEGIN
+#ifdef PAGE
+	Width: Enclosing . Width - 2;
+#else
+	Width: Enclosed . Width;
+#endif
+	HorizPos: Left = Enclosing . Left + 1;
+	END;
+
+ Line_: BEGIN
+	Line;
+	LineBreak: Yes;
+	END;
+
+ TEXT_UNIT :
+	 Width : Enclosed . Width;
+
+END
