@@ -23,85 +23,32 @@
 
 
 /* ---------------------------------------------------------------------- */
-/* |    VoirXHorsStruct regarde si des boites ont des relations         | */
-/* |            hors-structure avec la boite passee en parametre et     | */
-/* |            doivent etre placees en X absolu.                       | */
+/* |    SetYCompleteForOutOfStruct regarde si des boites ont des        | */
+/* |         relations hors-structure avec la boite passee en parametre | */
+/* |         et doivent etre placees en Y absolu.                       | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         VoirXHorsStruct (PtrBox pBox, int SeuilVisu, int frame)
+static void         SetYCompleteForOutOfStruct (PtrBox pBox, int visibility, int frame)
 #else  /* __STDC__ */
-static void         VoirXHorsStruct (pBox, SeuilVisu, frame)
-PtrBox            pBox;
-int                 SeuilVisu;
+static void         SetYCompleteForOutOfStruct (pBox, visibility, frame)
+PtrBox              pBox;
+int                 visibility;
 int                 frame;
 #endif /* __STDC__ */
 {
-   PtrPosRelations      pPosRel;
+   PtrPosRelations     pPosRel;
+   BoxRelation        *pRelation;
+   boolean             notEmpty;
    int                 i;
-   boolean             nonnul;
-   BoxRelation           *pRelation;
-
 
    pPosRel = pBox->BxPosRelations;
    while (pPosRel != NULL)
      {
-	i = 1;
-	nonnul = pPosRel->PosRTable[i - 1].ReBox != NULL;
-	while (i <= MAX_RELAT_POS && nonnul)
+	i = 0;
+	notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
+	while (i < MAX_RELAT_POS && notEmpty)
 	  {
-	     pRelation = &pPosRel->PosRTable[i - 1];
-	     if (pRelation->ReBox->BxAbstractBox != NULL)
-		/* Relation hors-struture sur l'origine de la boite */
-		if (pRelation->ReOp == OpHorizDep
-		    && pRelation->ReBox->BxXOutOfStruct
-		    && pRelation->ReBox->BxAbstractBox->AbHorizPos.PosAbRef == pBox->BxAbstractBox
-		    && pRelation->ReBox->BxXToCompute)
-		  {
-		     /* La boite distante va etre placee */
-		     pRelation->ReBox->BxXToCompute = FALSE;
-		     Placer (pRelation->ReBox->BxAbstractBox, SeuilVisu, frame, TRUE, FALSE);
-		     VoirXHorsStruct (pRelation->ReBox, SeuilVisu, frame);
-		  }
-	     i++;
-	     if (i <= MAX_RELAT_POS)
-		nonnul = pPosRel->PosRTable[i - 1].ReBox != NULL;
-	  }
-	pPosRel = pPosRel->PosRNext;
-     }
-}				/* VoirXHorsStruct */
-
-/* ---------------------------------------------------------------------- */
-/* |    VoirYHorsStruct regarde si des boites ont des relations         | */
-/* |            hors-structure avec la boite passee en parametre et     | */
-/* |            doivent etre placees en Y absolu.                       | */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-static void         VoirYHorsStruct (PtrBox pBox, int SeuilVisu, int frame)
-
-#else  /* __STDC__ */
-static void         VoirYHorsStruct (pBox, SeuilVisu, frame)
-PtrBox            pBox;
-int                 SeuilVisu;
-int                 frame;
-
-#endif /* __STDC__ */
-
-{
-   PtrPosRelations      pPosRel;
-   int                 i;
-   boolean             nonnul;
-   BoxRelation           *pRelation;
-
-
-   pPosRel = pBox->BxPosRelations;
-   while (pPosRel != NULL)
-     {
-	i = 1;
-	nonnul = pPosRel->PosRTable[i - 1].ReBox != NULL;
-	while (i <= MAX_RELAT_POS && nonnul)
-	  {
-	     pRelation = &pPosRel->PosRTable[i - 1];
+	     pRelation = &pPosRel->PosRTable[i];
 	     if (pRelation->ReBox->BxAbstractBox != NULL)
 		/* Relation hors-struture sur l'origine de la boite */
 		if (pRelation->ReOp == OpVertDep
@@ -111,96 +58,378 @@ int                 frame;
 		  {
 		     /* La boite distante va etre placee */
 		     pRelation->ReBox->BxYToCompute = FALSE;
-		     Placer (pRelation->ReBox->BxAbstractBox, SeuilVisu, frame, FALSE, TRUE);
-		     VoirYHorsStruct (pRelation->ReBox, SeuilVisu, frame);
+		     Placer (pRelation->ReBox->BxAbstractBox, visibility, frame, FALSE, TRUE);
+		     SetYCompleteForOutOfStruct (pRelation->ReBox, visibility, frame);
 		  }
 	     i++;
-	     if (i <= MAX_RELAT_POS)
-		nonnul = pPosRel->PosRTable[i - 1].ReBox != NULL;
+	     if (i < MAX_RELAT_POS)
+		notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
 	  }
-	pPosRel = pPosRel->PosRNext;
 	/* Bloc suivant */
+	pPosRel = pPosRel->PosRNext;
      }
-}				/* VoirYHorsStruct */
+}
+
 
 /* ---------------------------------------------------------------------- */
-/* |    Placer met a` jour toutes les origines des boi^tes correpondant | */
-/* |            aux pave's inclus dans pAb.                          | */
+/* |    SetXCompleteForOutOfStruct regarde si des boites ont des        | */
+/* |         relations hors-structure avec la boite passee en parametre | */
+/* |         et doivent etre placees en X absolu.                       | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static void         SetXCompleteForOutOfStruct (PtrBox pBox, int visibility, int frame)
+#else  /* __STDC__ */
+static void         SetXCompleteForOutOfStruct (pBox, visibility, frame)
+PtrBox              pBox;
+int                 visibility;
+int                 frame;
+#endif /* __STDC__ */
+{
+   PtrPosRelations     pPosRel;
+   BoxRelation        *pRelation;
+   boolean             notEmpty;
+   int                 i;
+
+   pPosRel = pBox->BxPosRelations;
+   while (pPosRel != NULL)
+     {
+	i = 0;
+	notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
+	while (i < MAX_RELAT_POS && notEmpty)
+	  {
+	     pRelation = &pPosRel->PosRTable[i];
+	     if (pRelation->ReBox->BxAbstractBox != NULL)
+		/* Relation hors-struture sur l'origine de la boite */
+		if (pRelation->ReOp == OpHorizDep
+		    && pRelation->ReBox->BxXOutOfStruct
+		    && pRelation->ReBox->BxAbstractBox->AbHorizPos.PosAbRef == pBox->BxAbstractBox
+		    && pRelation->ReBox->BxXToCompute)
+		  {
+		     /* La boite distante va etre placee */
+		     pRelation->ReBox->BxXToCompute = FALSE;
+		     Placer (pRelation->ReBox->BxAbstractBox, visibility, frame, TRUE, FALSE);
+		     SetXCompleteForOutOfStruct (pRelation->ReBox, visibility, frame);
+		  }
+	     i++;
+	     if (i < MAX_RELAT_POS)
+		notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
+	  }
+	pPosRel = pPosRel->PosRNext;
+     }
+}
+
+
+#ifdef __COLPAGE__
+/* ---------------------------------------------------------------------- */
+/* |    ClearPageIndicators remet a faux les boolens AbOnPageBreak et   | */
+/* |            PageHorsPage dans tous les paves du sous-arbre pAb      | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static void         ClearPageIndicators (PtrAbstractBox pAb)
+#else  /* __STDC__ */
+static void         ClearPageIndicators (pAb)
+PtrAbstractBox      pAb;
+
+#endif /* __STDC__ */
+{
+   PtrAbstractBox             pAbb;
+
+   pAbb = pAb;
+   pAbb->AbOnPageBreak = FALSE;
+   pAbb->AbAfterPageBreak = FALSE;
+   pAbb = pAbb->AbFirstEnclosed;
+   while (pAbb != NULL)
+     {
+	ClearPageIndicators (pAbb);
+	pAbb = pAbb->AbNext;
+     }
+}
+#endif /* __COLPAGE__ */
+
+
+/* ---------------------------------------------------------------------- */
+/* |  SetPageIndicators teste la position d'un pave' par rapport a`  | */
+/* |            la limite de page. Positionne les indicateurs du pave': | */
+/* |            pave' sur la limite de page ou au dela` de la limite.   | */
+/* |            Le parame`tre height donne la position de la limite de  | */
+/* |            page exprime'e en pixels.                               | */
+/* |            Si un pave' de'borde verticalement de sa boi^te         | */
+/* |            englobante et que ce pave' n'est pas se'cable, alors    | */
+/* |            la boi^te englobante est conside're'e comme coupe'e par | */
+/* |            la limite de page.                                      | */
+/* |            Quand la limite de page coupe un pave' non se'cable la  | */
+/* |            limite de page est alors remonte'e pour rejeter hors    | */
+/* |            page le pave' et le processus est repris au de'but.     | */
+/* |            Dans ce cas, au retour de la fonction le parame`tre     | */
+/* |            height est modifie' et isPageBreakChanged est Vrai.     | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static void         SetPageIndicators (PtrAbstractBox pAb, int *height, boolean *isPageBreakChanged)
+#else  /* __STDC__ */
+static void         SetPageIndicators (pAb, height, isPageBreakChanged)
+PtrAbstractBox      pAb;
+int                *height;
+boolean            *isPageBreakChanged;
+#endif /* __STDC__ */
+{
+   PtrAbstractBox    pChildAb;
+   PtrBox            pBox;
+   PtrBox            pPreviousBox;
+   PtrBox            pFirstBox;
+   int               org;
+   boolean           toContinue;
+
+   /* A priori la limite de page n'est pas deplacee */
+   *isPageBreakChanged = FALSE;
+   /* et il faut examiner les paves fils */
+
+   if (!pAb->AbDead && pAb->AbBox != NULL)
+     {
+	/* verifie les limites de la boite du pave */
+	pBox = pAb->AbBox;
+
+	/* --- mis en lignes ------------------------- */
+	if (pBox->BxType == BoSplit)
+	  {
+	     pPreviousBox = pBox;
+	     pBox = pBox->BxNexChild;
+	     toContinue = TRUE;
+	     pFirstBox = pBox;	/* memorise la premiere boite */
+	     /* A priori la boite est dans la page */
+	     pAb->AbAfterPageBreak = FALSE;
+	     pAb->AbOnPageBreak = FALSE;
+	     /* Ce n'est pas la peine de continuer le calcul */
+	     /* des coupures de boites quand la limite de    */
+	     /* page est deplacee */
+	     while (!*isPageBreakChanged && toContinue && pBox != NULL)
+	       {
+		  /* Origine de la boite de coupure */
+		  org = pBox->BxYOrg;
+		  if (org + pBox->BxHeight <= *height)
+		     ;		/* La boite est a l'interieur de la page */
+		  else if (org >= *height)
+		    {
+		       /* Il faut memoriser la boite de coupure coupee */
+		       pBox->BxAbstractBox->AbBox->BxMoved = pBox;
+		       if (pBox == pFirstBox)
+			  /* La boite est hors page */
+			  HorsDeLaPage (pAb, height, isPageBreakChanged);
+		       else if (pPreviousBox->BxType == BoDotted && pPreviousBox->BxNSpaces == 0)
+			 {
+			    /* La derniere boite de la page est hyphenee */
+			    /* et n'est pas secable sur un blanc */
+			    if (pPreviousBox == pFirstBox)
+			       /* Le pave est note hors de la page */
+			       HorsDeLaPage (pAb, height, isPageBreakChanged);
+			    else
+			      {
+				 /* deplace la limite de page */
+				 *height = pPreviousBox->BxYOrg;
+				 *isPageBreakChanged = TRUE;
+			      }
+			 }
+		       else
+			  /* La boite est sur la limite de page */
+			  SurLaPage (pAb, height, isPageBreakChanged);
+		       toContinue = FALSE;
+		    }
+		  else
+		    {
+		       /* La boite est sur la limite de page */
+		       /* deplace la limite de page sur l'origine de la boite */
+		       *height = org;
+		       *isPageBreakChanged = TRUE;
+		    }
+
+		  pPreviousBox = pBox;
+		  pBox = pBox->BxNexChild;
+	       }
+	  }
+	/* --- cas genenral ----------------------------------------- */
+	else
+	  {
+	     /* Si la boite composee n'est pas eclatee */
+	     if (pBox->BxType != BoGhost)
+	       {
+		  /* Origine de la boite de coupure */
+		  org = pBox->BxYOrg;
+		  if (org + pBox->BxHeight <= *height)
+		    {
+		       /* La boite est dans la page */
+		       pAb->AbAfterPageBreak = FALSE;
+		       pAb->AbOnPageBreak = FALSE;
+		    }
+		  else if (org >= *height)
+		     /* La boite est hors page */
+		     HorsDeLaPage (pAb, height, isPageBreakChanged);
+		  else if (!pAb->AbAcceptPageBreak || pAb->AbLeafType == LtText || pAb->AbLeafType == LtSymbol)
+		    {
+		       /* La boite est sur la limite de page mais non secable */
+		       /* deplace la limite de page sur l'origine de la boite */
+		       *height = org;
+		       *isPageBreakChanged = TRUE;
+		    }
+		  else if (pAb->AbVertEnclosing)
+		    {
+		       /* La boite est sur la limite de page, secable et englobee */
+		       if (pAb->AbFirstEnclosed == NULL)
+			  /* attend la boite terminale pour remonter l'indicateur */
+			  SurLaPage (pAb, height, isPageBreakChanged);
+		    }
+		  else
+		    {
+		       /* La boite est sur la limite de page, secable et non englobee */
+		       pAb->AbOnPageBreak = TRUE;
+		       pAb->AbAfterPageBreak = FALSE;
+		    }
+	       }		/*if != BoGhost */
+	     else
+	       {
+		  pAb->AbOnPageBreak = FALSE;
+		  pAb->AbAfterPageBreak = FALSE;
+	       }
+
+	     /* traite les paves fils */
+	     pChildAb = pAb->AbFirstEnclosed;
+	     /* Ce n'est pas la peine de continuer le calcul */
+	     /* des coupures de boites quand la limite de    */
+	     /* page est deplacee */
+	     while (pChildAb != NULL && !*isPageBreakChanged)
+	       {
+#ifdef __COLPAGE__
+		  /* on saute les paves de colonnes pour arriver a la */
+		  /* derniere car c'est toujours pour la derniere */
+		  /* colonne qu'on evalue la coupure */
+		  while (pChildAb->AbElement->ElTypeNumber == PageBreak + 1
+			 && (pChildAb->AbElement->ElPageType == ColBegin
+			  || pChildAb->AbElement->ElPageType == ColComputed
+		       || pChildAb->AbElement->ElPageType == ColUser
+			 || pChildAb->AbElement->ElPageType == ColGroup)
+			 && pChildAb->AbNext != NULL)
+		     pChildAb = pChildAb->AbNext;
+#endif /* __COLPAGE__ */
+		  SetPageIndicators (pChildAb, height, isPageBreakChanged);
+		  /* passe au suivant */
+		  pChildAb = pChildAb->AbNext;
+	       }
+	  }
+
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |  SetPageBreakPosition teste la position d'un pave' par rapport a`  | */
+/* |            la limite de page. Elle rend Vrai si la boi^te du pave' | */
+/* |            est incluse dans la page. Sinon le pave' est coupe'     | */
+/* |            par la limite ou se situe au dela` de la limite et les  | */
+/* |            indicateurs correspondants du pave' sont positionne's.  | */
+/* |            Le parame`tre page donne la position de la limite de    | */
+/* |            page.                                                   | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+boolean             MarqueCoupure (PtrAbstractBox pAb, int *page)
+#else  /* __STDC__ */
+boolean             MarqueCoupure (pAb, page)
+PtrAbstractBox      pAb;
+int                *page;
+#endif /* __STDC__ */
+{
+   int                 height;
+   boolean             result;
+
+   height = PixelValue (*page, UnPoint, pAb);
+#ifdef __COLPAGE__
+   /* comme dans le cas des colonnes, il y a des branches de l'image */
+   /* qui ne sont pas examinees et mises a jour par SetPageIndicators, */
+   /* on parcourt l'arbre pour mettre AbOnPageBreak et AbAfterPageBreak a faux */
+   ClearPageIndicators (pAb);
+#endif /* __COLPAGE__ */
+   result = TRUE;
+   /* Tant que la limite de page change on recalcule */
+   /* quelles sont les boites coupees */
+   while (result)
+      SetPageIndicators (pAb, &height, &result);
+   result = !pAb->AbOnPageBreak;
+   /* Faut-il traduire la hauteur de page ? */
+   *page = PixelValue (height, UnPoint, pAb);
+   return result;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |  AddBoxTranslations met a` jour toutes les origines des boi^tes    | */
+/* |            correpondant aux pave's inclus dans pAb.                | */
 /* |            A chaque niveau la proce'dure additionnne le de'calage  | */
 /* |            de la boi^te englobante aux origines des boi^tes        | */
 /* |            incluses, en X et en Y selon la valeur de l'indicateur  | */
-/* |            EnX et EnY et du status de la boi^te englobe'e.         | */
+/* |            horizRef et vertRef et du status de la boi^te englobe'e | */
 /* |            Si ne'cessaire, la proce'dure ve'rifie l'englobement.   | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
-void                Placer (PtrAbstractBox pAb, int SeuilVisu, int frame, boolean EnX, boolean EnY)
-
+void                Placer (PtrAbstractBox pAb, int visibility, int frame, boolean horizRef, boolean vertRef)
 #else  /* __STDC__ */
-void                Placer (pAb, SeuilVisu, frame, EnX, EnY)
-PtrAbstractBox             pAb;
-int                 SeuilVisu;
+void                Placer (pAb, visibility, frame, horizRef, vertRef)
+PtrAbstractBox      pAb;
+int                 visibility;
 int                 frame;
-boolean             EnX;
-boolean             EnY;
-
+boolean             horizRef;
+boolean             vertRef;
 #endif /* __STDC__ */
-
 {
    int                 x, y, i;
-   PtrBox            box1;
-   int                 larg, haut;
-   PtrAbstractBox             pChildAb;
+   PtrBox              box1;
+   PtrBox              pChildBox;
+   PtrBox              pBox;
+   BoxRelation        *pRelation;
+   PtrAbstractBox      pChildAb;
+   PtrPosRelations     pPosRel;
+   int                 width, height;
    boolean             eclate;
    boolean             Peclate;
-   boolean             nonnul;
-   PtrPosRelations      pPosRel;
+   boolean             notEmpty;
    boolean             newX;
    boolean             newY;
    boolean             placeenX;
    boolean             placeenY;
    boolean             reenglobx;
    boolean             reengloby;
-   PtrBox            pBo1;
-   PtrBox            pBox;
-   BoxRelation           *pRelation;
 
    /* Origine de la boite du pave le plus englobant */
    pBox = pAb->AbBox;
    x = pBox->BxXOrg;
    y = pBox->BxYOrg;
-   larg = pBox->BxWidth;
-   haut = pBox->BxHeight;
+   width = pBox->BxWidth;
+   height = pBox->BxHeight;
    Peclate = pBox->BxType == BoGhost;
    pChildAb = pAb->AbFirstEnclosed;
 
    /* Indique s'il faut reevaluer l'englobement du contenu apres mise a jour */
    reenglobx = FALSE;
    reengloby = FALSE;
-   /* EnX et EnY indiquent que la boite mere (pBox) transmet son decalage */
-   /* newX et newY indiquent que la boite fille (pBo1) accepte le decalage */
+   /* horizRef et vertRef indiquent que la boite mere (pBox) transmet son decalage */
+   /* newX et newY indiquent que la boite fille (pChildBox) accepte le decalage */
    /* placeenX et placeenY indiquent que la boite fille transmet son decalage */
 
    /* Transforme origines relatives des boites filles en origines absolues */
-   if (pAb->AbVisibility >= SeuilVisu)
+   if (pAb->AbVisibility >= visibility)
       while (pChildAb != NULL)
 	{
 
-	   pBo1 = pChildAb->AbBox;
-	   if (pBo1 != NULL)
+	   pChildBox = pChildAb->AbBox;
+	   if (pChildBox != NULL)
 	     {
-		eclate = Peclate || pBo1->BxType == BoGhost;
+		eclate = Peclate || pChildBox->BxType == BoGhost;
 
 		/* Decale boites englobees dont l'origine depend de l'englobante */
 		/* La boite est coupee, on decale les boites de coupure */
-		if (pBo1->BxType == BoSplit)
+		if (pChildBox->BxType == BoSplit)
 		  {
-		     box1 = pBo1->BxNexChild;
+		     box1 = pChildBox->BxNexChild;
 		     while (box1 != NULL)
 		       {
-			  if (EnX)
+			  if (horizRef)
 			     box1->BxXOrg += x;
-			  if (EnY)
+			  if (vertRef)
 			     box1->BxYOrg += y;
 			  box1 = box1->BxNexChild;
 		       }
@@ -209,24 +438,24 @@ boolean             EnY;
 		  {
 		     /* S'il s'agit d'un bloc de ligne elastique */
 		     /* il faut reevaluer l'englobement vertical */
-		     if (pBo1->BxType == BoBlock && pBo1->BxHorizFlex)
+		     if (pChildBox->BxType == BoBlock && pChildBox->BxHorizFlex)
 			reengloby = TRUE;
 		     /* Regarde si la boite est positionnee en X dans l'englobante */
-		     box1 = GetHPosRelativePos (pBo1, NULL);
-		     placeenX = pBo1->BxXToCompute;
+		     box1 = GetHPosRelativePos (pChildBox, NULL);
+		     placeenX = pChildBox->BxXToCompute;
 		     if (box1 == NULL)
 			newX = TRUE;
-		     else if (pBo1->BxXOutOfStruct)
+		     else if (pChildBox->BxXOutOfStruct)
 			newX = FALSE;
-		     else if (box1->BxHorizFlex && box1 != pBo1)
+		     else if (box1->BxHorizFlex && box1 != pChildBox)
 			/* Le decalage des boites voisines liees a la boite elastique */
 			/* est deja effectue par l'appel de MoveBoxEdge */
 			newX = FALSE;
 		     else
 			newX = TRUE;
 
-		     /* On regarde si la boite doit etre placee en X absolu */
-		     if (EnX)
+		     /* regarde si la boite doit etre placee en X absolu */
+		     if (horizRef)
 		       {
 			  if (newX)
 			    {
@@ -241,22 +470,22 @@ boolean             EnY;
 		     else
 			placeenX = FALSE;
 
-		     /* On regarde si la boite est positionnee en Y dans l'englobante */
-		     box1 = GetVPosRelativeBox (pBo1, NULL);
-		     placeenY = pBo1->BxYToCompute;
+		     /* regarde si la boite est positionnee en Y dans l'englobante */
+		     box1 = GetVPosRelativeBox (pChildBox, NULL);
+		     placeenY = pChildBox->BxYToCompute;
 		     if (box1 == NULL)
 			newY = TRUE;
-		     else if (pBo1->BxYOutOfStruct)
+		     else if (pChildBox->BxYOutOfStruct)
 			newY = FALSE;
-		     else if (box1->BxVertFlex && box1 != pBo1)
+		     else if (box1->BxVertFlex && box1 != pChildBox)
 			/* Le decalage des boites voisines liees a la boite elastique */
 			/* est deja effectue par l'appel de MoveBoxEdge */
 			newY = FALSE;
 		     else
 			newY = TRUE;
 
-		     /* On regarde si la boite doit etre placee en Y absolu */
-		     if (EnY)
+		     /* regarde si la boite doit etre placee en Y absolu */
+		     if (vertRef)
 		       {
 
 			  if (newY)
@@ -273,71 +502,70 @@ boolean             EnY;
 			placeenY = FALSE;
 
 		     /* Le contenu des boites elastiques et hors-structures est deja place */
-		     if (pBo1->BxHorizFlex || pBo1->BxXOutOfStruct)
+		     if (pChildBox->BxHorizFlex || pChildBox->BxXOutOfStruct)
 		       {
 			  placeenX = FALSE;
-			  /*if (pBo1->BxType == BoBlock) */
+			  /*if (pChildBox->BxType == BoBlock) */
 			  /* La reevaluation du bloc de lignes place le contenu en Y */
 			  /*placeenY = FALSE; */
 		       }
-		     if (pBo1->BxVertFlex || pBo1->BxYOutOfStruct)
+		     if (pChildBox->BxVertFlex || pChildBox->BxYOutOfStruct)
 			placeenY = FALSE;
-		     /* On detecte les erreurs d'englobement de la boite englobee */
-		     if (!eclate && pBo1->BxType != BoPicture
+		     /* detecte les erreurs d'englobement de la boite englobee */
+		     if (!eclate && pChildBox->BxType != BoPicture
 		     /* Ne verifie pas les boites placees par relation hors-structure */
-			 && !pBo1->BxXOutOfStruct && !pBo1->BxYOutOfStruct)
+			 && !pChildBox->BxXOutOfStruct && !pChildBox->BxYOutOfStruct)
 			if (pChildAb->AbHorizEnclosing && placeenX
-			    && (pBo1->BxXOrg < 0 || pBo1->BxXOrg > larg))
+			    && (pChildBox->BxXOrg < 0 || pChildBox->BxXOrg > width))
 			  {
 			     if (HighlightBoxErrors)
 			       TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_HORIZ_POS), AbsBoxType (pChildAb));
 			  }
 			else if (pChildAb->AbVertEnclosing && placeenY
-			       && (pBo1->BxYOrg < 0 || pBo1->BxYOrg > haut))
+			       && (pChildBox->BxYOrg < 0 || pChildBox->BxYOrg > height))
 			  {
 			     if (HighlightBoxErrors)
 			       TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_VERT_POS), AbsBoxType (pChildAb));
 			  }
-			else if (pBo1->BxWidth < 0)
+			else if (pChildBox->BxWidth < 0)
 			  {
-			     pBo1->BxWidth = 1;
+			     pChildBox->BxWidth = 1;
 			     if (HighlightBoxErrors)
 			       TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_HORIZ_SIZING), AbsBoxType (pChildAb));
 			  }
-			else if (pBo1->BxHeight < 0)
+			else if (pChildBox->BxHeight < 0)
 			  {
-			     pBo1->BxHeight = 1;
+			     pChildBox->BxHeight = 1;
 			     if (HighlightBoxErrors)
 			       TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_VERT_SIZING), AbsBoxType (pChildAb));
 			  }
-		     /* On decale la boite positionnee en X dans l'englobante */
-		     if (EnX && newX)
+		     /* decale la boite positionnee en X dans l'englobante */
+		     if (horizRef && newX)
 		       {
-			  i = pBo1->BxXOrg + pBo1->BxWidth - larg;
-			  /* On regarde s'il s'agit d'une boite elastique */
-			  if (pBo1->BxHorizFlex)
+			  i = pChildBox->BxXOrg + pChildBox->BxWidth - width;
+			  /* regarde s'il s'agit d'une boite elastique */
+			  if (pChildBox->BxHorizFlex)
 			    {
 			       /* Initialise la file des boites deplacees */
 			       box1 = pChildAb->AbHorizPos.PosAbRef->AbBox;
 			       box1->BxMoved = NULL;
 			       /* Pas de deplacement du contenu des boites qui */
 			       /*  dependent de la boite elastique             */
-			       MoveBoxEdge (pBo1, box1, OpHorizDep, x, frame, TRUE);
+			       MoveBoxEdge (pChildBox, box1, OpHorizDep, x, frame, TRUE);
 			    }
-/**BE:AOUT*/ 
 			  else if (!placeenX)
-			     /**BE:AOUT*//* il faut deplacer tout le contenu de la boite */
-/**BE:AOUT*/ XMoveAllEnclosed (pBo1, x, frame);
+			    /* il faut deplacer tout le contenu de la boite */
+			    XMoveAllEnclosed (pChildBox, x, frame);
 			  else
-			     pBo1->BxXOrg += x;
+			     pChildBox->BxXOrg += x;
 
-			  pBo1->BxXToCompute = FALSE;	/* La boite est placee */
+			  pChildBox->BxXToCompute = FALSE;	/* La boite est placee */
 
-			  /* On detecte les debordements de la boite englobante */
+			  /* detecte les debordements de la boite englobante */
 			  if (pChildAb->AbHorizEnclosing
 			      && !eclate
 			      && i > 1
-			      && !pBo1->BxHorizFlex
+			      && !pChildBox->BxHorizFlex
 			      && !pBox->BxHorizFlex)
 			    {
 			       if (HighlightBoxErrors)
@@ -346,30 +574,30 @@ boolean             EnY;
 			  /* Decale les boites qui ont des relations hors-structure avec */
 			  /* la boite deplacee et met a jour les dimensions elastiques   */
 			  /* des boites liees a la boite deplacee.                       */
-			  pPosRel = pBo1->BxPosRelations;
+			  pPosRel = pChildBox->BxPosRelations;
 			  while (pPosRel != NULL)
 			    {
 			       i = 1;
-			       nonnul = pPosRel->PosRTable[i - 1].ReBox != NULL;
+			       notEmpty = (pPosRel->PosRTable[i - 1].ReBox != NULL);
 			       /* Si la boite est elastique, les relations */
 			       /* hors-structure sont deja traitees.       */
-			       if (!pBo1->BxHorizFlex)
-				  while (i <= MAX_RELAT_POS && nonnul)
+			       if (!pChildBox->BxHorizFlex)
+				  while (i <= MAX_RELAT_POS && notEmpty)
 				    {
 				       pRelation = &pPosRel->PosRTable[i - 1];
 				       if (pRelation->ReBox->BxAbstractBox != NULL)
 					 {
 					    /* Initialise la file des boites deplacees */
-					    pBo1->BxMoved = NULL;
+					    pChildBox->BxMoved = NULL;
 					    /* Relation hors-struture sur l'origine de la boite */
 					    if (pRelation->ReOp == OpHorizDep
 					     && pRelation->ReBox->BxXOutOfStruct
 						&& pRelation->ReBox->BxAbstractBox->AbHorizPos.PosAbRef == pChildAb)
 					      {
 						 if (pRelation->ReBox->BxHorizFlex)
-						    MoveBoxEdge (pRelation->ReBox, pBo1, pRelation->ReOp, x, frame, TRUE);
+						    MoveBoxEdge (pRelation->ReBox, pChildBox, pRelation->ReOp, x, frame, TRUE);
 						 else
-						    XMove (pRelation->ReBox, pBo1, x, frame);
+						    XMove (pRelation->ReBox, pChildBox, x, frame);
 						 /* La boite distante est placee */
 						 pRelation->ReBox->BxXToCompute = FALSE;
 					      }
@@ -378,56 +606,56 @@ boolean             EnY;
 					      {
 						 /* Pas de deplacement du contenu des boites qui */
 						 /*  dependent de la boite elastique             */
-						 MoveBoxEdge (pRelation->ReBox, pBo1, pRelation->ReOp, x, frame, TRUE);
+						 MoveBoxEdge (pRelation->ReBox, pChildBox, pRelation->ReOp, x, frame, TRUE);
 					      }
 					 }
 				       i++;
 				       if (i <= MAX_RELAT_POS)
-					  nonnul = pPosRel->PosRTable[i - 1].ReBox != NULL;
+					  notEmpty = (pPosRel->PosRTable[i - 1].ReBox != NULL);
 				    }
 			       pPosRel = pPosRel->PosRNext;
 			    }
 		       }
-		     /* On ne decale pas la boite, mais le fait de deplacer */
+		     /* ne decale pas la boite, mais le fait de deplacer */
 		     /* l'englobante sans deplacer une englobee peut        */
 		     /* modifier la largeur de la boite englobante.         */
-		     else if (EnX && pBo1->BxXOutOfStruct)
+		     else if (horizRef && pChildBox->BxXOutOfStruct)
 			reenglobx = TRUE;
-		     /* On traite les relations hors-structures des boites non */
+		     /* traite les relations hors-structures des boites non */
 		     /* decalees mais qui doivent etre placees en X absolu     */
 		     if (placeenX && !newX)
 		       {
-			  VoirXHorsStruct (pBo1, SeuilVisu, frame);
+			  SetXCompleteForOutOfStruct (pChildBox, visibility, frame);
 			  /* La boite est placee */
-			  pBo1->BxXToCompute = FALSE;
+			  pChildBox->BxXToCompute = FALSE;
 		       }
-		     /* On decale la boite positionnee en Y dans l'englobante */
-		     if (EnY && newY)
+		     /* decale la boite positionnee en Y dans l'englobante */
+		     if (vertRef && newY)
 		       {
-			  i = pBo1->BxYOrg + pBo1->BxHeight - haut;
+			  i = pChildBox->BxYOrg + pChildBox->BxHeight - height;
 
-			  /* On regarde s'il s'agit d'une boite elastique */
-			  if (pBo1->BxVertFlex)
+			  /* regarde s'il s'agit d'une boite elastique */
+			  if (pChildBox->BxVertFlex)
 			    {
 			       /* Initialise la file des boites deplacees */
 			       box1 = pChildAb->AbVertPos.PosAbRef->AbBox;
 			       box1->BxMoved = NULL;
 			       /* Pas de deplacement du contenu des boites qui */
-			       /*  dependent de la boite elastique             */
-			       MoveBoxEdge (pBo1, box1, OpVertDep, y, frame, FALSE);
+			       /*  dependent de la boite elastique */
+			       MoveBoxEdge (pChildBox, box1, OpVertDep, y, frame, FALSE);
 			    }
-/**BE:AOUT*/ 
 			  else if (!placeenY)
-			     /**BE:AOUT*//* il faut deplacer tout le contenu de la boite */
-/**BE:AOUT*/ YMoveAllEnclosed (pBo1, y, frame);
+			    /* il faut deplacer tout le contenu de la boite */
+			    YMoveAllEnclosed (pChildBox, y, frame);
 			  else
-			     pBo1->BxYOrg += y;
-			  pBo1->BxYToCompute = FALSE;	/* La boite est placee */
-			  /* On detecte les debordements en Y de la boite englobante */
+			     pChildBox->BxYOrg += y;
+			  /* La boite est placee */
+			  pChildBox->BxYToCompute = FALSE;
+			  /* detecte les debordements en Y de la boite englobante */
 			  if (pChildAb->AbVertEnclosing
 			      && !eclate
 			      && i > 1
-			      && !pBo1->BxVertFlex
+			      && !pChildBox->BxVertFlex
 			      && !pBox->BxVertFlex)
 			    {
 			       if (HighlightBoxErrors)
@@ -436,30 +664,30 @@ boolean             EnY;
 			  /* Decale les boites qui ont des relations hors-structure avec */
 			  /* la boite deplacee et met a jour les dimensions elastiques   */
 			  /* des boites liees a la boite deplacee.                       */
-			  pPosRel = pBo1->BxPosRelations;
+			  pPosRel = pChildBox->BxPosRelations;
 			  while (pPosRel != NULL)
 			    {
 			       i = 1;
-			       nonnul = pPosRel->PosRTable[i - 1].ReBox != NULL;
+			       notEmpty = (pPosRel->PosRTable[i - 1].ReBox != NULL);
 			       /* Si la boite est elastique, les relations */
 			       /* hors-structure sont deja traitees.       */
-			       if (!pBo1->BxVertFlex)
-				  while (i <= MAX_RELAT_POS && nonnul)
+			       if (!pChildBox->BxVertFlex)
+				  while (i <= MAX_RELAT_POS && notEmpty)
 				    {
 				       pRelation = &pPosRel->PosRTable[i - 1];
 				       if (pRelation->ReBox->BxAbstractBox != NULL)
 					 {
 					    /* Initialise la file des boites deplacees */
-					    pBo1->BxMoved = NULL;
+					    pChildBox->BxMoved = NULL;
 					    /* Relation hors-struture sur l'origine de la boite */
 					    if (pRelation->ReOp == OpVertDep
 					     && pRelation->ReBox->BxYOutOfStruct
 						&& pRelation->ReBox->BxAbstractBox->AbVertPos.PosAbRef == pChildAb)
 					      {
 						 if (pRelation->ReBox->BxVertFlex)
-						    MoveBoxEdge (pRelation->ReBox, pBo1, pRelation->ReOp, y, frame, FALSE);
+						    MoveBoxEdge (pRelation->ReBox, pChildBox, pRelation->ReOp, y, frame, FALSE);
 						 else
-						    YMove (pRelation->ReBox, pBo1, y, frame);
+						    YMove (pRelation->ReBox, pChildBox, y, frame);
 						 /* La boite distante est placee */
 						 pRelation->ReBox->BxYToCompute = FALSE;
 					      }
@@ -468,36 +696,37 @@ boolean             EnY;
 					      {
 						 /* Pas de deplacement du contenu des boites qui */
 						 /*  dependent de la boite elastique             */
-						 MoveBoxEdge (pRelation->ReBox, pBo1, pRelation->ReOp, y, frame, FALSE);
+						 MoveBoxEdge (pRelation->ReBox, pChildBox, pRelation->ReOp, y, frame, FALSE);
 					      }
 					 }
 				       i++;
 				       if (i <= MAX_RELAT_POS)
-					  nonnul = pPosRel->PosRTable[i - 1].ReBox != NULL;
+					  notEmpty = (pPosRel->PosRTable[i - 1].ReBox != NULL);
 				    }
 			       pPosRel = pPosRel->PosRNext;
 			    }
 		       }
-		     /* On ne decale pas la boite, mais le fait de deplacer */
+		     /* ne decale pas la boite, mais le fait de deplacer */
 		     /* l'englobante sans deplacer une englobee peut        */
 		     /* modifier la hauteur de la boite englobante.         */
-		     else if (EnY && pBo1->BxYOutOfStruct)
+		     else if (vertRef && pChildBox->BxYOutOfStruct)
 			reengloby = TRUE;
 
-		     /* On traite les relations hors-structures des boites non */
+		     /* traite les relations hors-structures des boites non */
 		     /* decalees mais qui doivent etre placees en Y absolu     */
 		     if (placeenY && !newY)
 		       {
-			  VoirYHorsStruct (pBo1, SeuilVisu, frame);
+			  SetYCompleteForOutOfStruct (pChildBox, visibility, frame);
 			  /* La boite est placee */
-			  pBo1->BxYToCompute = FALSE;
+			  pChildBox->BxYToCompute = FALSE;
 		       }
-		     /* On traite les origines des boites de niveau inferieur */
+		     /* traite les origines des boites de niveau inferieur */
 		     if (placeenX || placeenY)
-			Placer (pChildAb, SeuilVisu, frame, placeenX, placeenY);
+			Placer (pChildAb, visibility, frame, placeenX, placeenY);
 		  }
 	     }
-	   pChildAb = pChildAb->AbNext;	/* On passe au suivant */
+	   /* passe au suivant */
+	   pChildAb = pChildAb->AbNext;
 	}
    /* Si une dimension de la boite depend du contenu et qu'une des  */
    /* boites filles est positionnee par une relation hors-structure */
@@ -507,7 +736,7 @@ boolean             EnY;
 
    if (reengloby && pBox->BxContentHeight)
       RecordEnclosing (pBox, FALSE);
-}				/* Placer */
+}
 
 
 /* ---------------------------------------------------------------------- */
@@ -517,42 +746,36 @@ boolean             EnY;
 /* |            limite de page est alors remonte'e pour rejeter hors    | */
 /* |            page le pave' et le processus est repris au de'but.     | */
 /* |            Dans ce cas, au retour de la fonction le parame`tre     | */
-/* |            haut est modifie' et modifpage est poste' a` Vrai.      | */
+/* |            height est modifie' et isPageBreakChanged est Vrai.     | */
 /* ---------------------------------------------------------------------- */
-
-
 #ifdef __STDC__
-static void         SurLaPage (PtrAbstractBox pAb, int *haut, boolean * modifpage)
-
+static void         SurLaPage (PtrAbstractBox pAb, int *height, boolean * isPageBreakChanged)
 #else  /* __STDC__ */
-static void         SurLaPage (pAb, haut, modifpage)
+static void         SurLaPage (pAb, height, isPageBreakChanged)
 PtrAbstractBox             pAb;
-int                *haut;
-boolean            *modifpage;
-
+int                *height;
+boolean            *isPageBreakChanged;
 #endif /* __STDC__ */
-
 {
-
    if (pAb != NULL)
      {
-	if (!pAb->AbAcceptPageBreak && *haut > pAb->AbBox->BxYOrg)
+	if (!pAb->AbAcceptPageBreak && *height > pAb->AbBox->BxYOrg)
 	  {
 	     /* La boite est sur la limite de page mais non secable */
 	     /* deplace la limite de page sur l'origine de la boite */
-	     *haut = pAb->AbBox->BxYOrg;
-	     *modifpage = TRUE;
+	     *height = pAb->AbBox->BxYOrg;
+	     *isPageBreakChanged = TRUE;
 	  }
 	else if (!pAb->AbOnPageBreak)
 	  {
 	     pAb->AbOnPageBreak = TRUE;
 	     pAb->AbAfterPageBreak = FALSE;
-	     /* On traite le pave pere */
+	     /* traite le pave pere */
 	     if (pAb->AbVertEnclosing)
-		SurLaPage (pAb->AbEnclosing, haut, modifpage);
+		SurLaPage (pAb->AbEnclosing, height, isPageBreakChanged);
 	  }
      }
-}				/*SurLaPage */
+}
 
 
 /* ---------------------------------------------------------------------- */
@@ -561,19 +784,14 @@ boolean            *modifpage;
 /* |            marque's comme sur la page ou hors de la page et si     | */
 /* |            le pave' est englobe' verticalement.                    | */
 /* ---------------------------------------------------------------------- */
-
-
 #ifdef __STDC__
-static void         HorsDeLaPage (PtrAbstractBox pAb, int *haut, boolean * modifpage)
-
+static void         HorsDeLaPage (PtrAbstractBox pAb, int *height, boolean * isPageBreakChanged)
 #else  /* __STDC__ */
-static void         HorsDeLaPage (pAb, haut, modifpage)
-PtrAbstractBox             pAb;
-int                *haut;
-boolean            *modifpage;
-
+static void         HorsDeLaPage (pAb, height, isPageBreakChanged)
+PtrAbstractBox      pAb;
+int                *height;
+boolean            *isPageBreakChanged;
 #endif /* __STDC__ */
-
 {
    PtrAbstractBox             pavepere;
 
@@ -587,258 +805,12 @@ boolean            *modifpage;
 	   if (pavepere->AbBox->BxType == BoGhost)
 	     {
 		if (!pavepere->AbOnPageBreak)
-		   HorsDeLaPage (pavepere, haut, modifpage);
+		   HorsDeLaPage (pavepere, height, isPageBreakChanged);
 	     }
 	   else if (!pavepere->AbAfterPageBreak)
-	      SurLaPage (pavepere, haut, modifpage);
-     }
-}				/*HorsDeLaPage */
-
-
-/* ---------------------------------------------------------------------- */
-/* |    CoupSurPage teste la position d'un pave' par rapport a` la      | */
-/* |            limite de page. Elle rend Vrai si la boi^te du pave'    | */
-/* |            est incluse dans la page. Sinon le pave' est coupe'     | */
-/* |            par la limite ou se situe au dela` de la limite et les  | */
-/* |            indicateurs correspondants du pave' sont positionne's.  | */
-/* |            Le parame`tre haut donne la position de la limite de    | */
-/* |            page exprime'e en pixels.                               | */
-/* |            Si un pave' de'borde verticalement de sa boi^te         | */
-/* |            englobante et que ce pave' n'est pas se'cable, alors    | */
-/* |            la boi^te englobante est conside're'e comme coupe'e par | */
-/* |            la limite de page.                                      | */
-/* |            Quand la limite de page coupe un pave' non se'cable la  | */
-/* |            limite de page est alors remonte'e pour rejeter hors    | */
-/* |            page le pave' et le processus est repris au de'but.     | */
-/* |            Dans ce cas, au retour de la fonction le parame`tre     | */
-/* |            haut est modifie' et modifpage est poste' a` Vrai.      | */
-/* ---------------------------------------------------------------------- */
-
-
-#ifdef __STDC__
-static void         CoupSurPage (PtrAbstractBox Pv, int *haut, boolean * modifpage)
-
-#else  /* __STDC__ */
-static void         CoupSurPage (Pv, haut, modifpage)
-PtrAbstractBox             Pv;
-int                *haut;
-boolean            *modifpage;
-
-#endif /* __STDC__ */
-
-{
-   int                 org;
-   PtrAbstractBox             pChildAb;
-   PtrBox            box1;
-   PtrBox            prec;
-   PtrBox            first;
-   boolean             retour;
-
-   /* A priori la limite de page n'est pas deplacee */
-   *modifpage = FALSE;
-   /* et il faut examiner les paves fils */
-
-   if (!Pv->AbDead && Pv->AbBox != NULL)
-     {
-
-	/* On verifie les limites de la boite du pave */
-	box1 = Pv->AbBox;
-
-	/* --- La boite du pave est coupee en lignes ------------------------- */
-	if (box1->BxType == BoSplit)
-	  {
-	     prec = box1;
-	     box1 = box1->BxNexChild;
-	     retour = TRUE;
-	     first = box1;	/* memorise la premiere boite */
-	     /* A priori la boite est dans la page */
-	     Pv->AbAfterPageBreak = FALSE;
-	     Pv->AbOnPageBreak = FALSE;
-	     /* Ce n'est pas la peine de continuer le calcul */
-	     /* des coupures de boites quand la limite de    */
-	     /* page est deplacee */
-	     while (!*modifpage && retour && box1 != NULL)
-	       {
-		  /* Origine de la boite de coupure */
-		  org = box1->BxYOrg;
-		  if (org + box1->BxHeight <= *haut)
-		     ;		/* La boite est a l'interieur de la page */
-		  else if (org >= *haut)
-		    {
-		       /* Il faut memoriser la boite de coupure coupee */
-		       box1->BxAbstractBox->AbBox->BxMoved = box1;
-		       if (box1 == first)
-			  /* La boite est hors page */
-			  HorsDeLaPage (Pv, haut, modifpage);
-		       else if (prec->BxType == BoDotted && prec->BxNSpaces == 0)
-			 {
-			    /* La derniere boite de la page est hyphenee */
-			    /* et n'est pas secable sur un blanc */
-			    if (prec == first)
-			       /* Le pave est note hors de la page */
-			       HorsDeLaPage (Pv, haut, modifpage);
-			    else
-			      {
-				 /* On deplace la limite de page */
-				 *haut = prec->BxYOrg;
-				 *modifpage = TRUE;
-			      }
-			 }
-		       else
-			  /* La boite est sur la limite de page */
-			  SurLaPage (Pv, haut, modifpage);
-		       retour = FALSE;
-		    }
-		  else
-		    {
-		       /* La boite est sur la limite de page */
-		       /* deplace la limite de page sur l'origine de la boite */
-		       *haut = org;
-		       *modifpage = TRUE;
-		    }
-
-		  prec = box1;
-		  box1 = box1->BxNexChild;
-	       }		/*while */
-	  }
-	/* --- Dans le cas genenral ----------------------------------------- */
-	else
-	  {
-	     /* Si la boite composee n'est pas eclatee */
-	     if (box1->BxType != BoGhost)
-	       {
-		  /* Origine de la boite de coupure */
-		  org = box1->BxYOrg;
-		  if (org + box1->BxHeight <= *haut)
-		    {
-		       /* La boite est dans la page */
-		       Pv->AbAfterPageBreak = FALSE;
-		       Pv->AbOnPageBreak = FALSE;
-		    }
-		  else if (org >= *haut)
-		     /* La boite est hors page */
-		     HorsDeLaPage (Pv, haut, modifpage);
-		  else if (!Pv->AbAcceptPageBreak || Pv->AbLeafType == LtText || Pv->AbLeafType == LtSymbol)
-		    {
-		       /* La boite est sur la limite de page mais non secable */
-		       /* deplace la limite de page sur l'origine de la boite */
-		       *haut = org;
-		       *modifpage = TRUE;
-		    }
-		  else if (Pv->AbVertEnclosing)
-		    {
-		       /* La boite est sur la limite de page, secable et englobee */
-		       if (Pv->AbFirstEnclosed == NULL)
-			  /* On attend la boite terminale pour remonter l'indicateur */
-			  SurLaPage (Pv, haut, modifpage);
-		    }
-		  else
-		    {
-		       /* La boite est sur la limite de page, secable et non englobee */
-		       Pv->AbOnPageBreak = TRUE;
-		       Pv->AbAfterPageBreak = FALSE;
-		    }
-	       }		/*if != BoGhost */
-	     else
-	       {
-		  Pv->AbOnPageBreak = FALSE;
-		  Pv->AbAfterPageBreak = FALSE;
-	       }
-
-	     /* On traite les paves fils */
-	     pChildAb = Pv->AbFirstEnclosed;
-	     /* Ce n'est pas la peine de continuer le calcul */
-	     /* des coupures de boites quand la limite de    */
-	     /* page est deplacee */
-	     while (pChildAb != NULL && !*modifpage)
-	       {
-#ifdef __COLPAGE__
-		  /* on saute les paves de colonnes pour arriver a la */
-		  /* derniere car c'est toujours pour la derniere */
-		  /* colonne qu'on evalue la coupure */
-		  while (pChildAb->AbElement->ElTypeNumber == PageBreak + 1
-			 && (pChildAb->AbElement->ElPageType == ColBegin
-			  || pChildAb->AbElement->ElPageType == ColComputed
-		       || pChildAb->AbElement->ElPageType == ColUser
-			 || pChildAb->AbElement->ElPageType == ColGroup)
-			 && pChildAb->AbNext != NULL)
-		     pChildAb = pChildAb->AbNext;
-#endif /* __COLPAGE__ */
-		  CoupSurPage (pChildAb, haut, modifpage);
-		  /* On passe au suivant */
-		  pChildAb = pChildAb->AbNext;
-	       }
-	  }			/*else */
-
-     }
-}				/* CoupSurPage */
-
-#ifdef __COLPAGE__
-/* ---------------------------------------------------------------------- */
-/* |    RazPage remet a faux les boolens AbOnPageBreak et PageHorsPage     | */
-/* |            dans tous les paves du sous-arbre pAb                  | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-static void         RazPage (PtrAbstractBox pAb)
-#else  /* __STDC__ */
-static void         RazPage (pAb)
-PtrAbstractBox             pAb;
-
-#endif /* __STDC__ */
-{
-   PtrAbstractBox             pAbb;
-
-   pAbb = pAb;
-   pAbb->AbOnPageBreak = FALSE;
-   pAbb->AbAfterPageBreak = FALSE;
-   pAbb = pAbb->AbFirstEnclosed;
-   while (pAbb != NULL)
-     {
-	RazPage (pAbb);
-	pAbb = pAbb->AbNext;
+	      SurLaPage (pavepere, height, isPageBreakChanged);
      }
 }
-#endif /* __COLPAGE__ */
-
-
-/* ---------------------------------------------------------------------- */
-/* |    MarqueCoupure teste la position d'un pave' par rapport a` la    | */
-/* |            limite de page. Elle rend Vrai si la boi^te du pave'    | */
-/* |            est incluse dans la page. Sinon le pave' est coupe'     | */
-/* |            par la limite ou se situe au dela` de la limite et les  | */
-/* |            indicateurs correspondants du pave' sont positionne's.  | */
-/* |            Le parame`tre page donne la position de la limite de    | */
-/* |            page.                                                   | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-boolean             MarqueCoupure (PtrAbstractBox Pv, int *page)
-#else  /* __STDC__ */
-boolean             MarqueCoupure (Pv, page)
-PtrAbstractBox             Pv;
-int                *page;
-
-#endif /* __STDC__ */
-{
-   int                 haut;
-   boolean             result;
-
-   haut = PixelValue (*page, UnPoint, Pv);
-#ifdef __COLPAGE__
-   /* comme dans le cas des colonnes, il y a des branches de l'image */
-   /* qui ne sont pas examinees et mises a jour par CoupSurPage, */
-   /* on parcourt l'arbre pour mettre AbOnPageBreak et AbAfterPageBreak a faux */
-   RazPage (Pv);
-#endif /* __COLPAGE__ */
-   result = TRUE;
-   /* Tant que la limite de page change on recalcule */
-   /* quelles sont les boites coupees */
-   while (result)
-      CoupSurPage (Pv, &haut, &result);
-   result = !Pv->AbOnPageBreak;
-   /* Faut-il traduire la hauteur de page ? */
-   *page = PixelValue (haut, UnPoint, Pv);
-   return result;
-}				/*MarqueCoupure */
 
 
 /* ---------------------------------------------------------------------- */
@@ -853,55 +825,50 @@ int                *page;
 /* |            parame`tre EnPt, en points typographiques (valeur Vrai) | */
 /* |            ou en unite's logiques (Valeur Faux).                   | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
-void                HautCoupure (PtrAbstractBox Pv, boolean EnPt, int *ht, int *pos, int *nbcar)
-
+void                HautCoupure (PtrAbstractBox pAb, boolean EnPt, int *ht, int *pos, int *nbcar)
 #else  /* __STDC__ */
-void                HautCoupure (Pv, EnPt, ht, pos, nbcar)
-PtrAbstractBox             Pv;
+void                HautCoupure (pAb, EnPt, ht, pos, nbcar)
+PtrAbstractBox             pAb;
 boolean             EnPt;
 int                *ht;
 int                *pos;
 int                *nbcar;
-
 #endif /* __STDC__ */
-
 {
-   int                 haut;
+   PtrBox            box1;
+   PtrBox            pChildBox;
+   PtrTextBuffer      adbuff;
+   int                 height;
    int                 org, i;
    int                 hfont;
-   PtrBox            box1;
-   PtrBox            pBo1;
-   PtrTextBuffer      adbuff;
    boolean             encore;
-
 
    *nbcar = 0;
    *pos = 0;
    *ht = 0;
-   /* On calcule la position et la hauteur du pave */
-   box1 = Pv->AbBox;
+   /* calcule la position et la hauteur du pave */
+   box1 = pAb->AbBox;
    if (box1 != NULL)
      {
 
 	/* La boite du pave est coupee en lignes */
 	if (box1->BxType == BoSplit)
 	  {
-	     pBo1 = box1->BxNexChild;
-	     org = pBo1->BxYOrg;
+	     pChildBox = box1->BxNexChild;
+	     org = pChildBox->BxYOrg;
 
-	     /* On recherche la derniere boite de coupure */
-	     while (pBo1->BxNexChild != NULL)
-		pBo1 = pBo1->BxNexChild;
+	     /* recherche la derniere boite de coupure */
+	     while (pChildBox->BxNexChild != NULL)
+		pChildBox = pChildBox->BxNexChild;
 
-	     haut = pBo1->BxYOrg + pBo1->BxHeight - org;
+	     height = pChildBox->BxYOrg + pChildBox->BxHeight - org;
 
 	     /* BxMoved est la boite sur laquelle passe la limite */
 	     box1 = box1->BxMoved;
 
 	     /* Nombre de caracteres qui entrent dans la page */
-	     if (Pv->AbOnPageBreak && box1 != NULL)
+	     if (pAb->AbOnPageBreak && box1 != NULL)
 	       {
 		  *nbcar = box1->BxIndChar;
 		  /* Il ne faut pas couper le dernier mot d'une page     */
@@ -912,14 +879,14 @@ int                *nbcar;
 		     if (box1->BxPrevious->BxType == BoDotted)
 			if (box1->BxPrevious->BxNSpaces != 0)
 			  {
-			     /* On recheche en arriere le blanc precedent */
+			     /* recheche en arriere le blanc precedent */
 			     adbuff = box1->BxBuffer;
 			     i = box1->BxFirstChar - 1;
 			     encore = TRUE;
 			     while (encore)
 				if (adbuff->BuContent[i] == ' ')
 				  {
-				     /* On a trouve le blanc */
+				     /* a trouve le blanc */
 				     encore = FALSE;
 				     /* Debute le nouveau mot au caractere suivant */
 				     (*nbcar)++;
@@ -934,11 +901,11 @@ int                *nbcar;
 					     i = adbuff->BuLength - 1;
 					  }
 					else
-					   /* On arrete */
+					   /* arrete */
 					   encore = FALSE;
 				     else
 					i--;
-				  }	/*else */
+				  }
 			  }
 	       }
 	  }
@@ -948,49 +915,50 @@ int                *nbcar;
 	     /* Il faut descendre tant que l'on a des boites eclatees */
 	     while (box1->BxType == BoGhost)
 		box1 = box1->BxAbstractBox->AbFirstEnclosed->AbBox;
-	     /* On prend la position de la premiere boite */
+	     /* prend la position de la premiere boite */
 	     if (box1->BxType == BoSplit)
 		/* Il faut prendre la position de la 1ere boite de coupure */
 		box1 = box1->BxNexChild;
 	     org = box1->BxYOrg;
-	     haut = 0;
+	     height = 0;
 	     while (box1 != NULL)
 	       {
-		  /* On prend la limite inferieur */
+		  /* prend la limite inferieur */
 		  if (box1->BxType == BoPiece)
 		     /* il faut aller chercher la derniere boite de coupure */
 		     while (box1->BxNexChild != NULL)
 			box1 = box1->BxNexChild;
 		  i = box1->BxYOrg + box1->BxHeight;
-		  if (i > haut)
-		     haut = i;
+		  if (i > height)
+		     height = i;
 		  if (box1->BxAbstractBox->AbNext == NULL)
 		     box1 = NULL;
 		  else
 		     box1 = box1->BxAbstractBox->AbNext->AbBox;
 	       }
-	     haut -= org;	/* La hauteur de la boite eclatee */
+	     /* La hauteur de la boite eclatee */
+	     height -= org;
 	  }
 	else
 	  {
 	     org = box1->BxYOrg;
-	     haut = box1->BxHeight;
+	     height = box1->BxHeight;
 	  }
 
-	/* On traduit les valeurs pixel dans l'unite demandee */
+	/* traduit les valeurs pixel dans l'unite demandee */
 	if (EnPt)
 	  {
 	     *pos = PixelToPoint (org);
-	     *ht = PixelToPoint (haut);
+	     *ht = PixelToPoint (height);
 	  }
 	else
 	  {
 	     hfont = FontHeight (box1->BxFont);
 	     *pos = org * 10 / hfont;
-	     *ht = haut * 10 / hfont;
+	     *ht = height * 10 / hfont;
 	  }
      }
-}				/* HautCoupure */
+}
 
 
 /* ---------------------------------------------------------------------- */
@@ -999,10 +967,10 @@ int                *nbcar;
 /* |            Cette position est relative au pave englobant.          | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                PosPavePt (PtrAbstractBox Pv, int *xCoord, int *yCoord)
+void                PosPavePt (PtrAbstractBox pAb, int *xCoord, int *yCoord)
 #else  /* __STDC__ */
-void                PosPavePt (Pv, xCoord, yCoord)
-PtrAbstractBox             Pv;
+void                PosPavePt (pAb, xCoord, yCoord)
+PtrAbstractBox             pAb;
 int                *xCoord;
 int                *yCoord;
 
@@ -1011,17 +979,17 @@ int                *yCoord;
 
    int                 x, y;
 
-   if (Pv != NULL)
-      if (Pv->AbBox != NULL)
+   if (pAb != NULL)
+      if (pAb->AbBox != NULL)
 	{
-	   x = Pv->AbBox->BxXOrg;
-	   y = Pv->AbBox->BxYOrg;
-	   Pv = Pv->AbEnclosing;
-	   if (Pv != NULL)
+	   x = pAb->AbBox->BxXOrg;
+	   y = pAb->AbBox->BxYOrg;
+	   pAb = pAb->AbEnclosing;
+	   if (pAb != NULL)
 	     {
 		/* decalage par rapport a l'englobant */
-		x -= Pv->AbBox->BxXOrg;
-		y -= Pv->AbBox->BxXOrg;
+		x -= pAb->AbBox->BxXOrg;
+		y -= pAb->AbBox->BxXOrg;
 	     }
 	   *xCoord = PixelToPoint (x);
 	   *yCoord = PixelToPoint (y);
@@ -1034,40 +1002,40 @@ int                *yCoord;
 /* |            passe' en parametre.                                    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                DimPavePt (PtrAbstractBox Pv, int *hauteur, int *largeur)
+void                DimPavePt (PtrAbstractBox pAb, int *height, int *largeur)
 #else  /* __STDC__ */
-void                DimPavePt (Pv, hauteur, largeur)
-PtrAbstractBox             Pv;
-int                *hauteur;
+void                DimPavePt (pAb, height, largeur)
+PtrAbstractBox             pAb;
+int                *height;
 int                *largeur;
 
 #endif /* __STDC__ */
 {
 
-   if (Pv != NULL)
-      if (Pv->AbBox != NULL)
+   if (pAb != NULL)
+      if (pAb->AbBox != NULL)
 	{
-	   *hauteur = PixelToPoint (Pv->AbBox->BxHeight);
-	   *largeur = PixelToPoint (Pv->AbBox->BxWidth);
+	   *height = PixelToPoint (pAb->AbBox->BxHeight);
+	   *largeur = PixelToPoint (pAb->AbBox->BxWidth);
 	}
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    MarqueAPlacer marque le sous-arbre des paves en cours de        | */
+/* |    SetBoxToTranslate marque le sous-arbre des paves en cours de    | */
 /* |            placement.                                              | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                MarqueAPlacer (PtrAbstractBox pAb, boolean EnX, boolean EnY)
+void                MarqueAPlacer (PtrAbstractBox pAb, boolean horizRef, boolean vertRef)
 #else  /* __STDC__ */
-void                MarqueAPlacer (pAb, EnX, EnY)
-PtrAbstractBox             pAb;
-boolean             EnX;
-boolean             EnY;
+void                MarqueAPlacer (pAb, horizRef, vertRef)
+PtrAbstractBox      pAb;
+boolean             horizRef;
+boolean             vertRef;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pChildAb;
+   PtrAbstractBox    pChildAb;
    PtrBox            pBox;
 
    pBox = pAb->AbBox;
@@ -1077,21 +1045,21 @@ boolean             EnY;
    /* Les boites englobees des boites elastiques */
    /* sont toujours placees en absolue           */
    if (pBox->BxHorizFlex || pBox->BxXOutOfStruct)
-      EnX = FALSE;
+      horizRef = FALSE;
    if (pBox->BxVertFlex || pBox->BxYOutOfStruct)
-      EnY = FALSE;
+      vertRef = FALSE;
 
    if (pBox->BxType != BoSplit)
      {
-	pBox->BxXToCompute = EnX;
-	pBox->BxYToCompute = EnY;
+	pBox->BxXToCompute = horizRef;
+	pBox->BxYToCompute = vertRef;
      }
 
    /* Marque les paves englobes */
    pChildAb = pAb->AbFirstEnclosed;
    while (pChildAb != NULL)
      {
-	MarqueAPlacer (pChildAb, EnX, EnY);
+	MarqueAPlacer (pChildAb, horizRef, vertRef);
 	pChildAb = pChildAb->AbNext;
      }
 }
