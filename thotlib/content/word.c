@@ -323,7 +323,7 @@ ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
 
   if (pEl == NULL)
     return (FALSE);
-  else if (pEl == endEl && iChar > endChar)
+  else if (pEl == endEl && iChar >= endChar)
     /* On est arrive a la fin du domaine de recherche */
     return (FALSE);
   else
