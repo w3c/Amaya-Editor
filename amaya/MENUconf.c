@@ -927,14 +927,14 @@ LPARAM lParam;
 	      GetDlgItemText (hwnDlg, IDC_CACHEDIRECTORY, CacheDirectory,
 			      sizeof (CacheDirectory) - 1);
 		  CacheStatus |= AMAYA_CACHE_RESTART;
-	      break;
-		case IDC_CACHESIZE:
+		  break;
+	    case IDC_CACHESIZE:
 	      CacheSize = GetDlgItemInt (hwnDlg, IDC_CACHESIZE, FALSE, FALSE);
-		  CacheStatus |= AMAYA_CACHE_RESTART;
+	      CacheStatus |= AMAYA_CACHE_RESTART;
 	      break;
-		case IDC_MAXCACHEFILE:
-          MaxCacheFile = GetDlgItemInt (hwnDlg, IDC_MAXCACHEFILE, FALSE, FALSE);
-		  CacheStatus |= AMAYA_CACHE_RESTART;
+	    case IDC_MAXCACHEFILE:
+	      MaxCacheFile = GetDlgItemInt (hwnDlg, IDC_MAXCACHEFILE, FALSE, FALSE);
+	      CacheStatus |= AMAYA_CACHE_RESTART;
           break;			
 	    }
 	}
@@ -4289,19 +4289,19 @@ View                view;
    TtaNewTextForm (AnnotBase + mAnnotUser,
 		   AnnotBase + AnnotMenu,
 		   TtaGetMessage (AMAYA, AM_ANNOT_USER),
-		   20,
+		   30,
 		   1,
 		   TRUE);
    TtaNewTextForm (AnnotBase + mAnnotPostServer,
 		   AnnotBase + AnnotMenu,
 		   TtaGetMessage (AMAYA, AM_ANNOT_POST_SERVER),
-		   20,
+		   30,
 		   1,
 		   TRUE);
    TtaNewTextForm (AnnotBase + mAnnotServers,
 		   AnnotBase + AnnotMenu,
 		   TtaGetMessage (AMAYA, AM_ANNOT_SERVERS),
-		   20,
+		   30,
 		   1,
 		   TRUE);
    usprintf (s, "B%s%c",
@@ -4317,6 +4317,7 @@ View                view;
 
    /* load and display the current values */
    GetAnnotConf ();
+
 #ifndef _WINDOWS
    RefreshAnnotMenu ();
   /* display the menu */
@@ -4363,4 +4364,3 @@ void                InitConfMenu ()
 #endif /* ANNOTATIONS */
 #endif /* !_WINDOWS */
 }
-
