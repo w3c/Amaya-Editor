@@ -355,7 +355,7 @@ RDFResourceP ANNOT_FindRDFResource( List** listP, char* name, ThotBool create )
 {
   RDFResourceP resource;
 
-  if (!name)
+  if (!name || !name[0])
     return NULL;
 
   /* search for resource in list */
@@ -363,7 +363,7 @@ RDFResourceP ANNOT_FindRDFResource( List** listP, char* name, ThotBool create )
   if ((!resource || !resource->name) && create)
     {
       if (!resource)
-        resource = TtaGetMemory (sizeof(RDFResource));
+        resource = (RDFResourceP) TtaGetMemory (sizeof(RDFResource));
 
       resource->name = TtaStrdup (name);
       resource->statements = NULL;
