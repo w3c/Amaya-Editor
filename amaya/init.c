@@ -636,11 +636,11 @@ ThotBool CanReplaceCurrentDocument (Document doc, View view)
 /*----------------------------------------------------------------------
    ExtractParameters extract parameters from document nane.        
   ----------------------------------------------------------------------*/
-void                ExtractParameters (char *aName, char *parameters)
+void ExtractParameters (char *aName, char *parameters)
 {
-   int              lg, i;
-   char *         ptr;
-   char *         oldptr;
+   int            lg, i;
+   char          *ptr;
+   char          *oldptr;
 
    if (!parameters || !aName)
      /* bad parameters */
@@ -2862,9 +2862,8 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
    /* do we have to redraw buttons and menus? */
    if (!reinitialized)
      {
-       if ((docType == docHTML || docType == docImage || docType == docSVG ||
-	    /*rajouter si necessaire #ifdef _SVGLIB ...*/
-	    docType == docLibrary ) &&
+       if ((docType == docHTML || docType == docImage ||
+	    docType == docSVG || docType == docLibrary ) &&
 	   DocumentTypes[doc] != docHTML &&
 	   DocumentTypes[doc] != docImage &&
 	   DocumentTypes[doc] != docSVG &&
@@ -4546,7 +4545,7 @@ void ShowToC (Document document, View view)
 /*----------------------------------------------------------------------
    ViewToClose                                                      
   ----------------------------------------------------------------------*/
-ThotBool ViewToClose (NotifyDialog * event)
+ThotBool ViewToClose (NotifyDialog *event)
 {
    Document      document;
    View          view, structView, altView, linksView, tocView;
@@ -4560,11 +4559,19 @@ ThotBool ViewToClose (NotifyDialog * event)
    if (view != 1)
      /* let Thot perform normal operation */
      return FALSE;
-   else
-     /* closing main view */
-     if (!CanReplaceCurrentDocument (document, view))
-	/* abort the command and don't let Thot perform normal operation */
-	return TRUE;
+   else if (DocumentTypes[document] == docLibrary)
+     {
+       if (TtaIsDocumentModified (document))
+	 {
+	   InitConfirm (document, view, TtaGetMessage (AMAYA, AM_SAVE_DISK));
+	   if (UserAnswer)
+	     SaveDocument (document, view);
+	   TtaSetDocumentUnmodified (document);
+	 }
+     }
+   else if (!CanReplaceCurrentDocument (document, view))
+     /* abort the command and don't let Thot perform normal operation */
+     return TRUE;
 
    if (structView != 0 && TtaIsViewOpen (document, structView))
      TtaCloseView (document, structView);
