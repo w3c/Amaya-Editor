@@ -9,22 +9,22 @@ Extensions 2.1:
 ---------------
 
 * User Interface:
-  - The Save menu entry and the Save button are disabled when the document
-    cannot be saved.
+  - The Save item in menu File and the Save button are disabled when the
+    document does not need to be saved.
   - Menu entries Quotation, Subscript, Superscript, and BDO can be set
     or unset from the "Character element" menu.
   - New colorful button bar
   - New Home button
-  - Changing the New command: there are 3 different menu entries
-    + "New HTML document" displays a form to choose the document location
-      first.
-    + "From template" proposes a list of templates to build you new document
-      when you have a template server.
+  - command File/New has been changed. It now proposes 3 possibilities:
+    + "New HTML document" displays a form to choose the location of the
+      document to be created before it displays a blank page.
+    + "From template" proposes a list of templates to be used for the new
+      document when you have a template server.
     + "New CSS" displays a form to choose the style sheet location first.
-  - There is a preference menu for the language negociation.
+  - Menu Special/Preferences contains a new item for language negotiation.
 
-* Thot API: Due to a conflict with the libjpeg definition the Thot type boolean
-  has been renamed ThotBool.
+* Thot API: Due to a conflict with the libjpeg definition the Thot type
+  boolean has been renamed ThotBool.
 
 * MathML: the full presentation part of MathML is now supported, but not
   all attributes are yet taken into account when formatting mathematical
