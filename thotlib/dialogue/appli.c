@@ -1711,8 +1711,13 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 
   frame = GetMainFrameNumber (hwnd);
   GetWindowRect (hwnd, &rect);
+
+  
+
   switch (mMsg)
     {
+
+
     case WM_CREATE:
       /* Create toolbar  */
       ThotTBBitmap.hInst = hInstance;
@@ -1934,8 +1939,10 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
      on mouse move  */
   static int       oldXPos;
   static int       oldYPos;
+  
 
-  frame = GetFrameNumber (hwnd);
+  frame = GetFrameNumber (hwnd);  
+
   /* do not handle events if the Document is in NoComputedDisplay mode. */
   if (frame != -1)
     {
@@ -2016,9 +2023,11 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	    }
 	}
     }
-    
   switch (mMsg)
     {
+
+	  
+
     case WM_CREATE:
       DragAcceptFiles (hwnd, TRUE);
       return 0;
@@ -2113,7 +2122,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (int *)&key))
 	WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key, lParam, FALSE);
       if (wParam != VK_MENU)
-	return 0;
+	return (DefWindowProc (hwnd, mMsg, wParam, lParam));
       break;
 
 #ifdef IME_INPUT
