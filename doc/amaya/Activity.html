@@ -2,235 +2,174 @@
 <html>
 <head>
 <title>
-Activity on Amaya</title>
+Amaya Activity</title>
+<style>
+BLOCKQUOTE { color : #003A7F; font-style : italic }
+H2 { color : #00647F }
+H3 { color : #000000 }
+H4 { color : #00647F }
+PRE { color : #007F00; font-family : courier; font-weight : bold }
+B { color : #00647F }
+EM { color : #FFFF00; background-color : #0000FF }
+STRONG { font-weight : bold }
+CAPTION { text-decoration : underline; marging-top : 1 }
+TD { background-color : #FFC1C1 }
+TH { background-color : #9E9E9E }
+P.splash { color : #00647F }
+A:link { color : #0000FF }
+</style>
 </head>
-<body lang="en" style="background-color : #FFFFFF">
-<p>
-<a href="../"><img border="0" src="../Icons/WWW/w3c_home" alt="W3C"
-width="72"></a> <a href="../Consortium/Prospectus/ActivityList.html"><img
-border="0" src="../Icons/WWW/activity_48x48" alt="Activities" width="48"></a>
-<a href="Overview.html"><img src="Icons/amaya.gif" alt="Amaya"
-border="0"></a></p>
+<body bgcolor="#FFFBF0" text="black" link="blue">
+<p class="banner">
+<a href="http://www.w3.org/"><img alt="W3C" width="72" height="48" border="0"
+src="http://www.w3.org/Icons/w3c_home.gif"></a> <a
+href="http://www.w3.org/UI/"><img src="http://www.w3.org/Icons/ui.gif"
+border="0" width="212" height="48" alt="User Interface Domain"></a></p>
 
-<h1>W3C Activity: Amaya</h1>
+<h1>Amaya Activity</h1>
+<p class="splash">
+Work on Amaya is being managed as part of W3C's User Interface domain.</p>
+<blockquote>
 
-<h2>Introduction</h2>
-<p>
-The first tools made widely available to end users on the Web were browsers.
-Then some help was provided to authors by such tools as filters or text
-editors with an HTML mode. Recently, specialized editors were proposed for
-HTML. With the evolution of Web documents towards a richer structure and a
-number of additional formats (graphics, multimedia objects, math, style
-sheets, etc), more sophisticated tools are needed.</p>
-<p>
-<strong>Amaya</strong> has been designed as a new generation of client
-software that can integrate all aspects of the Web and that still remains user
-friendly.</p>
-<p>
-The main purpose of <strong>Amaya</strong> is to serve as a testbed to
-experiment new Web protocols and formats, and to test and demonstrate new
-features proposed for existing Web standards.</p>
+Activity statements provide a managerial overview of W3C's work in this area.
+They are designed to be read from beginning to end, to be informative and
+interesting. The role of W3C is given, also the benefits to the Web community,
+accomplishments to date and a summary of what the future holds. Background
+reading pages to help set the scene and explain any technical concepts are in
+preparation. Where necessary these also contain a short tutorial.
+</blockquote>
+<ol>
+<li>
+<a href="#intro">Introduction</a>
+<li>
+<a href="#role">Amaya at W3C</a>
+<li>
+<a href="#accom">Accomplishments</a>
+<li>
+<a href="#future">What the future holds</a>
+</ol>
 
-<h2>Requirements</h2>
+<h2><a name="intro">Introduction</a></h2>
 <p>
-As the Web technology is evolving very fast, a tool like
-<strong>Amaya</strong> must be able to change very fast, taking into account
-the latest proposed extensions to Web protocols and formats. Therefore,
-<strong>Amaya</strong> should provide an extensible framework.</p>
+Amaya is W3C's own test-bed browser/editor. With the extremely fast moving
+nature of Web technology, Amaya plays a central role at the Consortium. Easily
+extended to integrate new ideas into its design, Amaya provides developers
+with many specialized features including multiple views, where the internal
+structural model of the document can be displayed alongside the browser's view
+of how it should be presented on the screen. Amaya has a counterpart called <a
+href="http://www.w3.org/pub/WWW/Jigsaw/">Jigsaw</a> which plays a similar role
+on the server side. Amaya is a complete web browsing and authoring environment
+and comes equiped with a WYSIWYG style of interface, similar to that of the
+more popular commercial browsers.</p>
 <p>
-For allowing in-depth evaluation of new features the software must be
-available on several platforms, it must be extensible and easy to use, and
-have good performances.</p>
+Amaya maintains a consistent internal document model adhering to the Document
+Type Definition (DTD), meaning that it handles the relationships between
+various document components: paragraphs, headings, lists and so on, as laid
+down in the relevant W3C HTML Recommendation. Amaya has been extended to
+demonstrate many features in HTML 4.0, the current recommendation for the
+language.</p>
 
-<h3>A full featured client</h3>
+<h2><a name="role">Amaya at W3C</a></h2>
 <p>
-For testing all aspects of Web protocols and formats, <strong>Amaya</strong>
-must include not only a browser but also an editor for Web documents. Both
-functions must be integrated seamlessly. This allows new features that are not
-yet widely deployed to be tested and validated from different points of
-view.</p>
+Amaya has been developed by W3C at by the Amaya team: Ir&egrave;ne Vatton,
+Ramzi Gu&eacute;tari, Jos&eacute; Kahan, Vincent Quint, Daniel Veillard. Used
+by other groups within the consortium to demonstrate work and to act as an
+experimental platform Amaya has played an important role in the areas of:</p>
+<ul>
+<li><p>
+<b>Math on the Web:</b> Amaya demonstrates a prototype implementation of <a
+href="../TR/WD-math/">MathML</a> which allows users to browse and edit web
+pages containing mathematical expressions. The screen below shows the way that
+you can display equations on the screen side by side the internal model used
+by Amaya.</p>
+</ul>
+<p>
+<img width="350" height="400" src="Icons/amaya-math.gif"></p>
+<ul>
+<li><p>
+<b>HTTP protocol:</b> In its basic version, Amaya implements many web
+protocols and formats: it accesses remote sites by means of HTTP 1.1, as
+implemented in <a href="http://www.w3.org/pub/WWW/Library/">libwww</a>. Amaya
+takes advantage of the most advanced features of HTTP, such as content
+negotiation to retrieve the most appropriate picture format, for instance, or
+keep alive connections to save bandwidth.</p>
+<li><p>
+<b>Graphics:</b> Amaya displays images in the PNG format, more powerful
+graphics format than GIF and more suited to the needs of the Web. A CGM
+plug-in (CGM is commonly used vector graphics format in computer drawing
+packages) developed by Rutherford Appleton Laboratories was demonstrated at
+EITC'97 in Brussels.</p>
+<li><p>
+<b>Style sheets:</b> Amaya has extensive support for the W3C style sheet
+language CSS and offers a simple-to-use interface enabling users to write
+style sheets for Web documents without having to know the details of the
+syntax associated with style sheet rules and properties. You can create
+colored text, change the font, set the background color and control other
+presentational effects.</p>
+<li><p>
+<b>HTML 4:</b> As an editor, Amaya is guaranteed to produce HTML 4 compliant
+code. The way it handles documents is strictly according to the HTML DTD, the
+Document Type Definition.</p>
+<li><p>
+<b>Amaya in other languages:</b> It is now possible to launch Amaya so that
+the user dialogs are in German or French. The intention is to cover other
+European languages in the future.</p>
+</ul>
 
-<h3>A sample implementation of HTML</h3>
+<h2><a name="current">Current Situation</a></h2>
 <p>
-<strong>Amaya</strong> currently implements the full <a
-href="../TR/REC-html32">HTML 3.2</a> recommendation, and should implement the
-latest recommendation, <a href="../TR/REC-html40">HTML 4.0</a>.</p>
-
-<h3>A sample implementation of CSS</h3>
+The Amaya software is available for both Windows and Unix platforms and can be
+downloaded from the W3C site.</p>
 <p>
-<a href="../Style/">Cascading Style Sheets</a> are implemented in some
-browsers (<a href="../Arena/">Arena</a> is one of them), but document
-designers need tools for creating style sheets. <strong>Amaya</strong> must
-support CSS and provide a convenient user interface for the design of style
-sheets.</p>
-
-<h3>A testbed for new protocols</h3>
+Documentation is provided at every level, catering for the beginner right
+through to the developer wanting to extend the software for their own
+purposes. There is also an active and very useful mailing list where users can
+discuss Amaya features and how they work, making note of any problems
+experienced using the software.</p>
 <p>
-<strong>Amaya</strong> should be used for experimenting the specifications
-developed in various areas, such as <a
-href="../International/">Internationalization</a>, <a
-href="../PICS/">PICS</a>, <a href="../Math">Math</a>, HTTP or metadata.</p>
-
-<h2>Current situation</h2>
-
-<h4>Background</h4>
+The pure C Amaya 1.2a beta public release is available in source code and
+precompiled binary forms, as is the Amaya-Java 1.1c beta public release.</p>
 <p>
-Amaya is built on top of the <a
-href="http://opera.inrialpes.fr/thot/AboutThot.html">Thot</a> library
-developed at <a href="http://www.inria.fr/">Inria</a> by project <a
-href="http://opera.inrialpes.fr/">Opera</a>. Thot offers a comprehensive
-toolset for structured document manipulations.</p>
-<p>
-Ir&egrave;ne Vatton and Vincent Quint started developing a HTML editor at
-Inria in October 1994 in order to evaluate the advantages of structured
-editing for authoring Web documents. This first prototype was then known as
-Tamaya. In October 1995, Daniel Veillard joined the team for implementing the
-new CSS proposal. The first demo of Tamaya was presented at the WWW4
-Conference, in Boston. In February 1996, the team joined the W3C for
-developing <strong> Amaya</strong>, the W3C's testbed client software, based
-on this background.</p>
-
-<h3>Releases</h3>
-<p>
-The <a href="User/BinDist.html">binary version</a> of <strong>Amaya</strong>
-for Unix platforms was first released to W3C members and to the public in July
-and August 1996, respectively.</p>
-<p>
-The Windows version, first released in July 1997,  is much more stable now,
-but it is still missing a few features, such as printing documents (only
-PostScript generation is currently available). We are working on these
-features, which should be available very soon. The Unix and Windows versions
-will then support exactly the same features.</p>
-<p>
-Since February 1997, the <a href="User/SourceDist.html">source code</a> has
-been available to the public.</p>
-<p>
-We have two distributions of Amaya. A pure C version based on Libwww and a
+There are two distributions of Amaya. A pure C version based on Libwww and a
 version embedding a Java virtual machine. The later uses the HTTP classes from
-Jigsaw.</p>
+Jigsaw. This is a an object-oriented server for HTTP 1.1 written in Java. An
+API is available from the Java language offering an easy customization path
+for Amaya users.</p>
 
-<h3>Features</h3>
+<h2><a name="future">What the Future Holds</a></h2>
 <p>
-The current version of <strong>Amaya</strong> constitutes a strong basis on
-which developers can make extensions and experiments. It includes the
-following features:</p>
-<dl>
-<dt>Editing/browsing</dt>
-<dd>
-Browsing and editing with a direct manipulation user interface and a
-structured representation of documents
-</dd>
-<dt>Java support</dt>
-<dd>
-Integration of a Java virtual machine, to support applications and extensions
-written in Java. An API is available from the Java language offering an easy
-customization path for Amaya users.
-</dd>
-<dt>HTML</dt>
-<dd>
-Full support of <a href="../TR/REC-html32">HTML 3.2</a> and support of many <a
-href="../TR/REC-html40">HTML 4.0</a> features, such as:
+The next release of Amaya, Amaya 1.3, should be ready July 1998. There are a
+number of improvments, for example:</p>
 <ul>
-<li>
-OBJECT element with a general mechanism for the insertion of multimedia
-objects and a wide range of other media plug-ins.
-<li>
-SPAN element, to attach style or language to inline elements.
-<li>
-The HTML 4.0 table model
-<li>
-The LANG attribute (with multilingual hyphenation and spell checking), ID (for
-CSS and links) - CLASS (for CSS).
-</ul>
-</dd>
-<dt>CSS</dt>
-<dd>
-Support for a large subset of CSS1 properties. The current implementation
-should be considered as an experiment but the plan is to revisit this part of
-the Amaya code.
-</dd>
-<dt>HTTP</dt>
-<dd>
-Access to remote sites for both browsing and publishing, using HTTP 1.1. Two
-different implementations of this protocol can be used: <a
-href="../Library/">libwww</a> or the Java classes from <a
-href="../Jigsaw/">Jigsaw</a>.
-</dd>
-<dt>MathML</dt>
-<dd>
-A prototype implementation of <a href="../TR/WD-math/">MathML</a> to browse
-web pages containing mathematical expressions and to edit such pages.
-</dd>
-<dt>Graphics</dt>
-<dd>
-Amaya displays images including those in the <a
-href="../Graphics/PNG/">PNG</a> format.<br>
-A CGM plug-in has been developed by Rutherford Appleton Laboratory
-</dd>
-<dt>PICS</dt>
-<dd>
-A <a href="../../../PICS/refcode/">modification</a> of Amaya has been made to
-support PICS based filters using the new <a
-href="../../../TR/PR-PICSRules">PICSRules</a> profile language.
-</dd>
-</dl>
-
-<h2>Next step</h2>
-<p>
-The public release 1.2a of Amaya, including the Windows'95/NT version, is now
-available.</p>
-<p>
-During next months, we plan to develop <strong>Amaya</strong> in the following
-directions:</p>
-<ul>
-<li>
-CSS: improvements to the current implementation and extension
-<li>
-HTML: a more complete implementation of HTML 4.0
-<li>
-XML: extension of the current MathML implementation and support for other XML
-applications
-<li>
-DOM: demonstration of DOM Level 1 in Java
-<li>
-I18N: at least support for western languages. Eastern languages will take more
-time.
-<li>
-WAI: we propose to integrate WAI recommendations in Amaya
+<li><p>
+Better printer support: an increased range of printers will be supported in
+the Windows version of Amaya. Currently you are limited to output to a
+Postcript file.</p>
+<li><p>
+Implementation of the new version of the PNG (Portable Network Graphics)
+library.</p>
+<li><p>
+Zoom control for each document. You will be able to set a zoom setting so that
+text and images increase in size according to a zoom value.</p>
+<li><p>
+Better formatting and printing of tables.</p>
+<li><p>
+Style sheets: increased support of CSS style sheets with better interactive
+interface for generating your own style sheets for documents.</p>
+<li><p>
+Implementation the new version of libwww.</p>
 </ul>
 <p>
-Contributions are expected for adding more features in future versions.</p>
-<p>
-</p>
-<hr>
+Beyond this, the Amaya team will be working on a fuller implementation of CSS
+extending to CSS2, on the progressive display of images and on features to
+support internationalization. The team will continue to work with other W3C
+Activities to help demonstrate and test new developments in a variety of
+areas.</p>
+
+<h2>Contacts</h2>
 <address>
-<a href="mailto:vincent.quint@w3.org">Vincent Quint</a>, <a
-href="mailto:irene.vatton@w3.org">Ir&egrave;ne Vatton</a><br>
-<a href="../Help/Webmaster">Webmaster</a><br>
-$Date$</address>
-<p class="policyfooter">
-<small><a
-href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright">Copyright</a>
-&nbsp;&copy;&nbsp; 1997 <a href="http://www.w3.org/">W3C</a> (<a
-href="http://www.lcs.mit.edu/">MIT</a>, <a
-href="http://www.inria.fr/">INRIA</a>, <a
-href="http://www.keio.ac.jp/">Keio</a> ), All Rights Reserved. W3C <a
-href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Legal
-Disclaimer">liability,</a> <a
-href="http://www.w3.org/Consortium/Legal/ipr-notice.html#W3C
-Trademarks">trademark</a>, <a
-href="http://www.w3.org/Consortium/Legal/copyright-documents.html">document
-use </a>and <a
-href="http://www.w3.org/Consortium/Legal/copyright-software.html">software
-licensing </a>rules apply. Your interactions with this site are in accordance
-with our <a
-href="http://www.w3.org/Consortium/Legal/privacy-statement.html#Public">public</a>
-and <a
-href="http://www.w3.org/Consortium/Legal/privacy-statement.html#Members">Member</a>
-privacy statements.</small></p>
-<p>
-</p>
-<p>
-</p>
+<a href="mailto:irene.vatton@w3.org">Ir&egrave;ne Vatton</a>,<br>
+<a href="mailto:vincent.quint@w3.org">Vincent Quint</a><br>
+Last modified $Date$</address>
 </body>
 </html>
