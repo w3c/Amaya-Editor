@@ -29,9 +29,6 @@
 #include "HTMLedit_f.h"
 #include "AHTURLTools_f.h"
 
-/* maximum length of a Thot structure schema name */
-#define MAX_SS_NAME_LENGTH 32
-
 #define MaxMsgLength 200
 
 /* Mapping table of XML attribute values */

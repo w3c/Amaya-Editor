@@ -49,7 +49,8 @@
 #include "tree_f.h"
 #include "viewapi_f.h"
 
-static Name         nameBuffer;
+#define ELEM_NAME_LENGTH 100
+static char        nameBuffer[ELEM_NAME_LENGTH];
 
 /* ----------------------------------------------------------------------
    ChangeElementType
@@ -1712,7 +1713,7 @@ char *TtaGetElementTypeName (ElementType elementType)
 	   elementType.ElTypeNum < 1)
     TtaError (ERR_invalid_element_type);
   else
-    strncpy (nameBuffer, ((PtrSSchema) (elementType.ElSSchema))->SsRule->SrElem[elementType.ElTypeNum - 1]->SrName, MAX_NAME_LENGTH);
+    strncpy (nameBuffer, ((PtrSSchema) (elementType.ElSSchema))->SsRule->SrElem[elementType.ElTypeNum - 1]->SrName, ELEM_NAME_LENGTH);
   return nameBuffer;
 }
 
@@ -1736,7 +1737,7 @@ char *TtaGetElementTypeOriginalName (ElementType elementType)
 	   elementType.ElTypeNum < 1)
     TtaError (ERR_invalid_element_type);
   else
-    strncpy (nameBuffer, ((PtrSSchema) (elementType.ElSSchema))->SsRule->SrElem[elementType.ElTypeNum - 1]->SrOrigName, MAX_NAME_LENGTH);
+    strncpy (nameBuffer, ((PtrSSchema) (elementType.ElSSchema))->SsRule->SrElem[elementType.ElTypeNum - 1]->SrOrigName, ELEM_NAME_LENGTH);
   return nameBuffer;
 }
 
@@ -1860,7 +1861,7 @@ char *TtaGetElementLabel (Element element)
    if (element == NULL)
 	TtaError (ERR_invalid_parameter);
    else 
-     strncpy (nameBuffer, ((PtrElement) element)->ElLabel, MAX_NAME_LENGTH);
+     strncpy (nameBuffer, ((PtrElement) element)->ElLabel, ELEM_NAME_LENGTH);
    return nameBuffer;
 }
 

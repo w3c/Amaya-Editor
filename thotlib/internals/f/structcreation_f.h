@@ -17,7 +17,7 @@ extern void CreationExceptions ( PtrElement pEl,
                                  PtrDocument pDoc );
 extern void GetExternalTypeName ( PtrSSchema pSS,
                                   int typeNum,
-                                  Name typeName );
+                                  char **typeName );
 extern void BuildAbsBoxSpliText ( PtrElement pEl,
                                   PtrElement pNewEl,
                                   PtrElement pNextEl,
@@ -47,7 +47,7 @@ extern int MenuChoixElem ( PtrSSchema pSS,
                            int rule,
                            PtrElement pEl,
                            char *menuBuf,
-                           Name menuTitle,
+                           char *menuTitle,
                            PtrDocument pDoc );
 extern void ChoiceMenuCallback ( int item,
                                  char *natureName );
@@ -88,7 +88,7 @@ extern void CreationExceptions (/* PtrElement pEl,
                                    PtrDocument pDoc */);
 extern void GetExternalTypeName (/* PtrSSchema pSS,
                                     int typeNum,
-                                    Name typeName */);
+                                    char **typeName */);
 extern void BuildAbsBoxSpliText (/* PtrElement pEl,
                                     PtrElement pNewEl,
                                     PtrElement pNextEl,
@@ -118,7 +118,7 @@ extern int MenuChoixElem (/* PtrSSchema pSS,
                              int rule,
                              PtrElement pEl,
                              char *menuBuf,
-                             Name menuTitle,
+                             char *menuTitle,
                              PtrDocument pDoc */);
 extern void ChoiceMenuCallback (/* int item,
                                    char *natureName */);

@@ -3954,11 +3954,11 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, ThotBool recordLineN
   PtrAttribute        pAttr;
   PtrTtAttribute      pAttr1;
   CHARSET             charset;
-  char                *charset_name;
-  unsigned char       startName[MAX_NAME_LENGTH+1];
-  unsigned char       endName[MAX_NAME_LENGTH+3];
-  unsigned char      *ns_prefix;
-  int                 fnum;
+  char               *charset_name;
+  char               *startName = NULL;
+  char               *endName = NULL;
+  char               *ns_prefix;
+  int                 fnum, len_ns;
   ThotBool            specialTag;
 
   if (pNode != NULL)
@@ -4009,6 +4009,11 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, ThotBool recordLineN
 		  specialTag = FALSE;
 		  /* Export the element name */
 		  pRe1 = pNode->ElStructSchema->SsRule->SrElem[pNode->ElTypeNumber - 1];
+		  len_ns = 0;
+		  if (ExportElemNsPrefix (pDoc, pNode) != NULL)
+		    len_ns = strlen (ExportElemNsPrefix (pDoc, pNode)) + 1;
+		  startName = TtaGetMemory (strlen (pRe1->SrOrigName) + 2 + len_ns + 1);
+		  endName = TtaGetMemory (strlen (pRe1->SrOrigName) + 3 + len_ns + 1);
 		  if (TypeHasException (ExcHidden, pNode->ElTypeNumber,	pNode->ElStructSchema))
 		    {
 		      /* Don't export hidden elements */
@@ -4121,6 +4126,8 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, ThotBool recordLineN
 		  
 		  if ((startName[0] != EOS) && !specialTag)
 		    ExportXmlBuffer (pDoc, ">");
+		  if (startName != NULL)
+		    TtaFreeMemory (startName);
 		}
 	      
 	      /* Recursive export */
@@ -4134,6 +4141,8 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, ThotBool recordLineN
 	      /* Export End tag */
 	      if (pNode != pDoc->DocDocElement)
 		ExportXmlBuffer (pDoc, endName);
+	      if (endName != NULL)
+		TtaFreeMemory (endName);
 	    }
 	  else
 	    {

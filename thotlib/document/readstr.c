@@ -201,9 +201,11 @@ static ThotBool     ReadSRule (BinFile file, PtrSRule pSRule)
 {
    RConstruct          constr;
    int                 j;
+   Name                buffer;
 
-   TtaReadName (file, pSRule->SrName);
-   strcpy (pSRule->SrOrigName, pSRule->SrName);
+   TtaReadName (file, buffer);
+   pSRule->SrName = TtaStrdup (buffer); 
+   pSRule->SrOrigName = TtaStrdup (buffer); 
    TtaReadShort (file, &pSRule->SrNDefAttrs);
    for (j = 0; j < pSRule->SrNDefAttrs; j++)
       TtaReadShort (file, &pSRule->SrDefAttr[j]);

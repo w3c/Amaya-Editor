@@ -83,7 +83,7 @@ void CreateDocument (PtrDocument *pDoc, Document *document)
    trouvee dans ce schema. typeNum vaut zero si le nom     
    n'est pas trouve'.                                      
   ----------------------------------------------------------------------*/
-void GetSRuleFromName (int *typeNum, PtrSSchema *pSS, Name typeName,
+void GetSRuleFromName (int *typeNum, PtrSSchema *pSS, char *typeName,
 		       int whichName)
 {
    int                 ruleNum;
@@ -2212,16 +2212,17 @@ SSchema TtaGetSchemaExtension (Document document, char *NomExtension)
   ----------------------------------------------------------------------*/
 SRule *ExtensionRule (PtrSSchema pSS, int typeNum, PtrSSchema pExtSS)
 {
-  PtrSRule             RegleExt, Rule;
-   Name                typeName;
-   int                 r;
+  PtrSRule            RegleExt, Rule;
+  char               *typeName = NULL;
+  int                 r;
 
    RegleExt = NULL;
    if (pExtSS != NULL && pSS != NULL)
       if (pExtSS->SsExtension && !pSS->SsExtension)
 	{
+	  typeName = TtaGetMemory (strlen (pSS->SsRule->SrElem[typeNum - 1]->SrName) + 1);
 	   /*on cherche d'abord une regle d'extension ayant le nom du type */
-	   strncpy (typeName, pSS->SsRule->SrElem[typeNum - 1]->SrName, MAX_NAME_LENGTH);
+	   strcpy (typeName, pSS->SsRule->SrElem[typeNum - 1]->SrName);
 	   r = 0;
 	   while (RegleExt == NULL && r < pExtSS->SsNExtensRules)
 	      if (strcmp (typeName, pExtSS->SsExtensBlock->EbExtensRule[r].SrName) == 0)
@@ -2247,6 +2248,8 @@ SRule *ExtensionRule (PtrSSchema pSS, int typeNum, PtrSSchema pExtSS)
 		       }
 		  }
 	     }
+	   if (typeName != NULL);
+	   TtaFreeMemory (typeName);
 	}
    return RegleExt;
 }

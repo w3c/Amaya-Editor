@@ -1501,6 +1501,16 @@ void FreeSchStruc (PtrSSchema pSS)
 	TtaFreeMemory (pSS->SsRule->SrElem[i]->SrLocalAttr);
       if (pSS->SsRule->SrElem[i]->SrRequiredAttr)
 	TtaFreeMemory (pSS->SsRule->SrElem[i]->SrRequiredAttr);
+      if (pSS->SsRule->SrElem[i]->SrName != NULL)
+	{
+	  TtaFreeMemory (pSS->SsRule->SrElem[i]->SrName);
+	  pSS->SsRule->SrElem[i]->SrName = NULL;
+	}
+      if (pSS->SsRule->SrElem[i]->SrOrigName != NULL)
+	{
+	  TtaFreeMemory (pSS->SsRule->SrElem[i]->SrOrigName);
+	  pSS->SsRule->SrElem[i]->SrOrigName = NULL;
+	}
       free (pSS->SsRule->SrElem[i]);
     }
   free (pSS->SsRule);

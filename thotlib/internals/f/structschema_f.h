@@ -10,7 +10,7 @@ extern void CreateDocument ( PtrDocument *pDoc,
                              Document *document );
 extern void GetSRuleFromName ( int *typeNum,
                                PtrSSchema *pSS,
-                               Name typeName,
+                               char *typeName,
                                int whichName );
 extern void GetAttrRuleFromName ( int *attrNum,
                                   PtrSSchema *pSSch,
@@ -120,7 +120,7 @@ extern void CreateDocument (/* PtrDocument *pDoc,
                                Document *document */);
 extern void GetSRuleFromName (/* int *typeNum,
                                  PtrSSchema *pSS,
-                                 Name typeName,
+                                 char *typeName,
                                  int whichName */);
 extern void GetAttrRuleFromName (/* int *attrNum,
                                     PtrSSchema *pSSch,

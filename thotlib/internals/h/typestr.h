@@ -149,9 +149,9 @@ typedef struct _StructSchema *PtrSSchema;
 /* A rule defining an element type in a structure schema */
 typedef struct _SRule
 {
-	Name       SrName;	    /* left-hand symbol of the rule =
+	char      *SrName;	    /* left-hand symbol of the rule =
 				       element type defined by the rule */
-        Name       SrOrigName;      /* real name of the rule */
+        char      *SrOrigName;      /* real name of the rule */
 	int 	   SrNDefAttrs;     /* 0..MAX_DEFAULT_ATTR, number of
 				       attributes with a default value */
 	int        SrDefAttr[MAX_DEFAULT_ATTR]; /* default value attributes */

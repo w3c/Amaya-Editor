@@ -33,7 +33,7 @@
 /*----------------------------------------------------------------------
   BuildChoiceMenu
   ----------------------------------------------------------------------*/
-void BuildChoiceMenu (char *bufMenu, Name menuTitle, int nbEntries,
+void BuildChoiceMenu (char *bufMenu, char *menuTitle, int nbEntries,
 		      ThotBool natureChoice)
 {
 #ifdef IV

@@ -933,45 +933,48 @@ static ThotBool Translate (PtrSSchema pSS, char *word, char *trans)
    ThotBool            found;
    int                 i, j;
    PtrTtAttribute      pAttr;
-   char                terme[MAX_NAME_LENGTH];
 
    found = FALSE;
-   strncpy (terme, AsciiTranslate (word), MAX_NAME_LENGTH - 1);
    /* cherche le mot a traduire d'abord parmi les noms d'elements */
    for (i = 0; i < pSS->SsNRules; i++)
-      if (strcmp (terme, pSS->SsRule->SrElem[i]->SrName) == 0)
-	{
-	   strncpy (pSS->SsRule->SrElem[i]->SrName, AsciiTranslate (trans),
-		    MAX_NAME_LENGTH - 1);
-	   found = TRUE;
-	}
+     if (pSS->SsRule->SrElem[i]->SrName != NULL &&
+	 strcmp (AsciiTranslate (word), pSS->SsRule->SrElem[i]->SrName) == 0)
+       {
+	 TtaFreeMemory (pSS->SsRule->SrElem[i]->SrName);
+	 pSS->SsRule->SrElem[i]->SrName = TtaStrdup (AsciiTranslate (trans));
+	 found = TRUE;
+       }
+
    /* cherche ensuite parmi les noms d'attributs et de valeurs d'attributs */
    for (i = 0; i < pSS->SsNAttributes; i++)
 	{
 	   pAttr = pSS->SsAttribute->TtAttr[i];
-	   if (strcmp (terme, pAttr->AttrName) == 0)
+	   if (strcmp (AsciiTranslate (word), pAttr->AttrName) == 0)
 	     {
-		strncpy (pAttr->AttrName, AsciiTranslate (trans),
-			 MAX_NAME_LENGTH - 1);
+		strncpy (pAttr->AttrName, trans, MAX_NAME_LENGTH - 1);
 		found = TRUE;
 	     }
 	   else if (pAttr->AttrType == AtEnumAttr)
 	      for (j = 0; j < pAttr->AttrNEnumValues; j++)
-		 if (strcmp (terme, pAttr->AttrEnumValue[j]) == 0)
+		 if (strcmp (word, pAttr->AttrEnumValue[j]) == 0)
 		   {
-		      strncpy (pAttr->AttrEnumValue[j], AsciiTranslate (trans),
-			       MAX_NAME_LENGTH - 1);
+		      strncpy (pAttr->AttrEnumValue[j],
+			       AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
 		      found = TRUE;
 		   }
 	}
+
    /* cherche enfin parmi les regles d'extension, si c'est un schema d'extension */
    if (pSS->SsExtension)
       if (pSS->SsNExtensRules > 0 && pSS->SsExtensBlock != NULL)
 	 for (i = 0; i < pSS->SsNExtensRules; i++)
-	    if (strcmp (terme, pSS->SsExtensBlock->EbExtensRule[i].SrName) == 0)
+	    if (pSS->SsExtensBlock->EbExtensRule[i].SrName != NULL &&
+		strcmp (AsciiTranslate (word), pSS->SsExtensBlock->EbExtensRule[i].SrName) == 0)
 	      {
-		 strncpy (pSS->SsExtensBlock->EbExtensRule[i].SrName, AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
-		 found = TRUE;
+		TtaFreeMemory (pSS->SsExtensBlock->EbExtensRule[i].SrName);
+		pSS->SsExtensBlock->EbExtensRule[i].SrName =
+		  TtaStrdup (AsciiTranslate (trans));
+		found = TRUE;
 	      }
    return found;
 }

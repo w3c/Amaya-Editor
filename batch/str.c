@@ -140,21 +140,23 @@ static ThotBool     ImportExcept;  /* we met exception ImportLine or
   ----------------------------------------------------------------------*/
 static void InitBasicType (SRule *pRule, char *name, BasicType typ)
 {
-   strncpy (pRule->SrName, name, MAX_NAME_LENGTH);
-   pRule->SrConstruct = CsBasicElement;
-   pRule->SrBasicType = typ;
-   pRule->SrUnitElem = False;
-   pRule->SrExportedElem = False;
-   pRule->SrFirstExcept = 0;
-   pRule->SrLastExcept = 0;
-   pRule->SrNDefAttrs = 0;
-   pRule->SrRecursive = False;
-   pRule->SrNLocalAttrs = 0;
-   pRule->SrLocalAttr = NULL;
-   pRule->SrRequiredAttr = NULL;
-   pRule->SrNInclusions = 0;
-   pRule->SrNExclusions = 0;
-   pRule->SrRefImportedDoc = False;
+  if (pRule->SrName == NULL)
+    pRule->SrName = TtaGetMemory (MAX_NAME_LENGTH);
+  strncpy (pRule->SrName, name, MAX_NAME_LENGTH);
+  pRule->SrConstruct = CsBasicElement;
+  pRule->SrBasicType = typ;
+  pRule->SrUnitElem = False;
+  pRule->SrExportedElem = False;
+  pRule->SrFirstExcept = 0;
+  pRule->SrLastExcept = 0;
+  pRule->SrNDefAttrs = 0;
+  pRule->SrRecursive = False;
+  pRule->SrNLocalAttrs = 0;
+  pRule->SrLocalAttr = NULL;
+  pRule->SrRequiredAttr = NULL;
+  pRule->SrNInclusions = 0;
+  pRule->SrNExclusions = 0;
+  pRule->SrRefImportedDoc = False;
 }
 
 /*----------------------------------------------------------------------
@@ -218,30 +220,37 @@ static void         Initialize ()
    /* first rules of the structure schema are those that define basic types */
    pRule = (PtrSRule) malloc (sizeof (SRule));
    pSSchema->SsRule->SrElem[CharString] = pRule;
+   memset (pRule, 0, sizeof (SRule));
    InitBasicType (pRule, "TEXT_UNIT", CharString);
 
    pRule = (PtrSRule) malloc (sizeof (SRule));
    pSSchema->SsRule->SrElem[GraphicElem] = pRule;
+   memset (pRule, 0, sizeof (SRule));
    InitBasicType (pRule, "GRAPHICS_UNIT", GraphicElem);
 
    pRule = (PtrSRule) malloc (sizeof (SRule));
    pSSchema->SsRule->SrElem[Symbol] = pRule;
+   memset (pRule, 0, sizeof (SRule));
    InitBasicType (pRule, "SYMBOL_UNIT", Symbol);
 
    pRule = (PtrSRule) malloc (sizeof (SRule));
    pSSchema->SsRule->SrElem[Picture] = pRule;
+   memset (pRule, 0, sizeof (SRule));
    InitBasicType (pRule, "PICTURE_UNIT", Picture);
 
    pRule = (PtrSRule) malloc (sizeof (SRule));
    pSSchema->SsRule->SrElem[Refer] = pRule;
+   memset (pRule, 0, sizeof (SRule));
    InitBasicType (pRule, "REFERENCE_UNIT", Refer);
 
    pRule = (PtrSRule) malloc (sizeof (SRule));
    pSSchema->SsRule->SrElem[PageBreak] = pRule;
+   memset (pRule, 0, sizeof (SRule));
    InitBasicType (pRule, "PAGE_BREAK", PageBreak);
 
    pRule = (PtrSRule) malloc (sizeof (SRule));
    pSSchema->SsRule->SrElem[UnusedBasicType] = pRule;
+   memset (pRule, 0, sizeof (SRule));
    InitBasicType (pRule, "UNUSED", UnusedBasicType);
 
    pSSchema->SsNRules = MAX_BASIC_TYPE;
@@ -250,6 +259,7 @@ static void         Initialize ()
    pRule = (PtrSRule) malloc (sizeof (SRule));
    pSSchema->SsRule->SrElem[pSSchema->SsNRules++] = pRule;
    pSSchema->SsDocument = pSSchema->SsNRules;
+   pRule->SrName = TtaGetMemory (MAX_NAME_LENGTH);
    strcpy (pRule->SrName, "Document");
    pRule->SrConstruct = CsDocument;
    pRule->SrUnitElem = False;
@@ -310,7 +320,7 @@ static void         Initialize ()
 static ThotBool      RuleNameExist ()
 {
    int                 r;
-   ThotBool             ret;
+   ThotBool            ret;
    Name                name;
 
    /* initialize the function return */
@@ -355,11 +365,14 @@ static void      AllocateNewRule (PtrSSchema pSS)
      }
    /* create a new rule descriptor */
    pRule = (PtrSRule) malloc (sizeof (SRule));
-   memset (pRule, 0, sizeof (SRule));
    if (pRule == NULL)
      TtaDisplaySimpleMessage (FATAL, STR,STR_NOT_ENOUGH_MEM);
    else
-     pSS->SsRule->SrElem[pSS->SsNRules++] = pRule;
+     {
+       memset (pRule, 0, sizeof (SRule));
+       pRule->SrName = TtaGetMemory (MAX_NAME_LENGTH);
+       pSS->SsRule->SrElem[pSS->SsNRules++] = pRule;
+     }
 }
 
 /*----------------------------------------------------------------------

@@ -36,9 +36,6 @@
 #include "XHTMLbuilder_f.h"
 #include "Xml2thot_f.h"
 
-/* maximum length of a Thot structure schema name */
-#define MAX_SS_NAME_LENGTH 32
-
 #define MaxMsgLength 200
 
 /* Elements that cannot contain text as immediate children.

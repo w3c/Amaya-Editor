@@ -371,16 +371,27 @@ static PtrSSchema ConstructAbstractSchStruct ()
 
    /* initialise les types de base */
    pSS->SsRule->SrElem[CharString] = (PtrSRule) malloc (sizeof (SRule));
+   pSS->SsRule->SrElem[CharString]->SrName = TtaGetMemory (MAX_NAME_LENGTH);
    strcpy (pSS->SsRule->SrElem[CharString]->SrName, "TEXT_UNIT");
+
    pSS->SsRule->SrElem[GraphicElem] = (PtrSRule) malloc (sizeof (SRule));
+   pSS->SsRule->SrElem[GraphicElem]->SrName = TtaGetMemory (MAX_NAME_LENGTH);
    strcpy (pSS->SsRule->SrElem[GraphicElem]->SrName, "GRAPHICS_UNIT");
+
    pSS->SsRule->SrElem[Symbol] = (PtrSRule) malloc (sizeof (SRule));
+   pSS->SsRule->SrElem[Symbol]->SrName = TtaGetMemory (MAX_NAME_LENGTH);
    strcpy (pSS->SsRule->SrElem[Symbol]->SrName, "SYMBOL_UNIT");
+
    pSS->SsRule->SrElem[Picture] = (PtrSRule) malloc (sizeof (SRule));
+   pSS->SsRule->SrElem[Picture]->SrName = TtaGetMemory (MAX_NAME_LENGTH);
    strcpy (pSS->SsRule->SrElem[Picture]->SrName, "PICTURE_UNIT");
+
    pSS->SsRule->SrElem[Refer] = (PtrSRule) malloc (sizeof (SRule));
+   pSS->SsRule->SrElem[Refer]->SrName = TtaGetMemory (MAX_NAME_LENGTH);
    strcpy (pSS->SsRule->SrElem[Refer]->SrName, "REFERENCE_UNIT");
+
    pSS->SsRule->SrElem[PageBreak] = (PtrSRule) malloc (sizeof (SRule));
+   pSS->SsRule->SrElem[PageBreak]->SrName = TtaGetMemory (MAX_NAME_LENGTH);
    strcpy (pSS->SsRule->SrElem[PageBreak]->SrName, "PAGE_BREAK");
 
    pSS->SsNRules = MAX_BASIC_TYPE - 1;
@@ -833,6 +844,9 @@ static void ProcessName (SyntacticCode r, SyntacticCode pr, indLine wl,
 		{
 		  if (!strcmp (fileName, "EDITOR"))
 		    {
+		      if (pSSchema->SsRule->SrElem[i]->SrName == NULL)
+			pSSchema->SsRule->SrElem[i]->SrName =
+			  TtaGetMemory(MAX_NAME_LENGTH);
 		      strcpy (pSSchema->SsRule->SrElem[i]->SrName, name);
 		      pSSchema->SsNRules++;
 		      typeNum = i + 1;

@@ -1047,6 +1047,8 @@ static void         AppendSRule (int *ret, PtrSSchema pSS, PtrPSchema pPSch,
       TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
       return;      
     }
+  pSS->SsRule->SrElem[i]->SrName = NULL;
+  pSS->SsRule->SrElem[i]->SrOrigName = NULL;
   memset (pSS->SsRule->SrElem[i], 0, sizeof (SRule));
 #ifndef NODISPLAY
   if (pPSch)
@@ -1144,7 +1146,8 @@ int          CreateNature (char *SSchName, char *PSchName,
 	 {
 	 pRule = pSS->SsRule->SrElem[ret - 1];
 	 strncpy (pRule->SrOrigNat, SSchName, MAX_NAME_LENGTH);
-	 strncpy (pRule->SrName, SSchName, MAX_NAME_LENGTH);
+	 pRule->SrName = TtaGetMemory ((strlen (SSchName)) + 1);
+	 strcpy (pRule->SrName, SSchName);
 	 pRule->SrNDefAttrs = 0;
 	 pRule->SrConstruct = CsNatureSchema;
 	 pRule->SrSSchemaNat = NULL;
@@ -2301,8 +2304,8 @@ void AppendXmlElement (char *xmlName, ElementType *elType,
     {
       /* Initializes a new rule structure */
       pRule = pSS->SsRule->SrElem[rule - 1];
-      strncpy (pRule->SrName, xmlName, MAX_NAME_LENGTH);
-      strncpy (pRule->SrOrigName, xmlName, MAX_NAME_LENGTH);
+      pRule->SrName = TtaStrdup (xmlName);
+      pRule->SrOrigName = TtaStrdup (xmlName);
       pRule->SrNDefAttrs = 0;
       pRule->SrNLocalAttrs = 0;
       pRule->SrLocalAttr = NULL;
@@ -2410,11 +2413,12 @@ void GetXmlElementType (char *xmlName, ElementType *elType,
    elType->ElTypeNum = 0;
    if (elType->ElSSchema)
      {
-       /* search into that schema */
+       /* search within this schema */
        pSS = (PtrSSchema) elType->ElSSchema;
        for (rule = 0; !found && rule < pSS->SsNRules; rule++)
 	 {
- 	   if (strncmp (pSS->SsRule->SrElem[rule]->SrOrigName, xmlName, MAX_NAME_LENGTH) == 0)
+ 	   if (pSS->SsRule->SrElem[rule]->SrOrigName != NULL &&
+	       strcmp (pSS->SsRule->SrElem[rule]->SrOrigName, xmlName) == 0)
 	     {
 	       elType->ElTypeNum = rule + 1;
 	       if (mappedName)
@@ -2435,7 +2439,8 @@ void GetXmlElementType (char *xmlName, ElementType *elType,
 	       pSS = (PtrSSchema) pPfS->PfSSchema;
 	       for (rule = 0; !found && rule < pSS->SsNRules; rule++)
 		 {
-		   if (strncmp (pSS->SsRule->SrElem[rule]->SrOrigName, xmlName, MAX_NAME_LENGTH) == 0)
+		   if (pSS->SsRule->SrElem[rule]->SrOrigName != NULL &&
+		       strcmp (pSS->SsRule->SrElem[rule]->SrOrigName, xmlName) == 0)
 		     {
 		       elType->ElTypeNum = rule + 1;
 		       if (mappedName)
@@ -2514,10 +2519,18 @@ void ChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, PtrDocument 
 	  strcpy (pSS->SsName, sSchemaName);
 	  strcpy (pSS->SsDefaultPSchema, sSchemaName);
 	  strcat (pSS->SsDefaultPSchema, "P");
+	  /* Modify the rule element name */
 	  for (i = 0; i < pSS->SsNRules; i++)
-	    if (strcmp (pSS->SsRule->SrElem[i]->SrName, "XML") == 0)
+	    if (pSS->SsRule->SrElem[i]->SrName != NULL &&
+		strcmp (pSS->SsRule->SrElem[i]->SrName, "XML") == 0)
 	      {
+		TtaFreeMemory (pSS->SsRule->SrElem[i]->SrName);
+		pSS->SsRule->SrElem[i]->SrName = NULL;
+		pSS->SsRule->SrElem[i]->SrName = TtaGetMemory (strlen (sSchemaName) + 1);
 		strcpy (pSS->SsRule->SrElem[i]->SrName, sSchemaName);
+		TtaFreeMemory (pSS->SsRule->SrElem[i]->SrOrigName);
+		pSS->SsRule->SrElem[i]->SrOrigName = NULL;
+		pSS->SsRule->SrElem[i]->SrOrigName = TtaGetMemory (strlen (sSchemaName) + 1);
 		strcpy (pSS->SsRule->SrElem[i]->SrOrigName, sSchemaName);
 		i = pSS->SsNRules;
 	      }
@@ -2584,8 +2597,22 @@ void ChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, PtrDocument 
   while (!found && i < docSS->SsNRules);
   if (found)
     {
-      strcpy (pRule->SrOrigNat, sSchemaName);
+      strncpy (pRule->SrOrigNat, sSchemaName, MAX_NAME_LENGTH);
+      if (pRule->SrName != NULL)
+	{
+	  TtaFreeMemory (pRule->SrName);
+	  pRule->SrName = NULL;
+	}
+      pRule->SrName = TtaGetMemory (strlen (sSchemaName) + 1);
       strcpy (pRule->SrName, sSchemaName);
+      if (pRule->SrOrigName != NULL)
+	{
+	  TtaFreeMemory (pRule->SrOrigName);
+	  pRule->SrOrigName = NULL;
+	}
+      pRule->SrOrigName = TtaGetMemory (strlen (sSchemaName) + 1);
+      strcpy (pRule->SrOrigName, sSchemaName);
+
     } 
 }
 

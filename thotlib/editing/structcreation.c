@@ -197,31 +197,29 @@ void CreationExceptions (PtrElement pEl, PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
-   GetExternalTypeName retourne dans le buffer typeName le nom qui doit
-   etre presente' a l'utilisateur pour l'element portant   
-   le numero de type typeNum dans le schema de structure   
-   pSS.							
+   GetExternalTypeName retourne le pointeur typeName le nom qui doit
+   etre presente a l'utilisateur pour l'element portant   
+   le numero de type typeNum dans le schema de structure pSS.
   ----------------------------------------------------------------------*/
-void GetExternalTypeName (PtrSSchema pSS, int typeNum, Name typeName)
+void GetExternalTypeName (PtrSSchema pSS, int typeNum, char **typeName)
 {
    if (!TypeHasException (ExcHidden, typeNum, pSS))
       /* ce type d'element ne porte pas l'exception Hidden, on retourne
          le nom de la regle qui le definit */
-      strncpy (typeName, pSS->SsRule->SrElem[typeNum - 1]->SrName,
-	       MAX_NAME_LENGTH);
+     *typeName = pSS->SsRule->SrElem[typeNum - 1]->SrName;
    else
       /* ce type d'element porte l'exception Hidden */
    if (pSS->SsRule->SrElem[typeNum - 1]->SrConstruct == CsList)
       /* c'est une liste, on retourne le nom de ses elements */
-      strncpy (typeName, pSS->SsRule->SrElem[pSS->SsRule->SrElem[typeNum - 1]->SrListItem - 1]->SrName, MAX_NAME_LENGTH);
+      *typeName = pSS->SsRule->SrElem[pSS->SsRule->SrElem[typeNum - 1]->SrListItem - 1]->SrName;
    else if (pSS->SsRule->SrElem[typeNum - 1]->SrConstruct == CsAggregate ||
 	    pSS->SsRule->SrElem[typeNum - 1]->SrConstruct == CsUnorderedAggregate)
       /* c'est un agregat, on retourne le nom de son 1er element */
-      strncpy (typeName, pSS->SsRule->SrElem[pSS->SsRule->SrElem[typeNum - 1]->SrComponent[0] - 1]->SrName, MAX_NAME_LENGTH);
+      *typeName = pSS->SsRule->SrElem[pSS->SsRule->SrElem[typeNum - 1]->SrComponent[0] - 1]->SrName;
    else
       /* ce n'est ni une liste ni un agregat, on ignore */
       /* l'exception Hidden */
-      strncpy (typeName, pSS->SsRule->SrElem[typeNum - 1]->SrName, MAX_NAME_LENGTH);
+      *typeName = pSS->SsRule->SrElem[typeNum - 1]->SrName;
 }
 
 
@@ -1068,7 +1066,6 @@ ThotBool LinkReference (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc)
   PtrReference        pRef;
   PtrAbstractBox      pAb;
   int                 view, referredTypeNum, frame;
-  Name                typeName;
   ThotBool            again, new, ret;
 
   ret = FALSE;
@@ -1081,11 +1078,6 @@ ThotBool LinkReference (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc)
     ReferredType (pEl, NULL, &pSS, &referredTypeNum, pDoc);
   else
     ReferredType (NULL, pAttr, &pSS, &referredTypeNum, pDoc);
-  if (pSS == NULL || referredTypeNum == 0)
-    typeName[0] = EOS;
-  else
-    strncpy (typeName, pSS->SsRule->SrElem[referredTypeNum - 1]->SrName,
-	     MAX_NAME_LENGTH);
   new = FALSE;
   again = TRUE;
   if (!new && again)
@@ -1183,7 +1175,7 @@ static void AddChoiceMenuItem (Name item, int *menuInd, char *menuBuf)
    begin indique si on s'interesse plutot au debut de l'element ou 
    la fin de l'element.                                            
   ----------------------------------------------------------------------*/
-static void UserElementName (PtrElement pEl, ThotBool begin, Name ret)
+static void UserElementName (PtrElement pEl, ThotBool begin, char **ret)
 {
    PtrSRule            pSRule;
    PtrElement          pChild;
@@ -1192,7 +1184,7 @@ static void UserElementName (PtrElement pEl, ThotBool begin, Name ret)
       /* ce type d'element ne porte pas l'exception Hidden */
      {
 	/* par defaut on retourne le type de l'element lui-meme */
-	strncpy (ret, pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName, MAX_NAME_LENGTH);
+       *ret = pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName;
 	/* la regle qui definit le type de l'element */
 	pSRule = pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1];
 	if (pSRule->SrConstruct == CsChoice)
@@ -1200,14 +1192,14 @@ static void UserElementName (PtrElement pEl, ThotBool begin, Name ret)
 	      /* c'est un choix avec un fils */
 	      if (pEl->ElSource == NULL)
 		 /* ce n'est pas une inclusion, on prend le nom du fils */
-		 strncpy (ret, pEl->ElFirstChild->ElStructSchema->SsRule->SrElem[pEl->ElFirstChild->ElTypeNumber - 1]->SrName, MAX_NAME_LENGTH);
+		 *ret = pEl->ElFirstChild->ElStructSchema->SsRule->SrElem[pEl->ElFirstChild->ElTypeNumber - 1]->SrName;
      }
    else
       /* ce type d'element porte l'exception Hidden */
    if (pEl->ElTerminal || pEl->ElFirstChild == NULL)
       /* l'element n'a pas de fils, on retourne quand meme */
       /* le type de l'element lui-meme */
-      strncpy (ret, pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName, MAX_NAME_LENGTH);
+      *ret = pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName;
    else
      {
 	/* on retourne le type du premier ou dernier fils de */
@@ -1273,14 +1265,14 @@ static ThotBool TteItemMenuInsert (PtrSSchema pSS, int typeNum, PtrElement pEl,
    menu.                                                           
   ----------------------------------------------------------------------*/
 int MenuChoixElem (PtrSSchema pSS, int rule, PtrElement pEl, char *menuBuf,
-		   Name menuTitle, PtrDocument pDoc)
+		   char *menuTitle, PtrDocument pDoc)
 {
    PtrElement          pAncest, pPrevEl;
    int                 i, menuInd, nItems, typeNum;
    ThotBool            ok;
    PtrSRule            pSRule;
    PtrSSchema          pAncSS;
-   Name                typeName;
+   char               *typeName = NULL;
 
    NatureChoice = FALSE;
    nItems = 0;
@@ -1377,7 +1369,7 @@ int MenuChoixElem (PtrSSchema pSS, int rule, PtrElement pEl, char *menuBuf,
 					  if (!ExcludedType (pEl, i, pAncSS))
 					     /* met l'unite dans le menu */
 					    {
-					       GetExternalTypeName (pAncSS, i, typeName);
+					       GetExternalTypeName (pAncSS, i, &typeName);
 					       if (TteItemMenuInsert (pAncSS, i, pEl, pDoc, InsertWithin))
 						 {
 						    AddChoiceMenuItem (typeName, &menuInd, menuBuf);
@@ -1395,7 +1387,7 @@ int MenuChoixElem (PtrSSchema pSS, int rule, PtrElement pEl, char *menuBuf,
 		       pAncest = pAncest->ElParent;
 		       /* passe a l'element englobant */
 		    }
-		  strncpy (menuTitle, TtaGetMessage (LIB, TMSG_EL_TYPE), MAX_NAME_LENGTH);
+		  strcpy (menuTitle, TtaGetMessage (LIB, TMSG_EL_TYPE));
 	       }
 	     else
 		/* c'est un choix avec indication des types possibles */
@@ -1411,7 +1403,7 @@ int MenuChoixElem (PtrSSchema pSS, int rule, PtrElement pEl, char *menuBuf,
 			     /* de creer ce type d'element */
 			     if (!ExcludedType (pEl, pSRule->SrChoice[typeNum], pSS))
 			       {
-				  GetExternalTypeName (pSS, pSRule->SrChoice[typeNum], typeName);
+				  GetExternalTypeName (pSS, pSRule->SrChoice[typeNum], &typeName);
 				  if (TteItemMenuInsert (pSS, pSRule->SrChoice[typeNum],
 						   pEl, pDoc, InsertWithin))
 				    {
@@ -1423,7 +1415,7 @@ int MenuChoixElem (PtrSSchema pSS, int rule, PtrElement pEl, char *menuBuf,
 			       }
 		       typeNum++;
 		    }
-		  strncpy (menuTitle, pSRule->SrName, MAX_NAME_LENGTH);
+		  strcpy (menuTitle, pSRule->SrName);
 	       }
 	  }
      }
@@ -1474,10 +1466,10 @@ void ChoiceMenuCallback (int item, char *natureName)
 }
 
 /*----------------------------------------------------------------------
-   CreeChoix       si l'element pEl est de type choix, demande a	
-   l'utilisateur le type d'element qu'il veut creer et cree la	
-   descendance de l'element pointe par pEl, selon le choix de		
-   l'utilisateur.                                                     
+   CreeChoix       
+   Si l'element pEl est de type choix, demande a l'utilisateur	
+   le type d'element qu'il veut creer et cree la descendance	
+   de l'element pointe par pEl, selon le choix de l'utilisateur. 
    Retourne dans pLeaf un pointeur sur le premier element cree'.	
    La fonction rend faux si rien n'a ete cree, vrai si au moins un    
    element a ete cree.                                                
@@ -1488,7 +1480,7 @@ static ThotBool CreeChoix (PtrDocument pDoc, PtrElement *pEl, PtrElement *pLeaf,
    PtrElement          pNewEl, pChild, pRet;
    int                 choiceTypeNum;
    char                menuBuf[MAX_TXT_LEN];
-   Name                menuTitle;
+   char                menuTitle[MAX_TXT_LEN];
    int                 nItems;
    ThotBool            ret, ok, stop;
    NotifyElement       notifyEl;
@@ -1528,7 +1520,8 @@ static ThotBool CreeChoix (PtrDocument pDoc, PtrElement *pEl, PtrElement *pLeaf,
 		else
 		  {
 		     menu = TRUE;
-		     nItems = MenuChoixElem (ChosenTypeSSchema, choiceTypeNum, *pEl, menuBuf, menuTitle, pDoc);
+		     nItems = MenuChoixElem (ChosenTypeSSchema, choiceTypeNum,
+					     *pEl, menuBuf, menuTitle, pDoc);
 		  }
 	       }
 	     choiceTypeNum = 0;
@@ -2598,14 +2591,14 @@ static ThotBool AddInsertMenuItem (Name word1, Name word2, Name word3,
 
 
 /*----------------------------------------------------------------------
-   CheckAction       detecte les insertions Avant/Apres dupliquees    
-   et les supprime.                                 
+   CheckAction       
+   Detecte les insertions Avant/Apres dupliquees et les supprime.
   ----------------------------------------------------------------------*/
 static void CheckAction (int *prevMenuInd, int *menuInd, int *nItems)
 {
    int                 i;
    ThotBool            found;
-   Name                typeName1, typeName2;
+   char               *typeName1 = NULL, *typeName2 = NULL;
 
    found = FALSE;
    if (UserAction[*nItems - 1] == InsertAfter ||
@@ -2619,8 +2612,8 @@ static void CheckAction (int *prevMenuInd, int *menuInd, int *nItems)
 		 && ElemTypeAction[i] == ElemTypeAction[*nItems - 1]
 		 && SSchemaAction[i] == SSchemaAction[*nItems - 1])
 	       {
-		  UserElementName (ElemAction[i], (ThotBool)(Action[i] == InsertBefore), typeName1);
-		  UserElementName (ElemAction[*nItems - 1], (ThotBool)(Action[i] == InsertBefore), typeName2);
+		  UserElementName (ElemAction[i], (ThotBool)(Action[i] == InsertBefore), &typeName1);
+		  UserElementName (ElemAction[*nItems - 1], (ThotBool)(Action[i] == InsertBefore), &typeName2);
 		  if (strcmp (typeName1, typeName2) == 0)
 		     found = TRUE;
 	       }
@@ -2668,7 +2661,8 @@ static void AddItemWithinSiblimg (PtrElement pEl, ThotBool before, int *menuInd,
    int                 distance, typeNum;
    PtrSSchema          pSS;
    ThotBool            isList, optional;
-   Name                typeName, N;
+   Name                N;
+   char               *typeName = NULL;
    MenuItemAction      action;
 
    typeNum = 0;
@@ -2709,7 +2703,7 @@ static void AddItemWithinSiblimg (PtrElement pEl, ThotBool before, int *menuInd,
 		 strncpy (N, TtaGetMessage (LIB, TMSG_AFTER), MAX_NAME_LENGTH);
 	      else
 		 strncpy (N, TtaGetMessage (LIB, TMSG_BEFORE), MAX_NAME_LENGTH);
-	      GetExternalTypeName (pSS, typeNum, typeName);
+	      GetExternalTypeName (pSS, typeNum, &typeName);
 	      if (*separatorBefore)
 		{
 		   /* un separateur est demande' avant cette entree, on le met */
@@ -2768,7 +2762,7 @@ static void AddItemWithinSiblimg (PtrElement pEl, ThotBool before, int *menuInd,
 					      action = InsertAfter;
 					   if (TteItemMenuInsert (pSS, typeNum, pEl, pDoc, action))
 					     {
-						GetExternalTypeName (pSS, typeNum, typeName);
+						GetExternalTypeName (pSS, typeNum, &typeName);
 
 						if (!AddInsertMenuItem (typeName, N, "",
 							prevMenuInd, nItems,
@@ -2857,7 +2851,7 @@ void                CreateInsertPageMenu ()
    int                 firstChar, lastChar, nItems, prevMenuInd, menuInd;
    Name                titre;
    char                menuBuf[MAX_TXT_LEN];
-   Name                typeName;
+   char               *typeName = NULL;
 
    menuInd = 0;
    prevMenuInd = 0;
@@ -2876,7 +2870,7 @@ void                CreateInsertPageMenu ()
 	   if (TteItemMenuInsert ((pDoc)->DocSSchema, PageBreak + 1,
 				  firstSel, pDoc, InsertBefore))
 	     {
-		UserElementName (firstSel, TRUE, typeName);
+		UserElementName (firstSel, TRUE, &typeName);
 		if (AddInsertMenuItem (TtaGetMessage (LIB, TMSG_PAGE_BRK),
 		   TtaGetMessage (LIB, TMSG_BEFORE), typeName, &prevMenuInd,
 				       &nItems, &menuInd, menuBuf))
@@ -2896,7 +2890,7 @@ void                CreateInsertPageMenu ()
 	   if (TteItemMenuInsert ((pDoc)->DocSSchema, PageBreak + 1,
 				  lastSel, pDoc, InsertAfter))
 	     {
-		UserElementName (lastSel, FALSE, typeName);
+		UserElementName (lastSel, FALSE, &typeName);
 		if (AddInsertMenuItem (TtaGetMessage (LIB, TMSG_PAGE_BRK),
 		    TtaGetMessage (LIB, TMSG_AFTER), typeName, &prevMenuInd,
 				       &nItems, &menuInd, menuBuf))
@@ -2937,7 +2931,8 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
    ThotBool            isList, optional, ok;
    PtrSRule            pSRule, pParentSRule;
    PtrSSchema          pSS, pAncestSS, pSSExt;
-   Name                typeName1, typeName2, N;
+   Name                N;
+   char               *typeName1 = NULL, *typeName2 = NULL;
    ThotBool            separatorAfter, separatorBefore, protectedElem;
 
    createPasteMenuOK = FALSE;
@@ -3039,7 +3034,7 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 				     if (ok)
 					/* on ajoute une entree au menu */
 				       {
-					  GetExternalTypeName (pAncestSS, pSRule->SrInclusion[i], typeName1);
+					  GetExternalTypeName (pAncestSS, pSRule->SrInclusion[i], &typeName1);
 					  pAncest = firstSel;
 					  /* on ne peut pas inserer comme descendant direct */
 					  /* d'un noeud CsChoice ou CsIdentity' */
@@ -3055,7 +3050,7 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 						     /* l'element et son pere sont de type equivalent */
 						     pAncest = pAncest->ElParent;
 					    }
-					  UserElementName (pAncest, TRUE, typeName2);
+					  UserElementName (pAncest, TRUE, &typeName2);
 					  if (separatorBefore)
 					    {
 					       /* un separateur est demande' avant cette entree, on le met */
@@ -3067,7 +3062,7 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 					     /* une paire de marques autour de la selection */
 					    {
 					       strncpy (N, TtaGetMessage (LIB, TMSG_AROUND), MAX_NAME_LENGTH);
-					       typeName2[0] = EOS;
+					       typeName2 = NULL;
 					       ok = TteItemMenuInsert (pAncestSS, pSRule->SrInclusion[i] + 1, lastSel, pDoc, InsertAfter);
 					    }
 					  else
@@ -3149,8 +3144,8 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 			    if (ok)
 				/* ajoute une entree pour ce voisin */
 			      {
-				GetExternalTypeName (pSS, typeNum, typeName1);
-				UserElementName (pEl, TRUE, typeName2);
+				GetExternalTypeName (pSS, typeNum, &typeName1);
+				UserElementName (pEl, TRUE, &typeName2);
 				if (separatorBefore)
 				  {
 				    /* un separateur est demande' avant cette entree, on le met */
@@ -3161,7 +3156,7 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 				  /* une paire de marques autour de la selection */
 				  {
 				    strncpy (N, TtaGetMessage (LIB, TMSG_AROUND), MAX_NAME_LENGTH);
-				    typeName2[0] = EOS;
+				    typeName2 = NULL;
 				    ok = TteItemMenuInsert (pSS, typeNum + 1, lastSel, pDoc, InsertAfter);
 				  }
 				else
@@ -3206,8 +3201,8 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 				(create || paste ||
 				 pSS->SsRule->SrElem[typeNum - 1]->SrConstruct != CsReference))
 			      {
-				GetExternalTypeName (pSS, typeNum, typeName1);
-				UserElementName (pEl, TRUE, typeName2);
+				GetExternalTypeName (pSS, typeNum, &typeName1);
+				UserElementName (pEl, TRUE, &typeName2);
 				/* envoie l'evenement item a creer */
 				if (TteItemMenuInsert (pSS, typeNum, pEl, pDoc, InsertBefore))
 				  {
@@ -3302,7 +3297,7 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 				    SrConstruct != CsPairedElement)
 				   /* pas d'insertion d'une paire APRES */
 				  {
-				     GetExternalTypeName (pAncestSS, pSRule->SrInclusion[i], typeName1);
+				     GetExternalTypeName (pAncestSS, pSRule->SrInclusion[i], &typeName1);
 				     pAncest = lastSel;
 				     /* on ne peut pas inserer comme descendant direct */
 				     /* d'un noeud CsChoice ou CsIdentity' */
@@ -3318,7 +3313,7 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 						/* l'element et son pere sont de type equivalent */
 						pAncest = pAncest->ElParent;
 				       }
-				     UserElementName (pAncest, FALSE, typeName2);
+				     UserElementName (pAncest, FALSE, &typeName2);
 				     if (separatorBefore)
 				       {
 					  /* un separateur est demande' avant cette entree, on le met */
@@ -3391,8 +3386,8 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 			     if ((create || paste || pSS->SsRule->SrElem[typeNum - 1]->SrConstruct != CsReference)
 				 && pSS->SsRule->SrElem[typeNum - 1]->SrConstruct != CsPairedElement)
 			       {
-				  GetExternalTypeName (pSS, typeNum, typeName1);
-				  UserElementName (pEl, FALSE, typeName2);
+				  GetExternalTypeName (pSS, typeNum, &typeName1);
+				  UserElementName (pEl, FALSE, &typeName2);
 				  if (separatorBefore)
 				    {
 				       /* un separateur est demande' avant cette entree, on le met */
@@ -3438,8 +3433,8 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 			      (create || paste
 			       || pSS->SsRule->SrElem[typeNum - 1]->SrConstruct != CsReference))
 			    {
-			      GetExternalTypeName (pSS, typeNum, typeName1);
-			      UserElementName (pEl, FALSE, typeName2);
+			      GetExternalTypeName (pSS, typeNum, &typeName1);
+			      UserElementName (pEl, FALSE, &typeName2);
 				/* envoie l'evenement item a creer */
 			      if (TteItemMenuInsert (pSS, typeNum, pEl, pDoc, InsertAfter))
 				{

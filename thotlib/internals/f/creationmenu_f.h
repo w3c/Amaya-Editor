@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void BuildChoiceMenu ( char *bufMenu,
-                              Name menuTitle,
+                              char *menuTitle,
                               int nbEntries,
                               ThotBool natureChoice );
 extern void InsertSeparatorInMenu ( int *prevMenuInd,
@@ -23,7 +23,7 @@ extern void BuildPasteMenu ( int RefMenu,
 #else /* __STDC__ */
 
 extern void BuildChoiceMenu (/* char *bufMenu,
-                                Name menuTitle,
+                                char *menuTitle,
                                 int nbEntries,
                                 ThotBool natureChoice */);
 extern void InsertSeparatorInMenu (/* int *prevMenuInd,

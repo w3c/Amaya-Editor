@@ -2790,8 +2790,10 @@ static PtrElement SearchElInSubTree (PtrElement pElRoot, int elType,
    if (typeName[0] != EOS)
       /* on compare les noms de type */
      {
-	if (strcmp (typeName, pElRoot->ElStructSchema->SsRule->SrElem[pElRoot->ElTypeNumber - 1]->SrName) == 0)
-	   pEC = pElRoot;
+       if (strncmp (typeName,
+		    pElRoot->ElStructSchema->SsRule->SrElem[pElRoot->ElTypeNumber - 1]->SrName,
+		    MAX_NAME_LENGTH) == 0)
+	 pEC = pElRoot;
      }
    else
       /* on compare les numero de type et code de schema de structure */

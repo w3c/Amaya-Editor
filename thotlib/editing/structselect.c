@@ -2827,8 +2827,7 @@ void BuildSelectionMessage ()
       pEl = FirstSelectedElement;
     }
   /* put the type name of the first selected element */
-  strncpy (msgBuf, pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName,
-	   MAX_NAME_LENGTH);
+  strcpy (msgBuf, pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName);
   /* add the types of the ancestors */
   pEl = pEl->ElParent;
   nbasc = 1;
