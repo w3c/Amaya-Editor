@@ -14,11 +14,6 @@
  *         R. Guetari (W3C/INRIA): Unicode version 
  */
 
-/* Compiling this module with -DSTANDALONE generates the main program of  */
-/* a converter which reads a HTML file and creates a Thot .PIV file.      */
-/* Without this option, it creates a function StartParser that parses a   */
-/* file and creates the internal representation of a Thot document.       */
-
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
@@ -387,6 +382,7 @@ static char         FileBuffer[INPUT_FILE_BUFFER_SIZE+1];
 #ifdef _I18N_
 static char         FileBufferA[INPUT_FILE_BUFFER_SIZE+1];
 #endif
+static CHARSET      ParsingCharset;           /* encoding of the parsed document */
 static int	    LastCharInFileBuffer = 0; /* last char. in the buffer */
 static int          CurrentBufChar;           /* current character read */
 static CHAR_T	    PreviousBufChar = EOS;    /* previous character read */
@@ -406,6 +402,7 @@ static CHAR_T*      docURL = NULL;	  /* path or URL of the document */
 /* input buffer */
 #define MaxBufferLength 1000
 #define AllmostFullBuffer 700
+#define MaxMsgLength 200	/* maximum size of error messages */
 static  UCHAR_T     inputBuffer[MaxBufferLength];
 static int          LgBuffer = 0;	  /* actual length of text in input
 					     buffer */
@@ -452,8 +449,8 @@ static int          EntityTableEntry = 0; /* entry of the entity table that
 					     matches the entity read so far */
 static int          CharRank = 0;	  /* rank of the last matching
 					     character in that entry */
-
-#define MaxMsgLength 200	/* maximum size of error messages */
+static FILE*        ErrFile = (FILE*) 0;
+static CHAR_T       ErrFileName [80];
 
 #ifdef __STDC__
 static void         ProcessStartGI (CHAR_T* GIname);
@@ -461,102 +458,6 @@ static void         ProcessStartGI (CHAR_T* GIname);
 static void         ProcessStartGI ();
 #endif
 
-static FILE*        ErrFile = (FILE*) 0;
-static CHAR_T       ErrFileName [80];
-
-extern CHARSET      CharEncoding;
-extern ThotBool     charset_undefined;
-
-/*----------------------------------------------------------------------
-  ParseCharset: Parses the element HTTP-EQUIV and looks for the charset 
-  value.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void ParseCharset (Element el) 
-#else  /* !__STDC__ */
-static void ParseCharset (el) 
-Element el;
-#endif /* !__STDC__ */
-{
-#ifndef STANDALONE
-   int length;
-   CHAR_T *text, *text2, *ptrText, *str;
-   CHAR_T  charsetname[MAX_LENGTH];
-   int     pos, index = 0;
-   AttributeType attrType;
-   Attribute attr;
-   Element root;
-
-   if (!charset_undefined)
-      return;
-
-  attrType.AttrSSchema = DocumentSSchema;
-  attrType.AttrTypeNum = HTML_ATTR_http_equiv;
-  attr = TtaGetAttribute (el, attrType);
-  if (attr != NULL)
-     {
-     /* There is a HTTP-EQUIV attribute */
-     length = TtaGetTextAttributeLength (attr);
-     if (length > 0)
-        {
-        text = TtaAllocString (length + 1);
-        TtaGiveTextAttributeValue (attr, text, &length);
-        if (!ustrcasecmp (text, TEXT("content-type")))
-	   {
-           attrType.AttrTypeNum = HTML_ATTR_meta_content;
-           attr = TtaGetAttribute (el, attrType);
-           if (attr != NULL)
-	      {
-              length = TtaGetTextAttributeLength (attr);
-              if (length > 0)
-		 {
-                 text2 = TtaAllocString (length + 1);
-                 TtaGiveTextAttributeValue (attr, text2, &length);
-                 ptrText = text2;
-                 while (*ptrText)
-		    {
-                    *ptrText = utolower (*ptrText);
-		    ptrText++;
-		    }
-                 str = ustrstr (text2, TEXT("charset="));
-                 if (str)
-		    {
- 		    pos = str - text2 + 8;
-		    while (text2[pos] != WC_SPACE && text2[pos] != WC_TAB &&
-			   text2[pos] != WC_EOS)
-		       charsetname[index++] = text2[pos++];
-		    charsetname[index] = WC_EOS;
-		    CharEncoding = TtaGetCharset (charsetname);
-
-		    if (CharEncoding == UNDEFINED_CHARSET)
-                       CharEncoding = UTF_8;
-		    else
-		       {
-		       /* copy the charset to the document's metadata info */
-                       root = TtaGetMainRoot (HTMLcontext.doc);
-		       attrType.AttrTypeNum = HTML_ATTR_Charset;
-		       attr = TtaGetAttribute (root, attrType);
-		       if (!attr)
-			  /* the root element does not have a Charset
-			     attribute. Create one */
-			  {
-                          attr = TtaNewAttribute (attrType);
-                          TtaAttachAttribute (root, attr, HTMLcontext.doc);
-			  }
-		       TtaSetAttributeText (attr, charsetname, root,
-					    HTMLcontext.doc);
-		       }
-		    charset_undefined = FALSE;
-		    }
-                 TtaFreeMemory (text2);
-		 }       
-	      } 
-	   }
-        TtaFreeMemory (text);
-	}
-     }
-#endif /* STANDALONE */
-}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -773,13 +674,11 @@ ElementType elType;
 	    i++;
 	  }
 	while (pHTMLGIMapping[i].XMLname[0] != WC_EOS);
-#ifndef STANDALONE
       else
 	{
 	  GetXMLElementName (elType, &buffer);
 	  return buffer;
 	}
-#endif
     }
   return TEXT("???");
 }
@@ -1092,9 +991,7 @@ CHAR_T*             msg;
       if (docURL != NULL)
 	{
          fprintf (ErrFile, "*** Errors in %s\n", docURL);
-#ifndef STANDALONE
          TtaFreeMemory (docURL);
-#endif /* STANDALONE */
          docURL = NULL;
 	}
       /* print the line number and character number before the message */
@@ -1978,9 +1875,6 @@ Element             el;
    STRING              text;
    CHAR_T              lastChar[2];
    STRING              name1;
-#ifdef STANDALONE
-   STRING              imageName, name2;
-#endif
    int                 length;
 
    elType = TtaGetElementType (el);
@@ -2185,7 +2079,10 @@ Element             el;
       break;
 
 	case HTML_EL_META:
-         ParseCharset (el);
+         ParseCharset (el, HTMLcontext.doc);
+#ifdef _I18N_
+	 ParsingCharset = TtaGetDocumentCharset (HTMLcontext.doc);
+#endif /* _I18N_ */
          break;
 
     case HTML_EL_STYLE_:	/* it's a STYLE element */
@@ -2219,14 +2116,12 @@ Element             el;
 	  }
        if (HTMLcontext.parsingCSS)
 	 {
-#ifndef STANDALONE
 	   text = GetStyleContents (el);
 	   if (text)
 	     {
 	       ReadCSSRules (HTMLcontext.doc, NULL, text, FALSE);
 	       TtaFreeMemory (text);
 	     }
-#endif /* !STANDALONE */
 	   HTMLcontext.parsingCSS = FALSE;
 	 }
 	/* and continue as if it were a Preformatted or a Script */
@@ -2286,38 +2181,10 @@ Element             el;
        /* Check that at least one option has a SELECTED attribute */
        OnlyOneOptionSelected (el, HTMLcontext.doc, TRUE);
        break;
-    case HTML_EL_PICTURE_UNIT:
-#ifdef STANDALONE
-       /* copy value of attribute SRC into the content of the element */
-       attrType.AttrSSchema = DocumentSSchema;
-       attrType.AttrTypeNum = HTML_ATTR_SRC;
-       attr = TtaGetAttribute (el, attrType);
-       if (attr != NULL)
-	 {
-	    length = TtaGetTextAttributeLength (attr);
-	    name1 = TtaAllocString (length + 1);
-	    name2 = TtaAllocString (length + 1);
-	    imageName = TtaAllocString (length + 1);
-	    TtaGiveTextAttributeValue (attr, name1, &length);
-	    /* extract image name from full name */
-	    TtaExtractName (name1, name2, imageName);
-	    if (ustrlen (imageName) == 0)
-	       /* full names ends with ''/ */
-	       TtaExtractName (name2, name1, imageName);
-	    if (ustrlen (imageName) != 0)
-	       TtaSetTextContent (el, imageName, HTMLcontext.language, HTMLcontext.doc);
-	    TtaFreeMemory (name1);
-	    TtaFreeMemory (name2);
-	    TtaFreeMemory (imageName);
-	 }
-#endif /* STANDALONE */
-       break;
 
-#ifndef STANDALONE
     case HTML_EL_LINK:
        CheckCSSLink (el, HTMLcontext.doc, DocumentSSchema);
        break;
-#endif /* STANDALONE */
 
     case HTML_EL_Data_cell:
     case HTML_EL_Heading_cell:
@@ -2331,26 +2198,20 @@ Element             el;
 	     TtaInsertFirstChild (&child, el, HTMLcontext.doc);
 	 }
 
-#ifndef STANDALONE
        /* detect whether we're parsing a whole table or just a cell */
        if (HTMLcontext.withinTable == 0)
 	 NewCell (el, HTMLcontext.doc, FALSE);
-#endif /* STANDALONE */
        break;
 
     case HTML_EL_Table:
-#ifndef STANDALONE
        CheckTable (el, HTMLcontext.doc);
-#endif
        HTMLcontext.withinTable--;
        break;
 
-#ifndef STANDALONE
     case HTML_EL_TITLE:
        /* show the TITLE in the main window */
        UpdateTitle (el, HTMLcontext.doc);
        break;
-#endif
 
     default:
        break;
@@ -2921,35 +2782,27 @@ CHAR_T                c;
 	}
       if (math)
 	{
-#ifndef STANDALONE
 	  /* Parse the MathML structure */
 	  if (XMLparse (stream, &CurrentBufChar, TEXT("MathML"), HTMLcontext.doc, HTMLcontext.lastElement, FALSE,
 		    HTMLcontext.language, pHTMLGIMapping[lastElemEntry].XMLname))
-#endif /* STANDALONE */
 	    /* when returning from the XML parser, the end tag has already
 	       been read */
 	    (void) CloseElement (lastElemEntry, -1, FALSE);
-#ifndef STANDALONE
 	  else
 	    StopParsing ();
-#endif /* STANDALONE */
 	}
       else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("xmlgraphics")) ||
                !ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("svg")))
 	/* a tag <xmlgraphics> or <svg> has been read */
         {
 	  /* Parse the GraphML structure */
-#ifndef STANDALONE
 	  if (XMLparse (stream, &CurrentBufChar, TEXT("GraphML"), HTMLcontext.doc, HTMLcontext.lastElement, FALSE,
 		    HTMLcontext.language, pHTMLGIMapping[lastElemEntry].XMLname))
-#endif /* STANDALONE */
 	    /* when returning from the XML parser, the end tag has already
 	       been read */
 	    (void) CloseElement (lastElemEntry, -1, FALSE);
-#ifndef STANDALONE
 	  else
 	    StopParsing ();
-#endif /* STANDALONE */
 	}
       else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("pre"))   ||
                !ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("style")) ||
@@ -2976,7 +2829,6 @@ CHAR_T                c;
       elType = TtaGetElementType (HTMLcontext.lastElement);
       if (elType.ElTypeNum == HTML_EL_STYLE_)
 	{
-#ifndef STANDALONE
 	  /* Search the Notation attribute */
 	  attrType.AttrSSchema = elType.ElSSchema;
 	  attrType.AttrTypeNum = HTML_ATTR_Notation;
@@ -2995,7 +2847,6 @@ CHAR_T                c;
 		HTMLcontext.parsingCSS = TRUE;
 	      TtaFreeMemory (text);
 	    }
-#endif /* STANDALONE */
 	}
       else if (elType.ElTypeNum == HTML_EL_Text_Area)
 	{
@@ -3750,7 +3601,6 @@ char                c;
    PutInBuffer (c);
 }
 
-#ifndef STANDALONE
 /*----------------------------------------------------------------------
    CreateAttrWidthPercentPxl
    an HTML attribute "width" has been created for a Table of a HR.
@@ -3772,7 +3622,6 @@ int                 oldWidth;
   Attribute          attrOld, attrNew;
   int                length, val;
   CHAR_T             msgBuffer[MaxMsgLength];
-#ifndef STANDALONE
   ElementType	     elType;
   int                w, h;
   ThotBool           isImage;
@@ -3781,7 +3630,6 @@ int                 oldWidth;
   isImage = (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
 	     elType.ElTypeNum == HTML_EL_Data_cell ||
 	     elType.ElTypeNum == HTML_EL_Heading_cell);
-#endif
 
   /* remove trailing spaces */
   length = ustrlen (buffer) - 1;
@@ -3803,7 +3651,6 @@ int                 oldWidth;
 	  attrNew = TtaNewAttribute (attrTypePercent);
 	  TtaAttachAttribute (el, attrNew, doc);
 	}
-#ifndef STANDALONE
       else if (isImage && oldWidth == -1)
 	{
 	  if (attrOld == NULL)
@@ -3811,7 +3658,6 @@ int                 oldWidth;
 	  else
 	    oldWidth = TtaGetAttributeValue (attrOld);
 	}
-#endif
     }
   else
     {
@@ -3824,7 +3670,6 @@ int                 oldWidth;
 	  attrNew = TtaNewAttribute (attrTypePxl);
 	  TtaAttachAttribute (el, attrNew, doc);
 	}
-#ifndef STANDALONE
       else if (isImage && oldWidth == -1)
 	{
 	  TtaGiveBoxSize (el, doc, 1, UnPixel, &w, &h);
@@ -3833,7 +3678,6 @@ int                 oldWidth;
 	  else
 	    oldWidth = w * TtaGetAttributeValue (attrOld) / 100;	  
 	}
-#endif
     }
 
   if (attrOld != NULL)
@@ -3849,10 +3693,8 @@ int                 oldWidth;
     usprintf (msgBuffer, TEXT("Invalid attribute value \"%s\""), buffer);
     ParseHTMLError (doc, msgBuffer);
     }
-#ifndef STANDALONE
   if (isImage)
     UpdateImageMap (el, doc, oldWidth, -1);
-#endif
 }
 
 /*----------------------------------------------------------------------
@@ -3919,7 +3761,7 @@ Document            doc;
       ParseHTMLError (doc, msgBuffer);
       }
 }
-#endif /* STANDALONE */
+
 
 /*----------------------------------------------------------------------
    EndOfAttrValue
@@ -3973,21 +3815,17 @@ CHAR_T              c;
    /* treatments of some particular HTML attributes */
    else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("style")))
       {
-#ifndef STANDALONE
       TtaSetAttributeText (lastAttribute, inputBuffer, lastAttrElement,
 			   HTMLcontext.doc);
       ParseHTMLSpecificStyle (HTMLcontext.lastElement, inputBuffer, HTMLcontext.doc, FALSE);
-#endif
       done = TRUE;
       }
-#ifndef STANDALONE
    else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("link")))
       HTMLSetAlinkColor (HTMLcontext.doc, inputBuffer);
    else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("alink")))
       HTMLSetAactiveColor (HTMLcontext.doc, inputBuffer);
    else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("vlink")))
       HTMLSetAvisitedColor (HTMLcontext.doc, inputBuffer);
-#endif
 
    if (!done)
       {
@@ -4187,7 +4025,6 @@ CHAR_T              c;
 				 HTMLcontext.doc);
 	    }
 	 }
-#ifndef STANDALONE
       /* Some HTML attributes are equivalent to a CSS property:      */
       /*      background     ->                   background         */
       /*      bgcolor        ->                   background         */
@@ -4205,7 +4042,6 @@ CHAR_T              c;
       else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("text")) ||
 	       !ustrcmp (lastAttrEntry->XMLattribute, TEXT("color")))
          HTMLSetForegroundColor (HTMLcontext.doc, HTMLcontext.lastElement, inputBuffer);
-#endif /* !STANDALONE */
       }
    InitBuffer ();
 }
@@ -5270,7 +5106,7 @@ ThotBool*       endOfFile;
 	  mbcstr[1] = buffer[(*index)++];
           nbBytes = 2;
 	  }
-       TtaMB2WC (mbcstr, &charRead, CharEncoding);
+       TtaMB2WC (mbcstr, &charRead, ParsingCharset);
        *endOfFile = (charRead == WC_EOS);
        }
     else if (infile == NULL)
@@ -5293,8 +5129,7 @@ ThotBool*       endOfFile;
        if (*endOfFile == FALSE)
 	  {
           char* mbsBuff = &FileBuffer[(*index)];
-	  (*index) += TtaGetNextWideCharFromMultibyteString (&charRead,
-						      &mbsBuff, CharEncoding);
+	  (*index) += TtaGetNextWideCharFromMultibyteString (&charRead, &mbsBuff, ParsingCharset);
 	  if (*index > LastCharInFileBuffer)
 	     *index = 0;
 	  }
@@ -5838,23 +5673,28 @@ STRING              fileName;
 
 
 /*----------------------------------------------------------------------
-  ContentIsXML parses the HTML file to detect if it's XHML document.
+  ContentIsXML parses the loaded file to detect if it includes a XML
+  declaration.
+  Set the charset value if the XML declaration gives an encoding.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            ContentIsXML (CHAR_T* fileName)
+ThotBool            HasXMLDeclaration (CHAR_T *fileName, CHARSET *charset)
 #else
-ThotBool            ContentIsXML (fileName)
-CHAR_T*             fileName;
+ThotBool            HasXMLDeclaration (fileName, charset)
+CHAR_T             *fileName;
+CHARSET            *charset;
 #endif
 {
-  gzFile              stream;
-  int                 res, i;
-  ThotBool            endOfFile, isXHTML;
-  char                file_name[MAX_LENGTH];
+  gzFile        stream;
+  char          file_name[MAX_LENGTH];
+  CHAR_T       *ptr, *end;
+  CHAR_T        charsetname[MAX_LENGTH];
+  int           res, i, j;
+  ThotBool      endOfFile, isXHTML;
 
   isXHTML = FALSE;
   wc2iso_strcpy (file_name, fileName);
-
+  *charset = UNDEFINED_CHARSET;
   stream = gzopen (file_name, "r");
   if (stream != 0)
     {
@@ -5870,8 +5710,9 @@ CHAR_T*             fileName;
 	    FileBuffer[res] = EOS;
 	  /* check if the file contains "<?xml ..." */
 	  i = 0;
-	  while (!endOfFile && i < res)
+	  while (!endOfFile && i < res && i < 5)
 	    {
+	      /* if the declaration is present it's the first element */
 	      if (strncasecmp (&FileBuffer[i], "<?xml", 5))
 		i++;
 	      else
@@ -5881,11 +5722,30 @@ CHAR_T*             fileName;
 		  /* stop the research */
 		  endOfFile = TRUE;
 		  if (FileBuffer[i] == SPACE  ||
-              FileBuffer[i] == BSPACE ||
-              FileBuffer[i] == EOL    ||
-              FileBuffer[i] == TAB    ||
-              FileBuffer[i] == __CR__)
-		     isXHTML = TRUE;
+		      FileBuffer[i] == BSPACE ||
+		      FileBuffer[i] == EOL    ||
+		      FileBuffer[i] == TAB    ||
+		      FileBuffer[i] == __CR__)
+		    {
+		      isXHTML = TRUE;
+		      /* check whether there is an encoding */
+		      i++;
+		      ptr = ustrstr (&FileBuffer[i], TEXT("encoding"));
+		      end = NULL;
+		      if (ptr)
+			ptr = ustrstr (ptr, TEXT("\""));
+		      if (ptr)
+			end = ustrstr (&ptr[1], TEXT("\""));
+		      if (end && end != ptr)
+			{
+			  /* get the document charset */
+			  i = 0; j = 1;
+			  while (&ptr[j] != end)
+			    charsetname[i++] = ptr[j++];
+			  charsetname[i] = WC_EOS;
+			  *charset = TtaGetCharset (charsetname);
+			}
+		    }
 		}
 	    }
 	}
@@ -6940,7 +6800,7 @@ Document            doc;
    AfterTagPRE = FALSE;
    HTMLcontext.parsingCSS = FALSE;
    CurrentBufChar = 0;
-}
+ }
 
 /*----------------------------------------------------------------------
    ParseIncludedHTML
@@ -7006,7 +6866,7 @@ Document   doc;
    elType = TtaGetElementType (lastelem);
    schemaName = TtaGetSSchemaName(elType.ElSSchema);
 #ifdef _I18N_
-   TtaWCS2MBS (&HTMLbuf, &ptrHTMLbuf, CharEncoding);
+   TtaWCS2MBS (&HTMLbuf, &ptrHTMLbuf,  ParsingCharset);
 #endif /* _I18N_ */
    if (ustrcmp (schemaName, TEXT("HTML")) == 0)
      /* parse an HTML subtree */
@@ -7021,93 +6881,12 @@ Document   doc;
        InputText = html_buff; 
        /* InputText = HTMLbuf; */
        CurrentBufChar = 0;
-#ifndef STANDALONE
        if (!XMLparse (NULL, &CurrentBufChar, schemaName, doc, lastelem,
 		      isclosed, TtaGetDefaultLanguage(), NULL))
 	  StopParsing ();
-#endif
       }
 }
 
-#ifdef STANDALONE
-/*----------------------------------------------------------------------
-   main program
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 main (int argc, char **argv)
-#else
-int                 main (argc, argv)
-int                 argc;
-char              **argv;
-#endif
-{
-  Element             el, oldel;
-  Document            doc;
-  FILE               *infile;
-  STRING              pathURL = NULL;
-  CHAR_T              htmlFileName[200];
-  CHAR_T              pivotFileName[200];
-  CHAR_T              documentDirectory[200];
-  CHAR_T              documentName[200];
-  int                 returnCode;
-  ThotBool	      plainText;
-
-  /* check the number of arguments in command line */
-  returnCode = 0;
-  if (argc != 3)
-    /* command line is not OK */
-    {
-      fprintf (stderr, "Usage: html2thot html_file Thot_file\n");
-      returnCode = 1;
-    }
-  else
-    {
-      TtaInitializeAppRegistry (argv[0]);
-      /* get the input file name from the command line */
-      argv++;
-      ustrcpy (htmlFileName, *argv);
-      /*  open the input file */
-      infile = fopen (htmlFileName, "r");
-      if (infile == 0)
-	{
-	  fprintf (stderr, "Cannot open %s\n", htmlFileName);
-	  returnCode = 2;
-	}
-      else
-	{
-	  /* input file OK. Get the output file name from the command line */
-	  argv++;
-	  ustrcpy (pivotFileName, *argv);
-	  /* the file to be parsed is supposed to be HTML */
-	  plainText = FALSE;
-	  /* initialize mapping table */
-	  InitMapping ();
-	  /* initialize automaton for the HTML parser */
-	  InitAutomaton ();
-	  /* initialize the Thot toolkit */
-	  TtaInitialize ("HTMLThot");
-	  /* extract directory and file name from second argument */
-	  TtaExtractName (pivotFileName, documentDirectory, documentName);
-	  if (documentName[0] == EOS && !TtaCheckDirectory (documentDirectory))
-	    {
-	      ustrcpy (documentName, documentDirectory);
-	      documentDirectory[0] = EOS;
-	    }
-	  TtaSetDocumentPath (documentDirectory);
-	  docURL = htmlFileName;
-	  /* create a Thot document of type HTML */
-	  doc = TtaNewDocument (TEXT("HTML"), pivotFileName);
-	  HTMLcontext.doc = doc;
-	  if (doc == 0)
-	    {
-	      fprintf (stderr, "Cannot create file %s.PIV\n", pivotFileName);
-	      returnCode = 3;
-	    }
-	  else
-	    /* set the notification mode for the new document */
-	    TtaSetNotificationMode (doc, 1);
-	  stream = gzopen (pivotFileName, "r");
-#else  /* STANDALONE */
 /*----------------------------------------------------------------------
    StartParser loads the file Directory/htmlFileName for
    displaying the document documentName.
@@ -7173,10 +6952,8 @@ ThotBool            plainText;
 	}
       TtaAppendDocumentPath (documentDirectory);
       /* create a Thot document of type HTML */
-#endif /* STANDALONE */
       /* the Thot document has been successfully created */
       {
-#ifndef STANDALONE
 	length = ustrlen (pathURL);
 	if (ustrcmp (pathURL, htmlFileName) == 0)
 	  {
@@ -7189,15 +6966,19 @@ ThotBool            plainText;
 	    docURL = TtaAllocString (length+1);
 	    usprintf (docURL, TEXT("%s temp file: %s"), pathURL, htmlFileName);
 	  }
-#endif /* STANDALONE */
 	/* do not check the Thot abstract tree against the structure */
 	/* schema while building the Thot document. */
 	TtaSetStructureChecking (0, doc);
 	/* set the notification mode for the new document */
 	TtaSetNotificationMode (doc, 1);
 	HTMLcontext.language = TtaGetDefaultLanguage ();
-#ifndef STANDALONE
 	DocumentSSchema = TtaGetDocumentSSchema (doc);
+#ifdef _I18N_
+	/* Get the document encoding */
+	ParsingCharset = TtaGetDocumentCharset (HTMLcontext.doc);
+	if (ParsingCharset == UNDEFINED_CHARSET)
+	  ParsingCharset = UTF_8;
+#endif /* _I18N_ */
 	/* is the current document a HTML document */
 #ifdef ANNOTATIONS
 	if (DocumentTypes[doc] == docAnnot
@@ -7223,7 +7004,6 @@ ThotBool            plainText;
 		isHTML = FALSE;
 	      }
 	    rootElement = TtaGetMainRoot (doc);
-#ifndef STANDALONE
 	    if (DocumentTypes[doc] == docSource ||
 		DocumentTypes[doc] == docSourceRO)
 	      {
@@ -7237,7 +7017,6 @@ ThotBool            plainText;
 		    TtaAttachAttribute (rootElement, attr, doc);
 		  }
 	      }
-#endif /* STANDALONE */
 	    
 	    /* add the default attribute PrintURL */
 	    attrType.AttrSSchema = DocumentSSchema;
@@ -7306,7 +7085,6 @@ ThotBool            plainText;
 	TtaSetDocumentDirectory (doc, temppath);
 	/* disable auto save */
 	TtaSetDocumentBackUpInterval (doc, 0);
-#endif /* STANDALONE */
 	/* parse the input file and build the Thot document */
 	if (plainText)
 	  ReadTextFile (stream, NULL, doc, pathURL);
@@ -7326,30 +7104,18 @@ ThotBool            plainText;
 	    CheckAbstractTree (pathURL, HTMLcontext.doc);
 	  }
 	gzclose (stream);
-#ifdef STANDALONE
-	/* save and close the Thot document */
-	TtaSaveDocument (doc, pivotFileName);
-	TtaCloseDocument (doc);
-#else  /* STANDALONE */
 	TtaFreeMemory (docURL);
 	/* an HTML document could be a template */
 	if (!plainText)
 	  OpenTemplateDocument (doc);
 	TtaSetDisplayMode (doc, DisplayImmediately);
-#endif /* STANDALONE */
 	/* check the Thot abstract tree against the structure schema. */
 	TtaSetStructureChecking (1, doc);
 	DocumentSSchema = NULL;
       }
     }
-#ifdef STANDALONE
-  /* quit the Thot toolkit */
-  TtaQuit ();
-}
-#else  /* STANDALONE */
    TtaSetDocumentUnmodified (doc);
    HTMLcontext.doc = 0;
-#endif /* STANDALONE */
 }
 
 /* end of module */

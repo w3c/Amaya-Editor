@@ -761,10 +761,8 @@ Document     doc;
    ElementType		elType;
    AttributeType	attrType;
    Attribute		attr, charsetAttr;
-   Language             lang;
-   int                  length;
-   STRING               text;
-   CHAR_T               ISOlatin;
+   CHARSET              charset;
+   STRING               ptr;
 #define MAX_CHARSET_LEN 50
    CHAR_T               Charset[MAX_CHARSET_LEN];
    CHAR_T		buffer[200];
@@ -789,19 +787,15 @@ Document     doc;
       /* prepare the value of attribute Namespaces */
       buffer[0] = EOS;
       if (useMathML)
-	 {
-	 ustrcat (buffer, TEXT("\n      xmlns:m=\"http://www.w3.org/1998/Math/MathML/\""));
-	 }
+	ustrcat (buffer, TEXT("\n      xmlns:m=\"http://www.w3.org/1998/Math/MathML/\""));
       if (useGraphML)
-	 {
-	 ustrcat (buffer, TEXT("\n      xmlns:g=\"http://www.w3.org/Graphics/SVG/Amaya2D\""));
-	 }
+	ustrcat (buffer, TEXT("\n      xmlns:g=\"http://www.w3.org/Graphics/SVG/Amaya2D\""));
       /* set the value of attribute Namespaces */
       if (attr == NULL)
-	 {
-	 attr = TtaNewAttribute (attrType);
-	 TtaAttachAttribute (root, attr, doc);
-	 }
+	{
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (root, attr, doc);
+	}
       TtaSetAttributeText (attr, buffer, root, doc);
       }
 
@@ -827,18 +821,25 @@ Document     doc;
    if (useFrames)
       TtaSetAttributeValue (attr, HTML_ATTR_HtmlDTD_VAL_Frameset, root, doc);
    else
-      TtaSetAttributeValue (attr, HTML_ATTR_HtmlDTD_VAL_Transitional, root,
-			    doc);
+      TtaSetAttributeValue (attr, HTML_ATTR_HtmlDTD_VAL_Transitional, root, doc);
 
-   /* get the charset defined by the Charset attribute of the root element*/
-   attrType.AttrTypeNum = HTML_ATTR_Charset;
-   charsetAttr = TtaGetAttribute (root, attrType);
+   /* get the document charset */
    Charset[0] = EOS;
-   if (charsetAttr)
-      {
-      length = MAX_CHARSET_LEN - 2;
-      TtaGiveTextAttributeValue (charsetAttr, Charset, &length);
-      }
+   charset = TtaGetDocumentCharset (doc);
+   if (charset != UNDEFINED_CHARSET)
+     {
+       ptr = TtaGetCharsetName (charset);
+       ustrcat (Charset, ptr);
+       /* set the Charset attribute of the root element*/
+       attrType.AttrTypeNum = HTML_ATTR_Charset;
+       charsetAttr = TtaGetAttribute (root, attrType);
+       if (!charsetAttr)
+	 {
+	   charsetAttr = TtaNewAttribute (attrType);
+	   TtaAttachAttribute (root, charsetAttr, doc);
+	   TtaSetAttributeText (charsetAttr, Charset, root, doc);	
+	 }
+     }
 
    /* Create (or update) a META element to specify Content-type and Charset */
    /* Get the HEAD element first */
@@ -855,69 +856,6 @@ Document     doc;
       }
    if (head)
       {
-      if (Charset[0] == EOS)
-	/* no Charset attribute on the root element */
-	{
-        /* is there a Language attribute on the root element? */
-        attrType.AttrTypeNum = HTML_ATTR_Langue;
-        attr = TtaGetAttribute (root, attrType);
-        if (attr)
-	   /* there is a language attribute on the root */
-	   /* is it the defaut attribute set by Thot or the real one */
-	   {
-           attrType.AttrTypeNum = HTML_ATTR_RealLang;
-           if (!TtaGetAttribute (root, attrType))
-	     /* not the real one. look further */
-	      attr = NULL;
-	   }
-        if (!attr)
-	   /* no Language specified on the root. Look for the body element */
-	   {
-           attrType.AttrTypeNum = HTML_ATTR_Langue;
-	   el = head;
-           TtaNextSibling (&el);
-	   while (el && !attr)
-	     {
-             elType = TtaGetElementType (el);
-	     if (elType.ElSSchema == attrType.AttrSSchema &&
-	         elType.ElTypeNum == HTML_EL_BODY)
-	       /* it's the BODY element. Is there a language attribute on it */
-	       {
-	       attr = TtaGetAttribute (el, attrType);
-	       el = NULL;
-	       }
-	     else
-	       TtaNextSibling (&el);
-	     }
-	   }
-        if (attr)
-	   /* there is a Language attribute on the root or body element */
-	   {
-	   length = TtaGetTextAttributeLength (attr);
-	   text = TtaAllocString (length + 1);
-	   TtaGiveTextAttributeValue (attr, text, &length);
-	   lang = TtaGetLanguageIdFromName (text);
-	   TtaFreeMemory (text);
-	   ISOlatin = TtaGetAlphabet (lang);
-	   if (ISOlatin == TEXT('L'))
-	     ustrcpy (Charset, TEXT("iso-8859-1"));
-	   else if (ISOlatin == TEXT('2'))
-	     ustrcpy (Charset, TEXT("iso-8859-2"));
-	   else if (ISOlatin == TEXT('9'))
-	     ustrcpy (Charset, TEXT("iso-8859-9"));
-	   else
-	     Charset[0] = EOS;
-	   }
-#ifdef VQ
-        No language attribute, no charset specified in the document.
-        We could set a default charset (for instance iso-8859-1), but
-        should we do that if the document is in another encoding?
-
-	else
-           /* No language attribute. Default Charset is ISO Latin 1 */
-           ustrcpy (Charset, TEXT("iso-8859-1"));
-#endif
-	}
       /* indicate the MIME type and the charset in a meta element with
 	 an http-equiv attr */
       /* look for a meta/http-equiv element */
@@ -980,15 +918,6 @@ Document     doc;
 	 TtaSetAttributeText (attr, buffer, meta, doc);
 	 }
       } 
-   if (!charsetAttr)
-     if (Charset[0] != EOS)
-	/* create a Charset attribute on the root element */
-	{
-	attrType.AttrTypeNum = HTML_ATTR_Charset;
-	charsetAttr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (root, charsetAttr, doc);
-	TtaSetAttributeText (charsetAttr, Charset, root, doc);	
-	}
 }
 
 /*----------------------------------------------------------------------

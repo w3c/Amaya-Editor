@@ -271,8 +271,6 @@ typedef struct _RELOAD_context {
 		   element (% of the window height) */
 } RELOAD_context;
 
-extern CHARSET  CharEncoding;
-extern ThotBool charset_undefined;
 
 /*----------------------------------------------------------------------
    IsDocumentLoaded returns the document identification if the        
@@ -2126,23 +2124,30 @@ ThotBool            history;
   Element             root;
   Attribute           attr;
   AttributeType       attrType;
+  CHARSET             charset, httpcharset;
+  CHAR_T*             charEncoding;
   CHAR_T*             tempdocument;
   CHAR_T*             tempdir;
   CHAR_T*             s;
   CHAR_T*             content_type;
-  CHAR_T*             charset;
   STRING              profile;
   int                 i, j;
   ThotBool            otherFile;
   ThotBool            plainText;
   ThotBool            XHTMLdoc;
+  ThotBool            xmlDeclaration;
 
   docType = docHTML;
   otherFile = TRUE;
   XHTMLdoc = FALSE;
   tempdir = tempdocument = NULL;
   content_type = HTTP_headers (http_headers, AM_HTTP_CONTENT_TYPE);
-
+  /* check if there is an XML declaration with a charset declaration */
+  if (tempfile[0] != WC_EOS)
+    xmlDeclaration = HasXMLDeclaration (tempfile, &charset);
+  else
+    xmlDeclaration = HasXMLDeclaration (pathname, &charset);     
+    
   if (content_type == NULL || content_type[0] == EOS)
     /* no content type */
     {
@@ -2152,16 +2157,14 @@ ThotBool            history;
 	  /* it seems to be an HTML document */
 	  docType = docHTML;
 	  /* it may be an XHTML document. Look for <?xml ...?> in it */
-	  if ((tempfile[0] != WC_EOS && ContentIsXML (tempfile)) ||
-	      (tempfile[0] == WC_EOS && ContentIsXML (pathname)))
+	  if (xmlDeclaration)
 	     XHTMLdoc = TRUE;
 	  otherFile = FALSE;
 	}
       else if (IsXMLName (pathname))
 	{
 	/* it's a document written in XML: check its doctype */
-	  if ((tempfile[0] != WC_EOS && IsXHTMLDocType (tempfile)) ||
-	      (tempfile[0] == WC_EOS && IsXHTMLDocType (pathname)))
+	  if (xmlDeclaration)
 	    {
 	    docType = docHTML;
 	    XHTMLdoc = TRUE;
@@ -2186,7 +2189,7 @@ ThotBool            history;
 	/* Let's suppose it's HTML */
 	  docType = docHTML;
 	  otherFile = FALSE;
-	  if (ContentIsXML (tempfile))
+	  if (xmlDeclaration)
 	     XHTMLdoc = TRUE;
 	}
       }
@@ -2212,8 +2215,7 @@ ThotBool            history;
 		   docType = docHTML;
 		   otherFile = FALSE;
 		   /* check if it's an XHTML document */
-		   if ((tempfile[0] != WC_EOS && ContentIsXML (tempfile)) ||
-		       (tempfile[0] == WC_EOS && ContentIsXML (pathname)))
+		   if (xmlDeclaration)
 		     XHTMLdoc = TRUE;
 		 }
 	       else if (!ustrncasecmp (&content_type[i+1], TEXT("xhtml"), 5))
@@ -2451,13 +2453,12 @@ ThotBool            history;
       DocumentMeta[newdoc]->xmlformat = XHTMLdoc;
       DocumentSource[newdoc] = 0;
 
-      charset = HTTP_headers (http_headers, AM_HTTP_CHARSET);
-      CharEncoding = TtaGetCharset (charset);
-
-      if (CharEncoding == UNDEFINED_CHARSET) {
-         CharEncoding = ISO_8859_1;
-         charset_undefined = TRUE;
-	  }
+      charEncoding = HTTP_headers (http_headers, AM_HTTP_CHARSET);
+      httpcharset = TtaGetCharset (charEncoding);
+      if (httpcharset != UNDEFINED_CHARSET)
+	TtaSetDocumentCharset (newdoc, httpcharset);
+      else if (charset != UNDEFINED_CHARSET)
+	TtaSetDocumentCharset (newdoc, charset);
 
       if (TtaGetViewFrame (newdoc, 1) != 0)
 	/* this document is displayed */
@@ -2493,7 +2494,7 @@ ThotBool            history;
 
       profile = TtaGetEnvString ("Profile");
 #ifdef EXPAT_PARSER
-      if (XHTMLdoc || !ustrcmp (profile, TEXT("basic-editor")))
+      if (XHTMLdoc || (!plainText && !ustrcmp (profile, TEXT("basic-editor"))))
 	StartXmlParser (newdoc,
 			tempdocument,
 			documentname,
@@ -2507,30 +2508,6 @@ ThotBool            history;
 #endif /* EXPAT_PARSER */
 
       TtaFreeMemory (tempdir);
-
-      /* If it's an HTML document, save the charset into the Charset
-	 attribute */
-      if (charset)
-	{
-	  /* copy the charset to the document's metadata info */
-
-	  if (DocumentTypes[newdoc] == docHTMLRO ||
-	      DocumentTypes[newdoc] == docHTML)
-	    {
-	      root = TtaGetMainRoot (newdoc);
-	      attrType.AttrSSchema = TtaGetDocumentSSchema (newdoc);
-	      attrType.AttrTypeNum = HTML_ATTR_Charset;
-	      attr = TtaGetAttribute (root, attrType);
-	      if (!attr)
-		/* the root element does not have a Charset attribute.
-		   Create one */
-		{
-		  attr = TtaNewAttribute (attrType);
-		  TtaAttachAttribute (root, attr, newdoc);
-		}
-	      TtaSetAttributeText (attr, charset, root, newdoc);
-	    }
-	}
 
       /* Set the document read-only when needed */
       if (DocumentTypes[newdoc] == docHTMLRO

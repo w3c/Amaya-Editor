@@ -462,41 +462,35 @@ AttrValueMapping XhtmlAttrValueMappingTable[] =
    {HTML_ATTR_no_resize, TEXT("noresize"), HTML_ATTR_no_resize_VAL_Yes_},
    {0, TEXT(""), 0}			/* Last entry. Mandatory */
 };
-#ifdef EXPAT_PARSER
-
-extern CHARSET  CharEncoding;
-extern ThotBool charset_undefined;
 
 
 /*----------------------------------------------------------------------
-  XhtmlParseCharset:
+  ParseCharset:
   Parses the element HTTP-EQUIV and looks for the charset value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void XhtmlParseCharset (Element el,
-			       Document doc) 
+void     ParseCharset (Element el, Document doc) 
 #else  /* !__STDC__ */
-static void XhtmlParseCharset (el, doc) 
+void     ParseCharset (el, doc) 
 Element  el;
 Document doc;
 #endif /* !__STDC__ */
 {
- 
-   int           length;
-   CHAR_T       *text, *text2, *ptrText, *str;
-   CHAR_T        charsetname[MAX_LENGTH];
-   int           pos, index = 0;
    AttributeType attrType;
    Attribute     attr;
-   Element       root;
    SSchema       docSSchema;
+   CHARSET       charset;
+   CHAR_T       *text, *text2, *ptrText, *str;
+   CHAR_T        charsetname[MAX_LENGTH];
+   int           length;
+   int           pos, index = 0;
 
-
-   if (!charset_undefined)
-       return;
+   charset = TtaGetDocumentCharset (doc);
+   if (charset != UNDEFINED_CHARSET)
+     /* the charset was already defined by the http header */
+     return;
 
    docSSchema = TtaGetDocumentSSchema (doc);
-
    attrType.AttrSSchema = docSSchema;
    attrType.AttrTypeNum = HTML_ATTR_http_equiv;
    attr = TtaGetAttribute (el, attrType);
@@ -527,38 +521,16 @@ Document doc;
 			 }
 		       
 		       str = ustrstr (text2, TEXT("charset="));
-		       
 		       if (str)
 			 {
 			   pos = str - text2 + 8;
-			   
 			   while (text2[pos] != WC_SPACE &&
 				  text2[pos] != WC_TAB && text2[pos] != WC_EOS)
 			     charsetname[index++] = text2[pos++];
-			   
 			   charsetname[index] = WC_EOS;
-			   CharEncoding = TtaGetCharset (charsetname);
-			   
-			   if (CharEncoding == UNDEFINED_CHARSET)
-			       CharEncoding = UTF_8;
-			   else
-			     {
-			       /* copy the charset to the 
-				  document's metadata info */
-			       root = TtaGetMainRoot (doc);
-			       attrType.AttrTypeNum = HTML_ATTR_Charset;
-			       attr = TtaGetAttribute (root, attrType);
-			       if (!attr)
-				 /* the root element does not have a 
-				    Charset attribute. Create one */
-				 {
-				   attr = TtaNewAttribute (attrType);
-				   TtaAttachAttribute (root, attr, doc);
-				 }
-			       TtaSetAttributeText (attr, charsetname,
-						    root, doc);
-			     }
-			   charset_undefined = FALSE;
+			   charset = TtaGetCharset (charsetname);
+			   if (charset != UNDEFINED_CHARSET)
+			     TtaSetDocumentCharset (doc, charset);
 			 }
 		       TtaFreeMemory (text2);
 		     }       
@@ -568,7 +540,6 @@ Document doc;
 	 }
      }
 }
-#endif /* EXPAT_PARSER */
 
 /*----------------------------------------------------------------------
   XhtmlElementComplete
@@ -576,16 +547,12 @@ Document doc;
   Check its attributes and its contents.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void     XhtmlElementComplete (Element el,
-			       Document doc,
-			       int *error)
+void       XhtmlElementComplete (Element el, Document doc, int *error)
 #else
-void     XhtmlElementComplete (el,
-			       doc,
-			       error)
-Element           el;
-Document          doc;
-int              *error;
+void       XhtmlElementComplete (el, doc, error)
+Element    el;
+Document   doc;
+int       *error;
 #endif
 {
 #ifdef EXPAT_PARSER
@@ -809,7 +776,7 @@ int              *error;
        break;
        
      case HTML_EL_META:
-       XhtmlParseCharset (el, doc);
+       ParseCharset (el, doc);
        break;
 
      case HTML_EL_STYLE_:	/* it's a STYLE element */

@@ -6,7 +6,8 @@
  */
 
 /* Unicode Routines
- * Author: R. Guetari (W3C/INRIA)
+ * Authors: R. Guetari (W3C/INRIA)
+ *          I. Vatton (W3C/INRIA)
  */
 
 #include <stdio.h>
@@ -16,176 +17,170 @@
 #include "ustring_f.h"
  
 unsigned long offset[6] = {
-         0x00000000UL,
-         0x00003080UL,
-         0x000E2080UL,
-         0x03C82080UL,
-         0xFA082080UL,
-         0x82082080UL
+  0x00000000UL,
+  0x00003080UL,
+  0x000E2080UL,
+  0x03C82080UL,
+  0xFA082080UL,
+  0x82082080UL
 };
 
 typedef struct {
-        CHAR_T  ISOCode [50];
-        CHARSET Charset;
+  CHAR_T  ISOCode [50];
+  CHARSET Charset;
 } CharsetCode;
 
 static CharsetCode CharsetCodeTable[] =
 {
-    {TEXT("ANSI_X3.4-1968"),   US_ASCII},
+    {TEXT("ascii"),            US_ASCII},
+    {TEXT("iso646-US"),        US_ASCII},
+    {TEXT("us-ascii"),         US_ASCII},
+    {TEXT("us"),               US_ASCII},
+#ifdef IV
+    {TEXT("ansi_x3.4-1968"),   US_ASCII},
     {TEXT("iso-ir-6"),         US_ASCII},
     {TEXT("ANSI_X3.4-1986"),   US_ASCII},
-    {TEXT("ISO_646.irv:1991"), US_ASCII},
-    {TEXT("ASCII"),            US_ASCII},
-    {TEXT("ISO646-US"),        US_ASCII},
-    {TEXT("US-ASCII"),         US_ASCII},
-    {TEXT("us"),               US_ASCII},
+    {TEXT("iso_646.irv:1991"), US_ASCII},
     {TEXT("IBM367"),           US_ASCII},
     {TEXT("cp367"),            US_ASCII},
     {TEXT("csASCII"),          US_ASCII},
+#endif
 
-	{TEXT("ISO_8859-1:1987"), ISO_8859_1},
-	{TEXT("iso-ir-100"),      ISO_8859_1},
-	{TEXT("ISO_8859-1"),      ISO_8859_1},
-	{TEXT("ISO-8859-1"),      ISO_8859_1},
-	{TEXT("latin1"),          ISO_8859_1},
-	{TEXT("l1"),              ISO_8859_1},
-	{TEXT("IBM819"),          ISO_8859_1},
-	{TEXT("CP819"),           ISO_8859_1},
-	{TEXT("csISOLatin1"),     ISO_8859_1},
+    {TEXT("iso-8859-1"),      ISO_8859_1},
+    {TEXT("iso_8859-1:1987"), ISO_8859_1},
+    {TEXT("latin1"),          ISO_8859_1},
+#ifdef IV
+    {TEXT("l1"),              ISO_8859_1},
+    {TEXT("IBM819"),          ISO_8859_1},
+    {TEXT("CP819"),           ISO_8859_1},
+    {TEXT("csISOLatin1"),     ISO_8859_1},
+#endif
 
-	{TEXT("ISO_8859-2:1987"), ISO_8859_2},
-	{TEXT("iso-ir-101"),      ISO_8859_2},
-	{TEXT("ISO_8859-2"),      ISO_8859_2},
-	{TEXT("ISO-8859-2"),      ISO_8859_2},
-	{TEXT("latin2"),          ISO_8859_2},
-	{TEXT("l2"),              ISO_8859_2},
-	{TEXT("csISOLatin2"),     ISO_8859_2},
+    {TEXT("iso-8859-2"),      ISO_8859_2},
+    {TEXT("iso_8859-2:1987"), ISO_8859_2},
+    {TEXT("latin2"),          ISO_8859_2},
+#ifdef IV
+    {TEXT("iso-ir-101"),      ISO_8859_2},
+    {TEXT("l2"),              ISO_8859_2},
+    {TEXT("csisoLatin2"),     ISO_8859_2},
+#endif
 
-	{TEXT("ISO_8859-3:1988"), ISO_8859_3},
-	{TEXT("iso-ir-109"),      ISO_8859_3},
-	{TEXT("ISO_8859-3"),      ISO_8859_3},
-	{TEXT("ISO-8859-3"),      ISO_8859_3},
-	{TEXT("latin3"),          ISO_8859_3},
-	{TEXT("l3"),              ISO_8859_3},
-	{TEXT("csISOLatin3"),     ISO_8859_3},
+    {TEXT("iso-8859-3"),      ISO_8859_3},
+    {TEXT("iso_8859-3:1988"), ISO_8859_3},
+    {TEXT("latin3"),          ISO_8859_3},
+#ifdef IV
+    {TEXT("iso-ir-109"),      ISO_8859_3},
+    {TEXT("l3"),              ISO_8859_3},
+    {TEXT("csisoLatin3"),     ISO_8859_3},
+#endif
 
-	{TEXT("ISO_8859-4:1988"), ISO_8859_4},
-	{TEXT("iso-ir-110"),      ISO_8859_4},
-	{TEXT("ISO_8859-4"),      ISO_8859_4},
-	{TEXT("ISO-8859-4"),      ISO_8859_4},
-	{TEXT("latin4"),          ISO_8859_4},
-	{TEXT("l4"),              ISO_8859_4},
-	{TEXT("csISOLatin4"),     ISO_8859_4},
+    {TEXT("iso-8859-4"),      ISO_8859_4},
+    {TEXT("iso_8859-4:1988"), ISO_8859_4},
+    {TEXT("latin4"),          ISO_8859_4},
+#ifdef IV
+    {TEXT("iso-ir-110"),      ISO_8859_4},
+    {TEXT("l4"),              ISO_8859_4},
+    {TEXT("csisoLatin4"),     ISO_8859_4},
+#endif
 
-	{TEXT("ISO_8859-5:1988"),    ISO_8859_5},
-	{TEXT("iso-ir-144"),         ISO_8859_5},
-	{TEXT("ISO_8859-5"),         ISO_8859_5},
-	{TEXT("ISO-8859-5"),         ISO_8859_5},
-	{TEXT("cyrillic"),           ISO_8859_5},
-	{TEXT("csISOLatinCyrillic"), ISO_8859_5},
+    {TEXT("iso-8859-5"),         ISO_8859_5},
+    {TEXT("iso_8859-5:1988"),    ISO_8859_5},
+#ifdef IV
+    {TEXT("iso-ir-144"),         ISO_8859_5},
+    {TEXT("iso_8859-5"),         ISO_8859_5},
+    {TEXT("cyrillic"),           ISO_8859_5},
+    {TEXT("csisoLatinCyrillic"), ISO_8859_5},
+#endif
 
-	{TEXT("ISO_8859-6:1987"),  ISO_8859_6},
-	{TEXT("iso-ir-127"),       ISO_8859_6},
-	{TEXT("ISO_8859-6"),       ISO_8859_6},
-	{TEXT("ISO-8859-6"),       ISO_8859_6},
-	{TEXT("ECMA-114"),         ISO_8859_6},
-	{TEXT("ASMO-708"),         ISO_8859_6},
-	{TEXT("arabic"),           ISO_8859_6},
-	{TEXT("csISOLatinArabic"), ISO_8859_6},
+    {TEXT("iso-8859-6"),       ISO_8859_6},
+    {TEXT("iso_8859-6:1987"),  ISO_8859_6},
+    {TEXT("iso-8859-6"),       ISO_8859_6},
+    {TEXT("arabic"),           ISO_8859_6},
+    {TEXT("ECMA-114"),         ISO_8859_6},
+#ifdef IV
+    {TEXT("iso-ir-127"),       ISO_8859_6},
+    {TEXT("ASMO-708"),         ISO_8859_6},
+    {TEXT("csISOLatinArabic"), ISO_8859_6},
+    {TEXT("ISO_8859-6-E"), ISO_8859_6_E},
+    {TEXT("csISO88596E"),  ISO_8859_6_E},
+    {TEXT("ISO_8859-6-I"), ISO_8859_6_I},
+    {TEXT("csISO88596I"),  ISO_8859_6_I},
+#endif
 
-	{TEXT("ISO_8859-6-E"), ISO_8859_6_E},
-	{TEXT("csISO88596E"),  ISO_8859_6_E},
+    {TEXT("iso-8859-7"),      ISO_8859_7},
+    {TEXT("iso_8859-7:1987"), ISO_8859_7},
+    {TEXT("greek"),           ISO_8859_7},
+    {TEXT("ECMA-118"),        ISO_8859_7},
+#ifdef IV
+    {TEXT("iso-ir-126"),      ISO_8859_7},
+    {TEXT("ELOT_928"),        ISO_8859_7},
+    {TEXT("greek8"),          ISO_8859_7},
+    {TEXT("csISOLatinGreek"), ISO_8859_7},
+#endif
 
-	{TEXT("ISO_8859-6-I"), ISO_8859_6_I},
-	{TEXT("csISO88596I"),  ISO_8859_6_I},
+    {TEXT("iso-8859-8"),       ISO_8859_8},
+    {TEXT("iso_8859-8:1988"),  ISO_8859_8},
+    {TEXT("hebrew"),           ISO_8859_8},
+#ifdef IV
+    {TEXT("iso-ir-138"),       ISO_8859_8},
+    {TEXT("csISOLatinHebrew"), ISO_8859_8},
+    {TEXT("ISO_8859-8-E"), ISO_8859_8_E},
+    {TEXT("csISO88598E"),  ISO_8859_8_E},
+    {TEXT("ISO_8859-8-I"), ISO_8859_8_I},
+    {TEXT("csISO88598I"),  ISO_8859_8_I},
+#endif
 
-	{TEXT("ISO_8859-7:1987"), ISO_8859_7},
-	{TEXT("iso-ir-126"),      ISO_8859_7},
-	{TEXT("ISO_8859-7"),      ISO_8859_7},
-	{TEXT("ISO-8859-7"),      ISO_8859_7},
-	{TEXT("ELOT_928"),        ISO_8859_7},
-	{TEXT("ECMA-118"),        ISO_8859_7},
-	{TEXT("greek"),           ISO_8859_7},
-	{TEXT("greek8"),          ISO_8859_7},
-	{TEXT("csISOLatinGreek"), ISO_8859_7},
+    {TEXT("iso-8859-9"),      ISO_8859_9},
+    {TEXT("iso_8859-9:1989"), ISO_8859_9},
+    {TEXT("latin5"),          ISO_8859_9},
+#ifdef IV
+    {TEXT("iso-ir-148"),      ISO_8859_9},
+    {TEXT("l5"),              ISO_8859_9},
+    {TEXT("csISOLatin5"),     ISO_8859_9},
 
-	{TEXT("ISO_8859-8:1988"),  ISO_8859_8},
-	{TEXT("iso-ir-138"),       ISO_8859_8},
-	{TEXT("ISO_8859-8"),       ISO_8859_8},
-	{TEXT("ISO-8859-8"),       ISO_8859_8},
-	{TEXT("hebrew"),           ISO_8859_8},
-	{TEXT("csISOLatinHebrew"), ISO_8859_8},
+    {TEXT("latin6"),           ISO_8859_10},
+    {TEXT("iso-ir-157"),       ISO_8859_10},
+    {TEXT("l6"),               ISO_8859_10},
+    {TEXT("ISO_8859-10:1992"), ISO_8859_10},
+    {TEXT("csISOLatin6"),      ISO_8859_10},
 
-	{TEXT("ISO_8859-8-E"), ISO_8859_8_E},
-	{TEXT("csISO88598E"),  ISO_8859_8_E},
+    {TEXT("ISO_8859-15"), ISO_8859_15},
+    
+    {TEXT("ISO_8859-supp"), ISO_8859_supp},
+    {TEXT("iso-ir-154"),    ISO_8859_supp},
+    {TEXT("latin1-2-5"),    ISO_8859_supp},
+    {TEXT("csISO8859Supp"), ISO_8859_supp},
+#endif
 
-	{TEXT("ISO_8859-8-I"), ISO_8859_8_I},
-	{TEXT("csISO88598I"),  ISO_8859_8_I},
+    {TEXT("UNICODE-1-1"), UNICODE_1_1},
+    {TEXT("csUnicode11"), UNICODE_1_1},
 
-	{TEXT("ISO_8859-9:1989"), ISO_8859_9},
-	{TEXT("iso-ir-148"),      ISO_8859_9},
-	{TEXT("ISO_8859-9"),      ISO_8859_9},
-	{TEXT("ISO-8859-9"),      ISO_8859_9},
-	{TEXT("latin5"),          ISO_8859_9},
-	{TEXT("l5"),              ISO_8859_9},
-	{TEXT("csISOLatin5"),     ISO_8859_9},
+    {TEXT("UNICODE-1-1-UTF-7"), UNICODE_1_1_UTF_7},
+    {TEXT("csUnicode11UTF7"),   UNICODE_1_1_UTF_7},
 
-	{TEXT("latin6"),           ISO_8859_10},
-	{TEXT("iso-ir-157"),       ISO_8859_10},
-	{TEXT("l6"),               ISO_8859_10},
-	{TEXT("ISO_8859-10:1992"), ISO_8859_10},
-	{TEXT("csISOLatin6"),      ISO_8859_10},
-
-	{TEXT("ISO_8859-15"), ISO_8859_15},
-
-	{TEXT("ISO_8859-supp"), ISO_8859_supp},
-	{TEXT("iso-ir-154"),    ISO_8859_supp},
-	{TEXT("latin1-2-5"),    ISO_8859_supp},
-	{TEXT("csISO8859Supp"), ISO_8859_supp},
-
-
-	{TEXT("UNICODE-1-1"), UNICODE_1_1},
-	{TEXT("csUnicode11"), UNICODE_1_1},
-
-	{TEXT("UNICODE-1-1-UTF-7"), UNICODE_1_1_UTF_7},
-	{TEXT("csUnicode11UTF7"),   UNICODE_1_1_UTF_7},
-
-	{TEXT("UTF-7"), UTF_7},
-
-	{TEXT("UTF-8"), UTF_8},
-
-	{TEXT("windows-1250"), WINDOWS_1250},
-
-	{TEXT("windows-1251"), WINDOWS_1251},
-
-	{TEXT("windows-1252"), WINDOWS_1252},
-
-	{TEXT("windows-1253"), WINDOWS_1253},
-
-	{TEXT("windows-1254"), WINDOWS_1254},
-
-	{TEXT("windows-1255"), WINDOWS_1255},
-
-	{TEXT("windows-1256"), WINDOWS_1256},
-
-	{TEXT("windows-1257"), WINDOWS_1257},
-
-	{TEXT("windows-1258"), WINDOWS_1258},
-
-	{TEXT(""), -1}
+    {TEXT("UTF-7"), UTF_7},
+    {TEXT("UTF-8"), UTF_8},
+    {TEXT("windows-1250"), WINDOWS_1250},
+    {TEXT("windows-1251"), WINDOWS_1251},
+    {TEXT("windows-1252"), WINDOWS_1252},
+    {TEXT("windows-1253"), WINDOWS_1253},
+    {TEXT("windows-1254"), WINDOWS_1254},
+    {TEXT("windows-1255"), WINDOWS_1255},
+    {TEXT("windows-1256"), WINDOWS_1256},
+    {TEXT("windows-1257"), WINDOWS_1257},
+    {TEXT("windows-1258"), WINDOWS_1258},
+    {TEXT(""), UNDEFINED_CHARSET}
 };
 
-CHARSET  CharEncoding = UTF_8;
-ThotBool charset_undefined = FALSE;
 
 /*-------------------------------------------------------------
   uputchar
   -------------------------------------------------------------*/
 #ifdef __STDC__
-int uputchar (int c)
+int     uputchar (int c)
 #else  /* !__STDC__ */
-int uputchar (c)
-int c;
+int     uputchar (c)
+int     c;
 #endif /* !__STDC__ */
 {
 #   ifdef _I18N_
@@ -200,11 +195,11 @@ int c;
   ustrcasecmp: compare two strings without regard to case.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-int ustrcasecmp (const CHAR_T* str1, const CHAR_T* str2)
+int ustrcasecmp (const CHAR_T *str1, const CHAR_T *str2)
 #else  /* __STDC__ */
 int ustrcasecmp (str1, str2)
-const CHAR_T* str1;
-const CHAR_T* str2;
+const CHAR_T *str1;
+const CHAR_T *str2;
 #endif /* __STDC__ */
 {
 #   ifdef _I18N_
@@ -242,11 +237,11 @@ const CHAR_T* str2;
   way that strcat does.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T* ustrcat (CHAR_T* dest, const CHAR_T* src)
+CHAR_T *ustrcat (CHAR_T *dest, const CHAR_T *src)
 #else  /* __STDC__ */
-CHAR_T* ustrcat (dest, src)
-CHAR_T*       dest;
-const CHAR_T* src;
+CHAR_T *ustrcat (dest, src)
+CHAR_T       *dest;
+const CHAR_T *src;
 #endif /* __STDC__ */
 {
 #   ifdef _I18N_
@@ -262,10 +257,10 @@ const CHAR_T* src;
   ustrchr: Find a character in a string.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T* ustrchr (const CHAR_T* src, CHAR_T c)
+CHAR_T *ustrchr (const CHAR_T *src, CHAR_T c)
 #else  /* __STDC__ */
-CHAR_T* ustrchr (src, c)
-const CHAR_T*  src;
+CHAR_T *ustrchr (src, c)
+const CHAR_T  *src;
 CHAR_T         c;
 #endif /* __STDC__ */
 {
@@ -282,11 +277,11 @@ CHAR_T         c;
   ustrcmp: compare strings.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-int ustrcmp (const CHAR_T* str1, const CHAR_T* str2)
+int ustrcmp (const CHAR_T *str1, const CHAR_T *str2)
 #else  /* __STDC__ */
 int ustrcmp (str1, str2)
-const CHAR_T* str1;
-const CHAR_T* str2;
+const CHAR_T *str1;
+const CHAR_T *str2;
 #endif /* __STDC__ */
 {
 #   ifdef _I18N_
@@ -302,11 +297,11 @@ const CHAR_T* str2;
   ustrcoll: compre strings using local-specific information.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-int ustrcoll (const CHAR_T* str1, const CHAR_T* str2)
+int ustrcoll (const CHAR_T *str1, const CHAR_T *str2)
 #else  /* __STDC__ */
 int ustrcoll (str1, str2)
-const CHAR_T* str1;
-const CHAR_T* str2;
+const CHAR_T *str1;
+const CHAR_T *str2;
 #endif /* __STDC__ */
 {
 #   ifdef _I18N_
@@ -324,11 +319,11 @@ const CHAR_T* str2;
   does.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T* ustrcpy (CHAR_T* dest, const CHAR_T* src)
+CHAR_T *ustrcpy (CHAR_T *dest, const CHAR_T *src)
 #else  /* __STDC__ */
-CHAR_T* ustrcpy (dest, src)
-CHAR_T*       dest;
-const CHAR_T* src;
+CHAR_T *ustrcpy (dest, src)
+CHAR_T       *dest;
+const CHAR_T *src;
 #endif /* __STDC__ */
 {
 #   ifdef _I18N_
@@ -344,10 +339,10 @@ const CHAR_T* src;
   ustrdup: duplicate strings.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T* ustrdup (const CHAR_T* str)
+CHAR_T *ustrdup (const CHAR_T *str)
 #else  /* __STDC__ */
-CHAR_T* ustrdup (str)
-const CHAR_T* str;
+CHAR_T *ustrdup (str)
+const CHAR_T *str;
 #endif /* __STDC__ */
 {
 #   ifdef _I18N_
@@ -377,11 +372,11 @@ const CHAR_T* str;
   same way that strcpy does.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T* iso2wc_strcpy (CHAR_T* dest, const char* src)
+CHAR_T     *iso2wc_strcpy (CHAR_T *dest, const char *src)
 #else  /* __STDC__ */
-CHAR_T* iso2wc_strcpy (dest, src)
-CHAR_T*      dest;
-const char* src;
+CHAR_T     *iso2wc_strcpy (dest, src)
+CHAR_T     *dest;
+const char *src;
 #endif /* __STDC__ */
 {
 #   ifdef _I18N_
@@ -403,10 +398,10 @@ const char* src;
   ustrlen: get the length of a string.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-size_t ustrlen (const CHAR_T* str)
+size_t ustrlen (const CHAR_T *str)
 #else  /* __STDC__ */
 size_t ustrlen (str)
-const CHAR_T* str;
+const CHAR_T *str;
 #endif /* __STDC__ */
 {
 #   ifdef _I18N_
@@ -423,11 +418,11 @@ const CHAR_T* str;
                 to case.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-int ustrncasecmp (const CHAR_T* str1, const CHAR_T* str2, unsigned int count)
+int ustrncasecmp (const CHAR_T *str1, const CHAR_T *str2, unsigned int count)
 #else  /* __STDC__ */
 int ustrncasecmp (str1, str2, count)
-const CHAR_T* str1;
-const CHAR_T* str2;
+const CHAR_T *str1;
+const CHAR_T *str2;
 unsigned int  count;
 #endif /* __STDC__ */
 {
@@ -472,11 +467,11 @@ unsigned int  count;
   ustrncat: append n characters of a string src.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T* ustrncat (CHAR_T* dest, const CHAR_T* src, unsigned int count)
+CHAR_T *ustrncat (CHAR_T *dest, const CHAR_T *src, unsigned int count)
 #else  /* __STDC__ */
-CHAR_T* ustrncat (dest, src, count)
-CHAR_T*       dest;
-const CHAR_T* src;
+CHAR_T *ustrncat (dest, src, count)
+CHAR_T       *dest;
+const CHAR_T *src;
 unsigned int  count;
 #endif /* __STDC__ */
 {
@@ -493,11 +488,11 @@ unsigned int  count;
   ustrncmp: compare n characters of str1 and str2.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T* ustrncmp (const CHAR_T* str1, const CHAR_T* str2, unsigned int count)
+CHAR_T       *ustrncmp (const CHAR_T *str1, const CHAR_T *str2, unsigned int count)
 #else  /* __STDC__ */
-CHAR_T* ustrncmp (str1, str2, count)
-const CHAR_T* str1;
-const CHAR_T* str2;
+CHAR_T       *ustrncmp (str1, str2, count)
+const CHAR_T *str1;
+const CHAR_T *str2;
 unsigned int  count;
 #endif /* __STDC__ */
 {
@@ -514,11 +509,11 @@ unsigned int  count;
   ustrncpy: copy n characters of one string to another.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T* ustrncpy (CHAR_T* dest, const CHAR_T* src, unsigned int count)
+CHAR_T       *ustrncpy (CHAR_T *dest, const CHAR_T *src, unsigned int count)
 #else  /* __STDC__ */
-CHAR_T* ustrncpy (dest, src, count)
-CHAR_T*       dest;
-const CHAR_T* src;
+CHAR_T       *ustrncpy (dest, src, count)
+CHAR_T       *dest;
+const CHAR_T *src;
 unsigned int  count;
 #endif /* __STDC__ */
 {
@@ -535,10 +530,10 @@ unsigned int  count;
   ustrrchr: scan a string for the last occurrence of a character.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T* ustrrchr (const CHAR_T* str, CHAR_T c)
+CHAR_T        *ustrrchr (const CHAR_T *str, CHAR_T c)
 #else  /* __STDC__ */
-CHAR_T* ustrrchr (str, c)
-const CHAR_T* str;
+CHAR_T        *ustrrchr (str, c)
+const CHAR_T  *str;
 CHAR_T         c;
 #endif /* __STDC__ */
 {
@@ -555,11 +550,11 @@ CHAR_T         c;
   ustrtok: find the next token in a string.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T* ustrtok (CHAR_T* str, const CHAR_T* delemiter)
+CHAR_T *ustrtok (CHAR_T *str, const CHAR_T *delemiter)
 #else  /* __STDC__ */
-CHAR_T* ustrtok (str, delemiter)
-CHAR_T*       str;
-const CHAR_T* delemiter;
+CHAR_T *ustrtok (str, delemiter)
+CHAR_T       *str;
+const CHAR_T *delemiter;
 #endif /* __STDC__ */
 {
 #   ifdef _I18N_ 
@@ -578,13 +573,12 @@ const CHAR_T* delemiter;
 /*-------------------------------------------------------------
   ustrstr: find a substring.
   -------------------------------------------------------------*/
- 
 #ifdef __STDC__
-CHAR_T* ustrstr (const CHAR_T* str, const CHAR_T* strCharSet)
+CHAR_T        *ustrstr (const CHAR_T *str, const CHAR_T *strCharSet)
 #else  /* __STDC__ */
-CHAR_T* ustrstr (str, strCharSet)
-const CHAR_T* str;
-const CHAR_T* strCharSet;
+CHAR_T        *ustrstr (str, strCharSet)
+const CHAR_T  *str;
+const CHAR_T  *strCharSet;
 #endif /* __STDC__ */
 {
 #   ifdef _I18N_
@@ -600,15 +594,15 @@ const CHAR_T* strCharSet;
   wc2iso_strcasecmp: compare CHAR_T* string to a char* string.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-int wc2iso_strcasecmp (const CHAR_T* str1, const char* str2)
+int           wc2iso_strcasecmp (const CHAR_T *str1, const char *str2)
 #else  /* __STDC__ */
-int wc2iso_strcasecmp (str1, str2)
-const CHAR_T* str1;
-const char*   str2;
+int           wc2iso_strcasecmp (str1, str2)
+const CHAR_T *str1;
+const char   *str2;
 #endif /* __STDC__ */
 {
     int       diff;
-    CHAR_T* wc_str2 = (CHAR_T*) malloc ((strlen (str2) + 1) * sizeof (CHAR_T));
+    CHAR_T *wc_str2 = (CHAR_T*) malloc ((strlen (str2) + 1) * sizeof (CHAR_T));
 
     iso2wc_strcpy (wc_str2, str2);
     diff = ustrcasecmp ((CHAR_T*)str1, (CHAR_T*)wc_str2);
@@ -622,11 +616,11 @@ const char*   str2;
   iso2wc_strcasecmp: compare char* string to a CHAR_T* string.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-int iso2wc_strcasecmp (const char* str1, const CHAR_T* str2)
+int iso2wc_strcasecmp (const char *str1, const CHAR_T *str2)
 #else  /* __STDC__ */
 int iso2wc_strcasecmp (str1, str2)
-const CHAR_T* str1;
-const char*   str2;
+const CHAR_T *str1;
+const char   *str2;
 #endif /* __STDC__ */
 {
     return wc2iso_strcasecmp (str2, str1);
@@ -640,11 +634,11 @@ const char*   str2;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-char* wc2iso_strcpy (char* dest, const CHAR_T* src)
+char         *wc2iso_strcpy (char *dest, const CHAR_T *src)
 #else  /* __STDC__ */
-char* wc2iso_strcpy (dest, src)
-char*         dest;
-const CHAR_T*  src;
+char         *wc2iso_strcpy (dest, src)
+char         *dest;
+const CHAR_T *src;
 #endif /* __STDC__ */
 {
     /* 
@@ -668,11 +662,11 @@ const CHAR_T*  src;
   same way that strcpy does.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-char* wc2iso_strncpy (char* dest, const CHAR_T* src, int count)
+char         *wc2iso_strncpy (char *dest, const CHAR_T *src, int count)
 #else  /* __STDC__ */
-char* wc2iso_strncpy (dest, src, count)
-char*         dest;
-const CHAR_T*  src;
+char         *wc2iso_strncpy (dest, src, count)
+char         *dest;
+const CHAR_T  *src;
 int           count;
 #endif /* __STDC__ */
 {
@@ -694,15 +688,15 @@ int           count;
   The second arg mest be char*
   -------------------------------------------------------------*/
 #ifdef __STDC__
-int wc2iso_strcmp (CHAR_T* str1, const char* str2)
+int wc2iso_strcmp (CHAR_T *str1, const char *str2)
 #else  /* __STDC__ */
 int wc2iso_strcmp (str1, str2)
-const CHAR_T* str1;
-const char*   str2;
+const CHAR_T *str1;
+const char   *str2;
 #endif /* __STDC__ */
 {
     int       diff;
-    CHAR_T* cus_str2 = (CHAR_T*) malloc ((strlen (str2) + 1) * sizeof (CHAR_T));
+    CHAR_T *cus_str2 = (CHAR_T*) malloc ((strlen (str2) + 1) * sizeof (CHAR_T));
 
     iso2wc_strcpy (cus_str2, str2);
     diff = ustrcmp (str1, cus_str2);
@@ -713,27 +707,50 @@ const char*   str2;
 
 
 /*----------------------------------------------------------------------
-  TtaGetCharset: 
+  TtaGetCharset gives the charset 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-CHARSET TtaGetCharset (const CHAR_T* charsetname)
+CHARSET       TtaGetCharset (const CHAR_T *charsetname)
 #else  /* !__STDC__ */
-CHARSET TtaGetCharset (charsetname)
-const CHAR_T* charsetname;
+CHARSET       TtaGetCharset (charsetname)
+const CHAR_T *charsetname;
 #endif /* !__STDC__ */
 {
-    int index = 0;
+  int index = 0;
 
-    if (charsetname == NULL || charsetname[0] == 0)
-       return UNDEFINED_CHARSET;
-
-    while (CharsetCodeTable[index].ISOCode != NULL && CharsetCodeTable[index].ISOCode[0]) {
-          if (!ustrcasecmp (CharsetCodeTable[index].ISOCode, charsetname))
-             return CharsetCodeTable[index].Charset;
-          index++;
-	}
-
+  if (charsetname == NULL || charsetname[0] == 0)
     return UNDEFINED_CHARSET;
+  while (CharsetCodeTable[index].Charset != UNDEFINED_CHARSET)
+    {
+      if (!ustrcasecmp (CharsetCodeTable[index].ISOCode, charsetname))
+	return CharsetCodeTable[index].Charset;
+      index++;
+    }
+  return UNDEFINED_CHARSET;
+}
+
+
+/*----------------------------------------------------------------------
+  TtaGetCharsetName gives the constant string of the charset ISO name.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T      *TtaGetCharsetName (CHARSET charset)
+#else  /* !__STDC__ */
+CHAR_T      *TtaGetCharsetName (charset)
+CHARSET      charset;
+#endif /* !__STDC__ */
+{
+  int index = 0;
+
+  if (UNDEFINED_CHARSET)
+    return NULL;
+  while (CharsetCodeTable[index].Charset != UNDEFINED_CHARSET)
+    {
+      if (CharsetCodeTable[index].Charset == charset)
+	return &(CharsetCodeTable[index].ISOCode);
+      index++;
+    }
+  return NULL;
 }
 
 
@@ -743,165 +760,168 @@ const CHAR_T* charsetname;
   value in a multibyte character string.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int TtaGetNextWideCharFromMultibyteString (CHAR_T* car, unsigned char** txt, CHARSET encoding)
+int            TtaGetNextWideCharFromMultibyteString (CHAR_T *car, unsigned char **txt, CHARSET encoding)
 #else  /* !__STDC__ */
-int TtaGetNextWideCharFromMultibyteString (car, txt, encoding)
-CHAR_T*        car;
-unsigned char* txt;
+int            TtaGetNextWideCharFromMultibyteString (car, txt, encoding)
+CHAR_T        *car;
+unsigned char *txt;
 CHARSET        encoding;
 #endif /* !__STDC__ */
 {
-    int            nbBytesToRead;
-    unsigned char* start = *txt;
-    CHAR_T         res;
+  int            nbBytesToRead;
+  unsigned char *start = *txt;
+  CHAR_T         res;
 
-    switch (encoding) {
-           case ISO_8859_1: 
-                nbBytesToRead = 1;
-                *car = (CHAR_T) *start++;
-                break;
-
-           case ISO_8859_2:
-                nbBytesToRead = 1;
-                *car = TtaGetUnicodeValueFrom_ISO_8859_2_Code (*start);
-                start++;
-                break;
-
-           case ISO_8859_3:
-                nbBytesToRead = 1;
-                *car = TtaGetUnicodeValueFrom_ISO_8859_3_Code (*start);
-                start++;
-                break;
-
-           case ISO_8859_4:
-                nbBytesToRead = 1;
-                *car = TtaGetUnicodeValueFrom_ISO_8859_4_Code (*start);
-                start++;
-                break;
-
-           case ISO_8859_5:
-                nbBytesToRead = 1;
-                *car = TtaGetUnicodeValueFrom_ISO_8859_5_Code (*start);
-                start++;
-                break;
-
-           case ISO_8859_6:
-                nbBytesToRead = 1;
-                *car = TtaGetUnicodeValueFrom_ISO_8859_6_Code (*start);
-                start++;
-                break;
-
-           case ISO_8859_7:
-                nbBytesToRead = 1;
-                *car = TtaGetUnicodeValueFrom_ISO_8859_7_Code (*start);
-                start++;
-                break;
-
-           case ISO_8859_8:
-                nbBytesToRead = 1;
-                *car = TtaGetUnicodeValueFrom_ISO_8859_8_Code (*start);
-                start++;
-                break;
-
-           case ISO_8859_9:
-                nbBytesToRead = 1;
-                *car = TtaGetUnicodeValueFrom_ISO_8859_9_Code (*start);
-                start++;
-                break;
-
-           case WINDOWS_1250:
-                nbBytesToRead = 1;
-                *car = TtaGetUnicodeValueFromWindows1250CP (*start);
-                start++;
-                break;
-
-           case WINDOWS_1251:
-                nbBytesToRead = 1;
-                *car = TtaGetUnicodeValueFromWindows1251CP (*start);
-                start++;
-                break;
-
-           case WINDOWS_1252:
-                nbBytesToRead = 1;
-                *car = TtaGetUnicodeValueFromWindows1252CP (*start);
-                start++;
-                break;
-
-           case WINDOWS_1253:
-                nbBytesToRead = 1;
-                *car = TtaGetUnicodeValueFromWindows1253CP (*start);
-                start++;
-                break;
-
-           case WINDOWS_1254:
-                nbBytesToRead = 1;
-                *car = TtaGetUnicodeValueFromWindows1254CP (*start);
-                start++;
-                break;
-
-           case WINDOWS_1255:
-                nbBytesToRead = 1;
-                *car = TtaGetUnicodeValueFromWindows1255CP (*start);
-                start++;
-                break;
-
-           case WINDOWS_1256:
-                nbBytesToRead = 1;
-                *car = TtaGetUnicodeValueFromWindows1256CP (*start);
-                start++;
-                break;
-
-           case WINDOWS_1257:
-                nbBytesToRead = 1;
-                *car = TtaGetUnicodeValueFromWindows1257CP (*start);
-                start++;
-                break;
-
-           case UTF_8:
-                if (*start < 0xC0)
-                   nbBytesToRead = 1;
-                else if (*start < 0xE0)
-                     nbBytesToRead = 2;
-                else if (*start < 0xF0)
-                     nbBytesToRead = 3;
-                else if (*start < 0xF8)
-                     nbBytesToRead = 4;
-                else if (*start < 0xFC)
-                     nbBytesToRead = 5;
-                else if (*start <= 0xFF)
-                     nbBytesToRead = 6;
-            
-                res = 0;
-
-                /* See how many bytes to read to build a wide character */
-                switch (nbBytesToRead) {        /** WARNING: There is not break statement between cases */
-                       case 6: res += *start++;
-                               res <<= 6;
-
-                       case 5: res += *start++;
-                               res <<= 6;
-            
-                       case 4: res += *start++;
-                               res <<= 6;
-
-                       case 3: res += *start++;
-                               res <<= 6;
-
-                       case 2: res += *start++;
-                               res <<= 6;
-            
-                       case 1: res += *start++;
-				}
-                res -= offset[nbBytesToRead - 1];
-
-                if (res <= 0xFFFF)
-                   *car = res;
-                else 
-                    *car = TEXT('?');    
-                break;
+  switch (encoding)
+    {
+    case ISO_8859_1: 
+      nbBytesToRead = 1;
+      *car = (CHAR_T) *start++;
+      break;
+      
+    case ISO_8859_2:
+      nbBytesToRead = 1;
+      *car = TtaGetUnicodeValueFrom_ISO_8859_2_Code (*start);
+      start++;
+      break;
+      
+    case ISO_8859_3:
+      nbBytesToRead = 1;
+      *car = TtaGetUnicodeValueFrom_ISO_8859_3_Code (*start);
+      start++;
+      break;
+      
+    case ISO_8859_4:
+      nbBytesToRead = 1;
+      *car = TtaGetUnicodeValueFrom_ISO_8859_4_Code (*start);
+      start++;
+      break;
+      
+    case ISO_8859_5:
+      nbBytesToRead = 1;
+      *car = TtaGetUnicodeValueFrom_ISO_8859_5_Code (*start);
+      start++;
+      break;
+      
+    case ISO_8859_6:
+      nbBytesToRead = 1;
+      *car = TtaGetUnicodeValueFrom_ISO_8859_6_Code (*start);
+      start++;
+      break;
+      
+    case ISO_8859_7:
+      nbBytesToRead = 1;
+      *car = TtaGetUnicodeValueFrom_ISO_8859_7_Code (*start);
+      start++;
+      break;
+      
+    case ISO_8859_8:
+      nbBytesToRead = 1;
+      *car = TtaGetUnicodeValueFrom_ISO_8859_8_Code (*start);
+      start++;
+      break;
+      
+    case ISO_8859_9:
+      nbBytesToRead = 1;
+      *car = TtaGetUnicodeValueFrom_ISO_8859_9_Code (*start);
+      start++;
+      break;
+      
+    case WINDOWS_1250:
+      nbBytesToRead = 1;
+      *car = TtaGetUnicodeValueFromWindows1250CP (*start);
+      start++;
+      break;
+      
+    case WINDOWS_1251:
+      nbBytesToRead = 1;
+      *car = TtaGetUnicodeValueFromWindows1251CP (*start);
+      start++;
+      break;
+      
+    case WINDOWS_1252:
+      nbBytesToRead = 1;
+      *car = TtaGetUnicodeValueFromWindows1252CP (*start);
+      start++;
+      break;
+      
+    case WINDOWS_1253:
+      nbBytesToRead = 1;
+      *car = TtaGetUnicodeValueFromWindows1253CP (*start);
+      start++;
+      break;
+      
+    case WINDOWS_1254:
+      nbBytesToRead = 1;
+      *car = TtaGetUnicodeValueFromWindows1254CP (*start);
+      start++;
+      break;
+      
+    case WINDOWS_1255:
+      nbBytesToRead = 1;
+      *car = TtaGetUnicodeValueFromWindows1255CP (*start);
+      start++;
+      break;
+      
+    case WINDOWS_1256:
+      nbBytesToRead = 1;
+      *car = TtaGetUnicodeValueFromWindows1256CP (*start);
+      start++;
+      break;
+      
+    case WINDOWS_1257:
+      nbBytesToRead = 1;
+      *car = TtaGetUnicodeValueFromWindows1257CP (*start);
+      start++;
+      break;
+      
+    case UTF_8:
+      if (*start < 0xC0)
+	nbBytesToRead = 1;
+      else if (*start < 0xE0)
+	nbBytesToRead = 2;
+      else if (*start < 0xF0)
+	nbBytesToRead = 3;
+      else if (*start < 0xF8)
+	nbBytesToRead = 4;
+      else if (*start < 0xFC)
+	nbBytesToRead = 5;
+      else if (*start <= 0xFF)
+	nbBytesToRead = 6;
+      
+      res = 0;
+      
+      /* See how many bytes to read to build a wide character */
+      switch (nbBytesToRead)
+	{
+	  /** WARNING: There is not break statement between cases */
+	case 6: res += *start++;
+	  res <<= 6;
+	  
+	case 5: res += *start++;
+	  res <<= 6;
+	  
+	case 4: res += *start++;
+	  res <<= 6;
+	  
+	case 3: res += *start++;
+	  res <<= 6;
+	  
+	case 2: res += *start++;
+	  res <<= 6;
+	  
+	case 1: res += *start++;
 	}
-
-    return nbBytesToRead;
+      res -= offset[nbBytesToRead - 1];
+      
+      if (res <= 0xFFFF)
+	*car = res;
+      else 
+	*car = TEXT('?');    
+      break;
+    }
+  
+  return nbBytesToRead;
 }
 #endif /* _I18N_ */
 

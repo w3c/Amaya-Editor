@@ -1,3 +1,4 @@
+
 /* Beginning of labels */
 #define AM_FILES		0
 #define AM_OPEN_URL		1

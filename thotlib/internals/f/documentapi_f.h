@@ -8,8 +8,8 @@
 
 extern void CreateWithException ( PtrElement pEl,
                                   PtrDocument pDoc );
-extern CHARSET TtaGetDocumentCharset ( PtrDocument pDoc );
-extern void TtaSetDocumentCharset ( PtrDocument pDoc,
+extern CHARSET TtaGetDocumentCharset ( Document document );
+extern void TtaSetDocumentCharset ( Document document,
                                     CHARSET charSet );
 extern Document TtaOpenDocument ( STRING documentName,
                                   int accessMode );
@@ -85,8 +85,8 @@ extern PtrDocument DocToPtr ( Document document );
 
 extern void CreateWithException (/* PtrElement pEl,
                                     PtrDocument pDoc */);
-extern CHARSET TtaGetDocumentCharset (/* PtrDocument pDoc */);
-extern void TtaSetDocumentCharset (/* PtrDocument pDoc,
+extern CHARSET TtaGetDocumentCharset (/* Document document */);
+extern void TtaSetDocumentCharset (/* Document document,
                                       CHARSET charSet */);
 extern Document TtaOpenDocument (/* STRING documentName,
                                     int accessMode */);

@@ -72,24 +72,22 @@ static CHAR_T         fileName[MAX_PATH];
 /* file extension */
 static CHAR_T         fileExtension[MAX_PATH];
 
-extern CHARSET        CharEncoding;
 
-#include "tree_f.h"
-
-#include "callback_f.h"
-#include "translation_f.h"
 #include "absboxes_f.h"
+#include "applicationapi_f.h"
+#include "callback_f.h"
+#include "content_f.h"
+#include "externalref_f.h"
+#include "fileaccess_f.h"
 #include "memory_f.h"
-
 #include "readprs_f.h"
 #include "references_f.h"
-#include "externalref_f.h"
 #include "schemas_f.h"
 #include "schtrad_f.h"
-#include "fileaccess_f.h"
 #include "structschema_f.h"
-#include "content_f.h"
-#include "applicationapi_f.h"
+#include "translation_f.h"
+#include "tree_f.h"
+
 
 /*----------------------------------------------------------------------
    GetSecondaryFile
@@ -164,22 +162,17 @@ ThotBool	    open;
    est ecrit dans le fichier des que la longueur limite des lignes 
    est atteinte.                                                   
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         PutChar (UCHAR_T c, int fileNum, STRING outBuffer,
-			     PtrDocument pDoc, ThotBool lineBreak,
-			     CHARSET encoding)
-
+			     PtrDocument pDoc, ThotBool lineBreak)
 #else  /* __STDC__ */
-static void         PutChar (c, fileNum, outBuffer, pDoc, lineBreak, encoding)
+static void         PutChar (c, fileNum, outBuffer, pDoc, lineBreak)
 UCHAR_T             c;
 int                 fileNum;
 STRING              outBuffer;
 PtrDocument         pDoc;
 ThotBool            lineBreak;
-CHARSET             encoding;
 #endif /* __STDC__ */
-
 {
    int                 i, j, indent;
    PtrTSchema          pTSch;
@@ -216,7 +209,7 @@ CHARSET             encoding;
 	 /* pas de longueur max. des lignes de sortie, on ecrit */
 	 /* directement le caractere dans le fichier de sortie */
 #ifdef _I18N_ 
-	 nb_bytes2write = TtaWC2MB (c, mbc, CharEncoding);
+	 nb_bytes2write = TtaWC2MB (c, mbc, pDoc->DocCharset);
 	 for (index = 0; index < nb_bytes2write; index++)
 	   putc (mbc[index], fileDesc);
 #else  /* !_I18N_ */
@@ -231,8 +224,7 @@ CHARSET             encoding;
 	 for (i = 0; i < OutputFile[fileNum].OfBufferLen; i++)
 	   {
 #ifdef _I18N_
-	   nb_bytes2write = TtaWC2MB (OutputFile[fileNum].OfBuffer[i], mbc,
-				      CharEncoding);
+	   nb_bytes2write = TtaWC2MB (OutputFile[fileNum].OfBuffer[i], mbc, pDoc->DocCharset);
 	   for (index = 0; index < nb_bytes2write; index++)
 	     putc (mbc[index], fileDesc);
 #else  /* !_I18N_ */
@@ -254,8 +246,7 @@ CHARSET             encoding;
 	   for (i = 0; i < OutputFile[fileNum].OfBufferLen; i++)
 	     {
 #ifdef _I18N_
-	     nb_bytes2write = TtaWC2MB (OutputFile[fileNum].OfBuffer[i], mbc,
-					CharEncoding);
+	     nb_bytes2write = TtaWC2MB (OutputFile[fileNum].OfBuffer[i], mbc, pDoc->DocCharset);
 	     for (index = 0; index < nb_bytes2write; index++)
 	       putc (mbc[index], fileDesc);
 #else  /* !_I18N_ */
@@ -309,7 +300,7 @@ CHARSET             encoding;
 		   {
 #ifdef _I18N_
 		   nb_bytes2write = TtaWC2MB (OutputFile[fileNum].OfBuffer[j],
-					      mbc, CharEncoding);
+					      mbc, pDoc->DocCharset);
 		   for (index = 0; index < nb_bytes2write; index++)
 		     putc (mbc[index], fileDesc);
 #else  /* !_I18N_ */
@@ -362,12 +353,11 @@ CHARSET             encoding;
 #ifdef __STDC__
 static void PutColor (int n, int fileNum, PtrDocument pDoc, ThotBool lineBreak)
 #else  /* __STDC__ */
-static void PutColor (n, fileNum, pDoc, lineBreak)
+static void         PutColor (n, fileNum, pDoc, lineBreak)
 int                 n;
 int                 fileNum;
 PtrDocument         pDoc;
 ThotBool            lineBreak;
-
 #endif /* __STDC__ */
 {
    int                 i;
@@ -378,7 +368,7 @@ ThotBool            lineBreak;
      ptr = Color_Table[n];
      i = 0;
      while (ptr[i] != EOS)
-       PutChar (ptr[i++], fileNum, NULL, pDoc, lineBreak, CharEncoding);
+       PutChar (ptr[i++], fileNum, NULL, pDoc, lineBreak);
      }
 }
 
@@ -386,17 +376,14 @@ ThotBool            lineBreak;
    PutPattern  sort dans fichier le nom du motif qui se trouve au	
    rang n dans la table des motifs.				
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-static void PutPattern (int n, int fileNum, PtrDocument pDoc,
-			ThotBool lineBreak)
+static void PutPattern (int n, int fileNum, PtrDocument pDoc, ThotBool lineBreak)
 #else  /* __STDC__ */
 static void         PutPattern (n, fileNum, pDoc, lineBreak)
 int                 n;
 int                 fileNum;
 PtrDocument         pDoc;
 ThotBool            lineBreak;
-
 #endif /* __STDC__ */
 {
    int                 i;
@@ -407,7 +394,7 @@ ThotBool            lineBreak;
      ptr = Patterns[n];
      i = 0;
      while (ptr[i] != EOS)
-       PutChar (ptr[i++], fileNum, NULL, pDoc, lineBreak, CharEncoding);
+       PutChar (ptr[i++], fileNum, NULL, pDoc, lineBreak);
      }
 }
 
@@ -437,7 +424,7 @@ ThotBool            lineBreak;
    usprintf (buffer, TEXT("%d"), n);
    i = 0;
    while (buffer[i] != EOS)
-      PutChar (buffer[i++], fileNum, outBuffer, pDoc, lineBreak, CharEncoding);
+      PutChar (buffer[i++], fileNum, outBuffer, pDoc, lineBreak);
 }
 
 /*----------------------------------------------------------------------
@@ -649,7 +636,7 @@ PtrDocument     pDoc;
 	   while (pTSch->TsCharTransl[ft - 1].StTarget[j] != EOS)
 	     {
 	     PutChar (pTSch->TsCharTransl[ft - 1].StTarget[j], fileNum, NULL,
-		      pDoc, lineBreak, CharEncoding);
+		      pDoc, lineBreak);
 	     j++;
 	     }
 	   /* prepare la prochaine recherche dans la table */
@@ -684,7 +671,7 @@ PtrDocument     pDoc;
 	  {
 	  ft = textTransBegin;
 	  if (c != WC_EOS)
-	    PutChar (c, fileNum, NULL, pDoc, lineBreak, CharEncoding);
+	    PutChar (c, fileNum, NULL, pDoc, lineBreak);
 	  }
 	else
 	  /* on avait commence' a analyser une sequence de caracteres. */
@@ -704,8 +691,7 @@ PtrDocument     pDoc;
 	    i = pBufT->BuLength + i - b;
 	    }
 	  if (c != WC_EOS)
-	    PutChar (pBufT->BuContent[i - 1], fileNum, NULL, pDoc, lineBreak,
-		     CharEncoding);
+	    PutChar (pBufT->BuContent[i - 1], fileNum, NULL, pDoc, lineBreak);
 	  b = 0;
 	  ft = textTransBegin;
 	  lt = textTransEnd;
@@ -728,8 +714,7 @@ PtrDocument     pDoc;
    /* Si on a commence' a analyser une sequence de caracteres, */
    /* on sort le debut de la sequence. */
    for (i = 0; i <= b - 1; i++)
-     PutChar (pTSch->TsCharTransl[ft - 1].StSource[i], fileNum, NULL, pDoc,
-	      lineBreak, CharEncoding);
+     PutChar (pTSch->TsCharTransl[ft - 1].StSource[i], fileNum, NULL, pDoc, lineBreak);
 }
 
 /*----------------------------------------------------------------------
@@ -784,8 +769,7 @@ PtrDocument         pDoc;
 	     {
 	     i = 0;
 	     while (pBufT->BuContent[i] != EOS)
-	       PutChar (pBufT->BuContent[i++], fileNum, NULL, pDoc, lineBreak,
-			CharEncoding);
+	       PutChar (pBufT->BuContent[i++], fileNum, NULL, pDoc, lineBreak);
 	     pBufT = pBufT->BuNext;
 	     }
 	 else if (pTSch != NULL)
@@ -823,7 +807,7 @@ PtrDocument         pDoc;
 	   /* pas de traduction */
 	   {
 	   if (c != WC_EOS)
-	     PutChar (c, fileNum, NULL, pDoc, lineBreak, CharEncoding);
+	     PutChar (c, fileNum, NULL, pDoc, lineBreak);
 	   }
 	 else
 	   /* on traduit l'element */
@@ -839,15 +823,14 @@ PtrDocument         pDoc;
 	     pTrans = &pTSch->TsCharTransl[ft - 1];
 	     while (pTrans->StTarget[b] != EOS)
 	       {
-	       PutChar (pTrans->StTarget[b], fileNum, NULL, pDoc, lineBreak,
-			CharEncoding);
+	       PutChar (pTrans->StTarget[b], fileNum, NULL, pDoc, lineBreak);
 	       b++;
 	       }
 	     }
 	   else
 	     /* ce symbole ne se traduit pas */
 	     if (c != WC_EOS)
-	       PutChar (c, fileNum, NULL, pDoc, lineBreak, CharEncoding);
+	       PutChar (c, fileNum, NULL, pDoc, lineBreak);
 	   }
 	 if (pEl->ElLeafType == LtPolyLine)
 	   if (pEl->ElNPoints > 0)
@@ -860,14 +843,10 @@ PtrDocument         pDoc;
 	       {
 	       for (i = 0; i < pBufT->BuLength; i++)
 		 {
-		 PutChar (TEXT(' '), fileNum, NULL, pDoc, lineBreak,
-			  CharEncoding);
-		 PutInt (pBufT->BuPoints[i].XCoord, fileNum, NULL, pDoc,
-			 lineBreak);
-		 PutChar (TEXT(','), fileNum, NULL, pDoc, lineBreak,
-			  CharEncoding);
-		 PutInt (pBufT->BuPoints[i].YCoord, fileNum, NULL, pDoc,
-			 lineBreak);
+		 PutChar (TEXT(' '), fileNum, NULL, pDoc, lineBreak);
+		 PutInt (pBufT->BuPoints[i].XCoord, fileNum, NULL, pDoc, lineBreak);
+		 PutChar (TEXT(','), fileNum, NULL, pDoc, lineBreak);
+		 PutInt (pBufT->BuPoints[i].YCoord, fileNum, NULL, pDoc, lineBreak);
 		 }
 	       pBufT = pBufT->BuNext;
 	       }
@@ -2332,8 +2311,7 @@ ThotBool            lineBreak;
 	 i = pTSch->TsConstBegin[varItem->TvItem - 1];
 	 while (pTSch->TsConstant[i - 1] != EOS)
 	   {
-	   PutChar (pTSch->TsConstant[i - 1], fileNum, outBuffer, pDoc,
-		    lineBreak, CharEncoding);
+	   PutChar (pTSch->TsConstant[i - 1], fileNum, outBuffer, pDoc, lineBreak);
 	   i++;
 	   }
 	 break;
@@ -2379,16 +2357,14 @@ ThotBool            lineBreak;
 	     {
 	     j = j * 10;
 	     if (j > i)
-	       PutChar (TEXT('0'), fileNum, outBuffer, pDoc, lineBreak,
-			CharEncoding);
+	       PutChar (TEXT('0'), fileNum, outBuffer, pDoc, lineBreak);
 	     }
 	   }
 	 /* convertit la valeur du compteur dans le style demande' */
 	 GetCounterValue (i, varItem->TvCounterStyle, number, &j);
 	 /* sort la valeur du compteur */
 	 for (k = 0; k < j; k++)
-	   PutChar (number[k], fileNum, outBuffer, pDoc, lineBreak,
-		    CharEncoding);
+	   PutChar (number[k], fileNum, outBuffer, pDoc, lineBreak);
 	 break;
 
        case VtBuffer:
@@ -2397,7 +2373,7 @@ ThotBool            lineBreak;
 	 while (pTSch->TsBuffer[varItem->TvItem - 1][i] != EOS)
 	   {
 	   PutChar (pTSch->TsBuffer[varItem->TvItem - 1][i], fileNum,
-		    outBuffer, pDoc, lineBreak, CharEncoding);
+		    outBuffer, pDoc, lineBreak);
 	   i++;
 	   }
 	 break;
@@ -2433,25 +2409,21 @@ ThotBool            lineBreak;
 		 {
 		 i = 0;
 		 while (i < pBuf->BuLength)
-		   PutChar (pBuf->BuContent[i++], fileNum, outBuffer, pDoc,
-			    FALSE, CharEncoding);
+		   PutChar (pBuf->BuContent[i++], fileNum, outBuffer, pDoc, FALSE);
 		 pBuf = pBuf->BuNext;
 		 }
 	       break;
 	     case AtReferenceAttr:
-	       PutChar (TEXT('R'), fileNum, outBuffer, pDoc, lineBreak,
-			CharEncoding);
-	       PutChar (TEXT('E'), fileNum, outBuffer, pDoc, lineBreak,
-			CharEncoding);
-	       PutChar (TEXT('F'), fileNum, outBuffer, pDoc, lineBreak,
-			CharEncoding);
+	       PutChar (TEXT('R'), fileNum, outBuffer, pDoc, lineBreak);
+	       PutChar (TEXT('E'), fileNum, outBuffer, pDoc, lineBreak);
+	       PutChar (TEXT('F'), fileNum, outBuffer, pDoc, lineBreak);
 	       break;
 	     case AtEnumAttr:
 	       i = 0;
 	       attrTrans = &pA->AeAttrSSchema->SsAttribute[varItem->TvItem-1];
 	       while (attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i] != EOS)
 		 PutChar (attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i++],
-			  fileNum, outBuffer, pDoc, lineBreak, CharEncoding);
+			  fileNum, outBuffer, pDoc, lineBreak);
 	       break;
 	     }
 	   }
@@ -2460,36 +2432,31 @@ ThotBool            lineBreak;
        case VtFileDir:	/* le nom du directory de sortie */
 	 i = 0;
 	 while (fileDirectory[i] != WC_EOS)
-	   PutChar (fileDirectory[i++], fileNum, outBuffer, pDoc, lineBreak,
-		    CharEncoding);
+	   PutChar (fileDirectory[i++], fileNum, outBuffer, pDoc, lineBreak);
 	 break;
 
        case VtFileName:	/* le nom du fichier de sortie */
 	 i = 0;
 	 while (fileName[i] != WC_EOS)
-	   PutChar (fileName[i++], fileNum, outBuffer, pDoc, lineBreak,
-		    CharEncoding);
+	   PutChar (fileName[i++], fileNum, outBuffer, pDoc, lineBreak);
 	 break;
 	 
        case VtExtension:	/* le nom de l'extension de fichier */
 	 i = 0;
 	 while (fileExtension[i] != WC_EOS)
-	   PutChar (fileExtension[i++], fileNum, outBuffer, pDoc, lineBreak,
-		    CharEncoding);
+	   PutChar (fileExtension[i++], fileNum, outBuffer, pDoc, lineBreak);
 	 break;
 
        case VtDocumentName:	/* le nom du document */
 	 i = 0;
 	 while (pDoc->DocDName[i] != WC_EOS)
-	   PutChar (pDoc->DocDName[i++], fileNum, outBuffer, pDoc, lineBreak,
-		    CharEncoding);
+	   PutChar (pDoc->DocDName[i++], fileNum, outBuffer, pDoc, lineBreak);
 	 break;
 
        case VtDocumentDir:	/* le repertoire du document */
 	 i = 0;
 	 while (pDoc->DocDirectory[i] != WC_EOS)
-	   PutChar (pDoc->DocDirectory[i++], fileNum, outBuffer, pDoc,
-		    lineBreak, CharEncoding);
+	   PutChar (pDoc->DocDirectory[i++], fileNum, outBuffer, pDoc, lineBreak);
 	 break;
 
        default:
@@ -2607,8 +2574,7 @@ ThotBool            recordLineNb;
 	   i = pTSch->TsConstBegin[pTRule->TrObjectNum - 1];
 	   while (pTSch->TsConstant[i - 1] != WC_EOS)
 	     {
-	     PutChar (pTSch->TsConstant[i - 1], fileNum, NULL, pDoc,
-		      *lineBreak, CharEncoding);
+	     PutChar (pTSch->TsConstant[i - 1], fileNum, NULL, pDoc, *lineBreak);
 	     i++;
 	     }
 	   break;
@@ -2618,12 +2584,12 @@ ThotBool            recordLineNb;
 	   i = 0;
 	   while (pTSch->TsBuffer[pTRule->TrObjectNum - 1][i] != WC_EOS)
 	     PutChar (pTSch->TsBuffer[pTRule->TrObjectNum - 1][i++], fileNum,
-		      NULL, pDoc, *lineBreak, CharEncoding);
+		      NULL, pDoc, *lineBreak);
 	   break;
 
 	 case ToVariable:	/* creation d'une variable */
 	   PutVariable (pEl, pAttr, pTSch, pSSch, pTRule->TrObjectNum,
-			pTRule->TrReferredObj, NULL, fileNum, pDoc,*lineBreak);
+			pTRule->TrReferredObj, NULL, fileNum, pDoc, *lineBreak);
 	   break;
 
 	 case ToAttr:
@@ -2668,8 +2634,7 @@ ThotBool            recordLineNb;
 		       {
 		       i = 0;
 		       while (i < pBuf->BuLength)
-			 PutChar (pBuf->BuContent[i++], fileNum, NULL, pDoc,
-				  FALSE, CharEncoding);
+			 PutChar (pBuf->BuContent[i++], fileNum, NULL, pDoc, FALSE);
 		       pBuf = pBuf->BuNext;
 		       }
 		   else
@@ -2688,7 +2653,7 @@ ThotBool            recordLineNb;
 		 while (attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i] !=
 			WC_EOS)
 		   PutChar (attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i++],
-			    fileNum, NULL, pDoc, *lineBreak, CharEncoding);
+			    fileNum, NULL, pDoc, *lineBreak);
 		 break;
 	       default:
 		 break;
@@ -2713,8 +2678,7 @@ ThotBool            recordLineNb;
 		 case PtUnderline:
 		 case PtThickness:
 		 case PtLineStyle:
-		   PutChar (pRPres->PrChrValue, fileNum, NULL, pDoc,
-			    *lineBreak, CharEncoding);
+		   PutChar (pRPres->PrChrValue, fileNum, NULL, pDoc, *lineBreak);
 		   break;
 		 case PtIndent:
 		 case PtSize:
@@ -2732,30 +2696,24 @@ ThotBool            recordLineNb;
 		 case PtJustify:
 		 case PtHyphenate:
 		   if (pRPres->PrJustify)
-		     PutChar (TEXT('Y'), fileNum, NULL, pDoc, *lineBreak,
-			      CharEncoding);
+		     PutChar (TEXT('Y'), fileNum, NULL, pDoc, *lineBreak);
 		   else
-		     PutChar (TEXT('N'), fileNum, NULL, pDoc, *lineBreak,
-			      CharEncoding);
+		     PutChar (TEXT('N'), fileNum, NULL, pDoc, *lineBreak);
 		   break;
 		 case PtAdjust:
 		   switch (pRPres->PrAdjust)
 		     {
 		     case AlignLeft:
-		       PutChar (TEXT('L'), fileNum, NULL, pDoc, *lineBreak,
-				CharEncoding);
+		       PutChar (TEXT('L'), fileNum, NULL, pDoc, *lineBreak);
 		       break;
 		     case AlignRight:
-		       PutChar (TEXT('R'), fileNum, NULL, pDoc, *lineBreak,
-				CharEncoding);
+		       PutChar (TEXT('R'), fileNum, NULL, pDoc, *lineBreak);
 		       break;
 		     case AlignCenter:
-		       PutChar (TEXT('C'), fileNum, NULL, pDoc, *lineBreak,
-				CharEncoding);
+		       PutChar (TEXT('C'), fileNum, NULL, pDoc, *lineBreak);
 		       break;
 		     case AlignLeftDots:
-		       PutChar (TEXT('D'), fileNum, NULL, pDoc, *lineBreak,
-				CharEncoding);
+		       PutChar (TEXT('D'), fileNum, NULL, pDoc, *lineBreak);
 		       break;
 		     }
 		   break;
@@ -2771,8 +2729,7 @@ ThotBool            recordLineNb;
 	     {
 	     i = 0;
 	     while (i < pBuf->BuLength)
-	       PutChar (pBuf->BuContent[i++], fileNum, NULL, pDoc, *lineBreak,
-			CharEncoding);
+	       PutChar (pBuf->BuContent[i++], fileNum, NULL, pDoc, *lineBreak);
 	     pBuf = pBuf->BuNext;
 	     }
 	   break;
@@ -2806,37 +2763,32 @@ ThotBool            recordLineNb;
 	   /* produit le nom du directory */
 	   i = 0;
 	   while (fileDirectory[i] != WC_EOS)
-	     PutChar (fileDirectory[i++], fileNum, NULL, pDoc, *lineBreak,
-		      CharEncoding);
+	     PutChar (fileDirectory[i++], fileNum, NULL, pDoc, *lineBreak);
 	   break;
 
 	 case ToFileName:
 	   /* produit le nom de fichier */
 	   i = 0;
 	   while (fileName[i] != WC_EOS)
-	     PutChar (fileName[i++], fileNum, NULL, pDoc, *lineBreak,
-		      CharEncoding);
+	     PutChar (fileName[i++], fileNum, NULL, pDoc, *lineBreak);
 	   break;
 
 	 case ToExtension:
 	   i = 0;
 	   while (fileExtension[i] != WC_EOS)
-	     PutChar (fileExtension[i++], fileNum, NULL, pDoc, *lineBreak,
-		      CharEncoding);
+	     PutChar (fileExtension[i++], fileNum, NULL, pDoc, *lineBreak);
 	   break;
 
 	 case ToDocumentName:
 	   i = 0;
 	   while (pDoc->DocDName[i] != WC_EOS)
-	     PutChar (pDoc->DocDName[i++], fileNum, NULL, pDoc, *lineBreak,
-		      CharEncoding);
+	     PutChar (pDoc->DocDName[i++], fileNum, NULL, pDoc, *lineBreak);
 	   break;
 
 	 case ToDocumentDir:
 	   i = 0;
 	   while (pDoc->DocDirectory[i] != WC_EOS)
-	     PutChar (pDoc->DocDirectory[i++], fileNum, NULL, pDoc, *lineBreak,
-		      CharEncoding);
+	     PutChar (pDoc->DocDirectory[i++], fileNum, NULL, pDoc, *lineBreak);
 	   break;
 
 	 case ToReferredDocumentName:
@@ -2892,8 +2844,7 @@ ThotBool            recordLineNb;
 	     if (nameBuffer != NULL)
 	       while (*nameBuffer != WC_EOS)
 		 {
-		 PutChar (*nameBuffer, fileNum, NULL, pDoc, *lineBreak,
-			  CharEncoding);
+		 PutChar (*nameBuffer, fileNum, NULL, pDoc, *lineBreak);
 		 nameBuffer++;
 		 }
 	     }
@@ -3005,8 +2956,7 @@ ThotBool            recordLineNb;
 			   i = 0;
 			   while (pRef->RdReferred->ReReferredLabel[i] != EOS)
 			     PutChar (pRef->RdReferred->ReReferredLabel[i++],
-				      fileNum, NULL, pDoc, *lineBreak,
-				      CharEncoding);
+				      fileNum, NULL, pDoc, *lineBreak);
 			 }
 		 }
 	     }
@@ -3078,8 +3028,7 @@ ThotBool            recordLineNb;
 	     {
 	     i = 0;
 	     while (pElGet->ElLabel[i] != WC_EOS)
-	       PutChar (pElGet->ElLabel[i++], fileNum, NULL, pDoc, *lineBreak,
-			CharEncoding);
+	       PutChar (pElGet->ElLabel[i++], fileNum, NULL, pDoc, *lineBreak);
 	     }
 	   break;
 
@@ -3104,7 +3053,7 @@ ThotBool            recordLineNb;
 	   for (i = 0; i < OutputFile[1].OfBufferLen; i++) {
 #ifdef _I18N_
 	     nb_bytes2write = TtaWC2MB (OutputFile[1].OfBuffer[i], mbc,
-					CharEncoding);
+					pDoc->DocCharset);
 	     for (index = 0; index < nb_bytes2write; index++)
 	       putc (mbc[index], OutputFile[1].OfFileDesc);
 #else  /* !_I18N_ */
@@ -3350,9 +3299,9 @@ ThotBool            recordLineNb;
 	 /* le fichier a inclure est ouvert */
 	 {
 	 /* while (TtaReadByte (includedFile, &c)) */
-	 while (TtaReadWideChar (includedFile, &c, CharEncoding))
+	 while (TtaReadWideChar (includedFile, &c, pDoc->DocCharset))
 	   /* on ecrit dans le fichier principal courant */
-	   PutChar (c, 1, NULL, pDoc, *lineBreak, CharEncoding);
+	   PutChar (c, 1, NULL, pDoc, *lineBreak);
 	 TtaReadClose (includedFile);
 	 }
        break;
@@ -3706,8 +3655,7 @@ PtrDocument         pDoc;
 	for (i = 0; i < OutputFile[fich].OfBufferLen; i++)
 	  {
 #ifdef _I18N_
-	  nb_bytes2write = TtaWC2MB (OutputFile[fich].OfBuffer[i], mbc,
-				     CharEncoding);
+	  nb_bytes2write = TtaWC2MB (OutputFile[fich].OfBuffer[i], mbc, pDoc->DocCharset);
 	  for (index = 0; index < nb_bytes2write; index++)
 	    putc (mbc[index], OutputFile[fich].OfFileDesc);
 #else  /* !_I18N_ */

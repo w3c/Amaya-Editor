@@ -34,7 +34,6 @@ typedef int        *SSchema;
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-
 /*----------------------------------------------------------------------
    TtaNewDocument
 
@@ -743,6 +742,18 @@ extern void TtaConfigReadConfigFiles ( CHAR_T* aSchemaPath );
   ----------------------------------------------------------------------*/
 extern void TtaConfigSSchemaExternalName (/*OUT*/ CHAR_T* nameUser, CHAR_T* nameSchema, int Typ );
 
+/*----------------------------------------------------------------------
+  TtaGetDocumentCharset gets the document charset
+  Returns UNDEFINED_CHARSET when the document uses the default charset.
+ ----------------------------------------------------------------------*/
+extern CHARSET TtaGetDocumentCharset (Document document);
+
+/*----------------------------------------------------------------------
+  TtaSetDocumentCharset sets the document charset
+  ----------------------------------------------------------------------*/
+extern void  TtaSetDocumentCharset (Document document,
+				    CHARSET charSet);
+
 #else  /* __STDC__ */
 
 extern Document     TtaNewDocument ( /* CHAR_T* structureSchema, CHAR_T* documentName */ );
@@ -790,11 +801,13 @@ extern void         TtaGetDocumentPath ( /* char *buffer, int bufferLength */ );
 extern void         TtaGetSchemaPath ( /* char *buffer, int bufferLength */ );
 extern Document     TtaGetDocumentOfSavedElements ();
 
-extern void TtaConfigReadConfigFiles (/* CHAR_T* aSchemaPath */);
-extern void TtaConfigSSchemaExternalName (/* CHAR_T *nameUser,
+extern void         TtaConfigReadConfigFiles (/* CHAR_T* aSchemaPath */);
+extern void         TtaConfigSSchemaExternalName (/* CHAR_T *nameUser,
                                              CHAR_T *nameSchema,
                                              int Typ */);
-
+extern CHARSET      TtaGetDocumentCharset (/* Document document */);
+extern void         TtaSetDocumentCharset (/* Document document,
+					      CHARSET charSet */);
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
 

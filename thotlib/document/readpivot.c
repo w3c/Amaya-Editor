@@ -59,7 +59,6 @@ static int          newColor[] =
  149, 149, 140, 130, 130, 131, 131, 133, 133, 133, 133, 123, 3, 1, 7,
  7, 6, 6, 5, 5, 5, 4, 4, 4, 3, 3, 2};
 
-extern CHARSET CharEncoding;
 
 #define MAX_EXT_DOC 10
 
@@ -1521,7 +1520,7 @@ PtrAttribute       *pAttr;
 		       /* lit tout le texte de l'attribut */
 		       stop = FALSE;
 		       do
-			  if (!TtaReadWideChar (pivFile, &pBT->BuContent[pBT->BuLength++], CharEncoding))
+			  if (!TtaReadWideChar (pivFile, &pBT->BuContent[pBT->BuLength++], pDoc->DocCharset))
 			     /* erreur de lecture */
 			    {
 			       PivotError (pivFile);

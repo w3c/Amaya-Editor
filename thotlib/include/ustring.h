@@ -50,26 +50,32 @@ typedef enum {
 } CHARSET;
 
 #ifdef _I18N_
-
 typedef wchar_t  CHAR_T;
 typedef wchar_t* PCHAR_T;
 typedef wchar_t  UCHAR_T;
 typedef wchar_t* PUCHAR_T;
 typedef wchar_t* STRING;
 typedef wchar_t* USTRING;
-
 #else  /* _I18N_ */
-
 typedef char            CHAR_T;
 typedef char*           PCHAR_T;
 typedef unsigned char   UCHAR_T;
 typedef unsigned char*  PUCHAR_T;
 typedef char*           STRING;
 typedef unsigned char*  USTRING;
-
 #endif /* _I18N_ */
 
 #ifdef __STDC__
+/*----------------------------------------------------------------------
+  TtaGetCharset gives the charset 
+  ----------------------------------------------------------------------*/
+extern CHARSET TtaGetCharset (const CHAR_T *charsetname);
+
+/*----------------------------------------------------------------------
+  TtaGetCharsetName gives the constant string of the charset ISO name.
+  ----------------------------------------------------------------------*/
+extern CHAR_T *TtaGetCharsetName (CHARSET charset);
+
 extern int          uputchar                              (int);
 extern int          ustrcasecmp                           (const CHAR_T*, const CHAR_T*);
 extern CHAR_T*      ustrcat                               (CHAR_T*, const CHAR_T*);
@@ -92,10 +98,10 @@ extern int          iso2wc_strcasecmp                     (const char*, const CH
 extern int          wc2iso_strcmp                         (CHAR_T*, const char*);
 extern CHAR_T*      iso2wc_strcpy                         (CHAR_T* dest, const char* src);
 extern char*        wc2iso_strcpy                         (char*, const CHAR_T*);
-extern CHARSET      TtaGetCharset                         (const CHAR_T*);
-extern int          TtaGetNextWideCharFromMultibyteString (CHAR_T*, unsigned char**, CHARSET);
 
 #else  /* __STDC__ */
+extern CHARSET      TtaGetCharset (/* const CHAR_T *charsetname */);
+extern CHAR_T      *TtaGetCharsetName (/* CHARSET charset */);
 extern int          uputchar                              ();
 extern int          ustrcasecmp                           ();
 extern int          cus2iso_strcasecmp                    ();
@@ -121,8 +127,6 @@ extern int          wc2iso_strcmp                         ();
 extern CHAR_T*      iso2wc_strcpy                         ();
 extern CHAR_T*      cus2wc_strcpy                         ();
 extern char*        wc2iso_strcpy                         ();
-extern CHARSET      TtaGetCharset                         ();
-extern int          TtaGetNextWideCharFromMultibyteString ();
 #endif /* __STDC__ */
 
 #endif /* _USTRING_H */

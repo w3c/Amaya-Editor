@@ -42,11 +42,9 @@
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateDocument (PtrDocument * pDoc)
-
 #else  /* __STDC__ */
 void                CreateDocument (pDoc)
 PtrDocument        *pDoc;
-
 #endif /* __STDC__ */
 {
    int                 doc;
@@ -69,6 +67,8 @@ PtrDocument        *pDoc;
 	documentDisplayMode[doc] = DisplayImmediately;
 	(*pDoc)->DocBackUpInterval = CurSaveInterval;
 	(*pDoc)->DocCheckingMode = DEFAULT_CHECK_MASK;
+	(*pDoc)->DocCharset = ISO_8859_1;
+	(*pDoc)->DocDefaultCharset = TRUE;
      }
 }
 

@@ -120,6 +120,8 @@ ThotBool            isHTML;
   root = TtaGetMainRoot (doc);
   /* disable auto save */
   TtaSetDocumentBackUpInterval (doc, 0);
+  /* Set the document charset */
+  TtaSetDocumentCharset (doc, ISO_8859_1);
 
   elType = TtaGetElementType (root);
   attrType.AttrSSchema = elType.ElSSchema;

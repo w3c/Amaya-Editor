@@ -6,6 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void ParseCharset ( Element el,
+                           Document doc );
 extern void XhtmlElementComplete ( Element el,
                                    Document doc,
                                    int *error );
@@ -28,6 +30,8 @@ extern void XhtmlEntityCreated ( int entityVal,
 
 #else /* __STDC__ */
 
+extern void ParseCharset (/* Element el,
+                             Document doc */);
 extern void XhtmlElementComplete (/* Element el,
                                      Document doc,
                                      int *error */);

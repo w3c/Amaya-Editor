@@ -82,31 +82,61 @@ PtrDocument         pDoc;
 }
 
 /*----------------------------------------------------------------------
- * TtaGetDocumentCharset
- *----------------------------------------------------------------------*/
+  TtaGetDocumentCharset gets the document charset
+  Returns UNDEFINED_CHARSET when the document uses the default charset.
+ ----------------------------------------------------------------------*/
 #ifdef __STDC__
-CHARSET TtaGetDocumentCharset (PtrDocument pDoc)
+CHARSET     TtaGetDocumentCharset (Document document)
 #else  /* __STDC__ */
-CHARSET TtaGetDocumentCharset (pDoc)
-PtrDocument pDoc;
+CHARSET     TtaGetDocumentCharset (document)
+Document     document;
 #endif /* __STDC__ */
 {
-    return pDoc->Charset;
+  PtrDocument pDoc;
+
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS || LoadedDocument[document - 1] == NULL)
+    {
+      TtaError (ERR_invalid_document_parameter);
+      return (UNDEFINED_CHARSET);
+    }
+  else
+    {
+      pDoc = LoadedDocument[document - 1];
+      if (pDoc->DocDefaultCharset)
+	return (UNDEFINED_CHARSET);
+      else
+      return (pDoc->DocCharset);
+    }
 }
 
 
 /*----------------------------------------------------------------------
- * TtaSetDocumentCharset
- *----------------------------------------------------------------------*/
+  TtaSetDocumentCharset sets the document charset
+ ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void TtaSetDocumentCharset (PtrDocument pDoc, CHARSET charSet)
+void         TtaSetDocumentCharset (Document document, CHARSET charSet)
 #else  /* __STDC__ */
-void TtaSetDocumentCharset (pDoc, charSet)
-PtrDocument pDoc;
-CHARSET     charSet;
+void         TtaSetDocumentCharset (document, charSet)
+Document     document;
+CHARSET      charSet;
 #endif /* __STDC__ */
 {
-    pDoc->Charset = charSet;
+  PtrDocument pDoc;
+
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
+      pDoc = LoadedDocument[document - 1];
+      pDoc->DocCharset = charSet;
+      pDoc->DocDefaultCharset = FALSE;
+    }
 }
 
 /*----------------------------------------------------------------------
