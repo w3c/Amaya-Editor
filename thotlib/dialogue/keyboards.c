@@ -33,6 +33,10 @@
 #include "select_tv.h"
 #include "appdialogue_tv.h"
 
+#ifdef _GTK
+#include "gtk-functions.h"
+#endif /* _GTK */
+
 #define MAX_ARGS 20
 #define MAX_KEYBOARD 4
 
@@ -50,7 +54,9 @@ static ThotWidget   Keyboards[MAX_KEYBOARD];
 static ptrfont      KbFonts[MAX_KEYBOARD];
 static int          KbX = 800;
 static int          KbY = 100;
+#ifndef _GTK
 static ThotGC       GCkey;
+#endif /* !_GTK */
 
 /* data for the keyboards */
 /*iso */
@@ -392,6 +398,8 @@ static ITEM         Items_Graph[] =
 #include "textcommands_f.h"
 #include "xwindowdisplay_f.h"
 
+
+#ifndef _GTK
 /*----------------------------------------------------------------------
    WChar
    displays character ch at position <x,y> of window w using the character
@@ -401,7 +409,6 @@ static ITEM         Items_Graph[] =
 static void WChar (ThotWindow w, char ch, int x, int y, int func,
 		   ptrfont font, int disp, ThotGC GClocal)
 {
-#ifndef _GTK
    int                 length;
 
    length = 1;
@@ -412,14 +419,14 @@ static void WChar (ThotWindow w, char ch, int x, int y, int func,
    FontOrig (font, ch, &x, &y);
    XDrawString (TtDisplay, w, GClocal, x, y, &ch, length);
 #endif
-#endif /* _GTK */
 }
+#endif /* _GTK */
 
 /*----------------------------------------------------------------------
    KbdEndDisplay
    Ends the display of a keyboard.
   ----------------------------------------------------------------------*/
-static void         KbdEndDisplay (ThotWidget w, int index, caddr_t call_d)
+static void KbdEndDisplay (ThotWidget w, int index, caddr_t call_d)
 {
 #ifndef _GTK
 #ifndef _WINDOWS
@@ -508,6 +515,132 @@ static void         ExposeKbd (ThotWidget w, int param, XmDrawnButtonCallbackStr
 }
 
 #endif /* _GTK */
+
+#ifdef _GTK
+static void CreateKeyboard (int number, char *title, ptrfont pFont,
+			    int col, int x, int y, ITEM *items, int nbitem)
+{
+  int                 i,j;
+  register ITEM      *it;
+  ThotWidget          w;
+  GtkWidget *vbox1;
+  GtkWidget *vbox5;
+  GtkWidget *frame2;
+  GtkWidget *hbox1;
+  GtkWidget *hbox2;
+  GtkWidget *button1;
+  GtkWidget *label;
+  char                string[10];
+  int                 param;
+  
+  
+  w = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_title (GTK_WINDOW (w), title);
+  gtk_window_set_position (GTK_WINDOW (w), GTK_WIN_POS_MOUSE);
+  ConnectSignalGTK (GTK_OBJECT (w),
+		    "delete_event",
+		    GTK_SIGNAL_FUNC(gtk_true),
+		    (gpointer)NULL);
+  
+  vbox1 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox1);
+  gtk_container_add (GTK_CONTAINER (w), vbox1);
+   
+  frame2 = gtk_frame_new (NULL);
+  gtk_widget_show (frame2);
+  gtk_box_pack_start (GTK_BOX (vbox1), frame2, TRUE, TRUE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (frame2), 5);
+  
+  hbox1 = gtk_hbox_new (FALSE, 5);
+  gtk_widget_show (hbox1);
+  gtk_container_add (GTK_CONTAINER (frame2), hbox1);
+  gtk_container_set_border_width (GTK_CONTAINER (hbox1), 5);
+  
+  hbox2 = gtk_hbox_new (FALSE, 5);
+  gtk_widget_show (hbox2);
+  gtk_container_add (GTK_CONTAINER (vbox1), hbox2);
+   
+  button1 = gtk_button_new_with_label (TtaGetMessage (LIB, TMSG_CANCEL));
+  gtk_widget_show (button1);
+  GTK_WIDGET_SET_FLAGS (GTK_WIDGET(button1), GTK_CAN_DEFAULT);
+  gtk_widget_grab_default(GTK_WIDGET(button1));
+  gtk_box_pack_start (GTK_BOX (hbox2), button1, TRUE, TRUE, 2); 
+  gtk_container_set_border_width (GTK_CONTAINER (button1), 2);
+  ConnectSignalGTK (GTK_OBJECT (button1),
+		    "clicked",
+		    GTK_SIGNAL_FUNC (KbdEndDisplay),
+		    (gpointer)number);
+
+  sprintf (string, "+%d+%d", x, y);
+  /* Affiche les differents boutons du clavier */
+  it = items;
+  /* Prepare les parametres des procedures KbdCallbackHandler et ExposeKbd */
+  param = number * 256;	/* indice du clavier */
+  
+  if (it->legend == 0)
+    {
+      j = 0;
+      /* Un clavier sans legende */
+      for (i = 0; i < nbitem; i++, it++)
+	{
+	  if (i == 10*j)
+	    {
+	      /* vbox witch contain one color column */
+	      vbox5 = gtk_vbox_new (TRUE, 5);
+	      gtk_widget_show (vbox5);
+	      gtk_box_pack_start (GTK_BOX (hbox1), vbox5, TRUE, TRUE, 0);
+	      j++;
+	    }
+	  string[0] = it->name;
+	  string[1] = EOS;
+	  button1 = gtk_button_new ();
+	  gtk_widget_show (button1);
+	  gtk_box_pack_start (GTK_BOX(vbox5), button1, TRUE, TRUE, 0);
+	  label = gtk_label_new (string);
+	  label->style = gtk_style_copy (label->style);
+	  label->style->font = pFont;
+	  gtk_widget_show (label);
+	  gtk_container_add (GTK_CONTAINER (button1), label);
+	  ConnectSignalGTK (GTK_OBJECT (button1),
+			    "clicked",
+			    GTK_SIGNAL_FUNC (KbdCallbackHandler),
+			    (gpointer)(param + (int)(it->value)));
+	}
+    }
+  else
+    {
+      j = 0;
+      /* Un clavier avec legende */
+      for (i = 0; i < nbitem; i++, it++)
+	{
+	  if (i == 10*j)
+	    {
+	      /* vbox witch contain one color column */
+	      vbox5 = gtk_vbox_new (TRUE, 5);
+	      gtk_widget_show (vbox5);
+	      gtk_box_pack_start (GTK_BOX (hbox1), vbox5, TRUE, TRUE, 0);
+	      j++;
+	    }
+	  
+	  string[0] = it->name;
+	  string[1] = '\n';
+	  button1 = gtk_button_new ();
+	  gtk_widget_show (button1);
+	  gtk_box_pack_start (GTK_BOX(vbox5), button1, TRUE, TRUE, 0);
+	  label = gtk_label_new (string);
+	  label->style = gtk_style_copy (label->style);
+	  label->style->font = pFont;
+	  gtk_widget_show (label);
+	  ConnectSignalGTK (GTK_OBJECT (button1),
+			    "clicked",
+			    GTK_SIGNAL_FUNC (KbdCallbackHandler),
+			    (gpointer)(param + (int)(it->value)));
+	}
+    }
+  gtk_widget_show_all (w);
+  Keyboards[number] = w;
+}
+#else /* !_GTK */
 /*----------------------------------------------------------------------
    CreateKeyboard
    creates a keyboard.
@@ -698,7 +831,7 @@ static void CreateKeyboard (int number, char *title, ptrfont pFont,
      }
 #endif /* _GTK */
 }
-
+#endif /* _GTK */
 
 /*----------------------------------------------------------------------
    LoadKbd
