@@ -38,7 +38,8 @@ use Iso qw( &return_code_in_ISO_639
 						# ex : "/home/ehuck/opera/Amaya/tools/xmldialogues/base/base_am_msg.xml";
 	my $where = "";# directory where the result files are putting (idem under but directory "/docs")
 	my $sufix = "";# "-amayamsg"; # sufix of the dialogues files = result
-	my $specific_sufix = "";# ".amaya.trans"; #used to indicate those specific files
+	#$specific_sufix no more used
+	#my $specific_sufix = "";# ".amaya.trans"; #used to indicate those specific files
 	my $head_name = "";# "amayamsg.h";#name of the label file created
 	#my $head_dir = "";
 	#my $head_file = $head_dir.$head_name;
@@ -73,7 +74,7 @@ use Iso qw( &return_code_in_ISO_639
 
 sub product_translate {
 
-	($base , $head_name ,$where ,$sufix ,$specific_sufix ,$begin_label ,$lang ) = @_;
+	($base , $head_name ,$where ,$sufix ,$begin_label ,$lang ) = @_;
 	
 	#$head_file = $head_dir.$head_name;
 	print "\tBegin of producte ready-to-translate file from $base\n";
@@ -111,8 +112,8 @@ $encoding = "";
 	}
 		
 # the files generated	
-	push (@list_of_files_created, $where . $lang . $sufix . $specific_sufix);
-	push (@list_of_files_created, $where . $head_name . $specific_sufix );
+	push (@list_of_files_created, $where . $lang . $sufix );
+	push (@list_of_files_created, $where . $head_name );
 
 # create the two new files
 	foreach (@list_of_files_created) {

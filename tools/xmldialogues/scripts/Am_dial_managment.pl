@@ -5,7 +5,12 @@ use strict ;
 
 #############################for parmameters###########################################
 # some environement variables for portability  
+	if (!defined ($ENV{"HOME"}) ) {
+		die "The variable \"home\" cannot be loaded because you certainly not using Linux or
+		Unix\n";
+	}
 my $home = $ENV{"HOME"} . "/";
+
 my $config_file = "$home.amaya/am_dialogues.conf.xml";
 
 my $path_amaya = ""; # way between $home and the Repertory Amaya and libwww
@@ -24,6 +29,7 @@ my $OUT_MSG_directory = "$path_amaya/Amaya/config/";
 my $directory_for_file_to_translate = "$path_amaya/Amaya/tools/xmldialogues/docs/";
 
 #	and the sufix for the generated file created into /docs to help translation
+#Warning : no more used
 my $specific_sufix = ".amaya.trans"; #used to indicate those specific files
 
 # commentary for begining of the ".h" file
@@ -169,7 +175,6 @@ sub menu {
 					$head_name {$_} ,
 					$directory_for_file_to_translate,
 					$lang_sufix {$_},
-					$specific_sufix,
 					$comment_for_begining_of_h_file,
 					$lang
 				);
