@@ -3639,7 +3639,7 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 	     n++;
 	     menu = XmCreateRowColumn (w, "Dialogue", args, n);
 #else /* _GTK */
-	     menu = gtk_vbox_new (FALSE, 2);
+	     menu = gtk_vbox_new (FALSE, 0);
 	     gtk_widget_show_all (menu);
 	     gtk_container_add (GTK_CONTAINER(w), menu);	     
 #endif /* !_GTK */
@@ -3767,7 +3767,7 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 	     w = gtk_button_new ();
 	     gtk_container_add (GTK_CONTAINER (w), tmpw);
 	     gtk_widget_show_all (w);
-	     gtk_box_pack_start (GTK_BOX (row), w, FALSE, TRUE, 4);
+	     gtk_box_pack_start (GTK_BOX (row), w, FALSE, FALSE, 0);
 	     /* Connecte the clicked acton to the button */
 	     ConnectSignalGTK (w,
 			       "clicked",
