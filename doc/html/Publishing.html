@@ -13,7 +13,7 @@
 <table border="0" summary="toc">
   <tbody>
     <tr>
-      <td><p><img alt="W3C" src="../../images/WWW/w3c_home" /> <img
+      <td><p><img alt="W3C" src="../../images/w3c_home" /> <img
         alt="Amaya" src="../images/amaya.gif" /></p>
       </td>
       <td><p><a href="SpellChecking.html" accesskey="p"><img alt="previous"
@@ -92,9 +92,9 @@ follows:</p>
   <li>The <strong>Document location</strong> field indicates the location
     where the file has to be written. This can be a file in the local
     filesystem (e.g. "/pub/html/welcome.html") or the name of a remote URI
-    (e.g. "http://www.w3.org/pub/WWW/Welcome.html"). 
+    (e.g. "http://www.w3.org/pub/Welcome.html"). 
     <p><strong>Note</strong> that this should be a complete path as there is
-    no way to guess the name of "http://www.w3.org/pub/WWW". You should also
+    no way to guess the name of "http://www.w3.org/pub". You should also
     make sure that you have the <strong>right to do a PUT</strong> method in
     the case of a remote location. See the page on <a
     href="http://www.w3.org/Amaya/User/Put.html">configuring your server to
@@ -124,9 +124,9 @@ follows:</p>
     <ul>
       <li>using a relative path, the images is stored at a location relative
         to the document directory. For example, if the document location is
-        "http://www.w3.org/pub/WWW/Welcome.html" and the images location is
+        "http://www.w3.org/pub/Welcome.html" and the images location is
         "Images", an image "W3C.png" contained in the document is stored at
-        the URI "http://www.w3.org/pub/WWW/Images/W3C.png" and the HTML file
+        the URI "http://www.w3.org/pub/Images/W3C.png" and the HTML file
         is modified to reference it as: 
         <p>&lt;IMG SRC="Images/W3C.png"&gt;</p>
         <p>This is similar in the case of a document location in the local
@@ -134,8 +134,8 @@ follows:</p>
       </li>
       <li>using an absolute path, the images are stored at this exact
         location, independently of the document location. In the previous
-        example, if the images location specified is "http://pub/WWW/Images",
-        the image is stored at "http://www.w3.org/pub/WWW/Images/W3C.png" and
+        example, if the images location specified is "http://pub/Images",
+        the image is stored at "http://www.w3.org/pub/Images/W3C.png" and
         the corresponding HTML file is modified in the following way: 
         <p>&lt;IMG SRC="Images/W3C.png"&gt;</p>
       </li>
