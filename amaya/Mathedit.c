@@ -1620,6 +1620,32 @@ void CreateMO (document, view)
    CreateCharStringElement (MathML_EL_MO, document);
 }
 
+/*----------------------------------------------------------------------
+CreateMathEntity
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateMathEntity (Document document, View view)
+#else /* __STDC__*/
+void CreateMathEntity (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+  Element     firstSel;
+  int         firstChar, i;
+  ElementType elType;
+
+   TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
+
+   /* if not within a MathML element, nothing to do */
+   elType = TtaGetElementType (firstSel);
+   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
+      return;
+
+  /* @@@@@@@@ */
+
+   /***** Attribute EntityName="&InvisibleTimes;" ****/
+}
 
 /*----------------------------------------------------------------------
    InitMathML initializes MathML context.           

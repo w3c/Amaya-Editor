@@ -1783,8 +1783,6 @@ BOXES
  VALUE_EntityName: BEGIN
         Content: (EntityName);
         Visibility: 0;
-	IN Math_Structure_view BEGIN
-		END;
         IN Math_Structure_view BEGIN
                 Visibility: ATTR_Visibility;	
 		Size: DOC_FONTSIZE;
