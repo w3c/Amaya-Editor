@@ -10,6 +10,8 @@ WWWDAV = @WWWDAV@
 LIBWWW_RDF_PARSER = @LIBWWW_RDF_PARSER@
 LIBZ = @LIBZ@
 
+OBJDIRS = wxdialog
+
 include ../Options
 
 INCLUDES= -DHAVE_CONFIG_H $(AMAYA_INCLUDES) $(EXPAT_INCLUDES) $(X_FLAGS)
@@ -37,6 +39,8 @@ DICOFILES= *.ptn *.dic alphabet clavier
 AMAYAFILES= *.STR *.conf *.trans *.en *.gif *.png \
            *.PRS *.TRA AmayaPage.html AmayaPage.html.* Amaya.svg
 
+RESOURCEFILES= *.xrc
+
 FONTSFILES=Families.list fonts.dir icones*
 
 AMAYA	= @top_srcdir@/amaya
@@ -52,15 +56,20 @@ comp_annot: $(amaya_comp_annot)
 # specific entry point check the dependancies
 #
 
-amaya : ../thotlib/libThotEditor.a amaya_schemas amaya_src ../bin/amaya
+amaya : directories ../thotlib/libThotEditor.a amaya_schemas amaya_src ../bin/amaya
 
 #
 # General entry point everything should have compiled correctly
 #
-all : amaya_schemas amaya_src ../bin/amaya @NOPRINT@../bin/print
+all : directories amaya_schemas amaya_src ../bin/amaya @NOPRINT@../bin/print
 
 clean :
 	$(RM) *.o *.h *.c EDITOR* HTML* TextFile* MathML* SVG* Timeline* XLink* XML* logo.* *.a
+	(for dir in $(OBJDIRS) ; do $(RM) -r $$dir/*.o ; done)
+
+directories :
+	@(for dir in $(OBJDIRS) ; \
+	  do if test ! -d $$dir ; then $(MKDIR) $$dir ; fi ; done)
 
 include .depends
 
@@ -497,6 +506,8 @@ install : all @NOPRINT@../bin/print
 	@(if test ! -d $(prefix) ; then $(MKDIR) $(prefix) ; fi)
 	@(if test ! -d $(prefix)/Amaya ; then $(MKDIR) $(prefix)/Amaya ; fi)
 	@(if test ! -d $(prefix)/Amaya/amaya ; then $(MKDIR) $(prefix)/Amaya/amaya ; fi)
+	@(if test ! -d $(prefix)/Amaya/resources ; then $(MKDIR) $(prefix)/Amaya/resources ; fi)
+	@(if test ! -d $(prefix)/Amaya/resources/xrc ; then $(MKDIR) $(prefix)/Amaya/resources/xrc ; fi)
 	@(if test ! -d $(prefix)/Amaya/config ; then $(MKDIR) $(prefix)/Amaya/config ; fi)
 	@(if test ! -d $(prefix)/Amaya/annotlib ; then $(MKDIR) $(prefix)/Amaya/annotlib ; fi)
 	@(if test ! -d $(prefix)/Amaya/fonts ; then $(MKDIR) $(prefix)/Amaya/fonts ; fi)
@@ -514,6 +525,10 @@ install : all @NOPRINT@../bin/print
 	(for i in $(AMAYAFILES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/amaya/$$i` ; do \
 	    $(INSTALL_DATA) $$file $(prefix)/Amaya/amaya ; \
+	  done ; done)
+	(for i in $(RESOURCEFILES) ; do \
+	  for file in `$(ECHO) $(THOTDIR)/resources/xrc/$$i` ; do \
+	    $(INSTALL_DATA) $$file $(prefix)/Amaya/resources/xrc ; \
 	  done ; done)
 	(for i in $(CONFIGFILES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/config/$$i` ; do \
