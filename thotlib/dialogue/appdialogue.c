@@ -1481,7 +1481,7 @@ ThotBool   state;
 	      /* force la mise a jour de la fenetre */
 	      XtManageChild (row);
 #else  /* _WINDOWS */
-	      index = i;
+	      index = i + 1;
 	      if (procedure) {
 		w = (TBBUTTON*) TtaGetMemory (sizeof (TBBUTTON));
 		if (!w)
