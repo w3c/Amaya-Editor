@@ -756,16 +756,16 @@
 	<message xml:lang="it">&amp;Chiudi tab</message>
 	<message xml:lang="ru">Закрыть пан&amp;ель</message>
 </label>
-<label define="BCloseView">
-	<message xml:lang="en">&amp;Close view</message>
-	<message xml:lang="fr">&amp;Fermer la vue</message>
-	<message xml:lang="de">Ansicht schließen</message>
-	<message xml:lang="it">Chiudi vista</message>
-	<message xml:lang="tr">Görünümü kapat</message>
-	<message xml:lang="es">&amp;Cerrar vista</message>
-	<message xml:lang="pt">Fechar vista</message>
-	<message xml:lang="fi">Sulje näkymä</message>
-	<message xml:lang="ru">Закрыть вид</message>
+<label define="BCloseWindow">
+	<message xml:lang="en">&amp;Close window</message>
+	<message xml:lang="fr">&amp;Fermer la fenêtre</message>
+	<message xml:lang="de">Schließen</message>
+	<message xml:lang="it">Chiudi</message>
+	<message xml:lang="tr">Belgeyi kapat</message>
+	<message xml:lang="es">Cerrar &amp;ventana</message>
+	<message xml:lang="pt">Fechar janela</message>
+	<message xml:lang="fi">Sulje ikkuna</message>
+	<message xml:lang="ru">Закрыть окно</message>
 </label>
 <label define="BExit">
 	<message xml:lang="en">E&amp;xit Amaya</message>
