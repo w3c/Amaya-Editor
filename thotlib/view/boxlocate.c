@@ -1823,7 +1823,7 @@ PtrBox GetClickedLeafBox (int frame, int xRef, int yRef)
       while (pBox != NULL)
 	{
 	  pAb = pBox->BxAbstractBox;
-	  if (pAb->AbVisibility >= pFrame->FrVisibility &&
+	  if (/*pAb->AbVisibility >= pFrame->FrVisibility &&*/
 	      (!pAb->AbPresentationBox || pAb->AbCanBeModified))
 	    {
 	      if (pAb->AbLeafType == LtGraphics ||
