@@ -4919,7 +4919,10 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			 (FileBuffer[i] == SPACE  ||
 			  FileBuffer[i] == EOL    ||
 			  FileBuffer[i] == TAB    ||
-			  FileBuffer[i] == __CR__))
+			  FileBuffer[i] == __CR__ ||
+			  (unsigned char) FileBuffer[i] == 0xEF ||
+			  (unsigned char) FileBuffer[i] == 0xBB ||
+			  (unsigned char) FileBuffer[i] == 0xBF ))
 		    i++;
 		  if (FileBuffer[i] == '<')
 		    found = TRUE;
