@@ -77,7 +77,7 @@
 75 Kopyala
 76 Yapıştır
 77 Temizle
-78 **&Insert before
+78 **&Insert
 79 &Ekle
 80 Ara...
 81 Yazım hataları ara...
@@ -142,11 +142,11 @@
 140 **Shrink horizontal extend
 141 **Shrink vertical extend
 142 **Select the row
-143 **Insert a row before
-144 **Append a row after
+143 **Insert a row
+144 **Append a row
 145 **Select the column
-146 **Insert a column before
-147 **Append a column after
+146 **Insert a column
+147 **Append a column
 148 **Paste before
 149 **Paste after
 150 **Map area
@@ -228,11 +228,11 @@
 226 **Shrink horizontal extend
 227 **Shrink vertical extend
 228 **Select the row
-229 **Insert a row before
-230 **Append a row after
+229 **Insert a row
+230 **Append a row
 231 **Select the column
-232 **Insert a column before
-233 **Append a column after
+232 **Insert a column
+233 **Append a column
 234 **Paste before
 235 **Paste after
 236 SVG kütüphanesini göster

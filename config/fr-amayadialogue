@@ -77,8 +77,8 @@
 75 &Copier
 76 Co&ller
 77 Dé&truire
-78 &Insérer avant
-79 &Ajoutér après
+78 &Insérer
+79 &Ajoutér
 80 Rec&hercher...
 81 Vérifier &orthographe...
 82 Transfor&mer...
@@ -142,11 +142,11 @@
 140 Réduire extension horizontale
 141 Réduire extension verticale
 142 Sélectionner la ligne
-143 Insérer une ligne avant
-144 Ajouter une ligne après
+143 Insérer une ligne
+144 Ajouter une ligne
 145 Sélectionner la colonne
-146 Insérer une colonne avant
-147 Ajouter une colonne après
+146 Insérer une colonne
+147 Ajouter une colonne
 148 Coller avant
 149 Coller après
 150 Plan
@@ -228,11 +228,11 @@
 226 Réduire extension horizontale
 227 Réduire extension verticale
 228 Sélectionner la ligne
-229 Insérer une ligne avant
-230 Ajouter une ligne après
+229 Insérer une ligne
+230 Ajouter une ligne
 231 Sélectionner la colonne
-232 Insérer une colonne avant
-233 Ajouter une colonne après
+232 Insérer une colonne
+233 Ajouter une colonne
 234 Coller avant
 235 Coller après
 236 Montrer la librairie graphique

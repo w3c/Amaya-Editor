@@ -77,8 +77,8 @@
 75 Copia
 76 Incolla
 77 Cancella
-78 &Inserisci prima
-79 &Aggiungi dopo
+78 &Inserisci
+79 &Aggiungi
 80 Trova...
 81 Controllo ortografico...
 82 Trasforma...
@@ -142,11 +142,11 @@
 140 Riduci l'estensione orizzontale
 141 Riduci l'estensione verticale
 142 Seleziona la riga
-143 Inserisci una riga prima
-144 Aggiungi una riga dopo
+143 Inserisci una riga
+144 Aggiungi una riga
 145 Seleziona la colonna
-146 Inserisci una colonna prima
-147 Aggiungi una colonna dopo
+146 Inserisci una colonna
+147 Aggiungi una colonna
 148 Incolla prima
 149 Incolla dopo
 150 Area mappabile
@@ -228,11 +228,11 @@
 226 Riduci l'estensione orizzontale
 227 Riduci l'estensione verticale
 228 Seleziona la riga
-229 Inserisci una riga prima
-230 Aggiungi una riga dopo
+229 Inserisci una riga
+230 Aggiungi una riga
 231 Seleziona la colonna
-232 Inserisci una colonna prima
-233 Aggiungi una colonna dopo
+232 Inserisci una colonna
+233 Aggiungi una colonna
 234 Incolla prima
 235 Incolla dopo
 236 Mostri librería SVG

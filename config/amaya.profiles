@@ -65,8 +65,8 @@
 &CreateRuby
 +bookmarks
 +davbase
-#&InsertBefore
-#&InsertAfter
+&InsertBefore
+&InsertAfter
 
 ################# AMAYA DISPLAY
 <Display>

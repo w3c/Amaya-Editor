@@ -77,8 +77,8 @@
 75 &Copiar
 76 &Pegar
 77 &Borrar
-78 &Insertar delante
-79 &Añadir detrás
+78 &Insertar
+79 &Añadir
 80 &Buscar...
 81 &Verificar ortografía...
 82 &Transformar...
@@ -142,11 +142,11 @@
 140 Reducir extensión horizontal
 141 Reducir extensión vertical
 142 Seleccionar fila
-143 Insertar fila delante
-144 Añadir fila detrás
+143 Insertar fila
+144 Añadir fila
 145 Seleccionar columna
-146 Insertar columna delante
-147 Añadir columna detrás
+146 Insertar columna
+147 Añadir columna
 148 Pegar delante
 149 Pegar detrás
 150 Área de mapa
@@ -228,11 +228,11 @@
 226 Reducir extensión horizontal
 227 Reducir extensión vertical
 228 Seleccionar fila
-229 Insertar fila delante
-230 Añadir fila detrás
+229 Insertar fila
+230 Añadir fila
 231 Seleccionar columna
-232 Insertar columna delante
-233 Añadir columna detrás
+232 Insertar columna
+233 Añadir columna
 234 Pegar delante
 235 Pegar detrás
 236 &Ver Biblioteca SVG
