@@ -93,8 +93,10 @@ extern void lit_placement_temporel ( Element el,
 extern void ecrit_placement_temporel ( Element el,
                                        int start,
                                        int duration );
-extern Element recherche_premier_animate_dans_arbre ( Element element );
-extern Element recherche_animate_suivant_dans_arbre ( Element element );
+extern Element recherche_premier_animate_dans_arbre ( Document basedoc,
+                                                      Element element );
+extern Element recherche_animate_suivant_dans_arbre ( Document basedoc,
+                                                      Element element );
 extern void create_title_group ( Document basedoc,
                                  Document timelinedoc,
                                  int ty,
@@ -220,8 +222,10 @@ extern void lit_placement_temporel (/* Element el,
 extern void ecrit_placement_temporel (/* Element el,
                                          int start,
                                          int duration */);
-extern Element recherche_premier_animate_dans_arbre (/* Element element */);
-extern Element recherche_animate_suivant_dans_arbre (/* Element element */);
+extern Element recherche_premier_animate_dans_arbre (/* Document basedoc,
+                                                        Element element */);
+extern Element recherche_animate_suivant_dans_arbre (/* Document basedoc,
+                                                        Element element */);
 extern void create_title_group (/* Document basedoc,
                                    Document timelinedoc,
                                    int ty,
