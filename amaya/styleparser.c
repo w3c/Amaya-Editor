@@ -3930,12 +3930,7 @@ ThotBool            withUndo;
 		  import = MAX_CSS_LENGTH;
 		  noRule = TRUE;
 		  ignoreMedia = FALSE;
-		}
-	      else if ((ignoreMedia || media) && openRule == 0)
-		{
-		  ignoreMedia = FALSE;
 		  media = FALSE;
-		  noRule = TRUE;
 		}
 	      else
 		toParse = TRUE;

@@ -274,7 +274,11 @@ CSSInfoPtr      css;
 				prevS = pIS->PiPSchema;
 				before = FALSE;
 			      }
+			    else
+			      oldcss = oldcss->NextCSS;
 			  }
+			else
+			  oldcss = oldcss->NextCSS;
 		      }
 		    else if (oldcss->category == CSS_DOCUMENT_STYLE)
 		      {
@@ -658,7 +662,8 @@ CSSmedia    media;
 	  /* update the current media value */
 	  if (media == CSS_ALL)
 	    oldcss->media[doc] = media;
-	  else if (oldcss->media[doc] != media || oldcss->media[doc] != CSS_ALL)
+	  else if (oldcss->media[doc] != media ||
+		   oldcss->media[doc] != CSS_ALL)
 	    if ((printing && media == CSS_PRINT) ||
 		(!printing && media == CSS_SCREEN))
 		oldcss->media[doc] = media;
@@ -667,7 +672,8 @@ CSSmedia    media;
       if (tempfile[0] == EOS)
 	/* cannot do more */
 	return;
-      else if ((!printing && media == CSS_PRINT) ||
+      else if (media == CSS_OTHER ||
+	       (!printing && media == CSS_PRINT) ||
 	       (printing && media == CSS_SCREEN) ||
 	       !oldcss->enabled[doc])
 	/* nothing more to do */

@@ -170,11 +170,11 @@ Document            doc;
       res = fopen (ptr, "r");
       if (res != NULL)
 	{
-#     ifdef _WINDOWS
+#ifdef _WINDOWS
 	  if (fstat (_fileno (res), &buf))
-#     else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
 	  if (fstat (fileno (res), &buf))
-#     endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	    fclose (res);
 	  else
 	    {
@@ -249,8 +249,10 @@ NotifyAttribute    *event;
      media = CSS_SCREEN;
    else if (!ustrcasecmp (name2, TEXT ("print")))
      media = CSS_PRINT;
-   else
+   else if (!ustrcasecmp (name2, TEXT ("all")))
      media = CSS_ALL;
+   else
+     media = CSS_OTHER;
    TtaFreeMemory (name2);
    /* get the CSS URI */
    attrType.AttrSSchema = elType.ElSSchema;
@@ -268,11 +270,13 @@ NotifyAttribute    *event;
        if (css->media[doc] != media)
 	 {
 	   /* something changed and we are not printing */
-	   if (media != CSS_PRINT && css->media[doc] == CSS_PRINT)
+	   if ((media == CSS_ALL || media == CSS_SCREEN) &&
+	       (css->media[doc] == CSS_PRINT || css->media[doc] == CSS_OTHER))
 	     LoadStyleSheet (completeURL, doc, el, NULL, media);
 	   else
 	     {
-	       if (media == CSS_PRINT && css->media[doc] != CSS_PRINT)
+	       if ((media == CSS_PRINT || media == CSS_OTHER) &&
+	       (css->media[doc] == CSS_ALL || css->media[doc] == CSS_SCREEN))
 		 RemoveStyleSheet (completeURL, doc, FALSE, FALSE);
 	       /* only update the CSS media info */
 	       css->media[doc] = media;

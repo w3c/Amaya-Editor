@@ -25,6 +25,7 @@ typedef enum
   CSS_ALL,	/* screen and print */
   CSS_SCREEN,	/* screen only */
   CSS_PRINT,	/* print only */
+  CSS_OTHER,	/* aural or other */
 } CSSmedia;
 
 typedef struct _PISchema

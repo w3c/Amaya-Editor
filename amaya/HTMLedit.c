@@ -1331,6 +1331,11 @@ NotifyElement      *event;
   anchor = NULL;
   if (elType.ElSSchema == HTMLschema && elType.ElTypeNum == HTML_EL_Anchor)
       anchor = el;
+  else if (elType.ElSSchema == HTMLschema && elType.ElTypeNum == HTML_EL_LINK)
+    {
+      /* check if it's a CSS link */
+      CheckCSSLink (el, doc, HTMLschema);
+    }
   else if (elType.ElSSchema == HTMLschema && elType.ElTypeNum == HTML_EL_STYLE_)
     {
       /* The pasted element is a STYLE element in the HEAD.

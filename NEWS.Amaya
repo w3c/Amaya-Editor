@@ -23,6 +23,7 @@ Fixed bugs 2.5:
 
 * CSS:
   - Amaya didn't well remove specific Background colors.
+  - When a link to a CSS was pasted the CSS style sheet wasn't applied.
 
 =============================================================
 2.4

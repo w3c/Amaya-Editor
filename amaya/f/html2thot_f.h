@@ -21,6 +21,9 @@ extern ThotBool IsCharacterLevelElement ( Element el );
 extern void OnlyOneOptionSelected ( Element el,
                                     Document doc,
                                     ThotBool parsing );
+extern void CheckCSSLink ( Element el,
+                           Document doc,
+                           SSchema schema );
 extern int MapAttrValue ( int ThotAtt,
                           STRING AttrVal );
 extern void SetAttrIntItemStyle ( Element el,
@@ -71,6 +74,9 @@ extern ThotBool IsCharacterLevelElement (/* Element el */);
 extern void OnlyOneOptionSelected (/* Element el,
                                       Document doc,
                                       ThotBool parsing */);
+extern void CheckCSSLink (/* Element el,
+                             Document doc,
+                             SSchema schema */);
 extern int MapAttrValue (/* int ThotAtt,
                             STRING AttrVal */);
 extern void SetAttrIntItemStyle (/* Element el,
