@@ -579,97 +579,99 @@ PtrDict             dict;
     {
       difference = (difference > 0) ? difference - iteration : difference + iteration;
       size = Lg - difference;
-      
-      /*
-	determination si le calcul des mots de cette size doivent etre calcules. 
-	dist_mini determine le cout minimum obligatoire pour cette size de mot 
-	si ce cout est deja superieur au seuil courant, il est inutile de traiter
-	ces mots
-	*/
-      dist_mini = (difference > 0) ? difference * KI : -difference * KO;
-      if (dist_mini > seuilCourant)
-	continue;
-      
-      /* calcul des indices de debut et fin de dictionnaire */
-      word = dict->DictLengths[size];
-      idx = dict->DictWords[word];
-      if (size >= MAX_WORD_LEN || (dict->DictLengths[size + 1] - 1 > dict->DictNbWords))
-	sup = dict->DictWords[dict->DictNbWords];
-      else
-	sup = dict->DictWords[dict->DictLengths[size + 1]];
-      
-      /* initialisation des valeurs en dehors des diagonales de calculs effectifs */
-      
-      for (j = 1; j <= size; j++)
+      if (size >= 0 && size < MAX_WORD_LEN)
 	{
-	  i = j - largeur - 1;
-	  if (difference > 0)
-	    i = i + difference;
-	  if (i > 0)
-	    dist[i][j] = seuilCourant + 1;
-	  i = j + largeur + 1;
-	  if (difference < 0)
-	    i = i + difference;
-	  if (i <= Lg)
-	    dist[i][j] = seuilCourant + 1;
-	}
-      
-      /* parcours du dictionnaire */
-      while (idx < sup)
-	{
-	  pWord = idx;
-	  k = dict->DictCommon[word++];
-	  /* si le calcul du mot precedent a ete stoppe a l'indice derniere_ligne
-	     et que le mot courant possede un nombre de lettres communes superieur
-	     a cette valeur, il est inutile de faire le calcul */
-	  if (k <= derniere_ligne)
+	  /*
+	    determination si le calcul des mots de cette size doivent etre calcules. 
+	    dist_mini determine le cout minimum obligatoire pour cette size de mot 
+	    si ce cout est deja superieur au seuil courant, il est inutile de traiter
+	    ces mots
+	  */
+	  dist_mini = (difference > 0) ? difference * KI : -difference * KO;
+	  if (dist_mini > seuilCourant)
+	    continue;
+	  
+	  /* calcul des indices de debut et fin de dictionnaire */
+	  word = dict->DictLengths[size];
+	  idx = dict->DictWords[word];
+	  if (size >= MAX_WORD_LEN || (dict->DictLengths[size + 1] - 1 > dict->DictNbWords))
+	    sup = dict->DictWords[dict->DictNbWords];
+	  else
+	    sup = dict->DictWords[dict->DictLengths[size + 1]];
+	  
+	  /* initialisation des valeurs en dehors des diagonales de calculs effectifs */
+	  
+	  for (j = 1; j <= size; j++)
 	    {
-	      ustrcpy (currentWord, &dict->DictString[pWord]);
-	      
-	      /* calcul */
-	      for (j = k; j <= size; j++)
-		{
-		  minimum = dist[0][j];
-		  derniere_ligne = j;
-		  deb = j - largeur;
-		  if (difference > 0)
-		    deb = deb + difference;
-		  if (deb < 1)
-		    deb = 1;
-		  fin = j + largeur;
-		  if (difference < 0)
-		    fin = fin + difference;
-		  if (fin > Lg)
-		    fin = Lg;
-		  for (i = deb; i <= fin; i++)
-		    {
-		      x = dist[i][j - 1] + KI;
-		      y = dist[i - 1][j] + KO;
-		      z = dist[i - 1][j - 1] + Tsub[currentWord[j - 1]][wordcmp[i - 1]];
-		      x = (x < y) ? x : y;
-		      x = (x < z) ? x : z;
-		      if ((i > 1) && (j > 1))
-			{
-			  y = dist[i - 2][j - 2] + Tsub[currentWord[j - 2]][wordcmp[i - 1]]
-			    + Tsub[currentWord[j - 1]][wordcmp[i - 2]] + KP;
-			  x = (x < y) ? x : y;
-			}
-		      dist[i][j] = x;
-		      /* mise a jour du minimum de la colonne */
-		      minimum = (x < minimum) ? x : minimum;
-		    }
-		  /* sortie de boucle si les resultats sont deja tous superieurs au seuil */
-		  if (minimum > seuilCourant)
-		    break;
-		}
-	      if (x <= seuilCourant)
-		{		  
-		  dernier_liste = Insert (x, pWord, dict);
-		  if (dernier_liste < seuilCourant)
-		    seuilCourant = dernier_liste;
-		}
+	      i = j - largeur - 1;
+	      if (difference > 0)
+		i = i + difference;
+	      if (i > 0)
+		dist[i][j] = seuilCourant + 1;
+	      i = j + largeur + 1;
+	      if (difference < 0)
+		i = i + difference;
+	      if (i <= Lg)
+		dist[i][j] = seuilCourant + 1;
 	    }
-	  idx += size + 1;
+	  
+	  /* parcours du dictionnaire */
+	  while (idx < sup)
+	    {
+	      pWord = idx;
+	      k = dict->DictCommon[word++];
+	      /* si le calcul du mot precedent a ete stoppe a l'indice derniere_ligne
+		 et que le mot courant possede un nombre de lettres communes superieur
+		 a cette valeur, il est inutile de faire le calcul */
+	      if (k <= derniere_ligne)
+		{
+		  ustrcpy (currentWord, &dict->DictString[pWord]);
+		  
+		  /* calcul */
+		  for (j = k; j <= size; j++)
+		    {
+		      minimum = dist[0][j];
+		      derniere_ligne = j;
+		      deb = j - largeur;
+		      if (difference > 0)
+			deb = deb + difference;
+		      if (deb < 1)
+			deb = 1;
+		      fin = j + largeur;
+		      if (difference < 0)
+			fin = fin + difference;
+		      if (fin > Lg)
+			fin = Lg;
+		      for (i = deb; i <= fin; i++)
+			{
+			  x = dist[i][j - 1] + KI;
+			  y = dist[i - 1][j] + KO;
+			  z = dist[i - 1][j - 1] + Tsub[currentWord[j - 1]][wordcmp[i - 1]];
+			  x = (x < y) ? x : y;
+			  x = (x < z) ? x : z;
+			  if ((i > 1) && (j > 1))
+			    {
+			      y = dist[i - 2][j - 2] + Tsub[currentWord[j - 2]][wordcmp[i - 1]]
+				+ Tsub[currentWord[j - 1]][wordcmp[i - 2]] + KP;
+			      x = (x < y) ? x : y;
+			    }
+			  dist[i][j] = x;
+			  /* mise a jour du minimum de la colonne */
+			  minimum = (x < minimum) ? x : minimum;
+			}
+		      /* sortie de boucle si les resultats sont deja tous superieurs au seuil */
+		      if (minimum > seuilCourant)
+			break;
+		    }
+		  if (x <= seuilCourant)
+		    {		  
+		      dernier_liste = Insert (x, pWord, dict);
+		      if (dernier_liste < seuilCourant)
+			seuilCourant = dernier_liste;
+		    }
+		}
+	      idx += size + 1;
+	    }
 	}
     }
 }
