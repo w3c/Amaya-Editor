@@ -385,7 +385,6 @@ void DocumentInfo (Document document, View view)
    TtaNewLabel (BaseDialog + DocInfoContent1,
 		BaseDialog + DocInfoForm,
 		"___________________________________________");
-
    /* Document URL */
    if (DocumentURLs[document] != NULL)
      content = DocumentURLs[document];
@@ -3886,7 +3885,7 @@ static void SetFileSuffix ()
 /*----------------------------------------------------------------------
    Callback procedure for dialogue events.                            
   ----------------------------------------------------------------------*/
-void                CallbackDialogue (int ref, int typedata, char *data)
+void CallbackDialogue (int ref, int typedata, char *data)
 {
   char             *tempfile;
   char             *tempname;

@@ -266,7 +266,7 @@ void FrameKilled (int *w, int frame, int *info)
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void   CopyToolTipText (int frame, LPTOOLTIPTEXT lpttt)
+static void CopyToolTipText (int frame, LPTOOLTIPTEXT lpttt)
 {
    char      *pString;
    char      *pDest = lpttt->lpszText;
@@ -468,7 +468,7 @@ void FrameResized (GtkWidget *w, GdkEventConfigure *event, gpointer data)
 }
 
 #else /* _GTK */
-void    FrameResized (int *w, int frame, int *info)
+void FrameResized (int *w, int frame, int *info)
 {
    int                 n;
    Dimension           width, height;
@@ -483,7 +483,7 @@ void    FrameResized (int *w, int frame, int *info)
 
    FrameRedraw (frame, width, height);
 }
-#endif /* _GTK */
+#endif /* !_GTK */
 #endif /* !_WINDOWS */
 
 #ifdef _WINDOWS
@@ -811,6 +811,7 @@ void FrameVScrolled (int *w, int frame, int *param)
   ----------------------------------------------------------------------*/
 void TtcLineUp (Document document, View view)
 {
+#ifndef _GTK
 #ifndef _WINDOWS
   XmScrollBarCallbackStruct infos;
 #else   /* _WINDOWS */
@@ -830,6 +831,16 @@ void TtcLineUp (Document document, View view)
   delta = -13;
   VerticalScroll (frame, delta, 1);
 #endif /* _WINDOWS */
+#else /* _GTK */
+  /*
+   *
+   *
+   * A FAIRE
+   *
+   */
+
+
+#endif /* !_GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -837,6 +848,7 @@ void TtcLineUp (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcLineDown (Document document, View view)
 {
+#ifndef _GTK
 #ifndef _WINDOWS
   XmScrollBarCallbackStruct infos;
 #else   /* _WINDOWS */
@@ -856,6 +868,16 @@ void TtcLineDown (Document document, View view)
   delta = 13;
   VerticalScroll (frame, delta, 1);
 #endif /* _WINDOWS */
+#else /* _GTK */
+  /*
+   *
+   *
+   * A FAIRE
+   *
+   */
+
+
+#endif /* !_GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -863,6 +885,7 @@ void TtcLineDown (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcScrollLeft (Document document, View view)
 {
+#ifndef _GTK
 #ifndef _WINDOWS
   XmScrollBarCallbackStruct infos;
 #else   /* _WINDOWS */
@@ -882,6 +905,16 @@ void TtcScrollLeft (Document document, View view)
   delta = -13;
   HorizontalScroll (frame, delta, 1);
 #endif /* _WINDOWS */
+#else /* _GTK */
+  /*
+   *
+   *
+   * A FAIRE
+   *
+   */
+
+
+#endif /* !_GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -889,6 +922,7 @@ void TtcScrollLeft (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcScrollRight (Document document, View view)
 {
+#ifndef _GTK
 #ifndef _WINDOWS
   XmScrollBarCallbackStruct infos;
 #else   /* _WINDOWS */
@@ -908,6 +942,16 @@ void TtcScrollRight (Document document, View view)
   delta = 13;
   HorizontalScroll (frame, delta, 1);
 #endif /* _WINDOWS */
+#else /* _GTK */
+  /*
+   *
+   * A FAIRE
+   *
+   *
+   *
+   */
+
+#endif /* !_GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -916,6 +960,7 @@ void TtcScrollRight (Document document, View view)
 void TtcPageUp (Document document, View view)
 {
    int                 frame;
+#ifndef _GTK
 #ifndef _WINDOWS
    XmScrollBarCallbackStruct infos;
 #else   /* _WINDOWS */
@@ -933,6 +978,15 @@ void TtcPageUp (Document document, View view)
    delta = -FrameTable[frame].FrHeight;
    VerticalScroll (frame, delta, 1);
 #endif /* _WINDOWS */
+#else /* _GTK */
+   /*
+    *
+    * A FAIRE
+    *
+    *
+    */
+
+#endif /* !_GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -940,8 +994,8 @@ void TtcPageUp (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcPageDown (Document document, View view)
 {
-   int                 frame;
-
+  int                 frame;
+#ifndef _GTK
 #ifndef _WINDOWS
    XmScrollBarCallbackStruct infos;
 #else   /* _WINDOWS */
@@ -959,6 +1013,16 @@ void TtcPageDown (Document document, View view)
    delta = FrameTable[frame].FrHeight;
    VerticalScroll (frame, delta, 1);
 #endif /* _WINDOWS */
+#else /* _GTK */
+   /*
+    *
+    * A FAIRE
+    *
+    *
+    */
+
+
+#endif /* !_GTK */
 }
 
 
@@ -976,6 +1040,7 @@ void TtcPageTop (Document document, View view)
      frame = 0;
    JumpIntoView (frame, 0);
 #else  /* !_WINDOWS */
+#ifndef _GTK
    XmScrollBarCallbackStruct infos;
    int                 frame;
 
@@ -985,6 +1050,14 @@ void TtcPageTop (Document document, View view)
      frame = 0;
    infos.reason = XmCR_TO_TOP;
    FrameVScrolled (0, frame, (int *) &infos);
+#else /* _GTK */
+   /*
+    * A FAIRE
+    *
+    *
+    */
+
+#endif /* !_GTK */
 #endif /* _WINDOWS */
 }
 
@@ -1002,6 +1075,7 @@ void TtcPageEnd (Document document, View view)
      frame = 0;
    JumpIntoView (frame, 100);
 #else  /* !_WINDOWS */
+#ifndef _GTK
    XmScrollBarCallbackStruct infos;
    int                 frame;
 
@@ -1011,6 +1085,16 @@ void TtcPageEnd (Document document, View view)
      frame = 0;
    infos.reason = XmCR_TO_BOTTOM;
    FrameVScrolled (0, frame, (int *) &infos);
+#else /* _GTK */
+   /*
+    *
+    *A FAIRE
+    *
+    */
+
+
+
+#endif /* !_GTK */
 #endif /* _WINDOWS */
 }
 
@@ -1037,7 +1121,11 @@ void InitializeOtherThings ()
    ClickY = 0;
    /* message de selection vide */
 #ifndef _WINDOWS
+#ifndef _GTK
    null_string = XmStringCreateSimple ("");
+#else /* _GTK */
+   null_string = (gchar *)"";
+#endif /* !_GTK */
 #endif /* _WINDOWS */
    OldMsgSelect[0] = EOS;
    OldDocMsgSelect = NULL;
@@ -1050,28 +1138,28 @@ void InitializeOtherThings ()
   ----------------------------------------------------------------------*/
 void TtaChangeWindowTitle (Document document, View view, char *title)
 {
-    int          idwindow, v;
-    PtrDocument  pDoc;
-
-    if (view > 0)
-      {
-       idwindow = GetWindowNumber (document, view);
-       if (idwindow > 0) 
-          ChangeFrameTitle (idwindow, title);
-      }
-    else
-      {
-	pDoc = LoadedDocument[document - 1];
-	/* traite les vues de l'arbre principal */
-	for (v = 0; v < MAX_VIEW_DOC; v++)
-	  if (pDoc->DocView[v].DvPSchemaView > 0)
-	    ChangeFrameTitle (pDoc->DocViewFrame[v], title);
-	/* traite les vues des elements associes */
-	for (v = 0; v < MAX_ASSOC_DOC; v++)
-	  if (pDoc->DocAssocRoot[v] != NULL)
-	    if (pDoc->DocAssocFrame[v] != 0)
-	       ChangeFrameTitle (pDoc->DocAssocFrame[v], title);
-      }
+  int          idwindow, v;
+  PtrDocument  pDoc;
+  
+  if (view > 0)
+    {
+      idwindow = GetWindowNumber (document, view);
+      if (idwindow > 0) 
+	ChangeFrameTitle (idwindow, title);
+    }
+  else
+    {
+      pDoc = LoadedDocument[document - 1];
+      /* traite les vues de l'arbre principal */
+      for (v = 0; v < MAX_VIEW_DOC; v++)
+	if (pDoc->DocView[v].DvPSchemaView > 0)
+	  ChangeFrameTitle (pDoc->DocViewFrame[v], title);
+      /* traite les vues des elements associes */
+      for (v = 0; v < MAX_ASSOC_DOC; v++)
+	if (pDoc->DocAssocRoot[v] != NULL)
+	  if (pDoc->DocAssocFrame[v] != 0)
+	    ChangeFrameTitle (pDoc->DocAssocFrame[v], title);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1079,7 +1167,6 @@ void TtaChangeWindowTitle (Document document, View view, char *title)
   ----------------------------------------------------------------------*/
 void TtaRaiseView (Document document, View view)
 {
-#ifndef _GTK
    int                 idwindow;
    ThotWidget          w;
 
@@ -1088,14 +1175,18 @@ void TtaRaiseView (Document document, View view)
    if (idwindow != 0)
      {
 	w = FrameTable[idwindow].WdFrame;
-#   ifndef _WINDOWS
+#ifndef _WINDOWS
+#ifndef _GTK
 	if (w != 0)
 	   XMapRaised (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
-#   else  /* _WINDOWS */
+#else /* _GTK */
+	if (w!=0)
+	  gdk_window_raise (GTK_WIDGET(w->parent->parent->parent)->window);
+#endif /* !_GTK */
+#else  /* _WINDOWS */
 	SetForegroundWindow (FrMainRef [idwindow]);
 #endif /* _WINDOWS */
      }
-#endif /*_GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -1130,10 +1221,14 @@ void TtaSetStatus (Document document, View view, CONST char *text,
 		   CONST char *name)
 {
    int                 frame;
-   char              s[MAX_LENGTH];
+   char                s[MAX_LENGTH];
 #ifndef _WINDOWS
+#ifndef _GTK
    Arg                 args[MAX_ARGS];
    XmString            title_string;
+#else /* _GTK */
+   gchar * title_string;
+#endif /* !_GTK */
 #endif /* _WINDOWS */
 
    if (document == 0)
@@ -1173,7 +1268,22 @@ void TtaSetStatus (Document document, View view, CONST char *text,
 	     XtSetValues (FrameTable[frame].WdStatus, args, 1);
 	     XtManageChild (FrameTable[frame].WdStatus);
 	     XmStringFree (title_string);
-#endif /* _GTK */
+#else /* _GTK */
+	     if (name)
+	       {
+		  /* text est un format */
+		  sprintf (s, text, name);
+		  title_string=s;
+	       }
+	     else
+	       title_string = text;
+	     gtk_statusbar_pop(GTK_STATUSBAR(FrameTable[frame].WdStatus),
+			       (guint)gtk_object_get_data (GTK_OBJECT(FrameTable[frame].WdStatus), "MainSerie"));
+	     gtk_statusbar_push(GTK_STATUSBAR(FrameTable[frame].WdStatus),
+				(guint)gtk_object_get_data (GTK_OBJECT(FrameTable[frame].WdStatus), "MainSerie"),
+				text);
+	     gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].WdStatus));
+#endif /* !_GTK */
 #endif /* _WINDOWS */
 	    }
      }
@@ -2194,7 +2304,16 @@ void ChangeFrameTitle (int frame, char *text)
         n++;
         XtSetValues (w, args, n);
      }
-#   endif /* _GTK */
+#   else /* _GTK */
+   ThotWidget          w;
+   w = FrameTable[frame].WdFrame;
+   if (w != 0)
+     {
+       w=gtk_widget_get_toplevel(w);
+       /*       w=w->parent->parent->parent->parent;*/
+       gtk_window_set_title (GTK_WINDOW(w), text);
+     }
+#   endif /* !_GTK */
 #   endif /* _WINDOWS */
 }
 

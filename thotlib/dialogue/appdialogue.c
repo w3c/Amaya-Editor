@@ -1130,6 +1130,10 @@ void TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon)
    Menu_Ctl           *ptrmenu;
    char               *ptr;
 
+#ifdef _GTK
+   printf("appel de TteOpenMainWindow\n");
+#endif
+
    /* Creation de la fenetre principale */
    UserErrorCode = 0;
    TtaInitDialogueTranslations (InitTranslations (name));
@@ -1254,6 +1258,8 @@ static ThotWidget liteClue = NULL;
 void InitClue (ThotWidget toplevel)
 {
 #ifndef _GTK
+  /* This is not used in GTK because you can choose the text
+     you want to show when you create the button */
    Arg                 args[MAX_ARGS];
    int                 n;
    int                 wait_ms = 500; /* 500 ms i.e. 1/2 second */
@@ -1265,12 +1271,14 @@ void InitClue (ThotWidget toplevel)
                                    toplevel, NULL);
    
    user_delay = TtaGetEnvString("TOOLTIPDELAY");
-   if (user_delay != NULL) {
-       if (sscanf(user_delay,"%d",&wait_ms) != 1) {
-           TtaSetEnvString ("TOOLTIPDELAY", "500", TRUE);
+   if (user_delay != NULL)
+     {
+       if (sscanf(user_delay,"%d",&wait_ms) != 1) 
+	 {
+	   TtaSetEnvString ("TOOLTIPDELAY", "500", TRUE);
 	   wait_ms = 500;
-       }
-   }
+	 }
+     }
    bg = ColorPixel(ColorNumber("Yellow"));
    fg = ColorPixel(ColorNumber("Black"));
    n = 0;
@@ -1356,7 +1364,6 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 						     NULL, info ,"private", 
 						     w, GTK_SIGNAL_FUNC (APP_ButtonCallback), 
 						     (gpointer)frame);
-		   
 		      gtk_widget_show (row);
 		      FrameTable[frame].Call_Button[i] = (Proc) procedure;
 		    }
@@ -1470,7 +1477,7 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
    view: the concerned view.
    index: the index.
   ----------------------------------------------------------------------*/
-void      *TtaGetButtonCallback (Document document, View view, int index)
+void *TtaGetButtonCallback (Document document, View view, int index)
 {
    int                 frame;
 
@@ -1552,7 +1559,12 @@ void      TtaSwitchButton (Document document, View view, int index)
 	      XtSetArg (args[n], XmNbottomShadowColor, top);
 	      n++;
 	      XtSetValues (FrameTable[frame].Button[index], args, n);
-#endif /* _GTK */
+#else /* _GTK */
+
+
+
+
+#endif /* !_GTK */
 #endif /* _WINDOWS */
 	    }
 	}
@@ -1610,7 +1622,16 @@ void TtaChangeButton (Document document, View view, int index, ThotIcon picture,
 	      n++;
 	      XtSetValues (FrameTable[frame].Button[index], args, n);
 	      FrameTable[frame].EnabledButton[index] = state;
-#endif /* _GTK */
+#else /* _GTK */
+	      /*
+	      * A FAIRE
+	      * une solution serait de modifier directement l'attribut icon de la GtkToolbarChild
+	      * http://developer.gnome.org/doc/API/gtk/gtktoolbar.html#GTKTOOLBAR-STRUCT
+	      *
+	      *
+	      **/
+	      FrameTable[frame].EnabledButton[index] = state;
+#endif /* !_GTK */
 #endif /* _WINDOWS */
 	    }
 	}
@@ -2420,20 +2441,21 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 
 	   if (Main_Wd == 0)
 	     WinErrorBox (WIN_Main_Wd, "MakeFrame");
-	   else {
-	     /* store everything. */
-	     FrMainRef[frame]            = Main_Wd;
-	     FrRef[frame]                = hwndClient;
-	     WinToolBar[frame]           = ToolBar;
-	     FrameTable[frame].WdStatus  = StatusBar;
-	     /* and show it up. */
-                  
-	     menu_bar = CreateMenu ();
-	     if (!menu_bar) 
-	       WinErrorBox (Main_Wd, "MakeFrame");
-	     else 
-	       WinMenus[frame] = menu_bar;
-	   }
+	   else 
+	     {
+	       /* store everything. */
+	       FrMainRef[frame]            = Main_Wd;
+	       FrRef[frame]                = hwndClient;
+	       WinToolBar[frame]           = ToolBar;
+	       FrameTable[frame].WdStatus  = StatusBar;
+	       /* and show it up. */
+	       
+	       menu_bar = CreateMenu ();
+	       if (!menu_bar) 
+		 WinErrorBox (Main_Wd, "MakeFrame");
+	       else 
+		 WinMenus[frame] = menu_bar;
+	     }
 #else /* _WINDOWS */
 	   if (width < MIN_WIDTH)
 	     dx = (Dimension) MIN_WIDTH;
@@ -2451,10 +2473,11 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 #ifdef _GTK
 	   /*** Build the document window ***/
 	   Main_Wd = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-	   gtk_window_set_title (GTK_WINDOW (Main_Wd), "Amaya");
+	   gtk_widget_realize (GTK_WIDGET(Main_Wd));
+	   gtk_window_set_title (GTK_WINDOW (Main_Wd), name);
 	   gtk_window_set_policy (GTK_WINDOW (Main_Wd), TRUE, TRUE, FALSE);
-	   gtk_window_set_position (GTK_WINDOW (Main_Wd), GTK_WIN_POS_MOUSE);
-	   gtk_window_set_default_size (GTK_WINDOW (Main_Wd), dx, dy);
+	   gtk_widget_set_uposition(GTK_WIDGET(Main_Wd), X, Y);
+	   gtk_widget_set_usize (GTK_WIDGET(Main_Wd), dx+4, dy+4);
 	   gtk_signal_connect (GTK_OBJECT (Main_Wd), "destroy",
 			       GTK_SIGNAL_FUNC (FrameKilled),(gpointer) frame);
 	   gtk_widget_show(Main_Wd);
@@ -2558,9 +2581,9 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   FrameTable[frame].MenuUndo = -1;
 	   FrameTable[frame].MenuRedo = -1;
 
+	   menu_bar = 0;
 #ifndef _WINDOWS
 #ifndef _GTK
-	   menu_bar = 0;
 	   n = 0;
 	   XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	   n++;
@@ -2587,9 +2610,9 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 #ifndef _WINDOWS
 #ifdef _GTK
 			 menu_bar = gtk_menu_bar_new ();
-			 gtk_widget_ref (menu_bar);
+			 /*			 gtk_widget_ref (menu_bar);
 			 gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "menubar", menu_bar,
-						   (GtkDestroyNotify) gtk_widget_unref);
+						   (GtkDestroyNotify) gtk_widget_unref);*/
 			 gtk_widget_show (menu_bar);
 			 gtk_container_add (GTK_CONTAINER (handlebox1), menu_bar);
 #else /* _GTK */
@@ -2606,8 +2629,10 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 #else  /* _WINDOWS */
 #ifdef _GTK
 		     w = gtk_menu_new ();
+		     gtk_widget_show (GTK_WIDGET (w));
 #else /* _GTK */
 		     w = XmCreateCascadeButton (menu_bar, TtaGetMessage (THOT, ptrmenu->MenuID), args, n);
+		     XtManageChild (w);
 #endif /* _GTK */
 #endif /* !_WINDOWS */
 		     FrameTable[frame].WdMenus[i] = w;
@@ -2630,7 +2655,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 		     gtk_container_add(GTK_CONTAINER (menu_bar), menu_item);
 		     gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), w);
 #else /* _GTK */
-		     XtManageChild (w);
 		     /* Register dynamic menus */
 		     if (ptrmenu->MenuHelp)
 		       {
@@ -2647,7 +2671,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	       i++;
 	     }
 
-	   /* enable othe menu entries */
+	   /* enable other menu entries */
 	   while (i < MAX_MENU)
 	     {
 	       FrameTable[frame].EnabledMenus[i] = FALSE;
@@ -2696,6 +2720,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 				     (GtkDestroyNotify) gtk_widget_unref);
 	   gtk_widget_show (label1);
 	   gtk_box_pack_start (GTK_BOX (hbox1), label1, FALSE, TRUE, 10);
+	   FrameTable[frame].WdStatus = label1;
 
 	   /* Put the edit zone */
 	   entry1 = gtk_entry_new ();
@@ -2704,6 +2729,10 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 				     (GtkDestroyNotify) gtk_widget_unref);
            gtk_widget_show (entry1);
 	   gtk_box_pack_start (GTK_BOX (hbox1), entry1, TRUE, TRUE, 5);
+
+	   for (i = 1; i < MAX_TEXTZONE; i++)
+	     FrameTable[frame].Text_Zone[i] = 0;
+	   FrameTable[frame].Text_Zone[0] = entry1;
 
 
 	   /* Creation of the table which includes drawingarea and scrollbars */
@@ -2780,7 +2809,12 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 				     (GtkDestroyNotify) gtk_widget_unref);
 	   gtk_widget_show (statusbar);
 	   gtk_box_pack_start (GTK_BOX (vbox1), statusbar, FALSE, TRUE, 0);
-
+	   gtk_object_set_data(GTK_OBJECT(statusbar), "MainSerie", 	   
+			       (gpointer)gtk_statusbar_get_context_id(statusbar, "MainSerie"));
+	   gtk_statusbar_push(GTK_STATUSBAR(statusbar),
+			      (guint)gtk_object_get_data (GTK_OBJECT(statusbar), "MainSerie"),
+			      "");
+	   FrameTable[frame].WdStatus = statusbar;
 
            /* Connect callbacks */
 	   gtk_signal_connect (GTK_OBJECT (drawing_area), "button_press_event",
@@ -2799,7 +2833,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
                                   | GDK_FOCUS_CHANGE_MASK
                                   ); 
 	   */
-
+	   /*
 	   gtk_signal_connect (GTK_OBJECT (handlebox1), "destroy",
 			       GTK_SIGNAL_FUNC (gtk_widget_destroy),
 			       NULL);
@@ -2818,7 +2852,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   gtk_signal_connect (GTK_OBJECT (entry1), "destroy",
 			       GTK_SIGNAL_FUNC (gtk_widget_destroy),
 			       NULL);
-
+	   */
 	   /* gtk_signal_connect (GTK_OBJECT (vscrl), "value_changed",
 	      GTK_SIGNAL_FUNC (FrameVScrolled), &frame);*/
 
@@ -2828,7 +2862,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   FrameTable[frame].WdScrollH = hscrl;
 	   FrameTable[frame].WdScrollV = vscrl;
            FrRef[frame] = drawing_area->window;
-#else /* _GTK */
+#else /* !_GTK */
 	   /*** Creation of scrollbars ***/
 	   n = 0;
 	   XtSetArg (args[n], XmNbackground, Scroll_Color);
@@ -3132,9 +3166,8 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
    Ferme la fenetre, detruit le fichier et libere l'entree.      
    Libere toutes les boites allouees a la fenetre.                   
   ----------------------------------------------------------------------*/
-void                DestroyFrame (int frame)
+void DestroyFrame (int frame)
 {
-#ifndef _GTK
    ThotWidget          w;
    int                 action;
    int                 ref, i;
@@ -3179,11 +3212,23 @@ void                DestroyFrame (int frame)
 	  }
 
 #ifndef _WINDOWS
+#ifndef _GTK
         XFlushOutput (0);
         /* Detache les procedures de callback */
         XtRemoveCallback (XtParent (XtParent (w)), XmNdestroyCallback, (XtCallbackProc) FrameKilled, (XtPointer) frame);
 
         XDestroyWindow (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
+#else /* _GTK */
+	/*
+	gtk_signal_disconnect_by_func(GTK_OBJECT(GTK_WIDGET(w)->parent->parent), GTK_SIGNAL_FUNC(FrameKilled), frame); 
+	gtk_widget_destroy (GTK_WIDGET(w)->parent->parent->parent);
+	*/
+#endif /* !_GTK */
+#ifdef _GTK
+   printf("Boom on detruit la frame\n");
+   gtk_widget_destroy (GTK_WIDGET(gtk_widget_get_toplevel(FrameTable[frame].WdFrame)));
+#endif /* _GTK */
+
 
         for (i = 0; i < MAX_BUTTON; i++)
 	  FrameTable[frame].Button[i] = 0;
@@ -3215,11 +3260,10 @@ void                DestroyFrame (int frame)
 	ClearConcreteImage (frame);
 	ThotFreeFont (frame);	/* On libere les polices de caracteres utilisees */
      }
-#endif /* _GTK */		
 #ifdef _WINDOWS
    if (FrMainRef [frame])
       DestroyWindow (FrMainRef[frame]);
-#endif
+#endif /* _WINDAUB */
 }
 
 

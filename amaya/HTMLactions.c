@@ -1287,7 +1287,6 @@ ThotBool AnnotSimpleClick (NotifyElement *event)
   ----------------------------------------------------------------------*/
 void UpdateTitle (Element el, Document doc)
 {
-#ifndef _GTK
    Element             textElem, next;
    ElementType         elType;
    Language            lang;
@@ -1332,7 +1331,7 @@ void UpdateTitle (Element el, Document doc)
     	   TtaChangeWindowTitle (DocumentSource[doc], 0, text);
 	TtaFreeMemory (text);
      }
-#endif /* _GTK */
+
 }
 
 /*----------------------------------------------------------------------

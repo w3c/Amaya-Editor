@@ -1161,7 +1161,7 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
    Updates the Attributes menu of all open frames belonging to document
    pDoc.
   ----------------------------------------------------------------------*/
-void                UpdateAttrMenu (PtrDocument pDoc)
+void UpdateAttrMenu (PtrDocument pDoc)
 {
 #ifndef _GTK
   Document            document;
