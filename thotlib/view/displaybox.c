@@ -156,7 +156,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
   int                 xd, yd, i, w;
   int                 fg, bg;
   int                 width, height;
-  static   ThotBool   StixExist = TRUE;
+  ThotBool            StixExist;
 
   fg = pBox->BxAbstractBox->AbForeground;
   bg = pBox->BxAbstractBox->AbBackground;
@@ -169,8 +169,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
 #ifdef _WINDOWS
 	if (WinFontExist ("esstix6_.ttf"))
 #endif /*_WINDOWS*/
-	   if (StixExist == TRUE)
-           GetMathFontFromChar (pBox->BxAbstractBox->AbShape, (void **) &font, pBox->BxFont->FontSize);
+      GetMathFontFromChar (pBox->BxAbstractBox->AbShape, (void **) &font, pBox->BxFont->FontSize);
       if (font == NULL)
 	{
 	  GetFontAndIndexFromSpec (32, pBox->BxFont, &font);
