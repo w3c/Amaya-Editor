@@ -21,6 +21,7 @@
 #include "frame.h"
 #include "appdialogue.h"
 #include "application.h"
+#include "registry_f.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
