@@ -38,26 +38,25 @@
 static ThotBool     AttrFormExists = FALSE;
 static ThotBool     MandatoryAttrFormExists = FALSE;
 
-
 #define LgMaxAttrText 500
-/* the menu attributes */
-static PtrSSchema   AttrStruct[MAX_MENU * 2];
-static ThotBool     AttrOblig[MAX_MENU * 2];
-static ThotBool     AttrEvent[MAX_MENU* 2];
 static PtrSSchema   SchCurrentAttr = NULL;
 static PtrDocument  DocCurrentAttr = NULL;
 static char         TextAttrValue[LgMaxAttrText];
-static int          AttrNumber[MAX_MENU * 2];
-static int          EventMenu[MAX_FRAME];
 static int          NumCurrentAttr = 0;
 static int          CurrentAttr;
 /* return value of the input form */
 static int          NumAttrValue;
 /* main menu of attributes */
+static PtrSSchema   AttrStruct[MAX_MENU * 2];
+static int          AttrNumber[MAX_MENU * 2];
 static int          ActiveAttr[MAX_MENU * 2];
+static ThotBool     AttrOblig[MAX_MENU * 2];
+static ThotBool     AttrInSchema[MAX_MENU * 2];
+static ThotBool     AttrEvent[MAX_MENU * 2];
 /* submenu of event attributes */
 static int          AttrEventNumber[MAX_MENU];
 static int          ActiveEventAttr[MAX_MENU];
+static int          EventMenu[MAX_FRAME];
 
 /* required attributs context */
 static PtrAttribute PtrReqAttr;
@@ -931,7 +930,6 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
      } 
 } 
 
-
 /*----------------------------------------------------------------------
    CallbackReqAttrMenu
    handles the callback of the menu which captures the required attributes.
@@ -1035,9 +1033,9 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
   PtrElement          firstSel, lastSel;
   PtrSSchema          pSS;
   PtrSSchema          pSchExt;
-  PtrAttribute        pAttrNew;
+  PtrAttribute        pAttr;
   PtrSRule            pRe1;
-  PtrTtAttribute      pAttr;
+  PtrTtAttribute      pAt;
   char                tempBuffer[MAX_NAME_LENGTH + 1];
   int                 i, j, k;
   int                 firstChar, lastChar;
@@ -1087,7 +1085,7 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
 		      if (pSS->SsAttribute->TtAttr[att - 1]->AttrGlobal &&
 			  /* and invisible attributes */
 			  !AttrHasException (ExcInvisible, att, pSS))
-			/* skip the attribute Langue execpt the first time */
+			/* skip the attribute Language execpt the first time */
 			if (nbOfEntries == 0 || att != 1)
 			  if (TteItemMenuAttr (pSS, att, firstSel, SelDoc))
 			    {
@@ -1096,6 +1094,7 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
 			      AttrStruct[nbOfEntries] = pSS;
 			      AttrNumber[nbOfEntries] = att;
 			      AttrOblig[nbOfEntries] = FALSE;
+			      AttrInSchema[nbOfEntries] = TRUE;
 			      /* is it an event attribute */
 			      AttrEvent[nbOfEntries] =
 				AttrHasException (ExcEventAttr, att, pSS);
@@ -1133,6 +1132,7 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
 		      AttrStruct[nbOfEntries] = pSS;
 		      AttrNumber[nbOfEntries] = pRe1->SrLocalAttr->Num[att];
 		      AttrOblig[nbOfEntries] = pRe1->SrRequiredAttr->Bln[att];
+		      AttrInSchema[nbOfEntries] = TRUE;
 		      /* is it an event attribute */
 		      AttrEvent[nbOfEntries] = AttrHasException (ExcEventAttr,
 					     pRe1->SrLocalAttr->Num[att], pSS);
@@ -1153,10 +1153,47 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
 	    }
 	  while (pSchExt != NULL);
 	}
-      
       /* la table contient tous les attributs applicables aux elements */
       /* selectionnes */
-      GetAttribute (&pAttrNew);
+      /* add attributes attached to the element that are not yet in
+	 the table */
+      pAttr = firstSel->ElFirstAttr;
+      while (pAttr)
+	{
+	  isNew = TRUE;
+	  for (att = 0; att < nbOfEntries && isNew; att++)
+	    {
+	      if (pAttr->AeAttrNum == AttrNumber[att] &&
+		  pAttr->AeAttrSSchema == AttrStruct[att])
+		isNew = FALSE;
+            }
+	  if (isNew)
+	    {
+	      if (nbOfEntries - *nbEvent < MAX_MENU &&
+		  !AttrHasException (ExcInvisible, pAttr->AeAttrNum,
+				     pAttr->AeAttrSSchema) &&
+		  TteItemMenuAttr (pAttr->AeAttrSSchema, pAttr->AeAttrNum,
+				   firstSel, SelDoc))
+		{
+		  /* conserve le schema de structure et le numero */
+		  /* d'attribut de cette nouvelle entree du menu */
+		  AttrStruct[nbOfEntries] = pAttr->AeAttrSSchema;
+		  AttrNumber[nbOfEntries] = pAttr->AeAttrNum;
+		  AttrOblig[nbOfEntries] = FALSE;
+		  AttrInSchema[nbOfEntries] = FALSE;
+		  /* is it an event attribute? */
+		  AttrEvent[nbOfEntries] = AttrHasException (ExcEventAttr,
+				       pAttr->AeAttrNum, pAttr->AeAttrSSchema);
+		  if (AttrEvent[nbOfEntries])
+		    (*nbEvent)++;
+		  nbOfEntries++;
+		}
+	    }
+          pAttr = pAttr->AeNext;
+	}
+
+      /* build the menu according to the table */
+      GetAttribute (&pAttr);
       if (nbOfEntries > 0)
 	{
 	  lgmenu = 0;
@@ -1166,15 +1203,15 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
 	  /* met les noms des attributs de la table dans le menu */
 	  for (att = 0; att < nbOfEntries; att++)
 	    {
-	      pAttr = AttrStruct[att]->SsAttribute->TtAttr[AttrNumber[att]-1];
-	      pAttrNew->AeAttrSSchema = AttrStruct[att];
-	      pAttrNew->AeAttrNum = AttrNumber[att];
-	      pAttrNew->AeDefAttr = FALSE;
-	      if (pAttr->AttrType == AtEnumAttr && pAttr->AttrNEnumValues == 1)
+	      pAt = AttrStruct[att]->SsAttribute->TtAttr[AttrNumber[att]-1];
+	      pAttr->AeAttrSSchema = AttrStruct[att];
+	      pAttr->AeAttrNum = AttrNumber[att];
+	      pAttr->AeDefAttr = FALSE;
+	      if (pAt->AttrType == AtEnumAttr && pAt->AttrNEnumValues == 1)
 		/* attribut enumere' a une seule valeur (attribut booleen) */
-		sprintf (tempBuffer, "T%s", pAttr->AttrName);
+		sprintf (tempBuffer, "T%s", pAt->AttrName);
 	      else
-		sprintf (tempBuffer, "T%s...", pAttr->AttrName);
+		sprintf (tempBuffer, "T%s...", pAt->AttrName);
 	      i = strlen (tempBuffer) + 1;
 	      if (AttrEvent[att])
 		{
@@ -1182,7 +1219,7 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
 		    strcpy (&bufEventAttr[lgsubmenu], tempBuffer);
 		  lgsubmenu += i;
 		  /* mark all active enties*/
-		  if (AttributeValue (firstSel, pAttrNew) != NULL)
+		  if (AttributeValue (firstSel, pAttr) != NULL)
 		    ActiveEventAttr[k] = 1;
 		  else
 		    ActiveEventAttr[k] = 0;
@@ -1195,7 +1232,7 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
 		    strcpy (&bufMenu[lgmenu], tempBuffer);
 		  lgmenu += i;
 		  /* mark all active enties*/
-		  if (AttributeValue (firstSel, pAttrNew) != NULL)
+		  if (AttributeValue (firstSel, pAttr) != NULL)
 		    ActiveAttr[j] = 1;
 		  else
 		    ActiveAttr[j] = 0;
@@ -1203,7 +1240,8 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
 		}
 	    }
 	}
-      DeleteAttribute (NULL, pAttrNew);
+      DeleteAttribute (NULL, pAttr);
+
       if (*nbEvent > 0)
 	{
 	  /* add the event entry if needed */
