@@ -27,6 +27,7 @@ extern ThotBool IsValidProtocol ( const STRING url );
 extern STRING GetBaseURL ( Document doc );
 extern STRING GetLocalPath ( Document doc,
                              STRING url );
+extern void ConvertFileURL ( STRING url );
 extern void NormalizeURL ( STRING orgName,
                            Document doc,
                            STRING newName,
@@ -41,6 +42,7 @@ extern STRING AmayaParseUrl ( const STRING aName,
                               STRING relatedName,
                               int wanted );
 extern void SimplifyUrl ( STRING* url );
+extern void ConvertFileURL ( /* STRING url */);
 extern ThotBool NormalizeFile ( STRING src,
                                 STRING target );
 extern STRING MakeRelativeURL ( STRING aName,

@@ -736,6 +736,21 @@ STRING     url;
     return (NULL);
 }
 
+/*----------------------------------------------------------------------
+   ConvertFileURL
+   If the URL starts with file: prefix, it removes the protocol so that we
+   can use it as a local filename
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void ConvertFileURL (STRING url)
+#else
+void ConvertFileURL (url)
+STRING url
+#endif /* __STDC__ */
+{
+  if (!ustrncasecmp (url, TEXT("file:"), 5))
+      ustrcpy (url, url + 5);
+}
 
 /*----------------------------------------------------------------------
    NormalizeURL

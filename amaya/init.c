@@ -2357,10 +2357,12 @@ ThotBool	    history;
       StartParser (newdoc, tempdocument, documentname, tempdir, pathname, plainText);
       TtaFreeMemory (tempdir);
       if (!plainText)
+	{
 	if (HTMLErrorsFound)
 	  TtaSetItemOn (newdoc, 1, Special, BShowLogFile);
 	else
-          TtaSetItemOff (newdoc, 1, Special, BShowLogFile);
+	  TtaSetItemOff (newdoc, 1, Special, BShowLogFile);
+	}
       if (newdoc != doc)
 	/* the document is displayed in a different window */
 	/* reset the history of the new window */
@@ -2368,6 +2370,11 @@ ThotBool	    history;
         /* hide template entry if no template server is configured */
       if (TtaGetEnvString (TEXT("TEMPLATE_URL")) == NULL)
  	TtaSetItemOff (newdoc, 1, File, BTemplate);
+#ifdef ANNOTATIONS
+      /* auto-load the annotations associated with the document */
+      if (!plainText)
+	ANNOT_AutoLoad (newdoc);
+#endif /* ANNOTATIONS */
     }
   TtaFreeMemory (tempdocument);
   return (newdoc);
@@ -3314,6 +3321,10 @@ void               *ctx_cbf;
      NormalizeURL (tempdocument, baseDoc, pathname, documentname, NULL);
    else
      NormalizeURL (tempdocument, 0, pathname, documentname, NULL);
+
+   /* if it's a file: url, we remove the protocol, as it
+      is a local file */
+   ConvertFileURL (pathname);
 
    if (parameters[0] == EOS)
      {
@@ -4675,6 +4686,9 @@ NotifyEvent        *event;
    InitAutomaton ();
    /* initialize the configuration menu context */
    InitConfMenu ();
+#ifdef ANNOTATIONS
+   ANNOT_Init ();
+#endif /* ANNOTATIONS */
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
    /* initialize the libwww */
    QueryInit ();

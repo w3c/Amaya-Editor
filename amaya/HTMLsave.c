@@ -1294,6 +1294,8 @@ View                view;
   ok = FALSE;
   /* attempt to save through network if possible */
   ustrcpy (tempname, DocumentURLs[doc]);
+  /* if the URL starts with file:, supress the protocol part */
+  ConvertFileURL (tempname);
   /* suppress compress suffixes from tempname */
   i = ustrlen (tempname) - 1;
   if (i > 2 && !ustrcmp (&tempname[i-2], TEXT(".gz")))
