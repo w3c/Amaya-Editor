@@ -30,12 +30,20 @@ extern ThotBool TextsEqual ( PtrTextBuffer pBuf1,
 extern void CopyTextToText ( PtrTextBuffer pSrceBuf,
                              PtrTextBuffer pCopyBuf,
                              int *len );
-extern void CopyStringToText ( CHAR_T* srceStrn,
-                               PtrTextBuffer pCopyBuf,
-                               int *LgCopiee );
-extern void CopyTextToString ( PtrTextBuffer pSrceBuf,
-                               CHAR_T* pStrCpy,
-                               int *len );
+extern int CopyS2B ( unsigned char *src,
+                     int max,
+                     PtrTextBuffer pBuf,
+                     int pos );
+extern int CopyB2S ( PtrTextBuffer pBuf,
+                     int pos,
+                     unsigned char *des,
+                     int max );
+extern void CopyStringToBuffer ( unsigned char *src,
+                                 PtrTextBuffer pDestBuf,
+                                 int *length );
+extern void CopyBufferToString ( PtrTextBuffer pSrceBuf,
+                                 char *dest,
+                                 int *length );
 extern void ClearText ( PtrTextBuffer pBuf );
 extern void AddPointInPolyline ( PtrTextBuffer firstBuffer,
                                  int rank,
@@ -79,12 +87,20 @@ extern ThotBool TextsEqual (/* PtrTextBuffer pBuf1,
 extern void CopyTextToText (/* PtrTextBuffer pSrceBuf,
                                PtrTextBuffer pCopyBuf,
                                int *len */);
-extern void CopyStringToText (/* CHAR_T* srceStrn,
-                                 PtrTextBuffer pCopyBuf,
-                                 int *LgCopiee */);
-extern void CopyTextToString (/* PtrTextBuffer pSrceBuf,
-                                 CHAR_T* pStrCpy,
-                                 int *len */);
+extern int CopyS2B (/* unsigned char *src,
+                       int max,
+                       PtrTextBuffer pBuf,
+                       int pos */);
+extern int CopyB2S (/* PtrTextBuffer pBuf,
+                       int pos,
+                       unsigned char *des,
+                       int max */);
+extern void CopyStringToBuffer (/* unsigned char *src,
+                                   PtrTextBuffer pDestBuf,
+                                   int *length */);
+extern void CopyBufferToString (/* PtrTextBuffer pSrceBuf,
+                                   char *dest,
+                                   int *length */);
 extern void ClearText (/* PtrTextBuffer pBuf */);
 extern void AddPointInPolyline (/* PtrTextBuffer firstBuffer,
                                    int rank,

@@ -1305,7 +1305,7 @@ static ThotBool     XmlCloseElement (char *mappedName)
 
 	   /* complete all closed elements */
 	   if (el != XMLcontext.lastElement)
-	       if (!TtaIsAncestor(el, XMLcontext.lastElement))
+	       if (!TtaIsAncestor (el, XMLcontext.lastElement))
 	           el = NULL;
 	   
 	   spacesDeleted = FALSE;

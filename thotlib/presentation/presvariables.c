@@ -925,7 +925,7 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 	  case VarText:
 	    /* constante textuelle */
 	    pPres1 = &pSchP->PsConstant[pVa1->ViConstant - 1];
-	    CopyStringToText (pPres1->PdString, pAb->AbText, &l);
+	    CopyStringToBuffer (pPres1->PdString, pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    pAb->AbLanguage = TtaGetLanguageIdFromAlphabet (pPres1->PdAlphabet);
 	    break;
@@ -969,7 +969,7 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 		  case AtNumAttr:
 		    /* traduit l'entier en ASCII selon le style voulu */
 		    GetCounterValue (pA->AeAttrValue, pVa1->ViStyle, number, &l);
-		    CopyStringToText (number, pAb->AbText, &l);
+		    CopyStringToBuffer (number, pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    pAb->AbCreatorAttr = pA;
 		    break;
@@ -983,12 +983,12 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 		    pAb->AbCreatorAttr = pA;
 		    break;
 		  case AtReferenceAttr:
-		    CopyStringToText ("REF", pAb->AbText, &l);
+		    CopyStringToBuffer ("REF", pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    break;
 		  case AtEnumAttr:
 		    pAttr1 = &pSS->SsAttribute[pA->AeAttrNum - 1];
-		    CopyStringToText (pAttr1->AttrEnumValue[pA->AeAttrValue-1],
+		    CopyStringToBuffer (pAttr1->AttrEnumValue[pA->AeAttrValue-1],
 				      pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    pAb->AbCreatorAttr = pA;
@@ -1033,7 +1033,7 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 		}
 	    /* traduit l'entier en ASCII */
 	    GetCounterValue (i, pVa1->ViStyle, number, &l);
-	    CopyStringToText (number, pAb->AbText, &l);
+	    CopyStringToBuffer (number, pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    break;
 
@@ -1043,17 +1043,17 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 	    *pt = time (NULL);
 	    ptm = localtime (pt);
 	    GetCounterValue (ptm->tm_year, CntArabic, number, &l);
-	    CopyStringToText (number, pAb->AbText, &l);
+	    CopyStringToBuffer (number, pAb->AbText, &l);
 	    pAb->AbVolume += l;
-	    CopyStringToText ("/", pAb->AbText, &l);
+	    CopyStringToBuffer ("/", pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    GetCounterValue (ptm->tm_mon + 1, CntArabic, number, &l);
-	    CopyStringToText (number, pAb->AbText, &l);
+	    CopyStringToBuffer (number, pAb->AbText, &l);
 	    pAb->AbVolume += l;
-	    CopyStringToText ("/", pAb->AbText, &l);
+	    CopyStringToBuffer ("/", pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    GetCounterValue (ptm->tm_mday, CntArabic, number, &l);
-	    CopyStringToText (number, pAb->AbText, &l);
+	    CopyStringToBuffer (number, pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    break;
 
@@ -1063,43 +1063,43 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 	    *pt = time (NULL);
 	    ptm = localtime (pt);
 	    GetCounterValue (ptm->tm_mday, CntArabic, number, &l);
-	    CopyStringToText (number, pAb->AbText, &l);
+	    CopyStringToBuffer (number, pAb->AbText, &l);
 	    pAb->AbVolume += l;
-	    CopyStringToText ("/", pAb->AbText, &l);
+	    CopyStringToBuffer ("/", pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    GetCounterValue (ptm->tm_mon + 1, CntArabic, number, &l);
-	    CopyStringToText (number, pAb->AbText, &l);
+	    CopyStringToBuffer (number, pAb->AbText, &l);
 	    pAb->AbVolume += l;
-	    CopyStringToText ("/", pAb->AbText, &l);
+	    CopyStringToBuffer ("/", pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    GetCounterValue (ptm->tm_year, CntArabic, number, &l);
-	    CopyStringToText (number, pAb->AbText, &l);
+	    CopyStringToBuffer (number, pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    break;
 
 	  case VarDocName:
 	    /* Name du document */
-	    CopyStringToText (pDoc->DocDName, pAb->AbText, &l);
+	    CopyStringToBuffer (pDoc->DocDName, pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    break;
 
 	  case VarDirName:
 	    /* Name du document */
-	    CopyStringToText (pDoc->DocDirectory, pAb->AbText, &l);
+	    CopyStringToBuffer (pDoc->DocDirectory, pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    break;
 
 	  case VarElemName:
 	    /* Name de l'element */
 	    pEl = pAb->AbElement;
-	    CopyStringToText (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].
+	    CopyStringToBuffer (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].
 			      SrName, pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    break;
 
 	  case VarAttrName:
 	    /* Nom de l'attribut */
-	    CopyStringToText (pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrName, pAb->AbText, &l);
+	    CopyStringToBuffer (pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrName, pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    break;
 
@@ -1124,7 +1124,7 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 	      i = pEl->ElPageNumber;	/* numero de la page trouvee */
 	    /* traduit le numero de page en ASCII selon le style voulu */
 	    GetCounterValue (i, pVa1->ViStyle, number, &l);
-	    CopyStringToText (number, pAb->AbText, &l);
+	    CopyStringToBuffer (number, pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    break;
 

@@ -2157,54 +2157,54 @@ void InsertElemInChoice (PtrElement pEl, PtrElement *pNew, PtrDocument pDoc,
    Attaches to the pEl Element the required attributes specified by the
    pRe1 rule of the structure scheme pSS.
   ----------------------------------------------------------------------*/
-void AttachRequiredAttributes (PtrElement pEl, SRule * pSRule, PtrSSchema pSS,
+void AttachRequiredAttributes (PtrElement pEl, SRule *pSRule, PtrSSchema pSS,
 			       ThotBool withAttr, PtrDocument pDoc)
 {
-   int                 i;
-   int                 att;
-   PtrAttribute        pAttr;
-   PtrReference        ref;
-   int                 l;
+  PtrAttribute        pAttr;
+  PtrReference        ref;
+  int                 i;
+  int                 att;
+  int                 l;
 
-   for (i = 0; i < pSRule->SrNDefAttrs; i++)
-     {
-	if (pSRule->SrDefAttrModif[i] && !withAttr)
-	   /* we are reading a pivot, so we don't create any attributes with a
-	      default value */
-	   continue;
+  for (i = 0; i < pSRule->SrNDefAttrs; i++)
+    {
+      if (pSRule->SrDefAttrModif[i] && !withAttr)
+	/* we are reading a pivot, so we don't create any attributes with a
+	   default value */
+	continue;
 
-	att = pSRule->SrDefAttr[i];
-	/* gets an attribute block */
-	GetAttribute (&pAttr);
-	/* links this block to the head of the attributes list of the element */
-	pAttr->AeNext = pEl->ElFirstAttr;
-	pEl->ElFirstAttr = pAttr;
-	/* fills the attribute block */
-	pAttr->AeAttrSSchema = pSS;
-	pAttr->AeAttrNum = att;
-	if (!pSRule->SrDefAttrModif[i])
-	  /* fixed value attribute */
-	   pAttr->AeDefAttr = TRUE;
-	pAttr->AeAttrType = pSS->SsAttribute[att - 1].AttrType;
-	switch (pAttr->AeAttrType)
-	      {
-		 case AtEnumAttr:
-		 case AtNumAttr:
-		    pAttr->AeAttrValue = pSRule->SrDefAttrValue[i];
-		    break;
-		 case AtTextAttr:
-		    GetTextBuffer (&pAttr->AeAttrText);
-		    CopyStringToText (pSS->SsConstBuffer + pSRule->SrDefAttrValue[i] - 1, pAttr->AeAttrText, &l);
-		    break;
-		 case AtReferenceAttr:
-		    /* gets a reference descriptor */
-		    GetReference (&ref);
-		    pAttr->AeAttrReference = ref;
-		    pAttr->AeAttrReference->RdElement = pEl;
-		    pAttr->AeAttrReference->RdAttribute = pAttr;
-		    break;
-	      }
-     }
+      att = pSRule->SrDefAttr[i];
+      /* gets an attribute block */
+      GetAttribute (&pAttr);
+      /* links this block to the head of the attributes list of the element */
+      pAttr->AeNext = pEl->ElFirstAttr;
+      pEl->ElFirstAttr = pAttr;
+      /* fills the attribute block */
+      pAttr->AeAttrSSchema = pSS;
+      pAttr->AeAttrNum = att;
+      if (!pSRule->SrDefAttrModif[i])
+	/* fixed value attribute */
+	pAttr->AeDefAttr = TRUE;
+      pAttr->AeAttrType = pSS->SsAttribute[att - 1].AttrType;
+      switch (pAttr->AeAttrType)
+	{
+	case AtEnumAttr:
+	case AtNumAttr:
+	  pAttr->AeAttrValue = pSRule->SrDefAttrValue[i];
+	  break;
+	case AtTextAttr:
+	  GetTextBuffer (&pAttr->AeAttrText);
+	  CopyStringToBuffer (pSS->SsConstBuffer + pSRule->SrDefAttrValue[i] - 1, pAttr->AeAttrText, &l);
+	  break;
+	case AtReferenceAttr:
+	  /* gets a reference descriptor */
+	  GetReference (&ref);
+	  pAttr->AeAttrReference = ref;
+	  pAttr->AeAttrReference->RdElement = pEl;
+	  pAttr->AeAttrReference->RdAttribute = pAttr;
+	  break;
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -3499,48 +3499,46 @@ PtrAttribute GetTypedAttrAncestor (PtrElement pEl, int attNum,
   ----------------------------------------------------------------------*/
 void CheckLanguageAttr (PtrDocument pDoc, PtrElement pEl)
 {
-   PtrAttribute        pAttr, pA;
-   int                 len;
-   Language            lang;
+  PtrAttribute        pAttr, pA;
+  Language            lang;
+  int                 len;
  
-   if (pEl != NULL)
-      if (GetTypedAttrForElem (pEl, 1, NULL) == NULL)
-	 /* this element has no language attribute */
-	{
-	   /* a priori, we'll take the default language */
-	   lang = TtaGetDefaultLanguage ();
-	   if (pEl != pDoc->DocDocElement)
-	      /* it's not the root of the principal tree, so we verify
-		 if the principal tree has has a language attribue. If yes, 
-		 we use that language */
-	     {
-		pAttr = GetTypedAttrForElem (pDoc->DocDocElement, 1, NULL);
-		if (pAttr != NULL)
-		   if (pAttr->AeAttrText != NULL)
-		      lang = TtaGetLanguageIdFromName (pAttr->AeAttrText->BuContent);
-	     }
-	   /* changes the language of the text leaves */
-	   ChangeLanguageLeaves (pEl, lang);
-	   /* applies the langyuage attribute to the element */
-	   GetAttribute (&pAttr);
-	   pAttr->AeAttrSSchema = pDoc->DocSSchema;
-	   pAttr->AeAttrNum = 1;
-	   pAttr->AeDefAttr = FALSE;
-	   pAttr->AeAttrType = AtTextAttr;
-	   GetTextBuffer (&pAttr->AeAttrText);
-	   CopyStringToText (TtaGetLanguageName (lang), pAttr->AeAttrText, &len);
-	   if (pEl->ElFirstAttr == NULL)
-	      /* it's the first attribute of the element */
-	      pEl->ElFirstAttr = pAttr;
-	   else
-	     {
-		pA = pEl->ElFirstAttr;	/* first attribute of the element */
-		while (pA->AeNext != NULL)	/* searches for the last attribute */
-		   pA = pA->AeNext;
-		pA->AeNext = pAttr;	/* links the new attribute */
-	     }
-	   pAttr->AeNext = NULL;	/* it's the last attribute */
-	}
+   if (pEl && GetTypedAttrForElem (pEl, 1, NULL) == NULL)
+     /* this element has no language attribute */
+     {
+       /* a priori, we'll take the default language */
+       lang = TtaGetDefaultLanguage ();
+       if (pEl != pDoc->DocDocElement)
+	 /* it's not the root of the principal tree, so we verify
+	    if the principal tree has has a language attribue. If yes, 
+	    we use that language */
+	 {
+	   pAttr = GetTypedAttrForElem (pDoc->DocDocElement, 1, NULL);
+	   if (pAttr && pAttr->AeAttrText != NULL)
+	     lang = TtaGetLanguageIdFromName (pAttr->AeAttrText->BuContent);
+	 }
+       /* changes the language of the text leaves */
+       ChangeLanguageLeaves (pEl, lang);
+       /* applies the langyuage attribute to the element */
+       GetAttribute (&pAttr);
+       pAttr->AeAttrSSchema = pDoc->DocSSchema;
+       pAttr->AeAttrNum = 1;
+       pAttr->AeDefAttr = FALSE;
+       pAttr->AeAttrType = AtTextAttr;
+       GetTextBuffer (&pAttr->AeAttrText);
+       CopyStringToBuffer (TtaGetLanguageName (lang), pAttr->AeAttrText, &len);
+       if (pEl->ElFirstAttr == NULL)
+	 /* it's the first attribute of the element */
+	 pEl->ElFirstAttr = pAttr;
+       else
+	 {
+	   pA = pEl->ElFirstAttr;	/* first attribute of the element */
+	   while (pA->AeNext != NULL)	/* searches for the last attribute */
+	     pA = pA->AeNext;
+	   pA->AeNext = pAttr;	/* links the new attribute */
+	 }
+       pAttr->AeNext = NULL;	/* it's the last attribute */
+     }
 }
 
 /* ----------------------------------------------------------------------

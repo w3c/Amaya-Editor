@@ -615,7 +615,7 @@ void NewTextLanguage (PtrAbstractBox pAb, int charIndex, Language lang,
 	    if (setLangAttr)
 	      {
 		GetTextBuffer (&pAttr->AeAttrText);
-		CopyStringToText (TtaGetLanguageName (lang), pAttr->AeAttrText, &len);
+		CopyStringToBuffer (TtaGetLanguageName (lang), pAttr->AeAttrText, &len);
 	      }
 	    else
 	      {

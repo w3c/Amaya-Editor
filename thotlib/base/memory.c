@@ -11,7 +11,6 @@
  * Authors: V. Quint (INRIA)
  *          I. Vatton (INRIA) - Boxes and lines
  *          H. Richy (IRISA) - Dictionaries
- *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
 
@@ -402,7 +401,7 @@ char *TtaStrdup (char* str)
 /*----------------------------------------------------------------------
    TtaReAlloc increases the size of the memory block.                        
   ----------------------------------------------------------------------*/
-void               *TtaRealloc (void *ptr, unsigned int n)
+void *TtaRealloc (void *ptr, unsigned int n)
 {
    void               *res;
 
@@ -419,7 +418,7 @@ void               *TtaRealloc (void *ptr, unsigned int n)
 /*----------------------------------------------------------------------
    InitEditorMemory initializes block contexts.                                                  
   ----------------------------------------------------------------------*/
-void                InitEditorMemory ()
+void InitEditorMemory ()
 {
 
    NbFree_TextBuff = 0;
@@ -502,59 +501,57 @@ void                InitEditorMemory ()
 /*----------------------------------------------------------------------
    GetTextBuffer alloue un buffer de texte.                        
   ----------------------------------------------------------------------*/
-void                GetTextBuffer (PtrTextBuffer * pBT)
+void GetTextBuffer (PtrTextBuffer *pBT)
 {
-   PtrTextBuffer       pBuf;
+  PtrTextBuffer       pBuf;
 
-   if (PtFree_TextBuff == NULL)
-     {
-	/* pas de buffer dans la chaine des libres, acquiert un nouveau buffer */
-	pBuf = (PtrTextBuffer) TtaGetMemory (sizeof (TextBuffer));
-     }
-   else
-     {
-	/* recupere un buffer en tete de la chaine des libres */
-	pBuf = PtFree_TextBuff;
-	PtFree_TextBuff = pBuf->BuNext;
-	NbFree_TextBuff--;
-     }
-   /* initialise le buffer */
-   *pBT = pBuf;
-   if (pBuf)
-     {
-       memset (pBuf, 0, sizeof (TextBuffer));
-       pBuf->BuNext = NULL;
-       pBuf->BuPrevious = NULL;
-       pBuf->BuLength = 0;
-       pBuf->BuContent[0] = EOS;
-       NbUsed_TextBuff++;
-     }
+  if (PtFree_TextBuff == NULL)
+    /* pas de buffer dans la chaine des libres, acquiert un nouveau buffer */
+    pBuf = (PtrTextBuffer) TtaGetMemory (sizeof (TextBuffer));
+  else
+    {
+      /* recupere un buffer en tete de la chaine des libres */
+      pBuf = PtFree_TextBuff;
+      PtFree_TextBuff = pBuf->BuNext;
+      NbFree_TextBuff--;
+    }
+  /* initialise le buffer */
+  *pBT = pBuf;
+  if (pBuf)
+    {
+      memset (pBuf, 0, sizeof (TextBuffer));
+      pBuf->BuNext = NULL;
+      pBuf->BuPrevious = NULL;
+      pBuf->BuLength = 0;
+      pBuf->BuContent[0] = WC_EOS;
+      NbUsed_TextBuff++;
+    }
 }
 
 /*----------------------------------------------------------------------
    FreeTextBuffer libere un buffer de texte.                       
   ----------------------------------------------------------------------*/
-void                FreeTextBuffer (PtrTextBuffer pBT)
+void FreeTextBuffer (PtrTextBuffer pBT)
 {
 
-   /* insere le buffer en tete de la chaine des libres */
-   if (pBT != NULL)
-     {
+  /* insere le buffer en tete de la chaine des libres */
+  if (pBT != NULL)
+    {
 #ifdef DEBUG_MEMORY
-       TtaFreeMemory (pBT);
+      TtaFreeMemory (pBT);
 #else
-	pBT->BuNext = PtFree_TextBuff;
-	PtFree_TextBuff = pBT;
-	NbFree_TextBuff++;
+      pBT->BuNext = PtFree_TextBuff;
+      PtFree_TextBuff = pBT;
+      NbFree_TextBuff++;
 #endif
-	NbUsed_TextBuff--;
-     }
+      NbUsed_TextBuff--;
+    }
 }
 
 /*----------------------------------------------------------------------
    GetPathSeg
   ----------------------------------------------------------------------*/
-void                GetPathSeg (PtrPathSeg * pPE)
+void GetPathSeg (PtrPathSeg *pPE)
 {
    PtrPathSeg       pPa;
 
@@ -584,7 +581,7 @@ void                GetPathSeg (PtrPathSeg * pPE)
 /*----------------------------------------------------------------------
    FreePathSeg
   ----------------------------------------------------------------------*/
-void                FreePathSeg (PtrPathSeg pPE)
+void FreePathSeg (PtrPathSeg pPE)
 {
 
    /* insere le buffer en tete de la chaine des libres */
@@ -604,7 +601,7 @@ void                FreePathSeg (PtrPathSeg pPE)
 /*----------------------------------------------------------------------
    GetElement alloue un element.                                   
   ----------------------------------------------------------------------*/
-void                GetElement (PtrElement * pEl)
+void GetElement (PtrElement * pEl)
 {
    int                 i;
    PtrElement          pNewEl;
@@ -651,7 +648,7 @@ void                GetElement (PtrElement * pEl)
 /*----------------------------------------------------------------------
    FreeElement libere un element.                                  
   ----------------------------------------------------------------------*/
-void                FreeElement (PtrElement pEl)
+void FreeElement (PtrElement pEl)
 {
    PtrPathSeg       pPa, pPaNext;
 
@@ -685,7 +682,7 @@ void                FreeElement (PtrElement pEl)
 /*----------------------------------------------------------------------
    GetAttribute alloue un attribut.                                     
   ----------------------------------------------------------------------*/
-void                GetAttribute (PtrAttribute * pAttr)
+void GetAttribute (PtrAttribute * pAttr)
 {
    PtrAttribute        pNewAttr;
 
@@ -715,7 +712,7 @@ void                GetAttribute (PtrAttribute * pAttr)
 /*----------------------------------------------------------------------
    FreeAttribute libere un attribut.                                    
   ----------------------------------------------------------------------*/
-void                FreeAttribute (PtrAttribute pAttr)
+void FreeAttribute (PtrAttribute pAttr)
 {
 
 #ifdef DEBUG_MEMORY
@@ -733,7 +730,7 @@ void                FreeAttribute (PtrAttribute pAttr)
 /*----------------------------------------------------------------------
    GetReferredDescr alloue un descripteur de reference.            
   ----------------------------------------------------------------------*/
-void                GetReferredDescr (PtrReferredDescr * pDR)
+void GetReferredDescr (PtrReferredDescr * pDR)
 {
    PtrReferredDescr    pNewDR;
 
@@ -763,7 +760,7 @@ void                GetReferredDescr (PtrReferredDescr * pDR)
 /*----------------------------------------------------------------------
    FreeReferredDescr libere un descripteur de reference.           
   ----------------------------------------------------------------------*/
-void                FreeReferredDescr (PtrReferredDescr pDR)
+void FreeReferredDescr (PtrReferredDescr pDR)
 {
   if (pDR != NULL)
     {
@@ -781,7 +778,7 @@ void                FreeReferredDescr (PtrReferredDescr pDR)
 /*----------------------------------------------------------------------
    GetDescCopy alloue un descripteur de copie.                     
   ----------------------------------------------------------------------*/
-void                GetDescCopy (PtrCopyDescr * pDC)
+void GetDescCopy (PtrCopyDescr * pDC)
 {
    PtrCopyDescr        pNewDC;
 
@@ -809,7 +806,7 @@ void                GetDescCopy (PtrCopyDescr * pDC)
 /*----------------------------------------------------------------------
    FreeDescCopy libere un descripteur de copie.                    
   ----------------------------------------------------------------------*/
-void                FreeDescCopy (PtrCopyDescr pDC)
+void FreeDescCopy (PtrCopyDescr pDC)
 {
 #ifdef DEBUG_MEMORY
        TtaFreeMemory (pDC);
@@ -824,7 +821,7 @@ void                FreeDescCopy (PtrCopyDescr pDC)
 /*----------------------------------------------------------------------
    GetExternalDoc alloue un descripteur de document externe.       
   ----------------------------------------------------------------------*/
-void                GetExternalDoc (PtrExternalDoc * pDE)
+void GetExternalDoc (PtrExternalDoc * pDE)
 {
    PtrExternalDoc      pNewDE;
 
@@ -850,7 +847,7 @@ void                GetExternalDoc (PtrExternalDoc * pDE)
 /*----------------------------------------------------------------------
    FreeExternalDoc libere un descripteur de document externe.      
   ----------------------------------------------------------------------*/
-void                FreeExternalDoc (PtrExternalDoc pDE)
+void FreeExternalDoc (PtrExternalDoc pDE)
 {
 
 #ifdef DEBUG_MEMORY
@@ -866,7 +863,7 @@ void                FreeExternalDoc (PtrExternalDoc pDE)
 /*----------------------------------------------------------------------
    GetReference alloue une reference.                              
   ----------------------------------------------------------------------*/
-void                GetReference (PtrReference * pRef)
+void GetReference (PtrReference * pRef)
 {
    PtrReference        pNewRef;
 
@@ -896,7 +893,7 @@ void                GetReference (PtrReference * pRef)
 /*----------------------------------------------------------------------
    FreeReference libere une reference.                             
   ----------------------------------------------------------------------*/
-void                FreeReference (PtrReference pRef)
+void FreeReference (PtrReference pRef)
 {
 
 #ifdef DEBUG_MEMORY
@@ -912,7 +909,7 @@ void                FreeReference (PtrReference pRef)
 /*----------------------------------------------------------------------
    GetAbstractBox alloue un pave.                                  
   ----------------------------------------------------------------------*/
-void                GetAbstractBox (PtrAbstractBox *pAb)
+void GetAbstractBox (PtrAbstractBox *pAb)
 {
    PtrAbstractBox      pNewAb;
 
@@ -935,7 +932,7 @@ void                GetAbstractBox (PtrAbstractBox *pAb)
 /*----------------------------------------------------------------------
    FreeAbstractBox libere un pave.                                 
   ----------------------------------------------------------------------*/
-void                FreeAbstractBox (PtrAbstractBox pAb)
+void FreeAbstractBox (PtrAbstractBox pAb)
 {
 
 #ifdef DEBUG_MEMORY
@@ -964,7 +961,7 @@ void                FreeAbstractBox (PtrAbstractBox pAb)
 /*----------------------------------------------------------------------
    GetDocument alloue un descripteur de document.                  
   ----------------------------------------------------------------------*/
-void                GetDocument (PtrDocument * pDoc)
+void GetDocument (PtrDocument * pDoc)
 {
    PtrDocument         pNewDoc;
 
@@ -998,7 +995,7 @@ void                GetDocument (PtrDocument * pDoc)
 /*----------------------------------------------------------------------
    FreeDocument libere un descripteur de document.                 
   ----------------------------------------------------------------------*/
-void                FreeDocument (PtrDocument pDoc)
+void FreeDocument (PtrDocument pDoc)
 {
    int                 i;
 
@@ -1028,7 +1025,7 @@ void                FreeDocument (PtrDocument pDoc)
 /*----------------------------------------------------------------------
    GetAttributePres allocates a attribute presentation.                    
   ----------------------------------------------------------------------*/
-void                GetAttributePres (AttributePres **pAP)
+void GetAttributePres (AttributePres **pAP)
 {
   AttributePres          *pNewAP;
 
@@ -1041,7 +1038,7 @@ void                GetAttributePres (AttributePres **pAP)
 /*----------------------------------------------------------------------
    FreeAttributePres frees a attribute presentation.                    
   ----------------------------------------------------------------------*/
-void                FreeAttributePres (AttributePres *pAP)
+void FreeAttributePres (AttributePres *pAP)
 {
   if (pAP)
     {
@@ -1054,7 +1051,7 @@ void                FreeAttributePres (AttributePres *pAP)
 /*----------------------------------------------------------------------
    GetSchPres alloue un schema de presentation.                    
   ----------------------------------------------------------------------*/
-void                GetSchPres (PtrPSchema * pSP)
+void GetSchPres (PtrPSchema * pSP)
 {
    PtrPSchema          pNewSP;
 
@@ -1077,7 +1074,7 @@ void                GetSchPres (PtrPSchema * pSP)
 /*----------------------------------------------------------------------
    FreeSchPres libere un schemas de presentation.                  
   ----------------------------------------------------------------------*/
-void                FreeSchPres (PtrPSchema pSP)
+void FreeSchPres (PtrPSchema pSP)
 {
   AttributePres      *pAP, *pNextAP;
   int                 i;
@@ -1134,7 +1131,7 @@ void                FreeSchPres (PtrPSchema pSP)
    GetHandleSchPres alloue un element de chainage de schemas de    
    presentation.                                  
   ----------------------------------------------------------------------*/
-void                GetHandleSchPres (PtrHandlePSchema * pHSP)
+void GetHandleSchPres (PtrHandlePSchema * pHSP)
 {
   PtrHandlePSchema  pNewHSP;
 
@@ -1161,7 +1158,7 @@ void                GetHandleSchPres (PtrHandlePSchema * pHSP)
    FreeHandleSchPres libere un element de chainage de schemas de   
    presentation.                                 
   ----------------------------------------------------------------------*/
-void                FreeHandleSchPres (PtrHandlePSchema pHSP)
+void FreeHandleSchPres (PtrHandlePSchema pHSP)
 {
 #ifdef DEBUG_MEMORY
        TtaFreeMemory (pHSP);
@@ -1180,7 +1177,7 @@ void                FreeHandleSchPres (PtrHandlePSchema pHSP)
    GetDocSchemasDescr alloue un block de description des schemas de
    presentation associes a un schema de structure
   ----------------------------------------------------------------------*/
-void                GetDocSchemasDescr (PtrDocSchemasDescr * pPFS)
+void GetDocSchemasDescr (PtrDocSchemasDescr * pPFS)
 {
    PtrDocSchemasDescr  pNewPFS;
 
@@ -1204,7 +1201,7 @@ void                GetDocSchemasDescr (PtrDocSchemasDescr * pPFS)
    FreeDocSchemasDescr libere un block de description des schemas de
    presentation associes a un schema de structure
   ----------------------------------------------------------------------*/
-void                FreeDocSchemasDescr (PtrDocSchemasDescr pPFS)
+void FreeDocSchemasDescr (PtrDocSchemasDescr pPFS)
 {
 #ifdef DEBUG_MEMORY
    TtaFreeMemory (pPFS);
@@ -1222,7 +1219,7 @@ void                FreeDocSchemasDescr (PtrDocSchemasDescr pPFS)
 /*----------------------------------------------------------------------
    GetTRule allocates a translation rule
   ----------------------------------------------------------------------*/
-void                GetTRule (PtrTRule *pR)
+void GetTRule (PtrTRule *pR)
 {
   PtrTRule    pNewR;
 
@@ -1236,7 +1233,7 @@ void                GetTRule (PtrTRule *pR)
 /*----------------------------------------------------------------------
    FreeTRule frees a translation rule
   ----------------------------------------------------------------------*/
-void                FreeTRule (PtrTRule pR)
+void FreeTRule (PtrTRule pR)
 {
   if (pR)
     TtaFreeMemory (pR);
@@ -1246,7 +1243,7 @@ void                FreeTRule (PtrTRule pR)
 /*----------------------------------------------------------------------
    GetSchTra allocates a translation schema
   ----------------------------------------------------------------------*/
-void                GetSchTra (PtrTSchema *pST)
+void GetSchTra (PtrTSchema *pST)
 {
   PtrTSchema    pNewST;
 
@@ -1260,7 +1257,7 @@ void                GetSchTra (PtrTSchema *pST)
 /*----------------------------------------------------------------------
    FreeTRule frees a translation schema
   ----------------------------------------------------------------------*/
-void                FreeSchTra (PtrTSchema pST)
+void FreeSchTra (PtrTSchema pST)
 {
   int     i;
 
@@ -1277,7 +1274,7 @@ void                FreeSchTra (PtrTSchema pST)
    GetExternalBlock alloue un bloc d'extension pour un schema de   
    structure.                                                      
   ----------------------------------------------------------------------*/
-void                GetExternalBlock (PtrExtensBlock * pBE)
+void GetExternalBlock (PtrExtensBlock * pBE)
 {
   PtrExtensBlock    pNewBE;
 
@@ -1301,7 +1298,7 @@ void                GetExternalBlock (PtrExtensBlock * pBE)
 /*----------------------------------------------------------------------
    FreeExternalBlock libere un bloc extension de schema de structure. 
   ----------------------------------------------------------------------*/
-void                FreeExternalBlock (PtrExtensBlock pBE)
+void FreeExternalBlock (PtrExtensBlock pBE)
 {
 #ifdef DEBUG_MEMORY
        TtaFreeMemory (pBE);
@@ -1316,7 +1313,7 @@ void                FreeExternalBlock (PtrExtensBlock pBE)
 /*----------------------------------------------------------------------
    GetSchStruct alloue un schema de structure.                     
   ----------------------------------------------------------------------*/
-void                GetSchStruct (PtrSSchema * pSS)
+void GetSchStruct (PtrSSchema * pSS)
 {
   PtrSSchema    pNewSS;
 
@@ -1339,7 +1336,7 @@ void                GetSchStruct (PtrSSchema * pSS)
 /*----------------------------------------------------------------------
    FreeSchStruc libere un schema de structure.                     
   ----------------------------------------------------------------------*/
-void                FreeSchStruc (PtrSSchema pSS)
+void FreeSchStruc (PtrSSchema pSS)
 {
   if (pSS->SsExtensBlock != NULL)
     {
@@ -1368,7 +1365,7 @@ void                FreeSchStruc (PtrSSchema pSS)
 /*----------------------------------------------------------------------
    GetPresentRule alloue une regle de presentation.                
   ----------------------------------------------------------------------*/
-void                GetPresentRule (PtrPRule * pRP)
+void GetPresentRule (PtrPRule * pRP)
 {
   PtrPRule    pNewRP;
 
@@ -1395,7 +1392,7 @@ void                GetPresentRule (PtrPRule * pRP)
 /*----------------------------------------------------------------------
    FreePresentRule libere une regle de presentation.               
   ----------------------------------------------------------------------*/
-void                FreePresentRule (PtrPRule pRP)
+void FreePresentRule (PtrPRule pRP)
 {
    PtrCondition        pCond, nextCond;
 
@@ -1420,7 +1417,7 @@ void                FreePresentRule (PtrPRule pRP)
    GetPresentRuleCond alloue une condition pour une regle de       
    presentation.                                                   
   ----------------------------------------------------------------------*/
-void                GetPresentRuleCond (PtrCondition * pCond)
+void GetPresentRuleCond (PtrCondition * pCond)
 {
   PtrCondition   pNewCond;
 
@@ -1447,7 +1444,7 @@ void                GetPresentRuleCond (PtrCondition * pCond)
    FreePresentRuleCond libere une condition sur une regle de       
    presentation.                                                   
   ----------------------------------------------------------------------*/
-void                FreePresentRuleCond (PtrCondition pCond)
+void FreePresentRuleCond (PtrCondition pCond)
 {
 #ifdef DEBUG_MEMORY
        TtaFreeMemory (pCond);
@@ -1462,7 +1459,7 @@ void                FreePresentRuleCond (PtrCondition pCond)
 /*----------------------------------------------------------------------
    GetDifferedRule alloue une regle retardee.                      
   ----------------------------------------------------------------------*/
-void                GetDifferedRule (PtrDelayedPRule * pRR)
+void GetDifferedRule (PtrDelayedPRule * pRR)
 {
   PtrDelayedPRule   pNewRR;
 
@@ -1489,7 +1486,7 @@ void                GetDifferedRule (PtrDelayedPRule * pRR)
 /*----------------------------------------------------------------------
    FreeDifferedRule libere une regle retardee.                     
   ----------------------------------------------------------------------*/
-void                FreeDifferedRule (PtrDelayedPRule pRR)
+void FreeDifferedRule (PtrDelayedPRule pRR)
 {
 #ifdef DEBUG_MEMORY
        TtaFreeMemory (pRR);
@@ -1504,7 +1501,7 @@ void                FreeDifferedRule (PtrDelayedPRule pRR)
 /*----------------------------------------------------------------------
    InitKernelMemory initialise l'allocation memoire pour le kernel   
   ----------------------------------------------------------------------*/
-void                InitKernelMemory ()
+void InitKernelMemory ()
 {
    int                 i;
    ViewFrame          *pFrame;
@@ -1543,7 +1540,7 @@ void                InitKernelMemory ()
 /*----------------------------------------------------------------------
    GetPosBlock alloue un bloc de relations de position.           
   ----------------------------------------------------------------------*/
-void                GetPosBlock (PtrPosRelations * pBlock)
+void GetPosBlock (PtrPosRelations * pBlock)
 {
    int                 i;
    PtrPosRelations     pNewBlock;
@@ -1573,7 +1570,7 @@ void                GetPosBlock (PtrPosRelations * pBlock)
 /*----------------------------------------------------------------------
    FreePosBlock libere le bloc de relations.                       
   ----------------------------------------------------------------------*/
-void                FreePosBlock (PtrPosRelations * pBlock)
+void FreePosBlock (PtrPosRelations * pBlock)
 {
   PtrPosRelations    pNextBlock;
 
@@ -1594,7 +1591,7 @@ void                FreePosBlock (PtrPosRelations * pBlock)
 /*----------------------------------------------------------------------
    GetDimBlock alloue un bloc de relations de dimension.            
   ----------------------------------------------------------------------*/
-void                GetDimBlock (PtrDimRelations * pBlock)
+void GetDimBlock (PtrDimRelations * pBlock)
 {
    int                 i;
    PtrDimRelations     pNewBlock;
@@ -1627,7 +1624,7 @@ void                GetDimBlock (PtrDimRelations * pBlock)
 /*----------------------------------------------------------------------
    FreeDimBlock libere le bloc de relations de dimension.              
   ----------------------------------------------------------------------*/
-void                FreeDimBlock (PtrDimRelations * pBlock)
+void FreeDimBlock (PtrDimRelations * pBlock)
 {
   PtrDimRelations    pNextBlock;
 
@@ -1648,7 +1645,7 @@ void                FreeDimBlock (PtrDimRelations * pBlock)
 /*----------------------------------------------------------------------
    GetBox Alloue un nouveau contexte de boite pour le pave pAb.    
   ----------------------------------------------------------------------*/
-PtrBox              GetBox (PtrAbstractBox pAb)
+PtrBox GetBox (PtrAbstractBox pAb)
 {
    PtrBox              pBox;
 
@@ -1680,7 +1677,7 @@ PtrBox              GetBox (PtrAbstractBox pAb)
    FreeBox libere le contexte de boite pBox et retourne la boite 
    suivante.                                               
   ----------------------------------------------------------------------*/
-PtrBox              FreeBox (PtrBox pBox)
+PtrBox FreeBox (PtrBox pBox)
 {
    PtrPosRelations     pPosRel;
    PtrPosRelations     nepos;
@@ -1743,7 +1740,7 @@ PtrBox              FreeBox (PtrBox pBox)
 /*----------------------------------------------------------------------
    GetLine alloue un contexte de ligne.                            
   ----------------------------------------------------------------------*/
-void                GetLine (PtrLine * pLine)
+void GetLine (PtrLine * pLine)
 {
    PtrLine             pNewLine;
 
@@ -1785,7 +1782,7 @@ void                GetLine (PtrLine * pLine)
 /*----------------------------------------------------------------------
    FreeLine libere le contexte de ligne.                           
   ----------------------------------------------------------------------*/
-void                FreeLine (PtrLine pLine)
+void FreeLine (PtrLine pLine)
 {
 
 #ifdef DEBUG_MEMORY
@@ -1808,7 +1805,7 @@ void                FreeLine (PtrLine pLine)
 /*----------------------------------------------------------------------
    GetSearchContext alloue un contexte de recherche.                  
   ----------------------------------------------------------------------*/
-void                GetSearchContext (PtrSearchContext * pSearch)
+void GetSearchContext (PtrSearchContext * pSearch)
 {
   PtrSearchContext    s;
   
@@ -1835,7 +1832,7 @@ void                GetSearchContext (PtrSearchContext * pSearch)
 /*----------------------------------------------------------------------
    FreeSearchContext libe`re un contexte de recherche.                
   ----------------------------------------------------------------------*/
-void                FreeSearchContext (PtrSearchContext * pSearch)
+void FreeSearchContext (PtrSearchContext * pSearch)
 {
   if (pSearch != NULL)
     if (*pSearch != NULL)
@@ -1849,7 +1846,7 @@ void                FreeSearchContext (PtrSearchContext * pSearch)
 /*----------------------------------------------------------------------
    FreeStringInDict libere les entre'es d'un dictionnaire.             
   ----------------------------------------------------------------------*/
-void                FreeStringInDict (PtrDict pDict)
+void FreeStringInDict (PtrDict pDict)
 {
    PtrString           pString;
    PtrCommons          pCommon;
@@ -1881,7 +1878,7 @@ void                FreeStringInDict (PtrDict pDict)
 /*----------------------------------------------------------------------
    GetDictContext effectue un malloc controle.                     
   ----------------------------------------------------------------------*/
-static void        *GetDictContext (unsigned int n)
+static void *GetDictContext (unsigned int n)
 {
    if (n > 0)
       return (TtaGetMemory ((size_t) n));
@@ -1893,7 +1890,7 @@ static void        *GetDictContext (unsigned int n)
    GetStringInDict retourne -1 en cas de manque de memoire            
    retourne  0 si OK.                                      
   ----------------------------------------------------------------------*/
-int                 GetStringInDict (PtrDict * pDict, ThotBool readonly)
+int GetStringInDict (PtrDict * pDict, ThotBool readonly)
 {
    PtrDict             pdict;
    unsigned int        i;
@@ -1934,7 +1931,7 @@ int                 GetStringInDict (PtrDict * pDict, ThotBool readonly)
    GetDictionary retourne dans pDict un pointeur vers le dictionaire  
    alloue ou NULL si manque de memoire                                
   ----------------------------------------------------------------------*/
-void                GetDictionary (PtrDict * pDict)
+void GetDictionary (PtrDict * pDict)
 {
    int                 i;
    PtrDict             pdict;
@@ -1979,7 +1976,7 @@ void                GetDictionary (PtrDict * pDict)
 /*----------------------------------------------------------------------
    FreeDictionary libere le dictionnaire.                             
   ----------------------------------------------------------------------*/
-void                FreeDictionary (PtrDict pDict)
+void FreeDictionary (PtrDict pDict)
 {
    pDict->DictNext = PtFree_Dict;
    PtFree_Dict = pDict;

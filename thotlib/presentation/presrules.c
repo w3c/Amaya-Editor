@@ -1221,276 +1221,283 @@ static PtrAbstractBox SearchAbsBoxRef (ThotBool notType, int numAbType,
 				       RefKind refKind, PtrAbstractBox pAbb,
 				       PtrAttribute pAttr, PtrDocument pDoc)
 {
-   ThotBool            found;
-   PtrAbstractBox      pAb;
-   int                 view;
-   PtrAbstractBox      pAbbMain;
+  ThotBool            found;
+  PtrAbstractBox      pAb;
+  PtrAbstractBox      pAbbMain;
+  int                 view;
 
-   pAb = pAbb;
-   if (pAb != NULL)
-     {
-	found = FALSE;
-	switch (level)
+  pAb = pAbb;
+  if (pAb != NULL)
+    {
+      found = FALSE;
+      switch (level)
+	{
+	case RlEnclosing:
+	  do
+	    {
+	      pAb = pAb->AbEnclosing;
+	      if (numAbType == 0)
+		found = TRUE;
+	      else if (pAb != NULL)
+		VerifyAbsBox (&found, pSP, refKind, numAbType, notType, pAb);
+	    }
+	  while (pAb != NULL && !found);
+	  break;
+
+	case RlSameLevel:
+	  /* accede au premier pave de ce niveau */
+	  if (pAb->AbEnclosing != NULL)
+	    pAb = pAb->AbEnclosing->AbFirstEnclosed;
+	  /* cherche en avant le pave demande' */
+	  do
+	    if (numAbType == 0)
+	      if (pAb->AbDead)
+		pAb = pAb->AbNext;
+	      else
+		found = TRUE;
+	    else
 	      {
-		 case RlEnclosing:
-		    do
-		      {
-			 pAb = pAb->AbEnclosing;
-			 if (numAbType == 0)
-			    found = TRUE;
-			 else if (pAb != NULL)
-			    VerifyAbsBox (&found, pSP, refKind, numAbType, notType, pAb);
-		      }
-		    while (pAb != NULL && !found);
-		    break;
-
-		 case RlSameLevel:
-		    /* accede au premier pave de ce niveau */
-		    if (pAb->AbEnclosing != NULL)
-		       pAb = pAb->AbEnclosing->AbFirstEnclosed;
-		    /* cherche en avant le pave demande' */
-		    do
-		       if (numAbType == 0)
-			  if (pAb->AbDead)
-			     pAb = pAb->AbNext;
-			  else
-			     found = TRUE;
-		       else
-			 {
-			    VerifyAbsBox (&found, pSP, refKind, numAbType, notType, pAb);
-			    if (!found)
-			       pAb = pAb->AbNext;
-			 }
-		    while (pAb != NULL && !found);
-		    break;
-
-		 case RlEnclosed:
-		    pAb = pAb->AbFirstEnclosed;
-		    if (pAb != NULL)
-		       do
-			  if (numAbType == 0)
-			     if (pAb->AbDead)
-				pAb = pAb->AbNext;
-			     else
-				found = TRUE;
-			  else
-			    {
-			       VerifyAbsBox (&found, pSP, refKind, numAbType, notType, pAb);
-			       if (!found)
-				  pAb = pAb->AbNext;
-			    }
-		       while (pAb != NULL && !found);
-		    break;
-
-		 case RlPrevious:
-		    pAb = pAb->AbPrevious;
-		    if (pAb != NULL)
-		       do
-			  if (numAbType == 0)
-			     if (pAb->AbDead)
-				pAb = pAb->AbPrevious;
-			     else
-				found = TRUE;
-			  else
-			    {
-			       VerifyAbsBox (&found, pSP, refKind, numAbType, notType, pAb);
-			       if (!found)
-				  pAb = pAb->AbPrevious;
-			    }
-		       while (pAb != NULL && !found);
-		    break;
-
-		 case RlNext:
-		    pAb = pAb->AbNext;
-		    if (pAb != NULL)
-		       do
-			  if (numAbType == 0)
-			     if (pAb->AbDead)
-				pAb = pAb->AbNext;
-			     else
-				found = TRUE;
-			  else
-			    {
-			       VerifyAbsBox (&found, pSP, refKind, numAbType, notType, pAb);
-			       if (!found)
-				  pAb = pAb->AbNext;
-			    }
-		       while (pAb != NULL && !found);
-		    break;
-
-		 case RlSelf:
-		 case RlContainsRef:
-		    break;
-
-		 case RlRoot:
-		    /* on cherche le pave racine de l'image abstraite */
-		    while (pAb->AbEnclosing != NULL)
-		       pAb = pAb->AbEnclosing;
-		    break;
-
-		 case RlCreator:
-		    /* on cherche le pave' qui a cree' ce pave de presentation */
-		    /* est-ce le pere ? */
-		    if (pAb->AbEnclosing != NULL)
-		       if (pAb->AbEnclosing->AbElement == pAb->AbElement)
-			  if (!pAb->AbEnclosing->AbPresentationBox)
-			    {
-			       found = TRUE;	/* c'est bien le pere */
-			       pAb = pAb->AbEnclosing;
-			    }
-		    if (!found)
-		       /* on cherche parmi les freres */
-		      {
-			 /* parmi les freres suivants d'abord */
-			 do
-			    if (pAb->AbPresentationBox)
-			       pAb = pAb->AbNext;
-			    else if (pAb->AbElement == pAbb->AbElement)
-			       found = TRUE;
-			    else
-			       pAb = NULL;
-			 while (!found && pAb != NULL);
-			 if (!found)
-			    /* pas trouve', on cherche parmi les freres precedents */
-			   {
-			      pAb = pAbb;
-			      do
-				 if (pAb->AbPresentationBox)
-				    pAb = pAb->AbPrevious;
-				 else if (pAb->AbElement == pAbb->AbElement)
-				    found = TRUE;
-				 else
-				    pAb = NULL;
-			      while (!found && pAb != NULL);
-			   }
-		      }
-		    if (pAb != NULL)
-		       if (pAb->AbDead)
-			  pAb = NULL;
-		    break;
-
-		 case RlReferred:
-		    view = pAb->AbDocView;
-		    if (pAttr == NULL)
-		      {
-			 /* cherche les attributs references de l'element */
-			 pAttr = pAb->AbElement->ElFirstAttr;
-			 found = FALSE;
-			 while (pAttr != NULL && !found)
-			   {
-			      if (pAttr->AeAttrType == AtReferenceAttr)
-				 /* c'est un attribut reference */
-				{
-				   /* cet attribut a-t-il une regle de presentation qui */
-				   /* cree le pave pour lequel on travaille ? */
-				   if (AttrCreatePresBox (pAttr, pAbb, pDoc))
-				      /* oui, c'est l'attribut cherche' */
-				      found = TRUE;
-				}
-			      if (!found)
-				 /* passe a l'attribut suivant de l'element */
-				 pAttr = pAttr->AeNext;
-			   }
-		      }
-		    pAb = NULL;
-		    /* cherche le premier pave de l'element designe' par */
-		    /* l'attribut */
-		    if (pAttr != NULL)
-		       if (pAttr->AeAttrType == AtReferenceAttr)
-			  if (pAttr->AeAttrReference != NULL)
-			     if (pAttr->AeAttrReference->RdReferred != NULL)
-				/* les references externes ne sont pas utilisees */
-				/* dans les positionnements et les dimensionnements */
-				if (!pAttr->AeAttrReference->RdReferred->ReExternalRef)
-				   if (pAttr->AeAttrReference->RdReferred->ReReferredElem != NULL)
-				      pAb = pAttr->AeAttrReference->RdReferred->ReReferredElem->
-					 ElAbstractBox[view - 1];
-		    pAbbMain = NULL;
-		    if (pAb != NULL)
-		       /* cherche en avant le pave demande */
-		       do
-			  if (numAbType == 0)
-			     if (pAb->AbDead)
-				/* ce pave est en cours de destruction */
-				if (pAb->AbNext == NULL)
-				   pAb = NULL;
-				else if (pAb->AbNext->AbElement == pAb->AbElement)
-				   /* le pave suivant appartient au meme element,
-				      on le prend en compte */
-				   pAb = pAb->AbNext;
-				else
-				   /* on n'a pas trouve' de pave pour cet element */
-				   pAb = NULL;
-			     else
-				found = TRUE;
-			  else
-			    {
-			       VerifyAbsBox (&found, pSP, refKind, numAbType, notType, pAb);
-			       if (!found)
-				 {
-				    if (!pAb->AbPresentationBox)
-				       pAbbMain = pAb;
-				    if (pAb->AbNext != NULL)
-				       if (pAb->AbNext->AbElement == pAb->AbElement)
-					  pAb = pAb->AbNext;
-				       else
-					  pAb = NULL;
-				    else
-				       pAb = NULL;
-				 }
-			    }
-		       while (pAb != NULL && !found);
-		    if (pAb == NULL && pAbbMain != NULL && numAbType != 0)
-		       /* on cherche parmi les paves descendants du pave principal */
-		      {
-			 pAb = pAbbMain->AbFirstEnclosed;
-			 while (pAb != NULL && !found)
-			   {
-			      VerifyAbsBoxDescent (&found, pSP, refKind, numAbType, notType, pAb);
-			      if (!found && pAb != NULL)
-				 pAb = pAb->AbNext;
-			   }
-		      }
-		    break;
-
-		 default:
-		    break;
+		VerifyAbsBox (&found, pSP, refKind, numAbType, notType, pAb);
+		if (!found)
+		  pAb = pAb->AbNext;
 	      }
-     }
-   return pAb;
+	  while (pAb != NULL && !found);
+	  break;
+
+	case RlEnclosed:
+	  pAb = pAb->AbFirstEnclosed;
+	  if (pAb != NULL)
+	    do
+	      if (numAbType == 0)
+		{
+		  if (pAb->AbDead)
+		    pAb = pAb->AbNext;
+		  else
+		    found = TRUE;
+		}
+	      else
+		{
+		  VerifyAbsBox (&found, pSP, refKind, numAbType, notType, pAb);
+		  if (!found)
+		    pAb = pAb->AbNext;
+		}
+	    while (pAb != NULL && !found);
+	  break;
+	  
+	case RlPrevious:
+	  pAb = pAb->AbPrevious;
+	  if (pAb != NULL)
+	    do
+	      if (numAbType == 0)
+		{
+		  if (pAb->AbDead)
+		    pAb = pAb->AbPrevious;
+		  else
+		    found = TRUE;
+		}
+	      else
+		{
+		  VerifyAbsBox (&found, pSP, refKind, numAbType, notType, pAb);
+		  if (!found)
+		    pAb = pAb->AbPrevious;
+		}
+	    while (pAb != NULL && !found);
+	  break;
+	  
+	case RlNext:
+	  pAb = pAb->AbNext;
+	  if (pAb != NULL)
+	    do
+	      if (numAbType == 0)
+		{
+		  if (pAb->AbDead)
+		    pAb = pAb->AbNext;
+		  else
+		    found = TRUE;
+		}
+	      else
+		{
+		  VerifyAbsBox (&found, pSP, refKind, numAbType, notType, pAb);
+		  if (!found)
+		    pAb = pAb->AbNext;
+		}
+	    while (pAb != NULL && !found);
+	  break;
+	  
+	case RlSelf:
+	case RlContainsRef:
+	  break;
+
+	case RlRoot:
+	  /* on cherche le pave racine de l'image abstraite */
+	  while (pAb->AbEnclosing != NULL)
+	    pAb = pAb->AbEnclosing;
+	  break;
+
+	case RlCreator:
+	  /* on cherche le pave' qui a cree' ce pave de presentation */
+	  /* est-ce le pere ? */
+	  if (pAb->AbEnclosing && pAb->AbEnclosing->AbElement == pAb->AbElement &&
+	      !pAb->AbEnclosing->AbPresentationBox)
+	    {
+	      found = TRUE;	/* c'est bien le pere */
+	      pAb = pAb->AbEnclosing;
+	    }
+	  if (!found)
+	    /* on cherche parmi les freres */
+	    {
+	      /* parmi les freres suivants d'abord */
+	      do
+		if (pAb->AbPresentationBox)
+		  pAb = pAb->AbNext;
+		else if (pAb->AbElement == pAbb->AbElement)
+		  found = TRUE;
+		else
+		  pAb = NULL;
+	      while (!found && pAb != NULL);
+	      if (!found)
+		/* pas trouve', on cherche parmi les freres precedents */
+		{
+		  pAb = pAbb;
+		  do
+		    if (pAb->AbPresentationBox)
+		      pAb = pAb->AbPrevious;
+		    else if (pAb->AbElement == pAbb->AbElement)
+		      found = TRUE;
+		    else
+		      pAb = NULL;
+		  while (!found && pAb != NULL);
+		}
+	    }
+	  if (pAb && pAb->AbDead)
+	    pAb = NULL;
+	  break;
+
+	case RlReferred:
+	  view = pAb->AbDocView;
+	  if (pAttr == NULL)
+	    {
+	      /* cherche les attributs references de l'element */
+	      pAttr = pAb->AbElement->ElFirstAttr;
+	      found = FALSE;
+	      while (pAttr != NULL && !found)
+		{
+		  if (pAttr->AeAttrType == AtReferenceAttr)
+		    /* c'est un attribut reference */
+		    {
+		      /* cet attribut a-t-il une regle de presentation qui */
+		      /* cree le pave pour lequel on travaille ? */
+		      if (AttrCreatePresBox (pAttr, pAbb, pDoc))
+			/* oui, c'est l'attribut cherche' */
+			found = TRUE;
+		    }
+		  if (!found)
+		    /* passe a l'attribut suivant de l'element */
+		    pAttr = pAttr->AeNext;
+		}
+	    }
+	  pAb = NULL;
+	  /* cherche le premier pave de l'element designe' par */
+	  /* l'attribut */
+	  if (pAttr && pAttr->AeAttrType == AtReferenceAttr &&
+	      pAttr->AeAttrReference &&
+	      pAttr->AeAttrReference->RdReferred &&
+	      /* les references externes ne sont pas utilisees */
+	      /* dans les positionnements et les dimensionnements */
+	      !pAttr->AeAttrReference->RdReferred->ReExternalRef &&
+	      pAttr->AeAttrReference->RdReferred->ReReferredElem != NULL)
+	    pAb = pAttr->AeAttrReference->RdReferred->ReReferredElem->ElAbstractBox[view - 1];
+	  pAbbMain = NULL;
+	  if (pAb != NULL)
+	    /* cherche en avant le pave demande */
+	    do
+	      if (numAbType == 0)
+		{
+		  if (pAb->AbDead)
+		    {
+		      /* ce pave est en cours de destruction */
+		      if (pAb->AbNext == NULL)
+			pAb = NULL;
+		      else if (pAb->AbNext->AbElement == pAb->AbElement)
+			/* le pave suivant appartient au meme element,
+			 on le prend en compte */
+			pAb = pAb->AbNext;
+		      else
+			/* on n'a pas trouve' de pave pour cet element */
+			pAb = NULL;
+		    }
+		  else
+		    found = TRUE;
+		}
+	      else
+		{
+		  VerifyAbsBox (&found, pSP, refKind, numAbType, notType, pAb);
+		  if (!found)
+		    {
+		      if (!pAb->AbPresentationBox)
+			pAbbMain = pAb;
+		      if (pAb->AbNext != NULL)
+			{
+			  if (pAb->AbNext->AbElement == pAb->AbElement)
+			    pAb = pAb->AbNext;
+			  else
+			    pAb = NULL;
+			}
+		      else
+			pAb = NULL;
+		    }
+		}
+	    while (pAb != NULL && !found);
+	  if (pAb == NULL && pAbbMain != NULL && numAbType != 0)
+	    /* on cherche parmi les paves descendants du pave principal */
+	    {
+	      pAb = pAbbMain->AbFirstEnclosed;
+	      while (pAb != NULL && !found)
+		{
+		  VerifyAbsBoxDescent (&found, pSP, refKind, numAbType, notType, pAb);
+		  if (!found && pAb != NULL)
+		    pAb = pAb->AbNext;
+		}
+	    }
+	  break;
+	  
+	default:
+	  break;
+	}
+    }
+  return pAb;
 }
 
 /*----------------------------------------------------------------------
-   	GetConstantBuffer   acquiert un buffer de texte pour la constante de	
-   		presentation correspondant au pave pointe par pAb.	
+  GetConstantBuffer   acquiert un buffer de texte pour la constante de	
+  presentation correspondant au pave pointe par pAb.	
   ----------------------------------------------------------------------*/
-void                GetConstantBuffer (PtrAbstractBox pAb)
+void GetConstantBuffer (PtrAbstractBox pAb)
 {
-   PtrTextBuffer       pBT;
+  PtrTextBuffer       pBT;
 
-
-   GetTextBuffer (&pBT);
-   pAb->AbText = pBT;
-   if (pAb->AbLeafType == LtText)
-     pAb->AbLanguage = TtaGetDefaultLanguage ();
-   pAb->AbVolume = 0;
+  GetTextBuffer (&pBT);
+  pAb->AbText = pBT;
+  if (pAb->AbLeafType == LtText)
+    pAb->AbLanguage = TtaGetDefaultLanguage ();
+  pAb->AbVolume = 0;
 }
 
 /*----------------------------------------------------------------------
-   	UpdateFreeVol	met a jour le volume libre restant dans la vue	
-   		du pave pAb, en prenant en compte le volume de ce	
-   		nouveau pave feuille.					
+  UpdateFreeVol	met a jour le volume libre restant dans la vue	
+  du pave pAb, en prenant en compte le volume de ce	
+  nouveau pave feuille.					
   ----------------------------------------------------------------------*/
-void                UpdateFreeVol (PtrAbstractBox pAb, PtrDocument pDoc)
+void UpdateFreeVol (PtrAbstractBox pAb, PtrDocument pDoc)
 {
   pDoc->DocViewFreeVolume[pAb->AbDocView - 1] -= pAb->AbVolume;
 }
 
 /*----------------------------------------------------------------------
-   	FillContent met dans le pave pointe par pAb le contenu de l'element
-   		feuille pointe par pEl.					
+  FillContent met dans le pave pointe par pAb le contenu de l'element
+  feuille pointe par pEl.					
   ----------------------------------------------------------------------*/
-void   FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
+void FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
 {
   int                 lg, i;
   PtrTextBuffer       pBu1;
@@ -1502,11 +1509,11 @@ void   FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
       pAb->AbLeafType = LtText;
       GetConstantBuffer (pAb);
       pBu1 = pAb->AbText;
-      CopyStringToText ("<", pBu1, &lg);
-      CopyStringToText (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber-1].SrName,
+      CopyStringToBuffer ("<", pBu1, &lg);
+      CopyStringToBuffer (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber-1].SrName,
 			pBu1, &i);
       lg += i;
-      CopyStringToText (">", pBu1, &i);
+      CopyStringToBuffer (">", pBu1, &i);
       lg += i;
       pAb->AbVolume = lg;
       pAb->AbCanBeModified = FALSE;
@@ -1565,51 +1572,51 @@ void   FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
 	  pAb->AbLeafType = LtText;
 	  GetConstantBuffer (pAb);
 	  pBu1 = pAb->AbText;
-	  pBu1->BuContent[0] = '[';
+	  pBu1->BuContent[0] = TEXT('[');
 	  lg = 2;
-	  pBu1->BuContent[lg - 1] = '?';
+	  pBu1->BuContent[lg - 1] = TEXT('?');
 	  /* la reference pointe sur rien */
 	  if (pEl->ElReference != NULL)
 	    {
 	      pPR1 = pEl->ElReference;
 	      if (pPR1->RdInternalRef)
 		{
-		  if (pPR1->RdReferred != NULL)
-		    if (!pPR1->RdReferred->ReExternalRef)
-		      if (!IsASavedElement (pPR1->RdReferred->ReReferredElem))
-			/* l'element reference' n'est pas dans le */
-			/* buffer des elements coupe's */
-			pBu1->BuContent[lg - 1] = '*';
+		  if (pPR1->RdReferred &&
+		     !pPR1->RdReferred->ReExternalRef &&
+		      !IsASavedElement (pPR1->RdReferred->ReReferredElem))
+		    /* l'element reference' n'est pas dans le */
+		    /* buffer des elements coupe's */
+		    pBu1->BuContent[lg - 1] = TEXT('*');
 		  lg++;
-		  pBu1->BuContent[lg - 1] = ']';
+		  pBu1->BuContent[lg - 1] = TEXT(']');
 		}
 	      else
 		{
-		  if (pPR1->RdReferred != NULL)
-		    if (pPR1->RdReferred->ReExternalRef)
-		      /* copie le nom du document reference' */
-		      {
-			i = 1;
-			pDe1 = pPR1->RdReferred;
-			while (pDe1->ReExtDocument[i - 1] != EOS)
-			  {
-			    pBu1->BuContent[lg - 1] = pDe1->ReExtDocument[i-1];
-			    lg++;
-			    i++;
-			  }
-			lg--;
-		      }
+		  if (pPR1->RdReferred &&
+		      pPR1->RdReferred->ReExternalRef)
+		    /* copie le nom du document reference' */
+		    {
+		      i = 1;
+		      pDe1 = pPR1->RdReferred;
+		      while (pDe1->ReExtDocument[i - 1] != EOS)
+			{
+			  pBu1->BuContent[lg - 1] = pDe1->ReExtDocument[i - 1];
+			  lg++;
+			  i++;
+			}
+		      lg--;
+		    }
 		  lg++;
 		  if (!pPR1->RdInternalRef)
 		    {
-		      pBu1->BuContent[0] = '<';
-		      pBu1->BuContent[lg - 1] = '>';
+		      pBu1->BuContent[0] = TEXT('<');
+		      pBu1->BuContent[lg - 1] = TEXT('>');
 		    }
 		  else
-		    pBu1->BuContent[lg - 1] = ']';
+		    pBu1->BuContent[lg - 1] = TEXT(']');
 		}
 	    }
-	  pBu1->BuContent[lg] = EOS;
+	  pBu1->BuContent[lg] = WC_EOS;
 	  /* fin de la chaine de car. */
 	  pBu1->BuLength = lg;
 	  pAb->AbVolume = lg;
@@ -1621,13 +1628,13 @@ void   FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
 	  pBu1 = pAb->AbText;
 	  if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrFirstOfPair)
 	    {
-	      pBu1->BuContent[0] = '<';
-	      pBu1->BuContent[1] = '<';
+	      pBu1->BuContent[0] = TEXT('<');
+	      pBu1->BuContent[1] = TEXT('<');
 	    }
 	  else
 	    {
-	      pBu1->BuContent[0] = '>';
-	      pBu1->BuContent[1] = '>';
+	      pBu1->BuContent[0] = TEXT('>');
+	      pBu1->BuContent[1] = TEXT('>');
 	    }
 	  pBu1->BuContent[2] = EOS;
 	  /* fin de la chaine de car. */
@@ -1840,7 +1847,7 @@ void SearchPresSchema (PtrElement pEl, PtrPSchema * pSchP, int *indexElType,
 /*----------------------------------------------------------------------
   CheckPPosUser							
   ----------------------------------------------------------------------*/
-static ThotBool     CheckPPosUser (PtrAbstractBox pAb, PtrDocument pDoc)
+static ThotBool CheckPPosUser (PtrAbstractBox pAb, PtrDocument pDoc)
 {
    return (IsAbstractBoxDisplayed (pAb, pDoc->DocViewFrame[pAb->AbDocView - 1]));
 }
@@ -2663,7 +2670,7 @@ static PtrElement SearchElInSubTree (PtrElement pElRoot, int elType,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static PtrPRule     GetRuleCopy (PtrPRule pPRule)
+static PtrPRule GetRuleCopy (PtrPRule pPRule)
 {
    ThotBool            found;
 
@@ -2688,7 +2695,7 @@ static PtrPRule     GetRuleCopy (PtrPRule pPRule)
 
 /*----------------------------------------------------------------------
   ApplyCopy applique une regle de copie.				
-   		  Procedure appelee aussi dans modif.c			
+  Procedure appelee aussi dans modif.c			
   ----------------------------------------------------------------------*/
 void ApplyCopy (PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb,
 		ThotBool withDescCopy)
@@ -3831,7 +3838,7 @@ PtrPRule SearchPresRule (PtrElement pEl, PRuleType ruleType,
    	RedispAbsBox indique dans le contexte du document que le pave pAb	
    		est a reafficher					
   ----------------------------------------------------------------------*/
-void                RedispAbsBox (PtrAbstractBox pAb, PtrDocument pDoc)
+void RedispAbsBox (PtrAbstractBox pAb, PtrDocument pDoc)
 {
   int         view;
 

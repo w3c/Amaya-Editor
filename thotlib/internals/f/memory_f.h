@@ -14,9 +14,9 @@ extern char *TtaStrdup ( char* str );
 extern void *TtaRealloc ( void *ptr,
                           unsigned int n );
 extern void InitEditorMemory ( void );
-extern void GetTextBuffer ( PtrTextBuffer * pBT );
+extern void GetTextBuffer ( PtrTextBuffer *pBT );
 extern void FreeTextBuffer ( PtrTextBuffer pBT );
-extern void GetPathSeg ( PtrPathSeg * pPE );
+extern void GetPathSeg ( PtrPathSeg *pPE );
 extern void FreePathSeg ( PtrPathSeg pPE );
 extern void GetElement ( PtrElement * pEl );
 extern void FreeElement ( PtrElement pEl );
@@ -83,9 +83,9 @@ extern char *TtaStrdup (/* char* str */);
 extern void *TtaRealloc (/* void *ptr,
                             unsigned int n */);
 extern void InitEditorMemory (/* void */);
-extern void GetTextBuffer (/* PtrTextBuffer * pBT */);
+extern void GetTextBuffer (/* PtrTextBuffer *pBT */);
 extern void FreeTextBuffer (/* PtrTextBuffer pBT */);
-extern void GetPathSeg (/* PtrPathSeg * pPE */);
+extern void GetPathSeg (/* PtrPathSeg *pPE */);
 extern void FreePathSeg (/* PtrPathSeg pPE */);
 extern void GetElement (/* PtrElement * pEl */);
 extern void FreeElement (/* PtrElement pEl */);

@@ -12,7 +12,6 @@
  *
  */
 
-#include "ustring.h"
 #include "libmsg.h"
 #include "thot_sys.h"
 #include "message.h"
@@ -668,7 +667,7 @@ void AddDocOfExternalRef (PtrElement pEl, DocumentIdentifier docIdent, PtrDocume
 
    if (pEl != NULL)
       if (pEl->ElReferredDescr != NULL)
-	 if (ustrcmp (pDoc2->DocIdent, docIdent) != 0)
+	 if (strcmp (pDoc2->DocIdent, docIdent) != 0)
 	   {
 	    if (pEl->ElReferredDescr->ReExtDocRef == NULL)
 	       /* cet element n'est encore reference' par aucun document externe, */

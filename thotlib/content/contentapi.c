@@ -63,16 +63,15 @@ static void InsertText (PtrElement pEl, int position, unsigned char *content,
 			Document document)
 {
   PtrTextBuffer       pBuf, pPreviousBuff, newBuf;
-  unsigned char      *ptr;
-  int                 length, l, delta, lengthBefore, i;
-  int                 max;
-  PtrElement          pElAsc;
 #ifndef NODISPLAY
   PtrDocument         selDoc;
   PtrElement          firstSelection, lastSelection;
   int                 firstChar, lastChar;
   ThotBool            selOk, changeSelection = FALSE;
 #endif /* NODISPLAY */
+  unsigned char      *ptr;
+  int                 length, l, delta, lengthBefore, i;
+  PtrElement          pElAsc;
    
   length = strlen (content);
   if (length > 0)
@@ -120,52 +119,14 @@ static void InsertText (PtrElement pEl, int position, unsigned char *content,
 	  }
 	else if (lengthBefore < pBuf->BuLength)
 	  {
-	   /* Creates a buffer for the second part of the text */
+	   /* creates a buffer for the second part of the text */
 	     newBuf = NewTextBuffer (pBuf);
-	     strcpy (newBuf->BuContent, pBuf->BuContent + lengthBefore);
+	     ustrcpy (newBuf->BuContent, pBuf->BuContent + lengthBefore);
 	     newBuf->BuLength = pBuf->BuLength - lengthBefore;
 	  }
 	pBuf->BuContent[lengthBefore] = WC_EOS;
 	pBuf->BuLength = lengthBefore;
-
-	/* If there is enough space in the buffer, add a string at its end */
-	ptr = content;
-	max = length;
-#ifdef _I18N
-	l = 0;
-	length = 0;
-#else /* _I18N */
-	l = 0;
-#endif /* _I18N */
-	while (l < max)
-	  {
-#ifdef _I18N
-	    i = 0;
-	    while (i < THOT_MAX_CHAR - lengthBefore && l < max)
-	      {
-		l += TtaMBs2WC (&ptr, (wchar_t *)&pBuf->BuContent[i], UTF_8);
-		i++;
-	      }
-	    length += i;
-#else /* _I18N */
-	    if (max - l < THOT_MAX_CHAR - lengthBefore)
-	      i = max - l;
-	    else
-	      i = THOT_MAX_CHAR - lengthBefore - 1;
-	    strncpy (&(pBuf->BuContent[lengthBefore]), ptr, i);
-	    ptr += i;
-	    l += i;
-#endif /* _I18N */
-	    pBuf->BuLength += i;
-	    pBuf->BuContent[pBuf->BuLength] = WC_EOS;
-	    lengthBefore = 0;
-	    if (l < max)
-	      {
-		pPreviousBuff = pBuf;
-		pBuf = NewTextBuffer (pPreviousBuff);
-	      }
-	  }
-
+	length = CopyS2B (content, length, pBuf, lengthBefore);
 	delta = length;
 	pEl->ElTextLength += length;
 	pEl->ElVolume += length;
@@ -230,8 +191,7 @@ static void InsertText (PtrElement pEl, int position, unsigned char *content,
 static void SetContent (Element element, unsigned char *content,
 			Language language, Document document)
 {
-  PtrTextBuffer       pBuf, pPreviousBuff, pNextBuff;
-  unsigned char      *ptr;
+  PtrTextBuffer       pBuf, pNextBuff;
   int                 length, l, delta = 0, i;
   int                 max;
   PtrElement          pEl;
@@ -263,56 +223,17 @@ static void SetContent (Element element, unsigned char *content,
 	pEl->ElLanguage = language;
       
       /* store the contents of the element */
-      if (content != NULL)
+      if (content)
 	{
-	  ptr = content;
-	  pBuf = pEl->ElText;
-	  pPreviousBuff = NULL;
 	  max = strlen (content);
-#ifdef _I18N
-	  l = 0;
-	  length = 0;
-#else /* _I18N */
-	  length = max;
-	  l = 0;
-#endif /* _I18N */
-	  do
-	    {
-	      if (pBuf == NULL)
-		GetTextBuffer (&pBuf);
-#ifdef _I18N
-	      i = 0;
-	      while (i < THOT_MAX_CHAR && l < max)
-		{
-		  l += TtaMBs2WC (&ptr, (wchar_t *)&pBuf->BuContent[i], UTF_8);
-		  i++;
-		}
-	      length += i;
-#else /* _I18N */
-	      if (max - l >= THOT_MAX_CHAR)
-		i = THOT_MAX_CHAR - 1;
-	      else
-		i = max - l;
-	      if (i > 0)
-		{
-
-		  strncpy (pBuf->BuContent, ptr, i);
-		  ptr += i;
-		  l += i;
-		}
-#endif /* _I18N */
-	      pBuf->BuLength = i;
-	      pBuf->BuContent[i] = WC_EOS;
-	      pBuf->BuPrevious = pPreviousBuff;
-	      if (pPreviousBuff == NULL)
-		pEl->ElText = pBuf;
-	      else
-		pPreviousBuff->BuNext = pBuf;
-	      pPreviousBuff = pBuf;
-	      pBuf = pBuf->BuNext;
-	      pPreviousBuff->BuNext = NULL;
-	    }
-	  while (l < max);
+	  pBuf = pEl->ElText;
+	  if (pBuf == NULL)
+	    GetTextBuffer (&pEl->ElText);
+	  pBuf = pEl->ElText;
+	  if (pBuf && max > 0)
+	    length = CopyS2B (content, max, pBuf, 0);
+	  else
+	    length = 0;
 	}
       else
 	{
@@ -320,14 +241,22 @@ static void SetContent (Element element, unsigned char *content,
 	  /* point to the first buffer to be released */
 	  pBuf = pEl->ElText;
 	  if (pBuf)
-	  pBuf = pBuf->BuNext;
+	    pBuf = pBuf->BuNext;
 	}
 
       delta = length - pEl->ElTextLength;
       pEl->ElTextLength = length;
       pEl->ElVolume = length;
-      /* Release the remaining buffers */
-      while (pBuf != NULL)
+
+      /* Release extra buffers */
+      pBuf = pEl->ElText;
+      i = 0;
+      while (pBuf && i < length)
+	{
+	  i += pBuf->BuLength;
+	  pBuf = pBuf->BuNext;
+	}
+      while (pBuf)
 	{
 	  pNextBuff = pBuf->BuNext;
 #ifdef NODISPLAY
@@ -337,6 +266,7 @@ static void SetContent (Element element, unsigned char *content,
 #endif /* NODISPLAY */
 	  pBuf = pNextBuff;
 	}
+
       if (pEl->ElLeafType == LtPicture && pEl->ElPictInfo != NULL)
 	/* Releases the  pixmap */
 	FreePictInfo ((PictInfo *) ((pEl)->ElPictInfo));
@@ -526,8 +456,6 @@ void TtaDeleteTextContent (Element element, int position, int length,
 {
   PtrTextBuffer       pBufFirst, pBufLast, pBufNext;
   STRING              dest, source;
-  int                 delta, lengthBefore, firstDeleted;
-  int                 lastDeleted, l, i;
   PtrElement          pElAsc, pEl;
 #ifndef NODISPLAY
   PtrDocument         selDoc;
@@ -535,6 +463,8 @@ void TtaDeleteTextContent (Element element, int position, int length,
   int                 firstChar, lastChar;
   ThotBool            selOk, changeSelection;
 #endif /* NODISPLAY */
+  int                 delta, lengthBefore, firstDeleted;
+  int                 lastDeleted, l, i;
 
   UserErrorCode = 0;
   pEl = (PtrElement) element;
@@ -545,191 +475,190 @@ void TtaDeleteTextContent (Element element, int position, int length,
   else if (pEl->ElLeafType != LtText &&
 	   pEl->ElLeafType != LtPicture)
     TtaError (ERR_invalid_element_type);
-  else
-    /* verifies the parameter document */
-    if (document < 1 || document > MAX_DOCUMENTS)
-      TtaError (ERR_invalid_document_parameter);
-    else if (LoadedDocument[document - 1] == NULL)
-      TtaError (ERR_invalid_document_parameter);
-    else if (length < 0 || position <= 0 || position > pEl->ElTextLength)
-      TtaError (ERR_invalid_parameter);
-    else if (length > 0)
-      {
-	/* verifies that the parameter length is not too big */
-	if (position + length > pEl->ElTextLength + 1)
-	  length = pEl->ElTextLength - position + 1;
+  else if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else if (length < 0 || position <= 0 || position > pEl->ElTextLength)
+    TtaError (ERR_invalid_parameter);
+  else if (length > 0)
+    {
+      /* verifies that the parameter length is not too big */
+      if (position + length > pEl->ElTextLength + 1)
+	length = pEl->ElTextLength - position + 1;
 #ifndef NODISPLAY
-	/* modifies the selection if the element belongs to it */
-	selOk = GetCurrentSelection (&selDoc, &firstSelection, &lastSelection,
-				     &firstChar, &lastChar);
-	changeSelection = FALSE;
-	if (selOk && selDoc == LoadedDocument[document - 1] &&
-	    (pEl == firstSelection || pEl == lastSelection))
-	  /* The selection starts and/or stops in the element */
-	  /* First, we abort the selection */
-	  {
-	    TtaSelectElement (document, NULL);
-	    changeSelection = TRUE;
-	    if (lastChar > 1)
-	      lastChar -= 1;
-	    if (pEl == firstSelection)
-	      /* The element is at the begenning of the selection */
-	      {
-		if (firstChar > position)
-		  {
-		    firstChar -= length;
-		    if (firstChar < position)
-		      firstChar = position;
-		  }
-	      }
-	    if (pEl == lastSelection)
-	      /* The element is at the end of the selection */
-	      {
-		if (position < lastChar)
-		  {
-		    lastChar -= length;
-		    if (lastChar < position)
-		      lastChar = position;
-		  }
-	      }
-	  }
+      /* modifies the selection if the element belongs to it */
+      selOk = GetCurrentSelection (&selDoc, &firstSelection, &lastSelection,
+				   &firstChar, &lastChar);
+      changeSelection = FALSE;
+      if (selOk && selDoc == LoadedDocument[document - 1] &&
+	  (pEl == firstSelection || pEl == lastSelection))
+	/* The selection starts and/or stops in the element */
+	/* First, we abort the selection */
+	{
+	  TtaSelectElement (document, NULL);
+	  changeSelection = TRUE;
+	  if (lastChar > 1)
+	    lastChar -= 1;
+	  if (pEl == firstSelection)
+	    /* The element is at the begenning of the selection */
+	    {
+	      if (firstChar > position)
+		{
+		  firstChar -= length;
+		  if (firstChar < position)
+		    firstChar = position;
+		}
+	    }
+	  if (pEl == lastSelection)
+	    /* The element is at the end of the selection */
+	    {
+	      if (position < lastChar)
+		{
+		  lastChar -= length;
+		  if (lastChar < position)
+		    lastChar = position;
+		}
+	    }
+	}
 #endif /* NODISPLAY */
-	delta = length;
-	pEl->ElTextLength -= delta;
-	pEl->ElVolume -= delta;
-	/* Looks for the buffer where the string to be suppressed starts*/
-	pBufFirst = pEl->ElText;
-	lengthBefore = 0;
-	while (pBufFirst->BuNext != NULL &&
-	       lengthBefore + pBufFirst->BuLength < position)
-	  {
-	     lengthBefore += pBufFirst->BuLength;
-	     pBufFirst = pBufFirst->BuNext;
-	  }
-	/* Length of the buffer containing the beginning of the string to be
-	   suppress */
-	firstDeleted = position - lengthBefore;
-	/* Looks for the buffer pBufLast containing the end of the string to
-	   be suppressed and releases the intermediate buffers. The buffers
-	   containing the begenning of the string to be suppressed and its
-	   end are not released */
-	pBufLast = pBufFirst;
-	lastDeleted = firstDeleted + length - 1;
-	while (pBufLast->BuNext != NULL &&
-	       lastDeleted > pBufLast->BuLength)
-	  {
-	     lastDeleted -= pBufLast->BuLength;
-	     if (pBufLast != pBufFirst)
-		/* This is not the buffer containing the begenning of the 
-		   tring. It is released */
-	       {
-		  pBufNext = pBufLast->BuNext;
-		  pBufLast->BuPrevious->BuNext = pBufLast->BuNext;
-		  if (pBufLast->BuNext != NULL)
-		     pBufLast->BuNext->BuPrevious = pBufLast->BuPrevious;
+      delta = length;
+      pEl->ElTextLength -= delta;
+      pEl->ElVolume -= delta;
+      /* Looks for the buffer where the string to be suppressed starts*/
+      pBufFirst = pEl->ElText;
+      lengthBefore = 0;
+      while (pBufFirst->BuNext != NULL &&
+	     lengthBefore + pBufFirst->BuLength < position)
+	{
+	  lengthBefore += pBufFirst->BuLength;
+	  pBufFirst = pBufFirst->BuNext;
+	}
+      /* Length of the buffer containing the beginning of the string to be
+	 suppress */
+      firstDeleted = position - lengthBefore;
+      /* Looks for the buffer pBufLast containing the end of the string to
+	 be suppressed and releases the intermediate buffers. The buffers
+	 containing the begenning of the string to be suppressed and its
+	 end are not released */
+      pBufLast = pBufFirst;
+      lastDeleted = firstDeleted + length - 1;
+      while (pBufLast->BuNext != NULL &&
+	     lastDeleted > pBufLast->BuLength)
+	{
+	  lastDeleted -= pBufLast->BuLength;
+	  if (pBufLast != pBufFirst)
+	    /* This is not the buffer containing the begenning of the 
+	       tring. It is released */
+	    {
+	      pBufNext = pBufLast->BuNext;
+	      pBufLast->BuPrevious->BuNext = pBufLast->BuNext;
+	      if (pBufLast->BuNext != NULL)
+		pBufLast->BuNext->BuPrevious = pBufLast->BuPrevious;
 #ifdef NODISPLAY
-		  FreeTextBuffer (pBufLast);
+	      FreeTextBuffer (pBufLast);
 #else /* NODISPLAY */
-		  DeleteBuffer (pBufLast, ActiveFrame);
+	      DeleteBuffer (pBufLast, ActiveFrame);
 #endif /* NODISPLAY */
-		  pBufLast = pBufNext;
-	       }
-	     else
-		pBufLast = pBufLast->BuNext;
-	  }
-	/* The text following the string to suppress is moved on the right */
-	if (pBufFirst == pBufLast)
-	   /* The whole string to suppress is in the same buffer */
-	   /* The text following the string to be suppressed is moved at 
-	      the position of the begenning of the string to suppress */
-	  {
-	     dest = &pBufFirst->BuContent[firstDeleted - 1];
-	     l = length;
-	  }
-	else
-	   /* The begenning and the and of the string to be suppressed are
-	      in different buffers. The text of the first buffer is troncated
-	      and the text remaining in the other buffer is moved at the
-	      begenning of the buffer */
-	  {
-	     pBufFirst->BuContent[firstDeleted - 1] = WC_EOS;
-	     pBufFirst->BuLength = firstDeleted - 1;
-	     dest = pBufLast->BuContent;
-	     l = lastDeleted;
-	  }
-	/* The text following the part to be suppresses is moved */
-	source = &pBufLast->BuContent[lastDeleted];
-	i = 0;
-	while (source[i] != WC_EOS)
-	  {
-	    dest[i] = source[i];
-	    i++;
-	  }
-	dest[i] = WC_EOS;
-	pBufLast->BuLength -= l;
-	/* If the buffers of the begening and the end of the suppresses string
-	   are empty, they are released. A buffer is kept for the element */
-	if (pBufFirst->BuLength == 0 &&
-	    (pBufFirst->BuPrevious != NULL || pBufFirst->BuNext != NULL))
-	   /* If the buffer of the begenning is empty, it is released */
-	  {
-	     if (pBufFirst->BuPrevious != NULL)
-		pBufFirst->BuPrevious->BuNext = pBufFirst->BuNext;
-	     else
-		pEl->ElText = pBufFirst->BuNext;
-	     if (pBufFirst->BuNext != NULL)
-		pBufFirst->BuNext->BuPrevious = pBufFirst->BuPrevious;
+	      pBufLast = pBufNext;
+	    }
+	  else
+	    pBufLast = pBufLast->BuNext;
+	}
+      /* The text following the string to suppress is moved on the right */
+      if (pBufFirst == pBufLast)
+	/* The whole string to suppress is in the same buffer */
+	/* The text following the string to be suppressed is moved at 
+	   the position of the begenning of the string to suppress */
+	{
+	  dest = &pBufFirst->BuContent[firstDeleted - 1];
+	  l = length;
+	}
+      else
+	/* The begenning and the and of the string to be suppressed are
+	   in different buffers. The text of the first buffer is troncated
+	   and the text remaining in the other buffer is moved at the
+	   begenning of the buffer */
+	{
+	  pBufFirst->BuContent[firstDeleted - 1] = WC_EOS;
+	  pBufFirst->BuLength = firstDeleted - 1;
+	  dest = pBufLast->BuContent;
+	  l = lastDeleted;
+	}
+      /* The text following the part to be suppresses is moved */
+      source = &pBufLast->BuContent[lastDeleted];
+      i = 0;
+      while (source[i] != WC_EOS)
+	{
+	  dest[i] = source[i];
+	  i++;
+	}
+      dest[i] = WC_EOS;
+      pBufLast->BuLength -= l;
+      /* If the buffers of the begening and the end of the suppresses string
+	 are empty, they are released. A buffer is kept for the element */
+      if (pBufFirst->BuLength == 0 &&
+	  (pBufFirst->BuPrevious || pBufFirst->BuNext))
+	/* If the buffer of the begenning is empty, it is released */
+	{
+	  if (pBufFirst->BuPrevious)
+	    pBufFirst->BuPrevious->BuNext = pBufFirst->BuNext;
+	  else
+	    pEl->ElText = pBufFirst->BuNext;
+	  if (pBufFirst->BuNext)
+	    pBufFirst->BuNext->BuPrevious = pBufFirst->BuPrevious;
 #ifdef NODISPLAY
-	     FreeTextBuffer (pBufFirst);
+	  FreeTextBuffer (pBufFirst);
 #else /* NODISPLAY */
-	     DeleteBuffer (pBufFirst, ActiveFrame);
+	  DeleteBuffer (pBufFirst, ActiveFrame);
 #endif /* NODISPLAY */
-	  }
-	if (pBufFirst != pBufLast)
-	   if (pBufLast->BuLength == 0 &&
-	       (pBufLast->BuPrevious != NULL || pBufLast->BuNext != NULL))
-	      /* The buffer of the end is empty. It is released */
-	     {
-		if (pBufLast->BuPrevious != NULL)
-		   pBufLast->BuPrevious->BuNext = pBufLast->BuNext;
-		else
-		   pEl->ElText = pBufLast->BuNext;
-		if (pBufLast->BuNext != NULL)
-		   pBufLast->BuNext->BuPrevious = pBufLast->BuPrevious;
+	}
+      if (pBufFirst != pBufLast && pBufLast->BuLength == 0 &&
+	  (pBufLast->BuPrevious || pBufLast->BuNext))
+	/* The buffer of the end is empty. It is released */
+	{
+	  if (pBufLast->BuPrevious)
+	    pBufLast->BuPrevious->BuNext = pBufLast->BuNext;
+	  else
+	    pEl->ElText = pBufLast->BuNext;
+	  if (pBufLast->BuNext)
+	    pBufLast->BuNext->BuPrevious = pBufLast->BuPrevious;
 #ifdef NODISPLAY
-		FreeTextBuffer (pBufLast);
+	  FreeTextBuffer (pBufLast);
 #else /* NODISPLAY */
-		DeleteBuffer (pBufLast, ActiveFrame);
+	  DeleteBuffer (pBufLast, ActiveFrame);
 #endif /* NODISPLAY */
-	     }
-	/* Updates the volumes of the ancestors */
-	pElAsc = pEl->ElParent;
-	while (pElAsc != NULL)
-	  {
-	     pElAsc->ElVolume -= delta;
-	     pElAsc = pElAsc->ElParent;
-	  }
+	}
+      /* Updates the volumes of the ancestors */
+      pElAsc = pEl->ElParent;
+      while (pElAsc)
+	{
+	  pElAsc->ElVolume -= delta;
+	  pElAsc = pElAsc->ElParent;
+	}
 #ifndef NODISPLAY
-	/* Redisplays the element */
-	RedisplayLeaf (pEl, document, -delta);
-	/* Sets up a new selection if the element belongs to it */
-	if (changeSelection)
-	  {
-	     if (firstChar > 0)
-		if (lastSelection == firstSelection)
-		   TtaSelectString (document, (Element) firstSelection,
-				    firstChar, lastChar);
-		else
-		   TtaSelectString (document, (Element) firstSelection,
-				    firstChar, 0);
-	     else
-		TtaSelectElement (document, (Element) firstSelection);
-	     if (lastSelection != firstSelection)
-		TtaExtendSelection (document, (Element) lastSelection,
-				    lastChar);
-	  }
+      /* Redisplays the element */
+      RedisplayLeaf (pEl, document, -delta);
+      /* Sets up a new selection if the element belongs to it */
+      if (changeSelection)
+	{
+	  if (firstChar > 0)
+	    {
+	      if (lastSelection == firstSelection)
+		TtaSelectString (document, (Element) firstSelection,
+				 firstChar, lastChar);
+	      else
+		TtaSelectString (document, (Element) firstSelection,
+				 firstChar, 0);
+	    }
+	  else
+	    TtaSelectElement (document, (Element) firstSelection);
+	  if (lastSelection != firstSelection)
+	    TtaExtendSelection (document, (Element) lastSelection,
+				lastChar);
+	}
 #endif /* NODISPLAY */
-     }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -790,7 +719,7 @@ ThotBool TtaMergeText (Element element, Document document)
    ThotBool            ok = FALSE;
 #ifndef NODISPLAY
    PtrElement          FreeElement;
-   PtrElement          pEl2;
+   PtrElement          pEl2, pEl;
 
    UserErrorCode = 0;
    if (element == NULL)
@@ -806,28 +735,25 @@ ThotBool TtaMergeText (Element element, Document document)
    else
      /* parameter document is correct */
      {
-       pEl2 = ((PtrElement) element)->ElNext;
-       if (((PtrElement) element)->ElStructSchema->SsRule[((PtrElement) element)->ElTypeNumber - 1].SrConstruct != CsConstant)
-	 if (pEl2 != NULL)
-	   if (pEl2->ElTerminal && pEl2->ElLeafType == LtText)
-	     if (pEl2->ElLanguage == ((PtrElement) element)->ElLanguage)
-	       if (pEl2->ElStructSchema->SsRule[pEl2->ElTypeNumber - 1].SrConstruct != CsConstant)
-		 if (SameAttributes ((PtrElement) element, pEl2))
-		   if (((PtrElement) element)->ElSource == NULL &&
-		       pEl2->ElSource == NULL)
-		     if (BothHaveNoSpecRules ((PtrElement) element, pEl2))
-		       {
-			 /* destroy the second element of the text */
-			 DestroyAbsBoxes (pEl2, LoadedDocument[document - 1],
-					  FALSE);
-			 ok = MergeTextElements ((PtrElement) element,
-				    &FreeElement, LoadedDocument[document - 1],
-				    FALSE, FALSE);
-			 RedisplayMergedText ((PtrElement) element, document);
-			 if (FreeElement != NULL)
-			   DeleteElement (&FreeElement,
-					  LoadedDocument[document - 1]);
-		       }
+       pEl = (PtrElement) element;
+       pEl2 = pEl->ElNext;
+       if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct != CsConstant &&
+	   pEl2 && pEl2->ElTerminal && pEl2->ElLeafType == LtText &&
+	   pEl2->ElLanguage == pEl->ElLanguage &&
+	   pEl2->ElStructSchema->SsRule[pEl2->ElTypeNumber - 1].SrConstruct != CsConstant)
+	 if (SameAttributes (pEl, pEl2) &&
+	     pEl->ElSource == NULL && pEl2->ElSource == NULL &&
+	     BothHaveNoSpecRules (pEl, pEl2))
+	   {
+	     /* destroy the second element of the text */
+	     DestroyAbsBoxes (pEl2, LoadedDocument[document - 1], FALSE);
+	     ok = MergeTextElements (pEl,
+				     &FreeElement, LoadedDocument[document - 1],
+				     FALSE, FALSE);
+	     RedisplayMergedText (pEl, document);
+	     if (FreeElement != NULL)
+	       DeleteElement (&FreeElement, LoadedDocument[document - 1]);
+	   }
      }
 #endif
    return ok;
@@ -848,7 +774,7 @@ void TtaSetGraphicsShape (Element element, char shape, Document document)
 {
    int                 delta;
    ThotBool            polyline;
-   PtrElement          pElAsc;
+   PtrElement          pElAsc, pEl;
 
    UserErrorCode = 0;
    if (element == NULL)
@@ -870,15 +796,14 @@ void TtaSetGraphicsShape (Element element, char shape, Document document)
 	 /* parameter document is correct */
 	 {
 	   delta = 0;
-	   if (((PtrElement) element)->ElLeafType == LtSymbol)
+	   pEl = (PtrElement) element;
+	   if (pEl->ElLeafType == LtSymbol)
 	     {
-	       if (((PtrElement) element)->ElGraph == EOS &&
-		   shape != EOS)
+	       if (pEl->ElGraph == EOS && shape != EOS)
 		 delta = 1;
-	       else if (((PtrElement) element)->ElGraph != EOS &&
-			shape == EOS)
+	       else if (pEl->ElGraph != EOS && shape == EOS)
 		 delta = -1;
-	       ((PtrElement) element)->ElWideChar = 0;
+	       pEl->ElWideChar = 0;
 	     }
 	   else
 	     {
@@ -887,42 +812,38 @@ void TtaSetGraphicsShape (Element element, char shape, Document document)
 			   shape == 'F' || shape == 'D' || shape == 'p' ||
 			   shape == 's' || shape == 'w' || shape == 'x' ||
 			   shape == 'y' || shape == 'z');
-	       if (polyline &&
-		   ((PtrElement) element)->ElLeafType == LtGraphics)
+	       if (polyline && pEl->ElLeafType == LtGraphics)
 		 /* changing simple graphic --> polyline */
 		 {
-		   ((PtrElement) element)->ElLeafType = LtPolyLine;
-		   GetTextBuffer (&((PtrElement) element)->ElPolyLineBuffer);
-		   ((PtrElement) element)->ElNPoints = 1;
-		   ((PtrElement) element)->ElText->BuLength = 1;
-		   ((PtrElement) element)->ElText->BuPoints[0].XCoord = 0;
-		   ((PtrElement) element)->ElText->BuPoints[0].YCoord = 0;
+		   pEl->ElLeafType = LtPolyLine;
+		   GetTextBuffer (&pEl->ElPolyLineBuffer);
+		   pEl->ElNPoints = 1;
+		   pEl->ElText->BuLength = 1;
+		   pEl->ElText->BuPoints[0].XCoord = 0;
+		   pEl->ElText->BuPoints[0].YCoord = 0;
 		 }
-	       else if (!polyline &&
-			((PtrElement) element)->ElLeafType == LtPolyLine)
+	       else if (!polyline && pEl->ElLeafType == LtPolyLine)
 		 /* changing polyline --> simple graphic */
 		 {
-		   delta = -((PtrElement) element)->ElNPoints;
+		   delta = -pEl->ElNPoints;
 		   if (shape != EOS)
 		     delta++;
-		   ClearText (((PtrElement) element)->ElPolyLineBuffer);
-		   FreeTextBuffer (((PtrElement) element)->ElPolyLineBuffer);
-		   ((PtrElement) element)->ElLeafType = LtGraphics;
+		   ClearText (pEl->ElPolyLineBuffer);
+		   FreeTextBuffer (pEl->ElPolyLineBuffer);
+		   pEl->ElLeafType = LtGraphics;
 		 }
-	       else if (((PtrElement) element)->ElLeafType == LtGraphics)
+	       else if (pEl->ElLeafType == LtGraphics)
 		 {
-		 if (((PtrElement) element)->ElGraph == EOS &&
-		     shape != EOS)
-		   delta = 1;
-		 else if (((PtrElement) element)->ElGraph != EOS &&
-			  shape == EOS)
-		   delta = -1;
+		   if (pEl->ElGraph == EOS && shape != EOS)
+		     delta = 1;
+		   else if (pEl->ElGraph != EOS && shape == EOS)
+		     delta = -1;
 		 }
 	     }
-	   if (((PtrElement) element)->ElLeafType == LtPolyLine)
-	     ((PtrElement) element)->ElPolyLineType = shape;
+	   if (pEl->ElLeafType == LtPolyLine)
+	     pEl->ElPolyLineType = shape;
 	   else
-	     ((PtrElement) element)->ElGraph = shape;
+	     pEl->ElGraph = shape;
 	   /* Updates the volumes of ancestors */
 	   if (delta > 0)
 	     {
@@ -961,15 +882,13 @@ void TtaSetSymbolCode (Element element, wchar_t code, Document document)
      TtaError (ERR_invalid_element_type);
    else if (((PtrElement) element)->ElGraph != '?')
      TtaError (ERR_invalid_element_type);
+   else if (document < 1 || document > MAX_DOCUMENTS)
+     TtaError (ERR_invalid_document_parameter);
+   else if (LoadedDocument[document - 1] == NULL)
+     TtaError (ERR_invalid_document_parameter);
    else
-       /* verifies the parameter document */
-       if (document < 1 || document > MAX_DOCUMENTS)
-	 TtaError (ERR_invalid_document_parameter);
-       else if (LoadedDocument[document - 1] == NULL)
-	 TtaError (ERR_invalid_document_parameter);
-       else
-	 /* parameter document is correct */
-	 ((PtrElement) element)->ElWideChar = code;
+     /* parameter document is correct */
+     ((PtrElement) element)->ElWideChar = code;
 }
 
 /*----------------------------------------------------------------------
@@ -986,15 +905,13 @@ static ThotBool PolylineOK (Element element, Document document)
       TtaError (ERR_invalid_element_type);
    else if (((PtrElement) element)->ElLeafType != LtPolyLine)
       TtaError (ERR_invalid_element_type);
-   else
-      /* verifies the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-      TtaError (ERR_invalid_document_parameter);
+   else if (document < 1 || document > MAX_DOCUMENTS)
+     TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
-      TtaError (ERR_invalid_document_parameter);
+     TtaError (ERR_invalid_document_parameter);
    else
-      /* parameter document is correct */
-      ok = TRUE;
+     /* parameter document is correct */
+     ok = TRUE;
    return ok;
 }
 
@@ -1061,31 +978,30 @@ void TtaAddPointInPolyline (Element element, int rank, TypeUnit unit,
   ----------------------------------------------------------------------*/
 void TtaDeletePointInPolyline (Element element, int rank, Document document)
 {
-   PtrElement          pEl;
+  PtrElement          pEl;
 
-   if (PolylineOK (element, document))
-     {
+  if (PolylineOK (element, document))
+    {
       if (rank <= 0)
-	 TtaError (ERR_invalid_parameter);
+	TtaError (ERR_invalid_parameter);
       else
 	{
-	   /* Suppresses the point from the polyline */
-	   DeletePointInPolyline (&(((PtrElement) element)->ElPolyLineBuffer),
-				  rank);
-	   /* There is a point less in the element */
-	   ((PtrElement) element)->ElNPoints--;
-	   /* Updates the volumes of ancestors */
-	   pEl = ((PtrElement) element)->ElParent;
-	   while (pEl != NULL)
-	     {
-		pEl->ElVolume--;
-		pEl = pEl->ElParent;
-	     }
+	  /* Suppresses the point from the polyline */
+	  DeletePointInPolyline (&(((PtrElement) element)->ElPolyLineBuffer), rank);
+	  /* There is a point less in the element */
+	  ((PtrElement) element)->ElNPoints--;
+	  /* Updates the volumes of ancestors */
+	  pEl = ((PtrElement) element)->ElParent;
+	  while (pEl != NULL)
+	    {
+	      pEl->ElVolume--;
+	      pEl = pEl->ElParent;
+	    }
 #ifndef NODISPLAY
-	   RedisplayLeaf ((PtrElement) element, document, -1);
+	  RedisplayLeaf ((PtrElement) element, document, -1);
 #endif
 	}
-     }
+    }
 }
 
 
@@ -1690,11 +1606,6 @@ void TtaGiveSubString (Element element, unsigned char *buffer, int position,
 {
   PtrTextBuffer       pBuf;
   PtrElement          pEl;
-  unsigned char      *ptr;
-  int                 l;
-#ifdef _I18N
-  int                 i;
-#endif /* _I18N */
 
   UserErrorCode = 0;
   pEl = (PtrElement) element;
@@ -1709,41 +1620,16 @@ void TtaGiveSubString (Element element, unsigned char *buffer, int position,
     TtaError (ERR_invalid_element_type);
   else
     {
-      l = 0;
       pBuf = pEl->ElText;
-      ptr = buffer;
       position--;
-      /* The begenning buffer is not considered */
-      while (pBuf != NULL && pBuf->BuLength <= position)
+      /* skip previous buffers */
+      while (pBuf && pBuf->BuLength <= position)
 	{
 	  position -= pBuf->BuLength;
 	  pBuf = pBuf->BuNext;
 	}
       /* copying into the buffer */
-      l = 0;
-      while (pBuf != NULL && length > 0)
-	{
-#ifdef _I18N
-	  i = position;
-	  while (i < pBuf->BuLength && l < length)
-	    {
-	      l += TtaWC2MBs ((wchar_t *)&pBuf->BuContent[i], &ptr, UTF_8);
-	      i++;
-	    }
-	  length -= l;
-#else /* _I18N */
-	  if (length + position < pBuf->BuLength)
-	    l = length;
-	  else
-	    l = pBuf->BuLength - position;
-	  strncpy (ptr, pBuf->BuContent + position, l);
-	  ptr = ptr + l;
-	  length = length - l;
-#endif /* _I18N */
-	  pBuf = pBuf->BuNext;
-	  position = 0;
-	}
-      *ptr = EOS;
+      length = CopyB2S (pBuf, position, buffer, length);
     }
 }
 

@@ -49,11 +49,7 @@ extern ThotBool ConfigGetPSchemaNature ( PtrSSchema pSS,
 extern ThotBool ConfigDefaultPSchema ( char* schema,
                                        char* schpres );
 extern void FreeTranslations ( void );
-extern void DrawAddAttr ( PtrAttribute * pAttr,
-                          PtrElement pEl );
 extern void RedisplayCopies ( void );
-extern void DrawSupprAttr ( PtrAttribute pAttr,
-                            PtrElement pEl );
 extern ThotBool IsASavedElement ( PtrElement pEl );
 extern ThotBool CallEventType ( int *notifyEvent,
                                 ThotBool pre );
@@ -174,11 +170,7 @@ extern ThotBool ConfigGetPSchemaNature (/* PtrSSchema pSS,
 extern ThotBool ConfigDefaultPSchema (/* char* schema,
                                          char* schpres */);
 extern void FreeTranslations (/* void */);
-extern void DrawAddAttr (/* PtrAttribute * pAttr,
-                            PtrElement pEl */);
 extern void RedisplayCopies (/* void */);
-extern void DrawSupprAttr (/* PtrAttribute pAttr,
-                              PtrElement pEl */);
 extern ThotBool IsASavedElement (/* PtrElement pEl */);
 extern ThotBool CallEventType (/* int *notifyEvent,
                                   ThotBool pre */);

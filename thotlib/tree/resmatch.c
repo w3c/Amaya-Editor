@@ -1,6 +1,5 @@
 
 #ifndef STANDALONE
-#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "tree.h"
@@ -18,7 +17,8 @@
 /*----------------------------------------------------------------------  
   RestCoupler
   ----------------------------------------------------------------------*/
-static ThotBool RestCoupler (Restruct restr, int indSrc, int indDst, int indRecFrom, int indRecTo)
+static ThotBool RestCoupler (Restruct restr, int indSrc, int indDst,
+			     int indRecFrom, int indRecTo)
 {
 #ifdef DEBUG
   fprintf (stdout, "      Coupler  : %d %c - %d %c\n",
@@ -54,7 +54,8 @@ static ThotBool RestCoupler (Restruct restr, int indSrc, int indDst, int indRecF
 static ThotBool RestDeCoupler (Restruct resctx, int indSrc)
 {
 #ifdef DEBUG
-  fprintf (stdout, "      Decoupler source : %d %c\n",indSrc, resctx->RSrcPrint->SPrint[indSrc]);
+  fprintf (stdout, "      Decoupler source : %d %c\n",indSrc,
+	   resctx->RSrcPrint->SPrint[indSrc]);
 #endif
   if (indSrc < 0 || resctx->RCoupledNodes[indSrc] == NULL)
     {
@@ -95,57 +96,53 @@ static ThotBool RestEraseCouple (Restruct resctx)
   ----------------------------------------------------------------------*/
 static TyRelation RestMatchSymb (Restruct resctx, int ISrc, int IDst)
 {
-   TyRelation result;
-   char CSrc, CDst;
-   char *PSrc;
-   char *PDst;
+  TyRelation result;
+  char       CSrc, CDst;
+  char      *PSrc;
+  char      *PDst;
 
+  PSrc = resctx->RSrcPrint->SPrint;
+  PDst = resctx->RDestPrint;
+  result = NONE;
+  /* si l'un des deux symboles (source ou dest) est @, recherche s'ils */
+  /* correspondent au meme type d'element */
+  if (PSrc[ISrc] == '@' || PDst[IDst] == '@')
+    {
+      if (TtaSameSSchemas (RContext->CSrcSchema, (resctx->RDestType).ElSSchema) &&
+	  resctx->RSrcPrint->SNodes[ISrc] != NULL &&
+	  resctx->RDestNodes[IDst] != NULL &&
+	  resctx->RSrcPrint->SNodes[ISrc]->TypeNum == resctx->RDestNodes[IDst]->TypeNum && 
+	  (PSrc[ISrc] == '{' || PSrc[ISrc] == '(' || PSrc[ISrc] == '[' || 
+	   PDst[IDst] == '{' || PDst[IDst] == '(' || PDst[IDst] == '['))
+	result = IDENTITE;
+      else if (PDst[IDst] == '@' && PSrc[ISrc] != '}' && PSrc[ISrc] != ')' &&
+	       PSrc[ISrc] != ']')
+	result = REC_MASK;
+    }
 
-   PSrc = resctx->RSrcPrint->SPrint;
-   PDst = resctx->RDestPrint;
-   result = NONE;
-   /* si l'un des deux symboles (source ou dest) est @, recherche s'ils */
-   /* correspondent au meme type d'element */
-   if (PSrc[ISrc] == '@' || PDst[IDst] == '@')
-     {
-     if(TtaSameSSchemas (RContext->CSrcSchema, (resctx->RDestType).ElSSchema) &&
-	resctx->RSrcPrint->SNodes[ISrc] != NULL &&
-	resctx->RDestNodes[IDst] != NULL &&
-	resctx->RSrcPrint->SNodes[ISrc]->TypeNum == resctx->RDestNodes[IDst]->TypeNum && 
-	((PSrc[ISrc] == '{' || PSrc[ISrc] == '(' || PSrc[ISrc] == '[') || 
-	 (PDst[IDst] == '{' || PDst[IDst] == '(' || PDst[IDst] == '['))
-       )
-       result = IDENTITE;
-     else
-       if (PDst[IDst] == '@' && (PSrc[ISrc] != '}' && PSrc[ISrc] != ')' && PSrc[ISrc] != ']'))
-	 {
-	   result = REC_MASK;
-	 }
-     }
-
-   if (result == NONE)
-     {
-       CSrc = PSrc[ISrc];
-       CDst = PDst[IDst];
-       if (CDst != CSrc)
-	 { /* les sources  texte, graphique, symbole, reference, image */
-	   /* sont compatibles avec la destination unite */
-	   if (CDst == 'U' && 
-	       (CSrc == 'T' || CSrc == 'G' || CSrc == 'S' || CSrc == 'R' || CSrc == 'P'))
-	     result = EQUIVALENCE;
-	 }
-       else
-	 {
-	   /****
-	   if (CSrc == 'N') ** deux natures **
-	     ;
-	   if (CSrc == 'R') ** deux references **
-	     ;
-	   ****/
-	   result = EQUIVALENCE;
-	 }
-     }
-   return result;
+  if (result == NONE)
+    {
+      CSrc = PSrc[ISrc];
+      CDst = PDst[IDst];
+      if (CDst != CSrc)
+	{ /* les sources  texte, graphique, symbole, reference, image */
+	  /* sont compatibles avec la destination unite */
+	  if (CDst == 'U' && 
+	      (CSrc == 'T' || CSrc == 'G' || CSrc == 'S' || CSrc == 'R' || CSrc == 'P'))
+	    result = EQUIVALENCE;
+	}
+      else
+	{
+	  /****
+	       if (CSrc == 'N') ** deux natures **
+	       ;
+	       if (CSrc == 'R') ** deux references **
+	       ;
+	  ****/
+	  result = EQUIVALENCE;
+	}
+    }
+  return result;
 }
 
 /*----------------------------------------------------------------------  

@@ -42,12 +42,12 @@ static ThotBool     MandatoryAttrFormExists = FALSE;
 #define LgMaxAttrText 500
 /* the menu attributes */
 static PtrSSchema   AttrStruct[MAX_MENU * 2];
-static int          AttrNumber[MAX_MENU * 2];
 static ThotBool     AttrOblig[MAX_MENU * 2];
 static ThotBool     AttrEvent[MAX_MENU* 2];
-static char       TextAttrValue[LgMaxAttrText];
 static PtrSSchema   SchCurrentAttr = NULL;
 static PtrDocument  DocCurrentAttr = NULL;
+static char         TextAttrValue[LgMaxAttrText];
+static int          AttrNumber[MAX_MENU * 2];
 static int          EventMenu[MAX_FRAME];
 static int          NumCurrentAttr = 0;
 static int          CurrentAttr;
@@ -780,15 +780,15 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
 				PtrAttribute currAttr,
 				PtrDocument pDoc, int view)
 {
-   int                 i, lgmenu, val;
-   int                 form, subform;
-   Document            doc;
+   Document          doc;
    char              bufMenu[MAX_TXT_LEN];
    char              title[MAX_NAME_LENGTH + 2];
+   int               i, lgmenu, val;
+   int               form, subform;
+
 #ifdef _WINDOWS
    WIN_pAttr1 = pAttr1;
 #endif /* _WINDOWS */
-
    doc = (Document) IdentDocument (pDoc);
    /* detruit la feuille de dialogue et la recree */
    strcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
@@ -859,12 +859,12 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
        
      case AtTextAttr: /* attribut a valeur textuelle */
        subform = form + 2;
-       if (currAttr != NULL && currAttr->AeAttrText != NULL)
+       if (currAttr && currAttr->AeAttrText)
 	 {
 	   i = LgMaxAttrText - 2;
-	   CopyTextToString (currAttr->AeAttrText, TextAttrValue, &i);
+	   CopyBufferToString (currAttr->AeAttrText, TextAttrValue, &i);
 	 }
-		else
+       else
 	   TextAttrValue[0] = EOS;
 #ifndef _WINDOWS
        TtaNewTextForm (subform, form, title, 40, 1, FALSE);
@@ -933,7 +933,7 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
   ----------------------------------------------------------------------*/
 void CallbackReqAttrMenu (int ref, int val, char *txt)
 {
-  int                 length;
+  int      length;
 
   switch (ref)
     {
@@ -960,7 +960,7 @@ void CallbackReqAttrMenu (int ref, int val, char *txt)
 	GetTextBuffer (&PtrReqAttr->AeAttrText);
       else
 	ClearText (PtrReqAttr->AeAttrText);
-      CopyStringToText (txt, PtrReqAttr->AeAttrText, &length);
+      CopyStringToBuffer (txt, PtrReqAttr->AeAttrText, &length);
       break;
     case NumMenuAttrEnumNeeded:
       /* menu des valeurs d'un attribut a valeurs enumerees */
@@ -977,7 +977,7 @@ void CallbackReqAttrMenu (int ref, int val, char *txt)
    builds the form for capturing the value of the required
    attribute as defined by the pRuleAttr rule.
   ----------------------------------------------------------------------*/
-void                BuildReqAttrMenu (PtrAttribute pAttr, PtrDocument pDoc)
+void BuildReqAttrMenu (PtrAttribute pAttr, PtrDocument pDoc)
 {
    TtAttribute        *pRuleAttr;
 
@@ -1509,7 +1509,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
 			GetTextBuffer (&(pAttrNew->AeAttrText));
 		      else
 			ClearText (pAttrNew->AeAttrText);
-		      CopyStringToText (TextAttrValue, pAttrNew->AeAttrText, &lg);
+		      CopyStringToBuffer (TextAttrValue, pAttrNew->AeAttrText, &lg);
 		    }
 		  /* applique les attributs a la partie selectionnee */
 		  AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,

@@ -171,8 +171,7 @@ static void AttachMandatoryAttrSRule (PtrElement pEl, PtrDocument
 				
 			      case AtTextAttr:
 				/* attribut a valeur textuelle */
-				CopyStringToText (" ", pAttr->AeAttrText,
-						  &len);
+				CopyStringToBuffer (" ", pAttr->AeAttrText, &len);
 				break;
 				
 			      case AtEnumAttr:
@@ -582,7 +581,7 @@ void TtaSetAttributeText (Attribute attribute, char* buffer,
       else
 	ClearText (pAttr->AeAttrText);
       /* Sets the new value */
-      CopyStringToText (buffer, pAttr->AeAttrText, &lg);
+      CopyStringToBuffer (buffer, pAttr->AeAttrText, &lg);
       if (pAttr->AeAttrNum == 1)
 	/* language attribute */
 	{

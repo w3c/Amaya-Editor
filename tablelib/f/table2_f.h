@@ -9,9 +9,9 @@
 extern void CanApplAttrRules ( PtrElement pEl,
                                PtrAttribute pAttr,
                                PtrDocument pDoc,
-                               ThotBool * ApplAttr );
+                               ThotBool *ApplAttr );
 extern void CheckHeightRuleHairline ( PtrAbstractBox pAb,
-                                      PosRule * position,
+                                      PosRule *position,
                                       PtrPRule pRule,
                                       PtrAbstractBox * pAbFootTable );
 extern void CheckNextIsFootTable ( PtrElement pEl,
@@ -36,9 +36,9 @@ extern void Table2LoadResources ( void );
 extern void CanApplAttrRules (/* PtrElement pEl,
                                  PtrAttribute pAttr,
                                  PtrDocument pDoc,
-                                 ThotBool * ApplAttr */);
+                                 ThotBool *ApplAttr */);
 extern void CheckHeightRuleHairline (/* PtrAbstractBox pAb,
-                                        PosRule * position,
+                                        PosRule *position,
                                         PtrPRule pRule,
                                         PtrAbstractBox * pAbFootTable */);
 extern void CheckNextIsFootTable (/* PtrElement pEl,

@@ -92,7 +92,7 @@ extern void InsertElemInChoice ( PtrElement pEl,
                                  PtrDocument pDoc,
                                  ThotBool del );
 extern void AttachRequiredAttributes ( PtrElement pEl,
-                                       SRule * pSRule,
+                                       SRule *pSRule,
                                        PtrSSchema pSS,
                                        ThotBool withAttr,
                                        PtrDocument pDoc );
@@ -236,7 +236,7 @@ extern void InsertElemInChoice (/* PtrElement pEl,
                                    PtrDocument pDoc,
                                    ThotBool del */);
 extern void AttachRequiredAttributes (/* PtrElement pEl,
-                                         SRule * pSRule,
+                                         SRule *pSRule,
                                          PtrSSchema pSS,
                                          ThotBool withAttr,
                                          PtrDocument pDoc */);

@@ -474,53 +474,51 @@ PtrAbstractBox InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib,
   ----------------------------------------------------------------------*/
 void ConstantCopy (int NConst, PtrPSchema pSchP, PtrAbstractBox pAb)
 {
-   PresConstant       *pConst;
+  PresConstant       *pConst;
+  int                 l;
 
-   pConst = &pSchP->PsConstant[NConst - 1];
-   switch (pConst->PdType)
-	 {
-	    case GraphicElem:
-	       pAb->AbLeafType = LtGraphics;
-	       pAb->AbShape = (char)pConst->PdString[0];
-	       if (pAb->AbShape == 'C')
-		 /* rectangle with rounded corners */
-		 {
-	         pAb->AbRx = 5;
-		 pAb->AbRxUnit = UnPoint;
-	         pAb->AbRy = 5;
-		 pAb->AbRyUnit = UnPoint;
-		 }
-	       pAb->AbGraphAlphabet = 'L';
-	       pAb->AbVolume = 1;
-	       break;
-	    case Symbol:
-	       pAb->AbLeafType = LtSymbol;
-	       pAb->AbShape = (char)pConst->PdString[0];
-	       pAb->AbGraphAlphabet = 'G';
-	       if (pAb->AbShape == EOS)
-		  pAb->AbVolume = 0;
-	       else
-		  pAb->AbVolume = 1;
-	       break;
-	    case CharString:
-	       pAb->AbLeafType = LtText;
-	       if (pAb->AbText == NULL)
-		  GetConstantBuffer (pAb);
-	       ustrncpy (pAb->AbText->BuContent, pConst->PdString,
-			 THOT_MAX_CHAR - 1);
-	       pAb->AbText->BuContent[THOT_MAX_CHAR - 1] = EOS;
-	       pAb->AbText->BuLength = ustrlen (pAb->AbText->BuContent);
-	       pAb->AbLanguage = TtaGetLanguageIdFromAlphabet (pConst->PdAlphabet);
-	       pAb->AbVolume = pAb->AbText->BuLength;
-	       break;
-	    case Picture:
-	       NewPictInfo (pAb, pConst->PdString, UNKNOWN_FORMAT);
-	       pAb->AbLeafType = LtPicture;
-	       pAb->AbVolume = 100;
-	       break;
-	    default:
-	       break;
-	 }
+  pConst = &pSchP->PsConstant[NConst - 1];
+  switch (pConst->PdType)
+    {
+    case GraphicElem:
+      pAb->AbLeafType = LtGraphics;
+      pAb->AbShape = (char)pConst->PdString[0];
+      if (pAb->AbShape == 'C')
+	/* rectangle with rounded corners */
+	{
+	  pAb->AbRx = 5;
+	  pAb->AbRxUnit = UnPoint;
+	  pAb->AbRy = 5;
+	  pAb->AbRyUnit = UnPoint;
+	}
+      pAb->AbGraphAlphabet = 'L';
+      pAb->AbVolume = 1;
+      break;
+    case Symbol:
+      pAb->AbLeafType = LtSymbol;
+      pAb->AbShape = (char) pConst->PdString[0];
+      pAb->AbGraphAlphabet = 'G';
+      if (pAb->AbShape == EOS)
+	pAb->AbVolume = 0;
+      else
+	pAb->AbVolume = 1;
+      break;
+    case CharString:
+      pAb->AbLeafType = LtText;
+      if (pAb->AbText == NULL)
+	GetConstantBuffer (pAb);
+      CopyStringToBuffer (pConst->PdString, pAb->AbText, &l);
+      pAb->AbLanguage = TtaGetLanguageIdFromAlphabet (pConst->PdAlphabet);
+      pAb->AbVolume = pAb->AbText->BuLength;
+      break;
+    case Picture:
+      NewPictInfo (pAb, pConst->PdString, UNKNOWN_FORMAT);
+      pAb->AbLeafType = LtPicture;
+      pAb->AbVolume = 100;
+      break;
+    default:
+      break;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -576,7 +574,7 @@ static int GetGestView (DocViewDescr *pView, PtrSSchema pSS)
     pGuestView = pView->DvFirstGuestView;
     found = FALSE;
     while (pGuestView && !found)
-       if (!ustrcmp (pGuestView->GvSSchema->SsName, pSS->SsName))
+       if (!strcmp (pGuestView->GvSSchema->SsName, pSS->SsName))
 	  {
 	  found = TRUE;
 	  viewSch = pGuestView->GvPSchemaView;
@@ -615,7 +613,7 @@ int AppliedView (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc,
 	 pView = &pDoc->DocView[viewNb - 1];
 	 if (pView->DvSSchema == pDoc->DocSSchema)
 	    /* c'est une vue du document lui-me^me */
-	    if (!ustrcmp (pSS->SsName, pDoc->DocSSchema->SsName))
+	    if (!strcmp (pSS->SsName, pDoc->DocSSchema->SsName))
 	       /* c'est un element du document lui-meme. On prend le numero
 		  de la vue dans le schema de presentation qui la definit */
 	       viewSch = pView->DvPSchemaView;
@@ -1089,13 +1087,13 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 		    {
 		      if (pCond->CoTypeAncestor != 0)
 			equal = (pAsc->ElTypeNumber == pCond->CoTypeAncestor &&
-				 !ustrcmp (pAsc->ElStructSchema->SsName,
-					   pSS->SsName));
+				 !strcmp (pAsc->ElStructSchema->SsName,
+					  pSS->SsName));
 		      else
-			equal = (!ustrcmp (pCond->CoAncestorName,
+			equal = (!strcmp (pCond->CoAncestorName,
 					   pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) &&
-				 !ustrcmp (pCond->CoSSchemaName,
-					   pAsc->ElStructSchema->SsName));
+				 !strcmp (pCond->CoSSchemaName,
+					  pAsc->ElStructSchema->SsName));
 		      if (equal)
 			{
 			  i++;
@@ -1111,13 +1109,13 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 		    {
 		      if (pCond->CoTypeAncestor != 0)
 			equal = (pAsc->ElTypeNumber == pCond->CoTypeAncestor &&
-				 !ustrcmp (pAsc->ElStructSchema->SsName,
-					   pSS->SsName));
+				 !strcmp (pAsc->ElStructSchema->SsName,
+					  pSS->SsName));
 		      else
-			equal = (!ustrcmp (pCond->CoAncestorName,
-					   pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) &&
-				 !ustrcmp (pCond->CoSSchemaName,
-					   pAsc->ElStructSchema->SsName)); 
+			equal = (!strcmp (pCond->CoAncestorName,
+					  pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) &&
+				 !strcmp (pCond->CoSSchemaName,
+					  pAsc->ElStructSchema->SsName)); 
 		      if (equal)
 			i++;
 		      pAsc = pAsc->ElParent;  /* passe a l'element ascendant */
@@ -3365,8 +3363,8 @@ static void  ApplPresRules (PtrElement pEl, PtrDocument pDoc,
 		stop = FALSE;
 		while (pAttr != NULL && !stop)
 		  if (pAttr->AeAttrNum == pR->PrSpecifAttr &&
-		      !ustrcmp (pAttr->AeAttrSSchema->SsName,
-				pR->PrSpecifAttrSSchema->SsName))
+		      !strcmp (pAttr->AeAttrSSchema->SsName,
+			       pR->PrSpecifAttrSSchema->SsName))
 		    stop = TRUE;
 		  else
 		    pAttr = pAttr->AeNext;
