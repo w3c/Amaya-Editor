@@ -509,13 +509,9 @@ static ThotBool CheckDate (unsigned char c, int fnum, char *outBuf,
 	      for (index = 0; tm[index] != EOL; index++)
 		ExportChar ((wchar_t) tm[index], fnum, outBuf, pDoc,
 			    FALSE, FALSE, FALSE);
-	      return TRUE;
+	      DateIndex = 0;
 	    }
-	  else
-	    {
-	      StartDate = FALSE;
-	      StartDollar = FALSE;
-	    }
+	  return TRUE;
 	}
       else if (c == EOS || c == EOL || DateIndex == 10)
 	{
