@@ -2396,6 +2396,81 @@
 	<message xml:lang="fr">Ressayez? </message>
 	<message xml:lang="pt">Tentar de novo? </message>
 </label>
+<label define="AM_DAV_PREFERENCES">
+	<message xml:lang="en">WebDAV Preferences</message>
+	<message xml:lang="fr">Configuration WebDAV</message>
+	<message xml:lang="pt">Preferências WebDAV</message>
+</label>
+<label define="AM_DAV_USER_URL">
+	<message xml:lang="en">User's Personal Reference (URL)</message>
+	<message xml:lang="fr">Référence Personnelle de l'utilisateur (URL)</message>
+	<message xml:lang="pt">Referência Pessoal do Usuário (URL)</message>
+</label>
+<label define="AM_DAV_USER_RESOURCES">
+	<message xml:lang="en">User's WebDAV Resource List (URL URL)</message>
+	<message xml:lang="fr">List des Ressources de l'utilisateur (URL URL)</message>
+	<message xml:lang="pt">Lista de Recursos WebDAV do Usuário (URL URL)</message>
+</label>
+<label define="AM_DAV_DEPTH">
+	<message xml:lang="en">Lock Depth</message>
+	<message xml:lang="fr">Profondeur du Verrou</message>
+	<message xml:lang="pt">Profundidade da Trava</message>
+</label>
+<label define="AM_DAV_DEPTH_INFINITY">
+	<message xml:lang="en">infinity</message>
+	<message xml:lang="fr">infini</message>
+	<message xml:lang="pt">infinita</message>
+</label>
+<label define="AM_DAV_TIMEOUT">
+	<message xml:lang="en">Lock Timeout</message>
+	<message xml:lang="fr">Temps d'Expiration</message>
+	<message xml:lang="pt">Duração da Trava</message>
+</label>
+<label define="AM_DAV_TIMEOUT_INFINITE">
+	<message xml:lang="en">Infinite</message>
+	<message xml:lang="fr">Infini</message>
+	<message xml:lang="pt">Infinito</message>
+</label>
+<label define="AM_DAV_TIMEOUT_OTHER">
+	<message xml:lang="en">Other</message>
+	<message xml:lang="fr">Autre</message>
+	<message xml:lang="pt">Outro</message>
+</label>
+<label define="AM_DAV_TIMEOUT_SECONDS">
+	<message xml:lang="en">Seconds</message>
+	<message xml:lang="fr">Secondes</message>
+	<message xml:lang="pt">Segundos</message>
+</label>
+<label define="AM_DAV_LOCKSCOPE">
+	<message xml:lang="en">Lock Scope</message>
+	<message xml:lang="fr">Type du Verrou</message>
+	<message xml:lang="pt">Escopo da Trava</message>
+</label>
+<label define="AM_DAV_LOCKSCOPE_EXCLUSIVE">
+	<message xml:lang="en">exclusive</message>
+	<message xml:lang="fr">exclusif</message>
+	<message xml:lang="pt">exclusivo</message>
+</label>
+<label define="AM_DAV_LOCKSCOPE_SHARED">
+	<message xml:lang="en">shared</message>
+	<message xml:lang="fr">partagée</message>
+	<message xml:lang="pt">compartilhado</message>
+</label>
+<label define="AM_DAV_AWARENESS">
+	<message xml:lang="en">Awarenees</message>
+	<message xml:lang="fr">Notification</message>
+	<message xml:lang="pt">Percepção</message>
+</label>
+<label define="AM_DAV_AWARENESS_GENERAL">
+	<message xml:lang="en">General awareness</message>
+	<message xml:lang="fr">Notification général</message>
+	<message xml:lang="pt">Percepção geral</message>
+</label>
+<label define="AM_DAV_AWARENESS_ONEXIT">
+	<message xml:lang="en">Awareness on exit</message>
+	<message xml:lang="fr">Notification àla sortie</message>
+	<message xml:lang="pt">Percepção ao sair</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

@@ -201,6 +201,8 @@ UnlockDocument
 PropDocument
 CopyLockInformation
 LockIndicator
+CooperationConfig
+DAVPreferences
 DAVLockDocument
 
 ######### BROWSING

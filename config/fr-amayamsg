@@ -291,3 +291,18 @@
 289 Opération a échué! Cause: Faute de dépendence
 290 Opération a échué! Cause: %s
 291 Ressayez? 
+292 Configuration WebDAV
+293 Référence Personnelle de l'utilisateur (URL)
+294 List des Ressources de l'utilisateur (URL URL)
+295 Profondeur du Verrou
+296 infini
+297 Temps d'Expiration
+298 Infini
+299 Autre
+300 Secondes
+301 Type du Verrou
+302 exclusif
+303 partagée
+304 Notification
+305 Notification général
+306 Notification àla sortie

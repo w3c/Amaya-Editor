@@ -2798,6 +2798,17 @@ void CopyLockInformation (Document document, View view)
 }
 
 
+/*----------------------------------------------------------------------
+   DAVConfigure 
+   A Configure dialogue for the WebDAV user's preferences.
+  ----------------------------------------------------------------------*/
+void CooperationConfig (Document document, View view) 
+{
+#ifdef DAV
+    DAVPreferences (document,view);
+#endif /* DAV */
+}
+
 
 
 /*----------------------------------------------------------------------

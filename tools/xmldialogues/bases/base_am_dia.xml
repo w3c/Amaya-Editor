@@ -1990,6 +1990,11 @@
 	<message xml:lang="fr">Verrouillé ?</message>
 	<message xml:lang="pt">Travado?</message>
 </label>
+<label define="BCoopConfig">
+	<message xml:lang="en">Preferences...</message>
+	<message xml:lang="fr">Préférences...</message>
+	<message xml:lang="pt">Preferências...</message>
+</label>
 <label define="BInformation">
 	<message xml:lang="en">About Amaya</message>
 	<message xml:lang="fr">À propos de Amaya</message>

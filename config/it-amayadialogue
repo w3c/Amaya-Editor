@@ -231,31 +231,32 @@
 229 **View resource properties...
 230 **Copy lock information...
 231 **Locked?
-232 Informazioni su Amaya
-233 Informazioni su Amaya al W3C
-234 Indice
-235 Navigazione
-236 Viste
-237 Selezione
-238 Documento
-239 Creazione elementi
-240 Attributi
-241 Caratteri
-242 Ristrutturazione
-243 Collegamenti
-244 Tabelle
-245 Zone attive
-246 Matematica
-247 Graphics
-248 Supporto XML
-249 Fogli di stile
-250 Ricerca
-251 Controllo ortografico
-252 Pubblicazione
-253 Stampa
-254 Numerazione
-255 Creare un libro
-256 Annotazioni
-257 Configurazione di Amaya
-258 Scelte rapide
-259 Accessibilità in Amaya
+232 **Preferences...
+233 Informazioni su Amaya
+234 Informazioni su Amaya al W3C
+235 Indice
+236 Navigazione
+237 Viste
+238 Selezione
+239 Documento
+240 Creazione elementi
+241 Attributi
+242 Caratteri
+243 Ristrutturazione
+244 Collegamenti
+245 Tabelle
+246 Zone attive
+247 Matematica
+248 Graphics
+249 Supporto XML
+250 Fogli di stile
+251 Ricerca
+252 Controllo ortografico
+253 Pubblicazione
+254 Stampa
+255 Numerazione
+256 Creare un libro
+257 Annotazioni
+258 Configurazione di Amaya
+259 Scelte rapide
+260 Accessibilità in Amaya

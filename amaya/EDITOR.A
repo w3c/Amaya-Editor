@@ -287,6 +287,8 @@ MENUS
 	view:1 Cooperation_ button:BCopyLock -> CopyLockInformation;
 	view:1 Cooperation_ Separator;
         view:1 Cooperation_ toggle:BLockIndicator -> LockIndicator;
+	view:1 Cooperation_ Separator;
+	view:1 Cooperation_ button:BCoopConfig -> CooperationConfig;
 
 	view:1 Help_ button:BInformation -> HelpAmaya;
 	view:1 Help_ button:BAtW3C -> HelpAtW3C;

@@ -552,7 +552,7 @@ ThotBool  AHTReqContext_delete (AHTReqContext * me)
 #endif   
 
 #ifdef DAV /* if there is a DAV context object, delete it */
-       if (me->dav_context) AHTDAVContext_delete(me->dav_context);
+       if (me->dav_context) AHTDAVContext_delete (me->dav_context);
 #endif /* DAV */
 
        if (Amaya->reqlist)

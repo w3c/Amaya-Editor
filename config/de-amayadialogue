@@ -231,31 +231,32 @@
 229 **View resource properties...
 230 **Copy lock information...
 231 **Locked?
-232 Info
-233 Über Amaya
-234 Index
-235 Browsen
-236 Ansichten
-237 Markieren
-238 Dokument
-239 Elemente
-240 Attribute
-241 Zeichen
-242 Transformieren
-243 Verweise
-244 Tabellen
-245 Aktive Bildbereiche
-246 Formeln
-247 SVG
-248 XML
-249 Formate/Formatvorlagen
-250 Suchen/Ersetzen
-251 Rechtschreibprüfung
-252 Speichern/Veröffentlichen
-253 Drucken
-254 Abschnitte numerieren
-255 Buch erstellen
-256 Anmerkungen
-257 Konfiguration
-258 Tastenkürzel
-259 Benutzerfreundlichkeit
+232 **Preferences...
+233 Info
+234 Über Amaya
+235 Index
+236 Browsen
+237 Ansichten
+238 Markieren
+239 Dokument
+240 Elemente
+241 Attribute
+242 Zeichen
+243 Transformieren
+244 Verweise
+245 Tabellen
+246 Aktive Bildbereiche
+247 Formeln
+248 SVG
+249 XML
+250 Formate/Formatvorlagen
+251 Suchen/Ersetzen
+252 Rechtschreibprüfung
+253 Speichern/Veröffentlichen
+254 Drucken
+255 Abschnitte numerieren
+256 Buch erstellen
+257 Anmerkungen
+258 Konfiguration
+259 Tastenkürzel
+260 Benutzerfreundlichkeit

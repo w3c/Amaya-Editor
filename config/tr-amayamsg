@@ -291,3 +291,18 @@
 289 **Request failed! Reason: Failed Dependency
 290 **Request failed! Reason: %s
 291 **Try again? 
+292 **WebDAV Preferences
+293 **User's Personal Reference (URL)
+294 **User's WebDAV Resource List (URL URL)
+295 **Lock Depth
+296 **infinity
+297 **Lock Timeout
+298 **Infinite
+299 **Other
+300 **Seconds
+301 **Lock Scope
+302 **exclusive
+303 **shared
+304 **Awarenees
+305 **General awareness
+306 **Awareness on exit
