@@ -433,7 +433,11 @@ CHARSET TtaGetLocaleCharset ()
   if (LocaleSystemCharset == UNSUPPORTED_CHARSET)
     {
       char * lang = getenv("LANG");
+#ifdef _WX
       if (lang && TtaDirExists ("/tmp"))
+#else /* _WX */
+      if (lang && ThotDirExists ("/tmp"))
+#endif /* _WX */
 	{
 	  int  fd;
 	  char buffer[256];
