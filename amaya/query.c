@@ -150,7 +150,7 @@ PicType contentType;
       atom = HTAtom_for("image/xbm");
       break;
     case eps_type:
-      atom = HTAtom_for("application/postscriptm");
+      atom = HTAtom_for("application/postscript");
       break;
    case xpm_type:
       atom = HTAtom_for("image/xpm");
