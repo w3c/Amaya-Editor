@@ -174,6 +174,58 @@ void                TtaRefresh ()
      }
 }
 
+
+/*----------------------------------------------------------------------
+   RedrawFilledBoxes redraw from top to bottom all filled boxes.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         RedrawFilledBoxes (int frame, int xmin, int xmax, int ymin, int ymax)
+#else  /* __STDC__ */
+static void         RedrawFilledBoxes (frame, xmin, xmax, ymin, ymax)
+int                 frame;
+int                 xmin;
+int                 xmax;
+int                 ymin;
+int                 ymax;
+#endif /* __STDC__ */
+{
+   PtrAbstractBox      pAb;
+   PtrBox              pBox;
+   ViewFrame          *pFrame;
+   int                 x, y;
+
+   pFrame = &ViewFrameTable[frame - 1];
+   pAb = pFrame->FrAbstractBox;
+   x = pFrame->FrXOrg;
+   y = pFrame->FrYOrg;
+   pBox = pAb->AbBox;
+   if (pAb->AbPictBackground)
+     DrawPicture (pBox, (PictInfo *) pAb->AbPictBackground, frame);
+   else if (pAb->AbFillBox)
+     DrawRectangle (frame, pBox->BxThickness, pAb->AbLineStyle,
+		    pBox->BxXOrg - x, pBox->BxYOrg - y,
+		    pBox->BxWidth, pBox->BxHeight, 0, 0, pAb->AbForeground,
+		    pAb->AbBackground, pAb->AbFillPattern);
+
+   while (pBox->BxNextBackground != NULL)
+     {
+       pBox = pBox->BxNextBackground;
+       pAb = pBox->BxAbstractBox;
+       if (pBox->BxYOrg + pBox->BxHeight >= ymin
+	   && pBox->BxYOrg <= ymax
+	   && pBox->BxXOrg + pBox->BxWidth >= xmin
+	   && pBox->BxXOrg <= xmax)
+	 if (pAb->AbPictBackground)
+	   DrawPicture (pBox, (PictInfo *) pAb->AbPictBackground, frame);
+	 else
+	   DrawRectangle (frame, pBox->BxThickness, pAb->AbLineStyle,
+			  pBox->BxXOrg - x, pBox->BxYOrg - y,
+			  pBox->BxWidth, pBox->BxHeight, 0, 0, pAb->AbForeground,
+			  pAb->AbBackground, pAb->AbFillPattern);
+     }
+}
+
+
 /*----------------------------------------------------------------------
    RedrawFrameTop redraw from bottom to top a frame.
    The scroll parameter indicates the height of a scroll
@@ -277,6 +329,8 @@ int                 scroll;
 		    }
 	       }
 
+	     /* Redraw from top to bottom all filled boxes */
+	     RedrawFilledBoxes (frame, framexmin, framexmax, frameymin, frameymax);
 	     /* Display planes in reverse order from biggest to lowest */
 	     plane = 65536;
 	     nextplane = plane - 1;
@@ -524,32 +578,32 @@ PtrBox              pBox;
 int                 frame;
 #endif /* __STDC__ */
 {
-   PtrAbstractBox      pAbbox1;
+   PtrAbstractBox      pAb;
    int                 i;
 
    /* Look for and ancestor abstract boxe with PavGraphCreation flag set */
-   pAbbox1 = pBox->BxAbstractBox->AbEnclosing;
+   pAb = pBox->BxAbstractBox->AbEnclosing;
    i = 0;
    while (i == 0)
-      if (pAbbox1 == NULL)
+      if (pAb == NULL)
 	 i = 1;
-      else if (pAbbox1->AbBox->BxHorizFlex
-	       || pAbbox1->AbBox->BxVertFlex)
+      else if (pAb->AbBox->BxHorizFlex
+	       || pAb->AbBox->BxVertFlex)
 	{
 	   i = 1;
-	   pAbbox1 = NULL;
+	   pAb = NULL;
 	}
-      else if ((pAbbox1->AbHorizPos.PosUserSpecified)
-	       || (pAbbox1->AbVertPos.PosUserSpecified)
-	       || (pAbbox1->AbWidth.DimUserSpecified)
-	       || (pAbbox1->AbHeight.DimUserSpecified))
+      else if ((pAb->AbHorizPos.PosUserSpecified)
+	       || (pAb->AbVertPos.PosUserSpecified)
+	       || (pAb->AbWidth.DimUserSpecified)
+	       || (pAb->AbHeight.DimUserSpecified))
 	 i = 1;
       else
-	 pAbbox1 = pAbbox1->AbEnclosing;
+	 pAb = pAb->AbEnclosing;
 
    /* There is an englobing abstract box */
-   if (pAbbox1 != NULL)
-      AddBoxToCreate (tocreate, pAbbox1->AbBox, frame);
+   if (pAb != NULL)
+      AddBoxToCreate (tocreate, pAb->AbBox, frame);
 
    /* Add this box to create, if there is no englobing box */
    /* already registered and if this box is visible.       */
@@ -584,7 +638,7 @@ int                 scroll;
    PtrBox              ToCreate;
    PtrBox              pFirstBox;
    ViewFrame          *pFrame;
-   PtrAbstractBox      pAbbox1;
+   PtrAbstractBox      pAb;
    int                 plane;
    int                 nextplane;
    int                 i, delta;
@@ -628,6 +682,8 @@ int                 scroll;
 	vol = 0;
 	delta = height - h / 2;
 
+	/* Redraw from top to bottom all filled boxes */
+	RedrawFilledBoxes (frame, framexmin, framexmax, frameymin, frameymax);
 	/* Display planes in reverse order from biggest to lowest */
 	plane = 65536;
 	nextplane = plane - 1;
@@ -677,32 +733,32 @@ int                 scroll;
 			 {
 			    /* this is no a new box */
 			    pBox->BxNew = 0;
-			    pAbbox1 = pBox->BxAbstractBox;
+			    pAb = pBox->BxAbstractBox;
 			    i = 0;
 			    while (i == 0)
-			       if (pAbbox1 == NULL)
+			       if (pAb == NULL)
 				  i = 1;
-			       else if (pAbbox1->AbWidth.DimIsPosition
-					|| pAbbox1->AbHeight.DimIsPosition)
+			       else if (pAb->AbWidth.DimIsPosition
+					|| pAb->AbHeight.DimIsPosition)
 				 {
 				    i = 1;
-				    pAbbox1 = NULL;
+				    pAb = NULL;
 				 }
-			       else if ((pAbbox1->AbHorizPos.PosUserSpecified)
-				    || (pAbbox1->AbVertPos.PosUserSpecified)
-				      || (pAbbox1->AbWidth.DimUserSpecified)
-				    || (pAbbox1->AbHeight.DimUserSpecified))
+			       else if ((pAb->AbHorizPos.PosUserSpecified)
+				    || (pAb->AbVertPos.PosUserSpecified)
+				      || (pAb->AbWidth.DimUserSpecified)
+				    || (pAb->AbHeight.DimUserSpecified))
 				  i = 1;
 			       else
-				  pAbbox1 = pAbbox1->AbEnclosing;
+				  pAb = pAb->AbEnclosing;
 			 }
 		       else
-			  pAbbox1 = NULL;
+			  pAb = NULL;
 
                        /** skip box to create dynamically **/
-		       if (pAbbox1 != NULL)
+		       if (pAb != NULL)
 			  /* store the box to create */
-			  AddBoxToCreate (&ToCreate, pAbbox1->AbBox, frame);
+			  AddBoxToCreate (&ToCreate, pAb->AbBox, frame);
 		       else  if (y >= frameymin            && 
 				 pBox->BxYOrg <= frameymax && 
 				 x >= framexmin            && 
@@ -738,21 +794,21 @@ int                 scroll;
 	  {
 	     DirectCreation (ToCreate, frame);
 	     /* Should the son's boxes being handled too ? */
-	     pAbbox1 = ToCreate->BxAbstractBox;
-	     if (pAbbox1 != NULL)
-		pAbbox1 = pAbbox1->AbFirstEnclosed;
-	     while (pAbbox1 != NULL)
+	     pAb = ToCreate->BxAbstractBox;
+	     if (pAb != NULL)
+		pAb = pAb->AbFirstEnclosed;
+	     while (pAb != NULL)
 	       {
-		  if ((pAbbox1->AbHorizPos.PosUserSpecified)
-		      || (pAbbox1->AbVertPos.PosUserSpecified)
-		      || (pAbbox1->AbWidth.DimUserSpecified)
-		      || (pAbbox1->AbHeight.DimUserSpecified))
+		  if ((pAb->AbHorizPos.PosUserSpecified)
+		      || (pAb->AbVertPos.PosUserSpecified)
+		      || (pAb->AbWidth.DimUserSpecified)
+		      || (pAb->AbHeight.DimUserSpecified))
 		    {
-		       ToCreate = pAbbox1->AbBox;
+		       ToCreate = pAb->AbBox;
 		       DirectCreation (ToCreate, frame);
 		    }
 		  else
-		     pAbbox1 = pAbbox1->AbNext;
+		     pAb = pAb->AbNext;
 	       }
 	     return (FALSE);
 	  }

@@ -311,8 +311,68 @@ int                 desory;
 #ifndef _WINDOWS
    if (SrcPix != None)
       XCopyArea (TtDisplay, SrcPix, Drawab, TtGraphicGC, srcorx, srcory, w, h, desorx, desory);
-#endif /* _WINDOWS */
 
+#ifdef IV
+    XGCValues values;
+    GC gc_bg;
+    unsigned int valuemask;
+
+   if (bg_style->flag & S_BACKGROUND_IMAGE) /* background image */
+     {
+       if (bg_style->image)
+	 {
+	   gc_bg = XCreateGC (TtDisplay, Drawab, 0, NULL);
+	   XCopyGC (TtDisplay, gc_fill, 0xFFFF, gc_bg);
+	   valuemask = GCTile|GCFillStyle|GCTileStipXOrigin|GCTileStipYOrigin;
+	   values.fill_style = FillTiled;
+	   values.tile = bg_style->image->pixmap;
+	   if (bg_style->flag & S_BACKGROUND_ORIGIN)
+	     {
+	       if (bg_style->flag & S_BACKGROUND_FIXED)
+		 {
+		   values.ts_x_origin = bg_style->x_pos * (WinWidth-bg_style->image->width)/100;
+		   values.ts_y_origin = bg_style->y_pos * (WinHeight-bg_style->image->height)/100 + WinTop;
+		 }
+	       else
+		 {
+		   values.ts_x_origin = -PixelIndent;
+		   values.ts_y_origin = WinTop - PixelOffset;
+		 }
+	     }
+	   XChangeGC (TtDisplay, gc_bg, valuemask, &values);
+	   
+	   if (bg_style->flag & S_BACKGROUND_Y_REPEAT)
+	     {
+	       frameRect.y = WinTop;
+	       frameRect.height = WinHeight;
+	     }
+	   else
+	     {
+	       frameRect.y = values.ts_y_origin;
+	       frameRect.height = bg_style->image->height;
+	     }
+	   if (bg_style->flag & S_BACKGROUND_X_REPEAT)
+	     {
+	       frameRect.x = WinLeft;
+	       frameRect.width = WinWidth;
+	     }
+	   else
+	     {
+	       frameRect.x = values.ts_x_origin;
+	       frameRect.width = bg_style->image->width;
+	     }
+	   XSetClipRectangles (TtDisplay, gc_bg, 0, 0,&frameRect, 1, Unsorted);
+	   XFillRectangle (TtDisplay, Drawab, gc_bg, x, y, w, h);
+	   XFreeGC (TtDisplay, gc_bg);
+	 }
+       else
+	 if (!(bg_style->flag & (S_BACKGROUND_COLOR)))
+	   /* use paper if no pix map and color */
+	   XFillRectangle(TtDisplay, Drawab, gc_fill, x, y, w, h);
+     }
+
+#endif
+#endif /* _WINDOWS */
 }
 
 
@@ -843,47 +903,55 @@ int                 frame;
    BackGroundPixel = box->BxAbstractBox->AbBackground;
 
    SetPictureClipping (&PicWArea, &PicHArea, wif, hif, imageDesc);
-   if (!Printing) {
-	SetCursorWatch (frame);
-	if (imageDesc->PicPixmap == EpsfPictureLogo)
-	   DrawEpsBox (box, imageDesc, frame, epsflogo_width, epsflogo_height);
-	else {
-	     if (!IsValid (box, imageDesc) || 
-		 (( imageDesc->PicWArea!= wif) || (imageDesc->PicHArea!=hif))) {
-		  LoadPicture (frame, box, imageDesc);
-		  PicWArea = imageDesc->PicWArea;
-		  PicHArea = imageDesc->PicHArea;
-		  SetPictureClipping (&PicWArea, &PicHArea, wif, hif, imageDesc);
+   if (!Printing)
+     {
+       SetCursorWatch (frame);
+       if (imageDesc->PicPixmap == EpsfPictureLogo)
+	 DrawEpsBox (box, imageDesc, frame, epsflogo_width, epsflogo_height);
+       else
+	 {
+	   if (!IsValid (box, imageDesc) || 
+	       (( imageDesc->PicWArea!= wif) || (imageDesc->PicHArea!=hif)))
+	     {
+	       LoadPicture (frame, box, imageDesc);
+	       PicWArea = imageDesc->PicWArea;
+	       PicHArea = imageDesc->PicHArea;
+	       SetPictureClipping (&PicWArea, &PicHArea, wif, hif, imageDesc);
 	     }
-	     if (imageDesc->PicPresent != FillFrame)
-		 Picture_Center (PicWArea, PicHArea, wif, hif, pres, &xtranslate, &ytranslate, &pxorig, &pyorig);
-	     
-	     if (imageDesc->PicMask) {
-		     XSetClipOrigin (TtDisplay, TtGraphicGC, xif - pxorig + xtranslate, yif - pyorig + ytranslate);
-		     XSetClipMask (TtDisplay, TtGraphicGC, imageDesc->PicMask);
+	   if (imageDesc->PicPresent != FillFrame)
+	     Picture_Center (PicWArea, PicHArea, wif, hif, pres, &xtranslate, &ytranslate, &pxorig, &pyorig);
+	   
+	   if (imageDesc->PicMask)
+	     {
+	       XSetClipOrigin (TtDisplay, TtGraphicGC, xif - pxorig + xtranslate, yif - pyorig + ytranslate);
+	       XSetClipMask (TtDisplay, TtGraphicGC, imageDesc->PicMask);
 	     }
-	     if (PicWArea < wif)
-		 wif = PicWArea;
-	     if (PicHArea < hif)
-		 hif = PicHArea;
-	     if (typeImage >= InlineHandlers) {
-		     if (PictureHandlerTable[typeImage].DrawPicture != NULL)
-			 (*(PictureHandlerTable[typeImage].DrawPicture)) (imageDesc, xif + xtranslate, yif + ytranslate);
-	     } else
-		   LayoutPicture (imageDesc->PicPixmap, drawable, pxorig, pyorig,
-				  wif, hif, xif + xtranslate, yif + ytranslate);
-	     
-	     if (imageDesc->PicMask) {
-		     XSetClipMask (TtDisplay, TtGraphicGC, None);
-		     XSetClipOrigin (TtDisplay, TtGraphicGC, 0, 0);
+	   if (PicWArea < wif)
+	     wif = PicWArea;
+	   if (PicHArea < hif)
+	     hif = PicHArea;
+	   if (typeImage >= InlineHandlers)
+	     {
+	       if (PictureHandlerTable[typeImage].DrawPicture != NULL)
+		 (*(PictureHandlerTable[typeImage].DrawPicture)) (imageDesc, xif + xtranslate, yif + ytranslate);
 	     }
-	}
-	ResetCursorWatch (frame);
-   }
+	   else
+	     LayoutPicture (imageDesc->PicPixmap, drawable, pxorig, pyorig,
+			    wif, hif, xif + xtranslate, yif + ytranslate);
+	   
+	   if (imageDesc->PicMask)
+	     {
+	       XSetClipMask (TtDisplay, TtGraphicGC, None);
+	       XSetClipOrigin (TtDisplay, TtGraphicGC, 0, 0);
+	     }
+	 }
+       ResetCursorWatch (frame);
+     }
    else if (typeImage < InlineHandlers && typeImage > -1)
-       /* for the moment we didn't consider plugin printing */
-       (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea,
-							       (FILE *) drawable, BackGroundPixel);
+     /* for the moment we didn't consider plugin printing */
+     (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName, pres, xif, yif, wif, hif, PicXArea,
+							     PicYArea, PicWArea, PicHArea,
+							     (FILE *) drawable, BackGroundPixel);
 #endif /* _WINDOWS */
 }
 

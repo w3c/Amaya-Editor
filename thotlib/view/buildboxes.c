@@ -598,7 +598,6 @@ int                *height;
    PtrAbstractBox      pCurrentAb;
    PtrBox              pChildBox, pBox;
    PtrBox              pCurrentBox;
-   PtrLine             pLine;
    int                 val, x, y;
    boolean             still;
 
@@ -649,28 +648,19 @@ int                *height;
        if (pCurrentBox->BxContentWidth)
 	 {
 	   /* it's an extensible line */
-	   pLine = pCurrentBox->BxFirstLine;
-	   *width = 0;
-	   /* search the greatest line */
-	   while (pLine != NULL)
-	     {
-	     if (pCurrentBox->BxFirstLine->LiRealLength > *width)
-	       *width = pCurrentBox->BxFirstLine->LiRealLength;
-	     pLine = pLine->LiNext;
-	     }
+	   *width = pCurrentBox->BxMaxWidth;
 	   pCurrentBox->BxWidth = *width;
 	 }
        else
 	 {
 	   /* Si la largeur du contenu depasse le minimum */
 	   if (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum
-	       && pCurrentBox->BxFirstLine != pCurrentBox->BxLastLine)
+	       && pCurrentBox->BxMaxWidth > pCurrentBox->BxWidth)
 	     {
 	       /* Il faut prendre la largeur du contenu */
 	       pCurrentBox->BxContentWidth = TRUE;
 	       RecomputeLines (pAb, NULL, NULL, frame);
 	     }
-	   else
 	     *width = pCurrentBox->BxWidth;
 	 }
      }
@@ -941,6 +931,110 @@ PtrAbstractBox      pAb;
 
 
 /*----------------------------------------------------------------------
+  SearchPreviousFillBox searchs the previous fill box in current view.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static PtrAbstractBox SearchPreviousFilledBox (PtrAbstractBox pAb)
+#else  /* __STDC__ */
+static PtrAbstractBox SearchPreviousFilledBox (pAb)
+PtrAbstractBox      pAb;
+#endif /* __STDC__ */
+{
+  PtrAbstractBox    pPreviousAb;
+
+  if (pAb == NULL)
+    return (NULL);
+  else
+    {
+      pPreviousAb = pAb->AbPrevious;
+      /* don't take care of dead abstract box, not compound filled boxes */
+      while (pPreviousAb != NULL &&
+	     (pPreviousAb->AbDead ||
+	      pPreviousAb->AbLeafType != LtCompound ||
+	      !pPreviousAb->AbFillBox))
+	pPreviousAb = pPreviousAb->AbPrevious;
+
+      if (pPreviousAb == NULL)
+	/* search at upper level */
+	pPreviousAb = SearchPreviousFilledBox (pAb->AbEnclosing);
+      return (pPreviousAb);
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  AddFilledBox adds the box in the filled list if it's not already
+  registered.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         AddFilledBox (PtrBox pBox, PtrBox pMainBox)
+#else  /* __STDC__ */
+static void         AddFilledBox (pBox, pMainBox)
+PtrBox              pBox;
+PtrBox              pMainBox;
+#endif /* __STDC__ */
+{
+  PtrBox            pFilledBox;
+  PtrAbstractBox    pAb;
+
+  if (pBox != pMainBox)
+    {
+      pFilledBox = pMainBox->BxNextBackground;
+      while (pFilledBox != NULL && pFilledBox != pBox)
+	pFilledBox = pFilledBox->BxNextBackground;
+
+      if (pFilledBox == NULL)
+	{
+	  /* the current filled box is not registered */
+	  pAb = SearchPreviousFilledBox (pBox->BxAbstractBox);
+	  if (pAb == NULL)
+	    {
+	      /* The new box is the first filled box */
+	      pBox->BxNextBackground = pMainBox->BxNextBackground;
+	      pMainBox->BxNextBackground = pBox;
+	    }
+	  else
+	    {
+	      /* Add it in the list */
+	      pFilledBox = pAb->AbBox;
+	      pBox->BxNextBackground = pFilledBox->BxNextBackground;
+	      pFilledBox->BxNextBackground = pBox;
+	    }
+	}
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  RemoveFilledBox adds the box in the filled list.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         RemoveFilledBox (PtrBox pBox, PtrBox pMainBox)
+#else  /* __STDC__ */
+static void         RemoveFilledBox (pBox, pMainBox)
+PtrBox              pBox;
+PtrBox              pMainBox;
+#endif /* __STDC__ */
+{
+  PtrBox            pFilledBox;
+
+  if (pBox != pMainBox)
+    {
+      pFilledBox = pMainBox;
+      while (pFilledBox != NULL && pFilledBox->BxNextBackground != pBox)
+	pFilledBox = pFilledBox->BxNextBackground;
+
+      if (pFilledBox != NULL)
+	{
+	  /* remove the box from the list */
+	  pFilledBox->BxNextBackground = pBox->BxNextBackground;
+	  pBox->BxNextBackground = NULL;
+	}
+    }
+}
+
+
+/*----------------------------------------------------------------------
    CreateBox cree la boite qui est associee au pave donne en       
    parametre et initialise son contenu :                   
    - Calcule sa place en caracteres dans le document tout  
@@ -1054,6 +1148,7 @@ int                *carIndex;
 	       {
 		  pCurrentBox->BxPrevious = NULL;
 		  pCurrentBox->BxNext = NULL;
+		  pMainBox = pCurrentBox;
 		  /* On modifie le chainage a partir de la boite racine */
 		  /* BxNext(RlRoot) -> Debut du chainage                */
 		  /* BxPrevious(RlRoot) -> Fin du chainage              */
@@ -1137,6 +1232,24 @@ int                *carIndex;
 			 split = TRUE;
 			 pCurrentBox->BxType = BoGhost;
 		      }
+		    /*********************** TEST ****************/
+		    if (pAb->AbFillPattern != 0)
+		      pAb->AbFillBox = TRUE;
+		    /*********************** TEST ****************/
+
+		    /* Is there a background image ? */
+		    if (pAb->AbPictBackground != NULL)
+		      {
+			/* force filling */
+			pAb->AbFillBox = TRUE;
+			/* load the picture */
+			LoadPicture (frame, pCurrentBox, (PictInfo *) pAb->AbPictBackground);
+		      }
+		    /* Is it a filled box ? */
+		    if (pAb->AbFillBox)
+		      /* register the box */
+		      AddFilledBox (pCurrentBox, pMainBox);
+
 		    /* Il faut creer les boites des paves inclus */
 		    pChildAb = pAb->AbFirstEnclosed;
 		    while (pChildAb != NULL)
@@ -1481,6 +1594,10 @@ int                 frame;
 	  {
 	     /* Liberation des lignes et boites coupees */
 	     pCurrentBox = pAb->AbBox;
+	     if (pAb->AbLeafType == LtCompound)
+	       /* unregister the box */
+	       RemoveFilledBox (pCurrentBox, ViewFrameTable[frame - 1].FrAbstractBox->AbBox);
+
 	     if (pCurrentBox->BxType == BoBlock)
 		RemoveLines (pCurrentBox, frame, pCurrentBox->BxFirstLine, &changeSelectBegin, &changeSelectEnd);
 
@@ -1892,9 +2009,37 @@ int                 frame;
 		       else
 			  pSiblingBox = pSiblingBox->BxNexChild;
 		    }
+		  /* mark the zone to be displayed */
 		  if (pSiblingBox->BxWidth > 0 && pSiblingBox->BxHeight > 0)
 		     DefClip (frame, pSiblingBox->BxXOrg, pSiblingBox->BxYOrg, pSiblingBox->BxXOrg + pSiblingBox->BxWidth,
 			      pSiblingBox->BxYOrg + pSiblingBox->BxHeight);
+	       }
+	     else if (pAb->AbLeafType == LtCompound)
+	       {
+		 /*********************** TEST ****************/
+		 if (pAb->AbFillPattern != 0)
+		   pAb->AbFillBox = TRUE;
+		 /*********************** TEST ****************/
+
+		 /* Is there a background image ? */
+		 if (pAb->AbPictBackground != NULL)
+		   {
+		     /* force filling */
+		     pAb->AbFillBox = TRUE;
+		     /* load the picture */
+		     LoadPicture (frame, pBox, (PictInfo *) pAb->AbPictBackground);
+		   }
+		 
+		 if (pAb->AbFillBox)
+		   /* register the box in filled list */
+		   AddFilledBox (pBox, pMainBox);
+		 else
+		   /* unregister the box in filled list */
+		   RemoveFilledBox (pBox, pMainBox);
+		 
+		 /* mark the zone to be displayed */
+		 DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth,
+			  pBox->BxYOrg + pBox->BxHeight);
 	       }
 	  }
 	/* Taille des caracteres du CONTENU DU PAVE MODIFIE */

@@ -551,8 +551,8 @@ raint              *height;
       /* Il ne reste plu rien a droite de la fenetre */
       *width = l - *Xpos;
 
-/*** Traite la hauteur et la position Y ***/
-/*** Traite la hauteur et la position Y ***/
+   /*** Traite la hauteur et la position Y ***/
+   /*** Traite la hauteur et la position Y ***/
    /*      +-------------+                       */
    /*      |             |                       */
    /*      |  Document   |a                      */
@@ -560,17 +560,17 @@ raint              *height;
    /*      |             |                       */
    /*      |             |                       */
    /*    +-+-------------+-+     +-+             */
-   /*    |    Picture        |\    | |           */
+   /*    |    Concrete     |\    | |             */
    /*    |                 | \   | |a            */
    /*    |+---------------+|  \  | |             */
    /*    ||               ||\  --|-|             */
    /*    ||               ||  \  | |             */
-   /*    ||   ViewFrame     ||   ==|=|slider     */
+   /*    ||   ViewFrame   ||   ==|=|slider       */
    /*    ||               ||  /  | |             */
    /*    ||               ||/  --|-|             */
    /*    |+---------------+|  /  | |             */
    /*    |                 | /   | |b            */
-   /*    |   Concrete      |/    | |             */
+   /*    |     Image       |/    | |             */
    /*    +-+-------------+-+     +-+             */
    /*      |             |                       */
    /*      |             |                       */

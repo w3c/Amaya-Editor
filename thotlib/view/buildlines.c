@@ -2620,6 +2620,13 @@ int                 frame;
 	else
 	  {
 	     ComputeLines (pBox, frame, &height);
+	     if (pBox->BxContentWidth)
+	       {
+		 /* it's an extensible bloc of lines */
+		 width = pBox->BxMaxWidth;
+		 h = pBox->BxYOrg;
+		 pBox->BxWidth = pBox->BxMaxWidth;
+	       }
 	     width = 0;
 	  }
 	ReadyToDisplay = status;

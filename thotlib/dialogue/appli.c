@@ -2122,7 +2122,7 @@ int                 frame;
 
 
 /*----------------------------------------------------------------------
-   UpdateScrollbars met a jour les bandes de defilement de la fenetree^tre    
+   UpdateScrollbars met a jour les bandes de defilement de la fenetretre    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UpdateScrollbars (int frame)

@@ -1065,8 +1065,6 @@ boolean             exceptCrWith;
    Au retour volsupp indique le volume des paves de        
    presentation tues et pAbbReDisp le pave a reafficher.     
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
 static void         KillPresEnclosing (PtrAbstractBox pAb, boolean head, PtrDocument pDoc, PtrAbstractBox * pAbbReDisp, int *volsupp, boolean exceptRep)
 
