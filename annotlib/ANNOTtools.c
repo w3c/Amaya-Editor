@@ -34,11 +34,11 @@
  **
  ****************************************************************/
 /* ------------------------------------------------------------
-   list_add
+   List_add
    Adds a new element to the beginning of a linked
    list.
    ------------------------------------------------------------*/
-void List_add (List **me, char *object)
+void List_add (List **me, CHAR_T *object)
 {
   List *new;
 
@@ -52,7 +52,7 @@ void List_add (List **me, char *object)
 }
 
 /* ------------------------------------------------------------
-   list_delFirst
+   List_delFirst
    Deletes the first element of a linked list.
    ------------------------------------------------------------*/
 void List_delFirst (List **me)
@@ -104,22 +104,6 @@ void List_delObject (List **list, char *object)
 }
 
 /* ------------------------------------------------------------
-   List_search
-   Returns list item that contains the object
-   ------------------------------------------------------------*/
-List *List_search (List *list, CHAR_T *object)
-{
-  List *item = list;
-
-  while (item && (ustrcasecmp (item->object, object)))
-    {
-      item = item->next;
-    }
-
-  return (item);
-}
-
-/* ------------------------------------------------------------
    List_count
    Returns the number of items in a list
    ------------------------------------------------------------*/
@@ -135,6 +119,69 @@ int List_count (List *list)
     }
 
   return (count);
+}
+
+/* ------------------------------------------------------------
+   AnnotFilter_add
+   Adds a new element to the beginning of a linked
+   list if it doesn't exist in the list.
+   ------------------------------------------------------------*/
+void AnnotFilter_add (List **me, CHAR_T *object)
+{
+  List *new;
+  AnnotFilterData *filter;
+
+  if (*me && AnnotFilter_search (*me, object))
+    return;
+
+  /* initialize the filter */
+  filter = TtaGetMemory (sizeof (AnnotFilter));
+  filter->object = TtaStrdup (object);
+  filter->show = TRUE;
+
+  /* and now add it to the list */
+  new = (List *) malloc (sizeof (List));
+  new->object = (void *) filter;
+  if (!*me)
+      new->next = NULL;
+  else
+      new->next = *me;
+  *me = new;
+}
+
+/*------------------------------------------------------------
+   AnnotList_search
+   Returns list item that contains the object
+   ------------------------------------------------------------*/
+List *AnnotFilter_search (List *list, CHAR_T *object)
+{
+  List *list_item = list;
+  AnnotFilterData *filter;
+  while (list_item)
+    {
+      filter = (AnnotFilterData *) list_item->object;
+      if (!ustrcasecmp (filter->object, object))
+	break;
+      list_item = list_item->next;
+    }
+
+  return (list_item);
+}
+
+/*------------------------------------------------------------
+   AnnotList_search
+   Returns list item that contains the object
+   ------------------------------------------------------------*/
+List *AnnotList_search (List *list, CHAR_T *object)
+{
+  List *item = list;
+
+  while (item && (ustrcasecmp ((CHAR_T *) item->object, (CHAR_T *) object)))
+    {
+      item = item->next;
+    }
+
+  return (item);
 }
 
 /* ------------------------------------------------------------

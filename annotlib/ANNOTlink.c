@@ -16,6 +16,7 @@
  */
 
 #include "annotlib.h"
+#include "ANNOTtools_f.h"
 #include "AHTURLTools_f.h"
 #include "ANNOTevent_f.h"
 
@@ -189,6 +190,10 @@ AnnotMeta *annot;
   TtaSetAttributeText (attr, annotName, anchor, source_doc);
   TtaFreeMemory (annotName);
   TtaUnselect (source_doc);
+
+  /* add the annotation to the filter list */
+  AnnotFilter_add (&(AnnotMetaData[source_doc].authors), annot->author);
+  AnnotFilter_add (&(AnnotMetaData[source_doc].types), annot->type);
 }
 
 /*-----------------------------------------------------------------------
@@ -288,7 +293,7 @@ void LINK_SaveLink (source_doc)
       AddAnnotationIndexFile (DocumentURLs[source_doc], indexName);
     }
 
-  annot_list = AnnotMetaDataList[source_doc];  
+  annot_list = AnnotMetaData[source_doc].annotations;  
   /* write the update annotation list */
   AnnotList_writeIndex (indexName, annot_list);
   TtaFreeMemory (indexName);
@@ -318,7 +323,7 @@ AnnotMeta* LINK_CreateMeta (source_doc, annot_doc, labf, c1, labl, cl)
   **  Make a new annotation entry, add it to annotlist, and initialize it.
   */
   annot =  AnnotMeta_new ();
-  List_add (&AnnotMetaDataList[source_doc], (void *) annot);
+  List_add (&(AnnotMetaData[source_doc].annotations), (void *) annot);
 
   if (IsW3Path (DocumentURLs[source_doc])
       || IsFilePath(DocumentURLs[source_doc]))
@@ -344,7 +349,8 @@ AnnotMeta* LINK_CreateMeta (source_doc, annot_doc, labf, c1, labl, cl)
   annot_user = GetAnnotUser ();
   annot->author = TtaStrdup (annot_user);
   annot->content_type = TtaStrdup ("text/html");
-  annot->body_url = TtaStrdup (DocumentURLs[annot_doc]); 
+  annot->body_url = TtaStrdup (DocumentURLs[annot_doc]);
+
   return annot;
 }
 
@@ -355,11 +361,17 @@ AnnotMeta* LINK_CreateMeta (source_doc, annot_doc, labf, c1, labl, cl)
   -----------------------------------------------------------------------*/
 void LINK_DelMetaFromMemory (Document doc)
 {
-  if (!AnnotMetaDataList[doc])
+  if (!AnnotMetaData[doc].annotations)
     return;
 
-  AnnotList_free (AnnotMetaDataList[doc]);
-  AnnotMetaDataList[doc] = NULL;
+  AnnotList_free (AnnotMetaData[doc].annotations);
+  AnnotMetaData[doc].annotations = NULL;
+  /*
+  AnnotList_free (AnnotMetaData[doc].authors);
+  AnnotList_free (AnnotMetaData[doc].types);
+  AnnotList_free (AnnotMetaData[doc].servers);
+  */
+
 }
 
 /*-----------------------------------------------------------------------
@@ -410,7 +422,7 @@ void LINK_LoadAnnotationIndex (doc, annotIndex)
       else 
 	{
 	  LINK_AddLinkToSource (doc, annot);
-	  List_add (&AnnotMetaDataList[doc], (void*) annot);
+	  List_add (&AnnotMetaData[doc].annotations, (void*) annot);
 	}
       List_delFirst (&list_ptr);
     }
@@ -772,11 +784,11 @@ void LINK_AddMetaToMemory (Document doc, CHAR_T *annotUser, CHAR_T *annotDate, C
   me->body_url = TtaStrdup (body_url);
 
   /* add it to the list structure */
-  if (!AnnotMetaDataList[doc]) 
+  if (!AnnotMetaData[doc]) 
     {
       /* the list was empty */
       me->next = NULL;
-      AnnotMetaDataList[doc] = me;
+      AnnotMetaData[doc] = me;
     }
   else
     {

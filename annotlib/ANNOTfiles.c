@@ -118,7 +118,7 @@ Document doc;
     return (NULL);
 
   /* get a pointer to the annot list */
-  ptr = AnnotMetaDataList[doc];
+  ptr = AnnotMetaData[doc].annotations;
   if (!ptr)
     return (NULL);
 

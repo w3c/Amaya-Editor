@@ -7,14 +7,18 @@
 #ifdef __STDC__
 
 extern void List_add ( List **me,
-                       char *object );
+                       CHAR_T *object );
 extern void List_delFirst ( List **me );
 extern void List_delAll ( List **me );
 extern void List_delObject ( List **list,
                              char *object );
-extern List *List_search ( List *list,
-                           CHAR_T *object );
 extern int List_count ( List *list );
+extern void AnnotFilter_add ( List **me,
+                              CHAR_T *object );
+extern List *AnnotFilter_search ( List *list,
+                                  CHAR_T *object );
+extern List *AnnotList_search ( List *list,
+                                CHAR_T *object );
 extern AnnotMeta *AnnotMeta_new ( void );
 extern void AnnotList_free ( List *annot_list );
 extern void Annot_free ( AnnotMeta *annot );
@@ -45,14 +49,18 @@ extern Document AnnotationTargetDocument ( Document annotDoc );
 #else /* __STDC__ */
 
 extern void List_add (/* List **me,
-                         char *object */);
+                         CHAR_T *object */);
 extern void List_delFirst (/* List **me */);
 extern void List_delAll (/* List **me */);
 extern void List_delObject (/* List **list,
                                char *object */);
-extern List *List_search (/* List *list,
-                             CHAR_T *object */);
 extern int List_count (/* List *list */);
+extern void AnnotFilter_add (/* List **me,
+                                CHAR_T *object */);
+extern List *AnnotFilter_search (/* List *list,
+                                    CHAR_T *object */);
+extern List *AnnotList_search (/* List *list,
+                                  CHAR_T *object */);
 extern AnnotMeta *AnnotMeta_new (/* void */);
 extern void AnnotList_free (/* List *annot_list */);
 extern void Annot_free (/* AnnotMeta *annot */);

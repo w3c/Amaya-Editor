@@ -83,8 +83,22 @@ AnnotFileType;
 #include "ANNOTmenu_f.h"
 #include "rdf2annot_f.h"
 
+typedef struct _AnnotFilter {
+  char *object;
+  ThotBool show;
+} AnnotFilterData;
+
 /* linked list of all annotations related to a document */
-List *AnnotMetaDataList[DocumentTableLength];
+typedef struct _AnnotMetaDataList {
+  /* the list of all the annotations related to a document */
+  List *annotations;
+  /* filter information */
+  List *authors;
+  List *types;
+  List *servers;
+} AnnotMetaDataList;
+
+AnnotMetaDataList AnnotMetaData[DocumentTableLength];
 
 /* Definition de constantes pour les annotations */
 

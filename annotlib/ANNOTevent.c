@@ -315,7 +315,7 @@ View view;
    * load the local annotations if there's no annotserver or if
    * annotServers include the localhost
    */
-  if (!annotServers || List_search (annotServers, TEXT("localhost")))
+  if (!annotServers || AnnotList_search (annotServers, TEXT("localhost")))
     {
       annotIndex = LINK_GetAnnotationIndexFile (DocumentURLs[doc]);
       LINK_LoadAnnotationIndex (doc, annotIndex);

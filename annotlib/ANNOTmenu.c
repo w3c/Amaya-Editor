@@ -200,6 +200,152 @@ View         view;
  **
  *************************************************/
 
+/*---------------------------------------------------------------
+  BuildAnnotFilterSelector builds the list allowing to select a profile
+------------------------------------------------------------------*/
+#ifdef __STDC__
+static void BuildAnnotFilterSelector (Document doc, SelType selector)
+#else
+static void BuildAnnotFilterSelector (doc)
+Document doc;
+#endif /* __STDC__ */
+{
+  int                   nb_entries;
+  int                   i;
+  List                  *list_item;
+  AnnotFilterData       *filter;
+
+   /* count and copy the entries that we're interested in */
+  switch (selector)
+    {
+    case BY_AUTHOR:
+      list_item = AnnotMetaData[doc].authors;
+      break;
+    case BY_TYPE:
+      list_item = AnnotMetaData[doc].types;
+      break;
+    case BY_SERVER:
+      list_item = AnnotMetaData[doc].servers;
+      break;
+    }
+  nb_entries = 0;
+  ustrcpy (s, TEXT(""));
+  i = 0;
+  while (list_item)
+     {
+       filter = (AnnotFilterData *) list_item->object;
+       if (filter)
+	 {
+	   usprintf (&s[i], TEXT("%c%s"), 
+		     (filter->show) ? TEXT(' ') : TEXT('*'),
+		     filter->object);
+	   i += ustrlen (&s[i]) + 1;
+	   nb_entries++;
+	 }
+       list_item = list_item->next;
+     }
+
+   /* Fill in the form  */
+   TtaNewSelector (AnnotFilterBase + mFilterSelector, 
+		   AnnotFilterBase + AnnotFilterMenu,
+		   NULL,
+		   nb_entries,
+		   s,
+		   5,
+		   NULL,
+		   TRUE,
+		   TRUE);
+
+   /* remove the selector */
+   TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, TEXT(""));
+}
+
+/*---------------------------------------------------------------
+  ChangeAnnotVisibility
+------------------------------------------------------------------*/
+#ifdef __STDC__
+static void ChangeAnnotVisibility (Document doc, SelType selector, CHAR_T *object, ThotBool show)
+#else
+static void ChangeAnnotVisibility (doc, selector, object, show)
+Document doc;
+SelType selector;
+CHAR_T *object;
+ThotBool show;
+
+#endif /* __STDC__ */
+{
+  List *list_item;
+  AnnotFilterData *filter;
+
+  /* change the filter metadata first */
+  switch (selector)
+    {
+    case BY_AUTHOR:
+      list_item = AnnotMetaData[doc].authors;
+      break;
+    case BY_TYPE:
+      list_item = AnnotMetaData[doc].types;
+      break;
+    case BY_SERVER:
+      list_item = AnnotMetaData[doc].servers;
+      break;
+    }
+  
+  while (list_item)
+    {
+      filter = (AnnotFilterData *) list_item->object;
+      if (filter && !ustrcasecmp (filter->object, object))
+	{
+	  filter->show = show;
+	  break;
+	}
+      list_item = list_item->next;
+    }
+
+  /* then redraw the selector */
+  BuildAnnotFilterSelector (doc, selector);
+
+  /* @@ and show/hide it on the document :) */
+}
+
+/*---------------------------------------------------------------
+  ChangeAnnotVisibility
+------------------------------------------------------------------*/
+#ifdef __STDC__
+static void ChangeAllAnnotVisibility (Document doc, SelType selector, ThotBool show)
+#else
+static void ChangeAllAnnotVisibility (doc, selector, show)
+Document doc;
+SelType selector;
+ThotBool show;
+
+#endif /* __STDC__ */
+{
+  List *list_item;
+  AnnotFilterData *filter;
+
+  /* change the filter metadata first */
+  switch (selector)
+    {
+    case BY_AUTHOR:
+      list_item = AnnotMetaData[doc].authors;
+      break;
+    case BY_TYPE:
+      list_item = AnnotMetaData[doc].types;
+      break;
+    case BY_SERVER:
+      list_item = AnnotMetaData[doc].servers;
+      break;
+    }
+  
+  while (list_item)
+    {
+      filter = (AnnotFilterData *) list_item->object;
+      if (filter)
+	filter->show = show;
+      list_item = list_item->next;
+    }
+}
 
 /*----------------------------------------------------------------------
   DocAnnotVisibility
@@ -219,6 +365,18 @@ ThotBool show;
   Element     el;
   Attribute           attr;
   AttributeType       attrType;
+
+  /* change the selectors */
+  ChangeAllAnnotVisibility (document, BY_AUTHOR, show);
+  ChangeAllAnnotVisibility (document, BY_TYPE, show);
+  ChangeAllAnnotVisibility (document, BY_SERVER, show);
+
+  /* and redisplay the current selector */
+  BuildAnnotFilterSelector (document, AnnotSelType);
+
+  /*
+   * Do the visible change on the document
+   */
 
   /* avoid refreshing the document while we're constructing it */
   TtaSetDisplayMode (document, NoComputedDisplay);
@@ -260,77 +418,6 @@ ThotBool show;
   TtaSetDisplayMode (document, DisplayImmediately);
 }
 
-/*---------------------------------------------------------------
-  BuildAnnotFilterSelector builds the list allowing to select a profile
-------------------------------------------------------------------*/
-#ifdef __STDC__
-static void BuildAnnotFilterSelector (Document doc, SelType selector)
-#else
-static void BuildAnnotFilterSelector (doc)
-Document doc;
-#endif /* __STDC__ */
-{
-  int                   nb_entries;
-  int                   i;
-  CHAR_T                *sel_entry;
-  List                  *item;
-  AnnotMeta             *annot;
-
-   /* count and copy the entries that we're interested in */
-  item = AnnotMetaDataList[doc];
-  nb_entries = 0;
-  ustrcpy (s, TEXT(""));
-  i = 0;
-  while (item)
-     {
-       annot = (AnnotMeta *) item->object;
-       /* @@ the idea is to use the different selection types here */
-       /* @@ we need to add memory dynamically, to avoid the memory overrun */
-       /* we need to check that one entry didn't exist already */
-       switch (selector)
-	 {
-	 case BY_AUTHOR:
-	   sel_entry = annot->author;
-	   break;
-	 case BY_TYPE:
-	   sel_entry = annot->type;
-	   break;
-	 case BY_SERVER:
-	   sel_entry = NULL;
-	   /*
-	   sel_entry = NormalizeURL (get server!);
-	   */
-	   break;
-	 default:
-	   sel_entry = NULL;
-	   break;
-	 }
-       if (sel_entry == NULL)
-	 {
-	   item = item->next;
-	   continue;
-	 }
-       ustrcpy (&s[i], sel_entry);
-       i += ustrlen (&s[i]) + 1;
-       nb_entries++;
-       item = item->next;
-     }
-
-   /* Fill in the form  */
-   TtaNewSelector (AnnotFilterBase + mFilterSelector, 
-		   AnnotFilterBase + AnnotFilterMenu,
-		   NULL,
-		   nb_entries,
-		   s,
-		   5,
-		   NULL,
-		   TRUE,
-		   TRUE);
-
-   /* remove the selector */
-   TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, TEXT(""));
-}
-
 /*----------------------------------------------------------------------
    callback of the AnnotFilter menu
   ----------------------------------------------------------------------*/
@@ -363,16 +450,20 @@ CHAR_T             *data;
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1:
-#if 0
-	      ToggleAnnotVisibility (AnnotSel, AnnotSelType);
-#endif
+	      ChangeAnnotVisibility (AnnotFilterDoc, AnnotSelType, 
+				     AnnotSelItem, TRUE);
 	      /* maybe refresh the dialogue */
 	      break;
 	    case 2:
+	      ChangeAnnotVisibility (AnnotFilterDoc, AnnotSelType, 
+				     AnnotSelItem, FALSE);
+	      /* maybe refresh the dialogue */
+	      break;
+	    case 3:
 	      DocAnnotVisibility (AnnotFilterDoc, AnnotFilterView, TRUE);
 	      /* maybe refresh the dialogue and reset the selection */
 	      break;
-	    case 3:
+	    case 4:
 	      DocAnnotVisibility (AnnotFilterDoc, AnnotFilterView, FALSE);
 	      /* maybe refresh the dialogue and reset the selection */
 	      break;
@@ -395,7 +486,7 @@ CHAR_T             *data;
 	     annotation document... means I'll only be able to have
 	     one such annotation dialogue at the time */
 	  AnnotSelType = val;
-	  BuildAnnotFilterSelector (1, val);
+	  BuildAnnotFilterSelector (AnnotFilterDoc, val);
 	  break;
 
 	default:
@@ -427,10 +518,14 @@ View                view;
      find this info in the callback */
   AnnotFilterDoc = document;
   AnnotFilterView = view;
+  AnnotSelItem[0] = WC_EOS;
+  AnnotSelType = 0;
 
   /* Create the dialogue form */
   i = 0;
-  strcpy (&s[i], TEXT("Toggle selection"));
+  strcpy (&s[i], TEXT("Show"));
+  i += ustrlen (&s[i]) + 1;
+  strcpy (&s[i], TEXT("Hide"));
   i += ustrlen (&s[i]) + 1;
   strcpy (&s[i], TEXT("Show all"));
   i += ustrlen (&s[i]) + 1;
@@ -438,7 +533,7 @@ View                view;
 
   TtaNewSheet (AnnotFilterBase + AnnotFilterMenu, 
 	       TtaGetViewFrame (document, view),
-	       TEXT("Show/Hide annotations"), 3, s, TRUE, 1, 'L', 
+	       TEXT("Annotation filter"), 4, s, TRUE, 2, 'L', 
 	       D_DONE);
   
   /* create the radio buttons for choosing a selector */

@@ -147,7 +147,7 @@ $(AMAYA_ANNOT_OBJ) : Annot.h annotlib.h ../amaya/EDITOR.h
 # recompile ANNOTmenu if the menu definitions change
 ANNOTmenu.o : ANNOTmenu.h
 
-libAnnot : $(AMAYA_ANNOT_SCHEMA) libAnnot.a
+libAnnot : $(AMAYA_ANNOT_SCHEMA) ../amaya/HTML.h ../amaya/TextFile.h libAnnot.a
 
 libAnnotSchemas : $(AMAYA_ANNOT_SCHEMA) 
 
