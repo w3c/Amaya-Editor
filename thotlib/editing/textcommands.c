@@ -408,8 +408,11 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	     {
 	     done = FALSE;
 	     pEl = pBox->BxAbstractBox->AbElement;
-	     if (!strcmp(pEl->ElStructSchema->SsName, "MathML") &&
-		 MathMoveBackwardCursorFunction != NULL)
+	     if (pBox->BxAbstractBox->AbPresentationBox)
+	       /* the selection is within an attribute value */
+	       done = FALSE;
+	     else if (!strcmp(pEl->ElStructSchema->SsName, "MathML") &&
+		      MathMoveBackwardCursorFunction != NULL)
 	       done = MathMoveBackwardCursorFunction ();
 	     else if (!strcmp (pEl->ElStructSchema->SsName, "SVG") &&
 		      (!pEl->ElTerminal || pEl->ElLeafType != LtText))
@@ -495,8 +498,11 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	     {
 	     done = FALSE;
 	     pEl = pBox->BxAbstractBox->AbElement;
-	     if (!strcmp(pEl->ElStructSchema->SsName, "MathML") &&
-		 MathMoveForwardCursorFunction != NULL)
+	     if (pBox->BxAbstractBox->AbPresentationBox)
+	       /* the selection is within an attribute value */
+	       done = FALSE;
+	     else if (!strcmp(pEl->ElStructSchema->SsName, "MathML") &&
+		      MathMoveForwardCursorFunction != NULL)
 	       done = MathMoveForwardCursorFunction ();
 	     else if (!strcmp (pEl->ElStructSchema->SsName, "SVG") &&
 		      (!pEl->ElTerminal || pEl->ElLeafType != LtText))
@@ -602,9 +608,11 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	   
 	 case 7:	/* Next line (^N) */
 	   if (pBox)
-         pEl = pBox->BxAbstractBox->AbElement;
-	   if (pEl && !strcmp (pEl->ElStructSchema->SsName, "SVG") &&
+	     pEl = pBox->BxAbstractBox->AbElement;
+	   if (pBox && !pBox->BxAbstractBox->AbPresentationBox &&
+	       pEl && !strcmp (pEl->ElStructSchema->SsName, "SVG") &&
 	       (!pEl->ElTerminal || pEl->ElLeafType != LtText))
+	       /* the selection is not  within an attribute value */
 	     TtcNextElement (doc, view);
 	   else if (pBox)
 	     {
@@ -654,7 +662,8 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	 case 8:	/* Previous line (^P) */
 	   if (pBox)
 	     pEl = pBox->BxAbstractBox->AbElement;
-	   if (pEl && !strcmp (pEl->ElStructSchema->SsName, "SVG") &&
+	   if (pBox && !pBox->BxAbstractBox->AbPresentationBox &&
+	       pEl && !strcmp (pEl->ElStructSchema->SsName, "SVG") &&
 	       (!pEl->ElTerminal || pEl->ElLeafType != LtText))
 	     TtcPreviousElement (doc, view);
 	   else if (pBox)
