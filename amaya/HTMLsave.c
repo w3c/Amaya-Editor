@@ -2078,11 +2078,8 @@ void SaveDocument (Document doc, View view)
 {
   Document	      xmlDoc;
   DisplayMode         dispMode;
-  NotifyElement       event;
   char                tempname[MAX_LENGTH];
   char                localFile[MAX_LENGTH];
-  char                documentname[MAX_LENGTH];
-  char                tempdir[MAX_LENGTH];
   char               *ptr;
   int                 i;
   int                 line = 0, index = 0;
@@ -2198,89 +2195,23 @@ void SaveDocument (Document doc, View view)
   else
     {
       /* it's a local document */
-      strcpy (localFile, tempname);
-      if (TextFormat)
-	{
-	  if (DocumentTypes[doc] == docSource)
-	    /* it's a source file. renumber lines */
-	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "TextFileT");
-	  else
-	    ok = TtaExportDocument (doc, tempname, "TextFileT");
-	}
-      else
-	{
-	  SetNamespacesAndDTD (doc);
-	  if (DocumentTypes[doc] == docLibrary || DocumentTypes[doc] == docHTML)
-	    {
-	      if (SaveAsXML)
-		{
-		  if (TtaGetDocumentProfile(doc) == L_Xhtml11)
-		    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
-							      "HTMLT11");
-		  else
-		    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
-							      "HTMLTX");
-		  DocumentMeta[doc]->xmlformat = TRUE;
-		}
-	      else
-		{
-		  ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLT");
-		  DocumentMeta[doc]->xmlformat = FALSE;
-		}
-	    }
-	  else if (DocumentTypes[doc] == docSVG)
-	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "SVGT");
-	  else if (DocumentTypes[doc] == docMath)
-	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "MathMLT");
-	  else if (DocumentTypes[doc] == docXml)
-	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, NULL);
-#ifdef BOOKMARKS
-	  else if (DocumentTypes[doc] == docBookmark)
-	    ok = BM_DocSave (doc, tempname);
-#endif /* BOOKMARKS */
-	}
+      Synchronize (doc, view);
       /* save a local copy of the current document */
       if (xmlDoc)
-	ptr = GetLocalPath (xmlDoc, tempname);
+	{
+	  ptr = GetLocalPath (xmlDoc, tempname);
+	  TtaSetDocumentUnmodified (xmlDoc);
+	}
       else
 	ptr = GetLocalPath (doc, tempname);
-      TtaFileCopy (tempname, ptr);
+      ok = TtaFileCopy (ptr, tempname);
       TtaFreeMemory (ptr);
     }
 
-  if (TextFormat && DocumentTypes[doc] == docSource)
-    {
-      StartParser (doc, localFile, documentname, tempdir, localFile, TRUE, FALSE);
-      /* restore the current selection */
-      GotoLine (doc, line, index, TRUE);
-      /* Clear the document history because the document is reparsed */
-      TtaClearUndoHistory (doc);
-    }
   /* restore original display mode */
   TtaSetDisplayMode (doc, dispMode);
-
-  if (DocumentTypes[doc] == docCSS)
-    /* reapply the CSS to relative documents */
-    UpdateStyleSheet (DocumentURLs[doc], localFile);
   SavingDocument = 0;
-  if (newLineNumbers)
-    {
-     /* line numbers have been changed in the saved document */
-      if (DocumentTypes[doc] != docSource)
-        /* It's a HTML document. If the source view is open, redisplay the
-	   source. */
-       RedisplaySourceFile (doc);
-     else if (DocumentTypes[doc] == docSource && xmlDoc)
-       {
-	/* It's a source document. Reparse the corresponding HTML document */
-	 TtaExtractName (localFile, tempdir, documentname);
-	 RestartParser (xmlDoc, localFile, tempdir, documentname, TRUE);
-	 TtaSetDocumentUnmodified (xmlDoc);
-	 /* Synchronize selections */
-	 event.document = doc;
-	 SynchronizeSourceView (&event);
-       }
-    }
+
   if (ok)
     {
       if (DocumentMeta[doc] && DocumentMeta[doc]->method == CE_TEMPLATE)

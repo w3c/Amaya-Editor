@@ -4275,7 +4275,7 @@ void Reload (Document doc, View view)
    pathname = (char *)TtaGetMemory (MAX_LENGTH);
    documentname = (char *)TtaGetMemory (MAX_LENGTH);
    /* if the document is a template, restore the template script URL */
-   if (DocumentMeta[doc]->method == CE_TEMPLATE)
+   if (DocumentMeta[doc] && DocumentMeta[doc]->method == CE_TEMPLATE)
       ReloadTemplateParams (&(DocumentURLs[doc]), &(DocumentMeta[doc]->method));
    NormalizeURL (DocumentURLs[doc], 0, pathname, documentname, NULL);
 

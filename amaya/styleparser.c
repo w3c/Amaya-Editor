@@ -4493,6 +4493,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       ids[0] = NULL;
       attrs[0] = NULL;
       attrvals[0] = NULL;
+      attrmatch[0] = Txtmatch;
 
       /* now names[0] points to the beginning of the parsed item
 	 and cur to the next chain to be parsed */
@@ -4528,9 +4529,6 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	    else
 	      {
 		classes[0] = deb;
-		/* a "class" attribute on an element may contain several
-		   words, one for each class it matches */
-		attrmatch[0] = Txtword;
 		specificity += 10;
 	        if (names[0] && !strcmp (names[0], "*"))
 		  names[0] = NULL;
@@ -4585,11 +4583,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 			}
 		  }
 		else
-		  {
-		    pseudoclasses[0] = deb;
-		    /* a "pseudo-class" attribute must match */
-		    attrmatch[0] = Txtmatch;
-		  }
+		  pseudoclasses[0] = deb;
 		if (names[0] && !strcmp (names[0], "*"))
 		  names[0] = NULL;
 	      }
@@ -4623,8 +4617,6 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		    specificity += 100;
 		    if (names[0] && !strcmp (names[0], "*"))
 		      names[0] = NULL;
-		    /* a "id" attribute must match */
-		    attrmatch[0] = Txtmatch;
 		  }
 	      }
 	  }
@@ -4995,7 +4987,9 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 #else /* XML_GENERIC */
 	    ctxt->attrType[j] = HTML_ATTR_Class;
 #endif /* XML_GENERIC */
-	  ctxt->attrMatch[j] = attrmatch[i];
+	    /* a "class" attribute on an element may contain several
+	       words, one for each class it matches */
+	  ctxt->attrMatch[j] = Txtword;
 	  /* add a new entry */
 	  /* update attrLevel */
 	  ctxt->attrLevel[j] = i;
@@ -5016,7 +5010,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 #else /* XML_GENERIC */
 	    ctxt->attrType[j] = HTML_ATTR_PseudoClass;
 #endif /* XML_GENERIC */
-	  ctxt->attrMatch[j] = attrmatch[i];
+	  ctxt->attrMatch[j] = Txtmatch;
 	  /* add a new entry */
 	  /* update attrLevel */
 	  ctxt->attrLevel[j] = i;
@@ -5037,7 +5031,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 #else /* XML_GENERIC */
 	    ctxt->attrType[j] = HTML_ATTR_ID;
 #endif /* XML_GENERIC */
-	  ctxt->attrMatch[j] = attrmatch[i];
+	  ctxt->attrMatch[j] = Txtmatch;
 	  /* add a new entry */
 	  /* update attrLevel */
 	  ctxt->attrLevel[j] = i;
