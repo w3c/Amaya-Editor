@@ -906,6 +906,7 @@ void NewContent (PtrAbstractBox pAb)
   PtrDocument         pDoc;
   PtrElement          pEl, pAncest;
   PtrAttribute        pAttr, pNewAttr;
+  PtrAbstractBox      pAbMain;
   unsigned char       text[10];
   int                 dVol, len, view;
   ThotBool            selInAttr;
@@ -945,8 +946,8 @@ void NewContent (PtrAbstractBox pAb)
 	    }
 	  /* reafficher l'attribut */
 	  /********  when undoing this operation, the whole element having
-		     this attribute will be selected.  How to record the current
-		     selection, which is within the attribute value? ************/
+		     this attribute will be selected. How to record the current
+		     selection, which is within the attribute value? *********/
 	  OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
 	  AttachAttrWithValue (pEl, pDoc, pNewAttr);
 	  CloseHistorySequence (pDoc);
@@ -956,16 +957,35 @@ void NewContent (PtrAbstractBox pAb)
 	    {
 	      /* update the selection */
 	      pAb = pEl->ElAbstractBox[view - 1];
-	      while (pAb)
+	      while (pAb && pAb->AbElement == pEl)
 		{
-		  if (pAb->AbElement == pEl && pAb->AbCreatorAttr == pAttr &&
-		      pAb->AbCanBeModified)
-		    SelectStringInAttr (pDoc, pAb, FirstSelectedCharInAttr,
-					LastSelectedCharInAttr, !SelPosition);
-		  if (pAb->AbElement == pEl)
-		    pAb = pAb->AbNext;
+		  if (pAb->AbPresentationBox)
+		    /* pAb is a presentation abstract box for the element */
+		    /* to which the attribute is attached */
+		    if (pAb->AbCanBeModified && pAb->AbCreatorAttr == pAttr)
+		      SelectStringInAttr (pDoc, pAb, FirstSelectedCharInAttr,
+					 LastSelectedCharInAttr, !SelPosition);
 		  else
-		    pAb = NULL;
+		    /* pAb is the main abstract box for the element to which */
+		    /* the attribute is attached. Process its children */
+		    {
+		      pAbMain = pAb;
+		      pAb = pAb->AbFirstEnclosed;
+		      while (pAb != NULL)
+			{
+			  if (pAb->AbElement == pEl)
+			    if (pAb->AbPresentationBox && pAb->AbCanBeModified)
+			      if (pAb->AbCreatorAttr == pAttr)
+				SelectStringInAttr (pDoc, pAb,
+						    FirstSelectedCharInAttr,
+						    LastSelectedCharInAttr,
+						    !SelPosition);
+				
+			  pAb = pAb->AbNext;
+			}
+		      pAb = pAbMain;  /* return to parent */
+		    }
+		  pAb = pAb->AbNext;
 		}
 	    }
 	  AbstractImageUpdated (pDoc);

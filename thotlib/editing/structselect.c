@@ -684,51 +684,52 @@ static ThotBool   WithinAbsBox (PtrAbstractBox pAb, PtrAbstractBox pRootAb)
   ----------------------------------------------------------------------*/
 static PtrAbstractBox GetAbsBoxSelectedAttr (int view)
 {
-   PtrAbstractBox      pAbView, pAb;
+  PtrAbstractBox      pAbView, pAb, pAbMain;
 
-   if (view == AbsBoxSelectedAttr->AbDocView)
-      pAbView = AbsBoxSelectedAttr;
-   else
-     {
-	/* search the corresponding abstract box in the view: pAbView */
-	pAbView = NULL;
-	if (AbsBoxSelectedAttr->AbElement == NULL)
-	   pAb = NULL;
-	else
-	   pAb = AbsBoxSelectedAttr->AbElement->ElAbstractBox[view - 1];
-	while (pAbView == NULL && pAb != NULL &&
-	       pAb->AbElement == AbsBoxSelectedAttr->AbElement)
-	  {
-	     if (pAb->AbPresentationBox)
-		/* pAb is a presentation abstract box for the element */
-	        /* to which the attibute is attached */
-	       {
-		  if (pAb->AbCanBeModified &&
-		    pAb->AbCreatorAttr == AbsBoxSelectedAttr->AbCreatorAttr)
-		     pAbView = pAb;
-	       }
-	     else
-		/* pAb is the main abstract box for the element to which */
-	        /* the attribute is attached */
-	       {
-		  pAb = pAb->AbFirstEnclosed;
-		  while (pAbView == NULL && pAb != NULL &&
-			 pAb->AbElement == AbsBoxSelectedAttr->AbElement)
-		    {
-		       if (pAb->AbPresentationBox && pAb->AbCanBeModified)
-			  if (pAb->AbCreatorAttr ==
-			      		AbsBoxSelectedAttr->AbCreatorAttr)
-			     pAbView = pAb;
-		       pAb = pAb->AbNext;
-		    }
-		  if (pAb != NULL)
-		     pAb = pAb->AbEnclosing;
-	       }
-	     if (pAb != NULL)
-		pAb = pAb->AbNext;
-	  }
-     }
-   return pAbView;
+  if (view == AbsBoxSelectedAttr->AbDocView)
+    pAbView = AbsBoxSelectedAttr;
+  else
+    {
+      /* search the corresponding abstract box in the view: pAbView */
+      pAbView = NULL;
+      if (AbsBoxSelectedAttr->AbElement == NULL)
+	pAb = NULL;
+      else
+	pAb = AbsBoxSelectedAttr->AbElement->ElAbstractBox[view - 1];
+      while (pAbView == NULL && pAb != NULL &&
+	     pAb->AbElement == AbsBoxSelectedAttr->AbElement)
+	{
+	  if (pAb->AbPresentationBox)
+	    /* pAb is a presentation abstract box for the element */
+	    /* to which the attribute is attached */
+	    {
+	      if (pAb->AbCanBeModified &&
+		  pAb->AbCreatorAttr == AbsBoxSelectedAttr->AbCreatorAttr)
+		pAbView = pAb;
+	    }
+	  else
+	    /* pAb is the main abstract box for the element to which */
+	    /* the attribute is attached */
+	    {
+	      pAbMain = pAb;
+	      pAb = pAb->AbFirstEnclosed;
+	      while (pAbView == NULL && pAb != NULL)
+		{
+		  if (pAb->AbElement == AbsBoxSelectedAttr->AbElement)
+		    if (pAb->AbPresentationBox && pAb->AbCanBeModified)
+		      if (pAb->AbCreatorAttr ==
+			  AbsBoxSelectedAttr->AbCreatorAttr)
+			pAbView = pAb;
+		  pAb = pAb->AbNext;
+		}
+	      if (pAbView == NULL)
+		pAb = pAbMain;
+	    }
+	  if (pAbView == NULL && pAb != NULL)
+	    pAb = pAb->AbNext;
+	}
+    }
+  return pAbView;
 }
 
 /*----------------------------------------------------------------------
