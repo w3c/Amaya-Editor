@@ -41,6 +41,10 @@ extern void GiveEnclosureSize ( PtrAbstractBox pAb,
                                 int frame,
                                 int *width,
                                 int *height );
+extern ThotBool CheckMBP ( PtrAbstractBox pAb,
+                           PtrBox pBox,
+                           int frame,
+                           ThotBool evalAuto );
 extern PtrAbstractBox SearchEnclosingType ( PtrAbstractBox pAb,
                                             BoxType box_type );
 extern PtrLine SearchLine ( PtrBox pBox );
@@ -106,6 +110,10 @@ extern void GiveEnclosureSize (/* PtrAbstractBox pAb,
                                   int frame,
                                   int *width,
                                   int *height */);
+extern ThotBool CheckMBP (/* PtrAbstractBox pAb,
+                             PtrBox pBox,
+                             int frame,
+                             ThotBool evalAuto */);
 extern PtrAbstractBox SearchEnclosingType (/* PtrAbstractBox pAb,
                                               BoxType box_type */);
 extern PtrLine SearchLine (/* PtrBox pBox */);
