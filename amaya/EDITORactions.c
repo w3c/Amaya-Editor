@@ -111,6 +111,7 @@ ThotBool            isHTML;
   DocumentMeta[doc]->form_data = NULL;
   DocumentMeta[doc]->method = CE_ABSOLUTE;
   DocumentMeta[doc]->put_default_name = FALSE;
+  DocumentMeta[doc]->xmlformat = FALSE;
   DocumentSource[doc] = 0;
 
   ResetStop (doc);
