@@ -274,12 +274,12 @@ void TtaUpdateEditorColors ()
 
   name = TtaGetEnvString ("appname");
   /* background color */
-  found = FindColor (0, name, "BackgroundColor", TEXT("#E1E1E1"), &White_Color);
+  found = FindColor (0, name, "BackgroundColor", TEXT("LightGrey1"), &White_Color);
   /* drawing color */
   found = FindColor (0, name, "ForegroundColor", TEXT("Black"), &Black_Color);
   /* selection colors */
   found = FindColor (0, name, "InserPointColor", TEXT("Red"), &Select_Color);
-  found = FindColor (0, name, "DocSelectColor", TEXT("#FFE9C1"), &Select_Color);
+  found = FindColor (0, name, "DocSelectColor", TEXT("LightGold3"), &Select_Color);
   /* The reference color */
   found = FindColor (0, name, "ActiveBoxColor", TEXT("Red"), &(Box_Color));
   /* color for read-only sections */
@@ -291,7 +291,7 @@ void TtaUpdateEditorColors ()
   /* scrolls color */
   Scroll_Color = BgMenu_Color;
   /* color for the inactive entries */
-  found = FindColor (0, name, "InactiveItemColor", TEXT("#E1E1E1"), &InactiveB_Color);
+  found = FindColor (0, name, "InactiveItemColor", TEXT("LightGrey2"), &InactiveB_Color);
 #ifdef _WINDOWS
   /*WinInitColors ();*/
 #endif /* _WINDOWS */

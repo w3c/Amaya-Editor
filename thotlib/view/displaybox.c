@@ -320,18 +320,33 @@ CHAR_T                modele;
        /* show the selection on the current symbol */
       if (pFrame->FrSelectionBegin.VsBox == pBox ||
 	  pFrame->FrSelectionEnd.VsBox == pBox)
-	bg = SelColor;
+	{
+	  bg = SelColor;
+	  if (pAb->AbLeafType == LtGraphics)
+	    DrawRectangle (frame, 2, 0, xd, yd, width,
+			   height, RO, op, pAb->AbForeground,
+			   bg, 0);
+	  else
+	    {
+	      PaintWithPattern (frame, xd, yd, width, height, 0, RO, op,
+				pAb->AbForeground,
+				bg, 4);
+	      DisplayStringSelection (frame, 0, 2, pBox);
+	    }
+	}
       else
-	bg = pAb->AbBackground;
+	{
+	  bg = pAb->AbBackground;
+	  if (pAb->AbLeafType == LtGraphics)
+	    DrawRectangle (frame, 2, 0, xd, yd, width,
+			   height, RO, op, pAb->AbForeground,
+			   bg, 0);
+	  else
+	    PaintWithPattern (frame, xd, yd, width, height, 0, RO, op,
+			      pAb->AbForeground,
+			      bg, 4);
+	}
       
-      if (pAb->AbLeafType == LtGraphics)
-	DrawRectangle (frame, 2, 0, xd, yd, width,
-		       height, RO, op, pAb->AbForeground,
-		       bg, 0);
-      else
-	PaintWithPattern (frame, xd, yd, width, height, 0, RO, op,
-			  pAb->AbForeground,
-			  bg, 4);
     }
 }
 
@@ -1402,8 +1417,14 @@ int                 ymax;
       /* Empty */
       if (box->BxAbstractBox->AbLeafType == LtSymbol)
 	DisplayEmptyBox (box, frame, '2');
-      else if (ThotLocalActions[T_emptybox] != NULL)
-	(*ThotLocalActions[T_emptybox]) (box, frame, '2');
+      else
+	{
+	   if (ThotLocalActions[T_emptybox] != NULL)
+	     (*ThotLocalActions[T_emptybox]) (box, frame, '2');
+	   if (pFrame->FrSelectionBegin.VsBox == box ||
+	       pFrame->FrSelectionEnd.VsBox == box)
+	     DisplayStringSelection (frame, 0, box->BxWidth, box);
+	}
     }
   else if (box->BxAbstractBox->AbLeafType == LtText)
     /* Display a Text box */
