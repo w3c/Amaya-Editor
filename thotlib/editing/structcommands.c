@@ -3066,7 +3066,7 @@ int                 item;
       /* pas de selection, on ne fait rien */
       return;
    DoSurround (firstEl, lastEl, firstChar, lastChar, pDoc,
-	       typeNumSurround[item - 1], pSSSurround[item - 1]);
+	       typeNumSurround[item], pSSSurround[item]);
 }
 
 
@@ -3096,6 +3096,8 @@ int                *NItems;
    Name                menuTitle, typeName;
    char                choiceMenuBuf[MAX_TXT_LEN];
 
+   if (ThotLocalActions[T_rsurround] == NULL)
+     TteConnectAction (T_rsurround, SurroundMenuInput);
    /* prend la selection courante */
    GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar);
    if (pDoc != NULL && firstSel != NULL)
@@ -3205,7 +3207,6 @@ int                *NItems;
 	/* la table est maintenant complete */
 	/* construit le menu a partir de la table */
 	*NItems = 0;
-	NElSurround = 0;
 	menuBuffer[0] = '\0';
 	menuInd = 0;
 	for (i = 0; i < NElSurround; i++)
@@ -3376,6 +3377,8 @@ View                view;
    char                menuBuffer[MAX_TXT_LEN];
    Name                title;
 
+   if (ThotLocalActions[T_rchangetype] == NULL)
+     TteConnectAction (T_rchangetype, (Proc) ChangeTypeMenuInput);
    /* terminer une insertion eventuelle */
    CloseInsertion ();
    /* y-a-t'il une selection ? */

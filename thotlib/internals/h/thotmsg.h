@@ -36,6 +36,17 @@ int indexTable ;
 #define VAL_SPACE		15
 #define OUTPUT_MODE		16
 #define INVALID_SCH_PATH		17
+#define ABOUT                   18
+#define CLOSE			19
+#define ABOUT1                  20
+#define ABOUT2                  21
+#define ABOUT3                  22
+#define ABOUT4                  23
+#define ABOUT5                  24
+#define ABOUT6                  25
+#define ABOUT7                  26
+#define ABOUT8                  27
 
-#define THOT_MAX_MSG			18
+
+#define THOT_MAX_MSG			28
 #endif

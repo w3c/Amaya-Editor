@@ -735,7 +735,7 @@ char               *valtext;
 					pAttrNew->AeAttrValue = NumAttrValue;
 				     /* applique les attributs a la partie selectionnee */
 				     AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel, firstSel,
-							SelDoc);
+							SelDoc, TRUE);
 				     break;
 
 				  case AtTextAttr:
@@ -754,7 +754,7 @@ char               *valtext;
 				       }
 				     /* applique les attributs a la partie selectionnee */
 				     AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel, firstSel,
-							SelDoc);
+							SelDoc, TRUE);
 				     break;
 
 				  case AtReferenceAttr:
@@ -770,7 +770,7 @@ char               *valtext;
 					pAttrNew->AeAttrValue = NumAttrValue;
 				     /* applique les attributs a la partie selectionnee */
 				     AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel, firstSel,
-							SelDoc);
+							SelDoc, TRUE);
 				     break;
 
 				  default:
@@ -840,7 +840,7 @@ int                 frame;
 		  }
 		/* applique l'attribut a la partie selectionnee */
 		AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
-				   firstSel, SelDoc);
+				   firstSel, SelDoc, TRUE);
 		UpdateAttrMenu (SelDoc);
 	     }
 	   else
@@ -873,7 +873,7 @@ int                 frame;
 			pAttrNew->AeAttrValue = 0;
 		     /* applique l'operation a la partie selectionnee */
 		     AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
-					firstSel, SelDoc);
+					firstSel, SelDoc, TRUE);
 		  }
 		else
 		  {

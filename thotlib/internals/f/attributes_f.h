@@ -58,7 +58,8 @@ extern void AttachAttrToRange ( PtrAttribute pAttr,
                                 int firstChar,
                                 PtrElement pLastSel,
                                 PtrElement pFirstSel,
-                                PtrDocument pDoc );
+                                PtrDocument pDoc,
+                                boolean reDisplay );
 extern void AttachMandatoryAttributes ( PtrElement pEl,
                                         PtrDocument pDoc );
 extern PtrAttribute GetAttrByExceptNum ( PtrElement pEl,
@@ -122,7 +123,8 @@ extern void AttachAttrToRange (/* PtrAttribute pAttr,
                                   int firstChar,
                                   PtrElement pLastSel,
                                   PtrElement pFirstSel,
-                                  PtrDocument pDoc */);
+                                  PtrDocument pDoc,
+                                  boolean reDisplay */);
 extern void AttachMandatoryAttributes (/* PtrElement pEl,
                                           PtrDocument pDoc */);
 extern PtrAttribute GetAttrByExceptNum (/* PtrElement pEl,

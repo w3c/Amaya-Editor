@@ -1230,16 +1230,16 @@ PtrAttribute        pNewAttr;
    AttachAttrToRange applique l'attribut pAttr a une partie de document
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                AttachAttrToRange (PtrAttribute pAttr, int lastChar, int firstChar, PtrElement pLastSel, PtrElement pFirstSel, PtrDocument pDoc)
+void                AttachAttrToRange (PtrAttribute pAttr, int lastChar, int firstChar, PtrElement pLastSel, PtrElement pFirstSel, PtrDocument pDoc, boolean reDisplay)
 #else  /* __STDC__ */
-void                AttachAttrToRange (pAttr, lastChar, firstChar, pLastSel, pFirstSel, pDoc)
+void                AttachAttrToRange (pAttr, lastChar, firstChar, pLastSel, pFirstSel, pDoc, reDisplay)
 PtrAttribute        pAttr;
 int                 lastChar;
 int                 firstChar;
 PtrElement          pLastSel;
 PtrElement          pFirstSel;
 PtrDocument         pDoc;
-
+boolean		    reDisplay;
 #endif /* __STDC__ */
 {
    PtrElement          pEl;
@@ -1301,16 +1301,17 @@ PtrDocument         pDoc;
 	   for (i = 1; i <= MAX_PARAM_DOC; i++)
 	      if (pDoc->DocParameters[i - 1] != NULL)
 		 AttachAttrToRange (pAttr, 0, 0, pDoc->DocParameters[i - 1],
-				    pDoc->DocParameters[i - 1], pDoc);
+				    pDoc->DocParameters[i - 1], pDoc, FALSE);
 	   for (i = 1; i <= MAX_ASSOC_DOC; i++)
 	      if (pDoc->DocAssocRoot[i - 1] != NULL)
 		 AttachAttrToRange (pAttr, 0, 0, pDoc->DocAssocRoot[i - 1],
-				    pDoc->DocAssocRoot[i - 1], pDoc);
+				    pDoc->DocAssocRoot[i - 1], pDoc, FALSE);
 	}
    /* parcourt a nouveau les elements selectionnes pour fusionner les */
    /* elements voisins de meme type ayant les memes attributs, reaffiche */
    /* toutes les vues et retablit la selection */
-   MergeAndSelect (pDoc, pFirstSel, pLastSel, firstChar, lastChar);
+   if (reDisplay)
+     MergeAndSelect (pDoc, pFirstSel, pLastSel, firstChar, lastChar);
 }
 
 
