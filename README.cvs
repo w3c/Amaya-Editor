@@ -1,7 +1,5 @@
 <p> This folder contains the <a href="http://www.w3.org/Amaya/">Amaya</a>
-sources. You will aso neet the <a href="http://www.w3.org/Library/">libwww</a>
-sources for compiling the Amaya Application. Extract it in a sibling directory
-of your Amaya extract tree, configure will look for it there.</p>
+sources.
 
 <p>One need cvs-1.10, perl, gcc, gmake installed as the main make(1),
 autoconf, automake and al., X11 and Motif developpement headers and libraries:
