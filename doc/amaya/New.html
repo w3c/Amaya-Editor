@@ -1,39 +1,71 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
 <title>
 Amaya New Features History</title>
 </head>
-<body>
+<body lang="en">
 
 <div id="head">
 <p>
 <a href="../../"><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"></a>
-<a href="../"><img border="0" src="../Icons/amaya.gif" alt="Amaya"></a> <a href="Manual.html"><img
-border="0" src="../Icons/doc48x.gif" alt="Doc"></a></p>
+<a href="../"><img border="0" src="../Icons/amaya.gif" alt="Amaya"></a> <a
+href="Manual.html"><img border="0" src="../Icons/doc48x.gif"
+alt="Doc"></a></p>
 </div>
 <p>
 This file indicates the new features you can find in the latest versions of
 Amaya.</p>
 
-<h1>New Features in Amaya 1.1c</h1>
+<h1>Fixed bugs in Amaya 1.1c</h1>
 <p>
 November 17, 1997</p>
-<p>
-Minor bug corrections.</p>
-<h1>NewFeatures in Amaya 1.1 and 1.1a</h1>
+
+<h3>The following points are improved in Windows version:</h3>
+<ul>
+<li>
+256 color mode for windows,
+<li>
+background images and image transparency,
+<li>
+keyboard management,
+<li>
+opening files from text zones and toolbar management,
+<li>
+HTML forms,
+<li>
+links management in local files.
+</ul>
+
+<h3>Global improving (Windows and Unix versions):</h3>
+<ul>
+<li>
+CSS background  rule,
+<li>
+saving in ASCII format,
+<li>
+editing of hotzones in image maps (not available yet in Windows version),
+<li>
+the "Make Book" function,
+<li>
+the help in line,
+<li>
+other minor reported bugs are now fixed.
+</ul>
+
+<h1>New features in Amaya 1.1</h1>
 <p>
 July 10 and September 15, 1997</p>
 
 <h2>Extensions</h2>
 <ul>
 <li>
-Anchors and ID attributes: 
+Anchors and ID attributes:
 <ul>
 <li>
 When Amaya parses a document it checks that all MAPs have a different NAME,
 and it changes duplicate NAMEs. The USEMAP attribute of the related IMG
-element is updated accordingly. 
+element is updated accordingly.
 <li>
 The function "Create Target" generates an attribute NAME or ID depending on
 the current selection. - If the DTD allows the insertion of an anchor as the
@@ -44,22 +76,22 @@ ID attribute for this structured element. The ID value is generated, like the
 NAME value, after the included text. Amaya checks that the new NAME or ID
 value is unique. If it's not the case it changes the value by adding a number
 at the end of the word. For example, it generates "value1" if "value" already
-exists in the document. 
+exists in the document.
 <li>
 When an anchor with a NAME attribute or an element with an ID attribute is
 pasted, Amaya checks that the new NAME or ID value is unique and changes it if
-it's not unique. 
+it's not unique.
 <li>
 Functions which create a MAP element generates automatically a NAME with value
-"map". Amaya checks that the new NAME value is unique. 
+"map". Amaya checks that the new NAME value is unique.
 <li>
 When an IMG with a USEMAP attribute is pasted, Amaya remove this attribute,
 and when an IMG with a USEMAP attribute is deleted, it does take care of the
 related MAP element. The document author is supposed to delete this MAP or  to
-link it to another IMG element. 
+link it to another IMG element.
 </ul>
 <li>
-Links: 
+Links:
 <p>
 The functions "Create Link" and "Change Link" create an anchor if the DTD
 allows the insertion of an anchor as the parent of the current selection. Then
@@ -73,7 +105,7 @@ the current document URL).</p>
 When an anchor with a HREF attribute is pasted, Amaya transforms the HREF
 value to make it relative to the document base.</p>
 <li>
-Images: 
+Images:
 <p>
 The function "Create Image" creates the SRC value relatively to the document
 base (the BASE element value or the current document URL). Amaya also creates
@@ -82,7 +114,7 @@ the ALT attribute and initializes its value with the image name.</p>
 When an IMG is pasted, Amaya transforms the SRC value to make it relative to
 the document base.</p>
 <li>
-Publishing: 
+Publishing:
 <ul>
 <li><p>
 Button "Copy Images" indicates that images have to be copied into: - the new
@@ -96,22 +128,22 @@ possible.</p>
 <li>
 Customization: Each user can define his/her personal file HTML.conf in his/her
 HOME directory. So each individual user can now customize size and position of
-Amaya windows. 
+Amaya windows.
 <li>
 Java: Upgraded to Kaffe-0.9.1 using the JDK 1.1.2 classes. The mechanism to
 access Java objects content has been cleaned up and should be ready for 64 bit
 targets. Java stubs are not distributed anymore, the Makefiles produced by
 autoconf build them on the fly to avoid conflict in case of changes in the
 HTML schemas. General improvements for the Java classes embedding access to
-the document C objects. 
+the document C objects.
 <li>
 Math: This version of Amaya contains an embryonic MathML editor, that allows
 mathematical expressions to be embedded in HTML pages.  It implements a subset
 of the MathML specification. This feature should be considered as a
-demonstration, as it is very incomplete. More in next releases. 
+demonstration, as it is very incomplete. More in next releases.
 <li>
 MS/Windows This is the first version of Amaya that runs on Microsoft Windows
-(both Windows 95 and Windows/NT). 
+(both Windows 95 and Windows/NT).
 </ul>
 
 <h2>Fixed bugs</h2>
@@ -138,9 +170,9 @@ registered the previous style value instead of the new one.</p>
 <h2>Extensions</h2>
 <ul>
 <li>
-A new command to create OBJECTs (HTML-Cougar) in Types menu. 
+A new command to create OBJECTs (HTML-Cougar) in Types menu.
 <li>
-A <a href="Plugins.html">plug-in</a> mechanism allows OBJECTs to be executed. 
+A <a href="Plugins.html">plug-in</a> mechanism allows OBJECTs to be executed.
 <li><p>
 Attribute LANG (HTML-Cougar) is implemented (see Attributes menu)</p>
 <li><p>
@@ -173,57 +205,57 @@ if numbering is active when the Print command is issued.</p>
 <li>
 Make Book: allows to merge several HTML documents into a single one (for
 printing a collection, for instance). This is based on typed links
-(rel="chapter"). 
+(rel="chapter").
 </ul>
 <li>
-Printing has been extended: 
+Printing has been extended:
 <ul>
 <li>
 "Setup and Print": this command proposes to change print options before
 printing. Parameters ManualFeed, Table of contents, Numbered links and default
 PostScript file name are reset when a new document is printed. New options
-are: 
+are:
 <ul>
 <li>
-Table of contents: prints the Table_of_contents view of the document. 
+Table of contents: prints the Table_of_contents view of the document.
 <li>
-Numbered links: numbers links in the main view and prints them. 
+Numbered links: numbers links in the main view and prints them.
 </ul>
 <li>
 "Print": this command prints the document with the print parameters defined in
-previous "Setup and Print" command. 
+previous "Setup and Print" command.
 </ul>
 <li>
 Directories are no longer automatically browsed when the user inserts them in
 the "Open Location" form. A new button (List) is added in this form that
-allows to explicitly browse the current directory. 
+allows to explicitly browse the current directory.
 <li>
 It's now possible to extend dictionaries used by the spell-checker. When the
 user clicks on a (+dic) button in the spell-checker form, the current word is
 added to the common extensible dictionary. By default this common dictionary
 is located in $HOME/.thot.DIC, but the user can change this location in the
-.thotrc registry: EXTENDDICT= 
+.thotrc registry: EXTENDDICT=
 <li>
 Documents can be saved in text form (see Save As command), with a list of URLS
-for external links. 
+for external links.
 <li>
 Images are zoomed according to attributes width and height. Combining the
 Control key with the Middle button of the mouse allows the user to easily
-resize an image. 
+resize an image.
 <li>
 CSS: More properties are supported: background-color, background-image,
-background-repeat, text-align. 
+background-repeat, text-align.
 <li>
-The registry now supports $(MACHINE) for architecture dependent paths. 
+The registry now supports $(MACHINE) for architecture dependent paths.
 <li>
 Java support: Amaya now integrates the Java Kaffe runtime. This version uses
 the Jigsaw HTTP/1.1 classes to do network access, and provide a user cache.
 Most of the Thot API is available from the Java language offering an easy
 customization path for Amaya users. This also simplifies significantly the use
 of Amaya as a testbed since a lot of developements are done in Java and can
-easily be integrated to the existing base. 
+easily be integrated to the existing base.
 <li>
-HTML markup is now in lowercase, to improve efficiency of compression tools. 
+HTML markup is now in lowercase, to improve efficiency of compression tools.
 </ul>
 <p>
 </p>
@@ -232,32 +264,32 @@ HTML markup is now in lowercase, to improve efficiency of compression tools.
 <ul>
 <li>
 When saving a document in HTML, Amaya omitted quotes around some attribute
-values. 
+values.
 <li>
-When inserting an anchor around a sample image, the image was sometimes lost. 
+When inserting an anchor around a sample image, the image was sometimes lost.
 <li>
 On 1 bit per pixel screens, buttons in dialog boxes were entirely black and
-selection was invisible. 
+selection was invisible.
 <li>
 Amaya didn't select any element or character when the mouse was out of
-document limits. 
+document limits.
 <li>
 Some improvements to table formatting (cells containing a single IMG with a
-width attribute are formatted correctly). 
+width attribute are formatted correctly).
 <li>
 Creation of new definitions (DD) at the beginning of a definition list (DL) is
-now possible. 
+now possible.
 <li>
 Amaya tried to interpret "&amp;" followed by a non-letter as an entity. It's
-now interpreted as ordinary text. 
+now interpreted as ordinary text.
 <li>
 When a &lt;TD> tag follows a &lt;TABLE> tag without a &lt;TR> in between, a
-WIDTH attribute associated with &lt;TD> was considered invalid. 
+WIDTH attribute associated with &lt;TD> was considered invalid.
 <li>
-Amaya created additional &lt;P> tags in table cells and list items. 
+Amaya created additional &lt;P> tags in table cells and list items.
 <li>
 tags such as &lt;B>, &lt;I>, &lt;EM>, etc. caused troubles in &lt;PRE>
-elements. 
+elements.
 </ul>
 <hr>
 
@@ -268,20 +300,19 @@ elements.
 <h2>Extensions</h2>
 <ul>
 <li>
-Attributes height and width are taken into account for IMG, TD and TH. 
+Attributes height and width are taken into account for IMG, TD and TH.
 <li>
-Tooltips (aka tips) are available on buttons. 
+Tooltips (aka tips) are available on buttons.
 <li>
 A message is displayed at the bottom of the window when the document is saved.
-
 <li>
-Creation of definition lists (DL) is easier. 
+Creation of definition lists (DL) is easier.
 <li>
-Added Two new buttons, to create links and tables. 
+Added Two new buttons, to create links and tables.
 <li>
-Amaya can now uncompress gziped HTML files. 
+Amaya can now uncompress gziped HTML files.
 <li>
-Sends an Accept header corresponding to the MIME types Amaya can display 
+Sends an Accept header corresponding to the MIME types Amaya can display
 </ul>
 
 <h2>Fixed bugs</h2>
@@ -289,35 +320,35 @@ Sends an Accept header corresponding to the MIME types Amaya can display
 <li>
 The main view (Formatted_view) of HTML documents was always placed at the top
 left corner of the screen. The position specified in the HTML.conf file was
-ignored. 
+ignored.
 <li>
 Under certain conditions, it was possible to create several BODY or HEAD
-elements in the same document. 
+elements in the same document.
 <li>
 It was sometimes necessary to activate the Close View command twice for
-actually closing the Structure view. 
+actually closing the Structure view.
 <li>
 In some tables, columns containing badly structured cells were sometimes moved
-to the left side of the table. 
+to the left side of the table.
 <li>
 When an image was within a paragraph with some text, and with a caret on its
 right or left edge, pressing keys Enter, Del and BackSpace led to strange
-results. 
+results.
 <li>
 Submitting a form always sent the value attribute of the Submit button,
 regardless of whether a name attribute was present or not. Other minor
-problems with form selection were fixed up. 
+problems with form selection were fixed up.
 <li>
-Amaya didn't support invalid base like a complete document URL. 
+Amaya didn't support invalid base like a complete document URL.
 <li>
-Amaya didn't support invalid attributes in BASE element. 
+Amaya didn't support invalid attributes in BASE element.
 <li>
 Under certain conditions, copy and paste of images between documents didn't
-work. 
+work.
 <li>
-Under certain conditions, some images were not published. 
+Under certain conditions, some images were not published.
 <li>
-When publishing, Amaya did not sent a Content-Type header. 
+When publishing, Amaya did not sent a Content-Type header.
 </ul>
 <hr>
 
@@ -328,194 +359,193 @@ When publishing, Amaya did not sent a Content-Type header.
 <h2>Extensions</h2>
 <ul>
 <li>
-Structure transformation (command Types/Transform) 
+Structure transformation (command Types/Transform)
 <ul>
 <li>
-more efficient pattern matching algorithm 
+more efficient pattern matching algorithm
 <li>
 more structure checking: transformations are not proposed to the user if they
 lead to an invalid structure (even if the transformation is matched with the
-selection). 
+selection).
 <li>
 the last modification time of the file <code>HTML.trans</code> is checked
-before it is parsed. 
+before it is parsed.
 <li>
 in version 0.8, if the parser detects an error in file
 <code>HTML.trans</code>, the transformation process is stopped. Now, the
-parser skips the invalid transformation. 
+parser skips the invalid transformation.
 <li>
-error messages are displayed at the bottom of the window. 
+error messages are displayed at the bottom of the window.
 </ul>
 <li>
-Color palette 
+Color palette
 <ul>
 <li>
 The palette highlights the foreground and background colors of the element
 selected when the palette is opened. The highlight allows users to choose the
-same colors for different elements. 
+same colors for different elements.
 <li>
 It is also possible now to remove a color attribute from an element just using
-the "standard color" button in the palette. 
+the "standard color" button in the palette.
 </ul>
 <li>
-Forms 
+Forms
 <ul>
 <li>
 forms can now be sent using GET and POST methods to protected/unprotected URLs
-
 <li>
-creation of form components has been improved 
+creation of form components has been improved
 <li>
-you can activate buttons and menu options by double-clicking them. 
+you can activate buttons and menu options by double-clicking them.
 </ul>
 <li>
-HTML 3.2 
+HTML 3.2
 <ul>
 <li>
 the latest extensions of HTML 3.2. have been added: tag BASEFONT and
-attributes width and height for tags TH and TD. 
+attributes width and height for tags TH and TD.
 <li>
 It is now possible to add comments in HTML documents (use command
-Structure/Comment in the Structure view) 
+Structure/Comment in the Structure view)
 </ul>
 <li>
-User Interface 
+User Interface
 <ul>
 <li>
 When the current selection is within a PRE element, some menu entries are
 disabled: Image in Types menu, and Big, Small, Sub, Sup, and Font in Character
-Element menu. 
+Element menu.
 <li>
-Interpretation of "~" and "file:" in "Open" and "Save As" dialogue boxes 
+Interpretation of "~" and "file:" in "Open" and "Save As" dialogue boxes
 <li>
 In previous versions, I B and TT buttons were never updated when selection
-changed. Now they are displayed according to the current selection. 
+changed. Now they are displayed according to the current selection.
 <li>
-Continuous scroll: the document scrolls as you move the slider 
+Continuous scroll: the document scrolls as you move the slider
 <li>
-Distinction between "Cancel" and "Done" buttons in dialogue boxes. 
+Distinction between "Cancel" and "Done" buttons in dialogue boxes.
 <li>
 When opening the Structure view, the document is displayed with the selected
-part visible in that view. 
+part visible in that view.
 </ul>
 <li>
 Environment variables are initialized from the Registry (file
-<code>thot.ini</code>) 
+<code>thot.ini</code>)
 <li>
 Integration of libwww5.0a, giving among other things: HTTP/1.1 and keep-alive
-connections. 
+connections.
 <li>
-Reload button and command (File/Reload Document). 
+Reload button and command (File/Reload Document).
 <li>
 Spell checker is now available for English and French, but both dictionaries
-are far from complete. 
+are far from complete.
 </ul>
 
 <h2>Bug fixes</h2>
 <ul>
 <li>
 Closing an Amaya window with a window manager command caused Amaya to crash.
-Now only the concerned window is closed. 
+Now only the concerned window is closed.
 <li>
 The HTML parser inserted a space at the beginning of a new line generated by a
-&lt;BR> tag followed by new line in the source file. 
+&lt;BR> tag followed by new line in the source file.
 <li>
 Call "Change link" from Links menu and click in the document itself. The
 dialog box for entering the URL of the target was empty in previous versions.
-Now it contains the current value of attribute HREF. 
+Now it contains the current value of attribute HREF.
 <li>
 Select some characters, call "Create link" from Link menu and click in the
 document itself. Do not enter anything in the dialogue box for the URL and
 press the Cancel button in this dialogue box. Later, call the Change link
 command for entering an actual URL for that anchor. Nothing happened in
-previous versions. Now you can change the URL. 
+previous versions. Now you can change the URL.
 <li>
-Some elements were lost during structure transformation, this is now fixed. 
+Some elements were lost during structure transformation, this is now fixed.
 <li>
 Structure transformation was impossible if the selection contains comments or
 invalid elements. Now transformations are possible (invalid tags are removed
-in the new structure). 
+in the new structure).
 <li>
 In previous versions, if the input focus is in one window and you press the H1
 button (or any other button of that kind) in another window (with a different
-document in it) it changes the first window. Now, the button does nothing. 
+document in it) it changes the first window. Now, the button does nothing.
 <li>
 Colors management is completely re-casted and we hope to solve color problems
-in previous versions. 
+in previous versions.
 <li>
 An emphasized string (or strong or...) can now span several lines in a
-Preformatted. 
+Preformatted.
 <li>
 When the same Web image is shared by two loaded documents, just one local copy
 was created by Amaya and this copy was lost when the first document was
 closed. This choice causes troubles when user tried to publish the second
-document. Now Amaya creates two copies, one for each document. 
+document. Now Amaya creates two copies, one for each document.
 <li>
-Copy and paste on images didn't work fine in previous release. 
+Copy and paste on images didn't work fine in previous release.
 <li>
 Sometimes, local copies of remote documents were not created in the right
-place. Now it works. 
+place. Now it works.
 <li>
 When user closed a document view with the Window Manager, the whole
-application exited. Now only the document view is closed. 
+application exited. Now only the document view is closed.
 <li>
-It is now possible to save a document if it is modified and close it. 
+It is now possible to save a document if it is modified and close it.
 <li>
 In the previous version, Amaya did not detect the cancel of the network save
-of an object to a protected URL space. 
+of an object to a protected URL space.
 <li>
 Inserting an image from a local directory did not react well to errors. This
-has been corrected. 
+has been corrected.
 <li>
 Call "Create Link" when an target anchor is selected or "Create Target" when a
 link anchor is selected, Amaya refused to add the href or name attribute. Now
-it works. 
+it works.
 <li>
 Call "Change Link" anywhere asked to select the destination. Now this function
-works only within an link anchor. 
+works only within an link anchor.
 <li>
 After loading a lot of CSS files Amaya cannot load images because file
-descriptors are not freed. Now it is correct. 
+descriptors are not freed. Now it is correct.
 <li>
-The command "Save As" doesn't work or crashes. Now it is correct. 
+The command "Save As" doesn't work or crashes. Now it is correct.
 <li>
-Bug in area-mapping (circle) fixed. 
+Bug in area-mapping (circle) fixed.
 <li>
-Support of the starting option -display 
+Support of the starting option -display
 <li>
 If a user gave a wrong password, Amaya did not ask the user for the new
-password. It kept using the wrong one. Fixed. 
+password. It kept using the wrong one. Fixed.
 <li>
 When typing in the WYSIWYG window, clicking e.g. the "Italics" button enters
 italics mode. After typing a few italic chars one wants to change back to
 normal mode. Clicking the "Italics" button once again achieves this. But you
 can't go on typing in normal mode, because this second click also selects the
 italic text to become the active (highlighted) region. Simply typing ahead
-overwrites the whole (italic) region. This bug is fixed. 
+overwrites the whole (italic) region. This bug is fixed.
 <li>
 The implicit break following the &lt;HR>failed to appear when a
 &lt;FONT><font> tag follows &lt;BR>. The text within the FONT construct
-appeared to the right ofthe horizontal rule. This bug is fixed</font> 
+appeared to the right ofthe horizontal rule. This bug is fixed</font>
 <li>
 <font>When typing in the WYSIWYG window, clicking e.g. the "Italics" button
 enters italics mode. After typing a few italic chars one wants to change back
 to normal mode. Clicking the "Italics" button once again achieves this. But
 you can't go on typing in normal mode, because this second click also selects
 the italic text to become the active (highlighted) region. Simply typing ahead
-overwrites the whole (italic) region. This bug is fixed.</font> 
+overwrites the whole (italic) region. This bug is fixed.</font>
 <li>
-<font>Printing with "US" paper size did not work. Bug fixed.</font> 
+<font>Printing with "US" paper size did not work. Bug fixed.</font>
 <li>
 <font>When changing attribut "align" for an element DIV containing paragraphs,
 the paragraphs were not redisplayed with the alignment defined by the
 attribute but they moved in a weird way in the Structure view. This bug is
-fixed. </font> 
+fixed.</font>
 <li>
 Select a DT and change its style: the DT element in the Structure view gets
-confused. Bug fixed. 
+confused. Bug fixed.
 <li>
 Selection was moved to its original position at the ned of command Edit/Find.
-It now stays at its current position. 
+It now stays at its current position.
 </ul>
 <hr>
 <address>
