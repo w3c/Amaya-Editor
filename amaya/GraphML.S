@@ -320,7 +320,7 @@ STRUCT
 
 EXCEPT
 
-   GraphML:             IsDraw, MoveResize, NoShowBox, NoMove;
+   GraphML:             IsDraw, MoveResize, NoMove;
    g:                   NoMove, NoResize, HighlightChildren, NoShowBox,
                         NoCreate;
    defs:                NoMove, NoResize, NoShowBox, NoCreate;
