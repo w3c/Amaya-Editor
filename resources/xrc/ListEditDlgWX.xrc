@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
-  <object class="wxDialog" name="ListDlgWX">
-    <title>ListDlgWX</title>
+  <object class="wxDialog" name="ListEditDlgWX">
+    <title>*ListEditDlgWX*</title>
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
@@ -9,7 +9,7 @@
           <orient>wxVERTICAL</orient>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_LABEL">
-              <label>*List title*</label>
+              <label>*List edit title*</label>
             </object>
             <option>0</option>
             <flag>wxALL|wxEXPAND</flag>
@@ -20,11 +20,18 @@
           <object class="sizeritem">
             <object class="wxListBox" name="wxID_LIST">
               <content/>
-              <size>250,100</size>
+              <size>100,100</size>
               <style>wxLB_NEEDED_SB</style>
             </object>
             <option>1</option>
             <flag>wxALL|wxGROW</flag>
+          </object>
+          <object class="spacer">
+            <size>0,5</size>
+          </object>
+          <object class="sizeritem">
+            <object class="wxTextCtrl" name="wxID_TEXT"/>
+            <flag>wxEXPAND</flag>
           </object>
           <object class="spacer">
             <size>0,5</size>
@@ -37,7 +44,7 @@
               </object>
               <object class="sizeritem">
                 <object class="wxButton" name="wxID_OK">
-                  <label>OK</label>
+                  <label>*Ok*</label>
                   <default>1</default>
                   <focused>1</focused>
                 </object>
@@ -47,7 +54,7 @@
               </object>
               <object class="sizeritem">
                 <object class="wxButton" name="wxID_CANCEL">
-                  <label>CANCEL</label>
+                  <label>*Cancel*</label>
                 </object>
               </object>
             </object>

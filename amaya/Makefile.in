@@ -235,6 +235,7 @@ AMAYA_OBJ = \
 	wxdialog/ImageDlgWX.o \
 	wxdialog/InitConfirmDlgWX.o \
 	wxdialog/ListDlgWX.o \
+	wxdialog/ListEditDlgWX.o \
 	wxdialog/ObjectDlgWX.o \
 	wxdialog/OpenDocDlgWX.o \
 	wxdialog/PreferenceDlgWX.o \

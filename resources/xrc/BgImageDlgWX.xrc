@@ -40,48 +40,56 @@
           </object>
           <object class="sizeritem">
             <object class="wxBoxSizer">
-              <orient>wxVERTICAL</orient>
-              <object class="sizeritem">
-                <object class="wxStaticText" name="wxID_LABEL_REPEATMODE">
-                  <label>*Repeat mode*</label>
-                </object>
-              </object>
-              <object class="sizeritem">
-                <object class="wxStaticLine"/>
-                <flag>wxEXPAND</flag>
-              </object>
+              <orient>wxHORIZONTAL</orient>
               <object class="sizeritem">
                 <object class="wxBoxSizer">
-                  <orient>wxHORIZONTAL</orient>
+                  <orient>wxVERTICAL</orient>
                   <object class="sizeritem">
-                    <object class="wxBitmapButton" name="wxID_BBT_REPEAT">
-                      <bitmap>../icons/BG_repeat.png</bitmap>
+                    <object class="wxStaticText" name="wxID_LABEL_REPEATMODE">
+                      <label>*Repeat mode*</label>
                     </object>
                   </object>
                   <object class="sizeritem">
-                    <object class="wxBitmapButton" name="wxID_BBT_REPEAT_X">
-                      <bitmap>../icons/BG_repeat_x.png</bitmap>
-                    </object>
+                    <object class="wxStaticLine"/>
+                    <flag>wxEXPAND</flag>
                   </object>
                   <object class="sizeritem">
-                    <object class="wxBitmapButton" name="wxID_BBT_REPEAT_Y">
-                      <bitmap>../icons/BG_repeat_y.png</bitmap>
+                    <object class="wxBoxSizer">
+                      <orient>wxHORIZONTAL</orient>
+                      <object class="sizeritem">
+                        <object class="wxBitmapButton" name="wxID_BBT_REPEAT">
+                          <bitmap>../icons/BG_repeat.png</bitmap>
+                        </object>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxBitmapButton" name="wxID_BBT_REPEAT_X">
+                          <bitmap>../icons/BG_repeat_x.png</bitmap>
+                        </object>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxBitmapButton" name="wxID_BBT_REPEAT_Y">
+                          <bitmap>../icons/BG_repeat_y.png</bitmap>
+                        </object>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxBitmapButton" name="wxID_BBT_NOREPEAT">
+                          <bitmap>../icons/BG_norepeat.png</bitmap>
+                        </object>
+                      </object>
                     </object>
-                  </object>
-                  <object class="sizeritem">
-                    <object class="wxBitmapButton" name="wxID_BBT_NOREPEAT">
-                      <bitmap>../icons/BG_norepeat.png</bitmap>
-                    </object>
+                    <flag>wxTOP|wxEXPAND</flag>
+                    <border>4</border>
                   </object>
                 </object>
-                <flag>wxTOP|wxEXPAND</flag>
-                <border>4</border>
+                <flag>wxTOP</flag>
+                <border>5</border>
               </object>
             </object>
-            <flag>wxTOP</flag>
-            <border>5</border>
+            <option>1</option>
+            <flag>wxEXPAND</flag>
           </object>
         </object>
+        <option>1</option>
         <flag>wxALL|wxEXPAND</flag>
         <border>5</border>
       </object>

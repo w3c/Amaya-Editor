@@ -10,7 +10,11 @@
  * Authors: I. Vatton
  *
  */
- 
+
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
+
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
@@ -34,6 +38,11 @@
 #ifdef _WINGUI
 #include "wininclude.h"
 #endif /* _WINGUI */
+
+#ifdef _WX
+  #include "wxdialogapi_f.h"
+#endif /* _WX */
+
 
 static char         ListBuffer[MAX_CSS_LENGTH];
 static char        *OldBuffer;
@@ -1596,24 +1605,24 @@ void CreateClass (Document doc, View view)
 	InitConfirm (doc, 1, TtaGetMessage (AMAYA, AM_SEL_CLASS));
       else
 	{
-#ifndef _WINGUI
+#ifdef _GTK
 	  TtaNewForm (BaseDialog + ClassForm, TtaGetViewFrame (doc, 1), 
 		      TtaGetMessage (AMAYA, AM_DEF_CLASS), FALSE, 2, 'L', D_DONE);
-#endif /* !_WINGUI */
+#endif /* _GTK */
 	  NbClass = BuildClassList (doc, ListBuffer, MAX_CSS_LENGTH, elHtmlName);
-#ifndef _WINGUI
+#ifdef _GTK
 	  TtaNewSelector (BaseDialog + ClassSelect, BaseDialog + ClassForm,
 			  TtaGetMessage (AMAYA, AM_SEL_CLASS),
 			  NbClass, ListBuffer, 5, NULL, TRUE, FALSE);
-#endif /* !_WINGUI */
-	  
+#endif /* _GTK */
+  
 	  /* preselect the entry corresponding to the class of the element. */
 	  if (!strcmp (schName, "MathML"))
 	    attrType.AttrTypeNum = MathML_ATTR_class;
 #ifdef _SVG
 	  else if (!strcmp (schName, "SVG"))
 	    attrType.AttrTypeNum = SVG_ATTR_class;
-#endif
+#endif /* _SVG */
 	  else
 	    attrType.AttrTypeNum = HTML_ATTR_Class;
 	  attr = TtaGetAttribute (ClassReference, attrType);
@@ -1621,23 +1630,35 @@ void CreateClass (Document doc, View view)
 	    {
 	      len = 50;
 	      TtaGiveTextAttributeValue (attr, a_class, &len);
-#ifndef _WINGUI
+#ifdef _GTK
 	      TtaSetSelector (BaseDialog + ClassSelect, -1, a_class);
-#endif /* _WINGUI */
+#endif /* _GTK */
 	      strcpy (CurrentClass, a_class);
 	    }
 	  else
 	    {
-#ifndef _WINGUI
+#ifdef _GTK
 	      TtaSetSelector (BaseDialog + ClassSelect, 0, NULL);
-#endif /* _WINGUI */
+#endif /* _GTK */
 	      strcpy (CurrentClass, elHtmlName);
 	    }
   
+#ifdef _WX
+	  CreateListEditDlgWX( BaseDialog+ClassForm,
+			       TtaGetViewFrame(doc, 1),
+			       TtaGetMessage(AMAYA, AM_DEF_CLASS),
+			       TtaGetMessage(AMAYA, AM_SEL_CLASS),
+			       NbClass,
+			       ListBuffer,
+			       CurrentClass );
+#endif /* _WX */
+
 	  /* pop-up the dialogue box. */
-#ifndef _WINGUI
+#if defined(_GTK) | defined(_WX)
 	  TtaShowDialogue (BaseDialog + ClassForm, TRUE);
-#else  /* _WINGUI */
+#endif  /* defined(_GTK) | defined(_WX) */
+
+#ifdef _WINGUI
 	  CreateRuleDlgWindow (TtaGetViewFrame (doc, 1), NbClass, ListBuffer);
 #endif /* _WINGUI */
 	}

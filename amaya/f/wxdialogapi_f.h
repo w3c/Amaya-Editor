@@ -113,6 +113,13 @@ extern ThotBool CreateBgImageDlgWX ( int ref,
                                      ThotWindow parent,
                                      const char * urlToOpen,
                                      int RepeatValue );
+extern ThotBool CreateListEditDlgWX ( int ref,
+                                      ThotWindow parent,
+                                      const char *title,
+                                      const char * list_title,
+                                      int nb_item,
+                                      const char *items,
+                                      const char * selected_item );
 
 #else /* __STDC__ */
 
@@ -223,6 +230,13 @@ extern ThotBool CreateBgImageDlgWX ( int ref,
                                        ThotWindow parent,
                                        const char * urlToOpen,
                                        int RepeatValue );
+extern ThotBool CreateListEditDlgWX ( int ref,
+                                        ThotWindow parent,
+                                        const char *title,
+                                        const char * list_title,
+                                        int nb_item,
+                                        const char *items,
+                                        const char * selected_item );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -7631,6 +7631,10 @@ void MakeIDMenu (Document doc, View view)
 #ifdef _WINGUI  
   CreateMakeIDDlgWindow (TtaGetViewFrame (doc, view));
 #endif /* _WINGUI */
+
+#ifdef _WX
+  wxASSERT_MSG(false, _T("TODO: MakeIDMenu"));
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------

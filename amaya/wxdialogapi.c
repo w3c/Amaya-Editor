@@ -19,6 +19,7 @@
   #include "wxdialog/ImageDlgWX.h"
   #include "wxdialog/InitConfirmDlgWX.h"
   #include "wxdialog/ListDlgWX.h"
+  #include "wxdialog/ListEditDlgWX.h"
   #include "wxdialog/ObjectDlgWX.h"
   #include "wxdialog/OpenDocDlgWX.h"
   #include "wxdialog/PreferenceDlgWX.h"
@@ -976,4 +977,54 @@ ThotBool CreateBgImageDlgWX ( int ref, ThotWindow parent, const char * urlToOpen
 #else /* _WX */
   return FALSE;
 #endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  CreateListEditDlgWX proposes 
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+ThotBool CreateListEditDlgWX( int ref, ThotWindow parent,
+			      const char *title, const char * list_title,
+			      int nb_item, const char *items, const char * selected_item )
+{
+#ifdef _WX
+  wxString      wx_title         = TtaConvMessageToWX( title );
+  wxString      wx_selected_item = TtaConvMessageToWX( selected_item );
+  wxString      wx_list_title    = TtaConvMessageToWX( list_title );
+  wxArrayString wx_items;
+  
+  /* convert the (char *) list to wxArrayString */
+  int i = 0;
+  int index = 0;
+  while (i < nb_item && items[index] != EOS)
+    {
+      wx_items.Add( TtaConvMessageToWX( &items[index] ) );
+      index += strlen (&items[index]) + 1; /* one entry length */
+      i++;
+    }
+
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
+  /* create the dialog */
+  ListEditDlgWX * p_dlg = new ListEditDlgWX( ref, parent,
+					     wx_title,
+					     wx_list_title,
+					     wx_items,
+					     wx_selected_item );
+
+  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+      /* the dialog has been sucesfully registred */
+      return TRUE;
+  else
+    {
+      /* an error occured durring registration */
+      p_dlg->Destroy();
+      return FALSE;
+    }
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */  
 }
