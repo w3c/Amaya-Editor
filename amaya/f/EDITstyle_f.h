@@ -9,7 +9,7 @@
 extern void RemoveStyle ( Element el,
                           Document doc,
                           boolean removeSpan );
-extern void UpdateStyleDelete ( NotifyAttribute * event );
+extern boolean UpdateStyleDelete ( NotifyAttribute * event );
 extern boolean DeleteStyleRule ( NotifyElement * event );
 extern void SetStyleRule ( NotifyElement * event );
 extern void UpdateStylePost ( NotifyAttribute * event );
@@ -26,7 +26,7 @@ extern void StyleCallbackDialogue ( int ref,
 extern void RemoveStyle (/* Element el,
                             Document doc,
                             boolean removeSpan */);
-extern void UpdateStyleDelete (/* NotifyAttribute * event */);
+extern boolean UpdateStyleDelete (/* NotifyAttribute * event */);
 extern boolean DeleteStyleRule (/* NotifyElement * event */);
 extern void SetStyleRule (/* NotifyElement * event */);
 extern void UpdateStylePost (/* NotifyAttribute * event */);

@@ -4732,14 +4732,6 @@ char                c;
    char*               msgBuffer = (char*) TtaGetMemory (sizeof (char) * MaxBufferLength);
 
    CloseBuffer ();
-#ifdef MATHML
-   if (WithinMathML)
-      {
-      /* provisional implementation: attributes are ignored */
-      InitBuffer ();
-      return;
-      }
-#endif /* MATHML */
    /* inputBuffer contains the attribute name */
    /* get the corresponding Thot attribute */
    if (UnknownTag)
@@ -4970,14 +4962,6 @@ char                c;
    char*               msgBuffer = (char*) malloc (sizeof (char) * MaxBufferLength);
    Language	       lang;
 
-#ifdef MATHML
-   if (WithinMathML)
-      {
-      /* provisional implementation: attributes are ignored */
-      InitBuffer ();
-      return;
-      }
-#endif /* MATHML */
    if (IgnoreAttr)
       /* this is the end of value of an invalid attribute. Keep the */
       /* quote character that ends the value for copying it into the */

@@ -89,8 +89,7 @@ char        *selector;
 }
 
 /*----------------------------------------------------------------------
-  CleanStylePresentation:  remove the existing style presentation of a
-  specific element
+  CleanGenericPresentation
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CleanGenericPresentation (char *selector, Document doc)
@@ -193,13 +192,14 @@ boolean           removeSpan;
    remove the existing style presentation.                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                UpdateStyleDelete (NotifyAttribute * event)
+boolean             UpdateStyleDelete (NotifyAttribute * event)
 #else
-void                UpdateStyleDelete (event)
+boolean             UpdateStyleDelete (event)
 NotifyAttribute    *event;
 #endif
 {
   CleanStylePresentation (event->element, event->document);
+  return FALSE;  /* let Thot perform normal operation */
 }
 
 
