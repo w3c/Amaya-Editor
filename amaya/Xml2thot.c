@@ -5445,6 +5445,7 @@ static void   XmlParse (FILE     *infile, CHARSET charset,
 	       /* accept a newline before the XML declaration */
 	       i = 1;
 	       res = res - 1;
+	       htmlLineRead = 1;
 	     }
 	   beginning = FALSE;
 	 }
