@@ -4526,8 +4526,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	 TtaSetTextForm (BaseDialog + PasswordText, Display_password);
 #endif /* _WINDOWS */
 #else /* _GTK */
-       strncpy (Answer_password, data, MAX_LENGTH);
-       Answer_password[MAX_LENGTH - 1] = EOS;
+       strncpy (Answer_password, data, NAME_LENGTH);
+       Answer_password[NAME_LENGTH - 1] = EOS;
 #endif /* _GTK */
        break;
        
