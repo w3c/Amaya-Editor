@@ -150,7 +150,7 @@ static int CountInlineChars (Element *mark, int firstCh, selMode *mode)
 	 text sibling elements, adjust the selection mode flag */
       if (firstCh == 0)
 	{
-	  *mode = (selMode)((int)mode | SEL_STRING_RANGE);
+	  *mode = (selMode)((int)*mode | SEL_STRING_RANGE);
 	  /* START or END point? */
 	  el = *mark;
 	  TtaNextSibling (&el);
@@ -158,12 +158,12 @@ static int CountInlineChars (Element *mark, int firstCh, selMode *mode)
 	    {
 	      elType = TtaGetElementType (el);
 	      if (elType.ElTypeNum == THOT_TEXT_UNIT)
-		*mode = (selMode)((int)mode | SEL_START_POINT);
+		*mode = (selMode)((int)*mode | SEL_START_POINT);
 	      else
-		*mode = (selMode)((int)mode | SEL_END_POINT);
+		*mode = (selMode)((int)*mode | SEL_END_POINT);
 	    }
 	  else
-	    *mode = (selMode)((int)mode | SEL_END_POINT);
+	    *mode = (selMode)((int)*mode | SEL_END_POINT);
 	}
 
       /* now point to the parent */
@@ -299,19 +299,19 @@ static void AdjustSelMode (Element *el, int *start, int index, selMode *mode, se
   if (*start > 0)
     {
       len = TtaGetTextLength (*el);
-      *mode = (selMode)((int)mode | SEL_STRING_RANGE);
+      *mode = (selMode)((int)*mode | SEL_STRING_RANGE);
       if (*start > len)
 	{
-	  *mode = (selMode)((int)mode | SEL_END_POINT);
+	  *mode = (selMode)((int)*mode | SEL_END_POINT);
 	  *start = len;
 	}
       else if (*start > index)
 	{
 	  if (type == SEL_FIRST_EL)
-	    *mode = (selMode)((int)mode | SEL_START_POINT);
+	    *mode = (selMode)((int)*mode | SEL_START_POINT);
 	  else
 	    {
-	      *mode = (selMode)((int)mode | SEL_END_POINT);
+	      *mode = (selMode)((int)*mode | SEL_END_POINT);
 	      *start = *start - 1;
 	    }
 	}
