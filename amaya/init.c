@@ -357,6 +357,11 @@ void DocumentMetaClear (DocumentMetaDataElement *me)
       TtaFreeMemory (me->content_location);
       me->content_location = NULL;
     }
+  if (me->full_content_location)
+    {
+      TtaFreeMemory (me->full_content_location);
+      me->full_content_location = NULL;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -534,8 +539,8 @@ void DocumentInfo (Document document, View view)
 
    /* Content Location */
    if (DocumentMeta[document] 
-       && DocumentMeta[document]->content_location != NULL)
-     content = DocumentMeta[document]->content_location;
+       && DocumentMeta[document]->full_content_location != NULL)
+     content = DocumentMeta[document]->full_content_location;
    else
      content = TtaGetMessage (AMAYA, AM_UNKNOWN);
    TtaNewLabel (BaseDialog + DocInfoLocation,
@@ -3625,12 +3630,18 @@ static Document LoadDocument (Document doc, char *pathname,
 	DocumentMeta[newdoc]->content_length = TtaStrdup (s);
       else
 	DocumentMeta[newdoc]->content_length = NULL;
-      /* content-location */
+      /* simplified content-location */
       s = HTTP_headers (http_headers, AM_HTTP_CONTENT_LOCATION);
       if (s)
 	DocumentMeta[newdoc]->content_location = TtaStrdup (s);
       else
 	DocumentMeta[newdoc]->content_location = NULL;
+      /* full content-location */
+      s = HTTP_headers (http_headers, AM_HTTP_FULL_CONTENT_LOCATION);
+      if (s)
+	DocumentMeta[newdoc]->full_content_location = TtaStrdup (s);
+      else
+	DocumentMeta[newdoc]->full_content_location = NULL;
 
       if (TtaGetViewFrame (newdoc, 1) != 0)
 	/* this document is displayed */
@@ -4105,6 +4116,8 @@ void ShowSource (Document document, View view)
 	   DocumentMeta[sourceDoc]->charset = TtaStrdup (DocumentMeta[document]->charset);
 	 if (DocumentMeta[document]->content_location)
 	   DocumentMeta[sourceDoc]->content_location = TtaStrdup (DocumentMeta[document]->content_location);
+	 if (DocumentMeta[document]->full_content_location)
+	   DocumentMeta[sourceDoc]->full_content_location = TtaStrdup (DocumentMeta[document]->full_content_location);
 	 DocumentTypes[sourceDoc] = docSource;
 	 charset = TtaGetDocumentCharset (document);
 	 if (charset == UNDEFINED_CHARSET)

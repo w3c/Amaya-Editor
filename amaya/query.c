@@ -395,10 +395,12 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
   /* copy the content-location */
   tmp_char = HTAnchor_location (anchor);
   if (tmp_char && *tmp_char)
-    {	
+    {
+      /* make a copy of the full location_header, for computing the base url */
+      me->http_headers.full_content_location = TtaStrdup (tmp_char);
       /* only include the filename. We suppose we have either a 
        relative or an absolute URL and that everything after the last
-      slash is the */
+      slash is the doc name + ext */
       if (HTURL_isAbsolute (tmp_char))
 	{
 	  tmp_char2 = tmp_char + strlen (tmp_char) -1;
@@ -431,6 +433,9 @@ static void HTTP_headers_delete (AHTHeaders me)
 
   if (me.content_location)
     TtaFreeMemory (me.content_location);
+
+  if (me.full_content_location)
+    TtaFreeMemory (me.full_content_location);
 }
 
 /*----------------------------------------------------------------------
@@ -461,6 +466,9 @@ char   *HTTP_headers (AHTHeaders *me, AHTHeaderName param)
       break;
     case AM_HTTP_CONTENT_LOCATION:
       result = me->content_location;
+      break;
+    case AM_HTTP_FULL_CONTENT_LOCATION:
+      result = me->full_content_location;
       break;
     default:
       result = NULL;

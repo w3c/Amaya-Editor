@@ -3486,8 +3486,8 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
 
 	  /* content location */
       SetDlgItemText (hwnDlg, IDC_DICONTENTLOC, "Content Location");
-      if (DocumentMeta[doc] && DocumentMeta[doc]->content_location != NULL)
-	     content = DocumentMeta[doc]->content_location;
+      if (DocumentMeta[doc] && DocumentMeta[doc]->full_content_location != NULL)
+	     content = DocumentMeta[doc]->full_content_location;
       else
 	     content = TtaGetMessage (AMAYA, AM_UNKNOWN);
       SetDlgItemText (hwnDlg, IDC_DICONTENTLOC_VAL, content);

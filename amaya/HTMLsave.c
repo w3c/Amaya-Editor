@@ -2762,6 +2762,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
   char               *old_charset = NULL;
   char               *old_mimetype = NULL;
   char               *old_content_location = NULL;
+  char               *old_full_content_location = NULL;
   char               *ptr;
   CHARSET             charset;
 
@@ -2975,6 +2976,13 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 	  DocumentMeta[doc]->content_location = NULL;
 	}
 
+      /* save the previous full content_location */
+      if (DocumentMeta[doc]->full_content_location) 
+	{
+	  old_full_content_location = DocumentMeta[doc]->full_content_location;
+	  DocumentMeta[doc]->full_content_location = NULL;
+	}
+
       /* change display mode to avoid flicker due to callbacks executed when
 	 saving some elements, for instance META */
       dispMode = TtaGetDisplayMode (doc);
@@ -3133,6 +3141,8 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 	    TtaFreeMemory (old_mimetype);
 	  if (old_content_location)
 	    TtaFreeMemory (old_content_location);
+	  if (old_full_content_location)
+	    TtaFreeMemory (old_full_content_location);
 	}
       else
 	{
@@ -3170,6 +3180,9 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 	  if (old_content_location && DocumentMeta[doc]->content_location)
 	    TtaFreeMemory (DocumentMeta[doc]->content_location);
 	  DocumentMeta[doc]->content_location = old_content_location;
+	  if (old_full_content_location && DocumentMeta[doc]->full_content_location)
+	    TtaFreeMemory (DocumentMeta[doc]->full_content_location);
+	  DocumentMeta[doc]->full_content_location = old_full_content_location;
 	  /* propose to save a second time */
 	  SaveDocumentAs(doc, 1);
 	}

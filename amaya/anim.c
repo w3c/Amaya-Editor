@@ -2951,6 +2951,8 @@ void ShowSourceOfTimeline (Document document, View view)
 	   DocumentMeta[sourceDoc]->charset = TtaStrdup (DocumentMeta[document]->charset); 
 	 if (DocumentMeta[document]->content_location)
 	   DocumentMeta[sourceDoc]->content_location = TtaStrdup (DocumentMeta[document]->content_location);
+	 if (DocumentMeta[document]->full_content_location)
+	   DocumentMeta[sourceDoc]->full_content_location = TtaStrdup (DocumentMeta[document]->full_content_location);
 	 DocumentTypes[sourceDoc] = docSource;
 	 charset = TtaGetDocumentCharset (document);
 	 if (charset == UNDEFINED_CHARSET)

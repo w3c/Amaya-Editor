@@ -67,7 +67,8 @@ typedef enum _AHTHeaderName
     AM_HTTP_CHARSET = 1,
     AM_HTTP_CONTENT_LENGTH = 2,
     AM_HTTP_REASON = 3,
-    AM_HTTP_CONTENT_LOCATION = 4
+    AM_HTTP_CONTENT_LOCATION = 4,
+    AM_HTTP_FULL_CONTENT_LOCATION = 5
   } 
 AHTHeaderName;
 
@@ -80,6 +81,7 @@ typedef struct _AHTHeaders
     char *content_length;
     char *reason;
     char *content_location;
+    char *full_content_location;
   }
 AHTHeaders;
 
@@ -452,7 +454,8 @@ typedef struct _DocumentMetaDataElement
   char    *content_type;     /* content type returned by the server */
   char    *charset;          /* charset returned by the server */
   char    *content_length;   /* content length returned by the server */
-  char    *content_location; /* content location returned by the server */
+  char    *content_location; /* simplified content location returned by the server */
+  char    *full_content_location; /* full content location returned by the server */
   ClickEvent method;           /* method used to send this data */
   ThotBool   xmlformat;        /* the document should be exported in xml format */
   
