@@ -4770,58 +4770,35 @@ ATTRIBUTES
  Button_type:
 	CreateBefore (AttrNameAndValue);
 
- NAME(Anchor):
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-#ifndef PAGE
-	CreateFirst(Target_gif);
-#endif
-	CreateLast(ATTR_NAME_ANCH);
-	CreateLast(VALUE_NAME_ANCH);
-#ifdef LINK_NUMBER
-        CreateAfter(TargetPageNumber);
-#endif
-#ifndef PAGE
-#ifdef BLACK_WHITE
-	Underline: Underlined;
-#endif
-#endif
-	IN Structure_view BEGIN
-		Foreground: Enclosing =;
-		Underline: Enclosing =;
-		END;
-	IN Alternate_view BEGIN
-		Foreground: Enclosing =;
-		Underline: Enclosing =;
-		END;
-	END;
- NAME(MAP):
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	CreateLast(ATTR_NAME_ANCH);
-	CreateLast(VALUE_NAME_ANCH);
-#ifndef PAGE
-#ifdef BLACK_WHITE
-	Underline: Underlined;
-#else
-	Foreground: LINK_Color;
-#endif
-#endif
-	IN Structure_view BEGIN
-		Foreground: Enclosing =;
-		Underline: Enclosing =;
-		END;
-	IN Alternate_view BEGIN
-		Foreground: Enclosing =;
-		Underline: Enclosing =;
-		END;
-	END;
  NAME:
 	BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
+	if MAP CreateLast(ATTR_NAME_ANCH);
+	if MAP CreateLast(VALUE_NAME_ANCH);
+	if Anchor CreateLast(ATTR_NAME_ANCH);
+	if Anchor CreateLast(VALUE_NAME_ANCH);
+#ifdef LINK_NUMBER
+        if Anchor CreateAfter(TargetPageNumber);
+#endif
+#ifndef PAGE
+	if Anchor CreateFirst(Target_gif);
+#ifdef BLACK_WHITE
+	if Anchor Underline: Underlined;
+	if MAP Underline: Underlined;
+	if MAP Underline: Underlined;
+#else
+	if MAP Foreground: LINK_Color;
+#endif
+#endif
+	IN Structure_view BEGIN
+		Foreground: Enclosing =;
+		Underline: Enclosing =;
+		END;
+	IN Alternate_view BEGIN
+		Foreground: Enclosing =;
+		Underline: Enclosing =;
+		END;
 	END;
 
  Script_URL:
