@@ -679,7 +679,7 @@ CXXFLAGS="${CXXFLAGS} -W -x c++ ${CXX_OPTIONS}"
 # on macosx, specific flags must be set to avoid conflicts with allready installed libwww
 # for exemple it's possible to install libwww with fink (fink install libwww)
 # to avoid conflicts, we just force the linker to search for specified amaya path first
-if test "$OS_OPTIONS"="-D_UNIX -D_MACOS" ; then
+if test "$OS_OPTIONS" = "-D_UNIX -D_MACOS" ; then
   LDFLAGS="-Wl,-search_paths_first"
 else
   LDFLAGS=""
