@@ -145,6 +145,7 @@ static AM_WIN_MenuText WIN_GeneralMenuText[] =
 	{IDC_ACCESSKEY, AM_ACCESSKEY},
 	{IDC_ANONE, AM_NONE},
 	{IDC_BGIMAGES, AM_SHOW_BG_IMAGES},
+	{IDC_MULTIKEY, AM_PASTE_LINE_BY_LINE},
 	{0, 0}
 };
 #endif /* _WINDOWS */
@@ -156,7 +157,7 @@ static char     DialogueLang [MAX_LENGTH];
 static int      AccesskeyMod;
 static int      FontMenuSize;
 static char     HomePage [MAX_LENGTH];
-static ThotBool Multikey;
+static ThotBool PasteLineByLine;
 static ThotBool BgImages;
 static ThotBool S_Buttons;
 static ThotBool S_Address;
@@ -403,7 +404,7 @@ void InitAmayaDefEnv (void)
   TtaSetDefEnvString ("HOME_PAGE", HomePage, FALSE);
   HomePage[0] = EOS;
   TtaSetDefEnvString ("EXPORT_CRLF", "no", FALSE);
-  TtaSetDefEnvString ("ENABLE_MULTIKEY", "no", FALSE);
+  TtaSetDefEnvString ("PASTE_LINE_BY_LINE", "yes", FALSE);
   TtaSetDefEnvString ("ENABLE_BG_IMAGES", "yes", FALSE);
   TtaSetDefEnvString ("LOAD_IMAGES", "yes", FALSE);
   TtaSetDefEnvString ("VERIFY_PUBLISH", "no", FALSE);
@@ -1563,7 +1564,7 @@ static void GetGeneralConf (void)
 	/* old model */
 	Zoom = 100 + (oldzoom * 10);
     }
-  TtaGetEnvBoolean ("ENABLE_MULTIKEY", &Multikey);
+  TtaGetEnvBoolean ("PASTE_LINE_BY_LINE", &PasteLineByLine);
   TtaGetEnvBoolean ("ENABLE_BG_IMAGES", &BgImages);
   TtaGetEnvBoolean ("SHOW_BUTTONS", &S_Buttons);
   TtaGetEnvBoolean ("SHOW_ADDRESS", &S_Address);
@@ -1835,8 +1836,7 @@ static void SetGeneralConf (void)
       /* recalibrate the zoom settings in all the active documents */
       RecalibrateZoom ();
     }
-  TtaSetEnvBoolean ("ENABLE_MULTIKEY", Multikey, TRUE);
-  TtaSetMultikey (Multikey);
+  TtaSetEnvBoolean ("PASTE_LINE_BY_LINE", PasteLineByLine, TRUE);
   TtaSetEnvBoolean ("ENABLE_BG_IMAGES", BgImages, TRUE);
   /* handling show buttons, address, targets and section numbering */
   TtaGetEnvBoolean ("SHOW_BUTTONS", &old);
@@ -1885,7 +1885,7 @@ static void GetDefaultGeneralConf ()
   TtaGetDefEnvInt ("FontZoom", &Zoom);
   if (Zoom == 0)
     Zoom = 100;
-  GetDefEnvToggle ("ENABLE_MULTIKEY", &Multikey, 
+  GetDefEnvToggle ("PASTE_LINE_BY_LINE", &PasteLineByLine, 
 		   GeneralBase + mToggleGeneral, 0);
   GetDefEnvToggle ("ENABLE_BG_IMAGES", &BgImages,
 		   GeneralBase + mToggleGeneral, 1);
@@ -1921,7 +1921,7 @@ static void GetDefaultGeneralConf ()
 void WIN_RefreshGeneralMenu (HWND hwnDlg)
 {
   SetDlgItemText (hwnDlg, IDC_HOMEPAGE, HomePage);
-  CheckDlgButton (hwnDlg, IDC_MULTIKEY, (Multikey) 
+  CheckDlgButton (hwnDlg, IDC_MULTIKEY, (PasteLineByLine) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_BGIMAGES, (BgImages) 
 		  ? BST_CHECKED : BST_UNCHECKED);
@@ -1959,7 +1959,7 @@ static void RefreshGeneralMenu ()
 {
   TtaSetNumberForm (GeneralBase + mDoubleClickDelay, DoubleClickDelay);
   TtaSetNumberForm (GeneralBase + mZoom, Zoom);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 0, Multikey);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 0, PasteLineByLine);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 1, BgImages);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 2, S_Buttons);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 3, S_Address);
@@ -2043,7 +2043,7 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	   AccesskeyMod = 2;
 	   break;
 	case IDC_MULTIKEY:
-	  Multikey = !Multikey;
+	  PasteLineByLine = !PasteLineByLine;
 	  break;
 	case IDC_BGIMAGES:
 	  BgImages = !BgImages;
@@ -2139,7 +2139,7 @@ static void GeneralCallbackDialog (int ref, int typedata, char *data)
 	  switch (val) 
 	    {
 	    case 0:
-	      Multikey = !Multikey;
+	      PasteLineByLine = !PasteLineByLine;
 	      break;
 	    case 1:
 	      BgImages = !BgImages;
@@ -2241,7 +2241,7 @@ void GeneralConfMenu (Document document, View view)
    TtaNewLabel (GeneralBase + mGeneralEmpty4, GeneralBase + GeneralMenu, " ");
    /* second line */
    sprintf (s, "B%s%cB%s%cB%s%cB%s%cB%s%cB%s", 
-	     TtaGetMessage (AMAYA, AM_ENABLE_MULTIKEY), EOS, 
+	     TtaGetMessage (AMAYA, AM_PASTE_LINE_BY_LINE), EOS, 
 	     TtaGetMessage (AMAYA, AM_SHOW_BG_IMAGES), EOS, 
 	     TtaGetMessage (AMAYA, AM_SHOW_BUTTONBAR), EOS,
 	     TtaGetMessage (AMAYA, AM_SHOW_TEXTZONE), EOS,

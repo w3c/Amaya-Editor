@@ -2319,8 +2319,7 @@ void CheckNewLines (NotifyOnTarget *event)
   Language    lang;
   ThotBool    pre, para, changed, selChanged, newParagraph, undoSeqExtended,
               prevCharEOL;
-  /**** @@@@@ PasteLineByLine should be a preference setting ****/
-  ThotBool PasteLineByLine = TRUE;
+  ThotBool    PasteLineByLine;
 
   if (!event->target)
     return;
@@ -2360,6 +2359,9 @@ void CheckNewLines (NotifyOnTarget *event)
   if (pre)
     /* there is a <PRE> ancestor. Don't change anything */
     return;
+
+  /* get the user value for this option */
+  TtaGetEnvBoolean ("PASTE_LINE_BY_LINE", &PasteLineByLine);
 
   /* replace every new line in the content of the element by a space
      and replace every sequence of spaces by a single space */
