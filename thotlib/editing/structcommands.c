@@ -2246,8 +2246,9 @@ boolean             Before;
 {
    PtrElement          firstSel, lastSel, pNew, pF, pSibling, pEl, pElem;
    PtrDocument         pSelDoc;
-   ElementType	       elType;
+   ElementType	       selType;
    NotifyElement       notifyEl;
+   NotifyOnElementType notifyElType;
    int                 firstChar, lastChar, NSiblings, ancestorRule, rule;
    boolean             PointInsertion, ok, createAfter, splitElem, elConst,
                        empty, selEnTete, selEnQueue;
@@ -2317,9 +2318,26 @@ boolean             Before;
 		     /* ca n'a pas marche'. essaie les transformations de */
 		     /* type par patterns */
 		     {
-			elType.ElSSchema = (SSchema) pSS;
-			elType.ElTypeNum = typeNum;
-			ok = TransformIntoType (elType, IdentDocument (pSelDoc));
+                        GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,&lastChar);
+                        pEl=firstSel;
+                        selType.ElTypeNum= firstSel->ElTypeNumber;
+                        selType.ElSSchema = (SSchema)(firstSel->ElStructSchema);
+                        while(selType.ElTypeNum !=0 && pEl!=NULL)
+                          {
+                             pEl= NextInSelection(pEl,lastSel);
+			     if (pEl!= NULL && (pEl->ElTypeNumber!=selType.ElTypeNum
+                                               || pEl->ElStructSchema->SsCode != ((PtrSSchema)(selType.ElSSchema))->SsCode))
+                                selType.ElTypeNum=0;
+                          }
+         		notifyElType.event = TteElemTransform;
+		  	notifyElType.document = (Document) IdentDocument (pSelDoc);
+		  	notifyElType.elementType.ElTypeNum = selType.ElTypeNum;
+		  	notifyElType.elementType.ElSSchema = selType.ElSSchema;
+		  	notifyElType.element = (Element) (firstSel);
+		  	notifyElType.targetElementType.ElTypeNum = typeNum;
+		  	notifyElType.targetElementType.ElSSchema = (SSchema) pSS;
+			
+			ok = !CallEventType((NotifyEvent *) & notifyElType,TRUE);
 		     }
 		  /* si ca n'a pas marche' et si plusieurs elements sont
 		     selectionne's, on essaie de transformer chaque element

@@ -21,6 +21,7 @@
 #include "HTMLedit_f.h"
 #include "HTMLform_f.h"
 #include "HTMLimage_f.h"
+#include "trans_f.h"
 
 
 /*----------------------------------------------------------------------
@@ -657,6 +658,20 @@ NotifyElement      *event;
 	SelectionDoc = event->document;
      }
    UpdateContextSensitiveMenus (event->document);
+}
+
+/*----------------------------------------------------------------------
+   A element type conversion has not been achieved by the editor.
+   Trying with language-driven restructuration.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean            ElemToTransform (NotifyOnElementType * event)
+#else  /* __STDC__ */
+void               ElemToTransform (event)
+NotifyOnElementType * event;
+#endif  /* __STDC__ */
+{
+   return (!TransformIntoType(event->targetElementType, event->document));
 }
 
 /*----------------------------------------------------------------------

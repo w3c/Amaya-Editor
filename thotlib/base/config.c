@@ -530,10 +530,18 @@ void                ConfigReadConfigFiles ()
 				       doc_import[nbitemdoc] = TRUE;
 				    nbitemdoc++;
 				 }
-			       if (typ == 2 || typ == 4)
+			       if (typ == 2)
 				 {
 				    nat_items[nbitemnat] = nameOrig;
 				    nat_items_menu[nbitemnat] = nameTrans;
+				    nbitemnat++;
+				 }
+			       if (typ == 4)
+				 {
+				    nat_items[nbitemnat] = TtaGetMemory(strlen(nameOrig)+1);
+				    nat_items_menu[nbitemnat] = TtaGetMemory(strlen(nameTrans)+1);
+				    strcpy(nat_items[nbitemnat],nameOrig);
+                                    strcpy(nat_items_menu[nbitemnat],nameTrans);
 				    nbitemnat++;
 				 }
 			       if (typ == 3)
