@@ -4,7 +4,7 @@
 #
 #       amaya-$MACH-$AMAYAVERSION.tgz
 # 
-AMAYAVERSION=2.4
+AMAYAVERSION=2.5
 THOTDIR=/tahiti/diffusion/Amaya
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX-ELF RS6000"
@@ -82,8 +82,6 @@ do
    Amaya/amaya/HTML.STR \
    Amaya/amaya/HTML.conf \
    Amaya/amaya/HTML.trans \
-   Amaya/amaya/*.en \
-   Amaya/amaya/*.fr \
    Amaya/amaya/HTML*.PRS \
    Amaya/amaya/HTML*.TRA \
    Amaya/amaya/*.en \
