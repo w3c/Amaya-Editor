@@ -460,52 +460,17 @@ void        PolySplit (float a1, float b1, float a2, float b2,
 	  }
      }
 }
-
-/*----------------------------------------------------------------------
-  QuadraticSplit : split a quadratic Bezier and pushes the result on the stack.
-  ----------------------------------------------------------------------*/
-void QuadraticSplit (float a1, float b1, float a2, float b2,
-		     float a3, float b3,
-		     ThotPoint **points, int *npoints,
-		     int *maxpoints)
-{
-   register float      tx, ty;
-   float               x1, y1, x2, y2, x3, y3, i, j;
-   float               sx, sy;
-   float               xmid, ymid;
-
-   stack_deep = 0;
-   PushStack (a1, b1, a2, b2, a3, b3, 0, 0);
-
-   while (PopStack (&x1, &y1, &x2, &y2, &x3, &y3, &i, &j))
-     {
-	if (fabs (x1 - x3) < SEG_SPLINE && fabs (y1 - y3) < SEG_SPLINE)
-	   PolyNewPoint (FloatToInt (x1), FloatToInt (y1), points, npoints,
-			 maxpoints);
-	else
-	  {
-	     tx   = (float) MIDDLE_OF (x2, x3);
-	     ty   = (float) MIDDLE_OF (y2, y3);
-	     sx   = (float) MIDDLE_OF (x1, x2);
-	     sy   = (float) MIDDLE_OF (y1, y2);
-	     xmid = (float) MIDDLE_OF (sx, tx);
-	     ymid = (float) MIDDLE_OF (sy, ty);
-
-	     PushStack (xmid, ymid, tx, ty, x3, y3, 0, 0);
-	     PushStack (x1, y1, sx, sy, xmid, ymid, 0, 0);
-	  }
-     }
-}
  
 /*----------------------------------------------------------------------
   EllipticSplit : creates points on the given elliptic arc 
   (using endpoint parameterization)
   see http://www.w3.org/TR/SVG/implnote.html for implementations notes
   ----------------------------------------------------------------------*/
-void  EllipticSplit (double x1, double y1, double x2, double y2, 
-			    double xradius, double yradius, 
-			    int Phi, int large, int sweep, 
-			    ThotPoint **points, int *npoints, int *maxpoints)
+void  EllipticSplit (int frame, int x, int y,
+		     double x1, double y1, double x2, double y2, 
+		     double xradius, double yradius, 
+		     int Phi, int large, int sweep, 
+		     ThotPoint **points, int *npoints, int *maxpoints)
 {
   double xmid, ymid, 
     Phicos, Phisin, 
@@ -515,7 +480,7 @@ void  EllipticSplit (double x1, double y1, double x2, double y2,
     Rxcos, Rysin, cX, cY,
     xtheta, ytheta, xthetaprim, ythetaprim,
     x3, y3, theta, deltatheta, inveangle,
-    thetabegin ;
+    thetabegin;
 
   if (xradius == 0 || yradius == 0)
       return;
@@ -578,11 +543,6 @@ void  EllipticSplit (double x1, double y1, double x2, double y2,
   cY = Phisin * cxprim + Phicos * cyprim + ymid;
   
   /* Step 4: Compute theta and delta_theta */
-  /*thetasign =  (yprim - cyprim) / yradius; 
-    REALLY ? 
-    apart svg immplementation 
-    It's not in any doc about angle between vectors...
-  More tests to come then a mail...*/
   xtheta = (xprim - cxprim) / xradius;
   ytheta = (yprim - cyprim) / yradius;
   /*could also use hypot(x,y) = sqrt(x*x+y*Y),
@@ -602,7 +562,6 @@ void  EllipticSplit (double x1, double y1, double x2, double y2,
   else
     if (sweep == 0 && deltatheta > 0)
       deltatheta -= M_PI_DOUBLE;
-
  /* Step 5: NOW that we have the center and the angles
      we can at least and at last 
      compute the points. */
@@ -613,17 +572,57 @@ void  EllipticSplit (double x1, double y1, double x2, double y2,
     cprim = A_DEGREE;
   else
     cprim = -1 * A_DEGREE;
-  deltatheta = fabs(deltatheta);
+  deltatheta = fabs (deltatheta);
   while (fabs (theta) < deltatheta)
     {
       Rxcos = xradius * cos (thetabegin + theta);
       Rysin = yradius * sin (thetabegin + theta);
       x3 = Phicos*Rxcos - Phisin*Rysin + cX;
       y3 = Phisin*Rxcos + Phicos*Rysin + cY;
+      x3 = (double) (x + PixelValue ((int) x3, UnPixel, NULL,
+			    ViewFrameTable[frame - 1].FrMagnification));
+      y3 = (double) (y + PixelValue ((int) y3, UnPixel, NULL,
+			    ViewFrameTable[frame - 1].FrMagnification));
       PolyNewPoint ((int) x3, (int) y3, points, npoints, maxpoints); 
       theta += cprim;
     }  
 }
+/*----------------------------------------------------------------------
+  QuadraticSplit : split a quadratic Bezier and pushes the result on the stack.
+  ----------------------------------------------------------------------*/
+void QuadraticSplit (float a1, float b1, float a2, float b2,
+		     float a3, float b3,
+		     ThotPoint **points, int *npoints,
+		     int *maxpoints)
+{
+   register float      tx, ty;
+   float               x1, y1, x2, y2, x3, y3, i, j;
+   float               sx, sy;
+   float               xmid, ymid;
+
+   stack_deep = 0;
+   PushStack (a1, b1, a2, b2, a3, b3, 0, 0);
+
+   while (PopStack (&x1, &y1, &x2, &y2, &x3, &y3, &i, &j))
+     {
+	if (fabs (x1 - x3) < SEG_SPLINE && fabs (y1 - y3) < SEG_SPLINE)
+	   PolyNewPoint (FloatToInt (x1), FloatToInt (y1), points, npoints,
+			 maxpoints);
+	else
+	  {
+	     tx   = (float) MIDDLE_OF (x2, x3);
+	     ty   = (float) MIDDLE_OF (y2, y3);
+	     sx   = (float) MIDDLE_OF (x1, x2);
+	     sy   = (float) MIDDLE_OF (y1, y2);
+	     xmid = (float) MIDDLE_OF (sx, tx);
+	     ymid = (float) MIDDLE_OF (sy, ty);
+
+	     PushStack (xmid, ymid, tx, ty, x3, y3, 0, 0);
+	     PushStack (x1, y1, sx, sy, xmid, ymid, 0, 0);
+	  }
+     }
+}
+ 
 /*----------------------------------------------------------------------
   IsOnSegment checks if the point x, y is on the segment x1, y1 to
   x2, y2 with DELTA_SEL precision.

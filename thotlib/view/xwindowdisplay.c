@@ -2210,7 +2210,7 @@ static void  DrawCurrent (int frame, int thick, int style,
 	DoDrawLines (frame, thick, style, points, npoints, fg, bg, pattern);
     }
 }
- 
+
 /*----------------------------------------------------------------------
   DrawPath draws a path.
   Parameter path is a pointer to the list of path segments
@@ -2316,22 +2316,27 @@ void DrawPath (int frame, int thick, int style, int x, int y,
 	      break;
 
 	    case PtEllipticalArc:
-	      x1 = (float) (x + PixelValue (pPa->XStart, UnPixel, NULL,
-					    ViewFrameTable[frame - 1].FrMagnification));
-	      y1 = (float) (y + PixelValue (pPa->YStart, UnPixel, NULL,
-					    ViewFrameTable[frame - 1].FrMagnification));
-	      x2 = (float) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
-					    ViewFrameTable[frame - 1].FrMagnification));
-	      y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
-					    ViewFrameTable[frame - 1].FrMagnification));
-	      cx1 = pPa->XRadius;
-	      cy1 = pPa->YRadius;
-	      EllipticSplit ((double) x1, (double) y1, 
+	      x1 = pPa->XStart;
+	      y1 = pPa->YStart;
+	      x2 = pPa->XEnd;
+	      y2 = pPa->YEnd;
+		
+	      cx1 = pPa->XRadius; 
+	      cy1 = pPa->YRadius; 
+
+	      EllipticSplit ( frame, x, y,
+			     (double) x1, (double) y1, 
 			     (double) x2, (double) y2, 
 			     (double) cx1, (double) cy1,
 			     fmod(pPa->XAxisRotation, 360), 
 			     pPa->LargeArc, pPa->Sweep,
 			     &points, &npoints, &maxpoints);
+
+	      x2 = (float) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
+					    ViewFrameTable[frame - 1].FrMagnification));
+	      y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
+					    ViewFrameTable[frame - 1].FrMagnification));
+	   
 	      PolyNewPoint ((int) x2, (int) y2, &points, &npoints, 
  			    &maxpoints);
 	      break;
