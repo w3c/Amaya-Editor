@@ -693,6 +693,10 @@ static void DoSubmit (Document doc, int method, char *action)
   int                 i;
   char               *urlName;
 
+  /* clear the selection */
+  if (TtaGetSelectedDocument () == doc)
+    TtaUnselect (doc);
+
   /* remove any trailing & */
   if (buffer)
     buffer_size = strlen (buffer);
