@@ -273,9 +273,6 @@ AHTReqContext      *me;
 {
    AHTDocId_Status    *docid_status;
 
-
-   return;
-
    if (me)
      {
 
@@ -768,11 +765,13 @@ int                 status;
 	 }
      }
 
+#ifdef _WINDOWS
    /* erase the context if we're dealing with an asynchronous request */
    if ((me->mode & AMAYA_ASYNC) ||	(me->mode & AMAYA_IASYNC)) {
 	   me->reqStatus = HT_END;
        /** AHTReqContext_delete (me); **/
    }
+#endif /* _WINDOWS */
 
   return HT_OK;
 }
@@ -1167,13 +1166,15 @@ void                QueryInit ()
 
    /* New AHTBridge stuff */
 
-
-   HTEvent_setUnregisterCallback (AHTEvent_unregister);
-   
 #  ifdef _WINDOWS
    HTEventInit ();
 #  endif _WINDOWS;
+
    HTEvent_setRegisterCallback (AHTEvent_register);
+
+#  ifndef _WINDOWS
+   HTEvent_setUnregisterCallback (AHTEvent_unregister);
+#  endif /* _WINDOWS */
 
    /* Setup authentication manager */
     /***
@@ -1197,11 +1198,6 @@ void                QueryInit ()
 
    /* Setting up other user interfaces */
    /* needs a little bit more work */
-
-   /* Setting up handlers */
-#ifndef HACK_WWW
-/*    HTNetCall_addBefore(HTLoadStart, NULL, 0); */
-#endif
 
    /* Setting up different network parameters */
    /* Maximum number of simultaneous open sockets */
@@ -1299,9 +1295,6 @@ void                QueryClose ()
 
    Thread_deleteAll ();
  
-#ifndef HACK_WWW
-/**  HTAuthInfo_deleteAll (); **/
-#endif
    HTProxy_deleteAll ();
    HTNoProxy_deleteAll ();
    HTGateway_deleteAll ();
@@ -1525,6 +1518,41 @@ boolean error_html;
    } else
         status = HTLoadAnchor ((HTAnchor *) me->anchor, me->request);
 
+#ifndef _WINDOWS
+   if (status == HT_ERROR || me->reqStatus == HT_END || me->reqStatus == HT_ERR)
+ {
+      /* in case of error, free all allocated memory and exit */
+      if (me->output)
+         fclose (me->output);
+
+      if ((mode & AMAYA_ASYNC) || (mode & AMAYA_IASYNC)) {
+         if (me->outputfile)
+            TtaFreeMemory (me->outputfile);
+         if (me->urlName)
+            TtaFreeMemory (me->urlName);
+      }
+
+      if (me->reqStatus == HT_ERR) {
+         status = HT_ERROR;
+         /* show an error message on the status bar */
+         DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR;
+         TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), me->
+status_urlName);
+      } else
+            status = HT_OK;
+
+      AHTReqContext_delete (me);
+   } else {
+         /* part of the stop button handler */
+         if ((mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC)) {
+            status = LoopForStop (me);
+	    AHTReqContext_delete (me);
+         }
+   }
+   TtaHandlePendingEvents ();
+
+#else  /* !_WINDOWS */
+
    if (status == HT_ERROR) {
 
       /* in case of error, free all allocated memory and exit */
@@ -1550,13 +1578,13 @@ boolean error_html;
    } else {
          /* part of the stop button handler */
          if ((mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC)) {
-#           ifndef _WINDOWS
 	    status = LoopForStop (me);
-#           endif /* !_WINDOWS */
 	    AHTReqContext_delete (me);
 	 }
    }
    TtaHandlePendingEvents ();
+
+#endif /* !_WINDOWS */
 
    return (status);
 }
@@ -1766,12 +1794,7 @@ char               *outputfile;
       output stream */
 
    HTRequest_setPostCallback (me->request, AHTUpload_callback);
-   /*****
-   HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
-   ******/
-   /*
-   HTRequest_setOutputStream (me->request, HTFWriter_new (me->request, me->output, YES));
-   */
+
    me->anchor = (HTParentAnchor *) HTAnchor_findAddress (urlName);
 
    /* Set the Content-Type of the file we are uploading */
