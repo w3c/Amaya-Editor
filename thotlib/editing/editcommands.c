@@ -3791,7 +3791,7 @@ void TtcDeletePreviousChar (Document doc, View view)
 	    {
 	      moveAfter = (pViewSel->VsBox->BxAbstractBox->AbLeafType != LtText ||
 			   pViewSel->VsBox->BxAbstractBox->AbVolume == 0);
-	      ContentEditing (TEXT_SUP);
+	      ContentEditing (TEXT_DEL);
 	    }
 	  pViewSel = &ViewFrameTable[frame - 1].FrSelectionEnd;
 	  if (moveAfter &&
