@@ -7,48 +7,48 @@
 #if __STDC__
 
 extern PtrPRule GetPageRule ( PtrElement pEl,
-                              int Vue,
+                              int view,
                               PtrPSchema * pSchP );
 extern PtrPRule GetPRulePage ( PRuleType TypeR,
                                int b,
                                PtrPSchema pSchP );
 extern void PageHeaderFooter ( PtrElement pElPage,
-                               int Vue,
+                               int view,
                                int *b,
                                PtrPSchema * pSchP );
 extern void TagAbsBoxInPage ( PtrAbstractBox pAb );
 extern void KillAbsBoxAboveLimit ( PtrAbstractBox pP,
-                                   int limite,
-                                   int VueNb,
+                                   int limit,
+                                   int viewNb,
                                    PtrDocument pDoc,
                                    PtrAbstractBox * RedispAbsBox );
 extern boolean KillAbsBoxBeforePage ( PtrAbstractBox pPage,
                                       int frame,
                                       PtrDocument pDoc,
-                                      int VueNb );
+                                      int viewNb );
 
 #else /* __STDC__ */
 
 extern PtrPRule GetPageRule (/* PtrElement pEl,
-                                int Vue,
+                                int view,
                                 PtrPSchema * pSchP */);
 extern PtrPRule GetPRulePage (/* PRuleType TypeR,
                                  int b,
                                  PtrPSchema pSchP */);
 extern void PageHeaderFooter (/* PtrElement pElPage,
-                                 int Vue,
+                                 int view,
                                  int *b,
                                  PtrPSchema * pSchP */);
 extern void TagAbsBoxInPage (/* PtrAbstractBox pAb */);
 extern void KillAbsBoxAboveLimit (/* PtrAbstractBox pP,
-                                     int limite,
-                                     int VueNb,
+                                     int limit,
+                                     int viewNb,
                                      PtrDocument pDoc,
                                      PtrAbstractBox * RedispAbsBox */);
 extern boolean KillAbsBoxBeforePage (/* PtrAbstractBox pPage,
                                         int frame,
                                         PtrDocument pDoc,
-                                        int VueNb */);
+                                        int viewNb */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

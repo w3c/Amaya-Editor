@@ -118,8 +118,8 @@ extern PtrElement FirstAssocElem ( PtrDocument pDoc,
                                    PtrSSchema pSS );
 extern void CopyIncludedElem ( PtrElement pEl,
                                PtrDocument pDoc );
-extern PtrElement ReplicateEleme ( PtrElement pEl,
-                                   PtrDocument pDoc );
+extern PtrElement ReplicateElement ( PtrElement pEl,
+                                     PtrDocument pDoc );
 extern PtrAttribute GetTypedAttrForElem ( PtrElement pEl,
                                           int attrNum,
                                           PtrSSchema pSSattr );
@@ -244,8 +244,8 @@ extern PtrElement FirstAssocElem (/* PtrDocument pDoc,
                                      PtrSSchema pSS */);
 extern void CopyIncludedElem (/* PtrElement pEl,
                                  PtrDocument pDoc */);
-extern PtrElement ReplicateEleme (/* PtrElement pEl,
-                                     PtrDocument pDoc */);
+extern PtrElement ReplicateElement (/* PtrElement pEl,
+                                       PtrDocument pDoc */);
 extern PtrAttribute GetTypedAttrForElem (/* PtrElement pEl,
                                             int attrNum,
                                             PtrSSchema pSSattr */);

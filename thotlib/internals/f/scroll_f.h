@@ -17,26 +17,26 @@ extern void ShowXPosition ( int frame,
                             int large );
 extern void ShowYPosition ( int frame,
                             int y,
-                            int haut );
-extern int ImageAbs ( int frame,
-                      int *debut,
-                      int *fin,
-                      int *total );
+                            int height );
+extern int PositionAbsBox ( int frame,
+                            int *nbCharBegin,
+                            int *nbCharEnd,
+                            int *total );
 extern void ComputeDisplayedChars ( int frame,
                                     int *Xpos,
                                     int *Ypos,
-                                    int *largeur,
-                                    int *hauteur );
+                                    int *width,
+                                    int *height );
 extern void ShowBox ( int frame,
                       PtrBox pBox,
                       int position,
-                      int pourcent );
+                      int percent );
 extern boolean IsScrollNeeded ( int frame,
                                 int selection );
 extern void ShowSelectedBox ( int frame,
                               boolean actif );
 extern boolean IsAbsBoxVisible ( int frame,
-                                 PtrAbstractBox pave );
+                                 PtrAbstractBox pAb );
 
 #else /* __STDC__ */
 
@@ -51,26 +51,26 @@ extern void ShowXPosition (/* int frame,
                               int large */);
 extern void ShowYPosition (/* int frame,
                               int y,
-                              int haut */);
-extern int ImageAbs (/* int frame,
-                        int *debut,
-                        int *fin,
-                        int *total */);
+                              int height */);
+extern int PositionAbsBox (/* int frame,
+                              int *nbCharBegin,
+                              int *nbCharEnd,
+                              int *total */);
 extern void ComputeDisplayedChars (/* int frame,
                                       int *Xpos,
                                       int *Ypos,
-                                      int *largeur,
-                                      int *hauteur */);
+                                      int *width,
+                                      int *height */);
 extern void ShowBox (/* int frame,
                         PtrBox pBox,
                         int position,
-                        int pourcent */);
+                        int percent */);
 extern boolean IsScrollNeeded (/* int frame,
                                   int selection */);
 extern void ShowSelectedBox (/* int frame,
                                 boolean actif */);
 extern boolean IsAbsBoxVisible (/* int frame,
-                                   PtrAbstractBox pave */);
+                                   PtrAbstractBox pAb */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

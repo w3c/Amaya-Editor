@@ -7,30 +7,30 @@
 #if __STDC__
 
 extern ContentType ReadContentType ( BinFile file );
-extern PtrPRule ReadRulePtr ( BinFile file,
-                              PtrPRule * nextr );
-extern void ReadPosition ( BinFile file,
-                           PosRule * RP );
+extern PtrPRule ReadPRulePtr ( BinFile file,
+                               PtrPRule * pNextPRule );
+extern void ReadPosRule ( BinFile file,
+                          PosRule * pPosRule );
 extern AttrComparType ReadAttrCompar ( BinFile file );
-extern void ReadRules ( BinFile file,
-                        PtrPRule * pR,
-                        PtrPRule * nextr );
-extern PtrPSchema ReadPresentationSchema ( Name fname,
-                                           PtrSSchema SS );
+extern void ReadPRules ( BinFile file,
+                         PtrPRule * pPRule,
+                         PtrPRule * pNextPRule );
+extern PtrPSchema ReadPresentationSchema ( Name fileName,
+                                           PtrSSchema pSS );
 
 #else /* __STDC__ */
 
 extern ContentType ReadContentType (/* BinFile file */);
-extern PtrPRule ReadRulePtr (/* BinFile file,
-                                PtrPRule * nextr */);
-extern void ReadPosition (/* BinFile file,
-                             PosRule * RP */);
+extern PtrPRule ReadPRulePtr (/* BinFile file,
+                                 PtrPRule * pNextPRule */);
+extern void ReadPosRule (/* BinFile file,
+                            PosRule * pPosRule */);
 extern AttrComparType ReadAttrCompar (/* BinFile file */);
-extern void ReadRules (/* BinFile file,
-                          PtrPRule * pR,
-                          PtrPRule * nextr */);
-extern PtrPSchema ReadPresentationSchema (/* Name fname,
-                                             PtrSSchema SS */);
+extern void ReadPRules (/* BinFile file,
+                           PtrPRule * pPRule,
+                           PtrPRule * pNextPRule */);
+extern PtrPSchema ReadPresentationSchema (/* Name fileName,
+                                             PtrSSchema pSS */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

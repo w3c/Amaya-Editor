@@ -6,9 +6,9 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void BuildPathDocBuffer ( char *BufDir,
+extern void BuildPathDocBuffer ( char *bufDir,
                                  char separator,
-                                 int *nbitem );
+                                 int *nbItems );
 extern void BuildSchPresNameMenu ( PtrSSchema pSchStr,
                                    Name name );
 extern void CallbackSchPresNameMenu ( int ref,
@@ -25,9 +25,9 @@ extern void TtcOpenDocument ( Document document,
 
 #else /* __STDC__ */
 
-extern void BuildPathDocBuffer (/* char *BufDir,
+extern void BuildPathDocBuffer (/* char *bufDir,
                                    char separator,
-                                   int *nbitem */);
+                                   int *nbItems */);
 extern void BuildSchPresNameMenu (/* PtrSSchema pSchStr,
                                      Name name */);
 extern void CallbackSchPresNameMenu (/* int ref,

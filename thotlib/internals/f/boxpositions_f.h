@@ -13,11 +13,11 @@ extern void AddBoxTranslations ( PtrAbstractBox pAb,
                                  int frame,
                                  boolean horizRef,
                                  boolean vertRef );
-extern void HautCoupure ( PtrAbstractBox pAb,
-                          boolean pointVal,
-                          int *ht,
-                          int *pos,
-                          int *nChars );
+extern void SetPageHeight ( PtrAbstractBox pAb,
+                            boolean pointVal,
+                            int *ht,
+                            int *pos,
+                            int *nChars );
 extern void SetBoxToTranslate ( PtrAbstractBox pAb,
                                 boolean horizRef,
                                 boolean vertRef );
@@ -31,11 +31,11 @@ extern void AddBoxTranslations (/* PtrAbstractBox pAb,
                                    int frame,
                                    boolean horizRef,
                                    boolean vertRef */);
-extern void HautCoupure (/* PtrAbstractBox pAb,
-                            boolean pointVal,
-                            int *ht,
-                            int *pos,
-                            int *nChars */);
+extern void SetPageHeight (/* PtrAbstractBox pAb,
+                              boolean pointVal,
+                              int *ht,
+                              int *pos,
+                              int *nChars */);
 extern void SetBoxToTranslate (/* PtrAbstractBox pAb,
                                   boolean horizRef,
                                   boolean vertRef */);

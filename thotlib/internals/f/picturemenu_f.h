@@ -7,9 +7,9 @@
 #if __STDC__
 
 extern void CallbackPictureMenu ( int ref,
-                                  int typedata,
+                                  int typeData,
                                   char *txt );
-extern void BuildPictureMenu ( char *nom,
+extern void BuildPictureMenu ( char *name,
                                boolean *result,
                                int *typim,
                                int *pres,
@@ -19,9 +19,9 @@ extern void ImageMenuLoadResources ( void );
 #else /* __STDC__ */
 
 extern void CallbackPictureMenu (/* int ref,
-                                    int typedata,
+                                    int typeData,
                                     char *txt */);
-extern void BuildPictureMenu (/* char *nom,
+extern void BuildPictureMenu (/* char *name,
                                  boolean *result,
                                  int *typim,
                                  int *pres,

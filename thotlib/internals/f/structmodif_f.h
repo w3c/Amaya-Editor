@@ -10,37 +10,37 @@ extern void InitSave ( void );
 extern boolean IsASavedElement ( PtrElement pEl );
 extern void RedisplayCopies ( PtrElement pEl,
                               PtrDocument pDoc,
-                              boolean reaff );
-extern boolean IsANewElement ( PtrElement pE );
-extern boolean IsWithinANewElement ( PtrElement pE );
-extern void UpdateRefAttributes ( PtrElement pRac,
+                              boolean redisplay );
+extern boolean IsANewElement ( PtrElement pEl );
+extern boolean IsWithinANewElement ( PtrElement pEl );
+extern void UpdateRefAttributes ( PtrElement pRoot,
                                   PtrDocument pDoc );
-extern void AssignPairIdentifiers ( PtrElement pRac,
+extern void AssignPairIdentifiers ( PtrElement pRoot,
                                     PtrDocument pDoc );
-extern void RedisplayEmptyReferences ( PtrElement pElR,
-                                       PtrDocument * docsel,
-                                       boolean reaff );
+extern void RedisplayEmptyReferences ( PtrElement pEl,
+                                       PtrDocument * pDoc,
+                                       boolean redisplay );
 extern void TtcHolophrast ( Document document,
                             View view );
 extern void DeHolophrast ( PtrElement pEl,
                            PtrDocument pDoc );
-extern void NewTextLanguage ( PtrAbstractBox pav,
-                              int indexc,
-                              Language langue );
+extern void NewTextLanguage ( PtrAbstractBox pAb,
+                              int charIndex,
+                              Language lang );
 extern boolean CompleteElement ( PtrElement pEl,
                                  PtrDocument pDoc );
-extern boolean BreakElement ( PtrElement ElemADupliquer,
-                              PtrElement ElemCoupure,
-                              int carcoupure,
-                              boolean Paragraph );
+extern boolean BreakElement ( PtrElement pElReplicate,
+                              PtrElement pSplitEl,
+                              int splitIndex,
+                              boolean block );
 extern void MergeTextLeaves ( PtrElement * pEl,
-                              PtrElement * PremLib,
-                              PtrDocument * SelDoc );
-extern void MergeAndSelect ( PtrDocument SelDoc,
-                             PtrElement PremSel,
-                             PtrElement DerSel,
-                             int premcar,
-                             int dercar );
+                              PtrElement * pFirstFree,
+                              PtrDocument * pDoc );
+extern void MergeAndSelect ( PtrDocument pDoc,
+                             PtrElement firstSel,
+                             PtrElement lastSel,
+                             int firstChar,
+                             int lastChar );
 
 #else /* __STDC__ */
 
@@ -48,37 +48,37 @@ extern void InitSave (/* void */);
 extern boolean IsASavedElement (/* PtrElement pEl */);
 extern void RedisplayCopies (/* PtrElement pEl,
                                 PtrDocument pDoc,
-                                boolean reaff */);
-extern boolean IsANewElement (/* PtrElement pE */);
-extern boolean IsWithinANewElement (/* PtrElement pE */);
-extern void UpdateRefAttributes (/* PtrElement pRac,
+                                boolean redisplay */);
+extern boolean IsANewElement (/* PtrElement pEl */);
+extern boolean IsWithinANewElement (/* PtrElement pEl */);
+extern void UpdateRefAttributes (/* PtrElement pRoot,
                                     PtrDocument pDoc */);
-extern void AssignPairIdentifiers (/* PtrElement pRac,
+extern void AssignPairIdentifiers (/* PtrElement pRoot,
                                       PtrDocument pDoc */);
-extern void RedisplayEmptyReferences (/* PtrElement pElR,
-                                         PtrDocument * docsel,
-                                         boolean reaff */);
+extern void RedisplayEmptyReferences (/* PtrElement pEl,
+                                         PtrDocument * pDoc,
+                                         boolean redisplay */);
 extern void TtcHolophrast (/* Document document,
                               View view */);
 extern void DeHolophrast (/* PtrElement pEl,
                              PtrDocument pDoc */);
-extern void NewTextLanguage (/* PtrAbstractBox pav,
-                                int indexc,
-                                Language langue */);
+extern void NewTextLanguage (/* PtrAbstractBox pAb,
+                                int charIndex,
+                                Language lang */);
 extern boolean CompleteElement (/* PtrElement pEl,
                                    PtrDocument pDoc */);
-extern boolean BreakElement (/* PtrElement ElemADupliquer,
-                                PtrElement ElemCoupure,
-                                int carcoupure,
-                                boolean Paragraph */);
+extern boolean BreakElement (/* PtrElement pElReplicate,
+                                PtrElement pSplitEl,
+                                int splitIndex,
+                                boolean block */);
 extern void MergeTextLeaves (/* PtrElement * pEl,
-                                PtrElement * PremLib,
-                                PtrDocument * SelDoc */);
-extern void MergeAndSelect (/* PtrDocument SelDoc,
-                               PtrElement PremSel,
-                               PtrElement DerSel,
-                               int premcar,
-                               int dercar */);
+                                PtrElement * pFirstFree,
+                                PtrDocument * pDoc */);
+extern void MergeAndSelect (/* PtrDocument pDoc,
+                               PtrElement firstSel,
+                               PtrElement lastSel,
+                               int firstChar,
+                               int lastChar */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

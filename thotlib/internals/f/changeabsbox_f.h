@@ -58,42 +58,42 @@ extern void DestroyAbsBoxesView ( PtrElement pEl,
 extern void DestroyAbsBoxes ( PtrElement pEl,
                               PtrDocument pDoc,
                               boolean verify );
-extern void ReafReference ( PtrReference pRef,
-                            PtrAbstractBox pAb,
-                            PtrDocument pDocRef );
-extern void ChngRef ( PtrAbstractBox pAb,
-                      PtrDocument pDoc );
-extern PtrAbstractBox PavCherche ( PtrAbstractBox pAb,
-                                   boolean pres,
-                                   int typeElOrPres,
-                                   PtrPSchema pSchP,
-                                   PtrSSchema pSchStr );
-extern void ReNumPages ( PtrElement pEl,
-                         int view );
-extern void TransmetValCompt ( PtrElement pEl,
-                               PtrDocument pDoc,
-                               Name nameAttr,
-                               int counter,
-                               PtrPSchema pSchP,
-                               PtrSSchema pSchS );
+extern void RedispRef ( PtrReference pRef,
+                        PtrAbstractBox pAb,
+                        PtrDocument pDocRef );
+extern void RedispAllReferences ( PtrAbstractBox pAb,
+                                  PtrDocument pDoc );
+extern PtrAbstractBox AbsBoxFromElOrPres ( PtrAbstractBox pAb,
+                                           boolean pres,
+                                           int typeElOrPres,
+                                           PtrPSchema pSchP,
+                                           PtrSSchema pSchStr );
+extern void ComputePageNum ( PtrElement pEl,
+                             int view );
+extern void TransmitCounterVal ( PtrElement pEl,
+                                 PtrDocument pDoc,
+                                 Name nameAttr,
+                                 int counter,
+                                 PtrPSchema pSchP,
+                                 PtrSSchema pSchS );
 extern void UpdateNumbers ( PtrElement pElBegin,
-                         PtrElement pElModif,
-                         PtrDocument pDoc,
-                         boolean redisp );
-extern void ChngBtCompt ( PtrElement pElBegin,
-                          PtrDocument pDoc,
-                          int counter,
-                          PtrPSchema pSchP,
-                          PtrSSchema pSS );
-extern void ChngPresAttr ( PtrElement pEl,
-                           PtrAttribute pAttr,
-                           PtrDocument pDoc,
-                           boolean remove,
-                           boolean inherit,
-                           PtrAttribute pAttrComp );
-extern boolean MemeTexte ( PtrElement pEl,
-                           PtrDocument pDoc,
-                           PtrElement * pLib );
+                            PtrElement pElModif,
+                            PtrDocument pDoc,
+                            boolean redisp );
+extern void UpdateBoxesCounter ( PtrElement pElBegin,
+                                 PtrDocument pDoc,
+                                 int counter,
+                                 PtrPSchema pSchP,
+                                 PtrSSchema pSS );
+extern void UpdatePresAttr ( PtrElement pEl,
+                             PtrAttribute pAttr,
+                             PtrDocument pDoc,
+                             boolean remove,
+                             boolean inherit,
+                             PtrAttribute pAttrComp );
+extern boolean IsIdenticalTextType ( PtrElement pEl,
+                                     PtrDocument pDoc,
+                                     PtrElement * pLib );
 
 #else /* __STDC__ */
 
@@ -149,42 +149,42 @@ extern void DestroyAbsBoxesView (/* PtrElement pEl,
 extern void DestroyAbsBoxes (/* PtrElement pEl,
                                 PtrDocument pDoc,
                                 boolean verify */);
-extern void ReafReference (/* PtrReference pRef,
-                              PtrAbstractBox pAb,
-                              PtrDocument pDocRef */);
-extern void ChngRef (/* PtrAbstractBox pAb,
-                        PtrDocument pDoc */);
-extern PtrAbstractBox PavCherche (/* PtrAbstractBox pAb,
-                                     boolean pres,
-                                     int typeElOrPres,
-                                     PtrPSchema pSchP,
-                                     PtrSSchema pSchStr */);
-extern void ReNumPages (/* PtrElement pEl,
-                           int view */);
-extern void TransmetValCompt (/* PtrElement pEl,
-                                 PtrDocument pDoc,
-                                 Name nameAttr,
-                                 int counter,
-                                 PtrPSchema pSchP,
-                                 PtrSSchema pSchS */);
+extern void RedispRef (/* PtrReference pRef,
+                          PtrAbstractBox pAb,
+                          PtrDocument pDocRef */);
+extern void RedispAllReferences (/* PtrAbstractBox pAb,
+                                    PtrDocument pDoc */);
+extern PtrAbstractBox AbsBoxFromElOrPres (/* PtrAbstractBox pAb,
+                                             boolean pres,
+                                             int typeElOrPres,
+                                             PtrPSchema pSchP,
+                                             PtrSSchema pSchStr */);
+extern void ComputePageNum (/* PtrElement pEl,
+                               int view */);
+extern void TransmitCounterVal (/* PtrElement pEl,
+                                   PtrDocument pDoc,
+                                   Name nameAttr,
+                                   int counter,
+                                   PtrPSchema pSchP,
+                                   PtrSSchema pSchS */);
 extern void UpdateNumbers (/* PtrElement pElBegin,
-                           PtrElement pElModif,
-                           PtrDocument pDoc,
-                           boolean redisp */);
-extern void ChngBtCompt (/* PtrElement pElBegin,
-                            PtrDocument pDoc,
-                            int counter,
-                            PtrPSchema pSchP,
-                            PtrSSchema pSS */);
-extern void ChngPresAttr (/* PtrElement pEl,
-                             PtrAttribute pAttr,
-                             PtrDocument pDoc,
-                             boolean remove,
-                             boolean inherit,
-                             PtrAttribute pAttrComp */);
-extern boolean MemeTexte (/* PtrElement pEl,
-                             PtrDocument pDoc,
-                             PtrElement * pLib */);
+                              PtrElement pElModif,
+                              PtrDocument pDoc,
+                              boolean redisp */);
+extern void UpdateBoxesCounter (/* PtrElement pElBegin,
+                                   PtrDocument pDoc,
+                                   int counter,
+                                   PtrPSchema pSchP,
+                                   PtrSSchema pSS */);
+extern void UpdatePresAttr (/* PtrElement pEl,
+                               PtrAttribute pAttr,
+                               PtrDocument pDoc,
+                               boolean remove,
+                               boolean inherit,
+                               PtrAttribute pAttrComp */);
+extern boolean IsIdenticalTextType (/* PtrElement pEl,
+                                       PtrDocument pDoc,
+                                       PtrElement * pLib */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern char *AsciiTranslate ( char *buffer );
+extern char *AsciiTranslate ( char *pBuffer );
 extern int TtaGetMessageTable ( char *msgName,
                                 int msgNumber );
 extern char *TtaGetMessage ( int origin,
@@ -21,7 +21,7 @@ extern void DisplayPivotMessage ( char *code );
 
 #else /* __STDC__ */
 
-extern char *AsciiTranslate (/* char *buffer */);
+extern char *AsciiTranslate (/* char *pBuffer */);
 extern int TtaGetMessageTable (/* char *msgName,
                                   int msgNumber */);
 extern char *TtaGetMessage (/* int origin,

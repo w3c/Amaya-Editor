@@ -31,7 +31,7 @@ extern void asci2code (/* char *string */);
 extern void code2asci (/* char *string */);
 extern void Corr_pretraitement (/* PtrDict dict */);
 extern boolean Corr_ReloadDict (/* PtrDict * pDictionary */);
-extern void DictXS_Init (/* void */);
+extern void Dict_Init (/* void */);
 extern boolean TtaLoadDocumentDictionary (/* PtrDocument document,
                                              int *pDictionary,
                                              boolean ToCreate */);

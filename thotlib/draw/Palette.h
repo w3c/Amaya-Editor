@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 1996 INRIA, All rights reserved
- */
-
 /* Types and attributes for the document type Palette */
 
 /* Global attributes */

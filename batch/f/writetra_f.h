@@ -8,61 +8,61 @@
 
 extern void WriteShort ( int n );
 extern void WriteSignedShort ( int n );
-extern void wrnom ( Name n );
-extern void wrbool ( boolean b );
-extern void WriteTransCondition ( TransCondition T );
-extern void WriteRelatNivAsc ( RelatNAscend R );
-extern void WriteTRuleType ( TRuleType T );
-extern void WriteTOrder ( TOrder P );
-extern void WriteCreatedObject ( CreatedObject T );
-extern void WriteRelativePosition ( TRelatPosition P );
-extern void WriteTCounterOp ( TCounterOp T );
-extern void WriteTVarType ( TranslVarType T );
-extern void WriteCounterStyle ( CounterStyle S );
-extern void wrptrregle ( PtrTRule p );
-extern void WriteRegles ( PtrTRule pR );
-extern void wrptrbloc ( PtrTRuleBlock b );
-extern void WriteBlocks ( PtrTRuleBlock pB,
-                          PtrSSchema pSchStr );
-extern void WriteReglesAttr ( int att,
-                              PtrSSchema pSchStr,
-                              PtrTSchema pSchTra );
-extern void WriteReglesPres ( int pres,
-                              PtrSSchema pSchStr,
-                              PtrTSchema pSchTra );
-extern boolean WriteTranslationSchemas ( Name fname,
-                                         PtrTSchema pSchTra,
-                                         PtrSSchema pSchStr );
+extern void WriteName ( Name n );
+extern void WriteBoolean ( boolean b );
+extern void WriteTransCondition ( TransCondition cond );
+extern void WriteRelatNAscend ( RelatNAscend rel );
+extern void WriteTRuleType ( TRuleType typ );
+extern void WriteTOrder ( TOrder order );
+extern void WriteCreatedObject ( CreatedObject obj );
+extern void WriteRelativePosition ( TRelatPosition pos );
+extern void WriteTCounterOp ( TCounterOp op );
+extern void WriteTVarType ( TranslVarType typ );
+extern void WriteCounterStyle ( CounterStyle style );
+extern void WriteTRulePtr ( PtrTRule ptr );
+extern void WriteTRules ( PtrTRule pTRule );
+extern void WriteBlockPtr ( PtrTRuleBlock pBlock );
+extern void WriteBlocks ( PtrTRuleBlock pBlock,
+                          PtrSSchema pSS );
+extern void WriteTRulesAttr ( int att,
+                              PtrSSchema pSS,
+                              PtrTSchema pTSch );
+extern void WritePRuleTrans ( int pres,
+                              PtrSSchema pSS,
+                              PtrTSchema pTSch );
+extern boolean WriteTranslationSchema ( Name fileName,
+                                        PtrTSchema pTSch,
+                                        PtrSSchema pSS );
 
 #else /* __STDC__ */
 
 extern void WriteShort (/* int n */);
 extern void WriteSignedShort (/* int n */);
-extern void wrnom (/* Name n */);
-extern void wrbool (/* boolean b */);
-extern void WriteTransCondition (/* TransCondition T */);
-extern void WriteRelatNivAsc (/* RelatNAscend R */);
-extern void WriteTRuleType (/* TRuleType T */);
-extern void WriteTOrder (/* TOrder P */);
-extern void WriteCreatedObject (/* CreatedObject T */);
-extern void WriteRelativePosition (/* TRelatPosition P */);
-extern void WriteTCounterOp (/* TCounterOp T */);
-extern void WriteTVarType (/* TranslVarType T */);
-extern void WriteCounterStyle (/* CounterStyle S */);
-extern void wrptrregle (/* PtrTRule p */);
-extern void WriteRegles (/* PtrTRule pR */);
-extern void wrptrbloc (/* PtrTRuleBlock b */);
-extern void WriteBlocks (/* PtrTRuleBlock pB,
-                            PtrSSchema pSchStr */);
-extern void WriteReglesAttr (/* int att,
-                                PtrSSchema pSchStr,
-                                PtrTSchema pSchTra */);
-extern void WriteReglesPres (/* int pres,
-                                PtrSSchema pSchStr,
-                                PtrTSchema pSchTra */);
-extern boolean WriteTranslationSchemas (/* Name fname,
-                                           PtrTSchema pSchTra,
-                                           PtrSSchema pSchStr */);
+extern void WriteName (/* Name n */);
+extern void WriteBoolean (/* boolean b */);
+extern void WriteTransCondition (/* TransCondition cond */);
+extern void WriteRelatNAscend (/* RelatNAscend rel */);
+extern void WriteTRuleType (/* TRuleType typ */);
+extern void WriteTOrder (/* TOrder order */);
+extern void WriteCreatedObject (/* CreatedObject obj */);
+extern void WriteRelativePosition (/* TRelatPosition pos */);
+extern void WriteTCounterOp (/* TCounterOp op */);
+extern void WriteTVarType (/* TranslVarType typ */);
+extern void WriteCounterStyle (/* CounterStyle style */);
+extern void WriteTRulePtr (/* PtrTRule ptr */);
+extern void WriteTRules (/* PtrTRule pTRule */);
+extern void WriteBlockPtr (/* PtrTRuleBlock pBlock */);
+extern void WriteBlocks (/* PtrTRuleBlock pBlock,
+                            PtrSSchema pSS */);
+extern void WriteTRulesAttr (/* int att,
+                                PtrSSchema pSS,
+                                PtrTSchema pTSch */);
+extern void WritePRuleTrans (/* int pres,
+                                PtrSSchema pSS,
+                                PtrTSchema pTSch */);
+extern boolean WriteTranslationSchema (/* Name fileName,
+                                          PtrTSchema pTSch,
+                                          PtrSSchema pSS */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

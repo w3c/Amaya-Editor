@@ -6,6 +6,8 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
+extern void CreateWithException ( PtrElement pEl,
+                                  PtrDocument pDoc );
 extern Document TtaNewDocument ( char *structureSchema,
                                  char *documentName );
 extern Document TtaOpenDocument ( char *documentName,
@@ -79,6 +81,8 @@ extern PtrDocument DocToPtr ( Document document );
 
 #else /* __STDC__ */
 
+extern void CreateWithException (/* PtrElement pEl,
+                                    PtrDocument pDoc */);
 extern Document TtaNewDocument (/* char *structureSchema,
                                    char *documentName */);
 extern Document TtaOpenDocument (/* char *documentName,

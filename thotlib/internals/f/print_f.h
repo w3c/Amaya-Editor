@@ -8,31 +8,31 @@
 
 extern int Error ( char *s );
 extern PtrReference NextReferenceToEl ( PtrElement pEl,
-                                        PtrDocument pDocEl,
-                                        boolean StopNonCharge,
-                                        PtrReference pRefPrec,
+                                        PtrDocument pDoc,
+                                        boolean processNotLoaded,
+                                        PtrReference pPrevRef,
                                         PtrDocument * pDocRef,
-                                        PtrExternalDoc * pDE,
-                                        boolean DocExtSuivant );
-extern boolean GetCurrentSelection ( PtrDocument * SDoc,
-                                     PtrElement * PrEl,
-                                     PtrElement * DerEl,
-                                     int *PrCar,
-                                     int *DerCar );
+                                        PtrExternalDoc * pExtDoc,
+                                        boolean nextExtDoc );
+extern boolean GetCurrentSelection ( PtrDocument * pDoc,
+                                     PtrElement * firstEl,
+                                     PtrElement * lastEl,
+                                     int *firstChar,
+                                     int *lastChar );
 extern void GetSizesFrame ( int frame,
-                            int *larg,
-                            int *haut );
+                            int *width,
+                            int *height );
 extern ThotWindow TtaGetThotWindow ( int frame );
-extern void GetDocAndView ( int nframe,
-                            PtrDocument * pD,
-                            int *nv,
+extern void GetDocAndView ( int frame,
+                            PtrDocument * pDoc,
+                            int *view,
                             boolean * assoc );
-extern void PrintOnePage ( PtrDocument pDo1,
-                           PtrAbstractBox pavPage,
-                           PtrAbstractBox pavNPage,
-                           int Vue,
-                           boolean Assoc );
-extern void ClientSend ( ThotWindow clientwind,
+extern void PrintOnePage ( PtrDocument pDoc,
+                           PtrAbstractBox pPageAb,
+                           PtrAbstractBox pNextPageAb,
+                           int view,
+                           boolean assoc );
+extern void ClientSend ( ThotWindow clientWindow,
                          char *name,
                          int messageID );
 extern void main ( int argc,
@@ -42,31 +42,31 @@ extern void main ( int argc,
 
 extern int Error (/* char *s */);
 extern PtrReference NextReferenceToEl (/* PtrElement pEl,
-                                          PtrDocument pDocEl,
-                                          boolean StopNonCharge,
-                                          PtrReference pRefPrec,
+                                          PtrDocument pDoc,
+                                          boolean processNotLoaded,
+                                          PtrReference pPrevRef,
                                           PtrDocument * pDocRef,
-                                          PtrExternalDoc * pDE,
-                                          boolean DocExtSuivant */);
-extern boolean GetCurrentSelection (/* PtrDocument * SDoc,
-                                       PtrElement * PrEl,
-                                       PtrElement * DerEl,
-                                       int *PrCar,
-                                       int *DerCar */);
+                                          PtrExternalDoc * pExtDoc,
+                                          boolean nextExtDoc */);
+extern boolean GetCurrentSelection (/* PtrDocument * pDoc,
+                                       PtrElement * firstEl,
+                                       PtrElement * lastEl,
+                                       int *firstChar,
+                                       int *lastChar */);
 extern void GetSizesFrame (/* int frame,
-                              int *larg,
-                              int *haut */);
+                              int *width,
+                              int *height */);
 extern ThotWindow TtaGetThotWindow (/* int frame */);
-extern void GetDocAndView (/* int nframe,
-                              PtrDocument * pD,
-                              int *nv,
+extern void GetDocAndView (/* int frame,
+                              PtrDocument * pDoc,
+                              int *view,
                               boolean * assoc */);
-extern void PrintOnePage (/* PtrDocument pDo1,
-                             PtrAbstractBox pavPage,
-                             PtrAbstractBox pavNPage,
-                             int Vue,
-                             boolean Assoc */);
-extern void ClientSend (/* ThotWindow clientwind,
+extern void PrintOnePage (/* PtrDocument pDoc,
+                             PtrAbstractBox pPageAb,
+                             PtrAbstractBox pNextPageAb,
+                             int view,
+                             boolean assoc */);
+extern void ClientSend (/* ThotWindow clientWindow,
                            char *name,
                            int messageID */);
 extern void main (/* int argc,

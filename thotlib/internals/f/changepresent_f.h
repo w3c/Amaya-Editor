@@ -12,72 +12,72 @@ extern void RuleSetPut ( RuleSet RuleS1,
                          int num );
 extern void RuleSetClr ( RuleSet RuleS1 );
 extern boolean BothHaveNoSpecRules ( PtrElement pEl1,
-                                  PtrElement pEl2 );
+                                     PtrElement pEl2 );
 extern PtrAbstractBox AbsBoxOfEl ( PtrElement pEl,
                                    int view );
 extern void NewPosition ( PtrAbstractBox pAb,
+                          int deltaX,
+                          int deltaY,
+                          int frame,
+                          boolean display );
+extern void NewDimension ( PtrAbstractBox pAb,
                            int deltaX,
                            int deltaY,
                            int frame,
                            boolean display );
-extern void NewDimension ( PtrAbstractBox pAb,
-                            int deltaX,
-                            int deltaY,
-                            int frame,
-                            boolean display );
 extern void ApplyNewRule ( PtrDocument pDoc,
-                            PtrPRule pPRule,
-                            PtrElement pEl );
+                           PtrPRule pPRule,
+                           PtrElement pEl );
 extern void ModifyGraphics ( PtrElement pEl,
-                              PtrDocument pDoc,
-                              int viewToApply,
-                              boolean modifLineStyle,
-                              char LineStyle,
-                              boolean modifLineWeight,
-                              int LineWeight,
-                              TypeUnit LineWeightUnit,
-                              boolean modifFillPattern,
-                              int FillPattern,
-                              boolean modifColorBackground,
-                              int ColorBackground,
-                              boolean modifLineColor,
-                              int LineColor );
+                             PtrDocument pDoc,
+                             int viewToApply,
+                             boolean modifLineStyle,
+                             char LineStyle,
+                             boolean modifLineWeight,
+                             int LineWeight,
+                             TypeUnit LineWeightUnit,
+                             boolean modifFillPattern,
+                             int FillPattern,
+                             boolean modifColorBackground,
+                             int ColorBackground,
+                             boolean modifLineColor,
+                             int LineColor );
 extern void ModifyColor ( int colorNum,
-                            boolean Background );
+                          boolean Background );
 extern void ModifyChar ( PtrElement pEl,
-                              PtrDocument pDoc,
-                              int viewToApply,
-                              boolean modifFamily,
-                              char family,
-                              boolean modifStyle,
-                              int charStyle,
-                              boolean modifsize,
-                              int size,
-                              boolean modifUnderline,
-                              int underline,
-                              boolean modifWeight,
-                              int weightUnderline );
+                         PtrDocument pDoc,
+                         int viewToApply,
+                         boolean modifFamily,
+                         char family,
+                         boolean modifStyle,
+                         int charStyle,
+                         boolean modifsize,
+                         int size,
+                         boolean modifUnderline,
+                         int underline,
+                         boolean modifWeight,
+                         int weightUnderline );
 extern void ModifyLining ( PtrElement pEl,
-                          PtrDocument pDoc,
-                          int viewToApply,
-                          boolean modifAdjust,
-                          int Adjust,
-                          boolean modifJustif,
-                          boolean Justif,
-                          boolean modifIndent,
-                          int ValIndent,
-                          boolean modifLineSpacing,
-                          int LineSpacing,
-                          boolean modifHyphen,
-                          boolean Hyphenate );
+                           PtrDocument pDoc,
+                           int viewToApply,
+                           boolean modifAdjust,
+                           int Adjust,
+                           boolean modifJustif,
+                           boolean Justif,
+                           boolean modifIndent,
+                           int ValIndent,
+                           boolean modifLineSpacing,
+                           int LineSpacing,
+                           boolean modifHyphen,
+                           boolean Hyphenate );
 extern void ApplyStandardRule ( PtrElement pEl,
-                                    PtrDocument pDoc,
-                                    PRuleType ruleType,
-                                    int viewSch );
+                                PtrDocument pDoc,
+                                PRuleType ruleType,
+                                int viewSch );
 extern void RemoveSpecPresTree ( PtrElement pElRoot,
-                            PtrDocument pDoc,
-                            RuleSet RulesS,
-                            int viewToApply );
+                                 PtrDocument pDoc,
+                                 RuleSet RulesS,
+                                 int viewToApply );
 
 #else /* __STDC__ */
 
@@ -87,72 +87,72 @@ extern void RuleSetPut (/* RuleSet RuleS1,
                            int num */);
 extern void RuleSetClr (/* RuleSet RuleS1 */);
 extern boolean BothHaveNoSpecRules (/* PtrElement pEl1,
-                                    PtrElement pEl2 */);
+                                       PtrElement pEl2 */);
 extern PtrAbstractBox AbsBoxOfEl (/* PtrElement pEl,
                                      int view */);
 extern void NewPosition (/* PtrAbstractBox pAb,
+                            int deltaX,
+                            int deltaY,
+                            int frame,
+                            boolean display */);
+extern void NewDimension (/* PtrAbstractBox pAb,
                              int deltaX,
                              int deltaY,
                              int frame,
                              boolean display */);
-extern void NewDimension (/* PtrAbstractBox pAb,
-                              int deltaX,
-                              int deltaY,
-                              int frame,
-                              boolean display */);
 extern void ApplyNewRule (/* PtrDocument pDoc,
-                              PtrPRule pPRule,
-                              PtrElement pEl */);
+                             PtrPRule pPRule,
+                             PtrElement pEl */);
 extern void ModifyGraphics (/* PtrElement pEl,
-                                PtrDocument pDoc,
-                                int viewToApply,
-                                boolean modifLineStyle,
-                                char LineStyle,
-                                boolean modifLineWeight,
-                                int LineWeight,
-                                TypeUnit LineWeightUnit,
-                                boolean modifFillPattern,
-                                int FillPattern,
-                                boolean modifColorBackground,
-                                int ColorBackground,
-                                boolean modifLineColor,
-                                int LineColor */);
+                               PtrDocument pDoc,
+                               int viewToApply,
+                               boolean modifLineStyle,
+                               char LineStyle,
+                               boolean modifLineWeight,
+                               int LineWeight,
+                               TypeUnit LineWeightUnit,
+                               boolean modifFillPattern,
+                               int FillPattern,
+                               boolean modifColorBackground,
+                               int ColorBackground,
+                               boolean modifLineColor,
+                               int LineColor */);
 extern void ModifyColor (/* int colorNum,
-                              boolean Background */);
+                            boolean Background */);
 extern void ModifyChar (/* PtrElement pEl,
-                                PtrDocument pDoc,
-                                int viewToApply,
-                                boolean modifFamily,
-                                char family,
-                                boolean modifStyle,
-                                int charStyle,
-                                boolean modifsize,
-                                int size,
-                                boolean modifUnderline,
-                                int underline,
-                                boolean modifWeight,
-                                int weightUnderline */);
+                           PtrDocument pDoc,
+                           int viewToApply,
+                           boolean modifFamily,
+                           char family,
+                           boolean modifStyle,
+                           int charStyle,
+                           boolean modifsize,
+                           int size,
+                           boolean modifUnderline,
+                           int underline,
+                           boolean modifWeight,
+                           int weightUnderline */);
 extern void ModifyLining (/* PtrElement pEl,
-                            PtrDocument pDoc,
-                            int viewToApply,
-                            boolean modifAdjust,
-                            int Adjust,
-                            boolean modifJustif,
-                            boolean Justif,
-                            boolean modifIndent,
-                            int ValIndent,
-                            boolean modifLineSpacing,
-                            int LineSpacing,
-                            boolean modifHyphen,
-                            boolean Hyphenate */);
+                             PtrDocument pDoc,
+                             int viewToApply,
+                             boolean modifAdjust,
+                             int Adjust,
+                             boolean modifJustif,
+                             boolean Justif,
+                             boolean modifIndent,
+                             int ValIndent,
+                             boolean modifLineSpacing,
+                             int LineSpacing,
+                             boolean modifHyphen,
+                             boolean Hyphenate */);
 extern void ApplyStandardRule (/* PtrElement pEl,
-                                      PtrDocument pDoc,
-                                      PRuleType ruleType,
-                                      int viewSch */);
+                                  PtrDocument pDoc,
+                                  PRuleType ruleType,
+                                  int viewSch */);
 extern void RemoveSpecPresTree (/* PtrElement pElRoot,
-                              PtrDocument pDoc,
-                              RuleSet RulesS,
-                              int viewToApply */);
+                                   PtrDocument pDoc,
+                                   RuleSet RulesS,
+                                   int viewToApply */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

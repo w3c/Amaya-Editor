@@ -16,14 +16,14 @@ extern void AddAbsBoxes ( PtrAbstractBox pAbbRoot,
 extern boolean IsBreakable ( PtrAbstractBox pAb );
 extern void AdjustVolume ( PtrElement pEl,
                            PtrDocument pDoc );
-extern void IncreaseVolume ( boolean inHead,
+extern void IncreaseVolume ( boolean head,
                              int dVol,
                              int frame );
-extern void DecreaseVolume ( boolean inHead,
+extern void DecreaseVolume ( boolean head,
                              int dVol,
                              int frame );
 extern void CheckAbsBox ( PtrElement pEl,
-                          int Vue,
+                          int view,
                           PtrDocument pDoc,
                           boolean begin,
                           boolean display );
@@ -48,14 +48,14 @@ extern void AddAbsBoxes (/* PtrAbstractBox pAbbRoot,
 extern boolean IsBreakable (/* PtrAbstractBox pAb */);
 extern void AdjustVolume (/* PtrElement pEl,
                              PtrDocument pDoc */);
-extern void IncreaseVolume (/* boolean inHead,
+extern void IncreaseVolume (/* boolean head,
                                int dVol,
                                int frame */);
-extern void DecreaseVolume (/* boolean inHead,
+extern void DecreaseVolume (/* boolean head,
                                int dVol,
                                int frame */);
 extern void CheckAbsBox (/* PtrElement pEl,
-                            int Vue,
+                            int view,
                             PtrDocument pDoc,
                             boolean begin,
                             boolean display */);

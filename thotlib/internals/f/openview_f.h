@@ -7,24 +7,24 @@
 #if __STDC__
 
 extern void CallbackOpenView ( int ref,
-                               int typedata,
+                               int dataType,
                                char *data );
 extern void TtcOpenView ( Document document,
-                          View vue );
+                          View view );
 extern void TtcCloseView ( Document document,
-                           View view );
+                           View viewIn );
 extern void SwitchSynchronize ( Document document,
                                 View view );
 
 #else /* __STDC__ */
 
 extern void CallbackOpenView (/* int ref,
-                                 int typedata,
+                                 int dataType,
                                  char *data */);
 extern void TtcOpenView (/* Document document,
-                            View vue */);
+                            View view */);
 extern void TtcCloseView (/* Document document,
-                             View view */);
+                             View viewIn */);
 extern void SwitchSynchronize (/* Document document,
                                   View view */);
 

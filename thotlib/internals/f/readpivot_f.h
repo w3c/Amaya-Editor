@@ -110,7 +110,7 @@ extern PtrElement ReadTreePiv (/* BinFile pivFile,
                                   boolean createDesc */);
 extern boolean AbstractTreeOK (/* PtrElement pEl,
                                   PtrDocument pDoc */);
-extern void AssociatePairs (/* PtrElement pRoot */)
+extern void AssociatePairs (/* PtrElement pRoot */);
 extern void ReadSchemaNamesPiv (/* BinFile file,
                                    PtrDocument pDoc,
                                    char *tag,

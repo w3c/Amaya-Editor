@@ -69,9 +69,9 @@ extern void RedispNewElement ( Document document,
                                PtrElement sibling,
                                boolean first,
                                boolean creation );
-extern void ChangePavModif ( PtrElement pEl,
-                             Document document,
-                             boolean newPavModif );
+extern void ChangeAbsBoxModif ( PtrElement pEl,
+                                Document document,
+                                boolean newAbsModif );
 extern void NewSelection ( Document document,
                            Element element,
                            int firstCharacter,
@@ -192,9 +192,9 @@ extern void RedispNewElement (/* Document document,
                                  PtrElement sibling,
                                  boolean first,
                                  boolean creation */);
-extern void ChangePavModif (/* PtrElement pEl,
-                               Document document,
-                               boolean newPavModif */);
+extern void ChangeAbsBoxModif (/* PtrElement pEl,
+                                  Document document,
+                                  boolean newAbsModif */);
 extern void NewSelection (/* Document document,
                              Element element,
                              int firstCharacter,

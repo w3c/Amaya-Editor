@@ -19,7 +19,7 @@ extern int Corr_verifiermot ( char mot[MAX_WORD_LEN],
                               Language langue,
                               PtrDict dico );
 extern void Corr_ajoutermot ( char mot[MAX_WORD_LEN],
-                              PtrDict * pDict );
+                              PtrDict *pDict );
 extern void Corr_init_correction ( void );
 extern void Corr_proposer ( Language langue,
                             PtrDict dicodocu );
@@ -52,7 +52,7 @@ extern int Corr_verifiermot (/* char mot[MAX_WORD_LEN],
                                 Language langue,
                                 PtrDict dico */);
 extern void Corr_ajoutermot (/* char mot[MAX_WORD_LEN],
-                                PtrDict * pDict */);
+                                PtrDict *pDict */);
 extern void Corr_init_correction (/* void */);
 extern void Corr_proposer (/* Language langue,
                               PtrDict dicodocu */);

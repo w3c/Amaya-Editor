@@ -7,42 +7,42 @@
 #if __STDC__
 
 extern int CounterValMinMax ( int counterNum,
-                            PtrSSchema pSS,
-                            PtrPSchema pSchP,
-                            PtrElement pElNum,
-                            int view,
-                            boolean Maximum );
-extern int CounterVal ( int counterNum,
-                      PtrSSchema pSS,
-                      PtrPSchema pSchP,
-                      PtrElement pElNum,
-                      int view );
-extern boolean PresAbsBoxUserEditable ( PtrAbstractBox pAb );
-extern boolean NewVariable ( int varNum,
-                              PtrSSchema pSS,
-                              PtrPSchema pSchP,
-                              PtrAbstractBox pAb,
-                              PtrDocument pDoc );
-
-#else /* __STDC__ */
-
-extern int CounterValMinMax (/* int counterNum,
                               PtrSSchema pSS,
                               PtrPSchema pSchP,
                               PtrElement pElNum,
                               int view,
-                              boolean Maximum */);
-extern int CounterVal (/* int counterNum,
+                              boolean Maximum );
+extern int CounterVal ( int counterNum,
                         PtrSSchema pSS,
                         PtrPSchema pSchP,
                         PtrElement pElNum,
-                        int view */);
-extern boolean PresAbsBoxUserEditable (/* PtrAbstractBox pAb */);
-extern boolean NewVariable (/* int varNum,
+                        int view );
+extern boolean PresAbsBoxUserEditable ( PtrAbstractBox pAb );
+extern boolean NewVariable ( int varNum,
+                             PtrSSchema pSS,
+                             PtrPSchema pSchP,
+                             PtrAbstractBox pAb,
+                             PtrDocument pDoc );
+
+#else /* __STDC__ */
+
+extern int CounterValMinMax (/* int counterNum,
                                 PtrSSchema pSS,
                                 PtrPSchema pSchP,
-                                PtrAbstractBox pAb,
-                                PtrDocument pDoc */);
+                                PtrElement pElNum,
+                                int view,
+                                boolean Maximum */);
+extern int CounterVal (/* int counterNum,
+                          PtrSSchema pSS,
+                          PtrPSchema pSchP,
+                          PtrElement pElNum,
+                          int view */);
+extern boolean PresAbsBoxUserEditable (/* PtrAbstractBox pAb */);
+extern boolean NewVariable (/* int varNum,
+                               PtrSSchema pSS,
+                               PtrPSchema pSchP,
+                               PtrAbstractBox pAb,
+                               PtrDocument pDoc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

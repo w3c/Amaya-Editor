@@ -6,52 +6,32 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void PasteBeforeOrAfter ( PtrElement * retour,
-                                 PtrDocument pDoc,
-                                 PtrElement pElem,
-                                 boolean Dev,
-                                 boolean MajVol,
-                                 PtrElement PremElSv,
-                                 PtrElement * pLib,
-                                 int *PremCarColle,
-                                 int nR,
-                                 PtrSSchema pS );
-extern void PasteWithin ( PtrElement * retour,
+extern void PasteWithin ( PtrElement * pFirstPastedEl,
                           PtrDocument pDoc,
                           PtrElement pEl,
-                          PtrElement * pLib );
+                          PtrElement * pFirstFree );
 extern void CanCopyOrCut ( boolean * result,
-                           PtrDocument docsel,
-                           PtrElement premsel,
-                           PtrElement dersel,
-                           int premcar,
-                           int dercar );
+                           PtrDocument pDoc,
+                           PtrElement firstSel,
+                           PtrElement lastSel,
+                           int firstChar,
+                           int lastChar );
 extern void StructPasteCommand ( void );
 extern void StructReturnKey ( void );
 extern void StructSelectLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern void PasteBeforeOrAfter (/* PtrElement * retour,
-                                   PtrDocument pDoc,
-                                   PtrElement pElem,
-                                   boolean Dev,
-                                   boolean MajVol,
-                                   PtrElement PremElSv,
-                                   PtrElement * pLib,
-                                   int *PremCarColle,
-                                   int nR,
-                                   PtrSSchema pS */);
-extern void PasteWithin (/* PtrElement * retour,
+extern void PasteWithin (/* PtrElement * pFirstPastedEl,
                             PtrDocument pDoc,
                             PtrElement pEl,
-                            PtrElement * pLib */);
+                            PtrElement * pFirstFree */);
 extern void CanCopyOrCut (/* boolean * result,
-                             PtrDocument docsel,
-                             PtrElement premsel,
-                             PtrElement dersel,
-                             int premcar,
-                             int dercar */);
+                             PtrDocument pDoc,
+                             PtrElement firstSel,
+                             PtrElement lastSel,
+                             int firstChar,
+                             int lastChar */);
 extern void StructPasteCommand (/* void */);
 extern void StructReturnKey (/* void */);
 extern void StructSelectLoadResources (/* void */);

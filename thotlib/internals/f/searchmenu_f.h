@@ -18,22 +18,22 @@ extern void TtcSearchEmptyReference ( Document document,
                                       View view );
 extern void CallbackReferenceMenu ( int val );
 extern void BuildReferenceMenu ( char *bufMenu,
-                                 int nbEntrees,
-                                 int *entreeChoisie );
+                                 int nbEntries,
+                                 int *selEntry );
 extern void BuildSearchReferences ( PtrDocument pDoc );
 extern void TtcSearchReference ( Document document,
                                  View view );
-extern void CallbackReferenceTo ( int Ref,
-                                  int Data );
+extern void CallbackReferenceTo ( int ref,
+                                  int data );
 extern void TtcSearchText ( Document document,
                             View view );
 extern void CallbackTextReplace ( int ref,
                                   int val,
                                   char *txt );
 extern void BuildGoToPageMenu ( PtrDocument pDoc,
-                                int VueDoc,
-                                int VueSch,
-                                boolean Assoc );
+                                int docView,
+                                int schView,
+                                boolean assoc );
 extern void CallbackGoToPageMenu ( int ref,
                                    int val );
 extern void SearchLoadResources ( void );
@@ -52,22 +52,22 @@ extern void TtcSearchEmptyReference (/* Document document,
                                         View view */);
 extern void CallbackReferenceMenu (/* int val */);
 extern void BuildReferenceMenu (/* char *bufMenu,
-                                   int nbEntrees,
-                                   int *entreeChoisie */);
+                                   int nbEntries,
+                                   int *selEntry */);
 extern void BuildSearchReferences (/* PtrDocument pDoc */);
 extern void TtcSearchReference (/* Document document,
                                    View view */);
-extern void CallbackReferenceTo (/* int Ref,
-                                    int Data */);
+extern void CallbackReferenceTo (/* int ref,
+                                    int data */);
 extern void TtcSearchText (/* Document document,
                               View view */);
 extern void CallbackTextReplace (/* int ref,
                                     int val,
                                     char *txt */);
 extern void BuildGoToPageMenu (/* PtrDocument pDoc,
-                                  int VueDoc,
-                                  int VueSch,
-                                  boolean Assoc */);
+                                  int docView,
+                                  int schView,
+                                  boolean assoc */);
 extern void CallbackGoToPageMenu (/* int ref,
                                      int val */);
 extern void SearchLoadResources (/* void */);

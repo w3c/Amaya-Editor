@@ -37,15 +37,15 @@ extern boolean DocIdentIsNull ( DocumentIdentifier Ident );
 extern void MakeCompleteName ( Name fname,
                                char *fext,
                                PathBuffer directory_list,
-                               PathBuffer nomabs,
-                               int *lg );
+                               PathBuffer completeName,
+                               int *length );
 extern void GetPictureFileName ( char *name,
-                                 char *fn );
-extern void FindCompleteName ( Name fname,
-                               char *fext,
+                                 char *fileName );
+extern void FindCompleteName ( Name fileName,
+                               char *extension,
                                PathBuffer directory,
-                               PathBuffer nomabs,
-                               int *lg );
+                               PathBuffer completeName,
+                               int *length );
 extern void GetDocIdent ( DocumentIdentifier * Ident,
                           Name docName );
 extern void GetDocName ( DocumentIdentifier Ident,
@@ -89,15 +89,15 @@ extern boolean DocIdentIsNull (/* DocumentIdentifier Ident */);
 extern void MakeCompleteName (/* Name fname,
                                  char *fext,
                                  PathBuffer directory_list,
-                                 PathBuffer nomabs,
-                                 int *lg */);
+                                 PathBuffer completeName,
+                                 int *length */);
 extern void GetPictureFileName (/* char *name,
-                                   char *fn */);
-extern void FindCompleteName (/* Name fname,
-                                 char *fext,
+                                   char *fileName */);
+extern void FindCompleteName (/* Name fileName,
+                                 char *extension,
                                  PathBuffer directory,
-                                 PathBuffer nomabs,
-                                 int *lg */);
+                                 PathBuffer completeName,
+                                 int *length */);
 extern void GetDocIdent (/* DocumentIdentifier * Ident,
                             Name docName */);
 extern void GetDocName (/* DocumentIdentifier Ident,

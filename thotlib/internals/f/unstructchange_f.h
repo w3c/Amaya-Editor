@@ -14,7 +14,7 @@ extern void SelectSiblings ( PtrElement * firstEl,
 extern void ReturnKey ( void );
 extern void DeleteNextChar ( int frame,
                              PtrElement pEl,
-                             boolean Before );
+                             boolean before );
 extern void NoStructSelectLoadResources ( void );
 
 #else /* __STDC__ */
@@ -27,7 +27,7 @@ extern void SelectSiblings (/* PtrElement * firstEl,
 extern void ReturnKey (/* void */);
 extern void DeleteNextChar (/* int frame,
                                PtrElement pEl,
-                               boolean Before */);
+                               boolean before */);
 extern void NoStructSelectLoadResources (/* void */);
 
 #endif /* __STDC__ */

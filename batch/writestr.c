@@ -6,7 +6,6 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "typetime.h"
 #include "storage.h"
 
 #define EXPORT extern

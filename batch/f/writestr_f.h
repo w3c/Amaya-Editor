@@ -9,28 +9,28 @@
 extern int UniqueIdent ( void );
 extern void WriteShort ( int n );
 extern void WriteSignedShort ( int n );
-extern void wrNom ( Name n );
+extern void WriteName ( Name name );
 extern void WriteBoolean ( boolean b );
-extern void WriteAttributeType ( AttribType T );
-extern void WriteConstructor ( RConstruct C );
-extern void WriteBasicType ( BasicType T );
-extern boolean WriteStructureSchema ( Name fname,
-                                      PtrSSchema pSchStr,
-                                      int Code );
+extern void WriteAttributeType ( AttribType typ );
+extern void WriteConstructor ( RConstruct constr );
+extern void WriteBasicType ( BasicType typ );
+extern boolean WriteStructureSchema ( Name fileName,
+                                      PtrSSchema pSS,
+                                      int code );
 
 #else /* __STDC__ */
 
 extern int UniqueIdent (/* void */);
 extern void WriteShort (/* int n */);
 extern void WriteSignedShort (/* int n */);
-extern void wrNom (/* Name n */);
+extern void WriteName (/* Name name */);
 extern void WriteBoolean (/* boolean b */);
-extern void WriteAttributeType (/* AttribType T */);
-extern void WriteConstructor (/* RConstruct C */);
-extern void WriteBasicType (/* BasicType T */);
-extern boolean WriteStructureSchema (/* Name fname,
-                                        PtrSSchema pSchStr,
-                                        int Code */);
+extern void WriteAttributeType (/* AttribType typ */);
+extern void WriteConstructor (/* RConstruct constr */);
+extern void WriteBasicType (/* BasicType typ */);
+extern boolean WriteStructureSchema (/* Name fileName,
+                                        PtrSSchema pSS,
+                                        int code */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

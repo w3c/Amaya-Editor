@@ -6,13 +6,13 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern boolean ReadStructureSchema ( Name fname,
-                                     PtrSSchema scheme );
+extern boolean ReadStructureSchema ( Name fileName,
+                                     PtrSSchema pSS );
 
 #else /* __STDC__ */
 
-extern boolean ReadStructureSchema (/* Name fname,
-                                       PtrSSchema scheme */);
+extern boolean ReadStructureSchema (/* Name fileName,
+                                       PtrSSchema pSS */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

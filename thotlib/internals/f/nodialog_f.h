@@ -32,17 +32,17 @@ extern void BuildSchPresNameMenu ( PtrSSchema pSchStr,
                                    Name name );
 extern boolean LinkReference ( void );
 extern void NewPosition ( PtrAbstractBox pAb,
+                          int DeltaX,
+                          int DeltaY,
+                          int frame,
+                          boolean Disp );
+extern void NewDimension ( PtrAbstractBox pAb,
                            int DeltaX,
                            int DeltaY,
                            int frame,
                            boolean Disp );
-extern void NewDimension ( PtrAbstractBox pAb,
-                            int DeltaX,
-                            int DeltaY,
-                            int frame,
-                            boolean Disp );
 extern boolean BothHaveNoSpecRules ( PtrElement pEl1,
-                                  PtrElement pEl2 );
+                                     PtrElement pEl2 );
 extern void ModPresent ( boolean OnlyChars );
 extern void ShowBox ( int frame,
                       PtrBox boite,
@@ -190,17 +190,17 @@ extern void BuildSchPresNameMenu (/* PtrSSchema pSchStr,
                                      Name name */);
 extern boolean LinkReference (/* void */);
 extern void NewPosition (/* PtrAbstractBox pAb,
+                            int DeltaX,
+                            int DeltaY,
+                            int frame,
+                            boolean Disp */);
+extern void NewDimension (/* PtrAbstractBox pAb,
                              int DeltaX,
                              int DeltaY,
                              int frame,
                              boolean Disp */);
-extern void NewDimension (/* PtrAbstractBox pAb,
-                              int DeltaX,
-                              int DeltaY,
-                              int frame,
-                              boolean Disp */);
 extern boolean BothHaveNoSpecRules (/* PtrElement pEl1,
-                                    PtrElement pEl2 */);
+                                       PtrElement pEl2 */);
 extern void ModPresent (/* boolean OnlyChars */);
 extern void ShowBox (/* int frame,
                         PtrBox boite,
