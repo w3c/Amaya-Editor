@@ -41,7 +41,7 @@ ThotBool AddLoadedImage (char *name, char *pathname,
 			 Document doc, LoadedImageDesc **desc)
 {
    LoadedImageDesc    *pImage, *previous, *sameImage;
-   char               *localname;
+   char               *localname = NULL;
 
    *desc = NULL;
    sameImage = NULL;
