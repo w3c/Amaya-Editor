@@ -68,6 +68,26 @@ void List_del (List **me)
 }
 
 /* ------------------------------------------------------------
+   List_rem
+   Removes an element of a linked list.
+   ------------------------------------------------------------*/
+void List_rem (List **list, char *object)
+{
+  List *item = *list;
+
+  while (item && (item->object != object)) {
+    list = &item->next;
+    item = *list;
+  }
+
+  if (item)
+    {
+      *list = item->next;
+      free (item);
+    }
+}
+
+/* ------------------------------------------------------------
    AnnotMeta_new
    Creates a new annotation metadata element
    ------------------------------------------------------------*/
@@ -87,33 +107,44 @@ AnnotMeta *AnnotMeta_new (void)
    ------------------------------------------------------------*/
 void AnnotList_free (List *annot_list)
 {
-  AnnotMeta *annot;
   List *list_ptr, *next;
 
   list_ptr = annot_list;
   while (list_ptr)
     {
-      annot = (AnnotMeta *) list_ptr->object;
-      if (annot->source_url) 
-	free (annot->source_url);
-      if (annot->author) 
-	free (annot->author);
-      if (annot->cdate) 
-	free (annot->cdate);
-      if (annot->mdate) 
-	free (annot->mdate);
-      if (annot->content_type) 
-	free (annot->content_type);
-      if (annot->content_length) 
-	free (annot->content_length);
-      if (annot->body_url) 
-	free (annot->body_url);
-      if (annot->body) 
-	free (annot->body);
+      Annot_free ((AnnotMeta *) list_ptr->object);
       next = list_ptr->next;
       free (list_ptr);
       list_ptr = next;
     }
+}
+
+/* ------------------------------------------------------------
+   Annot_free
+   Frees a single annotation.
+   ------------------------------------------------------------*/
+void Annot_free (AnnotMeta *annot)
+{
+  if (annot->annot_url)
+    free (annot->annot_url);
+  if (annot->source_url) 
+    free (annot->source_url);
+  if (annot->author) 
+    free (annot->author);
+  /* annot->type @@ */
+  if (annot->cdate) 
+    free (annot->cdate);
+  if (annot->mdate) 
+    free (annot->mdate);
+  if (annot->content_type) 
+    free (annot->content_type);
+  if (annot->content_length) 
+    free (annot->content_length);
+  if (annot->body_url) 
+    free (annot->body_url);
+  if (annot->body) 
+    free (annot->body);
+  free (annot);
 }
  
 /* ------------------------------------------------------------

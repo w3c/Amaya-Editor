@@ -192,6 +192,74 @@ AnnotMeta *annot;
 }
 
 /*-----------------------------------------------------------------------
+  LINK_RemoveLinkFromSource
+  -----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+void LINK_RemoveLinkFromSource (Document source_doc, AnnotMeta *annot)
+#else /* __STDC__*/
+void LINK_RemoveLinkFromSource (source_doc, annot)
+     Document source_doc;
+     AnnotMeta *annot;
+#endif /* __STDC__*/
+{
+  ElementType   elType;
+  Element       anchor, elCour, elSuiv;
+  AttributeType attrTypeAnnot, attrTypeName;
+  Attribute     attrAnnot, attrName;
+  int           lg;
+  ThotBool       removeAnnot;
+
+  CHAR_T *annotName = "xx";	/* @@ */
+  CHAR_T *textName =  TtaGetMemory (200);
+
+  elCour = SearchElementInDoc (source_doc, HTML_EL_BODY);
+  elType.ElSSchema          = 
+  attrTypeAnnot.AttrSSchema = 
+  attrTypeName.AttrSSchema  = TtaGetSSchema ("HTML", source_doc);
+  elType.ElTypeNum = HTML_EL_Anchor;
+  attrTypeAnnot.AttrTypeNum = HTML_ATTR_Annotation;
+  attrTypeName.AttrTypeNum = HTML_ATTR_NAME;
+
+  removeAnnot = FALSE;
+  anchor = TtaSearchTypedElement (elType, SearchForward, elCour);
+  while (elCour && anchor && !removeAnnot)
+  {
+    /* Searches for an element of type anchor */
+    if (anchor)
+    {
+      attrAnnot = TtaGetAttribute (anchor, attrTypeAnnot);
+      attrName = TtaGetAttribute (anchor, attrTypeName);
+      if (attrAnnot)
+      {
+        TtaGiveTextAttributeValue (attrName, textName, &lg);
+        removeAnnot = !strcmp (textName, annotName);
+	/* Suppress the annotation */
+	if (attrAnnot && removeAnnot)
+	  {
+	    TtaRemoveTree (anchor, source_doc);
+	    /* @and unlink the file, update the index ... */
+	    break;
+	  }
+      }
+      /* point to the next element */
+      elCour = elSuiv = anchor;
+      TtaNextSibling (&elSuiv);
+      while ((elSuiv == NULL) && (elCour != NULL))
+      {
+        elCour = elSuiv = TtaGetParent (elCour);
+        TtaNextSibling (&elSuiv);
+      }
+      elCour = elSuiv;
+    }
+    else
+      elCour = anchor;
+    anchor = TtaSearchTypedElement (elType, SearchForward, elCour);
+  }
+}
+
+
+/*-----------------------------------------------------------------------
    Procedure LINK_SaveLink (source_doc, annot_doc, labf, c1, labl, cN)
   -----------------------------------------------------------------------
    Writes the metadata describing an annotation file and its source
@@ -328,15 +396,17 @@ void LINK_LoadAnnotationIndex (doc, annotIndex)
     {
       annot = (AnnotMeta *) list_ptr->object;
       if ((el = TtaSearchElementByLabel (annot->labf, body)) == NULL)
-	/* @@ perhaps I should erase it from the list? */
-	fprintf (stderr, "This annotation has lost its parent!\n");
+	{
+	  fprintf (stderr, "This annotation has lost its parent!\n");
+	  Annot_free (annot);
+	}
       else 
 	{
 	  LINK_AddLinkToSource (doc, annot);
-	  AnnotMetaDataList[doc] = annot_list;
+	  List_add (&AnnotMetaDataList[doc], (void*) annot);
 	}
       /* @@@ */
-      list_ptr = list_ptr->next;
+      List_del (&list_ptr);
     }
 }
 

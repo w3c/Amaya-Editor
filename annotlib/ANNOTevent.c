@@ -385,11 +385,51 @@ void *context;
    if (!ctx)
      return;
 
-#if 0
    if (status == HT_OK)
-     LINK_LoadAnnotationIndex (doc, ctx->remoteAnnotIndex);
-   /* TtaFileUnlink (remoteAnnotIndex);*/
-#endif
+     {
+       int source_doc = DocumentMeta[doc]->source_doc;
+       AnnotMeta *annot = GetMetaData (source_doc, doc);
+
+#if 0 /* RRS - interim idea for updating the annotation.  Doesn't work
+	 unless the POST reply returns all the properties */
+       if (annot)
+	 {
+	   LINK_RemoveLinkFromSource (source_doc, annot);
+	   List_rem (AnnotMetaDataList[source_doc], annot);
+	   Annot_free (annot);
+	 }
+       LINK_LoadAnnotationIndex (doc, ctx->remoteAnnotIndex);
+       ANNOT_LoadAnnotation (source_doc, doc);
+#endif /*0*/
+
+       if (annot)
+	 {
+	   List* listP =
+	     RDF_parseFile (ctx->remoteAnnotIndex, ANNOT_LIST);
+	   if (listP)
+	     {
+	       AnnotMeta* returned_annot = (AnnotMeta *)listP->object;
+	       if (returned_annot->source_url
+		   && strcmp(returned_annot->source_url, annot->source_url))
+		 fprintf (stderr, "?oops - POST returned an annotation for a different source: %s vs %s\n",
+			  returned_annot->source_url, annot->source_url);
+	       if (returned_annot->annot_url) {
+		 TtaFreeMemory(annot->annot_url);
+		 annot->annot_url = returned_annot->annot_url;
+		 returned_annot->annot_url = NULL;
+	       }
+	       if (returned_annot->body_url) {
+		 TtaFreeMemory(annot->body_url); /* @@ unlink the file? */
+		 annot->body_url = returned_annot->body_url;
+		 returned_annot->body_url = NULL;
+	       }
+	       if (listP->next)
+		 fprintf (stderr, "?oops - POST returned more than one annotation\n");
+	       AnnotList_free (listP);
+	     }
+	 }
+       TtaFileUnlink (ctx->remoteAnnotIndex);
+     }
 
    TtaFreeMemory (ctx->remoteAnnotIndex);
    TtaFreeMemory (ctx);
