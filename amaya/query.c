@@ -78,6 +78,7 @@ struct _HTHost
 static HTList      *converters = NULL;	/* List of global converters */
 static HTList      *encodings = NULL;
 static int          object_counter = 0;	/* loaded objects counter */
+static  boolean    AmayaIsAlive;
 
 #include "answer_f.h"
 #include "query_f.h"
@@ -466,6 +467,9 @@ int                 status;
    if (!me)
       return HT_OK;		/* not an Amaya request */
 
+   if (!AmayaIsAlive)
+     me->reqStatus = HT_ABORT;
+
    if (status == HT_LOADED || status == HT_CREATED || status == HT_NO_DATA)
      error_flag = FALSE;
    else
@@ -587,7 +591,7 @@ int                 status;
 
    /* don't remove or Xt will hang up during the put */
 
-   if (me->method == METHOD_PUT || me->method == METHOD_POST)
+   if (AmayaIsAlive && me->method == METHOD_PUT || me->method == METHOD_POST)
      {
 	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE),
 		       me->urlName);
@@ -949,6 +953,7 @@ void                QueryInit ()
 #endif
 {
 
+   AmayaIsAlive = TRUE;
    AHTProfile_newAmaya (HTAppName, HTAppVersion);
 
    /* New AHTBridge stuff */
@@ -1055,6 +1060,10 @@ static int          LoopForStop (AHTReqContext * me)
 	     TtaHandleOneEvent (&ev);
 	  }
 
+	if (!AmayaIsAlive)
+	  /* Amaya was killed during one of the callback handlers */
+	  exit (0);
+
 #endif /* WWW_XWINDOWS */
      }
 
@@ -1085,6 +1094,9 @@ static int          LoopForStop (AHTReqContext * me)
   ----------------------------------------------------------------------*/
 void                QueryClose ()
 {
+
+   AmayaIsAlive = FALSE;
+
    /* remove all the handlers and callbacks that may output a message to
       a non-existent Amaya window */
 
@@ -1092,6 +1104,8 @@ void                QueryClose ()
    HTNet_deleteAfter (redirection_handler);
    HTAlertCall_deleteAll (HTAlert_global () );
    HTAlert_setGlobal ((HTList *) NULL);
+   HTEvent_setRegisterCallback ((HTEvent_registerCallback *) NULL);
+   HTEvent_setUnregisterCallback ((HTEvent_registerCallback *) NULL);
 
    Thread_deleteAll ();
  
