@@ -1993,7 +1993,7 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
       SetWindowText (GetDlgItem (hwnDlg, IDC_SHOWTARGET),
 		     TtaGetMessage (AMAYA, AM_SHOW_TARGETS));
       SetWindowText (GetDlgItem (hwnDlg, IDC_NUMBER),
-		     TtaGetMessage (AMAYA, AM_SECTIONNUMBER));
+		     TtaGetMessage (AMAYA, AM_SECTION_NUMBER));
       /* write the current values in the dialog entries */
       WIN_RefreshGeneralMenu (hwnDlg);
       break;
