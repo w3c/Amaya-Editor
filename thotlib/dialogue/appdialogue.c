@@ -337,6 +337,54 @@ HWND GetCurrentWindow ()
 }
 #endif /* _WINDOWS */
 
+#ifdef _MOTIF
+  /* This is not used in GTK because you can choose the text
+     you want to show when you create the button */
+static ThotWidget liteClue = NULL;
+/*----------------------------------------------------------------------
+   InitClue
+
+   Initialize the liteClue Widget for the application, handling the
+   tooltips on buttons.
+   Parameters:
+   toplevel: the application toplevel Shell.
+  ----------------------------------------------------------------------*/
+void InitClue (ThotWidget toplevel)
+{
+   Arg                 args[MAX_ARGS];
+   int                 n;
+   int                 wait_ms = 500; /* 500 ms i.e. 1/2 second */
+   char               *user_delay;
+   ThotColor           bg, fg;
+
+   if (liteClue != NULL) return;
+   liteClue = XtVaCreatePopupShell("popup_shell", xcgLiteClueWidgetClass,
+                                   toplevel, NULL);
+   
+   user_delay = TtaGetEnvString("TOOLTIPDELAY");
+   if (user_delay != NULL)
+     {
+       if (sscanf(user_delay,"%d",&wait_ms) != 1) 
+	 {
+	   TtaSetEnvString ("TOOLTIPDELAY", "500", TRUE);
+	   wait_ms = 500;
+	 }
+     }
+   bg = ColorPixel(ColorNumber("Yellow"));
+   fg = ColorPixel(ColorNumber("Black"));
+   n = 0;
+   XtSetArg (args[n], XtNbackground, bg);
+   n++;
+   XtSetArg (args[n], XtNforeground, fg);
+   n++;
+   XtSetArg (args[n], XtNfont, DefaultFont);
+   n++;
+   XtSetArg (args[n], XgcNwaitPeriod, wait_ms);
+   n++;
+   XtSetValues (liteClue, args, n);
+}
+#endif /* _MOTIF */
+
 /*----------------------------------------------------------------------
    TteInitMenuActions alloue la table des actions.                    
   ----------------------------------------------------------------------*/
@@ -1538,53 +1586,6 @@ static gboolean APP_ButtonCallbackGTK (ThotButton w, int frame)
 }
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WINDOWS) */
 
-#ifdef _MOTIF
-  /* This is not used in GTK because you can choose the text
-     you want to show when you create the button */
-static ThotWidget liteClue = NULL;
-/*----------------------------------------------------------------------
-   InitClue
-
-   Initialize the liteClue Widget for the application, handling the
-   tooltips on buttons.
-   Parameters:
-   toplevel: the application toplevel Shell.
-  ----------------------------------------------------------------------*/
-void InitClue (ThotWidget toplevel)
-{
-   Arg                 args[MAX_ARGS];
-   int                 n;
-   int                 wait_ms = 500; /* 500 ms i.e. 1/2 second */
-   char               *user_delay;
-   ThotColor           bg, fg;
-
-   if (liteClue != NULL) return;
-   liteClue = XtVaCreatePopupShell("popup_shell", xcgLiteClueWidgetClass,
-                                   toplevel, NULL);
-   
-   user_delay = TtaGetEnvString("TOOLTIPDELAY");
-   if (user_delay != NULL)
-     {
-       if (sscanf(user_delay,"%d",&wait_ms) != 1) 
-	 {
-	   TtaSetEnvString ("TOOLTIPDELAY", "500", TRUE);
-	   wait_ms = 500;
-	 }
-     }
-   bg = ColorPixel(ColorNumber("Yellow"));
-   fg = ColorPixel(ColorNumber("Black"));
-   n = 0;
-   XtSetArg (args[n], XtNbackground, bg);
-   n++;
-   XtSetArg (args[n], XtNforeground, fg);
-   n++;
-   XtSetArg (args[n], XtNfont, DefaultFont);
-   n++;
-   XtSetArg (args[n], XgcNwaitPeriod, wait_ms);
-   n++;
-   XtSetValues (liteClue, args, n);
-}
-#endif /* _MOTIF */
 
 /*----------------------------------------------------------------------
    TtaAddButton
