@@ -20,6 +20,7 @@
 #include "typebase.h"
 #include "fileaccess.h"
 #include "registry.h"
+#include "appstruct.h"
 
 /* error codes */
 
