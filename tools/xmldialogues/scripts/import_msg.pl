@@ -33,7 +33,6 @@ eval `cat $script_dir/Am_var_global.dat`;
 
 
 # inutile pour l'instant:
-#How do I get at the characters between tags?
 #Use XML_SetCharacterDataHandler.
 #    $us = Unicode::String->new( [$initial_value] )
 #    $us->latin1("something");
@@ -54,9 +53,11 @@ eval `cat $script_dir/Am_var_global.dat`;
 	my %labels;	#values of label (=key)and their reference 
 	my %texts;	#references (=key) and their text
 	my $current_label;	#to notice the current label occured ,in which we are
+	my $current_tag; #to nitice in which tag we are
 	my $old_text;
 	my $found = 0; #boolean used during the parse of a whole label 
 	my $lang_already_exist = 0 ;
+	my $encodage = ""; #to load the encoding type of the messages
 ################
 ## main main
 ################
@@ -83,7 +84,6 @@ eval `cat $script_dir/Am_var_global.dat`;
 
 	initlabel ();
 	inittext ();						
-
 	
 	open (IN,"<$basefile") || die "can't read $basefile because: $!\n";
 	open (OUT,">$newbasefile") || die "can't create $newbasefile because: $!\n";
@@ -96,13 +96,17 @@ eval `cat $script_dir/Am_var_global.dat`;
 	rename ( $newbasefile, $basefile )  || 	
 		 	die "can't rename $newbasefile to $basefile because of: $! \nthe old base still exist, the new base name is $newbasefile\n";							
 			
+debug ( "the encodage is $encodage ");
 	print "\tEnd IMPORT\n";
 }################
 ## End main
 ################
 
 sub debug { #wrote messages when necessary ($debug = 1)
-	if ($debug) { print $_[0];print "\n" }
+	if ($debug) { 
+		print $_[0];
+		print "\n" ;
+	}
 }#end debug
 
 #--------------------------------------------------------------------
@@ -203,9 +207,14 @@ sub addtext {
 
 #--------------------------------------------------------------------
 
-sub inittext { # fill the %text from $in_textfile that is the file source
+sub inittext { 
+# fill the %text from $in_textfile that is the file source
+# and search into the (first)line (# encoding= ...) the encoding 
 	my $line;
 	my $line_count = 0;
+	my $diese;
+	my $define;
+	my @rest;
 	
 # open $in_textlfile only if it exists and is readable
 	unless (-r $in_textfile){ print "fichier $in_textfile introuvable"}
@@ -213,11 +222,25 @@ sub inittext { # fill the %text from $in_textfile that is the file source
 
 	
 #	reads and adds all the texts
+
 #	warning, the file must be well-formed without errors and no comments	
 	while ( $line = <TEXT> ) {
 		$line_count++;
-		if ($line ne "") {addtext ($line, $line_count);}
+		if ($line =~ /^# encoding=/) {
+			($diese, $define, $encodage, @rest) = split( /\s/,$line);
+			debug("the encodage is$encodage voila");
+		}
+		elsif ($line ne "") {
+			addtext ($line, $line_count);
+		}
   	}
+	unless ( $encodage eq "utf8"|| $encodage eq "latin1" ) {
+		do {
+			print "\tin what type of encoding are messages ?\n\tutf8 (default) or latin1\n";
+			chomp ($encodage = <STDIN> );
+		}while ($encodage ne "utf8" && $encodage ne "latin1");
+	}
+	
 	close (TEXT) || die "problem during text'file is closed: $!";
 
 # verification
@@ -237,7 +260,7 @@ sub inittext { # fill the %text from $in_textfile that is the file source
 
 sub start_hndl {
 	my $expat = shift; 
-	my $element = shift; 	# element is the name of the tag
+ 	my $element = $current_tag = shift; 	# element is the name of the tag
 	my @attributes = ();
 	my $numberparam = 0; #double of parametres, because they're going by pair
 
@@ -259,8 +282,8 @@ sub start_hndl {
 			debug ("message necessitant comparaison");
 			$found = 1 ;
 			# A TRAITER			
-			print "this translate already exist for $current_label at ";
-			print $expat->current_line . "\n" ;
+#			print "this translate already exist for $current_label at ";
+#			print $expat->current_line . "\n" ;
 		}
 		print OUT "\t";	
 		addbegintag ( $element,$numberparam, @attributes );					
@@ -342,7 +365,9 @@ sub end_hndl { #	do the modification if necessary
 	}
 	elsif ($end_tag eq "control") { 
 #	if we add a new language, we have to mention it	
-		print OUT "\t<language>$language_code</language>\n" ;
+		unless ($lang_already_exist) {
+			print OUT "\t<language encoding=\"$encodage\">$language_code</language>\n" ;
+		}
 	}	
 	print OUT "</$end_tag>\n";
 }  # End endhndl
@@ -367,7 +392,9 @@ sub char_hndl {
 #	use Unicode::String qw(utf8 latin1);
 	my ($p, $data) = @_;
 	recopy ( $data );
-	
+	if ($current_tag eq "language" && $data eq $language_code ) {
+		$lang_already_exist = 1 ;		
+	}
 }  #End char_hndl
 
 #--------------------------------------------------------------------
@@ -376,7 +403,7 @@ sub comment_hndl { # it's just the comment that is automaticaly copied
 	my ($p, $data) = @_;
 	my $line = $p->current_line;
 	
-	debug ("Comment line $line:\t$data");
+#	debug ("Comment line $line:\t$data");
 	print OUT "<!--$data-->";
 }	#End comment_hndl
 

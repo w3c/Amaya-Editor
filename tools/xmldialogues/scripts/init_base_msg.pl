@@ -38,7 +38,7 @@ use strict;
 	
 #	read the file source only if it exists and is readable
 	unless (-r $in_filename ) {
-		print "fichier $in_filename introuvable"
+		print "fichier $in_filename introuvable";
 		}
    else {
 		open (IN, "<$in_filename") || die "erreur de lecture de $in_filename: $!";
@@ -46,9 +46,9 @@ use strict;
 
 #	drop the comments at the beginning	
 	do {
-	$line = <IN>;
-	chomp ($line);
-	($define,$ref_name,$value,@rest) = split (/ /, $line);
+		$line = <IN>;
+		chomp ($line);
+		($define,$ref_name,$value,@rest) = split (/ /, $line);
 	}	while ($line eq "" || $define ne "#define");
 	
 #	the first line wich we are interested in is already red	
@@ -57,13 +57,15 @@ use strict;
 #	reads and adds all the labels
 #	warning, the rest of the file must be well-formed without errors 	
 	while ($line = <IN>) {
-	chomp ($line);
-	($define,$ref_name,$value) = split (/ /, $line);
-	if ($line ne "" && $define eq "#define" ) {
-		for ($i = 0,$i <= 5,$i++) {
-			$ref_name =~ s/\s//g; # to avoid that $ref_name still had spaces
-			}						 # many times because one isn't always enough
-		add ($ref_name);
+		chomp ($line);
+		$line =~ s/\s+/ /g;
+		($define,$ref_name,$value) = split (/ /, $line);
+#		print "$ref_name\n";
+		if ($line ne "" && $define eq "#define" ) {
+			for ($i = 0,$i <= 5,$i++) {
+				$ref_name =~ s/\s//g; # to avoid that $ref_name still had spaces
+				}						 # many times because one isn't always enough
+			add ($ref_name);
 		}
   	}
    

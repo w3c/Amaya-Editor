@@ -12,6 +12,9 @@
 use strict;
 use XML::Parser;
 use Unicode::String qw(utf8 latin1);
+	#to indicate that all string will be in utf8 (as they are read) by default
+#	Unicode::String->stringify_as( utf8 );
+ 
 use IO::File;
 
 ################
@@ -22,10 +25,10 @@ use IO::File;
 	my $sufix = "-amayamsg"; # sufix of the dialogues files = result
 	
 	my @list_of_lang_occur = ();
-	my $curent_label;
+	my $current_label;
 #	my $last_element_occur;
-	my $curent_language ;
-	my $curent_element; #to know in wuitch tag we are to treat texts
+	my $current_language ;
+	my $current_element; #to know in wuitch tag we are to treat texts
 	my $reference_value = 0;
 
 	my @list_of_dialogues_files = ();#to list the exacts names of the created files
@@ -39,15 +42,18 @@ use IO::File;
 	
 	my @text_patches = (); #used because with the html, the text is cut in several patches
 	
-	
+	my %language_out_codages; 	#To indicate in which cadage the output file are
+										#some needs encoding utf-8 to iso-latin1
+	my $codage ; 	#because the codage is an attribute of <language> and the
+						#coresspondig language is nown after as a char
 {
 
 
 # declaration of the parser
 	my $parser = new XML::Parser (
-				ErrorContext  => 0 	#number of lines shown 
+				ErrorContext  => 0 ,	#number of lines shown 
 											#after a mistake  
-				#, NoExpand	=> 1  #like his name (i.e. don't
+				NoExpand	=> 1  #like his name (i.e. don't 
 									#translate '&lt'; into '<') 
              );
 #	declaration of the subs used when events are noted	
@@ -94,7 +100,7 @@ sub init_record_verification { #to reinititialise to 0
 
 sub start_hndl {
 	my $expat = shift; 
-	$curent_element = my $element = shift; 	# element is the name of the tag
+	$current_element = my $element = shift; 	# element is the name of the tag
 	my %attributes ;
 	my $numberparam = 0; #double of parameters, because they're going by pair
 	my $string ;
@@ -118,7 +124,7 @@ sub start_hndl {
 				
 	if ( $element eq "message" ) {
 		if ( $attributes {"xml::lang"} ) {			 
-			$curent_language = $attributes{'xml::lang'} ;
+			$current_language = $attributes{'xml::lang'} ;
 		}
 		else {
 			print "the message at line ". $expat->current_line ."don't have a lang attribute\n"
@@ -126,15 +132,21 @@ sub start_hndl {
 		@text_patches = (); # to have a new text
 	}
 	elsif ( $element eq "label") {
-		$curent_label = $attributes { "define"};#	to remember the last label if there's a text between begin and end tag
-		$string = "#define $curent_label" . "\t\t" . $reference_value++ ."\n" ;
+		$current_label = $attributes { "define"};#	to remember the last label if there's a text between begin and end tag
+		$string = "#define $current_label" . "\t\t" . $reference_value ."\n" ;
 		print HEADFILE $string ; 
 	}
 	elsif ( $element eq "base_message") {
 		#nothing	
 	}
 	elsif ( $element eq "language" ) {
-		#nothing
+		#store the codage specify for the language
+		if ( $attributes {"encoding"} ) {			 
+			$codage = $attributes{'encoding'} ;
+		}
+		else {
+			print "the language at line ". $expat->current_line ."don't have a codage attribute\n"
+		}
 	}	
 	elsif ($element eq "control") {
 		#nothing
@@ -159,10 +171,24 @@ sub open_file {
   return $fh;
 }
 #--------------------------------------------------------------------
-sub print_in_a_file {
-	my  $fhs = shift;
-	
-	print $fhs shift;
+sub print_in_a_file { 	#as is name, and take the good codage if it's specified
+	my $fhs = shift;
+	my $string = Unicode::String->new( shift ) ;
+ 
+	if (defined ( $language_out_codages{$current_language} ) ) {
+		if ( $language_out_codages{$current_language} eq "latin1" ) {
+			print $fhs $string->latin1 ;
+		}
+		elsif ( $language_out_codages{$current_language} eq "utf8" ) {
+			print $fhs $string->utf8 ;
+		}
+		else {
+			print $fhs $string->utf8 ;
+		}	
+	}
+	else {
+		print $fhs $string->utf8;
+	}
 }
 #--------------------------------------------------------------------
 
@@ -177,13 +203,13 @@ sub end_hndl { #	do the modification if necessary
 	if ( $end_tag eq "message" ) {
 #			print @text_patches ;
 			$string = join ( '',@text_patches );
-			if ( $curent_language eq "en") { # to reparate/fill the lakes
+			if ( $current_language eq "en") { # to reparate/fill the lakes
 				$english_text_reference= "$reference_value " .  "**" . $string ;
 			}				
 			$string = "$reference_value " . $string ;
-			$fh =  $list_handles [ $handle_names_ref{$curent_language} ];
+			$fh =  $list_handles [ $handle_names_ref{$current_language} ];
 	    	print_in_a_file ( $fh,"$string\n");
-			$record_verification {$curent_language } = 1 ;
+			$record_verification {$current_language } = 1 ;
 			
 	}	
 	elsif ( $end_tag eq "control" ) { 	#one time only
@@ -198,7 +224,8 @@ sub end_hndl { #	do the modification if necessary
 		init_record_verification ();		
 	}
 		
-	elsif ( $end_tag eq "label") {	#if it lake translates
+	elsif ( $end_tag eq "label") {	
+		#if it lake translates
 		foreach $prefix ( keys (%record_verification) ) {
 #			print $prefix . "\n";
 			if ($record_verification {$prefix } == 0) {
@@ -206,17 +233,10 @@ sub end_hndl { #	do the modification if necessary
 #				print $fh . "\n";			
 		      $fh = $list_handles [$fh];
 #				print $fh . "\n";
-
-
-
-
 				print_in_a_file ( $fh ,"$english_text_reference\n" );
-
-
-
-
 			}
 		}
+		$reference_value++ ; # to increment the reference number
 		init_record_verification ();
 	}
 	elsif ($end_tag eq "messages") {
@@ -236,23 +256,25 @@ sub end_hndl { #	do the modification if necessary
 
 sub char_hndl {
 #	use Unicode::String qw(utf8 latin1);
-	my ($p, $data) = @_;
+	my $p = shift ; 
+	my $data = Unicode::String->new( shift ) ;
 	my $fh;
 	
 	if  ($data ne "" && $data =~ /[^\n\t]/ ) {
-#	print "$data\n";
-		if ( $curent_element eq "language") {
+		if ( $current_element eq "language") {
 		   $data =~ s/\s+// ; 
 			if ( length ($data) > 1) {
 			   push (@list_of_lang_occur , $data ) ;
+				$language_out_codages { $data } = $codage ;
 			}
 		}
-		elsif ( $curent_element eq "message" && length ($data) > 1) {
-			print "$data\n";
-			@text_patches = (@text_patches, $data);				
+		elsif ( $current_element eq "message" && length ($data) >= 1) {
+			$data =~ s/&amp;/&/g;
+			$data	=~ s/&lt;/</g;
+			push (@text_patches, $data);				
 		}
 	}
-	
+
 }  #End char_hndl
 
 #--------------------------------------------------------------------
