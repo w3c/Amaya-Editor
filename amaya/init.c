@@ -2066,7 +2066,7 @@ ThotBool local;
 	  ustrcpy (ptr, TEXT("html"));
 	}
       else
-	ustrcat (ptr, TEXT(".html"));
+	ustrcat (tempfile_new, TEXT(".html"));
       TtaFileUnlink (tempfile_new);
 #ifndef _WINDOWS
       rename (tempfile, tempfile_new);
