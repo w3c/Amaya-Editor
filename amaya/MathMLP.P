@@ -59,7 +59,7 @@ DEFAULT
    HorizRef: Enclosed . HRef;
    Height: Enclosed . Height;
    Width: Enclosed  . Width;
-   VertPos: HRef = Previous . Href;
+   VertPos: HRef = Previous . HRef;
    HorizPos: Left = Previous . Right;
    LineBreak: No;
    Font: Enclosing =;
@@ -666,8 +666,8 @@ RULES
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + 1;
-		VertPos: Top = Previous . Bottom;
+		HorizPos: Left = Previous . Right + 1;
+		VertPos: HRef = Previous . HRef;
 		Font: Helvetica;
 		END;
 	END;

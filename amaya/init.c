@@ -337,10 +337,10 @@ char               *data;
 	  newType.ElTypeNum = MathML_EL_MSUBSUP;
 	  break;
 	case 4:
-	  newType.ElTypeNum = MathML_EL_MSUB;
+	  newType.ElTypeNum = MathML_EL_MSUP;
 	  break;
 	case 5:
-	  newType.ElTypeNum = MathML_EL_MSUP;
+	  newType.ElTypeNum = MathML_EL_MSUB;
 	  break;
 	case 6:
 	  newType.ElTypeNum = MathML_EL_Block;
@@ -475,6 +475,7 @@ View                view;
       TtaSetDialoguePosition ();
     }
   TtaShowDialogue (MathsDialogue + FormMaths, TRUE);
+  /*TtcDisplayGreekKeyboard (doc, view);*/
   KeyboardsLoadResources ();
 }
 #endif /* MATHML */

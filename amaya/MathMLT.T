@@ -124,6 +124,7 @@ RULES
 	end;
 
 #include "Text_SGML.inc"
+#include "greek.sgml"
 SYMBTRANSLATE
         BEGIN
 	'i'     -> '&Integral;';

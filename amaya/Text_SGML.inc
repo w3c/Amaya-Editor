@@ -6,6 +6,8 @@ TextTRANSLATE Latin
 	BEGIN
 	'<'    -> '&lt;';
 	'&'    -> '&amp;';
+	'\32'  -> '&ApplyFunction;';
+	'\129' -> '&InvisibleTimes;';
 	'\212' -> '\12'; { '&CTLrc;' }
 	'\230' -> 'oe'; { '&oelig;'}
 	'\231' -> 'OE'; {'&OElig;'}
