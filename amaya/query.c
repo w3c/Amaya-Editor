@@ -1014,7 +1014,7 @@ static void         AHTAlertInit ()
    HTAlert_add (AHTProgress, HT_A_PROGRESS);
    HTAlert_add ((HTAlertCallback *) Add_NewSocket_to_Loop, HT_PROG_CONNECT);
    HTAlert_add (AHTError_print, HT_A_MESSAGE);
-   HTError_setShow (~((int) 0 ) & ~((int) HT_ERR_SHOW_DEBUG));	/* process all messages except debug ones*/
+   HTError_setShow (~((unsigned int) 0 ) & ~((unsigned int) HT_ERR_SHOW_DEBUG));	/* process all messages except debug ones*/
    HTAlert_add (AHTConfirm, HT_A_CONFIRM);
    HTAlert_add (AHTPrompt, HT_A_PROMPT);
    HTAlert_add (AHTPromptPassword, HT_A_SECRET);

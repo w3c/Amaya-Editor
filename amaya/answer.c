@@ -420,7 +420,7 @@ HTRequest          *request;
    while ((pres = (HTError *) HTList_nextObject (cur)))
      {
 	index = HTError_index (pres);
-	if (HTError_doShow (pres))
+	/*	if (HTError_doShow (pres)) */
 	  {			/* Error number */
 	     switch (index)
 		   {
@@ -439,12 +439,14 @@ HTRequest          *request;
 				 StrAllocCat (me->error_stream, buffer);
 			       }
 			   }
+			 return;
 			 break;
 		      default:
 			if (pres->par != NULL)
 			   {
 			     StrAllocCat (me->error_stream, pres->par);
 			   }
+			 return;
 			 break;
 		   }
 	  }
