@@ -379,6 +379,16 @@ BEGIN
                     11
 END
 
+PRINTPROGRESSDLG DIALOG DISCARDABLE  0, 0, 122, 50
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Printing ..."
+FONT 8, "MS Sans Serif"
+BEGIN
+    PUSHBUTTON      "Cancel",IDCANCEL,38,29,50,14
+    CTEXT           "Abort printing",IDC_ABORTPRNT,7,13,108,11,
+                    SS_CENTERIMAGE
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -486,6 +496,14 @@ BEGIN
         RIGHTMARGIN, 211
         TOPMARGIN, 7
         BOTTOMMARGIN, 112
+    END
+
+    PRINTPROGRESSDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 115
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 43
     END
 END
 #endif    // APSTUDIO_INVOKED

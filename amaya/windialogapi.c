@@ -49,20 +49,23 @@
 
 #define MenuMaths             1
 
-extern HINSTANCE hInstance;
-extern HDC       TtPrinterDC;
-extern char*     AttrHREFvalue;
-extern char      ChkrCorrection[MAX_PROPOSAL_CHKR+1][MAX_WORD_LEN];
-extern BOOL      TtIsPrinterTrueColor;
+extern HINSTANCE    hInstance;
+extern HDC          TtPrinterDC;
+extern char*        AttrHREFvalue;
+extern char         ChkrCorrection[MAX_PROPOSAL_CHKR+1][MAX_WORD_LEN];
+extern BOOL         TtIsPrinterTrueColor;
+extern BOOL         bUserAbort;
+extern HWND         hWndParent;
 
-static char   urlToOpen [256];
-static char   message [300];
-static char   message2 [300];
-static char   wndTitle [100];
-static char   currentLabel [100];
-static char   currentRejectedchars [100];
-static char   currentPathName [100];
-static char   currentFileToPrint [MAX_PATH];
+static char         urlToOpen [256];
+static char         message [300];
+static char         message2 [300];
+static char         wndTitle [100];
+static char         currentLabel [100];
+static char         currentRejectedchars [100];
+static char         currentPathName [100];
+static char         currentFileToPrint [MAX_PATH];
+static char*        lpPrintTemplateName = (char*) 0;
 static int          currentDoc ;
 static int          currentView ;
 static int          currentRef;
@@ -156,6 +159,7 @@ LRESULT CALLBACK ChangeFormatDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK GreekKeyboardDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK AuthenticationDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK BackgroundImageDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK PrintInProgressDlgProc (HWND, UINT, WPARAM, LPARAM);
 #else  /* !__STDC__ */
 LRESULT CALLBACK LinkDlgProc ();
 LRESULT CALLBACK HelpDlgProc ();
@@ -178,7 +182,43 @@ LRESULT CALLBACK ChangeFormatDlgProc ();
 LRESULT CALLBACK GreekKeyboardDlgProc ();
 LRESULT CALLBACK AuthenticationDlgProc ();
 LRESULT CALLBACK BackgroundImageDlgProc ();
+LRESULT CALLBACK PrintInProgressDlgProc ();
 #endif /* __STDC__ */
+
+/* ------------------------------------------------------------------------ *
+ *                                                                          *
+ *  FUNCTION   : GetPrinterDC()                                             *
+ *                                                                          *
+ *  PURPOSE    : Read WIN.INI for default printer and create a DC for it.   *
+ *                                                                          *
+ *  RETURNS    : A handle to the DC if successful or NULL otherwise.        *
+ *                                                                          *
+ * ------------------------------------------------------------------------ */
+HDC PASCAL GetPrinterDC () {
+
+    PRINTDLG printDlg;
+
+    memset(&printDlg, 0, sizeof(PRINTDLG));
+    printDlg.lStructSize = sizeof(PRINTDLG);
+    printDlg.Flags       = PD_RETURNDC;
+    printDlg.hwndOwner   = GetCurrentWindow ();
+    printDlg.hInstance   = (HANDLE) NULL;
+
+    // Display the PRINT dialog box. */
+
+    if (PrintDlg (&printDlg) == TRUE) {
+       if (lpPrintTemplateName) {
+          TtaFreeMemory (lpPrintTemplateName);
+		  lpPrintTemplateName = (char*) 0;
+	   }
+
+/*       lpPrintTemplateName = (char*) TtaGetMemory (strlen (printDlg.lpPrintTemplateName) + 1);
+       strcpy (lpPrintTemplateName, printDlg.lpPrintTemplateName); */
+       return (printDlg.hDC);        
+    } else
+          return( NULL );
+
+}
 
 /* ----------------------------------------------------------------------*/
 /* ----------------------------------------------------------------------*/
@@ -637,7 +677,6 @@ char* image_location;
 }
 
 
-
         /*********************************************************
          *                                                       *
          *                   C A L L B A C K S                   *
@@ -852,6 +891,13 @@ LPARAM lParam;
 
                    CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_PRINTER);
 
+                   TtPrinterDC = GetPrinterDC ();
+                   if (TtPrinterDC) {
+                      SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, lpPrintTemplateName);
+                      WinInitPrinterColors ();
+				   }
+
+#                  if 0 /******************************************/
                    EnumPrinters (PRINTER_ENUM_LOCAL, NULL, 5, (LPBYTE) "", 0, &dwNeeded, &dwReturned) ;
 
                    // Alloue de l’espace pour le tableau PRINTER_INFO_5
@@ -868,6 +914,7 @@ LPARAM lParam;
                        TtPrinterDC = CreateDC (NULL, pInfo5->pPrinterName,  NULL, NULL);
 					   WinInitPrinterColors ();
 				   }
+#                  endif /* 0 *************************************/
                 } else if (toPostscript) {
                      CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_POSTSCRIPT);
                      SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, currentFileToPrint);
@@ -911,6 +958,11 @@ LPARAM lParam;
 							toPostscript = FALSE;
                             CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_PRINTER);
 
+                            TtPrinterDC = GetPrinterDC ();
+							if (TtPrinterDC)
+                               SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, lpPrintTemplateName);
+
+#                           if 0 /**************************************************/
                             EnumPrinters (PRINTER_ENUM_LOCAL, NULL, 5, (LPBYTE) "", 0, &dwNeeded, &dwReturned) ;
 
                             // Alloue de l’espace pour le tableau PRINTER_INFO_5
@@ -926,6 +978,7 @@ LPARAM lParam;
                                 SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, pInfo5->pPrinterName);
                                 TtPrinterDC = CreateDC (NULL, pInfo5->pPrinterName,  NULL, NULL);
 							}
+#                           endif /*0 **************************************************/
 
 						    ThotCallback (numMenuSupport + baseDlg, INTEGER_DATA, (char*)0);
                             break;

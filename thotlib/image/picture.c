@@ -132,6 +132,11 @@ static unsigned char MirrorBytes[0x100] = {
 };
 
 #ifdef _WINDOWS 
+
+/* Macro to determine to round off the given value to the closest byte */
+#define WIDTHBYTES(i)   ((i+31)/32*4)
+
+
 #ifdef __STDC__
 void LoadPicture2Print (int, PtrBox, PictInfo*);
 #else  /* __STDC__ */
@@ -144,6 +149,214 @@ BOOL pic2print = FALSE ;
 int  bgRed;
 int  bgGreen;
 int  bgBlue;
+
+/*----------------------------------------------------------------------*
+ *                                                                      *
+ * FUNCTION: DibNumColors(VOID FAR * pv)                                *
+ *                                                                      *
+ * PURPOSE : Determines the number of colors in the DIB by looking at   *
+ *           the BitCount filed in the info block.                      *
+ *                                                                      *
+ * RETURNS : The number of colors in the DIB.                           *
+ *                                                                      *
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+WORD DibNumColors (VOID FAR* pv)
+#else  /* !__STDC__ */
+WORD DibNumColors (pv)
+VOID FAR* pv;
+#endif /* __STDC__ */
+{
+    INT                 bits;
+    LPBITMAPINFOHEADER  lpbi;
+    LPBITMAPCOREHEADER  lpbc;
+
+    lpbi = ((LPBITMAPINFOHEADER)pv);
+    lpbc = ((LPBITMAPCOREHEADER)pv);
+
+    /*  With the BITMAPINFO format headers, the size of the palette
+     *  is in biClrUsed, whereas in the BITMAPCORE - style headers, it
+     *  is dependent on the bits per pixel ( = 2 raised to the power of
+     *  bits/pixel).
+     */
+    if (lpbi->biSize != sizeof (BITMAPCOREHEADER)) {
+       if (lpbi->biClrUsed != 0)
+          return (WORD)lpbi->biClrUsed;
+       bits = lpbi->biBitCount;
+	} else
+          bits = lpbc->bcBitCount;
+
+    switch (bits) {
+          case 1:  return   2;
+          case 4:  return  16;
+          case 8:  return 256;
+          default: return   0; /* A 24 bitcount DIB has no color table */
+	}
+}
+
+/*----------------------------------------------------------------------*
+ *                                                                      *
+ * FUNCTION:  PaletteSize(VOID FAR * pv)                                *
+ *                                                                      *
+ * PURPOSE :  Calculates the palette size in bytes. If the info. block  *
+ *            is of the BITMAPCOREHEADER type, the number of colors is  *
+ *            multiplied by 3 to give the palette size, otherwise the   *
+ *            number of colors is multiplied by 4.                      *                                                       *
+ *                                                                      *
+ * RETURNS :  Palette size in number of bytes.                          *
+ *                                                                      *
+ *----------------------------------------------------------------------*/
+WORD PaletteSize (VOID FAR * pv)
+{
+    LPBITMAPINFOHEADER lpbi;
+    WORD               NumColors;
+
+    lpbi      = (LPBITMAPINFOHEADER)pv;
+    NumColors = DibNumColors(lpbi);
+
+    if (lpbi->biSize == sizeof(BITMAPCOREHEADER))
+        return (WORD)(NumColors * sizeof(RGBTRIPLE));
+    else
+        return (WORD)(NumColors * sizeof(RGBQUAD));
+}
+/*----------------------------------------------------------------------
+ *                                                                      *
+ *  FUNCTION   : DibInfo (LPBITMAPINFOHEADER lpbi)                      *
+ *                                                                      *
+ *  PURPOSE    : Retrieves the DIB info associated with a CF_DIB        *
+ *               format memory block.                                   *
+ *                                                                      *
+ *  RETURNS    : TRUE  - if successful.                                 *
+ *               FALSE - otherwise                                      *
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+BOOL DibInfo (LPBITMAPINFOHEADER lpbi)
+#else /* !__STDC__ */
+BOOL DibInfo (lpbi)
+LPBITMAPINFOHEADER lpbi;
+#endif /* __STDC__ */
+{
+    if (lpbi){
+       /* fill in the default fields */
+       if (lpbi->biSize != sizeof (BITMAPCOREHEADER)) {
+          if (lpbi->biSizeImage == 0L)
+             lpbi->biSizeImage = WIDTHBYTES (lpbi->biWidth * lpbi->biBitCount) * lpbi->biHeight;
+
+          if (lpbi->biClrUsed == 0L)
+             lpbi->biClrUsed = DibNumColors (lpbi);
+		}
+        return TRUE;
+    }
+    return FALSE;
+}
+
+/* ---------------------------------------------------------------------- *
+ *                                                                        *
+ * FUNCTION:  PrintDIB(HWND hWnd, HDC hDC, int x, int y, int dx, int dy)  *
+ *                                                                        *
+ * PURPOSE :  Set the DIB bits to the printer DC.                         *
+ *                                                                        *
+ * ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void PrintDIB (LPBITMAPINFOHEADER lpBmpInfo, LPBYTE lpBits, HWND hWnd, HDC hDC, int x, int y, int dx, int dy)
+#else  /* !__STDC__ */
+void PrintDIB (lpBmpInfo, lpBits, hWnd, hDC, x, y, dx, dy)
+LPBITMAPINFOHEADER lpBmpInfo;
+LPBYTE             lpBits;
+HWND               hWnd; 
+HDC                hDC; 
+int                x; 
+int                y; 
+int                dx; 
+int                dy;
+#endif /* __STDC__*/
+{
+    SetDIBitsToDevice (TtPrinterDC, x, y, lpBmpInfo->biWidth, lpBmpInfo->biHeight, 0, 0, 0, lpBmpInfo->biHeight, lpBits, lpBmpInfo, DIB_RGB_COLORS);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+LPBITMAPINFO CreateBitmapInfoStruct(HWND hwnd, HBITMAP hBmp) 
+#else /* !__STDC__ */
+LPBITMAPINFO CreateBitmapInfoStruct(hwnd, hBmp) 
+HWND    hwnd; 
+HBITMAP hBmp; 
+#endif /* __STDC__ */
+{ 
+    BITMAP      bmp; 
+    LPBITMAPINFO pbmi; 
+    WORD        cClrBits; 
+ 
+    /* Retrieve the bitmap's color format, width, and height. */ 
+ 
+    if (!GetObject (hBmp, sizeof(BITMAP), (LPSTR)&bmp)) 
+       WinErrorBox (hwnd); 
+ 
+
+    /* Convert the color format to a count of bits. */ 
+ 
+    cClrBits = (WORD) (bmp.bmPlanes * bmp.bmBitsPixel); 
+ 
+    if (cClrBits != 1) { 
+       if (cClrBits <= 4) 
+          cClrBits = 4; 
+       else if (cClrBits <= 8) 
+            cClrBits = 8; 
+       else if (cClrBits <= 16) 
+            cClrBits = 16; 
+       else if (cClrBits <= 24) 
+            cClrBits = 24; 
+       else 
+           cClrBits = 32; 
+	}
+ 
+    /* 
+     * Allocate memory for the BITMAPINFO structure. (This structure 
+     * contains a BITMAPINFOHEADER structure and an array of RGBQUAD data 
+     * structures.) 
+     */ 
+ 
+    if (cClrBits != 24) 
+       pbmi = (LPBITMAPINFO) LocalAlloc (LPTR, sizeof (BITMAPINFOHEADER) + sizeof (RGBQUAD) * (2^cClrBits)); 
+ 
+    /* 
+     * There is no RGBQUAD array for the 24-bit-per-pixel format. 
+     */ 
+ 
+    else 
+         pbmi = (LPBITMAPINFO) LocalAlloc(LPTR, sizeof(BITMAPINFOHEADER)); 
+ 
+    /* Initialize the fields in the BITMAPINFO structure. */ 
+ 
+    pbmi->bmiHeader.biSize     = sizeof (BITMAPINFOHEADER); 
+    pbmi->bmiHeader.biWidth    = bmp.bmWidth; 
+    pbmi->bmiHeader.biHeight   = bmp.bmHeight; 
+    pbmi->bmiHeader.biPlanes   = bmp.bmPlanes; 
+    pbmi->bmiHeader.biBitCount = bmp.bmBitsPixel; 
+    if (cClrBits < 24) 
+       pbmi->bmiHeader.biClrUsed = 2^cClrBits; 
+
+    /* If the bitmap is not compressed, set the BI_RGB flag. */  
+    pbmi->bmiHeader.biCompression = BI_RGB; 
+ 
+    /* 
+     * Compute the number of bytes in the array of color 
+     * indices and store the result in biSizeImage. 
+     */ 
+ 
+    pbmi->bmiHeader.biSizeImage = (pbmi->bmiHeader.biWidth + 7) / 8 * pbmi->bmiHeader.biHeight * cClrBits; 
+ 
+    /* 
+     * Set biClrImportant to 0, indicating that all of the 
+     * device colors are important. 
+     */ 
+ 
+    pbmi->bmiHeader.biClrImportant = 0; 
+ 
+    return pbmi; 
+} 
+
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -431,25 +644,6 @@ PictInfo           *imageDesc;
    by the drawable.                                                          
    if picXOrg or picYOrg are postive, the copy operation is shifted      
   ----------------------------------------------------------------------*/
-#ifdef _WINDOWS
-#ifdef __STDC__
-static void         WIN_LayoutPicture (HDC currentDeviceContext, BOOL trueColorsDevice, Pixmap pixmap, Drawable drawable, int picXOrg, int picYOrg, int w, int h, int xFrame, int yFrame, int frame, PictInfo *imageDesc)
-#else  /* __STDC__ */
-static void         WIN_LayoutPicture (currentDeviceContext,trueColorsDevice, pixmap, drawable, picXOrg, picYOrg, w, h, xFrame, yFrame, frame, imageDesc)
-HDC                 currentDeviceContext; 
-BOOL                trueColorsDevice;
-Pixmap              pixmap;
-Drawable            drawable;
-int                 picXOrg;
-int                 picYOrg;
-int                 w;
-int                 h;
-int                 xFrame;
-int                 yFrame;
-int                 frame;
-PictInfo           *imageDesc;
-#endif /* __STDC__ */
-#else  /* _WINDOWS */
 #ifdef __STDC__
 static void         LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg, int picYOrg, int w, int h, int xFrame, int yFrame, int frame, PictInfo *imageDesc)
 #else  /* __STDC__ */
@@ -465,7 +659,6 @@ int                 yFrame;
 int                 frame;
 PictInfo           *imageDesc;
 #endif /* __STDC__ */
-#endif /* _WINDOWS */
 {
 
   ViewFrame*        pFrame;
@@ -501,10 +694,10 @@ PictInfo           *imageDesc;
     }
 # ifdef _WINDOWS 
 		 
-  if (!trueColorsDevice) {
-     WIN_InitSystemColors (currentDeviceContext);
-     SelectPalette (currentDeviceContext, TtCmap, FALSE);
-     nbPalColors = RealizePalette (currentDeviceContext);
+  if (!TtIsTrueColor) {
+     WIN_InitSystemColors (TtDisplay);
+     SelectPalette (TtDisplay, TtCmap, FALSE);
+     nbPalColors = RealizePalette (TtDisplay);
   }
 # endif /* _WINDOWS */
 
@@ -529,23 +722,24 @@ PictInfo           *imageDesc;
 #         else /* _WINDOWS */
 	case RealSize:
 	  if ((imageDesc->bgRed == -1 && imageDesc->bgGreen == -1 && imageDesc->bgBlue == -1) || imageDesc->PicType == -1) {
-	    hMemDC = CreateCompatibleDC (currentDeviceContext);
+	    hMemDC = CreateCompatibleDC (TtDisplay);
 	    hOldBitmap1 = SelectObject (hMemDC, pixmap);
-	    SetMapMode (hMemDC, GetMapMode (currentDeviceContext));
+	    SetMapMode (hMemDC, GetMapMode (TtDisplay));
 	    GetObject (pixmap, sizeof (BITMAP), (LPVOID) &bm) ;
 	    ptSize.x = bm.bmWidth;
 	    ptSize.y = bm.bmHeight;
-	    DPtoLP (currentDeviceContext, &ptSize, 1);
+	    DPtoLP (TtDisplay, &ptSize, 1);
 	    ptOrg.x = 0;
 	    ptOrg.y = 0;
 	    DPtoLP (hMemDC, &ptOrg, 1);
 	    
-	    BitBlt (currentDeviceContext, xFrame, yFrame, ptSize.x, ptSize.y, hMemDC, ptOrg.x, ptOrg.y, SRCCOPY);
+	    if (!BitBlt (TtDisplay, xFrame, yFrame, ptSize.x, ptSize.y, hMemDC, ptOrg.x, ptOrg.y, SRCCOPY))
+           WinErrorBox (NULL);
 		SelectObject (hMemDC, hOldBitmap1);
 	    if (!DeleteDC (hMemDC))
            WinErrorBox (NULL);
 	  } else {
-           WIN_LayoutTransparentPicture (currentDeviceContext, pixmap, xFrame, yFrame, w, h, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
+           WIN_LayoutTransparentPicture (TtDisplay, pixmap, xFrame, yFrame, w, h, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
 	  }
 #         endif /* _WINDOWS */
 	  break;
@@ -676,11 +870,11 @@ PictInfo           *imageDesc;
                   clipWidth = delta;
 		  }
 	  
-          hMemDC  = CreateCompatibleDC (currentDeviceContext);
-          hBkgBmp = CreateCompatibleBitmap (currentDeviceContext, w, h);
-          hOrigDC = CreateCompatibleDC (currentDeviceContext);
+          hMemDC  = CreateCompatibleDC (TtDisplay);
+          hBkgBmp = CreateCompatibleBitmap (TtDisplay, w, h);
+          hOrigDC = CreateCompatibleDC (TtDisplay);
           hrgn = CreateRectRgn (x, y, x + clipWidth, y + clipHeight);
-          SelectClipRgn(currentDeviceContext, hrgn); 
+          SelectClipRgn(TtDisplay, hrgn); 
           hOldBitmap1 = SelectObject (hOrigDC, pixmap);
           hOldBitmap2 = SelectObject (hMemDC, hBkgBmp);
           
@@ -696,12 +890,12 @@ PictInfo           *imageDesc;
 			 y += imageDesc->PicHArea;
 		  } while (y < (h - yFrame));
 
-          BitBlt (currentDeviceContext, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
+          BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
 
 		  SelectObject (hOrigDC, hOldBitmap1);
 		  SelectObject (hMemDC, hOldBitmap2);
 
-          SelectClipRgn(currentDeviceContext, NULL); 
+          SelectClipRgn(TtDisplay, NULL); 
 
           if (!DeleteDC (hMemDC))
              WinErrorBox (WIN_Main_Wd);
@@ -1201,11 +1395,8 @@ int                 hlogo;
       h = hFrame;
    x += xFrame;
    y += yFrame;
-#  ifdef _WINDOWS
-   WIN_LayoutPicture (TtDisplay, TtIsTrueColor, pixmap, drawable, picXOrg, picYOrg, w, h, x, y, frame, imageDesc);
-#  else  /* _WINDOWS */
+
    LayoutPicture (pixmap, drawable, picXOrg, picYOrg, w, h, x, y, frame, imageDesc);
-#  endif /* _WINDOWS */
 
 #  ifdef _WINDOWS
    if (!DeleteObject (pixmap))
@@ -1253,6 +1444,10 @@ int                 frame;
    Drawable            drawable;
    int                 x, y;
    ThotColor           BackGroundPixel;
+
+#  ifdef _WINDOWS 
+   LPBITMAPINFO  lpBmpInfo;
+#  endif /* _WINDOWS */
 
    if (box->BxAbstractBox->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
      /* the picture is not visible */
@@ -1317,13 +1512,8 @@ int                 frame;
 		 (*(PictureHandlerTable[typeImage].DrawPicture)) (box, imageDesc, xFrame + xTranslate, yFrame + yTranslate);
 	     }
 	   else {
-#       ifdef _WINDOWS
-	    WIN_LayoutPicture (TtDisplay, TtIsTrueColor, imageDesc->PicPixmap, drawable, picXOrg, picYOrg,
-			    wFrame, hFrame, xFrame + xTranslate, yFrame + yTranslate, frame, imageDesc);
-#       else  /* _WINDOWS */
 	    LayoutPicture (imageDesc->PicPixmap, drawable, picXOrg, picYOrg,
 			    wFrame, hFrame, xFrame + xTranslate, yFrame + yTranslate, frame, imageDesc);
-#       endif /* _WINDOWS */
 	   }
 	   
 	 }
@@ -1332,10 +1522,21 @@ int                 frame;
      /* for the moment we didn't consider plugin printing */
 #       ifdef _WINDOWS
 	 if (TtPrinterDC) {
-        pic2print = TRUE;
+        LPBYTE lpBits;
+
         LoadPicture2Print (frame, box, imageDesc);
-	    WIN_LayoutPicture (TtPrinterDC, TtIsPrinterTrueColor, imageDesc->PicPixmap, drawable, picXOrg, picYOrg,
-			    wFrame, hFrame, xFrame + xTranslate, yFrame + yTranslate, frame, imageDesc);
+        lpBmpInfo = CreateBitmapInfoStruct(FrRef [frame], imageDesc->PicPixmap);
+
+        lpBits = (LPBYTE) GlobalAlloc (GMEM_FIXED, lpBmpInfo->bmiHeader.biSizeImage);
+        if (!lpBits)
+           WinErrorBox (NULL);
+
+        if (!GetDIBits (TtDisplay, (HBITMAP) imageDesc->PicPixmap, 0, (WORD)lpBmpInfo->bmiHeader.biHeight, lpBits, lpBmpInfo, DIB_RGB_COLORS))
+           WinErrorBox (NULL);        
+
+		/* pBuf = (LPSTR) TtaGetMemory (picWArea * picHArea * 32); */
+        /* nbLines = GetDIBits (TtDisplay, imageDesc->PicPixmap, 0, picWArea * picHArea, pBuf, lpBmpInfoHeader, DIB_RGB_COLORS); */
+        PrintDIB (&lpBmpInfo->bmiHeader, lpBits, FrRef [frame], TtPrinterDC, xFrame, yFrame, picWArea, picHArea) ;
 	 } else {
            (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName, pres, xFrame, yFrame, wFrame, hFrame, picXArea,
 							                                       picYArea, picWArea, picHArea,

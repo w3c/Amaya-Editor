@@ -207,6 +207,7 @@
 #define SAVELISTDIALOG                  365
 #define IDC_WINCURSOR                   376
 #define BGIMAGEDIALOG                   380
+#define PRINTPROGRESSDLG                389
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -529,6 +530,7 @@
 #define IDC_ISO_LATIN_2                 1388
 #define IDC_ISO_LATIN_9                 1389
 #define IDC_SYMBOL_ENCOD                1390
+#define IDC_ABORTPRNT                   1399
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -561,9 +563,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        389
+#define _APS_NEXT_RESOURCE_VALUE        390
 #define _APS_NEXT_COMMAND_VALUE         40046
-#define _APS_NEXT_CONTROL_VALUE         1399
+#define _APS_NEXT_CONTROL_VALUE         1400
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -299,14 +299,7 @@ int                *height;
   if (buffer == NULL)
     return (ThotBitmapNone);	
 
-# ifdef _WINDOWS
-  if (pic2print && TtPrinterDC)
-     pixmap = WIN_DataToPixmap (TtPrinterDC, TtIsPrinterTrueColor, TtWPrinterDepth, buffer, w, h, 100, colrs);
-  else
-     pixmap = WIN_DataToPixmap (TtDisplay, TtIsTrueColor, TtWDepth, buffer, w, h, 100, colrs);
-# else  /* _WINDOWS */
   pixmap = DataToPixmap (buffer, w, h, 100, colrs);
-# endif /* _WINDOWS */
   TtaFreeMemory (buffer);  
   if (pixmap == None)
     return (ThotBitmapNone);

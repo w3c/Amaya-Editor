@@ -1193,21 +1193,6 @@ static signed int tabCorres [256];
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef _WINDOWS
-#ifdef __STDC__
-Pixmap WIN_DataToPixmap (HDC hDC, BOOL trueColorsDevice, int deviceDepth, unsigned char *image_data, int width, int height, int num_colors, ThotColorStruct colrs[256])
-#else  /* __STDC__ */
-Pixmap WIN_DataToPixmap (hDC, trueColorsDevice, deviceDepth, image_data, width, height, num_colors, colrs)
-HDC                 hDC;
-BOOL                trueColorDevice;
-int                 deviceDepth;
-unsigned char*      image_data;
-int                 width;
-int                 height;
-int                 num_colors;
-ThotColorsStruct     colrs[256];
-#endif /* __STDC__ */
-#else  /* _WINDOWS */
 #ifdef __STDC__
 Pixmap DataToPixmap (unsigned char *image_data, int width, int height, int num_colors, ThotColorStruct colrs[256])
 #else  /* __STDC__ */
@@ -1218,7 +1203,6 @@ int                 height;
 int                 num_colors;
 ThotColorStruct     colrs[256];
 #endif /* __STDC__ */
-#endif /* _WINDOWS */
 {
 
 #  ifndef _WINDOWS
@@ -1367,8 +1351,8 @@ ThotColorStruct     colrs[256];
    else
        need_to_dither = FALSE;
 
-   if (trueColorsDevice)
-      return WIN_MakeImage (hDC, image_data, width, height, deviceDepth, colrs);
+   if (TtIsTrueColor)
+      return WIN_MakeImage (TtDisplay, image_data, width, height, TtWDepth, colrs);
    else {
          static int        cbBits, cbPlanes; 
          BYTE               mapIndex ;
@@ -1379,8 +1363,8 @@ ThotColorStruct     colrs[256];
          HBITMAP           bmp = 0;
          unsigned int      colorIndex;
 
-         destMemDC = CreateCompatibleDC (hDC);
-         WIN_InitSystemColors (hDC);
+         destMemDC = CreateCompatibleDC (TtDisplay);
+         WIN_InitSystemColors (TtDisplay);
 
          if (width % 2)
 			padding = 1;
@@ -1396,7 +1380,7 @@ ThotColorStruct     colrs[256];
          for (i = 0; i < MAXNUMBER; i++)
              Mapping [i] = -1;
 
-         bmp = CreateCompatibleBitmap (hDC, width, height);
+         bmp = CreateCompatibleBitmap (TtDisplay, width, height);
 
          if ((bmp == NULL)) {
             TtaFreeMemory (bmBits);
@@ -1554,14 +1538,7 @@ int                *height;
 #     endif /* _WINDOWS */
     }
   
-#  ifdef _WINDOWS
-   if (pic2print && TtPrinterDC)
-      pixmap = WIN_DataToPixmap (TtPrinterDC, TtIsPrinterTrueColor, TtWPrinterDepth, buffer, w, h, ncolors, colrs);
-   else 
-       pixmap = WIN_DataToPixmap (TtDisplay, TtIsTrueColor, TtWDepth, buffer, w, h, ncolors, colrs);
-#  else  /* _WINDOWS */
    pixmap = DataToPixmap (buffer, w, h, ncolors, colrs);
-#  endif /* _WINDOWS */
    TtaFreeMemory (buffer);
    if (pixmap == None)
      return (ThotBitmapNone);

@@ -448,7 +448,7 @@ Document            document;
    printArgv [printArgc] = (char*) TtaGetMemory (strlen (dir) + strlen (name) + 6);
    sprintf  (printArgv [printArgc], "%s\\%s.PIV", dir, name);
    printArgc++;
-   PrintDoc (printArgc, printArgv, TtPrinterDC, TtIsPrinterTrueColor);
+   PrintDoc (printArgc, printArgv, TtPrinterDC, TtIsTrueColor, TtWDepth, name, dir, hInstance);
    for (i = 0; i < printArgc; i++)
        TtaFreeMemory (printArgv [i]);
 #  else /* !_WINDOWS */

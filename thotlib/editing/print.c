@@ -143,8 +143,19 @@ static int          firstPage;
 static int          lastPage;
 
 #ifdef _WINDOWS
-extern HDC  TtPrinterDC;
+#define PRINTPROGRESSDLG 389
+extern HDC       TtPrinterDC;
+extern int       currentFrame;
+extern HINSTANCE hInstance;
 
+BOOL             bError;
+BOOL             bUserAbort;
+FARPROC          lpfnAbortProc = NULL;
+HWND             hDlgPrint     = NULL;
+HWND             hWndParent    = NULL;
+
+static HWND      thotWindow    = (HWND) 0;
+static HINSTANCE hCurrentInstance ;
 #ifdef __STDC__
 int WINAPI DllMain (HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved) 
 #else  /* __STDC__ */
@@ -157,25 +168,170 @@ PVOID     pvReserved;
     return TRUE;
 }
 
+/* ------------------------------------------------------------------------ *
+ *                                                                          *
+ *  FUNCTION   :PrintDlgProc (HWND, unsigned , WORD , DWORD )               *
+ *                                                                          *
+ *  PURPOSE    :Dialog function for the "Cancel Printing" dialog. It sets   *
+ *              the abort flag if the user presses <Cancel>.                *
+ *                                                                          *
+ * ------------------------------------------------------------------------ */
+LRESULT CALLBACK PrintInProgressDlgProc (HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam)
+{
+    switch (iMessage) {
+    case WM_INITDIALOG:
 
-/*----------------------------------------------------------------------
-   AbortProc: Allows to abort the printing process.
-  ----------------------------------------------------------------------*/
+            EnableMenuItem (GetSystemMenu (hDlg, FALSE), (WORD)SC_CLOSE, (WORD)MF_GRAYED);
+            break;
+
+    case WM_COMMAND:
+            bUserAbort = TRUE;
+            EnableWindow (hWndParent, TRUE);
+            DestroyWindow (hDlg);
+            hDlgPrint = 0;
+            break;
+
+    default:
+            return FALSE;
+    }
+    return TRUE;
+        UNREFERENCED_PARAMETER(wParam);
+        UNREFERENCED_PARAMETER(lParam);
+}
+/*-----------------------------------------------------------------------
+ CreatePrintInProgressDlgWindow
+ ------------------------------------------------------------------------*/
 #ifdef __STDC__
-BOOL CALLBACK AbortProc (HDC hPrnDC, int iCode)
-#else  /* __STDC__ */
-BOOL CALLBACK AbortProc (hPrnDC, iCode)
-HDC hPrnDC; 
-int iCode;
+HWND CreatePrintInProgressDlgWindow (HWND parent)
+#else /* !__STDC__ */
+HWND CreatePrintInProgressDlgWindow (parent)
+HWND    parent; 
 #endif /* __STDC__ */
 {
-    MSG msg;
+    return CreateDialog (hCurrentInstance, MAKEINTRESOURCE (PRINTPROGRESSDLG), parent, (DLGPROC) PrintInProgressDlgProc);
+}
 
-    while (PeekMessage (&msg, NULL, 0, 0, PM_REMOVE)) {
-          TranslateMessage (&msg);
-		  DispatchMessage (&msg);
+/* ----------------------------------------------------------------------*
+ *                                                                       *
+ * FUNCTION:AbortProc (HDC hPrnDC, short nCode)                          *
+ *                                                                       *
+ * PURPOSE :Checks message queue for messages from the "Cancel Printing" *
+ *          dialog. If it sees a message, (this will be from a print     *
+ *          cancel command), it terminates.                              *
+ *                                                                       *
+ * RETURNS :Inverse of Abort flag                                        *
+ *                                                                       *
+ * ----------------------------------------------------------------------*/
+#ifdef __STDC__
+BOOL APIENTRY AbortProc (HDC hPrnDC, SHORT nCode)
+#else  /* __STDC__ */
+BOOL APIENTRY AbortProc (PrnDC, nCode)
+HDC   hPrnDC; 
+SHORT nCode;
+#endif /* __STDC__ */
+{
+    MSG   msg;
+
+    while (!bUserAbort && PeekMessage (&msg, NULL, 0, 0, PM_REMOVE)) {
+          if (!hDlgPrint || !IsDialogMessage (hDlgPrint, &msg)) {
+             TranslateMessage (&msg);
+             DispatchMessage (&msg);
+		  } 
+    } 
+    return !bUserAbort;
+    UNREFERENCED_PARAMETER(hPrnDC);
+    UNREFERENCED_PARAMETER(nCode);
+}
+
+/* ---------------------------------------------------------------------- *
+ *                                                                        *
+ *  FUNCTION: InitPrinting(HDC hDC, HWND hWnd, HANDLE hInst, LPSTR msg)   *
+ *                                                                        *
+ *  PURPOSE : Makes preliminary driver calls to set up print job.         *
+ *                                                                        *
+ *  RETURNS : TRUE  - if successful.                                      *
+ *            FALSE - otherwise.                                          *
+ *                                                                        *
+ * ---------------------------------------------------------------------- */
+#ifdef __STDC__
+BOOL PASCAL InitPrinting(HDC hDC, HWND hWnd, HANDLE hInst, LPSTR msg)
+#else /* !__STDC__ */
+BOOL PASCAL InitPrinting(hDC, hWnd, hInst, msg)
+HDC    hDC; 
+HWND   hWnd; 
+HANDLE hInst; 
+LPSTR  msg;
+#endif /* __STDC__ */
+{
+    DOCINFO         DocInfo;
+
+    bError     = FALSE;     /* no errors yet */
+    bUserAbort = FALSE;     /* user hasn't aborted */
+
+    hWndParent = hWnd;      /* save for Enable at Term time */
+
+    lpfnAbortProc    = (WNDPROC) MakeProcInstance (AbortProc, hInst);
+
+    hDlgPrint = CreatePrintInProgressDlgWindow (hWndParent);
+
+    if (!hDlgPrint)
+        return FALSE;
+
+    SetWindowText (hDlgPrint, msg);
+    EnableWindow (hWndParent, FALSE);        /* disable parent */
+
+    /*
+     * Use new printing APIs...Petrus Wong 12-May-1993
+     */
+    if (SetAbortProc (hDC, (ABORTPROC)lpfnAbortProc) <= 0) {
+       bError = TRUE;
+       return FALSE;
     }
-	return TRUE;
+
+    memset(&DocInfo, 0, sizeof(DOCINFO));
+    DocInfo.cbSize      = sizeof(DOCINFO);
+    DocInfo.lpszDocName = (LPTSTR) msg;
+    DocInfo.lpszOutput  = NULL;
+
+    if (StartDoc (hDC, &DocInfo) <= 0) {
+        bError = TRUE;
+        return FALSE;
+    }
+    bError = FALSE;
+
+    /* might want to call the abort proc here to allow the user to
+     * abort just before printing begins */
+    return TRUE;
+}
+
+/* ---------------------------------------------------------------------- *
+ *                                                                        *
+ *  FUNCTION   :  TermPrinting(HDC hDC)                                   *
+ *                                                                        *
+ *  PURPOSE    :  Terminates print job.                                   *
+ *                                                                        *
+ * ---------------------------------------------------------------------- */
+#ifdef __STDC__
+VOID PASCAL TermPrinting(HDC hDC)
+#else  /* !__STDC__ */
+VOID PASCAL TermPrinting(hDC)
+HDC hDC;
+#endif /* __STDC__ */
+{
+   /*
+    * Use new printing APIs...Petrus Wong 12-May-1993
+    */
+    if (!bError)
+        EndDoc(hDC);
+
+    if (bUserAbort)
+        AbortDoc(hDC);
+    else {
+        EnableWindow(hWndParent, TRUE);
+        DestroyWindow(hDlgPrint);
+    }
+
+    FreeProcInstance(lpfnAbortProc);
 }
 #endif /* _WINDOWS */
 
@@ -2184,8 +2340,11 @@ PtrDocument         pDoc;
    boolean             present, assoc, found, withPages;
 
 #  ifdef _WINDOWS
-   static DOCINFO docInfo = {sizeof (DOCINFO), "Amaya: Printing ...", NULL};
-   int xPage, yPage, i;
+   static DOCINFO docInfo = {sizeof (DOCINFO), "Amaya", NULL};
+   int    i;
+   POINT  ptPage;
+   int    cxPage, cyPage, xRes, yRes, xSize, ySize, xPSize, yPSize, dx, dy;
+   RECT   Rect;
 #  endif /* _WINDOWS */
 
    TheDoc = pDoc;
@@ -2208,23 +2367,53 @@ PtrDocument         pDoc;
    if (TtPrinterDC) {
       for (i = 0; i < MAX_COLOR; i++) 
           Pix_Color[i] = RGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue);
+
+      xSize = GetDeviceCaps (TtPrinterDC, HORZRES);
+      ySize = GetDeviceCaps (TtPrinterDC, VERTRES);
+      xRes  = GetDeviceCaps (TtPrinterDC, LOGPIXELSX);
+      yRes  = GetDeviceCaps (TtPrinterDC, LOGPIXELSY);
+
+      /* Fix bounding rectangle for the picture .. */
+      Rect.top    = 0;
+      Rect.left   = 0;
+      Rect.bottom = ySize;
+      Rect.right  = xSize;
+
+      /* ... and inform the driver */
+      Escape (TtPrinterDC, SET_BOUNDS, sizeof (RECT), (LPSTR)&Rect, NULL);
+
+#     if 0 /* LAST MODIFICATION ****************************************************/
+      if (!InitPrinting (TtPrinterDC, thotWindow, hCurrentInstance, NULL))
+         WinErrorBox (NULL);
+#     endif /* LAST MODIFICATION ****************************************************/
+
+
+
       SetAbortProc (TtPrinterDC, AbortProc);
       if ((StartDoc (TtPrinterDC, &docInfo)) <= 0)
          WinErrorBox ();
-   }
 
-   xPage = GetDeviceCaps (TtPrinterDC, LOGPIXELSX);
-   yPage = GetDeviceCaps (TtPrinterDC, LOGPIXELSX);
-   /*
-   SetMapMode (TtPrinterDC, MM_LOMETRIC);
-   SetWindowExtEx (TtPrinterDC, xPage, yPage, NULL);
-   SetViewportExtEx (TtPrinterDC, xPage, yPage, NULL);
-   SetViewportOrgEx (TtPrinterDC, 0, 0, NULL);
-   */
-   SetMapMode (TtPrinterDC, MM_ISOTROPIC);
-   SetWindowExtEx (TtPrinterDC, 1440, 1440, NULL);
-   SetViewportExtEx (TtPrinterDC, xPage * 19, yPage * 27, NULL);
-   SetViewportOrgEx (TtPrinterDC, 0, 0, NULL);
+      SetStretchBltMode (TtPrinterDC, COLORONCOLOR);
+
+      cxPage = GetDeviceCaps (TtPrinterDC, LOGPIXELSX);
+      cyPage = GetDeviceCaps (TtPrinterDC, LOGPIXELSX);
+
+      ptPage.x = GetDeviceCaps (TtPrinterDC, HORZSIZE);
+      ptPage.y = GetDeviceCaps (TtPrinterDC, VERTSIZE);
+
+      SetMapMode (TtPrinterDC, MM_ISOTROPIC);
+
+      /*****  DPtoLP (TtPrinterDC, (POINT*)&ptPage, 1);  *****/
+
+      /* SetMapMode (TtPrinterDC, MM_ANISOTROPIC); */
+      SetWindowExtEx (TtPrinterDC, 1440, 1440, NULL);
+      SetViewportExtEx (TtPrinterDC, cxPage * (int)((float) ptPage.x / (float) 10), cyPage * (int) ((float) ptPage.y / (float) 10), NULL);
+      /******* SetViewportExtEx (TtPrinterDC, (int) ((float) cxPage * ((float) ptPage.x / (float) 10)), (int) ((float) cyPage * ((float) ptPage.y / (float) 10)), NULL); *******/
+      /* SetViewportExtEx (TtPrinterDC, GetDeviceCaps (TtPrinterDC, LOGPIXELSX), GetDeviceCaps (TtPrinterDC, LOGPIXELSY), NULL); */
+      /* SetViewportExtEx (TtPrinterDC, xPage * 19, yPage * 27, NULL); */
+      SetViewportOrgEx (TtPrinterDC, 0, 0, NULL);
+   }
+   
 #  endif /* _WINDOWS */
    /* imprime l'une apres l'autre les vues a imprimer indiquees dans */
    /* les parametres d'appel du programme print */
@@ -2849,14 +3038,18 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-void PrintDoc (int argc, char** argv, HDC PrinterDC, BOOL isTrueColors)
+void PrintDoc (int argc, char** argv, HDC PrinterDC, BOOL isTrueColors, int depth, char* tmpDocName, char* tmpDir, HINSTANCE hInst)
 #else  /* !__STDC__ */
-void PrintDoc (argc, argc, PrinterDC, isTrueColors)
+void PrintDoc (argc, argc, PrinterDC, isTrueColors, depth, tmpDocName, tmpDir, hInstance)
 int    argc;
 char** argv;
 HDC    PrinterDC;
 BOOL   isTrueColors;
-#endif /* __STDCC__ */
+int    depth;
+char*  tmpDocName; 
+char*  tmpDir;
+HINSTANCE hInst;
+#endif /* __STDC__ */
 #else  /* !_WINDOWS */
 #ifdef __STDC__
 void                main (int argc, char **argv)
@@ -2888,10 +3081,11 @@ char              **argv;
   boolean             done;
 
 # ifdef _WINDOWS 
-  TtPrinterDC          = PrinterDC;
-  TtIsPrinterTrueColor = isTrueColors;
-  TtWPrinterDepth = GetDeviceCaps (TtPrinterDC, PLANES);
-
+  TtPrinterDC      = PrinterDC;
+  TtIsTrueColor    = isTrueColors;
+  TtWDepth         = depth;
+  TtWPrinterDepth  = GetDeviceCaps (TtPrinterDC, PLANES);
+  hCurrentInstance = hInst;
 # endif /* _WINDOWS */
 
   removeDirectory = FALSE;
@@ -2899,7 +3093,9 @@ char              **argv;
   NPagesPerSheet = 1;
   BlackAndWhite  = 0;
   manualFeed     = 0;
+# ifndef _WINDOWS
   thotWindow     = (ThotWindow) 0;
+# endif /* !_WINDOWS */
   NoEmpyBox      = 1;
   Repaginate     = 0;
   firstPage      = 0;
@@ -3130,15 +3326,17 @@ char              **argv;
          if (!strcmp (destination, "PSFILE"))
            {
 #            ifdef _WINDOWS 
-             sprintf (cmd, "copy %s\\%s.ps %s\n", tempDir, name, printer);
+             /* sprintf (cmd, "copy %s\\%s.ps %s\n", tempDir, name, printer); */
+             sprintf (cmd, "%s\\%s.ps", tempDir, name);
+             CopyFile (cmd, printer, FALSE);
 #            else  /* !_WINDOWS */
              sprintf (cmd, "/bin/mv %s/%s.ps %s\n", tempDir, name, printer);
-#            endif /* _WINDOWS */
              result = system (cmd);
              if (result != 0)
 	         ClientSend (thotWindow, printer, TMSG_CANNOT_CREATE_PS);
              else
 	         ClientSend (thotWindow, realName, TMSG_DOC_PRINTED);
+#            endif /* _WINDOWS */
            }
          else
            {
@@ -3167,6 +3365,17 @@ char              **argv;
    if (removeDirectory)
     {
 #      ifdef _WINDOWS
+	   int i;
+       if (TtPrinterDC && !DeleteFile (cmd))
+          WinErrorBox (NULL);
+	   else {
+             char* pivDoc = (char*) TtaGetMemory (strlen (tmpDocName) + strlen (tmpDir) + 6);
+             sprintf (pivDoc, "%s\\%s.PIV", tmpDir, tmpDocName); 
+			 if (!DeleteFile (pivDoc))
+                WinErrorBox (NULL);
+	         else if (_rmdir (tempDir))
+                  WinErrorBox (NULL);
+	   }
 #      else  /* _WINDOWS */
        sprintf (cmd, "/bin/rm -rf %s\n", tempDir);
        system (cmd);

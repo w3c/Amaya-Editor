@@ -210,6 +210,10 @@ LPARAM lParam;
  
     return CallWindowProc (lpfnTextZoneWndProc, hwnd, msg, wParam, lParam); 
 }
+
+HWND GetCurrentWindow () {
+     return FrRef [currentFrame];
+}
 #endif /* _WINDOWS */
 
 #include "appli_f.h"
