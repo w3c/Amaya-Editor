@@ -28,8 +28,14 @@
 #include "awparser.h"
 
 
-#define  BREAK_CHAR	'\t'
-#define  LINE_MAX 	1024
+#define  BREAK_CHAR    '\t'
+#define  LINE_MAX      1024
+
+#ifndef _WINDOWS
+#define PORT_CHAR      ':'
+#else
+#define PORT_CHAR      '%' 
+#endif /* _WINDOWS */
 
 
 /*----------------------------------------------------------------------
@@ -37,7 +43,6 @@
   ----------------------------------------------------------------------*/
 
 PUBLIC char     	DAVHome[LINE_MAX];
-
 
 
 /* ------------------------------------------------------------------ 
