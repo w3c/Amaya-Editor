@@ -1415,22 +1415,19 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
 	  if (SaveAsXML)
 	    {
 	      if (TtaGetDocumentProfile(doc) == L_Xhtml11)
-		ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
-							  "HTMLT11");
+		ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLT11");
 	      else
-		ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
-							  "HTMLTX");
+		ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLTX");
 	    }
 	  else
-	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
-						      "HTMLT");
+	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLT");
 	}
       else if (DocumentTypes[doc] == docSVG)
-	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
-						  "SVGT");
+	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "SVGT");
       else if (DocumentTypes[doc] == docMath)
-	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
-						  "MathMLT");
+	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "MathMLT");
+      else if (DocumentTypes[doc] == docXml)
+	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, NULL);
       else if (DocumentTypes[doc] == docImage)
 	{
 	  /* copy the image file to the new destination */
@@ -1479,8 +1476,7 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
 	  ptr = GetLocalPath (doc, tempname);
 	  if (DocumentTypes[doc] == docImage)
 	    /* export the new container (but to the temporary file name */
-	    ok = TtaExportDocumentWithNewLineNumbers (doc, ptr,
-						      "HTMLTX");
+	    ok = TtaExportDocumentWithNewLineNumbers (doc, ptr, "HTMLTX");
 	  else
 	    TtaFileCopy (tempname, ptr);
 	  TtaFreeMemory (ptr);
@@ -2226,16 +2222,13 @@ void SaveDocument (Document doc, View view)
 	      }
 	    else
 	      {
-		ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
-							  "HTMLT");
+		ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLT");
 		DocumentMeta[doc]->xmlformat = FALSE;
 	      }
 	  else if (DocumentTypes[doc] == docSVG)
-	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
-						      "SVGT");
+	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "SVGT");
 	  else if (DocumentTypes[doc] == docMath)
-	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
-						      "MathMLT");
+	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "MathMLT");
 	  else if (DocumentTypes[doc] == docXml)
 	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, NULL);
 	  
@@ -3190,7 +3183,8 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 	   */
 	  if (DocumentTypes[doc] == docImage)
 	    UpdateDocImage (doc, src_is_local, dst_is_local, documentFile);
-	  else if (DocumentTypes[doc] != docMath)
+	  else if (DocumentTypes[doc] != docMath &&
+		   DocumentTypes[doc] != docXml)
 	    UpdateImages (doc, src_is_local, dst_is_local, imgbase, documentFile);
 	  toUndo = TtaCloseUndoSequence (doc);
 	  if (dst_is_local)
