@@ -117,7 +117,8 @@ static void         SpaceToChar (USTRING text)
 /*----------------------------------------------------------------------
   DrawArrowHead draw the end of an arrow.
   ----------------------------------------------------------------------*/
-static void   DrawArrowHead (int frame, int x1, int y1, int x2, int y2, int thick, int fg)
+static void DrawArrowHead (int frame, int x1, int y1, int x2, int y2,
+			   int thick, int fg)
 {
   float               x, y, xb, yb, dx, dy, l, sina, cosa;
   float               width, height;
@@ -177,7 +178,8 @@ static void   DrawArrowHead (int frame, int x1, int y1, int x2, int y2, int thic
 /*----------------------------------------------------------------------
   DrawOneLine draw one line starting from (x1, y1) to (x2, y2) in frame.
   ----------------------------------------------------------------------*/
-static void  DrawOneLine (int frame, int thick, int style, int x1, int y1, int x2, int y2, int fg)
+static void  DrawOneLine (int frame, int thick, int style, int x1, int y1,
+			  int x2, int y2, int fg)
 {
   HPEN     hPen;
   HPEN     hOldPen;
@@ -223,7 +225,7 @@ static void  DrawOneLine (int frame, int thick, int style, int x1, int y1, int x
   DrawChar draw a char at location (x, y) in frame and with font.
   The parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void      DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int fg)
+void DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int fg)
 {
   CHAR_T              str[2] = {car, 0};
   HFONT               hOldFont;
@@ -269,7 +271,9 @@ void      DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int fg)
   parameter fg indicates the drawing color
   Returns the lenght of the string drawn.
   ----------------------------------------------------------------------*/
-int   DrawString (STRING buff, int i, int lg, int frame, int x, int y, ptrfont font, int lgboite, int bl, int hyphen, int debutbloc, int fg, int shadow)
+int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
+		ptrfont font, int lgboite, int bl, int hyphen, int debutbloc,
+		int fg, int shadow)
 {
    STRING              ptcar;
    int                 j, width;
@@ -557,7 +561,6 @@ int   DrawString (STRING buff, int i, int lg, int frame, int x, int y, ptrfont f
   - 1 = underlined
   - 2 = overlined
   - 3 = cross-over
-  
                   (x,y)
           _________________________________________________\_/__ top
           /|\    I    I          /|\       /|\   /|\        
@@ -569,9 +572,9 @@ int   DrawString (STRING buff, int i, int lg, int frame, int x, int y, ptrfont f
            |             I                  |
 	       |             I                  |
 	      \|/____________I_________________\|/_ bottom
-	      
   ----------------------------------------------------------------------*/
-void      DisplayUnderline (int frame, int x, int y, ptrfont font, int type, int lg, int fg)
+void DisplayUnderline (int frame, int x, int y, ptrfont font, int type,
+		       int lg, int fg)
 {
   int                 fheight;	/* font height           */
   int                 bottom;	/* underline position    */
@@ -665,7 +668,8 @@ void      DrawPoints (int frame, int x, int y, int lgboite, int fg)
   DrawRadical Draw a radical symbol.
   The parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void     DrawRadical (int frame, int thick, int x, int y, int l, int h, ptrfont font, int fg)
+void DrawRadical (int frame, int thick, int x, int y, int l, int h,
+		  ptrfont font, int fg)
 {
   int       xm, xp, fh;
 
@@ -695,7 +699,8 @@ void     DrawRadical (int frame, int thick, int x, int y, int l, int h, ptrfont 
   - double if type = 2.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void       DrawIntegral (int frame, int thick, int x, int y, int l, int h, int type, ptrfont font, int fg)
+void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
+		   int type, ptrfont font, int fg)
 {
   int      xm, yf, yend, exnum, delta;
   int      wd, asc, hd;
@@ -757,7 +762,8 @@ void       DrawIntegral (int frame, int thick, int x, int y, int l, int h, int t
   DrawMonoSymb draw a one glyph symbol.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-static void     DrawMonoSymb (CHAR_T symb, int frame, int x, int y, int l, int h, ptrfont font, int fg)
+static void DrawMonoSymb (CHAR_T symb, int frame, int x, int y, int l,
+			  int h, ptrfont font, int fg)
 {
   int                 xm, yf;
 
@@ -771,7 +777,7 @@ static void     DrawMonoSymb (CHAR_T symb, int frame, int x, int y, int l, int h
   DrawSigma draw a Sigma symbol.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void    DrawSigma (int frame, int x, int y, int l, int h, ptrfont font, int fg)
+void DrawSigma (int frame, int x, int y, int l, int h, ptrfont font, int fg)
 {
   int               xm, ym, fh;
 
@@ -804,7 +810,7 @@ void    DrawSigma (int frame, int x, int y, int l, int h, ptrfont font, int fg)
   DrawPi draw a PI symbol.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void        DrawPi (int frame, int x, int y, int l, int h, ptrfont font, int fg)
+void DrawPi (int frame, int x, int y, int l, int h, ptrfont font, int fg)
 {
   int         fh;
 
@@ -836,7 +842,8 @@ void        DrawPi (int frame, int x, int y, int l, int h, ptrfont font, int fg)
   DrawIntersection draw an intersection symbol.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void        DrawIntersection (int frame, int x, int y, int l, int h, ptrfont font, int fg)
+void DrawIntersection (int frame, int x, int y, int l, int h,
+		       ptrfont font, int fg)
 {
   HPEN        hPen;
   HPEN        hOldPen;
@@ -881,7 +888,7 @@ void        DrawIntersection (int frame, int x, int y, int l, int h, ptrfont fon
   DrawUnion draw an Union symbol.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void        DrawUnion (int frame, int x, int y, int l, int h, ptrfont font, int fg)
+void DrawUnion (int frame, int x, int y, int l, int h, ptrfont font, int fg)
 {
   HPEN        hPen;
   HPEN        hOldPen;
@@ -928,7 +935,8 @@ void        DrawUnion (int frame, int x, int y, int l, int h, ptrfont font, int 
   225, 270 ou 315.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void        DrawArrow (int frame, int thick, int style, int x, int y, int l, int h, int orientation, int fg)
+void DrawArrow (int frame, int thick, int style, int x, int y, int l,
+		int h, int orientation, int fg)
 {
   int         xm, ym, xf, yf;
 
@@ -997,7 +1005,8 @@ void        DrawArrow (int frame, int thick, int style, int x, int y, int l, int
   DrawBracket draw an opening or closing bracket (depending on direction)
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void        DrawBracket (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int fg)
+void DrawBracket (int frame, int thick, int x, int y, int l, int h,
+		  int direction, ptrfont font, int fg)
 {
    int         xm, yf, yend;
 
@@ -1064,7 +1073,8 @@ void        DrawBracket (int frame, int thick, int x, int y, int l, int h, int d
   on direction)
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void        DrawPointyBracket (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int fg)
+void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
+			int direction, ptrfont font, int fg)
 {
    int         xm, yf;
 
@@ -1112,7 +1122,8 @@ void        DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
   DrawParenthesis draw a closing or opening parenthesis (direction).
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void        DrawParenthesis (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int fg)
+void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
+		      int direction, ptrfont font, int fg)
 {
   int         xm, yf, yend, exnum, delta;
 
@@ -1272,7 +1283,8 @@ void        DrawParenthesis (int frame, int thick, int x, int y, int l, int h, i
   DrawBrace draw an opening of closing brace (depending on direction).
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void        DrawBrace (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int fg)
+void DrawBrace (int frame, int thick, int x, int y, int l, int h,
+		int direction, ptrfont font, int fg)
 {
    int         xm, ym, yf, yend, exnum, delta;
 
@@ -1403,7 +1415,8 @@ void        DrawBrace (int frame, int thick, int x, int y, int l, int h, int dir
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-void        DrawRectangle (int frame, int thick, int style, int x, int y, int width, int height, int fg, int bg, int pattern)
+void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
+		    int height, int fg, int bg, int pattern)
 {
    LOGBRUSH    logBrush;
    Pixmap      pat = (Pixmap) 0;
@@ -1494,8 +1507,8 @@ void        DrawRectangle (int frame, int thick, int style, int x, int y, int wi
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-
-void        DrawDiamond (int frame, int thick, int style, int x, int y, int width, int height, int fg, int bg, int pattern)
+void DrawDiamond (int frame, int thick, int style, int x, int y, int width,
+		  int height, int fg, int bg, int pattern)
 {
 }
 
@@ -1511,26 +1524,22 @@ void        DrawDiamond (int frame, int thick, int style, int x, int y, int widt
   - a backward arrow has to be drawn (2)
   - both backward and forward arrows have to be drawn (3)
   ----------------------------------------------------------------------*/
-void DrawSegments (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int fg, int arrow, int bg, int pattern)
+void DrawSegments (int frame, int thick, int style, int x, int y,
+		   PtrTextBuffer buffer, int nb, int fg, int arrow,
+		   int bg, int pattern)
 {
-  ThotPoint  *points;
-  int         i, j;
+  ThotPoint          *points;
   PtrTextBuffer       adbuff;
+  int                 i, j;
 
-  /* fill the included polygon */
-  DrawPolygon (frame, 0, style, x, y, buffer, nb, fg, bg, pattern);
-  if (thick == 0 || fg < 0)
-    return;
-
-  y += FrameTable[frame].FrTopMargin;
   /* Allocate a table of points */
   points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * (nb - 1));
   adbuff = buffer;
+  y += FrameTable[frame].FrTopMargin;
   j = 1;
   for (i = 1; i < nb; i++)
     {
-      if (j >= adbuff->BuLength &&
-	  adbuff->BuNext != NULL)
+      if (j >= adbuff->BuLength && adbuff->BuNext != NULL)
 	{
 	  /* Next buffer */
 	  adbuff = adbuff->BuNext;
@@ -1545,14 +1554,10 @@ void DrawSegments (int frame, int thick, int style, int x, int y, PtrTextBuffer 
       j++;
     }
 
+   DoDrawPolygon (frame, thick, style, points, nb, fg, bg, pattern);
   /* backward arrow  */
   if (arrow == 2 || arrow == 3)
     DrawArrowHead (frame, points[1].x, points[1].y, points[0].x, points[0].y, thick, fg);
-  
-  /* Draw the border */
-  for (i = 1; i < nb - 1; i++)
-    DrawOneLine (frame, thick, style,
-		 points [i-1].x, points[i-1].y, points[i].x, points[i].y, fg);
 
   /* Forward arrow */
   if (arrow == 1 || arrow == 3)
@@ -1648,8 +1653,8 @@ void DrawPolygon (int frame, int thick, int style, int x, int y,
 			   int pattern)
 {
   ThotPoint          *points;
-  int                 i, j;
   PtrTextBuffer       adbuff;
+  int                 i, j;
 
    /* Allocate a table of points */
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * nb);
@@ -1683,41 +1688,41 @@ void DrawPolygon (int frame, int thick, int style, int x, int y,
 /*----------------------------------------------------------------------
   PolyNewPoint : add a new point to the current polyline.
   ----------------------------------------------------------------------*/
-static ThotBool     PolyNewPoint (int x, int y,
-				  ThotPoint **points, int *npoints,
-				  int *maxpoints)
+static ThotBool PolyNewPoint (int x, int y,ThotPoint **points,
+			      int *npoints, int *maxpoints)
 {
-   ThotPoint          *tmp;
-   int                 size;
+  ThotPoint          *tmp;
+  int                 size;
 
-   if (*npoints >= *maxpoints)
-     {
-	size = *maxpoints + ALLOC_POINTS;
-	if ((tmp = (ThotPoint *) realloc (*points, size * sizeof (ThotPoint))) == 0)
-	   return (FALSE);
-	else
-	  {
-	     /* la reallocation a reussi */
-	     *points = tmp;
-	     *maxpoints = size;
-	  }
-     }
+  if (*npoints >= *maxpoints)
+    {
+      size = *maxpoints + ALLOC_POINTS;
+      if ((tmp = (ThotPoint *) realloc (*points, size * sizeof (ThotPoint))) == 0)
+	return (FALSE);
+      else
+	{
+	  /* la reallocation a reussi */
+	  *points = tmp;
+	  *maxpoints = size;
+	}
+    }
 
-   /* ignore identical points */
-   if (*npoints > 0 &&
-       (*points)[*npoints - 1].x == x && (*points)[*npoints - 1].y == y)
-      return (FALSE);
-
-   (*points)[*npoints].x = x;
-   (*points)[*npoints].y = y;
-   (*npoints)++;
-   return (TRUE);
+  /* ignore identical points */
+  if (*npoints > 0 &&
+      (*points)[*npoints - 1].x == x && (*points)[*npoints - 1].y == y)
+    return (FALSE);
+  
+  (*points)[*npoints].x = x;
+  (*points)[*npoints].y = y;
+  (*npoints)++;
+  return (TRUE);
 }
 
 /*----------------------------------------------------------------------
   PushStack : push a spline on the stack.
   ----------------------------------------------------------------------*/
-static void   PushStack (float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
+static void PushStack (float x1, float y1, float x2, float y2, float x3,
+		       float y3, float x4, float y4)
 {
    StackPoint         *stack_ptr;
 
@@ -1739,7 +1744,8 @@ static void   PushStack (float x1, float y1, float x2, float y2, float x3, float
 /*----------------------------------------------------------------------
   PopStack : pop a spline from the stack.
   ----------------------------------------------------------------------*/
-static ThotBool     PopStack (float *x1, float *y1, float *x2, float *y2, float *x3, float *y3, float *x4, float *y4)
+static ThotBool PopStack (float *x1, float *y1, float *x2, float *y2,
+			  float *x3, float *y3, float *x4, float *y4)
 {
    StackPoint         *stack_ptr;
 
@@ -1763,9 +1769,9 @@ static ThotBool     PopStack (float *x1, float *y1, float *x2, float *y2, float 
 /*----------------------------------------------------------------------
   PolySplit : split a poly line and push the results on the stack.
   ----------------------------------------------------------------------*/
-static void         PolySplit (float a1, float b1, float a2, float b2,
-			       float a3, float b3, float a4, float b4,
-			       ThotPoint **points, int *npoints, int *maxpoints)
+static void PolySplit (float a1, float b1, float a2, float b2,
+		       float a3, float b3, float a4, float b4,
+		       ThotPoint **points, int *npoints, int *maxpoints)
 {
    register float      tx, ty;
    float               x1, y1, x2, y2, x3, y3, x4, y4;
@@ -1814,7 +1820,9 @@ static void         PolySplit (float a1, float b1, float a2, float b2,
   - both backward and forward arrows have to be drawn (3)
   Parameter control indicates the control points.
   ----------------------------------------------------------------------*/
-void          DrawCurve (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int fg, int arrow, C_points * controls)
+void DrawCurve (int frame, int thick, int style, int x, int y,
+		PtrTextBuffer buffer, int nb, int fg, int arrow,
+		C_points *controls)
 {
   ThotPoint           *points;
   int                 npoints, maxpoints;
@@ -1955,7 +1963,9 @@ void          DrawCurve (int frame, int thick, int style, int x, int y, PtrTextB
   color, background color and fill pattern.
   Parameter controls contains the list of control points.
   ----------------------------------------------------------------------*/
-void          DrawSpline (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int fg, int bg, int pattern, C_points * controls)
+void DrawSpline (int frame, int thick, int style, int x, int y,
+		 PtrTextBuffer buffer, int nb, int fg, int bg,
+		 int pattern, C_points *controls)
 {
   ThotPoint     *points;
   int           npoints, maxpoints;
@@ -2211,8 +2221,8 @@ static void SetPath (int frame, HDC display, int x, int y, PtrPathSeg path)
   Parameter path is a pointer to the list of path segments
   fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void            DrawPath (int frame, int thick, int style, int x, int y,
-			  PtrPathSeg path, int fg, int bg, int pattern)
+void DrawPath (int frame, int thick, int style, int x, int y,
+	       PtrPathSeg path, int fg, int bg, int pattern)
 {
   HDC                 display;
   Pixmap              pat;
@@ -2280,9 +2290,9 @@ void            DrawPath (int frame, int thick, int style, int x, int y,
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-void            DrawOval (int frame, int thick, int style, int x, int y,
-			  int width, int height, int rx, int ry,
-			  int fg, int bg, int pattern)
+void DrawOval (int frame, int thick, int style, int x, int y,
+	       int width, int height, int rx, int ry,
+	       int fg, int bg, int pattern)
 {
   Pixmap        pat = (Pixmap) 0;
   HPEN          hPen;
@@ -2381,7 +2391,8 @@ void            DrawOval (int frame, int thick, int style, int x, int y,
   Parameters fg, bg, and pattern are for drawing color, background color
   and fill pattern.
   ----------------------------------------------------------------------*/
-void          DrawEllips (int frame, int thick, int style, int x, int y, int width, int height, int fg, int bg, int pattern)
+void DrawEllips (int frame, int thick, int style, int x, int y, int width,
+		 int height, int fg, int bg, int pattern)
 {
   Pixmap   pat = (Pixmap)0;
   HPEN     hPen;
@@ -2461,7 +2472,8 @@ void          DrawEllips (int frame, int thick, int style, int x, int y, int wid
   depending on align value.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void          DrawHorizontalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int fg)
+void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
+			 int l, int h, int align, int fg)
 {
    int        Y;
 
@@ -2486,7 +2498,8 @@ void          DrawHorizontalLine (int frame, int thick, int style, int x, int y,
   or bottom depending on align value.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void          DrawHorizontalBrace (int frame, int thick, int style, int x, int y, int l, int h, int align, int fg)
+void DrawHorizontalBrace (int frame, int thick, int style, int x, int y,
+			  int l, int h, int align, int fg)
 {
   int        Y;
 
@@ -2520,7 +2533,8 @@ void          DrawHorizontalBrace (int frame, int thick, int style, int x, int y
   depending on align value.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void          DrawVerticalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int fg)
+void DrawVerticalLine (int frame, int thick, int style, int x, int y, int l,
+		       int h, int align, int fg)
 {
   int        X;
 
@@ -2546,7 +2560,8 @@ void          DrawVerticalLine (int frame, int thick, int style, int x, int y, i
   right depending on align value.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void          DrawDoubleVerticalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int fg)
+void DrawDoubleVerticalLine (int frame, int thick, int style, int x, int y,
+			     int l, int h, int align, int fg)
 {
   int        X;
 
@@ -2573,7 +2588,8 @@ void          DrawDoubleVerticalLine (int frame, int thick, int style, int x, in
   DrawSlash draw a slash or backslash depending on direction.
   Le parame`tre indique la couleur du trace'.
   ----------------------------------------------------------------------*/
-void          DrawSlash (int frame, int thick, int style, int x, int y, int l, int h, int direction, int fg)
+void DrawSlash (int frame, int thick, int style, int x, int y, int l, int h,
+		int direction, int fg)
 {
   int              xf, yf;
 
@@ -2598,7 +2614,8 @@ void          DrawSlash (int frame, int thick, int style, int x, int y, int l, i
   DrawCorner draw a corner.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void        DrawCorner (int frame, int thick, int style, int x, int y, int l, int h, int corner, int fg)
+void DrawCorner (int frame, int thick, int style, int x, int y, int l,
+		 int h, int corner, int fg)
 {
   ThotPoint   point[3];
   int         xf, yf;
@@ -2685,7 +2702,8 @@ void        DrawCorner (int frame, int thick, int style, int x, int y, int l, in
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-void        DrawRectangleFrame (int frame, int thick, int style, int x, int y, int width, int height, int fg, int bg, int pattern)
+void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
+			 int width, int height, int fg, int bg, int pattern)
 {
 }
 
@@ -2695,7 +2713,8 @@ void        DrawRectangleFrame (int frame, int thick, int style, int x, int y, i
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-void        DrawEllipsFrame (int frame, int thick, int style, int x, int y, int width, int height, int fg, int bg, int pattern)
+void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
+		      int width, int height, int fg, int bg, int pattern)
 {
 }
 
@@ -2703,7 +2722,7 @@ void        DrawEllipsFrame (int frame, int thick, int style, int x, int y, int 
   StorePageInfo and psBoundingBox are empty, they have no meaning in
   this context and are kept for interface compatibility.
   ----------------------------------------------------------------------*/
-void        StorePageInfo (int pagenum, int width, int height)
+void StorePageInfo (int pagenum, int width, int height)
 {
 #ifdef _WIN_PRINT
    LastPageNumber = pagenum;
@@ -2714,7 +2733,7 @@ void        StorePageInfo (int pagenum, int width, int height)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void        psBoundingBox (int frame, int width, int height)
+void psBoundingBox (int frame, int width, int height)
 {
 }
 
@@ -2722,7 +2741,7 @@ void        psBoundingBox (int frame, int width, int height)
 /*----------------------------------------------------------------------
   Clear clear the area of frame located at (x, y) and of size width x height.
   ----------------------------------------------------------------------*/
-void        Clear (int frame, int width, int height, int x, int y)
+void Clear (int frame, int width, int height, int x, int y)
 {
    ThotWindow          w;
    HBRUSH              hBrush;
@@ -2770,6 +2789,7 @@ void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-void        PaintWithPattern (int frame, int x, int y, int width, int height, ThotWindow w, int fg, int bg, int pattern)
+void PaintWithPattern (int frame, int x, int y, int width, int height,
+		       ThotWindow w, int fg, int bg, int pattern)
 {
 }
