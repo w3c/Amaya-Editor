@@ -40,8 +40,8 @@ TitleDlgWX::TitleDlgWX( wxWindow* parent,
   SetTitle( title );
 
   // update dialog labels
-  XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel(wxString(TtaGetMessage (LIB, TMSG_CANCEL), AmayaApp::conv_ascii));
-  XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton)->SetLabel(wxString(TtaGetMessage (LIB, TMSG_LIB_CONFIRM), AmayaApp::conv_ascii));
+  XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_CANCEL) ));
+  XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_LIB_CONFIRM) ));
   XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->SetValue(doc_title);
 
   Layout();
