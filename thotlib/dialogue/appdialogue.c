@@ -2449,6 +2449,7 @@ int TtaAddTextZone (Document doc, View view, char *label,
 	      gtk_box_pack_start (GTK_BOX (row), w, FALSE, TRUE, 5);
 	    }
 	  combo = gtk_combo_new ();
+	  gtk_combo_set_case_sensitive (GTK_COMBO (combo), TRUE);
 	  FrameTable[frame].Combo = combo;
 	  gtk_widget_ref (combo);
 	  /* Initialize combobox list */
