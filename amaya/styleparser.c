@@ -222,7 +222,7 @@ static char *SkipProperty (char *ptr)
   char        c;
 
   deb = ptr;
-  while (*ptr != EOS && *ptr != ';' && *ptr != '}' && *ptr != '"')
+  while (*ptr != EOS && *ptr != ';' && *ptr != '}')
     {
       if (*ptr == '"' && (ptr == deb || ptr[-1] != '\\'))
 	{
@@ -253,7 +253,7 @@ static char *SkipValue (char *ptr, ThotBool error)
   char        c;
 
   deb = ptr;
-  while (*ptr != EOS && *ptr != ';' && *ptr != '}' && *ptr != '"')
+  while (*ptr != EOS && *ptr != ';' && *ptr != '}')
     {
       if (*ptr == '"' && (ptr == deb || ptr[-1] != '\\'))
 	{
@@ -493,6 +493,11 @@ static char *ParseCSSColor (char *cssRule, PresentationValue * val)
   val->typed_data.real = FALSE;
   val->typed_data.value = 0;
   ptr = TtaGiveRGB (cssRule, &redval, &greenval, &blueval);
+  if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      cssRule = SkipWord (cssRule);
+      return (cssRule);
+    }
   if (ptr == cssRule)
     {
       cssRule = SkipValue (cssRule, TRUE);
@@ -3354,8 +3359,8 @@ static void  ParseCSSRule (Element element, PSchema tsch,
       if (*cssRule < 0x41 || *cssRule > 0x7A ||
 	  (*cssRule > 0x5A && *cssRule < 0x60))
 	{
+	  CSSParseError ("Invalid character", cssRule);
 	  cssRule++;
-	  CSSParseError ("Invalid character", "{");
 	  cssRule = SkipBlanksAndComments (cssRule);
 	}
       
@@ -4862,6 +4867,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   c = SPACE;
   index = 0;
   base = NULL;
+  quoted = FALSE;
   /* number of new lines parsed */
   newlines = 0;
   /* avoid too many redisplay */
@@ -4896,10 +4902,11 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 	  switch (c)
 	    {
 	    case '@': /* perhaps an import primitive */
-	      import = CSSindex;
+	      if (!quoted)
+		import = CSSindex;
 	      break;
 	    case ';':
-	      if (import != MAX_CSS_LENGTH && !media)
+	      if (!quoted && !media && import != MAX_CSS_LENGTH)
 		{ 
 		  if (strncasecmp (&CSSbuffer[import+1], "import", 6))
 		    /* it's not an import */
@@ -4909,13 +4916,13 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		}
 	      break;
 	    case '*':
-	      if (CSScomment == MAX_CSS_LENGTH && CSSindex > 0 &&
+	      if (!quoted && CSScomment == MAX_CSS_LENGTH && CSSindex > 0 &&
 		  CSSbuffer[CSSindex - 1] == '/')
 		/* start a comment */
 		CSScomment = CSSindex - 1;
 	      break;
 	    case '/':
-	      if (CSSindex > 1 && CSScomment != MAX_CSS_LENGTH &&
+	      if (!quoted && CSSindex > 1 && CSScomment != MAX_CSS_LENGTH &&
 		  CSSbuffer[CSSindex - 1] == '*')
 		{
 		  /* close a comment:and ignore its contents */
@@ -4938,7 +4945,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		      CSSindex--;
 		      }
 		}
-	      else if (CSScomment == MAX_CSS_LENGTH && CSSindex > 0 &&
+	      else if (!quoted && CSScomment == MAX_CSS_LENGTH && CSSindex > 0 &&
 		       CSSbuffer[CSSindex - 1] ==  '<')
 		{
 		  /* this is the closing tag ! */
@@ -4947,7 +4954,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		} 
 	      break;
 	    case '<':
-	      if (CSScomment == MAX_CSS_LENGTH)
+	      if (!quoted && CSScomment == MAX_CSS_LENGTH)
 		{
 		  /* only if we're not parsing a comment */
 		  c = buffer[index++];
@@ -4964,47 +4971,62 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		}
 	      break;
 	    case '-':
-	      if (CSSindex > 0 && CSSbuffer[CSSindex - 1] == '-' &&
+	      if (!quoted && CSSindex > 0 && CSSbuffer[CSSindex - 1] == '-' &&
 		  HTMLcomment)
 		/* CSS within an HTML comment */
 		noRule = TRUE;
 	      break;
 	    case '>':
-	      if (HTMLcomment)
+	      if (!quoted && HTMLcomment)
 		noRule = TRUE;
 	      break;
 	    case ' ':
-	      if (import != MAX_CSS_LENGTH && openRule == 0)
+	      if (!quoted && import != MAX_CSS_LENGTH && openRule == 0)
 		media = !strncmp (&CSSbuffer[import+1], "media", 5);
 	      break;
 	    case '{':
-	      openRule++;
-	      if (import != MAX_CSS_LENGTH && openRule == 1 && media)
+	      if (!quoted)
 		{
-		  /* is it the screen concerned? */
-		  CSSbuffer[CSSindex+1] = EOS;
-		  if (TtaIsPrinting ())
-		    base = strstr (&CSSbuffer[import], "print");
-		  else
-		    base = strstr (&CSSbuffer[import], "screen");
-		  if (base == NULL)
-		     base = strstr (&CSSbuffer[import], "all");
-		  if (base == NULL)
-		    ignoreMedia = TRUE;
-		  noRule = TRUE;
+		  openRule++;
+		  if (import != MAX_CSS_LENGTH && openRule == 1 && media)
+		    {
+		      /* is it the screen concerned? */
+		      CSSbuffer[CSSindex+1] = EOS;
+		      if (TtaIsPrinting ())
+			base = strstr (&CSSbuffer[import], "print");
+		      else
+			base = strstr (&CSSbuffer[import], "screen");
+		      if (base == NULL)
+			base = strstr (&CSSbuffer[import], "all");
+		      if (base == NULL)
+			ignoreMedia = TRUE;
+		      noRule = TRUE;
+		    }
 		}
 	      break;
 	    case '}':
-	      openRule--;
-	      if (import != MAX_CSS_LENGTH && openRule == 0)
+	      if (!quoted)
 		{
-		  import = MAX_CSS_LENGTH;
-		  noRule = TRUE;
-		  ignoreMedia = FALSE;
-		  media = FALSE;
+		  openRule--;
+		  if (import != MAX_CSS_LENGTH && openRule == 0)
+		    {
+		      import = MAX_CSS_LENGTH;
+		      noRule = TRUE;
+		      ignoreMedia = FALSE;
+		      media = FALSE;
+		    }
+		  else
+		    toParse = TRUE;
+		}
+	      break;
+	    case '"':
+	      if (quoted)
+		{
+		  if (CSSbuffer[CSSindex - 1] != '\\')
+		    quoted = FALSE;
 		}
 	      else
-		toParse = TRUE;
+		quoted = TRUE;
 	      break;
 	    default:
 	      if (c == EOL)
