@@ -51,13 +51,13 @@ Pixmap TtaCreateBitmapLogo (int width, int height, char *bits)
    gdk_color_black (TtCmap, &black);
    gdk_color_white (TtCmap, &white);
    if (bits != NULL)
-     return  gdk_pixmap_create_from_data (DefaultWindow->window,
-					  bits,
-					  width,
-					  height,					   
-					    1,
-					  &white,
-					  &black);
+     return (Pixmap) gdk_pixmap_create_from_data (DefaultWindow->window,
+						  bits,
+						  width,
+						  height,					   
+						  1,
+						  (GdkColor *)&white,
+						  (GdkColor *)&black);
    else
      return 0;
 #endif /* !_GTK */
@@ -83,10 +83,10 @@ Pixmap TtaCreatePixmapLogo (char **d)
    pixmap = 0;
    if (d != NULL)
      {
-       pixmap = gdk_pixmap_create_from_xpm_d (DefaultWindow->window,
-					      &mask ,
-					      &DefaultWindow->style->bg[GTK_STATE_NORMAL] ,
-					      (gchar **) d); 
+       pixmap = (Pixmap)gdk_pixmap_create_from_xpm_d (DefaultWindow->window,
+						      &mask ,
+						      &DefaultWindow->style->bg[GTK_STATE_NORMAL] ,
+						      (gchar **) d); 
        /*       icon = gtk_pixmap_new (pixmap, mask);
        gdk_pixmap_unref (pixmap);
        gdk_bitmap_unref (mask);	*/

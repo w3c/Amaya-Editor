@@ -531,7 +531,7 @@ int LWZReadByte (FILE *fd, int flag, int input_code_size)
    return code;
 }
 
-
+#ifndef _GTK
 /*----------------------------------------------------------------------
   highbit returns position of highest set bit in 'ul' as an integer (0-31),
   or -1 if none.     
@@ -543,6 +543,7 @@ static int highbit (unsigned long ul)
   for (i = 31; ((ul & 0x80000000) == 0) && i >= 0; i--, ul <<= 1) ;
   return i;
 }
+#endif /* !_GTK */
 
 /*----------------------------------------------------------------------
   highbit16 returns position of highest set bit in 'ul' as an integer (0-31),
@@ -555,7 +556,7 @@ int highbit16 (unsigned long ul)
   for (i = 15; ((ul & 0x8000) == 0) && i >= 0; i--, ul <<= 1) ;
   return i;
 }
-
+#ifndef _GTK
 /*----------------------------------------------------------------------
   nbbits returns the width of a bit PicMask.
   ----------------------------------------------------------------------*/
@@ -604,7 +605,7 @@ static int nbbits (unsigned long ul)
       return (8);
    }
 }
-
+#endif /* !_GTK */
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
   Make a shape  of depth 1 for display from image data.
@@ -614,7 +615,9 @@ Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
 		 unsigned int bg, int bperpix)
 {
   XImage             *newmask;
+#ifndef _GTK
   ThotGC              tmp_gc;
+#endif /* !_GTK */
   Pixmap              PicMask;
   unsigned short     *spixels;
   unsigned char      *data_ptr, *max_data;
@@ -812,11 +815,11 @@ Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
   Make an image of appropriate depth for display from image data.
   The parameter ncolors gives the number of colors in the image.
   ----------------------------------------------------------------------*/
+#ifndef _GTK
 static XImage *MakeImage (Display *dsp, unsigned char *data, int width,
 			  int height, int depth, ThotColorStruct *colrs,
 			  int ncolors, ThotBool withAlpha)
 {
-#ifndef _GTK
   XImage             *newimage = NULL;
   unsigned char      *bit_data, *bitp;
   unsigned long       c;
@@ -1026,8 +1029,8 @@ static XImage *MakeImage (Display *dsp, unsigned char *data, int width,
       return (None);
     }
    return (newimage);
-#endif /* !_GTK */
 }
+#endif /* !_GTK */
 #else /* _WINDOWS */
 /*----------------------------------------------------------------------
   Make an image of appropriate depth for display from image data.
@@ -1228,7 +1231,6 @@ Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
   XDestroyImage (image);
 #else /* _GTK */
   Pixmap              img;
-  int                 size;
   unsigned long       FgPixel;
   unsigned long       BgPixel;
   ThotColorStruct     gdkFgPixel;
@@ -1239,7 +1241,7 @@ Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
   gdkBgPixel.pixel = gdk_rgb_xpixel_from_rgb (BgPixel);
   /* TODO */
 
-  img = gdk_pixmap_create_from_data (DefaultDrawable, image_data, width, height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+  img = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, image_data, width, height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
 
 #endif /* !_GTK */
   return (img);

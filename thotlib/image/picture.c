@@ -230,7 +230,7 @@ void FreePixmap (Pixmap pixmap)
     XFreePixmap (TtDisplay, pixmap);
 #else /* _GTK */
   {
-   gdk_imlib_free_pixmap (pixmap);
+   gdk_imlib_free_pixmap ((GdkPixmap *)pixmap);
   }
 #endif /* !_GTK */
 #else  /* _WINDOWS */
@@ -345,15 +345,15 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 #else /* _WINDOWS */
 #ifndef _GTK
   XRectangle        rect;
-#endif /* !_GTK */
   XGCValues         values;
   unsigned int      valuemask;
+#endif /* !_GTK */
 #endif /* _WINDOWS */
 #ifdef _GTK
   XRectangle         rect;
-  GdkImlibBorder     rect_border;
-  GdkImlibImage     *im;
-  GdkGCValues       *GCvalues;
+  /*  GdkImlibBorder     rect_border;*/
+  /*GdkImlibImage     *im;*/
+  /*  GdkGCValues       *GCvalues;*/
 
 #endif
 
@@ -409,12 +409,12 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	   if (imageDesc->PicMask)
 	     {
 	       gdk_gc_set_clip_origin (TtGraphicGC, xFrame - picXOrg, yFrame - picYOrg);
-	       gdk_gc_set_clip_mask (TtGraphicGC, imageDesc->PicMask);
+	       gdk_gc_set_clip_mask (TtGraphicGC, (GdkPixmap *)imageDesc->PicMask);
 	     }
-	   gdk_draw_pixmap (drawable, TtGraphicGC, pixmap, picXOrg, picYOrg, xFrame, yFrame, w ,h);
+	   gdk_draw_pixmap ((GdkDrawable *)drawable, TtGraphicGC,(GdkPixmap *) pixmap, picXOrg, picYOrg, xFrame, yFrame, w ,h);
 	   if (imageDesc->PicMask)
 	     {
-	       gdk_gc_set_clip_mask (TtGraphicGC, None);
+	       gdk_gc_set_clip_mask (TtGraphicGC, (GdkPixmap *)None);
 	       gdk_gc_set_clip_origin (TtGraphicGC, 0, 0);
 	     }
 #endif /* !_GTK */
@@ -535,16 +535,16 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 #else /* _GTK */
 	  gdk_gc_set_fill (tiledGC, GDK_TILED);
 	  gdk_gc_set_ts_origin (tiledGC, xFrame, yFrame);
-	  gdk_gc_set_tile (tiledGC, pixmap);
+	  gdk_gc_set_tile (tiledGC, (GdkPixmap *)pixmap);
 	  if (picPresent == RealSize)
 	    {
 	      if (imageDesc->PicMask)
 		{
 		  gdk_gc_set_clip_origin (tiledGC, xFrame - picXOrg, yFrame - picYOrg);
-		  gdk_gc_set_clip_mask (tiledGC, imageDesc->PicMask);
+		  gdk_gc_set_clip_mask (tiledGC, (GdkPixmap *)imageDesc->PicMask);
 		}
 	      else
-		gdk_gc_set_clip_rectangle (tiledGC, &rect);
+		gdk_gc_set_clip_rectangle (tiledGC, (GdkRectangle *)&rect);
 	      if (w > imageDesc->PicWArea)
 		w = imageDesc->PicWArea;
 	      if (h > imageDesc->PicHArea)
@@ -552,13 +552,13 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	    }
 	  else
 	    {
-	      gdk_gc_set_clip_rectangle (tiledGC, &rect);
+	      gdk_gc_set_clip_rectangle (tiledGC, (GdkRectangle *)&rect);
 	      if (picPresent == YRepeat && w > imageDesc->PicWArea)
 		w = imageDesc->PicWArea;
 	      if (picPresent == XRepeat && h > imageDesc->PicHArea)
 		h = imageDesc->PicHArea;
 	    }
-	  gdk_draw_rectangle (drawable, /* the window */ 
+	  gdk_draw_rectangle ((GdkDrawable *)drawable, /* the window */ 
 			      tiledGC,  /* the GC */
 			      TRUE,     /* filled=true */
 			      xFrame,   /* x position drawing */
@@ -570,7 +570,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
           rect.y = 0;
           rect.width = MAX_SIZE;
           rect.height = MAX_SIZE;
-	  gdk_gc_set_clip_rectangle (tiledGC, &rect);
+	  gdk_gc_set_clip_rectangle (tiledGC, (GdkRectangle *)&rect);
 	  if (imageDesc->PicMask)
 	    {
 	      gdk_gc_set_clip_mask (tiledGC, None);
@@ -782,7 +782,7 @@ void InitPictureHandlers (ThotBool printing)
    /* create a special logo for lost pictures */
    /* TODO */
 
-   theVisual = gdk_visual_get_system ();
+   theVisual = (Visual *) gdk_visual_get_system ();
 #else /* _GTK */
    /* initialize Graphic context to display pictures */
    TtGraphicGC = XCreateGC (TtDisplay, TtRootWindow, 0, NULL);
@@ -1153,7 +1153,7 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame, int x,
     return;
 
 
-  drawable = TtaGetThotWindow (frame);
+  drawable = (Drawable)TtaGetThotWindow (frame);
   GetXYOrg (frame, &xFrame, &yFrame);
   typeImage = imageDesc->PicType;
   GetPictureFileName (imageDesc->PicFileName, fileName);
@@ -1407,14 +1407,16 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 {
   PathBuffer          fileName;
   PictureScaling      pres;
-  Drawable            drw = None;
 #ifdef _GTK
 #ifndef _GTK2
   GdkImlibImage      *im = None;
+  GdkPixmap          *drw = None;
 #else /* _GTK2 */
   GdkPixbuf          *im = None;
   GError             *error=NULL;
 #endif /* !_GTK2 */
+#else /* !_GTK */
+  Drawable            drw = None;
 #endif /* _GTK */
   PtrAbstractBox      pAb;
   Picture_Report      status;
@@ -1555,7 +1557,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      im = gdk_imlib_load_image (fileName);
 	      gdk_imlib_render(im, w, h);
 	      drw = gdk_imlib_move_image (im);
-	      imageDesc->PicMask = gdk_imlib_move_mask (im);
+	      imageDesc->PicMask = (GdkPixmap *)gdk_imlib_move_mask (im);
 #else /* _GTK2 */
 	      im = gdk_pixbuf_new_from_file(fileName, &error);
 #endif /* !_GTK2 */
@@ -1586,17 +1588,16 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		 ViewFrameTable[frame - 1].FrMagnification);
 #else /* _GTK */
 	      /* load the picture using ImLib */
-	      im = gdk_imlib_load_image (fileName);
-	      
+	      im = gdk_imlib_load_image (fileName);	      
 	      if (pres == FillFrame)
 		{
 		  /* if it's a background, dont rescale the picture */
 		  w = im->rgb_width;
 		  h = im->rgb_height;
 		}
-	      gdk_imlib_render(im, w, h);
+	      gdk_imlib_render(im, (gint)w, (gint)h);
 	      drw = gdk_imlib_move_image (im);
-	      imageDesc->PicMask = gdk_imlib_move_mask (im);
+	      imageDesc->PicMask = (GdkPixmap *)gdk_imlib_move_mask (im);
 	      width = im->rgb_width;
 	      height = im->rgb_height;
 	      if (pres == FillFrame)
