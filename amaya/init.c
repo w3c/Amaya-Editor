@@ -7274,66 +7274,85 @@ void InitAmaya (NotifyEvent * event)
    if (appArgc % 2 == 0)
      /* The last argument in the command line is the document to be opened */
      s = appArgv[appArgc - 1];
-   if (s == NULL || s[0] == EOS)
-     /* no argument: display the Home Page */
-     s = TtaGetEnvString ("HOME_PAGE");
-   if (URL_list && s && !strcasecmp (s, "$PREV"))
-     {
-       /* no argument and no Home: display the previous open URI */
-       for (i = 0; URL_list[i] != EOS && URL_list[i] != EOL; i++)
-	 ptr[i] = URL_list[i];
-       ptr[i] = EOS;
-       s = ptr;
-     }
 
-   if (s == NULL || s[0] == EOS)
-     {
-       /* no argument, no Home, and no previous page: display default Amaya URL */
-       GoToHome (0, 1);
-     }
-   else if (IsW3Path (s))
-     {
-       /* it's a remote document */
-       strcpy (LastURLName, s);
-       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
-     }
-   else
-     {
-       NormalizeFile (s, LastURLName, AM_CONV_NONE);
-       if (IsW3Path (LastURLName))
-	 {
-	   /* if the command line paremeter 
-	      is a url without http://
-	      it's a remote document or 
-	      a new file (doesn't exist yet )
-	      in the current path */
-	   strcpy (s, LastURLName);
-	   CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
-	 }
-       else
-	 {
-	   /* check if it is an absolute or a relative name */
-#ifdef _WINDOWS
-	   if (LastURLName[0] == DIR_SEP || LastURLName[1] == ':')
-#else /* _WINDOWS */
-	   if (LastURLName[0] == DIR_SEP)
-#endif /* _WINDOWS */
-	     /* it is an absolute name */
-	     TtaExtractName (LastURLName, DirectoryName, DocumentName);
-	   else
-	     {
-	       /* it is a relative name */
-	       getcwd (DirectoryName, MAX_LENGTH);
-	       strcpy (DocumentName, LastURLName);
-	     }
-	   /* start with the local document */
-	   LastURLName[0] = EOS;
-	   CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
-	 }
-     }
+   // load the document with its url (s)
+   OpenNewDocFromArgv(s);
+
    TtaFreeMemory (ptr);
    ptr = NULL;
    Loading_method = CE_ABSOLUTE;
+
+#ifdef _WX
+   /* register openurl callback in order to call it when twice amaya instance are running */
+   TtaRegisterOpenURLCallback( (void (*)(void*))OpenNewDocFromArgv );
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void OpenNewDocFromArgv( char * url )
+{
+  int i;
+  char ptr[MAX_LENGTH];
+  char * s = url;
+  
+  if (s == NULL || s[0] == EOS)
+    /* no argument: display the Home Page */
+    s = TtaGetEnvString ("HOME_PAGE");
+  if (URL_list && s && !strcasecmp (s, "$PREV"))
+    {
+      /* no argument and no Home: display the previous open URI */
+      for (i = 0; URL_list[i] != EOS && URL_list[i] != EOL; i++)
+	ptr[i] = URL_list[i];
+      ptr[i] = EOS;
+      s = ptr;
+    }
+  
+  if (s == NULL || s[0] == EOS)
+    {
+      /* no argument, no Home, and no previous page: display default Amaya URL */
+      GoToHome (0, 1);
+    }
+  else if (IsW3Path (s))
+    {
+      /* it's a remote document */
+      strcpy (LastURLName, s);
+      CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
+    }
+  else
+    {
+      NormalizeFile (s, LastURLName, AM_CONV_NONE);
+      if (IsW3Path (LastURLName))
+	{
+	  /* if the command line paremeter 
+	     is a url without http://
+	     it's a remote document or 
+	     a new file (doesn't exist yet )
+	     in the current path */
+	  strcpy (s, LastURLName);
+	  CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
+	}
+      else
+	{
+	  /* check if it is an absolute or a relative name */
+#ifdef _WINDOWS
+	  if (LastURLName[0] == DIR_SEP || LastURLName[1] == ':')
+#else /* _WINDOWS */
+	    if (LastURLName[0] == DIR_SEP)
+#endif /* _WINDOWS */
+	     /* it is an absolute name */
+	      TtaExtractName (LastURLName, DirectoryName, DocumentName);
+	    else
+	      {
+		/* it is a relative name */
+		getcwd (DirectoryName, MAX_LENGTH);
+		strcpy (DocumentName, LastURLName);
+	      }
+	  /* start with the local document */
+	  LastURLName[0] = EOS;
+	  CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------

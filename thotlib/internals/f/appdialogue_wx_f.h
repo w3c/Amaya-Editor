@@ -89,6 +89,7 @@ extern ThotBool TtaRegisterWidgetWX ( int ref,
 extern void TtaToggleOnOffSidePanel ( int frame_id );
 extern void TtaToggleOnOffSplitView ( int frame_id );
 extern void TtaDoPostFrameCreation ( int frame_id );
+extern void TtaToggleOnOffFullScreen ( int frame_id );
 
 #else /* __STDC__ */
 
@@ -175,6 +176,7 @@ extern ThotBool TtaRegisterWidgetWX ( int ref,
 extern void TtaToggleOnOffSidePanel ( int frame_id );
 extern void TtaToggleOnOffSplitView ( int frame_id );
 extern void TtaDoPostFrameCreation ( int frame_id );
+extern void TtaToggleOnOffFullScreen ( int frame_id );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

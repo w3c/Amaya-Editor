@@ -5,7 +5,6 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
 extern char * DocumentTypeString ( Document document );
@@ -144,6 +143,7 @@ extern ThotBool CheckMakeDirectory ( char *name,
 extern void FreeAmayaIcons ( void );
 extern void FreeAmayaStructures ( void );
 extern void InitAmaya ( NotifyEvent * event );
+extern void OpenNewDocFromArgv ( char * url );
 extern void ChangeAttrOnRoot ( Document doc,
                                int attrNum );
 extern void ShowPanel ( Document doc,
@@ -182,7 +182,6 @@ extern void SaveGeometryOnExit ( int document,
                                  const char * view_name );
 
 #else /* __STDC__ */
-
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
 extern char * DocumentTypeString ( Document document );
@@ -321,6 +320,7 @@ extern ThotBool CheckMakeDirectory ( char *name,
 extern void FreeAmayaIcons ( void );
 extern void FreeAmayaStructures ( void );
 extern void InitAmaya ( NotifyEvent * event );
+extern void OpenNewDocFromArgv ( char * url );
 extern void ChangeAttrOnRoot ( Document doc,
                                  int attrNum );
 extern void ShowPanel ( Document doc,

@@ -52,7 +52,8 @@ extern void TtaRefreshPanelTooltips( int window_id );
 extern void TtaToggleOnOffSidePanel( int frame_id );
 extern void TtaToggleOnOffSplitView( int frame_id );
 extern void TtaToggleOnOffFullScreen( int frame_id );
-extern int GetWindowNumber (Document, View view);
+extern int GetWindowNumber (Document doc, View view);
+extern void TtaRegisterOpenURLCallback( void (*callback) (void *) );
 
 #endif /* #define __APPDIALOGUE_WX_H__ */
 

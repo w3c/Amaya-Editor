@@ -79,6 +79,7 @@ include .depends
 
 THOTK_OBJ = \
 	base/AmayaApp.o \
+	base/AmayaAppInstance.o \
 	base/wxAmayaTimer.o \
 	base/wxAmayaSocketEvent.o \
 	base/wxAmayaSocketEventLoop.o \

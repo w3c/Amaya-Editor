@@ -30,9 +30,11 @@
 
 #include "appdialogue_wx.h"
 #include "registry_wx.h"
+#include "message_wx.h"
 
 #include "wxAmayaSocketEventLoop.h"
 #include "wxAmayaSocketEvent.h"
+#include "AmayaAppInstance.h"
 
 IMPLEMENT_APP(AmayaApp)
 
@@ -88,12 +90,10 @@ wxIcon AmayaApp::m_AppIcon( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char
  */
 bool AmayaApp::OnInit()
 {
+  m_AmayaIsInit = false;
+
   // for debug : the output is stderr
   delete wxLog::SetActiveTarget( new wxLogStderr );
-  
-  // first check there is no other Amaya instance
-  if (IsAnotherAmayaRunning())
-    return false;
 
   // under X we usually want to use the primary selection by default (which
   // is shared with other apps)
@@ -194,6 +194,27 @@ bool AmayaApp::OnInit()
 
 #endif /* _GLPRINT */
 
+  // check there is no other Amaya instance
+  m_pAmayaInstance = new AmayaAppInstance( this );
+  
+  if (m_pAmayaInstance->IsAnotherAmayaRunning())
+    {
+      wxLogError(_T("Another instance is running"));
+
+      wxString url;
+      if (wxApp::argc % 2 == 0)
+	/* The last argument in the command line is the document to be opened */
+	url = wxApp::argv[wxApp::argc-1];
+      m_pAmayaInstance->SendURLToOtherAmayaInstance( url );
+      return false;
+    }
+  else
+    {
+      m_pAmayaInstance->StartURLGrabberServer();
+    }
+
+  m_AmayaIsInit = true;
+
   return true;
 }
 
@@ -280,7 +301,7 @@ void AmayaApp::OnIdle( wxIdleEvent& event )
   // launch user dialogs (ex: Confirm dialogs).
   // The dialogues can't be shown into OnInit because 
   // wxEventLoop is not ready at this place !
-  if (!m_AmayaIsLaunched)
+  if (!m_AmayaIsLaunched && m_AmayaIsInit)
     {
       m_AmayaIsLaunched = TRUE;
 #ifndef _GLPRINT
@@ -360,21 +381,13 @@ wxIcon AmayaApp::GetAppIcon()
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaApp
- *      Method:  IsAnotherAmayaRunning
- * Description:  Returns true if another amaya instance is runing
+ *      Method:  RegisterOpenURLCallback
+ * Description:  
  *--------------------------------------------------------------------------------------
  */
-bool AmayaApp::IsAnotherAmayaRunning()
+void AmayaApp::RegisterOpenURLCallback( void (*callback) (void *) )
 {
-  const wxString name = wxString::Format(_T("AMAYA-%s"), wxGetUserId().c_str());
-  m_SingleInstance_Checker = new wxSingleInstanceChecker(name);
-  if ( m_SingleInstance_Checker->IsAnotherRunning() )
-    {
-      wxLogError(_("Another program instance is already running, aborting."));
-      return true;
-    }
-  else
-    return false;
+  m_pAmayaInstance->RegisterOpenURLCallback( callback );  
 }
 
 BEGIN_EVENT_TABLE(AmayaApp, wxApp)

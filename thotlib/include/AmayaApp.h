@@ -12,8 +12,11 @@
   #include "wx/glcanvas.h"
 #endif /* _GL */
 
+typedef void (*OpenURLCallback) (void * );
+
 class wxAmayaSocketEventLoop;
 class wxSingleInstanceChecker;
+class AmayaAppInstance;
 
 #ifdef _GL
 class AmayaApp : public wxGLApp
@@ -22,7 +25,7 @@ class AmayaApp : public wxApp
 #endif /* _GL */ 
 {
 public:
-
+  void RegisterOpenURLCallback( OpenURLCallback callback );
 
 #ifdef _GL
   static int * GetGL_AttrList();
@@ -30,9 +33,6 @@ public:
 
   static wxImageList * GetDocumentIconList();
   static wxIcon GetAppIcon();
-
- protected:
-  bool IsAnotherAmayaRunning();
 
  protected:
   DECLARE_EVENT_TABLE()
@@ -56,7 +56,9 @@ public:
   static wxImageList * m_pDocImageList; /* this is the list where documents icons are stored */
   static wxIcon m_AppIcon;
 
-  wxSingleInstanceChecker * m_SingleInstance_Checker;
+  AmayaAppInstance * m_pAmayaInstance;
+
+  bool m_AmayaIsInit;
 };
 
 DECLARE_APP(AmayaApp)

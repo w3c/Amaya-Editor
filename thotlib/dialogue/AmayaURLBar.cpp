@@ -97,7 +97,7 @@ void AmayaURLBar::GotoSelectedURL()
   if (p_frame)
     {
       APP_Callback_URLActivate ( p_frame->GetFrameId(),
-				 GetValue().mb_str(*wxConvCurrent) );
+				 GetValue().mb_str(wxConvUTF8) );
     }
 }
 

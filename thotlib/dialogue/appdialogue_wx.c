@@ -40,6 +40,7 @@
 #include "thotmsg_f.h"
 #include "dialogapi_f.h"
 
+#include "AmayaApp.h"
 #include "AmayaCanvas.h"
 #include "AmayaFrame.h"
 #include "AmayaNormalWindow.h"
@@ -998,7 +999,7 @@ void TtaSetURLBar( int frame_id,
   APP_Callback_URLActivate - Callback to set url in box when Enter key pressed
   params:
     + frame_id : frame identifier
-    + text : the new url text
+    + text : the new url text (UTF-8 encoding)
   returns:
   ----------------------------------------------------------------------*/
 void APP_Callback_URLActivate (int frame_id, const char *text)
@@ -1564,5 +1565,18 @@ void TtaToggleOnOffFullScreen( int frame_id )
     }
 
   p_window->ToggleFullScreen();
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaRegisterOpenURLCallback
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void TtaRegisterOpenURLCallback( void (*callback) (void *) )
+{
+#ifdef _WX
+  /* register openurl callback in order to call it when twice amaya instance are running */
+  ((AmayaApp *)wxTheApp)->RegisterOpenURLCallback( callback );
 #endif /* _WX */
 }
