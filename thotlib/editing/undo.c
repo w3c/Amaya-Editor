@@ -388,6 +388,8 @@ ThotBool removeWhenUndoing;
 
    if (!pEl)
       return;
+   if (!pEl->ElStructSchema)
+      return;
    /* error if no sequence open */
    if (!pDoc->DocEditSequence)
      {

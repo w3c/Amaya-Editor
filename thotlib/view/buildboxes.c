@@ -516,7 +516,7 @@ int                *height;
 		 case 'h':
 		 case '>':
 		    *width = *height;
-		    *height = hfont;
+		    *height = hfont / 3;
 		    break;
 		 case '(':
 		 case ')':
@@ -569,7 +569,7 @@ int                *height;
 	    case 't':
 	    case 'b':
 	       *width = *height;
-	       *height = hfont;
+	       *height = hfont / 3;
 	       break;
 	    case 'C':
 	    case 'a':

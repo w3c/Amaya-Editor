@@ -103,12 +103,12 @@ STRUCT
 
       MSQRT
 	  = BEGIN
-	    RootBase;
+	    RootBase = Construct;
 	    END;
 
       MROOT
 	  = BEGIN
-	    RootBase = Construct;
+	    RootBase;
 	    Index = Construct;
 	    END;
 

@@ -854,7 +854,6 @@ int                 fg;
 #  else /* _WINDOWS */
        fout = (FILE *) FrRef[frame];
 
-       /* Do we need to change the current color ? */
        CurrentColor (fout, fg);
 
        fh = FontHeight (font);
@@ -912,7 +911,10 @@ int                 fg;
 
    if (y < 0)
      return;
-   /* y += FrameTable[frame].FrTopMargin; */
+   /* draw the box for debugging:
+   DrawRectangle (frame, 1, 0, x, y, l, h, 0, 0, fg, 0, 0); */
+
+   y += FrameTable[frame].FrTopMargin;
 #  ifdef _WINDOWS
    if (TtPrinterDC) {
       exnum = 0;
@@ -1408,6 +1410,9 @@ int                 fg;
    fout = (FILE *) FrRef[frame];
   if (y < 0)
     return;
+   /* draw the box for debugging:
+   DrawRectangle (frame, 1, 0, x, y, l, h, 0, 0, fg, 0, 0);	*/
+
    y += FrameTable[frame].FrTopMargin;
 
    /* Do we need to change the current color ? */
@@ -1421,9 +1426,9 @@ int                 fg;
    ey = FontHeight (font);
    h -= ey;
    y += FontBase (font);
+   x = PixelToPoint (x + (l / 2));
    yf = PixelToPoint (y + h);
    y = PixelToPoint (y) + 1;
-   x = PixelToPoint (x);
 
    if (h < ey / 4)
      {
@@ -1472,7 +1477,10 @@ int                 fg;
 
    if (y < 0)
       return;
-   /* y += FrameTable[frame].FrTopMargin; */
+   /* draw the box for debugging:
+   DrawRectangle (frame, 1, 0, x, y, l, h, 0, 0, fg, 0, 0); */
+
+   y += FrameTable[frame].FrTopMargin;
    if (thick < 0)
       return;
 
@@ -1483,7 +1491,7 @@ int                 fg;
       exnum = 0;
 
       if (h <= (int) (1.3 * FontHeight (font))) { /* With only one glyph */
-		 if (direction == 0) { /* draw a opening parenthesis */
+		 if (direction == 0) { /* draw an opening parenthesis */
             xm = x + ((l - CharacterWidth ('(', font)) / 2);
             yf = y + ((h - CharacterHeight ('(', font)) / 2) - FontAscent (font) + CharacterAscent ('(', font);
             WIN_DrawChar ('(', frame, xm, yf, font, RO, func, fg);
@@ -1539,7 +1547,6 @@ int                 fg;
 	  }
    }
 #  else  /* !_WINDOWS */
-
    fout = (FILE *) FrRef[frame];
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -1552,14 +1559,15 @@ int                 fg;
    ey = FontHeight (font);
    h -= ey;
    y += FontBase (font);
-   x = PixelToPoint (x);
    yf = PixelToPoint (y + h);
    y = PixelToPoint (y) + 1;
+   x = PixelToPoint (x + (l / 2));
 
-   if (h < ey / 4)
+   if (h < ey / 3)
      {
 	/* Made of only one glyph */
 	if (direction == 0)
+	   /* draw an opening parenthesis */
 	   fprintf (fout, "-%d %d (\\() c\n", yf, x);
 	else
 	   fprintf (fout, "-%d %d (\\)) c\n", yf, x);
@@ -1568,7 +1576,7 @@ int                 fg;
      {
 	/* Drawn with more than one glyph */
 	if (direction == 0)
-	   fprintf (fout, "%d -%d -%d %s (\\346) (\\347) (\\350) s3\n", x + 1, yf, y, Scale);
+	   fprintf (fout, "%d -%d -%d %s (\\346) (\\347) (\\350) s3\n", x+1, yf, y, Scale);
 	else
 	   fprintf (fout, "%d -%d -%d %s (\\366) (\\367) (\\370) s3\n", x, yf, y, Scale);
      }
@@ -1597,6 +1605,7 @@ int                 fg;
 #endif /* __STDC__ */
 {
 #  ifdef _WINDOWS 
+      /* **** A FAIRE **** */    
 #  else  /* !_WINDOWS */
    int                 ey, yf;
    FILE               *fout;
@@ -1604,6 +1613,10 @@ int                 fg;
    fout = (FILE *) FrRef[frame];
   if (y < 0)
     return;
+
+   /* draw the box for debugging:
+   DrawRectangle (frame, 1, 0, x, y, l, h, 0, 0, fg, 0, 0); */
+
    y += FrameTable[frame].FrTopMargin;
 
    /* Do we need to change the current color ? */

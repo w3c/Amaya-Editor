@@ -1793,7 +1793,7 @@ BOXES
  Bar:	{ fraction bar }
 	BEGIN
 	LineWeight: 1 pt;
-	Height: 0.2;
+	Height: 0.1;
         Width: Enclosing . Width ;
 	HorizPos: Left = Enclosing . Left;
 	Content: Graphics 'h';	{ horizontal bar }
@@ -1806,6 +1806,7 @@ BOXES
 
  RadicalSymbol:
 	BEGIN
+	LineWeight: 1 pt;
 	Height: Enclosing . Height;
 	Width: RootBase . Width + ROOT_OFFSET;
 	VertPos: Top = Enclosing . Top;
@@ -2034,7 +2035,7 @@ RULES
         BEGIN
 	HorizRef: * . Top;
 	HorizPos: VMiddle = Bar . VMiddle;
-	VertPos: Top = Bar . Bottom + 0.1;
+	VertPos: Top = Bar . Bottom;
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
