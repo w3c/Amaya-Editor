@@ -2428,6 +2428,8 @@ ThotBool TtaIsSpecialKey( int wx_keycode )
 void TtaSendStatsInfo()
 {
 #ifdef _WX
+  if (Printing)
+    return;
   /* default value for SEND_STATS is "Yes" */
   TtaSetEnvBoolean ("SEND_STATS", TRUE, FALSE);
   

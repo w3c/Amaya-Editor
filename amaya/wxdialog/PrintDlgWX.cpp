@@ -23,7 +23,7 @@ BEGIN_EVENT_TABLE(PrintDlgWX, AmayaDialog)
   EVT_RADIOBOX( XRCID("wxID_ORIENTATION_BOX"),  PrintDlgWX::OnPaperOrientationBox )
   EVT_RADIOBOX( XRCID("wxID_DISPOSITION_BOX"),  PrintDlgWX::OnPaperDispositionBox )
   EVT_RADIOBOX( XRCID("wxID_OUTPUT_BOX"),       PrintDlgWX::OnOutputBox )
-  //EVT_CHECKBOX( XRCID("wxID_MANUAL_CHK"),       PrintDlgWX::OnManualChkBox )
+  EVT_CHECKBOX( XRCID("wxID_MANUAL_CHK"),       PrintDlgWX::OnManualChkBox )
   EVT_TEXT( XRCID("wxID_FILE_TXT_CTRL"),        PrintDlgWX::OnTypePrinter )
 #endif _WINDOWS
   EVT_CHECKBOX( XRCID("wxID_TOC_CHK"),          PrintDlgWX::OnTocChkBox )
@@ -101,12 +101,12 @@ PrintDlgWX::PrintDlgWX( int ref,
 
   // options check list
   XRCCTRL(*this, "wxID_OPTIONS_TXT", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_OPTIONS) ));
-  //XRCCTRL(*this, "wxID_MANUAL_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_MANUAL_FEED) ));
   XRCCTRL(*this, "wxID_TOC_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_PRINT_TOC) ));
   XRCCTRL(*this, "wxID_LINKS_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_NUMBERED_LINKS) ));
   XRCCTRL(*this, "wxID_PRINT_URL_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_PRINT_URL) ));
   XRCCTRL(*this, "wxID_IGNORE_CSS_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_WITH_CSS) ));
-  //XRCCTRL(*this, "wxID_MANUAL_CHK", wxCheckBox)->SetValue(manual_feed);
+  XRCCTRL(*this, "wxID_MANUAL_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_MANUAL_FEED) ));
+  XRCCTRL(*this, "wxID_MANUAL_CHK", wxCheckBox)->SetValue(manual_feed);
   XRCCTRL(*this, "wxID_TOC_CHK", wxCheckBox)->SetValue(with_toc);
   XRCCTRL(*this, "wxID_LINKS_CHK", wxCheckBox)->SetValue(with_links);
   XRCCTRL(*this, "wxID_PRINT_URL_CHK", wxCheckBox)->SetValue(with_url);
@@ -206,6 +206,15 @@ void PrintDlgWX::OnOutputBox ( wxCommandEvent& event )
     }
 #endif /* _WINDOWS */
 }
+  
+/*---------------------------------------------------------------
+  OnManualChkBox 
+  ---------------------------------------------------------------*/
+void PrintDlgWX::OnManualChkBox ( wxCommandEvent& event )
+{ 
+  wxLogDebug( _T("PrintDlgWX::OnManualChkBox") );
+  ThotCallback (BasePrint + PrintOptions, INTEGER_DATA, (char*) 0);
+} 
 
 /*---------------------------------------------------------------
   OnTocChkBox
