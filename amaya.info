@@ -1,5 +1,5 @@
 Package: 	amaya
-Version:	8.5
+Version:	8.6
 Revision:	1
 Maintainer:	Stephane GULLY <stephane.gully@inrialpes.fr>
 Depends:	glib-shlibs, imlib-shlibs (>= 1.9.14-2), gtk+-shlibs, gettext, libjpeg-shlibs, libpng3-shlibs
@@ -8,7 +8,7 @@ Conflicts:	amaya-gtk
 Replaces:	amaya-gtk
 Source:		mirror:custom:amaya-src-%v.tgz
 CustomMirror: <<
-	Primary:  http://www.w3.org/Amaya/Distribution
+	Primary:  ftp://ftp.w3.org/pub/amaya
 	ftp-US:   ftp://ftp.w3.org/pub/amaya
 <<
 SourceDirectory: Amaya
@@ -16,7 +16,7 @@ NoSetLDFLAGS: true
 GCC: 3.3
 CompileScript: <<
 	mkdir Darwin
-	cd 'Darwin' && ../configure --with-gtk --with-dav --prefix=%p/share --bindir=%p/bin && make
+	cd 'Darwin' && ../configure --with-gtk --with-dav --enable-bookmarks --prefix=%p/share --bindir=%p/bin && make
 <<
 InstallScript: <<
 	cd 'Darwin' && make install prefix=%i/share bindir=%i/bin
@@ -43,4 +43,4 @@ DescPackaging: <<
 <<
 License:	OSI-Approved
 Homepage:	http://www.w3.org/Amaya/
-Source-MD5:	0ee123988b2e09fe60f9120df8dc9012
+Source-MD5:	a70d4fcb5c3f8d81eff78522dc7f8b01
