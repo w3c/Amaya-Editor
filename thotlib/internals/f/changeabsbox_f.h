@@ -53,43 +53,43 @@ extern void CrPaveNouv ( PtrElement pEl,
                          int viewNb );
 extern void DetPavVue ( PtrElement pEl,
                         PtrDocument pDoc,
-                        boolean Verif,
-                        int vue );
+                        boolean verify,
+                        int view );
 extern void DetrPaves ( PtrElement pEl,
                         PtrDocument pDoc,
-                        boolean Verif );
+                        boolean verify );
 extern void ReafReference ( PtrReference pRef,
                             PtrAbstractBox pAb,
                             PtrDocument pDocRef );
 extern void ChngRef ( PtrAbstractBox pAb,
                       PtrDocument pDoc );
 extern PtrAbstractBox PavCherche ( PtrAbstractBox pAb,
-                                   boolean Pres,
-                                   int Typ,
+                                   boolean pres,
+                                   int typeElOrPres,
                                    PtrPSchema pSchP,
                                    PtrSSchema pSchStr );
 extern void ReNumPages ( PtrElement pEl,
-                         int vue );
+                         int view );
 extern void TransmetValCompt ( PtrElement pEl,
                                PtrDocument pDoc,
-                               Name NmAttr,
-                               int cpt,
+                               Name nameAttr,
+                               int counter,
                                PtrPSchema pSchP,
                                PtrSSchema pSchS );
-extern void MajNumeros ( PtrElement pElDebut,
+extern void MajNumeros ( PtrElement pElBegin,
                          PtrElement pElModif,
-                         PtrDocument pDocu,
-                         boolean reaff );
-extern void ChngBtCompt ( PtrElement pElDebut,
+                         PtrDocument pDoc,
+                         boolean redisp );
+extern void ChngBtCompt ( PtrElement pElBegin,
                           PtrDocument pDoc,
-                          int cpt,
+                          int counter,
                           PtrPSchema pSchP,
                           PtrSSchema pSS );
 extern void ChngPresAttr ( PtrElement pEl,
                            PtrAttribute pAttr,
                            PtrDocument pDoc,
-                           boolean Suppr,
-                           boolean herit,
+                           boolean remove,
+                           boolean inherit,
                            PtrAttribute pAttrComp );
 extern boolean MemeTexte ( PtrElement pEl,
                            PtrDocument pDoc,
@@ -144,43 +144,43 @@ extern void CrPaveNouv (/* PtrElement pEl,
                            int viewNb */);
 extern void DetPavVue (/* PtrElement pEl,
                           PtrDocument pDoc,
-                          boolean Verif,
-                          int vue */);
+                          boolean verify,
+                          int view */);
 extern void DetrPaves (/* PtrElement pEl,
                           PtrDocument pDoc,
-                          boolean Verif */);
+                          boolean verify */);
 extern void ReafReference (/* PtrReference pRef,
                               PtrAbstractBox pAb,
                               PtrDocument pDocRef */);
 extern void ChngRef (/* PtrAbstractBox pAb,
                         PtrDocument pDoc */);
 extern PtrAbstractBox PavCherche (/* PtrAbstractBox pAb,
-                                     boolean Pres,
-                                     int Typ,
+                                     boolean pres,
+                                     int typeElOrPres,
                                      PtrPSchema pSchP,
                                      PtrSSchema pSchStr */);
 extern void ReNumPages (/* PtrElement pEl,
-                           int vue */);
+                           int view */);
 extern void TransmetValCompt (/* PtrElement pEl,
                                  PtrDocument pDoc,
-                                 Name NmAttr,
-                                 int cpt,
+                                 Name nameAttr,
+                                 int counter,
                                  PtrPSchema pSchP,
                                  PtrSSchema pSchS */);
-extern void MajNumeros (/* PtrElement pElDebut,
+extern void MajNumeros (/* PtrElement pElBegin,
                            PtrElement pElModif,
-                           PtrDocument pDocu,
-                           boolean reaff */);
-extern void ChngBtCompt (/* PtrElement pElDebut,
+                           PtrDocument pDoc,
+                           boolean redisp */);
+extern void ChngBtCompt (/* PtrElement pElBegin,
                             PtrDocument pDoc,
-                            int cpt,
+                            int counter,
                             PtrPSchema pSchP,
                             PtrSSchema pSS */);
 extern void ChngPresAttr (/* PtrElement pEl,
                              PtrAttribute pAttr,
                              PtrDocument pDoc,
-                             boolean Suppr,
-                             boolean herit,
+                             boolean remove,
+                             boolean inherit,
                              PtrAttribute pAttrComp */);
 extern boolean MemeTexte (/* PtrElement pEl,
                              PtrDocument pDoc,

@@ -45,9 +45,9 @@ extern void DesBDimension ( int frame,
 extern void ModeCreation ( PtrBox pBox,
                            int frame );
 extern void DesCaractere ( PtrBox pBox,
-                           PtrTextBuffer * adbuff,
+                           PtrTextBuffer * pBuffer,
                            int *x,
-                           int *icar,
+                           int *index,
                            int *charsNumber,
                            int *spacesNumber );
 
@@ -92,9 +92,9 @@ extern void DesBDimension (/* int frame,
 extern void ModeCreation (/* PtrBox pBox,
                              int frame */);
 extern void DesCaractere (/* PtrBox pBox,
-                             PtrTextBuffer * adbuff,
+                             PtrTextBuffer * pBuffer,
                              int *x,
-                             int *icar,
+                             int *index,
                              int *charsNumber,
                              int *spacesNumber */);
 

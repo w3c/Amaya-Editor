@@ -8,16 +8,16 @@
 
 extern void VueDeFenetre ( int frame,
                            int *doc,
-                           int *vue );
+                           int *view );
 extern void RetourKill ( int *w,
                          int frame,
-                         int *infos );
+                         int *info );
 extern void TraiteExpose ( ThotWindow w,
                            int frame,
                            XExposeEvent * event );
 extern void XChangeTaille ( int *w,
                             int frame,
-                            int *infos );
+                            int *info );
 extern void XChangeHScroll ( int *w,
                              int frame,
                              int *param );
@@ -37,7 +37,7 @@ extern void TtaRaiseView ( Document document,
                            View view );
 extern ThotWidget TtaGetViewFrame ( Document document,
                                     View view );
-extern void MsgSelect ( char *texte );
+extern void MsgSelect ( char *text );
 extern void TtaSetStatus ( Document document,
                            View view,
                            char *text,
@@ -63,12 +63,12 @@ extern void TtaResetCursor ( Document document,
 extern void DesignationPave ( int *frame,
                               int *pave );
 extern void ChangeTitre ( int frame,
-                          char *texte );
+                          char *text );
 extern void ChangeSelFntr ( int frame );
 extern int GetFenetre ( ThotWindow w );
 extern void DimFenetre ( int frame,
-                         int *larg,
-                         int *haut );
+                         int *width,
+                         int *height );
 extern void SetClip ( int frame,
                       int orgx,
                       int orgy,
@@ -84,16 +84,16 @@ extern void MajScrolls ( int frame );
 
 extern void VueDeFenetre (/* int frame,
                              int *doc,
-                             int *vue */);
+                             int *view */);
 extern void RetourKill (/* int *w,
                            int frame,
-                           int *infos */);
+                           int *info */);
 extern void TraiteExpose (/* ThotWindow w,
                              int frame,
                              XExposeEvent * event */);
 extern void XChangeTaille (/* int *w,
                               int frame,
-                              int *infos */);
+                              int *info */);
 extern void XChangeHScroll (/* int *w,
                                int frame,
                                int *param */);
@@ -113,7 +113,7 @@ extern void TtaRaiseView (/* Document document,
                              View view */);
 extern ThotWidget TtaGetViewFrame (/* Document document,
                                       View view */);
-extern void MsgSelect (/* char *texte */);
+extern void MsgSelect (/* char *text */);
 extern void TtaSetStatus (/* Document document,
                              View view,
                              char *text,
@@ -139,12 +139,12 @@ extern void TtaResetCursor (/* Document document,
 extern void DesignationPave (/* int *frame,
                                 int *pave */);
 extern void ChangeTitre (/* int frame,
-                            char *texte */);
+                            char *text */);
 extern void ChangeSelFntr (/* int frame */);
 extern int GetFenetre (/* ThotWindow w */);
 extern void DimFenetre (/* int frame,
-                           int *larg,
-                           int *haut */);
+                           int *width,
+                           int *height */);
 extern void SetClip (/* int frame,
                         int orgx,
                         int orgy,

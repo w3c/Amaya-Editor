@@ -11,7 +11,6 @@ extern void WrPav ( PtrAbstractBox pAb,
                     FILE * outfile );
 extern void ListeBoites ( Name fname,
                           int frame );
-extern void StatMedia ( FILE * outfile );
 
 #else /* __STDC__ */
 
@@ -20,7 +19,6 @@ extern void WrPav (/* PtrAbstractBox pAb,
                       FILE * outfile */);
 extern void ListeBoites (/* Name fname,
                             int frame */);
-extern void StatMedia (/* FILE * outfile */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -6,163 +6,115 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void docModify ( PtrDocument doc,
-                        PtrElement pEl );
 extern boolean VueAvecPage ( PtrDocument pDoc,
-                             int vue,
+                             int view,
                              boolean assoc );
 extern void VueFen ( int nframe,
-                     PtrDocument pD,
-                     int *nv,
+                     PtrDocument pDoc,
+                     int *viewNum,
                      boolean * assoc );
 extern void DocVueFen ( int frame,
-                        PtrDocument * pD,
-                        int *nv,
+                        PtrDocument * pDoc,
+                        int *viewNum,
                         boolean * assoc );
 extern int LesVuesDunDoc ( PtrDocument pDoc,
-                           AvailableView LesVues );
-extern void PaginerDoc ( PtrDocument pDoc );
-extern void LibDocument ( PtrDocument * pDoc );
+                           AvailableView viewList );
 extern void dest1vue ( PtrDocument pDoc,
-                       DocViewNumber v );
-extern int NbVueExiste ( PtrDocument pDoc );
-extern void detruit ( PtrDocument pDoc,
-                      int vue,
-                      boolean assoc,
-                      boolean AvecFermeDoc );
-extern void MajAccessMode ( PtrDocument pDoc,
-                            int accessMode );
-extern void MajElInclus ( PtrElement pEl,
-                          PtrDocument pDoc );
+                       DocViewNumber view );
+extern void CloseDocumentView ( PtrDocument pDoc,
+                                int view,
+                                boolean assoc,
+                                boolean closeDoc );
 extern void changenomdoc ( PtrDocument pDoc,
-                           char *Nm );
-extern boolean SauverDoc ( PtrDocument pDoc,
-                           Name NomDuDocument,
-                           PathBuffer NomDirectory,
-                           boolean SauveDocAvecCopie,
-                           boolean SauveDocAvecMove );
-extern boolean SauveDocument ( PtrDocument pDoc,
-                               int Mode );
-extern void DestVue ( int nframe );
+                           char *newName );
+extern void DestVue ( int nFrame );
 extern void OuvreVuesInit ( PtrDocument pDoc );
-extern void LoadDocument ( PtrDocument * pDoc,
-                           char *nomfichier );
-extern void NewDocument ( PtrDocument * pDoc,
-                          PtrBuffer nomschema,
-                          Name nomdoc,
-                          PathBuffer nomdir );
-extern void NouveauDocument ( PtrBuffer nomsch );
 extern int CreeImageAbstraite ( PtrDocument pDoc,
                                 int v,
                                 int r,
                                 PtrSSchema pSS,
-                                int vuedesignee,
-                                boolean debut,
-                                PtrElement RacineVue );
+                                int chosenView,
+                                boolean begin,
+                                PtrElement viewRoot );
 extern void OuvreVueCreee ( PtrDocument pDoc,
-                            int vue,
-                            boolean Assoc,
+                            int view,
+                            boolean assoc,
                             int X,
                             int Y,
-                            int L,
-                            int H );
+                            int width,
+                            int height );
 extern int CreVueNommee ( PtrDocument pDoc,
-                          Name nom,
+                          Name viewName,
                           int X,
                           int Y,
-                          int L,
-                          int H );
+                          int width,
+                          int height );
 extern void TraiteRetMenuVues ( PtrDocument pDoc,
-                                int VdView,
-                                PtrElement SousArbreVueAOuvrir,
-                                DocViewNumber VueDeReference );
+                                int menuItem,
+                                PtrElement subTree,
+                                DocViewNumber selectedView );
 extern void MenuVuesAOuvrir ( PtrDocument pDoc,
-                              char *Buf,
-                              int *nbitem );
+                              char *buffer,
+                              int *nItems );
 extern void FermerVueDoc ( PtrDocument pDoc,
-                           int nv,
+                           int view,
                            boolean assoc );
-extern void FermerVue ( void );
 
 #else /* __STDC__ */
 
-extern void docModify (/* PtrDocument doc,
-                          PtrElement pEl */);
 extern boolean VueAvecPage (/* PtrDocument pDoc,
-                               int vue,
+                               int view,
                                boolean assoc */);
 extern void VueFen (/* int nframe,
-                       PtrDocument pD,
-                       int *nv,
+                       PtrDocument pDoc,
+                       int *viewNum,
                        boolean * assoc */);
 extern void DocVueFen (/* int frame,
-                          PtrDocument * pD,
-                          int *nv,
+                          PtrDocument * pDoc,
+                          int *viewNum,
                           boolean * assoc */);
 extern int LesVuesDunDoc (/* PtrDocument pDoc,
-                             AvailableView LesVues */);
-extern void PaginerDoc (/* PtrDocument pDoc */);
-extern void LibDocument (/* PtrDocument * pDoc */);
+                             AvailableView viewList */);
 extern void dest1vue (/* PtrDocument pDoc,
-                         DocViewNumber v */);
-extern int NbVueExiste (/* PtrDocument pDoc */);
-extern void detruit (/* PtrDocument pDoc,
-                        int vue,
-                        boolean assoc,
-                        boolean AvecFermeDoc */);
-extern void MajAccessMode (/* PtrDocument pDoc,
-                              int accessMode */);
-extern void MajElInclus (/* PtrElement pEl,
-                            PtrDocument pDoc */);
+                         DocViewNumber view */);
+extern void CloseDocumentView (/* PtrDocument pDoc,
+                                  int view,
+                                  boolean assoc,
+                                  boolean closeDoc */);
 extern void changenomdoc (/* PtrDocument pDoc,
-                             char *Nm */);
-extern boolean SauverDoc (/* PtrDocument pDoc,
-                             Name NomDuDocument,
-                             PathBuffer NomDirectory,
-                             boolean SauveDocAvecCopie,
-                             boolean SauveDocAvecMove */);
-extern boolean SauveDocument (/* PtrDocument pDoc,
-                                 int Mode */);
-extern void DestVue (/* int nframe */);
+                             char *newName */);
+extern void DestVue (/* int nFrame */);
 extern void OuvreVuesInit (/* PtrDocument pDoc */);
-extern void LoadDocument (/* PtrDocument * pDoc,
-                             char *nomfichier */);
-extern void NewDocument (/* PtrDocument * pDoc,
-                            PtrBuffer nomschema,
-                            Name nomdoc,
-                            PathBuffer nomdir */);
-extern void NouveauDocument (/* PtrBuffer nomsch */);
 extern int CreeImageAbstraite (/* PtrDocument pDoc,
                                   int v,
                                   int r,
                                   PtrSSchema pSS,
-                                  int vuedesignee,
-                                  boolean debut,
-                                  PtrElement RacineVue */);
+                                  int chosenView,
+                                  boolean begin,
+                                  PtrElement viewRoot */);
 extern void OuvreVueCreee (/* PtrDocument pDoc,
-                              int vue,
-                              boolean Assoc,
+                              int view,
+                              boolean assoc,
                               int X,
                               int Y,
-                              int L,
-                              int H */);
+                              int width,
+                              int height */);
 extern int CreVueNommee (/* PtrDocument pDoc,
-                            Name nom,
+                            Name viewName,
                             int X,
                             int Y,
-                            int L,
-                            int H */);
+                            int width,
+                            int height */);
 extern void TraiteRetMenuVues (/* PtrDocument pDoc,
-                                  int VdView,
-                                  PtrElement SousArbreVueAOuvrir,
-                                  DocViewNumber VueDeReference */);
+                                  int menuItem,
+                                  PtrElement subTree,
+                                  DocViewNumber selectedView */);
 extern void MenuVuesAOuvrir (/* PtrDocument pDoc,
-                                char *Buf,
-                                int *nbitem */);
+                                char *buffer,
+                                int *nItems */);
 extern void FermerVueDoc (/* PtrDocument pDoc,
-                             int nv,
+                             int view,
                              boolean assoc */);
-extern void FermerVue (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

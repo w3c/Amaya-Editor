@@ -7,7 +7,7 @@
 #if __STDC__
 
 extern void StrDesBoite ( PtrBox * result,
-                          PtrAbstractBox pAb,
+                          PtrAbstractBox pRootAb,
                           int frame,
                           int x,
                           int y,
@@ -16,7 +16,7 @@ extern void StrDesBoite ( PtrBox * result,
 #else /* __STDC__ */
 
 extern void StrDesBoite (/* PtrBox * result,
-                            PtrAbstractBox pAb,
+                            PtrAbstractBox pRootAb,
                             int frame,
                             int x,
                             int y,

@@ -69,26 +69,26 @@ int                 yf;
    if (frame > 0 && frame <= MAX_FRAME)
      {
 	pFrame = &ViewFrameTable[frame - 1];
-	/* Faut-il prendre toute la largeur de la fenetre? */
+	/* Should we take the whole width of the frame ? */
 	if (xd == xf && xd == -1)
 	  {
 	     DimFenetre (frame, &width, &height);
 	     pFrame->FrClipXBegin = pFrame->FrXOrg;
 	     pFrame->FrClipXEnd = width + pFrame->FrXOrg;
 	  }
-	/* On termine un reaffichage */
+	/* finish the redrawing */
 	else if (xd == xf && xd == 0)
 	  {
 	     pFrame->FrClipXBegin = 0;
 	     pFrame->FrClipXEnd = 0;
 	  }
-	/* Faut-il initialiser la zone de reaffichage? */
+	/* Should we initalize the area redrawn */
 	else if (pFrame->FrClipXBegin == pFrame->FrClipXEnd && pFrame->FrClipXBegin == 0)
 	  {
 	     pFrame->FrClipXBegin = xd;
 	     pFrame->FrClipXEnd = xf;
 	  }
-	/* On met a jour la zone de reaffichage */
+	/* Update the coordinates of the area redrawn */
 	else
 	  {
 	     if (pFrame->FrClipXBegin > xd)
@@ -96,7 +96,7 @@ int                 yf;
 	     if (pFrame->FrClipXEnd < xf)
 		pFrame->FrClipXEnd = xf;
 	  }
-	/* Faut-il prendre toute la heighteur de la fenetre? */
+	/* Should we take the whole height of the frame ? */
 	if (yd == yf && yd == -1)
 	  {
 	     DimFenetre (frame, &width, &height);
@@ -109,13 +109,13 @@ int                 yf;
 	     pFrame->FrClipYBegin = 0;
 	     pFrame->FrClipYEnd = 0;
 	  }
-	/* Faut-il initialiser la zone de reaffichage? */
+	/* Should we initalize the area redrawn */
 	else if (pFrame->FrClipYBegin == pFrame->FrClipYEnd && pFrame->FrClipYBegin == 0)
 	  {
 	     pFrame->FrClipYBegin = yd;
 	     pFrame->FrClipYEnd = yf;
 	  }
-	/* On met a jour la zone de reaffichage */
+	/* Update the coordinates of the area redrawn */
 	else
 	  {
 	     if (pFrame->FrClipYBegin > yd)
@@ -162,7 +162,7 @@ void                TtaRefresh ()
      {
 	if (ViewFrameTable[frame - 1].FrAbstractBox != NULL)
 	  {
-	     /* force le reaffichage de toute la fenetre */
+	     /* enforce redrawing of the whole frame */
 	     DefClip (frame, -1, -1, -1, -1);
 	     (void) RedrawFrameBottom (frame, 0);
 	  }
@@ -199,7 +199,7 @@ int                 delta;
    int                 framexmax;
    int                 frameymin;
    int                 frameymax;
-   boolean             audessous;
+   boolean             isbelow;
    boolean             toadd;
    int                 plane;
    int                 nextplane;
@@ -208,8 +208,9 @@ int                 delta;
    PtrBox            pBo1;
    PtrBox            pBo2;
 
-   /* A priori on n'ajoute pas de nouveaux paves */
+   /* are new abstract boxes needed */
    toadd = FALSE;
+
    pFrame = &ViewFrameTable[frame - 1];
    if (pFrame->FrReady && pFrame->FrAbstractBox != NULL
        && pFrame->FrClipXBegin < pFrame->FrClipXEnd
@@ -224,63 +225,66 @@ int                 delta;
 	DimFenetre (frame, &l, &h);
 	height = pFrame->FrYOrg;
 	bottom = height + h;
-	/* S'il y a quelque chose a reafficher ? */
+
+	/* Is there a need to redisplay part of the frame ? */
 	if (framexmin < framexmax && frameymin < frameymax)
 	  {
-	     /* Recherche la 1ere boite au dessus du bottom de la fenetre */
-	     /* La recherche commence par la derniere boite affichee */
+	     /* Search the first visible box starting from the */
+	     /* bottom, i.e. the last box drawn                */
 	     pBox = pFrame->FrAbstractBox->AbBox->BxPrevious;
 	     if (pBox == NULL)
-		/* Document vide */
+		/* empty document */
 		pBox = pFrame->FrAbstractBox->AbBox;
-	     audessous = TRUE;
+	     isbelow = TRUE;
 	     min = NULL;
 	     max = NULL;
 	     vol = 0;
-	     /* 1/2 frame au dessous du bottom de la fenetre */
+	     /* half a frame under the bottom of the window */
 	     x = bottom + h / 2;
-	     while (audessous)
+	     while (isbelow)
 	       {
 		  pBo1 = pBox;
 		  if (pBo1->BxYOrg < bottom)
-		     audessous = FALSE;
+		     isbelow = FALSE;
 		  else
 		    {
 		       if (pBo1->BxYOrg > x)
 			  if (pBo1->BxType != BoPiece && pBo1->BxType != BoDotted)
-			     /* Ce n'est pas une boite de coupure */
+			     /* this is not a breaking box */
 			     vol += pBo1->BxAbstractBox->AbVolume;
 			  else if (pBo1->BxAbstractBox->AbBox->BxNexChild == pBox)
-			     /* C'est la 1ere boite de coupure */
+			     /* this is the first breaking box */
 			     vol += pBo1->BxAbstractBox->AbVolume;
 		       if (pBo1->BxPrevious == NULL)
-			  audessous = FALSE;
+			  isbelow = FALSE;
 		       pBox = pBo1->BxPrevious;
 		    }
 	       }
 
-	     /* On affiche les planes dans l'orde n a 0 */
+	     /* Display planes in reverse order from biggest to lowest */
 	     plane = 65536;
 	     nextplane = plane - 1;
 	     firstbox = pBox;
 	     while (plane != nextplane)
-		/* Il y a un nouveau plane a afficher */
+		/* there is a new plane to display */
 	       {
 		  plane = nextplane;
 		  pBox = firstbox;
-		  /* On reparcourt toutes les boites */
+		  /* browse all the boxes */
 
-		  /* Affiche toutes les boites non encore entierement affichees */
+		  /* Draw all the boxes not yet displayed */
 		  while (pBox != NULL)
 		    {
 		       pBo1 = pBox;
 		       if (pBo1->BxAbstractBox->AbDepth == plane)
-			  /* La boite est affichee dans le plane courant */
+			  /* The box is drawn in the current plane */
 			 {
 			    y = pBo1->BxYOrg + pBo1->BxHeight;
-			    /* Il faut tenir compte du remplissage de fin de bloc */
+
+			    /* take into account the filling of the end of the block */
 			    x = pBo1->BxXOrg + pBo1->BxWidth + pBo1->BxEndOfBloc;
-			    /* On note la derniere boite au dessus ou non visible */
+
+			    /* Save the box on top or the first not visible */
 			    if (y > height && pBo1->BxYOrg < bottom)
 			      {
 				 if (max == NULL)
@@ -292,12 +296,13 @@ int                 delta;
 				&& x >= framexmin
 				&& pBo1->BxXOrg <= framexmax)
 			       DisplayBox (pBox, frame);
-			    /* On passe a la boite nextante */
+
+			    /* Skip to next box */
 			    pBox = pBo1->BxPrevious;
 			 }
 		       else if (pBo1->BxAbstractBox->AbDepth < plane)
-			  /* On retient la plus grande valeur de plane inferieur */
 			 {
+			  /* keep the lowest value for plane depth */
 			    if (plane == nextplane)
 			       nextplane = pBo1->BxAbstractBox->AbDepth;
 			    else if (pBo1->BxAbstractBox->AbDepth > nextplane)
@@ -309,23 +314,25 @@ int                 delta;
 		    }
 	       }
 
-	     /* La zone modifiee est affichee */
+	     /* The updated area is redrawn */
 	     DefClip (frame, 0, 0, 0, 0);
 	     ResetClip (frame);
 
-	     /* On complete eventuellement l'image partielle */
+	     /* If needed complete the partial existing image */
 	     pBox = pFrame->FrAbstractBox->AbBox;
 	     if (!FrameUpdating && !TextInserting)
 	       {
 		  pBo1 = pBox;
+
+		  /* The concrete image is being filled */
 		  FrameUpdating = TRUE;
-		  /* On est en train de completer l'image */
+
+		  /* Abstract image overflow of half a frame both on top and bottom */
 		  y = height - pBo1->BxYOrg;
 		  x = h / 2;
 
-		  /* L'image depasse d'une 1/2 frame en height et en bottom */
 		  if (vol > 0 && y > x)
-		     /* On calcule le volume a retirer */
+		     /* Compute the volume to remove */
 		    {
 		       pBox = pBo1->BxNext;
 		       height -= x;
@@ -342,114 +349,126 @@ int                 delta;
 				    y += pBo2->BxAbstractBox->AbVolume;
 				 else if (pBo2->BxNexChild == NULL)
 				    y += pBo2->BxAbstractBox->AbVolume;
-				 /* else while */
 			      }
 			 }
 		       pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume - vol - y;
 		    }
 
-		  /* Il manque un morceau d'image concrete en height de la fenetre */
+		  /* A piece of the abstract image need to be rebuild on top */
 		  else if (pFrame->FrAbstractBox->AbTruncatedHead && y < 0)
 		    {
-		       /* On libere des paves en bottom */
+		       /* Free abstract boxes at the bottom */
 		       if (vol > 0 && vol < pFrame->FrAbstractBox->AbVolume)
 			 {
 			    DecreaseVolume (FALSE, vol, frame);
 			    DefClip (frame, 0, 0, 0, 0);
-			    /* On complete en height -> On decale toute l'image concrete */
+			    /* Fill on top, so shift the whole concrete image */
 			 }
 
-		       /* Volume a toaddr */
+		       /* Volume to add */
 		       if (pFrame->FrAbstractBox == NULL)
 			 {
-			    printf ("ERR: plus de pave dans %d\n", frame);
+			    printf ("ERR: No more abastract boxes in %d\n", frame);
 			    vol = -pFrame->FrVolume;
 			 }
 		       else
 			  vol = pFrame->FrVolume - pFrame->FrAbstractBox->AbVolume;
 
-		       /* Hauteur a toaddr */
+		       /* Height to add */
 		       x -= y;
 		       if (vol <= 0)
 			 {
-			    /* Volume de la surface manquante */
+			    /* volume of the area to add */
 			    vol = x * l;
-			    /* Evaluation en caracteres */
+			    /* convert in number of chars */
 			    vol = VolumCar (vol);
 			 }
 		       if (min != NULL)
 			 {
 			    pBo2 = min;
 			    y = pBo2->BxYOrg;
-			    /* Ancienne limite de la fenetre */
+
+			    /* previous frame limit */
 			    x = y + pBo2->BxHeight;
 			 }
 		       IncreaseVolume (TRUE, vol, frame);
-		       /* On a toadd des paves */
+
+		       /* Need to add abstract boxes */
 		       toadd = TRUE;
-		       /* Il faut repositionner la fenetre dans l'image concrete */
+
+		       /* Recompute the loaction of the frame in the abstract image */
 		       if (min != NULL)
 			 {
 			    pBo2 = min;
 			    y = -y + pBo2->BxYOrg;
-			    /* y=deplacement de l'ancienne 1ere boite */
-			    /* Ce qui est deja affiche depend de l'ancienne 1ere boite */
+
+			    /* y equal the shift of previous first box */
+			    /* What's already displayed is related to this */
+			    /* previous first box location */
 			    pFrame->FrYOrg += y;
-			    /* x = limite du reaffichage apres decalage */
+
+			    /* x equal the limit of redrawing after shifting */
 			    if (y > 0)
 			       x = pBo2->BxYOrg + pBo2->BxHeight;
-			    /* Nouvelle position limite */
+
+			    /* new limit */
 			    pFrame->FrClipYEnd = x;
 			 }
 		       else
-			  /* Il n'y a pas d'ancienne boite : */
-			  /* la fenetre est cadree en height de l'image */
+			  /* No previous box. The frame is drawn */
+			  /* on top of the concrete image */
 			  pFrame->FrYOrg = 0;
 
-		       /* On a fini de completer l'image */
+		       /* Image should be complete */
 		       FrameUpdating = FALSE;
-		       audessous = RedrawFrameTop (frame, 0);
+		       isbelow = RedrawFrameTop (frame, 0);
 		    }
 
-		  /* Il manque un morceau d'image concrete en bottom de la fenetre */
+		  /* A piece of the concrete image lack at the bottom */
 		  else if (pFrame->FrAbstractBox->AbTruncatedTail && bottom > pBo1->BxYOrg + pBo1->BxHeight)
 		    {
 		       y = pBo1->BxYOrg + pBo1->BxHeight;
-		       /* Volume de la surface manquante */
+
+		       /* volume of the area to add */
 		       vol = (bottom - y) * l;
-		       /* Evaluation en caracteres */
+
+		       /* convert in number of chars */
 		       vol = VolumCar (vol);
 
-		       /* On nettoie le bottom de la fenetre */
+		       /* cleanup the bottom of the frame */
 		       Clear (frame, l, pFrame->FrYOrg + h - y, 0, y);
-		       /* Il faut eviter de boucler quand le volume n'est pas modifie */
+
+		       /* don't loop is volume didn't change */
 		       y = pFrame->FrAbstractBox->AbVolume;
 		       IncreaseVolume (FALSE, vol, frame);
 		       y -= pFrame->FrAbstractBox->AbVolume;
-		       /* On a fini de completer l'image */
+
+		       /* Image should be complete */
 		       FrameUpdating = FALSE;
+
 		       if (y == 0)
-			  printf ("ERR: Il n'y a rien a toaddr\n");
+			  printf ("ERR: Nothing to add\n");
 		       else
-			  /* On n'a peut-etre pas fini de completer l'image */
-			  audessous = RedrawFrameBottom (frame, 0);
+			  /* Maybe image is not complete yet */
+			  isbelow = RedrawFrameBottom (frame, 0);
 		    }
 
-		  /* Le volume est satisfaisant */
+		  /* Volume computed is sufficient */
 		  else
 		     pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume;
-		  /* On a fini de completer l'image */
+
+		  /* update of image is finished */
 		  FrameUpdating = FALSE;
 	       }
 	  }
 	else
-	   /* La zone modifiee n'est pas visible */
+	   /* The nodified area is not visible */
 	   DefClip (frame, 0, 0, 0, 0);
 
      }
    else if (pFrame->FrReady)
      {
-	/* Il n'y avait rien a afficher */
+	/* Nothing to draw */
 	DefClip (frame, 0, 0, 0, 0);
 	ResetClip (frame);
      }
@@ -554,7 +573,7 @@ int                 delta;
    PtrBox            ToCreate;
    int                 i;
 
-   /* used to store new abstract boxes */
+   /* are new abstract boxes needed */
    toadd = FALSE;
    /* used to store boxes created on the fly */
    ToCreate = NULL;
@@ -655,7 +674,7 @@ int                 delta;
 		       else
 			  pAbbox1 = NULL;
 
-/*** skip box to create interractively ***/
+/*** skip box to create dynamically ***/
 		       if (pAbbox1 != NULL)
 			  /* store the box to create */
 			  AddBoxToCreate (&ToCreate, pAbbox1->AbBox, frame);
@@ -842,7 +861,7 @@ int                 delta;
 		     ontop = RedrawFrameBottom (frame, 0);
 	       }
 
-	     /* Le volume est satisfaisant */
+	     /* Volume computed is sufficient */
 	     else
 	       {
 		  /* Is a cleanup of the bottom of frame needed ? */
@@ -886,7 +905,7 @@ int                 frame;
 #endif /* __STDC__ */
 {
    ViewFrame            *pFrame;
-   int                 l, h;
+   int                 w, h;
 
    /* Check that the frame exists */
    pFrame = &ViewFrameTable[frame - 1];
@@ -902,7 +921,7 @@ int                 frame;
    else
      {
 	/* clean the frame */
-	DimFenetre (frame, &l, &h);
-	Clear (frame, l, h, 0, 0);
+	DimFenetre (frame, &w, &h);
+	Clear (frame, w, h, 0, 0);
      }
 }

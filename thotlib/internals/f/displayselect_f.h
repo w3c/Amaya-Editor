@@ -8,17 +8,17 @@
 
 extern void MajPavSelect ( int frame,
                            PtrAbstractBox pAb,
-                           boolean Etat );
+                           boolean status );
 extern void VisuSel ( int frame,
-                      boolean Etat );
+                      boolean status );
 
 #else /* __STDC__ */
 
 extern void MajPavSelect (/* int frame,
                              PtrAbstractBox pAb,
-                             boolean Etat */);
+                             boolean status */);
 extern void VisuSel (/* int frame,
-                        boolean Etat */);
+                        boolean status */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
