@@ -2144,15 +2144,20 @@ LPARAM lParam;
   switch (msg)
     {
     case WM_INITDIALOG:
-      SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_APPLY_CLASS));
       if (withEdit)
-	SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+	  {
+        SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_DEF_CLASS));
+	    SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+	  }
       else
-	SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_APPLY));
+	  {
+        SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_APPLY_CLASS));
+	    SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_APPLY));
+	  }
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
       
       wndListRule = CreateWindow (TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
-				  10, 10, 200, 130, hwnDlg, (HMENU) 1, 
+				  10, 10, 200, 120, hwnDlg, (HMENU) 1, 
 				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
       
       SendMessage (wndListRule, LB_RESETCONTENT, 0, 0);
