@@ -155,7 +155,11 @@ ThotBool BMList_containsURL (List *list, char *url)
   ------------------------------------------------------------*/
 char * BM_GetMDate (void *object)
 {
-  return ((BookmarkP) object)->modified;
+  BookmarkP me;
+
+  me = (BookmarkP) object;
+
+  return (me->modified ? me->modified : (char *) "0000-00-00T00:00:00+00:00");
 }
 
 /*-----------------------------------------------------------
