@@ -102,6 +102,7 @@ Ctrl <Key>t , Ctrl <Key>i:         CreateImage()
 Ctrl <Key>t , Ctrl <Key>-:         CreateHorizontalRule() 
 Ctrl <Key>t , Ctrl <Key>a:         CreateAddress() 
 Ctrl <Key>t , Ctrl <Key>q:         CreateBlockQuote() 
+Ctrl <Key>t , Ctrl <Key>r:         CreateRuby() 
 Ctrl <Key>t , Ctrl <Key>v:         CreateDivision() 
 # BR and &nbsp;
 Ctrl <Key>Return:                  CreateBreak("\212") 
