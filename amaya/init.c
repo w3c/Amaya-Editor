@@ -1017,13 +1017,11 @@ CHAR_T*              text;
       if (change)
 	{
 	  /* change the text value */
-	  TtaSetTextZone (document, view, 1, s);
-	  CallbackDialogue (BaseDialog + URLName, STRING_DATA, s);
+	  TtaSetTextZone (document, view, 1, text);
+	  CallbackDialogue (BaseDialog + URLName, STRING_DATA, text);
 	}
       else
 	CallbackDialogue (BaseDialog + URLName, STRING_DATA, text);
-      if (s)
-	TtaFreeMemory (s);
       InNewWindow = FALSE;
       CurrentDocument = document;
       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 1);
@@ -3772,6 +3770,7 @@ CHAR_T*             data;
 	 }
        break;
      case URLName:
+       RemoveNewLines (data);
        if (IsW3Path (data))
 	 {
 	   /* save the URL name */
