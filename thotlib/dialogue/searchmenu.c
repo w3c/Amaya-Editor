@@ -642,6 +642,9 @@ void CallbackTextReplace (int ref, int val, char *txt)
 #ifdef _GTK 
       TtaDestroyDialogue (NumFormSearchText);
 #endif /* _GTK */
+#ifdef _WX
+      printf ("\nCallbackTextReplace - Penser a detruire ce satane dialogue");
+#endif /* _WX */
 	  TtaFreeMemory (SString);
 	  SString = NULL;
 	  TtaFreeMemory (RString);
@@ -877,6 +880,25 @@ void CallbackTextReplace (int ref, int val, char *txt)
 				   TtaGetMessage (LIB, TMSG_NOT_FOUND),
 				   NULL);
 #endif /* _GTK */
+#ifdef _WX
+	      printf ("\nCallbackTextReplace - TODO : MessageBox");
+	      /*
+	      if (!searchEnd)
+		{
+		  searchEnd = TRUE;
+		  if (WithReplace && ReplaceDone)
+		    {
+		    if (!AutoReplace)
+		      MessageBox (NULL,
+				  TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE),
+				  msgCaption, MB_OK | MB_ICONEXCLAMATION);
+		    }
+		  else
+		    MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOT_FOUND),
+				msgCaption, MB_OK | MB_ICONEXCLAMATION);
+		}
+	      */
+#endif /* _WX */
 	      StartSearch = TRUE;
 	    }
 	}
