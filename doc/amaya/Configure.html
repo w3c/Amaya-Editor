@@ -79,21 +79,19 @@ file</a>.</p>
 
 <h3><a name="Specifying">Specifying the proxies</a></h3>
 <p>
-You can specify a proxy and a set of domains which should be access without
-a proxy by means of two proxy variables. You can set up the proxy variables
-by using either the <a
-href="#registry">registry file</a> or your shell's environment variables.</p>
+You can specify a proxy and a set of domains which should be access without a
+proxy by means of two proxy variables. You can set up the proxy variables by
+using either the <a href="#registry">registry file</a> or your shell's
+environment variables.</p>
 <p>
 If you use the registry file, find the <code>[amaya]</code>, section and
 specify the proxy variables as in the following example:</p>
 <blockquote>
-<pre>
-HTTP_PROXY=http://groucho.marx.edu:1028
+<pre>HTTP_PROXY=http://groucho.marx.edu:1028
      proxy FQDN --^               ^---- optional proxy port
 
 NO_PROXY=harpo.marx.edu zeppo.marx.edu chico.marx.edu
-    FQDN --^           ^--- space separated entries
-</pre>
+    FQDN --^           ^--- space separated entries</pre>
 </blockquote>
 <p>
 Amaya uses the environment variables proxy and no_proxy for setting up the
@@ -118,7 +116,7 @@ how to specify environment variables.</p>
 <p>
 As of version 1.3a, Amaya provides a cache thru libwww. The cache is enabled
 by default and is stored in a directory which is called
-<STRONG>libwww-cache</STRONG>.</p>
+<strong>libwww-cache</strong>.</p>
 <p>
 Three registry files entries allow you to control the cache:</p>
 <dl>
@@ -305,8 +303,7 @@ with the "accent" followed by the "letter". For example to obtain a '&atilde;'
 first press '~' then type 'a'. To obtain a '~' you have to press '~' twice.
 The table below gives available key sequences:</p>
 
-<table border="1">
-<caption></caption>
+<table border="1" style="font-family : times; font-size : 24pt">
 <tbody>
 <tr>
 <td>
@@ -457,13 +454,13 @@ o O
 &ograve; &Ograve;
 </td>
 <td>
-&oslash; &Oslash;
+&oacute; &Oacute;
 </td>
 <td>
 &ouml; &Ouml;
 </td>
 <td>
-
+&oslash; &Oslash;
 </td>
 <td>
 &ocirc; &Ocirc;

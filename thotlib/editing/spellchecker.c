@@ -83,7 +83,10 @@ int                *pDictionary;
 boolean             ToCreate;
 #endif /* __STDC__ */
 {
-  char              *extenddic, *ptr;
+  char              *extenddic;
+# ifdef _WINDOWS
+  char              *ptr;
+# endif /* !_WINDOWS */
   char               path[MAX_PATH], dictname[MAX_PATH];
 
   /* dictionary name = document name */
@@ -118,7 +121,7 @@ boolean             ToCreate;
 # else  /* !_WINDOWS */
   if (path[0] == EOS ||  !TtaCheckDirectory (path))
     strcpy (path, TtaGetEnvString ("HOME"));
-#     endif /* !_WINDOWS */
+# endif /* !_WINDOWS */
   LoadTreatedDict ((PtrDict *) pDictionary, 0, document, dictname,
 		   path, FALSE, ToCreate);
   return (*pDictionary != EOS);

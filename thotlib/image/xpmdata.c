@@ -33,11 +33,12 @@
 \*****************************************************************************/
 
 #ifndef CXPMPROG
-/* Official version number */
+/* Official version number 
 static char *RCS_Version = "$XpmVersion: 3.4k $";
-
-/* Internal version number */
+*/
+/* Internal version number 
 static char *RCS_Id = "$Id$";
+*/
 
 #include "XpmI.h"
 #endif
@@ -386,13 +387,13 @@ xpmGetCmt(data, cmt)
 
 xpmDataType xpmDataTypes[] =
 {
-    "", "!", "\n", '\0', '\n', "", "", "", "",	/* Natural type */
-    "C", "/*", "*/", '"', '"', ",\n", "static char *", "[] = {\n", "};\n",
-    "Lisp", ";", "\n", '"', '"', "\n", "(setq ", " '(\n", "))\n",
+    {"", "!", "\n", '\0', '\n', "", "", "", ""},	/* Natural type */
+    {"C", "/*", "*/", '"', '"', ",\n", "static char *", "[] = {\n", "};\n"},
+    {"Lisp", ";", "\n", '"', '"', "\n", "(setq ", " '(\n", "))\n"},
 #ifdef VMS
     NULL
 #else
-    NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, NULL
+    {NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, NULL}
 #endif
 };
 

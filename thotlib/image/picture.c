@@ -1569,7 +1569,7 @@ int                 frame;
 #endif /* __STDC__ */
 {
    int                 typeImage;
-   char                fileName[1023];
+   PathBuffer          fileName;
    PictureScaling      pres;
    int                 xFrame, yFrame, wFrame, hFrame;
    int                 picXArea, picYArea, picWArea, picHArea;
@@ -1809,7 +1809,7 @@ PictInfo           *imageDesc;
 #endif /* __STDC__ */
 {
    int                 typeImage;
-   char                fileName[1023];
+   PathBuffer          fileName;
    PictureScaling      pres;
    int                 xFrame = 0;
    int                 yFrame = 0;
@@ -2041,7 +2041,7 @@ PictInfo           *imageDesc;
 #endif /* __STDC__ */
 {
    int                 typeImage;
-   char                fileName[1023];
+   PathBuffer          fileName;
    PictureScaling      pres;
    int                 xFrame = 0;
    int                 yFrame = 0;

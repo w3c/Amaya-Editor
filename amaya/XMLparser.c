@@ -12,6 +12,7 @@
 
 #define THOT_EXPORT extern
 #include "amaya.h"
+#include "css.h"
 
 #ifdef MATHML
 #include "MathMLbuilder_f.h"
@@ -19,6 +20,7 @@
 #ifdef GRAPHML
 #include "GraphMLbuilder_f.h"
 #endif
+#include "HTMLstyle_f.h"
 #include "html2thot_f.h"
 
 #define EOS     '\0'

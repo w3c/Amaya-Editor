@@ -5,8 +5,14 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+extern void AddMathButton (Document doc,
+			   View view);
+extern void InitMathML ();
 
 #else /* __STDC__ */
+extern void AddMathButton (/* Document doc,
+			      View view */);
+extern void InitMathML ();
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

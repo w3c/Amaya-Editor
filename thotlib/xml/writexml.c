@@ -251,6 +251,7 @@ char *comments;
   return ok;
 }
 
+#ifdef IV
 /*----------------------------------------------------------------------
    	XmlMakePrefix make the prefix from the first two letters of 
 	the nature name and an arbitrary number
@@ -315,6 +316,7 @@ SSchema sSchema;
     }
   return ok;
 }
+#endif /* IV */
 
 /*----------------------------------------------------------------------
    	XmlFreePrefixs: free internals prefixs structures
@@ -384,7 +386,7 @@ Document        doc;
   return XmlWriteVersionNumber (xmlFile);
 }
 
-
+#ifdef IV
 /*----------------------------------------------------------------------
    XmlWriteDocSchemaNames: write all the structure schemas used by document doc.                                                  
   ----------------------------------------------------------------------*/
@@ -454,7 +456,6 @@ Document        doc;
   return ok;
 }
 
-
 /*----------------------------------------------------------------------
    XmlWriteSchemaPres: Write the doc's schemas presentation
   ----------------------------------------------------------------------*/
@@ -519,6 +520,7 @@ Document doc;
     }
   return ok;
 }
+#endif /* IV */
 
 /*----------------------------------------------------------------------
    XmlWriteReference: Writes a reference

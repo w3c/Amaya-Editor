@@ -50,6 +50,7 @@ static int      GraphDialogue;
 static boolean  PaletteDisplayed = FALSE;
 #define BUFFER_LENGTH 100
 
+#include "HTMLpresentation_f.h"
 #ifdef _WINDOWS
 #include "windialogapi_f.h"
 #define iconGraphics 22

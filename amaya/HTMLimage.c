@@ -24,6 +24,7 @@
 #endif
 #include "AHTURLTools_f.h"
 #include "EDITimage_f.h"
+#include "EDITORactions_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 
@@ -366,7 +367,7 @@ void *context;
 #endif /* __STDC__ */
 {
    char               *pathname;
-   char*               tempfile; /* [MAX_LENGTH]; */
+   char*               tempfile;
    LoadedImageDesc    *desc = (LoadedImageDesc *) context;
    ElemImage          *ctxEl, *ctxPrev;
    ElementType         elType;
@@ -379,7 +380,7 @@ void *context;
 	/* the image could not be loaded */
 	if ((status != 200) && (status != 0))
 	   return;
-    tempfile = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
+	tempfile = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
 	/* rename the local file of the image */
 	strcpy (tempfile, desc->localName);
 	TtaFileUnlink (tempfile);
@@ -413,8 +414,8 @@ void *context;
 	    ctxEl = ctxEl->nextElement;
 	    TtaFreeMemory ( ctxPrev);
 	  }
+	TtaFreeMemory (tempfile);
      }
-   TtaFreeMemory (tempfile);
 }
 
 /*----------------------------------------------------------------------
@@ -696,11 +697,11 @@ int                 flags;
 	/* verify if StopTransfer is called */
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
 	if (DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
-	  return;
+	  break;
 #endif
 	if (DocumentURLs[doc] == NULL || strcmp (currentURL, DocumentURLs[doc]))
 	  /* the document has been removed */
-	  return;
+	  break;
 	/* search the next element having an attribute SRC */
 	TtaSearchAttribute (attrType, SearchForward, el, &elFound, &attr);
 	el = elFound;
@@ -711,6 +712,7 @@ int                 flags;
    while (el != NULL);
 
    /* Images fetching is now finished */
+   TtaFreeMemory (currentURL);
 }
 
 

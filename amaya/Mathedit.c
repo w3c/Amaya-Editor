@@ -19,8 +19,6 @@
 #include "css.h"
 #include "trans.h"
 
-#include "html2thot_f.h"
-#include "MathMLbuilder_f.h"
 #include "MathML.h"
 #ifdef GRAPHML
 #include "GraphML.h"
@@ -28,7 +26,6 @@
 #ifndef _WINDOWS
 #include "Math.xpm"
 #include "math.xpm"
-#include "mathdisp.xpm"
 #include "root.xpm"
 #include "sqrt.xpm"
 #include "frac.xpm"
@@ -55,6 +52,9 @@ static boolean	IsLastDeletedElement = FALSE;
 static Element	LastDeletedElement = NULL;
 static Element	CurrentMatrixColumn = NULL;
 
+#include "html2thot_f.h"
+#include "trans_f.h"
+#include "MathMLbuilder_f.h"
 #ifdef _WINDOWS
 #include "windialogapi_f.h"
 #define iconMath 21 

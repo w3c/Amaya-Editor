@@ -30,6 +30,8 @@
 #include "appdialogue.h"
 #include "fileaccess.h"
 #include "thotdir.h"
+#include "constxml.h"
+#include "typexml.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -70,12 +72,14 @@
 #include "structcommands_f.h"
 #include "structcreation_f.h"
 #include "structselect_f.h"
+#include "thotmodule_f.h"
 #include "tree_f.h"
 #include "views_f.h"
 #include "viewapi_f.h"
 #include "viewcommands_f.h"
 #include "schemas_f.h"
 #include "writepivot_f.h"
+#include "xmlmodule_f.h"
 
 /*----------------------------------------------------------------------
    RedisplayExternalRefs cherche, pour tous les elements du document	

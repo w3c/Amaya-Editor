@@ -34,9 +34,17 @@ typedef struct _HistElement
 /* the history of a window */
 typedef HistElement   anHistory[DOC_HISTORY_SIZE];
 
+
+/* the structure used for the Forward and Backward buttons history callbacks */
+typedef struct _GotoHistory_context
+{
+  Document             doc;
+  int                  prevnext;
+  boolean	       last;
+} GotoHistory_context;
+
 /* the history of all windows */
 static anHistory    DocHistory[DocumentTableLength];
-
 /* current position in the history of each window */
 static int          DocHistoryIndex[DocumentTableLength];
 
@@ -175,14 +183,6 @@ static int      RelativePosition (doc, distance)
    return sum;
 }
 
-
-/* the structure used for the Forward and Backward buttons history callbacks */
-typedef struct _GotoHistory_context {
-  Document             doc;
-  int                  prevnext;
-  boolean	       last;
-} GotoHistory_context;
-
 /*----------------------------------------------------------------------
    GotoPreviousHTML_callback
    This function is called when the document is loaded
@@ -203,59 +203,53 @@ char *urlName;
 char *outputfile;
 char *content_type;
 void *context;
-
 #endif
 {
   Document             doc;
   Element	       el;
-  int                  prev;
-  boolean	       last;
   GotoHistory_context *ctx = (GotoHistory_context *) context;
+  int                  prev;
 
   if (ctx == NULL)
     return;
 
   prev = ctx->prevnext;
-  last = ctx->last;
   doc = ctx->doc;
+  if (DocHistoryIndex[doc] == prev)
+    {
+      /* we are still working on the same document */
+      /* show the document at the position stored in the history */
+      el = ElementAtPosition (doc, DocHistory[doc][prev].HistPosition);
+      TtaShowElement (doc, 1, el, DocHistory[doc][prev].HistDistance);
 
-   /* show the document at the position stored in the history */
-   el = ElementAtPosition (doc, DocHistory[doc][prev].HistPosition);
-   TtaShowElement (doc, 1, el, DocHistory[doc][prev].HistDistance);
-
-   DocHistoryIndex[doc] = prev;
-
-   /* set the Forward button on if it was the last document in the history */
-   if (last)
-      SetArrowButton (doc, FALSE, TRUE);
-
-   TtaFreeMemory (ctx);
+      /* set the Forward button on if it was the last document in the history */
+      if (ctx->last)
+	SetArrowButton (doc, FALSE, TRUE);
+    }
+  TtaFreeMemory (ctx);
 }
 
 /*----------------------------------------------------------------------
    GotoPreviousHTML
    This function is called when the user presses the Previous button
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                GotoPreviousHTML (Document doc, View view)
 #else
 void                GotoPreviousHTML (doc, view)
 Document            document;
 View                view;
-
 #endif
 {
-   int                 prev, i;
+   GotoHistory_context *ctx;
    char               *url = NULL;
    char               *form_data = NULL;
+   int                 prev, i;
    int                 method;
    boolean	       last, hist;
    boolean             same_form_data;
 
-   GotoHistory_context *ctx;
-
-   if ((doc < 0) || (doc >= DocumentTableLength))
+   if (doc < 0 || doc >= DocumentTableLength)
       return;
    if (DocHistoryIndex[doc] < 0 || DocHistoryIndex[doc] >= DOC_HISTORY_SIZE)
       return;
@@ -297,18 +291,18 @@ View                view;
    hist = FALSE;
    last = FALSE;
    if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl == NULL)
-      {
-      last = TRUE;
-      hist = TRUE;
-      }
+     {
+       last = TRUE;
+       hist = TRUE;
+     }
    else
-      {
-      i = DocHistoryIndex[doc];
-      i++;
-      i %= DOC_HISTORY_SIZE;
-      if (DocHistory[doc][i].HistUrl == NULL)
+     {
+       i = DocHistoryIndex[doc];
+       i++;
+       i %= DOC_HISTORY_SIZE;
+       if (DocHistory[doc][i].HistUrl == NULL)
 	 last = TRUE;
-      }
+     }
 
    /* set the Back button off if there is no previous document in history */
    i = prev;
@@ -320,12 +314,17 @@ View                view;
       /* there is no previous document, set the Back button OFF */
       SetArrowButton (doc, TRUE, FALSE);
 
-   /* load the previous document */
    /* save the context */
    ctx = TtaGetMemory (sizeof (GotoHistory_context));
    ctx->prevnext = prev;
    ctx->last = last;
    ctx->doc = doc;
+
+   /* load the previous document */
+   if (hist)
+     /* record the current position in the history */
+     AddDocHistory (doc, url, form_data, method);
+   DocHistoryIndex[doc] = prev;
 
     /* is it the current document ? */     
    if (DocumentURLs[doc] && !strcmp (url, DocumentURLs[doc]) && same_form_data)
@@ -336,8 +335,11 @@ View                view;
 	 AddDocHistory (doc, url, form_data, method);
        GotoPreviousHTML_callback (doc, 0, url, NULL, NULL, (void *) ctx);
      }
-   else 
-     (void) GetHTMLDocument (url, form_data, doc, doc, method, hist, (void *) GotoPreviousHTML_callback, (void *) ctx);
+   else
+     {
+       StopTransfer (doc, 1);
+       (void) GetHTMLDocument (url, form_data, doc, doc, method, FALSE, (void *) GotoPreviousHTML_callback, (void *) ctx);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -360,13 +362,12 @@ char *urlName;
 char *outputfile;
 char *content_type;
 void *context;
-
 #endif
 {
   Element	       el;
-  int                 next;
   Document             doc;
   GotoHistory_context     *ctx = (GotoHistory_context *) context;
+  int                  next;
   
   /* retrieve the context */
 
@@ -375,11 +376,13 @@ void *context;
 
   next = ctx->prevnext;
   doc = ctx->doc;
-
-   /* show the document at the position stored in the history */
-   el = ElementAtPosition (doc, DocHistory[doc][next].HistPosition);
-   TtaShowElement (doc, 1, el, DocHistory[doc][next].HistDistance);
-
+  if (DocHistoryIndex[doc] == next)
+    {
+      /* we are still working on the same document */
+      /* show the document at the position stored in the history */
+      el = ElementAtPosition (doc, DocHistory[doc][next].HistPosition);
+      TtaShowElement (doc, 1, el, DocHistory[doc][next].HistDistance);
+    }
    TtaFreeMemory (ctx);
 }
 
@@ -387,29 +390,24 @@ void *context;
    GotoNextHTML
    This function is called when the user presses the Next button
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                GotoNextHTML (Document doc, View view)
 #else
 void                GotoNextHTML (doc, view)
 Document            document;
 View                view;
-
 #endif
 {
+   GotoHistory_context  *ctx;
    char         *url = NULL;
    char         *form_data = NULL;
    int           method;
+   int		 next, i;
    boolean       same_form_data;
 
-   int		next, i;
-   GotoHistory_context  *ctx;
-
-   if (DocHistoryIndex[doc] < 0)
+   if (doc < 0 || doc >= DocumentTableLength)
       return;
-   if (DocHistoryIndex[doc] >= DOC_HISTORY_SIZE)
-      return;
-   if ((doc < 0) || (doc >= DocumentTableLength))
+   if (DocHistoryIndex[doc] < 0 || DocHistoryIndex[doc] >= DOC_HISTORY_SIZE)
       return;
 
    /* next entry in history */
@@ -474,8 +472,11 @@ View                view;
    if (DocumentURLs[doc] && !strcmp (url, DocumentURLs[doc]) && same_form_data)
      /* it's just a move in the same document */
      GotoNextHTML_callback (doc, 0, url, NULL, NULL, (void *) ctx);
-   else 
-     (void) GetHTMLDocument (url, form_data, doc, doc, method, FALSE, (void *) GotoNextHTML_callback, (void *) ctx);
+   else
+     {
+       StopTransfer (doc, 1);
+       (void) GetHTMLDocument (url, form_data, doc, doc, method, FALSE, (void *) GotoNextHTML_callback, (void *) ctx);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -527,7 +528,7 @@ ClickEvent          method;
       /* there is no document before in the history */
       /* The Back button is normally OFF set it ON */
       SetArrowButton (doc, TRUE, TRUE);
-
+     
    /* store the URL and the associated form data */
    if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl)
      TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].HistUrl);

@@ -20,6 +20,10 @@
 #include "css_f.h"
 #include "html2thot_f.h"
 #include "init_f.h"
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
+#else
+#include "query_f.h"
+#endif /* AMAYA_JAVA */
 #include "EDITORactions_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
@@ -826,7 +830,7 @@ View                view;
 #endif /* __STDC__ */
 {
    ElementType         elType;
-   Element             el, firstEl;
+   Element             el;
    AttributeType       attrType;
    Attribute           attr;
    int                 firstChar, i;
@@ -2198,7 +2202,7 @@ View view;
 {
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 #else
- StopAllRequests ();
+ StopAllRequests (doc);
   libwww_CleanCache ();
 #endif /* AMAYA_JAVA */
 }

@@ -102,9 +102,9 @@ int                *pointselect;
 	   /* ou si le pave est un fils du precedent */
 	     else if (pSelBox->BxAbstractBox->AbDepth > pAb->AbDepth ||
 		      (pSelBox->BxAbstractBox->AbDepth == pAb->AbDepth &&
-		       (pSelBox->BxAbstractBox->AbLeafType == LtCompound &&
-		       pAb->AbLeafType != LtCompound) ||
-		       IsParentBox (pSelBox, pBox)))
+		       ((pSelBox->BxAbstractBox->AbLeafType == LtCompound &&
+			 pAb->AbLeafType != LtCompound) ||
+			IsParentBox (pSelBox, pBox))))
 	       {
 		 pSelBox = pBox;
 		 *pointselect = pointIndex;

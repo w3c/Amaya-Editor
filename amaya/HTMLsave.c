@@ -1445,15 +1445,23 @@ DBG(fprintf(stderr, "DoSaveAs : from %s to %s/%s , with images %d\n", DocumentUR
   documentFile = TtaGetMemory (MAX_LENGTH);
   strcpy (documentFile, SavePath);
   len = strlen (documentFile);
-  if (documentFile [len -1] != DIR_SEP && documentFile [len - 1] != '/') {
-     if (dst_is_local) {
-        strcat (documentFile, DIR_STR);
-        url_sep = DIR_SEP;
-     } else {
-           strcat (documentFile, "/");
-           url_sep = '/';
-     }
-  }
+  if (documentFile [len -1] != DIR_SEP && documentFile [len - 1] != '/')
+    {
+     if (dst_is_local)
+       {
+	 strcat (documentFile, DIR_STR);
+	 url_sep = DIR_SEP;
+       }
+     else
+       {
+	 strcat (documentFile, "/");
+	 url_sep = '/';
+       }
+    }
+  else if (dst_is_local)
+    url_sep = DIR_SEP;
+  else
+    url_sep = '/';
 
   if (SaveName[0] == EOS)
     {

@@ -750,7 +750,7 @@ char               *text;
 
 #endif
 {
-  char             *s;
+  char             *s = NULL;
   boolean           change;
 
   change = FALSE;

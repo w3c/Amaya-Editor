@@ -152,6 +152,7 @@ BoxType          colrow;
   boolean             empty;
 
   /* select the rigth list */
+  i = 0;
   pPreviousTabRel = NULL;
   if (colrow == BoColumn && table->AbBox->BxColumns != NULL)
     {
@@ -458,21 +459,21 @@ int             frame;
 #endif
 {
   PtrAttribute        pAttr;
-  PtrSSchema          pSS;
+  PtrSSchema          pSS = NULL;
   PtrDocument         pDoc;
   PtrAbstractBox      cell, row , firstRow, pAb;
   PtrAbstractBox      rowList[MAX_COLROW];
   PtrTabRelations     pTabRel;
   int                 i, j, k, org, val;
   int                 sum, height;
-  int                 attrHeight;
+  int                 attrHeight = 0;
   int                 remainder;
   boolean             found;
 
   if (table->AbBox->BxCycles != 0)
     /* the table formatting is currently in process */
     return;
-
+  j = 0;
   /* manage spanned columns */
   pDoc = LoadedDocument[FrameTable[frame].FrDoc - 1];
   if (number > 0)
@@ -497,7 +498,7 @@ int             frame;
 		      row != pTabRel->TaRTable[j])
 		j++;
 	      
-	      found = (row == pTabRel->TaRTable[j]);
+	      found = (j < MAX_RELAT_DIM && row == pTabRel->TaRTable[j]);
 	      if (!found)
 		pTabRel = pTabRel->TaRNext;
 	    }
@@ -535,6 +536,9 @@ int             frame;
 		  else
 		    row = NULL;
 		}
+	      /* update rowSpans[i] if necessary */
+	      if (k < rowSpans[i])
+		rowSpans[i] = k;
 
 	      /* get the real cell height */
 	      pAb = cell->AbFirstEnclosed;

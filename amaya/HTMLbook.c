@@ -947,7 +947,7 @@ Document            document;
   Attribute		RelAttr, HrefAttr = NULL;
   AttributeType	attrType;
   int			length;
-  char			*text, *ptr, *url;
+  char			*text, *ptr, *url = NULL;
   Document		newdoc;
   boolean              call_callback = FALSE;
   GetIncludedDocuments_context  *ctx = NULL;

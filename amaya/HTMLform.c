@@ -847,6 +847,8 @@ Element             element;
 	else
 	   method = TtaGetAttributeValue (attr);
      }
+   else
+     method = HTML_ATTR_METHOD_VAL_Get_;
 
    /* search the subtree for the form elements */
    elForm  = TtaGetFirstChild(elForm);

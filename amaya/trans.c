@@ -15,11 +15,13 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "trans.h"
+#include "tree.h"
 
 #include "HTMLimage_f.h"
 #include "html2thot_f.h"
 #include "transparse_f.h"
-#include "tree.h"
+#include "XMLparser_f.h"
+
  
 /*
  * pattern matching stack associates a node of source structure tree to a 
@@ -564,7 +566,7 @@ Element             elem;
 #endif
 {
    boolean             result;
-   strAttrDesc        *pAttr;
+   strAttrDesc        *pAttr = NULL;
    AttributeType       AttrTyp;
    Attribute           attr;
    char               *buf;
@@ -1969,7 +1971,8 @@ Document            doc;
 
 #endif
 {
-   Element             prevFirst, parentFirst, nextLast, parentLast;
+   Element             prevFirst, parentFirst, nextLast;
+   Element             parentLast = NULL;
    boolean             result;
 
    TtaGiveFirstSelectedElement (doc, &origFirstSelect, &ffc, &flc);
@@ -2139,7 +2142,7 @@ char               *prevtag;
 {
 
   ElementType         elemTypeChild, tagElType, prevElType;
-  int                 cardinal, i;
+  int                 cardinal, i = 0;
   ElementType 	      *subTypes;
   boolean             result, found;
   Construct           constOfType;

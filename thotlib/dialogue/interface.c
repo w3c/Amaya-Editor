@@ -454,13 +454,15 @@ static Multi_Key    mk_tab[] =
    {XK_n, XK_asciitilde, XK_ntilde},	/* ntilde */
    {XK_O, XK_grave, XK_Ograve},	/* Ograve */
    {XK_O, XK_acute, XK_Oacute},	/* Oacute */
-   {XK_O, XK_apostrophe, XK_Ooblique},	/* Ooblique */
+   {XK_O, XK_apostrophe, XK_Oacute},	/* Oacute */
+   {XK_O, XK_asterisk, XK_Ooblique},	/* Oacute */
    {XK_O, XK_asciicircum, XK_Ocircumflex},	/* Ocircumflex */
    {XK_O, XK_asciitilde, XK_Otilde},	/* Otilde */
    {XK_O, XK_quotedbl, XK_Odiaeresis},	/* Odiaeresis */
    {XK_o, XK_grave, XK_ograve},	/* ograve */
    {XK_o, XK_acute, XK_oacute},	/* oacute */
-   {XK_o, XK_apostrophe, XK_oslash},	/* oslash */
+   {XK_o, XK_apostrophe, XK_oacute},	/* oslash */
+   {XK_o, XK_asterisk, XK_oslash},	/* oslash */
    {XK_o, XK_asciicircum, XK_ocircumflex},	/* ocircumflex */
    {XK_o, XK_asciitilde, XK_otilde},	/* otilde */
    {XK_o, XK_minus, XK_otilde},	/* otilde */

@@ -35,12 +35,13 @@
 #include "page_tv.h"
 
 
-#include "buildboxes_f.h"
 #include "absboxes_f.h"
-#include "changeabsbox_f.h"
-#include "presrules_f.h"
 #include "boxpositions_f.h"
+#include "buildboxes_f.h"
+#include "changeabsbox_f.h"
+#include "font_f.h"
 #include "pagecommands_f.h"
+#include "presrules_f.h"
 
 
 /*----------------------------------------------------------------------

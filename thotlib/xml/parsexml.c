@@ -34,19 +34,23 @@
 #include "document.h"
 #include "application.h"
 #include "app.h"
-
-#define THOT_EXPORT
-#include "translatexml_f.h"
+#include "constmedia.h"
+#include "typemedia.h"
+#include "appdialogue.h"
 #include "constxml.h"
 #include "typexml.h"
-#include "xmlmodule_f.h"
-#include "thotmodule_f.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
-#include "constmedia.h"
-#include "appdialogue.h"
 #include "appdialogue_tv.h"
+
+#include "actions_f.h"
+#include "referenceapi_f.h"
+#include "translatexml_f.h"
+#include "treeapi_f.h"
+#include "thotmodule_f.h"
+#include "xmlmodule_f.h"
+
 
 /* an entity name */
 typedef unsigned char entName[10];
@@ -1555,6 +1559,6 @@ char	 *name;
 void XmlParserLoadResources ()
 {
   if (ThotLocalActions[T_xmlparsedoc] == NULL)
-    TteConnectAction (T_xmlparsedoc, XmlParseDoc);
+    TteConnectAction (T_xmlparsedoc, (Proc) XmlParseDoc);
 }
 /* end of module */

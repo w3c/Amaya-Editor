@@ -4722,7 +4722,7 @@ int                 code;
 
 #endif
 {
-   int		i, c;
+   int		i, c = 0;
    Language	lang, l;
 
    /* look for that code in the fallback table */
@@ -4749,6 +4749,8 @@ int                 code;
 	 c = UnicodeFallbackTable[i].EightbitCode - 2000;
 	 }
       }
+   else
+     lang = TtaGetLanguageIdFromAlphabet('L');
 
    if (lang == currentLanguage)
       PutInBuffer ((char) c);

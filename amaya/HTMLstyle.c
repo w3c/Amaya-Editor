@@ -2987,7 +2987,7 @@ PresentationContext context;
 char               *cssRule;
 #endif
 {
-  Element              el;
+  Element              el = NULL;
   ElementType          elType;
   GenericContext        gblock;
   SpecificContextBlock *sblock;
@@ -3350,7 +3350,7 @@ char               *cssRule;
 #endif
 {
   PresentationValue   unused;
-  char               *p;
+  char               *p = NULL;
   int                 lg , i;
   boolean             found;
 
