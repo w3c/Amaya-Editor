@@ -214,7 +214,7 @@ static void SetControlPoints (float x, float y, float l1, float l2,
    Le parametre nb contient le nombre de points + 1        
    definis dans la polyline.                               
   ----------------------------------------------------------------------*/
-C_points *ComputeControlPoints (PtrTextBuffer buffer, int nb, int zoom)
+C_points *ComputeControlPoints (PtrTextBuffer buffer, int nb)
 {
    C_points           *controls;
    PtrTextBuffer       pBuffer;
@@ -228,15 +228,11 @@ C_points *ComputeControlPoints (PtrTextBuffer buffer, int nb, int zoom)
 
    pBuffer = buffer;
    j = 1;
-   x1 = (float) PixelValue (pBuffer->BuPoints[j].XCoord, UnPixel, NULL,
-			    zoom);
-   y1 = (float) PixelValue (pBuffer->BuPoints[j].YCoord, UnPixel, NULL,
-			    zoom);
+   x1 = pBuffer->BuPoints[j].XCoord;
+   y1 = pBuffer->BuPoints[j].YCoord;
    j++;
-   x2 = (float) PixelValue (pBuffer->BuPoints[j].XCoord, UnPixel, NULL,
-			    zoom);
-   y2 = (float) PixelValue (pBuffer->BuPoints[j].YCoord, UnPixel, NULL,
-			    zoom);
+   x2 = pBuffer->BuPoints[j].XCoord;
+   y2 = pBuffer->BuPoints[j].YCoord;
    if (nb < 3)
      {
 	/* cas particulier des courbes avec 2 points */
@@ -246,10 +242,8 @@ C_points *ComputeControlPoints (PtrTextBuffer buffer, int nb, int zoom)
    else
      {
 	j++;
-	x3 = (float) PixelValue (pBuffer->BuPoints[j].XCoord, UnPixel,
-				 NULL, zoom);
-	y3 = (float) PixelValue (pBuffer->BuPoints[j].YCoord, UnPixel,
-				 NULL, zoom);
+	x3 = pBuffer->BuPoints[j].XCoord;
+	y3 = pBuffer->BuPoints[j].YCoord;
      }
 
    dx = x1 - x2;
@@ -307,10 +301,8 @@ C_points *ComputeControlPoints (PtrTextBuffer buffer, int nb, int zoom)
 		       j = 0;
 		    }
 	       }
-	     x3 = (float) PixelValue (pBuffer->BuPoints[j].XCoord,
-				      UnPixel, NULL, zoom);
-	     y3 = (float) PixelValue (pBuffer->BuPoints[j].YCoord,
-				      UnPixel, NULL, zoom);
+	     x3 = pBuffer->BuPoints[j].XCoord;
+	     y3 = pBuffer->BuPoints[j].YCoord;
 	  }
 	dx = x3 - x2;
 	dy = y2 - y3;
@@ -346,7 +338,6 @@ C_points *ComputeControlPoints (PtrTextBuffer buffer, int nb, int zoom)
 
    return (controls);
 }
-
 
 /*----------------------------------------------------------------------
   GiveTextParams returns the width and the number of included spaces

@@ -962,7 +962,7 @@ void DisplayPolyLine (PtrBox pBox, int frame, ThotBool selected,
 	  /* compute control points */
 	  if (pBox->BxPictInfo == NULL)
 	    pBox->BxPictInfo = (int *) ComputeControlPoints (pBox->BxBuffer,
-							     pBox->BxNChars, ViewFrameTable[frame - 1].FrMagnification);
+							     pBox->BxNChars);
 	  DrawCurve (frame, i, style, xd, yd, pBox->BxBuffer,
 		     pBox->BxNChars, fg, arrow,
 		     (C_points *) pBox->BxPictInfo);
@@ -975,7 +975,7 @@ void DisplayPolyLine (PtrBox pBox, int frame, ThotBool selected,
 	  /* compute control points */
 	  if (pBox->BxPictInfo == NULL)
 	    pBox->BxPictInfo = (int *) ComputeControlPoints (pBox->BxBuffer, 
-							     pBox->BxNChars, ViewFrameTable[frame - 1].FrMagnification);
+							     pBox->BxNChars);
 	  DrawSpline (frame, i, style, xd, yd, pBox->BxBuffer,
 		      pBox->BxNChars, fg, bg, pat,
 		      (C_points *) pBox->BxPictInfo);

@@ -11,8 +11,7 @@ extern PtrAbstractBox SearchNextAbsBox ( PtrAbstractBox pAb,
 extern PtrAbstractBox GetParentCell ( PtrBox pBox );
 extern PtrAbstractBox GetParentDraw ( PtrBox pBox );
 extern C_points *ComputeControlPoints ( PtrTextBuffer buffer,
-                                        int nb,
-                                        int zoom );
+                                        int nb );
 extern char GiveTextParams ( PtrTextBuffer *pBuffer,
                              int *ind,
                              int *nChars,
@@ -84,8 +83,7 @@ extern PtrAbstractBox SearchNextAbsBox (/* PtrAbstractBox pAb,
 extern PtrAbstractBox GetParentCell (/* PtrBox pBox */);
 extern PtrAbstractBox GetParentDraw (/* PtrBox pBox */);
 extern C_points *ComputeControlPoints (/* PtrTextBuffer buffer,
-                                          int nb,
-                                          int zoom */);
+                                          int nb */);
 extern char GiveTextParams (/* PtrTextBuffer *pBuffer,
                                int *ind,
                                int *nChars,
