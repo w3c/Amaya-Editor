@@ -9,7 +9,6 @@
    nodialog : fonctions vides pour l'edition de lien
  */
 
-#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"

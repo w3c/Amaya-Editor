@@ -18,7 +18,6 @@
    Chargement et liberation des schemas de structure et de traduction
  */
 
-#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "consttra.h"

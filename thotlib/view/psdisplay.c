@@ -1693,7 +1693,7 @@ int                 pattern;
       if (pat != 0) {
          WinLoadGC (TtPrinterDC, fg, RO);
    
-         hBrush = CreateSolidBrush (Pix_Color[bg]);
+         hBrush = CreateSolidBrush (ColorPixel (bg));
          hOldBrush = SelectObject (TtPrinterDC, hBrush);
          PatBlt (TtPrinterDC, x, y, larg, height, PATCOPY);
          SelectObject (TtPrinterDC, hOldBrush);
@@ -1702,7 +1702,7 @@ int                 pattern;
 	  }
 
       if (thick > 0) {
-         if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [fg])))
+         if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg))))
             WinErrorBox (WIN_Main_Wd);
          hOldPen = SelectObject (TtPrinterDC, hPen) ;
          SelectObject (TtPrinterDC, GetStockObject (NULL_BRUSH)) ;
@@ -2310,7 +2310,7 @@ int                 pattern;
 
    /* Fill in the rectangle */
    if (pat != 0) {
-      hBrush = CreateSolidBrush (Pix_Color[bg]);
+      hBrush = CreateSolidBrush (ColorPixel (bg));
       hOldBrush = SelectObject (TtPrinterDC, hBrush);
    } else {
          SelectObject (TtPrinterDC, GetStockObject (NULL_BRUSH));
@@ -2343,7 +2343,7 @@ int                 pattern;
 			 } 
 	  }  
    } else {
-          if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [bg])))
+          if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
              WinErrorBox (WIN_Main_Wd);
    }
 
@@ -2440,11 +2440,11 @@ int                 pattern;
                          hBrush = (HBRUSH) 0;
                          break;
 
-                case 1:  hBrush = CreateSolidBrush (Pix_Color[fg]);
+                case 1:  hBrush = CreateSolidBrush (ColorPixel (fg));
                          hOldBrush = SelectObject (TtPrinterDC, hBrush);
                          break;
 
-                case 2:  hBrush = CreateSolidBrush (Pix_Color[bg]);
+                case 2:  hBrush = CreateSolidBrush (ColorPixel (bg));
                          hOldBrush = SelectObject (TtPrinterDC, hBrush);
                          break;
 
@@ -2489,7 +2489,7 @@ int                 pattern;
 				} 
 		 }  
 	  } else {
-             if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [bg])))
+             if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
                 WinErrorBox (WIN_Main_Wd);
 	  }
       hOldPen = SelectObject (TtPrinterDC, hPen) ;

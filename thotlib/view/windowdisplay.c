@@ -1061,7 +1061,7 @@ int                 fg;
       /* if (!GetClipRgn(TtDisplay, clipRgn))
          WinErrorBox (NULL); */
       WinLoadGC (TtDisplay, fg, RO);
-      if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [fg])))
+      if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg))))
          WinErrorBox (WIN_Main_Wd);
       hOldPen = SelectObject (TtDisplay, hPen) ;
       Polyline (TtDisplay, point, 4);
@@ -1554,7 +1554,7 @@ int                 pattern;
 
    WinLoadGC (TtDisplay, fg, RO);
    if (pat != 0) {
-      hBrush = CreateSolidBrush (Pix_Color[bg]);
+      hBrush = CreateSolidBrush (ColorPixel (bg));
       hOldBrush = SelectObject (TtDisplay, hBrush);
    } else {
          SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
@@ -1585,7 +1585,7 @@ int                 pattern;
 			 } 
 	  }  
    } else {
-          if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [bg])))
+          if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
              WinErrorBox (WIN_Main_Wd);
    }
    hOldPen = SelectObject (TtDisplay, hPen) ;
@@ -1864,7 +1864,7 @@ int                 pattern;
       /* if (!GetClipRgn(TtDisplay, clipRgn))
          WinErrorBox (NULL); */
       WinLoadGC (TtDisplay, fg, RO);
-      if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [fg])))
+      if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg))))
          WinErrorBox (WIN_Main_Wd);
       hOldPen = SelectObject (TtDisplay, hPen) ;
       InitDrawing (0, style, thick, RO, active, fg);
@@ -2269,7 +2269,7 @@ C_points           *controls;
       /* if (!GetClipRgn(TtDisplay, clipRgn))
          WinErrorBox (NULL); */
       WinLoadGC (TtDisplay, fg, RO);
-      if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [fg])))
+      if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg))))
          WinErrorBox (WIN_Main_Wd);
       hOldPen = SelectObject (TtDisplay, hPen) ;
       InitDrawing (0, style, thick, RO, active, fg);
@@ -2356,7 +2356,7 @@ int                 pattern;
    /* Fill in the rectangle */
    WinLoadGC (TtDisplay, fg, RO);
    if (pat != 0) {
-      hBrush = CreateSolidBrush (Pix_Color[bg]);
+      hBrush = CreateSolidBrush (ColorPixel (bg));
       hOldBrush = SelectObject (TtDisplay, hBrush);
    } else {
          SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
@@ -2387,7 +2387,7 @@ int                 pattern;
 			 } 
 	  }  
    } else {
-          if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [bg])))
+          if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
              WinErrorBox (WIN_Main_Wd);
    }
 
@@ -2587,11 +2587,11 @@ int                 pattern;
                       hBrush = (HBRUSH) 0;
                       break;
 
-             case 1:  hBrush = CreateSolidBrush (Pix_Color[fg]);
+             case 1:  hBrush = CreateSolidBrush (ColorPixel (fg));
                       hOldBrush = SelectObject (TtDisplay, hBrush);
                       break;
 
-             case 2:  hBrush = CreateSolidBrush (Pix_Color[bg]);
+             case 2:  hBrush = CreateSolidBrush (ColorPixel (bg));
                       hOldBrush = SelectObject (TtDisplay, hBrush);
                       break;
 
@@ -2601,7 +2601,7 @@ int                 pattern;
 	  }
    } else if (pat != 0) {
       hBrush = CreatePatternBrush (pat); 
-      /* hBrush = CreateSolidBrush (Pix_Color[pattern]); */
+      /* hBrush = CreateSolidBrush (ColorPixel (pattern)); */
       hOldBrush = SelectObject (TtDisplay, hBrush);
    } else {
          SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
@@ -2632,7 +2632,7 @@ int                 pattern;
 			 } 
 	  }  
    } else {
-          if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [bg])))
+          if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
              WinErrorBox (WIN_Main_Wd);
    }
 
@@ -3181,8 +3181,10 @@ int          color;
 #  ifndef _WINDOWS
    XSetWindowBackground (TtDisplay, FrRef[frame], ColorPixel (color));
 #  else  /* _WINDOWS */
+   COLORREF cr;
    WIN_GetDeviceContext (frame) ;
-   SetBkColor (TtDisplay, ColorPixel (color)); 
+   cr = ColorPixel (color);
+   SetBkColor (TtDisplay, (COLORREF)ColorPixel (color)); 
    WIN_ReleaseDeviceContext ();
 #  endif /* _WINDOWS */
 }

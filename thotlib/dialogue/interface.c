@@ -17,7 +17,6 @@
 /*#define DEBUG_MULTIKEY 1*/
 #define OWN_XLOOKUPSTRING	/* Do NOT remove it, it change thot_gui.h includes */
 
-#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmenu.h"

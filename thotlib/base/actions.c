@@ -19,7 +19,6 @@
  * Changed: S. Bonhomme (INRIA) 
  */
 
-#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "appstruct.h"

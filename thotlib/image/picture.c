@@ -23,7 +23,6 @@
  * Last modification: Jan 09 1997
  */
 
-#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"

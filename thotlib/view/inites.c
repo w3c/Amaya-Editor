@@ -490,7 +490,7 @@ unsigned short      blue;
 	 {
 	   /* try to allocate the right color */
 #ifdef _WINDOWS
-	   ExtColor[prev] = RGB (red, green, blue);
+	   ExtColor[prev] = RGB ((BYTE)red, (BYTE)green, (BYTE)blue);
 #else  /* _WINDOWS */
 	   col.red   = red * 256;
 	   col.green = green * 256;

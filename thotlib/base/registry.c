@@ -23,7 +23,6 @@
  *
  */
 
-#include "ustring.h"
 #include "thotkey.h"
 #include "thot_sys.h"
 #include "constmedia.h"

@@ -11,7 +11,6 @@
  * Authors: S. Bonhomme (INRIA)
  *          
  */
-#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"

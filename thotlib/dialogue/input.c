@@ -24,7 +24,6 @@
  *
  */
 
-#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "thot_key.h"

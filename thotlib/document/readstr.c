@@ -18,7 +18,6 @@
    Ce module charge un schema de structure depuis un fichier .STR
  */
 
-#include "ustring.h"
 #include "thot_sys.h"
 #include "libmsg.h"
 #include "message.h"

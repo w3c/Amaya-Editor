@@ -19,7 +19,6 @@
  *         R. Guetari (W3C/INRIA) Windows NT/95
  */
 
-#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"

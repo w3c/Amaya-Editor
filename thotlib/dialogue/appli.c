@@ -22,7 +22,6 @@
  *
  */
 
-#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "thot_key.h"
@@ -993,7 +992,15 @@ View                view;
 
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
+#  ifdef _WINDOWS
+   int                 frame;
+
+   if (document != 0)
+      frame = GetWindowNumber (document, view);
+   else
+     frame = 0;
+   JumpIntoView (frame, 0);
+#  else  /* !_WINDOWS */
    XmScrollBarCallbackStruct infos;
    int                 frame;
 
@@ -1003,7 +1010,7 @@ View                view;
      frame = 0;
    infos.reason = XmCR_TO_TOP;
    FrameVScrolled (0, frame, (int *) &infos);
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -1018,7 +1025,15 @@ View                view;
 
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
+#  ifdef _WINDOWS
+   int                 frame;
+
+   if (document != 0)
+      frame = GetWindowNumber (document, view);
+   else
+     frame = 0;
+   JumpIntoView (frame, 100);
+#  else  /* !_WINDOWS */
    XmScrollBarCallbackStruct infos;
    int                 frame;
 
@@ -1028,7 +1043,7 @@ View                view;
      frame = 0;
    infos.reason = XmCR_TO_BOTTOM;
    FrameVScrolled (0, frame, (int *) &infos);
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }
 
 

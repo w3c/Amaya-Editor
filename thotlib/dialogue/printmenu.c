@@ -9,7 +9,6 @@
  * Messages and printing management.
  */
 
-#include "ustring.h"
 #include "thot_sys.h"
 #include "libmsg.h"
 #include "message.h"

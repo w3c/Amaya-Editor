@@ -21,7 +21,6 @@
  *         R. Guetari (W3C/INRIA) - Adaptation to Windows platforms.
  */
 
-#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 

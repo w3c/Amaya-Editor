@@ -21,7 +21,6 @@
  *
  */
 
-#include "ustring.h"
 #include "thot_sys.h"
 int                 UserErrorCode;
 

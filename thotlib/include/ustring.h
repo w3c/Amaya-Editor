@@ -10,12 +10,25 @@
 
 #ifdef _I18N_
 
+#ifdef __JIS__
+
+typedef unsigned int    CHAR_T;
+typedef unsigned int*   PCHAR_T;
+typedef unsigned int    UCHAR_T;
+typedef unsigned int*   PUCHAR_T;
+typedef unsigned int*   STRING;
+typedef unsigned int*   USTRING;
+
+#else  /* !__JIS__ */
+
 typedef unsigned short  CHAR_T;
 typedef unsigned short* PCHAR_T;
 typedef unsigned short  UCHAR_T;
 typedef unsigned short* PUCHAR_T;
 typedef unsigned short* STRING;
 typedef unsigned short* USTRING;
+
+#endif /* __JIS__ */
 
 #else  /* _I18N_ */
 

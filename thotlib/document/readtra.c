@@ -18,7 +18,6 @@
    Ce module charge un schema de traduction depuis un fichier .TRA
  */
 
-#include "ustring.h"
 #include "thot_sys.h"
 #include "libmsg.h"
 #include "message.h"
