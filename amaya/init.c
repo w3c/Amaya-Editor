@@ -1382,9 +1382,9 @@ View                view;
   Load the Home page
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void     GoToHome (Document doc, View view)
+void            GoToHome (Document doc, View view)
 #else
-static void     GoToHome (doc, view)
+void            GoToHome (doc, view)
 Document        doc;
 View            view;
 #endif
@@ -3403,9 +3403,6 @@ void               *ctx_cbf;
 		       /* help document has to be in read-only mode */
 		       TtcSwitchCommands (newdoc, 1); /* no command filed */
 		       
-		       TtaSetItemOff (newdoc, 1, File, New1);
-		       TtaSetItemOff (newdoc, 1, File, BOpenDoc);
-		       TtaSetItemOff (newdoc, 1, File, BOpenInNewWindow);
 		       if (CE_event == CE_HELP)
 			 TtaSetToggleItem (newdoc, 1, Views, TShowTextZone, FALSE);
 		       else
