@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * Handles error messages for Thot applications
  *
@@ -86,7 +77,8 @@ CHAR_T*             pBuffer;
 	if (pBuffer[i] != WC_EOS)
 	   if (pBuffer[i + 1] == TEXT('\\'))
 	     {
-		/* On est dans le cas de deux backslashs consecutifs; on les prend */
+		/* On est dans le cas de deux backslashs consecutifs;
+		   on les prend */
 		result[j++] = pBuffer[i++];
 		result[j++] = pBuffer[i++];
 	     }
@@ -163,7 +155,8 @@ char*               pBuffer;
 	if (pBuffer[i] != EOS)
 	   if (pBuffer[i + 1] == '\\')
 	     {
-		/* On est dans le cas de deux backslashs consecutifs; on les prend */
+		/* On est dans le cas de deux backslashs consecutifs;
+		   on les prend */
 		ISOresult[j++] = pBuffer[i++];
 		ISOresult[j++] = pBuffer[i++];
 	     }
@@ -241,8 +234,9 @@ int                 msgNumber;
   CHAR_T              fileName[MAX_TXT_LEN];
   CHARSET             encoding;
   unsigned char       pBuff[MAX_TXT_LEN];
+#ifdef _I18N_
   unsigned char*      ptrBuff;
-  unsigned char       txt[MAX_TXT_LEN];
+#endif
 
   /* contruction du nom $THOTDIR/bin/$LANG-msgName */
   ustrcpy (fileName, TtaGetVarLANG ());
