@@ -39,9 +39,6 @@ int GetFontFilenameFromConfig (char script, int family, int highlight,
 					  family, 
 					  highlight);
   
-  if (response == NULL)
-    response = (char *) FontLoadFromConfig ('1', 1, 1);
-  
   if (response == NULL ||
       !TtaFileExist (response))
     {
