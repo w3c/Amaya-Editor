@@ -725,6 +725,8 @@
 #define IDC_BGCOLOR2                    1453
 #define IDC_CHANGCOLOR                  1454
 #define IDC_LANNEG                      1456
+#define IDC_NORMALBOLD                  1457
+#define IDC_DEFAULTBOLD                 1459
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -765,7 +767,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        512
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1457
+#define _APS_NEXT_CONTROL_VALUE         1460
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

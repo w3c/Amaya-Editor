@@ -2908,19 +2908,22 @@ LPARAM lParam;
                                 break;
                        default: CheckRadioButton (hwnDlg, IDC_TIMES, IDC_DEFAULTFAMILY, IDC_DEFAULTFAMILY);
                 }
-/*******/  separer ce menu en deux, en utilisant la varable fontWeight /******/
+/****  separer ce menu en deux, en utilisant la varable fontWeight *****/
                 switch (fontStyle) {
                        case 0:  CheckRadioButton (hwnDlg, IDC_ROMAN, IDC_DEFAULTSTYLE, IDC_ROMAN);
                                 break;
+                       case 1:  CheckRadioButton (hwnDlg, IDC_ROMAN, IDC_DEFAULTSTYLE, IDC_ITALIC);
+                                break;
+                       case 2:  CheckRadioButton (hwnDlg, IDC_ROMAN, IDC_DEFAULTSTYLE, IDC_OBLIQUE);
+                                break;
+                       default: CheckRadioButton (hwnDlg, IDC_ROMAN, IDC_DEFAULTSTYLE, IDC_DEFAULTSTYLE);
+                                break;
+                }
+
+                switch (fontWeight) {
+                       case 0:  CheckRadioButton (hwnDlg, IDC_ROMAN, IDC_DEFAULTSTYLE, IDC_NORMALBOLD);
+                                break;
                        case 1:  CheckRadioButton (hwnDlg, IDC_ROMAN, IDC_DEFAULTSTYLE, IDC_BOLD);
-                                break;
-                       case 2:  CheckRadioButton (hwnDlg, IDC_ROMAN, IDC_DEFAULTSTYLE, IDC_ITALIC);
-                                break;
-                       case 3:  CheckRadioButton (hwnDlg, IDC_ROMAN, IDC_DEFAULTSTYLE, IDC_OBLIQUE);
-                                break;
-                       case 4:  CheckRadioButton (hwnDlg, IDC_ROMAN, IDC_DEFAULTSTYLE, IDC_BOLDITALIC);
-                                break;
-                       case 5:  CheckRadioButton (hwnDlg, IDC_ROMAN, IDC_DEFAULTSTYLE, IDC_BOLDOBLIQUE);
                                 break;
                        default: CheckRadioButton (hwnDlg, IDC_ROMAN, IDC_DEFAULTSTYLE, IDC_DEFAULTSTYLE);
                                 break;
@@ -3000,31 +3003,31 @@ LPARAM lParam;
 							break;
 
 					   case IDC_ROMAN:
-						    ThotCallback (NumMenuStyleChar, INTEGER_DATA, (STRING) 0);
-							break;
-
-					   case IDC_BOLD:
-						    ThotCallback (NumMenuStyleChar, INTEGER_DATA, (STRING) 1);
+						    ThotCallback (NumMenuCharFontStyle, INTEGER_DATA, (STRING) 0);
 							break;
 
 					   case IDC_ITALIC:
-						    ThotCallback (NumMenuStyleChar, INTEGER_DATA, (STRING) 2);
+						    ThotCallback (NumMenuCharFontStyle, INTEGER_DATA, (STRING) 1);
 							break;
 
 					   case IDC_OBLIQUE:
-						    ThotCallback (NumMenuStyleChar, INTEGER_DATA, (STRING) 3);
-							break;
-
-					   case IDC_BOLDITALIC:
-						    ThotCallback (NumMenuStyleChar, INTEGER_DATA, (STRING) 4);
-							break;
-
-					   case IDC_BOLDOBLIQUE:
-						    ThotCallback (NumMenuStyleChar, INTEGER_DATA, (STRING) 5);
+						    ThotCallback (NumMenuCharFontStyle, INTEGER_DATA, (STRING) 2);
 							break;
 
 					   case IDC_DEFAULTSTYLE:
-						    ThotCallback (NumMenuStyleChar, INTEGER_DATA, (STRING) 6);
+						    ThotCallback (NumMenuCharFontStyle, INTEGER_DATA, (STRING) 3);
+							break;
+
+					   case IDC_NORMALBOLD:
+						    ThotCallback (NumMenuCharFontWeight, INTEGER_DATA, (STRING) 0);
+							break;
+
+					   case IDC_BOLD:
+						    ThotCallback (NumMenuCharFontWeight, INTEGER_DATA, (STRING) 1);
+							break;
+
+					   case IDC_DEFAULTBOLD:
+						    ThotCallback (NumMenuCharFontWeight, INTEGER_DATA, (STRING) 2);
 							break;
 
 					   case IDC_NORMAL:

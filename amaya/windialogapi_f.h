@@ -29,7 +29,7 @@ extern void CreateOpenDocDlgWindow (HWND, STRING, STRING, STRING, int, int, int,
 extern void CreateSaveListDlgWindow (HWND, int, STRING, int, int);
 extern void CreateCloseDocDlgWindow (HWND, STRING, STRING, BOOL*, BOOL*);
 extern void CreateLanguageDlgWindow (HWND, STRING, STRING, int, STRING, STRING, int, int, int, STRING);
-extern void CreateCharacterDlgWindow (HWND, int, int, int, int);
+extern void CreateCharacterDlgWindow (HWND, int, int, int, int, int);
 extern void CreateCreateRuleDlgWindow (HWND, int, int, int, int, STRING);
 extern void CreateApplyClassDlgWindow (HWND, int, int, int, int, STRING);
 extern void CreateSpellCheckDlgWindow (HWND, STRING, STRING, int, int, int, int, int, int, int);
