@@ -515,6 +515,7 @@ static void BookmarkMenuCallbackDialog (int ref, int typedata, char *data)
 		printf ("uh oh, no ref\n");
 	    }
 	  break;
+
 	case mBMTitle:
 	  if (data)
 	    BM_bufferCopy (aDynBookmark->title, data);
@@ -601,7 +602,7 @@ void BM_BookmarkMenu (Document doc, View view, int ref, BookmarkP bookmark)
        /* we only show this property for new bookmarks */
        /* bookmark files */
        TtaNewPaddedLabel (BookmarkBase + mBMBFileListL,  BookmarkBase + BookmarkMenu, 
-			  "Bookmark Files", longest_label);
+			  "Bookmark store", longest_label);
        TtaNewComboBox (BookmarkBase + mBMBFileList,
 		       BookmarkBase + BookmarkMenu,
 		       NULL, TRUE);
@@ -737,7 +738,23 @@ static void InitTopicMenu (Document doc, BookmarkP bookmark)
   ----------------------------------------------------------------------*/
 static void RefreshTopicMenu ()
 {
+  char ** bm_urls = NULL;
+  int count;
+  ThotWidget combo;
+
   /* set the menu entries to the current values */
+
+  /* count how many open bookmark files we have */
+  /* get all the bookmark files */
+  
+  count = BM_Context_dumpAsCharList (&bm_urls);
+  if (count) 
+    {
+      combo = TtaCatWidget (TopicBase + mTMBFileList);
+      TtaInitComboBox (combo, count, bm_urls);
+      TtaFreeMemory (bm_urls);
+    }
+
   /* TtaSetTextForm (TopicBase + mTMParentTopic, BM_bufferContent (aDynTopic->parent_url)); */
   TtaSetTextForm (TopicBase + mTMTitle, BM_bufferContent (aDynTopic->title));
   TtaSetTextForm (TopicBase + mTMAuthor, BM_bufferContent (aDynTopic->author));
@@ -833,6 +850,32 @@ static void TopicMenuCallbackDialog (int ref, int typedata, char *data)
 	    BM_bufferClear (aDynTopic->parent_url);
 	  break;
 
+	case mTMBFileList:
+	  if (typedata == STRING_DATA && data && data[0])
+	    {
+	      int ref; 
+	      ThotBool found;
+	      
+	      if (!strcmp (data, "Default bookmark file"))
+		{
+		  ref = 0;
+		  found = TRUE;
+		}
+	      else 
+		found = BM_Context_reference (data, &ref);
+	      
+	      if (found)
+		{
+		  aDynTopic->ref = ref;
+		  /* change the doc so that we update the correct view */
+		  aDynTopic->doc =  BM_getDocumentFromRef (ref);
+		  BM_RefreshTopicTree (ref);
+		}
+	      else
+		printf ("uh oh, no ref\n");
+	    }
+	  break;
+
 	case mTMTitle:
 	  if (data)
 	    BM_bufferCopy (aDynTopic->title, data);
@@ -909,6 +952,17 @@ void BM_TopicMenu (Document doc, View view, int ref, BookmarkP bookmark)
 		TtaGetViewFrame (doc, view),
 		TtaGetMessage (AMAYA, AM_BM_TPROPERTIES),
 		1, s, TRUE, 2, 'L', D_DONE);
+
+   if (MultipleBookmarks () && !bookmark)
+     {
+       /* we only show this property for new bookmarks */
+       /* bookmark files */
+       TtaNewPaddedLabel (TopicBase + mTMBFileListL,  TopicBase + TopicMenu, 
+			  "Bookmark store", longest_label);
+       TtaNewComboBox (TopicBase + mTMBFileList,
+		       TopicBase + TopicMenu,
+		       NULL, TRUE);
+     }
 
    /* topic hierarchy */
    label = TtaGetMessage (AMAYA, AM_BM_TOPIC_HIERARCHY);

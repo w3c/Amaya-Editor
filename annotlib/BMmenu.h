@@ -47,7 +47,9 @@
 #define mTMDescriptionL         14
 #define mTMTitleL               15
 #define mTMTopicTreeL           16
-#define MAX_TOPICMENU_DLG       17
+#define mTMBFileList            17
+#define mTMBFileListL           18
+#define MAX_TOPICMENU_DLG       19
 
 #define TopicURLMenu            1
 #define mTUMURL                 2
