@@ -3537,8 +3537,10 @@ static void RestoreDefEnvGeom (char *env_var, Document doc)
   ----------------------------------------------------------------------*/
 static void SetEnvGeom (const char *view_name, Document doc)
 {
-  int view;
   int x, y, w, h;
+
+#ifndef _WX
+  int view;
     
   if ((!strcmp (view_name, "Source_view")) ||
       (!strcmp (view_name, "Annot_Formatted_view")) ||
@@ -3554,6 +3556,11 @@ static void SetEnvGeom (const char *view_name, Document doc)
       sprintf (s, "%d %d %d %d", x, y, w, h);
       TtaSetEnvString ((char *)view_name, s, TRUE);
     }
+#else /* _WX */
+      TtaGetViewXYWH (doc, 0, &x, &y, &w, &h);
+      sprintf (s, "%d %d %d %d", x, y, w, h);
+      TtaSetEnvString ((char *)view_name, s, TRUE);
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -3562,7 +3569,16 @@ static void SetEnvGeom (const char *view_name, Document doc)
   ----------------------------------------------------------------------*/
 static void RestoreDefaultGeometryConf (void)
 {
-  int   source, i;
+  int   i;
+
+#ifdef _WX
+  for (i = 1; i < DocumentTableLength; i++)
+    {
+      if (DocumentURLs[i] != NULL)
+	RestoreDefEnvGeom ("Wx_Window", i);
+    }
+#else /* _WX */
+  int  source;
 
   for (i = 1; i < DocumentTableLength; i++)
     if (DocumentURLs[i] != NULL &&
@@ -3586,6 +3602,7 @@ static void RestoreDefaultGeometryConf (void)
 	      RestoreDefEnvGeom ("Source_view", source);
 	  }
       }
+#endif /* _WX */
   /* save the options */
   TtaSaveAppRegistry ();
 }
@@ -3595,7 +3612,17 @@ static void RestoreDefaultGeometryConf (void)
   ----------------------------------------------------------------------*/
 static void SetEnvCurrentGeometry (int document, const char * view_name)
 {
-  int  source, i;
+
+  int   i;
+
+#ifdef _WX
+  for (i = 1; i < DocumentTableLength; i++)
+    {
+      if (DocumentURLs[i] != NULL)
+	SetEnvGeom ("Wx_Window", i);
+    }
+#else /* _WX */
+  int  source;
 
   i = document;
   /* only do the processing if the document exists */
@@ -3625,10 +3652,9 @@ static void SetEnvCurrentGeometry (int document, const char * view_name)
 		}
 	  }
 	else
-	  {
-	    SetEnvGeom ( view_name, i );
-	  }
+	  SetEnvGeom ( view_name, i );
       }
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------

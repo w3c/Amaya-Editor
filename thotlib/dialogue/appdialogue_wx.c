@@ -80,7 +80,7 @@ void TtaShowWindow( int window_id, ThotBool show )
  	+ the window id
         + 0 if too much created windows
   ----------------------------------------------------------------------*/
-int TtaMakeWindow( int x, int y, int w, int h)
+int TtaMakeWindow( int x, int y, int w, int h )
 {
 #ifdef _WX
   AmayaWindow * p_AmayaWindow = NULL;
@@ -92,15 +92,14 @@ int TtaMakeWindow( int x, int y, int w, int h)
   /* Create the window */
   p_AmayaWindow = 
     new AmayaWindow( window_id, NULL, wxDefaultPosition, wxDefaultSize );
-  if (w != 0)
+ if (!p_AmayaWindow)
+    return -1; /* no enough memory */
+
+   if (w != 0 && h != 0)
    p_AmayaWindow->SetSize(x, y, w, h);
   else
    p_AmayaWindow->SetSize(-1, -1, 800, 600);
-  if (!p_AmayaWindow)
-    return -1; /* no enough memory */
-  
-  /* p_AmayaWindow->SetSize(-1, -1, 800, 600); */
-  
+    
   /* save the window reference into the global array */ 
   WindowTable[window_id].WdWindow = p_AmayaWindow;
   WindowTable[window_id].FrWidth  = p_AmayaWindow->GetSize().GetWidth();
@@ -223,10 +222,10 @@ int TtaMakeFrame( const char * schema_name,
 		  int * volume )
 {
 #ifdef _WX
-  
   /* finding a free frame id */
   int        frame_id = 1;
   ThotBool   found = FALSE;
+
   while (frame_id <= MAX_FRAME && !found)
     {
       found = (FrameTable[frame_id].FrDoc == 0 && FrameTable[frame_id].WdFrame != 0);
@@ -244,8 +243,7 @@ int TtaMakeFrame( const char * schema_name,
 	    frame_id++;
 	}
     }
-  
-  
+
   if (!found)
     return 0; /* too much created frames : bye bye ! */
   

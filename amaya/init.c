@@ -2788,9 +2788,9 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
        /* get the geometry of the main window */
        if (window_id == -1)
 	 {
-	   tmp = "Main_Window_Geometry";
+	   tmp = "Wx_Window";
 	   TtaGetViewGeometry (doc, tmp, &x, &y, &w, &h);
-	   if (w == 0)
+	   if (w == 0 || h == 0)
 	     {
 	       tmp = "Formatted_view";
 	       TtaGetViewGeometry (doc, tmp, &x, &y, &w, &h);

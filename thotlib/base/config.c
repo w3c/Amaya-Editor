@@ -1278,17 +1278,17 @@ void             ConfigKeyboard (int *x, int *y)
 }
 
 /*----------------------------------------------------------------------
-   getXYWidthHeight        lit les 4 entiers x, y, width, height   
-   suivent les deux-points dans une ligne de la section    
-   open ou geometry d'un fichier .conf                     
+   getXYWidthHeight        
+   Lit les 4 entiers x, y, width, height qui suivent les deux-points 
+   dans une ligne de la section open ou geometry d'un fichier .conf                     
    Retourne TRUE si succes.                                
   ----------------------------------------------------------------------*/
 static ThotBool getXYWidthHeight (char *line, PtrDocument pDoc, int *x,
 				  int *y, int *width, int *height)
 {
-  char                seqLine[MAX_TXT_LEN];
-  int                 nbIntegers;
-  ThotBool            result;
+  char       seqLine[MAX_TXT_LEN];
+  int        nbIntegers;
+  ThotBool   result;
 
   result = FALSE;
   /* extrait la partie de la ligne qui suit les deux-points */
@@ -1400,53 +1400,37 @@ void  ConfigGetViewGeometry (PtrDocument pDoc, char *view, int *x,
 void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
 		     int *height)
 {
+
 #ifdef _WX
-
-  /* TODO
-   * 
-  int 		frame;
-  ThotFrame	pFrame = NULL;
-    
-  frame = GetWindowNumber (doc, view);
-  pFrame = FrameTable[frame].WdFrame;
-
-  if (pFrame)
+  int window_id = -1;;
+ 
+  window_id = TtaGetDocumentWindowId( doc, -1 );
+  if (window_id < 0)
     {
-      pFrame->GetPosition( xmm, ymm );
-      pFrame->GetSize( width,height );
-    }*/
+      *xmm = 0;
+      *ymm = 0;
+      *width = 800;
+      *height = 600;
+      return;
+    }
+
+  *width = WindowTable[window_id].FrWidth;
+  *height = WindowTable[window_id].FrHeight;
+  *xmm = 0;
+  *ymm = 0;
 #endif /* _WX */
-#if defined(_MOTIF) || defined(_GTK)
-  int                 frame;
-  ThotWidget          widget;
-#ifdef _GTK
-  ThotWidget          tmpw;
-#endif /* _GTK */
+
 #ifdef _MOTIF  
-  int                 n;
-  Arg                 args[20];
-#endif /* _MOTIF */
-  Position            x, y;
-  Dimension           w, h;
+  int           frame;
+  ThotWidget    widget;
+  int           n;
+  Arg           args[20];
+  Position      x, y;
+  Dimension     w, h;
 
   frame =  GetWindowNumber (doc, view);
   widget = (ThotWidget) FrameTable[frame].WdFrame;
-#ifdef _GTK
-  /*tmpw = GTK_WIDGET (widget);*/
-  tmpw = gtk_widget_get_toplevel (GTK_WIDGET (widget));
-  /* values of w h are not realy exact, there are too much pixel (2 or 3) */
-  w = tmpw->allocation.width - 4;
-  h = tmpw->allocation.height - 4;
-  x = tmpw->allocation.x;
-  y = tmpw->allocation.y;
-  *xmm = x;
-  *ymm = y;
-  *width = w;
-  *height = h;
-#endif /* _GTK */
-#ifdef _MOTIF  
   widget = XtParent (XtParent (XtParent (widget)));
-
   /* Ask X what's the geometry of the frame */
   n = 0;
   XtSetArg (args[n], XmNx, &x);
@@ -1463,9 +1447,31 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
   /* take into account the window manager headband */
   *ymm = y - 18;
   *width = w;
-  *height = h;
+  *height = h;;
 #endif /* _MOTIF */
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+
+#ifdef _GTK
+  int           frame;
+  ThotWidget    widget;
+  ThotWidget    tmpw;
+  Position      x, y;
+  Dimension     w, h;
+
+  frame =  GetWindowNumber (doc, view);
+  widget = (ThotWidget) FrameTable[frame].WdFrame;
+  /*tmpw = GTK_WIDGET (widget);*/
+  tmpw = gtk_widget_get_toplevel (GTK_WIDGET (widget));
+  /* values of w h are not realy exact, there are too much pixel (2 or 3) */
+  w = tmpw->allocation.width - 4;
+  h = tmpw->allocation.height - 4;
+  x = tmpw->allocation.x;
+  y = tmpw->allocation.y;
+  *xmm = x;
+  *ymm = y;
+  *width = w;
+  *height = h;
+#endif /* _GTK */
+
 #ifdef _WINGUI
   int  frame;
   HWND hWnd;
@@ -1485,10 +1491,12 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
       *height = (int) (rect.bottom - rect.top);
     }
 #endif /* _WINGUI */
+
+  return;
 }
 
 /*----------------------------------------------------------------------
-   TtaGetViewGeometryRegistry returns the position (x, y) and sizes        
+   TtaGetViewGeometryRegistry ret;urns the position (x, y) and sizes        
    (width, height) of the frame where the view is displayed. These values
    are read from the Thot registry.
    Parameters:    document: the document.                  
@@ -1506,7 +1514,7 @@ void TtaGetViewGeometry (Document document, char *name, int *x, int *y,
   *x = 0;
   *y = 0;
   *width = 0;
-  *height = 0;
+  *height = 0;;
 
   if (document < 1 || document > MAX_DOCUMENTS)
      TtaError (ERR_invalid_document_parameter);
