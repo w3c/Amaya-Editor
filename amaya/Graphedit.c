@@ -478,6 +478,51 @@ ThotBool    horiz;
     }
 }
 
+
+/*----------------------------------------------------------------------
+  UpdateAttrText creates or updates the text attribute attr of the
+  element el.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void   UpdateAttrText (Element el, Document doc, AttributeType attrType, int value)
+#else /* __STDC__*/
+static void   UpdateAttrText (el, doc, attrType, value)
+Element       el;
+Document      doc;
+AttributeType attrType;
+int           value;
+#endif /* __STDC__*/
+{
+  CHAR_T		buffer[32], unit[32];
+  Attribute             attr;
+  int                   length;
+
+  attr = TtaGetAttribute (el, attrType);
+  if (attr == NULL)
+    {
+      /* it's a new attribute */
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, attr, doc);
+      /* by default generate pixel values */
+      usprintf (buffer, TEXT("%dpx"), value);
+      TtaSetAttributeText (attr, buffer, el, doc);
+      TtaRegisterAttributeCreate (attr, el, doc);
+    }
+  else
+    {
+      /* get the current unit */
+      length = 32;
+      TtaGiveTextAttributeValue (attr, buffer, &length);
+      unit[0] = WC_EOS;
+      usscanf (buffer, TEXT("%d%s"), &length, unit);
+      /* convert the value according to the current unit */
+      usprintf (buffer, TEXT("%d%s"), value, unit);
+      TtaRegisterAttributeReplace (attr, el, doc);
+      TtaSetAttributeText (attr, buffer, el, doc);
+    }
+}
+
+
 /*----------------------------------------------------------------------
  UpdatePositionAttribute
  update attribute "position" for element el according its attributes
@@ -490,15 +535,12 @@ static void UpdatePositionAttribute (el, doc, org, dim, horiz)
 Element     el;
 Document    doc;
 int         org;
-int         dim;;
+int         dim;
 ThotBool    horiz;
 #endif /* __STDC__*/
 {
   ElementType		elType;
   AttributeType	        attrType;
-  Attribute             attr;
-  CHAR_T		buffer[32], unit[32];
-  int                   length;
 
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
@@ -533,28 +575,7 @@ ThotBool    horiz;
     /* no attribute available */
     return;
 
-  attr = TtaGetAttribute (el, attrType);
-  if (attr == NULL)
-    /* element el has no position attribute */
-    {
-      attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (el, attr, doc);
-      /* by default generate pixel values */
-      usprintf (buffer, TEXT("%dpx"), org);
-      TtaSetAttributeText (attr, buffer, el, doc);
-      TtaRegisterAttributeCreate (attr, el, doc);
-    }
-  else
-    {
-      /* get the current unit */
-      length = 32;
-      TtaGiveTextAttributeValue (attr, buffer, &length);
-      unit[0] = WC_EOS;
-      usscanf (buffer, TEXT("%d%s"), &length, unit);
-      usprintf (buffer, TEXT("%d%s"), org, unit);
-      TtaRegisterAttributeReplace (attr, el, doc);
-      TtaSetAttributeText (attr, buffer, el, doc);
-    }
+  UpdateAttrText (el, doc, attrType, org);
 }
 
 /*----------------------------------------------------------------------
@@ -602,9 +623,6 @@ ThotBool    horiz;
 {
   ElementType		elType;
   AttributeType	        attrType;
-  Attribute             attr;
-  CHAR_T		buffer[32], unit[32];
-  int                   length;
 
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
@@ -649,28 +667,7 @@ ThotBool    horiz;
     /* no attribute available */
     return;
 
-  attr = TtaGetAttribute (el, attrType);
-  if (attr == NULL)
-    /* element el has no position attribute */
-    {
-      attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (el, attr, doc);
-      /* by default generate pixel values */
-      usprintf (buffer, TEXT("%dpx"), dim);
-      TtaSetAttributeText (attr, buffer, el, doc);
-      TtaRegisterAttributeCreate (attr, el, doc);
-    }
-  else
-    {
-      /* get the current unit */
-      length = 32;
-      TtaGiveTextAttributeValue (attr, buffer, &length);
-      unit[0] = WC_EOS;
-      usscanf (buffer, TEXT("%d%s"), &length, unit);
-      usprintf (buffer, TEXT("%d%s"), dim, unit);
-      TtaRegisterAttributeReplace (attr, el, doc);
-      TtaSetAttributeText (attr, buffer, el, doc);
-    }
+  UpdateAttrText (el, doc, attrType, dim);
 }
 
 /*----------------------------------------------------------------------
@@ -911,12 +908,52 @@ void ControlPointChanged(event)
      NotifyOnValue *event;
 #endif /* __STDC__*/
 {
-  /*************
-   int	minX, minY, maxX, maxY;
+  Element         el, child;
+  Document        doc;
+  ElementType     elType;
+  AttributeType	  attrType;
+  Attribute       attr;
+  STRING          text, buffer;
+  int             i, length;
+  int             x, y;
 
-   UpdatePointsAttribute (event->element, event->document, &minX, &minY, &maxX,
-			  &maxY);
-  ***************/
+  el = event->element;
+  elType = TtaGetElementType (event->element);
+  doc = event->document;
+  attrType.AttrSSchema = elType.ElSSchema;
+  if (elType.ElSSchema != GetGraphMLSSchema (doc))
+    return;
+  if (elType.ElTypeNum == GraphML_EL_polyline ||
+	    elType.ElTypeNum == GraphML_EL_polygon)
+     {
+	child = TtaGetFirstChild (el);
+	length = TtaGetPolylineLength (child);
+	/* get all points */
+	i = 1;
+	buffer = TtaAllocString (20);
+	text = TtaAllocString (length * 20);
+	text[0] = EOS;
+	while (i <= length)
+	  {
+	     TtaGivePolylinePoint (child, i, UnPixel, &x, &y);
+	     usprintf (buffer, TEXT("%d,%d"), x, y);
+	     ustrcat (text, buffer);
+	     if (i < length)
+	       ustrcat (text, TEXT(" "));
+	     i++;
+	  }
+	TtaFreeMemory (buffer);
+	attrType.AttrTypeNum = GraphML_ATTR_points;
+	attr = TtaGetAttribute (el, attrType);
+	if (attr == NULL)
+	  {
+	    /* it's a new attribute */
+	    attr = TtaNewAttribute (attrType);
+	    TtaAttachAttribute (el, attr, doc);
+	  }
+	TtaSetAttributeText (attr, text, el, doc);
+	TtaFreeMemory (text);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -1083,7 +1120,7 @@ int                 construct;
     {
     case 0:	/* line */
 	newType.ElTypeNum = GraphML_EL_line_;
-	shape = '\\';
+	shape = 'g';
 	break;
     case 1:	/* rectangle */
 	newType.ElTypeNum = GraphML_EL_rect;
@@ -1214,20 +1251,24 @@ int                 construct;
      /* select the right element */
      TtaSelectElement (doc, selEl);
    
-   if (shape == 'S' || shape == 'p' || shape == 'B' || shape == 's')
+   if (shape == 'S' || shape == 'p' || shape == 'B' || shape == 's' || shape == 'g')
      /* multipoints element. Let the user enter the points */
      {
-       TtaGiveBoxSize (parent, doc, 1, UnPoint, &w, &h);
-
-       TtaChangeLimitOfPolyline (child, UnPoint, w, h, doc);
+       if (shape != 'g')
+	 {
+	   TtaGiveBoxSize (parent, doc, 1, UnPoint, &w, &h);
+	   TtaChangeLimitOfPolyline (child, UnPoint, w, h, doc);
+	 }
        TtcInsertGraph (doc, 1, shape);
+#ifdef IV
        dispMode = TtaGetDisplayMode (doc);
        /* ask Thot to stop displaying changes made in the document */
        if (dispMode == DisplayImmediately)
          TtaSetDisplayMode (doc, DeferredDisplay);
        /* ask Thot to display changes made in the document */
        TtaSetDisplayMode (doc, dispMode);
-       if (TtaGetVolume (selEl) < 3)
+#endif
+       if (shape != 'g' && TtaGetVolume (selEl) < 3)
 	 {
 	   /* the polyline doesn't have enough points */
 	   TtaDeleteTree (selEl, doc);
@@ -1406,11 +1447,13 @@ STRING              data;
       /* the user has selected an entry in the Graphics palette */
       doc = TtaGetSelectedDocument ();
       if (doc > 0)
-        /* there is a selection */
-	if ((int) data == 11)
-	   CreateGroup ();
-	else
-           CreateGraphicElement ((int) data);
+	{
+	  /* there is a selection */
+	  if ((int) data == 11)
+	    CreateGroup ();
+	  else
+	    CreateGraphicElement ((int) data);
+	}
       break;
  
     default:

@@ -2212,7 +2212,6 @@ int                 frame;
       BoxCreating = TRUE;
 
    pFrame = &ViewFrameTable[frame - 1];
-
    /* Il faut verifier que la boite reste visible dans la fenetre */
    GetSizesFrame (frame, &width, &height);
    if (pBox->BxXOrg < pFrame->FrXOrg)

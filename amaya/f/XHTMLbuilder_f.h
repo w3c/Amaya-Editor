@@ -11,8 +11,6 @@ extern void ParseCharset ( Element el,
 extern void XhtmlElementComplete ( Element el,
                                    Document doc,
                                    int *error );
-extern void XhtmlGetDTDName ( STRING DTDname,
-                              STRING elementName );
 extern void MapHTMLAttributeValue ( CHAR_T* AttrVal,
                                     AttributeType attrType,
                                     int* value );
@@ -31,8 +29,6 @@ extern void ParseCharset (/* Element el,
 extern void XhtmlElementComplete (/* Element el,
                                      Document doc,
                                      int *error */);
-extern void XhtmlGetDTDName (/* STRING DTDname,
-                                STRING elementName */);
 extern void MapHTMLAttributeValue (/* CHAR_T* AttrVal,
                                       AttributeType attrType,
                                       int* value */);

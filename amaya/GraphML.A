@@ -22,8 +22,6 @@ ELEMENTS
 	ElemGraphModify.Post -> ControlPointChanged;
    ClosedSpline:
 	ElemGraphModify.Post -> ControlPointChanged;
-   line_:
-	ElemGraphModify.Post -> ControlPointChanged;
    polyline:
 	ElemGraphModify.Post -> ControlPointChanged;
    polygon:

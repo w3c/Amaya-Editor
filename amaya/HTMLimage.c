@@ -316,7 +316,7 @@ int                 attrNum;
      {
 	child = TtaGetFirstChild (element);
 	length = TtaGetPolylineLength (child);
-	/* keep points */
+	/* get points */
 	i = 1;
 	buffer = TtaAllocString (100);
 	text[0] = EOS;

@@ -71,6 +71,7 @@ static ThotBool     FromKeyboard;
 #include "content_f.h"
 #include "documentapi_f.h"
 #include "docs_f.h"
+#include "displayselect_f.h"
 #include "displayview_f.h"
 #include "editcommands_f.h"
 #include "font_f.h"
@@ -79,6 +80,7 @@ static ThotBool     FromKeyboard;
 #include "language_f.h"
 #include "memory_f.h"
 #include "picture_f.h"
+#include "presentationapi_f.h"
 #include "scroll_f.h"
 #include "structcommands_f.h"
 #include "structcreation_f.h"
@@ -1297,7 +1299,7 @@ int                 frame;
 {
    int                 xDelta, yDelta;
 
-   if (!APPgraphicModify (pBox->BxAbstractBox->AbElement, (int)c, frame, TRUE))
+   if (!APPgraphicModify (pAb->AbElement, (int)c, frame, TRUE))
      {
        pAb->AbShape = c;
        /* Dimensions du symbole */
@@ -1319,7 +1321,7 @@ int                 frame;
        BoxUpdate (pBox, pLine, 0, 0, xDelta, 0, yDelta, frame, FALSE);
        /* adjust the width of some symbols */
        ResizeHeight (pBox, NULL, NULL, 0, 0, 0, frame);
-       APPgraphicModify (pBox->BxAbstractBox->AbElement, (int)c, frame, FALSE);
+       APPgraphicModify (pAb->AbElement, (int)c, frame, FALSE);
      }
 }
 
@@ -1341,12 +1343,15 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
+  ViewFrame          *pFrame;
+  PtrBox              box;
   PtrTextBuffer       pBuffer;
   int                 xDelta, yDelta;
   int                 width, height;
   int                 x, y;
 
-  if (!APPgraphicModify (pBox->BxAbstractBox->AbElement, (int) c, frame, TRUE))
+  pFrame = &ViewFrameTable[frame - 1];
+  if (!APPgraphicModify (pAb->AbElement, (int) c, frame, TRUE))
     {
       /* efface la selection precedente */
       switch (c)
@@ -1389,12 +1394,13 @@ int                 frame;
 	  if (pBox->BxNChars == 1)
 	    {
 	      /* il faut saisir les points de la polyline */
-	      x = pBox->BxXOrg - ViewFrameTable[frame - 1].FrXOrg;
-	      y = pBox->BxYOrg - ViewFrameTable[frame - 1].FrYOrg;
+	      x = pBox->BxXOrg - pFrame->FrXOrg;
+	      y = pBox->BxYOrg - pFrame->FrYOrg;
 	      if (c == 'w' || c == 'x' || c == 'y' || c == 'z')
 		pAb->AbVolume = PolyLineCreation (frame, &x, &y, pBox, 2);
 	      else
 		pAb->AbVolume = PolyLineCreation (frame, &x, &y, pBox, 0);
+	      pAb->AbElement->ElNPoints = pAb->AbVolume;
 	      pBox->BxNChars = pAb->AbVolume;
 	      DisplayPointSelection (frame, pBox, 0);
 #ifndef _WINDOWS
@@ -1438,11 +1444,20 @@ int                 frame;
 
 	  pAb->AbShape = c;
 	  pAb->AbVolume = 1;
-	  if (c == 'g')
+	  if (c == 'g' && pAb->AbEnclosing &&
+	      pAb->AbEnclosing->AbWidth.DimIsPosition)
 	    {
-	      x = pBox->BxXOrg - ViewFrameTable[frame - 1].FrXOrg;
-	      y = pBox->BxYOrg - ViewFrameTable[frame - 1].FrYOrg;
+	      x = pBox->BxXOrg - pFrame->FrXOrg;
+	      y = pBox->BxYOrg - pFrame->FrYOrg;
 	      LineCreation (frame, pBox, &x, &y, &xDelta, &yDelta);
+	      x += pFrame->FrXOrg;
+	      y += pFrame->FrYOrg;
+	      xDelta += pFrame->FrXOrg;
+	      yDelta += pFrame->FrYOrg;
+	      /* Update the enclosing stretchable box */
+	      pAb = pAb->AbEnclosing;
+	      NewPosition (pAb, x, y, frame, TRUE);
+	      NewDimension (pAb, xDelta, yDelta, frame, TRUE);
 	    }
 	  else
 	    {
@@ -1466,8 +1481,8 @@ int                 frame;
 	      BoxUpdate (pBox, pLine, 0, 0, xDelta, 0, yDelta, frame, FALSE);
 	    }
 	}
-      /* Reaffiche la selection */
-      APPgraphicModify (pBox->BxAbstractBox->AbElement, (int) c, frame, FALSE);
+      /* but could notify its parent */
+      APPgraphicModify (pAb->AbElement, (int) c, frame, FALSE);
     }
 }
 
@@ -2571,7 +2586,7 @@ int                 editType;
       
       if (pCell != NULL && ThotLocalActions[T_checkcolumn])
 	{
-	  /* we have to propage position to cell children */
+	  /* we have to propage the position to children */
 	  savePropagate = Propagate;
 	  Propagate = ToChildren;
 	  pBlock = SearchEnclosingType (pBox->BxAbstractBox, BoBlock);

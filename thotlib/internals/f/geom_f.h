@@ -26,11 +26,11 @@ extern int PolyLineExtension ( int frame,
                                int point,
                                ThotBool close );
 extern int LineCreation ( int frame,
+                          PtrBox pBox,
                           int *x1,
                           int *y1,
                           int *x2,
-                          int *y2,
-                          PtrBox pBox );
+                          int *y2 );
 extern void LineModification ( int frame,
                                PtrBox pBox,
                                int point,
@@ -104,11 +104,11 @@ extern int PolyLineExtension (/* int frame,
                                  int point,
                                  ThotBool close */);
 extern int LineCreation (/* int frame,
+                            PtrBox pBox,
                             int *x1,
                             int *y1,
                             int *x2,
-                            int *y2,
-                            PtrBox pBox */);
+                            int *y2 */);
 extern void LineModification (/* int frame,
                                  PtrBox pBox,
                                  int point,
