@@ -2099,4 +2099,5 @@ View                view;
 	{
 	   TtcCloseDocument (i, 1);
 	}
+   exit(0);
 }
