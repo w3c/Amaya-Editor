@@ -1840,48 +1840,48 @@ static void	SetFileSuffix ()
 {
   char		      suffix[6];
   char               *filename;
-  int		      i;
+  int		      i, len;
 
-  if (SavingDocument != (Document) None)
-    if (DocumentName[0] != EOS)
-      {
+  if (SavingDocument != 0 && SaveName[0] != EOS)
+    {
       if (SaveAsHTML)
-	 strcpy (suffix, "html");
+	strcpy (suffix, "html");
       else if (SaveAsText)
-	 strcpy (suffix, "txt");
+	strcpy (suffix, "txt");
       else
 	 return;
 
       /* looks for a suffix at the end of the document name */
-      for (i = strlen (DocumentName)-1; i > 0 && DocumentName[i] != '.'; i--);
-      if (DocumentName[i] != '.')
-         /* there is no suffix */
-	 {
-	 i = strlen (DocumentName);
-	 DocumentName[i++] = '.';
-	 }
+      len = strlen (SaveName);
+      for (i = len-1; i > 0 && SaveName[i] != '.'; i--);
+      if (SaveName[i] != '.')
+	/* there is no suffix */
+	{
+	  i = len;
+	  SaveName[i++] = '.';
+	}
       else
-	 /* there is a suffix */
-	 {
-	 i++;
-	 if (strncmp (suffix, &DocumentName[i], 3) == 0)
+	/* there is a suffix */
+	{
+	  i++;
+	  if (strncmp (suffix, &SaveName[i], 3) == 0)
 	    /* the requested suffix is already here. Do nothing */
 	    i = 0;
-	 }
-
+	}
+      
       if (i > 0)
-	 /* change or append the suffix */
-	 {
-	 strcpy (&DocumentName[i], suffix);
-	 /* display the new filename in the dialog box */
-	 filename = TtaGetMemory (MAX_LENGTH);
-	 strcpy (filename, DirectoryName);
-	 strcat (filename, DIR_STR);
-	 strcat (filename, DocumentName);
-	 TtaSetTextForm (BaseDialog + NameSave, filename);
-	 TtaFreeMemory (filename);
-	 }
-      }
+	/* change or append the suffix */
+	{
+	  strcpy (&SaveName[i], suffix);
+	  /* display the new filename in the dialog box */
+	  filename = TtaGetMemory (MAX_LENGTH);
+	  strcpy (filename, DirectoryName);
+	  strcat (filename, DIR_STR);
+	  strcat (filename, SaveName);
+	  TtaSetTextForm (BaseDialog + NameSave, filename);
+	  TtaFreeMemory (filename);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------

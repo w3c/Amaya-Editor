@@ -1551,17 +1551,18 @@ int                 attrNum;
 	length = TtaGetPolylineLength (child);
 	/* keep points */
 	i = 1;
+	buffer = (char *) TtaGetMemory (100);
+	text[0] = EOS;
 	while (i <= length)
 	  {
 	     TtaGivePolylinePoint (child, i, UnPixel, &x1, &y1);
-	     buffer = (char *) TtaGetMemory (100);
 	     sprintf (buffer, "%d,%d", x1, y1);
 	     strcat (text, buffer);
-	     TtaFreeMemory (buffer);
 	     if (i < length)
 	       strcat (text, ",");
 	     i++;
 	  }
+	TtaFreeMemory (buffer);
      }
    TtaSetAttributeText (attrCoords, text, element, document);
    TtaFreeMemory (text);
