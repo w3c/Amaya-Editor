@@ -2466,7 +2466,7 @@ char *GetTempName (const char *dir, const char *prefix)
   if (prefix)
   { 
       i = 0;
-	  while (prefix[i] != EOL && i < L_tmpnam - 8)
+	  while (prefix[i] != EOS && i < L_tmpnam - 8)
 	    tmpbufmem[len++] = prefix[i++];
 	  tmpbufmem[len] = EOS;
   }
