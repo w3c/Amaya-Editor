@@ -1200,19 +1200,19 @@ LPARAM lParam;
       SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentPathName);
       if (SaveAsHTML)
 	{
-	  CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_HTML);
+	  CheckRadioButton (hwnDlg, IDC_HTML, IDC_XML, IDC_HTML);
 	  EnableWindow (transURLWnd, TRUE);
 	  EnableWindow (copyImgWnd, TRUE);
 	}
       else if (SaveAsXHTML)
 	{
-	  CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_XML);
+	  CheckRadioButton (hwnDlg, IDC_HTML, IDC_XML, IDC_XML);
 	  EnableWindow (transURLWnd, TRUE);
 	  EnableWindow (copyImgWnd, TRUE);
 	}
       else if (SaveAsText)
 	{
-	  CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_TEXT);
+	  CheckRadioButton (hwnDlg, IDC_HTML, IDC_XML, IDC_TEXT);
 	  EnableWindow (transURLWnd, FALSE);
 	  EnableWindow (copyImgWnd, FALSE);
 	}
