@@ -1392,8 +1392,8 @@ caddr_t             call_d;
 			      if (strings)
 				XmStringGetLtoR (strings[0], XmSTRING_DEFAULT_CHARSET, &ptr);
 			      (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, ptr);
-			      if (strings && ptr)
-				XmStringFree (ptr);
+			      if (strings)
+				TtaFreeMemory (ptr);
 			    }
 			  else
 			    {
@@ -1464,8 +1464,7 @@ XmListCallbackStruct *infos;
 	   if (ok && text != NULL)
 	      if (text[0] != EOS && text[0] != SPACE)
 		 (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, text);
-	   if (text)
-	     XmStringFree (text);
+	   TtaFreeMemory (text);
 	}
 }
 
@@ -1500,8 +1499,7 @@ caddr_t             call_d;
 	   /* retourne la valeur saisie si la feuille de saisie est reactive */
 	   text = XmTextGetString (wtext);
 	   (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, text);
-	   if (text)
-	     XmStringFree (text);
+	   TtaFreeMemory (text);
 	}
 #endif /* _GTK */
 }
@@ -1539,8 +1537,7 @@ caddr_t             call_d;
 	     /* retourne la valeur du label */
 	     XmStringGetLtoR (text, XmSTRING_DEFAULT_CHARSET, &str);
 	     (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, str);
-	     if (str)
-	       XmStringFree (str);
+	     TtaFreeMemory (str);
 	  }
 	else
 	   XtSetValues ((ThotWidget) catalogue->Cat_Entries, args, 1);
