@@ -2638,7 +2638,7 @@ RULES
 	Size: Enclosing * 60 %;
 	HorizRef: * . Top;
 	HorizPos: Left = Base . Right;
-	VertPos: Bottom = Base . Top + 0.7;
+	VertPos: Bottom = Base . Top + 0.9;
 	IN Math_Structure_view BEGIN
 		Size: Enclosing =;
 		Width: Enclosing . Width;
@@ -2651,7 +2651,7 @@ RULES
 	Size: Enclosing * 60 %;
 	HorizRef: * . Top;
 	HorizPos: Left = Base . Right;
-	VertPos: Top = Base . Bottom - 0.7;
+	VertPos: Top = Base . Bottom - 0.8;
 	IN Math_Structure_view BEGIN
 		Size: Enclosing =;
 		Width: Enclosing . Width;
