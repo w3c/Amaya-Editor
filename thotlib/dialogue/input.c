@@ -11,7 +11,7 @@
  * Authors: I. Vatton (INRIA)
  *          D. Veillard (INRIA) - Removed X remapping of keys,
  *                                lead to crash in some configurations
- *          R. Guetari (W3C/INRIA) - Windows version
+ *          R. Guetari (W3C/INRIA) - Previous Windows version
  *
  */
 
@@ -641,9 +641,9 @@ void CharTranslation (ThotKeyEvent *event)
 #endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
-   APPtextModify send a message TteElemReturn to the application.   
+   APPKey send a message msg to the application.   
   ----------------------------------------------------------------------*/
-static ThotBool APPReturn (PtrElement pEl, Document doc, ThotBool pre)
+static ThotBool APPKey (int msg, PtrElement pEl, Document doc, ThotBool pre)
 {
    PtrElement          pParentEl;
    NotifyOnTarget      notifyEl;
@@ -652,7 +652,7 @@ static ThotBool APPReturn (PtrElement pEl, Document doc, ThotBool pre)
 
    result = FALSE;
    pParentEl = pEl;
-   notifyEl.event = TteElemReturn;
+   notifyEl.event = msg;
    notifyEl.document = doc;
    notifyEl.targetdocument = doc;
    while (pParentEl != NULL)
@@ -671,7 +671,8 @@ static ThotBool APPReturn (PtrElement pEl, Document doc, ThotBool pre)
    ThotInput
    handles the character encoding.                     
   ----------------------------------------------------------------------*/
-void   ThotInput (int frame, USTRING string, unsigned int nb, int PicMask, int key)
+void ThotInput (int frame, unsigned char *string, unsigned int nb,
+		int PicMask, int key)
 {
   KEY                *ptr;
   Document            document;
@@ -917,7 +918,7 @@ void   ThotInput (int frame, USTRING string, unsigned int nb, int PicMask, int k
 	  if (LoadedDocument[document - 1] == SelectedDocument &&
 	      command == CMD_CreateElement)
 	    /* check if the application wants to handle the return */
-	    done = APPReturn (FirstSelectedElement, document, TRUE);
+	    done = APPKey (TteElemReturn, FirstSelectedElement, document, TRUE);
 	  else
 	    done = FALSE;
 	  /* Call action if it's active */
@@ -931,7 +932,7 @@ void   ThotInput (int frame, USTRING string, unsigned int nb, int PicMask, int k
 	      if (LoadedDocument[document - 1] == SelectedDocument &&
 		  command == CMD_CreateElement)
 		/* post treatment for the application */
-		APPReturn (FirstSelectedElement, document, FALSE);
+		APPKey (TteElemReturn, FirstSelectedElement, document, FALSE);
 	    }
 	}
      else if (nb == 0)
@@ -981,9 +982,19 @@ void   ThotInput (int frame, USTRING string, unsigned int nb, int PicMask, int k
 	  else if (value == 9 ||
 		   ( value >= 32 && value < 128) || (value >= 144 && value < 256))
 	    {
-		/* on insere un caractere valide quelque soit la langue */
-		if (MenuActionList[0].Call_Action)
-		  (*MenuActionList[0].Call_Action) (document, view, value);
+	      if (LoadedDocument[document - 1] == SelectedDocument &&
+		  value == TAB)
+		/* check if the application wants to handle the Tab */
+		done = APPKey (TteElemTab, FirstSelectedElement, document, TRUE);
+	      else
+		done = FALSE;
+	      /* on insere un caractere valide quelque soit la langue */
+	      if (!done && MenuActionList[0].Call_Action)
+		(*MenuActionList[0].Call_Action) (document, view, value);
+	      if (LoadedDocument[document - 1] == SelectedDocument &&
+		  value == TAB)
+		/* post treatment for the application */
+		APPKey (TteElemTab, FirstSelectedElement, document, FALSE);
 	    }
 	}
     }

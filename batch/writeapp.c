@@ -404,6 +404,7 @@ static void         WriteActionList (char *fname)
 	    case TteElemFetchInclude:
 	    case TteElemTextModify:
 	    case TteElemReturn:
+	    case TteElemTab:
 	      fprintf (AppFile, "NotifyOnTarget *event);\n");
 	      fprintf (actionFile, "NotifyOnTarget *event)\n");
 	      break;

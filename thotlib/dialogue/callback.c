@@ -191,125 +191,124 @@ ThotBool CallEventAttribute (NotifyAttribute * notifyAttr, ThotBool pre)
   ----------------------------------------------------------------------*/
 ThotBool CallEventType (NotifyEvent * notifyEvent, ThotBool pre)
 {
-   int                 elType;
-   Element             element;
-   PtrSSchema          schStruct;
+  Element             element;
+  PtrSSchema          schStruct;
+  int                 elType;
 
-   if (notifyEvent == NULL)
-      return FALSE;
+  if (notifyEvent == NULL)
+    return FALSE;
 
-   elType = 0;
-   schStruct = NULL;
-   element = NULL;
-
-   switch (notifyEvent->event)
-	 {
-	    case TteElemNew:
-	    case TteElemRead:
-	    case TteElemInclude:
-	    case TteElemMenu:
-	       if (pre)
-		 {
-		    elType = ((NotifyElement *) notifyEvent)->elementType.ElTypeNum;
-		    element = ((NotifyElement *) notifyEvent)->element;
-		    schStruct = (PtrSSchema) (((NotifyElement *) notifyEvent)->elementType.ElSSchema);
-		 }
-	       else
-		 {
-		    element = ((NotifyElement *) notifyEvent)->element;
-		    elType = ((PtrElement) element)->ElTypeNumber;
-		    schStruct = ((PtrElement) element)->ElStructSchema;
-		 }
-	       break;
-	    case TteElemDelete:
-	       if (pre)
-		 {
-		    element = ((NotifyElement *) notifyEvent)->element;
-		    elType = ((PtrElement) element)->ElTypeNumber;
-		    schStruct = ((PtrElement) element)->ElStructSchema;
-		 }
-	       else
-		 {
-		    element = ((NotifyElement *) notifyEvent)->element;
-		    elType = ((NotifyElement *) notifyEvent)->elementType.ElTypeNum;
-		    schStruct = (PtrSSchema) (((NotifyElement *) notifyEvent)->elementType.ElSSchema);
-		 }
-	       break;
-	    case TteElemSave:
-	    case TteElemExport:
-	    case TteElemSelect:
-	    case TteElemClick:
-	    case TteElemActivate:
-	    case TteElemExtendSelect:
-	    case TteElemCopy:
-	    case TteElemChange:
-	    case TteElemMove:
-	    case TteElemMouseOver:
-	    case TteElemMouseOut:
-	    case TteElemReturn:
-	       element = ((NotifyElement *) notifyEvent)->element;
-	       elType = ((PtrElement) element)->ElTypeNumber;
-	       schStruct = ((PtrElement) element)->ElStructSchema;
-	       break;
-	    case TteElemSetReference:
-	    case TteElemFetchInclude:
-	    case TteElemTextModify:
-	       element = ((NotifyOnTarget *) notifyEvent)->element;
-	       elType = ((PtrElement) element)->ElTypeNumber;
-	       schStruct = ((PtrElement) element)->ElStructSchema;
-	       break;
-	    case TteElemPaste:
-	       if (pre)
-		 {
-		    element = ((NotifyOnValue *) notifyEvent)->target;
-		    elType = ((PtrElement) element)->ElTypeNumber;
-		    schStruct = ((PtrElement) element)->ElStructSchema;
-		 }
-	       else
-		 {
-		    element = ((NotifyElement *) notifyEvent)->element;
-		    elType = ((PtrElement) element)->ElTypeNumber;
-		    schStruct = ((PtrElement) element)->ElStructSchema;
-		 }
-	       break;
-	    case TteElemGraphModify:
-	       element = ((NotifyOnValue *) notifyEvent)->element;
-	       elType = ((PtrElement) element)->ElTypeNumber;
-	       schStruct = ((PtrElement) element)->ElStructSchema;
-	       break;
-	    case TtePRuleCreate:
-	    case TtePRuleModify:
-	    case TtePRuleDelete:
-	       element = ((NotifyPresentation *) notifyEvent)->element;
-	       elType = ((PtrElement) element)->ElTypeNumber;
-	       schStruct = ((PtrElement) element)->ElStructSchema;
-	       break;
-	    case TteDocOpen:
-	    case TteDocTmpOpen:
-	    case TteDocCreate:
-	    case TteDocClose:
-	    case TteDocSave:
-	    case TteDocExport:
-	    case TteDocNatPresent:
-	    case TteViewOpen:
-	    case TteViewClose:
-	    case TteViewResize:
-	    case TteViewScroll:
-	       element = 0;
-	       if (((NotifyDialog *) notifyEvent)->document != 0)
-		  if (LoadedDocument[((NotifyDialog *) notifyEvent)->document - 1] != NULL)
-		    {
-		       schStruct = LoadedDocument[((NotifyDialog *) notifyEvent)->document - 1]->DocSSchema;
-		       if (schStruct != NULL)
-			  elType = schStruct->SsRootElem;
-		    }
-	       break;
-	    case TteInit:
-	    case TteExit:
-	       break;
-	    default:
-	       break;
-	 }
-
-   return CallAction (notifyEvent, notifyEvent->event, pre, elType, element, schStruct, FALSE);
+  elType = 0;
+  schStruct = NULL;
+  element = NULL;
+  switch (notifyEvent->event)
+    {
+    case TteElemNew:
+    case TteElemRead:
+    case TteElemInclude:
+    case TteElemMenu:
+      if (pre)
+	{
+	  elType = ((NotifyElement *) notifyEvent)->elementType.ElTypeNum;
+	  element = ((NotifyElement *) notifyEvent)->element;
+	  schStruct = (PtrSSchema) (((NotifyElement *) notifyEvent)->elementType.ElSSchema);
+	}
+      else
+	{
+	  element = ((NotifyElement *) notifyEvent)->element;
+	  elType = ((PtrElement) element)->ElTypeNumber;
+	  schStruct = ((PtrElement) element)->ElStructSchema;
+	}
+      break;
+    case TteElemDelete:
+      if (pre)
+	{
+	  element = ((NotifyElement *) notifyEvent)->element;
+	  elType = ((PtrElement) element)->ElTypeNumber;
+	  schStruct = ((PtrElement) element)->ElStructSchema;
+	}
+      else
+	{
+	  element = ((NotifyElement *) notifyEvent)->element;
+	  elType = ((NotifyElement *) notifyEvent)->elementType.ElTypeNum;
+	  schStruct = (PtrSSchema) (((NotifyElement *) notifyEvent)->elementType.ElSSchema);
+	}
+      break;
+    case TteElemSave:
+    case TteElemExport:
+    case TteElemSelect:
+    case TteElemClick:
+    case TteElemActivate:
+    case TteElemExtendSelect:
+    case TteElemCopy:
+    case TteElemChange:
+    case TteElemMove:
+    case TteElemMouseOver:
+    case TteElemMouseOut:
+    case TteElemReturn:
+    case TteElemTab:
+      element = ((NotifyElement *) notifyEvent)->element;
+      elType = ((PtrElement) element)->ElTypeNumber;
+      schStruct = ((PtrElement) element)->ElStructSchema;
+      break;
+    case TteElemSetReference:
+    case TteElemFetchInclude:
+    case TteElemTextModify:
+      element = ((NotifyOnTarget *) notifyEvent)->element;
+      elType = ((PtrElement) element)->ElTypeNumber;
+      schStruct = ((PtrElement) element)->ElStructSchema;
+      break;
+    case TteElemPaste:
+      if (pre)
+	{
+	  element = ((NotifyOnValue *) notifyEvent)->target;
+	  elType = ((PtrElement) element)->ElTypeNumber;
+	  schStruct = ((PtrElement) element)->ElStructSchema;
+	}
+      else
+	{
+	  element = ((NotifyElement *) notifyEvent)->element;
+	  elType = ((PtrElement) element)->ElTypeNumber;
+	  schStruct = ((PtrElement) element)->ElStructSchema;
+	}
+      break;
+    case TteElemGraphModify:
+      element = ((NotifyOnValue *) notifyEvent)->element;
+      elType = ((PtrElement) element)->ElTypeNumber;
+      schStruct = ((PtrElement) element)->ElStructSchema;
+      break;
+    case TtePRuleCreate:
+    case TtePRuleModify:
+    case TtePRuleDelete:
+      element = ((NotifyPresentation *) notifyEvent)->element;
+      elType = ((PtrElement) element)->ElTypeNumber;
+      schStruct = ((PtrElement) element)->ElStructSchema;
+      break;
+    case TteDocOpen:
+    case TteDocTmpOpen:
+    case TteDocCreate:
+    case TteDocClose:
+    case TteDocSave:
+    case TteDocExport:
+    case TteDocNatPresent:
+    case TteViewOpen:
+    case TteViewClose:
+    case TteViewResize:
+    case TteViewScroll:
+      element = 0;
+      if (((NotifyDialog *) notifyEvent)->document != 0)
+	if (LoadedDocument[((NotifyDialog *) notifyEvent)->document - 1] != NULL)
+	  {
+	    schStruct = LoadedDocument[((NotifyDialog *) notifyEvent)->document - 1]->DocSSchema;
+	    if (schStruct != NULL)
+	      elType = schStruct->SsRootElem;
+	  }
+      break;
+    case TteInit:
+    case TteExit:
+      break;
+    default:
+      break;
+    }
+  return CallAction (notifyEvent, notifyEvent->event, pre, elType, element, schStruct, FALSE);
 }

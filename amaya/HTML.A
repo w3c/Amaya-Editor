@@ -41,6 +41,7 @@ ELEMENTS
 	ElemTextModify.Pre -> SaveDocumentStatus;
 	ElemTextModify.Post -> RestoreDocumentStatus;
 	ElemReturn.Pre -> HandleReturn;
+	ElemTab.Pre -> HandleTab;
 	END;
 
    Password_Input:
@@ -48,12 +49,14 @@ ELEMENTS
 	ElemTextModify.Pre -> SaveDocumentStatus;
 	ElemTextModify.Post -> RestoreDocumentStatus;
 	ElemReturn.Pre -> HandleReturn;
+	ElemTab.Pre -> HandleTab;
 	END;
 
    Text_Area:
 	BEGIN
 	ElemTextModify.Pre -> SaveDocumentStatus;
 	ElemTextModify.Post -> RestoreDocumentStatus;
+	ElemTab.Pre -> HandleTab;
 	END;
 
    File_Input:
@@ -61,6 +64,37 @@ ELEMENTS
 	ElemTextModify.Pre -> SaveDocumentStatus;
 	ElemTextModify.Post -> RestoreDocumentStatus;
 	ElemReturn.Pre -> HandleReturn;
+	ElemTab.Pre -> HandleTab;
+	END;
+
+   Option_Menu:
+	BEGIN
+	ElemTab.Pre -> HandleTab;
+	END;
+
+   Checkbox_Input:
+	BEGIN
+	ElemTab.Pre -> HandleTab;
+	END;
+
+   Radio_Input:
+	BEGIN
+	ElemTab.Pre -> HandleTab;
+	END;
+
+   Submit_Input:
+	BEGIN
+	ElemTab.Pre -> HandleTab;
+	END;
+
+   Reset_Input:
+	BEGIN
+	ElemTab.Pre -> HandleTab;
+	END;
+
+   Button_Input:
+	BEGIN
+	ElemTab.Pre -> HandleTab;
 	END;
 
    Frame:

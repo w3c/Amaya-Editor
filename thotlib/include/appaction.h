@@ -49,6 +49,7 @@ typedef enum
      TteElemTextModify,
      TteElemGraphModify,
      TteElemReturn,
+     TteElemTab,
      TteElemMouseOver,
      TteElemMouseOut,
      TtePRuleCreate,

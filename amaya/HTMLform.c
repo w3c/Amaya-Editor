@@ -466,13 +466,13 @@ static void ParseForm (Document doc, Element ancestor, Element el,
 	}
       
       lang = TtaGetDefaultLanguage ();      
-      attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+      attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
       attrType.AttrTypeNum = HTML_ATTR_NAME;
       attrTypeS.AttrSSchema = attrType.AttrSSchema;
       TtaSearchAttribute (attrType, SearchForward, ancestor, &el, &attr);
-      while (el != NULL && (!withinForm || TtaIsAncestor(el, ancestor)))
+      while (el && (!withinForm || TtaIsAncestor(el, ancestor)))
 	{
-	  if (attr != NULL)
+	  if (attr)
 	    {
 	      elType = TtaGetElementType (el);
 	      switch (elType.ElTypeNum)
@@ -951,7 +951,93 @@ void SubmitForm (Document doc, Element element)
 }
 
 /*----------------------------------------------------------------------
-  Activate the enclosing form
+  HandleTab selects the next form element.
+ -----------------------------------------------------------------------*/
+ThotBool HandleTab (NotifyOnTarget *event)
+{
+  ElementType         elType;
+  Element             el, elForm, child, next;
+  Attribute           attr;
+  AttributeType       attrType;
+  int                 i;
+  ThotBool            found, cycle;
+
+  el = event->element;
+  elType = TtaGetElementType (el);
+  elType.ElTypeNum = HTML_EL_Form;
+  attrType.AttrTypeNum = HTML_ATTR_NAME;
+  attrType.AttrSSchema = elType.ElSSchema;
+  elForm = TtaGetTypedAncestor (el, elType);
+  /* we're looking for a next element */
+  cycle = FALSE;
+  if (elForm)
+    {
+      TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+      found = FALSE;
+      while (!found && el && TtaIsAncestor(el, elForm))
+	{
+	  if (el == event->element)
+	    {
+	      /* we made a complete trun and no other element was found */
+	      el = NULL;
+	      attr = NULL;
+	    }
+	  if (attr)
+	    {
+	      elType = TtaGetElementType (el);
+	      switch (elType.ElTypeNum)
+		{
+		case HTML_EL_Option_Menu:
+		case HTML_EL_Checkbox_Input:
+		case HTML_EL_Radio_Input:
+		  /* no included text: select the element itself */
+		  TtaSelectElement (event->document, el);
+		  found =TRUE;
+		  break;
+
+		case HTML_EL_Text_Area:
+		case HTML_EL_Text_Input:
+		case HTML_EL_File_Input:
+		case HTML_EL_Password_Input:
+		  /* look for the last included text */
+		  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+		  child = TtaSearchTypedElement (elType, SearchForward, el);
+		  if (child)
+		    {
+		      next = child;
+		      do
+			{
+			  child = next;
+			  next = TtaSearchTypedElementInTree (elType,
+							      SearchForward,
+							      el, child);
+			}
+		      while (next);
+		      i = TtaGetTextLength (child);
+		      TtaSelectString (event->document, child, i+1, i);
+		    }
+		  found =TRUE;
+		  break;
+		  
+		default:
+		  TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+		  if (el == NULL && !cycle)
+		    {
+		      /* restart from the beginning of the form */
+		      cycle = TRUE;
+		      el = elForm;
+		      TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+		    }
+		  break;
+		}
+	    }
+	}
+    }
+  return TRUE; /* don't let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
+  HandleReturn submits the enclosing form
  -----------------------------------------------------------------------*/
 ThotBool HandleReturn (NotifyOnTarget *event)
 {
@@ -962,7 +1048,7 @@ ThotBool HandleReturn (NotifyOnTarget *event)
    char               *action;
    int                 method, length;
 
-   /* find the parent form node */
+   /* find the parent form element */
    elType = TtaGetElementType (event->element);
    elType.ElTypeNum = HTML_EL_Form;
    attrType.AttrSSchema = elType.ElSSchema;
@@ -1003,7 +1089,7 @@ ThotBool HandleReturn (NotifyOnTarget *event)
    The user has triggered the Browse button associated with a File_Input
    element.  Display a file selector.
    ----------------------------------------------------------------------*/
-void                ActivateFileInput (Document doc, Element el)
+void ActivateFileInput (Document doc, Element el)
 {
 	/******* TO DO *******/
 }
@@ -1013,7 +1099,7 @@ void                ActivateFileInput (Document doc, Element el)
    SelectCheckbox
    selects a Checkbox input				
    ----------------------------------------------------------------------*/
-void                SelectCheckbox (Document doc, Element el)
+void SelectCheckbox (Document doc, Element el)
 {
    ElementType         elType;
    Attribute           attr;
@@ -1173,7 +1259,7 @@ void                SelectOneRadio (Document doc, Element el)
   put the caret at the end of the text element within the Inserted_Text
   element.
   ----------------------------------------------------------------------*/
-ThotBool            SelectInsertedText (NotifyElement * event)
+ThotBool SelectInsertedText (NotifyElement *event)
 {
    ElementType         elType;
    Element             textLeaf, parent;
@@ -1210,7 +1296,7 @@ ThotBool            SelectInsertedText (NotifyElement * event)
    SelectOneOption
    selects an option in option menu			
   ----------------------------------------------------------------------*/
-void                SelectOneOption (Document doc, Element el)
+void SelectOneOption (Document doc, Element el)
 {
 #ifdef _WINDOWS
   int                 nbOldEntries = 20;

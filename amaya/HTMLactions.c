@@ -68,8 +68,8 @@ typedef struct _FollowTheLink_context {
   Document             doc;
   Element              anchor;
   Element              elSource;
-  STRING               sourceDocUrl;
-  STRING               url;
+  char                *sourceDocUrl;
+  char                *url;
 } FollowTheLink_context;
 
 /*----------------------------------------------------------------------
@@ -158,7 +158,7 @@ static void ResetFontOrPhraseOnText (Document document, Element elem, int notTyp
    SetFontOrPhraseOnText: The text element elem should be 
    within an element of type newtype.              
   ----------------------------------------------------------------------*/
-static void         SetFontOrPhraseOnText (Document document, Element elem,
+static void SetFontOrPhraseOnText (Document document, Element elem,
 				 int newtype)
 {
    ElementType         elType, siblingType;
@@ -291,8 +291,8 @@ static void         SetFontOrPhraseOnText (Document document, Element elem,
 /*----------------------------------------------------------------------
    SetFontOrPhraseOnElement                                
   ----------------------------------------------------------------------*/
-static void         SetFontOrPhraseOnElement (Document document, Element elem,
-					      int elemtype, ThotBool remove)
+static void SetFontOrPhraseOnElement (Document document, Element elem,
+				      int elemtype, ThotBool remove)
 {
    Element             child, next;
    ElementType         elType;
@@ -335,13 +335,13 @@ static void         SetFontOrPhraseOnElement (Document document, Element elem,
    comparing attributes.
   ----------------------------------------------------------------------*/
 static Element GetElemWithAttr (Document doc, AttributeType attrType,
-				STRING nameVal, Attribute ignore)
+				char *nameVal, Attribute ignore)
 {
    Element             el, elFound;
    Attribute           nameAttr;
-   ThotBool            found;
+   char               *name;
    int                 length;
-   STRING              name;
+   ThotBool            found;
 
    elFound = NULL;
    el = TtaGetMainRoot (doc);
@@ -380,7 +380,7 @@ static Element GetElemWithAttr (Document doc, AttributeType attrType,
    If ignore is not NULL, it is an attribute that should be ignored when
    comparing NAME attributes.              
   ----------------------------------------------------------------------*/
-Element             SearchNAMEattribute (Document doc, STRING nameVal, Attribute ignore)
+Element SearchNAMEattribute (Document doc, char *nameVal, Attribute ignore)
 {
    Element             elFound;
    AttributeType       attrType;
@@ -445,21 +445,21 @@ Element             SearchNAMEattribute (Document doc, STRING nameVal, Attribute
    FollowTheLink_callback
    This function is called when the document is loaded
   ----------------------------------------------------------------------*/
-void FollowTheLink_callback (int targetDocument, int status, STRING urlName,
-			     STRING outputfile, AHTHeaders *http_headers,
-			     void * context)
+void FollowTheLink_callback (int targetDocument, int status, char *urlName,
+			     char *outputfile, AHTHeaders *http_headers,
+			     void *context)
 {
   Element             elFound=NULL;
   ElementType         elType;
   Element             elSource;
   Document            doc;
   Element             anchor;
-  STRING              sourceDocUrl, url;
   AttributeType       attrType;
   Attribute           PseudoAttr;
   SSchema             docSchema; 
   View                view;
   FollowTheLink_context      *ctx = (FollowTheLink_context *) context;
+  char               *sourceDocUrl, *url;
 
   /* retrieve the context */
   if (ctx == NULL)
@@ -545,7 +545,7 @@ void FollowTheLink_callback (int targetDocument, int status, STRING urlName,
   double click on the elSource element.
   The parameter doc is the document that contains the origin element.
   ----------------------------------------------------------------------*/
-static ThotBool  FollowTheLink (Element anchor, Element elSource, Document doc)
+static ThotBool FollowTheLink (Element anchor, Element elSource, Document doc)
 {
    AttributeType          attrType;
    Attribute              HrefAttr, PseudoAttr, attr;
@@ -555,8 +555,8 @@ static ThotBool  FollowTheLink (Element anchor, Element elSource, Document doc)
    ElementType            elType;
    Document               targetDocument;
    SSchema                HTMLSSchema;
-   char                 documentURL[MAX_LENGTH];
-   STRING                 url, info, sourceDocUrl;
+   char                   documentURL[MAX_LENGTH];
+   char                  *url, *info, *sourceDocUrl;
    int                    length;
    ThotBool		  isHTML;
    FollowTheLink_context *ctx;
@@ -718,7 +718,7 @@ static ThotBool  FollowTheLink (Element anchor, Element elSource, Document doc)
 /*----------------------------------------------------------------------
   DblClickOnButton     The user has double-clicked a BUTTON element.         
   ----------------------------------------------------------------------*/
-static void         DblClickOnButton (Element element, Document document)
+static void DblClickOnButton (Element element, Document document)
 {
    AttributeType       attrType;
    Attribute           attr;
@@ -749,7 +749,7 @@ static void         DblClickOnButton (Element element, Document document)
 /*----------------------------------------------------------------------
   ActivateElement    The user has activated an element.         
   ----------------------------------------------------------------------*/
-static ThotBool     ActivateElement (Element element, Document document)
+static ThotBool ActivateElement (Element element, Document document)
 {
    AttributeType       attrType;
    Attribute           attr;
@@ -954,9 +954,9 @@ static ThotBool     ActivateElement (Element element, Document document)
 }
 
 /*----------------------------------------------------------------------
-  DisplayUrlAnchor    Display the url when an anchor is selectionned 
+  DisplayUrlAnchor displays the url when an anchor is selectionned
   ----------------------------------------------------------------------*/
-static void     DisplayUrlAnchor (Element element, Document document)
+static void DisplayUrlAnchor (Element element, Document document)
 {
    AttributeType       attrType;
    Attribute           attr, HrefAttr = NULL;
@@ -964,7 +964,7 @@ static void     DisplayUrlAnchor (Element element, Document document)
    ElementType         elType, elType1;
    SSchema             HTMLschema, XLinkSchema;
    ThotBool	       ok, isHTML, isXLink;
-   STRING              url, pathname, documentname;
+   char               *url, *pathname, *documentname;
    int                 length;
 
    elType = TtaGetElementType (element);
@@ -1103,7 +1103,7 @@ static void     DisplayUrlAnchor (Element element, Document document)
 /*----------------------------------------------------------------------
   DoAction activates the current element from the keyborad
   ----------------------------------------------------------------------*/
-void            DoAction (Document doc, View view)
+void DoAction (Document doc, View view)
 {
    Element             firstSel;
    int                 firstChar, lastChar;
@@ -1119,7 +1119,7 @@ void            DoAction (Document doc, View view)
 /*----------------------------------------------------------------------
   AccessKeyHandler handles links or select elements
   ----------------------------------------------------------------------*/
-void            AccessKeyHandler (Document doc, void * param)
+void AccessKeyHandler (Document doc, void * param)
 {
   Element             el, child, next;
   ElementType         elType;
@@ -1164,7 +1164,7 @@ void            AccessKeyHandler (Document doc, void * param)
 /*----------------------------------------------------------------------
   IgnoreEvent       An empty function to be able to ignore events.
   ----------------------------------------------------------------------*/
-ThotBool            IgnoreEvent (NotifyElement *event)
+ThotBool IgnoreEvent (NotifyElement *event)
 {
   /* don't let Thot perform it's normal operation */
   return TRUE;
@@ -1173,7 +1173,7 @@ ThotBool            IgnoreEvent (NotifyElement *event)
 /*----------------------------------------------------------------------
   DoubleClick     The user has double-clicked an element.         
   ----------------------------------------------------------------------*/
-ThotBool            DoubleClick (NotifyElement *event)
+ThotBool DoubleClick (NotifyElement *event)
 {
   ThotBool usedouble;
 
@@ -1189,7 +1189,7 @@ ThotBool            DoubleClick (NotifyElement *event)
 /*----------------------------------------------------------------------
   SimpleClick     The user has clicked an element.         
   ----------------------------------------------------------------------*/
-ThotBool            SimpleClick (NotifyElement *event)
+ThotBool SimpleClick (NotifyElement *event)
 {
   ThotBool usedouble;
 
@@ -1207,7 +1207,7 @@ ThotBool            SimpleClick (NotifyElement *event)
 /*----------------------------------------------------------------------
   AnnotSimpleClick     The user has clicked on an annotation icon
   ----------------------------------------------------------------------*/
-ThotBool            AnnotSimpleClick (NotifyElement *event)
+ThotBool AnnotSimpleClick (NotifyElement *event)
 {
 #ifdef ANNOTATIONS
   /* if it's an annotation link, highlight the annotated text  */
@@ -1221,7 +1221,7 @@ ThotBool            AnnotSimpleClick (NotifyElement *event)
    UpdateTitle update the content of the Title field on top of the 
    main window, according to the contents of element el.   
   ----------------------------------------------------------------------*/
-void                UpdateTitle (Element el, Document doc)
+void UpdateTitle (Element el, Document doc)
 {
 #ifndef _GTK
    Element             textElem, next;
@@ -1274,12 +1274,12 @@ void                UpdateTitle (Element el, Document doc)
 /*----------------------------------------------------------------------
    FreeDocumentResource                                                  
   ----------------------------------------------------------------------*/
-void                FreeDocumentResource (Document doc)
+void FreeDocumentResource (Document doc)
 {
-  STRING             tempdocument;
   Document	     sourceDoc;
   char               htmlErrFile [80];
-  int			i;
+  char              *tempdocument;
+  int		     i;
 
   if (doc == 0)
     return;
@@ -1361,7 +1361,7 @@ void                FreeDocumentResource (Document doc)
 /*----------------------------------------------------------------------
    DocumentClosed                                                  
   ----------------------------------------------------------------------*/
-void                DocumentClosed (NotifyDialog * event)
+void DocumentClosed (NotifyDialog * event)
 {
    if (event == NULL)
       return;
@@ -1371,7 +1371,7 @@ void                DocumentClosed (NotifyDialog * event)
 /*----------------------------------------------------------------------
    A new element has been selected. Update menus accordingly.      
   ----------------------------------------------------------------------*/
-void                UpdateContextSensitiveMenus (Document doc)
+void UpdateContextSensitiveMenus (Document doc)
 {
    ElementType         elType, elTypeSel;
    Element             firstSel;
@@ -1923,7 +1923,7 @@ void                ResetHighlightedElement ()
    A new element has been selected. If the Source view is open,
    synchronize it with the new selection.      
   ----------------------------------------------------------------------*/
-void                SynchronizeSourceView (NotifyElement * event)
+void SynchronizeSourceView (NotifyElement * event)
 {
    Element             firstSel, el, child, otherEl;
    int                 firstChar, lastChar, line, i, view;
@@ -2080,7 +2080,7 @@ void                SynchronizeSourceView (NotifyElement * event)
 /*----------------------------------------------------------------------
    A new element has been selected. Update menus accordingly.      
   ----------------------------------------------------------------------*/
-void                SelectionChanged (NotifyElement * event)
+void SelectionChanged (NotifyElement *event)
 {
    if (event->document != SelectionDoc)
      {
@@ -2099,7 +2099,7 @@ void                SelectionChanged (NotifyElement * event)
 /*----------------------------------------------------------------------
    SetCharFontOrPhrase                                     
   ----------------------------------------------------------------------*/
-void                SetCharFontOrPhrase (int document, int elemtype)
+void SetCharFontOrPhrase (int document, int elemtype)
 {
    Element             selectedEl, elem, firstSelectedElem, lastSelectedElem,
                        child, next, elFont, lastEl;
