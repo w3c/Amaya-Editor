@@ -1661,7 +1661,7 @@ echo "configure:1657: checking for libjpeg version = 6b" >&5
          x JPEG_LIB_VERSION x
 EOF
 if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
-  egrep "x 62  x" >/dev/null 2>&1; then
+  egrep "x 62 x" >/dev/null 2>&1; then
   rm -rf conftest*
           echo "$ac_t""yes" 1>&6
         LIBJPEG='-ljpeg'
@@ -1673,8 +1673,8 @@ else
 fi
 rm -f conftest*
 
-    echo $ac_n "checking for libpng version = 1.0.1""... $ac_c" 1>&6
-echo "configure:1678: checking for libpng version = 1.0.1" >&5
+    echo $ac_n "checking for libpng version = 1.0.x""... $ac_c" 1>&6
+echo "configure:1678: checking for libpng version = 1.0.x" >&5
     cat > conftest.$ac_ext <<EOF
 #line 1680 "configure"
 #include "confdefs.h"
@@ -1682,7 +1682,7 @@ echo "configure:1678: checking for libpng version = 1.0.1" >&5
 	x PNG_LIBPNG_VER_STRING x
 EOF
 if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
-  egrep "x \"1.0.1\"  x" >/dev/null 2>&1; then
+  egrep "x \"1.0\..*\" x" >/dev/null 2>&1; then
   rm -rf conftest*
           echo "$ac_t""yes" 1>&6
         LIBPNG='-lpng'

@@ -1429,5 +1429,5 @@ CHAR_T*               appliname;
 #   endif  /* !_WINDOWS */
     TtaFreeMemory (text);
     return table;
-  }				/*else */
-}				/*InitTranslation */
+  }
+}

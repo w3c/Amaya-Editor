@@ -57,6 +57,7 @@ CSSInfoPtr      css;
   if (sSchema == NULL)
     sSchema = TtaGetDocumentSSchema (doc);
   pInfo = css->infos;
+  nextLink = NULL;
   found = FALSE;
   pIS = NULL;
   while (pInfo != NULL && !found)

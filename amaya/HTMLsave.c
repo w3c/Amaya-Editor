@@ -1998,12 +1998,14 @@ View                view;
   ----------------------------------------------------------------------*/
 void                   BackUpDocs ()
 {
-  Document             doc;
-  FILE                *f;
-  CHAR_T               pathname[MAX_LENGTH];
-  CHAR_T               docname[MAX_LENGTH];
-  CHAR_T*              ptr;
-  int                  l;
+  Document        doc;
+  FILE           *f;
+  CHAR_T          pathname[MAX_LENGTH];
+  CHAR_T          docname[MAX_LENGTH];
+  CHAR_T*         ptr;
+  char            tempdocA[MAX_LENGTH];
+  char            docnameA[MAX_LENGTH];  
+  int             l;
 
   /* check all modified documents */
   f = NULL;
@@ -2042,7 +2044,9 @@ void                   BackUpDocs ()
         DocumentURLs[doc] = pathname;
         SaveDocument (doc, 1);
 	/* register the backup file name and the original document name */
-	fprintf (f, "%s %s %d\n", pathname, ptr, DocumentTypes[doc]);
+	wc2iso_strcpy (tempdocA, pathname);
+	wc2iso_strcpy (docnameA, ptr);
+	fprintf (f, "\"%s\" \"%s\" %d\n", tempdocA, docnameA, DocumentTypes[doc]);
 	TtaFreeMemory (ptr);
       }
   /* now close the crash file */

@@ -9,8 +9,8 @@
  *
  * GraphMLbuilder
  *
- * Author: V. Quint
- *
+ * Authors: V. Quint
+ *          I. Vatton
  */
  
 
@@ -189,6 +189,46 @@ ParserData *XmlContext;
 }
 
 /*----------------------------------------------------------------------
+   ParseFillStrokeAttributes
+   Create or update a specific presentation rule for element el that reflects
+   the value of attribute attr, which is fill, stroke or stroke-width
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void      ParseFillStrokeAttributes (int attrType, Attribute attr, Element el, Document doc, ThotBool delete)
+#else
+void      ParseFillStrokeAttributes (attrType, attr, el, doc, delete)
+int             attrType;
+Attribute	attr;
+Element		el;
+Document	doc;
+ThotBoool       delete;
+#endif
+{
+#define buflen 50
+   CHAR_T               css_command[buflen+20];
+   int                  length;
+   STRING               text;
+
+   length = TtaGetTextAttributeLength (attr) + 2;
+   text = TtaAllocString (length);
+   if (text != NULL)
+      {
+      /* get the value of the attribute */
+      TtaGiveTextAttributeValue (attr, text, &length);
+      /* builds the equivalent CSS rule */
+      if (attrType == GraphML_ATTR_fill)
+	  usprintf (css_command, TEXT("fill: %s"), text);
+      else if (attrType == GraphML_ATTR_stroke)
+          usprintf (css_command, TEXT("stroke: %s"), text);
+      else if (attrType == GraphML_ATTR_stroke_width)
+          usprintf (css_command, TEXT("stroke-width: %s"), text);
+      /* parse the CSS rule */
+      ParseHTMLSpecificStyle (el, css_command, doc, 0, delete);
+      TtaFreeMemory (text);
+      }
+}
+
+/*----------------------------------------------------------------------
    CreateGraphicalLeaf
    Create a GRAPHICS_UNIT element as the last child of element el if it
    does not exist yet.
@@ -202,40 +242,54 @@ char                shape;
 Element             el;
 Document            doc;
 ThotBool            changeShape;
-
 #endif
 {
-   ElementType	elType;
-   Element	leaf, child;
-   CHAR_T       oldShape;
+  ElementType	   elType;
+  Element	   leaf, child;
+  AttributeType    attrType;
+  Attribute        attr;
+  CHAR_T           oldShape;
 
-   leaf = NULL;
-   child = TtaGetLastChild (el);
-   if (child != NULL)
-      /* there is a child element */
-      {
+  leaf = NULL;
+  child = TtaGetLastChild (el);
+  if (child != NULL)
+    /* there is a child element */
+    {
       elType = TtaGetElementType (child);
       if (elType.ElTypeNum == GraphML_EL_GRAPHICS_UNIT)
-	 {
-	 oldShape = TtaGetGraphicsShape (child);
-	 leaf = child;
-	 if (oldShape == EOS || (changeShape && oldShape != shape))
+	{
+	  oldShape = TtaGetGraphicsShape (child);
+	  leaf = child;
+	  if (oldShape == EOS || (changeShape && oldShape != shape))
 	    TtaSetGraphicsShape (child, shape, doc);
-	 }
-      }
-   if (leaf == NULL)
-      /* create the graphical element */
-      {
-      elType.ElSSchema = GetGraphMLSSchema (doc);
+	}
+    }
+
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = GraphML_ATTR_stroke;
+  if (leaf == NULL)
+    /* create the graphical element */
+    {
       elType.ElTypeNum = GraphML_EL_GRAPHICS_UNIT;
       leaf = TtaNewElement (doc, elType);
       if (child == NULL)
-         TtaInsertFirstChild (&leaf, el, doc);
+	TtaInsertFirstChild (&leaf, el, doc);
       else
-         TtaInsertSibling (leaf, child, FALSE, doc);
+	TtaInsertSibling (leaf, child, FALSE, doc);
       TtaSetGraphicsShape (leaf, shape, doc);
-      }
-   return leaf;
+    }
+  /* set the attribute stroke */
+  attr = TtaGetAttribute (el, attrType);
+  if (attr == NULL)
+    {
+      /* it's a new attribute */
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, attr, doc);
+      TtaSetAttributeText (attr, TEXT("1"), el, doc);
+    }
+  ParseFillStrokeAttributes (attrType.AttrTypeNum, attr, el, doc, FALSE);
+  return leaf;
 }
 
 /*----------------------------------------------------------------------
@@ -398,46 +452,6 @@ Document	doc;
 }
 
 /*----------------------------------------------------------------------
-   ParseFillStrokeAttributes
-   Create or update a specific presentation rule for element el that reflects
-   the value of attribute attr, which is fill, stroke or stroke-width
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void      ParseFillStrokeAttributes (int attrType, Attribute attr, Element el, Document doc, ThotBool delete)
-#else
-void      ParseFillStrokeAttributes (attrType, attr, el, doc, delete)
-int             attrType;
-Attribute	attr;
-Element		el;
-Document	doc;
-ThotBoool       delete;
-#endif
-{
-#define buflen 50
-   CHAR_T               css_command[buflen+20];
-   int                  length;
-   STRING               text;
-
-   length = TtaGetTextAttributeLength (attr) + 2;
-   text = TtaAllocString (length);
-   if (text != NULL)
-      {
-      /* get the value of the attribute */
-      TtaGiveTextAttributeValue (attr, text, &length);
-      /* builds the equivalent CSS rule */
-      if (attrType == GraphML_ATTR_fill)
-	  usprintf (css_command, TEXT("fill: %s"), text);
-      else if (attrType == GraphML_ATTR_stroke)
-          usprintf (css_command, TEXT("stroke: %s"), text);
-      else if (attrType == GraphML_ATTR_stroke_width)
-          usprintf (css_command, TEXT("stroke-width: %s"), text);
-      /* parse the CSS rule */
-      ParseHTMLSpecificStyle (el, css_command, doc, 0, delete);
-      TtaFreeMemory (text);
-      }
-}
-
-/*----------------------------------------------------------------------
   SetGraphicDepths forces a depth to each SVG child.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -507,7 +521,24 @@ int             *error
    *error = 0;
    elType = TtaGetElementType (el);
    GraphMLSSchema = GetGraphMLSSchema (doc);
-   if (elType.ElSSchema == GraphMLSSchema)
+   if (elType.ElSSchema != GraphMLSSchema)
+     /* this is not a GraphML element. It's the HTML element <XMLGraphics>, or
+	any other element containing a GraphML expression */
+     {
+     if (TtaGetFirstChild (el) == NULL && !TtaIsLeaf (elType))
+	/* this element is empty. Create a GraphML element as it's child */
+	{
+	newType.ElSSchema = GraphMLSSchema;
+	newType.ElTypeNum = GraphML_EL_GraphML;
+	new = TtaNewElement (doc, newType);
+	TtaInsertFirstChild (&new, el, doc);
+	/* Create a placeholder within the GraphML element */
+        newType.ElTypeNum = GraphML_EL_GraphicsElement;
+	child = TtaNewElement (doc, newType);
+	TtaInsertFirstChild (&child, new, doc);
+	}
+     }
+   else
      {
      /* if the parent element is defined by a different SSchema, insert
         a GraphML root element between the element and its parent */

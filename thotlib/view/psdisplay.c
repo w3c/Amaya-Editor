@@ -81,7 +81,7 @@ static int          NbWhiteSp;
 #include "initpses_f.h"
 #include "memory_f.h"
 #include "units_f.h"
-
+#include "psdisplay_f.h"
 
 /*----------------------------------------------------------------------
    WriteCar writes s1 or s2 depending on encoding.

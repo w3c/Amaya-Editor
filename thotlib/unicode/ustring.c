@@ -616,9 +616,9 @@ const char   *str2;
   iso2wc_strcasecmp: compare char* string to a CHAR_T* string.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-int iso2wc_strcasecmp (const char *str1, const CHAR_T *str2)
+int           iso2wc_strcasecmp (const char *str1, const CHAR_T *str2)
 #else  /* __STDC__ */
-int iso2wc_strcasecmp (str1, str2)
+int           iso2wc_strcasecmp (str1, str2)
 const CHAR_T *str1;
 const char   *str2;
 #endif /* __STDC__ */
@@ -632,7 +632,6 @@ const char   *str2;
   function suposes that momery has been already allocated in the 
   same way that strcpy does.
   -------------------------------------------------------------*/
- 
 #ifdef __STDC__
 char         *wc2iso_strcpy (char *dest, const CHAR_T *src)
 #else  /* __STDC__ */

@@ -56,7 +56,7 @@ AC_ARG_WITH(more-shared, [  --with-included-jpeg    use provided libjpeg, libpng
 if test "$with_included_jpeg" != "yes" ; then
 dnl
     AC_MSG_CHECKING([for libjpeg version = 6b])
-    AC_EGREP_CPP([x 62  x],
+    AC_EGREP_CPP([x 62 x],
         [#include <jpeglib.h>
          x JPEG_LIB_VERSION x],
 dnl
@@ -69,8 +69,8 @@ dnl
         )
 dnl    
 dnl
-    AC_MSG_CHECKING([for libpng version = 1.0.1])
-    AC_EGREP_CPP([x \"1.0.1\"  x],
+    AC_MSG_CHECKING([for libpng version = 1.0.x])
+    AC_EGREP_CPP([x \"1.0\..*\" x],
         [#include <png.h>
 	x PNG_LIBPNG_VER_STRING x],
 dnl

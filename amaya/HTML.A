@@ -54,6 +54,12 @@ ELEMENTS
 	ElemTextModify.Post -> RestoreDocumentStatus;
 	END;
 
+   File_Input:
+	BEGIN
+	ElemTextModify.Pre -> SaveDocumentStatus;
+	ElemTextModify.Post -> RestoreDocumentStatus;
+	END;
+
    Frame:
 	ElemSelect.Pre -> SelectInsertedText;
 

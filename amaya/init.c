@@ -368,7 +368,8 @@ View		view;
 
    ret = TRUE;
    if (TtaIsDocumentModified (document) ||
-       (DocumentSource[document] &&
+       (DocumentTypes[document] != docLog &&
+	DocumentSource[document] &&
 	TtaIsDocumentModified (DocumentSource[document])))
      {
 	InitConfirm (document, view, TtaGetMessage (AMAYA, AM_DOC_MODIFIED));
@@ -4773,13 +4774,12 @@ DocumentType     docType;
   ----------------------------------------------------------------------*/
 static ThotBool       RestoreAmayaDocs ()
 {
-  FILE              * f;
-  int                 docType;
-  CHAR_T              tempname[MAX_LENGTH], tempdoc[MAX_LENGTH];
-  CHAR_T              docname[MAX_LENGTH];  
-  char                tempdocA[MAX_LENGTH];
-  char                docnameA[MAX_LENGTH];  
-  ThotBool            aDoc;
+  FILE           *f;
+  CHAR_T          tempname[MAX_LENGTH], tempdoc[MAX_LENGTH];
+  CHAR_T          docname[MAX_LENGTH];  
+  char            line[MAX_LENGTH * 2];
+  int             docType, i, j;
+  ThotBool        aDoc;
 
   /* check if Amaya has crashed */
   usprintf (tempname, TEXT("%s%cCrash.amaya"), TempFileDirectory, WC_DIR_SEP);
@@ -4788,34 +4788,73 @@ static ThotBool       RestoreAmayaDocs ()
   if (TtaFileExist (tempname))
     {
       InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_RELOAD_FILES));
-      if (UserAnswer)
-        f = ufopen (tempname, TEXT("r"));
-      else
-	f = NULL;
-
+      f = fopen (tempname, TEXT("r"));
       if (f != NULL)
 	{
 	  InNewWindow = TRUE;
-	  tempdoc[0] = WC_EOS;
-	  fscanf (f, "%s %s %d\n", tempdocA, docnameA, &docType);
-	  iso2wc_strcpy (tempdoc, tempdocA);
-	  iso2wc_strcpy (docname, docnameA);
-	  while (tempdoc[0] != WC_EOS && TtaFileExist (tempdoc))
+	  i = 0;
+	  line[i] = EOS;
+	  fread (&line[i], 1, 1, f);
+	  while (line[0] == '"')
 	    {
-	      if (UserAnswer)
+	      /* get the temp name */
+	      do
 		{
-                  if (RestoreOneAmayaDoc (0, tempdoc, docname, (DocumentType) docType))
-		    aDoc = TRUE;
+		  i++;
+		  fread (&line[i], 1, 1, f);
 		}
-	      else
-		/* unlink this saved file */
-		TtaFileUnlink (tempdoc);
-               /*next saved file */
-               tempdoc[0] = WC_EOS;
-               tempdocA[0] = EOS;
-               fscanf (f, "%s %s %d\n", tempdocA, docnameA, &docType);
-               iso2wc_strcpy (tempdoc, tempdocA);
-               iso2wc_strcpy (docname, docnameA);
+	      while (line[i] != '"');
+	      line[i] = EOS;
+	      iso2wc_strcpy (tempdoc, &line[1]);
+	      /* skip spaces and the next first " */
+	      do
+		{
+		  i++;
+		  fread (&line[i], 1, 1, f);
+		}
+	      while (line[i] != '"');
+	      /* get the origin name */
+	      j = i + 1;
+	      do
+		{
+		  i++;
+		  fread (&line[i], 1, 1, f);
+		}
+	      while (line[i] != '"');
+	      line[i] = EOS;
+	      iso2wc_strcpy (docname, &line[j]);
+	      /* skip spaces */
+	      do
+		{
+		  i++;
+		  fread (&line[i], 1, 1, f);
+		}
+	      while (line[i] == ' ');
+	      /* get the docType */
+	      j = i;
+	      do
+		{
+		  i++;
+		  fread (&line[i], 1, 1, f);
+		}
+	      while (line[i] != '\n');
+	      line[i] = EOS;
+	      sscanf (&line[j], "%d",  &docType);
+	      if (tempdoc[0] != WC_EOS && TtaFileExist (tempdoc))
+		{
+		  if (UserAnswer)
+		    {
+		      if (RestoreOneAmayaDoc (0, tempdoc, docname, (DocumentType) docType))
+			aDoc = TRUE;
+		    }
+		  else
+		    /* unlink this saved file */
+		    TtaFileUnlink (tempdoc);
+		}
+	      /*next saved file */
+	      i = 0;
+	      line[i] = EOS;
+	      fread (&line[i], 1, 1, f);
 	    }
 	  InNewWindow = FALSE;	  
 	  fclose (f);
