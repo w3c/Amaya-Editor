@@ -93,6 +93,7 @@ static char         Message3[300];
 static char         WndTitle[100];
 static char         CurrentPathName[100];
 static char         WinCurLang[100];
+static char         WinCurXML[100];
 static char         CurFileToPrint[MAX_PATH];
 static char         AttDlgTitle[100];
 static char         MathEntName[MAX_TXT_LEN];
@@ -118,6 +119,7 @@ static int          currAttrVal;
 static int          Num_zoneRecess;
 static int          Num_zoneLineSpacing;
 static int          Num_lang;
+static int          XMLnum;
 static int          Align_num;
 static int          Indent_value;
 static int          Indent_num;
@@ -149,6 +151,7 @@ static ThotBool     ReleaseFocus;
 static OPENFILENAME OpenFileName;
 static char        *SzFilter;
 static ThotWindow   wndCSSList;
+static ThotWindow   wndXMLList;
 static ThotWindow   wndLangList;
 static ThotWindow   wndListRule;
 static ThotWindow   wndEditRule;
@@ -163,6 +166,7 @@ static ThotWindow   CharacterForm = NULL;
 static ThotWindow   FormatForm = NULL;
 static ThotWindow   PrintForm = NULL;
 static ThotWindow   LangForm = NULL;
+static ThotWindow   XMLForm = NULL;
 static ThotWindow   AttrForm = NULL;
 static ThotWindow   SaveAsForm = NULL;
 static ThotWindow   MimeTypeDlg = NULL;
@@ -246,58 +250,85 @@ LRESULT CALLBACK XMLDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
   switch (msg)
     {
     case WM_INITDIALOG:
-      SetWindowText (hwnDlg, WndTitle);
-      SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
-		  TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-      SetWindowText (GetDlgItem (hwnDlg, ID_DONE),
-		  TtaGetMessage (LIB, TMSG_DONE));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_CSSFILES),
-		  TtaGetMessage (AMAYA, AM_CSS_FILE));
-      wndCSSList = GetDlgItem (hwnDlg, IDC_CSSLIST);
+      /* get the default GUI font */
+      /* destroy the focus of the previous open dialog */
+      XMLForm = hwnDlg;
+      SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_EL_TYPE));
+	  SetWindowText (GetDlgItem (hwnDlg, ID_APPLY), TtaGetMessage (LIB, TMSG_INSERT));
+	  SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_XMLELEM),
+			 TtaGetMessage (LIB, TMSG_EL_TYPE));
+      wndXMLList = GetDlgItem (hwnDlg, IDC_XMLLIST),
       /* set the font of the window */
-      WIN_SetDialogfont (wndCSSList);
-      SendMessage (wndCSSList, LB_RESETCONTENT, 0, 0);
-      while (i < NbItem && cssList[index] != EOS)
-	{
-	  SendMessage (wndCSSList, LB_INSERTSTRING, i, (LPARAM) &cssList[index]); 
-	  index += strlen (&cssList[index]) + 1;	/* entry length */
-	  i++;
-	}
-
-      itemIndex = SendMessage (wndCSSList, LB_SETCURSEL, (WPARAM)0, (LPARAM)0);
-      SetDlgItemText (hwnDlg, IDC_CSSEDIT, SzBuffer);
-      break;
+      WIN_SetDialogfont (wndXMLList);
+      SendMessage (wndXMLList, LB_RESETCONTENT, 0, 0);
+    while (i < NbItem && ItemList[index] != EOS)
+      {
+	SendMessage (wndXMLList, LB_INSERTSTRING, i, (LPARAM) &ItemList[index]); 
+	index += strlen (&ItemList[index]) + 1;/* Longueur de l'intitule */
+	i++;
+      }
+    SetWindowText (GetDlgItem (hwnDlg, IDC_XMLEDIT), "");
+	XMLnum = -1;
+    break;
 
     case WM_CLOSE:
     case WM_DESTROY:
+      XMLForm = NULL;
       EndDialog (hwnDlg, ID_DONE);
       break;
 
     case WM_COMMAND:
-      if (LOWORD (wParam) == IDC_CSSLIST && HIWORD (wParam) == LBN_SELCHANGE)
+      if (LOWORD (wParam) == 1 || HIWORD (wParam) == LBN_SELCHANGE ||
+	  HIWORD (wParam) == LBN_DBLCLK)
 	{
-	itemIndex = SendMessage (wndCSSList, LB_GETCURSEL, 0, 0);
-	itemIndex = SendMessage (wndCSSList, LB_GETTEXT, itemIndex, (LPARAM) SzBuffer);
-	SetDlgItemText (hwnDlg, IDC_CSSEDIT, SzBuffer);
-	ThotCallback (BaseCSS + CSSSelect, STRING_DATA, SzBuffer);
+	  if (HIWORD (wParam) == LBN_SELCHANGE)
+	    {
+	      XMLnum = SendMessage (wndXMLList, LB_GETCURSEL, 0, 0);
+	      XMLnum = SendMessage (wndXMLList, LB_GETTEXT, XMLnum,
+				      (LPARAM) WinCurXML);
+	      SetWindowText (GetDlgItem (hwnDlg, IDC_XMLEDIT), WinCurXML);
+	    }
+	  else if (HIWORD (wParam) == LBN_DBLCLK)
+	    {
+	      if (LB_ERR == (XMLnum = SendMessage (wndLangList, LB_GETCURSEL, 0, 0L)))
+		break;
+	      XMLnum = SendMessage (wndLangList, LB_GETTEXT, XMLnum,
+				      (LPARAM) WinCurLang);
+	    }
+	  SetDlgItemText (hwnDlg, IDC_XMLEDIT, WinCurXML);
+	  ThotCallback (NumSelectElemToBeCreated, STRING_DATA, WinCurXML);
+	  if (HIWORD (wParam) == LBN_DBLCLK)
+	    {
+		  /* confirm the selection */
+	      ThotCallback (NumFormElemToBeCreated, INTEGER_DATA, (char*) 1);
+	      XMLForm = NULL;
+	      EndDialog (hwnDlg, ID_DONE);
+	      return FALSE;
+	    }
 	}
-
+      
       switch (LOWORD (wParam))
 	{
-	case ID_CONFIRM:
-	  ThotCallback (BaseCSS + CSSForm, INTEGER_DATA, (char*) 1);
-	  EndDialog (hwnDlg, ID_CONFIRM);
+	case ID_APPLY:
+	  GetDlgItemText (hwnDlg, IDC_XMLEDIT, WinCurXML, sizeof (WinCurXML) - 1);
+	  if (WinCurXML[0] != EOS)
+	    ThotCallback (NumSelectElemToBeCreated, STRING_DATA, WinCurXML);
+	  ThotCallback (NumFormElemToBeCreated, INTEGER_DATA, (char*) 1);
 	  break;
-
-	case IDCANCEL:
 	case ID_DONE:
-	  ThotCallback (BaseCSS + CSSForm, INTEGER_DATA, (char*) 0);
+	  ThotCallback (NumFormElemToBeCreated, INTEGER_DATA, (char*) 0);
+	  XMLForm = NULL;
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;	  
+	case WM_CLOSE:
+	case WM_DESTROY:
+	  XMLForm = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	}
       break;
-    default:
-      return FALSE;
+    default: return FALSE;
     }
   return TRUE;
 }
@@ -3611,16 +3642,20 @@ void CreateAltDlgWindow ()
  CreateXMLDlgWindow
  ------------------------------------------------------------------------*/
 void CreateXMLDlgWindow (ThotWindow parent, int nb_item, char *buffer,
-			 char *title, char *msg_text)
+			 ThotBool withText)
 {
   NbItem     = (UINT)nb_item;
-  cssList    = buffer;
-  strcpy (WndTitle, title);
+  ItemList    = buffer;
   if (NbItem == 0)
     /* no entry */
-    MessageBox (parent, msg_text, WndTitle, MB_OK | MB_ICONWARNING);
+    MessageBox (parent, TtaGetMessage (LIB, TMSG_NO_ELEMENT),
+		        TtaGetMessage (LIB, TMSG_EL_TYPE),
+                MB_OK | MB_ICONWARNING);
+  else if (withText)
+    DialogBox (hInstance, MAKEINTRESOURCE (XMLDIALOG), NULL,
+	       (DLGPROC) XMLDlgProc);
   else 
-    DialogBox (hInstance, MAKEINTRESOURCE (CSSDIALOG), parent,
+    DialogBox (hInstance, MAKEINTRESOURCE (XMLDIALOG1), NULL,
 	       (DLGPROC) XMLDlgProc);
 }
 

@@ -266,6 +266,8 @@
 #define NUMATTRDIALOG                   566
 #define TEXTATTRDIALOG                  567
 #define REQATTRDIALOG                   570
+#define XMLDIALOG                       571
+#define XMLDIALOG1                      572
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -762,6 +764,9 @@
 #define IDC_CHARSET_LIST                1600
 #define IDC_WORDLIST                    1601
 #define IDC_WORDEDIT                    1602
+#define IDC_XMLLIST                     1604
+#define IDC_XMLEDIT                     1605
+#define IDC_XMLELEM                     1606
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -808,7 +813,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        571
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1603
+#define _APS_NEXT_CONTROL_VALUE         1607
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

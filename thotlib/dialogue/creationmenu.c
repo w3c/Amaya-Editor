@@ -21,6 +21,9 @@
 #include "typemedia.h"
 #include "interface.h"
 #include "application.h"
+#ifdef _WINGUI
+#include "wininclude.h"
+#endif /* _WINGUI */
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -129,8 +132,7 @@ void TtaShowElementMenu (Document doc, View view)
       /* generate the form with two buttons Isert and Done */
 #ifdef _WINGUI
       CreateXMLDlgWindow (TtaGetViewFrame (doc, 1), nbItem, menuBuf,
-			  TtaGetMessage (LIB, TMSG_EL_TYPE),
-			  TtaGetMessage (LIB, TMSG_NO_ELEMENT));
+			  withTextInput);
 #endif /* _WINGUI */
 #ifdef _GTK
       if (nbItem > 0)

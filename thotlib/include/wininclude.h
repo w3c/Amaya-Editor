@@ -54,7 +54,7 @@ extern void   ReusePrinterDC (void);
 extern void   WinInitPrinterColors (void);
 extern void   CreateAltDlgWindow ();
 extern void   CreateXMLDlgWindow (ThotWindow parent, int nb_item, char *buffer,
-				  char *title, char *msg_text);
+				  ThotBool withText);
 extern void   CreateCSSDlgWindow (ThotWindow parent, int nb_item, char *buffer,
 				  char *title, char * msg_text);
 extern void   CreateTitleDlgWindow (ThotWindow parent, char *title);
