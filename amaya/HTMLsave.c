@@ -1156,22 +1156,25 @@ void SetNamespacesAndDTD (Document doc)
   Parse a temporary saved version of the document to detect
   the parsing errors due to the new doctype
   ----------------------------------------------------------------------*/
-ThotBool  ParseWithNewDoctype (Document doc, char *localFile, char *tempdir, char *documentname,
-			       int new_doctype, ThotBool *error, ThotBool xml_doctype)
+ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
+			      char *documentname, int new_doctype,
+			      ThotBool *error, ThotBool xml_doctype)
 {
   SSchema       schema;
   CHARSET       charset;
-  char          charsetname[MAX_LENGTH];
-  int           parsingLevel;
-  ThotBool      xmlDec, withDoctype, isXML, isKnown;
   DocumentType  thotType;
   Document      ext_doc = 0;
+  ElementType     elType;
+  Element         docEl, old_doctype;
+  char          charsetname[MAX_LENGTH];
+  int           parsingLevel;
   char         *s;
   char          type[NAME_LENGTH];
   char          tempdoc2 [100];
-  ThotBool      ok = FALSE;
   char          err_doc [100];
   char          err_extdoc [100];
+  ThotBool      xmlDec, withDoctype, isXML, isKnown;
+  ThotBool      ok = FALSE;
 
   /* Clean up previous Parsing errors file */
   CleanUpParsingErrors ();
@@ -1195,6 +1198,7 @@ ThotBool  ParseWithNewDoctype (Document doc, char *localFile, char *tempdir, cha
 	  TtaFreeMemory (DocumentURLs[ext_doc]);
 	  DocumentURLs[ext_doc] = NULL;
 	}
+      DocumentTypes[ext_doc] = DocumentTypes[doc];
       DocumentURLs[ext_doc] = TtaStrdup (DocumentURLs[doc]);
       DocumentMeta[ext_doc]->form_data = TtaStrdup (DocumentMeta[doc]->form_data);
       DocumentMeta[ext_doc]->initial_url = TtaStrdup (DocumentMeta[doc]->initial_url);
@@ -1204,6 +1208,7 @@ ThotBool  ParseWithNewDoctype (Document doc, char *localFile, char *tempdir, cha
       DocumentMeta[ext_doc]->xmlformat = xml_doctype;
       charset = TtaGetDocumentCharset (doc);
       TtaSetDocumentCharset (ext_doc, charset, FALSE);
+      TtaSetDocumentProfile (ext_doc, new_doctype);
 
       /* Copy the current document into a second temporary file */
       sprintf (tempdoc2, "%s%c%d%c%s",
@@ -1254,7 +1259,34 @@ ThotBool  ParseWithNewDoctype (Document doc, char *localFile, char *tempdir, cha
 
   /* Update the xml indicator for the document */
   if (ok)
-    DocumentMeta[doc]->xmlformat = xml_doctype;
+    {
+      /* Remove the previous doctype if it exists */
+      docEl = TtaGetMainRoot (ext_doc);
+      elType = TtaGetElementType (docEl);
+      /* Search the doctype declaration according to the main schema */
+      if (new_doctype == L_Basic || new_doctype == L_Strict ||
+	  new_doctype == L_Xhtml11 || new_doctype == L_Transitional)
+	elType.ElTypeNum = HTML_EL_DOCTYPE;
+      else if (new_doctype == L_MathML) 
+	elType.ElTypeNum = MathML_EL_DOCTYPE;
+      else if (new_doctype == L_SVG) 
+	elType.ElTypeNum = SVG_EL_DOCTYPE;
+      old_doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
+      if (old_doctype)
+	TtaDeleteTree (old_doctype, ext_doc);
+      /* Add the new doctype */
+      CreateDoctype (ext_doc, new_doctype, FALSE, FALSE);
+      /* link the source view to this new document */
+      DocumentSource[ext_doc] = DocumentSource[doc];
+      DocumentSource[doc] = 0;
+      /* Notify the document as modified */
+      TtaSetDocumentModified (ext_doc);
+      /* Synchronize the document */
+      Synchronize (ext_doc, 1);
+      TtaFileCopy (tempdoc2, localFile);
+      DocumentSource[doc] = DocumentSource[ext_doc];
+      DocumentSource[ext_doc] = 0;
+    }
 
   /* Delete the external document */
   if (ext_doc != 0)
@@ -1263,6 +1295,7 @@ ThotBool  ParseWithNewDoctype (Document doc, char *localFile, char *tempdir, cha
       TtaCloseDocument (ext_doc);
       TtaFreeMemory (DocumentURLs[ext_doc]);
       DocumentURLs[ext_doc] = NULL;
+      DocumentTypes[ext_doc] = docFree;
     }
 
   return (ok);

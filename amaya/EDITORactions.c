@@ -572,11 +572,10 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   --------------------------------------------------------------------------*/
 static void CreateOrChangeDoctype (Document doc, View view, int new_doctype)
 {
-  ElementType     elType;
-  Element         docEl, old_doctype;
   char           *tempdoc = NULL; 
   char            documentname[MAX_LENGTH];
   char            tempdir[MAX_LENGTH];
+  int             oldprofile;
   ThotBool        ok = FALSE, error = FALSE;
   
   /* The document has to be parsed with the new doctype */
@@ -586,44 +585,27 @@ static void CreateOrChangeDoctype (Document doc, View view, int new_doctype)
   /* Parse the document with the new doctype */
   tempdoc = GetLocalPath (doc, DocumentURLs[doc]);
   TtaExtractName (tempdoc, tempdir, documentname);
-  ok = ParseWithNewDoctype (doc, tempdoc, tempdir, documentname, new_doctype, &error, XmlDoctype);
+  /* change the document profile */
+  oldprofile = TtaGetDocumentProfile (doc);
+  ok = ParseWithNewDoctype (doc, tempdoc, tempdir, documentname, new_doctype,
+			    &error, XmlDoctype);
 
   if (ok)
     {
-      /* Remove the previous doctype if it exists */
-      docEl = TtaGetMainRoot (doc);
-      elType = TtaGetElementType (docEl);
-      /* Search the doctype declaration according to the main schema */
-      if (new_doctype == L_Basic || new_doctype == L_Strict ||
-	  new_doctype == L_Xhtml11 || new_doctype == L_Transitional)
-	elType.ElTypeNum = HTML_EL_DOCTYPE;
-      else if (new_doctype == L_MathML) 
-	elType.ElTypeNum = MathML_EL_DOCTYPE;
-      else if (new_doctype == L_SVG) 
-	elType.ElTypeNum = SVG_EL_DOCTYPE;
-      old_doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
-      if (old_doctype != NULL)
-	TtaDeleteTree (old_doctype, doc);
-      
-      /* Add the new doctype */
-      CreateDoctype (doc, new_doctype, FALSE, FALSE);
-      /* Store the new doctype */
-      TtaSetDocumentProfile (doc, new_doctype);
-      
       /* Update the Doctype menu */
       UpdateDoctypeMenu (doc);
       /* Notify the document as modified */
       TtaSetDocumentModified (doc);
-      /* Synchronize the document */
-      Synchronize (doc, view);
       /* Reparse the document to remove the errors */
       if (error)
 	{
 	  RestartParser (doc, tempdoc, tempdir, documentname, FALSE);
 	  TtaSetDocumentModified (doc);
-	  Synchronize (doc, view);
 	}
     }
+  else
+    /* restore the document profile */
+    TtaSetDocumentProfile (doc, oldprofile);
 
   TtaFreeMemory (tempdoc);
 }
