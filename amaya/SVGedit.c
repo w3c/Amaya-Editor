@@ -1100,20 +1100,34 @@ void GraphElemPasted (NotifyElement *event)
 {
   ElementType    elType;
   SSchema	 SvgSchema;
+  Element        parent;
 
   XLinkPasted (event);
   /* check that the svg element includes that element */
   CheckSVGRoot (event->document, event->element);
   SetGraphicDepths (event->document, event->element);
 
-  /* Set the namespace declaration */
+  /* Set the namespace declaration if it's an <svg> element that is not
+     within an element belonging to the SVG namespace */
   SvgSchema = GetSVGSSchema (event->document);
   elType = TtaGetElementType (event->element);
   if (elType.ElTypeNum == SVG_EL_SVG &&
       elType.ElSSchema == SvgSchema)
+    /* it's an <svg> element */
     {
-      TtaSetUriSSchema (elType.ElSSchema, SVG_URI);
-      TtaSetANamespaceDeclaration (event->document, event->element, NULL, SVG_URI);
+      parent = TtaGetParent (event->element);
+      if (parent)
+	{
+	  elType = TtaGetElementType (parent);
+	  if (elType.ElSSchema != SvgSchema)
+	    /* the parent element is not in the SVG namespace. Put a
+	       namespace declaration on the pasted <svg> element */
+	    {
+	      TtaSetUriSSchema (elType.ElSSchema, SVG_URI);
+	      TtaSetANamespaceDeclaration (event->document, event->element,
+					   NULL, SVG_URI);
+	    }
+	}
     }
   /* Check attribute NAME or ID in order to make sure that its value */
   /* is unique in the document */
@@ -1830,10 +1844,14 @@ void CreateGraphicElement (int entry)
 	  /* schema when inserting this element */
 	  oldStructureChecking = TtaGetStructureChecking (doc);
 	  TtaSetStructureChecking (0, doc);
+	  /* insert the new <div> element */
 	  TtaInsertFirstChild (&child, foreignObj, doc);
+	  /* put an XHTML namespace declaration on the <div> element */
+	  TtaSetUriSSchema (childType.ElSSchema, XHTML_URI);
+	  TtaSetANamespaceDeclaration (doc, child, NULL, XHTML_URI);
 	  TtaSetStructureChecking (oldStructureChecking, doc);
-		      /* create an alternate SVG text element for viewers
-			 that can't display embedded MathML */
+	  /* create an alternate SVG text element for viewers that are not
+	     able to display embedded MathML */
 	  elType.ElSSchema = SvgSchema;
 	  elType.ElTypeNum = SVG_EL_text_;
 	  altText = TtaNewElement (doc, elType);
@@ -2191,16 +2209,27 @@ void SwitchIconGraph (Document doc, View view, ThotBool state)
   ----------------------------------------------------------------------*/
 void SVGCreated (NotifyElement * event)
 {
-  ElementType	elType;
+  ElementType	elType, parentType;
+  Element       parent;
   AttributeType	attrType;
   Attribute	attr;
 
   elType = TtaGetElementType (event->element);
-
-  /* Set the namespace declaration */
-  TtaSetUriSSchema (elType.ElSSchema, SVG_URI);
-  TtaSetANamespaceDeclaration (event->document, event->element, NULL, SVG_URI);
-
+  /* Set the namespace declaration if the parent element is in a different
+     namespace */
+  parent = TtaGetParent (event->element);
+  if (parent)
+    {
+      parentType = TtaGetElementType (parent);
+      if (parentType.ElSSchema != elType.ElSSchema)
+	/* the parent element is not in the SVG namespace. Put a namespace
+	   declaration on the  <svg> element */
+	{
+	  TtaSetUriSSchema (elType.ElSSchema, SVG_URI);
+	  TtaSetANamespaceDeclaration (event->document, event->element, NULL,
+				       SVG_URI);
+	}
+    }
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = SVG_ATTR_width_;
   attr = TtaGetAttribute (event->element, attrType);

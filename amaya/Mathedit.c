@@ -775,7 +775,8 @@ static void         CreateMathConstruct (int construct)
 	    }
 	  if (el)
 	    {
-	      /* associate an attribute IntDisplaystyle with the new <math> elem */
+	      /* associate an attribute IntDisplaystyle with the new
+		 <math> element */
 	      SetDisplaystyleMathElement (el, doc);
 	      /* Set the MathML namespace declaration */
 	      elType = TtaGetElementType (el);
