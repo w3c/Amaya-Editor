@@ -460,7 +460,7 @@ char               *name;
    else
      {
       /* at least allocate the selection color */
-      found = FindColor (0, name, "DocSelectColor", "Black", &Select_Color);
+      found = FindColor (0, name, "DocSelectColor", "White", &Select_Color);
 
       /* color for borders and buttons */
       found = FindColor (0, name, "ButtonColor", "White", &Button_Color);
