@@ -16,7 +16,7 @@
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of June 16, 2004</h4>
+<h4>Version of September 27, 2004</h4>
 
 <p>© 1996-2004 INRIA</p>
 <hr />
@@ -174,6 +174,13 @@
           </li>
           <li><a href="#sectc4223">Page breaking and line breaking
             conditions</a></li>
+          <li><a href="#Controllin">Controlling style of lists</a>
+            <ul>
+              <li><a href="#litype">List item type</a></li>
+              <li><a href="#liimage">List item image</a></li>
+              <li><a href="#liposition">List item position</a></li>
+            </ul>
+          </li>
           <li><a href="#sectc4224">Visibility</a></li>
           <li><a href="#sectc4225">Character style properties</a>
             <ul>
@@ -1894,7 +1901,7 @@ exceptions are indicated by a name. They are separated by semicolons.</p>
                     'CssBackground' / 'CssClass' / 'CssId' / 'CssPseudoClass' /
                     'NoShowBox' / 'SetWindowBackground' /
                     'Shadow' / 'EventAttr' / 'SpacePreserve' /
-                    'IsPlaceholder' /
+                    'IsPlaceholder' / 'StartCounter' / 'SetCounter' /
                     ExceptNum .</pre>
 
 <p>The following are the available exceptions:</p>
@@ -2109,6 +2116,10 @@ exceptions are indicated by a name. They are separated by semicolons.</p>
   <dt><tt>SpacePreserve</tt></dt>
     <dd>@@@@</dd>
   <dt><tt>IsPlaceholder</tt></dt>
+    <dd>@@@@</dd>
+  <dt><tt>StartCounter</tt></dt>
+    <dd>@@@@</dd>
+  <dt><tt>SetCounter</tt></dt>
     <dd>@@@@</dd>
 </dl>
 
@@ -3166,10 +3177,13 @@ different styles. The keyword <tt>VALUE</tt> is followed (between
 parentheses) by the name of the counter, the name of the attribute, or the
 keyword <tt>PageNumber</tt> and the desired style, the two parameters being
 separated by a comma. The style is a keyword which indicates whether the
-value should be presented in arabic numerals (<tt>Arabic</tt>), lower-case
-roman numerals (<tt>LRoman</tt>), or upper-case roman numerals
-(<tt>URoman</tt>), or by an upper-case letter (<tt>Uppercase</tt>) or
-lower-case letter (<tt>Lowercase</tt>).</p>
+value should be presented in arabic numerals (<tt>Arabic</tt>,
+<tt>Decimal</tt> or <tt>DecimalLeadingZero</tt>), lower-case roman numerals
+(<tt>LRoman</tt> or <tt>LowerRoman</tt>), upper-case roman numerals
+(<tt>URoman</tt> or <tt>UpperRoman</tt>), upper-case latin letter
+(<tt>Uppercase</tt> or <tt>UpperLatin</tt>), lower-case latin letter
+(<tt>Lowercase</tt> or <tt>LowerLatin</tt>), uppercase greek letter
+(<tt>UpperGreek</tt>) or lowercase greek letter (<tt>LowerGreek</tt>).</p>
 
 <p>For a page counter, the keyword <tt>PageNumber</tt> can be followed,
 between parentheses, by the name of the view from which to obtain the page
@@ -3191,8 +3205,10 @@ concerned by the function.</p>
                                 CounterStyle ')' .
      PageAttrCtr  = 'PageNumber' [ '(' ViewID ')' ] /
                      [ MinMax ] CounterID / AttrID .
-     CounterStyle = 'Arabic' / 'LRoman' / 'URoman' /
-                    'Uppercase' / 'Lowercase' .
+     CounterStyle = 'Arabic' / 'Decimal' / 'DecimalLeadingZero' /
+                    'URoman' /  'UpperRoman' / 'LRoman' / 'LowerRoman' /
+                    'Uppercase' / 'UpperLatin' / 'Lowercase' / 'LowerLatin' /
+                    'LowerGreek' / 'UpperGreek' .
      MinMax       = 'MaxRangeVal' / 'MinRangeVal' .</pre>
 
 <blockquote class="example">
@@ -4039,6 +4055,7 @@ function. The properties are:</p>
   <li>the position of the box in relation to other boxes,</li>
   <li>the height or width of the box, with overflow exceptions,</li>
   <li>the margins, padding and borders of the box,</li>
+  <li>the style and position of list item markers,</li>
   <li>the characteristics of the lines contained in the box: linespacing,
     indentation of the first line, hyphenation, writing direction</li>
   <li>the conditions for breaking the box across pages,</li>
@@ -4104,7 +4121,10 @@ rules are terminated by a semicolon.</p>
                 'BorderTopStyle' ':' BorderStyle /
                 'BorderRightStyle' ':' BorderStyle /
                 'BorderBottomStyle' ':' BorderStyle /
-                'BorderLeftStyle' ':' BorderStyle .
+                'BorderLeftStyle' ':' BorderStyle /
+                'ListStyleType' ':' ListStyleType /
+                'ListStyleImage' ':' ListStyleImage /
+                'ListStylePosition' ':' ListStylePosition /
                 'LineSpacing' ':'   DistanceInherit /
                 'Indent' ':'        DistanceInherit /
                 'Adjust' ':'        AdjustInherit /
@@ -4137,6 +4157,7 @@ rules are terminated by a semicolon.</p>
      PresFunc = Creation '(' BoxID ')' /
                 'Line' /
                 'NoLine' /
+                'Display' ':' DisplayVal /
                 'Page' '(' BoxID ')' /
                 'Copy' '(' BoxTypeToCopy ')' /
                 'ShowBox' /
@@ -4872,8 +4893,19 @@ non-primary view to override the primary view's <tt>Line</tt> rule. The
 <tt>NoLine</tt> rule must not be used with the primary view because the
 absence of the <tt>Line</tt> rule has the same effect. Like the <tt>Line</tt>
 rule, the <tt>NoLine</tt> rule does not take any parameters.</p>
-<pre>              'Line'
-              'NoLine'</pre>
+
+<p id="compatibil">For compatibility with CSS, langiage P also provides the
+<tt>Display</tt> rule which accepts the following values: <tt>Inline</tt>,
+<tt>Block</tt>, <tt>ListItem</tt>, <tt>RunIin</tt>, <tt>InlineBlock</tt>, and
+<tt>None</tt>, plus <tt>Enclosing =</tt> for inheritance. These values play
+the same role as in CSS. Notice that the effect of value <tt>ListItem</tt>
+depends on other rules related to lists: <tt>ListStyleType</tt>,
+<tt>ListStyleImage</tt> and <tt>ListStylePosition</tt>.</p>
+<pre>                  'Line'
+                  'NoLine'
+                  'Display' ':' DisplayVal /
+     DisplayVal = 'Inline' / 'Block' / 'ListItem' / 'RunIin' /
+                  'InlineBlock' / 'None' / 'Enclosing' '=' .</pre>
 
 <div class="subsubsection">
 <h4><a name="sectd42221" id="sectd42221">Line spacing</a></h4>
@@ -5149,6 +5181,44 @@ to all views defined in the presentation schema.</p>
 </div>
 
 <div class="subsection">
+<h3 id="Controllin">Controlling style of lists</h3>
+
+<p>To present an element as a list item, rule <tt>Display</tt> with value
+<tt>ListItem</tt> must apply to that element. The type and the position of
+the marker generated by this rule are determined by three other rules:
+<tt>ListStyleType</tt>, <tt>ListStyleImage</tt> and
+<tt>ListStylePosition</tt>.</p>
+
+<h4 id="litype">List item type</h4>
+
+<p>This rule defines the type of maker that must be created for a list item.
+It is equivalent to the CSS property <tt>list-style-type</tt>, and accepts
+the same values.</p>
+<pre>                     'ListStyleType' ':' ListStyleType
+     ListStyleType = 'Disc' / 'Circle' / 'Square' / 'Decimal' /
+                     'DecimalLeadingZero' / 'LowerRoman' / 'UpperRoman' / 
+                     'LowerGreek' / 'LowerLatin' / 'UpperLatin' / 'None' /
+                     'Enclosing' '=' .</pre>
+
+<h4 id="liimage">List item image</h4>
+
+<p>This rule defines the image that must be created as a merker for a list
+item. It is equivalent to the CSS property <tt>list-style-image</tt>. The URL
+of the image is simply a character string.</p>
+<pre>                         'ListStyleImage' ':' ListStyleImage
+     ListStyleImage    = 'None' / 'Enclosing' '=' / ListStyleImageURI .
+     ListStyleImageURI = STRING .</pre>
+</div>
+
+<h4 id="liposition">List item position</h4>
+
+<p>This rule defines the position of the marker: inside the list item or
+outside. It is equivalent to the CSS property <tt>list-style-position</tt>,
+and accepts the same values.</p>
+<pre>                         'ListStylePosition' ':' ListStylePosition
+     ListStylePosition = 'Inside' / 'Outside' / 'Enclosing' '=' .</pre>
+
+<div class="subsection">
 <h3><a name="sectc4224" id="sectc4224">Visibility</a></h3>
 
 <p>The visibility property is used to control which elements should or should
@@ -5193,6 +5263,10 @@ is used.</p>
 </div>
 
 <div class="subsection">
+<p>Notice that rule <a href="#compatibil"><tt>Display</tt></a> with value
+<tt>None</tt> is equivalent to rule <tt>Visibility</tt> with value
+<tt>0</tt>.</p>
+
 <h3><a name="sectc4225" id="sectc4225">Character style properties</a></h3>
 
 <p>Four properties are used to determine which characters are used to display
@@ -7968,7 +8042,7 @@ ExcValue       = 'NoCut' / 'NoCreate' / 'NoReplicate' /
                  'CssBackground' / 'CssClass' / 'CssId' / 'CssPseudoClass' /
                  'NoShowBox' / 'SetWindowBackground' /
                  'Shadow' / 'EventAttr' / 'SpacePreserve' /
-                 'IsPlaceholder' /
+                 'IsPlaceholder' / 'StartCounter' / 'SetCounter' /
                  ExceptNum .
 ExceptNum =      NUMBER .
 
@@ -8049,8 +8123,10 @@ Function        = 'DATE' / 'FDATE' /
                   CounterStyle ')' .
 PageAttrCtr     = 'PageNumber' [ '(' ViewID ')' ] /
                   [ MinMax ] CounterID / AttrID .
-CounterStyle    = 'Arabic' / 'LRoman' / 'URoman' /
-                  'Uppercase' / 'Lowercase' .
+CounterStyle    = 'Arabic' / 'Decimal' / 'DecimalLeadingZero' /
+                  'URoman' /  'UpperRoman' / 'LRoman' / 'LowerRoman' /
+                  'Uppercase' / 'UpperLatin' / 'Lowercase' / 'LowerLatin' /
+                  'LowerGreek' / 'UpperGreek' .
 MinMax          = 'MaxRangeVal' / 'MinRangeVal' .
 
 BoxSeq          = Box &lt; Box &gt; .
@@ -8154,7 +8230,10 @@ Property        = 'VertRef' ':' HorizPosition /
                   'BorderTopStyle' ':' BorderStyle /
                   'BorderRightStyle' ':' BorderStyle /
                   'BorderBottomStyle' ':' BorderStyle /
-                  'BorderLeftStyle' ':' BorderStyle .
+                  'BorderLeftStyle' ':' BorderStyle /
+                  'ListStyleType' ':' ListStyleType /
+                  'ListStyleImage' ':' ListStyleImage /
+                  'ListStylePosition' ':' ListStylePosition /
                   'LineSpacing' ':' DistOrInherit /
                   'Indent' ':' DistOrInherit /
                   'Adjust' ':' AlignOrInherit /
@@ -8187,12 +8266,15 @@ Property        = 'VertRef' ':' HorizPosition /
 PresFunc        = Creation '(' BoxID ')' /
                   'Line' /
                   'NoLine' /
+                  'Display' ':' DisplayVal /
                   'Page' '(' BoxID ')' /
                   'Copy' '(' BoxTypeToCopy ')' /
                   'ShowBox' /
                   'BackgroundPicture' ':' FileName /
                   'PictureMode' ':' PictMode .
 
+DisplayVal      = 'Inline' / 'Block' / 'ListItem' / 'RunIin' /
+                  'InlineBlock' / 'None' / 'Enclosing' '=' .
 BoxTypeToCopy   = BoxID [ ExtStruct ] /
                    ElemID [ ExtStruct ] .
 ExtStruct       = '(' ElemID ')' .
@@ -8251,6 +8333,15 @@ BorderColor     = InheritParent / 'Transparent' / 'Foreground' /
 BorderStyle     = InheritParent /
                   'None' / 'Hidden' / 'Dotted' / 'Dashed' / 'Solid' /
                   'Double' / 'Groove' / 'Ridge' / 'Inset' / 'Outset' .
+
+ListStyleType   = 'Disc' / 'Circle' / 'Square' / 'Decimal' /
+                  'DecimalLeadingZero' / 'LowerRoman' / 'UpperRoman' / 
+                  'LowerGreek' / 'LowerLatin' / 'UpperLatin' / 'None' /
+                  'Enclosing' '=' .
+ListStyleImage  = 'None' / 'Enclosing' '=' / ListStyleImageURI .
+ListStyleImageURI = STRING .
+ListStylePosition = 'Inside' / 'Outside' / 'Enclosing' '=' .
+
 InheritParent   = 'Enclosing' '=' / 'Creator' '=' .
 ColorName       = NAME .
 
