@@ -551,11 +551,11 @@ int                 status;
 #endif
 {
 
-   char               *ref;
    HTAnchor           *new_anchor = HTResponse_redirection (response);
    AHTReqContext      *me = HTRequest_context (request);
    HTMethod            method = HTRequest_method (request);
-
+   char               *ref;
+   char               *tmp;
 
    if (!new_anchor)
      {
@@ -570,7 +570,6 @@ int                 status;
    if (!HTMethod_isSafe (method))
      {
 	HTAlertCallback    *prompt = HTAlert_find (HT_A_CONFIRM);
-
 	if (prompt)
 	  {
 	     if ((*prompt) (request, HT_A_CONFIRM, HT_MSG_REDIRECTION,
@@ -597,9 +596,14 @@ int                 status;
 				  me->urlName, AMAYA_PARSE_ALL);
 	     if (ref)
 	       {
-		 TtaFreeMemory (new_anchor->parent->address);
-		 new_anchor->parent->address = ref;
+		 HT_FREE (new_anchor->parent->address);
+		 tmp = NULL;
+		 HTSACopy (&tmp, ref);
+		 new_anchor->parent->address = tmp;
+		 TtaFreeMemory (ref);
 	       }
+	     else
+	       return HT_ERROR; /* We can't redirect anymore */
 	  }
 
 	/* update the current file name */
