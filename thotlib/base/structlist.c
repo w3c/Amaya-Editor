@@ -3295,7 +3295,17 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 	     pSc1 = pHd->HdPSchema;
 	     if (pSc1 != NULL)
 	       {
-		 fprintf (fileDescriptor, "{---------------------------------------------------------------}\n\n");
+		 fprintf (fileDescriptor, "{-----------------------  ");
+		 switch (pSc1->PsOrigin)
+		   {
+		   case Agent: fprintf (fileDescriptor, "User Agent");
+		     break;
+		   case User: fprintf (fileDescriptor, "User");
+		     break;
+		   case Author: fprintf (fileDescriptor, "Author");
+		     break;
+		   }
+		 fprintf (fileDescriptor, " -----------------------}\n\n");
 		 fprintf (fileDescriptor, "PRESENTATION ");
 		 wrtext (pSchemaStr->SsName, fileDescriptor);
 		 fprintf (fileDescriptor, ";\n");
