@@ -421,7 +421,6 @@ void               *extra;
 			ctxEl = ctxEl->nextElement;
 			ctxEl->callback = callback;
 			ctxEl->extra = extra;
-			ctxEl = ctxEl->nextElement;
 			ctxEl->currentElement = el;
 			ctxEl->nextElement = NULL;
 		      }
