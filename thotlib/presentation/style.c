@@ -2566,7 +2566,7 @@ Document            doc;
   int                 nbrules, i, j;
   unsigned int        elType, attrType, max;
 
-  if (doc == 0)
+  if (doc == 0 || LoadedDocument[doc - 1] == NULL)
     return;
 
   /* avoid too many redisplay */
