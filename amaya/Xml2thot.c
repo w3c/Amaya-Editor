@@ -4705,65 +4705,68 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
     charset = ISO_8859_1;
   InitializeExpatParser (charset);
  
-  /* Check if there is an xml declaration with a charset declaration */
-  if (docURL[0] != EOS)
-    CheckDocHeader (docURL, &xmlDec, &docType, &isXML, &isKnown,
-		    &parsingLevel, &charset, charsetname, &thotType);
-  
-  /* Parse the input file and complete the Thot document */
-  infile = gzopen (docURL, "r");
-  if (infile != 0)
+  if (docURL != NULL)
     {
-      while (!endOfFile && !XMLNotWellFormed)
+      /* Check if there is an xml declaration with a charset declaration */
+      if (docURL[0] != EOS)
+	CheckDocHeader (docURL, &xmlDec, &docType, &isXML, &isKnown,
+			&parsingLevel, &charset, charsetname, &thotType);
+      
+      /* Parse the input file and complete the Thot document */
+      infile = gzopen (docURL, "r");
+      if (infile != 0)
 	{
-	  /* read the XML file */
-	  res = gzread (infile, bufferRead, COPY_BUFFER_SIZE);      
-	  if (res < COPY_BUFFER_SIZE)
-	    endOfFile = TRUE;
-	  i = 0;
-	  if (!docType)
-	    /* There is no DOCTYPE Declaration 
-	       We include a virtual DOCTYPE declaration so that EXPAT parser
-	       doesn't stop processing when it finds an external entity */	  
+	  while (!endOfFile && !XMLNotWellFormed)
 	    {
-	      if (xmlDec)
-		/* There is a XML declaration */
-		/* We look for the first '>' character */
+	      /* read the XML file */
+	      res = gzread (infile, bufferRead, COPY_BUFFER_SIZE);      
+	      if (res < COPY_BUFFER_SIZE)
+		endOfFile = TRUE;
+	      i = 0;
+	      if (!docType)
+		/* There is no DOCTYPE Declaration 
+		   We include a virtual DOCTYPE declaration so that EXPAT parser
+		   doesn't stop processing when it finds an external entity */	  
 		{
-		  while ((bufferRead[i] != '>') && i < res)
-		    i++;
-		  if (i < res)
+		  if (xmlDec)
+		    /* There is a XML declaration */
+		    /* We look for the first '>' character */
 		    {
-		      i++;
-		      if (!XML_Parse (Parser, bufferRead, i, FALSE))
+		      while ((bufferRead[i] != '>') && i < res)
+			i++;
+		      if (i < res)
+			{
+			  i++;
+			  if (!XML_Parse (Parser, bufferRead, i, FALSE))
+			    XmlParseError (errorNotWellFormed,
+					   (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
+			  res = res - i;
+			}
+		    }
+		  
+		  /* Virtual DOCTYPE Declaration */
+		  if (!XMLNotWellFormed)
+		    {
+		      VirtualDoctype = TRUE;
+		      tmpLineRead = XML_GetCurrentLineNumber (Parser);
+		      if (!XML_Parse (Parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
 			XmlParseError (errorNotWellFormed,
 				       (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
-		      res = res - i;
+		      docType = TRUE;
+		      extraLineRead = XML_GetCurrentLineNumber (Parser) - tmpLineRead;
 		    }
 		}
 	      
-	      /* Virtual DOCTYPE Declaration */
+	      /* Standard EXPAT processing */
 	      if (!XMLNotWellFormed)
 		{
-		  VirtualDoctype = TRUE;
-		  tmpLineRead = XML_GetCurrentLineNumber (Parser);
-		  if (!XML_Parse (Parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
+		  if (!XML_Parse (Parser, &bufferRead[i], res, endOfFile))
 		    XmlParseError (errorNotWellFormed,
 				   (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
-		  docType = TRUE;
-		  extraLineRead = XML_GetCurrentLineNumber (Parser) - tmpLineRead;
 		}
 	    }
-	  
-	  /* Standard EXPAT processing */
-	  if (!XMLNotWellFormed)
-	    {
-	      if (!XML_Parse (Parser, &bufferRead[i], res, endOfFile))
-		XmlParseError (errorNotWellFormed,
-			       (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
-	    }
-	}
-    } 
+	} 
+    }
 
   /* Free expat parser */ 
   FreeXmlParserContexts ();
@@ -4834,7 +4837,6 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
   /* Restore the display mode */
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, dispMode);
-
 
   return (!XMLNotWellFormed);
 }
