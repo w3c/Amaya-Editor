@@ -329,9 +329,8 @@ int                 applyDomain;
 	    /* s'ils sont partiellement selectionnes */
 	    if (firstChar > 1 || lastChar > 0)
 	      CutSelection (pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
-	if (!addPresRule && !chngFormat)
-	   /* only changes to standard presentation for characters, graphics
-	      and color */
+	if (!addPresRule)
+	   /* only changes to standard presentation */
 	   {
 	   /* set selection to the highest level elements having the same
 	      content */
@@ -349,6 +348,242 @@ int                 applyDomain;
 		   }
 	   }
 
+	/* evalue les difference entre le pave traite' et les demandes
+	   de l'utilisateur */
+	if (pFirstSel->ElAssocNum > 0)
+	  pAb = AbsBoxOfEl (pFirstSel, 1);
+	else
+	  pAb = AbsBoxOfEl (pFirstSel, SelectedView);
+	if (pAb != NULL)
+	  {
+	    if (pAb->AbSizeUnit == UnPoint)
+	      currentBodySize = pAb->AbSize;
+	    else
+	      currentBodySize = FontPointSize (pAb->AbSize);
+	    
+	    /* famille de polices de caracteres */
+	    if (locChngFontFamily)
+	      {
+		if (StdFontFamily)
+		  {
+		    RuleSetPut (TheRules, PtFont);
+		    locChngFontFamily = FALSE;
+		  }
+		else
+		  locChngFontFamily = (FontFamily != pAb->AbFont);
+	      }
+	    /* style des caracteres */
+	    if (locChngStyle)
+	      {
+		if (StdStyle)
+		  {
+		    RuleSetPut (TheRules, PtStyle);
+		    locChngStyle = FALSE;
+		  }
+		else
+		  locChngStyle = (Style != pAb->AbHighlight);
+	      }
+
+	    /* style du souligne */
+	    if (locChngUnderline)
+	      {
+		if (StdUnderline)
+		  {
+		    RuleSetPut (TheRules, PtUnderline);
+		    locChngUnderline = FALSE;
+		  }
+		else
+		  locChngUnderline = (UnderlineStyle != pAb->AbUnderline);
+	      }
+
+	    /* epaisseur du souligne */
+	    if (locChngWeight)
+	      {
+		if (StdWeight)
+		  {
+		    RuleSetPut (TheRules, PtThickness);
+		    StdWeight = FALSE;
+		  }
+		else
+		  locChngWeight = (UnderlineWeight != pAb->AbThickness);
+	      }
+
+	    /* corps en points typo */
+	    if (locChngBodySize)
+	      {
+		if (StdBodySize)
+		  {
+		    RuleSetPut (TheRules, PtSize);
+		    locChngBodySize = FALSE;
+		  }
+		else
+		  locChngBodySize = (BodySize != currentBodySize);
+	      }
+
+	    /* alignement des lignes */
+	    if (locChngCadr)
+	      {
+		if (StdCadr)
+		  {
+		    RuleSetPut (TheRules, PtAdjust);
+		    locChngCadr = FALSE;
+		  }
+		else
+		  {
+		    switch (pAb->AbAdjust)
+		      {
+		      case AlignLeft:
+			i = 1;
+			break;
+		      case AlignRight:
+			i = 2;
+			break;
+		      case AlignCenter:
+			i = 3;
+			break;
+		      case AlignLeftDots:
+			i = 4;
+			break;
+		      default:
+			i = 1;
+			break;
+		      }
+		    locChngCadr = (i != Cadr);
+		  }
+	      }
+
+	    /* justification */
+	    if (locChngJustif)
+	      {
+		if (StdJustif)
+		  {
+		    RuleSetPut (TheRules, PtJustify);
+		    locChngJustif = FALSE;
+		  }
+		else
+		  locChngJustif = (Justif != pAb->AbJustify);
+	      }
+
+	    /* coupure des mots */
+	    if (locChngHyphen)
+	      {
+		if (StdHyphen)
+		  {
+		    RuleSetPut (TheRules, PtHyphenate);
+		    locChngHyphen = FALSE;
+		  }
+		else
+		  locChngHyphen = (Hyphenate != pAb->AbHyphenate);
+	      }
+
+	    /* renfoncement de la premiere ligne */
+	    if (locChngIndent)
+	      {
+		if (StdIndent)
+		  {
+		    RuleSetPut (TheRules, PtIndent);
+		    locChngIndent = FALSE;
+		  }
+		else
+		  {
+		    if (pAb->AbIndent > 0)
+		      sign = 1;
+		    else if (pAb->AbIndent == 0)
+		      sign = 0;
+		    else
+		      sign = -1;
+		    i = abs (pAb->AbIndent);
+		    if (pAb->AbIndentUnit == UnRelative)
+		      /* convertit AbIndent en points typographiques */
+		      {
+			i = (currentBodySize * i) / 10;
+			if ((currentBodySize * i) % 10 >= 5)
+			  i++;
+		      }
+		    if (sign == IndentSign && i == IndentValue)
+		      /* pas de changement */
+		      locChngIndent = FALSE;
+		    else
+		      {
+			if (IndentSign != 0 && IndentValue == 0)
+			  IndentValue = 15;
+			TtaSetNumberForm (NumZoneRecess, IndentValue);
+		      }
+		  }
+	      }
+	    
+	    /* interligne */
+	    if (locChngLineSp)
+	      {
+		if (StdLineSp)
+		  {
+		    RuleSetPut (TheRules, PtLineSpacing);
+		    locChngLineSp = FALSE;
+		  }
+		else
+		  {
+		    i = pAb->AbLineSpacing;
+		    if (pAb->AbLineSpacingUnit == UnRelative)
+		      /* convertit 'interligne en points typographiques */
+		      {
+			i = (currentBodySize * i) / 10;
+			if ((currentBodySize * i) % 10 >= 5)
+			  i++;
+		      }
+		    if (OldLineSp == i)
+		      locChngLineSp = FALSE;
+		  }
+	      }
+
+	    /* style des traits graphiques */
+	    if (locChngLineStyle)
+	      {
+		if (StdLineStyle)
+		  {
+		    RuleSetPut (TheRules, PtLineStyle);
+		    locChngLineStyle = FALSE;
+		  }
+		else
+		  locChngLineStyle = (LineStyle != pAb->AbLineStyle);
+	      }
+
+	    /* epaisseur des traits graphiques */
+	    LocLineWeightUnit = pAb->AbLineWeightUnit;
+	    if (locChngLineWeight)
+	      {
+		if (StdLineWeight)
+		  {
+		    RuleSetPut (TheRules, PtLineWeight);
+		    locChngLineWeight = FALSE;
+		  }
+		else
+		  {
+		    if (pAb->AbLineWeightUnit == UnPoint)
+		      i = pAb->AbLineWeight;
+		    else
+		      {
+			i = (currentBodySize * pAb->AbLineWeight) / 10;
+			if ((currentBodySize * i) % 10 >= 5)
+			  i++;
+		      }
+		    if (LineWeight != i)
+		      LocLineWeightUnit = UnPoint;
+		  }
+	      }
+	    
+	    /* trame de remplissage */
+	    if (locChngTrame)
+	      {
+		if (StdTrame)
+		  {
+		    RuleSetPut (TheRules, PtFillPattern);
+		    locChngTrame = FALSE;
+		  }
+		else
+		  locChngTrame = (PaintWithPattern != pAb->AbFillPattern);
+	      }
+	  }
+
 	if (doIt)
 	 if (chngChars || chngFormat || chngGraphics
 	     || ChngStandardColor || ChngStandardGeom)
@@ -360,242 +595,6 @@ int                 applyDomain;
 	    while (pEl != NULL)
 	      /* Traite l'element courant */
 	      {
-		/* evalue les difference entre le pave traite' et les demandes
-		   de l'utilisateur */
-		if (pEl->ElAssocNum > 0)
-		  pAb = AbsBoxOfEl (pEl, 1);
-		else
-		  pAb = AbsBoxOfEl (pEl, SelectedView);
-		if (pAb != NULL)
-		  {
-		    if (pAb->AbSizeUnit == UnPoint)
-		      currentBodySize = pAb->AbSize;
-		    else
-		      currentBodySize = FontPointSize (pAb->AbSize);
-		    
-		    /* famille de polices de caracteres */
-		    if (locChngFontFamily)
-		      {
-			if (StdFontFamily)
-			  {
-			    RuleSetPut (TheRules, PtFont);
-			    locChngFontFamily = FALSE;
-			  }
-			else
-			  locChngFontFamily = (FontFamily != pAb->AbFont);
-		      }
-		    /* style des caracteres */
-		    if (locChngStyle)
-		      {
-			if (StdStyle)
-			  {
-			    RuleSetPut (TheRules, PtStyle);
-			    locChngStyle = FALSE;
-			  }
-			else
-			  locChngStyle = (Style != pAb->AbHighlight);
-		      }
-
-		    /* style du souligne */
-		    if (locChngUnderline)
-		      {
-			if (StdUnderline)
-			  {
-			    RuleSetPut (TheRules, PtUnderline);
-			    locChngUnderline = FALSE;
-			  }
-			else
-			  locChngUnderline = (UnderlineStyle != pAb->AbUnderline);
-		      }
-
-		    /* epaisseur du souligne */
-		    if (locChngWeight)
-		      {
-			if (StdWeight)
-			  {
-			    RuleSetPut (TheRules, PtThickness);
-			    StdWeight = FALSE;
-			  }
-			else
-			  locChngWeight = (UnderlineWeight != pAb->AbThickness);
-		      }
-
-		    /* corps en points typo */
-		    if (locChngBodySize)
-		      {
-			if (StdBodySize)
-			  {
-			    RuleSetPut (TheRules, PtSize);
-			    locChngBodySize = FALSE;
-			  }
-			else
-			  locChngBodySize = (BodySize != currentBodySize);
-		      }
-
-		    /* alignement des lignes */
-		    if (locChngCadr)
-		      {
-			if (StdCadr)
-			  {
-			    RuleSetPut (TheRules, PtAdjust);
-			    locChngCadr = FALSE;
-			  }
-			else
-			  {
-			    switch (pAb->AbAdjust)
-			      {
-			      case AlignLeft:
-				i = 1;
-				break;
-			      case AlignRight:
-				i = 2;
-				break;
-			      case AlignCenter:
-				i = 3;
-				break;
-			      case AlignLeftDots:
-				i = 4;
-				break;
-			      default:
-				i = 1;
-				break;
-			      }
-			    locChngCadr = (i != Cadr);
-			  }
-		      }
-
-		    /* justification */
-		    if (locChngJustif)
-		      {
-			if (StdJustif)
-			  {
-			    RuleSetPut (TheRules, PtJustify);
-			    locChngJustif = FALSE;
-			  }
-			else
-			  locChngJustif = (Justif != pAb->AbJustify);
-		      }
-
-		    /* coupure des mots */
-		    if (locChngHyphen)
-		      {
-			if (StdHyphen)
-			  {
-			    RuleSetPut (TheRules, PtHyphenate);
-			    locChngHyphen = FALSE;
-			  }
-			else
-			  locChngHyphen = (Hyphenate != pAb->AbHyphenate);
-		      }
-
-		    /* renfoncement de la premiere ligne */
-		    if (locChngIndent)
-		      {
-			if (StdIndent)
-			  {
-			    RuleSetPut (TheRules, PtIndent);
-			    locChngIndent = FALSE;
-			  }
-			else
-			  {
-			    if (pAb->AbIndent > 0)
-			      sign = 1;
-			    else if (pAb->AbIndent == 0)
-			      sign = 0;
-			    else
-			      sign = -1;
-			    i = abs (pAb->AbIndent);
-			    if (pAb->AbIndentUnit == UnRelative)
-			      /* convertit AbIndent en points typographiques */
-			      {
-				i = (currentBodySize * i) / 10;
-				if ((currentBodySize * i) % 10 >= 5)
-				  i++;
-			      }
-			    if (sign == IndentSign && i == IndentValue)
-			      /* pas de changement */
-			      locChngIndent = FALSE;
-			    else
-			      {
-				if (IndentSign != 0 && IndentValue == 0)
-				  IndentValue = 15;
-				TtaSetNumberForm (NumZoneRecess, IndentValue);
-			      }
-			  }
-		      }
-		    
-		    /* interligne */
-		    if (locChngLineSp)
-		      {
-			if (StdLineSp)
-			  {
-			    RuleSetPut (TheRules, PtLineSpacing);
-			    locChngLineSp = FALSE;
-			  }
-			else
-			  {
-			    i = pAb->AbLineSpacing;
-			    if (pAb->AbLineSpacingUnit == UnRelative)
-			      /* convertit 'interligne en points typographiques */
-			      {
-				i = (currentBodySize * i) / 10;
-				if ((currentBodySize * i) % 10 >= 5)
-				  i++;
-			      }
-			    if (OldLineSp == i)
-			      locChngLineSp = FALSE;
-			  }
-		      }
-
-		    /* style des traits graphiques */
-		    if (locChngLineStyle)
-		      {
-			if (StdLineStyle)
-			  {
-			    RuleSetPut (TheRules, PtLineStyle);
-			    locChngLineStyle = FALSE;
-			  }
-			else
-			  locChngLineStyle = (LineStyle != pAb->AbLineStyle);
-		      }
-
-		    /* epaisseur des traits graphiques */
-		    LocLineWeightUnit = pAb->AbLineWeightUnit;
-		    if (locChngLineWeight)
-		      {
-			if (StdLineWeight)
-			  {
-			    RuleSetPut (TheRules, PtLineWeight);
-			    locChngLineWeight = FALSE;
-			  }
-			else
-			  {
-			    if (pAb->AbLineWeightUnit == UnPoint)
-			      i = pAb->AbLineWeight;
-			    else
-			      {
-				i = (currentBodySize * pAb->AbLineWeight) / 10;
-				if ((currentBodySize * i) % 10 >= 5)
-				  i++;
-			      }
-			    if (LineWeight != i)
-			      LocLineWeightUnit = UnPoint;
-			  }
-		      }
-		    
-		    /* trame de remplissage */
-		    if (locChngTrame)
-		      {
-			if (StdTrame)
-			  {
-			    RuleSetPut (TheRules, PtFillPattern);
-			    locChngTrame = FALSE;
-			  }
-			else
-			  locChngTrame = (PaintWithPattern != pAb->AbFillPattern);
-		      }
-		  }
-
 		pElem = pEl;
 		if (chngFormat)
 		  /* Format properties apply to block elements only. If the
@@ -629,7 +628,6 @@ int                 applyDomain;
 		    RuleSetPut (TheRules, PtForeground);
 		  }
 		RemoveSpecPresTree (pElem, pSelDoc, TheRules, SelectedView);
-		RuleSetClr (TheRules);
 
 		/* Character properties */
 		if (chngChars)
@@ -668,6 +666,8 @@ int                 applyDomain;
 	      }
 	    /* fin de la boucle de parcours et traitement des */
 	    /* elements selectionnes */
+
+	    RuleSetClr (TheRules);
 	  }
 	/* tente de fusionner les elements voisins et reaffiche les paves */
 	/* modifie's et la selection */
