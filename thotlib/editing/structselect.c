@@ -1214,11 +1214,12 @@ boolean            *abExist;
 {
    PtrAbstractBox      pAb, pNextAb;
    int                 firstChar, lastChar;
-   boolean             first, last, partialSel, unique, active;
+   boolean             first, last, partialSel, unique, active, show;
 
    if (TtaGetDisplayMode (FrameTable[frame].FrDoc) != DisplayImmediately)
-     return;
-
+     show = FALSE;
+   else
+     show = TRUE;
    first = TRUE;
    pAb = pEl->ElAbstractBox[view - 1];
    /* first abstract box of elemenebt in the view */
@@ -1314,15 +1315,19 @@ boolean            *abExist;
 	     unique = FirstSelectedElement == LastSelectedElement;
 	     InsertViewSelMarks (frame, pAb, firstChar, lastChar, first, last,
 				 unique);
-	     /* should this abstract box be made visible to the user? (scroll) */
-	     active = view == SelectedView;
-	     if (first)
-		if (assoc || active || SelectedDocument->DocView[view - 1].DvSync)
-		   ShowSelectedBox (frame, active);
-	     first = FALSE;
-	     if (last)
-		/* highlight selection */
-		SwitchSelection (frame, TRUE);
+
+	     if (show)
+	       {
+		 /* should this abstract box be made visible to the user? (scroll) */
+		 active = view == SelectedView;
+		 if (first)
+		   if (assoc || active || SelectedDocument->DocView[view - 1].DvSync)
+		     ShowSelectedBox (frame, active);
+		 first = FALSE;
+		 if (last)
+		   /* highlight selection */
+		   SwitchSelection (frame, TRUE);
+	       }
 	  }
 	/* this abstract box is selected */
 	pAb->AbSelected = TRUE;

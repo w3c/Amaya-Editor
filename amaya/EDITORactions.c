@@ -268,6 +268,7 @@ int              elementT;
    Element             el, head, parent, new;
    SSchema             docSchema;
    int                 i, j;
+   boolean             before;
 
    docSchema = TtaGetDocumentSSchema (document);
    if (strcmp(TtaGetSSchemaName (docSchema), "HTML") != 0)
@@ -283,13 +284,23 @@ int              elementT;
        /* give current position */
        TtaGiveFirstSelectedElement (document, &el, &i, &j);
        if (el == NULL || el == head || !TtaIsAncestor (el, head))
-	 el = TtaGetLastChild (head);
+	 {
+	   /* the current selection is not within the head */
+	   el = TtaGetLastChild (head);
+	   /* insert after the last element in the head */
+	   before = FALSE;
+	 }
        else
 	 {
+	   /* the current selection is not within the head */
 	   parent = TtaGetParent (el);
+	   /* insert before the current element */
+	   before = TRUE;
 	   while (parent != head)
 	     {
 	       el = parent;
+	       /* insert after the parent element */
+	       before = FALSE;
 	       parent = TtaGetParent (el);
 	     }
 	 }
@@ -303,7 +314,7 @@ int              elementT;
 	     return (NULL);
 	 }
        new = TtaNewTree (document, elType, "");
-       TtaInsertSibling (new, el, FALSE, document);
+       TtaInsertSibling (new, el, before, document);
        return (new);
      }
 }

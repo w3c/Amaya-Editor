@@ -851,21 +851,21 @@ int                *nChars;
    Debute l'insertion de caracteres dans une boite de texte.      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         StartTextInsertion (PtrAbstractBox pAb, int frame, PtrBox pSelBox, PtrTextBuffer pBuffer, int ind, int i, int k)
+static void         StartTextInsertion (PtrAbstractBox pAb, int frame, PtrBox pSelBox, PtrTextBuffer pBuffer, int ind, int prev)
 #else  /* __STDC__ */
-static void         StartTextInsertion (pAb, frame, pSelBox, pBuffer, ind, x, previousChars)
+static void         StartTextInsertion (pAb, frame, pSelBox, pBuffer, ind, prev)
 PtrAbstractBox      pAb;
 int                 frame;
 PtrBox              pSelBox;
 PtrTextBuffer       pBuffer;
 int                 ind;
-int                 i;
-int                 k;
+int                 prev;
 #endif /* __STDC__ */
 {
    PtrBox              pBox;
    PtrTextBuffer       pPreviousBuffer;
    PtrTextBuffer       pNewBuffer;
+   int                 k, i;
 
    /* recupere la fenetre active pour la selection */
    if (frame == 0)
@@ -874,7 +874,7 @@ int                 k;
      {
 	/* Recherche le point d'insertion (&i non utilise) */
        if (pAb == NULL)
-	 GiveInsertPoint (NULL, frame, &pSelBox, &pBuffer, &ind, &i, &k);
+	 GiveInsertPoint (NULL, frame, &pSelBox, &pBuffer, &ind, &i, &prev);
 	TextInserting = TRUE;
 	/* boite entiere */
 	pBox = pSelBox->BxAbstractBox->AbBox;
@@ -903,7 +903,7 @@ int                 k;
 	pNewBuffer = pSelBox->BxAbstractBox->AbText;
 
 	/* Insertion en debut de boite */
-	if (ind == 1 && k == 0 && pBuffer->BuLength > 0)
+	if (ind == 1 && prev == 0 && pBuffer->BuLength > 0)
 	  {
 	     /* buffer precedent */
 	     pPreviousBuffer = pBuffer->BuPrevious;
@@ -1847,7 +1847,7 @@ int                 frame;
 		  pViewSel = &pFrame->FrSelectionBegin;
 
 		  /* Note que le texte de l'e'le'ment va changer */
-		  StartTextInsertion (NULL, frame, NULL, NULL, 0, 0, 0);
+		  StartTextInsertion (NULL, frame, NULL, NULL, 0, 0);
 		  /* fusionne le premier et dernier buffer de la selection */
 		  /* premier buffer=destination */
 		  pTargetBuffer = pViewSel->VsBuffer;
@@ -2114,7 +2114,7 @@ PtrTextBuffer       clipboard;
 
 	       /* Coupure des buffers pour l'insertion */
 	       if (!TextInserting)
-		  StartTextInsertion (NULL, frame, NULL, NULL, 0, 0, 0);
+		  StartTextInsertion (NULL, frame, NULL, NULL, 0, 0);
 
 	       /* Insertion en fin de buffer */
 	       if (pViewSel->VsIndBuf > pViewSel->VsBuffer->BuLength)
@@ -2886,7 +2886,7 @@ int                 keyboard;
 		      
 		      /* initialise l'insertion */
 		      if (!TextInserting)
-			StartTextInsertion (pAb, frame, pSelBox, pBuffer, ind, xx, previousChars);
+			StartTextInsertion (pAb, frame, pSelBox, pBuffer, ind, previousChars);
 		      font = pSelBox->BxFont;
 		      
 		      if (pBuffer == NULL)
