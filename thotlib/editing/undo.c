@@ -63,7 +63,9 @@ int errorCode;
 
 #endif /* __STDC__ */
 {
+#ifdef THOT_DEBUG
    fprintf (stderr, "**** Undo error %d ****\n", errorCode);
+#endif /* THOT_DEBUG */
 }
 
 /*----------------------------------------------------------------------

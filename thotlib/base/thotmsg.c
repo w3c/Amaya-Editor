@@ -178,7 +178,7 @@ int                 errorCode;
 #   else  /* _WINDOWS */
 	fprintf (stderr, buffer);
 #   endif /* _WINDOWS */
-#endif /* THOT_DEBUG */
      }
+#endif /* THOT_DEBUG */
 }
 #endif /* _WIN_PRINT */
