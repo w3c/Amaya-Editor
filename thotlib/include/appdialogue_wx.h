@@ -8,6 +8,7 @@
 /* amaya need to know this function in order to launch callbacks */
 extern void          ThotCallback ( int ref, int typedata, char *data );
 #endif /* _WINGUI */
+
 #ifdef _WX
 /* amaya need to know thotlib color list in order to setup the dialogs */
 extern int           NumberOfColors ( void );
@@ -67,8 +68,8 @@ extern ThotBool TtaHandleShortcutKey( wxKeyEvent& event );
 extern ThotBool TtaHandleSpecialKey( wxKeyEvent& event );
 extern ThotBool TtaIsSpecialKey( int wx_keycode );
 
+#endif /* _WX */
+
 extern void TtaRedirectFocus();
 
 #endif /* #define __APPDIALOGUE_WX_H__ */
-
-#endif /* _WX */

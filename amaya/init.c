@@ -53,13 +53,13 @@
   #include "windowtypes_wx.h"
   #include "paneltypes_wx.h"
   #include "registry_wx.h"
-  #include "appdialogue_wx.h"
   #include "AmayaWindowIterator.h"
   #include "AmayaParams.h"
-  #include "appdialogue_wx.h"
   
   extern XmlEntity *pMathEntityTable;
 #endif /* _WX */
+
+#include "appdialogue_wx.h"
 
 #if defined(_GTK) || defined(_WX) 
 #include "stopN.xpm"
