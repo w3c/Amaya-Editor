@@ -35,6 +35,7 @@ echo "Plarform ------->" $MACH
    Amaya/dicopar/alphabet \
    Amaya/dicopar/clavier \
    Amaya/doc/amaya/Access.html \
+   Amaya/doc/amaya/Annotations.html \
    Amaya/doc/amaya/Attributes.html \
    Amaya/doc/amaya/Browsing.html \
    Amaya/doc/amaya/Changing.html \
