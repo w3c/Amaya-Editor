@@ -2815,7 +2815,7 @@ void                SelectAround (int val)
 		{
 		  if (FirstSelectedElement->ElParent == LastSelectedElement->ElParent)
 		    /* selection is normalized */
-		    pEl = SelMenuParentEl;
+		    pEl = FirstSelectedElement->ElParent;
 		  else
 		    /* The first and last selected elements are */
 		    /* not siblings. Change the selection so that */
