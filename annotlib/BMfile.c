@@ -35,6 +35,11 @@ static librdf_world *world;
 static librdf_storage *storage;
 static librdf_model *model;
 
+/* DEFINE for debugging the parser */
+/*
+#define BMFILE_DEBUG 1
+*/
+
 /*   First step.
 ** open the bookmark file if it's not open, add something, close it 
 */
@@ -157,7 +162,9 @@ static void parse_file (librdf_world *world, char *filename, char *base, int ntr
   }
   librdf_free_stream (stream);  
   librdf_free_parser (parser);
+#ifdef BMFILE_DEBUG
   fprintf(stderr, "Added %d statements\n", count);
+#endif /* BMFILE_DEBUG */
 }
 
 /*----------------------------------------------------------------------
@@ -914,7 +921,8 @@ int Model_dumpAsList (List **dump, ThotBool topics)
       Model_getItemInfo (world, model, subject, item, topics);
 
       List_add (dump, (void *) item);
-      
+
+#ifdef BMFILE_DEBUG      
       if (item->self_url)
 	printf ("found node with url %s\n", item->self_url);
 
@@ -923,15 +931,17 @@ int Model_dumpAsList (List **dump, ThotBool topics)
 
       if (item->bookmarks)
 	printf ("  and bookmarks url %s\n", item->bookmarks);
+#endif /* BMFILE_DEBUG */
 
       count++;
       librdf_stream_next (stream);
     }
 
   librdf_free_stream (stream);  
-  
+
+#ifdef BMFILE_DEBUG  
   fprintf(stderr, "matching statements: %d\n", count);
-  
+#endif /* BMFILE_DEBUG */
   return (count);
 }
 
