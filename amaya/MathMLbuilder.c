@@ -1479,19 +1479,22 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 		     (int)text[0] == 0x2248 || /* equivalent */
 		     (int)text[0] == 0x2297 || /* circle times */
 		     (int)text[0] == 0x2295 || /* circle plus */
-		     (int)text[0] == 0x2229 ||
-		     (int)text[0] == 0x222A ||
-		     (int)text[0] == 0x2283 ||
-		     (int)text[0] == 0x2287 ||
-		     (int)text[0] == 0x2284 ||
-		     (int)text[0] == 0x2282 ||
-		     (int)text[0] == 0x2286 ||
-		     (int)text[0] == 0x2208 ||
-		     (int)text[0] == 0x2209 ||
-		     (int)text[0] == 0x2220 ||
-		     (int)text[0] == 0x2207 ||
+		     (int)text[0] == 0x2229 || /* Intersection */
+		     (int)text[0] == 0x222A || /* Union */
+		     (int)text[0] == 0x2283 || /* Superset of */
+		     (int)text[0] == 0x2287 || /* Superset of or equal to */
+		     (int)text[0] == 0x2284 || /* Not a subset of */
+		     (int)text[0] == 0x2282 || /* Subset of */
+		     (int)text[0] == 0x2286 || /* Subset of or equal to */
+		     (int)text[0] == 0x2208 || /* Element of */
+		     (int)text[0] == 0x2209 || /* Not an element of */
+		     (int)text[0] == 0x2220 || /* Angle */
+		     (int)text[0] == 0x2207 || /* Nabla */
 		     (int)text[0] == 0x2227 || /* and */
-		     (int)text[0] == 0x2228)   /* or */
+		     (int)text[0] == 0x2228 || /* or */
+		     (int)text[0] == 0x2190 || /* left arrow */
+		     (int)text[0] == 0x2192 || /* right arrow */
+		     (int)text[0] == 0x2194)   /* left right arrow */
 #endif
 	      /* infix operator */
 	      val = MathML_ATTR_IntAddSpace_VAL_both;
