@@ -13,10 +13,6 @@
  *          D. Veillard (W3C/INRIA): Windows NT/95 routines
  *
  */
-#ifdef _GTK
-#include <gtk/gtk.h>
-#include <gdk/gdk.h>
-#endif /* _GTK */
 
 #include "thot_sys.h"
 #include "libmsg.h"

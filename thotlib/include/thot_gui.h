@@ -154,6 +154,8 @@ typedef XColor    ThotColorStruct;
 #include <X11/Xlibint.h>
 #endif /* OWN_XLOOKUPSTRING */
 #ifdef _GTK
+#include <gtk/gtk.h>
+#include <gdk/gdk.h>
 typedef GtkWidget     *ThotWidget;
 typedef Window         ThotWindow;
 typedef ThotWidget     ThotButton;

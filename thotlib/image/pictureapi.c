@@ -11,9 +11,6 @@
  * Authors: I. Vatton (INRIA)
  *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  */
-#ifdef _GTK
-#include <gtk/gtk.h>
-#endif /* _GTK */
 
 #include "thot_sys.h"
 #include "constmedia.h"

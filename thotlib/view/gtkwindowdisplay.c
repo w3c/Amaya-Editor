@@ -12,7 +12,6 @@
  * Author:  I. Vatton (INRIA)
  *
  */
-#include <gtk/gtk.h>
 
 #include "ustring.h"
 #include "math.h"

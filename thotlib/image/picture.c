@@ -23,9 +23,6 @@
  * Last modification: Jan 09 1997
  */
 
-#ifdef _GTK 
-#include <gtk/gtk.h>
-#endif /* _GTK */
 
 #include "thot_gui.h"
 #include "thot_sys.h"

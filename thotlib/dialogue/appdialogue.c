@@ -18,10 +18,6 @@
  *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
-#ifdef _GTK
-#include <gtk/gtk.h>
-#include "amaya.xpm"
-#endif /* _GTK */
 
 #include "thot_gui.h"
 #include "thot_sys.h"
