@@ -1446,7 +1446,7 @@ static void SetPrintConf ()
 #endif /* __STDC__ */
 {
   TtaSetEnvString ("THOTPRINT", ThotPrint, TRUE);
-  TtaSetEnvInt ("PAPERSIZE", &PaperSize, TRUE);
+  TtaSetEnvInt ("PAPERSIZE", PaperSize, TRUE);
   /* update the print environment */
   TtaSetPrintCommand (ThotPrint);
   TtaSetPrintParameter (PP_PaperSize, PaperSize);
