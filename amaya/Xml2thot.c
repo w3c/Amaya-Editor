@@ -4306,7 +4306,7 @@ static void ReplaceExternAttrType (Element elold, Element elnew, Document doc)
 static Element  ChangeExternalElemType (Element el, Document doc)
 {
   ElementType   elType, parentType;
-  Element       parent, elemElement, elemContent, child;
+  Element       parent, elemElement, elemContent;
   int           oldStructureChecking;
  
   elemElement = NULL;

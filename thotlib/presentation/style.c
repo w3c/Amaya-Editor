@@ -689,7 +689,7 @@ static void PresRuleAddAncestorCond (PtrPRule rule, int type, int nr)
 /*----------------------------------------------------------------------
   PresRuleAddAttrCond : add a Attr condition to a presentation rule.
   ----------------------------------------------------------------------*/
-static void         PresRuleAddAttrCond (PtrPRule rule, int type)
+static void PresRuleAddAttrCond (PtrPRule rule, int type, char* value)
 {
    PtrCondition        cond = NULL;
 
@@ -700,12 +700,15 @@ static void         PresRuleAddAttrCond (PtrPRule rule, int type)
 	TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
 	return;
      }
-   cond->CoCondition = PcAttribute;
+   cond->CoCondition = PcInheritAttribute;
    cond->CoNotNegative = TRUE;
    cond->CoTarget = FALSE;
    cond->CoTypeAttr = type;
-   cond->CoTestAttrValue = FALSE;
-   cond->CoAttrValue = 0;
+   cond->CoTestAttrValue = (value != NULL);
+   if (value)
+     strncpy (cond->CoAttrTextValue, value, MAX_NAME_LENGTH);
+   else
+     cond->CoAttrTextValue[0] = EOS;
    AddCond (&rule->PrCond, cond);
 }
 
@@ -829,6 +832,7 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
 	{
 	new->ApElemType = ctxt->type;
 	pPS = PresentationSchema (pSS, LoadedDocument[ctxt->doc - 1]);
+	pPS->PsNInheritedAttrs->Num[ctxt->type - 1] += 1;
 	pPS->PsNHeirElems->Num[attrType - 1] += 1;
 	}
       if (attrs)
@@ -918,7 +922,7 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
 			   PRuleType pres, unsigned int att)
 {
   PtrCondition        firstCond, cond;
-  int                 i, nbcond;
+  int                 i, nbcond, nbCtxtCond;
 
   /* test the number and type of the rule */
   if (rule->PrViewNum != 1)
@@ -926,54 +930,93 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
   if (pres && rule->PrType != pres)
     return (-1);
 
-   /* scan all the conditions associated to a rule */
-   firstCond = rule->PrCond;
-   /* check the number of condititons */
-   cond = firstCond;
-   nbcond = 0;
-   while (cond)
-     {
-       cond = cond->CoNextCondition;
-       nbcond++;
-     }
+  /* scan all the conditions associated to a rule */
+  firstCond = rule->PrCond;
+  /* check the number of condititons */
+  cond = firstCond;
+  nbcond = 0;
+  while (cond)
+    {
+      cond = cond->CoNextCondition;
+      nbcond++;
+    }
+  nbCtxtCond = 0;
+  if (att < MAX_ANCESTORS)
+    /* the rule is associated to an attribute */
+    {
+      /* count the number of conditions in the context */
+      if (ctxt->name[0])
+	nbCtxtCond++;
+      for (i = 1; i < MAX_ANCESTORS; i++)
+	{
+	  if (ctxt->name[i])
+	    nbCtxtCond++;
+	  if (ctxt->attrType[i])
+	    nbCtxtCond++;
+	}
+    }
+  else
+    /* the rule is associated with an element */
+    {
+      /* count the number of conditions in the context */
+      for (i = 1; i < MAX_ANCESTORS; i++)
+	if (ctxt->name[i])
+	  nbCtxtCond++;
+    }
 
-   if (att < MAX_ANCESTORS)
-     {
-       /* the rule is associated to an attribute */
-       /* test if the element type is within the rule conditions */
-       if (ctxt->name[att] &&
-	   (nbcond != 1 ||
-	    firstCond->CoCondition != PcElemType ||
-	    firstCond->CoTypeElem != (int) ctxt->name[att] ||
-	    (att == 0 && firstCond->CoTypeElem != (int) ctxt->type)))
-	 /* it's not the right rule */
-	 return (1);
-     }
+  if (nbCtxtCond < nbcond)
+    return (1);
+  else if (nbCtxtCond > nbcond)
+    return (-1);
+
+  /* same number of conditions */
+  if (att < MAX_ANCESTORS && ctxt->name[0])
+    /* the context has a condition on the element that has that attribute */
+    {
+      cond = firstCond;
+      while (cond &&
+	     (cond->CoCondition != PcElemType ||
+	      cond->CoTypeElem != ctxt->name[0]))
+	cond = cond->CoNextCondition;
+      if (cond == NULL)
+	/* conditions are different */
+	return (1);
+    }
+
    /* check if all ancestors are within the rule conditions */
-   i = 0;
-   while (i < MAX_ANCESTORS && ctxt->name[i] != 0)
+   i = 1;
+   while (i < MAX_ANCESTORS)
      {
-       if (ctxt->names_nb[i] > 0 && i != (int)att)
+       if (ctxt->names_nb[i] > 0)
 	 {
 	   cond = firstCond;
 	   while (cond &&
 		  (cond->CoCondition != PcWithin ||
-		   cond->CoTypeAncestor != ctxt->names_nb[i] ||
+		   cond->CoTypeAncestor != ctxt->name[i] ||
 		   cond->CoRelation != ctxt->names_nb[i] - 1))
 	     cond = cond->CoNextCondition;
 	   if (cond == NULL)
 	     /* the ancestor is not found */
 	     return (1);
 	 }
+       if (ctxt->attrType[i] && i != att)
+	 {
+	   cond = firstCond;
+	   while (cond &&
+		  (cond->CoCondition != PcInheritAttribute ||
+		   cond->CoTypeAttr != ctxt->attrType[i] ||
+		   cond->CoTestAttrValue != (ctxt->attrText != NULL) ||
+		   (cond->CoTestAttrValue && strcmp (cond->CoAttrTextValue,
+						     ctxt->attrText[i]))))
+	     cond = cond->CoNextCondition;
+	   if (cond == NULL)
+	     /* conditions are different */
+	     return (1);
+	 }
        i++;
      }
 
-   if (nbcond == 0 && i == 1 && att == MAX_ANCESTORS)
-     /* no condition: it's the right rule */
-     return (0);
-   if (i != nbcond)
-     /* it's not the right rule: there are too many conditions in the rule */
-     return (-1);
+   /* all conditions are the same */
    return (0);
 }
 
@@ -1114,7 +1157,7 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
 		PresRuleAddAncestorCond (pRule, ctxt->name[i], ctxt->names_nb[i]);
 	      if (ctxt->attrType[i]  && i != att)
 		/* it's another attribute */
-		PresRuleAddAttrCond (pRule, ctxt->attrType[i]);
+		PresRuleAddAttrCond (pRule, ctxt->attrType[i], ctxt->attrText[i]);
 	      i++;
 	    }
 

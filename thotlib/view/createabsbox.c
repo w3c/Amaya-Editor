@@ -1177,10 +1177,11 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 			    else
 			      currentCond = (pCond->CoAttrValue == pA->AeAttrValue);
 			  }
-			/* don't check other attributes of the current ancestor
-			   nor other ancestor elements */
+			/* don't check other attributes for this element */
 			pA = NULL;
-			pAsc = NULL;
+			if (currentCond)
+			  /* don't look further */
+			  pAsc = NULL;
 		      }
 		  }
 		/* if the attribute has not been encountered yet, check next
@@ -3303,7 +3304,7 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
   int                i, view, l, valNum;
   PtrPRule           pRuleView, pRule, ruleToApply, pR;
   PtrHandlePSchema   pHd;
-  PtrPSchema         pSchPres, pSchPattr;
+  PtrPSchema         pSchPres, pSchPattr, pSP;
   PtrAttribute       pAttr;
   PtrElement         pElAttr;
   PtrSSchema	     pSSattr;
@@ -3372,7 +3373,8 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
      get presentation rules associated with attributes */
   pHd = NULL;
   /* look at the main presentation schema first */
-  pSchPres = PresentationSchema (pEl->ElStructSchema, pDoc);
+  pSP = PresentationSchema (pEl->ElStructSchema, pDoc);
+  pSchPres = pSP;
   while (pSchPres != NULL)
     {
       /* first, get rules associated with the element type only if it's not the
@@ -3414,92 +3416,98 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
          for view 1 if it's a P schema extension */
       if (viewSch == 1 || pHd == NULL)
 	{
-	  inheritTable = pSchPres->PsInheritedAttr->
-                                              ElInherit[pEl->ElTypeNumber - 1];
-	  if (pSchPres->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
+	  if (pSP->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
 	    /* the element type inherit some attributes */
-	    for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
-	      if ((*inheritTable)[l - 1])  /* pEl inherit attribute l */
-		/* is this attribute present on an ancestor? */
-		if ((pAttr = GetTypedAttrAncestor (pEl, l, pEl->ElStructSchema,
-						   &pElAttr)) != NULL)
-		  {
-		    apply = TRUE;
-		    /* exceptions for attributes related to tables */
-		    if (ThotLocalActions[T_ruleattr] != NULL)
-		      (*ThotLocalActions[T_ruleattr])
-			(pEl, pAttr, pDoc, &apply);
-		    if (apply)
-		      {
-			view = AppliedView (pEl, pAttr, pDoc, viewNb);
-			pSSattr = pAttr->AeAttrSSchema;
-			if (pDoc->DocView[viewNb-1].DvPSchemaView == 1 && pHd)
-			  /* it's a P schema extension */
-			  /* if it's an ID ou class attribute, take P schema
-			     extensions associated with the document S schema*/
-			  if (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
-						pAttr->AeAttrSSchema) ||
-			      AttrHasException (ExcCssId, pAttr->AeAttrNum,
-						pAttr->AeAttrSSchema))
-			    pSSattr = pDoc->DocSSchema;
-			/* process all values of the attribute, in case of a
-			   text attribute with a list of values */
-			valNum = 1;
-			do
-			  {
-			    /* first rule for this value of the attribute */
-			    pR = AttrPresRule (pAttr, pEl, TRUE, NULL,
-					       pSchPres, &valNum);
-			    /* look at all rules associated with this value */
-			    while (pR != NULL)
-			      {
-				ruleToApply = NULL;
-				if (!pR->PrDuplicate)
-				  /* if it's a creation rule, apply it now */
-				  if (!ApplCrRule (pR, pSSattr, pSchPres,
-					 pAttr, pAbbReturn, viewNb, pDoc, pEl,
-					 forward, lqueue, queuePR, queuePP,
-                                         queuePS, queuePA, pNewAbbox))
-				   /* not a creation rule, get the right rule*/
-				   ruleToApply = GetNextAttrPresRule (&pR,
-					           pAttr->AeAttrSSchema, pAttr,
-						   pElAttr, pDoc, pEl, view);
-				if (ruleToApply &&
-				    DoesViewExist (pEl, pDoc, viewNb))
-				  /* this rule applies to the element */
-				  {
-				  if (viewSch == 1 &&
-				      ruleToApply->PrType != PtFunction)
-				    /* main view. Record the rule for cascade*/
-				    /* but apply presentation function
-				       immediately */
+	    {
+	      inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
+	      if (!inheritTable)
+		{
+		  CreateInheritedAttrTable (pEl, pDoc);
+		  inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber-1];
+		}
+	      for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
+		if ((*inheritTable)[l - 1])  /* pEl inherit attribute l */
+		  /* is this attribute present on an ancestor? */
+		  if ((pAttr = GetTypedAttrAncestor (pEl, l, pEl->ElStructSchema,
+						     &pElAttr)) != NULL)
+		    {
+		      apply = TRUE;
+		      /* exceptions for attributes related to tables */
+		      if (ThotLocalActions[T_ruleattr] != NULL)
+			(*ThotLocalActions[T_ruleattr])
+			  (pEl, pAttr, pDoc, &apply);
+		      if (apply)
+			{
+			  view = AppliedView (pEl, pAttr, pDoc, viewNb);
+			  pSSattr = pAttr->AeAttrSSchema;
+			  if (pDoc->DocView[viewNb-1].DvPSchemaView == 1 && pHd)
+			    /* it's a P schema extension */
+			    /* if it's an ID ou class attribute, take P schema
+			       extensions associated with the document S schema*/
+			    if (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
+						  pAttr->AeAttrSSchema) ||
+				AttrHasException (ExcCssId, pAttr->AeAttrNum,
+						  pAttr->AeAttrSSchema))
+			      pSSattr = pDoc->DocSSchema;
+			  /* process all values of the attribute, in case of a
+			     text attribute with a list of values */
+			  valNum = 1;
+			  do
+			    {
+			      /* first rule for this value of the attribute */
+			      pR = AttrPresRule (pAttr, pEl, TRUE, NULL,
+						 pSchPres, &valNum);
+			      /* look at all rules associated with this value */
+			      while (pR != NULL)
+				{
+				  ruleToApply = NULL;
+				  if (!pR->PrDuplicate)
+				    /* if it's a creation rule, apply it now */
+				    if (!ApplCrRule (pR, pSSattr, pSchPres, pAttr,
+					    pAbbReturn, viewNb, pDoc, pEl, forward,
+                                            lqueue, queuePR, queuePP, queuePS, queuePA,
+                                            pNewAbbox))
+				      /* not a creation rule, get the right rule*/
+				      ruleToApply = GetNextAttrPresRule (&pR,
+							    pAttr->AeAttrSSchema, pAttr,
+						            pElAttr, pDoc, pEl, view);
+				  if (ruleToApply &&
+				      DoesViewExist (pEl, pDoc, viewNb))
+				    /* this rule applies to the element */
 				    {
-				      if (RuleHasHigherPriority (ruleToApply,
-					   pSchPres,
-					   selectedRule[ruleToApply->PrType],
-					   schemaOfSelectedRule[ruleToApply->PrType]))
+				      if (viewSch == 1 &&
+					  ruleToApply->PrType != PtFunction)
+					/* main view. Record the rule for cascade */
+					/* but apply presentation function */
+					/* immediately */
 					{
-					  selectedRule[ruleToApply->PrType] = ruleToApply;
-					  schemaOfSelectedRule[ruleToApply->PrType] = pSchPres;      
-					  attrOfSelectedRule[ruleToApply->PrType] = pAttr;
+					  if (RuleHasHigherPriority (ruleToApply,
+					     pSchPres,
+					     selectedRule[ruleToApply->PrType],
+					     schemaOfSelectedRule[ruleToApply->PrType]))
+					    {
+					      selectedRule[ruleToApply->PrType] = ruleToApply;
+					      schemaOfSelectedRule[ruleToApply->PrType] = pSchPres;      
+					      attrOfSelectedRule[ruleToApply->PrType] = pAttr;
+					    }
 					}
+				      else
+					/* not the main view, apply the rule now */
+					if (!ApplyRule (ruleToApply, pSchPres,
+							pNewAbbox, pDoc, pAttr))
+					  WaitingRule (ruleToApply, pNewAbbox, pSchPres,
+						       pAttr, queuePA, queuePS, queuePP,
+						       queuePR, lqueue);
 				    }
-				  else
-				    /* not the main view, apply the rule now */
-				    if (!ApplyRule (ruleToApply, pSchPres,
-						    pNewAbbox, pDoc, pAttr))
-				      WaitingRule (ruleToApply, pNewAbbox,
-					    pSchPres, pAttr, queuePA, queuePS,
-					    queuePP, queuePR, lqueue);
-				  }
 				/* next rule associated with this value of the
 				   attribute */
-				pR = pR->PrNextPRule;
-			      }
-			  }
-			while (valNum > 0);
-		      }
-                  }
+				  pR = pR->PrNextPRule;
+				}
+			    }
+			  while (valNum > 0);
+			}
+		    }
+	    }
 
 	  /* now get the rules associated with the attributes of the element */
 	  pAttr = pEl->ElFirstAttr;	/* first attribute of element */
