@@ -8,7 +8,7 @@
 ;General
 
   ;Name and file
-  !define VERSION "9.0"
+  !define VERSION "9.0.1"
   Name "Amaya WX ${VERSION} (debug)"
   OutFile "Amaya-WX-${VERSION}-debug.exe"
   
