@@ -3390,7 +3390,7 @@ int                *lqueue;
 
 {
    if (*lqueue >= MAX_QUEUE_LEN)
-      printf ("Increase LgMaxQueue (crimabs.c)\n");
+      printf ("Increase MAX_QUEUE_LEN\n");
    else
      {
 	(*lqueue)++;

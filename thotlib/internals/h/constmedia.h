@@ -13,7 +13,7 @@
 
 /* constant for managing awaiting rules during the abstract
    image construction */ 
-#define MAX_QUEUE_LEN 10
+#define MAX_QUEUE_LEN 20
 
 /* Constants for documents images management */
 #define FULL_BUFFER 99		/* Max. number of characters in buffers */

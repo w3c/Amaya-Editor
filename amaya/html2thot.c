@@ -1,12 +1,15 @@
-/***
- *** Copyright (c) 1996 INRIA, All rights reserved
- ***/
-
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
 /*----------------------------------------------------------------------
-   
+
    html2thot parses an HTML file and builds the abstract tree of a Thot
-   document of type HTML.                                                      
-   
+   document of type HTML.
+
   ----------------------------------------------------------------------*/
 
 /* Compiling this module with -DSTANDALONE generates the main program of  */
@@ -262,7 +265,7 @@ static GIMapping    GIMappingTable[] =
    {"TT", SPACE, 'E', HTML_EL_Teletype_text, NULL},
    {"UL", SPACE, 'E', HTML_EL_Unnumbered_List, NULL},
    {"VAR", SPACE, 'E', HTML_EL_Variable, NULL},
-   {"XMP", SPACE, 'E', HTML_EL_Preformatted, NULL},	/*converted to PRE */
+   {"XMP", SPACE, 'E', HTML_EL_Preformatted, NULL},	/* converted to PRE */
    {"", SPACE, EOS, 0, NULL}	/* Last entry. Mandatory */
 };
 
@@ -291,7 +294,7 @@ static int          CharLevelElement[] =
    HTML_EL_Anchor,
    HTML_EL_Italic_text, HTML_EL_Bold_text, HTML_EL_Teletype_text,
    HTML_EL_Struck_text, HTML_EL_Font_,
-HTML_EL_Emphasis, HTML_EL_Strong, HTML_EL_Def, HTML_EL_Code, HTML_EL_Sample,
+   HTML_EL_Emphasis, HTML_EL_Strong, HTML_EL_Def, HTML_EL_Code, HTML_EL_Sample,
    HTML_EL_Keyboard, HTML_EL_Variable, HTML_EL_Cite,
    HTML_EL_Input,
    0};
@@ -578,7 +581,7 @@ static AttrValueMapping AttrValueMappingTable[] =
    {HTML_ATTR_Selected, "SELECTED", HTML_ATTR_Selected_VAL_Yes_},
    {HTML_ATTR_Checked, "CHECKED", HTML_ATTR_Checked_VAL_Yes_},
    {HTML_ATTR_Word_wrap, "NOWRAP", HTML_ATTR_Word_wrap_VAL_No_wrap},
-
+   {HTML_ATTR_NoShade, "NOSHADE", HTML_ATTR_NoShade_VAL_NoShade_},
    {0, "", 0}			/* Last entry. Mandatory */
 };
 
@@ -667,8 +670,8 @@ static int          CharRank = 0;	/* rank of the last matching */
 					/* character in that entry */
 
 /*----------------------------------------------------------------------
-   ParseAreaCoords computes x, y, width and height of the box from    
-   the coords attribute value.                             
+   ParseAreaCoords computes x, y, width and height of the box from
+   the coords attribute value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ParseAreaCoords (Element element, Document document)
@@ -814,8 +817,8 @@ Document            document;
 
 
 /*----------------------------------------------------------------------
-   MapGI   search in GIMappingTable the entry for the element of   
-   name GI and returns the rank of that entry.             
+   MapGI   search in GIMappingTable the entry for the element of
+   name GI and returns the rank of that entry.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 MapGI (char *gi)
@@ -840,8 +843,8 @@ char               *gi;
 }
 
 /*----------------------------------------------------------------------
-   GIType  search in GIMappingTable the Element type associated to 
-   a given GI Name. If not found returns zero.                
+   GIType  search in GIMappingTable the Element type associated to
+   a given GI Name. If not found returns zero.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -873,7 +876,7 @@ int                *elem;
 }
 
 /*----------------------------------------------------------------------
-   GITagName search in GIMappingTable the name for a given element 
+   GITagName search in GIMappingTable the name for a given element
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 char               *GITagName (Element elem)
@@ -901,7 +904,7 @@ Element             elem;
 }
 
 /*----------------------------------------------------------------------
-   GITagNameByType search in GIMappingTable the name for a given type 
+   GITagNameByType search in GIMappingTable the name for a given type
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 char               *GITagNameByType (int type)
@@ -930,9 +933,9 @@ int                 type;
 }
 
 /*----------------------------------------------------------------------
-   MapAttr search in AttributeMappingTable the entry for the       
-   attribute of name Attr and returns the rank of that     
-   entry.                                                  
+   MapAttr search in AttributeMappingTable the entry for the
+   attribute of name Attr and returns the rank of that
+   entry.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          MapAttr (char *Attr)
@@ -962,9 +965,9 @@ char               *Attr;
    return entry;
 }
 /*----------------------------------------------------------------------
-   MapThotAttr     search in AttributeMappingTable the entry for   
-   the attribute of name Attr and returns the Thot Attribute   
-   corresponding to the rank of that entry.                    
+   MapThotAttr     search in AttributeMappingTable the entry for
+   the attribute of name Attr and returns the Thot Attribute
+   corresponding to the rank of that entry.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 MapThotAttr (char *Attr, char *tag)
@@ -990,9 +993,9 @@ char               *tag;
 }
 
 /*----------------------------------------------------------------------
-   MapAttrValue    search in AttrValueMappingTable the entry for   
-   the attribute ThotAtt and its value AttrVal. Returns    
-   the rank of that entry.                                 
+   MapAttrValue    search in AttrValueMappingTable the entry for
+   the attribute ThotAtt and its value AttrVal. Returns
+   the rank of that entry.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 MapAttrValue (int ThotAtt, char *AttrVal)
@@ -1035,9 +1038,9 @@ char               *AttrVal;
 
 
 /*----------------------------------------------------------------------
-   copyCEstring    create a copy of the string of elements pointed 
-   by first and return a pointer on ther first     
-   element of the copy.                            
+   copyCEstring    create a copy of the string of elements pointed
+   by first and return a pointer on ther first
+   element of the copy.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrClosedElement copyCEstring (PtrClosedElement first)
@@ -1069,8 +1072,8 @@ PtrClosedElement    first;
 
 
 /*----------------------------------------------------------------------
-   InitMapping     intialise the list of the elements closed by    
-   each start tag.                                 
+   InitMapping     intialise the list of the elements closed by
+   each start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                InitMapping (void)
@@ -1210,7 +1213,7 @@ void                InitMapping ()
 }
 
 /*----------------------------------------------------------------------
-   Within  checks if an element of type ThotType is in the stack.  
+   Within  checks if an element of type ThotType is in the stack.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      Within (int ThotType)
@@ -1240,7 +1243,7 @@ int                 ThotType;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTMLError  print the error message msg on stderr.          
+   ParseHTMLError  print the error message msg on stderr.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ParseHTMLError (Document doc, unsigned char *msg)
@@ -1262,7 +1265,7 @@ unsigned char      *msg;
 }
 
 /*----------------------------------------------------------------------
-   CloseBuffer     close the input buffer.                         
+   CloseBuffer     close the input buffer.
   ----------------------------------------------------------------------*/
 static void         CloseBuffer ()
 {
@@ -1270,7 +1273,7 @@ static void         CloseBuffer ()
 }
 
 /*----------------------------------------------------------------------
-   InitBuffer      initialize the input buffer.                    
+   InitBuffer      initialize the input buffer.
   ----------------------------------------------------------------------*/
 static void         InitBuffer ()
 {
@@ -1286,9 +1289,9 @@ static boolean      InsertElement ();
 #endif
 
 /*----------------------------------------------------------------------
-   InsertSibling   return TRUE if the new element must be inserted 
-   in the Thot document as a sibling of lastElement;       
-   return FALSE it it must be inserted as a child.         
+   InsertSibling   return TRUE if the new element must be inserted
+   in the Thot document as a sibling of lastElement;
+   return FALSE it it must be inserted as a child.
   ----------------------------------------------------------------------*/
 static boolean      InsertSibling ()
 {
@@ -1301,8 +1304,8 @@ static boolean      InsertSibling ()
 }
 
 /*----------------------------------------------------------------------
-   IsCharacterLevelElement return TRUE if element el is a          
-   character level element, FALSE if not.                  
+   IsCharacterLevelElement return TRUE if element el is a
+   character level element, FALSE if not.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             IsCharacterLevelElement (Element el)
@@ -1328,7 +1331,7 @@ Element             el;
 }
 
 /*----------------------------------------------------------------------
-   IsBlockElement  return TRUE if element el is a block element.   
+   IsBlockElement  return TRUE if element el is a block element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      IsBlockElement (Element el)
@@ -1354,7 +1357,7 @@ Element             el;
 }
 
 /*----------------------------------------------------------------------
-   CannotContainText return TRUE if element el is a block element. 
+   CannotContainText return TRUE if element el is a block element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      CannotContainText (ElementType elType)
@@ -1444,8 +1447,8 @@ static void         TextToDocument ()
 
 
 /*----------------------------------------------------------------------
-   StartOfTag      Beginning of a HTML tag (start or end tag).     
-   Put the preceding text into the Thot document.  
+   StartOfTag      Beginning of a HTML tag (start or end tag).
+   Put the preceding text into the Thot document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         StartOfTag (char c)
@@ -1460,7 +1463,7 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
-   PutInBuffer     put character c in the input buffer.            
+   PutInBuffer     put character c in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutInBuffer (unsigned char c)
@@ -1503,9 +1506,9 @@ unsigned char       c;
 }
 
 /*----------------------------------------------------------------------
-   CheckSurrounding inserts an element Paragraph in the abstract   
-   tree of the Thot document if el is a leaf and is not    
-   allowed to be a child of element parent.                
+   CheckSurrounding inserts an element Paragraph in the abstract
+   tree of the Thot document if el is a leaf and is not
+   allowed to be a child of element parent.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      CheckSurrounding (Element * el, Element parent)
@@ -1558,8 +1561,8 @@ Element             parent;
 
 
 /*----------------------------------------------------------------------
-   InsertElement   inserts element el in the abstract tree of the  
-   Thot document, at the current position.                 
+   InsertElement   inserts element el in the abstract tree of the
+   Thot document, at the current position.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      InsertElement (Element * el)
@@ -1603,8 +1606,8 @@ Element            *el;
 }
 
 /*----------------------------------------------------------------------
-   InsertHR        inserts the HR element el in the abstract tree  
-   of the Thot document, at the current position.          
+   InsertHR        inserts the HR element el in the abstract tree
+   of the Thot document, at the current position.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      InsertHR (Element * el)
@@ -1655,8 +1658,8 @@ Element            *el;
 }
 
 /*----------------------------------------------------------------------
-   CreateAttr      create an attribute of type attrType for the    
-   element el.                                             
+   CreateAttr      create an attribute of type attrType for the
+   element el.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CreateAttr (Element el, AttributeType attrType, char *text, boolean invalid)
@@ -1713,7 +1716,7 @@ boolean             invalid;
 
 /*----------------------------------------------------------------------
    	OnlyOneOptionSelected sets unselected other options		
-   		if parsed is True, sets the DefaultSelected attribute	 
+   		if parsed is True, sets the DefaultSelected attribute	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                OnlyOneOptionSelected (Element el, Document doc, boolean parsed)
@@ -1802,8 +1805,8 @@ boolean             parsed;
 }
 
 /*----------------------------------------------------------------------
-   ElementComplete Element el is complete. Check its attributes    
-   and its contents.                               
+   ElementComplete Element el is complete. Check its attributes
+   and its contents.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ElementComplete (Element el)
@@ -2069,14 +2072,14 @@ Element             el;
 
 
 /*----------------------------------------------------------------------
-   CloseElement    End of HTML element defined in entry entry of   
-   GIMappingTable.                                 
-   Terminate all corresponding Thot elements.      
-   If start <0, an explicit end tag has been       
-   encountered in the HTML file, else the end      
-   of element is implied by the beginning of       
-   an element described by entry start of          
-   GIMappingTable.                                 
+   CloseElement    End of HTML element defined in entry entry of
+   GIMappingTable.
+   Terminate all corresponding Thot elements.
+   If start <0, an explicit end tag has been
+   encountered in the HTML file, else the end
+   of element is implied by the beginning of
+   an element described by entry start of
+   GIMappingTable.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      CloseElement (int entry, int start)
@@ -2281,9 +2284,9 @@ int                 start;
 
 
 /*----------------------------------------------------------------------
-   TypeAttrValue   Value val has been read for the HTML attribute  
-   TYPE. Create a child for the current Thot       
-   element INPUT accordingly.                      
+   TypeAttrValue   Value val has been read for the HTML attribute
+   TYPE. Create a child for the current Thot
+   element INPUT accordingly.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         TypeAttrValue (char *val)
@@ -2334,8 +2337,8 @@ char               *val;
 
 
 /*----------------------------------------------------------------------
-   SetAttrIntItemStyle     Create or update attribute IntItemStyle 
-   of List_Item element el according to its surrounding elements.  
+   SetAttrIntItemStyle     Create or update attribute IntItemStyle
+   of List_Item element el according to its surrounding elements.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetAttrIntItemStyle (Element el, Document doc)
@@ -2481,8 +2484,8 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
-   EndOfStartTag   a ">" has been read. It indicates the end       
-   of a start tag.                                         
+   EndOfStartTag   a ">" has been read. It indicates the end
+   of a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         EndOfStartTag (char c)
@@ -2543,9 +2546,9 @@ static void         ProcessStartGI ();
 #endif
 
 /*----------------------------------------------------------------------
-   ContextOK       returns TRUE if the element at position entry   
-   in the mapping table is allowed to occur in the         
-   current structural context.                             
+   ContextOK       returns TRUE if the element at position entry
+   in the mapping table is allowed to occur in the
+   current structural context.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      ContextOK (int entry)
@@ -2612,7 +2615,7 @@ int                 entry;
 }
 
 /*----------------------------------------------------------------------
-   SpecialImplicitEnd                                              
+   SpecialImplicitEnd
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SpecialImplicitEnd (int entry)
@@ -2647,8 +2650,8 @@ int                 entry;
 }
 
 /*----------------------------------------------------------------------
-   InsertInvalidEl create an element Invalid_element with the      
-   indicated content.                                      
+   InsertInvalidEl create an element Invalid_element with the
+   indicated content.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         InsertInvalidEl (char *content)
@@ -2677,9 +2680,9 @@ char               *content;
 }
 
 /*----------------------------------------------------------------------
-   ProcessStartGI  An HTML GI has been read in a start tag.        
+   ProcessStartGI  An HTML GI has been read in a start tag.
    Create the corresponding Thot thing (element, attribute,
-   or character), according to the mapping table.          
+   or character), according to the mapping table.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ProcessStartGI (char *GIname)
@@ -2851,7 +2854,7 @@ char               *GIname;
 
 
 /*----------------------------------------------------------------------
-   EndOfStartGI    An HTML GI has been read in a start tag.        
+   EndOfStartGI    An HTML GI has been read in a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         EndOfStartGI (char c)
@@ -2871,8 +2874,8 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
-   EndOfStartGIandTag      a ">" has been read. It indicates the   
-   end of a GI and the end of a start tag.         
+   EndOfStartGIandTag      a ">" has been read. It indicates the
+   end of a GI and the end of a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         EndOfStartGIandTag (char c)
@@ -2888,8 +2891,8 @@ char                c;
 
 
 /*----------------------------------------------------------------------
-   EndOfEndTag     An end tag has been read in the HTML file.      
-   Terminate all corresponding Thot elements.      
+   EndOfEndTag     An end tag has been read in the HTML file.
+   Terminate all corresponding Thot elements.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         EndOfEndTag (char c)
@@ -2968,8 +2971,8 @@ char                c;
 
 
 /*----------------------------------------------------------------------
-   PutInContent    put the string ChrString in the leaf of        
-   current element.                                
+   PutInContent    put the string ChrString in the leaf of
+   current element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static Element      PutInContent (char *ChrString)
@@ -3009,8 +3012,8 @@ char               *ChrString;
 }
 
 /*----------------------------------------------------------------------
-   EndOfAttrName   A HTML attribute has been read. Create the      
-   corresponding Thot attribute.                   
+   EndOfAttrName   A HTML attribute has been read. Create the
+   corresponding Thot attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         EndOfAttrName (char c)
@@ -3110,8 +3113,8 @@ char                c;
 
 
 /*----------------------------------------------------------------------
-   EndOfAttrNameAndTag     A ">" has been read. It indicates the   
-   end of an attribute name and the end of a start tag.    
+   EndOfAttrNameAndTag     A ">" has been read. It indicates the
+   end of an attribute name and the end of a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         EndOfAttrNameAndTag (char c)
@@ -3126,8 +3129,8 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
-   StartOfAttrValue        A quote (or double quote) starting an   
-   attribute value has been read.                          
+   StartOfAttrValue        A quote (or double quote) starting an
+   attribute value has been read.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         StartOfAttrValue (char c)
@@ -3145,9 +3148,9 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
-   an HTML attribute "width" has been created for a Table of a HR. 
-   Create the corresponding attribute IntWidthPercent or           
-   IntWidthPxl.                                                    
+   an HTML attribute "width" has been created for a Table of a HR.
+   Create the corresponding attribute IntWidthPercent or
+   IntWidthPxl.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateAttrWidthPercentPxl (char *buffer, Element el, Document doc)
@@ -3179,8 +3182,8 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
-   an HTML attribute "size" has been created for a Font element.   
-   Create the corresponding internal attribute.                    
+   an HTML attribute "size" has been created for a Font element.
+   Create the corresponding internal attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateAttrIntSize (char *buffer, Element el, Document doc)
@@ -3218,9 +3221,9 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
-   EndOfAttrValue  An attribute value has been read in the HTML    
-   file. Put that value in the current Thot        
-   attribute.                                      
+   EndOfAttrValue  An attribute value has been read in the HTML
+   file. Put that value in the current Thot
+   attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         EndOfAttrValue (char c)
@@ -3439,8 +3442,8 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
-   EndOfAttrValueAndTag    A ">" has been read. It indicates the   
-   end of an attribute value and the end of a start tag.   
+   EndOfAttrValueAndTag    A ">" has been read. It indicates the
+   end of an attribute value and the end of a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         EndOfAttrValueAndTag (char c)
@@ -3455,7 +3458,7 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
-   StartOfEntity   A character '&' has been encountered in text.   
+   StartOfEntity   A character '&' has been encountered in text.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         StartOfEntity (char c)
@@ -3471,9 +3474,9 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
-   EndOfEntity     End of a HTML entity. Search that entity in the 
-   entity table and put the corresponding ISO      
-   Latin-1 character in the input buffer.          
+   EndOfEntity     End of a HTML entity. Search that entity in the
+   entity table and put the corresponding ISO
+   Latin-1 character in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         EndOfEntity (char c)
@@ -3505,8 +3508,8 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
-   EntityChar      A character belonging to a HTML entity has been 
-   read.                                           
+   EntityChar      A character belonging to a HTML entity has been
+   read.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         EntityChar (unsigned char c)
@@ -3571,9 +3574,9 @@ unsigned char       c;
 }
 
 /*----------------------------------------------------------------------
-   EndOfNumEntity  End of a numerical entity. Convert the          
-   string read into a number and put the character 
-   having that code in the input buffer.           
+   EndOfNumEntity  End of a numerical entity. Convert the
+   string read into a number and put the character
+   having that code in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         EndOfNumEntity (char c)
@@ -3592,9 +3595,9 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
-   NumEntityChar   A character belonging to a HTML numerical       
-   entity has been read. Put that character in     
-   the entity buffer.                              
+   NumEntityChar   A character belonging to a HTML numerical
+   entity has been read. Put that character in
+   the entity buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         NumEntityChar (char c)
@@ -3623,8 +3626,8 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
-   EndOfDocument   End of the HTML file. Terminate the Thot        
-   document                                        
+   EndOfDocument   End of the HTML file. Terminate the Thot
+   document
   ----------------------------------------------------------------------*/
 static void         EndOfDocument ()
 {
@@ -3632,7 +3635,7 @@ static void         EndOfDocument ()
 }
 
 /*----------------------------------------------------------------------
-   PutLess put '<' in the input buffer                             
+   PutLess put '<' in the input buffer
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutLess (char c)
@@ -3646,7 +3649,7 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
-   PutAmpersandSpace       put '& ' in the input buffer.           
+   PutAmpersandSpace       put '& ' in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutAmpersandSpace (char c)
@@ -3661,7 +3664,7 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
-   PutLessAndSpace put '<' and the space read in the input buffer. 
+   PutLessAndSpace put '<' and the space read in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutLessAndSpace (char c)
@@ -3677,7 +3680,7 @@ char                c;
 
 
 /*----------------------------------------------------------------------
-   StartOfComment  Beginning of a HTML comment.                    
+   StartOfComment  Beginning of a HTML comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         StartOfComment (char c)
@@ -3727,7 +3730,7 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
-   PutInComment    put character c in the current HTML comment.    
+   PutInComment    put character c in the current HTML comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutInComment (unsigned char c)
@@ -3777,7 +3780,7 @@ unsigned char       c;
 }
 
 /*----------------------------------------------------------------------
-   EndOfComment    End of a HTML comment.                          
+   EndOfComment    End of a HTML comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         EndOfComment (char c)
@@ -3798,7 +3801,7 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
-   PutDash put a dash character in the input buffer.               
+   PutDash put a dash character in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutDash (char c)
@@ -3813,7 +3816,7 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
-   PutDashDash     put 2 dash characters in the input buffer.      
+   PutDashDash     put 2 dash characters in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutDashDash (char c)
@@ -3829,7 +3832,7 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
-   Do_nothing      Do nothing.                                     
+   Do_nothing      Do nothing.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         Do_nothing (char c)
@@ -3996,8 +3999,8 @@ static sourceTransition sourceAutomaton[] =
 };
 
 /*----------------------------------------------------------------------
-   InitAutomaton   read the "source" form of the automaton and     
-   build the "executable" form.                    
+   InitAutomaton   read the "source" form of the automaton and
+   build the "executable" form.
   ----------------------------------------------------------------------*/
 static void         InitAutomaton ()
 {
@@ -4040,8 +4043,8 @@ static void         InitAutomaton ()
 }
 
 /*----------------------------------------------------------------------
-   GetNextInputChar        returns the next character in the imput 
-   file or buffer.                         
+   GetNextInputChar        returns the next character in the imput
+   file or buffer.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -4072,10 +4075,10 @@ char                GetNextInputChar ()
 }
 
 /*----------------------------------------------------------------------
-   HTMLparse       parse either the HTML file infile or the text   
-   buffer HTMLbuf and build the equivalent Thot    
-   abstract tree.                                  
-   One parameter should be NULL.                   
+   HTMLparse       parse either the HTML file infile or the text
+   buffer HTMLbuf and build the equivalent Thot
+   abstract tree.
+   One parameter should be NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HTMLparse (FILE * infile, char *HTMLbuf)
@@ -4293,8 +4296,8 @@ char               *HTMLbuf;
 
 
 /*----------------------------------------------------------------------
-   CheckAbstractTree       Check the Thot abstract tree and create 
-   the missing elements.                   
+   CheckAbstractTree       Check the Thot abstract tree and create
+   the missing elements.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CheckAbstractTree (char *pathURL)
@@ -4851,12 +4854,12 @@ in the Head ****/
 
 
 /*----------------------------------------------------------------------
-   InitializeParser                                                
-   initializes variables and stack for parsing file                
-   the parser will insert the thot tree after or as a child        
-   of last elem, in the document doc.                              
-   If last elem is NULL or doc=0, the parser doesn't initialize    
-   the stack                                                       
+   InitializeParser
+   initializes variables and stack for parsing file
+   the parser will insert the thot tree after or as a child
+   of last elem, in the document doc.
+   If last elem is NULL or doc=0, the parser doesn't initialize
+   the stack
   ----------------------------------------------------------------------*/
 #ifdef __STDC_
 void                InitializeParser (Element lastelem, boolean isclosed, Document doc)
@@ -4940,7 +4943,7 @@ Document            doc;
 
 #ifdef STANDALONE
 /*----------------------------------------------------------------------
-   main program                                                
+   main program
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 main (int argc, char **argv)
@@ -5014,10 +5017,10 @@ char              **argv;
 	       }
 #else  /* STANDALONE */
 /*----------------------------------------------------------------------
-   StartHTMLParser loads the file Directory/htmlFileName for       
-   displaying the document documentName.                   
-   The parameter pathURL gives the original (local or      
-   distant) path or URL of the html document.              
+   StartHTMLParser loads the file Directory/htmlFileName for
+   displaying the document documentName.
+   The parameter pathURL gives the original (local or
+   distant) path or URL of the html document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                StartHTMLParser (Document doc, char *htmlFileName, char *documentName, char *documentDirectory, char *pathURL)
