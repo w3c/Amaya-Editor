@@ -1932,7 +1932,6 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
 	 }
 }
 
-
 /*----------------------------------------------------------------------
    Traite les commandes TextInserting Cut Paste Copy Oops          
    ainsi que l'insertion des Graphiques Images et Symboles         
@@ -2036,8 +2035,10 @@ static void         ContentEditing (int editType)
 		      pAb->AbPolyLineShape != 'z')
 		    {
 		      /* Ajout de points dans une polyline */
-		      still = (pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's');
-		      if (!APPgraphicModify (pAb->AbElement, pAb->AbPolyLineShape, frame, TRUE))
+		      still = (pAb->AbPolyLineShape == 'p' ||
+			       pAb->AbPolyLineShape == 's');
+		      if (!APPgraphicModify (pAb->AbElement,
+					     pAb->AbPolyLineShape, frame,TRUE))
 			{
 			  x = pBox->BxXOrg - pFrame->FrXOrg;
 			  y = pBox->BxYOrg - pFrame->FrYOrg;
@@ -2048,7 +2049,7 @@ static void         ContentEditing (int editType)
 			  pAb->AbVolume = pBox->BxNChars;
 			  if (pBox->BxPictInfo != NULL)
 			    {
-				/* reevalue les points de controle */
+			      /* reevalue les points de controle */
 			      free ((STRING) pBox->BxPictInfo);
 			      pBox->BxPictInfo = NULL;
 			    }
