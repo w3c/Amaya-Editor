@@ -178,39 +178,19 @@ Search_form *search_form;
 Spell_form *spell_form;
 /* variables containing table  parameters */
 Table_form *table;
+
 /*------------------------------------------------------------------------
 external functions
 --------------------------------------------------------------------------*/
-/* Function that creates a "Set up and print" dialog box */
-GtkWidget* create_dialog_print ();
+
 /*Function that creates a "New HTML document" or "New CSS.." dialog box  */
-GtkWidget *create_dialog_new (gchar *title);
-/*Function that creates a "Save as" dialog box  */
-GtkWidget *create_dialog_save (gchar *title);
-/*Function that creates a "Style" dialog box  */
-GtkWidget *create_dialog_style();
-/*Function that creates a "Apply class" dialog box  */
-GtkWidget* create_dialog_apply_class ();
-/*Function that creates a "Language attributes" dialog box  */
-GtkWidget* create_dialog_attr_lang ();
-/*Function that creates a "Close" dialog box  */
-GtkWidget* create_dialog_close ();
-/*Function that creates a "Confirm" dialog box  */
-GtkWidget* create_dialog_confirm ();
-/*Function that creates a "Confirm" dialog box  */
-GtkWidget* create_dialog_create_rule ();
-/*Function that creates a "math" dialog box  */
-GtkWidget* create_dialog_math ();
-/*Function that creates a "Preferences" dialog box  */
-GtkWidget* create_dialog_preferences ();
-/*Function that creates a "Search" dialog box  */
-GtkWidget* create_dialog_search ();
-/*Function that creates a "Spell" dialog box  */
-GtkWidget* create_dialog_spell ();
-/*Function that creates a "Table" dialog box  */
-GtkWidget* create_dialog_table ();
-/* Callback function called by the "Document style" button */
-void ChangeDocumentStyle (Document doc, View view);
-/* Callback function called by the "Preferences" button */
-void GeneralPreferences (Document doc, View view);
+void CreateOpenDocDlgGTK (gchar *title);
+
+
+
+
+
+
+
 #endif /*_DIALOG_BOX_H_*/
+
