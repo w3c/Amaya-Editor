@@ -11,6 +11,8 @@
  * libmanag.c
  *
  * This module contains functions to handle Amaya SVG Library
+ * Authors :
+ *         E. Bonnet (INRIA) - GTK combo box & svglib
  */
 
 /* header file */
@@ -58,6 +60,10 @@
 #include "libmanag.h" 
 #include "libmanag_f.h"
 
+#ifdef _WINDOWS
+#include "wininclude.h"
+#endif /* _WINDOWS */
+
 #ifdef _SVGLIB
 /* common local variables */
 static char    buffermem[MAX_LENGTH];
@@ -81,9 +87,6 @@ typedef struct _Library_URITitle
 /* List header */
 static ListUriTitle *HeaderListUriTitle = NULL;
 
-/* variable to handle inter session file */
-static ThotBool LibraryStructureModified = FALSE;
-
 /* variable to handle SVGLibrary dialogue */
 static char svgFilter[MAX_LENGTH];
 static char libraryFilter[MAX_LENGTH];
@@ -94,6 +97,12 @@ static char NewLibraryTitle[MAX_LENGTH];
 static char LastURLSVG[MAX_LENGTH];
 static char LastURLCatalogue[MAX_LENGTH];
 
+/* box size and position values */
+static int x_box = 10000;
+static int y_box = 10000;
+static int width_box = 0;
+static int height_box = 0;
+
 #ifndef _WINDOWS
 #include  "Libsvg.xpm"
 #include  "LibsvgNo.xpm"
@@ -103,13 +112,13 @@ static Pixmap   iconLibsvg;
 static Pixmap   iconLibsvgNo;
 static int      LibSVGButton;
 
-/* pour windows
 #ifdef _WINDOWS
 #include "wininclude.h"
 #define iconLibsvg   28
 #define iconLibsvgNo 28
-#endif _WINDOWS
-*/
+
+static HWND     SVGLibHwnd = NULL;
+#endif /* _WINDOWS */
 
 #endif /* _SVGLIB */
 
@@ -161,7 +170,6 @@ ThotBool IsCurrentSelectionSVG ()
 	      stop = 1;
 	      IsSVG = FALSE;
 	    }
-	  /* register in the do queue the element that will be copied */
 	  if (currentEl == lastSelEl)
 	    currentEl = NULL;
 	  else
@@ -178,12 +186,49 @@ ThotBool IsCurrentSelectionSVG ()
 
 
 /*----------------------------------------------------------------------
-  Copy_svg_information_tree                                  
-  
-  Check if the selection is a SVG element        
-  and copy it into a temporary buffer
+  IsCurrentSelectionContainsUseElement
+  Check if the current selection contains use element
+  You must use IsCurrentSelectionSVG before
+  ----------------------------------------------------------------------*/
+ThotBool IsCurrentSelectionContainsUseElement()
+{
+  ThotBool      containUseEl = FALSE;
+#ifdef _SVGLIB
+  Document      selDoc;
+  Element       firstSelEl, lastSelEl, currentEl, elFound;
+  ElementType   elTypeSearch;
+  int           firstChar, lastChar, i;
+  int           stop = 0;
 
-  Initializes add svg model Form
+  /* get the current selection */
+  TtaGiveFirstSelectedElement (selDoc, &firstSelEl, &firstChar, &i);
+  TtaGiveLastSelectedElement (selDoc, &lastSelEl, &i, &lastChar);
+
+  elTypeSearch = TtaGetElementType (firstSelEl);
+  elTypeSearch.ElTypeNum = SVG_EL_use_;
+
+  currentEl = firstSelEl;
+  while (currentEl && (stop == 0))
+    {
+      elFound = TtaSearchTypedElement (elTypeSearch, SearchInTree, TtaGetParent (currentEl));
+      if (elFound == currentEl || TtaIsAncestor (elFound, currentEl))
+	{
+	  containUseEl = TRUE;
+	  stop = 1;
+	}
+      if (currentEl == lastSelEl)
+	currentEl = NULL;
+      else
+	TtaGiveNextSelectedElement (selDoc, &currentEl, &i, &i);
+    }
+#endif /* _SVGLIB */
+  return containUseEl;
+}
+
+/*----------------------------------------------------------------------
+  CopySvgInformationTree
+  Checks if the selection is a SVG element        
+  and initializes add svg model form (dialog)
   ----------------------------------------------------------------------*/
 void CopySvgInformationTree (Document doc, View view)
 {
@@ -312,9 +357,15 @@ void CallbackLibrary (int ref, int typedata, char *data)
 	    break;
 	  else
 	    {
-	      /* create all the HTML element, *.svg file and *.png file */
-	      AddSVGModelIntoLibrary (0, FALSE, SaveLibraryTitleSelection);
-	      TtaDestroyDialogue (ref);
+	      if (IsCurrentSelectionSVG ())
+		{
+		  /* create all the HTML element, *.svg file and *.png file */
+		  AddSVGModelIntoLibrary (0, FALSE, SaveLibraryTitleSelection);
+		  TtaDestroyDialogue (ref);
+		}
+/* else
+{ put a dialogue form to advertize : it's a bad selection
+}*/
 	    }
 	  break;
 	case 3: /* show dialogue create new catalogue */
@@ -343,15 +394,18 @@ void CallbackLibrary (int ref, int typedata, char *data)
 		      IsLibraryName (filename))
 		    {
 		      AddLibraryDataIntoStructure (TRUE, LastURLCatalogue, NewLibraryTitle);
-		      LibraryStructureModified = TRUE;
 		      /* create all the HTML element, *.svg file and *.png file */
 		      AddSVGModelIntoLibrary (0, TRUE, NewLibraryTitle);
+		      /* save inter session file */
+		      WriteInterSessionLibraryFileManager ();
 		      TtaDestroyDialogue (ref);
 		      TtaDestroyDialogue (BaseLibrary + AddSVGModel);
 		    }
+#ifndef _WINDOWS
 		  else
 		    TtaNewLabel (BaseLibrary + SVGLibraryLabel2, BaseLibrary + NewSVGLibrary,
 				 TtaGetMessage (AMAYA, AM_SVGLIB_MISSING_TITLE));
+#endif /* _WINDOWS */
 		  TtaFreeMemory (filename);
 		  TtaFreeMemory (dirname);
 		}
@@ -360,7 +414,10 @@ void CallbackLibrary (int ref, int typedata, char *data)
 		  libDoc = TtaNewDocument("HTML", "tmp");
 		  InNewWindow = TRUE;
 		  res = GetAmayaDoc (LastURLCatalogue, NULL, libDoc, 0, CE_ABSOLUTE,
-				     FALSE, NULL, NULL, ISO_8859_1/* TtaGetDefaultCharset()*/);
+				     FALSE, NULL, NULL, /*ISO_8859_1*/TtaGetDefaultCharset());
+		  AddSVGModelIntoLibrary (res, FALSE, NewLibraryTitle);
+		  TtaDestroyDialogue (ref);
+		  TtaDestroyDialogue (BaseLibrary + AddSVGModel);
 		}
 	    }
 	  else /* this file already be in the structure list */
@@ -433,7 +490,7 @@ void CallbackLibrary (int ref, int typedata, char *data)
       strcat (LastURLSVG, data);
 #ifndef _WINDOWS
       TtaSetTextForm (BaseLibrary + SVGFileBrowserText, LastURLSVG);
-#endif*/ /* !_WINDOWS */
+#endif /* !_WINDOWS */
       break;
     case SVGFilter: /* Filter value */
       if (strlen(data) <= NAME_LENGTH)
@@ -513,7 +570,9 @@ void CallbackLibrary (int ref, int typedata, char *data)
       switch (val)
 	{
 	case 2: /* Confirm button set NewSVGFileURL Text Zone */
+#ifndef _WINDOWS
 	  TtaSetTextForm (BaseLibrary + NewSVGFileURL, LastURLSVG);
+#endif /* _WINDOWS */
 	  TtaDestroyDialogue (ref);
 	  break;
 	case 3: /* Filter button,  reinitialize directories and document lists */
@@ -532,7 +591,9 @@ void CallbackLibrary (int ref, int typedata, char *data)
       switch (val)
 	{
 	case 2: /* Confirm button set NewSVGLibFileURL Text Zone */
+#ifndef _WINDOWS
 	  TtaSetTextForm (BaseLibrary + SVGLibraryURL, LastURLCatalogue);
+#endif /* WINDOWS */
 	  /* Is this library file exist?*/
 
 	  if (IsLibraryName (LastURLCatalogue))
@@ -543,7 +604,9 @@ void CallbackLibrary (int ref, int typedata, char *data)
 		  strcpy (NewLibraryTitle, libraryTitle);
 		  if (libraryTitle)
 		    TtaFreeMemory (libraryTitle);
+#ifndef _WINDOWS
 		  TtaSetTextForm (BaseLibrary + NewSVGLibraryTitle, NewLibraryTitle);
+#endif /* WINDOWS */
 		}
 	    }
 	  TtaDestroyDialogue (ref);
@@ -586,7 +649,6 @@ void CreateNewCatalogueDialogue (Document doc, View view)
   char           bufButton[MAX_LENGTH];
   char          *filename;
   int            i;
-#endif /* _WINDOWS */
 
   /* fonction de test de la selection courante */
   i = 0;
@@ -627,7 +689,7 @@ void CreateNewCatalogueDialogue (Document doc, View view)
   filename =  (char *) TtaGetMemory (MAX_LENGTH);
   TtaExtractName (DocumentURLs[doc], baseDirectory, filename);
 */
-
+#endif /* _WINDOWS */
 #endif /* _SVGLIB */
 }
 
@@ -642,7 +704,6 @@ void ShowLibraryBrowser (int FileSuffix)
   char           bufButton[MAX_LENGTH];
   char          *filename;
   int            i;
-#endif /* _WINDOWS */
 
   i = 0;
   strcpy (&bufButton[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
@@ -722,7 +783,7 @@ void ShowLibraryBrowser (int FileSuffix)
       TtaFreeMemory (filename);
     }
 
-
+#endif /* _WINDOWS */
 #endif /* _SVGLIB */
 }
 
@@ -856,7 +917,7 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
 /*
  *
  * Initialiser les metas: DocumentMeta[newLibraryDoc]
- *
+ * OK mais voir si DocumentSource et DocumentURLs ne pose pas de problème
  */
 
 
@@ -991,6 +1052,7 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
   el = TtaSearchTypedElement (elType, SearchInTree, body);
   /* set the initial selection */
   TtaSelectElement (newLibraryDoc, el);
+
   if (SelectionDoc != 0)
     UpdateContextSensitiveMenus (SelectionDoc);
   SelectionDoc = newLibraryDoc;
@@ -1115,9 +1177,9 @@ void AddLibraryDataIntoStructure (ThotBool persLib, char *url, char *title)
       listNew->Title = Title;
       listNew->indice = index;
       if (persLib)
-	listCur->customLibrary = TRUE;
+	listNew->customLibrary = TRUE;
       else
-	listCur->customLibrary = FALSE;
+	listNew->customLibrary = FALSE;
       listCur->next = listNew;
     }
   else
@@ -1173,12 +1235,6 @@ void SVGLIB_FreeDocumentResource ()
 #ifdef _SVGLIB
   ListUriTitle      *curList, *prevList;
 
-  /* Problem: when appli use this function there is no EnvString */
-  if (LibraryStructureModified)
-    {
-      /* save inter session file */
-      WriteInterSessionLibraryFileManager ();
-    }
   /* Free structure memory */
   curList = HeaderListUriTitle;
   while (curList)
@@ -1342,7 +1398,6 @@ void InitSVGLibraryManagerStructure ()
   char     *url_home, *url_thot, *app_home, *thot_dir;
   char     *urlstring, *librarytitle;
   FILE     *libfile;
-  int       cpt = 0;
 
   if (!HeaderListUriTitle)
     {
@@ -1360,40 +1415,20 @@ void InitSVGLibraryManagerStructure ()
 	{
 	  while (fscanf (libfile, "%s", urlstring) > 0)
 	    {
-	      if (cpt == 0)
+	      if (urlstring)
 		{
-		  if (urlstring)
+		  /* Get the document title by opening the document
+		     and then update the Uri-Title structure */
+		  librarytitle = GetLibraryFileTitle (urlstring);
+		  if (librarytitle)
 		    {
-		      /* Get the document title by opening the document
-			 and then update the Uri-Title structure */
-		      librarytitle = GetLibraryFileTitle (urlstring);
-		      if (librarytitle)
-			{
-			  /* ajout dans la structure et dans le buffer de memorisation */
-			  AddLibraryDataIntoStructure (TRUE, urlstring, librarytitle);
-			  TtaFreeMemory (librarytitle);
-			}
-		    }
-		  cpt++;
-		}
-	      else
-		{
-		  if (urlstring)
-		    {
-		      /* Get the document title by opening the document
-			 and then update the Uri-Title structure */ 
-		      librarytitle = GetLibraryFileTitle (urlstring);
-		      if (librarytitle)
-			{
-			  /* ajout dans la structure et dans le buffer de memorisation */
-			  AddLibraryDataIntoStructure (TRUE, urlstring, librarytitle);
-			  TtaFreeMemory (librarytitle);
-			}
+		      /* ajout dans la structure et dans le buffer de memorisation */
+		      AddLibraryDataIntoStructure (TRUE, urlstring, librarytitle);
+		      TtaFreeMemory (librarytitle);
 		    }
 		}
 	    }
 	  TtaReadClose (libfile);
-	  cpt = 0;
 	}
       
       /* Read lib_files.dat into THOTDIR directory */
@@ -1405,42 +1440,23 @@ void InitSVGLibraryManagerStructure ()
 	{
 	  while (fscanf (libfile, "%s", urlstring) > 0)
 	    {
-	      if (cpt == 0)
+	      if (urlstring)
 		{
-		  if (urlstring)
+		  /* modifier ici car ne fonctionne pas sous windows */
+		  sprintf (url_thot, "%s%cconfig%clibconfig%c%s", thot_dir,
+			   DIR_SEP, DIR_SEP, DIR_SEP, urlstring);
+		  strcpy (urlstring, url_thot);
+		  /* Get the document title by opening the document
+		     and then update the Uri-Title structure */
+		  librarytitle = GetLibraryFileTitle (urlstring);
+		  if (librarytitle)
 		    {
-		      strcat (url_thot, urlstring);
-		      strcpy (urlstring, url_thot);
-		      /* Get the document title by opening the document
-			 and then update the Uri-Title structure */
-		      librarytitle = GetLibraryFileTitle (urlstring);
-		      if (librarytitle)
-			{
-			  /* Add into Library Manager Structure List */
-			  AddLibraryDataIntoStructure (FALSE, urlstring, librarytitle);
-			  TtaFreeMemory (librarytitle);
-			}
-		    }
-		  cpt++;
-		}
-	      else
-		{
-		  if (urlstring)
-		    {
-		      /* Get the document title by opening the document
-			 and then update the Uri-Title structure */
-		      strcpy (url_thot, thot_dir);
-		      strcat (url_thot, urlstring);
-		      strcpy (urlstring, url_thot);
-		      librarytitle = GetLibraryFileTitle (urlstring);
-		      if (librarytitle)
-			{
-			  /* Add into Library Manager Structure List */
-			  AddLibraryDataIntoStructure (FALSE ,urlstring, librarytitle);
-			  TtaFreeMemory (librarytitle);
-			}
+		      /* Add into Library Manager Structure List */
+		      AddLibraryDataIntoStructure (FALSE, urlstring, librarytitle);
+		      TtaFreeMemory (librarytitle);
 		    }
 		}
+		
 	    }
 	  TtaReadClose (libfile);
 	}
@@ -1504,12 +1520,13 @@ void OpenCatalogue (Document doc, View view)
 	  if (IsLibraryName (buffer))
 	    {
 	      /* Open the first catalogue of the Library File */
-	      sprintf (LastURLName, "%s",
-		       buffer);
+/*	      sprintf (LastURLName, "%s",
+		       buffer);*/
 	      /* load the HOME document */
 	      InNewWindow = TRUE;
 	      CurrentDocument = doc;
-	      CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
+	      GetAmayaDoc (buffer, NULL, 0, 0, CE_ABSOLUTE,
+			   FALSE, NULL, NULL, TtaGetDefaultCharset());
 	    }
 	  TtaFreeMemory (buffer);
 	}
@@ -1522,12 +1539,13 @@ void OpenCatalogue (Document doc, View view)
       sprintf (lib_path, "%s%cconfig%clibconfig%cdefault_cat.lhtml",
 	       app_home, DIR_SEP, DIR_SEP, DIR_SEP);
 
-      sprintf (LastURLName, "%s", lib_path);
-      
       /* load the Catalogue document */
       InNewWindow = TRUE;
       CurrentDocument = doc;
-      CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
+      GetAmayaDoc (lib_path, NULL,
+		   0, 0, CE_ABSOLUTE,
+		   FALSE, NULL, NULL,
+		   TtaGetDefaultCharset());
       TtaFreeMemory (lib_path);
     }
 #endif /* _SVGLIB */
@@ -1591,7 +1609,7 @@ void SaveSVGURL (Document doc, Element El)
   if (attrSearch)
     {
       length = TtaGetTextAttributeLength (attrSearch);
-      buffer = (char *) TtaGetMemory (length);
+      buffer = (char *) TtaGetMemory (length + 2);
       TtaGiveTextAttributeValue (attrSearch, buffer, &length);
       strcpy (buffermem, buffer);
       TtaFreeMemory (buffer);
@@ -1665,17 +1683,20 @@ void InitLibrary (void)
 
 /*----------------------------------------------------------------------
   GetURIId
+  this function allocates and returns Identifier of a URI if it exists
+                                      NULL if not
+  parameter: the xlink:href URI
   ----------------------------------------------------------------------*/
 char *GetURIId (char *href)
 {
-  char    *result = href;
+  char    *result = NULL;
 #ifdef _SVGLIB
   char    *ptrStr1;
   int      length;
 
-  if (result)
+  if (href)
     {
-      ptrStr1 = result;
+      ptrStr1 = href;
       while (*ptrStr1 != '#' && *ptrStr1 != EOS)
 	{
 	  ptrStr1++;
@@ -1688,7 +1709,7 @@ char *GetURIId (char *href)
 	  strcpy (result, ptrStr1);
 	}
       else
-	result = ptrStr1;
+	result = NULL;
     }
 #endif /* _SVGLIB */
   return result;
@@ -1758,12 +1779,12 @@ Element PasteLibraryGraphicElement (Element sourceEl, Document sourceDoc, int Me
   Document       destDoc;
   SSchema        docSchema, SvgSchema;
   Element        selEl, child, SvgRootEl, parent, sibling;
-  Element        LastInserted, firstSelEl, useEl, elFound;
+  Element        LastInserted, firstSelEl, useEl, elFound, curEl;
   ElementType    elType, selType;
   Attribute      attrSvgRoot, attrSvgUse, attrFound;
   AttributeType  attrTypeSvgRoot, attrTypeSvgUse;
   int            firstChar, lastChar, len;
-  char          *pathname, *buffer, *basename, *filename, *relativeURL;
+  char          *pathname, *buffer, *basename, *filename, *relativeURL = NULL;
   DisplayMode    dispMode;
   ThotBool	 found;
 
@@ -1934,21 +1955,32 @@ Element PasteLibraryGraphicElement (Element sourceEl, Document sourceDoc, int Me
   if (Method == CopySVGLibSelection)
     {
       TtaAskFirstCreation();
-      if (!sibling)
+      curEl = TtaGetFirstChild (sourceEl);
+      while (curEl)
 	{
-	  copiedElement = TtaCopyTree (sourceEl, sourceDoc, destDoc, parent);
-	  if (copiedElement)
+	  if (!sibling)
 	    {
-	      TtaInsertFirstChild (&copiedElement, parent, destDoc);
+	      copiedElement = TtaCopyTree (curEl, sourceDoc, destDoc, parent);
+	      if (copiedElement)
+		{
+		  TtaInsertFirstChild (&copiedElement, parent, destDoc);
+		  /* check that id attribute is unique */
+		  MakeUniqueName (copiedElement, destDoc);
+		  sibling = copiedElement;
+		}
 	    }
-	}
-      else
-	{
-	  copiedElement = TtaCopyTree (sourceEl, sourceDoc, destDoc, sibling);
-	  if (copiedElement)
+	  else
 	    {
-	      TtaInsertSibling (copiedElement, sibling, FALSE, destDoc);
+	      copiedElement = TtaCopyTree (curEl, sourceDoc, destDoc, sibling);
+	      if (copiedElement)
+		{
+		  TtaInsertSibling (copiedElement, sibling, FALSE, destDoc);
+		  /* check that id attribute is unique */
+		  MakeUniqueName (copiedElement, destDoc);
+		  sibling = copiedElement;
+		}
 	    }
+	  TtaNextSibling (&curEl);
 	}
     }
   else if (Method == ReferToSVGLibSelection)
@@ -1964,7 +1996,7 @@ Element PasteLibraryGraphicElement (Element sourceEl, Document sourceDoc, int Me
       /* modify url of the Library Document to adapt it to the edited document */
       pathname = (char *) TtaGetMemory (MAX_LENGTH);
       basename = (char *) TtaGetMemory (MAX_LENGTH);
-      relativeURL = (char *) TtaGetMemory (MAX_LENGTH);
+/*      relativeURL = (char *) TtaGetMemory (MAX_LENGTH);*/
       filename = (char *) TtaGetMemory (MAX_LENGTH);
       NormalizeURL (buffermem, sourceDoc, pathname, filename, NULL);
       NormalizeURL (filename, sourceDoc, pathname, basename, NULL);
@@ -1984,7 +2016,8 @@ Element PasteLibraryGraphicElement (Element sourceEl, Document sourceDoc, int Me
       copiedElement = useEl;
       TtaFreeMemory (pathname);
       TtaFreeMemory (basename);
-      TtaFreeMemory (relativeURL);
+      if (relativeURL)
+	TtaFreeMemory (relativeURL);
     }
   TtaSetDisplayMode (destDoc, dispMode);
  
@@ -2025,7 +2058,11 @@ void CopyOrReference (Document doc, View view)
   /* activates the Library Dialogue 1 */
   TtaShowDialogue (BaseLibrary+FormLibrary, TRUE);
 #else /* _WINDOWS */
-  CreatePasteLibraryModelDlgWnd (TtaGetViewFrame (doc, view));
+  if (!SVGLibHwnd)
+    /* only activate the menu if it isn't active already */
+    CreatePasteLibraryModelDlgWindow (TtaGetViewFrame (doc, view));
+  else
+     SetFocus (SVGLibHwnd);
 #endif /* _WINDOWS */
 #endif /* _SVGLIB */
 }
@@ -2035,22 +2072,60 @@ void CopyOrReference (Document doc, View view)
   CreatePNGofSVGSelected
   This function creates a PNG by using screenshot on svg selected elements
   ----------------------------------------------------------------------*/
-void CreatePNGofSVGFile (Document doc, char *pngurl)
+void CreatePNGofSVGFile (Document svgDoc, char *pngurl)
 {
 #ifdef _SVGLIB
-  unsigned char *screenshot;
-  int width, height;
+  unsigned char *screenshot = NULL;
 
-  width = height = 150;
-  /* Get SVG geometry size to initialize width and height */
-
-  screenshot = GetScreenshot (GetWindowNumber (doc, 1), 0, 0, width, height);
-
-  SavePng (pngurl, 
-	   screenshot,
-	   (unsigned int) width,
-	   (unsigned int) height);
+  if (svgDoc != 0)
+    {
+      /* Get SVG geometry size to initialize x, y, width and height */
+      /* Voir GetScreenshot dans thotlib/image/picture.c */
+      screenshot = GetScreenshot (GetWindowNumber (svgDoc, 1), pngurl);
+      if (screenshot)
+	TtaFreeMemory (screenshot);
+    }
 #endif /* _SVGLIB */
+}
+
+
+/*----------------------------------------------------------------------
+  GiveSVGXYWidthAndHeight
+  Gets x min, y min, width max and height max
+  ----------------------------------------------------------------------*/
+void   GiveSVGXYWidthAndHeight (Element el, Document svgDoc, View view,
+				int *x, int *y, int *width, int *height)
+{
+#ifdef _SVGLIB
+  Element      parent;
+  ElementType  elType;
+  /* Compare temporary value with static int */
+  int          x_tmp, y_tmp, width_tmp, height_tmp;
+
+  elType = TtaGetElementType (el);
+  elType.ElTypeNum = SVG_EL_SVG;
+  parent = TtaGetTypedAncestor (el, elType);
+
+  TtaGiveBoxPosition (parent, svgDoc, 1, UnPixel, &x_tmp, &y_tmp);
+  if (*x > x_tmp)
+    {
+      *x = x_tmp;
+    }
+  if (*y > y_tmp)
+    {
+      *y = y_tmp;
+    }
+
+  TtaGiveBoxSize (parent, svgDoc, 1, UnPixel, &width_tmp, &height_tmp);
+  if (*width < width_tmp)
+    {
+      *width = width_tmp;
+    }
+  if (*height < height_tmp)
+    {
+      *height = height_tmp;
+    }
+#endif _SVGLIB
 }
 
 /*----------------------------------------------------------------------
@@ -2058,101 +2133,224 @@ void CreatePNGofSVGFile (Document doc, char *pngurl)
   This function creates a SVG document by copying svg selected elements.
   Then opens it in a new window.
   Returns document number if operation succeed, 0 else if.
+  inspired from CreateDoctype in EDITORactions.c module
+            and InitDocAndView in init.c module
   ----------------------------------------------------------------------*/
-Document CreateNewSVGFileofSVGSelected ()
+Document CreateNewSVGFileofSVGSelected (char *url)
 {
   Document             newSVGDoc = 0;
 #ifdef _SVGLIB
   Document             selDoc;
   Element              firstSelEl, lastSelEl, currentEl, siblingEl, copiedEl;
-  Element              elFound, root, newEl, comment, leaf;
+  Element              elFound, root, newEl, comment, leaf, doctype;
   ElementType          elType;
   Attribute            newAttr;
   AttributeType        attrType;
-  char                 buffer[MAX_LENGTH];
+  char                 buffer[MAX_LENGTH], charsetName[MAX_LENGTH];
   int                  firstChar, lastChar, i, oldStructureChecking;
   Language             lang;
   View                 SVGView;
-
-  if (IsCurrentSelectionSVG()) /* we can create a new svg file */
+  
+  newSVGDoc = TtaInitDocument ("SVG", "tmp", 0);
+  if (newSVGDoc != 0)
     {
-      newSVGDoc = TtaInitDocument ("SVG", "tmp", 0);
-      if (newSVGDoc != 0)
+      TtaSetPSchema (newSVGDoc, "SVGP");
+      TtaSetDocumentCharset (newSVGDoc, ISO_8859_1);
+      oldStructureChecking = TtaGetStructureChecking (newSVGDoc);
+      TtaSetStructureChecking (0, newSVGDoc);
+
+      DocumentMeta[newSVGDoc] = DocumentMetaDataAlloc ();
+      DocumentMeta[newSVGDoc]->form_data = NULL;
+      DocumentMeta[newSVGDoc]->initial_url = NULL;
+      DocumentMeta[newSVGDoc]->method = CE_ABSOLUTE;
+      /* force the XML parsing */
+      DocumentMeta[newSVGDoc]->xmlformat = TRUE;
+
+      /* Set the document charset */
+      TtaSetDocumentCharset (newSVGDoc, ISO_8859_1);
+      strcpy (charsetName , "iso-8859-1");
+      DocumentMeta[newSVGDoc]->charset = TtaStrdup (charsetName);
+
+      root = TtaGetMainRoot (newSVGDoc);
+      elType = TtaGetElementType (root);
+
+     /* create the SVG DOCTYPE element */
+      elType.ElTypeNum = SVG_EL_DOCTYPE;
+      doctype = TtaSearchTypedElement (elType, SearchInTree, root);
+      if (doctype != NULL)
+	TtaDeleteTree (doctype, newSVGDoc);
+      CreateDoctype (newSVGDoc, L_SVG, FALSE, FALSE);
+
+      root = TtaGetRootElement (newSVGDoc);
+      elType.ElTypeNum = SVG_EL_XMLcomment;
+      comment = TtaNewTree (newSVGDoc, elType, "");
+      TtaSetStructureChecking (0, newSVGDoc);
+      TtaInsertSibling (comment, root, TRUE, newSVGDoc);
+      TtaSetStructureChecking (1, newSVGDoc);
+      strcpy (buffer, " Created by ");
+      strcat (buffer, HTAppName);
+      strcat (buffer, " ");
+      strcat (buffer, HTAppVersion);
+      strcat (buffer, ", see http://www.w3.org/Amaya/ ");
+      leaf = TtaGetFirstLeaf (comment);
+      lang = TtaGetLanguageIdFromScript('L');
+      TtaSetTextContent (leaf, buffer, lang, newSVGDoc);
+
+      TtaSetNotificationMode (newSVGDoc, 1);
+      TtaSetDocumentProfile (newSVGDoc, 0);
+
+      /* search the svg root element */
+      elType.ElTypeNum = SVG_EL_SVG;
+/*      elFound = TtaSearchTypedElement(elType, SearchForward, TtaGetMainRoot (newSVGDoc));*/
+      elFound = TtaGetRootElement (newSVGDoc);
+      if (elFound)
 	{
-	  TtaSetPSchema (newSVGDoc, "SVGP");
-	  oldStructureChecking = TtaGetStructureChecking (newSVGDoc);
-	  TtaSetStructureChecking (0, newSVGDoc);
+	  /* Copy all the svg selected elements in the current document */
+	  selDoc = TtaGetSelectedDocument();
+	  TtaGiveFirstSelectedElement (selDoc, &firstSelEl, &firstChar, &i);
+	  TtaGiveLastSelectedElement (selDoc, &lastSelEl, &i, &lastChar);
 	  
-	  root = TtaGetRootElement (newSVGDoc);
-	  elType = TtaGetElementType (root);
-	  elType.ElTypeNum = SVG_EL_XMLcomment;
-	  comment = TtaNewTree (newSVGDoc, elType, "");
+	  /* Insert a group element with unique Id */
+	  elType.ElTypeNum = SVG_EL_g;
+	  newEl = TtaNewElement (newSVGDoc, elType);
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  attrType.AttrTypeNum = SVG_ATTR_id;
+	  newAttr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (newEl, newAttr, newSVGDoc);
 	  TtaSetStructureChecking (0, newSVGDoc);
-	  TtaInsertSibling (comment, root, TRUE, newSVGDoc);
-	  TtaSetStructureChecking (1, newSVGDoc);
-	  strcpy (buffer, " Created by ");
-	  strcat (buffer, HTAppName);
-	  strcat (buffer, " ");
-	  strcat (buffer, HTAppVersion);
-	  strcat (buffer, ", see http://www.w3.org/Amaya/ ");
-	  leaf = TtaGetFirstLeaf (comment);
-	  lang = TtaGetLanguageIdFromScript('L');
-	  TtaSetTextContent (leaf, buffer, lang, newSVGDoc);
+	  TtaInsertFirstChild(&newEl, elFound, newSVGDoc);
+	  
+	  /* insert the copy of an element in the same order than selection */
+	  copiedEl = TtaCopyTree (firstSelEl, selDoc, newSVGDoc, newEl);
+	  TtaInsertFirstChild (&copiedEl, newEl, newSVGDoc);
+	  CheckSVGRoot (newSVGDoc, copiedEl);
 
-	  /* search the svg root element */
-	  elType.ElTypeNum = SVG_EL_Document;
-/*	  elFound = TtaSearchTypedElement(elType, SearchInTree, TtaGetRootElement(newSVGDoc));*/
-	  elFound = TtaGetRootElement (newSVGDoc);
-	  if (elFound)
+	  MakeStaticCopy (copiedEl, selDoc, newSVGDoc, url);
+
+	  GiveSVGXYWidthAndHeight (firstSelEl, selDoc, 1, &x_box, &y_box, &width_box, &height_box);
+
+	  currentEl = firstSelEl;
+	  siblingEl = copiedEl;
+	  TtaGiveNextSelectedElement (selDoc, &currentEl, &i, &i);
+	  while (currentEl)
 	    {
-	      /* Copy all the svg selected elements in the current document */
-	      selDoc = TtaGetSelectedDocument();
-	      TtaGiveFirstSelectedElement (selDoc, &firstSelEl, &firstChar, &i);
-	      TtaGiveLastSelectedElement (selDoc, &lastSelEl, &i, &lastChar);
-	      
-	      /* Insert a group element with unique Id */
-	      elType.ElTypeNum = SVG_EL_g;
-	      newEl = TtaNewElement (newSVGDoc, elType);
-	      attrType.AttrSSchema = elType.ElSSchema;
-	      attrType.AttrTypeNum = SVG_ATTR_id;
-	      newAttr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (newEl, newAttr, newSVGDoc);
-	      TtaSetStructureChecking (0, newSVGDoc);
-	      TtaInsertFirstChild(&newEl, elFound, newSVGDoc);
-
-	      /* insert the copy of an element in the same order than selection */
-	      copiedEl = TtaCopyTree (firstSelEl, selDoc, newSVGDoc, newEl);
-	      TtaInsertFirstChild (&copiedEl, newEl, newSVGDoc);
+	      copiedEl = TtaCopyTree (currentEl, selDoc, newSVGDoc, newEl);
+	      TtaInsertSibling (copiedEl, siblingEl, FALSE, newSVGDoc);
+	      /* check SVG root attribute width and height */
 	      CheckSVGRoot (newSVGDoc, copiedEl);
-	      currentEl = firstSelEl;
-	      siblingEl = copiedEl;
-	      TtaGiveNextSelectedElement (selDoc, &currentEl, &i, &i);
-	      while (currentEl)
+	      MakeStaticCopy (copiedEl, selDoc, newSVGDoc, url);
+	      GiveSVGXYWidthAndHeight (currentEl, selDoc, 1, &x_box, &y_box, &width_box, &height_box);
+
+	      if (currentEl == lastSelEl)
+		currentEl = NULL;
+	      else
 		{
-		  copiedEl = TtaCopyTree (currentEl, selDoc, newSVGDoc, newEl);
-		  TtaInsertSibling (copiedEl, siblingEl, FALSE, newSVGDoc);
-		  CheckSVGRoot (newSVGDoc, copiedEl);
-		  if (currentEl == lastSelEl)
-		    currentEl = NULL;
-		  else
-		    {
-		      siblingEl = copiedEl;
-		      TtaGiveNextSelectedElement (newSVGDoc, &currentEl, &i, &i);
-		    }
+		  siblingEl = copiedEl;
+		  TtaGiveNextSelectedElement (newSVGDoc, &currentEl, &i, &i);
 		}
-	      /* initialize id attribute text content of the groupe element*/
-	      TtaSetAttributeText (newAttr, "object", newEl, newSVGDoc);
-	      MakeUniqueName (newEl, newSVGDoc);
 	    }
-	  
-	  TtaSetStructureChecking (oldStructureChecking, newSVGDoc);
-	  /* get the width and height before opening the svg file */
-	  SVGView = TtaOpenMainView (newSVGDoc, 100/*x*/, 100/*y*/, 400/*w*/, 400/*h*/);
-	}
+	  /* initialize id attribute text content of the groupe element*/
+	  TtaSetAttributeText (newAttr, "object", newEl, newSVGDoc);
+	  MakeUniqueName (newEl, newSVGDoc);
+	}      
+      TtaSetStructureChecking ((ThotBool)oldStructureChecking, newSVGDoc);
+      /* get the width and height before opening the svg file */
+      /* A EFFECTUER */
+
+      SVGView = TtaOpenMainView (newSVGDoc, 0, 0, width_box - x_box, height_box - y_box);
+
     }
 #endif /* _SVGLIB */
   return newSVGDoc;
 }
+
+
+/*----------------------------------------------------------------------
+  MakeStaticCopy
+  parameters:
+  copiedEl: element to check (xlink href attribute)
+  selDoc: document where becomes the copied element
+  destDoc: document where is pasted the copied element
+  ----------------------------------------------------------------------*/
+void MakeStaticCopy (Element copiedEl, Document selDoc, Document destDoc,
+			                                    char *newurl)
+{
+#ifdef _SVGLIB
+  Element               elFound, child;
+  ElementType           elType;
+  Attribute             attrFound;
+  AttributeType         attrType;
+  char                 *uriid, *basename, *uri, *relativeURI, *pathname, *filename, *tempbuf;
+  int                   length;
+  ThotBool              stop = FALSE;
+
+  elType = TtaGetElementType (copiedEl);
+
+  /* replace use element by it's content definition*/
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = SVG_ATTR_xlink_href;
+  TtaSearchAttribute (attrType, SearchInTree, TtaGetParent (copiedEl), &elFound, &attrFound);
+  if (attrFound && (elFound == copiedEl || TtaIsAncestor (elFound, copiedEl)))
+    {
+      while (!stop && elFound)
+	{
+	  /* get the old href attribute */
+	  length = TtaGetTextAttributeLength (attrFound);
+	  tempbuf = (char *) TtaGetMemory (length + 2);
+	  TtaGiveTextAttributeValue (attrFound, tempbuf, &length);
+	  if (!IsW3Path (tempbuf))
+	    {
+	      uriid = GetURIId (tempbuf);
+	      basename = (char *) TtaGetMemory (MAX_LENGTH);
+	      filename = (char *) TtaGetMemory (MAX_LENGTH);
+	      pathname = (char *) TtaGetMemory (MAX_LENGTH);
+	      uri = (char *) TtaGetMemory (MAX_LENGTH);
+	      basename = GetBaseURL (selDoc);
+	      NormalizeURL (DocumentURLs[selDoc], selDoc, pathname, filename, NULL);
+	      /* A EFFECTUER make another test to know if elFound is a use element */
+	      if (uriid)
+		{/* it's a use element */
+		  /* replace use element by it's content definition */
+		  /* Copy what the use element refer from abstract tree*/
+		  /* + remove element use */
+		  child = TtaGetFirstChild (elFound);
+		  /* A EFFECTUER: continuer les tests sur les éléments symbol et defs */
+
+		  TtaRemoveTree (child, destDoc);
+		  TtaInsertSibling (child, elFound, TRUE, destDoc);
+		  TtaDeleteTree (elFound, destDoc);
+		  TtaFreeMemory (uriid);
+		}
+	      else
+		{/* it's an img element or any other else*/
+		  /* tempbuf contient l'url relative de l'image ou autre element 
+		     ainsi que le nom du fichier */
+		  sprintf (uri, "%s%s", basename, tempbuf);
+		  SimplifyUrl (&uri);
+		  relativeURI = MakeRelativeURL (uri, newurl);
+		  TtaSetAttributeText (attrFound, relativeURI, elFound, destDoc);
+		  TtaFreeMemory (tempbuf);
+		  if (relativeURI)
+		    TtaFreeMemory (relativeURI);
+		}
+	      TtaFreeMemory (basename);
+	      TtaFreeMemory (filename); 
+	      TtaFreeMemory (pathname);
+	      TtaFreeMemory (uri);
+	    }
+	  /* search next attribute */
+	  TtaSearchAttribute (attrType, SearchForward,
+			      elFound, &elFound, &attrFound);
+	  if (!TtaIsAncestor (elFound, copiedEl))
+	    {
+	      stop = TRUE;
+	    }
+	}
+    }
+  /* change the attribute text content */
+#endif /* -SVGLIB */
+}
+
 
 /*----------------------------------------------------------------------
   AddSVGModelIntoLibrary
@@ -2161,16 +2359,15 @@ Document CreateNewSVGFileofSVGSelected ()
   Parameters:
   libraryDoc : document to update if it's not a newLib file
   newLib : TRUE if it's a new library
-  !!!!!ne pas utiliser le titre pour ajouter les informations dans un
-  document mais préférer l'URI
-  libraryTitle : the Title
+  libraryTitle : Title of the new Library
   ----------------------------------------------------------------------*/
 void AddSVGModelIntoLibrary (Document libraryDoc, ThotBool newLib, char *libraryTitle)
 {
 #ifdef _SVGLIB
-  char      *newURL, *suffix, *libraryURL, *tmp;
-  ThotBool   ok;
+  char      *newURL, *suffix, *libraryURL, *tmp, *filename, *dirname;
+  ThotBool   repExist, ok = FALSE;
   Document   svgDoc, tmpDoc;
+  long int   i = 0;
 
   libraryURL = NULL;
   suffix = (char *) TtaGetMemory (10);
@@ -2179,14 +2376,14 @@ void AddSVGModelIntoLibrary (Document libraryDoc, ThotBool newLib, char *library
     {
       if (libraryDoc != 0)
 	{
-	  libraryURL = (char *) TtaGetMemory (strlen (DocumentURLs[libraryDoc]) + 1);
+	  libraryURL = (char *) TtaGetMemory (MAX_LENGTH);
 	  strcpy (libraryURL, DocumentURLs[libraryDoc]);
 	}
       else
 	{
 	  /* initialize string buffer */
 	  tmp = GetLibraryPathFromTitle (libraryTitle);
-	  libraryURL = (char *) TtaGetMemory (strlen (tmp) + 1);
+	  libraryURL = (char *) TtaGetMemory (MAX_LENGTH);
 	  strcpy (libraryURL, tmp);
 	  /* Open it */
 	  tmpDoc = TtaNewDocument ("HTML", "temp_library"); 
@@ -2199,24 +2396,49 @@ void AddSVGModelIntoLibrary (Document libraryDoc, ThotBool newLib, char *library
       libraryURL = (char *) TtaGetMemory (strlen (LastURLCatalogue) + 1);
       strcpy (libraryURL, LastURLCatalogue);
     }
+  /* Create library directory if it doesn't exist yet */
+  /* this directory will contain all svg and png file corresponding to the library */
+  ExtractLibraryPrefixFilename (libraryURL);
+  repExist = CreateLibraryDirectory (libraryURL);
+
+  if (repExist)
+    {
+      /* We save SVG file and PNG file into */
+      filename = (char *) TtaGetMemory (MAX_LENGTH);
+      dirname = (char *) TtaGetMemory (MAX_LENGTH);
+      TtaExtractName (libraryURL, dirname, filename);
+      sprintf (libraryURL, "%s%c%s", libraryURL, DIR_SEP, filename);
+      TtaFreeMemory (filename);
+      TtaFreeMemory (dirname);
+    }
+  /* else we save SVG file and PNG file in the same directory than library file */
+
   /* Create SVG file corresponding to the current selection*/
   strcpy (suffix, ".svg");
   newURL = MakeUniqueSuffixFilename (libraryURL, suffix);
-  svgDoc = CreateNewSVGFileofSVGSelected();
+
+  svgDoc = CreateNewSVGFileofSVGSelected(newURL);
   if (svgDoc)
     {
-      ok = TtaExportDocument (svgDoc, newURL, "SVGT");
+      SaveAsText = FALSE;
+      ok = TtaExportDocumentWithNewLineNumbers (svgDoc, newURL, "SVGT");
     }
-  
+
+  while (i < 1000000)
+    {
+      i++;
+    }
+
   /*  Create PNG file corresponding to the svg file */
-  ExtractSVGPrefixFilename (newURL);
+  ExtractLibraryPrefixFilename (newURL);
   strcat (newURL, ".png");
   CreatePNGofSVGFile (svgDoc, newURL);
-
+  
+  /* edit (update) library file */
   if (newLib)
     {
       libraryDoc = CreateNewLibraryFile (LastURLCatalogue, NewLibraryTitle);
-
+/*      ok = TtaExportDocumentWithNewLineNumbers (libraryDoc, LastURLCatalogue, "HTMLT");*/
     }
   addingModelIntoLibraryFile (libraryDoc, newURL);
 
@@ -2238,15 +2460,15 @@ void addingModelIntoLibraryFile (Document libDoc, char *newURL)
 {
 #ifdef _SVGLIB
   Element         imgEl, rootEl, rowEl, cellEl, anchorEl, table, newcellEl;
-  Element         insertedEl;
+  Element         insertedEl, textEl, testEl;
   ElementType     elType;
   Attribute       attr;
   AttributeType   attrType;
-  char           *relativeURL, *basename, *class;
+  char           *basename, *class, *relativeURL = NULL;
   int             oldStructureChecking;
 
   basename = (char *) TtaGetMemory (MAX_LENGTH);
-  relativeURL = (char *) TtaGetMemory (MAX_LENGTH);
+  /*  relativeURL = (char *) TtaGetMemory (MAX_LENGTH);*/
   class = (char *) TtaGetMemory (MAX_LENGTH);
 
   oldStructureChecking = TtaGetStructureChecking (libDoc);
@@ -2297,18 +2519,27 @@ void addingModelIntoLibraryFile (Document libDoc, char *newURL)
   else
     {
       elType.ElTypeNum = HTML_EL_Table_row;
-      insertedEl = TtaSearchTypedElement (elType, SearchInTree, rootEl);
+      /* search the last table row element */
+      /* 2 methods
+	 first one: search table body element and then take the lastchildelement
+	 second one: search the table row and then take the next sibling element*/
+      testEl = TtaSearchTypedElement (elType, SearchInTree, rootEl);
+      while (testEl != NULL)
+	{
+	  insertedEl = testEl;
+	  TtaNextSibling (&testEl);
+	}
       /* create a new table row element */
       elType.ElTypeNum = HTML_EL_Table_row;
       rowEl = TtaNewTree (libDoc, elType, "");
     }
-      TtaInsertSibling (rowEl, insertedEl, TRUE, libDoc);
-      TtaOpenUndoSequence (libDoc, rowEl, rowEl, 0, 0);
-
-      elType.ElTypeNum = HTML_EL_Table;
-      table = TtaSearchTypedElement (elType, SearchInTree, rootEl);
-      if (table)
-	CheckAllRows (table, libDoc, FALSE, FALSE);
+  TtaInsertSibling (rowEl, insertedEl, FALSE, libDoc);
+  TtaOpenUndoSequence (libDoc, rowEl, rowEl, 0, 0);
+  
+  elType.ElTypeNum = HTML_EL_Table;
+  table = TtaSearchTypedElement (elType, SearchInTree, rootEl);
+  if (table)
+    CheckAllRows (table, libDoc, FALSE, FALSE);
   
   /*
    * Edit the first column of the new row
@@ -2330,12 +2561,16 @@ void addingModelIntoLibraryFile (Document libDoc, char *newURL)
   if (attr != NULL)
     TtaAttachAttribute (anchorEl, attr, libDoc);
   /* newURL must be a svg URL */
-  ExtractSVGPrefixFilename (newURL);
+  ExtractLibraryPrefixFilename (newURL);
+  /* écrire fonction de récupération de l'id créé lors de CreateSVGFileofSVGSelected 
+     A EFFECTUER*/
   strcat (newURL, ".svg#object");
   basename = GetBaseURL (libDoc);
   relativeURL = MakeRelativeURL (newURL, basename);
   TtaSetAttributeText (attr, relativeURL, anchorEl, libDoc);
-  
+  if (relativeURL)
+    TtaFreeMemory (relativeURL);
+
   /* create an image element */
   elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
   imgEl = TtaNewTree (libDoc, elType, "");
@@ -2345,10 +2580,12 @@ void addingModelIntoLibraryFile (Document libDoc, char *newURL)
   attr = TtaNewAttribute (attrType);
   if (attr != NULL)
     TtaAttachAttribute (imgEl, attr, libDoc);
-  ExtractSVGPrefixFilename (newURL);
+  ExtractLibraryPrefixFilename (newURL);
   strcat (newURL, ".png");
   relativeURL = MakeRelativeURL (newURL, basename);
   TtaSetAttributeText (attr, relativeURL, imgEl, libDoc);
+  if (relativeURL)
+    TtaFreeMemory (relativeURL);
   /* initialize image "class" attribute */
   attrType.AttrTypeNum = HTML_ATTR_Class;
   attr = TtaNewAttribute (attrType);
@@ -2370,7 +2607,13 @@ void addingModelIntoLibraryFile (Document libDoc, char *newURL)
 	TtaAttachAttribute (cellEl, attr, libDoc);
       strcpy (class, "g_title");
       TtaSetAttributeText (attr, class, cellEl, libDoc);
+      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+      textEl = TtaNewTree (libDoc, elType, "");
+      TtaInsertFirstChild (&textEl, cellEl, libDoc);
+      TtaSetTextContent (textEl, "Title", TtaGetDefaultLanguage (), libDoc);
     }
+  /* let selection on it */
+  TtaSelectElement (libDoc, textEl);
 
   /*
    * Edit the third column of the new row
@@ -2385,6 +2628,10 @@ void addingModelIntoLibraryFile (Document libDoc, char *newURL)
 	TtaAttachAttribute (cellEl, attr, libDoc);
       strcpy (class, "g_comment");
       TtaSetAttributeText (attr, class, cellEl, libDoc);
+      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+      textEl = TtaNewTree (libDoc, elType, "");
+      TtaInsertFirstChild (&textEl, cellEl, libDoc);
+      TtaSetTextContent (textEl, "Comment", TtaGetDefaultLanguage (), libDoc);
     }
 
   /* set stop button */
@@ -2394,8 +2641,8 @@ void addingModelIntoLibraryFile (Document libDoc, char *newURL)
 
   /* Free memory */  
   TtaFreeMemory (basename);
-  TtaFreeMemory (relativeURL);
-  
+  TtaFreeMemory (class);  
+
   TtaSetStructureChecking (oldStructureChecking, libDoc);
   TtaCloseUndoSequence (libDoc);
   TtaSetDocumentModified (libDoc);
@@ -2406,16 +2653,13 @@ void addingModelIntoLibraryFile (Document libDoc, char *newURL)
 /*----------------------------------------------------------------------
   CreateLibraryDirectory
   this function creates a Directory linked to the library path.
-  A effectuer (pour l'instant on place les fichiers SVG et PNG
-  dans le meme repertoire que le fichier *.lhtml
   ----------------------------------------------------------------------*/
-ThotBool CreateLibraryDirectory (char *libraryurl)
+ThotBool CreateLibraryDirectory (char *libDirectory)
 {
   ThotBool    RepCreated = FALSE;
 #ifdef _SVGLIB
-
-  ExtractSVGPrefixFilename (libraryurl);
-  RepCreated = CheckMakeDirectory (libraryurl, FALSE);
+  ExtractLibraryPrefixFilename (libDirectory);
+  RepCreated = CheckMakeDirectory (libDirectory, TRUE);
 #endif /* _SVGLIB */
   return RepCreated;
 }
@@ -2439,7 +2683,7 @@ char *MakeUniqueSuffixFilename (char * libraryURL, char *suffix)
 
   TtaExtractName (libraryURL, dirname, filename);
   strcpy (pathname, dirname);
-  ExtractSVGPrefixFilename (filename);
+  ExtractLibraryPrefixFilename (filename);
   sprintf (pathname, "%s%c%s%s", pathname, DIR_SEP, filename, suffix);
   while (TtaFileExist (pathname))
     {
@@ -2455,11 +2699,11 @@ char *MakeUniqueSuffixFilename (char * libraryURL, char *suffix)
 
 
 /*----------------------------------------------------------------------
-  ExtractSVGPrefixFilename
+  ExtractLibraryPrefixFilename
   This function extracts the prefix file name by removing the suffix.
-  A renommer ExtractPrefixFilename
+  Parameter : URL with filename
   ----------------------------------------------------------------------*/
-void ExtractSVGPrefixFilename (char *filename)
+void ExtractLibraryPrefixFilename (char *filename)
 {
 #ifdef _SVGLIB
   char   *ptrStr, *oldptrStr;
@@ -2509,7 +2753,7 @@ ThotBool WriteInterSessionLibraryFileManager ()
 	{
 	  if(curList->customLibrary)
 	    {
-	      /* it's a custom Library, add it to lib_files.dat */
+	      /* it's a custom Library, add it to APP_HOME/lib_files.dat */
 	      strcpy (urlstring, curList->URI);
 	      fprintf (libfile, "%s%c", urlstring, EOL);
 	    }
@@ -2521,6 +2765,98 @@ ThotBool WriteInterSessionLibraryFileManager ()
   TtaFreeMemory (urlstring);
 #endif /* _SVGLIB */
   return succeed;
+}
+
+
+/*----------------------------------------------------------------------
+  SearchGraphicalObjectByTitle
+  A EFFECTUER
+  Function that search e graphical object by title.
+  If it exists, return titles of the libraries where it appears.
+  (It may be several libraries)
+  ----------------------------------------------------------------------*/
+void SearchGraphicalObjectByTitle (char *GraphicalObjectTitle)
+{
+#ifdef _SVGLIB
+  ListUriTitle      *curList = HeaderListUriTitle;
+  Document           libDoc, res;
+  Element            goTitle, root, rowEl;
+  ElementType        elType;
+  char              *title;
+  ThotBool           goFound = FALSE;
+  int                length;
+  Language           lang;
+
+  lang = TtaGetDefaultLanguage ();
+
+  while (curList && !goFound)
+    {
+      /* open curList library (Cf Makebook) and look after graphical object title */
+      libDoc = TtaNewDocument("HTML", "tmp");
+      res = GetAmayaDoc (curList->URI, NULL, libDoc, 0, CE_MAKEBOOK,
+			 FALSE, NULL, NULL, TtaGetDefaultCharset ());
+      if (res)
+	{
+	  root = TtaGetRootElement (res);
+	  elType = TtaGetElementType (root);
+	  elType.ElTypeNum = HTML_EL_Table_row;
+	  rowEl = TtaSearchTypedElement (elType, SearchForward, root);
+	  /* search on class attribute */
+/*	  attrType.AttrSSchema = elType.ElSSchema;
+	  attrType.AttrTypeNum = HTML_ATTR_Class;*/
+	  while (rowEl && !goFound)
+	    {
+	      goTitle = TtaGetFirstChild (rowEl);
+	      TtaNextSibling (&goTitle);
+	      length = TtaGetTextLength (goTitle);
+	      title = (char *) TtaGetMemory (length + 1);
+	      TtaGiveTextContent (goTitle, title, &length, &lang);
+	      if (!strcmp (GraphicalObjectTitle, title))
+		{
+		  goFound = TRUE;
+		}
+	      rowEl = TtaSearchTypedElement (elType, SearchForward, rowEl);
+	    }
+	  /* free memory only if it's not a loaded document */
+/*	  FreeDocumentResource (res);
+	  TtaCloseDocument (res);*/
+	}
+      curList = curList->next;
+    }
+  if (goFound)
+    {
+      /* open it */
+
+    }
+#endif /* _SVGLIB */
+}
+
+/*----------------------------------------------------------------------
+  RemoveLibraryModel
+  A EFFECTUER
+  this function removes a library model
+  Parameters: the deleted document and the deleted element
+  ----------------------------------------------------------------------*/
+void RemoveLibraryModel (Document deletedDoc, Element deletedEl)
+{
+#ifdef _SVGLIB
+  Element        rowEl;
+  ElementType    elType;
+
+  elType = TtaGetElementType (deletedEl);
+  TtaOpenUndoSequence (deletedDoc, NULL, NULL, 0, 0);
+  if (elType.ElTypeNum == HTML_EL_Table_row)
+    {
+      /* we only have to remove deletedEl */
+      TtaRegisterElementDelete (deletedEl, deletedDoc);
+      TtaRemoveTree (deletedEl, deletedDoc);
+    }
+  else
+    {
+      /* find it */
+    }
+  TtaCloseUndoSequence(deletedDoc);
+#endif /* _SVGLIB */
 }
 
 
@@ -2548,5 +2884,54 @@ void SwitchIconLibrary (Document doc, View view, ThotBool state)
     TtaChangeButton (doc, view, LibSVGButton, (ThotIcon)iconLibsvg, state);
   else
     TtaChangeButton (doc, view, LibSVGButton, (ThotIcon)iconLibsvgNo, state);
+#endif /* _SVGLIB */
+}
+
+
+/*----------------------------------------------------------------------
+   OpenLibraryCallback
+   The Address text field in a document window has been modified by the user
+   Load the corresponding document in that window.
+  ----------------------------------------------------------------------*/
+void OpenLibraryCallback (Document doc, View view, char *text)
+{
+#ifdef _SVGLIB
+  ListUriTitle      *curList = HeaderListUriTitle;
+  char              *url = NULL;
+  ThotBool           change;
+
+  change = FALSE;
+  if (text)
+    {
+      /* remove any trailing '\n' chars that may have gotten there
+	 after a cut and paste */
+      change = RemoveNewLines (text);
+
+      if (HeaderListUriTitle)
+	{
+	  while (curList)
+	    {
+	      if (strcmp (text, curList->Title) == 0)
+		{
+		  url = TtaGetMemory (strlen (curList->URI) + 1);
+		  strcpy (url, curList->URI);
+		  break;
+		}
+	      else
+		curList = curList->next;
+	    }
+	}
+      if (url == NULL)
+	return;
+      else
+	{
+	  InNewWindow = FALSE;
+	  CurrentDocument = doc;
+	  GetAmayaDoc (url, NULL, CurrentDocument,
+		       CurrentDocument, CE_ABSOLUTE, TRUE,
+		       NULL, NULL, TtaGetDefaultCharset ());
+	  TtaFreeMemory (url);
+	}
+    }
 #endif /* _SVGLIB */
 }

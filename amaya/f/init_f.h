@@ -207,6 +207,7 @@ extern void CloseDocument ( Document doc,
                             View view );
 extern void AmayaClose ( Document document,
                          View view );
+extern char *InitStringForCombobox ( void );
 
 #else /* __STDC__ */
 
@@ -411,6 +412,7 @@ extern void CloseDocument (/* Document doc,
                               View view */);
 extern void AmayaClose (/* Document document,
                            View view */);
+extern char *InitStringForCombobox (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

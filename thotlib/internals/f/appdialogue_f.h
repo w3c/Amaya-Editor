@@ -68,7 +68,7 @@ extern int TtaAddTextZone ( Document doc,
                             char *label,
                             ThotBool editable,
                             void (*procedure) (),
-                            char *string );
+                            char *listUrl );
 extern void TtaSetTextZone ( Document doc,
                              View view,
                              int index,
@@ -189,7 +189,7 @@ extern int TtaAddTextZone (/* Document doc,
                               char *label,
                               ThotBool editable,
                               void (*procedure) (),
-                              char *string */);
+                              char *listUrl */);
 extern void TtaSetTextZone (/* Document doc,
                                View view,
                                int index,

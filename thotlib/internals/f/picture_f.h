@@ -37,10 +37,7 @@ extern void GetPictureHandlersList ( int *count,
 extern void LittleXBigEndian ( unsigned char *b,
                                long n );
 extern unsigned char *GetScreenshot ( int frame,
-                                      int x,
-                                      int y,
-                                      int width,
-                                      int height );
+                                      char *pngurl );
 
 #else /* __STDC__ */
 
@@ -75,10 +72,7 @@ extern void GetPictureHandlersList (/* int *count,
 extern void LittleXBigEndian (/* unsigned char *b,
                                  long n */);
 extern unsigned char *GetScreenshot (/* int frame,
-                                        int x,
-                                        int y,
-                                        int width,
-                                        int height */);
+                                        char *pngurl */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

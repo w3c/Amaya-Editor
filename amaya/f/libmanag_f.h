@@ -7,6 +7,7 @@
 #ifdef __STDC__
 
 extern ThotBool IsCurrentSelectionSVG ( void );
+extern ThotBool IsCurrentSelectionContainsUseElement ( void );
 extern void CopySvgInformationTree ( Document doc,
                                      View view );
 extern void CallbackLibrary ( int ref,
@@ -50,28 +51,46 @@ extern Element PasteLibraryGraphicElement ( Element sourceEl,
                                             int Method );
 extern void CopyOrReference ( Document doc,
                               View view );
-extern void CreatePNGofSVGFile ( Document doc,
+extern void CreatePNGofSVGFile ( Document svgDoc,
                                  char *pngurl );
-extern Document CreateNewSVGFileofSVGSelected ( void );
+extern void GiveSVGXYWidthAndHeight ( Element el,
+                                      Document svgDoc,
+                                      View view,
+                                      int *x,
+                                      int *y,
+                                      int *width,
+                                      int *height );
+extern Document CreateNewSVGFileofSVGSelected ( char *url );
+extern void MakeStaticCopy ( Element copiedEl,
+                             Document selDoc,
+                             Document destDoc,
+                             char *newurl );
 extern void AddSVGModelIntoLibrary ( Document libraryDoc,
                                      ThotBool newLib,
                                      char *libraryTitle );
 extern void addingModelIntoLibraryFile ( Document libDoc,
                                          char *newURL );
-extern ThotBool CreateLibraryDirectory ( char *libraryurl );
+extern ThotBool CreateLibraryDirectory ( char *libDirectory );
 extern char *MakeUniqueSuffixFilename ( char * libraryURL,
                                         char *suffix );
-extern void ExtractSVGPrefixFilename ( char *filename );
+extern void ExtractLibraryPrefixFilename ( char *filename );
 extern ThotBool WriteInterSessionLibraryFileManager ( void );
+extern void SearchGraphicalObjectByTitle ( char *GraphicalObjectTitle );
+extern void RemoveLibraryModel ( Document deletedDoc,
+                                 Element deletedEl );
 extern void AddLibraryButton ( Document doc,
                                View view );
 extern void SwitchIconLibrary ( Document doc,
                                 View view,
                                 ThotBool state );
+extern void OpenLibraryCallback ( Document doc,
+                                  View view,
+                                  char *text );
 
 #else /* __STDC__ */
 
 extern ThotBool IsCurrentSelectionSVG (/* void */);
+extern ThotBool IsCurrentSelectionContainsUseElement (/* void */);
 extern void CopySvgInformationTree (/* Document doc,
                                        View view */);
 extern void CallbackLibrary (/* int ref,
@@ -115,24 +134,41 @@ extern Element PasteLibraryGraphicElement (/* Element sourceEl,
                                               int Method */);
 extern void CopyOrReference (/* Document doc,
                                 View view */);
-extern void CreatePNGofSVGFile (/* Document doc,
+extern void CreatePNGofSVGFile (/* Document svgDoc,
                                    char *pngurl */);
-extern Document CreateNewSVGFileofSVGSelected (/* void */);
+extern void GiveSVGXYWidthAndHeight (/* Element el,
+                                        Document svgDoc,
+                                        View view,
+                                        int *x,
+                                        int *y,
+                                        int *width,
+                                        int *height */);
+extern Document CreateNewSVGFileofSVGSelected (/* char *url */);
+extern void MakeStaticCopy (/* Element copiedEl,
+                               Document selDoc,
+                               Document destDoc,
+                               char *newurl */);
 extern void AddSVGModelIntoLibrary (/* Document libraryDoc,
                                        ThotBool newLib,
                                        char *libraryTitle */);
 extern void addingModelIntoLibraryFile (/* Document libDoc,
                                            char *newURL */);
-extern ThotBool CreateLibraryDirectory (/* char *libraryurl */);
+extern ThotBool CreateLibraryDirectory (/* char *libDirectory */);
 extern char *MakeUniqueSuffixFilename (/* char * libraryURL,
                                           char *suffix */);
-extern void ExtractSVGPrefixFilename (/* char *filename */);
+extern void ExtractLibraryPrefixFilename (/* char *filename */);
 extern ThotBool WriteInterSessionLibraryFileManager (/* void */);
+extern void SearchGraphicalObjectByTitle (/* char *GraphicalObjectTitle */);
+extern void RemoveLibraryModel (/* Document deletedDoc,
+                                   Element deletedEl */);
 extern void AddLibraryButton (/* Document doc,
                                  View view */);
 extern void SwitchIconLibrary (/* Document doc,
                                   View view,
                                   ThotBool state */);
+extern void OpenLibraryCallback (/* Document doc,
+                                    View view,
+                                    char *text */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -120,7 +120,7 @@ extern void TtaChangeButton (Document document, View view, int index, ThotIcon p
    procedure: procedure to be executed when the new entry is changed by the
    user.
   ----------------------------------------------------------------------*/
-extern int TtaAddTextZone (Document document, View view, char *label, ThotBool editable, void (*procedure) (), char *string);
+extern int TtaAddTextZone (Document document, View view, char *label, ThotBool editable, void (*procedure) (), char *listUrl);
 
 /*----------------------------------------------------------------------
    TtaSetTextZone

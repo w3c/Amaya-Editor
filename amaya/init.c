@@ -1505,11 +1505,6 @@ static void         TextURL (Document doc, View view, char *text)
       if (!CanReplaceCurrentDocument (doc, view))
 	{
 	  /* restore the previous value @@ */
-#ifdef _SVGLIB
-	  if (DocumentTypes[doc] == docLibrary)
-	    TtaSetTextZone (doc, view, 1, GetLibraryTitleFromPath (DocumentURLs[doc]));
-	  else
-#endif /* _SVGLIB */
 	  TtaSetTextZone (doc, view, 1, DocumentURLs[doc]);
 	  /* cannot load the new document */
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), text);
@@ -2274,7 +2269,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
   Document      old_doc;
   Element       root, comment, leaf;
   ElementType   elType;
-  char         *tmp, buffer[MAX_LENGTH], *string;
+  char         *tmp, buffer[MAX_LENGTH], *string = NULL;
   int           x, y, w, h;
   int           requested_doc;
   Language	lang;
@@ -2527,16 +2522,16 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   if (docType == docLibrary)
 	     {
 #ifdef _SVGLIB
-	       /* Initialize SVG Library Buffer string */
-	       string = InitSVGBufferForComboBox ();
-/*	       list_url = InitSVGLibraryListURL();*/
-#else /* _SVGLIB */
-	       string = NULL;
+	       if (InNewWindow == TRUE)
+		 {
+		   /* Initialize SVG Library Buffer string */
+		   string = InitSVGBufferForComboBox ();
+		   TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
+				   FALSE, OpenLibraryCallback, string);
+		 }
 #endif /* _SVGLIB */
-	       TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-			       TRUE, TextURL, string);
-	       TtaFreeMemory (string);
-	       string = NULL;
+	       if (string)
+		 TtaFreeMemory (string);
 	     }
 	   else
 	     TtcSwitchCommands (doc, 1); /* no command open */
@@ -2669,9 +2664,11 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	     }
 	   else
 	     {
-	       string = NULL;
+	       string = InitStringForCombobox ();
 	       TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
 			       TRUE, TextURL, string);
+	       if (string)
+		 TtaFreeMemory (string);
 	       /* turn off the assign annotation buttons (should be
 		  contextual */
 	       TtaSetItemOff (doc, 1, Annotations_, BReplyToAnnotation);
@@ -7278,4 +7275,41 @@ void AmayaClose (Document document, View view)
 	    return;
 	}
    TtaQuit ();
+}
+
+
+/*----------------------------------------------------------------------
+  InitStringForCombobox
+  Initializes a string for a list box in a combobox
+  ----------------------------------------------------------------------*/
+char *InitStringForCombobox()
+{
+  char   *buffer = NULL;
+  char   *url_home, *urlstring, *app_home;
+  FILE   *urlfile;
+
+  /* Initialize string by reading a file in APPHOME 
+		  .amaya/list_url.dat */
+  url_home = (char *) TtaGetMemory (MAX_LENGTH);
+  urlstring = (char *) TtaGetMemory (MAX_LENGTH);
+  buffer = (char *) TtaGetMemory (MAX_LENGTH);
+  
+  /* Read list_url.dat into APP_HOME directory */
+  app_home = TtaGetEnvString ("APP_HOME");
+  sprintf (url_home, "%s%clist_url.dat", app_home, DIR_SEP); 
+  /* ./.amaya/list_url.dat */
+  urlfile = TtaReadOpen (url_home);
+  if (urlfile)
+    {
+      while (fscanf (urlfile, "%s", urlstring) > 0)
+	{
+	  strcat (buffer, urlstring);
+	  if (urlstring != EOL)
+	    sprintf (buffer, "%s%c", buffer, EOL);
+	}
+      TtaReadClose (urlfile);
+    }
+  TtaFreeMemory (url_home);
+  TtaFreeMemory (urlstring);
+  return buffer;
 }

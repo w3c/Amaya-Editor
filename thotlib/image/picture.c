@@ -2582,16 +2582,20 @@ void LittleXBigEndian (register unsigned char *b, register long n)
   GetScreenshot makes a screenshot of Amaya drawing area
   this function allocates and returns the screenshot
   ----------------------------------------------------------------------*/
-unsigned char *GetScreenshot (int frame, int x, int y, int width, int height)
+unsigned char *GetScreenshot (int frame, char *pngurl)
 {
   unsigned char   *screenshot = NULL;
 #ifdef _GTK
   GdkImage        *View;
   unsigned char   *pixel, inter;
   int              k, cpt1, cpt2, line, line2, mi_h, NbOctetsPerLine, i = 0;
+  int              widthb, heightb;
 
+  TtaHandlePendingEvents ();
+  widthb = (FrameTable[frame].WdFrame)->allocation.width;
+  heightb = (FrameTable[frame].WdFrame)->allocation.height;
+  View = gdk_image_get (FrRef[frame], 0, 0, widthb, heightb);
 
-  View = gdk_image_get ((FrameTable[frame].WdFrame)->window, x, y, width, height);
   pixel = (unsigned char *) View->mem;
   k = 4 * View->width * View->height - 4;
   /* change BGRA in RGBA */
@@ -2628,6 +2632,12 @@ unsigned char *GetScreenshot (int frame, int x, int y, int width, int height)
   screenshot = (unsigned char *) TtaGetMemory (k + 4);
   memcpy (screenshot, View->mem, k + 4);
   gdk_image_destroy (View);
+
+  SavePng (pngurl,
+	   screenshot,
+	   (unsigned int) widthb,
+	   (unsigned int) heightb);
+
 #endif /* _GTK */
   return screenshot;
 }
