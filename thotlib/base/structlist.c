@@ -547,46 +547,46 @@ void CountNodes (PtrElement pNode, FILE *fileDescriptor, int level)
 }
 
 /*----------------------------------------------------------------------
-   wrRef ecrit une reference.                                     
+  wrRef ecrit une reference.                                     
   ----------------------------------------------------------------------*/
 static void wrRef (PtrReference pRef, FILE *fileDescriptor)
 {
-   PtrReferredDescr pDe1;
-   Name             N;
+  PtrReferredDescr pDe1;
+  Name             N;
 
-   switch (pRef->RdTypeRef)
-	 {
-	    case RefFollow:
-	       fprintf (fileDescriptor, "Renvoi");
-	       break;
-	    case RefInclusion:
-	       fprintf (fileDescriptor, "Inclusion");
-	       break;
-	    default:
-	       fprintf (fileDescriptor, "RdTypeRef ????");
-	       break;
-	 }
-
-   if (pRef->RdInternalRef)
-      fprintf (fileDescriptor, " interne ");
-   else
-      fprintf (fileDescriptor, " externe ");
-   if (pRef->RdReferred == NULL)
-      fprintf (fileDescriptor, "*RdReferred=NULL*");
-   else
-     {
-	pDe1 = pRef->RdReferred;
-	if (pDe1->ReExternalRef)
-	  {
-	     fprintf (fileDescriptor, "%s(", pDe1->ReReferredLabel);
-	     GetDocName (pDe1->ReExtDocument, N);
-	     fprintf (fileDescriptor, "%s)", N);
-	  }
-	else if (pDe1->ReReferredElem == NULL)
-	   fprintf (fileDescriptor, "ReReferredElem=NULL, ReReferredLabel=%s", pDe1->ReReferredLabel);
-	else
-	   fprintf (fileDescriptor, "%s", pDe1->ReReferredElem->ElLabel);
-     }
+  if (pRef->RdInternalRef)
+    fprintf (fileDescriptor, " internal ");
+  else
+    fprintf (fileDescriptor, " external ");
+  switch (pRef->RdTypeRef)
+    {
+    case RefFollow:
+      fprintf (fileDescriptor, "reference");
+      break;
+    case RefInclusion:
+      fprintf (fileDescriptor, "transclusion");
+      break;
+    default:
+      fprintf (fileDescriptor, "RdTypeRef????");
+      break;
+    }
+  if (pRef->RdReferred == NULL)
+    fprintf (fileDescriptor, "*RdReferred=NULL*");
+  else
+    {
+      pDe1 = pRef->RdReferred;
+      if (pDe1->ReExternalRef)
+	{
+	  fprintf (fileDescriptor, "%s(", pDe1->ReReferredLabel);
+	  GetDocName (pDe1->ReExtDocument, N);
+	  fprintf (fileDescriptor, "%s)", N);
+	}
+      else if (pDe1->ReReferredElem == NULL)
+	fprintf (fileDescriptor, "ReReferredElem=NULL, ReReferredLabel=%s",
+		 pDe1->ReReferredLabel);
+      else
+	fprintf (fileDescriptor, "%s", pDe1->ReReferredElem->ElLabel);
+    }
 }
 
 /*----------------------------------------------------------------------
