@@ -2319,7 +2319,7 @@ static unsigned char *HandleXMLstring (unsigned char *data, int *length,
 		  if (found && entityValue <= 255)
 		    /* store the ISO latin1 character */
 		    buffer[j++] = entityValue;
-#endif /* _I18N_ */s
+#endif /* _I18N_ */
 		  else if (found && element)
 		    {
 		      if (stdText)

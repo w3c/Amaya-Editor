@@ -281,14 +281,22 @@ int CharacterWidth (unsigned char c, PtrFont font)
   if (font == NULL)
     return 0;
   else if (c == INVISIBLE_CHAR)
-    return 0;
+    return 1;
+
+  if (c == START_ENTITY)
+    c = '&';
+  else if (c == TAB || c == UNBREAKABLE_SPACE)
+    /* we use the SPACE width for the character TAB */
+    c = SPACE;
+
 #if !defined(_WINDOWS) && !defined(_GTK)
-  else if (xf->per_char == NULL)
-    l = xf->max_bounds.width;
+  if (xf->per_char == NULL)
+    return xf->max_bounds.width;
   else if (c < xf->min_char_or_byte2)
-    l = 0;
+    return 0;
 #endif /* !defined(_WINDOWS) && !defined(_GTK) */
-  else if (c == NEW_LINE || c == BREAK_LINE)
+
+  if (c == NEW_LINE || c == BREAK_LINE)
     /* characters NEW_LINE and BREAK_LINE are equivalent */
     l = 1;
   else if (c == THIN_SPACE)
@@ -321,12 +329,6 @@ int CharacterWidth (unsigned char c, PtrFont font)
 #endif  /* _WINDOWS */
   else
     {
-      if (c == START_ENTITY)
-	c = '&';
-      else if (c == TAB || c == UNBREAKABLE_SPACE)
-	/* we use the SPACE width for the character TAB */
-	c = SPACE;
-
 #ifdef _WINDOWS
       l = font->FiWidths[c];
 #else  /* _WINDOWS */
@@ -367,16 +369,16 @@ int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
   PtrFont         font;
   unsigned char   car;
 
+  if (c == 0x200D ||
+      c == 0x200E /* lrm */ || c == 0x200F /* rlm */ ||
+      c == 0x202A /* lre */ || c == 0x202B /* rle */ ||
+      c == 0x202D /* lro */ || c == 0x202E /* rlo */ ||
+      c == 0x202C /* pdf */ || c == 0x2061 /* ApplyFunction */ ||
+      c == 0x2062 /* InvisibleTimes */)
+    return 1;
   car = GetFontAndIndexFromSpec (c, specfont, &font);
   if (font == NULL)
     return 6;
-  else if (c == 0x200D ||
-	   c == 0x200E /* lrm */ || c == 0x200F /* rlm */ ||
-	   c == 0x202A /* lre */ || c == 0x202B /* rle */ ||
-	   c == 0x202D /* lro */ || c == 0x202E /* rlo */ ||
-	   c == 0x202C /* pdf */ || c == 0x2061 /* ApplyFunction */ ||
-	   c == 0x2062 /* InvisibleTimes */)
-    return 0;
   else
     return CharacterWidth (car, font);
 #else /* _I18N_ */

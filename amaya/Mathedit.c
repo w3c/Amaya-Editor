@@ -218,7 +218,7 @@ static Element SplitTextInMathML (Document doc, Element el, int index,
   /* get the parent element (MO, MN, MI or MTEXT) */
   parent = TtaGetParent (el);
 
-  len = TtaGetTextLength (el);
+  len = TtaGetElementVolume (el);
   /* if it's a mchar, mglyph or an entity, don't split it */
   elType = TtaGetElementType (parent);
   if (elType.ElTypeNum == MathML_EL_MGLYPH)
@@ -740,7 +740,7 @@ static void         CreateMathConstruct (int construct)
       if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
 	/* the first selected element is a character string */
 	{
-	  len = TtaGetTextLength (sibling);
+	  len = TtaGetElementVolume (sibling);
 	  if (c1 > len)
 	    /* the caret is at the end of that character string */
 	    {
@@ -749,7 +749,7 @@ static void         CreateMathConstruct (int construct)
 	      if (next)
 		/* there is another character string after that one.
 		   split the enclosing mo, mn, mi or mtext */
-		sibling = SplitTextInMathML (doc, sibling, c1,&registered);
+		sibling = SplitTextInMathML (doc, sibling, c1, &registered);
 	      else
 		/* create the new element after the character string */
 		before = FALSE;
@@ -765,7 +765,7 @@ static void         CreateMathConstruct (int construct)
       ok = FALSE;
       if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && c1 > 1)
 	{
-	  len = TtaGetTextLength (sibling);
+	  len = TtaGetElementVolume (sibling);
 	  if (c1 > len)
 	    /* the caret is at the end of that character string */
 	    {
@@ -1824,8 +1824,8 @@ static void CreateCharStringElement (int typeNum, Document doc)
 	      Split it, as well as its parent (mtext, mi, mo, mn) */
 	   {
 	   if (lastChar == 0 && (firstChar == 0 || firstSel != lastSel))
-	      lastChar = TtaGetTextLength (lastSel);
-	   el = SplitTextInMathML (doc, lastSel, lastChar+1, &mrowCreated);
+	      lastChar = TtaGetElementVolume (lastSel);
+	   el = SplitTextInMathML (doc, lastSel, lastChar + 1, &mrowCreated);
 	   } 
 	 else if (elType.ElTypeNum == MathML_EL_MGLYPH)
 	   {
@@ -1949,7 +1949,7 @@ void CreateMSPACE (Document document, View view)
 /*----------------------------------------------------------------------
    A new element has been selected. Synchronize selection in source view.      
   ----------------------------------------------------------------------*/
-void                MathSelectionChanged (NotifyElement * event)
+void MathSelectionChanged (NotifyElement * event)
 {
    SynchronizeSourceView (event);
 }
@@ -2048,12 +2048,16 @@ static ThotBool MathMoveForward ()
   if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
     /* the caret is in a character string */
     {
-      len = TtaGetTextLength (el);
+      len = TtaGetElementVolume (el);
       if (lastChar < len)
 	/* the caret is not at the end of the string, move it to the
 	   next character in the string */
 	{
-	TtaSelectString (doc, el, lastChar+2, lastChar+1);
+	  if (lastChar < firstChar)
+	    /* a caret */
+	    TtaSelectString (doc, el, firstChar + 1, firstChar);
+	  else
+	    TtaSelectString (doc, el, lastChar + 1, lastChar);
 	done = TRUE;
 	}
     }
@@ -2141,7 +2145,7 @@ static ThotBool MathMoveBackward ()
 	/* the caret is not at the beginning of the string. Move it to
 	   the previous character in the string */
 	{
-	TtaSelectString (doc, el, firstChar-1, firstChar-2);
+	TtaSelectString (doc, el, firstChar - 1, firstChar - 2);
 	done = TRUE;
 	}
     }
@@ -2183,8 +2187,8 @@ static ThotBool MathMoveBackward ()
 			  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
 			    /* put the caret at the end of the string */
 			    {
-			      len = TtaGetTextLength (leaf);
-			      TtaSelectString (doc, leaf, len+1, len);
+			      len = TtaGetElementVolume (leaf);
+			      TtaSelectString (doc, leaf, len + 1, len);
 			    }
 			  else
 			    /* select the whole leaf */
@@ -2314,7 +2318,7 @@ static void MergeMathEl (Element el, Element el2, ThotBool before,
      else
         {
         TtaInsertSibling (textEl2, prevEl, FALSE, doc);
-        len = TtaGetTextLength (prevEl);
+        len = TtaGetElementVolume (prevEl);
 	if (TtaMergeText (prevEl, doc))
 	   {
 	   if (*newSelEl == textEl2)
@@ -2334,7 +2338,7 @@ static void MergeMathEl (Element el, Element el2, ThotBool before,
      TtaNextSibling (&nEl);
      if (nEl)
         {
-	len = TtaGetTextLength (prevEl);
+	len = TtaGetElementVolume (prevEl);
         if (TtaMergeText (prevEl, doc))
 	   if (*newSelEl == nEl)
 	      {
@@ -2414,7 +2418,7 @@ static Element ClosestLeaf (Element el, int* pos)
       if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
 	{
 	if (prev != NULL)
-	   *pos = TtaGetTextLength (leaf) + 1;
+	   *pos = TtaGetElementVolume (leaf) + 1;
 	else
 	   *pos = 1;
 	}
@@ -2478,7 +2482,6 @@ static void SeparateFunctionNames (Element *firstEl, Element lastEl,
 	      if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
 		{
 		  leafSplit = FALSE;
-		  len = TtaGetTextLength (textEl);
 		  /* get the content of this text leaf and analyze it */
 		  len = BUFLEN - 1;
 		  TtaGiveTextContent (textEl, text, &len, &lang);
@@ -3248,7 +3251,7 @@ static void InsertMathEntity (unsigned char *entityName, Document document)
 	sibling = parent;
       if (firstChar > 1)
 	{
-	  len = TtaGetTextLength (firstSel);
+	  len = TtaGetElementVolume (firstSel);
 	  if (firstChar > len)
 	    /* the caret is at the end of that character string */
 	    /* Create the new element after the character string */
@@ -3279,8 +3282,8 @@ static void InsertMathEntity (unsigned char *entityName, Document document)
   strcat (buffer, ";");
   TtaSetAttributeText (attr, buffer, el, document);
   SetContentAfterEntity (entityName, el, document);
-  len = TtaGetTextLength (el);
-  TtaSelectString (document, el, len+1, len);
+  len = TtaGetElementVolume (el);
+  TtaSelectString (document, el, len + 1, len);
   ParseMathString (el, TtaGetParent (el), document);
   TtaSetDocumentModified (document);
   TtaCloseUndoSequence (document);
@@ -3594,7 +3597,7 @@ void MathStringModified (NotifyOnTarget *event)
 void NewMathString (NotifyElement *event)
 {
    RemoveAttr (event->element, event->document, MathML_ATTR_EntityName);
-   if (TtaGetTextLength (event->element) > 0)
+   if (TtaGetElementVolume (event->element) > 0)
       ParseMathString (event->element, TtaGetParent (event->element),
 		       event->document);
 }
@@ -3777,8 +3780,8 @@ void DeleteMColumn (Document document, View view)
 		   if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
 		     if (selBefore)
 		        {
-			len = TtaGetTextLength (leaf);
-		        TtaSelectString (document, leaf, len+1, len);
+			len = TtaGetElementVolume (leaf);
+		        TtaSelectString (document, leaf, len + 1, len);
 			}
 		     else
 		        TtaSelectString (document, leaf, 1, 0);

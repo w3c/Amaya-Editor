@@ -1063,8 +1063,6 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	      x += lg;
 	      car = GetFontAndIndexFromSpec (adbuff->BuContent[indbuff],
 					     font, &nextfont);
-	      if (car == INVISIBLE_CHAR)
-		lg = 0;
 	      if (car == SPACE)
 		{
 		  lg = lgspace;

@@ -1387,7 +1387,7 @@ RULES
    C_Space:
 	BEGIN
 	Width: 0;
-	Height: 0;
+	{Height: 0;}
 	HorizRef: * . Bottom;
 	IN Structure_view 
 		Visibility: 0;

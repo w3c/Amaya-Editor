@@ -1483,7 +1483,7 @@ void SelectString (PtrDocument pDoc, PtrElement pEl, int firstChar, int lastChar
       return;
    /* by default it's a string, not a position within a string */
    string = TRUE;
-   if (firstChar == lastChar+1)
+   if (firstChar > lastChar)
       /* it's a position */
       string = FALSE;
    SelectStringOrPosition (pDoc, pEl, firstChar, lastChar, string);

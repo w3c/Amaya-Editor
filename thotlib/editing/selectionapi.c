@@ -230,7 +230,7 @@ void TtaExtendSelection (Document document, Element element, int lastCharacter)
 	to TtaAddElementToSelection and by the last call to TtaSelectElement.
    element: the element to be added to the current selection
   ----------------------------------------------------------------------*/
-void      TtaAddElementToSelection (Document document, Element element)
+void TtaAddElementToSelection (Document document, Element element)
 {
    PtrDocument         pDoc;
    PtrElement          firstSelection, lastSelection;
@@ -379,16 +379,21 @@ void  TtaGiveFirstSelectedElement (Document document, Element *selectedElement,
    else
       /* Parameter document is correct */
      {
-       ok = GetCurrentSelection (&pDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
+       ok = GetCurrentSelection (&pDoc, &firstSelection, &lastSelection,
+				 &firstChar, &lastChar);
        if (ok)
 	 if (pDoc == LoadedDocument[document - 1])
 	   {
 	     *selectedElement = (Element) firstSelection;
 	     *firstCharacter = firstChar;
 	     if (lastSelection == firstSelection)
-	       if (lastChar > 1)
+	       {
+	       if (lastChar > firstChar)
 		 *lastCharacter = lastChar - 1;
-	     if (firstChar != 0 && lastChar == 0)
+	       else
+		 *lastCharacter = lastChar;
+	       }
+	     else if (firstChar != 0 && lastChar == 0)
 	       *lastCharacter = firstSelection->ElVolume;
 	   }
      }
@@ -433,7 +438,8 @@ void  TtaGiveNextSelectedElement (Document document, Element *selectedElement,
    else
       /* Parameter document is correct */
      {
-	ok = GetCurrentSelection (&pDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
+	ok = GetCurrentSelection (&pDoc, &firstSelection, &lastSelection,
+				  &firstChar, &lastChar);
 	if (!ok)
 	   *selectedElement = NULL;
 	else if (pDoc != LoadedDocument[document - 1])
@@ -520,7 +526,8 @@ void   TtaGiveLastSelectedElement (Document document, Element *selectedElement,
    else
       /* Parameter document is correct */
      {
-       ok = GetCurrentSelection (&pDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
+       ok = GetCurrentSelection (&pDoc, &firstSelection, &lastSelection,
+				 &firstChar, &lastChar);
        if (ok)
 	 if (pDoc == LoadedDocument[document - 1])
 	   {
@@ -528,11 +535,15 @@ void   TtaGiveLastSelectedElement (Document document, Element *selectedElement,
 	     if (lastSelection == firstSelection)
 	       {
 		 *firstCharacter = firstChar;
-		 if (lastChar > 1)
+		 if (lastChar > firstChar)
 		   *lastCharacter = lastChar - 1;
+		 else
+		   *lastCharacter = lastChar;
 	       }
-	     if (lastChar > 0)
+	     else if (lastChar > 0)
 	       *lastCharacter = lastChar - 1;
 	   }
      }
 }
+
+

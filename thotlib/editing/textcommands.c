@@ -234,7 +234,7 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
 		    /* add the last char in the left selection */
 		    nChars = pBox->BxFirstChar + nChars;
 		  else
-		    nChars = pBox->BxFirstChar + nChars + 1;
+		    nChars = pBox->BxFirstChar + nChars;
 	       }
 	     /* Change the selection */
 	     if (extendSel)
@@ -420,7 +420,7 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
        switch (code)
 	 {
 	 case 1:	/* Backward one character (<-) */
-	   if (pBox != NULL)
+	   if (pBox)
 	     {
 	     done = FALSE;
 	     pEl = pBox->BxAbstractBox->AbElement;
