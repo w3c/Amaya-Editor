@@ -38,7 +38,7 @@ extern void TtaRaiseView ( Document document,
 extern ThotWidget TtaGetViewFrame ( Document document,
                                     View view );
 extern void DisplaySelMessage ( char *text,
-				PtrDocument pDoc );
+                                PtrDocument pDoc );
 extern void TtaSetStatus ( Document document,
                            View view,
                            CONST char *text,
@@ -111,7 +111,7 @@ extern void TtaRaiseView (/* Document document,
 extern ThotWidget TtaGetViewFrame (/* Document document,
                                       View view */);
 extern void DisplaySelMessage (/* char *text,
-				  PtrDocument pDoc */);
+                                  PtrDocument pDoc */);
 extern void TtaSetStatus (/* Document document,
                              View view,
                              CONST char *text,

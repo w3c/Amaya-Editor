@@ -11,9 +11,15 @@ extern TypeTree RestNextEffNode ( TypeTree tree,
 extern Element RestCreateDescent ( Element ancestor,
                                    TypeTree ancestTree,
                                    TypeTree descendTree,
+                                   TypeTree recOrigTree,
+                                   TypeTree recDestTree,
                                    Document doc );
 extern TypeTree RestTarget ( TypeTree source,
                              Restruct restr );
+extern TypeTree RestSourceRec ( TypeTree source,
+                                Restruct restr );
+extern TypeTree RestDestRec ( TypeTree source,
+                              Restruct restr );
 extern boolean RestChangeOnPlace ( Document doc,
                                    Restruct restruct );
 extern boolean RestChangeToType ( Document sourceDoc,
@@ -29,9 +35,15 @@ extern TypeTree RestNextEffNode (/* TypeTree tree,
 extern Element RestCreateDescent (/* Element ancestor,
                                      TypeTree ancestTree,
                                      TypeTree descendTree,
+                                     TypeTree recOrigTree,
+                                     TypeTree recDestTree,
                                      Document doc */);
 extern TypeTree RestTarget (/* TypeTree source,
                                Restruct restr */);
+extern TypeTree RestSourceRec (/* TypeTree source,
+                                  Restruct restr */);
+extern TypeTree RestDestRec (/* TypeTree source,
+                                Restruct restr */);
 extern boolean RestChangeOnPlace (/* Document doc,
                                      Restruct restruct */);
 extern boolean RestChangeToType (/* Document sourceDoc,

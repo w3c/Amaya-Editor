@@ -964,7 +964,7 @@ int                 keyboard;
   PtrAttribute        pHeritAttr;
   PtrElement          pElAttr;  
   ViewSelection      *pViewSel;
-  Language            language;
+  Language            language, plang;
   int                 index;
   boolean             cut;
   boolean             notification;
@@ -972,12 +972,14 @@ int                 keyboard;
 
   pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
   notification = FALSE;
+  pSelAb = *pAb;
+  plang = pSelAb->AbLanguage;
   if (keyboard == -1)
-    if ((*pAb)->AbLanguage < TtaGetFirstUserLanguage())
+    if (plang < TtaGetFirstUserLanguage())
       /* le contenu du pave a ete saisi par palette */
       /* et on a saisi au clavier : recherche la langue dans les ancetres */
       {
-	pHeritAttr = GetTypedAttrAncestor ((*pAb)->AbElement->ElParent, 1, NULL, &pElAttr); 
+	pHeritAttr = GetTypedAttrAncestor (pSelAb->AbElement->ElParent, 1, NULL, &pElAttr); 
 	if (pHeritAttr != NULL)
 	  if (pHeritAttr->AeAttrText != NULL)
 	    {
@@ -986,24 +988,24 @@ int                 keyboard;
 	    }
       }
     else
-      language = (*pAb)->AbLanguage;
+      language = plang;
   else if (keyboard == 2)
     /* une langue latine saisie */
-    if (TtaGetAlphabet ((*pAb)->AbLanguage) == 'L')
-      language = (*pAb)->AbLanguage;
+    if (TtaGetAlphabet (plang) == 'L')
+      language = plang;
     else
       language = TtaGetLanguageIdFromAlphabet ('L');
   else if (keyboard == 3)
     /* une langue greque saisie */
-    if (TtaGetAlphabet ((*pAb)->AbLanguage) == 'G')
-      language = (*pAb)->AbLanguage;
+    if (TtaGetAlphabet (plang) == 'G')
+      language = plang;
     else
       language = TtaGetLanguageIdFromAlphabet ('G');
   else
     language = 0;
-  
-  if ((*pAb)->AbLeafType == LtText)
-    if ((*pAb)->AbLanguage != language)
+
+  if (pSelAb->AbLeafType == LtText)
+    if (plang != language && plang != 0)
       {
 	notification = CloseTextInsertionWithControl ();
 	if (!notification)
@@ -1016,7 +1018,7 @@ int                 keyboard;
 		index = pBox->BxIndChar + pViewSel->VsIndBox + 1;
 		if (index <= 1)
 		  {
-		    pSelAb = (*pAb)->AbPrevious;
+		    pSelAb = pSelAb->AbPrevious;
 		    if (pSelAb != NULL)
 		      if (pSelAb->AbLeafType == LtText && pSelAb->AbLanguage == language && pSelAb->AbCanBeModified)
 			{

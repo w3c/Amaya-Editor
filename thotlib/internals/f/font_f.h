@@ -26,7 +26,7 @@ extern int FontBase ( ptrfont font );
 extern int FontRelSize ( int size );
 extern int FontPointSize ( int size );
 extern ptrfont LoadFont ( char name[100],
-			  int toPatch);
+                          int toPatch );
 extern void FontIdentifier ( char alphabet,
                              char family,
                              int highlight,
@@ -70,7 +70,7 @@ extern int FontBase (/* ptrfont font */);
 extern int FontRelSize (/* int size */);
 extern int FontPointSize (/* int size */);
 extern ptrfont LoadFont (/* char name[100],
-			    int toPatch */);
+                            int toPatch */);
 extern void FontIdentifier (/* char alphabet,
                                char family,
                                int highlight,

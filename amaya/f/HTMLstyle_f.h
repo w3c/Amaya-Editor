@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern char CSSparser ( Document doc,
-			boolean *CSSparsing );
+                        boolean *CSSparsing );
 extern char *SkipBlanks ( char *ptr );
 extern boolean IsBlank ( char *ptr );
 extern char *SkipProperty ( char *ptr );
@@ -34,11 +34,11 @@ extern void ParseCSSBackgroundImageCallback ( Document doc,
                                               Element el,
                                               char *file,
                                               void *extra );
-extern char *UpdateCSSBackgroundImage (char *oldpath,
-				       char *newpath,
-				       char *imgpath,
-				       char *styleString);
-extern char *GetCSSBackgroundURL (char *styleString);
+extern char *UpdateCSSBackgroundImage ( char *oldpath,
+                                        char *newpath,
+                                        char *imgpath,
+                                        char *styleString );
+extern char *GetCSSBackgroundURL ( char *styleString );
 extern void ParseStyleDeclaration ( Element el,
                                     char *cssRule,
                                     Document doc,
@@ -90,7 +90,7 @@ extern void HTMLResetAvisitedColor ( Document doc );
 #else /* __STDC__ */
 
 extern char CSSparser (/* Document doc,
-			  boolean *CSSparsing */);
+                          boolean *CSSparsing */);
 extern char *SkipBlanks (/* char *ptr */);
 extern boolean IsBlank (/* char *ptr */);
 extern char *SkipProperty (/* char *ptr */);
@@ -118,9 +118,9 @@ extern void ParseCSSBackgroundImageCallback (/* Document doc,
                                                 char *file,
                                                 void *extra */);
 extern char *UpdateCSSBackgroundImage (/* char *oldpath,
-					  char *newpath,
-					  char *imgpath,
-					  char *styleString */);
+                                          char *newpath,
+                                          char *imgpath,
+                                          char *styleString */);
 extern char *GetCSSBackgroundURL (/* char *styleString */);
 extern void ParseStyleDeclaration (/* Element el,
                                       char *cssRule,

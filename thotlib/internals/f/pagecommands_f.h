@@ -26,7 +26,7 @@ extern boolean KillAbsBoxBeforePage ( PtrAbstractBox pPage,
                                       int frame,
                                       PtrDocument pDoc,
                                       int viewNb,
-				      int *clipOrg);
+                                      int *clipOrg );
 
 #else /* __STDC__ */
 
@@ -50,7 +50,7 @@ extern boolean KillAbsBoxBeforePage (/* PtrAbstractBox pPage,
                                         int frame,
                                         PtrDocument pDoc,
                                         int viewNb,
-					int *clipOrg */);
+                                        int *clipOrg */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

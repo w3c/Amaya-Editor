@@ -237,9 +237,9 @@ int                 ErrorNumber;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBitmap          JpegCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable * mask1)
+ThotBitmap          JpegCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap *mask1, int *width, int *height)
 #else  /* __STDC__ */
-ThotBitmap          JpegCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
+ThotBitmap          JpegCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1, width, height)
 char               *fn;
 PictureScaling      pres;
 int                *xif;
@@ -248,7 +248,8 @@ int                *wif;
 int                *hif;
 unsigned long       BackGroundPixel;
 ThotBitmap         *mask1;
-
+int                *width;
+int                *height;
 #endif /* __STDC__ */
 {
   int                 w, h;
@@ -256,11 +257,19 @@ ThotBitmap         *mask1;
   ThotColorStruct     colrs[256];
   unsigned char      *buffer,*buffer2;
 
+# ifdef _WINDOWS
+  bgRed   = -1;
+  bgGreen = -1;
+  bgBlue  = -1;
+# endif /* _WINDOWS */
+
   /* effective load of the Picture from Jpeg Library */
   buffer = ReadJpegToData (fn, &w, &h, colrs);
-
+  /* return image dimensions */
+  *width = w;
+  *height = h;
   if (!buffer)
-	 return ThotBitmapNone;
+    return (ThotBitmapNone);
 
   if (*xif == 0 && *yif != 0)
     *xif = w;
@@ -277,18 +286,19 @@ ThotBitmap         *mask1;
       h = *yif;
     }
   
+  if (buffer == NULL)
+    return (ThotBitmapNone);	
   pixmap = DataToPixmap (buffer, w, h, 100, colrs);
-  
   TtaFreeMemory (buffer);  
   if (pixmap == None)
-    return ThotBitmapNone;
+    return (ThotBitmapNone);
   else
     {
       *wif = w;
       *hif = h;
       *xif = 0;
       *yif = 0;
-      return (ThotBitmap) pixmap;
+      return ((ThotBitmap) pixmap);
     }
 }
 

@@ -28,6 +28,8 @@ extern boolean StoreDocument ( PtrDocument pDoc,
                                boolean move );
 extern boolean WriteDocument ( PtrDocument pDoc,
                                int mode );
+extern void BackupAll ( void );
+extern void BackupOnFatalErrorLoadResources ( void );
 
 #else /* __STDC__ */
 
@@ -53,6 +55,8 @@ extern boolean StoreDocument (/* PtrDocument pDoc,
                                  boolean move */);
 extern boolean WriteDocument (/* PtrDocument pDoc,
                                  int mode */);
+extern void BackupAll (/* void */);
+extern void BackupOnFatalErrorLoadResources (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -9,7 +9,7 @@
 extern char *AsciiTranslate ( char *pBuffer );
 extern int TtaGetMessageTable ( CONST char *msgName,
                                 int msgNumber );
-extern void FreeAllMessages ();
+extern void FreeAllMessages ( void );
 extern char *TtaGetMessage ( int origin,
                              int num );
 extern void TtaDisplayMessage ( int msgType,
@@ -25,7 +25,7 @@ extern void DisplayPivotMessage ( char *code );
 extern char *AsciiTranslate (/* char *pBuffer */);
 extern int TtaGetMessageTable (/* CONST char *msgName,
                                   int msgNumber */);
-extern void FreeAllMessages ();
+extern void FreeAllMessages (/* void */);
 extern char *TtaGetMessage (/* int origin,
                                int num */);
 extern void TtaDisplayMessage (/* int msgType,

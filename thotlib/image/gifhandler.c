@@ -1462,9 +1462,9 @@ ThotColorStruct     colrs[256];
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBitmap          GifCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap * mask1)
+ThotBitmap          GifCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap * mask1, int *width, int *height)
 #else  /* __STDC__ */
-ThotBitmap          GifCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
+ThotBitmap          GifCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1, width, height)
 char               *fn;
 PictureScaling      pres;
 int                *xif;
@@ -1473,7 +1473,8 @@ int                *wif;
 int                *hif;
 unsigned long       BackGroundPixel;
 ThotBitmap         *mask1;
-
+int                *width;
+int                *height;
 #endif /* __STDC__ */
 {
   int                 w, h;
@@ -1495,54 +1496,54 @@ ThotBitmap         *mask1;
 # endif /* _WINDOWS */
 
   buffer = ReadGifToData (fn, &w, &h, &ncolors, &cpp, colrs);
-
+  /* return image dimensions */
+  *width = w;
+  *height = h;
   if (buffer == NULL)
-     return ThotBitmapNone;
+     return (ThotBitmapNone);
 
   if (*xif == 0 && *yif != 0)
     *xif = w;
   if (*xif != 0 && *yif == 0)
     *yif = h;
   if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif))
-      {   
-	  /* xif and yif contain width and height of the box */
-	  
-	  if ((*xif * *yif) > 4000000 ) {
-	      ratio = 4000000 / (*xif * *yif);
-	      *xif = ratio * *xif;
-	      *yif = ratio * *yif;
-	  }
-	  buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
-	  TtaFreeMemory (buffer);
-	  buffer = buffer2;
-	  buffer2 = NULL;
-	  w = *xif;
-	  h = *yif;
-      }
-
+    {
+      /* xif and yif contain width and height of the box */	  
+      if ((*xif * *yif) > 4000000 )
+	{
+	  ratio = 4000000 / (*xif * *yif);
+	  *xif = ratio * *xif;
+	  *yif = ratio * *yif;
+	}
+      buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
+      TtaFreeMemory (buffer);
+      buffer = buffer2;
+      buffer2 = NULL;
+      w = *xif;
+      h = *yif;
+    }
   
   if (buffer == NULL)
-      return ThotBitmapNone;
-	
-   if (Gif89.transparent != -1)
-     {
-       if (Gif89.transparent < 0)
-	 i = 256 + Gif89.transparent;
-       else
-	 i = Gif89.transparent;
-#      ifndef _WINDOWS
-       *mask1 = MakeMask (TtDisplay, buffer, w, h, i);
-#      else  /* _WINDOWS */
-       bgRed   = colrs[i].red;
-	   bgGreen = colrs[i].green;
-	   bgBlue  = colrs[i].blue;
-#      endif /* _WINDOWS */
-     }
-
+    return (ThotBitmapNone);	
+  if (Gif89.transparent != -1)
+    {
+      if (Gif89.transparent < 0)
+	i = 256 + Gif89.transparent;
+      else
+	i = Gif89.transparent;
+#     ifndef _WINDOWS
+      *mask1 = MakeMask (TtDisplay, buffer, w, h, i);
+#     else  /* _WINDOWS */
+      bgRed   = colrs[i].red;
+      bgGreen = colrs[i].green;
+      bgBlue  = colrs[i].blue;
+#     endif /* _WINDOWS */
+    }
+  
    pixmap = DataToPixmap (buffer, w, h, ncolors, colrs);
    TtaFreeMemory (buffer);
    if (pixmap == None)
-     return ThotBitmapNone;
+     return (ThotBitmapNone);
    else
      {
        *wif = w;

@@ -414,8 +414,8 @@ int                *height;
      }
    else
      {
-	*width = picture->PicWArea;
-	*height = picture->PicHArea;
+	*width = picture->PicWidth;
+	*height = picture->PicHeight;
      }
 }
 
@@ -2633,9 +2633,11 @@ int                 frame;
 			    {
 			      pBlock = SearchEnclosingType (pAb, BoBlock);
 			      if (pBlock != NULL)
-				RecomputeLines (pBlock, NULL, NULL, frame);
-			      /* we will have to pack enclosing box */
-			      RecordEnclosing (pBlock->AbBox, FALSE);
+				{
+				  RecomputeLines (pBlock, NULL, NULL, frame);
+				  /* we will have to pack enclosing box */
+				  RecordEnclosing (pBlock->AbBox, FALSE);
+				}
 			    }
 			  (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
 			}

@@ -39,7 +39,7 @@ extern void PrintOnePage ( PtrDocument pDoc,
                            PtrAbstractBox pPageAb,
                            PtrAbstractBox pNextPageAb,
                            int view,
-			   int clipOrg,
+                           int clipOrg,
                            boolean assoc );
 extern void DisplayConfirmMessage ( char *text );
 extern void DisplayMessage ( char *text,
@@ -84,7 +84,7 @@ extern void PrintOnePage (/* PtrDocument pDoc,
                              PtrAbstractBox pPageAb,
                              PtrAbstractBox pNextPageAb,
                              int view,
-			     int clipOrg,
+                             int clipOrg,
                              boolean assoc */);
 extern void DisplayConfirmMessage (/* char *text */);
 extern void DisplayMessage (/* char *text,

@@ -145,6 +145,8 @@ int                 imagetype;
       image->PicYArea = 0;
       image->PicWArea = 0;
       image->PicHArea = 0;
+      image->PicWidth = 0;
+      image->PicHeight = 0;
       image->mapped = FALSE;
       image->created = FALSE;
     }
@@ -193,6 +195,8 @@ int                *Imdsource;
    imagec->PicYArea = images->PicYArea;
    imagec->PicWArea = images->PicWArea;
    imagec->PicHArea = images->PicHArea;
+   imagec->PicWidth = images->PicWidth;
+   imagec->PicHeight = images->PicHeight;
    imagec->PicPresent = images->PicPresent;
    imagec->PicType = images->PicType;
 }

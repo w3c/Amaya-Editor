@@ -1735,6 +1735,9 @@ unsigned char      *msg;
       if (docURL != NULL)
 	 {
 	 fprintf (stderr, "*** Errors in %s\n", docURL);
+#ifndef STANDALONE
+	 TtaFreeMemory (docURL);
+#endif /* STANDALONE */
 	 docURL = NULL;
 	 }
       /* print the line number and character number before the message */

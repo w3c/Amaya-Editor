@@ -404,9 +404,9 @@ PictInfo           *imageDesc;
 
 #endif /* __STDC__ */
 {
-   if (((imageDesc->PicWArea == 0) && (imageDesc->PicHArea == 0)) ||
-       ((imageDesc->PicWArea > MAX_PICT_SIZE) ||
-	(imageDesc->PicHArea > MAX_PICT_SIZE)))
+   if ((imageDesc->PicWArea == 0 && imageDesc->PicHArea == 0) ||
+       (imageDesc->PicWArea > MAX_PICT_SIZE ||
+	imageDesc->PicHArea > MAX_PICT_SIZE))
      {
 	*picWArea = wFrame;
 	*picHArea = hFrame;
@@ -659,7 +659,7 @@ PictInfo           *imageDesc;
           
           y = 0;
 
-		  do {
+	  do {
              x = 0;
              do {
                 if (!BitBlt (hMemDC, x, y, imageDesc->PicWArea, imageDesc->PicHArea, hOrigDC, 0, 0, SRCCOPY))
@@ -1397,7 +1397,7 @@ int            bperpix;
       TtaFreeMemory (cxarr);
     }
   
-  return (char *) epic;
+  return (epic);
 }
 
 
@@ -1419,6 +1419,7 @@ PictInfo           *imageDesc;
    int                 xFrame = 0;
    int                 yFrame = 0;
    int                 wFrame, hFrame, w, h;
+   int                 width, height;
    Drawable            picMask = None;
    Drawable            myDrawable = None;
    Picture_Report      status;
@@ -1452,8 +1453,8 @@ PictInfo           *imageDesc;
 #      ifdef _WINDOWS
        imageDesc->PicType = 3;
        pres = RealSize;
-       myDrawable = (*(PictureHandlerTable [3].
-			       Produce_Picture)) (LostPicturePath, pres, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask);
+       myDrawable = (*(PictureHandlerTable [GIF_FORMAT].
+		       Produce_Picture)) (LostPicturePath, pres, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask);
 #      else  /* !_WINDOWS */
        myDrawable = PictureLogo;
 #      endif /* _WINDOWS */
@@ -1482,34 +1483,30 @@ PictInfo           *imageDesc;
 
        if (!Printing)
 	 {
+#          ifndef _WINDOWS
 	   if (box != NULL)
 	     /* set the colors of the  graphic context GC */
 	     if (TtWDepth == 1)
 	       {
 		 /* Black and white screen */
-#                ifndef _WINDOWS
 		 XSetForeground (TtDisplay, TtGraphicGC, Black_Color);
 		 XSetBackground (TtDisplay, TtGraphicGC, ColorPixel (BackgroundColor[frame]));
-#                endif /* _WINDOWS */
 	       }
 	     else if (box->BxAbstractBox->AbSensitive && !box->BxAbstractBox->AbPresentationBox)
 	       {
 		 /* Set active Box Color */
-#                ifndef _WINDOWS
 		 XSetForeground (TtDisplay, TtGraphicGC, Box_Color);
 		 XSetForeground (TtDisplay, GCpicture, Box_Color);
 		 XSetBackground (TtDisplay, TtGraphicGC, ColorPixel (box->BxAbstractBox->AbBackground));
-#                endif /* _WINDOWS */
 	       }
 	     else
 	       {
 		 /* Set Box Color */
-#                ifndef _WINDOWS
 		 XSetForeground (TtDisplay, TtGraphicGC, ColorPixel (box->BxAbstractBox->AbForeground));
 		 XSetForeground (TtDisplay, GCpicture, ColorPixel (box->BxAbstractBox->AbForeground));
 		 XSetBackground (TtDisplay, TtGraphicGC, ColorPixel (box->BxAbstractBox->AbBackground));
-#                endif /* _WINDOWS */
 	       }
+#          endif /* _WINDOWS */
 	 }
 
        Bgcolor = ColorPixel (box->BxAbstractBox->AbBackground);
@@ -1542,12 +1539,15 @@ PictInfo           *imageDesc;
 		     yFrame = box->BxHeight;
 		 }
 	       myDrawable = (*(PictureHandlerTable[typeImage].
-			       Produce_Picture)) (fileName, pres, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask);
-#          ifdef _WINDOWS
-           imageDesc->bgRed   = bgRed;
-		   imageDesc->bgGreen = bgGreen;
-		   imageDesc->bgBlue  = bgBlue;
-#          endif /* _WINDOWS */
+			       Produce_Picture)) (fileName, pres, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height);
+	       /* intrinsic width and height */
+	       imageDesc->PicWidth = width;
+	       imageDesc->PicHeight = height;
+#              ifdef _WINDOWS
+	       imageDesc->bgRed   = bgRed;
+	       imageDesc->bgGreen = bgGreen;
+	       imageDesc->bgBlue  = bgBlue;
+#              endif /* _WINDOWS */
 	     }
 	 }
        
@@ -1565,15 +1565,9 @@ PictInfo           *imageDesc;
 	     {
 	       /* one of box size is unknown, keep the image size */
 	       if (w == 0)
-		 {
 		   w = wFrame;
-		   /*box->BxWidth = wFrame;*/
-		 }
 	       if (h == 0)
-		 {
 		   h = hFrame;
-		   /*box->BxHeight = hFrame;*/
-		 }
 	       /* Do you have to extend the clipping */
 	       DefClip (frame, box->BxXOrg, box->BxYOrg, box->BxXOrg + w, box->BxYOrg + h);
 	       NewDimPicture (box->BxAbstractBox);
@@ -1638,6 +1632,8 @@ PictInfo           *imageDesc;
        imageDesc->PicYArea = 0;
        imageDesc->PicWArea = 0;
        imageDesc->PicHArea = 0;
+       imageDesc->PicWidth = 0;
+       imageDesc->PicHeight = 0;
      }
 
      if ((imageDesc->PicType >= InlineHandlers) && (PictureHandlerTable[imageDesc->PicType].FreePicture != NULL))

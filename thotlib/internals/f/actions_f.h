@@ -8,7 +8,7 @@
 
 extern void TteConnectAction ( int id,
                                Proc procedure );
-extern void TtaSetBackup (Proc procedure);
+extern void TtaSetBackup ( Proc procedure );
 
 #else /* __STDC__ */
 

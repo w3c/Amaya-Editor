@@ -548,10 +548,7 @@ Document            doc;
       TtaSetAttributeText (attr, a_class, ClassReference, doc);
     }
   /* parse and apply this new CSS to the current document */
-  if (stylestring[0] == '.')
     ParseHTMLStyleHeader (NULL, stylestring, doc, TRUE);
-  else
-    ParseHTMLStyleHeader (NULL, stylestring, doc, FALSE);
 }
 
 /*----------------------------------------------------------------------

@@ -6,7 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean      ElementNeedsPlaceholder (Element el);
 extern void ParseAreaCoords ( Element element,
                               Document document );
 extern int MapGI ( char *gi,
@@ -32,12 +31,12 @@ extern void SetAttrIntItemStyle ( Element el,
 extern void CreateAttrWidthPercentPxl ( char *buffer,
                                         Element el,
                                         Document doc,
-					int oldWidth );
+                                        int oldWidth );
 extern void CreateAttrIntSize ( char *buffer,
                                 Element el,
                                 Document doc );
 extern void InitAutomaton ( void );
-extern void FreeHTMLParser ();
+extern void FreeHTMLParser ( void );
 extern char GetNextInputChar ( void );
 extern void HTMLparse ( FILE * infile,
                         char *HTMLbuf );
@@ -79,12 +78,12 @@ extern void SetAttrIntItemStyle (/* Element el,
 extern void CreateAttrWidthPercentPxl (/* char *buffer,
                                           Element el,
                                           Document doc,
-					  int oldWidth */);
+                                          int oldWidth */);
 extern void CreateAttrIntSize (/* char *buffer,
                                   Element el,
                                   Document doc */);
 extern void InitAutomaton (/* void */);
-extern void FreeHTMLParser ();
+extern void FreeHTMLParser (/* void */);
 extern char GetNextInputChar (/* void */);
 extern void HTMLparse (/* FILE * infile,
                           char *HTMLbuf */);

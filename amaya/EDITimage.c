@@ -464,7 +464,7 @@ char               *text;
   LoadedImageDesc   *desc;
 
   /* get the absolute URL of the image */
-  NormalizeURL (text, sourceDocument, pathimage, imagename, NULL);
+  NormalizeURL (text, doc, pathimage, imagename, NULL);
   if (IsHTTPPath (DocumentURLs[doc]))
     {
       /* remote target document */
@@ -542,8 +542,8 @@ NotifyElement      *event;
   Element            elSRC, el;
   Document           doc;
   char              *text;
-  char*              pathimage = (char*) TtaGetMemory (MAX_LENGTH * sizeof (char)) ; /* pathimage[MAX_LENGTH]; */
-  char*              imagename = (char*) TtaGetMemory (MAX_LENGTH * sizeof (char)) ; /* imagename[MAX_LENGTH]; */
+  char              *pathimage;
+  char              *imagename;
 
    /* Select an image name */
    el = event->element;
@@ -551,8 +551,8 @@ NotifyElement      *event;
    text = GetImageURL (doc, 1);
    if (text == NULL || text[0] == EOS)
      {
-	/* JK: remove the empty SRC element */
-	TtaRemoveTree (el, doc);
+	/* delete the empty SRC element */
+	TtaDeleteTree (el, doc);
 	return;
      }
    /* search the SRC attribute */
@@ -577,7 +577,9 @@ NotifyElement      *event;
 	TtaAttachAttribute (elSRC, attr, doc);
      }
    /* copy image name in ALT attribute */
-   strcpy (imagename, "image: ");
+   imagename = (char*) TtaGetMemory (MAX_LENGTH);
+   pathimage = (char*) TtaGetMemory (MAX_LENGTH);
+   strcpy (imagename, " ");
    TtaExtractName (text, pathimage, &imagename[7]);
    strcat (imagename, " ");
    TtaSetAttributeText (attr, imagename, elSRC, doc);
@@ -602,25 +604,55 @@ NotifyAttribute    *event;
    Attribute           attr;
    Document            doc;
    int                 length;
-   char               *buf1, *buf2, *imageName;
+   char               *buf1, *buf2;
+   char               *localname, *imageName;
+   LoadedImageDesc   *desc;
 
    doc = event->document;
    el = event->element;
    attr = event->attribute;
    /* get a buffer for the attribute value */
-   length = TtaGetTextAttributeLength (attr);
-   buf1 = TtaGetMemory (length + 1);
-   buf2 = TtaGetMemory (length + 1);
-   imageName = TtaGetMemory (length + 1);
+   length = MAX_LENGTH;
+   buf1 = TtaGetMemory (length);
+   buf2 = TtaGetMemory (length);
+   imageName = TtaGetMemory (length);
    /* copy the SRC attribute into the buffer */
    TtaGiveTextAttributeValue (attr, buf1, &length);
+   NormalizeURL (buf1, doc, buf2, imageName, NULL);
    /* extract image name from full name */
-   TtaExtractName (buf1, buf2, imageName);
-   if (strlen (imageName) == 0)
-      /* full names ends with ''/ */
-      TtaExtractName (buf2, buf1, imageName);
+   TtaExtractName (buf2, buf1, imageName);
    if (strlen (imageName) != 0)
-      TtaSetTextContent (el, imageName, TtaGetDefaultLanguage (), doc);
+     {
+       if (IsHTTPPath(buf2))
+	 {
+	   /* remote image */
+	   localname = GetLocalPath (doc, buf2);
+	   /* load a remote image into a remote document */
+	   TtaSetTextContent (el, localname, SPACE, doc);
+	   TtaFreeMemory (localname);
+	   ActiveTransfer (doc);
+	   FetchImage (doc, el, NULL, 0, NULL, NULL);
+	   ResetStop (doc);
+	 }
+       else
+	 {
+	   /* local image */
+	   if (IsHTTPPath (DocumentURLs[doc]))
+	     {
+	       NormalizeURL (imageName, doc, buf1, imageName, NULL);
+	       /* load a local image into a remote document */
+	       AddLoadedImage (imageName, buf1, doc, &desc);
+	       desc->status = IMAGE_MODIFIED;
+	       TtaFileCopy (buf2, desc->localName);
+	       TtaSetTextContent (el, desc->localName, SPACE, doc);
+	     }
+	   else
+	     {
+	       /* load a local image into a local document */
+	       TtaSetTextContent (el, buf2, SPACE, doc);
+	     }
+	 }
+     }
    TtaFreeMemory (buf1);
    TtaFreeMemory (buf2);
    TtaFreeMemory (imageName);

@@ -13,7 +13,9 @@ extern Drawable XpmCreate ( char *fn,
                             int *wif,
                             int *hif,
                             unsigned long BackGroundPixel,
-                            Drawable * mask1 );
+                            Drawable *mask1,
+                            int *width,
+                            int *height );
 extern void XpmPrint ( char *fn,
                        PictureScaling pres,
                        int xif,
@@ -37,7 +39,9 @@ extern Drawable XpmCreate (/* char *fn,
                               int *wif,
                               int *hif,
                               unsigned long BackGroundPixel,
-                              Drawable * mask1 */);
+                              Drawable *mask1,
+                              int *width,
+                              int *height */);
 extern void XpmPrint (/* char *fn,
                          PictureScaling pres,
                          int xif,

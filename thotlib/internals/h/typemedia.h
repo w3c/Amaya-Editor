@@ -389,7 +389,7 @@ typedef struct _AbstractBox
     struct /* AbLeafType = LtText */
     {
       PtrTextBuffer  _AbText_;      /* On first text buffer */
-      unsigned char  _AbLanguage_;  /* Language used */
+      Language  _AbLanguage_;  /* Language used */
     } s1;
     struct /* AbLeafType = LtGraphics or LtSymbol */
     {

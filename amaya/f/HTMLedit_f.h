@@ -26,6 +26,8 @@ extern void CreateTarget ( Document doc,
 extern void UpdateAttrID ( NotifyAttribute * event );
 extern void CoordsModified ( NotifyAttribute * event );
 extern void GraphicsModified ( NotifyAttribute * event );
+extern boolean StoreWidth ( NotifyAttribute * event );
+extern boolean StoreHeight ( NotifyAttribute * event );
 extern boolean AttrWidthDelete ( NotifyAttribute * event );
 extern void AttrWidthModified ( NotifyAttribute * event );
 extern void AttrFontSizeCreated ( NotifyAttribute * event );
@@ -36,6 +38,7 @@ extern void ListItemCreated ( NotifyElement * event );
 extern void ListChangedType ( NotifyElement * event );
 extern void UpdateAttrIntItemStyle ( NotifyAttribute * event );
 extern void AttrItemStyle ( NotifyAttribute * event );
+extern boolean AttrSTYLEinMenu ( NotifyAttribute * event );
 extern boolean AttrNAMEinMenu ( NotifyAttribute * event );
 extern void ResetFontOrPhraseOnText ( Document document,
                                       Element elem,
@@ -111,6 +114,8 @@ extern void CreateTarget (/* Document doc,
 extern void UpdateAttrID (/* NotifyAttribute * event */);
 extern void CoordsModified (/* NotifyAttribute * event */);
 extern void GraphicsModified (/* NotifyAttribute * event */);
+extern boolean StoreWidth (/* NotifyAttribute * event */);
+extern boolean StoreHeight (/* NotifyAttribute * event */);
 extern boolean AttrWidthDelete (/* NotifyAttribute * event */);
 extern void AttrWidthModified (/* NotifyAttribute * event */);
 extern void AttrFontSizeCreated (/* NotifyAttribute * event */);
@@ -121,6 +126,7 @@ extern void ListItemCreated (/* NotifyElement * event */);
 extern void ListChangedType (/* NotifyElement * event */);
 extern void UpdateAttrIntItemStyle (/* NotifyAttribute * event */);
 extern void AttrItemStyle (/* NotifyAttribute * event */);
+extern boolean AttrSTYLEinMenu (/* NotifyAttribute * event */);
 extern boolean AttrNAMEinMenu (/* NotifyAttribute * event */);
 extern void ResetFontOrPhraseOnText (/* Document document,
                                         Element elem,

@@ -1903,12 +1903,14 @@ void               *ctx_cbf;
 
 
    /* Extract parameters if necessary */
-
    if (strlen (documentPath) > MAX_LENGTH - 1) 
      {
        TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_TOO_LONG_URL), "512");
        return (0);
      }
+   else
+     /* clean up the status line */
+     TtaSetStatus (baseDoc, 1, " ", NULL);
  
    ok = TRUE;
    tempdocument = TtaGetMemory (MAX_LENGTH);

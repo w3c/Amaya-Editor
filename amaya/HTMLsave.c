@@ -1034,7 +1034,10 @@ char                  *newURL;
 			   if (pImage->originalName != NULL)
 			     TtaFreeMemory (pImage->originalName);
 			   pImage->originalName = (char *) TtaStrdup (tempname);
-			   pImage->status = IMAGE_MODIFIED;
+			   if (TtaFileExist(pImage->localName))
+			     pImage->status = IMAGE_MODIFIED;
+			   else
+			     pImage->status = IMAGE_NOT_LOADED;
 			   pImage->elImage = (struct _ElemImage *) el;
 			 }
 		     }

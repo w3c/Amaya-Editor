@@ -13,7 +13,9 @@ extern ThotBitmap EpsCreate ( char *fn,
                               int *wif,
                               int *hif,
                               unsigned long BackGroundPixel,
-                              Drawable * PicMask );
+                              ThotBitmap *PicMask,
+                              int *width,
+                              int *height );
 extern void EpsPrint ( char *fn,
                        PictureScaling pres,
                        int xif,
@@ -37,7 +39,9 @@ extern ThotBitmap EpsCreate (/* char *fn,
                                 int *wif,
                                 int *hif,
                                 unsigned long BackGroundPixel,
-                                Drawable * PicMask */);
+                                ThotBitmap *PicMask,
+                                int *width,
+                                int *height */);
 extern void EpsPrint (/* char *fn,
                          PictureScaling pres,
                          int xif,

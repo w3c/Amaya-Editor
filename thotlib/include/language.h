@@ -20,7 +20,7 @@
 #include "typebase.h"
 
 /* document */
-typedef unsigned char Language;
+typedef int         Language;
 typedef int        *Dictionary;
 
 #ifndef __CEXTRACT__

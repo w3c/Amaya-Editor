@@ -26,7 +26,7 @@ extern void NormalizeURL ( char *orgName,
                            Document doc,
                            char *newName,
                            char *docName,
-			   char *otherPath);
+                           char *otherPath );
 extern boolean IsSameHost ( const char *url1,
                             const char *url2 );
 extern boolean HasKnownFileSuffix ( const char *path );
@@ -63,7 +63,7 @@ extern void NormalizeURL (/* char *orgName,
                              Document doc,
                              char *newName,
                              char *docName,
-			     char *otherPath */);
+                             char *otherPath */);
 extern boolean IsSameHost (/* const char *url1,
                               const char *url2 */);
 extern boolean HasKnownFileSuffix (/* const char *path */);

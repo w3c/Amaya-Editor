@@ -29,7 +29,7 @@ extern void TransferReferences ( PtrElement pTarget,
                                  PtrDocument pSourceDoc );
 extern void RegisterExternalRef ( PtrElement pEl,
                                   PtrDocument pDoc,
-                                  boolean new );
+                                  boolean IsNew );
 extern void AddDocOfExternalRef ( PtrElement pEl,
                                   DocumentIdentifier docIdent,
                                   PtrDocument pDoc2 );
@@ -73,7 +73,7 @@ extern void TransferReferences (/* PtrElement pTarget,
                                    PtrDocument pSourceDoc */);
 extern void RegisterExternalRef (/* PtrElement pEl,
                                     PtrDocument pDoc,
-                                    boolean new */);
+                                    boolean IsNew */);
 extern void AddDocOfExternalRef (/* PtrElement pEl,
                                     DocumentIdentifier docIdent,
                                     PtrDocument pDoc2 */);

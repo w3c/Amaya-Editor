@@ -14,8 +14,6 @@ extern int ThotDirBrowse_first ( ThotDirBrowse * me,
                                  char *ext );
 extern int ThotDirBrowse_next ( ThotDirBrowse * me );
 extern int ThotDirBrowse_close ( ThotDirBrowse * me );
-extern void ThotExit ( int result );
-extern void InitErrorHandler ( void );
 extern ThotFileHandle TtaFileOpen ( CONST char *name,
                                     ThotFileMode mode );
 extern int TtaFileClose ( ThotFileHandle handle );
@@ -45,8 +43,6 @@ extern int ThotDirBrowse_first (/* ThotDirBrowse * me,
                                    char *ext */);
 extern int ThotDirBrowse_next (/* ThotDirBrowse * me */);
 extern int ThotDirBrowse_close (/* ThotDirBrowse * me */);
-extern void ThotExit (/* int result */);
-extern void InitErrorHandler (/* void */);
 extern ThotFileHandle TtaFileOpen (/* CONST char *name,
                                       ThotFileMode mode */);
 extern int TtaFileClose (/* ThotFileHandle handle */);

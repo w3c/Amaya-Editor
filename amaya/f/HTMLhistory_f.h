@@ -7,8 +7,20 @@
 #ifdef __STDC__
 
 extern void InitDocHistory ( Document doc );
+extern void GotoPreviousHTML_callback ( int newdoc,
+                                        int status,
+                                        char *urlName,
+                                        char *outputfile,
+                                        char *content_type,
+                                        void * context );
 extern void GotoPreviousHTML ( Document doc,
                                View view );
+extern void GotoNextHTML_callback ( int newdoc,
+                                    int status,
+                                    char *urlName,
+                                    char *outputfile,
+                                    char *content_type,
+                                    void * context );
 extern void GotoNextHTML ( Document doc,
                            View view );
 extern void AddDocHistory ( Document doc,
@@ -17,8 +29,20 @@ extern void AddDocHistory ( Document doc,
 #else /* __STDC__ */
 
 extern void InitDocHistory (/* Document doc */);
+extern void GotoPreviousHTML_callback (/* int newdoc,
+                                          int status,
+                                          char *urlName,
+                                          char *outputfile,
+                                          char *content_type,
+                                          void * context */);
 extern void GotoPreviousHTML (/* Document doc,
                                  View view */);
+extern void GotoNextHTML_callback (/* int newdoc,
+                                      int status,
+                                      char *urlName,
+                                      char *outputfile,
+                                      char *content_type,
+                                      void * context */);
 extern void GotoNextHTML (/* Document doc,
                              View view */);
 extern void AddDocHistory (/* Document doc,

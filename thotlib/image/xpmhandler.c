@@ -49,74 +49,79 @@
    fn. updates the wif, hif, xif , yif                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Drawable            XpmCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable * mask1)
+Drawable            XpmCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable *mask1, int *width, int *height)
 #else  /* __STDC__ */
-Drawable            XpmCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
+Drawable            XpmCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1, width, height)
 char               *fn;
-PictureScaling           pres;
+PictureScaling      pres;
 int                *xif;
 int                *yif;
 int                *wif;
 int                *hif;
 unsigned long       BackGroundPixel;
 Drawable           *mask1;
+int                *width;
+int                *height;
 #endif /* __STDC__ */
 {
-   int                 status;
-   Pixmap              pixmap;
-   XpmAttributes       att;
-   unsigned long       valuemask = 0;
+  int                 status;
+  Pixmap              pixmap;
+  XpmAttributes       att;
+  unsigned long       valuemask = 0;
 
-   /* pixmap loading parameters passed to the library */
+  /* pixmap loading parameters passed to the library */
+  att.valuemask = valuemask;
+  att.valuemask |= XpmRGBCloseness;
+  att.valuemask |= XpmReturnPixels;
+  att.red_closeness = 40000;
+  att.green_closeness = 40000;
+  att.blue_closeness = 40000;
+  att.numsymbols = 1;
+  att.mask_pixel = BackGroundPixel;
 
-   att.valuemask = valuemask;
-   att.valuemask |= XpmRGBCloseness;
-   att.valuemask |= XpmReturnPixels;
-   att.red_closeness = 40000;
-   att.green_closeness = 40000;
-   att.blue_closeness = 40000;
-   att.numsymbols = 1;
-   att.mask_pixel = BackGroundPixel;
-
-#  ifndef _WINDOWS
-   status = XpmReadFileToPixmap (TtDisplay, TtRootWindow, fn, &pixmap, mask1, &att);
-#  endif  /* _WINDOWS */
-   if (status != XpmSuccess)
-     {
-       switch (status)
-	 {   
-	 case XpmColorError:
-	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_COLOR_INCORRECT);
-	   break;
-	 case XpmOpenFailed:
-	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_XPM_OPEN_ERR);
-	   break;
-	 case XpmFileInvalid:
-	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_XPM_FILE_INCORRECT);
-	   break;
-	 case XpmNoMemory:
-	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_XPM_NO_MEM);
-	   break;
-	 case XpmColorFailed:
-	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_XPM_COLOR_ERR);
-	   break;
-	 }
-       return (Drawable) None;
-     }
-   else
-     {
-	*wif = att.width;
-	*hif = att.height;
-	*xif = 0;
-	*yif = 0;
-
-	/* frees the library's internal structures */
-#       ifndef _WINDOWS
-	XpmFreeAttributes (&att);
-#       endif  /* _WINDOWS */
-	att.valuemask = valuemask;/* reinitialises the value mask */
-	return (Drawable) pixmap;
-     }
+# ifndef _WINDOWS
+  status = XpmReadFileToPixmap (TtDisplay, TtRootWindow, fn, &pixmap, mask1, &att);
+# endif  /* _WINDOWS */
+  /* return image dimensions */
+  *width = att.width;
+  *height = att.height;
+  
+  if (status != XpmSuccess)
+    {
+      switch (status)
+	{   
+	case XpmColorError:
+	  TtaDisplaySimpleMessage (INFO, LIB, TMSG_COLOR_INCORRECT);
+	  break;
+	case XpmOpenFailed:
+	  TtaDisplaySimpleMessage (INFO, LIB, TMSG_XPM_OPEN_ERR);
+	  break;
+	case XpmFileInvalid:
+	  TtaDisplaySimpleMessage (INFO, LIB, TMSG_XPM_FILE_INCORRECT);
+	  break;
+	case XpmNoMemory:
+	  TtaDisplaySimpleMessage (INFO, LIB, TMSG_XPM_NO_MEM);
+	  break;
+	case XpmColorFailed:
+	  TtaDisplaySimpleMessage (INFO, LIB, TMSG_XPM_COLOR_ERR);
+	  break;
+	}
+      return ((Drawable) None);
+    }
+  else
+    {
+      *wif = att.width;
+      *hif = att.height;
+      *xif = 0;
+      *yif = 0;
+      
+      /* frees the library's internal structures */
+#     ifndef _WINDOWS
+      XpmFreeAttributes (&att);
+#     endif  /* _WINDOWS */
+      att.valuemask = valuemask;/* reinitialises the value mask */
+      return (Drawable) pixmap;
+    }
 }
 
 

@@ -17,6 +17,13 @@ extern void SetupAndPrint ( Document document,
                             View view );
 extern void SectionNumbering ( Document document,
                                View view );
+extern void GetIncludedDocuments_callback ( int newdoc,
+                                            int status,
+                                            char *urlName,
+                                            char *outputfile,
+                                            char *content_type,
+                                            void * context );
+extern void MakeBook_callback ( Document document );
 extern void MakeBook ( Document document,
                        View view );
 
@@ -33,6 +40,13 @@ extern void SetupAndPrint (/* Document document,
                               View view */);
 extern void SectionNumbering (/* Document document,
                                  View view */);
+extern void GetIncludedDocuments_callback (/* int newdoc,
+                                              int status,
+                                              char *urlName,
+                                              char *outputfile,
+                                              char *content_type,
+                                              void * context */);
+extern void MakeBook_callback (/* Document document */);
 extern void MakeBook (/* Document document,
                          View view */);
 

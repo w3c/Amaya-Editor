@@ -9,6 +9,12 @@
 extern Element SearchNAMEattribute ( Document doc,
                                      char *nameVal,
                                      Attribute ignore );
+extern void FollowTheLink_callback ( int targetDocument,
+                                     int status,
+                                     char *urlName,
+                                     char *outputfile,
+                                     char *content_type,
+                                     void * context );
 extern boolean DoubleClick ( NotifyElement * event );
 extern void FreeDocumentResource ( Document doc );
 extern void DocumentClosed ( NotifyDialog * event );
@@ -25,6 +31,12 @@ extern void SelectDestination ( Document doc,
 extern Element SearchNAMEattribute (/* Document doc,
                                        char *nameVal,
                                        Attribute ignore */);
+extern void FollowTheLink_callback (/* int targetDocument,
+                                       int status,
+                                       char *urlName,
+                                       char *outputfile,
+                                       char *content_type,
+                                       void * context */);
 extern boolean DoubleClick (/* NotifyElement * event */);
 extern void FreeDocumentResource (/* Document doc */);
 extern void DocumentClosed (/* NotifyDialog * event */);
