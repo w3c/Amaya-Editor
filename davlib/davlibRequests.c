@@ -15,7 +15,10 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.12  2003-11-19 12:33:16  gully
+ ** Revision 1.13  2004-05-27 15:47:56  cvs
+ ** Irene
+ **
+ ** Revision 1.12  2003/11/19 12:33:16  gully
  ** Compilation fix (webdav support)
  **
  ** S. GULLY
@@ -1603,13 +1606,7 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
                             else
                                 saved = YES;
                          }
-
-                        /* if the lock information is not saved, 
-                         * change document to read only mode
-                         */ 
-                        if (!saved) 
-                           ChangeToBrowserMode (context->docid);
-                        
+                     
                      }/*!matches*/
                  } /*DAVAwareness */
              } /*lockinfo*/
