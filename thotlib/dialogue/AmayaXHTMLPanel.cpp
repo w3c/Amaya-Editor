@@ -70,7 +70,8 @@ AmayaXHTMLPanel::AmayaXHTMLPanel( wxWindow * p_parent_window, AmayaNormalWindow 
  */
 AmayaXHTMLPanel::~AmayaXHTMLPanel()
 {
-  
+  // unregister myself to the manager, so nothing should be asked to me in future
+  m_pManager->UnregisterSubPanel( this );  
 }
 
 /*

@@ -81,6 +81,8 @@ AmayaColorsPanel::AmayaColorsPanel( wxWindow * p_parent_window, AmayaNormalWindo
  */
 AmayaColorsPanel::~AmayaColorsPanel()
 {  
+  // unregister myself to the manager, so nothing should be asked to me in future
+  m_pManager->UnregisterSubPanel( this );
 }
 
 /*

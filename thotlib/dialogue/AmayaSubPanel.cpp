@@ -99,13 +99,11 @@ AmayaSubPanel::AmayaSubPanel( wxWindow *      p_parent_window
  */
 AmayaSubPanel::~AmayaSubPanel()
 {
-  // unregister myself to the manager, so nothing should be asked to me in future
-  m_pManager->UnregisterSubPanel( this );
 
-  // destroy manualy the floating panel because it seems that it stay alive
+  /*  // destroy manualy the floating panel because it seems that it stay alive
   if ( m_pFloatingPanel )
     m_pFloatingPanel->Destroy();
-  m_pFloatingPanel = NULL;
+    m_pFloatingPanel = NULL;*/
 }
 
 /*----------------------------------------------------------------------

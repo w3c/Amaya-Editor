@@ -79,6 +79,8 @@ AmayaFormatPanel::AmayaFormatPanel( wxWindow * p_parent_window, AmayaNormalWindo
  */
 AmayaFormatPanel::~AmayaFormatPanel()
 {  
+  // unregister myself to the manager, so nothing should be asked to me in future
+  m_pManager->UnregisterSubPanel( this );
 }
 
 /*

@@ -93,7 +93,8 @@ AmayaAttributePanel::AmayaAttributePanel( wxWindow * p_parent_window, AmayaNorma
  */
 AmayaAttributePanel::~AmayaAttributePanel()
 {
-  wxLogDebug( _T("AmayaAttributePanel::~AmayaAttributePanel") );
+  // unregister myself to the manager, so nothing should be asked to me in future
+  m_pManager->UnregisterSubPanel( this );
 }
 
 

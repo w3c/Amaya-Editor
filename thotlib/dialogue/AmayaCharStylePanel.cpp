@@ -119,6 +119,8 @@ AmayaCharStylePanel::AmayaCharStylePanel( wxWindow * p_parent_window, AmayaNorma
  */
 AmayaCharStylePanel::~AmayaCharStylePanel()
 {  
+  // unregister myself to the manager, so nothing should be asked to me in future
+  m_pManager->UnregisterSubPanel( this );
 }
 
 /*

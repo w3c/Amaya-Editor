@@ -135,9 +135,9 @@ bool AmayaSubPanelManager::UnregisterSubPanel( AmayaSubPanel * p_panel )
   DebugSubPanelList();
   
   if (ret)
-    wxLogDebug( _T("AmayaSubPanelManager::UnregisterSubPanel : OK") );
+    wxLogDebug( _T("AmayaSubPanelManager::UnregisterSubPanel [%d] OK"), p_panel->GetPanelType() );
   else
-    wxLogDebug( _T("AmayaSubPanelManager::UnregisterSubPanel : !OK") );   
+    wxLogDebug( _T("AmayaSubPanelManager::UnregisterSubPanel [%d] !OK"), p_panel->GetPanelType() );   
 
   return ret;
 }
@@ -329,7 +329,7 @@ void AmayaSubPanelManager::DoFloat( AmayaSubPanel * p_panel )
  */
 void AmayaSubPanelManager::DoUnfloat( AmayaSubPanel * p_panel )
 {
-  wxLogDebug( _T("AmayaSubPanelManager::DoUnfloat [%x]"), p_panel );
+  wxLogDebug( _T("AmayaSubPanelManager::DoUnfloat [%x][%d]"), p_panel, p_panel->GetPanelType() );
 
   // can unfloat ?
   if ( !CanChangeState(p_panel, p_panel->GetState()&~AmayaSubPanel::wxAMAYA_SPANEL_FLOATING) )
