@@ -232,6 +232,7 @@
 #define ATTR2ITEMSDIALOG                415
 #define TABLEDIALOG                     416
 #define MATRIXDIALOG                    417
+#define OPENIMAGEDIALOG                 418
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -268,6 +269,7 @@
 #define IDC_GETURL                      1056
 #define IDC_URLMESSAGE                  1057
 #define ID_APPLY                        1058
+#define IDC_GETALT                      1058
 #define IDC_FONTFAMILY                  1059
 #define IDC_TIMES                       1060
 #define IDC_HELVETICA                   1061
@@ -569,8 +571,10 @@
 #define IDC_NUMCOLEDIT                  1410
 #define IDC_GRECT                       1411
 #define IDC_NUMROWSEDIT                 1411
+#define IDC_PRINTURL                    1411
 #define IDC_GALPHA1                     1412
 #define IDC_BORDEREDIT                  1412
+#define IDC_ALTMESSAGE                  1412
 #define IDC_GPOLYLINE                   1413
 #define IDC_NUMROWS                     1413
 #define IDC_GALPHA2                     1414
@@ -602,15 +606,17 @@
 #define ID_BUTTON40040                  40040
 #define ID_BUTTON40041                  40041
 #define ID_BUTTON40042                  40042
+#define ID_BUTTON40046                  40046
+#define ID_BUTTON40047                  40047
 #define IDC_URL                         -1
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        418
-#define _APS_NEXT_COMMAND_VALUE         40046
-#define _APS_NEXT_CONTROL_VALUE         1411
+#define _APS_NEXT_RESOURCE_VALUE        419
+#define _APS_NEXT_COMMAND_VALUE         40048
+#define _APS_NEXT_CONTROL_VALUE         1413
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -77,6 +77,7 @@ extern HWND         hWndParent;
 extern int          WIN_MenuAlphabet;
 
 static char         urlToOpen [256];
+static char         altText [256];
 static char         message [300];
 static char         message2 [300];
 static char         wndTitle [100];
@@ -129,6 +130,7 @@ static int          baseDoc;
 static int          formDoc;
 static int          docSelect;
 static int          dirSelect;
+static int          imageAlt;
 static int          currAttrVal;
 static int          menuAlphaLanguage; 
 static int          LangValue;
@@ -158,6 +160,7 @@ static BOOL         tableOfContents = FALSE;
 static BOOL         numberedLinks   = FALSE;
 static BOOL         A4Format        = TRUE;
 static BOOL	        USFormat        = FALSE;
+static BOOL         printURL        = TRUE;
 static char*        classList;
 static char*        langList;
 static char*        saveList;
@@ -196,6 +199,7 @@ LRESULT CALLBACK MatrixDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK SearchDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK SaveAsDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK OpenDocDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK OpenImgDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK GraphicsDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK SaveListDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK CloseDocDlgProc (HWND, UINT, WPARAM, LPARAM);
@@ -226,6 +230,7 @@ LRESULT CALLBACK MatrixDlgProc ();
 LRESULT CALLBACK SearchDlgProc ();
 LRESULT CALLBACK SaveAsDlgProc ();
 LRESULT CALLBACK OpenDocDlgProc ();
+LRESULT CALLBACK OpenImgDlgProc ();
 LRESULT CALLBACK GraphicsDlgProc ();
 LRESULT CALLBACK SaveListDlgProc ();
 LRESULT CALLBACK CloseDocDlgProc ();
@@ -551,6 +556,40 @@ int   doc_type;
 }
 
 /*-----------------------------------------------------------------------
+ CreateOPenImgDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateOpenImgDlgWindow (HWND parent, char* doc_to_open, int base_doc, int form_doc, int image_alt, int doc_select, int dir_select, int doc_type)
+#else  /* !__STDC__ */
+void CreateOpenImgDlgWindow (parent, doc_to_open, base_doc, form_doc, image_alt, doc_select, dir_select, doc_type)
+HWND  parent;
+char* doc_to_open;
+int   base_doc;
+int   for_doc;
+int   image_alt;
+int   doc_select;
+int   dir_select;
+int   doc_type;
+#endif /* __STDC__ */
+{  
+	baseDoc   = base_doc;
+	formDoc   = form_doc;
+	docSelect = doc_select;
+	dirSelect = dir_select;
+    imageAlt  = image_alt;
+    
+    if (doc_type == TEXT_FILE)
+       szFilter = APPFILENAMEFILTER;
+	else if (doc_type == IMG_FILE)
+         szFilter = APPIMAGENAMEFILTER;
+    else 
+        szFilter = APPALLFILESFILTER;
+
+	DialogBox (hInstance, MAKEINTRESOURCE (OPENIMAGEDIALOG), parent, (DLGPROC) OpenImgDlgProc);
+	strcpy (doc_to_open, urlToOpen);
+}
+
+/*-----------------------------------------------------------------------
  CreateGraphicsDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -672,9 +711,9 @@ int   font_size;
  CreateCreateRuleDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateAttributeDlgWindow (char* title, int curr_val, int nb_items, char* buffer) 
+void CreateAttributeDlgWindow (char* title, int curr_val, int nb_items) 
 #else  /* __STDC__ */
-void CreateAttributeDlgWindow (title, curr_val, nb_items, buffer) 
+void CreateAttributeDlgWindow (title, curr_val, nb_items) 
 char* title;
 int   attr_val; 
 int   nb_items; 
@@ -1165,6 +1204,9 @@ LPARAM lParam;
 {
     switch (msg) {
 	       case WM_INITDIALOG:
+                if (printURL)
+                   CheckDlgButton (hwnDlg, IDC_PRINTURL, TRUE);
+
                 if (tableOfContents)
                    CheckDlgButton (hwnDlg, IDC_TABOFCONTENTS, TRUE);
 
@@ -1182,6 +1224,11 @@ LPARAM lParam;
                        case IDC_LINKS:
 						    numberedLinks = !numberedLinks;
 							ThotCallback (numMenuOptions + baseDlg, INTEGER_DATA, (char*)2);
+                            break;
+
+                       case IDC_PRINTURL:
+                            printURL = !printURL;
+                            ThotCallback (numMenuOptions + baseDlg, INTEGER_DATA, (char*)3);
                             break;
 
 				       case ID_PRINT:
@@ -1972,7 +2019,7 @@ LPARAM lParam;
 }
 
 /*-----------------------------------------------------------------------
- CloseDocDlgProc
+ OpenDocDlgProc
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
 LRESULT CALLBACK OpenDocDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -2021,6 +2068,81 @@ LPARAM lParam;
 
                             SetDlgItemText (hwnDlg, IDC_GETURL, urlToOpen);
                             EndDialog (hwnDlg, ID_CONFIRM);
+							break;
+
+				       case IDCANCEL:
+                            ThotCallback (baseDoc + formDoc, INTEGER_DATA, (char*) 0);
+                            urlToOpen [0] = 0;
+					        EndDialog (hwnDlg, IDCANCEL);
+							break;
+				}
+				break;
+				default: return FALSE;
+	}
+	return TRUE ;
+}
+
+/*-----------------------------------------------------------------------
+ OpenImgDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK OpenImgDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK OpenImgDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+    switch (msg) {
+	       case WM_INITDIALOG:
+			    SetDlgItemText (hwnDlg, IDC_GETURL, "");
+				urlToOpen [0] = 0;
+			    SetDlgItemText (hwnDlg, IDC_GETALT, "");
+				altText [0] = 0;
+				break;
+
+		   case WM_COMMAND:
+			    if (HIWORD (wParam) == EN_UPDATE)
+				   if (LOWORD (wParam) == IDC_GETALT) {
+					  GetDlgItemText (hwnDlg, IDC_GETALT, altText, sizeof (altText) - 1);
+					  ThotCallback (baseDoc + imageAlt, STRING_DATA, altText);
+				   }
+			    switch (LOWORD (wParam)) {
+				       case ID_CONFIRM:
+						    GetDlgItemText (hwnDlg, IDC_GETURL, urlToOpen, sizeof (urlToOpen) - 1);
+                            if (!altText || altText [0] == 0)
+                               MessageBox (hwnDlg, "Attribute ALT is mandatory", "Open Image", MB_OK | MB_ICONERROR);
+                            else 
+                                 EndDialog (hwnDlg, ID_CONFIRM);
+							break;
+
+				       case IDC_BROWSE:
+                            OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
+                            OpenFileName.hwndOwner         = hwnDlg; 
+                            OpenFileName.hInstance         = hInstance ; 
+                            OpenFileName.lpstrFilter       = (LPSTR) szFilter; 
+                            OpenFileName.lpstrCustomFilter = (LPTSTR) NULL; 
+                            OpenFileName.nMaxCustFilter    = 0L; 
+                            OpenFileName.nFilterIndex      = 1L; 
+                            OpenFileName.lpstrFile         = (LPSTR) szFileName; 
+                            OpenFileName.nMaxFile          = 256; 
+                            OpenFileName.lpstrInitialDir   = NULL; 
+                            OpenFileName.lpstrTitle        = TEXT ("Open a File"); 
+                            OpenFileName.nFileOffset       = 0; 
+                            OpenFileName.nFileExtension    = 0; 
+                            OpenFileName.lpstrDefExt       = TEXT ("*.gif"); 
+                            OpenFileName.lCustData         = 0; 
+                            OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY; 
+ 
+                            if (GetOpenFileName (&OpenFileName)) {
+	                           strcpy (urlToOpen, OpenFileName.lpstrFile);
+	                        }
+
+                            SetDlgItemText (hwnDlg, IDC_GETURL, urlToOpen);
+                            if (altText [0] != 0)
+                               EndDialog (hwnDlg, ID_CONFIRM);
 							break;
 
 				       case IDCANCEL:

@@ -397,7 +397,7 @@ View                view;
    else
      return (LastURLImage);
 #  else /* _WINDOWS */
-   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), LastURLImage, BaseImage, FormImage, -1, -1, 1) ;
+   CreateOpenImgDlgWindow (TtaGetViewFrame (document, view), LastURLImage, BaseImage, FormImage, ImageAlt, -1, -1, 1) ;
    return (LastURLImage);
 #  endif /* _WINDOWS */
 }

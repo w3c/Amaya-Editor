@@ -709,7 +709,8 @@ Document            doc;
      {
        /* the document is in ReadWrite mode */
 #ifdef _WINDOWS 
-       WIN_TtaChangeButton (document, 1, 5, iconBrowser, TRUE);
+       /* WIN_TtaChangeButton (document, 1, 5, iconBrowser, TRUE); */
+       WIN_TtaChangeButton (document, 1, 5, iconBrowser, TBSTATE_HIDDEN);
 #else  /* _WINDOWS */
        TtaChangeButton (document, 1, 5, iconBrowser);
 #endif /* _WINDOWS */
@@ -1471,7 +1472,7 @@ boolean             logFile;
 	     WIN_TtaAddButton (doc, 1, iconBack, GotoPreviousHTML, TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS), TBSTYLE_BUTTON, FALSE);
 	     WIN_TtaAddButton (doc, 1, iconForward, GotoNextHTML, TtaGetMessage (AMAYA, AM_BUTTON_NEXT), TBSTYLE_BUTTON, FALSE);
 	     WIN_TtaAddButton (doc, 1, inconReload, Reload, TtaGetMessage (AMAYA, AM_BUTTON_RELOAD), TBSTYLE_BUTTON, TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconEditor, SetBrowserEditor, TtaGetMessage (AMAYA, AM_BUTTON_BrowseEdit), TBSTYLE_BUTTON, FALSE);
+	     WIN_TtaAddButton (doc, 1, iconEditor, SetBrowserEditor, TtaGetMessage (AMAYA, AM_BUTTON_BrowseEdit), TBSTYLE_BUTTON, TBSTATE_ENABLED);
 	     WIN_TtaAddButton (doc, 1, 0, NULL, NULL, TBSTYLE_SEP, TBSTATE_ENABLED); /* SEPARATOR */
 
 	     WIN_TtaAddButton (doc, 1, inconSave, SaveDocument, TtaGetMessage (AMAYA, AM_BUTTON_SAVE), TBSTYLE_BUTTON, TBSTATE_ENABLED);

@@ -37,18 +37,20 @@ BEGIN
     LTEXT           "URL",IDC_URL,16,7,19,11
 END
 
-PRINTDIALOG DIALOG DISCARDABLE  100, 100, 172, 60
+PRINTDIALOG DIALOG DISCARDABLE  100, 100, 172, 70
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Print"
 FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "Print",ID_PRINT,104,13,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,104,30,50,14
-    GROUPBOX        "Options",IDC_OPTIONS,8,7,82,40,WS_GROUP
+    GROUPBOX        "Options",IDC_OPTIONS,8,7,81,48,WS_GROUP
     CONTROL         "Table of Contents",IDC_TABOFCONTENTS,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,14,17,70,14
     CONTROL         "Numbered Links",IDC_LINKS,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,14,28,60,15
+    CONTROL         "Print URL",IDC_PRINTURL,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,14,39,71,16
 END
 
 SEARCHDIALOG DIALOG DISCARDABLE  100, 100, 153, 194
@@ -472,6 +474,21 @@ BEGIN
     LTEXT           "Number of Rows (1..200)",IDC_NUMROWS,23,35,81,10
 END
 
+OPENIMAGEDIALOG DIALOG DISCARDABLE  100, 100, 299, 95
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Open Document"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Confirm",ID_CONFIRM,53,74,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,195,74,50,14
+    PUSHBUTTON      "Browse",IDC_BROWSE,117,74,68,15
+    EDITTEXT        IDC_GETURL,7,18,283,16,ES_AUTOHSCROLL
+    LTEXT           "Type the URL of the document to load or push Browse button to load a local file",
+                    IDC_URLMESSAGE,7,7,257,11
+    EDITTEXT        IDC_GETALT,7,52,283,16,ES_AUTOHSCROLL
+    LTEXT           "Alternate Text",IDC_ALTMESSAGE,7,41,284,11
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -495,9 +512,9 @@ BEGIN
         VERTGUIDE, 9
         VERTGUIDE, 14
         TOPMARGIN, 7
-        BOTTOMMARGIN, 53
+        BOTTOMMARGIN, 63
         HORZGUIDE, 7
-        HORZGUIDE, 59
+        HORZGUIDE, 62
     END
 
     SEARCHDIALOG, DIALOG
@@ -619,6 +636,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 78
     END
+
+    OPENIMAGEDIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 292
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 88
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -710,6 +735,8 @@ BEGIN
     SEPARATOR
     BUTTON      ID_BUTTON40041
     BUTTON      ID_BUTTON40042
+    BUTTON      ID_BUTTON40046
+    BUTTON      ID_BUTTON40047
 END
 
 
