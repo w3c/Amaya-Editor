@@ -267,7 +267,7 @@ STRUCT
 	File_Input (ATTR !NAME) = CONSTANT C_Empty;
 	Reset_Input;
 	Submit_Input;
-	END - (Input);
+	END;
 
 
   Text_With_Frame = BEGIN

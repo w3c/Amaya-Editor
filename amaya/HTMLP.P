@@ -4481,6 +4481,9 @@ RULES
  Hidden_Input: BEGIN
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_Hidden);
+	Visibility: 0;
+	IN Structure_view
+		Visibility: Enclosing =;
 	END;
 
  Password_Input: BEGIN

@@ -1946,11 +1946,9 @@ Element             el;
 {
    ElementType         elType, newElType, childType;
    Element             constElem, child, grandChild, desc, leaf;
-   Attribute           attr, nextAttr, oldAttr;
-   Attribute           attrChild;
+   Attribute           attr;
    AttributeType       attrType;
    int                 kind;
-   int                 value;
    int                 length;
    boolean             empty;
    char               *text;
@@ -1970,57 +1968,26 @@ Element             el;
    newElType.ElSSchema = elType.ElSSchema;
    switch (elType.ElTypeNum)
 	 {
-	    case HTML_EL_Input:	/*  it's an UNPUT */
-	       child = TtaGetFirstChild (el);
-	       if (child == NULL)
-		  ParseHTMLError (theDocument, "Attribute \"TYPE\" is missing");
-	       else
-		 {
-		    /* move all attributes of element Input to its child or its */
-		    /* grand child */
-		    attr = NULL;
-		    TtaNextAttribute (el, &attr);
-		    while (attr != NULL)
+	    case HTML_EL_Input:	/*  it's an INPUT */
+		/* special case of INPUT elements */
+		/* Create a child of type Text_Input */
+		elType.ElTypeNum = HTML_EL_Text_Input;
+		child = TtaNewTree (theDocument, elType, "");
+		TtaInsertFirstChild (&child, el, theDocument);
+	    case HTML_EL_Text_Input:
+		attr = NULL;
+		TtaNextAttribute (el, &attr);
+		while (attr != NULL)
 		      {
-			 nextAttr = attr;
-			 TtaNextAttribute (el, &nextAttr);
 			 TtaGiveAttributeType (attr, &attrType, &kind);
-			 if (attrType.AttrTypeNum == HTML_ATTR_Alignment ||
-			     attrType.AttrTypeNum == HTML_ATTR_NAME ||
-			     attrType.AttrTypeNum == HTML_ATTR_SRC ||
-			  attrType.AttrTypeNum == HTML_ATTR_Default_Value ||
-			     attrType.AttrTypeNum == HTML_ATTR_Area_Size ||
-			     attrType.AttrTypeNum == HTML_ATTR_MaxLength ||
-			     attrType.AttrTypeNum == HTML_ATTR_Checked)
+			 if (attrType.AttrTypeNum == HTML_ATTR_Default_Value)
+			   /* attribute Default_Value */
+			   /* copy attribute value into the first
+			      text leaf of element */
 			   {
-			      /* create an attribute with same type and same value */
-			      /* and associate it with the child or grand child */
-			      oldAttr = TtaGetAttribute (child, attrType);
-			      if (oldAttr != NULL)
-				 /* this attribute already exists */
-				 attrChild = oldAttr;
-			      else
-				{
-				   attrChild = TtaNewAttribute (attrType);
-				   TtaAttachAttribute (child, attrChild, theDocument);
-				}
-			      if (kind == 0 || kind == 1)
-				 /* enumerate or integer */
-				{
-				   value = TtaGetAttributeValue (attr);
-				   TtaSetAttributeValue (attrChild, value, child, theDocument);
-				}
-			      else if (kind == 2)
-				 /* Text */
-				{
 				   length = TtaGetTextAttributeLength (attr);
 				   text = TtaGetMemory (length + 1);
 				   TtaGiveTextAttributeValue (attr, text, &length);
-				   TtaSetAttributeText (attrChild, text, child, theDocument);
-				   if (attrType.AttrTypeNum == HTML_ATTR_Default_Value)
-				      /* attribute Default_Value */
-				      /* copy attribute value into the first
-					 text leaf of element */
 				     {
 				        desc = child;
 					do
@@ -2038,12 +2005,9 @@ Element             el;
 					  }
 				     }
 				   TtaFreeMemory (text);
-				}
 			   }
-			 TtaRemoveAttribute (el, attr, theDocument);
-			 attr = nextAttr;
+			 TtaNextAttribute (el, &attr);
 		      }
-		 }
 	       break;
 
 	    case HTML_EL_Preformatted:		/* it's a preformatted */
@@ -2441,9 +2405,8 @@ char               *val;
    int                 entry;
    unsigned char       msgBuffer[MaxBufferLength];
    ElementType         elType;
-   Element             newChild, oldChild;
+   Element             newChild;
    AttributeType       attrType;
-   boolean             done;
 
    entry = MapAttrValue (DummyAttribute, val);
    if (entry < 0)
@@ -2457,18 +2420,11 @@ char               *val;
      }
    else
      {
-	done = FALSE;
-	oldChild = TtaGetFirstChild (lastElement);
-	if (oldChild != NULL)
+	elType = TtaGetElementType (lastElement);
+	if (elType.ElTypeNum != HTML_EL_Input)
+	  sprintf (msgBuffer, "Duplicate attribute \"TYPE = %s\"", val);
+	else
 	  {
-	     elType = TtaGetElementType (oldChild);
-	     if (elType.ElTypeNum == AttrValueMappingTable[entry].ThotAttrValue)
-		done = TRUE;
-	  }
-	if (!done)
-	  {
-	     if (oldChild != NULL)
-		TtaDeleteTree (oldChild, theDocument);
 	     elType.ElSSchema = structSchema;
 	     elType.ElTypeNum = AttrValueMappingTable[entry].ThotAttrValue;
 	     newChild = TtaNewTree (theDocument, elType, "");
@@ -2840,7 +2796,7 @@ char               *GIname;
 #endif
 {
    ElementType         elType;
-   Element             el, child, preLine;
+   Element             el, preLine;
    int                 entry;
    unsigned char       cBuf[2];
    char                msgBuffer[MaxBufferLength];
@@ -2923,14 +2879,6 @@ char               *GIname;
 					 /* an empty Text element has been created. The */
 					 /* following character data must go to that elem. */
 					 MergeText = TRUE;
-				      /* special case of INPUT elements */
-				      /* Create a child of type Text_Input */
-				      if (GIMappingTable[entry].ThotType == HTML_EL_Input)
-					{
-					   elType.ElTypeNum = HTML_EL_Text_Input;
-					   child = TtaNewTree (theDocument, elType, "");
-					   TtaInsertFirstChild (&child, el, theDocument);
-					}
 				   }
 			      }
 			 }

@@ -415,17 +415,16 @@ RULES
 	END;
 
  Option_Menu: BEGIN
-	Create '<SELECT';
+	Create '\12<SELECT';
 	Create Attributes;
-	Create '>\12';
-	Create '</SELECT>\12' After;
+	Create '>';
+	Create '\12</SELECT>\12' After;
 	END;
 
  Option: BEGIN
-	Create '<OPTION';
-	IF Selected
-		Create ' selected';
-	Create '>\12';
+	Create '\12<OPTION';
+	Create Attributes;
+	Create '>';
 	END;
 
  Toggle_Menu: BEGIN
@@ -982,6 +981,9 @@ ATTRIBUTES
 	Create ' size=';
 	Create MenuSize;
 	END;
+
+ Selected:
+	Create ' selected';
 
  Default_Value: BEGIN
 	Create ' value="';
