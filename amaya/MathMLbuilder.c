@@ -4095,8 +4095,17 @@ void      MathMLElementComplete (ParserData *context, Element el, int *error)
 	  /* Create placeholders within the MathML element */
 	  CreatePlaceholders (TtaGetFirstChild (el), doc);
 	  break;
+       case MathML_EL_MTEXT:
+	  if (TtaGetFirstChild (el) == NULL)
+	    /* empty <mtext>. It will have to be parsed when the user enters
+	       some content */
+	    SetAttrParseMe (el, doc);
        case MathML_EL_MI:
-	  SetFontstyleAttr (el, doc);
+	  if (TtaGetFirstChild (el) == NULL)
+	    /* empty <mi> Replace it by an empty Construct */
+	    ChangeTypeOfElement (el, doc, MathML_EL_Construct);
+	  else
+	    SetFontstyleAttr (el, doc);
 	  break;
        case MathML_EL_MO:
 	  SetIntAddSpaceAttr (el, doc);

@@ -3428,7 +3428,7 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
    SetAttrParseMe
    associate a IntParseMe attribute with element el in document doc
  -----------------------------------------------------------------------*/
-static void SetAttrParseMe (Element el, Document doc)
+void SetAttrParseMe (Element el, Document doc)
 {
   ElementType    elType;
   AttributeType  attrType;

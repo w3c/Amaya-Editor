@@ -127,11 +127,8 @@ RULES
   	end;
 
    SqrtBase:
-	if empty
-		begin
-		create SOT;
-		create 'none/>\12';
-		end;
+	begin
+	end;
 
    MENCLOSE:
         begin
@@ -157,17 +154,11 @@ RULES
 	create 'mroot>\12' after;
   	end;
    RootBase:
-	if empty
-		begin
-		create SOT;
-		create 'none/>\12';
-		end;
+	begin
+	end;
    Index:
-	if empty
-		begin
-		create SOT;
-		create 'none/>\12';
-		end;
+	begin
+	end;
 
    MFRAC:
 	begin
@@ -192,17 +183,11 @@ RULES
 	create 'mfrac>\12' after;
 	end;
    Numerator:
-	if empty
-		begin
-		create SOT;
-		create 'none/>\12';
-		end;
+	begin
+	end;
    Denominator:
-	if empty
-		begin
-		create SOT;
-		create 'none/>\12';
-		end;
+	begin
+	end;
 
    MFENCED:
         begin
@@ -237,23 +222,14 @@ RULES
 	create 'msubsup>\12' after;
 	end;
    Base:
-	if empty
-		begin
-		create SOT;
-		create 'none/>\12';
-		end;
+	begin
+	end;
    Subscript:
-	if empty
-		begin
-		create SOT;
-		create 'none/>\12';
-		end;
+	begin
+	end;
    Superscript:
-	if empty
-		begin
-		create SOT;
-		create 'none/>\12';
-		end;
+	begin
+	end;
 
    MSUB:
 	begin
@@ -291,17 +267,11 @@ RULES
 	create 'munder>\12' after;
 	end;
    UnderOverBase:
-	if empty
-		begin
-		create SOT;
-		create 'none/>\12';
-		end;
+	begin
+	end;
    Underscript:
-	if empty
-		begin
-		create SOT;
-		create 'none/>\12';
-		end;
+	begin
+	end;
 
    MOVER:
 	begin
@@ -315,11 +285,8 @@ RULES
 	create 'mover>\12' after;
 	end;
    Overscript:
-	if empty
-		begin
-		create SOT;
-		create 'none/>\12';
-		end;
+	begin
+	end;
 
    MUNDEROVER:
 	begin
@@ -345,11 +312,8 @@ RULES
 	create 'mmultiscripts>\12' after;
 	end;
    MultiscriptBase:
-	if empty
-		begin
-		create SOT;
-		create 'none/>\12';
-		end;
+	begin
+	end;
    
    Construct:
 	begin
@@ -362,6 +326,14 @@ RULES
 		begin
 		create SOT;
 		create 'none/>\12';
+		end;
+	if not IntPlaceholder and not immediately within MSubscript
+           and not immediately within MSuperscript
+		begin
+		create SOT;
+		create 'mi>';
+		create SCT;
+		create 'mi>\12';
 		end;
 	end;
    PostscriptPair:

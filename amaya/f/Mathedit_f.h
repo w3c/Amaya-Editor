@@ -55,6 +55,8 @@ extern void CreateMSPACE ( Document document,
 extern void MathSelectionChanged ( NotifyElement * event );
 extern ThotBool GlobalMathAttrInMenu ( NotifyAttribute * event );
 extern void InitMathML ( void );
+extern void SetAttrParseMe ( Element el,
+			     Document doc );
 extern void CreateMathEntity ( Document document,
                                View view );
 extern void CreateInvisibleTimes ( Document document,
@@ -177,6 +179,8 @@ extern void CreateMSPACE (/* Document document,
 extern void MathSelectionChanged (/* NotifyElement * event */);
 extern ThotBool GlobalMathAttrInMenu (/* NotifyAttribute * event */);
 extern void InitMathML (/* void */);
+extern void SetAttrParseMe (/* Element el,
+			       Document doc */);
 extern void CreateMathEntity (/* Document document,
                                  View view */);
 extern void CreateInvisibleTimes (/* Document document,
