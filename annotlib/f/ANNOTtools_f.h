@@ -16,6 +16,8 @@ extern void List_delObject ( List **list,
                              char *object );
 extern int List_count ( List *list );
 extern int AnnotList_localCount ( List *annot_list );
+extern void AnnotFilter_update ( Document source_doc,
+                                 AnnotMeta *annot );
 extern void AnnotFilter_add ( AnnotMetaDataList *annotMeta,
                               SelType type,
                               void *object,
@@ -87,6 +89,8 @@ extern void List_delObject (/* List **list,
                                char *object */);
 extern int List_count (/* List *list */);
 extern int AnnotList_localCount (/* List *annot_list */);
+extern void AnnotFilter_update (/* Document source_doc,
+                                   AnnotMeta *annot */);
 extern void AnnotFilter_add (/* AnnotMetaDataList *annotMeta,
                                 SelType type,
                                 void *object,

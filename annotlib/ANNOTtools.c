@@ -157,6 +157,46 @@ int AnnotList_localCount (List *annot_list)
   return (count);
 }
 
+
+/*-----------------------------------------------------------------------
+  AnnotFilter_update
+  -----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+void AnnotFilter_update (Document source_doc, AnnotMeta *annot)
+#else /* __STDC__*/
+void AnnotFilter_update (source_doc, annot)
+     Document source_doc;
+     AnnotMeta *annot;
+#endif /* __STDC__*/
+{
+  CHAR_T       *tmp;
+  CHAR_T       server[MAX_LENGTH];
+
+  AnnotFilter_add (&AnnotMetaData[source_doc], BY_TYPE, annot->type, annot);
+  if (annot->annot_url)
+    tmp = annot->annot_url;
+  else
+    tmp = annot->body_url;
+
+  if (tmp)
+    { /* @@ when creating a new annot, we don't yet know the URL;
+         perhaps we should use the POST server name here? */
+      GetServerName (tmp, server);
+      AnnotFilter_add (&AnnotMetaData[source_doc], BY_SERVER, server, annot);
+    }
+  else
+    server[0] = WC_EOS;
+
+  if (annot->author)
+    {
+      tmp = TtaGetMemory (ustrlen (annot->author) + ustrlen (server) + 4);
+      usprintf (tmp, "%s@%s", annot->author, server);
+      AnnotFilter_add (&AnnotMetaData[source_doc], BY_AUTHOR, tmp, annot);
+      TtaFreeMemory (tmp);
+    }
+}
+
 /* ------------------------------------------------------------
    AnnotFilter_add
    Adds a new element to the beginning of a linked
