@@ -11,10 +11,8 @@
           <orient>wxVERTICAL</orient>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_SEARCH_FOR">
-              <label></label>
+              <label>Texte a chercher</label>
             </object>
-            <flag>wxALL|wxEXPAND</flag>
-            <border>5</border>
           </object>
           <object class="sizeritem">
             <object class="wxTextCtrl" name="wxID_SEARCH_FOR_TXT">
@@ -25,68 +23,73 @@
           </object>
           <object class="sizeritem">
             <object class="wxCheckBox" name="wxID_CHECK_CASE">
-              <label></label>
+              <label>Ignorer la casse</label>
             </object>
-            <flag>wxEXPAND</flag>
-            <border>5</border>
+            <flag>wxALL</flag>
+            <border>2</border>
           </object>
           <object class="sizeritem">
             <object class="wxStaticLine"/>
-            <flag>wxALL|wxEXPAND</flag>
-            <border>5</border>
+            <flag>wxEXPAND</flag>
+          </object>
+          <object class="spacer">
+            <size>0,5</size>
           </object>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_REPLACE_BY">
-              <label></label>
+              <label>Texte de remplacement</label>
             </object>
-            <flag>wxEXPAND</flag>
-            <border>5</border>
           </object>
           <object class="sizeritem">
             <object class="wxTextCtrl" name="wxID_REPLACE_BY_TXT"/>
             <flag>wxEXPAND</flag>
             <border>5</border>
           </object>
+          <object class="spacer">
+            <size>0,5</size>
+          </object>
           <object class="sizeritem">
-            <object class="wxGridSizer">
-              <cols>2</cols>
-              <rows>1</rows>
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
               <object class="sizeritem">
                 <object class="wxRadioBox" name="wxID_REPLACE_BOX">
-                  <label></label>
+                  <label>Remplacement</label>
                   <content>
-                    <item/>
-                    <item/>
-                    <item/></content>
-                  <selection>0</selection>
+                    <item>Sans remplacement</item>
+                    <item>Remplacement a la demande</item>
+                    <item>Remplacement automatique</item>
+                  </content>
                   <style>wxRA_SPECIFY_COLS</style>
                 </object>
-                <flag>wxALL|wxEXPAND</flag>
-                <border>5</border>
+                <option>1</option>
+              </object>
+              <object class="spacer">
+                <size>5,0</size>
               </object>
               <object class="sizeritem">
                 <object class="wxRadioBox" name="wxID_SEARCH_AREA_BOX">
-                  <label></label>
+                  <label>Ou rechercher</label>
                   <content>
-                    <item/>
-                    <item/>
-                    <item/>
-                    <item/></content>
-                  <selection>0</selection>
+                    <item>Avant la selection</item>
+                    <item>Dans la selection</item>
+                    <item>Apres la selection</item>
+                    <item>Dans tout le document</item>
+                  </content>
                   <style>wxRA_SPECIFY_COLS</style>
                 </object>
-                <flag>wxALL|wxEXPAND</flag>
-                <border>5</border>
+                <option>1</option>
               </object>
             </object>
-            <flag>wxALL|wxGROW</flag>
-            <border>5</border>
+            <option>1</option>
+            <flag>wxALL|wxEXPAND</flag>
           </object>
         </object>
+        <option>1</option>
         <flag>wxALL|wxEXPAND</flag>
         <border>5</border>
       </object>
       <object class="sizeritem">
+        <option>0</option>
         <flag>wxALL|wxALIGN_CENTRE_VERTICAL|wxALIGN_CENTRE_HORIZONTAL|wxADJUST_MINSIZE</flag>
         <border>5</border>
         <object class="wxBoxSizer">
@@ -95,7 +98,7 @@
             <flag>wxALL</flag>
             <border>5</border>
             <object class="wxButton" name="wxID_CONFIRMBUTTON">
-              <label>CONFIRMBUTTON</label>
+              <label>OK</label>
               <default>1</default>
             </object>
           </object>
@@ -103,14 +106,14 @@
             <flag>wxALL</flag>
             <border>5</border>
             <object class="wxButton" name="wxID_NOREPLACEBUTTON">
-              <label>NOREPLACEBUTTON</label>
+              <label>NOREPLACE</label>
             </object>
           </object>
           <object class="sizeritem">
             <flag>wxALL</flag>
             <border>5</border>
             <object class="wxButton" name="wxID_CANCELBUTTON">
-              <label>CANCELBUTTON</label>
+              <label>CANCEL</label>
             </object>
           </object>
         </object>
