@@ -213,6 +213,7 @@ void *context;
    char                tempfile[MAX_LENGTH];
    LoadedImageDesc    *desc = (LoadedImageDesc *) context;
    ElemImage          *ctxEl, *ctxPrev;
+   ElementType         elType;
 
 #ifdef AMAYA_JAVA
    FilesLoading[doc]--;
@@ -239,11 +240,11 @@ void *context;
 	desc->elImage = NULL;
 	while (ctxEl != NULL)
 	  {
-	     if (ctxEl->callback != NULL)
-	         ctxEl->callback(doc, ctxEl->currentElement, tempfile,
-		                 ctxEl->extra);
-             else
-		 DisplayImage (doc, ctxEl->currentElement, tempfile);
+	    elType = TtaGetElementType (ctxEl->currentElement);
+	    if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+	      DisplayImage (doc, ctxEl->currentElement, tempfile);
+	    else if (ctxEl->callback != NULL)
+	      ctxEl->callback(doc, ctxEl->currentElement, tempfile, ctxEl->extra);
 	     ctxPrev = ctxEl;
 	     ctxEl = ctxEl->nextElement;
 	     TtaFreeMemory ((char *) ctxPrev);
