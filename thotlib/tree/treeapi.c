@@ -2154,7 +2154,10 @@ int TtaGetCardinalOfType (ElementType elementType)
 	 	  result = 1;
 		  break;
 	       case CsChoice:
-		  result = pRule->SrNChoices;
+		 if (pRule->SrNChoices > 0)
+		   result = pRule->SrNChoices;
+		 else
+		   result = 0;
 		  break;
 	       case CsAggregate:
 	       case CsUnorderedAggregate:
@@ -2199,7 +2202,7 @@ void TtaGiveConstructorsOfType (ElementType **typesArray,
         switch (pRule->SrConstruct)
           {
 	   case CsNatureSchema:
-		if(*size<1)
+		if (*size < 1)
 		    TtaError(ERR_buffer_too_small);
                 else
                    {
@@ -2209,7 +2212,7 @@ void TtaGiveConstructorsOfType (ElementType **typesArray,
                    }
                 break;
 	   case CsBasicElement:
-		if(*size<1)
+		if (*size < 1)
 		    TtaError(ERR_buffer_too_small);
                 else
                    {
@@ -2237,7 +2240,7 @@ void TtaGiveConstructorsOfType (ElementType **typesArray,
                    }
                  break;
            case CsIdentity:
-		if(*size<1)
+		if (*size < 1)
 		    TtaError(ERR_buffer_too_small);
                 else
                    {
@@ -2247,7 +2250,7 @@ void TtaGiveConstructorsOfType (ElementType **typesArray,
                    }
                  break;
 	   case CsList:
-		if(*size<1)
+		if (*size < 1)
 		    TtaError(ERR_buffer_too_small);
                 else
                    {
@@ -2257,14 +2260,14 @@ void TtaGiveConstructorsOfType (ElementType **typesArray,
                    }
                  break;
 	   case CsChoice:
-		if(*size<pRule->SrNChoices)
+		if (*size < pRule->SrNChoices)
                    {
-		    TtaError(ERR_buffer_too_small);
+		    TtaError (ERR_buffer_too_small);
                     *size = 0;
                    }
                 else
                    {
-                    for (i=0; i< pRule->SrNChoices;i++)
+                    for (i = 0; i < pRule->SrNChoices; i++)
                       {
                         ((*typesArray)[i]).ElSSchema = elementType.ElSSchema;
                         ((*typesArray)[i]).ElTypeNum = pRule->SrChoice[i];
@@ -2274,14 +2277,14 @@ void TtaGiveConstructorsOfType (ElementType **typesArray,
                 break;
            case CsAggregate:
            case CsUnorderedAggregate:
-                if(*size<pRule->SrNComponents)
+                if (*size < pRule->SrNComponents)
                    {
 		    TtaError(ERR_buffer_too_small);
                     *size = 0;
                    }
                 else
                    {
-                    for (i=0; i< pRule->SrNComponents;i++)
+                    for (i = 0; i< pRule->SrNComponents; i++)
                       {
                         ((*typesArray)[i]).ElSSchema = elementType.ElSSchema;
                         ((*typesArray)[i]).ElTypeNum = pRule->SrComponent[i];

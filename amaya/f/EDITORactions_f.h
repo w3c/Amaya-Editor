@@ -249,6 +249,8 @@ extern void AddSeparator ( Document document,
                            View view );
 extern void ViewBookmarks ( Document document,
                             View view );
+extern void MoveItem ( Document document,
+                       View view );
 extern void ImportTopics ( Document document,
                            View view );
 extern void LockDocument ( Document document,
@@ -509,6 +511,8 @@ extern void AddSeparator ( Document document,
                              View view );
 extern void ViewBookmarks ( Document document,
                               View view );
+extern void MoveItem ( Document document,
+                         View view );
 extern void ImportTopics ( Document document,
                              View view );
 extern void LockDocument ( Document document,

@@ -569,7 +569,7 @@ extern int          sys_nerr;
 #include <socket.h>
 #include <in.h>
 #include <inet.h>
-#include <netdb.h>
+#include toto/*#include <netdb.h>*/
 #include <ucx$inetdef.h>
 
 #endif /* not DECNET */

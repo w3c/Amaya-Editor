@@ -2070,7 +2070,7 @@ static ThotBool IsValidHtmlChild (ElementType elemType, char *tag, char *prevtag
 {
 
   ElementType         elemTypeChild, tagElType, prevElType;
-  ElementType 	      *subTypes;
+  ElementType 	      *subTypes = NULL;
   Construct           constOfType;
   char               *name;
   int                 cardinal, i = 0, start;
@@ -2079,16 +2079,16 @@ static ThotBool IsValidHtmlChild (ElementType elemType, char *tag, char *prevtag
   result = FALSE;
   elemTypeChild.ElSSchema = elemType.ElSSchema;
   cardinal = TtaGetCardinalOfType (elemType);
-  if (cardinal <= 0)
-    return FALSE;
-  subTypes = (ElementType *) TtaGetMemory (cardinal * sizeof (ElementType));
-  TtaGiveConstructorsOfType (&subTypes, &cardinal, elemType);
+  if (cardinal > 0)
+    {
+      subTypes = (ElementType *) TtaGetMemory (cardinal * sizeof (ElementType));
+      TtaGiveConstructorsOfType (&subTypes, &cardinal, elemType);
+    }
+
   constOfType = TtaGetConstructOfType (elemType);
   GIType (tag, &tagElType, TransDoc);
-  if (!TtaSameSSchemas(elemType.ElSSchema, tagElType.ElSSchema) ||
-      tagElType.ElTypeNum == 0)
-    result = FALSE;
-  else
+  if (TtaSameSSchemas(elemType.ElSSchema, tagElType.ElSSchema) &&
+      tagElType.ElTypeNum != 0)
     {
       switch (constOfType)
 	{
@@ -2097,33 +2097,39 @@ static ThotBool IsValidHtmlChild (ElementType elemType, char *tag, char *prevtag
 	  break;
 	  
 	case ConstructIdentity:
-	  if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
-	    result = TRUE;
-	  else
+	  if (cardinal > 0)
 	    {
-	      name = GetXMLElementName (subTypes[0], TransDoc);
-	      if (!strcmp ((char *)name, "???") ||
-		  !strcmp ((char *)name, "none"))
-		/* search if tag can be inserted as a child of the identity */
+	      if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
+		result = TRUE;
+	      else
+		{
+		  name = GetXMLElementName (subTypes[0], TransDoc);
+		  if (!strcmp ((char *)name, "???") ||
+		      !strcmp ((char *)name, "none"))
+		    /* search if tag can be inserted as a child of the identity */
+		    result = IsValidHtmlChild (subTypes[0], tag, "");
+		}
+	      /* any math element can be inserted under <math> (only row in MathML.S)*/
+	      if (!result &&
+		  !strcmp ((char *)TtaGetElementTypeName (elemType), "math") && 
+		  !strcmp ((char *)TtaGetSSchemaName (elemType.ElSSchema), "MathML"))
 		result = IsValidHtmlChild (subTypes[0], tag, "");
 	    }
-	  /* any math element can be inserted under <math> (only row in MathML.S)*/
-	  if (!result &&
-	      !strcmp ((char *)TtaGetElementTypeName (elemType), "math") && 
-	      !strcmp ((char *)TtaGetSSchemaName (elemType.ElSSchema), "MathML"))
-	    result = IsValidHtmlChild (subTypes[0], tag, "");
 	  break;
 	  
 	case ConstructList:
-	  if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
-	    result = TRUE;
-	  else
+	  if (cardinal > 0)
 	    {
-	      name = GetXMLElementName (subTypes[0], TransDoc);
-	      if (!strcmp ((char *)name, "???") ||
-		  !strcmp ((char *)name, "p*") ||
-		  !strcmp ((char *)name, "none"))
-		result = IsValidHtmlChild (subTypes[0], tag, "");
+	      if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
+		result = TRUE;
+	      else
+		{
+		  name = GetXMLElementName (subTypes[0], TransDoc);
+		  if (!strcmp ((char *)name, "???") ||
+		      !strcmp ((char *)name, "p*") ||
+		      !strcmp ((char *)name, "none"))
+		    result = IsValidHtmlChild (subTypes[0], tag, "");
+		}
 	    }
 	  break;
 	  
@@ -2228,7 +2234,8 @@ static ThotBool IsValidHtmlChild (ElementType elemType, char *tag, char *prevtag
 	  break;
 	  
 	case ConstructNature:
-	  if (TtaSameSSchemas (tagElType.ElSSchema, subTypes[0].ElSSchema))
+	  if (cardinal > 0 &&
+	      TtaSameSSchemas (tagElType.ElSSchema, subTypes[0].ElSSchema))
 	    {
 	      if (subTypes[0].ElTypeNum == 0)
 		TtaGiveTypeFromName (&subTypes[0], TtaGetElementTypeName(elemType));

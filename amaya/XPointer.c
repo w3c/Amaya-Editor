@@ -79,7 +79,6 @@ static Element RootElement; /* the root of the tree we're parsing (so that
 
 /*----------------------------------------------------------------------
   StrACat
-
   A not very efficient function that makes a dynamic memory allocation
   strcat
   ----------------------------------------------------------------------*/
@@ -686,11 +685,13 @@ ThotBool SearchTextPosition (Element *mark, int *firstCh)
   the caller to free the returned string.
   Returns NULL in case of error.
   ----------------------------------------------------------------------*/
-static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len, int mode, ThotBool firstF)
+static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len,
+			     int mode, ThotBool firstF)
 {
   XPathItem *xpath_item, *xpath_tmp;
-  char buffer[500];
-  char *xpath_expr = NULL;
+  char      *buffer = NULL, *name;
+  char      *xpath_expr = NULL;
+  int        l;
 
   xpath_item = *xpath_list;
   if  (mode & SEL_STRING_RANGE)
@@ -714,14 +715,23 @@ static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len, int mo
       if (xpath_item->elType.ElTypeNum != THOT_TEXT_UNIT)
 	{
 	  if (xpath_item->id_value)
-	    snprintf (buffer, sizeof (buffer),
-		      "id(\"%s\")", xpath_item->id_value);
+	    {
+	      l = strlen (xpath_item->id_value) + 8;
+	      buffer = (char *)TtaGetMemory (l);
+	      strcpy (buffer, "id(\""); 
+	      strcat (buffer, xpath_item->id_value);
+	      strcat (buffer, "\")");
+	    }
 	  else
-	    snprintf (buffer, sizeof (buffer),
-		      "/%s[%d]",  
-		      TtaGetElementTypeName (xpath_item->elType),
-		      xpath_item->index);
+	    {
+	      name = TtaGetElementTypeName (xpath_item->elType);
+	      l = strlen (name) + 14;
+	      buffer = (char *)TtaGetMemory (l);
+	      sprintf (buffer, "/%s[%d]", name, xpath_item->index);
+	    }
 	  StrACat (&xpath_expr, buffer);
+	  TtaFreeMemory (buffer);
+	  buffer = NULL;
 	}
       if (xpath_item->id_value)
 	TtaFreeMemory (xpath_item->id_value);
@@ -732,8 +742,9 @@ static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len, int mo
 
   if (mode & SEL_STRING_RANGE)
     {
-      snprintf (buffer, sizeof (buffer),
-		",\"\",%d,%d)", firstCh, len);
+      l = 30;
+      buffer = (char *)TtaGetMemory (l);
+      sprintf (buffer, ",\"\",%d,%d)", firstCh, len);
       StrACat (&xpath_expr, buffer);
       if (mode & SEL_START_POINT || mode & SEL_END_POINT)
 	StrACat (&xpath_expr, ")");
@@ -753,15 +764,16 @@ static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len, int mo
   It's up to the caller to free the returned string.
   Returns NULL in case of failure.
   ----------------------------------------------------------------------*/
-static char *XPointer_ThotEl2XPath (Element start, int firstCh, int len, selMode mode, ThotBool firstF)
+static char *XPointer_ThotEl2XPath (Element start, int firstCh, int len,
+				    selMode mode, ThotBool firstF)
 {
-  Element el, prev;
+  Element     el, prev;
   ElementType elType, prevElType;
-  int child_count;
-  XPathItem *xpath_item;
-  XPathList xpath_list = (XPathItem *) NULL;
-  char *xpath_expr;
-  char *id_value = NULL;
+  int         child_count;
+  XPathItem  *xpath_item;
+  XPathList   xpath_list = (XPathItem *) NULL;
+  char       *xpath_expr;
+  char       *id_value = NULL;
 
   /* if the user selected a text, adjust the start/end indexes according
      to its siblings inlined text */
@@ -834,15 +846,12 @@ static char *XPointer_ThotEl2XPath (Element start, int firstCh, int len, selMode
 char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
 {
   Element     firstEl, lastEl;
-
+  ElementType elType;
   int         firstCh, lastCh, i;
   int         firstLen;
-
   char       *firstXpath;
   char       *lastXpath = NULL;
-  ElementType elType;
-
-  char     *schemaName;
+  char       *schemaName;
 
   selMode    firstMode = (selMode)0;
   selMode    lastMode = (selMode)0;

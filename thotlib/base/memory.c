@@ -144,7 +144,7 @@ void  *TtaGetMemory (unsigned int n)
   void               *res;
   
   if (n == 0)
-    n++;
+    n = 1;
   res = malloc ((size_t) n);
 
   if (!res)
@@ -175,7 +175,7 @@ void *TtaRealloc (void *ptr, unsigned int n)
    void               *res;
 
    if (n == 0)
-      n++;
+      n = 1;
    res = realloc (ptr, (size_t) n);
 #ifndef _WINGUI 
    if (!res)

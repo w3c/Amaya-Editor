@@ -195,8 +195,13 @@ static ThotBool IsPresentInAggregate (Element elParent, int typeNum,
   
   typeParent = TtaGetElementType (elParent);
   card = TtaGetCardinalOfType (typeParent);
-  typesArray = (ElementType *)TtaGetMemory (card * sizeof (ElementType));
-  TtaGiveConstructorsOfType (&typesArray, &card, typeParent);
+  if (card > 0)
+    {
+      typesArray = (ElementType *)TtaGetMemory (card * sizeof (ElementType));
+      TtaGiveConstructorsOfType (&typesArray, &card, typeParent);
+    }
+  else
+    typesArray = NULL;
   elChild = TtaGetFirstChild (elParent);
   if (elChild == NULL)
     {
