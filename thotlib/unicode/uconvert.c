@@ -1129,8 +1129,8 @@ int  TtaGetNumberOfBytesToRead (unsigned char **txt, CHARSET encoding)
 	nbBytesToRead = 3;
       else if (*start < 0xF8)
 	nbBytesToRead = 4;
-      else
-	/* add some error processing here */ ;
+      /*else
+        add some error processing here  ; */ 
     }
 
   return nbBytesToRead;

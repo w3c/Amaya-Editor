@@ -6,6 +6,7 @@
   by Irene Vatton
   */
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 /* ---------------------------------------------------------------------- */

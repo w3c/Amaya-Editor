@@ -67,7 +67,7 @@ extern void CopyUseElementAttribute ( Element useEl,
                                       Document doc );
 extern void AddSVGModelIntoLibrary ( Document libraryDoc,
                                      ThotBool newLib,
-                                     char *libraryTitle );
+                                     char *title );
 extern void addingModelIntoLibraryFile ( Document libDoc,
                                          char *newURL );
 extern ThotBool CreateLibraryDirectory ( char *libDirectory );
@@ -150,7 +150,7 @@ extern void CopyUseElementAttribute (/* Element useEl,
                                         Document doc */);
 extern void AddSVGModelIntoLibrary (/* Document libraryDoc,
                                        ThotBool newLib,
-                                       char *libraryTitle */);
+                                       char *title */);
 extern void addingModelIntoLibraryFile (/* Document libDoc,
                                            char *newURL */);
 extern ThotBool CreateLibraryDirectory (/* char *libDirectory */);
