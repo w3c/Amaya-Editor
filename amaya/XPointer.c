@@ -28,6 +28,9 @@
 
 #define THOT_EXPORT extern
 #include "amaya.h"
+#include "MathML.h"
+#include "GraphML.h"
+#include "XLink.h"
 #include "XPointer.h"
 #include "XPointerparse_f.h"
 #undef THOT_EXPORT
@@ -48,8 +51,6 @@ typedef XPathItem * XPathList;
 
 /* the thotlib element type used to identify a text node */
 #define THOT_TEXT_UNIT  1
-/* the thotlib attribute type used to identify an id attribute*/
-#define THOT_ATTR_ID    2  
 
 typedef enum _selMode {
   SEL_START_POINT=1,
@@ -173,12 +174,23 @@ static char * GetIdValue (Element el)
   Attribute attr;
   AttributeType attrType;
   ElementType elType;
+  char *schema_name;
   char *value;
   int len;
 
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = THOT_ATTR_ID;
+  schema_name = TtaGetSSchemaName (elType.ElSSchema);
+  if (!ustrcmp (schema_name, TEXT("XLink")))
+    /* ignore all XLink elements (they are only annotation
+       related, and invisible to the document */
+    return NULL;
+  else if (!ustrcmp (schema_name, TEXT("MathML")))
+    attrType.AttrTypeNum = MathML_ATTR_id;
+  else if (!ustrcmp (schema_name, TEXT("GraphML")))
+    attrType.AttrTypeNum = GraphML_ATTR_id;
+  else
+    attrType.AttrTypeNum = HTML_ATTR_ID;
 
   attr = TtaGetAttribute (el, attrType);
   if (attr != NULL)
