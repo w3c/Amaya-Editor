@@ -1773,7 +1773,7 @@
 </label>
 <label define="AM_NO_XPOINTER">
 	<message xml:lang="en">Cannot create an XPointer</message>
-	<message xml:lang="fr">Impossible de crléer un XPointer</message>
+	<message xml:lang="fr">Impossible de créer un XPointer</message>
 	<message xml:lang="es">No pude crear un XPointer</message>
 </label>
 <label define="AMAYA_MSG_MAX">

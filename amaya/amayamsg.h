@@ -236,5 +236,5 @@
 #define AM_ACCESSKEY		233
 #define AM_NONE		234
 #define AM_LOCAL_CSS		235
-#define AM_NO_XPOINTER              236
+#define AM_NO_XPOINTER		236
 #define AMAYA_MSG_MAX		237
