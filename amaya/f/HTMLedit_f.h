@@ -38,7 +38,7 @@ extern void ListItemCreated ( NotifyElement * event );
 extern void ListChangedType ( NotifyElement * event );
 extern void UpdateAttrIntItemStyle ( NotifyAttribute * event );
 extern void AttrItemStyle ( NotifyAttribute * event );
-extern boolean AttrSTYLEinMenu ( NotifyAttribute * event );
+extern boolean GlobalAttrInMenu ( NotifyAttribute * event );
 extern boolean AttrNAMEinMenu ( NotifyAttribute * event );
 extern void ResetFontOrPhraseOnText ( Document document,
                                       Element elem,
@@ -126,7 +126,7 @@ extern void ListItemCreated (/* NotifyElement * event */);
 extern void ListChangedType (/* NotifyElement * event */);
 extern void UpdateAttrIntItemStyle (/* NotifyAttribute * event */);
 extern void AttrItemStyle (/* NotifyAttribute * event */);
-extern boolean AttrSTYLEinMenu (/* NotifyAttribute * event */);
+extern boolean GlobalAttrInMenu (/* NotifyAttribute * event */);
 extern boolean AttrNAMEinMenu (/* NotifyAttribute * event */);
 extern void ResetFontOrPhraseOnText (/* Document document,
                                         Element elem,

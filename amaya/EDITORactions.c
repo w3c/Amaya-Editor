@@ -1859,7 +1859,6 @@ View                view;
 
 #endif /* __STDC__ */
 {
-#ifdef COUGAR
    ElementType         elType;
    Element             child, el;
    Attribute           attr;
@@ -1897,7 +1896,6 @@ View                view;
 	     }
 	 }
      }
-#endif /* COUGAR */
 }
 
 /*----------------------------------------------------------------------

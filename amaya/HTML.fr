@@ -119,6 +119,7 @@ REL: rel
 REV: rev
 Title: title
 Align: align
+TextAlign: align
 NoShade: noshade
 Size_: size
 Width__: width
@@ -187,6 +188,7 @@ height\240: height
 left_: left
 center_: center
 right_: right
+justify_: justify
 NoShade_: noshade
 Top_: top
 Middle_: middle

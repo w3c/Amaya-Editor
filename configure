@@ -24,7 +24,7 @@ ac_help="$ac_help
 ac_help="$ac_help
   --enable-java           Add Kaffe Java virtual machine"
 ac_help="$ac_help
-  --enable-javaawt        Add Kaffe Java Biss AWT"
+  --enable-java-awt       Add Kaffe Java Biss AWT"
 ac_help="$ac_help
   --enable-intr           Use Kaffe Java Interpreter"
 ac_help="$ac_help
@@ -6440,7 +6440,7 @@ fi
 
 
 THOT_OPTIONS=
-AMAYA_OPTIONS="-DCOUGAR" $MATH_OPTIONS $GRAPH_OPTIONS
+AMAYA_OPTIONS=$MATH_OPTIONS $GRAPH_OPTIONS
 PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
 JAVA_OPTIONS="$java_ilu_option $java_awt_option"
 ANNOTATIONS_OPTIONS=
@@ -6523,12 +6523,14 @@ else
     java_frag=/dev/null
     javasrc_frag=/dev/null
     javanosrc_frag=/dev/null
+
     if test "$with_ilu" = "yes" ; then
+       
        
        www_frag=/dev/null
     else
-    
-       www_frag=$srcdir/amaya/Makefile.libwww
+       
+              www_frag=$srcdir/amaya/Makefile.libwww
     fi
 fi
 

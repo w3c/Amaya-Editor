@@ -565,7 +565,6 @@ BOXES
 		END;
 	END;
 
-#ifdef COUGAR
   ATTR_ID: BEGIN
 	Content: Text ' id=';
 	Visibility: 0;
@@ -589,10 +588,273 @@ BOXES
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
-#endif
+
+ ATTR_DIR_LTR: BEGIN
+	Content: Text ' dir=ltr';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ ATTR_DIR_RTL: BEGIN
+	Content: Text ' dir=rtl';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ ATTR_ONCLICK: BEGIN
+	Content: Text ' onclick=';
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ VALUE_ONCLICK: BEGIN
+	Content: (onclick);
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+ ATTR_ONDBLCLICK: BEGIN
+	Content: Text ' ondblclick=';
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ VALUE_ONDBLCLICK: BEGIN
+	Content: (ondblclick);
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+ ATTR_ONMOUSEDOWN: BEGIN
+	Content: Text ' onmousedown=';
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ VALUE_ONMOUSEDOWN: BEGIN
+	Content: (onmousedown);
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+ ATTR_ONMOUSEUP: BEGIN
+	Content: Text ' onmouseup=';
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ VALUE_ONMOUSEUP: BEGIN
+	Content: (onmouseup);
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+ ATTR_ONMOUSEOVER: BEGIN
+	Content: Text ' onmouseover=';
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ VALUE_ONMOUSEOVER: BEGIN
+	Content: (onmouseover);
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+ ATTR_ONMOUSEMOVE: BEGIN
+	Content: Text ' onmousemove=';
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ VALUE_ONMOUSEMOVE: BEGIN
+	Content: (onmousemove);
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+ ATTR_ONMOUSEOUT: BEGIN
+	Content: Text ' onmouseout=';
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ VALUE_ONMOUSEOUT: BEGIN
+	Content: (onmouseout);
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+ ATTR_ONKEYPRESS: BEGIN
+	Content: Text ' onkeypress=';
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ VALUE_ONKEYPRESS: BEGIN
+	Content: (onkeypress);
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+ ATTR_ONKEYDOWN: BEGIN
+	Content: Text ' onkeydown=';
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ VALUE_ONKEYDOWN: BEGIN
+	Content: (onkeydown);
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+ ATTR_ONKEYUP: BEGIN
+	Content: Text ' onkeyup=';
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ VALUE_ONKEYUP: BEGIN
+	Content: (onkeyup);
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
 
 { ---- Style CSS end ---- }
-#ifdef COUGAR
+
   ATTR_LANG: BEGIN
 	Content: Text ' lang=';
 	HorizPos: Left = Previous . Right;
@@ -616,7 +878,7 @@ BOXES
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
-#endif
+
  ATTR_HTTPEQUIV: BEGIN
 	Content: Text ' http-equiv=';
 	Visibility: 0;
@@ -713,7 +975,7 @@ BOXES
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
-#ifdef COUGAR
+
  OBJECT_S: BEGIN
 	Content: Text 'OBJECT';
 	Visibility: 0;
@@ -723,7 +985,7 @@ BOXES
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
-#endif
+
 #ifdef MATHML
  Math_S: BEGIN
 	Content: Text 'MATH';
@@ -1402,6 +1664,18 @@ BOXES
 
  ALIGN_RIGHT: BEGIN
 	Content: Text ' align=right';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ ALIGN_JUSTIFY: BEGIN
+	Content: Text ' align=justify';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
@@ -2585,7 +2859,6 @@ BOXES
 		END;
 	END;
 
-#ifdef COUGAR
  ATTR_CLASSID: BEGIN
 	Content: Text ' classid=';
 	Visibility: 0;
@@ -2696,7 +2969,6 @@ BOXES
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
-#endif
 
  ATTR_NOSHADE: BEGIN
 	Content: Text ' noshade';
@@ -4621,7 +4893,6 @@ RULES
 		END;		
 	END;
 
-#ifdef COUGAR
  Object: BEGIN
 	CreateBefore(OBJECT_S);
 	CreateWith(VerticalLine);
@@ -4669,7 +4940,6 @@ RULES
 		END;
 	END;
 
-#endif
 #ifdef MATHML
  Math: BEGIN
 	CreateBefore(Math_S);
@@ -5249,39 +5519,29 @@ RULES
 	CreateBefore(IMG_S);
 	LineBreak: No;
 	PageBreak: No;
-#ifdef COUGAR
 	if Immediately within Object BEGIN
 		Width: Enclosing . Width;
 		Height: Enclosing . Height;
 		VertPos: Top = Enclosing . Top;
 		END;
-#endif
 	HorizRef: * . Bottom;
 	IN Structure_view BEGIN
 		Height: 1 px;
 		Width: 1 px;
-#ifdef COUGAR
 		if NOT Immediately within Object
 		   Visibility: 1;
 		if Immediately within Object
 		   Visibility: 0;
-#else
-		Visibility: 1;
-#endif
 		VertPos: Top = Previous . Bottom;
 		HorizPos: Left = Enclosing . Left;
 		END;
 	IN Alternate_view BEGIN
 		Height: 1 px;
 		Width: 1 px;
-#ifdef COUGAR
 		if NOT Immediately within Object
 		   Visibility: 1;
 		if Immediately within Object
 		   Visibility: 0;
-#else
-		Visibility: 1;
-#endif
 		END;
 	IN Links_view
 #ifndef PAGE
@@ -5731,13 +5991,13 @@ RULES
 	END;
 
 ATTRIBUTES
-#ifdef COUGAR
+
  Langue:
 	BEGIN
 	CreateBefore(ATTR_LANG);
 	CreateBefore(VALUE_LANG);
 	END;
-#endif
+
  HREF_:
 	BEGIN
 	CreateBefore(ATTR_HREF);
@@ -6119,7 +6379,7 @@ ATTRIBUTES
 	CreateBefore(ATTR_VALUE);
 	CreateBefore(VALUE_PARAM_VALUE);
 	END;
-#ifdef COUGAR
+
  classid:
 	BEGIN
 	CreateBefore(ATTR_CLASSID);
@@ -6150,7 +6410,6 @@ ATTRIBUTES
 	CreateBefore(VALUE_CODETYPE);
 	END;
 
-#endif
  Img_border:
 	BEGIN
 	CreateBefore(ATTR_BORDER);
@@ -6352,77 +6611,32 @@ ATTRIBUTES
 	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	END;
 
- Align (Preformatted) = left_:
-	BEGIN
-	HorizPos: Left = Enclosing . Left;
-	Adjust: Left;
-	In Structure_view
-	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
- Align (Preformatted) = center_:
-	BEGIN
-	HorizPos: VMiddle = Enclosing . VMiddle;
-	Adjust: Left;
-	In Structure_view
-	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
- Align (Preformatted) = right_:
-	BEGIN
-	HorizPos: Right = Enclosing . Right;
-	Adjust: Left;
-	In Structure_view
-	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-
- Align = left_:
+ TextAlign = left_:
 	BEGIN
 	CreateBefore(ALIGN_LEFT);
-	If not Table
-	   Adjust: Left;
-	If Horizontal_Rule
-	   HorizPos: Left = Enclosing . Left;
-	If Text_Input
-	   HorizPos: Left = Enclosing . Left;
-	If Table
-	   HorizPos: Left = Enclosing . Left;
-	In Structure_view
-	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	Adjust: Left;
 	END;
-
- Align = center_:
+ TextAlign = center_:
 	BEGIN
 	CreateBefore(ALIGN_CENTER);
-	If not Table
-	   Adjust: VMiddle;	
-	If Horizontal_Rule
-	   HorizPos: VMiddle = Enclosing . VMiddle;
-	If Text_Input
-	   HorizPos: VMiddle = Enclosing . VMiddle;
-	If Table
-	   HorizPos: VMiddle = Enclosing . VMiddle;
+	Adjust: VMiddle;	
 	In Structure_view
-	   BEGIN
 	   Adjust: Left;
-	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	   END;
 	END;
-
- Align = right_:
+ TextAlign = right_:
 	BEGIN
 	CreateBefore(ALIGN_RIGHT);
-	If not Table
-	   Adjust: Right;
-	If Horizontal_Rule
-	   HorizPos: Right = Enclosing . Right;
-	If Text_Input
-	   HorizPos: Right = Enclosing . Right;
-	If Table
-	   HorizPos: Right = Enclosing . Right;
+	Adjust: Right;
 	In Structure_view
-	   BEGIN
-	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	   Adjust: Left;
-	   END;
+	END;
+ TextAlign = justify_:
+	BEGIN
+	CreateBefore(ALIGN_JUSTIFY);
+	Adjust: Left;
+	Justify: Yes;
+	In Structure_view
+	   Justify: Enclosing =;
 	END;
 
  cellspacing:
@@ -7009,13 +7223,77 @@ ATTRIBUTES
 	CreateBefore(VALUE_CLASS);
 	END;
 
-#ifdef COUGAR
   ID:
 	BEGIN
 	CreateBefore(ATTR_ID);
 	CreateBefore(VALUE_ID);
 	END;
-#endif
+
+  dir = ltr:
+	CreateBefore(ATTR_DIR_LTR);
+
+  dir = rtl:
+	CreateBefore(ATTR_DIR_RTL);
+
+  onclick:
+	BEGIN
+	CreateBefore(ATTR_ONCLICK);
+	CreateBefore(VALUE_ONCLICK);
+	END;
+
+  ondblclick:
+	BEGIN
+	CreateBefore(ATTR_ONDBLCLICK);
+	CreateBefore(VALUE_ONDBLCLICK);
+	END;
+
+  onmousedown:
+	BEGIN
+	CreateBefore(ATTR_ONMOUSEDOWN);
+	CreateBefore(VALUE_ONMOUSEDOWN);
+	END;
+
+  onmouseup:
+	BEGIN
+	CreateBefore(ATTR_ONMOUSEUP);
+	CreateBefore(VALUE_ONMOUSEUP);
+	END;
+
+  onmouseover:
+	BEGIN
+	CreateBefore(ATTR_ONMOUSEOVER);
+	CreateBefore(VALUE_ONMOUSEOVER);
+	END;
+
+  onmousemove:
+	BEGIN
+	CreateBefore(ATTR_ONMOUSEMOVE);
+	CreateBefore(VALUE_ONMOUSEMOVE);
+	END;
+
+  onmouseout:
+	BEGIN
+	CreateBefore(ATTR_ONMOUSEOUT);
+	CreateBefore(VALUE_ONMOUSEOUT);
+	END;
+
+  onkeypress:
+	BEGIN
+	CreateBefore(ATTR_ONKEYPRESS);
+	CreateBefore(VALUE_ONKEYPRESS);
+	END;
+
+  onkeydown:
+	BEGIN
+	CreateBefore(ATTR_ONKEYDOWN);
+	CreateBefore(VALUE_ONKEYDOWN);
+	END;
+
+  onkeyup:
+	BEGIN
+	CreateBefore(ATTR_ONKEYUP);
+	CreateBefore(VALUE_ONKEYUP);
+	END;
 
   Invalid_attribute:
 	BEGIN

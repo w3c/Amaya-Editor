@@ -10,11 +10,7 @@ CONST
 RULES
 
  HTML : BEGIN
-#ifdef COUGAR
 	Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\12';
-#else
-	Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">\12';
-#endif
 	Create '<html';
 	Create Attributes;
 	Create '>\12';
@@ -310,7 +306,6 @@ RULES
 	Create '>\12';
 	END;
 
-#ifdef COUGAR
  Object: BEGIN
 	Create '<object';
 	Create Attributes;
@@ -324,7 +319,6 @@ RULES
 	Create '>';
 	Create '</span>' After;
 	END;
-#endif
 
 #ifdef MATHML
  Math: BEGIN
@@ -548,7 +542,6 @@ RULES
 	END;
 
  PICTURE_UNIT: BEGIN
-#ifdef COUGAR
 	if Immediately within Object
 		Remove;
 	if NOT Immediately within Object BEGIN
@@ -558,13 +551,6 @@ RULES
 		END;
 	if NOT within Paragraph AND NOT Immediately within Object
 		Create '\12' After;
-#else
-	Create '<img';
-	Create Attributes;
-	Create '>' After;
-	if NOT within Paragraph
-		Create '\12' After;
-#endif
 	END;
 
  Anchor: BEGIN
@@ -611,7 +597,6 @@ RULES
  Table_head:
 	Remove;
 
-#ifdef COUGAR
  thead:
 	BEGIN
 	Create '<thead';
@@ -634,7 +619,6 @@ RULES
 	Create '>\12';
 	Create '</tbody>\12' after;
 	END;
-#endif
 
  Table_body:
 	Get tfoot;
@@ -709,7 +693,6 @@ RULES
 
 ATTRIBUTES
 
-#ifdef COUGAR
  Langue:
 	IF not HTML
 	    BEGIN
@@ -717,7 +700,6 @@ ATTRIBUTES
 	    Create Langue;
 	    Create DoubleQuote;
 	    END;
-#endif
 
  http_equiv: BEGIN
 	Create ' http-equiv="';
@@ -821,20 +803,29 @@ ATTRIBUTES
 	END;
 
  Clear = Left_:
-	Create ' clear=left';
+	Create ' clear="left"';
  Clear = Right_:
-	Create ' clear=right';
+	Create ' clear="right"';
  Clear = All_:
-	Create ' clear=all';
+	Create ' clear="all"';
  Clear = None:
-	Create ' clear=none';
+	Create ' clear="none"';
 
  Align = left_:
-	Create ' align=left';
+	Create ' align="left"';
  Align = center_:
-	Create ' align=center';
+	Create ' align="center"';
  Align = right_:
-	Create ' align=right';
+	Create ' align="right"';
+
+ TextAlign = left_:
+	Create ' align="left"';
+ TextAlign = center_:
+	Create ' align="center"';
+ TextAlign = right_:
+	Create ' align="right"';
+ TextAlign = justify_:
+	Create ' align="justify"';
 
  NoShade:
 	Create ' noshade';
@@ -881,7 +872,7 @@ ATTRIBUTES
 	Create Param_value;
 	Create DoubleQuote;
 	END;
-#ifdef COUGAR
+
  classid: BEGIN
 	Create ' classid="';
 	Create classid;
@@ -911,7 +902,7 @@ ATTRIBUTES
 	Create codetype;
 	Create DoubleQuote;
 	END;
-#endif
+
  Title : BEGIN
 	NoTranslation;
 	Create ' title="';
@@ -925,8 +916,7 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
- Style\240:
-	BEGIN
+ Style\240: BEGIN
 	IF not Within HEAD
 	    BEGIN
 	    Create ' style="';
@@ -935,34 +925,97 @@ ATTRIBUTES
 	    END;
 	END;
 
-#ifdef COUGAR
  ID:	BEGIN
 	Create ' id="';
 	Create ID;
 	Create DoubleQuote;
 	END;
-#endif
+
+ dir = ltr :
+	Create ' dir="ltr"';
+ dir = rtl :
+	Create ' dir="rtl"';
+
+ onclick: BEGIN
+	Create ' onclick="';
+	Create onclick;
+	Create DoubleQuote;
+	END;
+
+ ondblclick: BEGIN
+	Create ' ondblclick="';
+	Create ondblclick;
+	Create DoubleQuote;
+	END;
+
+ onmousedown: BEGIN
+	Create ' onmousedown="';
+	Create onmousedown;
+	Create DoubleQuote;
+	END;
+
+ onmouseup: BEGIN
+	Create ' onmouseup="';
+	Create onmouseup;
+	Create DoubleQuote;
+	END;
+
+ onmouseover: BEGIN
+	Create ' onmouseover="';
+	Create onmouseover;
+	Create DoubleQuote;
+	END;
+
+ onmousemove: BEGIN
+	Create ' onmousemove="';
+	Create onmousemove;
+	Create DoubleQuote;
+	END;
+
+ onmouseout: BEGIN
+	Create ' onmouseout="';
+	Create onmouseout;
+	Create DoubleQuote;
+	END;
+
+ onkeypress: BEGIN
+	Create ' onkeypress="';
+	Create onkeypress;
+	Create DoubleQuote;
+	END;
+
+ onkeydown: BEGIN
+	Create ' onkeydown="';
+	Create onkeydown;
+	Create DoubleQuote;
+	END;
+
+ onkeyup: BEGIN
+	Create ' onkeyup="';
+	Create onkeyup;
+	Create DoubleQuote;
+	END;
 
  BulletStyle = disc :
-	Create ' type=disc';
+	Create ' type="disc"';
  BulletStyle = square :
-	Create ' type=square';
+	Create ' type="square"';
  BulletStyle = circle :
-	Create ' type=circle';
+	Create ' type="circle"';
 
  COMPACT:
 	Create ' compact';
 
  NumberStyle = Arabic_ :
-	Create ' type=1';
+	Create ' type="1"';
  NumberStyle = LowerAlpha :
-	Create ' type=a';
+	Create ' type="a"';
  NumberStyle = UpperAlpha :
-	Create ' type=A';
+	Create ' type="A"';
  NumberStyle = LowerRoman :
-	Create ' type=i';
+	Create ' type="i"';
  NumberStyle = UpperRoman :
-	Create ' type=I';
+	Create ' type="I"';
 
  Start > 1: BEGIN
 	Create ' start="';
@@ -971,21 +1024,21 @@ ATTRIBUTES
 	END;
 
  ItemStyle = disc :
-	Create ' type=disc';
+	Create ' type="disc"';
  ItemStyle = square :
-	Create ' type=square';
+	Create ' type="square"';
  ItemStyle = circle :
-	Create ' type=circle';
+	Create ' type="circle"';
  ItemStyle = Arabic_ :
-	Create ' type=1';
+	Create ' type="1"';
  ItemStyle = LowerAlpha :
-	Create ' type=a';
+	Create ' type="a"';
  ItemStyle = UpperAlpha :
-	Create ' type=A';
+	Create ' type="A"';
  ItemStyle = LowerRoman :
-	Create ' type=i';
+	Create ' type="i"';
  ItemStyle = UpperRoman :
-	Create ' type=I';
+	Create ' type="I"';
 
  ItemValue: BEGIN
 	Create ' value="';
@@ -1076,15 +1129,15 @@ ATTRIBUTES
 	END;
 
  Alignment = Top_:
-	Create ' align=top';
+	Create ' align="top"';
  Alignment = Middle_:
-	Create ' align=middle';
+	Create ' align="middle"';
  Alignment = Bottom_:
-	Create ' align=bottom';
+	Create ' align="bottom"';
  Alignment = Left_:
-	Create ' align=left';
+	Create ' align="left"';
  Alignment = Right_:
-	Create ' align=right';
+	Create ' align="right"';
 
  Height_: BEGIN
 	Create ' height="';
@@ -1124,11 +1177,11 @@ ATTRIBUTES
 	Create ' nohref';
 
  shape = rectangle:
-	Create ' shape=rect';
+	Create ' shape="rect"';
  shape = circle:
-	Create ' shape=circle';
+	Create ' shape="circle"';
  shape = polygon:
-	Create ' shape=poly';
+	Create ' shape="poly"';
 
  coords: BEGIN
 	Create ' coords="';
@@ -1138,9 +1191,9 @@ ATTRIBUTES
 
 #ifdef MATHML
  mode = inline_math:
-	Create ' mode=inline';
+	Create ' mode="inline"';
  mode = display:
-	Create ' mode=display';
+	Create ' mode="display"';
 #endif
 
  Border: BEGIN
@@ -1162,22 +1215,22 @@ ATTRIBUTES
 	END;
 
  Position = Position_top:
-	 Create ' align=top';
+	 Create ' align="top"';
  Position = Position_bottom:
-	 Create ' align=bottom';
+	 Create ' align="bottom"';
 
  Row_align = Row_left:
-	 Create ' align=left';
+	 Create ' align="left"';
  Row_align = Row_center:
-	 Create ' align=center';
+	 Create ' align="center"';
  Row_align = Row_right:
-	 Create ' align=right';
+	 Create ' align="right"';
  Row_valign = Row_top:
-	 Create ' valign=top';
+	 Create ' valign="top"';
  Row_valign = Row_middle:
-	 Create ' valign=middle';
+	 Create ' valign="middle"';
  Row_valign = Row_bottom:
-	 Create ' valign=bottom';
+	 Create ' valign="bottom"';
 
  colspan_: BEGIN
 	Create ' colspan="';
@@ -1192,18 +1245,18 @@ ATTRIBUTES
 	END;
 
  Cell_align = Cell_left:
-	Create ' align=left';
+	Create ' align="left"';
  Cell_align = Cell_center:
-	Create ' align=center';
+	Create ' align="center"';
  Cell_align = Cell_right:
-	Create ' align=right';
+	Create ' align="right"';
 
  Cell_valign = Cell_top:
-	Create ' valign=top';
+	Create ' valign="top"';
  Cell_valign = Cell_middle:
-	Create ' valign=middle';
+	Create ' valign="middle"';
  Cell_valign = Cell_bottom:
-	Create ' valign=bottom';
+	Create ' valign="bottom"';
 
  No_wrap = no_wrap:
 	Create ' nowrap';

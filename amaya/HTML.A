@@ -245,27 +245,64 @@ ATTRIBUTES
 	AttrDelete.Post -> AttrItemStyle;
 	END;
 
+   ID:
+	BEGIN
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+	AttrCreate.Post -> UpdateAttrID;
+	AttrModify.Post -> UpdateAttrID;	
+	AttrDelete.Post -> UpdateAttrID;
+	END;
+
+   Class:
+	BEGIN
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+	AttrCreate.Post -> AttrClassChanged;
+	AttrModify.Post -> AttrClassChanged;
+	AttrDelete.Post -> AttrClassChanged;
+	END;
+
    Style\240:
 	BEGIN
-	AttrMenu.Pre ->    AttrSTYLEinMenu;
+	AttrMenu.Pre ->    GlobalAttrInMenu;
 	AttrCreate.Post -> UpdateStylePost;
 	AttrModify.Post -> UpdateStylePost;
 	AttrDelete.Pre ->  UpdateStyleDelete;
 	AttrDelete.Post -> AttrStyleDeleted;
 	END;
 
-   Class:
-	BEGIN
-	AttrCreate.Post -> AttrClassChanged;
-	AttrModify.Post -> AttrClassChanged;
-	AttrDelete.Post -> AttrClassChanged;
-	END;
+   Title:
+	AttrMenu.Pre ->    GlobalAttrInMenu;
 
    Langue:
 	BEGIN
+	AttrMenu.Pre ->    GlobalAttrInMenu;
 	AttrCreate.Post -> AttrLangCreated;
 	AttrDelete.Post -> AttrLangDeleted;
 	END;
+
+   dir:
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+
+   onclick:
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+   ondblclick:
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+   onmousedown:
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+   onmouseup:
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+   onmouseover:
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+   onmousemove:
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+   onmouseout:
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+   onkeypress:
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+   onkeydown:
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+   onkeyup:
+	AttrMenu.Pre ->    GlobalAttrInMenu;
 
    Selected:
 	BEGIN
@@ -282,10 +319,4 @@ ATTRIBUTES
 	AttrDelete.Pre ->  DeleteAttrSelected;	
 	END;
 
-   ID:
-	BEGIN
-	AttrCreate.Post -> UpdateAttrID;
-	AttrModify.Post -> UpdateAttrID;	
-	AttrDelete.Post -> UpdateAttrID;
-	END;
 END

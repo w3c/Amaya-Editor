@@ -4,77 +4,120 @@ STRUCTURE HTML;
 DEFPRES HTMLP;
 
 ATTR
-   ID = TEXT;
-   Class = text;
-   PseudoClass = text;
-   Style\240 = TEXT;
+			{ coreattrs }
+   ID = TEXT;			{ id }
+   Class = TEXT;		{ class }
+   PseudoClass = TEXT;
+   Style\240 = TEXT;		{ style }
+   Title = TEXT;		{ title }
+			{ i18n }
+   dir = ltr, rtl;		{ dir }
+			{ events }
+   onclick = TEXT;		{ onclick }
+   ondblclick = TEXT;		{ ondblclick }
+   onmousedown = TEXT;		{ onmousedown }
+   onmouseup = TEXT;		{ onmouseup }
+   onmouseover = TEXT;		{ onmouseover }
+   onmousemove = TEXT;		{ onmousemove }
+   onmouseout = TEXT;		{ onmouseout }
+   onkeypress = TEXT;		{ onkeypress }
+   onkeydown = TEXT;		{ onkeydown }
+   onkeyup = TEXT;		{ onkeyup }
+
    Invalid_attribute = TEXT;
    Ghost_restruct = TEXT;
 
 CONST
+
    C_Empty = ' ';
    C_Foot = ' ';
    C_Head = ' ';
    C_BR   = '\212';
 
 STRUCT
-  HTML (ATTR SectionNumbering = Yes_; ShowAreas = Yes_) =
+
+  HTML (ATTR SectionNumbering = Yes_; ShowAreas = Yes_) =	{ HTML }
 	BEGIN
 	HEAD;
 	BODY;
 	END + (Invalid_element, Comment\240);
 
-  BODY (ATTR background_ = Text; BackgroundColor = Text; TextColor = Text;
-	LinkColor = Text; VisitedLinkColor = Text; ActiveLinkColor = Text)
+  BODY								{ BODY }
+	(ATTR background_ = Text; BackgroundColor = Text; TextColor = Text;
+	   { background          bgcolor                 text }
+	     LinkColor = Text; VisitedLinkColor = Text; ActiveLinkColor = Text)
+           { link              vlink                    alink }
 	= LIST OF (Element);
 
   Invalid_element (ATTR Error_type = UnknownTag, BadPosition) = TEXT;
   Comment\240 = LIST OF (Comment_line = TEXT);
 
-  HEAD = AGGREGATE
+  HEAD = AGGREGATE						{ HEAD }
 	  Document_URL = TEXT;
-	  TITLE = TEXT;
-	? ISINDEX (ATTR Prompt = TEXT) = CONSTANT C_Empty;
-	? BASE;
-	? Styles (ATTR Notation = TEXT) = TEXT;
-	? Scripts = LIST OF (SCRIPT = TEXT);
+	  TITLE = TEXT;						{ TITLE }
+	? ISINDEX (ATTR Prompt = TEXT) = CONSTANT C_Empty;	{ ISINDEX }
+		      { prompt }
+	? BASE;							{ BASE }
+	? Styles						{ STYLE }
+		(ATTR Notation = TEXT) = TEXT;
+		    { type }
+	? Scripts = LIST OF (SCRIPT);
 	? Metas = LIST OF (META);
 	? Links = LIST OF (LINK);
 	END;
-  META (ATTR http_equiv = Text; !meta_name = Text; !meta_content = Text)
+
+  SCRIPT = TEXT;						{ SCRIPT }
+
+  META								{ META }
+	(ATTR http_equiv = Text; !meta_name = Text; !meta_content = Text)
+	    { http-equic          name               content }
 	 = CONSTANT C_Empty;
-  LINK (ATTR HREF_ = Text;
-#ifdef COUGAR
+
+  LINK (ATTR HREF_ = Text;					{ LINK }
+	   { href }
 	     Link_type = TEXT;
-#endif
-	     REL = Text; REV = Text; Title = Text)
+	   { type }
+	     REL = Text; REV = Text)
+	   { rel         rev }
 	 = CONSTANT C_Empty;
 
-  BASE (ATTR !HREF_) = CONSTANT C_Empty;
+  BASE (ATTR !HREF_) = CONSTANT C_Empty;			{ BASE }
+	    { href }
 
-  Element = CASE OF
-	Paragraph;
+  Element = CASE OF						{ block }
+	Paragraph;						{ P }
 	Pseudo_paragraph;
-	Heading;
-	List_;
-	Horizontal_Rule (ATTR Align = left_, center_, right_;
+	Heading;						{ heading }
+	List_;							{ list + DL }
+	Preformatted;						{ PRE preformatted }
+	Division;						{ DIV }
+	Center;							{ CENTER }
+	Block_Quote (ATTR cite = TEXT) =			{ BLOCKQUOTE }
+		LIST OF (Element);
+	Form;							{ FORM }
+	ISINDEX;						{ ISINDEX }
+	Horizontal_Rule (ATTR Align = left_, center_, right_;	{ HR }
+			    { align   left   center   right }
 			NoShade = NoShade_; Size_ = Integer;
-			Width__ = Text; IntWidthPercent = Integer;
+		      { noshade             size }
+			Width__ = Text;
+		      { width }
+			IntWidthPercent = Integer;
 			IntWidthPxl = Integer) =
 		CONSTANT C_Empty;
-	Block_Quote = LIST OF (Element);
-	Preformatted;
-	Address = LIST OF (AddressContent);
-	Division;
-	Center;
-	Applet;
-	PICTURE (ATTR Alignment = Top_, Middle_, Bottom_, Left_, Right_;
-		 Height_ = Integer; Width__; IntWidthPercent; IntWidthPxl;
-		 hspace = Integer; vspace = Integer; Img_border = Integer;
-		 ISMAP = Yes_; USEMAP = Text; SRC = Text; ALT = Text);
-#ifdef COUGAR
-	Object;
-#endif
+	Table;							{ TABLE }
+	Address = LIST OF (AddressContent);			{ ADDRESS }
+	Applet;							{ APPLET }
+	PICTURE							{ IMG }
+		(ATTR Alignment = Top_, Middle_, Bottom_, Left_, Right_;
+		{     align       top   middle   bottom   left   right }
+		  Height_ = Integer; Width__; IntWidthPercent; IntWidthPxl;
+		{ height             width }
+		  hspace = Integer; vspace = Integer; Img_border = Integer;
+		{ hspace            vspace            border }
+		  ISMAP = Yes_; USEMAP = Text; SRC = Text; ALT = Text);
+		{ ismap        usemap         src         alt }
+	Object;							{ OBJECT }
 #ifdef MATHML
 	MathDisp (ATTR mode = display, inline_math) = MathML;
 #endif
@@ -85,10 +128,7 @@ STRUCT
 	 = GraphML
 	   with Height_ ?= 200, Width__ ?= '100%', IntWidthPercent ?= 100;
 #endif
-	Form;
-	Table;
-	MAP;
-	ISINDEX;
+	MAP;							{ MAP }
 	END;
 
 #ifdef GRAPHML
@@ -97,185 +137,243 @@ STRUCT
 
   AddressContent = CASE OF
 	Basic_Elem;
-	Paragraph;
+	Paragraph;		{ P }
 	Pseudo_paragraph;
 	END;
 
   Basic_Set = LIST OF (Basic_Elem);
 
-  Heading = CASE OF
-	H1 (ATTR Align) = Basic_Set;
-	H2 (ATTR Align) = Basic_Set;
-	H3 (ATTR Align) = Basic_Set;
-	H4 (ATTR Align) = Basic_Set;
-	H5 (ATTR Align) = Basic_Set;
-	H6 (ATTR Align) = Basic_Set;
+  Paragraph							{ P }
+	(ATTR TextAlign = left_, center_, right_, justify_) = Basic_Set;
+	    { align	  left   center   right   justify }
+  Pseudo_paragraph = Basic_Set;
+
+  Heading = CASE OF						{ heading }
+	H1 (ATTR TextAlign) = Basic_Set;			{ H1 }
+	       { align }
+	H2 (ATTR TextAlign) = Basic_Set;			{ H2 }
+	H3 (ATTR TextAlign) = Basic_Set;			{ H3 }
+	H4 (ATTR TextAlign) = Basic_Set;			{ H4 }
+	H5 (ATTR TextAlign) = Basic_Set;			{ H5 }
+	H6 (ATTR TextAlign) = Basic_Set;			{ H6 }
 	END;
 
-  Paragraph (ATTR Align) = Basic_Set;
-  Pseudo_paragraph = Basic_Set;
-  Preformatted (ATTR Width__; IntWidthPercent; IntWidthPxl)
+  Preformatted (ATTR Width__; IntWidthPercent; IntWidthPxl)	{ PRE }
+		   { width }
 		= Basic_Set
-	     - (PICTURE, Big_text, Small_text, Subscript, Superscript, Font_);
+	     - (PICTURE, Object, Applet,
+		Big_text, Small_text, Subscript, Superscript,
+		Font_, BaseFont);
 
-  Anchor (ATTR HREF_; NAME = Text; REL; REV; Title;
+  { A }
+  Anchor (ATTR HREF_; NAME = Text; REL; REV;
+	     { href   name         rel  rev }
 	       InternalLink = Reference(Any); ExternalLink = Yes_)
 	= Basic_Set;
 
-  Basic_Elem = CASE OF
+  Basic_Elem = CASE OF				{ special }
         TEXT;
-	PICTURE;
-	Anchor;
 	Font;
 	Phrase;
-	Font_;
-	BaseFont;
-	Applet;
-#ifdef COUGAR
-	Object;
-#endif
+	Anchor;					{ A }
+	PICTURE;				{ IMG }
+	Applet;					{ APPLET }
+	Object;					{ OBJECT }
+	Font_;					{ FONT }
+	BaseFont;				{ BASEFONT }
+	BR (ATTR Clear = Left_, Right_, All_, None) = CONSTANT C_BR;	{ BR }
+	       { clear   left   right   all   none }
+	SCRIPT;					{ SCRIPT }
+	MAP;					{ MAP }
+	Quotation (ATTR cite) = Basic_Set;	{ Q }
+	Subscript = Basic_Set;			{ SUB }
+	Superscript = Basic_Set;		{ SUP }
+	Span = Basic_Set;			{ SPAN }
+	BDO = Basic_Set;			{ BDO }
+	IFRAME;					{ IFRAME }
 #ifdef MATHML
 	Math (ATTR mode) = MathML;
 #endif
-	SCRIPT;
-	MAP;
-	BR (ATTR Clear = Left_, Right_, All_, None) = CONSTANT C_BR;
-	Span = Basic_Set;
 	END;
 
-  BaseFont (ATTR BaseFontSize = Integer) = CONSTANT C_Empty;
+  BaseFont (ATTR BaseFontSize = Integer) = CONSTANT C_Empty;	{ BASEFONT }
+		{ size }
 
-  Font = CASE OF
-	Italic_text = Basic_Set;
-	Bold_text = Basic_Set;
-	Teletype_text = Basic_Set;
-	Underlined_text = Basic_Set;
-	Struck_text = Basic_Set;
-	Big_text = Basic_Set;
-	Small_text = Basic_Set;
-	Subscript = Basic_Set;
-	Superscript = Basic_Set;
+  Font = CASE OF			{ fontstyle }
+	Italic_text = Basic_Set;	{ I }
+	Bold_text = Basic_Set;		{ B }
+	Teletype_text = Basic_Set;	{ TT }
+	Underlined_text = Basic_Set;	{ U }
+	Struck_text = Basic_Set;	{ STRIKE }
+	Big_text = Basic_Set;		{ BIG }
+	Small_text = Basic_Set;		{ SMALL }
 	END;
 
-  Phrase = CASE OF
-	Emphasis = Basic_Set;
-	Strong = Basic_Set;
-	Def = Basic_Set;
-	Code = Basic_Set;
-	Sample = Basic_Set;
-	Keyboard = Basic_Set;
-	Variable = Basic_Set;
-	Cite = Basic_Set;
+  Phrase = CASE OF			{ phrase }
+	Emphasis = Basic_Set;		{ EM }
+	Strong = Basic_Set;		{ STRONG }
+	Def = Basic_Set;		{ DFN }
+	Code = Basic_Set;		{ CODE }
+	Sample = Basic_Set;		{ SAMP }
+	Keyboard = Basic_Set;		{ KBD }
+	Variable = Basic_Set;		{ VAR }
+	Cite = Basic_Set;		{ CITE }
 	END;
 
-  Font_ (ATTR Font_size = Text; IntSizeIncr = Integer; IntSizeDecr = Integer;
-	      IntSizeRel = Integer; color = Text) = Basic_Set;
+  Font_ (ATTR Font_size = Text; color = Text;			{ FONT }
+	    { size              color }
+	      IntSizeIncr = Integer; IntSizeDecr = Integer;
+	      IntSizeRel = Integer) = Basic_Set;
 
-  Applet (ATTR codebase = TEXT; !code = TEXT; applet_name = TEXT;
-	       alt = TEXT; Alignment; Height_; Width__; IntWidthPercent;
-	       IntWidthPxl; hspace; vspace) =
+  Applet (ATTR codebase = TEXT; !code = TEXT;			{ APPLET }
+	     { codebase          code }
+	       alt = TEXT; applet_name = TEXT;
+	     { alt         name }
+	       Width__; Height_;
+	     { width    height }
+	       IntWidthPercent; IntWidthPxl;
+	       Alignment; hspace; vspace) =
+	     { align      hspace  vspace }
 	LIST OF (Applet_Content = CASE OF
-				  Parameter;
+				  Parameter;			{ PARAM }
 				  Basic_Set;
 				  END);
-  Parameter (ATTR Param_name = TEXT; Param_value = TEXT) =  CONSTANT C_Empty;
+  Parameter (ATTR Param_name = TEXT; Param_value = TEXT) =	{ PARAM }
+		{ name               value }
+	CONSTANT C_Empty;
 
-#ifdef COUGAR
-  Object (ATTR classid = TEXT; codebase; data = TEXT; Object_type = TEXT;
+  Object							{ OBJECT }
+	(ATTR classid = TEXT; codebase; data = TEXT; Object_type = TEXT;
+	    { classid         codebase  data         type }
 	  codetype = TEXT; Alignment; !Height_; !Width__; IntWidthPercent;
+        { codetype         align       height    width }
 	  IntWidthPxl; hspace; vspace;
+        {              hspace  vspace }
 	  Img_border; USEMAP; ALT) =
+	{ border      usemap  alt }
 	BEGIN
 	PICTURE;
 	Object_Content = LIST OF (CASE OF Element; Parameter; END);
+						 { PARAM }
 	END with Height_ ?= 400, Width__ ?= '400', IntWidthPxl ?= 400;
-#endif
 
-  Block = CASE OF
-	Paragraph;
+  Block = CASE OF						{ block }
+	Paragraph;						{ P }
 	Pseudo_paragraph;
-	List_;
-	Block_Quote;
-	Preformatted;
-	Division;
-	Center = LIST OF (Element);
+	Heading;						{ heading }
+	List_;							{ list + DL }
+	Block_Quote;						{ BLOCKQUOTE }
+	Preformatted;						{ PRE }
+	Division;						{ DIV }
+	Center = LIST OF (Element);				{ CENTER }
 	Form;
 	END;
 
-  Division (ATTR Align) = LIST OF (Element);
+  Division (ATTR TextAlign) = LIST OF (Element);		{ DIV }
 
-  List_ = CASE OF
-	Unnumbered_List (ATTR BulletStyle = disc, circle, square;
-			      COMPACT = Yes_) =
+  List_ = CASE OF						{ list }
+	Unnumbered_List			 			{ UL }
+		(ATTR BulletStyle = disc, circle, square;
+		    { type          disc  circle  square }
+		      COMPACT = Yes_) =
+		    { compact }
 			LIST OF (List_Item);
-	Numbered_List  (ATTR NumberStyle = Arabic_, LowerAlpha, UpperAlpha,
-			    LowerRoman, UpperRoman; Start = Integer; COMPACT) =
+	Numbered_List						{ OL }
+		(ATTR NumberStyle = Arabic_, LowerAlpha, UpperAlpha,
+		    { type          1        a           A }
+				    LowerRoman, UpperRoman;
+				  { i           I }
+		      Start = Integer; COMPACT) =
+		    { start            compact }
 			LIST OF (List_Item) with Start ?= 1;
-	Directory (ATTR COMPACT) =
+	Directory (ATTR COMPACT) =				{ DIR }
 			LIST OF (List_Item);
-	Menu (ATTR COMPACT) =
+	Menu (ATTR COMPACT) =					{ MENU }
 			LIST OF (List_Item);
-	Definition_List = LIST OF (Definition_Item);
+	Definition_List (ATTR COMPACT) =			{ DL }
+			LIST OF (Definition_Item);
 	END;
 
-  List_Item (ATTR ItemStyle = disc, circle, square, Arabic_, LowerAlpha,
-		  UpperAlpha, LowerRoman, UpperRoman;
-		  IntItemStyle = disc, circle, square, Arabic_, LowerAlpha,
-		  UpperAlpha, LowerRoman, UpperRoman;
+  List_Item (ATTR ItemStyle = disc, circle, square,		{ LI }
+		{ type        disc  circle  square }
+		  Arabic_, LowerAlpha, UpperAlpha, LowerRoman, UpperRoman;
+		{ 1        a           A           i           I }
+		  IntItemStyle = disc, circle, square,
+		  Arabic_, LowerAlpha, UpperAlpha, LowerRoman, UpperRoman;
 		  ItemValue = Integer) =
+		{ value }
 	LIST OF (Block);
 
-  Definition_Item (ATTR COMPACT) = BEGIN
-	Term_List = LIST OF (Term = Basic_Set);
-	? Definition = LIST OF (Block);
+  Definition_Item = BEGIN
+	Term_List = LIST OF (Term = Basic_Set);			{ DT }
+	? Definition = LIST OF (Block);				{ DD }
 	END;
 
-  Form (ATTR !Script_URL = Text; METHOD = Get_, Post_; ENCTYPE = Text) =
+  Form (ATTR !Script_URL = Text; METHOD = Get_, Post_;		{ FORM }
+	    { action             method }
+	     ENCTYPE = Text) =
+	   { enctype }
 	LIST OF (Form_Element) + (Input) with METHOD ?= Get_;
 
   Form_Element = CASE OF
-	Paragraph;
+	Paragraph;						{ P }
 	Pseudo_paragraph;
-	Option_Menu;
-	Text_Area (ATTR !NAME; Rows = Integer; Columns = Integer;
-			Default_Value = Text) =
+	Option_Menu;						{ SELECT }
+	Text_Area 						{ TEXTAREA }
+		(ATTR !NAME; Rows = Integer; Columns = Integer;
+		     { name  rows            cols }
+		       Default_Value = Text) =
 		Text_With_Frame with Rows ?= 4, Columns ?= 20;
-	Heading;
-	List_;
-	Horizontal_Rule;
-	Block_Quote;
-	Preformatted;
-	Division;
-	Table;
-	Center;
-	ISINDEX;
+	Heading;						{ heading }
+	List_;							{ list + DL }
+	Horizontal_Rule;					{ HR }
+	Block_Quote;						{ BLOCKQUOTE }
+	Preformatted;						{ PRE }
+	Division;						{ DIV }
+	Table;							{ TABLE }
+	Center;							{ CENTER }
+	ISINDEX;						{ ISINDEX }
 	END;
 
-  Option_Menu (ATTR !NAME; Multiple = Yes_; MenuSize = Integer) =
+  Option_Menu (ATTR !NAME; Multiple = Yes_; MenuSize = Integer) =    { SELECT }
+		   { name  multiple         size }
 	LIST OF (Option) - (Input);
-  Option (ATTR Selected = Yes_; DefaultSelected = Yes_; !Value_ = Text) =
+  Option							     { OPTION }
+	(ATTR Selected = Yes_; DefaultSelected = Yes_; !Value_ = Text) =
+	    { selected                                  value }
 	TEXT;
 
-  Input = CASE OF
-	Checkbox_Input (ATTR !NAME; 
-			     Checked = Yes_, No_; DefaultChecked = Yes_, No_;
-			     Value_) =
+  Input = CASE OF					{ INPUT / InputType }
+	Checkbox_Input					{ INPUT / CHECKBOX }
+		(ATTR !NAME; { name }
+		      Checked = Yes_, No_; DefaultChecked = Yes_, No_;
+		    { checked }
+		      Value_ { value } ) =
 		CONSTANT C_Empty with Checked ?= No_;
-	Radio_Input (ATTR !NAME; Checked; DefaultChecked; !Value_) =
+	Radio_Input					{ INPUT / RADIO }
+		(ATTR !NAME; Checked; DefaultChecked; !Value_) =
+		     { name  checked                   value }
 		CONSTANT C_Empty with Checked ?= No_, NAME ?= 'radio';
-	Text_Input (ATTR !NAME; Area_Size = Integer; MaxLength = Integer; Value_) =
+	Text_Input					{ INPUT / TEXT }
+		(ATTR !NAME; Area_Size = Integer;
+		     { name  size }
+		      MaxLength = Integer; Value_) =
+		     { maxlength           value }
 		Text_With_Frame with Area_Size ?= 20;
-	Hidden_Input (ATTR !NAME; Value_) = CONSTANT C_Empty;
-	Password_Input (ATTR !NAME; Area_Size; MaxLength) = Text_With_Frame;
-	File_Input (ATTR !NAME) = CONSTANT C_Empty;
-	Reset_Input (ATTR NAME; Value_) = BEGIN
+	Hidden_Input					{ INPUT / HIDDEN }
+		(ATTR !NAME; Value_) = CONSTANT C_Empty;
+	Password_Input					{ INPUT / PASSWORD }
+		(ATTR !NAME; Area_Size; MaxLength) = Text_With_Frame;
+	File_Input					{ INPUT / FILE }
+		(ATTR !NAME) = CONSTANT C_Empty;
+	Reset_Input (ATTR NAME; Value_) = BEGIN		{ INPUT / RESET }
 		Frame;
 		END with NAME ?= 'Reset', Value_ ?= 'Reset';
-	Submit_Input (ATTR NAME; Value_) = BEGIN
+	Submit_Input (ATTR NAME; Value_) = BEGIN	{ INPUT / SUBMIT }
 		Frame;
 		END with Value_ ?= 'Submit';
-	Option_Menu;
-	Text_Area;
+	Option_Menu;					{ SELECT }
+	Text_Area;					{ TEXTAREA }
 	END;
 
   Text_With_Frame = BEGIN
@@ -283,46 +381,88 @@ STRUCT
 	Frame = CONSTANT C_Empty;
 	END;
 
-  Table (ATTR Border = Integer;
-	      Align;
+  Table (ATTR Border = Integer;					{ TABLE }
+	    { border }
+	      Align; BackgroundColor;
+	    { align  bgcolor }
 	      Width__; IntWidthPxl; IntWidthPercent;
+	    { width }
 	      cellspacing = Integer; cellpadding = Integer) =
+	    { cellspacing	     cellpadding }
 	BEGIN
-	CAPTION (ATTR Position = Position_top, Position_bottom) = Basic_Set;
+	CAPTION							{ CAPTION }
+	      (ATTR Position = Position_top, Position_bottom) =
+		  { align      top           bottom }
+		Basic_Set;
 	Table_head = LIST OF (Column_head);
-	? thead = LIST OF (Table_row);
-	Table_body = LIST OF (tbody = LIST OF (Table_row));
-	? tfoot = LIST OF (Table_row);
+	? thead = LIST OF (Table_row);				{ THEAD }
+	Table_body = LIST OF (
+		tbody = LIST OF (Table_row));			{ TBODY }
+	? tfoot = LIST OF (Table_row);				{ TFOOT }
 	Table_foot = CONSTANT C_Foot;
 	END;
   Column_head (ATTR IntWidthPercent; IntWidthPxl) =
 	CONSTANT C_Head;
-  Table_row (ATTR Row_align = Row_left, Row_center, Row_right;
-		  Row_valign = Row_top, Row_middle, Row_bottom, Row_baseline;
-		  height\240 = Integer) =
+  Table_row							{ TR }
+	(ATTR Row_align = Row_left, Row_center, Row_right;
+	    { align       left      center      right }
+	      Row_valign = Row_top, Row_middle, Row_bottom, Row_baseline;
+	    { valign       top      middle      bottom      baseline }
+	      BackgroundColor) =
+	    { bgcolor }
 	LIST OF (Table_cell);
   Table_cell = CASE OF
-	Data_cell(ATTR Ref_column = REFERENCE(Column_head);
+	Data_cell(ATTR Ref_column = REFERENCE(Column_head);	{ TD }
                  ColExt = REFERENCE(Column_head);
                  RowExt = REFERENCE(Table_row);
 		 colspan_ = INTEGER;
+		{ colspan }
                  rowspan_ = INTEGER;
+		{ rowspan }
                  Cell_align = Cell_left, Cell_center, Cell_right;
+		{ align       left       center       right }
                  Cell_valign = Cell_top, Cell_middle, Cell_bottom;
+		{ valign       top       middle       bottom }
+		 BackgroundColor;
+		{ bgcolor }
 		 Width__; IntWidthPxl; IntWidthPercent;
+		{ width }
 		 Height_;
+		{ height }
                  No_wrap = no_wrap) = LIST OF (Element);
-	Heading_cell(ATTR Ref_column; ColExt; RowExt; colspan_; rowspan_;
-		 Cell_align; Cell_valign; Width__; IntWidthPxl; IntWidthPercent;
+		{ nowrap }
+	Heading_cell						{ TH }
+		(ATTR Ref_column; ColExt; RowExt;
+		 colspan_; rowspan_;
+		 Cell_align; Cell_valign; BackgroundColor;
+		 Width__; IntWidthPxl; IntWidthPercent;
 		 Height_; No_wrap) = LIST OF (Element);
 	END;
 
-  MAP (ATTR NAME; Ref_IMG = REFERENCE(Any)) = LIST OF (AREA);
-  AREA (ATTR shape = rectangle, circle, polygon, default_;
+  MAP (ATTR NAME; Ref_IMG = REFERENCE(Any)) = LIST OF (AREA);	{ MAP }
+	  { name }
+  AREA (ATTR shape = rectangle, circle, polygon, default_;	{ AREA }
+	   { shape   rect       cirecle poly     default }
 	coords = Text; HREF_; nohref = Yes_; ALT;
+	{ coords       href   nohref         alt }
 	x_coord = Integer; y_coord = Integer; IntWidthPxl;
-        height\240; AreaRef_IMG = REFERENCE(Any)) = GRAPHICS
+        height\240 = Integer; AreaRef_IMG = REFERENCE(Any)) = GRAPHICS
 	with x_coord ?= 0, y_coord ?= 0, IntWidthPxl ?= 25, height\240 ?= 10;
+
+  FRAMESET =							{ FRAMESET }
+	AGGREGATE
+	LIST OF (FrameElem);
+	NOFRAMES = LIST OF (Element);				{ NOFRAMES }
+	END;
+
+  FRAME = CONSTANT C_Empty;					{ FRAME }
+
+  FrameElem = CASE OF
+	FRAMESET;
+	FRAME;
+	END;
+
+  IFRAME = LIST OF (Element);					{ IFRAME }
 
 EXCEPT
 	HTML:           NoMove, NoResize;
@@ -363,9 +503,6 @@ EXCEPT
 	XMLGraphics:    MoveResize, NoMove;
 #endif
 
-#ifndef COUGAR
-	Langue:         Invisible;
-#endif
 	ExternalLink:	Invisible;
 	InternalLink:	Invisible;
 	IntWidthPercent:NewPercentWidth, Invisible;
@@ -403,8 +540,6 @@ EXCEPT
 	Ref_column:	ColRef, Invisible;
 	colspan_:	ColSpan;
 	rowspan_:	RowSpan;
-#ifdef COUGAR
 	Object_Content: Hidden, NoCreate, NoCut, NoSelect;
-#endif
 	Ghost_restruct:	Invisible;
 END

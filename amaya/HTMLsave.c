@@ -1064,11 +1064,9 @@ char                  *newURL;
 	       if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
 			attrType.AttrTypeNum == HTML_ATTR_Style_)
 		 {
-#ifdef COUGAR
 		   elType = TtaGetElementType (TtaGetParent(el));
 		   if (elType.ElTypeNum != HTML_EL_Object)
 		     {
-#endif
 		       buflen = MAX_LENGTH;
 		       buf = (char *) TtaGetMemory (buflen);
 		       if (buf == NULL)
@@ -1201,9 +1199,7 @@ DBG(fprintf(stderr, "     SRC from %s to %s\n", buf, url);)
 			     }
 			 }
 		       TtaFreeMemory (buf);
-#ifdef COUGAR
 		     }
-#endif
 		 }
 	       TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
 	     }

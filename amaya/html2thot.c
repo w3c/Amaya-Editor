@@ -257,9 +257,7 @@ static GIMapping    HTMLGIMappingTable[] =
 #endif
    {"MENU", SPACE, HTML_EL_Menu, NULL},
    {"META", 'E', HTML_EL_META, NULL},
-#ifdef COUGAR
    {"OBJECT", SPACE, HTML_EL_Object, NULL},
-#endif
    {"OL", SPACE, HTML_EL_Numbered_List, NULL},
    {"OPTION", SPACE, HTML_EL_Option, NULL},
    {"P", SPACE, HTML_EL_Paragraph, NULL},
@@ -270,9 +268,7 @@ static GIMapping    HTMLGIMappingTable[] =
    {"SCRIPT", SPACE, HTML_EL_SCRIPT, NULL},
    {"SELECT", SPACE, HTML_EL_Option_Menu, NULL},
    {"SMALL", SPACE, HTML_EL_Small_text, NULL},
-#ifdef COUGAR
    {"SPAN", SPACE, HTML_EL_Span, NULL},
-#endif
    {"STRIKE", SPACE, HTML_EL_Struck_text, NULL},
    {"STRONG", SPACE, HTML_EL_Strong, NULL},
    {"STYLE", SPACE, HTML_EL_Styles, NULL},
@@ -308,9 +304,7 @@ static int          NoTextChild[] =
    HTML_EL_Form, HTML_EL_Menu, HTML_EL_Numbered_List, HTML_EL_Option_Menu,
    HTML_EL_Unnumbered_List, HTML_EL_Definition, HTML_EL_List_Item,
    HTML_EL_MAP, HTML_EL_Applet,
-#ifdef COUGAR
    HTML_EL_Object,
-#endif
    HTML_EL_Division, HTML_EL_Center,
    HTML_EL_Table, HTML_EL_thead, HTML_EL_tbody, HTML_EL_tfoot, HTML_EL_Table_row,
    HTML_EL_Data_cell, HTML_EL_Heading_cell,
@@ -346,9 +340,7 @@ static int          CharLevelElement[] =
    HTML_EL_Font_,
    HTML_EL_Emphasis, HTML_EL_Strong, HTML_EL_Def, HTML_EL_Code, HTML_EL_Sample,
    HTML_EL_Keyboard, HTML_EL_Variable, HTML_EL_Cite,
-#ifdef COUGAR
    HTML_EL_Span,
-#endif
    HTML_EL_Input,
    HTML_EL_Option, HTML_EL_Option_Menu,
    HTML_EL_Text_Input,
@@ -431,19 +423,17 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"ACTION", "", 'A', HTML_ATTR_Script_URL},
    {"ALIGN", "APPLET", 'A', HTML_ATTR_Alignment},
    {"ALIGN", "CAPTION", 'A', HTML_ATTR_Position},
-   {"ALIGN", "DIV", 'A', HTML_ATTR_Align},
-   {"ALIGN", "H1", 'A', HTML_ATTR_Align},
-   {"ALIGN", "H2", 'A', HTML_ATTR_Align},
-   {"ALIGN", "H3", 'A', HTML_ATTR_Align},
-   {"ALIGN", "H4", 'A', HTML_ATTR_Align},
-   {"ALIGN", "H5", 'A', HTML_ATTR_Align},
-   {"ALIGN", "H6", 'A', HTML_ATTR_Align},
-   {"ALIGN", "HR", 'A', HTML_ATTR_Align},
+   {"ALIGN", "DIV", 'A', HTML_ATTR_TextAlign},
+   {"ALIGN", "H1", 'A', HTML_ATTR_TextAlign},
+   {"ALIGN", "H2", 'A', HTML_ATTR_TextAlign},
+   {"ALIGN", "H3", 'A', HTML_ATTR_TextAlign},
+   {"ALIGN", "H4", 'A', HTML_ATTR_TextAlign},
+   {"ALIGN", "H5", 'A', HTML_ATTR_TextAlign},
+   {"ALIGN", "H6", 'A', HTML_ATTR_TextAlign},
+   {"ALIGN", "HR", 'A', HTML_ATTR_TextAlign},
    {"ALIGN", "IMG", 'A', HTML_ATTR_Alignment},
-#ifdef COUGAR
    {"ALIGN", "OBJECT", 'A', HTML_ATTR_Alignment},
-#endif
-   {"ALIGN", "P", 'A', HTML_ATTR_Align},
+   {"ALIGN", "P", 'A', HTML_ATTR_TextAlign},
    {"ALIGN", "TABLE", 'A', HTML_ATTR_Align},
    {"ALIGN", "TD", 'A', HTML_ATTR_Cell_align},
    {"ALIGN", "TH", 'A', HTML_ATTR_Cell_align},
@@ -453,44 +443,33 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"BACKGROUND", "", 'A', HTML_ATTR_background_},
    {"BGCOLOR", "", 'A', HTML_ATTR_BackgroundColor},
    {"BORDER", "IMG", 'A', HTML_ATTR_Img_border},
-#ifdef COUGAR
    {"BORDER", "OBJECT", 'A', HTML_ATTR_Img_border},
-#endif
    {"BORDER", "TABLE", 'A', HTML_ATTR_Border},
    {"CELLSPACING", "", 'A', HTML_ATTR_cellspacing},
    {"CELLPADDING", "", 'A', HTML_ATTR_cellpadding},
    {"CHECKED", "", 'A', HTML_ATTR_Checked},
    {"CLASS", "", 'A', HTML_ATTR_Class},
-#ifdef COUGAR
    {"CLASSID", "", 'A', HTML_ATTR_classid},
-#endif
    {"CLEAR", "BR", 'A', HTML_ATTR_Clear},
    {"CODE", "", 'A', HTML_ATTR_code},
    {"CODEBASE", "", 'A', HTML_ATTR_codebase},
-#ifdef COUGAR
    {"CODETYPE", "", 'A', HTML_ATTR_codetype},
-#endif
    {"COLOR", "", 'A', HTML_ATTR_color},
    {"COLS", "", 'A', HTML_ATTR_Columns},
    {"COLSPAN", "", 'A', HTML_ATTR_colspan_},
    {"COMPACT", "", 'A', HTML_ATTR_COMPACT},
    {"CONTENT", "", 'A', HTML_ATTR_meta_content},
    {"COORDS", "", 'A', HTML_ATTR_coords},
-#ifdef COUGAR
    {"DATA", "", 'A', HTML_ATTR_data},
-#endif
+   {"DIR", "", 'A', HTML_ATTR_dir},
    {"ENCTYPE", "", 'A', HTML_ATTR_ENCTYPE},
    {"HEIGHT", "", 'A', HTML_ATTR_Height_},
    {"HREF", "", 'A', HTML_ATTR_HREF_},
    {"HSPACE", "", 'A', HTML_ATTR_hspace},
    {"HTTP-EQUIV", "", 'A', HTML_ATTR_http_equiv},
-#ifdef COUGAR
    {"ID", "", 'A', HTML_ATTR_ID},
-#endif
    {"ISMAP", "", 'A', HTML_ATTR_ISMAP},
-#ifdef COUGAR
    {"LANG", "", 'A', HTML_ATTR_Langue},
-#endif
    {"LINK", "", 'A', HTML_ATTR_LinkColor},
    {"MAXLENGTH", "", 'A', HTML_ATTR_MaxLength},
    {"METHOD", "", 'A', HTML_ATTR_METHOD},
@@ -506,6 +485,18 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"NOHREF", "", 'A', HTML_ATTR_nohref},
    {"NOSHADE", "", 'A', HTML_ATTR_NoShade},
    {"NOWRAP", "", 'A', HTML_ATTR_No_wrap},
+
+   {"ONCLICK", "", 'A', HTML_ATTR_onclick},
+   {"ONDBLCLICK", "", 'A', HTML_ATTR_ondblclick},
+   {"ONKEYDOWN", "", 'A', HTML_ATTR_onkeydown},
+   {"ONKEYPRESS", "", 'A', HTML_ATTR_onkeypress},
+   {"ONKEYUP", "", 'A', HTML_ATTR_onkeyup},
+   {"ONMOUSEDOWN", "", 'A', HTML_ATTR_onmousedown},
+   {"ONMOUSEMOVE", "", 'A', HTML_ATTR_onmousemove},
+   {"ONMOUSEOUT", "", 'A', HTML_ATTR_onmouseout},
+   {"ONMOUSEOVER", "", 'A', HTML_ATTR_onmouseover},
+   {"ONMOUSEUP", "", 'A', HTML_ATTR_onmouseup},
+
    {"PROMPT", "", 'A', HTML_ATTR_Prompt},
    {"REL", "", 'A', HTML_ATTR_REL},
    {"REV", "", 'A', HTML_ATTR_REV},
@@ -524,10 +515,8 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"TEXT", "", 'A', HTML_ATTR_TextColor},
    {"TITLE", "", 'A', HTML_ATTR_Title},
    {"TYPE", "LI", 'A', HTML_ATTR_ItemStyle},
-#ifdef COUGAR
    {"TYPE", "LINK", 'A', HTML_ATTR_Link_type},
    {"TYPE", "OBJECT", 'A', HTML_ATTR_Object_type},
-#endif
    {"TYPE", "OL", 'A', HTML_ATTR_NumberStyle},
    {"TYPE", "STYLE", 'A', HTML_ATTR_Notation},
    {"TYPE", "UL", 'A', HTML_ATTR_BulletStyle},
@@ -545,9 +534,7 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"WIDTH", "APPLET", 'A', HTML_ATTR_Width__},
    {"WIDTH", "HR", 'A', HTML_ATTR_Width__},
    {"WIDTH", "IMG", 'A', HTML_ATTR_Width__},
-#ifdef COUGAR
    {"WIDTH", "OBJECT", 'A', HTML_ATTR_Width__},
-#endif
    {"WIDTH", "PRE", 'A', HTML_ATTR_Width__},
    {"WIDTH", "TABLE", 'A', HTML_ATTR_Width__},
    {"WIDTH", "TD", 'A', HTML_ATTR_Width__},
@@ -563,6 +550,14 @@ static AttributeMapping HTMLAttributeMappingTable[] =
 
 static AttrValueMapping HTMLAttrValueMappingTable[] =
 {
+   {HTML_ATTR_dir, "LTR", HTML_ATTR_dir_VAL_ltr},
+   {HTML_ATTR_dir, "RTL", HTML_ATTR_dir_VAL_rtl},
+
+   {HTML_ATTR_TextAlign, "LEFT", HTML_ATTR_TextAlign_VAL_left_},
+   {HTML_ATTR_TextAlign, "CENTER", HTML_ATTR_TextAlign_VAL_center_},
+   {HTML_ATTR_TextAlign, "RIGHT", HTML_ATTR_TextAlign_VAL_right_},
+   {HTML_ATTR_TextAlign, "JUSTIFY", HTML_ATTR_TextAlign_VAL_justify_},
+
    {HTML_ATTR_Align, "LEFT", HTML_ATTR_Align_VAL_left_},
    {HTML_ATTR_Align, "CENTER", HTML_ATTR_Align_VAL_center_},
    {HTML_ATTR_Align, "RIGHT", HTML_ATTR_Align_VAL_right_},
@@ -2220,7 +2215,6 @@ Element             el;
    newElType.ElSSchema = elType.ElSSchema;
    switch (elType.ElTypeNum)
 	 {
-#ifdef COUGAR
 	    case HTML_EL_Object:	/*  it's an object */
 	       /* create Object_Content */
 	       child = TtaGetFirstChild (el);
@@ -2284,7 +2278,7 @@ Element             el;
 		     }
 		 }
 		break;
-#endif /* COUGAR */
+
 	    case HTML_EL_Input:	/*  it's an INPUT without TYPE attribute */
 		/* Create a child of type Text_Input */
 		elType.ElTypeNum = HTML_EL_Text_Input;

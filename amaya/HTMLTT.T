@@ -247,12 +247,11 @@ RULES
 	Remove;
 	END;
 
-#ifdef COUGAR
  Object: BEGIN
 	Create Attributes;
 	Remove;
 	END;
-#endif
+
 #ifdef MATHML
  Math:  BEGIN
         Create '[math]';
@@ -421,15 +420,11 @@ RULES
 	END;
 
  PICTURE_UNIT: BEGIN
-#ifdef COUGAR
 	If Immediately within Object
 		Remove;
 	If NOT Immediately within Object BEGIN
 		Create Attributes;
 		END;
-#else
-	Create Attributes;
-#endif
 	If NOT ALT 
 	  Create '[Image]';
 	END;
@@ -481,7 +476,6 @@ RULES
  Table_head:
 	Remove;
 
-#ifdef COUGAR
  thead:
 	BEGIN
 	END;
@@ -492,7 +486,6 @@ RULES
  tbody:
 	BEGIN
 	END;
-#endif
 
  Table_body:
 	BEGIN
@@ -621,6 +614,19 @@ ATTRIBUTES
 	BEGIN
 	END;
 
+ TextAlign = left_:
+	BEGIN
+	END;
+ TextAlign = center_:
+	BEGIN
+	END;
+ TextAlign = right_:
+	BEGIN
+	END;
+ TextAlign = justify_:
+	BEGIN
+	END;
+
  NoShade:
 	BEGIN
 	END;
@@ -645,7 +651,7 @@ ATTRIBUTES
 
  Param_value: BEGIN
 	END;
-#ifdef COUGAR
+
  classid: BEGIN
 	END;
 
@@ -660,7 +666,7 @@ ATTRIBUTES
 
  codetype: BEGIN
 	END;
-#endif
+
  Title : BEGIN
 	NoTranslation;
 	END;
