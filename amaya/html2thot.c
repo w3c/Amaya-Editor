@@ -6310,51 +6310,73 @@ Document            doc;
    load and uncompress a file in memory.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char               *ReadCompressedFile (char *filename)
+static char       *ReadCompressedFile (char *filename)
 #else
-static char               *ReadCompressedFile (filename)
+static char       *ReadCompressedFile (filename)
 char              *filename;
-
 #endif
 {
-    int   bufsize = 2000;
-    int   index = 0;
-    char *buffer = NULL;
-    gzFile stream = NULL;
-    int res;
+  gzFile           stream = NULL;
+  char            *buffer, *new;
+  int              bufsize = 2000;
+  int              index = 0;
+  int              res, c, diff;
+  boolean          ok;
 
-    stream = gzopen(filename, "r");
-    if (stream == NULL) return(NULL);
-    buffer = TtaGetMemory(bufsize + 1);
-    if (buffer == NULL) return(NULL);
-    while (1) {
-        res = gzread(stream, buffer + index, bufsize - index);
-	if (res < 0) {
-	    TtaFreeMemory(buffer);
-	    gzclose(stream);
-	    return(NULL);
+  stream = gzopen (filename, "r");
+  if (stream == NULL)
+    return (NULL);
+  buffer = TtaGetMemory (bufsize + 1);
+  if (buffer == NULL)
+    return (NULL);
+  ok = TRUE;
+  while (ok)
+    {
+      res = gzread (stream, buffer + index, bufsize - index);
+      if (res < 0)
+	{
+	  TtaFreeMemory (buffer);
+	  buffer = NULL;
+	  ok = FALSE;
 	}
-	if (res == 0) {
-	    /* end of file */
-	    buffer[index] = '\0';
-	    break;
+      else if (res == 0)
+	{
+	  /* end of file */
+	  buffer[index] = EOS;
+	  break;
 	}
-	index += res;
-	if (index >= bufsize) {
-	    char *new;
-
-	    bufsize *= 2;
-	    new = TtaRealloc(buffer, bufsize + 1);
-	    if (new == NULL) {
-	       TtaFreeMemory(buffer);
-	       gzclose(stream);
-	       return(NULL);
+      else
+	{
+	  /* remove null characters */
+	  c = 0;
+	  while (c < res)
+	    {
+	      if (buffer[index+c] == EOS)
+		{
+		  res--;
+		  diff = res - c;
+		  if (diff > 0)
+		    strncpy (&buffer[index+c], &buffer[index+c+1], diff);
+		}
+	      else
+		c++;
 	    }
-	    buffer = new;
+	}
+      index += res;
+      if (index >= bufsize)
+	{
+	  bufsize *= 2;
+	  new = TtaRealloc (buffer, bufsize + 1);
+	  if (new == NULL)
+	    {
+	      TtaFreeMemory (buffer);
+	      ok = FALSE;
+	    }
+	  buffer = new;
 	}
     }
-    gzclose(stream);
-    return(buffer);
+  gzclose (stream);
+  return (buffer);
 }
 #endif
 
