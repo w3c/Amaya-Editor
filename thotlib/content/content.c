@@ -340,7 +340,7 @@ boolean             withAppEvent;
 				 notifyEl.element = (Element) pEl2;
 				 notifyEl.elementType.ElTypeNum = pEl2->ElTypeNumber;
 				 notifyEl.elementType.ElSSchema = (SSchema) (pEl2->ElStructSchema);
-				 notifyEl.position = 1;
+				 notifyEl.position = TTE_MERGE_DELETE_LAST_ITEM;
 				 if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 				    /* l'application refuse la destruction, on ne fait rien */
 				    merge = FALSE;
