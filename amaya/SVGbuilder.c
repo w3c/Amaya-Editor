@@ -96,11 +96,12 @@ void      SVGGetDTDName (char *DTDname, char *elementName)
    Search in the Attribute Mapping Table the entry for the
    attribute of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
-void   MapSVGAttribute (char *attrName, AttributeType *attrType,
-			    char* elementName, ThotBool *level, Document doc)
+void MapSVGAttribute (char *attrName, AttributeType *attrType,
+		      char* elementName, ThotBool *level, Document doc)
 {
   attrType->AttrSSchema = GetSVGSSchema (doc);
-  MapXMLAttribute (SVG_TYPE, attrName, elementName, level, doc, &(attrType->AttrTypeNum));
+  MapXMLAttribute (SVG_TYPE, attrName, elementName, level, doc,
+		   &(attrType->AttrTypeNum));
 }
 
 /*----------------------------------------------------------------------
@@ -108,7 +109,7 @@ void   MapSVGAttribute (char *attrName, AttributeType *attrType,
    Search in the Attribute Value Mapping Table the entry for the attribute
    ThotAtt and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
-void    MapSVGAttributeValue (char* AttrVal, AttributeType attrType, int *value)
+void MapSVGAttributeValue (char* AttrVal, AttributeType attrType, int *value)
 {
    int                 i;
 

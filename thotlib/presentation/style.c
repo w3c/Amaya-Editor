@@ -873,7 +873,7 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
 	  if (attrVal)
 	    strcpy (new->ApString, attrVal);
 	  else
-	    attrs->ApString[0] = EOS;
+	    new->ApString[0] = EOS;
 	  new->ApTextFirstPRule = NULL;
 	  return (&(new->ApTextFirstPRule));
 	  break;

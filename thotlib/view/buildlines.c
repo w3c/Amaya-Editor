@@ -1669,12 +1669,12 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 	     /* Break the box anywhere */
 	     BreakMainBox (pLine, pNextBox, maxLength, pRootAb, TRUE);
 	     pBox = pNextBox;
-	     if (pNextBox->BxNexChild)
+	     if (pBox->BxAbstractBox->AbLeafType == LtText && pBox->BxNexChild)
 	       {
 		 /* we have a new box */
-		 if (pNextBox->BxType != BoScript)
+		 if (pBox->BxType != BoScript)
 		   /* take the first child of a main box */
-		   pBox = pNextBox->BxNexChild;
+		   pBox = pBox->BxNexChild;
 		 pLine->LiFirstPiece = pBox;
 	       }
 	   }
@@ -1687,7 +1687,8 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 	     {
 	       /* Break that box */
 	       BreakMainBox (pLine, pNextBox, maxLength, pRootAb, FALSE);
-	       if (pNextBox->BxNexChild)
+	       if (pNextBox->BxAbstractBox->AbLeafType == LtText &&
+		   pNextBox->BxNexChild)
 		 {
 		   /* we have a new box */
 		   if (pNextBox->BxType != BoScript)
@@ -1838,7 +1839,7 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
       pLine->LiLastBox = pBox;
 
    /* teste s'il reste des boites a mettre en ligne */
-   if ((pBox->BxNexChild == NULL) &&
+   if ((pBox->BxAbstractBox->AbLeafType != LtText || pBox->BxNexChild == NULL) &&
        GetNextBox (pBox->BxAbstractBox) == NULL)
       *full = FALSE;
 
@@ -2613,7 +2614,7 @@ static void ShiftLine (PtrLine pLine, PtrAbstractBox pAb, PtrBox pBox,
 	XMove (ibox1, NULL, x, frame);
 	while (ibox1 != pBox)
 	  {
-	    if (ibox1->BxNexChild)
+	    if (ibox1->BxType == BoScript && ibox1->BxNexChild)
 	      /* get the next child */
 	      ibox1 = ibox1->BxNexChild;
 	    else
@@ -2649,7 +2650,7 @@ static void ShiftLine (PtrLine pLine, PtrAbstractBox pAb, PtrBox pBox,
        else
 	 pBox = GetNextBox (pBox->BxAbstractBox);
 	if (pBox && pBox->BxNexChild &&
-	    (pBox->BxType == BoSplit || pBox->BxType == BoSplit))
+	    (pBox->BxType == BoSplit || pBox->BxType == BoMulScript))
 	  pBox = pBox->BxNexChild;
 	if (pBox && !pBox->BxAbstractBox->AbNotInLine)
 	  XMove (pBox, NULL, x, frame);

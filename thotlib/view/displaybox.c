@@ -964,7 +964,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   int                 buffleft;
   int                 indbuff, bl;
   int                 indmax;
-  int                 nbcar, x, y, y1;  /******/
+  int                 nbcar, x, y, y1;
   int                 lgspace, whitespace;
   int                 fg, bg;
   int                 shadow;
@@ -1354,8 +1354,6 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		Call the function in any case to let Postscript justify the
 		text of the box.
 	      */
-	      if (nbcar == 0)
-		bl = 0;
 	      y1 = y + BoxFontBase (pBox->BxFont);
 	      x += DrawString (buffer, nbcar, frame, x, y1, prevfont, width,
 			       bl, hyphen, blockbegin, fg, shadow);
