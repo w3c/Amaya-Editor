@@ -2984,10 +2984,6 @@ void UpdateScrollbars (int frame)
 #else /* _GTK */
    l = FrameTable[frame].FrWidth;
    h = FrameTable[frame].FrHeight;
-   /*
-   l = GTK_WIDGET (FrameTable[frame].WdFrame)->allocation.width;
-   h = GTK_WIDGET (FrameTable[frame].WdFrame)->allocation.height;
-   */
 #endif /* !_GTK */
    if (width + Xpos <= l)
      {
@@ -3003,7 +2999,6 @@ void UpdateScrollbars (int frame)
        n++;
        XtSetValues (hscroll, args, n);
 #else /* _GTK */
-       /*       printf("updatescrollbar hscroll\n");*/
        tmpw = (GtkAdjustment *)gtk_object_get_data (GTK_OBJECT(hscroll), "Adjustment");
        tmpw->lower = 0;
        tmpw->upper = l;
@@ -3011,14 +3006,7 @@ void UpdateScrollbars (int frame)
        tmpw->page_increment = Xpos-13;
        tmpw->step_increment = 13;
        tmpw->value = Xpos;
-       /*       printf ("  Xpos=%d\n  pagesize=%d\n", Xpos, width);*/
-       /*gtk_adjustment_set_value (tmpw, Xpos);       */
-       /*       gtk_widget_show_all (GTK_WIDGET(hscroll)->parent);*/
-       gtk_widget_show_all (GTK_WIDGET(hscroll));
-       gtk_widget_queue_draw (GTK_WIDGET(hscroll));
-       gtk_adjustment_value_changed (tmpw);
        gtk_adjustment_changed (tmpw);
-       /*       gtk_widget_show_all (GTK_WIDGET(tmpw));*/
 #endif /* !_GTK */
      }
 
@@ -3036,7 +3024,6 @@ void UpdateScrollbars (int frame)
        n++;
        XtSetValues (vscroll, args, n);
 #else /* _GTK */
-       /*       printf("updatescrollbar vcroll\n");*/
        tmpw = (GtkAdjustment *)gtk_object_get_data (GTK_OBJECT(vscroll), "Adjustment");
        tmpw->lower = 0;
        tmpw->upper = h;
@@ -3044,14 +3031,7 @@ void UpdateScrollbars (int frame)
        tmpw->page_increment = Ypos-13;
        tmpw->step_increment = 13;
        tmpw->value = Ypos;
-       /*       printf ("  Ypos=%d\n  pagesize=%d\n", Ypos, height);*/
-       /*       gtk_adjustment_set_value (tmpw, Ypos);       */
-       /*       gtk_widget_show_all (GTK_WIDGET(vscroll)->parent);*/
-       gtk_widget_show_all (GTK_WIDGET(vscroll));
-       gtk_widget_queue_draw (GTK_WIDGET(vscroll));
-       gtk_adjustment_value_changed (tmpw);
        gtk_adjustment_changed (tmpw);
-       /*       gtk_widget_show_all (GTK_WIDGET(tmpw));*/
 #endif /* !_GTK */
      }
 #else  /* _WINDOWS */
