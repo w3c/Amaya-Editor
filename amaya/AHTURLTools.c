@@ -446,6 +446,76 @@ const STRING        path;
 }
 
 /*----------------------------------------------------------------------
+  IsMathMLName                                                         
+  returns TRUE if path points to an MathML resource.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool             IsMathMLName (const STRING path)
+#else  /* __STDC__ */
+ThotBool             IsMathMLName (path)
+const STRING        path;
+#endif /* __STDC__ */
+{
+   CHAR_T              temppath[MAX_LENGTH];
+   CHAR_T              suffix[MAX_LENGTH];
+
+   if (!path)
+      return (FALSE);
+
+   ustrcpy (temppath, path);
+   ExtractSuffix (temppath, suffix);
+
+   if (!ustrcasecmp (suffix, TEXT("mml")))
+     return (TRUE);
+   else if (!ustrcmp (suffix, TEXT("gz")))
+     {
+       /* take into account compressed files */
+       ExtractSuffix (temppath, suffix);       
+       if (!ustrcasecmp (suffix, TEXT("mml")))
+	 return (TRUE);
+       else
+	 return (FALSE);
+     }
+   else
+     return (FALSE);
+}
+
+/*----------------------------------------------------------------------
+  IsSVGName                                                         
+  returns TRUE if path points to an MathML resource.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool             IsSVGName (const STRING path)
+#else  /* __STDC__ */
+ThotBool             IsSVGName (path)
+const STRING        path;
+#endif /* __STDC__ */
+{
+   CHAR_T              temppath[MAX_LENGTH];
+   CHAR_T              suffix[MAX_LENGTH];
+
+   if (!path)
+      return (FALSE);
+
+   ustrcpy (temppath, path);
+   ExtractSuffix (temppath, suffix);
+
+   if (!ustrcasecmp (suffix, TEXT("svg")))
+     return (TRUE);
+   else if (!ustrcmp (suffix, TEXT("gz")))
+     {
+       /* take into account compressed files */
+       ExtractSuffix (temppath, suffix);       
+       if (!ustrcasecmp (suffix, TEXT("svg")))
+	 return (TRUE);
+       else
+	 return (FALSE);
+     }
+   else
+     return (FALSE);
+}
+
+/*----------------------------------------------------------------------
   IsCSSName                                                         
   returns TRUE if path points to an XML resource.
   ----------------------------------------------------------------------*/

@@ -2219,10 +2219,32 @@ ThotBool            history;
 	  docType = thotType;
 	  unknown = FALSE;
 	}
-      else if (IsCSSName (pathname))
+      else if (IsMathMLName (pathname))
+	{
+	  /* it seems to be an XML document */
+	  isXML = TRUE;
+	  docType = docMath;
+	  unknown = FALSE;
+	}
+       else if (IsSVGName (pathname))
+	{
+	  /* it seems to be an XML document */
+	  isXML = TRUE;
+	  docType = docSVG;
+	  unknown = FALSE;
+	}
+     else if (IsCSSName (pathname))
 	{
 	  docType = docCSS;
 	  unknown = FALSE;
+	}
+      else if (IsImageName (pathname))
+	{
+	  /* It's a local image file that we can display. We change the 
+	     doctype flag so that we can create an HTML container later on */
+	  docType = docImage;
+	  unknown = FALSE;
+	  parsingLevel = L_Transitional;
 	}
       }
    else
@@ -2275,6 +2297,15 @@ ThotBool            history;
 		   parsingLevel = L_Other;
 		   unknown = FALSE;
 		 }
+	       else if (!ustrncasecmp (&content_type[i+1], TEXT("mathml"), 6) ||
+			!ustrncasecmp (&content_type[i+1], TEXT("x-mathml"), 8))
+		 {
+		   /* it's an XML document */
+		   isXML = TRUE;
+		   docType = docMath;
+		   parsingLevel = L_Other;
+		   unknown = FALSE;
+		 }
 	       else
 		 {
 		   docType = docText;
@@ -2282,46 +2313,52 @@ ThotBool            history;
 		   unknown = FALSE;
 		 }
 	     }
-	   else if (!ustrcasecmp (content_type, TEXT("application")) &&
-		    !ustrncasecmp (&content_type[i+1], TEXT("x-sh"), 4))
+	   else if (!ustrcasecmp (content_type, TEXT("application")))
 	     {
-	       docType = docText;
-	       parsingLevel = L_Other;
-	       unknown = FALSE;
-	     }	     
+	       if (!ustrncasecmp (&content_type[i+1], TEXT("x-sh"), 4))
+		 {
+		   docType = docText;
+		   parsingLevel = L_Other;
+		   unknown = FALSE;
+		 }	     
+	       else if (!ustrncasecmp (&content_type[i+1], TEXT("mathml"), 6))
+		 {
+		   /* it's an XML document */
+		   isXML = TRUE;
+		   docType = docMath;
+		   parsingLevel = L_Other;
+		   unknown = FALSE;
+		 }
+	     }
+	   else if (!ustrcasecmp (content_type, TEXT("image")))
+	     {
+	       if (!ustrncasecmp (&content_type[i+1], TEXT("svg"), 3))
+		 {
+		   /* it's an XML document */
+		   isXML = TRUE;
+		   docType = docSVG;
+		   parsingLevel = L_Other;
+		   unknown = FALSE;
+		 }
+	       else
+		 {
+		   /* get a pointer to the type ('/' substituted with an EOS
+		      earlier in this function */
+		   i = 0;
+		   while (content_type[i])
+		     i++;
+		   i++;
+		   /* we'll generate a HTML document */
+		   if (IsImageType (&content_type[i]))
+		     {
+		       docType = docImage;
+		       unknown = FALSE;
+		       parsingLevel = L_Transitional;
+		     }
+		 }
+	     }
 	 }
      }
-
-  /* Is the document an image */
-  if (unknown)
-    {
-      if (content_type && !ustrcmp (content_type, TEXT("image")) 
-	  && tempfile[0] != WC_EOS)
-	{
-	  /* get a pointer to the type ('/' substituted with an EOS
-	     earlier in this function */
-	  i = 0;
-	  while (content_type[i])
-	    i++;
-	  i++;
-	  /* change the doctype flag so that we can create an HTML container 
-	     later on */
-	  if (IsImageType (&content_type[i]))
-	    {
-	      docType = docImage;
-	      unknown = FALSE;
-	      parsingLevel = L_Transitional;
-	    }
-	}
-      else if (IsImageName (pathname) && tempfile[0] == WC_EOS)
-	{
-	  /* It's a local image file that we can display. We change the 
-	     doctype flag so that we can create an HTML container later on */
-	  docType = docImage;
-	  unknown = FALSE;
-	  parsingLevel = L_Transitional;
-	}
-    }
 
   if (unknown && tempfile[0] != WC_EOS)
     {

@@ -67,7 +67,7 @@ static CHAR_T *HTMLDocTypes_1[] =
 
 static CHAR_T *HTMLDocTypes_2[] =
 {
-  TEXT("\"http://www.w3.org/1999/xhtml\">\n"),
+  TEXT("\"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\">\n"),
   TEXT("\"DTD/xhtml1-1-strict.dtd\">\n"),
   TEXT("\"DTD/xhtml1-1-transitional.dtd\">\n"),
   TEXT("\'DTD/xhtml1-1-frameset.dtd\">\n"),

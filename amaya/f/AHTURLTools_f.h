@@ -19,6 +19,8 @@ extern void ExtractSuffix ( CHAR_T* aName,
                             CHAR_T* aSuffix );
 extern ThotBool IsHTMLName ( const CHAR_T* path );
 extern ThotBool IsXMLName ( const STRING path );
+extern ThotBool IsMathMLName ( const STRING path );
+extern ThotBool IsSVGName ( const STRING path );
 extern ThotBool IsCSSName ( const STRING path );
 extern ThotBool IsImageName ( const STRING path );
 extern ThotBool IsImageType ( const STRING type );
@@ -69,6 +71,8 @@ extern void ExtractSuffix (/* CHAR_T* aName,
                               CHAR_T* aSuffix */);
 extern ThotBool IsHTMLName (/* const CHAR_T* path */);
 extern ThotBool IsXMLName (/* const STRING path */);
+extern ThotBool IsMathMLName (/* const STRING path */);
+extern ThotBool IsSVGName (/* const STRING path */);
 extern ThotBool IsCSSName (/* const STRING path */);
 extern ThotBool IsImageName (/* const STRING path */);
 extern ThotBool IsImageType (/* const STRING type */);
