@@ -285,7 +285,7 @@ char            *name;
 #endif /* !__STDC__ */
 {
   PtrProCtl        current;
-  int              i;
+  int              i = 0;
   ThotBool         found;
 
   if (name == NULL)

@@ -484,7 +484,7 @@ ThotBool removeWhenUndoing;
 
 #endif /* __STDC__ */
 {
-   PtrEditOperation	editOp;
+   PtrEditOperation	editOp = NULL;
    PtrAttribute		pCopy, pOldAttr;
    ThotBool		merge;
 
@@ -832,6 +832,10 @@ ThotBool reverse;
    NotifyAttribute	notifyAttr;
    int			i, nSiblings;
 
+   newParent = NULL;
+   newPreviousSibling = NULL;
+   newCreatedElement = NULL;
+   newSavedElement = NULL;
    pDoc = LoadedDocument [doc - 1];
    if (undo)
       editOp = pDoc->DocLastEdit;

@@ -611,6 +611,9 @@ int                 strngLen;
 	/* on n'a pas encore trouve' la chaine cherchee */
 	found = FALSE;
 	pEl = *firstEl;
+	if (pEl->ElStructSchema == NULL)
+	  /* the element doesn't exist anymore */
+	  return FALSE;
 	/* on cherche d'abord la chaine */
 	if (forward)
 	   /* Recherche en avant */

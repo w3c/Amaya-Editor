@@ -1052,7 +1052,7 @@ STRING        bufEventAttr;
   CHAR_T                tempBuffer[MAX_NAME_LENGTH + 1];
   int                 i, j, k;
   int                 firstChar, lastChar;
-  int                 lgmenu, lgsubmenu;
+  int                 lgmenu = 0, lgsubmenu;
   int                 att, nbOfEntries;
   ThotBool            selectionOK, isNew;
 

@@ -124,7 +124,7 @@ Document            document;
    CHAR_T                  cmd[1024];
    int                     res;
 #endif /* _WINDOWS */
-   int                     i, j;
+   int                     i, j = 0;
    int                     frame;
 
    /* initialize the print command */

@@ -1619,7 +1619,7 @@ ThotBool            pre;
    PtrDocument         pDoc;
    int                 vue;
    ThotBool            assoc;
-   ThotBool            ok;
+   ThotBool            ok = FALSE;
 
    GetDocAndView (frame, &pDoc, &vue, &assoc);
    result = FALSE;
@@ -1646,9 +1646,9 @@ ThotBool            pre;
 	   {
 	   if (ThotLocalActions[T_openhistory] != NULL)
 	     (*ThotLocalActions[T_openhistory]) (pDoc, pEl, pEl, 0, 0);
-	   if (ThotLocalActions[T_clearhistory] != NULL)
+	   if (ThotLocalActions[T_addhistory] != NULL)
 	     (*ThotLocalActions[T_addhistory]) (pEl, pDoc, TRUE, TRUE);
-	   if (ThotLocalActions[T_clearhistory] != NULL)
+	   if (ThotLocalActions[T_closehistory] != NULL)
 	     (*ThotLocalActions[T_closehistory]) (pDoc);
 	   }
      }

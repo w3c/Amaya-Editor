@@ -2216,6 +2216,7 @@ int                 viewNb;
        v = pEl->ElAssocNum - 1;
        for (view = firstView; view <= lastView; view++)
 	 {
+	   frame = 0;
 	   if (!assocView)
 	     {
 	       /* l'element ne s'affiche pas dans une vue d'elements associes */

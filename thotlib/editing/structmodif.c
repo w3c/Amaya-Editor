@@ -1086,6 +1086,7 @@ ThotBool		    select;
    ThotBool            ret, ok;
 
    ret = FALSE;
+   NSiblings = 0;
    CloseInsertion ();
    /* y-a-t'il une selection courante ? */
    if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))

@@ -2112,7 +2112,7 @@ Document            doc;
 #endif
 {
   PRule               rule;
-  PtrPRule            pRule;
+  PtrPRule            pRule = NULL;
   PtrSSchema	      pSS;
   AttributePres      *attrs;
   DisplayMode         dispMode;

@@ -528,6 +528,7 @@ void                PasteCommand ()
   int                 firstChar, lastChar, numAssoc, view, i;
   ThotBool            ok, before, within;
   
+  before = FALSE;
   if (FirstSavedElement == NULL)
     TtaDisplaySimpleMessage (INFO, LIB, TMSG_NOTHING_TO_PASTE);
   else if (GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))

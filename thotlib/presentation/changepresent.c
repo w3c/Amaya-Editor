@@ -1042,10 +1042,10 @@ ThotBool        remove;
 	{
 	  /* process each presentation rule */
 	  pCurrentRule = pRule;
+	  done = FALSE;
 	  if (pCurrentRule != NULL)
 	    {
 	    ruleType = pCurrentRule->PrType;
-	    done = FALSE;
 	    /* is the view concerned by the presentation rule ? */
 	    if (pCurrentRule->PrViewNum == 1 ||
 		pCurrentRule->PrViewNum == viewSch)

@@ -346,7 +346,7 @@ Restruct resctx;
   ThotBool            stop;
   int                 level;
   int		      *indrec;
-  int                 RecFirstIndex;
+  int                 RecFirstIndex = 0;
 
   CSrc = resctx->RSrcPrint->SPrint;
   CDst = resctx->RDestPrint;

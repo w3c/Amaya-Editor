@@ -922,6 +922,7 @@ Restruct restruct;
   int i;
   ThotBool result = TRUE;
   
+  tfather = NULL;
   destType = restruct->RDestType;
   ptrTree =  restruct->RSrcPrint->STree;
   

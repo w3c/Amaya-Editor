@@ -1994,6 +1994,7 @@ PictInfo           *imageDesc;
    status = PictureFileOk (fileName, &typeImage);
    w = 0;
    h = 0;
+   Bgcolor = ColorPixel (box->BxAbstractBox->AbBackground);
 
 #ifdef _WINDOWS
    if (TtDisplay == 0) {

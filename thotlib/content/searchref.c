@@ -688,7 +688,7 @@ PtrDocument         pDoc;
 				     (pAttr, &attrRef);
 				 if (!attrRef)
 				   {
-				   RemoveAttribute (pEl, pAttr);
+				   RemoveAttribute (pRoot, pAttr);
 				   delAttr = TRUE;
 				   }
 			       }
