@@ -1917,9 +1917,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 	    found = FindBreakLine (pNextBox, &width, &breakWidth, &boxLength,
 				   &nSpaces, &newIndex, &pNewBuff, &wordWidth);
 	  else
-	    {
-	      found = FALSE;
-	    }
+	    found = FALSE;
 	   
 	  if (found && width + xi <= pLine->LiXMax)
 	    {
@@ -1953,16 +1951,12 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 		  pNextBox->BxType == BoFloatBlock ||
 		  pNextBox->BxType == BoTable)
 		wordWidth = pNextBox->BxMinWidth;
-	      else if (!pNextBox->BxAbstractBox->AbWidth.DimIsPosition &&
+	      else if (pNextBox->BxAbstractBox->AbLeafType != LtText &&
+		       !pNextBox->BxAbstractBox->AbWidth.DimIsPosition &&
 		       pNextBox->BxAbstractBox->AbHorizEnclosing &&
 		       (pNextBox->BxAbstractBox->AbWidth.DimAbRef == NULL ||
 			!IsParentBox (pNextBox->BxAbstractBox->AbWidth.DimAbRef->AbBox, pNextBox)))
-		{
-		  /*if (pNextBox->BxWidth > pLine->LiXMax)
-		    wordWidth = pLine->LiXMax;
-		    else*/
-		    wordWidth = pNextBox->BxWidth;
-		}
+		wordWidth = pNextBox->BxWidth;
 	      pBox = pNextBox;
 	      xi += pNextBox->BxWidth;
 	      if (pNextBox->BxAbstractBox->AbLeafType == LtText &&

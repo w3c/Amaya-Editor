@@ -659,19 +659,12 @@ void FrameRedraw (int frame, Dimension width, Dimension height)
 
 #ifdef _GTK
 #ifdef _GL
-
 /*----------------------------------------------------------------------
   DrawGL :
   ----------------------------------------------------------------------*/
-gboolean GL_DrawCallback (ThotWidget widget, 
-			  GdkEventExpose *event, 
+gboolean GL_DrawCallback (ThotWidget widget, GdkEventExpose *event, 
 			  gpointer data)
 {
-  /*   int frame; */
-
-  /*   frame = (int ) data; */
-  /*   GL_Swap (frame); */
-  /* FrameTable[frame].DblBuffNeedSwap = TRUE; */
   DefClip ((int ) data, -1, -1, -1, -1);
   GL_DrawAll ((int ) data);
   return TRUE;
@@ -695,88 +688,35 @@ gboolean  GL_Destroy (ThotWidget widget, GdkEventExpose *event,
   GL_Init :
   Opengl pipeline state initialization
   ----------------------------------------------------------------------*/
-gboolean  GL_Init (ThotWidget widget, 
-		   GdkEventExpose *event, 
-		   gpointer data)
+gboolean GL_Init (ThotWidget widget, GdkEventExpose *event, gpointer data)
 {
-  static ThotBool dialogfont_enabled = FALSE;
- 
   while (!gtk_gl_area_make_current (GTK_GL_AREA(widget)))
     ;
-           
   SetGlPipelineState ();
-  if (!dialogfont_enabled)
-    {
-      /*InitDialogueFonts ("");*/
-      dialogfont_enabled = TRUE;
-    } 
   return TRUE;   
 }
-/*----------------------------------------------------------------------
-  ExposeCallbackGTK : 
-  When a part of the canvas is hidden by a window or menu 
-  It permit to Redraw frames 
-  ----------------------------------------------------------------------*/
-gboolean ExposeCallbackGTK (ThotWidget widget, 
-			    GdkEventExpose *event, 
-			    gpointer data)
-{
-  int                 frame;
-
-  frame = (int) data;
-  if ((event->area.width <= 0) || 
-      (event->area.height <= 0) || 
-      !(frame > 0 && frame <= MAX_FRAME))
-    return TRUE;
-  if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
-    return TRUE; 
-
-  /* THIS JUST DOESN'T WORK !!!
-     even when storing successive x,y and so on...
-     it's just gtk and opengl mix bad...
-     so the Xfree and gtk guys that tells us 
-     it work, just have to come here and code it here
-     with an hardware opengl implementation on their PC...
-     They will see the Speed problem...*/
-  /*if (event->count > 0)*/
-  /*    return TRUE; */
-  if (GL_prepare (frame))
-    {
-      if (glhard ()) 
-	{
-	  DefRegion (frame,
-		     0, 0, 
-		     FrameTable[frame].FrWidth, FrameTable[frame].FrHeight); 
-	  FrameRedraw (frame, FrameTable[frame].FrWidth, FrameTable[frame].FrHeight);
-	}
-      else
-	GL_Swap (frame);
-    }
-  return TRUE;
-}
+#endif /* _GL */
 
 /*----------------------------------------------------------------------
   FrameResizedGTK When user resize window
   ----------------------------------------------------------------------*/
-gboolean FrameResizedGTK (GtkWidget *widget, 
-			  GdkEventConfigure *event, 
-			  gpointer data)
+gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
 {
-  int                 frame;
-  Dimension           width, height;
-  int                 forever = 0;
-
-  frame = (int )data;
+  int         frame;
+  int         width, height;
+#ifdef _GL
+  int         forever = 0;
+#endif /* _GL */
+ 
+  frame = (int) data;
   width = event->width;
-  height = event->height;
-  if ((width <= 0) || 
-      (height <= 0))
+  height = event->height; 
+  if (width <= 0 || height <= 0)
     return TRUE;
-  if ((width == FrameTable[frame].FrWidth) && 
-      (height == FrameTable[frame].FrHeight))
+  if (FrameTable[frame].FrWidth == width && FrameTable[frame].FrHeight == height)
     return TRUE;
-  
-  if (widget)
+#ifdef _GL
+  if (w)
     if (GL_prepare (frame))
       {
 	/* prevent flickering*/
@@ -791,22 +731,17 @@ gboolean FrameResizedGTK (GtkWidget *widget,
 	  so until sizes are stabilized, we resize. 
 	if it never stabilizes itself, we stop at at
 	the tenth resize*/
-
 	while (gtk_events_pending ())
 	  gtk_main_iteration ();
 
-	while ((width != widget->allocation.width ||
-	       height != widget->allocation.height) && 
+	while ((width != w->allocation.width ||
+	       height != w->allocation.height) && 
 	       forever < 10)
 	  {	     
-	    width = widget->allocation.width; 
-	    height = widget->allocation.height; 
-
-	    FrameTable[frame].FrWidth = width;
-	    FrameTable[frame].FrHeight = height;
+	    width = w->allocation.width; 
+	    height = w->allocation.height; 
 	    if (GL_prepare (frame))
 	      {
-
 		FrameTable[frame].FrWidth = width;
 		FrameTable[frame].FrHeight = height;
 		GLResize (width, height, 0, 0);
@@ -820,31 +755,14 @@ gboolean FrameResizedGTK (GtkWidget *widget,
 	  }
 	FrameTable[frame].DblBuffNeedSwap = TRUE; 
 	GL_SwapEnable (frame);
-    if (GL_prepare (frame))
-      {
-	GL_Swap (frame);
+	if (GL_prepare (frame))
+	  GL_Swap (frame);
       }
-      }
-  return TRUE;
-}
-#else /* _GL*/
-/*----------------------------------------------------------------------
-  FrameResizedGTK When user resize window
-  ----------------------------------------------------------------------*/
-gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
-{
-  int         frame;
-  Dimension   width, height;
- 
-  frame = (int )data;
-  width = event->width;
-  height = event->height; 
-  if (FrameTable[frame].FrWidth == width
-      && FrameTable[frame].FrHeight == height)
-    return TRUE;
+#else /* _GL */
   FrameRedraw (frame, width, height);
   while (gtk_events_pending ()) 
     gtk_main_iteration ();
+#endif /* _GL */
   return TRUE;
 }
 
@@ -855,27 +773,49 @@ gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
   ----------------------------------------------------------------------*/
 gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer data)
 {
-  int nframe;
-  int                 x;
-  int                 y;
-  int                 l;
-  int                 h;
+  int                  frame;
+  int                  x;
+  int                  y;
+  int                  w;
+  int                  h;
 
-  nframe = (int )data;
+  frame = (int) data;
   x = event->area.x;
   y = event->area.y;
-  l = event->area.width;
+  w = event->area.width;
   h = event->area.height;
-  
-  
-  if (nframe > 0 && nframe <= MAX_FRAME)
-    { 
-      DefRegion (nframe, x, y, l+x, y+h );
-      RedrawFrameBottom (nframe, 0, NULL);
+  if (w <= 0 || h <= 0 || frame == 0 || frame > MAX_FRAME)
+    return TRUE;
+  if (FrameTable[frame].FrDoc == 0 ||
+      documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+    return TRUE; 
+#ifdef _GL
+  /* THIS JUST DOESN'T WORK !!!
+     even when storing successive x,y and so on...
+     it's just gtk and opengl mix bad...
+     so the Xfree and gtk guys that tells us 
+     it work, just have to come here and code it here
+     with an hardware opengl implementation on their PC...
+     They will see the Speed problem...*/
+  /*if (event->count > 0)*/
+  /*    return TRUE; */
+  if (GL_prepare (frame))
+    {
+      if (glhard ()) 
+	{
+	  DefRegion (frame, 0, 0, 
+		     FrameTable[frame].FrWidth, FrameTable[frame].FrHeight); 
+	  RedrawFrameBottom (frame, 0, NULL);
+	}
+      else
+	GL_Swap (frame);
     }
+#else /* _GL */
+      DefRegion (frame, x, y, x + w, y + h);
+      RedrawFrameBottom (frame, 0, NULL);
+#endif /* _GL */
   return FALSE;
 }
-#endif /* _GL */
 #else /* _GTK */
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
