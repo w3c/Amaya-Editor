@@ -8,7 +8,7 @@
 
 extern char *GetUserAgentName ( void );
 extern char *GetDocumentURL ( Document doc );
-extern char *AmayaGetMessage ( int msg );
+extern STRING AmayaGetMessage ( int msg );
 extern int PopUpAuthDialog ( int doc );
 extern char *GetUserString ( void );
 extern char *GetPasswdString ( void );
@@ -38,7 +38,7 @@ extern int AmayaLoadHTMLDocument ( char *URL,
 
 extern char *GetUserAgentName (/* void */);
 extern char *GetDocumentURL (/* Document doc */);
-extern char *AmayaGetMessage (/* int msg */);
+extern STRING AmayaGetMessage (/* int msg */);
 extern int PopUpAuthDialog (/* int doc */);
 extern char *GetUserString (/* void */);
 extern char *GetPasswdString (/* void */);

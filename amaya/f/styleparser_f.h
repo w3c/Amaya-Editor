@@ -66,10 +66,10 @@ extern void ApplyCSSRules ( Element el,
                             Document doc,
                             boolean destroy );
 extern CHAR_T ReadCSSRules ( Document doc,
-                           Document docRef,
-                           CSSInfoPtr css,
-                           STRING buffer,
-                           boolean withUndo );
+                             Document docRef,
+                             CSSInfoPtr css,
+                             STRING buffer,
+                             boolean withUndo );
 
 #else /* __STDC__ */
 
@@ -133,10 +133,10 @@ extern void ApplyCSSRules (/* Element el,
                               Document doc,
                               boolean destroy */);
 extern CHAR_T ReadCSSRules (/* Document doc,
-                             Document docRef,
-                             CSSInfoPtr css,
-                             STRING buffer,
-                             boolean withUndo */);
+                               Document docRef,
+                               CSSInfoPtr css,
+                               STRING buffer,
+                               boolean withUndo */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -6,7 +6,19 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void AddMathButton ( Document doc,
+                            View view );
+extern void SwitchIconMath ( Document doc,
+                             View view,
+                             boolean state );
+
 #else /* __STDC__ */
+
+extern void AddMathButton (/* Document doc,
+                              View view */);
+extern void SwitchIconMath (/* Document doc,
+                               View view,
+                               boolean state */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

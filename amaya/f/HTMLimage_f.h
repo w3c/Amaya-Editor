@@ -12,6 +12,9 @@ extern boolean AddLoadedImage ( STRING name,
                                 LoadedImageDesc ** desc );
 extern LoadedImageDesc *SearchLoadedImage ( STRING localpath,
                                             Document doc );
+extern void SetAreaCoords ( Document document,
+                            Element element,
+                            int attrNum );
 extern void UpdateImageMap ( Element image,
                              Document document,
                              int oldWidth,
@@ -49,6 +52,9 @@ extern boolean AddLoadedImage (/* STRING name,
                                   LoadedImageDesc ** desc */);
 extern LoadedImageDesc *SearchLoadedImage (/* STRING localpath,
                                               Document doc */);
+extern void SetAreaCoords (/* Document document,
+                              Element element,
+                              int attrNum */);
 extern void UpdateImageMap (/* Element image,
                                Document document,
                                int oldWidth,

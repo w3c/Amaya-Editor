@@ -11,6 +11,12 @@ extern void CallbackImage ( int ref,
                             int typedata,
                             STRING data );
 extern void InitImage ( void );
+extern void CreateAreaRect ( Document doc,
+                             View view );
+extern void CreateAreaCircle ( Document doc,
+                               View view );
+extern void CreateAreaPoly ( Document doc,
+                             View view );
 extern STRING GetImageURL ( Document document,
                             View view );
 extern void ChangeBackgroundImage ( Document document,
@@ -38,6 +44,12 @@ extern void CallbackImage (/* int ref,
                               int typedata,
                               STRING data */);
 extern void InitImage (/* void */);
+extern void CreateAreaRect (/* Document doc,
+                               View view */);
+extern void CreateAreaCircle (/* Document doc,
+                                 View view */);
+extern void CreateAreaPoly (/* Document doc,
+                               View view */);
 extern STRING GetImageURL (/* Document document,
                               View view */);
 extern void ChangeBackgroundImage (/* Document document,
