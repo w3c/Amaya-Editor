@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
+extern PtrDocument GetPtrDocument ( DocumentIdentifier docIdent );
 extern boolean OpenDocument ( Name docName,
                               PtrDocument pDoc,
                               boolean loadIncludedDoc,
@@ -68,6 +69,7 @@ extern void LoadDocumentPiv ( BinFile file,
 
 #else /* __STDC__ */
 
+extern PtrDocument GetPtrDocument (/* DocumentIdentifier docIdent */);
 extern boolean OpenDocument (/* Name docName,
                                 PtrDocument pDoc,
                                 boolean loadIncludedDoc,
@@ -108,7 +110,7 @@ extern PtrElement ReadTreePiv (/* BinFile pivFile,
                                   boolean createDesc */);
 extern boolean AbstractTreeOK (/* PtrElement pEl,
                                   PtrDocument pDoc */);
-extern void AssociatePairs (/* PtrElement pRoot */);
+extern void AssociatePairs (/* PtrElement pRoot */)
 extern void ReadSchemaNamesPiv (/* BinFile file,
                                    PtrDocument pDoc,
                                    char *tag,
