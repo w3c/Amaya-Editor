@@ -8,7 +8,11 @@
 #ifndef _APPLICATION_H_
 #define _APPLICATION_H_
 #define HTAppName     "amaya"
-#define HTAppVersion  "8.6"
+#ifdef _WX
+#define HTAppVersion  "9.0-pre"
+#else /* _WX */
+#define HTAppVersion  "8.7-pre"
+#endif /* _WX */
 #define HTAppDate     __DATE__ 
 
 #include "typebase.h"
