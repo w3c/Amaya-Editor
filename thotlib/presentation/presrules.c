@@ -3929,18 +3929,6 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	case PtFloat:
 	  pAb->AbFloat = CharRule (pPRule, pAb->AbElement, pAb->AbDocView,
 				   &appl);
-#ifdef IV
-	  if (appl)
-	    {
-	      if (pAb->AbFloat == 'L' || pAb->AbFloat == 'R')
-		/* Float left or right */
-		{
-		  if (pAb->AbEnclosing)
-		    pAb->AbEnclosing->AbInLine = TRUE;
-		  pAb->AbAcceptLineBreak = TRUE;
-		}
-	    }
-#endif
 	  break;
 	case PtClear:
 	  pAb->AbClear = CharRule (pPRule, pAb->AbElement, pAb->AbDocView,

@@ -68,7 +68,8 @@ typedef enum
   BoTable,
   BoRow,
   BoColumn,
-  BoCell
+  BoCell,
+  BoFloatBlock
 } BoxType;
 
 /* Type of relation between boxes:

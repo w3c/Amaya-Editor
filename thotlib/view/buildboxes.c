@@ -1063,15 +1063,17 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
 	  pCurrentBox->BxLastLine = NULL;
 	}
     }
-  else if (pAb->AbInLine)
+  else if (pAb->AbInLine || pCurrentBox->BxType == BoFloatBlock)
     {
       /* It's a block of lines */
-      if (pCurrentBox->BxType == BoBlock && pCurrentBox->BxFirstLine != NULL)
+      if ((pCurrentBox->BxType == BoBlock ||
+	   pCurrentBox->BxType == BoFloatBlock) && pCurrentBox->BxFirstLine)
 	/* we have to reformat the block of lines */
 	RecomputeLines (pAb, NULL, NULL, frame);
       else
 	{
-	  pCurrentBox->BxType = BoBlock;
+	  if (pCurrentBox->BxType != BoFloatBlock)
+	    pCurrentBox->BxType = BoBlock;
 	  pCurrentBox->BxFirstLine = NULL;
 	  pCurrentBox->BxLastLine = NULL;
 	  ComputeLines (pCurrentBox, frame, height);
@@ -1154,7 +1156,7 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
 		  (!pChildAb->AbWidth.DimIsPosition &&
 		   pChildAb->AbWidth.DimMinimum))
 		{
-		  /* the width of that box doesn't depend on the emclosing */
+		  /* the width of that box doesn't depend on the enclosing */
 		  if (pChildBox->BxXOrg < 0)
 		    val = pChildBox->BxWidth;
 		  else
@@ -1167,7 +1169,7 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
 		  (!pChildAb->AbHeight.DimIsPosition &&
 		   pChildAb->AbHeight.DimMinimum))
 		{
-		  /* the height of that box doesn't depend on the emclosing */
+		  /* the height of that box doesn't depend on the enclosing */
 		  if (pChildBox->BxYOrg < 0)
 		    val = pChildBox->BxHeight;
 		  else
@@ -1449,8 +1451,8 @@ static void TransmitMBP (PtrBox pBox, int frame, int i, int j,
 	  if (i != 0)
 	    {
 	      if (pAb->AbWidth.DimIsPosition ||
-		  pAb->AbWidth.DimAbRef != 0 ||
-		  pAb->AbWidth.DimAbRef == pAb->AbEnclosing)
+		  pAb->AbWidth.DimAbRef/* ||
+		  pAb->AbWidth.DimAbRef == pAb->AbEnclosing*/)
 		/* the outside width is constrained */
 		ResizeWidth (pAb->AbBox, pAb->AbBox, NULL, -i, i, 0, 0, frame);
 	      else
@@ -1476,8 +1478,8 @@ static void TransmitMBP (PtrBox pBox, int frame, int i, int j,
 	  if (j != 0)
 	    {
 	      if (pAb->AbWidth.DimIsPosition ||
-		  pAb->AbWidth.DimAbRef != 0 ||
-		  pAb->AbWidth.DimAbRef == pAb->AbEnclosing)
+		  pAb->AbWidth.DimAbRef/* ||
+		  pAb->AbWidth.DimAbRef == pAb->AbEnclosing*/)
 		/* the outside width is constrained */
 		ResizeWidth (pAb->AbBox, pAb->AbBox, NULL, -j, 0, j, 0, frame);
 	      else
@@ -1507,8 +1509,8 @@ static void TransmitMBP (PtrBox pBox, int frame, int i, int j,
 	  if (i || j)
 	    {
 	      if (pAb->AbHeight.DimIsPosition ||
-		  pAb->AbHeight.DimAbRef != 0 ||
-		  pAb->AbHeight.DimAbRef == pAb->AbEnclosing)
+		  pAb->AbHeight.DimAbRef/* ||
+		  pAb->AbHeight.DimAbRef == pAb->AbEnclosing*/)
 		/* the outside height is constrained */
 		ResizeHeight (pAb->AbBox, pAb->AbBox, NULL, - i - j, i, j,
 			      frame);
@@ -1525,8 +1527,8 @@ static void TransmitMBP (PtrBox pBox, int frame, int i, int j,
   CheckMBP checks margins, borders and paddings of the current box.
   Return TRUE when any value was updated.
   ----------------------------------------------------------------------*/
-static ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame,
-			  ThotBool evalAuto)
+ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame,
+		   ThotBool evalAuto)
 {
   int lt, rb;
 
@@ -1543,8 +1545,8 @@ static ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame,
   else if (lt != 0 || rb != 0)
     {
       if (pAb->AbHeight.DimIsPosition ||
-	  pAb->AbHeight.DimAbRef != 0 ||
-	  pAb->AbHeight.DimAbRef == pAb->AbEnclosing)
+	  pAb->AbHeight.DimAbRef/* ||
+	  pAb->AbHeight.DimAbRef == pAb->AbEnclosing*/)
 	/* the outside height is constrained */
 	ResizeHeight (pBox, pBox, NULL, - lt - rb, lt, rb, frame);
       else
@@ -1565,8 +1567,9 @@ static ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame,
     {
       pAb->AbBox->BxVertRef += lt;
       if (pAb->AbWidth.DimIsPosition ||
-	  pAb->AbWidth.DimAbRef != 0 ||
-	  pAb->AbWidth.DimAbRef == pAb->AbEnclosing)
+	  pAb->AbWidth.DimAbRef
+	  /* ||
+	     pAb->AbWidth.DimAbRef == pAb->AbEnclosing*/)
 	/* the outside width is constrained */
 	ResizeWidth (pBox, pBox, NULL, - lt - rb, lt, rb, 0, frame);
       else
@@ -1843,6 +1846,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 	      pCurrentBox->BxRows = NULL;
 	      pCurrentBox->BxMaxWidth = 0;
 	      pCurrentBox->BxMinWidth = 0;
+	      pAb->AbFloat = 'N';
 	    }
 	  else if (TypeHasException (ExcIsRow,
 				     pAb->AbElement->ElTypeNumber, pSS))
@@ -1853,6 +1857,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 	      pCurrentBox->BxRows = NULL;
 	      pCurrentBox->BxMaxWidth = 0;
 	      pCurrentBox->BxMinWidth = 0;
+	      pAb->AbFloat = 'N';
 	    }
 	  else if (TypeHasException (ExcIsCell,
 				     pAb->AbElement->ElTypeNumber, pSS))
@@ -1863,10 +1868,10 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 	      pCurrentBox->BxRows = NULL;
 	      pCurrentBox->BxMaxWidth = 0;
 	      pCurrentBox->BxMinWidth = 0;
+	      pAb->AbFloat = 'N';
 	    }
-	  
 	  if (inLines && pAb->AbAcceptLineBreak)
-	    /* the abstract box is in line but accepts line breaks it becomes a ghost */
+	    /* it's in line but it accepts line breaks it becomes a ghost */
 	    {
 	      if (pAb->AbFirstEnclosed)
 		{
@@ -1910,6 +1915,25 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 		SetMainWindowBackgroundColor (frame, pAb->AbBackground);
 	      else
 		SetMainWindowBackgroundColor (frame, DefaultBColor);
+	    }
+	  
+	  /* check if there is a float box inside */
+	  pChildAb = pAb->AbFirstEnclosed;
+	  while (pChildAb)
+	    {
+	      if (pChildAb->AbFloat == 'L' || pChildAb->AbFloat == 'R')
+		{
+		  if (pChildAb->AbLeafType == LtCompound &&
+		      (pChildAb->AbWidth.DimIsPosition ||
+		       pChildAb->AbWidth.DimAbRef
+		       /* ||
+			  pChildAb->AbWidth.DimAbRef*/))
+		    /* invalid rule */
+		    pChildAb->AbFloat = 'N';
+		  else
+		    /*pCurrentBox->BxType = BoFloatBlock*/;
+		}
+	      pChildAb = pChildAb->AbNext;
 	    }
 	  
 	  /* create enclosed boxes */
@@ -3041,7 +3065,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  pDimAb = &pAb->AbWidth;
 	  if (!pDimAb->DimIsPosition)
 	    {
-	      if (pDimAb->DimAbRef != NULL || pDimAb->DimValue >= 0)
+	      if (pDimAb->DimAbRef || pDimAb->DimValue >= 0)
 		pAb->AbWidthChange = (pDimAb->DimUnit == UnRelative);
 	      if (pAb->AbHorizPos.PosAbRef != NULL)
 		pAb->AbHorizPosChange = (pAb->AbHorizPos.PosUnit == UnRelative);
