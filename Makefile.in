@@ -169,10 +169,10 @@ libwww libwww.a :
 	  fi)
 	@(if test ! -d $(LIBWWW) ; then $(MKDIR) $(LIBWWW) ;  fi)
 	@(localdir=`pwd` ; libwwwdir="$(THOTDIR)/$(LIBWWW)" ; cd $(LIBWWW) ; \
-	  unset LANG; if [ -x $$libwwwdir/configure ] ; then \
-	  if [ ! -x $(LIBWWW)/Library/src/Makefile ] ; then \
-	      $$libwwwdir/configure --disable-shared; \
-	  fi
+	  unset LANG; \
+	  if [ ! Makefile ] ; then \
+	  	../$$libwwwdir/configure --disable-shared \
+			-with-zlib="$$localdir/libz.a"; \
 	  fi)
 	@(cd $(LIBWWW)/Library/src ; $(MAKE) CC=$(CC) CFLAGS="-O")
 	@($(CP) $(LIBWWW)/Library/src/.libs/libwww.a libwww.a)
