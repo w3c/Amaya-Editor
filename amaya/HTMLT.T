@@ -6,7 +6,6 @@ LINELENGTH 78;
 
 CONST
    DoubleQuote  = '"';
-   C_Style = ' style="';
 
 RULES
 
@@ -339,20 +338,6 @@ RULES
 	END;
 
  TEXT_UNIT: BEGIN
-	IF *Style\240 and not Within HEAD
-	    BEGIN
-	    Create '<span';
-	    Create Attributes;
-	    Create '>';
-	    Create '</span>' After;
-	    END;
-	IF *Class and not Within HEAD
-	    BEGIN
-	    Create '<span';
-	    Create Attributes;
-	    Create '>';
-	    Create '</span>' After;
-	    END;
 	IF Within Text_Area
 		Remove;
 	IF Within Text_Input
@@ -938,8 +923,7 @@ ATTRIBUTES
 	BEGIN
 	IF TEXT_UNIT and not Within HEAD 
 	    BEGIN
-	    Create '<span ';
-	    Create C_Style;
+	    Create '<span style="';
 	    Create Style\240;
 	    Create DoubleQuote;
 	    Create '>';
@@ -947,7 +931,7 @@ ATTRIBUTES
 	    END;
 	IF not TEXT_UNIT and not Within HEAD
 	    BEGIN
-	    Create C_Style;
+	    Create ' style="';
 	    Create Style\240;
 	    Create DoubleQuote;
 	    END;
