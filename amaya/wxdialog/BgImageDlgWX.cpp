@@ -48,6 +48,7 @@ BgImageDlgWX::BgImageDlgWX( int ref, wxWindow* parent, const wxString & urlToOpe
   SetTitle( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BACKGROUND_IMAGE)) );
   XRCCTRL(*this, "wxID_LABEL_URL", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BACKGROUND_IMAGE)) );
   XRCCTRL(*this, "wxID_OPENBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
+  XRCCTRL(*this, "wxID_CLEARBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_CLEAR) ));
   XRCCTRL(*this, "wxID_BROWSEBUTTON", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
   XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
 
