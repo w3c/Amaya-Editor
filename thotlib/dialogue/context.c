@@ -675,8 +675,6 @@ int                 dy;
    TtWDepth = GetDeviceCaps (hdc, PLANES);
    if (TtWDepth == 1)
       TtWDepth = GetDeviceCaps (hdc, BITSPIXEL);
-
-   DeleteDC (hdc);
 #  endif /* _WINDOWS */
 
 #  ifndef _WINDOWS
@@ -692,7 +690,13 @@ int                 dy;
    InitColors (name);
    InitGraphicContexts ();
    InitCurs ();
+
+#  ifdef _WINDOWS 
+   WIN_InitDialogueFonts (hdc, name);
+   DeleteDC (hdc);
+#  else /* !_WINDOWS */
    InitDialogueFonts (name);
+#endif /* _WINDOWS */
 
    /* Initialization of Picture Drivers */
    InitPictureHandlers (FALSE);

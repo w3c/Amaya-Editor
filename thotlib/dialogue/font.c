@@ -179,7 +179,7 @@ TypeUnit unit;
    }
 
    WIN_nHeight = -MulDiv (size, DOT_PER_INCHE, 72);
-
+      
    hFont = CreateFont (WIN_nHeight, WIN_nWidth, 0, 0, WIN_fnWeight,
                        WIN_fdwItalic, WIN_fdwUnderline, WIN_fdwStrikeOut,
                        DEFAULT_CHARSET, OUT_TT_ONLY_PRECIS, CLIP_DEFAULT_PRECIS,
@@ -387,7 +387,14 @@ PtrAbstractBox      pAb;
                dist = PointToPixel (val);
                break;
           case UnPixel:
+#              ifdef _WINDOWS
+			   if (TtPrinterDC)
+				   dist = (val * PrinterDPI + PrinterDPI / 2) / ScreenDPI;
+			   else
+                   dist = val;
+#              else  /* _WINDOWS */
                dist = val;
+#              endif /* _WINDOWS */
                break;
           case UnPercent:
                i = val * (int) pAb;
@@ -432,7 +439,14 @@ PtrAbstractBox      pAb;
        dist = PixelToPoint (val);
        break;
      case UnPixel:
+#        ifdef _WINDOWS 
+		 if (TtPrinterDC)
+			 dist = (val * ScreenDPI + ScreenDPI / 2) / PrinterDPI;
+		 else 
+			 dist = val;
+#        else  /* _WINDOWS */ 
        dist = val;
+#        endif /* _WINDOWS */
        break;
      case UnPercent:
        if (pAb == NULL)
@@ -835,26 +849,40 @@ boolean             increase;
 	  /* Allocate the font structure */
 	  ptfont = TtaGetMemory (sizeof (FontInfo));
 	  ptfont->FiFont = WIN_LoadFont (alphabet, family, highlight, size, unit);
-	  WIN_GetDeviceContext (-1);
-	  hOldFont = SelectObject (TtDisplay, ptfont->FiFont);
-	  if (GetTextMetrics (TtDisplay, &textMetric))
-	    {
-	      ptfont->FiAscent = textMetric.tmAscent;
-	      ptfont->FiHeight = textMetric.tmAscent + textMetric.tmDescent;
-	    }
-	  else
-	    {
-	      ptfont->FiAscent = 0;
-	      ptfont->FiHeight = 0;
-	    }
-	  for (c = 0; c < 256; c++)
-	    {
-	      GetTextExtentPoint (TtDisplay, &c, 1, &wsize);
-	      ptfont->FiWidths[c] = wsize.cx;
-	      ptfont->FiHeights[c] = wsize.cy;
-	    }
-	  SelectObject (TtDisplay, hOldFont);
-	  WIN_ReleaseDeviceContext ();
+      if (TtPrinterDC != 0) {
+         hOldFont = SelectObject (TtPrinterDC, ptfont->FiFont);
+         if (GetTextMetrics (TtPrinterDC, &textMetric)) {
+            ptfont->FiAscent = textMetric.tmAscent;
+            ptfont->FiHeight = textMetric.tmAscent + textMetric.tmDescent;
+		 } else {
+               ptfont->FiAscent = 0;
+               ptfont->FiHeight = 0;
+		 }
+         for (c = 0; c < 256; c++) {
+             GetTextExtentPoint (TtPrinterDC, &c, 1, &wsize);
+             ptfont->FiWidths[c] = wsize.cx;
+             ptfont->FiHeights[c] = wsize.cy;
+		 }
+         SelectObject (TtPrinterDC, hOldFont);
+      } else { 
+           WIN_GetDeviceContext (-1);
+           hOldFont = SelectObject (TtDisplay, ptfont->FiFont);
+
+           if (GetTextMetrics (TtDisplay, &textMetric)) {
+              ptfont->FiAscent = textMetric.tmAscent;
+              ptfont->FiHeight = textMetric.tmAscent + textMetric.tmDescent;
+		   } else {
+                ptfont->FiAscent = 0;
+                ptfont->FiHeight = 0;
+		   }
+           for (c = 0; c < 256; c++) {
+               GetTextExtentPoint (TtDisplay, &c, 1, &wsize);
+               ptfont->FiWidths[c] = wsize.cx;
+               ptfont->FiHeights[c] = wsize.cy;
+		   }
+           SelectObject (TtDisplay, hOldFont);
+           WIN_ReleaseDeviceContext ();
+	  }
 #      else  /* _WINDOWS */
 	  if (alphabet == 'G' && (size > 8 && size < 16 || size == 24))
 	    ptfont = LoadFont (textX, size);
@@ -954,12 +982,22 @@ int                 frame;
 /*----------------------------------------------------------------------
  *      InitDialogueFonts initialize the standard fonts used by the Thot Toolkit.
   ----------------------------------------------------------------------*/
+#ifdef _WINDOWS
+#ifdef __STDC__
+void                WIN_InitDialogueFonts (HDC hDC, char *name)
+#else  /* __STDC__ */
+void                WIN_InitDialogueFonts (hDC, name)
+HDC                 hDC;
+char               *name;
+#endif /* __STDC__ */
+#else  /* !_WINDOWS */
 #ifdef __STDC__
 void                InitDialogueFonts (char *name)
 #else  /* __STDC__ */
 void                InitDialogueFonts (name)
 char               *name;
 #endif /* __STDC__ */
+#endif /* _WINDOWS */
 {
 #  ifndef _WINDOWS
    int                 ndir, ncurrent;
@@ -1006,7 +1044,11 @@ char               *name;
 		UseBitStreamFamily = FALSE;
 	  }
      }
+#  ifdef _WINDOWS
+   DOT_PER_INCHE = GetDeviceCaps(hDC, LOGPIXELSY);
+#  else  /* !_WINDOWS */
    DOT_PER_INCHE = 72;
+#  endif /* _WINDOWS */
 
 
    /* Is there any predefined size for menu fonts ? */

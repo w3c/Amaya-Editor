@@ -80,6 +80,11 @@ static int          defPaginate;
 static int          defPageSize;
 static Name         PresSchema;
 
+#ifdef _WINDOWS
+extern HWND currentWindow ;
+extern int  currentFrame;
+#endif /* _WINDOWS */
+
 
 /*----------------------------------------------------------------------
   Print: interface to the Print program.
@@ -448,7 +453,11 @@ Document            document;
    printArgv [printArgc] = (char*) TtaGetMemory (strlen (dir) + strlen (name) + 6);
    sprintf  (printArgv [printArgc], "%s\\%s.PIV", dir, name);
    printArgc++;
-   PrintDoc (printArgc, printArgv, TtPrinterDC, TtIsTrueColor, TtWDepth, name, dir, hInstance);
+   WIN_ReleaseDeviceContext ();
+   PrintDoc (currentWindow, printArgc, printArgv, TtPrinterDC, TtIsTrueColor, TtWDepth, name, dir, hInstance);
+   if (!IsWindowEnabled (FrRef[currentFrame]))
+      EnableWindow (FrRef[currentFrame], TRUE);
+   SetFocus (FrRef[currentFrame]);
    for (i = 0; i < printArgc; i++)
        TtaFreeMemory (printArgv [i]);
 #  else /* !_WINDOWS */

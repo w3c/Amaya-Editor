@@ -12,7 +12,8 @@
  * some functions are just fake ones, not used on Postcript output, but needed
  * at link time.
  *
- * Author: I. Vatton (INRIA)
+ * Authors: I. Vatton (INRIA)
+ *          R. Guetari (W3C/INRIA) Windows routines.
  *
  */
 

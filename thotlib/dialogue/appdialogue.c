@@ -88,6 +88,7 @@ static SchemaMenu_Ctl *SchemasMenuList;
 #define WM_ENTER (WM_USER)
 
 extern TBADDBITMAP ThotTBBitmap;
+extern HWND        currentWindow;
 
 static WNDPROC lpfnTextZoneWndProc = (WNDPROC) 0;
 static BOOL    doSwitchButton = TRUE;
@@ -2332,6 +2333,16 @@ int                 doc;
 		dy = (Dimension) haut;
 #            endif /* _WINDOWS */
 
+#       ifdef _WINDOWS
+        if (X < 0)
+           X = 92;
+        else
+            X = mmtopixel (X, 1);
+        if (Y < 0)
+           Y = 2;
+        else
+           Y = mmtopixel (Y, 0);
+#       else  /* _WINDOWS */
 	     if (X <= 0)
 		X = 92;
 	     else
@@ -2340,6 +2351,7 @@ int                 doc;
 		Y = 2;
 	     else
 		Y = mmtopixel (Y, 0);
+#       endif /* _WINDOWS */
 
 #            ifdef _WINDOWS
 #        if 0
@@ -3724,6 +3736,10 @@ char               *data;
 	j = ref - MAX_LocalMenu;
 	i = j / MAX_ITEM;
 	frame = j - (i * MAX_ITEM);	/* reste de la division */
+#   ifdef _WINDOWS
+    if (frame != -1)
+       currentWindow = FrRef [frame];
+#   endif /* _WINDOWS */
 	item = i / MAX_MENU;
 	menu = i - (item * MAX_MENU);	/* reste de la division */
 	if (frame == 0)

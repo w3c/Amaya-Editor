@@ -18,6 +18,7 @@
  * psdisplay.c : All the Postscript generation routines.
  *
  * Author: I. Vatton (INRIA)
+ *         R. Guetari (W3C/INRIA) - Printing routines for Windows.
  *
  */
 
@@ -415,7 +416,7 @@ int                 fg;
 #  ifdef _WINDOWS
    if (TtPrinterDC) {
       ptcar = &buff[i - 1];
-      SetMapperFlags (TtPrinterDC, 0);
+      SetMapperFlags (TtPrinterDC, 1);
       GetTextExtentPoint (TtPrinterDC, ptcar, lg, &size);
       width = size.cx;
       if (ptcar[0] == '\212') {
@@ -1270,10 +1271,22 @@ int                 pattern;
    if (y < 0)   
       return ;
 
+#  ifdef _WINDOWS
+   if (TtPrinterDC == (HDC) 0) {
+      xf = PixelToPoint (x + larg);
+      yf = PixelToPoint (y + height);
+      x  = PixelToPoint (x);
+      y  = PixelToPoint (y);
+   } else {
+        xf = x + larg;
+        yf = y + height;
+   }
+#  else /* !_WINDOWS */
    xf = PixelToPoint (x + larg);
    yf = PixelToPoint (y + height);
    x  = PixelToPoint (x);
    y  = PixelToPoint (y);
+#  endif /* _WINDOWS */
 
    /* Fill in the rectangle */
    if (TtPrinterDC) {

@@ -68,6 +68,8 @@
 #include "fileaccess_f.h"
 #include "memory_f.h"
 #ifdef _WINDOWS 
+#include "units_tv.h"
+
 #include "win_f.h"
 #endif /* _WINDOWS */
 
@@ -136,12 +138,13 @@ static unsigned char MirrorBytes[0x100] = {
 /* Macro to determine to round off the given value to the closest byte */
 #define WIDTHBYTES(i)   ((i+31)/32*4)
 
-
+#ifdef _WIN_PRINT
 #ifdef __STDC__
 void LoadPicture2Print (int, PtrBox, PictInfo*);
 #else  /* __STDC__ */
 void LoadPicture2Print ();
 #endif /* __STDC__ */
+#endif /* _WIN_PRINT */
 
 extern boolean  peInitialized;
 
@@ -150,6 +153,9 @@ int  bgRed;
 int  bgGreen;
 int  bgBlue;
 
+#ifdef _WIN_PRINT
+
+extern HWND currentWindow;
 /*----------------------------------------------------------------------*
  *                                                                      *
  * FUNCTION: DibNumColors(VOID FAR * pv)                                *
@@ -258,7 +264,7 @@ LPBITMAPINFOHEADER lpbi;
  *                                                                        *
  * ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void PrintDIB (LPBITMAPINFOHEADER lpBmpInfo, LPBYTE lpBits, HWND hWnd, HDC hDC, int x, int y, int dx, int dy)
+void PrintDIB (LPBITMAPINFO lpBmpInfo, LPBYTE lpBits, HWND hWnd, HDC hDC, int x, int y, int dx, int dy)
 #else  /* !__STDC__ */
 void PrintDIB (lpBmpInfo, lpBits, hWnd, hDC, x, y, dx, dy)
 LPBITMAPINFOHEADER lpBmpInfo;
@@ -271,7 +277,8 @@ int                dx;
 int                dy;
 #endif /* __STDC__*/
 {
-    SetDIBitsToDevice (TtPrinterDC, x, y, lpBmpInfo->biWidth, lpBmpInfo->biHeight, 0, 0, 0, lpBmpInfo->biHeight, lpBits, lpBmpInfo, DIB_RGB_COLORS);
+    StretchDIBits (TtPrinterDC, x, y, dx, dy, 0, 0, lpBmpInfo->bmiHeader.biWidth, lpBmpInfo->bmiHeader.biHeight, lpBits, lpBmpInfo, DIB_RGB_COLORS, SRCCOPY);
+    /* SetDIBitsToDevice (TtPrinterDC, x, y, lpBmpInfo->biWidth, lpBmpInfo->biHeight, 0, 0, 0, lpBmpInfo->biHeight, lpBits, lpBmpInfo, DIB_RGB_COLORS); */
 }
 
 /*----------------------------------------------------------------------
@@ -357,6 +364,143 @@ HBITMAP hBmp;
     return pbmi; 
 } 
 
+/*----------------------------------------------------------------------*
+ *                                                                      *
+ * FUNCTION: GetTransparentDIBits (HBITMAP pixmap)                      *
+ *                                                                      *
+ *----------------------------------------------------------------------*/
+#ifdef __STDC__
+LPBYTE GetTransparentDIBits (int frame, HBITMAP pixmap, int x, int y, int width, int height, int red, int green, int blue, LPBITMAPINFO* lpBmpInfo)
+#else  /* !__STDC__ */
+LPBYTE GetTransparentDIBits (frame, pixmap, x, y, width, height, red, green, blue, lpBmpInfo)
+int     frame;
+HBITMAP pixmap;
+int          x;
+int          y;
+int          width; 
+int          height,;
+int          red;
+int          green;
+int          blue;
+LPBITMAPINFO* lpBmpInfo;
+#endif /* __STDC__ */
+{
+   HDC      hDC = GetDC (currentWindow);
+   HDC      hNewDC;
+   HDC      hImageDC;
+   HDC      hOrDC;
+   HDC      hAndDC;
+   HDC      hInvAndDC;
+   HDC      hDestDC;
+   HBITMAP  bitmap, newBmp;
+   HBITMAP  bitmapOr;
+   HBITMAP  pOldBitmapOr;
+   HBITMAP  bitmapAnd;
+   HBITMAP  pOldBitmapAnd;
+   HBITMAP  bitmapInvAnd;
+   HBITMAP  pOldBitmapInvAnd;
+   HBITMAP  bitmapDest;
+   HBITMAP  pOldBitmapDest;
+   COLORREF crColor = RGB (red, green, blue);
+   COLORREF crOldBkColor ;
+   LPBYTE   lpBits;
+
+   hImageDC = CreateCompatibleDC (hDC);
+   bitmap   = SelectObject (hImageDC, pixmap);
+   SetMapMode (hImageDC, GetMapMode (hDC));
+   
+   hNewDC = CreateCompatibleDC (hDC);
+   newBmp = SelectObject (hNewDC, pixmap);
+   SetMapMode (hImageDC, GetMapMode (hDC));
+   SetBkColor (hNewDC, RGB (255, 255, 255));
+   
+   hOrDC = CreateCompatibleDC (hDC);
+   SetMapMode (hOrDC, GetMapMode (hDC));
+   bitmapOr = CreateCompatibleBitmap (hImageDC, width, height);
+   pOldBitmapOr = SelectObject (hOrDC, bitmapOr);
+   BitBlt (hOrDC, 0, 0, width, height, hImageDC, 0, 0, SRCCOPY);
+
+   hAndDC = CreateCompatibleDC (hDC);
+   SetMapMode (hAndDC, GetMapMode (hDC));
+   bitmapAnd = CreateBitmap (width, height, 1, 1, NULL);
+   pOldBitmapAnd = SelectObject (hAndDC, bitmapAnd);
+
+   crOldBkColor = SetBkColor (hImageDC, crColor);
+   BitBlt (hAndDC, 0, 0, width, height, hImageDC, 0, 0, SRCCOPY);
+
+   SetBkColor (hImageDC, crOldBkColor);
+
+   hInvAndDC = CreateCompatibleDC (hDC);
+   SetMapMode (hInvAndDC, GetMapMode (hDC));
+   bitmapInvAnd = CreateBitmap (width, height, 1, 1, NULL);
+   pOldBitmapInvAnd = SelectObject (hInvAndDC, bitmapInvAnd);
+   BitBlt (hInvAndDC, 0, 0, width, height, hAndDC, 0, 0, NOTSRCCOPY);
+
+   BitBlt (hOrDC, 0, 0, width, height, hInvAndDC, 0, 0, SRCAND);
+
+   hDestDC = CreateCompatibleDC (hDC);
+   SetMapMode (hDestDC, GetMapMode (hDC));
+   bitmapDest = CreateCompatibleBitmap (hImageDC, width, height);
+   pOldBitmapDest = SelectObject (hDestDC, bitmapDest);
+   /* BitBlt (hDestDC, 0, 0, width, height, hDC, x, y, SRCCOPY); */
+   BitBlt (hDestDC, 0, 0, width, height, hNewDC, x, y, SRCCOPY);
+
+   BitBlt (hDestDC, 0, 0, width, height, hAndDC, 0, 0, SRCAND);
+
+   BitBlt (hDestDC, 0, 0, width, height, hOrDC, 0, 0, SRCINVERT);
+
+   /* Getting DIBits */
+
+   *lpBmpInfo = CreateBitmapInfoStruct (FrRef [frame], bitmapDest);
+
+   lpBits = (LPBYTE) GlobalAlloc (GMEM_FIXED, (*lpBmpInfo)->bmiHeader.biSizeImage);
+   if (!lpBits)
+      WinErrorBox (NULL);
+
+   if (!GetDIBits (hDC, (HBITMAP) bitmapDest, 0, (WORD)(*lpBmpInfo)->bmiHeader.biHeight, lpBits, *lpBmpInfo, DIB_RGB_COLORS))
+      WinErrorBox (NULL);        
+
+   SelectObject (hDestDC, pOldBitmapDest);
+   SelectObject (hInvAndDC, pOldBitmapInvAnd);
+   SelectObject (hAndDC, pOldBitmapAnd);
+   SelectObject (hOrDC, pOldBitmapOr);
+   SelectObject (hImageDC, bitmap);
+
+   if (!DeleteDC (hDestDC))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteDC (hInvAndDC))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteDC (hAndDC))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteDC (hOrDC))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteDC (hImageDC))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteDC (hDC))
+      WinErrorBox (WIN_Main_Wd);
+
+   if (!DeleteObject (bitmap))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteObject (bitmapOr))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteObject (pOldBitmapOr))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteObject (bitmapAnd))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteObject (pOldBitmapAnd))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteObject (bitmapInvAnd))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteObject (pOldBitmapInvAnd))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteObject (bitmapDest))
+      WinErrorBox (WIN_Main_Wd);
+   if (!DeleteObject (pOldBitmapDest))
+      WinErrorBox (WIN_Main_Wd);
+
+   return lpBits;
+}
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -647,7 +791,8 @@ PictInfo           *imageDesc;
 #ifdef __STDC__
 static void         LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg, int picYOrg, int w, int h, int xFrame, int yFrame, int frame, PictInfo *imageDesc)
 #else  /* __STDC__ */
-static void         LayoutPicture (pixmap, drawable, picXOrg, picYOrg, w, h, xFrame, yFrame, frame, imageDesc)
+static void         
+ (pixmap, drawable, picXOrg, picYOrg, w, h, xFrame, yFrame, frame, imageDesc)
 Pixmap              pixmap;
 Drawable            drawable;
 int                 picXOrg;
@@ -1521,27 +1666,34 @@ int                 frame;
    else if (typeImage < InlineHandlers && typeImage > -1)
      /* for the moment we didn't consider plugin printing */
 #       ifdef _WINDOWS
+#       ifdef _WIN_PRINT
 	 if (TtPrinterDC) {
         LPBYTE lpBits;
 
         LoadPicture2Print (frame, box, imageDesc);
-        lpBmpInfo = CreateBitmapInfoStruct(FrRef [frame], imageDesc->PicPixmap);
 
-        lpBits = (LPBYTE) GlobalAlloc (GMEM_FIXED, lpBmpInfo->bmiHeader.biSizeImage);
-        if (!lpBits)
-           WinErrorBox (NULL);
+        /* if ((imageDesc->bgRed == -1 && imageDesc->bgGreen == -1 && imageDesc->bgBlue == -1) || imageDesc->PicType == -1) { */
+           lpBmpInfo = CreateBitmapInfoStruct(FrRef [frame], imageDesc->PicPixmap);
 
-        if (!GetDIBits (TtDisplay, (HBITMAP) imageDesc->PicPixmap, 0, (WORD)lpBmpInfo->bmiHeader.biHeight, lpBits, lpBmpInfo, DIB_RGB_COLORS))
-           WinErrorBox (NULL);        
+           lpBits = (LPBYTE) GlobalAlloc (GMEM_FIXED, lpBmpInfo->bmiHeader.biSizeImage);
+           if (!lpBits)
+              WinErrorBox (NULL);
+
+           if (!GetDIBits (TtDisplay, (HBITMAP) imageDesc->PicPixmap, 0, (WORD)lpBmpInfo->bmiHeader.biHeight, lpBits, lpBmpInfo, DIB_RGB_COLORS))
+              WinErrorBox (NULL);
+		/* } else 
+             lpBits = GetTransparentDIBits (frame, (HBITMAP) imageDesc->PicPixmap, xFrame, yFrame, imageDesc->PicWidth, imageDesc->PicHeight, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue, &lpBmpInfo); */
 
 		/* pBuf = (LPSTR) TtaGetMemory (picWArea * picHArea * 32); */
         /* nbLines = GetDIBits (TtDisplay, imageDesc->PicPixmap, 0, picWArea * picHArea, pBuf, lpBmpInfoHeader, DIB_RGB_COLORS); */
-        PrintDIB (&lpBmpInfo->bmiHeader, lpBits, FrRef [frame], TtPrinterDC, xFrame, yFrame, picWArea, picHArea) ;
+        /* PrintDIB (&lpBmpInfo->bmiHeader, lpBits, FrRef [frame], TtPrinterDC, xFrame, yFrame, picWArea, picHArea) ; */
+        PrintDIB (lpBmpInfo, lpBits, FrRef [frame], TtPrinterDC, xFrame, yFrame, picWArea, picHArea) ;
 	 } else {
            (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName, pres, xFrame, yFrame, wFrame, hFrame, picXArea,
 							                                       picYArea, picWArea, picHArea,
 							                                       (FILE *) drawable, BackGroundPixel);
 	 }
+#       endif /* _WIN_PRINT */
 #       else  /* _WINDOWS */
      (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName, pres, xFrame, yFrame, wFrame, hFrame, picXArea,
 							     picYArea, picWArea, picHArea,
@@ -1798,8 +1950,18 @@ PictInfo           *imageDesc;
 	       myDrawable = (*(PictureHandlerTable[typeImage].
 			       Produce_Picture)) (fileName, pres, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height);
 	       /* intrinsic width and height */
+#          ifdef _WINDOWS 
+           if (TtPrinterDC) {
+              imageDesc->PicWidth  = (width * PrinterDPI + PrinterDPI / 2) / ScreenDPI;
+	          imageDesc->PicHeight = (height * PrinterDPI + PrinterDPI / 2) / ScreenDPI;
+		   } else {
+                imageDesc->PicWidth = width;
+                imageDesc->PicHeight = height;
+		   }
+#          else  /* _WINDOWS */
 	       imageDesc->PicWidth = width;
 	       imageDesc->PicHeight = height;
+#          endif /* _WINDOWS */
 #              ifdef _WINDOWS
 	       imageDesc->bgRed   = bgRed;
 	       imageDesc->bgGreen = bgGreen;
@@ -1834,10 +1996,24 @@ PictInfo           *imageDesc;
 
    if (imageDesc->PicPresent != ReScale || Printing)
      {
+#      ifdef _WINDOWS 
+       if (TtPrinterDC) {
+          imageDesc->PicXArea = (xFrame * PrinterDPI + PrinterDPI / 2) / ScreenDPI;
+          imageDesc->PicYArea = (yFrame * PrinterDPI + PrinterDPI / 2) / ScreenDPI;
+          imageDesc->PicWArea = (wFrame * PrinterDPI + PrinterDPI / 2) / ScreenDPI;
+          imageDesc->PicHArea = (hFrame * PrinterDPI + PrinterDPI / 2) / ScreenDPI;
+	   } else {
+            imageDesc->PicXArea = xFrame;
+            imageDesc->PicYArea = yFrame;
+            imageDesc->PicWArea = wFrame;
+            imageDesc->PicHArea = hFrame;
+	   }
+#      else /* !_WINDOWS */
        imageDesc->PicXArea = xFrame;
        imageDesc->PicYArea = yFrame;
        imageDesc->PicWArea = wFrame;
        imageDesc->PicHArea = hFrame;
+#      endif /* _WINDOWS */
      }
    else
      {
@@ -1865,6 +2041,7 @@ PictInfo           *imageDesc;
 }
 
 #ifdef _WINDOWS
+#ifdef _WIN_PRINT
 /*----------------------------------------------------------------------
   LoadPicture2Print
   ----------------------------------------------------------------------*/
@@ -1983,6 +2160,7 @@ PictInfo           *imageDesc;
    }
    UpdatePictInfo (imageDesc, myDrawable);
 }
+#endif /* _WIN_PRINT */
 #endif /* _WINDOWS */
 
 

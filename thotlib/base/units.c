@@ -9,6 +9,7 @@
  * Module dedicated to font handling.
  *
  * Author: I. Vatton (INRIA)
+ *         R. Guetari (W3C/INRIA)
  *
  */
 
@@ -22,6 +23,11 @@
 #define THOT_EXPORT extern
 #include "frame_tv.h"
 
+#ifdef _WINDOWS */
+extern int ScreenDPI;
+extern int PrinterDPI;
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
  *      PointToPixel convert from points to pixels.
   ----------------------------------------------------------------------*/
@@ -33,7 +39,7 @@ int                 value;
 
 #endif /* __STDC__ */
 {
-   return ((value * 72 + 36) / DOT_PER_INCHE);
+   return ((value * DOT_PER_INCHE + DOT_PER_INCHE / 2) / 72);
 }
 
 
@@ -48,7 +54,6 @@ int                 value;
 
 #endif /* __STDC__ */
 {
-   return ((value * DOT_PER_INCHE + DOT_PER_INCHE / 2) / 72);
+   return ((value * 72 + 36) / DOT_PER_INCHE);
 }
-
 

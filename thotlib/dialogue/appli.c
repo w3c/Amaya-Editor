@@ -1340,7 +1340,7 @@ LPARAM      lParam;
                 return 0;
            }
 
-           default:
+           default: 
 #                  if 0
                    GetWindowRect (WinToolBar[frame], &rWindow) ;
                    ScreenToClient (hwnd, (LPPOINT) &rWindow.left) ;

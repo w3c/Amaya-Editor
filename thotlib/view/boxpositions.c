@@ -486,7 +486,7 @@ int                *page;
       SetPageIndicators (pAb, table, &height, &result);
    result = !pAb->AbOnPageBreak;
    /* Faut-il traduire la hauteur de page ? */
-   *page = PixelValue (height, UnPoint, pAb);
+   *page = LogicalValue (height, UnPoint, pAb);
    return result;
 }
 

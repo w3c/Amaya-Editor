@@ -19,7 +19,8 @@
  *
  * Authors: I. Vatton (INRIA)
  *          C. Roisin (INRIA) - Pagination at printing time
- *          R. Guetari (INRIA) - Integration of PostScript prologue and Printing routines for Windows.
+ *          R. Guetari (INRIA) - Printing routines for Windows.
+ *                               Integration of PostScript prologue. 
  *
  */
 
@@ -68,6 +69,10 @@
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 #include "platform_tv.h"
+
+#ifdef _WINDOWS
+#include "units_tv.h"
+#endif /* _WINDOWS */
 
 extern RGBstruct RGB_colors[];
 
@@ -153,9 +158,11 @@ BOOL             bUserAbort;
 FARPROC          lpfnAbortProc = NULL;
 HWND             hDlgPrint     = NULL;
 HWND             hWndParent    = NULL;
+HWND             currentWindow;
 
 static HWND      thotWindow    = (HWND) 0;
 static HINSTANCE hCurrentInstance ;
+
 #ifdef __STDC__
 int WINAPI DllMain (HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved) 
 #else  /* __STDC__ */
@@ -576,7 +583,11 @@ char* server;
 #  endif /* ! _WINDOWS */
    InitDocColors ("thot");
    /* Initialisation des polices de caracteres */
+#  ifdef _WINDOWS 
+   WIN_InitDialogueFonts (TtPrinterDC, "thot");
+#  else  /* _WINDOWS */
    InitDialogueFonts ("thot");
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------------*/
@@ -2382,36 +2393,8 @@ PtrDocument         pDoc;
       /* ... and inform the driver */
       Escape (TtPrinterDC, SET_BOUNDS, sizeof (RECT), (LPSTR)&Rect, NULL);
 
-#     if 0 /* LAST MODIFICATION ****************************************************/
       if (!InitPrinting (TtPrinterDC, thotWindow, hCurrentInstance, NULL))
          WinErrorBox (NULL);
-#     endif /* LAST MODIFICATION ****************************************************/
-
-
-
-      SetAbortProc (TtPrinterDC, AbortProc);
-      if ((StartDoc (TtPrinterDC, &docInfo)) <= 0)
-         WinErrorBox ();
-
-      SetStretchBltMode (TtPrinterDC, COLORONCOLOR);
-
-      cxPage = GetDeviceCaps (TtPrinterDC, LOGPIXELSX);
-      cyPage = GetDeviceCaps (TtPrinterDC, LOGPIXELSX);
-
-      ptPage.x = GetDeviceCaps (TtPrinterDC, HORZSIZE);
-      ptPage.y = GetDeviceCaps (TtPrinterDC, VERTSIZE);
-
-      SetMapMode (TtPrinterDC, MM_ISOTROPIC);
-
-      /*****  DPtoLP (TtPrinterDC, (POINT*)&ptPage, 1);  *****/
-
-      /* SetMapMode (TtPrinterDC, MM_ANISOTROPIC); */
-      SetWindowExtEx (TtPrinterDC, 1440, 1440, NULL);
-      SetViewportExtEx (TtPrinterDC, cxPage * (int)((float) ptPage.x / (float) 10), cyPage * (int) ((float) ptPage.y / (float) 10), NULL);
-      /******* SetViewportExtEx (TtPrinterDC, (int) ((float) cxPage * ((float) ptPage.x / (float) 10)), (int) ((float) cyPage * ((float) ptPage.y / (float) 10)), NULL); *******/
-      /* SetViewportExtEx (TtPrinterDC, GetDeviceCaps (TtPrinterDC, LOGPIXELSX), GetDeviceCaps (TtPrinterDC, LOGPIXELSY), NULL); */
-      /* SetViewportExtEx (TtPrinterDC, xPage * 19, yPage * 27, NULL); */
-      SetViewportOrgEx (TtPrinterDC, 0, 0, NULL);
    }
    
 #  endif /* _WINDOWS */
@@ -2840,14 +2823,14 @@ boolean             assoc;
 	    /* CurrentFrame est une variable globale a print */
 	    GivePageHeight (CurrentFrame, clipOrg, position);
 #ifdef PRINT_DEBUG
-          list = fopen("/tahiti/vatton/.amaya/ia","w");
+          list = fopen("C:\\TEMP\\AMAYA\\ia.dbg","w");
           if (list != NULL)
             {
               NumberAbsBoxes(RootAbsBox);
               ListAbsBoxes(RootAbsBox, 2, list);
               fclose(list);
             }
-          list = fopen("/tahiti/vatton/.amaya//bt","w");
+          list = fopen("C:\\TEMP\\AMAYA\\bt.dbg","w");
           if (list != NULL)
             {
               NumberAbsBoxes(RootAbsBox);
@@ -3038,9 +3021,10 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-void PrintDoc (int argc, char** argv, HDC PrinterDC, BOOL isTrueColors, int depth, char* tmpDocName, char* tmpDir, HINSTANCE hInst)
+void PrintDoc (HWND hWnd, int argc, char** argv, HDC PrinterDC, BOOL isTrueColors, int depth, char* tmpDocName, char* tmpDir, HINSTANCE hInst)
 #else  /* !__STDC__ */
-void PrintDoc (argc, argc, PrinterDC, isTrueColors, depth, tmpDocName, tmpDir, hInstance)
+void PrintDoc (hWnd, argc, argc, PrinterDC, isTrueColors, depth, tmpDocName, tmpDir, hInstance)
+HWND   hWnd;
 int    argc;
 char** argv;
 HDC    PrinterDC;
@@ -3086,6 +3070,11 @@ char              **argv;
   TtWDepth         = depth;
   TtWPrinterDepth  = GetDeviceCaps (TtPrinterDC, PLANES);
   hCurrentInstance = hInst;
+  WIN_GetDeviceContext (-1);
+  ScreenDPI        = GetDeviceCaps (TtDisplay, LOGPIXELSY);
+  WIN_ReleaseDeviceContext ();
+  PrinterDPI       = GetDeviceCaps (TtPrinterDC, LOGPIXELSY);
+  currentWindow    = hWnd;
 # endif /* _WINDOWS */
 
   removeDirectory = FALSE;
@@ -3245,8 +3234,10 @@ char              **argv;
     }
   
   /* At least one view is mandatory */
+# ifndef _WINDOWS 
   if (!viewFound)
     usage (argv[0]);
+# endif /* _WINDOWS */
   
   length = strlen (name);
   if (!realNameFound)

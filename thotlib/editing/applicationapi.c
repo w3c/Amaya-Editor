@@ -214,7 +214,13 @@ char               *applicationName;
    NColors = MAX_COLOR;
    RGB_Table = RGB_colors;
    Color_Table = Name_colors;
+#  ifdef _WINDOWS
+   WIN_GetDeviceContext (-1);
+   DOT_PER_INCHE = GetDeviceCaps(TtDisplay, LOGPIXELSY);
+   /* DOT_PER_INCHE = 72; */
+#  else  /* !_WINDOWS */
    DOT_PER_INCHE = 72;
+#  endif /* _WINDOWS */
    numOfJobs = 0;
    /* Initializes patterns */
    NbPatterns = sizeof (Name_patterns) / sizeof (char *);
