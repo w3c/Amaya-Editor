@@ -2056,6 +2056,33 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 }
 
 /*----------------------------------------------------------------------
+  SameChar
+  compare characters c1 and c2 and return TRUE if they are the same.
+  If attrNum is 1 (lang attribute) comparison is case insensitive.
+  ----------------------------------------------------------------------*/
+static ThotBool SameChar (CHAR_T c1, CHAR_T c2, int attrNum)
+{
+
+  if (attrNum != 1)
+    return (c1 == c2);
+  else
+    {
+      if (c1 > 127 || c2 > 127)
+	return (c1 == c2);
+      else
+	{
+	  if (c1 == c2)
+	    return TRUE;
+	  else
+	    if (c1 - c2 == 32 || c2 - c1 == 32)
+	      return TRUE;
+	    else
+	      return FALSE;
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
    AttrPresRule retourne la premiere regle de la chaine des regles
    de presentation a` appliquer pour l'attribut pAttr.     
    - si inheritRule = true on ne s'interesse pas aux regles par defaut
@@ -2087,6 +2114,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
   char               *attrValue, *ptr, *wordEnd;
   unsigned int        len;
   int                 i, j, k;
+  CHAR_T             *refVal;
   ThotBool            found, ok;
 
   pRule = NULL;
@@ -2187,8 +2215,9 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 	    {
 	      if (attrValue)
 		{
+		  refVal = TtaConvertMbsToCHAR ((unsigned char *)pAPRule->ApString);
 		  /* test the attribute value */
-		  if (attrValue[0] == EOS && pAPRule->ApString[0] == EOS)
+		  if (attrValue[0] == EOS && refVal[0] == EOS)
 		    /* both strings are empty */
 		    ok = TRUE;
 		  else
@@ -2200,20 +2229,22 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 			   attribute value */
 			{
 			  while (attrValue[j] != EOS &&
-				 attrValue[j] == pAPRule->ApString[j] &&
-				 pAPRule->ApString[j] != EOS)
+				 SameChar (attrValue[j], refVal[j],
+					   pAttr->AeAttrNum) &&
+				 refVal[j] != EOS)
 			    j++;
-			  ok = (pAPRule->ApString[j] == EOS &&
+			  ok = (refVal[j] == EOS &&
 				(attrValue[j] == '-' || attrValue[j] == EOS));
 			}
 		      else
 		        while (!ok && attrValue[j] != EOS)
 			  {
 			    k = 0;
-			    while (pAPRule->ApString[k] != EOS &&
-				   attrValue[j + k] == pAPRule->ApString[k])
+			    while (refVal[k] != EOS &&
+				   SameChar (attrValue[j + k], refVal[k],
+					     pAttr->AeAttrNum))
 			      k++;
-			    ok = (pAPRule->ApString[k] == EOS);
+			    ok = (refVal[k] == EOS);
 			    if (ok)
 			      {
 				/* the substring was found */
@@ -2235,6 +2266,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 			    j++;
 			  }
 		    }
+		  TtaFreeMemory (refVal);
 		  if (ok)
 		    {
 		      if (pAPRule->ApElemType == 0)

@@ -82,7 +82,7 @@ ThotBool TtaLoadDocumentDictionary (PtrDocument document, int *pDictionary,
   char               path[MAX_PATH], dictname[MAX_PATH];
 
   /* dictionary name = document name */
-  *pDictionary = (int) NULL;
+  *pDictionary = 0;
   
   extenddic = TtaGetEnvString ("EXTENDDICT");
   if (extenddic != NULL)
