@@ -1988,11 +1988,11 @@ static char *ParseCSSFontSize (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSFontFamily: parse a CSS font family string   
+   ParseACSSFontFamily: parse a CSS font family string   
    we expect the input string describing the attribute to be     
    a common generic font style name                                
   ----------------------------------------------------------------------*/
-static char *ParseCSSFontFamily (Element element, PSchema tsch,
+static char *ParseACSSFontFamily (Element element, PSchema tsch,
 				 PresentationContext context, char *cssRule,
 				 CSSInfoPtr css, ThotBool isHTML)
 {
@@ -2049,6 +2049,14 @@ static char *ParseCSSFontFamily (Element element, PSchema tsch,
       if (quoteChar != EOS)
 	cssRule++;
     }
+  else if (!strncasecmp (cssRule, "courier new", 11) &&
+      (quoteChar == EOS || quoteChar == cssRule[11]))
+    {
+      font.typed_data.value = FontCourier;
+      cssRule += 11;
+      if (quoteChar != EOS)
+	cssRule++;
+    }
   else if (!strncasecmp (cssRule, "courier", 7) &&
       (quoteChar == EOS || quoteChar == cssRule[7]))
     {
@@ -2085,7 +2093,7 @@ static char *ParseCSSFontFamily (Element element, PSchema tsch,
 	{
 	  /* recursive call to ParseCSSFontFamily */
 	  cssRule++;
-	  cssRule = ParseCSSFontFamily (element, tsch, context, cssRule, css, isHTML);
+	  cssRule = ParseACSSFontFamily (element, tsch, context, cssRule, css, isHTML);
 	  return (cssRule);
 	}
     }
@@ -2109,6 +2117,22 @@ static char *ParseCSSFontFamily (Element element, PSchema tsch,
 	   TtaSetStylePresentation (PRFont, element, tsch, context, font);
 	 }
      }
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSFontFamily: parse a CSS font family string   
+   we expect the input string describing the attribute to be     
+   a common generic font style name                                
+  ----------------------------------------------------------------------*/
+static char *ParseCSSFontFamily (Element element, PSchema tsch,
+				 PresentationContext context, char *cssRule,
+				 CSSInfoPtr css, ThotBool isHTML)
+{
+  cssRule = ParseACSSFontFamily (element, tsch, context, cssRule, css, isHTML);
+  /* skip extra values */
+  while (cssRule && *cssRule != ';' && *cssRule != EOS)
+    cssRule++;
   return (cssRule);
 }
 
@@ -2401,7 +2425,7 @@ static char *ParseCSSFont (Element element, PSchema tsch,
 	cssRule = ParseCSSFontSize (element, tsch, context, cssRule, css, isHTML);
       NewLineSkipped = skippedNL;
       if (*cssRule != ';' && *cssRule != EOS)
-      cssRule = ParseCSSFontFamily (element, tsch, context, cssRule, css, isHTML);
+      cssRule = ParseACSSFontFamily (element, tsch, context, cssRule, css, isHTML);
       if (ptr == cssRule)
 	cssRule = SkipValue ("Invalid font value", cssRule);
     }
