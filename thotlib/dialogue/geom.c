@@ -2274,6 +2274,7 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
   /* change the cursor, modify library state */
   w = FrRef[frame];
 #ifdef _WINDOWS
+  /* WIN_HandleExpose (w, int frame, WPARAM wParam, LPARAM lParam); */
   WIN_GetDeviceContext (frame);
   GetWindowRect (w, &rect);
   SetCursorPos (*x + rect.left, *y + rect.top);

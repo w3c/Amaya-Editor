@@ -19,7 +19,7 @@ extern void       WIN_ThotCallBack (ThotWindow, WPARAM, LPARAM);
 extern void       WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam, LPARAM lParam, ThotBool isSpecial);
 extern void       WIN_InitDialogueFonts (HDC, CHAR_T*);
 extern void       APP_ButtonCallback (ThotButton, int, caddr_t);
-extern void       CleanFrameCatList (int);
+extern void       CleanFrameCatList (int frame, int ref);
 extern int        GetMainFrameNumber (ThotWindow);
 extern LRESULT    ToolBarNotify (int, ThotWindow, WPARAM, LPARAM);
 extern LRESULT CALLBACK TextZoneProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);

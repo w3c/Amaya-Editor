@@ -712,7 +712,7 @@ static ThotBool WIN_InitNumAttrDialog (ThotWindow parent)
    required specifies if it's a required attribute
    currAttr gives the current value of the attribute
   ----------------------------------------------------------------------*/
-static void         MenuValues (TtAttribute * pAttr1, ThotBool required,
+static void MenuValues (TtAttribute * pAttr1, ThotBool required,
 				PtrAttribute currAttr,
 				PtrDocument pDoc, int view)
 {
@@ -867,7 +867,7 @@ static void         MenuValues (TtAttribute * pAttr1, ThotBool required,
    CallbackReqAttrMenu
    handles the callback of the menu which captures the required attributes.
   ----------------------------------------------------------------------*/
-void                CallbackReqAttrMenu (int ref, int val, STRING txt)
+void CallbackReqAttrMenu (int ref, int val, STRING txt)
 {
   int                 length;
 
@@ -1218,10 +1218,10 @@ void                UpdateAttrMenu (PtrDocument pDoc)
 		  /* destroy the submenu event */
 		  TtaDestroyDialogue (EventMenu[frame - 1]);
 #ifdef _WINDOWS
+		  CleanFrameCatList (frame, EventMenu[frame - 1]);
 		  if (subMenuID[frame])
-		    {
-		      DeleteMenu (FrameTable[frame].WdMenus[menu], subMenuID[frame], MF_BYCOMMAND);
-		    }
+		    DeleteMenu (FrameTable[frame].WdMenus[menu], subMenuID[frame],
+			            MF_BYCOMMAND);
 		  else 
 		    subMenuID[frame] = 0;
 #endif /* _WINDOWS */
@@ -1727,7 +1727,7 @@ void                CallbackLanguageMenu (int ref, int val, STRING txt)
    Closes all dialogue boxes related with attribute input that are
    associated with document pDoc.
   ----------------------------------------------------------------------*/
-void                CloseAttributeDialogues (PtrDocument pDoc)
+void CloseAttributeDialogues (PtrDocument pDoc)
 {
  if (PtrDocOfReqAttr == pDoc)
    {

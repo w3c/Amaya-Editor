@@ -3167,8 +3167,8 @@ void                DestroyFrame (int frame)
 	    DestroyAcceleratorTable (hAccel [frame]);
 	    hAccel [frame] = NULL;
 	  }
-    /* PostMessage(FrMainRef[frame], WM_DESTROY, 0, 0);      */
-	CleanFrameCatList (frame);
+    /* clean the whole CatList of the frame */
+	CleanFrameCatList (frame, 0);
 
         for (i = 0; i < MAX_BUTTON; i++)
 	  {

@@ -123,8 +123,6 @@ ThotBool            WithMessages = TRUE;
 static int          FirstFreeRef;	/* First free reference */
 /* Declarations des variables globales */
 static struct Cat_List*    PtrCatalogue;	/* Le pointeur su les catalogues  */
-static int                 NbOccCat;
-static int                 NbLibCat;
 static struct E_List*      PtrFreeE_List;
 static int                 NbOccE_List;
 static int                 NbLibE_List;
@@ -430,14 +428,41 @@ void WIN_AddFrameCatalogue (ThotWidget parent, struct Cat_Context* catalogue)
 }
 
 /*----------------------------------------------------------------------
-CleanFrameCatList
+  CleanFrameCatList removes all entries (ref = 0) or a specific entry.
   ----------------------------------------------------------------------*/
-void CleanFrameCatList (int frame) 
+void CleanFrameCatList (int frame, int ref) 
 {
-  int i;
+  int         i;
+  ThotBool    found;
 
-  for (i = 0; i < MAX_FRAMECAT; i++)
-    FrameCatList[frame].Cat_Table[i] = NULL;
+  if (ref == 0)
+  {
+	/* clean up all entries */
+    for (i = 0; i < MAX_FRAMECAT; i++)
+      FrameCatList[frame].Cat_Table[i] = NULL;
+  }
+  else
+  {
+    i = 0;
+	found = FALSE;
+    while (i < MAX_FRAMECAT && FrameCatList[frame].Cat_Table[i] &&
+		!found)
+	{
+	  if (FrameCatList[frame].Cat_Table[i]->Cat_Ref == ref)
+	  {
+		/* remove this entry */
+		while (i < MAX_FRAMECAT - 1 && FrameCatList[frame].Cat_Table[i + 1])
+		{
+	      FrameCatList[frame].Cat_Table[i] = FrameCatList[frame].Cat_Table[i + 1];
+		  i++;
+		}
+	    FrameCatList[frame].Cat_Table[i] = NULL;
+		found = TRUE;
+	  }
+	  else
+	    i++;
+	}
+  }
 }
 
 
@@ -619,7 +644,6 @@ static struct Cat_List *NewCatList ()
    adlist->Cat_Next = NULL;
 
    /* Updates thenumber of available and free catalogues */
-   NbLibCat += MAX_CAT;
    for (i = 0; i < MAX_CAT; i++)
      {
        adlist->Cat_Table[i].Cat_Widget = 0;
@@ -737,8 +761,6 @@ static struct Cat_Context *CatEntry (int ref)
 #ifndef _GTK
 	catlib->Cat_PtParent = NULL;
 #endif /* _GTK */
-	NbOccCat++;
-	NbLibCat--;
 	return (catlib);
      }
    else
@@ -1477,8 +1499,6 @@ void       TtaInitDialogue (char *server, ThotAppContext *app_context, Display *
    ShowY = 100;
 
    /* Initialisation des catalogues */
-   NbOccCat = 0;
-   NbLibCat = 0;
    PtrCatalogue = NewCatList ();
    NbOccE_List = 0;
    NbLibE_List = 0;
@@ -2033,8 +2053,6 @@ static void ClearChildren (struct Cat_Context *parentCatalogue)
 
 		  /* Libere le catalogue */
 		  catalogue->Cat_Widget = 0;
-		  NbLibCat++;
-		  NbOccCat--;
 
 		  if ((catalogue->Cat_Type == CAT_POPUP)
 		      || (catalogue->Cat_Type == CAT_PULL)
@@ -4754,8 +4772,6 @@ static int          DestForm (int ref)
 #endif /* _WINDOWS */
 	     /* Libere le catalogue */
 	     catalogue->Cat_Widget = 0;
-	     NbLibCat++;
-	     NbOccCat--;
 	     return (0);
 	  }
      }
@@ -4939,9 +4955,6 @@ void                TtaDestroyDialogue (int ref)
 #endif /* _WINDOWS */
 	/* Libere le catalogue */
 	catalogue->Cat_Widget = 0;
-	catalogue->Cat_Ref = 0;
-	NbLibCat++;
-	NbOccCat--;
      }
 #endif /* _GTK */
 }
@@ -5268,7 +5281,7 @@ void WIN_ThotCallBack (HWND hWnd, WPARAM wParam, LPARAM lParam)
 	    hWnd, wParam, HIWORD (wParam), LOWORD (wParam), lParam, lParam);
 #endif /* AMAYA_DEBUG */
    frame = GetMainFrameNumber (hWnd);
-   if (frame > 0 && frame < MAX_FRAME)
+   if (frame > 0 && frame <= MAX_FRAME)
    {
       currentParent = FrMainRef[frame];
 	  nearest = NULL;
