@@ -372,6 +372,7 @@ LRESULT CALLBACK TextDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	      ThotCallback (BaseDialog + TitleText, STRING_DATA, UrlToOpen);
 	      ThotCallback (BaseDialog + TitleForm, INTEGER_DATA, (char*) 1);
 	    }
+	  EndDialog (hwnDlg, ID_CONFIRM);
 	  break;
       
 	case ID_DONE:
