@@ -34,14 +34,10 @@
 extern ThotColorStruct cblack;
 extern int             ColorPs;
 
-#define	MAX_STACK	50
-#define	MIDDLE_OF(v1, v2)	(((v1)+(v2))/2.0)
-#define SEG_SPLINE      5
-#define ALLOC_POINTS    300
-static ThotPoint   *points;	/* control points for curbs */
-static int          npoints;
-static int          MAX_points;
-static int i;
+#define	MAX_STACK      50
+#define	MIDDLE_OF(v1, v2) (((v1)+(v2))/2.0)
+#define SEG_SPLINE     5
+#define ALLOC_POINTS   300
 
 typedef struct stack_point
   {
@@ -1706,32 +1702,35 @@ void          DrawPolygon (int frame, int thick, int style, int x, int y,
 /*----------------------------------------------------------------------
   PolyNewPoint : add a new point to the current polyline.
   ----------------------------------------------------------------------*/
-static ThotBool     PolyNewPoint (int x, int y)
+static ThotBool     PolyNewPoint (int x, int y,
+				  ThotPoint *points, int *npoints,
+				  int *maxpoints)
 {
-  ThotPoint          *tmp;
-  int                 taille;
+   ThotPoint          *tmp;
+   int                 size;
 
-  if (npoints >= MAX_points)
-    {
-      taille = MAX_points + ALLOC_POINTS;
-      if ((tmp = (ThotPoint *) realloc (points, taille * sizeof (ThotPoint))) == 0)
-	return (FALSE);
-      else
-	{
-	  /* la reallocation a reussi */
-	  points = tmp;
-	  MAX_points = taille;
-	}
-    }
+   if (*npoints >= *maxpoints)
+     {
+	size = *maxpoints + ALLOC_POINTS;
+	if ((tmp = (ThotPoint *) realloc (points, size * sizeof (ThotPoint))) == 0)
+	   return (FALSE);
+	else
+	  {
+	     /* la reallocation a reussi */
+	     points = tmp;
+	     *maxpoints = size;
+	  }
+     }
 
-  /* ignore identical points */
-  if (npoints > 0 && points[npoints - 1].x == x && points[npoints - 1].y == y)
-    return (FALSE);
+   /* ignore identical points */
+   if (*npoints > 0 &&
+       points[*npoints - 1].x == x && points[*npoints - 1].y == y)
+      return (FALSE);
 
-  points[npoints].x = x;
-  points[npoints].y = y;
-  npoints++;
-  return (TRUE);
+   points[*npoints].x = x;
+   points[*npoints].y = y;
+   (*npoints)++;
+   return (TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -1783,7 +1782,9 @@ static ThotBool     PopStack (float *x1, float *y1, float *x2, float *y2, float 
 /*----------------------------------------------------------------------
   PolySplit : split a poly line and push the results on the stack.
   ----------------------------------------------------------------------*/
-static void   PolySplit (float a1, float b1, float a2, float b2, float a3, float b3, float a4, float b4)
+static void         PolySplit (float a1, float b1, float a2, float b2,
+			       float a3, float b3, float a4, float b4,
+			       ThotPoint *points, int *npoints, int *maxpoints)
 {
    register float      tx, ty;
    float               x1, y1, x2, y2, x3, y3, x4, y4;
@@ -1792,10 +1793,12 @@ static void   PolySplit (float a1, float b1, float a2, float b2, float a3, float
 
    stack_deep = 0;
    PushStack (a1, b1, a2, b2, a3, b3, a4, b4);
+
    while (PopStack (&x1, &y1, &x2, &y2, &x3, &y3, &x4, &y4))
      {
 	if (fabs (x1 - x4) < SEG_SPLINE && fabs (y1 - y4) < SEG_SPLINE)
-	   PolyNewPoint (FloatToInt (x1), FloatToInt (y1));
+	   PolyNewPoint (FloatToInt (x1), FloatToInt (y1), points, npoints,
+			 maxpoints);
 	else
 	  {
 	     tx   = (float) MIDDLE_OF (x2, x3);
@@ -1820,7 +1823,10 @@ static void   PolySplit (float a1, float b1, float a2, float b2, float a3, float
 /*----------------------------------------------------------------------
   QuadraticSplit : split a quadratic Bezier and pushes the result on the stack.
   ----------------------------------------------------------------------*/
-static void         QuadraticSplit (float a1, float b1, float a2, float b2, float a3, float b3)
+static void         QuadraticSplit (float a1, float b1, float a2, float b2,
+				    float a3, float b3,
+				    ThotPoint *points, int *npoints,
+				    int *maxpoints)
 {
    register float      tx, ty;
    float               x1, y1, x2, y2, x3, y3, i, j;
@@ -1833,7 +1839,8 @@ static void         QuadraticSplit (float a1, float b1, float a2, float b2, floa
    while (PopStack (&x1, &y1, &x2, &y2, &x3, &y3, &i, &j))
      {
 	if (fabs (x1 - x3) < SEG_SPLINE && fabs (y1 - y3) < SEG_SPLINE)
-	   PolyNewPoint (FloatToInt (x1), FloatToInt (y1));
+	   PolyNewPoint (FloatToInt (x1), FloatToInt (y1), points, npoints,
+			 maxpoints);
 	else
 	  {
 	     tx   = (float) MIDDLE_OF (x2, x3);
@@ -1864,6 +1871,8 @@ static void         QuadraticSplit (float a1, float b1, float a2, float b2, floa
   ----------------------------------------------------------------------*/
 void          DrawCurve (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int fg, int arrow, C_points * controls)
 {
+  ThotPoint           *points;
+  int                 npoints, maxpoints;
   PtrTextBuffer       adbuff;
   int                 i, j;
   float               x1, y1, x2, y2;
@@ -1873,9 +1882,8 @@ void          DrawCurve (int frame, int thick, int style, int x, int y, PtrTextB
 
   /* alloue la liste des points */
   npoints = 0;
-  MAX_points = ALLOC_POINTS;
-  
-  points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
+  maxpoints = ALLOC_POINTS;
+  points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * maxpoints);
   adbuff = buffer;
   y += FrameTable[frame].FrTopMargin;
   j = 1;
@@ -1903,7 +1911,8 @@ void          DrawCurve (int frame, int thick, int style, int x, int y, PtrTextB
 
   for (i = 2; i < nb; i++)
     {
-      PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
+      PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2, points, &npoints,
+		 &maxpoints);
       /* skip to next points */
       x1 = x2;
       y1 = y2;
@@ -1940,7 +1949,7 @@ void          DrawCurve (int frame, int thick, int style, int x, int y, PtrTextB
 	    }
 	}
     }
-  PolyNewPoint ((int) x2, (int) y2);
+  PolyNewPoint ((int) x2, (int) y2, points, &npoints, &maxpoints);
 
    if (fg < 0)
      thick = 0;
@@ -2003,6 +2012,8 @@ void          DrawCurve (int frame, int thick, int style, int x, int y, PtrTextB
   ----------------------------------------------------------------------*/
 void          DrawSpline (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int fg, int bg, int pattern, C_points * controls)
 {
+  ThotPoint     *points;
+  int           npoints, maxpoints;
   PtrTextBuffer adbuff;
   int           i, j;
   float         x1, y1, x2, y2;
@@ -2016,8 +2027,8 @@ void          DrawSpline (int frame, int thick, int style, int x, int y, PtrText
 
   /* allocate the list of points */
   npoints = 0;
-  MAX_points = ALLOC_POINTS;
-  points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
+  maxpoints = ALLOC_POINTS;
+  points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * maxpoints);
   adbuff = buffer;
   y += FrameTable[frame].FrTopMargin;
   j = 1;
@@ -2041,7 +2052,8 @@ void          DrawSpline (int frame, int thick, int style, int x, int y, PtrText
 
   for (i = 2; i < nb; i++)
     {
-      PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
+      PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2, points, &npoints,
+		 &maxpoints);
       /* next points */
       x1 = x2;
       y1 = y2;
@@ -2082,8 +2094,8 @@ void          DrawSpline (int frame, int thick, int style, int x, int y, PtrText
     }
 
   /* close the polyline */
-  PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
-  PolyNewPoint ((int) x2, (int) y2);
+  PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2, points, &npoints, &maxpoints);
+  PolyNewPoint ((int) x2, (int) y2, points, &npoints, &maxpoints);
 
    if (fg < 0)
      thick = 0;
@@ -2164,13 +2176,14 @@ void          DrawSpline (int frame, int thick, int style, int x, int y, PtrText
 
 /*----------------------------------------------------------------------
   DrawCurrent
-  Draws the polyline or polygon corresponding to the list og points
+  Draws the polyline or polygon corresponding to the list of points
   contained in buffer points.
   Parameter path is a pointer to the list of path segments
   fg indicates the drawing color
   ----------------------------------------------------------------------*/
-static void  DrawCurrent (int frame, int thick, int style, int fg, int bg,
-			  int pattern)
+static void  DrawCurrent (int frame, int thick, int style,
+			  ThotPoint *points, int npoints,
+			  int fg, int bg, int pattern)
 {
   if (npoints > 1)
     {
@@ -2181,7 +2194,6 @@ static void  DrawCurrent (int frame, int thick, int style, int fg, int bg,
       else
 	/* draw a polyline or a ploygon */
 	DoDrawPolygon (frame, thick, style, points, npoints, fg, bg, pattern);
-      npoints = 0;
     }
 }
 
@@ -2193,6 +2205,8 @@ static void  DrawCurrent (int frame, int thick, int style, int fg, int bg,
 void            DrawPath (int frame, int thick, int style, int x, int y,
 			  PtrPathSeg path, int fg, int bg, int pattern)
 {
+  ThotPoint           *points;
+  int                 npoints, maxpoints;
   PtrPathSeg          pPa;
   float               x1, y1, cx1, cy1, x2, y2, cx2, cy2;
 
@@ -2200,8 +2214,8 @@ void            DrawPath (int frame, int thick, int style, int x, int y,
     {
       y += FrameTable[frame].FrTopMargin;
       /* alloue la liste des points */
-      MAX_points = ALLOC_POINTS;
-      points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
+      maxpoints = ALLOC_POINTS;
+      points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * maxpoints);
       npoints = 0;
       pPa = path;
       while (pPa)
@@ -2211,7 +2225,11 @@ void            DrawPath (int frame, int thick, int style, int x, int y,
 	    /* if some points are already stored, display the line
 	       they represent */
 	    if (npoints > 1)
-	      DrawCurrent (frame, thick, style, fg, bg, pattern);
+	      {
+		DrawCurrent (frame, thick, style, points, npoints, fg, bg,
+			     pattern);
+		npoints = 0;
+	      }
 
 	  switch (pPa->PaShape)
 	    {
@@ -2224,8 +2242,8 @@ void            DrawPath (int frame, int thick, int style, int x, int y,
 				   ViewFrameTable[frame - 1].FrMagnification));
 	      y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	      PolyNewPoint ((int) x1, (int) y1);
-	      PolyNewPoint ((int) x2, (int) y2);
+	      PolyNewPoint ((int) x1, (int) y1, points, &npoints, &maxpoints);
+	      PolyNewPoint ((int) x2, (int) y2, points, &npoints, &maxpoints);
 	      break;
 
 	    case PtCubicBezier:
@@ -2245,8 +2263,9 @@ void            DrawPath (int frame, int thick, int style, int x, int y,
 				   ViewFrameTable[frame - 1].FrMagnification));
 	      cy2 = (float) (y + PixelValue (pPa->YCtrlEnd, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	      PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
-	      PolyNewPoint ((int) x2, (int) y2);
+	      PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2, points, &npoints,
+			 &maxpoints);
+	      PolyNewPoint ((int) x2, (int) y2, points, &npoints, &maxpoints);
 	      break;
 
 	    case PtQuadraticBezier:
@@ -2262,8 +2281,9 @@ void            DrawPath (int frame, int thick, int style, int x, int y,
 				   ViewFrameTable[frame - 1].FrMagnification));
 	      y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	      QuadraticSplit (x1, y1, cx1, cy1, x2, y2);
-	      PolyNewPoint ((int) x2, (int) y2);
+	      QuadraticSplit (x1, y1, cx1, cy1, x2, y2, points, &npoints,
+			      &maxpoints);
+	      PolyNewPoint ((int) x2, (int) y2, points, &npoints, &maxpoints);
 	      break;
 
 	    case PtEllipticalArc:
@@ -2275,7 +2295,7 @@ void            DrawPath (int frame, int thick, int style, int x, int y,
       /* if some points are left in the buffer, display the line they
 	 represent */
       if (npoints > 1)
-	DrawCurrent (frame, thick, style, fg, bg, pattern);
+	DrawCurrent (frame, thick, style, points, npoints, fg, bg, pattern);
       /* free the table of points */
       free (points);
     }

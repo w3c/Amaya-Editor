@@ -1395,8 +1395,8 @@ static PtrBox       CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines, 
 	  pCurrentBox->BxNChars = pAb->AbVolume;
 	  pCurrentBox->BxXRatio = 1;
 	  pCurrentBox->BxYRatio = 1;
-	  width = 0;         /*****/
-	  height = 0;        /*****/
+	  width = pCurrentBox->BxAbstractBox->AbEnclosing->AbBox->BxWidth;
+	  height = pCurrentBox->BxAbstractBox->AbEnclosing->AbBox->BxHeight;
 	  break;
 	case LtCompound:
 	  if (TypeHasException (ExcIsTable, pAb->AbElement->ElTypeNumber,

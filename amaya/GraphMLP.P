@@ -1356,6 +1356,8 @@ RULES
 	CreateWith (VerticalLine);
 	HorizPos: Left = Enclosing . Left + 1 pt UserSpecified;
 	VertPos:  Top = Enclosing . Top + 1 pt UserSpecified;
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
 	IN Structure_view BEGIN
 	        if within use_
 	            Visibility: 0;
