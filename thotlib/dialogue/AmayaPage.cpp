@@ -81,7 +81,7 @@ AmayaPage::AmayaPage( wxWindow * p_parent_window )
 
   // Split button creation
   // this button is used to quickly split the page 
-  wxString amaya_directory( TtaGetEnvString ("THOTDIR"), AmayaWindow::conv_ascii );
+  wxString amaya_directory( TtaGetEnvString ("THOTDIR"), *wxConvCurrent );
   wxBitmap button_split_icon1( amaya_directory + _T("/resources/icons/split_black.xpm"), wxBITMAP_TYPE_XPM );
   wxBitmap button_split_icon2( amaya_directory + _T("/resources/icons/split_red.xpm"), wxBITMAP_TYPE_XPM );
   m_pSplitButton = new wxBitmapButton( this

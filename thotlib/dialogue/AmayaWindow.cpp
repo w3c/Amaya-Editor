@@ -46,11 +46,6 @@
 #define DEFAULT_TOOGLE_FULLSCREEN    false
 #define DEFAULT_TOOGLE_TOOLTIP       true
 
-// Static attribut used to convert text from unicode to ISO-8859-1
-// or from ISO-8859-1 to unicode
-wxCSConv AmayaWindow::conv_ascii(_T("ISO-8859-1"));
-
-
 IMPLEMENT_DYNAMIC_CLASS(AmayaWindow, wxFrame)
 
 /*

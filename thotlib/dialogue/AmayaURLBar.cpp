@@ -43,7 +43,7 @@ AmayaURLBar::AmayaURLBar ( wxWindow *     parent
   // create the combobox and the ok button
   m_pComboBox = new wxComboBox( this, -1, _T(""), wxDefaultPosition, wxDefaultSize );
   // create the icone for the button
-  wxString amaya_directory( TtaGetEnvString ("THOTDIR"), AmayaWindow::conv_ascii );
+  wxString amaya_directory( TtaGetEnvString ("THOTDIR"), *wxConvCurrent );
   m_pValidateButton = new wxBitmapButton( this
 					  ,-1
 					  ,wxBitmap( amaya_directory + _T("/resources/icons/toolbar/ok.png") )
@@ -89,7 +89,7 @@ void AmayaURLBar::OnURLTextEnter( wxCommandEvent& event )
   if (p_frame)
     {
       APP_Callback_URLActivate ( p_frame->GetFrameId(),
-				 GetValue().mb_str(AmayaWindow::conv_ascii) );
+				 GetValue().mb_str(*wxConvCurrent) );
     }
 
   // do not skip this event because we don't want to propagate this event

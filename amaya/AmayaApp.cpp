@@ -16,10 +16,6 @@
 
 IMPLEMENT_APP(AmayaApp)
 
-// Static attribut used to convert text from unicode to ISO-8859-1
-// or from ISO-8859-1 to unicode
-wxCSConv AmayaApp::conv_ascii(_T("ISO-8859-1"));
-
 #ifndef _GLPRINT
 // defined into EDITORAPP.c
 extern int amaya_main (int argc, char** argv);
@@ -109,7 +105,7 @@ bool AmayaApp::OnInit()
 
   // this is the amaya directory (need to be called after amaya_main or
   // TtaGetEnvString will return bad strings)
-  wxString amaya_directory( TtaGetEnvString ("THOTDIR"), conv_ascii );
+  wxString amaya_directory( TtaGetEnvString ("THOTDIR"), *wxConvCurrent );
 
   // Now it's possible to load all the dialogs
   wxXmlResource::Get()->Load( amaya_directory+_T("/resources/xrc/InitConfirmDlgWX.xrc") );
@@ -170,14 +166,12 @@ void AmayaApp::InitAmayaArgs()
   amaya_argc = wxApp::argc;
   amaya_argv = new char*[amaya_argc];
 
-  //  wxCSConv conv_ascii(_T("ISO-8859-1")); // to convert string in ASCII (ISO-8859-1)
   for ( int i = 0; i < amaya_argc; i++ )
   {
     // unicode to ascii convertion of every arguments
-    wxString     amaya_arg( wxApp::argv[i] );
-    wxASSERT_MSG( amaya_arg.IsAscii(), _T("arguments (argv) must contain only ascii char in order to be converted in ascii") );
+    wxString amaya_arg( wxApp::argv[i] );
     amaya_argv[i] = new char[amaya_arg.Length()+1];
-    sprintf(amaya_argv[i],"%s", (const char*) amaya_arg.mb_str(conv_ascii));
+    sprintf(amaya_argv[i], "%s", (const char*) amaya_arg.mb_str(*wxConvCurrent));
   }
 }
 
