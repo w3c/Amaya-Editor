@@ -1844,6 +1844,8 @@ int i;
     }
   if (cache_dir)
     TtaFreeMemory (cache_dir);
+  if (real_dir)
+    TtaFreeMemory (real_dir);
   /* warn the user if the cache isn't active */
   if (cache_enabled && !HTCacheMode_enabled ())
     {
