@@ -5125,20 +5125,22 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			  /* it's not necessary to continue */
 			  found = FALSE;
 			  endOfSniffedFile = TRUE;
-			  /* We consider the document as an html one */
-			  *thotType = docHTML;
 			  end = strstr (&FileBuffer[i], ">");
 			  ptrns = strstr (&FileBuffer[i], "xmlns");
 			  if (ptrns && ptrns < end)
 			    {
-			      ptr = strstr (ptrns, "xhtml");
+			      ptr = strstr (ptrns,  XHTML_URI);
 			      if (ptr && ptr < end)
 				{
 				  /* The xhtml namespace declaration is found */
+				  *thotType = docHTML;
 				  *isXML = TRUE;
 				  *isknown = TRUE;
 				}
 			    }
+			  else
+			    /* No namespace, we consider the document as an html one */
+			    *thotType = docHTML;
 			}
 		      else if (!strncasecmp (&FileBuffer[i], "svg", 3))
 			{

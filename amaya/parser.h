@@ -16,6 +16,15 @@
 #define ANNOT_TYPE   5
 #define XML_TYPE     6
 
+
+/* Supported namespace declarations */
+#define MAX_URI_NAME_LENGTH  60
+#define XHTML_URI       "http://www.w3.org/1999/xhtml"
+#define MathML_URI      "http://www.w3.org/1998/Math/MathML"
+#define SVG_URI         "http://www.w3.org/2000/svg"
+#define XLink_URI       "http://www.w3.org/1999/xlink"
+#define NAMESPACE_URI   "http://www.w3.org/XML/1998/namespace"
+
 #define MaxTypeNameLength 30
 #define DummyAttribute    500
 typedef char typeName[MaxTypeNameLength];
