@@ -2610,7 +2610,7 @@ if test "$ac_test_CXXFLAGS" = set; then
   CXXFLAGS=$ac_save_CXXFLAGS
 elif test $ac_cv_prog_cxx_g = yes; then
   if test "$GXX" = yes; then
-    CXXFLAGS="-O2"
+    CXXFLAGS="-g -O2"
   else
     CXXFLAGS="-g"
   fi
@@ -13714,7 +13714,7 @@ make_output="Makefile Options.orig:Options.in tools/Makefile \
        libjpeg/Makefile libpng/Makefile libpng/zlib/Makefile \
        tools/mkdep/Makefile \
        tools/cextract-1.7/Makefile thotlib/Makefile \
-       thotlib/include/Makefile batch/Makefile tablelib/Makefile"
+       thotlib/include/Makefile batch/Makefile"
 
 if test "$build_amaya" = "yes" ; then
 

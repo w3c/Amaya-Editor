@@ -159,11 +159,9 @@ ${AMAYADIR}/cpp/i386/t-* \
 ${AMAYADIR}/cpp/i386/x-* \
 ${AMAYADIR}/davlib/Makefile.in \
 ${AMAYADIR}/davlib/*.c \
-${AMAYADIR}/davlib/*.cpp \
 ${AMAYADIR}/davlib/f/*.h \
 ${AMAYADIR}/davlib/h/*.h \
 ${AMAYADIR}/davlib/tree/*.c \
-${AMAYADIR}/davlib/tree/*.cpp \
 ${AMAYADIR}/davlib/tree/h/*.h \
 ${AMAYADIR}/dicopar/*.dic \
 ${AMAYADIR}/dicopar/*.ptn \
@@ -184,7 +182,6 @@ ${AMAYADIR}/libjpeg/Makefile \
 ${AMAYADIR}/libjpeg/README \
 ${AMAYADIR}/libjpeg/*.1 \
 ${AMAYADIR}/libjpeg/*.c \
-${AMAYADIR}/libjpeg/*.cpp \
 ${AMAYADIR}/libjpeg/*.h \
 ${AMAYADIR}/libjpeg/*.log \
 ${AMAYADIR}/libjpeg/*.doc \
@@ -223,7 +220,6 @@ ${AMAYADIR}/libjpeg/testorig.jpg \
 ${AMAYADIR}/libjpeg/testprog.jpg \
 ${AMAYADIR}/libpng/Makefile.in \
 ${AMAYADIR}/libpng/*.c \
-${AMAYADIR}/libpng/*.cpp \
 ${AMAYADIR}/libpng/*.h \
 ${AMAYADIR}/libpng/zlib/ChangeLog \
 ${AMAYADIR}/libpng/zlib/Make_vms.com \
@@ -235,7 +231,6 @@ ${AMAYADIR}/libpng/zlib/Makefile.qnx \
 ${AMAYADIR}/libpng/zlib/Makefile.tc \
 ${AMAYADIR}/libpng/zlib/README \
 ${AMAYADIR}/libpng/zlib/*.c \
-${AMAYADIR}/libpng/zlib/*.cpp \
 ${AMAYADIR}/libpng/zlib/*.h \
 ${AMAYADIR}/libpng/zlib/descrip.mms \
 ${AMAYADIR}/libraptor/Makefile.in \
@@ -280,7 +275,6 @@ ${AMAYADIR}/pluginlib/COPYRIGHT* \
 ${AMAYADIR}/pluginlib/Makefile.plugin \
 ${AMAYADIR}/pluginlib/*.h \
 ${AMAYADIR}/pluginlib/*.c \
-${AMAYADIR}/pluginlib/*.cpp \
 ${AMAYADIR}/pluginlib/f/*.h \
 ${AMAYADIR}/thotlib/Makefile.in \
 ${AMAYADIR}/thotlib/include/Makefile.in \
@@ -411,12 +405,10 @@ ${LIBWWWDIR}/Library/src/vms/Makefile.in \
 ${LIBWWWDIR}/Library/src/vms/build_multinet.com \
 ${LIBWWWDIR}/Library/src/vms/descrip.mms \
 ${LIBWWWDIR}/Library/src/*.c \
-${LIBWWWDIR}/Library/src/*.cpp \
 ${LIBWWWDIR}/Library/src/*.h \
 ${LIBWWWDIR}/Library/src/windows/Makefile.am \
 ${LIBWWWDIR}/Library/src/windows/Makefile.in \
 ${LIBWWWDIR}/Library/src/windows/*.c \
-${LIBWWWDIR}/Library/src/windows/*.cpp \
 ${LIBWWWDIR}/Library/src/windows/*.h \
 ${LIBWWWDIR}/Library/src/windows/*.def \
 ${LIBWWWDIR}/Library/src/windows/*.files \
@@ -425,7 +417,6 @@ ${LIBWWWDIR}/modules/Makefile.in \
 ${LIBWWWDIR}/modules/md5/Makefile.am \
 ${LIBWWWDIR}/modules/md5/Makefile.in \
 ${LIBWWWDIR}/modules/md5/*.c \
-${LIBWWWDIR}/modules/md5/*.cpp \
 ${LIBWWWDIR}/modules/md5/*.h \
 ${LIBWWWDIR}/modules/expat/COPYING \
 ${LIBWWWDIR}/modules/expat/MANIFEST \
@@ -441,7 +432,6 @@ ${LIBWWWDIR}/modules/expat/Makefile.in \
 ${LIBWWWDIR}/modules/expat/configure.in \
 ${LIBWWWDIR}/modules/expat/lib/*.h \
 ${LIBWWWDIR}/modules/expat/lib/*.c \
-${LIBWWWDIR}/modules/expat/lib/*.cpp \
 ${LIBWWWDIR}/config/Makefile.am \
 ${LIBWWWDIR}/config/Makefile.in \
 ${LIBWWWDIR}/config/config.guess \
