@@ -52,6 +52,7 @@ echo "Platform ------->" $MACH
    Amaya/annotlib/Annot.STR \
    Amaya/annotlib/AnnotP.PRS \
    Amaya/annotlib/AnnotT.TRA \
+   Amaya/annotlib/selected.gif \
    Amaya/amaya/COPYRIGHT* \
    Amaya/amaya/AmayaPage.html* \
    Amaya/amaya/*.conf \

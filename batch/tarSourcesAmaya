@@ -105,6 +105,7 @@ Amaya/annotlib/*.T \
 Amaya/annotlib/*.c \
 Amaya/annotlib/*.h \
 Amaya/annotlib/f/*.h \
+Amaya/annotlib/selected.gif \
 Amaya/config/amaya.kb \
 Amaya/config/amaya.keyboard \
 Amaya/config/amaya.emacs \
