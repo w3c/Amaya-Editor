@@ -252,48 +252,6 @@ int                 frame;
 {
 }
 
-#ifdef __STDC__
-void                InsertChar (unsigned char car, int clavier)
-#else  /* __STDC__ */
-void                InsertChar (car, clavier)
-unsigned char       car;
-int                 clavier;
-
-#endif /* __STDC__ */
-{
-}
-
-#ifdef __STDC__
-void                MovingCommands (int code)
-#else  /* __STDC__ */
-void                MovingCommands (code)
-int                 code;
-
-#endif /* __STDC__ */
-{
-}
-
-#ifdef __STDC__
-void                ContentEditing (int numero, boolean IsCar)
-#else  /* __STDC__ */
-void                ContentEditing (numero, IsCar)
-int                 numero;
-boolean             IsCar;
-
-#endif /* __STDC__ */
-{
-}
-
-#ifdef __STDC__
-void                PasteXClipboard (unsigned char *Xbuffer, int nbytes)
-#else  /* __STDC__ */
-void                PasteXClipboard (Xbuffer, nbytes)
-unsigned char      *Xbuffer;
-int                 nbytes;
-
-#endif /* __STDC__ */
-{
-}
 
 #ifdef __STDC__
 int                 CopyXClipboard (unsigned char **buffer)

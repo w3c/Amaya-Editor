@@ -1,5 +1,5 @@
 
-/* epshandler.c -- Implementation EPS pictures */
+/* epshandler.c -- Implementation of EPS pictures */
 
 
 #include "thot_sys.h"
@@ -27,12 +27,12 @@ extern Pixmap       EpsfPictureLogo;
 
 
 /* ------------------------------------------------------------------- */
-/* | Find EPS bounding box.				             | */
+/* | Find EPS picture bounding box.				             | */
 /* ------------------------------------------------------------------- */
 #ifdef __STDC__
-static void FindBoundingBox (char *fn, int *xif, int *yif, int *wif, int *hif)
+static void GetPictureBoundaries (char *fn, int *xif, int *yif, int *wif, int *hif)
 #else  /* __STDC__ */
-static void FindBoundingBox (fn, xif, yif, wif, hif)
+static void GetPictureBoundaries (fn, xif, yif, wif, hif)
 char               *fn;
 int                *xif;
 int                *yif;
@@ -43,7 +43,7 @@ int                *hif;
 
 #define BUFSIZE 1023
   FILE               *fin;
-  int                 c;	/* modif postscript bea */
+  int                 c;	
   char               *pt, buff[BUFSIZE];
   int                 X2, Y2;
 
@@ -75,41 +75,9 @@ int                *hif;
     }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    GetHexit recupere un chiffre hexa.                              | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-static int          GetHexit (FILE * ifd)
-#else  /* __STDC__ */
-static int          GetHexit (ifd)
-FILE               *ifd;
-#endif /* __STDC__ */
-{
-   register int        i;
-   register char       c;
-
-   for (;;)
-     {
-	i = getc (ifd);
-	if (i == EOF)
-	  {
-	     TtaDisplaySimpleMessage (INFO, LIB, PREMAT_EOF);
-	  }
-	c = (char) i;
-	if (c >= '0' && c <= '9')
-	   return c - '0';
-	else if (c >= 'A' && c <= 'F')
-	   return c - 'A' + 10;
-	else if (c >= 'a' && c <= 'f')
-	   return c - 'a' + 10;
-	/* Else ignore the rest. */
-     }
-}
-
-
 
 /* ------------------------------------------------------------------- */
-/* | On lit une image contenue dans le fichier fn                    | */
+/* | Read the bounding box of an eps file  no picture to produce here                | */
 /* ------------------------------------------------------------------- */
 #ifdef __STDC__
 ThotBitmap          EpsCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable * PicMask)
@@ -133,20 +101,20 @@ Drawable           *PicMask;
    *PicMask = None;
 #endif
 
-   FindBoundingBox (fn, xif, yif, wif, hif);
+   GetPictureBoundaries (fn, xif, yif, wif, hif);
    *xif = PointToPixel (*xif);
    *yif = PointToPixel (*yif);
    *wif = PointToPixel (*wif);
    *hif = PointToPixel (*hif);
    return (ThotBitmap) EpsfPictureLogo;
 #endif /* !NEW_WILLOWS */
-}				/*EpsCreate */
+}			
 
 
 
-/* ------------------------------------------------------------------- */
-/* | On imprime une image                                            | */
-/* ------------------------------------------------------------------- */
+/* --------------------------------------------------------------- */
+/* | Print the eps picture with the right parameters : scale and positions                       | */
+/* --------------------------------------------------------------- */
 #ifdef __STDC__
 void                EpsPrint (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, FILE * fd, unsigned long BackGroundPixel)
 #else  /* __STDC__ */
@@ -173,8 +141,10 @@ unsigned long       BackGroundPixel;
    FILE               *fin;
    int                 c;
 
-   /* On relit la bounding box au moment de l'impression */
-   FindBoundingBox (fn, &PicXArea, &PicYArea, &PicWArea, &PicHArea);
+   /* Read the picture boundaries */
+
+   GetPictureBoundaries (fn, &PicXArea, &PicYArea, &PicWArea, &PicHArea);
+
    xif = PixelToPoint (xif);
    yif = PixelToPoint (yif);
    wif = PixelToPoint (wif);
@@ -185,7 +155,7 @@ unsigned long       BackGroundPixel;
    fprintf (fd, "%%%% Including file %s\n", fn);
    fprintf (fd, "BEGINEPSFILE\n");
 
-   /* on definit un clip avec l'image frame */
+   /* define the picture clipping */
 
    fprintf (fd, " newpath %d %d moveto %d %d rlineto %d %d rlineto %d %d rlineto\n",
 	    xif - 1, -yif, wif, 0, 0, hif, -wif, 0);
@@ -196,39 +166,40 @@ unsigned long       BackGroundPixel;
 	    case RealSize:
 	       x = xif - PicXArea + (wif - PicWArea) / 2;
 	       y = yif + PicYArea - (hif - PicHArea) / 2;
-	       /* on fait juste un translate au bon endroit */
+	       /* translate the picture to the right position*/
 	       fprintf (fd, "  %d %d translate\n", x, -y);
 	       break;
 	    case ReScale:
-	       /* meme echelle X et Y, centre'  */
+	       /* the same sclale for x and y and center the picture */
+
 	       Scx = (float) wif / (float) PicWArea;
 	       Scy = (float) hif / (float) PicHArea;
-	       /* on cherche dans quel sens ca risque de coincer */
+
 	       if (Scy <= Scx)
 		 {
-		    /* mise ajour des formules Nabil */
+		    /* updating the formulas : N */
 		    Scx = Scy;
 		    x = (int) ((float) xif - (Scx * (float) PicXArea) + ((float) (wif - (PicWArea * Scx)) / 2.));
-		    /* recentrer en X */
+		    /* recenter in X */
 		    y = (int) ((float) yif + (Scy * (float) PicYArea));
 		 }
 	       else
 		 {
 		    Scy = Scx;
 		    x = (int) ((float) xif - (Scx * (float) PicXArea));
-		    /* recentrer en Y */
+		    /* recenter in  Y */
 		    y = (int) ((float) yif + (Scy * (float) PicYArea) - ((float) (hif - (PicHArea * Scy)) / 2.));
 		 }
-	       /* on fait un translate et un scale */
+	       /* we translate then we scale  */
 	       fprintf (fd, "  %d %d translate %.4f %.4f scale\n", x, -y, Scx, Scy);
 	       break;
 	    case FillFrame:
-	       /* remplissage du cadre (echelle XY) */
+	       /* eps frame filling */
 	       Scx = (float) wif / (float) PicWArea;
 	       Scy = (float) hif / (float) PicHArea;
 	       x = (int) ((float) xif - (Scx * (float) PicXArea));
 	       y = (int) ((float) yif + (Scy * (float) PicYArea));
-	       /* on fait un translate et un scale */
+	       /* we perform a scale and the translate */
 	       fprintf (fd, "  %d %d translate %.4f %.4f scale\n", x, -y, Scx, Scy);
 	       break;
 	    default:
@@ -250,10 +221,10 @@ unsigned long       BackGroundPixel;
    fprintf (fd, "ENDEPSFILE\n");
 
 #endif /* !NEW_WILLOWS */
-}				/*EpsPrint */
+}			
 
 /* ------------------------------------------------------------------- */
-/* | On teste si une image est bien du PostScript                    | */
+/* | Chech if the picture header is of an eps file or not before going to the dark          | */
 /* ------------------------------------------------------------------- */
 #ifdef __STDC__
 boolean             IsEpsFormat (char *fn)
@@ -263,16 +234,16 @@ char               *fn;
 #endif /* __STDC__ */
 {
    FILE               *fin;
-   int                 c;	/* modif postscript bea */
+   int                 c;	
    boolean             res;
 
    res = FALSE;
    fin = fopen (fn, "r");
    if (fin)
      {
+	 /* search for %! signature of the eps and ps files */
 	c = getc (fin);
 	if ((c != EOF) && (c == '%'))
-	   /* on cherche %! dans les 2 premiers caracteres */
 	  {
 	     c = getc (fin);
 	     if ((c != EOF) && (c == '!'))
@@ -281,4 +252,5 @@ char               *fn;
      }
    fclose (fin);
    return res;
-}				/*IsEpsFormat */
+}				
+ 

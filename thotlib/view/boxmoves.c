@@ -582,7 +582,7 @@ OpRelation          op;
 
    /* Modifie enventuellement le dessin de la boite */
    if (oldPosEdge != newPosEdge)
-/**PL*/ MirrorShape (pAb, pBox->BxHorizInverted, pBox->BxVertInverted, FALSE);
+     MirrorShape (pAb, pBox->BxHorizInverted, pBox->BxVertInverted, FALSE);
 
    /* Note la boite qui fixe la position de la boite elastique */
    if (pAb->AbVertPos.PosAbRef == NULL)

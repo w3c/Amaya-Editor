@@ -19,8 +19,6 @@ extern void CloseTextInsertion ( void );
 extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
                                  int frame );
 extern void ClearClipboard ( PtrTextBuffer registre );
-extern void ContentEditing ( int numero,
-                                boolean IsCar );
 extern void PasteXClipboard ( unsigned char *Xbuffer,
                             int nbytes );
 extern void TtcCutSelection ( Document document,
@@ -54,8 +52,6 @@ extern void CloseTextInsertion (/* void */);
 extern void CloseParagraphInsertion (/* PtrAbstractBox pAb,
                                    int frame */);
 extern void ClearClipboard (/* PtrTextBuffer registre */);
-extern void ContentEditing (/* int numero,
-                                  boolean IsCar */);
 extern void PasteXClipboard (/* unsigned char *Xbuffer,
                               int nbytes */);
 extern void TtcCutSelection (/* Document document,

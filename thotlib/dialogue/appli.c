@@ -1218,7 +1218,7 @@ XEvent             *ev;
 			     {
 				/* selection a l'interieur d'une polyline */
 				if (ThotLocalActions[T_editfunc] != NULL)
-				   (*ThotLocalActions[T_editfunc]) (TEXT_INSERT, FALSE);
+				   (*ThotLocalActions[T_editfunc]) (TEXT_INSERT);
 			     }
 			   else
 			     {
