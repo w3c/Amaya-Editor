@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <ctype.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -44,11 +45,14 @@ typedef struct _Type {
  * add more type as needed.
  */
 
-int nbTypes = 4;
+int nbTypes = 7;
 Type tabType[1000] = {
 { 0, "void",	"",		"void",			NULL},
-{ 0, "int",	"int",		"jint",			NULL},
 { 0, "boolean",	"boolean",	"jint",			NULL},
+{ 0, "char",	"char",		"jchar",		NULL},
+{ 0, "char",	"byte",		"jbyte",		NULL},
+{ 0, "short",	"short",	"jshort",		NULL},
+{ 0, "int",	"int",		"jint",			NULL},
 { 1, "char",	"String",	"struct Hjava_lang_String*", "java_lang_String"},
 };
 
@@ -125,7 +129,6 @@ void read_type(char *filename)
     char buffer[1000];
     char *p, *q;
     FILE *in;
-    int res;
     int line = 0;
     int indir;
     char name[256];
@@ -435,6 +438,27 @@ void dump_java(FILE *out) {
     Function *f;
     Arg *a;
     Type *t;
+    char package[256];
+    int idx;
+    int is_package = 0;
+    char *class_name = &package[0];
+
+    /* Split classname into a package name and an class name */
+    strcpy(package,classname);
+    idx = strlen(package) - 1;
+    for (;idx >= 0;idx--) {
+        if (package[idx] == '_') {
+	   if (!is_package) {
+	      package[idx] = '\0';
+	      class_name = &package[idx + 1];
+	   } else
+	      package[idx] = '.';
+	   is_package = 1;
+	}
+    }
+    *class_name = toupper(*class_name);
+    if (is_package) fprintf(out,"package %s;\n\n",package);
+
 
     fprintf(out,"/*\n * Java public native definitions for class %s\n",
            classname);
@@ -443,6 +467,7 @@ void dump_java(FILE *out) {
            classname, classname);
     dump_cmd(out);
     fprintf(out," */\n\n");
+    fprintf(out,"public class %s {\n", class_name);
     for (i = 0;i < nbFunctions;i++) {
         f = &tabFunctions[i];
 	t = &tabType[f->type];
@@ -465,6 +490,7 @@ void dump_java(FILE *out) {
 	/* if (n == 0) fprintf(out,"void"); */
 	fprintf(out,");\n");
     }
+    fprintf(out,"\n}\n");
 }
 
 void dump_h(FILE *out) {
