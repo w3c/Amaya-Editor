@@ -997,12 +997,14 @@ static void DisplayUrlAnchor (Element element, Document document)
    elType = TtaGetElementType (element);
    HTMLschema = TtaGetSSchema ("HTML", document);
    isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLschema);
+   isXLink = 0;
    if (!isHTML)
-     isXLink = TtaSameSSchemas (elType.ElSSchema, 
-				TtaGetSSchema ("XLink", document));
-   else
-     isXLink = 0;
-   
+     {
+       XLinkSchema = TtaGetSSchema ("XLink", document);
+       if (XLinkSchema)
+	 isXLink = TtaSameSSchemas (elType.ElSSchema, XLinkSchema);
+     }
+    
    /* Check if the current element is interested in display url */
    ok = FALSE;
    if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
@@ -1055,7 +1057,7 @@ static void DisplayUrlAnchor (Element element, Document document)
 	       attrType.AttrTypeNum = HTML_ATTR_cite;
 	       attr = TtaGetAttribute (ancestor, attrType);
 	     }
-	   if (!attr)
+	   if (!attr && XLinkSchema)
 	     {
 	       attrType.AttrSSchema = XLinkSchema;
 	       attrType.AttrTypeNum = XLink_ATTR_href_;
