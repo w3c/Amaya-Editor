@@ -14,15 +14,15 @@
 ! the editor. So new transformations can be added while editing.
 !
 ! A tranformation rule has three parts : 
-!     - a name terminated by a colon ":"
-!     - a source pattern terminated by a semi-colon ";"
-!     - and a list of rules between braces "{" "}", each one
-!           terminated by a semi-colon ";"
+!     - a NAME terminated by a colon ":"
+!     - a SOURCE PATTERN terminated by a semi-colon ";"
+!     - and a list of RULES between braces "{" "}", each one
+!       terminated by a semi-colon ";"
 !
-! The name will appear in the transform menu.
+! a) The NAME will appear in the transform menu.
 !
-! The pattern gives of a specific organization of the elements
-! to be transformed: it contains HTML tags and SGML-like syntax
+! b) The SOURCE PATTERN gives of a specific organization of the elements
+! to be transformed: it contains XML/HTML tags and SGML-like syntax
 ! for the composition operators:
 !     e1 | e2   for a choice between elements e1 and e2
 !     e1 , e2   for a sequence e1 followed by e2
@@ -34,32 +34,36 @@
 ! It is possible to rename a tag by preceeding it with a name
 ! followed by a colon ":"
 !
-! A rule expresses transformations to be applied to the elements 
-! identified in the pattern. They have two parts :
-!        - a source identifier: a tag or a name which occurs in
-!          the pattern and links the rule to the pattern nodes
-!        -  a rule body: drives the transformation
-!  Each rule end with a symbol ";"
+! c) RULES express transformations to be applied to the elements 
+! identified in the pattern.
+! Each rule end with a symbol ";"
 !
-! there are two kinds of rule bodies:
-! - A discard rule body is slash and express that the correspoding
-!    pattern node does not occurin the transformation result
+| - It could be performed by an action rule. In this case the rule
+!   starts with a "$" followed by the menu action to be called.
 !
-! - A generation rule begins with
-!     - a symbol ">"
-!     - and a target tag list. This list is itself divided into
-!       two parts separated by a colon":": 
-!         * the generation location path
-!         * and the list of tags to be generated
-! The dot symbol "." is used for descending in the tree structure.
-! if the special token star "*" ends the list of tags to be 
-! generated, the source elment tag is not changed but this element
-! can be moved in a different place in the destination. 
+! - It could be a list of transformation items:
+!  They have two parts :
+!      - a source identifier: a tag or a name which occurs in
+!        the pattern and links the rule to the pattern nodes
+!      - a rule body: drives the transformation
+!        there are two kinds of rule bodies:
+!        - a discard rule body is slash and express that the correspoding
+!          pattern node does not occuring the transformation result
+!        - a generation rule begins with
+!        - a symbol ">"
+!        - and a target tag list. This list is itself divided into
+!          two parts separated by a colon":": 
+!           * the generation location path
+!           * and the list of tags to be generated
+!   The dot symbol "." is used for descending in the tree structure.
+!   if the special token star "*" ends the list of tags to be 
+!   generated, the source elment tag is not changed but this element
+!   can be moved in a different place in the destination. 
 !
-! The rules are applied in the order the identifiers are met when
-! (depth first) traversing the source structure.
-! Several rules may have the same identifier, in that case, the rules
-! are applied in the order they are defined.
+!   The rules are applied in the order the identifiers are met when
+!   (depth first) traversing the source structure.
+!   Several rules may have the same identifier, in that case, the rules
+!   are applied in the order they are defined.
 
 ! Transformation rules 
 !!!!!!!!!!!!!!!!!!!!!!
@@ -309,12 +313,12 @@ Transpose Table:table{tbody{tr{(td|th)+}|(tr{td2:td|th2:th})+}};
 
 Heading Cell :?(td|th)+,td,?(td|th)+;
 	{
-	td>:th;
+	$CreateHeadingCell;
 	}
 
 Data Cell :?(td|th)+,th,?(td|th)+;
 	{
-	th>:td;
+	$CreateDataCell;
 	}
 
 !headings to/from definitions
@@ -331,7 +335,6 @@ Definition list:((h1|h2|h3|h4|h5|h6),*+)+;
 	h6 > dl:dt;
 	* > dl.dd:*;
 	}
-
 
 Definition list:(h1,?hr,?(level1:*)+,?(h2,?(level2:*)+,?((h3|h4|h5|h6),(level3:*)+)+)+)+;
 	{
@@ -358,8 +361,6 @@ Definition list:(h2,?hr,?(level1:*)+,(h3,?(level2:*)+,((h4|h5|h6),(level3:*)+)+)
 	level3 > dl.dd.dl.dd.dl.dd:*;
 	}
 
-
-
 Definition list:(h3,?hr,?(level1:*)+,?(h4,?(level2:*)+,((h5|h6),(level3:*)+)+)+)+;
 	{
 	h3 > dl:dt;
@@ -381,8 +382,6 @@ Multi level Definition list:(h4,?hr,?(level1:*)+,(h5,?(level2:*)+,((h6)+,(level3
 	level3 > dl.dd.dl.dd.dl.dd:*;
 	}
 
-
-
 Headings h1:(dl{(dt1:dt|dd{(dl{(dt2:dt|dd{(dl{(dt3:dt|dd{content:*})+}|content:*)+})+}|content:*)+})+}|hr)+;
 	{
 	dt1 > :h1;
@@ -398,7 +397,6 @@ Headings h2:(dl{(dt1:dt|dd{(dl{(dt2:dt|dd{(dl{(dt3:dt|dd{content:*})+}|content:*
 	dt3 > :h4;
 	content > :*;
 	}
-
 
 Headings h3:(dl{(dt1:dt|dd{(dl{(dt2:dt|dd{(dl{(dt3:dt|dd{content:*})+}|content:*)+})+}|content:*)+})+}|hr)+;
 	{

@@ -8,8 +8,9 @@
 #ifndef _TRANS_H__
 #define _TRANS_H__
 /*----------------------------------------------------------------------
-     Definitions of types and variables used in type transformation (trans.c and transparse.c)
-     Stephane Bonhomme Apr 96   
+  Definition of types and variables used in type transformation
+  (trans.c and transparse.c)
+  Stephane Bonhomme Apr 96   
   ----------------------------------------------------------------------*/
 #define MAX_STACK 100       /* size of html generation and pattern matching stacks */
 #define BUFFER_LEN 10000     /* size of html buffer */
@@ -17,9 +18,9 @@
 #ifndef PPSTANDALONE
 
 /*----------------------------------------------------------------------
-    structure definitions
+  Structure definitions
   ----------------------------------------------------------------------*/
-/*relation between pattern nodes (also called Symbols) and source structure tree nodes*/
+/* relation between pattern nodes (also called Symbols) and source structure tree nodes */
 typedef struct _MatchChildren
   {
      struct _SymbDesc   *MatchSymb;	/* pattern symbol */
@@ -41,7 +42,7 @@ strMatch;
 /* Source structure tree nodes definition */
 typedef struct _Node
   {
-     unsigned char      *Tag;		/* HTML tag */
+     unsigned char      *Tag;		/* HTML or XML tag */
      Element             Elem;		/* element instance */
      struct _Node       *Parent;	
      struct _Node       *Child;
@@ -103,7 +104,7 @@ typedef struct _RuleDesc
      unsigned char      *RuleName;
      strNodeDesc        *OptionNodes;
      strNodeDesc        *NewNodes;
-     ThotBool		DeleteRule;
+     ThotBool		 DeleteRule;
      struct _RuleDesc   *NextRule;
      struct _RuleDesc   *Next;
   }
@@ -123,42 +124,43 @@ strListElem;
 
 typedef struct _ListSymb
   {
-     struct _SymbDesc   *Symbol;
-     struct _ListSymb   *Next;
+    struct _SymbDesc   *Symbol;
+    struct _ListSymb   *Next;
   }
 strListSymb;
 
 /* pattern node (symbol) */
 typedef struct _SymbDesc
   {
-     unsigned char      *SymbolName;
-     unsigned char      *Tag;
-     strRuleDesc        *Rule;
-     ThotBool            IsOptional;
-     ThotBool            IsActiveSymb;
-     ThotBool            IsOptChild;
-     int                 Depth;
-     strAttrDesc        *Attributes;
-     strListSymb        *Children;
-     strListSymb        *Followings;
-     struct _SymbDesc   *Next;
+    unsigned char      *SymbolName;
+    unsigned char      *Tag;
+    strRuleDesc        *Rule;
+    ThotBool            IsOptional;
+    ThotBool            IsActiveSymb;
+    ThotBool            IsOptChild;
+    int                 Depth;
+    strAttrDesc        *Attributes;
+    strListSymb        *Children;
+    strListSymb        *Followings;
+    struct _SymbDesc   *Next;
   }
 strSymbDesc;
 
 /* transformation descriptor */
 typedef struct _TransDesc
   {
-     unsigned char      *NameTrans;
-     int                 NbPatSymb;
-     int                 NbRules;
-     int                 PatDepth;
-     strListSymb        *First;
-     strSymbDesc        *RootDesc;
-     strSymbDesc        *Symbols;
-     strRuleDesc        *Rules;
-     ThotBool            IsActiveTrans;
-     unsigned char      *DestinationTag;
-     struct _TransDesc  *Next;
+    unsigned char      *NameTrans;
+    int                 NbPatSymb;
+    int                 NbRules;
+    int                 PatDepth;
+    strListSymb        *First;
+    strSymbDesc        *RootDesc;
+    strSymbDesc        *Symbols;
+    strRuleDesc        *Rules;
+    ThotBool            IsActiveTrans;
+    ThotBool            IsAction;       /* TRUE -> DestinationTag is an action */
+    unsigned char      *DestinationTag;
+    struct _TransDesc  *Next;
   }
 strTransDesc;
 

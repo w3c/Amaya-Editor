@@ -56,6 +56,11 @@ extern void TtaRemoveDocAccessKeys (Document doc);
 extern void TtaRemoveAccessKey (Document doc, unsigned int key);
 
 /*----------------------------------------------------------------------
+  TtaExecuteMenuAction execute the corresponding menu action.
+  ----------------------------------------------------------------------*/
+extern void TtaExecuteMenuAction (char *actionName, Document doc, View view);
+
+/*----------------------------------------------------------------------
    TtaAddButton
    Adds a new button entry in a document view.
    This function must specify a valid view of a valid document.

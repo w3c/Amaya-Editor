@@ -12,6 +12,9 @@ extern void FreeMenus ( void );
 extern void TteAddMenuAction ( char *actionName,
                                Proc procedure,
                                ThotBool state );
+extern void TtaExecuteMenuAction ( char *actionName,
+                                   Document doc,
+                                   View view );
 extern void TteZeroMenu ( WindowType windowtype,
                           char *schemaName );
 extern void TteAddMenu ( WindowType windowtype,
@@ -135,6 +138,9 @@ extern void FreeMenus (/* void */);
 extern void TteAddMenuAction (/* char *actionName,
                                  Proc procedure,
                                  ThotBool state */);
+extern void TtaExecuteMenuAction (/* char *actionName,
+                                     Document doc,
+                                     View view */);
 extern void TteZeroMenu (/* WindowType windowtype,
                             char *schemaName */);
 extern void TteAddMenu (/* WindowType windowtype,

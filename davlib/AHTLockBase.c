@@ -436,29 +436,26 @@ PUBLIC char * makeIfItem (const char * filename, char * relUri, char *lockToken)
  * Note: the caller must delete all LockLine objects after
  *       use them. 
  * ----------------------------------------------------------- */
-PUBLIC HTList * processLockFile (const char * filename, const char * reqUri) 
+PUBLIC HTList *processLockFile (const char *filename, const char *reqUri) 
 {
-    FILE * fp;
-    LockLine * info = NULL;
-    BOOL match = NO;
-    HTList * list = NULL;
-    char path[DAV_LINE_MAX];
+    FILE     *fp;
+    LockLine *info = NULL;
+    BOOL      match = NO;
+    HTList   *list = NULL;
+    char      path[DAV_LINE_MAX];
     
-    if ( filename && *filename && reqUri && *reqUri) 
+    if (filename && *filename && reqUri && *reqUri) 
      {
-        list  = HTList_new(); 
-
 	/*file "filename" should be at the lock base */
-	sprintf (path,"%s%s",DAVHome,filename);	
-	
+	sprintf (path,"%s%s", DAVHome, filename);	
 #ifdef DEBUG_LOCK_BASE		
         fprintf (stderr,"AHTLockBase... opening %s\n",path);
 #endif
-
         /* open the file "filename" for read purposes */
-        if ((fp = fopen (path,"r")) == NULL ) 
+        if ((fp = fopen (path,"r")) == NULL) 
             return NO;
 
+        list  = HTList_new(); 
         /* read all file to found all matches */
         while ( (info = LockLine_readline (fp)) != NULL) 
          {
@@ -468,34 +465,29 @@ PUBLIC HTList * processLockFile (const char * filename, const char * reqUri)
                      info->relativeURI, info->lockToken, info->depth, \
                      info->timeout, info->initialTime); */
 
-           
                 match = matchURI (reqUri,(const char*)info->relativeURI);
-            
                 if (match)
                  {
-                    int slash_uri=0, slash_info=0;
-                    int i=0;
-                
-#ifdef DEBUG_LOCK_BASE		
+                    int slash_uri = 0, slash_info = 0;
+                    int i = 0;
+#ifdef DEBUG_LOCK_BASE
                     fprintf (stderr,"AHTLockBase... checking hierarchical level\n");
 #endif
-
                     /* counts number of "/" - hierarchical level */
-                    for (i=0;i< (int)strlen(reqUri); i++) 
-                        if (reqUri[i]=='/') slash_uri++;
+                    for (i=0; i< (int)strlen (reqUri); i++) 
+                        if (reqUri[i]=='/')
+			  slash_uri++;
 
-                    for (i=0; i< (int)strlen(info->relativeURI);i++) 
+                    for (i=0; i < (int)strlen (info->relativeURI); i++) 
                         if (info->relativeURI[i] == '/') slash_info++;            
 
                     /* "exact" match */
                     if (slash_uri == slash_info) 
-                     {
                         match = YES; /* confirm match */
-                     }
                     else if ( (slash_uri > slash_info) ) 
                      {
-                        if ( (TOLOWER(info->depth) == 'i') || 
-                             (slash_uri== (slash_info+1) ) ) 
+                        if (TOLOWER(info->depth) == 'i' || 
+                             slash_uri== (slash_info+1)) 
                             /* reqUri is a member of info->relativeUri */
                             match = YES; /* confirm match */
                      }
@@ -629,7 +621,6 @@ PUBLIC char * mountIfHeader (HTList *if_list)
  *     char ** relative : if succeed, this pointer should contain the relative
  *                        URI used in URI      
  * -------------------------------------------------------------------------- */
-
 PUBLIC BOOL separateUri (const char *URI, const char *localFQDN,
                          char ** hostname, char **relative) 
 {
@@ -650,13 +641,11 @@ PUBLIC BOOL separateUri (const char *URI, const char *localFQDN,
     /* no parameters, no work to do */
     if (!URI || !(*URI) || !localFQDN || !(*localFQDN)) 
         return NO;
- 
     
     /* make a copy of URI to change it */
-    StrAllocCopy (address,URI);
-    StrAllocCopy (fqdn,localFQDN);
+    StrAllocCopy (address, URI);
+    StrAllocCopy (fqdn, localFQDN);
 
-    
     /* we search these pointer positions :
      *  address ->  http://host.domaine:port/relative 
      *                     ^   ^        ^   ^
@@ -708,7 +697,7 @@ PUBLIC BOOL separateUri (const char *URI, const char *localFQDN,
      }
 
     /* try to find the domain name in the host */
-    StrAllocCopy (filename,host);
+    StrAllocCopy (filename, host);
     dom = HTStrCaseStr (host, ".");
     
     if (dom == NULL) 
@@ -719,7 +708,7 @@ PUBLIC BOOL separateUri (const char *URI, const char *localFQDN,
          {
             dom = HTStrCaseStr (fqdn,".");
             if (dom) 
-                StrAllocCat(filename,dom);
+	      StrAllocCat(filename, dom);
          }
         else
          {/* if it is localhost, use FQDN insteed */
@@ -729,12 +718,13 @@ PUBLIC BOOL separateUri (const char *URI, const char *localFQDN,
      }
 
     /* copy the port number to the host */
-    if (pnumber[0]!='\0') StrAllocCat (filename,pnumber);
+    if (pnumber[0]!='\0')
+      StrAllocCat (filename, pnumber);
 
     /* returning */
     (*hostname) = filename;
     (*relative) = relUri;
-
+    HT_FREE(address);
     return status;
 }
 

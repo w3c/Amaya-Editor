@@ -23,8 +23,8 @@ extern BOOL matchURI ( const char *requestUri,
 extern PUBLIC char * makeIfItem ( const char * filename,
                                   char * relUri,
                                   char *lockToken );
-extern PUBLIC HTList * processLockFile ( const char * filename,
-                                         const char * reqUri );
+extern PUBLIC HTList *processLockFile ( const char *filename,
+                                        const char *reqUri );
 extern PUBLIC HTList * searchLockBase ( char * filename,
                                         char * reqUri );
 extern PUBLIC char * mountIfHeader ( HTList *if_list );
@@ -63,8 +63,8 @@ extern BOOL matchURI (/* const char *requestUri,
 extern PUBLIC char * makeIfItem (/* const char * filename,
                                     char * relUri,
                                     char *lockToken */);
-extern PUBLIC HTList * processLockFile (/* const char * filename,
-                                           const char * reqUri */);
+extern PUBLIC HTList *processLockFile (/* const char *filename,
+                                          const char *reqUri */);
 extern PUBLIC HTList * searchLockBase (/* char * filename,
                                           char * reqUri */);
 extern PUBLIC char * mountIfHeader (/* HTList *if_list */);

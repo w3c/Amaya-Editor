@@ -112,9 +112,9 @@ extern void CreateTFoot ( Document document,
                           View view );
 extern void CreateRow ( Document document,
                         View view );
-extern void CreateDataCell ( Document document,
+extern void CreateDataCell ( Document doc,
                              View view );
-extern void CreateHeadingCell ( Document document,
+extern void CreateHeadingCell ( Document doc,
                                 View view );
 extern void DeleteColumn ( Document document,
                            View view );
@@ -344,9 +344,9 @@ extern void CreateTFoot (/* Document document,
                             View view */);
 extern void CreateRow (/* Document document,
                           View view */);
-extern void CreateDataCell (/* Document document,
+extern void CreateDataCell (/* Document doc,
                                View view */);
-extern void CreateHeadingCell (/* Document document,
+extern void CreateHeadingCell (/* Document doc,
                                   View view */);
 extern void DeleteColumn (/* Document document,
                              View view */);

@@ -1852,33 +1852,34 @@ void CreateRow (Document document, View view)
 /*----------------------------------------------------------------------
   CreateCell creates or transforms a cell
   ----------------------------------------------------------------------*/
-static void CreateCell (Document document, View view, int typeCell)
+static void CreateCell (Document doc, View view, int typeCell)
 {
-  Element             el;
+  Element             el, firstSel, lastSel, parent;
   ElementType         elType;
   SSchema	      HTMLSSchema;
   int                 firstchar, lastchar, other;
-  ThotBool            open = FALSE;
+  ThotBool            open = FALSE, done = FALSE;
 
   if (typeCell == HTML_EL_Heading_cell)
     other = HTML_EL_Data_cell;
   else
     other = HTML_EL_Heading_cell;
 
-  if (!TtaGetDocumentAccessMode (document))
+  if (!TtaGetDocumentAccessMode (doc))
     /* the document is in ReadOnly mode */
     return;
   /* get the first selected element */
-  TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
-  if (el != NULL)
+  TtaGiveFirstSelectedElement (doc, &firstSel, &firstchar, &lastchar);
+  if (firstSel != NULL)
     {
-      if (TtaIsReadOnly (el))
+      if (TtaIsReadOnly (firstSel))
 	/* the selected element is read-only */
 	return;
 
-      elType = TtaGetElementType (el);
-      HTMLSSchema = TtaGetSSchema ("HTML", document);
-#ifdef IV
+      TtaGiveLastSelectedElement (doc, &lastSel, &firstchar, &lastchar);
+      HTMLSSchema = TtaGetSSchema ("HTML", doc);
+      elType = TtaGetElementType (firstSel);
+      el = firstSel;
       /* Transform enclosing cell */
       if (elType.ElSSchema == HTMLSSchema &&
 	  (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
@@ -1886,78 +1887,95 @@ static void CreateCell (Document document, View view, int typeCell)
 	   elType.ElTypeNum == HTML_EL_Element))
 	{
 	  /* check the enclosing element */
-	  el = TtaGetParent (el);
-	  if (el != NULL)
+	  el = TtaGetParent (firstSel);
+	  if (el && 
+	      (firstSel == lastSel || el == TtaGetParent (lastSel)) &&
+	      firstSel == TtaGetFirstChild (el) && lastSel == TtaGetLastChild (el))
 	    {
+	      /* basic elements with the same parent */
 	      elType = TtaGetElementType (el);
+	      parent = TtaGetParent (el);
 	      if (elType.ElSSchema == HTMLSSchema &&
-		  elType.ElTypeNum ==  HTML_EL_Pseudo_paragraph)
+		  elType.ElTypeNum ==  HTML_EL_Pseudo_paragraph &&
+		  el == TtaGetFirstChild (parent) && el == TtaGetLastChild (parent))
 		{
 		  /* check the enclosing element */
-		  el = TtaGetParent (el);
-		  if (el != NULL)
+		  el = parent;
+		  if (el)
 		    elType = TtaGetElementType (el);
 		}
+	      lastSel = el;
 	    }
 	}
-#endif /* IV */
 
-      if (elType.ElSSchema == HTMLSSchema && elType.ElTypeNum == typeCell)
-	/* cell has the right type */
-	return;
-      if (elType.ElSSchema == HTMLSSchema && elType.ElTypeNum == other)
+      while (el)
 	{
-	  /* change the type of this cell */
-	  TtaOpenUndoSequence (document, NULL, NULL, 0, 0);
-	  TtaChangeTypeOfElement (el, document, typeCell);
-	  TtaRegisterElementTypeChange (el, other, document);
-	  TtaCloseUndoSequence (document);
-	  return;
-	}
-      else if (elType.ElSSchema == HTMLSSchema &&
-	       elType.ElTypeNum == HTML_EL_Table_row)
-	{
-	  /* change the type of all included cells */
-	  el = TtaGetFirstChild (el);
-	  while (el)
+	  elType = TtaGetElementType (el);
+	  if (elType.ElSSchema == HTMLSSchema && elType.ElTypeNum == typeCell)
+	    /* cell has the right type */
+	    done = TRUE;
+	  if (elType.ElSSchema == HTMLSSchema && elType.ElTypeNum == other)
 	    {
-	      elType = TtaGetElementType (el);
-	      if (elType.ElSSchema == HTMLSSchema && elType.ElTypeNum == other)
+	      /* change the type of this cell */
+	      if (!open)
 		{
-		  TtaChangeTypeOfElement (el, document, typeCell);
-		  /* register that change */
-		  if (!open)
-		    {
-		      TtaOpenUndoSequence (document, NULL, NULL, 0, 0);
-		      open = TRUE;
-		    }
-		  TtaRegisterElementTypeChange (el, other, document);
+		  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+		  open = TRUE;
 		}
-	      TtaNextSibling (&el);
+	      TtaChangeTypeOfElement (el, doc, typeCell);
+	      TtaRegisterElementTypeChange (el, other, doc);
+	      done = TRUE;
 	    }
-	  if (open)
-	    TtaCloseUndoSequence (document);
-	  return;
+	  else if (elType.ElSSchema == HTMLSSchema &&
+		   elType.ElTypeNum == HTML_EL_Table_row)
+	    {
+	      /* change the type of all included cells */
+	      el = TtaGetFirstChild (el);
+	      while (el)
+		{
+		  elType = TtaGetElementType (el);
+		  if (elType.ElSSchema == HTMLSSchema && elType.ElTypeNum == other)
+		    {
+		      TtaChangeTypeOfElement (el, doc, typeCell);
+		      /* register that change */
+		      if (!open)
+			{
+			  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+			  open = TRUE;
+			}
+		      TtaRegisterElementTypeChange (el, other, doc);
+		    }
+		  TtaNextSibling (&el);
+		}
+	      done = TRUE;
+	    }
+	  if (el == lastSel)
+	    el = NULL;
+	  else
+	    TtaNextSibling (&el);
 	}
-      /* try to create the data cell close to the current position */
-      CreateHTMLelement (typeCell, document);
+      if (open)
+	TtaCloseUndoSequence (doc);
+      if (!done)
+	/* try to create the data cell close to the current position */
+	CreateHTMLelement (typeCell, doc);
     }
 }
 
 /*----------------------------------------------------------------------
   CreateDataCell
   ----------------------------------------------------------------------*/
-void CreateDataCell (Document document, View view)
+void CreateDataCell (Document doc, View view)
 {
-  CreateCell (document, view, HTML_EL_Data_cell);
+  CreateCell (doc, view, HTML_EL_Data_cell);
 }
 
 /*----------------------------------------------------------------------
   CreateHeadingCell
   ----------------------------------------------------------------------*/
-void CreateHeadingCell (Document document, View view)
+void CreateHeadingCell (Document doc, View view)
 {
-  CreateCell (document, view, HTML_EL_Heading_cell);
+  CreateCell (doc, view, HTML_EL_Heading_cell);
 }
 
 /*----------------------------------------------------------------------

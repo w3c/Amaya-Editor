@@ -668,8 +668,7 @@ void TteAddMenuAction (char *actionName, Proc procedure, ThotBool state)
 
 
 /*----------------------------------------------------------------------
-   FindMenuAction recherche l'action dans la table des actions        
-   d'interface.                                                    
+  FindMenuAction returns the entry that describes the menu action.
   ----------------------------------------------------------------------*/
 static int FindMenuAction (char *actionName)
 {
@@ -681,6 +680,29 @@ static int FindMenuAction (char *actionName)
 	   return (i);
      }
    return (i);
+}
+
+/*----------------------------------------------------------------------
+  TtaExecuteMenuAction execute the corresponding menu action.
+  ----------------------------------------------------------------------*/
+void TtaExecuteMenuAction (char *actionName, Document doc, View view)
+{
+   int                 i, frame;
+
+
+  UserErrorCode = 0;
+  /* verifie le parametre document */
+  if (doc == 0 || view == 0 || actionName == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      i = FindMenuAction (actionName);
+      frame = GetWindowNumber (doc, view);
+      if (i > 0 && i < MaxMenuAction &&
+	  MenuActionList[i].ActionActive[frame] &&
+	  MenuActionList[i].Call_Action)
+	(*MenuActionList[i].Call_Action) (doc, view);
+    }
 }
 
 

@@ -6,23 +6,23 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void FreeList ( strListSymb * pl );
+extern void FreeList ( strListSymb *list );
 extern int MapThotAttr ( char* attrName,
                          char *elementName );
-extern void ppInitAutomaton ( void );
+extern void DoInitAutomaton ( void );
 extern void FreeTransform ( void );
-extern int ppStartParser ( char *name,
+extern int DoStartParser ( char *name,
                            SSchema tStrSchema,
                            strTransSet **resTrSet );
 
 #else /* __STDC__ */
 
-extern void FreeList (/* strListSymb * pl */);
+extern void FreeList (/* strListSymb *list */);
 extern int MapThotAttr (/* char* attrName,
                            char *elementName */);
-extern void ppInitAutomaton (/* void */);
+extern void DoInitAutomaton (/* void */);
 extern void FreeTransform (/* void */);
-extern int ppStartParser (/* char *name,
+extern int DoStartParser (/* char *name,
                              SSchema tStrSchema,
                              strTransSet **resTrSet */);
 
