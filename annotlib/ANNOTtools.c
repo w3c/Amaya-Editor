@@ -919,6 +919,7 @@ Element SearchAnnotation (doc, annotDoc)
 	if (!ustrcmp (ancName, annotDoc))
 	  break;
 	TtaFreeMemory (ancName);
+	ancName = NULL;
       }
     /* @@ JK: do we need to get the succesor? */
     elCour = TtaGetSuccessor (elCour);
