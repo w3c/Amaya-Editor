@@ -297,21 +297,21 @@ BEGIN
     LTEXT           "status",IDC_IDSTATUS,15,68,186,8
 END
 
-DOCINFOMENU DIALOG DISCARDABLE  100, 100, 237, 106
+DOCINFOMENU DIALOGEX 100, 100, 237, 106
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Document Information"
 FONT 8, "MS Sans Serif"
 BEGIN
     PUSHBUTTON      "Done",ID_DONE,93,84,50,14
     LTEXT           "Location:",IDC_DIURL,10,11,70,8
-    LTEXT           "Content Type",IDC_DICONTENTTYPE,10,29,70,8
-    LTEXT           "Charset",IDC_DICHARSET,10,47,70,8
-    LTEXT           "Content Length",IDC_DICONTENTLEN,10,65,70,8
-    LTEXT           "Content Type value",IDC_DICONTENTTYPE_VAL,99,28,131,8
-    LTEXT           "Charset value",IDC_DICHARSET_VAL,99,45,131,8
-    LTEXT           "Content Length value",IDC_DICONTENTLEN_VAL,99,64,131,8
     EDITTEXT        IDC_DIURL_VAL,99,11,131,12,ES_AUTOHSCROLL | ES_READONLY | 
-                    NOT WS_BORDER
+                    NOT WS_BORDER,WS_EX_CLIENTEDGE
+    LTEXT           "Content Type",IDC_DICONTENTTYPE,10,29,70,8
+    LTEXT           "Content Type value",IDC_DICONTENTTYPE_VAL,99,28,131,8
+    LTEXT           "Charset",IDC_DICHARSET,10,47,70,8
+    LTEXT           "Charset value",IDC_DICHARSET_VAL,99,45,131,8
+    LTEXT           "Content Length",IDC_DICONTENTLEN,10,65,70,8
+    LTEXT           "Content Length value",IDC_DICONTENTLEN_VAL,99,64,131,8
 END
 
 
