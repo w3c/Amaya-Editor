@@ -13,6 +13,10 @@
  *
  */
 
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "libmsg.h"
@@ -35,6 +39,11 @@
   #include "wininclude.h"
 #endif /* _WINGUI */
 
+#ifdef _WX
+  #include "AmayaFormatPanel.h"
+  #include "AmayaCharStylePanel.h"
+  #include "AmayaSubPanelManager.h"
+#endif /* _WX */
 
 #include "actions_f.h"
 #include "applicationapi_f.h"
@@ -2146,6 +2155,20 @@ void TtcChangeCharacters (Document document, View view)
 				       fontNum, FontStyle, FontWeight,
 				       UnderlineStyle, FontSize);
 #endif /* _WINGUI */
+#ifdef _WX
+	     /* TODO */
+	     /*
+	     AmayaPanelParams p;
+	     p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPLANG;
+	     p.param2 = (void*)FALSE;
+	     p.param3 = (void*)ptr;
+	     p.param4 = (void*)label;
+	     p.param5 = (void*)bufMenu;
+	     p.param6 = (void*)nbItem;
+	     p.param7 = (void*)defItem;
+	     AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_CHARSTYLE, p );
+	     */
+#endif /* _WX */
 	  }
 	DocModPresent = pDoc;
 

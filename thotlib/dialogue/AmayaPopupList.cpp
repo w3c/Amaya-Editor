@@ -13,6 +13,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaPopupL, wxListBox)
 BEGIN_EVENT_TABLE(AmayaPopupL, wxListBox)
   EVT_KILL_FOCUS( AmayaPopupL::OnKillFocus )
   EVT_SET_FOCUS(  AmayaPopupL::OnSetFocus )
+  EVT_LISTBOX( -1, AmayaPopupL::OnSelect )
 END_EVENT_TABLE()
 
 /*
@@ -40,6 +41,7 @@ AmayaPopupL::~AmayaPopupL()
   wxLogDebug( _T("AmayaPopupL::~AmayaPopupL") );
 }
 
+
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaPopupL
@@ -50,6 +52,20 @@ AmayaPopupL::~AmayaPopupL()
 void AmayaPopupL::OnKillFocus( wxFocusEvent & event )
 {
   wxLogDebug( _T("AmayaPopupL::OnKillFocus") );
+  event.Skip();
+}
+
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPopupL
+ *      Method:  OnSelect
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaPopupL::OnSelect( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaPopupL::OnSelect") );
   event.Skip();
 }
 
@@ -94,7 +110,7 @@ AmayaPopupList::AmayaPopupList ( wxWindow * parent, wxPoint pos ) :
   //  m_pList->Connect( -1, wxEVT_KILL_FOCUS, (wxObjectEventFunction)(wxEventFunction)(wxFocusEventFunction)&AmayaPopupList::OnKillFocus );
   p_sizer->Add( m_pList, 1, wxEXPAND );
 
-  // m_pList->SetFocus();
+  m_pList->SetFocus();
 }
 
 /*
@@ -120,7 +136,7 @@ void AmayaPopupList::OnKillFocus( wxFocusEvent & event )
 {
   wxLogDebug( _T("AmayaPopupList::OnKillFocus") );
 
-  //  event.Skip();
+  event.Skip();
 }
 
 /*

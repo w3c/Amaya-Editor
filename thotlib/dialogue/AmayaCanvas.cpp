@@ -55,7 +55,8 @@
  */
 
 #ifdef _GL
-AmayaCanvas::AmayaCanvas( AmayaFrame *  p_parent_window,
+AmayaCanvas::AmayaCanvas( wxWindow * p_parent_window,
+			  AmayaFrame * p_parent_frame,
 			  wxGLContext * p_shared_context )
   : wxGLCanvas( p_parent_window,
 		p_shared_context,
@@ -63,10 +64,11 @@ AmayaCanvas::AmayaCanvas( AmayaFrame *  p_parent_window,
 		wxDefaultPosition, wxDefaultSize, 0 , _T("AmayaCanvas"),
 		AmayaApp::GetGL_AttrList() ),
 #else // #ifdef _GL  
-AmayaCanvas::AmayaCanvas( AmayaFrame *  p_parent_window )
+AmayaCanvas::AmayaCanvas( wxWindow * p_parent_window,
+			  AmayaFrame * p_parent_frame )
   : wxPanel( p_parent_window ),
 #endif // #ifdef _GL
-  m_pAmayaFrame( p_parent_window ),
+  m_pAmayaFrame( p_parent_frame ),
   m_Init( false )
 {
 #ifdef FORUMLARY_WIDGET_DEMO

@@ -14,7 +14,7 @@
  */
 
 #ifdef _WX
-#include "wx/wx.h"
+  #include "wx/wx.h"
 #endif /* _WX */
 
 #include "thot_gui.h"
@@ -32,10 +32,6 @@
 #include "appdialogue.h"
 #include "thotcolor.h"
 #include "picture.h"
-#ifdef _WX
-  #include "message_wx.h"
-  #include "AmayaScrollBar.h"
-#endif /* _WX */
 #ifdef _GTK
   #include <gdk/gdkx.h>
 #endif /*_GTK*/
@@ -79,6 +75,8 @@ static PtrDocument  OldDocMsgSelect;
   #include "AmayaFrame.h"
   #include "AmayaCanvas.h"
   #include "appdialogue_wx.h"
+  #include "message_wx.h"
+  #include "AmayaScrollBar.h"
 #endif /* _WX */
 #ifdef _GTK
   #include "gtk-functions.h"
@@ -3676,6 +3674,7 @@ void UpdateScrollbars (int frame)
 #if defined(_GTK) || defined(_WX)
   l = FrameTable[frame].FrWidth;
   h = FrameTable[frame].FrHeight;
+
 #ifdef _WX
   if (width < l)
   {
@@ -3693,6 +3692,7 @@ void UpdateScrollbars (int frame)
   else
     FrameTable[frame].WdFrame->HideScrollbar(1);
 #endif /*_WX*/
+
 #ifdef _GTK
   if (width + x <= l &&
       (width + vscroll->allocation.width <= l || 

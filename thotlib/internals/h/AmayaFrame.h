@@ -128,9 +128,6 @@ public:
 
 protected:
   DECLARE_EVENT_TABLE()
-  void OnScrollLineUp( wxScrollEvent& event );
-  void OnScrollLineDown( wxScrollEvent& event );
-  void OnScroll( wxScrollEvent& event );
   void OnMouse( wxMouseEvent& event );
   void OnSize( wxSizeEvent& event );
   void OnIdle( wxIdleEvent& event );

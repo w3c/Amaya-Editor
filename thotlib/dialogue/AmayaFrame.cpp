@@ -161,7 +161,7 @@ AmayaCanvas * AmayaFrame::CreateDrawingArea()
   if ( GetSharedContext () == -1/* || GetSharedContext () == m_FrameId */)
     {
       /* there is no existing context, I need to create a first one and share it with others canvas */
-      p_canvas = new AmayaCanvas( this );
+      p_canvas = new AmayaCanvas( this, this );
       SetSharedContext( m_FrameId );
     }
   else
@@ -170,16 +170,16 @@ AmayaCanvas * AmayaFrame::CreateDrawingArea()
       wxGLContext * p_SharedContext = FrameTable[GetSharedContext()].WdFrame->GetCanvas()->GetContext();
       wxASSERT( p_SharedContext );
       // create the new canvas with the opengl shared context
-      p_canvas = new AmayaCanvas( this, p_SharedContext );
+      p_canvas = new AmayaCanvas( this, this, p_SharedContext );
     }
 #endif /*_NOSHARELIST*/
 
 #ifdef _NOSHARELIST
-  p_canvas = new AmayaCanvas( this );
+  p_canvas = new AmayaCanvas( this, this );
 #endif /* _NOSHARELIST */
 
 #else /* _GL */
-  p_canvas = new AmayaCanvas( this );
+  p_canvas = new AmayaCanvas( this, this );
 #endif /* _GL */
   return p_canvas;
 }
@@ -289,7 +289,7 @@ void AmayaFrame::ShowScrollbar( int scrollbar_id )
 	   {
         
 	     // Create vertical scrollbar
-	     m_pScrollBarV = new AmayaScrollBar( this, -1, wxSB_VERTICAL );
+	     m_pScrollBarV = new AmayaScrollBar( this, GetFrameId(), wxSB_VERTICAL );
 	     m_pHSizer->Add( m_pScrollBarV, 0, wxEXPAND );
 	   }
 	 else
@@ -307,7 +307,7 @@ void AmayaFrame::ShowScrollbar( int scrollbar_id )
 	 if (!m_pScrollBarH)
 	   {
 	     // Create vertical and horizontal scrollbars
-	     m_pScrollBarH = new AmayaScrollBar( this, -1, wxSB_HORIZONTAL );
+	     m_pScrollBarH = new AmayaScrollBar( this, GetFrameId(), wxSB_HORIZONTAL );
 	     m_pVSizer->Add( m_pScrollBarH, 0, wxEXPAND );
 	   }
 	 else
@@ -377,62 +377,6 @@ void AmayaFrame::SwapBuffers()
     m_pCanvas->SwapBuffers();
 }
 #endif // #ifdef _GL
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaFrame
- *      Method:  OnScroll
- * Description:  this method is called when a scroll event is comming
- *               ie : when a scrollbar is moved
- *--------------------------------------------------------------------------------------
- */
-void AmayaFrame::OnScroll( wxScrollEvent& event )
-{
-  wxLogDebug( _T("AmayaFrame::OnScroll: frame=%d h/v=%s pos=%d"),
-     m_FrameId,
-     event.GetOrientation() == wxHORIZONTAL ? _T("h") : _T("v"),
-     event.GetPosition() );
-
-  if (m_pScrollBarH && event.GetOrientation() == wxHORIZONTAL)
-   {
-     FrameHScrolledCallback(
-	m_FrameId,
-	event.GetPosition(),
-	m_pScrollBarH->GetPageSize() );
-     /* now repaint the canvas because wxWidgets is not able to know himself that the canvas has changed */
-     GL_DrawAll();
-   }
-  else if (m_pScrollBarV && event.GetOrientation() == wxVERTICAL)
-   {
-     FrameVScrolledCallback(
-	m_FrameId,
-	event.GetPosition() );
-     /* now repaint the canvas because wxWidgets is not able to know himself that the canvas has changed */
-     GL_DrawAll();
-   }
-  
-  event.Skip();
-}
-
-void AmayaFrame::OnScrollLineUp( wxScrollEvent& event )
-{
-  wxLogDebug( _T("AmayaFrame::OnScrollLineUp: frame=%d h/v=%s pos=%d"),
-     m_FrameId,
-     event.GetOrientation() == wxHORIZONTAL ? _T("h") : _T("v"),
-     event.GetPosition() );
-
-  event.Skip();
-}
-
-void AmayaFrame::OnScrollLineDown( wxScrollEvent& event )
-{
-  wxLogDebug( _T("AmayaFrame::OnScrollLineDown: frame=%d h/v=%s pos=%d"),
-     m_FrameId,
-     event.GetOrientation() == wxHORIZONTAL ? _T("h") : _T("v"),
-     event.GetPosition() );
-
-  event.Skip();
-}
 
 /*
  *--------------------------------------------------------------------------------------
@@ -927,9 +871,6 @@ void AmayaFrame::OnKeyDown(wxKeyEvent& event)
  *    + AmayaFrame::OnScroll is assigned to a scroll event 
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaFrame, wxPanel)
-  //  EVT_SCROLL_THUMBTRACK(    AmayaFrame::OnScrollLineUp )
-  //  EVT_SCROLL_ENDSCROLL(     AmayaFrame::OnScrollLineDown )
-  EVT_SCROLL( 		AmayaFrame::OnScroll ) // all scroll events
   EVT_CLOSE( 		AmayaFrame::OnClose )
   EVT_SIZE( 		AmayaFrame::OnSize )
   EVT_IDLE(             AmayaFrame::OnIdle ) // Process a wxEVT_IDLE event

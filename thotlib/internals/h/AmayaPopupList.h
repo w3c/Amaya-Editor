@@ -18,6 +18,7 @@ class AmayaPopupL : public wxListBox
   DECLARE_EVENT_TABLE()
   void OnKillFocus( wxFocusEvent & event );
   void OnSetFocus( wxFocusEvent & event );
+  void OnSelect( wxCommandEvent& event );
 };
 
 /*

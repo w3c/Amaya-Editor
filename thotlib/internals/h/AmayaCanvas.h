@@ -66,10 +66,12 @@ public:
   DECLARE_DYNAMIC_CLASS(AmayaCanvas)
 
 #ifdef _GL
-  AmayaCanvas( AmayaFrame * p_parent_window = NULL,
+  AmayaCanvas( wxWindow * p_parent_window = NULL,
+	       AmayaFrame * p_parent_frame = NULL,
 	       wxGLContext * p_shared_context = NULL );
 #else /* _GL */
-  AmayaCanvas( AmayaFrame * p_parent_window = NULL );
+  AmayaCanvas( wxWindow * p_parent_window = NULL,
+	       AmayaFrame * p_parent_frame = NULL );
 #endif /* _GL */
   virtual ~AmayaCanvas( );
 
