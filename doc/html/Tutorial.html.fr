@@ -414,10 +414,10 @@ document d'un serveur Web.</p>
 <p>L'entrée <strong>Fichier/Ouvrir dans nouvelle fenêtre</strong> affiche le
 nouveau document sélectionné dans une nouvelle fenêtre.</p>
 
-<p>Les entrées du menu XHTML présente les éléments que l'on peut insérer dans
-le document affiché, en fonction de la famille XHTML choisie. La manière la
-plus simple de créer de nouveaux éléments dans un document est de placer le
-point d'insertion dans la position voulue et d'utiliser le menu</p>
+<p>Les entrées du menu XHTML présentent les éléments que l'on peut insérer
+dans le document affiché, en fonction de la famille XHTML choisie. La manière
+la plus simple de créer de nouveaux éléments dans un document est de placer
+le point d'insertion dans la position voulue et d'utiliser le menu</p>
 
 <p><strong>Xhtml</strong>, ou les boutons correspondant aux éléments les plus
 communs (images, en-têtes, listes...). Ces boutons ou entrées de menu créent
@@ -435,8 +435,7 @@ titre</strong>.</p>
 <h3>Définir la langue utilisée</h3>
 
 <p>Il est important de définir la langue dans laquelle est écrit le document.
-Sans indication explicite, le document est supposé écrit en anglais. Cette
-langue est utilisée par le correcteur orthographique. écrit en anglais. Cette
+Sans indication explicite, le document est supposé écrit en anglais. La
 langue est utilisée par le correcteur orthographique.</p>
 
 <p>Pour définir qu'un document est écrit français, il faut sélectionner
@@ -461,25 +460,25 @@ le formulaire de choix de la langue.</p>
 <div>
 <h3><a id="L1104">Sauver des documents en HTML</a></h3>
 
-<p><b>Amaya</b> ne fournit aucune vue d'ensemble de série de pages installées
-sur le serveur. Cependant il est possible de sauver des fichiers d'un serveur
-lointain comme des fichiers locaux grâce aux commandes
+<p><b>Amaya</b> ne fournit aucune vue d'ensemble des pages installées sur le
+serveur. Cependant il est possible de sauver ou copier des fichiers sur un
+serveur ou sur sur son disque local grâce aux commandes
 <strong>Sauver</strong> et <strong>Sauver comme</strong>. Pendant ces
 opérations, Amaya tient compte des images.</p>
 
 <h4><a id="L1517">La commande Sauver</a></h4>
 
 <p>La commande sauver peut être invoquée soit en choisissant
-<strong>Sauver</strong> depuis le menu <strong>Fichier</strong> (control-s
-pour Windows, control-x, control-s pour Unix) ou bien en cliquant sur le
-bouton <img alt="floppy" src="../images/floppy.gif" />.</p>
+<strong>Sauver</strong> depuis le menu <strong>Fichier</strong> (<code>Ctrl
+s</code> pour Windows, <code>Ctrl x Ctrl s</code> pour Unix) ou bien en
+cliquant sur le bouton <img alt="floppy" src="../images/floppy.gif" />.</p>
 
 <h4><a id="L1518">La commande Sauver comme</a></h4>
 
 <p>Le fait de sélectionner l'entrée <strong>Sauver comme</strong> dans le
-menu <strong>Fichier</strong> ouvre une boîte de dialogue qui vous permet de
+menu <strong>Fichier</strong> ouvre une boîte de dialogue qui permet de
 sauver le document courant à une adresse différente (sur un serveur Web ou
-sur le disque local) ou de changer certains paramétres, comme le format du
+sur le disque local) ou de changer certains paramètres, comme le format du
 document et l'encodage.</p>
 
 <p><img src="../images/SaveAs-fr.gif" alt="SaveAs" /></p>
@@ -504,8 +503,8 @@ paragraphe existant en deux et insère l'en-tête au milieu.</p>
 <h3>Transformations</h3>
 
 <p>Si une partie du paragraphe est sélectionnée au moment où on insère
-l'en-tête, ce texte sera supprimé dans le paragraphe est inséré dans
-l'en-tête créé.</p>
+l'en-tête, ce texte sera supprimé dans le paragraphe et inséré dans l'en-tête
+créé.</p>
 
 <p>On peut aussi sélectionner le paragraphe (touche <code>F2</code> ou
 <code>Esc</code>) et transformer ainsi le paragraphe en en-tête. Un ou
@@ -517,16 +516,20 @@ sélection courante.</p>
 <h3>Préformaté</h3>
 
 <p>L'élément préformaté est un paragraphe particulier qui permet de préserver
-tous les caractères&nbsp;: espace, fin de ligne. Quand la sélection se trouve
-à la fin d'un &lt;pre&gt;, la touche Enter crée une nouvelle ligne du
-&lt;pre&gt;.</p>
+tous les caractères&nbsp;: espace, fin de ligne. </p>
 
 <p>Pour transformer un paragraphe en préformaté, on sélectionne le paragraphe
 en entier et on active l'entrée de menu <strong>XHTML/Préformaté</strong> (ou
-<code>Ctrl t Ctrl x</code>).</p>
+<code>Ctrl h Ctrl p</code>).</p>
 
 <p>Pour transformer un préformaté en paragraphe, on sélectionne le préformaté
 en entier et on active l'entrée de menu <strong>XHTML/Paragraphe</strong>.</p>
+
+<p>Quand la sélection se trouve à la fin d'un &lt;pre&gt;, la touche
+<code>Enter</code> crée une nouvelle ligne du &lt;pre&gt;. Pour créer un
+paragraphe après le &lt;pre&gt;, il faut sélectionner le &lt;pre&gt; en
+utilisant la touche <code>Esc</code> (Linux) ou <code>F2</code> (Windows)
+puis <code>Enter</code>.</p>
 
 <h3>Division</h3>
 
@@ -541,12 +544,6 @@ général elle clôt l'élément courant et crée un paragraphe juste après. Si un
 élément complet est sélectionné, la touche <code>Enter</code> crée une autre
 instance de cet élément. Par exemple si on sélectionne un en-tête, la touche
 <code>Enter</code> va créer un en-tête vide après.</p>
-
-<p>Quand la sélection se trouve à la fin d'un &lt;pre&gt;, la touche
-<code>Enter</code> crée une nouvelle ligne du &lt;pre&gt;. Pour créer un
-paragraphe après le &lt;pre&gt;, il faut sélectionner le &lt;pre&gt; en
-utilisant la touche <code>Esc</code> (Linux) ou <code>F2</code> (Windows)
-puis <code>Enter</code>.</p>
 
 <h3><a id="Back">Les touches Back Space et Delete</a></h3>
 
@@ -568,7 +565,7 @@ précédent.</p>
 depuis le clavier, Amaya utilise le support standard fournit par le
 système.</p>
 
-<p>Amaya fournit des raccourcis clavier pour certains caractères non
+<p>Amaya fournit aussi des raccourcis pour certains caractères non
 disponibles au clavier comme&nbsp;:</p>
 <ul>
   <li>Pour obtenir un espace non sécable, vous devez taper <code>Ctrl -
@@ -723,7 +720,7 @@ entre-elles ou des documents entre-eux.</p>
 
 <p>Pour créer une cible dans un document, il suffit de sélectionner le
 passage désiré et d'activer l'entrée de menu <strong>Créer cible</strong>
-(<code>Ctrl l Ctrl t</code>)dans le menu <strong>Liens</strong>. Si la
+(<code>Ctrl l Ctrl t</code>) dans le menu <strong>Liens</strong>. Si la
 sélection porte sur un élément HTML entier, Amaya va lui associer un
 identificateur unique. Sinon, Amaya va englober le contenu de la sélection
 dans une ancre cible.</p>
@@ -732,12 +729,13 @@ dans une ancre cible.</p>
 d'un certain type dans le document. Pour cela on active l'entrée
 <strong>Ajouter/Retirer des attributs ID</strong> dans le menu
 <strong>Spécial</strong>. Par exemple, on peut demander d'associer un
-identificateur à tous les éléments H1.</p>
+identificateur à tous les éléments H2.</p>
 
 <h3>Création de liens</h3>
 
-<p>L'origine d'un lien est une ancre qui possède un attribut href. On procède
-de la même façon pour un lien vers un document local, une cible</p>
+<p>L'origine d'un lien est une ancre qui possède un attribut
+<code>href</code>. On procède de la même façon pour un lien vers un document
+entier ou une cible.</p>
 
 <h4>Lien vers un autre document édité par Amaya</h4>
 <ol>
@@ -782,15 +780,14 @@ la vue des liens (entrée <strong>Montrer les liens</strong> du menu
 
 <h4>Lien vers un autre document non affiché</h4>
 
-<p>Pour créer un lien vers un autre document local ou distant édité par
-Amaya:</p>
+<p>Pour créer un lien vers un autre document local ou distant&nbsp;:</p>
 <ol>
   <li>On sélectionne le passage choisi.</li>
   <li>On clique sur le bouton <img alt="Link " src="../images/Link.gif"
   /></li>
   <li>On clique sur une zone du document qui ne peut pas être une cible pour
-    faire afficher le formulaire de saisie de l'URL. Si le document est
-    local, on peut utiliser le browser de fichier pour s</li>
+    afficher le formulaire de saisie de l'URL. Si le document est local, on
+    peut utiliser le browser de fichier pour sélectionner le fichier.</li>
 </ol>
 
 <p>Autre méthode&nbsp;:</p>
@@ -798,8 +795,7 @@ Amaya:</p>
   <li>On sélectionne le passage choisi.</li>
   <li>On choisit <strong>Créer/changer lien</strong> du menu
     <strong>Liens</strong> (raccourci <code>Ctrl l Ctrl l</code>)</li>
-  <li>Soit on saisit l'URL du document cible et on confirme. Soit on décide
-    de choisir la cible avec la souris (bouton Clic).</li>
+  <li>On saisit l'URL du document cible et on confirme.</li>
 </ol>
 
 <h4><a id="Changing">Mettre à jour un lien</a></h4>
@@ -808,9 +804,10 @@ Amaya:</p>
 place la sélection dans l'ancre et on procède comme pour la création de lien
 (bouton <img alt="Link " src="../images/Link.gif" /> ou l'entrée
 <strong>Créer/changer Lien</strong> du menu <strong>Liens</strong>). On peut
-alors désigner la nouvelle cible ou éditer l'URI. Pour changer la cible d'un
-lien, on peut également éditer l'attribut <code>href</code> dans la vue
-structure.</p>
+alors désigner la nouvelle cible ou éditer l'URI. </p>
+
+<p>Pour changer la cible d'un lien, on peut également éditer l'attribut
+<code>href</code> dans la vue structure.</p>
 
 <h4><a id="Removing">Supprimer un lien ou une ancre cible</a></h4>
 
@@ -829,30 +826,28 @@ remplacer, détruire.</p>
 
 <p>Il est possible de marquer des parties de texte mises en ligne soit en
 utilisant les CSS (voir plus loin), soit en utilisant les éléments mise en
-évidence, important, code, citation, abréviation, etc. de HTML</p>
+évidence, important, code, citation, abréviation, etc. de HTML.</p>
+
+<p>Les entrées de menu et les boutons correspondants fonctionnent comme des
+bascules (activée/désactivées).</p>
+
+<p>Souvent l'introduction de mises en évidence engendrent des problèmes de
+perte des blancs.</p>
 
 <h3>Traitement des blancs</h3>
 
-<p>L'auteur d'un tel document peut vouloir spécifier son intention de
-préserver tous les caractères pour certains éléments. Pour cela, il peut
-utiliser l'attribut xml:space (pour des documents XHTML) ou l'élément
-&lt;pre&gt; .</p>
-
 <p>Le traitement des blancs est appliqué par Amaya lors du chargement d'un
-document et lors de l'édition de celui-ci.. Par exemple, le code source
+document et lors de l'édition de celui-ci. Par exemple, le code source
 suivant:</p>
-<pre><code>    &lt;p&gt;Amaya supprime les&lt;strong&gt; blancs non significatifs &lt;/strong&gt;au chargement&lt;/p&gt;</code></pre>
+<pre><code>    &lt;p&gt;Amaya supprime les</code>&lt;strong&gt;<code> blancs non significatifs </code>&lt;/strong&gt;<code>au chargement&lt;/p&gt;</code></pre>
 
-<p>donnera à l'édition:</p>
-<pre><code>    Amaya supprime les</code><strong><code> blancs non significatifs </code></strong><code>au chargement</code></pre>
-
-<p>et sera sauvegardé sous cette forme. Lors du prochain chargement de ce
-document, cette partie sera transformée en:</p>
+<p>donnera&nbsp;:</p>
 <pre><code>    Amaya supprime les</code><code><strong>blancs non significatif</strong></code><code><strong>s</strong>au chargement</code></pre>
 
 <p>car les blancs de début et de fin de l'élément <code>strong</code> sont
-considérés comme non significatifs et sont donc supprimés. La forme correcte
-aurait été:</p>
+considérés comme non significatifs et sont donc supprimés.</p>
+
+<p>La forme correcte aurait été :</p>
 <pre>    &lt;p&gt;Amaya supprime les &lt;strong&gt;blancs non significatifs&lt;/strong&gt; au chargement&lt;/p&gt;</pre>
 </div>
 
@@ -978,10 +973,10 @@ sélectionner une colonne :</p>
 ligne&nbsp;:</p>
 <ul>
   <li><strong>Insérer une ligne avant</strong> dans le sous-menu
-    <strong>Table</strong> (<code>Ctrl t Ctrl b</code>) ajoute une nouvelle
+    <strong>Table</strong> (<code>Ctrl t Ctrl i</code>) ajoute une nouvelle
     ligne avant la ligne sélectionnée.</li>
   <li><strong>Insérer une ligne après</strong> dans le sous-menu
-    <strong>Table</strong> (<code>Ctrl t Ctrl a</code>)ajoute une nouvelle
+    <strong>Table</strong> (<code>Ctrl t Ctrl n</code>)ajoute une nouvelle
     ligne après la ligne sélectionnée.</li>
 </ul>
 
@@ -1074,19 +1069,18 @@ vous créez une nouveau corps de table après le corps de table sélectionné.</p>
 cellules de la table. Pour cette raison, Amaya pourrait mal comprendre vos
 intentions quand vous sélectionnez un type d'élément (par exemple cliquant
 H1, H2, etc. ou sélectionnant une entrée dans le menu <strong>Xhtml</strong>)
-pendant qu'un composant de la table est sélectionné. Quand vous voulez créer
-un élément après la table, vous devez sélectionner la table entière
-(contrôler la sélection courante dans la ligne du bas de la fenêtre) et taper
-sur la touche Enter. Amaya engendrera un paragraphe après la table. Ce
-nouveau paragraphe peut être modifié si besoin est.</p>
+pendant qu'un composant de la table est sélectionné.</p>
 
 <h3>Création d'un paragraphe après une table</h3>
 
 <p>Quand la sélection se trouve dans une table, la touche <code>Enter</code>
-crée un nouveau paragraphe dans la table. Pour créer un paragraphe après la
-table, il faut sélectionner la table entière en utilisant la touche
-<code>Esc</code> (Unix) ou <code>F2</code> (Windows) puis
-<code>Enter</code>.</p>
+crée un nouveau paragraphe dans la table. </p>
+
+<p>Pour créer un paragraphe après la table, il faut sélectionner la table
+entière en utilisant la touche <code>Esc</code> (Unix) ou <code>F2</code>
+(Windows) puis <code>Enter</code>.</p>
+
+<p> Ce nouveau paragraphe peut être modifié si besoin est.</p>
 
 <p></p>
 
@@ -1101,13 +1095,10 @@ déplacer une colonne.</p>
 <h3>Recherche et remplacement de texte</h3>
 
 <p>La recherche/remplacement se lance, soit en cliquant sur le bouton <img
-src="../images/find.gif" alt="find " />, soit par l'entrée de
-menu<strong>Edition/Rechercher</strong>. Un boite de dialogue apparaît. vous
-avez deux zones de saisie la première sera pour le texte à rechercher la
-deuxième zone de saisie sera pour le texte à remplacer. Pour chacune des
-actions vous avez des choix d'options <code>Ctrl f</code> (Windows), ou
-<code>Shift Alt %</code> (Unix) . Un boite de dialogue apparaît pour saisir
-le texte à rechercher, et éventuellement le texte de remplacement.</p>
+src="../images/find.gif" alt="find " />, soit par l'entrée de menu
+<strong>Edition/Rechercher</strong>. Un boite de dialogue apparaît. vous avez
+deux zones de saisie la première sera pour le texte à rechercher la deuxième
+zone de saisie sera pour le texte à remplacer.</p>
 
 <p style="text-align: center"><img alt="(Rechercher/Remplacer)"
 src="../images/search_and_replace-fr.png" /></p>
@@ -1143,13 +1134,10 @@ src="../images/spellchecking-fr.png" /></p>
 <p>les options de la boite de dialogue :</p>
 <ul>
   <li>Le dictionnaire utilisé se fait en fonction de la langue définie au
-    niveau de la division si vous n'avez pas de division ce sera la langue
-    définie au niveau du document lui même.</li>
-  <li>A droite vous pouvez spécifier le nombre de proposition qui vous serez
-    faites lorsqu'Amaya ne reconnaîtra pas un mot (par défaut 3).</li>
-  <li>A droite vous avez la possibilité d'exclure des éléments lors de
-    recherche de correspondance de mots avec le dictionnaire (par défaut
-    toutes les options sont activé)</li>
+    niveau de l'élément ou du document.</li>
+  <li>On peut spécifier le nombre de propositions (par défaut 3).</li>
+  <li>On peut exclure des éléments lors de recherche de correspondance de
+    mots avec le dictionnaire (par défaut toutes les options sont activé)</li>
   <li>Options de zone de recherche vous avez la possibilité de spécifier la
     zone sur laquelle cette correction orthographique se fera avant la
     sélection, après la sélection, dans la sélection ou sur la totalité du
@@ -1195,15 +1183,10 @@ sélectionné, le menu <strong>Attributs</strong> affiche la liste des
 attributs applicables. On peut voir rapidement si l'attribut a une valeur ou
 non</p>
 
-<p>Pour changer la valeur d'un attribut, comme <code>href</code> pour une
-ancre, on modifie la valeur dans la boîte de dialogue puis on valide avec le
-bouton <strong>Appliquer</strong><strong>.</strong> Pour supprimer
-l'attribut, on clique sur le bouton <strong>Retire l'attribut</strong>.</p>
-
 <h3><a id="Editing">Editer des attributs dans la Vue structure</a></h3>
 
 <p>Tous les attributs sont affichés dans la Vue structure. Les attributs dont
-la valeur peut être choisie librement sont affichés en noir et vous pouvez
+la valeur peut être choisie librement sont affichés en prune et vous pouvez
 éditer leur valeur comme n'importe quelle autre chaîne de caractères. Quand
 la valeur de l'attribut est affichée en bleu, vous pouvez seulement la
 changer à l'aide du menu <strong>Attributs</strong>. Ceci assure que seules
@@ -1286,12 +1269,16 @@ difficile de comprendre pourquoi un élément est visualisé avec cette couleur
 ou ces marges, etc. Pour aider l'utilisateur, Amaya fournit une commande
 <strong>Montrer le style appliqué</strong> qui visualise dans une fenêtre
 externe les propriétés CSS appliquées au premier élément de la sélection
-courante. L'utilisateur peut afficher le source CSS qui engendre chaque
-propriété en double (ou simple) cliquant sur la propriété. Aussi longtemps
-que la fenêtre est ouverte, Amaya met à jour le contenu de la fenêtre quand
-la sélection change. En appuyant sur la touche <code>F2</code> (ou
-<code>Esc</code> sur les plates-formes Linux), l'utilisateur peut voir les
-propriétés CSS appliquées aux éléments englobants.</p>
+courante. </p>
+
+<p>L'utilisateur peut afficher le source CSS qui engendre chaque propriété en
+double (ou simple) cliquant sur la propriété. Aussi longtemps que la fenêtre
+est ouverte, Amaya met à jour le contenu de la fenêtre quand la sélection
+change. </p>
+
+<p>En appuyant sur la touche <code>F2</code> (ou <code>Esc</code> sur les
+plates-formes Linux), l'utilisateur peut voir les propriétés CSS appliquées
+aux éléments englobants.</p>
 
 <h3>Créer des propriétés CSS</h3>
 
@@ -1401,7 +1388,7 @@ le document comme un document HTML au lieu de XHTML et donc éviter de bloquer
 sur le parseur XML.</p>
 </div>
 <address>
-  <p>Irène Vatton $date: Tuesday 13 January 2004 - 09:45:05$</p>
+  <p>Irène Vatton $date: Wednesday 14 January 2004 - 17:45:16$</p>
 
 </address>
 
