@@ -2306,7 +2306,7 @@ LRESULT CALLBACK InitConfirmDlgProc (ThotWindow hwnDlg, UINT msg,
     SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
       messageWnd = CreateWindow ("STATIC", message,
 				 WS_CHILD | WS_VISIBLE | SS_LEFT,
-				 10, 5, 300, 15, hwnDlg, (HMENU) 99, 
+				 10, 5, 500, 15, hwnDlg, (HMENU) 99, 
 				 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE),
 				 NULL);
        /* set the font of the window */

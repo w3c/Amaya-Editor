@@ -582,6 +582,7 @@
 #define IDC_ENABLEFTP                   1426
 #define IDC_SHOWTARGETS                 1427
 #define IDC_NUMBERS                     1428
+#define IDC_CRLF                        1429
 #define IDC_LOSTUPDATECHECK             1430
 #define IDC_NOPROXY                     1430
 #define IDC_VERIFYPUBLISH               1431

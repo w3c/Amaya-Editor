@@ -1920,7 +1920,7 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
       SetWindowText (GetDlgItem (hwnDlg, IDC_NUMBERS),
 		     TtaGetMessage (1, TSectionNumber));
       SetWindowText (GetDlgItem (hwnDlg, IDC_CRLF),
-		     TtaGetMessage (amaya, AM_EXPORT_CRLF));
+		     TtaGetMessage (AMAYA, AM_EXPORT_CRLF));
       /* write the current values in the dialog entries */
       WIN_RefreshGeneralMenu (hwnDlg);
       break;
