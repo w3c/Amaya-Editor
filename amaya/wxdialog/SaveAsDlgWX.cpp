@@ -72,7 +72,7 @@ SaveAsDlgWX::SaveAsDlgWX( int ref,
       XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT) ));
       XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetString(0, TtaConvMessageToWX( "HTML"  ) );
       XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetString(1, TtaConvMessageToWX( "XML" ));
-      XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetString(2, TtaConvMessageToWX( "Text" ));
+      XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetString(2, TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_TEXT) ));
       if ((DocumentMeta[doc] && DocumentMeta[doc]->xmlformat) ||
 	  doc_type == docMath ||
 	  doc_type == docSVG ||
@@ -124,6 +124,8 @@ SaveAsDlgWX::SaveAsDlgWX( int ref,
     }
   else
     {
+      XRCCTRL(*this, "wxID_CHARSET_CB",
+	      wxComboBox)->Append ( TtaConvMessageToWX( UserCharset ) );
       XRCCTRL(*this, "wxID_CHARSET_CB",
 	      wxComboBox)->Append ( TtaConvMessageToWX( "UTF-8" ) );
       XRCCTRL(*this, "wxID_CHARSET_CB",

@@ -537,8 +537,8 @@ static void InitSaveForm (Document document, View view, char *pathname)
        && DocumentTypes[document] != docXml)
      {
        /* choice between html, xhtml and text */
-       sprintf (buffer, "%s%c%s%c%s", "BHTML", EOS, "BXML", EOS,
-		"BText");
+       sprintf (buffer, "%s%c%s%c%c%s", "BHTML", EOS, "BXML", EOS,
+		'B', TtaGetMessage (AMAYA, AM_TEXT));
        TtaNewSubmenu (BaseDialog + RadioSave, BaseDialog + SaveForm, 0,
 			 TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT), 3, buffer,
 			 NULL, 0, TRUE);
