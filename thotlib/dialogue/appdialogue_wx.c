@@ -407,23 +407,22 @@ int TtaMakeFrame( const char * schema_name,
   FrameTable[frame_id].FrWidth        = 0; //width
   FrameTable[frame_id].FrHeight       = 0; // height
   
-  /* get registry default values for visibility */
-  char * visiStr = TtaGetEnvString ("VISIBILITY");
-  int visiVal;
-  if (visiStr == NULL)
-    visiVal = 5;
-  else
-    {
-      visiVal = atoi (visiStr);
-      if (visiVal < 0 || visiVal > 10)
-	visiVal = 5;
-    }
-
   /* Initialise la visibilite et le zoom de la fenetre */
   /* get the old value : 0 if this is the first */
   int zoom, visilibity;
   GetFrameParams (frame_id, &visilibity, &zoom);
-  InitializeFrameParams (frame_id, visiVal, zoom);
+  /* get registry default values for visibility 
+   * because visibility must be reinitialized for each frame */
+  char * visiStr = TtaGetEnvString ("VISIBILITY");
+  if (visiStr == NULL)
+    visilibity = 5;
+  else
+    {
+      visilibity = atoi(visiStr);
+      if (visilibity < 0 || visilibity > 10)
+	visilibity = 5;
+    }
+  InitializeFrameParams (frame_id, visilibity, zoom);
 
   /* the document title will be used to name the frame's page */
   p_AmayaFrame->SetFrameTitle( TtaConvMessageToWX( doc_name ) );

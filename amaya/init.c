@@ -2733,6 +2733,8 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	     }
 	 }
        else if (!isOpen)
+	 /* if isOpen is true, it means that a new window has been opened for this document 
+	  * we must initialize each things that must be initialized once for the window */
 	 {
 #ifdef _WX
 	   /* Init panels */
@@ -2899,22 +2901,31 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
 			   TRUE, (Proc)TextURL, URL_list);
 
+#ifdef _GTK
 	   /* initial state for menu entries */
 	   TtaSetItemOff (doc, 1, File, BBack);
 	   TtaSetItemOff (doc, 1, File, BForward);
 	   TtaSetItemOff (doc, 1, File, BSave);
 	   TtaSetItemOff (doc, 1, File, BSynchro);
+
+	   /* button bar On/Off => TODO for WX */
 	   if (SButtons[doc] && docType != docBookmark)
 	     TtaSetToggleItem (doc, 1, Views, TShowButtonbar, TRUE);
 	   else
 	     /* hide buttons */
 	     TtcSwitchButtonBar (doc, 1);
+	   
+	   /* Url bar On/Off => TODO for WX */
 	   if (SAddress[doc])
 	     TtaSetToggleItem (doc, 1, Views, TShowTextZone, TRUE);
 	   else
 	     /* hide the address */
 	     TtcSwitchCommands (doc, 1);
+
+	   /* MapArea menu item */
 	   TtaSetToggleItem (doc, 1, Views, TShowMapAreas, MapAreas[doc]);
+
+	   /* ShowTarget menu item */
 	   TtaGetEnvBoolean ("SHOW_TARGET", &show);
 	   if (show)
 	     ShowTargets (doc, 1);
@@ -2936,7 +2947,29 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   if (!GetBookmarksEnabled ())
 	     TtaSetMenuOff (doc, 1, Bookmarks_);
 #endif /* BOOKMARKS */
-	 }
+#endif /* _GTK */
+	   
+
+	 } /* isOpen */
+
+#ifdef _WX
+       /* initial state for menu entries */
+       TtaSetItemOff (doc, 1, File, BBack);
+       TtaSetItemOff (doc, 1, File, BForward);
+       TtaSetItemOff (doc, 1, File, BSave);
+       TtaSetItemOff (doc, 1, File, BSynchro);
+       TtaSetMenuOff (doc, 1, Attributes_);
+
+       /* init MapAreas menu item */
+       TtaSetToggleItem (doc, 1, Views, TShowMapAreas, MapAreas[doc]);
+       /* init show target menu item */
+       TtaGetEnvBoolean ("SHOW_TARGET", &show);
+       if (show)
+	 ShowTargets (doc, 1);
+       else
+	 TtaSetToggleItem (doc, 1, Views, TShowTargets, FALSE);
+#endif /* _WX */
+	 
      }
 
 #if _WX
