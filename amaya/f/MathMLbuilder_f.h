@@ -40,8 +40,7 @@ extern void SetIntAddSpaceAttr ( Element el,
 extern void ChangeTypeOfElement ( Element elem,
                                   Document doc,
                                   int newTypeNum );
-extern void CheckFence ( Element el,
-                         Document doc );
+extern ThotBool ChildOfMRowOrInferred ( Element el );
 extern void CreateFencedSeparators ( Element fencedExpression,
                                      Document doc,
                                      ThotBool record );
@@ -50,9 +49,10 @@ extern void MathMLElementComplete ( Element el,
 extern void SetFontfamily ( Document doc,
                             Element el,
                             STRING value );
-extern void SetFontsize ( Document doc,
-                          Element el,
-                          STRING value );
+extern void MathMLAttrToStyleProperty ( Document doc,
+                                        Element el,
+                                        STRING value,
+					int attr );
 extern void MathMLAttributeComplete ( Attribute attr,
                                       Element el,
                                       Document doc );
@@ -95,8 +95,7 @@ extern void SetIntAddSpaceAttr (/* Element el,
 extern void ChangeTypeOfElement (/* Element elem,
                                     Document doc,
                                     int newTypeNum */);
-extern void CheckFence (/* Element el,
-                           Document doc */);
+extern ThotBool ChildOfMRowOrInferred (/* Element el */);
 extern void CreateFencedSeparators (/* Element fencedExpression,
                                        Document doc,
                                        ThotBool record */);
@@ -105,9 +104,10 @@ extern void MathMLElementComplete (/* Element el,
 extern void SetFontfamily (/* Document doc,
                               Element el,
                               STRING value */);
-extern void SetFontsize (/* Document doc,
-                            Element el,
-                            STRING value */);
+extern void MathMLAttrToStyleProperty (/* Document doc,
+                                          Element el,
+                                          STRING value,
+			                  int attr */);
 extern void MathMLAttributeComplete (/* Attribute attr,
                                         Element el,
                                         Document doc */);

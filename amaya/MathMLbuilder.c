@@ -1875,9 +1875,44 @@ void ChangeTypeOfElement (elem, doc, newTypeNum)
 
 
 /*----------------------------------------------------------------------
+   ChildOfMRowOrInferred
+   Return TRUE if element el is a child of a MROW element or an
+   inferred MROW element
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool      ChildOfMRowOrInferred (Element el)
+#else
+ThotBool      ChildOfMRowOrInferred (el)
+Element                 el;
+#endif
+{
+   ElementType	 elType;
+   Element       parent;
+   ThotBool      result;
+
+   result = FALSE;
+   parent = TtaGetParent (el);
+   if (parent)
+      {
+      elType = TtaGetElementType (parent);
+      result = (elType.ElTypeNum == MathML_EL_MROW ||
+		elType.ElTypeNum == MathML_EL_SqrtBase ||
+		elType.ElTypeNum == MathML_EL_MSTYLE ||
+		elType.ElTypeNum == MathML_EL_MERROR ||
+		elType.ElTypeNum == MathML_EL_MPADDED ||
+		elType.ElTypeNum == MathML_EL_MPHANTOM ||
+		elType.ElTypeNum == MathML_EL_MENCLOSE ||
+		elType.ElTypeNum == MathML_EL_CellWrapper ||
+                elType.ElTypeNum == MathML_EL_FencedExpression);
+      }
+   return result;   
+}
+
+/*----------------------------------------------------------------------
    CheckFence
-   If el is a MO element that contains a single fence character,
-   transform the MO into a MF and the character into a Thot symbol.
+   If el is a MO element, if it's a child of a MROW (or equivalent)
+   element and if it contains a single fence character, transform the MO
+   into a MF and the fence character into a Thot symbol.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void      CheckFence (Element el, Document doc)
@@ -1889,27 +1924,29 @@ Document		doc;
 #endif
 {
    ElementType	 elType;
-   Element	     content;
+   Element	 content;
    AttributeType attrType;
    Attribute	 attr, attrStretchy;
    int           len, val;
-   Language	     lang;
-   CHAR_T		 alphabet;
+   Language	 lang;
+   CHAR_T	 alphabet;
    UCHAR_T       text[2];
    unsigned char c;
 
    elType = TtaGetElementType (el);
    if (elType.ElTypeNum == MathML_EL_MO)
-      /* the element is a MO */
-      {
-      content = TtaGetFirstChild (el);
-      if (content != NULL)
-	{
-	elType = TtaGetElementType (content);
-	if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
-	   {
-	   len = TtaGetTextLength (content);
-	   if (len == 1)
+     /* the element is a MO */
+     {
+     if (ChildOfMRowOrInferred (el))
+        {
+        content = TtaGetFirstChild (el);
+        if (content != NULL)
+	  {
+	  elType = TtaGetElementType (content);
+	  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+	    {
+	    len = TtaGetTextLength (content);
+	    if (len == 1)
 	      {
 	      len = 2;
 	      TtaGiveTextContent (content, text, &len, &lang);
@@ -1959,9 +1996,10 @@ Document		doc;
 		      TtaSetGraphicsShape (content, c, doc);
 		      }
 	      }
-	   }
-	}
-      }
+	    }
+	  }
+       }
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -2251,18 +2289,12 @@ int             *error;
        case MathML_EL_MO:
 	  SetIntAddSpaceAttr (el, doc);
 	  SetIntVertStretchAttr (el, doc, 0, NULL);
+	  /* if the MO element is a child of a MROW (or equivalent) and if it
+	     contains a fence character, transform this MO into MF and
+	     transform the fence character into a Thot SYMBOL */
+	  CheckFence (el, doc);
 	  break;
        case MathML_EL_MROW:
-	  /* end of MROW */
-	  /* look for all MO children containing a fence character and
-	     transform these MO into MF and the fence character into a\
-	     Thot SYMBOL */
-	  child = TtaGetFirstChild (el);
-	  while (child != NULL)
-	    {
-	    CheckFence (child, doc);
-	    TtaNextSibling (&child);
-	    }
 	  /* Create placeholders within the MROW */
           CreatePlaceholders (TtaGetFirstChild (el), doc);
 	  break;
@@ -2418,26 +2450,42 @@ void SetFontfamily (doc, el, value)
 }
 
 /*----------------------------------------------------------------------
- SetFontsize
+ MathMLAttrToStyleProperty
+ The MathML attribute attr is associated with element el. Generate
+ the corresponding style property for this element.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void SetFontsize (Document doc, Element el, STRING value)
+void MathMLAttrToStyleProperty (Document doc, Element el, STRING value, int attr)
 #else /* __STDC__*/
-void SetFontsize (doc, el, value)
+void MathMLAttrToStyleProperty (doc, el, value, attr)
   Document doc;
   Element el;
   STRING value;
+  int attr;
 #endif /* __STDC__*/
 {
 #define buflen 50
   CHAR_T           css_command[buflen+20];
- 
-  usprintf (css_command, TEXT("font-size: %s"), value);
+
+  switch (attr)
+    {
+    case MathML_ATTR_fontsize:
+       usprintf (css_command, TEXT("font-size: %s"), value);
+       break;
+    case MathML_ATTR_lspace:
+       usprintf (css_command, TEXT("padding-left: %s"), value);
+       break;
+    case MathML_ATTR_rspace:
+       usprintf (css_command, TEXT("padding-right: %s"), value);
+       break;
+    }
   ParseHTMLSpecificStyle (el, css_command, doc, FALSE);
 }
 
 /*----------------------------------------------------------------------
    MathMLAttributeComplete
+   The XML parser has completed parsing attribute attr (as well as its value)
+   that is associated with element el in document doc.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void      MathMLAttributeComplete (Attribute attr, Element el, Document doc)
@@ -2456,8 +2504,10 @@ Document	doc;
    STRING            value;
    int               val, length;
  
+   /* first get the type of that attribute */
    TtaGiveAttributeType (attr, &attrType, &attrKind);
    if (attrType.AttrTypeNum == MathML_ATTR_bevelled)
+     /* it's a bevelled attribute */
      {
        val = TtaGetAttributeValue (attr);
        if (val == MathML_ATTR_bevelled_VAL_true)
@@ -2471,7 +2521,9 @@ Document	doc;
    else if (attrType.AttrTypeNum == MathML_ATTR_color ||
        attrType.AttrTypeNum == MathML_ATTR_background_ ||
        attrType.AttrTypeNum == MathML_ATTR_fontsize ||
-       attrType.AttrTypeNum == MathML_ATTR_fontfamily)
+       attrType.AttrTypeNum == MathML_ATTR_fontfamily ||
+       attrType.AttrTypeNum == MathML_ATTR_lspace ||
+       attrType.AttrTypeNum == MathML_ATTR_rspace)
       {
       length = TtaGetTextAttributeLength (attr);
       if (length >= buflen)
@@ -2489,11 +2541,14 @@ Document	doc;
 	     case MathML_ATTR_background_:
                HTMLSetBackgroundColor (doc, el, value);
 	       break;
-	     case MathML_ATTR_fontsize:
-	       SetFontsize (doc, el, value);
-	       break;
 	     case MathML_ATTR_fontfamily:
 	       SetFontfamily (doc, el, value);
+	       break;
+	     case MathML_ATTR_fontsize:
+	     case MathML_ATTR_lspace:
+	     case MathML_ATTR_rspace:
+	       MathMLAttrToStyleProperty (doc, el, value,
+					  attrType.AttrTypeNum);
 	       break;
 	     }
 	   TtaFreeMemory (value);

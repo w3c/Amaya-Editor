@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -10,7 +10,7 @@
  * be contained in this module.
  *
  * Author: I. Vatton
- *         R. Guetari (W3C/INRIA): Unicode.
+ *         R. Guetari: Unicode.
  *
  */
 

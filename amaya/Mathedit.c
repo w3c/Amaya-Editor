@@ -262,17 +262,7 @@ ThotBool            *mrowCreated;
      }
 
   /* check if the parent is a child of a MROW or equivalent */
-  row = TtaGetParent (parent);
-  elType = TtaGetElementType (row);
-  withinMrow = (elType.ElTypeNum == MathML_EL_MROW ||
-		elType.ElTypeNum == MathML_EL_SqrtBase ||
-		elType.ElTypeNum == MathML_EL_MSTYLE ||
-		elType.ElTypeNum == MathML_EL_MERROR ||
-		elType.ElTypeNum == MathML_EL_MPADDED ||
-		elType.ElTypeNum == MathML_EL_MPHANTOM ||
-		elType.ElTypeNum == MathML_EL_CellWrapper ||
-		elType.ElTypeNum == MathML_EL_MENCLOSE ||
-                elType.ElTypeNum == MathML_EL_FencedExpression);
+  withinMrow = ChildOfMRowOrInferred (parent);
 
   /* split the text element if needed */
   before = TRUE;
@@ -490,16 +480,7 @@ Document doc;
   parent = TtaGetParent (el);
   if (parent == NULL)
      return;
-  elType = TtaGetElementType (parent);
-  if (elType.ElTypeNum != MathML_EL_MROW &&
-      elType.ElTypeNum != MathML_EL_SqrtBase &&
-      elType.ElTypeNum != MathML_EL_MSTYLE &&
-      elType.ElTypeNum != MathML_EL_MERROR &&
-      elType.ElTypeNum != MathML_EL_MPADDED &&
-      elType.ElTypeNum != MathML_EL_MPHANTOM &&
-      elType.ElTypeNum != MathML_EL_CellWrapper &&
-      elType.ElTypeNum != MathML_EL_MENCLOSE &&
-      elType.ElTypeNum != MathML_EL_FencedExpression)
+  if (!ChildOfMRowOrInferred (el))
 	 {
 	 sibling = TtaGetFirstChild (parent);
 	 nChildren = 0;
@@ -3570,19 +3551,20 @@ NotifyAttribute    *event;
 }
 
 /*----------------------------------------------------------------------
- MathAttrFontsizeCreated
+ MathPresentAttrCreated
  An attribute fontsize has been created or updated by the user.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void MathAttrFontsizeCreated (NotifyAttribute *event)
+void MathPresentAttrCreated (NotifyAttribute *event)
 #else /* __STDC__*/
-void MathAttrFontsizeCreated(event)
+void MathPresentAttrCreated (event)
      NotifyAttribute *event;
 #endif /* __STDC__*/
 {
 #define buflen 200
   STRING           value;
-  int              length;
+  int              length, attrKind;
+  AttributeType    attrType;
 
   value = TtaAllocString (buflen);
   value[0] = WC_EOS;
@@ -3591,11 +3573,12 @@ void MathAttrFontsizeCreated(event)
      length = buflen - 1;
   if (length > 0)
      TtaGiveTextAttributeValue (event->attribute, value, &length);
+  TtaGiveAttributeType (event->attribute, &attrType, &attrKind);
   /* associate a CSS property font-size with the element */
-  SetFontsize (event->document, event->element, value);
+  MathMLAttrToStyleProperty (event->document, event->element, value,
+			     attrType.AttrTypeNum);
   TtaFreeMemory (value);
 }
- 
  
 /*----------------------------------------------------------------------
  MathAttrFontsizeDelete
@@ -3608,13 +3591,54 @@ ThotBool MathAttrFontsizeDelete(event)
      NotifyAttribute *event;
 #endif /* __STDC__*/
 {
-  /* ask the CSS handler to remove the effect of the CSS property font-size */
+  /* ask the CSS handler to remove the effect of the CSS property
+     font-size */
   /* in the statement below, "10pt" is meaningless. It's here just to
      make the CSS parser happy */
-  ParseHTMLSpecificStyle (event->element, TEXT("font-size: 10pt"), event->document, TRUE);
+  ParseHTMLSpecificStyle (event->element, TEXT("font-size: 10pt"),
+			  event->document, TRUE);
   return FALSE; /* let Thot perform normal operation */
 }
 
+/*----------------------------------------------------------------------
+ MathAttrLspaceDelete
+ The user is deleting an attribute lspace.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool MathAttrLspaceDelete (NotifyAttribute *event)
+#else /* __STDC__*/
+ThotBool MathAttrLspaceDelete(event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  /* ask the CSS handler to remove the effect of the CSS property
+     padding-left */
+  /* in the statement below, "10pt" is meaningless. It's here just to
+     make the CSS parser happy */
+  ParseHTMLSpecificStyle (event->element, TEXT("padding-left: 10pt"),
+			  event->document, TRUE);
+  return FALSE; /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
+ MathAttrRspaceDelete
+ The user is deleting an attribute rspace.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool MathAttrRspaceDelete (NotifyAttribute *event)
+#else /* __STDC__*/
+ThotBool MathAttrRspaceDelete(event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  /* ask the CSS handler to remove the effect of the CSS property
+     padding-right */
+  /* in the statement below, "10pt" is meaningless. It's here just to
+     make the CSS parser happy */
+  ParseHTMLSpecificStyle (event->element, TEXT("padding-right: 10pt"),
+			  event->document, TRUE);
+  return FALSE; /* let Thot perform normal operation */
+}
 
 /*----------------------------------------------------------------------
  MathAttrFontfamilyCreated

@@ -1100,11 +1100,17 @@ ThotBool            generic;
     {
     case STYLE_UNIT_REL:
       int_unit = UnRelative;
-      if (type == PtBreak1 ||
-	  type == PtBreak2 ||
-	  type == PtIndent ||
-	  type == PtLineSpacing ||
-	  type == PtLineWeight)
+      if (type == PtHeight ||            type == PtWidth ||
+	  type == PtMarginTop ||         type == PtMarginRight ||
+	  type == PtMarginBottom ||      type == PtMarginLeft ||
+	  type == PtPaddingTop ||        type == PtPaddingRight ||
+	  type == PtPaddingBottom ||     type == PtPaddingLeft ||
+	  type == PtBorderTopWidth ||    type == PtBorderRightWidth ||
+	  type == PtBorderBottomWidth || type == PtBorderLeftWidth ||
+          type == PtSize ||              type == PtThickness ||
+	  type == PtIndent ||            type == PtLineSpacing ||
+          type == PtLineWeight ||
+          type == PtBreak1 ||            type == PtBreak2)
 	value *= 10;
       break;
     case STYLE_UNIT_EM:

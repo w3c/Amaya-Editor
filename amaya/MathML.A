@@ -76,8 +76,8 @@ ATTRIBUTES
 
    fontsize:
         BEGIN
-        AttrCreate.Post -> MathAttrFontsizeCreated;
-        AttrModify.Post -> MathAttrFontsizeCreated;
+        AttrCreate.Post -> MathPresentAttrCreated;
+        AttrModify.Post -> MathPresentAttrCreated;
         AttrDelete.Pre ->  MathAttrFontsizeDelete;
         END;
  
@@ -95,11 +95,17 @@ ATTRIBUTES
         AttrDelete.Pre ->  MathAttrColorDelete;
         END;
 
-   background\240:
+   lspace:
         BEGIN
-        AttrCreate.Post -> MathAttrBackgroundCreated;
-        AttrModify.Post -> MathAttrBackgroundCreated;
-        AttrDelete.Pre ->  MathAttrBackgroundDelete;
+        AttrCreate.Post -> MathPresentAttrCreated;
+        AttrModify.Post -> MathPresentAttrCreated;
+        AttrDelete.Pre ->  MathAttrLspaceDelete;
+        END;
+   rspace:
+        BEGIN
+        AttrCreate.Post -> MathPresentAttrCreated;
+        AttrModify.Post -> MathPresentAttrCreated;
+        AttrDelete.Pre ->  MathAttrRspaceDelete;
         END;
 
    stretchy:
@@ -109,17 +115,19 @@ ATTRIBUTES
 	AttrDelete.Post -> AttrStretchyChanged;	
 	END;
 
-   name:
-	BEGIN
-	AttrModify.Post -> AttrNameChanged;
-	END;
-
    bevelled:
 	BEGIN
 	AttrCreate.Post -> AttrBevelledChanged;
 	AttrModify.Post -> AttrBevelledChanged;
 	AttrDelete.Post -> AttrBevelledChanged;		
 	END;
+
+   background\240:
+        BEGIN
+        AttrCreate.Post -> MathAttrBackgroundCreated;
+        AttrModify.Post -> MathAttrBackgroundCreated;
+        AttrDelete.Pre ->  MathAttrBackgroundDelete;
+        END;
 
    open:
 	BEGIN
@@ -140,4 +148,9 @@ ATTRIBUTES
 	AttrDelete.Post -> AttrSeparatorsChanged;
 	END;
    
+   name:
+	BEGIN
+	AttrModify.Post -> AttrNameChanged;
+	END;
+
 END
