@@ -179,8 +179,9 @@ void IsolateSelection (PtrDocument pDoc, PtrElement *pFirstSel,
 	  done = TRUE;
 	}
   if (!done)
-    if (*lastChar > 0 && *pLastSel)
-      if ((*pLastSel)->ElTerminal && (*pLastSel)->ElLeafType == LtText)
+    if (*pLastSel)
+      if ((*pLastSel)->ElTerminal && (*pLastSel)->ElLeafType == LtText &&
+	  *lastChar > 1 && *lastChar <= (*pLastSel)->ElVolume)
 	SplitAfterSelection (*pLastSel, *lastChar, pDoc);
 }
 
@@ -1263,7 +1264,7 @@ void CutCommand (ThotBool save, ThotBool replace)
 	       element. This substring can't be deleted */
 	    stop = TRUE;
 	  else if (lastSel->ElTerminal && lastSel->ElLeafType == LtText &&
-		   lastChar > 0 && lastChar < lastSel->ElVolume &&
+		   lastChar > 1 && lastChar <= lastSel->ElVolume &&
 		   ElementIsReadOnly (lastSel))
 	    /* the selection ends with a substring of a ReadOnly
 	       element. This substring can't be deleted */
@@ -1542,7 +1543,7 @@ void CutCommand (ThotBool save, ThotBool replace)
 			      /* that's the last selected element */
 			      if (lastSel->ElTerminal &&
 				  lastSel->ElLeafType == LtText &&
-				  lastChar > 0 &&
+				  lastChar > 1 &&
 				  lastChar <= lastSel->ElTextLength)
 				/* la selection se termine a l'interieur d'un
 				   element, on le coupe en deux */
@@ -1585,7 +1586,17 @@ void CutCommand (ThotBool save, ThotBool replace)
 				         (void*)(&row), (void*)SelectedColumn,
 					 (void*)doc, (void*)(&fakeCell));
 			      else
-				pEl = NextInSelection (pEl, lastSel);
+				{
+				  pEl = NextInSelection (pEl, lastSel);
+				  if (pEl && pEl == lastSel &&
+				      pEl->ElTerminal &&
+				      pEl->ElLeafType == LtText &&
+				      lastChar <= 1)
+				    /* this is the last selected element, but
+				       selection ends before its first char.
+				       do not delete it */
+				    pEl = NULL;
+				}
 			    }
 			  
 			  /* verifie qu'il ne s'agit pas d'un element

@@ -1970,6 +1970,7 @@ RULES
 		Width: Enclosing . Width - 1.2;
 #endif
 		MarginTop: VSpaceInToC;
+		MarginBottom: VSpaceInToC;
 		Size: Enclosing + 2 pt;
 		Visibility: 10;
 		END;
@@ -2021,6 +2022,7 @@ RULES
 		Weight: Enclosing =;
 		Visibility: 9;
 		MarginTop: VSpaceInToC;
+		MarginBottom: 0;
 		END;
 	IN Links_view
 		Visibility: 0;
@@ -2070,6 +2072,7 @@ RULES
 		Weight: Enclosing =;
 		Visibility: 8;
 		MarginTop: VSpaceInToC;
+		MarginBottom: 0;
 		END;
 	IN Links_view
 		Visibility: 0;
