@@ -824,9 +824,10 @@ void TtaPrint (Document document, char *viewNames, char *cssNames)
    PtrDocument         pDoc;
    PathBuffer          dirName;
    Name                docName;
-   Name                newPres;
+   Name                schName;
+   char               *newPres, *savePres;
    PtrPSchema          pPSch;
-   char               *savePres, *tmpDirName, *tmpDocName;
+   char               *tmpDirName, *tmpDocName;
    char                fileName[MAX_TXT_LEN];
    int                 orientation, i, k;
    ThotBool	       docReadOnly;
@@ -834,14 +835,22 @@ void TtaPrint (Document document, char *viewNames, char *cssNames)
 
    pDoc = LoadedDocument[document - 1];
    /* prepares the execution of the print command */
-   savePres = TtaStrdup (pDoc->DocSSchema->SsDefaultPSchema);
+   newPres = NULL;
+   savePres = NULL;
    if (PresSchema[0] != EOS)
-     strcpy (newPres, PresSchema);
+     newPres = TtaStrdup (PresSchema);
    else
-     ConfigGetPSchemaForPageSize (pDoc->DocSSchema, PageSize, newPres);
+     {
+       ConfigGetPSchemaForPageSize (pDoc->DocSSchema, PageSize, schName);
+       if (schName[0] != EOS)
+	 newPres = TtaStrdup (schName);
+     }
      
-   if (newPres[0] != EOS)
-     strcpy (pDoc->DocSSchema->SsDefaultPSchema, newPres);
+   if (newPres)
+     {
+       savePres = pDoc->DocSSchema->SsDefaultPSchema;
+       pDoc->DocSSchema->SsDefaultPSchema = newPres;
+     }
 
    /* initialise temporary directory and temporary file names */
    TtaGetPrintNames (&tmpDocName, &tmpDirName);
@@ -905,11 +914,6 @@ void TtaPrint (Document document, char *viewNames, char *cssNames)
    else
      orientation = 0;
 
-   /* restores the presentation scheme */
-   if (pDoc->DocSSchema->SsDefaultPSchema)
-     TtaFreeMemory (pDoc->DocSSchema->SsDefaultPSchema);
-   pDoc->DocSSchema->SsDefaultPSchema = TtaStrdup (savePres);
-
    /* make an automatic backup */
    if (ok)
      { 
@@ -942,11 +946,13 @@ void TtaPrint (Document document, char *viewNames, char *cssNames)
 		cssNames,
 		document);
      }
+
    /* restores the presentation scheme */
-   if (pDoc->DocSSchema->SsDefaultPSchema)
-     TtaFreeMemory (pDoc->DocSSchema->SsDefaultPSchema);
-   pDoc->DocSSchema->SsDefaultPSchema = TtaStrdup (savePres);
-   TtaFreeMemory (savePres);
+   if (newPres)
+     {
+       pDoc->DocSSchema->SsDefaultPSchema = savePres;
+       TtaFreeMemory (newPres);
+     }
 }
 
 /*----------------------------------------------------------------------
