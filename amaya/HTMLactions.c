@@ -265,8 +265,12 @@ Document            doc;
 
 		  /* get the referred document */
 		  targetDocument = GetHTMLDocument (documentURL, NULL,
-				   doc, doc, DC_TRUE, FALSE);
-		  AddDocHistory (targetDocument, DocumentURLs[targetDocument]); /******/
+				   doc, doc, CE_TRUE, FALSE);
+		  AddDocHistory (targetDocument, DocumentURLs[targetDocument]);
+		  if (HelpDocuments[targetDocument] == TRUE)
+		    /* help document are displayed in read-only mode */
+		    TtaSetDocumentAccessMode (targetDocument, 0);
+
 		  /* if the referred document has replaced the clicked
 		     document, pseudo attribute "visited" should not be set */
 		  if (targetDocument == doc)

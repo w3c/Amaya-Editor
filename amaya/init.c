@@ -792,9 +792,9 @@ View                view;
 #  else /* _WINDOWS */
    CreateOPenDocDlgWindow (TtaGetViewFrame (document, view), docToOpen)	;
    if (InNewWindow)
-      GetHTMLDocument (docToOpen, NULL, 0, 0, DC_FALSE, TRUE);
+      GetHTMLDocument (docToOpen, NULL, 0, 0, CE_FALSE, TRUE);
    else 
-      GetHTMLDocument (docToOpen, NULL, document, document, DC_FALSE, TRUE);
+      GetHTMLDocument (docToOpen, NULL, document, document, CE_FALSE, TRUE);
 #  endif /* _WINDOWS */
 }
 
@@ -1468,15 +1468,15 @@ NotifyDialog       *event;
    mathView = TtaGetViewFromName (document, "Math_Structure_view");
 #endif /* MATHML */
    if (view != 1)
-     {
-	return FALSE;		/* let Thot perform normal operation */
-     }
+     /* let Thot perform normal operation */
+     return FALSE;
    else
      /* closing main view */
      if (!CanReplaceCurrentDocument (document, view))
-	/* abort the command */
-	return TRUE;		/* don't let Thot perform normal operation */
+	/* abort the command and don't let Thot perform normal operation */
+	return TRUE;
 
+   HelpDocuments[document] = FALSE;
    if (structView != 0 && TtaIsViewOpened (document, structView))
      TtaCloseView (document, structView);
    if (altView != 0 && TtaIsViewOpened (document, altView))
@@ -1489,7 +1489,8 @@ NotifyDialog       *event;
    if (mathView != 0 && TtaIsViewOpened (document, mathView))
      TtaCloseView (document, mathView);
 #endif /* MATHML */
-   return FALSE;		/* let Thot perform normal operation */
+   /* let Thot perform normal operation */
+   return FALSE;
 }
 
 
@@ -1500,18 +1501,18 @@ NotifyDialog       *event;
     - form_data: the text to be posted.
     - doc: the document which can be removed if not updated.
     - baseDoc: the document which documentPath is relative to.
-    - DC_event: DC_FORM_POST for a post request, DC_TRUE for a double click.
+    - CE_event: CE_FORM_POST for a post request, CE_TRUE for a double click.
     - history: record the URL in the browsing history
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document            GetHTMLDocument (const char *documentPath, char *form_data, Document doc, Document baseDoc, DoubleClickEvent DC_event, boolean history)
+Document            GetHTMLDocument (const char *documentPath, char *form_data, Document doc, Document baseDoc, ClickEvent CE_event, boolean history)
 #else
-Document            GetHTMLDocument (documentPath, form_data, doc, baseDoc, DC_event, history)
+Document            GetHTMLDocument (documentPath, form_data, doc, baseDoc, CE_event, history)
 const char         *documentPath;
 char               *form_data;
 Document            doc;
 Document            baseDoc;
-DoubleClickEvent    DC_event;
+ClickEvent          CE_event;
 boolean		    history;
 
 #endif
@@ -1549,7 +1550,8 @@ boolean		    history;
    /* Extract the target if necessary */
    ExtractTarget (tempdocument, target);
    /* Add the  base content if necessary */
-   if (DC_event & DC_TRUE)
+   if (CE_event == CE_TRUE || CE_event == CE_FORM_GET
+       || CE_event == CE_FORM_POST || CE_event == CE_MAKEBOOK)
       NormalizeURL (tempdocument, baseDoc, pathname, documentname);
    else
       NormalizeURL (tempdocument, 0, pathname, documentname);
@@ -1564,7 +1566,7 @@ boolean		    history;
 	strcat (pathname, parameters);
      }
 
-   if ((DC_event & DC_FORM_POST) || (DC_event & DC_FORM_GET))
+   if ((CE_event == CE_FORM_POST) || (CE_event == CE_FORM_GET))
      {
        /* special checks for forms */
        if (!IsW3Path (pathname))
@@ -1582,7 +1584,10 @@ boolean		    history;
    if (ok && newdoc == 0)
      {
        /* document not loaded yet */
-       if (DC_event & DC_TRUE && !IsW3Path (pathname) && !TtaFileExist (pathname))
+       if ((CE_event == CE_TRUE || CE_event == CE_FORM_GET
+	    || CE_event == CE_FORM_POST || CE_event == CE_MAKEBOOK)
+	   && !IsW3Path (pathname) 
+	   && !TtaFileExist (pathname))
 	 /* the target document doesn't exist */
 	 TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
        else
@@ -1596,11 +1601,18 @@ boolean		    history;
 	       if (newdoc == 0)
 		 /* cannot display the new document */
 		 ok = FALSE;
+	       else if (CE_event == CE_HELP)
+		 {
+		   /* help document has to be in read-only mode */
+		   TtaSetDocumentAccessMode (newdoc, 0);
+		   TtcSwitchCommands (newdoc, 1);
+		   HelpDocuments[newdoc] = TRUE;
+		 }
 	     }
 	   else
 	     {
 	       /* stop current transfer for previous document */
-	       if (!(DC_event & DC_MAKEBOOK))
+	       if (CE_event != CE_MAKEBOOK)
 		 StopTransfer (baseDoc, 1);
 	       newdoc = doc;
 	     }
@@ -1624,7 +1636,7 @@ boolean		    history;
 	       ActiveTransfer (newdoc);
 	       if (IsW3Path (pathname))
 		 {
-		   if (DC_event & DC_FORM_POST)
+		   if (CE_event == CE_FORM_POST)
 		     toparse = GetObjectWWW (newdoc, pathname, form_data, tempfile,
 					     AMAYA_FORM_POST | AMAYA_SYNC,
 					     NULL, NULL, NULL, NULL, YES);
@@ -1807,7 +1819,6 @@ void                CallbackDialogue (ref, typedata, data)
 int                 ref;
 int                 typedata;
 char               *data;
-
 #endif
 {
   int                 val, i;
@@ -1819,10 +1830,9 @@ char               *data;
   char                my_dir_sep;
 
   if ((typedata == 2) && data && strchr (data, '/'))
-	 my_dir_sep = '/';
+    my_dir_sep = '/';
   else 
-	  my_dir_sep = DIR_SEP;
-   
+    my_dir_sep = DIR_SEP;
 
    val = (int) data;
    switch (ref - BaseDialog)
@@ -1857,9 +1867,9 @@ char               *data;
 		 {
 		   /* load an URL */
 		   if (InNewWindow)
-		     GetHTMLDocument (LastURLName, NULL, 0, 0, DC_FALSE, TRUE);
+		     GetHTMLDocument (LastURLName, NULL, 0, 0, CE_FALSE, TRUE);
 		   else
-		     GetHTMLDocument (LastURLName, NULL, CurrentDocument, CurrentDocument, DC_FALSE, TRUE);
+		     GetHTMLDocument (LastURLName, NULL, CurrentDocument, CurrentDocument, CE_FALSE, TRUE);
 		 }
 	       else if (DirectoryName[0] != EOS && DocumentName[0] != EOS)
 		 {
@@ -1871,9 +1881,9 @@ char               *data;
 		   if (TtaFileExist (tempfile))
 		     {
 		       if (InNewWindow)
-			 GetHTMLDocument (tempfile, NULL, 0, 0, DC_FALSE, TRUE);
+			 GetHTMLDocument (tempfile, NULL, 0, 0, CE_FALSE, TRUE);
 		       else
-			 GetHTMLDocument (tempfile, NULL, CurrentDocument, CurrentDocument, DC_FALSE, TRUE);
+			 GetHTMLDocument (tempfile, NULL, CurrentDocument, CurrentDocument, CE_FALSE, TRUE);
 		     }
 		   else
 		     TtaSetStatus (CurrentDocument, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempfile);
@@ -2333,6 +2343,7 @@ NotifyEvent        *event;
      {
        /* initialize document table */
        DocumentURLs[i] = NULL;
+       HelpDocuments[i] = FALSE;
        /* initialize history */
        DocHistoryIndex[i] = -1;
        /* Create a temporary sub-directory for storing the HTML and
@@ -2560,7 +2571,7 @@ View                view;
   strcpy (localname, HTAppName);
   strcat (localname, " - ");
   strcat (localname, HTAppVersion);
-# ifndef _WINDOWS */
+# ifndef _WINDOWS
   TtaNewLabel(BaseDialog + Version, BaseDialog + FormAbout, localname);
   TtaNewLabel(BaseDialog + About1, BaseDialog + FormAbout, TtaGetMessage(AMAYA, AM_ABOUT1));
   TtaNewLabel(BaseDialog + About2, BaseDialog + FormAbout, TtaGetMessage(AMAYA, AM_ABOUT2));
@@ -2587,8 +2598,8 @@ int         index;
   s = (char *) TtaGetEnvString ("THOTDIR");
   if (s != NULL)
     {
-      strcat (LastURLName, s);
-      strcat (localname, "/doc/User/");
+      strcat (localname, s);
+      strcat (localname, "/doc/amaya/");
       strcat (localname, Manual[index]);
     }
 
@@ -2597,10 +2608,7 @@ int         index;
       strcpy (localname, AMAYA_PAGE_DOC);
       strcat (localname, Manual[index]);
     }
-  document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, FALSE);
-  /* document in read-only mode */
-  if (document != 0)
-    TtaSetDocumentAccessMode (document, 0);
+  document = GetHTMLDocument (localname, NULL, 0, 0, CE_HELP, FALSE);
 }
 
 /*----------------------------------------------------------------------

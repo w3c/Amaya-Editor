@@ -538,6 +538,8 @@ Document     doc;
   boolean           change;
 
   elType = TtaGetElementType (el);
+  if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
+    return;
   attrType.AttrSSchema = elType.ElSSchema;
    if (elType.ElTypeNum == HTML_EL_Anchor || elType.ElTypeNum == HTML_EL_MAP)
      attrType.AttrTypeNum = HTML_ATTR_NAME;

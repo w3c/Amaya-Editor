@@ -459,7 +459,7 @@ char               *name;
       Box_Color = cblack.pixel;
 
    /* color for read-only sections */
-   found = FindColor (0, name, "ReadOnlyColor", "MediumBlue", &(RO_Color));
+   found = FindColor (0, name, "ReadOnlyColor", "DarkGreen3", &(RO_Color));
    if (!found)
       RO_Color = cwhite.pixel;
    else if (TtWDepth == 1)

@@ -34,7 +34,7 @@
 #define MAX_LENGTH     512
 #define NAME_LENGTH     32
 #define HTAppName "amaya"
-#define HTAppVersion "V1.1a Beta"
+#define HTAppVersion "V1.1b"
 
 #define URL_SEP '/'
 #define URL_STR "/"
@@ -51,20 +51,11 @@
 #endif
 
 /* The different events for a DoubleClick */
-typedef enum _DoubleClickEvent
-  {
-     DC_FALSE = 0,
-     DC_TRUE = 1,
-     DC_FORM_POST = 2,
-     DC_FORM_GET = 4,
-     DC_MAKEBOOK = 8
-  }
-DoubleClickEvent;
+typedef enum _ClickEvent {
+  CE_FALSE, CE_TRUE, CE_FORM_POST, CE_FORM_GET, CE_HELP, CE_MAKEBOOK
+} ClickEvent;
 
 typedef char        AmayaReadChar ();
-
-/*typedef void        *PresentationTarget; */
-
 #define NO               0
 #define YES              1
 
@@ -203,16 +194,15 @@ typedef char*		 anHistory[DOC_HISTORY_SIZE];
 
 #define DocumentTableLength 10
 THOT_EXPORT char        *DocumentURLs[DocumentTableLength];
-
+/* TRUE if the document is displayed by help commands */
+THOT_EXPORT boolean      HelpDocuments[DocumentTableLength];
 /* The whole document is loaded when the corresponding value
    in FilesLoading is equal to 0 */
 THOT_EXPORT int          FilesLoading[DocumentTableLength];
 /* Gives the status (error, success) of the download of the objects of
    a document */
-
 THOT_EXPORT anHistory	 DocHistory[DocumentTableLength];
 THOT_EXPORT int		 DocHistoryIndex[DocumentTableLength];
-
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
 THOT_EXPORT int          DocNetworkStatus[DocumentTableLength];
 #endif
@@ -227,12 +217,10 @@ THOT_EXPORT int          TTButton;
 #define IMAGE_MODIFIED		3
 
 #ifdef __STDC__
-typedef void (*LoadedImageCallback)(Document doc, Element el, char *file,
-                                  void *extra);
+typedef void (*LoadedImageCallback)(Document doc, Element el, char *file, void *extra);
 #else
 typedef void (*LoadedImageCallback)();
 #endif
-
 typedef struct _ElemImage
   {
      Element             currentElement;/* first element using this image */

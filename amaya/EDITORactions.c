@@ -75,7 +75,7 @@ View                view;
 	  }
      }
 
-   doc = GetHTMLDocument (tempfile, NULL, 0, 0, DC_FALSE, FALSE);
+   doc = GetHTMLDocument (tempfile, NULL, 0, 0, CE_FALSE, FALSE);
    ResetStop (doc);
    ApplyFinalStyle (doc);
    root = TtaGetMainRoot (doc);

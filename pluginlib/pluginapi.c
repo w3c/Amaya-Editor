@@ -603,7 +603,7 @@ const char *target;
 #         ifdef PLUGIN_DEBUG
           printf ("AM_geturl: Passing the stream to AMAYA\n");
 #         endif
-          GetHTMLDocument (url, NULL, 0, 0, DC_FALSE, TRUE);
+          GetHTMLDocument (url, NULL, 0, 0, CE_FALSE, TRUE);
 	}
       else
 	{

@@ -76,7 +76,7 @@ View                view;
    /* load the previous document */
    DocHistoryIndex[doc] = prev;
    url = DocHistory[doc][prev];
-   (void) GetHTMLDocument (url, NULL, doc, doc, DC_FALSE, FALSE);
+   (void) GetHTMLDocument (url, NULL, doc, doc, CE_FALSE, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -136,7 +136,7 @@ View                view;
    /* load the next document */
    DocHistoryIndex[doc] = next;
    url = DocHistory[doc][DocHistoryIndex[doc]];
-   (void) GetHTMLDocument (url, NULL, doc, doc, DC_FALSE, FALSE);
+   (void) GetHTMLDocument (url, NULL, doc, doc, CE_FALSE, FALSE);
 }
 
 /*----------------------------------------------------------------------

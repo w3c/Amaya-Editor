@@ -829,20 +829,13 @@ void                TtaInitializeAppRegistry (appArgv0)
 char               *appArgv0;
 #endif
 {
-   char               *home_dir;
-   char                filename[MAX_PATH];
-   int                 execname_len;
    PathBuffer          execname;
    PathBuffer          path;
+   char               *home_dir;
+   char                filename[MAX_PATH];
    char               *my_path;
    char               *dir_end = NULL;
    char               *appName;
-#  ifndef _WINDOWS
-   char               *thot_dir_env;
-   int                 len;
-#  endif /* _WINDOWS */
-   char                URL_DIR_SEP;
-
 #ifdef _WINDOWS
 #ifndef __CYGWIN32__
   extern int _fmode;
@@ -851,16 +844,13 @@ char               *appArgv0;
 #else /* ! _WINDOWS */
   struct stat         stat_buf;
 #endif /* _WINDOWS */
-
-   if (appArgv0 && strchr (appArgv0, '/'))
-	  URL_DIR_SEP = '/';
-   else 
-	   URL_DIR_SEP = DIR_SEP;
+  int                 execname_len;
+  int                 len, round;
+  boolean             found, ok;
 
   if (AppRegistryInitialized != 0)
     return;
   AppRegistryInitialized++;
-
   /*
    * Sanity check on the argument given. An error here should be
    * detected by programmers, since it's a application coding error.
@@ -894,11 +884,11 @@ char               *appArgv0;
    */
   else if (TtaFileExist (appArgv0))
     {
-#       ifndef _WINDOWS
+#     ifndef _WINDOWS
       getcwd (&execname[0], sizeof (execname));
-#       else  /* _WINDOWS */
+#     else  /* _WINDOWS */
       _getcwd (&execname[0], sizeof (execname));
-#       endif /* _WINDOWS */
+#     endif /* _WINDOWS */
       strcat (execname, DIR_STR);
       strcat (execname, appArgv0);
     }
@@ -919,8 +909,9 @@ char               *appArgv0;
        * enviroment variables. Then search for the binary along the
        * PATH.
        */
-      strncpy (path, my_path, sizeof (path) - 1);
-      path[sizeof (path) - 1] = '\0';
+      len = sizeof (path) - 1;
+      strncpy (path, my_path, len);
+      path[len] = '\0';
 
       execname_len = sizeof (execname);
 #     ifdef _WINDOWS
@@ -947,7 +938,7 @@ char               *appArgv0;
 
   do
     appName--;
-  while ((appName > &execname[0]) && (*appName != URL_DIR_SEP));
+  while (appName > execname && *appName != DIR_SEP);
   if (*appName == DIR_SEP)
     /* dir_end used for relative links ... */
     dir_end = appName++;
@@ -982,137 +973,112 @@ char               *appArgv0;
 #endif
 
    /* get the THOTDIR for this application. It's under a bin dir */
-   dir_end = &execname[0];
+   dir_end = execname;
    while (*dir_end)
      /* go to the ending NUL */
       dir_end++;
 
+   /* remove the application name */
+   ok = FALSE;
    do
-      dir_end--;
-   while ((dir_end > &execname[0]) && (*dir_end != URL_DIR_SEP));
-
-   if (*dir_end == URL_DIR_SEP)
      {
+       dir_end--;
+       ok = (dir_end <= execname || *dir_end == DIR_SEP);
+     }
+   while (!ok);
+   if (*dir_end == DIR_SEP)
+     {
+       /* the name has been found */
+       found = TRUE;
        *dir_end = '\0';
        /* save the binary directory in BinariesDirectory */
-       strncpy (BinariesDirectory, &execname[0], sizeof (BinariesDirectory));
+       strncpy (BinariesDirectory, execname, sizeof (BinariesDirectory));
 
-#ifndef _WINDOWS
-       /* first check the THOTDIR environment variable */
-       thot_dir_env = getenv("THOTDIR");
-       if (thot_dir_env != NULL && IsThotDir (thot_dir_env))
+       /* remove the binary directory */
+       found = FALSE;
+       ok = FALSE;
+       round = 2;
+       while (!found || round != 0)
 	 {
-	   strcpy(execname, thot_dir_env);
-	   AddRegisterEntry ("System", "THOTDIR", thot_dir_env, REGISTRY_INSTALL, TRUE);
-	   goto load_system_settings;
+	   do
+	     {
+	       dir_end--;
+	       ok = (dir_end <= execname || *dir_end == DIR_SEP);
+	     }
+	   while (!ok);
+	   if (*dir_end == DIR_SEP)
+	     {
+	       *dir_end = '\0';
+	       if (!strcmp (&dir_end[1], ".."))
+		 round ++;
+	       else if (strcmp (&dir_end[1], "."))
+		 {
+		   round --;
+		   /* a directory name has been found */
+		   found = TRUE;
+		 }
+	     }
+	   else
+	     {
+	       /* no directory has been found */
+	       found = TRUE;
+	       ok = FALSE;
+	     }
 	 }
-       else if (thot_dir_env != NULL) 
-	 fprintf (stderr,"Invalid THOTDIR environment variable : %s\n", thot_dir_env);
-#endif
+       if (ok)
+	 {
+	   *dir_end = '\0';
+	   if (IsThotDir (execname))
+	     AddRegisterEntry ("System", "THOTDIR", execname, REGISTRY_INSTALL, TRUE);
+	 }
 #ifdef COMPILED_IN_THOTDIR
        /* Check a compiled-in value */
-       if (IsThotDir (COMPILED_IN_THOTDIR))
+       else if (IsThotDir (COMPILED_IN_THOTDIR))
 	 {
 	   strcpy(execname, COMPILED_IN_THOTDIR);
 	   AddRegisterEntry ("System", "THOTDIR", COMPILED_IN_THOTDIR,
 			     REGISTRY_INSTALL, TRUE);
-	   goto load_system_settings;
 	 }
-#endif /* COMPILED_IN_THOTDIR */
+#else /* COMPILED_IN_THOTDIR */
 #ifdef COMPILED_IN_THOTDIR2
        /* Check a compiled-in value */
-       if (IsThotDir (COMPILED_IN_THOTDIR2))
+       else if (IsThotDir (COMPILED_IN_THOTDIR2))
 	 {
 	   strcpy(execname, COMPILED_IN_THOTDIR2);
 	   AddRegisterEntry ("System", "THOTDIR", COMPILED_IN_THOTDIR2,
 			     REGISTRY_INSTALL, TRUE);
-	   goto load_system_settings;
 	 }
 #endif /* COMPILED_IN_THOTDIR2 */
-
-       /* if all else fails, scan up from where we found the binary */ 
-       if (IsThotDir (&execname[0]))
+#endif /* COMPILED_IN_THOTDIR */
+       else
 	 {
-	   AddRegisterEntry ("System", "THOTDIR", execname, REGISTRY_INSTALL, TRUE);
-	   goto load_system_settings;
-	 }
-   
-       do
-	 dir_end--;
-       while (dir_end > &execname[0] && *dir_end != URL_DIR_SEP);
-
-       if (*dir_end != URL_DIR_SEP)
-	 goto thot_dir_not_found;
-
-       *dir_end = '\0';
-       if (IsThotDir (&execname[0]))
-	 {
-	   AddRegisterEntry ("System", "THOTDIR", execname, REGISTRY_INSTALL, TRUE);
-	   goto load_system_settings;
-	 }
-
-       do
-	 dir_end--;
-       while ((dir_end > &execname[0]) && (*dir_end != URL_DIR_SEP));
-       if (*dir_end == DIR_SEP)
-	 {
-	   *dir_end = '\0';
-	   if (IsThotDir (&execname[0]))
-	     {
-	       AddRegisterEntry ("System", "THOTDIR", execname, REGISTRY_INSTALL, TRUE);
-	       goto load_system_settings;
-	     }
-
-	   do
-	     dir_end--;
-	   while ((dir_end > &execname[0]) && (*dir_end != URL_DIR_SEP));
-	   if (*dir_end == DIR_SEP)
-	     {
-	       *dir_end = '\0';
-	       if (IsThotDir (&execname[0]))
-		 {
-		   AddRegisterEntry ("System", "THOTDIR", execname,
-				     REGISTRY_INSTALL, TRUE);
-		   goto load_system_settings;
-		 }
-	     }
+	   fprintf (stderr, "Cannot find THOTDIR\n");
+	   exit (1);
 	 }
      }
- thot_dir_not_found:
-
-   fprintf (stderr, "Cannot find THOTDIR\n");
-   exit (1);
-
- load_system_settings:
-
+   
 #ifdef MACHINE
-   /*
-    * if MACHINE is set up, add it to the registry
-    */
+   /* if MACHINE is set up, add it to the registry */
    AddRegisterEntry ("System", "MACHINE", MACHINE, REGISTRY_INSTALL, TRUE);
 #endif
 
-   /*
-    * load the system settings, stored in THOTDIR/config/thot.ini .
-    */
-   strcpy (filename, &execname[0]);
+   /* load the system settings, stored in THOTDIR/config/thot.ini */
+   strcpy (filename, execname);
    strcat (filename, DIR_STR);
    strcat (filename, THOT_CONFIG_FILENAME);
    strcat (filename, DIR_STR);
    strcat (filename, THOT_INI_FILENAME);
-   if (TtaFileExist (&filename[0]))
+   if (TtaFileExist (filename))
      {
 #ifdef DEBUG_REGISTRY
-	fprintf (stderr, "reading system %s from %s\n",
-		 THOT_INI_FILENAME, filename);
+       fprintf (stderr, "reading system %s from %s\n", THOT_INI_FILENAME, filename);
 #endif
-	ImportRegistryFile (filename, REGISTRY_SYSTEM);
-	*dir_end = '\0';
-	dir_end -= 3;
+       ImportRegistryFile (filename, REGISTRY_SYSTEM);
+       *dir_end = '\0';
+       dir_end -= 3;
      }
    else
-      fprintf (stderr, "System wide %s not found at %s\n",
-               THOT_INI_FILENAME, &filename[0]);
+     fprintf (stderr, "System wide %s not found at %s\n", THOT_INI_FILENAME, &filename[0]);
 
    if (home_dir != NULL)
      {
