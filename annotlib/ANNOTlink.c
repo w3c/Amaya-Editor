@@ -289,8 +289,10 @@ void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
   
   
   /* only substitute the icon name if it has changed */
-  TtaGiveSubString (el, previous, 0, sizeof (previous) - 1);
+  TtaGiveSubString (el, previous, 1, sizeof (previous) - 1);
   if (previous[0] != EOS && strcasecmp (iconName, previous))
+    TtaSetPictureContent (el, iconName, SPACE, source_doc, "image/gif");
+  else if (previous[0] == EOS)
     TtaSetPictureContent (el, iconName, SPACE, source_doc, "image/gif");
 }
 
