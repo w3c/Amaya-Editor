@@ -1390,7 +1390,7 @@ int                 ymax;
     }
 
   /* is the box selected? */
-  selected = pAb->AbSelected;
+  selected = (pAb->AbSelected || box == pFrame->FrSelectionBegin.VsBox);
   /* Search for the enclosing box */
   if (pAb->AbEnclosing == NULL)
     mbox = box;
