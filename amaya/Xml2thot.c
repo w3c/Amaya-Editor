@@ -492,11 +492,22 @@ int         line;
      }
 
    if (line != 0)
-     {
-       fprintf (ErrFile, "   line %d, char %d: %s\n", line, 0, mbcsMsg);
-       fclose (ErrFile);
-       ErrFile = NULL;
-     }
+     if (line == -1)
+       {
+	 if (docURL != NULL)
+	   {
+	     fprintf (ErrFile, "*** Errors in %s\n", docURL);
+	     TtaFreeMemory (docURL);
+	     docURL = NULL;
+	     fprintf (ErrFile, "  %s\n", mbcsMsg);
+	   }
+       }
+     else
+       {
+	 fprintf (ErrFile, "   line %d, char %d: %s\n", line, 0, mbcsMsg);
+	 fclose (ErrFile);
+	 ErrFile = NULL;
+       }
    else if (doc == XMLcontext.doc)
      {
       /* the error message is related to the document being parsed */
@@ -1732,11 +1743,6 @@ STRING      data;
    CHAR_T      *buffer, *bufferws, *buffertext;
    int          i1, i2=0, i3=0;
 
-#ifdef EXPAT_PARSER_DEBUG
-   printf ("\n  PutInXmlElement - length : %d, data \"%s\"",
-	   ustrlen (data), data);
-#endif /* EXPAT_PARSER_DEBUG */
-
    i = 0;
    /* Immediately after a start tag, treatment of the leading spaces */
    /* If RemoveLeadingSpace = TRUE, we suppress all leading white-space */
@@ -2669,10 +2675,6 @@ int      length;
      buffer[i-1] = WC_EOS;
    else
      buffer[i] = WC_EOS;
-
-#ifdef EXPAT_PARSER_DEBUG
-   printf ("\n CreateXmlEntity - name : %s", buffer);
-#endif /* EXPAT_PARSER_DEBUG */
    
    /* Search the entity in the corresponding table */
    (*(currentParserCtxt->MapEntity)) (buffer, &entityValue, &alphabet);
@@ -3588,6 +3590,7 @@ static void         InitializeExpatParser ()
   paramEntityParsing = XML_PARAM_ENTITY_PARSING_UNLESS_STANDALONE;
 
   /* Construct a new parser with namespace processing */
+  /*  parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP); */
   parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
  
   /* Define the user data pointer that gets passed to handlers */
@@ -4145,6 +4148,8 @@ ThotBool    xmlDoctype;
   char            www_file_name[MAX_LENGTH];
   int             length, error;
   ThotBool        isXHTML;
+  CHARSET         charset;
+  ThotBool        unknownCharset = FALSE;
 
   /* General initialization */
   rootElement = TtaGetMainRoot (doc);
@@ -4251,7 +4256,15 @@ ThotBool    xmlDoctype;
       /* Initialize the error file */
       ErrFile = (FILE*) 0;
       ErrFileName[0] = WC_EOS;
-      
+
+      /* Get the document charset */
+      charset = TtaGetDocumentCharset (doc);
+      if (charset != UNDEFINED_CHARSET && charset != ISO_8859_1)
+	{
+	  unknownCharset = TRUE;
+	  XmlParseError (XMLcontext.doc, TEXT("The encoding of this document is not supported by Amaya. If you want to edit it, you may loose some informations "), -1);
+	}
+
       /* Specific initialization for expat */
       InitializeExpatParser ();
 	
@@ -4284,6 +4297,10 @@ ThotBool    xmlDoctype;
 	  docURL = NULL;
 	}
       
+      /* Document with unknown is set in a read-only access mode */
+      if (unknownCharset)
+	  SetBrowserEditor (doc);
+
       TtaSetDisplayMode (doc, DisplayImmediately);
 
       /* Check the Thot abstract tree against the structure schema. */
