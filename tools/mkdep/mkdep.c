@@ -85,6 +85,30 @@ void init_dep()
     nb_include_in_hash = 0;
 }
 
+void free_dep()
+{
+    int i;
+    inc_dep cour, next;
+
+#ifdef DEBUG_HASH
+    fprintf(stderr,"Free_dep\n");
+#endif
+
+    for (i = 0; i < 256; i++)
+      {
+	cour = inc_hash[i];
+	while (cour != NULL)
+	  {
+	    next = cour->next;
+	    free(cour->name);
+	    free(cour);
+	    cour = next;
+	  }
+      }
+
+    nb_include_in_hash = 0;
+}
+
 inc_dep add_inc(char *filename)
 {
     inc_dep prev = NULL, cour;
@@ -546,6 +570,8 @@ int main(int argc, char **argv)
 #ifdef DEBUG_HASH
         fprintf(stderr,"total %d includes in hash\n", nb_include_in_hash);
 #endif
+	free_dep();
+
 	return 0;
 }
 
