@@ -311,6 +311,11 @@ static int          CharLevelElement[] =
    HTML_EL_Emphasis, HTML_EL_Strong, HTML_EL_Def, HTML_EL_Code, HTML_EL_Sample,
    HTML_EL_Keyboard, HTML_EL_Variable, HTML_EL_Cite,
    HTML_EL_Input,
+   HTML_EL_Option, HTML_EL_Option_Menu,
+   HTML_EL_Toggle_Item, HTML_EL_Toggle_Menu,
+   HTML_EL_Radio_Item, HTML_EL_Radio_Menu,
+   HTML_EL_Text_Input_Line, HTML_EL_Text_Input,
+   HTML_EL_Text_With_Frame, HTML_EL_Inserted_Text,
    HTML_EL_BR,
    0};
 
@@ -1575,15 +1580,15 @@ unsigned char       c;
 
 
 /*----------------------------------------------------------------------
-   KeepBlockInCharLevelElem
+   BlockInCharLevelElem
    Element el is a block-level element. If its parent is a character-level
    element, add a record in the list of block-level elements to be
    checked when the document is complete.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void KeepBlockInCharLevelElem (Element el)
+static void BlockInCharLevelElem (Element el)
 #else
-static void KeepBlockInCharLevelElem (el)
+static void BlockInCharLevelElem (el)
 Element             el;
 
 #endif
@@ -1654,7 +1659,7 @@ Element             parent;
 	      if (newEl != NULL)
 	        {
 	          TtaInsertFirstChild (el, newEl, theDocument);
-	          KeepBlockInCharLevelElem (newEl);
+	          BlockInCharLevelElem (newEl);
 		  ret = TRUE;
 	        }
      	      }
@@ -1974,7 +1979,7 @@ Element             el;
 
    /* is this an block-level element in a character-level element? */
    if (!IsCharacterLevelElement (el))
-      KeepBlockInCharLevelElem (el);
+      BlockInCharLevelElem (el);
 
    elType = TtaGetElementType (el);
    newElType.ElSSchema = elType.ElSSchema;
@@ -4640,7 +4645,7 @@ Document            doc;
 #endif
 {
    Element             el, parent, child, first, last, next, copy, newparent,
-		       elem, prev;
+		       elem, prev, firstNotCharElem, blockParent;
    PtrElemToBeChecked  elTBC, nextElTBC;
 
    /* check all block-level elements whose parent was a character-level
@@ -4677,6 +4682,7 @@ Document            doc;
 	   newparent = TtaGetParent (parent);
 	   elem = first;
 	   prev = NULL;
+	   firstNotCharElem = NULL;
 	   do
 	     {
 	     if (elem == last)
@@ -4687,12 +4693,16 @@ Document            doc;
 	       TtaNextSibling (&next);
 	       }
 	     if (!IsCharacterLevelElement (elem))
+	       /* This is not a character level element */
 	       /* create copies of element parent for all decendants of child*/
 	       {
 	       EncloseCharLevelElem (elem, parent, doc);
 	       prev = NULL;
+	       if (firstNotCharElem == NULL)
+		  firstNotCharElem = elem;
 	       }
 	     else
+	       /* this is a character level element */
 	       /* enclose elem in a copy of parent element */
 	       {
 	       if (prev != NULL)
@@ -4714,6 +4724,45 @@ Document            doc;
 	   while (elem != NULL);
 	   /* delete the old character-level element */
 	   TtaDeleteTree (parent, doc);
+
+	   /* if, among the elements that have just been moved, there are
+	      block elements which are now children of block elements, move
+	      these elements as siblings of their parent */
+	   elem = firstNotCharElem;
+	   while (elem != NULL)
+	     {
+	     if (elem == last)
+		next = NULL;
+	     else
+		{
+		next = elem;
+		TtaNextSibling (&next);
+		}
+	     if (IsBlockElement (elem))
+		{
+		blockParent = TtaGetParent (elem);
+		if (blockParent != NULL && IsBlockElement (blockParent))
+		   {
+		   prev = blockParent;
+		   do
+		     {
+		     TtaRemoveTree (elem, doc);
+		     TtaInsertSibling (elem, prev, FALSE, doc);
+		     prev = elem;
+		     elem = next;
+		     if (elem == last)
+			next = NULL;
+		     else
+		        if (next != NULL)
+			   TtaNextSibling (&next);
+		     }
+		   while (elem != NULL);
+		   next = NULL;
+		   }
+		}
+
+	     elem = next;	     
+	     }
 	   /* if el is a Pseudo-paragraph, merge it with its next or previous
 	      siblings if they also are Pseudo-paragraphs */
 	   MergePseudoParagraph (el, doc);
