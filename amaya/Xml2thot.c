@@ -176,6 +176,7 @@ static STRING	    XMLrootClosingTag = NULL;
 static int	    XMLrootLevel = 0;
 static ThotBool	    lastTagRead = FALSE;
 static ThotBool     XMLabort = FALSE;
+static ThotBool     XMLerror = FALSE;
 
 /* maximum size of error messages */
 #define MaxMsgLength 200
@@ -3241,16 +3242,16 @@ ThotBool   withDoctype;
 
 #endif
 {
-  UCHAR_T      charRead; 
-  ThotBool     endOfFile = FALSE;
-  int          res;
 #define	 COPY_BUFFER_SIZE	1024
-  char         bufferRead[COPY_BUFFER_SIZE];
-
-  CHAR_T      *ptr;
-  char         tmpBuffer[COPY_BUFFER_SIZE];
-  char         tmp2Buffer[COPY_BUFFER_SIZE];
-  int          tmplen;
+   char         bufferRead[COPY_BUFFER_SIZE];
+   char         tmpBuffer[COPY_BUFFER_SIZE];
+   char         tmp2Buffer[COPY_BUFFER_SIZE];
+   UCHAR_T      charRead; 
+   CHAR_T      *ptr;
+   STRING       profile;
+   int          res;
+   int          tmplen;
+   ThotBool     endOfFile = FALSE;
   
    if (infile != NULL)
        endOfFile = FALSE;
@@ -3321,6 +3322,14 @@ ThotBool   withDoctype;
        ErrFile = NULL;
        if (XMLabort)
 	 InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_ERROR));
+       else if (XMLerror)
+	 {
+	   profile = TtaGetEnvString ("Profile");
+	   if (!profile)
+	     InitInfo (TtaGetMessage (AMAYA, AM_XML_WARNING), profile);
+	   else
+	     InitInfo (TtaGetMessage (AMAYA, AM_XML_WARNING), TEXT(""));
+	 }
      } 
 }
 

@@ -2319,6 +2319,8 @@ ThotBool            history;
 	      method = CE_RELATIVE;
 	      /* ???? newdoc = doc */
 	      newdoc = InitDocView (doc, documentname, docAnnot, 0);
+	      /* we are not currently able to use the XML parser for annotations */
+	      isXML = FALSE;
 	    }
 #endif /* ANNOTATIONS */
 	  else if (method == CE_LOG)
@@ -2469,14 +2471,11 @@ ThotBool            history;
 	    /* force the XML parsing */
 	    DocumentMeta[newdoc]->xmlformat = TRUE;
 	  if (!ustrncmp (profile, TEXT("XHTML-basic"), 10))
-	    {
-	      if (parsingLevel < L_Basic)
-		ParsingLevel[newdoc] = parsingLevel;
-	      else	    
-		ParsingLevel[newdoc] = L_Basic;
-	    }
+	    ParsingLevel[newdoc] = L_Basic;
+	  else if (!ustrncmp (profile, TEXT("XHTML-strict"), 10))
+	    ParsingLevel[newdoc] = L_Basic;
 	  else
-	    ParsingLevel[newdoc] = parsingLevel;
+	    ParsingLevel[newdoc] = L_Transitional;
 	}
 
       plainText = (parsingLevel == L_Other);

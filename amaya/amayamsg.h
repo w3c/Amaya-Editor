@@ -208,4 +208,5 @@
 #define AM_PORTRAIT		205
 #define AM_LANDSCAPE		206
 #define AM_ENABLE_FTP		207
-#define AMAYA_MSG_MAX		208
+#define AM_XML_WARNING          208
+#define AMAYA_MSG_MAX		209
