@@ -23,6 +23,8 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  what you give them.   Help stamp out software-hoarding!  */
 
 #include <malloc.h>
+#include <string.h>
+#include <stdio.h>
 #ifdef EMACS
 #define NO_SHORTNAMES
 #include "../src/config.h"
@@ -613,7 +615,6 @@ make_assertion (pfile, option, str)
      U_CHAR *str;
 {
   cpp_buffer *ip;
-  struct directive *kt;
   U_CHAR *buf, *p, *q;
 
   /* Copy the entire option so we can modify it.  */
@@ -1973,7 +1974,6 @@ cpp_expand_to_buffer (pfile, buf, length)
      int length;
 {
   register cpp_buffer *ip;
-  cpp_buffer obuf;
   U_CHAR *limit = buf + length;
   U_CHAR *buf1;
 #if 0
@@ -2112,9 +2112,7 @@ output_line_command (pfile, conditional, file_change)
      int conditional;
      enum file_change_code file_change;
 {
-  int len;
-  char *line_cmd_buf, *line_end;
-  long line, col;
+ long line, col;
   cpp_buffer *ip = CPP_BUFFER (pfile);
 
   if (ip->fname == NULL || CPP_OPTIONS (pfile)->no_output) {
@@ -2319,7 +2317,7 @@ special_symbol (hp, pfile)
      cpp_reader *pfile;
 {
   char *buf;
-  int i, len;
+  int len;
   int true_indepth;
   cpp_buffer *ip = NULL;
   struct tm *timebuf;
@@ -3133,7 +3131,6 @@ do_include (pfile, keyword, unused1, unused2)
   int skip_dirs = (keyword->type == T_INCLUDE_NEXT);
   char *fname;		/* Dynamically allocated fname buffer */
   char *pcftry;
-  char *pcfname;
   U_CHAR *fbeg, *fend;		/* Beginning and end of fname */
   enum cpp_token token;
 
@@ -3152,7 +3149,6 @@ do_include (pfile, keyword, unused1, unused2)
   int angle_brackets = 0;	/* 0 for "...", 1 for <...> */
   int pcf = -1;
   char *pcfbuf;
-  char *pcfbuflimit;
   int pcfnum;
   f= -1;			/* JF we iz paranoid! */
 
@@ -3748,7 +3744,6 @@ do_line (pfile, keyword)
   long old_written = CPP_WRITTEN (pfile);
   enum file_change_code file_change = same_file;
   enum cpp_token token;
-  int i;
 
   token = get_directive_token (pfile);
 
@@ -3990,7 +3985,6 @@ do_ident (pfile, keyword, buf, limit)
      U_CHAR *buf, *limit;
 {
 /*  long old_written = CPP_WRITTEN (pfile);*/
-  int len;
 
   /* Allow #ident in system headers, since that's not user's fault.  */
   if (CPP_PEDANTIC (pfile) && !CPP_BUFFER (pfile)->system_header_p)
@@ -4315,7 +4309,7 @@ skip_if_group (pfile, any)
   U_CHAR *beg_of_line = bp;
 #endif
   register int ident_length;
-  U_CHAR *ident, *after_ident;
+  U_CHAR *ident;
   struct parse_marker line_start_mark;
 
   parse_set_mark (&line_start_mark, pfile);
@@ -4674,7 +4668,6 @@ cpp_get_token (pfile)
 	  if (opts->put_out_comments)
 	    {
 	      cpp_buffer *pbuf = CPP_BUFFER (pfile);
-	      long dummy;
 	      U_CHAR *start = pbuf->buf + start_mark.position;
 	      int len = pbuf->cur - start;
 	      CPP_RESERVE(pfile, 1 + len);
@@ -6616,7 +6609,6 @@ cpp_handle_options (pfile, argc, argv)
 	       Let's include also any that were specified earlier
 	       on the command line.  That way we can get rid of any
 	       that were passed automatically in from GCC.  */
-	    int j;
 	    opts->inhibit_predefs = 1;
 	    for (ptr = &opts->pending; *ptr != NULL; )
 	      {
@@ -7366,7 +7358,6 @@ cpp_error_with_line (pfile, line, column, msg, arg1, arg2, arg3)
      char *msg;
      char *arg1, *arg2, *arg3;
 {
-  int i;
   cpp_buffer *ip = cpp_file_buffer (pfile);
 
   cpp_print_containing_files (pfile);
@@ -7384,7 +7375,6 @@ cpp_warning_with_line (pfile, line, column, msg, arg1, arg2, arg3)
      char *msg;
      char *arg1, *arg2, *arg3;
 {
-  int i;
   cpp_buffer *ip;
 
   if (CPP_OPTIONS (pfile)->inhibit_warnings)
@@ -7497,7 +7487,6 @@ cpp_error_from_errno (pfile, name)
      cpp_reader *pfile;
      char *name;
 {
-  int i;
   cpp_buffer *ip = cpp_file_buffer (pfile);
 
   cpp_print_containing_files (pfile);

@@ -151,10 +151,6 @@ SOURCE=..\..\thotlib\dialogue\nodisplay.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\document\pivot.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\base\platform.c
 # End Source File
 # Begin Source File
