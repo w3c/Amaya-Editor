@@ -409,7 +409,7 @@ static char *ParseBorderValue (char *cssRule, PresentationValue *border)
        border->typed_data.value = 5;
        cssRule = SkipWord (cssRule);
      }
-   else if (isdigit (*cssRule))
+   else if (isdigit (*cssRule) || *cssRule == '.')
      cssRule = ParseCSSUnit (cssRule, border);
    return (cssRule);
 }
@@ -2642,7 +2642,7 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
      cssRule = SkipWord (cssRule);
    else if (!strncasecmp (cssRule, "bottom", 6))
      cssRule = SkipWord (cssRule);
-   else if (isdigit (*cssRule))
+   else if (isdigit (*cssRule) || *cssRule == '.')
      cssRule = SkipWord (cssRule);
    else
      ok = FALSE;
@@ -2697,7 +2697,7 @@ static char *ParseCSSBackground (Element element, PSchema tsch,
                !strncasecmp (cssRule, "center", 6) ||
                !strncasecmp (cssRule, "top", 3)    ||
                !strncasecmp (cssRule, "bottom", 6) ||
-               isdigit (*cssRule))
+               isdigit (*cssRule) || *cssRule == '.')
            cssRule = ParseCSSBackgroundPosition (element, tsch, context,
 						 cssRule, css, isHTML);
       /* perhaps a Background Color */
@@ -2870,7 +2870,7 @@ static char *ParseSVGStrokeWidth (Element element, PSchema tsch,
   width.typed_data.value = 0;
   width.typed_data.unit = STYLE_UNIT_INVALID;
   width.typed_data.real = FALSE;
-  if (isdigit (*cssRule))
+  if (isdigit (*cssRule) || *cssRule == '.')
      cssRule = ParseCSSUnit (cssRule, &width);
   if (width.typed_data.unit != STYLE_UNIT_INVALID)
      {
