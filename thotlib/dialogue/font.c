@@ -187,6 +187,7 @@ static HFONT WIN_LoadFont (char script, int family, int highlight, int size)
 
    if (script == 'Z')
      sprintf (&lpszFace[0], "Arial Unicode MS");
+     /* sprintf (&lpszFace[0], "Bitsream Cyberbit"); */
 
    switch (highlight)
      {
@@ -312,19 +313,21 @@ int CharacterWidth (int c, PtrFont font)
   else
     {
 #ifdef _WINDOWS
-	  if(c == THIN_SPACE || c == HALF_EM)
+      if(c == THIN_SPACE || c == HALF_EM)
 	{
 	  if (font->FiFirstChar <= 32 && font->FiLastChar >= 32)
 	  {
-	  l = font->FiWidths[32 - font->FiFirstChar] + 3;
-	  if (c == HALF_EM)
-	    l = l / 2;
-	  else
-	    l = l / 4;
+	    l = font->FiWidths[32 - font->FiFirstChar] + 3;
+	    if (c == HALF_EM)
+	      l = l / 2;
+	    else
+	      l = l / 4;
 	  }
 	}
       else if (font->FiFirstChar <= c && font->FiLastChar >= c)
-	l = font->FiWidths[c - font->FiFirstChar];
+	  l = font->FiWidths[c - font->FiFirstChar];
+      else if (font->FiScript == 'Z')
+	l = font->FiAscent; /* MJD: Simple hack, works only approximately */
 #else  /* _WINDOWS */
 #ifdef _GTK
       if (c == THIN_SPACE)
@@ -1109,6 +1112,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	      ptfont->FiFamily = family;
 	      ptfont->FiHighlight = highlight;
 	      ptfont->FiSize = val;
+	      /* insert code for GetTextMetricsW */
 	      if (GetTextMetrics (display, &textMetric))
 		{
 		  ptfont->FiAscent = textMetric.tmAscent;
