@@ -43,7 +43,7 @@ APP -DGRAPHML TextFile.A
 SRC_DIR=$(THOTDIR)\annotlib
 DEST_DIR=$(THOTDIR)\annotlib
 
-APP -DMATHML -DGRAPHML Annot.A
 STR Annot
+APP Annot.A
 PRS AnnotP
 TRA AnnotT
