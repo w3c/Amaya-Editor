@@ -413,7 +413,7 @@ strSymbDesc        *symb;
    strMatch           *sm;
    strMatchChildren   *smc;
    strNode            *n;
-   strListSymb           *dl;
+   strListSymb        *dl;
 
    sm = node->Matches;
    if (sm == NULL)
@@ -1265,7 +1265,7 @@ Document            doc;
    Element             elCour, elOriginal;
    AttributeType       attrType;
    Attribute           attrFound;
-   CHAR_T                label[10];
+   CHAR_T              label[10];
    int                 l, rank, idf, delta;
 
    attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
@@ -1307,7 +1307,7 @@ Document            doc;
 
 #endif
 {
-   CHAR_T                label[10];
+   CHAR_T              label[10];
    int                 l, idf, rank, delta;
    AttributeType       attrType;
    Attribute           attrFound;
@@ -1426,10 +1426,8 @@ strNode            *TN;
   GIType (NS->Tag, &elType, TransDoc);
  
   if (elType.ElSSchema == NULL)
-    {
-      /*specifique a MathML */
-      elType.ElSSchema = TtaGetSSchema (TEXT("MathML"), TransDoc);
-    }
+    /*specifique a MathML */
+    elType.ElSSchema = TtaGetSSchema (TEXT("MathML"), TransDoc);
 
   NS->Idf = idfCounter++;
   NS->Nbc = 0;
@@ -1445,9 +1443,7 @@ strNode            *TN;
       NS->Attributes->Next = ND->Attributes;
     }
   else
-    {
-      NS->Attributes = ND->Attributes;
-    }
+    NS->Attributes = ND->Attributes;
   generationStack[++topGenerStack] = NS;
 
   /* writing the tag name */
@@ -1459,11 +1455,13 @@ strNode            *TN;
   while (AD != NULL)
     {
       if (AD->IsTransf)
-	{			/* transfer attribute */
+	{
+	  /* transfer attribute */
 	  ancestor = TN;
 	  found = FALSE;
 	  while (!found && ancestor != NULL)
-	    {		/* searching for source element (in current element ancestors) */
+	    {
+	      /* searching for source element (in current element ancestors) */
 	      if (ancestor->MatchSymb != NULL)
 		found = (!ustrcmp (ancestor->MatchSymb->SymbolName, AD->AttrTag)
 			 || !ustrcmp (ancestor->MatchSymb->Tag, AD->AttrTag));
@@ -1475,20 +1473,20 @@ strNode            *TN;
 	  if (found)
 	    {
 	      /* searching for an ancestor of the source element which have the wanted attribute  */
-	      attr = NULL;
 	      found = FALSE;
 	      while (!found && ancestor != NULL)
 		{
+		  attr = NULL;
 		  attrType.AttrTypeNum = -1;
-		  if (ancestor != NULL)
+		  if (ancestor->Tag && ustrcmp(ancestor->Tag, TEXT("Root")))
 		    {
 		      tag = TtaAllocString (NAME_LENGTH);
 		      ustrcpy (tag, GITagNameByType (TtaGetElementType (ancestor->Elem)));
 		      attrType.AttrTypeNum = MapThotAttr (AD->AttrAttr, tag);
 		      TtaFreeMemory (tag);
+		      if (attrType.AttrTypeNum != -1)
+			attr = TtaGetAttribute (ancestor->Elem, attrType);
 		    }
-		  if (attrType.AttrTypeNum != -1)
-		    attr = TtaGetAttribute (ancestor->Elem, attrType);
 		  found = (attr != NULL);
 		  if (!found)
 		    ancestor = ancestor->Parent;
@@ -1506,7 +1504,9 @@ strNode            *TN;
 		      l = TtaGetTextAttributeLength (attr);
 		      attrValue = TtaAllocString (l+1);
 		      TtaGiveTextAttributeValue (attr, attrValue, &l);
+		      res = res && PutInHtmlBuffer (TEXT("\""));
 		      res = res && PutInHtmlBuffer (attrValue);
+		      res = res && PutInHtmlBuffer (TEXT("\""));
 		      TtaFreeMemory (attrValue);
 		    }
 		  else
@@ -1668,20 +1668,20 @@ ThotBool            inplace;
 /*----------------------------------------------------------------------
    Fonctions de transformation par regles            
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-static ThotBool        TransformNode (strMatchChildren * sm);
+static ThotBool TransformNode (strMatchChildren * sm);
 #else
-static ThotBool        TransformNode (sm);
+static ThotBool TransformNode ();
 #endif
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static ThotBool        ApplyTransChild (strMatchChildren * smc)
 #else
 static ThotBool        ApplyTransChild (smc)
 strMatchChildren   *smc;
-
 #endif
 {
    strMatchChildren   *smc2;
@@ -1727,7 +1727,8 @@ return result;
 
 
 /*----------------------------------------------------------------------
-  TransformNode : transforms a matched node acconding to the rule relative to the 
+  TransformNode :
+  transforms a matched node acconding to the rule relative to the 
   matched symbol
   ---------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1848,7 +1849,8 @@ strMatchChildren   *sm;
 }
 
 /*----------------------------------------------------------------------
-  ApplyTransformation: applies the transformation based on sm matching descriptors
+  ApplyTransformation:
+  applies the transformation based on sm matching descriptors
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static ThotBool     ApplyTransformation (strMatch * sm, Document doc)
