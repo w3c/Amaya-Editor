@@ -14,110 +14,10 @@
 
 <hr />
 
-<table border="0">
-  <caption>Categories</caption>
-  <tbody>
-    <tr>
-      <td width="120"><a href="#annotations">Annotations</a></td>
-      <td width="120"><a href="#browsing">Browsing</a></td>
-      <td width="120"><a href="#CSS">CSS</a></td>
-      <td width="120"><a href="#editing">Editing</a></td>
-    </tr>
-    <tr>
-      <td><a href="#formatting">Formatting</a></td>
-      <td><a href="#forms">Forms</a></td>
-      <td><a href="#GL">GL</a></td>
-      <td><a href="#xhtml">(X)HTML</a></td>
-    </tr>
-    <tr>
-      <td><a href="#I18N">I18N</a></td>
-      <td><a href="#images">Images</a></td>
-      <td><a href="#mathml">MathML</a></td>
-      <td><a href="#networking">Networking</a></td>
-    </tr>
-    <tr>
-      <td><a href="#printing">Printing</a></td>
-      <td><a href="#svg">SVG</a></td>
-      <td><a href="#tables">Tables</a></td>
-      <td><a href="#interface">User Interface</a></td>
-    </tr>
-    <tr>
-      <td><a href="#XML">XML</a></td>
-      <td><a href="#miscellaneous">Miscellaneous</a></td>
-      <td></td>
-      <td></td>
-    </tr>
-  </tbody>
-</table>
-<hr />
-
-<p></p>
-
 <table border="1">
-  <caption><span id="annotations">Annotations</span></caption>
   <tbody>
     <tr class="title">
-      <th class="summary">Summary</th>
-      <th>Submission</th>
-      <th>Submitted By</th>
-      <th>Fixed</th>
-    </tr>
-  </tbody>
-</table>
-
-<p></p>
-
-<table border="1">
-  <caption><span id="browsing">Browsing</span></caption>
-  <tbody>
-    <tr class="title">
-      <th class="summary">Summary</th>
-      <th>Submission</th>
-      <th>Submitted By</th>
-      <th>Fixed</th>
-    </tr>
-  </tbody>
-</table>
-
-<p></p>
-
-<table border="1">
-  <caption><span id="CSS">CSS</span></caption>
-  <tbody>
-    <tr class="title">
-      <th class="summary">Summary</th>
-      <th>Submission</th>
-      <th>Submitted By</th>
-      <th>Fixed</th>
-    </tr>
-    <tr>
-      <td>Rendering problem with some CSS rules, see <a
-        href="http://www.w3.org/TR/2003/WD-webarch-20031209/#no-silent-recovery">http://www.w3.org/TR/2003/WD-webarch-20031209/#no-silent-recovery</a>
-
-        <p>Other browsers render "a box around some text with the title
-        overlaying the box and vertically centered on the top line of the
-        box, but indented"</p>
-      </td>
-      <td>2003-12-11</td>
-      <td>Alan</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Restore the document position after a CSS synchronize.</td>
-      <td>2004-03</td>
-      <td>Thomas</td>
-      <td></td>
-    </tr>
-  </tbody>
-</table>
-
-<p></p>
-
-<table border="1">
-  <caption><span id="editing">Editing</span></caption>
-  <tbody>
-    <tr class="title">
-      <th class="summary">Summary</th>
+      <th class="summary">Editing/Formatting</th>
       <th>Submission</th>
       <th>Submitted By</th>
       <th>Fixed</th>
@@ -167,181 +67,6 @@
       <td></td>
       <td></td>
       <td></td>
-    </tr>
-    <tr>
-      <td>No linebreaks for copy+paste under windows
-
-        <p>When trying to copy some text from an Amaya window into a mail
-        message (Netscape), all linebreaks get lost (or rather: not
-        converted- there are some weird characters where the linebreaks
-        should be).</p>
-      </td>
-      <td>2003-07-09</td>
-      <td>P. Hoschka</td>
-      <td></td>
-    </tr>
-  </tbody>
-</table>
-
-<p></p>
-
-<table border="1">
-  <caption><span id="formatting">Formatting</span></caption>
-  <tbody>
-    <tr class="title">
-      <th class="summary">Summary</th>
-      <th>Submission</th>
-      <th>Submitted By</th>
-      <th>Fixed</th>
-    </tr>
-    <tr>
-      <td>When lists are included in blocks that are centered, the list
-        bullets are not centered but the text is.</td>
-      <td></td>
-      <td>J. Russel</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Unbreakable strings are broken (with hyphens added) whenever the
-        window is narrower than the string. This is in contrast to action of
-        other browsers and leads to unusually displays in some table
-        situations. Fixing the document width and forcing scrolling seems
-        more appropriate.</td>
-      <td></td>
-      <td>J. Russel</td>
-      <td></td>
-    </tr>
-  </tbody>
-</table>
-
-<p></p>
-
-<table border="1">
-  <caption><span id="forms">Forms</span></caption>
-  <tbody>
-    <tr class="title">
-      <th class="summary">Summary</th>
-      <th>Submission</th>
-      <th>Submitted By</th>
-      <th>Fixed</th>
-    </tr>
-    <tr>
-      <td>Size = x is not acted upon which yields awkward screens.</td>
-      <td></td>
-      <td>J. Russel</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Disabled form entry areas are still able to be used.</td>
-      <td></td>
-      <td>J. Russel</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>A good test case for various problems with forms
-
-        <p><a href="http://home.cogeco.ca/~ve3ll/am_forms.htm">test
-        case</a></p>
-      </td>
-      <td></td>
-      <td>J. Russel</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td><a href="../misc/amaya/browsebox.htm">The file browser is not
-        connected .....</a></td>
-      <td>2003-07-10</td>
-      <td>J. Russel</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Display input checkboxes with background, foreground, borders?</td>
-      <td>2003-11</td>
-      <td>J.Russel</td>
-      <td></td>
-    </tr>
-  </tbody>
-</table>
-
-<p></p>
-
-<table border="1">
-  <caption><span id="GL">GL</span></caption>
-  <tbody>
-    <tr class="title">
-      <th class="summary">Summary</th>
-      <th>Submission</th>
-      <th>Submitted By</th>
-      <th>Fixed</th>
-    </tr>
-    <tr>
-      <td>Problem with the clipping of background images.</td>
-      <td>2003-10-20</td>
-      <td>Irène</td>
-      <td></td>
-    </tr>
-  </tbody>
-</table>
-
-<p></p>
-
-<p></p>
-
-<table border="1">
-  <caption><span id="xhtml">(X)HTML</span></caption>
-  <tbody>
-    <tr class="title">
-      <th class="summary">Summary</th>
-      <th>Submission</th>
-      <th>Submitted By</th>
-      <th>Fixed</th>
-    </tr>
-    <tr>
-      <td>Attribute ALT should be mandatory when creating an AREA</td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Inserting an attribute class on the selection "bla bla
-        &lt;em&gt;bla bla&lt;/em&gt; bla bla" generates
-
-        <p>&lt;span class="foo"&gt;bla bla &lt;/span&gt;&lt;em
-        class="foo"&gt;bla bla&lt;/em&gt; &lt;span class="foo"&gt; bla
-        bla&lt;/span&gt;</p>
-
-        <p>instead of</p>
-
-        <p>&lt;span class="foo"&gt;bla bla &lt;em&gt;bla bla&lt;/em&gt; bla
-        bla&lt;/span&gt;</p>
-      </td>
-      <td>2001-08-21</td>
-      <td>J. Quint</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>The structure view reveals two spans inside an object instead of
-        the single object element inside a span element.
-
-        <p><a href="test.xhtml">test.xhtml</a></p>
-      </td>
-      <td></td>
-      <td>Keith Hopper</td>
-      <td></td>
-    </tr>
-  </tbody>
-</table>
-
-<p></p>
-
-<table border="1">
-  <caption><span id="I18N">I18N</span></caption>
-  <tbody>
-    <tr class="title">
-      <th class="summary">Summary</th>
-      <th>Submission</th>
-      <th>Submitted By</th>
-      <th>Fixed</th>
     </tr>
     <tr>
       <td>Arabic Windows platforms write Arabic characters right-to-left even
@@ -402,30 +127,192 @@
       <td>Zhang Weiwu</td>
       <td></td>
     </tr>
+    <tr>
+      <td>When lists are included in blocks that are centered, the list
+        bullets are not centered but the text is.</td>
+      <td></td>
+      <td>J. Russel</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Problem with the clipping of background images.</td>
+      <td>2003-10-20</td>
+      <td>Irène</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Unbreakable strings are broken (with hyphens added) whenever the
+        window is narrower than the string. This is in contrast to action of
+        other browsers and leads to unusually displays in some table
+        situations. Fixing the document width and forcing scrolling seems
+        more appropriate.</td>
+      <td></td>
+      <td>J. Russel</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Cut with shift delete ok but shift insert doesnt paste correctly
+        onn Windows</td>
+      <td>2001-08-02</td>
+      <td>J. Russel</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>After scrolling to bottom of document, scrolling up to top
+        overscrolls on many docs. And scrolling down overscrolls on some
+        documents. This is with a jpg image background that doesn't go
+        completely to the top or bottom of screen.
+
+        <p><a
+        href="http://www.cgocable.net/~jrussel/mathsci.htm">mathsci.htm</a></p>
+
+        <p><a
+        href="http://www.cgocable.net/~jrussel/home.htm">home.htm</a></p>
+      </td>
+      <td></td>
+      <td>J. Russel</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>A shortcut key for skipping/replacing+next in the spell checker so
+        I don't have to rely upon the mouse and compex navigation to quickly
+        move through the document.</td>
+      <td>2002-07-17</td>
+      <td>J. Reagle</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>No linebreaks for copy+paste under windows
+
+        <p>When trying to copy some text from an Amaya window into a mail
+        message (Netscape), all linebreaks get lost (or rather: not
+        converted- there are some weird characters where the linebreaks
+        should be).</p>
+      </td>
+      <td>2003-07-09</td>
+      <td>P. Hoschka</td>
+      <td></td>
+    </tr>
   </tbody>
-</table>
-
-<p></p>
-
-<table border="1">
-  <caption><span id="images">Images</span></caption>
   <tbody>
     <tr class="title">
-      <th class="summary">Summary</th>
+      <th class="summary">CSS</th>
       <th>Submission</th>
       <th>Submitted By</th>
       <th>Fixed</th>
     </tr>
+    <tr>
+      <td>Rendering problem with some CSS rules, see <a
+        href="http://www.w3.org/TR/2003/WD-webarch-20031209/#no-silent-recovery">http://www.w3.org/TR/2003/WD-webarch-20031209/#no-silent-recovery</a>
+
+        <p>Other browsers render "a box around some text with the title
+        overlaying the box and vertically centered on the top line of the
+        box, but indented"</p>
+      </td>
+      <td>2003-12-11</td>
+      <td>Alan</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Restore the document position after a CSS synchronize.</td>
+      <td>2004-03</td>
+      <td>Thomas</td>
+      <td></td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
   </tbody>
 </table>
 
-<p></p>
-
 <table border="1">
-  <caption><span id="mathml">MathML</span></caption>
   <tbody>
     <tr class="title">
-      <th class="summary">Summary</th>
+      <th class="summary">HTML</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>Attribute ALT should be mandatory when creating an AREA</td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Inserting an attribute class on the selection "bla bla
+        &lt;em&gt;bla bla&lt;/em&gt; bla bla" generates
+
+        <p>&lt;span class="foo"&gt;bla bla &lt;/span&gt;&lt;em
+        class="foo"&gt;bla bla&lt;/em&gt; &lt;span class="foo"&gt; bla
+        bla&lt;/span&gt;</p>
+
+        <p>instead of</p>
+
+        <p>&lt;span class="foo"&gt;bla bla &lt;em&gt;bla bla&lt;/em&gt; bla
+        bla&lt;/span&gt;</p>
+      </td>
+      <td>2001-08-21</td>
+      <td>J. Quint</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Size = x is not acted upon which yields awkward screens.</td>
+      <td></td>
+      <td>J. Russel</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Disabled form entry areas are still able to be used.</td>
+      <td></td>
+      <td>J. Russel</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>A good test case for various problems with forms
+
+        <p><a href="http://home.cogeco.ca/~ve3ll/am_forms.htm">test
+        case</a></p>
+      </td>
+      <td></td>
+      <td>J. Russel</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="../misc/amaya/browsebox.htm">The file browser is not
+        connected .....</a></td>
+      <td>2003-07-10</td>
+      <td>J. Russel</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Display input checkboxes with background, foreground, borders?</td>
+      <td>2003-11</td>
+      <td>J.Russel</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>The structure view reveals two spans inside an object instead of
+        the single object element inside a span element.
+
+        <p><a href="test.xhtml">test.xhtml</a></p>
+      </td>
+      <td></td>
+      <td>Keith Hopper</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<table border="1">
+  <tbody>
+    <tr class="title">
+      <th class="summary">MathML</th>
       <th>Submission</th>
       <th>Submitted By</th>
       <th>Fixed</th>
@@ -446,53 +333,10 @@
   </tbody>
 </table>
 
-<p></p>
-
 <table border="1">
-  <caption><span id="networking">Networking</span></caption>
   <tbody>
     <tr class="title">
-      <th class="summary">Summary</th>
-      <th>Submission</th>
-      <th>Submitted By</th>
-      <th>Fixed</th>
-    </tr>
-    <tr>
-      <td>Crash after a 404 error</td>
-      <td>2003-09-25</td>
-      <td>R. Swick</td>
-      <td></td>
-    </tr>
-  </tbody>
-</table>
-
-<p></p>
-
-<table border="1">
-  <caption><span id="printing">Printing</span></caption>
-  <tbody>
-    <tr class="title">
-      <th class="summary">Summary</th>
-      <th>Submission</th>
-      <th>Submitted By</th>
-      <th>Fixed</th>
-    </tr>
-    <tr>
-      <td>No OpenGL print on Windows platforms</td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-  </tbody>
-</table>
-
-<p></p>
-
-<table border="1">
-  <caption><span id="svg">SVG</span></caption>
-  <tbody>
-    <tr class="title">
-      <th class="summary">Summary</th>
+      <th class="summary">SVG</th>
       <th>Submission</th>
       <th>Submitted By</th>
       <th>Fixed</th>
@@ -528,105 +372,6 @@
   </tbody>
 </table>
 
-<p></p>
-
-<table border="1">
-  <caption><span id="tables">Tables</span></caption>
-  <tbody>
-    <tr class="title">
-      <th class="summary">Summary</th>
-      <th>Submission</th>
-      <th>Submitted By</th>
-      <th>Fixed</th>
-    </tr>
-  </tbody>
-</table>
-
-<p></p>
-
-<table border="1">
-  <caption><span id="interface">User Interface</span></caption>
-  <tbody>
-    <tr class="title">
-      <th class="summary">Summary</th>
-      <th>Submission</th>
-      <th>Submitted By</th>
-      <th>Fixed</th>
-    </tr>
-    <tr>
-      <td>Cut with shift delete ok but shift insert doesnt paste correctly
-        onn Windows</td>
-      <td>2001-08-02</td>
-      <td>J. Russel</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>After scrolling to bottom of document, scrolling up to top
-        overscrolls on many docs. And scrolling down overscrolls on some
-        documents. This is with a jpg image background that doesn't go
-        completely to the top or bottom of screen.
-
-        <p><a
-        href="http://www.cgocable.net/~jrussel/mathsci.htm">mathsci.htm</a></p>
-
-        <p><a
-        href="http://www.cgocable.net/~jrussel/home.htm">home.htm</a></p>
-      </td>
-      <td></td>
-      <td>J. Russel</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>A shortcut key for skipping/replacing+next in the spell checker so
-        I don't have to rely upon the mouse and compex navigation to quickly
-        move through the document.</td>
-      <td>2002-07-17</td>
-      <td>J. Reagle</td>
-      <td></td>
-    </tr>
-  </tbody>
-</table>
-
-<p></p>
-
-<table border="1">
-  <caption><span id="XML">XML</span></caption>
-  <tbody>
-    <tr class="title">
-      <th class="summary">Summary</th>
-      <th>Submission</th>
-      <th>Submitted By</th>
-      <th>Fixed</th>
-    </tr>
-  </tbody>
-</table>
-
-<p></p>
-
-<table border="1">
-  <caption><span id="miscellaneous">Miscellaneous</span></caption>
-  <tbody>
-    <tr class="title">
-      <th class="summary">Summary</th>
-      <th>Submission</th>
-      <th>Submitted By</th>
-      <th>Fixed</th>
-    </tr>
-    <tr>
-      <td>Make shortcuts coherent with accelerators</td>
-      <td>2003-04</td>
-      <td>Juan Lanus</td>
-      <td></td>
-    </tr>
-  </tbody>
-</table>
-
-<p></p>
-
-<p></p>
-
-<p></p>
-
-<p></p>
+<p>$Date$</p>
 </body>
 </html>
