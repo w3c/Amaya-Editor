@@ -30,7 +30,7 @@
 <h2>Sélectionner</h2>
 
 <p>De nombreuses commandes sur  <strong>Amaya</strong> agissent sur la
-sélection courante. La sélection courante peut être faites de différentes
+sélection courante. La sélection courante se faire de différentes
 manières.</p>
 <dl>
   <dt>Sélectionner avec la souris.</dt>
@@ -57,31 +57,31 @@ du premier élément sélectionné est affiché sur le fond de la fenetre. Il est
 suivi par les caractères des éléments pris en compte dans la structure. Cela
 peut  être utile quand la structure du document est complexe.</p>
 
-<h3><a name="Selecting1">Sélectionner avec la structure</a></h3>
+<h3><a name="Selecting1">Sélectionner par la structure</a></h3>
 
 <p>La  structure vue est particulièrement commode pour sélectionner rapidement
-de longs éléments. Il suffit de cliquer sur l'étiquette bleue  représentant
+des éléments longs. Il suffit de cliquer sur l'étiquette bleue  représentant
 l'élément, ou sur le nom d'un de ses attributs, ou encore sur sa ligne
-verticale bleue. Un élément long comme un tableau complexe ou une longue liste
-peut etre sélectionné par un simple clique.</p>
+verticale bleue. Un élément long comme une  table complexe ou une longue liste
+peut être sélectionné par un simple clique.</p>
 
-<p>Cliquer sur un caractère noir  dans la structure vue sélectionne uniquement
-ce caractère.</p>
+<p>Le fait de cliquer sur un caractère noir  dans la structure vue sélectionne
+uniquement ce caractère.</p>
 
-<p>Un texte en caractère gras dans la stucture vue  représente la valeur d'un
-attribut pouvant etre édité directement à partir du clavier. Une sélection
-dans une telle valeur d'attribut ne peut pas etre étendue en dehors de cet
+<p>Un texte en caractères gras dans la stucture vue  représente la valeur d'un
+attribut pouvant être édité directement à partir du clavier. Une sélection
+dans une telle valeur d'attribut ne peut pas être étendue en dehors de cet
 attribut.</p>
 
-<p>Il est également possible d'utiliser le clavier pour sélectionner par 
+<p>Il est également possible d'utiliser le clavier pour sélectionner par
 structure dans n'importe quelle vue. Presser la touche Esc (F2 sur Windows)
-sélectionne l'élément "parent" dans la structure du document. Presser touche
-ESC (F2 sur Windows) plusieurs fois permet d'augmenter d'un niveau la
-structure sélectionnée jusqu'`sélectionner la racine du document.. Il est
+sélectionne l'élément "parent" dans la structure du document. Presser la
+touche ESC (F2 sur Windows) plusieurs fois permet d'augmenter d'un niveau la
+structure sélectionnée jusqu'à sélectionner la racine du document. Il est
 encore possible de sélectionner des éléments "fils":  la touche "raccourci
-clavier par défaut" est ctrl-minus ("-"). Pour sélectionner l'élément suivant
+clavier par défaut" est ctrl-moins ("-"). Pour sélectionner l'élément suivant
 ou l'élément précédent au même niveau (ou au niveau de l'élément "parent" s'il
-n'y a pas de suivant/précédent "fils" au niveau courant), utilisez control-k
+n'y a pas de "fils" suivant/précédent  au niveau courant), utilisez control-k
 (pour le suivant) et control-j (pour le précédent).</p>
 
 <h3><a name="Selecting2">Sélectionner des images</a></h3>
@@ -90,7 +90,7 @@ n'y a pas de suivant/précédent "fils" au niveau courant), utilisez control-k
 déplacé sur  le côté gauche de l'image. Ceci vous permet de taper le texte
 avant l'image. Si vous cliquez sur la partie droite d'une image, le point
 d'insertion est déplacé sur le côté droit de cette image. Ceci vous permet de
-taper le texte aprésl'image.</p>
+taper le texte aprés l'image.</p>
 
 <p>Quand vous utilisez les touches de direction pour vous déplacer, le curseur
 se déplacera d'un côté de l'image vers l'image elle-même (tout en la
