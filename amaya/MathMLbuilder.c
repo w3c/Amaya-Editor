@@ -1915,10 +1915,11 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 		    {
 		      elType = TtaGetElementType (previous);
 		      if (elType.ElTypeNum == MathML_EL_MO ||
+			  elType.ElTypeNum == MathML_EL_MF ||
 			  elType.ElTypeNum == MathML_EL_OpeningFence ||
 			  elType.ElTypeNum == MathML_EL_ClosingFence ||
 			  elType.ElTypeNum == MathML_EL_FencedSeparator)
-			/* after an operator => prefix operator */
+			/* after an operator or parenthesis => prefix operator*/
 			val = MathML_ATTR_IntAddSpace_VAL_nospace;
 		      else
 			/* infix operator */
