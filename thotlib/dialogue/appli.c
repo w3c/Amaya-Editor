@@ -876,6 +876,7 @@ void FrameVScrolled (GtkAdjustment *w, int frame)
       else if (infos->reason == XmCR_TO_BOTTOM)
 	{
 	  /* go to the document end */
+	  JumpIntoView (frame, 100);
 	  /* recompute the scroll bars */
 	  UpdateScrollbars (frame);
 	}
