@@ -338,7 +338,7 @@ int              elementT;
        TtaInsertSibling (new, el, before, document);
        /* register this element in the editing history */
        TtaOpenUndoSequence (document, firstSel, lastSel, firstChar, lastChar);
-       TtaRegisterElementCreate (document, new);
+       TtaRegisterElementCreate (new, document);
        TtaCloseUndoSequence (document);
        return (new);
      }

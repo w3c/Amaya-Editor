@@ -194,12 +194,30 @@ void  AttrToSpan (elem, attr, doc)
 }
 
 /*----------------------------------------------------------------------
-  AttrStyleDeleted: the user has removed a Style attribute
+  GlobalAttrCreated: the user has created a global attribute
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                AttrStyleDeleted (NotifyAttribute * event)
+void                GlobalAttrCreated (NotifyAttribute * event)
 #else
-void                AttrStyleDeleted (event)
+void                GlobalAttrCreated (event)
+NotifyAttribute    *event;
+ 
+#endif
+{
+   Element	firstChild, lastChild;
+
+   /* if the attribute is on a text string, create a SPAN element that encloses
+      this text string and move the attribute to that SPAN element */
+   AttrToSpan (event->element, event->attribute, event->document);
+}
+
+/*----------------------------------------------------------------------
+  GlobalAttrDeleted: the user has removed a global attribute
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                GlobalAttrDeleted (NotifyAttribute * event)
+#else
+void                GlobalAttrDeleted (event)
 NotifyAttribute    *event;
  
 #endif

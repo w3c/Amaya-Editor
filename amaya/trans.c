@@ -965,7 +965,7 @@ Document doc;
 	      parSch = (TtaGetElementType (parent)).ElSSchema;
 	}
     }
-  TtaRegisterElementDelete (doc, elem) ;
+  TtaRegisterElementDelete (elem, doc) ;
   TtaRemoveTree (elem, doc);  
 }
 
@@ -1052,7 +1052,7 @@ Document            doc;
 	TtaNextSibling (&courEl);
 	while (courEl != NULL && courEl != myLastSelect)
 	  {	    
-	    TtaRegisterElementCreate (doc, courEl);
+	    TtaRegisterElementCreate (courEl, doc);
 	    TtaNextSibling (&courEl);
 	  }
 	TtaCloseUndoSequence (doc);

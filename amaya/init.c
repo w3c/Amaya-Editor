@@ -1151,7 +1151,7 @@ STRING              text;
    else
      {
        TtaOpenUndoSequence (document, NULL, NULL, 0, 0);
-       TtaRegisterElementReplace (document, el);
+       TtaRegisterElementReplace (el, document);
        child = TtaGetFirstChild (el);
        if (child == NULL)
 	 {

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1996.
+ *  (c) COPYRIGHT INRIA 1998.
  *  Please read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -733,7 +733,7 @@ View                view;
 	command */
       return;
 
-   TtaSetDisplayMode (doc, DeferredDisplay);
+   /**** TtaSetDisplayMode (doc, DeferredDisplay); ****/
 
    /* Undo all operations belonging to a sequence of editing operations */
    doit = TRUE;
@@ -741,9 +741,19 @@ View                view;
       {
       if (LastEdit->EoType == EtDelimiter)
 	 {
+	 /* end of undo sequence */
+	 /**** TtaSetDisplayMode (doc, DisplayImmediately); ****/
          /* set the selection that is recorded */
          if (LastEdit->EoFirstSelectedEl && LastEdit->EoLastSelectedEl)
 	   {
+	   /* Send events TteElemSelect.Pre */
+	   notifyEl.event = TteElemSelect;
+           notifyEl.document = doc;
+           notifyEl.element = (Element) (LastEdit->EoFirstSelectedEl);
+           notifyEl.elementType.ElTypeNum = LastEdit->EoFirstSelectedEl->ElTypeNumber;
+           notifyEl.elementType.ElSSchema = (SSchema) (LastEdit->EoFirstSelectedEl->ElStructSchema);
+           notifyEl.position = 0;
+           CallEventType ((NotifyEvent *) & notifyEl, TRUE);
            if (LastEdit->EoFirstSelectedChar > 0)
              {
              if (LastEdit->EoFirstSelectedEl == LastEdit->EoLastSelectedEl)
@@ -755,9 +765,35 @@ View                view;
              }
            else
              TtaSelectElement (doc, (Element)(LastEdit->EoFirstSelectedEl));
+	   /* Send events TteElemSelect.Post */
+	   notifyEl.event = TteElemSelect;
+           notifyEl.document = doc;
+           notifyEl.element = (Element) (LastEdit->EoFirstSelectedEl);
+           notifyEl.elementType.ElTypeNum = LastEdit->EoFirstSelectedEl->ElTypeNumber;
+           notifyEl.elementType.ElSSchema = (SSchema) (LastEdit->EoFirstSelectedEl->ElStructSchema);
+           notifyEl.position = 0;
+           CallEventType ((NotifyEvent *) & notifyEl, FALSE);
            if (LastEdit->EoFirstSelectedEl != LastEdit->EoLastSelectedEl)
+	     {
+	     /* Send event TteElemExtendSelect. Pre */
+	     notifyEl.event = TteElemExtendSelect;
+             notifyEl.document = doc;
+             notifyEl.element = (Element)(LastEdit->EoLastSelectedEl);
+             notifyEl.elementType.ElTypeNum = LastEdit->EoLastSelectedEl->ElTypeNumber;
+             notifyEl.elementType.ElSSchema = (SSchema) (LastEdit->EoLastSelectedEl->ElStructSchema);
+             notifyEl.position = 0;
+             CallEventType ((NotifyEvent *) & notifyEl, TRUE);
              TtaExtendSelection (doc, (Element)(LastEdit->EoLastSelectedEl),
 			         LastEdit->EoLastSelectedChar);
+	     /* Send event TteElemExtendSelect. Post */
+	     notifyEl.event = TteElemExtendSelect;
+             notifyEl.document = doc;
+             notifyEl.element = (Element)(LastEdit->EoLastSelectedEl);
+             notifyEl.elementType.ElTypeNum = LastEdit->EoLastSelectedEl->ElTypeNumber;
+             notifyEl.elementType.ElSSchema = (SSchema) (LastEdit->EoLastSelectedEl->ElStructSchema);
+             notifyEl.position = 0;
+             CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+	     }
 	   }
          doit = FALSE;
 	 }
@@ -849,6 +885,4 @@ View                view;
          Remove it from the history */
       CancelAnEdit (LastEdit, pDoc);
       }
-
-   TtaSetDisplayMode (doc, DisplayImmediately);
 }

@@ -49,13 +49,13 @@ extern void          TtaCloseUndoSequence (Document document);
 
    Parameters:
 
-   document: the concerned document
    element: the created element
+   document: the concerned document
   ----------------------------------------------------------------------*/
-extern void         TtaRegisterElementCreate (Document document, Element element);
+extern void         TtaRegisterElementCreate (Element element, Document document);
 
 /* ----------------------------------------------------------------------
-   RegisterElementDelete
+   TtaRegisterElementDelete
    
    Register a single element Deletion in the editing history
    The registratration must be performed BEFORE the element is actually
@@ -63,10 +63,10 @@ extern void         TtaRegisterElementCreate (Document document, Element element
 
    Parameters:
 
-   document: the concerned document
    element: the element to be deleted
+   document: the concerned document
   ----------------------------------------------------------------------*/
-extern void         TtaRegisterElementDelete (Document document, Element element);
+extern void         TtaRegisterElementDelete (Element element, Document document);
 
 /* ----------------------------------------------------------------------
    TtaRegisterElementReplace
@@ -75,10 +75,10 @@ extern void         TtaRegisterElementDelete (Document document, Element element
 
    Parameters:
 
-   document: the concerned document
    element: the created element
+   document: the concerned document
   ----------------------------------------------------------------------*/
-extern void        TtaRegisterElementReplace (Document document, Element element);
+extern void        TtaRegisterElementReplace (Element element, Document document);
 
 /* ----------------------------------------------------------------------
    TtaClearUndoHistory
@@ -91,9 +91,9 @@ extern void         TtaClearUndoHistory (Document document);
 #else  /* __STDC__ */
 extern void          TtaOpenUndoSequence (/* Document document, Element firstSel,Element lastSel, int firstSelChar, int lastSelChar */);
 extern void          TtaCloseUndoSequence (/* Document document */);
-extern void         TtaRegisterElementCreate (/* Document document, Element element */);
-extern void         TtaRegisterElementDelete (/* Document document, Element element */);
-extern void         TtaRegisterElementReplace (/* Document document, Element element */);
+extern void         TtaRegisterElementCreate (/* Element element, Document document */);
+extern void         TtaRegisterElementDelete (/* Element element, Document document */);
+extern void         TtaRegisterElementReplace (/* Element element, Document document */);
 extern void         TtaClearUndoHistory (/* Document document */);
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

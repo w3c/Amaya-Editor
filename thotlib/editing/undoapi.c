@@ -112,15 +112,15 @@ Document document;
    
    Parameters:
 
-   document: the concerned document
    element: the created element
+   document: the concerned document
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void         TtaRegisterElementReplace (Document document, Element element)
+void         TtaRegisterElementReplace (Element element, Document document)
 #else /* __STDC__ */
-void         TtaRegisterElementReplace (document, element)
-Document document;
+void         TtaRegisterElementReplace (element, document)
 Element element;
+Document document;
 #endif /* __STDC__ */
 {
   AddEditOpInHistory ((PtrElement)element, LoadedDocument [document - 1], 
@@ -136,15 +136,15 @@ Element element;
 
    Parameters:
 
-   document: the concerned document
    element: the element to be deleted
+   document: the concerned document
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void         TtaRegisterElementCreate (Document document, Element element)
+void         TtaRegisterElementCreate (Element element, Document document)
 #else /* __STDC__ */
-void         TtaRegisterElementCreate (document, element)
-Document document;
+void         TtaRegisterElementCreate (element, document)
 Element element;
+Document document;
 #endif /* __STDC__ */
 {
   AddEditOpInHistory ((PtrElement)element, LoadedDocument [document - 1], 
@@ -162,15 +162,15 @@ Element element;
 
    Parameters:
 
-   document: the concerned document
    element: the element to be deleted
+   document: the concerned document
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void         TtaRegisterElementDelete (Document document, Element element)
+void         TtaRegisterElementDelete (Element element, Document document)
 #else /* __STDC__ */
-void         TtaRegisterElementDelete (document, element)
-Document document;
+void         TtaRegisterElementDelete (element, document)
 Element element;
+Document document;
 #endif /* __STDC__ */
 {
   AddEditOpInHistory ((PtrElement)element, LoadedDocument [document - 1], 

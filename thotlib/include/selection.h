@@ -204,6 +204,21 @@ extern void         TtaGiveFirstSelectedElement (Document document, /*OUT*/ Elem
 extern void         TtaGiveNextSelectedElement (Document document, /*OUT*/ Element * selectedElement, /*OUT*/ int *firstCharacter, /*OUT*/ int *lastCharacter);
 
 /*----------------------------------------------------------------------
+   TtaGiveNextElement
+ 
+   Returns the element that follows a given element in the selection order
+ 
+   Parameters:
+   document: the document for which the selection is asked.
+   element: the current element.
+   last: end of the range to be searched, usually last selected element.
+ 
+   Return parameters:
+   element: the next element in the selection order. NULL if not found.
+  ----------------------------------------------------------------------*/
+extern void         TtaGiveNextElement (Document document, /*OUT*/ Element * element, Element last);
+
+/*----------------------------------------------------------------------
    TtaGiveLastSelectedElement
 
    Returns the last element in the current selection in a given document.
@@ -239,6 +254,7 @@ extern void         TtaUnselect ( /* Document document */ );
 extern void         TtaSetSelectionMode ( /* boolean withMenu */ );
 extern void         TtaGiveFirstSelectedElement ( /* Document document, Element *selectedElement, int *firstCharacter, int *lastCharacter */ );
 extern void         TtaGiveNextSelectedElement ( /* Document document, Element *selectedElement, int *firstCharacter, int *lastCharacter */ );
+extern void         TtaGiveNextElement ( /* Document document, Element * element, Element last */ );
 extern void         TtaGiveLastSelectedElement ( /* Document document, Element *selectedElement, int *firstCharacter, int *lastCharacter */ );
 
 #endif /* __STDC__ */

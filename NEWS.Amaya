@@ -55,3 +55,8 @@ Fixed bugs 1.5:
 * CSS selectors like "PRE SPAN.test" didn't work.
 
 * SMALL elements could be displayed too small.
+
+* When putting an attribute on a text string, the attribute was generated
+  as text in the HTML output.  Now a SPAN element is generated to carry
+  the attribute.  This bug occured with attributes title, dir, and most
+  event attributes (onclick, ondblclick, onmousedown, etc.).

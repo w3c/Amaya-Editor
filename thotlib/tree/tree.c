@@ -1322,7 +1322,7 @@ PtrElement          pRoot;
 {
    boolean             within;
 
-   if (pEl->ElStructSchema == NULL)
+   if (pEl == NULL || pEl->ElStructSchema == NULL || pRoot == NULL)
      return FALSE;
 
    within = FALSE;

@@ -542,6 +542,51 @@ int                *lastCharacter;
 
 
 /*----------------------------------------------------------------------
+   TtaGiveNextElement
+
+   Returns the element that follows a given element in the selection order
+
+   Parameters:
+   document: the document for which the selection is asked.
+   element: the current element.
+   last: end of the range to be searched, usually last selected element.
+
+   Return parameters:
+   element: the next element in the selection order. NULL if not found.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaGiveNextElement (Document document, Element * element, Element last)
+
+#else  /* __STDC__ */
+void                TtaGiveNextElement (document, element, last)
+Document            document;
+Element            *element;
+Element		    last;
+
+#endif /* __STDC__ */
+
+{
+   PtrDocument         pDoc;
+   PtrElement          pEl;
+
+   UserErrorCode = 0;
+   /* Checks the parameter document */
+   if (document < 1 || document > MAX_DOCUMENTS)
+     TtaError (ERR_invalid_document_parameter);
+   else if (LoadedDocument[document - 1] == NULL)
+     TtaError (ERR_invalid_document_parameter);
+   else if (last == NULL)
+     TtaError (ERR_invalid_parameter);
+   else
+      /* Parameters document and last are correct */
+     {
+	pEl = NextInSelection ((PtrElement) * element, last);
+	*element = (Element) pEl;
+     }
+}
+
+
+/*----------------------------------------------------------------------
    TtaGiveLastSelectedElement
 
    Returns the last element in the current selection in a given document.

@@ -249,6 +249,13 @@ ATTRIBUTES
 	AttrDelete.Post -> AttrItemStyle;
 	END;
 
+   Langue:
+	BEGIN
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+	AttrCreate.Post -> AttrLangCreated;
+	AttrDelete.Post -> AttrLangDeleted;
+	END;
+
    ID:
 	BEGIN
 	AttrMenu.Pre ->    GlobalAttrInMenu;
@@ -271,42 +278,83 @@ ATTRIBUTES
 	AttrCreate.Post -> UpdateStylePost;
 	AttrModify.Post -> UpdateStylePost;
 	AttrDelete.Pre ->  UpdateStyleDelete;
-	AttrDelete.Post -> AttrStyleDeleted;
+	AttrDelete.Post -> GlobalAttrDeleted;
 	END;
 
    Title:
-	AttrMenu.Pre ->    GlobalAttrInMenu;
-
-   Langue:
 	BEGIN
 	AttrMenu.Pre ->    GlobalAttrInMenu;
-	AttrCreate.Post -> AttrLangCreated;
-	AttrDelete.Post -> AttrLangDeleted;
+	AttrCreate.Post -> GlobalAttrCreated;
+	AttrDelete.Post -> GlobalAttrDeleted;
 	END;
 
    dir:
+	BEGIN
 	AttrMenu.Pre ->    GlobalAttrInMenu;
+	AttrCreate.Post -> GlobalAttrCreated;
+	AttrDelete.Post -> GlobalAttrDeleted;
+	END;
 
    onclick:
+	BEGIN
 	AttrMenu.Pre ->    GlobalAttrInMenu;
+	AttrCreate.Post -> GlobalAttrCreated;
+	AttrDelete.Post -> GlobalAttrDeleted;
+	END;
    ondblclick:
+	BEGIN
 	AttrMenu.Pre ->    GlobalAttrInMenu;
+	AttrCreate.Post -> GlobalAttrCreated;
+	AttrDelete.Post -> GlobalAttrDeleted;
+	END;
    onmousedown:
+	BEGIN
 	AttrMenu.Pre ->    GlobalAttrInMenu;
+	AttrCreate.Post -> GlobalAttrCreated;
+	AttrDelete.Post -> GlobalAttrDeleted;
+	END;
    onmouseup:
+	BEGIN
 	AttrMenu.Pre ->    GlobalAttrInMenu;
+	AttrCreate.Post -> GlobalAttrCreated;
+	AttrDelete.Post -> GlobalAttrDeleted;
+	END;
    onmouseover:
+	BEGIN
 	AttrMenu.Pre ->    GlobalAttrInMenu;
+	AttrCreate.Post -> GlobalAttrCreated;
+	AttrDelete.Post -> GlobalAttrDeleted;
+	END;
    onmousemove:
+	BEGIN
 	AttrMenu.Pre ->    GlobalAttrInMenu;
+	AttrCreate.Post -> GlobalAttrCreated;
+	AttrDelete.Post -> GlobalAttrDeleted;
+	END;
    onmouseout:
+	BEGIN
 	AttrMenu.Pre ->    GlobalAttrInMenu;
+	AttrCreate.Post -> GlobalAttrCreated;
+	AttrDelete.Post -> GlobalAttrDeleted;
+	END;
    onkeypress:
+	BEGIN
 	AttrMenu.Pre ->    GlobalAttrInMenu;
+	AttrCreate.Post -> GlobalAttrCreated;
+	AttrDelete.Post -> GlobalAttrDeleted;
+	END;
    onkeydown:
+	BEGIN
 	AttrMenu.Pre ->    GlobalAttrInMenu;
+	AttrCreate.Post -> GlobalAttrCreated;
+	AttrDelete.Post -> GlobalAttrDeleted;
+	END;
    onkeyup:
+	BEGIN
 	AttrMenu.Pre ->    GlobalAttrInMenu;
+	AttrCreate.Post -> GlobalAttrCreated;
+	AttrDelete.Post -> GlobalAttrDeleted;
+	END;
 
    Selected:
 	BEGIN
