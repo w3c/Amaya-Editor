@@ -1134,28 +1134,14 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	  !TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
 			     pAb->AbElement->ElStructSchema))
 	{
-	  dx -= box->BxXOrg;
-	  dy -= box->BxYOrg;
+	  dx -= box->BxXOrg - box->BxLMargin;
+	  dy -= box->BxYOrg - box->BxTMargin;
 	}
       dx -= (dx / imageDesc->PicWArea) * imageDesc->PicWArea;
       dy -= (dy / imageDesc->PicHArea) * imageDesc->PicHArea;
       /* x, y give the shift in the source image */
       x = 0;
-      if (xFrame < dx)
-	{
-	  x = -dx;
-	  dx = 0;
-	}
-      else
-	x = 0;
-      if (yFrame < dy)
-	{
-	  y = -dy;
-	  dy = 0;
-	}
-      else
-	y = 0;
-
+      y = 0;
       /* the default presentation depends on the box type */
       picPresent = imageDesc->PicPresent;
       if (picPresent == DefaultPres)
@@ -1185,46 +1171,51 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	      XSetClipOrigin (TtDisplay, TtGraphicGC, 0, 0);
 	    }
 #else /* _GTK */ 
-	   if (w != imageDesc->PicWArea || h != imageDesc->PicHArea || 
-	       imageDesc->PicPixmap == NULL)
-	     {
-	       /*W and H is not the same 
-		 as when we load the image*/
-	       if (imageDesc->im && w > 0 && h > 0)
-		 {
-		   gdk_imlib_render(imageDesc->im, w, h);
-		   if (imageDesc->PicMask)
-		     {
-		       gdk_gc_set_clip_origin (TtGraphicGC, xFrame - picXOrg, 
-					       yFrame - picYOrg);
-		       gdk_gc_set_clip_mask (TtGraphicGC, 
-					     (GdkPixmap *) gdk_imlib_move_mask (imageDesc->im));
-		     }		   
-		   gdk_draw_pixmap ((GdkDrawable *)drawable, TtGraphicGC,
-				    (GdkPixmap *) imageDesc->im->pixmap, 
-				    picXOrg, picYOrg, 
-				    xFrame, yFrame, w ,h);
-		 }
-	     }
-	   else
-	     {
-	       if (imageDesc->PicMask)
-		 {
-		   gdk_gc_set_clip_origin (TtGraphicGC, xFrame - picXOrg, 
-					   yFrame - picYOrg);
-		   gdk_gc_set_clip_mask (TtGraphicGC, 
-					 (GdkPixmap *) imageDesc->PicMask);
-		 }
-	       gdk_draw_pixmap ((GdkDrawable *)drawable, TtGraphicGC,
-				(GdkPixmap *) imageDesc->PicPixmap, 
-				picXOrg, picYOrg, xFrame, yFrame, w ,h);
-	     }
-	   /*Restablish to normal clip*/
-	   if (imageDesc->PicMask)
-	     {
-	       gdk_gc_set_clip_mask (TtGraphicGC, (GdkPixmap *)None);
-	       gdk_gc_set_clip_origin (TtGraphicGC, 0, 0);
-	     }
+          rect.x = pFrame->FrClipXBegin - pFrame->FrXOrg;
+          rect.y = pFrame->FrClipYBegin - pFrame->FrYOrg;
+          rect.width = pFrame->FrClipXEnd - pFrame->FrClipXBegin;
+          rect.height = pFrame->FrClipYEnd - pFrame->FrClipYBegin;
+	  gdk_gc_set_clip_rectangle (TtGraphicGC, (GdkRectangle *) &rect);
+	  if (w != imageDesc->PicWArea || h != imageDesc->PicHArea || 
+	      imageDesc->PicPixmap == NULL)
+	    {
+	      /*W and H is not the same 
+		as when we load the image*/
+	      if (imageDesc->im && w > 0 && h > 0)
+		{
+		  gdk_imlib_render(imageDesc->im, w, h);
+		  if (imageDesc->PicMask)
+		    {
+		      gdk_gc_set_clip_origin (TtGraphicGC, xFrame - picXOrg, 
+					      yFrame - picYOrg);
+		      gdk_gc_set_clip_mask (TtGraphicGC, 
+					    (GdkPixmap *) gdk_imlib_move_mask (imageDesc->im));
+		    }		   
+		  gdk_draw_pixmap ((GdkDrawable *)drawable, TtGraphicGC,
+				   (GdkPixmap *) imageDesc->im->pixmap, 
+				   picXOrg, picYOrg, 
+				   xFrame, yFrame, w ,h);
+		}
+	    }
+	  else
+	    {
+	      if (imageDesc->PicMask)
+		{
+		  gdk_gc_set_clip_origin (TtGraphicGC, xFrame - picXOrg, 
+					  yFrame - picYOrg);
+		  gdk_gc_set_clip_mask (TtGraphicGC, 
+					(GdkPixmap *) imageDesc->PicMask);
+		}
+	      gdk_draw_pixmap ((GdkDrawable *)drawable, TtGraphicGC,
+			       (GdkPixmap *) imageDesc->PicPixmap, 
+			       picXOrg, picYOrg, xFrame, yFrame, w ,h);
+	    }
+	  /*Restablish to normal clip*/
+	  if (imageDesc->PicMask)
+	    {
+	      gdk_gc_set_clip_mask (TtGraphicGC, (GdkPixmap *)None);
+	      gdk_gc_set_clip_origin (TtGraphicGC, 0, 0);
+	    }
 #endif /* _GTK */
 #else /* _WINDOWS */
 	case RealSize:
@@ -1288,11 +1279,14 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 		{
 		  rect.height = 0;
 		  dy = 0;
+		  h = 0;
 		}
 	      else
-		rect.height = delta;
-	      if (h > imageDesc->PicHArea)
-		h = imageDesc->PicHArea;
+		{
+		  rect.height = delta;
+		  if (h > delta)
+		    h = delta;
+		}
 	    }
           rect.height += dy;
 	  
@@ -1309,11 +1303,14 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 		{
 		  rect.width = 0;
 		  dx = 0;
+		  w = 0;
 		}
 	      else
-		rect.width = delta;
-	      if (w > imageDesc->PicWArea)
-		w = imageDesc->PicWArea;
+		{
+		  rect.width = delta;
+		  if (w > delta)
+		    w = delta;
+		}
 	    }
           rect.width += dx;
 #ifndef _GTK
@@ -1339,7 +1336,8 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	      XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
 	      XSetClipOrigin (TtDisplay, tiledGC, -dx, -dy);
 	    }
-	  XFillRectangle (TtDisplay, drawable, tiledGC, xFrame, yFrame, w, h);
+	  if (h > 0 && w > 0)
+	    XFillRectangle (TtDisplay, drawable, tiledGC, xFrame, yFrame, w, h);
 	  /* remove clipping */
           rect.x = 0;
           rect.y = 0;
@@ -1355,6 +1353,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	  gdk_gc_set_fill (tiledGC, GDK_TILED);
           gdk_gc_set_ts_origin (tiledGC, x, y);
 	  gdk_gc_set_tile (tiledGC, (GdkPixmap *) pixmap);
+	  gdk_gc_set_clip_rectangle (tiledGC, (GdkRectangle *) &rect);
 	  if (picPresent == RealSize)
 	    {
 	      if (imageDesc->PicMask)
@@ -1362,22 +1361,22 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 		  gdk_gc_set_clip_origin (tiledGC, xFrame - picXOrg, yFrame - picYOrg);
 		  gdk_gc_set_clip_mask (tiledGC, (GdkPixmap *)imageDesc->PicMask);
 		}
-	      else
-		gdk_gc_set_clip_rectangle (tiledGC, (GdkRectangle *) &rect);
+	      /*else
+		gdk_gc_set_clip_rectangle (tiledGC, (GdkRectangle *) &rect);*/
 	    }
 	  else
 	    {
 	      gdk_gc_set_clip_rectangle (tiledGC, (GdkRectangle *) &rect);
 	      gdk_gc_set_clip_origin (tiledGC, -dx, -dy);
 	    }
-	  gdk_draw_rectangle ((GdkDrawable *)drawable, /* the window */ 
-			      tiledGC,  /* the GC */
-			      TRUE,     /* filled=true */
-			      xFrame,   /* x position drawing */
-			      yFrame,   /* y position drawing */
-			      w,        /* width drawing */
-			      h);       /* height drawing */
-
+	  if (h > 0 && w > 0)
+	    gdk_draw_rectangle ((GdkDrawable *)drawable, /* the window */ 
+				tiledGC,  /* the GC */
+				TRUE,     /* filled=true */
+				xFrame,   /* x position drawing */
+				yFrame,   /* y position drawing */
+				w,        /* width drawing */
+				h);       /* height drawing */
 	  /* remove clipping */
           rect.x = 0;
           rect.y = 0;
@@ -1397,46 +1396,48 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
           clipHeight = pFrame->FrClipYEnd - pFrame->FrClipYBegin;
           if (picPresent == FillFrame || picPresent == YRepeat)
 	    {
-	      /* clipping height is done by the box height */
-	      if (y < yFrame)
-		{
-		  /* reduce the height in delta value */
-		  clipHeight = clipHeight + y - yFrame;
-		  y = yFrame;
-		}
 	      if (clipHeight > h)
                 clipHeight = h;
 	    }
 	  else
 	    {
 	      /* clipping height is done by the image height */
-	      delta = yFrame + imageDesc->PicHArea - y;
+	      delta = imageDesc->PicHArea - yFrame;
 	      if (delta <= 0)
-		clipHeight = 0;
+		{
+		  clipHeight = 0;
+		  dy = 0;
+		  h = 0;
+		}
 	      else
-		clipHeight = delta;
+		{
+		  clipHeight = delta;
+		  if (h > delta)
+		    h = delta;
+		}
 	    }
 	  
           if (picPresent == FillFrame || picPresent == XRepeat)
 	    {
-	      /* clipping width is done by the box width */
-	      if (x < xFrame)
-		{
-		  /* reduce the width in delta value */
-		  clipWidth = clipWidth + x - xFrame;
-		  x = xFrame;
-		}
 	      if (clipWidth > w)
 		clipWidth = w;
 	    }
 	  else
 	    {
 	      /* clipping width is done by the image width */
-	      delta = xFrame + imageDesc->PicWArea - x;
+	      delta = imageDesc->PicWArea - xFrame;
 	      if (delta <= 0)
-		clipWidth = 0;
+		{
+		  clipWidth = 0;
+		  dx = 0;
+		  w = 0;
+		}
 	      else
-		clipWidth = delta;
+		{
+		  clipWidth = delta;
+		  if (w > delta)
+		    w = delta;
+		}
 	    }
           hMemDC  = CreateCompatibleDC (TtDisplay);
           bitmapTiled = CreateCompatibleBitmap (TtDisplay, w, h);

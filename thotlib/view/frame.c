@@ -72,7 +72,6 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
    int                xb, xe, yb, ye;
 
    GetSizesFrame (frame, &width, &height);
-
    if ((xd == xf && xd == 0 && (yd != yf || yd != 0)) ||
        (yd == yf && yd == 0 && (xd != xf || xd != 0)))
      return;
@@ -123,10 +122,12 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
 	/* Update the coordinates of the area redrawn */
 	else
 	  {
-	     if (pFrame->FrClipXBegin > xd)
-		pFrame->FrClipXBegin = xd;
-	     if (pFrame->FrClipXEnd < xf)
-		pFrame->FrClipXEnd = xf;
+	    if (xd < 0)
+	      xd = 0;
+	    if (pFrame->FrClipXBegin > xd)
+	      pFrame->FrClipXBegin = xd;
+	    if (pFrame->FrClipXEnd < xf)
+	      pFrame->FrClipXEnd = xf;
 	  }
 	/* Should we take the whole height of the frame ? */
 	if (yd == yf && yd == -1)
@@ -151,10 +152,12 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
 	/* Update the coordinates of the area redrawn */
 	else
 	  {
-	     if (pFrame->FrClipYBegin > yd)
-		pFrame->FrClipYBegin = yd;
-	     if (pFrame->FrClipYEnd < yf)
-		pFrame->FrClipYEnd = yf;
+	    if (yd < 0)
+	      yd = 0;
+	    if (pFrame->FrClipYBegin > yd)
+	      pFrame->FrClipYBegin = yd;
+	    if (pFrame->FrClipYEnd < yf)
+	      pFrame->FrClipYEnd = yf;
 	  }
      }
 #ifdef _GL
@@ -199,7 +202,7 @@ void TtaRefresh ()
    from the most englobing box down to pBox itself.
    It ensure unicity of boxes referenced in adbloc.
   ----------------------------------------------------------------------*/
-static void    AddBoxToCreate (PtrBox * tocreate, PtrBox pBox, int frame)
+static void AddBoxToCreate (PtrBox * tocreate, PtrBox pBox, int frame)
 {
   PtrAbstractBox      pAb;
   int                 i;
@@ -363,15 +366,15 @@ static void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
 	      picPresent = imageDesc->PicPresent;
 	      if (picPresent == DefaultPres)
 		picPresent = FillFrame;
-	      if (picPresent == YRepeat || picPresent == FillFrame ||
-		  (picPresent == XRepeat && !pAb->AbTruncatedHead))
+	      if (setWindow || picPresent == YRepeat || picPresent == FillFrame ||
+		  (picPresent == XRepeat/* && !pAb->AbTruncatedHead*/))
 		DrawPicture (pBox, imageDesc, frame,  xd - x, yd - y, width, height);
 	      else if (!pAb->AbTruncatedHead)
 		/* the clipping will work automatically */
 		DrawPicture (pBox, imageDesc, frame,
-			     pBox->BxXOrg - x,
-			     pBox->BxYOrg + FrameTable[frame].FrTopMargin - y,
-			     pBox->BxW, pBox->BxH);
+			     pBox->BxXOrg + pBox->BxLMargin - x,
+			     pBox->BxYOrg + pBox->BxTMargin + FrameTable[frame].FrTopMargin - y,
+			     width, height);
 	    }
 	}
     }
