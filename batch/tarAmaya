@@ -5,7 +5,7 @@
 #       amaya-$MACH-$AMAYAVERSION.tar.gz
 # 
 AMAYAVERSION=1.3
-THOTDIR=/tahiti/diffusion/opera
+THOTDIR=/tahiti/diffusion/Thot
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX-ELF RS6000 SGI"
 #PLATFORMS="LINUX-ELF"
@@ -26,7 +26,6 @@ do
    Thot/README.amaya \
    Thot/config/XKeysymDB \
    Thot/config/thot.ini \
-   Thot/config/amaya.css \
    Thot/config/amaya.keyboard \
    Thot/config/en-amayadialogue \
    Thot/config/en-amayamsg \
@@ -56,15 +55,12 @@ do
    Thot/doc/amaya/Registry.html \
    Thot/doc/amaya/Transform.html \
    Thot/doc/amaya/Attributes.html \
-   Thot/doc/amaya/New.html \
    Thot/doc/amaya/Views.html \
-   Thot/doc/amaya/Autoconf.html \
    Thot/doc/amaya/Publishing.html \
    Thot/doc/amaya/Put.html \
    Thot/doc/amaya/ImageMaps.html \
    Thot/doc/amaya/Numbering.html \
    Thot/doc/amaya/Searching.html \
-   Thot/doc/amaya/BinDist.html \
    Thot/doc/amaya/Selecting.html \
    Thot/doc/amaya/Browsing.html \
    Thot/doc/amaya/CSS.html \
@@ -86,15 +82,14 @@ do
    Thot/$MACH/bin/amaya \
    Thot/$MACH/bin/print \
    Thot/batch/MachineType \
-   Thot/amaya/COPYRIGHT \
    Thot/amaya/AmayaPage.html \
    Thot/amaya/HTML.STR \
-   Thot/amaya/HTML.conf \
-   Thot/amaya/HTML.trans \
-   Thot/amaya/HTML.en \
-   Thot/amaya/HTML.fr \
    Thot/amaya/HTML*.PRS \
    Thot/amaya/HTML*.TRA \
+   Thot/amaya/HTML.conf \
+   Thot/amaya/HTML.trans \
+   Thot/amaya/*.en \
+   Thot/amaya/*.fr \
    Thot/amaya/*.gif \
    Thot/amaya/MathML.STR \
    Thot/amaya/MathML*.PRS \

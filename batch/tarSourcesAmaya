@@ -9,7 +9,7 @@
 #       amaya-libs-$MACH-$AMAYAVERSION.tar.gz
 #
 AMAYAVERSION=1.3
-THOTDIR=/tahiti/diffusion/opera
+THOTDIR=/tahiti/diffusion/Thot
 DEST=/tahiti/thottape
 
 TAR="tar cvbfh 200"
@@ -60,6 +60,8 @@ Thot/amaya/EDITstyle.c \
 Thot/amaya/HTML.A \
 Thot/amaya/HTML.S \
 Thot/amaya/HTML.conf \
+Thot/amaya/*.en \
+Thot/amaya/*.fr \
 Thot/amaya/HTMLP.P \
 Thot/amaya/HTMLT.T \
 Thot/amaya/HTMLTT.T \
@@ -130,6 +132,9 @@ Thot/config/de-libdialogue \
 Thot/config/de-transdialogue \
 Thot/config/de-corrdialogue \
 Thot/config/thot.ini \
+Thot/dicopar/*.ptn \
+Thot/dicopar/alphabet \
+Thot/dicopar/clavier \
 Thot/pluginlib/Makefile.in \
 Thot/pluginlib/Makefile.plugin \
 Thot/pluginlib/*.c \
@@ -225,6 +230,7 @@ Thot/batch/printstr.c \
 Thot/batch/prs.c \
 Thot/batch/str.c \
 Thot/batch/tra.c \
+Thot/batch/rescandialogue.c \
 Thot/batch/writeapp.c \
 Thot/batch/writeprs.c \
 Thot/batch/writestr.c \
@@ -293,7 +299,6 @@ Thot/doc/amaya/MakeBook.html \
 Thot/doc/amaya/StyleSheets.html \
 Thot/doc/amaya/Manual.html \
 Thot/doc/amaya/Tables.html \
-Thot/doc/amaya/AmayaArchi.html \
 Thot/doc/amaya/Math.html \
 Thot/doc/amaya/Registry.html \
 Thot/doc/amaya/Transform.html \
@@ -319,7 +324,14 @@ Thot/doc/amaya/Links.html \
 Thot/doc/amaya/Put.html \
 Thot/doc/amaya/SpellChecking.html \
 Thot/doc/Icons/*.gif \
-Thot/misc/tools/rescandialogue.c \
+Thot/fonts/Families.list \
+Thot/fonts/fonts.dir \
+Thot/fonts/icones* \
+Thot/Icons/WWW/activity_48x48 \
+Thot/Icons/WWW/guide48x \
+Thot/Icons/WWW/new_red \
+Thot/Icons/WWW/relnotes48x \
+Thot/Icons/WWW/w3c_home \
 Thot/libjpeg/Makefile \
 Thot/libjpeg/README \
 Thot/libjpeg/*.1 \
