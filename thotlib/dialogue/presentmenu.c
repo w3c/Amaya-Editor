@@ -2032,7 +2032,7 @@ void TtcChangeCharacters (Document document, View view)
 	     i += strlen (&string[i]) + 1;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewSubmenu (NumMenuCharFamily, NumFormPresChar, 0,
-	     TtaGetMessage (LIB, TMSG_FONT_FAMILY), 4, string, NULL, TRUE);
+	     TtaGetMessage (LIB, TMSG_FONT_FAMILY), 4, string, NULL, 0, TRUE);
 
 	     /* sous-menu style de caracteres */
 	     i = 0;
@@ -2044,7 +2044,7 @@ void TtcChangeCharacters (Document document, View view)
 	     i += strlen (&string[i]) + 1;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewSubmenu (NumMenuCharFontStyle, NumFormPresChar, 0,
-		   TtaGetMessage (LIB, TMSG_STYLE), 4, string, NULL, TRUE);
+		   TtaGetMessage (LIB, TMSG_STYLE), 4, string, NULL, 0, TRUE);
 
 	     /* sous-menu type de Souligne */
 	     i = 0;
@@ -2058,7 +2058,7 @@ void TtcChangeCharacters (Document document, View view)
 	     i += strlen (&string[i]) + 1;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewSubmenu (NumMenuUnderlineType, NumFormPresChar, 0,
-		    TtaGetMessage (LIB, TMSG_LINE), 5, string, NULL, TRUE);
+		    TtaGetMessage (LIB, TMSG_LINE), 5, string, NULL, 0, TRUE);
 
 	     /* sous-menu graisse des caracteres */
 	     i = 0;
@@ -2068,7 +2068,7 @@ void TtcChangeCharacters (Document document, View view)
 	     i += strlen (&string[i]) + 1;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewSubmenu (NumMenuCharFontWeight, NumFormPresChar, 0,
-		   TtaGetMessage (LIB, TMSG_BOLDNESS), 3, string, NULL, TRUE);
+		   TtaGetMessage (LIB, TMSG_BOLDNESS), 3, string, NULL, 0, TRUE);
 
 	     /* sous-menus des corps disponibles, en points typographiques */
 	     nbItems = 0;
@@ -2088,7 +2088,8 @@ void TtcChangeCharacters (Document document, View view)
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     nbItems++;
 	     TtaNewSubmenu (NumMenuCharFontSize, NumFormPresChar, 0,
-			    TtaGetMessage (LIB, TMSG_BODY_SIZE_PTS), nbItems, string, NULL, TRUE);
+			    TtaGetMessage (LIB, TMSG_BODY_SIZE_PTS), nbItems,
+			    string, NULL, 0, TRUE);
 #endif /* _GTK */
        
 	     /* initialise la zone 'Famille de caracteres' */
@@ -2382,7 +2383,7 @@ void TtcChangeFormat (Document document, View view)
          sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
 	/* Inchange */
          TtaNewSubmenu (NumMenuAlignment, NumFormPresFormat, 0,
-         TtaGetMessage (LIB, TMSG_ALIGN), 5, string, NULL, TRUE);
+         TtaGetMessage (LIB, TMSG_ALIGN), 5, string, NULL, 0, TRUE);
          /* change la police des 4 premieres entrees */
          for (i = 0; i < 4; i++)
             TtaRedrawMenuEntry (NumMenuAlignment, i, "icones", ThotColorNone, -1);
@@ -2434,7 +2435,7 @@ void TtcChangeFormat (Document document, View view)
          i += strlen (&string[i]) + 1;
          sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
          TtaNewSubmenu (NumMenuRecessSense, NumFormPresFormat, 0,
-                        TtaGetMessage (LIB, TMSG_INDENT), 3, string, NULL, TRUE);
+                        TtaGetMessage (LIB, TMSG_INDENT), 3, string, NULL, 0, TRUE);
          /* change la police des 3 premieres entrees du sous-menu */
          for (i = 0; i < 2; i++)
 	   TtaRedrawMenuEntry (NumMenuRecessSense, i, "icones", ThotColorNone, -1);
@@ -2465,7 +2466,7 @@ void TtcChangeFormat (Document document, View view)
          i += strlen (&string[i]) + 1;
          sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
          TtaNewSubmenu (NumMenuLineSpacing, NumFormPresFormat, 0,
-                        TtaGetMessage (LIB, TMSG_LINE_SPACING), 4, string, NULL, TRUE);
+                        TtaGetMessage (LIB, TMSG_LINE_SPACING), 4, string, NULL, 0, TRUE);
          /* change la police des 3 premieres entrees */
          for (i = 0; i < 3; i++)
              TtaRedrawMenuEntry (NumMenuLineSpacing, i, "icones", ThotColorNone, -1);

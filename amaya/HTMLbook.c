@@ -735,7 +735,7 @@ void SetupAndPrint (Document doc, View view)
   i += strlen (&bufMenu[i]) + 1;
   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_US));
   TtaNewSubmenu (BasePrint + PaperFormat, BasePrint + FormPrint, 0,
-		 TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, bufMenu, NULL, TRUE);
+		 TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, bufMenu, NULL, 0, TRUE);
   if (PageSize == PP_US)
     TtaSetMenuForm (BasePrint + PaperFormat, 1);
   else
@@ -747,7 +747,7 @@ void SetupAndPrint (Document doc, View view)
   i += strlen (&bufMenu[i]) + 1;
   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (AMAYA, AM_LANDSCAPE));
   TtaNewSubmenu (BasePrint + PaperOrientation, BasePrint + FormPrint, 0,
-		 TtaGetMessage (AMAYA, AM_ORIENTATION), 2, bufMenu, NULL, TRUE);
+		 TtaGetMessage (AMAYA, AM_ORIENTATION), 2, bufMenu, NULL, 0, TRUE);
   if (Orientation == PP_Landscape)
     TtaSetMenuForm (BasePrint + PaperOrientation, 1);
   else
@@ -760,7 +760,7 @@ void SetupAndPrint (Document doc, View view)
   i += strlen (&bufMenu[i]) + 1;
   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_4_PAGE_SHEET));
   TtaNewSubmenu (BasePrint + PPagesPerSheet, BasePrint + FormPrint, 0,
-		 TtaGetMessage (LIB, TMSG_REDUCTION), 3, bufMenu, NULL, TRUE);
+		 TtaGetMessage (LIB, TMSG_REDUCTION), 3, bufMenu, NULL, 0, TRUE);
   if (PagePerSheet == 1)
     TtaSetMenuForm (BasePrint + PPagesPerSheet, 0);
   else if (PagePerSheet == 2)
@@ -774,7 +774,7 @@ void SetupAndPrint (Document doc, View view)
   i += strlen (&bufMenu[i]) + 1;
   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PS_FILE));
   TtaNewSubmenu (BasePrint + PrintSupport, BasePrint + FormPrint, 0,
-		 TtaGetMessage (LIB, TMSG_OUTPUT), 2, bufMenu, NULL, TRUE);
+		 TtaGetMessage (LIB, TMSG_OUTPUT), 2, bufMenu, NULL, 0, TRUE);
 
   /* PaperPrint selector */
   TtaNewTextForm (BasePrint + PPrinterName, BasePrint + FormPrint, NULL, 30, 1, TRUE);

@@ -134,7 +134,7 @@ void                UpdateSelectMenu (PtrDocument pDoc)
 	     else
 	       {
 		  TtaNewPulldown (ref, FrameTable[frame].WdMenus[menu], NULL,
-				  NbItemSel, BufMenuSel, NULL);
+				  NbItemSel, BufMenuSel, 0, NULL);
 		  TtaSetMenuOn (document, vue, menuID);
 	       }
 	  }

@@ -648,7 +648,7 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
 	 }
 #ifdef _GTK
        /* cree le menu des valeurs de l'attribut */
-       TtaNewSubmenu (subform, form, 0, title, val, bufMenu, NULL, TRUE);
+       TtaNewSubmenu (subform, form, 0, title, val, bufMenu, NULL, 0, TRUE);
        TtaAttachForm (subform);
        /* initialise le menu avec la valeur courante */
        val = -1;

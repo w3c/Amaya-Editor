@@ -1781,7 +1781,7 @@ void InitCharset (Document document, View view, char *url)
 	      TtaGetMessage (AMAYA, AM_SELECT_CHARSET), TRUE, 1, 'L', D_CANCEL);
   /* radio buttons */
   TtaNewSubmenu (BaseDialog + CharsetSel, BaseDialog + CharsetForm, 0,
-		 NULL, 3, s, NULL, FALSE);
+		 NULL, 3, s, NULL, 0, FALSE);
   TtaSetMenuForm (BaseDialog + CharsetSel, i);
       
   TtaSetDialoguePosition ();

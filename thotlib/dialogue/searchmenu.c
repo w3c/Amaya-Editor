@@ -340,7 +340,7 @@ static void InitMenuWhereToSearch (int ref)
   /* sous-menu Ou` rechercher element vide */
   TtaNewSubmenu (NumMenuOrSearchText, ref, 0,
 		 TtaGetMessage (LIB, TMSG_SEARCH_WHERE), 4, string,
-		 NULL, FALSE);
+		 NULL, 0, FALSE);
   TtaSetMenuForm (NumMenuOrSearchText, 2);
 }
 #endif /* _GTK */
@@ -481,7 +481,7 @@ static char           wxCaption[200];
 	       TtaGetMessage (LIB, TMSG_AUTO_REPLACE));
       TtaNewSubmenu (NumMenuReplaceMode, NumFormSearchText, 0,
 		     TtaGetMessage (LIB, TMSG_REPLACE), 3, string,
-		     NULL, FALSE);
+		     NULL, 0, FALSE);
       if (WithReplace)
 	{
 	  if (AutoReplace)
