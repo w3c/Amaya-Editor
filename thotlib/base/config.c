@@ -116,12 +116,12 @@ CHAR_T*        car;
 unsigned char* txt;
 #endif /* !__STDC__ */
 {
-#ifdef RamziGuetari
+/* #ifdef RamziGuetari */
     /* This code may be used if a Wide character may be encoded on
        more than 2 bytes */
-    int           nbBytesToRead;
-    char*         start = *txt;
-    CHAR_T        res;
+    int            nbBytesToRead;
+    unsigned char* start = *txt;
+    CHAR_T         res;
 
     /* See how many bytes to read to build a wide character */
     if (*start < 0xC0)
@@ -165,7 +165,8 @@ unsigned char* txt;
         *car = TEXT('?');
     
     return nbBytesToRead;
-#   endif /* RamziGuetari */
+/* #   endif /* RamziGuetari */
+#   if 0
     char            mbcstr[MAX_BYTES] = "\0";
     int             nbBytesToRead;
     CHAR_T          res;
@@ -173,7 +174,7 @@ unsigned char* txt;
     
     mbcstr[0] = *start;
     nbBytesToRead = 1;
-    if (*start >= 0x80) {
+    if (isleadbyte(*start)) {
        txt++;
        mbcstr[1] = *start++;
        nbBytesToRead = 2;
@@ -181,6 +182,7 @@ unsigned char* txt;
     mbtowc (car, mbcstr, nbBytesToRead);
     /* mbtowc (&res, mbcstr, nbBytesToRead); */
     return nbBytesToRead;
+#   endif /* 0 */
 }
 #endif /* _I18N_ */
 

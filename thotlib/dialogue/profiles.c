@@ -447,7 +447,7 @@ static void SortFunctionTable ()
   int           i, j, index;
 
   /* copy the list of contexts in a large table */
-  SortedFunctionTable = (char**) TtaGetMemory (NbFunctions * sizeof (CharUnit*));
+  SortedFunctionTable = (char**) TtaGetMemory (NbFunctions * sizeof (char*));
   index = 0;
   ctxt = FunctionTable;
   EnableEdit = FALSE;

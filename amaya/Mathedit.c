@@ -3669,7 +3669,7 @@ void AttrOpenCloseChanged (event)
         TtaGiveTextAttributeValue (event->attribute, text, &length);
 	}
       /* set the content of the fence element */
-      TtaSetGraphicsShape (content, text[0], event->document);
+      TtaSetGraphicsShape (content, text[0], event->document); 
       }
     }
 }

@@ -582,7 +582,7 @@ Document doc;
    int         len;
    Language    lang;
    CHAR_T      alphabet;
-   char        text[4];
+   CHAR_T      text[4];
 
    len = TtaGetTextLength (*el);
    if (len == 1)
@@ -591,25 +591,25 @@ Document doc;
       TtaGiveTextContent (*el, text, &len, &lang);
       alphabet = TtaGetAlphabet (lang);
       parent = TtaGetParent (*el);
-      if (text[0] != EOS)
+      if (text[0] != WC_EOS)
 	  {
 	    parentType = TtaGetElementType (parent);
 	    elType = parentType;
 	    if (parentType.ElTypeNum == MathML_EL_MF &&
-		(text[0] == '(' ||
-		 text[0] == ')' ||
-		 text[0] == '[' ||
-		 text[0] == ']' ||
-		 text[0] == '{' ||
-		 text[0] == '}'))
+		(text[0] == TEXT('(') ||
+		 text[0] == TEXT(')') ||
+		 text[0] == TEXT('[') ||
+		 text[0] == TEXT(']') ||
+		 text[0] == TEXT('{') ||
+		 text[0] == TEXT('}')))
 	       /* Transform the text element into a Thot SYMBOL */
 	       elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
 	    else if (parentType.ElTypeNum == MathML_EL_MF &&
-		     text[0] == '|')
+		     text[0] == TEXT('|'))
 	       /* Transform the text element into a Thot GRAPHIC */
 	       {
 	       elType.ElTypeNum = MathML_EL_GRAPHICS_UNIT;
-	       text[0] = 'v';
+	       text[0] = TEXT('v');
 	       }
 	    else
 	       /* a TEXT element is OK */
@@ -620,7 +620,7 @@ Document doc;
 	       TtaInsertSibling (new, *el, FALSE, doc);
 	       TtaDeleteTree (*el, doc);
 	       *el = new;
-	       TtaSetGraphicsShape (new, text[0], doc);
+	       TtaSetGraphicsShape (new, (char)text[0], doc);
 	       }
 	  }
       }
@@ -1099,7 +1099,7 @@ void SetIntVertStretchAttr (el, doc, base, selEl)
 	         if (len == 1)
 		   {
 		   len = 2;
-		   TtaGiveTextContent (textEl, text, &len, &lang);
+		   TtaGiveTextContent (textEl, text, &len, &lang); 
 		   alphabet = TtaGetAlphabet (lang);
 		   if (len == 1)
 		     if (alphabet == 'G')

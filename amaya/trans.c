@@ -2850,7 +2850,7 @@ Document            doc;
 	  if (best == -1)
 	    /* no transformation for the actual selection : take another one */
 	    best = last;
-	  TransCallbackDialog (TransBaseDialog + TransMenu, 0, best);
+	  TransCallbackDialog (TransBaseDialog + TransMenu, 0, best); 
 	}
     }
   TtaFreeMemory (nameSet);  

@@ -11,8 +11,10 @@
 
 #include <stdio.h>
 #include "thot_sys.h"
+#include "winsys.h"
 
 #define _MIN_ ((a), (b)) (a) < (b) ? (a) : (b)
+#define MAX_LEN 1024
 
 #ifdef __STDC__
 CHAR_T* ufgets (CHAR_T* string, int n, FILE *stream)
@@ -24,6 +26,7 @@ FILE*  stream;
 #endif /* __STDC__ */
 {
 #   ifdef _I18N_
+#   if 0
     unsigned char byte;
     CHAR_T        wChar;
     char          mbcstr[MAX_BYTES];
@@ -39,7 +42,7 @@ FILE*  stream;
           }
           if (!done) {
              mbcstr[0] = byte;
-             if (byte >= 0x80) {
+             if (isleadbyte (byte)) {
                 if ((byte = fgetc (stream)) == 0 || byte == EOF) {
                    string [nbWChar] = WC_EOS;
                    done = TRUE;
@@ -54,7 +57,37 @@ FILE*  stream;
     if (nbWChar == 0)
        return (CHAR_T*) 0;
     return string;
+#   endif /*** 000 ***/
+    char str[2048];
+    fgets (str, 2048, stream);
+    mbstowcs (string, str, 2048);
+    return string;
 #   else  /* !_I18N_ */
     return (CHAR_T*) fgets ((char*) string, n, stream);
 #   endif /* !_I18N_ */
+}
+
+#ifdef __STDC__
+FILE* ufopen (CHAR_T* name, CHAR_T* mode)
+#else  /* !__STDC__ */
+FILE* ufopen (name, mode)
+CHAR_T* name;
+CHAR_T* mode;
+#endif /* !__STDC__ */
+{
+#  ifdef _I18N_
+   if (IS_NT)
+      return _wfopen (name, mode);
+   else {
+        char mbName[MAX_LEN];
+        char mbMode[MAX_LEN];
+
+        wcstombs (mbName, name, MAX_LEN);
+        wcstombs (mbMode, mode, MAX_LEN);
+
+        return fopen (mbName, mbMode);
+   }
+#  else  /* !_I18N_ */
+   return fopen (name, mode);
+#  endif /* !_I18N_ */
 }

@@ -119,18 +119,14 @@ int     msgType;
 #endif /* __STDC__ */
 {
    if (hwnd) {
-      LPTSTR pText = (LPTSTR) malloc (ustrlen (errorMsg) + 3);
-      if ( pText ) {
-         /* Set caret to end of current text */
-         int ndx = GetWindowTextLength (hwnd);
-         SetFocus (hwnd);   
-         SendMessage (hwnd, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
-         /* Append text */
-         usprintf( pText, TEXT("%s\r\n"), errorMsg );
-         SendMessage (hwnd, EM_REPLACESEL, 0, (LPARAM) ((LPTSTR) pText));
-
-         free (pText);			
-	  } 
+      CHAR_T pText[1024];
+      /* Set caret to end of current text */
+      int ndx = GetWindowTextLength (hwnd);
+      SetFocus (hwnd);   
+      SendMessage (hwnd, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
+      /* Append text */
+      usprintf( pText, TEXT("%s\r\n"), errorMsg );
+      SendMessage (hwnd, EM_REPLACESEL, 0, (LPARAM) ((LPTSTR) pText));
    } 
 }
 

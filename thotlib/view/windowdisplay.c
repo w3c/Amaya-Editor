@@ -778,7 +778,7 @@ int                 shadow;
                 /* GetClipRgn(TtDisplay, clipRgn); */
                 outOpt = 0;
 
-#               ifdef _I18N_
+#               if 0 /* ifdef _I18N_ */
                 fontLangInfo = GetFontLanguageInfo (TtDisplay);
 
                 if (fontLangInfo == GCP_ERROR) /* There is a Problem. */
@@ -819,9 +819,9 @@ int                 shadow;
 	            GetCharacterPlacement (TtDisplay, ptcar, ustrlen (ptcar), GCP_MAXEXTENT, &results, infoFlag);
 
                 ExtTextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin, outOpt, &rect, (USTRING) szNewText, lg, anDX);
-#               else  /* !_I18N_ */
+#               endif /* 00000 else  /* !_I18N_ */ */
                 TextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin, (USTRING) ptcar, lg);
-#               endif /* !_18N_ */
+/* #               endif /* !_18N_ */
 			 } 
 	  } 
  

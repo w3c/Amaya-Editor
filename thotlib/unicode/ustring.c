@@ -30,6 +30,19 @@ const CHAR_T* str2;
 #   ifdef _WINDOWS
     return (int) _wcsicmp ((wchar_t*)str1, (wchar_t*)str2);
 #   else  /* !_WINDOWS */
+    int len1 = ustrlen (str1);
+    int len2 = ustrlen (str2);
+    int i    = 0;
+
+    if (len1 != len2)
+       return (len1 - len2);
+
+    while (str1[i]) {
+          if (towlower (str1[i]) != towlower (str2[i]))
+             return (str1[i] - str2[i]);
+          i++;
+	}
+    return 0;
 #   endif /* !_WINDOWS */
 }
 

@@ -51,10 +51,10 @@ extern Pixmap       EpsfPictureLogo;
    Find EPS picture bounding box.      		             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         GetPictureBoundaries (CharUnit* fn, int *xif, int *yif, int *wif, int *hif)
+static void         GetPictureBoundaries (CHAR_T* fn, int *xif, int *yif, int *wif, int *hif)
 #else  /* __STDC__ */
 static void         GetPictureBoundaries (fn, xif, yif, wif, hif)
-CharUnit*           fn;
+CHAR_T*             fn;
 int                *xif;
 int                *yif;
 int                *wif;
@@ -74,7 +74,7 @@ int                *hif;
    *yif = 0;
    *wif = 590;
    *hif = 840;
-   fin = fopen (fn, "r");
+   fin = ufopen (fn, TEXT("r"));
    if (fin)
      {
 	pt = buff;

@@ -625,7 +625,7 @@ int makeArgcArgv (HINSTANCE hInst, CHAR_T*** pArgv, char* cmdLine)
 #else  /* __STDC__ */
 int makeArgcArgv (hInst, pArgv, cmdLine)
 HINSTANCE   hInst; 
-CharUnit*** pArgv; 
+CHAR_T***   pArgv; 
 char*       cmdLine;
 #endif /* __STDC__ */
 { 
@@ -1572,11 +1572,11 @@ CHAR_T*          server;
 #endif /* __STDC__ */
 #else  /* _WINDOWS */
 #ifdef __STDC__
-void             TtaInitDialogue (CharUnit* server, ThotAppContext * app_context, Display ** Dp)
+void             TtaInitDialogue (CHAR_T* server, ThotAppContext * app_context, Display ** Dp)
 
 #else  /* __STDC__ */
 void             TtaInitDialogue (server, app_context, Dp)
-CharUnit*        server;
+CHAR_T*          server;
 ThotAppContext*  app_context;
 Display**        Dp;
 

@@ -51,6 +51,7 @@ static FILE        *AppFile;
 #include "memory_f.h"
 
 char     mbsTmpStr [1024];
+char     mbsName [1024];
 char     mbsStatement [5000]; 
 CHAR_T   wcsStatement [2500]; 
 
@@ -197,9 +198,11 @@ STRING              menuName;
 	       break;
 	 }
 #  ifdef _I18N_
-   usprintf (wcsStatement, TEXT(", TEXT(\"%s\"), %s, %s, %d);\n"), schemaName, menuName, item->AppItemName, itemsNumber);
-   wcstombs (mbsStatement, wcsStatement, 5000);
-   fprintf (AppFile, mbsStatement);
+   /* usprintf (wcsStatement, TEXT(", TEXT(\"%s\"), %s, %s, %d);\n"), schemaName, menuName, item->AppItemName, itemsNumber);
+   wcstombs (mbsStatement, wcsStatement, 5000); */
+   wcstombs (mbsName, menuName, 1024);
+   wcstombs (mbsTmpStr, item->AppItemName, 1024);
+   fprintf (AppFile, ", TEXT(\"%s\"), %s, %s, %d);\n", schemaName, mbsName, mbsTmpStr, itemsNumber);
 #  else  /* !_I18N_ */
    fprintf (AppFile, ", TEXT(\"%s\"), %s, %s, %d);\n", schemaName, menuName, item->AppItemName, itemsNumber);
 #  endif /* !_I18N_ */
@@ -222,9 +225,11 @@ STRING              menuName;
 		    break;
 	      }
 #   ifdef _I18N_
-    usprintf (wcsStatement, TEXT(", TEXT(\"%s\"), %s, %s"), schemaName, menuName, item->AppItemName);
-    wcstombs (mbsStatement, wcsStatement, 5000);
-	fprintf (AppFile, mbsStatement);
+    /* usprintf (wcsStatement, TEXT(", TEXT(\"%s\"), %s, %s"), schemaName, menuName, item->AppItemName);
+    wcstombs (mbsStatement, wcsStatement, 5000); */
+    wcstombs (mbsName, menuName, 1024);
+    wcstombs (mbsTmpStr, item->AppItemName, 1024);
+	fprintf (AppFile, ", TEXT(\"%s\"), %s, %s", schemaName, mbsName, mbsTmpStr);
 #   else  /* !_I18N_ */
 	fprintf (AppFile, ", TEXT(\"%s\"), %s, %s", schemaName, menuName, item->AppItemName);
 #   endif /* !_I18N_ */
@@ -372,9 +377,10 @@ CHAR_T             *schemaName;
 				   break;
 			     }
 #                ifdef _I18N_
-                 usprintf (wcsStatement, TEXT(", TEXT(\"%s\"), %s, -1"), schName, menu->AppMenuName);
-                 wcstombs (mbsStatement, wcsStatement, 5000);
-                 fprintf (AppFile, mbsStatement);
+                 /* usprintf (wcsStatement, TEXT(", TEXT(\"%s\"), %s, -1"), schName, menu->AppMenuName);
+                 wcstombs (mbsStatement, wcsStatement, 5000); */
+                 wcstombs (mbsTmpStr, menu->AppMenuName, 1024);
+                 fprintf (AppFile, ", TEXT(\"%s\"), %s, -1", schName, mbsTmpStr);
 #                else  /* !_I18N_ */
                  fprintf (AppFile, ", TEXT(\"%s\"), %s, -1", schName, menu->AppMenuName);
 #                endif /* !_I18N_ */ 

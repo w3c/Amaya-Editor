@@ -99,15 +99,6 @@ CHAR_T*             bval;
       nbBytes = 2;
    }
    mbtowc (bval, mbcstr, nbBytes);
-   /* if (car >= 0x80) {
-      if (TtaReadByte (file, &car) == 0) {
-         *bval = (CHAR_T)0;
-         return FALSE;
-      }
-      mbcstr [1] = car;
-      nbBytes = 2;
-   }*/
-   mbtowc (bval, mbcstr, nbBytes);
    return (TRUE);
 #  else  /* !_I18N_ */
    return TtaReadByte (file, bval);
@@ -514,11 +505,11 @@ DocumentIdentifier  Ident;
 #endif /* __STDC__ */
 {
    int                 j;
-#  if defined(_I18N_) && defined(_WINDOWS)
+#  ifdef _I18N_
    char   mbcstr[3] = "\0";
    int    nbBytes;
    CHAR_T WCcar;
-#  endif /* defined(_I18N_) && defined(_WINDOWS) */
+#  endif /* _I18N_ */
 
    j = 1;
    while (j < MAX_DOC_IDENT_LEN && Ident[j - 1] != EOS)
@@ -558,13 +549,13 @@ DocumentIdentifier *Ident;
    int j = 0;
    
    do
-#     if defined(_I18N_) && defined(_WINDOWS)
+#     ifdef _I18N_
       if (!TtaReadWideChar (file, &((*Ident)[j++])))
          (*Ident)[j - 1] = WC_EOS;
-#     else /* !(defined(_I18N_) && defined(_WINDOWS)) */
+#     else /* !_I18N_ */
       if (!TtaReadByte (file, &((*Ident)[j++])))
          (*Ident)[j - 1] = EOS;
-#     endif /* !(defined(_I18N_) && defined(_WINDOWS)) */
+#     endif /* !_I18N_ */
    while (!(j >= MAX_DOC_IDENT_LEN || (*Ident)[j - 1] == WC_EOS)) ;
 }
 

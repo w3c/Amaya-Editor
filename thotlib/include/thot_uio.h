@@ -1,15 +1,20 @@
 #ifndef THOT_UIO_H
 #define THOT_UIO_H
 
+#ifdef _I18N_ 
+#define usprintf swprintf
+#else  /* !_I18N_ */
+#define usprintf sprintf
+#endif /* !_I18N_ */
+
+
 #ifdef _I18N_ /*****************************/
 
 #ifdef _WINDOWS
 
 #define ufprintf fwprintf
-#define usprintf swprintf
 #define usscanf  swscanf
 #define uaccess  _waccess
-#define ufopen   _wfopen
 #define uopen    _wopen
 #define uunlink  _wunlink
 #define ustat    _wstat
@@ -25,9 +30,7 @@
 #else  /* !_I18N_ ****************************/
 
 #define ufprintf fprintf
-#define usprintf sprintf
 #define usscanf  sscanf
-#define ufopen   fopen
 #define ugetenv  getenv
 #define urename  rename
 
@@ -50,8 +53,6 @@
 #endif /* _WINDOWS*/
 
 #endif /* !_I18N_ ****************************/
-
-extern CHAR_T* ufgets (CHAR_T* , int , FILE*);
 
 #if defined(_WINDOWS) && defined(_I18N_)
 
@@ -100,3 +101,11 @@ extern CHAR_T* ufgets (CHAR_T* , int , FILE*);
 
 
 #endif /* THOT_UIO_H */
+
+#ifdef __STDC__
+extern CHAR_T* ufgets (CHAR_T*, int, FILE*);
+extern FILE*   ufopen (CHAR_T*, CHAR_T*);
+#else  /* !__STDC__ */
+extern CHAR_T* ufgets ();
+extern FILE*   ufopen ();
+#endif /* !__STDC__ */

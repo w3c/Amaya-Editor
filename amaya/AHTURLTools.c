@@ -1597,7 +1597,7 @@ CHAR_T**     url;
   CHAR_T*   p;
   CHAR_T   *orig, *dest, *end;
 
-  CharUnit used_sep;
+  CHAR_T    used_sep;
   ThotBool ddot_simplify; /* used to desactivate the double dot simplifcation:
 			     something/../ simplification in relative URLs when they start with a ../ */
 

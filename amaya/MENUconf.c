@@ -2640,7 +2640,7 @@ char* env_var;
   /* in order to read the default values from HTML.conf, we erase the 
      registry entry */
   TtaClearEnvString (env_var);
-  TtaGetViewGeometryMM (GeometryDoc, env_var, &x, &y, &w, &h);
+  TtaGetViewGeometryMM (GeometryDoc, env_var, &x, &y, &w, &h); 
   usprintf (s, TEXT("%d %d %d %d"), 
 	   x,
 	   y,
@@ -3320,7 +3320,7 @@ LPARAM lParam;
 		{	
 		  if (ustrlen(Profiles_File))
 		    {
-		      TtaRebuildProTable(Profiles_File);
+		      TtaRebuildProTable(Profiles_File); 
 		      BuildProfileList();
 		    }
 		}

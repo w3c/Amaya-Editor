@@ -100,7 +100,7 @@ CONST CHAR_T*       filename;
 int                 TtaFileUnlink (CONST CHAR_T* filename)
 #else  /* __STDC__ */
 int                 TtaFileUnlink (filename)
-CONST CharUnit*     filename;
+CONST CHAR_T*       filename;
 
 #endif /* __STDC__ */
 {
@@ -140,6 +140,7 @@ ThotDirBrowse      *me;
    int                 ls_car;
    ThotBool            notEof;
    struct stat         fileStat;
+   char                fName[MAX_LENGTH];
 
    while (TRUE)
      {
@@ -170,7 +171,13 @@ ThotDirBrowse      *me;
 	me->buf[i] = EOS;
 	if (notEof == FALSE && !i)
 	   return 0;
+
+#   ifdef _I18N_
+    wcstombs (fName, me->buf, MAX_LENGTH);
+	if (stat (fName, &fileStat) == -1)
+#   else  /* !_I18N_ */
 	if (stat (me->buf, &fileStat) == -1)
+#   endif /* !_I18N_ */
 	   return -1;
 	/* next if fileStat is not included in our PicMask */
 	if (S_ISDIR (fileStat.st_mode) && !(me->PicMask & ThotDirBrowse_DIRECTORIES))
@@ -226,7 +233,7 @@ CHAR_T*             ext;
       avoid having the shell interpret them, for example, when the
       dir name contains ( chars. As a first attempt, we enclose the
       arguments between quotes */
-   cus_sprintf (space, TEXT("/bin/ls -d \"%s\"/%s%s\ 2>/dev/null"), dir ? dir : TEXT(""), name ? name : TEXT(""), ext ? ext : TEXT(""));
+   usprintf (space, TEXT("/bin/ls -d \"%s\"/%s%s\ 2>/dev/null"), dir ? dir : TEXT(""), name ? name : TEXT(""), ext ? ext : TEXT(""));
    me->ls_stream = NULL;
    if ((me->ls_stream = popen (space, "r")) == NULL)
       return -1;
@@ -427,10 +434,13 @@ ThotFileMode        mode;
       creation = OPEN_EXISTING;
    ret = CreateFile (name, access, FILE_SHARE_READ, &secAttribs, creation, FILE_ATTRIBUTE_NORMAL, NULL);
 #else  /* _WINDOWS && !__GNUC__ */
+   char fName [MAX_LENGTH];
+
+   wcstombs (fName, name, MAX_LENGTH);
 #ifdef _WINDOWS_
-   ret = open (name, mode | _O_BINARY, 0777);
+   ret = open (fName, mode | _O_BINARY, 0777);
 #else
-   ret = open (name, mode, 0777);
+   ret = open (fName, mode, 0777);
 #endif
 #endif /* _WINDOWS && !__GNUC__ */
    return ret;
@@ -654,13 +664,13 @@ CONST STRING        file2;
 #ifdef _WINDOWS
     f1 = ufopen(file1,TEXT("rb"));
 #else
-    f1 = ufopen(file1,"r");
+    f1 = ufopen(file1, TEXT("r"));
 #endif
     if (f1 == NULL) return(FALSE);
 #ifdef _WINDOWS
     f2 = ufopen(file2, TEXT("rb"));
 #else
-    f2 = fopen(file2,"r");
+    f2 = ufopen(file2, TEXT("r"));
 #endif
     if (f2 == NULL) {
 	fclose(f1);

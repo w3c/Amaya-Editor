@@ -105,7 +105,7 @@ ThotBool            TtaIsSuffixFileIn (CHAR_T* aDirectory, CHAR_T* suffix)
 #else  /* __STDC__ */
 ThotBool            TtaIsSuffixFileIn (aDirectory, suffix)
 CHAR_T*             aDirectory;
-CharUnit*           suffix;
+CHAR_T*             suffix;
 
 #endif /* __STDC__ */
 {

@@ -5484,7 +5484,7 @@ ThotBool*       endOfFile;
     int           res;
 
 #   ifdef _I18N_
-    char          mbcstr[MAX_BYTES];
+    unsigned char mbcstr[MAX_BYTES];
     int           nbBytes;
 #   endif /* _I18N_ */
 
@@ -5495,7 +5495,7 @@ ThotBool*       endOfFile;
     if (buffer != NULL) {
        mbcstr[0] = buffer[(*index)++];
        nbBytes   = 1;
-       if (mbcstr[0] >= 0x80) {
+       if (isleadbyte (mbcstr[0])) {
           mbcstr[1] = buffer[(*index)++];
           nbBytes = 2;
        }
@@ -5516,13 +5516,8 @@ ThotBool*       endOfFile;
             }
          }
          if (*endOfFile == FALSE) {
-            mbcstr[0] = FileBuffer[(*index)++];
-            nbBytes   = 1;
-            if (mbcstr[0] >= 0x80) {
-               mbcstr[1] = FileBuffer[(*index)++];
-               nbBytes = 2;
-            }
-            mbtowc (&charRead, mbcstr, nbBytes);
+            char* mbsBuff = &FileBuffer[(*index)];
+            (*index) += GetNextWideCharFromMultibyteString (&charRead, &mbsBuff);
             if (*index > LastCharInFileBuffer)
                *index = 0;
          }
@@ -6005,9 +6000,19 @@ STRING              fileName;
   gzFile              stream;
   int                 res, i;
   ThotBool            endOfFile, isXHTML;
+# ifdef _I18N_
+  char                fname[MAX_LENGTH];
+# else  /* !_I18N_ */
+  char*               fname = fileName ;
+# endif /* !_I18N_ */
 
   isXHTML = FALSE;
-  stream = gzopen (fileName, "r");
+
+# ifdef _I18N_
+  wcstombs (fname, fileName, MAX_LENGTH);
+# endif /* _I18N_ */
+
+  stream = gzopen (fname, "r");
   if (stream != 0)
     {
       InputText = NULL;
@@ -6024,7 +6029,7 @@ STRING              fileName;
 	  i = 0;
 	  while (!endOfFile && i < res)
 	    {
-	      if (ustrncasecmp(&FileBuffer[i], TEXT("<html"), 5))
+	      if (strncasecmp(&FileBuffer[i], "<html", 5))
 		i++;
 	      else
 		{

@@ -90,11 +90,11 @@ static CHAR_T*       AppNameW;
 static char          CurrentDir[MAX_PATH];
 static STRING        Thot_Dir;
 
-#if defined(_WINDOWS) && defined(_I18N_)
+#ifdef _I18N_
 static CHAR_T        EnvString[MAX_TXT_LEN];
-#else  /* !(defined(_WINDOWS) && defined(_I18N_)) */
+#else  /* !_I18N_ */
 static char          EnvString[MAX_TXT_LEN];
-#endif /* !(defined(_WINDOWS) && defined(_I18N_)) */         
+#endif /* !_I18N_ */         
 
 PathBuffer execname;
 PathBuffer path;
@@ -1520,7 +1520,7 @@ CHAR_T*             appArgv0;
    */
   else if (TtaFileExist (appArgv0))
     {
-      cus_getcwd (&execname[0], sizeof (execname) / sizeof (CharUnit));
+      ugetcwd (&execname[0], sizeof (execname) / sizeof (CHAR_T));
       ustrcat (execname, WC_DIR_STR);
       ustrcat (execname, appArgv0);
     }
@@ -1601,7 +1601,7 @@ CHAR_T*             appArgv0;
 	  S_ISLNK (stat_buf.st_mode) &&
 	  len > 0)
      {
-       len = readlink (execname, filename, sizeof (filename) / sizeof (CharUnit));
+       len = readlink (execname, filename, sizeof (filename) / sizeof (CHAR_T));
        if (len > 0)
 	 {
 	   filename[len] = 0;

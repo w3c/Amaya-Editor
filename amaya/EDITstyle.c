@@ -934,7 +934,7 @@ Document            doc;
   if (!found && head)
     {
       /* the STYLE element doesn't exist we create it now */
-      el = TtaNewTree (doc, elType, TEXT(""));
+      el = TtaNewTree (doc, elType, "");
       /* insert the new style element after the title if it exists */
       elType.ElTypeNum = HTML_EL_TITLE;
       title = TtaSearchTypedElementInTree (elType, SearchForward, head, head);
@@ -952,7 +952,7 @@ Document            doc;
     {
       /* there is no TEXT element within the STYLE element. We create it now */
       elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-      child = TtaNewTree (doc, elType, TEXT(""));
+      child = TtaNewTree (doc, elType, "");
       TtaInsertFirstChild (&child, el, doc);
       /* remember the element to be registered in the Undo queue */
       el = child;
@@ -1019,7 +1019,7 @@ Document            doc;
 	   /* create a Comment_line within the Comment */
 	   {
 	   elType.ElTypeNum = HTML_EL_Comment_line;
-           line = TtaNewTree (doc, elType, TEXT(""));
+           line = TtaNewTree (doc, elType, "");
            TtaInsertFirstChild (&line, child, doc);
 	   child = TtaGetLastChild (line);
 	   insertNewLine = FALSE;

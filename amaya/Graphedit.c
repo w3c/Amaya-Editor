@@ -1042,7 +1042,7 @@ int                 construct;
 	   /* the document is supposed to be HTML */
 	   childType.ElSSchema = docSchema;
 	   childType.ElTypeNum = HTML_EL_HTMLfragment;
-	   child = TtaNewTree (doc, childType, TEXT(""));
+	   child = TtaNewTree (doc, childType, "");
 	   /* do not check the Thot abstract tree against the structure */
 	   /* schema when inserting this element */
 	   oldStructureChecking = TtaGetStructureChecking (doc);
