@@ -1226,6 +1226,11 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
    /* how to fill the polygone */
    if (pattern == 0)
      logBrush.lbStyle = BS_NULL;
+   else if (pattern == 3)
+     {
+       logBrush.lbColor = ColorPixel (fg);
+       logBrush.lbStyle = BS_HATCHED;
+     }
    else
      {
        if (pattern == 1)
@@ -2429,4 +2434,5 @@ void psBoundingBox (int frame, int width, int height)
 void PaintWithPattern (int frame, int x, int y, int width, int height,
 		       ThotWindow w, int fg, int bg, int pattern)
 {
+  DrawRectangle (frame, 0, 0, x, y, width, height, fg, bg, 3)
 }
