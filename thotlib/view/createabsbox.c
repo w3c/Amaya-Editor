@@ -18,6 +18,7 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "picture.h"
+#include "content.h"
 #include "message.h"
 #include "language.h"
 #include "appdialogue.h"
@@ -1927,8 +1928,14 @@ ThotBool CreateListItemMarker (PtrPRule pPRule, PtrAbstractBox pAb,
 	  do
 	    {
 	      if (pAscAb->AbPictListStyle)
-		imageDesc = (ThotPictInfo *) pAscAb->AbPictListStyle;
-	      else
+		{
+		  imageDesc = (ThotPictInfo *) pAscAb->AbPictListStyle;
+		  if (imageDesc->PicFileName == NULL)
+		    imageDesc = NULL;
+		  else if (!TtaFileExist (imageDesc->PicFileName))
+		    imageDesc = NULL;
+		}
+	      if (imageDesc == NULL)
 		pAscAb = pAscAb->AbEnclosing;
 	    }
 	  while (imageDesc == NULL && pAscAb);
