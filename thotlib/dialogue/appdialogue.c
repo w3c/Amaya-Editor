@@ -3934,6 +3934,10 @@ void DestroyFrame (int frame)
   int                 ref, i;
   int                 item;
 
+#ifdef _GL
+  GL_DestroyFrame (frame);
+#endif /* _GL */
+
   if (ThotLocalActions[T_stopinsert] != NULL)
     (*ThotLocalActions[T_stopinsert]) ();
   w = FrameTable[frame].WdFrame;

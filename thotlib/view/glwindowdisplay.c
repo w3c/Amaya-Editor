@@ -511,6 +511,14 @@ void GL_SetOpacity (int opacity)
   Opacity = (int) ((opacity * 255)/1000);
 }
 
+/*----------------------------------------------------------------------
+ GL_DestroyFrame :
+ Close Opengl pipeline
+ ----------------------------------------------------------------------*/
+void  GL_DestroyFrame (int frame)
+{
+  FreeAllPicCacheFromFrame (frame);
+}
 
 /*----------------------------------------------------------------------
  GL_SetForeground : set color before drawing a or many vertex

@@ -600,6 +600,7 @@ void FrameRedraw (int frame, Dimension width, Dimension height)
 }
 
 
+
 #ifdef _GTK
 #ifdef _GL
 #ifdef GL_ANIM
@@ -677,7 +678,7 @@ gboolean  GL_Destroy (ThotWidget widget, GdkEventExpose *event,
  
   frame = (int) data;
   FreeAllPicCacheFromFrame (frame);
-  return TRUE ;
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -1836,6 +1837,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
     if (frame >= 0 && frame <= MAX_FRAME)
       {
 #ifdef _GL 
+      GL_DestroyFrame (frame);	
 	  GL_Win32ContextClose (frame, hwnd);
 #endif /*_GL*/
 	GetDocAndView (frame, &pDoc, &view);

@@ -157,20 +157,36 @@ void FreeAllPicCacheFromFrame (int frame)
   Pic_Cache *Cache = PicCache;
   Pic_Cache *Before;
   
-  Before = Cache;  
+ Before = PicCache;
   while (Cache)
     {
       if (Cache->frame == frame)
 	{
-	  if (Before == PicCache)
-	    PicCache = Before->next;
+
+		  if (Before == PicCache)
+		  {
+			  Before = Before->next;
+			  PicCache = Before;
+		  }
 	  else
-	    Before->next = Cache->next;  
+	    Before->next = Cache->next; 
+
+	if (GL_prepare (frame))
 	  Free_Pic_Chache (Cache);
-	  Cache = NULL;
+
+	if (PicCache != Before)
+	  Cache = Before->next;
+	else
+	  Cache = Before;
+	
 	}
-      Cache = Cache->next;      
-      Before = Cache;
+	  else
+	  {
+		  Before = Cache; 
+		  Cache = Cache->next;
+	      
+	  }     
+      
     }
 }
 
@@ -2885,55 +2901,54 @@ RGBQUAD QuadFromWord(WORD b16)
 DIB2RGBA (LPBITMAPINFOHEADER hDib, unsigned char *jsmpPixels)
 {
 
-int r=0, p=0, q=0, b=0, n=0, 
-       nUnused=0, nBytesWide=0, nUsed=0, nLastBits=0, nLastNibs=0, nCTEntries=0,
-       nRow=0, nByte=0, nPixel=0;
-BYTE bytCTEnt = 0;
-LPBITMAPINFOHEADER pbBmHdr = (LPBITMAPINFOHEADER)hDib; 
+  int r=0, p=0, q=0, b=0, n=0, 
+    nUnused=0, nBytesWide=0, nUsed=0, nLastBits=0, nLastNibs=0, nCTEntries=0,
+    nRow=0, nByte=0, nPixel=0;
+  BYTE bytCTEnt = 0;
+  LPBITMAPINFOHEADER pbBmHdr = (LPBITMAPINFOHEADER)hDib; 
+  
+  /*Point to the color table and pixels*/
+  DWORD     dwCTab = (DWORD)pbBmHdr + pbBmHdr->biSize;
+  LPRGBQUAD pCTab  = (LPRGBQUAD)(dwCTab);
+  LPSTR     lpBits = (LPSTR)pbBmHdr + (WORD)pbBmHdr->biSize;
+  
+  /*Different formats for the image bits*/
+  LPBYTE   lpPixels = (LPBYTE)  lpBits;
+  RGBQUAD* pRgbQs   = (RGBQUAD*)lpBits;
+  WORD*    wPixels  = (WORD*)   lpBits;
+  RGBQUAD quad;
+  
 
-   /*Point to the color table and pixels*/
-   DWORD     dwCTab = (DWORD)pbBmHdr + pbBmHdr->biSize;
-   LPRGBQUAD pCTab  = (LPRGBQUAD)(dwCTab);
-   LPSTR     lpBits = (LPSTR)pbBmHdr +
-                      (WORD)pbBmHdr->biSize;
-
-   /*Different formats for the image bits*/
-   LPBYTE   lpPixels = (LPBYTE)  lpBits;
-   RGBQUAD* pRgbQs   = (RGBQUAD*)lpBits;
-   WORD*    wPixels  = (WORD*)   lpBits;
-RGBQUAD quad;
-
-
-switch (pbBmHdr->biBitCount)
-   {
-
-      case 16: 
-		  nPixel = 0;
-		  while (nPixel < pbBmHdr->biWidth*pbBmHdr->biHeight)
-		  {
-				quad = QuadFromWord (wPixels[nPixel]);
-
-               jsmpPixels[nPixel*3+0] = quad.rgbRed;
-               jsmpPixels[nPixel*3+1] = quad.rgbGreen;
-               jsmpPixels[nPixel*3+2] = quad.rgbBlue;
-			   nPixel++;
-		  }
-		  /*
-         for (r=0;r < pbBmHdr->biHeight; r++)
-         {
-            for (p=0,q=0; p < pbBmHdr->biWidth; p++,q+=3)
-            {
-               nRow    = (pbBmHdr->biHeight-r-1) * pbBmHdr->biWidth;
-               nPixel  = nRow + p;
-
-               quad = QuadFromWord (wPixels[nPixel]);
-
-               jsmpPixels[r*q+0] = quad.rgbRed;
-               jsmpPixels[r*q+1] = quad.rgbGreen;
-               jsmpPixels[r*q+2] = quad.rgbBlue;
-            }
-         }*/
-         break;
+  switch (pbBmHdr->biBitCount)
+    {
+      
+    case 16: 
+      nPixel = 0;
+     /*  while (nPixel < pbBmHdr->biWidth*pbBmHdr->biHeight) */
+/* 	{ */
+/* 	  quad = QuadFromWord (wPixels[nPixel]); */
+	  
+/* 	  jsmpPixels[nPixel*3+0] = quad.rgbRed; */
+/* 	  jsmpPixels[nPixel*3+1] = quad.rgbGreen; */
+/* 	  jsmpPixels[nPixel*3+2] = quad.rgbBlue; */
+/* 	  nPixel++; */
+/* 	} */
+      
+	for (r=0; r < pbBmHdr->biHeight; r++)
+	  {
+	    for (p=0,q=0; p < pbBmHdr->biWidth; p++,q+=3)
+	      {
+		nRow    = (pbBmHdr->biHeight-r-1) * pbBmHdr->biWidth;
+		nPixel  = nRow + p;
+		
+		quad = QuadFromWord (wPixels[nPixel]);
+		
+		jsmpPixels[r*q+0] = quad.rgbRed;
+		jsmpPixels[r*q+1] = quad.rgbGreen;
+		jsmpPixels[r*q+2] = quad.rgbBlue;
+	      }
+	  }
+      break;
 
       case 24:
          nBytesWide =  (pbBmHdr->biWidth*3);
@@ -3091,7 +3106,6 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
 				*(pixel + k + 2) = *(internal + line + 2); 
 				*(pixel + k + 3) = 255;
 				k += 4;line +=3;
-				i++;	
 			}
 			TtaFreeMemory (lpvBits);
 			TtaFreeMemory (screenshot);
