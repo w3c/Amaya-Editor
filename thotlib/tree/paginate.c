@@ -41,7 +41,7 @@
 #define THOT_EXPORT
 #include "page_tv.h"
 
-#define PRINT_DEBUG 
+/*#define PRINT_DEBUG*/ 
 
 #include "absboxes_f.h"
 #include "applicationapi_f.h"
