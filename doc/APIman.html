@@ -10,7 +10,7 @@
 <PRE>
 <EM>ThotLib V3</EM></PRE>
 <PRE>
-Date: March, 1999</PRE>
+Date: 8 March, 1999</PRE>
 
 <H1>The Thot Tool Kit API</H1>
 <ADDRESS>Vincent QUINT, Ir&egrave;ne VATTON - INRIA</ADDRESS>
@@ -1936,7 +1936,27 @@ selected.</P>
 
 </DL>
 
-<H4><A NAME="sectc923">9.2.3</A> TtaShowDialogue</H4>
+<H4><A NAME="sectc923">9.2.3</A> TtaSetTextForm</H4>
+
+<P>Changes the current value of the text form.</P>
+
+<HR>
+
+<P>void TtaSetTextForm (int ref, STRING text)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD>
+<P><EM>ref</EM>: the unique reference attached to the dialogue element.</P>
+
+<P><EM>text</EM>: the new string.</P>
+
+</DL>
+
+<H4><A NAME="sectc924">9.2.4</A> TtaShowDialogue</H4>
 
 <P>This function displays an existing dialogue (form, sheet, dialog
 sheet).</P>
@@ -1958,7 +1978,7 @@ unmapped.</P>
 
 </DL>
 
-<H4><A NAME="sectc924">9.2.4</A> TtaUnmapDialogue</H4>
+<H4><A NAME="sectc925">9.2.5</A> TtaUnmapDialogue</H4>
 
 <P>This function undisplays an existing dialogue (form, sheet, dialog
 sheet).</P>
@@ -3381,7 +3401,7 @@ TtaSetSchemaPath.</P>
 <P>Inserts an element in a tree, as an immediate sibling of a given element.
 The element to be inserted must not yet be part of a document. You can call
 <TT>TtaCanInsertSibling</TT> before to check whether that insertion is allowed
-or not (see section <A HREF="#sectc11331">11.3.31</A>).</P>
+or not (see section <A HREF="#sectc11333">11.3.33</A>).</P>
 
 <HR>
 
@@ -3410,7 +3430,7 @@ sibling, if False, inserts newElement as next sibling of sibling.</P>
 element to be inserted must not yet be part of a document. This function can
 also be used for attaching an option to a choice. You can call
 <TT>TtaCanInsertFirstChild</TT> before to check whether that insertion is
-allowed or not (see section <A HREF="#sectc11332">11.3.32</A>).</P>
+allowed or not (see section <A HREF="#sectc11334">11.3.34</A>).</P>
 
 <HR>
 
@@ -3664,7 +3684,51 @@ is no next associated tree for the document.
 <DD>the last child element of parent; NULL if parent has no child.
 </DL>
 
-<H4><A NAME="sectc1135">11.3.5</A> TtaPreviousSibling</H4>
+<H4><A NAME="sectc1135">11.3.5</A> TtaGetFirstLeaf</H4>
+<A NAME="L57990"></A>
+<P>Returns the first leaf element of a given element.</P>
+
+<HR>
+
+<P>Element TtaGetFirstLeaf(Element parent)</P>
+
+<HR>
+
+<DL>
+<DT>Parameter:</DT>
+
+<DD><EM>parent</EM>: the element for which the first leaf element is asked.
+</DL>
+
+<DL>
+<DT>Return value:</DT>
+
+<DD>the first leaf element of parent; parent itself if it has no leaf.
+</DL>
+
+<H4><A NAME="sectc1136">11.3.6</A> TtaGetLastLeaf</H4>
+<A NAME="L58021"></A>
+<P>Returns the last leaf element of a given element.</P>
+
+<HR>
+
+<P>Element TtaGetLastLeaf(Element parent)</P>
+
+<HR>
+
+<DL>
+<DT>Parameter:</DT>
+
+<DD><EM>parent</EM>: the element for which the last leaf element is asked.
+</DL>
+
+<DL>
+<DT>Return value:</DT>
+
+<DD>the last leaf element of parent; parent itself if it has no leaf.
+</DL>
+
+<H4><A NAME="sectc1137">11.3.7</A> TtaPreviousSibling</H4>
 <A NAME="L2943"></A>
 <P>Returns the previous sibling element of a given element.</P>
 
@@ -3687,7 +3751,7 @@ is no next associated tree for the document.
 previous sibling.
 </DL>
 
-<H4><A NAME="sectc1136">11.3.6</A> TtaNextSibling</H4>
+<H4><A NAME="sectc1138">11.3.8</A> TtaNextSibling</H4>
 <A NAME="L2977"></A>
 <P>Returns the next sibling element of a given element.</P>
 
@@ -3710,7 +3774,7 @@ previous sibling.
 sibling.
 </DL>
 
-<H4><A NAME="sectc1137">11.3.7</A> TtaGetSuccessor</H4>
+<H4><A NAME="sectc1139">11.3.9</A> TtaGetSuccessor</H4>
 <A NAME="L3010"></A>
 <P>Returns the element that follows a given element at the same level or at
 the first upper level where there is a following element.</P>
@@ -3733,7 +3797,7 @@ the first upper level where there is a following element.</P>
 <DD>the successor, or NULL if there is no successor.
 </DL>
 
-<H4><A NAME="sectc1138">11.3.8</A> TtaGetPredecessor</H4>
+<H4><A NAME="sectc11310">11.3.10</A> TtaGetPredecessor</H4>
 <A NAME="L3044"></A>
 <P>Returns the element that precedes a given element at the same level or at
 the first upper level where there is a preceding element.</P>
@@ -3756,7 +3820,7 @@ the first upper level where there is a preceding element.</P>
 <DD>the predecessor, or NULL if there is no predecessor.
 </DL>
 
-<H4><A NAME="sectc1139">11.3.9</A> TtaGetParent</H4>
+<H4><A NAME="sectc11311">11.3.11</A> TtaGetParent</H4>
 <A NAME="L3077"></A>
 <P>Returns the parent element (i.e. first ancestor) of a given element.</P>
 
@@ -3778,7 +3842,7 @@ the first upper level where there is a preceding element.</P>
 <DD>the parent element, or NULL if there is no parent (root).
 </DL>
 
-<H4><A NAME="sectc11310">11.3.10</A> TtaGetCommonAncestor</H4>
+<H4><A NAME="sectc11312">11.3.12</A> TtaGetCommonAncestor</H4>
 <A NAME="L3109"></A>
 <P>Returns the common ancestor element of two given elements.</P>
 
@@ -3802,7 +3866,7 @@ the first upper level where there is a preceding element.</P>
 <DD>the common ancestor, or NULL if there is no common ancestor.
 </DL>
 
-<H4><A NAME="sectc11311">11.3.11</A> TtaGetTypedAncestor</H4>
+<H4><A NAME="sectc11313">11.3.13</A> TtaGetTypedAncestor</H4>
 <A NAME="L3147"></A>
 <P>Returns the first ancestor of a given type for a given element.</P>
 
@@ -3826,7 +3890,7 @@ the first upper level where there is a preceding element.</P>
 <DD>the ancestor, or NULL if there is no ancestor of that type.
 </DL>
 
-<H4><A NAME="sectc11312">11.3.12</A> TtaGetElementType</H4>
+<H4><A NAME="sectc11314">11.3.14</A> TtaGetElementType</H4>
 <A NAME="L3185"></A>
 <P>Returns the type of a given element.</P>
 
@@ -3848,7 +3912,7 @@ the first upper level where there is a preceding element.</P>
 <DD>type of the element.
 </DL>
 
-<H4><A NAME="sectc11313">11.3.13</A> TtaGetElementTypeName</H4>
+<H4><A NAME="sectc11315">11.3.15</A> TtaGetElementTypeName</H4>
 <A NAME="L3218"></A>
 <P>Returns the name of an element type.</P>
 
@@ -3870,7 +3934,7 @@ the first upper level where there is a preceding element.</P>
 <DD>name of that type.
 </DL>
 
-<H4><A NAME="sectc11314">11.3.14</A> TtaGetElementTypeOriginalName</H4>
+<H4><A NAME="sectc11316">11.3.16</A> TtaGetElementTypeOriginalName</H4>
 <A NAME="L56825"></A>
 <P>Returns the original name of an element type, as it is defined in the
 structure schema.</P>
@@ -3893,7 +3957,7 @@ structure schema.</P>
 <DD>original name of that type.
 </DL>
 
-<H4><A NAME="sectc11315">11.3.15</A> TtaGiveTypeFromName</H4>
+<H4><A NAME="sectc11317">11.3.17</A> TtaGiveTypeFromName</H4>
 <A NAME="L3250"></A>
 <P>Gives an element type whose name is known (the structure schema that
 defines that type must be loaded). That type is searched in a given structure
@@ -3922,7 +3986,7 @@ schema.</P>
 = 0 if the type is not found.
 </DL>
 
-<H4><A NAME="sectc11316">11.3.16</A> TtaGiveTypeFromOriginalName</H4>
+<H4><A NAME="sectc11318">11.3.18</A> TtaGiveTypeFromOriginalName</H4>
 <A NAME="L56856"></A>
 <P>Gives an element type whose original name (in the language it is given in
 the structure schema) is known (the structure schema that defines that type
@@ -3951,7 +4015,7 @@ that structure schema or natures used in that structure schema.</P>
 = 0 if the type is not found.
 </DL>
 
-<H4><A NAME="sectc11317">11.3.17</A> TtaSameTypes</H4>
+<H4><A NAME="sectc11319">11.3.19</A> TtaSameTypes</H4>
 <A NAME="L3289"></A>
 <P>Compares two element types.</P>
 
@@ -3975,7 +4039,7 @@ that structure schema or natures used in that structure schema.</P>
 <DD>0 if both types are different, 1 if they are identical.
 </DL>
 
-<H4><A NAME="sectc11318">11.3.18</A> TtaGetElementLabel</H4>
+<H4><A NAME="sectc11320">11.3.20</A> TtaGetElementLabel</H4>
 <A NAME="L3328"></A>
 <P>Returns the label of a given element.</P>
 
@@ -3997,7 +4061,7 @@ that structure schema or natures used in that structure schema.</P>
 <DD>label of the element.
 </DL>
 
-<H4><A NAME="sectc11319">11.3.19</A> TtaIsConstant</H4>
+<H4><A NAME="sectc11321">11.3.21</A> TtaIsConstant</H4>
 <A NAME="L3360"></A>
 <P>Indicates whether an element type is a constant.</P>
 
@@ -4019,7 +4083,7 @@ that structure schema or natures used in that structure schema.</P>
 <DD>1 = the type is a constant, 0 = the type is not a constant.
 </DL>
 
-<H4><A NAME="sectc11320">11.3.20</A> TtaIsLeaf</H4>
+<H4><A NAME="sectc11322">11.3.22</A> TtaIsLeaf</H4>
 <A NAME="L3392"></A>
 <P>Indicates whether an element type is a leaf.</P>
 
@@ -4041,7 +4105,7 @@ that structure schema or natures used in that structure schema.</P>
 <DD>1 if the type is a leaf, 0 if the type is not a leaf.
 </DL>
 
-<H4><A NAME="sectc11321">11.3.21</A> TtaGetConstructOfType</H4>
+<H4><A NAME="sectc11323">11.3.23</A> TtaGetConstructOfType</H4>
 <A NAME="L3426"></A>
 <P>Returns the construct of an element type.</P>
 
@@ -4063,7 +4127,7 @@ that structure schema or natures used in that structure schema.</P>
 <DD>the construct that defines the structure of that element type.
 </DL>
 
-<H4><A NAME="sectc11322">11.3.22</A> TtaGetConstruct</H4>
+<H4><A NAME="sectc11324">11.3.24</A> TtaGetConstruct</H4>
 <A NAME="L3458"></A>
 <P>Returns the construct of an element.</P>
 
@@ -4085,7 +4149,7 @@ that structure schema or natures used in that structure schema.</P>
 <DD>the construct that defines the structure of that element.
 </DL>
 
-<H4><A NAME="sectc11323">11.3.23</A> TtaGetAccessRight</H4>
+<H4><A NAME="sectc11325">11.3.25</A> TtaGetAccessRight</H4>
 <A NAME="L3490"></A>
 <P>Returns the access rights for a given element.</P>
 
@@ -4107,7 +4171,7 @@ that structure schema or natures used in that structure schema.</P>
 <DD>access right for that element (ReadOnly, ReadWrite, Hidden, Inherited).
 </DL>
 
-<H4><A NAME="sectc11324">11.3.24</A> TtaIsHolophrasted</H4>
+<H4><A NAME="sectc11326">11.3.26</A> TtaIsHolophrasted</H4>
 <A NAME="L3522"></A>
 <P>Tests whether a given element is holphrasted or not.</P>
 
@@ -4129,7 +4193,7 @@ that structure schema or natures used in that structure schema.</P>
 <DD>1 if the element is holphrasted, 0 if not.
 </DL>
 
-<H4><A NAME="sectc11325">11.3.25</A> TtaIsReadOnly</H4>
+<H4><A NAME="sectc11327">11.3.27</A> TtaIsReadOnly</H4>
 <A NAME="L3555"></A>
 <P>Tests whether a given element is protected against user modifications
 (ReadOnly).</P>
@@ -4152,7 +4216,7 @@ that structure schema or natures used in that structure schema.</P>
 <DD>1 if the element is protected, 0 if not.
 </DL>
 
-<H4><A NAME="sectc11326">11.3.26</A> TtaIsHidden</H4>
+<H4><A NAME="sectc11328">11.3.28</A> TtaIsHidden</H4>
 <A NAME="L3587"></A>
 <P>Tests whether a given element is hidden to the user (Hidden).</P>
 
@@ -4174,7 +4238,7 @@ that structure schema or natures used in that structure schema.</P>
 <DD>1 if the element is hidden, 0 if not.
 </DL>
 
-<H4><A NAME="sectc11327">11.3.27</A> TtaIsInAnInclusion</H4>
+<H4><A NAME="sectc11329">11.3.29</A> TtaIsInAnInclusion</H4>
 <A NAME="L3619"></A>
 <P>Tests whether a given element is (in) an included element. An included
 element is a "live" copy of another element.</P>
@@ -4197,7 +4261,7 @@ element is a "live" copy of another element.</P>
 <DD>1 if the element is included, 0 if not.
 </DL>
 
-<H4><A NAME="sectc11328">11.3.28</A> TtaIsAncestor</H4>
+<H4><A NAME="sectc11330">11.3.30</A> TtaIsAncestor</H4>
 <A NAME="L3652"></A>
 <P>Tests if an element is an ancestor of another element.</P>
 
@@ -4221,7 +4285,7 @@ element is a "live" copy of another element.</P>
 <DD>1 if ancestor in an ancestor of element, 0 if not.
 </DL>
 
-<H4><A NAME="sectc11329">11.3.29</A> TtaIsBefore</H4>
+<H4><A NAME="sectc11331">11.3.31</A> TtaIsBefore</H4>
 <A NAME="L3690"></A>
 <P>Tests if an element precedes another element in the preorder traversal of
 the tree.</P>
@@ -4246,7 +4310,7 @@ the tree.</P>
 <DD>1 if the first element precedes the second element, 0 if not.
 </DL>
 
-<H4><A NAME="sectc11330">11.3.30</A> TtaIsFirstPairedElement</H4>
+<H4><A NAME="sectc11332">11.3.32</A> TtaIsFirstPairedElement</H4>
 <A NAME="L3728"></A>
 <P>Indicates if a given paired element is the first or the second of the
 pair.</P>
@@ -4269,7 +4333,7 @@ pair.</P>
 <DD>1 if it is the first element of the pair, 0 if it is the second.
 </DL>
 
-<H4><A NAME="sectc11331">11.3.31</A> <A
+<H4><A NAME="sectc11333">11.3.33</A> <A
 NAME="L32216">TtaCanInsertSibling</A></H4>
 <A NAME="L32296"></A>
 <P>Checks whether an element of a given type can be inserted in an abstract
@@ -4304,7 +4368,7 @@ If False, checks if insertion is allowed after element "sibling".</P>
 does not allow that insertion.
 </DL>
 
-<H4><A NAME="sectc11332">11.3.32</A> <A
+<H4><A NAME="sectc11334">11.3.34</A> <A
 NAME="L32256">TtaCanInsertFirstChild</A></H4>
 <A NAME="L32304"></A>
 <P>Checks whether an element of a given type can be inserted in an abstract
@@ -4334,7 +4398,7 @@ Document document)</P>
 does not allow that insertion.
 </DL>
 
-<H4><A NAME="sectc11333">11.3.33</A> TtaGetDocument</H4>
+<H4><A NAME="sectc11335">11.3.35</A> TtaGetDocument</H4>
 <A NAME="L3760"></A>
 <P>Returns the document containing a given element</P>
 
@@ -4357,7 +4421,7 @@ does not allow that insertion.
 inserted in any document.
 </DL>
 
-<H4><A NAME="sectc11334">11.3.34</A> TtaNextCopiedElement</H4>
+<H4><A NAME="sectc11336">11.3.36</A> TtaNextCopiedElement</H4>
 <A NAME="L3793"></A>
 <P>Returns one of the elements that have been copied into the ``clipboard'' by
 the last Copy or Cut command. (This function is available only in the
@@ -4383,7 +4447,7 @@ element of the clipboard if the next one is asked.
 next element in the clipboard or if the clipboard is empty.
 </DL>
 
-<H4><A NAME="sectc11335">11.3.35</A> TtaGetCopiedDocument</H4>
+<H4><A NAME="sectc11337">11.3.37</A> TtaGetCopiedDocument</H4>
 <A NAME="L3826"></A>
 <P>Returns the document from which the current content of the clipboard has
 been copied or cut. (This function is available only in the ThotEditor
@@ -7812,7 +7876,28 @@ to be selected. 0 if the whole element must be selected.</P>
 
 </DL>
 
-<H4><A NAME="sectc1815">18.1.5</A> TtaSelectInterval</H4>
+<H4><A NAME="sectc1815">18.1.5</A> TtaAddElementToSelection</H4>
+<A NAME="L57829"></A>
+<P>Add a new element to the current selection.  The new selection may then
+contain separate elements.</P>
+
+<HR>
+
+<P>void TtaAddElementToSelection (Document document, Element element)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD><EM>document</EM>: the document to which the element belongs.  This
+element must belong to the same document as the elements selected by previous
+calls to TtaAddElementToSelection and by the last call to TtaSelectElement.
+<P><EM>element</EM>: the element to be added to the current selection.</P>
+
+</DL>
+
+<H4><A NAME="sectc1816">18.1.6</A> TtaSelectInterval</H4>
 <A NAME="L8103"></A>
 <P>If a pair of paired elements is selected, select also all elements between
 the two paired elements. Nothing is done if the current selection is not a
@@ -7836,7 +7921,7 @@ pair.</P>
 <DD>No return value
 </DL>
 
-<H4><A NAME="sectc1816">18.1.6</A> TtaUnselect</H4>
+<H4><A NAME="sectc1817">18.1.7</A> TtaUnselect</H4>
 <A NAME="L8132"></A>
 <P>Turns the selection off for a document.</P>
 
@@ -7858,7 +7943,36 @@ pair.</P>
 <DD>No return value
 </DL>
 
-<H4><A NAME="sectc1817">18.1.7</A> TtaSetSelectionMode</H4>
+<H4><A NAME="sectc1818">18.1.8</A> TtaSwitchSelection</H4>
+<A NAME="L57860"></A>
+<P>Switche the selection  on or off  in a view. </P>
+
+<HR>
+
+<P>void TtaSwitchSelection (Document document, View view, boolean show)</P>
+
+<HR>
+
+<DL>
+<DT>Parameter:</DT>
+
+<DD><EM>document</EM>: the document for which the selection must be switched
+off or on
+<P><EM>view</EM>: the view for which the selection must be switched off or
+on</P>
+
+<P><EM>show</EM>: indicate whether the selection must be switched off or
+on</P>
+
+</DL>
+
+<DL>
+<DT>Return value:</DT>
+
+<DD>No return value
+</DL>
+
+<H4><A NAME="sectc1819">18.1.9</A> TtaSetSelectionMode</H4>
 <A NAME="L8165"></A>
 <P>Change selection mode. If withMenu = False functions TtaSelectElement,
 TtaSelectString, TtaExtendSelection and TtaUnselect do not update the menus
@@ -7975,7 +8089,41 @@ if the</P>
 
 </DL>
 
-<H4><A NAME="sectc1825">18.2.5</A> TtaGiveNextSelectedElement</H4>
+<H4><A NAME="sectc1825">18.2.5</A> TtaGiveLastSelectedElement</H4>
+<A NAME="L57897"></A>
+<P>Returns the last element in the current selection in a given document. If
+this element is a Text element and if only a substring is selected, return
+also the rank of the first and last characters in the selection.</P>
+
+<HR>
+
+<P>void TtaGiveLastSelectedElement(Document document, Element
+*selectedElement, int *firstCharacter, int *lastCharacter)</P>
+
+<HR>
+
+<DL>
+<DT>Parameter:</DT>
+
+<DD><EM>document</EM>: the document for which the selection is asked.
+</DL>
+
+<DL>
+<DT>Return parameters:</DT>
+
+<DD><EM>selectedElement</EM>: the last selected element, NULL if no element is
+selected in the document.
+<P><EM>firstCharacter</EM>: rank of the first character in the selection, or 0
+if the whole element is in the selection.</P>
+
+<P><EM>lastCharacter</EM>: rank of the last character in the selection, or 0
+if the</P>
+
+<P>whole element is in the selection.</P>
+
+</DL>
+
+<H4><A NAME="sectc1826">18.2.6</A> TtaGiveNextSelectedElement</H4>
 <A NAME="L8252"></A>
 <P>Returns the element that follows a given element in the current selection
 in a given document. If this element is a Text element and if only a substring
@@ -8010,6 +8158,36 @@ if the</P>
 
 <P>whole element is in the selection.</P>
 
+</DL>
+
+<H4><A NAME="sectc1827">18.2.7</A> TtaGiveNextElement</H4>
+<A NAME="L57940"></A>
+<P>Returns the element that follows a given element in the selection
+order.</P>
+
+<HR>
+
+<P>void TtaGiveNextElement(Document document, Element *eselectedElement,
+Element last)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD><EM>document</EM>: the document to which element belongs.
+<P><EM>element</EM>: the current element.</P>
+
+<P><EM>last</EM>: end of the range to be searched, usually last selected
+element.</P>
+
+</DL>
+
+<DL>
+<DT>Return parameters:</DT>
+
+<DD><EM>element</EM>: the next element in the selection order. NULL if not
+found.
 </DL>
 
 <H2><A NAME="secta19">19</A> Printing</H2>
