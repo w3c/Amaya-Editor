@@ -423,6 +423,22 @@ static void         wrfontstyle (PtrPRule pR)
 		     putchar (pR->PrChrValue);
 		     break;
 	       }
+      else if (pR->PrType == PtUnicodeBidi)
+	 switch (pR->PrChrValue)
+	       {
+		  case 'N':
+		     printf ("Normal");
+		     break;
+		  case 'E':
+		     printf ("Embed");
+		     break;
+		  case 'O':
+		     printf ("Override");
+		     break;
+		  default:
+		     putchar (pR->PrChrValue);
+		     break;
+	       }
       else if (pR->PrType == PtLineStyle)
 	 switch (pR->PrChrValue)
 	       {
@@ -1139,6 +1155,10 @@ static void         wrsuiteregles (PtrPRule RP)
 		    break;
 		 case PtDirection:
 		    printf ("Direction: ");
+		    wrfontstyle (RP);
+		    break;
+		 case PtUnicodeBidi:
+		    printf ("UnicodeBidi: ");
 		    wrfontstyle (RP);
 		    break;
 		 case PtLineStyle:

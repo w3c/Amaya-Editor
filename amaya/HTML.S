@@ -187,7 +187,7 @@ STRUCT
 		{ hspace  vspace }
 		 SVG_ImageContent;
 	SVG_ImageContent  = SVG;
-	Embed						{ EMBED }
+	Embed_						{ EMBED }
 	    (ATTR SRC;
 		  Alignment;
 		{ align   top   bottom   left   right }
@@ -286,7 +286,7 @@ STRUCT
 	Span = Basic_Set;					{ SPAN }
 	BDO = Basic_Set;					{ BDO }
 	Object;							{ OBJECT }
-	Embed;							{ EMBED }
+	Embed_;							{ EMBED }
 	IFRAME;							{ IFRAME }
 	ruby;                                                   { ruby }
 	MathML;							{ MATH }

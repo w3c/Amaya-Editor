@@ -531,7 +531,7 @@ void DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
   elType = TtaGetElementType (el);
   if ((elType.ElTypeNum == HTML_EL_PICTURE_UNIT) ||
       ((elType.ElTypeNum == HTML_EL_Object ||
-	elType.ElTypeNum == HTML_EL_Embed) &&
+	elType.ElTypeNum == HTML_EL_Embed_) &&
        (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML")  == 0)))
     {
       /** for the moment, the above function won't identify SVG images.

@@ -4306,7 +4306,7 @@ static Element  ChangeExternalElemType (Element el, Document doc)
 	}
     }
   else if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) &&
-	   elType.ElTypeNum == HTML_EL_Embed)
+	   elType.ElTypeNum == HTML_EL_Embed_)
     {
 	  /* create a Embed_Content element */
 	  elType.ElTypeNum = HTML_EL_Embed_Content;

@@ -1322,6 +1322,7 @@ void TtaAttachPRule (Element element, PRule pRule, Document document)
    PRUnderline: NoUnderline, Underline, Overline, CrossOut.
    PRThickness: ThinUnderline, ThickUnderline.
    PRDirection: LeftToRight, RightToLeft.
+   PRUnicodeBidi: Normal, Embed, Override.
    PRLineStyle, PRBorderTopStyle, PRBorderRightStyle, PRBorderBottomStyle,
       PRBorderLeftStyle: SolidLine, DashedLine, DottedLine.
    PRNoBreak1, PRNoBreak2: a positive integer (distance in points).
@@ -1514,6 +1515,27 @@ void TtaSetPRuleValue (Element element, PRule pRule, int value, Document documen
 	       break;
 	     case RightToLeft:
 	       ((PtrPRule) pRule)->PrChrValue = 'R';
+	       break;
+	     default:
+#ifndef NODISPLAY
+	       done = FALSE;
+#endif
+	       TtaError (ERR_invalid_parameter);
+	       break;
+	     }
+	   break;
+	 case PtUnicodeBidi:
+	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	   switch (value)
+	     {
+	     case Normal:
+	       ((PtrPRule) pRule)->PrChrValue = 'N';
+	       break;
+	     case Embed:
+	       ((PtrPRule) pRule)->PrChrValue = 'E';
+	       break;
+	     case Override:
+	       ((PtrPRule) pRule)->PrChrValue = 'O';
 	       break;
 	     default:
 #ifndef NODISPLAY
@@ -2333,6 +2355,7 @@ int                 TtaGetPRuleType (PRule pRule)
    PRUnderline: NoUnderline, Underline, Overline, CrossOut.
    PRThickness: ThinUnderline, ThickUnderline.
    PRDirection: LeftToRight, RightToLeft.
+   PRUnicodeBidi: Normal, Embed, Override.
    PRLineStyle, PRBorderTopStyle, PRBorderRightStyle, PRBorderBottomStyle,
       PRBorderLeftStyle: SolidLine, DashedLine, DottedLine.
    PRNoBreak1, PRNoBreak2: a positive integer (distance in points).
@@ -2465,6 +2488,23 @@ int                 TtaGetPRuleValue (PRule pRule)
 	    break;
 	  case 'R':
 	    value = RightToLeft;
+	    break;
+	  default:
+	    TtaError (ERR_invalid_parameter);
+	    break;
+	  }
+	break;
+      case PtUnicodeBidi:
+	switch (((PtrPRule) pRule)->PrChrValue)
+	  {
+	  case 'N':
+	    value = Normal;
+	    break;
+	  case 'E':
+	    value = Embed;
+	    break;
+	  case 'O':
+	    value = Override;
 	    break;
 	  default:
 	    TtaError (ERR_invalid_parameter);
@@ -2708,6 +2748,7 @@ int                 TtaSamePRules (PRule pRule1, PRule pRule2)
 			    case PtUnderline:
 			    case PtThickness:
 			    case PtDirection:
+			    case PtUnicodeBidi:
 			    case PtLineStyle:
 			    case PtBorderTopStyle:
 			    case PtBorderRightStyle:

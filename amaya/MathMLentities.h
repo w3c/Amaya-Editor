@@ -2,8 +2,6 @@
 XmlEntity  MathEntityTable[] =
 {
    /* This table MUST be in alphabetical order */
-   /* This table contains characters from the Symbol font plus some
-      specific MathML entities */
 	{"AElig", 198},
 	{"Aacute", 193},
 	{"Abreve", 258},

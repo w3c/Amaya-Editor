@@ -441,6 +441,7 @@ typedef struct _AbstractBox
   int             AbLeftBorder;    /* Left Border */
 
   char            AbDirection;        /* Writing direction */
+  char            AbUnicodeBidi;      /* Unicode Bidi */
   char            AbLineStyle;        /* Line style */
   BAlignment      AbAdjust;	      /* Alignment of lines in the box */
   TypeUnit        AbSizeUnit;         /* Unit for the size */

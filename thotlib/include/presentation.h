@@ -53,31 +53,32 @@ typedef int        *PRule;
 #define PRDepth 36
 #define PRAdjust 37
 #define PRDirection 38
-#define PRLineStyle 39
-#define PRLineWeight 40
-#define PRFillPattern 41
-#define PRBackground 42
-#define PRForeground 43
-#define PRHyphenate 44
-#define PRVertOverflow 45
-#define PRHorizOverflow 46
+#define PRUnicodeBidi 39
+#define PRLineStyle 40
+#define PRLineWeight 41
+#define PRFillPattern 42
+#define PRBackground 43
+#define PRForeground 44
+#define PRHyphenate 45
+#define PRVertOverflow 46
+#define PRHorizOverflow 47
 /* PtPageBreak, PtLineBreak, PtGather */
-#define PRXRadius 50
-#define PRYRadius 51
-#define PRNoBreak1 52
-#define PRNoBreak2 53
+#define PRXRadius 51
+#define PRYRadius 52
+#define PRNoBreak1 53
+#define PRNoBreak2 54
 /* PtPictInfo */
-#define PRLine 55
-#define PRCreateEnclosing 56
-#define PRShowBox 57
-#define PRBackgroundPicture 58
-#define PRPictureMode 59
-#define PRNotInLine 60
-#define PRNone 61
-#define PRPageBefore 62
-#define PRPageAfter 63
-#define PRPageInside 64
-#define LAST_PRES_RULE_TYPE 64
+#define PRLine 56
+#define PRCreateEnclosing 57
+#define PRShowBox 58
+#define PRBackgroundPicture 59
+#define PRPictureMode 60
+#define PRNotInLine 61
+#define PRNone 62
+#define PRPageBefore 63
+#define PRPageAfter 64
+#define PRPageInside 65
+#define LAST_PRES_RULE_TYPE 65
 
 /* values for rules PRBorder*Style */
 #define BorderStyleNone 1
@@ -126,6 +127,11 @@ typedef int        *PRule;
 #define LeftToRight 1
 #define RightToLeft 2
 
+/* values for rule PRUnicodeBidi */
+#define Normal 1
+#define Embed 2
+#define Override 3
+
 /* values for rule PRLineStyle */
 #define SolidLine 1
 #define DashedLine 2
@@ -154,9 +160,9 @@ extern void TtaSetFontZoom (int zoom);
    Parameter:
    presentationType: type of the presentation rule to be created. Available
    values are PRSize, PRStyle, PRWeight, PRFont, PRUnderline, PRThickness,
-   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRLineStyle, PRDirection
-   PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate,
-   PRWidth, PRHeight, PRVertPos, PRHorizPos.
+   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRLineStyle, PRDirection,
+   PRUnicodeBidi, PRLineWeight, PRFillPattern, PRBackground, PRForeground,
+   PRHyphenate, PRWidth, PRHeight, PRVertPos, PRHorizPos.
    view: the view (this view must be open).
    document: the document.
    Return value:
@@ -172,9 +178,9 @@ extern PRule TtaNewPRule (int presentationType, View view, Document document);
    Parameter:
    presentationType: type of the presentation rule to be created. Available
    values are PRSize, PRStyle, PRWeight, PRFont, PRUnderline, PRThickness,
-   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRLineStyle, PRDirection
-   PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate,
-   PRShowBox, PRNotInLine.
+   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRLineStyle, PRDirection,
+   PRUnicodeBidi, PRLineWeight, PRFillPattern, PRBackground, PRForeground,
+   PRHyphenate, PRShowBox, PRNotInLine.
    viewName: the name of the view (this view does not need to be open).
    document: the document.
    Return value:
@@ -190,9 +196,9 @@ extern PRule TtaNewPRuleForView (int presentationType, int view, Document docume
    Parameter:
    presentationType: type of the presentation rule to be created. Available
    values are PRSize, PRStyle, PRWeight, PRFont, PRUnderline, PRThickness,
-   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRLineStyle, PRDirection
-   PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate,
-   PRShowBox, PRNotInLine.
+   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRLineStyle, PRDirection,
+   PrUnicodeBidi, PRLineWeight, PRFillPattern, PRBackground, PRForeground,
+   PRHyphenate, PRShowBox, PRNotInLine.
    viewName: the name of the view (this view does not need to be open).
    document: the document.
    Return value:
@@ -271,6 +277,7 @@ extern void         TtaRemovePRule (Element element, PRule pRule, Document docum
    PRUnderline: NoUnderline, Underline, Overline, CrossOut.
    PRThickness: ThinUnderline, ThickUnderline.
    PRDirection: LeftToRight, RightToLeft.
+   PRUnicodeBidi: Normal, Embed, Override.
    PRLineStyle, PRBorderTopStyle, PRBorderRightStyle, PRBorderBottomStyle,
       PRBorderLeftStyle: SolidLine, DashedLine, DottedLine.
    PRNoBreak1, PRNoBreak2: a positive integer (distance in points).
@@ -473,9 +480,9 @@ extern void TtaNextPRule (Element element, /*INOUT*/ PRule * pRule);
    element: the element of interest.
    presentationType: type of the desired presentation rule. Available
    values are PRSize, PtStyle, PtWeight, PRFont, PRUnderline, PRThickness,
-   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRLineStyle, PRDirection
-   PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate,
-   PRShowBox, PRNotInLine.
+   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRLineStyle, PRDirection,
+   PRUnicodeBidi, PRLineWeight, PRFillPattern, PRBackground, PRForeground,
+   PRHyphenate, PRShowBox, PRNotInLine.
    Return value:
    the presentation rule found, or NULL if the element
    does not have this type of presentation rule.
@@ -489,10 +496,10 @@ extern PRule TtaGetPRule (Element element, int presentationType);
    Parameters:
    pRule: the presentation rule of interest.
    Return value:
-   type of that presentation rule. Available values are RSize, PtStyle,
+   type of that presentation rule. Available values are RSize, RStyle,
    RFont, RUnderline, RThickness, PRIndent, RLineSpacing, RDepth, RAdjust,
-   RLineStyle, RDirection, RLineWeight, RFillPattern, RBackground,
-   RForeground, RHyphenate, PRShowBox, PRNotInLine.
+   RLineStyle, RDirection, RUnicodeBidi, RLineWeight, RFillPattern,
+   RBackground, RForeground, RHyphenate, PRShowBox, PRNotInLine.
   ----------------------------------------------------------------------*/
 extern int TtaGetPRuleType (PRule pRule);
 
@@ -517,6 +524,7 @@ extern int TtaGetPRuleType (PRule pRule);
    PRUnderline: NoUnderline, Underline, Overline, CrossOut.
    PRThickness: ThinUnderline, ThickUnderline.
    PRDirection: LeftToRight, RightToLeft.
+   PRUnicodeBidi: Normal, Embed, Override.
    PRLineStyle, PRBorderTopStyle, PRBorderRightStyle, PRBorderBottomStyle,
       PRBorderLeftStyle: SolidLine, DashedLine, DottedLine.
    PRNoBreak1, PRNoBreak2: a positive integer (distance in points).

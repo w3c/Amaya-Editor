@@ -386,6 +386,9 @@ static void         CreatePRule (PRuleType t, indLine wi)
 	    case PtDirection:
 	       CurRule->PrChrValue = 'L';       /* Left to right by default */
 	       break;
+	    case PtUnicodeBidi:
+	       CurRule->PrChrValue = 'N';       /* Normal by default */
+	       break;
 	    case PtLineStyle:
 	    case PtBorderTopStyle:
 	    case PtBorderRightStyle:
@@ -1420,12 +1423,13 @@ static void ProcessShortKeyWord (int x, indLine wi, SyntacticCode gCode)
 
      case CHR_61:
        /*  =  */
-       if (gCode == RULE_InheritVal   || gCode == RULE_NameInherit ||
+       if (gCode == RULE_InheritVal       || gCode == RULE_NameInherit ||
 	   gCode == RULE_Color ||
-	   gCode == RULE_BoolInherit  || gCode == RULE_InheritDist ||
-	   gCode == RULE_InheritSize  || gCode == RULE_AdjustInherit ||
-	   gCode == RULE_DirInherit   || gCode == RULE_LineStyleInherit ||
-	   gCode == RULE_StyleInherit || gCode == RULE_InheritParent)
+	   gCode == RULE_BoolInherit      || gCode == RULE_InheritDist ||
+	   gCode == RULE_InheritSize      || gCode == RULE_AdjustInherit ||
+	   gCode == RULE_DirInherit       || gCode == RULE_BidiInherit ||
+	   gCode == RULE_LineStyleInherit ||gCode == RULE_StyleInherit ||
+	   gCode == RULE_InheritParent)
 	 /* PresInherit */
 	 {
 	   CurRule->PrInhPercent = False;
@@ -2123,6 +2127,14 @@ static void         CheckDefaultRules ()
      {
 	CreateDefaultRule ();
 	CurRule->PrType = PtDirection;
+	InheritRule (InheritParent);
+     }
+   if (GetTypedRule (PtUnicodeBidi, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle UnicodeBidi par defaut, on en cree une : */
+      /* UnicodeBidi: Enclosing =; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtUnicodeBidi;
 	InheritRule (InheritParent);
      }
    if (GetTypedRule (PtLineStyle, pPSchema->PsFirstDefaultPRule) == NULL)
@@ -2966,10 +2978,6 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	CreatePRule (PtWeight, wi);
 	CurRule->PrChrValue = 'B';	/* Weight; Bold */
 	break;
-      case KWD_Normal:
-	/* Weight Normal */
-	CurRule->PrChrValue = 'N';
-	break;
       case KWD_Underline:
 	/* Souligne */
 	CreatePRule (PtUnderline, wi);
@@ -3101,6 +3109,10 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
       case KWD_Direction:
 	/* Direction */
 	CreatePRule (PtDirection, wi);
+	break;
+      case KWD_UnicodeBidi:
+	/* UnicodeBidi */
+	CreatePRule (PtUnicodeBidi, wi);
 	break;
       case KWD_LineStyle:
 	CreatePRule (PtLineStyle, wi);
@@ -3302,6 +3314,20 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	/* writing direction */
 	CurRule->PrChrValue = 'R';
 	break;
+      case KWD_Normal:
+	if (CurRule->PrType == PtUnicodeBidi)
+	  /* UnicodeBidi = Normal */
+	  CurRule->PrChrValue = 'N';
+	else
+	  /* Weight = Normal */
+	  CurRule->PrChrValue = 'N';
+	break;
+      case KWD_Embed:
+        CurRule->PrChrValue = 'E';
+	break;
+      case KWD_Override:
+        CurRule->PrChrValue = 'O';
+	break;
       case KWD_nil /* NULL */ :
 	if (CurRule->PrType == PtHeight || CurRule->PrType == PtWidth)
 	  CompilerMessage (wi, PRS, FATAL, FORDBIDDEN_IN_HEIGHT_AND_WIDTH,
@@ -3336,7 +3362,8 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	if (gCode == RULE_Reference)
 	  SetLevel (RlEnclosed, wi);
 	else if (CurRule->PrType == PtVisibility ||
-		 CurRule->PrType == PtDirection)
+		 CurRule->PrType == PtDirection ||
+		 CurRule->PrType == PtUnicodeBidi)
 	  CompilerMessage (wi, PRS, FATAL, CANT_INHERIT_FROM_ENCLOSED,
 			   inputLine, LineNum);
 	else
@@ -3356,7 +3383,8 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	if (gCode == RULE_Reference)
 	  SetLevel (RlPrevious, wi);
 	else if (CurRule->PrType == PtVisibility ||
-		 CurRule->PrType == PtDirection)
+		 CurRule->PrType == PtDirection ||
+		 CurRule->PrType == PtUnicodeBidi)
 	  CompilerMessage (wi, PRS, FATAL, CANT_INHERIT_FROM_PREVIOUS,
 			   inputLine, LineNum);
 	else

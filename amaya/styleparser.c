@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1262,6 +1262,55 @@ static char *ParseCSSDirection (Element element, PSchema tsch,
     */
    if (direction.typed_data.value)
      TtaSetStylePresentation (PRDirection, element, tsch, context, direction);
+   return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSUnicodeBidi: parse a CSS unicode-bidi property
+  ----------------------------------------------------------------------*/
+static char *ParseCSSUnicodeBidi (Element element, PSchema tsch,
+				  PresentationContext context, char *cssRule,
+				  CSSInfoPtr css, ThotBool isHTML)
+{
+   PresentationValue   bidi;
+
+   bidi.typed_data.value = 0;
+   bidi.typed_data.unit = STYLE_UNIT_REL;
+   bidi.typed_data.real = FALSE;
+
+   cssRule = SkipBlanksAndComments (cssRule);
+   if (!strncasecmp (cssRule, "normal", 6))
+     {
+       bidi.typed_data.value = STYLE_BIDINORMAL;
+       cssRule = SkipWord (cssRule);
+     }
+   else if (!strncasecmp (cssRule, "embed", 5))
+     {
+       bidi.typed_data.value = STYLE_BIDIEMBED;
+       cssRule = SkipWord (cssRule);
+     }
+   else if (!strncasecmp (cssRule, "override", 8))
+     {
+       bidi.typed_data.value = STYLE_BIDIOVERRIDE;
+       cssRule = SkipWord (cssRule);
+     }
+   else if (!strncasecmp (cssRule, "inherit", 7))
+     {
+       /* not implemented */
+       cssRule = SkipWord (cssRule);
+       return (cssRule);
+     }
+   else
+     {
+       CSSParseError ("Invalid unicode-bidi value", cssRule);
+       return (cssRule);
+     }
+
+   /*
+    * install the new presentation.
+    */
+   if (bidi.typed_data.value)
+     TtaSetStylePresentation (PRUnicodeBidi, element, tsch, context, bidi);
    return (cssRule);
 }
 
@@ -2961,6 +3010,7 @@ static CSSProperty CSSProperties[] =
    {"line-height", ParseCSSLineSpacing},
 
    {"direction", ParseCSSDirection},
+   {"unicode-bidi", ParseCSSUnicodeBidi},
 
    {"margin-top", ParseCSSMarginTop},
    {"margin-right", ParseCSSMarginRight},
@@ -3475,6 +3525,20 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
 	  break;
 	case STYLE_RIGHTTOLEFT:
 	  strcpy (buffer, "direction: rtl");
+	  break;
+	}
+      break;
+    case PRUnicodeBidi:
+      switch (settings->value.typed_data.value)
+	{
+	case STYLE_BIDINORMAL:
+	  strcpy (buffer, "unicode-bidi: normal");
+	  break;
+	case STYLE_BIDIEMBED:
+	  strcpy (buffer, "unicode-bidi: embed");
+	  break;
+	case STYLE_BIDIOVERRIDE:
+	  strcpy (buffer, "unicode-bidi: bidi-override");
 	  break;
 	}
       break;

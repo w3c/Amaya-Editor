@@ -1331,6 +1331,9 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
     case C_PR_DIRECTION:
       TypeRP = PtDirection;
       break;
+    case C_PR_UNICODEBIDI:
+      TypeRP = PtUnicodeBidi;
+      break;
     case C_PR_LINESTYLE:
       TypeRP = PtLineStyle;
       break;
@@ -1539,6 +1542,7 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
       case PtUnderline:
       case PtThickness:
       case PtDirection:
+      case PtUnicodeBidi:
       case PtLineStyle:
       case PtBorderTopStyle:
       case PtBorderRightStyle:
@@ -1750,6 +1754,7 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
 	  case PtUnderline:
 	  case PtThickness:
 	  case PtDirection:
+	  case PtUnicodeBidi:
 	  case PtLineStyle:
           case PtBorderTopStyle:
           case PtBorderRightStyle:

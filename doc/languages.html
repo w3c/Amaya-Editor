@@ -16,7 +16,7 @@
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of January 14, 2002</h4>
+<h4>Version of January 23, 2002</h4>
 
 <p>© 1996-2002 INRIA</p>
 <hr />
@@ -3012,11 +3012,10 @@ A semi-colon terminates each declaration.</p>
 <p>In the case of a character string, the keyword <tt>Text</tt> can be
 followed by the name of an script (for example, <tt>Greek</tt> or
 <tt>Latin</tt>) in which the constant's text should be expressed. If the
-script name is absent, the Latin script is used. When the script name
-is present, only the first letter of the script name is interpreted. Thus,
-the words <tt>Greek</tt> and <tt>Grec</tt> designate the same script. In
-current versions of Thot, only the Greek and Latin scripts are
-available.</p>
+script name is absent, the Latin script is used. When the script name is
+present, only the first letter of the script name is interpreted. Thus, the
+words <tt>Greek</tt> and <tt>Grec</tt> designate the same script. In current
+versions of Thot, only the Greek and Latin scripts are available.</p>
 <pre>                 'CONST' ConstSeq
      ConstSeq   = Const &lt; Const &gt; .
      Const      = ConstID '=' ConstType ConstValue ';' .
@@ -3233,6 +3232,7 @@ following rules are considered to be the default rules:</p>
    Adjust:            Enclosing =;
    Hyphenate:         Enclosing =;
    Direction:         Enclosing =;
+   UnicodeBidi:       Enclosing =;
    PageBreak:         Yes;
    LineBreak:         Yes;
    InLine:            Yes;
@@ -4041,6 +4041,7 @@ rules are terminated by a semicolon.</p>
                 'Adjust' ':'        AdjustInherit /
                 'Hyphenate' ':'     BoolInherit /
                 'Direction' ':'     DirInherit /
+                'UnicodeBidi' ':'   BidiInherit /
                 'PageBreak' ':'     Boolean /
                 'LineBreak' ':'     Boolean /
                 'InLine' ':'        Boolean /
@@ -4732,10 +4733,10 @@ of the attribute is used.</p>
   minimum        = NUMBER .</pre>
 
 <p>The properties which can be obtained by inheritance are hyphenation,
-writing direction, interline spacing, character font (font family), font
-style, font size, visibility, indentation, underlining, alignment of text,
-stacking order of objects, the style and thickness of lines, fill pattern and
-the colors of lines and characters.</p>
+writing direction, Unicode-bidi, interline spacing, character font (font
+family), font style, font size, visibility, indentation, underlining,
+alignment of text, stacking order of objects, the style and thickness of
+lines, fill pattern and the colors of lines and characters.</p>
 </div>
 
 <div class="subsection">
@@ -4765,8 +4766,8 @@ boxes will be placed according to the line breaking rules.</p>
 
 <p>The <tt>Line</tt> rule does not have a parameter. The characteristics of
 the lines that will be constructed are determined by the
-<tt>LineSpacing</tt>, <tt>Indent</tt>, <tt>Adjust</tt>, <tt>Hyphenate</tt>
-and <code>Direction</code> rules. Moreover, the <a
+<tt>LineSpacing</tt>, <tt>Indent</tt>, <tt>Adjust</tt>, <tt>Hyphenate</tt>,
+<code>Direction</code> and <code>UnicodeBidi</code> rules. Moreover, the <a
 href="#insectd42226"><tt>Inline</tt> rule</a> permits the exclusion of
 certain elements from the line breaking process.</p>
 
@@ -4877,7 +4878,7 @@ followed by an equals sign.</p>
 
 <p>The <tt>Direction</tt> rule indicates the directionality of text: from
 left to right, as for latin scripts, or from right to left, as for the Arabic
-or Hebrew scripts.</p>
+or Hebrew scripts. This is used by the Unicode bidirectional algorithm.</p>
 
 <p>The writing direction property takes either a constant value
 (<code>ltr</code> for left to right, or <code>rtl</code> for right to left)
@@ -4888,7 +4889,11 @@ sign.</p>
      DirInherit =  'ltr' / 'rtl' / Kinship '=' .</pre>
 </div>
 
-<p></p>
+<p>The <code>UnicodeBidi</code> rule is the equivalent of the CSS2
+<code>unicode-bidi</code> property. It takes the same values and acts in the
+same way.</p>
+<pre>                   'Direction' ':' BidiInherit
+     BidiInherit = 'Normal' / 'Embed' / 'Override' / Kinship '=' .</pre>
 
 <div class="subsubsection">
 <h4><a name="sectd42226" id="sectd42226">Avoiding line breaking</a></h4>
@@ -6548,11 +6553,11 @@ keyword.</p>
 <h4><a name="sectd5284" id="sectd5284">Conditions on the scripts</a></h4>
 
 <p>The character string base type (and only this type) can use the condition
-<tt>Script = a</tt> which indicates that the translation rule(s) should
-only apply if the script of the character string is the one whose name
-appears after the equals sign (or is not, if there is a preceding
-<tt>NOT</tt> keyword). This condition cannot be applied to translation rules
-of an attribute.</p>
+<tt>Script = a</tt> which indicates that the translation rule(s) should only
+apply if the script of the character string is the one whose name appears
+after the equals sign (or is not, if there is a preceding <tt>NOT</tt>
+keyword). This condition cannot be applied to translation rules of an
+attribute.</p>
 
 <p>In the current implementation of Thot, the available scripts are the
 <tt>Latin</tt> script and the <tt>Greek</tt> script.</p>
@@ -6673,8 +6678,8 @@ rules:</p>
   <li>those taking numeric values (<tt>Size, Indent, LineSpacing,
     LineWeight</tt>),</li>
   <li>those with values taken from a predefined list (<tt>Adjust, Hyphenate,
-    Direction, Style, Weight, Font, UnderLine, Thickness,
-  LineStyle</tt>),</li>
+    Direction, UnicodeBidi, Style, Weight, Font, UnderLine, Thickness,
+    LineStyle</tt>),</li>
   <li>those whose value is a name (<tt>FillPattern, Background,
     Foreground</tt>).</li>
 </ul>
@@ -7512,7 +7517,7 @@ for which the translation rule block should be applied.</p>
   <li>rules taking numeric values: <tt>Size</tt>, <tt>Indent</tt>,
     <tt>LineSpacing</tt>, <tt>LineWeight</tt>,</li>
   <li>rules whose values are taken from a predefined list (i.e. whose type is
-    an enumeration): <tt>Adjust</tt>, <tt>Hyphenate,Direction,
+    an enumeration): <tt>Adjust</tt>, <tt>Hyphenate,Direction, UnicodeBidi,
     <tt>Style</tt>, <tt>Weight</tt>, <tt>Font</tt>, <tt>UnderLine</tt>,
     <tt>Thickness</tt>, <tt>LineStyle</tt>,</tt></li>
   <li>rules whose value is a name: <tt>FillPattern</tt>, <tt>Background</tt>,
@@ -7632,14 +7637,14 @@ recode these terminal elements of the documents structure. The last sections
 of a translation schema are intended for this purpose, each specifying the
 recoding rules for one type of terminal element.</p>
 
-<p>The recoding rules for character strings are grouped by scripts. There
-is a group of rules for each script of the Thot document that must be
+<p>The recoding rules for character strings are grouped by scripts. There is
+a group of rules for each script of the Thot document that must be
 translated. Each such group of rules begins with the <tt>TEXTTRANSLATE</tt>
 keyword, followed by the specification of the script to translate and the
 recoding rules, between the <tt>BEGIN</tt> and <tt>END</tt> keywords unless
 there is only one recoding rule for the script. The specification of the
-script is not required: by default it is assumed to the Latin script (the
-ISO Latin-1 character set).</p>
+script is not required: by default it is assumed to the Latin script (the ISO
+Latin-1 character set).</p>
 
 <p>Each recoding rule is formed by a source string between apostrophes and a
 target string, also between apostrophes, the two strings being separated by
@@ -7668,11 +7673,10 @@ by the compiler as is the maximum length of the source and target strings.</p>
 <p>The recoding rules for symbols and graphical elements are written in the
 same manner as the recoding rules for character strings. They are preceded,
 respectively, by the <tt>SYMBTRANSLATE</tt> and <tt>GRAPHTRANSLATE</tt> and
-so not require a specification of the script. Their source string is
-limited to one character, since, in Thot, each symbol and each graphical
-element is represented by a single character. The symbol and graphical
-element codes are defined along with the <a href="#sect7">non-standard
-character codes</a>.</p>
+so not require a specification of the script. Their source string is limited
+to one character, since, in Thot, each symbol and each graphical element is
+represented by a single character. The symbol and graphical element codes are
+defined along with the <a href="#sect7">non-standard character codes</a>.</p>
 
 <blockquote class="example">
   <p><strong>Example:</strong></p>
@@ -8020,6 +8024,7 @@ Property        = 'VertRef' ':' HorizPosition /
                   'Adjust' ':' AlignOrInherit /
                   'Hyphenate' ':' BoolInherit /
                   'Direction' ':' DirInherit /
+                  'UnicodeBidi' ':' BidiInherit /
                   'PageBreak' ':' Boolean /
                   'LineBreak' ':' Boolean /
                   'InLine' ':' Boolean /
@@ -8127,6 +8132,7 @@ Alignment       = 'Left' / 'Right' / 'VMiddle' /
                   'LeftWithDots' .
 
 DirInherit      = 'ltr' / 'rtl' / Kinship '=' .
+BidiInherit     = 'Normal' / 'Embed' / 'Override' / Kinship '=' .
 
 DistOrInherit   = Kinship InheritedDist / Distance .
 InheritedDist   = '=' / '+' AbsDist / '-' AbsDist .
@@ -8417,10 +8423,9 @@ Target        = STRING .</pre>
 <div class="section">
 <h2><a name="sectb71" id="sectb71">Characters</a></h2>
 
-<p>The characters of the Latin script follow the encoding defined in the
-ISO 8859-1 (ISO Latin-1) standard. The characters of the Greek script
-follow the encoding defined by Adobe for its Symbol font (Adobe
-FontSpecific).</p>
+<p>The characters of the Latin script follow the encoding defined in the ISO
+8859-1 (ISO Latin-1) standard. The characters of the Greek script follow the
+encoding defined by Adobe for its Symbol font (Adobe FontSpecific).</p>
 
 <p>Characters whose octal code is greater than 0200 are written in the form
 of their octal code preceded by a backslash character (``\''). For example,

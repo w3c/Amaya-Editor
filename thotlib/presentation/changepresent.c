@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001.
+ *  (c) COPYRIGHT INRIA, 1996-2002.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -459,6 +459,9 @@ int          NumTypePRuleAPI (PtrPRule pRule)
 	       break;
 	    case PtDirection:
 	       return PRDirection;
+	       break;
+	    case PtUnicodeBidi:
+	       return PRUnicodeBidi;
 	       break;
 	    case PtLineStyle:
 	       return PRLineStyle;

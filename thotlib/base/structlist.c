@@ -261,6 +261,9 @@ static void         WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
     case PtDirection:
       fprintf (fileDescriptor, "Direction");
       break;
+    case PtUnicodeBidi:
+      fprintf (fileDescriptor, "UnicodeBidi");
+      break;
     case PtLineStyle:
       fprintf (fileDescriptor, "LineStyle");
       break;
@@ -1228,6 +1231,22 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 		     break;
 	          default:
 		     fprintf (fileDescriptor, "%c", pAb->AbDirection);
+		     break;
+	       }
+	fprintf (fileDescriptor, "Bidi:");
+	switch (pAb->AbUnicodeBidi)
+	       {
+		  case 'N':
+		     fprintf (fileDescriptor, "normal");
+		     break;
+		  case 'E':
+		     fprintf (fileDescriptor, "embed");
+		     break;
+		  case 'O':
+		     fprintf (fileDescriptor, "override");
+		     break;
+	          default:
+		     fprintf (fileDescriptor, "%c", pAb->AbUnicodeBidi);
 		     break;
 	       }
 	fprintf (fileDescriptor, " Indent:%d", pAb->AbIndent);
@@ -2379,6 +2398,22 @@ static void         wrfontstyle (PtrPRule pR, FILE *fileDescriptor)
 		     fprintf (fileDescriptor, "%c", pR->PrChrValue);
 		     break;
 	       }
+      else if (pR->PrType == PtUnicodeBidi)
+	 switch (pR->PrChrValue)
+	       {
+		  case 'N':
+		     fprintf (fileDescriptor, "normal");
+		     break;
+		  case 'E':
+		     fprintf (fileDescriptor, "embed");
+		     break;
+		  case 'O':
+		     fprintf (fileDescriptor, "override");
+		     break;
+	          default:
+		     fprintf (fileDescriptor, "%c", pR->PrChrValue);
+		     break;
+	       }
       else if (pR->PrType == PtLineStyle ||
 	       pR->PrType == PtBorderTopStyle ||
 	       pR->PrType == PtBorderRightStyle ||
@@ -3179,6 +3214,10 @@ static void         wrsuiteregles (PtrPRule RP, FILE *fileDescriptor)
 		    break;
 		 case PtDirection:
 		    fprintf (fileDescriptor, "Direction: ");
+		    wrfontstyle (RP, fileDescriptor);
+		    break;
+		 case PtUnicodeBidi:
+		    fprintf (fileDescriptor, "UnicodeBidi: ");
 		    wrfontstyle (RP, fileDescriptor);
 		    break;
 		 case PtLineStyle:

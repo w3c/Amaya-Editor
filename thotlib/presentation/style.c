@@ -1489,6 +1489,24 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	  break;	  
 	}
       break;
+    case PtUnicodeBidi:
+      rule->PrPresMode = PresImmediate;
+      switch (value)
+	{
+	case STYLE_BIDINORMAL:
+	  rule->PrChrValue = 'N';
+	  break;
+	case STYLE_BIDIEMBED:
+	  rule->PrChrValue = 'E';
+	  break;
+	case STYLE_BIDIOVERRIDE:
+	  rule->PrChrValue = 'O';
+	  break;
+	default:
+	  rule->PrChrValue = 'N';
+	  break;	  
+	}
+      break;
     case PtHyphenate:
       rule->PrPresMode = PresImmediate;
       switch (value)
@@ -1807,6 +1825,21 @@ static PresentationValue   PRuleToPresentationValue (PtrPRule rule)
 	  break;
 	case 'L':
 	  value = STYLE_LEFTTORIGHT;
+	  break;
+	}
+      break;
+
+    case PtUnicodeBidi:
+      switch (rule->PrChrValue)
+	{
+	case 'N':
+	  value = STYLE_BIDINORMAL;
+	  break;
+	case 'E':
+	  value = STYLE_BIDIEMBED;
+	  break;
+	case 'O':
+	  value = STYLE_BIDIOVERRIDE;
 	  break;
 	}
       break;
@@ -2202,6 +2235,9 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
       break;
     case PRDirection:
       *intRule = PtDirection;
+      break;
+    case PRUnicodeBidi:
+      *intRule = PtUnicodeBidi;
       break;
     case PRShowBox:
       *intRule = PtFunction;

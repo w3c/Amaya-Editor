@@ -212,7 +212,7 @@ typedef enum
   PtBorderTopColor, PtBorderRightColor, PtBorderBottomColor, PtBorderLeftColor,
   PtBorderTopStyle, PtBorderRightStyle, PtBorderBottomStyle, PtBorderLeftStyle,
   PtSize, PtStyle, PtWeight, PtFont, PtUnderline, PtThickness,
-  PtIndent, PtLineSpacing, PtDepth, PtAdjust, PtDirection,
+  PtIndent, PtLineSpacing, PtDepth, PtAdjust, PtDirection, PtUnicodeBidi,
   PtLineStyle, PtLineWeight, PtFillPattern, PtBackground, PtForeground,
   PtHyphenate, PtVertOverflow, PtHorizOverflow, PtPageBreak, PtLineBreak,
   PtGather, PtXRadius, PtYRadius,
@@ -473,7 +473,8 @@ typedef struct _PresRule
 				        -1 means "same color as foreground" */
 	}  s0;
 	struct	/* PRuleType = PtFont, PtStyle, PtWeight, PtUnderline,
-	        	       PtThickness, PtDirection, PtLineStyle,
+	        	       PtThickness, PtDirection, PtUnicodeBidi,
+                               PtLineStyle,
 	                       PtBorderTopStyle, PtBorderRightStyle,
                                PtBorderBottomStyle, PtBorderLeftStyle */
 	{

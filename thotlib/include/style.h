@@ -132,6 +132,10 @@ typedef struct _PresentationSetting
 #define STYLE_LEFTTORIGHT               1
 #define STYLE_RIGHTTOLEFT               2
 
+#define STYLE_BIDINORMAL                1
+#define STYLE_BIDIEMBED                 2
+#define STYLE_BIDIOVERRIDE              3
+
 #define STYLE_BORDERNONE		1
 #define STYLE_BORDERHIDDEN		2
 #define STYLE_BORDERDOTTED		3

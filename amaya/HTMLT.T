@@ -814,7 +814,7 @@ RULES
 	Remove;
 	END;
 
- Embed: BEGIN
+ Embed_: BEGIN
 	if NOT Immediately within Object AND NOT IsInput BEGIN
 		Create '<embed';
 		Create Attributes;

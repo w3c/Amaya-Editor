@@ -3802,7 +3802,7 @@ RULES
 		Visibility: 0;
 	END;
 
- Embed: BEGIN
+ Embed_: BEGIN
 	if not Immediately within Object and not IsInput
 		CreateBefore(ElementName);
 	LineBreak: No;
@@ -6548,14 +6548,14 @@ ATTRIBUTES
 	    CreateBefore(AttrNameAndValue);
 	Direction: rtl;
 	END;
-  dir (Embed) = ltr_:
+  dir (Embed_) = ltr_:
 	BEGIN
 	if not Immediately within Object
 	   HorizPos: Left = Enclosing . Left;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	END;
-  dir (Embed) = rtl_:
+  dir (Embed_) = rtl_:
 	BEGIN
 	if not Immediately within Object
 	   HorizPos: Right = Enclosing . Right;

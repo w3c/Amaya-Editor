@@ -249,6 +249,9 @@ void                WritePRuleType (PRuleType ruleType)
 	    case PtDirection:
 	       TtaWriteByte (outfile, C_PR_DIRECTION);
 	       break;
+	    case PtUnicodeBidi:
+	       TtaWriteByte (outfile, C_PR_UNICODEBIDI);
+	       break;
 	    case PtLineStyle:
 	       TtaWriteByte (outfile, C_PR_LINESTYLE);
 	       break;
@@ -1009,6 +1012,7 @@ void                WritePRules (PtrPRule pPRule, PtrSSchema pSS)
 			     case PtUnderline:
 			     case PtThickness:
 			     case PtDirection:
+			     case PtUnicodeBidi:
 			     case PtLineStyle:
 			     case PtBorderTopStyle:
 			     case PtBorderRightStyle:

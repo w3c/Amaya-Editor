@@ -203,36 +203,6 @@ void MapMathMLAttributeValue (char *AttrVal, AttributeType attrType,
 }
 
 /*----------------------------------------------------------------------
-   MapMathMLEntity
-   Search that entity in the entity table and return the corresponding value.
-  ----------------------------------------------------------------------*/
-void MapMathMLEntity (char *entityName, char *entityValue,
-		      char *script)
-{
-   int	i;
-  ThotBool       found;
-
-  found = FALSE;
-  for (i = 0; pMathEntityTable[i].charCode >= 0 && !found; i++)
-    found = !strcmp (pMathEntityTable[i].charName, entityName);
-
-  if (found)
-    /* entity found */
-    {
-      i--;
-      entityValue[0] = (unsigned char) pMathEntityTable[i].charCode;
-      entityValue[1] = EOS;
-      *script = 'G';
-      /* *script = pMathEntityTable[i].charScript;*/
-    }
-  else
-    {
-      entityValue[0] = EOS;
-      *script = EOS;
-    }
-}
-
-/*----------------------------------------------------------------------
    MathMLEntityCreated
   ----------------------------------------------------------------------*/
 void MathMLEntityCreated (unsigned char *entityValue, Language lang,

@@ -124,7 +124,8 @@ Rule3 =		  Creation '(' BoxName ')' /
 		  [ 'Included' ] 'Column' '(' BoxNameList ')' /
 		  'Copy' '(' BoxTypeCopied ')' /
 		  'Depth' ':' NbInherit /
-                  'Direction' ':' DirInherit .
+                  'Direction' ':' DirInherit /
+                  'UnicodeBidi' ':' BidiInherit .
 Rule4 =		  'LineStyle' ':' LineStyleInherit /
 		  'LineWeight' ':' DistInherit /
 		  'FillPattern' ':' NameInherit /
@@ -169,6 +170,8 @@ FileName =	  STRING .
 PictMode =	  'NormalSize' / 'Scale' / 'RepeatXY' / 'RepeatX' / 'RepeatY' .
 
 DirInherit =      Link '=' / 'ltr' / 'rtl' .
+
+BidiInherit =     Link '=' / 'Normal' / 'Embed' / 'Override' .
 
 LineStyleInherit = Link '=' / 'Solid' / 'Dashed' / 'Dotted' .
 

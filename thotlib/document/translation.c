@@ -926,6 +926,7 @@ static unsigned char  PresRuleValue (PtrPRule pPRule)
      case PtUnderline:
      case PtThickness:
      case PtDirection:
+     case PtUnicodeBidi:
      case PtLineStyle:
        val = pPRule->PrChrValue;
        break;
@@ -2556,6 +2557,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	      case PtUnderline:
 	      case PtThickness:
 	      case PtDirection:
+	      case PtUnicodeBidi:
 	      case PtLineStyle:
 		PutChar ((wchar_t) (pRPres->PrChrValue), fnum, NULL, pDoc, *lineBreak, FALSE);
 		break;
