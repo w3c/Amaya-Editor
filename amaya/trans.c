@@ -1979,7 +1979,7 @@ Document            doc;
    if (myFirstSelect != myLastSelect)
      {
        /* selection crosses several elements, looks if their parents */
-       /* surround the entiere selction, if it is the case consider */
+       /* surround the whole selection, if it is the case, */
        /* the parent is considered as a selected element */ 
 	if (myFirstSelect != NULL && ffc <= 1)
 	  {
@@ -1987,7 +1987,9 @@ Document            doc;
 	     prevFirst = myFirstSelect;
 	     TtaPreviousSibling (&prevFirst);
 	     parentFirst = TtaGetParent (myFirstSelect);
-	     while (parentFirst != NULL && prevFirst == NULL && TtaIsBefore (parentFirst, myLastSelect))
+	     while (parentFirst != NULL && 
+		    prevFirst == NULL && 
+		    TtaIsBefore (parentFirst, myLastSelect))
 	       {
 		  myFirstSelect = parentFirst;
 		  prevFirst = myFirstSelect;
@@ -2001,7 +2003,9 @@ Document            doc;
 	     nextLast = myLastSelect;
 	     TtaNextSibling (&nextLast);
 	     parentLast = TtaGetParent (myLastSelect);
-	     while (parentLast != NULL && nextLast == NULL && TtaIsBefore (myFirstSelect, parentLast))
+	     while (parentLast != NULL && 
+		    nextLast == NULL && 
+		    TtaIsBefore (myFirstSelect, parentLast))
 	       {
 		  myLastSelect = parentLast;
 		  nextLast = myLastSelect;
@@ -2033,6 +2037,7 @@ Document            doc;
 	  }
 	parentFirst = parentLast = TtaGetParent (myFirstSelect);
      }
+
    mySelect = NULL;
    result = (myFirstSelect != NULL && parentFirst == parentLast);
    if (result && parentFirst != NULL)
@@ -2073,7 +2078,9 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
-   Give the next selected element, accordingly  to extension given by CheckSelectionLevel 
+   MyNextSelectedElement
+   Gives the next selected element, accordingly  to extension given by 
+   CheckSelectionLevel 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         MyNextSelectedElement (Document doc, Element * elSelect)
@@ -2207,7 +2214,9 @@ char               *prevtag;
 		       !strcmp (GITagNameByType (subTypes[i]), "NONE"))
 		result = IsValidHtmlChild (subTypes[i], tag, "");
 	      if (!result)
-		if (TtaIsOptionalInAggregate(i,elemType)) 
+		if (!strcmp (GITagNameByType (subTypes[i]), "???") ||
+		    !strcmp (GITagNameByType (subTypes[i]), "NONE") ||
+		    TtaIsOptionalInAggregate(i,elemType)) 
 		  i++;
 		else
 		  i = cardinal;
@@ -2318,7 +2327,7 @@ char               *prevTag;
 		  result = IsValidHtmlChild (elemTypeRoot,
 					     node->Tag,
 					     prevTag);
-		  strcpy (prevTag, smc->MatchNode->Tag);
+		  strcpy (prevTag, node->Tag);
 		}
 	    }
 	  else
@@ -2362,144 +2371,144 @@ char               *data;
 
 #endif
 {
-   int                 val, length;
-   DisplayMode         oldDisplayMode;
-   SSchema	       sch;
-   Element	       elParent, elFound;
-   Attribute	       attr;
-   AttributeType       attrType;
-   boolean	       found;
-   char		       buf [MAX_LENGTH];
-   SearchDomain	       domain;
+  int                 val, length;
+  DisplayMode         oldDisplayMode;
+  SSchema	       sch;
+  Element	       elParent, elFound;
+  Attribute	       attr;
+  AttributeType       attrType;
+  boolean	       found;
+  char		       buf [MAX_LENGTH];
+  SearchDomain	       domain;
 
-   val = (int) data;
-   switch (ref - TransBaseDialog)
-	 {
-	    case TransMenu:
-	       oldDisplayMode = TtaGetDisplayMode (TransDoc);
-	       /* annule la selection */
-	       if (oldDisplayMode != DisplayImmediately)
-		 TtaSetDisplayMode (TransDoc, DisplayImmediately);
-	       TtaSelectElement (TransDoc, NULL);
-	       /* passe en mode de display differe */
+  val = (int) data;
+  switch (ref - TransBaseDialog)
+    {
+    case TransMenu:
+      oldDisplayMode = TtaGetDisplayMode (TransDoc);
+      /* annule la selection */
+      if (oldDisplayMode != DisplayImmediately)
+	TtaSetDisplayMode (TransDoc, DisplayImmediately);
+      TtaSelectElement (TransDoc, NULL);
+      /* passe en mode de display differe */
 #ifndef AMAYA_DEBUG
-	       TtaSetDisplayMode (TransDoc, DeferredDisplay);
+      TtaSetDisplayMode (TransDoc, DeferredDisplay);
 #endif		
-	       resultTrans = ApplyTransformation (menuTrans[val], TransDoc);
-	       if (!resultTrans)
-		 {
-	            TtaSetDisplayMode (TransDoc, DisplayImmediately);
-		    /* transformation has failed, restoring the old selection */
-		    if (ffc == 0 && flc == 0)
-		       TtaSelectElement (TransDoc, origFirstSelect);
-		    else
-		       TtaSelectString (TransDoc, origFirstSelect, ffc, flc);
-		    TtaExtendSelection (TransDoc, origLastSelect, llc);
-		    /* display an error message */
-		    TtaSetStatus (TransDoc, 1, TtaGetMessage (AMAYA, AM_TRANS_FAILED), NULL);
-		 }
-	       else
-		 {
+      resultTrans = ApplyTransformation (menuTrans[val], TransDoc);
+      if (!resultTrans)
+	{
+	  TtaSetDisplayMode (TransDoc, DisplayImmediately);
+	  /* transformation has failed, restoring the old selection */
+	  if (ffc == 0 && flc == 0)
+	    TtaSelectElement (TransDoc, origFirstSelect);
+	  else
+	    TtaSelectString (TransDoc, origFirstSelect, ffc, flc);
+	  TtaExtendSelection (TransDoc, origLastSelect, llc);
+	  /* display an error message */
+	  TtaSetStatus (TransDoc, 1, TtaGetMessage (AMAYA, AM_TRANS_FAILED), NULL);
+	}
+      else
+	{
 
-		    /* transformation was succesful */ 
-		   sch = TtaGetElementType (myFirstSelect).ElSSchema;
-		   if (strcmp (TtaGetSSchemaName (sch), "MathML") == 0)
-		     {
-		       /* checking the MathML thot tree */
-		       if (isClosed)
-			 elParent = TtaGetParent (myFirstSelect);
-		       else
-			 elParent = myFirstSelect;
-		       while (elParent != NULL &&
-			      strcmp (GITagName (elParent), "???") == 0)
-			 elParent = TtaGetParent (elParent);
-		       if (elParent != NULL)
-			 {
-			   TtaSetStructureChecking (0, TransDoc);
+	  /* transformation was succesful */ 
+	  sch = TtaGetElementType (myFirstSelect).ElSSchema;
+	  if (strcmp (TtaGetSSchemaName (sch), "MathML") == 0)
+	    {
+	      /* checking the MathML thot tree */
+	      if (isClosed)
+		elParent = TtaGetParent (myFirstSelect);
+	      else
+		elParent = myFirstSelect;
+	      while (elParent != NULL &&
+		     strcmp (GITagName (elParent), "???") == 0)
+		elParent = TtaGetParent (elParent);
+	      if (elParent != NULL)
+		{
+		  TtaSetStructureChecking (0, TransDoc);
 #              ifdef MATHML
-			   CheckMathElement (elParent);
+		  CheckMathElement (elParent);
 #              endif /* MATHML */
-			   TtaSetStructureChecking (1, TransDoc);
-			 } 
-		     }
-		   else
-		     {
-		       /* checking the HTML thot tree */
-		       InitializeParser (TtaGetMainRoot (TransDoc), TRUE, TransDoc);
-		       TtaSetStructureChecking (0, TransDoc);
-		       CheckAbstractTree (NULL);
-		       if (TtaIsViewOpened (TransDoc, 1))
-			 ApplyFinalStyle (TransDoc);
-		       TtaSetStructureChecking (1, TransDoc);
-		     }
+		  TtaSetStructureChecking (1, TransDoc);
+		} 
+	    }
+	  else
+	    {
+	      /* checking the HTML thot tree */
+	      InitializeParser (TtaGetMainRoot (TransDoc), TRUE, TransDoc);
+	      TtaSetStructureChecking (0, TransDoc);
+	      CheckAbstractTree (NULL);
+	      if (TtaIsViewOpened (TransDoc, 1))
+		ApplyFinalStyle (TransDoc);
+	      TtaSetStructureChecking (1, TransDoc);
+	    }
 		   
-		   if (myLastSelect == NULL)
-		     if (!isClosed)
-		       myLastSelect = TtaGetLastChild (myFirstSelect);
-		     else
-		       myLastSelect = TtaGetLastChild (TtaGetParent (myFirstSelect));
-		   else
-		     TtaPreviousSibling (&myLastSelect);
-		   if (isClosed)
-		     TtaNextSibling (&myFirstSelect);
-		   else
-		     myFirstSelect = TtaGetFirstChild (myFirstSelect);
-		   if (strcmp (TtaGetSSchemaName (sch), "HTML") == 0)
-		     {
-		       /* displaying the images */
-		       attrType.AttrSSchema = sch;
-		       attrType.AttrTypeNum = HTML_ATTR_SRC;
-		       elFound = NULL;
-		       attr = NULL;
-		       TtaSearchAttribute (attrType, SearchInTree, myFirstSelect, &elFound, &attr);
-		       if (elFound == NULL)
-			 TtaSearchAttribute (attrType, SearchForward, myFirstSelect, &elFound, &attr);
-		       while (elFound != NULL && 
-			      (myLastSelect == NULL || 
-			       TtaIsBefore (elFound, myLastSelect) ||
-			       TtaIsAncestor (elFound, myLastSelect)))
-			 {
+	  if (myLastSelect == NULL)
+	    if (!isClosed)
+	      myLastSelect = TtaGetLastChild (myFirstSelect);
+	    else
+	      myLastSelect = TtaGetLastChild (TtaGetParent (myFirstSelect));
+	  else
+	    TtaPreviousSibling (&myLastSelect);
+	  if (isClosed)
+	    TtaNextSibling (&myFirstSelect);
+	  else
+	    myFirstSelect = TtaGetFirstChild (myFirstSelect);
+	  if (strcmp (TtaGetSSchemaName (sch), "HTML") == 0)
+	    {
+	      /* displaying the images */
+	      attrType.AttrSSchema = sch;
+	      attrType.AttrTypeNum = HTML_ATTR_SRC;
+	      elFound = NULL;
+	      attr = NULL;
+	      TtaSearchAttribute (attrType, SearchInTree, myFirstSelect, &elFound, &attr);
+	      if (elFound == NULL)
+		TtaSearchAttribute (attrType, SearchForward, myFirstSelect, &elFound, &attr);
+	      while (elFound != NULL && 
+		     (myLastSelect == NULL || 
+		      TtaIsBefore (elFound, myLastSelect) ||
+		      TtaIsAncestor (elFound, myLastSelect)))
+		{
 #ifdef DEBUG
-			   printf ("Fetching Image...\n");
+		  printf ("Fetching Image...\n");
 #endif
-			   FetchImage (TransDoc, elFound, NULL, 0, NULL, NULL);
-			   TtaSearchAttribute (attrType, SearchForward, elFound, &elFound, &attr);
-			 }
-		     }
-		   /* selecting the new elements */
-		   /* or setting the selction to the specified node */
-		   attrType.AttrSSchema = TtaGetDocumentSSchema(TransDoc);
-		   attrType.AttrTypeNum = HTML_ATTR_Ghost_restruct;
-		   found = FALSE;
-		   elFound = NULL;
-		   attr = NULL;
-		   domain = SearchInTree;
-		   elFound = TtaGetParent(myFirstSelect);
-		   while (elFound != NULL && !found)
-		     {
-		       TtaSearchAttribute (attrType, domain, elFound, &elFound, &attr);
-		       domain = SearchForward;
-		       if (elFound != NULL)
-			 {
-			   TtaGiveTextAttributeValue (attr, buf, &length);
-			   found = !strcmp (buf, "Select");
-			 }
-		     }
-		   if (found)
-		     {
-		       TtaRemoveAttribute (elFound, attr, TransDoc);
-		       myFirstSelect = elFound;
-		       myLastSelect = NULL;
-		     }
+		  FetchImage (TransDoc, elFound, NULL, 0, NULL, NULL);
+		  TtaSearchAttribute (attrType, SearchForward, elFound, &elFound, &attr);
+		}
+	    }
+	  /* selecting the new elements */
+	  /* or setting the selction to the specified node */
+	  attrType.AttrSSchema = TtaGetDocumentSSchema(TransDoc);
+	  attrType.AttrTypeNum = HTML_ATTR_Ghost_restruct;
+	  found = FALSE;
+	  elFound = NULL;
+	  attr = NULL;
+	  domain = SearchInTree;
+	  elFound = TtaGetParent(myFirstSelect);
+	  while (elFound != NULL && !found)
+	    {
+	      TtaSearchAttribute (attrType, domain, elFound, &elFound, &attr);
+	      domain = SearchForward;
+	      if (elFound != NULL)
+		{
+		  TtaGiveTextAttributeValue (attr, buf, &length);
+		  found = !strcmp (buf, "Select");
+		}
+	    }
+	  if (found)
+	    {
+	      TtaRemoveAttribute (elFound, attr, TransDoc);
+	      myFirstSelect = elFound;
+	      myLastSelect = NULL;
+	    }
 			
-		   TtaSetDisplayMode (TransDoc, DisplayImmediately);
-		   TtaSelectElement (TransDoc, myFirstSelect);
-		   if (myLastSelect != NULL && TtaIsBefore (myFirstSelect, myLastSelect))
-		     TtaExtendSelection (TransDoc, myLastSelect, 0);
-		 }
-	       FreeMatchEnv ();
-	       break;
-	 }
+	  TtaSetDisplayMode (TransDoc, DisplayImmediately);
+	  TtaSelectElement (TransDoc, myFirstSelect);
+	  if (myLastSelect != NULL && TtaIsBefore (myFirstSelect, myLastSelect))
+	    TtaExtendSelection (TransDoc, myLastSelect, 0);
+	}
+      FreeMatchEnv ();
+      break;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -2725,6 +2734,8 @@ Document            doc;
 		  strcpy (nameSet, TtaGetSSchemaName (elType.ElSSchema));
 		  ok =  ppStartParser (nameSet, &CourTransSet);
 		}
+	      if (CourTransSet == NULL)
+		elemSelect = TtaGetParent (elemSelect);
 	    }
 	}
       else
