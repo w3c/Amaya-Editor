@@ -287,7 +287,7 @@ ThotBool CheckValidID (NotifyAttribute *event)
   ----------------------------------------------------------------------*/
 void SetRelativeURLs (Document doc, char *newpath)
 {
-  SSchema             XHTMLSSchema, MathSSchema, GraphSSchema, XLinkSSchema;
+  SSchema             XHTMLSSchema, MathSSchema, SVGSSchema, XLinkSSchema;
   Element             el, root, content;
   ElementType         elType;
   Attribute           attr;
@@ -305,17 +305,17 @@ void SetRelativeURLs (Document doc, char *newpath)
 #endif
   XHTMLSSchema = TtaGetSSchema ("HTML", doc);
   MathSSchema = TtaGetSSchema ("MathML", doc);
-  GraphSSchema = TtaGetSSchema ("SVG", doc);
+  SVGSSchema = TtaGetSSchema ("SVG", doc);
   XLinkSSchema = TtaGetSSchema ("XLink", doc);
   root = TtaGetMainRoot (doc);
 
   /* handle style elements */
   elType = TtaGetElementType (root);
-  if (elType.ElSSchema == XHTMLSSchema || elType.ElSSchema == GraphSSchema)
+  if (elType.ElSSchema == XHTMLSSchema || elType.ElSSchema == SVGSSchema)
     {
       if (elType.ElSSchema == XHTMLSSchema)
 	elType.ElTypeNum = HTML_EL_STYLE_;
-      else if (elType.ElSSchema == GraphSSchema)
+      else if (elType.ElSSchema == SVGSSchema)
 	elType.ElTypeNum = SVG_EL_style__;
       el = TtaSearchTypedElement (elType, SearchInTree, root);
     }
@@ -362,7 +362,7 @@ void SetRelativeURLs (Document doc, char *newpath)
 	  attrType.AttrSSchema = MathSSchema;
 	  break;
 	case SVG_TYPE:
-	  attrType.AttrSSchema = GraphSSchema;
+	  attrType.AttrSSchema = SVGSSchema;
 	  break;
 	case XLINK_TYPE:
 	  attrType.AttrSSchema = XLinkSSchema;
@@ -388,7 +388,7 @@ void SetRelativeURLs (Document doc, char *newpath)
 		  (attrType.AttrTypeNum == MathML_ATTR_style_ &&
 		   attrType.AttrSSchema == MathSSchema) ||
 		  (attrType.AttrTypeNum == SVG_ATTR_style_  &&
-		   attrType.AttrSSchema == GraphSSchema))
+		   attrType.AttrSSchema == SVGSSchema))
 		{
 		  /* manage background-image rule within style attribute */
 		  new_url = UpdateCSSBackgroundImage (DocumentURLs[doc],
@@ -2364,11 +2364,11 @@ static ThotBool UpdateDocImage (Document doc, ThotBool src_is_local,
 static void UpdateImages (Document doc, ThotBool src_is_local,
 			  ThotBool dst_is_local, char *imgbase, char *newURL)
 {
-  SSchema             XHTMLSSchema, MathSSchema, GraphSSchema, XLinkSSchema;
+  SSchema             XHTMLSSchema, MathSSchema, SVGSSchema, XLinkSSchema;
   AttributeType       attrType;
   ElementType         elType;
   Attribute           attr;
-  Element             el, root, content;
+  Element             el, root, content, svgpic;
   LoadedImageDesc    *pImage;
   Language            lang;
   char                tempfile[MAX_LENGTH];
@@ -2382,6 +2382,7 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
   char               *sStyle, *stringStyle;
   char               *oldStyle;
   int                 buflen, max, index;
+  ThotBool            copyref;
 
   if (imgbase[0] != EOS)
     {
@@ -2426,16 +2427,16 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 
       XHTMLSSchema = TtaGetSSchema ("HTML", doc);
       MathSSchema = TtaGetSSchema ("MathML", doc);
-      GraphSSchema = TtaGetSSchema ("SVG", doc);
+      SVGSSchema = TtaGetSSchema ("SVG", doc);
       XLinkSSchema = TtaGetSSchema ("XLink", doc);
       root = TtaGetMainRoot (doc);
       /* handle style elements */
       elType = TtaGetElementType (root);
-      if (elType.ElSSchema == XHTMLSSchema || elType.ElSSchema == GraphSSchema)
+      if (elType.ElSSchema == XHTMLSSchema || elType.ElSSchema == SVGSSchema)
 	{
 	  if (elType.ElSSchema == XHTMLSSchema)
 	    elType.ElTypeNum = HTML_EL_STYLE_;
-	  else if (elType.ElSSchema == GraphSSchema)
+	  else if (elType.ElSSchema == SVGSSchema)
 	    elType.ElTypeNum = SVG_EL_style__;
 	  el = TtaSearchTypedElement (elType, SearchInTree, root);
 	}
@@ -2585,7 +2586,7 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 	       attrType.AttrSSchema = MathSSchema;
 	       break;
 	     case SVG_TYPE:
-	       attrType.AttrSSchema = GraphSSchema;
+	       attrType.AttrSSchema = SVGSSchema;
 	       break;
 	     case XLINK_TYPE:
 	       attrType.AttrSSchema = XLinkSSchema;
@@ -2597,156 +2598,173 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 	     TtaSearchAttribute (attrType, SearchForward, root, &el, &attr);
 	   else
 	     el = NULL;
+
 	   while (el && attr)
 	     {
-	       elType = TtaGetElementType (el);
-	       buflen = MAX_LENGTH;
-	       buf = TtaGetMemory (buflen);
-	       if (buf != NULL)
+	       copyref = TRUE;
+	       /* look for a SVG_PICTURE_UNIT element */
+	       if (el != NULL && attrType.AttrSSchema == SVGSSchema)
 		 {
-		   TtaGiveTextAttributeValue (attr, buf, &buflen);
-		   if ((attrType.AttrTypeNum == HTML_ATTR_Style_ &&
-			attrType.AttrSSchema == XHTMLSSchema) ||
-		       (attrType.AttrTypeNum == MathML_ATTR_style_ &&
-			attrType.AttrSSchema == MathSSchema) ||
-		       (attrType.AttrTypeNum == SVG_ATTR_style_  &&
-			attrType.AttrSSchema == GraphSSchema))
+		   elType = TtaGetElementType (el);
+		   elType.ElTypeNum = SVG_EL_PICTURE_UNIT;
+		   svgpic = TtaSearchTypedElement (elType, SearchInTree, el);
+		   if (svgpic != NULL)
+		     el = svgpic;
+		   else
+		     copyref = FALSE;
+		 }
+
+	       if (copyref)
+		 {
+		   elType = TtaGetElementType (el);
+		   buflen = MAX_LENGTH;
+		   buf = TtaGetMemory (buflen);
+		   if (buf != NULL)
 		     {
-		       /* It's an attribute Style: look for url()*/
-		       url[0] = EOS;
-		       tempname[0] = EOS;
-		       ptr = UpdateCSSBackgroundImage (oldpath, newURL, imgbase, buf);
-		       if (ptr != NULL)
+		       TtaGiveTextAttributeValue (attr, buf, &buflen);
+		       if ((attrType.AttrTypeNum == HTML_ATTR_Style_ &&
+			    attrType.AttrSSchema == XHTMLSSchema) ||
+			   (attrType.AttrTypeNum == MathML_ATTR_style_ &&
+			    attrType.AttrSSchema == MathSSchema) ||
+			   (attrType.AttrTypeNum == SVG_ATTR_style_  &&
+			    attrType.AttrSSchema == SVGSSchema))
 			 {
-			   /* register the modification to be able to undo it */
-			   TtaRegisterAttributeReplace (attr, el, doc);
-			   /* save this new style attribute string */
-			   TtaSetAttributeText (attr, ptr, el, doc);
-			   strcpy (url, ptr);
-			   TtaFreeMemory (ptr);
-			   /* extract the URL from the new style string */
-			   ptr = GetCSSBackgroundURL (url);
+			   /* It's an attribute Style: look for url()*/
+			   url[0] = EOS;
+			   tempname[0] = EOS;
+			   ptr = UpdateCSSBackgroundImage (oldpath, newURL, imgbase, buf);
 			   if (ptr != NULL)
 			     {
+			       /* register the modification to be able to undo it */
+			       TtaRegisterAttributeReplace (attr, el, doc);
+			       /* save this new style attribute string */
+			       TtaSetAttributeText (attr, ptr, el, doc);
 			       strcpy (url, ptr);
 			       TtaFreeMemory (ptr);
-			       NormalizeURL (url, 0, tempname, imgname, newURL);
-			     }
-			   /* extract the URL from the old style string */
-			   ptr = GetCSSBackgroundURL (buf);
-			   if (ptr != NULL)
-			     {
-			       NormalizeURL (ptr, 0, buf, imgname, oldpath);
-			       TtaFreeMemory (ptr);
-			     }
-			   else
-			     buf[0] = EOS;
-			 }
-		     }
-		   else
-		     {
-		       /* extract the old image name and location */
-		       strcpy (url, buf);
-		       NormalizeURL (url, 0, buf, imgname, oldpath);
-		       /* save the new SRC attr value */
-		       if (imgbase[0] != EOS)
-			 {
-			   /* compose the relative or absolute name */
-			   strcpy (url, imgbase);
-			   strcat (url, imgname);
-			 }
-		       else
-			 /* in same directory -> local name */
-			 strcpy (url, imgname);
-		       
-		       NormalizeURL (url, 0, tempname, imgname, newURL);
-		       /* register the modification to be able to undo it */
-		       TtaRegisterAttributeReplace (attr, el, doc);
-		       TtaSetAttributeText (attr, url, el, doc);
-		     }
-		   
-		   /*
-		     At this point:
-		     - url gives the relative new image name
-		     - tempname gives the new image full name
-		     - buf gives the old image full name
-		     - imgname contains the image file name
-		   */
-		   if (url[0] != EOS && buf[0] != EOS)
-		     {
-#ifdef AMAYA_DEBUG
-		       fprintf(stderr, "     SRC from %s to %s\n", buf, url);
-#endif
-		       if ((src_is_local) && (!dst_is_local))
-			 {
-			   /* add the localfile to the images list */
-			   AddLocalImage (buf, imgname, tempname, doc, &pImage);
-			    /* get image type */
-			   if (pImage)
-			     pImage->imageType = TtaGetPictureType (el);
-			 }
-		       /* mark the image descriptor or copy the file */
-		       if (dst_is_local)
-			 {
-			   /* do a file copy */
-			   if (IsW3Path (buf) || IsHTTPPath (oldpath))
-			     {
-			       /*
-				 it was a remote image:
-				 we use the local temporary name to do the copy
-			       */
-			       strcpy (buf, localpath);
-			       strcat (buf, imgname);
-			       pImage = SearchLoadedImage (buf, doc);
-			       if (pImage)
-				 strcpy (buf, pImage->tempfile);
-			     }
-			   
-			   if (imgbase[0] != EOS)
-			     strcpy (tempfile, tempname);
-			   else
-			     {
-			       strcpy (tempfile, SavePath);
-			       strcat (tempfile, DIR_STR);
-			       strcat (tempfile, imgname);
-			     }
-			   TtaFileCopy (buf, tempfile);
-			 }
-		       else
-			 {
-			   /* save on a remote server */
-			   if (IsW3Path (buf) || IsHTTPPath (oldpath))
-			     {
-			       /*
-				 it was a remote image:
-				 get the image descriptor to prepare
-				 the saving process
-			       */
-			       strcpy (tempfile, localpath);
-			       strcat (tempfile, imgname);
-			       pImage = SearchLoadedImage (tempfile, doc);
-			       /* update the descriptor */
-			       if (pImage)
+			       /* extract the URL from the new style string */
+			       ptr = GetCSSBackgroundURL (url);
+			       if (ptr != NULL)
 				 {
-				   /* image was already loaded */
-				   if (pImage->originalName != NULL)
-				     TtaFreeMemory (pImage->originalName);
-				   pImage->originalName = TtaStrdup (tempname);
-				   if (TtaFileExist(pImage->tempfile))
-				     pImage->status = IMAGE_MODIFIED;
-				   else
-				     pImage->status = IMAGE_NOT_LOADED;
-				   /*pImage->elImage = (struct _ElemImage *) el;*/
+				   strcpy (url, ptr);
+				   TtaFreeMemory (ptr);
+				   NormalizeURL (url, 0, tempname, imgname, newURL);
 				 }
+			       /* extract the URL from the old style string */
+			       ptr = GetCSSBackgroundURL (buf);
+			       if (ptr != NULL)
+				 {
+				   NormalizeURL (ptr, 0, buf, imgname, oldpath);
+				   TtaFreeMemory (ptr);
+				 }
+			       else
+				 buf[0] = EOS;
 			     }
-#if 0 /* JK Not sure if this is needed (tempfile isn't initialized for local files */
-			   else
-			       /* add the localfile to the images list */
-			       AddLocalImage (tempfile, imgname, tempname, doc, &pImage);
-#endif
 			 }
+		       else
+			 {
+			   /* extract the old image name and location */
+			   strcpy (url, buf);
+			   NormalizeURL (url, 0, buf, imgname, oldpath);
+			   /* save the new SRC attr value */
+			   if (imgbase[0] != EOS)
+			     {
+			       /* compose the relative or absolute name */
+			       strcpy (url, imgbase);
+			       strcat (url, imgname);
+			     }
+			   else
+			     /* in same directory -> local name */
+			     strcpy (url, imgname);
+			   
+			   NormalizeURL (url, 0, tempname, imgname, newURL);
+			   /* register the modification to be able to undo it */
+			   TtaRegisterAttributeReplace (attr, el, doc);
+			   TtaSetAttributeText (attr, url, el, doc);
+			 }
+		       
+		       /*
+			 At this point:
+			 - url gives the relative new image name
+			 - tempname gives the new image full name
+			 - buf gives the old image full name
+			 - imgname contains the image file name
+		       */
+		       if (url[0] != EOS && buf[0] != EOS)
+			 {
+#ifdef AMAYA_DEBUG
+			   fprintf(stderr, "     SRC from %s to %s\n", buf, url);
+#endif
+			   if ((src_is_local) && (!dst_is_local))
+			     {
+			       /* add the localfile to the images list */
+			       AddLocalImage (buf, imgname, tempname, doc, &pImage);
+			       /* get image type */
+			       if (pImage)
+				 pImage->imageType = TtaGetPictureType (el);
+			     }
+			   /* mark the image descriptor or copy the file */
+			   if (dst_is_local)
+			     {
+			       /* do a file copy */
+			       if (IsW3Path (buf) || IsHTTPPath (oldpath))
+				 {
+				   /*
+				     it was a remote image:
+				     we use the local temporary name to do the copy
+				   */
+				   strcpy (buf, localpath);
+				   strcat (buf, imgname);
+				   pImage = SearchLoadedImage (buf, doc);
+				   if (pImage)
+				     strcpy (buf, pImage->tempfile);
+				 }
+			       
+			       if (imgbase[0] != EOS)
+				 strcpy (tempfile, tempname);
+			       else
+				 {
+				   strcpy (tempfile, SavePath);
+				   strcat (tempfile, DIR_STR);
+				   strcat (tempfile, imgname);
+				 }
+			       TtaFileCopy (buf, tempfile);
+			     }
+			   else
+			     {
+			       /* save on a remote server */
+			       if (IsW3Path (buf) || IsHTTPPath (oldpath))
+				 {
+				   /*
+				     it was a remote image:
+				     get the image descriptor to prepare
+				     the saving process
+				   */
+				   strcpy (tempfile, localpath);
+				   strcat (tempfile, imgname);
+				   pImage = SearchLoadedImage (tempfile, doc);
+				   /* update the descriptor */
+				   if (pImage)
+				     {
+				       /* image was already loaded */
+				       if (pImage->originalName != NULL)
+					 TtaFreeMemory (pImage->originalName);
+				       pImage->originalName = TtaStrdup (tempname);
+				       if (TtaFileExist(pImage->tempfile))
+					 pImage->status = IMAGE_MODIFIED;
+				       else
+					 pImage->status = IMAGE_NOT_LOADED;
+				       /*pImage->elImage = (struct _ElemImage *) el;*/
+				     }
+				 }
+#if 0 /* JK Not sure if this is needed (tempfile isn't initialized for local files */
+			       else
+				 /* add the localfile to the images list */
+				 AddLocalImage (tempfile, imgname, tempname, doc, &pImage);
+#endif
+			     }
+			 }
+		       TtaFreeMemory (buf);
 		     }
-		   TtaFreeMemory (buf);
 		 }
 	       TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
 	     }
