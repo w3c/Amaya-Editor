@@ -353,7 +353,7 @@ void                DeleteAllTrees (pDoc)
 PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
-   int                 i;
+   int                 i, view;
    PtrOutReference     pOutRef, pNextOutRef;
    PtrChangedReferredEl pChnRef, pNextChnRef;
    PtrTextBuffer       pBuf, pNextBuf;
@@ -372,10 +372,18 @@ PtrDocument         pDoc;
 	pDoc->DocComment = NULL;
 	/* libere tout l'arbre du document et ses descripteurs de reference */
 	DeleteElement (&pDoc->DocRootElement, pDoc);
+	/* document views are now empty */
+	for (view = 0; view < MAX_VIEW_DOC; view++)
+	   pDoc->DocViewRootAb[view] = NULL;
 	/* libere les elements associes */
 	for (i = 1; i <= MAX_ASSOC_DOC; i++)
-	   if (pDoc->DocAssocRoot[i - 1] != NULL)
+	  if (pDoc->DocAssocRoot[i - 1] != NULL)
+	    {
 	      DeleteElement (&pDoc->DocAssocRoot[i - 1], pDoc);
+	      /* document views are now empty */
+	      pDoc->DocAssocRoot[view] = NULL;
+	    }
+
 	/* libere les parametres */
 	for (i = 1; i <= MAX_PARAM_DOC; i++)
 	   if (pDoc->DocParameters[i - 1] != NULL)
