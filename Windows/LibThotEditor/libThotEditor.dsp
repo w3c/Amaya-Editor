@@ -243,10 +243,6 @@ SOURCE=..\..\thotlib\document\documentapi.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\tree\draw.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\editing\editcommands.c
 # End Source File
 # Begin Source File

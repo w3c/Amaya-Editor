@@ -1504,7 +1504,6 @@ DEP_CPP_ATTRI=\
 	"..\..\thotlib\internals\f\content_f.h"\
 	"..\..\thotlib\internals\f\displayview_f.h"\
 	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\references_f.h"\
 	"..\..\thotlib\internals\f\structcreation_f.h"\
@@ -1567,7 +1566,6 @@ DEP_CPP_ATTRI=\
 	"..\..\thotlib\internals\f\content_f.h"\
 	"..\..\thotlib\internals\f\displayview_f.h"\
 	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\references_f.h"\
 	"..\..\thotlib\internals\f\structcreation_f.h"\
@@ -1597,6 +1595,7 @@ DEP_CPP_ATTRI=\
 	
 NODEP_CPP_ATTRI=\
 	"..\..\thotlib\include\thot_uio.h"\
+	"..\..\thotlib\internals\f\draw_f.h"\
 	
 
 "$(INTDIR)\attributeapi.obj" : $(SOURCE) $(DEP_CPP_ATTRI) "$(INTDIR)"
@@ -1645,7 +1644,6 @@ DEP_CPP_ATTRIB=\
 	"..\..\thotlib\internals\f\displayview_f.h"\
 	"..\..\thotlib\internals\f\docs_f.h"\
 	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\frame_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
@@ -1723,7 +1721,6 @@ DEP_CPP_ATTRIB=\
 	"..\..\thotlib\internals\f\displayview_f.h"\
 	"..\..\thotlib\internals\f\docs_f.h"\
 	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\frame_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
@@ -1759,6 +1756,7 @@ DEP_CPP_ATTRIB=\
 	
 NODEP_CPP_ATTRIB=\
 	"..\..\thotlib\include\thot_uio.h"\
+	"..\..\thotlib\internals\f\draw_f.h"\
 	
 
 "$(INTDIR)\attributes.obj" : $(SOURCE) $(DEP_CPP_ATTRIB) "$(INTDIR)"
@@ -3618,7 +3616,6 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\internals\f\absboxes_f.h"\
 	"..\..\thotlib\internals\f\actions_f.h"\
 	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\externalref_f.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -3682,7 +3679,6 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\internals\f\absboxes_f.h"\
 	"..\..\thotlib\internals\f\actions_f.h"\
 	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\externalref_f.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -3716,6 +3712,7 @@ DEP_CPP_CHECK=\
 	
 NODEP_CPP_CHECK=\
 	"..\..\thotlib\include\thot_uio.h"\
+	"..\..\thotlib\internals\f\draw_f.h"\
 	
 
 "$(INTDIR)\checkaccess.obj" : $(SOURCE) $(DEP_CPP_CHECK) "$(INTDIR)"
@@ -5496,7 +5493,6 @@ DEP_CPP_DISPLAY=\
 	"..\..\thotlib\internals\f\displayview_f.h"\
 	"..\..\thotlib\internals\f\docs_f.h"\
 	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\editcommands_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\frame_f.h"\
@@ -5591,7 +5587,6 @@ DEP_CPP_DISPLAY=\
 	"..\..\thotlib\internals\f\displayview_f.h"\
 	"..\..\thotlib\internals\f\docs_f.h"\
 	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\editcommands_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\frame_f.h"\
@@ -5636,6 +5631,7 @@ DEP_CPP_DISPLAY=\
 	
 NODEP_CPP_DISPLAY=\
 	"..\..\thotlib\include\thot_uio.h"\
+	"..\..\thotlib\internals\f\draw_f.h"\
 	
 
 "$(INTDIR)\displayview.obj" : $(SOURCE) $(DEP_CPP_DISPLAY) "$(INTDIR)"
@@ -5688,7 +5684,6 @@ DEP_CPP_DOCS_=\
 	"..\..\thotlib\internals\f\displayview_f.h"\
 	"..\..\thotlib\internals\f\docs_f.h"\
 	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\paginate_f.h"\
@@ -5784,7 +5779,6 @@ DEP_CPP_DOCS_=\
 	"..\..\thotlib\internals\f\displayview_f.h"\
 	"..\..\thotlib\internals\f\docs_f.h"\
 	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\paginate_f.h"\
@@ -5835,6 +5829,7 @@ DEP_CPP_DOCS_=\
 	
 NODEP_CPP_DOCS_=\
 	"..\..\thotlib\include\thot_uio.h"\
+	"..\..\thotlib\internals\f\draw_f.h"\
 	
 
 "$(INTDIR)\docs.obj" : $(SOURCE) $(DEP_CPP_DOCS_) "$(INTDIR)"
@@ -5876,7 +5871,6 @@ DEP_CPP_DOCUM=\
 	"..\..\thotlib\internals\f\displayview_f.h"\
 	"..\..\thotlib\internals\f\docs_f.h"\
 	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\externalref_f.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
@@ -5952,7 +5946,6 @@ DEP_CPP_DOCUM=\
 	"..\..\thotlib\internals\f\displayview_f.h"\
 	"..\..\thotlib\internals\f\docs_f.h"\
 	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\externalref_f.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
@@ -5995,6 +5988,7 @@ DEP_CPP_DOCUM=\
 	
 NODEP_CPP_DOCUM=\
 	"..\..\thotlib\include\thot_uio.h"\
+	"..\..\thotlib\internals\f\draw_f.h"\
 	
 
 "$(INTDIR)\documentapi.obj" : $(SOURCE) $(DEP_CPP_DOCUM) "$(INTDIR)"
@@ -12729,7 +12723,6 @@ DEP_CPP_STRUCTC=\
 	"..\..\thotlib\internals\f\displayview_f.h"\
 	"..\..\thotlib\internals\f\docs_f.h"\
 	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\editcommands_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\frame_f.h"\
@@ -12818,7 +12811,6 @@ DEP_CPP_STRUCTC=\
 	"..\..\thotlib\internals\f\displayview_f.h"\
 	"..\..\thotlib\internals\f\docs_f.h"\
 	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\editcommands_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\frame_f.h"\
@@ -12861,6 +12853,7 @@ DEP_CPP_STRUCTC=\
 	
 NODEP_CPP_STRUCTC=\
 	"..\..\thotlib\include\thot_uio.h"\
+	"..\..\thotlib\internals\f\draw_f.h"\
 	
 
 "$(INTDIR)\structcreation.obj" : $(SOURCE) $(DEP_CPP_STRUCTC) "$(INTDIR)"
@@ -13438,7 +13431,6 @@ DEP_CPP_STRUCTSE=\
 	"..\..\thotlib\internals\f\createabsbox_f.h"\
 	"..\..\thotlib\internals\f\displayselect_f.h"\
 	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\frame_f.h"\
 	"..\..\thotlib\internals\f\keyboards_f.h"\
@@ -13510,7 +13502,6 @@ DEP_CPP_STRUCTSE=\
 	"..\..\thotlib\internals\f\createabsbox_f.h"\
 	"..\..\thotlib\internals\f\displayselect_f.h"\
 	"..\..\thotlib\internals\f\displayview_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\frame_f.h"\
 	"..\..\thotlib\internals\f\keyboards_f.h"\
@@ -13547,6 +13538,7 @@ DEP_CPP_STRUCTSE=\
 	
 NODEP_CPP_STRUCTSE=\
 	"..\..\thotlib\include\thot_uio.h"\
+	"..\..\thotlib\internals\f\draw_f.h"\
 	
 
 "$(INTDIR)\structselect.obj" : $(SOURCE) $(DEP_CPP_STRUCTSE) "$(INTDIR)"
@@ -14094,7 +14086,6 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\internals\f\abspictures_f.h"\
 	"..\..\thotlib\internals\f\applicationapi_f.h"\
 	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\externalref_f.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -14163,7 +14154,6 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\internals\f\abspictures_f.h"\
 	"..\..\thotlib\internals\f\applicationapi_f.h"\
 	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\externalref_f.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -14199,6 +14189,7 @@ DEP_CPP_TREE_=\
 	
 NODEP_CPP_TREE_=\
 	"..\..\thotlib\include\thot_uio.h"\
+	"..\..\thotlib\internals\f\draw_f.h"\
 	
 
 "$(INTDIR)\tree.obj" : $(SOURCE) $(DEP_CPP_TREE_) "$(INTDIR)"
@@ -15290,7 +15281,6 @@ DEP_CPP_VIEWS=\
 	"..\..\thotlib\internals\f\displayview_f.h"\
 	"..\..\thotlib\internals\f\docs_f.h"\
 	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
 	"..\..\thotlib\internals\f\frame_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
@@ -15384,7 +15374,6 @@ DEP_CPP_VIEWS=\
 	"..\..\thotlib\internals\f\displayview_f.h"\
 	"..\..\thotlib\internals\f\docs_f.h"\
 	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
 	"..\..\thotlib\internals\f\frame_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
@@ -15431,6 +15420,7 @@ DEP_CPP_VIEWS=\
 	
 NODEP_CPP_VIEWS=\
 	"..\..\thotlib\include\thot_uio.h"\
+	"..\..\thotlib\internals\f\draw_f.h"\
 	
 
 "$(INTDIR)\views.obj" : $(SOURCE) $(DEP_CPP_VIEWS) "$(INTDIR)"
@@ -15688,7 +15678,6 @@ DEP_CPP_WRITE=\
 	"..\..\thotlib\internals\f\createpages_f.h"\
 	"..\..\thotlib\internals\f\docs_f.h"\
 	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\paginate_f.h"\
@@ -15778,7 +15767,6 @@ DEP_CPP_WRITE=\
 	"..\..\thotlib\internals\f\createpages_f.h"\
 	"..\..\thotlib\internals\f\docs_f.h"\
 	"..\..\thotlib\internals\f\documentapi_f.h"\
-	"..\..\thotlib\internals\f\draw_f.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\paginate_f.h"\
@@ -15826,6 +15814,7 @@ DEP_CPP_WRITE=\
 	
 NODEP_CPP_WRITE=\
 	"..\..\thotlib\include\thot_uio.h"\
+	"..\..\thotlib\internals\f\draw_f.h"\
 	
 
 "$(INTDIR)\writedoc.obj" : $(SOURCE) $(DEP_CPP_WRITE) "$(INTDIR)"
