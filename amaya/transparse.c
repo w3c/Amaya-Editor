@@ -2372,7 +2372,10 @@ strTransSet        **resTrSet;
         strcat (fileName,".trans");
 	found = (TtaFileExist(fileName) == 1);
 	if (!found)
-	   cour = (char *)(next+1);
+	   if (next == NULL)
+	      cour = NULL;
+	   else
+	      cour = (char *)(next+1);
      }
    
    /* check if the file is newer than last read */
