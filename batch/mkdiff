@@ -33,6 +33,7 @@ DIR2=$TMP/amaya-$R2
 PATCH=amaya-src-$R1-to-$R2.patch
 NEWFILES=amaya-src-$R1-to-$R2-newfiles.tar.gz
 OLDFILES=amaya-src-$R1-to-$R2-files-to-rm
+DIFFS=amaya-src-$R1-to-$R2-diffs.tar
 
 # build patch file
 if $VERBOSE
@@ -64,3 +65,5 @@ grep "^Only in $DIR1/" $TO/$PATCH|sed "s|Only in $DIR1/||g"|sed "s|: |/|g">$TO/$
 # cleanup temp dirs
 rm -rf $DIR1 $DIR2
 
+# generate the tarfile which includes the three generated files
+(cd $TO; tar cvf $DIFFS  $OLDFILES $NEWFILES $PATCH; rm $OLDFILES $NEWFILES $PATCH)
