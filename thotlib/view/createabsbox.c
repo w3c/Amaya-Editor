@@ -1437,8 +1437,6 @@ boolean             completeCreator;
 	   pSchP->PsPresentBox[pAb->AbTypeNum - 1].PbAcceptLineBreak;
 	pAb->AbAcceptPageBreak =
 	   pSchP->PsPresentBox[pAb->AbTypeNum - 1].PbAcceptPageBreak;
-	pAb->AbNotInLine =
-	   pSchP->PsPresentBox[pAb->AbTypeNum - 1].PbNotInLine;
 	if (pRCre->PrPresBoxRepeat)
 	   pAb->AbRepeatedPresBox = TRUE;
 	pAb->AbLeafType = LtCompound;
@@ -2336,7 +2334,6 @@ boolean             completeCreator;
 	   pAb->AbPSchema = pSchP;
 	   pAb->AbAcceptLineBreak = pSchP->PsPresentBox[pAb->AbTypeNum - 1].PbAcceptLineBreak;
 	   pAb->AbAcceptPageBreak = pSchP->PsPresentBox[pAb->AbTypeNum - 1].PbAcceptPageBreak;
-	   pAb->AbNotInLine = pSchP->PsPresentBox[pAb->AbTypeNum - 1].PbNotInLine;
 	   pAbb1 = pEl->ElAbstractBox[viewIndex];
 	   /* pAbb1: 1er pave de l'element createur */
 	   /* chaine le pave cree */
@@ -5307,7 +5304,6 @@ boolean            *complete;
 		     pNewAbbox->AbPSchema = pSchP;
 		     pNewAbbox->AbAcceptLineBreak = pSchP->PsAcceptLineBreak[pEl->ElTypeNumber - 1];
 		     pNewAbbox->AbAcceptPageBreak = pSchP->PsAcceptPageBreak[pEl->ElTypeNumber - 1];
-		     pNewAbbox->AbNotInLine = pSchP->PsNotInLine[pEl->ElTypeNumber - 1];
 		     if (pDoc->DocReadOnly)
 		       {
 			  /* document en lecture seule */

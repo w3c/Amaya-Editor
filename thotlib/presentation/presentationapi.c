@@ -116,7 +116,8 @@ Document            document;
    presentationType: type of the presentation rule to be created. Available
    values are PRSize, PRStyle, PRFont, PRUnderline, PRThickness, PRIndent,
    PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle, PRLineWeight,
-   PRFillPattern, PRBackground, PRForeground, PRHyphenate.
+   PRFillPattern, PRBackground, PRForeground, PRHyphenate, PRShowBox,
+   PRNotInLine.
    viewName: the name of the view (this view does not need to be open).
    document: the document.
 
@@ -137,7 +138,9 @@ Document            document;
 
    UserErrorCode = 0;
    pPres = NULL;
-   if (presentationType != PRShowBox && (presentationType < 0 || presentationType > PRHyphenate))
+   if (presentationType != PRNotInLine &&
+       presentationType != PRShowBox &&
+       (presentationType < 0 || presentationType > PRHyphenate))
      TtaError (ERR_invalid_parameter);
    else if (document < 1 || document > MAX_DOCUMENTS)
      TtaError (ERR_invalid_document_parameter);
@@ -156,6 +159,11 @@ Document            document;
 	   pPres->PrType = PtFunction;
 	   pPres->PrPresFunction = FnShowBox;
 	 }
+       else if (presentationType == PRNotInLine)
+	 {
+	   pPres->PrType = PtFunction;
+	   pPres->PrPresFunction = FnNotInLine;
+	 }
        else
 	 pPres->PrType = (PRuleType) presentationType;
      }
@@ -172,7 +180,8 @@ Document            document;
    presentationType: type of the presentation rule to be created. Available
    values are PRSize, PRStyle, PRFont, PRUnderline, PRThickness, PRIndent,
    PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle, PRLineWeight,
-   PRFillPattern, PRBackground, PRForeground, PRHyphenate.
+   PRFillPattern, PRBackground, PRForeground, PRHyphenate, PRShowBox,
+   PRNotInLine.
    viewName: the name of the view (this view does not need to be open).
    document: the document.
 
@@ -197,7 +206,9 @@ Document            document;
 
    UserErrorCode = 0;
    pPres = NULL;
-   if (presentationType != PRShowBox && (presentationType < 0 || presentationType > PRHyphenate))
+   if (presentationType != PRShowBox &&
+       presentationType != PRNotInLine &&
+       (presentationType < 0 || presentationType > PRHyphenate))
      TtaError (ERR_invalid_parameter);
    else if (document < 1 || document > MAX_DOCUMENTS)
      TtaError (ERR_invalid_document_parameter);
@@ -233,6 +244,11 @@ Document            document;
 	     {
 	       pPres->PrType = PtFunction;
 	       pPres->PrPresFunction = FnShowBox;
+	     }
+	   else	if (presentationType == PRNotInLine)
+	     {
+	       pPres->PrType = PtFunction;
+	       pPres->PrPresFunction = FnNotInLine;
 	     }
 	   else
 	     pPres->PrType = (PRuleType) presentationType;
@@ -1222,7 +1238,8 @@ PRule              *pRule;
    presentationType: type of the desired presentation rule. Available
    values are RSize, PtStyle, RFont, RUnderline, RThickness, PtIndent,
    RLineSpacing, RDepth, RAdjust, RJustify, RLineStyle, RLineWeight,
-   RFillPattern, RBackground, RForeground, RHyphenate.
+   RFillPattern, RBackground, RForeground, RHyphenate, PRShowBox,
+   PRNotInLine.
 
    Return value:
    the presentation rule found, or NULL if the element
@@ -1251,6 +1268,8 @@ int                 presentationType;
     {
       if (presentationType == PRShowBox)
 	func = FnShowBox;
+      else if (presentationType == PRNotInLine)
+	func = FnNotInLine;
       else
 	func = -1;
 
@@ -1281,7 +1300,7 @@ int                 presentationType;
    type of that presentation rule. Available values are RSize, PtStyle,
    RFont, RUnderline, RThickness, PtIndent, RLineSpacing, RDepth, RAdjust,
    RJustify, RLineStyle, RLineWeight, RFillPattern, RBackground,
-   RForeground, RHyphenate.
+   RForeground, RHyphenate, PRShowBox, PRNotInLine.
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1302,6 +1321,8 @@ PRule               pRule;
       presentationType = ((PtrPRule) pRule)->PrType;
       if (presentationType == PtFunction && ((PtrPRule) pRule)->PrPresFunction == FnShowBox)
 	presentationType = PRShowBox;
+      else if (presentationType == PtFunction && ((PtrPRule) pRule)->PrPresFunction == FnNotInLine)
+	presentationType = PRNotInLine;
     }
   return presentationType;
 }

@@ -3928,6 +3928,10 @@ PtrAttribute        pAttr;
 		      ((PictInfo *) (pAbb1->AbPictBackground))->PicPresent = (PictureScaling)pPRule->PrPresBox[0];
 		    }
 		break;
+	      case FnNotInLine:
+		if (pPRule->PrViewNum == viewSch)
+		    pAbb1->AbNotInLine = TRUE;
+		break;
 	      default:
 		break;
 	      }

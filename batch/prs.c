@@ -1841,6 +1841,72 @@ indLine             wi;
 	}
 }
 
+/*----------------------------------------------------------------------
+   LayoutRule                                                      
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         LayoutRule (FunctionType layoutFonct, indLine wi)
+
+#else  /* __STDC__ */
+static void         LayoutRule (layoutFonct, wi)
+FunctionType        layoutFonct;
+indLine             wi;
+
+#endif /* __STDC__ */
+
+{
+   PtrPRule            pPRule;
+
+   ConditionEnd ();
+   if (DefaultRuleDef)
+      CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);
+   else if (RuleDef && CurType <= MAX_BASIC_TYPE)
+      CompilerMessage (wi, PRS, FATAL, BAD_RULE_FOR_A_TERMINAL_ELEM, inputLine, LineNum);
+   else if (layoutFonct != FnLine &&
+	    layoutFonct != FnNoLine &&
+	    pSSchema->SsRule[CurType - 1].SrConstruct == CsChoice)
+      CompilerMessage (wi, PRS, FATAL, CANT_USE_RULE_FOR_A_CHOICE, inputLine, LineNum);
+   else
+     {
+	/* verifie qu'il n'y a que des conditions Within parmi les
+	   conditions courantes */
+	CheckConditions (wi);
+	CreatePRule (PtFunction, wi);
+	CurRule->PrPresMode = PresFunction;
+	CurRule->PrPresFunction = layoutFonct;
+	CurRule->PrPresBoxRepeat = False;
+	CurRule->PrElement = False;
+	CurRule->PrExternal = False;
+	CurRule->PrNPresBoxes = 0;
+	CurRule->PrPresBoxName[0] = '\0';
+	/* verifie que cette regle n'est pas deja presente pour cette */
+	/* vue  uniquement pour layoutFonct = FnLine ou FnPage ou FnColumn */
+	if (layoutFonct == FnLine || layoutFonct == FnPage || layoutFonct == FnColumn
+	    || layoutFonct == FnSubColumn
+	    || layoutFonct == FnNoLine)
+	  {
+	     pPRule = FirstRule;
+	     while (pPRule != CurRule)
+	       {
+		  if (pPRule->PrViewNum == CurView)
+		     if (pPRule->PrType == PtFunction)
+			if (pPRule->PrPresFunction == FnLine
+			    || pPRule->PrPresFunction == FnNoLine
+			    || pPRule->PrPresFunction == FnPage
+			    || pPRule->PrPresFunction == FnColumn
+			    || pPRule->PrPresFunction == FnSubColumn)
+#ifdef __COLPAGE__
+			   /* on autorise quand meme Page suivi de Column */
+			   if (!((layoutFonct == FnColumn && pPRule->PrPresFunction == FnPage) ||
+				 (layoutFonct == FnSubColumn && pPRule->PrPresFunction == FnColumn)))
+#endif /* __COLPAGE__ */
+			      CompilerMessage (wi, PRS, FATAL, ONLY_ONE_PAGE_RULE, inputLine, LineNum);
+		  pPRule = pPRule->PrNextPRule;
+	       }
+	  }
+     }
+}
+
 
 /*----------------------------------------------------------------------
    BooleanValue affecte la valeur bool au parametre de presentation courant
@@ -1848,11 +1914,12 @@ indLine             wi;
    ou InInLineRule) de la boite courante ou des regles par defaut.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         BooleanValue (boolean bool)
+static void         BooleanValue (boolean bool, indLine wi)
 
 #else  /* __STDC__ */
-static void         BooleanValue (bool)
+static void         BooleanValue (bool, wi)
 boolean             bool;
+indLine		    wi;
 
 #endif /* __STDC__ */
 
@@ -1942,18 +2009,17 @@ boolean             bool;
 	 pPSchema->PsBuildAll[CurType - 1] = bool;
    else if (InInLineRule)
       /* on est dans une regle InLine */
-      if (PresBoxDef)
-	 /* pour une boite de presentation */
-	 pPSchema->PsPresentBox[CurPresBox - 1].PbNotInLine = bool;
-      else			/* pour la boite d'un type d'element */
-	 pPSchema->PsNotInLine[CurType - 1] = bool;
+      {
+        if (!bool)
+	   LayoutRule (FnNotInLine, wi);
+      }
    else
       /* on est dans une regle Justify, Hyphenate, VertOverflow ou
 	 HorizOverflow */
-     {
+      {
 	CurRule->PrPresMode = PresImmediate;
 	CurRule->PrJustify = bool;
-     }
+      }
 }
 
 /*----------------------------------------------------------------------
@@ -1991,72 +2057,6 @@ indLine             wi;
 	CurRule->PrExternal = False;
 	CurRule->PrNPresBoxes = 0;
 	CurRule->PrPresBoxName[0] = '\0';
-     }
-}
-
-/*----------------------------------------------------------------------
-   LayoutRule                                                      
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         LayoutRule (FunctionType layoutFonct, indLine wi)
-
-#else  /* __STDC__ */
-static void         LayoutRule (layoutFonct, wi)
-FunctionType        layoutFonct;
-indLine             wi;
-
-#endif /* __STDC__ */
-
-{
-   PtrPRule            pPRule;
-
-   ConditionEnd ();
-   if (DefaultRuleDef)
-      CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);
-   else if (RuleDef && CurType <= MAX_BASIC_TYPE)
-      CompilerMessage (wi, PRS, FATAL, BAD_RULE_FOR_A_TERMINAL_ELEM, inputLine, LineNum);
-   else if (layoutFonct != FnLine &&
-	    layoutFonct != FnNoLine &&
-	    pSSchema->SsRule[CurType - 1].SrConstruct == CsChoice)
-      CompilerMessage (wi, PRS, FATAL, CANT_USE_RULE_FOR_A_CHOICE, inputLine, LineNum);
-   else
-     {
-	/* verifie qu'il n'y a que des conditions Within parmi les
-	   conditions courantes */
-	CheckConditions (wi);
-	CreatePRule (PtFunction, wi);
-	CurRule->PrPresMode = PresFunction;
-	CurRule->PrPresFunction = layoutFonct;
-	CurRule->PrPresBoxRepeat = False;
-	CurRule->PrElement = False;
-	CurRule->PrExternal = False;
-	CurRule->PrNPresBoxes = 0;
-	CurRule->PrPresBoxName[0] = '\0';
-	/* verifie que cette regle n'est pas deja presente pour cette */
-	/* vue  uniquement pour layoutFonct = FnLine ou FnPage ou FnColumn */
-	if (layoutFonct == FnLine || layoutFonct == FnPage || layoutFonct == FnColumn
-	    || layoutFonct == FnSubColumn
-	    || layoutFonct == FnNoLine)
-	  {
-	     pPRule = FirstRule;
-	     while (pPRule != CurRule)
-	       {
-		  if (pPRule->PrViewNum == CurView)
-		     if (pPRule->PrType == PtFunction)
-			if (pPRule->PrPresFunction == FnLine
-			    || pPRule->PrPresFunction == FnNoLine
-			    || pPRule->PrPresFunction == FnPage
-			    || pPRule->PrPresFunction == FnColumn
-			    || pPRule->PrPresFunction == FnSubColumn)
-#ifdef __COLPAGE__
-			   /* on autorise quand meme Page suivi de Column */
-			   if (!((layoutFonct == FnColumn && pPRule->PrPresFunction == FnPage) ||
-				 (layoutFonct == FnSubColumn && pPRule->PrPresFunction == FnColumn)))
-#endif /* __COLPAGE__ */
-			      CompilerMessage (wi, PRS, FATAL, ONLY_ONE_PAGE_RULE, inputLine, LineNum);
-		  pPRule = pPRule->PrNextPRule;
-	       }
-	  }
      }
 }
 
@@ -2641,18 +2641,12 @@ indLine             wi;
 		 }
 	       break;
 	    case KWD_InLine:
-	       if (Conditions != NULL)
-		  /* un IF precede la regle Break. Erreur */
-		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_CONDITION,
-				 inputLine, LineNum);
-	       else if (CurView != 1)
-		  CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW,
-				 inputLine, LineNum);
+	       if (DefaultRuleDef)
+		  /* pas de regle InLine dans les regles par defaut */
+		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES,
+				   inputLine, LineNum);
 	       else
-		 {
-		    InInLineRule = True;
-		    ConditionEnd ();
-		 }
+		  InInLineRule = True;
 	       break;
 	    case KWD_Size:
 	       /* Size */
@@ -3105,11 +3099,11 @@ indLine             wi;
 	       break;
 	    case KWD_Yes:
 	       /* Yes */
-	       BooleanValue (True);
+	       BooleanValue (True, wi);
 	       break;
 	    case KWD_No:
 	       /* No */
-	       BooleanValue (False);
+	       BooleanValue (False, wi);
 	       break;
 	    case KWD_LeftWithDots:
 	       /* LeftWithDots */

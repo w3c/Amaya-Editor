@@ -984,6 +984,9 @@ PtrPRule            pR;
 		    break;
 		 }
 	       break;
+	    case FnNotInLine:
+	       printf ("InLine: No");
+	       break;
 	   case FnAny:
 	       printf ("?????");
 	       break;		    
@@ -1608,11 +1611,6 @@ char              **argv;
 		     printf ("Yes;\n");
 		  else
 		     printf ("No;\n");
-		  printf ("   InLine: ");
-		  if (pBo1->PbNotInLine)
-		     printf ("Yes;\n");
-		  else
-		     printf ("No;\n");
 		  printf ("   Gather: ");
 		  if (pBo1->PbBuildAll)
 		     printf ("Yes;\n");
@@ -1687,11 +1685,6 @@ char              **argv;
 		printf ("No;\n");
 	     printf ("   LineBreak: ");
 	     if (pSc1->PsAcceptLineBreak[El - 1])
-		printf ("Yes;\n");
-	     else
-		printf ("No;\n");
-	     printf ("   InLine: ");
-	     if (pSc1->PsNotInLine[El - 1])
 		printf ("Yes;\n");
 	     else
 		printf ("No;\n");

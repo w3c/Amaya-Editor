@@ -115,6 +115,9 @@ FILE               *fileDescriptor;
 		  case FnPictureMode:
 		     fprintf (fileDescriptor, "PictureMode");
 		     break;
+		  case FnNotInLine:
+		     fprintf (fileDescriptor, "InLine: No");
+		     break;
 		  default:
 		     fprintf (fileDescriptor, "PrPresFunction ????");
 		     break;

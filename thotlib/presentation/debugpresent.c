@@ -1013,11 +1013,15 @@ PtrPRule            pR;
                     break;
                  }
                break;
+	    case FnNotInLine:
+	       fprintf (output, "InLine: No");
+	       break;
 	 }
    if (pRe1->PrPresFunction != FnLine && pRe1->PrPresFunction != FnContentRef
        && pRe1->PrPresFunction != FnNoLine && pRe1->PrPresFunction != ShowBox
        && pRe1->PrPresFunction != FnPictureMode
-       && pRe1->PrPresFunction != FnBackgroundPicture)
+       && pRe1->PrPresFunction != FnBackgroundPicture
+       && pRe1->PrPresFunction != FnNotInLine)
      {
 	fprintf (output, "(");
 	if (pRe1->PrNPresBoxes == 0)
@@ -1661,11 +1665,6 @@ char               *output_file;
 		     fprintf (output, "Yes;\n");
 		  else
 		     fprintf (output, "No;\n");
-		  fprintf (output, "   InLine: ");
-		  if (pBo1->PbNotInLine)
-		     fprintf (output, "Yes;\n");
-		  else
-		     fprintf (output, "No;\n");
 		  fprintf (output, "   Gather: ");
 		  if (pBo1->PbBuildAll)
 		     fprintf (output, "Yes;\n");
@@ -1740,11 +1739,6 @@ char               *output_file;
 		fprintf (output, "No;\n");
 	     fprintf (output, "   LineBreak: ");
 	     if (pSc1->PsAcceptLineBreak[El - 1])
-		fprintf (output, "Yes;\n");
-	     else
-		fprintf (output, "No;\n");
-	     fprintf (output, "   InLine: ");
-	     if (pSc1->PsNotInLine[El - 1])
 		fprintf (output, "Yes;\n");
 	     else
 		fprintf (output, "No;\n");

@@ -365,6 +365,9 @@ boolean            *repeat;
 	    case C_PF_PICTUREMODE:
 	       functType = FnPictureMode;
 	       break;
+	    case C_PF_NOTINLINE:
+	       functType = FnNotInLine;
+	       break;
 	    default:
 	       error = True;
 	       functType = FnLine;
@@ -1140,7 +1143,8 @@ PtrPRule           *pNextPRule;
 			    pPR->PrPresFunction = ReadFunctionType (file, &pPR->PrPresBoxRepeat);
 			    if (pPR->PrPresFunction != FnLine
 				&& pPR->PrPresFunction != FnNoLine
-				&& pPR->PrPresFunction != FnShowBox)
+				&& pPR->PrPresFunction != FnShowBox
+				&& pPR->PrPresFunction != FnNotInLine)
 			      {
 				 TtaReadBool (file, &pPR->PrExternal);
 				 TtaReadBool (file, &pPR->PrElement);
@@ -1459,7 +1463,6 @@ PtrSSchema          pSS;
 		     TtaReadBool (file, &pBox->PbAcceptPageBreak);
 		     TtaReadBool (file, &pBox->PbAcceptLineBreak);
 		     TtaReadBool (file, &pBox->PbBuildAll);
-		     TtaReadBool (file, &pBox->PbNotInLine);
 		     TtaReadBool (file, &pBox->PbPageFooter);
 		     TtaReadBool (file, &pBox->PbPageHeader);
 		     TtaReadBool (file, &pBox->PbPageBox);
@@ -1644,10 +1647,6 @@ PtrSSchema          pSS;
 	     if (!error)
 		for (i = 0; i < InitialNElems; i++)
 		   TtaReadBool (file, &pPSch->PsBuildAll[i]);
-
-	     if (!error)
-		for (i = 0; i < InitialNElems; i++)
-		   TtaReadBool (file, &pPSch->PsNotInLine[i]);
 
 	     if (!error)
 		for (i = 0; i < InitialNElems; i++)

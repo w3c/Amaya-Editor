@@ -405,6 +405,9 @@ boolean             rep;
 	    case FnPictureMode:
 	       TtaWriteByte (outfile, C_PF_PICTUREMODE);
 	       break;
+	    case FnNotInLine:
+	       TtaWriteByte (outfile, C_PF_NOTINLINE);
+	       break;
 	    default:
 	       fprintf (stderr, "Invalid function %X\n", functType);
 	       break;
@@ -1008,7 +1011,8 @@ PtrPRule            pPRule;
 				       currentRule->PrPresBoxRepeat);
 		    if (currentRule->PrPresFunction != FnLine
 			&& currentRule->PrPresFunction != FnNoLine
-			&& currentRule->PrPresFunction != FnShowBox)
+			&& currentRule->PrPresFunction != FnShowBox
+			&& currentRule->PrPresFunction != FnNotInLine)
 		      {
 			 WriteBoolean (currentRule->PrExternal);
 			 WriteBoolean (currentRule->PrElement);
@@ -1266,7 +1270,6 @@ PtrSSchema          pSS;
 	WriteBoolean (pBox->PbAcceptPageBreak);
 	WriteBoolean (pBox->PbAcceptLineBreak);
 	WriteBoolean (pBox->PbBuildAll);
-	WriteBoolean (pBox->PbNotInLine);
 	WriteBoolean (pBox->PbPageFooter);
 	WriteBoolean (pBox->PbPageHeader);
 	WriteBoolean (pBox->PbPageBox);
@@ -1391,9 +1394,6 @@ PtrSSchema          pSS;
 
    for (i = 0; i < pSS->SsNRules; i++)
       WriteBoolean (pPSch->PsBuildAll[i]);
-
-   for (i = 0; i < pSS->SsNRules; i++)
-      WriteBoolean (pPSch->PsNotInLine[i]);
 
    for (i = 0; i < pSS->SsNRules; i++)
       WriteBoolean (pPSch->PsInPageHeaderOrFooter[i]);

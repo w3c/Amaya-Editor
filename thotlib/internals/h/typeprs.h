@@ -176,8 +176,6 @@ typedef struct _PresentationBox
 					   broken at the end of a line */
   boolean	PbBuildAll;	/* indicates if the box image must be built
 				   in one piece or if it can be partial */
-  boolean	PbNotInLine;	/* box not taken into account in the line
-				   making process */
   boolean	PbPageFooter;	/* it is a footer box */
   boolean	PbPageHeader;	/* it is a header box */
   boolean	PbPageBox;	/* it is a page box */
@@ -252,7 +250,8 @@ typedef enum
 {
   FnLine, FnPage, FnCreateBefore, FnCreateWith, FnCreateFirst, FnCreateLast,
   FnCreateAfter, FnColumn, FnCopy, FnContentRef, FnSubColumn, FnNoLine,
-  FnCreateEnclosing, FnShowBox, FnBackgroundPicture, FnPictureMode, FnAny
+  FnCreateEnclosing, FnShowBox, FnBackgroundPicture, FnPictureMode,
+  FnNotInLine, FnAny
 } FunctionType;
 
 typedef enum
@@ -790,11 +789,6 @@ element
 					  table StructSchema.SsRule, if the
 					  image of the box must be built in one
 					  piece or if it can be divided */
-  boolean     PsNotInLine[MAX_RULES_SSCHEMA];	/* indicates for each element
-					  type, in the same order as in the
-					  table StructSchema.SsRule, that the
-					  element is not to be taken into
-					  account when making lines */
   boolean     PsInPageHeaderOrFooter[MAX_RULES_SSCHEMA]; /* indicates for each
 					  element type, in the same order as
 					  in the table StructSchema.SsRule, if

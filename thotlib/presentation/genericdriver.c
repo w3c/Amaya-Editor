@@ -316,7 +316,7 @@ GenericContext      ctxt;
 	return (NULL);
      }
 
-   /* allocate and initialize the new BOXE */
+   /* allocate and initialize the new BOX */
    pSchemaPrs->PsNPresentBoxes++;
    ctxt->box = pSchemaPrs->PsNPresentBoxes;
    box = &pSchemaPrs->PsPresentBox[pSchemaPrs->PsNPresentBoxes - 1];
@@ -325,7 +325,6 @@ GenericContext      ctxt;
    box->PbAcceptPageBreak = TRUE;
    box->PbAcceptLineBreak = TRUE;
    box->PbBuildAll = TRUE;
-   box->PbNotInLine = TRUE;
    box->PbPageFooter = FALSE;
    box->PbPageHeader = FALSE;
    box->PbPageBox = FALSE;

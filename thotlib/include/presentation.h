@@ -49,6 +49,7 @@ typedef int        *PRule;
 #define PRNoBreak1 24
 #define PRNoBreak2 25
 #define PRShowBox 26
+#define PRNotInLine 27
 
 /* values for rule PRStyle */
 #define StyleRoman 1

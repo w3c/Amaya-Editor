@@ -530,6 +530,8 @@ PRuleType           pRule;
 	    case PtFunction:
 	       if (pRule->PrPresFunction == FnShowBox)
 		  return PRShowBox;
+	       else if (pRule->PrPresFunction == FnNotInLine)
+		  return PRNotInLine;
 	       else
 	          return PRFunction;
 	       break;
@@ -1756,7 +1758,7 @@ int                 LineColor;
   /* couleur de fond */
   if (modifColorBackground)
     {
-      /* cherche la regle de presentation specifique 'ColoreurFond' de */
+      /* cherche la regle de presentation specifique 'Background' de */
       /* l'element ou en cree une nouvelle */
       pPRule = SearchPresRule (pEl, PtBackground, 0, &isNew, pDoc, viewToApply);
       pPRule->PrType = PtBackground;

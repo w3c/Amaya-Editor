@@ -153,6 +153,7 @@
 #define C_PF_SHOWBOX 'B'
 #define C_PF_BGPICTURE 'b'
 #define C_PF_PICTUREMODE 'M'
+#define C_PF_NOTINLINE 'n'
 
 /* counters presentation style */
 #define C_NUM_ARABIC 'A'
