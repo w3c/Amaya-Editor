@@ -172,7 +172,7 @@ libwww libwww.a :
 	  	../$$libwwwdir/configure --disable-shared \
 			-with-zlib="$$localdir/libz.a"; \
 	  fi)
-	@(cd $(LIBWWW)/Library/src ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
+	@(cd $(LIBWWW)/Library/src ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" all-am)
 	@($(CP) $(LIBWWW)/Library/src/.libs/libwww.a libwww.a)
 	@echo libwww.a reinstalled
 
