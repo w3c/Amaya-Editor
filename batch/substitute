@@ -1,0 +1,76 @@
+#! /bin/sh
+
+if [ "$1" = "" -o "$3" = "" ]
+then
+    echo usage : $0 old_string new_string files ...
+    exit 1
+fi
+
+old_string=$1
+new_string=$2
+shift
+shift
+
+echo substituing $old_string by $new_string in
+
+while [ "$1" != "" ]
+do
+    echo -n $1 " : "
+    tmpname=`basename $1`
+    if [ ! -f "$1" ]
+    then
+        echo warning : $1 "doesn't exist"
+        shift
+        continue
+    fi
+    if [ -L "$1" ]
+    then
+        echo warning : $1 symbolic link, skipped
+        shift
+        continue
+    fi
+    if [ ! -w "$1" ]
+    then
+        echo warning : $1 non writable, skipped
+        shift
+       continue
+    fi
+
+    rm -f /tmp/substitute_$$_$1
+
+    sed s/"$old_string"/"$new_string"/g < $1 > /tmp/substitute_$$_$tmpname
+
+    if [ "$?" != "0" ]
+    then
+        echo error : sed failed on $tmpname
+        rm -f /tmp/substitute_$$_$tmpname
+        exit 1
+    fi
+
+    if [ ! -f "/tmp/substitute_$$_$tmpname" ]
+    then
+        echo error : sed failed on $tmpname
+        exit 1
+    fi
+
+    diff -q $1 /tmp/substitute_$$_$tmpname >& /dev/null
+
+    if [ "$?" = "0" ]
+    then
+        echo no change
+        rm -f /tmp/substitute_$$_$tmpname
+    else
+        if [ "$?" = "1" ]
+	then
+	    echo changed
+	    mv $1 $1.old
+	    mv /tmp/substitute_$$_$tmpname $1
+	else
+	    echo "trouble ..."
+	    rm -f /tmp/substitute_$$_$tmpname
+	    exit 1
+	fi
+    fi
+    shift
+done
+

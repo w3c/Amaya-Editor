@@ -7,7 +7,6 @@
  */
 
 #include "thot_sys.h"
-#include "ctype.h"
 #include "libmsg.h"
 #include "message.h"
 #include "constmedia.h"

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+OBJECT=$1
+
+while [ "$OBJECT" != "" ]
+do
+    res=`lid -S space $OBJECT`
+    if [ "$res" = "" ]
+    then
+        echo $OBJECT not found
+    else
+        grep $res
+    fi
+    shift
+    OBJECT=$1
+done
