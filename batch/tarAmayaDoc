@@ -32,10 +32,9 @@ echo "Generating doc tar files "
    Amaya/doc/html/*.html* \
    Amaya/doc/html/*/*.html* \
    Amaya/doc/html/*.css \
-   Amaya/doc/images/*.gif \
-   Amaya/doc/images/*.png \
-   Amaya/doc/images/*.jpg \
-   Amaya/doc/images/w3c_home
+   Amaya/doc/images/*-de.* \
+   Amaya/doc/images/*-es.* \
+   Amaya/doc/images/*-fr.*
 
 
 
