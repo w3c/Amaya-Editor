@@ -1500,27 +1500,60 @@ unsigned char       c;
      }
 }
 
+
+/*----------------------------------------------------------------------
+   InsertLastChild
+
+   inserts element el as last child of element parent.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void      InsertLastChild (Element * el, Element parent)
+#else
+static void      InsertLastChild (el, parent)
+Element          *el;
+Element          parent;
+#endif
+{
+   Element	 child, sibling;
+
+   child = TtaGetFirstChild (parent);
+   if (child == NULL)
+     TtaInsertFirstChild (el, parent, theDocument);
+   else
+     {
+	while (child != NULL)
+	  {
+	    sibling = child;
+	    TtaNextSibling (&child);
+	  }
+	TtaInsertSibling (*el, sibling, FALSE, theDocument);
+     }
+}
+
+
 /*----------------------------------------------------------------------
    CheckSurrounding
 
    inserts an element Paragraph in the abstract tree of the Thot document
    if el is a leaf and is not allowed to be a child of element parent.
+   Return TRUE if element *el has been inserted in the tree.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void      CheckSurrounding (Element * el, Element parent)
+static boolean      CheckSurrounding (Element * el, Element parent)
 #else
-static void      CheckSurrounding (el, parent)
-Element            *el;
+static boolean      CheckSurrounding (el, parent)
+Element             *el;
 Element             parent;
 
 #endif
 {
-
    ElementType         parentType, newElType, elType;
-   Element             newEl, ancestor, sibling, previous, child;
+   Element             newEl, ancestor, previous, child;
+   boolean	       ret;
 
    if (parent == NULL)
-      return;
+      return(FALSE);
+   ret = FALSE;
    elType = TtaGetElementType (*el);
    if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
      {
@@ -1541,19 +1574,9 @@ Element             parent;
 	      newEl = TtaNewElement (theDocument, newElType);
 	      /* insert the new paragraph element as the last child of */
 	      /* element ancestor */
-	      child = TtaGetFirstChild (ancestor);
-	      if (child == NULL)
-		 TtaInsertFirstChild (&newEl, ancestor, theDocument);
-	      else
-		 {
-		 while (child != NULL)
-		    {
-		    sibling = child;
-		    TtaNextSibling (&child);
-		    }
-		 TtaInsertSibling (newEl, sibling, FALSE, theDocument);
-		 child = sibling;
-		 }
+	      InsertLastChild (&newEl, ancestor);
+	      child = newEl;
+	      TtaPreviousSibling (&child);
 	      /* moves the last children of ancestor which are character */
 	      /* level elements into the new paragraph */
 	      if (newEl != NULL)
@@ -1572,9 +1595,12 @@ Element             parent;
 			}
 		     child = previous;
 		     }
-		  if (lastElement == parent)
-		     if (lastElement == ancestor)
-		        lastElement = newEl;
+		  /* insert the Text element in the tree */
+		  if (parent == ancestor)
+		     TtaInsertFirstChild (el, newEl, theDocument);
+		  else
+		     InsertLastChild (el, parent);
+		  ret = TRUE;
 		 }
      	      }
 	  }
@@ -1598,10 +1624,13 @@ Element             parent;
 	     newEl = TtaNewElement (theDocument, newElType);
 	     InsertElement (&newEl);
 	     if (newEl != NULL)
-		if (lastElement == parent)
-		    lastElement = newEl;
+	       {
+	         TtaInsertFirstChild (el, newEl, theDocument);
+		 ret = TRUE;
+	       }
 	  }
      }
+  return ret;
 }
 
 
@@ -1626,20 +1655,20 @@ Element            *el;
 	   parent = NULL;
 	else
 	   parent = TtaGetParent (lastElement);
-	CheckSurrounding (el, parent);
-	if (parent != NULL)
-	   TtaInsertSibling (*el, lastElement, FALSE, theDocument);
-	else
-	   {
-	     TtaDeleteTree (*el, theDocument);
-	     *el = NULL;
-	   }
+	if (!CheckSurrounding (el, parent))
+	  if (parent != NULL)
+	    TtaInsertSibling (*el, lastElement, FALSE, theDocument);
+	  else
+	    {
+	       TtaDeleteTree (*el, theDocument);
+	       *el = NULL;
+	    }
 	ret = TRUE;
      }
    else
      {
-	CheckSurrounding (el, lastElement);
-	TtaInsertFirstChild (el, lastElement, theDocument);
+	if (!CheckSurrounding (el, lastElement))
+	  TtaInsertFirstChild (el, lastElement, theDocument);
 	ret = FALSE;
      }
    if (*el != NULL)
@@ -1936,11 +1965,22 @@ Element             el;
 				   TtaSetAttributeText (attrChild, text, child, theDocument);
 				   if (attrType.AttrTypeNum == HTML_ATTR_Default_Value)
 				      /* attribute Default_Value */
+				      /* copy attribute value into the first
+					 text leaf of element */
 				     {
-					desc = TtaGetFirstChild (child);
-					desc = TtaGetFirstChild (desc);
-					TtaSetTextContent (desc, text, documentLanguage,
-							   theDocument);
+					do
+					   {
+					   desc = child;
+					   child = TtaGetFirstChild (desc);
+					   }
+					while (child != NULL);
+					if (desc != NULL)
+					  {
+					  childType = TtaGetElementType (desc);
+					  if (childType.ElTypeNum == HTML_EL_TEXT_UNIT)
+					    TtaSetTextContent (desc, text,
+						documentLanguage, theDocument);
+					  }
 				     }
 				   TtaFreeMemory (text);
 				}
@@ -3241,20 +3281,23 @@ Document            doc;
 #endif
 {
    AttributeType       attrType;
-   int                 val, ind;
+   int                 val, ind, coeff;
    Attribute           attr;
 
    /* is the first character a '+' or a '-' ? */
    ind = 0;
+   coeff = 1;
    if (buffer[0] == '+')
      {
 	attrType.AttrTypeNum = HTML_ATTR_IntSizeIncr;
 	ind++;
+	coeff = 2;
      }
    else if (buffer[0] == '-')
      {
 	attrType.AttrTypeNum = HTML_ATTR_IntSizeDecr;
 	ind++;
+	coeff = 2;
      }
    else
       attrType.AttrTypeNum = HTML_ATTR_IntSizeRel;
@@ -3262,6 +3305,7 @@ Document            doc;
    attr = TtaNewAttribute (attrType);
    TtaAttachAttribute (el, attr, doc);
    sscanf (&buffer[ind], "%d", &val);
+   val = val * coeff;
    TtaSetAttributeValue (attr, val, el, doc);
 }
 

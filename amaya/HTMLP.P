@@ -44,11 +44,11 @@ PRINT
 #define TableDoubleHSpace 8 pt
 #define TableSimpleVSpace 0.4
 #define VSpaceBeforeH1 1
-#define VSpaceBeforeH2 0.7
-#define VSpaceBeforeH3 0.6
+#define VSpaceBeforeH2 0.5
+#define VSpaceBeforeH3 0.5
 #define VSpaceBeforeH4 0.5
-#define VSpaceBeforeH5 0.4
-#define VSpaceBeforeH6 0.3
+#define VSpaceBeforeH5 0.5
+#define VSpaceBeforeH6 0.5
 #define VSpaceInToC 0.2
 
 COUNTERS
@@ -3529,9 +3529,9 @@ RULES
 	NoBreak2 : 2;
 #endif
 	Width: Enclosing . Width;
-	Height: 1.7 min;
+	Height: 1.5 min;
 	VertPos: Top = Previous . Bottom + VSpaceBeforeH1;
-	Size: Enclosing + 9;
+	Size: Enclosing + 6;
 	Style: Bold;
 	Hyphenate: No;
 	CreateBefore(H1_S);
@@ -3565,7 +3565,7 @@ RULES
 	NoBreak2 : 2;
 #endif
 	Width: Enclosing . Width;
-	Size: Enclosing + 6;
+	Size: Enclosing + 4;
 	Style: Bold;
 	CreateBefore(H2_S);
 	CreateWith(VerticalLine);
@@ -3630,7 +3630,7 @@ RULES
 #endif
 	VertPos: Top = Previous . Bottom + VSpaceBeforeH4;
 	Width: Enclosing . Width;
-	Size: Enclosing + 1;
+	Size: Enclosing =;
 	Style: Bold;
 	CreateBefore(H4_S);
 	CreateWith(VerticalLine);
@@ -3662,7 +3662,7 @@ RULES
 #endif
 	VertPos: Top = Previous . Bottom + VSpaceBeforeH5;
 	Width: Enclosing . Width;
-	Size: Enclosing + 1;
+	Size: Enclosing - 2;
 	CreateBefore(H5_S);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
@@ -3690,7 +3690,7 @@ RULES
 #endif
 	Width: Enclosing . Width;
 	VertPos: Top = Previous . Bottom + VSpaceBeforeH6;
-	Size: Enclosing + 1;
+	Size: Enclosing - 4;
 	CreateBefore(H6_S);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
@@ -3819,7 +3819,7 @@ RULES
 	CreateBefore(SUB_S);
 	CreateWith(VerticalLine);
 	LineBreak: No;
-	Size: Enclosing - 3 min 6;
+	Size: Enclosing - 3;
 	HorizRef: Enclosed . HRef - 0.3;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
@@ -3840,7 +3840,7 @@ RULES
 	CreateBefore(SUP_S);
 	CreateWith(VerticalLine);
 	LineBreak: No;
-	Size: Enclosing - 3 min 6;
+	Size: Enclosing - 3;
 	HorizRef: Enclosed . HRef + 0.4;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
@@ -4086,7 +4086,6 @@ RULES
 	CreateBefore(DT_S);
 	CreateWith(VerticalLine);
 	Line;
-	Style: Bold;
 #ifdef PAGE
 	NoBreak1 : 2;
 	NoBreak2 : 2;
