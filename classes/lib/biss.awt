@@ -1,0 +1,22 @@
+#properties of package biss.awt
+
+# customized settings for a 800x600 Toshiba 410CDT
+#biss.awt.ScreenSize=11
+#biss.awt.SysFont=Helvetica BOLD 12
+ 
+#biss.awt.ScrollBarWidth=12
+#biss.awt.TabWidth=2
+#biss.awt.CursorWidth=2
+#biss.awt.CursorColor=blue
+#biss.awt.StaticFont=Helvetica BOLD 11
+
+# customized settings for a 1280x1024 display
+#biss.awt.ScreenSize=17
+#biss.awt.SysFont=Helvetica BOLD 14
+#biss.awt.StaticFont=Helvetica BOLD 12
+#biss.awt.FixedFont=Courier BOLD 14
+#biss.awt.ButtonFont=Helvetica BOLD 12
+#biss.awt.MenuFont=Helvetica BOLD 12
+
+# required by XInside server (default: 12)
+biss.awt.GlobalKeyMod=4

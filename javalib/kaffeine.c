@@ -35,6 +35,7 @@ extern void initialiseKaffe(void);
 extern int threadedFileDescriptor(int fd);
 extern void yieldThread();
 extern int blockOnFile(int fd, int op);
+extern int (*select_call)(int, fd_set*, fd_set*, fd_set*, struct timeval*);
 
 static void register_stubs(void);
 
@@ -55,7 +56,7 @@ void                InitJava ()
 {
     object* args;
     stringClass** str;
-    char initClass[256];
+    char initClass[MAX_PATH];
 
     char *app_name = TtaGetEnvString ("appname");
 
@@ -70,8 +71,7 @@ void                InitJava ()
     fprintf(stderr, "Java Runtime Initialized\n");
 
     /* Build the init class name */
-    strcpy(initClass, app_name);
-    strcat(initClass, "Init");
+    sprintf(initClass, "%s/%sInit", app_name, app_name);
 
     /* Build an array of strings as the arguments */
     args = AllocObjectArray(1, "Ljava/lang/String;");
@@ -87,61 +87,6 @@ void                InitJava ()
     /* Start the application loop of events */
     do_execute_java_class_method("thotlib.Interface", "main",
                    "([Ljava/lang/String;)V", args);
-}
-
-/*----------------------------------------------------------------------
-  InitJavaEventLoop
-
-  Initialize the JavaEventLoop environment, including the network
-  interface, Java, etc...
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                InitJavaEventLoop (void)
-#else
-void                InitJavaEventLoop ()
-#endif
-{
-    char *env_value;
-    char  new_env[1024];
-
-    /*
-     * Everything is initialized BEFORE starting the
-     * Java Runtime ...
-     */
-    JavaEventLoopInitialized = 1;
-
-    /*
-     * set up the environment
-     */
-    strcpy(new_env,"CLASSPATH=");
-    env_value  = TtaGetEnvString("CLASSPATH");
-    if (env_value)
-       strcat(new_env, env_value);
-    env_value = getenv("CLASSPATH");
-    if (env_value) {
-       strcat(new_env,":");
-       strcat(new_env,env_value);
-    }
-    putenv(TtaStrdup(new_env));
-    strcpy(new_env,"KAFFEHOME=");
-    env_value  = TtaGetEnvString("KAFFEHOME");
-    if (env_value)
-       strcat(new_env, env_value);
-    putenv(TtaStrdup(new_env));
-
-    /*
-     * Register the X-Window socket as an input channel
-     */
-    x_window_socket = ConnectionNumber(TtaGetCurrentDisplay());
-    threadedFileDescriptor(x_window_socket);
-
-    /*
-     * Startup the Java environment. We should never return
-     * from this call, but InitJava will call TtaMainLoop again
-     * on the Application thread.
-     */
-    InitJava();
-
 }
 
 /*----------------------------------------------------------------------
@@ -213,16 +158,14 @@ ThotEvent *ev;
   int status;
 
 #ifdef WWW_XWINDOWS
-  status = XtAppPending (app_ctxt);
-  while (status & XtIMXEvent) {
-     XtAppProcessEvent (app_ctxt, XtIMXEvent);
-     status = XtAppPending (app_ctxt);
-  }
 
   /*
    * Need to check whether something else has to be scheduled.
    */
-  blockOnFile(x_window_socket, 0);
+  status = XtAppPending (app_ctxt);
+  if (!status) {
+     blockOnFile(x_window_socket, 0);
+  }
   XtAppNextEvent (app_ctxt, ev);
 
 #else  /* WWW_XWINDOWS */
@@ -250,10 +193,6 @@ ThotEvent *ev;
 
 #ifdef WWW_XWINDOWS
   status = XtAppPending (app_ctxt);
-  while (status & XtIMXEvent) {
-     XtAppProcessEvent (app_ctxt, XtIMXEvent);
-     status = XtAppPending (app_ctxt);
-  }
   if (status) {
      XtAppNextEvent (app_ctxt, ev);
      return(TRUE);
@@ -261,6 +200,66 @@ ThotEvent *ev;
   return(FALSE);
 #else  /* WWW_XWINDOWS */
 #endif /* !WWW_XWINDOWS */
+}
+
+/*----------------------------------------------------------------------
+  InitJavaEventLoop
+
+  Initialize the JavaEventLoop environment, including the network
+  interface, Java, etc...
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                InitJavaEventLoop (void)
+#else
+void                InitJavaEventLoop ()
+#endif
+{
+    char *env_value;
+    char  new_env[1024];
+
+    /*
+     * Everything is initialized BEFORE starting the
+     * Java Runtime ...
+     */
+    JavaEventLoopInitialized = 1;
+
+    /*
+     * set up the environment
+     */
+    strcpy(new_env,"CLASSPATH=");
+    env_value  = TtaGetEnvString("CLASSPATH");
+    if (env_value)
+       strcat(new_env, env_value);
+    env_value = getenv("CLASSPATH");
+    if (env_value) {
+       strcat(new_env,":");
+       strcat(new_env,env_value);
+    }
+    putenv(TtaStrdup(new_env));
+    strcpy(new_env,"KAFFEHOME=");
+    env_value  = TtaGetEnvString("KAFFEHOME");
+    if (env_value)
+       strcat(new_env, env_value);
+    putenv(TtaStrdup(new_env));
+
+    /*
+     * Register the X-Window socket as an input channel
+     */
+    x_window_socket = ConnectionNumber(TtaGetCurrentDisplay());
+    /* threadedFileDescriptor(x_window_socket); */
+
+    /*
+     * set up our own select call.
+     */
+    select_call = JavaSelect;
+
+    /*
+     * Startup the Java environment. We should never return
+     * from this call, but InitJava will call TtaMainLoop again
+     * on the Application thread.
+     */
+    InitJava();
+
 }
 
 /*----------------------------------------------------------------------

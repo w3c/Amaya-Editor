@@ -75,6 +75,9 @@ void                HandleQueuedNetRequests ()
  *									*
  ************************************************************************/
 
+static int AmayaEventLoopInitialized = 0;
+static int NbAmayaSelect = 0;
+
 /*----------------------------------------------------------------------
   AmayaSelect
 
@@ -82,8 +85,6 @@ void                HandleQueuedNetRequests ()
   the various packages (libWWW, Java, X-Windows ...) needing I/O in
   the Amaya program.
   ----------------------------------------------------------------------*/
-
-static int NbAmayaSelect = 0;
 
 #ifdef __STDC__
 int                AmayaSelect (int  n,  fd_set  *readfds,  fd_set  *writefds,
@@ -102,8 +103,8 @@ ThotEvent *ev;
 
     NbAmayaSelect++;
 
-    /* Just a test for now ... */
-    if (n <= x_window_socket) n = x_window_socket + 1;
+    /* Just a test for now ...
+    if (n <= x_window_socket) n = x_window_socket + 1; */
     res = select(n, readfds, writefds, exceptfds, timeout);
 
     return(res);
@@ -154,7 +155,7 @@ ThotEvent *ev;
   /*
    * Need to check whether something else has to be scheduled.
    */
-  blockOnFile(x_window_socket, 0);
+  /* blockOnFile(x_window_socket, 0); */
   XtAppNextEvent (app_ctxt, ev);
 
 #endif /* !_WINDOWS */

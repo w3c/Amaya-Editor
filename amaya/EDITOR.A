@@ -5,6 +5,9 @@ USES
 #ifdef AMAYA_PLUGIN
        , Plugin
 #endif /* AMAYA_PLUGIN */
+#ifdef AMAYA_JAVA
+       , Java
+#endif /* AMAYA_JAVA */
        ;
 
 DEFAULT
