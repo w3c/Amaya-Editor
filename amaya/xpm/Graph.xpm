@@ -6,7 +6,7 @@ static char * Graph_xpm[] = {
 "X	c #5f5f5f",
 "o	c #0000ff",
 "O	c #00f700",
-"#	c ~0C307FFF534C",
+"#	c #0C307FFF534C",
 "       oooooo   ",
 "       oooooo#X ",
 "  OOO  oooooo#X ",
