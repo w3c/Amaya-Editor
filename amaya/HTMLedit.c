@@ -2240,7 +2240,8 @@ ThotBool            GlobalAttrInMenu (NotifyAttribute * event)
 
        /* BASE and SCRIPT do not accept any global attribute */
        if (elType.ElTypeNum == HTML_EL_BASE ||
-	   elType.ElTypeNum == HTML_EL_SCRIPT)
+	   elType.ElTypeNum == HTML_EL_SCRIPT ||
+	   elType.ElTypeNum == HTML_EL_Element)
 	 return TRUE;
 
        /* BASEFONT and PARAM accept only ID */
