@@ -140,10 +140,10 @@ View                view;
 #endif /* __STDC__ */
 {
    /* on essaie d'abord de faire comme la touche Return */
-   if (BreakElement (NULL, NULL, 0, TRUE))
+   if (BreakElement (NULL, NULL, 0, TRUE, TRUE))
       return;
    /* puisque ca n'a pas marche', on essaie autre chose */
-   BreakElement (NULL, NULL, 0, FALSE);
+   BreakElement (NULL, NULL, 0, FALSE, TRUE);
 }
 
 

@@ -102,11 +102,544 @@ static int          ChangeTypeMethod[MAX_ITEMS_CHANGE_TYPE];
 #include "structschema_f.h"
 #include "content_f.h"
 
-
 /* element types proposed in menu Surround */
 static int          typeNumSurround[MAX_MENU];	/* type */
 static PtrSSchema   pSSSurround[MAX_MENU];	/* schema */
 static int          NElSurround;	/* number of entries in the table */
+
+/***** UNDO COMMAND ****/
+
+typedef struct _EditOperation *PtrEditOperation;
+
+/* Description of an editing operation in the history of editing commands */
+typedef struct _EditOperation
+{
+  PtrEditOperation EoNextOp;	      /* next operation in the editing
+					 history */
+  PtrEditOperation EoPreviousOp;      /* previous operation in the editing
+					 history */
+  boolean	   EoToBeContinued;   /* this operation is part of a sequence
+					 to be undone at once */
+  PtrElement	   EoParent;	      /* parent of elements to be inserted to
+					 undo the operation */
+  PtrElement	   EoPreviousSibling; /* previous sibling of first element to
+					 be inserted to undo the operation */
+  PtrElement	   EoCreatedElement;  /* element to be removed to undo the
+					 operation */
+  PtrElement	   EoSavedElement;    /* copy of the element to be inserted to
+					 undo the operation */
+  PtrElement       EoFirstSelectedEl; /* first selected element */
+  int              EoFirstSelectedChar; /* index of first selected character in
+					 the first selected element, if it's a
+					 character string */
+  PtrElement       EoLastSelectedEl;  /* last selected element */
+  int              EoLastSelectedChar;/* index of last selected character in
+					 the last selected element, if it's a
+					 character string */
+} EditOperation;
+
+/* Current status of editing history */
+   /* document whose editing history is recorded */
+   static PtrDocument HistoryDoc = NULL;
+   /* latest editing operation for that document */
+   static PtrEditOperation LastEdit = NULL;
+   /* number of editing commands recorded in the history */
+   static int NbEditsInHistory = 0;
+   /* a single editing command has started a sequence of editing operations */
+   static boolean EditSequence = FALSE;
+   /* if EditSequence, the first operation of the sequence is expected */
+   static boolean FirstInSequence = FALSE;
+   /* maximum number of editing operations recorded in the history */
+#define MAX_EDIT_HISTORY_LENGTH 20
+
+/****** Reset history (ClearHistory) when loading or reloading a document ****/
+
+/*----------------------------------------------------------------------
+   HistError
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void HistError (int errorCode)
+#else  /* __STDC__ */
+static void HistError (errorCode)
+int errorCode;
+
+#endif /* __STDC__ */
+{
+   fprintf (stderr, "**** Undo error %d ****\n", errorCode);
+}
+
+/*----------------------------------------------------------------------
+   UpdateHistoryLength
+   Add diff to variable NbEditsInHistory
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void UpdateHistoryLength (int diff, PtrDocument pDoc)
+#else  /* __STDC__ */
+static void UpdateHistoryLength (diff, pDoc)
+     int diff;
+     PtrDocument pDoc;
+
+#endif /* __STDC__ */
+{
+   if (NbEditsInHistory == 0 && diff > 0)
+     /* enable Undo command */
+     /**********/;
+   NbEditsInHistory += diff;
+   if (NbEditsInHistory == 0 && diff < 0)
+     /* disable Undo command */
+     /**********/;
+}
+
+/*----------------------------------------------------------------------
+   FreeSavedElementsHist
+   free the saved elements associated with editing operation editOp
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void FreeSavedElementsHist (PtrEditOperation editOp, PtrDocument pDoc)
+#else  /* __STDC__ */
+static void FreeSavedElementsHist (editOp, pDoc)
+PtrEditOperation editOp;
+PtrDocument pDoc;
+
+#endif /* __STDC__ */
+{
+   PtrElement	pEl;
+
+   pEl = editOp->EoSavedElement;
+   if (pEl)
+      {
+      /* if the saved selection is in the freed element, cancel it */
+      if (editOp->EoFirstSelectedEl)
+	 if (ElemIsWithinSubtree (editOp->EoFirstSelectedEl, pEl))
+	    {
+	    editOp->EoFirstSelectedEl = NULL;
+	    editOp->EoLastSelectedEl = NULL;
+	    }
+      if (editOp->EoLastSelectedEl)
+	 if (ElemIsWithinSubtree (editOp->EoLastSelectedEl, pEl))
+	    {
+	    editOp->EoFirstSelectedEl = NULL;
+	    editOp->EoLastSelectedEl = NULL;
+	    }
+      /* free the saved element */
+      DeleteElement (&pEl, pDoc);
+      }
+   editOp->EoSavedElement = NULL;
+}
+
+/*----------------------------------------------------------------------
+   CancelAnEdit
+   Remove and delete an editing operation from the history
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void CancelAnEdit (PtrEditOperation editOp, PtrDocument pDoc)
+#else  /* __STDC__ */
+static void CancelAnEdit (editOp, pDoc)
+PtrEditOperation editOp;
+PtrDocument pDoc;
+
+#endif /* __STDC__ */
+{
+   /* Error if there is no current history or if the current history is not
+      related to that document */
+   if (!HistoryDoc || HistoryDoc != pDoc)
+     {
+      HistError (1);
+      return;
+     }
+   /* unchain the operation descriptor */
+   if (editOp == LastEdit)
+      LastEdit = LastEdit->EoPreviousOp;
+   if (editOp->EoNextOp)
+      editOp->EoNextOp->EoPreviousOp = editOp->EoPreviousOp;
+   if (editOp->EoPreviousOp)
+      editOp->EoPreviousOp->EoNextOp = editOp->EoNextOp;
+   /* free the saved elements associated with that editing operation */
+   FreeSavedElementsHist (editOp, pDoc);
+   /* free the editing operation descriptor */
+   TtaFreeMemory (editOp);
+   editOp = NULL;
+   /* update the number of editing operations remaining in the history */
+   UpdateHistoryLength (-1, pDoc);
+}
+
+/*----------------------------------------------------------------------
+   ClearHistory
+   Clear the current history
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void ClearHistory (PtrDocument pDoc)
+#else  /* __STDC__ */
+static void ClearHistory (pDoc)
+PtrDocument pDoc;
+
+#endif /* __STDC__ */
+{
+   PtrEditOperation editOp, nextEditOp;
+
+   /* free all editing operation recorded in the current history */
+   editOp = LastEdit;
+   while (editOp)
+     {
+       nextEditOp = editOp->EoNextOp;
+       CancelAnEdit (editOp, HistoryDoc);
+       editOp = nextEditOp;
+     }
+   /* reiniatilize all variable representing the current history */
+   HistoryDoc = NULL;
+   LastEdit = NULL;
+   NbEditsInHistory = 0;
+   EditSequence = FALSE;
+   FirstInSequence = FALSE;
+}
+
+/*----------------------------------------------------------------------
+   ChangePointersOlderEdits
+   If Op and older editing operations in the history refer to elements
+   that have been copied from subtree pEl, change these reference to the
+   corresponding copies
+   If the selection saved in Op refers to elements that have been copied
+   from subtree pEl, change the saved selection to the corresponding copies.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void ChangePointersOlderEdits (PtrEditOperation Op, PtrElement pTree)
+#else  /* __STDC__ */
+static void ChangePointersOlderEdits (Op, pTree)
+PtrEditOperation Op;
+PtrElement pTree;
+
+#endif /* __STDC__ */
+{
+  PtrEditOperation	editOp;
+
+  editOp = Op->EoPreviousOp;
+  while (editOp)
+    {
+    if (editOp->EoParent)
+      if (ElemIsWithinSubtree(editOp->EoParent, pTree))
+	editOp->EoParent = editOp->EoParent->ElCopy;
+    if (editOp->EoPreviousSibling)
+      if (ElemIsWithinSubtree(editOp->EoPreviousSibling, pTree))
+	editOp->EoPreviousSibling = editOp->EoPreviousSibling->ElCopy;
+    if (editOp->EoCreatedElement)
+      if (ElemIsWithinSubtree(editOp->EoCreatedElement, pTree))
+	editOp->EoCreatedElement = editOp->EoCreatedElement->ElCopy;
+    if (editOp->EoFirstSelectedEl)
+      if (ElemIsWithinSubtree(editOp->EoFirstSelectedEl, pTree))
+	editOp->EoFirstSelectedEl = editOp->EoFirstSelectedEl->ElCopy;
+    if (editOp->EoLastSelectedEl)
+      if (ElemIsWithinSubtree(editOp->EoLastSelectedEl, pTree))
+	editOp->EoLastSelectedEl = editOp->EoLastSelectedEl->ElCopy;
+    editOp = editOp->EoPreviousOp;
+    }
+  /* if the current selection is in the copied element, set the saved
+     selection to the equivalent elements in the copy */
+  if (Op->EoFirstSelectedEl)
+     if (ElemIsWithinSubtree (Op->EoFirstSelectedEl, pTree))
+	Op->EoFirstSelectedEl = Op->EoFirstSelectedEl->ElCopy;
+  if (Op->EoLastSelectedEl)
+     if (ElemIsWithinSubtree (Op->EoLastSelectedEl, pTree))
+	Op->EoLastSelectedEl = Op->EoLastSelectedEl->ElCopy;
+}
+
+/*----------------------------------------------------------------------
+   AddEditOpInHistory
+   Register a single editing operation in the editing history.
+   pEl: the elements that has been (or will be) changed or deleted by the
+	 editing operation.
+   pDoc: the document to which this element belong.
+   save: a copy of element pEl must be saved in order to allow it to be
+	 restored when the operation will be undone.
+   removeWhenUndoing: element pEl to must be deleted when the operation will
+	 be undone.
+   firstSel, lastSel, firstSelChar, lastSelChar: indicate the selection
+	 that must be set when the operation will be undone.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void AddEditOpInHistory (PtrElement pEl, PtrDocument pDoc, boolean save,
+			 boolean removeWhenUndoing, PtrElement firstSel,
+		         PtrElement lastSel, int firstSelChar, int lastSelChar)
+#else  /* __STDC__ */
+void AddEditOpInHistory (pEl, pDoc, save, removeWhenUndoing,
+			 firstSel, lastSel, firstSelChar, lastSelChar)
+PtrElement pEl;
+PtrDocument pDoc;
+boolean save;
+boolean removeWhenUndoing;
+PtrElement firstSel;
+PtrElement lastSel;
+int firstSelChar;
+int lastSelChar;
+
+#endif /* __STDC__ */
+{
+   PtrEditOperation	editOp;
+   PtrElement		pCopy;
+
+   if (!pEl)
+      return;
+   /* if an editing sequence is open, changing document is not allowed */
+   if (EditSequence && HistoryDoc != pDoc)
+      {
+      HistError (2);
+      return;
+      }
+   /* if this operation does not concern the same document as the previous
+      ones, clear the current editing history and start a new one */
+   if (HistoryDoc && HistoryDoc != pDoc)
+      ClearHistory (pDoc);
+   HistoryDoc = pDoc;
+   /* create a new operation descriptor in the history */
+   editOp = (PtrEditOperation) TtaGetMemory (sizeof (EditOperation));
+   /* link the new operation descriptor in the history */
+   editOp->EoPreviousOp = LastEdit;
+   if (LastEdit)
+      LastEdit->EoNextOp = editOp;
+   LastEdit = editOp;
+   editOp->EoNextOp = NULL;
+   if (EditSequence && !FirstInSequence)
+      editOp->EoToBeContinued = TRUE;
+   else
+      editOp->EoToBeContinued = FALSE;
+   /* record the location in the abstract tree concerned by the operation */
+   editOp->EoParent = pEl->ElParent;
+   editOp->EoPreviousSibling = pEl->ElPrevious;
+   if (removeWhenUndoing)
+      editOp->EoCreatedElement = pEl;
+   else
+      editOp->EoCreatedElement = NULL;
+   editOp->EoSavedElement = NULL;
+   editOp->EoFirstSelectedEl = firstSel;
+   editOp->EoFirstSelectedChar = firstSelChar;
+   editOp->EoLastSelectedEl = lastSel;
+   editOp->EoLastSelectedChar = lastSelChar;
+   UpdateHistoryLength (1, pDoc);
+
+   if (save)
+     /* copy the elements concerned by the operation and attach them to the
+        operation descriptor */
+     {
+       /* do the copy */
+       pCopy = CopyTree (pEl, pDoc, pEl->ElAssocNum, pEl->ElStructSchema,
+		         pDoc, pEl->ElParent, FALSE, FALSE);
+       /* store the copy in the editing operation descriptor */
+       editOp->EoSavedElement = pCopy;
+       /* if older editing operations in the history refer to elements that
+	  have been copied, change these reference to the copies */
+       ChangePointersOlderEdits (editOp, pEl);
+     }
+
+   /* if a sequence of operations is open, there is now at least one element
+      in the sequence */
+   if (EditSequence)
+      FirstInSequence = FALSE;
+
+   /* If the history is too long, cancel the oldest operation in the history */
+   if (NbEditsInHistory > MAX_EDIT_HISTORY_LENGTH)
+      {
+      while (editOp->EoPreviousOp)
+	editOp = editOp->EoPreviousOp;
+      CancelAnEdit (editOp, pDoc);
+      }
+}
+
+/*----------------------------------------------------------------------
+   CancelLastEditFromHistory
+   Cancel the most recent editing operation in the editing history.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void CancelLastEditFromHistory (PtrDocument pDoc)
+#else  /* __STDC__ */
+void CancelLastEditFromHistory (pDoc)
+PtrDocument pDoc;
+
+#endif /* __STDC__ */
+{
+   /* the cancelled operation must be for the same document */
+   if (HistoryDoc != pDoc)
+     {
+      HistError (5);
+      return;
+     }
+   if (!LastEdit)
+     /* history empty. Error */
+     {
+      HistError (6);
+      return;
+     }
+   /* change the pointers in older edits that refer to the saved elements
+      that will be released */
+   if (LastEdit->EoSavedElement)
+      ChangePointersOlderEdits (LastEdit, LastEdit->EoSavedElement);
+   if (EditSequence && !LastEdit->EoToBeContinued)
+     /* the latest operation was the first in a sequence. The next one
+	will again be the first */
+     FirstInSequence = TRUE;
+   /* Remove the latest operation descriptor */
+   CancelAnEdit (LastEdit, pDoc);
+}
+
+
+/*----------------------------------------------------------------------
+   OpenHistorySequence
+   Open a sequence of editing operations in the history.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void OpenHistorySequence (PtrDocument pDoc)
+#else  /* __STDC__ */
+void OpenHistorySequence (pDoc)
+PtrDocument pDoc;
+
+#endif /* __STDC__ */
+{
+
+  /* can not open a sequence if a sequence is already open */
+  if (EditSequence)
+    {
+      HistError (7);
+      return;
+    }
+  /* if it's for a different document, clear the current history and start
+     a new one for the document of interest */
+  if (HistoryDoc && HistoryDoc != pDoc)
+     ClearHistory (pDoc);
+  HistoryDoc = pDoc;
+  EditSequence = TRUE;
+  FirstInSequence = TRUE;
+}
+
+/*----------------------------------------------------------------------
+   CloseHistorySequence
+   Close a sequence of editing operations in the history.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void CloseHistorySequence (PtrDocument pDoc)
+#else  /* __STDC__ */
+void CloseHistorySequence (pDoc)
+PtrDocument pDoc;
+
+#endif /* __STDC__ */
+{
+
+  /* error if no sequence open */
+   if (!EditSequence)
+     {
+      HistError (8);
+      return;
+     }
+   /* error if changing document */
+   if (!HistoryDoc || HistoryDoc != pDoc)
+     {
+      HistError (9);
+      return;
+     }
+   /* sequence closed */
+   EditSequence = FALSE;
+}
+
+/*----------------------------------------------------------------------
+   Undo
+   Undo the latest sequence of editing operations recorded in the history and
+   remove it from the istory.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void Undo (PtrDocument pDoc)
+#else  /* __STDC__ */
+static void Undo (pDoc)
+PtrDocument pDoc;
+
+#endif /* __STDC__ */
+{
+   PtrElement		pEl, pSibling;
+   Document		doc;
+   NotifyElement	notifyEl;
+   int			i, nSiblings;
+   boolean		doit;
+
+   if (!LastEdit)
+     /* history is empty */
+      return;
+   if (HistoryDoc != pDoc)
+     /* current history is not related to the document issuing the Undo
+	command */
+      return;
+
+   doc = IdentDocument (pDoc);
+   /* Undo all operations belonging to a sequence of editing operations */
+   doit = TRUE;
+   while (doit)
+      {
+      /* delete the element that have to be removed from the abstract tree */
+      if (LastEdit->EoCreatedElement)
+         {
+	 pEl = LastEdit->EoCreatedElement;
+	 /* tell the application that an element will be removed from the
+	    abstract tree */
+	 SendEventSubTree (TteElemDelete, pDoc, pEl, TTE_STANDARD_DELETE_LAST_ITEM);
+	 /* prepare event TteElemDelete to be sent to the application */
+	 notifyEl.event = TteElemDelete;
+	 notifyEl.document = doc;
+	 notifyEl.element = (Element) (pEl->ElParent);
+	 notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
+	 notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+	 nSiblings = 0;
+	 pSibling = pEl;
+	 while (pSibling->ElPrevious != NULL)
+	    {
+	    nSiblings++;
+	    pSibling = pSibling->ElPrevious;
+	    }
+	 notifyEl.position = nSiblings;
+	 /* remove an element */
+         TtaDeleteTree ((Element)pEl, doc);
+	 /* tell the application that an element has been removed */
+	 CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
+	 }
+
+      /* insert the saved element in the abstract tree */
+      if (LastEdit->EoSavedElement)
+         {
+         if (LastEdit->EoPreviousSibling)
+            TtaInsertSibling ((Element)(LastEdit->EoSavedElement),
+			  (Element)(LastEdit->EoPreviousSibling), FALSE, doc);
+         else
+            TtaInsertFirstChild (&(LastEdit->EoSavedElement),
+				 (Element)(LastEdit->EoParent), doc);
+         /* send event ElemPaste.Post to the application */
+         NotifySubTree (TteElemPaste, pDoc, LastEdit->EoSavedElement, 0);
+         }
+      LastEdit->EoSavedElement = NULL;
+
+      /* set the selection that is recorded */
+      if (LastEdit->EoFirstSelectedEl && LastEdit->EoLastSelectedEl)
+	{
+        if (LastEdit->EoFirstSelectedChar > 0)
+          {
+          if (LastEdit->EoFirstSelectedEl == LastEdit->EoLastSelectedEl)
+   	     i = LastEdit->EoLastSelectedChar;
+          else
+   	     i = TtaGetTextLength (LastEdit->EoFirstSelectedEl);
+          TtaSelectString (doc, LastEdit->EoFirstSelectedEl,
+			   LastEdit->EoFirstSelectedChar, i);
+          }
+        else
+          TtaSelectElement (doc, LastEdit->EoFirstSelectedEl);
+        if (LastEdit->EoFirstSelectedEl != LastEdit->EoLastSelectedEl)
+          TtaExtendSelection (doc, LastEdit->EoLastSelectedEl,
+			      LastEdit->EoLastSelectedChar);
+	}
+   
+      doit = LastEdit->EoToBeContinued;
+   
+      /* the most recent editing operation in the history has been undone.
+         Remove it from the history */
+      CancelAnEdit (LastEdit, pDoc);
+      if (!LastEdit)
+         doit = FALSE;
+      }
+}
+/***** END OF UNDO COMMAND ****/
+
 
 /*----------------------------------------------------------------------
    IsolatedPairedElem   verifie si l'element pEl est un element de 
@@ -1070,6 +1603,7 @@ boolean             save;
   PtrElement          firstSel, lastSel, pEl, pE, pPrev, pNext, pParent,
                       pS, pSS, pParentEl, pFree, pF, pF1, pPrevPage, pSave,
                       pSel, pEl1, pA, firstSelInit, lastSelInit,
+		      firstSelHist, lastSelHist,
 		      pAncestor[MAX_ANCESTOR],
 		      pAncestorPrev[MAX_ANCESTOR],
 		      pAncestorNext[MAX_ANCESTOR];
@@ -1117,6 +1651,8 @@ boolean             save;
 		lastSelInit = lastSel;
 		firstCharInit = firstChar;
 		lastCharInit = lastChar;
+		firstSelHist = firstSel;
+		lastSelHist = lastSel;
 		/* annule la selection */
 		TtaClearViewSelections ();
 		/* encore rien detruit */
@@ -1243,14 +1779,15 @@ boolean             save;
 		    stop = TRUE;
 		while (!stop);
 		if (firstSel != NULL)
-		  /* On a selectionne' seulement une marque de page ? */
 		  {
+		    /* On a selectionne' seulement une marque de page ? */
 		    pageSelected = cutPage;
 		    if (firstSel == lastSel)
 		      /* un seul element est selectionne' */
 		      if (firstSel->ElTerminal)
 			if (firstSel->ElLeafType == LtPageColBreak)
 			  pageSelected = TRUE;
+		    /* record the sibling of the ancestors */
 		    if (firstSel == NULL)
 		      pParent = NULL;
 		    else
@@ -1289,12 +1826,34 @@ boolean             save;
 			  }
 		      }
 
-		    /* premier element selectionne */
+		    /* open the sequence of editing operations for the history */
+		    OpenHistorySequence (pSelDoc);
 		    pEl = firstSel;
+		    pE = lastSel;
+		    if (firstSel->ElPrevious)
+		      if (firstSel->ElPrevious->ElTerminal)
+			if (firstSel->ElPrevious->ElLeafType == LtText)
+			  if (lastSel->ElNext)
+			    if (lastSel->ElNext->ElTerminal)
+			      if (lastSel->ElNext->ElLeafType == LtText)
+				/* both the previous element and the following
+				   one are text elements. They will probably
+				   be merged when the deletion is finished.
+				   Save also these two elements to avoid
+				   troubles caused by merging */
+			       {
+			       AddEditOpInHistory (firstSel->ElPrevious, pSelDoc, TRUE, TRUE,
+		       firstSelHist, lastSelHist, firstCharInit, lastCharInit);
+			       AddEditOpInHistory (lastSel->ElNext, pSelDoc, TRUE, TRUE, NULL, NULL, 0, 0);
+			       firstSelHist = NULL;
+			       lastSelHist = NULL;
+			       }
+
+		    /* traite tous les elements selectionnes */
+		    pEl = firstSel;	/* premier element selectionne */
 		    pS = NULL;
 		    pSave = NULL;
 		    pFree = NULL;
-		    /* traite tous les elements selectionnes */
 		    while (pEl != NULL)
 		      {
 			if (!pageSelected)
@@ -1306,8 +1865,8 @@ boolean             save;
 			if (pEl != NULL)
 			  {
 			    pE = pEl;
-			    /* pE : pointeur sur l'element a detruire
-			       cherche l'element a traiter apres
+			    /* pE : pointeur sur l'element a detruire */
+			    /* cherche l'element a traiter apres
 			       l'element courant */
 			    /* on detruit une marque de page */
 			    if (pageSelected && pE->ElTypeNumber == PageBreak + 1
@@ -1353,6 +1912,12 @@ boolean             save;
 				    pF = pF->ElPrevious;
 				  }
 				notifyEl.position = NSiblings;
+				/* record that deletion in the history */
+				AddEditOpInHistory (pE, pSelDoc, TRUE, FALSE,
+					firstSelHist, lastSelHist,
+					firstCharInit, lastCharInit);
+				/* the initial selection has been recorded */
+				firstSelHist = NULL; lastSelHist = NULL;
 				/* retire l'element courant de l'arbre */
 				pA = GetOtherPairedElement (pE);
 				RemoveElement (pE);
@@ -1443,6 +2008,8 @@ boolean             save;
 			      pEl = NULL;
 			  }
 		      }
+		    CloseHistorySequence (pSelDoc);
+
 		    /* les elements a couper ont ete coupe's */
 		    /* verifie que les elements suivant et precedent */
 		    /* n'ont pas ete detruits par les actions */
@@ -1798,7 +2365,7 @@ PtrDocument         pDoc;
 
 
 /*----------------------------------------------------------------------
-   	DoSurround							
+  DoSurround
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      DoSurround (PtrElement firstEl, PtrElement lastEl, int firstChar,
@@ -1925,12 +2492,18 @@ PtrSSchema          pSS;
 	/* on coupe eventuellement les atomes de texte */
 	SplitBeforeSelection (&firstEl, &firstChar, &lastEl, &lastChar, pDoc);
 	SplitAfterSelection (lastEl, lastChar, pDoc);
+
 	if (splitElem)
 	   /* coupe l'element en deux */
 	  {
-	     if (BreakElement (pEl1, firstEl, firstChar, FALSE))
+	     AddEditOpInHistory (pEl1, pDoc, TRUE, TRUE, firstEl, lastEl,
+		            firstChar, lastChar);
+	     if (BreakElement (pEl1, firstEl, firstChar, FALSE, FALSE))
 		pEl1 = pEl1->ElNext;
+	     else
+		CancelLastEditFromHistory (pDoc);
 	  }
+
 	/* on detruit les paves des elements qui vont etre deplaces */
 	pEl = firstEl;
 	while (pEl != NULL)
@@ -1946,6 +2519,7 @@ PtrSSchema          pSS;
 	/* on insere l'element cree' comme frere precedent du premier */
 	/* element a englober */
 	InsertElementBefore (pEl1, pRoot);
+	AddEditOpInHistory (pRoot, pDoc, FALSE, TRUE, NULL, NULL, 0, 0);
 	pEl = firstEl;
 	pPrev = NULL;
 	/* on parcourt tous les elements a englober et on les deplace */
@@ -1953,6 +2527,8 @@ PtrSSchema          pSS;
 	while (pEl != NULL)
 	  {
 	     pNext = pEl->ElNext;
+	     AddEditOpInHistory (pEl, pDoc, TRUE, FALSE, firstEl, lastEl,
+				 firstChar, lastChar);
 	     /* retire un element de l'arbre abstrait */
 	     RemoveElement (pEl);
 	     /* si c'est une feuille unite', elle prend le schema de structure
@@ -2269,21 +2845,12 @@ PtrSSchema          newSSchema;
    PtrElement          pEl;
    Element             El;
    ElementType         elType;
-   int                 ent, method, firstChar, lastChar;
+   int                 ent, method;
    boolean             ok;
    boolean             done = FALSE;
 
-   if (firstEl->ElParent != lastEl->ElParent)
-     {
-	/* essaie de ramener la selection a une suite de freres */
-	firstChar = 0;
-	lastChar = 0;
-	if (ThotLocalActions[T_selectsiblings] != NULL)
-	   ThotLocalActions[T_selectsiblings] (&firstEl, &lastEl, &firstChar,
-					       &lastChar);
-     }
+   /* Don't do anything if it's not a sequence of sibling elements */
    if (firstEl->ElParent == lastEl->ElParent)
-      /* c'est une suite de freres qui est selectionne'e */
       /* on ne peut rien faire si le pere est protege' */
       if (!ElementIsReadOnly (firstEl->ElParent))
 	{
@@ -2300,11 +2867,11 @@ PtrSSchema          newSSchema;
 	   if (!done)
 	      /* essaie de changer le type des elements selectionne's */
 	     {
-		if (lastEl == firstEl)
-		   /* un seul element selectionne', on essaie de changer son type */
-		   pEl = firstEl;
-		else
-		   /* plusieurs freres selectionn'es */
+	     if (lastEl == firstEl)
+		/* un seul element selectionne', on essaie de changer son type */
+		pEl = firstEl;
+	     else
+		/* plusieurs freres selectionn'es */
 		if (firstEl->ElPrevious == NULL && lastEl->ElNext == NULL)
 		   /* tous les freres sont selectionne's. On essaie de changer
 		      le type de leur pere */
@@ -2338,14 +2905,20 @@ PtrSSchema          newSSchema;
 			    switch (method)
 			      {
 			      case M_EQUIV :
+				/* store the command in the history */
+				AddEditOpInHistory (pEl, pDoc, TRUE, TRUE,
+					 firstEl, lastEl, 0, 0);
 				done = DoChangeType (pEl, pDoc, newTypeNum,
 						     newSSchema);
+				if (!done)
+				   CancelLastEditFromHistory (pDoc);
 				break;
 			      case M_RESDYN :
+				/***** history ******/
 				done = RestChangeType((Element)pEl, IdentDocument (pDoc),
 						      newTypeNum, (SSchema)newSSchema);
 				break;
-                              }
+			   }
 		       }
 		     if (!done)
 			/* on essaie de changer le type du pere si on est sur
@@ -2362,6 +2935,8 @@ PtrSSchema          newSSchema;
 	      if (lastEl == firstEl && !firstEl->ElTerminal &&
 		  firstEl->ElFirstChild == NULL)
 		{
+		   AddEditOpInHistory (firstEl, pDoc, TRUE, TRUE,
+				       firstEl, lastEl, 0, 0);
 		   elType.ElSSchema = (SSchema) newSSchema;
 		   elType.ElTypeNum = newTypeNum;
 		   El = TtaCreateDescentWithContent (IdentDocument (pDoc),
@@ -2369,6 +2944,8 @@ PtrSSchema          newSSchema;
 		   if (El != NULL)
 		      /* on a pu creer l'element du type voulu */
 		      done = TRUE;
+		   else
+		      CancelLastEditFromHistory (pDoc);
 		}
 	   if (!done)
 	      /* on essaie d'englober les elements selectionne's dans un element */
@@ -2410,73 +2987,71 @@ PtrDocument	 pDoc;
    PtrElement	pElem, Sibling, pList, pF, pSplit;
    boolean	ok;
 
-	     *splitElem = FALSE;
-	     *pSplitEl = NULL;
-	     *pElSplit = NULL;
-	     ok = FALSE;
-	     pElem = *pEl;
-	     do
-	       {
-		  /* isolate pElem from its sibling. If pElem is a component */
-		  /* of an aggregate, AllowedSibling would always say no */
-		  if (*splitElem)
-		    if (createAfter)
-		      {
-		      Sibling = pElem->ElNext;
-		      pElem->ElNext = NULL;
-		      }
-		    else
-		      {
-		      Sibling = pElem->ElPrevious;
-		      pElem->ElPrevious = NULL;
-		      }
-		  ok = AllowedSibling (pElem, pDoc, typeNum, pSS,
-				       !createAfter, TRUE, FALSE);
-		  /* restore link with sibling */
-		  if (*splitElem)
-		    if (createAfter)
-		      pElem->ElNext = Sibling;
-		    else
-		      pElem->ElPrevious = Sibling;
+   *splitElem = FALSE;
+   *pSplitEl = NULL;
+   *pElSplit = NULL;
+   ok = FALSE;
+   pElem = *pEl;
+   do
+     {
+     /* isolate pElem from its sibling. If pElem is a component */
+     /* of an aggregate, AllowedSibling would always say no otherwise */
+     if (*splitElem)
+       if (createAfter)
+         {
+         Sibling = pElem->ElNext;
+         pElem->ElNext = NULL;
+         }
+       else
+         {
+         Sibling = pElem->ElPrevious;
+         pElem->ElPrevious = NULL;
+         }
+     ok = AllowedSibling (pElem, pDoc, typeNum, pSS, !createAfter, TRUE,FALSE);
+     /* restore link with sibling */
+     if (*splitElem)
+       if (createAfter)
+         pElem->ElNext = Sibling;
+       else
+         pElem->ElPrevious = Sibling;
 
-		  if (ok)
-		       *pEl = pElem;
-		  else
-		    {
-		       if ((pElem->ElTerminal && pElem->ElLeafType == LtText &&
-			    charSplit > 0) ||
-			   *splitElem ||
-			   (createAfter && pElem->ElNext != NULL) ||
-			   (!createAfter && pElem->ElPrevious != NULL))
-			   {
-			     if (*splitElem && pElem != *pSplitEl)
-			       {
-				if (pElem == *pSplitEl)
-				   pElem = NULL;
-			       }
-			     else
-			       {
-			       if (createAfter && charSplit == 0 && !*splitElem)
-				  pSplit = pElem->ElNext;
-			       else
-				  pSplit = pElem;
-			       if (CanSplitElement(pSplit, charSplit,
-					FALSE, &pList, &pF, pSplitEl))
-				  {
-			          *splitElem = TRUE;
-				  if (*pElSplit == NULL)
-				     *pElSplit = pSplit;
-				  }
-			       else
-				  pElem = NULL;
-			       }
-			   }
-		       if (pElem != NULL)
-		          pElem = pElem->ElParent;
-		    }
-	       }
-	     while (pElem != NULL && !ok);
-	     return ok;
+     if (ok)
+       *pEl = pElem;
+     else
+       {
+       if ((pElem->ElTerminal && pElem->ElLeafType == LtText && charSplit > 0)
+	   || *splitElem ||
+   	   (createAfter && pElem->ElNext != NULL) ||
+   	   (!createAfter && pElem->ElPrevious != NULL))
+   	  {
+   	  if (*splitElem && pElem != *pSplitEl)
+   	     {
+   	     if (pElem == *pSplitEl)
+   		pElem = NULL;
+   	     }
+   	  else
+   	     {
+   	     if (createAfter && charSplit == 0 && !*splitElem)
+   		pSplit = pElem->ElNext;
+   	     else
+   		pSplit = pElem;
+   	     if (CanSplitElement (pSplit, charSplit, FALSE, &pList, &pF,
+				  pSplitEl))
+   		{
+   	        *splitElem = TRUE;
+   		if (*pElSplit == NULL)
+   		   *pElSplit = pSplit;
+   		}
+   	     else
+   		pElem = NULL;
+   	     }
+   	  }
+       if (pElem != NULL)
+          pElem = pElem->ElParent;
+       }
+     }
+   while (pElem != NULL && !ok);
+   return ok;
 }
 
 
@@ -2501,17 +3076,19 @@ boolean             Before;
 
 {
   PtrElement          firstSel, lastSel, pNew, pF, pSibling, pEl, pSecond;
-  PtrElement          pElem, pElSplit, pSplitEl, pNextEl;
+  PtrElement          pElem, pElSplit, pSplitEl, pNextEl, firstSelHist, lastSelHist;
   ElementType	      elType, selType;
   PtrDocument         pSelDoc;
   NotifyElement       notifyEl;
   NotifyOnElementType notifyElType;
-  int                 firstChar, lastChar, NSiblings, ancestorRule,
+  int                 firstChar, lastChar, origFirstChar, origLastChar,
+		      NSiblings, ancestorRule,
 		      rule, prevrule, prevprevrule, nComp;
   boolean             InsertionPoint, ok, createAfter, splitElem, elConst;
-  boolean             empty, selHead, selTail, done, deleted;
+  boolean             empty, selHead, selTail, done, deleted, registered;
 
   NSiblings = 0;
+  registered = FALSE;
   if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
     TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
   else if (pSelDoc != pDoc)
@@ -2521,7 +3098,7 @@ boolean             Before;
   else if (pSelDoc->DocReadOnly)
     TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
   else
-    /* il y a bien une selection et le document est modifiable */
+    /* there is a selection and the document can be modified */
     {
       elConst = FALSE;
       empty = FALSE;
@@ -2576,22 +3153,44 @@ boolean             Before;
 	    {
 	      /* on essaie d'abord de transformer l'ensemble des elements
 		 selectionne's en un element du type demande' */
-	      ok = ChangeTypeOfElements (firstSel, lastSel, pSelDoc, typeNum, pSS);
+	      /* remonte la selection courante sur une suite de freres si
+		 c'est equivalent */
+	      firstSelHist = firstSel;
+	      lastSelHist = lastSel;
+	      if (firstSel->ElParent != lastSel->ElParent)
+	        {
+		/* essaie de ramener la selection a une suite de freres */
+		firstChar = 0;
+		lastChar = 0;
+		if (ThotLocalActions[T_selectsiblings] != NULL)
+		   ThotLocalActions[T_selectsiblings] (&firstSel, &lastSel,
+						       &firstChar, &lastChar);
+	        }
+	      if (firstSel->ElParent != lastSel->ElParent)
+		ok = FALSE;
+	      else
+		{
+		OpenHistorySequence (pSelDoc);
+	        ok = ChangeTypeOfElements (firstSel, lastSel, pSelDoc, typeNum, pSS);
+		CloseHistorySequence (pSelDoc);
+		}
 	      if (!ok)
 		/* ca n'a pas marche'. essaie les transformations de */
 		/* type par patterns */
 		{
 		  GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,&lastChar);
-		  pEl=firstSel;
-		  selType.ElTypeNum= firstSel->ElTypeNumber;
+		  pEl = firstSel;
+		  selType.ElTypeNum = firstSel->ElTypeNumber;
 		  selType.ElSSchema = (SSchema)(firstSel->ElStructSchema);
-		  while(selType.ElTypeNum !=0 && pEl!=NULL)
+		  /********* what's the purpose of this loop? Ask S.B. ******/
+		  while(selType.ElTypeNum !=0 && pEl != NULL)
 		    {
-		      pEl= NextInSelection(pEl,lastSel);
-		      if (pEl!= NULL &&
-			  (pEl->ElTypeNumber!=selType.ElTypeNum
-			   || pEl->ElStructSchema->SsCode != ((PtrSSchema)(selType.ElSSchema))->SsCode))
-			selType.ElTypeNum=0;
+		      pEl= NextInSelection (pEl, lastSel);
+		      if (pEl != NULL &&
+			  (pEl->ElTypeNumber != selType.ElTypeNum ||
+			   pEl->ElStructSchema->SsCode !=
+			           ((PtrSSchema)(selType.ElSSchema))->SsCode))
+			 selType.ElTypeNum = 0;
 		    }
 		  notifyElType.event = TteElemTransform;
 		  notifyElType.document = (Document) IdentDocument (pSelDoc);
@@ -2600,8 +3199,11 @@ boolean             Before;
 		  notifyElType.element = (Element) (firstSel);
 		  notifyElType.targetElementType.ElTypeNum = typeNum;
 		  notifyElType.targetElementType.ElSSchema = (SSchema) pSS;
-		  
-		  ok = !CallEventType((NotifyEvent *) & notifyElType,TRUE);
+		  ok = !CallEventType((NotifyEvent *) & notifyElType, TRUE);
+		  /****** should call TransformIntoType from here, not from
+			  ElemToTransform.  Ask S.B. ********/
+		  /***** TransformIntoType should record the operation in
+			 the history ****/
 		}
 	      /* si ca n'a pas marche' et si plusieurs elements sont
 		 selectionne's, on essaie de transformer chaque element
@@ -2609,26 +3211,28 @@ boolean             Before;
 	      if (!ok)
 		if (firstSel != lastSel)
 		  {
-		    if (firstSel->ElParent != lastSel->ElParent)
-		      /* essaie de ramener la selection a une suite de
-			 freres */
-		      {
-			firstChar = 0;
-			lastChar = 0;
-			if (ThotLocalActions[T_selectsiblings] != NULL)
-			  ThotLocalActions[T_selectsiblings] (&firstSel, &lastSel,
-							      &firstChar, &lastChar);
-		      }
+		    /* store the command in the history */
+		    firstSelHist = firstSel;
+		    lastSelHist = lastSel;
+		    OpenHistorySequence (pSelDoc);
 		    pEl = firstSel;
 		    do
 		      {
 			/* essaie de transformer un element */
-			ok = ChangeTypeOfElements (pEl, pEl, pSelDoc, typeNum, pSS);
+			ok = ChangeTypeOfElements (pEl, pEl, pSelDoc, typeNum,
+			     pSS);
 			if (ok)
-			  /* cherche l'element suivant de la selection */
-			  pEl = NextInSelection (pEl, lastSel);
+			   {
+			   firstSelHist = NULL;
+			   lastSelHist = NULL;
+			   }
+			else
+			   CancelLastEditFromHistory (pSelDoc);
+			/* cherche l'element suivant de la selection */
+			pEl = NextInSelection (pEl, lastSel);
 		      }
-		    while (pEl != NULL && ok);
+		    while (pEl != NULL);
+		    CloseHistorySequence (pSelDoc);
 		  }
 	    }
 	  else
@@ -2638,6 +3242,10 @@ boolean             Before;
       if (InsertionPoint)
 	/* il y a un simple point d'insertion */
 	{
+	  origFirstChar = firstChar;
+	  origLastChar = lastChar;
+	  if (origFirstChar > 0 && origFirstChar == origLastChar)
+	      origLastChar--;
 	  /* verifie si l'element a creer porte l'exception NoCreate */
 	  if (TypeHasException (ExcNoCreate, typeNum, pSS))
 	    /* abandon */
@@ -2725,9 +3333,9 @@ boolean             Before;
 		    rule = 0;
 		  else
 		    {
-		      ok = CanInsertBySplitting (&pEl, firstChar,
-						 &splitElem, &pSplitEl, &pElSplit, createAfter,
-						 ancestorRule, pSS, pSelDoc);
+		      ok = CanInsertBySplitting (&pEl, firstChar, &splitElem,
+				    &pSplitEl, &pElSplit, createAfter,
+				    ancestorRule, pSS, pSelDoc);
 		      if (!ok && ancestorRule > 0)
 			if (ancestorRule == prevrule ||
 			    ancestorRule == prevprevrule)
@@ -2776,17 +3384,23 @@ boolean             Before;
 		  if (splitElem)
 		    /* coupe l'element en deux */
 		    {
-		      ok = BreakElement (pSplitEl, pElSplit, firstChar, FALSE);
-		      if (ok)
+		      /* store the editing operation in the history */
+/*****/		      AddEditOpInHistory (pSplitEl, pSelDoc, TRUE,
+			 FALSE, firstSel, lastSel, origFirstChar, origLastChar);
+		      ok = BreakElement (pSplitEl, pElSplit, firstChar, FALSE, FALSE);
+		      if (!ok)
+			CancelLastEditFromHistory (pSelDoc);
+		      else
 			{
+			  registered = TRUE;
 			  createAfter = TRUE;
 			  if (ancestorRule > 0)
 			    {
 			      pElem = pSplitEl;
 			      do
 				{
-				  ok = AllowedSibling (pElem, pDoc, typeNum,
-						       pSS, !createAfter, TRUE, FALSE);
+				  ok = AllowedSibling (pElem, pSelDoc, typeNum,
+					       pSS, !createAfter, TRUE, FALSE);
 				  if (ok)
 				    {
 				      pEl = pElem;
@@ -2827,14 +3441,18 @@ boolean             Before;
 			firstChar > 1 &&
 			firstChar <= firstSel->ElTextLength && !splitElem)
 		      {
+		        /* store the editing operation in the history */
+		        AddEditOpInHistory (firstSel, pSelDoc, TRUE, FALSE,
+			       firstSel, lastSel, origFirstChar, origLastChar);
+			registered = TRUE;
 			pNextEl = firstSel->ElNext;
 			SplitTextElement (firstSel, firstChar, pSelDoc, TRUE,
 					  &pSecond);
 			BuildAbsBoxSpliText (firstSel, pSecond, pNextEl, pSelDoc);
 		      }
 		  if (pNew == NULL)
-		    pNew = NewSubtree (typeNum, pSS, pSelDoc,
-				       pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
+		    pNew = NewSubtree (typeNum, pSS, pSelDoc, pEl->ElAssocNum,
+				       TRUE, TRUE, TRUE, TRUE);
 		  
 		  /* Insertion du nouvel element */
 		  if (createAfter)
@@ -2842,6 +3460,12 @@ boolean             Before;
 		      pSibling = pEl->ElNext;
 		      FwdSkipPageBreak (&pSibling);
 		      InsertElementAfter (pEl, pNew);
+		      if (!registered)
+			{
+			AddEditOpInHistory (pNew, pSelDoc, FALSE, TRUE,
+			       firstSel, lastSel, origFirstChar, origLastChar);
+			registered = TRUE;
+			}
 		      if (pSibling == NULL)
 			/* l'element pEl n'est plus le dernier fils de
 			   son pere */
@@ -2851,40 +3475,63 @@ boolean             Before;
 		    {
 		      pSibling = pEl->ElPrevious;
 		      InsertElementBefore (pEl, pNew);
+		      if (empty)
+			/* on doit detruire l'element vide devant lequel on
+			   vient de creer un nouvel element */
+			/* verifie si l'element a detruire porte l'exception
+			   NoCut */
+			if (TypeHasException (ExcNoCut, pEl->ElTypeNumber,
+					      pEl->ElStructSchema))
+			   empty = FALSE;
+		        else
+			  /* envoie l'evenement ElemDelete.Pre a
+			     l'application */
+			  if (SendEventSubTree (TteElemDelete, pSelDoc, pEl,
+						TTE_STANDARD_DELETE_LAST_ITEM))
+			    /* l'application refuse de detruire cet element */
+			    empty = FALSE;
+		      if (!registered)
+			{
+			if (empty)
+		           OpenHistorySequence (pSelDoc);
+			/* register the new element in the editing history */
+			AddEditOpInHistory (pNew, pSelDoc, FALSE, TRUE,
+			       firstSel, lastSel, origFirstChar, origLastChar);
+			if (empty)
+			   {
+			   /* register the empty element that will be deleted*/
+			   AddEditOpInHistory (pEl, pSelDoc, TRUE, FALSE,
+			       firstSel, lastSel, origFirstChar, origLastChar);
+		           CloseHistorySequence (pSelDoc);
+			   }
+			registered = TRUE;
+			}
 		      deleted = FALSE;
 		      if (empty)
 			/* on detruit l'element vide devant lequel on
 			   vient de creer un nouvel element */
-			/* verifie si l'element a detruire porte l'exception
-			   NoCut */
-			if (!TypeHasException (ExcNoCut, pEl->ElTypeNumber,
-					      pEl->ElStructSchema))
-			  /* envoie l'evenement ElemDelete.Pre a
-			     l'application */
-			  if (!SendEventSubTree (TteElemDelete, pSelDoc,
-						 pEl, TTE_STANDARD_DELETE_LAST_ITEM))
-			    {
-			      /* detruit les paves de l'element vide a 
-				 detruire */
-			      DestroyAbsBoxes (pEl, pSelDoc, TRUE);
-			      AbstractImageUpdated (pSelDoc);
-			      /* prepare l'evenement ElemDelete.Post */
-			      notifyEl.event = TteElemDelete;
-			      notifyEl.document = (Document) IdentDocument (pSelDoc);
-			      notifyEl.element = (Element) (pEl->ElParent);
-			      notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-			      notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-			      notifyEl.position = NSiblings + 1;
-			      pSibling = NextElement (pEl);
-			      /* retire l'element de l'arbre abstrait */
-			      RemoveElement (pEl);
-			      UpdateNumbers (pSibling, pEl, pSelDoc, TRUE);
-			      RedisplayCopies (pEl, pSelDoc, TRUE);
-			      DeleteElement (&pEl, pSelDoc);
-			      /* envoie l'evenement ElemDelete.Post a l'application */
-			      CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
-			      deleted = TRUE;
-			    }
+			{
+			/* detruit les paves de l'element vide a detruire */
+			DestroyAbsBoxes (pEl, pSelDoc, TRUE);
+			AbstractImageUpdated (pSelDoc);
+			/* prepare l'evenement ElemDelete.Post */
+			notifyEl.event = TteElemDelete;
+			notifyEl.document = (Document) IdentDocument (pSelDoc);
+			notifyEl.element = (Element) (pEl->ElParent);
+			notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
+			notifyEl.elementType.ElSSchema =
+			                       (SSchema) (pEl->ElStructSchema);
+			notifyEl.position = NSiblings + 1;
+			pSibling = NextElement (pEl);
+			/* retire l'element de l'arbre abstrait */
+			RemoveElement (pEl);
+			UpdateNumbers (pSibling, pEl, pSelDoc, TRUE);
+			RedisplayCopies (pEl, pSelDoc, TRUE);
+			DeleteElement (&pEl, pSelDoc);
+			/* envoie l'evenement ElemDelete.Post a l'application*/
+			CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
+			deleted = TRUE;
+			}
 		      if (!deleted && pSibling == NULL)
 			/* l'element pEl n'est plus le premier fils de
 			   son pere */
@@ -2893,7 +3540,7 @@ boolean             Before;
 		  if (pNew != NULL)
 		    {
 		      /* traite les exclusions des elements crees */
-		      RemoveExcludedElem (&pNew, pDoc);
+		      RemoveExcludedElem (&pNew, pSelDoc);
 		      /* traite les attributs requis des elements crees */
 		      AttachMandatoryAttributes (pNew, pSelDoc);
 		      if (pSelDoc->DocSSchema != NULL)
@@ -2926,109 +3573,6 @@ boolean             Before;
 	}
     }
 }
-
-/*----------------------------------------------------------------------
-   ImportAsciiFile                                              
-  ----------------------------------------------------------------------*/
-void                ImportAsciiFile ()
-
-{
-   PtrDocument         pDoc;
-   PtrElement          firstSel, lastSel, pEl;
-   PtrAbstractBox      pAb;
-   int                 firstChar, lastChar, i, frame, len;
-   int                 position = 0;
-   FILE               *file;
-   char                line[MAX_TXT_LEN];
-   boolean             previousLineEmpty;
-
-   /* Quelle est la selection courante ? */
-   if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
-      /* pas de selection, on ne fait rien */
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
-   else if (pDoc->DocReadOnly)
-      /* on ne peut rien inserer dans un document en lecture seule */
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
-   else
-     {
-	file = fopen ("/lifou/quint/toto", "r");
-	if (file == NULL)
-	  {
-	     fprintf (stderr, "cannot open file toto\n");
-	     return;
-	  }
-	pEl = NULL;
-	/* teste le premier element selectionne' */
-	if (firstSel->ElTerminal && firstSel->ElLeafType == LtText)
-	   /* c'est une feuille de texte, on va coller a l'interieur */
-	  {
-	     pEl = firstSel;
-	     if (firstChar == 0)
-		position = 0;
-	     else
-		position = firstChar - 1;
-	  }
-	else
-	   /* ce n'est pas une feuille de texte */
-	   /* on essaie de cre'er une feuille de texte a l'interieur du premier
-	      element selectionne' s'il est vide, ou devant sinon */
-	  {
-	     pAb = CreateALeaf (NULL, &frame, LtText, TRUE);
-	     if (pAb != NULL)
-	       {
-		  pEl = pAb->AbElement;
-		  position = 0;
-		  firstSel = pEl;
-		  firstChar = 0;
-	       }
-	  }
-	if (pEl != NULL)
-	  {
-	     previousLineEmpty = FALSE;
-	     while (fgets (line, MAX_TXT_LEN - 1, file) != NULL)
-	       {
-		  if (line[0] == '\n')
-		     previousLineEmpty = TRUE;
-		  else
-		    {
-		       if (previousLineEmpty)
-			  if (ThotLocalActions[T_enter] != NULL)
-			     ThotLocalActions[T_enter] ();
-		       len = strlen (line);
-		       InsertText (pEl, position, line, 0);
-		       position += len;
-		       previousLineEmpty = FALSE;
-		    }
-	       }
-	     fclose (file);
-	     pDoc->DocModified = TRUE;
-	     pDoc->DocNTypedChars += 20;
-	     TtaClearViewSelections ();
-	     AbstractImageUpdated (pDoc);
-	     RedisplayDocViews (pDoc);
-	     for (i = 0; i < NCreatedElements; i++)
-	       {
-		  RedisplayCopies (CreatedElement[i], pDoc, TRUE);
-		  UpdateNumbers (CreatedElement[i], CreatedElement[i],
-				 pDoc, TRUE);
-	       }
-	     /* selectionne la premiere feuille cree ou le premier element */
-	     /* colle', si ce n'est pas une constante */
-	     if (firstSel != NULL)
-		if (firstSel->ElStructSchema->SsRule[firstSel->ElTypeNumber - 1].SrConstruct == CsConstant)
-		  {
-		     firstChar = 0;
-		     firstSel = firstSel->ElParent;
-		  }
-	     if (firstSel != NULL)
-		if (firstChar == 0)
-		   SelectElementWithEvent (pDoc, firstSel, TRUE, TRUE);
-		else
-		   SelectPositionWithEvent (pDoc, firstSel, firstChar);
-	  }
-     }
-}
-
 
 /*----------------------------------------------------------------------
    AddEntrySurround ajoute, dans la table des elements a mettre    
@@ -3158,14 +3702,17 @@ int                 item;
    PtrElement          firstEl, lastEl;
    PtrDocument         pDoc;
    int                 firstChar, lastChar;
+   boolean	       done;
 
    /* recupere la selection courante */
    GetCurrentSelection (&pDoc, &firstEl, &lastEl, &firstChar, &lastChar);
-   if (firstEl == NULL)
+   if (!firstEl)
       /* pas de selection, on ne fait rien */
       return;
-   DoSurround (firstEl, lastEl, firstChar, lastChar, pDoc,
-	       typeNumSurround[item], pSSSurround[item]);
+   OpenHistorySequence (pDoc);
+   done = DoSurround (firstEl, lastEl, firstChar, lastChar, pDoc,
+		      typeNumSurround[item], pSSSurround[item]);
+   CloseHistorySequence (pDoc);
 }
 
 
@@ -3406,20 +3953,27 @@ int                 entree;
    PtrElement          pEl, lastEl;
    PtrDocument         pDoc;
    int                 firstChar, lastChar;
+   boolean             done;
 
    GetCurrentSelection (&pDoc, &pEl, &lastEl, &firstChar, &lastChar);
    if (pEl == NULL)
-
      return;
    switch (ChangeTypeMethod[entree])
      {
      case M_EQUIV :
-       DoChangeType (pEl, pDoc, ChangeTypeTypeNum[entree],
-		     ChangeTypeSSchema[entree]);
+       /* store the command in the history */
+       AddEditOpInHistory (pEl, pDoc, TRUE, TRUE, pEl, lastEl, firstChar,
+		           lastChar);
+       done = DoChangeType (pEl, pDoc, ChangeTypeTypeNum[entree],
+			    ChangeTypeSSchema[entree]);
+       if (!done)
+	  CancelLastEditFromHistory (pDoc);
        break;
      case M_RESDYN :
-       RestChangeType((Element)pEl,IdentDocument (pDoc), ChangeTypeTypeNum[entree],
-		      (SSchema)ChangeTypeSSchema[entree]);
+       /****** history ******/
+       done = RestChangeType((Element)pEl,IdentDocument (pDoc),
+			     ChangeTypeTypeNum[entree],
+			     (SSchema)ChangeTypeSSchema[entree]);
        break;
      }
 }

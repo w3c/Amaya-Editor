@@ -1062,15 +1062,17 @@ PtrDocument         pDoc;
    BreakElement
    divise un element et complete chacune des parties.
    Retourne TRUE en cas de succes.
+   select: select the new element
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             BreakElement (PtrElement pElReplicate, PtrElement pSplitEl, int splitIndex, boolean block)
+boolean             BreakElement (PtrElement pElReplicate, PtrElement pSplitEl, int splitIndex, boolean block, boolean select)
 #else  /* __STDC__ */
-boolean             BreakElement (pElReplicate, pSplitEl, splitIndex, block)
+boolean             BreakElement (pElReplicate, pSplitEl, splitIndex, block, select)
 PtrElement          pElReplicate;
 PtrElement          pSplitEl;
 int                 splitIndex;
 boolean             block;
+boolean		    select;
 #endif /* __STDC__ */
 
 {
@@ -1380,7 +1382,7 @@ boolean             block;
 		  /* indiquer que le document est modifie' */
 		  pDoc->DocModified = TRUE;
 		  pDoc->DocNTypedChars += 30;
-		  if (pNext != NULL)
+		  if (select && pNext != NULL)
 		     if (nextChar == 0)
 			SelectElementWithEvent (pDoc, pNext, TRUE, TRUE);
 		     else

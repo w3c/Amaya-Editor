@@ -1066,7 +1066,7 @@ void                StructReturnKey ()
    boolean             ok;
 
    /* on essaie d'abord de diviser un element */
-   if (BreakElement (NULL, NULL, 0, TRUE))
+   if (BreakElement (NULL, NULL, 0, TRUE, TRUE))
       /* ca a marche'. On a fini */
       return;
    /* ca n'a pas marche', on va essayer de creer un element de meme type */

@@ -33,7 +33,8 @@ extern boolean CompleteElement ( PtrElement pEl,
 extern boolean BreakElement ( PtrElement pElReplicate,
                               PtrElement pSplitEl,
                               int splitIndex,
-                              boolean block );
+                              boolean block,
+                              boolean select );
 extern void MergeTextLeaves ( PtrElement * pEl,
                               PtrElement * pFirstFree,
                               PtrDocument * pDoc );
@@ -72,7 +73,8 @@ extern boolean CompleteElement (/* PtrElement pEl,
 extern boolean BreakElement (/* PtrElement pElReplicate,
                                 PtrElement pSplitEl,
                                 int splitIndex,
-                                boolean block */);
+                                boolean block,
+				boolean select */);
 extern void MergeTextLeaves (/* PtrElement * pEl,
                                 PtrElement * pFirstFree,
                                 PtrDocument * pDoc */);

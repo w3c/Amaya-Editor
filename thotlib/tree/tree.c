@@ -3534,7 +3534,7 @@ boolean             shareRef;
    boolean             doCopy;
 
    pEl = NULL;
-   /* pointer to the element which will be created */
+   /* pointer to the element that will be created */
    if (pSource != NULL)
      {
 	doCopy = TRUE;
@@ -3680,6 +3680,8 @@ boolean             shareRef;
 		       /* computes the value of the label */
 		       ConvertIntToLabel (NewLabel (pDocCopy), pEl->ElLabel);
 		    }
+		  pSource->ElCopy = pEl;
+		  pEl->ElCopy = pSource;
 		  pEl->ElIsCopy = pSource->ElIsCopy;
 		  pEl->ElAccess = AccessInherited;
 		  pEl->ElHolophrast = pSource->ElHolophrast;

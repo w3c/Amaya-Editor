@@ -3990,7 +3990,7 @@ View                view;
    char                localname[MAX_LENGTH];
 #ifdef AMAYA_DEBUG
    Element             el;
-   View                structView;
+   View                structView, tocView;
    FILE               *list;
 
    /* get the root element */
@@ -4022,6 +4022,20 @@ View                view;
        strcat (localname, "/structboxes.debug");
        list = fopen (localname, "w");
        TtaListBoxes (document, structView, list);
+       fclose (list);
+     }
+   tocView = TtaGetViewFromName (document, "Table_of_contents");
+   if (tocView != 0 && TtaIsViewOpened (document, tocView))
+     {
+       strcpy (localname, TempFileDirectory);
+       strcat (localname, "/tocview.debug");
+       list = fopen (localname, "w");
+       TtaListView (document, tocView, list);
+       fclose (list);
+       strcpy (localname, TempFileDirectory);
+       strcat (localname, "/tocboxes.debug");
+       list = fopen (localname, "w");
+       TtaListBoxes (document, tocView, list);
        fclose (list);
      }
 #endif /* AMAYA_DEBUG */

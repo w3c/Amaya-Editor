@@ -165,6 +165,30 @@ int                *nChars;
      }
 }
 
+/*----------------------------------------------------------------------
+   RegisterInHistory
+   register element pEl in the editing history, to allow UNDO
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void     RegisterInHistory (PtrElement pEl, int frame,
+				   int firstCharIndex, int lastCharIndex)
+#else  /* __STDC__ */
+static void     RegisterInHistory (pEl, frame, firstCharIndex, lastCharIndex)
+PtrElement      pEl;
+int             frame;
+int		firstCharIndex;
+int		lastCharIndex
+
+#endif /* __STDC__ */
+{
+   PtrDocument         pDoc;
+   int                 view;
+   boolean             assoc;
+
+   GetDocAndView (frame, &pDoc, &view, &assoc);
+   AddEditOpInHistory (pEl, pDoc, TRUE, TRUE, pEl, pEl, firstCharIndex,
+		       lastCharIndex);
+}
 
 /*----------------------------------------------------------------------
    APPtextModify envoie un message qui notifie qu'un texte est     
@@ -887,7 +911,13 @@ int                 prev;
 	       {
 		  LastInsertAttr = pBox->BxAbstractBox->AbCreatorAttr;
 		  LastInsertAttrElem = pBox->BxAbstractBox->AbElement;
-		  APPattrModify (LastInsertAttr, pBox->BxAbstractBox->AbElement, frame, TRUE);
+		  APPattrModify (LastInsertAttr, LastInsertAttrElem, frame, TRUE);
+		  /* register the editing operation in the history */
+		  /***** when undoing this operation, the whole element having
+			 this attribute will be selected.  How to record the
+			 current selection, which is within the attribute
+			 value? ******/
+		  RegisterInHistory (LastInsertAttrElem, frame, 0, 0);
 	       }
 	  }
 	else if (LastInsertElText != pBox->BxAbstractBox->AbElement)
@@ -895,6 +925,11 @@ int                 prev;
 	    /* c'est un element feuille */
 	     LastInsertElText = pBox->BxAbstractBox->AbElement;
 	     APPtextModify (LastInsertElText, frame, TRUE);
+	     /* register the editing operation in the history */
+	     /******* if it's a delete operation, the last parameter
+		      of RegisterInHistory should be the rank of the last
+		      char selected in the text element *********/
+	     RegisterInHistory (LastInsertElText, frame, prev+1, prev);	     
 	  }
 
 	/* Memorize  the enclosing cell */
@@ -1631,6 +1666,9 @@ int                 frame;
        /* saisit le nom du fichier image */
        if (!APPtextModify (pAb->AbElement, frame, TRUE))
 	 {
+	   /* register the editing operation in the history */
+	   RegisterInHistory (pAb->AbElement, frame, 0, 0);	     
+
 	   if (ThotLocalActions[T_imagemenu] != NULL)
 	     (*ThotLocalActions[T_imagemenu]) (buffer, &ok, &type, &pres, pBox);
 	   else

@@ -299,6 +299,8 @@ typedef struct _ElementDescr
 					   NULL if the element is not a copy
 					   by inclusion */
     LabelString		ElLabel;	/* element unique identifier */
+    PtrElement		ElCopy;		/* copy of the element made by the
+					   latest call to function CopyTree */
     ElemAccessRight	ElAccess;	/* access rights to the element */
     boolean		ElHolophrast;	/* holophrasted element */
     boolean		ElTransContent;	/* element contents have been alreay
