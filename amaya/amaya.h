@@ -233,11 +233,9 @@ typedef enum _ClickEvent {
 #define MenuMaths 1
 #define MAX_MATHS  2
 
-#ifdef _SVG
 #define FormGraph 0
 #define MenuGraph 1
 #define MAX_GRAPH 2
-#endif /* _SVG */
 
 /* The possible GET/POST/PUT request modes */
 /*synchronous request*/
@@ -337,9 +335,7 @@ THOT_EXPORT int        BaseDialog;
 THOT_EXPORT int        BasePrint;
 THOT_EXPORT int        BaseImage;
 THOT_EXPORT int	       MathsDialogue;
-#ifdef _SVG
 THOT_EXPORT int	       GraphDialogue;
-#endif /* _SVG */
 THOT_EXPORT int	       BaseCSS;
 THOT_EXPORT int        ReturnOption;
 THOT_EXPORT int        NumberRows;
