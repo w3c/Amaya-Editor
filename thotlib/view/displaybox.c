@@ -1222,6 +1222,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
       /* display a caret if needed */
       if (left != right)
 	DisplayStringSelection (frame, left, right, pBox);
+      TtaFreeMemory (buffer);
     }
 }
 
