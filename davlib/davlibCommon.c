@@ -15,7 +15,15 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.4  2002-06-05 16:46:06  kirschpi
+ ** Revision 1.5  2002-06-06 17:10:46  kirschpi
+ ** Breaking the user messages in three lines
+ ** Fixing some code format problems
+ ** Fixing DAVLockIndicator, when Lock discovery is disabled.
+ ** Fixing unecessary memory allocations in FilterMultiStatus_handler
+ ** and FilterLocked_handler.
+ ** Manuele
+ **
+ ** Revision 1.4  2002/06/05 16:46:06  kirschpi
  ** Applying Amaya code format.
  ** Modifying some dialogs (looking for a better windows presentation)
  ** Adding a DAVResource list, a list of resources (specially collections),
@@ -82,6 +90,57 @@ char * DAVDefaultEmail (void)
     HTRequest_delete(request);
     return email;
 }
+
+
+
+/*----------------------------------------------------------------------
+   Breaks a string in two segments (the second segment starts at the 
+   firs with space ' ' after the middle of the string).
+   Return: char * : pointer to the second segment of the string
+   Note: it changes the orignal string, putting a '\0' between
+         the two segments
+  ----------------------------------------------------------------------*/
+char * DAVBreakString (char *original) 
+{
+    char *ptr = NULL;
+    char *next = NULL;
+    char *last = NULL;
+    int len = 0, y = 0;
+    BOOL middle = NO;
+    
+
+    len = strlen (original)/2;
+
+    /* less than 5 characters, ignore */
+    if (len<5)
+       return NULL;
+    
+    ptr = strchr (original, ' ');
+    next = (ptr)?ptr+1:NULL;
+    
+    while (next && *next && !middle) 
+     {
+        last = ptr;
+        y = strlen (next);
+        if (y<len)
+            middle = YES;
+        else 
+         {
+            ptr = strchr (next, ' ');
+            next = (ptr)?ptr+1:NULL;
+         }
+        
+     }
+
+    if (last) 
+     {
+        (*last) = '\0';
+        last++;
+     }
+             
+    return last;
+}
+
 
 
 /*----------------------------------------------------------------------

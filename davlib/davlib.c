@@ -14,7 +14,15 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.5  2002-06-05 16:46:06  kirschpi
+ ** Revision 1.6  2002-06-06 17:10:45  kirschpi
+ ** Breaking the user messages in three lines
+ ** Fixing some code format problems
+ ** Fixing DAVLockIndicator, when Lock discovery is disabled.
+ ** Fixing unecessary memory allocations in FilterMultiStatus_handler
+ ** and FilterLocked_handler.
+ ** Manuele
+ **
+ ** Revision 1.5  2002/06/05 16:46:06  kirschpi
  ** Applying Amaya code format.
  ** Modifying some dialogs (looking for a better windows presentation)
  ** Adding a DAVResource list, a list of resources (specially collections),
@@ -250,10 +258,10 @@ void DAVFreeLock (Document docid)
 {
     BOOL ok = NO;
     char *lockinfo;
-    char *relURI, *absURI;
+    char *relURI, *absURI, *ptr;
     char label1[LINE_MAX], label2[LINE_MAX];
 
-    lockinfo = relURI = absURI = NULL;
+    lockinfo = relURI = absURI = ptr = NULL;
     
     /* if user doesn't want awareness info, neither
      * awareness info on exit, return
@@ -277,9 +285,10 @@ void DAVFreeLock (Document docid)
         if (lockinfo && *lockinfo) 
          {
             sprintf (label1,TtaGetMessage(AMAYA,AM_LOCKED),DocumentURLs[docid]);
+            ptr = DAVBreakString (label1);
             sprintf (label2,TtaGetMessage(AMAYA,AM_UNLOCK_DOCUMENT));
             
-            if (DAVConfirmDialog (docid,label1, label2, " ")) 
+            if (DAVConfirmDialog (docid,label1,(ptr)?ptr:" ", label2)) 
              {
                 AHTDAVContext *new_davctx = GetUnlockInfo (docid);
                 if (new_davctx) 

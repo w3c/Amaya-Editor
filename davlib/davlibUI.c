@@ -15,7 +15,15 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.5  2002-06-05 16:46:06  kirschpi
+ ** Revision 1.6  2002-06-06 17:10:46  kirschpi
+ ** Breaking the user messages in three lines
+ ** Fixing some code format problems
+ ** Fixing DAVLockIndicator, when Lock discovery is disabled.
+ ** Fixing unecessary memory allocations in FilterMultiStatus_handler
+ ** and FilterLocked_handler.
+ ** Manuele
+ **
+ ** Revision 1.5  2002/06/05 16:46:06  kirschpi
  ** Applying Amaya code format.
  ** Modifying some dialogs (looking for a better windows presentation)
  ** Adding a DAVResource list, a list of resources (specially collections),
@@ -480,6 +488,10 @@ void DAVShowInfo (AHTReqContext *context)
   ---------------------------------------------------------------------- */
 void DAVShowPropfindInfo (AHTReqContext *context) 
 {
+    AwList *list = NULL;
+    AwNode *node = NULL;
+    AwString pattern = NULL;
+    char *empty = NULL;
 
     if (context) 
      {
@@ -487,9 +499,7 @@ void DAVShowPropfindInfo (AHTReqContext *context)
         
         if (davctx && davctx->tree) 
          {
-            AwList *list = NULL;
-            AwNode *node = NULL;
-            AwString pattern = AwString_new(20);
+            pattern = AwString_new(20);
             AwString_set (pattern,"propstat");
 
             /* find propstat node */
@@ -511,7 +521,7 @@ void DAVShowPropfindInfo (AHTReqContext *context)
             
             if (!list) 
              {
-                char *empty = StrAllocCopy (empty," ");
+                empty = StrAllocCopy (empty," ");
                 list = AwList_new (2);
                 AwList_put (list, empty);
                 StrAllocCopy (empty, TtaGetMessage (AMAYA, AM_PROPFIND_FAILED)); 
@@ -534,6 +544,7 @@ AwList * GetPropfindInfoFromNode (AwNode *propnode)
 {
     AwList *list = NULL;
     AwNode *child = NULL;
+    AwNode *href = NULL;    
     AwNode *Nactivelock = NULL;
     AwString info;
     char *name, *value;
@@ -591,7 +602,7 @@ AwList * GetPropfindInfoFromNode (AwNode *propnode)
                             /* if owner, found href child */ 
                             if (HTStrCaseStr (Nns,"owner")) 
                              {
-                                AwNode *href = NULL;    
+                                href = NULL;    
                                 info = AwString_new (5);
                                 AwString_set (info,"href");
                                 href = AwTree_search (child, info);

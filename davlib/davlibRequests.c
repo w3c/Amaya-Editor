@@ -15,7 +15,15 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.5  2002-06-05 16:46:06  kirschpi
+ ** Revision 1.6  2002-06-06 17:10:46  kirschpi
+ ** Breaking the user messages in three lines
+ ** Fixing some code format problems
+ ** Fixing DAVLockIndicator, when Lock discovery is disabled.
+ ** Fixing unecessary memory allocations in FilterMultiStatus_handler
+ ** and FilterLocked_handler.
+ ** Manuele
+ **
+ ** Revision 1.5  2002/06/05 16:46:06  kirschpi
  ** Applying Amaya code format.
  ** Modifying some dialogs (looking for a better windows presentation)
  ** Adding a DAVResource list, a list of resources (specially collections),
@@ -204,8 +212,12 @@ int FilterLocked_handler (HTRequest * request, HTResponse * response,
 
             /*sets xmlbody to lockdiscovery*/
             if (!createPropfindBody (YES,new_davctx->xmlbody,DAV_XML_LEN)) 
-                    return HT_OK;
+             {
+                AHTDAVContext_delete (new_davctx);
+                return HT_OK;
+             }
             
+
             if (context->method != METHOD_LOCK) 
              {
                 /* copy info to retry later */
@@ -273,6 +285,13 @@ int FilterMultiStatus_handler (HTRequest * request, HTResponse * response,
       
     if (context) 
      {
+        /* 207 Multi-Status is the normal status code for PROPFIND requests*/
+        if (context->method == METHOD_PROPFIND)
+            return HT_OK;  
+         /* 207 Multi-Status is an error code for LOCK requests */
+         else if (context->method == METHOD_LOCK || context->method == METHOD_UNLOCK) 
+            return HT_OK;
+
         new_davctx  = GetPropfindInfo (context->docid); 
         new_request = NULL;
         
@@ -285,14 +304,6 @@ int FilterMultiStatus_handler (HTRequest * request, HTResponse * response,
             fprintf (stderr,"FilterMultiStatus_handler.... finding lock info for %s\n",
                              context->urlName);
 #endif
-            
-            /* 207 Multi-Status is the normal status code for PROPFIND requests*/
-            if (context->method == METHOD_PROPFIND)
-                return HT_OK;  
-            /* 207 Multi-Status is an error code for LOCK requests */
-            else if (context->method == METHOD_LOCK || context->method == METHOD_UNLOCK) 
-                return HT_OK;
-
             
             /*sets xmlbody to lockdiscovery*/
             if (!createPropfindBody (YES,new_davctx->xmlbody,DAV_XML_LEN)) 
@@ -429,7 +440,7 @@ int FilterFindAndPut_handler (HTRequest * request, HTResponse * response,
     
     char owner[LINE_MAX];
     char label1[LINE_MAX],label2[LINE_MAX];
-    char *out, *deb, *uri,*msg ;
+    char *out, *deb, *uri,*msg, *ptr ;
     
     out = deb = uri = msg = NULL;
      
@@ -488,9 +499,10 @@ int FilterFindAndPut_handler (HTRequest * request, HTResponse * response,
             /*user if s/he wants to try again */            
             sprintf (label1,TtaGetMessage(AMAYA,AM_LOCKED_BY_OTHER),
                             lockinfo->relativeURI, owner, lockinfo->timeout);
+            ptr = DAVBreakString (label1);
             sprintf (label2,TtaGetMessage(AMAYA,AM_LOCK_OVERWRITE));
             
-            if (DAVConfirmDialog (context->docid,label1, " ", label2))
+            if (DAVConfirmDialog (context->docid,label1, (ptr)?ptr:" ", label2))
              {
                 /* save lock info */
                 if (saveLockLine (davctx->absoluteURI, lockinfo)==YES) 
@@ -922,9 +934,9 @@ int FilterFindAndShowLock_handler (HTRequest * request, HTResponse * response,
     char tmp1[LINE_MAX];
     char tmp2[LINE_MAX];
     char tmp3[LINE_MAX];
-    char *msg, *out, *deb;
+    char *ptr, *out, *deb;
     
-    out = deb = msg = NULL;
+    out = deb = ptr = NULL;
     
     if (davctx) 
      {
@@ -955,7 +967,8 @@ int FilterFindAndShowLock_handler (HTRequest * request, HTResponse * response,
             /* mounts the message for the user */
             sprintf (tmp1,TtaGetMessage(AMAYA,AM_LOCKED_BY_OTHER),
                             lockinfo->relativeURI, owner, lockinfo->timeout);
-            sprintf (tmp2," "); 
+            ptr = DAVBreakString (tmp1);
+            sprintf (tmp2,"%s",(ptr)?ptr:" "); 
             sprintf (tmp3,TtaGetMessage(AMAYA,AM_UNLOCK_BEFORE));     
          }
         else 
@@ -963,7 +976,8 @@ int FilterFindAndShowLock_handler (HTRequest * request, HTResponse * response,
             /* mounts the message for the user */
             sprintf (tmp1,TtaGetMessage(AMAYA,AM_LOCK_FAILED));
             sprintf (tmp2,TtaGetMessage(AMAYA,AM_LOCKED),context->urlName);
-            sprintf (tmp3," "); 
+            ptr = DAVBreakString (tmp2);
+            sprintf (tmp3,"%s",(ptr)?ptr:" "); 
          }
             
         /* display the message */
@@ -1243,7 +1257,7 @@ int FilterFindAndUnlock_handler (HTRequest * request, HTResponse * response,
     char label1[LINE_MAX],label2[LINE_MAX];
     char owner[LINE_MAX];
     char msg[LINE_MAX];
-    char *out, *deb;
+    char *out, *deb, *ptr;
     BOOL ok = NO;
     
     out = deb = NULL;
@@ -1278,9 +1292,10 @@ int FilterFindAndUnlock_handler (HTRequest * request, HTResponse * response,
             /*user if s/he wants unlock it*/        
             sprintf (label1,TtaGetMessage(AMAYA,AM_LOCKED_BY_OTHER),
                             lockinfo->relativeURI, owner, lockinfo->timeout);
+            ptr = DAVBreakString (label1);
             sprintf (label2,TtaGetMessage(AMAYA,AM_LOCK_OVERWRITE));
             
-            if (DAVConfirmDialog (context->docid,label1, " ", label2))
+            if (DAVConfirmDialog (context->docid,label1,(ptr)?ptr:" ", label2))
              {
                 /* save lock info */
                 if (saveLockLine (davctx->absoluteURI, lockinfo)==YES) 
@@ -1420,7 +1435,10 @@ void DAVLockDiscovery (Document document)
 #endif
 
    if (!DAVAllowResource (DAVResources,DocumentURLs[document])) 
-    return;
+    {           
+       DAVLockIndicatorState = FALSE;
+       return;
+    }
    
    /*basic info for the request*/
    davctx = GetPropfindInfo (document);
@@ -1456,7 +1474,7 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
     LockLine     *line     = NULL;
     char label1[LINE_MAX], label2[LINE_MAX];
     char owner[LINE_MAX];
-    char *out, *deb;
+    char *out, *deb, *ptr;
     BOOL saved = NO;
 
     out = deb = NULL;
@@ -1517,9 +1535,10 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
 
                         sprintf (label1,TtaGetMessage(AMAYA,AM_LOCKED_BY_OTHER),\
                                  lockinfo->relativeURI, owner, lockinfo->timeout);
+                        ptr = DAVBreakString (label1);
                         sprintf (label2,TtaGetMessage(AMAYA,AM_COPY_LOCK));
             
-                        if (DAVConfirmDialog (context->docid,label1, " ", label2)) 
+                        if (DAVConfirmDialog (context->docid,label1, (ptr)?ptr:" ", label2)) 
                          {
                             /* save lock info */
                             if (saveLockLine (davctx->absoluteURI, lockinfo)!=YES) 
