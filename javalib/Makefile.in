@@ -485,8 +485,7 @@ libAmayaJava.a : $(java_stubs) $(w3c_thotlib_stubs) $(w3c_amaya_stubs) $(AMAYA_J
 	$(RANLIB) libAmayaJava.a
 	@$(ECHO) "====>" libAmayaJava is done
 
-stubs : $(dirs) $(w3c_thotlib_stubs) $(w3c_amaya_stubs) $(java_stubs)
-	@make depend
+stubs : dirs $(w3c_thotlib_stubs) $(w3c_amaya_stubs) $(java_stubs)
 
 #
 # general stuff
