@@ -123,6 +123,80 @@ int                 frame;
 }
 
 
+/*----------------------------------------------------------------------
+   OnPage marque tous les paves ascendants comme coupe's par    
+   la limite de page.                                      
+   Quand la limite de page coupe un pave' non se'cable la  
+   limite de page est alors remonte'e pour rejeter hors    
+   page le pave' et le processus est repris au de'but.     
+   Dans ce cas, au retour de la fonction le parame`tre     
+   height est modifie' et isPageBreakChanged est Vrai.     
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         OnPage (PtrAbstractBox pAb, int *height, boolean * isPageBreakChanged)
+#else  /* __STDC__ */
+static void         OnPage (pAb, height, isPageBreakChanged)
+PtrAbstractBox             pAb;
+int                *height;
+boolean            *isPageBreakChanged;
+#endif /* __STDC__ */
+{
+   if (pAb != NULL)
+     {
+	if (!pAb->AbAcceptPageBreak && *height > pAb->AbBox->BxYOrg)
+	  {
+	     /* La boite est sur la limite de page mais non secable */
+	     /* deplace la limite de page sur l'origine de la boite */
+	     *height = pAb->AbBox->BxYOrg;
+	     *isPageBreakChanged = TRUE;
+	  }
+	else if (!pAb->AbOnPageBreak)
+	  {
+	     pAb->AbOnPageBreak = TRUE;
+	     pAb->AbAfterPageBreak = FALSE;
+	     /* traite le pave pere */
+	     if (pAb->AbVertEnclosing)
+		OnPage (pAb->AbEnclosing, height, isPageBreakChanged);
+	  }
+     }
+}
+
+
+/*----------------------------------------------------------------------
+   OutOfPage marque tous les paves ascendants comme coupe's     
+   par la limite de page s'ils ne sont pas de'ja`          
+   marque's comme sur la page ou hors de la page et si     
+   le pave' est englobe' verticalement.                    
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         OutOfPage (PtrAbstractBox pAb, int *height, boolean * isPageBreakChanged)
+#else  /* __STDC__ */
+static void         OutOfPage (pAb, height, isPageBreakChanged)
+PtrAbstractBox      pAb;
+int                *height;
+boolean            *isPageBreakChanged;
+#endif /* __STDC__ */
+{
+   PtrAbstractBox             pParentAb;
+
+   if (pAb != NULL)
+     {
+	pAb->AbOnPageBreak = FALSE;
+	pAb->AbAfterPageBreak = TRUE;
+	pParentAb = pAb->AbEnclosing;
+	if (pAb->AbVertEnclosing && pParentAb != NULL)
+	   /* Le pere est sur la page ou hors de la page */
+	   if (pParentAb->AbBox->BxType == BoGhost)
+	     {
+		if (!pParentAb->AbOnPageBreak)
+		   OutOfPage (pParentAb, height, isPageBreakChanged);
+	     }
+	   else if (!pParentAb->AbAfterPageBreak)
+	      OnPage (pParentAb, height, isPageBreakChanged);
+     }
+}
+
+
 #ifdef __COLPAGE__
 /*----------------------------------------------------------------------
    ClearPageIndicators remet a faux les boolens AbOnPageBreak et   
@@ -217,14 +291,14 @@ boolean            *isPageBreakChanged;
 		       pBox->BxAbstractBox->AbBox->BxMoved = pBox;
 		       if (pBox == pFirstBox)
 			  /* La boite est hors page */
-			  HorsDeLaPage (pAb, height, isPageBreakChanged);
+			  OutOfPage (pAb, height, isPageBreakChanged);
 		       else if (pPreviousBox->BxType == BoDotted && pPreviousBox->BxNSpaces == 0)
 			 {
 			    /* La derniere boite de la page est hyphenee */
 			    /* et n'est pas secable sur un blanc */
 			    if (pPreviousBox == pFirstBox)
 			       /* Le pave est note hors de la page */
-			       HorsDeLaPage (pAb, height, isPageBreakChanged);
+			       OutOfPage (pAb, height, isPageBreakChanged);
 			    else
 			      {
 				 /* deplace la limite de page */
@@ -234,7 +308,7 @@ boolean            *isPageBreakChanged;
 			 }
 		       else
 			  /* La boite est sur la limite de page */
-			  SurLaPage (pAb, height, isPageBreakChanged);
+			  OnPage (pAb, height, isPageBreakChanged);
 		       toContinue = FALSE;
 		    }
 		  else
@@ -265,7 +339,7 @@ boolean            *isPageBreakChanged;
 		    }
 		  else if (org >= *height)
 		     /* La boite est hors page */
-		     HorsDeLaPage (pAb, height, isPageBreakChanged);
+		     OutOfPage (pAb, height, isPageBreakChanged);
 		  else if (!pAb->AbAcceptPageBreak || pAb->AbLeafType == LtText || pAb->AbLeafType == LtSymbol)
 		    {
 		       /* La boite est sur la limite de page mais non secable */
@@ -278,7 +352,7 @@ boolean            *isPageBreakChanged;
 		       /* La boite est sur la limite de page, secable et englobee */
 		       if (pAb->AbFirstEnclosed == NULL)
 			  /* attend la boite terminale pour remonter l'indicateur */
-			  SurLaPage (pAb, height, isPageBreakChanged);
+			  OnPage (pAb, height, isPageBreakChanged);
 		    }
 		  else
 		    {
@@ -744,100 +818,26 @@ boolean             vertRef;
 
 
 /*----------------------------------------------------------------------
-   SurLaPage marque tous les paves ascendants comme coupe's par    
-   la limite de page.                                      
-   Quand la limite de page coupe un pave' non se'cable la  
-   limite de page est alors remonte'e pour rejeter hors    
-   page le pave' et le processus est repris au de'but.     
-   Dans ce cas, au retour de la fonction le parame`tre     
-   height est modifie' et isPageBreakChanged est Vrai.     
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         SurLaPage (PtrAbstractBox pAb, int *height, boolean * isPageBreakChanged)
-#else  /* __STDC__ */
-static void         SurLaPage (pAb, height, isPageBreakChanged)
-PtrAbstractBox             pAb;
-int                *height;
-boolean            *isPageBreakChanged;
-#endif /* __STDC__ */
-{
-   if (pAb != NULL)
-     {
-	if (!pAb->AbAcceptPageBreak && *height > pAb->AbBox->BxYOrg)
-	  {
-	     /* La boite est sur la limite de page mais non secable */
-	     /* deplace la limite de page sur l'origine de la boite */
-	     *height = pAb->AbBox->BxYOrg;
-	     *isPageBreakChanged = TRUE;
-	  }
-	else if (!pAb->AbOnPageBreak)
-	  {
-	     pAb->AbOnPageBreak = TRUE;
-	     pAb->AbAfterPageBreak = FALSE;
-	     /* traite le pave pere */
-	     if (pAb->AbVertEnclosing)
-		SurLaPage (pAb->AbEnclosing, height, isPageBreakChanged);
-	  }
-     }
-}
-
-
-/*----------------------------------------------------------------------
-   HorsDeLaPage marque tous les paves ascendants comme coupe's     
-   par la limite de page s'ils ne sont pas de'ja`          
-   marque's comme sur la page ou hors de la page et si     
-   le pave' est englobe' verticalement.                    
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         HorsDeLaPage (PtrAbstractBox pAb, int *height, boolean * isPageBreakChanged)
-#else  /* __STDC__ */
-static void         HorsDeLaPage (pAb, height, isPageBreakChanged)
-PtrAbstractBox      pAb;
-int                *height;
-boolean            *isPageBreakChanged;
-#endif /* __STDC__ */
-{
-   PtrAbstractBox             pavepere;
-
-   if (pAb != NULL)
-     {
-	pAb->AbOnPageBreak = FALSE;
-	pAb->AbAfterPageBreak = TRUE;
-	pavepere = pAb->AbEnclosing;
-	if (pAb->AbVertEnclosing && pavepere != NULL)
-	   /* Le pere est sur la page ou hors de la page */
-	   if (pavepere->AbBox->BxType == BoGhost)
-	     {
-		if (!pavepere->AbOnPageBreak)
-		   HorsDeLaPage (pavepere, height, isPageBreakChanged);
-	     }
-	   else if (!pavepere->AbAfterPageBreak)
-	      SurLaPage (pavepere, height, isPageBreakChanged);
-     }
-}
-
-
-/*----------------------------------------------------------------------
    HautCoupure indique quelles sont les conditions de coupure du   
    pave' passe' en parame`tre :                            
    - ht = hauteur de la boi^te du pave'.                   
    - pos = position de la boite du pave dans la page.      
-   - nbcar = nombre de caracte`res du pave' qui entrent    
+   - nChars = nombre de caracte`res du pave' qui entrent    
    dans la page s'il est de type texte, sinon le volume du 
    pave'.                                                  
    Les hauteurs sont exprime'es suivant la valeur du       
-   parame`tre EnPt, en points typographiques (valeur Vrai) 
+   parame`tre pointVal, en points typographiques (valeur Vrai) 
    ou en unite's logiques (Valeur Faux).                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                HautCoupure (PtrAbstractBox pAb, boolean EnPt, int *ht, int *pos, int *nbcar)
+void                HautCoupure (PtrAbstractBox pAb, boolean pointVal, int *ht, int *pos, int *nChars)
 #else  /* __STDC__ */
-void                HautCoupure (pAb, EnPt, ht, pos, nbcar)
-PtrAbstractBox             pAb;
-boolean             EnPt;
+void                HautCoupure (pAb, pointVal, ht, pos, nChars)
+PtrAbstractBox      pAb;
+boolean             pointVal;
 int                *ht;
 int                *pos;
-int                *nbcar;
+int                *nChars;
 #endif /* __STDC__ */
 {
    PtrBox            box1;
@@ -846,9 +846,9 @@ int                *nbcar;
    int                 height;
    int                 org, i;
    int                 hfont;
-   boolean             encore;
+   boolean             still;
 
-   *nbcar = 0;
+   *nChars = 0;
    *pos = 0;
    *ht = 0;
    /* calcule la position et la hauteur du pave */
@@ -874,30 +874,30 @@ int                *nbcar;
 	     /* Nombre de caracteres qui entrent dans la page */
 	     if (pAb->AbOnPageBreak && box1 != NULL)
 	       {
-		  *nbcar = box1->BxIndChar;
+		  *nChars = box1->BxIndChar;
 		  /* Il ne faut pas couper le dernier mot d'une page     */
 		  /* donc si la boite precedente est de type BtAvectrait */
 		  /* la limite de la page est deplacee sur le blanc qui  */
 		  /* precede ce mot */
-		  if (*nbcar != 0)
+		  if (*nChars != 0)
 		     if (box1->BxPrevious->BxType == BoDotted)
 			if (box1->BxPrevious->BxNSpaces != 0)
 			  {
 			     /* recheche en arriere le blanc precedent */
 			     adbuff = box1->BxBuffer;
 			     i = box1->BxFirstChar - 1;
-			     encore = TRUE;
-			     while (encore)
+			     still = TRUE;
+			     while (still)
 				if (adbuff->BuContent[i] == ' ')
 				  {
 				     /* a trouve le blanc */
-				     encore = FALSE;
+				     still = FALSE;
 				     /* Debute le nouveau mot au caractere suivant */
-				     (*nbcar)++;
+				     (*nChars)++;
 				  }
 				else
 				  {
-				     (*nbcar)--;
+				     (*nChars)--;
 				     if (i == 0)
 					if (adbuff->BuPrevious != NULL)
 					  {
@@ -906,7 +906,7 @@ int                *nbcar;
 					  }
 					else
 					   /* arrete */
-					   encore = FALSE;
+					   still = FALSE;
 				     else
 					i--;
 				  }
@@ -950,7 +950,7 @@ int                *nbcar;
 	  }
 
 	/* traduit les valeurs pixel dans l'unite demandee */
-	if (EnPt)
+	if (pointVal)
 	  {
 	     *pos = PixelToPoint (org);
 	     *ht = PixelToPoint (height);
@@ -962,42 +962,6 @@ int                *nbcar;
 	     *ht = height * 10 / hfont;
 	  }
      }
-}
-
-
-/*----------------------------------------------------------------------
-   PosPavePt rend la position en points typographiques du pave     
-   passe' en parametre.                                    
-   Cette position est relative au pave englobant.          
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                PosPavePt (PtrAbstractBox pAb, int *xCoord, int *yCoord)
-#else  /* __STDC__ */
-void                PosPavePt (pAb, xCoord, yCoord)
-PtrAbstractBox             pAb;
-int                *xCoord;
-int                *yCoord;
-
-#endif /* __STDC__ */
-{
-
-   int                 x, y;
-
-   if (pAb != NULL)
-      if (pAb->AbBox != NULL)
-	{
-	   x = pAb->AbBox->BxXOrg;
-	   y = pAb->AbBox->BxYOrg;
-	   pAb = pAb->AbEnclosing;
-	   if (pAb != NULL)
-	     {
-		/* decalage par rapport a l'englobant */
-		x -= pAb->AbBox->BxXOrg;
-		y -= pAb->AbBox->BxXOrg;
-	     }
-	   *xCoord = PixelToPoint (x);
-	   *yCoord = PixelToPoint (y);
-	}
 }
 
 

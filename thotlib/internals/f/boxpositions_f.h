@@ -14,13 +14,10 @@ extern void AddBoxTranslations ( PtrAbstractBox pAb,
                                  boolean horizRef,
                                  boolean vertRef );
 extern void HautCoupure ( PtrAbstractBox pAb,
-                          boolean EnPt,
+                          boolean pointVal,
                           int *ht,
                           int *pos,
-                          int *nbcar );
-extern void PosPavePt ( PtrAbstractBox pAb,
-                        int *xCoord,
-                        int *yCoord );
+                          int *nChars );
 extern void SetBoxToTranslate ( PtrAbstractBox pAb,
                                 boolean horizRef,
                                 boolean vertRef );
@@ -35,13 +32,10 @@ extern void AddBoxTranslations (/* PtrAbstractBox pAb,
                                    boolean horizRef,
                                    boolean vertRef */);
 extern void HautCoupure (/* PtrAbstractBox pAb,
-                            boolean EnPt,
+                            boolean pointVal,
                             int *ht,
                             int *pos,
-                            int *nbcar */);
-extern void PosPavePt (/* PtrAbstractBox pAb,
-                          int *xCoord,
-                          int *yCoord */);
+                            int *nChars */);
 extern void SetBoxToTranslate (/* PtrAbstractBox pAb,
                                   boolean horizRef,
                                   boolean vertRef */);
