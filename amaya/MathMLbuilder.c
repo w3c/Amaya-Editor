@@ -938,7 +938,7 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 			      if (selEl != NULL)
 				if (*selEl == textEl)
 				  *selEl = symbolEl;
-			      c = text[i];
+			      c = (unsigned char) text[i];
 #ifdef _I18N_
 		              if (text[i] == 0x222B)
 				c = 'i';
