@@ -3,7 +3,7 @@
 <html>
 <head>
   <title>Writing source code for Amaya</title>
-  <meta name="GENERATOR" content="amaya V2.2">
+  <meta name="GENERATOR" content="amaya V2.3">
 </head>
 
 <body lang="en">
@@ -237,7 +237,7 @@ tolerated. The message-text may be used asis, or it may be used as the format
 argument for the  C <code>language sprintf</code> function.</p>
 
 <p>The following table lists all the amaya dialogue files, their type, and
-cites any related file.</p>
+cites any related file (<em>incomplete, needs more prunning</em>)</p>
 
 <table border="1">
   <caption></caption>
@@ -338,7 +338,12 @@ for German, and so on.</p>
   <li>cd to the <code>Amaya/config</code> directory.</li>
   <li>Copy all the files named <code>en-* </code>into your own language code,
     for example,<code> </code><code>de-*</code> for German, .<code>it-*</code>
-    for Italian, ....</li>
+    for Italian, ....
+    <p>You can do it so using the follow shell script and by adding your
+    target language code (de, it, ...):</p>
+    <p> <code>  ls -d en-* | sed "s/en-\(.*\)/cp &amp;
+    target_language_code-\1/" | sh</code></p>
+  </li>
   <li>Open your new files and translate each message to the new language. Be
     careful of respecting the sense of the text (whether it is a C sprintf
     format string or a text message. If the original message has three
@@ -348,8 +353,8 @@ for German, and so on.</p>
 </ol>
 
 <p>TIP: In order to be able to place the context of each dialogue message,
-it's useful to look at the related files and have AmayaOne thing that is
-useful is look at the related files and have Amaya running.</p>
+it's useful to look at the related files and have Amaya running at the same
+time.</p>
 
 <h1>Adding a new Help menu entry</h1>
 
