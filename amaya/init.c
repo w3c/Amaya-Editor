@@ -4293,6 +4293,24 @@ CHAR_T*             data;
        ustrncpy (MathMLEntityName, data, MAX_LENGTH);
        MathMLEntityName[MAX_LENGTH - 1] = EOS;
        break;
+     case MakeIdMenu:
+       switch (val)
+	 {
+	 case 1:
+     case mAddId:
+       /* we need to memorize the document number... how to do that? */
+	   ChangeIDAttribute (IdElemName, 1, TRUE);
+	   break;
+	 case 2:
+       /* we need to memorize the document number... how to do that? */
+	   ChangeIDAttribute (IdElemName, 1, FALSE);
+	   break;
+	 }
+       break;
+     case mElemName:
+       ustrncpy (IdElemName, data, MAX_LENGTH);
+       IdElemName[MAX_LENGTH -1] = EOS;
+       break;
      }
 }
 
@@ -4907,6 +4925,75 @@ View                view;
    ChangeAttrOnRoot (document, HTML_ATTR_ShowAreas);
 }
 
+/*----------------------------------------------------------------------
+  MakeIDMenu
+  A menu for adding or removing ID attributes in a document
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                MakeIDMenu (Document document, View view)
+#else
+void                MakeIDMenu (document, view)
+Document            document;
+View                view;
+
+#endif
+{
+#ifndef _WINDOWS
+  int i;
+  CHAR_T  s[MAX_LENGTH];
+
+  /* initialize the global variables */
+  IdElemName[0] = EOS;
+
+  /* Create the dialogue form */
+  i = 0;
+  strcpy (&s[i], TEXT("Add id"));
+  i += ustrlen (&s[i]) + 1;
+  strcpy (&s[i], TEXT("Remove id"));
+  TtaNewSheet (BaseDialog + MakeIdMenu,
+	       TtaGetViewFrame (document, view),
+	       TEXT("id handler menu"),
+	       2, s, FALSE, 6, 'L', D_DONE);
+  TtaNewTextForm (BaseDialog + mElemName,
+		  BaseDialog + MakeIdMenu,
+		  TEXT("Enter an element name"),
+		  10,
+		  1,
+		  TRUE);
+  TtaSetDialoguePosition ();
+  TtaShowDialogue (BaseDialog + MakeIdMenu, TRUE);
+#endif /* _WINDOWS */
+}
+
+/*----------------------------------------------------------------------
+  MakeIDMenu
+  A menu for adding or removing ID attributes in a document
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                AddAnIDd (Document document, View view)
+#else
+void                AddAnId (document, view)
+Document            document;
+View                view;
+
+#endif
+{
+}
+
+/*----------------------------------------------------------------------
+  MakeIDMenu
+  A menu for adding or removing ID attributes in a document
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DelAnIDd (Document document, View view)
+#else
+void                DelAnId (document, view)
+Document            document;
+View                view;
+
+#endif
+{
+}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/

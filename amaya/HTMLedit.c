@@ -1133,7 +1133,7 @@ Document     doc;
   SSchema	    HTMLSSchema;
   Attribute         attr;
   STRING            value;
-  CHAR_T              url[MAX_LENGTH];
+  CHAR_T            url[MAX_LENGTH];
   int               length, i;
   ThotBool          change, isHTML;
 
@@ -1163,7 +1163,7 @@ Document     doc;
        attrType.AttrTypeNum = HTML_ATTR_ID;
     }
   attr = TtaGetAttribute (el, attrType);
-  
+
   if (attr != 0)
     {
       /* the element has an attribute NAME or ID */
@@ -1215,6 +1215,88 @@ Document     doc;
     }
 }
 
+/*----------------------------------------------------------------------
+  ChangeIDAttribute
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         ChangeIDAttribute (CHAR_T *elName, Document doc, ThotBool addID)
+#else  /* __STDC__ */
+void         ChangeIDdAttribute (elName, doc)
+CHAR_T         *elNamel
+Document	doc;
+ThotBool        addID;
+
+#endif /* __STDC__ */
+{
+  Element             el;
+  ElementType         elType;
+  AttributeType       attrType;
+  Attribute           attr;
+  CHAR_T             *schema_name;
+  DisplayMode         dispMode;
+
+  /* search for the elementType corresponding to the element name given
+   by the user */
+  GIType (elName, &elType, doc);
+  if (elType.ElTypeNum == 0)
+    /* element name not found */
+    return;
+
+  /* to be done: exception handling... where we can't add an ID attribute */
+#if 0
+  /* HTML */
+  if (elType.ElTypeNum == HTML_EL_Anchor
+      || elType.ElTypeNum == HTML_EL_MAP)
+    /* we can't put an id on this elements */
+    return;
+#endif
+
+  /* in function of the target elType, we choose the correct
+     ATTR_ID value */
+  schema_name = TtaGetSSchemaName (elType.ElSSchema);
+  if (!ustrcmp (schema_name, TEXT("HTML")))
+    attrType.AttrTypeNum = HTML_ATTR_ID;
+  else if (!ustrcmp (schema_name, TEXT("MathML")))
+    attrType.AttrTypeNum = MathML_ATTR_id;
+  else if (!ustrcmp (schema_name, TEXT("GraphML")))
+    attrType.AttrTypeNum = GraphML_ATTR_id;
+  attrType.AttrSSchema = elType.ElSSchema;
+
+  /* prepare the environment before doing the operation */
+  dispMode = TtaGetDisplayMode (doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
+  /* remove selection before modifications */
+  TtaUnselect (doc);
+  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+  
+  /* browse the tree and add the ID if it's missing */
+  el = TtaGetMainRoot (doc);
+  el = TtaSearchTypedElement (elType, SearchInTree, el);
+  while (el)
+    {
+      attr = TtaGetAttribute (el, attrType);
+      if (!attr && addID)
+	{
+	  attr = TtaNewAttribute (attrType);
+	  TtaRegisterAttributeCreate (attr, el, doc);
+	  TtaAttachAttribute (el, attr, doc);
+	  TtaSetAttributeText (attr, "_ID", el, doc);
+	  MakeUniqueName (el, doc);
+	}
+      else if (attr && !addID)
+	{
+	  TtaRegisterAttributeDelete (attr, el, doc);
+	  TtaRemoveAttribute (el, attr, doc);
+	}
+
+      el = TtaSearchTypedElement (elType, SearchForward, el);
+    }
+
+  TtaSetDocumentModified (doc);
+  TtaSetDisplayMode (doc, dispMode);
+  TtaCloseUndoSequence (doc);
+}
 
 /*----------------------------------------------------------------------
    CheckPseudoParagraph

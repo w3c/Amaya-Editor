@@ -33,6 +33,9 @@ extern void CreateAnchor ( Document doc,
                            ThotBool createLink );
 extern void MakeUniqueName ( Element el,
                              Document doc );
+extern void ChangeIDAttribute ( CHAR_T *elName,
+                                Document doc,
+                                ThotBool addID );
 extern void ElementCreated ( NotifyElement * event );
 extern void ElementDeleted ( NotifyElement *event );
 extern void ChangeURI ( Element el,
@@ -140,6 +143,9 @@ extern void CreateAnchor (/* Document doc,
                              ThotBool createLink */);
 extern void MakeUniqueName (/* Element el,
                                Document doc */);
+extern void ChangeIDAttribute (/* CHAR_T *elName,
+                                  Document doc,
+                                  ThotBool addID */);
 extern void ElementCreated (/* NotifyElement * event */);
 extern void ElementDeleted (/* NotifyElement *event */);
 extern void ChangeURI (/* Element el,

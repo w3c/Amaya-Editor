@@ -43,13 +43,13 @@ extern void InitConfirm3L ( Document document,
 extern void InitConfirm ( Document document,
                           View view,
                           CHAR_T* label );
+extern void OpenDoc ( Document document,
+                      View view );
 extern void OpenDocInNewWindow ( Document document,
                                  View view );
 extern void OpenNew ( Document document,
                       View view,
                       ThotBool isHTML );
-extern void OpenDoc ( Document document,
-                      View view );
 extern void GoToHome ( Document doc,
                        View view );
 extern Document InitDocView ( Document doc,
@@ -107,6 +107,12 @@ extern void ChangeAttrOnRoot ( Document document,
                                int attrNum );
 extern void ShowMapAreas ( Document document,
                            View view );
+extern void MakeIDMenu ( Document document,
+                         View view );
+extern void AddAnIDd ( Document document,
+                       View view );
+extern void DelAnIDd ( Document document,
+                       View view );
 extern void HelpAmaya ( Document document,
                         View view );
 extern void HelpAtW3C ( Document document,
@@ -196,13 +202,13 @@ extern void InitConfirm3L (/* Document document,
 extern void InitConfirm (/* Document document,
                             View view,
                             CHAR_T* label */);
+extern void OpenDoc (/* Document document,
+                        View view */);
 extern void OpenDocInNewWindow (/* Document document,
                                    View view */);
 extern void OpenNew (/* Document document,
                         View view,
                         ThotBool isHTML */);
-extern void OpenDoc (/* Document document,
-                        View view */);
 extern void GoToHome (/* Document doc,
                          View view */);
 extern Document InitDocView (/* Document doc,
@@ -260,6 +266,12 @@ extern void ChangeAttrOnRoot (/* Document document,
                                  int attrNum */);
 extern void ShowMapAreas (/* Document document,
                              View view */);
+extern void MakeIDMenu (/* Document document,
+                           View view */);
+extern void AddAnIDd (/* Document document,
+                         View view */);
+extern void DelAnIDd (/* Document document,
+                         View view */);
 extern void HelpAmaya (/* Document document,
                           View view */);
 extern void HelpAtW3C (/* Document document,
