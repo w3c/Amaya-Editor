@@ -24,6 +24,7 @@
 #include "selection.h"
 #include "language.h"
 #include "fileaccess.h"
+#include "content.h"
 #ifndef NODISPLAY
 #include "frame.h"
 #endif
@@ -1345,37 +1346,71 @@ Element             source;
    contained in the element.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 int                 TtaGetTextLength (Element element)
-
 #else  /* __STDC__ */
 int                 TtaGetTextLength (element)
 Element             element;
-
 #endif /* __STDC__ */
-
 {
    int                 textLength;
 
    UserErrorCode = 0;
    textLength = 0;
    if (element == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
+     TtaError (ERR_invalid_parameter);
    else if (!((PtrElement) element)->ElTerminal)
-     {
-	TtaError (ERR_invalid_element_type);
-     }
+     TtaError (ERR_invalid_element_type);
    else if (((PtrElement) element)->ElLeafType != LtText &&
 	    ((PtrElement) element)->ElLeafType != LtPicture)
-     {
-	TtaError (ERR_invalid_element_type);
-     }
+     TtaError (ERR_invalid_element_type);
    else
-      textLength = ((PtrElement) element)->ElTextLength;
+     textLength = ((PtrElement) element)->ElTextLength;
    return textLength;
+}
+
+
+/*----------------------------------------------------------------------
+   TtaGetPictureType
+
+   Returns the type of Picture element.
+
+   Parameter:
+   element: the element of interest. This element must be a Picture.
+
+   Return value:
+   PicType: type of the element.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+PicType             TtaGetPictureType (Element element)
+#else  /* __STDC__ */
+PicType             TtaGetPictureType (element)
+Element             element;
+#endif /* __STDC__ */
+{
+   PicType          pictType;
+   PictInfo        *imageDesc;
+   int              typeImage;
+
+   UserErrorCode = 0;
+   pictType = unknown_type;
+   if (element == NULL)
+     TtaError (ERR_invalid_parameter);
+   else if (!((PtrElement) element)->ElTerminal)
+     TtaError (ERR_invalid_element_type);
+   else if (((PtrElement) element)->ElLeafType != LtPicture)
+     TtaError (ERR_invalid_element_type);
+   else
+     {
+       imageDesc = (PictInfo *) (((PtrElement) element)->ElPictInfo);
+       if (imageDesc != NULL)
+	 {
+	   typeImage = imageDesc->PicType;
+	   if (typeImage != UNKNOWN_FORMAT)
+	     pictType = (PicType) typeImage;
+	 }
+     }
+   return pictType;
 }
 
 /*----------------------------------------------------------------------

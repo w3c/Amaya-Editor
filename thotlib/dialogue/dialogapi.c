@@ -136,6 +136,7 @@ static XtTranslations TextTranslations;
 #endif
 static ThotWidget   MainShell;
 
+#include "appdialogue_f.h"
 #include "memory_f.h"
 #include "thotmsg_f.h"
 
@@ -4826,7 +4827,6 @@ int                 cattype;
    int                 index;
    int                 count;
    struct Cat_Context *catalogue;
-   struct Cat_Context *parentCatalogue;
    struct E_List      *adbloc;
 #ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
