@@ -4900,8 +4900,8 @@ RULES
 	CreateBefore(LI_S);
 	CreateWith(VerticalLine);
 	LineBreak: No;
-	HorizPos: Left = Enclosing . Left + 1;
-	Width: Enclosing . Width - 1;
+	HorizPos: Left = Previous AnyBox . Right + 0.4;
+	Width: Right = Enclosing . Right;
 	VertPos: Top = Previous AnyElem . Bottom;
 	IN Structure_view
 		BEGIN
@@ -4913,7 +4913,9 @@ RULES
 
  Preformatted: BEGIN
 	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
-	{Width: Enclosed . Width; ******}
+	If within Center
+	   HorizPos: VMiddle = Enclosing . VMiddle;
+	Adjust: Left;
 	CreateBefore(PRE_S);
 	CreateWith(VerticalLine);
 	Font: Courier;
@@ -6311,6 +6313,28 @@ ATTRIBUTES
  Align (Horizontal_Rule) = right_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
+	In Structure_view
+	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	END;
+
+ Align (Preformatted) = left_:
+	BEGIN
+	HorizPos: Left = Enclosing . Left;
+	Adjust: Left;
+	In Structure_view
+	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	END;
+ Align (Preformatted) = center_:
+	BEGIN
+	HorizPos: VMiddle = Enclosing . VMiddle;
+	Adjust: Left;
+	In Structure_view
+	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	END;
+ Align (Preformatted) = right_:
+	BEGIN
+	HorizPos: Right = Enclosing . Right;
+	Adjust: Left;
 	In Structure_view
 	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	END;
