@@ -28,7 +28,8 @@ static boolean      SaveBeforeClosing;
 #include "viewcommands_f.h"
 
 /*----------------------------------------------------------------------
-   CallbackCloseDocMenu   traite les retours du formulaire "Fermer"
+   CallbackCloseDocMenu 
+   handles the callbacks of the CloseDoc menu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackCloseDocMenu (int ref, int typedata, char *data)
@@ -59,12 +60,9 @@ char               *data;
 }
 
 /*----------------------------------------------------------------------
-   AskToConfirm demande a` l'utilisateur s'il veut sauver puis     
-   fermer le document dont le contexte est pointe' par     
-   pDoc.                                                   
-   Retourne un booleen indiquant si la fermeture du        
-   document doit avoir lieu.                               
-   Au retour, Sauver indique si la sauvegarde est demandee.
+   AskToConfirm
+   asks the user if he wants to save before closing the pDoc document.
+   save takes a TRUE value if the document should be saved.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                AskToConfirm (PtrDocument pDoc, Document document, View view, boolean * confirmation, boolean * save)
@@ -111,7 +109,8 @@ boolean            *save;
 
 
 /*----------------------------------------------------------------------
-   CloseADocument ferme un document.                                  
+   CloseADocument
+   closes a document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             CloseADocument (Document document, Document docform, View viewform)
@@ -164,7 +163,8 @@ View                view;
 
 
 /*----------------------------------------------------------------------
-   TtcCloseDocument initialise la fermeture de document.              
+   TtcCloseDocument
+   begins closing of a document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcCloseDocument (Document document, View view)
