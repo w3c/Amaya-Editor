@@ -8,7 +8,7 @@ have been introduced in Amaya and Thot since version 1.4 of Amaya.
 Extensions 1.5:
 ---------------
 
-* First implementation of Undo.
+* First implementation of a multi-document, multi-level Undo command
 
 * WAI comments on Image and Maps.
 
@@ -61,9 +61,12 @@ Fixed bugs 1.5:
 
 * SMALL elements could be displayed too small.
 
-* <basefont face="...."> was exported as <basefont facee="....">
+* <basefont face="...."> was saved as <basefont facee="....">
 
 * When putting an attribute on a text string, the attribute was generated
   as text in the HTML output.  Now a SPAN element is generated to carry
   the attribute.  This bug occured with attributes title, dir, and most
   event attributes (onclick, ondblclick, onmousedown, etc.).
+
+* Amaya crashed when loading an isolated image with a filename without
+  a suffix.

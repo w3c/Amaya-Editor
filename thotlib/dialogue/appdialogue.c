@@ -1109,6 +1109,12 @@ int                 doc;
 		      FrameTable[frame].MenuUndo = ref;
 		      FrameTable[frame].EntryUndo = item;
 		    }
+		  /* Is it the Redo command */
+		  if (!ustrcmp (MenuActionList[action].ActionName, "TtcRedo"))
+		    {
+		      FrameTable[frame].MenuRedo = ref;
+		      FrameTable[frame].EntryRedo = item;
+		    }
 		  MenuActionList[action].ActionActive[frame] = TRUE;
 	       }
 	  }
@@ -1125,7 +1131,6 @@ int                 doc;
       TtaNewPulldown (ref, button, NULL, ptrmenu->ItemsNb, string, equiv);
    else
       TtaNewPulldown (ref, button, NULL, ptrmenu->ItemsNb, string, NULL);
-
 
 #  ifdef _WINDOWS
    currentMenu = button;
@@ -2582,6 +2587,7 @@ int                 doc;
 	   FrameTable[frame].MenuSelect = -1;
 	   FrameTable[frame].MenuPaste = -1;
 	   FrameTable[frame].MenuUndo = -1;
+	   FrameTable[frame].MenuRedo = -1;
 #          ifndef _WINDOWS
 	   menu_bar = 0;
 #          endif /* !_WINDOWS */ 
@@ -3285,6 +3291,86 @@ boolean      on;
 	{
 	  ref = FrameTable[frame].MenuUndo;
 	  item = FrameTable[frame].EntryUndo;
+#ifdef _WINDOWS
+	  hMenu = GetMenu (frame);
+	  if (on)
+	    EnableMenuItem (hMenu, ref + item, MF_ENABLED);
+	  else
+	    EnableMenuItem (hMenu, ref + item, MFS_GRAYED);
+#else  /* !_WINDOWS */
+	  if (on)
+	    TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
+	  else if (TtWDepth > 1)
+	    TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
+	  else
+	    {
+	      FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
+	      TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
+	    }
+#endif /* _WINDOWS */
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  SwitchRedo enables (on=TRUE) or disables (on=FALSE) the Redo
+  entry in all document frames.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         SwitchRedo (PtrDocument pDoc, boolean on)
+#else  /* __STDC__ */
+void         SwitchRedo (pDoc, on)
+PtrDocument  pDoc;
+boolean      on;
+#endif /* __STDC__ */
+{
+#ifndef _WINDOWS 
+  CHAR                fontname[100];
+  CHAR                text[20];
+#else _WINDOWS
+  HMENU               hMenu;
+#endif /* _WINDOWS */
+  int                 view, assoc, frame;
+  int                 ref, item;
+
+  if (pDoc == NULL)
+    return;
+  for (view = 0; view < MAX_VIEW_DOC; view++)
+    {
+      if (pDoc->DocView[view].DvPSchemaView > 0)
+	{
+	  frame = pDoc->DocViewFrame[view];
+	  if (ref != -1 && FrameTable[frame].MenuRedo != -1)
+	    {
+	      ref = FrameTable[frame].MenuRedo;
+	      item = FrameTable[frame].EntryRedo;
+#ifdef _WINDOWS
+	      hMenu = GetMenu (frame);
+	      if (on)
+		EnableMenuItem (hMenu, ref + item, MF_ENABLED);
+	      else
+		EnableMenuItem (hMenu, ref + item, MFS_GRAYED);
+#else  /* !_WINDOWS */
+	      if (on)
+		TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
+	      else if (TtWDepth > 1)
+		TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
+	      else
+		{
+		  FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
+		  TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
+		}
+#endif /* _WINDOWS */
+	    }
+	}
+    }
+  for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
+    {
+      frame = pDoc->DocAssocFrame[assoc];
+      if (frame != 0 && FrameTable[frame].MenuRedo != -1)
+	{
+	  ref = FrameTable[frame].MenuRedo;
+	  item = FrameTable[frame].EntryRedo;
 #ifdef _WINDOWS
 	  hMenu = GetMenu (frame);
 	  if (on)

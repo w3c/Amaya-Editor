@@ -26,158 +26,159 @@
 25 Çýkýþ
 26 Görünümü kapat
 27 **Undo
-28 Kes
-29 Kopyala
-30 Yapýþtýr
-31 Temizle
-32 **Editor Mode
-33 Ara...
-34 Yazým hatalarý arama...
-35 Dönüþtür
-36 BASE
-37 META
-38 Baðlantý (LINK)
-39 SCRIPT
-40 STYLE
-41 Yorum
-42 Adres (ADDRESS)
-43 Alan haritasý (AREA)
-44 Daire
-45 Çokgen
-46 Dikdörtgen
-47 BLOCKQUOTE
-48 Kesme (BR)
-49 Bölme (DIV)
-50 Form
-51 FORM
-52 **button (INPUT)
-53 Deðiþtir (INPUT)
-54 **File select (INPUT)
-55 **Hidden control (INPUT)
-56 **Password (INPUT)
-57 Radio (INPUT)
-58 Reset (INPUT)
-59 Submit (INPUT)
-60 Metin giriþi (INPUT)
-61 FIELDSET
-62 LABEL
-63 Seçenek (OPTION)
-64 **Submenu  (OPTGROUP)
-65 Metin alaný (TEXTAREA)
-66 Baþlýk
-67 H1
-68 H2
-69 H3
-70 H4
-71 H5
-72 H6
-73 Yatay çizgi (HR)
-74 **Inline frame (IFRAME)
-75 Görüntü (IMG)...
-76 Liste
-77 Noktalý liste (UL)
-78 Numaralý liste (OL)
-79 Taným listesi (DL)
-80 Terim (DT)
-81 Taným (DD)
-82 Matematik
-83 MATH
-84 Kök (mroot)
-85 Karekök (msqrt)
-86 Kesir (mfrac)
-87 Alt ve üstyazý (msubsup)
-88 altyazý (msub)
-89 üstyazý (msup)
-90 altýnda veya üstünde (munderover)
-91 altýnda (munder)
-92 üstünde (mover)
-93 Parantezler (mf)
-94 Multiscripts (mmultiscripts)
-95 Matris (mtable)
-96 **Delete matris column
-97 NOSCRIPT
-98 Nesne
-99 OBJECT
-100 Parametre (PARAM)
-101 Paragraf (P)
-102 Preformatted (PRE)
-103 Tablo
-104 TABLE
-105 Altyazý (CAPTION)
-106 COLGROUP
-107 COL
-108 THEAD
-109 TBODY
-110 TFOOT
-111 Sýra (TR)
-112 Veri hücresi (TD)
-113 Baþlýk hücresi (TH)
-114 **Delete table column
-115 Baðlantý yarat...
-116 Hedef yarat
-117 Baðlantý yarat...
-118 <A> tanýmý sil
-119 Tuþlarý göster
-120 Adres ve baþlýðý göster
-121 Yakýnlaþtýr
-122 **Show Targets
-123 Uzaklaþtýr
-124 Harita alanlarýný göster
-125 Yapýyý göster
-126 Alternatif gösterim
-127 Baðlantýlarý göster
-128 Ýçindekileri göster
-129 Karakter tarzý...
-130 Renkler...
-131 Biçim...
-132 Arkaplan görüntüsü...
-133 Kural yarat...
-134 \'class\' uygula...
-135 Tarzý tanýmlarý
-136 Bilgi türü
-137 Vurgu
-138 Kuvvetli
-139 Cite
-140 Taným
-141 Kod
-142 Deðiþken
-143 Örnek
-144 Tuþtakýmý
-145 **Abbreviation
-146 **Acronym
-147 **Insertion
-148 **Deletion
-149 Karakter birimi
-150 Ýtalik
-151 Kalýn
-152 Teletype
-153 Büyük
-154 Küçük
-155 Alt
-156 Üst
-157 **Quotation
-158 **BDO
-159 Bölüm numaralandýrmasý
-160 Kitap yap
-161 **Show log file
-162 **Purge cache
-163 Amaya hakkýnda
-164 **About Amaya at W3C
-165 Tarama
-166 Seçme
-167 Arama
-168 Görünümler
-169 Birim yaratma
-170 Baðlantýlar
-171 Yeniden yapýlandýrma
-172 Tablolar
-173 Matematik
-174 Görüntü haritalarý
-175 Tarz tanýmlarý
-176 Özellikler
-177 Yazým hatalarý aranýyor
-178 Sayfa yerleþtirme
-179 Bastýrma
-180 Numaralandýrmasý
-181 Kitap oluþturma
-182 Amaya yapýlandýrmasý
+28 **Redo
+29 Kes
+30 Kopyala
+31 Yapýþtýr
+32 Temizle
+33 **Editor Mode
+34 Ara...
+35 Yazým hatalarý arama...
+36 Dönüþtür
+37 BASE
+38 META
+39 Baðlantý (LINK)
+40 SCRIPT
+41 STYLE
+42 Yorum
+43 Adres (ADDRESS)
+44 Alan haritasý (AREA)
+45 Daire
+46 Çokgen
+47 Dikdörtgen
+48 BLOCKQUOTE
+49 Kesme (BR)
+50 Bölme (DIV)
+51 Form
+52 FORM
+53 **button (INPUT)
+54 Deðiþtir (INPUT)
+55 **File select (INPUT)
+56 **Hidden control (INPUT)
+57 **Password (INPUT)
+58 Radio (INPUT)
+59 Reset (INPUT)
+60 Submit (INPUT)
+61 Metin giriþi (INPUT)
+62 FIELDSET
+63 LABEL
+64 Seçenek (OPTION)
+65 **Submenu  (OPTGROUP)
+66 Metin alaný (TEXTAREA)
+67 Baþlýk
+68 H1
+69 H2
+70 H3
+71 H4
+72 H5
+73 H6
+74 Yatay çizgi (HR)
+75 **Inline frame (IFRAME)
+76 Görüntü (IMG)...
+77 Liste
+78 Noktalý liste (UL)
+79 Numaralý liste (OL)
+80 Taným listesi (DL)
+81 Terim (DT)
+82 Taným (DD)
+83 Matematik
+84 MATH
+85 Kök (mroot)
+86 Karekök (msqrt)
+87 Kesir (mfrac)
+88 Alt ve üstyazý (msubsup)
+89 altyazý (msub)
+90 üstyazý (msup)
+91 altýnda veya üstünde (munderover)
+92 altýnda (munder)
+93 üstünde (mover)
+94 Parantezler (mf)
+95 Multiscripts (mmultiscripts)
+96 Matris (mtable)
+97 **Delete matris column
+98 NOSCRIPT
+99 Nesne
+100 OBJECT
+101 Parametre (PARAM)
+102 Paragraf (P)
+103 Preformatted (PRE)
+104 Tablo
+105 TABLE
+106 Altyazý (CAPTION)
+107 COLGROUP
+108 COL
+109 THEAD
+110 TBODY
+111 TFOOT
+112 Sýra (TR)
+113 Veri hücresi (TD)
+114 Baþlýk hücresi (TH)
+115 **Delete table column
+116 Baðlantý yarat...
+117 Hedef yarat
+118 Baðlantý yarat...
+119 <A> tanýmý sil
+120 Tuþlarý göster
+121 Adres ve baþlýðý göster
+122 Yakýnlaþtýr
+123 **Show Targets
+124 Uzaklaþtýr
+125 Harita alanlarýný göster
+126 Yapýyý göster
+127 Alternatif gösterim
+128 Baðlantýlarý göster
+129 Ýçindekileri göster
+130 Karakter tarzý...
+131 Renkler...
+132 Biçim...
+133 Arkaplan görüntüsü...
+134 Kural yarat...
+135 \'class\' uygula...
+136 Tarzý tanýmlarý
+137 Bilgi türü
+138 Vurgu
+139 Kuvvetli
+140 Cite
+141 Taným
+142 Kod
+143 Deðiþken
+144 Örnek
+145 Tuþtakýmý
+146 **Abbreviation
+147 **Acronym
+148 **Insertion
+149 **Deletion
+150 Karakter birimi
+151 Ýtalik
+152 Kalýn
+153 Teletype
+154 Büyük
+155 Küçük
+156 Alt
+157 Üst
+158 **Quotation
+159 **BDO
+160 Bölüm numaralandýrmasý
+161 Kitap yap
+162 **Show log file
+163 **Purge cache
+164 Amaya hakkýnda
+165 **About Amaya at W3C
+166 Tarama
+167 Seçme
+168 Arama
+169 Görünümler
+170 Birim yaratma
+171 Baðlantýlar
+172 Yeniden yapýlandýrma
+173 Tablolar
+174 Matematik
+175 Görüntü haritalarý
+176 Tarz tanýmlarý
+177 Özellikler
+178 Yazým hatalarý aranýyor
+179 Sayfa yerleþtirme
+180 Bastýrma
+181 Numaralandýrmasý
+182 Kitap oluþturma
+183 Amaya yapýlandýrmasý

@@ -37,6 +37,8 @@ typedef struct _Frame_Ctl
   int           EntryPaste;	/* Entry number of the Paste command	  */
   int		MenuUndo;	/* Menu including the Undo command or -1  */
   int           EntryUndo;	/* Entry number of the Undo command	  */
+  int		MenuRedo;	/* Menu including the Redo command or -1  */
+  int           EntryRedo;	/* Entry number of the Redo command	  */
   ThotWidget	WdMenus[MAX_MENU];	/* List of menu Widgets		  */
   boolean	ActifMenus[MAX_MENU];	/* Active Menus   		  */
   Proc  	Call_Button[MAX_BUTTON];/* List of button Callbacks	  */

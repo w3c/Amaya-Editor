@@ -1300,6 +1300,9 @@ PtrDocument        *pDoc;
        /* de la chaine des descripteurs de references du document */
        GetReferredDescr (&pNewDoc->DocReferredEl);
        pNewDoc->DocLabelExpMax = 1;
+       pNewDoc->DocLastEdit = NULL;
+       pNewDoc->DocNbEditsInHistory = 0;
+       pNewDoc->DocEditSequence = FALSE;
        NbUsed_Document++;
      }
 }

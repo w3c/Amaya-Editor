@@ -25,6 +25,8 @@ extern void OpenHistorySequence ( PtrDocument pDoc,
 extern void CloseHistorySequence ( PtrDocument pDoc );
 extern void TtcUndo ( Document doc,
                       View view );
+extern void TtcRedo ( Document doc,
+                      View view );
 
 #else /* __STDC__ */
 
@@ -46,6 +48,8 @@ extern void OpenHistorySequence (/* PtrDocument pDoc,
                                     int lastSelChar */);
 extern void CloseHistorySequence (/* PtrDocument pDoc */);
 extern void TtcUndo (/* Document doc,
+                        View view */);
+extern void TtcRedo (/* Document doc,
                         View view */);
 
 #endif /* __STDC__ */

@@ -312,16 +312,16 @@ typedef struct _ElementDescr
     boolean  		ElTerminal;	/* the element is a leaf in the tree */
     union
     {
-	struct		/* ElTerminal = False */
+	struct				/* ElTerminal = False */
 	{
 	    PtrElement _ElFirstChild_;	/* first child element */
 	} s0;
-	struct		/* ElTerminal = True */
+	struct				/* ElTerminal = True */
 	{
 	    LeafType _ElLeafType_;	/* type of leaf */
 	    union
 	    {
-		struct	/* ElLeafType = LtText */
+		struct			/* ElLeafType = LtText */
 		{
 		    PtrTextBuffer _ElText_;  	/* pointer on the buffer
 						   containing the
@@ -329,11 +329,11 @@ typedef struct _ElementDescr
 		    int           _ElTextLength_;/* text length */
 		    Language      _ElLanguage_;	/* text language */
 		} s0;
-		struct	/* ElLeafType = LtGraphics or LtSymbol */
+		struct			/*ElLeafType = LtGraphics or LtSymbol*/
 		{
 		    char          _ElGraph_;	/* code of element */
 		} s1;
-		struct	/* ElLeafType = LtPageColBreak */
+		struct			/* ElLeafType = LtPageColBreak */
 		{
 		    boolean       _ElAssocHeader_; /* the header associated
 						     elements must be created*/
@@ -343,26 +343,26 @@ typedef struct _ElementDescr
 		    int           _ElViewPSchema_; /* view number in the
 						      presentation schema */
 		} s2;
-		struct	/* ElLeafType = LtReference */
+		struct			/* ElLeafType = LtReference */
 		{
 		    PtrReference  _ElReference_;   /* pointer on the referenced
 						      element */
 		} s3;
-		struct	/* ElLeafType = LtPairedElem */
+		struct			/* ElLeafType = LtPairedElem */
 		{
 		    int		  _ElPairIdent_;   /* unique identifier of the
 						      pair in the document */
 		    PtrElement	  _ElOtherPairedEl_;/* pointer on the other
 						     element in the same pair*/
 		} s4;
-		struct	/* ElLeafType = LtPlyLine */
+		struct			/* ElLeafType = LtPlyLine */
 		{
 		    PtrTextBuffer _ElPolyLineBuffer_; /* buffer containing the
 						     points defining the line*/
 		    int		  _ElNPoints_;	     /* number of points */
 		    char	  _ElPolyLineType_;  /* type of line */
 		} s5;
-		struct	/* TypeImage = LtPicture */
+		struct			/* TypeImage = LtPicture */
 		{
 		    PtrTextBuffer _ElPictureName_;/* pointer on the buffer
 						   containing thepicture name*/
@@ -481,6 +481,72 @@ typedef struct _DocViewDescr
 					   the active view */
 } DocViewDescr;
 
+/* type of an editing operation recorded in the history */
+typedef enum
+{
+        EtDelimiter,    /* Sequence delimiter */
+        EtElement,      /* Operation on elements */
+        EtAttribute     /* operation on an attribute */
+} EditOpType;
+ 
+typedef struct _EditOperation *PtrEditOperation;
+ 
+/* Description of an editing operation in the history of editing commands */
+typedef struct _EditOperation
+{
+  PtrEditOperation EoNextOp;          /* next operation in the editing
+                                         history */
+  PtrEditOperation EoPreviousOp;      /* previous operation in the editing
+                                         history */
+  EditOpType       EoType;            /* type of operation */
+union
+  {
+  struct        /* EoType = EtDelimiter */
+     {
+     PtrElement    _EoFirstSelectedEl_;  /* first selected element */
+     int           _EoFirstSelectedChar_;/* index of first selected character
+                                            in the first selected element,
+                                            if it's acharacter string */
+     PtrElement    _EoLastSelectedEl_;  /* last selected element */
+     int           _EoLastSelectedChar_;/* index of last selected character in
+                                           the last selected element, if it's a
+                                           character string */
+     } s0;
+  struct        /* EoType = EtElement */
+     {
+     PtrElement    _EoParent_;          /* parent of elements to be inserted to
+                                           undo the operation */
+     PtrElement    _EoPreviousSibling_; /* previous sibling of first element to
+                                           be inserted to undo the operation */
+     PtrElement    _EoCreatedElement_;  /* element to be removed to undo the
+                                           operation */
+     PtrElement    _EoSavedElement_;    /* copy of the element to be inserted
+                                           to undo the operation */
+     } s1;
+  struct      /* EoType = EtAttribute */
+    {
+    PtrElement     _EoElement_;         /* the element to which the attribute
+                                           belongs */
+    PtrAttribute   _EoCreatedAttribute_;/* attribute to be removed to undo the
+                                           operation */
+    PtrAttribute   _EoSavedAttribute_;  /* copy of the attribute to be inserted
+                                           to undo the operation */
+    } s2;
+  } u;
+} EditOperation;
+
+#define EoFirstSelectedEl u.s0._EoFirstSelectedEl_
+#define EoFirstSelectedChar u.s0._EoFirstSelectedChar_
+#define EoLastSelectedEl u.s0._EoLastSelectedEl_
+#define EoLastSelectedChar u.s0._EoLastSelectedChar_
+#define EoParent u.s1._EoParent_
+#define EoPreviousSibling u.s1._EoPreviousSibling_
+#define EoCreatedElement u.s1._EoCreatedElement_
+#define EoSavedElement u.s1._EoSavedElement_
+#define EoElement u.s2._EoElement_
+#define EoCreatedAttribute u.s2._EoCreatedAttribute_
+#define EoSavedAttribute u.s2._EoSavedAttribute_
+
 typedef struct _DocumentDescr *PtrDocument;
 
 /* a document under is internal representation */
@@ -584,7 +650,17 @@ typedef struct _DocumentDescr
 	unsigned char	DocCheckingMode; /* check document structure against
 					    the structure schemas */
 	boolean		DocPivotError;  /* an format error has been detected */
+
+	/* history of last changes made in the document */
+	PtrEditOperation DocLastEdit;	/* latest editing operation */
+	int		DocNbEditsInHistory; /* number of editing commands
+					     recorded in the history */
+	boolean		DocEditSequence;/* indicate whether a sequence of
+					   editing operations is open */
+	/* queue of latest undone commands */
+	PtrEditOperation DocLastUndone;	/* latest editing operation undone */
+	int		DocNbUndone;	/* number of undone editing commands */
+
 } DocumentDescr;
 
 #endif /* __TYPE_INT_H__ */
-

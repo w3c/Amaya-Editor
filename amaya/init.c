@@ -1667,9 +1667,11 @@ STRING documentname;
   imagefile = TtaGetMemory (ustrlen (documentname) + 6);
   ustrcpy (imagefile, documentname);
   ptr = ustrrchr (imagefile, '.');
-  ptr++;
-  ustrcpy (ptr, "html");
-  
+  if (!ptr)
+     ustrcat (imagefile, ".html");
+  else
+     ustrcpy (&(ptr[1]), "html");
+
   /* create the source and dest file names */
   source = TtaGetMemory (ustrlen (TempFileDirectory) + ustrlen (imagefile) + 6);
   sprintf (source, "%s%c%d%c%s", 
@@ -4075,7 +4077,6 @@ View                view;
 
 #endif
 {
-  Document    document;
   CHAR    localname[MAX_LENGTH];
   
   ustrcpy (localname, AMAYA_PAGE_DOC);

@@ -46,6 +46,7 @@ MENUS
 	view:5 File5 button:BCloseView -> TtcCloseView;
 
 	Edit_ button:BUndo -> TtcUndo;
+	Edit_ button:BRedo -> TtcRedo;
 	Edit_ Separator;
 	Edit_ button:BCut -> TtcCutSelection;
 	Edit_ button:BCopy -> TtcCopySelection;

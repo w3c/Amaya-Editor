@@ -6,12 +6,7 @@
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
+ * This module is part of the Thot library
  */
  
 #ifndef _APPSTRUCT_H_
@@ -167,6 +162,7 @@ extern void         TtcStartOfLine (Document document, View view);
 extern void         TtcSwitchButtonBar (Document document, View view);
 extern void         TtcSwitchCommands (Document document, View view);
 extern void         TtcUndo  (Document document, View view);
+extern void         TtcRedo  (Document document, View view);
 
 #else  /* __STDC__ */
 
@@ -253,6 +249,7 @@ extern void         TtcStartOfLine ( /*Document document, View view */ );
 extern void         TtcSwitchButtonBar ( /*Document document, View view */ );
 extern void         TtcSwitchCommands ( /*Document document, View view */ );
 extern void         TtcUndo ( /*Document document, View view */ );
+extern void         TtcRedo ( /*Document document, View view */ );
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
 

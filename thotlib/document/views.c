@@ -1079,6 +1079,7 @@ int                 height;
 	 SwitchPaste(pDoc, TRUE);
        /* TODO check the Undo state of the document */
        SwitchUndo (pDoc, FALSE);
+       SwitchRedo (pDoc, FALSE);
 
        /* met a jour les menus de la fenetre */
        if (ThotLocalActions[T_chselect] != NULL)

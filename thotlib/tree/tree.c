@@ -2753,6 +2753,8 @@ boolean             withLabel;
    PtrSSchema          pExtSSch;
    SRule              *pExtRule;
 
+   if (typeNum == 0)
+      return NULL;
    pEl = NULL;			/* no element has been (yet) created */
    if (Root)
      /* rule specifying the type of element */
