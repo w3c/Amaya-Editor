@@ -4877,10 +4877,9 @@ void           ReadTextFile (FILE *infile, char* textbuf,
   UNDEFINED_CHARSET.
   The type of the document (given by the first element name)
   ----------------------------------------------------------------------*/
-void          CheckDocHeader (CHAR_T *fileName, ThotBool *xmlDec,
-			      ThotBool *docType, ThotBool *isXML,
-			      int *parsingLevel, CHARSET *charset,
-			      STRING charsetname, DocumentType *thotType)
+void CheckDocHeader (CHAR_T *fileName, ThotBool *xmlDec, ThotBool *docType,
+		     ThotBool *isXML, int *parsingLevel, CHARSET *charset,
+		     STRING charsetname, DocumentType *thotType)
 {
   gzFile      stream;
   char        file_name[MAX_LENGTH];
@@ -5144,7 +5143,7 @@ void          CheckDocHeader (CHAR_T *fileName, ThotBool *xmlDec,
   Parses the loaded file to detect if it includes a charset value 
   in a META element 
   ----------------------------------------------------------------------*/
-void         CheckCharsetInMeta (CHAR_T *fileName, CHARSET *charset, STRING charsetname)
+void CheckCharsetInMeta (CHAR_T *fileName, CHARSET *charset, STRING charsetname)
 {
   gzFile     stream;
   char       file_name[MAX_LENGTH];
@@ -5236,8 +5235,8 @@ void         CheckCharsetInMeta (CHAR_T *fileName, CHARSET *charset, STRING char
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void         CheckHeadElements (Element el, Element *elHead,
-				       Element *elBody, Document doc)
+static void CheckHeadElements (Element el, Element *elHead,
+			       Element *elBody, Document doc)
 {
   Element           nextEl, rootElement, lastChild;
   ElementType       elType;
@@ -5251,8 +5250,7 @@ static void         CheckHeadElements (Element el, Element *elHead,
       TtaNextSibling (&nextEl);
       elType = TtaGetElementType (el);
       if (elType.ElTypeNum == HTML_EL_BODY &&
-	  elType.ElSSchema == DocumentSSchema &&
-	  *elBody == NULL)
+	  elType.ElSSchema == DocumentSSchema && *elBody == NULL)
 	*elBody = el;
       else if ((elType.ElTypeNum == HTML_EL_TITLE ||
 		elType.ElTypeNum == HTML_EL_ISINDEX ||

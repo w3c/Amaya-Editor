@@ -63,7 +63,6 @@ RULES
 	{ elements TITLE and BASE must be generated as the first chidren
 	  of the HEAD element }
 	Get TITLE Before;
-	Get BASE Before;
 #endif
 	Create '<isindex';
 	IF Prompt
@@ -102,7 +101,6 @@ RULES
 	{ elements TITLE and BASE must be generated as the first chidren
 	  of the HEAD element }
 	Get TITLE Before;
-	Get BASE Before;
 #endif
 	Create '<style';
 	IF Notation
@@ -125,7 +123,6 @@ RULES
 	{ elements TITLE and BASE must be generated as the first chidren
 	  of the HEAD element }
 	Get TITLE Before;
-	Get BASE Before;
 #endif
 	Create '<script';
 	Create Attributes;
@@ -141,8 +138,6 @@ RULES
 #ifdef XML
 	{ elements TITLE and BASE must be generated as the first chidren
 	  of the HEAD element }
-	Get TITLE Before;
-	Get BASE Before;
 #endif
 	Create '<meta' Before;
 	Create Attributes Before;
@@ -159,7 +154,6 @@ RULES
 	{ elements TITLE and BASE must be generated as the first chidren
 	  of the HEAD element }
 	Get TITLE Before;
-	Get BASE Before;
 #endif
 	Create '<link';
 	Remove;

@@ -705,7 +705,7 @@ void                SaveDocumentAs (Document doc, View view)
   ----------------------------------------------------------------------*/
 void         SetNamespacesAndDTD (Document doc)
 {
-   Element		root, el, head, meta, lastmeta, lastel;
+   Element		root, el, head, meta;
    ElementType		elType;
    AttributeType	attrType;
    Attribute		attr, charsetAttr;
@@ -900,61 +900,50 @@ void         SetNamespacesAndDTD (Document doc)
        /* look for a meta/http-equiv element */
        el = TtaGetFirstChild (head);
        meta = NULL;
-       lastmeta = NULL;
-       lastel = NULL;
        attrType.AttrTypeNum = HTML_ATTR_http_equiv;
        attr = NULL;
        while (el && !meta)
 	 {
-	 elType = TtaGetElementType (el);
-         if (elType.ElSSchema == attrType.AttrSSchema &&
-             elType.ElTypeNum == HTML_EL_META)
-	    {
-	    lastmeta = meta;
-	    attr = TtaGetAttribute (el, attrType);
-	    if (attr)
-	       meta = el;
-	    }
-	 if (!meta)
-	    {
-	    lastel = el;
-	    TtaNextSibling (&el);
-	    }
+	   elType = TtaGetElementType (el);
+	   if (elType.ElSSchema == attrType.AttrSSchema &&
+	       elType.ElTypeNum == HTML_EL_META)
+	     {
+	       attr = TtaGetAttribute (el, attrType);
+	       if (attr)
+		 meta = el;
+	     }
+	   if (!meta)
+	     TtaNextSibling (&el);
 	 }
        if (!meta)
 	 /* there is no meta element with a http-equiv attribute */
-	 /* create one */
+	 /* create one at the begginning of the head */
 	 {
-	 elType.ElSSchema = attrType.AttrSSchema;
-	 elType.ElTypeNum = HTML_EL_META;
-	 meta = TtaNewElement (doc, elType);
-	 if (!lastmeta)
-	    lastmeta = lastel;
-	 if (lastmeta)
-	    TtaInsertSibling (meta, lastmeta, FALSE, doc);
-	 else
-	    TtaInsertFirstChild (&meta, head, doc);
+	   elType.ElSSchema = attrType.AttrSSchema;
+	   elType.ElTypeNum = HTML_EL_META;
+	   meta = TtaNewElement (doc, elType);
+	   TtaInsertFirstChild (&meta, head, doc);
 	 }
        if (!attr)
 	 {
-	 attr = TtaNewAttribute (attrType);
-	 TtaAttachAttribute (meta, attr, doc);
+	   attr = TtaNewAttribute (attrType);
+	   TtaAttachAttribute (meta, attr, doc);
 	 }
        TtaSetAttributeText (attr, TEXT("Content-Type"), meta, doc);
        attrType.AttrTypeNum = HTML_ATTR_meta_content;
        attr = TtaGetAttribute (meta, attrType);
        if (!attr)
 	 {
-	 attr = TtaNewAttribute (attrType);
-	 TtaAttachAttribute (meta, attr, doc);
+	   attr = TtaNewAttribute (attrType);
+	   TtaAttachAttribute (meta, attr, doc);
 	 }
        if (Charset[0] == EOS)
 	 TtaSetAttributeText (attr, TEXT("text/html"), meta, doc);
        else
 	 {
-	 ustrcpy (buffer, TEXT("text/html; charset="));
-	 ustrcat (buffer, Charset);
-	 TtaSetAttributeText (attr, buffer, meta, doc);
+	   ustrcpy (buffer, TEXT("text/html; charset="));
+	   ustrcat (buffer, Charset);
+	   TtaSetAttributeText (attr, buffer, meta, doc);
 	 }
        } 
      }
