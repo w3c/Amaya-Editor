@@ -1260,13 +1260,25 @@ static Element ClosestLeaf (el, pos)
    do
       {
       prev = parent;  TtaPreviousSibling (&prev);
+      if (prev != NULL)
+	 {
+         elType = TtaGetElementType (prev);
+         if (elType.ElTypeNum == MathML_EL_FencedSeparator)
+	    /* avoid selecting FencedSeparator elements */
+	    TtaPreviousSibling (&prev);
+	 }
       if (prev == NULL)
 	 {
 	 next = parent;  TtaNextSibling (&next);
-	 if (next == NULL)
+	 if (next != NULL)
 	    {
-	    parent = TtaGetParent (parent);
+	    elType = TtaGetElementType (next);
+	    if (elType.ElTypeNum == MathML_EL_FencedSeparator)
+	       /* avoid selecting FencedSeparator elements */
+	       TtaNextSibling (&next);
 	    }
+	 if (next == NULL)
+	    parent = TtaGetParent (parent);
 	 }
       }
    while (next == NULL && prev == NULL && parent != NULL);
@@ -1294,12 +1306,10 @@ static Element ClosestLeaf (el, pos)
       elem = leaf;
       elType = TtaGetElementType (leaf);
       if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
-	{
 	if (prev != NULL)
 	   *pos = TtaGetTextLength (leaf) + 1;
 	else
 	   *pos = 1;
-	}
       }
    return elem;
 }
@@ -1434,7 +1444,7 @@ static void ParseMathString (theText, theElem, doc)
 	  {
 	  if (newSelEl != NULL)
 	     newSelEl = ClosestLeaf (theElem, &newSelChar);
-	  el = TtaGetParent (theElem);
+
 	  prev = theElem;
 	  TtaPreviousSibling (&prev);
 	  if (prev == NULL)
@@ -1443,6 +1453,7 @@ static void ParseMathString (theText, theElem, doc)
 	     TtaNextSibling (&next);
 	     }
 
+	  parent = TtaGetParent (theElem);
 	  TtaDeleteTree (theElem, doc);
 	  theElem = NULL;
 
@@ -1456,13 +1467,19 @@ static void ParseMathString (theText, theElem, doc)
 	  if (placeholderEl != NULL)
 	     newSelEl = placeholderEl;   
 
-	  CheckMROW (&el, doc);
-	  if (el != NULL)
-	   if (TtaGetFirstChild (el) == NULL)
+	  /* if the deleted element is a child of a FencedExpression element,
+	     upate the associated FencedSeparator elements */
+	  elType = TtaGetElementType (parent);
+	  if (elType.ElTypeNum == MathML_EL_FencedExpression)
+	     RegenerateFencedSeparators (parent, doc);
+
+	  CheckMROW (&parent, doc);
+	  if (parent != NULL)
+	   if (TtaGetFirstChild (parent) == NULL)
 	      {
 	      elType.ElTypeNum = MathML_EL_Construct;
 	      newEl = TtaNewElement (doc, elType);
-	      TtaInsertFirstChild (&newEl, el, doc);
+	      TtaInsertFirstChild (&newEl, parent, doc);
 	      if (newSelEl != NULL)
 	         newSelEl = newEl;
 	      }
@@ -1627,9 +1644,18 @@ static void ParseMathString (theText, theElem, doc)
        }
     }
 
-  /* Create a MROW element that encompasses the new elements if necessary */
   if (firstEl != NULL)
-    CreateParentMROW (firstEl, doc);
+     {
+     /* if we are in a FencedExpression element, upate the associated
+	FencedSeparator elements */
+     parent = TtaGetParent (firstEl);
+     elType = TtaGetElementType (parent);
+     if (elType.ElTypeNum == MathML_EL_FencedExpression)
+	 RegenerateFencedSeparators (parent, doc);
+
+     /* Create a MROW element that encompasses the new elements if necessary */
+     CreateParentMROW (firstEl, doc);
+     }
 
   TtaSetStructureChecking (1, doc);
   TtaSetDisplayMode (doc, DisplayImmediately);
@@ -1792,7 +1818,7 @@ void MathElementDeleted(event)
    IsLastDeletedElement = FALSE;
    LastDeletedElement = NULL;
 
-   /* If there is an enclosing MROW that is no longer neede, remove
+   /* If there is an enclosing MROW that is no longer needed, remove
       that MROW */
    CheckMROW (&parent, event->document);
 

@@ -1039,10 +1039,14 @@ int                 ActiveAttr[];
 	/* du premier element selectionne' (lui-meme compris) */
 	while (pEl != NULL)
 	  {
-	     pSS = pEl->ElStructSchema;		/* schema de struct de l'element courant */
-	     /* on parcourt toutes les extensions de schema de ce schema */
-	     do
-	       {
+	     pSS = pEl->ElStructSchema;	/* schema de struct de l'element courant */
+	     if (pSS == NULL)
+		pEl = NULL;
+	     else
+		{
+	        /* on parcourt toutes les extensions de schema de ce schema */
+	        do
+	          {
 		  /* on a deja traite' ce schema de structure ? */
 		  new = TRUE;
 		  for (i = 1; i <= nbOfEntries; i++)	/* parcourt la table */
@@ -1077,18 +1081,21 @@ int                 ActiveAttr[];
 		    }
 		  /* passe a l'extension de schema suivante */
 		  pSS = pSS->SsNextExtens;
-	       }
-	     while (pSS != NULL);
-	     pEl = pEl->ElParent;
-	     /* passe a l'element ascendant */
+	          }
+	        while (pSS != NULL);
+	        /* passe a l'element ascendant */
+	        pEl = pEl->ElParent;
+		}
 	  }
 
 	/* cherche les attributs locaux du premier element selectionne' */
 	pSS = firstSel->ElStructSchema;
-	pRe1 = &pSS->SsRule[firstSel->ElTypeNumber - 1];
-	pSchExt = SelDoc->DocSSchema;
-	do
+	if (pSS != NULL)
 	  {
+	  pRe1 = &pSS->SsRule[firstSel->ElTypeNumber - 1];
+	  pSchExt = SelDoc->DocSSchema;
+	  do
+	     {
 	     if (pRe1 != NULL)
 		/* prend les attributs locaux definis dans cette regle */
 		for (att = 1; att <= pRe1->SrNLocalAttrs; att++)
@@ -1114,8 +1121,9 @@ int                 ActiveAttr[];
 		  pRe1 = ExtensionRule (firstSel->ElStructSchema, firstSel->ElTypeNumber,
 					pSchExt);
 	       }
-	  }
-	while (pSchExt != NULL);
+	     }
+	   while (pSchExt != NULL);
+	   }
 
 	/* la table contient tous les attributs applicables aux elements */
 	/* selectionnes */

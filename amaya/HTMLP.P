@@ -58,6 +58,8 @@ PRINT
 #define VSpaceBeforeH5 0.5
 #define VSpaceBeforeH6 0.5
 #define VSpaceInToC 0.2
+#define LIST_INDENT 2.3
+#define LIST_NUMBER_WIDTH 2
 
 COUNTERS
    ItemCounter : Rank of List_Item init Start Reinit ItemValue;
@@ -2216,7 +2218,8 @@ BOXES
  UL_DISC: BEGIN
 	Content: Text Greek '\267';
 	Height: 0.8;
-	VertPos: HRef = Next . HRef;
+	VertPos: HRef = Creator . HRef;
+	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
 	Visibility: Creator =;
 	FillPattern: nopattern;
 	IN Structure_view
@@ -2227,7 +2230,8 @@ BOXES
 	Height: 0.4;
 	Width: 0.4;
 	LineWeight: 1 px;
-	VertPos: Bottom = Next . HRef;
+	VertPos: Bottom = Creator . HRef;
+	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
 	Visibility: Creator =;
 	IN Structure_view
 		Visibility: 0;
@@ -2237,7 +2241,8 @@ BOXES
 	Height: 0.4;
 	Width: 0.4;
 	LineWeight: 1 px;
-	VertPos: Bottom = Next . HRef;
+	VertPos: Bottom = Creator . HRef;
+	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
 	Visibility: Creator =;
 	IN Structure_view
 		Visibility: 0;
@@ -2246,7 +2251,8 @@ BOXES
  OL_NUM_ARABIC:
 	BEGIN
 	Content: (Value(ItemCounter, Arabic) Text '. ');
-	VertPos: HRef = Next . HRef;
+	VertPos: HRef = Creator . HRef;
+	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
 	Visibility: Creator =;
 	IN Structure_view
 		Visibility: 0;
@@ -2254,7 +2260,8 @@ BOXES
  OL_NUM_LALPHA:
 	BEGIN
 	Content: (Value(ItemCounter, lowercase) Text '. ');
-	VertPos: HRef = Next . HRef;
+	VertPos: HRef = Creator . HRef;
+	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
 	Visibility: Creator =;
 	IN Structure_view
 		Visibility: 0;
@@ -2262,7 +2269,8 @@ BOXES
  OL_NUM_UALPHA:
 	BEGIN
 	Content: (Value(ItemCounter, Uppercase) Text '. ');
-	VertPos: HRef = Next . HRef;
+	VertPos: HRef = Creator . HRef;
+	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
 	Visibility: Creator =;
 	IN Structure_view
 		Visibility: 0;
@@ -2270,7 +2278,8 @@ BOXES
  OL_NUM_LROMAN:
 	BEGIN
 	Content: (Value(ItemCounter, lRoman) Text '. ');
-	VertPos: HRef = Next . HRef;
+	VertPos: HRef = Creator . HRef;
+	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
 	Visibility: Creator =;
 	IN Structure_view
 		Visibility: 0;
@@ -2278,7 +2287,8 @@ BOXES
  OL_NUM_UROMAN:
 	BEGIN
 	Content: (Value(ItemCounter, URoman) Text '. ');
-	VertPos: HRef = Next . HRef;
+	VertPos: HRef = Creator . HRef;
+	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
 	Visibility: Creator =;
 	IN Structure_view
 		Visibility: 0;
@@ -4794,8 +4804,8 @@ RULES
  Definition: BEGIN
 	CreateBefore(DD_S);
 	CreateWith(VerticalLine);
-	Width: Enclosing . Width - 2.3;
-	HorizPos: Left = Enclosing . Left + 2.3;
+	Width: Enclosing . Width - LIST_INDENT;
+	HorizPos: Left = Enclosing . Left + LIST_INDENT;
 #ifdef PAGE
 	Justify: Yes;
 #endif
@@ -4814,18 +4824,11 @@ RULES
 	if NOT within Table
 	   Justify: Yes;
 #endif
+	Width: Enclosing . Width;
 	if NOT within Definition and NOT within List_Item
-	   BEGIN
 	   VertPos: Top = Previous NOT MAP . Bottom + 0.5;
-	   Width: Enclosing . Width - 1;
-	   HorizPos: Left = Enclosing . Left + 1;
-	   END;
 	otherwise
-	   BEGIN
 	   VertPos: Top = Previous NOT MAP . Bottom;
-	   Width: Enclosing . Width;
-	   HorizPos: Left = Enclosing . Left;
-	   END;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -4844,18 +4847,11 @@ RULES
 	if NOT within Table
 	   Justify: Yes;
 #endif
+	Width: Enclosing . Width;
 	if NOT within Definition and NOT within List_Item
-	   BEGIN
 	   VertPos: Top = Previous NOT MAP . Bottom + 0.5;
-	   Width: Enclosing . Width - 1;
-	   HorizPos: Left = Enclosing . Left + 1;
-	   END;
 	otherwise
-	   BEGIN
 	   VertPos: Top = Previous NOT MAP . Bottom;
-	   Width: Enclosing . Width;
-	   HorizPos: Left = Enclosing . Left;
-	   END;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -4886,9 +4882,8 @@ RULES
 
  Menu:	BEGIN
 	LineBreak: No;
-	Width: Enclosing . Width - 1;
+	Width: Enclosing . Width;
 	VertPos: Top = Previous NOT MAP . Bottom + 0.5;
-	HorizPos: Left = Enclosing . Left + 1;
 	CreateBefore(MENU_S);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
@@ -4902,9 +4897,8 @@ RULES
 
  Directory: BEGIN
 	LineBreak: No;
-	Width: Enclosing . Width - 1;
+	Width: Enclosing . Width;
 	VertPos: Top = Previous NOT MAP . Bottom + 0.5;
-	HorizPos: Left = Enclosing . Left + 1;
 	CreateBefore(DIR_S);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
@@ -4920,8 +4914,8 @@ RULES
 	CreateBefore(LI_S);
 	CreateWith(VerticalLine);
 	LineBreak: No;
-	HorizPos: Left = Previous AnyBox . Right + 0.4;
-	Width: Right = Enclosing . Right;
+	HorizPos: Left = Enclosing . Left + LIST_INDENT;
+	Width: Enclosing . Width - LIST_INDENT;
 	VertPos: Top = Previous AnyElem . Bottom;
 	IN Structure_view
 		BEGIN
@@ -5333,6 +5327,8 @@ RULES
 #ifdef PAGE
 	CreateAfter(LinkPageNumber);
 #endif
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Foreground: Enclosing =;
 		Underline: Enclosing =;
@@ -6038,7 +6034,6 @@ ATTRIBUTES
 	        Height: 1 px;
 	   If NOT PICTURE_UNIT
 		Height: Enclosed . Height;
-#endif
 	   END;
 	END;
 
@@ -6204,17 +6199,9 @@ ATTRIBUTES
  IntItemStyle = UpperAlpha :
 	CreateBefore(OL_NUM_UALPHA);
  IntItemStyle = LowerRoman :
-	BEGIN
 	CreateBefore(OL_NUM_LROMAN);
-	HorizPos: Left = Enclosing . Left + 1.7;
-	Width: Enclosing . Width - 1.7;
-	END;
  IntItemStyle = UpperRoman :
-	BEGIN
 	CreateBefore(OL_NUM_UROMAN);
-	HorizPos: Left = Enclosing . Left + 1.7;
-	Width: Enclosing . Width - 1.7;
-	END;
  IntItemStyle = disc :
 	CreateBefore(UL_DISC);
  IntItemStyle = square :

@@ -20,6 +20,8 @@ STRUCT
 
    MROW = LIST OF (Construct);
 
+   FencedSeparator = TEXT;
+
    Construct (ATTR placeholder = yes_) = CASE OF
 		  MTEXT = TEXT (ATTR entity = yes_);
 		  MROW;
@@ -34,7 +36,6 @@ STRUCT
 			Numerator = Construct;
 			Denominator = Construct;
 			END;
-		  FencedSeparator = TEXT;
 		  MFENCED (ATTR open = TEXT; close = TEXT; separators = TEXT;
 				vertstretch = yes_) =
 			BEGIN
@@ -107,10 +108,10 @@ EXCEPT
    RootBase:		Hidden, NoCut;
    Numerator:		Hidden;
    Denominator:	 	Hidden;
-   FencedExpression:	Hidden, NoCut;
-   FencedSeparator:	Hidden, NoCut;
-   OpeningFence:	Hidden, NoCut;
-   ClosingFence:	Hidden, NoCut;
+   FencedExpression:	Hidden, NoCut, NoCreate;
+   FencedSeparator:	Hidden, NoCut, NoCreate;
+   OpeningFence:	Hidden, NoCut, NoCreate;
+   ClosingFence:	Hidden, NoCut, NoCreate;
    Base:	 	Hidden, NoCut;
    Subscript:	 	Hidden;
    Superscript:	 	Hidden;
