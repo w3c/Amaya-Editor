@@ -199,7 +199,6 @@ void *context;
 
 #endif
 {
-   char  *remoteAnnotIndex;
    REMOTELOAD_context *ctx;
 
    /* restore REMOTELOAD contextext's */  
@@ -207,12 +206,9 @@ void *context;
 
    if (!ctx)
      return;
-   remoteAnnotIndex = ctx->remoteAnnotIndex;
-   TtaFreeMemory (ctx);
+
    if (status == 0)
-     LINK_LoadAnnotationIndex (doc, remoteAnnotIndex);
-   /* TtaFileUnlink (remoteAnnotIndex);*/
-   TtaFreeMemory (remoteAnnotIndex);
+     LINK_LoadAnnotationIndex (doc, ctx->remoteAnnotIndex);
 }
 
 /*-----------------------------------------------------------------------
@@ -286,13 +282,8 @@ View view;
 			  TEXT("application/rdf"));
       TtaFreeMemory (annotURL);
 
-      if (res)
-	{
-	  /* the document wasn't loaded off the web (because of an error),
-	     we clear up the context */
-	  TtaFreeMemory (ctx->remoteAnnotIndex);
-	  TtaFreeMemory (ctx);
-	}
+      TtaFreeMemory (ctx->remoteAnnotIndex);
+      TtaFreeMemory (ctx);
     }
 }
 
