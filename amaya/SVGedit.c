@@ -1211,13 +1211,13 @@ static void UpdateStyleOrSvgAttr (int presType, Element el, Document doc)
     attr = NULL;
   else
     attr = TtaGetAttribute (el, attrType);
-  SetStyleAttribute (doc, el);
   if (attr)
     /* There is an SVG attribute for the same property. Remove it */
     {
       TtaRegisterAttributeDelete (attr, el, doc);
       TtaRemoveAttribute (el, attr, doc);
     }
+  SetStyleAttribute (doc, el);
   TtaSetDocumentModified (doc);
 }
 
