@@ -3039,6 +3039,25 @@ static void UpdateFloat (PtrAbstractBox pAb, PtrAbstractBox pParent,
 }
 
 /*----------------------------------------------------------------------
+  TransmitDeadStatus marks all children of a dead abstract box.
+  ----------------------------------------------------------------------*/
+static void TransmitDeadStatus (PtrAbstractBox pAb)
+{
+  PtrAbstractBox  pChild;
+
+  if (pAb)
+    {
+      pChild = pAb->AbFirstEnclosed;
+      while (pChild)
+	{ 
+	  pChild->AbDead = TRUE;
+	  TransmitDeadStatus (pChild);
+	  pChild = pChild->AbNext;
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
   ComputeUpdates checks what is changing in the current Abstract Box.
   Return TRUE if there is at least one change.
   ----------------------------------------------------------------------*/
@@ -3415,6 +3434,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
   /* AbstractBox DEAD */
   else if (pAb->AbDead)
     {
+      /* mark all children */
+      TransmitDeadStatus (pAb);
       AnyWidthUpdate = TRUE;
       if (pAb->AbLeafType == LtPolyLine)
 	FreePolyline (pBox);	/* libere la liste des buffers de la boite */
