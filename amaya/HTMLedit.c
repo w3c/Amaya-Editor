@@ -425,7 +425,7 @@ ThotBool		    withUndo;
 	TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_TARGET), NULL);
 	/* Dialogue form to insert HREF name */
 #ifndef _WINDOWS 
-	TtaNewForm (BaseDialog + AttrHREFForm, TtaGetViewFrame (doc, 1),  TtaGetMessage (AMAYA, AM_ATTRIBUTE), TRUE, 2, 'L', D_DONE);
+	TtaNewForm (BaseDialog + AttrHREFForm, TtaGetViewFrame (doc, 1),  TtaGetMessage (AMAYA, AM_ATTRIBUTE), TRUE, 2, 'L', D_CANCEL);
 	TtaNewTextForm (BaseDialog + AttrHREFText, BaseDialog + AttrHREFForm,
 			TtaGetMessage (AMAYA, AM_HREF_VALUE), 50, 1, FALSE);
 #endif /* !__WINDOWS */
@@ -691,9 +691,9 @@ Boolean		    withUndo;
    CreateAnchor creates a link or target element.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CreateAnchor (Document doc, View view, ThotBool createLink)
+void                CreateAnchor (Document doc, View view, ThotBool createLink)
 #else  /* __STDC__ */
-static void         CreateAnchor (doc, view, createLink)
+void                CreateAnchor (doc, view, createLink)
 Document            doc;
 View                view;
 ThotBool            createLink;
@@ -1462,22 +1462,6 @@ NotifyElement      *event;
 
 
 /*----------------------------------------------------------------------
-   CreateLink creates a link element.                              
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CreateLink (Document doc, View view)
-#else  /* __STDC__ */
-void                CreateLink (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
-{
-   CreateAnchor (doc, view, TRUE);
-}
-
-
-/*----------------------------------------------------------------------
    CreateTarget creates a target element.                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2035,9 +2019,9 @@ NotifyAttribute    *event;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateElemEmphasis (Document document, View view)
+void                SetOnOffEmphasis (Document document, View view)
 #else  /* __STDC__ */
-void                CreateElemEmphasis (document, view)
+void                SetOnOffEmphasis (document, view)
 Document            document;
 View                view;
 
@@ -2049,9 +2033,9 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateElemStrong (Document document, View view)
+void                SetOnOffStrong (Document document, View view)
 #else  /* __STDC__ */
-void                CreateElemStrong (document, view)
+void                SetOnOffStrong (document, view)
 Document            document;
 View                view;
 
@@ -2063,9 +2047,9 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateElemCite (Document document, View view)
+void                SetOnOffCite (Document document, View view)
 #else  /* __STDC__ */
-void                CreateElemCite (document, view)
+void                SetOnOffCite (document, view)
 Document            document;
 View                view;
 
@@ -2078,9 +2062,9 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateElemDefinition (Document document, View view)
+void                SetOnOffDefinition (Document document, View view)
 #else  /* __STDC__ */
-void                CreateElemDefinition (document, view)
+void                SetOnOffDefinition (document, view)
 Document            document;
 View                view;
 
@@ -2093,9 +2077,9 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateElemCode (Document document, View view)
+void                SetOnOffCode (Document document, View view)
 #else  /* __STDC__ */
-void                CreateElemCode (document, view)
+void                SetOnOffCode (document, view)
 Document            document;
 View                view;
 
@@ -2108,9 +2092,9 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateElemVariable (Document document, View view)
+void                SetOnOffVariable (Document document, View view)
 #else  /* __STDC__ */
-void                CreateElemVariable (document, view)
+void                SetOnOffVariable (document, view)
 Document            document;
 View                view;
 
@@ -2123,9 +2107,9 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateElemSample (Document document, View view)
+void                SetOnOffSample (Document document, View view)
 #else  /* __STDC__ */
-void                CreateElemSample (document, view)
+void                SetOnOffSample (document, view)
 Document            document;
 View                view;
 
@@ -2138,9 +2122,9 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateElemKeyboard (Document document, View view)
+void                SetOnOffKeyboard (Document document, View view)
 #else  /* __STDC__ */
-void                CreateElemKeyboard (document, view)
+void                SetOnOffKeyboard (document, view)
 Document            document;
 View                view;
 
@@ -2153,9 +2137,9 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateElemAbbr (Document document, View view)
+void                SetOnOffAbbr (Document document, View view)
 #else  /* __STDC__ */
-void                CreateElemAbbr (document, view)
+void                SetOnOffAbbr (document, view)
 Document            document;
 View                view;
 
@@ -2168,9 +2152,9 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateElemAcronym (Document document, View view)
+void                SetOnOffAcronym (Document document, View view)
 #else  /* __STDC__ */
-void                CreateElemAcronym (document, view)
+void                SetOnOffAcronym (document, view)
 Document            document;
 View                view;
 
@@ -2183,9 +2167,9 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateElemINS (Document document, View view)
+void                SetOnOffINS (Document document, View view)
 #else  /* __STDC__ */
-void                CreateElemINS (document, view)
+void                SetOnOffINS (document, view)
 Document            document;
 View                view;
 
@@ -2198,9 +2182,9 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateElemDEL (Document document, View view)
+void                SetOnOffDEL (Document document, View view)
 #else  /* __STDC__ */
-void                CreateElemDEL (document, view)
+void                SetOnOffDEL (document, view)
 Document            document;
 View                view;
 
@@ -2213,9 +2197,9 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateElemItalic (Document document, View view)
+void                SetOnOffItalic (Document document, View view)
 #else  /* __STDC__ */
-void                CreateElemItalic (document, view)
+void                SetOnOffItalic (document, view)
 Document            document;
 View                view;
 
@@ -2228,9 +2212,9 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateElemBold (Document document, View view)
+void                SetOnOffBold (Document document, View view)
 #else  /* __STDC__ */
-void                CreateElemBold (document, view)
+void                SetOnOffBold (document, view)
 Document            document;
 View                view;
 
@@ -2243,9 +2227,9 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateElemTeletype (Document document, View view)
+void                SetOnOffTeletype (Document document, View view)
 #else  /* __STDC__ */
-void                CreateElemTeletype (document, view)
+void                SetOnOffTeletype (document, view)
 Document            document;
 View                view;
 
@@ -2258,9 +2242,9 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateElemBig (Document document, View view)
+void                SetOnOffBig (Document document, View view)
 #else  /* __STDC__ */
-void                CreateElemBig (document, view)
+void                SetOnOffBig (document, view)
 Document            document;
 View                view;
 
@@ -2273,9 +2257,9 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateElemSmall (Document document, View view)
+void                SetOnOffSmall (Document document, View view)
 #else  /* __STDC__ */
-void                CreateElemSmall (document, view)
+void                SetOnOffSmall (document, view)
 Document            document;
 View                view;
 
@@ -2288,9 +2272,9 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateSub (Document document, View view)
+void                SetOnOffSub (Document document, View view)
 #else  /* __STDC__ */
-void                CreateSub (document, view)
+void                SetOnOffSub (document, view)
 Document            document;
 View                view;
 
@@ -2303,9 +2287,9 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateSup (Document document, View view)
+void                SetOnOffSup (Document document, View view)
 #else  /* __STDC__ */
-void                CreateSup (document, view)
+void                SetOnOffSup (document, view)
 Document            document;
 View                view;
 
@@ -2318,9 +2302,9 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateQuotation (Document document, View view)
+void                SetOnOffQuotation (Document document, View view)
 #else  /* __STDC__ */
-void                CreateQuotation (document, view)
+void                SetOnOffQuotation (document, view)
 Document            document;
 View                view;
 
@@ -2333,9 +2317,9 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateBDO (Document document, View view)
+void                SetOnOffBDO (Document document, View view)
 #else  /* __STDC__ */
-void                CreateBDO (document, view)
+void                SetOnOffBDO (document, view)
 Document            document;
 View                view;
 

@@ -214,6 +214,7 @@ THOT_EXPORT Document     IncludedDocument;
 THOT_EXPORT Element      AttrHREFelement;
 THOT_EXPORT STRING       AttrHREFvalue;
 THOT_EXPORT Document     SelectionDoc;
+THOT_EXPORT ThotBool	 IsNewAnchor;
 THOT_EXPORT ThotBool	 SaveAsHTML;
 THOT_EXPORT ThotBool	 SaveAsXHTML;
 THOT_EXPORT ThotBool	 SaveAsText;

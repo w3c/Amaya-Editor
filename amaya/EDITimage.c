@@ -661,6 +661,8 @@ STRING              shape;
 	GetAlt (doc, view);
 	TtaSetAttributeText (attr, ImgAlt, el, doc);
 	ImgAlt[0] = EOS;
+	/* The link element is a new created one */
+	IsNewAnchor = TRUE;
 	/* FrameUpdating creation of Area and selection of destination */
 	SelectDestination (doc, el, FALSE);
      }

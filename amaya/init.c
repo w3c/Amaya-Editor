@@ -4100,8 +4100,13 @@ STRING              data;
        
      case AttrHREFForm:
        /* *********HREF Attribute*********** */
-       /* create an attribute HREF for the Link_Anchor */
-       SetREFattribute (AttrHREFelement, AttrHREFdocument, AttrHREFvalue, NULL);
+       if (val == 1)
+	 /* create an attribute HREF for the Link_Anchor */
+	 SetREFattribute (AttrHREFelement, AttrHREFdocument, AttrHREFvalue, NULL);
+       else if (IsNewAnchor)
+	 /* remove the link if it was just created */
+	 DeleteAnchor (AttrHREFdocument, 1);
+
        break;
 
      case AttrHREFText:

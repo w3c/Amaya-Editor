@@ -481,7 +481,8 @@ View                view;
   el = InsertWithinHead (document, view, HTML_EL_LINK);
   if (el != NULL)
     {
-      /*TtaSelectElement (document, el);*/
+      /* The link element is a new created one */
+      IsNewAnchor = TRUE;
       /* Select a new destination */
       SelectDestination (document, el, FALSE);
     }
@@ -2166,11 +2167,19 @@ View                view;
        /* Search the anchor element */
        el = SearchAnchor (doc, el, TRUE);
        if (el == NULL)
-	 /* no anchor element, create a new link */
-	 CreateLink (doc, view);
+	 {
+	   /* The link element is a new created one */
+	   IsNewAnchor = TRUE;
+	   /* no anchor element, create a new link */
+	   CreateAnchor (doc, view, TRUE);
+	 }
        else
-         /* There is an anchor. Just select a new destination */
-	 SelectDestination (doc, el, TRUE);
+	 {
+	   /* The link element already exists */
+	   IsNewAnchor = FALSE;
+	   /* There is an anchor. Just select a new destination */
+	   SelectDestination (doc, el, TRUE);
+	 }
      }
 }
 
@@ -2218,12 +2227,27 @@ View                view;
        firstSelectedChar = 0;
        lastSelectedChar = 0;
      }
+   else if (elType.ElTypeNum == HTML_EL_AREA)
+     {
+       anchor = firstSelectedElement;
+       /* prepare the elements to be selected later */
+       firstSelectedElement = NULL;
+       lastSelectedElement = NULL;
+       firstSelectedChar = 0;
+       lastSelectedChar = 0;
+     }
+   else if (elType.ElTypeNum == HTML_EL_Cite)
+     {
+       SetOnOffCite (doc, 1);
+       return;
+     }
    else
      {
        /* search the surrounding Anchor element */
        elType.ElTypeNum = HTML_EL_Anchor;
        anchor = TtaGetTypedAncestor (firstSelectedElement, elType);
      }
+
    if (anchor != NULL)
      {
        /* ask Thot to stop displaying changes made in the document */
@@ -2245,6 +2269,13 @@ View                view;
 	  previous = child;
 	  child = next;
 	  }
+       /* prepare the next selection */
+       if (firstSelectedElement == NULL)
+	 firstSelectedElement = TtaGetPredecessor (anchor);
+       if (firstSelectedElement == NULL)
+	 firstSelectedElement = TtaGetSuccessor (anchor);
+       if (firstSelectedElement == NULL)
+	 firstSelectedElement = TtaGetParent (anchor);
        /* delete the anchor element itself */
        TtaDeleteTree (anchor, doc);
        TtaSetDocumentModified (doc);

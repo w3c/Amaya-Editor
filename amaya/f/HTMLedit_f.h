@@ -23,13 +23,14 @@ extern Attribute GetNameAttr ( Document doc,
 extern void CreateTargetAnchor ( Document doc,
                                  Element el,
                                  ThotBool withUndo );
+extern void CreateAnchor ( Document doc,
+                           View view,
+                           ThotBool createLink );
 extern void MakeUniqueName ( Element el,
                              Document doc );
 extern void ElementCreated ( NotifyElement * event );
 extern void ElementDeleted ( NotifyElement *event );
 extern void ElementPasted ( NotifyElement * event );
-extern void CreateLink ( Document doc,
-                         View view );
 extern void CreateTarget ( Document doc,
                            View view );
 extern void UpdateAttrID ( NotifyAttribute * event );
@@ -49,48 +50,48 @@ extern void UpdateAttrIntItemStyle ( NotifyAttribute * event );
 extern void AttrItemStyle ( NotifyAttribute * event );
 extern ThotBool GlobalAttrInMenu ( NotifyAttribute * event );
 extern ThotBool AttrNAMEinMenu ( NotifyAttribute * event );
-extern void CreateElemEmphasis ( Document document,
-                                 View view );
-extern void CreateElemStrong ( Document document,
+extern void SetOnOffEmphasis ( Document document,
                                View view );
-extern void CreateElemCite ( Document document,
+extern void SetOnOffStrong ( Document document,
                              View view );
-extern void CreateElemDefinition ( Document document,
-                                   View view );
-extern void CreateElemCode ( Document document,
-                             View view );
-extern void CreateElemVariable ( Document document,
+extern void SetOnOffCite ( Document document,
+                           View view );
+extern void SetOnOffDefinition ( Document document,
                                  View view );
-extern void CreateElemSample ( Document document,
+extern void SetOnOffCode ( Document document,
+                           View view );
+extern void SetOnOffVariable ( Document document,
                                View view );
-extern void CreateElemKeyboard ( Document document,
-                                 View view );
-extern void CreateElemAbbr ( Document document,
+extern void SetOnOffSample ( Document document,
                              View view );
-extern void CreateElemAcronym ( Document document,
+extern void SetOnOffKeyboard ( Document document,
+                               View view );
+extern void SetOnOffAbbr ( Document document,
+                           View view );
+extern void SetOnOffAcronym ( Document document,
+                              View view );
+extern void SetOnOffINS ( Document document,
+                          View view );
+extern void SetOnOffDEL ( Document document,
+                          View view );
+extern void SetOnOffItalic ( Document document,
+                             View view );
+extern void SetOnOffBold ( Document document,
+                           View view );
+extern void SetOnOffTeletype ( Document document,
+                               View view );
+extern void SetOnOffBig ( Document document,
+                          View view );
+extern void SetOnOffSmall ( Document document,
+                            View view );
+extern void SetOnOffSub ( Document document,
+                          View view );
+extern void SetOnOffSup ( Document document,
+                          View view );
+extern void SetOnOffQuotation ( Document document,
                                 View view );
-extern void CreateElemINS ( Document document,
-                            View view );
-extern void CreateElemDEL ( Document document,
-                            View view );
-extern void CreateElemItalic ( Document document,
-                               View view );
-extern void CreateElemBold ( Document document,
-                             View view );
-extern void CreateElemTeletype ( Document document,
-                                 View view );
-extern void CreateElemBig ( Document document,
-                            View view );
-extern void CreateElemSmall ( Document document,
-                              View view );
-extern void CreateSub ( Document document,
-                        View view );
-extern void CreateSup ( Document document,
-                        View view );
-extern void CreateQuotation ( Document document,
-                              View view );
-extern void CreateBDO ( Document document,
-                        View view );
+extern void SetOnOffBDO ( Document document,
+                          View view );
 extern Element SearchAnchor ( Document doc,
                               Element element,
                               ThotBool link );
@@ -118,13 +119,14 @@ extern Attribute GetNameAttr (/* Document doc,
 extern void CreateTargetAnchor (/* Document doc,
                                    Element el,
                                    ThotBool withUndo */);
+extern void CreateAnchor (/* Document doc,
+                             View view,
+                             ThotBool createLink */);
 extern void MakeUniqueName (/* Element el,
                                Document doc */);
 extern void ElementCreated (/* NotifyElement * event */);
 extern void ElementDeleted (/* NotifyElement *event */);
 extern void ElementPasted (/* NotifyElement * event */);
-extern void CreateLink (/* Document doc,
-                           View view */);
 extern void CreateTarget (/* Document doc,
                              View view */);
 extern void UpdateAttrID (/* NotifyAttribute * event */);
@@ -144,48 +146,48 @@ extern void UpdateAttrIntItemStyle (/* NotifyAttribute * event */);
 extern void AttrItemStyle (/* NotifyAttribute * event */);
 extern ThotBool GlobalAttrInMenu (/* NotifyAttribute * event */);
 extern ThotBool AttrNAMEinMenu (/* NotifyAttribute * event */);
-extern void CreateElemEmphasis (/* Document document,
-                                   View view */);
-extern void CreateElemStrong (/* Document document,
+extern void SetOnOffEmphasis (/* Document document,
                                  View view */);
-extern void CreateElemCite (/* Document document,
+extern void SetOnOffStrong (/* Document document,
                                View view */);
-extern void CreateElemDefinition (/* Document document,
-                                     View view */);
-extern void CreateElemCode (/* Document document,
-                               View view */);
-extern void CreateElemVariable (/* Document document,
+extern void SetOnOffCite (/* Document document,
+                             View view */);
+extern void SetOnOffDefinition (/* Document document,
                                    View view */);
-extern void CreateElemSample (/* Document document,
+extern void SetOnOffCode (/* Document document,
+                             View view */);
+extern void SetOnOffVariable (/* Document document,
                                  View view */);
-extern void CreateElemKeyboard (/* Document document,
-                                   View view */);
-extern void CreateElemAbbr (/* Document document,
+extern void SetOnOffSample (/* Document document,
                                View view */);
-extern void CreateElemAcronym (/* Document document,
+extern void SetOnOffKeyboard (/* Document document,
+                                 View view */);
+extern void SetOnOffAbbr (/* Document document,
+                             View view */);
+extern void SetOnOffAcronym (/* Document document,
+                                View view */);
+extern void SetOnOffINS (/* Document document,
+                            View view */);
+extern void SetOnOffDEL (/* Document document,
+                            View view */);
+extern void SetOnOffItalic (/* Document document,
+                               View view */);
+extern void SetOnOffBold (/* Document document,
+                             View view */);
+extern void SetOnOffTeletype (/* Document document,
+                                 View view */);
+extern void SetOnOffBig (/* Document document,
+                            View view */);
+extern void SetOnOffSmall (/* Document document,
+                              View view */);
+extern void SetOnOffSub (/* Document document,
+                            View view */);
+extern void SetOnOffSup (/* Document document,
+                            View view */);
+extern void SetOnOffQuotation (/* Document document,
                                   View view */);
-extern void CreateElemINS (/* Document document,
-                              View view */);
-extern void CreateElemDEL (/* Document document,
-                              View view */);
-extern void CreateElemItalic (/* Document document,
-                                 View view */);
-extern void CreateElemBold (/* Document document,
-                               View view */);
-extern void CreateElemTeletype (/* Document document,
-                                   View view */);
-extern void CreateElemBig (/* Document document,
-                              View view */);
-extern void CreateElemSmall (/* Document document,
-                                View view */);
-extern void CreateSub (/* Document document,
-                          View view */);
-extern void CreateSup (/* Document document,
-                          View view */);
-extern void CreateQuotation (/* Document document,
-                                View view */);
-extern void CreateBDO (/* Document document,
-                          View view */);
+extern void SetOnOffBDO (/* Document document,
+                            View view */);
 extern Element SearchAnchor (/* Document doc,
                                 Element element,
                                 ThotBool link */);
