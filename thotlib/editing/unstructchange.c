@@ -808,6 +808,8 @@ void PasteCommand ()
 		    {
 		      /* get the last column of the cell */
 		      GetCellSpans (pPasted, &colspan, &rowspan);
+		      if (rowspan == 0)
+			rowspan = 9999;
 		      while (pNextRow && rowspan > 1)
 			{
 			  pNextRow = NextRowInTable (pNextRow, pTable);

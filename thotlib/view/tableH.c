@@ -1365,7 +1365,7 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
 					      memset (pTabSpan, 0, sizeof (TabSpan));
 					    }
 					  if (pAttr->AeAttrValue == 0)
-					    pTabSpan->TaSpanNumber[rspanNumber] = 999;
+					    pTabSpan->TaSpanNumber[rspanNumber] = 9999;
 					  else
 					    pTabSpan->TaSpanNumber[rspanNumber] = pAttr->AeAttrValue;
 					  pTabSpan->TaSpanCell[rspanNumber++] = pAb;

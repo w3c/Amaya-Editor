@@ -2622,6 +2622,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  
 	  /* Moving sibling boxes and the parent? */
 	  pPosRel = pBox->BxPosRelations;
+	  if (pBox->BxType != BoCell)
 	  while (pPosRel)
 	    {
 	      i = 0;
