@@ -1219,7 +1219,7 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
 		     TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       SetWindowText (GetDlgItem (hwnDlg, ID_CLEAR), TtaGetMessage (AMAYA, AM_CLEAR));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), "Browse");
+      SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TtaGetMessage (AMAYA, AM_BROWSE));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
       SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentPathName);
       
@@ -1264,23 +1264,13 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  if (UpdateURLs)
 	    CheckRadioButton (hwnDlg, IDC_TRANSFORMURL, IDC_TRANSFORMURL, IDC_TRANSFORMURL);
 	}
-	  /* mime type */
-      if (DocumentMeta[SavingDocument] && DocumentMeta[SavingDocument]->content_type)
-	ptr = DocumentMeta[SavingDocument]->content_type;
-      else if (UserMimeType[0] != EOS)
-	ptr = UserMimeType;
-      else
-	ptr = "UNKNOWN";
-      _snprintf (buff, 500, "MIME type: %s", ptr);
+      /* mime type */
+      _snprintf (buff, 500, "MIME type: %s", UserMimeType);
       SetDlgItemText (hwnDlg, IDC_MIMETYPE, buff);
       SetDlgItemText (hwnDlg, ID_CHANGEMIMETYPE, "Change");
       
       /* charset */
-      if (DocumentMeta[SavingDocument] && DocumentMeta[SavingDocument]->charset)
-        ptr = DocumentMeta[SavingDocument]->charset;
-      else
-        ptr = "UNKNOWN";
-      _snprintf (buff, 500, "Charset: %s", ptr);
+      _snprintf (buff, 500, "Charset: %s", UserCharset);
       SetDlgItemText (hwnDlg, IDC_CHARSET, buff);
       SetDlgItemText (hwnDlg, ID_CHANGECHARSET, "Change");
 
@@ -1309,14 +1299,14 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	case IDC_HTML:
 	  EnableWindow (transURLWnd, TRUE);
 	  EnableWindow (copyImgWnd, TRUE);
-	  ThotCallback (BaseDialog + ToggleSave, INTEGER_DATA, (char*) 0);
+	  ThotCallback (BaseDialog + RadioSave, INTEGER_DATA, (char*) 0);
 	  SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, DocToOpen);
 	  return 0;
 	  
 	case IDC_XML:
 	  EnableWindow (transURLWnd, TRUE);
 	  EnableWindow (copyImgWnd, TRUE);
-	  ThotCallback (BaseDialog + ToggleSave, INTEGER_DATA, (char*) 1);
+	  ThotCallback (BaseDialog + RadioSave, INTEGER_DATA, (char*) 1);
 	  SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, DocToOpen);
 	  return 0;
 	  
@@ -1324,44 +1314,32 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  EnableWindow (transURLWnd, FALSE);
 	  EnableWindow (copyImgWnd, FALSE);
 	  
-	  ThotCallback (BaseDialog + ToggleSave, INTEGER_DATA, (char*) 2);
+	  ThotCallback (BaseDialog + RadioSave, INTEGER_DATA, (char*) 2);
 	  SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, DocToOpen);
 	  return 0;
 	  
 	case IDC_COPYIMG:
-	  ThotCallback (BaseDialog + ToggleSave, INTEGER_DATA, (char*) 4);
+	  ThotCallback (BaseDialog + ToggleSave, INTEGER_DATA, (char*) 0);
 	  break;
 	  
 	case IDC_TRANSFORMURL:
-	  ThotCallback (BaseDialog + ToggleSave, INTEGER_DATA, (char*) 5);
+	  ThotCallback (BaseDialog + ToggleSave, INTEGER_DATA, (char*) 1);
 	  break;
 
   	case ID_CHANGECHARSET:
-	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 3);
+	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 5);
 	  if (SaveFormTmp[0] != EOS)
 	  {
-	   if (UserCharset[0] != EOS)
-          ptr = UserCharset;  
-       else if (DocumentMeta[SavingDocument] && DocumentMeta[SavingDocument]->charset)
-          ptr = DocumentMeta[SavingDocument]->charset;
-        else
-          ptr = "UNKNOWN";
-        _snprintf (buff, 500, "Charset: %s", ptr);
-        SetDlgItemText (hwnDlg, IDC_CHARSET, buff);	
+	    _snprintf (buff, 500, "Charset: %s", UserCharset);
+	    SetDlgItemText (hwnDlg, IDC_CHARSET, buff);	
 	  }
 	  break;
 
 	case ID_CHANGEMIMETYPE:
-	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 4);
+	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 6);
 	  if (SaveFormTmp[0] != EOS)
 	  {
-		if (UserMimeType[0] != EOS)
-		   ptr = UserMimeType;
-	    else if (DocumentMeta[SavingDocument] && DocumentMeta[SavingDocument]->content_type)
-	      ptr = DocumentMeta[SavingDocument]->content_type;
-        else 
-	      ptr = "UNKNOWN";
-	    _snprintf (buff, 500, "MIME type: %s", ptr);	  
+	    _snprintf (buff, 500, "MIME type: %s", UserMimeType);	  
 	    SetDlgItemText (hwnDlg, IDC_MIMETYPE, buff);
 	  }
 	  break;
@@ -1369,7 +1347,7 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	case ID_CLEAR:
 	  SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, "");
 	  SetDlgItemText (hwnDlg, IDC_EDITIMGSAVE, "");
-	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 2);
+	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 4);
 	  break;
 	  
 	case IDC_BROWSE:

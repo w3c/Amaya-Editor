@@ -222,7 +222,7 @@ static AM_WIN_MenuText WIN_GeometryMenuText[] =
 };
 #endif /* _WINDOWS */
 /* common local variables */
-char    s[MAX_LENGTH]; /* general purpose buffer */
+static char    s[MAX_LENGTH]; /* general purpose buffer */
 
 /* Language negotiation menu options */
 #ifdef _WINDOWS

@@ -117,63 +117,62 @@ typedef enum _ClickEvent {
 #define ToggleSave      11
 #define NameSave        12
 #define ImgDirSave      13
-#define Label1          14
-#define Label2          15
-#define Label3          16
-#define Label4          17
-#define ConfirmForm     18
-#define ConfirmText     19
-#define AttrHREFForm    20
-#define AttrHREFText    21
-#define FormAnswer      22
-#define RealmText       23
-#define AnswerText      24
-#define NameText        25
-#define PasswordText    26
-#define FilterText      27
-#define ClassForm       28
-#define ClassSelect     29
-#define AClassForm      30
-#define AClassSelect    31
-#define ConfirmSave     32
-#define ConfirmSaveList 33
-#define BrowserDirSelect   34
-#define BrowserDocSelect   35
-#define BrowserFilterText  36
-#define HREFLocalName   37
-#define MakeIdMenu      38
-#define mElemName       39
-#define mAddId          40
-#define mRemoveId       41
-#define mIdUseSelection 42
-#define mIdStatus       43
-#define FileBrowserForm 44
-#define FileBrowserText 45
-#define FileBrowserFilter 46
-#define FileBrowserLocalName 47
-#define MimeTypeForm    48
-#define MimeTypeSel     49
-#define MimeTypeFormL1  50
-#define MimeTypeFormL2  51
-#define MimeTypeSaveL   52
-#define MimeTypeSave    53
-#define CharsetSaveL    54
-#define CharsetSave     55
-#define CharsetForm     56
-#define CharsetSel      57
-#define Label5          58
-#define Label6          59
-#define MimeFormStatus  60
-#define SaveFormStatus  61
-#define OptionMenu	62
+#define ConfirmForm     14
+#define ConfirmText     15
+#define AttrHREFForm    16
+#define AttrHREFText    17
+#define FormAnswer      18
+#define RealmText       19
+#define AnswerText      20
+#define NameText        21
+#define PasswordText    22
+#define FilterText      23
+#define ClassForm       24
+#define ClassSelect     25
+#define AClassForm      26
+#define AClassSelect    27
+#define ConfirmSave     28
+#define ConfirmSaveList 29
+#define BrowserDirSelect   30
+#define BrowserDocSelect   31
+#define BrowserFilterText  32
+#define HREFLocalName   33
+#define MakeIdMenu      34
+#define mElemName       35
+#define mAddId          36
+#define mRemoveId       37
+#define mIdUseSelection 38
+#define mIdStatus       39
+#define FileBrowserForm 40
+#define FileBrowserText 41
+#define FileBrowserFilter 42
+#define FileBrowserLocalName 43
+#define MimeTypeForm    44
+#define MimeTypeSel     45
+#define MimeTypeSave    46
+#define CharsetForm     47
+#define CharsetSave     48
+#define CharsetSel      49
+#define RadioSave       50
+#define MimeFormStatus  51
+#define SaveFormStatus  52
+/* do not add items before this entry */
+#define OptionMenu	53
 
 /* MAX_SUBMENUS references reserved for submenus of Option menu */
 /* Do not insert new entries here */
 #define MAX_SUBMENUS    400
-#define About1		450
-#define About2		451
-#define About3		452
-#define Version		453
+#define Label1          54 /* no callback */
+#define Label2          55 /* no callback */
+#define Label3          56 /* no callback */
+#define Label4          57 /* no callback */
+#define About1		58 /* no callback */
+#define About2		59 /* no callback */
+#define About3		60 /* no callback */
+#define Version		61 /* no callback */
+#define CharsetSaveL    62 /* no callback */
+#define MimeTypeSaveL   63 /* no callback */
+/* first callback available: 454 */
 #define AboutForm      	454
 #define TableForm       455
 #define TableRows       456

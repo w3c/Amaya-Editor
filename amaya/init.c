@@ -284,9 +284,11 @@ typedef enum
 {
   OpenDocBrowser,
   HrefAttrBrowser,
+  DocSaveBrowser
 } TypeBrowserFile;
 
 TypeBrowserFile WidgetParent;
+
 
 /*----------------------------------------------------------------------
    DocumentMetaDataAlloc
@@ -1450,30 +1452,36 @@ void             InitConfirm (Document document, View view, char *label)
 void InitCharset (Document document, View view, char *url)
 {
 #ifndef _WINDOWS
-   char *charset_list = "Bus-ascii\0"
-     "BUTF-8\0"
-     "Biso-8859-1\0"
-     "Biso-8859-2\0";
+  char   s[MAX_LENGTH]; /* general purpose buffer */
+  int    i;
 
-   int nbcharset = 4;
-
-   TtaNewForm (BaseDialog + CharsetForm, TtaGetViewFrame (document, view),
-	       "Charset query", FALSE, 3, 'L', D_CANCEL);
-   TtaNewLabel (BaseDialog + MimeTypeFormL1, BaseDialog + CharsetForm,
-		"Please select the charset for the following resource:");
-   TtaNewLabel (BaseDialog + MimeTypeFormL2, BaseDialog + MimeTypeForm,
-		DocumentURLs[document]);
-   /* radio buttons */
-   TtaNewSubmenu (BaseDialog + CharsetSel, BaseDialog + CharsetForm, 0,
-		  NULL, nbcharset, charset_list, NULL, FALSE);
-   TtaSetMenuForm (BaseDialog + CharsetSel, 0);
-
-   TtaSetDialoguePosition ();
-   TtaShowDialogue (BaseDialog + CharsetForm, FALSE);
-   /* wait for an answer */
-   TtaWaitShowDialogue ();
+  i = 0;
+  strcpy (&s[i], "Bus-ascii");
+  i += strlen (&s[i]) + 1;
+  strcpy (&s[i], "BUTF-8");
+  i += strlen (&s[i]) + 1;
+  strcpy (&s[i], "Biso-8859-1");
+  i += strlen (&s[i]) + 1;
+  if (!strcmp (UserCharset, "us-ascii"))
+    i = 0;
+  else if (!strcmp (UserCharset, "UTF-8"))
+    i = 1;
+  else
+    i = 2;
+      
+  TtaNewForm (BaseDialog + CharsetForm, TtaGetViewFrame (document, view),
+	      "Charset query", TRUE, 1, 'L', D_CANCEL);
+  /* radio buttons */
+  TtaNewSubmenu (BaseDialog + CharsetSel, BaseDialog + CharsetForm, 0,
+		 NULL, 3, s, NULL, FALSE);
+  TtaSetMenuForm (BaseDialog + CharsetSel, i);
+      
+  TtaSetDialoguePosition ();
+  TtaShowDialogue (BaseDialog + CharsetForm, FALSE);
+  /* wait for an answer */
+  TtaWaitShowDialogue ();
 #else
-   CreateCharsetDlgWindow (TtaGetViewFrame (document, view));
+  CreateCharsetDlgWindow (TtaGetViewFrame (document, view));
 #endif /* _WINDOWS */
 }
 
@@ -1484,47 +1492,43 @@ void InitCharset (Document document, View view, char *url)
   ----------------------------------------------------------------------*/
 void InitMimeType (Document document, View view, char *url)
 {
-   char *mimetypes_list;
-   int nbmimetypes;
-   if (DocumentTypes[document] == docImage)
-     {
-       mimetypes_list = "image/png\0"
-	 "image/jpeg\0"
-	 "image/gif\0"
-	 "application/x-bitmap\0";
-       nbmimetypes = 3;
-     }
-   else if (DocumentTypes[document] == docSVG)
-     {
-       mimetypes_list = "text/xml+svg\0"
-	 "image/svg\0";
-       nbmimetypes = 2;
-     }
-   else 
-     {
-       mimetypes_list = "text/html\0"
-	 "text/xml\0"
-	 "text/xml+mathml\0"
-	 "text/plain\0"
-	 "text/css\0";
-       nbmimetypes = 5;
-     }
+  char *mimetypes_list;
+  int nbmimetypes;
+
+  if (DocumentTypes[document] == docImage)
+    {
+      mimetypes_list = "image/png\0"
+	"image/jpeg\0"
+	"image/gif\0"
+	"application/x-bitmap\0";
+      nbmimetypes = 3;
+    }
+  else if (DocumentTypes[document] == docSVG)
+    {
+      mimetypes_list = "text/xml+svg\0"
+	"image/svg\0";
+      nbmimetypes = 2;
+    }
+  else 
+    {
+      mimetypes_list = "text/html\0"
+	"text/xml\0"
+	"text/xml+mathml\0"
+	"text/plain\0"
+	"text/css\0";
+      nbmimetypes = 5;
+    }
 
 #ifndef _WINDOWS
    TtaNewForm (BaseDialog + MimeTypeForm, TtaGetViewFrame (document, view),
-	       "MIME type query", FALSE, 4, 'L', D_CANCEL);
-   TtaNewLabel (BaseDialog + MimeTypeFormL1, BaseDialog + MimeTypeForm,
-		"Please give the MIME type for the following resource:");
-   TtaNewLabel (BaseDialog + MimeTypeFormL2, BaseDialog + MimeTypeForm,
-		url);
+	       "MIME type query", TRUE, 1, 'L', D_CANCEL);
    /* selector */
    TtaNewSelector (BaseDialog + MimeTypeSel, BaseDialog + MimeTypeForm, NULL,
 		   nbmimetypes, mimetypes_list, 4, NULL, TRUE, FALSE);
    /* status */
-   TtaNewLabel (BaseDialog + MimeFormStatus,
-		BaseDialog + MimeTypeForm,
+   TtaNewLabel (BaseDialog + MimeFormStatus, BaseDialog + MimeTypeForm,
 		"     ");
-   TtaSetSelector (BaseDialog + MimeTypeSel, -1,  SaveFormTmp);
+   TtaSetSelector (BaseDialog + MimeTypeSel, -1,  UserMimeType);
 
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + MimeTypeForm, FALSE);
@@ -4014,22 +4018,12 @@ static void	UpdateSaveAsButtons ()
 #ifndef _WINDOWS
   int	active;
 
-  if (SaveAsHTML)
-    {
-      TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXML);
-      TtaSetToggleMenu (BaseDialog + ToggleSave, 2, SaveAsText);
-      active = 1;
-    }
-  else if (SaveAsXML)
-    {
-      TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
-      TtaSetToggleMenu (BaseDialog + ToggleSave, 2, SaveAsText);
-      active = 1;
-    }
+  if (SaveAsHTML || SaveAsXML)
+    active = 1;
   else
     active = 0;
-  TtaRedrawMenuEntry (BaseDialog + ToggleSave, 4, NULL, -1, active);
-  TtaRedrawMenuEntry (BaseDialog + ToggleSave, 5, NULL, -1, active);
+  TtaRedrawMenuEntry (BaseDialog + ToggleSave, 0, NULL, -1, active);
+  TtaRedrawMenuEntry (BaseDialog + ToggleSave, 1, NULL, -1, active);
 #endif /* !_WINDOWS */
 }
 
@@ -4107,8 +4101,8 @@ static void SetFileSuffix ()
   ----------------------------------------------------------------------*/
 void CallbackDialogue (int ref, int typedata, char *data)
 {
-  char             *tempfile;
-  char             *tempname;
+  char              tempfile[MAX_LENGTH];
+  char              tempname[MAX_LENGTH];
   char              sep;
   int               val, i;
   ThotBool          change;
@@ -4153,8 +4147,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	   else if (DirectoryName[0] != EOS && DocumentName[0] != EOS)
 	     {
 	       /* load a local file */
-	       tempfile = TtaGetMemory (MAX_LENGTH);
-	       memset (tempfile, EOS, MAX_LENGTH);
 	       strcpy (tempfile, DirectoryName);
 	       strcat (tempfile, DIR_STR);
 	       strcat (tempfile, DocumentName);
@@ -4186,7 +4178,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		     NewDocType = docHTML;
 		   InitializeNewDoc (tempfile, NewDocType, CurrentDocument);
 		 }
-	       TtaFreeMemory (tempfile);
 	     }
 	   else if (DocumentName[0] != EOS)
 	     TtaSetStatus (CurrentDocument, 1,
@@ -4240,7 +4231,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
        else
 	 {
 	   LastURLName[0] = EOS;
-	   tempfile = TtaGetMemory (MAX_LENGTH);
 	   change = NormalizeFile (data, tempfile, AM_CONV_NONE);
 	   
 	   if (TtaCheckDirectory (tempfile))
@@ -4250,7 +4240,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	     }
 	   else
 	     TtaExtractName (tempfile, DirectoryName, DocumentName);
-	   TtaFreeMemory (tempfile);
 	 }       
        break;
 
@@ -4263,12 +4252,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	   if (!strcmp (data, ".."))
 	     {
 	       /* suppress last directory */
-	       tempname = TtaGetMemory (MAX_LENGTH);
-	       tempfile = TtaGetMemory (MAX_LENGTH);
 	       strcpy (tempname, DirectoryName);
 	       TtaExtractName (tempname, DirectoryName, tempfile);
-	       TtaFreeMemory (tempfile);
-	       TtaFreeMemory (tempname);
 	     }
 	   else
 	     {
@@ -4294,14 +4279,12 @@ void CallbackDialogue (int ref, int typedata, char *data)
        strcpy (DocumentName, data);
        LastURLName[0] = EOS;
        /* construct the document full name */
-       tempfile = TtaGetMemory (MAX_LENGTH);
        strcpy (tempfile, DirectoryName);
        strcat (tempfile, DIR_STR);
        strcat (tempfile, DocumentName);
 #ifndef _WINDOWS
        TtaSetTextForm (BaseDialog + URLName, tempfile);
 #endif /* !_WINDOWS */
-       TtaFreeMemory (tempfile);
        break;
      case ConfirmForm:
        /* *********Confirm********* */
@@ -4373,7 +4356,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
        break;
        
        /* *********Save document as********* */
-     case ToggleSave:
+     case RadioSave:
        /* Output format */
        switch (val)
 	 {
@@ -4405,10 +4388,15 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #endif /* _WINDOWS */
 	   SetFileSuffix ();
 	   break;
-	 case 4:	/* "Copy Images" button */
+	 }
+       break;
+     case ToggleSave:
+       switch (val)
+	 {
+	 case 0:	/* "Copy Images" button */
 	   CopyImages = !CopyImages;
 	   break;
-	 case 5:	/* "Transform URLs" button */
+	 case 1:	/* "Transform URLs" button */
 	   UpdateURLs = !UpdateURLs;
 	   break; 
 	 }
@@ -4457,6 +4445,15 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	     }
 	 }
        else if (val == 2)
+	 /* "Browse" button */
+	 {
+	   WidgetParent = DocSaveBrowser;
+	   strcpy (LastURLName, SavePath);
+	   strcat (LastURLName, DIR_STR);
+	   strcat (LastURLName, SaveName);
+	   BrowserForm (SavingDocument, 1, LastURLName);
+	 }
+       else if (val == 3)
 	 /* "Clear" button */
 	 {
 	   if (SavingDocument != 0)
@@ -4470,7 +4467,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #endif /* !_WINDOWS */
 	     }
 	 }
-       else if (val == 3)
+       else if (val == 4)
 	 /* "Charset" button */
 	 {
 	   if (SavingDocument != 0)
@@ -4485,7 +4482,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #else
  		   SaveAsDlgStatus ("");
 #endif /* _WINDOWS */
-		   SaveFormTmp[0] = EOS;
 		   InitCharset (SavingDocument, 1, SavePath);
 		   if (SaveFormTmp[0] != EOS)
 		     {
@@ -4508,7 +4504,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		 }
 	     }
 	 }
-       else if (val == 4)
+       else if (val == 5)
 	 /* "MIME type" button */
 	 {
 	   if (SavingDocument != 0)
@@ -4523,7 +4519,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #else
 		   SaveAsDlgStatus ("");
 #endif /* _WINDOWS */
-		   strcpy (SaveFormTmp, UserMimeType);
 		   InitMimeType (SavingDocument, 1, SavePath);
 		   if (SaveFormTmp[0] != EOS)
 		     {
@@ -4560,7 +4555,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
        break;
      case NameSave:
        /* Document location */
-       tempfile = TtaGetMemory (MAX_LENGTH);
        if (!IsW3Path (data))
 	 change = NormalizeFile (data, tempfile, AM_CONV_NONE);
        else
@@ -4579,7 +4573,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	   else
 	     TtaExtractName (tempfile, SavePath, ObjectName);
 	 }
-       TtaFreeMemory (tempfile);
        break;
      case ImgDirSave:
        /* Image directory */
@@ -4588,18 +4581,16 @@ void CallbackDialogue (int ref, int typedata, char *data)
        else
 	 strcpy (SaveImgsURL, data);
        break;
+#ifdef IV
      case DirSave:
        if (!IsW3Path (SavePath))
 	 {
 	   /* Document directories */
-	   tempfile = TtaGetMemory (MAX_LENGTH);
 	   if (!strcmp (data, ".."))
 	     {
 	       /* suppress last directory */
-	       tempname = TtaGetMemory (MAX_LENGTH);
 	       strcpy (tempname, SavePath);
 	       TtaExtractName (tempname, SavePath, tempfile);
-	       TtaFreeMemory (tempname);
 	     }
 	   else
 	     {
@@ -4620,7 +4611,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
 			     BaseDialog + DirSave,
 			     ScanFilter, TtaGetMessage (AMAYA, AM_FILES),
 			     BaseDialog + DocSave);
-	   TtaFreeMemory (tempfile);
 	 }
        break;
      case DocSave:
@@ -4631,16 +4621,14 @@ void CallbackDialogue (int ref, int typedata, char *data)
        
        strcpy (SaveName, data);
        /* construct the document full name */
-       tempfile = TtaGetMemory (MAX_LENGTH);
        strcpy (tempfile, SavePath);
        strcat (tempfile, DIR_STR);
        strcat (tempfile, SaveName);
 #ifndef _WINDOWS
        TtaSetTextForm (BaseDialog + NameSave, tempfile);
 #endif /* !_WINDOWS */
-       TtaFreeMemory (tempfile);
        break;
-
+#endif /* IV */
      case ConfirmSave:
        /* *********SaveConfirm********* */
        UserAnswer = (val == 1);
@@ -4703,7 +4691,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	 }
        else
 	 {
-	   tempfile = TtaGetMemory (MAX_LENGTH);
 	   change = NormalizeFile (data, tempfile, AM_CONV_NONE);
 	   if (TtaCheckDirectory (tempfile))
 	     {
@@ -4713,7 +4700,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	   else
 	     TtaExtractName (tempfile, DirectoryName, DocumentName);
 	   strcpy (AttrHREFvalue, tempfile);
-	   TtaFreeMemory (tempfile);
 	 }       
        break;
 
@@ -4725,8 +4711,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #ifndef _WINDOWS
 	   /* this code is only valid under Unix. */
 	   /* In Windows, we're using a system widget */
-	   tempfile = TtaGetMemory (MAX_LENGTH);
-	   memset (tempfile, EOS, MAX_LENGTH);
 	   strcpy (tempfile, DirectoryName);
 	   strcat (tempfile, DIR_STR);
 	   strcat (tempfile, DocumentName);
@@ -4734,16 +4718,21 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	     {
 	       TtaSetTextForm (BaseDialog + AttrHREFText, tempfile);
 	       strcpy (AttrHREFvalue, tempfile);
-	       TtaFreeMemory (tempfile);
 	       CallbackDialogue (BaseDialog + AttrHREFForm, INTEGER_DATA, (char *) 1);
 	     }
 	   else if (WidgetParent == OpenDocBrowser)
 	     {
 	       TtaSetTextForm (BaseDialog + URLName, tempfile);
-	       TtaFreeMemory (tempfile);
 	       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
 	     }
-#endif /* !_WINDOWS */
+	   else if (WidgetParent == DocSaveBrowser)
+	     {
+	       TtaSetTextForm (BaseDialog + NameSave, tempfile);
+	       CallbackDialogue (BaseDialog + NameSave, STRING_DATA, tempfile);
+	     }
+	   /* remove the browsing dialogue */
+	   TtaDestroyDialogue (ref);
+#endif /* _WINDOWS */
 	 }
        else if (val == 2)
 	 /* Clear button */
@@ -4753,16 +4742,14 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	       LastURLName[0] = EOS;
 #ifndef _WINDOWS
 	       TtaSetTextForm (BaseDialog + FileBrowserText, LastURLName);
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
 	     }
 	   else if (WidgetParent == HrefAttrBrowser)
 	     {
-	       tempname = TtaGetMemory (MAX_LENGTH);
 	       tempname[0] = EOS; 	       
 #ifndef _WINDOWS
-	     TtaSetTextForm (BaseDialog + FileBrowserText, tempname);
-#endif /* !_WINDOWS */
-	       TtaFreeMemory (tempname);
+	       TtaSetTextForm (BaseDialog + FileBrowserText, tempname);
+#endif /* _WINDOWS */
 	     }
 	 }
        else if (val == 3)
@@ -4789,7 +4776,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	 }
        else
 	 {
-	   tempfile = TtaGetMemory (MAX_LENGTH);
 	   change = NormalizeFile (data, tempfile, AM_CONV_NONE);
 	   if (TtaCheckDirectory (tempfile))
 	     {
@@ -4799,7 +4785,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	   else
 	     TtaExtractName (tempfile, DirectoryName, DocumentName);
 	   strcpy (AttrHREFvalue, tempfile);
-	   TtaFreeMemory (tempfile);
 	 }       
        break;
 
@@ -4813,12 +4798,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	   if (!strcmp (data, ".."))
 	     {
 	       /* suppress last directory */
-	       tempname = TtaGetMemory (MAX_LENGTH);
-	       tempfile = TtaGetMemory (MAX_LENGTH);
 	       strcpy (tempname, DirectoryName);
 	       TtaExtractName (tempname, DirectoryName, tempfile);
-	       TtaFreeMemory (tempfile);
-	       TtaFreeMemory (tempname);
 	     }
 	   else
 	     {
@@ -4853,14 +4834,12 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	 LastURLName[0] = EOS;
 
        /* construct the document full name */
-       tempfile = TtaGetMemory (MAX_LENGTH);
        strcpy (tempfile, DirectoryName);
        strcat (tempfile, DIR_STR);
        strcat (tempfile, DocumentName);
 #ifndef _WINDOWS
        TtaSetTextForm (BaseDialog + FileBrowserText, tempfile);
 #endif /* !_WINDOWS */
-       TtaFreeMemory (tempfile);
        break;
 
        /* *********Browser Filter*********** */

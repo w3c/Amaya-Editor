@@ -1798,6 +1798,13 @@
 	<message xml:lang="de">Die Anmerkung kann nicht in ein anderes Dokument verschoben werden</message>
 	<message xml:lang="it">Non posso muovere l'annotazione su un diverso documento</message>
 </label>
+<label define="AM_CANGE_CHARSET">
+	<message xml:lang="en">Change Charset</message>
+	<message xml:lang="fr">Changer Charset</message>
+</label>
+<label define="AM_CHANGE_MIME_TYPE">
+	<message xml:lang="en">Change MIME type</message>
+</label>
 
 <label define="AMAYA_MSG_MAX">
 </label>
