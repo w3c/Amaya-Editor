@@ -180,12 +180,12 @@ typedef struct _SchemaMenu_Ctl
 #define T_rchangetype			93
 #define T_rsurround			94
 #define T_rchangepres			95
-#define T_checktable			96
-#define T_checkcolumn			97
+#define T_initevents			96
+#define T_checktable                   97
 #define T_cleartable			98
 #define T_resizetable                   99
 #define T_firstcolumn			100
-#define T_colupdates			101
+#define T_checkcolumn			101
 #define T_backuponfatal			102
 #define T_AIupdate			103
 #define T_redisplay			104
@@ -207,11 +207,10 @@ typedef struct _SchemaMenu_Ctl
 #define T_cancelhistory                 121
 #define T_closehistory                  122
 
-#define T_initevents                    123
-#define T_lock                          124
-#define T_unlock                        125
-#define T_islock                        126
-#define MAX_LOCAL_ACTIONS               127
+#define T_lock                          123
+#define T_unlock                        124
+#define T_islock                        125
+#define MAX_LOCAL_ACTIONS               126
 
 /*
  Predefined idexes of Thot actions which could be linked to shortcuts even

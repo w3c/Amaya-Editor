@@ -1605,6 +1605,9 @@ int                 arrow;
 #endif /* __STDC__ */
 
 {
+#ifdef _GTK
+   int                 k;
+#endif /* _GTK */
    ThotPoint          *points;
    int                 i, j;
    PtrTextBuffer       adbuff;
@@ -2174,6 +2177,9 @@ int                 pattern;
 #endif /* __STDC__ */
 
 {
+#ifdef _GTK
+   int                 i;
+#endif /* _GTK */
    Pixmap              pat;
    int                 arc;
    int                 xf, yf;
@@ -2625,6 +2631,9 @@ int                 bg;
 int                 pattern;
 #endif /* __STDC__ */
 {
+#ifdef _GTK
+   int                 i;
+#endif /* _GTK */
    int                 arc, arc2, xf, yf;
    XArc                xarc[4];
    XSegment            seg[5];

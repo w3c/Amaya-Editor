@@ -1353,29 +1353,14 @@ DisplayMode         newDisplayMode;
 	    /* le document passe du mode affichage differe' ou sans calcul  */
 	    /* d'image au mode  d'affichage immediat */
 	    {
-              if (oldDisplayMode == DeferredDisplay &&
-		  ThotLocalActions[T_colupdates])
-		/* update tables if necessary */
-		(*ThotLocalActions[T_colupdates]) (document);
-
 	      /* on met a jour le mode d'affichage */
 	      documentDisplayMode[document - 1] = newDisplayMode;
 
               if (oldDisplayMode == NoComputedDisplay)
-		{
-		  /* il faut recalculer l'image */
-		  RebuildImage (pDoc);
-		  /* update tables if necessary */
-		  if (ThotLocalActions[T_colupdates])
-		    (*ThotLocalActions[T_colupdates]) (document);
-		}
+		/* il faut recalculer l'image */
+		RebuildImage (pDoc);
 	      else if (oldDisplayMode == SuspendDisplay)
-		{
-		  AbstractImageUpdated (pDoc);
-		  if (ThotLocalActions[T_colupdates])
-		    /* update tables if necessary */
-		    (*ThotLocalActions[T_colupdates]) (document);
-		}
+		AbstractImageUpdated (pDoc);
 
               /* reaffiche ce qui a deja ete prepare' */
               RedisplayDocViews (pDoc);

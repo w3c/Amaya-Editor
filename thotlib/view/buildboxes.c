@@ -3760,11 +3760,7 @@ PtrAbstractBox      pAb;
 
 	     /* restore the current mode and  update tables if necessary */
 	     if (saveMode == DisplayImmediately)
-	       {
-		 documentDisplayMode[FrameTable[frame].FrDoc - 1] = saveMode;
-		 if (ThotLocalActions[T_colupdates] != NULL)
-		   (*ThotLocalActions[T_colupdates]) (FrameTable[frame].FrDoc);
-	       }
+	       documentDisplayMode[FrameTable[frame].FrDoc - 1] = saveMode;
 	      if (!lock)
 		/* unlock table formatting */
 		(*ThotLocalActions[T_unlock]) ();
