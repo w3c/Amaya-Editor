@@ -34,10 +34,13 @@
 #include "dialog.h"
 #include "application.h"
 #include "document.h"
-
 #include "picture.h"
+
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "platform_tv.h"
+#include "picture_tv.h"
+
 #define _MENU_IMAGE_FRAME   1
 #define _ZONE_DIR_IMAGE     2
 #define _IMAGE_FORM         3
@@ -45,12 +48,6 @@
 #define _IMAGE_SEL          5
 #define _MENU_IMAGE_TYPE    6
 #define MAX_IMAGE_MENU      7
-extern PathBuffer   DocumentPath;
-extern CHAR_T*      SchemaPath;
-extern STRING       FileExtension[];
-
-#undef THOT_EXPORT
-#define THOT_EXPORT static
 
 static int          IndexTypeImage, IndexPresImage, BaseDlgImage;
 static ThotBool     RedisplayPicture;
