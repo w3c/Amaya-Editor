@@ -918,9 +918,7 @@ void SVGElementComplete (Element el, Document doc, int *error)
 void               UnknownSVGNameSpace (ParserData *context, char* content)
 {
    ElementType     elType;
-   AttributeType   attrType;
    Element         elInv, elText;
-   Attribute       attr;
 
    /* Create a new Invalid_element */
    elType.ElSSchema = GetXMLSSchema (SVG_TYPE, context->doc);

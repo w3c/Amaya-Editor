@@ -12,18 +12,17 @@
  * Author: V. Quint
  */
 
- 
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
 #include "html2thot_f.h"
-#include "Xml2thot_f.h"
+#include "HTMLactions_f.h"
 #include "MathML.h"
 #include "parser.h"
 #include "styleparser_f.h"
 #include "style.h"
 #include "undo.h"
-
+#include "Xml2thot_f.h"
 
 /* Define a pointer to let parser functions access the Math entity table */
 extern XmlEntity *pMathEntityTable;
@@ -2207,9 +2206,7 @@ void      MathMLElementComplete (Element el, Document doc, int *error)
 void               UnknownMathMLNameSpace (ParserData *context, char* content)
 {
    ElementType     elType;
-   AttributeType   attrType;
    Element         elInv, elText;
-   Attribute       attr;
 
    /* Create a new Invalid_element */
    elType.ElSSchema = GetXMLSSchema (MATH_TYPE, context->doc);
