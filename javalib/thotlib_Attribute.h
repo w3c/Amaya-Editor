@@ -11,7 +11,7 @@ extern "C" {
 /* Header for class thotlib_Attribute */
 
 typedef struct Classthotlib_Attribute {
-  jint attribute;
+  jlong attribute;
 } Classthotlib_Attribute;
 HandleTo(thotlib_Attribute);
 

@@ -222,7 +222,7 @@ char               *path;
     if (path[0] == '\0') return(0);
 
     GetPictureFileName (path, fileName);
-    typeImage = unknown_type;
+    typeImage = UNKNOWN_FORMAT;
 
     status = PictureFileOk (fileName, &typeImage);
     switch (status) {

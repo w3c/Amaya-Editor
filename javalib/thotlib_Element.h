@@ -11,7 +11,7 @@ extern "C" {
 /* Header for class thotlib_Element */
 
 typedef struct Classthotlib_Element {
-  jint element;
+  jlong element;
 } Classthotlib_Element;
 HandleTo(thotlib_Element);
 
