@@ -276,7 +276,8 @@ static void CacheLookupHeightAndWidth (PictInfo *Image,
  ---------------------------------------------------*/
 void FreeAllPicCache ()
 {
-  FreePicCache (PicCache);  
+  if (PicCache)
+    FreePicCache (PicCache);  
 }
 /*----------------------------------------------------------------------
  Free video card memory from this texture.
@@ -2088,7 +2089,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
  GetPictureFileName (imageDesc->PicFileName, fileName);
  /* For the Sync Image*/
  if (frame != ActiveFrame)
-     GL_MakeCurrent (frame); 
+     GL_prepare (frame); 
  typeImage = LookupInPicCache (imageDesc, frame); 
  if (typeImage)
     {  
@@ -2346,7 +2347,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 
   /* For the Sync Image*/
   if (frame != ActiveFrame)
-    GL_MakeCurrent (ActiveFrame); 
+    GL_prepare (ActiveFrame); 
 }
 
 #else /* _GL */    
