@@ -1,4 +1,8 @@
-/************************************************************************
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
+
+/*----------------------------------------------------------------------
 
              GESTION des styles : suivant CSS de Hakon Lie
 
@@ -27,7 +31,7 @@
 
 [X] chargement de feuille de style externe (c.f. css.c)
 
- ************************************************************************/
+  ----------------------------------------------------------------------*/
 
 /* Included headerfiles */
 #include "amaya.h"
@@ -85,19 +89,19 @@ int                 strncasecmp (char *s1, char *s2, size_t n)
 
 #define MAX_DEEP 10
 
-/**************************************************************************/
-/*                                                                        */
-/*                      COLOR CONVERSION FUNCTIONS                        */
-/*                                                                        */
-/**************************************************************************/
+/*----------------------------------------------------------------------
+   
+   COLOR CONVERSION FUNCTIONS                        
+   
+  ----------------------------------------------------------------------*/
 
 #include "HTMLstyleColor.h"
 
-/**************************************************************************/
-/*                                                                        */
-/*                      PARSER FRONT-END                                  */
-/*                                                                        */
-/**************************************************************************/
+/*----------------------------------------------------------------------
+   
+   PARSER FRONT-END                                  
+   
+  ----------------------------------------------------------------------*/
 
 /*
  * CSSparser :  is the front-end function called by the HTML parser
@@ -183,11 +187,11 @@ Document            doc;
    return (cour);
 }
 
-/**************************************************************************/
-/*                                                                        */
-/*                      PARSING DEFINITIONS                               */
-/*                                                                        */
-/**************************************************************************/
+/*----------------------------------------------------------------------
+   
+   PARSING DEFINITIONS                               
+   
+  ----------------------------------------------------------------------*/
 
 /*
  * This flag is used to switch the parser to a destructive mode where
@@ -442,11 +446,11 @@ static HTML3StyleAttribute HTML3StyleAttributes[] =
 #endif
 
 
-/**************************************************************************/
-/*                                                                        */
-/*                      UNITS CONVERSION FUNCTIONS                        */
-/*                                                                        */
-/**************************************************************************/
+/*----------------------------------------------------------------------
+   
+   UNITS CONVERSION FUNCTIONS                        
+   
+  ----------------------------------------------------------------------*/
 
 /********** UNUSED *************
 #ifdef __STDC__
@@ -492,11 +496,11 @@ char                c;
    return (0);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  ParseHTML3Unit :                                                  | */
-/* |      parse a CSS Unit substring and returns the corresponding      | */
-/* |      value and its unit.                                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3Unit :                                                  
+   parse a CSS Unit substring and returns the corresponding      
+   value and its unit.                                           
+  ----------------------------------------------------------------------*/
 
 #define UNIT_INVALID	0
 #define UNIT_POINT	1
@@ -622,17 +626,17 @@ PresentationValue  *pval;
    return (attrstr);
 }
 
-/**************************************************************************/
-/*                                                                        */
-/*                      PARSING FUNCTIONS                                 */
-/*                                                                        */
-/**************************************************************************/
+/*----------------------------------------------------------------------
+   
+   PARSING FUNCTIONS                                 
+   
+  ----------------------------------------------------------------------*/
 
-/* ---------------------------------------------------------------------- */
-/* |  ParseHTMLURL :                                                    | */
-/* |      parse a CSS URL construct, returning the string for the URL   | */
-/* |      this string need to be freed.                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTMLURL :                                                    
+   parse a CSS URL construct, returning the string for the URL   
+   this string need to be freed.                                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTMLURL (char *attrstr, char **url)
@@ -677,11 +681,11 @@ char              **url;
    return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  GetHTML3StyleAttrIndex : returns the index of the current         | */
-/* |       attribute type in the HTML3StyleAttributes array             | */
-/* |       return NULL if not found                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetHTML3StyleAttrIndex : returns the index of the current         
+   attribute type in the HTML3StyleAttributes array             
+   return NULL if not found                                     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *GetHTML3StyleAttrIndex (char *attrstr, int *index)
@@ -704,10 +708,10 @@ int                *index;
    return (NULL);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  GetHTML3Name : return a string corresponding to the CSS name of   | */
-/* |       an element                                                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetHTML3Name : return a string corresponding to the CSS name of   
+   an element                                                   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 char               *GetHTML3Name (Element elem, Document doc)
@@ -726,10 +730,10 @@ Document            doc;
    return (res);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  GetHTML3Names : return the list of strings corresponding to the   | */
-/* |          CSS names of an element                                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetHTML3Names : return the list of strings corresponding to the   
+   CSS names of an element                                   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 GetHTML3Names (Element elem, Document doc, char **lst, int max)
@@ -768,17 +772,17 @@ int                 max;
    return (deep);
 }
 
-/**************************************************************************/
-/*                                                                        */
-/*              GENERIC FUNCTIONS FOR CONVERTING BEETWEEN                 */
-/*         PRESENTATION ATTRIBUTES AND THE CORRESPONDING STYLE            */
-/*                                                                        */
-/**************************************************************************/
+/*----------------------------------------------------------------------
+   
+   GENERIC FUNCTIONS FOR CONVERTING BEETWEEN                 
+   PRESENTATION ATTRIBUTES AND THE CORRESPONDING STYLE            
+   
+  ----------------------------------------------------------------------*/
 
-/* ---------------------------------------------------------------------- */
-/* |    UpdateStyleDelete : attribute Style will be deleted.            | */
-/* |       remove the existing style presentation.                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UpdateStyleDelete : attribute Style will be deleted.            
+   remove the existing style presentation.                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UpdateStyleDelete (NotifyAttribute * event)
 #else
@@ -805,10 +809,10 @@ NotifyAttribute    *event;
       context->drv->CleanPresentation (target, context, unused);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    UpdateStylePost : attribute Style has been updated or created.  | */
-/* |       reflect the new style presentation.                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UpdateStylePost : attribute Style has been updated or created.  
+   reflect the new style presentation.                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UpdateStylePost (NotifyAttribute * event)
 #else
@@ -860,11 +864,11 @@ NotifyAttribute    *event;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  GetHTML3StyleString : return a string corresponding to the CSS    | */
-/* |       description of the presentation attribute applied to a       | */
-/* |       element                                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetHTML3StyleString : return a string corresponding to the CSS    
+   description of the presentation attribute applied to a       
+   element                                                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                GetHTML3StyleString (Element elem, Document doc, char *buf, int *len)
@@ -1093,12 +1097,12 @@ int                *len;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTMLStyleDecl : parse an HTML3 Style string                        | */
-/* |      we expect the input string describing the style to be of the  | */
-/* |      form : ATTRIBUTE : DESCRIPTION [ , ATTIBUTE : DESCRIPTION ] * | */
-/* |      but tolerate incorrect or incomplete input                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTMLStyleDecl : parse an HTML3 Style string                        
+   we expect the input string describing the style to be of the  
+   form : ATTRIBUTE : DESCRIPTION [ , ATTIBUTE : DESCRIPTION ] * 
+   but tolerate incorrect or incomplete input                    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ParseHTMLStyleDecl (PresentationTarget target, PresentationContext context, char *attrstr)
@@ -1151,12 +1155,12 @@ char               *attrstr;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTMLSpecificStyle : parse and apply an HTML3 Style string. | */
-/* |      This function must be called only to in the context of        | */
-/* |      specific style applying to an element, we will use the        | */
-/* |      specific presentation driver to reflect the new presentation  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTMLSpecificStyle : parse and apply an HTML3 Style string. 
+   This function must be called only to in the context of        
+   specific style applying to an element, we will use the        
+   specific presentation driver to reflect the new presentation  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ParseHTMLSpecificStyle (Element elem, char *attrstr, Document doc)
@@ -1199,12 +1203,12 @@ Document            doc;
       ParseHTMLStyleDecl (target, (PresentationContext) context, attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTMLGenericSelector : Create a generic context for a given | */
-/* |        selector string. If the selector is made of multiple comma- | */
-/* |        separated selector items, it parses them one at a time and  | */
-/* |        return the end of the selector string to be handled or NULL | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTMLGenericSelector : Create a generic context for a given 
+   selector string. If the selector is made of multiple comma- 
+   separated selector items, it parses them one at a time and  
+   return the end of the selector string to be handled or NULL 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 char               *ParseHTMLGenericSelector (char *selector, char *attrstr,
@@ -1372,12 +1376,12 @@ PSchema             gPres;
    return (selector);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTMLGenericStyle : parse and apply an HTML3 Style string.  | */
-/* |      This function must be called only to in the context of        | */
-/* |      a generic style applying to class of element. The generic     | */
-/* |      presentation driver is used to reflect the new presentation.  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTMLGenericStyle : parse and apply an HTML3 Style string.  
+   This function must be called only to in the context of        
+   a generic style applying to class of element. The generic     
+   presentation driver is used to reflect the new presentation.  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ParseHTMLGenericStyle (char *selector, char *attrstr, Document doc, PSchema gPres)
@@ -1411,15 +1415,15 @@ PSchema             gPres;
 #endif
 }
 
-/**************************************************************************/
-/*                                                                        */
-/*             PARSING FUNCTIONS FOR EACH ATTRIBUTES                      */
-/*                                                                        */
-/**************************************************************************/
+/*----------------------------------------------------------------------
+   
+   PARSING FUNCTIONS FOR EACH ATTRIBUTES                      
+   
+  ----------------------------------------------------------------------*/
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleTest : For testing purposes only !!!             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleTest : For testing purposes only !!!             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleTest (PresentationTarget target,
@@ -1449,10 +1453,10 @@ char               *attrstr;
    return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleBgBlendDir : parse an HTML3 bg-blend-direction   | */
-/* |         attribute string                                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleBgBlendDir : parse an HTML3 bg-blend-direction   
+   attribute string                                           
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleBgBlendDir (PresentationTarget target,
@@ -1470,10 +1474,10 @@ char               *attrstr;
       return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleBgPosition : parse an HTML3 bg-position          | */
-/* |         attribute string                                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleBgPosition : parse an HTML3 bg-position          
+   attribute string                                           
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleBgPosition (PresentationTarget target,
@@ -1491,9 +1495,9 @@ char               *attrstr;
       return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  ParseHTML3StyleBgStyle : parse an HTML3 bg-style attribute string | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleBgStyle : parse an HTML3 bg-style attribute string 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleBgStyle (PresentationTarget target,
@@ -1511,10 +1515,10 @@ char               *attrstr;
       return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleBorderColor : parse an HTML3 border-color        | */
-/* |         attribute string.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleBorderColor : parse an HTML3 border-color        
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleBorderColor (PresentationTarget target,
@@ -1532,10 +1536,10 @@ char               *attrstr;
       return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleBorderStyle : parse an HTML3 border-style        | */
-/* |         attribute string.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleBorderStyle : parse an HTML3 border-style        
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleBorderStyle (PresentationTarget target,
@@ -1553,10 +1557,10 @@ char               *attrstr;
       return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleBorderWidth : parse an HTML3 border-width        | */
-/* |         attribute string.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleBorderWidth : parse an HTML3 border-width        
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleBorderWidth (PresentationTarget target,
@@ -1574,10 +1578,10 @@ char               *attrstr;
       return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleBorderColorInternal : parse an HTML3 border-color        | */
-/* |         attribute string.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleBorderColorInternal : parse an HTML3 border-color        
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleBorderColorInternal (PresentationTarget target,
@@ -1595,10 +1599,10 @@ char               *attrstr;
       return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleBorderStyleInternal : parse an HTML3 border-style        | */
-/* |         attribute string.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleBorderStyleInternal : parse an HTML3 border-style        
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleBorderStyleInternal (PresentationTarget target,
@@ -1616,10 +1620,10 @@ char               *attrstr;
       return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleBorderWidthInternal : parse an HTML3 border-width        | */
-/* |         attribute string.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleBorderWidthInternal : parse an HTML3 border-width        
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleBorderWidthInternal (PresentationTarget target,
@@ -1637,9 +1641,9 @@ char               *attrstr;
       return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleClear : parse an HTML3 clear attribute string    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleClear : parse an HTML3 clear attribute string    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleClear (PresentationTarget target,
@@ -1657,9 +1661,9 @@ char               *attrstr;
       return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleDisplay : parse an HTML3 display attribute string        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleDisplay : parse an HTML3 display attribute string        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleDisplay (PresentationTarget target,
@@ -1703,9 +1707,9 @@ char               *attrstr;
    return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleFloat : parse an HTML3 float attribute string    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleFloat : parse an HTML3 float attribute string    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleFloat (PresentationTarget target,
@@ -1723,10 +1727,10 @@ char               *attrstr;
       return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleLetterSpacing : parse an HTML3 letter-spacing    | */
-/* |         attribute string.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleLetterSpacing : parse an HTML3 letter-spacing    
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleLetterSpacing (PresentationTarget target,
@@ -1744,10 +1748,10 @@ char               *attrstr;
       return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleListStyle : parse an HTML3 list-style            | */
-/* |         attribute string.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleListStyle : parse an HTML3 list-style            
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleListStyle (PresentationTarget target,
@@ -1765,10 +1769,10 @@ char               *attrstr;
       return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleMagnification : parse an HTML3 magnification     | */
-/* |         attribute string.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleMagnification : parse an HTML3 magnification     
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleMagnification (PresentationTarget target,
@@ -1803,10 +1807,10 @@ char               *attrstr;
    return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleMarginLeft : parse an HTML3 margin-left          | */
-/* |         attribute string.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleMarginLeft : parse an HTML3 margin-left          
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleMarginLeft (PresentationTarget target,
@@ -1824,10 +1828,10 @@ char               *attrstr;
       return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleMarginRight : parse an HTML3 margin-right        | */
-/* |         attribute string.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleMarginRight : parse an HTML3 margin-right        
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleMarginRight (PresentationTarget target,
@@ -1845,9 +1849,9 @@ char               *attrstr;
       return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleMargin : parse an HTML3 margin attribute string. | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleMargin : parse an HTML3 margin attribute string. 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleMargin (PresentationTarget target,
@@ -1865,9 +1869,9 @@ char               *attrstr;
       return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StylePack : parse an HTML3 pack attribute string.     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StylePack : parse an HTML3 pack attribute string.     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StylePack (PresentationTarget target,
@@ -1885,9 +1889,9 @@ char               *attrstr;
       return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  ParseHTML3StylePadding : parse an HTML3 padding attribute string. | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StylePadding : parse an HTML3 padding attribute string. 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StylePadding (PresentationTarget target,
@@ -1905,10 +1909,10 @@ char               *attrstr;
       return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleTextAlign : parse an HTML3 text-align            | */
-/* |         attribute string.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleTextAlign : parse an HTML3 text-align            
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleTextAlign (PresentationTarget target,
@@ -1960,10 +1964,10 @@ char               *attrstr;
    return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleTextIndent : parse an HTML3 text-indent          | */
-/* |         attribute string.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleTextIndent : parse an HTML3 text-indent          
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleTextIndent (PresentationTarget target,
@@ -1993,10 +1997,10 @@ char               *attrstr;
    return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleTextTransform : parse an HTML3 text-transform    | */
-/* |         attribute string.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleTextTransform : parse an HTML3 text-transform    
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleTextTransform (PresentationTarget target,
@@ -2014,10 +2018,10 @@ char               *attrstr;
       return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleVerticalAlign : parse an HTML3 vertical-align    | */
-/* |         attribute string.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleVerticalAlign : parse an HTML3 vertical-align    
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleVerticalAlign (PresentationTarget target,
@@ -2035,10 +2039,10 @@ char               *attrstr;
       return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleWhiteSpace : parse an HTML3 white-space          | */
-/* |         attribute string.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleWhiteSpace : parse an HTML3 white-space          
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleWhiteSpace (PresentationTarget target,
@@ -2064,10 +2068,10 @@ char               *attrstr;
    return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleWordSpacing : parse an HTML3 word-spacing        | */
-/* |         attribute string.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleWordSpacing : parse an HTML3 word-spacing        
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleWordSpacing (PresentationTarget target,
@@ -2085,11 +2089,11 @@ char               *attrstr;
       return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleFont : parse an HTML3 font attribute string      | */
-/* |      we expect the input string describing the attribute to be     | */
-/* |            !!!!!!                                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleFont : parse an HTML3 font attribute string      
+   we expect the input string describing the attribute to be     
+   !!!!!!                                                  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleFont (PresentationTarget target,
@@ -2107,12 +2111,12 @@ char               *attrstr;
       return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleFontSize : parse an HTML3 font size attr string  | */
-/* |      we expect the input string describing the attribute to be     | */
-/* |    xx-small, x-small, small, medium, large, x-large, xx-large      | */
-/* |    or an absolute size, or an imcrement relative to the parent     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleFontSize : parse an HTML3 font size attr string  
+   we expect the input string describing the attribute to be     
+   xx-small, x-small, small, medium, large, x-large, xx-large      
+   or an absolute size, or an imcrement relative to the parent     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleFontSize (PresentationTarget target,
@@ -2165,10 +2169,6 @@ char               *attrstr;
    }
 
    /*
-
-    */
-
-   /*
     * install the attribute
     */
    if (context->drv->SetFontSize)
@@ -2176,11 +2176,11 @@ char               *attrstr;
    return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleFontFamily : parse an HTML3 font family string   | */
-/* |      we expect the input string describing the attribute to be     | */
-/* |    a common generic font style name                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleFontFamily : parse an HTML3 font family string   
+   we expect the input string describing the attribute to be     
+   a common generic font style name                                
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleFontFamily (PresentationTarget target,
@@ -2230,12 +2230,12 @@ char               *attrstr;
    return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleFontWeight : parse an HTML3 font weight string   | */
-/* |      we expect the input string describing the attribute to be     | */
-/* | extra-light, light, demi-light, medium, demi-bold, bold, extra-bold| */
-/* | or a number encoding for the previous values                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleFontWeight : parse an HTML3 font weight string   
+   we expect the input string describing the attribute to be     
+   extra-light, light, demi-light, medium, demi-bold, bold, extra-bold
+   or a number encoding for the previous values                       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleFontWeight (PresentationTarget target,
@@ -2310,11 +2310,11 @@ char               *attrstr;
    return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleFontStyle : parse an HTML3 font style string     | */
-/* |      we expect the input string describing the attribute to be     | */
-/* |      italic, oblique, small-caps or normal                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleFontStyle : parse an HTML3 font style string     
+   we expect the input string describing the attribute to be     
+   italic, oblique, small-caps or normal                         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleFontStyle (PresentationTarget target,
@@ -2390,11 +2390,11 @@ char               *attrstr;
    return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleLineSpacing : parse an HTML3 font leading string | */
-/* |      we expect the input string describing the attribute to be     | */
-/* |      value% or value                                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleLineSpacing : parse an HTML3 font leading string 
+   we expect the input string describing the attribute to be     
+   value% or value                                               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleLineSpacing (PresentationTarget target,
@@ -2422,12 +2422,12 @@ char               *attrstr;
    return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* | ParseHTML3StyleTextDecoration : parse an HTML3 text decor string   | */
-/* |      we expect the input string describing the attribute to be     | */
-/* |    underline, overline, line-through, box, shadowbox, box3d,       | */
-/* |    cartouche, blink or none                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleTextDecoration : parse an HTML3 text decor string   
+   we expect the input string describing the attribute to be     
+   underline, overline, line-through, box, shadowbox, box3d,       
+   cartouche, blink or none                                        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleTextDecoration (PresentationTarget target,
@@ -2486,13 +2486,13 @@ char               *attrstr;
    return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleColor : parse an HTML3 color attribute string    | */
-/* |      we expect the input string describing the attribute to be     | */
-/* |      either a color name, a 3 tuple or an hexadecimal encoding.    | */
-/* |      The color used will be approximed from the current color      | */
-/* |      table                                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleColor : parse an HTML3 color attribute string    
+   we expect the input string describing the attribute to be     
+   either a color name, a 3 tuple or an hexadecimal encoding.    
+   The color used will be approximed from the current color      
+   table                                                         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleColor (char *attrstr, PresentationValue * val)
@@ -2616,9 +2616,9 @@ PresentationValue  *val;
    return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleWidth : parse an HTML3 width attribute           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleWidth : parse an HTML3 width attribute           
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleWidth (PresentationTarget target,
@@ -2653,9 +2653,9 @@ char               *attrstr;
    return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleMarginTop : parse an HTML3 margin-top attribute  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleMarginTop : parse an HTML3 margin-top attribute  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleMarginTop (PresentationTarget target,
@@ -2685,10 +2685,10 @@ char               *attrstr;
    return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleMarginBottom : parse an HTML3 margin-bottom      | */
-/* |          attribute                                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleMarginBottom : parse an HTML3 margin-bottom      
+   attribute                                                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleMarginBottom (PresentationTarget target,
@@ -2718,9 +2718,9 @@ char               *attrstr;
    return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleHeight : parse an HTML3 height attribute                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleHeight : parse an HTML3 height attribute                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleHeight (PresentationTarget target,
@@ -2751,9 +2751,9 @@ char               *attrstr;
    return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleForeground : parse an HTML3 foreground attribute | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleForeground : parse an HTML3 foreground attribute 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleForeground (PresentationTarget target,
@@ -2781,9 +2781,9 @@ char               *attrstr;
    return (attrstr);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTML3StyleBackground : parse an HTML3 background attribute | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTML3StyleBackground : parse an HTML3 background attribute 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static char        *ParseHTML3StyleBackground (PresentationTarget target,
@@ -2849,19 +2849,19 @@ char               *attrstr;
    return (attrstr);
 }
 
-/**************************************************************************/
-/*                                                                        */
-/*         PARSING FUNCTIONS FOR HEADER STYLE DECLARATIONS                */
-/*                                                                        */
-/**************************************************************************/
+/*----------------------------------------------------------------------
+   
+   PARSING FUNCTIONS FOR HEADER STYLE DECLARATIONS                
+   
+  ----------------------------------------------------------------------*/
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTMLStyleDeclaration : parse one HTML style declaration    | */
-/* |      stored in the header of a HTML document                       | */
-/* |   We expect the style string to be of the form :                   | */
-/* |   [                                                                | */
-/* |   e.g: pinky, awful { color: pink, font-family: helvetica }        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTMLStyleDeclaration : parse one HTML style declaration    
+   stored in the header of a HTML document                       
+   We expect the style string to be of the form :                   
+   [                                                                
+   e.g: pinky, awful { color: pink, font-family: helvetica }        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ParseHTMLStyleDeclaration (Element elem, char *attrstr, Document doc, PSchema gPres)
 #else
@@ -2927,9 +2927,9 @@ PSchema             gPres;
 
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTMLClass : parse an HTML3 Class string                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTMLClass : parse an HTML3 Class string                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ParseHTMLClass (Element elem, char *attrstr, Document doc)
 #else
@@ -2999,9 +2999,9 @@ Document            doc;
    } while (rule != NULL);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ParseHTMLStyleSheet : Parse an HTML Style Sheet fragment        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTMLStyleSheet : Parse an HTML Style Sheet fragment        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ParseHTMLStyleSheet (char *fragment, Document doc, PSchema gPres)
 #else
@@ -3113,20 +3113,20 @@ PSchema             gPres;
    }
 }
 
-/**************************************************************************/
-/*                                                                        */
-/*          EVALUATION FUNCTIONS / CASCADING AND OVERLOADING              */
-/*                                                                        */
-/**************************************************************************/
+/*----------------------------------------------------------------------
+   
+   EVALUATION FUNCTIONS / CASCADING AND OVERLOADING              
+   
+  ----------------------------------------------------------------------*/
 
-/* ---------------------------------------------------------------------- */
-/* |    EvaluateClassContext : gives a score for an element in a tree   | */
-/* |    in function of a selector. Three argument enter in the          | */
-/* |    evaluation process :                                            | */
-/* |      - the class name associated to the element                    | */
-/* |      - the selector string associated to the rule                  | */
-/* |      - the element and it's place in the tree                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   EvaluateClassContext : gives a score for an element in a tree   
+   in function of a selector. Three argument enter in the          
+   evaluation process :                                            
+   - the class name associated to the element                    
+   - the selector string associated to the rule                  
+   - the element and it's place in the tree                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 EvaluateClassContext (Element elem, char *class, char *selector, Document doc)
@@ -3207,14 +3207,14 @@ Document            doc;
    return (result);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    EvaluateClassSelector : gives a score for an element in a tree  | */
-/* |    in function of a selector. Three argument enter in the          | */
-/* |    evaluation process :                                            | */
-/* |      - the class name associated to the element                    | */
-/* |      - the selector string associated to the rule                  | */
-/* |      - the element and it's place in the tree                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   EvaluateClassSelector : gives a score for an element in a tree  
+   in function of a selector. Three argument enter in the          
+   evaluation process :                                            
+   - the class name associated to the element                    
+   - the selector string associated to the rule                  
+   - the element and it's place in the tree                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 EvaluateClassSelector (Element elem, char *class, char *selector, Document doc)
@@ -3250,16 +3250,16 @@ Document            doc;
    return (val);
 }
 
-/**************************************************************************/
-/*                                                                        */
-/*              LIBRARY FUNCTIONS of GENERAL INTERREST                    */
-/*                                                                        */
-/**************************************************************************/
+/*----------------------------------------------------------------------
+   
+   LIBRARY FUNCTIONS of GENERAL INTERREST                    
+   
+  ----------------------------------------------------------------------*/
 
-/* ---------------------------------------------------------------------- */
-/* |  CreateWWWElement : find or create an element of a given type in   | */
-/* |       the document structure.                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CreateWWWElement : find or create an element of a given type in   
+   the document structure.                                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 Element             CreateWWWElement (Document doc, int type)
@@ -3288,10 +3288,10 @@ int                 type;
    return (CreateNewWWWElement (doc, type));
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  CreateNewWWWElement : create a new element of a given type in     | */
-/* |       the document structure.                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CreateNewWWWElement : create a new element of a given type in     
+   the document structure.                                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 Element             CreateNewWWWElement (Document doc, int type)
@@ -3390,11 +3390,11 @@ int                 type;
    return (el);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    IsImplicitClassName : return wether the Class name is an        | */
-/* |      implicit one, eg "H1" or "H2 EM" meaning it's a GI name       | */
-/* |      or an HTML context name.                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IsImplicitClassName : return wether the Class name is an        
+   implicit one, eg "H1" or "H2 EM" meaning it's a GI name       
+   or an HTML context name.                                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 IsImplicitClassName (char *class, Document doc)
 #else
@@ -3429,9 +3429,9 @@ Document            doc;
    return (1);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    SearchClass : search a given class in the style rules           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SearchClass : search a given class in the style rules           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 Element             SearchClass (char *class, Document doc)
 #else
@@ -3473,10 +3473,10 @@ Document            doc;
    return (el);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ApplyStyleRule : Change the presentation attributes of          | */
-/* |    a given element to reflect a style rule.                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplyStyleRule : Change the presentation attributes of          
+   a given element to reflect a style rule.                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ApplyStyleRule (Element elem, Element stylerule, Document doc)
 #else
@@ -3515,9 +3515,9 @@ Document            doc;
    } while (rule != NULL);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    RemoveStyleRule : removes the corresponding class.              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RemoveStyleRule : removes the corresponding class.              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RemoveStyleRule (Element elClass, Document doc)
 #else
@@ -3561,10 +3561,10 @@ Document            doc;
    TtaRemoveTree (elClass, doc);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    RemoveStyle : clean all the presentation attributes of          | */
-/* |    a given element.                                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RemoveStyle : clean all the presentation attributes of          
+   a given element.                                                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RemoveStyle (Element elem, Document doc)
 #else
@@ -3624,9 +3624,9 @@ Document            doc;
       context->drv->CleanPresentation (target, context, unused);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    SetHTMLStyleParserDestructiveMode :                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetHTMLStyleParserDestructiveMode :                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetHTMLStyleParserDestructiveMode (Bool mode)
 #else
@@ -3647,15 +3647,15 @@ Bool                mode;
    HTMLStyleParserDestructiveMode = mode;
 }
 
-/************************************************************************/
-/*                                                                      */
-/*                 Needed for support of HTML 3.2                       */
-/*                                                                      */
-/************************************************************************/
+/*----------------------------------------------------------------------
+   
+   Needed for support of HTML 3.2                       
+   
+  ----------------------------------------------------------------------*/
 
-/* ---------------------------------------------------------------------- */
-/* |    HTMLSetBackgroundColor :                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   HTMLSetBackgroundColor :                                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HTMLSetBackgroundColor (Document doc, Element elem, char *color)
 #else
@@ -3672,9 +3672,9 @@ char               *color;
    ParseHTMLSpecificStyle (elem, css_command, doc);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    HTMLSetForegroundColor :                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   HTMLSetForegroundColor :                                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HTMLSetForegroundColor (Document doc, Element elem, char *color)
 #else
@@ -3691,9 +3691,9 @@ char               *color;
    ParseHTMLSpecificStyle (elem, css_command, doc);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    HTMLResetBackgroundColor :                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   HTMLResetBackgroundColor :                                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HTMLResetBackgroundColor (Document doc, Element elem)
 #else
@@ -3717,9 +3717,9 @@ Element             elem;
       TtaResetViewBackgroundColor (doc, 1);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    HTMLResetForegroundColor :                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   HTMLResetForegroundColor :                                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HTMLResetForegroundColor (Document doc, Element elem)
 #else
@@ -3736,9 +3736,9 @@ Element             elem;
       TtaRemovePRule (elem, rule, doc);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    HTMLSetAlinkColor :                                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   HTMLSetAlinkColor :                                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HTMLSetAlinkColor (Document doc, char *color)
 #else
@@ -3754,9 +3754,9 @@ char               *color;
    ParseHTMLStyleHeader (NULL, css_command, doc, True);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    HTMLSetAactiveColor :                                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   HTMLSetAactiveColor :                                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HTMLSetAactiveColor (Document doc, char *color)
 #else
@@ -3772,9 +3772,9 @@ char               *color;
    ParseHTMLStyleHeader (NULL, css_command, doc, True);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    HTMLSetAvisitedColor :                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   HTMLSetAvisitedColor :                                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HTMLSetAvisitedColor (Document doc, char *color)
 #else
@@ -3790,9 +3790,9 @@ char               *color;
    ParseHTMLStyleHeader (NULL, css_command, doc, True);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    HTMLResetAlinkColor :                                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   HTMLResetAlinkColor :                                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HTMLResetAlinkColor (Document doc)
 #else
@@ -3809,9 +3809,9 @@ Document            doc;
    SetHTMLStyleParserDestructiveMode (False);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    HTMLResetAactiveColor :                                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   HTMLResetAactiveColor :                                                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HTMLResetAactiveColor (Document doc)
 #else
@@ -3828,9 +3828,9 @@ Document            doc;
    SetHTMLStyleParserDestructiveMode (False);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    HTMLResetAvisitedColor :                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   HTMLResetAvisitedColor :                                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HTMLResetAvisitedColor (Document doc)
 #else
