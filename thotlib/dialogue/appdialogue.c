@@ -107,7 +107,6 @@ HWND  ToolBar ;
 HWND  StatusBar;
 HWND  logoFrame;
 HMENU currentMenu;
-#ifdef THOT_TOOLTIPS
 int    nCust[MAX_FRAME][30];
 static HWND hwndTB;
 
@@ -116,14 +115,12 @@ static int   strIndex ;
 extern int     tipIndex;
 extern int     CommandToString [MAX_FRAME][MAX_BUTTON];
 extern char    szTbStrings [4096];
-#endif /* THOT_TOOLTIPS */
 
 #define ToolBar_InsertButton(hwnd, idButton, lpButton) \
     (BOOL)SendMessage((hwnd), TB_INSERTBUTTON, (WPARAM)idButton, (LPARAM)(LPTBBUTTON)lpButton)
 
 HMENU hmenu;
 int   menu_item ;
-#ifdef THOT_TOOLTIPS
 #ifdef __STDC__
 LPSTR GetString (int frame, int i_String)
 #else  /* __STDC__ */
@@ -176,7 +173,6 @@ LPARAM lParam;
 
    return 0 ;
 }
-#endif /* THOT_TOOLTIPS */
 
 #ifdef __STDC__
 LRESULT CALLBACK textZoneProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -1472,11 +1468,9 @@ char               *info;
 						 w->bReserved[1] = 0;
                          w->dwData       = 0;
                          w->iString      = -1;
-#                        ifdef THOT_TOOLTIPS
                          CommandToString[frame][tipIndex++] = TBBUTTONS_BASE + i;
                          CommandToString[frame][tipIndex]   = -1;
 			             nCust [frame][i] = i;
-#                        endif /* THOT_TOOLTIPS */
                          FrameTable[frame].Button[i] = w;
                          FrameTable[frame].Call_Button[i] = (Proc) procedure;
 
@@ -1498,12 +1492,10 @@ char               *info;
 #                 endif /* _WINDOWS */
                   if (info != NULL) {
 #                    ifdef _WINDOWS
-#                    ifdef THOT_TOOLTIPS
                      if (!tbStringsInitialized) {                   
 		                strcat (&szTbStrings [strIndex], info);
 	                    strIndex += (strlen (info) + 1);
 					 }
-#                    endif /* THOT_TOOLTIPS */
 #                    else  /* !_WINDOWS */
 		     XcgLiteClueAddWidget(liteClue, w,  info, strlen(info), 0);
 #                    endif /* _WINDOWS */

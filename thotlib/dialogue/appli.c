@@ -138,19 +138,14 @@ int         cyToolBar;
 int         CommandToString [MAX_FRAME][MAX_BUTTON];
 char        szTbStrings [4096];
 BOOL        buttonCommand;
-
+BOOL        autoScroll = FALSE;
 boolean viewClosed = FALSE;
-#ifdef THOT_TOOLTIPS
 DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | TBSTYLE_TOOLTIPS;
-#else  /* !THOT_TOOLTIPS */
-DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP;
-#endif /* THOT_TOOLTIPS */
 DWORD       dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 TBADDBITMAP ThotTBBitmap;
 
 #include "win_f.h"
 
-#ifdef THOT_TOOLTIPS
 #ifdef __STDC__
 BOOL InitToolTip (HWND hwndToolBar)
 #else  /* __STDC__ */
@@ -226,7 +221,6 @@ LPTOOLTIPTEXT lpttt;
 
    lstrcpy (pDest, pString) ;
 }
-#endif /* THOT_TOOLTIPS */
 #endif /* _WINDOWS */
 
 #include "absboxes_f.h"
@@ -1220,9 +1214,7 @@ LPARAM      lParam;
 #endif /* __STDC__ */
 {
     HWND   hwndTextEdit;
-#   ifdef  THOT_TOOLTIPS
     HWND   hwndToolTip ;
-#   endif  /* THOT_TOOLTIPS */
     RECT   rect;
     int    doc, view ;
     char*  viewName ;
@@ -1249,13 +1241,11 @@ LPARAM      lParam;
                 if ((SendMessage (ToolBar, TB_ADDBITMAP, (WPARAM) MAX_BUTTON, (LPARAM) (LPTBADDBITMAP) &ThotTBBitmap)) == -1)
                    WinErrorBox (NULL);
 
-#               ifdef THOT_TOOLTIPS
                 /* ToolBar_AddString (ToolBar, 0, &szTbStrings [0]); */
                 hwndToolTip = ToolBar_GetToolTips (ToolBar);
 				 
                 if (dwToolBarStyles & TBSTYLE_TOOLTIPS)
                    InitToolTip (ToolBar) ;	
-#               endif /* THOT_TOOLTIPS */
 
                 /* Create status bar  */
                 StatusBar = CreateStatusWindow (dwStatusBarStyles, "", hwnd, 2) ;
@@ -1303,7 +1293,6 @@ LPARAM      lParam;
                 SendMessage (FrRef [frame], WM_CHAR, wParam, lParam);
                 return 0;
 
-#          ifdef THOT_TOOLTIPS		 
            case WM_NOTIFY: {
                 LPNMHDR pnmh = (LPNMHDR) lParam ;
                 int idCtrl = (int) wParam ;
@@ -1319,7 +1308,6 @@ LPARAM      lParam;
                 }
                 return 0;
            }
-#          endif /* THOT_TOOLTIPS */
 
            case WM_COMMAND:
                 if (LOWORD (wParam) >= TBBUTTONS_BASE) {
@@ -1500,7 +1488,7 @@ LPARAM lParam;
                X_Pos = cRect.right;
 
             VerticalScroll (frame, delta, TRUE);
-            /* LocateSelectionInView (frame, X_Pos, Y_Pos, 0); */
+            LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
             /* if (wParam & MK_LBUTTON) */
             SendMessage (hwnd, WM_MOUSEMOVE, 0, 0L);
 		}
@@ -1560,6 +1548,8 @@ LPARAM lParam;
                  firstTime = TRUE;
                  if (fBlocking)
                     fBlocking = FALSE;
+                 if (autoScroll)
+                    autoScroll = FALSE;
                  return 0;
 
             case WM_LBUTTONDBLCLK:/* left double click handling */
@@ -1607,7 +1597,9 @@ LPARAM lParam;
                     /* ApplyDirectResize (frame, LOWORD (lParam), HIWORD (lParam)); */
                     ApplyDirectResize (frame, ClickX, ClickY);
                     /* memorize the click position */
-                 } 
+                 } else if (ThotLocalActions[T_editfunc] != NULL)
+                        (*ThotLocalActions[T_editfunc]) (TEXT_INSERT);
+                        /* selection a l'interieur d'une polyline */
 				 return 0;
 
             case WM_MOUSEMOVE:
@@ -1625,6 +1617,7 @@ LPARAM lParam;
             case WM_NCMOUSEMOVE:
                  if (firstTime && fBlocking) {
                      winCapture = GetCapture ();
+                     autoScroll = TRUE;
 					 firstTime = FALSE;
                      SetCapture (hwnd);
 				 }
