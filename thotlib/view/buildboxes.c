@@ -428,7 +428,8 @@ int                *nSpaces;
 	  }
 	else
 	   i++;
-	j++;
+	if (car != EOS)
+	  j++;
      }
 }
 

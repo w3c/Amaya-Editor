@@ -42,8 +42,19 @@ Extensions 2.3:
   - Improved the Accept: string for doing for doing image and css content
     negotiation.
 
+* Internationalization:
+  - There is now an italian version of Amaya. Many thanks to Roberto Bagnara.
+  - Dutch, German, Italian, Spanish, and Swedish dictionaries are now available
+    for the Amaya spell-checker. We are not able to avaluate the quality of
+    these dictionaries, but we hope they can help.
+
 * Building Amaya:
   - There are new make files for the Windows platforms.
+
+* GTK:
+  - You can build now the Amaya-GTK version. This version is only able to display
+    document views and many user actions are disabled.
+    See Autoconf.html to know how to build this version.
 
 Fixed bugs 2.3:
 ---------------

@@ -20,14 +20,11 @@ LIBS	=  $(AMAYA_LIBWWW_LIBS) $(AMAYA_JAVA_LIBS) $(AMAYA_PLUGIN_LIBS) \
 	  -lXext -lX11 $(X_EXTRA_LIBS) @LIBS@ @EXTRA_LIBS@ -lm
 
 CONFIGFILES=XKeysymDB unix-thot.rc amaya.keyboard \
-	    en-amayadialogue en-amayamsg en-libdialogue \
-	    en-transdialogue en-corrdialogue \
-	    fr-amayadialogue fr-amayamsg fr-libdialogue \
-	    fr-transdialogue fr-corrdialogue \
-	    de-amayadialogue de-amayamsg de-libdialogue \
-	    tr-transdialogue tr-corrdialogue \
-	    tr-amayadialogue tr-amayamsg tr-libdialogue \
-	    tr-transdialogue tr-corrdialogue
+	    en-amayadialogue en-amayamsg en-libdialogue en-corrdialogue \
+	    fr-amayadialogue fr-amayamsg fr-libdialogue fr-corrdialogue \
+	    de-amayadialogue de-amayamsg de-libdialogue de-corrdialogue \
+	    tr-amayadialogue tr-amayamsg tr-libdialogue tr-corrdialogue \
+	    it-amayadialogue it-amayamsg it-libdialogue it-corrdialogue
 
 DICOFILES= *.ptn *.dic alphabet clavier
 

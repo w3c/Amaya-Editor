@@ -229,17 +229,14 @@ Document            document;
    "position". If "document" is null, we have not to consider
    the selction nor the displaying
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                InsertText (PtrElement pEl, int position, STRING content, Document document)
-
 #else  /* __STDC__ */
 void                InsertText (pEl, position, content, document)
 PtrElement          pEl;
 int                 position;
 STRING              content;
 Document            document;
-
 #endif /* __STDC__ */
 
 {
@@ -298,7 +295,7 @@ Document            document;
 	/* looks for the buffer pBuf where the insertion has to be done */
 	pBuf = pEl->ElText;
 	lengthBefore = 0;
-	while (pBuf->BuNext != NULL && lengthBefore + pBuf->BuLength < position)
+	while (pBuf->BuNext && lengthBefore + pBuf->BuLength < position)
 	  {
 	     lengthBefore += pBuf->BuLength;
 	     pBuf = pBuf->BuNext;
@@ -308,18 +305,33 @@ Document            document;
 	if (lengthBefore == 0)
 	   /* one insert before the first character of the element */
 	  {
-	     /* one add a buffer before the existing buffers */
-	     GetTextBuffer (&pBuf);
-	     pBuf->BuNext = pEl->ElText;
-	     pBuf->BuPrevious = NULL;
-	     if (pBuf->BuNext != NULL)
-		pBuf->BuNext->BuPrevious = pBuf;
-	     pEl->ElText = pBuf;
+	    if (pBuf->BuLength != 0)
+	      {
+		/* one add a buffer before the existing buffers */
+		GetTextBuffer (&newBuf);
+		if (position)
+		  {
+		    /* chain a new buffer between two buffers */
+		    newBuf->BuNext = pBuf;
+		    newBuf->BuPrevious = pBuf->BuPrevious;
+		    pBuf->BuPrevious->BuNext = newBuf;
+		    pBuf->BuPrevious = newBuf;
+		  }
+		else
+		  {
+		    /* chain a new buffer as the first buffer */
+		    newBuf->BuNext = pEl->ElText;
+		    newBuf->BuPrevious = NULL;
+		    if (newBuf->BuNext)
+		      newBuf->BuNext->BuPrevious = newBuf;
+		    pEl->ElText = newBuf;
+		  }
+		pBuf = newBuf;
+	      }
 	  }
-	else
-	   /* Creates a buffer for the second part of the text */
-	if (lengthBefore < pBuf->BuLength)
+	else if (lengthBefore < pBuf->BuLength)
 	  {
+	   /* Creates a buffer for the second part of the text */
 	     newBuf = NewTextBuffer (pBuf);
 	     ustrcpy (newBuf->BuContent, pBuf->BuContent + lengthBefore);
 	     newBuf->BuLength = pBuf->BuLength - lengthBefore;
@@ -327,34 +339,24 @@ Document            document;
 	pBuf->BuContent[lengthBefore] = EOS;
 	pBuf->BuLength = lengthBefore;
 	/* If there is enough space in the buffer, one add a string at its end */
-	if (stringLength < THOT_MAX_CHAR - lengthBefore)
+	ptr = content;
+	while (stringLength > 0)
 	  {
-	     ustrncpy (pBuf->BuContent + lengthBefore, content, stringLength);
-	     pBuf->BuLength += stringLength;
-	     pBuf->BuContent[pBuf->BuLength] = EOS;
-	  }
-	else
-	   /* not enough space, another buffer is created */
-	  {
-	     pPreviousBuff = pBuf;
-	     pBuf = NULL;
-	     ptr = content;
-	     while (stringLength > 0)
-	       {
-		  if (pBuf == NULL)
-		     pBuf = NewTextBuffer (pPreviousBuff);
-		  if (stringLength >= THOT_MAX_CHAR)
-		     l = THOT_MAX_CHAR - 1;
-		  else
-		     l = stringLength;
-		  ustrncpy (pBuf->BuContent, ptr, l);
-		  ptr += l;
-		  stringLength -= l;
-		  pBuf->BuLength = l;
-		  pBuf->BuContent[l] = EOS;
-		  pPreviousBuff = pBuf;
-		  pBuf = NULL;
-	       }
+	    if (stringLength < THOT_MAX_CHAR - lengthBefore)
+	      l = stringLength;
+	    else
+	      l = THOT_MAX_CHAR - lengthBefore - 1;
+	    ustrncpy (pBuf->BuContent + lengthBefore, ptr, l);
+	    pBuf->BuLength += l;
+	    pBuf->BuContent[pBuf->BuLength] = EOS;
+	    lengthBefore = 0;
+	    stringLength -= l;
+	    ptr = &ptr[l];
+	    if (stringLength > 0)
+	      {
+		pPreviousBuff = pBuf;
+		pBuf = NewTextBuffer (pPreviousBuff);
+	      }
 	  }
 	/* Updates the volumes of ancestors */
 	pElAsc = pEl->ElParent;

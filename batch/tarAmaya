@@ -7,7 +7,7 @@
 AMAYAVERSION=2.3
 THOTDIR=/tahiti/diffusion/Amaya
 DEST=/tahiti/thottape
-PLATFORMS="solaris2 LINUX-ELF RS6000"
+PLATFORMS="solaris2 LINUX-ELF osf1 RS6000"
 #PLATFORMS="osf1"
 #PLATFORMS="RS6000"
 
@@ -52,6 +52,7 @@ do
    Amaya/config/tr-libdialogue \
    Amaya/config/tr-transdialogue \
    Amaya/config/tr-corrdialogue \
+   Amaya/config/it-* \
    Amaya/dicopar/*.ptn \
    Amaya/dicopar/alphabet \
    Amaya/dicopar/clavier \
@@ -119,91 +120,3 @@ do
    Amaya/fonts/fonts.dir \
    Amaya/fonts/icones*
 done
-
-#sepecific tar for solaris2.6
-tar cvzf $DEST/amaya-solaris2.6-$AMAYAVERSION.tgz  \
-   Amaya/README.amaya \
-   Amaya/config/XKeysymDB \
-   Amaya/config/amaya.keyboard \
-   Amaya/config/*thot.rc \
-   Amaya/config/amaya.kb \
-   Amaya/config/en-amayadialogue \
-   Amaya/config/en-amayamsg \
-   Amaya/config/en-libdialogue \
-   Amaya/config/en-transdialogue \
-   Amaya/config/en-corrdialogue \
-   Amaya/config/fr-amayadialogue \
-   Amaya/config/fr-amayamsg \
-   Amaya/config/fr-libdialogue \
-   Amaya/config/fr-transdialogue \
-   Amaya/config/fr-corrdialogue \
-   Amaya/config/de-amayadialogue \
-   Amaya/config/de-amayamsg \
-   Amaya/config/de-libdialogue \
-   Amaya/config/de-transdialogue \
-   Amaya/config/de-corrdialogue \
-   Amaya/config/tr-amayadialogue \
-   Amaya/config/tr-amayamsg \
-   Amaya/config/tr-libdialogue \
-   Amaya/config/tr-transdialogue \
-   Amaya/config/tr-corrdialogue \
-   Amaya/dicopar/*.ptn \
-   Amaya/dicopar/alphabet \
-   Amaya/dicopar/clavier \
-   Amaya/doc/amaya/Creating.html \
-   Amaya/doc/amaya/MakeBook.html \
-   Amaya/doc/amaya/StyleSheets.html \
-   Amaya/doc/amaya/Manual.html \
-   Amaya/doc/amaya/Tables.html \
-   Amaya/doc/amaya/AmayaArchi.html \
-   Amaya/doc/amaya/Math.html \
-   Amaya/doc/amaya/Registry.html \
-   Amaya/doc/amaya/Transform.html \
-   Amaya/doc/amaya/Attributes.html \
-   Amaya/doc/amaya/Views.html \
-   Amaya/doc/amaya/Publishing.html \
-   Amaya/doc/amaya/Put.html \
-   Amaya/doc/amaya/ImageMaps.html \
-   Amaya/doc/amaya/Numbering.html \
-   Amaya/doc/amaya/Searching.html \
-   Amaya/doc/amaya/Selecting.html \
-   Amaya/doc/amaya/Browsing.html \
-   Amaya/doc/amaya/CSS.html \
-   Amaya/doc/amaya/Plugins.html \
-   Amaya/doc/amaya/Keyboard.html \
-   Amaya/doc/amaya/Printing.html \
-   Amaya/doc/amaya/Changing.html \
-   Amaya/doc/amaya/Configure.html \
-   Amaya/doc/amaya/Links.html \
-   Amaya/doc/amaya/Put.html \
-   Amaya/doc/amaya/SpellChecking.html \
-   Amaya/doc/Icons/*.gif \
-   Amaya/Icons/WWW/activity_48x48 \
-   Amaya/Icons/WWW/guide48x \
-   Amaya/Icons/WWW/new_red \
-   Amaya/Icons/WWW/relnotes48x \
-   Amaya/Icons/WWW/w3c_home \
-   Amaya/solaris2.6/libXm.so.3 \
-   Amaya/solaris2.6/libXm.so \
-   Amaya/solaris2.6/bin/amaya \
-   Amaya/solaris2.6/bin/print \
-   Amaya/batch/MachineType \
-   Amaya/amaya/COPYRIGHT* \
-   Amaya/amaya/AmayaPage.html \
-   Amaya/amaya/HTML.STR \
-   Amaya/amaya/HTML.conf \
-   Amaya/amaya/HTML.trans \
-   Amaya/amaya/*.en \
-   Amaya/amaya/*.fr \
-   Amaya/amaya/HTML*.PRS \
-   Amaya/amaya/HTML*.TRA \
-   Amaya/amaya/*.en \
-   Amaya/amaya/*.fr \
-   Amaya/amaya/*.gif \
-   Amaya/amaya/MathML.STR \
-   Amaya/amaya/MathML*.PRS \
-   Amaya/amaya/MathML*.TRA \
-   Amaya/amaya/MathML.trans \
-   Amaya/fonts/Families.list \
-   Amaya/fonts/fonts.dir \
-   Amaya/fonts/icones*

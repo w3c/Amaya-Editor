@@ -46,6 +46,7 @@
 static ThotBool RightExtended;
 static ThotBool LeftExtended;
 static ThotBool Retry = FALSE;
+static ThotBool Moving = FALSE;
 
 #include "applicationapi_f.h"
 #include "appli_f.h"
@@ -360,7 +361,11 @@ ThotBool            extendSel;
 	   else
 	     pBox = NULL;
 	 }
-       
+       /* avoid to process two moving commands at the same time */
+       if (Moving)
+	 return;
+       else
+	 Moving = TRUE;
        /* could we shrink the current extended selection */
        if (extendSel)
 	 {
@@ -602,6 +607,7 @@ ThotBool            extendSel;
 	     }
 	   break;
 	 }
+       Moving = FALSE;
      }
 }
 
