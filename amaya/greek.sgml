@@ -2,10 +2,12 @@ TextTRANSLATE Grec
   BEGIN
   '\42' -> '&forall;';	{ for all, U+2200 ISOtech }
   '\44' -> '&exist;';	{ there exists, U+2203 ISOtech }
-	'\46' -> '&amp;';
-  '''' -> '&ni;';	{ contains as member, U+220B ISOtech }
+  '\46' -> '&amp;';
+  ''''  -> '&ni;';	{ contains as member, U+220B ISOtech }
   '\52' -> '&lowast;';	{ asterisk operator, U+2217 ISOtech }
   '\55' -> '&minus;';	{ minus sign, U+2212 ISOtech }
+  '\74' -> '&lt;';
+
   '\100' -> '&cong;';	{ approximately equal to, U+2245 ISOtech }
   '\101' -> '&Alpha;';	{ greek capital letter alpha, U+0391 }
   '\102' -> '&Beta;';	{ greek capital letter beta, U+0392 }
@@ -35,6 +37,8 @@ TextTRANSLATE Grec
   '\132' -> '&Zeta;';	{ greek capital letter zeta, U+0396 }
   '\134' -> '&there4;';	{ therefore, U+2234 ISOtech }
   '\136' -> '&perp;';	{ up tack = orthogonal to = perpendicular, U+22A5 ISOtech }
+
+  '\140' -> '&oline;';  {overline = spacing overscore, U+203E NEW }
   '\141' -> '&alpha;';	{ greek small letter alpha, U+03B1 ISOgrk3 }
   '\142' -> '&beta;';	{ greek small letter beta, U+03B2 ISOgrk3 }
   '\143' -> '&chi;';	{ greek small letter chi, U+03C7 ISOgrk3 }
@@ -61,7 +65,7 @@ TextTRANSLATE Grec
   '\171' -> '&psi;';	{ greek small letter psi, U+03C8 ISOgrk3 }
   '\172' -> '&zeta;';	{ greek small letter zeta, U+03B6 ISOgrk3 }
   '\176' -> '&sim;';	{ tilde operator = varies with = similar to, U+223C ISOtech }
-        '\240' -> '&nbsp;';
+  '\240' -> '&nbsp;';
   '\241' -> '&upsih;';	{ greek upsilon with hook symbol, U+03D2 NEW }
   '\242' -> '&prime;';	{ prime = minutes = feet, U+2032 ISOtech }
   '\243' -> '&le;';	{ less-than or equal to, U+2264 ISOtech }
@@ -77,18 +81,20 @@ TextTRANSLATE Grec
   '\255' -> '&uarr;';	{ upwards arrow, U+2191 ISOnum}
   '\256' -> '&rarr;';	{ rightwards arrow, U+2192 ISOnum }
   '\257' -> '&darr;';	{ downwards arrow, U+2193 ISOnum }
+
   '\262' -> '&Prime;';	{ double prime = seconds = inches, U+2033 ISOtech }
   '\263' -> '&ge;';	{ greater-than or equal to, U+2265 ISOtech }
+  '\264' -> '\327';
   '\265' -> '&prop;';	{ proportional to, U+221D ISOtech }
   '\266' -> '&part;';	{ partial differential, U+2202 ISOtech }
   '\267' -> '&bull;';	{ bullet = black small circle, U+2022 ISOpub }
+  '\270' -> '\367';
   '\271' -> '&ne;';	{ not equal to, U+2260 ISOtech }
   '\272' -> '&equiv;';	{ identical to, U+2261 ISOtech }
   '\273' -> '&asymp;';	{ almost equal to = asymptotic to, U+2248 ISOamsr }
   '\274' -> '&hellip;';	{ horizontal ellipsis = three dot leader, U+2026 ISOpub }
-        '\270' -> '\367;';
-        '\275' -> '|';
-        '\276' -> '&mdash;';
+  '\275' -> '|';
+  '\276' -> '&mdash;';
   '\277' -> '&crarr;';	{ downwards arrow with corner leftwards = carriage return, U+21B5 NEW }
   '\300' -> '&alefsym;';{ alef symbol = first transfinite cardinal, U+2135 NEW }
   '\301' -> '&image;';	{ blackletter capital I = imaginary part, U+2111 ISOamso }
@@ -108,11 +114,13 @@ TextTRANSLATE Grec
   '\317' -> '&notin;';	{ not an element of, U+2209 ISOtech }
   '\320' -> '&ang;';	{ angle, U+2220 ISOamso }
   '\321' -> '&nabla;';	{ nabla = backward difference, U+2207 ISOtech }
+  '\322' -> '\256';
+  '\323' -> '\251';
   '\324' -> '&trade;';	{ trade mark sign, U+2122 ISOnum }
   '\325' -> '&prod;';	{ n-ary product = product sign, U+220F ISOamsb }
   '\326' -> '&radic;';	{ square root = radical sign, U+221A ISOtech }
   '\327' -> '&sdot;';	{ dot operator, U+22C5 ISOamsb }
-        '\330' -> '\254';
+  '\330' -> '\254';
   '\331' -> '&and;';	{ logical and = wedge, U+2227 ISOtech }
   '\332' -> '&or;';	{ logical or = vee, U+2228 ISOtech }
   '\333' -> '&hArr;';	{ left right double arrow, U+21D4 ISOamsa }
@@ -122,33 +130,33 @@ TextTRANSLATE Grec
   '\337' -> '&dArr;';	{ downwards double arrow, U+21D3 ISOamsa }
   '\340' -> '&loz;';	{ lozenge, U+25CA ISOpub }
   '\341' -> '&lang;';	{ left-pointing angle bracket = bra, U+2329 ISOtech }
-        '\342' -> '&reg;';
-        '\343' -> '&copy;';
-        '\344' -> '&trade;';
+  '\342' -> '\256';
+  '\343' -> '\251';
+  '\344' -> '&trade;';
   '\345' -> '&sum;';	{ n-ary sumation, U+2211 ISOamsb }
-        '\346' -> '(';
-        '\347' -> '|';
-        '\350' -> '(';
+  '\346' -> '(';
+  '\347' -> '|';
+  '\350' -> '(';
   '\351' -> '&lceil;';	{ left ceiling = apl upstile, U+2308 ISOamsc }
-        '\352' -> '|';
+  '\352' -> '|';
   '\353' -> '&lfloor;';	{ left floor = apl downstile, U+230A ISOamsc }
-        '\354' -> '{';
-        '\355' -> '{';
-        '\356' -> '{';
-        '\357' -> '|';
-        '\360' -> ' ';
+  '\354' -> '{';
+  '\355' -> '{';
+  '\356' -> '{';
+  '\357' -> '|';
+  '\360' -> ' ';
   '\361' -> '&rang;';	{ right-pointing angle bracket = ket, U+232A ISOtech }
   '\362' -> '&int;';	{ integral, U+222B ISOtech }
-        '\363' -> '&int;';
-        '\364' -> '&int;';
-        '\365' -> '&int;';
-        '\366' -> ')';
-        '\367' -> '|';
-        '\370' -> '(';
+  '\363' -> '&int;';
+  '\364' -> '&int;';
+  '\365' -> '&int;';
+  '\366' -> ')';
+  '\367' -> '|';
+  '\370' -> '(';
   '\371' -> '&rceil;';	{ right ceiling, U+2309 ISOamsc }
-        '\372' -> '|';
+  '\372' -> '|';
   '\373' -> '&rfloor;';	{ right floor, U+230B ISOamsc }
-        '\374' -> '}';
-        '\375' -> '}';
-        '\376' -> '}';
+  '\374' -> '}';
+  '\375' -> '}';
+  '\376' -> '}';
   END;

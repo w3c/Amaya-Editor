@@ -1231,6 +1231,7 @@ TextTRANSLATE Grec
 	'\135' -> '&rsqb;';
 	'\136' -> '&DownTee;';
 	'\137' -> '&lowbar;';
+
 	'\141' -> '&alpha;';
 	'\142' -> '&beta;';
 	'\143' -> '&chi;';
@@ -1259,7 +1260,7 @@ TextTRANSLATE Grec
 	'\172' -> '&zeta;';
 
 	'\241' -> '&Upsi1;';
-
+        '\242' -> '&prime;';
 	'\243' -> '&le;';
 	'\244' -> '&Sol;';
 	'\245' -> '&infin;';
@@ -1275,7 +1276,7 @@ TextTRANSLATE Grec
 	'\257' -> '&DownArrow;';
 	'\260' -> '&deg;';
 	'\261' -> '&PlusMinus;';
-	'\262' -> '&rdquo;';
+	'\262' -> '&Prime;';
 	'\263' -> '&GreaterEqual;';
 	'\264' -> '&times;';
 	'\265' -> '&Proportional;';
@@ -1327,6 +1328,7 @@ TextTRANSLATE Grec
 	'\343' -> '&copyssf;';
 	'\344' -> '&tradessf;';
 	'\345' -> '&Sum;';
+        '\361' -> '&rang;';
 	'\362' -> '&Integral;';
 	END;
 
