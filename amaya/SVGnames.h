@@ -88,6 +88,7 @@ static AttributeMapping SVGAttributeMappingTable[] =
    {"version", "", 'A', SVG_ATTR_version, L_OtherValue},
    {"viewBox", "", 'A', SVG_ATTR_viewBox, L_OtherValue},
    {"width", "", 'A', SVG_ATTR_width_, L_OtherValue},
+   {"writing-mode", "", 'A', SVG_ATTR_writing_mode, L_OtherValue},
    {"x", "", 'A', SVG_ATTR_x, L_OtherValue},
    {"x1", "", 'A', SVG_ATTR_x1, L_OtherValue},
    {"x2", "", 'A', SVG_ATTR_x2, L_OtherValue},
@@ -149,6 +150,14 @@ static AttrValueMapping SVGAttrValueMappingTable[] =
    {SVG_ATTR_unicode_bidi, "embed", SVG_ATTR_unicode_bidi_VAL_embed_},
    {SVG_ATTR_unicode_bidi, "bidi-override", SVG_ATTR_unicode_bidi_VAL_bidi_override},
    {SVG_ATTR_unicode_bidi, "inherit", SVG_ATTR_unicode_bidi_VAL_inherit},
+
+   {SVG_ATTR_writing_mode, "lr-tb", SVG_ATTR_writing_mode_VAL_lr_tb},
+   {SVG_ATTR_writing_mode, "rl-tb", SVG_ATTR_writing_mode_VAL_rl_tb},
+   {SVG_ATTR_writing_mode, "tb-rl", SVG_ATTR_writing_mode_VAL_tb_rl},
+   {SVG_ATTR_writing_mode, "lr", SVG_ATTR_writing_mode_VAL_lr},
+   {SVG_ATTR_writing_mode, "rl", SVG_ATTR_writing_mode_VAL_rl},
+   {SVG_ATTR_writing_mode, "tb", SVG_ATTR_writing_mode_VAL_tb},
+   {SVG_ATTR_writing_mode, "inherit", SVG_ATTR_writing_mode_VAL_inherit},
 
    {0, "", 0}			/* Last entry. Mandatory */
 };

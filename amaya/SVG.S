@@ -250,6 +250,7 @@ STRUCT
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      direction_; text_anchor; text_decoration; unicode_bidi;
 	      transform;
+	      writing_mode = lr_tb, rl_tb, tb_rl, lr, rl, tb, inherit;
 	      x;
 	      y;
 	      dx = text;
@@ -262,6 +263,7 @@ STRUCT
 	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      direction_; text_anchor; text_decoration; unicode_bidi;
+	      writing_mode;
 	      x;
               y;
 	      dx;

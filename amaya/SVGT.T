@@ -785,6 +785,42 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
+  writing_mode = lr_tb:
+	BEGIN
+	create SAN;
+	create 'writing-mode="lr-tb"';
+	END;
+  writing_mode = rl_tb:
+	BEGIN
+	create SAN;
+	create 'writing-mode="rl-tb"';
+	END;
+  writing_mode = tb_rl:
+	BEGIN
+	create SAN;
+	create 'writing-mode="tb-rl"';
+	END;
+  writing_mode = lr:
+	BEGIN
+	create SAN;
+	create 'writing-mode="lr"';
+	END;
+  writing_mode = rl:
+	BEGIN
+	create SAN;
+	create 'writing-mode="rl"';
+	END;
+  writing_mode = tb:
+	BEGIN
+	create SAN;
+	create 'writing-mode="tb"';
+	END;
+  writing_mode = inherit:
+	BEGIN
+	create SAN;
+	create 'writing-mode="inherit"';
+	END;
+
    x:
 	BEGIN
 	create SAN;

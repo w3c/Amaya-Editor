@@ -1196,6 +1196,42 @@ ATTRIBUTES
         CreateBefore(AttrValue);
         END;
 
+  writing_mode = lr_tb:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Direction: ltr;
+	END;
+  writing_mode = rl_tb:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Direction: rtl;
+	END;
+  writing_mode = tb_rl:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Direction: rtl;
+	END;
+  writing_mode = lr:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Direction: ltr;
+	END;
+  writing_mode = rl:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Direction: rtl;
+	END;
+  writing_mode = tb:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Direction: ltr;
+	END;
+  writing_mode = inherit:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Direction: Enclosing =;
+	END;
+
   x:
 	BEGIN
 	CreateBefore (AttrName);

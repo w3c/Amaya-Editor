@@ -1,7 +1,7 @@
 #
 # Makefile.svg
-# Autoconf Fragment when using Graph
-# Irene Vatton 1998-2001
+# Autoconf Fragment when using SVG
+# Irene Vatton 1998-2002
 #
 
 AMAYA_SVG_OPTIONS=-D_SVG
@@ -22,7 +22,7 @@ AMAYA_SVG_INCLUDES=
 
 SVG_SCHEMAS= $(AMAYA)/SVG.S $(AMAYA)/SVGP.P $(AMAYA)/SVGT.T
 
-graph_schema= compSVG compSVGP compSVGT
+svg_schema= compSVG compSVGP compSVGT
 
 #
 # Structure schema compilation.
