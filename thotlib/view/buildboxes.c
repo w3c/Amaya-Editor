@@ -1783,7 +1783,7 @@ static ThotBool HasFloatingChild (PtrAbstractBox pAb, ThotBool *directParent,
 static void AddFloatingBox (PtrAbstractBox pAb, ThotBool left)
 {
   PtrBox              pBox, box;
-  PtrAbstractBox      pParent;
+  PtrAbstractBox      pParent, pBlock;
   PtrFloat            previous, new_;
 
   if (pAb && !pAb->AbDead)
@@ -1792,10 +1792,8 @@ static void AddFloatingBox (PtrAbstractBox pAb, ThotBool left)
       if (pAb->AbLeafType == LtCompound &&
 	  (pAb->AbWidth.DimIsPosition ||
 	   pAb->AbWidth.DimAbRef))
-	{
-	  /* cannot be a floated box */
-	  pAb->AbFloat = 'N';
-	}
+	/* cannot be a floated box */
+	pAb->AbFloat = 'N';
       else if (box)
 	{
 	  pParent = pAb->AbEnclosing;
@@ -1808,7 +1806,25 @@ static void AddFloatingBox (PtrAbstractBox pAb, ThotBool left)
 		  pParent->AbBox->BxType != BoBlock &&
 		  pParent->AbBox->BxType != BoFloatGhost))
 	    {
-printf ("BoFloatGhost\n");
+	      if (pParent->AbBox->BxType == BoCell)
+		{
+		  /* cannot be a floated box */
+		  pAb->AbFloat = 'N';
+		  return;
+		}
+	      else
+		pParent = pParent->AbEnclosing;
+	    }
+	  pBlock = pParent;
+	  pParent = pAb->AbEnclosing;
+	  if (pBlock == NULL)
+	    {
+	      /* cannot be a floated box */
+	      pAb->AbFloat = 'N';
+	      return;
+	    }
+	  while (pParent != pBlock)
+	    {
               pParent->AbBox->BxType = BoFloatGhost;
 	      pParent = pParent->AbEnclosing;
 	    }
