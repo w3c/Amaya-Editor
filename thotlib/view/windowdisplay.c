@@ -230,6 +230,7 @@ void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
 #endif /* _WIN_PRINT */
    SetTextColor (display, ColorPixel (fg));
    SetBkMode (display, TRANSPARENT);
+   SetTextAlign (display, TA_BASELINE | TA_LEFT);
    SetMapperFlags (display, 1);
    hOldFont = WinLoadFont (display, font);
    TextOut (display, x, y, str, 1);
@@ -302,7 +303,7 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
       y += FrameTable[frame].FrTopMargin;
       SetTextColor (display, ColorPixel (fg));
       SetBkMode (display, TRANSPARENT);
-      SetTextAlign (display, TA_BASELINE);
+      SetTextAlign (display, TA_BASELINE | TA_LEFT);
       TextOut (display, x, y, buff, lg);
       if (hyphen)
 	/* draw the hyphen */

@@ -1226,7 +1226,11 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		    }
 		 
 		  nbcar = 0;
+#ifdef _WINDOWS
+		  if (car != EOS)
+#else /* _WINDOWS */
 		  if (!Printing)
+#endif /* _WINDOWS */
 		    {
 		  if (car == SPACE)
 		    {
