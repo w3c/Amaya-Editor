@@ -19,8 +19,6 @@ extern void AddAbsBoxes ( PtrAbstractBox pAbbRoot,
                           ThotBool head );
 extern ThotBool IsBreakable ( PtrAbstractBox pAb,
                               PtrDocument pDoc );
-extern void AdjustVolume ( PtrElement pEl,
-                           PtrDocument pDoc );
 extern void IncreaseVolume ( ThotBool head,
                              int dVol,
                              int frame );

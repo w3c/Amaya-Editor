@@ -911,33 +911,6 @@ static void AddVolView (int VolOpt, PtrAbstractBox pAbbRoot,
 }
 
 /*----------------------------------------------------------------------
-   AdjustVolume pour toutes les vues du document pointe' par pDoc  
-   ajuste (reduit ou augmente) le volume des images        
-   abstraites en conservant l'element pointe par pEl au    
-   milieu (ou a peu pres) de l'image abstraite.            
-  ----------------------------------------------------------------------*/
-void                AdjustVolume (PtrElement pEl, PtrDocument pDoc)
-{
-  int                 view;
-
-  if (pEl != NULL && pDoc != NULL)
-    {
-      for (view = 0; view < MAX_VIEW_DOC; view++)
-	{
-	  /* traite toutes les vues */
-	  if (pDoc->DocView[view].DvPSchemaView > 0)
-	    /* la vue existe */
-	    {
-	      pDoc->DocViewFreeVolume[view] = pDoc->DocViewVolume[view] -
-		                           pDoc->DocViewRootAb[view]->AbVolume;
-	      AddVolView (pDoc->DocViewVolume[view], pDoc->DocViewRootAb[view],
-			  pEl, pDoc);
-	    }
-	}
-    }
-}
-
-/*----------------------------------------------------------------------
   IncreaseVolume Le Mediateur augmente de dVol le volume affichable  
   dans la fenetre ViewFrame.
   Met a jour la capacite de la vue affichee dans cette frame et cree de
