@@ -205,6 +205,7 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {"dir", "", 'A', HTML_ATTR_dir, L_BasicValue},
    {"disabled", "", 'A', HTML_ATTR_disabled, L_BasicValue},
 
+   {"enctype", "form", 'A', HTML_ATTR_ENCTYPE, L_BasicValue},
    {"enctype", "", 'A', HTML_ATTR_ENCTYPE, L_StrictValue},
    {"event", "script", 'A', HTML_ATTR_event, L_StrictValue},
 
