@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -116,11 +116,10 @@ void VerticalScroll (int frame, int delta, int selection)
 				   pFrame->FrXOrg + lframe, height);
 			  add = RedrawFrameTop (frame, -delta);
 		       }
+		     /* recompute scrolls */
+		     CheckScrollingWidth (frame);
+		     UpdateScrollbars (frame);
 		    }
-
-		  /* recompute scrolls */
-		  CheckScrollingWidth (frame);
-		  UpdateScrollbars (frame);
 
 		  if (selection != 0)
 		     if (add)

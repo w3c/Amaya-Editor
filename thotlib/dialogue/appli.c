@@ -391,7 +391,6 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
 void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
 						 int bottom_delta)
 {
-
    if ((width <= 0) || (height <= 0))
       return;
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
@@ -761,7 +760,7 @@ void FrameResized (int *w, int frame, int *info)
   ----------------------------------------------------------------------*/
 void WIN_ChangeVScroll (int frame, int reason, int value)
 {
-   int        delta, Xpos, Ypos, width, height;
+   int        delta, x, y, width, height;
    int        sPos, nbPages, remaining;
 
    if (frame < 0)
@@ -805,7 +804,7 @@ void WIN_ChangeVScroll (int frame, int reason, int value)
        
      case SB_THUMBPOSITION:
      case SB_THUMBTRACK:
-       ComputeDisplayedChars (frame, &Xpos, &Ypos, &width, &height);
+       ComputeDisplayedChars (frame, &x, &y, &width, &height);
        sPos = GetScrollPos (FrameTable[frame].WdScrollV, SB_CTL);
        delta = value - sPos;
        nbPages = abs (delta) / height;
@@ -837,7 +836,7 @@ void WIN_ChangeVScroll (int frame, int reason, int value)
   ----------------------------------------------------------------------*/
 void WIN_ChangeHScroll (int frame, int reason, int value)
 {
-   int        delta = 0, width = 1076, Xpos, Ypos, height;
+   int        delta = 0, width = 1076, x, y, height;
    int        sPos, nbPages, remaining;
 
    /* do not redraw it if in NoComputedDisplay mode */
@@ -864,7 +863,7 @@ void WIN_ChangeHScroll (int frame, int reason, int value)
        
      case SB_THUMBPOSITION:
      case SB_THUMBTRACK:
-       ComputeDisplayedChars (frame, &Xpos, &Ypos, &width, &height);
+       ComputeDisplayedChars (frame, &x, &y, &width, &height);
        sPos = GetScrollPos (FrameTable[frame].WdScrollH, SB_CTL);
        delta = value - sPos;
        nbPages = abs (delta) / width;
@@ -1108,15 +1107,14 @@ void FrameVScrolled (int *w, int frame, int *param)
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void FrameVScrolledGTK (GtkAdjustment *w, int frame)
-{ 
-  int        delta, Xpos, Ypos, width, height, viewed, left;
-  static int PreviousPosition = 0;
+{
+  int        delta, x, y, width, height, viewed, left;
 
   if (FrameTable[frame].FrDoc &&
       documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     return;
-  ComputeDisplayedChars (frame, &Xpos, &Ypos, &width, &height);
-  delta = (int) w->value - PreviousPosition;
+  ComputeDisplayedChars (frame, &x, &y, &width, &height);
+  delta = (int) w->value - y;
   viewed = abs (delta) / height;
   left = abs (delta) - (height * viewed);
   if (viewed <= 3)
@@ -1134,7 +1132,6 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
       delta = (int) ((w->value / (float)FrameTable[frame].FrHeight) * 100);
       JumpIntoView (frame, delta);
     }
-  PreviousPosition = (int) w->value;
 }
 
 #endif /*_GTK*/
@@ -3353,136 +3350,123 @@ void RemoveClipping (int frame)
   ----------------------------------------------------------------------*/
 void UpdateScrollbars (int frame)
 {
-   int                 Xpos, Ypos;
-   int                 width, height;
-   int                 l, h;
-   ThotWidget          hscroll, vscroll;
+  int                 x, y;
+  int                 width, height;
+  int                 l, h;
+  ThotWidget          hscroll, vscroll;
 #ifndef _WINDOWS
 #ifndef _GTK
-   Arg                 args[MAX_ARGS];
-   int                 n;
+  Arg                 args[MAX_ARGS];
+  int                 n;
 #else /* _GTK */
-   GtkAdjustment      *tmpw;
+  GtkAdjustment      *tmpw;
 #endif /* _GTK */
 #else /* _WINDOWS */
-   SCROLLINFO          scrollInfo;
+  SCROLLINFO          scrollInfo;
 #endif /* _WINDOWS */
 
-   /* Demande le volume affiche dans la fenetre */
-   ComputeDisplayedChars (frame, &Xpos, &Ypos, &width, &height);
-   hscroll = FrameTable[frame].WdScrollH;
-   vscroll = FrameTable[frame].WdScrollV;
-
+  /* Demande le volume affiche dans la fenetre */
+  ComputeDisplayedChars (frame, &x, &y, &width, &height);
+  hscroll = FrameTable[frame].WdScrollH;
+  vscroll = FrameTable[frame].WdScrollV;
 #ifndef _WINDOWS
-   l = FrameTable[frame].FrWidth;
-   h = FrameTable[frame].FrHeight;
+  l = FrameTable[frame].FrWidth;
+  h = FrameTable[frame].FrHeight;
 #ifndef _GTK
- if (width + Xpos <= l)
-     {
-       n = 0;
-       XtSetArg (args[n], XmNminimum, 0);n++;
-       XtSetArg (args[n], XmNmaximum, l);n++;
-       XtSetArg (args[n], XmNvalue, Xpos);n++;
-       XtSetArg (args[n], XmNsliderSize, width);n++;
-       XtSetValues (hscroll, args, n);
-     }
-   if (height + Ypos <= h)
-     {
-       n = 0;
-       XtSetArg (args[n], XmNminimum, 0);n++;
-       XtSetArg (args[n], XmNmaximum, h);n++;
-       XtSetArg (args[n], XmNvalue, Ypos);n++;
-       XtSetArg (args[n], XmNsliderSize, height);n++;
-       XtSetValues (vscroll, args, n);
-     }
+  if (width + x <= l)
+    {
+      n = 0;
+      XtSetArg (args[n], XmNminimum, 0);n++;
+      XtSetArg (args[n], XmNmaximum, l);n++;
+      XtSetArg (args[n], XmNvalue, x);n++;
+      XtSetArg (args[n], XmNsliderSize, width);n++;
+      XtSetValues (hscroll, args, n);
+    }
+  if (height + y <= h)
+    {
+      n = 0;
+      XtSetArg (args[n], XmNminimum, 0);n++;
+      XtSetArg (args[n], XmNmaximum, h);n++;
+      XtSetArg (args[n], XmNvalue, y);n++;
+      XtSetArg (args[n], XmNsliderSize, height);n++;
+      XtSetValues (vscroll, args, n);
+    }
 #else /*_GTK*/
-   if (width == l && Xpos == 0 && width > 60)
-     gtk_widget_hide (GTK_WIDGET (hscroll));
-   else
-     if (width + Xpos <= l)
-       {
-	 gtk_widget_show (GTK_WIDGET (hscroll));
-	 
-	 tmpw = gtk_range_get_adjustment (GTK_RANGE (hscroll));
-	 tmpw->lower = (gfloat) 0;
-	 tmpw->upper = (gfloat) l;
-	 tmpw->page_size = (gfloat) width;
-	 tmpw->page_increment = (gfloat) width-13;
-	 tmpw->step_increment = (gfloat) 8;
-	 tmpw->value = (gfloat) Xpos;
-	 gtk_adjustment_changed (tmpw);
-       }
-   else
-     gtk_widget_show (GTK_WIDGET (hscroll));
-   
-   if (height == h && Ypos == 0)
-     gtk_widget_hide (GTK_WIDGET (vscroll));
-   else
-     if (height + Ypos <= h)
-       {
-	 gtk_widget_show (GTK_WIDGET (vscroll));
-	 
-	 tmpw = gtk_range_get_adjustment (GTK_RANGE (vscroll));
-	 tmpw->lower = (gfloat) 0;
-	 tmpw->upper = (gfloat) h;
-	 tmpw->page_size = (gfloat) height;
-	 tmpw->page_increment = (gfloat) height;
-	 tmpw->step_increment = (gfloat) 6;
-	 tmpw->value = (gfloat) Ypos;
-	 gtk_adjustment_changed (tmpw);
-       }
-     else
-       {
-	 gtk_widget_show (GTK_WIDGET (vscroll));
-       }
+  if (width == l && x == 0 && width > 60)
+    gtk_widget_hide (GTK_WIDGET (hscroll));
+  else if (width + x <= l)
+    {
+      gtk_widget_show (GTK_WIDGET (hscroll));
+      tmpw = gtk_range_get_adjustment (GTK_RANGE (hscroll));
+      tmpw->lower = (gfloat) 0;
+      tmpw->upper = (gfloat) l;
+      tmpw->page_size = (gfloat) width;
+      tmpw->page_increment = (gfloat) width-13;
+      tmpw->step_increment = (gfloat) 8;
+      tmpw->value = (gfloat) x;
+      gtk_adjustment_changed (tmpw);
+    }
+  else
+    gtk_widget_show (GTK_WIDGET (hscroll));
+
+  if (height == h && y == 0)
+    gtk_widget_hide (GTK_WIDGET (vscroll));
+  else if (height + y <= h)
+    {
+      gtk_widget_show (GTK_WIDGET (vscroll));
+      tmpw = gtk_range_get_adjustment (GTK_RANGE (vscroll));
+      tmpw->lower = (gfloat) 0;
+      tmpw->upper = (gfloat) h;
+      tmpw->page_size = (gfloat) height;
+      tmpw->page_increment = (gfloat) height;
+      tmpw->step_increment = (gfloat) 6;
+      tmpw->value = (gfloat) y;
+      gtk_adjustment_changed (tmpw);
+    }
+  else
+    gtk_widget_show (GTK_WIDGET (vscroll));
 #ifdef _GL
-   /*For mutliview synchonization*/
-   GL_DrawAll (NULL, frame);
+  /*For mutliview synchonization*/
+  GL_DrawAll (NULL, frame);
 #endif /*_GL*/
 #endif /*_GTK*/  
 #else  /* _WINDOWS */
-   l = FrameTable[frame].FrWidth;
-   h = FrameTable[frame].FrHeight;
+  l = FrameTable[frame].FrWidth;
+  h = FrameTable[frame].FrHeight;
 
-   scrollInfo.cbSize = sizeof (SCROLLINFO);
-   scrollInfo.fMask  = SIF_PAGE | SIF_POS | SIF_RANGE;
-   scrollInfo.nMin   = 0;
-
-	
-	if (width == l && Xpos == 0 && width > 60)
-	/*hide*/
-	  ShowScrollBar(FrameTable[frame].WdScrollH, SB_CTL, FALSE);
-   else
-     if (width + Xpos <= l)
-       {
-		 /*show*/
-		 ShowScrollBar(FrameTable[frame].WdScrollH, SB_CTL, TRUE);
-	  scrollInfo.nMax   = l;
+  scrollInfo.cbSize = sizeof (SCROLLINFO);
+  scrollInfo.fMask  = SIF_PAGE | SIF_POS | SIF_RANGE;
+  scrollInfo.nMin   = 0;
+  if (width == l && x == 0 && width > 60)
+    /*hide*/
+    ShowScrollBar(FrameTable[frame].WdScrollH, SB_CTL, FALSE);
+  else if (width + x <= l)
+    {
+      /*show*/
+      ShowScrollBar(FrameTable[frame].WdScrollH, SB_CTL, TRUE);
+      scrollInfo.nMax   = l;
       scrollInfo.nPage  = width;
-      scrollInfo.nPos   = Xpos;	 
-	 SetScrollInfo (FrameTable[frame].WdScrollH, SB_CTL, &scrollInfo, TRUE);	
-       }
-   else
-	   /*show*/
-	  ShowScrollBar(FrameTable[frame].WdScrollH, SB_CTL, FALSE);
-
-   if (height == h && Ypos == 0)
-		/*hide*/
-		ShowScrollBar(FrameTable[frame].WdScrollV, SB_CTL, TRUE);
-   else
-     if (height + Ypos <= h)
-       {
-		 /*show*/
-		ShowScrollBar(FrameTable[frame].WdScrollV, SB_CTL, TRUE);
-		 scrollInfo.nMax   = h;
-		 scrollInfo.nPage  = height;
-         scrollInfo.nPos   = Ypos;
-   SetScrollInfo (FrameTable[frame].WdScrollV, SB_CTL, &scrollInfo, TRUE);
-	 
-       }
-     else
-		 /*show*/
-		ShowScrollBar(FrameTable[frame].WdScrollV, SB_CTL, TRUE);
-
+      scrollInfo.nPos   = x;	 
+      SetScrollInfo (FrameTable[frame].WdScrollH, SB_CTL, &scrollInfo, TRUE);	
+    }
+  else
+    /*show*/
+    ShowScrollBar(FrameTable[frame].WdScrollH, SB_CTL, FALSE);
+   
+  if (height == h && y == 0)
+    /*hide*/
+    ShowScrollBar(FrameTable[frame].WdScrollV, SB_CTL, TRUE);
+  else if (height + y <= h)
+    {
+      /*show*/
+      ShowScrollBar(FrameTable[frame].WdScrollV, SB_CTL, TRUE);
+      scrollInfo.nMax   = h;
+      scrollInfo.nPage  = height;
+      scrollInfo.nPos   = y;
+      SetScrollInfo (FrameTable[frame].WdScrollV, SB_CTL, &scrollInfo, TRUE);
+    }
+  else
+    /*show*/
+    ShowScrollBar(FrameTable[frame].WdScrollV, SB_CTL, TRUE);
 #endif /* _WINDOWS */
 }
