@@ -28,8 +28,8 @@ extern List *AnnotList_search ( List *list,
                                 CHAR_T *object );
 extern AnnotMeta *AnnotList_searchAnnot ( List *list,
                                           CHAR_T *url,
-                                          ThotBool useAnnotUrl );
-extern ThotBool AnnotList_delAnnot ( List *list,
+                                          AnnotMetaDataSearch searchType );
+extern ThotBool AnnotList_delAnnot ( List **list,
                                      CHAR_T *url,
                                      ThotBool useAnnotUrl );
 extern AnnotMeta *AnnotMeta_new ( void );
@@ -93,8 +93,8 @@ extern List *AnnotList_search (/* List *list,
                                   CHAR_T *object */);
 extern AnnotMeta *AnnotList_searchAnnot (/* List *list,
                                             CHAR_T *url,
-                                            ThotBool useAnnotUrl */);
-extern ThotBool AnnotList_delAnnot (/* List *list,
+                                            AnnotMetaDataSearch searchType */);
+extern ThotBool AnnotList_delAnnot (/* List **list,
                                        CHAR_T *url,
                                        ThotBool useAnnotUrl */);
 extern AnnotMeta *AnnotMeta_new (/* void */);

@@ -429,7 +429,7 @@ ThotBool show;
       
       /* now look in the filters to see if we need to hide it or not */
       annot = AnnotList_searchAnnot (AnnotMetaData[doc].annotations, 
-				     annot_url, FALSE);
+				     annot_url, AM_BODY_URL);
       TtaFreeMemory (annot_url);
       if (!annot)
 	continue;

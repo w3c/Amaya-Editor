@@ -59,6 +59,7 @@ AnnotMeta *annot;
 /*-----------------------------------------------------------------------
    LINK_GetAnnotationIndexFile 
    searches an entry in the main annot index file 
+   The caller must free the returned string.
    -----------------------------------------------------------------------*/
 #ifdef __STDC__
 char  *LINK_GetAnnotationIndexFile (char *source_url)
@@ -152,77 +153,6 @@ char *index_file;
     }
   TtaFreeMemory (annot_main_index_file);
 }
-
-/*-----------------------------------------------------------------------
-  DelAnnotationIndexFile 
-  Delentes an entry from the main annot index file
-  -----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void DelAnnotationIndexFile (char *source_url, char *index_file)
-#else
-static void DelAnnotationIndexFile (source_url, index_file)
-char *source_url;
-char *index_file;
-#endif /* __STDC__ */
-{
-  CHAR_T str[80];
-  CHAR_T *annot_dir;
-  CHAR_T *main_index;
-  CHAR_T *main_index_file_old;
-  CHAR_T *main_index_file_new;
-  int len;
-  FILE *fp_old;
-  FILE *fp_new;
-  
-  annot_dir = GetAnnotDir ();
-  main_index = GetAnnotMainIndex ();
-  main_index_file_old = TtaGetMemory (ustrlen (annot_dir) 
-					+ ustrlen (main_index)
-					+ 10);
-
-  main_index_file_new = TtaGetMemory (ustrlen (annot_dir) 
-				      + ustrlen (main_index)
-				      + 14);
-  usprintf (main_index_file_old, 
-	    TEXT("%s%c%s"), 
-	    annot_dir, 
-	    DIR_SEP, 
-	    main_index);
-
-  usprintf (main_index_file_new, 
-	    TEXT("%s%c%s.tmp"), 
-	    annot_dir, 
-	    DIR_SEP, 
-	    main_index);
-
-  if (!(fp_new = fopen (main_index_file_new, "w")))
-    return;
-
-  if (!(fp_old = fopen (main_index_file_old, "r")))
-    {
-      fclose (fp_new);
-      return;
-    }
-
-  len = ustrlen (source_url);
-  while (fgets (str, sizeof (str), fp_old))
-    {
-      if (ustrncmp (source_url, str, len))
-	fputs (str, fp_new);
-    }
-  fclose (fp_new);
-  fclose (fp_old);
-
-  /* rename the main index file */
-  TtaFileUnlink (main_index_file_old);
-  rename (main_index_file_new, main_index_file_old);
-  /* remove the index file */
-  TtaFileUnlink (index_file);
-
-  TtaFreeMemory (main_index_file_old);
-  TtaFreeMemory (main_index_file_new);
-}
-
 
 /*-----------------------------------------------------------------------
   LINK_AddLinkToSource
@@ -379,8 +309,8 @@ void LINK_RemoveLinkFromSource (source_doc, annot)
    LINK_SaveLink
    Writes the metadata describing an annotation file and its source
    link to an index file. This metadata consists of the
-   name of the annotation file, the selected elements on the document
-   (using thot labels for the moment), and the first and last characters.
+   name of the annotation file, and the Xpointer that specifies the 
+   selected  elements on the document
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -405,11 +335,12 @@ void LINK_SaveLink (source_doc)
   /* write the update annotation list */
   AnnotList_writeIndex (indexName, annot_list);
   TtaFreeMemory (indexName);
-  return;
 }
 
 /*-----------------------------------------------------------------------
    LINK_DeleteLink
+   For a given source doc, deletes the index entry from the main index and
+   removes the documents index file.
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -419,21 +350,70 @@ void LINK_DeleteLink (source_doc)
      Document source_doc;
 #endif /* __STDC__*/
 {
-  char   *indexName;
-  List   *annot_list;
+  char   *doc_index;
+  CHAR_T buffer[255];
+  CHAR_T *annot_dir;
+  CHAR_T *main_index;
+  CHAR_T *main_index_file_old;
+  CHAR_T *main_index_file_new;
+  int len;
+  FILE *fp_old;
+  FILE *fp_new;
+  
 
   /* get the annotation index */
-  indexName = LINK_GetAnnotationIndexFile (DocumentURLs[source_doc]);
-  if (!indexName)
+  doc_index = LINK_GetAnnotationIndexFile (DocumentURLs[source_doc]);
+  if (!doc_index)
     return;
 
-  DelAnnotationIndexFile (DocumentURLs[source_doc], indexName);
-  annot_list = AnnotMetaData[source_doc].annotations;  
-  /* write the update annotation list */
-  AnnotList_writeIndex (indexName, annot_list);
-  TtaFreeMemory (indexName);
+  annot_dir = GetAnnotDir ();
+  main_index = GetAnnotMainIndex ();
+  main_index_file_old = TtaGetMemory (ustrlen (annot_dir) 
+					+ ustrlen (main_index)
+					+ 10);
 
-  return;
+  main_index_file_new = TtaGetMemory (ustrlen (annot_dir) 
+				      + ustrlen (main_index)
+				      + 14);
+  usprintf (main_index_file_old, 
+	    TEXT("%s%c%s"), 
+	    annot_dir, 
+	    DIR_SEP, 
+	    main_index);
+
+  usprintf (main_index_file_new, 
+	    TEXT("%s%c%s.tmp"), 
+	    annot_dir, 
+	    DIR_SEP, 
+	    main_index);
+
+  if (!(fp_new = fopen (main_index_file_new, "w")))
+    return;
+
+  if (!(fp_old = fopen (main_index_file_old, "r")))
+    {
+      fclose (fp_new);
+      return;
+    }
+
+  len = ustrlen (doc_index);
+  while (fgets (buffer, sizeof (buffer), fp_old))
+    {
+      if (ustrncmp (doc_index, buffer, len))
+	fputs (buffer, fp_new);
+    }
+  fclose (fp_new);
+  fclose (fp_old);
+
+  /* rename the main index file */
+  TtaFileUnlink (main_index_file_old);
+  rename (main_index_file_new, main_index_file_old);
+  /* remove the index file */
+  TtaFileUnlink (doc_index);
+
+  TtaFreeMemory (main_index_file_old);
+  TtaFreeMemory (main_index_file_new);
+  TtaFreeMemory (doc_index);
 }
 
 /*-----------------------------------------------------------------------
@@ -488,7 +468,15 @@ AnnotMeta* LINK_CreateMeta (source_doc, annot_doc, labf, c1, labl, cl)
   annot_user = GetAnnotUser ();
   annot->author = TtaStrdup (annot_user);
   annot->content_type = TtaStrdup ("text/html");
-  annot->body_url = TtaStrdup (DocumentURLs[annot_doc]);
+  if (!IsW3Path (DocumentURLs[annot_doc]) 
+      && !IsFilePath (DocumentURLs[annot_doc]))
+    {
+      annot->body_url = TtaGetMemory (ustrlen (DocumentURLs[annot_doc])
+				      + sizeof (TEXT("file://")));
+      usprintf (annot->body_url, "file://%s", DocumentURLs[annot_doc]);
+    }
+  else
+    annot->body_url = TtaStrdup (DocumentURLs[annot_doc]);
   
   /* create the reverse link name */
   LINK_CreateAName (annot);
@@ -569,7 +557,7 @@ void LINK_LoadAnnotationIndex (doc, annotIndex)
 	  /* don't add an annotation if it's already on the list */
 	  /* @@ later, Ralph will add code to delete the old one */
 	  old_annot = AnnotList_searchAnnot (AnnotMetaData[doc].annotations,
-					     annot->annot_url, TRUE);
+					     annot->annot_url, AM_ANNOT_URL);
 	  if (!old_annot)
 	    {
 	      /* create the reverse link name */
@@ -601,7 +589,7 @@ void LINK_SelectSourceDoc (doc, annotIndex)
   AnnotMeta *annot;
   
   annot = AnnotList_searchAnnot (AnnotMetaData[doc].annotations,
-				 annot_url, FALSE);
+				 annot_url, AM_BODY_URL);
     if (annot)
       {
 	xptr_ctx = XPointer_parse (doc, annot->xptr);
@@ -686,63 +674,6 @@ void LINK_Remove (document, annotName)
   }
 }
 
-#if 0
-/*-----------------------------------------------------------------------
-   Procedure LINK_SaveLink (doc, annotName, labf, c1, labl, cN)
-  -----------------------------------------------------------------------
-   Writes the metadata describing an annotation file and its source
-   link to an index file. This metadata consists of the
-   name of the annotation file, the selected elements on the document
-   (using thot labels for the moment), and the first and last characters.
-  -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void LINK_SaveLink (Document document, CHAR_T *annotName, CHAR_T *labf, int c1, CHAR_T *labl, int cN)
-#else /* __STDC__*/
-void LINK_SaveLink (document, annotName, labf, c1, labl, cN)
-     Document document;
-     CHAR_T *  annotName;
-     CHAR_T *  labf;
-     int      c1;
-     CHAR_T *  labl;
-     int      cN;
-#endif /* __STDC__*/
-{
-  FILE   *newLinkFile, *oldLinkFile;
-  char   buffer[MAX_LENGTH];
-  CHAR_T *newFileName;
-  CHAR_T *oldFileName;
-
-  /* Open the annotation index */
-  oldFileName = LINK_GetAnnotationIndexFile (document);
-  if (!oldFileName)
-    {
-      
-    }
-
-  newFileName = TtaGetMemory (strlen (oldFileName) + 5);
-  sprintf (newFileName, "%s.new", oldFileName);
-  oldLinkFile = fopen (oldFileName, "r");
-
-  if (oldLinkFile)
-    {
-      /* Copy the existing links */
-      while (fgets (buffer, MAX_LENGTH, oldLinkFile))
-	fprintf (newLinkFile, buffer);
-      fclose (oldLinkFile);
-    }
-  
-  /* Add the new link */
-  fprintf (newLinkFile, "%s|%s|%d|%s|%d\n", annotName, labf, c1, labl, cN);
-
-  fclose (newLinkFile);
-  TtaFileCopy (newFileName, oldFileName);
-  TtaFileUnlink (newFileName);
-  TtaFreeMemory (newFileName);
-  TtaFreeMemory (oldFileName);
-}
-#endif
-
 /*-----------------------------------------------------------------------
    Procedure LINK_RemoveLink (document, annotName)
   -----------------------------------------------------------------------
@@ -802,38 +733,7 @@ void LINK_RemoveLink (document, annotName)
   printf ("(LINK_RemoveLink) FIN\n");
 }
 
-#if 0
-/*-----------------------------------------------------------------------
-   Procedure LINK_AddMetaToMemory
-  -----------------------------------------------------------------------
-  Copies the parsed metadata to memory
-  -----------------------------------------------------------------------*/
-void LINK_AddMetaToMemory (Document doc, CHAR_T *annotUser, CHAR_T *annotDate, CHAR_T *annotType, CHAR_T *body_url)
-{
-  AnnotMeta *me;
 
-  /* create a new element */
-  me = TtaGetMemory (sizeof (AnnotMeta));
-  me->author = TtaStrdup (annotUser);
-  me->cdate = TtaStrdup (annotDate);
-  me->type = TtaStrdup (annotType);
-  me->body_url = TtaStrdup (body_url);
 
-  /* add it to the list structure */
-  if (!AnnotMetaData[doc]) 
-    {
-      /* the list was empty */
-      me->next = NULL;
-      AnnotMetaData[doc] = me;
-    }
-  else
-    {
-      /* adding new elements to the list */
-      me->next = AnnotMetaDataList[doc];
-      AnnotMetaDataList[doc] = me;
-    }
-}
-
-#endif
 
 

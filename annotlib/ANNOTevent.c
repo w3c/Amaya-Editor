@@ -36,6 +36,8 @@ static ThotBool annotAutoLoad; /* should annotations be downloaded
 static ThotBool annotCustomQuery; /* use an algae custom query if TRUE */
 static CHAR_T *annotAlgaeText;    /* the custom algae query text */
 
+static Element last_selected_annotation; /* last selected annotation */
+
 /* the structure used for storing the context of the 
    Annot_Raisesourcedoc_callback function */
 typedef struct _RAISESOURCEDOC_context {
@@ -243,8 +245,6 @@ CHAR_T *url;
   url_len = (url) ? ustrlen (url) : 0;
 
   /* allocate enough memory in the string */
-  /* @@ I'm lazy today, so I'll just count how many times we have
-     cookies, rather than reallocating the memory if it's not enough */
   i = 0;
   in = annotAlgaeText;
   while (in)
@@ -810,6 +810,9 @@ Element el;
   int              length;
   CHAR_T          *annot_url;
 
+  /* memorize the last selected annotation */
+  last_selected_annotation = el;
+
   /* is it a link? */
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum != HTML_EL_Anchor)
@@ -834,6 +837,9 @@ Element el;
 
   /* select the annotated text */
   LINK_SelectSourceDoc (doc, annot_url);
+
+  /* memorize the last selected annotation */
+  last_selected_annotation = el;
 
   TtaFreeMemory (annot_url);
 }
@@ -996,15 +1002,13 @@ void ANNOT_Delete (document, view)
 #endif /* __STDC__*/
 {
   Document         source_doc, annot_doc;
-  AnnotMeta       *annot;
   ElementType      elType;
-  Element          annotEl, last;
+  Element          annotEl;
   AttributeType    attrType;
   Attribute	   attr;
-  CHAR_T          *annotName, *fileName;
   CHAR_T          *annot_url;
   int              i;
-  ThotBool         annotIsOpen;
+  AnnotMeta       *annot;
 
   /* maybe detect if the user just clicked on the annotation */
   /* e.g, if the annot_doc is not open */
@@ -1012,34 +1016,62 @@ void ANNOT_Delete (document, view)
 
   if (DocumentTypes[doc] == docAnnot)
     {
+      /* clear the status */
+      last_selected_annotation =  NULL;
       annot_doc = doc;
-      annotIsOpen = TRUE;      
       source_doc = DocumentMeta[doc]->source_doc;
+  
+      /* make the body */
+      if (IsW3Path (DocumentURLs[doc]))
+	{
+	  /* it's a remote annotation */
+	  if (DocumentMeta[doc]->form_data)
+	    {
+	      annot_url = TtaGetMemory (ustrlen (DocumentURLs[doc])
+				       + ustrlen (DocumentMeta[doc]->form_data)
+					+ sizeof (TEXT("?"))
+					+ 1);
+	      usprintf (annot_url, "%s?%s", DocumentURLs[doc], 
+			DocumentMeta[doc]->form_data);
+	    }
+	  else
+	    annot_url = TtaStrdup (DocumentURLs[doc]);
+	}
+      else 
+	{
+	  /* it's a local annotation */
+	  annot_url = TtaGetMemory (ustrlen (DocumentURLs[doc])
+				    + sizeof (TEXT("file://"))
+				    + 1);
+	  usprintf (annot_url, "file://%s", DocumentURLs[doc]);
+	}
+      /* find the annotation link in the source document that corresponds
+	 to this annotation */
       annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
-				     DocumentURLs[source_doc], TRUE);
-      source_doc = 1;
+				     annot_url, AM_BODY_URL);
+      if (!annot)
+	{
+	  TtaFreeMemory (annot_url);
+	  /* signal some error */
+	  return;
+	}
+      annotEl = SearchAnnotation (source_doc, annot->name);
     }
   else
     {
-      annotIsOpen = FALSE;
-      
+      source_doc = doc;
+
       /* verify if the user has selected an annotation link */
-      if (!TtaIsDocumentSelected (doc))
+      if (!last_selected_annotation)
 	return;
 
-      /* get the selected elemetn */
-      TtaGiveFirstSelectedElement (doc, &annotEl, &i, &i);
-      TtaGiveLastSelectedElement (doc, &last, &i, &i);
-      
-      /* Is the selected zone valid */
-      if ((annotEl == NULL) || (annotEl != last))
-	return;
+      annotEl = last_selected_annotation;
 
       /* is it a link? */
       elType = TtaGetElementType (annotEl);
       if (elType.ElTypeNum != HTML_EL_Anchor)
 	return;
-
+      
       /* is it an annotation link? */
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = HTML_ATTR_IsAnnotation;
@@ -1048,26 +1080,52 @@ void ANNOT_Delete (document, view)
 	return;
       
       /* get the annotation URL */
+      attrType.AttrTypeNum = HTML_ATTR_HREF_;
+      attr = TtaGetAttribute (annotEl, attrType);
+      if (!attr)
+	return;
       i = TtaGetTextAttributeLength (attr);
       i++;
       annot_url = TtaGetMemory (i);
       TtaGiveTextAttributeValue (attr, annot_url, &i);
 
-      /* get the annotation metadata */
-      annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
-				     DocumentURLs[source_doc], TRUE);
+      /* @@ JK: I may need to split the url and get the separate form_data */
+      if (IsFilePath (annot_url))
+	{
+	  CHAR_T *norm_url;
+
+	  norm_url = TtaGetMemory (ustrlen (annot_url));
+	  NormalizeFile (annot_url, norm_url, AM_CONV_NONE);
+	  annot_doc = IsDocumentLoaded (norm_url, NULL);
+	  TtaFreeMemory (norm_url);
+	}
+      else
+	annot_doc = IsDocumentLoaded (annot_url, NULL);
     }
 
-  /* close all the open annotation windows if they are open */
-  if (annotIsOpen)
-    {
-      TtaSetDocumentUnmodified (annot_doc);
-      /* we should add all the views */
-      TtaCloseView (annot_doc, 1);
-    }
   /* remove the annotation link in the source document */
   LINK_RemoveLinkFromSource (source_doc, annotEl);
   /* remove the annotation from the list and update it */
+  AnnotList_delAnnot (&(AnnotMetaData[source_doc].annotations),
+				 annot_url, FALSE);
+
+  /* update the annotation index or delete it if it's empty */
+  if (AnnotMetaData[source_doc].annotations)
+    LINK_SaveLink (source_doc);
+  else
+    LINK_DeleteLink (source_doc);
+
+  /* close the annotation window if it was open */
+  if (annot_doc)
+    {
+      TtaSetDocumentUnmodified (annot_doc);
+      /* we should add all the views */
+      TtaCloseDocument (annot_doc);
+    }
+  TtaFreeMemory (annot_url);
+
+  /* @@ JK: Todo rename the function to LINK_SaveIndex, as that's what it's
+     doing */
 }
 
 

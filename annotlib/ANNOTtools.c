@@ -14,12 +14,12 @@
  * Acknowledgments: inspired from code written by Christophe Marjoline 
  *                  for the byzance collaborative work application
  */
-
+ 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "annotlib.h"
 #include "fileaccess.h"
+#include "annotlib.h"
 #include "AHTURLTools_f.h"
 #include "HTML.h"
 
@@ -100,7 +100,6 @@ void List_delObject (List **list, char *object)
   if (item)
     {
       *list = item->next;
-      free (item->object);
       free (item);
     }
 }
@@ -284,7 +283,7 @@ List *AnnotList_search (List *list, CHAR_T *object)
    AnnotList_searchAnnot
    Returns the annot item that points to the same url
    ------------------------------------------------------------*/
-AnnotMeta *AnnotList_searchAnnot (List *list, CHAR_T *url, ThotBool useAnnotUrl)
+AnnotMeta *AnnotList_searchAnnot (List *list, CHAR_T *url, AnnotMetaDataSearch searchType)
 {
   List *item = list;
   AnnotMeta *annot;
@@ -294,11 +293,22 @@ AnnotMeta *AnnotList_searchAnnot (List *list, CHAR_T *url, ThotBool useAnnotUrl)
   while (item)
     {
       annot = (AnnotMeta *) item->object;
-      /* @@ this crashes... why? */
-      if (useAnnotUrl)
-	ptr = annot->annot_url;
-      else
-	ptr = annot->body_url;
+
+      switch (searchType)
+	{
+	case AM_ANNOT_URL:
+	  ptr = annot->annot_url;
+	  break;
+
+	case AM_BODY_URL:
+	  ptr = annot->body_url;
+	  break;
+
+	case AM_ANAME:
+	  ptr = annot->name;
+	  break;
+
+	}
 
       if (ptr && !ustrcasecmp (ptr, url))
 	{
@@ -312,14 +322,15 @@ AnnotMeta *AnnotList_searchAnnot (List *list, CHAR_T *url, ThotBool useAnnotUrl)
 }
 
 /*------------------------------------------------------------
-   AnnotList_searchAnnot
-   Returns the annot item that points to the same url
+   AnnotList_delAnnot
+   Searches for annotation with URL url and, if found, deletes it
+   and returns TRUE. Returns FALSE otherwise.
    ------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool AnnotList_delAnnot (List *list, CHAR_T *url, ThotBool useAnnotUrl)
+ThotBool AnnotList_delAnnot (List **list, CHAR_T *url, ThotBool useAnnotUrl)
 #else
 ThotBool AnnotList_delAnnot (list, url, userAnnotUrl)
-List *list;
+List **list;
 CHAR_T *url;
 ThotBool useAnnotUrl;
 
@@ -331,7 +342,7 @@ ThotBool useAnnotUrl;
   CHAR_T *ptr;
 
   prev = NULL;
-  item = list;
+  item = *list;
   while (item)
     {
       annot = (AnnotMeta *) item->object;
@@ -356,9 +367,19 @@ ThotBool useAnnotUrl;
       if (prev)
 	prev->next = item->next;
       else
-	list = item->next;
+	*list = item->next;
+      /* erase the annotation body */
+      if (IsFilePath (annot->body_url))
+	{
+	  ptr = TtaGetMemory (ustrlen (annot->body_url) + 1);
+	  NormalizeFile (annot->body_url, ptr, AM_CONV_NONE);
+	  TtaFileUnlink (ptr);
+	  TtaFreeMemory (ptr);
+	}
       /* delete the annotation */
       Annot_free (annot);
+      /* delete the list item */
+      TtaFreeMemory (item);
     }
 
   return (found);
@@ -1157,7 +1178,7 @@ CHAR_T *type;
 	    ptr = NULL;
 	  annot = AnnotList_searchAnnot (AnnotMetaData[i].annotations,
 					 (ptr) ? ptr : DocumentURLs[doc],
-					 FALSE);
+					 AM_BODY_URL);
 	  if (ptr)
 	    TtaFreeMemory (ptr);
 	  if (annot)

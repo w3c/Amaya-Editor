@@ -137,7 +137,7 @@ static AnnotMeta* FindAnnot( List** listP, char* annot_url, ThotBool create )
 
   if (!last_annotURL || strcmp(last_annotURL, annot_url)) {
     /* search for annotation in list */
-    annot = AnnotList_searchAnnot (*listP, annot_url, TRUE);
+    annot = AnnotList_searchAnnot (*listP, annot_url, AM_ANNOT_URL);
     if (!annot && create)
       {
 	annot = AnnotMeta_new ();

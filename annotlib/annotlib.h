@@ -70,6 +70,14 @@ typedef struct _List {
   struct _List *next;
 } List;
 
+/* the different kind of annotation searches we can do in an
+   an annotation metadata list */
+typedef enum _AnnotMetaDataSearch {
+  AM_ANNOT_URL = 1,
+  AM_BODY_URL = 2,
+  AM_ANAME = 4
+} AnnotMetaDataSearch;
+
 /* the type of character convertion we want to make on local URLs */
 typedef enum _AnnotFileType
 {
@@ -113,10 +121,3 @@ AnnotMetaDataList AnnotMetaData[DocumentTableLength];
 #define ANNOT_ANAME "Annotation"
 
 #endif /* ANNOTATIONS_H */
-
-
-
-
-
-
-
