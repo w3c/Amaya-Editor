@@ -2319,6 +2319,19 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
   /* ------------------------------------ */
 
     
+  if (oldDoc == 0 && inNewWindow == FALSE)
+    {
+      /* if the oldDoc doesn't exist and we don't want to open a new window 
+       * try to find an existing document and reuse its window */
+      View     activeView;
+      TtaGetActiveView( &oldDoc, &activeView );
+      
+      /* now if there is no active document,
+	 then really create a new window even if inNewWindow was FALSE */
+      if (oldDoc == 0)
+	inNewWindow = TRUE;
+    }
+
 #ifdef _WINGUI
   Window_Curs = IDC_WINCURSOR;
 #endif /* _WINGUI */
@@ -2331,10 +2344,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
   /* previous document */
   old_doc = oldDoc;
   doc     = oldDoc;
-  /* if there is no old doc then force the document to
-     be created in a new window */
-  if (oldDoc == 0)
-    inNewWindow = TRUE;
 
   if (replaceOldDoc)
     /* the new document will replace another document in the same window */
@@ -2394,8 +2403,38 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
        /* get the old document window */
        isOpen = TRUE;
        window_id = TtaGetDocumentWindowId( doc, -1 );
-       page_id   = TtaGetFreePageId( window_id );
-       page_position = 1;
+       if (docType == docSource || docType == docLog)
+	 {
+	   TtaGetDocumentPageId( doc, -1, &page_id, &page_position );
+	   
+	   /* now it's necessary to check what type of document is allready opened in order to adapte 
+	      what should be open and where 
+	      ex: the source view should be open in the bottom frame if the Log view is not open */
+	   int frame_id_1 = TtaGetFrameId( window_id, page_id, 1 );
+	   int frame_id_2 = TtaGetFrameId( window_id, page_id, 2 );
+	   int doc_id_1 = TtaGetFrameDocumentId( frame_id_1 );
+	   int doc_id_2 = TtaGetFrameDocumentId( frame_id_2 );
+
+	   if (docType == docSource)
+	     {
+	       /* we try to open a source document */
+	       /* test if the bottom frame contains a Log document */
+	       if (doc_id_2 != -1 && DocumentTypes[doc_id_2] != docLog)
+		 /* the bottom frame (2) do not contains a Log document so,
+		    open the source view into the bottom frame (2)*/
+		 page_position = 2;
+	       else
+		 /* the bottom frame contains a Log document so open the source view into the top frame*/
+		 page_position = 1;
+	     }
+	   else
+	     page_position = 2;
+	 }
+       else
+	 {
+	   page_id = TtaGetFreePageId( window_id );
+	   page_position = 1;
+	 }
 #endif /* _WX */
      }
 
@@ -3310,10 +3349,13 @@ static Document LoadDocument (Document doc, char *pathname,
     {
       /* we're loading a CSS file */
       docType = docCSS;
+      isXML   = FALSE;
       unknown = FALSE;
     }
-
-  if (content_type == NULL || content_type[0] == EOS)
+  /* if a CSS document has a xml header, CheckDocHeader will detect that the document is XML !
+   * (ex: http://www.inrialpes.fr has a css with a xml header :( )
+   * when we know that the document is CSS (method == CE_CSS) we should force docType to docCSS */
+  else if (content_type == NULL || content_type[0] == EOS)
     /* Local document - no content type  */
     {
       /* check file name extension */
@@ -3683,6 +3725,10 @@ static Document LoadDocument (Document doc, char *pathname,
 	    {
 	      docType = docLog;
 	      newdoc = doc;
+#ifdef _WX
+		  /* the LOG window labels have UTF8 charset on wxWidgets interface */
+	      charset = UTF_8;
+#endif /* _WX */
 	    }
 	  else if (docType != DocumentTypes[doc] && DocumentTypes[doc] != docLibrary)
 	    /* replace the current document by a new one */
@@ -4964,11 +5010,15 @@ Document GetAmayaDoc (char *urlname, char *form_data,
 	}
       else if (method == CE_LOG)
 	/* need to create a new window for the document */
-	newdoc = InitDocAndView (doc,
-                                 FALSE /* replaceOldDoc */,
-                                 TRUE /* inNewWindow */,
-	                         documentname, (DocumentType)docLog, 0, FALSE,
-				 L_Other, (ClickEvent)method);
+	newdoc = InitDocAndView ( baseDoc, /* SG: 'doc' is always NULL, maybe it should be baseDoc */
+				  FALSE /* replaceOldDoc */,
+#ifdef _WX
+				  FALSE /* inNewWindow */,
+#else /* _WX */
+				  TRUE /* inNewWindow */,
+#endif /* _WX */
+				  documentname, (DocumentType)docLog, 0, FALSE,
+				  L_Other, (ClickEvent)method);
       else if (method == CE_HELP)
 	{
 	  /* add the URI in the combobox string */
