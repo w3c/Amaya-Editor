@@ -7430,6 +7430,7 @@ boolean	            plainText;
 		DocumentSSchema = TtaGetDocumentSSchema (doc);
 		isHTML = TRUE;
 	      }
+	    LoadUserStyleSheet (doc);
 	    /* default ATTR_PrintURL */
 	    attrType.AttrSSchema = DocumentSSchema;
 	    attrType.AttrTypeNum = HTML_ATTR_PrintURL;

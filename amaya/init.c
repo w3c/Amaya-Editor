@@ -748,9 +748,6 @@ Document            doc;
 
        /* update windows menus */
        view = 1;
-       TtaSetItemOff (document, 1, File, BNew);
-       TtaSetItemOff (document, 1, File, BOpenDoc);
-       TtaSetItemOff (document, 1, File, BOpenInNewWindow);
        TtaSetItemOff (document, 1, File, BSave);
        TtaSetItemOff (document, 1, Edit_, BCut);
        TtaSetItemOff (document, 1, Edit_, BPaste);
@@ -861,9 +858,6 @@ Document            doc;
 
        /* update windows menus */
        view = 1;
-       TtaSetItemOn (document, 1, File, BNew);
-       TtaSetItemOn (document, 1, File, BOpenDoc);
-       TtaSetItemOn (document, 1, File, BOpenInNewWindow);
        TtaSetItemOn (document, 1, File, BSave);
        TtaSetItemOn (document, 1, Edit_, BCut);
        TtaSetItemOn (document, 1, Edit_, BPaste);
@@ -1437,7 +1431,7 @@ boolean             logFile;
 	   TtaCloseDocument (doc);
 	   return (0);
 	 }
-       LoadUserStyleSheet (doc);
+
        if (!opened)
 	 {
 #ifdef _WINDOWS
@@ -2158,15 +2152,14 @@ void *context;
   Reload
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                Reload (Document document, View view)
+void                Reload (Document doc, View view)
 #else
-void                Reload (document, view)
-Document            document;
+void                Reload (doc, view)
+Document            doc;
 View                view;
 
 #endif
 {
-   Document            newdoc;
    STRING              tempfile;
    STRING              pathname;
    STRING              documentname;
@@ -2178,26 +2171,26 @@ View                view;
    int		       distance;
    RELOAD_context     *ctx;
 
-   if (DocumentURLs[document] == NULL)
+   if (DocumentURLs[doc] == NULL)
       /* the document has not been loaded yet */
       return;
 
    /* abort all current exchanges concerning this document */
-   StopTransfer (document, 1);
+   StopTransfer (doc, 1);
 
-   if (!CanReplaceCurrentDocument (document, view))
+   if (!CanReplaceCurrentDocument (doc, view))
       /* abort the command */
       return;
 
    /* reload the document */
    pathname = TtaGetMemory (MAX_LENGTH);
    documentname = TtaGetMemory (MAX_LENGTH);
-   NormalizeURL (DocumentURLs[(int) document], 0, pathname, documentname, NULL);
-   if (DocumentMeta[document]->form_data)
-     form_data = TtaStrdup (DocumentMeta[document]->form_data);
+   NormalizeURL (DocumentURLs[(int) doc], 0, pathname, documentname, NULL);
+   if (DocumentMeta[doc]->form_data)
+     form_data = TtaStrdup (DocumentMeta[doc]->form_data);
    else
      form_data = NULL;
-   method = DocumentMeta[document]->method;
+   method = DocumentMeta[doc]->method;
 
    if (!IsW3Path (pathname) && !TtaFileExist (pathname))
      {
@@ -2209,14 +2202,13 @@ View                view;
      }
 
    /* get the current position in the document */
-   position = RelativePosition (document, &distance);
+   position = RelativePosition (doc, &distance);
 
-   W3Loading = document;	/* this document is currently in load */
-   /*newdoc = InitDocView (document, documentname, DocumentTypes[document], FALSE);*/
+   W3Loading = doc;	/* this document is currently in load */
 
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
    /* Check against concurrent loading on the same frame */
-   if (FilesLoading[newdoc])
+   if (FilesLoading[doc])
      {
        TtaFreeMemory (pathname);
        TtaFreeMemory (documentname);
@@ -2236,11 +2228,11 @@ View                view;
    tempfile = TtaGetMemory (MAX_LENGTH);
    tempfile[0] = EOS;
    toparse = 0;
-   ActiveTransfer (newdoc);
+   ActiveTransfer (doc);
    /* Create the context for the callback */
 
    ctx = TtaGetMemory (sizeof (RELOAD_context));
-   ctx->newdoc = newdoc;
+   ctx->newdoc = doc;
    ctx->documentname = documentname;
    ctx->form_data = form_data;
    ctx->method = method;
@@ -2251,18 +2243,18 @@ View                view;
      {
        /* load the document from the Web */
 #ifdef AMAYA_JAVA
-       toparse = GetObjectWWW (newdoc, pathname, form_data, tempfile, 
+       toparse = GetObjectWWW (doc, pathname, form_data, tempfile, 
 			       mode, 
 			       NULL, NULL, NULL, NULL, YES, NULL);
 #else /* AMAYA_JAVA */
-       toparse = GetObjectWWW (newdoc, pathname, form_data, tempfile, 
+       toparse = GetObjectWWW (doc, pathname, form_data, tempfile, 
 			       mode,
 			       NULL, NULL, (void *) Reload_callback, 
 			       (void *) ctx, YES, NULL);
 #endif /* AMAYA_JAVA */
      }
    else if (TtaFileExist (pathname))
-     Reload_callback (newdoc, 0, pathname, tempfile, NULL, (void *) ctx);
+     Reload_callback (doc, 0, pathname, tempfile, NULL, (void *) ctx);
 
    TtaFreeMemory (tempfile);
    TtaFreeMemory (pathname);
@@ -3799,7 +3791,7 @@ static boolean        RestoreAmayaDocs ()
 	{
 	  InNewWindow = TRUE;
 	  tempdoc[0] = EOS;
-	  fscanf (f, "%s %s\n", tempdoc, docname);
+	  fscanf (f, "%s %s %d\n", tempdoc, docname, &docType);
 	  while (tempdoc[0] != EOS && TtaFileExist (tempdoc))
 	    {
               if (UserAnswer)
@@ -3812,7 +3804,7 @@ static boolean        RestoreAmayaDocs ()
 		TtaFileUnlink (tempdoc);
               /*next saved file */
               tempdoc[0] = EOS;
-              fscanf (f, "%s %s %d\n", tempdoc, docname, docType);
+              fscanf (f, "%s %s %d\n", tempdoc, docname, &docType);
 	    }
 	  InNewWindow = FALSE;	  
 	  fclose (f);
