@@ -8225,7 +8225,6 @@ static void TreeItemSelect (ThotWidget w, ThotBool state, caddr_t call_d)
 
   if (cbf)
       (*cbf) (w, state, user_data);
-
 #endif /* GTK */
 }
 
@@ -8237,9 +8236,10 @@ static void TreeItemSelect (ThotWidget w, ThotBool state, caddr_t call_d)
 ThotWidget TtaClearTree (ThotWidget tree)
      /* add some tree stuff here */
 {
-#ifndef _WINDOWS
+  ThotWidget tree_widget = NULL;
+#ifdef _GTK
   GList *children;
-  ThotWidget tmp, tree_widget = NULL;
+  ThotWidget tmp;
 
   if (!tree || !GTK_IS_SCROLLED_WINDOW (tree))
     return NULL;
@@ -8264,8 +8264,8 @@ ThotWidget TtaClearTree (ThotWidget tree)
 	  g_list_free (children);
 	}
     }
+#endif /* _GTK */
   return (tree_widget);
-#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
