@@ -2755,34 +2755,27 @@ static void           ProcessStartGI (char* GIname)
 	      sameLevel = TRUE;
 	      if (pHTMLGIMapping[entry].ThotType > 0)
 		{
-		  if (pHTMLGIMapping[entry].ThotType == HTML_EL_HTML)
-		    /* the corresponding Thot element is the root of the
-		       abstract tree, which has been created at initialization */
-		    el = rootElement;
+		  /* create a Thot element */
+		  elType.ElSSchema = DocumentSSchema;
+		  elType.ElTypeNum = pHTMLGIMapping[entry].ThotType;
+		  if (pHTMLGIMapping[entry].XMLcontents == 'E')
+		    /* empty HTML element. Create all children specified */
+		    /* in the Thot structure schema */
+		    el = TtaNewTree (HTMLcontext.doc, elType, "");
 		  else
-		    /* create a Thot element */
+		    /* the HTML element may have children. Create only */
+		    /* the corresponding Thot element, without any child */
+		    el = TtaNewElement (HTMLcontext.doc, elType);
+		  TtaSetElementLineNumber (el, NumberOfLinesRead);
+		  sameLevel = InsertElement (&el);
+		  if (el != NULL)
 		    {
-		      elType.ElSSchema = DocumentSSchema;
-		      elType.ElTypeNum = pHTMLGIMapping[entry].ThotType;
 		      if (pHTMLGIMapping[entry].XMLcontents == 'E')
-			/* empty HTML element. Create all children specified */
-			/* in the Thot structure schema */
-			el = TtaNewTree (HTMLcontext.doc, elType, "");
-		      else
-			/* the HTML element may have children. Create only */
-			/* the corresponding Thot element, without any child */
-			el = TtaNewElement (HTMLcontext.doc, elType);
-		      TtaSetElementLineNumber (el, NumberOfLinesRead);
-		      sameLevel = InsertElement (&el);
-		      if (el != NULL)
-			{
-			  if (pHTMLGIMapping[entry].XMLcontents == 'E')
-			    HTMLcontext.lastElementClosed = TRUE;
-			  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-			    /* an empty Text element has been created. The */
-			    /* following character data must go to that elem. */
-			    HTMLcontext.mergeText = TRUE;
-			}
+			HTMLcontext.lastElementClosed = TRUE;
+		      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+			/* an empty Text element has been created. The */
+			/* following character data must go to that elem. */
+			HTMLcontext.mergeText = TRUE;
 		    }
 		}
 	      if (pHTMLGIMapping[entry].XMLcontents != 'E')
@@ -6357,9 +6350,15 @@ void ParseSubTree (char* HTMLbuf, Element lastelem, ThotBool isclosed,
 		      &isclosed, TtaGetDefaultLanguage()))
 	 StopParsing (doc);
 #else /* OLD_XML_PARSER */
+#ifdef LC
+       if (!ParseXmlSubTree (InputText, NULL, lastelem, isclosed,
+			     doc, TtaGetDefaultLanguage(), NULL))
+	 StopParsing (doc);
+#else /* LC */
        if (!ParseXmlSubTree (InputText, &lastelem, &isclosed,
 			     doc, TtaGetDefaultLanguage()))
 	 StopParsing (doc);
+#endif /* LC */
 #endif /* OLD_XML_PARSER */
       }
 }
@@ -6501,7 +6500,7 @@ void StartParser (Document doc, char *fileName,
 	      rootElement = ANNOT_GetHTMLRoot (doc); 
 	    else
 #endif /* ANNOTATIONS */
-	      rootElement = TtaGetRootElement (doc);
+	      rootElement = TtaGetMainRoot (doc);
 	    /* add the default attribute PrintURL */
 	    attrType.AttrSSchema = DocumentSSchema;
 	    attrType.AttrTypeNum = HTML_ATTR_PrintURL;
