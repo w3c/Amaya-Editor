@@ -1251,14 +1251,15 @@ void CutCommand (ThotBool save)
 		    }
 		}
 
-	      /* don't remove the root element or a cell
+	      /* don't remove the root element or a isolated cell
 		 or a mandatory element, but remove its content */
 	      stop = FALSE;
 	      do
 		if (firstSel == lastSel && 
 		    (firstSel->ElParent == NULL ||
-		     TypeHasException (ExcIsCell, firstSel->ElTypeNumber,
-				       firstSel->ElStructSchema) ||
+		     (TypeHasException (ExcIsCell, firstSel->ElTypeNumber,
+					firstSel->ElStructSchema) &&
+		      !WholeColumnSelected) ||
 		     !CanCutElement (firstSel, pSelDoc, NULL)))
 		  {
 		    if (firstSel->ElTerminal || firstSel->ElFirstChild == NULL)

@@ -1750,8 +1750,6 @@ void RowDeleted (NotifyElement * event)
   ----------------------------------------------------------------------*/
 ThotBool DeleteCell (NotifyElement * event)
 {
-printf ("Delete cell\n");
-#ifdef IV
   Element             cell;
   ElementType         elType;
   AttributeType       attrType;
@@ -1795,11 +1793,10 @@ printf ("Delete cell\n");
   else
     attrType.AttrTypeNum = HTML_ATTR_colspan_;
   attr = TtaGetAttribute (cell, attrType);
-  if (attr != NULL)
-    CurrentSpan = TtaGetAttributeValue (attr);
+  if (attr)
+      CurrentSpan = TtaGetAttributeValue (attr);
   else
     CurrentSpan = 1;
-#endif
   /* let Thot perform normal operation */
   return FALSE;
 }
@@ -1810,8 +1807,6 @@ printf ("Delete cell\n");
   ----------------------------------------------------------------------*/
 void CellDeleted (NotifyElement * event)
 {
-printf ("Cell deleted\n");
-#ifdef IV
   Element             cell, col, child;
   ElementType         elType;
   Document            doc;
@@ -1825,6 +1820,7 @@ printf ("Cell deleted\n");
     return;
   doc = event->document;
   span = CurrentSpan;
+  /* todo: generate empty cell after */
   CurrentSpan = 0;
   elType = TtaGetElementType (event->element);
   inMath = !TtaSameSSchemas (elType.ElSSchema,
@@ -1832,7 +1828,7 @@ printf ("Cell deleted\n");
   removed = RemoveColumn (CurrentColumn, doc, TRUE, inMath);
   if (removed)
     span--;
-  else if (CurrentColumn != NULL)
+  else if (CurrentColumn)
     {
       /* get the previous or the next one in the current row */
       before = FALSE;
@@ -1844,19 +1840,17 @@ printf ("Cell deleted\n");
 	  col = CurrentColumn;
 	  TtaNextSibling (&col);
 	}
-      cell = CloseCellForNewColumn (CurrentRow, col, doc, before, inMath,
+      /*cell = CloseCellForNewColumn (CurrentRow, col, doc, before, inMath,
 				    &span, &rowspan);
-      /* regenerate an empty cell */
       cell = AddEmptyCellInRow (CurrentRow, CurrentColumn, cell, before, doc,
 				inMath, FALSE);
       child = TtaGetFirstChild (cell);
-      TtaSelectElement (doc, child);
+      TtaSelectElement (doc, child);*/
     }
   if (CurrentRow)
     HandleColAndRowAlignAttributes (CurrentRow, doc);
   CurrentColumn = NULL;
   CurrentRow = NULL;
-#endif
 }
 
 /*----------------------------------------------------------------------

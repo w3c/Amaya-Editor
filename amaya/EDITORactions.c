@@ -2265,7 +2265,7 @@ static void CreateRow (Document doc, View view, ThotBool before)
 	TtaSetDisplayMode (doc, DeferredDisplay);
       elType = TtaGetElementType (el);
       TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-      elNew = TtaNewTree (doc, elType, "");
+      elNew = TtaNewElement (doc, elType);
       TtaInsertSibling (elNew, el, before, doc);
       TtaRegisterElementCreate (elNew, doc);
       event.element = elNew;
