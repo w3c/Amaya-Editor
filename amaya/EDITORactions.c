@@ -113,17 +113,17 @@ void CreateDoctype (Document doc, int profile)
   char           *ptr;
   SSchema         nature;
   ThotBool	  useMathML;
-
+  
   /* Check the Thot abstract tree against the structure schema. */
   TtaSetStructureChecking (0, doc);
-
+  
   /* We use the Latin_Script language to avoid */
   /* the spell_chekcer to check the doctype */
   language = Latin_Script;
-
+  
   docEl = TtaGetMainRoot (doc);
   elType = TtaGetElementType (docEl);
-
+  
   /* Add the new doctype */
   if ((profile == L_Basic) || (profile == L_Strict) ||
       (profile == L_Xhtml11) || (profile == L_Transitional))
@@ -146,6 +146,7 @@ void CreateDoctype (Document doc, int profile)
     {
       /* look for the MathML nature used in the document */
       nature = NULL;
+      useMathML = FALSE;
       do
 	{
 	  TtaNextNature (doc, &nature);
@@ -158,7 +159,7 @@ void CreateDoctype (Document doc, int profile)
 	}
       while (nature);
     }
-
+  
   doctype = TtaNewElement (doc, elType);
   TtaInsertFirstChild (&doctype, docEl, doc);
   /* Make the DOCTYPE element read-only */
@@ -191,7 +192,7 @@ void CreateDoctype (Document doc, int profile)
       else if (profile == L_SVG)
 	TtaSetTextContent (text, "svg PUBLIC \"-//W3C//DTD SVG 20001102//EN\"", language, doc);
     }
-
+  
   /* Create the second DOCTYPE_line element */
   elType.ElTypeNum = lineType.ElTypeNum;
   doctypeLine = TtaNewElement (doc, elType);
