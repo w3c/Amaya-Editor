@@ -46,8 +46,6 @@
 #define TMPDIR "TMPDIR"
 #endif /* _WINDOWS */
 
-#define ANNOT_ON_ANNOT
-
 /****************************************************************
  ** 
  ** List Handling functions

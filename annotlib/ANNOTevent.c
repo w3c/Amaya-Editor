@@ -638,11 +638,6 @@ AnnotLoadMode mode;
      graphic documents */
   if (!ANNOT_CanAnnotate(doc))
     return;
-  else if (DocumentTypes[doc] == docAnnot) 
-    {
-      ANNOT_AddThreadItem (doc, NULL, TRUE);
-      return;
-    }
 
   /*
    * Parsing test!
@@ -804,11 +799,17 @@ void ANNOT_Create (doc, view)
 
   if (!ANNOT_CanAnnotate (doc))
     return;
+#ifdef ANNOT_ON_ANNOT
+  /* @@ JK Exp stuff to add a new thread item */
+#if 0
   else if (DocumentTypes[doc] == docAnnot) 
     {
       ANNOT_AddThreadItem (doc, NULL, TRUE);
       return;
     }
+  /* @@ */
+#endif 
+#endif /* ANNOT_ON_ANNOT */
 
   if (!annotUser || *annotUser == EOS)
     {

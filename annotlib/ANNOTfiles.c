@@ -434,6 +434,7 @@ CHAR_T *title;
   -----------------------------------------------------------------------*/
 Element ANNOT_AddThreadItem (Document docAnnot, Element root, ThotBool AsSibling)
 {
+#ifdef ANNOT_ON_ANNOT
   ElementType elType;
   Element     thread, thread_item, el;
 
@@ -504,7 +505,9 @@ Element ANNOT_AddThreadItem (Document docAnnot, Element root, ThotBool AsSibling
 			 TtaGetDefaultLanguage (), docAnnot);
     }
   return (thread_item);
+#endif /* ANNOT_ON_ANNOT */
 }
+
 
 /*-----------------------------------------------------------------------
   ANNOT_InitDocumentThread
@@ -512,6 +515,7 @@ Element ANNOT_AddThreadItem (Document docAnnot, Element root, ThotBool AsSibling
   -----------------------------------------------------------------------*/
 void  ANNOT_InitDocumentThread (Document docAnnot)
 {
+#ifdef ANNOT_ON_ANNOT
   Element el, root;
 
   /*
@@ -563,8 +567,9 @@ void  ANNOT_InitDocumentThread (Document docAnnot)
       TtaInsertSibling (body, head, FALSE, docAnnot);
     }
 #endif
-
+#endif /* ANNOT_ON_ANNOT */
 }
+
 
 /*-----------------------------------------------------------------------
    ANNOT_InitDocumentStructure
@@ -605,9 +610,10 @@ void  ANNOT_InitDocumentStructure (doc, docAnnot, annot, initBody)
   if (initBody)
     ANNOT_InitDocumentBody (docAnnot, title);
 
-  /* @@ JK Test */
-  ANNOT_InitDocumentThread (docAnnot);
-  /* @@ */
+#ifdef ANNOT_ON_ANNOT
+  /* @@ jk: test */
+  /* ANNOT_InitDocumentThread (docAnnot); */
+#endif /* ANNOT_ON_ANNOT */
 
   if (free_title)
     TtaFreeMemory (title);
