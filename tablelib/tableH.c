@@ -1255,7 +1255,7 @@ int             frame;
   PtrTabRelations     pTabRel;
   PtrAbstractBox     *colBox, rowSpanCell[MAX_COLROW];
   PtrAbstractBox      pAb, row, cell;
-  PtrBox              pBox, box;
+  PtrBox              pBox, box, box1;
   int                *colMinWidth, *colMaxWidth;
   int                *colWidth, *colPercent, *colVSpan;
   int                 colSpan_MinWidth[MAX_COLROW], colSpan_Percent[MAX_COLROW];
@@ -1269,9 +1269,9 @@ int             frame;
   int                 attrVSpan, attrHSpan;
   int                 attrHeight, cellWidth;
   int                 tabWidth, tabPercent, minsize;
-  ThotBool             skip, statusColInWork;
-  ThotBool             foundH, foundV;
-  ThotBool             modified;
+  ThotBool            skip, statusColInWork;
+  ThotBool            foundH, foundV;
+  ThotBool            modified;
 
   if (col != NULL)
     if (col->AbBox == NULL)
@@ -1527,6 +1527,7 @@ int             frame;
 			  mbp += box->BxRMargin + box->BxRBorder + box->BxRPadding;
 			  min += mbp;
 			  max += mbp;
+			  cellWidth += mbp;
 			  /* update the min and max of the column */
 			  if (span > 1 && spanNumber < MAX_COLROW)
 			    {
@@ -1609,20 +1610,26 @@ int             frame;
 	  percent = 0;
 	  span = 0;
 	  width = 0;
+	  box1 = NULL;
+	  mbp = 0;
 	  j = 0;
 	  for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
 	    {
+	      box = colBox[cRef]->AbBox;
 	      if (colPercent[cRef] != 0)
 		percent += colPercent[cRef];
 	      else if (colWidth[cRef] != 0)
+		/* the width of that column is contrained */
 		width += colWidth[cRef];
 	      else if (colMaxWidth[cRef] < minsize)
 		{
+		  /* use the current max for this column */
 		  width += colMaxWidth[cRef];
 		  j++;
 		}
 	      else
 		{
+		  /* we will extend this column */
 		  min += colMinWidth[cRef];
 		  max += colMaxWidth[cRef];
 		  span++;
@@ -1630,6 +1637,10 @@ int             frame;
 		}
 	      realMin += colMinWidth[cRef];
 	      realMax += colMaxWidth[cRef];
+	      if (box1 && box->BxXOrg - box1->BxXOrg - box1->BxWidth > 0)
+		/* take spacing and borders into account */
+		width += box->BxXOrg - box1->BxXOrg - box1->BxWidth;
+	      box1 = box;
 	    }
 	  
 	  /* compare percent values */
@@ -1654,8 +1665,10 @@ int             frame;
 		  delta = delta / j;
 		  for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
 		    if (colPercent[cRef] == 0 && colWidth[cRef] == 0)
-		      if (delta > colMinWidth[cRef])
-			colWidth[cRef] = delta;
+		      if (colMaxWidth[cRef] < minsize)
+			colWidth[cRef] = colMaxWidth[cRef] + delta;
+		      else if (delta > 0 ||  -delta > colMinWidth[cRef])
+			colWidth[cRef] = colMinWidth[cRef] + delta;
 		      else
 			colWidth[cRef] = colMinWidth[cRef];
 		}
