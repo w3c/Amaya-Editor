@@ -236,7 +236,8 @@ NotifyElement *event;
 	 elType.ElTypeNum != GraphML_EL_polygon &&
 	 elType.ElTypeNum != GraphML_EL_text_ &&
 	 elType.ElTypeNum != GraphML_EL_image &&
-	 elType.ElTypeNum != GraphML_EL_foreignObject))
+	 elType.ElTypeNum != GraphML_EL_foreignObject &&
+	 elType.ElTypeNum != GraphML_EL_GraphML))
       {
       elType.ElSSchema = graphSSchema;
       elType.ElTypeNum = GraphML_EL_GraphicsElement;
@@ -257,7 +258,8 @@ NotifyElement *event;
 	 elType.ElTypeNum != GraphML_EL_polygon &&
 	 elType.ElTypeNum != GraphML_EL_text_ &&
 	 elType.ElTypeNum != GraphML_EL_image &&
-	 elType.ElTypeNum != GraphML_EL_foreignObject))
+	 elType.ElTypeNum != GraphML_EL_foreignObject &&
+	 elType.ElTypeNum != GraphML_EL_GraphML))
       {
       elType.ElSSchema = graphSSchema;
       elType.ElTypeNum = GraphML_EL_GraphicsElement;
@@ -482,18 +484,18 @@ ThotBool    horiz;
 /*----------------------------------------------------------------------
   UpdateAttrText creates or updates the text attribute attr of the
   element el.
-  The parameter parse is TRUE when the attribute must be parsed
-  after the change.
+  The parameter update is TRUE when the value gives a delta. In that case
+  the attribute must be parsed after the change.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void   UpdateAttrText (Element el, Document doc, AttributeType attrType, int value, ThotBool parse)
+static void   UpdateAttrText (Element el, Document doc, AttributeType attrType, int value, ThotBool update)
 #else /* __STDC__*/
-static void   UpdateAttrText (el, doc, attrType, value, parse)
+static void   UpdateAttrText (el, doc, attrType, value, update)
 Element       el;
 Document      doc;
 AttributeType attrType;
 int           value;
-ThotBool      parse;
+ThotBool      update;
 #endif /* __STDC__*/
 {
   CHAR_T		buffer[32], unit[32];
@@ -531,11 +533,13 @@ ThotBool      parse;
 	value = (value + 27) / 28;
       else if (!ustrcmp (unit, "mm"))
 	value = ((value * 10) + 27) / 28;
+      if (update)
+	value = value + length;
       usprintf (buffer, TEXT("%d%s"), value, unit);
       TtaRegisterAttributeReplace (attr, el, doc);
       TtaSetAttributeText (attr, buffer, el, doc);
     }
-  if (parse)
+  if (update)
     {
       /* generate the specific presentation */
       if (attrType.AttrTypeNum == GraphML_ATTR_x ||
@@ -588,7 +592,8 @@ ThotBool    horiz;
 	   elType.ElTypeNum == GraphML_EL_text_ ||
 	   elType.ElTypeNum == GraphML_EL_tspan ||
 	   elType.ElTypeNum == GraphML_EL_image ||
-	   elType.ElTypeNum == GraphML_EL_foreignObject)
+	   elType.ElTypeNum == GraphML_EL_foreignObject ||
+	   elType.ElTypeNum == GraphML_EL_GraphML)
     {
       /* move the origin */
       if (horiz)
@@ -678,6 +683,7 @@ ThotBool    horiz;
 	   elType.ElTypeNum == GraphML_EL_tspan ||
 	   elType.ElTypeNum == GraphML_EL_image ||
 	   elType.ElTypeNum == GraphML_EL_foreignObject ||
+	   elType.ElTypeNum == GraphML_EL_GraphML ||
 	   elType.ElTypeNum == GraphML_EL_Spline ||
 	   elType.ElTypeNum == GraphML_EL_ClosedSpline ||
 	   elType.ElTypeNum == GraphML_EL_polyline ||
@@ -798,64 +804,156 @@ NotifyAttribute *event;
 }
 
 /*----------------------------------------------------------------------
-  CheckGraphMLRootSize checks that the svg root element includes that
+  CheckGraphMLRoot checks that the svg root element includes that
   new element.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void             CheckGraphMLRootSize (Document doc, Element el)
+void             CheckGraphMLRoot (Document doc, Element el)
 #else /* __STDC__*/
-void             CheckGraphMLRootSize (doc, el)
+void             CheckGraphMLRoot (doc, el)
 Document         doc;
 Element          el;
 #endif /* __STDC__*/
 {
-  Element          graphRoot;
+  Element          graphRoot, child;
   ElementType      elType;
   AttributeType    attrType;
   SSchema	   graphSchema;
   PRule            rule;
   TypeUnit         unit;
-  int              x, y, w, h;
-  int              wR, hR;
+  int              x, y, w, h, val;
+  int              wR, hR, dummy;
 
   graphSchema = GetGraphMLSSchema (doc);
   elType.ElTypeNum = GraphML_EL_GraphML;
   elType.ElSSchema = graphSchema;
   attrType.AttrSSchema = graphSchema;
   graphRoot = TtaGetTypedAncestor (el, elType);
-  if (graphRoot)
+  while (graphRoot)
     {
-      /* get the unit used to express the SVG width */
+      /* check first the position of the new element */
+      TtaGiveBoxPosition (el, doc, 1, UnPixel, &x, &y);
+      /* get the unit of the SVG width */
       rule = TtaGetPRule (graphRoot, PRWidth);
       if (rule)
 	unit = TtaGetPRuleUnit (rule);
       else
 	unit = UnPixel;
-      TtaGiveBoxPosition (el, doc, 1, unit, &x, &y);
-      TtaGiveBoxSize (el, doc, 1, unit, &w, &h);
-      TtaGiveBoxSize (graphRoot, doc, 1, unit, &wR, &hR);
-      if (w + x > wR)
+      if (x < 0)
 	{
-	  /* increase the width of the root element */
-	  attrType.AttrTypeNum = GraphML_ATTR_width_;
-	  UpdateAttrText (graphRoot, doc, attrType, w + x, TRUE);
+	  /* translate the whole SVG contents */
+	  child = TtaGetFirstChild (graphRoot);
+	  val = -x;
+	  while (child)
+	    {
+	      if (elType.ElTypeNum == GraphML_EL_circle ||
+		  elType.ElTypeNum == GraphML_EL_ellipse)
+		attrType.AttrTypeNum = GraphML_ATTR_cx;
+	      else if (elType.ElTypeNum == GraphML_EL_rect ||
+		       elType.ElTypeNum == GraphML_EL_text_ ||
+		       elType.ElTypeNum == GraphML_EL_tspan ||
+		       elType.ElTypeNum == GraphML_EL_image ||
+		       elType.ElTypeNum == GraphML_EL_foreignObject ||
+		       elType.ElTypeNum == GraphML_EL_GraphML)
+		attrType.AttrTypeNum = GraphML_ATTR_x;
+	      else if (elType.ElTypeNum == GraphML_EL_line_)
+		{
+		  attrType.AttrTypeNum = GraphML_ATTR_x1;
+		  attrType.AttrTypeNum = GraphML_ATTR_x2;
+		}
+	      UpdateAttrText (child, doc, attrType, val, TRUE);
+
+	      /* check if the SVG width includes that element */
+	      TtaGiveBoxPosition (child, doc, 1, unit, &x, &dummy);
+	      TtaGiveBoxSize (child, doc, 1, unit, &w, &h);
+	      TtaGiveBoxSize (graphRoot, doc, 1, unit, &wR, &hR);
+	      if (w + x > wR)
+		{
+		  /* increase the width of the SVG element */
+		  attrType.AttrTypeNum = GraphML_ATTR_width_;
+		  UpdateAttrText (graphRoot, doc, attrType, w + x - wR, TRUE);
+		}
+	      /* next element */
+	      TtaNextSibling (&child);
+	    }
+	}
+      else
+	{
+	  /* check if the SVG width includes that element */
+	  TtaGiveBoxPosition (el, doc, 1, unit, &x, &dummy);
+	  TtaGiveBoxSize (el, doc, 1, unit, &w, &h);
+	  TtaGiveBoxSize (graphRoot, doc, 1, unit, &wR, &hR);
+	  if (w + x > wR)
+	    {
+	      /* increase the width of the SVG element */
+	      attrType.AttrTypeNum = GraphML_ATTR_width_;
+	      UpdateAttrText (graphRoot, doc, attrType, w + x - wR, TRUE);
+	    }
 	}
 
-      /* get the unit used to express the SVG width */
+      /* get the unit of the SVG width */
       rule = TtaGetPRule (graphRoot, PRHeight);
       if (rule)
 	unit = TtaGetPRuleUnit (rule);
       else
 	unit = UnPixel;
-      TtaGiveBoxPosition (el, doc, 1, unit, &x, &y);
-      TtaGiveBoxSize (el, doc, 1, unit, &w, &h);
-      TtaGiveBoxSize (graphRoot, doc, 1, unit, &wR, &hR);
-      if (h + y > hR)
+      if (y < 0)
 	{
-	  /* increase the height of the root element */
-	  attrType.AttrTypeNum = GraphML_ATTR_height_;
-	  UpdateAttrText (graphRoot, doc, attrType, h + y, TRUE);
+	  /* translate the whole SVG contents */
+	  child = TtaGetFirstChild (graphRoot);
+	  val = -y;
+	  while (child)
+	    {
+	      if (elType.ElTypeNum == GraphML_EL_circle ||
+		  elType.ElTypeNum == GraphML_EL_ellipse)
+		attrType.AttrTypeNum = GraphML_ATTR_cy;
+	      else if (elType.ElTypeNum == GraphML_EL_rect ||
+		       elType.ElTypeNum == GraphML_EL_text_ ||
+		       elType.ElTypeNum == GraphML_EL_tspan ||
+		       elType.ElTypeNum == GraphML_EL_image ||
+		       elType.ElTypeNum == GraphML_EL_foreignObject ||
+		       elType.ElTypeNum == GraphML_EL_GraphML)
+		attrType.AttrTypeNum = GraphML_ATTR_y;
+	      else if (elType.ElTypeNum == GraphML_EL_line_)
+		{
+		  attrType.AttrTypeNum = GraphML_ATTR_y1;
+		  attrType.AttrTypeNum = GraphML_ATTR_y2;
+		}
+	      UpdateAttrText (child, doc, attrType, val, TRUE);
+
+	      /* check if the SVG height includes that element */
+	      TtaGiveBoxPosition (child, doc, 1, unit, &dummy, &y);
+	      TtaGiveBoxSize (child, doc, 1, unit, &w, &h);
+	      TtaGiveBoxSize (graphRoot, doc, 1, unit, &wR, &hR);
+	      if (h + y > hR)
+		{
+		  /* increase the height of the root element */
+		  attrType.AttrTypeNum = GraphML_ATTR_height_;
+		  UpdateAttrText (graphRoot, doc, attrType, h + y - hR, TRUE);
+		}
+	      /* next element */
+	      TtaNextSibling (&child);
+	    }
 	}
+      else
+	{
+	  /* check if the SVG height includes that element */
+	  TtaGiveBoxPosition (el, doc, 1, unit, &dummy, &y);
+	  TtaGiveBoxSize (el, doc, 1, unit, &w, &h);
+	  TtaGiveBoxSize (graphRoot, doc, 1, unit, &wR, &hR);
+	  if (h + y > hR)
+	    {
+	      /* increase the height of the root element */
+	      attrType.AttrTypeNum = GraphML_ATTR_height_;
+	      UpdateAttrText (graphRoot, doc, attrType, h + y - hR, TRUE);
+	    }
+	}
+      /* check enclosing SGV */
+      el = TtaGetParent (graphRoot);
+      if (el)
+	graphRoot = TtaGetTypedAncestor (el, elType);
+      else
+	graphRoot = NULL;
     }
 }
 
@@ -987,7 +1085,7 @@ NotifyPresentation *event;
 	  UpdateWidthHeightAttribute (el, doc, width, TRUE);
 	}
       /* check that the svg root element includes that element */
-      CheckGraphMLRootSize (doc, el);
+      CheckGraphMLRoot (doc, el);
     }
   return ret; /* let Thot perform normal operation */
 }
@@ -1381,7 +1479,7 @@ int                 construct;
 	}
     }
   /* adapt the size of the SVG root element if necessary */
-  CheckGraphMLRootSize (doc, newEl);
+  CheckGraphMLRoot (doc, newEl);
   TtaCloseUndoSequence (doc);
   TtaSetDocumentModified (doc);
 }

@@ -1347,7 +1347,6 @@ int                 frame;
 #endif /* __STDC__ */
 {
   ViewFrame          *pFrame;
-  PtrBox              box;
   PtrTextBuffer       pBuffer;
   int                 xDelta, yDelta;
   int                 width, height;
@@ -3440,6 +3439,7 @@ CHAR_T                c;
 {
   ViewSelection      *pViewSel;
   PtrAbstractBox      pAb;
+  PtrAbstractBox      draw;
   DisplayMode         dispMode;
   PtrDocument         pDoc;
   PtrElement          firstEl, lastEl;
@@ -3496,10 +3496,34 @@ CHAR_T                c;
 	      if (pViewSel->VsBox != NULL)
 		{
 		  pAb = pViewSel->VsBox->BxAbstractBox;
-		  if (pAb->AbLeafType == LtPicture
-		      ||  pAb->AbLeafType == LtSymbol
-		      ||  pAb->AbLeafType == LtGraphics
-		      ||  pAb->AbLeafType == LtText)
+		  draw = GetParentDraw (pViewSel->VsBox);
+		  if (pAb->AbLeafType == LtText || pAb->AbLeafType == LtSymbol)
+		    ContentEditing (TEXT_SUP);
+		  else if (draw)
+		    {
+		      /* move the selection and reapply the command */
+		      pViewSel->VsBox = draw->AbBox;
+		      pViewSel->VsBuffer = NULL;
+		      pViewSel->VsIndBuf = 0;
+		      pViewSel->VsIndBox = 0;
+		      pViewSel->VsXPos = 0;
+		      pViewSel->VsNSpaces = 0;
+		      pViewSel->VsLine = NULL;
+		      pViewSel = &ViewFrameTable[frame - 1].FrSelectionEnd;
+		      pViewSel->VsBox = draw->AbBox;
+		      pViewSel->VsBuffer = NULL;
+		      pViewSel->VsIndBuf = 0;
+		      pViewSel->VsIndBox = 0;
+		      pViewSel->VsXPos = draw->AbBox->BxWidth;
+		      pViewSel->VsNSpaces = 0;
+		      pViewSel->VsLine = NULL;
+		      TtcInsertChar (document, view, c);
+		      /* restore the display mode */
+		      if (dispMode == DisplayImmediately)
+			TtaSetDisplayMode (document, DisplayImmediately);
+		      return;
+		    }
+		  else if (pAb->AbLeafType == LtPicture || pAb->AbLeafType == LtGraphics)
 		    ContentEditing (TEXT_SUP);
 		  else if (pAb->AbLeafType != LtCompound || pAb->AbVolume != 0)
 		    TtcPreviousChar (document, view);

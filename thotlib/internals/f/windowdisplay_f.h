@@ -340,11 +340,6 @@ extern void Scroll ( int frame,
                      int yd,
                      int xf,
                      int yf );
-extern void VideoInvert ( int frame,
-                          int width,
-                          int height,
-                          int x,
-                          int y );
 extern void PaintWithPattern ( int frame,
                                int x,
                                int y,
@@ -693,11 +688,6 @@ extern void Scroll (/* int frame,
                        int yd,
                        int xf,
                        int yf */);
-extern void VideoInvert (/* int frame,
-                            int width,
-                            int height,
-                            int x,
-                            int y */);
 extern void PaintWithPattern (/* int frame,
                                  int x,
                                  int y,

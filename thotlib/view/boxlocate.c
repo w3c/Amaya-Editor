@@ -1700,15 +1700,15 @@ int               ym;
   ThotBool            still, okH, okV;
 
   pFrame = &ViewFrameTable[frame - 1];
-  /* pas de point selectionne */
+  /* by default no selected point */
   pointselect = 0;
   if (pFrame->FrAbstractBox != NULL)
     {
-      /* On note les coordonnees par rapport a l'image concrete */
+      /* Get positions in the window */
       xr = xm + pFrame->FrXOrg;
       yr = ym + pFrame->FrYOrg;
 
-      /* On recherche la boite englobant le point designe */
+      /* Look for the box displayed at that point */
       if (ThotLocalActions[T_selecbox] != NULL)
 	(*ThotLocalActions[T_selecbox]) (&pBox, pFrame->FrAbstractBox,
 					 frame, xr, yr, &pointselect);
@@ -1723,7 +1723,7 @@ int               ym;
 	/* ctrl click */
 	still = TRUE;
       
-      /* On boucle tant que l'on ne trouve pas une boite deplacable */
+      /* Loop as long as a box that can be moved is not found */
       while (still)
 	{
 	  if (pAb == NULL)
@@ -1731,20 +1731,20 @@ int               ym;
 	  else
 	    pBox = pAb->AbBox;
 	  if (pBox == NULL)
-	    still = FALSE;	/* Il n'y a pas de boite */
-	  /* On regarde si le deplacement est autorise */
+	    /* no box can be moved here */
+	    still = FALSE;
 	  else
 	    {
+	      /* check if the moving is allowed */
 	      okH = CanBeTranslated (pAb, frame, TRUE, &xmin, &xmax);
 	      okV = CanBeTranslated (pAb, frame, FALSE, &ymin, &ymax);
 	      if (okH || okV)
 		still = FALSE;
 	    }
 	  
-	  /* Si on n'a pas trouve, il faut remonter */
 	  if (still)
 	    {
-	      /* On passe a la boite englobante */
+	      /* no box found yet, check the enclosing box */
 	      if (pAb != NULL)
 		pAb = pAb->AbEnclosing;
 	      else
@@ -1755,9 +1755,9 @@ int               ym;
 	    }
 	}
 
-      /* Est-ce que l'on a trouve une boite ? */
       if (pBox != NULL)
 	{
+	  /* A box is found */
 	  x = pBox->BxXOrg - pFrame->FrXOrg;
 	  y = pBox->BxYOrg - pFrame->FrYOrg;
 	  width = pBox->BxWidth;
@@ -1772,57 +1772,45 @@ int               ym;
 		    {
 		      LineModification (frame, pBox, pointselect, &x, &y);
 		      /* get back current changes */
-		      if (!pAb->AbWidth.DimIsPosition)
+		      if (!pAb->AbWidth.DimIsPosition && pAb->AbEnclosing)
 			/* this rule is applied to the parent */
 			pAb = pAb->AbEnclosing;
-		      if (pAb)
+		      pBox = pAb->AbBox;
+		      switch (pointselect)
 			{
-			  pBox = pAb->AbBox;
-			  switch (pointselect)
-			    {
-			    case 1:
-			    case 7:
-			      if (pBox->BxHorizInverted)
-				NewDimension (pAb, x, y, frame, TRUE);
-			      else
-				NewPosition (pAb, x, y, frame, TRUE);
-			      break;
-			    case 3:
-			    case 5:
-			      if (pBox->BxHorizInverted)
-				NewPosition (pAb, x, y, frame, TRUE);
-			      else
-				NewDimension (pAb, x, y, frame, TRUE);
-			      break;
-			    default: break;
-			    }
-			  DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH,
-			       pBox->BxYOrg - EXTRA_GRAPH,
-			       pBox->BxXOrg + width + EXTRA_GRAPH,
-			       pBox->BxYOrg + height + EXTRA_GRAPH);
-			  RedrawFrameBottom (frame, 0, NULL);
+			case 1:
+			case 7:
+			  if (pBox->BxHorizInverted)
+			    NewDimension (pAb, x, y, frame, TRUE);
+			  else
+			    NewPosition (pAb, x, y, frame, TRUE);
+			  break;
+			case 3:
+			case 5:
+			  if (pBox->BxHorizInverted)
+			    NewPosition (pAb, x, y, frame, TRUE);
+			  else
+			    NewDimension (pAb, x, y, frame, TRUE);
+			  break;
+			default: break;
 			}
 		    }
 		  else
 		    {
-		      /* Deplacement d'un point de la polyline */
-		      x = pBox->BxXOrg - pFrame->FrXOrg;
-		      y = pBox->BxYOrg - pFrame->FrYOrg;
-		      /* Note si le trace est ouvert ou ferme */
+		      /* Moving a point in a polyline */
+		      /* check if the polyline is opened or closed */
 		      still = (pAb->AbPolyLineShape == 'p' ||
 			       pAb->AbPolyLineShape == 's');
-		      /* if (ThotLocalActions[T_switchsel])
-			 (*ThotLocalActnions[T_switchsel]) (frame, FALSE);*/
 		      PolyLineModification (frame, &x, &y, pBox,
 					    pBox->BxNChars, pointselect, still);
-		      /* redisplay the box */
-		      DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH,
-			       pBox->BxYOrg - EXTRA_GRAPH,
-			       pBox->BxXOrg + width + EXTRA_GRAPH,
-			       pBox->BxYOrg + height + EXTRA_GRAPH);
-		      RedrawFrameBottom (frame, 0, NULL);
 		      NewContent (pAb);
 		    }
+		  /* redisplay the box */
+		  DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH,
+			   pBox->BxYOrg - EXTRA_GRAPH,
+			   pBox->BxXOrg + width + EXTRA_GRAPH,
+			   pBox->BxYOrg + height + EXTRA_GRAPH);
+		  RedrawFrameBottom (frame, 0, NULL);
 		  APPgraphicModify (pEl, pointselect, frame, FALSE);
 		}
 	    }

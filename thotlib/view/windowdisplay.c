@@ -3826,35 +3826,6 @@ int yf;
 #endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
-  VideoInvert switch to inverse video the area of frame located at
-  (x,y) and of size width x height.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                VideoInvert (int frame, int width, int height, int x, int y)
-#else  /* __STDC__ */
-void                VideoInvert (frame, width, height, x, y)
-int                 frame;
-int                 width;
-int                 height;
-int                 x;
-int                 y;
-
-#endif /* __STDC__ */
-{
-   ThotWindow          w;
-
-   w = FrRef[frame];
-   if (w != None) {
-      if (TtDisplay)
-         WIN_ReleaseDeviceContext ();
-       
-      WIN_GetDeviceContext (frame); 
-      PatBlt (TtDisplay, x, y + FrameTable[frame].FrTopMargin, width, height, PATINVERT);
-      WIN_ReleaseDeviceContext ();
-   }
-}
-
-/*----------------------------------------------------------------------
   PaintWithPattern fill the rectangle associated to a window w (or frame if w= 0)
   located on (x , y) and geometry width x height, using the
   given pattern.

@@ -24,9 +24,10 @@
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "boxes_tv.h"
 #include "frame_tv.h"
-static int          GridSize = 1;
 
+static int          GridSize = 1;
 #define DO_ALIGN(val) ((val + (GridSize/2)) / GridSize) * GridSize
 
 #include "appli_f.h"
@@ -94,16 +95,53 @@ int   nb;
 }
 #endif /* _WINDOWS */
 
+
 /*----------------------------------------------------------------------
- *      BoxGeometry set the geometry of the fake box used to interract
- *		with the user.
- *		Last parameter withborder indicate whether the border should
- *		be drawn or not.
+  VideoInvert switch to inverse video the area of frame located at
+  (x,y) and of size width x height.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void    BoxGeometry (int frame, int x, int y, int width, int height, int xr, int yr, ThotBool withborder)
+static void         VideoInvert (int frame, int width, int height, int x, int y)
 #else  /* __STDC__ */
-static void    BoxGeometry (frame, x, y, width, height, xr, yr, withborder)
+static void         VideoInvert (frame, width, height, x, y)
+int                 frame;
+int                 width;
+int                 height;
+int                 x;
+int                 y;
+
+#endif /* __STDC__ */
+{
+  ThotWindow          w;
+
+  w = FrRef[frame];
+   if (w != None)
+     {
+#ifdef _WINDOWS
+       if (TtDisplay)
+	 WIN_ReleaseDeviceContext ();
+       WIN_GetDeviceContext (frame); 
+       PatBlt (TtDisplay, x, y + FrameTable[frame].FrTopMargin, width, height, PATINVERT);
+       WIN_ReleaseDeviceContext ();
+#else /* _WINDOWS */
+#ifdef _GTK
+      gdk_draw_rectangle (w, TtInvertGC, TRUE, x, 
+			  y + FrameTable[frame].FrTopMargin, width, height);
+#else /* _GTK */
+     XFillRectangle (TtDisplay, w, TtInvertGC, x, y + FrameTable[frame].FrTopMargin, width, height);
+#endif /* _GTK */
+#endif /* _WINDOWS */
+     }
+}
+
+/*----------------------------------------------------------------------
+  BoxGeometry set the geometry of the fake box used to interract with
+  the user.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void    BoxGeometry (int frame, int x, int y, int width, int height, int xr, int yr)
+#else  /* __STDC__ */
+static void    BoxGeometry (frame, x, y, width, height, xr, yr)
 int            frame;
 int            x;
 int            y;
@@ -111,7 +149,6 @@ int            width;
 int            height;
 int            xr;
 int            yr;
-ThotBool       withborder;
 #endif /* __STDC__ */
 {
 #define step 6
@@ -131,15 +168,6 @@ ThotBool       withborder;
     VideoInvert (frame, width - 1, 1, x + 1, y + height - 1);
   /* reference point */
   VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, xr, yr);
-#ifdef IV
-  if (withborder)
-    {
-      for (i = step; i < width; i += step)
-	VideoInvert (frame, 1, height - 1, x + i, y + 1);
-      for (i = step; i < height; i += step)
-	VideoInvert (frame, width - 1, 1, x + 1, y + i);
-    }
-#endif
 }
 
 /*----------------------------------------------------------------------
@@ -344,7 +372,7 @@ PtrTextBuffer    Bbuffer;
 #endif /* _WINDOWS */
 
   /* shows up limit borders */
-  BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
+  BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2);
   /* loop waiting for the user input */
   ret = 0;
   /* take into account release button events that follow a press button event */
@@ -682,7 +710,7 @@ PtrTextBuffer    Bbuffer;
     }
   /* erase box frame */
 
-  BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
+  BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2);
 #ifdef _WINDOWS
   SetCursor (LoadCursor (NULL, IDC_ARROW));
 #else /* *_WINDOWS */
@@ -771,7 +799,7 @@ PtrTextBuffer    Bbuffer;
 #endif /* _WINDOWS */
 
   /* shows up limit borders */
-  BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
+  BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2);
   /* loop waiting for the user input */
   ret = 0;
   /* take into account release button events that follow a press button event */
@@ -965,7 +993,7 @@ PtrTextBuffer    Bbuffer;
     }
 
   /* erase box frame */
-  BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
+  BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2);
 #ifdef _WINDOWS
   SetCursor (LoadCursor (NULL, IDC_ARROW));
 #else /* *_WINDOWS */
@@ -1213,7 +1241,8 @@ int                *y2;
 /*----------------------------------------------------------------------
   LineModification interracts with the user to move a point of
   a line in a given frame.
-  The parameter point locates the modified extremity.
+  The parameter point locates the modified reference point.
+  Values xi, yi give the initial position of the box origin in the window.
   This fonction returns the new position of the extremity: xi, yi.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1227,6 +1256,7 @@ int                *xi;
 int                *yi;
 #endif /* __STDC__ */
 {
+  ViewFrame          *pFrame;
   PtrTextBuffer       pBuffer;
   PtrAbstractBox      draw;
   int                 width, height;
@@ -1260,7 +1290,9 @@ int                *yi;
   pBuffer->BuPoints[0].XCoord = PixelToPoint (width) * 1000;
   pBuffer->BuPoints[0].YCoord = PixelToPoint (height) * 1000;
 
-  /* store current points in the buffer */
+  /* store current points in the buffer:
+     positions are relative to the parent box origin */
+  pFrame = &ViewFrameTable[frame - 1];
   x = pBox->BxXOrg - xorg;
   y =  pBox->BxYOrg - yorg;
   switch (point)
@@ -1294,6 +1326,8 @@ int                *yi;
 
   /* get the current point */
   xMin = yMin = xMax = yMax = 0;
+  xorg -= pFrame->FrXOrg;
+  yorg -= pFrame->FrYOrg;
   RedrawPolyLine (frame, xorg, yorg, pBuffer, 3, 1, FALSE,
 		  &x1, &y1, &lastx, &lasty, &x3, &y3, &xMin, &yMin, &xMax, &yMax);
   MoveApoint (frame, xorg, yorg, x1, y1, x3, y3, lastx, lasty, 1, width, height, pBuffer, pBuffer);
@@ -1388,9 +1422,7 @@ int                 percentH;
   *y = ymin + dy;
 
 #ifdef _WINDOWS 
-  /* if (!SetCursorPos (*x + wp.rcNormalPosition.left, *y + wp.rcNormalPosition.top)) */
   if (!SetCursorPos (*x + rect.left, *y + rect.top))
-    /* if (!SetCursorPos (*x, *y)) */
     WinErrorBox (w, TEXT("UserGeometryCreate (2)"));
 #else  /* !_WINDOWS */
   XMapRaised (TtDisplay, w);
@@ -1399,7 +1431,7 @@ int                 percentH;
 #endif /* !_WINDOWS */
 
   /* draw the current box geometry */
-  BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+  BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr);
 
   /* Loop on user input to keep the first point */
   ret = 0;
@@ -1422,13 +1454,13 @@ int                 percentH;
             SetCursorPos (*x + rect.left, *y + rect.top);
 	  else if ((newx != *x && PosX) || (newy != *y && PosY))
 	    {
-	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr);
 	      if (PosX)
 		*x = newx - rect.left;
 	      if (PosY)
 		*y = newy - rect.top;
 	      
-	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr);
 	      /* the postion is fixed */
 	      if (!PosX || !PosY)
 		SetCursorPos (*x + rect.left, *y + rect.top);
@@ -1480,13 +1512,13 @@ int                 percentH;
 	    XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, *x, *y + FrameTable[frame].FrTopMargin);
 	  else if ((newx != *x && PosX) || (newy != *y && PosY))
 	    {
-	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr);
 	      if (PosX)
 		*x = newx;
 	      if (PosY)
 		*y = newy;
 
-	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr);
 	      XFlush (TtDisplay);
 	      /* the postion is fixed */
 	      if (!PosX || !PosY)
@@ -1535,7 +1567,7 @@ int                 percentH;
     }
 
   /* switch off the old box geometry */
-  BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+  BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr);
 #ifdef _WINDOWS 
   *x = xm - rect.left;
   *y = ym - rect.top;
@@ -1547,7 +1579,7 @@ int                 percentH;
   xr = 2;
   yr = 2;
   ym += FrameTable[frame].FrTopMargin;
-  BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+  BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr);
   /* indicate that the original position is the reference */
   RightOrLeft = 2;
   BottomOrTop = 2;
@@ -1598,7 +1630,7 @@ int                 percentH;
 	    {
 	      RightOrLeft = 1;
 	      BottomOrTop = 1;
-	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr);
 	      if (DimX)
 		{
 		  *width = 0;
@@ -1612,7 +1644,7 @@ int                 percentH;
 		  if (percentW != 0)
 		    *width = 0;
 		} 
-	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr);
 	    } 
       
 	  /* left or right position to modify */
@@ -1734,14 +1766,14 @@ int                 percentH;
 	  if (newx != *x || newy != *y || dx != *width || dy != *height)
 	    {
 	      /* switch off the old box */
-	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr);
 	      /* is there anewy dependence between height and width */
 	      if (percentW != 0)
 		dx = dy * percentW / 100;
 	      else if (percentH != 0)
 		dy = dx * percentH / 100;
 	      /* switch on the new box */
-	      BoxGeometry (frame, newx, newy, dx, dy, newx + xr, newy + yr, FALSE);
+	      BoxGeometry (frame, newx, newy, dx, dy, newx + xr, newy + yr);
 	      *x = newx;
 	      *y = newy;
 	      *width = dx;
@@ -1803,7 +1835,7 @@ int                 percentH;
 		{
 		  RightOrLeft = 1;
 		  BottomOrTop = 1;
-		  BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+		  BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr);
 		  if (DimX)
 		    {
 		      *width = 0;
@@ -1816,7 +1848,7 @@ int                 percentH;
 		      if (percentW != 0)
 			*width = 0;
 		    }
-		  BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+		  BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr);
 		}
 	    }
 	  else
@@ -1947,14 +1979,14 @@ int                 percentH;
 	  if (newx != *x || newy != *y || dx != *width || dy != *height)
 	    {
 	      /* switch off the old box */
-	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr);
 	      /* is there any dependence between height and width */
 	      if (percentW != 0)
 		dx = dy * percentW / 100;
 	      else if (percentH != 0)
 		dy = dx * percentH / 100;
 	      /* switch on the new box */
-	      BoxGeometry (frame, newx, newy, dx, dy, newx + xr, newy + yr, FALSE);
+	      BoxGeometry (frame, newx, newy, dx, dy, newx + xr, newy + yr);
 	      XFlush (TtDisplay);
 	      *x = newx;
 	      *y = newy;
@@ -1978,7 +2010,7 @@ int                 percentH;
     }
 
   /* Erase the box drawing */
-  BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+  BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr);
 #ifdef _WINDOWS 
   SetCursor (LoadCursor (NULL, IDC_ARROW));
 #else  /* _WINDOWS */
@@ -2129,10 +2161,12 @@ int                 ym;
 	  /* Should we move the box */
 	  if ((dx != 0) || (dy != 0))
 	    {
-	      BoxGeometry (frame, *x, *y, width, height, xr, yr, FALSE); /*Ancienne */
+	      /* old box */
+	      BoxGeometry (frame, *x, *y, width, height, xr, yr);
 	      xr += dx;
 	      yr += dy;
-	      BoxGeometry (frame, newx, newy, width, height, xr, yr, FALSE); /*Nouvelle */
+	      /* new box */
+	      BoxGeometry (frame, newx, newy, width, height, xr, yr);
 	      *x = newx;
 	      *y = newy;
 	    }
@@ -2150,7 +2184,7 @@ int                 ym;
 	}
     }
   /* Erase the box drawing */
-  BoxGeometry (frame, *x, *y, width, height, xr, yr, FALSE);
+  BoxGeometry (frame, *x, *y, width, height, xr, yr);
 #else  /* !_WINDOWS */
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
   if ((xmin >= *x) && (xmax <= *x + width))
@@ -2164,7 +2198,7 @@ int                 ym;
     }
 
   /* Shows the initial box size */
-  BoxGeometry (frame, *x, *y, width, height, xr, yr, FALSE);
+  BoxGeometry (frame, *x, *y, width, height, xr, yr);
 
   /* Loop on user interraction */
   ret = 0;
@@ -2243,7 +2277,7 @@ int                 ym;
 		}
 	      else
 		{
-		  newy = ymin + DO_ALIGN (ymax - height - ymin);	/*cote inferieur */
+		  newy = ymin + DO_ALIGN (ymax - height - ymin);  /* bottom border */
 		  warpy = ym + newy - *y;
 		}
 	    }
@@ -2254,10 +2288,12 @@ int                 ym;
 	  /* Should we move the box */
 	  if ((dx != 0) || (dy != 0))
 	    {
-	      BoxGeometry (frame, *x, *y, width, height, xr, yr, FALSE);	/*Ancienne */
+	      /* old box */
+	      BoxGeometry (frame, *x, *y, width, height, xr, yr);
 	      xr += dx;
 	      yr += dy;
-	      BoxGeometry (frame, newx, newy, width, height, xr, yr, FALSE);	/*Nouvelle */
+	      /* new box */
+	      BoxGeometry (frame, newx, newy, width, height, xr, yr);
 	      XFlush (TtDisplay);
 	      *x = newx;
 	      *y = newy;
@@ -2280,7 +2316,7 @@ int                 ym;
     }
 
   /* Erase the box drawing */
-  BoxGeometry (frame, *x, *y, width, height, xr, yr, FALSE);
+  BoxGeometry (frame, *x, *y, width, height, xr, yr);
 
   /* restore the Thot Library state */
   ThotUngrab ();
@@ -2393,7 +2429,7 @@ int                 percentH;
   ym += FrameTable[frame].FrTopMargin;
 
   /* Shows the initial box size */
-  BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);
+  BoxGeometry (frame, x, y, *width, *height, xr, yr);
 
   /* select the correct cursor */
   w = FrRef[frame];
@@ -2540,7 +2576,7 @@ int                 percentH;
 	  if ((dl != 0) || (dh != 0))
 	    {
 	      /* switch off the old box */
-	      BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);
+	      BoxGeometry (frame, x, y, *width, *height, xr, yr);
 	      /* is there any dependence between height and width */
 	      *width += dl;
 	      *height += dh;
@@ -2551,7 +2587,7 @@ int                 percentH;
 	      x += dx;
 	      y += dy;
 	      /* switch on the new one */
-	      BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);
+	      BoxGeometry (frame, x, y, *width, *height, xr, yr);
 	    }
 
 	  /* Should we move the cursor */
@@ -2573,7 +2609,7 @@ int                 percentH;
   /* Erase the box drawing */
   SetCursor (LoadCursor (NULL, IDC_ARROW));
   /* ShowCursor (TRUE); */
-  BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);
+  BoxGeometry (frame, x, y, *width, *height, xr, yr);
 #else  /* _WINDOWS */
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
   if (xmin == xmax)
@@ -2739,7 +2775,7 @@ int                 percentH;
 	  if ((dl != 0) || (dh != 0))
 	    {
 	      /* switch off the old box */
-	      BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);
+	      BoxGeometry (frame, x, y, *width, *height, xr, yr);
 	      /* is there any dependence between height and width */
 	      *width += dl;
 	      *height += dh;
@@ -2750,7 +2786,7 @@ int                 percentH;
 	      x += dx;
 	      y += dy;
 	      /* switch on the new one */
-	      BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);
+	      BoxGeometry (frame, x, y, *width, *height, xr, yr);
 	    }
 
 	  /* Should we move the cursor */
@@ -2769,7 +2805,7 @@ int                 percentH;
     }
 
   /* Erase the box drawing */
-  BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);
+  BoxGeometry (frame, x, y, *width, *height, xr, yr);
 
   /* restore the previous state of the Thot Library */
   ThotUngrab ();
