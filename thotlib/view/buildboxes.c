@@ -4640,7 +4640,21 @@ void CheckScrollingWidth (int frame)
     }
 }
 
-
+void InitTable (int i, PtrDocument pDoc)
+{
+  ViewFrame          *pFrame;
+	
+	/* initialize visibility and zoom for the window */
+  /* cf. procedure InitializeFrameParams */
+  pFrame = &ViewFrameTable[i - 1];
+  pFrame->FrVisibility = 5;	/* visibilite mise a 5 */
+  pFrame->FrMagnification = 0;	/* zoom a 0 */
+  
+  /* initialize frames tabe because it's used by display functions */
+  FrameTable[i].FrDoc = IdentDocument (pDoc);
+  FrameTable[i].FrView = i;
+  RemoveClipping(i);
+}
 /*----------------------------------------------------------------------
    ChangeConcreteImage traite la mise a jour d'une hierachie de paves 
    Pendant la creation d'une arborescence de boites on     
@@ -4666,7 +4680,7 @@ void CheckScrollingWidth (int frame)
   ----------------------------------------------------------------------*/
 ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 {
-   Document            document;
+   int            documentnb;
    PtrAbstractBox      pParentAb;
    PtrAbstractBox      pChildAb;
    ViewFrame          *pFrame;
@@ -4678,15 +4692,15 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
    int                 savevisu = 0;
    int                 savezoom = 0;
    ThotBool            change;
-   ThotBool            result;
+   ThotBool            result = TRUE;
    ThotBool            lock = TRUE;
 
 #ifdef _WINDOWS
      WIN_GetDeviceContext (frame);
 #endif /* _WINDOWS */
-   result = TRUE;
-   document = FrameTable[frame].FrDoc;
-   if (document == 0)
+
+   documentnb = FrameTable[frame].FrDoc;
+   if (documentnb == 0)
      return result;
 
    pLine = NULL;
@@ -4711,7 +4725,7 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_OLD_VIEW_NOT_REPLACED);
 	/* Dans les autres cas */
 	/* nothing to be done if in mode NoComputedDisplay */
-	else if (documentDisplayMode[document - 1] != NoComputedDisplay)
+	else if (documentDisplayMode[documentnb - 1] != NoComputedDisplay)
 	  {
 	     /* Traitement de la premiere creation */
 	     if (pFrame->FrAbstractBox == NULL)
@@ -4727,9 +4741,9 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 		  pFrame->FrSelectShown = FALSE;
 	       }
 
-	     saveMode = documentDisplayMode[document - 1];
+	     saveMode = documentDisplayMode[documentnb - 1];
 	     if (saveMode == DisplayImmediately)
-	       documentDisplayMode[document - 1] = DeferredDisplay;
+	       documentDisplayMode[documentnb - 1] = DeferredDisplay;
 
 	     /* On prepare le traitement de l'englobement apres modification */
 	     pFrame->FrReady = FALSE;	/* La frame n'est pas affichable */
@@ -4869,7 +4883,7 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 
 	     /* restore the current mode and  update tables if necessary */
 	     if (saveMode == DisplayImmediately)
-	       documentDisplayMode[document - 1] = saveMode;
+	       documentDisplayMode[documentnb - 1] = saveMode;
 	      if (!lock)
 		/* unlock table formatting */
 		(*ThotLocalActions[T_unlock]) ();

@@ -44,13 +44,16 @@
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+
 #include "boxes_tv.h"
 #include "font_tv.h"
 #include "platform_tv.h"
 #include "thotcolor.h"
 #include "thotcolor_tv.h"
+
 #undef THOT_EXPORT
 #define THOT_EXPORT
+
 #include "select_tv.h"
 #include "page_tv.h"
 #include "modif_tv.h"
@@ -243,8 +246,10 @@ BOOL PASCAL InitPrinting(HDC hDC, HWND hWnd, HANDLE hInst, LPSTR msg)
 
   if (!(GHwnAbort = CreateDialog (hInst, "Printinprogress", WIN_Main_Wd,
 				    (DLGPROC) AbortDlgProc)))
+  {
+	 
     WinErrorBox (WIN_Main_Wd, "InitPrinting: DE_LANG");
-
+  }
   SetAbortProc (TtPrinterDC, AbortProc);
   memset(&DocInfo, 0, sizeof(DOCINFO));
   DocInfo.cbSize      = sizeof(DOCINFO);
@@ -646,7 +651,6 @@ void GetDocAndView (int frame, PtrDocument *pDoc, int *view)
   ----------------------------------------------------------------------*/
 static int OpenPSFile (PtrDocument pDoc, int *volume)
 {
-  ViewFrame          *pFrame;
 #ifndef _WINDOWS
   FILE               *PSfile;
   char              tmp[MAX_PATH];
@@ -1414,16 +1418,8 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
     }
 #endif /* _WINDOWS */
 
-  /* initialize visibility and zoom for the window */
-  /* cf. procedure InitializeFrameParams */
-  pFrame = &ViewFrameTable[i - 1];
-  pFrame->FrVisibility = 5;	/* visibilite mise a 5 */
-  pFrame->FrMagnification = 0;	/* zoom a 0 */
-  
-  /* initialize frames tabe because it's used by display functions */
-  FrameTable[i].FrDoc = IdentDocument (pDoc);
-  FrameTable[i].FrView = i;
-  RemoveClipping(i);
+  InitTable (i, pDoc);
+
   *volume = 16000;
   return (i);
 }
@@ -1437,7 +1433,7 @@ static void ClosePSFile (int frame)
 
   PSfile = (FILE *) FrRef[frame];
   /* Est-ce la fenetre principale ? */
-  if (frame == 1)
+  if (frame == 1 && PSfile)
     {
       /* Oui -> on ferme le fichier */
       fprintf (PSfile, "grestore\n%%%%Trailer\n");
@@ -2346,17 +2342,253 @@ void gtk_print_dialog(){
 }
 
 #endif /* _GTK */	    
+
+#ifdef _GLPRINT
+
+#include <windows.h>
+#include "resource.h"
+#include "commdlg.h"
+#include "wininclude.h"
+
+static PRINTDLG     Pdlg;
+static ThotWindow   PrintForm = NULL;
+static ThotBool     LpInitialized = FALSE;
+
+/*----------------------------------------------------------------------
+  TtaGetPrinterDC()
+  Call the Windows print dialogue and returns TRUE is the printer is
+  available. Reuses the previous defined printer when the parameter 
+  reuse is TRUE.
+  Returns the orientation (0 = portrait, 1 = landscape), and the paper
+  format (0 = A4, 1 = US). 
+  ----------------------------------------------------------------------*/
+ThotBool TtaGetPrinterDC (ThotBool reuse, int *orientation, int *paper)
+{
+  LPDEVNAMES  lpDevNames;
+  LPDEVMODE   lpDevMode;
+  LPSTR       lpDriverName, lpDeviceName, lpPortName;
+
+  /* Display the PRINT dialog box. */
+  if (!LpInitialized)
+    {
+      /* initialize the pinter context */
+      memset(&Pdlg, 0, sizeof(PRINTDLG));
+      Pdlg.lStructSize = sizeof(PRINTDLG);
+      Pdlg.nCopies = 1;
+      Pdlg.Flags       = PD_RETURNDC;
+      Pdlg.hInstance   = (HANDLE) NULL;
+      LpInitialized = TRUE;
+    }
+  else if (reuse && Pdlg.hDevNames)
+    {
+      lpDevNames = (LPDEVNAMES) GlobalLock (Pdlg.hDevNames);
+      lpDriverName = (LPSTR) lpDevNames + lpDevNames->wDriverOffset;
+      lpDeviceName = (LPSTR) lpDevNames + lpDevNames->wDeviceOffset;
+      lpPortName = (LPSTR) lpDevNames + lpDevNames->wOutputOffset;
+      GlobalUnlock (Pdlg.hDevNames);
+      if (Pdlg.hDevMode)
+	{
+	  lpDevMode = (LPDEVMODE) GlobalLock (Pdlg.hDevMode);
+	  if (!lpDevMode)
+		  return FALSE;
+		  TtPrinterDC = CreateDC (lpDriverName, lpDeviceName, lpPortName, lpDevMode);
+	  if (lpDevMode->dmOrientation == DMORIENT_LANDSCAPE)
+	    /* landscape */
+	    *orientation = 1;
+	  else
+	    /* portrait */
+	    *orientation = 0;
+	  if (lpDevMode->dmPaperSize == DMPAPER_A4)
+	    /* A4 */
+	    *paper = 0;
+	  else
+	    /* US */
+	    *paper = 1;
+	  GlobalUnlock (Pdlg.hDevMode);
+	  return TRUE;
+	}
+    }
+
+  Pdlg.hwndOwner   = FrRef[0];
+  if (PrintDlg (&Pdlg))
+    {
+      if (Pdlg.hDevMode)
+	{
+	  lpDevMode = (LPDEVMODE) GlobalLock (Pdlg.hDevMode);
+	  if (!lpDevMode)
+		 return FALSE;
+	  if (lpDevMode->dmOrientation == DMORIENT_LANDSCAPE)
+	    /* landscape */
+	    *orientation = 1;
+	  else
+	    /* portrait */
+	    *orientation = 0;
+	  if (lpDevMode->dmPaperSize == DMPAPER_A4)
+	    /* A4 */
+	    *paper = 0;
+	  else
+	    /* US */
+	    *paper = 1;
+	  GlobalUnlock (Pdlg.hDevMode);
+	}
+      TtPrinterDC = Pdlg.hDC;
+      return TRUE;
+    }
+  else
+    {
+      TtPrinterDC = NULL;
+      return FALSE;
+    }
+}
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+int makeArgcArgv (HINSTANCE hInst, char*** pArgv, char* cmdLine)
+{ 
+  int          argc;
+  static char *argv[40];
+  static char  argv0[1024];
+  static char  commandLine [1024];
+  char        *ptr;
+  char         lookFor = 0;
+  enum {
+    nowAt_start, 
+    nowAt_text
+  } nowAt;
+
+  strcpy (commandLine, cmdLine);
+  ptr = commandLine;
+  *pArgv = argv;
+  argc = 0;
+  GetModuleFileName (hInst, (LPTSTR)argv0, sizeof (argv0));
+  argv[argc++] = argv0;
+  for (nowAt = nowAt_start;;)
+    {
+      if (!*ptr) 
+	return (argc);
+      if (lookFor)
+	{
+	  if (*ptr == lookFor)
+	    {
+	      nowAt = nowAt_start;
+	      lookFor = 0;
+	      *ptr = 0;   /* remove the quote */
+	    }
+	  else if (nowAt == nowAt_start)
+	    {
+	      argv[argc++] = ptr;
+	      nowAt = nowAt_text;
+	    }
+	  ptr++;
+	  continue;
+        }
+      if (*ptr == SPACE || *ptr == TAB)
+	{
+	  *ptr = 0;
+	  ptr++;
+	  nowAt = nowAt_start;
+	  continue;
+        }
+      if ((*ptr == '\'' || *ptr == '\"' || *ptr == '`') && nowAt == nowAt_start)
+	{
+	  lookFor = *ptr;
+	  nowAt = nowAt_start;
+	  ptr++;
+	  continue;
+        }
+      if (nowAt == nowAt_start)
+	{
+	  argv[argc++] = ptr;
+	  nowAt = nowAt_text;
+        }
+      ptr++;
+    }
+}
+static void SetupPixelFormatPrintGL (HDC hDC)
+{
+  static PIXELFORMATDESCRIPTOR pfd = 
+    {
+      sizeof(PIXELFORMATDESCRIPTOR),  /* size */
+      1,                              /* version */
+      PFD_DRAW_TO_BITMAP |			  /* Format Must Support Bitmap*/
+      PFD_SUPPORT_OPENGL |
+      PFD_SUPPORT_GDI, 		  /* Format Must Support OpenGL*/         
+      PFD_TYPE_RGBA,                  /* color type */
+      32,                             /* prefered color depth */
+      0, 0, 0, 0, 0, 0,               /* color bits (ignored) */
+      1,                              /* alpha buffer */
+      0,                              /* alpha bits (ignored) */
+      0,                              /* no accumulation buffer */
+      0, 0, 0, 0,                     /* accum bits (ignored) */
+      0,                              /* depth buffer */
+      1,                              /* stencil buffer */
+      0,                              /* no auxiliary buffers */
+      PFD_MAIN_PLANE,                 /* main layer */
+      0,                              /* reserved */
+      0, 0, 0,                        /* no layer, visible, damage masks */
+    };
+  int pixelFormat;	
+	HDC hdcurrent;
+
+hdcurrent = CreateDC ("DISPLAY", NULL, NULL, NULL);
+
+  pixelFormat = ChoosePixelFormat (hdcurrent, &pfd);
+  if (pixelFormat == 0) 
+    {
+      MessageBox(WindowFromDC(hDC), "ChoosePixelFormat failed.", "Error",
+		 MB_ICONERROR | MB_OK);
+      exit(1);
+    }
+
+  if (SetPixelFormat(hdcurrent, pixelFormat, &pfd) != TRUE) 
+    {
+	LPVOID lpMsgBuf;
+
+	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | 
+	    FORMAT_MESSAGE_IGNORE_INSERTS,
+	    NULL, GetLastError(),
+	    MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), 
+	    (LPTSTR) &lpMsgBuf,  0,  NULL );
+		MessageBox( NULL, (LPCTSTR)lpMsgBuf, "Error", MB_OK | MB_ICONINFORMATION );
+		LocalFree( lpMsgBuf );
+	    MessageBox(WindowFromDC(hDC), "SetPixelFormat failed.", "Error",
+		 MB_ICONERROR | MB_OK);
+		exit(1);
+    }
+
+  
+DeleteDC(hdcurrent);
+
+#ifdef _TEST
+  if ((pfd.dwFlags & PFD_GENERIC_ACCELERATED) != 0)
+    SetSoftware_Mode (FALSE);/*MCD mini client driver*/
+  else if ((pfd.dwFlags & PFD_GENERIC_FORMAT) != 0)
+    SetSoftware_Mode (TRUE);/*software opengl*/
+  else
+    SetSoftware_Mode (FALSE);/*ICD installable client driver*/
+#endif /*_TEST*/
+}
+#endif /*_GLPRINT*/
+
+
 /*----------------------------------------------------------------------
    Main program                                                           
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
 DLLEXPORT void PrintDoc (HWND hWnd, int argc, char **argv, HDC PrinterDC,
 			 ThotBool isTrueColors, int depth, char *tmpDocName,
 			 char *tmpDir, HINSTANCE hInst, ThotBool buttonCmd)
+{
+#else /*_GLPRINT*/
+BOOL PASCAL WinMain (HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCommand, int nShow)
+{ 
+  int        argc;
+  char**   argv;
+#endif /*_WINDOWS_DLL*/
 #else  /* _WINDOWS */
 int main (int argc, char **argv)
-#endif /* _WINDOWS */
 {
+#endif /* _WINDOWS */
   char             *realName = NULL;
   char             *server = NULL;
   char             *pChar = NULL;
@@ -2375,6 +2607,24 @@ int main (int argc, char **argv)
   ThotBool          realNameFound = FALSE;
   ThotBool          viewFound = FALSE;
   ThotBool          done;
+#ifndef _WINDOWS_DLL
+    ThotBool isTrueColors; 
+	int depth; 
+	char *tmpDocName = NULL;
+	char *tmpDir = NULL;
+	ThotBool buttonCmd;
+#ifdef _WINDOWS
+#ifdef _GLPRINT
+  HWND hWnd = NULL;
+  HDC PrinterDC = 0;
+
+  argc = makeArgcArgv (hInst, &argv, lpCommand);
+#endif /*_GLPRINT*/
+#endif /*_WINDOWS*/
+#endif /*_WINDOWS_DLL*/
+
+
+
 
   thotWindow       = 0;
   removeDirectory = FALSE;
@@ -2420,14 +2670,12 @@ int main (int argc, char **argv)
 #ifdef _GTK
   /* Initialization of gtk libraries */
   gtk_init_check (&argc, &argv);
-
 #ifdef _GL
    /* init an offscreen rendering context 
     in order to use OpenGL drawing results 
    as a base for printing. */
    GetGLContext ();
 #endif /* _GL */
-
   gtk_print_dialog ();
 #endif /* _GTK */
 
@@ -2647,12 +2895,25 @@ int main (int argc, char **argv)
   FirstFrame (server);
 
 #ifdef _WINDOWS 
-  if (!PrinterDC)
+
+#ifndef _WINDOWS_DLL
+  {	  
+	int k, l;
+	ThotBool reuse = FALSE;
+
+	if (!TtaGetPrinterDC (reuse, &k, &l))
   {
 	  TtaFreeMemory (realName);
 	  return;
   }
-  TtPrinterDC = PrinterDC;
+
+   SetupPixelFormatPrintGL (TtPrinterDC);
+  }
+#else
+	if(PrinterDC)
+		TtPrinterDC = PrinterDC;
+#endif /*_GLPRINT*/
+
   TtIsTrueColor = isTrueColors;
   TtWDepth = depth;
   TtWPrinterDepth = GetDeviceCaps (TtPrinterDC, PLANES);
@@ -2667,7 +2928,12 @@ int main (int argc, char **argv)
      DOT_PER_INCH = 72;
   else 
      DOT_PER_INCH = PrinterDPI;
-  WIN_Main_Wd = hWnd;
+#ifdef _WINDOWS_DLL
+	WIN_Main_Wd = hWnd;
+#else/*_WINDOWS_DLL*/
+	WIN_Main_Wd = NULL;
+#endif /*_WINDOWS_DLL*/
+
   buttonCommand = buttonCmd;
 #else /* _WINDOWS */
   DOT_PER_INCH = 90;
@@ -2773,9 +3039,13 @@ int main (int argc, char **argv)
 	DeleteFile (cmd);
       else
 	{
+#ifdef _WINDOWS_DLL
 	  sprintf (name, "%s\\%s.PIV", tmpDir, tmpDocName); 
+#endif /*_WINDOWS_DLL*/ 
 	  DeleteFile (name);
-	  length = strlen (tmpDir);
+	  if (tmpDir)
+	  {
+		length = strlen (tmpDir);
 	  /* remove CSS files in the temporary directory */
 	  for (i = 0; i < cssCounter; i++)
 	    {
@@ -2787,12 +3057,11 @@ int main (int argc, char **argv)
 	    }
 	  if (rmdir (tempDir))
 	    WinErrorBox (NULL, "PrintDoc (4)");
+	  }
       }
 #else  /* _WINDOWS */
       sprintf (cmd, "/bin/rm -rf %s\n", tempDir);
-      
-      /* system (cmd); */
-
+	  system (cmd);
 #endif /* _WINDOWS */
     }
    TtaFreeMemory (realName);

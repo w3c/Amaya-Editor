@@ -93,7 +93,8 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 		   char *viewsToPrint, char *cssToPrint, Document document)
 {
    char                   *ptr;
-#ifdef _WINDOWS
+
+#ifdef _WINDOWS_DLL
    HINSTANCE               hLib;
    /* FARPROC                 ptrMainProc; */
    typedef void (*MYPROC)(HWND, int, char **, HDC, ThotBool,
@@ -103,16 +104,16 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    char                    tmp[MAX_TXT_LEN];
    char                   *printArgv [100];
    int                     printArgc = 0;
-#else  /* _WINDOWS */
+#else /* _WINDOWS_DLL */
    char                    cmd[1024];
    int                     res;
-#endif /* _WINDOWS */
+#endif /* _WINDOWS_DLL */
    int                     i, j = 0;
    int                     frame;
 
    /* initialize the print command */
    ptr = TtaGetEnvString ("LANG");
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
    printArgv[printArgc] = TtaGetMemory (strlen (BinariesDirectory) + 7);
    strcpy (printArgv[printArgc], BinariesDirectory);
    strcat (printArgv[printArgc], DIR_STR);
@@ -124,15 +125,18 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    printArgv[printArgc] = TtaGetMemory (strlen (ptr) + 1);
    strcpy (printArgv[printArgc], ptr);
    printArgc++;
-#else /* !_WINDOWS */
+#else /* !_WINDOWS_DLL */
+#ifdef _WINDOWS
+   strcpy (cmd, "thotprinter.exe"); 
+#endif /* !_WINDOWS */
    sprintf (cmd, "%s/print", BinariesDirectory); 
    strcat (cmd, " -lang ");
    strcat (cmd, ptr);
-#endif /* !_WINDOWS */
+#endif /* !_WINDOWS_DLL */
 
    if (thotSch != NULL && thotSch[0] != EOS)
      {
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
        printArgv[printArgc] = TtaGetMemory (5) ;
        strcpy (printArgv[printArgc], "-sch");
        printArgc++;
@@ -145,7 +149,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
        printArgv[printArgc] = TtaGetMemory (strlen (thotDoc) + 1);
        strcpy (printArgv[printArgc], thotDoc);
        printArgc++;
-#else  /* !_WINDOWS */
+#else /* !_WINDOWS */
        strcat (cmd, " -sch ");
        strcat (cmd, thotSch);
        strcat (cmd, " -doc ");
@@ -156,14 +160,14 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    /* transmit the server name */
    if (servername && servername[0] != EOS)
      { 
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
        printArgv[printArgc] = TtaGetMemory (9);
        strcpy (printArgv[printArgc], "-display");
        printArgc++;
        printArgv[printArgc] = TtaGetMemory (strlen (servername) + 1);
        strcpy (printArgv[printArgc], servername);
        printArgc++;
-#else  /* _WINDOWS */
+#else /* !_WINDOWS */
        strcat (cmd, " -display ");
        strcat (cmd, servername);
 #endif /* _WINDOWS */
@@ -172,14 +176,14 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    /* transmit the document name */
    if (realName)
      { 
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
        printArgv[printArgc] = TtaGetMemory (6);
        strcpy (printArgv[printArgc], "-name");
        printArgc++;
        printArgv[printArgc] = TtaGetMemory (strlen (realName) + 10);
        strcpy (printArgv[printArgc], realName);
        printArgc++;
-#else  /* _WINDOWS */
+#else /* _WINDOWS_DLL */
        strcat (cmd, " -name ");
        strcat (cmd, realName);
 #endif /* _WINDOWS */
@@ -188,11 +192,11 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    /* transmit the orientation (default value is portrait) */
    if (userOrientation != 0)
      {
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
        printArgv[printArgc] = TtaGetMemory (11);
        strcpy (printArgv[printArgc], "-landscape");
        printArgc++;
-#else  /* _WINDOWS */
+#else /* _WINDOWS_DLL */
        strcat (cmd, " -landscape");
 #endif /* _WINDOWS */
      }
@@ -200,43 +204,43 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    /* transmit the output command */
    if (PaperPrint)
      {
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
        printArgv[printArgc] = TtaGetMemory (5);
        strcpy (printArgv[printArgc], "-out");
        printArgc++;
-#else  /* _WINDOWS */
+#else /* _WINDOWS_DLL */
        strcat (cmd, " -out \"");
 #endif /* _WINDOWS */
      }
    else
      {
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
        printArgv[printArgc] = TtaGetMemory (4);
        strcpy (printArgv[printArgc], "-ps");
        printArgc++;
-#else  /* _WINDOWS */
+#else /* _WINDOWS_DLL */
        strcat (cmd, " -ps \"");
 #endif /* _WINDOWS */
      }
 
    if (output[0] != EOS)
      {
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
        printArgv[printArgc] = TtaGetMemory (strlen (output) + 1);
        strcpy (printArgv[printArgc], output);
        printArgc++;
-#else  /* _WINDOWS */
+#else /* _WINDOWS_DLL */
        strcat (cmd, output);
        strcat (cmd, "\" ");
 #endif /* _WINDOWS */
      }
    else
      {
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
        printArgv[printArgc] = TtaGetMemory (3);
        strcpy (printArgv[printArgc], "lp");
        printArgc++;
-#else  /* _WINDOWS */
+#else /* _WINDOWS_DLL */
        strcat (cmd, "lp");
        strcat (cmd, "\" ");
 #endif /* _WINDOWS */
@@ -245,76 +249,78 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    /* transmit visualization of empty boxes (default no) */
    if (suppFrame == 0)
      {
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
        printArgv[printArgc] = TtaGetMemory (10);
        strcpy (printArgv[printArgc], "-emptybox");
        printArgc++;
-#else  /* _WINDOWS */
+#else /* _WINDOWS_DLL */
        strcat (cmd, " -emptybox");
-#endif /* _WINDOWS */
+#endif /* _WINDOWS_DLL */;
      }
 
    /* transmit black/white output (default no) */
    if (blackAndWhite != 0)
      {
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
        printArgv[printArgc] = TtaGetMemory (4);
        strcpy (printArgv[printArgc], "-bw");
        printArgc++;
-#else  /* _WINDOWS */
+#else /* _WINDOWS_DLL */
        strcat (cmd, " -bw");
-#endif /* _WINDOWS */
+#endif /* _WINDOWS_DLL */
      }
 
    /* transmit manualfeed (default no) */
    if (manualFeed != 0)
      {
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
        printArgv[printArgc] = TtaGetMemory (12);
        strcpy (printArgv[printArgc], "-manualfeed");
        printArgc++;
-#else  /* _WINDOWS */
+#else /* _WINDOWS_DLL */
        strcat (cmd, " -manualfeed");
-#endif /* _WINDOWS */
+#endif /* _WINDOWS_DLL  */
      }
 
    /* transmit repaginate (default no) */
    if (repaginate != 0)
      {
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
        printArgv[printArgc] = TtaGetMemory (10);
        strcpy (printArgv[printArgc], "-paginate");
        printArgc++;
-#else  /* _WINDOWS */
+#else /* _WINDOWS_DLL */
        strcat (cmd, " -paginate");
-#endif /* _WINDOWS */
+#endif /* _WINDOWS_DLL */
      }
 
    /* transmit page format */
    if (strcmp (PageSize, "A4"))
      {
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
        sprintf (tmp, "-P%s", PageSize);
        printArgv[printArgc] = TtaGetMemory (strlen (PageSize) + 3);
        strcpy (printArgv[printArgc], tmp);
        printArgc++;
-#else  /* _WINDOWS */
+#else /* _WINDOWS_DLL */
        strcat (cmd, " -P");
        strcat (cmd, PageSize);
 #endif /* _WINDOWS */
      }
 
    /* transmit window id */
-#ifndef _WINDOWS 
+
+#ifndef _WINDOWS_DLL
    i = strlen (cmd);
-#endif /* _WINDOWS */
+#endif /*_WINDOWS_DLL*/
+
    if (FrRef[0] != 0)
      {
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
        printArgv[printArgc] = TtaGetMemory (20);
        sprintf (printArgv[printArgc], "-w%ld", FrRef[0]);
        printArgc++;
-#else  /* _WINDOWS */
+#else /* _WINDOWS_DLL */
        sprintf (&cmd[i], " -w%u", (unsigned int) FrRef[0]);
 #endif /* _WINDOWS */
      }
@@ -325,21 +331,21 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 	 frame++;
        if (frame <= MAX_FRAME)
 	 {
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
 	   printArgv[printArgc] = TtaGetMemory (20);
 	   sprintf (printArgv[printArgc], "-w%ld", FrRef[frame]);
 	   printArgc++;
-#else  /* _WINDOWS */
+#else /* _WINDOWS_DLL */
 	   sprintf (&cmd[i], " -w%u", (unsigned int) FrRef[frame]);
 #endif /* _WINDOWS */
 	 }
        else
 	 {
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
 	   printArgv[printArgc] = TtaGetMemory (20);
 	   sprintf (printArgv[printArgc], "-w%ld", FrRef[0]);
 	   printArgc++;
-#else  /* _WINDOWS */
+#else /* _WINDOWS_DLL */
 	   sprintf (&cmd[i], " -w%u", (unsigned int) FrRef[0]);
 #endif /* _WINDOWS */
 	 }
@@ -348,29 +354,29 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    /* transmit values */
    if (nbPagesPerSheet != 1)
      {
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
        printArgv[printArgc] = TtaGetMemory (6);
        strcpy (printArgv[printArgc], "-npps");
        printArgc++;
        printArgv[printArgc] = TtaGetMemory (5);
        sprintf (printArgv[printArgc], "%d", nbPagesPerSheet);
        printArgc++;
-#else  /* _WINDOWS */
+#else /* _WINDOWS_DLL */
        i = strlen (cmd);
        sprintf (&cmd[i], " -npps %d ", nbPagesPerSheet);
-#endif /* _WINDOWS */
+#endif /* _WINDOWS_DLL */
      }
 
    if (firstPage > 1 || lastPage < 999)
      {
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
        printArgv[printArgc] = TtaGetMemory (7);
        sprintf (printArgv[printArgc], "-F%d", firstPage);
        printArgc++;
        printArgv[printArgc] = TtaGetMemory (7);
        sprintf (printArgv[printArgc], "-L%d", lastPage);
        printArgc++;
-#else  /* _WINDOWS */
+#else /* _WINDOWS */
    i = strlen (cmd);
    sprintf (&cmd[i], " -F%d -L%d ", firstPage, lastPage);
 #endif /* _WINDOWS */
@@ -378,11 +384,11 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 
    if (nCopies > 1)
      {
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
        printArgv[printArgc] = TtaGetMemory (8);
        sprintf (printArgv[printArgc], "-#%d", nCopies);
        printArgc++;
-#else  /* _WINDOWS */
+#else /* _WINDOWS */
        i = strlen (cmd);
        sprintf (&cmd[i], " -#%d ", nCopies);
 #endif /* _WINDOWS */
@@ -390,11 +396,11 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 
    if (hShift != 0)
      {
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
        printArgv[printArgc] = TtaGetMemory (7);
        sprintf (printArgv[printArgc], "-H%d", hShift);
        printArgc++;
-#else  /* _WINDOWS */
+#else /* _WINDOWS */
        i = strlen (cmd);
        sprintf (&cmd[i], " -H%d ", hShift);
 #endif /* _WINDOWS */
@@ -402,11 +408,11 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 
    if (vShift != 0)
      {
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
        printArgv[printArgc] = TtaGetMemory (7);
        sprintf (printArgv[printArgc], "-V%d", vShift);
        printArgc++;
-#else  /* _WINDOWS */
+#else /* _WINDOWS */
        i = strlen (cmd);
        sprintf (&cmd[i], " -V%d ", vShift);
 #endif /* _WINDOWS */
@@ -414,11 +420,11 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 
    if (reduction != 100)
      {
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
        printArgv[printArgc] = TtaGetMemory (7);
        sprintf (printArgv[printArgc], "-%%%d", reduction);
        printArgc++;
-#else  /* _WINDOWS */
+#else /* _WINDOWS */
        i = strlen (cmd);
        sprintf (&cmd[i], " -%%%d ", reduction);
 #endif /* _WINDOWS */
@@ -433,12 +439,12 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    if (viewsToPrint[i] != EOS)
      {
        /* insert the flag -v before each view name */
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
        printArgv[printArgc] = TtaStrdup ("-v");
        printArgc++;
        printArgv[printArgc] = TtaGetMemory (50);
        j = 0;
-#else  /* _WINDOWS */
+#else /* _WINDOWS */
        j = strlen (cmd);
        sprintf (&cmd[j], " -v ");
        j = strlen (cmd);
@@ -456,24 +462,24 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 	       if (viewsToPrint[i] != EOS)
 		 {
 		   /* insert the flag -v before each view name */
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
 		   printArgv[printArgc][j++] = EOS;
 		   printArgc++;
 		   printArgv[printArgc] = TtaStrdup ("-v");
 		   printArgc++;
 		   printArgv[printArgc] = TtaGetMemory (50);
 		   j = 0;
-#else  /* _WINDOWS */
+#else /* _WINDOWS */
 		   j = strlen (cmd);
 		   sprintf (&cmd[j], " -v ");
 		   j = strlen (cmd);
-#endif /* _WINDOWS */
+#endif /* _WINDOWS_DLL */
 		 }
 	     }
 	   else
 	     {
 	       /* copy the character */
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
 	       printArgv[printArgc][j++] = viewsToPrint[i];
 #else /* _WINDOWS */
 	       cmd[j++] = viewsToPrint[i];
@@ -483,7 +489,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 	       i++;
 	     }
 	 }
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
        printArgv[printArgc][j] = EOS;
        printArgc++;
 #endif /* _WINDOWS */
@@ -504,7 +510,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 	   else
 	     {
 	       /* insert the flag -cssa or -cssu before each stylesheet name */
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
 	       if (cssToPrint[i] == 'a')
 		 /* it's an author stylesheet */
 		 printArgv[printArgc] = TtaStrdup ("-cssa");
@@ -512,14 +518,14 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 		 /* it's an user stylesheet */
 		 printArgv[printArgc] = TtaStrdup ("-cssu");
 	       printArgc++;
-#else  /* _WINDOWS */
+#else /* _WINDOWSDLL */
 	       j = strlen (cmd);
 	       if (cssToPrint[i] == 'a')
 		 sprintf (&cmd[j], " -cssa ");
 	       else
 		 sprintf (&cmd[j], " -cssu ");
 	       j = strlen (cmd);
-#endif /* _WINDOWS */
+#endif /* _WINDOWS_DLL */
 	       /* skip the flag "a" or "u" */
 	       i++;
 	     }
@@ -529,38 +535,63 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
            if (cssToPrint[i] != EOS)
 	     /* there is a file name after the flag */
 	     {
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
 	       printArgv[printArgc] = TtaGetMemory (50);
-	       j = 0;
-#endif /* _WINDOWS */
+		   j = 0;
+#endif /* _WINDOWS_DLL */
 	       while (cssToPrint[i] != SPACE && cssToPrint[i] != EOS)
 		 {
 		   /* copy the character */
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
 		   printArgv[printArgc][j++] = cssToPrint[i];
 		   printArgv[printArgc][j] = EOS;
-#else /* _WINDOWS */
+#else /* _WINDOWSDLL */
 		   cmd[j++] = cssToPrint[i];
 		   cmd[j] = EOS;
 #endif /* _WINDOWS */
 		   /* process next char */
 		   i++;
 		 }
-#ifdef _WINDOWS
+#ifdef _WINDOWS_DLL
 	       printArgc++;
 #endif /* _WINDOWS */
 	     }
 	 }
      }
    /* transmit the path or source file */
-#ifdef _WINDOWS 
+#ifdef _WINDOWS
+#ifndef _WINDOWS_DLL
+   {
+    STARTUPINFO si;
+    PROCESS_INFORMATION pi;
+
+   cmd[j] = EOS;
+   i = strlen (cmd);
+   sprintf (&cmd[i], " -removedir %s/%s.PIV", dir, name);
+
+    ZeroMemory( &si, sizeof(si) );
+    si.cb = sizeof(si);
+    ZeroMemory( &pi, sizeof(pi) );
+
+	CreateProcess( NULL, // No module name (use command line). 
+        cmd, // Command line. 
+        NULL,             // Process handle not inheritable. 
+        NULL,             // Thread handle not inheritable. 
+        FALSE,            // Set handle inheritance to FALSE. 
+        0,                // No creation flags. 
+        NULL,             // Use parent's environment block. 
+        NULL,             // Use parent's starting directory. 
+        &si,              // Pointer to STARTUPINFO structure.
+        &pi );             // Pointer to PROCESS_INFORMATION structure.
+/* WaitForInputIdle*/
+}
+#else /*_WINDOWSDLL*/
    printArgv[printArgc] = TtaStrdup ("-removedir");
    printArgc++;
    printArgv[printArgc] = TtaGetMemory (strlen (dir) + strlen (name) + 6);
    sprintf  (printArgv[printArgc], "%s\\%s.PIV", dir, name);
    printArgc++;
    /*WIN_ReleaseDeviceContext ();*/
-
    hLib = LoadLibrary ("thotprinter");
    if (!hLib)
       return /* FATAL_EXIT_CODE */;
@@ -577,6 +608,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    (ptrMainProc) (FrRef[frame], printArgc, printArgv,
 		TtPrinterDC, TtIsTrueColor, 
 		TtWDepth, name, dir, hInstance, buttonCommand);
+
    FreeLibrary (hLib);
 
    EnableWindow (FrRef[frame], TRUE);
@@ -584,10 +616,11 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    for (i = 0; i < printArgc; i++)
        TtaFreeMemory (printArgv[i]);
    if (TtPrinterDC)
-     {
+   { 
        DeleteDC (TtPrinterDC);
        TtPrinterDC = (HDC) 0;
      }
+#endif /*_WINDOWSDLL*/
 #else /* !_WINDOWS */
    cmd[j] = EOS;
    i = strlen (cmd);
@@ -751,6 +784,7 @@ void TtaGetPrintNames (char **printDocName, char **printDirName)
 }
 
 #ifdef _WINDOWS
+
 /*----------------------------------------------------------------------
   TtaGetPrinterDC()
   Call the Windows print dialogue and returns TRUE is the printer is
@@ -788,7 +822,7 @@ ThotBool TtaGetPrinterDC (ThotBool reuse, int *orientation, int *paper)
 	  lpDevMode = (LPDEVMODE) GlobalLock (Pdlg.hDevMode);
 	  if (!lpDevMode)
 		  return FALSE;
-	  TtPrinterDC = CreateDC (lpDriverName, lpDeviceName, lpPortName, lpDevMode);
+		  TtPrinterDC = CreateDC (lpDriverName, lpDeviceName, lpPortName, lpDevMode);
 	  if (lpDevMode->dmOrientation == DMORIENT_LANDSCAPE)
 	    /* landscape */
 	    *orientation = 1;

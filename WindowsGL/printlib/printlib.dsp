@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MTd /W3 /GR /GX /ZI /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /D "_AMAYA_RELEASE_" /D "STDC_HEADERS" /D "__STDC__" /D "_WIN_PRINT" /D "_I18N_" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_SVGLIB" /D "_SVGANIM" /D "_STIX" /D "_FONTCONFIG" /FD /c
+# ADD CPP /nologo /MTd /W3 /GR /GX /ZI /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /D "_AMAYA_RELEASE_" /D "STDC_HEADERS" /D "__STDC__" /D "_WIN_PRINT" /D "_I18N_" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_SVGLIB" /D "_SVGANIM" /D "_STIX" /D "_FONTCONFIG" /D "_GLPRINT" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
@@ -203,6 +203,14 @@ SOURCE=..\..\thotlib\image\gifhandler.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\glglyph.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\view\glgradient.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\view\glwindowdisplay.c
 # End Source File
 # Begin Source File
@@ -263,6 +271,10 @@ SOURCE=..\..\thotlib\presentation\presvariables.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\view\printgl.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\presentation\pschemaapi.c
 # End Source File
 # Begin Source File
@@ -303,6 +315,10 @@ SOURCE=..\..\thotlib\document\schtrad.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\view\spline.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\dialogue\stix.c
 # End Source File
 # Begin Source File
@@ -312,6 +328,10 @@ SOURCE=..\..\thotlib\tree\structschema.c
 # Begin Source File
 
 SOURCE=..\..\Thotlib\presentation\Style.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\view\tesse.c
 # End Source File
 # Begin Source File
 

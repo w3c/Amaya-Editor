@@ -31,6 +31,9 @@
 #include "undo.h"
 #include "XHTMLbuilder_f.h"
 
+void MovePRule (PRule presRule, Element fromEl, Element toEl, Document doc,
+		ThotBool showBoxAllowed);
+
 /*----------------------------------------------------------------------
   MakeASpan
   if element elem is a text string that is not the single child of a
