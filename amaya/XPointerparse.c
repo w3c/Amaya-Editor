@@ -131,7 +131,7 @@ static void AddChild (XPointerContextPtr ctx, char *node)
   printf ("Adding child %s\n", node);
 #endif
 
-  if (curNode->nodeSize < strlen (node) + 1)
+  if ((unsigned) curNode->nodeSize < strlen (node) + 1)
     {
       if (curNode->node == NULL)
 	{
