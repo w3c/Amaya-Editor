@@ -222,6 +222,7 @@ Section "Amaya" SecAmaya
   File resources\xrc\*.xrc
   SetOutPath "$INSTDIR\amaya\wxdialog"
   File amaya\wxdialog\appicon.ico
+  File amaya\wxdialog\amaya.rc
 
   SetDetailsPrint textonly
   DetailPrint "Installing Amaya schemas"
