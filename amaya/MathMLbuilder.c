@@ -937,16 +937,16 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 							    len+1, &lang); 
 				      script = TtaGetScript (lang);
 #ifdef _I18N_
-				      if (text[i] != 0x222B &&
-					  text[i] != 0x222C &&
-					  text[i] != 0x222D &&
-					  text[i] != 0x222E &&
-					  text[i] != 0x2191 &&
-					  text[i] != 0x2193)
+				      if (text[0] != 0x222B &&
+					  text[0] != 0x222C &&
+					  text[0] != 0x222D &&
+					  text[0] != 0x222E &&
+					  text[0] != 0x2191 &&
+					  text[0] != 0x2193)
 #else
 				      if (script != 'G' ||
-					  (text[i] != 242 && text[i] != 173 &&
-					   text[i] != 175))
+					  (text[0] != 242 && text[0] != 173 &&
+					   text[0] != 175))
 #endif
 					/* not a stretchable symbol */
 					textEl = NULL;
