@@ -847,7 +847,7 @@ void                AddPointInPolyline (PtrTextBuffer firstBuffer, int rank, int
       /* on va ajouter le nouveau point en derniere position */
      {
 	rank = pBuf->BuLength + 1;
-	if (rank > (int)MAX_POINT_POLY)
+	if ((unsigned)rank > MAX_POINT_POLY)
 	   /* le dernier buffer est plein, on en ajoute un */
 	  {
 	     pBuf = NewTextBuffer (pBuf);
@@ -881,7 +881,7 @@ void                AddPointInPolyline (PtrTextBuffer firstBuffer, int rank, int
 		/* on met en tete du buffer le point qui debordait du */
 		/* buffer precedent */
 		pNextBuf->BuPoints[0] = oldSavePoint;
-	     if (pNextBuf->BuLength < (int)MAX_POINT_POLY)
+	     if ((unsigned)pNextBuf->BuLength < MAX_POINT_POLY)
 		/* ce buffer n'est pas plein */
 	       {
 		  /* on arrete les decalages */

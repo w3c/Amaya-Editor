@@ -2725,7 +2725,7 @@ static  LabelString         label;
 				  j = 0;
 				  for (i = 0; i < n; i++)
 				    {
-				      if (j >= (int)MAX_POINT_POLY)
+				      if ((unsigned)j >= MAX_POINT_POLY)
 					/* buffer courant plein */
 					{
 					  pBuf = NewTextBuffer (pBuf);
