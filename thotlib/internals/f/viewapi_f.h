@@ -53,8 +53,8 @@ extern void TtaGiveViewsToOpen ( Document document,
                                  int *nbViews );
 extern STRING TtaGetViewName ( Document document,
                                View view );
-extern ThotBool TtaIsViewOpened ( Document document,
-                                  View view );
+extern ThotBool TtaIsViewOpen ( Document document,
+                                View view );
 extern View TtaGetViewFromName ( Document document,
                                  char* viewName );
 extern void TtaGiveActiveView ( Document * document,
@@ -131,8 +131,8 @@ extern void TtaGiveViewsToOpen (/* Document document,
                                    int *nbViews */);
 extern STRING TtaGetViewName (/* Document document,
                                  View view */);
-extern ThotBool TtaIsViewOpened (/* Document document,
-                                    View view */);
+extern ThotBool TtaIsViewOpen (/* Document document,
+                                  View view */);
 extern View TtaGetViewFromName (/* Document document,
                                    char* viewName */);
 extern void TtaGiveActiveView (/* Document * document,

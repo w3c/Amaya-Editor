@@ -864,7 +864,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
-   TtaIsViewOpened
+   TtaIsViewOpen
 
    Returns TRUE for a open view.
 
@@ -877,9 +877,9 @@ View                view;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            TtaIsViewOpened (Document document, View view)
+ThotBool            TtaIsViewOpen (Document document, View view)
 #else  /* __STDC__ */
-ThotBool            TtaIsViewOpened (document, view)
+ThotBool            TtaIsViewOpen (document, view)
 Document            document;
 View                view;
 #endif /* __STDC__ */

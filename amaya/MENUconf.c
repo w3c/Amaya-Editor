@@ -1844,7 +1844,7 @@ static void      RecalibrateZoom ()
 	{
 	  /* calculate the new zoom for each open view*/
 	  for (view = 1; view < AMAYA_MAX_VIEW_DOC; view++)
-	    if (TtaIsViewOpened (doc, view))
+	    if (TtaIsViewOpen (doc, view))
 	    {
 	      zoom = TtaGetZoom (doc, view);
 	      TtaSetZoom (doc, view, zoom);
@@ -3036,7 +3036,7 @@ Document    doc;
     view = 1;
   else
     view = TtaGetViewFromName (doc, view_name);
-  if (view != 0 && TtaIsViewOpened (doc, view))
+  if (view != 0 && TtaIsViewOpen (doc, view))
     {
       /* get current geometry */
       TtaGetViewXYWH (doc, view, &x, &y, &w, &h);

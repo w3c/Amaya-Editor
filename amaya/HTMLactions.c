@@ -590,7 +590,7 @@ void *context;
 		}
 	      /* show the target element in all views */
 	      for (view = 1; view < 6; view++)
-		if (TtaIsViewOpened (targetDocument, view))
+		if (TtaIsViewOpen (targetDocument, view))
 		  TtaShowElement (targetDocument, view, elFound, 0);
 	    }
 	}
@@ -2110,7 +2110,7 @@ NotifyElement* event;
 		HighLightAttribute = attr;
 		/* Scroll all views where the element appears to show it */
 		for (view = 1; view < 6; view++)
-		  if (TtaIsViewOpened (otherDoc, view))
+		  if (TtaIsViewOpen (otherDoc, view))
 		    {
 		      TtaGiveBoxAbsPosition (otherEl, otherDoc, view, UnPixel,
 					     &x, &y);

@@ -322,7 +322,7 @@ extern void         TtaGiveViewsToOpen (Document document, /*OUT*/ STRING buffer
 extern STRING       TtaGetViewName (Document document, View view);
 
 /*----------------------------------------------------------------------
-   TtaIsViewOpened
+   TtaIsViewOpen
 
    Returns TRUE for a open view.
 
@@ -334,7 +334,7 @@ extern STRING       TtaGetViewName (Document document, View view);
    TRUE or FALSE.
 
   ----------------------------------------------------------------------*/
-extern ThotBool     TtaIsViewOpened (Document document, View view);
+extern ThotBool     TtaIsViewOpen (Document document, View view);
 
 /*----------------------------------------------------------------------
    TtaGetViewFromName
@@ -495,7 +495,7 @@ extern int          TtaGetZoom ( /* Document document, View view */ );
 extern int          TtaIsPSchemaValid ( /* STRING structureName, STRING presentationName */ );
 extern void         TtaGiveViewsToOpen ( /* Document document, STRING buffer, int *nbViews */ );
 extern STRING       TtaGetViewName ( /* Document document, View view */ );
-extern ThotBool     TtaIsViewOpened ( /*Document document, View view */ );
+extern ThotBool     TtaIsViewOpen ( /*Document document, View view */ );
 extern View         TtaGetViewFromName ( /* Document document, char* viewName */ );
 extern void         TtaRaiseView ( /*Document document, View view */ );
 extern void         TtaGiveActiveView ( /* Document *document, View *view */ );

@@ -766,7 +766,7 @@ Document  doc;
 #endif /* ANNOTATIONS */
 
       view = TtaGetViewFromName (document, "Structure_view");
-      if (view != 0 && TtaIsViewOpened (document, view))
+      if (view != 0 && TtaIsViewOpen (document, view))
 	{
 	  TtaSetItemOff (document, view, Edit_, BCut);
 	  TtaSetItemOff (document, view, Edit_, BPaste);
@@ -777,7 +777,7 @@ Document  doc;
 	  TtaSetMenuOff (document, view, Types);
 	}
       view = TtaGetViewFromName (document, "Alternate_view");
-      if (view != 0 && TtaIsViewOpened (document, view))
+      if (view != 0 && TtaIsViewOpen (document, view))
 	{
 	  TtaSetItemOff (document, view, Edit_, BCut);
 	  TtaSetItemOff (document, view, Edit_, BPaste);
@@ -787,7 +787,7 @@ Document  doc;
 	  TtaSetMenuOff (document, view, Types);
 	}
       view = TtaGetViewFromName (document, "Links_view");
-      if (view != 0 && TtaIsViewOpened (document, view))
+      if (view != 0 && TtaIsViewOpen (document, view))
 	{
 	  TtaSetItemOff (document, view, Edit_, BCut);
 	  TtaSetItemOff (document, view, Edit_, BPaste);
@@ -797,7 +797,7 @@ Document  doc;
 	  TtaSetMenuOff (document, view, Types);
 	}
       view = TtaGetViewFromName (document, "Table_of_contents");
-      if (view != 0 && TtaIsViewOpened (document, view))
+      if (view != 0 && TtaIsViewOpen (document, view))
 	{
 	  TtaSetItemOff (document, view, Edit_, BCut);
 	  TtaSetItemOff (document, view, Edit_, BPaste);
@@ -882,7 +882,7 @@ Document  doc;
 #endif /* ANNOTATIONS */
       
       view = TtaGetViewFromName (document, "Structure_view");
-      if (view != 0 && TtaIsViewOpened (document, view))
+      if (view != 0 && TtaIsViewOpen (document, view))
 	{
 	  TtaSetItemOn (document, view, Edit_, BCut);
 	  TtaSetItemOn (document, view, Edit_, BPaste);
@@ -893,7 +893,7 @@ Document  doc;
 	  TtaSetMenuOn (document, view, Types);
 	}
       view = TtaGetViewFromName (document, "Alternate_view");
-      if (view != 0 && TtaIsViewOpened (document, view))
+      if (view != 0 && TtaIsViewOpen (document, view))
 	{
 	  TtaSetItemOn (document, view, Edit_, BCut);
 	  TtaSetItemOn (document, view, Edit_, BPaste);
@@ -903,7 +903,7 @@ Document  doc;
 	  TtaSetMenuOn (document, view, Types);
 	}
       view = TtaGetViewFromName (document, "Links_view");
-      if (view != 0 && TtaIsViewOpened (document, view))
+      if (view != 0 && TtaIsViewOpen (document, view))
 	{
 	  TtaSetItemOn (document, view, Edit_, BCut);
 	  TtaSetItemOn (document, view, Edit_, BPaste);
@@ -913,7 +913,7 @@ Document  doc;
 	  TtaSetMenuOn (document, view, Types);
 	}
       view = TtaGetViewFromName (document, "Table_of_contents");
-      if (view != 0 && TtaIsViewOpened (document, view))
+      if (view != 0 && TtaIsViewOpen (document, view))
 	{
 	  TtaSetItemOn (document, view, Edit_, BCut);
 	  TtaSetItemOn (document, view, Edit_, BPaste);
@@ -1694,19 +1694,19 @@ ThotBool     readOnly;
 	  TtaSetToggleItem (doc, 1, Special, TSectionNumber, FALSE);
 	  /* close the Alternate view if it is open */
 	  altView = TtaGetViewFromName (doc, "Alternate_view");
-	  if (altView != 0 && TtaIsViewOpened (doc, altView))
+	  if (altView != 0 && TtaIsViewOpen (doc, altView))
 	    TtaCloseView (doc, altView);
 	  /* close the Structure view if it is open */
 	  structView = TtaGetViewFromName (doc, "Structure_view");
-	  if (structView != 0 && TtaIsViewOpened (doc, structView))
+	  if (structView != 0 && TtaIsViewOpen (doc, structView))
 	    TtaCloseView (doc, structView);
 	  /* close the Links view if it is open */
 	  linksView = TtaGetViewFromName (doc, "Links_view");
-	  if (linksView != 0 && TtaIsViewOpened (doc, linksView))
+	  if (linksView != 0 && TtaIsViewOpen (doc, linksView))
 	    TtaCloseView (doc, linksView);
 	  /* close the Table_of_contents view if it is open */
 	  tocView = TtaGetViewFromName (doc, "Table_of_contents");
-	  if (tocView != 0 && TtaIsViewOpened (doc, tocView))
+	  if (tocView != 0 && TtaIsViewOpen (doc, tocView))
 	    TtaCloseView (doc, tocView);
 	}
         /* remove the current selection */
@@ -2912,7 +2912,7 @@ View                view;
   TtaSetSensibility (document, view, visibility);
   /* Change visibility threshold in the table of content view if it's open */
   tocView = TtaGetViewFromName (document, "Table_of_contents");
-  if (tocView && TtaIsViewOpened (document, tocView))
+  if (tocView && TtaIsViewOpen (document, tocView))
      TtaSetSensibility (document, tocView, visibility);
 }
 
@@ -3123,7 +3123,7 @@ View                view;
 
    ustrcpy (structureName, TEXT("Structure_view"));  
    structView = TtaGetViewFromName (document, structureName);
-   if (structView != 0 && TtaIsViewOpened (document, structView))
+   if (structView != 0 && TtaIsViewOpen (document, structView))
      TtaRaiseView (document, structView);
    else
      {
@@ -3169,7 +3169,7 @@ View                view;
    altView = TtaGetViewFromName (document, "Alternate_view");
    if (view == altView)
       TtaRaiseView (document, view);
-   else if (altView != 0 && TtaIsViewOpened (document, altView))
+   else if (altView != 0 && TtaIsViewOpen (document, altView))
       TtaRaiseView (document, altView);
    else
      {
@@ -3214,7 +3214,7 @@ View                view;
    linksView = TtaGetViewFromName (document, "Links_view");
    if (view == linksView)
       TtaRaiseView (document, view);
-   else if (linksView != 0 && TtaIsViewOpened (document, linksView))
+   else if (linksView != 0 && TtaIsViewOpen (document, linksView))
       TtaRaiseView (document, linksView);
    else
      {
@@ -3259,7 +3259,7 @@ View                view;
    tocView = TtaGetViewFromName (document, "Table_of_contents");
    if (view == tocView)
       TtaRaiseView (document, view);
-   else if (tocView != 0 && TtaIsViewOpened (document, tocView))
+   else if (tocView != 0 && TtaIsViewOpen (document, tocView))
       TtaRaiseView (document, tocView);
    else
      {
@@ -3314,13 +3314,13 @@ NotifyDialog       *event;
 	/* abort the command and don't let Thot perform normal operation */
 	return TRUE;
 
-   if (structView != 0 && TtaIsViewOpened (document, structView))
+   if (structView != 0 && TtaIsViewOpen (document, structView))
      TtaCloseView (document, structView);
-   if (altView != 0 && TtaIsViewOpened (document, altView))
+   if (altView != 0 && TtaIsViewOpen (document, altView))
      TtaCloseView (document, altView);
-   if (linksView != 0 && TtaIsViewOpened (document, linksView))
+   if (linksView != 0 && TtaIsViewOpen (document, linksView))
      TtaCloseView (document, linksView);
-   if (tocView != 0 && TtaIsViewOpened (document, tocView))
+   if (tocView != 0 && TtaIsViewOpen (document, tocView))
      TtaCloseView (document, tocView);
    /* let Thot perform normal operation */
    return FALSE;
@@ -3475,7 +3475,7 @@ void*     context;
 	 {
 	   /* show the target element in all views */
 	   for (i = 1; i < 4; i++)
-	     if (TtaIsViewOpened (newdoc, i))
+	     if (TtaIsViewOpen (newdoc, i))
 	       TtaShowElement (newdoc, i, elFound, 0);
 	 }
      }
@@ -5374,7 +5374,7 @@ View                view;
    TtaListBoxes (document, view, list);
    fclose (list);
    structView = TtaGetViewFromName (document, "Structure_view");
-   if (structView != 0 && TtaIsViewOpened (document, structView))
+   if (structView != 0 && TtaIsViewOpen (document, structView))
      {
        ustrcpy (localname, TempFileDirectory);
        ustrcat (localname, "/structview.debug");
@@ -5388,7 +5388,7 @@ View                view;
        fclose (list);
      }
    tocView = TtaGetViewFromName (document, "Table_of_contents");
-   if (tocView != 0 && TtaIsViewOpened (document, tocView))
+   if (tocView != 0 && TtaIsViewOpen (document, tocView))
      {
        ustrcpy (localname, TempFileDirectory);
        ustrcat (localname, "/tocview.debug");
