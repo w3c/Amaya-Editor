@@ -1763,7 +1763,8 @@ static void         ShowGraphicsPalette (Document doc, View view)
                    0, NULL, TRUE, 1, 'L', D_DONE);
       TtaNewIconMenu (GraphDialogue + MenuGraph, GraphDialogue + FormGraph, 0,
 		      NULL, 12, mIcons, FALSE);
-      TtaSetMenuForm (GraphDialogue + MenuGraph, 0);
+      /* do not select the entry because it's not necessary */
+      /*TtaSetMenuForm (GraphDialogue + MenuGraph, 0);*/
       TtaSetDialoguePosition ();
     }
   TtaShowDialogue (GraphDialogue + FormGraph, TRUE);

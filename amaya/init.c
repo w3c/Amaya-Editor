@@ -1341,7 +1341,7 @@ void InitFormAnswer (Document document, View view, const char *auth_realm, char 
 		   TtaGetMessage (AMAYA, AM_PASSWORD), NAME_LENGTH, 1, TRUE);
 #else /* _GTK */
    TtaNewPwdForm (BaseDialog + PasswordText, BaseDialog + FormAnswer,
-		  TtaGetMessage (AMAYA, AM_PASSWORD), NAME_LENGTH, 1, FALSE);
+		  TtaGetMessage (AMAYA, AM_PASSWORD), NAME_LENGTH, 1, TRUE);
 #endif /* !_GTK */
    TtaSetTextForm (BaseDialog + NameText, Answer_name);
    TtaSetTextForm (BaseDialog + PasswordText, Answer_password);
@@ -4384,8 +4384,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	 TtaSetTextForm (BaseDialog + PasswordText, Display_password);
 #endif /* !_WINDOWS */
 #else /* _GTK */
-       strncpy (Answer_text, data, MAX_LENGTH);
-       Answer_text[MAX_LENGTH - 1] = EOS;
+       strncpy (Answer_password, data, MAX_LENGTH);
+       Answer_password[MAX_LENGTH - 1] = EOS;
 #endif /* !_GTK */
        break;
        
