@@ -34,6 +34,8 @@
   #include "wxdialog/TitleDlgWX.h"
 #endif /* _WX */
 
+// this global is used to remember the last filter when using a filebrowser
+int g_Last_used_filter = 0;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -148,8 +150,9 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent,
   if (TtaRaiseDialogue (ref))
     return FALSE;
 
-  wxString wx_title   = TtaConvMessageToWX( title );
-  wxString wx_docName = TtaConvMessageToWX( docName );
+  wxString wx_title     = TtaConvMessageToWX( title );
+  wxString wx_docName   = TtaConvMessageToWX( docName );
+  wxString wx_urlToOpen = TtaConvMessageToWX( urlToOpen );
   wxString wx_filter;
 
   if (doc_type == docHTML)
@@ -172,32 +175,10 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent,
   OpenDocDlgWX * p_dlg = new OpenDocDlgWX( ref, parent,
 					   wx_title,
 					   wx_docName,
-					   wx_filter );
-
-  /* - Setup urlbar ------------------------------------------- */
-  /* Append URL from url list to the urlbar */
-  const char *ptr, *ptr1;
-  wxString urltoappend;
-  ptr = urlList;
-  /* function will stop on double EOS */
-  if (urlList)
-    {
-      while (*ptr != EOS)
-	{
-	  ptr1 = ptr;
-	  while (*ptr1 != EOS)
-	      ptr1++;
-	  urltoappend = TtaConvMessageToWX( ptr );
-	  p_dlg->AppendURL( urltoappend );
-	  ptr = ptr1 + 1;
-	}
-    }
-
-  /* the first url in the list is the used one for the current frame */
-  wxString firsturl  = TtaConvMessageToWX( urlList );
-  wxString wx_urlToOpen = TtaConvMessageToWX( urlToOpen );
-  p_dlg->SetCurrentURL( wx_urlToOpen/*firsturl*/ );
-  /* ---------------------------------------------------------- */
+					   BuildWX_URL_List(urlList),
+					   wx_urlToOpen,
+					   wx_filter,
+					   &g_Last_used_filter );
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
       /* the dialog has been sucesfully registred */

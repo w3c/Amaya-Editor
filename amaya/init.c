@@ -2129,23 +2129,29 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
   ----------------------------------------------------------------------*/
 void  OpenDoc (Document doc, View view)
 {
-   if (CanReplaceCurrentDocument (doc, view))
+#ifndef _WX
+     if (CanReplaceCurrentDocument (doc, view))
      {
        /* load the new document */
        DontReplaceOldDoc = FALSE;
        InNewWindow       = FALSE;
+#endif /* _WX */
        /* no specific type requested */
        InitOpenDocForm (doc, view, "",
 			TtaGetMessage (AMAYA, AM_OPEN_DOCUMENT), docText);
+#ifndef _WX
      }
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void OpenDocInNewWindow (Document document, View view)
 {
+#ifndef _WX
   DontReplaceOldDoc = TRUE;
   InNewWindow       = TRUE;
+#endif /* _WX */
   /* no specific type requested */
   InitOpenDocForm (document, view, "",
 		   TtaGetMessage (AMAYA, AM_OPEN_IN_NEW_WINDOW),
@@ -2157,8 +2163,10 @@ void OpenDocInNewWindow (Document document, View view)
   ----------------------------------------------------------------------*/
 void OpenDocInNewTab (Document document, View view)
 {
+#ifndef _WX
   DontReplaceOldDoc = TRUE;
   InNewWindow       = FALSE;
+#endif /* _WX */
   /* no specific type requested */
   InitOpenDocForm (document, view, "",
 		   TtaGetMessage (AMAYA, AM_OPEN_IN_NEW_TAB),
@@ -2171,7 +2179,9 @@ void OpenDocInNewTab (Document document, View view)
 void OpenNew (Document document, View view, int docType, int docProfile)
 {
   /* create a new document */
+#ifndef _WX
   DontReplaceOldDoc = TRUE;
+#endif /* _WX */
   NewFile = TRUE;
   NewDocType = docType;
   NewDocProfile = docProfile;
@@ -5622,6 +5632,14 @@ void CallbackDialogue (int ref, int typedata, char *data)
       if (val == 1)
 	/* Confirm */
 	{
+#ifdef _WX
+	  if ( (CurrentDocument == 0) || /* this is the first loaded doc */
+	       (!InNewWindow && DontReplaceOldDoc) || /* in a new tab */
+	       (InNewWindow) || /* in a new window */
+	       (!DontReplaceOldDoc && CanReplaceCurrentDocument(CurrentDocument, 1)) /* wants to replace the current document */
+	       )
+	    {
+#endif /* _WX */
 	  TtaDestroyDialogue (BaseDialog + OpenForm);
 	  TtaDestroyDialogue (BaseDialog + FileBrowserForm);
 	  if (LastURLName[0] != EOS)
@@ -5631,7 +5649,11 @@ void CallbackDialogue (int ref, int typedata, char *data)
 			    DocumentName);
 	      /* update the list of URLs */
 	      if (NewFile)
+#ifdef _WX
+		InitializeNewDoc (LastURLName, NewDocType, CurrentDocument /*it was 0*/ , NewDocProfile);
+#else /* _WX */
 		InitializeNewDoc (LastURLName, NewDocType, 0, NewDocProfile);
+#endif /* _WX */
 	      /* load an URL */ 
 	      else if (DontReplaceOldDoc)
 		GetAmayaDoc (LastURLName, NULL, 0, 0, (ClickEvent)Loading_method,
@@ -5660,7 +5682,11 @@ void CallbackDialogue (int ref, int typedata, char *data)
 				 TRUE, NULL, NULL);
 		}
 	      else if (NewFile)
+#ifdef _WX
+		InitializeNewDoc (tempfile, NewDocType, CurrentDocument /*it was 0*/, NewDocProfile);
+#else /* _WX */
 		InitializeNewDoc (tempfile, NewDocType, 0, NewDocProfile);
+#endif /* _WX */
 	      else
 		{
 		  if (IsMathMLName (tempfile))
@@ -5709,6 +5735,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
 			  TtaGetMessage (AMAYA, AM_CANNOT_LOAD), "");
 	  NewFile = FALSE;
 	  CurrentDocument = 0;
+#ifdef _WX
+	    }
+#endif /* _WX */
 	}
       else if (val == 2)
 	{
@@ -5741,6 +5770,30 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	  CheckAmayaClosed ();
 	  NewFile = FALSE;
 	}
+      break;
+
+      /* this callback is used to select a destination for the new open document :
+       * 0 = replace current one
+       * 1 = in new tab
+       * 2 = in new window */
+    case OpenLocation:
+      {
+	if (val == 0) /* replace old doc */
+	  {
+	    DontReplaceOldDoc = FALSE;
+	    InNewWindow       = FALSE;
+	  }
+	else if (val == 1) /* in new tab */
+	  {
+	    DontReplaceOldDoc = TRUE;
+	    InNewWindow       = FALSE;
+	  }
+	else if (val == 2) /* in new window */
+	  {
+	    DontReplaceOldDoc = TRUE;
+	    InNewWindow       = TRUE;
+	  }
+      }
       break;
 
     case URLName:

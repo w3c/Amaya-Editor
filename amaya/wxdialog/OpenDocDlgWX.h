@@ -23,26 +23,36 @@ public:
 		wxWindow* parent,
 		const wxString & title,
 		const wxString & docName,
-		const wxString & filter );
+		const wxArrayString & urlList,
+		const wxString & urlToOpen,
+		const wxString & filter,
+		int * p_last_used_filter );
     
   // Destructor.                  
   virtual ~OpenDocDlgWX();
 
-  void AppendURL( const wxString & url );
-  void SetCurrentURL( const wxString & url );
-
 private:
-
-  void OnOpenButton( wxCommandEvent& event );
-  void OnBrowseButton( wxCommandEvent& event );
-  void OnCancelButton( wxCommandEvent& event );
-
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
+  void OnOpenButton( wxCommandEvent& event );
+  void OnClearButton( wxCommandEvent& event );
+  void OnCancelButton( wxCommandEvent& event );
+  void OnDirButton( wxCommandEvent& event );
+  void OnFilenameButton( wxCommandEvent& event );
+  void OnURLSelected( wxCommandEvent& event );
+  void OnText_Filename( wxCommandEvent& event );
+  void OnText_Dir( wxCommandEvent& event );
+  void OnText_Combobox( wxCommandEvent& event );
 
-private:
+
+ private:
+  void UpdateComboboxFromDirAndFilename();
+  void UpdateDirAndFilenameFromString(const wxString & full_path);
+
+ private:
   wxString m_Filter;
-
+  bool     m_LockUpdateFlag;
+  int *    m_pLastUsedFilter;
 };
 
 #endif  //__OPENDOCDLGWX_H__

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
   <object class="wxDialog" name="OpenDocDlgWX">
-    <title></title>
+    <title>*Open/New document*</title>
     <centered>1</centered>
     <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
     <object class="wxBoxSizer">
@@ -10,16 +10,70 @@
         <object class="wxBoxSizer">
           <orient>wxVERTICAL</orient>
           <object class="sizeritem">
-            <object class="wxStaticText" name="wxID_LABEL">
-              <label></label>
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="sizeritem">
+                <object class="wxStaticText" name="wxID_LABEL_FILENAME">
+                  <label>*File name*</label>
+                </object>
+                <flag>wxRIGHT</flag>
+                <border>4</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxTextCtrl" name="wxID_FILENAME"/>
+                <option>1</option>
+                <flag>wxEXPAND</flag>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_BUTTON_FILENAME">
+                  <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
+                </object>
+              </object>
             </object>
-            <flag>wxALL|wxEXPAND</flag>
-            <border>5</border>
+            <flag>wxBOTTOM|wxEXPAND</flag>
+            <border>4</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="sizeritem">
+                <object class="wxStaticText" name="wxID_LABEL_DIR">
+                  <label>*Directory*</label>
+                </object>
+                <flag>wxRIGHT</flag>
+                <border>4</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxTextCtrl" name="wxID_DIR"/>
+                <option>1</option>
+                <flag>wxEXPAND</flag>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_BUTTON_DIR">
+                  <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
+                </object>
+              </object>
+            </object>
+            <flag>wxBOTTOM|wxEXPAND</flag>
+            <border>4</border>
           </object>
           <object class="sizeritem">
             <object class="wxComboBox" name="wxID_COMBOBOX">
               <content/>
+              <size>400,-1</size>
               <focused>1</focused>
+            </object>
+            <flag>wxEXPAND</flag>
+          </object>
+          <object class="sizeritem">
+            <object class="wxRadioBox" name="wxID_RADIOBOX">
+              <label></label>
+              <content>
+                <item>*In new tab*</item>
+                <item>*Repleace current one*</item>
+                <item>*In new window*</item>
+              </content>
+              <style>wxRA_SPECIFY_COLS</style>
             </object>
             <flag>wxEXPAND</flag>
           </object>
@@ -29,29 +83,28 @@
       </object>
       <object class="sizeritem">
         <flag>wxALL|wxALIGN_RIGHT|wxADJUST_MINSIZE</flag>
-        <border>5</border>
         <object class="wxBoxSizer">
           <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
             <flag>wxALL</flag>
             <border>5</border>
-            <object class="wxButton" name="wxID_OPENBUTTON">
-              <label>OPENBUTTON</label>
+            <object class="wxButton" name="wxID_OK">
+              <label>*Open*</label>
               <default>1</default>
             </object>
           </object>
           <object class="sizeritem">
             <flag>wxALL</flag>
             <border>5</border>
-            <object class="wxButton" name="wxID_BROWSEBUTTON">
-              <label>BROWSEBUTTON</label>
+            <object class="wxButton" name="wxID_BUTTON_CLEAR">
+              <label>*Clear*</label>
             </object>
           </object>
           <object class="sizeritem">
             <flag>wxALL</flag>
             <border>5</border>
-            <object class="wxButton" name="wxID_CANCELBUTTON">
-              <label>CANCELBUTTON</label>
+            <object class="wxButton" name="wxID_CANCEL">
+              <label>*Cancel*</label>
             </object>
           </object>
         </object>

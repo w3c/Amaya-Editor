@@ -4024,6 +4024,26 @@
 	<message xml:lang="de">Objekt erzeugen</message>
 	<message xml:lang="ru">яНГДЮРЭ НАЗЕЙР</message>
 </label>
+<label define="AM_DIRECTORY">
+	<message xml:lang="en">Directory</message>
+	<message xml:lang="fr">Répertoire</message>
+</label>
+<label define="AM_FILE">
+	<message xml:lang="en">File</message>
+	<message xml:lang="fr">Fichier</message>
+</label>
+<label define="AM_REPLACECURRENT">
+	<message xml:lang="en">Replace current</message>
+	<message xml:lang="fr">Remplacer le document courant</message>
+</label>
+<label define="AM_INNEWTAB">
+	<message xml:lang="en">In new tab</message>
+	<message xml:lang="fr">Dans un nouvel onglet</message>
+</label>
+<label define="AM_INNEWWINDOW">
+	<message xml:lang="en">In new Window</message>
+	<message xml:lang="fr">Dans une nouvelle fenêtre</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

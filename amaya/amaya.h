@@ -159,8 +159,9 @@ typedef enum _ClickEvent {
 #define RadioSave       50
 #define MimeFormStatus  51
 #define SaveFormStatus  52
+#define OpenLocation    53
 /* do not add items before this entry */
-#define OptionMenu	53
+#define OptionMenu	54
 
 /* MAX_SUBMENUS references reserved for submenus of Option menu */
 /* Do not insert new entries here */
