@@ -682,7 +682,7 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
    char               *tempfile;
    char               *base_url;
    char               *ptr;
-   char               *dir;
+   char               *dir, *name;
    char               *prefix;
    ElemImage          *ctxEl, *ctxPrev;
    ElementType         elType;
@@ -783,26 +783,29 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 	  desc->content_type = TtaStrdup (ptr);
  	ctxEl = desc->elImage;
 	desc->elImage = NULL;
-	while (ctxEl != NULL)
+	while (ctxEl)
 	  {
-	    elType = TtaGetElementType (ctxEl->currentElement);
-
 	    /* the image may be included using either an SRC, an EMBED,
 	       an OBJECT, a use or a tref element */
-	    if (((strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) &&
-		 (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
-		  elType.ElTypeNum == HTML_EL_Embed_ ||
-		  elType.ElTypeNum == HTML_EL_Object)) ||
-		((strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG") == 0) &&
-		 (elType.ElTypeNum == SVG_EL_PICTURE_UNIT ||
-		  elType.ElTypeNum == SVG_EL_use_ ||
-		  elType.ElTypeNum == SVG_EL_tref)))
-	      DisplayImage (doc, ctxEl->currentElement, desc, NULL, ptr);
-	    else if (ctxEl->callback != NULL)
+	    if (ctxEl->callback)
 	      ctxEl->callback(doc, ctxEl->currentElement, desc->tempfile, ctxEl->extra);
-	    /* get image type */
-	    if (desc->imageType == unknown_type)
-	      desc->imageType = TtaGetPictureType (ctxEl->currentElement);
+	    else
+	      {
+		elType = TtaGetElementType (ctxEl->currentElement);
+		name = TtaGetSSchemaName (elType.ElSSchema);
+		if ((strcmp (name, "HTML") == 0 &&
+		      (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
+		       elType.ElTypeNum == HTML_EL_Embed_ ||
+		       elType.ElTypeNum == HTML_EL_Object)) ||
+		     (strcmp (name, "SVG") == 0 &&
+		      (elType.ElTypeNum == SVG_EL_PICTURE_UNIT ||
+		       elType.ElTypeNum == SVG_EL_use_ ||
+		       elType.ElTypeNum == SVG_EL_tref)))
+		  DisplayImage (doc, ctxEl->currentElement, desc, NULL, ptr);
+		/* get image type */
+		if (desc->imageType == unknown_type)
+		  desc->imageType = TtaGetPictureType (ctxEl->currentElement);
+	      }
 	    ctxPrev = ctxEl;
 	    ctxEl = ctxEl->nextElement;
 	    TtaFreeMemory (ctxPrev);
