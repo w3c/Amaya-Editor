@@ -258,8 +258,8 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
    else
      {
 #ifdef _GL
-       /*x -= pFrame->FrXOrg;
-	 y -= pFrame->FrYOrg;*/
+       x -= pFrame->FrXOrg;
+       y -= pFrame->FrYOrg;
 #endif /* _GL */
      pBox = GetLeafBox (endBox, frame, &x, &y, xDelta, yDelta);
      }
@@ -271,7 +271,11 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
 	  {
 	     if (IsTextLeaf (pAb))
 	       {
+#ifndef _GL
 		  x -= pBox->BxXOrg;
+#else /* _GL */
+		  x -= pBox->BxClipX;
+#endif /* _GL */
 		  LocateClickedChar (pBox, extendSel, &pBuffer, &x, &index,
 				     &nChars, &nbbl);
 		  if (LeftExtended && nChars > 0 && nChars <= pBox->BxNChars)
@@ -580,29 +584,31 @@ static void MovingCommands (int code, Document doc, View view,
 			    {
 			      /* moving to the beginning of the current box */
 #ifndef _GL
-			      y = pBox->BxYOrg + (pBox->BxHeight / 2);
 			      x = pBox->BxXOrg + xpos;
-#else /* _GL */
-			      y = pBox->BxClipY + (pBox->BxClipH / 2);
-			      x = pBox->BxClipX + xpos;
-#endif /* _GL */
-			      if (pBox->BxScript == 'A' ||
-				  pBox->BxScript == 'H')
+			      if (pBox->BxScript == 'A' || pBox->BxScript == 'H')
 				x += pBox->BxWidth + 2;
+			      y = pBox->BxYOrg + (pBox->BxHeight / 2);
+#else /* _GL */
+			      x = pBox->BxClipX + xpos + pFrame->FrXOrg;
+			      if (pBox->BxScript == 'A' || pBox->BxScript == 'H')
+				x += pBox->BxClipW + 2;
+			      y = pBox->BxClipY + (pBox->BxClipH / 2) + pFrame->FrYOrg;
+#endif /* _GL */
 			    }
 			  else
 			    {
 			      /* moving to the end of the previous box */
 #ifndef _GL
-			      y = ibox->BxYOrg + (pBox->BxHeight / 2);
 			      x = ibox->BxXOrg;
-#else /* _GL */
-			      y = ibox->BxClipY + (pBox->BxClipH / 2);
-			      x = ibox->BxClipX;
-#endif /* _GL */
-			      if (ibox->BxScript != 'A' &&
-				  ibox->BxScript != 'H')
+			      if (ibox->BxScript == 'A' || ibox->BxScript == 'H')
 				x += ibox->BxWidth + 2;
+			      y = ibox->BxYOrg + (pBox->BxHeight / 2);
+#else /* _GL */
+			      x = ibox->BxClipX + pFrame->FrXOrg;
+			      if (ibox->BxScript != 'A' && ibox->BxScript != 'H')
+				x += ibox->BxClipW + 2;
+			      y = ibox->BxClipY + (pBox->BxClipH / 2) + pFrame->FrYOrg;
+#endif /* _GL */
 			    }
 			  xDelta = -2;
 			  LocateLeafBox (frame, view, x, y, xDelta, 0, pBox, extendSel);
@@ -690,23 +696,13 @@ static void MovingCommands (int code, Document doc, View view,
 			ChangeSelection (frame, pBox->BxAbstractBox, x + 1,
 					 FALSE, TRUE, FALSE, FALSE);
 		      /* show the end of the selection */
-#ifndef _GL
 		      if (pBoxEnd->BxXOrg + pViewSelEnd->VsXPos > pFrame->FrXOrg + w)
-#else /* _GL */
-			if (pBoxEnd->BxClipX + pViewSelEnd->VsXPos > w)
-#endif /* _GL */
 			{
 			  if (FrameTable[frame].FrScrollOrg + FrameTable[frame].FrScrollWidth > pFrame->FrXOrg + w)
 			    TtcScrollRight (doc, view);
 			}
-#ifndef _GL
 		      else if (pBoxEnd->BxXOrg + pViewSelEnd->VsXPos - 4 < pFrame->FrXOrg)
 			HorizontalScroll (frame, pBoxEnd->BxXOrg + pViewSelEnd->VsXPos - 4 - pFrame->FrXOrg, 0);
-#else /* _GL */
-			else if (pBoxEnd->BxClipX + pViewSelEnd->VsXPos - 4 < 0)
-			  HorizontalScroll (frame, pBoxEnd->BxClipX + pViewSelEnd->VsXPos - 4, 0);
-
-#endif /* _GL */
 		    }
 		  else if (pBox->BxNext)
 		    {
@@ -722,24 +718,40 @@ static void MovingCommands (int code, Document doc, View view,
 			  if (pLine && pLine == SearchLine (ibox, frame))
 			    {
 			      /* moving to the end of the current box */
-			      y = pBox->BxYOrg + (pBox->BxHeight / 2);
+#ifndef _GL
 			      x = pBox->BxXOrg;
-			      if (pBox->BxScript != 'A' &&
-				  pBox->BxScript != 'H')
+			      if (pBox->BxScript != 'A' && pBox->BxScript != 'H')
 				x += pBox->BxWidth;
 			      else
 				x -= 2;
+			      y = pBox->BxYOrg + (pBox->BxHeight / 2);
+#else /* _GL */
+			      x = pBox->BxClipX + pFrame->FrXOrg;
+			      if (pBox->BxScript != 'A' && pBox->BxScript != 'H')
+				x += pBox->BxClipW;
+			      else
+				x -= 2;
+			      y = pBox->BxClipY + (pBox->BxClipH / 2) + pFrame->FrYOrg;
+#endif /* _GL */
 			    }
 			  else
 			    {
 			      /* moving to the beginning of the next box */
-			      y = ibox->BxYOrg;
+#ifndef _GL
 			      x = ibox->BxXOrg;
-			      if (ibox->BxScript == 'A' ||
-				  ibox->BxScript == 'H')
+			      if (ibox->BxScript == 'A' || ibox->BxScript == 'H')
 				x += ibox->BxWidth;
 			      else
 				x -= 2;
+			      y = ibox->BxYOrg;
+#else /* _GL */
+			      x = ibox->BxClipX + pFrame->FrXOrg;
+			      if (ibox->BxScript == 'A' || ibox->BxScript == 'H')
+				x += ibox->BxClipW;
+			      else
+				x -= 2;
+			      y = ibox->BxClipY + pFrame->FrYOrg;
+#endif /* _GL */
 			    }
 			  xDelta = 2;
 			  LocateLeafBox (frame, view, x, y, xDelta, 0, pBox, extendSel);
@@ -888,11 +900,7 @@ static void MovingCommands (int code, Document doc, View view,
 		    /* changing from an extension to a simple selection */
 		    ClickX = x - pFrame->FrXOrg;
 		  else
-#ifndef _GL
 		    x = ClickX + pFrame->FrXOrg;
-#else /* _GL */
-		  x += pFrame->FrXOrg;
-#endif /* _GL */
 		}
 	      else
 		RightExtended = TRUE;
@@ -966,11 +974,7 @@ static void MovingCommands (int code, Document doc, View view,
 		    ClickX = x - pFrame->FrXOrg;
 		  else
 		    /* take the original position into account */
-#ifndef _GL
 		    x = ClickX + pFrame->FrXOrg;
-#else /* _GL */
-		  x += pFrame->FrXOrg;
-#endif /* _GL */
 		}
 	      else if (extendSel)
 		LeftExtended = TRUE;

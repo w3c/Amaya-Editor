@@ -2390,7 +2390,7 @@ void TransCallbackDialog (int ref, int typedata, char* data)
       FreeMatchEnv ();
       break;
     case TransForm:
-      if (val == 1 && FormVal > 0)
+      if (val == 1)
 	{
 	  if (menuTrans[FormVal] && menuTrans[FormVal]->MatchSymb)
 	    trans = (strTransDesc *)(menuTrans[FormVal]->MatchSymb->Rule);
@@ -2403,10 +2403,10 @@ void TransCallbackDialog (int ref, int typedata, char* data)
       TtaDestroyDialogue (ref);
       FreeMatchEnv ();
       break;
-    case TransSelect:
-      break;
     case TransEntry:
       FormVal = val;
+      break;
+    default:
       break;
     }
 }
@@ -2597,7 +2597,7 @@ void TransformType (Document doc, View view)
 					      TtaGetViewFrame (doc, 1),
 					      TtaGetMessage (AMAYA, AM_TRANS),
 					      i, menuBuf);
-	  FormVal = 1;
+	  FormVal = 0;
 	  if (created)
 	    TtaShowDialogue (TransBaseDialog + TransForm, TRUE);
 #else /* _WX */
