@@ -6360,11 +6360,7 @@ Document            doc;
    if (DocumentTypes[doc] == docAnnot)
      {
        /* we search the start of HTML document in the annotation struct */
-       elRoot = TtaGetMainRoot (doc);
-       elType = TtaGetElementType (elRoot);
-       elType.ElTypeNum = Annot_EL_Body;
-       elRoot = TtaSearchTypedElement (elType, SearchInTree, elRoot);
-       elRoot = TtaGetFirstChild (elRoot);
+       elRoot = ANNOT_GetHTMLRoot (doc);
        docSSchema = TtaGetSSchema (TEXT("HTML"), doc);
      }
    else
@@ -7247,7 +7243,12 @@ ThotBool            plainText;
 		isHTML = TRUE;
 	      }
 	    LoadUserStyleSheet (doc);
-	    rootElement = TtaGetMainRoot (doc);
+#ifdef ANNOTATIONS
+	    if (DocumentTypes[doc] == docAnnot)
+	      rootElement = ANNOT_GetHTMLRoot (doc); 
+	    else
+#endif /* ANNOTATIONS */
+	      rootElement = TtaGetMainRoot (doc);
 	    /* add the default attribute PrintURL */
 	    attrType.AttrSSchema = DocumentSSchema;
 	    attrType.AttrTypeNum = HTML_ATTR_PrintURL;
@@ -7260,29 +7261,15 @@ ThotBool            plainText;
 	  }
 
 	TtaSetDisplayMode (doc, NoComputedDisplay);
-#ifdef ANNOTATIONS
-	if (DocumentTypes[doc] == docAnnot)
+	/* delete all element except the root element */
+	el = TtaGetFirstChild (rootElement);
+	while (el != NULL)
 	  {
-	    ElementType elType;
+	    oldel = el;
+	    TtaNextSibling (&el);
+	    TtaDeleteTree (oldel, doc);
+	  }
 
-	    /* we search the start of HTML document in the annotation struct */
-	    elType = TtaGetElementType (rootElement);
-	    elType.ElTypeNum = Annot_EL_Body;
-	    el = TtaSearchTypedElement (elType, SearchInTree, rootElement);
-	    rootElement = TtaGetFirstChild (el);
-	  }
-	else
-#endif /* ANNOTATIONS */
-	  {
-	    /* delete all element except the root element */
-	    el = TtaGetFirstChild (rootElement);
-	    while (el != NULL)
-	      {
-		oldel = el;
-		TtaNextSibling (&el);
-		TtaDeleteTree (oldel, doc);
-	      }
-	  }
 	/* save the path or URL of the document */
 	TtaExtractName (pathURL, temppath, tempname);
 	TtaSetDocumentDirectory (doc, temppath);
