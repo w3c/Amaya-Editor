@@ -1663,7 +1663,7 @@ STRING      data;
 		  (data[i] == WC_EOL || data[i] == WC_CR ||
 		   data[i] == WC_TAB || data[i] == WC_SPACE))
 	     i++;
-	   if (data[i] == WC_EOS)
+	   if (data[i] != WC_EOS)
 	     ImmediatelyAfterTag = FALSE;
 	 }
        else
@@ -2542,9 +2542,6 @@ CHAR_T     *attrValue;
 
 /*----------------------------------------------------------------------
    PutMathMLEntity
-   TEMPORARY FUNCTION	     XmlWhiteSpaceHandling (attrValue, XMLcontext.lastElement,
-				    XMLcontext.doc, 0);
-
    A MathML entity has been created by the XML parser.
    Create an attribute EntityName containing the entity name.
   ----------------------------------------------------------------------*/
