@@ -9643,7 +9643,10 @@ ATTRIBUTES
 	CreateBefore(ATTR_ID);
 	CreateBefore(VALUE_ID);
 #ifndef PAGE
-	CreateFirst(Target_gif);
+	if PICTURE_UNIT
+	   CreateBefore(Target_gif);
+	if not PICTURE_UNIT
+	   CreateFirst(Target_gif);
 #endif
 	END;
 

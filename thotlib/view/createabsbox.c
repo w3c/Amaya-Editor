@@ -1396,9 +1396,9 @@ boolean             completeCreator;
   if (ok)
     if (pEl->ElAbstractBox[viewIndex] == NULL)
       ok = FALSE;
-  /* on ne cree pas de pave fils pour un element holophraste' */
+  /* on ne cree pas de pave fils pour un element holophraste' ou une feuille */
   if (ok)
-    if (pEl->ElHolophrast)
+    if (pEl->ElHolophrast || pEl->ElTerminal)
       if (pRCre->PrPresFunction == FnCreateFirst || pRCre->PrPresFunction == FnCreateLast)
 	ok = FALSE;
   /* on ne cree pas de pave de presentation qui soit un frere ou le pere du */

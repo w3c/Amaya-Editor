@@ -189,12 +189,13 @@ PtrAbstractBox      pAb;
 	      }
 	    break;
 	  case LtPicture:
-	    if (!pAb->AbElement->ElTerminal || pAb->AbElement->ElLeafType != LtPicture)
+	    if (pAb->AbPresentationBox)
 	      {
-		/* ce n'est pas un element image */
+		/* c'est une boite de presentation image */
 		FreePictInfo (pAb->AbPictInfo);
 		pAb->AbPictInfo = NULL;
 	      }
+	    break;
 	  case LtCompound:
 	    if (pAb->AbPictBackground != NULL)
 	      {

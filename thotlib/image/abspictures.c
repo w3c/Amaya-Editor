@@ -40,10 +40,10 @@
    procedure commence par creer le descripteur.            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                NewPictInfo (PtrAbstractBox ppav, char *filename, int imagetype)
+void                NewPictInfo (PtrAbstractBox pAb, char *filename, int imagetype)
 #else  /* __STDC__ */
-void                NewPictInfo (ppav, filename, imagetype)
-PtrAbstractBox      ppav;
+void                NewPictInfo (pAb, filename, imagetype)
+PtrAbstractBox      pAb;
 char               *filename;
 int                 imagetype;
 #endif /* __STDC__ */
@@ -58,38 +58,39 @@ int                 imagetype;
   else
     picPresent = ReScale;
 
-  if (ppav->AbElement->ElTerminal && ppav->AbElement->ElLeafType == LtPicture)
+  if (!pAb->AbPresentationBox &&
+      pAb->AbElement->ElTerminal && pAb->AbElement->ElLeafType == LtPicture)
     {
-      /* image element -> attach the element descriptor to abtract box */
-      image = (PictInfo *) ppav->AbElement->ElPictInfo;
+      /* image element -> attach the element descriptor to the abtract box */
+      image = (PictInfo *) pAb->AbElement->ElPictInfo;
       if (image == NULL)
 	  {
 	    /* Create the element descriptor */
 	    image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
-	    ppav->AbElement->ElPictInfo = (int *) image;
+	    pAb->AbElement->ElPictInfo = (int *) image;
 	  }
       else
 	/* don't reset the presentation value */
 	picPresent = image->PicPresent;
 
-      ppav->AbPictInfo = ppav->AbElement->ElPictInfo;
+      pAb->AbPictInfo = pAb->AbElement->ElPictInfo;
       if (filename == NULL)
 	{
 	  GetTextBuffer (&pBuffer);
-	  ppav->AbElement->ElText = pBuffer;
+	  pAb->AbElement->ElText = pBuffer;
 	  ptr = &pBuffer->BuContent[0];
 	}
       else
 	ptr = filename;
      }
-   else if (ppav->AbPresentationBox)
+   else if (pAb->AbPresentationBox)
      {
-       /*  It's not an image element -> Create the descriptor */
-      image = (PictInfo *) ppav->AbPictInfo;
+       /*  It's a presentation box -> Create the descriptor */
+      image = (PictInfo *) pAb->AbPictInfo;
       if (image == NULL)
 	{
 	  image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
-	  ppav->AbPictInfo = (int *) image;
+	  pAb->AbPictInfo = (int *) image;
 	}
       else
 	/* don't reset the presentation value */
@@ -97,14 +98,14 @@ int                 imagetype;
 
        ptr = filename;
      }
-   else if (ppav->AbLeafType == LtCompound)
+   else if (pAb->AbLeafType == LtCompound)
      {
-       /*  It's not an image element -> Create the descriptor */
-      image = (PictInfo *) ppav->AbPictBackground;
+       /*  It's a background image -> Create the descriptor */
+      image = (PictInfo *) pAb->AbPictBackground;
       if (image == NULL)
 	{
 	  image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
-	  ppav->AbPictBackground = (int *) image;
+	  pAb->AbPictBackground = (int *) image;
 	}
       else
 	{

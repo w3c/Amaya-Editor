@@ -1616,7 +1616,7 @@ View                view;
   TtaSetSensibility (document, view, visibility);
   /* Change visibility threshold in the table of content view if it's open */
   tocView = TtaGetViewFromName (document, "Table_of_contents");
-  if (TtaIsViewOpened (document, tocView))
+  if (tocView && TtaIsViewOpened (document, tocView))
      TtaSetSensibility (document, tocView, visibility);
 }
 
