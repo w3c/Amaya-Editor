@@ -18,42 +18,6 @@
 #include "HTMLhistory_f.h"
 #include "init_f.h"
 
-char               *CSSHistory[CSS_HISTORY_SIZE];
-char               *HTMLHistory[CSS_HISTORY_SIZE];
-int                 CSSHistoryIndex = -1;
-int                 HTMLHistoryIndex = -1;
-
-#ifdef AMAYA_DEBUG
-#define MSG(msg) fprintf(stderr,msg)
-#else
-static char        *last_message = NULL;
-
-#define MSG(msg) last_message = msg
-#endif
-
-/*----------------------------------------------------------------------
-   IsLoaded                                                       
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static int          IsLoaded (char *url)
-#else
-static int          IsLoaded (url)
-char               *url;
-
-#endif
-{
-   int                 d;
-
-   if (url == NULL)
-      return (TRUE);
-   for (d = 0; d < DocumentTableLength; d++)
-      if (DocumentURLs[d] != NULL)
-	 if (!strcmp (DocumentURLs[d], url))
-	    return (TRUE);
-   return (FALSE);
-}
-
 /*----------------------------------------------------------------------
    GotoPreviousHTML                                               
   ----------------------------------------------------------------------*/
@@ -67,45 +31,47 @@ View                view;
 
 #endif
 {
-   int                 i;
+   int                 prev, i;
    char               *url = NULL;
-   int                 base = HTMLHistoryIndex;
 
-   if (HTMLHistoryIndex < 0)
+   if (DocHistoryIndex[doc] < 0)
       return;
-   if (HTMLHistoryIndex >= HTML_HISTORY_SIZE)
+   if (DocHistoryIndex[doc] >= DOC_HISTORY_SIZE)
       return;
    if ((doc < 0) || (doc >= DocumentTableLength))
       return;
 
-   do
-     {
-	if (HTMLHistoryIndex == 0)
-	  {
-	     for (i = HTML_HISTORY_SIZE - 1; i >= 0; i--)
-	       {
-		  if (HTMLHistory[i] != NULL)
-		    {
-		       HTMLHistoryIndex = i;
-		       url = HTMLHistory[i];
-		       break;
-		    }
-	       }
-	  }
-	else
-	  {
-	     HTMLHistoryIndex--;
-	     url = HTMLHistory[HTMLHistoryIndex];
-	  }
-	if (!IsLoaded (url))
-	   break;
-	else
-	   url = NULL;
-     }
-   while (base != HTMLHistoryIndex);
-   if (url != NULL)
+   prev = DocHistoryIndex[doc];
+   if (prev ==  0)
+      prev = DOC_HISTORY_SIZE - 1;
+   else
+      prev--;
+   if (DocHistory[doc][prev] == NULL)
+      return;
 
-      (void) GetHTMLDocument (url, NULL, doc, doc, DC_FALSE);
+   /* set the Forward button on if the next document is the last one
+      in the history */
+   i = DocHistoryIndex[doc];
+   i++;
+   i %= DOC_HISTORY_SIZE;
+   if (DocHistory[doc][i] == NULL)
+      SetArrowButton (doc, FALSE, TRUE);
+
+   /* set the Back button off if there is no document before the previous one*/
+   i = prev;
+   if (i ==  0)
+      i = DOC_HISTORY_SIZE - 1;
+   else
+      i--;
+   if (DocHistory[doc][i] == NULL)
+      /* there is no document before the previous one */
+      /* set the Back button OFF */
+      SetArrowButton (doc, TRUE, FALSE);
+
+   /* load the previous document */
+   DocHistoryIndex[doc] = prev;
+   url = DocHistory[doc][prev];
+   (void) GetHTMLDocument (url, NULL, doc, doc, DC_FALSE, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -122,83 +88,56 @@ View                view;
 #endif
 {
    char               *url = NULL;
-   int                 base = HTMLHistoryIndex;
+   int		       next, i;
 
-   if (HTMLHistoryIndex < 0)
+   if (DocHistoryIndex[doc] < 0)
       return;
-   if (HTMLHistoryIndex >= HTML_HISTORY_SIZE)
+   if (DocHistoryIndex[doc] >= DOC_HISTORY_SIZE)
       return;
    if ((doc < 0) || (doc >= DocumentTableLength))
       return;
 
-   do
-     {
-	url = HTMLHistory[HTMLHistoryIndex];
-	HTMLHistoryIndex++;
-	HTMLHistoryIndex %= HTML_HISTORY_SIZE;
-	if (!IsLoaded (url))
-	   break;
-	else
-	   url = NULL;
-     }
-   while (base != HTMLHistoryIndex);
-   if (url != NULL)
-      (void) GetHTMLDocument (url, NULL, doc, doc, DC_FALSE);
+   /* next entry in history */
+   next = DocHistoryIndex[doc] + 1;
+   next %= DOC_HISTORY_SIZE;
+   if (DocHistory[doc][next] == NULL)
+      return;
+
+   /* set the Back button on if it is off */
+   i = DocHistoryIndex[doc];
+   if (i ==  0)
+      i = DOC_HISTORY_SIZE - 1;
+   else
+      i--;
+   if (DocHistory[doc][i] == NULL)
+      /* there is no document before the current one. The Back button is
+         normally OFF */
+      /* set the Back button ON */
+      SetArrowButton (doc, TRUE, TRUE);
+
+   /* set the Forward button off if the next document is the last one
+      in the history */
+   i = next;
+   i++;
+   i %= DOC_HISTORY_SIZE;
+   if (DocHistory[doc][i] == NULL)
+      SetArrowButton (doc, FALSE, FALSE);
+
+   /* load the next document */
+   DocHistoryIndex[doc] = next;
+   url = DocHistory[doc][DocHistoryIndex[doc]];
+   (void) GetHTMLDocument (url, NULL, doc, doc, DC_FALSE, FALSE);
 }
 
 /*----------------------------------------------------------------------
-   AddCSSHistory                                                      
+   AddDocHistory                                                 
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                AddCSSHistory (CSSInfoPtr css)
+void                AddDocHistory (Document doc, char *url)
 #else  /* __STDC__ */
-void                AddCSS (css)
-CSSInfoPtr          css;
-
-#endif /* __STDC__ */
-{
-   int                 i;
-
-   if (!css)
-      return;
-   if (!css->url)
-      return;
-   if (css->category == CSS_DOCUMENT_STYLE)
-      return;
-
-   /* initialize the history if necessary */
-   if (CSSHistoryIndex == -1)
-     {
-	for (i = 0; i < CSS_HISTORY_SIZE; i++)
-	   CSSHistory[i] = NULL;
-	CSSHistoryIndex = 0;
-     }
-   /* history lookup to store unique URL's */
-   for (i = 0; i < CSS_HISTORY_SIZE; i++)
-     {
-	if (!CSSHistory[i])
-	   break;
-	if (strcmp (CSSHistory[i], css->url) != 0)
-	   return;
-     }
-   /* store the CSS url */
-   if (CSSHistory[CSSHistoryIndex])
-      TtaFreeMemory (CSSHistory[CSSHistoryIndex]);
-   CSSHistory[CSSHistoryIndex] = TtaStrdup (css->url);
-   CSSHistoryIndex++;
-   CSSHistoryIndex %= CSS_HISTORY_SIZE;
-
-}
-
-/*----------------------------------------------------------------------
-   AddHTMLHistory                                                 
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                AddHTMLHistory (char *url)
-#else  /* __STDC__ */
-void                AddHTMLHistory (url)
+void                AddDocHistory (doc, url)
+Document	    doc;
 char               *url;
 
 #endif /* __STDC__ */
@@ -207,82 +146,52 @@ char               *url;
 
    if (!url)
       return;
+   if (*url == '\0')
+      return;
 
    /* initialize the history if necessary */
-   if ((HTMLHistoryIndex < 0) || (HTMLHistoryIndex >= HTML_HISTORY_SIZE))
+   if ((DocHistoryIndex[doc] < 0) || (DocHistoryIndex[doc] >= DOC_HISTORY_SIZE))
      {
-	for (i = 0; i < HTML_HISTORY_SIZE; i++)
-	   HTMLHistory[i] = NULL;
-	HTMLHistoryIndex = HTML_HISTORY_SIZE - 1;
+	for (i = 0; i < DOC_HISTORY_SIZE; i++)
+	   DocHistory[doc][i] = NULL;
+	DocHistoryIndex[doc] = DOC_HISTORY_SIZE - 1;
      }
    /* first check for reinstalling an existing URL */
-   if ((HTMLHistory[HTMLHistoryIndex]) &&
-       (!strcmp (HTMLHistory[HTMLHistoryIndex], url)))
+   if ((DocHistory[doc][DocHistoryIndex[doc]]) &&
+       (!strcmp (DocHistory[doc][DocHistoryIndex[doc]], url)))
       return;
-   /* store the HTML url */
-   HTMLHistoryIndex++;
-   HTMLHistoryIndex %= HTML_HISTORY_SIZE;
-   if (HTMLHistory[HTMLHistoryIndex])
-      TtaFreeMemory (HTMLHistory[HTMLHistoryIndex]);
-   HTMLHistory[HTMLHistoryIndex] = TtaStrdup (url);
-}
 
-/*----------------------------------------------------------------------
-   BuildCSSHistoryList : Build the whole list of CSS in the history  
-  ----------------------------------------------------------------------*/
+   /* set the Back button on if necessary */
+   if (DocHistory[doc][DocHistoryIndex[doc]] != NULL)
+      /* there is a previous document */
+      {
+      i = DocHistoryIndex[doc];
+      if (i ==  0)
+         i = DOC_HISTORY_SIZE - 1;
+      else
+         i--;
+      if (DocHistory[doc][i] == NULL)
+	 /* there is no document before the previous one */
+	 /* The Back button is normally OFF */
+	 /* set the Back button ON */
+         SetArrowButton (doc, TRUE, TRUE);
+      }
 
-#ifdef __STDC__
-int                 BuildCSSHistoryList (Document doc, char *buf, int size, char *first)
-#else  /* __STDC__ */
-int                 BuildCSSHistoryList (doc, buf, size, first)
-Document            doc;
-char               *buf;
-int                 size;
-char               *first;
+   /* store the URL */
+   DocHistoryIndex[doc]++;
+   DocHistoryIndex[doc] %= DOC_HISTORY_SIZE;
+   if (DocHistory[doc][DocHistoryIndex[doc]])
+      TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]]);
+   DocHistory[doc][DocHistoryIndex[doc]] = TtaStrdup (url);
 
-#endif /* __STDC__ */
-{
-   int                 free = size;
-   int                 len;
-   int                 nb = 0;
-   int                 index = 0;
-   int                 i;
-   char               *url;
+   /* delete the next entry in the history */
+   i = DocHistoryIndex[doc];
+   i++;
+   i %= DOC_HISTORY_SIZE;
+   if (DocHistory[doc][i])
+      TtaFreeMemory (DocHistory[doc][i]);
+   DocHistory[doc][i] = NULL;
 
-   /*
-    * ad the first element if specified.
-    */
-   buf[0] = 0;
-   if (first)
-     {
-	strcpy (&buf[index], first);
-	len = strlen (first);
-	len++;
-	free -= len;
-	index += len;
-	nb++;
-     }
-
-   for (i = 0; i < CSS_HISTORY_SIZE; i++)
-     {
-	url = CSSHistory[i];
-	if (!url)
-	   break;
-	len = strlen (url);
-	len++;
-	if (len >= free)
-	  {
-	     MSG ("BuildCSSHistoryList : Too many styles\n");
-	     break;
-	  }
-	strcpy (&buf[index], url);
-	free -= len;
-	index += len;
-	nb++;
-     }
-
-#ifdef DEBUG_CSS
-   fprintf (stderr, "BuildCSSHistoryList : found %d CSS\n", nb);
-#endif
-   return (nb);
+   /* set the Forward button off */
+   SetArrowButton (doc, FALSE, FALSE);
 }

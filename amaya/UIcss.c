@@ -35,7 +35,7 @@ extern CSSInfoPtr   User_CSS;
 extern char        *CSSDocumentName;
 extern char        *CSSDirectoryName;
 extern char        *amaya_save_dir;
-extern boolean         NonPPresentChanged;
+extern boolean      NonPPresentChanged;
 extern int          BaseCSSDialog;
 extern CSSInfoPtr   LCSS;
 extern CSSInfoPtr   RCSS;
@@ -45,15 +45,24 @@ extern int          LListRPIIndex;
 extern int          RListRPIIndex;
 extern PRuleInfoPtr LListRPI;
 extern PRuleInfoPtr RListRPI;
-extern boolean         LListRPIModified;
+extern boolean      LListRPIModified;
+extern char        *CSSHistory[CSS_HISTORY_SIZE];
+extern int          CSSHistoryIndex;
+
 static boolean         RListRPIModified;
 
 #include "css_f.h"
 #include "p2css_f.h"
-#include "HTMLhistory_f.h"
 #include "AHTURLTools_f.h"
 #include "UIcss_f.h"
 
+#ifdef AMAYA_DEBUG
+#define MSG(msg) fprintf(stderr,msg)
+#else
+static char        *last_message = NULL;
+ 
+#define MSG(msg) last_message = msg
+#endif
 
 /*----------------------------------------------------------------------
    InitCSSDialog                                                  
@@ -150,6 +159,66 @@ View                view;
 
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseCSSDialog + FormDeleteCSS, TRUE);
+}
+
+/*----------------------------------------------------------------------
+   BuildCSSHistoryList : Build the whole list of CSS in the history  
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+static int          BuildCSSHistoryList (Document doc, char *buf, int size, char *first)
+#else  /* __STDC__ */
+static int          BuildCSSHistoryList (doc, buf, size, first)
+Document            doc;
+char               *buf;
+int                 size;
+char               *first;
+
+#endif /* __STDC__ */
+{
+   int                 free = size;
+   int                 len;
+   int                 nb = 0;
+   int                 index = 0;
+   int                 i;
+   char               *url;
+
+   /*
+    * ad the first element if specified.
+    */
+   buf[0] = 0;
+   if (first)
+     {
+	strcpy (&buf[index], first);
+	len = strlen (first);
+	len++;
+	free -= len;
+	index += len;
+	nb++;
+     }
+
+   for (i = 0; i < CSS_HISTORY_SIZE; i++)
+     {
+	url = CSSHistory[i];
+	if (!url)
+	   break;
+	len = strlen (url);
+	len++;
+	if (len >= free)
+	  {
+	     MSG ("BuildCSSHistoryList : Too many styles\n");
+	     break;
+	  }
+	strcpy (&buf[index], url);
+	free -= len;
+	index += len;
+	nb++;
+     }
+
+#ifdef DEBUG_CSS
+   fprintf (stderr, "BuildCSSHistoryList : found %d CSS\n", nb);
+#endif
+   return (nb);
 }
 
 /*----------------------------------------------------------------------

@@ -24,7 +24,9 @@
 #include "save.xpm"
 #include "find.xpm"
 #include "Back.xpm"
+#include "BackNo.xpm"
 #include "Forward.xpm"
+#include "ForwardNo.xpm"
 #include "Reload.xpm"
 #include "I.xpm"
 #include "B.xpm"
@@ -80,7 +82,9 @@ static Pixmap       iconB;
 static Pixmap       iconT;
 static Pixmap       iconImage;
 static Pixmap       iconBack;
+static Pixmap       iconBackNo;
 static Pixmap       iconForward;
+static Pixmap       iconForwardNo;
 static Pixmap       iconH1;
 static Pixmap       iconH2;
 static Pixmap       iconH3;
@@ -103,26 +107,28 @@ static Pixmap       iconJava;
 #define stopR        0
 #define stopN        0
 #define iconBack     1
-#define iconForward  2
-#define inconReload  3
-#define inconSave    4
-#define iconPrint    5
-#define iconFind     6
-#define inconI       7
-#define inconB       8
-#define iconT        9
-#define iconCSS     10
-#define inconImage  11
-#define iconH1      12
-#define iconH2      13
-#define iconH3      14
-#define iconBullet  15
-#define iconNum     16
-#define	iconDL      17
-#define iconLink    18
-#define iconTable   19
+#define iconBackNo   2
+#define iconForward  3
+#define iconForwardNo 4
+#define inconReload  5
+#define inconSave    6
+#define iconPrint    7
+#define iconFind     8
+#define inconI       9
+#define inconB       10
+#define iconT        11
+#define iconCSS     12
+#define inconImage  13
+#define iconH1      14
+#define iconH2      15
+#define iconH3      16
+#define iconBullet  17
+#define iconNum     18
+#define	iconDL      19
+#define iconLink    20
+#define iconTable   21
 #ifdef AMAYA_PLUGIN
-#define iconPlugin  20
+#define iconPlugin  22
 #endif AMAYA_PLUGIN
 #endif /* _WINDOWS */
 
@@ -367,6 +373,44 @@ Document            document;
 	 }
 #endif
      }
+}
+
+/*----------------------------------------------------------------------
+  SetArrowButton
+  Change the appearance of the Back (if back == TRUE) or Forward button
+  for a given document.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                SetArrowButton (Document document, boolean back, boolean on)
+#else
+void                SetArrowButton (document, back, on)
+Document            document;
+boolean		    back;
+boolean		    on;
+#endif
+{
+   int		index;
+   Pixmap	picture;
+
+   if (back)
+      {
+      index = 2;
+      if (on)
+	 picture = iconBack;
+      else
+	 picture = iconBackNo;
+      }
+   else
+      {
+      index = 3;
+      if (on)
+	 picture = iconForward;
+      else
+	 picture = iconForwardNo;
+      }
+#ifndef _WINDOWS
+   TtaChangeButton (document, 1, index, picture);
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -700,9 +744,9 @@ View                view;
 #  else /* _WINDOWS */
    CreateOPenDocDlgWindow (TtaGetViewFrame (document, view), docToOpen)	;
    if (InNewWindow)
-      GetHTMLDocument (docToOpen, NULL, 0, 0, DC_FALSE);
+      GetHTMLDocument (docToOpen, NULL, 0, 0, DC_FALSE, TRUE);
    else 
-       GetHTMLDocument (docToOpen, NULL, document, document, DC_FALSE);
+      GetHTMLDocument (docToOpen, NULL, document, document, DC_FALSE, TRUE);
 #  endif /* _WINDOWS */
 }
 
@@ -857,9 +901,9 @@ char               *pathname;
 #        ifndef _WINDOWS
 	     TtaAddButton (doc, 1, stopN, StopTransfer,
 			   TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT));
-	     TtaAddButton (doc, 1, iconBack, GotoPreviousHTML,
+	     TtaAddButton (doc, 1, iconBackNo, GotoPreviousHTML,
 			   TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS));
-	     TtaAddButton (doc, 1, iconForward, GotoNextHTML,
+	     TtaAddButton (doc, 1, iconForwardNo, GotoNextHTML,
 			   TtaGetMessage (AMAYA, AM_BUTTON_NEXT));
 	     TtaAddButton (doc, 1, iconReload, Reload,
 			   TtaGetMessage (AMAYA, AM_BUTTON_RELOAD));
@@ -905,8 +949,8 @@ char               *pathname;
 #        else /* _WINDOWS */
 
 	     TtaAddButton (doc, 1, stopR, StopTransfer, TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT));
-	     TtaAddButton (doc, 1, iconBack, GotoPreviousHTML, TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS));
-	     TtaAddButton (doc, 1, iconForward, GotoNextHTML, TtaGetMessage (AMAYA, AM_BUTTON_NEXT));
+	     TtaAddButton (doc, 1, iconBackNo, GotoPreviousHTML, TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS));
+	     TtaAddButton (doc, 1, iconForwardNo, GotoNextHTML, TtaGetMessage (AMAYA, AM_BUTTON_NEXT));
 	     TtaAddButton (doc, 1, inconReload, Reload, TtaGetMessage (AMAYA, AM_BUTTON_RELOAD));
 	     TtaAddButton (doc, 1, 0, NULL, NULL); /* SEPARATOR */
 
@@ -978,13 +1022,14 @@ char               *pathname;
    stores its path (or URL) into the document table.       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Document     LoadHTMLDocument (Document doc, char *pathname, char *tempfile, char *documentname)
+static Document     LoadHTMLDocument (Document doc, char *pathname, char *tempfile, char *documentname, boolean history)
 #else
-static Document     LoadHTMLDocument (doc, pathname, tempfile, documentname)
+static Document     LoadHTMLDocument (doc, pathname, tempfile, documentname, history)
 Document            doc;
 char               *pathname;
 char               *tempfile;
 char               *documentname;
+boolean		    history;
 
 #endif
 {
@@ -1066,8 +1111,9 @@ char               *documentname;
 	   /* this document is displayed */
 	   TtaSetTextZone (newdoc, 1, 1, s);
 	StartHTMLParser (newdoc, tempdocument, documentname, tempdir, pathname);
-	/* add this URL in history file */
-	AddHTMLHistory (DocumentURLs[newdoc]);
+	if (history)
+	   /* add this URL in history */
+	   AddDocHistory (newdoc, DocumentURLs[newdoc]);
 	TtaFreeMemory (tempdir);
      }
    TtaFreeMemory (tempdocument);
@@ -1142,7 +1188,7 @@ View                view;
      {
         TtaSetCursorWatch (0, 0);
 	/* do we need to control the last slash here? */
-	res = LoadHTMLDocument (newdoc, pathname, tempfile, documentname);
+	res = LoadHTMLDocument (newdoc, pathname, tempfile, documentname, FALSE);
 	W3Loading = 0;		/* loading is complete now */
 	TtaHandlePendingEvents ();
 	/* fetch and display all images referred by the document */
@@ -1420,16 +1466,18 @@ NotifyDialog       *event;
     - doc: the document which can be removed if not updated.
     - baseDoc: the document which documentPath is relative to.
     - DC_event: DC_FORM_POST for a post request, DC_TRUE for a double click.
+    - history: record the URL in the browsing history
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document            GetHTMLDocument (const char *documentPath, char *form_data, Document doc, Document baseDoc, DoubleClickEvent DC_event)
+Document            GetHTMLDocument (const char *documentPath, char *form_data, Document doc, Document baseDoc, DoubleClickEvent DC_event, boolean history)
 #else
-Document            GetHTMLDocument (documentPath, form_data, doc, baseDoc, DC_event)
+Document            GetHTMLDocument (documentPath, form_data, doc, baseDoc, DC_event, history)
 const char         *documentPath;
 char               *form_data;
 Document            doc;
 Document            baseDoc;
 DoubleClickEvent    DC_event;
+boolean		    history;
 
 #endif
 {
@@ -1571,7 +1619,7 @@ DoubleClickEvent    DC_event;
 	       if (toparse != -1)
 		 {
 		   /* do we need to control the last slash here? */
-		   res = LoadHTMLDocument (newdoc, pathname, tempfile, documentname);
+		   res = LoadHTMLDocument (newdoc, pathname, tempfile, documentname, history);
 		   W3Loading = 0;		/* loading is complete now */
 		   if (res == 0)
 		     {
@@ -1774,9 +1822,9 @@ char               *data;
 		 {
 		   /* load an URL */
 		   if (InNewWindow)
-		     GetHTMLDocument (LastURLName, NULL, 0, 0, DC_FALSE);
+		     GetHTMLDocument (LastURLName, NULL, 0, 0, DC_FALSE, TRUE);
 		   else
-		     GetHTMLDocument (LastURLName, NULL, CurrentDocument, CurrentDocument, DC_FALSE);
+		     GetHTMLDocument (LastURLName, NULL, CurrentDocument, CurrentDocument, DC_FALSE, TRUE);
 		 }
 	       else if (DirectoryName[0] != EOS && DocumentName[0] != EOS)
 		 {
@@ -1788,9 +1836,9 @@ char               *data;
 		   if (TtaFileExist (tempfile))
 		     {
 		       if (InNewWindow)
-			 GetHTMLDocument (tempfile, NULL, 0, 0, DC_FALSE);
+			 GetHTMLDocument (tempfile, NULL, 0, 0, DC_FALSE, TRUE);
 		       else
-			 GetHTMLDocument (tempfile, NULL, CurrentDocument, CurrentDocument, DC_FALSE);
+			 GetHTMLDocument (tempfile, NULL, CurrentDocument, CurrentDocument, DC_FALSE, TRUE);
 		     }
 		   else
 		     TtaSetStatus (CurrentDocument, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempfile);
@@ -2173,8 +2221,12 @@ NotifyEvent        *event;
    TtaRegisterPixmap("TeleType", iconT);
    iconBack = TtaCreatePixmapLogo (Back_xpm);
    TtaRegisterPixmap("Back", iconBack);
+   iconBackNo = TtaCreatePixmapLogo (BackNo_xpm);
+   TtaRegisterPixmap("BackNo", iconBackNo);
    iconForward = TtaCreatePixmapLogo (Forward_xpm);
    TtaRegisterPixmap("Forward", iconForward);
+   iconForwardNo = TtaCreatePixmapLogo (ForwardNo_xpm);
+   TtaRegisterPixmap("ForwardNo", iconForwardNo);
    iconH1 = TtaCreatePixmapLogo (H1_xpm);
    TtaRegisterPixmap("H1", iconH1);
    iconH2 = TtaCreatePixmapLogo (H2_xpm);
@@ -2241,11 +2293,15 @@ NotifyEvent        *event;
    /* add the temporary directory in document path */
    TtaAppendDocumentPath (TempFileDirectory);
 
-   /* Create all temporary sub-directories for documents */
+   /* Create and intialize resources needed for each document */
    for (i = 1; i < DocumentTableLength; i++)
      {
        /* initialize document table */
        DocumentURLs[i] = NULL;
+       /* initialize history */
+       DocHistoryIndex[i] = -1;
+       /* Create a temporary sub-directory for storing the HTML and
+	  image files */
        tempname = TtaGetMemory (MAX_LENGTH);
        sprintf (tempname, "%s%c%d", TempFileDirectory, DIR_SEP, i);
        if (!TtaCheckDirectory (tempname))
@@ -2480,7 +2536,7 @@ void HelpBrowsing (document, view)
 
    strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "Browsing.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
 }
 
 
@@ -2498,7 +2554,7 @@ void HelpSelecting (document, view)
 
    strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "Selecting.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
 }
 
 
@@ -2516,7 +2572,7 @@ void HelpSearching (document, view)
 
    strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "Searching.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
 }
 
 
@@ -2534,7 +2590,7 @@ void HelpViews (document, view)
 
    strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "Views.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
 }
 
 
@@ -2552,7 +2608,7 @@ void HelpCreating (document, view)
 
    strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "Creating.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
 }
 
 
@@ -2570,7 +2626,7 @@ void HelpLinks (document, view)
 
    strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "Links.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
 }
 
 
@@ -2588,7 +2644,7 @@ void HelpChanging (document, view)
 
    strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "Changing.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
 }
 
 
@@ -2606,7 +2662,7 @@ void HelpTables (document, view)
 
    strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "Tables.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
 }
 
 
@@ -2624,7 +2680,7 @@ void HelpMath (document, view)
 
    strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "Math.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
 }
 
 
@@ -2642,7 +2698,7 @@ void HelpImageMaps (document, view)
 
    strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "ImageMaps.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
 }
 
 
@@ -2660,7 +2716,7 @@ void HelpStyleSheets (document, view)
 
    strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "StyleSheets.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
 }
 
 
@@ -2678,7 +2734,7 @@ void HelpAttributes (document, view)
 
    strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "Attributes.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
 }
 
 
@@ -2696,7 +2752,7 @@ void HelpPublishing (document, view)
 
    strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "Publishing.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
 }
 
 
@@ -2714,7 +2770,7 @@ void HelpPrinting (document, view)
 
    strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "Printing.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
 }
 
 
@@ -2732,7 +2788,7 @@ void HelpMakeBook (document, view)
 
    strcpy (localname, AMAYA_PAGE_DOC);
    strcat (localname, "MakeBook.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
 }
 
 

@@ -10,12 +10,8 @@ extern void GotoPreviousHTML ( Document doc,
                                View view );
 extern void GotoNextHTML ( Document doc,
                            View view );
-extern void AddCSSHistory ( CSSInfoPtr css );
-extern void AddHTMLHistory ( char *url );
-extern int BuildCSSHistoryList ( Document doc,
-                                 char *buf,
-                                 int size,
-                                 char *first );
+extern void AddDocHistory ( Document doc,
+			    char *url );
 
 #else /* __STDC__ */
 
@@ -23,12 +19,8 @@ extern void GotoPreviousHTML (/* Document doc,
                                  View view */);
 extern void GotoNextHTML (/* Document doc,
                              View view */);
-extern void AddCSSHistory (/* CSSInfoPtr css */);
-extern void AddHTMLHistory (/* char *url */);
-extern int BuildCSSHistoryList (/* Document doc,
-                                   char *buf,
-                                   int size,
-                                   char *first */);
+extern void AddDocHistory (/* Document doc,
+			      char *url */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

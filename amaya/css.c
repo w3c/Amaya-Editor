@@ -84,10 +84,8 @@ char               *amaya_save_dir = NULL;
 boolean             NonPPresentChanged = FALSE;
 int                 BaseCSSDialog = -1;
 
-extern char        *CSSHistory[CSS_HISTORY_SIZE];
-extern char        *HTMLHistory[CSS_HISTORY_SIZE];
-extern int          CSSHistoryIndex;
-extern int          HTMLHistoryIndex;
+char               *CSSHistory[CSS_HISTORY_SIZE];
+int                 CSSHistoryIndex = -1;
 
 #ifdef AMAYA_DEBUG
 #define MSG(msg) fprintf(stderr,msg)
@@ -104,7 +102,6 @@ static char        *last_message = NULL;
 #include "query_f.h"
 #endif
 #include "AHTURLTools_f.h"
-#include "HTMLhistory_f.h"
 #include "HTMLstyle_f.h"
 #include "UIcss_f.h"
 
@@ -427,12 +424,39 @@ void                AddCSS (css)
 CSSInfoPtr          css;
 #endif
 {
+   int                 i;
+
    if (css == NULL)
       return;
-
    css->NextCSS = ListCSS;
    ListCSS = css;
-   AddCSSHistory (css);
+   if (!css->url)
+      return;
+   if (css->category == CSS_DOCUMENT_STYLE)
+      return;
+
+   /* initialize the history if necessary */
+   if (CSSHistoryIndex == -1)
+     {
+	for (i = 0; i < CSS_HISTORY_SIZE; i++)
+	   CSSHistory[i] = NULL;
+	CSSHistoryIndex = 0;
+     }
+   /* history lookup to store unique URL's */
+   for (i = 0; i < CSS_HISTORY_SIZE; i++)
+     {
+	if (!CSSHistory[i])
+	   break;
+	if (strcmp (CSSHistory[i], css->url) != 0)
+	   return;
+     }
+   /* store the CSS url */
+   if (CSSHistory[CSSHistoryIndex])
+      TtaFreeMemory (CSSHistory[CSSHistoryIndex]);
+   CSSHistory[CSSHistoryIndex] = TtaStrdup (css->url);
+   CSSHistoryIndex++;
+   CSSHistoryIndex %= CSS_HISTORY_SIZE;
+
 }
 
 /*----------------------------------------------------------------------
@@ -2378,11 +2402,10 @@ void                InitCSS ()
    int                 i, j;
    int                 res;
    FILE               *css_history_file;
-   FILE               *html_history_file;
    char               *home;
    char                tempfile[3000];
 
-   /* initialize the history if necessary */
+   /* initialize the CSS history if necessary */
    if (CSSHistoryIndex == -1)
      {
 	for (i = 0; i < CSS_HISTORY_SIZE; i++)
@@ -2417,41 +2440,7 @@ void                InitCSS ()
 	       }
 	  }
      }
-   /* initialize the history if necessary */
-   if (HTMLHistoryIndex == -1)
-     {
-	for (i = 0; i < HTML_HISTORY_SIZE; i++)
-	   HTMLHistory[i] = NULL;
-	HTMLHistoryIndex = HTML_HISTORY_SIZE - 1;
 
-	/*
-	 * Restore the history from the HTML_HISTORY_FILE
-	 */
-	home = TtaGetEnvString ("HOME");
-	if (home != NULL)
-	  {
-	     sprintf (tempfile, HTML_HISTORY_FILE, home, HTAppName);
-	     html_history_file = fopen (tempfile, "r");
-	     if (html_history_file != NULL)
-	       {
-		  for (i = 0; i < HTML_HISTORY_SIZE;)
-		    {
-		       tempfile[0] = EOS;
-		       res = fscanf (html_history_file, "%s\n", tempfile);
-		       if (res < 1)
-			  break;
-		       if (tempfile[0] == EOS)
-			  break;
-		       for (j = 0;j < i;j++)
-		          if (!strcmp(tempfile, HTMLHistory[j])) break;
-		       if (j >= i)
-			   HTMLHistory[i++] = TtaStrdup (tempfile);
-		    }
-		  HTMLHistoryIndex = i % HTML_HISTORY_SIZE;
-		  fclose (html_history_file);
-	       }
-	  }
-     }
    /* Read the AMAYA_SAVE_DIR environment variable for publishing */
    amaya_save_dir = TtaGetEnvString (AMAYA_SAVE_DIR);
 #ifdef DEBUG_CSS
@@ -2489,7 +2478,6 @@ void                CloseCSS ()
 {
    int                 i;
    FILE               *css_history_file;
-   FILE               *html_history_file;
    char               *home;
    char                tempfile[MAX_LENGTH];
 
@@ -2509,24 +2497,6 @@ void                CloseCSS ()
 		     fprintf (css_history_file, "%s\n", CSSHistory[i]);
 	       }
 	     fclose (css_history_file);
-	  }
-     }
-   /*
-    * Save the history in the HTML_HISTORY_FILE
-    */
-   home = TtaGetEnvString ("HOME");
-   if (home != NULL)
-     {
-	sprintf (tempfile, HTML_HISTORY_FILE, home, HTAppName);
-	html_history_file = fopen (tempfile, "w");
-	if (html_history_file != NULL)
-	  {
-	     for (i = 0; i < HTML_HISTORY_SIZE; i++)
-	       {
-		  if (HTMLHistory[i] != NULL)
-		     fprintf (html_history_file, "%s\n", HTMLHistory[i]);
-	       }
-	     fclose (html_history_file);
 	  }
      }
 }

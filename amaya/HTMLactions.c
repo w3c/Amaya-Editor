@@ -30,6 +30,7 @@
 #include "HTMLstyle_f.h"
 #include "HTMLedit_f.h"
 #include "HTMLform_f.h"
+#include "HTMLhistory_f.h"
 #include "HTMLimage_f.h"
 #include "trans_f.h"
 #include "selection.h"
@@ -264,7 +265,8 @@ Document            doc;
 
 		  /* get the referred document */
 		  targetDocument = GetHTMLDocument (documentURL, NULL,
-				   doc, doc, DC_TRUE);
+				   doc, doc, DC_TRUE, FALSE);
+		  AddDocHistory (targetDocument, DocumentURLs[targetDocument]); /******/
 		  /* if the referred document has replaced the clicked
 		     document, pseudo attribute "visited" should not be set */
 		  if (targetDocument == doc)

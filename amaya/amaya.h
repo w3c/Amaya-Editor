@@ -198,6 +198,9 @@ THOT_EXPORT boolean      SelectionInSTRIKE;
 THOT_EXPORT boolean      SelectionInBIG;
 THOT_EXPORT boolean      SelectionInSMALL;
 
+#define DOC_HISTORY_SIZE 50
+typedef char*		 anHistory[DOC_HISTORY_SIZE];
+
 #define DocumentTableLength 10
 THOT_EXPORT char        *DocumentURLs[DocumentTableLength];
 
@@ -206,6 +209,10 @@ THOT_EXPORT char        *DocumentURLs[DocumentTableLength];
 THOT_EXPORT int          FilesLoading[DocumentTableLength];
 /* Gives the status (error, success) of the download of the objects of
    a document */
+
+THOT_EXPORT anHistory	 DocHistory[DocumentTableLength];
+THOT_EXPORT int		 DocHistoryIndex[DocumentTableLength];
+
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
 THOT_EXPORT int          DocNetworkStatus[DocumentTableLength];
 #endif

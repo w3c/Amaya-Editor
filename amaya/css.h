@@ -116,7 +116,5 @@ CSSInfo            , *CSSInfoPtr;
  */
 #define CSS_HISTORY_FILE "%s/.%s/history.css"
 #define CSS_HISTORY_SIZE 50
-#define HTML_HISTORY_FILE "%s/.%s/history.html"
-#define HTML_HISTORY_SIZE 50
 
 #endif /* CSS_INC_H */

@@ -12,6 +12,9 @@ extern void ExtractParameters ( char *aName,
 extern void ExtractSuffix ( char *aName,
                             char *aSuffix );
 extern void ResetStop ( Document document );
+extern void SetArrowButton ( Document document,
+                             boolean back,
+                             boolean on );
 extern void ActiveTransfer ( Document document );
 extern void UpdateTransfer ( Document document );
 extern void StopTransfer ( Document document,
@@ -47,7 +50,8 @@ extern Document GetHTMLDocument ( const char *documentPath,
                                   char *form_data,
                                   Document doc,
                                   Document baseDoc,
-                                  DoubleClickEvent DC_event );
+                                  DoubleClickEvent DC_event,
+				  boolean history );
 extern void CallbackDialogue ( int ref,
                                int typedata,
                                char *data );
@@ -99,6 +103,9 @@ extern void ExtractParameters (/* char *aName,
 extern void ExtractSuffix (/* char *aName,
                               char *aSuffix */);
 extern void ResetStop (/* Document document */);
+extern void SetArrowButton (/* Document document,
+                               boolean back,
+                               boolean on */);
 extern void ActiveTransfer (/* Document document */);
 extern void UpdateTransfer (/* Document document */);
 extern void StopTransfer (/* Document document,
@@ -134,7 +141,8 @@ extern Document GetHTMLDocument (/* const char *documentPath,
                                     char *form_data,
                                     Document doc,
                                     Document baseDoc,
-                                    DoubleClickEvent DC_event */);
+                                    DoubleClickEvent DC_eventnt,
+				      boolean history */);
 extern void CallbackDialogue (/* int ref,
                                  int typedata,
                                  char *data */);

@@ -869,7 +869,7 @@ Document            document;
 	       includedDocument = TtaNewDocument ("HTML", "tmp");
 	       TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_FETCHING), url);
 	       newdoc = GetHTMLDocument (url, NULL, includedDocument,
-					 document, DC_TRUE | DC_MAKEBOOK);
+					 document, DC_TRUE | DC_MAKEBOOK, FALSE);
 	       if (newdoc != 0 && newdoc != document)
 		 {
 		   /* it's not the document itself */
