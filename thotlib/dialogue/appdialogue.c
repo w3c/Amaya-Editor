@@ -15,7 +15,7 @@
  * Handle windows and menu bars of Thot applications
  *
  * Author: I. Vatton (INRIA)
- *         R. Guetari (W3C/INRIA): Amaya porting on Windows NT and Window 95
+ *         R. Guetari (W3C/INRIA): Windows NT and Window 95 routines
  *
  */
 

@@ -18,7 +18,7 @@
  * Handle application frames
  *
  * Author: I. Vatton (INRIA)
- *         R. Guetari (W3C/INRIA): Amaya porting on Windows NT and Window 95
+ *         R. Guetari (W3C/INRIA): Windows NT and Window 95 Routines
  *
  */
 
@@ -435,7 +435,7 @@ int                 value;
 
    /* get some information on the position of the displayed part
     * for this document. */
-   UpdateScrollbars (frame);
+   /* UpdateScrollbars (frame); */
 }
 
 /*----------------------------------------------------------------------
@@ -1083,6 +1083,7 @@ LPARAM      lParam;
 	    case WM_CHAR:
                  SendMessage (FrRef [frame], WM_CHAR, wParam, lParam);
                  return 0;
+
             case WM_COMMAND:
 	         WinThotCallBack (hwnd, wParam, lParam);
 	         return (0);
@@ -1696,9 +1697,9 @@ int                 frame;
 
 #ifdef _WINDOWS
 #ifdef __STDC__
-ThotWindow          TtaGetThotWinMainWindow (int frame)
+ThotWindow TtaGetThotWinMainWindow (int frame)
 #else  /* __STDC__ */
-ThotWindow          TtaGetThotWinMainWindow (frame)
+ThotWindow TtaGetThotWinMainWindow (frame)
 int                 frame;
 
 #endif /* __STDC__ */
@@ -1977,9 +1978,9 @@ ThotWindow          w;
 
 #ifdef _WINDOWS
 #ifdef __STDC__
-int                 GetWindowWinMainFrame (ThotWindow w)
+int GetWindowWinMainFrame (ThotWindow w)
 #else  /* __STDC__ */
-int                 GetWindowWinMainFrame (w)
+int GetWindowWinMainFrame (w)
 ThotWindow          w;
 
 #endif /* __STDC__ */

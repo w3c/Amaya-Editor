@@ -38,8 +38,11 @@
 #include "picture_tv.h"
 #include "frame_tv.h"
 
-#define DC_TRUE    1
-#define AMAYA_SYNC 1
+#define DC_FALSE    0 
+#define DC_TRUE     1
+
+#define AMAYA_SYNC  1
+#define AMAYA_ASYNC 4
 
 extern ThotAppContext   app_cont;
 extern PluginInfo*      pluginTable [100];
@@ -133,22 +136,22 @@ const char* pluginMimeType;
          token [ndx] = EOS;
          if (pluginMimeType [index] == EOS) {
 	    if (token) {
-#ifdef PLUGIN_DEBUG
+#              ifdef PLUGIN_DEBUG
 	       printf ("Plugin name: %s\n", token);
-#endif
+#              endif
                pluginTable [indexHandler]->pluginID = (char*) malloc (strlen (token) + 1);
                strcpy (pluginTable [indexHandler]->pluginID, token);
             } else {
-#ifdef PLUGIN_DEBUG
+#                  ifdef PLUGIN_DEBUG
                    printf ("Plugin name: Unknown plugin\n");              
-#endif
+#                  endif
                    pluginTable [indexHandler]->pluginID = (char*) malloc (14);
                    strcpy (pluginTable [indexHandler]->pluginID, "Unknown Plugin");
             }
          } else {
-#ifdef PLUGIN_DEBUG
+#             ifdef PLUGIN_DEBUG
 	      printf ("Plugin type: %s\n", token);
-#endif
+#             endif
               if (pluginMimeType [index] != ':')
 		printf ("bad mime type\n");
               else 
@@ -170,9 +173,9 @@ const char* pluginMimeType;
                     if (pluginMimeType [index] == ',')
                        token [ndx++] = suffixes [suffixNdx++] = pluginMimeType [index++];
               }
-#ifdef PLUGIN_DEBUG
+#             ifdef PLUGIN_DEBUG
               printf ("suffixes: %s\n", token);
-#endif
+#             endif
               if (pluginMimeType [index] !=EOS) {
                  ndx = 0;
                  while (pluginMimeType [index] != EOS && pluginMimeType [index] != ';' && pluginMimeType [index] != ':')
@@ -184,16 +187,16 @@ const char* pluginMimeType;
                  }
                  if (pluginMimeType [index] == ':')
                     index++;
-#ifdef PLUGIN_DEBUG
+#                ifdef PLUGIN_DEBUG
                  printf ("comment: %s\n", token);
-#endif
+#                endif
               }
          }
    }
    suffixes [suffixNdx] = EOS;
-#ifdef PLUGIN_DEBUG
+#  ifdef PLUGIN_DEBUG
    printf ("Suffixes: %s\n", suffixes);
-#endif
+#  endif
    pluginTable [indexHandler]->fileExt = (char*) malloc (strlen (suffixes) + 1);
    strcpy (pluginTable [indexHandler]->fileExt, suffixes);
 }
@@ -264,9 +267,9 @@ char*     url;
     int         count = 0, ret = 0, ready_to_read;
     long        offset;
 
-#ifdef PLUGIN_DEBUG
+#   ifdef PLUGIN_DEBUG
     printf ("***** Ap_Normal *****\n");
-#endif
+#   endif
     fptr = fopen (url, "rb");
 
     offset = 0;
@@ -277,10 +280,10 @@ char*     url;
 	  buffer = (char*) malloc (ready_to_read);
 	  count = fread (buffer, sizeof (char), ready_to_read, fptr);                
 	  ret = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->write)) (pluginInstance, stream, offset , count , buffer);
-#ifdef PLUGIN_DEBUG
+#         ifdef PLUGIN_DEBUG
 	  printf ("%d WriteReady \n", ready_to_read);
 	  printf ("\t%d bytes consumed by NPP_Write\n", ret);
-#endif
+#         endif
 	  offset += count;
 	  free (buffer);
     }
@@ -305,9 +308,9 @@ char*     url;
     int         count = 0, ret = 0;
     long        offset;
 
-#ifdef PLUGIN_DEBUG
+#   ifdef PLUGIN_DEBUG
     printf ("***** Ap_AsFile *****\n");
-#endif
+#   endif
     fptr = fopen (url, "rb");
 
     offset = 0;
@@ -316,9 +319,9 @@ char*     url;
     while (!feof (fptr)) { 
 	  count = fread (buffer, sizeof (char), BUFSIZE, fptr);
 	  ret = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->write)) (pluginInstance, stream, offset , count , buffer);
-#ifdef PLUGIN_DEBUG
+#         ifdef PLUGIN_DEBUG
 	  printf ("\t%d bytes consumed by NPP_Write\n", ret);
-#endif
+#         endif
 	  offset += count;
     }
     fclose (fptr);
@@ -346,9 +349,9 @@ NPStream* stream;
 NPError   reason;
 #endif /* __STDC__ */
 {
-#ifdef PLUGIN_DEBUG
+#   ifdef PLUGIN_DEBUG
     printf ("***** Ap_DestroyStream *****\n");
-#endif
+#   endif
 
     if (instance == NULL)
        return NPERR_INVALID_INSTANCE_ERROR;
@@ -366,9 +369,9 @@ JRIEnv*  Ap_GetJavaEnv (void)
 JRIEnv*  Ap_GetJavaEnv ()
 #endif /* __STDC__ */
 {
-#ifdef PLUGIN_DEBUG
+#   ifdef PLUGIN_DEBUG
     printf ("***** Ap_GetJavaEnv *****\n"); 
-#endif
+#   endif
     return (NULL);
 }
 
@@ -382,82 +385,45 @@ jref Ap_GetJavaPeer (instance)
 NPP instance;
 #endif /* __STDC__ */
 {
-#ifdef PLUGIN_DEBUG
+#   ifdef PLUGIN_DEBUG
     printf ("***** Ap_GetJavaPeer *****\n"); 
-#endif
+#   endif
     return (NULL);
 }
 
 /*----------------------------------------------------------------------
-  AP_GetURL_callback
+  Ap_URLNotify
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void AP_GetURL_callback (NPP instance, char *tempfile)
-#else
-void AP_GetURL_callback (instance, tempfile)
-NPP instance;
-char *tempfile;
-#endif /* __STDC __ */
+void Ap_URLNotify(NPP instance, const char* url, NPReason reason, void* notifyData)
+#else  /* __STDC__ */
+void Ap_URLNotify(instance, url, reason, notifyData)
+NPP         instance; 
+const char* url; 
+NPReason    reason; 
+void*       notifyData;
+#endif /* __STDC__ */
 {
-    NPStream*   stream;
-    NPByteRange range;
-    char*       url;
-    uint16      stype;
-    int         ret;
-    struct stat sbuf;
-#ifdef PLUGIN_DEBUG
-    NPWindow*   pwindow;
-    char        widthText[10], heightText[10];
-    char*       argn[6], *argv[6];
-    char*       message = (char*) NULL;
-    int16       argc  = 6; /* to parametrize */
-    /* int16       argc  = 3; */ /* to parametrize */
-#endif
-
-  stat (url, &sbuf);
-
-  stream               = (NPStream*) malloc (sizeof (NPStream));
-  stream->url          = strdup (url);
-  stream->end          = 0;
-  stream->pdata        = instance->pdata;
-  stream->ndata        = NULL;
-  stream->notifyData   = NULL;
-  stream->end          = sbuf.st_size;
-  stream->lastmodified = sbuf.st_mtime; 
-
-    ret = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->newstream)) (instance,
-                                                                         pluginTable [currentExtraHandler]->pluginMimeType,
-                                                                         stream, 
-                                                                         FALSE, 
-                                                                         &stype); 
+    printf ("*** Ap_URLNotify ***\n") ;
+}
 
 /*----------------------------------------------------------------------
+  Ap_GetURLNotify
+  A faire: remplacer le 1 dans Getxxx par doc
   ----------------------------------------------------------------------*/
-#ifdef PLUGIN_DEBUG
-    printf ("Stype : %d\n", stype);
-#endif
-
-    switch (stype) {
-           case NP_NORMAL:     Ap_Normal (instance, stream, url); 
-                               break;
-           case NP_ASFILEONLY: (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->asfile)) (instance, stream, url);
-                               break;
-	   case NP_ASFILE:     Ap_AsFile (instance, stream, url);
-	       /*case NP_ASFILE:     Ap_Normal (indexPlug, (NPP) (imageDesc->pluginInstance), stream, url);  */
-                               break;
-           case NP_SEEK:       /* ?????????????????????????????
-                                  CALL Ap_RequestRead
-                                  ????????????????????????????? */
-                               break;
-           default:            printf ("Error unknown mode %d\n", stype);
-                               break;
-    }
-
-    (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->asfile)) (instance, stream, url);
-    /* (*(pluginTable [indexPlug]->pluginFunctionsTable->destroystream)) ((NPP)(imageDesc->pluginInstance), stream, NPRES_DONE);*/
-    range.offset = 0; /*10; */
-    range.length = 2000; /*20;*/
-    range.next   = NULL;
+#ifdef __STDC__
+NPError Ap_GetURLNotify (NPP instance, const char* url, const char* target, void* notifyData)
+#else  /* !__STDC__ */
+NPError Ap_GetURLNotify (instance, url, target, notifyData)
+NPP         instance; 
+const char* url; 
+const char* target; 
+void*       notifyData;
+#endif /* __STDC__ */
+{
+    printf ("*** Ap_Ap_GetURLNotify ***\n") ;
+    Ap_URLNotify (instance, url, NPRES_DONE, notifyData);
+    return NPERR_NO_ERROR;
 }
 
 /*----------------------------------------------------------------------
@@ -473,41 +439,72 @@ const char* url;
 const char* window;
 #endif /* __STDC__ */
 {
-   /*NPStream * stream;*/
-  int result;
-  char tempfile [200]; /* MAX_LENGTH */
+    int         result;
+    int         ret;
+    char        tempfile [200]; /* MAX_LENGTH */
+    uint16      stype;
+    NPStream*   stream;
+    struct stat sbuf;
 
-#ifdef PLUGIN_DEBUG
+#   ifdef PLUGIN_DEBUG
     printf ("***** Ap_GetURL *****\n"); 
-#endif
+#   endif
     if (IsValidProtocol (url)) {
-      if (window) {
-	/* pass the stream to AMAYA */
-#ifdef PLUGIN_DEBUG
-	printf ("AM_geturl: Passing the stream to AMAYA\n");
-#endif
-	GetHTMLDocument (url, NULL, 1, 1, DC_TRUE);
-      }
-      else {/* pass the stream to the plug-in */
-	result = GetObjectWWW (1, url, (char *) NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, 0);
-	if (result != -1) {
-#ifdef PLUGIN_DEBUG
-	  printf ("AM_geturl: Passing stream to the plug-in\n");
-#endif
-	  AP_GetURL_callback (instance, tempfile);
-	  /*NPP_NewStream();*/
-	  /* NPP_WriteReady(); */
-	  /* NPP_Write(); */  /* Until the stream ends */
-	  /* NPP_DestroyStream(); */
-	}
-      }
+
+       if (window) { /* pass the stream to AMAYA */
+#         ifdef PLUGIN_DEBUG
+          printf ("AM_geturl: Passing the stream to AMAYA\n");
+#         endif
+          GetHTMLDocument (url, NULL, 0, 0, DC_FALSE);
+       } else {/* pass the stream to the plug-in */
+#             ifdef PLUGIN_DEBUG
+	      printf ("AM_geturl: Passing stream to the plug-in\n");
+#             endif
+              result = GetObjectWWW (1, url, NULL, tempfile, AMAYA_ASYNC, NULL, NULL, NULL, NULL, FALSE) ;
+              if (result != -1) {
+                 stat (tempfile, &sbuf);
+
+                 stream               = (NPStream*) malloc (sizeof (NPStream));
+                 stream->url          = strdup (tempfile);
+                 stream->end          = 0;
+                 stream->pdata        = instance->pdata;
+                 stream->ndata        = NULL;
+                 stream->notifyData   = NULL;
+                 stream->end          = sbuf.st_size;
+                 stream->lastmodified = sbuf.st_mtime; 
+
+                 ret = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->newstream)) (instance,
+                                                             pluginTable [currentExtraHandler]->pluginMimeType,
+                                                             stream, 
+                                                             FALSE, 
+                                                             &stype); 
+                 switch (stype) {
+                        case NP_NORMAL:     
+                             Ap_Normal ((NPP) (instance), stream, url); 
+                             break;
+                        case NP_ASFILEONLY: 
+                             (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->asfile)) ((NPP)(instance), stream, url);
+                              break;
+	                case NP_ASFILE:     
+                             Ap_AsFile ((NPP) (instance), stream, url);
+                             break;
+                        case NP_SEEK: 
+			    /* Ap_RequestRead ()*/
+                             break;
+                        default:
+                             printf ("Error unknown mode %d\n", stype);
+                             break;
+		 }
+
+                 (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->asfile)) ((NPP)(instance), stream, url);
+	      }
+       }
     }
-#ifdef PLUGIN_DEBUG
-    else
-      /* java? */
-      printf ("AM_geturl: Passing the stream to Java Interpreter\n");
-#endif
-   return NPERR_NO_ERROR;
+#   ifdef PLUGIN_DEBUG
+    else /* java? */
+         printf ("AM_geturl: Passing the stream to Java Interpreter\n");
+#   endif
+    return NPERR_NO_ERROR;
 }
 
 /*----------------------------------------------------------------------
@@ -529,6 +526,28 @@ NPError Ap_NewStream (NPP instance, NPMIMEType type, const char* window, NPStrea
 }
 
 /*----------------------------------------------------------------------
+  Ap_PostURLNotify
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+NPError Ap_PostURLNotify (NPP instance, const char* url, const char* target, uint32 len, const char* buf, NPBool file, void* notifyData)
+#else  /* !__STDC__ */
+NPError Ap_PostURLNotify (instance, url, target, len, buf, file, void* notifyData)
+NPP         instance; 
+const char* url; 
+const char* target; 
+uint32      len;
+const char* buf;
+NPBool      file;
+void*       notifyData;
+#endif /* __STDC__ */
+{
+    printf ("*** Ap_PostURLNotify ***\n") ;
+    Ap_URLNotify (instance, url, NPRES_DONE, notifyData);
+
+    return NPERR_NO_ERROR;
+}
+
+/*----------------------------------------------------------------------
   Ap_PostURL
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -543,9 +562,10 @@ const char* buf;
 NPBool      file;
 #endif /* __STDC__ */
 {
-#ifdef PLUGIN_DEBUG
+#   ifdef PLUGIN_DEBUG
     printf ("***** Ap_PostURL *****\n");
-#endif
+#   endif
+
    return NPERR_NO_ERROR;
 }
 
@@ -562,31 +582,31 @@ NPByteRange* rangeList;
 {
     /*FILE        *fptr;*/
 
-#ifdef PLUGIN_DEBUG
+    FILE*        fptr;
+    char*        buffer;
+    char*        buffToWrite ;
+    int          count = 0, ret = 0, ready_to_read;
+    int          indexBuff = 0, i;
+    long         offset;
+    NPByteRange* currentRangeList = rangeList;
+
+#   ifdef PLUGIN_DEBUG
     printf ("***** Ap_RequestRead *****\n");
-    printf ("RequestRead  \n");
-#endif
-    /*
-    fptr = fopen ("/tahiti/guetari/example/nasa.cgm","rb");
+#   endif
+    fptr = fopen (stream->url, "rb");
+   
+    while (currentRangeList) {
+          if (currentRangeList->offset < 0)
+             offset = stream->end - currentRangeList->length ;
+          else
+              offset = currentRangeList->offset;
 
-    offset = 0;
-    fseek (fptr, offset, SEEK_SET);
-     
-    while (!feof (fptr)){
-	ready_to_read = (*(pluginFunctionsTable->writeready)) (instance, stream);
-	size = ready_to_read > rangeList->length ? rangeList->length : ready_to_read;
-	buffer = (char*) malloc (size);
-	count = fread (buffer, sizeof (char), size, fptr);
-
-	ret = (*(pluginFunctionsTable->write)) (instance, stream, offset , count, buffer);
-	
-	printf ("%d WriteReady \n", ready_to_read);
-	printf ("\t%d bytes consumed by NPP_Write\n", ret);
-	offset += count;
-	free (buffer);
+          fseek (fptr, offset, SEEK_SET);
+	  buffer = (char*) malloc (currentRangeList->length);
+	  count = fread (buffer, sizeof (char), currentRangeList->length, fptr);                
     }
+
     fclose (fptr);
-    */
     return NPERR_NO_ERROR;
 }
 
@@ -601,10 +621,10 @@ NPP         instance;
 const char* message;
 #endif /* __STDC__ */
 {
-#ifdef PLUGIN_DEBUG
+#   ifdef PLUGIN_DEBUG
     printf ("***** Ap_Status *****\n");
     printf ("Status %s\n", message);
-#endif
+#   endif
 }
 
 /*----------------------------------------------------------------------
@@ -617,9 +637,9 @@ const char* Ap_UserAgent (instance)
 NPP instance;
 #endif /* __STDC__ */
 {
-#ifdef PLUGIN_DEBUG
+#   ifdef PLUGIN_DEBUG
     printf ("***** Ap_UserAgent *****\n");
-#endif
+#   endif
     return ("Amaya");
 }
 
@@ -636,9 +656,9 @@ int32     len;
 void*     buffer;
 #endif /* __STDC__ */
 {
-#ifdef PLUGIN_DEBUG
+#   ifdef PLUGIN_DEBUG
     printf ("***** Ap_Write *****\n");
-#endif
+#   endif
     return 4;
 }
 
@@ -655,9 +675,9 @@ int* amaya_major;
 int* amaya_minor;
 #endif /* __STDC__ */
 {
-#ifdef PLUGIN_DEBUG
-  printf ("***** Ap_Version *****\n");
-#endif
+#   ifdef PLUGIN_DEBUG
+    printf ("***** Ap_Version *****\n");
+#   endif
     *plugin_major = NP_VERSION_MAJOR;
     *plugin_minor = NP_VERSION_MINOR;
 }
@@ -672,9 +692,9 @@ void Ap_ReloadPlugins (reloadPages)
 NPBool reloadPages;
 #endif /* __STDC__ */
 {
-#ifdef PLUGIN_DEBUG
-  printf ("***** Ap_ReloadPlugins *****\n");
-#endif
+#   ifdef PLUGIN_DEBUG
+    printf ("***** Ap_ReloadPlugins *****\n");
+#   endif
 }
 
 /*----------------------------------------------------------------------
@@ -690,9 +710,10 @@ void*       r_value;
 #endif /* __STDC__ */
 {
     NPError error = NPERR_NO_ERROR;
-#ifdef PLUGIN_DEBUG
+#   ifdef PLUGIN_DEBUG
     printf ("***** Ap_GetValue *****\nVariable: %d\n", variable);
-#endif
+#   endif
+
     if (!instance) error = NPERR_INVALID_INSTANCE_ERROR;
     else {
          switch (variable) {
@@ -722,10 +743,10 @@ void Ap_InitializeAmayaTable ()
     printf ("Size of NPAmayaFuncs = %d\n", (int) sizeof (NPNetscapeFuncs));
 #endif
 
-    amayaFunctionsTable->version       = ((uint16) (0));
     amayaFunctionsTable->size          = ((uint16) (sizeof       (NPNetscapeFuncs)));
-    amayaFunctionsTable->posturl       = ((NPN_PostURLUPP)       (Ap_PostURL));
+    amayaFunctionsTable->version       = ((uint16) (0));
     amayaFunctionsTable->geturl        = ((NPN_GetURLUPP)        (Ap_GetURL));
+    amayaFunctionsTable->posturl       = ((NPN_PostURLUPP)       (Ap_PostURL));
     amayaFunctionsTable->requestread   = ((NPN_RequestReadUPP)   (Ap_RequestRead));
     amayaFunctionsTable->newstream     = ((NPN_NewStreamUPP)     (Ap_NewStream));
     amayaFunctionsTable->write         = ((NPN_WriteUPP)         (Ap_Write));
@@ -738,7 +759,11 @@ void Ap_InitializeAmayaTable ()
     amayaFunctionsTable->reloadplugins = ((NPN_ReloadPluginsUPP) (Ap_ReloadPlugins));
     amayaFunctionsTable->getJavaEnv    = ((NPN_GetJavaEnvUPP)    (Ap_GetJavaEnv));
     amayaFunctionsTable->getJavaPeer   = ((NPN_GetJavaPeerUPP)   (Ap_GetJavaPeer));
+    amayaFunctionsTable->geturlnotify  = ((NPN_GetURLNotifyUPP)  (Ap_GetURLNotify));
+    amayaFunctionsTable->posturlnotify = ((NPN_PostURLNotifyUPP) (Ap_PostURLNotify));
+#ifdef XP_UNIX
     amayaFunctionsTable->getvalue      = ((NPN_GetValueUPP)      (Ap_GetValue));
+#endif /* XP_UNIX */
 }
 
 /*----------------------------------------------------------------------
@@ -750,18 +775,18 @@ void Ap_InitializePluginTable (indexHandler)
 int indexHandler;
 #endif /* __STDC__ */
 {
-  char* message;
-  int   ret;
+    char* message;
+    int   ret;
 
-#ifdef PLUGIN_DEBUG
-  printf ("***** Ap_InitializePluginTable *****\n");
-#endif
+#   ifdef PLUGIN_DEBUG
+    printf ("***** Ap_InitializePluginTable *****\n");
+#   endif
 
-  pluginTable[indexHandler]->pluginFunctionsTable = (NPPluginFuncs*) malloc (sizeof (NPPluginFuncs));
-#ifdef PLUGIN_DEBUG
-  printf ("Size of NPPluginFuncs = %d\n", (int) sizeof (NPPluginFuncs));
-#endif
-  pluginTable[indexHandler]->pluginFunctionsTable->size = ((uint16) (sizeof (NPPluginFuncs)));
+    pluginTable[indexHandler]->pluginFunctionsTable = (NPPluginFuncs*) malloc (sizeof (NPPluginFuncs));
+#   ifdef PLUGIN_DEBUG
+    printf ("Size of NPPluginFuncs = %d\n", (int) sizeof (NPPluginFuncs));
+#   endif
+    pluginTable[indexHandler]->pluginFunctionsTable->size = ((uint16) (sizeof (NPPluginFuncs)));
   
 #ifdef _WINDOWS
   ptr_NP_Initialize = GetProcAdress (pluginTable [indexHandler]->pluginHandle, "NP_Initialize");
@@ -798,9 +823,9 @@ int   indexHandler;
     int  index1 = 0;
     int  index2 = 0;
     int  ret;
-#ifdef PLUGIN_DEBUG
+#   ifdef PLUGIN_DEBUG
     printf ("***** Ap_InitializePlugin *****\n");
-#endif
+#   endif
 #ifdef _WINDOWS
     pluginTable [indexHandler]->pluginHandle = LoadLibrary (path);
     if (pluginTable [indexHandler]->pluginHandle == NULL) {
@@ -882,9 +907,9 @@ Display* display;
     /* int16       argc  = 3; */ /* to parametrize */
     struct stat sbuf;
      
-#ifdef PLUGIN_DEBUG
+#   ifdef PLUGIN_DEBUG
     printf ("***** Ap_CreatePluginInstance *****\n");
-#endif
+#   endif
 
     argn[0] = "SRC";
     argn[1] = "WIDTH";
@@ -959,35 +984,28 @@ Display* display;
                                                                          FALSE, 
                                                                          &stype); 
 
-#ifdef PLUGIN_DEBUG
+#   ifdef PLUGIN_DEBUG
     printf ("Stype : %d\n", stype);
-#endif
+#   endif
 
     switch (stype) {
-           case NP_NORMAL:     Ap_Normal ((NPP) (imageDesc->pluginInstance), stream, url); 
-                               break;
-           case NP_ASFILEONLY: (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->asfile)) ((NPP)(imageDesc->pluginInstance), stream, url);
-                               break;
-	   case NP_ASFILE:     Ap_AsFile ((NPP) (imageDesc->pluginInstance), stream, url);
-	       /*case NP_ASFILE:     Ap_Normal (indexPlug, (NPP) (imageDesc->pluginInstance), stream, url);  */
-                               break;
-           case NP_SEEK:       /* ?????????????????????????????
-                                  CALL Ap_RequestRead
-                                  ????????????????????????????? */
-                               break;
-           default:            printf ("Error unknown mode %d\n", stype);
-                               break;
+           case NP_NORMAL:     
+                Ap_Normal ((NPP) (imageDesc->pluginInstance), stream, url); 
+                break;
+           case NP_ASFILEONLY: 
+                (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->asfile)) ((NPP)(imageDesc->pluginInstance), stream, url);
+                break;
+	   case NP_ASFILE:     
+                Ap_AsFile ((NPP) (imageDesc->pluginInstance), stream, url);
+                break;
+           case NP_SEEK:
+                break;
+           default:            
+                printf ("Error unknown mode %d\n", stype);
+                break;
     }
 
     (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->asfile)) ((NPP)(imageDesc->pluginInstance), stream, url);
     /* (*(pluginTable [indexPlug]->pluginFunctionsTable->destroystream)) ((NPP)(imageDesc->pluginInstance), stream, NPRES_DONE);*/
-    range.offset = 0; /*10; */
-    range.length = 2000; /*20;*/
-    range.next   = NULL;
-
-    /*AM_requestread(stream, &range);*/
- 
-    /* printf ("Retrun from new stream = %d\n", ret); */
-    /*dlclose(fighandle);*/       
-}
+ }
 
