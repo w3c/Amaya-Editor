@@ -1685,6 +1685,60 @@ void ChangeURI (Element el, Attribute attr, Document originDocument,
 }
 
 /*----------------------------------------------------------------------
+   ElementOKforProfile
+   This function is called for each element pasted by the user, and for
+   each element within the pasted element.
+   Check whether element el is valid in the document profile. If it is
+   not, delete the element and return FALSE.
+   Check also all attributes associated with the element and remove
+   the attributes that are not allowed by the profile.
+  ----------------------------------------------------------------------*/
+ThotBool ElementOKforProfile (Element el, Document doc)
+{
+  ElementType    elType;
+  char           *name;
+  AttributeType  attrType;
+  int            kind;
+  Attribute      attr, nextAttr;
+  ThotBool       ok;
+
+  ok = TRUE;
+  /* handle only HTML elements */
+  elType = TtaGetElementType (el);
+  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+    /* it's an element from the HTML namspace */
+    if (TtaGetDocumentProfile (doc) != L_Other)
+      /* the document profile does not accept any element and attribute */
+      {
+        name = GetXMLElementName (elType, doc);
+	if (name == NULL || name[0] == EOS)
+	  /* this element type is not acceptend in the document profile */
+	  ok = FALSE;
+	else
+	  /* the element type is OK */
+	  {
+	    /* check all attributes of the element */
+	    attr = 0;
+	    TtaNextAttribute (el, &attr);
+	    while (attr)
+	      {
+		nextAttr = attr;  TtaNextAttribute (el, &nextAttr);
+		TtaGiveAttributeType (attr, &attrType, &kind);
+		name = GetXMLAttributeName (attrType, elType, doc);
+		if (name == NULL || name[0] == EOS)
+		  /* this attribute is not valid for this element in the
+		     document profile. Delete the attribute */
+		  TtaRemoveAttribute (el, attr, doc);
+		attr = nextAttr;
+	      }
+	  }
+      }
+  if (!ok)
+    TtaDeleteTree (el, doc);
+  return ok;
+}
+
+/*----------------------------------------------------------------------
    ElementPasted
    This function is called for each element pasted by the user, and for
    each element within the pasted element.
@@ -1710,12 +1764,14 @@ void ElementPasted (NotifyElement * event)
 
   el = event->element;
   doc = event->document;
+  if (!ElementOKforProfile (el, doc))
+    return;
   HTMLschema = TtaGetSSchema ("HTML", doc);
   CheckPseudoParagraph (el, doc);
   /* Check attribute NAME or ID in order to make sure that its value */
   /* is unique in the document */
   MakeUniqueName (el, doc);
-  
+
   elType = TtaGetElementType (el);
   anchor = NULL;
   if (elType.ElSSchema == HTMLschema && elType.ElTypeNum == HTML_EL_Anchor)
@@ -2233,6 +2289,9 @@ ThotBool AttrColorDelete (NotifyAttribute * event)
   ----------------------------------------------------------------------*/
 void ListItemCreated (NotifyElement * event)
 {
+  if (event->event == TteElemPaste)
+    if (!ElementOKforProfile (event->element, event->document))
+      return;
    SetAttrIntItemStyle (event->element, event->document);
 }
 

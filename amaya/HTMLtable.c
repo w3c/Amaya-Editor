@@ -14,6 +14,7 @@
 /* Amaya includes  */
 #define THOT_EXPORT extern
 #include "amaya.h"
+#include "fetchXMLname_f.h"
 #include "undo.h"
 #include "MathML.h"
 #include "MathMLbuilder_f.h"
@@ -1291,6 +1292,8 @@ void                CellPasted (NotifyElement * event)
 
    cell = event->element;
    doc = event->document;
+   if (!ElementOKforProfile (cell, doc))
+     return;
    row = TtaGetParent (cell);
    if (row == CurrentPastedRow)
      /* this cell is part of the pasted row */
@@ -1625,6 +1628,9 @@ void                RowPasted (NotifyElement * event)
 
   row = event->element;
   doc = event->document;
+  if (!ElementOKforProfile (row, doc))
+    return;
+
   elType = TtaGetElementType (row);
   inMath = TtaSameSSchemas (elType.ElSSchema,
 			    TtaGetSSchema ("MathML", doc));

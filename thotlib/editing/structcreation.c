@@ -109,39 +109,44 @@ static ThotBool     createPasteMenuOK;
 void NotifySubTree (APPevent appEvent, PtrDocument pDoc, PtrElement pEl,
 		    int origDoc)
 {
-   NotifyElement       notifyEl;
-   PtrElement          pChild;
+  NotifyElement       notifyEl;
+  PtrElement          pChild, pNext;
 
-   if (pEl == NULL || pEl->ElStructSchema == NULL)
-      return;
-   /* send event appEvent.Post to element pEl */
-   notifyEl.event = appEvent;
-   notifyEl.document = (Document) IdentDocument (pDoc);
-   notifyEl.element = (Element) pEl;
-   notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-   notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-   if (origDoc < 0)
-      /* called by Undo */
-      {
+  if (pEl == NULL || pEl->ElStructSchema == NULL)
+    return;
+  /* send event appEvent.Post to element pEl */
+  notifyEl.event = appEvent;
+  notifyEl.document = (Document) IdentDocument (pDoc);
+  notifyEl.element = (Element) pEl;
+  notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
+  notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+  if (origDoc < 0)
+    /* called by Undo */
+    {
       notifyEl.position = 0;
       notifyEl.info = 1;
-      }
-   else
-      {
+    }
+  else
+    {
       notifyEl.position = origDoc;
       notifyEl.info = 0;
-      }
-   CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-   if (pDoc->DocNotifyAll)
-      /* the document needs an event for each element in the subtree */
+    }
+  CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+  if (pDoc->DocNotifyAll)
+    /* the document needs an event for each element in the subtree */
+    if (pEl->ElStructSchema != NULL)
+      /* the element has not been deleted by the callback */
       if (!pEl->ElTerminal)
 	{
-	   pChild = pEl->ElFirstChild;
-	   while (pChild != NULL)
-	     {
-		NotifySubTree (appEvent, pDoc, pChild, origDoc);
-		pChild = pChild->ElNext;
-	     }
+	  pChild = pEl->ElFirstChild;
+	  while (pChild != NULL)
+	    {
+	      /* save pointer on next child, in case the current child
+		 is deleted by the application */
+	      pNext = pChild->ElNext;
+	      NotifySubTree (appEvent, pDoc, pChild, origDoc);
+	      pChild = pNext;
+	    }
 	}
 }
 

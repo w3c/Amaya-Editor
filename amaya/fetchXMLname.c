@@ -50,7 +50,7 @@ SSchema         GetXHTMLSSchema (Document doc)
    return (XHTMLSSchema);
 }
 
-/*----------------------------------------------------------------------charName
+/*----------------------------------------------------------------------
    GetMathMLSSchema returns the MathML Thot schema for document doc.
   ----------------------------------------------------------------------*/
 SSchema         GetMathMLSSchema (Document doc)
@@ -146,7 +146,6 @@ SSchema GetXMLSSchema (int XMLtype, Document doc)
   else
     return NULL;
 }
-
 
 /*----------------------------------------------------------------------
   MapXMLElementType
