@@ -2402,7 +2402,8 @@ void GetXmlElementType (char *xmlName, ElementType *elType,
        pSS = (PtrSSchema) elType->ElSSchema;
        for (rule = 0; !found && rule < pSS->SsNRules; rule++)
 	 {
- 	   if (pSS->SsRule->SrElem[rule]->SrOrigName != NULL &&
+ 	   if (pSS->SsRule->SrElem[rule]->SrConstruct != CsNatureSchema &&
+	       pSS->SsRule->SrElem[rule]->SrOrigName != NULL &&
 	       strcmp (pSS->SsRule->SrElem[rule]->SrOrigName, xmlName) == 0)
 	     {
 	       elType->ElTypeNum = rule + 1;
@@ -2424,7 +2425,8 @@ void GetXmlElementType (char *xmlName, ElementType *elType,
 	       pSS = (PtrSSchema) pPfS->PfSSchema;
 	       for (rule = 0; !found && rule < pSS->SsNRules; rule++)
 		 {
-		   if (pSS->SsRule->SrElem[rule]->SrOrigName != NULL &&
+		   if (pSS->SsRule->SrElem[rule]->SrConstruct != CsNatureSchema &&
+		       pSS->SsRule->SrElem[rule]->SrOrigName != NULL &&
 		       strcmp (pSS->SsRule->SrElem[rule]->SrOrigName, xmlName) == 0)
 		     {
 		       elType->ElTypeNum = rule + 1;

@@ -5045,7 +5045,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	{
 	  /* get the element type of this name in the current document */
 	  if (xmlType == XML_TYPE)
-	    /* it's a generic XML document */
+	    /* it's a generic XML document. Check the main document schema */
 	    {
 	      elType.ElSSchema = TtaGetDocumentSSchema (doc);
 	      TtaGetXmlElementType (names[i], &elType, &mappedName, doc);
