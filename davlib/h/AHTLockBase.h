@@ -19,12 +19,22 @@
 #include <time.h>
 
 #include "wwwsys.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* #ifdef __cplusplus */
+
 #include "HTList.h"
 #include "HTAssoc.h"
 #include "HTMemory.h"
 #include "HTString.h"
 #include "HTWWWStr.h"
 
+#ifdef __cplusplus
+}
+#endif /* #ifdef __cplusplus */
+
+   
 #include "awparser.h"
 
 /* thotlib header for TtaFileUnlink, a portable version

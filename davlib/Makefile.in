@@ -115,37 +115,37 @@ AMAYA_DAV_OBJ= \
 #
 
 list.o :
-	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/tree/list.c -o list.o
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/tree/list.c -o list.o
 
 awstring.o :
-	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/tree/awstring.c -o awstring.o
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/tree/awstring.c -o awstring.o
 
 awpair.o :
-	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/tree/awpair.c -o awpair.o
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/tree/awpair.c -o awpair.o
 
 awnode.o :
-	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/tree/awnode.c -o awnode.o
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/tree/awnode.c -o awnode.o
 
 awtree.o :
-	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/tree/awtree.c -o awtree.o
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/tree/awtree.c -o awtree.o
 
 awparser.o :
-	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/awparser.c -o awparser.o
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/awparser.c -o awparser.o
 
 AHTLockBase.o :
-	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/AHTLockBase.c -o AHTLockBase.o
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/AHTLockBase.c -o AHTLockBase.o
 
 davlib.o :
-	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/davlib.c -o davlib.o
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/davlib.c -o davlib.o
 
 davlibCommon.o :
-	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/davlibCommon.c -o davlibCommon.o
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/davlibCommon.c -o davlibCommon.o
 
 davlibUI.o :
-	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/davlibUI.c -o davlibUI.o
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/davlibUI.c -o davlibUI.o
 
 davlibRequests.o :
-	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/davlibRequests.c -o davlibRequests.o
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OPTIONS) -c $(DAVLIB)/davlibRequests.c -o davlibRequests.o
 
 davlib.a : $(AMAYA_DAV_OBJ)
 	$(AR) davlib.a $(AMAYA_DAV_OBJ) 

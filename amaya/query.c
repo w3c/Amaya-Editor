@@ -132,6 +132,7 @@ static  FILE        *trace_fp = NULL;   /* file pointer to the trace logs */
 #include "AHTFWrite_f.h"
 
 #ifdef DAV
+#define WEBDAV_EXPORT extern
 #include "davlib.h"
 #include "davlib_f.h"
 #include "davlibCommon_f.h"
@@ -616,7 +617,7 @@ ThotBool  AHTReqContext_delete (AHTReqContext * me)
 #endif   
 
 #ifdef DAV /* if there is a DAV context object, delete it */
-       if (me->dav_context) AHTDAVContext_delete (me->dav_context);
+       if (me->dav_context) AHTDAVContext_delete ((AHTDAVContext*)me->dav_context);
 #endif /* DAV */
 
        if (Amaya->reqlist)

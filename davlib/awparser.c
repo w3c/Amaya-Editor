@@ -12,7 +12,12 @@
  ** $Author$
  ** $Revision$
  ** $Log$
- ** Revision 1.4  2002-06-12 10:29:07  kirschpi
+ ** Revision 1.5  2003-11-19 12:33:16  gully
+ ** Compilation fix (webdav support)
+ **
+ ** S. GULLY
+ **
+ ** Revision 1.4  2002/06/12 10:29:07  kirschpi
  ** - adjusts in code format
  ** - new commentaries
  ** - small fixes
@@ -152,7 +157,7 @@ AwNode *AwParser_makeNode (char *data, char **attr,int len, int type)
  */
 extern void AwParser_textElement (void *userData,const XML_Char *s,int len) 
 {
-    AwTree *tree = userData;
+    AwTree *tree = (AwTree *)userData;
     AwNode *node;
     char *data;
 #ifdef DEBUG
@@ -192,7 +197,7 @@ extern void AwParser_textElement (void *userData,const XML_Char *s,int len)
  */
 extern void AwParser_startElement(void *userData, const char *name, const char **attr) 
 {
-    AwTree *tree = userData;
+    AwTree *tree = (AwTree *)userData;
     AwNode *node;
 #ifdef DEBUG
     AwPair *pair;
@@ -235,7 +240,7 @@ extern void AwParser_startElement(void *userData, const char *name, const char *
  */
 extern void AwParser_endElement(void *userData, const char *name) 
 {
-    AwTree *tree = userData;
+    AwTree *tree = (AwTree *)userData;
     AwNode *last = NULL;
 
     if (verifyString((char *)name)<=0)                 /* ignore lines like "\n" */

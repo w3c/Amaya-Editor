@@ -15,7 +15,12 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.7  2003-05-19 11:39:47  vatton
+ ** Revision 1.8  2003-11-19 12:33:16  gully
+ ** Compilation fix (webdav support)
+ **
+ ** S. GULLY
+ **
+ ** Revision 1.7  2003/05/19 11:39:47  vatton
  ** Moving the variable DAVLibEnable.
  ** Irene
  **
@@ -60,12 +65,25 @@
 
 /* header files used by AHTDAVContext struct */
 #include "awtree.h"             /* AwTree struct, for tree element in AHTDAVContext */
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* #ifdef __cplusplus */
+   
 #include "HTChunk.h"            /* for the output/debug elements in AHTDAVContext */
 #include "HTReq.h"              /* for oldRequest element in AHTDAVContext */
 #include "HTDAV.h"              /* WebDAV module in libwww */
 #include "HTHome.h"
 
+#ifdef __cplusplus
+}
+#endif /* #ifdef __cplusplus */
+
+#undef PUBLIC
+#define PUBLIC extern
 #include "AHTLockBase.h"        /* "base" for lock tokens */
+#undef PUBLIC
+#define PUBLIC
 
 
 
@@ -112,25 +130,25 @@
 /*
  * WebDAV User's preferences and informations
  */
-char DAVDepth[DAV_LINE_MAX];                        /* Depth to be used in WebDAV requests */
-char DAVTimeout[DAV_LINE_MAX];                      /* Timeout to be used in LOCK requests */
-char DAVLockScope[DAV_LINE_MAX];                    /* Lock scope (exclusive/shared) */
-char DAVUserURL[DAV_LINE_MAX];                      /* user's reference */
-BOOL DAVAwareness;                              /* if user wants general awareness info */
-BOOL DAVAwarenessExit;                          /* if user wants awareness information */
+WEBDAV_EXPORT char DAVDepth[DAV_LINE_MAX];                        /* Depth to be used in WebDAV requests */
+WEBDAV_EXPORT char DAVTimeout[DAV_LINE_MAX];                      /* Timeout to be used in LOCK requests */
+WEBDAV_EXPORT char DAVLockScope[DAV_LINE_MAX];                    /* Lock scope (exclusive/shared) */
+WEBDAV_EXPORT char DAVUserURL[DAV_LINE_MAX];                      /* user's reference */
+WEBDAV_EXPORT BOOL DAVAwareness;                              /* if user wants general awareness info */
+WEBDAV_EXPORT BOOL DAVAwarenessExit;                          /* if user wants awareness information */
                                                 /* about his/her locks, when exiting a resource */  
-char DAVResources[DAV_LINE_MAX];                    /* list of user's WebDAV resources */
+WEBDAV_EXPORT char DAVResources[DAV_LINE_MAX];                    /* list of user's WebDAV resources */
 
 /*
  * Full qualified host.domain name 
  */
-char DAVFullHostName[DAV_LINE_MAX];              
+WEBDAV_EXPORT char DAVFullHostName[DAV_LINE_MAX];              
 
 
 /*
  * State of the LockIndicator toggle
  */
-BOOL DAVLockIndicatorState;
+WEBDAV_EXPORT BOOL DAVLockIndicatorState;
 
 
 /*----------------------------------------------------------------------

@@ -32,7 +32,7 @@ extern AwList * AwList_new (int lsize)
     nlist = (AwList *) LIST_CALLOC(1,sizeof (AwList));
     if (nlist != NULL) 
      {
-        nlist->elements = (void *) LIST_CALLOC(lsize,sizeof(void *));
+        nlist->elements = (void **) LIST_CALLOC(lsize,sizeof(void *));
         if (nlist->elements == NULL) 
          {
             LIST_FREE (nlist);

@@ -15,7 +15,12 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.10  2003-11-04 13:07:42  vatton
+ ** Revision 1.11  2003-11-19 12:33:16  gully
+ ** Compilation fix (webdav support)
+ **
+ ** S. GULLY
+ **
+ ** Revision 1.10  2003/11/04 13:07:42  vatton
  ** Fix warnings reported by insure.
  ** Irene
  **
@@ -70,6 +75,7 @@
 
 #define THOT_EXPORT extern
 
+#define WEBDAV_EXPORT extern
 #include "davlib.h"
 
 #include "davlibCommon_f.h"
@@ -235,7 +241,7 @@ char * DAVCopyFile (char * filename, int size)
 
     if (filename) 
      {
-         document = TtaGetMemory (size + 1);
+         document = (char *)TtaGetMemory (size + 1);
 
          fp = fopen (filename, "r");
          while (fp && fread(c,1,1,fp)) 
@@ -475,7 +481,7 @@ LockLine * DAVGetLockFromTree (AwTree * tree, char *owner)
                 /*put < and > in locktoken */
                 if (Ilocktoken && *Ilocktoken!='<') 
                  {
-                    s = HT_CALLOC (strlen(Ilocktoken)+3,sizeof(char));
+                    s = (char *)HT_CALLOC (strlen(Ilocktoken)+3,sizeof(char));
                     sprintf (s,"<%s>",Ilocktoken);
                     HT_FREE (Ilocktoken);
                     Ilocktoken = s;
@@ -627,7 +633,7 @@ AHTDAVContext * AHTDAVContext_new (const char *DocURL)
     if (!DocURL || !(*DocURL)) 
         return NULL;
     
-    if ( (me = HT_CALLOC (1,sizeof(AHTDAVContext))) == NULL)
+    if ( (me = (AHTDAVContext *)HT_CALLOC (1,sizeof(AHTDAVContext))) == NULL)
         outofmem (__FILE__,"AHTDAVContext_new");
     
     /* getting absolute and relative URI */
@@ -729,7 +735,7 @@ AHTReqContext * DAVCreateDefaultContext (int doc, char *url, AHTDAVContext *dav,
         me->dav_context = dav;
         
         /* destiny url */
-        me->urlName = TtaGetMemory (MAX_LENGTH + 2);
+        me->urlName = (char *)TtaGetMemory (MAX_LENGTH + 2);
         strcpy (me->urlName, url);
         ChopURL (me->status_urlName,me->urlName);
 

@@ -301,6 +301,7 @@ extern char      LostPicturePath [512];
 
 
 #ifdef DAV
+#define WEBDAV_EXPORT extern
 #include "davlib.h"
 #include "davlib_f.h"
 #include "davlibRequests_f.h"

@@ -52,6 +52,7 @@
 #include "XHTMLbuilder_f.h"
 
 #ifdef DAV
+#define WEBDAV_EXPORT extern
 #include "davlib_f.h"
 #endif /* DAV */
 #include "libmanag_f.h"

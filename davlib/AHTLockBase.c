@@ -17,7 +17,6 @@
 */
 
 
-
 #include "AHTLockBase.h"
 
 
@@ -218,7 +217,7 @@ LockLine * LockLine_new (const char * aline)
             timeout && *timeout && itime && *itime ) 
          {
 
-            if ( (me = HT_CALLOC (1,sizeof(LockLine))) == NULL)
+            if ( (me = (LockLine *)HT_CALLOC (1,sizeof(LockLine))) == NULL)
                 HT_OUTOFMEM ("LockLine new");
 
             me->relativeURI = me->lockToken = NULL;
@@ -262,7 +261,7 @@ PUBLIC LockLine * LockLine_newObject (char * relativeURI, char * locktoken,
         && depth && *depth && timeout && *timeout) 
      {
 
-        if ( (me = HT_CALLOC (1,sizeof(LockLine))) == NULL)
+        if ( (me = (LockLine *)HT_CALLOC (1,sizeof(LockLine))) == NULL)
             HT_OUTOFMEM ("LockLine newObject");
 
         me->relativeURI = me->lockToken = me->timeout = me->initialTime = NULL;
@@ -414,7 +413,7 @@ PUBLIC char * makeIfItem (const char * filename, char * relUri, char *lockToken)
         sum += strlen (lockToken);
         sum += 15;
         
-        if ( (ptr = HT_CALLOC (sum,sizeof(char))) == NULL)
+        if ( (ptr = (char *)HT_CALLOC (sum,sizeof(char))) == NULL)
              HT_OUTOFMEM("AHTLockFile makeIfItem");
         
         sprintf (ptr,"<http://%s%s> (%s) ",filename,relUri,lockToken);
@@ -748,7 +747,7 @@ PUBLIC LockLine * processLockInfo (char *relative, AwTree *xmlbody, HTAssocList 
         depth = timeout = lock = NULL;
 
         /* getting lock-token */
-        while (headers && (h = HTAssocList_nextObject(headers))) 
+        while (headers && (h = (HTAssoc *)HTAssocList_nextObject(headers))) 
          {
             if (!strcasecomp(HTAssoc_name(h),"Lock-Token"))
                 ptr = HTAssoc_value(h);
@@ -876,6 +875,8 @@ PUBLIC BOOL saveLockBase (char *absolute, char *relative,
     return status;
 }
 
+/* need this function from thotlib ... */
+extern int TtaFileUnlink ( const char *filename );
 
 /* ---------------------------------------------------------------------------
  * This function removes the lock information in LockLine object from the base.

@@ -14,7 +14,12 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.11  2003-05-19 10:24:54  vatton
+ ** Revision 1.12  2003-11-19 12:33:16  gully
+ ** Compilation fix (webdav support)
+ **
+ ** S. GULLY
+ **
+ ** Revision 1.11  2003/05/19 10:24:54  vatton
  ** Internationalization of the MakeID dialogue.
  ** Irene
  **
@@ -71,6 +76,8 @@
 #include <stdio.h>
 
 #define THOT_EXPORT extern
+
+#define WEBDAV_EXPORT
 
 #include "davlib.h"
 
@@ -332,7 +339,7 @@ void DAVFreeLock (Document docid)
             ptr = DAVBreakString (label1);
             sprintf (label2,TtaGetMessage(AMAYA,AM_UNLOCK_DOCUMENT));
             
-            if (DAVConfirmDialog (docid,label1,(ptr)?ptr:" ", label2)) 
+            if (DAVConfirmDialog (docid,label1,(ptr)?ptr:(char *)" ", label2)) 
              {
                 AHTDAVContext *new_davctx = GetUnlockInfo (docid);
                 if (new_davctx) 

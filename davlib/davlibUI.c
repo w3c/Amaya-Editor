@@ -15,7 +15,12 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.9  2002-06-13 16:10:13  kirschpi
+ ** Revision 1.10  2003-11-19 12:33:16  gully
+ ** Compilation fix (webdav support)
+ **
+ ** S. GULLY
+ **
+ ** Revision 1.9  2002/06/13 16:10:13  kirschpi
  ** New dialogue "WebDAV Preferences"
  ** Corrections due last commit by JK
  ** Manuele
@@ -64,6 +69,7 @@
 
 #define THOT_EXPORT extern
 
+#define WEBDAV_EXPORT extern
 #include "davlib.h"
 #include "davlib_f.h"
 #include "davlibUI_f.h"
@@ -189,15 +195,15 @@ void DAVPropertiesVerticalDialog (Document docid, char *title, char *rheader,
         /* Main form */
         TtaNewSheet (BaseDialog + form, 
                      TtaGetViewFrame (docid, DAV_VIEW), 
-                     (title)?title:" ", 0, NULL, FALSE, 
+                     (title)?title:(char *)" ", 0, NULL, FALSE, 
                      (rheader && lheader)?lines+3:lines+1, 'L', D_DONE);
 
         if (rheader || lheader) 
          {
             TtaNewLabel (BaseDialog + (i++), BaseDialog + form,
-                         (lheader)?lheader:" ");
+                         (lheader)?lheader:(char *)" ");
             TtaNewLabel (BaseDialog + (i++), BaseDialog + form,
-                         "----------------");
+                         (char *)"----------------");
          }
 
         /* properties: names */ 
@@ -218,14 +224,14 @@ void DAVPropertiesVerticalDialog (Document docid, char *title, char *rheader,
         AwList_reset (list);
             
         TtaNewLabel (BaseDialog + (i++), BaseDialog + form,
-                     "              ");
+                     (char *)"              ");
 
         if (rheader || lheader) 
          {
             TtaNewLabel (BaseDialog + (i++), BaseDialog + form,
-                         (rheader)?rheader:" ");
+                         (rheader)?rheader:(char *)" ");
             TtaNewLabel (BaseDialog + (i++), BaseDialog + form,
-                         "------------------------------");
+                         (char *)"------------------------------");
          }
             
         /* properties: values */ 
@@ -253,7 +259,7 @@ void DAVPropertiesVerticalDialog (Document docid, char *title, char *rheader,
         AwList_delete (list);
                 
         TtaNewLabel (BaseDialog + (i++), BaseDialog + form,
-                     "              ");
+                     (char *)"              ");
 
             
         TtaSetDialoguePosition ();
@@ -295,19 +301,19 @@ void DAVHorizontalDialog (Document docid, char *title, char *rheader,
         /* Main form */
         TtaNewSheet (BaseDialog + form, 
                      TtaGetViewFrame (docid, DAV_VIEW), 
-                     (title)?title:" ", 0, NULL, TRUE, 
+                     (title)?title:(char *)" ", 0, NULL, TRUE, 
                      2, 'L', D_DONE);
 
         if (rheader || lheader) 
          {
             TtaNewLabel (BaseDialog + (i++), BaseDialog + form,
-                         (lheader)?lheader:" ");
+                         (lheader)?lheader:(char *)" ");
             TtaNewLabel (BaseDialog + (i++), BaseDialog + form,
-                         (rheader)?rheader:" ");
+                         (rheader)?rheader:(char *)" ");
             TtaNewLabel (BaseDialog + (i++), BaseDialog + form,
-                         "----------------");
+                         (char *)"----------------");
             TtaNewLabel (BaseDialog + (i++), BaseDialog + form,
-                         "---------------------------");
+                         (char *)"---------------------------");
          }
 
         /* names  values */ 
@@ -1070,7 +1076,7 @@ void DAVShowPreferencesDlg (Document document)
         
     char buf[DAV_LINE_MAX];
     
-    DAVPreferencesBase = TtaSetCallback (DAVShowPreferencesDlg_callback,MAX_DAVPREF_DLG);
+    DAVPreferencesBase = TtaSetCallback ((Proc)DAVShowPreferencesDlg_callback,MAX_DAVPREF_DLG);
 
     sprintf (buf,"%s%c%s%c",TtaGetMessage (AMAYA, AM_APPLY_BUTTON),EOS,
                             TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON),EOS);
