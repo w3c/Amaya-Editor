@@ -280,7 +280,7 @@ void JpegPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
   int                 picW, picH;
 
   data = ReadJpegToData (fn, &picW, &picH, colrs);
-  if (!data)
+  if (data)
     DataToPrint (data, pres, xif, yif, wif, hif, picW, picH, fd, 100, -1,
 		 bgColor, colrs, FALSE);
   TtaFreeMemory (data);
