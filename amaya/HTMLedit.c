@@ -830,7 +830,7 @@ void                CreateAnchor (Document doc, View view, ThotBool createLink)
 
   /* get the first and last selected element */
   TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
-  if (TtaIsReadOnly (el))
+  if (TtaIsReadOnly (first))
     /* the selected element is read-only */
     return;
   TtaGiveLastSelectedElement (doc, &last, &i, &cN);
