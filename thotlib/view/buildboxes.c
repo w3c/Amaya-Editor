@@ -1613,7 +1613,6 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 
   if (pAb->AbDead)
     return (NULL);
-
   /* by default it's not a table element */
   tableType = BoComplete;
   pSS = pAb->AbElement->ElStructSchema;
