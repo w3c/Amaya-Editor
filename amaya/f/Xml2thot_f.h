@@ -7,9 +7,13 @@
 #ifdef __STDC__
 
 extern void XmlSetElemLineNumber ( Element el );
+extern void XmlParseError ( ErrorType type,
+                            CHAR_T *msg,
+                            int line );
 extern ThotBool IsParsingCSS ( void );
 extern void SetParsingCSS ( ThotBool value );
 extern void SetParsingTextArea ( ThotBool value );
+extern void SetLanguagInXmlStack ( Language lang );
 extern int IsWithinTable ( void );
 extern void SubWithinTable ( void );
 extern void InsertXmlElement ( Element *el );
@@ -48,9 +52,13 @@ extern void StartXmlParser ( Document doc,
 #else /* __STDC__ */
 
 extern void XmlSetElemLineNumber (/* Element el */);
+extern void XmlParseError (/* ErrorType type,
+                              CHAR_T *msg,
+                              int line */);
 extern ThotBool IsParsingCSS (/* void */);
 extern void SetParsingCSS (/* ThotBool value */);
 extern void SetParsingTextArea (/* ThotBool value */);
+extern void SetLanguagInXmlStack (/* Language lang */);
 extern int IsWithinTable (/* void */);
 extern void SubWithinTable (/* void */);
 extern void InsertXmlElement (/* Element *el */);

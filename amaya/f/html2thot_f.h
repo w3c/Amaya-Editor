@@ -10,6 +10,7 @@ extern STRING SkipSep ( STRING ptr );
 extern STRING SkipInt ( STRING ptr );
 extern void ParseAreaCoords ( Element element,
                               Document document );
+extern void SetLanguagInHTMLStack ( Language lang );
 extern void InitMapping ( void );
 extern void ParseHTMLError ( Document doc,
                              CHAR_T* msg );
@@ -26,13 +27,6 @@ extern int MapAttrValue ( int thotAttr,
                           CHAR_T* attrVal );
 extern void SetAttrIntItemStyle ( Element el,
                                   Document doc );
-extern void CreateAttrWidthPercentPxl ( STRING buffer,
-                                        Element el,
-                                        Document doc,
-                                        int oldWidth );
-extern void CreateAttrIntSize ( STRING buffer,
-                                Element el,
-                                Document doc );
 extern void GetFallbackCharacter ( int code,
                                    USTRING fallback,
                                    Language* lang );
@@ -76,6 +70,7 @@ extern STRING SkipSep (/* STRING ptr */);
 extern STRING SkipInt (/* STRING ptr */);
 extern void ParseAreaCoords (/* Element element,
                                 Document document */);
+extern void SetLanguagInHTMLStack (/* Language lang */);
 extern void InitMapping (/* void */);
 extern void ParseHTMLError (/* Document doc,
                                CHAR_T* msg */);
@@ -92,13 +87,6 @@ extern int MapAttrValue (/* int thotAttr,
                             CHAR_T* attrVal */);
 extern void SetAttrIntItemStyle (/* Element el,
                                     Document doc */);
-extern void CreateAttrWidthPercentPxl (/* STRING buffer,
-                                          Element el,
-                                          Document doc,
-                                          int oldWidth */);
-extern void CreateAttrIntSize (/* STRING buffer,
-                                  Element el,
-                                  Document doc */);
 extern void GetFallbackCharacter (/* int code,
                                      USTRING fallback,
                                      Language* lang */);

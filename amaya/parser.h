@@ -81,6 +81,16 @@ typedef struct _XmlEntity
 }
 XmlEntity;
 
+/* Error types for the XML parser*/
+typedef enum
+{
+  errorEncoding,
+  errorNotWellFormed,
+  errorCharacterNotSupported,
+  errorParsing,
+  errorParsingProfile,
+} ErrorType;
+
 #endif /* PARSER_H */
 
 

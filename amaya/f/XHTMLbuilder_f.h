@@ -14,9 +14,40 @@ extern void XhtmlEntityCreated ( int entityValue,
 extern void XhtmlElementComplete ( Element el,
                                    Document doc,
                                    int *error );
-extern void MapHTMLAttributeValue ( CHAR_T* AttrVal,
+extern Element PutInContent ( STRING ChrString,
+                              ParserData *context );
+extern void CreateHTMLAttribute ( Element el,
+                                  AttributeType attrType,
+                                  CHAR_T* text,
+                                  ThotBool isInvalid,
+                                  Document doc,
+                                  Attribute *lastAttribute,
+                                  Element *lastAttrElement );
+extern void HTMLTypeAttrValue ( CHAR_T *val,
+                                Attribute lastAttribute,
+                                Element lastAttrElement,
+                                ParserData *context );
+extern void XhtmlTypeAttrValue ( CHAR_T *val,
+                                 Attribute currentAttribute,
+                                 Element lastAttrElement,
+                                 ParserData *context );
+extern void CreateAttrWidthPercentPxl ( STRING buffer,
+                                        Element el,
+                                        Document doc,
+                                        int oldWidth );
+extern void CreateAttrIntSize ( STRING buffer,
+                                Element el,
+                                Document doc );
+extern void EndOfHTMLAttributeValue ( CHAR_T *attrValue,
+                                      AttributeMapping *lastMappedAttr,
+                                      Attribute currentAttribute,
+                                      Element lastAttrElement,
+                                      ThotBool UnknownAttr,
+                                      ParserData *context,
+                                      ThotBool isXML );
+extern void MapHTMLAttributeValue ( CHAR_T *AttrVal,
                                     AttributeType attrType,
-                                    int* value );
+                                    int *value );
 
 #else /* __STDC__ */
 
@@ -28,9 +59,40 @@ extern void XhtmlEntityCreated (/* int entityValue,
 extern void XhtmlElementComplete (/* Element el,
                                      Document doc,
                                      int *error */);
-extern void MapHTMLAttributeValue (/* CHAR_T* AttrVal,
+extern Element PutInContent (/* STRING ChrString,
+                                ParserData *context */);
+extern void CreateHTMLAttribute (/* Element el,
+                                    AttributeType attrType,
+                                    CHAR_T* text,
+                                    ThotBool isInvalid,
+                                    Document doc,
+                                    Attribute *lastAttribute,
+                                    Element *lastAttrElement */);
+extern void HTMLTypeAttrValue (/* CHAR_T *val,
+                                  Attribute lastAttribute,
+                                  Element lastAttrElement,
+                                  ParserData *context */);
+extern void XhtmlTypeAttrValue (/* CHAR_T *val,
+                                   Attribute currentAttribute,
+                                   Element lastAttrElement,
+                                   ParserData *context */);
+extern void CreateAttrWidthPercentPxl (/* STRING buffer,
+                                          Element el,
+                                          Document doc,
+                                          int oldWidth */);
+extern void CreateAttrIntSize (/* STRING buffer,
+                                  Element el,
+                                  Document doc */);
+extern void EndOfHTMLAttributeValue (/* CHAR_T *attrValue,
+                                        AttributeMapping *lastMappedAttr,
+                                        Attribute currentAttribute,
+                                        Element lastAttrElement,
+                                        ThotBool UnknownAttr,
+                                        ParserData *context,
+                                        ThotBool isXML */);
+extern void MapHTMLAttributeValue (/* CHAR_T *AttrVal,
                                       AttributeType attrType,
-                                      int* value */);
+                                      int *value */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
