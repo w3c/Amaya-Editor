@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /I "..\..\amaya" /I "..\..\freetype-2.1.0\include" /D "NDEBUG" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "__STDC__" /D "STDC_HEADERS" /D "SOCKSTHOT_TOOLTIPS" /D "_I18N_" /D "WIN32" /D "_WINDOWS_" /D "_GL" /D "_SVGLIB" /D "_SVGANIM" /YX /FD /c
+# ADD CPP /nologo /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /I "..\..\amaya" /I "..\..\freetype-2.1.0\include" /I "..\..\..\freetype-2.1.0\include" /D "NDEBUG" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "__STDC__" /D "STDC_HEADERS" /D "SOCKSTHOT_TOOLTIPS" /D "_I18N_" /D "WIN32" /D "_WINDOWS_" /D "_GL" /D "_SVGLIB" /D "_SVGANIM" /YX /FD /c
 # ADD BASE RSC /l 0x40c
 # ADD RSC /l 0x40c
 BSC32=bscmake.exe
