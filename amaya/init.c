@@ -2530,6 +2530,8 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   if (docType == docAnnot)
 	     {
 	       /* turn off the menus that don't make sense in the annotation view */
+	       TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
+			       TRUE, TextURL);
 	       TtcSwitchCommands (doc, 1); /* no command open */
 	       TtaSetItemOff (doc, 1, Views, BShowAlternate);
 	       TtaSetItemOff (doc, 1, Views, BShowToC);
