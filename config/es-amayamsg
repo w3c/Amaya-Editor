@@ -110,12 +110,12 @@
 108 Enérgico (strong)
 109 Código (code)
 110 No repetir (no-repeat)
-111 Imagen:
+111 Imagen
 112 Cabecera nivel 1 (h1)
 113 Cabecera nivel 2 (h2)
 114 Cabecera nivel 3 (h3)
-115 Lista no numerada (ul)
-116 Lista numerada (ol)
+115 Lista no ordenada (ul)
+116 Lista ordenada (ol)
 117 Lista de definición (dl)
 118 Enlace
 119 Tabla
@@ -232,10 +232,10 @@
 230 Activar FTP
 231 XML inválido - ¿Recargar como HTML o mostrar análisis de errores?
 232 XML inválido - ¿Mostrar análisis de errores?
-233 Utiliza el menú 'Archivo / Forzar codificación de caracteres'
+233 Utiliza el menú 'Archivo > Forzar codificación de caracteres'
 234 Caracteres inválidos
 235 Perfil de este documento:
-236 Se ignoran Tags/atributos - vea Archivo / Ver errores sintácticos
+236 Se ignoran Tags/atributos - vea Archivo > Mostrar errores sintácticos
 237 La codificación de este documento no está soportada por Amaya
 238 Al editar y guardar este documento se cambiará su tipo
 239 No disponible
@@ -278,7 +278,7 @@
 276 Para usar esta opción el destino tiene que ser una URL HTTP
 277 Error: tipo MIME inválido
 278 Desconocido
-279 Se ignoran los estilos - vea Ver / Ver errores sintácticos
+279 Se ignoran los estilos - vea Archivo > Mostrar errores sintácticos
 280 Este documento ya está cargado en otra ventana
 281 Guardar la copia puede originar un problema de pérdida de actualización
 282 Al añadir o modificar el doctype se eliminarán algunos elementos o atributos
@@ -377,4 +377,4 @@
 375 Ubicación del contenido:
 376 Preferencias
 377 Carácter (&xxx;)
-378 **Create Object
+378 Crear Objeto

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Thu Oct 21 12:12:29 CEST 2004" version="85">
+<base last_update="Fri Dec  3 11:03:17 CET 2004" version="86">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -709,7 +709,7 @@
 	<message xml:lang="fr">Montrer les &amp;erreurs</message>
 	<message xml:lang="de">Parserfehler anzeigen</message>
 	<message xml:lang="it">Mostra le errore</message>
-	<message xml:lang="es">Errores &amp;sintácticos</message>
+	<message xml:lang="es">Mostrar errores &amp;sintácticos</message>
 	<message xml:lang="pt">Exibir erros de gramática (parsing)</message>
 	<message xml:lang="fi">Näytä käännösvirheet</message>
 	<message xml:lang="tr">Pars hatalarını göster</message>
@@ -1121,7 +1121,7 @@
 	<message xml:lang="de">Ungeordnete Liste (ul)</message>
 	<message xml:lang="it">Lista puntata (ul)</message>
 	<message xml:lang="tr">Noktalı liste (ul)</message>
-	<message xml:lang="es">Lista no numerada (ul)</message>
+	<message xml:lang="es">Lista no ordenada (ul)</message>
 	<message xml:lang="pt">Lista com bolinhas (ul)</message>
 	<message xml:lang="fi">Pistein erotettu luettelo (ul)</message>
 	<message xml:lang="ru">Маркированный список (ul)</message>
@@ -1132,7 +1132,7 @@
 	<message xml:lang="de">Geordnete Liste (ol)</message>
 	<message xml:lang="it">Lista numerata (ol)</message>
 	<message xml:lang="tr">Numaralı liste (ol)</message>
-	<message xml:lang="es">Lista numerada (ol)</message>
+	<message xml:lang="es">Lista ordenada (ol)</message>
 	<message xml:lang="pt">Lista numerada (ol)</message>
 	<message xml:lang="fi">Numeroitu luettelo (ol)</message>
 	<message xml:lang="ru">Нумерованный список (ol)</message>
@@ -1539,7 +1539,7 @@
 	<message xml:lang="fr">Insérer une ligne</message>
 	<message xml:lang="it">Inserisci una riga</message>
 	<message xml:lang="de">Zeile einfügen (davor)</message>
-	<message xml:lang="es">Insertar fila</message>
+	<message xml:lang="es">Insertar fila delante</message>
 	<message xml:lang="ru">Вставить строку</message>
 </label>
 <label define="BCreateRowA">
@@ -1547,7 +1547,7 @@
 	<message xml:lang="fr">Ajouter une ligne</message>
 	<message xml:lang="it">Aggiungi una riga</message>
 	<message xml:lang="de">Zeile inzufügen (danach)</message>
-	<message xml:lang="es">Añadir fila</message>
+	<message xml:lang="es">Añadir fila detrás</message>
 	<message xml:lang="ru">Добавить строку</message>
 </label>
 <label define="BSelectColumn">
@@ -1563,7 +1563,7 @@
 	<message xml:lang="fr">Insérer une colonne</message>
 	<message xml:lang="it">Inserisci una colonna</message>
 	<message xml:lang="de">Spalte einfügen (davor)</message>
-	<message xml:lang="es">Insertar columna</message>
+	<message xml:lang="es">Insertar columna delante</message>
 	<message xml:lang="ru">Вставить столбец</message>
 </label>
 <label define="BCreateColumnA">
@@ -1571,7 +1571,7 @@
 	<message xml:lang="fr">Ajouter une colonne</message>
 	<message xml:lang="it">Aggiungi una colonna</message>
 	<message xml:lang="de">Spalte inzufügen (danach)</message>
-	<message xml:lang="es">Añadir columna</message>
+	<message xml:lang="es">Añadir columna detrás</message>
 	<message xml:lang="ru">Добавить столбец</message>
 </label>
 <label define="BPasteBefore">
@@ -2440,7 +2440,7 @@
 	<message xml:lang="fr">Insérer une ligne</message>
 	<message xml:lang="it">Inserisci una riga</message>
 	<message xml:lang="de">Zeile einfügen (davor)</message>
-	<message xml:lang="es">Insertar fila</message>
+	<message xml:lang="es">Insertar fila delante</message>
 	<message xml:lang="ru">Вставить строку</message>
 </label>
 <label define="BMCreateRowA">
@@ -2448,7 +2448,7 @@
 	<message xml:lang="fr">Ajouter une ligne</message>
 	<message xml:lang="it">Aggiungi una riga</message>
 	<message xml:lang="de">Zeile inzufügen (danach)</message>
-	<message xml:lang="es">Añadir fila</message>
+	<message xml:lang="es">Añadir fila detrás</message>
 	<message xml:lang="ru">Добавить строку</message>
 </label>
 <label define="BMSelectColumn">
@@ -2464,7 +2464,7 @@
 	<message xml:lang="fr">Insérer une colonne</message>
 	<message xml:lang="it">Inserisci una colonna</message>
 	<message xml:lang="de">Spalte einfügen (davor)</message>
-	<message xml:lang="es">Insertar columna</message>
+	<message xml:lang="es">Insertar columna delante</message>
 	<message xml:lang="ru">Вставить столбец</message>
 </label>
 <label define="BMCreateColumnA">
@@ -2472,7 +2472,7 @@
 	<message xml:lang="fr">Ajouter une colonne</message>
 	<message xml:lang="it">Aggiungi una colonna</message>
 	<message xml:lang="de">Spalte inzufügen (danach)</message>
-	<message xml:lang="es">Añadir columna</message>
+	<message xml:lang="es">Añadir columna detrás</message>
 	<message xml:lang="ru">Добавить столбец</message>
 </label>
 <label define="BMPasteBefore">
