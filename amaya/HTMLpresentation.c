@@ -602,6 +602,8 @@ ThotBool ChangePRule (NotifyPresentation *event)
       }
     }
   /* set the Style_ attribute ? */
+  /* Store the new value into the presentation rule */
+  TtaSetPRuleValue (event->element, presRule, event->value, doc);
   SetStyleAttribute (doc, el);
   TtaSetDocumentModified (doc);
   return (ret);
