@@ -1286,6 +1286,13 @@ static void WriteBasicElements (FILE * Hfile)
    fprintf (Hfile, "_EL_");
    WriteRuleName (Hfile, r);
    fprintf (Hfile, " %d\n", r+1);
+
+   fprintf (Hfile, "#define ");
+   WriteName (Hfile, pSSchema->SsName);
+   r = AnyType;
+   fprintf (Hfile, "_EL_");
+   WriteRuleName (Hfile, r);
+   fprintf (Hfile, " %d\n", r+1);
 }
 
 /*----------------------------------------------------------------------
