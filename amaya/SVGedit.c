@@ -1333,6 +1333,13 @@ void         CreateGraphicElement (int entry)
     /* there is no selection. Nothing to do */
     return;
   TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
+  if (first)
+    {
+      parent = TtaGetParent (first);
+      if (TtaIsReadOnly (parent))
+	/* do not create new elements within a read-only element */
+	return;
+    }
   TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
   selEl = first;
   newEl = NULL;

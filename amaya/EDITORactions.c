@@ -2044,6 +2044,10 @@ void                CreateOrChangeLink (Document doc, View view)
 
    UseLastTarget = FALSE;
    TtaGiveFirstSelectedElement (doc, &el, &firstSelectedChar, &i);
+   if (TtaIsReadOnly (el))
+     /* the selected element is read-only */
+     return;
+
    if (el != NULL)
      {
        /* Look if there is an enclosing anchor element */
@@ -2077,12 +2081,20 @@ void                DeleteAnchor (Document doc, View view)
    ElementType         elType;
    DisplayMode         dispMode;
 
+   if (!TtaGetDocumentAccessMode (doc))
+     /* the document is in ReadOnly mode */
+     return;
+
    /* get the first selected element */
    TtaGiveFirstSelectedElement (doc, &firstSelectedElement,
 				&firstSelectedChar, &lastSelectedChar);
    if (firstSelectedElement == NULL)
       /* no selection. Do nothing */
       return;
+   if (TtaIsReadOnly (firstSelectedElement))
+     /* the selected element is read-only */
+     return;
+
    elType = TtaGetElementType (firstSelectedElement);
    if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
       /* the first selected element is not an HTML element. Do nothing */

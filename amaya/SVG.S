@@ -25,6 +25,8 @@ ATTR
 
 STRUCT
 
+{ Structure Module }
+
    SVG
 	(ATTR requiredFeatures = text;
 	      requiredExtensions = text;
@@ -48,6 +50,12 @@ STRUCT
 	      Charset = text)
         = LIST OF (GraphicsElement) + (XMLcomment, XMLPI, Unknown_namespace);
 
+   desc = TEXT;
+	
+   title = TEXT;
+	
+   metadata = TEXT;
+
    g
         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
@@ -67,17 +75,90 @@ STRUCT
 	      { graphicsElementEvents })
         = LIST OF (GraphicsElement);
 
-   path
-	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
-	      externalResourcesRequired; 
+   use_  { not in SVG Tiny }
+        (ATTR xlink_href = text;
+	      requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired;
 	      fill; stroke; stroke_width;
-              transform;
-	      d = text;
-	      pathLength = text)
+	      font_family; font_size; font_style; font_variant; font_weight;
+	      text_decoration;
+	      transform;
+	      { graphicsElementEvents }
+	      x; 
+	      y;
+              width_;
+              height_)
         = AGGREGATE
-	      desc; title; metadata;
-	      GRAPHICS;
+              desc; title; metadata;
 	      END;
+	
+   symbol_  { not in SVG Tiny }
+	(ATTR externalResourcesRequired;
+	      fill; stroke; stroke_width;
+	      font_family; font_size; font_style; font_variant; font_weight;
+	      text_decoration;
+	      viewBox;
+	      preserveAspectRatio = text; 
+	      { graphicsElementEvents })
+        = LIST OF (GraphicsElement);
+
+{ Images }
+
+   image
+	(ATTR xlink_href;
+	      requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired; 
+	      transform;
+	      x; 
+	      y;
+              width_;
+              height_)
+        = AGGREGATE
+              desc; ? title; ? metadata;
+              PICTURE;
+              SVG_Image = SVG;
+	      END;
+
+{ Conditional Processing }
+
+   switch
+	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired;
+	      { PresentationAttributes-All }
+	      fill; stroke; stroke_width;
+	      font_family; font_size; font_style; font_variant; font_weight;
+	      text_decoration;
+	      transform;
+	      { graphicsElementEvents })
+	= LIST OF (CASE OF
+		      GraphicsElement; foreignObject;
+	              END);
+
+{ Hyperlinking }
+
+   a
+        (ATTR xlink_href;
+	      requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired;
+	      fill; stroke; stroke_width;
+	      font_family; font_size; font_style; font_variant; font_weight;
+	      text_decoration;
+	      transform;
+	      { graphicsElementEvents }
+	      target_ = text)
+	= LIST OF (CASE OF
+		      GraphicsElement; TextComponent;
+	              END);
+
+{ Styling }
+
+   style__  { not in SVG Tiny }
+	(ATTR type = text;
+	      media = text;
+	      title_ = text)
+	= TEXT;
+
+{ Shapes }
 
    rect
         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
@@ -108,20 +189,6 @@ STRUCT
 	      GRAPHICS;
 	      END;
 	
-   ellipse
-        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
-	      externalResourcesRequired; 
-	      fill; stroke; stroke_width;
-	      transform;
-	      cx;
-	      cy;
-	      rx;
-	      ry)
-        = AGGREGATE
-	      desc; title; metadata;
-	      GRAPHICS;
-	      END;
-	
    line_
         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
@@ -131,6 +198,20 @@ STRUCT
 	      y1 = text;
               x2 = text;
 	      y2 = text)
+        = AGGREGATE
+	      desc; title; metadata;
+	      GRAPHICS;
+	      END;
+	
+   ellipse
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired; 
+	      fill; stroke; stroke_width;
+	      transform;
+	      cx;
+	      cy;
+	      rx;
+	      ry)
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;
@@ -158,6 +239,20 @@ STRUCT
 	      GRAPHICS;
 	      END;
 
+   path
+	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired; 
+	      fill; stroke; stroke_width;
+              transform;
+	      d = text;
+	      pathLength = text)
+        = AGGREGATE
+	      desc; title; metadata;
+	      GRAPHICS;
+	      END;
+
+{ Text }
+	
    text_
         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
@@ -171,7 +266,7 @@ STRUCT
 	      dy = text)
          = LIST OF (TextComponent);
 
-   tspan
+   tspan  { not in SVG Tiny }
 	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
 	      fill; stroke; stroke_width;
@@ -181,131 +276,66 @@ STRUCT
               y;
 	      dx;
 	      dy)
-	= LIST OF (SpanElement);
-
+	= LIST OF (SpanElement = CASE OF
+		      TEXT;
+		      tspan; 
+		      desc;
+		      title;
+		      metadata;
+		      END);
+	
    { tref }
    { textPath }
    { altGlyph }
-   { altGlyphDef }
-   { altGlyphItem }
-   { glyphRef }
+
+{ Filters }
+
+   { filter }
+   { feBlend }
+   { feFlood }
+   { feColorMatrix }
+   { feComponentTransfer }
+   { feComposite }
+   { feConvolveMatrix }
+   { feDiffuseLighting }
+   { feDisplacementMap }
+   { feGaussianBlur }
+   { feImage }
+   { feMerge }
+   { feMorphology }
+   { feOffset }
+   { feSpecularLighting }
+   { feTile }
+   { feTurbulence }
+
+{ Scripting }
+
+   script  { not in SVG Tiny }
+	(ATTR externalResourcesRequired;
+	      type)
+	= TEXT;
+
+{ Animation }
+
+   { animate }
+   { set }
+   { animateMotion }
+   { animateTransform }
+   { animateColor }
+   { mpath }
+
+{ Fonts }
+
    { font }
+   { font-face }
    { glyph }
    { missing-glyph }
    { hkern }
    { vkern }
 
-   use_
-        (ATTR xlink_href = text;
-	      requiredFeatures; requiredExtensions; systemLanguage;
-	      externalResourcesRequired;
-	      fill; stroke; stroke_width;
-	      font_family; font_size; font_style; font_variant; font_weight;
-	      text_decoration;
-	      transform;
-	      { graphicsElementEvents }
-	      x; 
-	      y;
-              width_;
-              height_)
-        = AGGREGATE
-              desc; title; metadata;
-	      END;
-	
-   image
-	(ATTR xlink_href;
-	      requiredFeatures; requiredExtensions; systemLanguage;
-	      externalResourcesRequired; 
-	      transform;
-	      x; 
-	      y;
-              width_;
-              height_)
-        = AGGREGATE
-              desc; ? title; ? metadata;
-              PICTURE;
-              SVG_Image;
-	      END;
+{ Extensibility }
 
-   symbol_
-	(ATTR externalResourcesRequired;
-	      fill; stroke; stroke_width;
-	      font_family; font_size; font_style; font_variant; font_weight;
-	      text_decoration;
-	      viewBox;
-	      preserveAspectRatio = text; 
-	      { graphicsElementEvents })
-        = LIST OF (GraphicsElement);
-	      
-   { marker }
-   
-   desc = TEXT;
-	
-   title = TEXT;
-	
-   { clipPath }
-   { mask }
-   { linearGradient }
-   { radialGradient }
-   { stop }
-   { pattern }
-
-   a
-        (ATTR xlink_href;
-	      requiredFeatures; requiredExtensions; systemLanguage;
-	      externalResourcesRequired;
-	      fill; stroke; stroke_width;
-	      font_family; font_size; font_style; font_variant; font_weight;
-	      text_decoration;
-	      transform;
-	      { graphicsElementEvents }
-	      target_ = text)
-	= LIST OF (CASE OF
-		      GraphicsElement; TextComponent;
-	              END);
-
-   { view }
-   { animate }
-   { set }
-   { animateMotion }
-   { animateColor }
-   { animateTransform }
-
-   script
-	(ATTR externalResourcesRequired;
-	      type = text)
-	= TEXT;
-
-   style__
-	(ATTR type;
-	      media = text;
-	      title_ = text)
-	= TEXT;
-
-   { color-profile }
-   { color-profile-src }
-   { font-face }
-   { font-face-src }
-   { font-face-uri }
-   { font-face-format }
-   { font-face-name }
-   { definition-src }
-   { cursor }
-	
-   switch
-	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
-	      externalResourcesRequired;
-	      { PresentationAttributes-All }
-	      fill; stroke; stroke_width;
-	      font_family; font_size; font_style; font_variant; font_weight;
-	      text_decoration;
-	      transform;
-	      { graphicsElementEvents })
-	= LIST OF (CASE OF
-		      GraphicsElement; foreignObject;
-	              END);
-
-   foreignObject
+   foreignObject  { not in SVG Tiny }
         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
 	      fill; stroke; stroke_width;
@@ -320,11 +350,51 @@ STRUCT
 	      HTML; MathML;
 	      END;
           END;
-	              
-   metadata = TEXT;
 
-   { filter }
-   { ... }
+{ Clipping }
+
+   { clipPath }
+
+{ Masking }
+
+   { mask }
+
+{ Markers }
+
+   { marker }
+
+{ Gradients }
+
+   { linearGradient }
+   { radialGradient }
+   { stop }
+
+{ Patterns }
+
+   { pattern }
+
+{ Cursors }
+
+   { cursor }
+
+{ Views }
+
+   { view }
+
+{ The following elements from SVG 1.0 does not appear in WD-SVG11-20011030 }
+
+   { altGlyphDef }
+   { altGlyphItem }
+   { glyphRef }
+   { color-profile }
+   { font-face-src }
+   { font-face-uri }
+   { font-face-format }
+   { font-face-name }
+   { definition-src }
+   { cursor }
+
+{ The following elements are not defined in the SVG DTD }
 
    GraphicsElement
 	= CASE OF
@@ -346,17 +416,6 @@ STRUCT
 	      metadata;
 	      END;
 
-   SpanElement
-	= CASE OF
-	      TEXT;
-	      tspan; 
-	      desc;
-	      title;
-	      metadata;
-	      END;
-	
-   SVG_Image = SVG;
-   
    XMLcomment = LIST OF (XMLcomment_line = TEXT);
 
    XMLPI = LIST OF (XMLPI_line = TEXT);

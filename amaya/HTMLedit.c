@@ -114,6 +114,10 @@ void                LinkToPreviousTarget (Document doc, View view)
      return;
 
    TtaGiveFirstSelectedElement (doc, &el, &firstSelectedChar, &i);
+   if (TtaIsReadOnly (el))
+     /* the selected element is read-only */
+     return;
+
    if (el != NULL)
      {
        UseLastTarget = TRUE;
@@ -816,11 +820,19 @@ void                CreateAnchor (Document doc, View view, ThotBool createLink)
   int                 c1, cN, lg, i;
   ThotBool            noAnchor, ok;
 
+  if (!TtaGetDocumentAccessMode (doc))
+    /* the document is in ReadOnly mode */
+    return;
+
   parag = NULL;
   HTMLSSchema = TtaGetSSchema ("HTML", doc);
   dispMode = TtaGetDisplayMode (doc);
+
   /* get the first and last selected element */
   TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
+  if (TtaIsReadOnly (el))
+    /* the selected element is read-only */
+    return;
   TtaGiveLastSelectedElement (doc, &last, &i, &cN);
 
   /* Check whether the selected elements are a valid content for an anchor */

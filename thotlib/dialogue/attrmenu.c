@@ -1050,9 +1050,11 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
   /* demande quelle est la selection courante */
   selectionOK = GetCurrentSelection (&SelDoc, &firstSel, &lastSel, &firstChar,
 				     &lastChar);
-  if (selectionOK && firstSel == lastSel &&
-      firstSel->ElParent == NULL)
+  if (selectionOK && firstSel == lastSel && firstSel->ElParent == NULL)
     /* the Document element is selected. It can't accept any attribute */
+    selectionOK = FALSE;
+  if (selectionOK && ElementIsReadOnly (firstSel))
+    /* the selected element is read-only. Don't change its attributes */
     selectionOK = FALSE;
   if (selectionOK && SelDoc == pDoc && firstSel)
     /* il y a une selection et elle est dans le document traite' */

@@ -994,12 +994,26 @@ static void         UpdateClass (Document doc)
   /* generate or update the style element in the document head */
   parent = TtaGetMainRoot (doc);
   elType = TtaGetElementType (parent);
-  elType.ElTypeNum = HTML_EL_HEAD;
-  head = TtaSearchTypedElement (elType, SearchForward, parent);
+  schName = TtaGetSSchemaName (elType.ElSSchema);
+  if (!strcmp (schName, "HTML"))
+    /* it's a HTML document */
+    {
+      elType.ElTypeNum = HTML_EL_HEAD;
+      head = TtaSearchTypedElement (elType, SearchForward, parent);
+      elType.ElTypeNum = HTML_EL_STYLE_;
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = HTML_ATTR_Notation;
+    }
+  if (!strcmp (schName, "SVG"))
+    /* it's a SVG document */
+    {
+      elType.ElTypeNum = SVG_EL_SVG;
+      head = TtaSearchTypedElement (elType, SearchForward, parent);
+      elType.ElTypeNum = SVG_EL_style__;
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = SVG_ATTR_type;
+    }
   el = head;
-  elType.ElTypeNum = HTML_EL_STYLE_;
-  attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = HTML_ATTR_Notation;
   found = FALSE;
   while (!found && el)
     {
@@ -1025,10 +1039,16 @@ static void         UpdateClass (Document doc)
     {
       /* the STYLE element doesn't exist we create it now */
       el = TtaNewTree (doc, elType, "");
-      /* insert the new style element after the title if it exists */
-      elType.ElTypeNum = HTML_EL_TITLE;
-      title = TtaSearchTypedElementInTree (elType, SearchForward, head, head);
-      if (title != NULL)
+      if (strcmp (schName, "HTML"))
+	title = NULL;
+      else
+	{
+	  /* insert the new style element after the title if it exists */
+	  elType.ElTypeNum = HTML_EL_TITLE;
+	  title = TtaSearchTypedElementInTree (elType, SearchForward, head,
+					       head);
+	}
+      if (title)
 	TtaInsertSibling (el, title, FALSE, doc);
       else
 	TtaInsertFirstChild (&el, head, doc);
@@ -1078,7 +1098,7 @@ static void         UpdateClass (Document doc)
 	      }
 	  }
       }
-    if (elType.ElTypeNum != HTML_EL_TEXT_UNIT)
+    if (!strcmp (schName, "HTML") && elType.ElTypeNum != HTML_EL_TEXT_UNIT)
       {
 	if (elType.ElTypeNum != HTML_EL_Comment_)
 	  /* the last child of the STYLE element is neither a text leaf nor
@@ -1303,6 +1323,10 @@ void CreateClass (Document doc, View view)
   int                 len, i, j;
   int                 firstSelectedChar, lastSelectedChar;
 
+  if (!TtaGetDocumentAccessMode (doc))
+    /* the document is in ReadOnly mode */
+    return;
+
   DocReference = doc;
   CurrentClass[0] = 0;
   ClassReference = NULL;
@@ -1314,6 +1338,16 @@ void CreateClass (Document doc, View view)
   if (last_elem != ClassReference)
     return;
   if (ClassReference == NULL)
+    return;
+
+  /* if the selected element is read-only, do nothing */
+  if (TtaIsReadOnly (ClassReference))
+    return;
+
+  elType = TtaGetElementType (TtaGetMainRoot (doc));
+  schName = TtaGetSSchemaName (elType.ElSSchema);
+  if (strcmp (schName, "HTML") && strcmp (schName, "SVG"))
+    /* it's not a HTML document nor a SVG document. Do nothing */
     return;
 
   /* if only a part of an element is selected, select the parent instead */
@@ -1419,13 +1453,21 @@ void ApplyClass (Document doc, View view)
   int                 len;
   int                 firstSelectedChar, lastSelectedChar;
 #ifndef _WINDOWS
-   char                bufMenu[MAX_TXT_LEN];
+  char                bufMenu[MAX_TXT_LEN];
 #endif /* _WINDOWS */
 
+  if (!TtaGetDocumentAccessMode (doc))
+    /* the document is in ReadOnly mode */
+    return;
   TtaGiveFirstSelectedElement (doc, &firstSelectedEl,
 			       &firstSelectedChar, &lastSelectedChar);
   if (!firstSelectedEl)
      return;
+
+  /* if the selected element is read-only, do nothing */
+  if (TtaIsReadOnly (firstSelectedEl))
+    return;
+
   CurrentClass[0] = EOS;
   ApplyClassDoc = doc;
 
