@@ -56,8 +56,8 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaFrame, wxPanel)
  *--------------------------------------------------------------------------------------
  */
 AmayaFrame::AmayaFrame(
-                int             frame_id
-      	       ,AmayaWindow *   p_parent_window
+                 int             frame_id
+		,AmayaWindow *   p_parent_window
 	      )
   :  wxPanel( p_parent_window, -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL
 #ifndef _WINDOWS
@@ -430,8 +430,9 @@ void AmayaFrame::SetFrameTitle(const wxString & frame_name)
 	    // p_page->SetToolTip( m_FrameTitle );
 
 	    // setup the tab title
+	    wxString frame_title = GetFrameTitle();
 	    p_notebook->SetPageText( page_id,
-				     wxString(m_FrameTitle).Truncate(15) + (m_FrameTitle.Len() > 15 ? _T("...") : _T("")) );
+				     wxString(frame_title).Truncate(15) + (frame_title.Len() > 15 ? _T("...") : _T("")) );
 	  }
       }
   }
@@ -450,7 +451,16 @@ void AmayaFrame::SetFrameTitle(const wxString & frame_name)
  */
 wxString AmayaFrame::GetFrameTitle()
 {
-  return m_FrameTitle;
+  if (GetMasterFrameId() == GetFrameId())
+    return m_FrameTitle;
+  else
+    {
+      AmayaFrame * p_frame = TtaGetFrameFromId(GetMasterFrameId());
+      if (p_frame)
+	return p_frame->m_FrameTitle;
+      else
+	return m_FrameTitle;
+    }
 }
 
 /*
@@ -496,6 +506,28 @@ wxString AmayaFrame::GetWindowTitle()
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaFrame
+ *      Method:  UpdateFrameURL
+ * Description:  just update the internal frame url value
+ *               (the master frame is updated.)
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaFrame::UpdateFrameURL( const wxString & new_url )
+{
+  if (GetMasterFrameId() == GetFrameId())
+    m_FrameUrl = new_url;
+  else
+    {
+      AmayaFrame * p_frame = TtaGetFrameFromId(GetMasterFrameId());
+      if (p_frame)
+	p_frame->m_FrameUrl = new_url;
+      else
+	m_FrameUrl = new_url;
+    }
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFrame
  *      Method:  SetFrameURL
  * Description:  setup the current frame url
  *--------------------------------------------------------------------------------------
@@ -521,7 +553,16 @@ void AmayaFrame::SetFrameURL( const wxString & new_url )
 wxString AmayaFrame::GetFrameURL()
 {
   wxLogDebug(_T("AmayaFrame::GetFrameURL - frameid=%d url=")+m_FrameUrl, GetFrameId());
-  return m_FrameUrl;
+  if (GetMasterFrameId() == GetFrameId())
+    return m_FrameUrl;
+  else
+    {
+      AmayaFrame * p_frame = TtaGetFrameFromId(GetMasterFrameId());
+      if (p_frame)
+	return p_frame->m_FrameUrl;
+      else
+	return m_FrameUrl;
+    }
 }
 
 /*
@@ -551,7 +592,16 @@ void AmayaFrame::SetFrameEnableURL( bool urlenabled )
  */
 bool AmayaFrame::GetFrameEnableURL( )
 {
-  return m_FrameUrlEnable;
+  if (GetMasterFrameId() == GetFrameId())
+    return m_FrameUrlEnable;
+  else
+    {
+      AmayaFrame * p_frame = TtaGetFrameFromId(GetMasterFrameId());
+      if (p_frame)
+	return p_frame->m_FrameUrlEnable;
+      else
+	return m_FrameUrlEnable;
+    }
 }
 
 
@@ -708,10 +758,12 @@ void AmayaFrame::SetActive( bool active )
 
       // setup the right frame url into the main window urlbar
       p_page->SetWindowURL( p_page->GetActiveFrame()->GetFrameURL() );
+
       // setup the enable/disable state of urlbar
       p_page->SetWindowEnableURL( p_page->GetActiveFrame()->GetFrameEnableURL() );
+
       // setup the enable/disable state of the toolbar buttons
-      p_page->SetWindowEnableToolBarButtons( p_page->GetActiveFrame()->GetFrameId() );
+      p_page->SetWindowEnableToolBarButtons( p_page->GetActiveFrame()->GetMasterFrameId() );
     }
 
   // update internal thotlib global var : ActiveFrame
@@ -778,6 +830,13 @@ void AmayaFrame::RaiseFrame()
     }
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFrame
+ *      Method:  SetStatusBarText
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
 void AmayaFrame::SetStatusBarText( const wxString & text )
 {
   wxLogDebug( _T("AmayaFrame::SetStatusBarText - len=%d"), text.Length() );
@@ -801,6 +860,13 @@ void AmayaFrame::SetStatusBarText( const wxString & text )
     }
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFrame
+ *      Method:  FreeFrame
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
 void AmayaFrame::FreeFrame()
 {
   // Detach the window menu bar to avoid  probleme when
@@ -832,6 +898,13 @@ void AmayaFrame::FreeFrame()
   SetPageParent( NULL );
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFrame
+ *      Method:  OnIdle
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
 void AmayaFrame::OnIdle( wxIdleEvent& event )
 {
   //  if ( m_ToDestroy )
@@ -840,6 +913,13 @@ void AmayaFrame::OnIdle( wxIdleEvent& event )
     event.Skip();
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFrame
+ *      Method:  OnContextMenu
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
 void AmayaFrame::OnContextMenu( wxContextMenuEvent & event )
 {
   wxLogDebug( _T("AmayaFrame::OnContextMenu - (x,y)=(%d,%d)"),
@@ -856,6 +936,22 @@ void AmayaFrame::OnContextMenu( wxContextMenuEvent & event )
 
   // to activate the contextual menu into the frame just uncomment the following line
   //  event.Skip();  
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFrame
+ *      Method:  GetMasterFrameId
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+int AmayaFrame::GetMasterFrameId()
+{
+  AmayaPage * p_page = GetPageParent();
+  if (p_page)
+    return p_page->GetMasterFrameId();
+  else
+    return -1;
 }
 
 /*----------------------------------------------------------------------

@@ -70,6 +70,8 @@ public:
   int GetFrameId();
   void RaiseFrame();
 
+  int GetMasterFrameId();
+
   AmayaScrollBar * GetScrollbarH();
   AmayaScrollBar * GetScrollbarV();
   void ShowScrollbar( int scrollbar_id );
@@ -83,6 +85,7 @@ public:
   void     SetFrameTitle(const wxString & frame_name);
   wxString GetFrameTitle();
 
+  void     UpdateFrameURL( const wxString & new_url );
   void     SetFrameURL( const wxString & new_url );
   wxString GetFrameURL();
   void     SetFrameEnableURL( bool urlenabled );

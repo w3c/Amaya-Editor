@@ -21,6 +21,7 @@
 
 #include "AmayaParams.h"
 #include "appdialogue_wx_f.h"
+#include "appdialogue_wx.h"
 
 #include "AmayaURLBar.h"
 #include "AmayaWindow.h"
@@ -102,8 +103,10 @@ void AmayaURLBar::GotoSelectedURL()
   AmayaFrame * p_frame = m_pAmayaWindowParent->GetActiveFrame();
   if (p_frame)
     {
-      APP_Callback_URLActivate ( p_frame->GetFrameId(),
-				 GetValue().mb_str(wxConvUTF8) );
+      p_frame = TtaGetFrameFromId(p_frame->GetMasterFrameId());
+      if (p_frame)
+	APP_Callback_URLActivate ( p_frame->GetFrameId(),
+				   GetValue().mb_str(wxConvUTF8) );
     }
 }
 
@@ -178,24 +181,21 @@ void AmayaURLBar::OnURLSelected( wxCommandEvent& event )
 #endif /* _WINDOWS */
 }
 
-#if 0
-void AmayaURLBar::OnChar( wxKeyEvent& event )
-{
-  wxLogDebug( _T("AmayaURLBar::OnChar : char=%x"),
-	      event.GetKeyCode() );
-  event.Skip();
-}
-
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaURLBar
+ *      Method:  OnURLText
+ * Description:  Called when the url text is changed
+ *               Just update the current frame internal url variable
+ *--------------------------------------------------------------------------------------
+ */
 void AmayaURLBar::OnURLText( wxCommandEvent& event )
 {
-  // event.GetString()
-  wxString s = m_pComboBox->GetValue( );
-  wxLogDebug( s );
-  //  event.SetString(_T(""));
-  m_pComboBox->SetValue( _T("") );
+  AmayaFrame * p_frame = m_pAmayaWindowParent->GetActiveFrame();
+  if (p_frame)
+    p_frame->UpdateFrameURL(m_pComboBox->GetValue());
   event.Skip();
 }
-#endif /* 0 */
 
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
@@ -205,7 +205,7 @@ BEGIN_EVENT_TABLE(AmayaURLBar, wxPanel)
   EVT_COMBOBOX( -1,         AmayaURLBar::OnURLSelected )
   EVT_TEXT_ENTER( -1,       AmayaURLBar::OnURLTextEnter )
   //  EVT_BUTTON( -1,           AmayaURLBar::OnURLTextEnter )
-  //  EVT_TEXT(-1,              AmayaURLBar::OnURLText )
+  EVT_TEXT(-1,              AmayaURLBar::OnURLText )
   // EVT_CHAR(		    AmayaURLBar::OnChar) // Process a wxEVT_CHAR event. 
 END_EVENT_TABLE()
 

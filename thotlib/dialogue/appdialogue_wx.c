@@ -850,6 +850,20 @@ AmayaWindow * TtaGetWindowFromId( int window_id )
 #endif /* #ifdef _WX */
 
 /*----------------------------------------------------------------------
+  TtaGetFrameFromId returns a frame from its id
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+#ifdef _WX
+AmayaFrame * TtaGetFrameFromId( int frame_id )
+{
+  if (frame_id <= 0 || frame_id >= MAX_FRAME )
+    return NULL;
+  return FrameTable[frame_id].WdFrame;
+}
+#endif /* #ifdef _WX */
+
+/*----------------------------------------------------------------------
   TtaGetFrameId returns the frame id corresponding to a sepcific position
   params:
     - window_id : in which window

@@ -102,6 +102,18 @@ public:
 
   void DeletedFrame( AmayaFrame * p_frame );
 
+  int GetMasterFrameId();
+
+ protected:
+  void AdjustSplitterPos( int height = -1, int width = -1 );
+  void RefreshSplitToggleMenu();
+  void RefreshShowPanelToggleMenu();
+
+ public:
+  void OnClose( wxCloseEvent& event );
+  
+ protected:
+  DECLARE_EVENT_TABLE()
   void OnSplitterPosChanged( wxSplitterEvent& event );
   void OnSplitterPosChanging( wxSplitterEvent& event );
   void OnSplitterDClick( wxSplitterEvent& event );
@@ -109,19 +121,10 @@ public:
   void OnSplitButton( wxCommandEvent& event );
 
   void OnSize( wxSizeEvent& event );
-  void OnClose( wxCloseEvent& event );
   void OnPaint( wxPaintEvent& event );
 
   void OnSetFocus( wxFocusEvent & event );
   void OnContextMenu( wxContextMenuEvent & event );
-
- protected:
-  void AdjustSplitterPos( int height = -1, int width = -1 );
-  void RefreshSplitToggleMenu();
-  void RefreshShowPanelToggleMenu();
-
- protected:
-  DECLARE_EVENT_TABLE()
   
   wxBoxSizer *       m_pSizerTop;
   wxSplitterWindow * m_pSplitterWindow;
@@ -143,6 +146,8 @@ public:
   wxString           m_SecondViewType;
 
   bool               m_IsSelected;
+
+  int                m_MasterFrameId;
 };
 
 #endif // __AMAYAPAGE_H__

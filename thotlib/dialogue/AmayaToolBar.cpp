@@ -144,7 +144,7 @@ void AmayaToolBar::OnButtonActivated( wxCommandEvent &event )
   wxASSERT( p_frame != NULL );
   if ( p_frame )
     {
-      int frame_id         = p_frame->GetFrameId();
+      int frame_id =  p_frame->GetFrameId();
       APP_Callback_ToolBarButtonActivate ( frame_id, event.GetId() );
     }
 }

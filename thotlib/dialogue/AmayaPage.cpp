@@ -67,7 +67,8 @@ AmayaPage::AmayaPage( wxWindow * p_parent_window )
      ,m_pWindowParent( NULL )
      ,m_PageId(-1)
      ,m_ActiveFrame(1) // by default, frame 1 is selected
-	 ,m_IsSelected(false)
+     ,m_IsSelected(false)
+     ,m_MasterFrameId(-1)
 {
   // Insert a forground sizer
   m_pSizerTop = new wxBoxSizer ( wxVERTICAL );
@@ -136,6 +137,12 @@ AmayaPage::~AmayaPage()
  */
 AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
 {
+  // check if this is the first frame or not
+  // the first one will be considered ad the master
+  // the master frame is the on which control the urlbar, buttons (TODO : and menus)
+  if ( !m_pTopFrame && !m_pBottomFrame )
+    m_MasterFrameId = p_frame->GetFrameId();
+
   // Select the right frame
   AmayaFrame ** pp_frame_container = NULL;
   switch (position)
@@ -322,7 +329,13 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
 
   // refresh the correspondig menu item state
   RefreshSplitToggleMenu();
-  
+
+  // check if there is no more frame in the page
+  // if there is no more frame, the master frame must be erased 
+  // the master frame is the on which control the urlbar, buttons (TODO : and menus)
+  if ( !m_pTopFrame && !m_pBottomFrame )
+    m_MasterFrameId = -1;
+
   return oldframe;
 }
 
@@ -1021,6 +1034,17 @@ void AmayaPage::RefreshShowPanelToggleMenu()
     GetWindowParent()->RefreshShowPanelToggleMenu();
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  GetMasterFrameId
+ * Description:  the master frame is the on which control the urlbar, buttons (TODO : and menus)
+ *--------------------------------------------------------------------------------------
+ */
+int AmayaPage::GetMasterFrameId()
+{
+  return m_MasterFrameId;
+}
 
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
