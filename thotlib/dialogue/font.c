@@ -149,10 +149,10 @@ static HFONT WIN_LoadFont (char script, int family, int highlight,
        family = 0;
 	 break;
      case '2':
-       charset = DEFAULT_CHARSET;
+       charset = EASTEUROPE_CHARSET;
        break;
      case '3':
-       charset = EASTEUROPE_CHARSET;
+       charset = BALTIC_CHARSET;
        break;
      case '4':
        charset = DEFAULT_CHARSET;
