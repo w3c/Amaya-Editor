@@ -346,11 +346,12 @@ Element SearchAttrId (Element root, char *val)
       
       /* recursive search all the children of root */
       el = TtaGetFirstChild (root);
-      if (!el)
-	break;
-      result = SearchAttrId (el, val);
-      if (result)
-	break;
+      if (el)
+	{
+	  result = SearchAttrId (el, val);
+	  if (result)
+	    break;
+	}
       /* try the same procedure on all the siblings of root */
       TtaNextSibling (&root);
     }
@@ -380,20 +381,23 @@ Element SearchSiblingIndex (Element root, char *el_name, int *index)
     {
       /* if the element is hidden, call the algorithm recursively from 
 	 this point */
-      if (ElIsHidden (sibling))
-	  {
-	    child = TtaGetFirstChild (sibling);
-	    result = SearchSiblingIndex (child, el_name, index);
-	    if (result)
-	      return result;
-	  }
-      /* test the current node */
-      else if (TestElName (sibling, el_name))
+      if (!TestElName (sibling, "Annotation")) /* ignore our XLink element */
 	{
-	  /* we found the element */
-	  if (*index == 1)
-	    return sibling;
-	  (*index)--;
+	  if (ElIsHidden (sibling))
+	    {
+	      child = TtaGetFirstChild (sibling);
+	      result = SearchSiblingIndex (child, el_name, index);
+	      if (result)
+		return result;
+	    }
+	  /* test the current node */
+	  else if (TestElName (sibling, el_name))
+	    {
+	      /* we found the element */
+	      if (*index == 1)
+		return sibling;
+	      (*index)--;
+	    }
 	}
       /* go to the next sibling */
       TtaNextSibling (&sibling);
