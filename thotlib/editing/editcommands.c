@@ -1183,6 +1183,7 @@ static void LoadSymbol (char c, PtrLine pLine, ThotBool defaultHeight,
    if (!APPgraphicModify (pAb->AbElement, (int)c, frame, TRUE))
      {
        pAb->AbShape = c;
+       pAb->AbElement->ElGraph = c;
        /* Dimensions du symbole */
        pAb->AbVolume = 1;
        if (defaultWidth || defaultHeight)

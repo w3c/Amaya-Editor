@@ -225,9 +225,11 @@ STRUCT
 	        separators;
 		IntVertStretch)			{ for internal use }
 	  = BEGIN
-	    OpeningFence = SYMBOL with IntVertStretch = yes_;
+	    OpeningFence (ATTR IntVertStretch; IntAddSpace)
+                             = SYMBOL with IntVertStretch = yes_;
 	    FencedExpression = LIST OF (Construct) + (FencedSeparator);
-	    ClosingFence = SYMBOL with IntVertStretch = yes_;
+	    ClosingFence (ATTR IntVertStretch; IntAddSpace)
+	                     = SYMBOL with IntVertStretch = yes_;
 	    END;
 
       { MF is for internal use. Exported as MO }
@@ -419,7 +421,7 @@ STRUCT
 
    { FencedSeparator is for internal use only. It contains a separator
      in a mfenced expression, according to the separator attribute }
-   FencedSeparator = TEXT;
+   FencedSeparator (ATTR IntVertStretch; IntAddSpace) = TEXT;
 
    { MathMLCharacters }
    MathMLCharacters = CASE OF

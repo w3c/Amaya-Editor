@@ -22,7 +22,10 @@ ELEMENTS
    ClosingFence:
 	ElemGraphModify.Post -> FenceModified;
    FencedSeparator:
-	ElemTextModify.Post -> FencedSeparatorModified;
+	BEGIN
+	ElemTextModify.Post ->  FencedSeparatorModified;
+	ElemGraphModify.Post -> FencedSeparatorModified;
+	END;
    MTEXT:
 	BEGIN
 	ElemNew.Post -> MtextCreated;

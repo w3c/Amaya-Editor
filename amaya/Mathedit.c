@@ -149,7 +149,10 @@ static void MathSetAttributes (Element el, Document doc, Element* selEl)
   elType = TtaGetElementType (el);
   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
     return;
-  if (elType.ElTypeNum == MathML_EL_MO)
+  if (elType.ElTypeNum == MathML_EL_MO ||
+      elType.ElTypeNum == MathML_EL_OpeningFence ||
+      elType.ElTypeNum == MathML_EL_ClosingFence ||
+      elType.ElTypeNum == MathML_EL_FencedSeparator)
      {
      SetIntAddSpaceAttr (el, doc);
      parent = TtaGetParent (el);
@@ -4839,6 +4842,10 @@ void FencedSeparatorModified (NotifyOnTarget *event)
   mfencedEl = TtaGetParent (fencedExpEl);
   if (mfencedEl == NULL)
      return;
+  SetIntAddSpaceAttr (event->element, event->document);
+  SetIntVertStretchAttr (event->element, event->document, 0, NULL);
+  /**** CheckFence (event->element, event->document); ******/
+ 
   i = 0;
   child = TtaGetFirstChild (fencedExpEl);
   while (child != NULL)
@@ -4848,8 +4855,14 @@ void FencedSeparatorModified (NotifyOnTarget *event)
 	 strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
 	{
 	content = TtaGetFirstChild (child);
-        len = 31 - i;
-        TtaGiveTextContent (content, &text[i], &len, &lang);
+	elType = TtaGetElementType (content);
+	if (elType.ElTypeNum == MathML_EL_SYMBOL_UNIT)
+	  text[i] = TtaGetGraphicsShape (content);
+	else
+	   {
+           len = 31 - i;
+           TtaGiveTextContent (content, &text[i], &len, &lang);
+	   }
 	i++;
 	}
      TtaNextSibling (&child);

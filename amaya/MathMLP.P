@@ -839,15 +839,15 @@ RULES
 
    FencedSeparator:
 	BEGIN
-	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Structure_view
 		Visibility: 0;
 	END;
 
    OpeningFence:
         BEGIN
+	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	HorizRef: Enclosed . HRef ;
-	VertPos: Top = Enclosing . Top;
 	Height: Enclosing . Height;
 	HorizPos: Left = Enclosing . Left;
 	Gather: Yes;
@@ -857,8 +857,8 @@ RULES
 
    ClosingFence:
         BEGIN
+	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	HorizRef: Enclosed . HRef ;
-	VertPos: Top = Enclosing . Top;
 	Height: Enclosing . Height;
 	HorizPos: Left = Previous . Right;
 	Gather: Yes;
@@ -2468,6 +2468,21 @@ ATTRIBUTES
 		VertPos: Top = Next not Construct . Top;
 		END;
 	if MF
+		BEGIN
+		Height: Enclosing . Height;
+		VertPos: Top =  Enclosing . Top;
+		END;
+	if OpeningFence
+		BEGIN
+		Height: Enclosing . Height;
+		VertPos: Top =  Enclosing . Top;
+		END;
+	if ClosingFence
+		BEGIN
+		Height: Enclosing . Height;
+		VertPos: Top =  Enclosing . Top;
+		END;
+	if FencedSeparator
 		BEGIN
 		Height: Enclosing . Height;
 		VertPos: Top =  Enclosing . Top;

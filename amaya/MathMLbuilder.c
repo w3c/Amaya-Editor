@@ -130,7 +130,10 @@ ThotBool     ElementNeedsPlaceholder (Element el)
 	    }
 	}
     }
-  else if (elType.ElTypeNum == MathML_EL_MO)
+  else if (elType.ElTypeNum == MathML_EL_MO ||
+	   elType.ElTypeNum == MathML_EL_OpeningFence ||
+	   elType.ElTypeNum == MathML_EL_ClosingFence ||
+	   elType.ElTypeNum == MathML_EL_FencedSeparator)
     /* an operator that contains a single Symbol needs a placeholder,
        except when it is in a Base or UnderOverBase */
     {
@@ -1524,7 +1527,10 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 		      else
 			{
 			  elType = TtaGetElementType (previous);
-			  if (elType.ElTypeNum == MathML_EL_MO)
+			  if (elType.ElTypeNum == MathML_EL_MO ||
+			      elType.ElTypeNum == MathML_EL_OpeningFence ||
+			      elType.ElTypeNum == MathML_EL_ClosingFence ||
+			      elType.ElTypeNum == MathML_EL_FencedSeparator)
 			    /* after an operator => prefix operator */
 			    val = MathML_ATTR_IntAddSpace_VAL_nospace;
 			  else
@@ -1647,6 +1653,7 @@ ThotBool      ChildOfMRowOrInferred (Element el)
 		elType.ElTypeNum == MathML_EL_MENCLOSE ||
 		elType.ElTypeNum == MathML_EL_MPADDED ||
 		elType.ElTypeNum == MathML_EL_MPHANTOM ||
+		elType.ElTypeNum == MathML_EL_MFENCED ||
 		elType.ElTypeNum == MathML_EL_CellWrapper ||
 		elType.ElTypeNum == MathML_EL_MathML ||
                 elType.ElTypeNum == MathML_EL_FencedExpression);
@@ -1665,7 +1672,7 @@ ThotBool      ChildOfMRowOrInferred (Element el)
   ----------------------------------------------------------------------*/
 void      CheckFence (Element el, Document doc)
 {
-   ElementType	       elType;
+   ElementType	       elType, contType;
    Element	       content;
    AttributeType       attrType;
    Attribute	       attr, attrStretchy;
@@ -1675,17 +1682,20 @@ void      CheckFence (Element el, Document doc)
    CHAR_T              text[2];
    char	               script;
    unsigned char       c;
-   int                 len, val;
+   int                 len, val, oldStructureChecking;
 
    elType = TtaGetElementType (el);
-   if (elType.ElTypeNum == MathML_EL_MO)
-     /* the element is a MO */
+   if (elType.ElTypeNum == MathML_EL_MO ||
+       elType.ElTypeNum == MathML_EL_OpeningFence ||
+       elType.ElTypeNum == MathML_EL_ClosingFence ||
+       elType.ElTypeNum == MathML_EL_FencedSeparator)
+     /* the element is a MO or equivalent */
      {
      content = TtaGetFirstChild (el);
      if (content != NULL)
        {
-       elType = TtaGetElementType (content);
-       if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+       contType = TtaGetElementType (content);
+       if (contType.ElTypeNum == MathML_EL_TEXT_UNIT)
 	 {
 	 len = TtaGetElementVolume (content);
 	 if (len == 1)
@@ -1697,7 +1707,7 @@ void      CheckFence (Element el, Document doc)
 	   if (text[0] == 8721 || text[0] == 8719) /* large Sigma or Pi */
 #else
 	   if ((script == 'G') &&
-	       (text[0] == 229 || text[0] == 213))  /* large Sigma or  Pi */
+	       (text[0] == 229 || text[0] == 213))  /* large Sigma or Pi */
 #endif
 	     /* it's a large operator */
 	     {
@@ -1735,8 +1745,8 @@ void      CheckFence (Element el, Document doc)
 		/* remove the content of the MO element */
 		TtaDeleteTree (content, doc);
 		/* change the MO element into a MF element */
-		ChangeTypeOfElement (el, doc, MathML_EL_MF);
-		    
+		if (elType.ElTypeNum == MathML_EL_MO)
+		   ChangeTypeOfElement (el, doc, MathML_EL_MF);
 		/* is there an attribute stretchy on this mo element? */
 		attrType.AttrSSchema = elType.ElSSchema;
 		attrType.AttrTypeNum = MathML_ATTR_stretchy;
@@ -1747,10 +1757,14 @@ void      CheckFence (Element el, Document doc)
 		  val = MathML_ATTR_stretchy_VAL_true;
 		if (val == MathML_ATTR_stretchy_VAL_true)
 		  {
-		  /* attach a IntVertStretch attribute to the MF element*/
+		  /* attach a IntVertStretch attribute to the MF element */
 		  attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
-		  attr = TtaNewAttribute (attrType);
-		  TtaAttachAttribute (el, attr, doc);
+		  attr = TtaGetAttribute (el, attrType);
+		  if (!attr)
+		    {
+		    attr = TtaNewAttribute (attrType);
+		    TtaAttachAttribute (el, attr, doc);
+		    }
 		  TtaSetAttributeValue (attr,
 					MathML_ATTR_IntVertStretch_VAL_yes_,
 					el, doc);
@@ -1773,8 +1787,14 @@ void      CheckFence (Element el, Document doc)
 		  else
 		    c = (char) text[0];
 		content = TtaNewElement (doc, elType);
+		/* do not check the Thot abstract tree against the structure
+		   schema while inserting this child element  */
+		oldStructureChecking = TtaGetStructureChecking (doc);
+		TtaSetStructureChecking (0, doc);
 		TtaInsertFirstChild (&content, el, doc);
 		TtaSetGraphicsShape (content, c, doc);
+		/* resume structure checking */
+		TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
 		}
 	      }
 	   }
@@ -1840,10 +1860,13 @@ void CreateFencedSeparators (Element fencedExpression, Document doc, ThotBool re
            leaf = TtaNewElement (doc, elType);
            TtaInsertFirstChild (&leaf, separator, doc);
            sepValue[0] = text[sep];
-           sepValue[1] = SPACE;
-           sepValue[2] = EOS;
+           sepValue[1] = EOS;
 	   lang = TtaGetLanguageIdFromScript('L');
            TtaSetTextContent (leaf, sepValue, lang, doc);
+	   SetIntAddSpaceAttr (separator, doc);
+	   SetIntVertStretchAttr (separator, doc, 0, NULL);
+	   CheckFence (separator, doc);
+
 	   /* is there a following non-space character in separators? */
 	   i = sep + 1;
 	   while (text[i] <= SPACE && text[i] != EOS)
@@ -1876,19 +1899,18 @@ static void  CreateOpeningOrClosingFence (Element fencedExpression,
   Attribute     attr;
   int           length;
   char          text[32];
-  char          c;
 
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
   if (open)
     {
-      c = '(';    /* default value of attribute 'open' */
+      text[0] = '(';    /* default value of attribute 'open' */
       attrType.AttrTypeNum = MathML_ATTR_open;
       elType.ElTypeNum = MathML_EL_OpeningFence;
     }
   else
     {
-      c = ')';    /* default value of attribute 'close' */
+      text[0] = ')';    /* default value of attribute 'close' */
       attrType.AttrTypeNum = MathML_ATTR_close;
       elType.ElTypeNum = MathML_EL_ClosingFence;
     }
@@ -1899,25 +1921,18 @@ static void  CreateOpeningOrClosingFence (Element fencedExpression,
       TtaGiveTextAttributeValue (attr, text, &length);
       if (length != 1)
 	/* content of attribute open or close should be a single character */
-	c = '?';
-      else
-	{
-	  c = text[0];
-	  /* filter characters that would represent strange symbols, such
-	     as root, integrals, arrows, etc. */
-	  if (c == 'r' || c == 'i' || c == 'c' || c == 'd' || c == 'S' ||
-	      c == 'P' || c == 'I' || c == 'U' || c == 'o' || c == 'u' ||
-	      c == 'h' || c == 'v' || c == 'R' || c == '^' || c == 'L' ||
-	      c == 'V' || c == 'D')
-	    c = '?';
-	}
+	text[0] = '?';
     }
+  text[1] = EOS;
   fence = TtaNewElement (doc, elType);
   TtaInsertSibling (fence, fencedExpression, open, doc);
-  elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
+  elType.ElTypeNum = MathML_EL_TEXT_UNIT;
   leaf = TtaNewElement (doc, elType);
   TtaInsertFirstChild (&leaf, fence, doc);
-  TtaSetGraphicsShape (leaf, c, doc);
+  TtaSetTextContent (leaf, text, TtaGetLanguageIdFromScript('L'), doc);
+  SetIntAddSpaceAttr (fence, doc);
+  SetIntVertStretchAttr (fence, doc, 0, NULL);
+  CheckFence (fence, doc);
 }
 
 /*----------------------------------------------------------------------
