@@ -1340,13 +1340,8 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
       pAb->AbLeafType != LtCompound)
     {
       /* shift in the source image */
-      x = pFrame->FrClipXBegin - box->BxXOrg - box->BxLMargin;
-      y = pFrame->FrClipYBegin - box->BxYOrg - box->BxTMargin;
-      if (pAb->AbLeafType != LtCompound)
-	{
-	  x = x - box->BxLBorder - box->BxLPadding;
-	  y = y - box->BxTBorder - box->BxTPadding;
-	}
+      x = pFrame->FrClipXBegin - box->BxXOrg - box->BxLMargin - box->BxLBorder - box->BxLPadding;
+      y = pFrame->FrClipYBegin - box->BxYOrg - box->BxTMargin - box->BxTBorder - box->BxTPadding;
       /* size of the copied zone */
       clipWidth = pFrame->FrClipXEnd - pFrame->FrClipXBegin;
       clipHeight = pFrame->FrClipYEnd - pFrame->FrClipYBegin;
@@ -1377,7 +1372,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	}
       gdk_draw_pixmap ((GdkDrawable *)drawable, TtGraphicGC,
 		       (GdkPixmap *) imageDesc->PicPixmap, 
-		       picXOrg, picYOrg, xFrame, yFrame, w ,h);
+		       picXOrg, picYOrg, xFrame, yFrame, w, h);
       /*Restablish to normal clip*/
       if (imageDesc->PicMask)
 	{
@@ -3083,7 +3078,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	  w = box->BxW;
 	  h = box->BxH;
 	}
-      if(imageDesc->PicWidth && imageDesc->PicHeight)
+      if (imageDesc->PicWidth && imageDesc->PicHeight)
 	{
 	  imageDesc->PicWArea = w;
 	  imageDesc->PicHArea = h;
@@ -3245,16 +3240,16 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		{
 		  if (imageDesc->PicWArea != w)
 		    ChangeWidth (box, box, NULL,
-				 (w + left + right) - box->BxW, 0, frame);
+				 w - box->BxW, 0, frame);
 		  if (imageDesc->PicHArea != h)
 		    ChangeHeight (box, box, NULL,
-				  (h + top + bottom + top + bottom) - box->BxH, frame);
+				  h - box->BxH, frame);
 #ifndef _GL
 		  DefClip (frame, box->BxXOrg, box->BxYOrg,
-			   box->BxXOrg + w, box->BxYOrg + h);
+			   box->BxXOrg + box->BxWidth, box->BxYOrg + box->BxHeight);
 #else /* _GL */
 		  DefRegion (frame, box->BxClipX, box->BxClipY,
-			   box->BxClipX + w, box->BxClipY + h);
+			   box->BxClipX + box->BxWidth, box->BxClipY + box->BxHeight);
 #endif /* _GL    */
 		  /* Force Image rescaling by making box 
 		     size different of image info size*/

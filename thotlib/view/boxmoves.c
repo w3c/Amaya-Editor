@@ -3028,7 +3028,6 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 		else
 		  box = box->BxMoved;
 	    }
-
 	  /* add the box in the history */
 	  pBox->BxMoved = pFromBox;
 	  /* keep in mind that the box should be placed */
