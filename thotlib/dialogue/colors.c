@@ -505,7 +505,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
 				 hwnd, (HMENU) 99, hInstance, NULL);
 	  /* set the font of the window */
       if(newFont)
-         SendMessage(hwnLButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(TRUE, 0));
+         SendMessage(hwnLButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       ShowWindow (hwnLButton, SW_SHOWNORMAL);
       UpdateWindow (hwnLButton);
       
@@ -517,7 +517,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
 				 hwnd, (HMENU) 101, hInstance, NULL);
 	  /* set the font of the window */
       if(newFont)
-         SendMessage(hwnRButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(TRUE, 0));
+         SendMessage(hwnRButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       ShowWindow (hwnRButton, SW_SHOWNORMAL);
       UpdateWindow (hwnRButton);
       
@@ -526,7 +526,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
 				       hwnd, (HMENU) DEFAULTCOLOR, hInstance, NULL);
 	  /* set the font of the window */
       if(newFont)
-         SendMessage(hwnDefaultColors, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(TRUE, 0));
+         SendMessage(hwnDefaultColors, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       ShowWindow (hwnDefaultColors, SW_SHOWNORMAL);
       UpdateWindow (hwnDefaultColors);
       
@@ -536,7 +536,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
 				 (HMENU) _IDDONE_, hInstance, NULL);
 	  /* set the font of the window */
 	  if(newFont)
-         SendMessage(doneButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(TRUE, 0));
+         SendMessage(doneButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       ShowWindow (doneButton, SW_SHOWNORMAL);
       UpdateWindow (doneButton);
       break;
