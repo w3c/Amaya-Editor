@@ -3972,7 +3972,7 @@ typedef struct _StateDescr
 StateDescr;
 
 /* the automaton that drives the HTML parser */
-#define MaxState 50
+#define MaxState 30
 StateDescr          automaton[MaxState];
 
 typedef struct _sourceTransition
@@ -4051,8 +4051,8 @@ static sourceTransition sourceAutomaton[] =
    {10, '*', (Proc) Do_nothing, 15},
 /* state 11: "<!-" has been read. Probably a comment */
    {11, '-', (Proc) StartOfComment, 12},
-   {11, '*', (Proc) Do_nothing, 15},	/* incorrect comment, wait */
-						/* for a closing '>' */
+   {11, '*', (Proc) Do_nothing, 15},	/* incorrect comment, expect */
+						/* a closing '>' */
 /* state 12: reading a comment */
    {12, '-', (Proc) Do_nothing, 13},
    {12, '*', (Proc) PutInComment, 12},
@@ -4111,6 +4111,8 @@ static void         InitAutomaton ()
    PtrTransition       trans;
    PtrTransition       prevTrans;
 
+   for (entry = 0; entry < MaxState; entry++)
+       automaton[entry].firstTransition = NULL;
    entry = 0;
    curState = 1000;
    prevTrans = NULL;
@@ -4141,6 +4143,28 @@ static void         InitAutomaton ()
 	  }
      }
    while (theState < 1000);
+}
+
+/*----------------------------------------------------------------------
+   FreeAutomaton
+   Free memory allocated to the automaton.
+  ----------------------------------------------------------------------*/
+static void         FreeAutomaton ()
+{
+   int                 entry;
+   PtrTransition       trans;
+   PtrTransition       nextTrans;
+
+   for (entry = 0; entry < MaxState; entry++)
+     {
+	trans = automaton[entry].firstTransition;
+	while (trans != NULL)
+	  {
+	     nextTrans = trans->nextTransition;
+	     TtaFreeMemory (trans);
+	     trans = nextTrans;
+	  }
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -4392,6 +4416,7 @@ char               *HTMLbuf;
 	  (HTMLbuf != NULL && !endBuffer));
    /* end of HTML file */
    EndOfDocument ();
+   FreeAutomaton ();
 }
 
 
