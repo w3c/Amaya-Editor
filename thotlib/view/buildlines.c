@@ -1243,7 +1243,7 @@ static void BreakPieceOfBox (PtrLine pLine, PtrBox pBox, int max,
    *   or without (lostPixels = -2);
    * - if we want to remove extra spaces at the end of the box.
    */
-  if (pNewBuff &&
+  if (pNewBuff && length < pBox->BxNChars &&
       (lostPixels != 0 || nSpaces != oldnSpaces || oldnSpaces == 0) &&
       (pBox->BxW != width /*|| lostPixels != pBox->BxNSpaces*/))
     ibox2 = GetBox (pAb);
@@ -1381,9 +1381,9 @@ static void BreakMainBox (PtrLine pLine, PtrBox pBox, int max,
    * - if the boolean force is TRUE;
    * - if we want to remove extra spaces at the end of the box.
    */
-  if (pNewBuff
-      && (lostPixels != 0 || nSpaces != 0 || force)
-      && (pBox->BxWidth != max || lostPixels != pBox->BxNSpaces))
+  if (pNewBuff && length < pBox->BxNChars &&
+      (lostPixels != 0 || nSpaces != 0 || force) &&
+      (pBox->BxWidth != max || lostPixels != pBox->BxNSpaces))
     {
       ibox1 = GetBox (pAb);
       ibox2 = GetBox (pAb);
@@ -1398,7 +1398,7 @@ static void BreakMainBox (PtrLine pLine, PtrBox pBox, int max,
     /* don't generate the hyphen */
     lostPixels = 0;
   
-  if (ibox1 != NULL && ibox2 != NULL)
+  if (ibox1 && ibox2)
     {
       /* Initialize the first piece */
       ibox1->BxScript =  pBox->BxScript;
@@ -2238,8 +2238,8 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 		    pBox = pNextBox->BxNexChild;
 		  else
 		    pBox = pNextBox;
-		  toCut = FALSE;
 		}
+	      toCut = FALSE;
 	    }
 
 	  lastbox = pNextBox;
@@ -3934,7 +3934,7 @@ void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
 	  maxlostPixels = pLine->LiNSpaces * SPACE_VALUE_MAX + xDelta;
 	  if (pLine->LiSpaceWidth > 0)
 	    {
-	      /* justified line */
+	      /* this line is already justified */
 	      lostPixels = BoxCharacterWidth (SPACE, pBox->BxFont);
 	      realLength = pLine->LiRealLength + xDelta - spaceDelta * (pLine->LiSpaceWidth - lostPixels);
 	      lostPixels = pLine->LiXMax - pLine->LiMinLength;
@@ -3942,11 +3942,11 @@ void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
 	  else
 	    lostPixels = pLine->LiXMax - pLine->LiRealLength;
 	  
-	  if (pBox->BxW - xDelta > pLine->LiXMax)
+	  if (pBox->BxWidth - xDelta > pLine->LiXMax)
 	    {
-	      /* The box too large */
-	      /* freed pixels in the line */
-	      lostPixels = pLine->LiXMax - pBox->BxW;
+	      /* The box is too large */
+	      /* free pixels in the line and recompute */
+	      lostPixels = pLine->LiXMax - pBox->BxWidth;
 	      if (lostPixels > 0)
 		RecomputeLines (pAb, pLine, NULL, frame);
 	    }
@@ -3955,14 +3955,16 @@ void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
 		    (lostPixels < maxlostPixels ||
 		     pLine->LiPrevious == NULL) &&
 		    pLine->LiNext == NULL))
-	    /* compress or complete the current line */
-	    if (pLine->LiSpaceWidth == 0)
-	      ShiftLine (pLine, pAb, pBox, xDelta, frame);
-	    else
-	      {
-		CompressLine (pLine, xDelta, frame, spaceDelta);
-		pLine->LiRealLength = realLength;
-	      }
+	    {
+	      /* compress or complete the current line */
+	      if (pLine->LiSpaceWidth == 0)
+		ShiftLine (pLine, pAb, pBox, xDelta, frame);
+	      else
+		{
+		  CompressLine (pLine, xDelta, frame, spaceDelta);
+		  pLine->LiRealLength = realLength;
+		}
+	    }
 	  else if (xDelta < 0)
 	    {
 	      /* Avoid to recompute the whole block of lines */
