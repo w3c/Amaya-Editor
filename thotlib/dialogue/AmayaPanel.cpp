@@ -31,13 +31,14 @@
 #include "AmayaPanel.h"
 #include "AmayaSubPanel.h"
 #include "AmayaSubPanelManager.h"
-#include "AmayaXHTMLPanel.h"
 #include "AmayaAttributePanel.h"
 #include "AmayaColorsPanel.h"
 #include "AmayaCharStylePanel.h"
 #include "AmayaFormatPanel.h"
 #include "AmayaApplyClassPanel.h"
 #include "AmayaMathMLPanel.h"
+#include "AmayaXHTMLPanel.h"
+#include "AmayaXMLPanel.h"
 #include "AmayaNormalWindow.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaPanel, wxPanel)
@@ -79,6 +80,7 @@ AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
   m_aPanelList[WXAMAYA_PANEL_FORMAT]     = new AmayaFormatPanel(    m_pScrolledWindow, p_parent_nwindow );
   m_aPanelList[WXAMAYA_PANEL_APPLYCLASS] = new AmayaApplyClassPanel( m_pScrolledWindow, p_parent_nwindow );
   m_aPanelList[WXAMAYA_PANEL_MATHML]     = new AmayaMathMLPanel( m_pScrolledWindow, p_parent_nwindow );
+ m_aPanelList[WXAMAYA_PANEL_XML]         = new AmayaXMLPanel( m_pScrolledWindow, p_parent_nwindow );
 
   // attach subpanels & title to the panel
   wxBoxSizer * p_TopSizer = new wxBoxSizer ( wxVERTICAL );
@@ -91,6 +93,7 @@ AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_XHTML],      0, wxBOTTOM | wxEXPAND, 5 );
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_ATTRIBUTE],  0, wxBOTTOM | wxEXPAND, 5 );
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_MATHML],     0, wxBOTTOM | wxEXPAND, 5 );
+  p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_XML],        0, wxBOTTOM | wxEXPAND, 5 );
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_COLORS],     0, wxBOTTOM | wxEXPAND, 5 );
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_CHARSTYLE],  0, wxBOTTOM | wxEXPAND, 5 );
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_FORMAT],     0, wxBOTTOM | wxEXPAND, 5 );

@@ -16,7 +16,8 @@ body {background-color: #F9F7F4; color: #666666; font-family: helvetica; }
 .head {margin: 1em 0 3em 0}
 h1 {font-size: 24pt}
 body {padding-left: 2em}</style>
-  <meta name="generator" content="amaya 8.6, see http://www.w3.org/Amaya/" />
+  <meta name="generator"
+  content="amaya 9.0-pre, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr">
@@ -25,7 +26,7 @@ body {padding-left: 2em}</style>
 <h1 id="Amaya">Amaya - Guide utilisateur</h1>
 
 <p class="head"><span class="author">Irène Vatton</span> <br />
-Dernière mise à jour : <!--$date=-->Wednesday 06 October 2004 - 14:13:09<!--$-->
+Dernière mise à jour : <!--$date=-->mercredi 08 dÃ©cembre 2004 - 12:59:45<!--$-->
 </p>
 </div>
 
@@ -255,7 +256,6 @@ final du document tel qu'il est vu par un navigateur Web</p>
   <li>Liens : création et destruction des liens.</li>
   <li>Vues : gestion des différentes vues du document.</li>
   <li>Style : gestion du style CSS.</li>
-  <li>Attributs : gestion des attributs de l'élément sélectionné.</li>
   <li>Annotations : création, destruction d'annotations.</li>
   <li>Aide : donne accès au manuel en ligne.</li>
 </ul>

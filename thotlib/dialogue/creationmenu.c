@@ -41,6 +41,10 @@
 #include "structcreation_f.h"
 #include "structselect_f.h"
 #include "thotmsg_f.h"
+#ifdef _WX
+  #include "appdialogue_wx.h"
+  #include "paneltypes_wx.h"
+#endif /* _WX */
 
 static char     NameOfElementToBeCreated[MAX_TXT_LEN];
 
@@ -120,16 +124,41 @@ void TtaShowElementMenu (Document doc, View view)
       pDoc = LoadedDocument[doc - 1];
       if (GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar) &&
 	  pSelDoc == pDoc)
-	{
 	  pSS = firstSel->ElStructSchema;
-	  menuBuf[0] = EOS;
-	  withTextInput =  (strcmp (pSS->SsName, "HTML") &&
-			    strcmp (pSS->SsName, "SVG") &&
-			    strcmp (pSS->SsName, "MathML"));
-	  if (strcmp (pSS->SsName, "TextFile"))
-	    nbItem = BuildElementSelector (pDoc, pSS, menuBuf);
-	}
+      else
+	pSS = pDoc->DocSSchema;
+
+      menuBuf[0] = EOS;
+      withTextInput =  (strcmp (pSS->SsName, "HTML") &&
+			strcmp (pSS->SsName, "SVG") &&
+			strcmp (pSS->SsName, "MathML"));
+      if (strcmp (pSS->SsName, "TextFile"))
+	nbItem = BuildElementSelector (pDoc, pSS, menuBuf);
+
       /* generate the form with two buttons Isert and Done */
+#ifdef _WX 
+      if (nbItem == 0)
+	TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_NO_ELEMENT), NULL);
+      else
+	{
+	  AmayaParams p;
+	  int         typeNum;
+	  p.param1 = (void*)nbItem;
+	  p.param2 = (void*)menuBuf;
+	  if (firstSel)
+	    {
+	      if (firstSel->ElTerminal && firstSel->ElParent)
+		firstSel = firstSel->ElParent;
+	      typeNum = firstSel->ElTypeNumber;
+	      p.param3 = (void*)(pSS->SsRule->SrElem[typeNum - 1]->SrName);
+	    }
+	  else
+	    p.param3 = (void*)"";
+	  /* the dialog reference used to call the right callback in thotlib */
+	  p.param4 = (void*)(NumFormElemToBeCreated);
+	  TtaSendDataToPanel( WXAMAYA_PANEL_XML, p );
+	}
+#endif /* _WX */
 #ifdef _WINGUI
       CreateXMLDlgWindow (NULL, nbItem, menuBuf, withTextInput);
 #endif /* _WINGUI */
