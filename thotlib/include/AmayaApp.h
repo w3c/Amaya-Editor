@@ -13,6 +13,7 @@
 #endif /* _GL */
 
 class wxAmayaSocketEventLoop;
+class wxSingleInstanceChecker;
 
 #ifdef _GL
 class AmayaApp : public wxGLApp
@@ -22,10 +23,6 @@ class AmayaApp : public wxApp
 {
 public:
 
-  virtual bool 	OnInit();
-  virtual int 	OnExit();
-
-  void OnIdle( wxIdleEvent& event );
 
 #ifdef _GL
   static int * GetGL_AttrList();
@@ -34,11 +31,16 @@ public:
   static wxImageList * GetDocumentIconList();
   static wxIcon GetAppIcon();
 
-protected:
+ protected:
+  bool IsAnotherAmayaRunning();
+
+ protected:
   DECLARE_EVENT_TABLE()
+  virtual bool 	OnInit();
+  virtual int 	OnExit();
+  void OnIdle( wxIdleEvent& event );
 
   bool m_AmayaIsLaunched;
-
 
   wxAmayaSocketEventLoop * m_SocketEventLoop;
 
@@ -53,6 +55,8 @@ protected:
 
   static wxImageList * m_pDocImageList; /* this is the list where documents icons are stored */
   static wxIcon m_AppIcon;
+
+  wxSingleInstanceChecker * m_SingleInstance_Checker;
 };
 
 DECLARE_APP(AmayaApp)

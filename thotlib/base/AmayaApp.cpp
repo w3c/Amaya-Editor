@@ -3,6 +3,7 @@
 #include "wx/wx.h"
 #include "wx/clipbrd.h"
 #include "wx/image.h"
+#include "wx/snglinst.h"
 #ifndef _GLPRINT
   #include "wx/xrc/xmlres.h"          // XRC XML resouces
 #endif /* _GLPRINT */
@@ -78,8 +79,22 @@ int AmayaApp::AttrList[] =
 wxImageList * AmayaApp::m_pDocImageList = NULL;
 wxIcon AmayaApp::m_AppIcon( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"logo.png"), wxBITMAP_TYPE_PNG );
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaApp
+ *      Method:  OnInit
+ * Description:  this is the entry point
+ *--------------------------------------------------------------------------------------
+ */
 bool AmayaApp::OnInit()
 {
+  // for debug : the output is stderr
+  delete wxLog::SetActiveTarget( new wxLogStderr );
+  
+  // first check there is no other Amaya instance
+  if (IsAnotherAmayaRunning())
+    return false;
+
   // under X we usually want to use the primary selection by default (which
   // is shared with other apps)
   wxTheClipboard->UsePrimarySelection();
@@ -88,9 +103,6 @@ bool AmayaApp::OnInit()
   // the flag will be set to true when amaya_main will be called
   // (when the first idle event will be called)
   m_AmayaIsLaunched = FALSE;
-
-  // for debug : the output is stderr
-  delete wxLog::SetActiveTarget( new wxLogStderr );
 
   // Required for images
   wxImage::AddHandler(new wxGIFHandler);
@@ -253,6 +265,13 @@ void AmayaApp::ClearAmayaArgs()
   delete [] amaya_argv;
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaApp
+ *      Method:  OnIdle
+ * Description:  called when there is no more event to procced
+ *--------------------------------------------------------------------------------------
+ */
 void AmayaApp::OnIdle( wxIdleEvent& event )
 {
   // amaya_main is called only once when the first Idle event is received
@@ -299,6 +318,13 @@ void AmayaApp::OnIdle( wxIdleEvent& event )
 }
 
 #ifdef _GL
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaApp
+ *      Method:  GetGL_AttrList
+ * Description:  static methode which returns the opengl best display attributes
+ *--------------------------------------------------------------------------------------
+ */
 int * AmayaApp::GetGL_AttrList()
 {
   return AttrList;
@@ -306,8 +332,12 @@ int * AmayaApp::GetGL_AttrList()
 #endif /* _GL */
 
 /*
- * Returns the documents image list
- * this is where the document's icons are stored (as mozilla)
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaApp
+ *      Method:  GetDocumentIconList
+ * Description:  Returns the documents image list
+ *               this is where the document's icons are stored (as mozilla)
+ *--------------------------------------------------------------------------------------
  */
 wxImageList * AmayaApp::GetDocumentIconList()
 {
@@ -315,11 +345,35 @@ wxImageList * AmayaApp::GetDocumentIconList()
 }
 
 /*
- * Returns the application icon which is shown in the window manager task bar
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaApp
+ *      Method:  GetAppIcon
+ * Description:  Returns the application icon which is shown in the window manager task bar
+ *--------------------------------------------------------------------------------------
  */
 wxIcon AmayaApp::GetAppIcon()
 {
   return m_AppIcon;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaApp
+ *      Method:  IsAnotherAmayaRunning
+ * Description:  Returns true if another amaya instance is runing
+ *--------------------------------------------------------------------------------------
+ */
+bool AmayaApp::IsAnotherAmayaRunning()
+{
+  const wxString name = wxString::Format(_T("AMAYA-%s"), wxGetUserId().c_str());
+  m_SingleInstance_Checker = new wxSingleInstanceChecker(name);
+  if ( m_SingleInstance_Checker->IsAnotherRunning() )
+    {
+      wxLogError(_("Another program instance is already running, aborting."));
+      return true;
+    }
+  else
+    return false;
 }
 
 BEGIN_EVENT_TABLE(AmayaApp, wxApp)
