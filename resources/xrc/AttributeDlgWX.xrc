@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
   <object class="wxDialog" name="wxID_DLG_ATTRIBUTE">
-    <title></title>
-    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxDIALOG_MODAL|wxRESIZE_BORDER|wxTAB_TRAVERSAL</style>
+    <title>Attributes</title>
+    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER|wxTAB_TRAVERSAL</style>
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
@@ -15,6 +15,7 @@
                 <item checked="0">id</item>
                 <item checked="0">class</item>
               </content>
+              <focused>1</focused>
             </object>
             <option>1</option>
             <flag>wxALL|wxEXPAND</flag>
@@ -24,7 +25,9 @@
               <label>Value</label>
               <orient>wxVERTICAL</orient>
               <object class="sizeritem">
-                <object class="wxPanel" name="wxID_PANEL_VALUE_DUMMY"/>
+                <object class="wxPanel" name="wxID_PANEL_VALUE_DUMMY">
+                  <style>wxTAB_TRAVERSAL</style>
+                </object>
                 <option>1</option>
                 <flag>wxALL|wxEXPAND</flag>
               </object>
@@ -54,14 +57,15 @@
           </object>
           <object class="sizeritem">
             <object class="wxButton" name="wxID_OK">
-              <label>OK</label>
+              <label>Apply</label>
+              <default>1</default>
             </object>
             <flag>wxRIGHT</flag>
             <border>5</border>
           </object>
           <object class="sizeritem">
             <object class="wxButton" name="wxID_CANCEL">
-              <label>CANCEL</label>
+              <label>Close</label>
             </object>
           </object>
         </object>
