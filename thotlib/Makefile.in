@@ -218,6 +218,7 @@ DIALOGUE_OBJ = \
 	dialogue/opendoc.o \
 	dialogue/openview.o \
 	dialogue/picturemenu.o \
+	dialogue/profiles.o \
 	dialogue/presentmenu.o \
 	dialogue/printmenu.o \
 	dialogue/extprintmenu.o \

@@ -240,7 +240,6 @@ HWND GetCurrentWindow () {
 #include "viewapi_f.h"
 #include "sortmenu_f.h"
 
-
 /*----------------------------------------------------------------------
    TteInitMenuActions alloue la table des actions.                    
   ----------------------------------------------------------------------*/
@@ -270,7 +269,9 @@ int                 number;
 #  endif /* _WINDOWS */
    InitDocContexts ();
 
-
+   /* Init the profile table */
+   InitProfileTable();
+ 
    /* Initialise le dialogue */
    servername = NULL;
 #  ifndef _WIN_PRINT
@@ -473,8 +474,9 @@ Proc                procedure;
    int                 lg;
    int                 i;
 
-   if (actionName == NULL)
-      return;			/* pas de nom d'action declare */
+   if ((actionName == NULL) || (!BelongProfileTable(actionName))) 
+     //   if (actionName == NULL)  
+       return;			/* pas de nom d'action declare */
 
    lg = ustrlen (actionName);
    if (FreeMenuAction < MaxMenuAction && lg != 0)
@@ -872,68 +874,84 @@ CHAR_T                itemType;
 
 #endif /* __STDC__ */
 {
-   Menu_Ctl           *ptrmenu;
-   SchemaMenu_Ctl     *ptrschema;
-   Item_Ctl           *ptr;
-   int                 i;
+  Menu_Ctl           *ptrmenu;
+  SchemaMenu_Ctl     *ptrschema;
+  Item_Ctl           *ptr;
+  int                 i;
 
-   /* Recherche la bonne liste de menus */
-   ptrmenu = NULL;
-   switch (windowtype)
-	 {
-	    case MainWindow:
-	       /* il s'agit d'un des menus principaux */
-	       if (MainMenuList != NULL)
-		  ptrmenu = MainMenuList;
-	       break;
+  /* Recherche la bonne liste de menus */
+  ptrmenu = NULL;
+  switch (windowtype)
+    {
+    case MainWindow:
+      /* il s'agit d'un des menus principaux */
+      if (MainMenuList != NULL)
+	ptrmenu = MainMenuList;
+      break;
+	   
+    case DocWindow:
+      /* il s'agit d'un des menus pris par defaut */
+      if (DocumentMenuList != NULL)
+	ptrmenu = DocumentMenuList;
+      break;
+	   
+    case DocTypeWindow:
+      /* il s'agit d'un menu d'un schema particulier */
+      ptrschema = SchemasMenuList;
+      while (ptrschema != NULL && ustrcmp (schemaName, ptrschema->SchemaName))
+	ptrschema = ptrschema->NextSchema;
+      if (ptrschema != NULL)
+	ptrmenu = ptrschema->SchemaMenu;
+      break;
+    }
+       
+  /* Recherche le menu */
+  while (ptrmenu != NULL && menuID != ptrmenu->MenuID)
+    ptrmenu = ptrmenu->NextMenu;
+       
+  if (ptrmenu != NULL && subMenu != -1)
+    {
+      /* Recherche l'entree du sous-menu dans le menu */
+      i = 0;
+      ptr = ptrmenu->ItemsList;
+      while (i < ptrmenu->ItemsNb && (ptr[i].ItemID != subMenu))
+	i++;
+      if (i < ptrmenu->ItemsNb)
+	ptrmenu = ptr[i].SubMenu;
+      else
+	/* on n'a pas trouve le sous-menu */
+	return;
+    }
+ 
 
-	    case DocWindow:
-	       /* il s'agit d'un des menus pris par defaut */
-	       if (DocumentMenuList != NULL)
-		  ptrmenu = DocumentMenuList;
-	       break;
-
-	    case DocTypeWindow:
-	       /* il s'agit d'un menu d'un schema particulier */
-	       ptrschema = SchemasMenuList;
-	       while (ptrschema != NULL && ustrcmp (schemaName, ptrschema->SchemaName))
-		  ptrschema = ptrschema->NextSchema;
-	       if (ptrschema != NULL)
-		  ptrmenu = ptrschema->SchemaMenu;
-	       break;
-	 }
-
-   /* Recherche le menu */
-   while (ptrmenu != NULL && menuID != ptrmenu->MenuID)
-      ptrmenu = ptrmenu->NextMenu;
-
-   if (ptrmenu != NULL && subMenu != -1)
-     {
-	/* Recherche l'entree du sous-menu dans le menu */
-	i = 0;
-	ptr = ptrmenu->ItemsList;
-	while (i < ptrmenu->ItemsNb && (ptr[i].ItemID != subMenu))
-	   i++;
-	if (i < ptrmenu->ItemsNb)
-	   ptrmenu = ptr[i].SubMenu;
-	else
-	   /* on n'a pas trouve le sous-menu */
-	   return;
-     }
-
-   /* ajoute l'item dans le menu */
-   i = 0;
-   ptr = ptrmenu->ItemsList;
-   while (i < ptrmenu->ItemsNb && ptr[i].ItemType != SPACE)
-      i++;
-
-   if (i < ptrmenu->ItemsNb)
-     {
-	ptr[i].ItemID = itemID;
-	ptr[i].ItemType = itemType;
-	if (actionName != NULL)
-	   ptr[i].ItemAction = FindMenuAction (actionName);
-     }
+  /* checks if the item is present in the user profile */
+  if (actionName == NULL || BelongProfileTable(actionName))
+    { 
+      /* ajoute l'item dans le menu */
+      i = 0;
+      ptr = ptrmenu->ItemsList;
+      while (i < ptrmenu->ItemsNb && ptr[i].ItemType != SPACE)
+	i++;
+      if (i < ptrmenu->ItemsNb)
+	{
+	  /* Remove the separaror if the previous element was one */
+	  if (! (itemType == TEXT('S') && (i == 0 || ptr[i-1].ItemType == TEXT('S'))))
+	    {
+	      ptr[i].ItemID = itemID;
+	      ptr[i].ItemType = itemType;
+	      if (actionName != NULL)
+		ptr[i].ItemAction = FindMenuAction (actionName);
+	    }
+	  else
+	    /* Remove separator */
+	    ptrmenu->ItemsNb--;
+	}
+    }
+  else
+    {
+      /* removes the entry */
+      ptrmenu->ItemsNb--;
+    }       
 }
 
 
@@ -981,6 +999,7 @@ int                 frame;
    ThotBool            withEquiv;
    Item_Ctl           *ptritem;
    STRING              ptr;
+   char                LastItemType = 'S';
 
    /* Construit le sous-menu attache a l'item */
 #  ifdef _WINDOWS
@@ -994,24 +1013,27 @@ int                 frame;
    ptritem = ptrmenu->ItemsList;
    while (item < ptrmenu->ItemsNb)
      {
-	/* Regarde si le texte des commandes ne deborde pas */
-	ptr = TtaGetMessage (THOT, ptritem[item].ItemID);
-	lg = ustrlen (ptr) + 1;
-	if (ptritem[item].ItemType == TEXT('S') && i + 2 < 700)
-	  {
-	     ustrcpy (&string[i], _S_);
-	     i += 2;
-	  }
-	else if (i + lg < 699)
-	  {
-	     if (ptritem[item].ItemType == TEXT('D'))
-		string[i] = TEXT('B');
-	     else
-		string[i] = ptritem[item].ItemType;
-	     ustrcpy (&string[i + 1], ptr);
-	     i += lg + 1;
-	  }
-	else
+       /* Regarde si le texte des commandes ne deborde pas */
+       ptr = TtaGetMessage (THOT, ptritem[item].ItemID);
+       lg = ustrlen (ptr) + 1;
+       if (ptritem[item].ItemType == TEXT('S') && i + 2 < 700  )
+	 {
+	   if (( ptrmenu != NULL ) && !( RemoveBadSeparators(ptrmenu, item, LastItemType)))
+	     {
+	       ustrcpy (&string[i], _S_);
+	       i += 2;
+	     }
+	 }
+       else if (i + lg < 699)
+	 {
+	   if (ptritem[item].ItemType == TEXT('D'))
+	     string[i] = TEXT('B');
+	   else
+	     string[i] = ptritem[item].ItemType;
+	   ustrcpy (&string[i + 1], ptr);
+	   i += lg + 1;
+	 }
+       else
 	   /* sinon on reduit le nombre d'items */
 	   ptrmenu->ItemsNb = item - 1;
 
@@ -1033,6 +1055,8 @@ int                 frame;
 	     MenuActionList[action].ActionActive[frame] = TRUE;
 	  }
 	equiv[j++] = EOS;
+	
+	LastItemType = ptrmenu->ItemsList[item].ItemType;
 	item++;
      }
    sref = ((entry + 1) * MAX_MENU * MAX_ITEM) + ref;
@@ -1068,6 +1092,9 @@ int                 doc;
    ThotBool            withEquiv;
    Item_Ctl           *ptritem;
    STRING              ptr;
+   char                LastItemType = 'S';
+   int                 nbremovedsep = 0;
+   
 #ifdef _WINDOWS 
 
    currentFrame = frame;
@@ -1082,78 +1109,94 @@ int                 doc;
    ptritem = ptrmenu->ItemsList;
    while (item < ptrmenu->ItemsNb)
      {
-	action = ptritem[item].ItemAction;
-	/* Regarde si le texte des commandes ne deborde pas */
-	ptr = TtaGetMessage (THOT, ptritem[item].ItemID);
-	lg = ustrlen (ptr) + 1;
-	if (ptritem[item].ItemType == TEXT('S') && i + 2 < 700)
-	  {
-	     ustrcpy (&string[i], _S_);
-	     i += 2;
-	  }
-	else if (i + lg < 699)
-	  {
-	     if (ptritem[item].ItemType == TEXT('D'))
-		string[i] = TEXT('B');
-	     else
-		string[i] = ptritem[item].ItemType;
-	     ustrcpy (&string[i + 1], ptr);
-	     i += lg + 1;
-	  }
-	else
-	   /* sinon on reduit le nombre d'items */
-	   ptrmenu->ItemsNb = item - 1;
+       action = ptritem[item].ItemAction;
+       /* Regarde si le texte des commandes ne deborde pas */
+       ptr = TtaGetMessage (THOT, ptritem[item].ItemID);
+       lg = ustrlen (ptr) + 1;
+       if (ptritem[item].ItemType == TEXT('S') && i + 2 < 700)
+	 {
 
-	/* traite le contenu de l'item de menu */
-	if (action != -1)
-	  {
-	     if (ptritem[item].ItemType == TEXT('B') || ptritem[item].ItemType == TEXT('T'))
-	       {
-		  /* Active l'action correspondante pour cette fenetre */
-		  if (MenuActionList[action].ActionEquiv != NULL)
-		    {
-		       withEquiv = TRUE;
-		       lg = ustrlen (MenuActionList[action].ActionEquiv);
-		       if (lg + j < MaxEquivLen)
-			 {
-			    ustrcpy (&equiv[j], MenuActionList[action].ActionEquiv);
-			    j += lg;
-			 }
-		    }
-		  /* Is it the Paste command */
-		  if (!ustrcmp (MenuActionList[action].ActionName, _TtcPasteCST_))
-		    {
-		      FrameTable[frame].MenuPaste = ref;
-		      FrameTable[frame].EntryPaste = item;
-		    }
-		  /* Is it the Undo command */
-		  if (!ustrcmp (MenuActionList[action].ActionName, _TtcUndoCST_))
-		    {
-		      FrameTable[frame].MenuUndo = ref;
-		      FrameTable[frame].EntryUndo = item;
-		    }
-		  /* Is it the Redo command */
-		  if (!ustrcmp (MenuActionList[action].ActionName, _TtcRedoCST_))
-		    {
-		      FrameTable[frame].MenuRedo = ref;
-		      FrameTable[frame].EntryRedo = item;
-		    }
-		  MenuActionList[action].ActionActive[frame] = TRUE;
-	       }
-	  }
-	equiv[j++] = EOS;
-	item++;
+	   if ( ptrmenu != NULL ) 
+	     {
+	       if (!( RemoveBadSeparators(ptrmenu, item,LastItemType)))
+		 {
+		   ustrcpy (&string[i], _S_);
+		   i += 2;
+		 }
+	       else
+		 nbremovedsep ++;
+	     }
+	 }
+       else if (i + lg < 699)
+	 {
+/* 	   if ( ptritem[item].ItemType != TEXT('M') || */
+/* 		ptritem[item].SubMenu->ItemsNb != 0 ) */
+/* 	     { */
+	       if (ptritem[item].ItemType == TEXT('D'))
+		 string[i] = TEXT('B');
+	       else
+		 string[i] = ptritem[item].ItemType;
+	       ustrcpy (&string[i + 1], ptr);
+	       i += lg + 1;
+/* 	     } */
+	 }
+       else
+	 /* sinon on reduit le nombre d'items */
+	 ptrmenu->ItemsNb = item - 1;
+       
+       /* traite le contenu de l'item de menu */
+       if (action != -1)
+	 {
+	   if (ptritem[item].ItemType == TEXT('B') || ptritem[item].ItemType == TEXT('T'))
+	     {
+	       /* Active l'action correspondante pour cette fenetre */
+	       if (MenuActionList[action].ActionEquiv != NULL)
+		 {
+		   withEquiv = TRUE;
+		   lg = ustrlen (MenuActionList[action].ActionEquiv);
+		   if (lg + j < MaxEquivLen)
+		     {
+		       ustrcpy (&equiv[j], MenuActionList[action].ActionEquiv);
+		       j += lg;
+		     }
+		 }
+	       /* Is it the Paste command */
+	       if (!ustrcmp (MenuActionList[action].ActionName, _TtcPasteCST_))
+		 {
+		   FrameTable[frame].MenuPaste = ref;
+		   FrameTable[frame].EntryPaste = item;
+		 }
+	       /* Is it the Undo command */
+	       if (!ustrcmp (MenuActionList[action].ActionName, _TtcUndoCST_))
+		 {
+		   FrameTable[frame].MenuUndo = ref;
+		   FrameTable[frame].EntryUndo = item;
+		 }
+	       /* Is it the Redo command */
+	       if (!ustrcmp (MenuActionList[action].ActionName, _TtcRedoCST_))
+		 {
+		   FrameTable[frame].MenuRedo = ref;
+		   FrameTable[frame].EntryRedo = item;
+		 }
+	       MenuActionList[action].ActionActive[frame] = TRUE;
+	     }
+	 }
+       LastItemType = ptrmenu->ItemsList[item].ItemType;
+       equiv[j++] = EOS;
+       item++;
      }
-
+   
 #  ifdef _WINDOWS
    currentMenu = button;
 #  endif /* _WINDOWS */
 
    /* Creation du Pulldown avec ou sans equiv */
    if (withEquiv)
-      TtaNewPulldown (ref, button, NULL, ptrmenu->ItemsNb, string, equiv);
+      TtaNewPulldown (ref, button, NULL, ptrmenu->ItemsNb - nbremovedsep,
+		      string, equiv);
    else
-      TtaNewPulldown (ref, button, NULL, ptrmenu->ItemsNb, string, NULL);
+      TtaNewPulldown (ref, button, NULL, ptrmenu->ItemsNb - nbremovedsep, 
+		      string, NULL);
 
 #  ifdef _WINDOWS
    currentMenu = button;
@@ -1167,11 +1210,13 @@ int                 doc;
 	action = ptritem[item].ItemAction;
 	if (action != -1)
 	  {
-	     if (ptritem[item].ItemType == TEXT('M'))
-	       {
-		  if (action != 0 && item < MAX_MENU)
-		     /* creation du sous-menu */
-		     BuildSubMenu (ptritem[item].SubMenu, ref, item, frame);
+	    if (ptritem[item].ItemType == TEXT('M'))
+	      {
+		if (action != 0 && item < MAX_MENU)
+		  /* creation du sous-menu */
+/* 		  if (ptrmenu->ItemsList[item].SubMenu->ItemsNb != 0) */
+		  if (!RemoveSubMenu(ptritem[item].SubMenu))
+		    BuildSubMenu (ptritem[item].SubMenu, ref, item, frame);
 	       }
 	  }
 	item++;
@@ -1181,7 +1226,7 @@ int                 doc;
 #ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    TteOpenMainWindow opens the application main window.
-
+ 
    Parameters:
    name: the name to be displayed as the title of the main window.
    logo: the logo pixmap to be displayed in the window or NULL.
@@ -2616,48 +2661,49 @@ int                 doc;
 	     {
 	       /* saute les menus qui ne concernent pas cette vue */
 	       if (ptrmenu->MenuView == 0 || ptrmenu->MenuView == view)
-		 {
-		   if (menu_bar == 0)
-		     {
-		       /*** La barre des menus ***/
+		 if (!RemoveMenu (ptrmenu))
+		   {
+		     if (menu_bar == 0)
+		       {
+			 /*** La barre des menus ***/
 #                      ifndef _WINDOWS
-		       XtSetArg (argument[0], XmNbackground, BgMenu_Color);
-		       XtSetArg (argument[1], XmNspacing, 0);
-		       menu_bar = XmCreateMenuBar (Main_Wd, "Barre_menu", argument, 2);
-		       XtManageChild (menu_bar);
+			 XtSetArg (argument[0], XmNbackground, BgMenu_Color);
+			 XtSetArg (argument[1], XmNspacing, 0);
+			 menu_bar = XmCreateMenuBar (Main_Wd, "Barre_menu", argument, 2);
+			 XtManageChild (menu_bar);
 #                      endif /* !_WINDOWS */
-		     }
+		       }
 		   
-		   /* construit le bouton de menu */
+		     /* construit le bouton de menu */
 #                  ifdef _WINDOWS
-		   w = CreateMenu ();
+		     w = CreateMenu ();
 #                  else  /* _WINDOWS */
-		   w = XmCreateCascadeButton (menu_bar, TtaGetMessage (THOT, ptrmenu->MenuID), args, n);
+		     w = XmCreateCascadeButton (menu_bar, TtaGetMessage (THOT, ptrmenu->MenuID), args, n);
 #                  endif /* !_WINDOWS */
-		   FrameTable[frame].WdMenus[i] = w;
-		   FrameTable[frame].EnabledMenus[i] = TRUE;
-		   /* Evite la construction des menus dynamiques */
-		   if (ptrmenu->MenuAttr)
-		     FrameTable[frame].MenuAttr = ptrmenu->MenuID;
-		   else if (ptrmenu->MenuSelect) 
-		     FrameTable[frame].MenuSelect = ptrmenu->MenuID;
-		   else 
-		     BuildPopdown (ptrmenu, ref, w, frame, doc);
+		     FrameTable[frame].WdMenus[i] = w;
+		     FrameTable[frame].EnabledMenus[i] = TRUE;
+		     /* Evite la construction des menus dynamiques */
+		     if (ptrmenu->MenuAttr)
+		       FrameTable[frame].MenuAttr = ptrmenu->MenuID;
+		     else if (ptrmenu->MenuSelect) 
+		       FrameTable[frame].MenuSelect = ptrmenu->MenuID;
+		     else 
+		       BuildPopdown (ptrmenu, ref, w, frame, doc);
 #                  ifdef _WINDOWS
-		   AppendMenu (menu_bar, MF_POPUP, (UINT) w, TtaGetMessage (THOT, ptrmenu->MenuID));
+		     AppendMenu (menu_bar, MF_POPUP, (UINT) w, TtaGetMessage (THOT, ptrmenu->MenuID));
 #                  else  /* !_WINDOWS */
-		   XtManageChild (w);
+		     XtManageChild (w);
 #                  endif /* !_WINDOWS */
-		   /* Enregistre les menus dynamiques */
-		   if (ptrmenu->MenuHelp)
-		     {
-		       /* Cadre a droite le menu help */
+		     /* Enregistre les menus dynamiques */
+		     if (ptrmenu->MenuHelp)
+		       {
+			 /* Cadre a droite le menu help */
 #                      ifndef _WINDOWS
-		       XtSetArg (argument[0], XmNmenuHelpWidget, w);
-		       XtSetValues (XtParent (w), argument, 1);
+			 XtSetArg (argument[0], XmNmenuHelpWidget, w);
+			 XtSetValues (XtParent (w), argument, 1);
 #                      endif /* _WINDOWS */
-		     }
-		 }
+		       }
+		   }
 
 	       ptrmenu = ptrmenu->NextMenu;
 	       ref += MAX_ITEM;
