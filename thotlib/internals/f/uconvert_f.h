@@ -11,7 +11,7 @@ extern long uatol ( const STRING string );
 extern CHAR_T utolower ( CHAR_T c );
 extern unsigned char TtaGetCharFromWC ( wchar_t wc,
                                         CHARSET encoding );
-extern wchar_t TtaGetWCFromChar ( const unsigned char c,
+extern wchar_t TtaGetWCFromChar ( unsigned char c,
                                   CHARSET encoding );
 extern int TtaWCToMBstring ( wchar_t src,
                              unsigned char **dest );
@@ -42,7 +42,7 @@ extern long uatol (/* const STRING string */);
 extern CHAR_T utolower (/* CHAR_T c */);
 extern unsigned char TtaGetCharFromWC (/* wchar_t wc,
                                           CHARSET encoding */);
-extern wchar_t TtaGetWCFromChar (/* const unsigned char c,
+extern wchar_t TtaGetWCFromChar (/* unsigned char c,
                                     CHARSET encoding */);
 extern int TtaWCToMBstring (/* wchar_t src,
                                unsigned char **dest */);

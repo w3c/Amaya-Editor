@@ -519,7 +519,7 @@ unsigned char TtaGetCharFromWC (wchar_t wc, CHARSET encoding)
   TtaGetWCFromChar returns the Unicode value of the corresponding
   ISO or Windows character code c.
   ----------------------------------------------------------------------*/
-wchar_t TtaGetWCFromChar (const unsigned char c, CHARSET encoding)
+wchar_t TtaGetWCFromChar (unsigned char c, CHARSET encoding)
 {
   unsigned int  val, max;
   unsigned short *table;
