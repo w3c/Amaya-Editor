@@ -3812,8 +3812,8 @@ static void  InitializeXmlParsingContext (Document doc,
   ----------------------------------------------------------------------*/
 Element         ChangeSvgImageType (Element el, Document doc)
 {
-  ElementType   elType;
-  Element       svgImageElement, svgImageContent;
+  ElementType   elType, parentType;
+  Element       parent, svgImageElement, svgImageContent;
   Attribute     attr, nextattr;
   int           oldStructureChecking;
  
@@ -3828,28 +3828,45 @@ Element         ChangeSvgImageType (Element el, Document doc)
   if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) &&
       (elType.ElTypeNum == HTML_EL_PICTURE_UNIT))
     {
-      /* create a SVG_Image element instead of the PICTURE element */
-      elType.ElTypeNum = HTML_EL_SVG_Image;
-      svgImageElement = TtaNewElement (doc, elType);
-      if (svgImageElement != NULL)
+      parent = TtaGetParent (el);
+      parentType = TtaGetElementType (parent);
+      if (parentType.ElTypeNum == HTML_EL_Object)
 	{
-	  TtaInsertSibling (svgImageElement, el, FALSE, doc);
-	  /* Attach the attributes to that new element */
-	  nextattr = NULL;
-	  TtaNextAttribute (el, &nextattr);
-	  while (nextattr != NULL)
-	    {
-	      attr = nextattr;
-	      TtaNextAttribute (el, &nextattr);
-	      TtaAttachAttribute (svgImageElement, attr, doc);
-	    }
 	  /* create a SVG_ImageContent element */
 	  elType.ElTypeNum = HTML_EL_SVG_ImageContent;
 	  svgImageContent = TtaNewElement (doc, elType);
 	  if (svgImageContent != NULL)
-	    TtaInsertFirstChild (&svgImageContent, svgImageElement, doc);
-	  /* Remove the PICTURE_UNIT element form the tree */
-	  TtaRemoveTree (el, doc);
+	    {
+	      TtaInsertSibling (svgImageContent, el, FALSE, doc);
+	      /* Remove the PICTURE_UNIT element form the tree */
+	      TtaRemoveTree (el, doc);
+	    }
+	}
+      else
+	{
+	  /* create a SVG_Image element instead of the PICTURE element */
+	  elType.ElTypeNum = HTML_EL_SVG_Image;
+	  svgImageElement = TtaNewElement (doc, elType);
+	  if (svgImageElement != NULL)
+	    {
+	      TtaInsertSibling (svgImageElement, el, FALSE, doc);
+	      /* Attach the attributes to that new element */
+	      nextattr = NULL;
+	      TtaNextAttribute (el, &nextattr);
+	      while (nextattr != NULL)
+		{
+		  attr = nextattr;
+		  TtaNextAttribute (el, &nextattr);
+		  TtaAttachAttribute (svgImageElement, attr, doc);
+		}
+	      /* create a SVG_ImageContent element */
+	      elType.ElTypeNum = HTML_EL_SVG_ImageContent;
+	      svgImageContent = TtaNewElement (doc, elType);
+	      if (svgImageContent != NULL)
+		TtaInsertFirstChild (&svgImageContent, svgImageElement, doc);
+	      /* Remove the PICTURE_UNIT element form the tree */
+	      TtaRemoveTree (el, doc);
+	    }
 	}
     }
   else if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0) &&
