@@ -71,55 +71,72 @@ static Element	LastDeletedElement = NULL;
    SplitTextInMathML
    Split element el and the enclosing element (MO, MI, MN or MTEXT).
    Parameter index indicates the position where the text has to be split.
-   Return the next created text within the next enclosing element.
+   Return the text element created within the next enclosing element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Element      SplitTextInMathML (Document doc, Element el, int index)
+static Element      SplitTextInMathML (Document doc, Element el, int index, boolean *mrowCreated)
 #else
-static Element      SplitTextInMathML (doc, el, index)
+static Element      SplitTextInMathML (doc, el, index, mrowCreated)
 Document            doc;
 Element             el;
 int                 index;
+boolean             *mrowCreated;
 #endif
 {
   Element            added, parent, row;
   ElementType        elType;
   int                oldStructureChecking;
+  boolean            withinMrow;
 
-  /* do not check the Thot abstract tree against the structure */
-  /* schema while changing the structure */
+  /* do not check the Thot abstract tree against the structure schema while
+     changing the structure */
   oldStructureChecking = TtaGetStructureChecking (doc);
   TtaSetStructureChecking (0, doc);
-  /* split the text to be inserted */
-  TtaSplitText (el, index-1, doc);
+
   /* get the parent element (MO, MN, MI or MTEXT) */
   parent = TtaGetParent (el);
 
   /* check whether the parent is a child of a MROW */
   row = TtaGetParent (parent);
   elType = TtaGetElementType (row);
-  if (elType.ElTypeNum != MathML_EL_MROW &&
-      elType.ElTypeNum != MathML_EL_FencedExpression)
+  withinMrow = (elType.ElTypeNum == MathML_EL_MROW ||
+                elType.ElTypeNum == MathML_EL_FencedExpression);
+
+  /* split the text element */
+  if (withinMrow)
+     TtaRegisterElementReplace (el, doc);
+  TtaSplitText (el, index-1, doc);
+  /* take the second part of the split text */
+  TtaNextSibling (&el);
+
+  *mrowCreated = FALSE;
+  if (!withinMrow)
     {
-      /* generates a new MROW element */
+      /* generate a new MROW element */
       elType.ElTypeNum = MathML_EL_MROW;
       row = TtaNewElement (doc, elType);
       TtaInsertSibling (row, parent, TRUE, doc);
+      TtaRegisterElementCreate (row, doc);
+      TtaRegisterElementDelete (parent, doc);
       TtaRemoveTree (parent, doc);
       /* move the parent into the new MROW */
       TtaInsertFirstChild (&parent, row, doc);
+      /* the MROW element has been registered in the Undo queue. There is
+	 no need to register the elements that will be created within
+	 this MROW element */
+      *mrowCreated = TRUE;
     }
 
   /* duplicate the parent element (MO, MN, MI or MTEXT) */
   elType = TtaGetElementType (parent);
   added = TtaNewElement (doc, elType);
   TtaInsertSibling (added, parent, FALSE, doc);
-  /* take the second part of the split text */
-  TtaNextSibling (&el);
+  /* move the second part of text into the duplicated parent */
   TtaRemoveTree (el, doc);
-  /* move the old element into the new MROW */
   TtaInsertFirstChild (&el, added, doc);
-  /* check the Thot abstract tree against the structure schema. */
+  if (withinMrow)
+     TtaRegisterElementCreate (added, doc);
+  /* resume structure checking */
   TtaSetStructureChecking ((boolean)oldStructureChecking, doc);
   return (el);
 }
@@ -130,11 +147,12 @@ int                 index;
   Delete element el if it's a placeholder.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void       DeleteIfPlaceholder (Element* el, Document doc)
+static void       DeleteIfPlaceholder (Element* el, Document doc, boolean record)
 #else
-static void       DeleteIfPlaceholder (el, doc)
+static void       DeleteIfPlaceholder (el, doc, record)
 Element* el;
 Document doc;
+boolean record;
 
 #endif
 {
@@ -153,6 +171,8 @@ AttributeType	attrType;
 	if (attr != NULL)
 	   /* this element is a placeholder. Delete it */
 	   {
+	   if (record)
+	      TtaRegisterElementDelete (*el, doc);
 	   TtaDeleteTree (*el, doc);
 	   *el = NULL;
 	   }
@@ -166,12 +186,13 @@ AttributeType	attrType;
   no placeholder created.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Element       InsertPlaceholder (Element el, boolean before, Document doc)
+static Element       InsertPlaceholder (Element el, boolean before, Document doc, boolean record)
 #else
-static Element       InsertPlaceholder (el, before, doc)
+static Element       InsertPlaceholder (el, before, doc, record)
 Element el;
 boolean before;
 Document doc;
+boolean record;
 
 #endif
 {
@@ -189,10 +210,10 @@ boolean		createConstruct, oldStructureChecking;
 	{
 	sibling = el;
 	TtaPreviousSibling (&sibling);
-	DeleteIfPlaceholder (&sibling, doc);
+	DeleteIfPlaceholder (&sibling, doc, record);
 	sibling = el;
 	TtaNextSibling (&sibling);
-	DeleteIfPlaceholder (&sibling, doc);
+	DeleteIfPlaceholder (&sibling, doc, record);
 	}
      else
 	/* this element needs placeholders.  Create placeholders if the
@@ -225,6 +246,8 @@ boolean		createConstruct, oldStructureChecking;
            TtaAttachAttribute (placeholderEl, attr, doc);
            TtaSetAttributeValue (attr, MathML_ATTR_placeholder_VAL_yes_,
 				 placeholderEl, doc);
+	   if (record)
+	      TtaRegisterElementCreate (placeholderEl, doc);
 	   }
 	}
      return placeholderEl;
@@ -233,7 +256,7 @@ boolean		createConstruct, oldStructureChecking;
 /*----------------------------------------------------------------------
   CreateParentMROW
   If element el is not a child of a MROW and if it has at least one
-  sibling that is not a Construct, create an enclosing MROW,
+  sibling that is not a Construct (place holder), create an enclosing MROW,
   except if el is a child of a MFENCED element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -245,7 +268,8 @@ Document doc;
 
 #endif
 {
-  Element            sibling, row, parent, firstChild, next, previous;
+  Element            sibling, row, parent, firstChild, lastChild, next,
+                     previous;
   ElementType        elType;
   int                nChildren;
 
@@ -269,16 +293,19 @@ Document doc;
 	    }
 	 if (nChildren > 1)
 	    {
-	      /* generates a new row element to include these elements */
+	      /* generate a new row element to include these elements */
 	      elType.ElTypeNum = MathML_EL_MROW;
 	      row = TtaNewElement (doc, elType);
-	      TtaInsertSibling (row, firstChild, TRUE, doc);
+	      lastChild = TtaGetLastChild (parent);
+	      TtaInsertSibling (row, lastChild, FALSE, doc);
+	      TtaRegisterElementCreate (row, doc);
 	      sibling = firstChild;
 	      previous = NULL;
 	      while (sibling != NULL)
 		{
 		next = sibling;
 		TtaNextSibling (&next);
+		TtaRegisterElementDelete (sibling, doc);
 	        TtaRemoveTree (sibling, doc);
 	        /* move the old element into the new MROW */
 		if (previous == NULL)
@@ -286,7 +313,10 @@ Document doc;
 		else
 		   TtaInsertSibling (sibling, previous, FALSE, doc);
 		previous = sibling;
-		sibling = next;
+		if (next == row)
+		   sibling = NULL;
+		else
+		   sibling = next;
 		}
 	    }
 	 }
@@ -326,11 +356,13 @@ static void RemoveAttr (el, doc, attrTypeNum)
    ones according to the value of attribute separators of parent MFENCED.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void RegenerateFencedSeparators (Element el, Document doc)
+static void RegenerateFencedSeparators (Element el, Document doc, boolean record)
 #else /* __STDC__*/
-static void RegenerateFencedSeparators (el, doc)
+static void RegenerateFencedSeparators (el, doc, record)
      Element el;
      Document doc;
+     boolean record;
+
 #endif /* __STDC__*/
 {
   Element	child, next;
@@ -345,11 +377,15 @@ static void RegenerateFencedSeparators (el, doc)
      TtaNextSibling (&next);
      elType = TtaGetElementType (child);
      if (elType.ElTypeNum == MathML_EL_FencedSeparator)
+       {
+        if (record)
+	  TtaRegisterElementDelete (child, doc);
 	TtaDeleteTree (child, doc);
+       }
      child = next;
      }
-   /* Create all FencedSeparator elements, according to attribute separators */
-   CreateFencedSeparators (el, doc);
+  /* Create all FencedSeparator elements, according to attribute separators */
+  CreateFencedSeparators (el, doc, record);
 }
 
 /*----------------------------------------------------------------------
@@ -369,10 +405,9 @@ int                 construct;
 		     placeholderEl, parent, new;
   ElementType        newType, elType, symbType;
   SSchema            docSchema, mathSchema;
-  int                c1, c2, i, j, len;
+  int                c1, c2, i, j, len, oldStructureChecking;
   boolean	     before, ParBlock, surround, insertSibling,
-		     selectFirstChild, displayTableForm;
-  int                oldStructureChecking;
+		     selectFirstChild, displayTableForm, mrowCreated;
 
       doc = TtaGetSelectedDocument ();
       TtaGiveLastSelectedElement (doc, &last, &c2, &j);
@@ -383,7 +418,7 @@ int                 construct;
       docSchema = TtaGetDocumentSSchema (doc);
 
       if (construct == 1)
-	/* button Math or DisplayMath */
+	/* Math button */
 	{
 	if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
 	   /* selection is in an HTML element */
@@ -412,8 +447,12 @@ int                 construct;
       
       TtaSetDisplayMode (doc, DeferredDisplay);
 
-      /* the new element will be inserted before the selected element */
+      /* By default, the new element will be inserted before the selected
+	 element */
       before = TRUE;
+
+      TtaOpenUndoSequence (doc, sibling, last, c1, c2);
+      mrowCreated = FALSE;
 
       /* Check whether the selected element is a MathML element */
       if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
@@ -421,6 +460,7 @@ int                 construct;
 	  /* the selection concerns a MathML element */
 	  mathSchema = elType.ElSSchema;
 	  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT && c1 > 1)
+	    /* the first selected element is a character string */
 	    {
 	      len = TtaGetTextLength (sibling);
 	      if (c1 > len)
@@ -428,15 +468,20 @@ int                 construct;
 		/* create the new element after the character string */
 		before = FALSE;
 	      else
-		sibling = SplitTextInMathML (doc, sibling, c1);
+		/* split the character string before the first selected char */
+		sibling = SplitTextInMathML (doc, sibling, c1, &mrowCreated);
 	    }
 	}
       else
-	  /* the selection concerns an HTML or GraphML element */
+	  /* the selection is not in a MathML element */
 	{
+	  /* get the MathML schema for this document or associate it to the
+	     document if it is not associated yet */
 	  mathSchema = TtaNewNature (docSchema, "MathML", "MathMLP");
 	  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
 	      elType.ElTypeNum != HTML_EL_Math)
+	    /* the current selection is in an HTML element, but it's not
+	       a Math element */
 	    {
 	      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && c1 > 1)
 		{
@@ -457,14 +502,17 @@ int                 construct;
 			{
 		        el = TtaNewTree (doc, elType, "");
 		        TtaInsertSibling (el, sibling, FALSE, doc);
+			TtaRegisterElementCreate (el, doc);
 			}
 		      }
 		  else
 		    {
 		      /* split the text to insert the Math element */
+		      TtaRegisterElementReplace (sibling, doc);
 		      TtaSplitText (sibling, c1-1, doc);
 		      /* take the second part of the split text element */
 		      TtaNextSibling (&sibling);
+		      TtaRegisterElementCreate (sibling, doc);
 		    }
 		}
 
@@ -477,7 +525,7 @@ int                 construct;
 		      newType = TtaGetElementType (el);
 		      if (newType.ElTypeNum == HTML_EL_Math)
 			{
-			  /* insert at the end of the previous MathML element */
+			  /* insert at the end of the previous MathML element*/
 			  before = FALSE;
 			  sibling = TtaGetLastChild (el);		      
 			}
@@ -502,6 +550,8 @@ int                 construct;
 
 	  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
 	      elType.ElTypeNum == HTML_EL_Math)
+	    /* the current selection is in an HTML element, and it's a
+	       Math element */
 	    {
 	      /* search the first MathML element */
 		sibling = TtaGetFirstChild (sibling);
@@ -556,12 +606,15 @@ int                 construct;
                     sibling = NULL;
 		 }
               if (sibling == NULL)
+		/* cannot insert a math element here */
                  {
                  TtaSetDisplayMode (doc, DisplayImmediately);
+                 TtaCloseUndoSequence (doc);
                  return;
                  }
               else
                  {
+		 /* create a Math element */
                  el = TtaNewTree (doc, elType, "");
                  if (insertSibling)
                     /* insert the new Math element as a sibling element */
@@ -570,6 +623,8 @@ int                 construct;
                     /* insert the new Math element as a child element */
                     TtaInsertFirstChild (&el, sibling, doc);
                  sibling = TtaGetFirstChild (el);
+		 /* register the new Math element in the Undo queue */
+		 TtaRegisterElementCreate (el, doc);
                  }
 	    }
 	}
@@ -582,7 +637,6 @@ int                 construct;
 	{
 	case 1:	/* create a Math element */
 	  /* handled above */
-	  return;
 	  break;
 	case 2:
 	  newType.ElTypeNum = MathML_EL_MROOT;
@@ -620,14 +674,16 @@ int                 construct;
 	case 12:
 	  newType.ElTypeNum = MathML_EL_MMULTISCRIPTS;
 	  break;
-	case 13:
+	case 13:     /* MTABLE */
 	  displayTableForm = TtaIsSelectionEmpty ();
 	  if (displayTableForm)
+	    /* ask the user about the number of rows and columns to be created */
 	    {
 	      NumberRows = 2;
 	      NumberCols = 2;
 #  ifdef _WINDOWS
-          CreateMatrixDlgWindow (BaseDialog, TableForm, TableCols, TableRows, NumberCols, NumberRows);
+              CreateMatrixDlgWindow (BaseDialog, TableForm, TableCols,
+				     TableRows, NumberCols, NumberRows);
 #  else  /* !_WINDOWS */
 	      TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (doc, 1),
 			  TtaGetMessage (1, BMatrix), TRUE, 1, 'L', D_CANCEL);
@@ -642,7 +698,11 @@ int                 construct;
 	      /* wait for an answer */
 	      TtaWaitShowDialogue ();
 	      if (!UserAnswer)
-		return;
+		/* the user decided to abort the command */
+		{
+		  TtaCloseUndoSequence (doc);
+		  return;
+		}
 #  endif /* !_WINDOWS */
 	    }
 	  else
@@ -655,6 +715,7 @@ int                 construct;
 	  selectFirstChild = FALSE;	/* select the second component */
 	  break;
 	default:
+	  TtaCloseUndoSequence (doc);
 	  return;
 	}
       if (!surround || !TransformIntoType (newType, doc))
@@ -679,11 +740,13 @@ int                 construct;
 		{
 		  /* replace the empty MROW by the new element*/
 		  TtaInsertSibling (el, row, TRUE, doc);
+		  TtaRegisterElementCreate (el, doc);
+		  TtaRegisterElementDelete (row, doc);
 		  TtaRemoveTree (row, doc);
 		}
 	      else
 		{
-		  /* check whether the element is a Construct */
+		  /* check whether the selected element is a Construct */
 		  elType = TtaGetElementType (sibling);
 		  if (elType.ElTypeNum == MathML_EL_Construct)
 		    {
@@ -692,6 +755,7 @@ int                 construct;
 		    }
 		  else
 		    TtaInsertSibling (el, sibling, before, doc);
+		  TtaRegisterElementCreate (el, doc);
 		}
 	    }
 	  else if (elType.ElTypeNum == MathML_EL_Construct)
@@ -699,6 +763,7 @@ int                 construct;
 	      /* replace the Construct element */
 	      TtaInsertFirstChild (&el, sibling, doc);
 	      RemoveAttr (el, doc, MathML_ATTR_placeholder);
+	      TtaRegisterElementCreate (el, doc);
 	    }
 	  else
 	    {
@@ -708,11 +773,13 @@ int                 construct;
 		sibling = TtaGetParent (sibling);
 	      /* insert the new element */
 	      TtaInsertSibling (el, sibling, before, doc);
+	      if (!mrowCreated)
+		 TtaRegisterElementCreate (el, doc);
 	    }
 	  
 	  TtaSetDocumentModified (doc);
 	  if (ParBlock)
-	    /* user wants to create a parenthesized block */
+	    /* the user wants to create a parenthesized block */
 	    /* create two MF elements, as the first and last child of the new
 	       MROW */
 	    {
@@ -772,12 +839,12 @@ int                 construct;
 	  parent = TtaGetParent (el);
 	  elType = TtaGetElementType (parent);
 	  if (elType.ElTypeNum == MathML_EL_FencedExpression)
-	     RegenerateFencedSeparators (parent, doc);
+	    RegenerateFencedSeparators (parent, doc, TRUE);
 
 	 /* insert placeholders before and/or after the new element if
 	    they are needed */
-	  placeholderEl = InsertPlaceholder (el, TRUE, doc);
-	  placeholderEl = InsertPlaceholder (el, FALSE, doc);
+	  placeholderEl = InsertPlaceholder (el, TRUE, doc, !mrowCreated);
+	  placeholderEl = InsertPlaceholder (el, FALSE, doc, !mrowCreated);
 
 	  TtaSetDisplayMode (doc, DisplayImmediately);
 	  /* check the Thot abstract tree against the structure schema. */
@@ -798,6 +865,8 @@ int                 construct;
 	  if (leaf)
 	    TtaSelectElement (doc, leaf);
 	}
+
+      TtaCloseUndoSequence (doc);
 }
 
 /*----------------------------------------------------------------------
@@ -898,6 +967,7 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
+  SwitchIconMath
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void              SwitchIconMath (Document doc, View view, boolean state)
@@ -1193,6 +1263,7 @@ static void CheckMROW (el, doc)
        TtaSetDisplayMode (doc, DeferredDisplay);
        oldStructureChecking = TtaGetStructureChecking (doc);
        TtaSetStructureChecking (0, doc);
+       TtaRegisterElementDelete (*el, doc);
        child = firstChild;
        while (child != NULL)
 	  {
@@ -1200,6 +1271,7 @@ static void CheckMROW (el, doc)
 	  TtaNextSibling (&next);
           TtaRemoveTree (child, doc);
           TtaInsertSibling (child, *el, TRUE, doc);
+	  TtaRegisterElementCreate (child, doc);
 	  child = next;
 	  }
        TtaDeleteTree (*el, doc);
@@ -1317,6 +1389,7 @@ static void MergeMathEl (el, el2, before, doc)
 {
   Element	textEl2, nextEl, prevEl;
 
+  TtaRegisterElementReplace (el, doc);
   textEl2 = TtaGetFirstChild (el2);
   if (before)
      prevEl = NULL;
@@ -1334,6 +1407,7 @@ static void MergeMathEl (el, el2, before, doc)
      prevEl = textEl2;
      textEl2 = nextEl;
      }
+  TtaRegisterElementDelete (el2, doc);
   TtaDeleteTree (el2, doc);
   MathSetAttributes (el, doc, NULL);
 }
@@ -1550,6 +1624,7 @@ static void ParseMathString (theText, theElem, doc)
 	  }
     }
 
+  TtaOpenUndoSequence (doc, selEl, selEl, firstSelChar, lastSelChar);
   TtaSetDisplayMode (doc, DeferredDisplay);
   oldStructureChecking = TtaGetStructureChecking (doc);
   TtaSetStructureChecking (0, doc);
@@ -1581,6 +1656,7 @@ static void ParseMathString (theText, theElem, doc)
 	     }
 
 	  parent = TtaGetParent (theElem);
+	  TtaRegisterElementDelete (theElem, doc);
 	  TtaDeleteTree (theElem, doc);
 	  theElem = NULL;
 
@@ -1588,9 +1664,9 @@ static void ParseMathString (theText, theElem, doc)
 	     instead of the deleted element */
 	  placeholderEl = NULL;
 	  if (prev != NULL)
-	     placeholderEl = InsertPlaceholder (prev, FALSE, doc);
+	    placeholderEl = InsertPlaceholder (prev, FALSE, doc, TRUE);
 	  else if (next != NULL)
-	     placeholderEl = InsertPlaceholder (next, TRUE, doc);
+	    placeholderEl = InsertPlaceholder (next, TRUE, doc, TRUE);
 	  if (placeholderEl != NULL)
 	     newSelEl = placeholderEl;   
 
@@ -1598,7 +1674,7 @@ static void ParseMathString (theText, theElem, doc)
 	     upate the associated FencedSeparator elements */
 	  elType = TtaGetElementType (parent);
 	  if (elType.ElTypeNum == MathML_EL_FencedExpression)
-	     RegenerateFencedSeparators (parent, doc);
+	    RegenerateFencedSeparators (parent, doc, TRUE);
 
 	  CheckMROW (&parent, doc);
 	  if (parent != NULL)
@@ -1640,6 +1716,7 @@ static void ParseMathString (theText, theElem, doc)
 		newEl = TtaNewElement (doc, elType);
 		TtaInsertSibling (newEl, theElem, TRUE, doc);
 		prevEl = newEl;
+		TtaRegisterElementDelete (textEl, doc);
 		TtaRemoveTree (textEl, doc);
 		TtaInsertFirstChild (&textEl, newEl, doc);
 		while (prev != NULL)
@@ -1647,11 +1724,14 @@ static void ParseMathString (theText, theElem, doc)
 		   next = textEl;
 		   textEl = prev;
 		   TtaPreviousSibling (&prev);
+		   TtaRegisterElementDelete (textEl, doc);
 		   TtaRemoveTree (textEl, doc);
 		   TtaInsertSibling (textEl, next, TRUE, doc);
 		   }
 		MathSetAttributes (newEl, doc, &newSelEl);
+		TtaRegisterElementCreate (newEl, doc);
 		}
+	     TtaRegisterElementReplace (theElem, doc);
 	     ChangeTypeOfElement (theElem, doc, mathType[i-1]);
 	     }
 	  next = theText;
@@ -1663,6 +1743,7 @@ static void ParseMathString (theText, theElem, doc)
 	     newEl = TtaNewElement (doc, elType);
 	     TtaInsertSibling (newEl, theElem, FALSE, doc);
 	     nextEl = newEl;
+	     TtaRegisterElementDelete (textEl, doc);
 	     TtaRemoveTree (textEl, doc);
 	     TtaInsertFirstChild (&textEl, newEl, doc);
 	     while (next != NULL)
@@ -1670,10 +1751,12 @@ static void ParseMathString (theText, theElem, doc)
 	        prev = textEl;
 		textEl = next;
 		TtaNextSibling (&next);
+		TtaRegisterElementDelete (textEl, doc);
 		TtaRemoveTree (textEl, doc);
 		TtaInsertSibling (textEl, prev, FALSE, doc);
 		}
 	     MathSetAttributes (newEl, doc, &newSelEl);
+	     TtaRegisterElementCreate (newEl, doc);
 	     }
 	  newEl = theElem;
 	  textEl = theText;
@@ -1687,6 +1770,7 @@ static void ParseMathString (theText, theElem, doc)
 	  elType.ElTypeNum = MathML_EL_TEXT_UNIT;
 	  textEl = TtaNewElement (doc, elType);
 	  TtaInsertFirstChild (&textEl, newEl, doc);
+	  TtaRegisterElementCreate (newEl, doc);
           }
        while (text[start] == ' ')
 	  start++;
@@ -1716,8 +1800,8 @@ static void ParseMathString (theText, theElem, doc)
 	  {
 	  /* if the new element contains a single SYMBOL, placeholders may
 	     be needed before and/or after that operator */
-	  placeholderEl = InsertPlaceholder (newEl, TRUE, doc);
-	  placeholderEl = InsertPlaceholder (newEl, FALSE, doc);
+	  placeholderEl = InsertPlaceholder (newEl, TRUE, doc, TRUE);
+	  placeholderEl = InsertPlaceholder (newEl, FALSE, doc, TRUE);
 	  /* the new contents may be an horizontally stretchable symbol */
 	  if (newEl != NULL)
 	    {
@@ -1778,7 +1862,7 @@ static void ParseMathString (theText, theElem, doc)
      parent = TtaGetParent (firstEl);
      elType = TtaGetElementType (parent);
      if (elType.ElTypeNum == MathML_EL_FencedExpression)
-	 RegenerateFencedSeparators (parent, doc);
+       RegenerateFencedSeparators (parent, doc, TRUE);
 
      /* Create a MROW element that encompasses the new elements if necessary */
      CreateParentMROW (firstEl, doc);
@@ -1786,6 +1870,7 @@ static void ParseMathString (theText, theElem, doc)
 
   TtaSetStructureChecking ((boolean)oldStructureChecking, doc);
   TtaSetDisplayMode (doc, DisplayImmediately);
+  TtaCloseUndoSequence (doc);
 
   /* set a new selection */
   if (newSelEl != NULL)
@@ -1855,11 +1940,13 @@ void MathElementPasted(event)
    parent = TtaGetParent (event->element);
    elType = TtaGetElementType (parent);
    if (elType.ElTypeNum == MathML_EL_FencedExpression)
-      RegenerateFencedSeparators (parent, event->document);
+     RegenerateFencedSeparators (parent, event->document, FALSE/******/);
 
    /* create placeholders before and/or after the new element */
-   placeholderEl = InsertPlaceholder (event->element, TRUE, event->document);
-   placeholderEl = InsertPlaceholder (event->element, FALSE, event->document);
+   placeholderEl = InsertPlaceholder (event->element, TRUE, event->document,
+				      FALSE/****/);
+   placeholderEl = InsertPlaceholder (event->element, FALSE, event->document,
+				      FALSE/****/);
 
    TtaSetStructureChecking ((boolean)oldStructureChecking, event->document);
 }
@@ -1957,7 +2044,7 @@ View                view;
 		   TtaGiveReferenceAttributeValue (attr, &colHead, name,
 						   &refDoc);
 		   TtaOpenUndoSequence (document, el, el, firstchar,
-					   lastchar);
+					lastchar);
 		   /* remove column */
 		   RemoveColumn (colHead, document, FALSE, TRUE);
 		   
@@ -2009,7 +2096,7 @@ void MathElementDeleted(event)
    if (parentType.ElTypeNum == MathML_EL_FencedExpression)
       /* a child of a FencedExpression element has been deleted,
          re-generate all FencedSeparator elements in that FencedExpression */
-      RegenerateFencedSeparators (parent, event->document);
+     RegenerateFencedSeparators (parent, event->document, FALSE/*****/);
 
    /* If there are several successive placeholders at the place where the
       element has been deleted, remove all unneeded placeholders.
@@ -2022,21 +2109,23 @@ void MathElementDeleted(event)
       /* the first child of parent has been deleted.
 	 Create a placeholder before the new first child */
       if (sibling != NULL)
-        placeholderEl = InsertPlaceholder (sibling, TRUE, event->document);
+        placeholderEl = InsertPlaceholder (sibling, TRUE, event->document,
+					   FALSE/******/);
       }
    else if (IsLastDeletedElement)
       {
       for (i = 1; i < event->position && sibling != NULL; i++)
          TtaNextSibling (&sibling);
       if (sibling != NULL)
-         placeholderEl = InsertPlaceholder (sibling, FALSE, event->document);
+         placeholderEl = InsertPlaceholder (sibling, FALSE, event->document,
+					    FALSE/*****/);
       }
    IsLastDeletedElement = FALSE;
    LastDeletedElement = NULL;
 
    /* If there is an enclosing MROW that is no longer needed, remove
       that MROW */
-   CheckMROW (&parent, event->document);
+   CheckMROW (&parent, event->document); /******/
 
    /* The deletion of this component may lead to a structure change for its
       siblings and its parent */
@@ -2116,8 +2205,8 @@ void MathElementDeleted(event)
 	   TtaRemoveTree (grandChild, event->document);
 	   TtaInsertSibling (grandChild, parent, TRUE, event->document);
 	   TtaDeleteTree (parent, event->document);
-	   placeholderEl = InsertPlaceholder (grandChild, FALSE, event->document);
-	   placeholderEl = InsertPlaceholder (grandChild, TRUE, event->document);
+	   placeholderEl = InsertPlaceholder (grandChild, FALSE, event->document, FALSE/******/);
+	   placeholderEl = InsertPlaceholder (grandChild, TRUE, event->document, FALSE/******/);
 	   }
 	}
       }
@@ -2300,7 +2389,7 @@ void AttrSeparatorsChanged (event)
     }
   while (fencedExpression == NULL && child != NULL);
   if (fencedExpression != NULL)
-     RegenerateFencedSeparators (fencedExpression, event->document);
+    RegenerateFencedSeparators (fencedExpression, event->document, FALSE/****/);
 }
 
 #endif /* MATHML */

@@ -48,7 +48,8 @@ extern void ChangeTypeOfElement ( Element elem,
 extern void CheckFence ( Element el,
                          Document doc );
 extern void CreateFencedSeparators ( Element fencedExpression,
-                                     Document doc );
+                                     Document doc,
+                                     boolean record );
 extern void TransformMFENCED ( Element el,
                                Document doc );
 extern void MathMLElementComplete ( Element el,
@@ -103,7 +104,8 @@ extern void ChangeTypeOfElement (/* Element elem,
 extern void CheckFence (/* Element el,
                            Document doc */);
 extern void CreateFencedSeparators (/* Element fencedExpression,
-                                       Document doc */);
+                                       Document doc,
+                                       boolean record */);
 extern void TransformMFENCED (/* Element el,
                                  Document doc */);
 extern void MathMLElementComplete (/* Element el,

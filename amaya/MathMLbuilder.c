@@ -15,6 +15,7 @@
 
 #define THOT_EXPORT extern
 #include "amaya.h"
+#include "undo.h"
 
 #include "Mathedit_f.h"
 #include "XMLparser_f.h"
@@ -1727,11 +1728,12 @@ Document		doc;
    according to attribute separators of the MFENCED element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void      CreateFencedSeparators (Element fencedExpression, Document doc)
+void      CreateFencedSeparators (Element fencedExpression, Document doc, boolean record)
 #else
-void      CreateFencedSeparators (fencedExpression, doc)
+void      CreateFencedSeparators (fencedExpression, doc, record)
 Element		fencedExpression;
 Document	doc;
+boolean         record;
 
 #endif
 {
@@ -1795,6 +1797,8 @@ Document	doc;
 	      i++;
            if (text[i] > SPACE && text[i] != EOS)
               sep = i;
+	   if (record)
+	     TtaRegisterElementCreate (separator, doc);
            }
          prev = child;
          }
@@ -1855,7 +1859,7 @@ Document	doc;
 	    child = next;
 	    }
 	 /* create FencedSeparator elements in the FencedExpression */
-	 CreateFencedSeparators (fencedExpression, doc);
+	 CreateFencedSeparators (fencedExpression, doc, FALSE);
 	 }
       }
    else
@@ -1897,7 +1901,7 @@ Document	doc;
 	  }
 
 	/* create FencedSeparator elements in the FencedExpression */
-	CreateFencedSeparators (fencedExpression, doc);
+	CreateFencedSeparators (fencedExpression, doc, FALSE);
 
         /* Create placeholders within the FencedExpression element */
         CreatePlaceholders (firstChild, doc);
