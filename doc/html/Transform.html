@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta name="GENERATOR" content="amaya 5.2" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Using the HTML.trans File</title>
   <style type="text/css">
   </style>
   <link href="style.css" rel="stylesheet" type="text/css" />
-  <title>Using the HTML.trans File</title>
 </head>
 
 <body xml:lang="en" lang="en">
@@ -20,12 +19,11 @@
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="editing_documents/the_transform_command.html" accesskey="p">
-	  			<img alt="previous" src="../images/left.gif" /></a> 
-		<a href="Changing.html" accesskey="t">
-		   <img alt="top" src="../images/up.gif" /></a> 
-		<a href="HTML.html" accesskey="n">
-		   <img alt="next" src="../images/right.gif" /></a></p>
+      <td><p><a href="editing_documents/the_transform_command.html"
+        accesskey="p"><img alt="previous" src="../images/left.gif" /></a> <a
+        href="Changing.html" accesskey="t"><img alt="top"
+        src="../images/up.gif" /></a> <a href="HTML.html" accesskey="n"><img
+        alt="next" src="../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -45,7 +43,7 @@ transformation procedure is called by the editor,so new transformations can
 be added during an editing session.</p>
 
 <p><strong>Warning</strong>: As the description of transformations may
-contain tags, do<strong> not </strong>edit the <code>HTML.trans</code> file
+contain tags, do<strong>not</strong>edit the <code>HTML.trans</code> file
 with <strong>Amaya</strong>. You can use any text editor.</p>
 <hr />
 
@@ -57,7 +55,7 @@ end of the line.</p>
 <p>The file consists of a list of transformation descriptions. Each
 transformation is described by three parts :</p>
 <ul>
-  <li>a <em>name </em>terminated by a colon
+  <li>a <em>name</em>terminated by a colon
   <strong><code>:</code></strong></li>
   <li>a <em>source pattern</em> terminated by a semi-colon
     <strong><code>;</code></strong></li>
@@ -81,13 +79,13 @@ and value of attributes.</p>
 <p>Formally, a pattern contains HTML tags (possibly with attributes) and some
 composition operators:</p>
 
-<p><strong><code>| </code></strong>for choice</p>
+<p><strong><code>|</code></strong>for choice</p>
 
-<p><strong><code>, </code></strong>for sibling</p>
+<p><strong><code>,</code></strong>for sibling</p>
 
-<p><strong><code>+ </code></strong>for sequence</p>
+<p><strong><code>+</code></strong>for sequence</p>
 
-<p><strong><code>? </code></strong>for option</p>
+<p><strong><code>?</code></strong>for option</p>
 
 <p><strong><code>( )</code></strong> for grouping nodes</p>
 
@@ -111,8 +109,8 @@ document.</p>
 <h3>The rules</h3>
 
 <p>A rule expresses how some elements identified in the pattern are
-transformed. A rule has two parts separated by the symbol <strong><code>&gt;
-</code></strong>:</p>
+transformed. A rule has two parts separated by the symbol
+<strong><code>&gt;</code></strong>:</p>
 <ul>
   <li>a source tag or a name defined in the pattern,</li>
   <li>a target tag list, giving the tags to be generated, and the place where
@@ -128,7 +126,7 @@ transformed. A rule has two parts separated by the symbol <strong><code>&gt;
 </ul>
 
 <p>The generation location path is searched in the leftmost branch of the
-document tree, starting from the parent of  the element matching the highest
+document tree, starting from the parent of the element matching the highest
 symbol of the pattern.</p>
 
 <p>In the target tag list, the dot symbol (<code><strong>.</strong></code>)
@@ -172,10 +170,10 @@ href="http://www5conf.inria.fr/">5th international WWW conference</a> in
 Paris, May 96, by Cécile Roisin and Stéphane Bonhomme.</p>
 <hr />
 
-<h2><a name="L235">Examples</a></h2>
+<h2><a name="L235" id="L235">Examples</a></h2>
 <ul>
   <li>The first example merges several consecutive unnumbered lists (UL) into
-    an unique list.
+    an unique list. 
     <pre>Merge Lists: (UL{LI+})+;
     { 
     LI &gt; UL:LI; 
@@ -187,8 +185,8 @@ Paris, May 96, by Cécile Roisin and Stéphane Bonhomme.</p>
     When the rule is first applied, the resulting structure is empty, so
     there is no UL element in which the LI can be created. Therefore an UL is
     first created, then the rule can be applied.</p>
-    </li>
-  <li>The second example transforms a definition list into a table.
+  </li>
+  <li>The second example transforms a definition list into a table. 
     <pre>Table: DL{(DT|DD)+}; 
    { 
    DT &gt; &lt;TABLE border=1&gt;.TBODY:TR.TD; 
@@ -201,13 +199,13 @@ Paris, May 96, by Cécile Roisin and Stéphane Bonhomme.</p>
       <li>Each DT involves the creation of a new row (TR) in the table
       body.</li>
       <li>Each DD involves the creation of a new cell (TD) in the last
-        existing row of the table.
+        existing row of the table. 
         <p></p>
       </li>
     </ul>
   </li>
   <li>The third example removes a table element, keeping its content
-    unchanged but extracted from the table.
+    unchanged but extracted from the table. 
     <pre>Remove Table:
 TABLE{?CAPTION,?(body:*{(TR{(TD{(?cell_content:*)+}|
                              TH{(?cell_content:*)+}
@@ -228,7 +226,6 @@ TABLE{?CAPTION,?(body:*{(TR{(TD{(?cell_content:*)+}|
 <address>
   <a href="mailto:Stephane.Bonhomme@inrialpes.fr">Stéphane Bonhomme</a> <br />
   $Date$
-  
 </address>
 </body>
 </html>
