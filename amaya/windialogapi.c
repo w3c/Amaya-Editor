@@ -799,62 +799,23 @@ STRING buffer;
     currAttrVal = curr_val;
 	attDlgNbItems = nb_items;
 
-	switch (app_lang) {
-           case FR_LANG:
-                switch (attDlgNbItems) {
-                       case 2: DialogBox (hInstance, MAKEINTRESOURCE (FR_ATTR2ITEMSDIALOG), NULL, (DLGPROC) Attr2ItemsDlgProc);
-                               break;
+    switch (attDlgNbItems) {
+           case 2: DialogBox (hInstance, MAKEINTRESOURCE (ATTR2ITEMSDIALOG), NULL, (DLGPROC) Attr2ItemsDlgProc);
+                   break;
 
-                       case 3: DialogBox (hInstance, MAKEINTRESOURCE (FR_ATTR3ITEMSDIALOG), NULL, (DLGPROC) Attr3ItemsDlgProc);
-                               break;
+           case 3: DialogBox (hInstance, MAKEINTRESOURCE (ATTR3ITEMSDIALOG), NULL, (DLGPROC) Attr3ItemsDlgProc);
+                   break;
 
-                       case 4: DialogBox (hInstance, MAKEINTRESOURCE (FR_ATTR4ITEMSDIALOG), NULL, (DLGPROC) Attr4ItemsDlgProc);
-                               break;
+           case 4: DialogBox (hInstance, MAKEINTRESOURCE (ATTR4ITEMSDIALOG), NULL, (DLGPROC) Attr4ItemsDlgProc);
+                   break;
 
-                       case 5: DialogBox (hInstance, MAKEINTRESOURCE (FR_ATTR5ITEMSDIALOG), NULL, (DLGPROC) Attr5ItemsDlgProc);
-                               break;
+           case 5: DialogBox (hInstance, MAKEINTRESOURCE (ATTR5ITEMSDIALOG), NULL, (DLGPROC) Attr5ItemsDlgProc);
+                   break;
 
-                       default: /* MessageBox ();*/
-                                break;
-				} 
-				break;
-           case DE_LANG:
-                switch (attDlgNbItems) {
-                       case 2: DialogBox (hInstance, MAKEINTRESOURCE (DE_ATTR2ITEMSDIALOG), NULL, (DLGPROC) Attr2ItemsDlgProc);
-                               break;
+           default: /* MessageBox ();*/
+                    break;
+	} 
 
-                       case 3: DialogBox (hInstance, MAKEINTRESOURCE (DE_ATTR3ITEMSDIALOG), NULL, (DLGPROC) Attr3ItemsDlgProc);
-                               break;
-
-                       case 4: DialogBox (hInstance, MAKEINTRESOURCE (DE_ATTR4ITEMSDIALOG), NULL, (DLGPROC) Attr4ItemsDlgProc);
-                               break;
-
-                       case 5: DialogBox (hInstance, MAKEINTRESOURCE (DE_ATTR5ITEMSDIALOG), NULL, (DLGPROC) Attr5ItemsDlgProc);
-                               break;
-
-                       default: /* MessageBox ();*/
-                                break;
-				} 
-				break;
-           default:
-                switch (attDlgNbItems) {
-                       case 2: DialogBox (hInstance, MAKEINTRESOURCE (EN_ATTR2ITEMSDIALOG), NULL, (DLGPROC) Attr2ItemsDlgProc);
-                               break;
-
-                       case 3: DialogBox (hInstance, MAKEINTRESOURCE (EN_ATTR3ITEMSDIALOG), NULL, (DLGPROC) Attr3ItemsDlgProc);
-                               break;
-
-                       case 4: DialogBox (hInstance, MAKEINTRESOURCE (EN_ATTR4ITEMSDIALOG), NULL, (DLGPROC) Attr4ItemsDlgProc);
-                               break;
-
-                       case 5: DialogBox (hInstance, MAKEINTRESOURCE (EN_ATTR5ITEMSDIALOG), NULL, (DLGPROC) Attr5ItemsDlgProc);
-                               break;
-
-                       default: /* MessageBox ();*/
-                                break;
-				} 
-				break;
-	}
 }
 
 /*-----------------------------------------------------------------------
@@ -903,17 +864,7 @@ STRING class_list;
 	classForm   = class_form;
 	classSelect = class_select;
 
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_CREATERULEDIALOG), parent, (DLGPROC) CreateRuleDlgProc);
-				break;
-           case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_CREATERULEDIALOG), parent, (DLGPROC) CreateRuleDlgProc);
-				break;
-           default:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_CREATERULEDIALOG), parent, (DLGPROC) CreateRuleDlgProc);
-				break;
-	}
+	DialogBox (hInstance, MAKEINTRESOURCE (CREATERULEDIALOG), parent, (DLGPROC) CreateRuleDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -934,17 +885,7 @@ STRING class_list;
 	classForm   = class_form;
 	classSelect = class_select;
 
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_APPLYCLASSDIALOG), parent, (DLGPROC) ApplyClassDlgProc);
-				break;
-           case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_APPLYCLASSDIALOG), parent, (DLGPROC) ApplyClassDlgProc);
-				break;
-           default:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_APPLYCLASSDIALOG), parent, (DLGPROC) ApplyClassDlgProc);
-				break;
-	}
+	DialogBox (hInstance, MAKEINTRESOURCE (APPLYCLASSDIALOG), parent, (DLGPROC) ApplyClassDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -1730,6 +1671,11 @@ LPARAM lParam;
                 cxChar = tm.tmAveCharWidth;
                 cyChar = tm.tmHeight + tm.tmExternalLeading;
 
+                SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_ATTR));
+                SetWindowText (GetDlgItem (hwnDlg, ID_APPLY), TtaGetMessage (LIB, TMSG_APPLY));
+                SetWindowText (GetDlgItem (hwnDlg, ID_DELETE), TtaGetMessage (LIB, TMSG_DEL_ATTR));
+                SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
+
                 radio1 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 				i++;
@@ -1821,6 +1767,11 @@ LPARAM lParam;
                 cxChar = tm.tmAveCharWidth;
                 cyChar = tm.tmHeight + tm.tmExternalLeading;
                 ReleaseDC (hwnDlg, hDC);
+
+                SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_ATTR));
+                SetWindowText (GetDlgItem (hwnDlg, ID_APPLY), TtaGetMessage (LIB, TMSG_APPLY));
+                SetWindowText (GetDlgItem (hwnDlg, ID_DELETE), TtaGetMessage (LIB, TMSG_DEL_ATTR));
+                SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
 
                 radio1 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
@@ -1924,6 +1875,11 @@ LPARAM lParam;
                 cxChar = tm.tmAveCharWidth;
                 cyChar = tm.tmHeight + tm.tmExternalLeading;
                 ReleaseDC (hwnDlg, hDC);
+
+                SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_ATTR));
+                SetWindowText (GetDlgItem (hwnDlg, ID_APPLY), TtaGetMessage (LIB, TMSG_APPLY));
+                SetWindowText (GetDlgItem (hwnDlg, ID_DELETE), TtaGetMessage (LIB, TMSG_DEL_ATTR));
+                SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
 
                 hwndRadio1 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
@@ -2040,6 +1996,11 @@ LPARAM lParam;
                 cxChar = tm.tmAveCharWidth;
                 cyChar = tm.tmHeight + tm.tmExternalLeading;
                 ReleaseDC (hwnDlg, hDC);
+
+                SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_ATTR));
+                SetWindowText (GetDlgItem (hwnDlg, ID_APPLY), TtaGetMessage (LIB, TMSG_APPLY));
+                SetWindowText (GetDlgItem (hwnDlg, ID_DELETE), TtaGetMessage (LIB, TMSG_DEL_ATTR));
+                SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
 
                 radio1 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
@@ -3156,6 +3117,10 @@ LPARAM lParam;
 
     switch (msg) {
 	       case WM_INITDIALOG:
+                SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_DEF_CLASS));
+                SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+                SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
+
 				wndListRule = CreateWindow (TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 					                         10, 10, 200, 130, hwnDlg, (HMENU) 1, 
 											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
@@ -3266,6 +3231,10 @@ LPARAM lParam;
 
     switch (msg) {
 	       case WM_INITDIALOG:
+                SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_APPLY_CLASS));
+                SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+                SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
+
 				wndListRule = CreateWindow (TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 					                         10, 10, 200, 130, hwnDlg, (HMENU) 1, 
 											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
