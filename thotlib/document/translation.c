@@ -4040,8 +4040,12 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode,
 		    }
 		  else if (strcmp (pRe1->SrOrigName, "doctype") == 0)
 		    {
+		      startName[0] = EOS;
+		      endName[0] = EOS;
+		      /*
 		      strcpy (startName, "<!DOCTYPE ");
 		      strcpy (endName, ">");
+		      */
 		      specialTag = TRUE;
 		    }
 		  else if (strcmp (pRe1->SrOrigName, "cdata") == 0)
