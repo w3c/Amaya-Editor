@@ -207,10 +207,6 @@ SOURCE=..\..\thotlib\dialogue\AmayaToolBar.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\dialogue\AmayaURLBar.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\dialogue\AmayaWindow.cpp
 # End Source File
 # Begin Source File

@@ -1184,10 +1184,12 @@ void TtaInitializeAppRegistry (char *appArgv0)
   char       *ptr2, *ptr3;
 #else /*  _WINGUI */
   struct stat stat_buf;
+#endif /* _WINDOWS */
+#ifdef _UNIX
   char        c_execname[MAX_LENGTH];
   char        c_filename[MAX_LENGTH];
   char       *c_end;
-#endif /* _WINGUI */
+#endif /* _UNIX */
   int         execname_len;
   int         len, round;
   ThotBool    found, ok;

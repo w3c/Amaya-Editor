@@ -8,6 +8,12 @@
 /*
  * Messages and printing management.
  */
+
+#if defined(_WX) && defined(_WINDOWS)
+  #include "wx/wx.h"
+  #include "wx/dynlib.h"
+#endif /* _WX  && _WINDOWS */
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "libmsg.h"
@@ -64,12 +70,17 @@
 #include "writeprs_f.h"
 #include "writestr_f.h"
 
-#ifdef _WINGUI
+#if defined(_WX) && defined(_WINDOWS)
+  #include "AmayaWindow.h"
+  #include "appdialogue_wx.h"
+#endif /* _WX  && _WINDOWS */
+
+#ifdef _WINDOWS
 #include "thotprinter_f.h"
 #include "wininclude.h"
 static PRINTDLG     Pdlg;
 static ThotBool     LpInitialized = FALSE;
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 
 static ThotBool     PInitialized = FALSE;
 static PathBuffer   PrintDirName;
@@ -99,7 +110,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 {
    char                   *ptr;
 #ifdef _WINDOWS
-  HINSTANCE               hLib;
+  HINSTANCE               hLib = NULL;
    typedef void (*MYPROC)(HWND, int, char **, HDC, ThotBool,
 			      int, char *, char *, HINSTANCE, ThotBool);
    MYPROC                  ptrMainProc;
@@ -551,13 +562,27 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
      }
    /* transmit the path or source file */
 #ifdef _WINDOWS
-#ifndef _WX
    printArgv[printArgc] = TtaStrdup ("-removedir");
    printArgc++;
    printArgv[printArgc] = (char *)TtaGetMemory (strlen (dir) + strlen (name) + 6);
    sprintf  (printArgv[printArgc], "%s\\%s.PIV", dir, name);
    printArgc++;
-   /*WIN_ReleaseDeviceContext ();*/
+#ifdef _WX
+   wxDynamicLibrary dyn_lib;
+   if (dyn_lib.Load(_T("thotprinter.dll"), wxDL_DEFAULT))
+   {
+	  ptrMainProc = (MYPROC) dyn_lib.GetSymbol (_T("PrintDoc"));
+     if (ptrMainProc)
+	 {   
+       AmayaWindow * p_window = TtaGetActiveWindow();
+	   HWND win_handle = (HWND)p_window->GetHandle();
+	   (ptrMainProc) (win_handle, printArgc, printArgv,
+		  NULL, TtIsTrueColor, 
+          TtWDepth, name, dir, wxGetInstance(), TRUE);
+        dyn_lib.Unload();
+     }
+   }
+#else /* _WX */
    hLib = LoadLibrary ("thotprinter");
    if (!hLib)
       return /* FATAL_EXIT_CODE */;
@@ -569,26 +594,22 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
      }
    
    EnableWindow  (FrRef[frame], FALSE);
-
    if (TtPrinterDC)
    (ptrMainProc) (FrRef[frame], printArgc, printArgv,
 		TtPrinterDC, TtIsTrueColor, 
 		TtWDepth, name, dir, hInstance, buttonCommand);
 
    FreeLibrary (hLib);
-
    EnableWindow (FrRef[frame], TRUE);
    SetFocus (FrRef[frame]);
-   for (i = 0; i < printArgc; i++)
-       TtaFreeMemory (printArgv[i]);
    if (TtPrinterDC)
      {
        DeleteDC (TtPrinterDC);
        TtPrinterDC = (HDC) 0;
      }
-#else /* _WX */
-   /* TODO : ecrire le code wx qui permet de charger une DLL et executer le code du print */
-#endif /* !_WX */
+#endif /* _WX */
+   for (i = 0; i < printArgc; i++)
+       TtaFreeMemory (printArgv[i]);
 #else /*_WINDOWS*/
    cmd[j] = EOS;
    i = strlen (cmd);

@@ -840,7 +840,6 @@ void TteAddMenu (int view, int menuID, int itemsNumber, char *menuName)
    Menu_Ctl           *newmenu;
    Item_Ctl           *ptr;
    int                 i;
-   ThotBool            ok;
 
    /* Creation du nouveau menu */
    newmenu = (Menu_Ctl *) TtaGetMemory (sizeof (Menu_Ctl));
@@ -1384,13 +1383,6 @@ void BuildPopdown ( Menu_Ctl *ptrmenu, int ref, ThotMenu button,
   ----------------------------------------------------------------------*/
 void TteOpenMainWindow (char *name, ThotIcon logo, ThotPixmap icon)
 {
-   int                 i, n;
-   int                 ref;
-   int                 lg;
-   char                string[MENU_VAL_LENGTH];
-   Menu_Ctl           *ptrmenu;
-   char               *ptr;
-
    /* Creation de la fenetre principale */
    UserErrorCode = 0;
    InitTranslations (name);
@@ -1410,6 +1402,10 @@ void TteOpenMainWindow (char *name, ThotIcon logo, ThotPixmap icon)
 #endif /* _GTK */
        {
 #if 0
+    char                string[MENU_VAL_LENGTH];
+    Menu_Ctl           *ptrmenu;
+    char               *ptr;
+    int                 lg, n, i;
 	/* Compte le nombre de menus a creer */
 	n = 0;
 	i = 0;
@@ -1437,7 +1433,8 @@ void TteOpenMainWindow (char *name, ThotIcon logo, ThotPixmap icon)
 #endif /* 0 */
 #ifdef _GTK
 	/* icone des fenetres de documents */
-	wind_pixmap = TtaCreateBitmapLogo (logowindow_width, logowindow_height, (char *)logowindow_bits);
+	wind_pixmap = TtaCreateBitmapLogo (logowindow_width, logowindow_height,
+                                       (char *)logowindow_bits);
 #endif /* _GTK */
      }
 #endif /* _WX */
@@ -3416,11 +3413,9 @@ void TtaDisableScrollbars (Document doc, View view)
 void DestroyFrame (int frame)
 {
   ThotFrame           w;
-  Menu_Ctl           *ptrmenu;
-  Item_Ctl           *ptr;
-  int                 action;
-  int                 ref, i;
-  int                 item;
+#ifndef _WX
+  int                 i;
+#endif /* _WX */
   
 #ifdef _GL
   GL_DestroyFrame (frame);
@@ -3431,9 +3426,12 @@ void DestroyFrame (int frame)
   w = FrameTable[frame].WdFrame;
   if (w != 0)
     {
-
-  /* do not destroy frame menu on WX because menus are specific to the document */
+      /* do not destroy frame menu on WX because menus are specific to the document */
 #ifndef _WX
+      Menu_Ctl           *ptrmenu;
+      Item_Ctl           *ptr;
+      int                 action;
+      int                 ref, item;
       /* Destruction des menus attaches a la fenetre */
       ptrmenu = FrameTable[frame].FrMenus;
       i = 0;
@@ -3865,12 +3863,9 @@ void TtaEnableAction( Document document, const char * action_name, ThotBool enab
   ----------------------------------------------------------------------*/
 void TtaSetMenuOff (Document document, View view, int menuID)
 {
-  ThotMenu            w;
   int                 menu;
   int                 frame;
-  int                 ref;
 #ifdef _WX
-  int                 menu_id;
   PtrDocument         pDoc = LoadedDocument[document-1];
 #endif /* _WX */
   Menu_Ctl*           ptrmenu;
@@ -3904,6 +3899,8 @@ void TtaSetMenuOff (Document document, View view, int menuID)
 #endif /* _GTK */
 	{
 	  /* Get the button widget */
+      ThotMenu            w;
+      int                 ref;
 	  w = FrameTable[frame].WdMenus[menu];
 	  if (w != 0)
 	    {
@@ -3931,12 +3928,9 @@ void TtaSetMenuOff (Document document, View view, int menuID)
   ----------------------------------------------------------------------*/
 void TtaSetMenuOn (Document document, View view, int menuID)
 {
-  ThotMenu            w;
   int                 menu;
   int                 frame;
-  int                 ref;
 #ifdef _WX
-  int                 menu_id;
   PtrDocument         pDoc = LoadedDocument[document-1];  
 #endif /* _WX */
   Menu_Ctl*           ptrmenu;
@@ -3970,6 +3964,8 @@ void TtaSetMenuOn (Document document, View view, int menuID)
 #endif /* _GTK */
 	{
 	  /* Get the button widget */
+      ThotMenu            w;
+      int                 ref;
 	  w = FrameTable[frame].WdMenus[menu];
 	  if (w != 0)
 	    {
@@ -3997,7 +3993,6 @@ void TtaSetMenuOn (Document document, View view, int menuID)
 void TtaSetToggleItem (Document document, View view, int menuID, int itemID, ThotBool on)
 {
    int                 frame;
-   int                 ref;
    int                 menu, submenu;
    int                 item, action;
 
@@ -4026,24 +4021,20 @@ void TtaSetToggleItem (Document document, View view, int menuID, int itemID, Tho
         * the WX toolkit will performe a toggle action and update automaticaly the menu item so
 	* to be sure just force the refresh */
        TtaRefreshMenuItemStats( document, NULL, itemID );
-#endif /* _WX */
-
-#ifndef _WX
+#else /* _WX */
+    int                 ref;
 	/* entry found */
 	ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
 	if (submenu != 0)
 	   ref += submenu * MAX_MENU * MAX_ITEM;
 	/* enable the entry */
-
 #ifdef _WINGUI
 	WIN_TtaSetToggleMenu (ref, item, on, FrMainRef[frame]);
 #endif /* _WINGUI */
-
 #if defined(_GTK)
 	TtaSetToggleMenu (ref, item, on);
 #endif /* #if defined(_GTK) */
 #endif /* _WX */
-
      }
 }
 
@@ -4055,7 +4046,6 @@ void TtaSetToggleItem (Document document, View view, int menuID, int itemID, Tho
 void  TtaSetItemOff (Document document, View view, int menuID, int itemID)
 {
    int                 frame;
-   int                 ref;
    int                 menu, submenu;
    int                 item;
    int                 action;
@@ -4080,6 +4070,7 @@ void  TtaSetItemOff (Document document, View view, int menuID, int itemID)
    if (menu > 0)
      TtaRefreshMenuItemStats( document, NULL, itemID );
 #else /* _WX */
+   int                 ref;
    if (action > 0 && action < MaxMenuAction &&
        MenuActionList[action].ActionActive[frame])
      /* the entry is found and is active */
@@ -4102,9 +4093,7 @@ void  TtaSetItemOff (Document document, View view, int menuID, int itemID)
   ----------------------------------------------------------------------*/
 void  TtaSetItemOn (Document document, View view, int menuID, int itemID)
 {
-   PtrDocument         pDoc;
    int                 frame;
-   int                 ref;
    int                 menu, submenu;
    int                 item;
    int                 action;
@@ -4137,6 +4126,8 @@ void  TtaSetItemOn (Document document, View view, int menuID, int itemID)
      MenuActionList[action].ActionActive[frame] = TRUE;
    if (menu > 0)
      {
+       PtrDocument         pDoc;
+       int                 frame;
        /* enable the menu entry */
        ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
        if (submenu != 0)

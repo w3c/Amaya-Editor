@@ -573,7 +573,10 @@ void TtaSetAttributeText (Attribute attribute, char* buffer,
 			  Element element, Document document)
 {
   int                 lg;
-  PtrAttribute        pAttr, pPrevAttr, pA;
+  PtrAttribute        pAttr;
+#ifndef NODISPLAY
+  PtrAttribute        pPrevAttr, pA;
+#endif /* NODISPLAY */
   Language	      lang;
 
   UserErrorCode = 0;

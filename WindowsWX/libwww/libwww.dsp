@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GX /O2 /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\lib" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /D "HT_DAV" /D "HT_ZLIB" /D "_GL" /D "WIN32" /D "_WINDOWS" /D "_SVGLIB" /D "_SVGANIM" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\lib" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /I "..\..\..\libwww\modules" /I "..\..\..\libwww\Library\src\windows" /D "HT_DAV" /D "HT_ZLIB" /D "_GL" /D "WIN32" /D "_WINDOWS" /D "_SVGLIB" /D "_SVGANIM" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "LIBWWW_USEIDN" /D "WITHOUT_ICONV" /YX /FD /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MDd /W3 /GR /GX /ZI /Od /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\lib" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /D "HT_DAV" /D "HT_ZLIB" /D "_GL" /D "WIN32" /D "_WINDOWS" /D "_SVGLIB" /D "_SVGANIM" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /FD /c
+# ADD CPP /nologo /MDd /W3 /GR /GX /ZI /Od /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\lib" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /I "..\..\..\libwww\modules" /I "..\..\..\libwww\Library\src\windows" /D "HT_DAV" /D "HT_ZLIB" /D "_GL" /D "WIN32" /D "_WINDOWS" /D "_SVGLIB" /D "_SVGANIM" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "LIBWWW_USEIDN" /D "WITHOUT_ICONV" /FD /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -80,6 +80,41 @@ LIB32=link.exe -lib
 
 # Name "libwww - Win32 Release"
 # Name "libwww - Win32 Debug"
+# Begin Group ".c"
+
+# PROP Default_Filter "*.c"
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\aliaslist.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\api.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\checker.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\converter.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\debug.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\delimitermap.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\filechecker.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\filemapper.c
+# End Source File
 # Begin Source File
 
 SOURCE=..\..\..\libwww\Library\src\HTAABrow.c
@@ -536,11 +571,103 @@ SOURCE=..\..\..\libwww\Library\src\HTZip.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\libwww\modules\idn\log.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\mapper.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\mapselector.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\libwww\modules\md5\md5.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\libwww\modules\idn\nameprep.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\nameprep_template.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\nameprepdata.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\normalizer.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\punycode.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\res.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\resconf.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\result.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\libwww\Library\src\SGML.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\strhash.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\ucs4.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\ucsmap.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\ucsset.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\unicode.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\unicode_template.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\unicodedata_320.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\unormalize.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\utf8.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\util.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\version.c
 # End Source File
 # Begin Source File
 
@@ -557,5 +684,126 @@ SOURCE=..\..\..\libwww\modules\expat\lib\xmlrole.c
 SOURCE=..\..\..\libwww\modules\expat\lib\xmltok.c
 # ADD CPP /D "COMPILED_FROM_DSP"
 # End Source File
+# End Group
+# Begin Group ".h"
+
+# PROP Default_Filter "*.h"
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\aliaslist.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\api.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\assert.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\checker.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\converter.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\debug.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\delimitermap.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\export.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\filechecker.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\filemapper.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\log.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\logmacro.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\mapper.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\mapselector.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\nameprep.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\normalizer.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\punycode.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\res.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\resconf.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\result.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\strhash.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\ucs4.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\ucsmap.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\ucsset.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\unicode.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\unormalize.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\utf8.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\util.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\modules\idn\version.h
+# End Source File
+# End Group
 # End Target
 # End Project

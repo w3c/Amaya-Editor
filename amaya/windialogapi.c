@@ -185,7 +185,6 @@ void ReusePrinterDC ()
 
   if (TtaGetPrinterDC (TRUE, &orientation, &paper))
     {
-      /* EnableWindow (ghwndMain, FALSE); */
       ThotCallback (BasePrint + PPrinterName, STRING_DATA, CurFileToPrint);
       ThotCallback (BasePrint + FormPrint, INTEGER_DATA, (char *)1);
     }
@@ -760,10 +759,8 @@ LRESULT CALLBACK PrintDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  if (TtaGetPrinterDC (FALSE, &orientation, &paper))
 	    {
 	      EnableWindow (ghwndMain, FALSE);
-	      ThotCallback (BasePrint + PaperOrientation, INTEGER_DATA,
-			    (char*) orientation);
-	      ThotCallback (BasePrint + PaperFormat, INTEGER_DATA,
-			    (char*) paper);
+	      ThotCallback (BasePrint + PaperOrientation, INTEGER_DATA, (char*) orientation);
+	      ThotCallback (BasePrint + PaperFormat, INTEGER_DATA, (char*) paper);
 	      ThotCallback (BasePrint + PPrinterName, STRING_DATA,
 			    CurFileToPrint);
 	      ThotCallback (BasePrint + FormPrint, INTEGER_DATA, (char*)1);

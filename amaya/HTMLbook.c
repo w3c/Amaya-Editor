@@ -412,7 +412,7 @@ static void CheckPrintingDocument (Document document)
    ----------------------------------------------------------------------*/  
 static void PrintDocument (Document doc, View view)
 {
-#if defined(_WINDOWS) && defined(_WX)
+#if defined(_WINDOWS) && defined(_WX) && defined(IV)
   /* On windows and with wxWidgets, disable printing for the moment */
   wxMessageDialog messagedialog( NULL,
 				 TtaConvMessageToWX("Not implemented yet"), 

@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GX /O2 /I "..\..\..\wxWidgets\lib\vc_dll\mswu" /I "..\\" /I "..\..\..\wxWidgets\include" /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /I "..\..\..\freetype-2.1.9\include" /D "HAVE_ERRNO_H" /D "XMD_H" /D "_STIX" /D "_FONTCONFIG" /D "_GLPRINT" /D "_AMAYA_RELEASE_" /D "STDC_HEADERS" /D "_WIN_PRINT" /D "_SVGLIB" /D "_SVGANIM" /D "__WXMSW__" /D "UNICODE" /D "_UNICODE" /D "_WINDOWS" /D "_GL" /D "WIN32" /D "_WX" /D WINVER=0x400 /D wxUSE_GUI=1 /D "WXUSINGDLL" /YX /FD /TP /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /D "NDEBUG" /D "__STDC_HEADERS" /D "STDC_HEADERS" /D "__STDC__" /D "_WIN_PRINT" /D "WIN32" /D "_WINDOWS" /D "_WINGUI" /D "_WINGUI_WX" /YX /FD /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MDd /W3 /GR /GX /ZI /Od /I "..\..\..\wxWidgets\lib\vc_dll\mswud" /I "..\\" /I "..\..\..\wxWidgets\include" /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /I "..\..\..\freetype-2.1.9\include" /D "HAVE_ERRNO_H" /D "XMD_H" /D "_STIX" /D "_FONTCONFIG" /D "_GLPRINT" /D "_AMAYA_RELEASE_" /D "STDC_HEADERS" /D "_WIN_PRINT" /D "_SVGLIB" /D "_SVGANIM" /D "__WXMSW__" /D "UNICODE" /D "_UNICODE" /D "_WINDOWS" /D "_GL" /D "WIN32" /D "_WX" /D WINVER=0x400 /D wxUSE_GUI=1 /D "WXUSINGDLL" /FD /TP /c
+# ADD CPP /nologo /MDd /W3 /GX /ZI /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /D "_DEBUG" /D "_WINDOWS_DLL" /D "STDC_HEADERS" /D "__STDC__" /D "_WIN_PRINT" /D "WIN32" /D "_WINDOWS" /D "_WINGUI" /D "_WINGUI_WX" /YX /FD /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -202,18 +202,6 @@ SOURCE=..\..\thotlib\image\gifhandler.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\view\gldisplay.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\dialogue\glglyph.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\view\glgradient.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\base\global.c
 # End Source File
 # Begin Source File
@@ -278,10 +266,6 @@ SOURCE=..\..\thotlib\presentation\presvariables.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\view\printgl.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\presentation\pschemaapi.c
 # End Source File
 # Begin Source File
@@ -318,10 +302,6 @@ SOURCE=..\..\thotlib\document\schtrad.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\view\spline.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\dialogue\stix.c
 # End Source File
 # Begin Source File
@@ -338,10 +318,6 @@ SOURCE=..\..\thotlib\view\tableH.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\view\tesse.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\tree\tree.c
 # End Source File
 # Begin Source File
@@ -355,6 +331,10 @@ SOURCE=..\..\thotlib\base\units.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\unicode\ustring.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\view\windowdisplay.c
 # End Source File
 # Begin Source File
 

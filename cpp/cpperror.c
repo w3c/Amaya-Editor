@@ -42,7 +42,6 @@ cpp_print_containing_files (pfile)
      cpp_reader *pfile;
 {
   cpp_buffer *ip;
-  int i;
   int first = 1;
 
   /* If stack of files hasn't changed since we last printed
@@ -130,7 +129,7 @@ fatal (str, arg)
   fprintf (stderr, "%s: ", progname);
   fprintf (stderr, str, arg);
   fprintf (stderr, "\n");
-  return (FATAL_EXIT_CODE);
+  //return (FATAL_EXIT_CODE);
 }
 
 void
@@ -142,6 +141,6 @@ cpp_pfatal_with_name (pfile, name)
 #ifdef VMS
   exit (vaxc$errno);
 #else
-  return (FATAL_EXIT_CODE);
+  //return (FATAL_EXIT_CODE);
 #endif
 }

@@ -76,14 +76,13 @@ a:visited {
 }
 
 div.body {
+  clear: left;
   margin-top: 0;
-  /*width:70%;*/
   margin-left:auto;
 }
 
 div.body p {
   margin: 0;
-  /*margin-left: -30%;*/
 }
 
 dl {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
-  <object class="wxDialog" name="PrintDlgWX">
+  <object class="wxDialog" name="WinPrintDlgWX">
     <title></title>
     <centered>1</centered>
     <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>

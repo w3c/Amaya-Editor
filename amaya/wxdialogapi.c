@@ -26,11 +26,7 @@
   #include "wxdialog/ObjectDlgWX.h"
   #include "wxdialog/OpenDocDlgWX.h"
   #include "wxdialog/PreferenceDlgWX.h"
-#ifdef _WINDOWS
-  #include "wxdialog/WinPrintDlgWX.h"
-#else /* _WINDOWS */
   #include "wxdialog/PrintDlgWX.h"
-#endif /* _WINDOWS */
   #include "wxdialog/SaveAsDlgWX.h"
   #include "wxdialog/SearchDlgWX.h"
   #include "wxdialog/SpellCheckDlgWX.h"

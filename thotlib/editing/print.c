@@ -132,7 +132,7 @@ static ThotWindow    thotWindow;
 #include "glwindowdisplay.h"
 
 static int          manualFeed;
-static char       pageSize [3];
+static char         PageSize [3];
 static int          BlackAndWhite;
 static int          HorizShift;
 static int          VertShift;
@@ -260,8 +260,8 @@ BOOL PASCAL InitPrinting(HDC hDC, HWND hWnd, HANDLE hInst, LPSTR msg)
   pg_counter = 0;         /* number of pages we have printed */
   if (!(GHwnAbort = CreateDialog (hInst, "Printinprogress", WIN_Main_Wd,
 				  (DLGPROC) AbortDlgProc)))
-    WinErrorBox (WIN_Main_Wd, "InitPrinting: DE_LANG");
-
+   /*MessageBox (WIN_Main_Wd, msg, "InitPrinting", MB_OK)*/;
+ 
   SetAbortProc (TtPrinterDC, AbortProc);
   memset(&DocInfo, 0, sizeof(DOCINFO));
   DocInfo.cbSize      = sizeof(DOCINFO);
@@ -1352,7 +1352,7 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
 
 	  if (manualFeed == 0)
 	    {
-	      if (!strcmp (pageSize, "A3"))
+	      if (!strcmp (PageSize, "A3"))
 		fprintf (PSfile, "a3tray\n");
 	    }
 	  else
@@ -1364,7 +1364,7 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
 	  fprintf (PSfile, "end\n");
 	  fprintf (PSfile, "/decalageH %d def /decalageV %d def\n", HorizShift, VertShift);
 	  fprintf (PSfile, "/reduction %d def\n", Zoom);
-	  fprintf (PSfile, "/page_size (%s) def\n", pageSize);
+	  fprintf (PSfile, "/page_size (%s) def\n", PageSize);
 	  fprintf (PSfile, "/orientation (%s) def\n", Orientation);
 	  fprintf (PSfile, "/nb_ppf (%dppf) def\n", NPagesPerSheet);
 	  fprintf (PSfile, "/suptrame %d def\n", NoEmpyBox);
@@ -2252,22 +2252,21 @@ void gtk_print_dialog ()
 }
 #endif /* _GTK */	    
 
-#ifdef _GLPRINT
-#ifdef _WINGUI
+#ifdef _WINGUI_WX
 #include "commdlg.h"
 static PRINTDLG     Pdlg;
 static ThotWindow   PrintForm = NULL;
 static ThotBool     LpInitialized = FALSE;
 
 /*----------------------------------------------------------------------
-  TtaGetPrinterDC()
+  GetPrinterDC()
   Call the Windows print dialogue and returns TRUE if the printer is
   available. Reuses the previous defined printer when the parameter 
   reuse is TRUE.
-  Returns the orientation (0 = portrait, 1 = landscape), and the paper
-  format (0 = A4, 1 = US). 
+  Returns the orientation (portrait, landscape), and the paper
+  format (A4, US). 
   ----------------------------------------------------------------------*/
-ThotBool TtaGetPrinterDC (ThotBool reuse, int *orientation, int *paper)
+ThotBool GetPrinterDC (ThotBool reuse)
 {
   LPDEVNAMES  lpDevNames;
   LPDEVMODE   lpDevMode;
@@ -2275,7 +2274,7 @@ ThotBool TtaGetPrinterDC (ThotBool reuse, int *orientation, int *paper)
 
   /* Display the PRINT dialog box. */
   if (!LpInitialized)
-    {
+  {
       /* initialize the pinter context */
       memset(&Pdlg, 0, sizeof(PRINTDLG));
       Pdlg.lStructSize = sizeof(PRINTDLG);
@@ -2299,25 +2298,23 @@ ThotBool TtaGetPrinterDC (ThotBool reuse, int *orientation, int *paper)
 		  TtPrinterDC = CreateDC ((LPCSTR)lpDriverName, (LPCSTR)lpDeviceName, (LPCSTR)lpPortName, lpDevMode);
 	  if (lpDevMode->dmOrientation == DMORIENT_LANDSCAPE)
 	    /* landscape */
-	    *orientation = 1;
+	    Orientation = "Landscape";
 	  else
 	    /* portrait */
-	    *orientation = 0;
+	    Orientation = "Portrait";
 	  if (lpDevMode->dmPaperSize == DMPAPER_A4)
 	    /* A4 */
-	    *paper = 0;
+	    strcpy (PageSize, "A4");
+
 	  else
 	    /* US */
-	    *paper = 1;
+	    strcpy (PageSize, "US");
+
 	  GlobalUnlock (Pdlg.hDevMode);
 	  return TRUE;
 	}
     }
-#ifdef _WX
-  // TODO
-#else
   Pdlg.hwndOwner   = FrRef[0];
-#endif
   if (PrintDlg (&Pdlg))
     {
       if (Pdlg.hDevMode)
@@ -2327,16 +2324,19 @@ ThotBool TtaGetPrinterDC (ThotBool reuse, int *orientation, int *paper)
 		 return FALSE;
 	  if (lpDevMode->dmOrientation == DMORIENT_LANDSCAPE)
 	    /* landscape */
-	    *orientation = 1;
+	    Orientation = "Landscape";
 	  else
 	    /* portrait */
-	    *orientation = 0;
+	    Orientation = "Portrait";
+
 	  if (lpDevMode->dmPaperSize == DMPAPER_A4)
 	    /* A4 */
-	    *paper = 0;
+	    strcpy (PageSize, "A4");
+
 	  else
 	    /* US */
-	    *paper = 1;
+	    strcpy (PageSize, "US");
+
 	  GlobalUnlock (Pdlg.hDevMode);
 	}
       TtPrinterDC = Pdlg.hDC;
@@ -2348,8 +2348,9 @@ ThotBool TtaGetPrinterDC (ThotBool reuse, int *orientation, int *paper)
       return FALSE;
     }
 }
-#endif /* #ifdef _WINGUI */
+#endif /* _WINGUI_WX */
 
+#ifdef _GLPRINT
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 int makeArgcArgv (HINSTANCE hInst, char*** pArgv, char* cmdLine)
@@ -2438,13 +2439,13 @@ static void DeleteAFile (char *fileName)
 /* TODO: integrer ceci avec l appel de la dll dans printmenu.c */
 void PrintDoc (HWND hWnd, int argc, char **argv, HDC PrinterDC,
 			 ThotBool isTrueColors, int depth, char *tmpDocName,
-			 char *tmpDir, HINSTANCE hInst, ThotBool buttonCmd)
+			 char *tmpDir, HINSTANCE hInst, ThotBool specificPrinter)
 #else /* _WX */
 DLLEXPORT void PrintDoc (HWND hWnd, int argc, char **argv, HDC PrinterDC,
 
 			 ThotBool isTrueColors, int depth, char *tmpDocName,
 
-			 char *tmpDir, HINSTANCE hInst, ThotBool buttonCmd)
+			 char *tmpDir, HINSTANCE hInst, ThotBool specificPrinter)
 
 #endif /* _WX */
 #else  /* _WINDOWS */
@@ -2457,7 +2458,7 @@ int main (int argc, char **argv)
 {
 #ifdef _WINDOWS
   char             *fileName;
-#endif
+#endif /* _WINDOWS */
   char             *realName = NULL;
   char             *server = NULL;
   char             *pChar = NULL;
@@ -2495,7 +2496,7 @@ int main (int argc, char **argv)
   HorizShift     = 0;
   VertShift      = 0;
   Zoom           = 100;
-  strcpy (pageSize, "A4");
+  strcpy (PageSize, "A4");
   Orientation    = "Portrait";
   PostscriptFont = NULL;
   ColorPs = -1;
@@ -2543,6 +2544,10 @@ int main (int argc, char **argv)
 #ifdef _GTK
   gtk_print_dialog ();
 #endif /* _GTK */
+#ifdef _WINGUI_WX
+  if (!GetPrinterDC (TRUE))
+    return;
+#endif /* _WINGUI_WX */
 
   while (argCounter < argc)
     {
@@ -2675,7 +2680,9 @@ int main (int argc, char **argv)
 	    }
 	  else if (!strcmp (argv[argCounter], "-landscape"))
 	    {
+#ifndef _WINGUI_WX
 	      Orientation = "Landscape";
+#endif /* _WINGUI_WX */
 	      argCounter++;
 	    }
 	  else if (!strcmp (argv[argCounter], "-removedir"))
@@ -2704,6 +2711,8 @@ int main (int argc, char **argv)
 	      pChar = &argv[argCounter][2];
 	      while ((option[index++] = *pChar++));
 	      option [index] = EOS;
+#ifndef _WINGUI_WX
+#else /* _WINGUI_WX */
 	      switch (argv[argCounter][1])
 		{
 		case 'F': FirstPrinted = atoi (option);
@@ -2712,7 +2721,7 @@ int main (int argc, char **argv)
 		case 'L': LastPrinted = atoi (option);
 		  argCounter++;
 		  break;
-		case 'P': strcpy (pageSize, option);
+		case 'P': strcpy (PageSize, option);
 		  argCounter++;
 		  break;
 		case '#': NCopies = atoi (option);
@@ -2733,6 +2742,7 @@ int main (int argc, char **argv)
 		default:
 		  ;
                 }
+#endif /* _WINGUI_WX */
 	    }
         }
       else
@@ -2778,6 +2788,7 @@ int main (int argc, char **argv)
 #ifndef _WX
   if (PrinterDC)
     TtPrinterDC = PrinterDC;
+
   TtIsTrueColor = isTrueColors;
   TtWDepth = depth;
   TtWPrinterDepth = GetDeviceCaps (TtPrinterDC, PLANES);
@@ -2788,7 +2799,7 @@ int main (int argc, char **argv)
   ReleaseDC (NULL, TtDisplay);
   TtDisplay = NULL;
   PrinterDPI = GetDeviceCaps (TtPrinterDC, LOGPIXELSY);
-  if (buttonCmd == FALSE && TtPrinterDC == NULL)
+  if (!specificPrinter && TtPrinterDC == NULL)
      DOT_PER_INCH = 72;
   else 
      DOT_PER_INCH = PrinterDPI;
