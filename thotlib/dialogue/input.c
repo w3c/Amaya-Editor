@@ -446,9 +446,15 @@ int                 command;
    generic character handling function. 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                MSCharTranslation (HWND hWnd, int frame, UINT msg,
-				       WPARAM wParam, LPARAM lParam)
-#endif				/* __STDC__ */
+void MSCharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+void MSCharTranslation (hWnd, frame, msg, wParam, lParam)
+HWND   hWnd; 
+int    frame; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
 {
    int                 keyboard_mask = 0;
    char                string[2];

@@ -9,8 +9,11 @@
 extern void DebugBreak ( void );
 extern void MyWarningHandler ( void );
 #ifdef _WINDOWS
-extern void TtaInitDialogue (char*, char*, char*, char*);
-#else  /* _WINDOWS */
+extern void TtaInitDialogue ( char *server,
+                              char *txtOK,
+                              char *txtRAZ,
+                              char *txtDone);
+#else  /* !_WINDOWS */
 extern void TtaInitDialogue ( char *server,
                               char *txtOK,
                               char *txtRAZ,

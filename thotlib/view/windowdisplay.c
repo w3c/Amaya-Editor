@@ -271,7 +271,11 @@ int                 fg;
    char                str[2] = {car, 0};
 #endif /* _WINDOWS */
 
+#ifndef _WINDOWS
    w = FrRef[frame];
+#else  /* _WINDOWS */
+   w = FrClientRef[frame];
+#endif /* _WINDOWS */
    if (w == None)
       return;
 
@@ -340,7 +344,11 @@ int                 fg;
 
 #endif
 
+#ifndef _WINDOWS
    w = FrRef[frame];
+#else  /* _WINDOWS */
+   w = FrClientRef[frame];
+#endif /* _WINDOWS */
    if (lg > 0 && w != None)
      {
 	ptcar = &buff[i - 1];
@@ -462,7 +470,11 @@ int                 fg;
 
    if (lg > 0)
      {
+#ifndef _WINDOWS
 	w = FrRef[frame];
+#else  /* _WINDOWS */
+	w = FrClientRef[frame];
+#endif /* _WINDOWS */
 	if (w == None)
 	   return;
 	fheight = FontHeight (font);
@@ -535,7 +547,11 @@ int                 fg;
    font = ThotLoadFont ('L', 't', 0, 6, UnPoint, frame);
    if (lgboite > 0)
      {
+#ifndef _WINDOWS
 	w = FrRef[frame];
+#else  /* _WINDOWS */
+	w = FrClientRef[frame];
+#endif /* _WINDOWS */
 	ptcar = " .";
 
 	/* compute lenght of the string " ." */
@@ -1781,16 +1797,16 @@ float               a1, b1, a2, b2, a3, b3, a4, b4;
 	   PolyNewPoint (FloatToInt (x1), FloatToInt (y1));
 	else
 	  {
-	     tx = MIDDLE_OF (x2, x3);
-	     ty = MIDDLE_OF (y2, y3);
-	     sx1 = MIDDLE_OF (x1, x2);
-	     sy1 = MIDDLE_OF (y1, y2);
-	     sx2 = MIDDLE_OF (sx1, tx);
-	     sy2 = MIDDLE_OF (sy1, ty);
-	     tx2 = MIDDLE_OF (x3, x4);
-	     ty2 = MIDDLE_OF (y3, y4);
-	     tx1 = MIDDLE_OF (tx2, tx);
-	     ty1 = MIDDLE_OF (ty2, ty);
+	     tx   = MIDDLE_OF (x2, x3);
+	     ty   = MIDDLE_OF (y2, y3);
+	     sx1  = MIDDLE_OF (x1, x2);
+	     sy1  = MIDDLE_OF (y1, y2);
+	     sx2  = MIDDLE_OF (sx1, tx);
+	     sy2  = MIDDLE_OF (sy1, ty);
+	     tx2  = MIDDLE_OF (x3, x4);
+	     ty2  = MIDDLE_OF (y3, y4);
+	     tx1  = MIDDLE_OF (tx2, tx);
+	     ty1  = MIDDLE_OF (ty2, ty);
 	     xmid = MIDDLE_OF (sx2, tx1);
 	     ymid = MIDDLE_OF (sy2, ty1);
 
@@ -2763,7 +2779,11 @@ int                 y;
 
 #endif /* _WINDOWS */
 
+#ifndef _WINDOWS
    w = FrRef[frame];
+#else  /* _WINDOWS */
+   w = FrClientRef[frame];
+#endif /* _WINDOWS */
    if (w != None)
      {
 #ifndef _WINDOWS
@@ -2829,7 +2849,11 @@ int                 y;
 {
    ThotWindow          w;
 
+#ifndef _WINDOWS
    w = FrRef[frame];
+#else  /* _WINDOWS */
+   w = FrClientRef[frame];
+#endif /* _WINDOWS */
    if (w != None)
      {
 #ifndef _WINDOWS
@@ -2863,7 +2887,11 @@ int                 yf;
 {
    ThotWindow          w;
 
+#ifndef _WINDOWS
    w = FrRef[frame];
+#else  /* _WINDOWS */
+   w = FrClientRef[frame];
+#endif /* _WINDOWS */
    if (w != None)
 #ifndef _WINDOWS
       XCopyArea (TtDisplay, w, w, TtWhiteGC, xd + FrameTable[frame].FrLeftMargin, yd + FrameTable[frame].FrTopMargin, width, height, xf + FrameTable[frame].FrLeftMargin, yf + FrameTable[frame].FrTopMargin);

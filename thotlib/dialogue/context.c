@@ -666,8 +666,12 @@ void                InitDocContexts ()
    /* Initialize the memory allocator */
    InitKernelMemory ();
    /* Initialisation de la table des frames */
-   for (i = 0; i <= MAX_FRAME; i++)
+   for (i = 0; i <= MAX_FRAME; i++) {
        FrRef[i] = 0;
+#ifdef _WINDOWS
+       FrClientRef[i] = 0;
+#endif /* _WINDOWS */
+   }
    PackBoxRoot = NULL;		/* Don't do englobing placement for current boxes */
    DifferedPackBlocks = NULL;	/* Don't differ englobing placement for current boxes */
    BoxCreating = FALSE;		/* no interractive creation yet */

@@ -6,6 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void TteConnectAction ( int id,
+                               Proc procedure );
 extern PtrReference NextReferenceToEl ( PtrElement pEl,
                                         PtrDocument pDoc,
                                         boolean processNotLoaded,
@@ -41,6 +43,8 @@ extern void main ( int argc,
 
 #else /* __STDC__ */
 
+extern void TteConnectAction (/* int id,
+                                 Proc procedure */);
 extern PtrReference NextReferenceToEl (/* PtrElement pEl,
                                           PtrDocument pDoc,
                                           boolean processNotLoaded,

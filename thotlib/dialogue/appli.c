@@ -51,8 +51,45 @@
 
 #ifndef _WINDOWS
 static XmString     null_string;
-
 #endif
+
+#ifdef _WINDOWS
+#include "wininc.h"
+
+#define MAX_MENUS 5
+#define ToolBar_AutoSize(hwnd) \
+    (void)SendMessage((hwnd), TB_AUTOSIZE, 0, 0L)
+
+#define ToolBar_GetItemRect(hwnd, idButton, lprc) \
+    (BOOL)SendMessage((hwnd), TB_GETITEMRECT, (WPARAM)idButton, (LPARAM)(LPRECT)lprc)
+
+extern HWND        hwndClient ;
+extern HWND        ToolBar ;
+extern HWND        StatusBar ;
+extern HINSTANCE   hInstance ;
+
+int    cyToolBar ;
+HWND   hwndTB ;
+HWND   hwndCombo ;
+DWORD  dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | CCS_NODIVIDER /*| TBSTYLE_TOOLTIPS */ ;
+DWORD  dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP ;
+
+TBBUTTON tbb[] = {
+     STD_FILENEW,     0, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0,
+     STD_FILEOPEN,    1, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 1,
+     STD_FILESAVE,    2, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 2,
+     STD_PRINT,       3, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 3,
+     STD_PRINTPRE,    4, TBSTATE_ENABLED, TBSTYLE_CHECK,  0, 0, 0, 4,
+     0, 0, TBSTATE_ENABLED, TBSTYLE_SEP, 0, 0, 0, 0,
+     STD_CUT,         5, TBSTATE_ENABLED, TBSTYLE_CHECKGROUP, 0, 0, 0,  5,
+     STD_COPY,        6, TBSTATE_ENABLED, TBSTYLE_CHECKGROUP, 0, 0, 0,  6,
+     STD_PASTE,       7, TBSTATE_ENABLED, TBSTYLE_CHECKGROUP, 0, 0, 0,  7,
+     STD_UNDO,        8, TBSTATE_ENABLED, TBSTYLE_BUTTON,     0, 0, 0,  8,
+     STD_PROPERTIES,  9, TBSTATE_ENABLED, TBSTYLE_CHECK,      0, 0, 0,  9,
+     STD_HELP,       10, TBSTATE_ENABLED, TBSTYLE_BUTTON,     0, 0, 0, 10,
+     STD_DELETE,     11, TBSTATE_ENABLED, TBSTYLE_BUTTON,     0, 0, 0, 11,
+};
+#endif /* _WINDOWS */
 
 #include "appli_f.h"
 #include "textcommands_f.h"
@@ -148,7 +185,15 @@ int                *info;
    WIN_HandleExpose deal with the redrawing of the Client Area when  
    a WM_PAINT has been received in MS-Windows.             
   ----------------------------------------------------------------------*/
-void                WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
+#ifdef __STDC__
+void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+void WIN_HandleExpose (w, frame, wParam, lParam)
+ThotWindow w; 
+int        frame; 
+WPARAM     wParam; 
+LPARAM     lParam;
+#endif /* __STDC__ */
 {
    PAINTSTRUCT         ps;
    RECT                rect;
@@ -162,8 +207,7 @@ void                WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LP
 	  {
 	     WIN_curHdc = BeginPaint (w, &ps);
              GetClientRect (w, &rect);
-	     DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top,
-			ps.rcPaint.right, ps.rcPaint.bottom);
+	     DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right, ps.rcPaint.bottom);
 	     SwitchSelection (frame, FALSE);
 	     RedrawFrameBottom (frame, 0);
 	     SwitchSelection (frame, TRUE);
@@ -275,10 +319,9 @@ int                *info;
    n++;
    XtGetValues ((ThotWidget) w, args, n);
 
-   if ((width > 0) && (height > 0)
+   if ((width > 0) && (height > 0) && documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
    /* ne pas traiter si le document est en mode NoComputedDisplay */
-   && documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
-     {
+      {
 	notifyDoc.event = TteViewResize;
 	FrameToView (frame, &doc, &view);
 	notifyDoc.document = doc;
@@ -915,69 +958,209 @@ char               *name;
 
 
 #ifdef _WINDOWS
+/* -------------------------------------------------------------------
+   InitToolBar
+   ------------------------------------------------------------------- */
+#ifdef __STDC__
+HWND InitToolBar (HWND hwndParent)
+#else  /* !__STDC__ */
+HWND InitToolBar (hwndParent)
+HWND hwndParent;
+#endif /* __STDC__ */
+{
+     int        iNumButtons ;
+     int        x, y, cx, cy ;
+     UINT       uiBitmap;
+     RECT       r ;
+     LPTBBUTTON ptbb ;
+
+     ptbb = &tbb[0] ;
+     iNumButtons = 10 ;
+
+     hwndTB = CreateToolbarEx (hwndParent, dwToolBarStyles, 1, 15,
+                               HINST_COMMCTRL, IDB_STD_SMALL_COLOR, ptbb, iNumButtons,
+                               0, 0, 0, 0, sizeof (TBBUTTON)) ;
+
+     return hwndTB ;
+}
+
+/* -------------------------------------------------------------------
+   InitStatusBar
+   ------------------------------------------------------------------- */
+#ifdef __STDC__
+HWND InitStatusBar (HWND hwndParent)
+#else  /* !__STDC__ */
+HWND InitStatusBar (hwndParent)
+HWND HWND hwndParent;
+#endif /* __STDC__ */
+{
+     HWND hwndSB ;
+     
+     hwndSB = CreateStatusWindow (dwStatusBarStyles, "", hwndParent, 2) ;
+     return hwndSB ;
+}
+
 /*----------------------------------------------------------------------
    WndProc :  The main MS-Windows event handler for the Thot         
    Library.                                                    
   ----------------------------------------------------------------------*/
-LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+#ifdef __STDC__
+LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam) 
+#else  /* !__STDC__ */
+LRESULT CALLBACK WndProc (hwnd, mMsg, wParam, lParam) 
+HWND        hwnd; 
+UINT        mMsg; 
+WPARAM      wParam; 
+LPARAM      lParam; 
+#endif /* __STDC__ */
 {
-   int                 comm;
-   HDC                 saveHdc;	/* Used to save WIN_curHdc during current event processing */
-   int                 frame;
-   PAINTSTRUCT         ps;
-   RECT                rect;
-   frame = GetFen (hWnd);
+     int frame;
 
-   /* 
-    * do not handle events if the Document is in NoComputedDisplay mode.
-    */
-   if (frame != -1) {
-      if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
-         return (DefWindowProc (hWnd, msg, wParam, lParam));
+     frame = GetFen (hwnd);
 
-      /*
-       * If are waiting for the user to explicitely point to a document,
-       * store the location and return.
-       */
-      if (ClickIsDone == 1 && ((msg == WM_LBUTTONDOWN) || (msg == WM_RBUTTONDOWN))) {
-	 ClickIsDone = 0;
-	 ClickFrame = frame;
-	 ClickX = LOWORD (lParam);
-	 ClickY = HIWORD (lParam);
-	 return (DefWindowProc (hWnd, msg, wParam, lParam));
-      }
-   }
+     switch (mMsg) {
+            case WM_CREATE: {
+	         /* Create toolbar (source resides in toolbar.c). */
+                 ToolBar = InitToolBar (hwnd) ;
 
-   /*
-    * If there is a TtaWaitShowDialogue, it's not possible to change
-    * the current selection, type-in a char etc....
-    if (TtaTestWaitShowDialogue() && 
-    (((msg == WM_LBUTTONDOWN) || (msg == WM_RBUTTONDOWN)) &&
-    !(GetKeyState(VK_CONTROL))))
-    return(DefWindowProc(hWnd,msg,wParam,lParam));
-    */
+                 /* Create status bar (source resides in statbar.c). */
+                 StatusBar = InitStatusBar (hwnd) ;
 
-   /* fprintf(stderr,"WndProc\n"); */
-   switch (msg)
-	 {
-	    case WM_PAINT:
-		/* WinInitColors (); */	/* has to go to some better place !!!! */
+                 /* Create client window (contains notify list). */
+                 hwndClient = CreateWindowEx (WS_EX_CLIENTEDGE, "ClientWndProc", NULL,
+                                              WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL, 0, 0, 0, 0,
+                                              hwnd, (HMENU) 1, hInstance, NULL) ;
+
+                 return 0 ;
+	    }
+
+            case WM_COMMAND:
+	         WinThotCallBack (hwnd, wParam, lParam);
+	         return (0);
+
+            case WM_DESTROY:
+                 PostQuitMessage (0) ;
+                 return 0 ;
+
+            case WM_SIZE: {
+                 int   cx = LOWORD (lParam) ;
+                 int   cy = HIWORD (lParam) ;
+                 int   cyStatus ;
+                 int   cyTB ;
+                 int   x, y ;
+                 DWORD dwStyle ;
+                 RECT  rWindow ;
+
+                 /* Adjust toolbar size. */
+                 if (IsWindowVisible (WinToolBar[frame])) {
+                    dwStyle = GetWindowLong (WinToolBar[frame], GWL_STYLE) ;
+                    if (dwStyle & CCS_NORESIZE)
+                       MoveWindow (WinToolBar[frame], 0, 0, cx, cyToolBar, FALSE) ;
+                    else
+                        ToolBar_AutoSize (WinToolBar[frame]) ;
+
+                    InvalidateRect (WinToolBar[frame], NULL, TRUE) ;
+                    GetWindowRect (WinToolBar[frame], &rWindow) ;
+                    ScreenToClient (hwnd, (LPPOINT) &rWindow.left) ;
+                    ScreenToClient (hwnd, (LPPOINT) &rWindow.right) ;
+                    cyTB = rWindow.bottom - rWindow.top ;
+	         } else 
+                      cyTB = 0 ;
+
+                 /* Adjust status bar size. */
+                 if (IsWindowVisible (FrameTable[frame].WdStatus)) {
+                    GetWindowRect (FrameTable[frame].WdStatus, &rWindow) ;
+                    cyStatus = rWindow.bottom - rWindow.top ;
+                    MoveWindow (FrameTable[frame].WdStatus, 0, cy - cyStatus, cx, cyStatus, TRUE) ;
+	         } else
+                       cyStatus = 0 ;
+
+                /* Adjust client window size. */
+                 x = 0 ;
+                 y = cyTB ;
+                 cy = cy - (cyStatus + cyTB) ;
+                 MoveWindow (FrClientRef [frame], x, y, cx, cy, TRUE) ;
+                 return 0;
+	    }
+
+            default:
+                  return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;
+     }
+}
+
+
+/* -------------------------------------------------------------------
+   ClientWndProc
+   ------------------------------------------------------------------- */
+#ifdef __STDC__
+LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK ClientWndProc (hwnd, mMsg, wParam, lParam)
+HWND   hwnd; 
+UINT   mMsg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+     HDC saveHdc;	/* Used to save WIN_curHdc during current event processing */
+     int frame;
+
+     frame = GetClientFen (hwnd);
+
+     /* do not handle events if the Document is in NoComputedDisplay mode. */
+
+     if (frame != -1) {
+        if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+           return (DefWindowProc (hwnd, mMsg, wParam, lParam));
+
+        /*
+         * If are waiting for the user to explicitely point to a document,
+         * store the location and return.
+         */
+        if (ClickIsDone == 1 && ((mMsg == WM_LBUTTONDOWN) || (mMsg == WM_RBUTTONDOWN))) {
+	   ClickIsDone = 0;
+	   ClickFrame = frame;
+	   ClickX = LOWORD (lParam);
+	   ClickY = HIWORD (lParam);
+	   return (DefWindowProc (hwnd, mMsg, wParam, lParam));
+        }
+     }
+
+     switch (mMsg) {
+          case WM_PAINT:
 	       /*
 	        * Some part of the Client Area has to be repaint.
 	        */
 	       saveHdc = WIN_curHdc;
-	       WIN_HandleExpose (hWnd, frame, wParam, lParam);
+	       WIN_HandleExpose (hwnd, frame, wParam, lParam);
 	       WIN_ReleaseDeviceContext ();
 	       WIN_curHdc = saveHdc;
 	       return 0;
 
-	    case WM_KEYDOWN:
-	    case WM_CHAR:
+          case WM_SIZE: {
+               HWND hwndNotify = GetWindow (hwnd, GW_CHILD) ;
+               int  cx         = LOWORD (lParam) ;
+               int  cy         = HIWORD (lParam) ;
+
+               /* Ignore if notification window is absent. */
+               if (hwndNotify != NULL)
+                   MoveWindow (hwndNotify, 0, 0, cx, cy, TRUE) ;
+
+               return 0 ;
+	  }
+
+	  case WM_VSCROLL:
+	       MSChangeVScroll (frame, LOWORD (wParam), HIWORD (wParam));
+	       WIN_ReleaseDeviceContext ();
+	       return (0);
+
+	  case WM_KEYDOWN:
+	  case WM_CHAR:
 	       TtaAbortShowDialogue ();
-	       MSCharTranslation (hWnd, frame, msg, wParam, lParam);
+	       MSCharTranslation (hwnd, frame, mMsg, wParam, lParam);
 	       return 0;
 
-	    case WM_LBUTTONDOWN:
+	  case WM_LBUTTONDOWN:
 	       /* stop any current insertion of text */
 	       CloseInsertion ();
 
@@ -998,7 +1181,7 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		 }
 	       return (0);
 
-	    case WM_MOUSEMOVE:
+	  case WM_MOUSEMOVE:
 	       {
 		  WPARAM              mMask = wParam & (MK_LBUTTON | MK_MBUTTON | MK_RBUTTON |
 						     MK_SHIFT | MK_CONTROL);
@@ -1011,7 +1194,7 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		  break;
 	       }
 
-	    case WM_LBUTTONDBLCLK:
+	  case WM_LBUTTONDBLCLK:
 	       /* left double click handling */
 	       TtaAbortShowDialogue ();
 
@@ -1023,7 +1206,7 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	       return (0);
 
 
-	    case WM_MBUTTONDOWN:
+	  case WM_MBUTTONDOWN:
 	       /* stop any current insertion of text */
 	       CloseInsertion ();
 
@@ -1042,43 +1225,9 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		 }
 	       return (0);
 	       
-	    case WM_SIZE:
-	       {
-		  RECT                rWindow;
-		  int                 width = LOWORD (lParam);
-		  int                 height = HIWORD (lParam);
-		  int                 cyStatus;
-		  int                 cyToolBar;
-
-		  if (IsWindowVisible (WinToolBar[frame]))
-		    {
-		       SendMessage (WinToolBar[frame], TB_AUTOSIZE, 0, 0L);
-		       InvalidateRect (WinToolBar[frame], NULL, TRUE);
-		       GetWindowRect (WinToolBar[frame], &rWindow);
-		       cyToolBar = rWindow.bottom - rWindow.top;
-		    }
-		  if (IsWindowVisible (FrameTable[frame].WdStatus))
-		    {
-		       GetWindowRect (FrameTable[frame].WdStatus, &rWindow);
-		       cyStatus = rWindow.bottom - rWindow.top;
-		       MoveWindow (FrameTable[frame].WdStatus, 0, height - cyStatus,
-				   width, cyStatus, TRUE);
-		    }
-		  MSChangeTaille (frame, width, height, cyToolBar, cyStatus);
-		  WIN_ReleaseDeviceContext ();
-		  return (0);
-	       }
-	       
-	    case WM_VSCROLL:
-	       MSChangeVScroll (frame, LOWORD (wParam), HIWORD (wParam));
-	       WIN_ReleaseDeviceContext ();
-	       return (0);
-
-	    case WM_COMMAND:
-	       WinThotCallBack (hWnd, wParam, lParam);
-	       return (0);
-	 }
-   return DefWindowProc (hWnd, msg, wParam, lParam);
+          default:
+               return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;
+     }
 }
 #endif /* _WINDOWS */
 
@@ -1332,6 +1481,19 @@ int                 frame;
 {
    return FrRef[frame];
 }
+
+#ifdef _WINDOWS
+#ifdef __STDC__
+ThotWindow          TtaGetThotClientWindow (int frame)
+#else  /* __STDC__ */
+ThotWindow          TtaGetThotClientWindow (frame)
+int                 frame;
+
+#endif /* __STDC__ */
+{
+   return FrClientRef[frame];
+}
+#endif /* _WINDOWS */
 
 
 /*----------------------------------------------------------------------
@@ -1600,6 +1762,27 @@ ThotWindow          w;
      }
    return (f);
 }
+
+#ifdef _WINDOWS
+#ifdef __STDC__
+int                 GetWindowClientFrame (ThotWindow w)
+#else  /* __STDC__ */
+int                 GetWindowClientFrame (w)
+ThotWindow          w;
+
+#endif /* __STDC__ */
+{
+   int                 f;
+
+   /* On recherche l'indice de la fenetre */
+   for (f = 0; f <= MAX_FRAME; f++)
+     {
+	if (FrClientRef[f] != 0 && FrClientRef[f] == w)
+	   break;
+     }
+   return (f);
+}
+#endif /* _WINDOWS */
 
 
 /*----------------------------------------------------------------------

@@ -165,7 +165,8 @@ char               *thotargv[] =
 {"amaya", "/users/guetari/opera/WINNT/test.html"};
 int                 thotargc = 1;
 
-extern LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK WndProc       (HWND, UINT, WPARAM, LPARAM) ;
+LRESULT CALLBACK ClientWndProc (HWND, UINT, WPARAM, LPARAM) ;
 
 /* following variables are declared as extern in frame_tv.h */
 HINSTANCE           hInstance = 0;
@@ -178,29 +179,6 @@ HFONT               WIN_DefaultFont;
 HWND                hwndAmaya;
 ThotWindow          WinStatusBar[MAX_FRAME + 2];
 HWND                WIN_Main_Wd;
-TBBUTTON            WIN_buttons[MAX_BUTTON] =
-{
-   STD_FILENEW, 0, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0,
-   STD_FILEOPEN, 1, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0,
-   STD_FILESAVE, 2, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0,
-   STD_PRINT, 3, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0,
-   STD_PRINTPRE, 4, TBSTATE_ENABLED, TBSTYLE_CHECK, 0, 0, 0, 0,
-   0, 0, TBSTATE_ENABLED, TBSTYLE_SEP, 0, 0, 0, 0,
-   0, 0, TBSTATE_ENABLED, TBSTYLE_SEP, 0, 0, 0, 0,
-   0, 0, TBSTATE_ENABLED, TBSTYLE_SEP, 0, 0, 0, 0,
-   0, 0, TBSTATE_ENABLED, TBSTYLE_SEP, 0, 0, 0, 0,
-   0, 0, TBSTATE_ENABLED, TBSTYLE_SEP, 0, 0, 0, 0,
-   0, 0, TBSTATE_ENABLED, TBSTYLE_SEP, 0, 0, 0, 0,
-   0, 0, TBSTATE_ENABLED, TBSTYLE_SEP, 0, 0, 0, 0,
-   0, 0, TBSTATE_ENABLED, TBSTYLE_SEP, 0, 0, 0, 0,
-   0, 0, TBSTATE_ENABLED, TBSTYLE_SEP, 0, 0, 0, 0,
-   0, 0, TBSTATE_ENABLED, TBSTYLE_SEP, 0, 0, 0, 0,
-   0, 0, TBSTATE_ENABLED, TBSTYLE_SEP, 0, 0, 0, 0,
-   0, 0, TBSTATE_ENABLED, TBSTYLE_SEP, 0, 0, 0, 0,
-   0, 0, TBSTATE_ENABLED, TBSTYLE_SEP, 0, 0, 0, 0,
-   0, 0, TBSTATE_ENABLED, TBSTYLE_SEP, 0, 0, 0, 0,
-   0, 0, TBSTATE_ENABLED, TBSTYLE_SEP, 0, 0, 0, 0,
-};
 
 COLORREF            WIN_Black_Color;	/* Text color                  */
 COLORREF            WIN_White_Color;	/* Background color            */
@@ -231,9 +209,14 @@ void                terminate__Fv (void)
    GetFen :  returns the Thot window number associated to an         
    X-Window window.                                            
   ----------------------------------------------------------------------*/
-int                 GetFen (ThotWindow win)
+#ifdef __STDC__
+int GetFen (ThotWindow win)
+#else  /* !__STDC__ */
+int GetFen (win)
+ThotWindow win;
+#endif /* __STDC__ */
 {
-   int                 frame;
+   int frame;
 
    for (frame = 0; frame <= MAX_FRAME; frame++)
       if (FrRef[frame] == win)
@@ -243,21 +226,29 @@ int                 GetFen (ThotWindow win)
    return (-1);
 }
 
+
+#ifdef _WINDOWS
 /*----------------------------------------------------------------------
-   WIN_GetFen :  returns the Thot window number associated to an     
+   GetClientFen :  returns the Thot window number associated to an     
    MS-Windows window.                                          
   ----------------------------------------------------------------------*/
-int                 WIN_GetFen (ThotWindow win)
+#ifdef __STDC__
+int GetClientFen (ThotWindow win)
+#else  /* !__STDC__ */
+int GetClientFen (win)
+ThotWindow win ;
+#endif /* __STDC__ */
 {
-   int                 frame;
+   int frame;
 
    for (frame = 0; frame <= MAX_FRAME; frame++)
-      if (FrRef[frame] == win)
+      if (FrClientRef[frame] == win)
 	 return (frame);
 
    fprintf (stderr, "Could not get MS-Windows number for %X\n", win);
-   return (1);
+   return -1;
 }
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    WIN_GetDeviceContext :  select a Device Context for a given       
@@ -266,25 +257,28 @@ int                 WIN_GetFen (ThotWindow win)
 HDC                 WIN_curHdc = 0;
 ThotWindow          WIN_curWin = -1;
 
-void                WIN_GetDeviceContext (int frame)
+#ifdef __STDC__
+void WIN_GetDeviceContext (int frame)
+#else  /* !__STDC__ */
+void WIN_GetDeviceContext (frame)
+int frame;
+#endif /* __STDC__ */
 {
-   int                 win;
+   int win;
 
-   if (frame == -1)
-     {
-	if (WIN_curHdc != 0)
-	   return;
-	for (frame = 0; frame <= MAX_FRAME; frame++)
-	   if (FrRef[frame] != 0)
-	      break;
-     }
-   if ((frame < 0) || (frame > MAX_FRAME))
-     {
-	fprintf (stderr, "Could not get Device Context for Window #%d\n", frame);
-	return;
-     }
+   if (frame == -1) {
+      if (WIN_curHdc != 0)
+	 return;
+      for (frame = 0; frame <= MAX_FRAME; frame++)
+	  if (FrClientRef[frame] != 0)
+	     break;
+   }
+   if ((frame < 0) || (frame > MAX_FRAME)) {
+      fprintf (stderr, "Could not get Device Context for Window #%d\n", frame);
+      return;
+   }
    
-   win = FrRef[frame];
+   win = FrClientRef[frame];
    
    if (win == 0)
      {
@@ -321,7 +315,12 @@ void                WIN_GetDeviceContext (int frame)
    WIN_GetWinDeviceContext :  select a Device Context for a given    
    MS-Windows window.                                          
   ----------------------------------------------------------------------*/
-void                WIN_GetWinDeviceContext (ThotWindow win)
+#ifdef __STDC__
+void WIN_GetWinDeviceContext (ThotWindow win)
+#else  /* !__STDC__ */
+void WIN_GetWinDeviceContext (ThotWindow win)
+ThotWindow win;
+#endif /* __STDC__ */
 {
    if (win == 0)
      return;
@@ -437,16 +436,20 @@ void                WinErrorBox (void)
    MessageBox (WIN_Main_Wd, str, tszAppName, MB_OK);
 }
 
-
-BOOL PASCAL         WinMain (HINSTANCE hInst,
-			     HINSTANCE hPrevInst,
-			     LPSTR lpCommand,
-			     int nShow)
+#ifdef __STDC__
+BOOL PASCAL WinMain (HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCommand, int nShow)
+#else  /* !__STDC__ */
+BOOL PASCAL WinMain (hInst, hPrevInst, lpCommand, nShow)
+HINSTANCE hInst; 
+HINSTANCE hPrevInst; 
+LPSTR     lpCommand; 
+int       nShow;
+#endif /* __STDC__ */
 {
 
    hInstance  = hInst;
    nAmayaShow = nShow;
-   tszAppName = "amaya";
+   tszAppName = "Amaya";
 
    thotmain (thotargc, thotargv);
    return (TRUE);
@@ -1251,25 +1254,34 @@ Display           **Dp;
 #ifdef _WINDOWS
    ATOM                res;
 
-   RootShell.cbSize = sizeof (RootShell);
-   RootShell.style = CS_HREDRAW | CS_VREDRAW;
-   RootShell.lpfnWndProc = WndProc;
-   RootShell.cbClsExtra = 0;
-   RootShell.cbWndExtra = 0;
-   RootShell.hInstance = hInstance;
-   RootShell.hIcon = LoadIcon (0, IDI_APPLICATION);
-   RootShell.hCursor = LoadCursor (0, IDC_ARROW);
-   RootShell.hbrBackground = (HBRUSH) GetStockObject (WHITE_BRUSH);
-   RootShell.lpszMenuName = NULL;
+   RootShell.cbSize        = sizeof (RootShell) ;
    RootShell.lpszClassName = tszAppName;
-   RootShell.hIconSm = LoadIcon (0, IDI_APPLICATION);
+   RootShell.hInstance     = hInstance ;
+   RootShell.lpfnWndProc   = WndProc ;
+   RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
+   RootShell.hIcon         = LoadIcon (hInstance, IDI_APPLICATION) ;
+   RootShell.lpszMenuName  = NULL ;
+   RootShell.hbrBackground = (HBRUSH) GetStockObject (WHITE_BRUSH);
+   RootShell.style         = 0 ;
+   RootShell.cbClsExtra    = 0 ;
+   RootShell.cbWndExtra    = 0 ;
+   RootShell.hIconSm       = LoadIcon (hInstance, IDI_APPLICATION) ;
 
-   if (!(res = RegisterClassEx (&RootShell)))
-     {
-	WinErrorBox ();
-     }
+   RegisterClassEx (&RootShell) ;
 
-   /*   InitCommonControls (); */
+   RootShell.lpszClassName = "ClientWndProc" ;
+   RootShell.hInstance     = hInstance ;
+   RootShell.lpfnWndProc   = ClientWndProc ;
+   RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
+   RootShell.hIcon         = LoadIcon (NULL, IDI_APPLICATION) ;
+   RootShell.lpszMenuName  = NULL ;
+   RootShell.hbrBackground = (HBRUSH) (COLOR_WINDOW + 1) ;
+   RootShell.style         = 0 ;
+   RootShell.cbClsExtra    = 0 ;
+   RootShell.cbWndExtra    = 0 ;
+   RootShell.hIconSm       = LoadIcon (NULL, IDI_APPLICATION) ;
+
+   RegisterClassEx (&RootShell) ;
 #endif /* _WINDOWS */
 
 #ifndef _WINDOWS
@@ -1440,6 +1452,9 @@ char               *textmenu;
 #endif /* _WINDOWS */
 
    FrRef[0] = 0;
+#ifdef _WINDOWS
+   FrClientRef[0] = 0;
+#endif /* _WINDOWS */
    FrameTable[0].WdStatus = 0;
    MainShell = 0;
    FrameTable[0].WdFrame = 0;	/* widget frame */

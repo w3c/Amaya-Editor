@@ -26,6 +26,9 @@
 /* Frames table */
 THOT_EXPORT Frame_Ctl   FrameTable[MAX_FRAME+1];
 THOT_EXPORT ThotWindow  FrRef[MAX_FRAME + 2];		/* window references */
+#ifdef _WINDOWS
+THOT_EXPORT ThotWindow  FrClientRef[MAX_FRAME + 2];		/* window references */
+#endif /* _WINDOWS */
 THOT_EXPORT ThotColor   BackgroundColor[MAX_FRAME + 2];	/* Background color */
 
 THOT_EXPORT int	 DOT_PER_INCHE;	   /* screen resolution		  */
