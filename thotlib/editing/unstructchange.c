@@ -620,13 +620,13 @@ void PasteCommand ()
   PtrDocument         pDoc;
   PtrElement          firstSel, lastSel, pEl, pPasted, pClose, pFollowing,
                       pNextEl, pFree, pSplitText, pSel, cellChild;
-  PtrElement          pColHead, pNextCol, pRow, pNextRow, pTable;
-  PtrElement          addedCell, pCell, extendedCell[500];
+  PtrElement          pColHead, pNextCol, pRow, pNextRow, pTable, pRealCol,
+                      pCe, addedCell, pCell, extendedCell[500];
   PtrPasteElem        pPasteD;
   ElementType         cellType;
   DisplayMode         dispMode;
   Document            doc;
-  int                 firstChar, lastChar, view, i, info = 0;
+  int                 firstChar, lastChar, view, i, nRowsTempCol, info = 0;
   int                 colspan, rowspan, back, nbextended;
   ThotBool            ok, before, within, lock, cancelled, first, beginning;
   ThotBool            savebefore;
@@ -805,22 +805,26 @@ void PasteCommand ()
 	  ok = FALSE;
 	  cellChild = NULL;
 	  addedCell = NULL; /* no cell generated */
+	  nRowsTempCol = 0;
 	  do
 	    {
-	      savebefore = before; /* could be temporay changed */
 	      if (WholeColumnSaved)
 		{
 		  /* look for the cell in that row and that column or
 		     in a previous column */
 		  pEl = GetCellInRow (pRow, pColHead, TRUE, &back);
 		  if (pEl == NULL && pRow)
+		    /* that row contains no cell in that column or in any
+		       preceding column */
 		    {
-		      /* no cell in that row */
 		      pNextCol = pColHead;
 		      while (pEl == NULL && pNextCol)
 			{
 			  /* paste before the cell in the next column */
+			  savebefore = before;
 			  before = TRUE;
+			  nRowsTempCol = 1;
+			  pRealCol = pColHead;
 			  pNextCol = NextColumnInTable (pNextCol, pTable);
 			  if (pNextCol)
 			    pEl = GetCellInRow (pRow, pNextCol, FALSE, &back);
@@ -829,18 +833,77 @@ void PasteCommand ()
 		  else
 		    {
 		      GetCellSpans (pEl, &colspan, &rowspan);
-		      if (colspan == 0)
-			colspan = 9999;
-		      if (colspan - back > 1)
+		      if ((!before && (colspan == 0 || colspan - back > 1)) ||
+			  (before && back > 0))
+			/* extend this cell instead of pasting the new cell */
 			{
-			  /* extend this cell instead of pasting the new cell */
 			  extendedCell[nbextended] = pEl;
 			  nbextended++;
 			  pEl = NULL;
+			  /* move to the bottom of this cell */
+			  if (rowspan == 0)
+			    /* infinite vertical spanning. Stop */
+			    pRow = NULL;
+			  else
+			    while (pRow && rowspan > 1)
+			      {
+				pRow = NextRowInTable (pRow, pTable);
+				if (pPasteD)
+				  pPasteD = pPasteD->PeNext;
+				if (rowspan > 0)
+				  rowspan--;
+			      }
+			}
+		      else if (before && back == 0 &&
+			       (rowspan > 1 || rowspan == 0))
+			/* there is a cell here and we can paste a new cell
+			   before it, but it spans several rows. In these
+			   spanned rows, we will paste cells after the
+			   previous column */
+			{
+			  pRealCol = pColHead;
+			  /* get the previous column */
+			  pColHead = pColHead->ElPrevious;
+			  if (pColHead)
+			    /* there is a previous column */
+			    {
+			      before = FALSE;
+			      if (rowspan != 0)
+				{
+			          nRowsTempCol = rowspan;
+			          savebefore = TRUE;
+				}
+			    }
+			  else
+			    /* no previous column. get the next one and
+			       paste before in the spanned rows */
+			    {
+			      pColHead = pRealCol;
+			      do
+				{
+				  pCe = GetCellInRow (pRow, pColHead, FALSE,
+						      &back);
+				  if (!pCe)
+				    pColHead = NextColumnInTable (pColHead,
+								  pTable);
+				}
+			      while (!pCe && pColHead);
+			      if (pColHead)
+				{
+				  before = TRUE;
+				  if (rowspan != 0)
+				    {
+				      nRowsTempCol = rowspan;
+				      savebefore = TRUE;
+				    }
+				}
+			    }
 			}
 		    }
-		  
-		  pNextRow = NextRowInTable (pRow, pTable);
+		  if (pRow)
+		    pNextRow = NextRowInTable (pRow, pTable);
+		  else
+		    pNextRow = NULL;
 		}
 	      if (pEl)
 		pPasted = PasteAnElement (pEl, pPasteD, within, before,
@@ -864,18 +927,20 @@ void PasteCommand ()
 		    /* next element will be pasted after the previous one*/
 		    {
 		      within = FALSE;
+		      savebefore = before;
+		      nRowsTempCol = 1;
 		      before = FALSE;
+		      pRealCol = pColHead;
 		    }
 		  else if (WholeColumnSaved)
 		    {
 		      /* get the last column of the cell */
 		      GetCellSpans (pPasted, &colspan, &rowspan);
-		      if (rowspan == 0)
-			rowspan = 9999;
-		      while (pNextRow && rowspan > 1)
+		      while (pNextRow && ((rowspan > 1) || (rowspan == 0)))
 			{
 			  pNextRow = NextRowInTable (pNextRow, pTable);
-			  rowspan--;
+			  if (rowspan > 0)
+			    rowspan--;
 			}
 		    }
 		}
@@ -906,14 +971,22 @@ void PasteCommand ()
 		  else
 		    pPasteD = pPasteD->PeNext;
 		}
-	      
+
 	      pRow = pNextRow;
 	      if (pRow && pPasteD == NULL)
 		/* there are more rows than pasted cell */
 		addedCell = NewSubtree (cellType.ElTypeNum,
-					(PtrSSchema) cellType.ElSSchema, pDoc, TRUE,
-					TRUE, TRUE, TRUE);
-	      before = savebefore;
+					(PtrSSchema) cellType.ElSSchema, pDoc,
+					TRUE, TRUE, TRUE, TRUE);
+	      if (nRowsTempCol > 0)
+		{
+		  nRowsTempCol --;
+		  if (nRowsTempCol == 0)
+		    {
+		      before = savebefore;
+		      pColHead = pRealCol;
+		    }
+		}
 	    }
 	  while (pPasteD || addedCell);
 
