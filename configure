@@ -7545,10 +7545,20 @@ if test "$build_amaya" = "yes" ; then
     fi
 fi
 
-if test "$with_gtk" = yes ; then
+if test "$no_graphic" = "yes" ; then
+    echo "Amaya configured with system graphic libraries (libjpeg, libpng, zlib)"
+else
+    echo "Amaya configured with static graphic libraries (libjpeg, libpng, zlib)"
+    if test "$with_gtk" = "yes" -o "$with_gl" = "yes" ; then
+      echo "  N.B. This option may not work in your platform. If Amaya crashes"
+      echo "  when opening a PNG file. Recompile it using the system libraries."
+    fi
+fi
+
+if test "$with_gtk" = "yes" ; then
     echo "Amaya configured with GTK"
 else 
-  if test "$no_motif" = yes ; then
+  if test "$no_motif" = "yes" ; then
     echo "Motif seems not installed on this machine"
     echo "Amaya need Motif 1.2 or 2.0"
   else
@@ -7566,8 +7576,5 @@ else
   fi
 fi
 
+echo ""
 echo "Now type \"make\" (GNU make preferably) to build the binaries"
-
-
-
-
