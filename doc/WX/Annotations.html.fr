@@ -4,7 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Annotations</title>
-  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
+  />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -75,7 +76,7 @@ lui sont présentées dans une nouvelle fenêtre.</p>
 <p style="text-align: center"><img src="../images/annotationicon.png"
 alt="annotation icon (= pencil)" /></p>
 
-<p>Une annotation possède plusieurs propriétés&nbsp;:</p>
+<p>Une annotation possède plusieurs propriétés :</p>
 <ul>
   <li>Point de stockage: dans le système de fichiers de l'utilisateur ou sur
     un serveur d'annotations</li>
@@ -128,67 +129,6 @@ trouvent dans le menu d'annotations représenté ci dessous.</p>
 
 <p style="text-align: center"><img src="../images/annotationsmenu-fr.png"
 alt="Annotations menu" /></p>
-
-<h3 id="Configurat">Menu de configuration pour les annotations</h3>
-
-<p>Ce menu est appelé à partir de l'entrée <strong>Configuration</strong>. La
-figure suivante montre la version Windows de ce menu. La version Unix a une
-interface utilisateur légèrement différente mais offre les mêmes
-fonctionnalités.</p>
-
-<p style="text-align: center"><img src="../images/configurebox.png"
-alt="configuration dialog box" /></p>
-
-<p></p>
-<dl>
-  <dt><strong>Nom de l'utilisateur (Annotation user)</strong></dt>
-    <dd>Ce champ est associé à chaque nouvelle annotation et définit
-      l'<strong>auteur</strong> de l'annotation. Par défaut, Amaya utilise le
-      nom de connexion pour construire la méta-donnée auteur. Le champ
-      "Annotation user" permet à un utilisateur de remplacer ce nom par un
-      nom plus significatif comme par exemple, changer le nom
-      <code>u1723242</code> en <code>marja</code>.</dd>
-  <dt><strong>Serveurs d'Annotations (Annotation servers)</strong></dt>
-    <dd>Ce champ définit les serveurs d'annotations à interroger lorsque
-      Amaya cherche une annotation. Vous pouvez spécifier un ou plusieurs
-      serveurs. Le nom de serveur <strong>localhost</strong> est réservé, il
-      indique à Amaya de chercher localement les annotations. Cela ne
-      signifie pas que l'on utilise un serveur pour les annotations locale,
-      pour cela il faudrait donner l'URL complète de celui-ci. Sous Unix, les
-      serveurs d'annotations sont spécifiés à la suite, séparés par un
-      espace. Sous Windows, ils sont spécifiés les uns après les autres et
-      séparés par la touche <code>Return</code>. Par défaut, ce champ est
-      initialisé avec <code>localhost</code>.
-      <p><em>ASTUCE</em>: Vous pouvez inhiber la consultation d'un serveur
-      d'annotations en préfixant l'URL du serveur avec le caractère '-'.</p>
-    </dd>
-  <dt><strong>Chargement automatique des annotations locales et distantes
-  (Autoload annotations)</strong></dt>
-    <dd>Ces options indiquent à Amaya de rechercher automatiquement ou non
-      les annotations lorsqu'une nouvelle URL est chargée. Si elles ne sont
-      pas positionnées alors l'utilisateur doit explicitement sélectionner
-      l'entrée <strong>Charger les annotations</strong> pour visualiser
-      celles-ci. Il peut y avoir un certain délai lorsque Amaya charge les
-      annotations distantes, ce délai étant du à la résolution du nom DNS des
-      serveurs d'annotations. Par défaut, ces options sont désactivées.</dd>
-  <dt><strong>Désactiver le chargement automatique des annotations
-  distantes</strong></dt>
-    <dd>Lorsque cette option est activée, Amaya réinitialise l'option
-      <code>Chargement automatique des annotations distantes</code> au
-      démarrage. Cela est très utile si vous travaillez en mode déconnecté de
-      temps en temps et que vous voulez continuer à charger automatiquement
-      les annotations locales tout en rechargeant les annotations distantes
-      lorsque vous êtes connectés.</dd>
-  <dt><strong>Serveur de publication des annotations (Annotation Post
-  Server)</strong></dt>
-    <dd>Ce champ définit le serveur sur lequel les annotations sont
-      enregistrées. Les annotations locales sont toujours sauvegardées dans
-      un répertoire local, sans tenir compte de ce champ. Par défaut, il est
-      vide. Il est à noter que le serveur sur lequel les annotations
-      distantes sont enregistrées n'est pas nécessairement inclus dans la
-      liste des serveurs interrogés; pour cela, vous devez rentrer son nom
-      dans chacun des deux champs, dans l'ordre que vous voulez.</dd>
-</dl>
 
 <h3 id="Creating">Créer une annotation</h3>
 
