@@ -141,6 +141,7 @@ NOFRAMES: noframes
 FRAME: frame
 IFRAME: iframe
 Langue: lang
+ID: id
 Class: class
 PseudoClass: pseudo class
 Style\240: style

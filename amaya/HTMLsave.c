@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1486,8 +1486,12 @@ View                view;
        /* save the current state of the document into the temporary file */
        tempdocument = GetLocalPath (document, DocumentURLs[document]);
        SetNamespacesAndDTD (document);
-       TtaExportDocumentWithNewLineNumbers (document, tempdocument,
-					    TEXT("HTMLT"));
+       if (DocumentMeta[document]->xmlformat)
+	 TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+					      TEXT("HTMLTX"));
+       else
+	 TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+					      TEXT("HTMLT"));
        RedisplaySourceFile (document);
        otherDoc = DocumentSource[document];
      }
@@ -1620,7 +1624,7 @@ View                view;
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
 
-  /* the suffix fixes the output format of HTML saved document */
+  /* the suffix determines the output format */
   SaveAsXHTML = IsXMLName (tempname) || DocumentMeta[doc]->xmlformat;
   if (IsW3Path (tempname))
     /* it's a remote document */
