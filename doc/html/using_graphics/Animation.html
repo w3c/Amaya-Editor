@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -5,7 +6,7 @@
   <meta http-equiv="Content-Type"
   content="application/xhtml+xml; charset=iso-8859-1" />
   <title>Graphics and SMIL Animation</title>
-  <meta name="generator" content="amaya 8.6, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -31,9 +32,8 @@
 <p>SVG represents animation as elements interspersed through the main
 structure which represents the organization of the graphics. Animation
 elements appear as children of the graphics elements they animate. To allow
-the author to focus on animation, a timeline view shows all animation
-elements and group them together according to the graphics element they
-animate.</p>
+focussing on animation, a timeline view shows all animation elements and
+groups them together according to the graphics elements they animate.</p>
 
 <h2>The Timeline View</h2>
 
@@ -44,18 +44,18 @@ representation of its animation elements.</p>
 <p>The following figure shows the three animated objects of a document. Each
 object is represented on the left side of the view by a label with a white
 background and a box next to its label. Clicking the label highlights the
-corresponding element in the formatted view, thus providing the user with the
-context of that element. If the graphics element has a single animation
-element (like element Rectangle in the figure), this animation element is
-displayed as a colored bar. If there are several elements, a single gray bar
-represents the whole animation (Circle, at the bottom of the figure), and a
-'+' button in the label allows the user to get a expanded representation.
-Element MyText, is an example of such an expanded representation where each
-animation element is represented by a colored bar. The button becomes a '-'
-that allows the user to get back to the condensed representation.</p>
+corresponding element in the formatted view, thus showing the context of that
+element. If the graphics element has a single animation element (like element
+Rectangle in the figure), this animation element is displayed as a colored
+bar. If there are several elements, a single gray bar represents the whole
+animation (Circle, at the bottom of the figure), and a '+' button in the
+label allows to view an expanded representation. Element MyText is an example
+of such an expanded representation where each animation element is
+represented by a colored bar. The button becomes a '-' that allows to go back
+to the condensed representation.</p>
 
-<p>Position on the timeline depends on when they start and stop acting and
-the color of each bar reflects the type of animation:</p>
+<p>The position of an animation on the timeline depends on when it starts and
+stops acting, and the color of each bar reflects the type of animation:</p>
 <ul>
   <li>yellow for <code>animate</code>,</li>
   <li>red for <code>set</code>,</li>
@@ -70,59 +70,59 @@ src="//home/vatton/Amaya/doc/images/timeline_view.png" /></p>
 
 <h2>Editing Animations</h2>
 
-<p>The timeline view is helpful to quickly perceive the animation of all
-graphics in a document, but it also allows an author to edit animation.
-Existing elements can be modified. Most manipulations are done directly on
-the timeline, such as moving a bar or changing its length. This is
-immediately reflected in other views where the corresponding attributes of
-the animation element are updated (attributes <code>begin</code> and
-<code>dur</code> in that case).</p>
+<p>The timeline view is useful to get a quick overview of the animation of
+all graphics in a document, but it also allows to edit animations. Existing
+elements can be modified. Most manipulations are done directly on the
+timeline, such as moving a bar or changing its length. This is immediately
+reflected in other views where the corresponding attributes of the animation
+element are updated (attributes <code>begin</code> and <code>dur</code> in
+that case).</p>
 
-<p>When creating a movement for an existing graphics element:</p>
+<p>A movement for an existing graphics element is created as follows:</p>
 <ul>
-  <li>The user starts by selecting the start time of the animation:
+  <li>Select the start time of the animation:
     <p>Click Ctrl + Left mouse button on the red timeline slider and move it
-    to the right start position.</p>
+    to the correct start position.</p>
   </li>
-  <li>Then, he/she selects the element of interest in the formatted view:
+  <li>Select the element of interest in the formatted view:
     <p>The element should have an ID. This ID will be displayed as the
     element label.</p>
   </li>
-  <li>Then, he/she clicks on the top left <img alt="anim_motion"
-    src="../../../amaya/anim_motion_sh_db.png" /> button in the timeline view:
-    <p>This creates a new animation element in that view.</p>
+  <li>Create a new animation element in the timeline view:
+    <p>Click on the top left <img alt="anim_motion"
+    src="../../../amaya/anim_motion_sh_db.png" /> button in the timeline
+    view.</p>
   </li>
-  <li>The user then points at the starting position and at the ending
-    position of the movement in the formatted view:
+  <li>Mark the starting and ending positions of the movement in the formatted
+    view:
     <p>Click Ctrl + Left mouse button on the displayed <img alt="cross"
     src="../../../amaya/timeline_cross.gif" /> icon in the formatted view.
-    Doing so, he/she can control the key positions of the animated element in
-    the context of the other graphics elements. The user draws the motion
-    pathof the element.</p>
+    This allows to control the key positions of the animated element in the
+    context of the other graphics elements. Simply draw the motion path of
+    the element.</p>
   </li>
-  <li>Finally, going back to the timeline view, he/she can move and/or resize
+  <li>Finally, going back to the timeline view, one can move and/or resize
     the new generated colored bar to adjust the timing.</li>
 </ul>
 
-<p>Manipulating timing in the timeline view is more comfortable, as this
-allows the user to better understand the synchronization of a particular
-element with the other animated elements. But the other views are still
-there, and some parameters may be adjusted in the structure view by editing
-attributes, as well as in the source code if necessary.</p>
+<p>Manipulating timing in the timeline view is more comfortable, as the
+synchronization of a particular element with the other animated elements is
+more clearly visible in this view. But the other views are still there, and
+some parameters may be adjusted in the structure view by editing attributes,
+as well as in the source code if necessary.</p>
 
-<p>When creating a color change for an existing graphics element</p>
+<p>A color change for an existing graphics element is created as follows:</p>
 <ul>
-  <li>The user starts by selecting the element of interest in the main
-  view,</li>
-  <li>Then, he/she clicks on the top left <img alt="anim_color"
+  <li>First select the element of interest in the main view,</li>
+  <li>then click on the top left <img alt="anim_color"
     src="../../../amaya/anim_color_sh_db.png" /> button.</li>
 </ul>
 
-<p>The user can manipulate a bar representing an animation in the same way
-he/she manipulates a rectangle in the document. Obviously some constraints
-are put in the timeline view. For instance colored bars can move only
-horizontally along the time axis and their height can not be changed
-individually. Those constraints represent the semantics of the timeline
-graphic language.</p>
+<p>A bar representing an animation can be manipulated exactly like a
+rectangle in the document. Obviously some constraints are put in the timeline
+view. For instance, colored bars can move only horizontally along the time
+axis and their height cannot be changed individually. These constraints
+follow from the semantics of the timeline graphic language.</p>
 </body>
 </html>
+

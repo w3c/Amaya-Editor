@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type"
   content="application/xhtml+xml; charset=iso-8859-1" />
-  <title>Grafik und SMIL-Animation</title>
+  <title>Graphik und SMIL-Animation</title>
   <meta name="generator" content="amaya 8.6, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -29,54 +28,111 @@
 <div id="page_body">
 <h1>Grafik und SMIL-Animation</h1>
 
-<p>SVG stellt Animationen als Elemente, in einer den Aufbau der Grafik widerspiegelnden Prim&auml;rstruktur, dar.
-Animierte Elemente sind von den graphischen Elementen abgeleitet, die sie animieren sollen. Damit der Autor seine Aufmerksamkeit auf die Animation richten kann, zeigt ein Zeitablaufsdiagramm (im Folgenden Zeitachsenansicht genannt) alle Animationselemente, zusammen mit den dazu passenden grafischen Animationselementen, an.</p>
+<p>In SVG werden Animationen als Elemente innerhalb der Struktur, die die
+Organisation der Graphik beschreibt, dargestellt. Animationselemente
+erscheinen als Kinder der animierten Graphikelemente. Um das Fokussieren auf
+eine Animation zu ermöglichen, werden alle Animationselemente in einer
+Zeitleistenansicht anzeigt und entsprechend der animierten Graphikelemente
+zusammengruppiert.</p>
 
-<h2>Die Zeitachsenansicht </h2>
+<h2>Die Zeitleistenansicht</h2>
 
-<p>Die Zeitachsenansicht zeigt Animationen zusammen mit grafischen Objekten an. Jedes animierte Objekt des Dokuments wird in der Ansicht durch eine grafische Darstellung der zu animierenden Elemente angezeigt. 
-Die folgende Abbildung zeigt die drei animierten Objekte des Dokuments. Jedes Objekt wird auf der linken Seite der Ansicht durch ein wei&szlig; hinterlegtes Namensschild (Label genannt) mit einem K&auml;stchen daneben repr&auml;sentiert. Beim Anklicken wird das zum Schild geh&ouml;rige Element in der Formatierungsansicht hervorgehoben, was dem Benutzer den Zusammenhang zeigt. Hat ein graphisches Element nur ein Animationselement (wie z.B. das Element "Rechteck" in der Abbildung), wird dieses durch einen farbigen Balken dargestellt. Gibt es mehrere Elemente werden diese durch einen grauen Balken, stellvertretend f&uuml;r die gesamte Animation, repr&auml;sentiert (siehe Kreis am Fu&szlig;e der Abbildung). Ein '+'-Schalter im Label wechselt in die erweiterte Ansicht. Das Element "MyText" ist ein Beispiel f&uuml;r eine solche erweiterte Darstellung in der jedes Element durch einen farbigen Balken repr&auml;sentiert wird. Mit dem '-'-Schalter der erweiterten Ansicht gelangt man wieder zur&uuml;ck.</p>
+<p>Die Zeitleistenansicht zeigt Animationen an, die mit Grafikobjekten
+assoziiert sind. Jedes animirte Objekt des Dokumentes wird dort dargestellt,
+mit einer graphischen Darstellung seiner Animationselemente.</p>
 
-<p>Die Position auf der Zeitachse h&auml;ngt vom ihrem Anfang und Ende ab. Die Farbe jedes Balken spiegelt die Art der Anmation wieder, dabei steht:</p>
+<p>Die folgende Abbildung zeigt die drei animierten Objekte eines Dokumentes.
+Jedes Objekt wird auf der linken Seite der Ansicht durch ein Label mit weißem
+Hintergrund und einem Kasten neben dem Label dargestellt. Durch Anklicken des
+Labels wird das entsprechende Element in der formatierten Ansicht
+hervorgehoben und zeigt so den Kontext dieses Elements an. Wenn das
+Graphikelement ein einzelnes Animationselement hat (wie das Element Rectangle
+in der Abbildung), wird dieses Animationselement als farbiger Balken
+angezeigt. Wenn es mehrere Elemente gibt, wird die gesamte Animation durch
+einen einzelnen grauen Balken dargestellt (Circle, am unteren Rand der
+Abbildung), und mit dem '+' Button kann der Benutzer auf eine erweiterte
+Darstellung umschalten. Das Element MyText ist ein Beispiel einer solchen
+erweiterten Darstellung, in der jedes Animationselement durch einen farbigen
+Balken dargestellt wird. Mit dem Button '-' gelangt der Benutzer zurück zu
+der komprimierten Darstellung.</p>
+
+<p>Die Position einer Animation auf der Zeitachse hängt von ihrem Start- und
+Endzeitpunkt ab, und die Farbe des Balkens gibt die Art der Animation
+wieder:</p>
 <ul>
-  <li>gelb f&uuml;r  <code>animate</code>,</li>
-  <li>rot f&uuml;r  <code>set</code>,</li>
-  <li>gr&uuml;n f&uuml;r <code>animateMotion</code>,</li>
-  <li>unkelblau f&uuml;r <code>animateColor</code>,</li>
-  <li>hellblau f&uuml;r  <code>animateTransform</code></li>
+  <li>gelb für <code>animate</code>,</li>
+  <li>rot für <code>set</code>,</li>
+  <li>grün für <code>animateMotion</code>,</li>
+  <li>dunkelblau für <code>animateColor</code>,</li>
+  <li>hellblau für <code>animateTransform</code>.</li>
 </ul>
 
 <p class="figure"><img alt="Animation view"
 src="//home/vatton/Amaya/doc/images/timeline_view.png" /></p>
 </div>
 
-<h2>Animationen edieren</h2>
+<h2>Bearbeiten von Animationen</h2>
 
-<p>Die Zeitachenansicht gibt dem Autor zum Einen &Uuml;bersicht &uuml;ber die Animation aller Grafiken im Dokument und zum Anderen kann er damit auch die vorhandenen Animationselemente bearbeiten. Die meisten Ver&auml;nderungen, wie zum Beispiel das Bewegen eines Balkens oder das &Auml;ndern seiner L&auml;nge, werden direkt auf der Zeitachse ausgef&uuml;hrt. Diese Ver&auml;nderungen sind sofort in den anderen Darstellungen zu sehen, da deren Attribute unmittelbar auf dem neusten Stand gehalten werden. Im unserem Beispiel sind das die  <code>begin</code> und
-<code>dur</code>.</p>
+<p>Die Zeitleistenansicht ist nützlich, um sich schnell einen Überblick über
+die Animationen aller Graphiken in einem Dokument zu verschaffen, aber sie
+erlaubt es auch, Animationen zu bearbeiten. Vorhandene Elemente können
+geändert werden. Die meisten Änderungen erfolgen direkt auf der Zeitleiste,
+wie das Verschieben eines Balkens oder das Ändern seiner Länge. Bei
+Änderungen dieser Art werden in anderen Ansichten die entsprechenden
+Attribute des Animationselements sofort aktualisiert (in diesem Beispiel die
+Attribute <code>begin</code> und <code>dur</code>).</p>
 
-<p>F&uuml;r ein existierendes grafisches Element  eine Bewegung erstellen:</p>
+<p>Eine Bewegung für ein existierendes Grafikelement kann man wie folgt
+erzeugen:</p>
 <ul>
-  <li>Man beginnt mit der Auswahl des Startzeitpunktes der Animation, indem er Strg + linke Maustaste &uuml;ber dem roten Zeitachsenschieberegler dr&uuml;ckt und ihn anschlie&szlig;end an die gew&uuml;nschte Position verschiebt.
+  <li>Festlegen der Startzeit der Animation:
+    <p>Dazu klickt man bei gedrückter Ctrl-Taste mit der linken Maustaste auf
+    den roten Zeitleistenschieber und verschiebt ihn in die richtige
+    Anfangsposition.</p>
   </li>
-  <li>Falls das Element eine ID erhalten soll die dann als Beschriftung fungiert, w&auml;hlt man dieses Element in der Formatierungsansicht aus
+  <li>Auswahl des gewünschten Elements in der formatierten Ansicht:
+    <p>Das Element sollte eine ID besitzen. Diese ID wird als Label für das
+    Element angezeigt.</p>
   </li>
-  <li>Dann klickt man den Schalter oben links auf der Zeitachse an und ein neues Animationselement wird in der Ansicht erstellt.
+  <li>Erzeugen eines neuen Animationselements in der Zeitleistenansicht:
+    <p>Dazu klickt man den oberen linken <img alt="anim_motion"
+    src="/amaya/anim_motion_sh_db.png" /> Button in der Zeitleistenansicht
+    an.</p>
   </li>
-  <li>Nun stellt der Autor die Start- und Endposition der Bewegung im der Formatierungsansicht ein, indem er
-Strg + linke Maustaste &uuml;ber dem Dargestellt-Icon <img alt="cross"
-    src="../../../amaya/timeline_cross.gif" /> in der Formatierungsansicht dr&uuml;ckt. Dabei kann er die Schl&uuml;sselpositionen des zu animierenden Elements im zusammenwirken mit denanderen grafischen Elementen steuern. Tats&auml;chlich wird der Bewegunspfad gezeichnet, als w&uuml;rde man die Form einer jeden Kurve, die zum Element geh&ouml;rt, zeichnen.
+  <li>Markieren der Start- und Zielposition der Bewegung in der formatierten
+    Ansicht:
+    <p>Dazu klickt man bei gedrückter Ctrl-Taste mit der linken Maustaste auf
+    das angezeigte <img alt="cross" src="../../../amaya/timeline_cross.gif"
+    /> Icon in der formatierten Ansicht. Damit kann man die
+    Schlüsselpositionen des animierten Elements im Kontext der anderen
+    Graphikelemente steuern. Man zeichnet nun einfach den Pfad der
+    Bewegung.</p>
   </li>
-  <li>Schlie&szlig;lich, zur&uuml;ck in der Zeitachsenansicht, kann man nun den neuen Balken, zur Festlegung des Timings, nach eigenem Wunsch verschieben, strecken und stauchen.</li>
+  <li>Abschließend kann man in der Zeitleistenansicht den neuen Balken
+    verschieben und/oder seine Größe ändern, um den Zeitablauf zu
+  justieren.</li>
 </ul>
 
-<p>Das Ver&auml;ndern des Timings mit Hilfe der Zeitansicht ist wesentlich angenehmer, zumal so dem Anwender die Synchronisation eines Elements mit den anderen Animationselementen besser verst&auml;ndlich wird. Au&szlig;erdem kann der Nutzer Schl&uuml;sselpositionen in der Hauptansicht durch blo&szlig;es Verschieben der Punkte mit der Maus einstellen. Die &uuml;brigen Ansichten sind weiterhin vorhanden. Manche Parameter k&ouml;nnen in der Strukturdarstellung und nat&uuml;rlich auch im Quellcode durch &Auml;ndern von Attributen eingestellt werden.</p>
+<p>Das Einstellen des Zeitablaufs ist in der Zeitleistenansicht bequemer,
+weil dort die Synchronisierung eines Elements mit den anderen animierten
+Elementen deutlicher sichtbar ist. Die anderen Ansichten bleiben aber
+weiterhin verfügbar, und manche Parameter können in der Strukturansicht durch
+Bearbeiten von Attributen eingestellt werden, sowie falls notwendig im
+Quelltext.</p>
 
-<p>Will man eine Farbver&auml;nderung f&uuml;r ein existierendes graphiisches Element erstellen, beginnt man mit der Auswahl des gew&uuml;nschten Elements in der Hauptansicht und klickt dann auf den  -Schalter oben links <img alt="anim_color"
-src="../../../amaya/anim_color_sh_db.png" />.</p>
+<p>Eine Farbenänderung für ein existierendes Graphikelement kann man wie
+folgt erzeugen:</p>
+<ul>
+  <li>zuerst das gewünschte Element in der Hauptansicht auswählen,</li>
+  <li>dann den oberen linken <img alt="anim_color"
+    src="/amaya/anim_color_sh_db.png" /> Button anklicken.</li>
+</ul>
 
-<p>
-Der Anwender kann einen, diie Animation repr&auml;sentierenden, Balken in der gleichen Weise ver&auml;ndern in der er auch eine Rechteck im Dokument ver&auml;ndert.. Nat&uuml;rlich schr&auml;nkt die Zeitachsenansicht auch ein.. Zum Beispiel k&ouml;nnen farbige Balken nur horizontal, also entlang der Zeitachse, bewegt werden, wohingegen die H&ouml;he nicht individuell eingestellt werden kann.
-Diese Einschr&auml;nkungen stammen aus der Semantik der Zeitreihengrafiksprache.</p>
+<p>Ein Balken, der eine Animation darstellt, kann genauso manipuliert werden
+wie ein Rechteck im Dokument. Für die Zeitleistenansicht gibt es allerdings
+ein paar Einschränkungen. Zum Beispiel können farbige Balken nur horizontal
+entlang der Zeitleiste bewegt werden, und ihre Höhe kann nicht einzeln
+geändert werden. Diese Einschränkungen ergeben sich aus der Semantik der
+timeline graphic language.</p>
 </body>
 </html>
